@@ -32,6 +32,10 @@ SLF4J_VERSION := 1.7.36
 JAVA_RELEASE = 21
 ENABLE_PREVIEW = 1
 
+## Test options
+TEST_JAVAX_EXPORTS := objectos.lang
+TEST_JAVAX_EXPORTS += objectos.util
+
 # Delete the default suffixes
 .SUFFIXES:
 
@@ -226,9 +230,6 @@ TEST_RUNTIME_OUTPUT = $(WORK)/test-output
 
 ## test main class
 TEST_MAIN = $(MODULE).RunTests
-
-## test exports
-TEST_JAVAX_EXPORTS := objectos.lang
 
 ## test java command
 TEST_JAVAX = $(JAVA)

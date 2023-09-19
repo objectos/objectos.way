@@ -33,11 +33,13 @@ public class RunTests {
 
     test.setName("All");
 
-    test.setXmlPackages(
-      List.of(
-        new XmlPackage("objectos.lang")
-      )
+    List<XmlPackage> packages;
+    packages = List.of(
+      new XmlPackage("objectos.lang"),
+      new XmlPackage("objectos.util")
     );
+
+    test.setXmlPackages(packages);
 
     TestNG ng;
     ng = new TestNG();
