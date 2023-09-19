@@ -1,0 +1,1211 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testng-results ignored="2" total="168" passed="166" failed="0" skipped="0">
+  <reporter-output>
+  </reporter-output>
+  <suite started-at="2023-08-18T13:50:05 BRT" name="Surefire suite" finished-at="2023-08-18T13:50:06 BRT" duration-ms="1415">
+    <groups>
+    </groups>
+    <test started-at="2023-08-18T13:50:05 BRT" name="Surefire test" finished-at="2023-08-18T13:50:06 BRT" duration-ms="1415">
+      <class name="objectos.asciidoc.UrlMacroTest">
+        <test-method signature="testCase01()[pri:0, instance:objectos.asciidoc.UrlMacroTest@15cee630, instance params:[]]" started-at="2023-08-18T13:50:06 BRT" name="testCase01" description="- https
+- well-formed
+" finished-at="2023-08-18T13:50:06 BRT" duration-ms="9" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase01 -->
+        <test-method signature="testCase01()[pri:0, instance:objectos.asciidoc.UrlMacroTest@3041beb3, instance params:[]]" started-at="2023-08-18T13:50:06 BRT" name="testCase01" description="- https
+- well-formed
+" finished-at="2023-08-18T13:50:06 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase01 -->
+        <test-method signature="testCase02()[pri:0, instance:objectos.asciidoc.UrlMacroTest@15cee630, instance params:[]]" started-at="2023-08-18T13:50:06 BRT" name="testCase02" description="- https
+- well-formed
+- w/ text before
+" finished-at="2023-08-18T13:50:06 BRT" duration-ms="7" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase02 -->
+        <test-method signature="testCase02()[pri:0, instance:objectos.asciidoc.UrlMacroTest@3041beb3, instance params:[]]" started-at="2023-08-18T13:50:06 BRT" name="testCase02" description="- https
+- well-formed
+- w/ text before
+" finished-at="2023-08-18T13:50:06 BRT" duration-ms="0" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase02 -->
+        <test-method signature="testCase03()[pri:0, instance:objectos.asciidoc.UrlMacroTest@15cee630, instance params:[]]" started-at="2023-08-18T13:50:06 BRT" name="testCase03" description="- https
+- well-formed
+- comma in attrlist
+" finished-at="2023-08-18T13:50:06 BRT" duration-ms="6" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase03 -->
+        <test-method signature="testCase03()[pri:0, instance:objectos.asciidoc.UrlMacroTest@3041beb3, instance params:[]]" started-at="2023-08-18T13:50:06 BRT" name="testCase03" description="- https
+- well-formed
+- comma in attrlist
+" finished-at="2023-08-18T13:50:06 BRT" duration-ms="0" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase03 -->
+      </class> <!-- objectos.asciidoc.UrlMacroTest -->
+      <class name="objectos.asciidoc.LexerTest">
+        <test-method signature="testCase01()[pri:0, instance:objectos.asciidoc.LexerTest@273293c8, instance params:[]]" started-at="2023-08-18T13:50:05 BRT" name="testCase01" description="apostrophe between word chars
+" finished-at="2023-08-18T13:50:05 BRT" duration-ms="2" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase01 -->
+        <test-method signature="testCase01()[pri:0, instance:objectos.asciidoc.LexerTest@6f1d799, instance params:[]]" started-at="2023-08-18T13:50:05 BRT" name="testCase01" description="apostrophe between word chars
+" finished-at="2023-08-18T13:50:05 BRT" duration-ms="9" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase01 -->
+      </class> <!-- objectos.asciidoc.LexerTest -->
+      <class name="objectos.asciidoc.ConstrainedBoldTest">
+        <test-method signature="testCase01()[pri:0, instance:objectos.asciidoc.ConstrainedBoldTest@2e4ecdf8, instance params:[]]" started-at="2023-08-18T13:50:06 BRT" name="testCase01" description="= bold
+
+- constrained
+- words only
+- well-formed
+" finished-at="2023-08-18T13:50:06 BRT" duration-ms="7" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase01 -->
+        <test-method signature="testCase01()[pri:0, instance:objectos.asciidoc.ConstrainedBoldTest@7b3feb26, instance params:[]]" started-at="2023-08-18T13:50:06 BRT" name="testCase01" description="= bold
+
+- constrained
+- words only
+- well-formed
+" finished-at="2023-08-18T13:50:06 BRT" duration-ms="0" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase01 -->
+        <test-method signature="testCase02()[pri:0, instance:objectos.asciidoc.ConstrainedBoldTest@2e4ecdf8, instance params:[]]" started-at="2023-08-18T13:50:06 BRT" name="testCase02" description="bold
+
+- constrained
+- phrases
+- well-formed
+" finished-at="2023-08-18T13:50:06 BRT" duration-ms="4" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase02 -->
+        <test-method signature="testCase03()[pri:0, instance:objectos.asciidoc.ConstrainedBoldTest@2e4ecdf8, instance params:[]]" started-at="2023-08-18T13:50:06 BRT" name="testCase03" description="bold enclosing italic
+" finished-at="2023-08-18T13:50:06 BRT" duration-ms="6" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase03 -->
+        <test-method signature="testCase02()[pri:0, instance:objectos.asciidoc.ConstrainedBoldTest@7b3feb26, instance params:[]]" started-at="2023-08-18T13:50:06 BRT" name="testCase02" description="bold
+
+- constrained
+- phrases
+- well-formed
+" finished-at="2023-08-18T13:50:06 BRT" duration-ms="0" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase02 -->
+        <test-method signature="testCase03()[pri:0, instance:objectos.asciidoc.ConstrainedBoldTest@7b3feb26, instance params:[]]" started-at="2023-08-18T13:50:06 BRT" name="testCase03" description="bold enclosing italic
+" finished-at="2023-08-18T13:50:06 BRT" duration-ms="0" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase03 -->
+      </class> <!-- objectos.asciidoc.ConstrainedBoldTest -->
+      <class name="objectos.asciidoc.SourceCodeBlockTest">
+        <test-method signature="testCase01()[pri:0, instance:objectos.asciidoc.SourceCodeBlockTest@64c95480, instance params:[]]" started-at="2023-08-18T13:50:05 BRT" name="testCase01" description="source code block
+
+- implict source style
+- delimited
+- single line
+" finished-at="2023-08-18T13:50:05 BRT" duration-ms="2" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase01 -->
+        <test-method signature="testCase01()[pri:0, instance:objectos.asciidoc.SourceCodeBlockTest@69499c6f, instance params:[]]" started-at="2023-08-18T13:50:05 BRT" name="testCase01" description="source code block
+
+- implict source style
+- delimited
+- single line
+" finished-at="2023-08-18T13:50:05 BRT" duration-ms="26" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase01 -->
+        <test-method signature="testCase02()[pri:0, instance:objectos.asciidoc.SourceCodeBlockTest@64c95480, instance params:[]]" started-at="2023-08-18T13:50:05 BRT" name="testCase02" description="source code block
+
+- explict source style
+- delimited
+- multiple lines
+" finished-at="2023-08-18T13:50:05 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase02 -->
+        <test-method signature="testCase02()[pri:0, instance:objectos.asciidoc.SourceCodeBlockTest@69499c6f, instance params:[]]" started-at="2023-08-18T13:50:05 BRT" name="testCase02" description="source code block
+
+- explict source style
+- delimited
+- multiple lines
+" finished-at="2023-08-18T13:50:05 BRT" duration-ms="10" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase02 -->
+        <test-method signature="testCase03()[pri:0, instance:objectos.asciidoc.SourceCodeBlockTest@64c95480, instance params:[]]" started-at="2023-08-18T13:50:05 BRT" name="testCase03" description="source code block
+
+- implict source style
+- delimited
+- indented content
+" finished-at="2023-08-18T13:50:05 BRT" duration-ms="0" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase03 -->
+        <test-method signature="testCase03()[pri:0, instance:objectos.asciidoc.SourceCodeBlockTest@69499c6f, instance params:[]]" started-at="2023-08-18T13:50:05 BRT" name="testCase03" description="source code block
+
+- implict source style
+- delimited
+- indented content
+" finished-at="2023-08-18T13:50:05 BRT" duration-ms="10" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase03 -->
+        <test-method signature="testCase04()[pri:0, instance:objectos.asciidoc.SourceCodeBlockTest@64c95480, instance params:[]]" started-at="2023-08-18T13:50:05 BRT" name="testCase04" description="source code block
+
+- implict source style
+- delimited
+- contains Token.BOLD_END
+" finished-at="2023-08-18T13:50:05 BRT" duration-ms="0" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase04 -->
+        <test-method signature="testCase04()[pri:0, instance:objectos.asciidoc.SourceCodeBlockTest@69499c6f, instance params:[]]" started-at="2023-08-18T13:50:05 BRT" name="testCase04" description="source code block
+
+- implict source style
+- delimited
+- contains Token.BOLD_END
+" finished-at="2023-08-18T13:50:05 BRT" duration-ms="7" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase04 -->
+        <test-method signature="testCase05()[pri:0, instance:objectos.asciidoc.SourceCodeBlockTest@64c95480, instance params:[]]" started-at="2023-08-18T13:50:05 BRT" name="testCase05" description="source code block
+
+- trailing space at close marker
+- has paragraph after
+" finished-at="2023-08-18T13:50:05 BRT" duration-ms="0" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase05 -->
+        <test-method signature="testCase05()[pri:0, instance:objectos.asciidoc.SourceCodeBlockTest@69499c6f, instance params:[]]" started-at="2023-08-18T13:50:05 BRT" name="testCase05" description="source code block
+
+- trailing space at close marker
+- has paragraph after
+" finished-at="2023-08-18T13:50:05 BRT" duration-ms="16" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase05 -->
+        <test-method signature="testCase06()[pri:0, instance:objectos.asciidoc.SourceCodeBlockTest@64c95480, instance params:[]]" started-at="2023-08-18T13:50:05 BRT" name="testCase06" description="source code block
+
+- empty line before ending marker
+- has paragraph after
+" finished-at="2023-08-18T13:50:05 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase06 -->
+        <test-method signature="testCase06()[pri:0, instance:objectos.asciidoc.SourceCodeBlockTest@69499c6f, instance params:[]]" started-at="2023-08-18T13:50:05 BRT" name="testCase06" description="source code block
+
+- empty line before ending marker
+- has paragraph after
+" finished-at="2023-08-18T13:50:05 BRT" duration-ms="10" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase06 -->
+        <test-method signature="testCase07()[pri:0, instance:objectos.asciidoc.SourceCodeBlockTest@64c95480, instance params:[]]" started-at="2023-08-18T13:50:05 BRT" name="testCase07" description="source code block
+
+- paragraph after
+- separating line is non-empty
+" finished-at="2023-08-18T13:50:05 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase07 -->
+        <test-method signature="testCase07()[pri:0, instance:objectos.asciidoc.SourceCodeBlockTest@69499c6f, instance params:[]]" started-at="2023-08-18T13:50:05 BRT" name="testCase07" description="source code block
+
+- paragraph after
+- separating line is non-empty
+" finished-at="2023-08-18T13:50:05 BRT" duration-ms="12" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase07 -->
+      </class> <!-- objectos.asciidoc.SourceCodeBlockTest -->
+      <class name="objectos.asciidoc.ParagraphTest">
+        <test-method signature="testCase01()[pri:0, instance:objectos.asciidoc.ParagraphTest@333e5fb6, instance params:[]]" started-at="2023-08-18T13:50:05 BRT" name="testCase01" description="two lines paragraph
+" finished-at="2023-08-18T13:50:05 BRT" duration-ms="0" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase01 -->
+        <test-method signature="testCase01()[pri:0, instance:objectos.asciidoc.ParagraphTest@3b7b0b57, instance params:[]]" started-at="2023-08-18T13:50:05 BRT" name="testCase01" description="two lines paragraph
+" finished-at="2023-08-18T13:50:05 BRT" duration-ms="6" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase01 -->
+        <test-method signature="testCase02()[pri:0, instance:objectos.asciidoc.ParagraphTest@333e5fb6, instance params:[]]" started-at="2023-08-18T13:50:05 BRT" name="testCase02" description="multiline paragraph
+
+- last line starts with url macro
+" finished-at="2023-08-18T13:50:05 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase02 -->
+        <test-method signature="testCase02()[pri:0, instance:objectos.asciidoc.ParagraphTest@3b7b0b57, instance params:[]]" started-at="2023-08-18T13:50:05 BRT" name="testCase02" description="multiline paragraph
+
+- last line starts with url macro
+" finished-at="2023-08-18T13:50:05 BRT" duration-ms="8" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase02 -->
+        <test-method signature="testCase03()[pri:0, instance:objectos.asciidoc.ParagraphTest@333e5fb6, instance params:[]]" started-at="2023-08-18T13:50:05 BRT" name="testCase03" description="multiline paragraph
+
+- 3 lines
+- second line ends with cmonospace
+" finished-at="2023-08-18T13:50:05 BRT" duration-ms="0" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase03 -->
+        <test-method signature="testCase03()[pri:0, instance:objectos.asciidoc.ParagraphTest@3b7b0b57, instance params:[]]" started-at="2023-08-18T13:50:05 BRT" name="testCase03" description="multiline paragraph
+
+- 3 lines
+- second line ends with cmonospace
+" finished-at="2023-08-18T13:50:05 BRT" duration-ms="8" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase03 -->
+        <test-method signature="testCase04()[pri:0, instance:objectos.asciidoc.ParagraphTest@333e5fb6, instance params:[]]" started-at="2023-08-18T13:50:05 BRT" name="testCase04" description="multiline paragraph.
+
+- line ends in a imacro.
+" finished-at="2023-08-18T13:50:05 BRT" duration-ms="0" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase04 -->
+        <test-method signature="testCase04()[pri:0, instance:objectos.asciidoc.ParagraphTest@3b7b0b57, instance params:[]]" started-at="2023-08-18T13:50:05 BRT" name="testCase04" description="multiline paragraph.
+
+- line ends in a imacro.
+" finished-at="2023-08-18T13:50:05 BRT" duration-ms="16" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase04 -->
+        <test-method signature="testCase05()[pri:0, instance:objectos.asciidoc.ParagraphTest@333e5fb6, instance params:[]]" started-at="2023-08-18T13:50:05 BRT" name="testCase05" description="imacro in the middle of a sentence
+" finished-at="2023-08-18T13:50:05 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase05 -->
+        <test-method signature="testCase05()[pri:0, instance:objectos.asciidoc.ParagraphTest@3b7b0b57, instance params:[]]" started-at="2023-08-18T13:50:05 BRT" name="testCase05" description="imacro in the middle of a sentence
+" finished-at="2023-08-18T13:50:05 BRT" duration-ms="9" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase05 -->
+        <test-method signature="testCase06()[pri:0, instance:objectos.asciidoc.ParagraphTest@333e5fb6, instance params:[]]" started-at="2023-08-18T13:50:05 BRT" name="testCase06" description="next line of paragraph starts with monospace
+" finished-at="2023-08-18T13:50:05 BRT" duration-ms="0" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase06 -->
+        <test-method signature="testCase06()[pri:0, instance:objectos.asciidoc.ParagraphTest@3b7b0b57, instance params:[]]" started-at="2023-08-18T13:50:05 BRT" name="testCase06" description="next line of paragraph starts with monospace
+" finished-at="2023-08-18T13:50:05 BRT" duration-ms="7" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase06 -->
+        <test-method signature="testCase07()[pri:0, instance:objectos.asciidoc.ParagraphTest@333e5fb6, instance params:[]]" started-at="2023-08-18T13:50:05 BRT" name="testCase07" description="paragraphs separated by non-empty line
+" finished-at="2023-08-18T13:50:05 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase07 -->
+        <test-method signature="testCase07()[pri:0, instance:objectos.asciidoc.ParagraphTest@3b7b0b57, instance params:[]]" started-at="2023-08-18T13:50:05 BRT" name="testCase07" description="paragraphs separated by non-empty line
+" finished-at="2023-08-18T13:50:05 BRT" duration-ms="10" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase07 -->
+        <test-method signature="testCase08()[pri:0, instance:objectos.asciidoc.ParagraphTest@333e5fb6, instance params:[]]" started-at="2023-08-18T13:50:05 BRT" name="testCase08" description="paragraph
+
+- trim before EOF
+" finished-at="2023-08-18T13:50:05 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase08 -->
+        <test-method signature="testCase08()[pri:0, instance:objectos.asciidoc.ParagraphTest@3b7b0b57, instance params:[]]" started-at="2023-08-18T13:50:05 BRT" name="testCase08" description="paragraph
+
+- trim before EOF
+" finished-at="2023-08-18T13:50:05 BRT" duration-ms="7" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase08 -->
+        <test-method signature="testCase09()[pri:0, instance:objectos.asciidoc.ParagraphTest@333e5fb6, instance params:[]]" started-at="2023-08-18T13:50:05 BRT" name="testCase09" description="paragraph
+
+- whole paragraph is emphasis
+- followed by another paragraph
+" finished-at="2023-08-18T13:50:05 BRT" duration-ms="2" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase09 -->
+        <test-method signature="testCase09()[pri:0, instance:objectos.asciidoc.ParagraphTest@3b7b0b57, instance params:[]]" started-at="2023-08-18T13:50:05 BRT" name="testCase09" description="paragraph
+
+- whole paragraph is emphasis
+- followed by another paragraph
+" finished-at="2023-08-18T13:50:05 BRT" duration-ms="9" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase09 -->
+      </class> <!-- objectos.asciidoc.ParagraphTest -->
+      <class name="objectos.asciidoc.ConstrainedMonospaceTest">
+        <test-method signature="testCase01()[pri:0, instance:objectos.asciidoc.ConstrainedMonospaceTest@35329a05, instance params:[]]" started-at="2023-08-18T13:50:05 BRT" name="testCase01" description="monospace
+
+- constrained
+- words only
+- well-formed
+" finished-at="2023-08-18T13:50:05 BRT" duration-ms="14" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase01 -->
+        <test-method signature="testCase01()[pri:0, instance:objectos.asciidoc.ConstrainedMonospaceTest@6dcbbb49, instance params:[]]" started-at="2023-08-18T13:50:05 BRT" name="testCase01" description="monospace
+
+- constrained
+- words only
+- well-formed
+" finished-at="2023-08-18T13:50:05 BRT" duration-ms="2" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase01 -->
+        <test-method signature="testCase02()[pri:0, instance:objectos.asciidoc.ConstrainedMonospaceTest@35329a05, instance params:[]]" started-at="2023-08-18T13:50:05 BRT" name="testCase02" description="monospace
+
+- constrained
+- phrases
+- well-formed
+" finished-at="2023-08-18T13:50:05 BRT" duration-ms="7" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase02 -->
+        <test-method signature="testCase02()[pri:0, instance:objectos.asciidoc.ConstrainedMonospaceTest@6dcbbb49, instance params:[]]" started-at="2023-08-18T13:50:05 BRT" name="testCase02" description="monospace
+
+- constrained
+- phrases
+- well-formed
+" finished-at="2023-08-18T13:50:05 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase02 -->
+        <test-method signature="testCase03()[pri:0, instance:objectos.asciidoc.ConstrainedMonospaceTest@35329a05, instance params:[]]" started-at="2023-08-18T13:50:05 BRT" name="testCase03" description="monospace
+
+- in the middle of paragraph
+" finished-at="2023-08-18T13:50:05 BRT" duration-ms="8" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase03 -->
+        <test-method signature="testCase03()[pri:0, instance:objectos.asciidoc.ConstrainedMonospaceTest@6dcbbb49, instance params:[]]" started-at="2023-08-18T13:50:05 BRT" name="testCase03" description="monospace
+
+- in the middle of paragraph
+" finished-at="2023-08-18T13:50:05 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase03 -->
+        <test-method signature="testCase04()[pri:0, instance:objectos.asciidoc.ConstrainedMonospaceTest@35329a05, instance params:[]]" started-at="2023-08-18T13:50:05 BRT" name="testCase04" description="monospace
+
+- in the middle of paragraph
+" finished-at="2023-08-18T13:50:05 BRT" duration-ms="9" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase04 -->
+        <test-method signature="testCase04()[pri:0, instance:objectos.asciidoc.ConstrainedMonospaceTest@6dcbbb49, instance params:[]]" started-at="2023-08-18T13:50:05 BRT" name="testCase04" description="monospace
+
+- in the middle of paragraph
+" finished-at="2023-08-18T13:50:05 BRT" duration-ms="0" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase04 -->
+        <test-method signature="testCase05()[pri:0, instance:objectos.asciidoc.ConstrainedMonospaceTest@35329a05, instance params:[]]" started-at="2023-08-18T13:50:05 BRT" name="testCase05" description="monospace
+
+- contents is a (not) inline macro
+" finished-at="2023-08-18T13:50:05 BRT" duration-ms="11" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase05 -->
+        <test-method signature="testCase05()[pri:0, instance:objectos.asciidoc.ConstrainedMonospaceTest@6dcbbb49, instance params:[]]" started-at="2023-08-18T13:50:05 BRT" name="testCase05" description="monospace
+
+- contents is a (not) inline macro
+" finished-at="2023-08-18T13:50:05 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase05 -->
+        <test-method signature="testCase06()[pri:0, instance:objectos.asciidoc.ConstrainedMonospaceTest@35329a05, instance params:[]]" started-at="2023-08-18T13:50:05 BRT" name="testCase06" description="monospace
+
+- contents is a (not) emphasis
+- contents is a (not) strong
+" finished-at="2023-08-18T13:50:05 BRT" duration-ms="9" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase06 -->
+        <test-method signature="testCase06()[pri:0, instance:objectos.asciidoc.ConstrainedMonospaceTest@6dcbbb49, instance params:[]]" started-at="2023-08-18T13:50:05 BRT" name="testCase06" description="monospace
+
+- contents is a (not) emphasis
+- contents is a (not) strong
+" finished-at="2023-08-18T13:50:05 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase06 -->
+        <test-method signature="testCase07()[pri:0, instance:objectos.asciidoc.ConstrainedMonospaceTest@35329a05, instance params:[]]" started-at="2023-08-18T13:50:05 BRT" name="testCase07" description="monospace
+
+- contents is a (not) emphasis
+- contents is a (not) strong
+" finished-at="2023-08-18T13:50:05 BRT" duration-ms="16" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase07 -->
+        <test-method signature="testCase07()[pri:0, instance:objectos.asciidoc.ConstrainedMonospaceTest@6dcbbb49, instance params:[]]" started-at="2023-08-18T13:50:05 BRT" name="testCase07" description="monospace
+
+- contents is a (not) emphasis
+- contents is a (not) strong
+" finished-at="2023-08-18T13:50:05 BRT" duration-ms="0" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase07 -->
+        <test-method signature="testCase08()[pri:0, instance:objectos.asciidoc.ConstrainedMonospaceTest@35329a05, instance params:[]]" started-at="2023-08-18T13:50:05 BRT" name="testCase08" description="monospace
+
+- not a monospace
+" finished-at="2023-08-18T13:50:05 BRT" duration-ms="25" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase08 -->
+        <test-method signature="testCase08()[pri:0, instance:objectos.asciidoc.ConstrainedMonospaceTest@6dcbbb49, instance params:[]]" started-at="2023-08-18T13:50:05 BRT" name="testCase08" description="monospace
+
+- not a monospace
+" finished-at="2023-08-18T13:50:05 BRT" duration-ms="0" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase08 -->
+      </class> <!-- objectos.asciidoc.ConstrainedMonospaceTest -->
+      <class name="objectos.asciidoc.ListingBlockTest">
+        <test-method signature="testCase01()[pri:0, instance:objectos.asciidoc.ListingBlockTest@a120b9, instance params:[]]" started-at="2023-08-18T13:50:06 BRT" name="testCase01" description="listing block
+
+- delimited
+- single line
+" finished-at="2023-08-18T13:50:06 BRT" duration-ms="11" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase01 -->
+        <test-method signature="testCase01()[pri:0, instance:objectos.asciidoc.ListingBlockTest@ca2cd5e, instance params:[]]" started-at="2023-08-18T13:50:06 BRT" name="testCase01" description="listing block
+
+- delimited
+- single line
+" finished-at="2023-08-18T13:50:06 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase01 -->
+        <test-method signature="testCase02()[pri:0, instance:objectos.asciidoc.ListingBlockTest@a120b9, instance params:[]]" started-at="2023-08-18T13:50:06 BRT" name="testCase02" description="listing block code with &#039;]&#039;
+" finished-at="2023-08-18T13:50:06 BRT" duration-ms="6" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase02 -->
+        <test-method signature="testCase02()[pri:0, instance:objectos.asciidoc.ListingBlockTest@ca2cd5e, instance params:[]]" started-at="2023-08-18T13:50:06 BRT" name="testCase02" description="listing block code with &#039;]&#039;
+" finished-at="2023-08-18T13:50:06 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase02 -->
+        <test-method signature="testCase03()[pri:0, instance:objectos.asciidoc.ListingBlockTest@a120b9, instance params:[]]" started-at="2023-08-18T13:50:06 BRT" name="testCase03" description="listing block code with &#039;[x]&#039;
+" finished-at="2023-08-18T13:50:06 BRT" duration-ms="6" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase03 -->
+        <test-method signature="testCase04()[pri:0, instance:objectos.asciidoc.ListingBlockTest@a120b9, instance params:[]]" started-at="2023-08-18T13:50:06 BRT" name="testCase04" description="listing block code with &#039;_&#039;
+" finished-at="2023-08-18T13:50:06 BRT" duration-ms="5" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase04 -->
+        <test-method signature="testCase03()[pri:0, instance:objectos.asciidoc.ListingBlockTest@ca2cd5e, instance params:[]]" started-at="2023-08-18T13:50:06 BRT" name="testCase03" description="listing block code with &#039;[x]&#039;
+" finished-at="2023-08-18T13:50:06 BRT" duration-ms="0" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase03 -->
+        <test-method signature="testCase04()[pri:0, instance:objectos.asciidoc.ListingBlockTest@ca2cd5e, instance params:[]]" started-at="2023-08-18T13:50:06 BRT" name="testCase04" description="listing block code with &#039;_&#039;
+" finished-at="2023-08-18T13:50:06 BRT" duration-ms="0" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase04 -->
+        <test-method signature="testCase05()[pri:0, instance:objectos.asciidoc.ListingBlockTest@a120b9, instance params:[]]" started-at="2023-08-18T13:50:06 BRT" name="testCase05" description="listing block marker ends at EOF
+" finished-at="2023-08-18T13:50:06 BRT" duration-ms="7" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase05 -->
+        <test-method signature="testCase05()[pri:0, instance:objectos.asciidoc.ListingBlockTest@ca2cd5e, instance params:[]]" started-at="2023-08-18T13:50:06 BRT" name="testCase05" description="listing block marker ends at EOF
+" finished-at="2023-08-18T13:50:06 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase05 -->
+      </class> <!-- objectos.asciidoc.ListingBlockTest -->
+      <class name="objectos.asciidoc.SectionTest">
+        <test-method signature="testCase01()[pri:0, instance:objectos.asciidoc.SectionTest@69069866, instance params:[]]" started-at="2023-08-18T13:50:06 BRT" name="testCase01" description="section
+
+- level 1
+- single paragraph
+" finished-at="2023-08-18T13:50:06 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase01 -->
+        <test-method signature="testCase01()[pri:0, instance:objectos.asciidoc.SectionTest@ac417a2, instance params:[]]" started-at="2023-08-18T13:50:06 BRT" name="testCase01" description="section
+
+- level 1
+- single paragraph
+" finished-at="2023-08-18T13:50:06 BRT" duration-ms="91" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase01 -->
+        <test-method signature="testCase02()[pri:0, instance:objectos.asciidoc.SectionTest@69069866, instance params:[]]" started-at="2023-08-18T13:50:06 BRT" name="testCase02" description="section
+
+- level 1
+- level 2
+- single paragraph in each
+" finished-at="2023-08-18T13:50:06 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase02 -->
+        <test-method signature="testCase02()[pri:0, instance:objectos.asciidoc.SectionTest@ac417a2, instance params:[]]" started-at="2023-08-18T13:50:06 BRT" name="testCase02" description="section
+
+- level 1
+- level 2
+- single paragraph in each
+" finished-at="2023-08-18T13:50:06 BRT" duration-ms="31" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase02 -->
+        <test-method signature="testCase03()[pri:0, instance:objectos.asciidoc.SectionTest@69069866, instance params:[]]" started-at="2023-08-18T13:50:06 BRT" name="testCase03" description="section
+
+- attribute list
+- level 1
+- no doctitle
+- single paragraph
+" finished-at="2023-08-18T13:50:06 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase03 -->
+        <test-method signature="testCase03()[pri:0, instance:objectos.asciidoc.SectionTest@ac417a2, instance params:[]]" started-at="2023-08-18T13:50:06 BRT" name="testCase03" description="section
+
+- attribute list
+- level 1
+- no doctitle
+- single paragraph
+" finished-at="2023-08-18T13:50:06 BRT" duration-ms="10" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase03 -->
+        <test-method signature="testCase04()[pri:0, instance:objectos.asciidoc.SectionTest@69069866, instance params:[]]" started-at="2023-08-18T13:50:06 BRT" name="testCase04" description="section
+
+- level 1
+- starts after a UL
+" finished-at="2023-08-18T13:50:06 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase04 -->
+        <test-method signature="testCase04()[pri:0, instance:objectos.asciidoc.SectionTest@ac417a2, instance params:[]]" started-at="2023-08-18T13:50:06 BRT" name="testCase04" description="section
+
+- level 1
+- starts after a UL
+" finished-at="2023-08-18T13:50:06 BRT" duration-ms="16" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase04 -->
+        <test-method signature="testCase05()[pri:0, instance:objectos.asciidoc.SectionTest@69069866, instance params:[]]" started-at="2023-08-18T13:50:06 BRT" name="testCase05" description="section
+
+- level reduction
+" finished-at="2023-08-18T13:50:06 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase05 -->
+        <test-method signature="testCase05()[pri:0, instance:objectos.asciidoc.SectionTest@ac417a2, instance params:[]]" started-at="2023-08-18T13:50:06 BRT" name="testCase05" description="section
+
+- level reduction
+" finished-at="2023-08-18T13:50:06 BRT" duration-ms="11" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase05 -->
+        <test-method signature="testCase06()[pri:0, instance:objectos.asciidoc.SectionTest@69069866, instance params:[]]" started-at="2023-08-18T13:50:06 BRT" name="testCase06" description="section
+
+- level reduction
+- L1 -&gt; L2 -&gt; L3 -&gt; L2
+" finished-at="2023-08-18T13:50:06 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase06 -->
+        <test-method signature="testCase06()[pri:0, instance:objectos.asciidoc.SectionTest@ac417a2, instance params:[]]" started-at="2023-08-18T13:50:06 BRT" name="testCase06" description="section
+
+- level reduction
+- L1 -&gt; L2 -&gt; L3 -&gt; L2
+" finished-at="2023-08-18T13:50:06 BRT" duration-ms="36" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase06 -->
+        <test-method signature="testCase07()[pri:0, instance:objectos.asciidoc.SectionTest@69069866, instance params:[]]" started-at="2023-08-18T13:50:06 BRT" name="testCase07" description="section
+
+- level reduction
+- L1 -&gt; L2 -&gt; L3 -&gt; L1
+" finished-at="2023-08-18T13:50:06 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase07 -->
+        <test-method signature="testCase07()[pri:0, instance:objectos.asciidoc.SectionTest@ac417a2, instance params:[]]" started-at="2023-08-18T13:50:06 BRT" name="testCase07" description="section
+
+- level reduction
+- L1 -&gt; L2 -&gt; L3 -&gt; L1
+" finished-at="2023-08-18T13:50:06 BRT" duration-ms="21" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase07 -->
+        <test-method signature="testCase08()[pri:0, instance:objectos.asciidoc.SectionTest@69069866, instance params:[]]" started-at="2023-08-18T13:50:06 BRT" name="testCase08" description="title is constrained monospace
+" finished-at="2023-08-18T13:50:06 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase08 -->
+        <test-method signature="testCase08()[pri:0, instance:objectos.asciidoc.SectionTest@ac417a2, instance params:[]]" started-at="2023-08-18T13:50:06 BRT" name="testCase08" description="title is constrained monospace
+" finished-at="2023-08-18T13:50:06 BRT" duration-ms="14" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase08 -->
+        <test-method signature="testCase09()[pri:0, instance:objectos.asciidoc.SectionTest@69069866, instance params:[]]" started-at="2023-08-18T13:50:06 BRT" name="testCase09" description="section has title only, i.e., no body
+" finished-at="2023-08-18T13:50:06 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase09 -->
+        <test-method signature="testCase09()[pri:0, instance:objectos.asciidoc.SectionTest@ac417a2, instance params:[]]" started-at="2023-08-18T13:50:06 BRT" name="testCase09" description="section has title only, i.e., no body
+" finished-at="2023-08-18T13:50:06 BRT" duration-ms="12" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase09 -->
+        <test-method signature="testCase10()[pri:0, instance:objectos.asciidoc.SectionTest@69069866, instance params:[]]" started-at="2023-08-18T13:50:06 BRT" name="testCase10" description="section has source code block
+" finished-at="2023-08-18T13:50:06 BRT" duration-ms="0" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase10 -->
+        <test-method signature="testCase10()[pri:0, instance:objectos.asciidoc.SectionTest@ac417a2, instance params:[]]" started-at="2023-08-18T13:50:06 BRT" name="testCase10" description="section has source code block
+" finished-at="2023-08-18T13:50:06 BRT" duration-ms="10" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase10 -->
+        <test-method signature="testCase11()[pri:0, instance:objectos.asciidoc.SectionTest@69069866, instance params:[]]" started-at="2023-08-18T13:50:06 BRT" name="testCase11" description="title has constrained italic/bold
+" finished-at="2023-08-18T13:50:06 BRT" duration-ms="2" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase11 -->
+        <test-method signature="testCase11()[pri:0, instance:objectos.asciidoc.SectionTest@ac417a2, instance params:[]]" started-at="2023-08-18T13:50:06 BRT" name="testCase11" description="title has constrained italic/bold
+" finished-at="2023-08-18T13:50:06 BRT" duration-ms="18" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase11 -->
+      </class> <!-- objectos.asciidoc.SectionTest -->
+      <class name="objectos.asciidoc.UnorderedListTest">
+        <test-method signature="testCase01()[pri:0, instance:objectos.asciidoc.UnorderedListTest@1e0294a7, instance params:[]]" started-at="2023-08-18T13:50:06 BRT" name="testCase01" description="unordered list
+
+- simple elements
+- dash
+- single level
+" finished-at="2023-08-18T13:50:06 BRT" duration-ms="8" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase01 -->
+        <test-method signature="testCase01()[pri:0, instance:objectos.asciidoc.UnorderedListTest@3451fc88, instance params:[]]" started-at="2023-08-18T13:50:06 BRT" name="testCase01" description="unordered list
+
+- simple elements
+- dash
+- single level
+" finished-at="2023-08-18T13:50:06 BRT" duration-ms="0" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase01 -->
+        <test-method signature="testCase02()[pri:0, instance:objectos.asciidoc.UnorderedListTest@1e0294a7, instance params:[]]" started-at="2023-08-18T13:50:06 BRT" name="testCase02" description="unordered list
+
+- complex elements
+- dash
+- single level
+" finished-at="2023-08-18T13:50:06 BRT" duration-ms="14" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase02 -->
+        <test-method signature="testCase02()[pri:0, instance:objectos.asciidoc.UnorderedListTest@3451fc88, instance params:[]]" started-at="2023-08-18T13:50:06 BRT" name="testCase02" description="unordered list
+
+- complex elements
+- dash
+- single level
+" finished-at="2023-08-18T13:50:06 BRT" duration-ms="0" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase02 -->
+        <test-method signature="testCase03()[pri:0, instance:objectos.asciidoc.UnorderedListTest@1e0294a7, instance params:[]]" started-at="2023-08-18T13:50:06 BRT" name="testCase03" description="unordered list
+
+- simple elements
+- asterisk
+- single level
+" finished-at="2023-08-18T13:50:06 BRT" duration-ms="6" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase03 -->
+        <test-method signature="testCase03()[pri:0, instance:objectos.asciidoc.UnorderedListTest@3451fc88, instance params:[]]" started-at="2023-08-18T13:50:06 BRT" name="testCase03" description="unordered list
+
+- simple elements
+- asterisk
+- single level
+" finished-at="2023-08-18T13:50:06 BRT" duration-ms="0" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase03 -->
+        <test-method signature="testCase04()[pri:0, instance:objectos.asciidoc.UnorderedListTest@1e0294a7, instance params:[]]" started-at="2023-08-18T13:50:06 BRT" name="testCase04" description="unordered list
+
+- nested unordered list
+- asterisk
+" finished-at="2023-08-18T13:50:06 BRT" duration-ms="7" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase04 -->
+        <test-method signature="testCase04()[pri:0, instance:objectos.asciidoc.UnorderedListTest@3451fc88, instance params:[]]" started-at="2023-08-18T13:50:06 BRT" name="testCase04" description="unordered list
+
+- nested unordered list
+- asterisk
+" finished-at="2023-08-18T13:50:06 BRT" duration-ms="0" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase04 -->
+        <test-method signature="testCase05()[pri:0, instance:objectos.asciidoc.UnorderedListTest@1e0294a7, instance params:[]]" started-at="2023-08-18T13:50:06 BRT" name="testCase05" description="unordered list
+
+- indented nested unordered list
+- asterisk
+" finished-at="2023-08-18T13:50:06 BRT" duration-ms="7" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase05 -->
+        <test-method signature="testCase05()[pri:0, instance:objectos.asciidoc.UnorderedListTest@3451fc88, instance params:[]]" started-at="2023-08-18T13:50:06 BRT" name="testCase05" description="unordered list
+
+- indented nested unordered list
+- asterisk
+" finished-at="2023-08-18T13:50:06 BRT" duration-ms="0" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase05 -->
+        <test-method signature="testCase06()[pri:0, instance:objectos.asciidoc.UnorderedListTest@1e0294a7, instance params:[]]" started-at="2023-08-18T13:50:06 BRT" name="testCase06" description="unordered list
+
+- simple elements
+- asterisk
+- single level
+- section
+" finished-at="2023-08-18T13:50:06 BRT" duration-ms="8" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase06 -->
+        <test-method signature="testCase06()[pri:0, instance:objectos.asciidoc.UnorderedListTest@3451fc88, instance params:[]]" started-at="2023-08-18T13:50:06 BRT" name="testCase06" description="unordered list
+
+- simple elements
+- asterisk
+- single level
+- section
+" finished-at="2023-08-18T13:50:06 BRT" duration-ms="0" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase06 -->
+        <test-method signature="testCase07()[pri:0, instance:objectos.asciidoc.UnorderedListTest@1e0294a7, instance params:[]]" started-at="2023-08-18T13:50:06 BRT" name="testCase07" description="unordered list
+
+- text with monospace
+" finished-at="2023-08-18T13:50:06 BRT" duration-ms="6" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase07 -->
+        <test-method signature="testCase07()[pri:0, instance:objectos.asciidoc.UnorderedListTest@3451fc88, instance params:[]]" started-at="2023-08-18T13:50:06 BRT" name="testCase07" description="unordered list
+
+- text with monospace
+" finished-at="2023-08-18T13:50:06 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase07 -->
+        <test-method signature="testCase08()[pri:0, instance:objectos.asciidoc.UnorderedListTest@1e0294a7, instance params:[]]" started-at="2023-08-18T13:50:06 BRT" name="testCase08" description="unordered list
+
+- third item is NOT an item
+" finished-at="2023-08-18T13:50:06 BRT" duration-ms="39" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase08 -->
+        <test-method signature="testCase08()[pri:0, instance:objectos.asciidoc.UnorderedListTest@3451fc88, instance params:[]]" started-at="2023-08-18T13:50:06 BRT" name="testCase08" description="unordered list
+
+- third item is NOT an item
+" finished-at="2023-08-18T13:50:06 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase08 -->
+        <test-method signature="testCase09()[pri:0, instance:objectos.asciidoc.UnorderedListTest@1e0294a7, instance params:[]]" started-at="2023-08-18T13:50:06 BRT" name="testCase09" description="unordered list
+
+- ul should end before the paragraph
+" finished-at="2023-08-18T13:50:06 BRT" duration-ms="12" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase09 -->
+        <test-method signature="testCase09()[pri:0, instance:objectos.asciidoc.UnorderedListTest@3451fc88, instance params:[]]" started-at="2023-08-18T13:50:06 BRT" name="testCase09" description="unordered list
+
+- ul should end before the paragraph
+" finished-at="2023-08-18T13:50:06 BRT" duration-ms="5" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase09 -->
+        <test-method signature="testCase10()[pri:0, instance:objectos.asciidoc.UnorderedListTest@1e0294a7, instance params:[]]" started-at="2023-08-18T13:50:06 BRT" name="testCase10" description="ul should end before section (ends with imacro)
+" finished-at="2023-08-18T13:50:06 BRT" duration-ms="27" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase10 -->
+        <test-method signature="testCase10()[pri:0, instance:objectos.asciidoc.UnorderedListTest@3451fc88, instance params:[]]" started-at="2023-08-18T13:50:06 BRT" name="testCase10" description="ul should end before section (ends with imacro)
+" finished-at="2023-08-18T13:50:06 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase10 -->
+        <test-method signature="testCase11()[pri:0, instance:objectos.asciidoc.UnorderedListTest@1e0294a7, instance params:[]]" started-at="2023-08-18T13:50:06 BRT" name="testCase11" description="items can be separated by new line
+" finished-at="2023-08-18T13:50:06 BRT" duration-ms="11" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase11 -->
+        <test-method signature="testCase11()[pri:0, instance:objectos.asciidoc.UnorderedListTest@3451fc88, instance params:[]]" started-at="2023-08-18T13:50:06 BRT" name="testCase11" description="items can be separated by new line
+" finished-at="2023-08-18T13:50:06 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase11 -->
+        <test-method signature="testCase12()[pri:0, instance:objectos.asciidoc.UnorderedListTest@1e0294a7, instance params:[]]" started-at="2023-08-18T13:50:06 BRT" name="testCase12" description="ul should end before block attr list
+" finished-at="2023-08-18T13:50:06 BRT" duration-ms="12" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase12 -->
+        <test-method signature="testCase12()[pri:0, instance:objectos.asciidoc.UnorderedListTest@3451fc88, instance params:[]]" started-at="2023-08-18T13:50:06 BRT" name="testCase12" description="ul should end before block attr list
+" finished-at="2023-08-18T13:50:06 BRT" duration-ms="0" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase12 -->
+        <test-method signature="testCase13()[pri:0, instance:objectos.asciidoc.UnorderedListTest@1e0294a7, instance params:[]]" started-at="2023-08-18T13:50:06 BRT" name="testCase13" description="ul at end of document
+" finished-at="2023-08-18T13:50:06 BRT" duration-ms="10" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase13 -->
+        <test-method signature="testCase14()[pri:0, instance:objectos.asciidoc.UnorderedListTest@1e0294a7, instance params:[]]" started-at="2023-08-18T13:50:06 BRT" name="testCase14" description="unordered list
+
+- text with monospace
+- text with strong
+- text with emphasis
+" finished-at="2023-08-18T13:50:06 BRT" duration-ms="11" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase14 -->
+        <test-method signature="testCase13()[pri:0, instance:objectos.asciidoc.UnorderedListTest@3451fc88, instance params:[]]" started-at="2023-08-18T13:50:06 BRT" name="testCase13" description="ul at end of document
+" finished-at="2023-08-18T13:50:06 BRT" duration-ms="0" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase13 -->
+        <test-method signature="testCase14()[pri:0, instance:objectos.asciidoc.UnorderedListTest@3451fc88, instance params:[]]" started-at="2023-08-18T13:50:06 BRT" name="testCase14" description="unordered list
+
+- text with monospace
+- text with strong
+- text with emphasis
+" finished-at="2023-08-18T13:50:06 BRT" duration-ms="0" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase14 -->
+        <test-method signature="testCase15()[pri:0, instance:objectos.asciidoc.UnorderedListTest@1e0294a7, instance params:[]]" started-at="2023-08-18T13:50:06 BRT" name="testCase15" description="unordered list
+
+- items separated by NL
+" finished-at="2023-08-18T13:50:06 BRT" duration-ms="15" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase15 -->
+        <test-method signature="testCase15()[pri:0, instance:objectos.asciidoc.UnorderedListTest@3451fc88, instance params:[]]" started-at="2023-08-18T13:50:06 BRT" name="testCase15" description="unordered list
+
+- items separated by NL
+" finished-at="2023-08-18T13:50:06 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase15 -->
+      </class> <!-- objectos.asciidoc.UnorderedListTest -->
+      <class name="objectos.asciidoc.PreambleTest">
+        <test-method signature="testCase01()[pri:0, instance:objectos.asciidoc.PreambleTest@21a9f95b, instance params:[]]" started-at="2023-08-18T13:50:06 BRT" name="testCase01" description="paragraph + UL
+" finished-at="2023-08-18T13:50:06 BRT" duration-ms="2" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase01 -->
+        <test-method signature="testCase01()[pri:0, instance:objectos.asciidoc.PreambleTest@2804b13f, instance params:[]]" started-at="2023-08-18T13:50:06 BRT" name="testCase01" description="paragraph + UL
+" finished-at="2023-08-18T13:50:06 BRT" duration-ms="32" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase01 -->
+      </class> <!-- objectos.asciidoc.PreambleTest -->
+      <class name="objectos.asciidoc.AttributeListTest">
+        <test-method signature="testCase01()[pri:0, instance:objectos.asciidoc.AttributeListTest@69d2fb0a, instance params:[]]" started-at="2023-08-18T13:50:06 BRT" name="testCase01" description="Attribute with comma (and quotes)
+
+- well-formed
+" finished-at="2023-08-18T13:50:06 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase01 -->
+        <test-method signature="testCase01()[pri:0, instance:objectos.asciidoc.AttributeListTest@7e38e254, instance params:[]]" started-at="2023-08-18T13:50:06 BRT" name="testCase01" description="Attribute with comma (and quotes)
+
+- well-formed
+" finished-at="2023-08-18T13:50:06 BRT" duration-ms="7" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase01 -->
+      </class> <!-- objectos.asciidoc.AttributeListTest -->
+      <class name="objectos.asciidoc.InlineMacroTest">
+        <test-method signature="testCase01()[pri:0, instance:objectos.asciidoc.InlineMacroTest@17136390, instance params:[]]" started-at="2023-08-18T13:50:06 BRT" name="testCase01" description="Not an inline macro
+" finished-at="2023-08-18T13:50:06 BRT" duration-ms="12" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase01 -->
+        <test-method signature="testCase02()[pri:0, instance:objectos.asciidoc.InlineMacroTest@17136390, instance params:[]]" started-at="2023-08-18T13:50:06 BRT" name="testCase02" description="inline macro
+
+- unordered list
+- section
+" finished-at="2023-08-18T13:50:06 BRT" duration-ms="11" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase02 -->
+        <test-method signature="testCase01()[pri:0, instance:objectos.asciidoc.InlineMacroTest@36c783ca, instance params:[]]" started-at="2023-08-18T13:50:06 BRT" name="testCase01" description="Not an inline macro
+" finished-at="2023-08-18T13:50:06 BRT" duration-ms="0" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase01 -->
+        <test-method signature="testCase02()[pri:0, instance:objectos.asciidoc.InlineMacroTest@36c783ca, instance params:[]]" started-at="2023-08-18T13:50:06 BRT" name="testCase02" description="inline macro
+
+- unordered list
+- section
+" finished-at="2023-08-18T13:50:06 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase02 -->
+        <test-method signature="testCase03()[pri:0, instance:objectos.asciidoc.InlineMacroTest@17136390, instance params:[]]" started-at="2023-08-18T13:50:06 BRT" name="testCase03" description="imacro ends the sentence
+" finished-at="2023-08-18T13:50:06 BRT" duration-ms="11" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase03 -->
+        <test-method signature="testCase03()[pri:0, instance:objectos.asciidoc.InlineMacroTest@36c783ca, instance params:[]]" started-at="2023-08-18T13:50:06 BRT" name="testCase03" description="imacro ends the sentence
+" finished-at="2023-08-18T13:50:06 BRT" duration-ms="0" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase03 -->
+        <test-method signature="testCase04()[pri:0, instance:objectos.asciidoc.InlineMacroTest@17136390, instance params:[]]" started-at="2023-08-18T13:50:06 BRT" name="testCase04" description="not imacro: target with spaces
+" finished-at="2023-08-18T13:50:06 BRT" duration-ms="6" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase04 -->
+        <test-method signature="testCase04()[pri:0, instance:objectos.asciidoc.InlineMacroTest@36c783ca, instance params:[]]" started-at="2023-08-18T13:50:06 BRT" name="testCase04" description="not imacro: target with spaces
+" finished-at="2023-08-18T13:50:06 BRT" duration-ms="0" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase04 -->
+        <test-method signature="testCase05()[pri:0, instance:objectos.asciidoc.InlineMacroTest@17136390, instance params:[]]" started-at="2023-08-18T13:50:06 BRT" name="testCase05" description="imacro + monospace
+" finished-at="2023-08-18T13:50:06 BRT" duration-ms="6" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase05 -->
+        <test-method signature="testCase05()[pri:0, instance:objectos.asciidoc.InlineMacroTest@36c783ca, instance params:[]]" started-at="2023-08-18T13:50:06 BRT" name="testCase05" description="imacro + monospace
+" finished-at="2023-08-18T13:50:06 BRT" duration-ms="0" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase05 -->
+        <test-method signature="testCase06()[pri:0, instance:objectos.asciidoc.InlineMacroTest@17136390, instance params:[]]" started-at="2023-08-18T13:50:06 BRT" name="testCase06" description="imacro + spaces + monospace
+" finished-at="2023-08-18T13:50:06 BRT" duration-ms="7" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase06 -->
+        <test-method signature="testCase06()[pri:0, instance:objectos.asciidoc.InlineMacroTest@36c783ca, instance params:[]]" started-at="2023-08-18T13:50:06 BRT" name="testCase06" description="imacro + spaces + monospace
+" finished-at="2023-08-18T13:50:06 BRT" duration-ms="0" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase06 -->
+        <test-method signature="testCase07()[pri:0, instance:objectos.asciidoc.InlineMacroTest@17136390, instance params:[]]" started-at="2023-08-18T13:50:06 BRT" name="testCase07" description="not inline macro:
+
+- semicolon @ eol
+" finished-at="2023-08-18T13:50:06 BRT" duration-ms="6" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase07 -->
+        <test-method signature="testCase07()[pri:0, instance:objectos.asciidoc.InlineMacroTest@36c783ca, instance params:[]]" started-at="2023-08-18T13:50:06 BRT" name="testCase07" description="not inline macro:
+
+- semicolon @ eol
+" finished-at="2023-08-18T13:50:06 BRT" duration-ms="0" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase07 -->
+        <test-method signature="testCase08()[pri:0, instance:objectos.asciidoc.InlineMacroTest@17136390, instance params:[]]" started-at="2023-08-18T13:50:06 BRT" name="testCase08" description="not inline macro:
+
+- no attrlist at EOL
+- also list...
+" finished-at="2023-08-18T13:50:06 BRT" duration-ms="29" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase08 -->
+        <test-method signature="testCase08()[pri:0, instance:objectos.asciidoc.InlineMacroTest@36c783ca, instance params:[]]" started-at="2023-08-18T13:50:06 BRT" name="testCase08" description="not inline macro:
+
+- no attrlist at EOL
+- also list...
+" finished-at="2023-08-18T13:50:06 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase08 -->
+        <test-method signature="testCase09()[pri:0, instance:objectos.asciidoc.InlineMacroTest@17136390, instance params:[]]" started-at="2023-08-18T13:50:06 BRT" name="testCase09" description="inline macro:
+
+- empty attrlist
+" finished-at="2023-08-18T13:50:06 BRT" duration-ms="6" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase09 -->
+        <test-method signature="testCase09()[pri:0, instance:objectos.asciidoc.InlineMacroTest@36c783ca, instance params:[]]" started-at="2023-08-18T13:50:06 BRT" name="testCase09" description="inline macro:
+
+- empty attrlist
+" finished-at="2023-08-18T13:50:06 BRT" duration-ms="0" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase09 -->
+      </class> <!-- objectos.asciidoc.InlineMacroTest -->
+      <class name="objectos.asciidoc.ConstrainedItalicTest">
+        <test-method signature="testCase01()[pri:0, instance:objectos.asciidoc.ConstrainedItalicTest@503a7990, instance params:[]]" started-at="2023-08-18T13:50:05 BRT" name="testCase01" description="= italic
+
+- constrained
+- words only
+- well-formed
+" finished-at="2023-08-18T13:50:05 BRT" duration-ms="0" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase01 -->
+        <test-method signature="testCase01()[pri:0, instance:objectos.asciidoc.ConstrainedItalicTest@69a90b81, instance params:[]]" started-at="2023-08-18T13:50:05 BRT" name="testCase01" description="= italic
+
+- constrained
+- words only
+- well-formed
+" finished-at="2023-08-18T13:50:05 BRT" duration-ms="8" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase01 -->
+        <test-method signature="testCase02()[pri:0, instance:objectos.asciidoc.ConstrainedItalicTest@503a7990, instance params:[]]" started-at="2023-08-18T13:50:05 BRT" name="testCase02" description="italic
+
+- constrained
+- phrases
+- well-formed
+" finished-at="2023-08-18T13:50:05 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase02 -->
+        <test-method signature="testCase02()[pri:0, instance:objectos.asciidoc.ConstrainedItalicTest@69a90b81, instance params:[]]" started-at="2023-08-18T13:50:05 BRT" name="testCase02" description="italic
+
+- constrained
+- phrases
+- well-formed
+" finished-at="2023-08-18T13:50:06 BRT" duration-ms="12" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase02 -->
+        <test-method signature="testCase03()[pri:0, instance:objectos.asciidoc.ConstrainedItalicTest@503a7990, instance params:[]]" started-at="2023-08-18T13:50:06 BRT" name="testCase03" description="= italic
+
+- constrained
+- not an italic
+" finished-at="2023-08-18T13:50:06 BRT" duration-ms="0" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase03 -->
+        <test-method signature="testCase03()[pri:0, instance:objectos.asciidoc.ConstrainedItalicTest@69a90b81, instance params:[]]" started-at="2023-08-18T13:50:06 BRT" name="testCase03" description="= italic
+
+- constrained
+- not an italic
+" finished-at="2023-08-18T13:50:06 BRT" duration-ms="7" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase03 -->
+        <test-method signature="testCase04()[pri:0, instance:objectos.asciidoc.ConstrainedItalicTest@503a7990, instance params:[]]" started-at="2023-08-18T13:50:06 BRT" name="testCase04" description="= italic
+
+- constrained
+- not an italic
+" finished-at="2023-08-18T13:50:06 BRT" duration-ms="0" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase04 -->
+        <test-method signature="testCase04()[pri:0, instance:objectos.asciidoc.ConstrainedItalicTest@69a90b81, instance params:[]]" started-at="2023-08-18T13:50:06 BRT" name="testCase04" description="= italic
+
+- constrained
+- not an italic
+" finished-at="2023-08-18T13:50:06 BRT" duration-ms="7" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase04 -->
+      </class> <!-- objectos.asciidoc.ConstrainedItalicTest -->
+      <class name="objectos.asciidoc.DocumentTest">
+        <test-method signature="testCase01()[pri:0, instance:objectos.asciidoc.DocumentTest@605eb072, instance params:[]]" started-at="2023-08-18T13:50:05 BRT" name="testCase01" description="doctitle + eof
+
+- happy path
+- title ends @ eof
+" finished-at="2023-08-18T13:50:05 BRT" duration-ms="14" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase01 -->
+        <test-method signature="testCase01()[pri:0, instance:objectos.asciidoc.DocumentTest@7a0f06ad, instance params:[]]" started-at="2023-08-18T13:50:05 BRT" name="testCase01" description="doctitle + eof
+
+- happy path
+- title ends @ eof
+" finished-at="2023-08-18T13:50:05 BRT" duration-ms="100" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase01 -->
+        <test-method signature="testCase02()[pri:0, instance:objectos.asciidoc.DocumentTest@605eb072, instance params:[]]" started-at="2023-08-18T13:50:05 BRT" name="testCase02" description="doctitle + NL
+
+- happy path
+- title ends @ NL
+" finished-at="2023-08-18T13:50:05 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase02 -->
+        <test-method signature="testCase02()[pri:0, instance:objectos.asciidoc.DocumentTest@7a0f06ad, instance params:[]]" started-at="2023-08-18T13:50:05 BRT" name="testCase02" description="doctitle + NL
+
+- happy path
+- title ends @ NL
+" finished-at="2023-08-18T13:50:05 BRT" duration-ms="6" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase02 -->
+        <test-method signature="testCase03()[pri:0, instance:objectos.asciidoc.DocumentTest@605eb072, instance params:[]]" started-at="2023-08-18T13:50:05 BRT" name="testCase03" description="doctitle (not a doctitle)
+
+- not a title (no space after symbol &#039;=&#039;)
+" finished-at="2023-08-18T13:50:05 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase03 -->
+        <test-method signature="testCase03()[pri:0, instance:objectos.asciidoc.DocumentTest@7a0f06ad, instance params:[]]" started-at="2023-08-18T13:50:05 BRT" name="testCase03" description="doctitle (not a doctitle)
+
+- not a title (no space after symbol &#039;=&#039;)
+" finished-at="2023-08-18T13:50:05 BRT" duration-ms="18" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase03 -->
+        <test-method signature="testCase04()[pri:0, instance:objectos.asciidoc.DocumentTest@605eb072, instance params:[]]" started-at="2023-08-18T13:50:05 BRT" name="testCase04" description="doctitle + paragraph
+" finished-at="2023-08-18T13:50:05 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase04 -->
+        <test-method signature="testCase04()[pri:0, instance:objectos.asciidoc.DocumentTest@7a0f06ad, instance params:[]]" started-at="2023-08-18T13:50:05 BRT" name="testCase04" description="doctitle + paragraph
+" finished-at="2023-08-18T13:50:05 BRT" duration-ms="36" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase04 -->
+        <test-method signature="testCase05()[pri:0, instance:objectos.asciidoc.DocumentTest@605eb072, instance params:[]]" started-at="2023-08-18T13:50:05 BRT" name="testCase05" description="document attributes
+
+- Objectos Docs v0002/index doc header
+" finished-at="2023-08-18T13:50:05 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase05 -->
+        <test-method signature="testCase05()[pri:0, instance:objectos.asciidoc.DocumentTest@7a0f06ad, instance params:[]]" started-at="2023-08-18T13:50:05 BRT" name="testCase05" description="document attributes
+
+- Objectos Docs v0002/index doc header
+" finished-at="2023-08-18T13:50:05 BRT" duration-ms="19" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase05 -->
+        <test-method signature="testCase06()[pri:0, instance:objectos.asciidoc.DocumentTest@605eb072, instance params:[]]" started-at="2023-08-18T13:50:05 BRT" name="testCase06" description="document attributes
+
+- allow dash/underscore in attribute name
+" finished-at="2023-08-18T13:50:05 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase06 -->
+        <test-method signature="testCase06()[pri:0, instance:objectos.asciidoc.DocumentTest@7a0f06ad, instance params:[]]" started-at="2023-08-18T13:50:05 BRT" name="testCase06" description="document attributes
+
+- allow dash/underscore in attribute name
+" finished-at="2023-08-18T13:50:05 BRT" duration-ms="13" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase06 -->
+      </class> <!-- objectos.asciidoc.DocumentTest -->
+    </test> <!-- Surefire test -->
+  </suite> <!-- Surefire suite -->
+</testng-results>

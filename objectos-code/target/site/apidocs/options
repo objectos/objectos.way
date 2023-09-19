@@ -1,0 +1,27 @@
+--module-path
+'/home/mendo/kdo/projetos/objectos/objectos-code/target/classes:/home/mendo/.m2/repository/br/com/objectos/objectos-util/0.8.0-SNAPSHOT/objectos-util-0.8.0-SNAPSHOT.jar:/home/mendo/.m2/repository/br/com/objectos/objectos-lang/0.8.0-SNAPSHOT/objectos-lang-0.8.0-SNAPSHOT.jar'
+--patch-module
+objectos.code='/home/mendo/kdo/projetos/objectos/objectos-code/src/main/java:/home/mendo/kdo/projetos/objectos/objectos-code/target/generated-sources/annotations'
+-encoding
+'UTF-8'
+-protected
+-source
+'20'
+--module-source-path
+'/home/mendo/kdo/projetos/objectos/objectos-code/target/site/apidocs/src'
+--enable-preview
+-author
+-bottom
+'Copyright &#169; 2014&#x2013;2023 <a href="https://www.objectos.com.br/">Objectos Software LTDA</a>. All rights reserved.'
+-charset
+'UTF-8'
+-d
+'/home/mendo/kdo/projetos/objectos/objectos-code/target/site/apidocs'
+-docencoding
+'UTF-8'
+-doctitle
+'br.com.objectos:objectos-code 0.8.0-SNAPSHOT API'
+-use
+-version
+-windowtitle
+'br.com.objectos:objectos-code 0.8.0-SNAPSHOT API'

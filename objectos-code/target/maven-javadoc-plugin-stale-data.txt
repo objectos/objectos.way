@@ -1,0 +1,54 @@
+-J-Xmx2048m
+-J-Xms1024m
+@options
+@packages
+@argfile
+--module-path
+'/home/mendo/kdo/projetos/objectos/objectos-code/target/classes:/home/mendo/.m2/repository/br/com/objectos/objectos-util/0.8.0-SNAPSHOT/objectos-util-0.8.0-SNAPSHOT.jar:/home/mendo/.m2/repository/br/com/objectos/objectos-lang/0.8.0-SNAPSHOT/objectos-lang-0.8.0-SNAPSHOT.jar'
+--patch-module
+objectos.code='/home/mendo/kdo/projetos/objectos/objectos-code/src/main/java:/home/mendo/kdo/projetos/objectos/objectos-code/target/generated-sources/annotations'
+-encoding
+'UTF-8'
+-protected
+-source
+'20'
+--module-source-path
+'/home/mendo/kdo/projetos/objectos/objectos-code/target/site/apidocs/src'
+--enable-preview
+-author
+-bottom
+'Copyright &#169; 2014&#x2013;2023 <a href="https://www.objectos.com.br/">Objectos Software LTDA</a>. All rights reserved.'
+-charset
+'UTF-8'
+-d
+'/home/mendo/kdo/projetos/objectos/objectos-code/target/site/apidocs'
+-docencoding
+'UTF-8'
+-doctitle
+'br.com.objectos:objectos-code 0.8.0-SNAPSHOT API'
+-use
+-version
+-windowtitle
+'br.com.objectos:objectos-code 0.8.0-SNAPSHOT API'
+objectos.code.tmpl
+objectos.code
+'/home/mendo/kdo/projetos/objectos/objectos-code/src/main/java/module-info.java'
+/home/mendo/kdo/projetos/objectos/objectos-code/target/site/apidocs/javadoc.sh = 1693333990676
+/home/mendo/kdo/projetos/objectos/objectos-code/target/site/apidocs/element-list = 1693333993075
+/home/mendo/kdo/projetos/objectos/objectos-code/target/site/apidocs/overview-tree.html = 1693333993437
+/home/mendo/kdo/projetos/objectos/objectos-code/target/site/apidocs/allclasses-index.html = 1693333993471
+/home/mendo/kdo/projetos/objectos/objectos-code/target/site/apidocs/allpackages-index.html = 1693333993474
+/home/mendo/kdo/projetos/objectos/objectos-code/target/site/apidocs/module-search-index.js = 1693333993476
+/home/mendo/kdo/projetos/objectos/objectos-code/target/site/apidocs/package-search-index.js = 1693333993498
+/home/mendo/kdo/projetos/objectos/objectos-code/target/site/apidocs/type-search-index.js = 1693333993499
+/home/mendo/kdo/projetos/objectos/objectos-code/target/site/apidocs/member-search-index.js = 1693333993499
+/home/mendo/kdo/projetos/objectos/objectos-code/target/site/apidocs/tag-search-index.js = 1693333993500
+/home/mendo/kdo/projetos/objectos/objectos-code/target/site/apidocs/index-all.html = 1693333993536
+/home/mendo/kdo/projetos/objectos/objectos-code/target/site/apidocs/search.html = 1693333993539
+/home/mendo/kdo/projetos/objectos/objectos-code/target/site/apidocs/index.html = 1693333993540
+/home/mendo/kdo/projetos/objectos/objectos-code/target/site/apidocs/help-doc.html = 1693333993545
+/home/mendo/kdo/projetos/objectos/objectos-code/target/site/apidocs/stylesheet.css = 1693333993548
+/home/mendo/kdo/projetos/objectos/objectos-code/target/site/apidocs/script.js = 1693333993548
+/home/mendo/kdo/projetos/objectos/objectos-code/target/site/apidocs/copy.svg = 1693333993549
+/home/mendo/kdo/projetos/objectos/objectos-code/target/site/apidocs/search.js = 1693333993552
+/home/mendo/kdo/projetos/objectos/objectos-code/target/site/apidocs/search-page.js = 1693333993553

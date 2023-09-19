@@ -1,0 +1,28 @@
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd" >
+<suite name="br.com.objectos.code.core" verbose="2">
+	<test name="java">
+		<packages>
+			<package name="br.com.objectos.code.java" />
+			<package name="br.com.objectos.code.java.declaration" />
+			<package name="br.com.objectos.code.java.element" />
+			<package name="br.com.objectos.code.java.expression" />
+			<package name="br.com.objectos.code.java.expression.testing" />
+			<package name="br.com.objectos.code.java.io" />
+			<package name="br.com.objectos.code.java.statement" />
+			<package name="br.com.objectos.code.java.type" />
+			<package name="br.com.objectos.code.util" />
+		</packages>
+	</test>
+	<!-- 
+	<test name="model">
+		<packages>
+			<package name="br.com.objectos.code.annotation.processing" />
+			<package name="br.com.objectos.code.model" />
+			<package name="br.com.objectos.code.model.element" />
+			<package name="br.com.objectos.code.model.element.pkg00" />
+			<package name="br.com.objectos.code.model.type" />
+			<package name="br.com.objectos.code.util" />
+		</packages>
+	</test>
+	 -->
+</suite>

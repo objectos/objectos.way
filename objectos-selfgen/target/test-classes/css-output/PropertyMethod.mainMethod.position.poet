@@ -1,0 +1,4 @@
+@java.lang.Override
+public SELF position(br.com.objectos.way.css.common.lang.Position position) {
+  return addDeclaration("position", position.stringValue());
+}

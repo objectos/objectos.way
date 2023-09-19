@@ -14,8 +14,11 @@
 # limitations under the License.
 #
 
-# Objectos
+#
+# Objectos Way
+#
 
+MODULE := objectos.way
 VERSION := 0.9.0-SNAPSHOT
 
 ## Deps versions
@@ -30,106 +33,130 @@ JAVA_RELEASE = 21
 
 ENABLE_PREVIEW = yes
 
-#
-# Makefile for libraries options
-#
-
-MAKEFILE_LIBRARY_PARTS := common-tools.mk
-MAKEFILE_LIBRARY_PARTS += common-deps.mk
-MAKEFILE_LIBRARY_PARTS += common-jar.mk
-MAKEFILE_LIBRARY_PARTS += common-test.mk
-#MAKEFILE_LIBRARY_PARTS += common-install.mk
-#MAKEFILE_LIBRARY_PARTS += common-source-jar.mk
-#MAKEFILE_LIBRARY_PARTS += common-javadoc.mk
-#MAKEFILE_LIBRARY_PARTS += common-pom.mk
-#MAKEFILE_LIBRARY_PARTS += common-ossrh.mk
-#MAKEFILE_LIBRARY_PARTS += common-release.mk
-
-MAKEFILE_LIBRARY = $(foreach part, $(MAKEFILE_LIBRARY_PARTS), make/$(part))
+# Delete the default suffixes
+.SUFFIXES:
 
 #
-# Objectos Lang
+# Tool used in this build
 #
 
-## Objectos Lang module name
-OBJECTOS_LANG = objectos.lang
+## java home
+ifdef JAVA_HOME
+JAVA_HOME_BIN := $(JAVA_HOME)/bin
+else
+JAVA_HOME_BIN :=
+endif
 
-## Objectos Lang Makefile
-OBJECTOS_LANG_MAKEFILE = $(OBJECTOS_LANG)/Makefile
+## java common options
+JAVA := $(JAVA_HOME_BIN)/java
 
-## Objectos Lang Makefile header : start
-## -------------------------------------
+## javac common options
+JAVAC := $(JAVA_HOME_BIN)/javac
+JAVAC += -g
+JAVAC += -Xpkginfo:always
 
-define OBJECTOS_LANG_MAKEFILE_HEADER :=
+## jar common options
+JAR := $(JAVA_HOME_BIN)/jar
+
+## javadoc common options
+JAVADOC := $(JAVA_HOME_BIN)/javadoc
+
+## curl common options
+CURL := curl
+CURL += --fail
+
+## gpg common options
+GPG := gpg
+
+## jq common options
+JQ := jq
+
+## sed common options
+SED := sed
+
 #
-# Copyright (C) 2023 Objectos Software LTDA.
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-# http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
+# main artifact options
 #
 
-# Objectos Lang
+## main base dir
+MAIN = $(MODULE)/main
 
-MODULE = $(OBJECTOS_LANG)
-VERSION = $(VERSION)
+## main source path
+SOURCE_PATH = $(MAIN)
 
-# Compile Options
+## main source files
+SOURCES = $(shell find ${SOURCE_PATH} -type f -name '*.java' -print)
 
-JAVA_RELEASE = $(JAVA_RELEASE)
+## main source files modified since last compilation
+MODIFIED_SOURCES :=
 
-COMPILE_DEPS =
+## main work dir
+WORK = $(MODULE)/work
 
-## Test options
+## main class output path
+CLASS_OUTPUT = $(WORK)/main
 
-TEST_COMPILE_DEPS = $$(call dependency,org.testng,testng,$(TESTNG_VERSION))
+## META-INF
+META_INF_DIR = $(CLASS_OUTPUT)/META-INF
 
-TEST_RUNTIME_DEPS = $$(TEST_COMPILE_DEPS)
-TEST_RUNTIME_DEPS += $$(call dependency,com.beust,jcommander,$(JCOMMANDER_VERSION))
-TEST_RUNTIME_DEPS += $$(call dependency,org.slf4j,slf4j-api,$(SLF4J_VERSION))
-TEST_RUNTIME_DEPS += $$(call dependency,org.slf4j,slf4j-nop,$(SLF4J_VERSION))
+## license 'artifact'
+LICENSE_ARTIFACT = $(META_INF_DIR)/LICENSE
 
-## POM generation options
+## main compiled classes
+CLASSES = $(SOURCES:$(SOURCE_PATH)/%.java=$(CLASS_OUTPUT)/%.class)
 
-POM_VARIABLES = DESCRIPTION
+## main compile-time dependencies
+# COMPILE_DEPS = 
 
+## main compile-time module-path
+COMPILE_MODULE_PATH = $(call module-path,$(COMPILE_DEPS))
+ 
+## main javac command
+## - do no set the module-path for artifacts that have no compile-time deps
+JAVACX = $(JAVAC)
+JAVACX += -d $(CLASS_OUTPUT)
+JAVACX += -Xlint:all
+ifdef ENABLE_PREVIEW
+JAVACX += --enable-preview
+endif
+ifneq ($(COMPILE_MODULE_PATH),)
+JAVACX += --module-path $(COMPILE_MODULE_PATH)
+endif
+JAVACX += --module-version $(VERSION)
+JAVACX += --release $(JAVA_RELEASE)
+JAVACX += $(MODIFIED_SOURCES)
+
+## main generated artifact
+ARTIFACT = $(WORK)/$(MODULE)-$(VERSION).jar
+
+## main jar command
+JARX = $(JAR)
+JARX += --create
+JARX += --file $(ARTIFACT)
+JARX += --module-version $(VERSION)
+JARX += -C $(CLASS_OUTPUT)
+JARX += .
+
+## Targets
 .PHONY: all
 all: jar
 
 .PHONY: clean
 clean:
-	rm -rf $$(WORK)/*
-endef
-
-## -------------------------------------
-## Objectos Lang Makefile header : end
-
-.PHONY: all
-all: objectos.lang@jar
-
-.PHONY: clean
-clean: objectos.lang@clean
+	rm -rf $(WORK)/*
 
 .PHONY: jar
-jar: objectos.lang@jar
+jar: $(ARTIFACT)
 
-.PHONY: test
-test: objectos.lang@test
+$(ARTIFACT): $(COMPILE_DEPS) $(CLASSES) $(LICENSE_ARTIFACT)
+	if [ -n "$(MODIFIED_SOURCES)" ]; then \
+		$(JAVACX); \
+	fi
+	$(JARX)
 
-.PHONY: objectos.lang@%
-objectos.lang@%: $(OBJECTOS_LANG_MAKEFILE)
-	$(MAKE) -C $(OBJECTOS_LANG) $*
+$(CLASSES): $(CLASS_OUTPUT)/%.class: $(SOURCE_PATH)/%.java
+	$(eval MODIFIED_SOURCES += $$<)
 
-$(OBJECTOS_LANG_MAKEFILE): export HEADER := $(OBJECTOS_LANG_MAKEFILE_HEADER)
-$(OBJECTOS_LANG_MAKEFILE): $(MAKEFILE_LIBRARY) Makefile
-	@echo $@
-	@echo "$$HEADER" > $@
-	@echo $(MAKEFILE_LIBRARY) | xargs tail -n +16 --quiet | cat - >> $@
+$(LICENSE_ARTIFACT): LICENSE
+	mkdir -p $(META_INF_DIR)
+	cp LICENSE $(META_INF_DIR)

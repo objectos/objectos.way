@@ -1,0 +1,4 @@
+--patch-module
+objectos.http=_
+--add-reads
+objectos.http=ALL-UNNAMED

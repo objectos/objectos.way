@@ -1,0 +1,7 @@
+Manifest-Version: 1.0
+Build-Jdk-Spec: 20
+Implementation-Title: br.com.objectos:objectos-carbonated
+Implementation-Version: 0.8.0-SNAPSHOT
+Implementation-Vendor: Objectos Software LTDA
+Created-By: Maven Integration for Eclipse
+

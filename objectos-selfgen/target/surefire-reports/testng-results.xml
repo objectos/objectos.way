@@ -1,0 +1,659 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testng-results ignored="0" total="80" passed="80" failed="0" skipped="0">
+  <reporter-output>
+  </reporter-output>
+  <suite started-at="2023-08-18T13:50:26 BRT" name="Surefire suite" finished-at="2023-08-18T13:50:27 BRT" duration-ms="959">
+    <groups>
+    </groups>
+    <test started-at="2023-08-18T13:50:26 BRT" name="Surefire test" finished-at="2023-08-18T13:50:27 BRT" duration-ms="959">
+      <class name="objectos.selfgen.css2.util.CssUtilSelfGen02Test">
+        <test-method is-config="true" signature="_generate()[pri:0, instance:objectos.selfgen.css2.util.CssUtilSelfGen02Test@618425b5]" started-at="2023-08-18T13:50:27 BRT" name="_generate" finished-at="2023-08-18T13:50:27 BRT" duration-ms="3" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- _generate -->
+        <test-method signature="all()[pri:0, instance:objectos.selfgen.css2.util.CssUtilSelfGen02Test@618425b5]" started-at="2023-08-18T13:50:27 BRT" name="all" finished-at="2023-08-18T13:50:27 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- all -->
+        <test-method signature="framework()[pri:0, instance:objectos.selfgen.css2.util.CssUtilSelfGen02Test@618425b5]" started-at="2023-08-18T13:50:27 BRT" name="framework" finished-at="2023-08-18T13:50:27 BRT" duration-ms="0" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- framework -->
+      </class> <!-- objectos.selfgen.css2.util.CssUtilSelfGen02Test -->
+      <class name="objectos.selfgen.css.spec.GeneratedColorStepTest">
+        <test-method signature="execute()[pri:0, instance:objectos.selfgen.css.spec.GeneratedColorStepTest@2f217633]" started-at="2023-08-18T13:50:26 BRT" name="execute" finished-at="2023-08-18T13:50:26 BRT" duration-ms="21" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- execute -->
+        <test-method is-config="true" signature="_clearResultList()[pri:0, instance:objectos.selfgen.css.spec.GeneratedColorStepTest@2f217633]" started-at="2023-08-18T13:50:26 BRT" name="_clearResultList" finished-at="2023-08-18T13:50:26 BRT" duration-ms="0" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- _clearResultList -->
+      </class> <!-- objectos.selfgen.css.spec.GeneratedColorStepTest -->
+      <class name="objectos.selfgen.css.spec.GeneratedStyleSheetStepTest">
+        <test-method signature="execute()[pri:0, instance:objectos.selfgen.css.spec.GeneratedStyleSheetStepTest@1a18644]" started-at="2023-08-18T13:50:26 BRT" name="execute" description="it should generate: (1) method for each sig (2) field for each type selector (3) field for each pseudo class selector (4) field for each pseudo element selector (5) field for each keyword (6) length methods for each unit (7) protected interface for each property (8) AnyDeclaration interface" finished-at="2023-08-18T13:50:26 BRT" duration-ms="32" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- execute -->
+        <test-method is-config="true" signature="_clearResultList()[pri:0, instance:objectos.selfgen.css.spec.GeneratedStyleSheetStepTest@1a18644]" started-at="2023-08-18T13:50:26 BRT" name="_clearResultList" finished-at="2023-08-18T13:50:26 BRT" duration-ms="0" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- _clearResultList -->
+      </class> <!-- objectos.selfgen.css.spec.GeneratedStyleSheetStepTest -->
+      <class name="objectos.selfgen.css2.util.CssUtilSelfGen01Test">
+        <test-method is-config="true" signature="_generate()[pri:0, instance:objectos.selfgen.css2.util.CssUtilSelfGen01Test@58695725]" started-at="2023-08-18T13:50:27 BRT" name="_generate" finished-at="2023-08-18T13:50:27 BRT" duration-ms="6" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- _generate -->
+        <test-method signature="all()[pri:0, instance:objectos.selfgen.css2.util.CssUtilSelfGen01Test@58695725]" started-at="2023-08-18T13:50:27 BRT" name="all" finished-at="2023-08-18T13:50:27 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- all -->
+        <test-method signature="framework()[pri:0, instance:objectos.selfgen.css2.util.CssUtilSelfGen01Test@58695725]" started-at="2023-08-18T13:50:27 BRT" name="framework" finished-at="2023-08-18T13:50:27 BRT" duration-ms="0" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- framework -->
+        <test-method signature="large()[pri:0, instance:objectos.selfgen.css2.util.CssUtilSelfGen01Test@58695725]" started-at="2023-08-18T13:50:27 BRT" name="large" finished-at="2023-08-18T13:50:27 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- large -->
+      </class> <!-- objectos.selfgen.css2.util.CssUtilSelfGen01Test -->
+      <class name="objectos.selfgen.html.StandardElementNameStepTest">
+        <test-method signature="execute()[pri:0, instance:objectos.selfgen.html.StandardElementNameStepTest@4be29ed9]" started-at="2023-08-18T13:50:27 BRT" name="execute" description="it should generate an enum constant for each element defined" finished-at="2023-08-18T13:50:27 BRT" duration-ms="2" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- execute -->
+      </class> <!-- objectos.selfgen.html.StandardElementNameStepTest -->
+      <class name="objectos.selfgen.html.InstructionIfaceStepTest">
+        <test-method signature="execute()[pri:0, instance:objectos.selfgen.html.InstructionIfaceStepTest@53fb3dab]" started-at="2023-08-18T13:50:27 BRT" name="execute" finished-at="2023-08-18T13:50:27 BRT" duration-ms="6" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- execute -->
+      </class> <!-- objectos.selfgen.html.InstructionIfaceStepTest -->
+      <class name="objectos.selfgen.css2.CssSelfGen15SignatureStringTest">
+        <test-method is-config="true" signature="_generate()[pri:0, instance:objectos.selfgen.css2.CssSelfGen15SignatureStringTest@4fb3ee4e]" started-at="2023-08-18T13:50:27 BRT" name="_generate" finished-at="2023-08-18T13:50:27 BRT" duration-ms="21" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- _generate -->
+        <test-method signature="generatedCssTemplate()[pri:0, instance:objectos.selfgen.css2.CssSelfGen15SignatureStringTest@4fb3ee4e]" started-at="2023-08-18T13:50:27 BRT" name="generatedCssTemplate" finished-at="2023-08-18T13:50:27 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- generatedCssTemplate -->
+      </class> <!-- objectos.selfgen.css2.CssSelfGen15SignatureStringTest -->
+      <class name="objectos.selfgen.css2.CssSelfGen14UrlTypeTest">
+        <test-method is-config="true" signature="_generate()[pri:0, instance:objectos.selfgen.css2.CssSelfGen14UrlTypeTest@58d75e99]" started-at="2023-08-18T13:50:27 BRT" name="_generate" finished-at="2023-08-18T13:50:27 BRT" duration-ms="13" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- _generate -->
+        <test-method signature="generatedCssTemplate()[pri:0, instance:objectos.selfgen.css2.CssSelfGen14UrlTypeTest@58d75e99]" started-at="2023-08-18T13:50:27 BRT" name="generatedCssTemplate" finished-at="2023-08-18T13:50:27 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- generatedCssTemplate -->
+      </class> <!-- objectos.selfgen.css2.CssSelfGen14UrlTypeTest -->
+      <class name="objectos.selfgen.css.select.PrefixTest">
+        <test-method signature="parse(java.lang.String,objectos.selfgen.css.spec.Prefix)[pri:0, instance:objectos.selfgen.css.select.PrefixTest@4738a206]" started-at="2023-08-18T13:50:26 BRT" name="parse" data-provider="parseProvider" finished-at="2023-08-18T13:50:26 BRT" duration-ms="4" status="PASS">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[]]>
+              </value>
+            </param>
+            <param index="1">
+              <value>
+                <![CDATA[]]>
+              </value>
+            </param>
+          </params>
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- parse -->
+        <test-method signature="parse(java.lang.String,objectos.selfgen.css.spec.Prefix)[pri:0, instance:objectos.selfgen.css.select.PrefixTest@4738a206]" started-at="2023-08-18T13:50:26 BRT" name="parse" data-provider="parseProvider" finished-at="2023-08-18T13:50:26 BRT" duration-ms="0" status="PASS">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[-webkit-]]>
+              </value>
+            </param>
+            <param index="1">
+              <value>
+                <![CDATA[-webkit-]]>
+              </value>
+            </param>
+          </params>
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- parse -->
+        <test-method signature="parse(java.lang.String,objectos.selfgen.css.spec.Prefix)[pri:0, instance:objectos.selfgen.css.select.PrefixTest@4738a206]" started-at="2023-08-18T13:50:26 BRT" name="parse" data-provider="parseProvider" finished-at="2023-08-18T13:50:26 BRT" duration-ms="1" status="PASS">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[-moz-]]>
+              </value>
+            </param>
+            <param index="1">
+              <value>
+                <![CDATA[-moz-]]>
+              </value>
+            </param>
+          </params>
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- parse -->
+        <test-method signature="parse(java.lang.String,objectos.selfgen.css.spec.Prefix)[pri:0, instance:objectos.selfgen.css.select.PrefixTest@4738a206]" started-at="2023-08-18T13:50:26 BRT" name="parse" data-provider="parseProvider" finished-at="2023-08-18T13:50:26 BRT" duration-ms="0" status="PASS">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[-ms-]]>
+              </value>
+            </param>
+            <param index="1">
+              <value>
+                <![CDATA[-ms-]]>
+              </value>
+            </param>
+          </params>
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- parse -->
+        <test-method signature="parse(java.lang.String,objectos.selfgen.css.spec.Prefix)[pri:0, instance:objectos.selfgen.css.select.PrefixTest@4738a206]" started-at="2023-08-18T13:50:26 BRT" name="parse" data-provider="parseProvider" finished-at="2023-08-18T13:50:26 BRT" duration-ms="0" status="PASS">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[-mso-]]>
+              </value>
+            </param>
+            <param index="1">
+              <value>
+                <![CDATA[-ms-]]>
+              </value>
+            </param>
+          </params>
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- parse -->
+        <test-method signature="parse(java.lang.String,objectos.selfgen.css.spec.Prefix)[pri:0, instance:objectos.selfgen.css.select.PrefixTest@4738a206]" started-at="2023-08-18T13:50:26 BRT" name="parse" data-provider="parseProvider" finished-at="2023-08-18T13:50:26 BRT" duration-ms="0" status="PASS">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[-xpto-]]>
+              </value>
+            </param>
+            <param index="1">
+              <value>
+                <![CDATA[-unknown-]]>
+              </value>
+            </param>
+          </params>
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- parse -->
+      </class> <!-- objectos.selfgen.css.select.PrefixTest -->
+      <class name="objectos.selfgen.css2.CssSelfGen01BorderColorTest">
+        <test-method is-config="true" signature="_generate()[pri:0, instance:objectos.selfgen.css2.CssSelfGen01BorderColorTest@2c35e847]" started-at="2023-08-18T13:50:27 BRT" name="_generate" finished-at="2023-08-18T13:50:27 BRT" duration-ms="43" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- _generate -->
+        <test-method signature="generatedColor()[pri:0, instance:objectos.selfgen.css2.CssSelfGen01BorderColorTest@2c35e847]" started-at="2023-08-18T13:50:27 BRT" name="generatedColor" finished-at="2023-08-18T13:50:27 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- generatedColor -->
+        <test-method signature="generatedCssTemplate()[pri:0, instance:objectos.selfgen.css2.CssSelfGen01BorderColorTest@2c35e847]" started-at="2023-08-18T13:50:27 BRT" name="generatedCssTemplate" finished-at="2023-08-18T13:50:27 BRT" duration-ms="0" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- generatedCssTemplate -->
+        <test-method signature="property()[pri:0, instance:objectos.selfgen.css2.CssSelfGen01BorderColorTest@2c35e847]" started-at="2023-08-18T13:50:27 BRT" name="property" finished-at="2023-08-18T13:50:27 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- property -->
+      </class> <!-- objectos.selfgen.css2.CssSelfGen01BorderColorTest -->
+      <class name="objectos.selfgen.css.spec.ValueTypeIfaceStepTest">
+        <test-method is-config="true" signature="_clearResultList()[pri:0, instance:objectos.selfgen.css.spec.ValueTypeIfaceStepTest@6cd28fa7]" started-at="2023-08-18T13:50:26 BRT" name="_clearResultList" finished-at="2023-08-18T13:50:26 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- _clearResultList -->
+        <test-method signature="execute()[pri:0, instance:objectos.selfgen.css.spec.ValueTypeIfaceStepTest@6cd28fa7]" started-at="2023-08-18T13:50:26 BRT" name="execute" description="it should generate a Value interface for each ValueType defined" finished-at="2023-08-18T13:50:26 BRT" duration-ms="5" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- execute -->
+      </class> <!-- objectos.selfgen.css.spec.ValueTypeIfaceStepTest -->
+      <class name="objectos.selfgen.css2.CssSelfGen03PercentageTypeTest">
+        <test-method is-config="true" signature="_generate()[pri:0, instance:objectos.selfgen.css2.CssSelfGen03PercentageTypeTest@5d7148e2]" started-at="2023-08-18T13:50:27 BRT" name="_generate" finished-at="2023-08-18T13:50:27 BRT" duration-ms="14" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- _generate -->
+        <test-method signature="generatedCssTemplate()[pri:0, instance:objectos.selfgen.css2.CssSelfGen03PercentageTypeTest@5d7148e2]" started-at="2023-08-18T13:50:27 BRT" name="generatedCssTemplate" finished-at="2023-08-18T13:50:27 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- generatedCssTemplate -->
+      </class> <!-- objectos.selfgen.css2.CssSelfGen03PercentageTypeTest -->
+      <class name="objectos.selfgen.html.AttributeSpecTest">
+        <test-method signature="classAttribute()[pri:0, instance:objectos.selfgen.html.AttributeSpecTest@cb0755b]" started-at="2023-08-18T13:50:27 BRT" name="classAttribute" finished-at="2023-08-18T13:50:27 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- classAttribute -->
+        <test-method signature="hiddenAttribute()[pri:0, instance:objectos.selfgen.html.AttributeSpecTest@cb0755b]" started-at="2023-08-18T13:50:27 BRT" name="hiddenAttribute" finished-at="2023-08-18T13:50:27 BRT" duration-ms="0" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- hiddenAttribute -->
+        <test-method signature="hrefAttribute()[pri:0, instance:objectos.selfgen.html.AttributeSpecTest@cb0755b]" started-at="2023-08-18T13:50:27 BRT" name="hrefAttribute" finished-at="2023-08-18T13:50:27 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- hrefAttribute -->
+        <test-method signature="idAttribute()[pri:0, instance:objectos.selfgen.html.AttributeSpecTest@cb0755b]" started-at="2023-08-18T13:50:27 BRT" name="idAttribute" finished-at="2023-08-18T13:50:27 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- idAttribute -->
+      </class> <!-- objectos.selfgen.html.AttributeSpecTest -->
+      <class name="objectos.selfgen.css2.SelectorNameTest">
+        <test-method signature="ofPseudoClassSelector()[pri:0, instance:objectos.selfgen.css2.SelectorNameTest@f5acb9d]" started-at="2023-08-18T13:50:27 BRT" name="ofPseudoClassSelector" finished-at="2023-08-18T13:50:27 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- ofPseudoClassSelector -->
+        <test-method signature="ofPseudoElementSelector()[pri:0, instance:objectos.selfgen.css2.SelectorNameTest@f5acb9d]" started-at="2023-08-18T13:50:27 BRT" name="ofPseudoElementSelector" finished-at="2023-08-18T13:50:27 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- ofPseudoElementSelector -->
+        <test-method signature="ofPseudoElementSelectorWebkit()[pri:0, instance:objectos.selfgen.css2.SelectorNameTest@f5acb9d]" started-at="2023-08-18T13:50:27 BRT" name="ofPseudoElementSelectorWebkit" finished-at="2023-08-18T13:50:27 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- ofPseudoElementSelectorWebkit -->
+        <test-method signature="ofTypeSelector()[pri:0, instance:objectos.selfgen.css2.SelectorNameTest@f5acb9d]" started-at="2023-08-18T13:50:27 BRT" name="ofTypeSelector" finished-at="2023-08-18T13:50:27 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- ofTypeSelector -->
+      </class> <!-- objectos.selfgen.css2.SelectorNameTest -->
+      <class name="objectos.selfgen.css2.StandardSelectorStepTest">
+        <test-method is-config="true" signature="_generate()[pri:0, instance:objectos.selfgen.css2.StandardSelectorStepTest@6392827e]" started-at="2023-08-18T13:50:27 BRT" name="_generate" finished-at="2023-08-18T13:50:27 BRT" duration-ms="8" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- _generate -->
+        <test-method signature="pseudoClass()[pri:0, instance:objectos.selfgen.css2.StandardSelectorStepTest@6392827e]" started-at="2023-08-18T13:50:27 BRT" name="pseudoClass" finished-at="2023-08-18T13:50:27 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- pseudoClass -->
+        <test-method signature="pseudoElement()[pri:0, instance:objectos.selfgen.css2.StandardSelectorStepTest@6392827e]" started-at="2023-08-18T13:50:27 BRT" name="pseudoElement" finished-at="2023-08-18T13:50:27 BRT" duration-ms="0" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- pseudoElement -->
+        <test-method signature="type()[pri:0, instance:objectos.selfgen.css2.StandardSelectorStepTest@6392827e]" started-at="2023-08-18T13:50:27 BRT" name="type" finished-at="2023-08-18T13:50:27 BRT" duration-ms="0" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- type -->
+      </class> <!-- objectos.selfgen.css2.StandardSelectorStepTest -->
+      <class name="objectos.selfgen.css2.GeneratedCssTemplateStepTest">
+        <test-method signature="all()[pri:0, instance:objectos.selfgen.css2.GeneratedCssTemplateStepTest@2ed2d9cb]" started-at="2023-08-18T13:50:27 BRT" name="all" finished-at="2023-08-18T13:50:27 BRT" duration-ms="11" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- all -->
+        <test-method signature="borderWidth()[pri:0, instance:objectos.selfgen.css2.GeneratedCssTemplateStepTest@2ed2d9cb]" started-at="2023-08-18T13:50:27 BRT" name="borderWidth" finished-at="2023-08-18T13:50:27 BRT" duration-ms="7" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- borderWidth -->
+        <test-method signature="selectors01()[pri:0, instance:objectos.selfgen.css2.GeneratedCssTemplateStepTest@2ed2d9cb]" started-at="2023-08-18T13:50:27 BRT" name="selectors01" finished-at="2023-08-18T13:50:27 BRT" duration-ms="10" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- selectors01 -->
+      </class> <!-- objectos.selfgen.css2.GeneratedCssTemplateStepTest -->
+      <class name="objectos.selfgen.css2.CssSelfGen17GridTemplateColumnsTest">
+        <test-method is-config="true" signature="_generate()[pri:0, instance:objectos.selfgen.css2.CssSelfGen17GridTemplateColumnsTest@e15b7e8]" started-at="2023-08-18T13:50:27 BRT" name="_generate" finished-at="2023-08-18T13:50:27 BRT" duration-ms="12" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- _generate -->
+        <test-method signature="api()[pri:0, instance:objectos.selfgen.css2.CssSelfGen17GridTemplateColumnsTest@e15b7e8]" started-at="2023-08-18T13:50:27 BRT" name="api" finished-at="2023-08-18T13:50:27 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- api -->
+        <test-method signature="generatedCssTemplate()[pri:0, instance:objectos.selfgen.css2.CssSelfGen17GridTemplateColumnsTest@e15b7e8]" started-at="2023-08-18T13:50:27 BRT" name="generatedCssTemplate" finished-at="2023-08-18T13:50:27 BRT" duration-ms="0" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- generatedCssTemplate -->
+      </class> <!-- objectos.selfgen.css2.CssSelfGen17GridTemplateColumnsTest -->
+      <class name="objectos.selfgen.css.spec.KeywordsClassStepTest">
+        <test-method is-config="true" signature="_clearResultList()[pri:0, instance:objectos.selfgen.css.spec.KeywordsClassStepTest@611889f4]" started-at="2023-08-18T13:50:26 BRT" name="_clearResultList" finished-at="2023-08-18T13:50:26 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- _clearResultList -->
+        <test-method signature="execute()[pri:0, instance:objectos.selfgen.css.spec.KeywordsClassStepTest@611889f4]" started-at="2023-08-18T13:50:26 BRT" name="execute" description="Keywords class must declared each keyword defined (sorted alpha)" finished-at="2023-08-18T13:50:26 BRT" duration-ms="18" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- execute -->
+      </class> <!-- objectos.selfgen.css.spec.KeywordsClassStepTest -->
+      <class name="objectos.selfgen.css2.CssSelfGen01JavaKeywordNameClashTest">
+        <test-method is-config="true" signature="_generate()[pri:0, instance:objectos.selfgen.css2.CssSelfGen01JavaKeywordNameClashTest@306e95ec]" started-at="2023-08-18T13:50:27 BRT" name="_generate" finished-at="2023-08-18T13:50:27 BRT" duration-ms="10" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- _generate -->
+        <test-method signature="generatedCssTemplate()[pri:0, instance:objectos.selfgen.css2.CssSelfGen01JavaKeywordNameClashTest@306e95ec]" started-at="2023-08-18T13:50:27 BRT" name="generatedCssTemplate" finished-at="2023-08-18T13:50:27 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- generatedCssTemplate -->
+      </class> <!-- objectos.selfgen.css2.CssSelfGen01JavaKeywordNameClashTest -->
+      <class name="objectos.selfgen.css.spec.LengthUnitStepTest">
+        <test-method is-config="true" signature="_clearResultList()[pri:0, instance:objectos.selfgen.css.spec.LengthUnitStepTest@48f278eb]" started-at="2023-08-18T13:50:26 BRT" name="_clearResultList" finished-at="2023-08-18T13:50:26 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- _clearResultList -->
+        <test-method signature="execute()[pri:0, instance:objectos.selfgen.css.spec.LengthUnitStepTest@48f278eb]" started-at="2023-08-18T13:50:26 BRT" name="execute" description="it should generate an enum constant for each unit." finished-at="2023-08-18T13:50:26 BRT" duration-ms="6" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- execute -->
+      </class> <!-- objectos.selfgen.css.spec.LengthUnitStepTest -->
+      <class name="objectos.selfgen.html.GeneratedHtmlTemplateStepTest">
+        <test-method signature="execute()[pri:0, instance:objectos.selfgen.html.GeneratedHtmlTemplateStepTest@6bbe85a8]" started-at="2023-08-18T13:50:27 BRT" name="execute" finished-at="2023-08-18T13:50:27 BRT" duration-ms="5" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- execute -->
+      </class> <!-- objectos.selfgen.html.GeneratedHtmlTemplateStepTest -->
+      <class name="objectos.selfgen.css2.KeywordNameTest">
+        <test-method signature="of()[pri:0, instance:objectos.selfgen.css2.KeywordNameTest@74751b3]" started-at="2023-08-18T13:50:27 BRT" name="of" finished-at="2023-08-18T13:50:27 BRT" duration-ms="0" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- of -->
+      </class> <!-- objectos.selfgen.css2.KeywordNameTest -->
+      <class name="objectos.selfgen.css.spec.PrimitiveTypeStepTest">
+        <test-method signature="execute()[pri:0, instance:objectos.selfgen.css.spec.PrimitiveTypeStepTest@5acf93bb]" started-at="2023-08-18T13:50:26 BRT" name="execute" finished-at="2023-08-18T13:50:26 BRT" duration-ms="3" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- execute -->
+        <test-method is-config="true" signature="_clearResultList()[pri:0, instance:objectos.selfgen.css.spec.PrimitiveTypeStepTest@5acf93bb]" started-at="2023-08-18T13:50:26 BRT" name="_clearResultList" finished-at="2023-08-18T13:50:26 BRT" duration-ms="0" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- _clearResultList -->
+      </class> <!-- objectos.selfgen.css.spec.PrimitiveTypeStepTest -->
+      <class name="objectos.selfgen.html.InternalInstructionStepTest">
+        <test-method signature="execute()[pri:0, instance:objectos.selfgen.html.InternalInstructionStepTest@53045c6c]" started-at="2023-08-18T13:50:27 BRT" name="execute" finished-at="2023-08-18T13:50:27 BRT" duration-ms="9" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- execute -->
+      </class> <!-- objectos.selfgen.html.InternalInstructionStepTest -->
+      <class name="objectos.selfgen.css.spec.StandardFunctionNameStepTest">
+        <test-method is-config="true" signature="_clearResultList()[pri:0, instance:objectos.selfgen.css.spec.StandardFunctionNameStepTest@7e7be63f]" started-at="2023-08-18T13:50:26 BRT" name="_clearResultList" finished-at="2023-08-18T13:50:26 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- _clearResultList -->
+        <test-method signature="execute()[pri:0, instance:objectos.selfgen.css.spec.StandardFunctionNameStepTest@7e7be63f]" started-at="2023-08-18T13:50:26 BRT" name="execute" description="it should generate an enum constant for each function defined" finished-at="2023-08-18T13:50:26 BRT" duration-ms="16" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- execute -->
+      </class> <!-- objectos.selfgen.css.spec.StandardFunctionNameStepTest -->
+      <class name="objectos.selfgen.html.SpecDslTest">
+        <test-method signature="category_createCategoryAndAddElements()[pri:0, instance:objectos.selfgen.html.SpecDslTest@548d708a]" started-at="2023-08-18T13:50:27 BRT" name="category_createCategoryAndAddElements" finished-at="2023-08-18T13:50:27 BRT" duration-ms="11" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- category_createCategoryAndAddElements -->
+        <test-method signature="element_addCategoryAsContentModel()[pri:0, instance:objectos.selfgen.html.SpecDslTest@548d708a]" started-at="2023-08-18T13:50:27 BRT" name="element_addCategoryAsContentModel" finished-at="2023-08-18T13:50:27 BRT" duration-ms="3" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- element_addCategoryAsContentModel -->
+        <test-method signature="element_formCanHaveFlowContentExceptForForms()[pri:0, instance:objectos.selfgen.html.SpecDslTest@548d708a]" started-at="2023-08-18T13:50:27 BRT" name="element_formCanHaveFlowContentExceptForForms" finished-at="2023-08-18T13:50:27 BRT" duration-ms="2" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- element_formCanHaveFlowContentExceptForForms -->
+        <test-method signature="text_withCategory()[pri:0, instance:objectos.selfgen.html.SpecDslTest@548d708a]" started-at="2023-08-18T13:50:27 BRT" name="text_withCategory" finished-at="2023-08-18T13:50:27 BRT" duration-ms="2" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- text_withCategory -->
+      </class> <!-- objectos.selfgen.html.SpecDslTest -->
+      <class name="objectos.selfgen.css.spec.TypeSelectorsGenTest">
+        <test-method signature="generateJavaFile()[pri:0, instance:objectos.selfgen.css.spec.TypeSelectorsGenTest@614ca7df]" started-at="2023-08-18T13:50:26 BRT" name="generateJavaFile" finished-at="2023-08-18T13:50:26 BRT" duration-ms="3" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- generateJavaFile -->
+        <test-method is-config="true" signature="_clearResultList()[pri:0, instance:objectos.selfgen.css.spec.TypeSelectorsGenTest@614ca7df]" started-at="2023-08-18T13:50:26 BRT" name="_clearResultList" finished-at="2023-08-18T13:50:26 BRT" duration-ms="0" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- _clearResultList -->
+      </class> <!-- objectos.selfgen.css.spec.TypeSelectorsGenTest -->
+      <class name="objectos.selfgen.css.spec.KeywordClassStepTest">
+        <test-method is-config="true" signature="_clearResultList()[pri:0, instance:objectos.selfgen.css.spec.KeywordClassStepTest@33990a0c]" started-at="2023-08-18T13:50:26 BRT" name="_clearResultList" finished-at="2023-08-18T13:50:26 BRT" duration-ms="12" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- _clearResultList -->
+        <test-method signature="execute()[pri:0, instance:objectos.selfgen.css.spec.KeywordClassStepTest@33990a0c]" started-at="2023-08-18T13:50:26 BRT" name="execute" description="keyword class must implement the PropertyValue interface
+if part of that value set
+" finished-at="2023-08-18T13:50:26 BRT" duration-ms="61" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- execute -->
+      </class> <!-- objectos.selfgen.css.spec.KeywordClassStepTest -->
+      <class name="objectos.selfgen.css2.CssSelfGen12CustomSignatureTest">
+        <test-method is-config="true" signature="_generate()[pri:0, instance:objectos.selfgen.css2.CssSelfGen12CustomSignatureTest@1b2abca6]" started-at="2023-08-18T13:50:27 BRT" name="_generate" finished-at="2023-08-18T13:50:27 BRT" duration-ms="8" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- _generate -->
+        <test-method signature="generatedCssTemplate()[pri:0, instance:objectos.selfgen.css2.CssSelfGen12CustomSignatureTest@1b2abca6]" started-at="2023-08-18T13:50:27 BRT" name="generatedCssTemplate" finished-at="2023-08-18T13:50:27 BRT" duration-ms="0" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- generatedCssTemplate -->
+      </class> <!-- objectos.selfgen.css2.CssSelfGen12CustomSignatureTest -->
+      <class name="objectos.selfgen.css2.CssSelfGen11Value2AndValue3SigsTest">
+        <test-method is-config="true" signature="_generate()[pri:0, instance:objectos.selfgen.css2.CssSelfGen11Value2AndValue3SigsTest@5ba3f27a]" started-at="2023-08-18T13:50:27 BRT" name="_generate" finished-at="2023-08-18T13:50:27 BRT" duration-ms="9" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- _generate -->
+        <test-method signature="generatedCssTemplate()[pri:0, instance:objectos.selfgen.css2.CssSelfGen11Value2AndValue3SigsTest@5ba3f27a]" started-at="2023-08-18T13:50:27 BRT" name="generatedCssTemplate" finished-at="2023-08-18T13:50:27 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- generatedCssTemplate -->
+      </class> <!-- objectos.selfgen.css2.CssSelfGen11Value2AndValue3SigsTest -->
+      <class name="objectos.selfgen.html.StandardAttributeNameStepTest">
+        <test-method signature="execute()[pri:0, instance:objectos.selfgen.html.StandardAttributeNameStepTest@3a7442c7]" started-at="2023-08-18T13:50:27 BRT" name="execute" description="it should generate an class for each distinct attribute defined" finished-at="2023-08-18T13:50:27 BRT" duration-ms="4" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- execute -->
+      </class> <!-- objectos.selfgen.html.StandardAttributeNameStepTest -->
+      <class name="objectos.selfgen.css2.CssSelfGen09StringLiteralTest">
+        <test-method is-config="true" signature="_generate()[pri:0, instance:objectos.selfgen.css2.CssSelfGen09StringLiteralTest@741a8937]" started-at="2023-08-18T13:50:27 BRT" name="_generate" finished-at="2023-08-18T13:50:27 BRT" duration-ms="11" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- _generate -->
+        <test-method signature="generatedCssTemplate()[pri:0, instance:objectos.selfgen.css2.CssSelfGen09StringLiteralTest@741a8937]" started-at="2023-08-18T13:50:27 BRT" name="generatedCssTemplate" finished-at="2023-08-18T13:50:27 BRT" duration-ms="0" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- generatedCssTemplate -->
+      </class> <!-- objectos.selfgen.css2.CssSelfGen09StringLiteralTest -->
+      <class name="objectos.selfgen.css2.util.CssUtilSelfGen06Test">
+        <test-method is-config="true" signature="_generate()[pri:0, instance:objectos.selfgen.css2.util.CssUtilSelfGen06Test@66d3eec0]" started-at="2023-08-18T13:50:26 BRT" name="_generate" finished-at="2023-08-18T13:50:27 BRT" duration-ms="36" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- _generate -->
+        <test-method signature="all()[pri:0, instance:objectos.selfgen.css2.util.CssUtilSelfGen06Test@66d3eec0]" started-at="2023-08-18T13:50:27 BRT" name="all" finished-at="2023-08-18T13:50:27 BRT" duration-ms="2" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- all -->
+        <test-method signature="framework()[pri:0, instance:objectos.selfgen.css2.util.CssUtilSelfGen06Test@66d3eec0]" started-at="2023-08-18T13:50:27 BRT" name="framework" finished-at="2023-08-18T13:50:27 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- framework -->
+      </class> <!-- objectos.selfgen.css2.util.CssUtilSelfGen06Test -->
+      <class name="objectos.selfgen.css.spec.FunctionInterfaceStepTest">
+        <test-method is-config="true" signature="_clearResultList()[pri:0, instance:objectos.selfgen.css.spec.FunctionInterfaceStepTest@3f6b0be5]" started-at="2023-08-18T13:50:26 BRT" name="_clearResultList" finished-at="2023-08-18T13:50:26 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- _clearResultList -->
+        <test-method signature="execute()[pri:0, instance:objectos.selfgen.css.spec.FunctionInterfaceStepTest@3f6b0be5]" started-at="2023-08-18T13:50:26 BRT" name="execute" finished-at="2023-08-18T13:50:26 BRT" duration-ms="12" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- execute -->
+      </class> <!-- objectos.selfgen.css.spec.FunctionInterfaceStepTest -->
+      <class name="objectos.selfgen.css.spec.PseudoElementSelectorsGenTest">
+        <test-method is-config="true" signature="_clearResultList()[pri:0, instance:objectos.selfgen.css.spec.PseudoElementSelectorsGenTest@1da2cb77]" started-at="2023-08-18T13:50:26 BRT" name="_clearResultList" finished-at="2023-08-18T13:50:26 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- _clearResultList -->
+        <test-method signature="generateJavaFile()[pri:0, instance:objectos.selfgen.css.spec.PseudoElementSelectorsGenTest@1da2cb77]" started-at="2023-08-18T13:50:26 BRT" name="generateJavaFile" finished-at="2023-08-18T13:50:26 BRT" duration-ms="2" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- generateJavaFile -->
+      </class> <!-- objectos.selfgen.css.spec.PseudoElementSelectorsGenTest -->
+      <class name="objectos.selfgen.css2.CssSelfGen16BoxShadowTest">
+        <test-method is-config="true" signature="_generate()[pri:0, instance:objectos.selfgen.css2.CssSelfGen16BoxShadowTest@25fb8912]" started-at="2023-08-18T13:50:27 BRT" name="_generate" finished-at="2023-08-18T13:50:27 BRT" duration-ms="12" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- _generate -->
+        <test-method signature="generatedCssTemplate()[pri:0, instance:objectos.selfgen.css2.CssSelfGen16BoxShadowTest@25fb8912]" started-at="2023-08-18T13:50:27 BRT" name="generatedCssTemplate" finished-at="2023-08-18T13:50:27 BRT" duration-ms="0" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- generatedCssTemplate -->
+      </class> <!-- objectos.selfgen.css2.CssSelfGen16BoxShadowTest -->
+      <class name="objectos.selfgen.css2.CssSelfGen07ValueTypeInValueTypeTest">
+        <test-method is-config="true" signature="_generate()[pri:0, instance:objectos.selfgen.css2.CssSelfGen07ValueTypeInValueTypeTest@7c24b813]" started-at="2023-08-18T13:50:27 BRT" name="_generate" finished-at="2023-08-18T13:50:27 BRT" duration-ms="13" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- _generate -->
+        <test-method signature="generatedCssTemplate()[pri:0, instance:objectos.selfgen.css2.CssSelfGen07ValueTypeInValueTypeTest@7c24b813]" started-at="2023-08-18T13:50:27 BRT" name="generatedCssTemplate" finished-at="2023-08-18T13:50:27 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- generatedCssTemplate -->
+      </class> <!-- objectos.selfgen.css2.CssSelfGen07ValueTypeInValueTypeTest -->
+      <class name="objectos.selfgen.css2.CssSelfGen00Test">
+        <test-method signature="propertyBorderWidth()[pri:0, instance:objectos.selfgen.css2.CssSelfGen00Test@7bd4937b]" started-at="2023-08-18T13:50:27 BRT" name="propertyBorderWidth" finished-at="2023-08-18T13:50:27 BRT" duration-ms="11" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- propertyBorderWidth -->
+        <test-method signature="selectors01()[pri:0, instance:objectos.selfgen.css2.CssSelfGen00Test@7bd4937b]" started-at="2023-08-18T13:50:27 BRT" name="selectors01" finished-at="2023-08-18T13:50:27 BRT" duration-ms="9" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- selectors01 -->
+      </class> <!-- objectos.selfgen.css2.CssSelfGen00Test -->
+      <class name="objectos.selfgen.css2.CssSelfGen02NumberTypeTest">
+        <test-method is-config="true" signature="_generate()[pri:0, instance:objectos.selfgen.css2.CssSelfGen02NumberTypeTest@209da20d]" started-at="2023-08-18T13:50:27 BRT" name="_generate" finished-at="2023-08-18T13:50:27 BRT" duration-ms="9" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- _generate -->
+        <test-method signature="generatedCssTemplate()[pri:0, instance:objectos.selfgen.css2.CssSelfGen02NumberTypeTest@209da20d]" started-at="2023-08-18T13:50:27 BRT" name="generatedCssTemplate" finished-at="2023-08-18T13:50:27 BRT" duration-ms="0" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- generatedCssTemplate -->
+      </class> <!-- objectos.selfgen.css2.CssSelfGen02NumberTypeTest -->
+      <class name="objectos.selfgen.css2.CssSelfGen10KeywordSelectorNameClashTest">
+        <test-method is-config="true" signature="_generate()[pri:0, instance:objectos.selfgen.css2.CssSelfGen10KeywordSelectorNameClashTest@6fd83fc1]" started-at="2023-08-18T13:50:27 BRT" name="_generate" finished-at="2023-08-18T13:50:27 BRT" duration-ms="12" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- _generate -->
+        <test-method signature="generatedCssTemplate()[pri:0, instance:objectos.selfgen.css2.CssSelfGen10KeywordSelectorNameClashTest@6fd83fc1]" started-at="2023-08-18T13:50:27 BRT" name="generatedCssTemplate" finished-at="2023-08-18T13:50:27 BRT" duration-ms="0" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- generatedCssTemplate -->
+      </class> <!-- objectos.selfgen.css2.CssSelfGen10KeywordSelectorNameClashTest -->
+      <class name="objectos.selfgen.css2.StandardNameTest">
+        <test-method is-config="true" signature="_generate()[pri:0, instance:objectos.selfgen.css2.StandardNameTest@4f2b503c]" started-at="2023-08-18T13:50:27 BRT" name="_generate" finished-at="2023-08-18T13:50:27 BRT" duration-ms="10" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- _generate -->
+        <test-method signature="all()[pri:0, instance:objectos.selfgen.css2.StandardNameTest@4f2b503c]" started-at="2023-08-18T13:50:27 BRT" name="all" finished-at="2023-08-18T13:50:27 BRT" duration-ms="0" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- all -->
+      </class> <!-- objectos.selfgen.css2.StandardNameTest -->
+      <class name="objectos.selfgen.css.spec.PseudoClassSelectorsGenTest">
+        <test-method is-config="true" signature="_clearResultList()[pri:0, instance:objectos.selfgen.css.spec.PseudoClassSelectorsGenTest@6283d8b8]" started-at="2023-08-18T13:50:26 BRT" name="_clearResultList" finished-at="2023-08-18T13:50:26 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- _clearResultList -->
+        <test-method signature="generateJavaFile()[pri:0, instance:objectos.selfgen.css.spec.PseudoClassSelectorsGenTest@6283d8b8]" started-at="2023-08-18T13:50:26 BRT" name="generateJavaFile" finished-at="2023-08-18T13:50:26 BRT" duration-ms="17" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- generateJavaFile -->
+      </class> <!-- objectos.selfgen.css.spec.PseudoClassSelectorsGenTest -->
+      <class name="objectos.selfgen.css2.LengthUnitStepTest">
+        <test-method is-config="true" signature="_generate()[pri:0, instance:objectos.selfgen.css2.LengthUnitStepTest@543588e6]" started-at="2023-08-18T13:50:27 BRT" name="_generate" finished-at="2023-08-18T13:50:27 BRT" duration-ms="51" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- _generate -->
+        <test-method signature="all()[pri:0, instance:objectos.selfgen.css2.LengthUnitStepTest@543588e6]" started-at="2023-08-18T13:50:27 BRT" name="all" finished-at="2023-08-18T13:50:27 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- all -->
+      </class> <!-- objectos.selfgen.css2.LengthUnitStepTest -->
+      <class name="objectos.selfgen.css2.util.CssUtilSelfGen05Test">
+        <test-method is-config="true" signature="_generate()[pri:0, instance:objectos.selfgen.css2.util.CssUtilSelfGen05Test@18d87d80]" started-at="2023-08-18T13:50:27 BRT" name="_generate" finished-at="2023-08-18T13:50:27 BRT" duration-ms="4" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- _generate -->
+        <test-method signature="all()[pri:0, instance:objectos.selfgen.css2.util.CssUtilSelfGen05Test@18d87d80]" started-at="2023-08-18T13:50:27 BRT" name="all" finished-at="2023-08-18T13:50:27 BRT" duration-ms="0" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- all -->
+        <test-method signature="framework()[pri:0, instance:objectos.selfgen.css2.util.CssUtilSelfGen05Test@18d87d80]" started-at="2023-08-18T13:50:27 BRT" name="framework" finished-at="2023-08-18T13:50:27 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- framework -->
+      </class> <!-- objectos.selfgen.css2.util.CssUtilSelfGen05Test -->
+      <class name="objectos.selfgen.css2.CssSelfGen13KeywordAsParameterTypeTest">
+        <test-method is-config="true" signature="_generate()[pri:0, instance:objectos.selfgen.css2.CssSelfGen13KeywordAsParameterTypeTest@52af26ee]" started-at="2023-08-18T13:50:27 BRT" name="_generate" finished-at="2023-08-18T13:50:27 BRT" duration-ms="10" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- _generate -->
+        <test-method signature="generatedCssTemplate()[pri:0, instance:objectos.selfgen.css2.CssSelfGen13KeywordAsParameterTypeTest@52af26ee]" started-at="2023-08-18T13:50:27 BRT" name="generatedCssTemplate" finished-at="2023-08-18T13:50:27 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- generatedCssTemplate -->
+      </class> <!-- objectos.selfgen.css2.CssSelfGen13KeywordAsParameterTypeTest -->
+      <class name="objectos.selfgen.css.spec.StandardPropertyNameStepTest">
+        <test-method is-config="true" signature="_clearResultList()[pri:0, instance:objectos.selfgen.css.spec.StandardPropertyNameStepTest@a530d0a]" started-at="2023-08-18T13:50:26 BRT" name="_clearResultList" finished-at="2023-08-18T13:50:26 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- _clearResultList -->
+        <test-method signature="execute()[pri:0, instance:objectos.selfgen.css.spec.StandardPropertyNameStepTest@a530d0a]" started-at="2023-08-18T13:50:26 BRT" name="execute" description="it should generate an enum constant for each property defined" finished-at="2023-08-18T13:50:26 BRT" duration-ms="29" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- execute -->
+      </class> <!-- objectos.selfgen.css.spec.StandardPropertyNameStepTest -->
+      <class name="objectos.selfgen.css2.CssSelfGen08MultiPropertyKeywordTest">
+        <test-method is-config="true" signature="_generate()[pri:0, instance:objectos.selfgen.css2.CssSelfGen08MultiPropertyKeywordTest@bae7dc0]" started-at="2023-08-18T13:50:27 BRT" name="_generate" finished-at="2023-08-18T13:50:27 BRT" duration-ms="9" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- _generate -->
+        <test-method signature="generatedCssTemplate()[pri:0, instance:objectos.selfgen.css2.CssSelfGen08MultiPropertyKeywordTest@bae7dc0]" started-at="2023-08-18T13:50:27 BRT" name="generatedCssTemplate" finished-at="2023-08-18T13:50:27 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- generatedCssTemplate -->
+      </class> <!-- objectos.selfgen.css2.CssSelfGen08MultiPropertyKeywordTest -->
+      <class name="objectos.selfgen.css.spec.AngleUnitStepTest">
+        <test-method signature="execute()[pri:0, instance:objectos.selfgen.css.spec.AngleUnitStepTest@3b6ddd1d]" started-at="2023-08-18T13:50:26 BRT" name="execute" description="it should generate an enum constant for each unit." finished-at="2023-08-18T13:50:26 BRT" duration-ms="6" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- execute -->
+        <test-method is-config="true" signature="_clearResultList()[pri:0, instance:objectos.selfgen.css.spec.AngleUnitStepTest@3b6ddd1d]" started-at="2023-08-18T13:50:26 BRT" name="_clearResultList" finished-at="2023-08-18T13:50:26 BRT" duration-ms="0" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- _clearResultList -->
+      </class> <!-- objectos.selfgen.css.spec.AngleUnitStepTest -->
+      <class name="objectos.selfgen.css2.util.CssUtilSelfGen03Test">
+        <test-method is-config="true" signature="_generate()[pri:0, instance:objectos.selfgen.css2.util.CssUtilSelfGen03Test@1e04fa0a]" started-at="2023-08-18T13:50:27 BRT" name="_generate" finished-at="2023-08-18T13:50:27 BRT" duration-ms="12" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- _generate -->
+        <test-method signature="all()[pri:0, instance:objectos.selfgen.css2.util.CssUtilSelfGen03Test@1e04fa0a]" started-at="2023-08-18T13:50:27 BRT" name="all" finished-at="2023-08-18T13:50:27 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- all -->
+        <test-method signature="framework()[pri:0, instance:objectos.selfgen.css2.util.CssUtilSelfGen03Test@1e04fa0a]" started-at="2023-08-18T13:50:27 BRT" name="framework" finished-at="2023-08-18T13:50:27 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- framework -->
+      </class> <!-- objectos.selfgen.css2.util.CssUtilSelfGen03Test -->
+      <class name="objectos.selfgen.css2.util.CssUtilSelfGen04Test">
+        <test-method is-config="true" signature="_generate()[pri:0, instance:objectos.selfgen.css2.util.CssUtilSelfGen04Test@1af2d44a]" started-at="2023-08-18T13:50:27 BRT" name="_generate" finished-at="2023-08-18T13:50:27 BRT" duration-ms="5" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- _generate -->
+        <test-method signature="all()[pri:0, instance:objectos.selfgen.css2.util.CssUtilSelfGen04Test@1af2d44a]" started-at="2023-08-18T13:50:27 BRT" name="all" finished-at="2023-08-18T13:50:27 BRT" duration-ms="0" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- all -->
+        <test-method signature="framework()[pri:0, instance:objectos.selfgen.css2.util.CssUtilSelfGen04Test@1af2d44a]" started-at="2023-08-18T13:50:27 BRT" name="framework" finished-at="2023-08-18T13:50:27 BRT" duration-ms="0" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- framework -->
+      </class> <!-- objectos.selfgen.css2.util.CssUtilSelfGen04Test -->
+      <class name="objectos.selfgen.css2.ColorNameTest">
+        <test-method signature="transparent()[pri:0, instance:objectos.selfgen.css2.ColorNameTest@21e360a]" started-at="2023-08-18T13:50:27 BRT" name="transparent" finished-at="2023-08-18T13:50:27 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- transparent -->
+      </class> <!-- objectos.selfgen.css2.ColorNameTest -->
+    </test> <!-- Surefire test -->
+  </suite> <!-- Surefire suite -->
+</testng-results>

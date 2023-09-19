@@ -1,0 +1,4 @@
+--patch-module
+objectos.asciidoc=_
+--add-reads
+objectos.asciidoc=ALL-UNNAMED

@@ -1,0 +1,4 @@
+--patch-module
+objectos.css=_
+--add-reads
+objectos.css=ALL-UNNAMED

@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report-3.0.xsd" version="3.0" name="TestSuite" time="1.242" tests="91" errors="0" skipped="0" failures="0">
+  <properties>
+    <property name="java.specification.version" value="20"/>
+    <property name="sun.jnu.encoding" value="UTF-8"/>
+    <property name="java.class.path" value="/home/mendo/kdo/projetos/objectos/objectos-html/target/test-classes:/home/mendo/kdo/projetos/objectos/objectos-selfgen/target/objectos-selfgen-0.8.0-SNAPSHOT.jar:/home/mendo/kdo/projetos/objectos/objectos-code/target/objectos-code-0.8.0-SNAPSHOT.jar:/home/mendo/.m2/repository/org/slf4j/slf4j-nop/1.7.36/slf4j-nop-1.7.36.jar:/home/mendo/.m2/repository/org/slf4j/slf4j-api/1.7.36/slf4j-api-1.7.36.jar:/home/mendo/.m2/repository/org/testng/testng/7.7.1/testng-7.7.1.jar:/home/mendo/.m2/repository/com/beust/jcommander/1.82/jcommander-1.82.jar:/home/mendo/.m2/repository/org/webjars/jquery/3.6.1/jquery-3.6.1.jar:"/>
+    <property name="java.vm.vendor" value="Amazon.com Inc."/>
+    <property name="sun.arch.data.model" value="64"/>
+    <property name="java.vendor.url" value="https://aws.amazon.com/corretto/"/>
+    <property name="user.timezone" value="America/Sao_Paulo"/>
+    <property name="os.name" value="Linux"/>
+    <property name="java.vm.specification.version" value="20"/>
+    <property name="sun.java.launcher" value="SUN_STANDARD"/>
+    <property name="user.country" value="US"/>
+    <property name="sun.boot.library.path" value="/opt/amazon-corretto-20.0.2.9.1-linux-x64/lib"/>
+    <property name="sun.java.command" value="org.apache.maven.surefire.booter.ForkedBooter /home/mendo/kdo/projetos/objectos/objectos-html/target/surefire 2023-08-18T13-49-42_567-jvmRun1 surefire-20230818135035245_16tmp surefire_5-20230818135035245_17tmp"/>
+    <property name="jdk.debug" value="release"/>
+    <property name="surefire.test.class.path" value="/home/mendo/kdo/projetos/objectos/objectos-html/target/test-classes:/home/mendo/kdo/projetos/objectos/objectos-selfgen/target/objectos-selfgen-0.8.0-SNAPSHOT.jar:/home/mendo/kdo/projetos/objectos/objectos-code/target/objectos-code-0.8.0-SNAPSHOT.jar:/home/mendo/.m2/repository/org/slf4j/slf4j-nop/1.7.36/slf4j-nop-1.7.36.jar:/home/mendo/.m2/repository/org/slf4j/slf4j-api/1.7.36/slf4j-api-1.7.36.jar:/home/mendo/.m2/repository/org/testng/testng/7.7.1/testng-7.7.1.jar:/home/mendo/.m2/repository/com/beust/jcommander/1.82/jcommander-1.82.jar:/home/mendo/.m2/repository/org/webjars/jquery/3.6.1/jquery-3.6.1.jar:"/>
+    <property name="sun.cpu.endian" value="little"/>
+    <property name="user.home" value="/home/mendo"/>
+    <property name="user.language" value="en"/>
+    <property name="java.specification.vendor" value="Oracle Corporation"/>
+    <property name="jdk.module.path" value="/home/mendo/kdo/projetos/objectos/objectos-html/target/classes:/home/mendo/kdo/projetos/objectos/objectos-util/target/objectos-util-0.8.0-SNAPSHOT.jar:/home/mendo/kdo/projetos/objectos/objectos-lang/target/objectos-lang-0.8.0-SNAPSHOT.jar"/>
+    <property name="java.version.date" value="2023-07-18"/>
+    <property name="java.home" value="/opt/amazon-corretto-20.0.2.9.1-linux-x64"/>
+    <property name="file.separator" value="/"/>
+    <property name="basedir" value="/home/mendo/kdo/projetos/objectos/objectos-html"/>
+    <property name="java.vm.compressedOopsMode" value="32-bit"/>
+    <property name="line.separator" value="&#10;"/>
+    <property name="java.vm.specification.vendor" value="Oracle Corporation"/>
+    <property name="java.specification.name" value="Java Platform API Specification"/>
+    <property name="surefire.real.class.path" value="/home/mendo/.m2/repository/org/apache/maven/surefire/surefire-api/3.1.2/surefire-api-3.1.2.jar:/home/mendo/.m2/repository/org/apache/maven/surefire/surefire-booter/3.1.2/surefire-booter-3.1.2.jar:/home/mendo/.m2/repository/org/apache/maven/surefire/surefire-extensions-spi/3.1.2/surefire-extensions-spi-3.1.2.jar:/home/mendo/.m2/repository/org/apache/maven/surefire/surefire-logger-api/3.1.2/surefire-logger-api-3.1.2.jar:/home/mendo/.m2/repository/org/apache/maven/surefire/surefire-shared-utils/3.1.2/surefire-shared-utils-3.1.2.jar:/home/mendo/kdo/projetos/objectos/objectos-html/target/test-classes:/home/mendo/kdo/projetos/objectos/objectos-selfgen/target/objectos-selfgen-0.8.0-SNAPSHOT.jar:/home/mendo/kdo/projetos/objectos/objectos-code/target/objectos-code-0.8.0-SNAPSHOT.jar:/home/mendo/.m2/repository/org/slf4j/slf4j-nop/1.7.36/slf4j-nop-1.7.36.jar:/home/mendo/.m2/repository/org/slf4j/slf4j-api/1.7.36/slf4j-api-1.7.36.jar:/home/mendo/.m2/repository/org/testng/testng/7.7.1/testng-7.7.1.jar:/home/mendo/.m2/repository/com/beust/jcommander/1.82/jcommander-1.82.jar:/home/mendo/.m2/repository/org/webjars/jquery/3.6.1/jquery-3.6.1.jar:/home/mendo/.m2/repository/org/apache/maven/surefire/surefire-testng/3.1.2/surefire-testng-3.1.2.jar:/home/mendo/.m2/repository/org/apache/maven/surefire/common-java5/3.1.2/common-java5-3.1.2.jar:/home/mendo/.m2/repository/org/apache/maven/surefire/surefire-grouper/3.1.2/surefire-grouper-3.1.2.jar:/home/mendo/.m2/repository/org/apache/maven/surefire/surefire-testng-utils/3.1.2/surefire-testng-utils-3.1.2.jar"/>
+    <property name="sun.management.compiler" value="HotSpot 64-Bit Tiered Compilers"/>
+    <property name="java.runtime.version" value="20.0.2+9-FR"/>
+    <property name="user.name" value="mendo"/>
+    <property name="stdout.encoding" value="UTF-8"/>
+    <property name="path.separator" value=":"/>
+    <property name="os.version" value="6.1.41-gentoo"/>
+    <property name="java.runtime.name" value="OpenJDK Runtime Environment"/>
+    <property name="file.encoding" value="UTF-8"/>
+    <property name="java.vm.name" value="OpenJDK 64-Bit Server VM"/>
+    <property name="java.vendor.version" value="Corretto-20.0.2.9.1"/>
+    <property name="localRepository" value="/home/mendo/.m2/repository"/>
+    <property name="java.vendor.url.bug" value="https://github.com/corretto/corretto-20/issues/"/>
+    <property name="java.io.tmpdir" value="/tmp"/>
+    <property name="java.version" value="20.0.2"/>
+    <property name="user.dir" value="/home/mendo/kdo/projetos/objectos/objectos-html"/>
+    <property name="os.arch" value="amd64"/>
+    <property name="java.vm.specification.name" value="Java Virtual Machine Specification"/>
+    <property name="native.encoding" value="UTF-8"/>
+    <property name="java.library.path" value="/usr/java/packages/lib:/usr/lib64:/lib64:/lib:/usr/lib"/>
+    <property name="java.vm.info" value="mixed mode"/>
+    <property name="stderr.encoding" value="UTF-8"/>
+    <property name="java.vendor" value="Amazon.com Inc."/>
+    <property name="java.vm.version" value="20.0.2+9-FR"/>
+    <property name="sun.io.unicode.encoding" value="UnicodeLittle"/>
+    <property name="java.class.version" value="64.0"/>
+  </properties>
+  <testcase name="testCase00" classname="objectos.html.internal.HtmlCompiler01Test" time="0.011"/>
+  <testcase name="testCase01" classname="objectos.html.internal.HtmlCompiler01Test" time="0.027"/>
+  <testcase name="testCase02" classname="objectos.html.internal.HtmlCompiler01Test" time="0.0"/>
+  <testcase name="testCase03" classname="objectos.html.internal.HtmlCompiler01Test" time="0.001"/>
+  <testcase name="testCase09" classname="objectos.html.internal.HtmlCompiler01Test" time="0.001"/>
+  <testcase name="testCase10" classname="objectos.html.internal.HtmlCompiler01Test" time="0.002"/>
+  <testcase name="testCase13" classname="objectos.html.internal.HtmlCompiler01Test" time="0.0"/>
+  <testcase name="testCase14" classname="objectos.html.internal.HtmlCompiler01Test" time="0.001"/>
+  <testcase name="testCase16" classname="objectos.html.internal.HtmlCompiler01Test" time="0.0"/>
+  <testcase name="testCase20" classname="objectos.html.internal.HtmlCompiler01Test" time="0.002"/>
+  <testcase name="testCase25" classname="objectos.html.internal.HtmlCompiler01Test" time="0.0"/>
+  <testcase name="testCase31" classname="objectos.html.internal.HtmlCompiler01Test" time="0.001"/>
+  <testcase name="testCase46" classname="objectos.html.internal.HtmlCompiler01Test" time="0.001"/>
+  <testcase name="testCase47" classname="objectos.html.internal.HtmlCompiler01Test" time="0.001"/>
+  <testcase name="testCase00" classname="objectos.html.internal.HtmlCompiler02Test" time="0.001"/>
+  <testcase name="testCase01" classname="objectos.html.internal.HtmlCompiler02Test" time="0.001"/>
+  <testcase name="testCase02" classname="objectos.html.internal.HtmlCompiler02Test" time="0.0"/>
+  <testcase name="testCase03" classname="objectos.html.internal.HtmlCompiler02Test" time="0.001"/>
+  <testcase name="testCase09" classname="objectos.html.internal.HtmlCompiler02Test" time="0.0"/>
+  <testcase name="testCase10" classname="objectos.html.internal.HtmlCompiler02Test" time="0.002"/>
+  <testcase name="testCase13" classname="objectos.html.internal.HtmlCompiler02Test" time="0.0"/>
+  <testcase name="testCase14" classname="objectos.html.internal.HtmlCompiler02Test" time="0.001"/>
+  <testcase name="testCase16" classname="objectos.html.internal.HtmlCompiler02Test" time="0.0"/>
+  <testcase name="testCase20" classname="objectos.html.internal.HtmlCompiler02Test" time="0.001"/>
+  <testcase name="testCase25" classname="objectos.html.internal.HtmlCompiler02Test" time="0.001"/>
+  <testcase name="testCase31" classname="objectos.html.internal.HtmlCompiler02Test" time="0.0"/>
+  <testcase name="testCase46" classname="objectos.html.internal.HtmlCompiler02Test" time="0.0"/>
+  <testcase name="testCase01" classname="objectos.html.internal.InternalCompiledHtmlTest" time="0.004"/>
+  <testcase name="testCase02" classname="objectos.html.internal.InternalCompiledHtmlTest" time="0.0"/>
+  <testcase name="testCase03" classname="objectos.html.internal.InternalCompiledHtmlTest" time="0.001"/>
+  <testcase name="testCase04" classname="objectos.html.internal.InternalCompiledHtmlTest" time="0.001"/>
+  <testcase name="testCase05" classname="objectos.html.internal.InternalCompiledHtmlTest" time="0.001"/>
+  <testcase name="testCase06" classname="objectos.html.internal.InternalCompiledHtmlTest" time="0.001"/>
+  <testcase name="testCase07" classname="objectos.html.internal.InternalCompiledHtmlTest" time="0.001"/>
+  <testcase name="testCase08" classname="objectos.html.internal.InternalCompiledHtmlTest" time="0.0"/>
+  <testcase name="testCase09" classname="objectos.html.internal.InternalCompiledHtmlTest" time="0.001"/>
+  <testcase name="testCase10" classname="objectos.html.internal.InternalCompiledHtmlTest" time="0.001"/>
+  <testcase name="processHrefTC01" classname="objectos.html.internal.HtmlPlayerTest" time="0.001"/>
+  <testcase name="processHrefTC02" classname="objectos.html.internal.HtmlPlayerTest" time="0.0"/>
+  <testcase name="processHrefTC03" classname="objectos.html.internal.HtmlPlayerTest" time="0.001"/>
+  <testcase name="pathName" classname="objectos.html.internal.ValidateTest" time="0.001"/>
+  <testcase name="writeAttributeValue" classname="objectos.html.internal.WriterTest" time="0.002"/>
+  <testcase name="writeText" classname="objectos.html.internal.WriterTest" time="0.0"/>
+  <testcase name="testCase00" classname="objectos.html.HtmlTemplateTest" time="0.001"/>
+  <testcase name="testCase01" classname="objectos.html.HtmlTemplateTest" time="0.001"/>
+  <testcase name="testCase02" classname="objectos.html.HtmlTemplateTest" time="0.001"/>
+  <testcase name="testCase03" classname="objectos.html.HtmlTemplateTest" time="0.0"/>
+  <testcase name="testCase04" classname="objectos.html.HtmlTemplateTest" time="0.001"/>
+  <testcase name="testCase05" classname="objectos.html.HtmlTemplateTest" time="0.0"/>
+  <testcase name="testCase06" classname="objectos.html.HtmlTemplateTest" time="0.0"/>
+  <testcase name="testCase07" classname="objectos.html.HtmlTemplateTest" time="0.001"/>
+  <testcase name="testCase08" classname="objectos.html.HtmlTemplateTest" time="0.001"/>
+  <testcase name="testCase09" classname="objectos.html.HtmlTemplateTest" time="0.0"/>
+  <testcase name="testCase10" classname="objectos.html.HtmlTemplateTest" time="0.001"/>
+  <testcase name="testCase11" classname="objectos.html.HtmlTemplateTest" time="0.002"/>
+  <testcase name="testCase12" classname="objectos.html.HtmlTemplateTest" time="0.002"/>
+  <testcase name="testCase13" classname="objectos.html.HtmlTemplateTest" time="0.001"/>
+  <testcase name="testCase14" classname="objectos.html.HtmlTemplateTest" time="0.001"/>
+  <testcase name="testCase15" classname="objectos.html.HtmlTemplateTest" time="0.001"/>
+  <testcase name="testCase16" classname="objectos.html.HtmlTemplateTest" time="0.001"/>
+  <testcase name="testCase17" classname="objectos.html.HtmlTemplateTest" time="0.0"/>
+  <testcase name="testCase18" classname="objectos.html.HtmlTemplateTest" time="0.001"/>
+  <testcase name="testCase19" classname="objectos.html.HtmlTemplateTest" time="0.001"/>
+  <testcase name="testCase20" classname="objectos.html.HtmlTemplateTest" time="0.001"/>
+  <testcase name="testCase21" classname="objectos.html.HtmlTemplateTest" time="0.001"/>
+  <testcase name="testCase22" classname="objectos.html.HtmlTemplateTest" time="0.002"/>
+  <testcase name="testCase23" classname="objectos.html.HtmlTemplateTest" time="0.016"/>
+  <testcase name="testCase24" classname="objectos.html.HtmlTemplateTest" time="0.001"/>
+  <testcase name="testCase25" classname="objectos.html.HtmlTemplateTest" time="0.001"/>
+  <testcase name="testCase26" classname="objectos.html.HtmlTemplateTest" time="0.002"/>
+  <testcase name="testCase27" classname="objectos.html.HtmlTemplateTest" time="0.002"/>
+  <testcase name="testCase28" classname="objectos.html.HtmlTemplateTest" time="0.0"/>
+  <testcase name="testCase29" classname="objectos.html.HtmlTemplateTest" time="0.002"/>
+  <testcase name="testCase30" classname="objectos.html.HtmlTemplateTest" time="0.001"/>
+  <testcase name="testCase31" classname="objectos.html.HtmlTemplateTest" time="0.001"/>
+  <testcase name="testCase32" classname="objectos.html.HtmlTemplateTest" time="0.001"/>
+  <testcase name="testCase34" classname="objectos.html.HtmlTemplateTest" time="0.002"/>
+  <testcase name="testCase35" classname="objectos.html.HtmlTemplateTest" time="0.002"/>
+  <testcase name="testCase36" classname="objectos.html.HtmlTemplateTest" time="0.001"/>
+  <testcase name="testCase37" classname="objectos.html.HtmlTemplateTest" time="0.0"/>
+  <testcase name="testCase38" classname="objectos.html.HtmlTemplateTest" time="0.001"/>
+  <testcase name="testCase39" classname="objectos.html.HtmlTemplateTest" time="0.001"/>
+  <testcase name="testCase40" classname="objectos.html.HtmlTemplateTest" time="0.002"/>
+  <testcase name="testCase41" classname="objectos.html.HtmlTemplateTest" time="0.002"/>
+  <testcase name="testCase42" classname="objectos.html.HtmlTemplateTest" time="0.001"/>
+  <testcase name="testCase43" classname="objectos.html.HtmlTemplateTest" time="0.001"/>
+  <testcase name="testCase44" classname="objectos.html.HtmlTemplateTest" time="0.002"/>
+  <testcase name="testCase45" classname="objectos.html.HtmlTemplateTest" time="0.004"/>
+  <testcase name="testCase46" classname="objectos.html.HtmlTemplateTest" time="0.001"/>
+  <testcase name="canBeEncoded_WithSingleByte" classname="objectos.html.tmpl.StandardElementNameTest" time="0.001"/>
+  <testcase name="canBeEncoded_WithSingleByte" classname="objectos.html.tmpl.StandardAttributeNameTest" time="0.0"/>
+</testsuite>

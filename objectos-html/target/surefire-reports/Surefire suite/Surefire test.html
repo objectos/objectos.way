@@ -1,0 +1,737 @@
+<html>
+<head>
+<title>TestNG:  Surefire test</title>
+<link href="../testng.css" rel="stylesheet" type="text/css" />
+<link href="../my-testng.css" rel="stylesheet" type="text/css" />
+
+<style type="text/css">
+.log { display: none;} 
+.stack-trace { display: none;} 
+</style>
+<script type="text/javascript">
+<!--
+function flip(e) {
+  current = e.style.display;
+  if (current == 'block') {
+    e.style.display = 'none';
+    return 0;
+  }
+  else {
+    e.style.display = 'block';
+    return 1;
+  }
+}
+
+function toggleBox(szDivId, elem, msg1, msg2)
+{
+  var res = -1;  if (document.getElementById) {
+    res = flip(document.getElementById(szDivId));
+  }
+  else if (document.all) {
+    // this is the way old msie versions work
+    res = flip(document.all[szDivId]);
+  }
+  if(elem) {
+    if(res == 0) elem.innerHTML = msg1; else elem.innerHTML = msg2;
+  }
+
+}
+
+function toggleAllBoxes() {
+  if (document.getElementsByTagName) {
+    d = document.getElementsByTagName('div');
+    for (i = 0; i < d.length; i++) {
+      if (d[i].className == 'log') {
+        flip(d[i]);
+      }
+    }
+  }
+}
+
+// -->
+</script>
+
+</head>
+<body>
+<h2 align='center'>Surefire test</h2><table border='1' align="center">
+<tr>
+<td>Tests passed/Failed/Skipped:</td><td>91/0/0</td>
+</tr><tr>
+<td>Started on:</td><td>Fri Aug 18 13:50:36 BRT 2023</td>
+</tr>
+<tr><td>Total time:</td><td>0 seconds (282 ms)</td>
+</tr><tr>
+<td>Included groups:</td><td></td>
+</tr><tr>
+<td>Excluded groups:</td><td></td>
+</tr>
+</table><p/>
+<small><i>(Hover the method name to see the test class name)</i></small><p/>
+<table width='100%' border='1' class='invocation-passed'>
+<tr><td colspan='4' align='center'><b>PASSED TESTS</b></td></tr>
+<tr><td><b>Test method</b></td>
+<td><b>Attribute(s)</b></td>
+<td width="30%"><b>Exception</b></td>
+<td width="10%"><b>Time (seconds)</b></td>
+<td><b>Instance</b></td>
+</tr>
+<tr>
+<td title='objectos.html.internal.WriterTest.writeAttributeValue()'><b>writeAttributeValue</b><br>Test class: objectos.html.internal.WriterTest</td>
+<td></td>
+<td>0</td>
+<td>objectos.html.internal.WriterTest@41fecb8b</td></tr>
+<tr>
+<td title='objectos.html.HtmlTemplateTest.testCase03()'><b>testCase03</b><br>Test class: objectos.html.HtmlTemplateTest<br>Test method: HtmlTemplate TC03
+
+- Single html element with a single head child element
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.html.HtmlTemplateTest@120f102b</td></tr>
+<tr>
+<td title='objectos.html.internal.HtmlCompiler02Test.testCase25()'><b>testCase25</b><br>Test class: objectos.html.internal.HtmlCompiler02Test<br>Test method: style/script => raw
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.html.internal.HtmlCompiler02Test@696da30b</td></tr>
+<tr>
+<td title='objectos.html.internal.HtmlPlayerTest.processHrefTC01()'><b>processHrefTC01</b><br>Test class: objectos.html.internal.HtmlPlayerTest</td>
+<td></td>
+<td>0</td>
+<td>objectos.html.internal.HtmlPlayerTest@1ba9117e</td></tr>
+<tr>
+<td title='objectos.html.internal.HtmlCompiler02Test.testCase02()'><b>testCase02</b><br>Test class: objectos.html.internal.HtmlCompiler02Test<br>Test method: <html class="no-js" lang="pt-BR"></html>
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.html.internal.HtmlCompiler02Test@696da30b</td></tr>
+<tr>
+<td title='objectos.html.HtmlTemplateTest.testCase18()'><b>testCase18</b><br>Test class: objectos.html.HtmlTemplateTest<br>Test method: HtmlTemplate TC18
+
+- attribute or element (title)
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.html.HtmlTemplateTest@120f102b</td></tr>
+<tr>
+<td title='objectos.html.internal.HtmlCompiler01Test.testCase31()'><b>testCase31</b><br>Test class: objectos.html.internal.HtmlCompiler01Test<br>Test method: HtmlTemplate TC31
+
+- email input
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.html.internal.HtmlCompiler01Test@3e6ef8ad</td></tr>
+<tr>
+<td title='objectos.html.internal.InternalCompiledHtmlTest.testCase09()'><b>testCase09</b><br>Test class: objectos.html.internal.InternalCompiledHtmlTest<br>Test method: PrettyPrintWriter TC09
+
+- style
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.html.internal.InternalCompiledHtmlTest@4e7912d8</td></tr>
+<tr>
+<td title='objectos.html.HtmlTemplateTest.testCase28()'><b>testCase28</b><br>Test class: objectos.html.HtmlTemplateTest<br>Test method: HtmlTemplate TC28
+
+- svg element (1)
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.html.HtmlTemplateTest@120f102b</td></tr>
+<tr>
+<td title='objectos.html.HtmlTemplateTest.testCase43()'><b>testCase43</b><br>Test class: objectos.html.HtmlTemplateTest</td>
+<td></td>
+<td>0</td>
+<td>objectos.html.HtmlTemplateTest@120f102b</td></tr>
+<tr>
+<td title='objectos.html.HtmlTemplateTest.testCase06()'><b>testCase06</b><br>Test class: objectos.html.HtmlTemplateTest<br>Test method: HtmlTemplate TC06
+
+- Nest depth=2
+- self closing tag (meta)
+- with attributes
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.html.HtmlTemplateTest@120f102b</td></tr>
+<tr>
+<td title='objectos.html.HtmlTemplateTest.testCase38()'><b>testCase38</b><br>Test class: objectos.html.HtmlTemplateTest<br>Test method: HtmlTemplate TC38
+
+- 12 attribute values
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.html.HtmlTemplateTest@120f102b</td></tr>
+<tr>
+<td title='objectos.html.internal.HtmlCompiler01Test.testCase01()'><b>testCase01</b><br>Test class: objectos.html.internal.HtmlCompiler01Test<br>Test method: <html lang="pt-BR"></html>
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.html.internal.HtmlCompiler01Test@3e6ef8ad</td></tr>
+<tr>
+<td title='objectos.html.internal.HtmlCompiler01Test.testCase00()'><b>testCase00</b><br>Test class: objectos.html.internal.HtmlCompiler01Test<br>Test method: <html></html>
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.html.internal.HtmlCompiler01Test@3e6ef8ad</td></tr>
+<tr>
+<td title='objectos.html.HtmlTemplateTest.testCase34()'><b>testCase34</b><br>Test class: objectos.html.HtmlTemplateTest<br>Test method: HtmlTemplate TC34
+
+- allow attributeOrElement in the root of lambda
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.html.HtmlTemplateTest@120f102b</td></tr>
+<tr>
+<td title='objectos.html.HtmlTemplateTest.testCase32()'><b>testCase32</b><br>Test class: objectos.html.HtmlTemplateTest<br>Test method: HtmlTemplate TC32
+
+- pathName + href interaction
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.html.HtmlTemplateTest@120f102b</td></tr>
+<tr>
+<td title='objectos.html.HtmlTemplateTest.testCase44()'><b>testCase44</b><br>Test class: objectos.html.HtmlTemplateTest</td>
+<td></td>
+<td>0</td>
+<td>objectos.html.HtmlTemplateTest@120f102b</td></tr>
+<tr>
+<td title='objectos.html.internal.InternalCompiledHtmlTest.testCase10()'><b>testCase10</b><br>Test class: objectos.html.internal.InternalCompiledHtmlTest<br>Test method: PrettyPrintWriter TC10
+
+- always end with a NL
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.html.internal.InternalCompiledHtmlTest@4e7912d8</td></tr>
+<tr>
+<td title='objectos.html.HtmlTemplateTest.testCase21()'><b>testCase21</b><br>Test class: objectos.html.HtmlTemplateTest<br>Test method: HtmlTemplate TC21
+
+- attributes come from another object.
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.html.HtmlTemplateTest@120f102b</td></tr>
+<tr>
+<td title='objectos.html.internal.InternalCompiledHtmlTest.testCase03()'><b>testCase03</b><br>Test class: objectos.html.internal.InternalCompiledHtmlTest<br>Test method: PrettyPrintWriter TC03
+
+- head/body
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.html.internal.InternalCompiledHtmlTest@4e7912d8</td></tr>
+<tr>
+<td title='objectos.html.internal.HtmlCompiler02Test.testCase16()'><b>testCase16</b><br>Test class: objectos.html.internal.HtmlCompiler02Test<br>Test method: Ambiguous
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.html.internal.HtmlCompiler02Test@696da30b</td></tr>
+<tr>
+<td title='objectos.html.internal.HtmlCompiler02Test.testCase14()'><b>testCase14</b><br>Test class: objectos.html.internal.HtmlCompiler02Test<br>Test method: Text child element
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.html.internal.HtmlCompiler02Test@696da30b</td></tr>
+<tr>
+<td title='objectos.html.internal.HtmlCompiler01Test.testCase46()'><b>testCase46</b><br>Test class: objectos.html.internal.HtmlCompiler01Test<br>Test method: HtmlTemplate TC46
+
+- flatten instruction
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.html.internal.HtmlCompiler01Test@3e6ef8ad</td></tr>
+<tr>
+<td title='objectos.html.HtmlTemplateTest.testCase08()'><b>testCase08</b><br>Test class: objectos.html.HtmlTemplateTest<br>Test method: HtmlTemplate TC08
+
+- Siblings + single attribute.
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.html.HtmlTemplateTest@120f102b</td></tr>
+<tr>
+<td title='objectos.html.HtmlTemplateTest.testCase31()'><b>testCase31</b><br>Test class: objectos.html.HtmlTemplateTest<br>Test method: HtmlTemplate TC31
+
+- email input
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.html.HtmlTemplateTest@120f102b</td></tr>
+<tr>
+<td title='objectos.html.internal.HtmlCompiler02Test.testCase09()'><b>testCase09</b><br>Test class: objectos.html.internal.HtmlCompiler02Test<br>Test method: <!DOCTYPE html>
+<html></html>
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.html.internal.HtmlCompiler02Test@696da30b</td></tr>
+<tr>
+<td title='objectos.html.HtmlTemplateTest.testCase26()'><b>testCase26</b><br>Test class: objectos.html.HtmlTemplateTest<br>Test method: HtmlTemplate TC26
+
+- multi-level include
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.html.HtmlTemplateTest@120f102b</td></tr>
+<tr>
+<td title='objectos.html.internal.HtmlCompiler01Test.testCase16()'><b>testCase16</b><br>Test class: objectos.html.internal.HtmlCompiler01Test<br>Test method: Ambiguous
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.html.internal.HtmlCompiler01Test@3e6ef8ad</td></tr>
+<tr>
+<td title='objectos.html.internal.InternalCompiledHtmlTest.testCase07()'><b>testCase07</b><br>Test class: objectos.html.internal.InternalCompiledHtmlTest<br>Test method: PrettyPrintWriter TC07
+
+- paragraph w/ text
+- + inline elements
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.html.internal.InternalCompiledHtmlTest@4e7912d8</td></tr>
+<tr>
+<td title='objectos.html.HtmlTemplateTest.testCase10()'><b>testCase10</b><br>Test class: objectos.html.HtmlTemplateTest<br>Test method: HtmlTemplate TC10
+
+- Test fragment inclusion.
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.html.HtmlTemplateTest@120f102b</td></tr>
+<tr>
+<td title='objectos.html.HtmlTemplateTest.testCase13()'><b>testCase13</b><br>Test class: objectos.html.HtmlTemplateTest<br>Test method: HtmlTemplate TC13
+
+- attributes come from another object.
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.html.HtmlTemplateTest@120f102b</td></tr>
+<tr>
+<td title='objectos.html.internal.HtmlCompiler02Test.testCase46()'><b>testCase46</b><br>Test class: objectos.html.internal.HtmlCompiler02Test<br>Test method: HtmlTemplate TC46
+
+- flatten instruction
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.html.internal.HtmlCompiler02Test@696da30b</td></tr>
+<tr>
+<td title='objectos.html.HtmlTemplateTest.testCase17()'><b>testCase17</b><br>Test class: objectos.html.HtmlTemplateTest<br>Test method: HtmlTemplate TC17
+
+- attribute or element (title)
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.html.HtmlTemplateTest@120f102b</td></tr>
+<tr>
+<td title='objectos.html.internal.HtmlCompiler02Test.testCase20()'><b>testCase20</b><br>Test class: objectos.html.internal.HtmlCompiler02Test<br>Test method: include template
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.html.internal.HtmlCompiler02Test@696da30b</td></tr>
+<tr>
+<td title='objectos.html.HtmlTemplateTest.testCase20()'><b>testCase20</b><br>Test class: objectos.html.HtmlTemplateTest<br>Test method: HtmlTemplate TC20
+
+- include template
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.html.HtmlTemplateTest@120f102b</td></tr>
+<tr>
+<td title='objectos.html.internal.HtmlPlayerTest.processHrefTC03()'><b>processHrefTC03</b><br>Test class: objectos.html.internal.HtmlPlayerTest</td>
+<td></td>
+<td>0</td>
+<td>objectos.html.internal.HtmlPlayerTest@1ba9117e</td></tr>
+<tr>
+<td title='objectos.html.internal.HtmlCompiler02Test.testCase10()'><b>testCase10</b><br>Test class: objectos.html.internal.HtmlCompiler02Test<br>Test method: fragment inclusion
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.html.internal.HtmlCompiler02Test@696da30b</td></tr>
+<tr>
+<td title='objectos.html.HtmlTemplateTest.testCase35()'><b>testCase35</b><br>Test class: objectos.html.HtmlTemplateTest<br>Test method: HtmlTemplate TC35
+
+- support noop() instruction
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.html.HtmlTemplateTest@120f102b</td></tr>
+<tr>
+<td title='objectos.html.HtmlTemplateTest.testCase00()'><b>testCase00</b><br>Test class: objectos.html.HtmlTemplateTest<br>Test method: HtmlTemplate TC00
+
+- single html element
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.html.HtmlTemplateTest@120f102b</td></tr>
+<tr>
+<td title='objectos.html.internal.HtmlCompiler02Test.testCase00()'><b>testCase00</b><br>Test class: objectos.html.internal.HtmlCompiler02Test<br>Test method: <html></html>
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.html.internal.HtmlCompiler02Test@696da30b</td></tr>
+<tr>
+<td title='objectos.html.HtmlTemplateTest.testCase05()'><b>testCase05</b><br>Test class: objectos.html.HtmlTemplateTest<br>Test method: HtmlTemplate TC05
+
+- Nest depth=2
+- self closing tag (meta)
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.html.HtmlTemplateTest@120f102b</td></tr>
+<tr>
+<td title='objectos.html.tmpl.StandardElementNameTest.canBeEncoded_WithSingleByte()'><b>canBeEncoded_WithSingleByte</b><br>Test class: objectos.html.tmpl.StandardElementNameTest</td>
+<td></td>
+<td>0</td>
+<td>objectos.html.tmpl.StandardElementNameTest@625732</td></tr>
+<tr>
+<td title='objectos.html.internal.HtmlCompiler01Test.testCase02()'><b>testCase02</b><br>Test class: objectos.html.internal.HtmlCompiler01Test<br>Test method: <html class="no-js" lang="pt-BR"></html>
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.html.internal.HtmlCompiler01Test@3e6ef8ad</td></tr>
+<tr>
+<td title='objectos.html.HtmlTemplateTest.testCase22()'><b>testCase22</b><br>Test class: objectos.html.HtmlTemplateTest<br>Test method: HtmlTemplate TC22
+
+- multiple invocations of the same attribute
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.html.HtmlTemplateTest@120f102b</td></tr>
+<tr>
+<td title='objectos.html.internal.HtmlCompiler01Test.testCase47()'><b>testCase47</b><br>Test class: objectos.html.internal.HtmlCompiler01Test<br>Test method: HtmlTemplate TC47
+
+- grid component
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.html.internal.HtmlCompiler01Test@3e6ef8ad</td></tr>
+<tr>
+<td title='objectos.html.internal.HtmlCompiler01Test.testCase20()'><b>testCase20</b><br>Test class: objectos.html.internal.HtmlCompiler01Test<br>Test method: include template
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.html.internal.HtmlCompiler01Test@3e6ef8ad</td></tr>
+<tr>
+<td title='objectos.html.HtmlTemplateTest.testCase07()'><b>testCase07</b><br>Test class: objectos.html.HtmlTemplateTest<br>Test method: HtmlTemplate TC07
+
+- Siblings as children of a single html element.
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.html.HtmlTemplateTest@120f102b</td></tr>
+<tr>
+<td title='objectos.html.internal.HtmlCompiler01Test.testCase03()'><b>testCase03</b><br>Test class: objectos.html.internal.HtmlCompiler01Test<br>Test method: <html><head></head></html>
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.html.internal.HtmlCompiler01Test@3e6ef8ad</td></tr>
+<tr>
+<td title='objectos.html.HtmlTemplateTest.testCase01()'><b>testCase01</b><br>Test class: objectos.html.HtmlTemplateTest<br>Test method: HtmlTemplate TC01
+
+- single html element with a single attribute.
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.html.HtmlTemplateTest@120f102b</td></tr>
+<tr>
+<td title='objectos.html.HtmlTemplateTest.testCase30()'><b>testCase30</b><br>Test class: objectos.html.HtmlTemplateTest<br>Test method: HtmlTemplate TC30
+
+- script + raw text
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.html.HtmlTemplateTest@120f102b</td></tr>
+<tr>
+<td title='objectos.html.HtmlTemplateTest.testCase14()'><b>testCase14</b><br>Test class: objectos.html.HtmlTemplateTest<br>Test method: HtmlTemplate TC14
+
+- text child element
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.html.HtmlTemplateTest@120f102b</td></tr>
+<tr>
+<td title='objectos.html.HtmlTemplateTest.testCase19()'><b>testCase19</b><br>Test class: objectos.html.HtmlTemplateTest<br>Test method: HtmlTemplate TC19
+
+- attribute or element (label)
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.html.HtmlTemplateTest@120f102b</td></tr>
+<tr>
+<td title='objectos.html.HtmlTemplateTest.testCase39()'><b>testCase39</b><br>Test class: objectos.html.HtmlTemplateTest<br>Test method: HtmlTemplate TC39
+
+- attribute value escaping
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.html.HtmlTemplateTest@120f102b</td></tr>
+<tr>
+<td title='objectos.html.HtmlTemplateTest.testCase23()'><b>testCase23</b><br>Test class: objectos.html.HtmlTemplateTest<br>Test method: HtmlTemplate TC23
+
+- (to be changed) imperative API
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.html.HtmlTemplateTest@120f102b</td></tr>
+<tr>
+<td title='objectos.html.internal.HtmlCompiler01Test.testCase25()'><b>testCase25</b><br>Test class: objectos.html.internal.HtmlCompiler01Test<br>Test method: style/script => raw
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.html.internal.HtmlCompiler01Test@3e6ef8ad</td></tr>
+<tr>
+<td title='objectos.html.internal.HtmlCompiler02Test.testCase31()'><b>testCase31</b><br>Test class: objectos.html.internal.HtmlCompiler02Test<br>Test method: HtmlTemplate TC31
+
+- email input
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.html.internal.HtmlCompiler02Test@696da30b</td></tr>
+<tr>
+<td title='objectos.html.HtmlTemplateTest.testCase09()'><b>testCase09</b><br>Test class: objectos.html.HtmlTemplateTest<br>Test method: HtmlTemplate TC09
+
+- Siblings at root.
+- Also doctype.
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.html.HtmlTemplateTest@120f102b</td></tr>
+<tr>
+<td title='objectos.html.HtmlTemplateTest.testCase15()'><b>testCase15</b><br>Test class: objectos.html.HtmlTemplateTest<br>Test method: HtmlTemplate TC15
+
+- text nodes + element nodes
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.html.HtmlTemplateTest@120f102b</td></tr>
+<tr>
+<td title='objectos.html.HtmlTemplateTest.testCase42()'><b>testCase42</b><br>Test class: objectos.html.HtmlTemplateTest</td>
+<td></td>
+<td>0</td>
+<td>objectos.html.HtmlTemplateTest@120f102b</td></tr>
+<tr>
+<td title='objectos.html.HtmlTemplateTest.testCase02()'><b>testCase02</b><br>Test class: objectos.html.HtmlTemplateTest<br>Test method: HtmlTemplate TC02
+
+- Single html element with two attributes
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.html.HtmlTemplateTest@120f102b</td></tr>
+<tr>
+<td title='objectos.html.HtmlTemplateTest.testCase12()'><b>testCase12</b><br>Test class: objectos.html.HtmlTemplateTest<br>Test method: HtmlTemplate TC12
+
+- Siblings fragments.
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.html.HtmlTemplateTest@120f102b</td></tr>
+<tr>
+<td title='objectos.html.internal.ValidateTest.pathName()'><b>pathName</b><br>Test class: objectos.html.internal.ValidateTest</td>
+<td></td>
+<td>0</td>
+<td>objectos.html.internal.ValidateTest@732c2a62</td></tr>
+<tr>
+<td title='objectos.html.internal.InternalCompiledHtmlTest.testCase01()'><b>testCase01</b><br>Test class: objectos.html.internal.InternalCompiledHtmlTest<br>Test method: PrettyPrintWriter TC01
+
+- empty element
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.html.internal.InternalCompiledHtmlTest@4e7912d8</td></tr>
+<tr>
+<td title='objectos.html.internal.HtmlCompiler01Test.testCase09()'><b>testCase09</b><br>Test class: objectos.html.internal.HtmlCompiler01Test<br>Test method: <!DOCTYPE html>
+<html></html>
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.html.internal.HtmlCompiler01Test@3e6ef8ad</td></tr>
+<tr>
+<td title='objectos.html.internal.HtmlCompiler02Test.testCase13()'><b>testCase13</b><br>Test class: objectos.html.internal.HtmlCompiler02Test<br>Test method: External id attributes
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.html.internal.HtmlCompiler02Test@696da30b</td></tr>
+<tr>
+<td title='objectos.html.HtmlTemplateTest.testCase04()'><b>testCase04</b><br>Test class: objectos.html.HtmlTemplateTest<br>Test method: HtmlTemplate TC04
+
+- Single html element with an attribute and child.
+- Attribute is defined in Java after the element.
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.html.HtmlTemplateTest@120f102b</td></tr>
+<tr>
+<td title='objectos.html.HtmlTemplateTest.testCase16()'><b>testCase16</b><br>Test class: objectos.html.HtmlTemplateTest<br>Test method: HtmlTemplate TC16
+
+- attribute or element (title)
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.html.HtmlTemplateTest@120f102b</td></tr>
+<tr>
+<td title='objectos.html.internal.WriterTest.writeText()'><b>writeText</b><br>Test class: objectos.html.internal.WriterTest</td>
+<td></td>
+<td>0</td>
+<td>objectos.html.internal.WriterTest@41fecb8b</td></tr>
+<tr>
+<td title='objectos.html.internal.InternalCompiledHtmlTest.testCase08()'><b>testCase08</b><br>Test class: objectos.html.internal.InternalCompiledHtmlTest<br>Test method: PrettyPrintWriter TC08
+
+- ul/li
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.html.internal.InternalCompiledHtmlTest@4e7912d8</td></tr>
+<tr>
+<td title='objectos.html.HtmlTemplateTest.testCase36()'><b>testCase36</b><br>Test class: objectos.html.HtmlTemplateTest<br>Test method: HtmlTemplate TC36
+
+- the `className` instruction
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.html.HtmlTemplateTest@120f102b</td></tr>
+<tr>
+<td title='objectos.html.HtmlTemplateTest.testCase40()'><b>testCase40</b><br>Test class: objectos.html.HtmlTemplateTest<br>Test method: HtmlTemplate TC40
+
+- text in lambda
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.html.HtmlTemplateTest@120f102b</td></tr>
+<tr>
+<td title='objectos.html.internal.InternalCompiledHtmlTest.testCase04()'><b>testCase04</b><br>Test class: objectos.html.internal.InternalCompiledHtmlTest<br>Test method: PrettyPrintWriter TC04
+
+- head/meta (self closing)
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.html.internal.InternalCompiledHtmlTest@4e7912d8</td></tr>
+<tr>
+<td title='objectos.html.HtmlTemplateTest.testCase45()'><b>testCase45</b><br>Test class: objectos.html.HtmlTemplateTest</td>
+<td></td>
+<td>0</td>
+<td>objectos.html.HtmlTemplateTest@120f102b</td></tr>
+<tr>
+<td title='objectos.html.internal.HtmlCompiler01Test.testCase13()'><b>testCase13</b><br>Test class: objectos.html.internal.HtmlCompiler01Test<br>Test method: External id attributes
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.html.internal.HtmlCompiler01Test@3e6ef8ad</td></tr>
+<tr>
+<td title='objectos.html.internal.HtmlCompiler02Test.testCase01()'><b>testCase01</b><br>Test class: objectos.html.internal.HtmlCompiler02Test<br>Test method: <html lang="pt-BR"></html>
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.html.internal.HtmlCompiler02Test@696da30b</td></tr>
+<tr>
+<td title='objectos.html.HtmlTemplateTest.testCase46()'><b>testCase46</b><br>Test class: objectos.html.HtmlTemplateTest<br>Test method: HtmlTemplate TC46
+
+- flatten instruction
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.html.HtmlTemplateTest@120f102b</td></tr>
+<tr>
+<td title='objectos.html.tmpl.StandardAttributeNameTest.canBeEncoded_WithSingleByte()'><b>canBeEncoded_WithSingleByte</b><br>Test class: objectos.html.tmpl.StandardAttributeNameTest</td>
+<td></td>
+<td>0</td>
+<td>objectos.html.tmpl.StandardAttributeNameTest@51dcb805</td></tr>
+<tr>
+<td title='objectos.html.internal.HtmlCompiler01Test.testCase10()'><b>testCase10</b><br>Test class: objectos.html.internal.HtmlCompiler01Test<br>Test method: fragment inclusion
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.html.internal.HtmlCompiler01Test@3e6ef8ad</td></tr>
+<tr>
+<td title='objectos.html.internal.InternalCompiledHtmlTest.testCase05()'><b>testCase05</b><br>Test class: objectos.html.internal.InternalCompiledHtmlTest<br>Test method: PrettyPrintWriter TC05
+
+- head/meta (self closing)
+- + attributes
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.html.internal.InternalCompiledHtmlTest@4e7912d8</td></tr>
+<tr>
+<td title='objectos.html.internal.InternalCompiledHtmlTest.testCase06()'><b>testCase06</b><br>Test class: objectos.html.internal.InternalCompiledHtmlTest<br>Test method: PrettyPrintWriter TC06
+
+- paragraph w/ text
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.html.internal.InternalCompiledHtmlTest@4e7912d8</td></tr>
+<tr>
+<td title='objectos.html.internal.HtmlCompiler01Test.testCase14()'><b>testCase14</b><br>Test class: objectos.html.internal.HtmlCompiler01Test<br>Test method: Text child element
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.html.internal.HtmlCompiler01Test@3e6ef8ad</td></tr>
+<tr>
+<td title='objectos.html.HtmlTemplateTest.testCase25()'><b>testCase25</b><br>Test class: objectos.html.HtmlTemplateTest<br>Test method: HtmlTemplate TC25
+
+- escape text
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.html.HtmlTemplateTest@120f102b</td></tr>
+<tr>
+<td title='objectos.html.internal.HtmlCompiler02Test.testCase03()'><b>testCase03</b><br>Test class: objectos.html.internal.HtmlCompiler02Test<br>Test method: <html><head></head></html>
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.html.internal.HtmlCompiler02Test@696da30b</td></tr>
+<tr>
+<td title='objectos.html.internal.InternalCompiledHtmlTest.testCase02()'><b>testCase02</b><br>Test class: objectos.html.internal.InternalCompiledHtmlTest<br>Test method: PrettyPrintWriter TC02
+
+- doctype
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.html.internal.InternalCompiledHtmlTest@4e7912d8</td></tr>
+<tr>
+<td title='objectos.html.HtmlTemplateTest.testCase11()'><b>testCase11</b><br>Test class: objectos.html.HtmlTemplateTest<br>Test method: HtmlTemplate TC11
+
+- Nested fragments.
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.html.HtmlTemplateTest@120f102b</td></tr>
+<tr>
+<td title='objectos.html.HtmlTemplateTest.testCase37()'><b>testCase37</b><br>Test class: objectos.html.HtmlTemplateTest<br>Test method: HtmlTemplate TC37
+
+- two consecutive input elements
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.html.HtmlTemplateTest@120f102b</td></tr>
+<tr>
+<td title='objectos.html.HtmlTemplateTest.testCase41()'><b>testCase41</b><br>Test class: objectos.html.HtmlTemplateTest<br>Test method: HtmlTemplate TC41
+
+- raw in lambda
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.html.HtmlTemplateTest@120f102b</td></tr>
+<tr>
+<td title='objectos.html.HtmlTemplateTest.testCase29()'><b>testCase29</b><br>Test class: objectos.html.HtmlTemplateTest<br>Test method: HtmlTemplate TC29
+
+- svg element (2)
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.html.HtmlTemplateTest@120f102b</td></tr>
+<tr>
+<td title='objectos.html.internal.HtmlPlayerTest.processHrefTC02()'><b>processHrefTC02</b><br>Test class: objectos.html.internal.HtmlPlayerTest</td>
+<td></td>
+<td>0</td>
+<td>objectos.html.internal.HtmlPlayerTest@1ba9117e</td></tr>
+<tr>
+<td title='objectos.html.HtmlTemplateTest.testCase24()'><b>testCase24</b><br>Test class: objectos.html.HtmlTemplateTest<br>Test method: HtmlTemplate TC24
+
+- escape text
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.html.HtmlTemplateTest@120f102b</td></tr>
+<tr>
+<td title='objectos.html.HtmlTemplateTest.testCase27()'><b>testCase27</b><br>Test class: objectos.html.HtmlTemplateTest<br>Test method: HtmlTemplate TC27
+
+- raw text
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.html.HtmlTemplateTest@120f102b</td></tr>
+</table><p>
+</body>
+</html>

@@ -1,0 +1,1418 @@
+<html>
+<head>
+<title>TestNG:  Surefire test</title>
+<link href="../testng.css" rel="stylesheet" type="text/css" />
+<link href="../my-testng.css" rel="stylesheet" type="text/css" />
+
+<style type="text/css">
+.log { display: none;} 
+.stack-trace { display: none;} 
+</style>
+<script type="text/javascript">
+<!--
+function flip(e) {
+  current = e.style.display;
+  if (current == 'block') {
+    e.style.display = 'none';
+    return 0;
+  }
+  else {
+    e.style.display = 'block';
+    return 1;
+  }
+}
+
+function toggleBox(szDivId, elem, msg1, msg2)
+{
+  var res = -1;  if (document.getElementById) {
+    res = flip(document.getElementById(szDivId));
+  }
+  else if (document.all) {
+    // this is the way old msie versions work
+    res = flip(document.all[szDivId]);
+  }
+  if(elem) {
+    if(res == 0) elem.innerHTML = msg1; else elem.innerHTML = msg2;
+  }
+
+}
+
+function toggleAllBoxes() {
+  if (document.getElementsByTagName) {
+    d = document.getElementsByTagName('div');
+    for (i = 0; i < d.length; i++) {
+      if (d[i].className == 'log') {
+        flip(d[i]);
+      }
+    }
+  }
+}
+
+// -->
+</script>
+
+</head>
+<body>
+<h2 align='center'>Surefire test</h2><table border='1' align="center">
+<tr>
+<td>Tests passed/Failed/Skipped:</td><td>166/0/0</td>
+</tr><tr>
+<td>Started on:</td><td>Fri Aug 18 13:50:05 BRT 2023</td>
+</tr>
+<tr><td>Total time:</td><td>1 seconds (1415 ms)</td>
+</tr><tr>
+<td>Included groups:</td><td></td>
+</tr><tr>
+<td>Excluded groups:</td><td></td>
+</tr>
+</table><p/>
+<small><i>(Hover the method name to see the test class name)</i></small><p/>
+<table width='100%' border='1' class='invocation-passed'>
+<tr><td colspan='4' align='center'><b>PASSED TESTS</b></td></tr>
+<tr><td><b>Test method</b></td>
+<td><b>Attribute(s)</b></td>
+<td width="30%"><b>Exception</b></td>
+<td width="10%"><b>Time (seconds)</b></td>
+<td><b>Instance</b></td>
+</tr>
+<tr>
+<td title='objectos.asciidoc.ParagraphTest.testCase09()'><b>testCase09</b><br>Test class: objectos.asciidoc.ParagraphTest<br>Test method: paragraph
+
+- whole paragraph is emphasis
+- followed by another paragraph
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.asciidoc.ParagraphTest@333e5fb6</td></tr>
+<tr>
+<td title='objectos.asciidoc.SectionTest.testCase08()'><b>testCase08</b><br>Test class: objectos.asciidoc.SectionTest<br>Test method: title is constrained monospace
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.asciidoc.SectionTest@ac417a2</td></tr>
+<tr>
+<td title='objectos.asciidoc.UnorderedListTest.testCase07()'><b>testCase07</b><br>Test class: objectos.asciidoc.UnorderedListTest<br>Test method: unordered list
+
+- text with monospace
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.asciidoc.UnorderedListTest@3451fc88</td></tr>
+<tr>
+<td title='objectos.asciidoc.SourceCodeBlockTest.testCase04()'><b>testCase04</b><br>Test class: objectos.asciidoc.SourceCodeBlockTest<br>Test method: source code block
+
+- implict source style
+- delimited
+- contains Token.BOLD_END
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.asciidoc.SourceCodeBlockTest@69499c6f</td></tr>
+<tr>
+<td title='objectos.asciidoc.ParagraphTest.testCase02()'><b>testCase02</b><br>Test class: objectos.asciidoc.ParagraphTest<br>Test method: multiline paragraph
+
+- last line starts with url macro
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.asciidoc.ParagraphTest@333e5fb6</td></tr>
+<tr>
+<td title='objectos.asciidoc.InlineMacroTest.testCase07()'><b>testCase07</b><br>Test class: objectos.asciidoc.InlineMacroTest<br>Test method: not inline macro:
+
+- semicolon @ eol
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.asciidoc.InlineMacroTest@36c783ca</td></tr>
+<tr>
+<td title='objectos.asciidoc.DocumentTest.testCase03()'><b>testCase03</b><br>Test class: objectos.asciidoc.DocumentTest<br>Test method: doctitle (not a doctitle)
+
+- not a title (no space after symbol '=')
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.asciidoc.DocumentTest@605eb072</td></tr>
+<tr>
+<td title='objectos.asciidoc.ConstrainedMonospaceTest.testCase08()'><b>testCase08</b><br>Test class: objectos.asciidoc.ConstrainedMonospaceTest<br>Test method: monospace
+
+- not a monospace
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.asciidoc.ConstrainedMonospaceTest@6dcbbb49</td></tr>
+<tr>
+<td title='objectos.asciidoc.UnorderedListTest.testCase10()'><b>testCase10</b><br>Test class: objectos.asciidoc.UnorderedListTest<br>Test method: ul should end before section (ends with imacro)
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.asciidoc.UnorderedListTest@3451fc88</td></tr>
+<tr>
+<td title='objectos.asciidoc.UnorderedListTest.testCase11()'><b>testCase11</b><br>Test class: objectos.asciidoc.UnorderedListTest<br>Test method: items can be separated by new line
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.asciidoc.UnorderedListTest@3451fc88</td></tr>
+<tr>
+<td title='objectos.asciidoc.SectionTest.testCase07()'><b>testCase07</b><br>Test class: objectos.asciidoc.SectionTest<br>Test method: section
+
+- level reduction
+- L1 -> L2 -> L3 -> L1
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.asciidoc.SectionTest@69069866</td></tr>
+<tr>
+<td title='objectos.asciidoc.SectionTest.testCase07()'><b>testCase07</b><br>Test class: objectos.asciidoc.SectionTest<br>Test method: section
+
+- level reduction
+- L1 -> L2 -> L3 -> L1
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.asciidoc.SectionTest@ac417a2</td></tr>
+<tr>
+<td title='objectos.asciidoc.ListingBlockTest.testCase04()'><b>testCase04</b><br>Test class: objectos.asciidoc.ListingBlockTest<br>Test method: listing block code with '_'
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.asciidoc.ListingBlockTest@ca2cd5e</td></tr>
+<tr>
+<td title='objectos.asciidoc.SectionTest.testCase02()'><b>testCase02</b><br>Test class: objectos.asciidoc.SectionTest<br>Test method: section
+
+- level 1
+- level 2
+- single paragraph in each
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.asciidoc.SectionTest@ac417a2</td></tr>
+<tr>
+<td title='objectos.asciidoc.ParagraphTest.testCase08()'><b>testCase08</b><br>Test class: objectos.asciidoc.ParagraphTest<br>Test method: paragraph
+
+- trim before EOF
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.asciidoc.ParagraphTest@333e5fb6</td></tr>
+<tr>
+<td title='objectos.asciidoc.InlineMacroTest.testCase02()'><b>testCase02</b><br>Test class: objectos.asciidoc.InlineMacroTest<br>Test method: inline macro
+
+- unordered list
+- section
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.asciidoc.InlineMacroTest@17136390</td></tr>
+<tr>
+<td title='objectos.asciidoc.InlineMacroTest.testCase08()'><b>testCase08</b><br>Test class: objectos.asciidoc.InlineMacroTest<br>Test method: not inline macro:
+
+- no attrlist at EOL
+- also list...
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.asciidoc.InlineMacroTest@17136390</td></tr>
+<tr>
+<td title='objectos.asciidoc.UnorderedListTest.testCase01()'><b>testCase01</b><br>Test class: objectos.asciidoc.UnorderedListTest<br>Test method: unordered list
+
+- simple elements
+- dash
+- single level
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.asciidoc.UnorderedListTest@3451fc88</td></tr>
+<tr>
+<td title='objectos.asciidoc.ParagraphTest.testCase01()'><b>testCase01</b><br>Test class: objectos.asciidoc.ParagraphTest<br>Test method: two lines paragraph
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.asciidoc.ParagraphTest@333e5fb6</td></tr>
+<tr>
+<td title='objectos.asciidoc.ConstrainedItalicTest.testCase02()'><b>testCase02</b><br>Test class: objectos.asciidoc.ConstrainedItalicTest<br>Test method: italic
+
+- constrained
+- phrases
+- well-formed
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.asciidoc.ConstrainedItalicTest@69a90b81</td></tr>
+<tr>
+<td title='objectos.asciidoc.SectionTest.testCase09()'><b>testCase09</b><br>Test class: objectos.asciidoc.SectionTest<br>Test method: section has title only, i.e., no body
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.asciidoc.SectionTest@ac417a2</td></tr>
+<tr>
+<td title='objectos.asciidoc.DocumentTest.testCase01()'><b>testCase01</b><br>Test class: objectos.asciidoc.DocumentTest<br>Test method: doctitle + eof
+
+- happy path
+- title ends @ eof
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.asciidoc.DocumentTest@7a0f06ad</td></tr>
+<tr>
+<td title='objectos.asciidoc.ListingBlockTest.testCase05()'><b>testCase05</b><br>Test class: objectos.asciidoc.ListingBlockTest<br>Test method: listing block marker ends at EOF
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.asciidoc.ListingBlockTest@ca2cd5e</td></tr>
+<tr>
+<td title='objectos.asciidoc.SectionTest.testCase06()'><b>testCase06</b><br>Test class: objectos.asciidoc.SectionTest<br>Test method: section
+
+- level reduction
+- L1 -> L2 -> L3 -> L2
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.asciidoc.SectionTest@69069866</td></tr>
+<tr>
+<td title='objectos.asciidoc.SectionTest.testCase01()'><b>testCase01</b><br>Test class: objectos.asciidoc.SectionTest<br>Test method: section
+
+- level 1
+- single paragraph
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.asciidoc.SectionTest@ac417a2</td></tr>
+<tr>
+<td title='objectos.asciidoc.ParagraphTest.testCase04()'><b>testCase04</b><br>Test class: objectos.asciidoc.ParagraphTest<br>Test method: multiline paragraph.
+
+- line ends in a imacro.
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.asciidoc.ParagraphTest@3b7b0b57</td></tr>
+<tr>
+<td title='objectos.asciidoc.UnorderedListTest.testCase09()'><b>testCase09</b><br>Test class: objectos.asciidoc.UnorderedListTest<br>Test method: unordered list
+
+- ul should end before the paragraph
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.asciidoc.UnorderedListTest@3451fc88</td></tr>
+<tr>
+<td title='objectos.asciidoc.UrlMacroTest.testCase02()'><b>testCase02</b><br>Test class: objectos.asciidoc.UrlMacroTest<br>Test method: - https
+- well-formed
+- w/ text before
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.asciidoc.UrlMacroTest@15cee630</td></tr>
+<tr>
+<td title='objectos.asciidoc.SectionTest.testCase10()'><b>testCase10</b><br>Test class: objectos.asciidoc.SectionTest<br>Test method: section has source code block
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.asciidoc.SectionTest@ac417a2</td></tr>
+<tr>
+<td title='objectos.asciidoc.UnorderedListTest.testCase05()'><b>testCase05</b><br>Test class: objectos.asciidoc.UnorderedListTest<br>Test method: unordered list
+
+- indented nested unordered list
+- asterisk
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.asciidoc.UnorderedListTest@3451fc88</td></tr>
+<tr>
+<td title='objectos.asciidoc.SectionTest.testCase01()'><b>testCase01</b><br>Test class: objectos.asciidoc.SectionTest<br>Test method: section
+
+- level 1
+- single paragraph
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.asciidoc.SectionTest@69069866</td></tr>
+<tr>
+<td title='objectos.asciidoc.UnorderedListTest.testCase06()'><b>testCase06</b><br>Test class: objectos.asciidoc.UnorderedListTest<br>Test method: unordered list
+
+- simple elements
+- asterisk
+- single level
+- section
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.asciidoc.UnorderedListTest@1e0294a7</td></tr>
+<tr>
+<td title='objectos.asciidoc.ListingBlockTest.testCase01()'><b>testCase01</b><br>Test class: objectos.asciidoc.ListingBlockTest<br>Test method: listing block
+
+- delimited
+- single line
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.asciidoc.ListingBlockTest@a120b9</td></tr>
+<tr>
+<td title='objectos.asciidoc.ConstrainedMonospaceTest.testCase04()'><b>testCase04</b><br>Test class: objectos.asciidoc.ConstrainedMonospaceTest<br>Test method: monospace
+
+- in the middle of paragraph
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.asciidoc.ConstrainedMonospaceTest@6dcbbb49</td></tr>
+<tr>
+<td title='objectos.asciidoc.ConstrainedBoldTest.testCase03()'><b>testCase03</b><br>Test class: objectos.asciidoc.ConstrainedBoldTest<br>Test method: bold enclosing italic
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.asciidoc.ConstrainedBoldTest@2e4ecdf8</td></tr>
+<tr>
+<td title='objectos.asciidoc.ConstrainedItalicTest.testCase04()'><b>testCase04</b><br>Test class: objectos.asciidoc.ConstrainedItalicTest<br>Test method: = italic
+
+- constrained
+- not an italic
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.asciidoc.ConstrainedItalicTest@503a7990</td></tr>
+<tr>
+<td title='objectos.asciidoc.ConstrainedMonospaceTest.testCase05()'><b>testCase05</b><br>Test class: objectos.asciidoc.ConstrainedMonospaceTest<br>Test method: monospace
+
+- contents is a (not) inline macro
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.asciidoc.ConstrainedMonospaceTest@35329a05</td></tr>
+<tr>
+<td title='objectos.asciidoc.PreambleTest.testCase01()'><b>testCase01</b><br>Test class: objectos.asciidoc.PreambleTest<br>Test method: paragraph + UL
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.asciidoc.PreambleTest@21a9f95b</td></tr>
+<tr>
+<td title='objectos.asciidoc.ConstrainedItalicTest.testCase03()'><b>testCase03</b><br>Test class: objectos.asciidoc.ConstrainedItalicTest<br>Test method: = italic
+
+- constrained
+- not an italic
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.asciidoc.ConstrainedItalicTest@503a7990</td></tr>
+<tr>
+<td title='objectos.asciidoc.ConstrainedItalicTest.testCase04()'><b>testCase04</b><br>Test class: objectos.asciidoc.ConstrainedItalicTest<br>Test method: = italic
+
+- constrained
+- not an italic
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.asciidoc.ConstrainedItalicTest@69a90b81</td></tr>
+<tr>
+<td title='objectos.asciidoc.SectionTest.testCase11()'><b>testCase11</b><br>Test class: objectos.asciidoc.SectionTest<br>Test method: title has constrained italic/bold
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.asciidoc.SectionTest@69069866</td></tr>
+<tr>
+<td title='objectos.asciidoc.InlineMacroTest.testCase03()'><b>testCase03</b><br>Test class: objectos.asciidoc.InlineMacroTest<br>Test method: imacro ends the sentence
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.asciidoc.InlineMacroTest@36c783ca</td></tr>
+<tr>
+<td title='objectos.asciidoc.ParagraphTest.testCase07()'><b>testCase07</b><br>Test class: objectos.asciidoc.ParagraphTest<br>Test method: paragraphs separated by non-empty line
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.asciidoc.ParagraphTest@3b7b0b57</td></tr>
+<tr>
+<td title='objectos.asciidoc.DocumentTest.testCase03()'><b>testCase03</b><br>Test class: objectos.asciidoc.DocumentTest<br>Test method: doctitle (not a doctitle)
+
+- not a title (no space after symbol '=')
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.asciidoc.DocumentTest@7a0f06ad</td></tr>
+<tr>
+<td title='objectos.asciidoc.InlineMacroTest.testCase01()'><b>testCase01</b><br>Test class: objectos.asciidoc.InlineMacroTest<br>Test method: Not an inline macro
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.asciidoc.InlineMacroTest@17136390</td></tr>
+<tr>
+<td title='objectos.asciidoc.SourceCodeBlockTest.testCase05()'><b>testCase05</b><br>Test class: objectos.asciidoc.SourceCodeBlockTest<br>Test method: source code block
+
+- trailing space at close marker
+- has paragraph after
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.asciidoc.SourceCodeBlockTest@64c95480</td></tr>
+<tr>
+<td title='objectos.asciidoc.UrlMacroTest.testCase01()'><b>testCase01</b><br>Test class: objectos.asciidoc.UrlMacroTest<br>Test method: - https
+- well-formed
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.asciidoc.UrlMacroTest@3041beb3</td></tr>
+<tr>
+<td title='objectos.asciidoc.SourceCodeBlockTest.testCase04()'><b>testCase04</b><br>Test class: objectos.asciidoc.SourceCodeBlockTest<br>Test method: source code block
+
+- implict source style
+- delimited
+- contains Token.BOLD_END
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.asciidoc.SourceCodeBlockTest@64c95480</td></tr>
+<tr>
+<td title='objectos.asciidoc.SectionTest.testCase04()'><b>testCase04</b><br>Test class: objectos.asciidoc.SectionTest<br>Test method: section
+
+- level 1
+- starts after a UL
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.asciidoc.SectionTest@ac417a2</td></tr>
+<tr>
+<td title='objectos.asciidoc.SectionTest.testCase09()'><b>testCase09</b><br>Test class: objectos.asciidoc.SectionTest<br>Test method: section has title only, i.e., no body
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.asciidoc.SectionTest@69069866</td></tr>
+<tr>
+<td title='objectos.asciidoc.SectionTest.testCase02()'><b>testCase02</b><br>Test class: objectos.asciidoc.SectionTest<br>Test method: section
+
+- level 1
+- level 2
+- single paragraph in each
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.asciidoc.SectionTest@69069866</td></tr>
+<tr>
+<td title='objectos.asciidoc.UnorderedListTest.testCase14()'><b>testCase14</b><br>Test class: objectos.asciidoc.UnorderedListTest<br>Test method: unordered list
+
+- text with monospace
+- text with strong
+- text with emphasis
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.asciidoc.UnorderedListTest@1e0294a7</td></tr>
+<tr>
+<td title='objectos.asciidoc.DocumentTest.testCase05()'><b>testCase05</b><br>Test class: objectos.asciidoc.DocumentTest<br>Test method: document attributes
+
+- Objectos Docs v0002/index doc header
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.asciidoc.DocumentTest@7a0f06ad</td></tr>
+<tr>
+<td title='objectos.asciidoc.InlineMacroTest.testCase05()'><b>testCase05</b><br>Test class: objectos.asciidoc.InlineMacroTest<br>Test method: imacro + monospace
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.asciidoc.InlineMacroTest@17136390</td></tr>
+<tr>
+<td title='objectos.asciidoc.DocumentTest.testCase04()'><b>testCase04</b><br>Test class: objectos.asciidoc.DocumentTest<br>Test method: doctitle + paragraph
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.asciidoc.DocumentTest@605eb072</td></tr>
+<tr>
+<td title='objectos.asciidoc.UnorderedListTest.testCase14()'><b>testCase14</b><br>Test class: objectos.asciidoc.UnorderedListTest<br>Test method: unordered list
+
+- text with monospace
+- text with strong
+- text with emphasis
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.asciidoc.UnorderedListTest@3451fc88</td></tr>
+<tr>
+<td title='objectos.asciidoc.UnorderedListTest.testCase15()'><b>testCase15</b><br>Test class: objectos.asciidoc.UnorderedListTest<br>Test method: unordered list
+
+- items separated by NL
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.asciidoc.UnorderedListTest@1e0294a7</td></tr>
+<tr>
+<td title='objectos.asciidoc.InlineMacroTest.testCase05()'><b>testCase05</b><br>Test class: objectos.asciidoc.InlineMacroTest<br>Test method: imacro + monospace
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.asciidoc.InlineMacroTest@36c783ca</td></tr>
+<tr>
+<td title='objectos.asciidoc.InlineMacroTest.testCase06()'><b>testCase06</b><br>Test class: objectos.asciidoc.InlineMacroTest<br>Test method: imacro + spaces + monospace
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.asciidoc.InlineMacroTest@36c783ca</td></tr>
+<tr>
+<td title='objectos.asciidoc.InlineMacroTest.testCase06()'><b>testCase06</b><br>Test class: objectos.asciidoc.InlineMacroTest<br>Test method: imacro + spaces + monospace
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.asciidoc.InlineMacroTest@17136390</td></tr>
+<tr>
+<td title='objectos.asciidoc.UrlMacroTest.testCase02()'><b>testCase02</b><br>Test class: objectos.asciidoc.UrlMacroTest<br>Test method: - https
+- well-formed
+- w/ text before
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.asciidoc.UrlMacroTest@3041beb3</td></tr>
+<tr>
+<td title='objectos.asciidoc.UnorderedListTest.testCase06()'><b>testCase06</b><br>Test class: objectos.asciidoc.UnorderedListTest<br>Test method: unordered list
+
+- simple elements
+- asterisk
+- single level
+- section
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.asciidoc.UnorderedListTest@3451fc88</td></tr>
+<tr>
+<td title='objectos.asciidoc.SourceCodeBlockTest.testCase03()'><b>testCase03</b><br>Test class: objectos.asciidoc.SourceCodeBlockTest<br>Test method: source code block
+
+- implict source style
+- delimited
+- indented content
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.asciidoc.SourceCodeBlockTest@69499c6f</td></tr>
+<tr>
+<td title='objectos.asciidoc.UnorderedListTest.testCase08()'><b>testCase08</b><br>Test class: objectos.asciidoc.UnorderedListTest<br>Test method: unordered list
+
+- third item is NOT an item
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.asciidoc.UnorderedListTest@3451fc88</td></tr>
+<tr>
+<td title='objectos.asciidoc.InlineMacroTest.testCase09()'><b>testCase09</b><br>Test class: objectos.asciidoc.InlineMacroTest<br>Test method: inline macro:
+
+- empty attrlist
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.asciidoc.InlineMacroTest@36c783ca</td></tr>
+<tr>
+<td title='objectos.asciidoc.ListingBlockTest.testCase03()'><b>testCase03</b><br>Test class: objectos.asciidoc.ListingBlockTest<br>Test method: listing block code with '[x]'
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.asciidoc.ListingBlockTest@a120b9</td></tr>
+<tr>
+<td title='objectos.asciidoc.UrlMacroTest.testCase01()'><b>testCase01</b><br>Test class: objectos.asciidoc.UrlMacroTest<br>Test method: - https
+- well-formed
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.asciidoc.UrlMacroTest@15cee630</td></tr>
+<tr>
+<td title='objectos.asciidoc.UnorderedListTest.testCase12()'><b>testCase12</b><br>Test class: objectos.asciidoc.UnorderedListTest<br>Test method: ul should end before block attr list
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.asciidoc.UnorderedListTest@1e0294a7</td></tr>
+<tr>
+<td title='objectos.asciidoc.DocumentTest.testCase05()'><b>testCase05</b><br>Test class: objectos.asciidoc.DocumentTest<br>Test method: document attributes
+
+- Objectos Docs v0002/index doc header
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.asciidoc.DocumentTest@605eb072</td></tr>
+<tr>
+<td title='objectos.asciidoc.SourceCodeBlockTest.testCase05()'><b>testCase05</b><br>Test class: objectos.asciidoc.SourceCodeBlockTest<br>Test method: source code block
+
+- trailing space at close marker
+- has paragraph after
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.asciidoc.SourceCodeBlockTest@69499c6f</td></tr>
+<tr>
+<td title='objectos.asciidoc.SourceCodeBlockTest.testCase06()'><b>testCase06</b><br>Test class: objectos.asciidoc.SourceCodeBlockTest<br>Test method: source code block
+
+- empty line before ending marker
+- has paragraph after
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.asciidoc.SourceCodeBlockTest@64c95480</td></tr>
+<tr>
+<td title='objectos.asciidoc.ParagraphTest.testCase07()'><b>testCase07</b><br>Test class: objectos.asciidoc.ParagraphTest<br>Test method: paragraphs separated by non-empty line
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.asciidoc.ParagraphTest@333e5fb6</td></tr>
+<tr>
+<td title='objectos.asciidoc.ConstrainedMonospaceTest.testCase04()'><b>testCase04</b><br>Test class: objectos.asciidoc.ConstrainedMonospaceTest<br>Test method: monospace
+
+- in the middle of paragraph
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.asciidoc.ConstrainedMonospaceTest@35329a05</td></tr>
+<tr>
+<td title='objectos.asciidoc.ConstrainedItalicTest.testCase01()'><b>testCase01</b><br>Test class: objectos.asciidoc.ConstrainedItalicTest<br>Test method: = italic
+
+- constrained
+- words only
+- well-formed
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.asciidoc.ConstrainedItalicTest@69a90b81</td></tr>
+<tr>
+<td title='objectos.asciidoc.UnorderedListTest.testCase08()'><b>testCase08</b><br>Test class: objectos.asciidoc.UnorderedListTest<br>Test method: unordered list
+
+- third item is NOT an item
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.asciidoc.UnorderedListTest@1e0294a7</td></tr>
+<tr>
+<td title='objectos.asciidoc.ParagraphTest.testCase06()'><b>testCase06</b><br>Test class: objectos.asciidoc.ParagraphTest<br>Test method: next line of paragraph starts with monospace
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.asciidoc.ParagraphTest@3b7b0b57</td></tr>
+<tr>
+<td title='objectos.asciidoc.SourceCodeBlockTest.testCase01()'><b>testCase01</b><br>Test class: objectos.asciidoc.SourceCodeBlockTest<br>Test method: source code block
+
+- implict source style
+- delimited
+- single line
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.asciidoc.SourceCodeBlockTest@64c95480</td></tr>
+<tr>
+<td title='objectos.asciidoc.SourceCodeBlockTest.testCase01()'><b>testCase01</b><br>Test class: objectos.asciidoc.SourceCodeBlockTest<br>Test method: source code block
+
+- implict source style
+- delimited
+- single line
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.asciidoc.SourceCodeBlockTest@69499c6f</td></tr>
+<tr>
+<td title='objectos.asciidoc.ParagraphTest.testCase05()'><b>testCase05</b><br>Test class: objectos.asciidoc.ParagraphTest<br>Test method: imacro in the middle of a sentence
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.asciidoc.ParagraphTest@333e5fb6</td></tr>
+<tr>
+<td title='objectos.asciidoc.UnorderedListTest.testCase04()'><b>testCase04</b><br>Test class: objectos.asciidoc.UnorderedListTest<br>Test method: unordered list
+
+- nested unordered list
+- asterisk
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.asciidoc.UnorderedListTest@3451fc88</td></tr>
+<tr>
+<td title='objectos.asciidoc.ConstrainedMonospaceTest.testCase06()'><b>testCase06</b><br>Test class: objectos.asciidoc.ConstrainedMonospaceTest<br>Test method: monospace
+
+- contents is a (not) emphasis
+- contents is a (not) strong
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.asciidoc.ConstrainedMonospaceTest@6dcbbb49</td></tr>
+<tr>
+<td title='objectos.asciidoc.ConstrainedBoldTest.testCase01()'><b>testCase01</b><br>Test class: objectos.asciidoc.ConstrainedBoldTest<br>Test method: = bold
+
+- constrained
+- words only
+- well-formed
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.asciidoc.ConstrainedBoldTest@7b3feb26</td></tr>
+<tr>
+<td title='objectos.asciidoc.ListingBlockTest.testCase02()'><b>testCase02</b><br>Test class: objectos.asciidoc.ListingBlockTest<br>Test method: listing block code with ']'
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.asciidoc.ListingBlockTest@a120b9</td></tr>
+<tr>
+<td title='objectos.asciidoc.SourceCodeBlockTest.testCase03()'><b>testCase03</b><br>Test class: objectos.asciidoc.SourceCodeBlockTest<br>Test method: source code block
+
+- implict source style
+- delimited
+- indented content
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.asciidoc.SourceCodeBlockTest@64c95480</td></tr>
+<tr>
+<td title='objectos.asciidoc.ParagraphTest.testCase08()'><b>testCase08</b><br>Test class: objectos.asciidoc.ParagraphTest<br>Test method: paragraph
+
+- trim before EOF
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.asciidoc.ParagraphTest@3b7b0b57</td></tr>
+<tr>
+<td title='objectos.asciidoc.SectionTest.testCase05()'><b>testCase05</b><br>Test class: objectos.asciidoc.SectionTest<br>Test method: section
+
+- level reduction
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.asciidoc.SectionTest@69069866</td></tr>
+<tr>
+<td title='objectos.asciidoc.AttributeListTest.testCase01()'><b>testCase01</b><br>Test class: objectos.asciidoc.AttributeListTest<br>Test method: Attribute with comma (and quotes)
+
+- well-formed
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.asciidoc.AttributeListTest@69d2fb0a</td></tr>
+<tr>
+<td title='objectos.asciidoc.UnorderedListTest.testCase02()'><b>testCase02</b><br>Test class: objectos.asciidoc.UnorderedListTest<br>Test method: unordered list
+
+- complex elements
+- dash
+- single level
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.asciidoc.UnorderedListTest@3451fc88</td></tr>
+<tr>
+<td title='objectos.asciidoc.ConstrainedMonospaceTest.testCase05()'><b>testCase05</b><br>Test class: objectos.asciidoc.ConstrainedMonospaceTest<br>Test method: monospace
+
+- contents is a (not) inline macro
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.asciidoc.ConstrainedMonospaceTest@6dcbbb49</td></tr>
+<tr>
+<td title='objectos.asciidoc.UnorderedListTest.testCase10()'><b>testCase10</b><br>Test class: objectos.asciidoc.UnorderedListTest<br>Test method: ul should end before section (ends with imacro)
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.asciidoc.UnorderedListTest@1e0294a7</td></tr>
+<tr>
+<td title='objectos.asciidoc.ParagraphTest.testCase03()'><b>testCase03</b><br>Test class: objectos.asciidoc.ParagraphTest<br>Test method: multiline paragraph
+
+- 3 lines
+- second line ends with cmonospace
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.asciidoc.ParagraphTest@333e5fb6</td></tr>
+<tr>
+<td title='objectos.asciidoc.ConstrainedBoldTest.testCase03()'><b>testCase03</b><br>Test class: objectos.asciidoc.ConstrainedBoldTest<br>Test method: bold enclosing italic
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.asciidoc.ConstrainedBoldTest@7b3feb26</td></tr>
+<tr>
+<td title='objectos.asciidoc.SectionTest.testCase04()'><b>testCase04</b><br>Test class: objectos.asciidoc.SectionTest<br>Test method: section
+
+- level 1
+- starts after a UL
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.asciidoc.SectionTest@69069866</td></tr>
+<tr>
+<td title='objectos.asciidoc.InlineMacroTest.testCase01()'><b>testCase01</b><br>Test class: objectos.asciidoc.InlineMacroTest<br>Test method: Not an inline macro
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.asciidoc.InlineMacroTest@36c783ca</td></tr>
+<tr>
+<td title='objectos.asciidoc.DocumentTest.testCase02()'><b>testCase02</b><br>Test class: objectos.asciidoc.DocumentTest<br>Test method: doctitle + NL
+
+- happy path
+- title ends @ NL
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.asciidoc.DocumentTest@605eb072</td></tr>
+<tr>
+<td title='objectos.asciidoc.UnorderedListTest.testCase01()'><b>testCase01</b><br>Test class: objectos.asciidoc.UnorderedListTest<br>Test method: unordered list
+
+- simple elements
+- dash
+- single level
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.asciidoc.UnorderedListTest@1e0294a7</td></tr>
+<tr>
+<td title='objectos.asciidoc.ConstrainedMonospaceTest.testCase03()'><b>testCase03</b><br>Test class: objectos.asciidoc.ConstrainedMonospaceTest<br>Test method: monospace
+
+- in the middle of paragraph
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.asciidoc.ConstrainedMonospaceTest@6dcbbb49</td></tr>
+<tr>
+<td title='objectos.asciidoc.ConstrainedBoldTest.testCase02()'><b>testCase02</b><br>Test class: objectos.asciidoc.ConstrainedBoldTest<br>Test method: bold
+
+- constrained
+- phrases
+- well-formed
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.asciidoc.ConstrainedBoldTest@2e4ecdf8</td></tr>
+<tr>
+<td title='objectos.asciidoc.LexerTest.testCase01()'><b>testCase01</b><br>Test class: objectos.asciidoc.LexerTest<br>Test method: apostrophe between word chars
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.asciidoc.LexerTest@273293c8</td></tr>
+<tr>
+<td title='objectos.asciidoc.InlineMacroTest.testCase04()'><b>testCase04</b><br>Test class: objectos.asciidoc.InlineMacroTest<br>Test method: not imacro: target with spaces
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.asciidoc.InlineMacroTest@17136390</td></tr>
+<tr>
+<td title='objectos.asciidoc.AttributeListTest.testCase01()'><b>testCase01</b><br>Test class: objectos.asciidoc.AttributeListTest<br>Test method: Attribute with comma (and quotes)
+
+- well-formed
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.asciidoc.AttributeListTest@7e38e254</td></tr>
+<tr>
+<td title='objectos.asciidoc.UnorderedListTest.testCase04()'><b>testCase04</b><br>Test class: objectos.asciidoc.UnorderedListTest<br>Test method: unordered list
+
+- nested unordered list
+- asterisk
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.asciidoc.UnorderedListTest@1e0294a7</td></tr>
+<tr>
+<td title='objectos.asciidoc.ConstrainedItalicTest.testCase02()'><b>testCase02</b><br>Test class: objectos.asciidoc.ConstrainedItalicTest<br>Test method: italic
+
+- constrained
+- phrases
+- well-formed
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.asciidoc.ConstrainedItalicTest@503a7990</td></tr>
+<tr>
+<td title='objectos.asciidoc.ParagraphTest.testCase02()'><b>testCase02</b><br>Test class: objectos.asciidoc.ParagraphTest<br>Test method: multiline paragraph
+
+- last line starts with url macro
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.asciidoc.ParagraphTest@3b7b0b57</td></tr>
+<tr>
+<td title='objectos.asciidoc.DocumentTest.testCase06()'><b>testCase06</b><br>Test class: objectos.asciidoc.DocumentTest<br>Test method: document attributes
+
+- allow dash/underscore in attribute name
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.asciidoc.DocumentTest@605eb072</td></tr>
+<tr>
+<td title='objectos.asciidoc.InlineMacroTest.testCase07()'><b>testCase07</b><br>Test class: objectos.asciidoc.InlineMacroTest<br>Test method: not inline macro:
+
+- semicolon @ eol
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.asciidoc.InlineMacroTest@17136390</td></tr>
+<tr>
+<td title='objectos.asciidoc.ListingBlockTest.testCase04()'><b>testCase04</b><br>Test class: objectos.asciidoc.ListingBlockTest<br>Test method: listing block code with '_'
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.asciidoc.ListingBlockTest@a120b9</td></tr>
+<tr>
+<td title='objectos.asciidoc.UnorderedListTest.testCase07()'><b>testCase07</b><br>Test class: objectos.asciidoc.UnorderedListTest<br>Test method: unordered list
+
+- text with monospace
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.asciidoc.UnorderedListTest@1e0294a7</td></tr>
+<tr>
+<td title='objectos.asciidoc.ListingBlockTest.testCase05()'><b>testCase05</b><br>Test class: objectos.asciidoc.ListingBlockTest<br>Test method: listing block marker ends at EOF
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.asciidoc.ListingBlockTest@a120b9</td></tr>
+<tr>
+<td title='objectos.asciidoc.UnorderedListTest.testCase12()'><b>testCase12</b><br>Test class: objectos.asciidoc.UnorderedListTest<br>Test method: ul should end before block attr list
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.asciidoc.UnorderedListTest@3451fc88</td></tr>
+<tr>
+<td title='objectos.asciidoc.UrlMacroTest.testCase03()'><b>testCase03</b><br>Test class: objectos.asciidoc.UrlMacroTest<br>Test method: - https
+- well-formed
+- comma in attrlist
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.asciidoc.UrlMacroTest@15cee630</td></tr>
+<tr>
+<td title='objectos.asciidoc.SectionTest.testCase08()'><b>testCase08</b><br>Test class: objectos.asciidoc.SectionTest<br>Test method: title is constrained monospace
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.asciidoc.SectionTest@69069866</td></tr>
+<tr>
+<td title='objectos.asciidoc.UnorderedListTest.testCase05()'><b>testCase05</b><br>Test class: objectos.asciidoc.UnorderedListTest<br>Test method: unordered list
+
+- indented nested unordered list
+- asterisk
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.asciidoc.UnorderedListTest@1e0294a7</td></tr>
+<tr>
+<td title='objectos.asciidoc.InlineMacroTest.testCase04()'><b>testCase04</b><br>Test class: objectos.asciidoc.InlineMacroTest<br>Test method: not imacro: target with spaces
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.asciidoc.InlineMacroTest@36c783ca</td></tr>
+<tr>
+<td title='objectos.asciidoc.ConstrainedMonospaceTest.testCase02()'><b>testCase02</b><br>Test class: objectos.asciidoc.ConstrainedMonospaceTest<br>Test method: monospace
+
+- constrained
+- phrases
+- well-formed
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.asciidoc.ConstrainedMonospaceTest@6dcbbb49</td></tr>
+<tr>
+<td title='objectos.asciidoc.DocumentTest.testCase01()'><b>testCase01</b><br>Test class: objectos.asciidoc.DocumentTest<br>Test method: doctitle + eof
+
+- happy path
+- title ends @ eof
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.asciidoc.DocumentTest@605eb072</td></tr>
+<tr>
+<td title='objectos.asciidoc.SourceCodeBlockTest.testCase07()'><b>testCase07</b><br>Test class: objectos.asciidoc.SourceCodeBlockTest<br>Test method: source code block
+
+- paragraph after
+- separating line is non-empty
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.asciidoc.SourceCodeBlockTest@69499c6f</td></tr>
+<tr>
+<td title='objectos.asciidoc.SectionTest.testCase05()'><b>testCase05</b><br>Test class: objectos.asciidoc.SectionTest<br>Test method: section
+
+- level reduction
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.asciidoc.SectionTest@ac417a2</td></tr>
+<tr>
+<td title='objectos.asciidoc.UnorderedListTest.testCase03()'><b>testCase03</b><br>Test class: objectos.asciidoc.UnorderedListTest<br>Test method: unordered list
+
+- simple elements
+- asterisk
+- single level
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.asciidoc.UnorderedListTest@1e0294a7</td></tr>
+<tr>
+<td title='objectos.asciidoc.UnorderedListTest.testCase15()'><b>testCase15</b><br>Test class: objectos.asciidoc.UnorderedListTest<br>Test method: unordered list
+
+- items separated by NL
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.asciidoc.UnorderedListTest@3451fc88</td></tr>
+<tr>
+<td title='objectos.asciidoc.ConstrainedBoldTest.testCase01()'><b>testCase01</b><br>Test class: objectos.asciidoc.ConstrainedBoldTest<br>Test method: = bold
+
+- constrained
+- words only
+- well-formed
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.asciidoc.ConstrainedBoldTest@2e4ecdf8</td></tr>
+<tr>
+<td title='objectos.asciidoc.UnorderedListTest.testCase11()'><b>testCase11</b><br>Test class: objectos.asciidoc.UnorderedListTest<br>Test method: items can be separated by new line
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.asciidoc.UnorderedListTest@1e0294a7</td></tr>
+<tr>
+<td title='objectos.asciidoc.ConstrainedMonospaceTest.testCase07()'><b>testCase07</b><br>Test class: objectos.asciidoc.ConstrainedMonospaceTest<br>Test method: monospace
+
+- contents is a (not) emphasis
+- contents is a (not) strong
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.asciidoc.ConstrainedMonospaceTest@6dcbbb49</td></tr>
+<tr>
+<td title='objectos.asciidoc.LexerTest.testCase01()'><b>testCase01</b><br>Test class: objectos.asciidoc.LexerTest<br>Test method: apostrophe between word chars
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.asciidoc.LexerTest@6f1d799</td></tr>
+<tr>
+<td title='objectos.asciidoc.ListingBlockTest.testCase02()'><b>testCase02</b><br>Test class: objectos.asciidoc.ListingBlockTest<br>Test method: listing block code with ']'
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.asciidoc.ListingBlockTest@ca2cd5e</td></tr>
+<tr>
+<td title='objectos.asciidoc.PreambleTest.testCase01()'><b>testCase01</b><br>Test class: objectos.asciidoc.PreambleTest<br>Test method: paragraph + UL
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.asciidoc.PreambleTest@2804b13f</td></tr>
+<tr>
+<td title='objectos.asciidoc.ConstrainedMonospaceTest.testCase03()'><b>testCase03</b><br>Test class: objectos.asciidoc.ConstrainedMonospaceTest<br>Test method: monospace
+
+- in the middle of paragraph
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.asciidoc.ConstrainedMonospaceTest@35329a05</td></tr>
+<tr>
+<td title='objectos.asciidoc.SourceCodeBlockTest.testCase02()'><b>testCase02</b><br>Test class: objectos.asciidoc.SourceCodeBlockTest<br>Test method: source code block
+
+- explict source style
+- delimited
+- multiple lines
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.asciidoc.SourceCodeBlockTest@69499c6f</td></tr>
+<tr>
+<td title='objectos.asciidoc.ConstrainedMonospaceTest.testCase01()'><b>testCase01</b><br>Test class: objectos.asciidoc.ConstrainedMonospaceTest<br>Test method: monospace
+
+- constrained
+- words only
+- well-formed
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.asciidoc.ConstrainedMonospaceTest@6dcbbb49</td></tr>
+<tr>
+<td title='objectos.asciidoc.ListingBlockTest.testCase03()'><b>testCase03</b><br>Test class: objectos.asciidoc.ListingBlockTest<br>Test method: listing block code with '[x]'
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.asciidoc.ListingBlockTest@ca2cd5e</td></tr>
+<tr>
+<td title='objectos.asciidoc.SectionTest.testCase03()'><b>testCase03</b><br>Test class: objectos.asciidoc.SectionTest<br>Test method: section
+
+- attribute list
+- level 1
+- no doctitle
+- single paragraph
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.asciidoc.SectionTest@ac417a2</td></tr>
+<tr>
+<td title='objectos.asciidoc.ConstrainedMonospaceTest.testCase01()'><b>testCase01</b><br>Test class: objectos.asciidoc.ConstrainedMonospaceTest<br>Test method: monospace
+
+- constrained
+- words only
+- well-formed
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.asciidoc.ConstrainedMonospaceTest@35329a05</td></tr>
+<tr>
+<td title='objectos.asciidoc.ConstrainedMonospaceTest.testCase07()'><b>testCase07</b><br>Test class: objectos.asciidoc.ConstrainedMonospaceTest<br>Test method: monospace
+
+- contents is a (not) emphasis
+- contents is a (not) strong
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.asciidoc.ConstrainedMonospaceTest@35329a05</td></tr>
+<tr>
+<td title='objectos.asciidoc.ConstrainedItalicTest.testCase01()'><b>testCase01</b><br>Test class: objectos.asciidoc.ConstrainedItalicTest<br>Test method: = italic
+
+- constrained
+- words only
+- well-formed
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.asciidoc.ConstrainedItalicTest@503a7990</td></tr>
+<tr>
+<td title='objectos.asciidoc.UrlMacroTest.testCase03()'><b>testCase03</b><br>Test class: objectos.asciidoc.UrlMacroTest<br>Test method: - https
+- well-formed
+- comma in attrlist
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.asciidoc.UrlMacroTest@3041beb3</td></tr>
+<tr>
+<td title='objectos.asciidoc.SectionTest.testCase06()'><b>testCase06</b><br>Test class: objectos.asciidoc.SectionTest<br>Test method: section
+
+- level reduction
+- L1 -> L2 -> L3 -> L2
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.asciidoc.SectionTest@ac417a2</td></tr>
+<tr>
+<td title='objectos.asciidoc.ParagraphTest.testCase05()'><b>testCase05</b><br>Test class: objectos.asciidoc.ParagraphTest<br>Test method: imacro in the middle of a sentence
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.asciidoc.ParagraphTest@3b7b0b57</td></tr>
+<tr>
+<td title='objectos.asciidoc.DocumentTest.testCase06()'><b>testCase06</b><br>Test class: objectos.asciidoc.DocumentTest<br>Test method: document attributes
+
+- allow dash/underscore in attribute name
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.asciidoc.DocumentTest@7a0f06ad</td></tr>
+<tr>
+<td title='objectos.asciidoc.UnorderedListTest.testCase13()'><b>testCase13</b><br>Test class: objectos.asciidoc.UnorderedListTest<br>Test method: ul at end of document
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.asciidoc.UnorderedListTest@1e0294a7</td></tr>
+<tr>
+<td title='objectos.asciidoc.SectionTest.testCase11()'><b>testCase11</b><br>Test class: objectos.asciidoc.SectionTest<br>Test method: title has constrained italic/bold
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.asciidoc.SectionTest@ac417a2</td></tr>
+<tr>
+<td title='objectos.asciidoc.InlineMacroTest.testCase02()'><b>testCase02</b><br>Test class: objectos.asciidoc.InlineMacroTest<br>Test method: inline macro
+
+- unordered list
+- section
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.asciidoc.InlineMacroTest@36c783ca</td></tr>
+<tr>
+<td title='objectos.asciidoc.UnorderedListTest.testCase03()'><b>testCase03</b><br>Test class: objectos.asciidoc.UnorderedListTest<br>Test method: unordered list
+
+- simple elements
+- asterisk
+- single level
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.asciidoc.UnorderedListTest@3451fc88</td></tr>
+<tr>
+<td title='objectos.asciidoc.SectionTest.testCase03()'><b>testCase03</b><br>Test class: objectos.asciidoc.SectionTest<br>Test method: section
+
+- attribute list
+- level 1
+- no doctitle
+- single paragraph
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.asciidoc.SectionTest@69069866</td></tr>
+<tr>
+<td title='objectos.asciidoc.ConstrainedMonospaceTest.testCase08()'><b>testCase08</b><br>Test class: objectos.asciidoc.ConstrainedMonospaceTest<br>Test method: monospace
+
+- not a monospace
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.asciidoc.ConstrainedMonospaceTest@35329a05</td></tr>
+<tr>
+<td title='objectos.asciidoc.ParagraphTest.testCase03()'><b>testCase03</b><br>Test class: objectos.asciidoc.ParagraphTest<br>Test method: multiline paragraph
+
+- 3 lines
+- second line ends with cmonospace
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.asciidoc.ParagraphTest@3b7b0b57</td></tr>
+<tr>
+<td title='objectos.asciidoc.SourceCodeBlockTest.testCase02()'><b>testCase02</b><br>Test class: objectos.asciidoc.SourceCodeBlockTest<br>Test method: source code block
+
+- explict source style
+- delimited
+- multiple lines
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.asciidoc.SourceCodeBlockTest@64c95480</td></tr>
+<tr>
+<td title='objectos.asciidoc.ConstrainedMonospaceTest.testCase02()'><b>testCase02</b><br>Test class: objectos.asciidoc.ConstrainedMonospaceTest<br>Test method: monospace
+
+- constrained
+- phrases
+- well-formed
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.asciidoc.ConstrainedMonospaceTest@35329a05</td></tr>
+<tr>
+<td title='objectos.asciidoc.ConstrainedItalicTest.testCase03()'><b>testCase03</b><br>Test class: objectos.asciidoc.ConstrainedItalicTest<br>Test method: = italic
+
+- constrained
+- not an italic
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.asciidoc.ConstrainedItalicTest@69a90b81</td></tr>
+<tr>
+<td title='objectos.asciidoc.ListingBlockTest.testCase01()'><b>testCase01</b><br>Test class: objectos.asciidoc.ListingBlockTest<br>Test method: listing block
+
+- delimited
+- single line
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.asciidoc.ListingBlockTest@ca2cd5e</td></tr>
+<tr>
+<td title='objectos.asciidoc.SectionTest.testCase10()'><b>testCase10</b><br>Test class: objectos.asciidoc.SectionTest<br>Test method: section has source code block
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.asciidoc.SectionTest@69069866</td></tr>
+<tr>
+<td title='objectos.asciidoc.UnorderedListTest.testCase13()'><b>testCase13</b><br>Test class: objectos.asciidoc.UnorderedListTest<br>Test method: ul at end of document
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.asciidoc.UnorderedListTest@3451fc88</td></tr>
+<tr>
+<td title='objectos.asciidoc.ParagraphTest.testCase09()'><b>testCase09</b><br>Test class: objectos.asciidoc.ParagraphTest<br>Test method: paragraph
+
+- whole paragraph is emphasis
+- followed by another paragraph
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.asciidoc.ParagraphTest@3b7b0b57</td></tr>
+<tr>
+<td title='objectos.asciidoc.ConstrainedMonospaceTest.testCase06()'><b>testCase06</b><br>Test class: objectos.asciidoc.ConstrainedMonospaceTest<br>Test method: monospace
+
+- contents is a (not) emphasis
+- contents is a (not) strong
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.asciidoc.ConstrainedMonospaceTest@35329a05</td></tr>
+<tr>
+<td title='objectos.asciidoc.InlineMacroTest.testCase09()'><b>testCase09</b><br>Test class: objectos.asciidoc.InlineMacroTest<br>Test method: inline macro:
+
+- empty attrlist
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.asciidoc.InlineMacroTest@17136390</td></tr>
+<tr>
+<td title='objectos.asciidoc.UnorderedListTest.testCase02()'><b>testCase02</b><br>Test class: objectos.asciidoc.UnorderedListTest<br>Test method: unordered list
+
+- complex elements
+- dash
+- single level
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.asciidoc.UnorderedListTest@1e0294a7</td></tr>
+<tr>
+<td title='objectos.asciidoc.DocumentTest.testCase02()'><b>testCase02</b><br>Test class: objectos.asciidoc.DocumentTest<br>Test method: doctitle + NL
+
+- happy path
+- title ends @ NL
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.asciidoc.DocumentTest@7a0f06ad</td></tr>
+<tr>
+<td title='objectos.asciidoc.InlineMacroTest.testCase03()'><b>testCase03</b><br>Test class: objectos.asciidoc.InlineMacroTest<br>Test method: imacro ends the sentence
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.asciidoc.InlineMacroTest@17136390</td></tr>
+<tr>
+<td title='objectos.asciidoc.ConstrainedBoldTest.testCase02()'><b>testCase02</b><br>Test class: objectos.asciidoc.ConstrainedBoldTest<br>Test method: bold
+
+- constrained
+- phrases
+- well-formed
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.asciidoc.ConstrainedBoldTest@7b3feb26</td></tr>
+<tr>
+<td title='objectos.asciidoc.ParagraphTest.testCase06()'><b>testCase06</b><br>Test class: objectos.asciidoc.ParagraphTest<br>Test method: next line of paragraph starts with monospace
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.asciidoc.ParagraphTest@333e5fb6</td></tr>
+<tr>
+<td title='objectos.asciidoc.DocumentTest.testCase04()'><b>testCase04</b><br>Test class: objectos.asciidoc.DocumentTest<br>Test method: doctitle + paragraph
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.asciidoc.DocumentTest@7a0f06ad</td></tr>
+<tr>
+<td title='objectos.asciidoc.ParagraphTest.testCase01()'><b>testCase01</b><br>Test class: objectos.asciidoc.ParagraphTest<br>Test method: two lines paragraph
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.asciidoc.ParagraphTest@3b7b0b57</td></tr>
+<tr>
+<td title='objectos.asciidoc.UnorderedListTest.testCase09()'><b>testCase09</b><br>Test class: objectos.asciidoc.UnorderedListTest<br>Test method: unordered list
+
+- ul should end before the paragraph
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.asciidoc.UnorderedListTest@1e0294a7</td></tr>
+<tr>
+<td title='objectos.asciidoc.ParagraphTest.testCase04()'><b>testCase04</b><br>Test class: objectos.asciidoc.ParagraphTest<br>Test method: multiline paragraph.
+
+- line ends in a imacro.
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.asciidoc.ParagraphTest@333e5fb6</td></tr>
+<tr>
+<td title='objectos.asciidoc.SourceCodeBlockTest.testCase06()'><b>testCase06</b><br>Test class: objectos.asciidoc.SourceCodeBlockTest<br>Test method: source code block
+
+- empty line before ending marker
+- has paragraph after
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.asciidoc.SourceCodeBlockTest@69499c6f</td></tr>
+<tr>
+<td title='objectos.asciidoc.InlineMacroTest.testCase08()'><b>testCase08</b><br>Test class: objectos.asciidoc.InlineMacroTest<br>Test method: not inline macro:
+
+- no attrlist at EOL
+- also list...
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.asciidoc.InlineMacroTest@36c783ca</td></tr>
+<tr>
+<td title='objectos.asciidoc.SourceCodeBlockTest.testCase07()'><b>testCase07</b><br>Test class: objectos.asciidoc.SourceCodeBlockTest<br>Test method: source code block
+
+- paragraph after
+- separating line is non-empty
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.asciidoc.SourceCodeBlockTest@64c95480</td></tr>
+</table><p>
+</body>
+</html>

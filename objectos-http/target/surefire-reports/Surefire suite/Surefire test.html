@@ -1,0 +1,565 @@
+<html>
+<head>
+<title>TestNG:  Surefire test</title>
+<link href="../testng.css" rel="stylesheet" type="text/css" />
+<link href="../my-testng.css" rel="stylesheet" type="text/css" />
+
+<style type="text/css">
+.log { display: none;} 
+.stack-trace { display: none;} 
+</style>
+<script type="text/javascript">
+<!--
+function flip(e) {
+  current = e.style.display;
+  if (current == 'block') {
+    e.style.display = 'none';
+    return 0;
+  }
+  else {
+    e.style.display = 'block';
+    return 1;
+  }
+}
+
+function toggleBox(szDivId, elem, msg1, msg2)
+{
+  var res = -1;  if (document.getElementById) {
+    res = flip(document.getElementById(szDivId));
+  }
+  else if (document.all) {
+    // this is the way old msie versions work
+    res = flip(document.all[szDivId]);
+  }
+  if(elem) {
+    if(res == 0) elem.innerHTML = msg1; else elem.innerHTML = msg2;
+  }
+
+}
+
+function toggleAllBoxes() {
+  if (document.getElementsByTagName) {
+    d = document.getElementsByTagName('div');
+    for (i = 0; i < d.length; i++) {
+      if (d[i].className == 'log') {
+        flip(d[i]);
+      }
+    }
+  }
+}
+
+// -->
+</script>
+
+</head>
+<body>
+<h2 align='center'>Surefire test</h2><table border='1' align="center">
+<tr>
+<td>Tests passed/Failed/Skipped:</td><td>76/0/0</td>
+</tr><tr>
+<td>Started on:</td><td>Fri Aug 18 13:51:04 BRT 2023</td>
+</tr>
+<tr><td>Total time:</td><td>0 seconds (320 ms)</td>
+</tr><tr>
+<td>Included groups:</td><td></td>
+</tr><tr>
+<td>Excluded groups:</td><td></td>
+</tr>
+</table><p/>
+<small><i>(Hover the method name to see the test class name)</i></small><p/>
+<table width='100%' border='1' class='invocation-passed'>
+<tr><td colspan='4' align='center'><b>PASSED TESTS</b></td></tr>
+<tr><td><b>Test method</b></td>
+<td><b>Attribute(s)</b></td>
+<td width="30%"><b>Exception</b></td>
+<td width="10%"><b>Time (seconds)</b></td>
+<td><b>Instance</b></td>
+</tr>
+<tr>
+<td title='objectos.http.HttpTest.http004()'><b>http004</b><br>Test class: objectos.http.HttpTest</td>
+<td></td>
+<td>0</td>
+<td>objectos.http.HttpTest@3b6ddd1d</td></tr>
+<tr>
+<td title='objectos.http.internal.HttpExchangeInputTest.http001()'><b>http001</b><br>Test class: objectos.http.internal.HttpExchangeInputTest</td>
+<td></td>
+<td>0</td>
+<td>objectos.http.internal.HttpExchangeInputTest@47987356</td></tr>
+<tr>
+<td title='objectos.http.internal.HttpExchangeHandleTest.http004()'><b>http004</b><br>Test class: objectos.http.internal.HttpExchangeHandleTest</td>
+<td></td>
+<td>0</td>
+<td>objectos.http.internal.HttpExchangeHandleTest@7205765b</td></tr>
+<tr>
+<td title='objectos.http.internal.HttpExchangeRequestLineTest.requestLineMethodPToInputRead()'><b>requestLineMethodPToInputRead</b><br>Test class: objectos.http.internal.HttpExchangeRequestLineTest<br>Test method: [#491] HTTP 006: REQUEST_LINE_METHOD_P --> INPUT_READ
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.http.internal.HttpExchangeRequestLineTest@7a419da4</td></tr>
+<tr>
+<td title='objectos.http.internal.HeaderValueTest.unsignedLongValue()'><b>unsignedLongValue</b><br>Test class: objectos.http.internal.HeaderValueTest</td>
+<td></td>
+<td>0</td>
+<td>objectos.http.internal.HeaderValueTest@29d89d5d</td></tr>
+<tr>
+<td title='objectos.http.internal.HttpExchangeParseHeaderTest.http006()'><b>http006</b><br>Test class: objectos.http.internal.HttpExchangeParseHeaderTest</td>
+<td></td>
+<td>0</td>
+<td>objectos.http.internal.HttpExchangeParseHeaderTest@2053d869</td></tr>
+<tr>
+<td title='objectos.http.internal.HttpExchangeSetupTest.http001()'><b>http001</b><br>Test class: objectos.http.internal.HttpExchangeSetupTest</td>
+<td></td>
+<td>0</td>
+<td>objectos.http.internal.HttpExchangeSetupTest@1e683a3e</td></tr>
+<tr>
+<td title='objectos.http.internal.HttpExchangeRequestLineTest.requestLineVersionToInputRead()'><b>requestLineVersionToInputRead</b><br>Test class: objectos.http.internal.HttpExchangeRequestLineTest<br>Test method: [#439] HTTP 001: REQUEST_LINE_VERSION --> INPUT_READ
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.http.internal.HttpExchangeRequestLineTest@7a419da4</td></tr>
+<tr>
+<td title='objectos.http.internal.HttpExchangeRequestLineTest.requestLineMethod()'><b>requestLineMethod</b><br>Test class: objectos.http.internal.HttpExchangeRequestLineTest<br>Test method: [#431] HTTP 001: REQUEST_LINE_METHOD --> REQUEST_LINE_TARGET
+
+- check if bufferIndex is updated
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.http.internal.HttpExchangeRequestLineTest@7a419da4</td></tr>
+<tr>
+<td title='objectos.http.internal.HttpExchangeRequestLineTest.requestLineTarget()'><b>requestLineTarget</b><br>Test class: objectos.http.internal.HttpExchangeRequestLineTest<br>Test method: [#434] HTTP 001: REQUEST_LINE_TARGET --> REQUEST_LINE_VERSION
+
+- bufferIndex should be after SP
+- requestTarget should contain the correct indices
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.http.internal.HttpExchangeRequestLineTest@7a419da4</td></tr>
+<tr>
+<td title='objectos.http.HttpTest.http003()'><b>http003</b><br>Test class: objectos.http.HttpTest</td>
+<td></td>
+<td>0</td>
+<td>objectos.http.HttpTest@3b6ddd1d</td></tr>
+<tr>
+<td title='objectos.http.internal.BytesTest.toLowerCase()'><b>toLowerCase</b><br>Test class: objectos.http.internal.BytesTest</td>
+<td></td>
+<td>0</td>
+<td>objectos.http.internal.BytesTest@14555e0a</td></tr>
+<tr>
+<td title='objectos.http.internal.HttpExchangeHandleTest.http001()'><b>http001</b><br>Test class: objectos.http.internal.HttpExchangeHandleTest</td>
+<td></td>
+<td>0</td>
+<td>objectos.http.internal.HttpExchangeHandleTest@7205765b</td></tr>
+<tr>
+<td title='objectos.http.internal.HttpExchangeParseHeaderTest.parseHeaderValue()'><b>parseHeaderValue</b><br>Test class: objectos.http.internal.HttpExchangeParseHeaderTest<br>Test method: [#444] HTTP 001: PARSE_HEADER_VALUE --> PARSE_HEADER
+
+- happy path
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.http.internal.HttpExchangeParseHeaderTest@2053d869</td></tr>
+<tr>
+<td title='objectos.http.internal.HttpExchangeRequestLineTest.http006()'><b>http006</b><br>Test class: objectos.http.internal.HttpExchangeRequestLineTest</td>
+<td></td>
+<td>0</td>
+<td>objectos.http.internal.HttpExchangeRequestLineTest@7a419da4</td></tr>
+<tr>
+<td title='objectos.http.internal.HttpExchangeTest.http003()'><b>http003</b><br>Test class: objectos.http.internal.HttpExchangeTest</td>
+<td></td>
+<td>0</td>
+<td>objectos.http.internal.HttpExchangeTest@759d26fb</td></tr>
+<tr>
+<td title='objectos.http.internal.HttpExchangeParseHeaderTest.http001()'><b>http001</b><br>Test class: objectos.http.internal.HttpExchangeParseHeaderTest</td>
+<td></td>
+<td>0</td>
+<td>objectos.http.internal.HttpExchangeParseHeaderTest@2053d869</td></tr>
+<tr>
+<td title='objectos.http.internal.HttpExchangeRequestLineTest.requestLineVersion02LF()'><b>requestLineVersion02LF</b><br>Test class: objectos.http.internal.HttpExchangeRequestLineTest<br>Test method: [#437] HTTP 001: REQUEST_LINE_VERSION --> PARSE_HEADER
+
+- client line terminator is LF only
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.http.internal.HttpExchangeRequestLineTest@7a419da4</td></tr>
+<tr>
+<td title='objectos.http.internal.HttpExchangeOutputTest.outputBuffer()'><b>outputBuffer</b><br>Test class: objectos.http.internal.HttpExchangeOutputTest<br>Test method: [#449] OUTPUT_BUFFER --> next action
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.http.internal.HttpExchangeOutputTest@2b48a640</td></tr>
+<tr>
+<td title='objectos.http.internal.HttpExchangeParseHeaderTest.parseHeaderToInputRead()'><b>parseHeaderToInputRead</b><br>Test class: objectos.http.internal.HttpExchangeParseHeaderTest<br>Test method: [#446] HTTP 001: PARSE_HEADER --> INPUT_READ
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.http.internal.HttpExchangeParseHeaderTest@2053d869</td></tr>
+<tr>
+<td title='objectos.http.internal.HttpChunkedCharsTest.http002()'><b>http002</b><br>Test class: objectos.http.internal.HttpChunkedCharsTest</td>
+<td></td>
+<td>0</td>
+<td>objectos.http.internal.HttpChunkedCharsTest@4bb33f74</td></tr>
+<tr>
+<td title='objectos.http.internal.HttpExchangeSetupTest.setup01()'><b>setup01</b><br>Test class: objectos.http.internal.HttpExchangeSetupTest<br>Test method: [#426] HTTP 001: SETUP --> INPUT
+
+- buffer must be reset
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.http.internal.HttpExchangeSetupTest@1e683a3e</td></tr>
+<tr>
+<td title='objectos.http.internal.HttpExchangeParseHeaderTest.parseHeaderToClientErrorBadRequest()'><b>parseHeaderToClientErrorBadRequest</b><br>Test class: objectos.http.internal.HttpExchangeParseHeaderTest<br>Test method: [#446] HTTP 001: PARSE_HEADER --> CLIENT_ERROR::BAD_REQUEST
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.http.internal.HttpExchangeParseHeaderTest@2053d869</td></tr>
+<tr>
+<td title='objectos.http.internal.HttpExchangeParseHeaderTest.parseHeaderToHandle()'><b>parseHeaderToHandle</b><br>Test class: objectos.http.internal.HttpExchangeParseHeaderTest<br>Test method: [#444] HTTP 001: PARSE_HEADER --> HANDLE
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.http.internal.HttpExchangeParseHeaderTest@2053d869</td></tr>
+<tr>
+<td title='objectos.http.internal.HttpExchangeHandleTest.handleInvoke()'><b>handleInvoke</b><br>Test class: objectos.http.internal.HttpExchangeHandleTest</td>
+<td></td>
+<td>0</td>
+<td>objectos.http.internal.HttpExchangeHandleTest@7205765b</td></tr>
+<tr>
+<td title='objectos.http.HttpTest.http006()'><b>http006</b><br>Test class: objectos.http.HttpTest</td>
+<td></td>
+<td>0</td>
+<td>objectos.http.HttpTest@3b6ddd1d</td></tr>
+<tr>
+<td title='objectos.http.util.UrlEncodedFormTest.testCase01()'><b>testCase01</b><br>Test class: objectos.http.util.UrlEncodedFormTest</td>
+<td></td>
+<td>0</td>
+<td>objectos.http.util.UrlEncodedFormTest@22ef9844</td></tr>
+<tr>
+<td title='objectos.http.internal.HttpExchangeParseHeaderTest.parseHeaderValueEmptyValue()'><b>parseHeaderValueEmptyValue</b><br>Test class: objectos.http.internal.HttpExchangeParseHeaderTest<br>Test method: [#444] HTTP 001: PARSE_HEADER_VALUE --> PARSE_HEADER
+
+- semi-happy path: empty value
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.http.internal.HttpExchangeParseHeaderTest@2053d869</td></tr>
+<tr>
+<td title='objectos.http.internal.HttpExchangeOutputTest.http001()'><b>http001</b><br>Test class: objectos.http.internal.HttpExchangeOutputTest</td>
+<td></td>
+<td>0</td>
+<td>objectos.http.internal.HttpExchangeOutputTest@2b48a640</td></tr>
+<tr>
+<td title='objectos.http.internal.HttpExchangeOutputTest.outputBufferToClose()'><b>outputBufferToClose</b><br>Test class: objectos.http.internal.HttpExchangeOutputTest<br>Test method: [#449] OUTPUT_BUFFER --> ERROR_WRITE::fails to get output stream
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.http.internal.HttpExchangeOutputTest@2b48a640</td></tr>
+<tr>
+<td title='objectos.http.internal.HttpExchangeInputTest.inputRead02()'><b>inputRead02</b><br>Test class: objectos.http.internal.HttpExchangeInputTest<br>Test method: [#428] HTTP 001: INPUT_READ --> CLOSE
+
+- InputStream::read throws
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.http.internal.HttpExchangeInputTest@47987356</td></tr>
+<tr>
+<td title='objectos.http.HttpTest.http001()'><b>http001</b><br>Test class: objectos.http.HttpTest</td>
+<td></td>
+<td>0</td>
+<td>objectos.http.HttpTest@3b6ddd1d</td></tr>
+<tr>
+<td title='objectos.http.internal.HttpExchangeOutputTest.outputBufferToCloseOnWrite()'><b>outputBufferToCloseOnWrite</b><br>Test class: objectos.http.internal.HttpExchangeOutputTest<br>Test method: [#449] OUTPUT_BUFFER --> ERROR_WRITE::output stream throws on write
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.http.internal.HttpExchangeOutputTest@2b48a640</td></tr>
+<tr>
+<td title='objectos.http.internal.HttpExchangeInputTest.inputRead01()'><b>inputRead01</b><br>Test class: objectos.http.internal.HttpExchangeInputTest<br>Test method: [#428] HTTP 001: INPUT_READ --> CLOSE
+
+- Socket::getInputStream throws
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.http.internal.HttpExchangeInputTest@47987356</td></tr>
+<tr>
+<td title='objectos.http.internal.HttpExchangeParseHeaderTest.parseHeaderValueToInputRead()'><b>parseHeaderValueToInputRead</b><br>Test class: objectos.http.internal.HttpExchangeParseHeaderTest<br>Test method: [#444] HTTP 001: PARSE_HEADER_VALUE --> INPUT_READ
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.http.internal.HttpExchangeParseHeaderTest@2053d869</td></tr>
+<tr>
+<td title='objectos.http.internal.HttpExchangeRequestLineTest.requestLineTargetToClientErrorUriTooLong()'><b>requestLineTargetToClientErrorUriTooLong</b><br>Test class: objectos.http.internal.HttpExchangeRequestLineTest<br>Test method: [#436] HTTP 001: REQUEST_LINE_TARGET --> CLIENT_ERROR::URI_TOO_LONG
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.http.internal.HttpExchangeRequestLineTest@7a419da4</td></tr>
+<tr>
+<td title='objectos.http.internal.HttpExchangeOutputTest.outputHeader()'><b>outputHeader</b><br>Test class: objectos.http.internal.HttpExchangeOutputTest<br>Test method: [#449] OUTPUT_HEADER --> OUTPUT_HEADER
+
+- buffer should contain data
+- bufferLimit should be updated
+- responseHeaderIndex should be updated
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.http.internal.HttpExchangeOutputTest@2b48a640</td></tr>
+<tr>
+<td title='objectos.http.internal.HttpExchangeRequestLineTest.requestLineMethodToClientErrorBadRequest()'><b>requestLineMethodToClientErrorBadRequest</b><br>Test class: objectos.http.internal.HttpExchangeRequestLineTest<br>Test method: [#432] HTTP 001: REQUEST_LINE_METHOD --> CLIENT_ERROR::BAD_REQUEST
+
+- bufferIndex is NOT updated
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.http.internal.HttpExchangeRequestLineTest@7a419da4</td></tr>
+<tr>
+<td title='objectos.http.internal.HttpExchangeParseHeaderTest.parseHeader()'><b>parseHeader</b><br>Test class: objectos.http.internal.HttpExchangeParseHeaderTest<br>Test method: [#445] HTTP 001: PARSE_HEADER --> PARSE_HEADER_NAME
+
+- resets header name
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.http.internal.HttpExchangeParseHeaderTest@2053d869</td></tr>
+<tr>
+<td title='objectos.http.internal.HttpExchangeTest.http004()'><b>http004</b><br>Test class: objectos.http.internal.HttpExchangeTest</td>
+<td></td>
+<td>0</td>
+<td>objectos.http.internal.HttpExchangeTest@759d26fb</td></tr>
+<tr>
+<td title='objectos.http.internal.HttpExchangeRequestBodyTest.http006()'><b>http006</b><br>Test class: objectos.http.internal.HttpExchangeRequestBodyTest</td>
+<td></td>
+<td>0</td>
+<td>objectos.http.internal.HttpExchangeRequestBodyTest@3d5c822d</td></tr>
+<tr>
+<td title='objectos.http.internal.HttpExchangeResultTest.resultToSetup()'><b>resultToSetup</b><br>Test class: objectos.http.internal.HttpExchangeResultTest<br>Test method: [#453] RESULT --> SETUP
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.http.internal.HttpExchangeResultTest@4d02f94e</td></tr>
+<tr>
+<td title='objectos.http.internal.HttpExchangeParseHeaderTest.parseHeaderNameToInputRead()'><b>parseHeaderNameToInputRead</b><br>Test class: objectos.http.internal.HttpExchangeParseHeaderTest<br>Test method: [#444] HTTP 001: PARSE_HEADER_NAME --> INPUT_READ
+
+- buffer index remains unchanged
+- not header name set
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.http.internal.HttpExchangeParseHeaderTest@2053d869</td></tr>
+<tr>
+<td title='objectos.http.internal.HttpExchangeRequestLineTest.requestLineVersionToClientErrorBadRequest()'><b>requestLineVersionToClientErrorBadRequest</b><br>Test class: objectos.http.internal.HttpExchangeRequestLineTest<br>Test method: [#438] HTTP 001: REQUEST_LINE_VERSION --> CLIENT_ERROR::BAD_REQUEST
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.http.internal.HttpExchangeRequestLineTest@7a419da4</td></tr>
+<tr>
+<td title='objectos.http.internal.HttpExchangeResultTest.http001()'><b>http001</b><br>Test class: objectos.http.internal.HttpExchangeResultTest</td>
+<td></td>
+<td>0</td>
+<td>objectos.http.internal.HttpExchangeResultTest@4d02f94e</td></tr>
+<tr>
+<td title='objectos.http.internal.HttpExchangeInputTest.inputRead03()'><b>inputRead03</b><br>Test class: objectos.http.internal.HttpExchangeInputTest<br>Test method: [#428] HTTP 001: INPUT_READ --> CLOSE
+
+- EOF
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.http.internal.HttpExchangeInputTest@47987356</td></tr>
+<tr>
+<td title='objectos.http.internal.HttpExchangeRequestLineTest.requestLineMethodP()'><b>requestLineMethodP</b><br>Test class: objectos.http.internal.HttpExchangeRequestLineTest<br>Test method: [#491] HTTP 006: REQUEST_LINE_METHOD_P --> REQUEST_LINE_TARGET
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.http.internal.HttpExchangeRequestLineTest@7a419da4</td></tr>
+<tr>
+<td title='objectos.http.internal.HttpExchangeOutputTest.outputHeaderToOutputTerminator()'><b>outputHeaderToOutputTerminator</b><br>Test class: objectos.http.internal.HttpExchangeOutputTest<br>Test method: [#449] OUTPUT_HEADER --> OUTPUT_TERMINATOR
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.http.internal.HttpExchangeOutputTest@2b48a640</td></tr>
+<tr>
+<td title='objectos.http.internal.ServerSocketThreadTest.testCase01()'><b>testCase01</b><br>Test class: objectos.http.internal.ServerSocketThreadTest</td>
+<td></td>
+<td>0</td>
+<td>objectos.http.internal.ServerSocketThreadTest@3c73951</td></tr>
+<tr>
+<td title='objectos.http.internal.HttpExchangeHandleTest.handle()'><b>handle</b><br>Test class: objectos.http.internal.HttpExchangeHandleTest<br>Test method: [#448] HANDLE --> HANDLE_INVOKE
+
+- sets closeConnection
+- resets responseBody
+- creates responseHeaders
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.http.internal.HttpExchangeHandleTest@7205765b</td></tr>
+<tr>
+<td title='objectos.http.internal.HttpExchangeRequestLineTest.requestLineVersion01()'><b>requestLineVersion01</b><br>Test class: objectos.http.internal.HttpExchangeRequestLineTest<br>Test method: [#437] HTTP 001: REQUEST_LINE_VERSION --> PARSE_HEADER
+
+- bufferIndex is after CRLF
+- version has correct values
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.http.internal.HttpExchangeRequestLineTest@7a419da4</td></tr>
+<tr>
+<td title='objectos.http.internal.HttpExchangeOutputTest.outputHeaderToOutputBufferBufferFull()'><b>outputHeaderToOutputBufferBufferFull</b><br>Test class: objectos.http.internal.HttpExchangeOutputTest<br>Test method: [#449] OUTPUT_HEADER --> OUTPUT_BUFFER (buffer full)
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.http.internal.HttpExchangeOutputTest@2b48a640</td></tr>
+<tr>
+<td title='objectos.http.HttpTest.http002()'><b>http002</b><br>Test class: objectos.http.HttpTest</td>
+<td></td>
+<td>0</td>
+<td>objectos.http.HttpTest@3b6ddd1d</td></tr>
+<tr>
+<td title='objectos.http.internal.HttpExchangeOutputTest.outputStatus()'><b>outputStatus</b><br>Test class: objectos.http.internal.HttpExchangeOutputTest<br>Test method: [#449] OUTPUT_STATUS --> OUTPUT_HEADER
+
+- buffer reset
+- responseHeaderIndex reset
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.http.internal.HttpExchangeOutputTest@2b48a640</td></tr>
+<tr>
+<td title='objectos.http.util.UrlEncodedFormTest.testCase02()'><b>testCase02</b><br>Test class: objectos.http.util.UrlEncodedFormTest</td>
+<td></td>
+<td>0</td>
+<td>objectos.http.util.UrlEncodedFormTest@22ef9844</td></tr>
+<tr>
+<td title='objectos.http.internal.HttpExchangeResultTest.result()'><b>result</b><br>Test class: objectos.http.internal.HttpExchangeResultTest<br>Test method: [#450] RESULT --> STOP
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.http.internal.HttpExchangeResultTest@4d02f94e</td></tr>
+<tr>
+<td title='objectos.http.internal.HttpExchangeRequestLineTest.http001()'><b>http001</b><br>Test class: objectos.http.internal.HttpExchangeRequestLineTest</td>
+<td></td>
+<td>0</td>
+<td>objectos.http.internal.HttpExchangeRequestLineTest@7a419da4</td></tr>
+<tr>
+<td title='objectos.http.internal.HttpExchangeRequestLineTest.requestLineMethodToInputRead()'><b>requestLineMethodToInputRead</b><br>Test class: objectos.http.internal.HttpExchangeRequestLineTest<br>Test method: [#433] HTTP 001: REQUEST_LINE_METHOD --> INPUT_READ
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.http.internal.HttpExchangeRequestLineTest@7a419da4</td></tr>
+<tr>
+<td title='objectos.http.internal.HttpExchangeRequestLineTest.requestLineToClientErrorBadRequest()'><b>requestLineToClientErrorBadRequest</b><br>Test class: objectos.http.internal.HttpExchangeRequestLineTest<br>Test method: [#430] REQUEST_LINE --> CLIENT_ERROR::BAD_REQUEST
+
+- buffer should remain untouched
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.http.internal.HttpExchangeRequestLineTest@7a419da4</td></tr>
+<tr>
+<td title='objectos.http.internal.HttpExchangeOutputTest.outputTerminatorToOutputBuffer()'><b>outputTerminatorToOutputBuffer</b><br>Test class: objectos.http.internal.HttpExchangeOutputTest<br>Test method: [#449] OUTPUT_TERMINATOR --> OUTPUT_BUFFER
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.http.internal.HttpExchangeOutputTest@2b48a640</td></tr>
+<tr>
+<td title='objectos.http.internal.HttpExchangeRequestLineTest.requestLineVersionToClientErrorUriTooLong()'><b>requestLineVersionToClientErrorUriTooLong</b><br>Test class: objectos.http.internal.HttpExchangeRequestLineTest<br>Test method: [#440] HTTP 001: REQUEST_LINE_VERSION --> CLIENT_ERROR::URI_TOO_LONG
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.http.internal.HttpExchangeRequestLineTest@7a419da4</td></tr>
+<tr>
+<td title='objectos.http.internal.HttpExchangeOutputTest.outputBody()'><b>outputBody</b><br>Test class: objectos.http.internal.HttpExchangeOutputTest<br>Test method: [#449] OUTPUT_BODY --> RESULT
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.http.internal.HttpExchangeOutputTest@2b48a640</td></tr>
+<tr>
+<td title='objectos.http.internal.HttpExchangeInputTest.input()'><b>input</b><br>Test class: objectos.http.internal.HttpExchangeInputTest<br>Test method: [#427] HTTP 001: INPUT alias to INPUT_READ --> REQUEST_LINE
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.http.internal.HttpExchangeInputTest@47987356</td></tr>
+<tr>
+<td title='objectos.http.internal.HttpExchangeRequestLineTest.requestLine()'><b>requestLine</b><br>Test class: objectos.http.internal.HttpExchangeRequestLineTest<br>Test method: [#429] HTTP 001: REQUEST_LINE --> REQUEST_LINE_METHOD
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.http.internal.HttpExchangeRequestLineTest@7a419da4</td></tr>
+<tr>
+<td title='objectos.http.internal.HttpExchangeRequestLineTest.requestLineToRequestLineMethodP()'><b>requestLineToRequestLineMethodP</b><br>Test class: objectos.http.internal.HttpExchangeRequestLineTest<br>Test method: [#491] HTTP 006: REQUEST_LINE --> REQUEST_LINE_METHOD_P
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.http.internal.HttpExchangeRequestLineTest@7a419da4</td></tr>
+<tr>
+<td title='objectos.http.HttpTest.http005()'><b>http005</b><br>Test class: objectos.http.HttpTest</td>
+<td></td>
+<td>0</td>
+<td>objectos.http.HttpTest@3b6ddd1d</td></tr>
+<tr>
+<td title='objectos.http.internal.HttpExchangeParseHeaderTest.parseHeaderValueHeaderNameIsUnknown()'><b>parseHeaderValueHeaderNameIsUnknown</b><br>Test class: objectos.http.internal.HttpExchangeParseHeaderTest<br>Test method: [#452] HTTP 001: PARSE_HEADER_VALUE --> PARSE_HEADER
+
+- semi-happy path: header name is unknown
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.http.internal.HttpExchangeParseHeaderTest@2053d869</td></tr>
+<tr>
+<td title='objectos.http.internal.HttpExchangeOutputTest.output()'><b>output</b><br>Test class: objectos.http.internal.HttpExchangeOutputTest<br>Test method: [#449] OUTPUT --> OUTPUT_STATUS
+
+- buffer reset
+- responseHeaderIndex reset
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.http.internal.HttpExchangeOutputTest@2b48a640</td></tr>
+<tr>
+<td title='objectos.http.internal.HttpExchangeOutputTest.outputBodyToErrorWrite()'><b>outputBodyToErrorWrite</b><br>Test class: objectos.http.internal.HttpExchangeOutputTest<br>Test method: [#449] OUTPUT_BODY --> ERROR_WRITE
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.http.internal.HttpExchangeOutputTest@2b48a640</td></tr>
+<tr>
+<td title='objectos.http.internal.HttpExchangeRequestLineTest.requestLineTargetToInputRead()'><b>requestLineTargetToInputRead</b><br>Test class: objectos.http.internal.HttpExchangeRequestLineTest<br>Test method: [#435] HTTP 001: REQUEST_LINE_TARGET --> INPUT_READ
+
+- bufferIndex should not have been updated
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.http.internal.HttpExchangeRequestLineTest@7a419da4</td></tr>
+<tr>
+<td title='objectos.http.internal.HttpExchangeParseHeaderTest.parseHeaderName()'><b>parseHeaderName</b><br>Test class: objectos.http.internal.HttpExchangeParseHeaderTest<br>Test method: [#444] HTTP 001: PARSE_HEADER_NAME --> PARSE_HEADER_VALUE
+
+- bufferIndex ends after colon
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.http.internal.HttpExchangeParseHeaderTest@2053d869</td></tr>
+<tr>
+<td title='objectos.http.internal.HttpExchangeParseHeaderTest.parseHeaderNameToParseHeaderValue()'><b>parseHeaderNameToParseHeaderValue</b><br>Test class: objectos.http.internal.HttpExchangeParseHeaderTest<br>Test method: [#452] HTTP 001: PARSE_HEADER_NAME --> PARSE_HEADER_VALUE (not found)
+
+- header name is unknown
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.http.internal.HttpExchangeParseHeaderTest@2053d869</td></tr>
+<tr>
+<td title='objectos.http.internal.HttpExchangeParseHeaderTest.parseHeaderValueToClientErrorBadRequest()'><b>parseHeaderValueToClientErrorBadRequest</b><br>Test class: objectos.http.internal.HttpExchangeParseHeaderTest<br>Test method: [#444] HTTP 001: PARSE_HEADER_VALUE --> CLIENT_ERROR::BAD_REQUEST
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.http.internal.HttpExchangeParseHeaderTest@2053d869</td></tr>
+<tr>
+<td title='objectos.http.internal.HttpExchangeParseHeaderTest.parseHeaderNameToClientErrorBadRequest()'><b>parseHeaderNameToClientErrorBadRequest</b><br>Test class: objectos.http.internal.HttpExchangeParseHeaderTest<br>Test method: [#444] HTTP 001: PARSE_HEADER_NAME --> CLIENT_ERROR::BAD_REQUEST
+
+- buffer index remains unchanged
+- not header name set
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.http.internal.HttpExchangeParseHeaderTest@2053d869</td></tr>
+<tr>
+<td title='objectos.http.internal.HttpExchangeOutputTest.http002()'><b>http002</b><br>Test class: objectos.http.internal.HttpExchangeOutputTest</td>
+<td></td>
+<td>0</td>
+<td>objectos.http.internal.HttpExchangeOutputTest@2b48a640</td></tr>
+<tr>
+<td title='objectos.http.internal.HttpExchangeOutputTest.outputTerminator()'><b>outputTerminator</b><br>Test class: objectos.http.internal.HttpExchangeOutputTest<br>Test method: [#449] OUTPUT_TERMINATOR --> OUTPUT_BODY
+</td>
+<td></td>
+<td>0</td>
+<td>objectos.http.internal.HttpExchangeOutputTest@2b48a640</td></tr>
+</table><p>
+</body>
+</html>

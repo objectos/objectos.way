@@ -1,0 +1,4 @@
+--patch-module
+objectos.selfgen=_
+--add-reads
+objectos.selfgen=ALL-UNNAMED

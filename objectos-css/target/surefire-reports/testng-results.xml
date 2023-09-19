@@ -1,0 +1,2176 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testng-results ignored="4" total="242" passed="238" failed="0" skipped="0">
+  <reporter-output>
+  </reporter-output>
+  <suite started-at="2023-08-18T13:50:51 BRT" name="Surefire suite" finished-at="2023-08-18T13:50:51 BRT" duration-ms="627">
+    <groups>
+    </groups>
+    <test started-at="2023-08-18T13:50:51 BRT" name="Surefire test" finished-at="2023-08-18T13:50:51 BRT" duration-ms="627">
+      <class name="objectos.css.util.NextTest">
+        <test-method signature="test()[pri:0, instance:objectos.css.util.NextTest@73a2e8ce]" started-at="2023-08-18T13:50:51 BRT" name="test" finished-at="2023-08-18T13:50:51 BRT" duration-ms="18" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- test -->
+      </class> <!-- objectos.css.util.NextTest -->
+      <class name="objectos.css.PreflightTest">
+        <test-method signature="test()[pri:0, instance:objectos.css.PreflightTest@23f98f26]" started-at="2023-08-18T13:50:51 BRT" name="test" finished-at="2023-08-18T13:50:51 BRT" duration-ms="2" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- test -->
+      </class> <!-- objectos.css.PreflightTest -->
+      <class name="objectos.css.sheet.StyleSheetTest">
+        <test-method is-config="true" signature="_beforeClass()[pri:0, instance:objectos.css.sheet.StyleSheetTest@6336075c]" started-at="2023-08-18T13:50:51 BRT" name="_beforeClass" finished-at="2023-08-18T13:50:51 BRT" duration-ms="5" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- _beforeClass -->
+        <test-method signature="backgroundImage()[pri:0, instance:objectos.css.sheet.StyleSheetTest@6336075c]" started-at="2023-08-18T13:50:51 BRT" name="backgroundImage" finished-at="2023-08-18T13:50:51 BRT" duration-ms="3" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- backgroundImage -->
+        <test-method is-config="true" signature="_beforeMethod()[pri:0, instance:objectos.css.sheet.StyleSheetTest@6336075c]" started-at="2023-08-18T13:50:51 BRT" name="_beforeMethod" finished-at="2023-08-18T13:50:51 BRT" duration-ms="0" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- _beforeMethod -->
+        <test-method is-config="true" signature="_beforeMethod()[pri:0, instance:objectos.css.sheet.StyleSheetTest@6336075c]" started-at="2023-08-18T13:50:51 BRT" name="_beforeMethod" finished-at="2023-08-18T13:50:51 BRT" duration-ms="0" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- _beforeMethod -->
+        <test-method signature="filterClassSelectorsByName01()[pri:0, instance:objectos.css.sheet.StyleSheetTest@6336075c]" started-at="2023-08-18T13:50:51 BRT" name="filterClassSelectorsByName01" description="# filterClassSelectorsByName test case #01
+
+- result will be non-empty
+- filtered out in the middle
+" finished-at="2023-08-18T13:50:51 BRT" duration-ms="4" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- filterClassSelectorsByName01 -->
+        <test-method is-config="true" signature="_beforeMethod()[pri:0, instance:objectos.css.sheet.StyleSheetTest@6336075c]" started-at="2023-08-18T13:50:51 BRT" name="_beforeMethod" finished-at="2023-08-18T13:50:51 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- _beforeMethod -->
+        <test-method signature="filterClassSelectorsByName02()[pri:0, instance:objectos.css.sheet.StyleSheetTest@6336075c]" started-at="2023-08-18T13:50:51 BRT" name="filterClassSelectorsByName02" description="# filterClassSelectorsByName test case #02
+
+- result will be empty
+" finished-at="2023-08-18T13:50:51 BRT" duration-ms="2" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- filterClassSelectorsByName02 -->
+        <test-method signature="filterClassSelectorsByName03()[pri:0, instance:objectos.css.sheet.StyleSheetTest@6336075c]" started-at="2023-08-18T13:50:51 BRT" name="filterClassSelectorsByName03" description="# filterClassSelectorsByName test case #03
+
+- media queries
+" finished-at="2023-08-18T13:50:51 BRT" duration-ms="5" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- filterClassSelectorsByName03 -->
+        <test-method is-config="true" signature="_beforeMethod()[pri:0, instance:objectos.css.sheet.StyleSheetTest@6336075c]" started-at="2023-08-18T13:50:51 BRT" name="_beforeMethod" finished-at="2023-08-18T13:50:51 BRT" duration-ms="0" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- _beforeMethod -->
+        <test-method is-config="true" signature="_beforeMethod()[pri:0, instance:objectos.css.sheet.StyleSheetTest@6336075c]" started-at="2023-08-18T13:50:51 BRT" name="_beforeMethod" finished-at="2023-08-18T13:50:51 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- _beforeMethod -->
+        <test-method signature="filterClassSelectorsByName04()[pri:0, instance:objectos.css.sheet.StyleSheetTest@6336075c]" started-at="2023-08-18T13:50:51 BRT" name="filterClassSelectorsByName04" description="# filterClassSelectorsByName test case #04
+
+- hover state
+" finished-at="2023-08-18T13:50:51 BRT" duration-ms="2" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- filterClassSelectorsByName04 -->
+        <test-method signature="filterClassSelectorsByName05()[pri:0, instance:objectos.css.sheet.StyleSheetTest@6336075c]" started-at="2023-08-18T13:50:51 BRT" name="filterClassSelectorsByName05" description="# filterClassSelectorsByName test case #05
+
+- hover state (multiple)
+" finished-at="2023-08-18T13:50:51 BRT" duration-ms="2" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- filterClassSelectorsByName05 -->
+        <test-method is-config="true" signature="_beforeMethod()[pri:0, instance:objectos.css.sheet.StyleSheetTest@6336075c]" started-at="2023-08-18T13:50:51 BRT" name="_beforeMethod" finished-at="2023-08-18T13:50:51 BRT" duration-ms="0" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- _beforeMethod -->
+        <test-method signature="filterClassSelectorsByName06()[pri:0, instance:objectos.css.sheet.StyleSheetTest@6336075c]" started-at="2023-08-18T13:50:51 BRT" name="filterClassSelectorsByName06" description="# filterClassSelectorsByName test case #06
+
+- media queries: skip empty media query
+" finished-at="2023-08-18T13:50:51 BRT" duration-ms="2" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- filterClassSelectorsByName06 -->
+        <test-method is-config="true" signature="_beforeMethod()[pri:0, instance:objectos.css.sheet.StyleSheetTest@6336075c]" started-at="2023-08-18T13:50:51 BRT" name="_beforeMethod" finished-at="2023-08-18T13:50:51 BRT" duration-ms="0" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- _beforeMethod -->
+        <test-method signature="filterClassSelectorsByName07()[pri:0, instance:objectos.css.sheet.StyleSheetTest@6336075c]" started-at="2023-08-18T13:50:51 BRT" name="filterClassSelectorsByName07" description="# filterClassSelectorsByName test case #07
+
+- media queries
+- keep only non-query rules
+" finished-at="2023-08-18T13:50:51 BRT" duration-ms="3" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- filterClassSelectorsByName07 -->
+        <test-method is-config="true" signature="_beforeMethod()[pri:0, instance:objectos.css.sheet.StyleSheetTest@6336075c]" started-at="2023-08-18T13:50:51 BRT" name="_beforeMethod" finished-at="2023-08-18T13:50:51 BRT" duration-ms="0" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- _beforeMethod -->
+        <test-method is-config="true" signature="_beforeMethod()[pri:0, instance:objectos.css.sheet.StyleSheetTest@6336075c]" started-at="2023-08-18T13:50:51 BRT" name="_beforeMethod" finished-at="2023-08-18T13:50:51 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- _beforeMethod -->
+        <test-method signature="testCase00()[pri:0, instance:objectos.css.sheet.StyleSheetTest@6336075c]" started-at="2023-08-18T13:50:51 BRT" name="testCase00" finished-at="2023-08-18T13:50:51 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase00 -->
+        <test-method is-config="true" signature="_beforeMethod()[pri:0, instance:objectos.css.sheet.StyleSheetTest@6336075c]" started-at="2023-08-18T13:50:51 BRT" name="_beforeMethod" finished-at="2023-08-18T13:50:51 BRT" duration-ms="3" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- _beforeMethod -->
+        <test-method signature="testCase01()[pri:0, instance:objectos.css.sheet.StyleSheetTest@6336075c]" started-at="2023-08-18T13:50:51 BRT" name="testCase01" finished-at="2023-08-18T13:50:51 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase01 -->
+        <test-method signature="testCase02()[pri:0, instance:objectos.css.sheet.StyleSheetTest@6336075c]" started-at="2023-08-18T13:50:51 BRT" name="testCase02" finished-at="2023-08-18T13:50:51 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase02 -->
+        <test-method is-config="true" signature="_beforeMethod()[pri:0, instance:objectos.css.sheet.StyleSheetTest@6336075c]" started-at="2023-08-18T13:50:51 BRT" name="_beforeMethod" finished-at="2023-08-18T13:50:51 BRT" duration-ms="0" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- _beforeMethod -->
+        <test-method signature="testCase03()[pri:0, instance:objectos.css.sheet.StyleSheetTest@6336075c]" started-at="2023-08-18T13:50:51 BRT" name="testCase03" finished-at="2023-08-18T13:50:51 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase03 -->
+        <test-method is-config="true" signature="_beforeMethod()[pri:0, instance:objectos.css.sheet.StyleSheetTest@6336075c]" started-at="2023-08-18T13:50:51 BRT" name="_beforeMethod" finished-at="2023-08-18T13:50:51 BRT" duration-ms="0" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- _beforeMethod -->
+        <test-method is-config="true" signature="_beforeMethod()[pri:0, instance:objectos.css.sheet.StyleSheetTest@6336075c]" started-at="2023-08-18T13:50:51 BRT" name="_beforeMethod" finished-at="2023-08-18T13:50:51 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- _beforeMethod -->
+        <test-method signature="testCase04()[pri:0, instance:objectos.css.sheet.StyleSheetTest@6336075c]" started-at="2023-08-18T13:50:51 BRT" name="testCase04" finished-at="2023-08-18T13:50:51 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase04 -->
+        <test-method signature="testCase05()[pri:0, instance:objectos.css.sheet.StyleSheetTest@6336075c]" started-at="2023-08-18T13:50:51 BRT" name="testCase05" finished-at="2023-08-18T13:50:51 BRT" duration-ms="4" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase05 -->
+        <test-method is-config="true" signature="_beforeMethod()[pri:0, instance:objectos.css.sheet.StyleSheetTest@6336075c]" started-at="2023-08-18T13:50:51 BRT" name="_beforeMethod" finished-at="2023-08-18T13:50:51 BRT" duration-ms="0" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- _beforeMethod -->
+        <test-method signature="testCase06()[pri:0, instance:objectos.css.sheet.StyleSheetTest@6336075c]" started-at="2023-08-18T13:50:51 BRT" name="testCase06" finished-at="2023-08-18T13:50:51 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase06 -->
+        <test-method is-config="true" signature="_beforeMethod()[pri:0, instance:objectos.css.sheet.StyleSheetTest@6336075c]" started-at="2023-08-18T13:50:51 BRT" name="_beforeMethod" finished-at="2023-08-18T13:50:51 BRT" duration-ms="0" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- _beforeMethod -->
+        <test-method signature="testCase07()[pri:0, instance:objectos.css.sheet.StyleSheetTest@6336075c]" started-at="2023-08-18T13:50:51 BRT" name="testCase07" finished-at="2023-08-18T13:50:51 BRT" duration-ms="2" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase07 -->
+        <test-method is-config="true" signature="_beforeMethod()[pri:0, instance:objectos.css.sheet.StyleSheetTest@6336075c]" started-at="2023-08-18T13:50:51 BRT" name="_beforeMethod" finished-at="2023-08-18T13:50:51 BRT" duration-ms="0" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- _beforeMethod -->
+        <test-method is-config="true" signature="_beforeMethod()[pri:0, instance:objectos.css.sheet.StyleSheetTest@6336075c]" started-at="2023-08-18T13:50:51 BRT" name="_beforeMethod" finished-at="2023-08-18T13:50:51 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- _beforeMethod -->
+        <test-method signature="testCase08()[pri:0, instance:objectos.css.sheet.StyleSheetTest@6336075c]" started-at="2023-08-18T13:50:51 BRT" name="testCase08" finished-at="2023-08-18T13:50:51 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase08 -->
+        <test-method is-config="true" signature="_beforeMethod()[pri:0, instance:objectos.css.sheet.StyleSheetTest@6336075c]" started-at="2023-08-18T13:50:51 BRT" name="_beforeMethod" finished-at="2023-08-18T13:50:51 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- _beforeMethod -->
+        <test-method signature="testCase09()[pri:0, instance:objectos.css.sheet.StyleSheetTest@6336075c]" started-at="2023-08-18T13:50:51 BRT" name="testCase09" finished-at="2023-08-18T13:50:51 BRT" duration-ms="0" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase09 -->
+        <test-method is-config="true" signature="_beforeMethod()[pri:0, instance:objectos.css.sheet.StyleSheetTest@6336075c]" started-at="2023-08-18T13:50:51 BRT" name="_beforeMethod" finished-at="2023-08-18T13:50:51 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- _beforeMethod -->
+        <test-method signature="testCase10()[pri:0, instance:objectos.css.sheet.StyleSheetTest@6336075c]" started-at="2023-08-18T13:50:51 BRT" name="testCase10" finished-at="2023-08-18T13:50:51 BRT" duration-ms="3" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase10 -->
+        <test-method signature="testCase11()[pri:0, instance:objectos.css.sheet.StyleSheetTest@6336075c]" started-at="2023-08-18T13:50:51 BRT" name="testCase11" finished-at="2023-08-18T13:50:51 BRT" duration-ms="2" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase11 -->
+        <test-method is-config="true" signature="_beforeMethod()[pri:0, instance:objectos.css.sheet.StyleSheetTest@6336075c]" started-at="2023-08-18T13:50:51 BRT" name="_beforeMethod" finished-at="2023-08-18T13:50:51 BRT" duration-ms="0" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- _beforeMethod -->
+        <test-method signature="testCase12()[pri:0, instance:objectos.css.sheet.StyleSheetTest@6336075c]" started-at="2023-08-18T13:50:51 BRT" name="testCase12" finished-at="2023-08-18T13:50:51 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase12 -->
+        <test-method is-config="true" signature="_beforeMethod()[pri:0, instance:objectos.css.sheet.StyleSheetTest@6336075c]" started-at="2023-08-18T13:50:51 BRT" name="_beforeMethod" finished-at="2023-08-18T13:50:51 BRT" duration-ms="0" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- _beforeMethod -->
+        <test-method is-config="true" signature="_beforeMethod()[pri:0, instance:objectos.css.sheet.StyleSheetTest@6336075c]" started-at="2023-08-18T13:50:51 BRT" name="_beforeMethod" finished-at="2023-08-18T13:50:51 BRT" duration-ms="0" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- _beforeMethod -->
+        <test-method signature="testCase13()[pri:0, instance:objectos.css.sheet.StyleSheetTest@6336075c]" started-at="2023-08-18T13:50:51 BRT" name="testCase13" finished-at="2023-08-18T13:50:51 BRT" duration-ms="3" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase13 -->
+        <test-method signature="testCase14()[pri:0, instance:objectos.css.sheet.StyleSheetTest@6336075c]" started-at="2023-08-18T13:50:51 BRT" name="testCase14" finished-at="2023-08-18T13:50:51 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase14 -->
+        <test-method is-config="true" signature="_beforeMethod()[pri:0, instance:objectos.css.sheet.StyleSheetTest@6336075c]" started-at="2023-08-18T13:50:51 BRT" name="_beforeMethod" finished-at="2023-08-18T13:50:51 BRT" duration-ms="0" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- _beforeMethod -->
+        <test-method is-config="true" signature="_beforeMethod()[pri:0, instance:objectos.css.sheet.StyleSheetTest@6336075c]" started-at="2023-08-18T13:50:51 BRT" name="_beforeMethod" finished-at="2023-08-18T13:50:51 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- _beforeMethod -->
+        <test-method signature="testCase15()[pri:0, instance:objectos.css.sheet.StyleSheetTest@6336075c]" started-at="2023-08-18T13:50:51 BRT" name="testCase15" finished-at="2023-08-18T13:50:51 BRT" duration-ms="3" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase15 -->
+        <test-method signature="testCase16()[pri:0, instance:objectos.css.sheet.StyleSheetTest@6336075c]" started-at="2023-08-18T13:50:51 BRT" name="testCase16" finished-at="2023-08-18T13:50:51 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase16 -->
+        <test-method is-config="true" signature="_beforeMethod()[pri:0, instance:objectos.css.sheet.StyleSheetTest@6336075c]" started-at="2023-08-18T13:50:51 BRT" name="_beforeMethod" finished-at="2023-08-18T13:50:51 BRT" duration-ms="0" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- _beforeMethod -->
+        <test-method is-config="true" signature="_beforeMethod()[pri:0, instance:objectos.css.sheet.StyleSheetTest@6336075c]" started-at="2023-08-18T13:50:51 BRT" name="_beforeMethod" finished-at="2023-08-18T13:50:51 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- _beforeMethod -->
+        <test-method signature="testCase17()[pri:0, instance:objectos.css.sheet.StyleSheetTest@6336075c]" started-at="2023-08-18T13:50:51 BRT" name="testCase17" finished-at="2023-08-18T13:50:51 BRT" duration-ms="0" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase17 -->
+        <test-method is-config="true" signature="_beforeMethod()[pri:0, instance:objectos.css.sheet.StyleSheetTest@6336075c]" started-at="2023-08-18T13:50:51 BRT" name="_beforeMethod" finished-at="2023-08-18T13:50:51 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- _beforeMethod -->
+        <test-method signature="testCase18()[pri:0, instance:objectos.css.sheet.StyleSheetTest@6336075c]" started-at="2023-08-18T13:50:51 BRT" name="testCase18" finished-at="2023-08-18T13:50:51 BRT" duration-ms="0" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase18 -->
+        <test-method signature="testCase19()[pri:0, instance:objectos.css.sheet.StyleSheetTest@6336075c]" started-at="2023-08-18T13:50:51 BRT" name="testCase19" finished-at="2023-08-18T13:50:51 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase19 -->
+        <test-method is-config="true" signature="_beforeMethod()[pri:0, instance:objectos.css.sheet.StyleSheetTest@6336075c]" started-at="2023-08-18T13:50:51 BRT" name="_beforeMethod" finished-at="2023-08-18T13:50:51 BRT" duration-ms="0" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- _beforeMethod -->
+        <test-method signature="testCase20()[pri:0, instance:objectos.css.sheet.StyleSheetTest@6336075c]" started-at="2023-08-18T13:50:51 BRT" name="testCase20" finished-at="2023-08-18T13:50:51 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase20 -->
+        <test-method is-config="true" signature="_beforeMethod()[pri:0, instance:objectos.css.sheet.StyleSheetTest@6336075c]" started-at="2023-08-18T13:50:51 BRT" name="_beforeMethod" finished-at="2023-08-18T13:50:51 BRT" duration-ms="0" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- _beforeMethod -->
+        <test-method signature="testCase21()[pri:0, instance:objectos.css.sheet.StyleSheetTest@6336075c]" started-at="2023-08-18T13:50:51 BRT" name="testCase21" finished-at="2023-08-18T13:50:51 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase21 -->
+        <test-method is-config="true" signature="_beforeMethod()[pri:0, instance:objectos.css.sheet.StyleSheetTest@6336075c]" started-at="2023-08-18T13:50:51 BRT" name="_beforeMethod" finished-at="2023-08-18T13:50:51 BRT" duration-ms="0" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- _beforeMethod -->
+        <test-method signature="testCase22()[pri:0, instance:objectos.css.sheet.StyleSheetTest@6336075c]" started-at="2023-08-18T13:50:51 BRT" name="testCase22" finished-at="2023-08-18T13:50:51 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase22 -->
+        <test-method is-config="true" signature="_beforeMethod()[pri:0, instance:objectos.css.sheet.StyleSheetTest@6336075c]" started-at="2023-08-18T13:50:51 BRT" name="_beforeMethod" finished-at="2023-08-18T13:50:51 BRT" duration-ms="0" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- _beforeMethod -->
+        <test-method signature="testCase23()[pri:0, instance:objectos.css.sheet.StyleSheetTest@6336075c]" started-at="2023-08-18T13:50:51 BRT" name="testCase23" finished-at="2023-08-18T13:50:51 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase23 -->
+        <test-method is-config="true" signature="_beforeMethod()[pri:0, instance:objectos.css.sheet.StyleSheetTest@6336075c]" started-at="2023-08-18T13:50:51 BRT" name="_beforeMethod" finished-at="2023-08-18T13:50:51 BRT" duration-ms="0" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- _beforeMethod -->
+        <test-method is-config="true" signature="_beforeMethod()[pri:0, instance:objectos.css.sheet.StyleSheetTest@6336075c]" started-at="2023-08-18T13:50:51 BRT" name="_beforeMethod" finished-at="2023-08-18T13:50:51 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- _beforeMethod -->
+        <test-method signature="testCase24()[pri:0, instance:objectos.css.sheet.StyleSheetTest@6336075c]" started-at="2023-08-18T13:50:51 BRT" name="testCase24" finished-at="2023-08-18T13:50:51 BRT" duration-ms="0" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase24 -->
+        <test-method is-config="true" signature="_beforeMethod()[pri:0, instance:objectos.css.sheet.StyleSheetTest@6336075c]" started-at="2023-08-18T13:50:51 BRT" name="_beforeMethod" finished-at="2023-08-18T13:50:51 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- _beforeMethod -->
+        <test-method signature="testCase25()[pri:0, instance:objectos.css.sheet.StyleSheetTest@6336075c]" started-at="2023-08-18T13:50:51 BRT" name="testCase25" finished-at="2023-08-18T13:50:51 BRT" duration-ms="0" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase25 -->
+        <test-method is-config="true" signature="_beforeMethod()[pri:0, instance:objectos.css.sheet.StyleSheetTest@6336075c]" started-at="2023-08-18T13:50:51 BRT" name="_beforeMethod" finished-at="2023-08-18T13:50:51 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- _beforeMethod -->
+        <test-method signature="testCase26()[pri:0, instance:objectos.css.sheet.StyleSheetTest@6336075c]" started-at="2023-08-18T13:50:51 BRT" name="testCase26" finished-at="2023-08-18T13:50:51 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase26 -->
+        <test-method is-config="true" signature="_beforeMethod()[pri:0, instance:objectos.css.sheet.StyleSheetTest@6336075c]" started-at="2023-08-18T13:50:51 BRT" name="_beforeMethod" finished-at="2023-08-18T13:50:51 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- _beforeMethod -->
+        <test-method signature="testCase27()[pri:0, instance:objectos.css.sheet.StyleSheetTest@6336075c]" started-at="2023-08-18T13:50:51 BRT" name="testCase27" finished-at="2023-08-18T13:50:51 BRT" duration-ms="0" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase27 -->
+        <test-method signature="testCase28()[pri:0, instance:objectos.css.sheet.StyleSheetTest@6336075c]" started-at="2023-08-18T13:50:51 BRT" name="testCase28" finished-at="2023-08-18T13:50:51 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase28 -->
+        <test-method is-config="true" signature="_beforeMethod()[pri:0, instance:objectos.css.sheet.StyleSheetTest@6336075c]" started-at="2023-08-18T13:50:51 BRT" name="_beforeMethod" finished-at="2023-08-18T13:50:51 BRT" duration-ms="0" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- _beforeMethod -->
+        <test-method signature="testCase29()[pri:0, instance:objectos.css.sheet.StyleSheetTest@6336075c]" started-at="2023-08-18T13:50:51 BRT" name="testCase29" finished-at="2023-08-18T13:50:51 BRT" duration-ms="2" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase29 -->
+        <test-method is-config="true" signature="_beforeMethod()[pri:0, instance:objectos.css.sheet.StyleSheetTest@6336075c]" started-at="2023-08-18T13:50:51 BRT" name="_beforeMethod" finished-at="2023-08-18T13:50:51 BRT" duration-ms="0" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- _beforeMethod -->
+        <test-method is-config="true" signature="_beforeMethod()[pri:0, instance:objectos.css.sheet.StyleSheetTest@6336075c]" started-at="2023-08-18T13:50:51 BRT" name="_beforeMethod" finished-at="2023-08-18T13:50:51 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- _beforeMethod -->
+        <test-method signature="testCase30()[pri:0, instance:objectos.css.sheet.StyleSheetTest@6336075c]" started-at="2023-08-18T13:50:51 BRT" name="testCase30" finished-at="2023-08-18T13:50:51 BRT" duration-ms="10" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase30 -->
+        <test-method signature="testCase31()[pri:0, instance:objectos.css.sheet.StyleSheetTest@6336075c]" started-at="2023-08-18T13:50:51 BRT" name="testCase31" finished-at="2023-08-18T13:50:51 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase31 -->
+        <test-method is-config="true" signature="_beforeMethod()[pri:0, instance:objectos.css.sheet.StyleSheetTest@6336075c]" started-at="2023-08-18T13:50:51 BRT" name="_beforeMethod" finished-at="2023-08-18T13:50:51 BRT" duration-ms="0" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- _beforeMethod -->
+        <test-method signature="testCase32()[pri:0, instance:objectos.css.sheet.StyleSheetTest@6336075c]" started-at="2023-08-18T13:50:51 BRT" name="testCase32" finished-at="2023-08-18T13:50:51 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase32 -->
+        <test-method is-config="true" signature="_beforeMethod()[pri:0, instance:objectos.css.sheet.StyleSheetTest@6336075c]" started-at="2023-08-18T13:50:51 BRT" name="_beforeMethod" finished-at="2023-08-18T13:50:51 BRT" duration-ms="0" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- _beforeMethod -->
+        <test-method signature="testCase33()[pri:0, instance:objectos.css.sheet.StyleSheetTest@6336075c]" started-at="2023-08-18T13:50:51 BRT" name="testCase33" finished-at="2023-08-18T13:50:51 BRT" duration-ms="2" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase33 -->
+        <test-method is-config="true" signature="_beforeMethod()[pri:0, instance:objectos.css.sheet.StyleSheetTest@6336075c]" started-at="2023-08-18T13:50:51 BRT" name="_beforeMethod" finished-at="2023-08-18T13:50:51 BRT" duration-ms="0" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- _beforeMethod -->
+        <test-method signature="testCase34()[pri:0, instance:objectos.css.sheet.StyleSheetTest@6336075c]" started-at="2023-08-18T13:50:51 BRT" name="testCase34" finished-at="2023-08-18T13:50:51 BRT" duration-ms="2" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase34 -->
+        <test-method is-config="true" signature="_beforeMethod()[pri:0, instance:objectos.css.sheet.StyleSheetTest@6336075c]" started-at="2023-08-18T13:50:51 BRT" name="_beforeMethod" finished-at="2023-08-18T13:50:51 BRT" duration-ms="0" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- _beforeMethod -->
+        <test-method signature="testCase35()[pri:0, instance:objectos.css.sheet.StyleSheetTest@6336075c]" started-at="2023-08-18T13:50:51 BRT" name="testCase35" finished-at="2023-08-18T13:50:51 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase35 -->
+        <test-method is-config="true" signature="_beforeMethod()[pri:0, instance:objectos.css.sheet.StyleSheetTest@6336075c]" started-at="2023-08-18T13:50:51 BRT" name="_beforeMethod" finished-at="2023-08-18T13:50:51 BRT" duration-ms="0" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- _beforeMethod -->
+        <test-method signature="transform()[pri:0, instance:objectos.css.sheet.StyleSheetTest@6336075c]" started-at="2023-08-18T13:50:51 BRT" name="transform" finished-at="2023-08-18T13:50:51 BRT" duration-ms="2" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- transform -->
+        <test-method is-config="true" signature="_beforeMethod()[pri:0, instance:objectos.css.sheet.StyleSheetTest@6336075c]" started-at="2023-08-18T13:50:51 BRT" name="_beforeMethod" finished-at="2023-08-18T13:50:51 BRT" duration-ms="0" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- _beforeMethod -->
+      </class> <!-- objectos.css.sheet.StyleSheetTest -->
+      <class name="objectos.css.select.AttributeSelectorTest">
+        <test-method signature="matches()[pri:0, instance:objectos.css.select.AttributeSelectorTest@3c49b588]" started-at="2023-08-18T13:50:51 BRT" name="matches" finished-at="2023-08-18T13:50:51 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- matches -->
+        <test-method signature="matches_EQUALS()[pri:0, instance:objectos.css.select.AttributeSelectorTest@3c49b588]" started-at="2023-08-18T13:50:51 BRT" name="matches_EQUALS" finished-at="2023-08-18T13:50:51 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- matches_EQUALS -->
+        <test-method signature="toStringTest()[pri:0, instance:objectos.css.select.AttributeSelectorTest@3c49b588]" started-at="2023-08-18T13:50:51 BRT" name="toStringTest" finished-at="2023-08-18T13:50:51 BRT" duration-ms="0" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- toStringTest -->
+        <test-method signature="toStringTest_withValue()[pri:0, instance:objectos.css.select.AttributeSelectorTest@3c49b588]" started-at="2023-08-18T13:50:51 BRT" name="toStringTest_withValue" finished-at="2023-08-18T13:50:51 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- toStringTest_withValue -->
+      </class> <!-- objectos.css.select.AttributeSelectorTest -->
+      <class name="objectos.css.select.IdSelectorTest">
+        <test-method signature="matches()[pri:0, instance:objectos.css.select.IdSelectorTest@1bfc6174]" started-at="2023-08-18T13:50:51 BRT" name="matches" finished-at="2023-08-18T13:50:51 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- matches -->
+        <test-method signature="toStringTest()[pri:0, instance:objectos.css.select.IdSelectorTest@1bfc6174]" started-at="2023-08-18T13:50:51 BRT" name="toStringTest" finished-at="2023-08-18T13:50:51 BRT" duration-ms="0" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- toStringTest -->
+      </class> <!-- objectos.css.select.IdSelectorTest -->
+      <class name="objectos.css.select.CompoundSelectorTest">
+        <test-method signature="matches()[pri:0, instance:objectos.css.select.CompoundSelectorTest@7ddc5ec6]" started-at="2023-08-18T13:50:51 BRT" name="matches" finished-at="2023-08-18T13:50:51 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- matches -->
+      </class> <!-- objectos.css.select.CompoundSelectorTest -->
+      <class name="objectos.css.internal.StandardTypeSelectorTest">
+        <test-method signature="varIntLimit()[pri:0, instance:objectos.css.internal.StandardTypeSelectorTest@29a00cde]" started-at="2023-08-18T13:50:51 BRT" name="varIntLimit" finished-at="2023-08-18T13:50:51 BRT" duration-ms="0" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- varIntLimit -->
+      </class> <!-- objectos.css.internal.StandardTypeSelectorTest -->
+      <class name="objectos.css.select.DescendantSelectorTest">
+        <test-method signature="matches()[pri:0, instance:objectos.css.select.DescendantSelectorTest@606b291b]" started-at="2023-08-18T13:50:51 BRT" name="matches" finished-at="2023-08-18T13:50:51 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- matches -->
+        <test-method signature="toStringTest()[pri:0, instance:objectos.css.select.DescendantSelectorTest@606b291b]" started-at="2023-08-18T13:50:51 BRT" name="toStringTest" finished-at="2023-08-18T13:50:51 BRT" duration-ms="0" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- toStringTest -->
+      </class> <!-- objectos.css.select.DescendantSelectorTest -->
+      <class name="objectos.css.type.ColorTest">
+        <test-method signature="hex()[pri:0, instance:objectos.css.type.ColorTest@75d1477a]" started-at="2023-08-18T13:50:51 BRT" name="hex" description="toString() should have six chars/digits" finished-at="2023-08-18T13:50:51 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- hex -->
+        <test-method signature="rgbAboveMaxAndBelowMin()[pri:0, instance:objectos.css.type.ColorTest@75d1477a]" started-at="2023-08-18T13:50:51 BRT" name="rgbAboveMaxAndBelowMin" description="hex() should not accept &lt; 0x0 or &gt; 0xffffff" finished-at="2023-08-18T13:50:51 BRT" duration-ms="0" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- rgbAboveMaxAndBelowMin -->
+      </class> <!-- objectos.css.type.ColorTest -->
+      <class name="objectos.css.select.UniversalSelectorTest">
+        <test-method signature="builder()[pri:0, instance:objectos.css.select.UniversalSelectorTest@3df8a0d8]" started-at="2023-08-18T13:50:51 BRT" name="builder" description="Selector.Builder should return UniversalSelector when no elements are added." finished-at="2023-08-18T13:50:51 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- builder -->
+        <test-method signature="toStringTest()[pri:0, instance:objectos.css.select.UniversalSelectorTest@3df8a0d8]" started-at="2023-08-18T13:50:51 BRT" name="toStringTest" finished-at="2023-08-18T13:50:51 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- toStringTest -->
+      </class> <!-- objectos.css.select.UniversalSelectorTest -->
+      <class name="objectos.css.select.PseudoClassSelectorTest">
+        <test-method signature="toStringTest()[pri:0, instance:objectos.css.select.PseudoClassSelectorTest@4d59ba57]" started-at="2023-08-18T13:50:51 BRT" name="toStringTest" finished-at="2023-08-18T13:50:51 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- toStringTest -->
+      </class> <!-- objectos.css.select.PseudoClassSelectorTest -->
+      <class name="objectos.css.util.ClassSelectorTest">
+        <test-method signature="nextClassSelector()[pri:0, instance:objectos.css.util.ClassSelectorTest@355ea654]" started-at="2023-08-18T13:50:51 BRT" name="nextClassSelector" finished-at="2023-08-18T13:50:51 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- nextClassSelector -->
+        <test-method signature="toStringTest()[pri:0, instance:objectos.css.util.ClassSelectorTest@355ea654]" started-at="2023-08-18T13:50:51 BRT" name="toStringTest" description="It should add the dot &#039;.&#039; character" finished-at="2023-08-18T13:50:51 BRT" duration-ms="0" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- toStringTest -->
+      </class> <!-- objectos.css.util.ClassSelectorTest -->
+      <class name="objectos.css.util.CustomPropertyTest">
+        <test-method signature="namesInvalid(java.lang.String)[pri:0, instance:objectos.css.util.CustomPropertyTest@cb784b5]" started-at="2023-08-18T13:50:51 BRT" name="namesInvalid" data-provider="namesInvalidProvider" finished-at="2023-08-18T13:50:51 BRT" duration-ms="2" status="PASS">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[]]>
+              </value>
+            </param>
+          </params>
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- namesInvalid -->
+        <test-method signature="namesInvalid(java.lang.String)[pri:0, instance:objectos.css.util.CustomPropertyTest@cb784b5]" started-at="2023-08-18T13:50:51 BRT" name="namesInvalid" data-provider="namesInvalidProvider" finished-at="2023-08-18T13:50:51 BRT" duration-ms="0" status="PASS">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[fo.o]]>
+              </value>
+            </param>
+          </params>
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- namesInvalid -->
+        <test-method signature="namesInvalid(java.lang.String)[pri:0, instance:objectos.css.util.CustomPropertyTest@cb784b5]" started-at="2023-08-18T13:50:51 BRT" name="namesInvalid" data-provider="namesInvalidProvider" finished-at="2023-08-18T13:50:51 BRT" duration-ms="0" status="PASS">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[foo?]]>
+              </value>
+            </param>
+          </params>
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- namesInvalid -->
+        <test-method signature="names_valid()[pri:0, instance:objectos.css.util.CustomPropertyTest@cb784b5]" started-at="2023-08-18T13:50:51 BRT" name="names_valid" finished-at="2023-08-18T13:50:51 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- names_valid -->
+      </class> <!-- objectos.css.util.CustomPropertyTest -->
+      <class name="objectos.css.select.TypeSelectorTest">
+        <test-method signature="matches()[pri:0, instance:objectos.css.select.TypeSelectorTest@6742e276]" started-at="2023-08-18T13:50:51 BRT" name="matches" finished-at="2023-08-18T13:50:51 BRT" duration-ms="0" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- matches -->
+        <test-method signature="toStringTest()[pri:0, instance:objectos.css.select.TypeSelectorTest@6742e276]" started-at="2023-08-18T13:50:51 BRT" name="toStringTest" finished-at="2023-08-18T13:50:51 BRT" duration-ms="0" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- toStringTest -->
+      </class> <!-- objectos.css.select.TypeSelectorTest -->
+      <class name="objectos.css.type.ColorHexTest">
+        <test-method signature="getMinifiedHexString()[pri:0, instance:objectos.css.type.ColorHexTest@798d2375]" started-at="2023-08-18T13:50:51 BRT" name="getMinifiedHexString" finished-at="2023-08-18T13:50:51 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- getMinifiedHexString -->
+        <test-method signature="of()[pri:0, instance:objectos.css.type.ColorHexTest@798d2375]" started-at="2023-08-18T13:50:51 BRT" name="of" finished-at="2023-08-18T13:50:51 BRT" duration-ms="0" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- of -->
+      </class> <!-- objectos.css.type.ColorHexTest -->
+      <class name="objectos.css.select.AttributeValueOperatorTest">
+        <test-method signature="matches(objectos.css.select.AttributeValueOperator,java.lang.String,java.lang.String,boolean)[pri:0, instance:objectos.css.select.AttributeValueOperatorTest@55367c8]" started-at="2023-08-18T13:50:51 BRT" name="matches" data-provider="matchesProvider" finished-at="2023-08-18T13:50:51 BRT" duration-ms="9" status="PASS">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[=]]>
+              </value>
+            </param>
+            <param index="1">
+              <value>
+                <![CDATA[a]]>
+              </value>
+            </param>
+            <param index="2">
+              <value>
+                <![CDATA[a]]>
+              </value>
+            </param>
+            <param index="3">
+              <value>
+                <![CDATA[true]]>
+              </value>
+            </param>
+          </params>
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- matches -->
+        <test-method signature="matches(objectos.css.select.AttributeValueOperator,java.lang.String,java.lang.String,boolean)[pri:0, instance:objectos.css.select.AttributeValueOperatorTest@55367c8]" started-at="2023-08-18T13:50:51 BRT" name="matches" data-provider="matchesProvider" finished-at="2023-08-18T13:50:51 BRT" duration-ms="1" status="PASS">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[=]]>
+              </value>
+            </param>
+            <param index="1">
+              <value>
+                <![CDATA[A]]>
+              </value>
+            </param>
+            <param index="2">
+              <value>
+                <![CDATA[a]]>
+              </value>
+            </param>
+            <param index="3">
+              <value>
+                <![CDATA[false]]>
+              </value>
+            </param>
+          </params>
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- matches -->
+        <test-method signature="matches(objectos.css.select.AttributeValueOperator,java.lang.String,java.lang.String,boolean)[pri:0, instance:objectos.css.select.AttributeValueOperatorTest@55367c8]" started-at="2023-08-18T13:50:51 BRT" name="matches" data-provider="matchesProvider" finished-at="2023-08-18T13:50:51 BRT" duration-ms="0" status="PASS">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[=]]>
+              </value>
+            </param>
+            <param index="1">
+              <value>
+                <![CDATA[a]]>
+              </value>
+            </param>
+            <param index="2">
+              <value>
+                <![CDATA[b]]>
+              </value>
+            </param>
+            <param index="3">
+              <value>
+                <![CDATA[false]]>
+              </value>
+            </param>
+          </params>
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- matches -->
+        <test-method signature="matches(objectos.css.select.AttributeValueOperator,java.lang.String,java.lang.String,boolean)[pri:0, instance:objectos.css.select.AttributeValueOperatorTest@55367c8]" started-at="2023-08-18T13:50:51 BRT" name="matches" data-provider="matchesProvider" finished-at="2023-08-18T13:50:51 BRT" duration-ms="0" status="PASS">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[=]]>
+              </value>
+            </param>
+            <param index="1">
+              <value>
+                <![CDATA[a]]>
+              </value>
+            </param>
+            <param index="2">
+              <value>
+                <![CDATA[aaa]]>
+              </value>
+            </param>
+            <param index="3">
+              <value>
+                <![CDATA[false]]>
+              </value>
+            </param>
+          </params>
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- matches -->
+        <test-method signature="matches(objectos.css.select.AttributeValueOperator,java.lang.String,java.lang.String,boolean)[pri:0, instance:objectos.css.select.AttributeValueOperatorTest@55367c8]" started-at="2023-08-18T13:50:51 BRT" name="matches" data-provider="matchesProvider" finished-at="2023-08-18T13:50:51 BRT" duration-ms="0" status="PASS">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[~=]]>
+              </value>
+            </param>
+            <param index="1">
+              <value>
+                <![CDATA[en-us]]>
+              </value>
+            </param>
+            <param index="2">
+              <value>
+                <![CDATA[]]>
+              </value>
+            </param>
+            <param index="3">
+              <value>
+                <![CDATA[false]]>
+              </value>
+            </param>
+          </params>
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- matches -->
+        <test-method signature="matches(objectos.css.select.AttributeValueOperator,java.lang.String,java.lang.String,boolean)[pri:0, instance:objectos.css.select.AttributeValueOperatorTest@55367c8]" started-at="2023-08-18T13:50:51 BRT" name="matches" data-provider="matchesProvider" finished-at="2023-08-18T13:50:51 BRT" duration-ms="1" status="PASS">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[~=]]>
+              </value>
+            </param>
+            <param index="1">
+              <value>
+                <![CDATA[en-us]]>
+              </value>
+            </param>
+            <param index="2">
+              <value>
+                <![CDATA[en-gb]]>
+              </value>
+            </param>
+            <param index="3">
+              <value>
+                <![CDATA[false]]>
+              </value>
+            </param>
+          </params>
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- matches -->
+        <test-method signature="matches(objectos.css.select.AttributeValueOperator,java.lang.String,java.lang.String,boolean)[pri:0, instance:objectos.css.select.AttributeValueOperatorTest@55367c8]" started-at="2023-08-18T13:50:51 BRT" name="matches" data-provider="matchesProvider" finished-at="2023-08-18T13:50:51 BRT" duration-ms="0" status="PASS">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[~=]]>
+              </value>
+            </param>
+            <param index="1">
+              <value>
+                <![CDATA[en-us]]>
+              </value>
+            </param>
+            <param index="2">
+              <value>
+                <![CDATA[en-us]]>
+              </value>
+            </param>
+            <param index="3">
+              <value>
+                <![CDATA[true]]>
+              </value>
+            </param>
+          </params>
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- matches -->
+        <test-method signature="matches(objectos.css.select.AttributeValueOperator,java.lang.String,java.lang.String,boolean)[pri:0, instance:objectos.css.select.AttributeValueOperatorTest@55367c8]" started-at="2023-08-18T13:50:51 BRT" name="matches" data-provider="matchesProvider" finished-at="2023-08-18T13:50:51 BRT" duration-ms="0" status="PASS">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[~=]]>
+              </value>
+            </param>
+            <param index="1">
+              <value>
+                <![CDATA[en-us]]>
+              </value>
+            </param>
+            <param index="2">
+              <value>
+                <![CDATA[en-us en-gb]]>
+              </value>
+            </param>
+            <param index="3">
+              <value>
+                <![CDATA[true]]>
+              </value>
+            </param>
+          </params>
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- matches -->
+        <test-method signature="matches(objectos.css.select.AttributeValueOperator,java.lang.String,java.lang.String,boolean)[pri:0, instance:objectos.css.select.AttributeValueOperatorTest@55367c8]" started-at="2023-08-18T13:50:51 BRT" name="matches" data-provider="matchesProvider" finished-at="2023-08-18T13:50:51 BRT" duration-ms="0" status="PASS">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[~=]]>
+              </value>
+            </param>
+            <param index="1">
+              <value>
+                <![CDATA[en-us]]>
+              </value>
+            </param>
+            <param index="2">
+              <value>
+                <![CDATA[en-gb en-us]]>
+              </value>
+            </param>
+            <param index="3">
+              <value>
+                <![CDATA[true]]>
+              </value>
+            </param>
+          </params>
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- matches -->
+        <test-method signature="matches(objectos.css.select.AttributeValueOperator,java.lang.String,java.lang.String,boolean)[pri:0, instance:objectos.css.select.AttributeValueOperatorTest@55367c8]" started-at="2023-08-18T13:50:51 BRT" name="matches" data-provider="matchesProvider" finished-at="2023-08-18T13:50:51 BRT" duration-ms="0" status="PASS">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[~=]]>
+              </value>
+            </param>
+            <param index="1">
+              <value>
+                <![CDATA[en-us]]>
+              </value>
+            </param>
+            <param index="2">
+              <value>
+                <![CDATA[en-gb en-us]]>
+              </value>
+            </param>
+            <param index="3">
+              <value>
+                <![CDATA[true]]>
+              </value>
+            </param>
+          </params>
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- matches -->
+        <test-method signature="matches(objectos.css.select.AttributeValueOperator,java.lang.String,java.lang.String,boolean)[pri:0, instance:objectos.css.select.AttributeValueOperatorTest@55367c8]" started-at="2023-08-18T13:50:51 BRT" name="matches" data-provider="matchesProvider" finished-at="2023-08-18T13:50:51 BRT" duration-ms="1" status="PASS">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[~=]]>
+              </value>
+            </param>
+            <param index="1">
+              <value>
+                <![CDATA[en-us]]>
+              </value>
+            </param>
+            <param index="2">
+              <value>
+                <![CDATA[en-gb        en-us  en-au]]>
+              </value>
+            </param>
+            <param index="3">
+              <value>
+                <![CDATA[true]]>
+              </value>
+            </param>
+          </params>
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- matches -->
+        <test-method signature="matches(objectos.css.select.AttributeValueOperator,java.lang.String,java.lang.String,boolean)[pri:0, instance:objectos.css.select.AttributeValueOperatorTest@55367c8]" started-at="2023-08-18T13:50:51 BRT" name="matches" data-provider="matchesProvider" finished-at="2023-08-18T13:50:51 BRT" duration-ms="1" status="PASS">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[^=]]>
+              </value>
+            </param>
+            <param index="1">
+              <value>
+                <![CDATA[a]]>
+              </value>
+            </param>
+            <param index="2">
+              <value>
+                <![CDATA[a]]>
+              </value>
+            </param>
+            <param index="3">
+              <value>
+                <![CDATA[true]]>
+              </value>
+            </param>
+          </params>
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- matches -->
+        <test-method signature="matches(objectos.css.select.AttributeValueOperator,java.lang.String,java.lang.String,boolean)[pri:0, instance:objectos.css.select.AttributeValueOperatorTest@55367c8]" started-at="2023-08-18T13:50:51 BRT" name="matches" data-provider="matchesProvider" finished-at="2023-08-18T13:50:51 BRT" duration-ms="0" status="PASS">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[^=]]>
+              </value>
+            </param>
+            <param index="1">
+              <value>
+                <![CDATA[a]]>
+              </value>
+            </param>
+            <param index="2">
+              <value>
+                <![CDATA[]]>
+              </value>
+            </param>
+            <param index="3">
+              <value>
+                <![CDATA[false]]>
+              </value>
+            </param>
+          </params>
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- matches -->
+        <test-method signature="matches(objectos.css.select.AttributeValueOperator,java.lang.String,java.lang.String,boolean)[pri:0, instance:objectos.css.select.AttributeValueOperatorTest@55367c8]" started-at="2023-08-18T13:50:51 BRT" name="matches" data-provider="matchesProvider" finished-at="2023-08-18T13:50:51 BRT" duration-ms="0" status="PASS">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[^=]]>
+              </value>
+            </param>
+            <param index="1">
+              <value>
+                <![CDATA[a]]>
+              </value>
+            </param>
+            <param index="2">
+              <value>
+                <![CDATA[abc]]>
+              </value>
+            </param>
+            <param index="3">
+              <value>
+                <![CDATA[true]]>
+              </value>
+            </param>
+          </params>
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- matches -->
+        <test-method signature="matches(objectos.css.select.AttributeValueOperator,java.lang.String,java.lang.String,boolean)[pri:0, instance:objectos.css.select.AttributeValueOperatorTest@55367c8]" started-at="2023-08-18T13:50:51 BRT" name="matches" data-provider="matchesProvider" finished-at="2023-08-18T13:50:51 BRT" duration-ms="1" status="PASS">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[$=]]>
+              </value>
+            </param>
+            <param index="1">
+              <value>
+                <![CDATA[.br]]>
+              </value>
+            </param>
+            <param index="2">
+              <value>
+                <![CDATA[whatever.com.br]]>
+              </value>
+            </param>
+            <param index="3">
+              <value>
+                <![CDATA[true]]>
+              </value>
+            </param>
+          </params>
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- matches -->
+        <test-method signature="matches(objectos.css.select.AttributeValueOperator,java.lang.String,java.lang.String,boolean)[pri:0, instance:objectos.css.select.AttributeValueOperatorTest@55367c8]" started-at="2023-08-18T13:50:51 BRT" name="matches" data-provider="matchesProvider" finished-at="2023-08-18T13:50:51 BRT" duration-ms="0" status="PASS">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[^=]]>
+              </value>
+            </param>
+            <param index="1">
+              <value>
+                <![CDATA[a]]>
+              </value>
+            </param>
+            <param index="2">
+              <value>
+                <![CDATA[xaa]]>
+              </value>
+            </param>
+            <param index="3">
+              <value>
+                <![CDATA[false]]>
+              </value>
+            </param>
+          </params>
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- matches -->
+        <test-method signature="matches(objectos.css.select.AttributeValueOperator,java.lang.String,java.lang.String,boolean)[pri:0, instance:objectos.css.select.AttributeValueOperatorTest@55367c8]" started-at="2023-08-18T13:50:51 BRT" name="matches" data-provider="matchesProvider" finished-at="2023-08-18T13:50:51 BRT" duration-ms="0" status="PASS">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[$=]]>
+              </value>
+            </param>
+            <param index="1">
+              <value>
+                <![CDATA[.br]]>
+              </value>
+            </param>
+            <param index="2">
+              <value>
+                <![CDATA[whatever.com.ar]]>
+              </value>
+            </param>
+            <param index="3">
+              <value>
+                <![CDATA[false]]>
+              </value>
+            </param>
+          </params>
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- matches -->
+        <test-method signature="matches(objectos.css.select.AttributeValueOperator,java.lang.String,java.lang.String,boolean)[pri:0, instance:objectos.css.select.AttributeValueOperatorTest@55367c8]" started-at="2023-08-18T13:50:51 BRT" name="matches" data-provider="matchesProvider" finished-at="2023-08-18T13:50:51 BRT" duration-ms="0" status="PASS">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[$=]]>
+              </value>
+            </param>
+            <param index="1">
+              <value>
+                <![CDATA[.br]]>
+              </value>
+            </param>
+            <param index="2">
+              <value>
+                <![CDATA[]]>
+              </value>
+            </param>
+            <param index="3">
+              <value>
+                <![CDATA[false]]>
+              </value>
+            </param>
+          </params>
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- matches -->
+        <test-method signature="matches(objectos.css.select.AttributeValueOperator,java.lang.String,java.lang.String,boolean)[pri:0, instance:objectos.css.select.AttributeValueOperatorTest@55367c8]" started-at="2023-08-18T13:50:51 BRT" name="matches" data-provider="matchesProvider" finished-at="2023-08-18T13:50:51 BRT" duration-ms="0" status="PASS">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[$=]]>
+              </value>
+            </param>
+            <param index="1">
+              <value>
+                <![CDATA[.br]]>
+              </value>
+            </param>
+            <param index="2">
+              <value>
+                <![CDATA[br.com]]>
+              </value>
+            </param>
+            <param index="3">
+              <value>
+                <![CDATA[false]]>
+              </value>
+            </param>
+          </params>
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- matches -->
+        <test-method signature="matches(objectos.css.select.AttributeValueOperator,java.lang.String,java.lang.String,boolean)[pri:0, instance:objectos.css.select.AttributeValueOperatorTest@55367c8]" started-at="2023-08-18T13:50:51 BRT" name="matches" data-provider="matchesProvider" finished-at="2023-08-18T13:50:51 BRT" duration-ms="1" status="PASS">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[*=]]>
+              </value>
+            </param>
+            <param index="1">
+              <value>
+                <![CDATA[example]]>
+              </value>
+            </param>
+            <param index="2">
+              <value>
+                <![CDATA[example.com]]>
+              </value>
+            </param>
+            <param index="3">
+              <value>
+                <![CDATA[true]]>
+              </value>
+            </param>
+          </params>
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- matches -->
+        <test-method signature="matches(objectos.css.select.AttributeValueOperator,java.lang.String,java.lang.String,boolean)[pri:0, instance:objectos.css.select.AttributeValueOperatorTest@55367c8]" started-at="2023-08-18T13:50:51 BRT" name="matches" data-provider="matchesProvider" finished-at="2023-08-18T13:50:51 BRT" duration-ms="0" status="PASS">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[*=]]>
+              </value>
+            </param>
+            <param index="1">
+              <value>
+                <![CDATA[example]]>
+              </value>
+            </param>
+            <param index="2">
+              <value>
+                <![CDATA[www.example.com]]>
+              </value>
+            </param>
+            <param index="3">
+              <value>
+                <![CDATA[true]]>
+              </value>
+            </param>
+          </params>
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- matches -->
+        <test-method signature="matches(objectos.css.select.AttributeValueOperator,java.lang.String,java.lang.String,boolean)[pri:0, instance:objectos.css.select.AttributeValueOperatorTest@55367c8]" started-at="2023-08-18T13:50:51 BRT" name="matches" data-provider="matchesProvider" finished-at="2023-08-18T13:50:51 BRT" duration-ms="0" status="PASS">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[*=]]>
+              </value>
+            </param>
+            <param index="1">
+              <value>
+                <![CDATA[example]]>
+              </value>
+            </param>
+            <param index="2">
+              <value>
+                <![CDATA[example]]>
+              </value>
+            </param>
+            <param index="3">
+              <value>
+                <![CDATA[true]]>
+              </value>
+            </param>
+          </params>
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- matches -->
+        <test-method signature="matches(objectos.css.select.AttributeValueOperator,java.lang.String,java.lang.String,boolean)[pri:0, instance:objectos.css.select.AttributeValueOperatorTest@55367c8]" started-at="2023-08-18T13:50:51 BRT" name="matches" data-provider="matchesProvider" finished-at="2023-08-18T13:50:51 BRT" duration-ms="0" status="PASS">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[*=]]>
+              </value>
+            </param>
+            <param index="1">
+              <value>
+                <![CDATA[example]]>
+              </value>
+            </param>
+            <param index="2">
+              <value>
+                <![CDATA[www.example]]>
+              </value>
+            </param>
+            <param index="3">
+              <value>
+                <![CDATA[true]]>
+              </value>
+            </param>
+          </params>
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- matches -->
+        <test-method signature="matches(objectos.css.select.AttributeValueOperator,java.lang.String,java.lang.String,boolean)[pri:0, instance:objectos.css.select.AttributeValueOperatorTest@55367c8]" started-at="2023-08-18T13:50:51 BRT" name="matches" data-provider="matchesProvider" finished-at="2023-08-18T13:50:51 BRT" duration-ms="0" status="PASS">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[*=]]>
+              </value>
+            </param>
+            <param index="1">
+              <value>
+                <![CDATA[example]]>
+              </value>
+            </param>
+            <param index="2">
+              <value>
+                <![CDATA[ex]]>
+              </value>
+            </param>
+            <param index="3">
+              <value>
+                <![CDATA[false]]>
+              </value>
+            </param>
+          </params>
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- matches -->
+        <test-method signature="matches(objectos.css.select.AttributeValueOperator,java.lang.String,java.lang.String,boolean)[pri:0, instance:objectos.css.select.AttributeValueOperatorTest@55367c8]" started-at="2023-08-18T13:50:51 BRT" name="matches" data-provider="matchesProvider" finished-at="2023-08-18T13:50:51 BRT" duration-ms="1" status="PASS">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[|=]]>
+              </value>
+            </param>
+            <param index="1">
+              <value>
+                <![CDATA[en]]>
+              </value>
+            </param>
+            <param index="2">
+              <value>
+                <![CDATA[]]>
+              </value>
+            </param>
+            <param index="3">
+              <value>
+                <![CDATA[false]]>
+              </value>
+            </param>
+          </params>
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- matches -->
+        <test-method signature="matches(objectos.css.select.AttributeValueOperator,java.lang.String,java.lang.String,boolean)[pri:0, instance:objectos.css.select.AttributeValueOperatorTest@55367c8]" started-at="2023-08-18T13:50:51 BRT" name="matches" data-provider="matchesProvider" finished-at="2023-08-18T13:50:51 BRT" duration-ms="0" status="PASS">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[|=]]>
+              </value>
+            </param>
+            <param index="1">
+              <value>
+                <![CDATA[en]]>
+              </value>
+            </param>
+            <param index="2">
+              <value>
+                <![CDATA[en-us]]>
+              </value>
+            </param>
+            <param index="3">
+              <value>
+                <![CDATA[true]]>
+              </value>
+            </param>
+          </params>
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- matches -->
+        <test-method signature="matches(objectos.css.select.AttributeValueOperator,java.lang.String,java.lang.String,boolean)[pri:0, instance:objectos.css.select.AttributeValueOperatorTest@55367c8]" started-at="2023-08-18T13:50:51 BRT" name="matches" data-provider="matchesProvider" finished-at="2023-08-18T13:50:51 BRT" duration-ms="0" status="PASS">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[|=]]>
+              </value>
+            </param>
+            <param index="1">
+              <value>
+                <![CDATA[en]]>
+              </value>
+            </param>
+            <param index="2">
+              <value>
+                <![CDATA[en-gb]]>
+              </value>
+            </param>
+            <param index="3">
+              <value>
+                <![CDATA[true]]>
+              </value>
+            </param>
+          </params>
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- matches -->
+        <test-method signature="matches(objectos.css.select.AttributeValueOperator,java.lang.String,java.lang.String,boolean)[pri:0, instance:objectos.css.select.AttributeValueOperatorTest@55367c8]" started-at="2023-08-18T13:50:51 BRT" name="matches" data-provider="matchesProvider" finished-at="2023-08-18T13:50:51 BRT" duration-ms="1" status="PASS">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[|=]]>
+              </value>
+            </param>
+            <param index="1">
+              <value>
+                <![CDATA[en]]>
+              </value>
+            </param>
+            <param index="2">
+              <value>
+                <![CDATA[pt-br]]>
+              </value>
+            </param>
+            <param index="3">
+              <value>
+                <![CDATA[false]]>
+              </value>
+            </param>
+          </params>
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- matches -->
+      </class> <!-- objectos.css.select.AttributeValueOperatorTest -->
+      <class name="objectos.css.internal.CssCompiler02Test">
+        <test-method signature="testCase01()[pri:0, instance:objectos.css.internal.CssCompiler02Test@6c479748]" started-at="2023-08-18T13:50:51 BRT" name="testCase01" description="html {}
+" finished-at="2023-08-18T13:50:51 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase01 -->
+        <test-method signature="testCase02()[pri:0, instance:objectos.css.internal.CssCompiler02Test@6c479748]" started-at="2023-08-18T13:50:51 BRT" name="testCase02" description="* {
+  box-sizing: border-box;
+}
+" finished-at="2023-08-18T13:50:51 BRT" duration-ms="0" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase02 -->
+        <test-method signature="testCase03()[pri:0, instance:objectos.css.internal.CssCompiler02Test@6c479748]" started-at="2023-08-18T13:50:51 BRT" name="testCase03" description="h1,h2,h3 {}
+" finished-at="2023-08-18T13:50:51 BRT" duration-ms="0" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase03 -->
+        <test-method signature="testCase04()[pri:0, instance:objectos.css.internal.CssCompiler02Test@6c479748]" started-at="2023-08-18T13:50:51 BRT" name="testCase04" description="ul {
+  margin: 20px 1.5rem;
+}
+" finished-at="2023-08-18T13:50:51 BRT" duration-ms="0" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase04 -->
+        <test-method signature="testCase06()[pri:0, instance:objectos.css.internal.CssCompiler02Test@6c479748]" started-at="2023-08-18T13:50:51 BRT" name="testCase06" description="TC 05: double value
+
+[hidden] {}
+" finished-at="2023-08-18T13:50:51 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase06 -->
+        <test-method signature="testCase07()[pri:0, instance:objectos.css.internal.CssCompiler02Test@6c479748]" started-at="2023-08-18T13:50:51 BRT" name="testCase07" description="TC 07: selector pseudo class/element
+" finished-at="2023-08-18T13:50:51 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase07 -->
+        <test-method signature="testCase08()[pri:0, instance:objectos.css.internal.CssCompiler02Test@6c479748]" started-at="2023-08-18T13:50:51 BRT" name="testCase08" description="TC 08: selector joined
+" finished-at="2023-08-18T13:50:51 BRT" duration-ms="0" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase08 -->
+        <test-method signature="testCase09()[pri:0, instance:objectos.css.internal.CssCompiler02Test@6c479748]" started-at="2023-08-18T13:50:51 BRT" name="testCase09" description="ul {
+  list-style-image: url(&quot;foo&quot;);
+}
+" finished-at="2023-08-18T13:50:51 BRT" duration-ms="0" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase09 -->
+        <test-method signature="testCase10()[pri:0, instance:objectos.css.internal.CssCompiler02Test@6c479748]" started-at="2023-08-18T13:50:51 BRT" name="testCase10" description="p {
+  font-family: &quot;Foo Bar&quot;;
+}
+" finished-at="2023-08-18T13:50:51 BRT" duration-ms="0" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase10 -->
+        <test-method signature="testCase11()[pri:0, instance:objectos.css.internal.CssCompiler02Test@6c479748]" started-at="2023-08-18T13:50:51 BRT" name="testCase11" description="p {
+  font-family: &quot;Foo Bar&quot;, sans-serif;
+}
+" finished-at="2023-08-18T13:50:51 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase11 -->
+        <test-method signature="testCase12()[pri:0, instance:objectos.css.internal.CssCompiler02Test@6c479748]" started-at="2023-08-18T13:50:51 BRT" name="testCase12" description="input {
+  color: #9ca3af
+}
+" finished-at="2023-08-18T13:50:51 BRT" duration-ms="0" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase12 -->
+        <test-method signature="testCase13()[pri:0, instance:objectos.css.internal.CssCompiler02Test@6c479748]" started-at="2023-08-18T13:50:51 BRT" name="testCase13" description="@media screen {
+  p {
+    display: flex;
+  }
+}
+" finished-at="2023-08-18T13:50:51 BRT" duration-ms="0" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase13 -->
+        <test-method signature="testCase14()[pri:0, instance:objectos.css.internal.CssCompiler02Test@6c479748]" started-at="2023-08-18T13:50:51 BRT" name="testCase14" description="@media (min-width: 640px) {
+  p {
+    display: flex;
+  }
+}
+" finished-at="2023-08-18T13:50:51 BRT" duration-ms="0" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase14 -->
+        <test-method signature="testCase15()[pri:0, instance:objectos.css.internal.CssCompiler02Test@6c479748]" started-at="2023-08-18T13:50:51 BRT" name="testCase15" description=".foo {}
+" finished-at="2023-08-18T13:50:51 BRT" duration-ms="0" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase15 -->
+        <test-method signature="testCase17()[pri:0, instance:objectos.css.internal.CssCompiler02Test@6c479748]" started-at="2023-08-18T13:50:51 BRT" name="testCase17" description=":-moz-ui-invalid {
+  box-shadow: 60px -16px teal, 10px 5px black;
+}
+" finished-at="2023-08-18T13:50:51 BRT" duration-ms="0" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase17 -->
+        <test-method signature="testCase18()[pri:0, instance:objectos.css.internal.CssCompiler02Test@6c479748]" started-at="2023-08-18T13:50:51 BRT" name="testCase18" description="[#487] p {
+  --text-color: black;
+}
+" finished-at="2023-08-18T13:50:51 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase18 -->
+        <test-method signature="testCase19()[pri:0, instance:objectos.css.internal.CssCompiler02Test@6c479748]" started-at="2023-08-18T13:50:51 BRT" name="testCase19" description="[#487] p {
+  color: var(--text-color);
+}
+" finished-at="2023-08-18T13:50:51 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase19 -->
+        <test-method signature="testCase21()[pri:0, instance:objectos.css.internal.CssCompiler02Test@6c479748]" started-at="2023-08-18T13:50:51 BRT" name="testCase21" description="div {
+  filter: opacity(0.4);
+}
+" finished-at="2023-08-18T13:50:51 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase21 -->
+        <test-method signature="testCase22()[pri:0, instance:objectos.css.internal.CssCompiler02Test@6c479748]" started-at="2023-08-18T13:50:51 BRT" name="testCase22" description="p {
+  font-weight: 600;
+}
+" finished-at="2023-08-18T13:50:51 BRT" duration-ms="0" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase22 -->
+      </class> <!-- objectos.css.internal.CssCompiler02Test -->
+      <class name="objectos.css.select.ClassSelectorTest">
+        <test-method signature="matches()[pri:0, instance:objectos.css.select.ClassSelectorTest@825ab3a]" started-at="2023-08-18T13:50:51 BRT" name="matches" finished-at="2023-08-18T13:50:51 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- matches -->
+        <test-method signature="toStringTest()[pri:0, instance:objectos.css.select.ClassSelectorTest@825ab3a]" started-at="2023-08-18T13:50:51 BRT" name="toStringTest" finished-at="2023-08-18T13:50:51 BRT" duration-ms="0" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- toStringTest -->
+      </class> <!-- objectos.css.select.ClassSelectorTest -->
+      <class name="objectos.css.util.ColorTest">
+        <test-method signature="ofHex()[pri:0, instance:objectos.css.util.ColorTest@1cb19add]" started-at="2023-08-18T13:50:51 BRT" name="ofHex" finished-at="2023-08-18T13:50:51 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- ofHex -->
+      </class> <!-- objectos.css.util.ColorTest -->
+      <class name="objectos.css.internal.CssCompiler01Test">
+        <test-method signature="testCase01()[pri:0, instance:objectos.css.internal.CssCompiler01Test@491e892a]" started-at="2023-08-18T13:50:51 BRT" name="testCase01" description="html {}
+" finished-at="2023-08-18T13:50:51 BRT" duration-ms="8" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase01 -->
+        <test-method signature="testCase02()[pri:0, instance:objectos.css.internal.CssCompiler01Test@491e892a]" started-at="2023-08-18T13:50:51 BRT" name="testCase02" description="* {
+  box-sizing: border-box;
+}
+" finished-at="2023-08-18T13:50:51 BRT" duration-ms="4" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase02 -->
+        <test-method signature="testCase04()[pri:0, instance:objectos.css.internal.CssCompiler01Test@491e892a]" started-at="2023-08-18T13:50:51 BRT" name="testCase04" description="ul {
+  margin: 20px 1.5rem;
+}
+" finished-at="2023-08-18T13:50:51 BRT" duration-ms="2" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase04 -->
+        <test-method signature="testCase05()[pri:0, instance:objectos.css.internal.CssCompiler01Test@491e892a]" started-at="2023-08-18T13:50:51 BRT" name="testCase05" description="TC 05: double value
+
+p {
+  line-height: 1.5;
+}
+" finished-at="2023-08-18T13:50:51 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase05 -->
+        <test-method signature="testCase06()[pri:0, instance:objectos.css.internal.CssCompiler01Test@491e892a]" started-at="2023-08-18T13:50:51 BRT" name="testCase06" description="TC 06: selector attribute
+
+[hidden] {}
+" finished-at="2023-08-18T13:50:51 BRT" duration-ms="0" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase06 -->
+        <test-method signature="testCase07()[pri:0, instance:objectos.css.internal.CssCompiler01Test@491e892a]" started-at="2023-08-18T13:50:51 BRT" name="testCase07" description="TC 07: selector pseudo class/element
+" finished-at="2023-08-18T13:50:51 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase07 -->
+        <test-method signature="testCase08()[pri:0, instance:objectos.css.internal.CssCompiler01Test@491e892a]" started-at="2023-08-18T13:50:51 BRT" name="testCase08" description="TC 08: selector joined
+" finished-at="2023-08-18T13:50:51 BRT" duration-ms="0" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase08 -->
+        <test-method signature="testCase09()[pri:0, instance:objectos.css.internal.CssCompiler01Test@491e892a]" started-at="2023-08-18T13:50:51 BRT" name="testCase09" description="ul {
+  list-style-image: url(&quot;foo&quot;);
+}
+" finished-at="2023-08-18T13:50:51 BRT" duration-ms="0" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase09 -->
+        <test-method signature="testCase10()[pri:0, instance:objectos.css.internal.CssCompiler01Test@491e892a]" started-at="2023-08-18T13:50:51 BRT" name="testCase10" description="p {
+  font-family: &quot;Foo Bar&quot;;
+}
+" finished-at="2023-08-18T13:50:51 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase10 -->
+        <test-method signature="testCase11()[pri:0, instance:objectos.css.internal.CssCompiler01Test@491e892a]" started-at="2023-08-18T13:50:51 BRT" name="testCase11" description="p {
+  font-family: &quot;Foo Bar&quot;, sans-serif;
+}
+" finished-at="2023-08-18T13:50:51 BRT" duration-ms="0" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase11 -->
+        <test-method signature="testCase12()[pri:0, instance:objectos.css.internal.CssCompiler01Test@491e892a]" started-at="2023-08-18T13:50:51 BRT" name="testCase12" description="input {
+  color: #9ca3af
+}
+" finished-at="2023-08-18T13:50:51 BRT" duration-ms="0" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase12 -->
+        <test-method signature="testCase13()[pri:0, instance:objectos.css.internal.CssCompiler01Test@491e892a]" started-at="2023-08-18T13:50:51 BRT" name="testCase13" description="@media screen {
+  p {
+    display: flex;
+  }
+}
+" finished-at="2023-08-18T13:50:51 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase13 -->
+        <test-method signature="testCase14()[pri:0, instance:objectos.css.internal.CssCompiler01Test@491e892a]" started-at="2023-08-18T13:50:51 BRT" name="testCase14" description="@media (min-width: 640px) {
+  p {
+    display: flex;
+  }
+}
+" finished-at="2023-08-18T13:50:51 BRT" duration-ms="0" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase14 -->
+        <test-method signature="testCase15()[pri:0, instance:objectos.css.internal.CssCompiler01Test@491e892a]" started-at="2023-08-18T13:50:51 BRT" name="testCase15" description=".foo {}
+" finished-at="2023-08-18T13:50:51 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase15 -->
+        <test-method signature="testCase16()[pri:0, instance:objectos.css.internal.CssCompiler01Test@491e892a]" started-at="2023-08-18T13:50:51 BRT" name="testCase16" description=".foo &gt; * + * {}
+" finished-at="2023-08-18T13:50:51 BRT" duration-ms="3" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase16 -->
+        <test-method signature="testCase17()[pri:0, instance:objectos.css.internal.CssCompiler01Test@491e892a]" started-at="2023-08-18T13:50:51 BRT" name="testCase17" description=":-moz-ui-invalid {
+  box-shadow: 60px -16px teal, 10px 5px black;
+}
+" finished-at="2023-08-18T13:50:51 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase17 -->
+        <test-method signature="testCase18()[pri:0, instance:objectos.css.internal.CssCompiler01Test@491e892a]" started-at="2023-08-18T13:50:51 BRT" name="testCase18" description="[#487] p {
+  --text-color: black;
+}
+" finished-at="2023-08-18T13:50:51 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase18 -->
+        <test-method signature="testCase19()[pri:0, instance:objectos.css.internal.CssCompiler01Test@491e892a]" started-at="2023-08-18T13:50:51 BRT" name="testCase19" description="[#487] p {
+  color: var(--text-color);
+}
+" finished-at="2023-08-18T13:50:51 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase19 -->
+        <test-method signature="testCase20()[pri:0, instance:objectos.css.internal.CssCompiler01Test@491e892a]" started-at="2023-08-18T13:50:51 BRT" name="testCase20" description="ul {
+  margin: 20px 1.5rem;
+}
+" finished-at="2023-08-18T13:50:51 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase20 -->
+        <test-method signature="testCase21()[pri:0, instance:objectos.css.internal.CssCompiler01Test@491e892a]" started-at="2023-08-18T13:50:51 BRT" name="testCase21" description="div {
+  filter: opacity(0.4);
+}
+" finished-at="2023-08-18T13:50:51 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase21 -->
+        <test-method signature="testCase22()[pri:0, instance:objectos.css.internal.CssCompiler01Test@491e892a]" started-at="2023-08-18T13:50:51 BRT" name="testCase22" description="p {
+  font-weight: 600;
+}
+" finished-at="2023-08-18T13:50:51 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase22 -->
+      </class> <!-- objectos.css.internal.CssCompiler01Test -->
+      <class name="objectos.css.select.AdjacentSiblingSelectorTest">
+        <test-method signature="toStringTest()[pri:0, instance:objectos.css.select.AdjacentSiblingSelectorTest@78f7a9c0]" started-at="2023-08-18T13:50:51 BRT" name="toStringTest" finished-at="2023-08-18T13:50:51 BRT" duration-ms="0" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- toStringTest -->
+      </class> <!-- objectos.css.select.AdjacentSiblingSelectorTest -->
+      <class name="objectos.css.select.ChildSelectorTest">
+        <test-method signature="matches()[pri:0, instance:objectos.css.select.ChildSelectorTest@79b1b471]" started-at="2023-08-18T13:50:51 BRT" name="matches" finished-at="2023-08-18T13:50:51 BRT" duration-ms="0" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- matches -->
+        <test-method signature="toStringTest()[pri:0, instance:objectos.css.select.ChildSelectorTest@79b1b471]" started-at="2023-08-18T13:50:51 BRT" name="toStringTest" finished-at="2023-08-18T13:50:51 BRT" duration-ms="0" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- toStringTest -->
+      </class> <!-- objectos.css.select.ChildSelectorTest -->
+      <class name="objectos.css.select.SelectorFactoryTest">
+        <test-method signature="attributeSelector()[pri:0, instance:objectos.css.select.SelectorFactoryTest@2a485b5]" started-at="2023-08-18T13:50:51 BRT" name="attributeSelector" finished-at="2023-08-18T13:50:51 BRT" duration-ms="2" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- attributeSelector -->
+        <test-method signature="attributeValueSelector()[pri:0, instance:objectos.css.select.SelectorFactoryTest@2a485b5]" started-at="2023-08-18T13:50:51 BRT" name="attributeValueSelector" finished-at="2023-08-18T13:50:51 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- attributeValueSelector -->
+        <test-method signature="childSelector()[pri:0, instance:objectos.css.select.SelectorFactoryTest@2a485b5]" started-at="2023-08-18T13:50:51 BRT" name="childSelector" finished-at="2023-08-18T13:50:51 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- childSelector -->
+        <test-method signature="classSelector()[pri:0, instance:objectos.css.select.SelectorFactoryTest@2a485b5]" started-at="2023-08-18T13:50:51 BRT" name="classSelector" finished-at="2023-08-18T13:50:51 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- classSelector -->
+        <test-method signature="descendantSelector()[pri:0, instance:objectos.css.select.SelectorFactoryTest@2a485b5]" started-at="2023-08-18T13:50:51 BRT" name="descendantSelector" finished-at="2023-08-18T13:50:51 BRT" duration-ms="0" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- descendantSelector -->
+        <test-method signature="idSelector()[pri:0, instance:objectos.css.select.SelectorFactoryTest@2a485b5]" started-at="2023-08-18T13:50:51 BRT" name="idSelector" finished-at="2023-08-18T13:50:51 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- idSelector -->
+        <test-method signature="invalidSelectors()[pri:0, instance:objectos.css.select.SelectorFactoryTest@2a485b5]" started-at="2023-08-18T13:50:51 BRT" name="invalidSelectors" finished-at="2023-08-18T13:50:51 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- invalidSelectors -->
+        <test-method signature="selectorList()[pri:0, instance:objectos.css.select.SelectorFactoryTest@2a485b5]" started-at="2023-08-18T13:50:51 BRT" name="selectorList" finished-at="2023-08-18T13:50:51 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- selectorList -->
+        <test-method signature="typeSelector()[pri:0, instance:objectos.css.select.SelectorFactoryTest@2a485b5]" started-at="2023-08-18T13:50:51 BRT" name="typeSelector" finished-at="2023-08-18T13:50:51 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- typeSelector -->
+        <test-method signature="universalSelector()[pri:0, instance:objectos.css.select.SelectorFactoryTest@2a485b5]" started-at="2023-08-18T13:50:51 BRT" name="universalSelector" finished-at="2023-08-18T13:50:51 BRT" duration-ms="0" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- universalSelector -->
+      </class> <!-- objectos.css.select.SelectorFactoryTest -->
+      <class name="objectos.css.internal.RandomStringGeneratorTest">
+        <test-method signature="setSeed()[pri:0, instance:objectos.css.internal.RandomStringGeneratorTest@6ccc0395]" started-at="2023-08-18T13:50:51 BRT" name="setSeed" description="Verifies setSeed generates the same sequence of pseudo random every time.
+" finished-at="2023-08-18T13:50:51 BRT" duration-ms="3" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- setSeed -->
+      </class> <!-- objectos.css.internal.RandomStringGeneratorTest -->
+      <class name="objectos.css.CssTemplateTest">
+        <test-method signature="customProperty01()[pri:0, instance:objectos.css.CssTemplateTest@330e8ce8]" started-at="2023-08-18T13:50:51 BRT" name="customProperty01" description="[#487] p {
+  --text-color: black;
+}
+" finished-at="2023-08-18T13:50:51 BRT" duration-ms="2" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- customProperty01 -->
+        <test-method signature="customProperty02()[pri:0, instance:objectos.css.CssTemplateTest@330e8ce8]" started-at="2023-08-18T13:50:51 BRT" name="customProperty02" description="[#487] p {
+  color: var(--text-color);
+}
+" finished-at="2023-08-18T13:50:51 BRT" duration-ms="0" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- customProperty02 -->
+        <test-method signature="customProperty03()[pri:0, instance:objectos.css.CssTemplateTest@330e8ce8]" started-at="2023-08-18T13:50:51 BRT" name="customProperty03" description="[#487] p {
+  color: var(--text-color, green);
+}
+" finished-at="2023-08-18T13:50:51 BRT" duration-ms="0" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- customProperty03 -->
+        <test-method signature="length()[pri:0, instance:objectos.css.CssTemplateTest@330e8ce8]" started-at="2023-08-18T13:50:51 BRT" name="length" description="[#488] external length values
+" finished-at="2023-08-18T13:50:51 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- length -->
+        <test-method signature="media01()[pri:0, instance:objectos.css.CssTemplateTest@330e8ce8]" started-at="2023-08-18T13:50:51 BRT" name="media01" description="[#460] @media screen {
+  p {
+    display: flex;
+  }
+}
+" finished-at="2023-08-18T13:50:51 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- media01 -->
+        <test-method signature="media02()[pri:0, instance:objectos.css.CssTemplateTest@330e8ce8]" started-at="2023-08-18T13:50:51 BRT" name="media02" description="[#460] @media (min-width: 640px) {
+  p {
+    display: flex;
+  }
+}
+" finished-at="2023-08-18T13:50:51 BRT" duration-ms="0" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- media02 -->
+        <test-method signature="percentage()[pri:0, instance:objectos.css.CssTemplateTest@330e8ce8]" started-at="2023-08-18T13:50:51 BRT" name="percentage" description="[#488] external percentage values
+" finished-at="2023-08-18T13:50:51 BRT" duration-ms="0" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- percentage -->
+        <test-method signature="propertyAppearance()[pri:0, instance:objectos.css.CssTemplateTest@330e8ce8]" started-at="2023-08-18T13:50:51 BRT" name="propertyAppearance" description="[#419] Preflight 13
+
+- appearance
+" finished-at="2023-08-18T13:50:51 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- propertyAppearance -->
+        <test-method signature="propertyBackgroundImage()[pri:0, instance:objectos.css.CssTemplateTest@330e8ce8]" started-at="2023-08-18T13:50:51 BRT" name="propertyBackgroundImage" description="[#419] Preflight 13
+
+- background-image
+" finished-at="2023-08-18T13:50:51 BRT" duration-ms="0" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- propertyBackgroundImage -->
+        <test-method signature="propertyBorderCollapse()[pri:0, instance:objectos.css.CssTemplateTest@330e8ce8]" started-at="2023-08-18T13:50:51 BRT" name="propertyBorderCollapse" description="[#417] Preflight 11
+
+- border-collapse
+" finished-at="2023-08-18T13:50:51 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- propertyBorderCollapse -->
+        <test-method signature="propertyBorderColor()[pri:0, instance:objectos.css.CssTemplateTest@330e8ce8]" started-at="2023-08-18T13:50:51 BRT" name="propertyBorderColor" description="[#394] Preflight 01
+
+- border-color
+" finished-at="2023-08-18T13:50:51 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- propertyBorderColor -->
+        <test-method signature="propertyBorderSideWidth()[pri:0, instance:objectos.css.CssTemplateTest@330e8ce8]" started-at="2023-08-18T13:50:51 BRT" name="propertyBorderSideWidth" description="[#397] Preflight 04
+
+- border-[side]-width
+" finished-at="2023-08-18T13:50:51 BRT" duration-ms="0" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- propertyBorderSideWidth -->
+        <test-method signature="propertyBorderStyle()[pri:0, instance:objectos.css.CssTemplateTest@330e8ce8]" started-at="2023-08-18T13:50:51 BRT" name="propertyBorderStyle" description="[#394] Preflight 01
+
+- border-style
+" finished-at="2023-08-18T13:50:51 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- propertyBorderStyle -->
+        <test-method signature="propertyBorderWidth()[pri:0, instance:objectos.css.CssTemplateTest@330e8ce8]" started-at="2023-08-18T13:50:51 BRT" name="propertyBorderWidth" description="[#394] Preflight 01
+
+- border-width
+" finished-at="2023-08-18T13:50:51 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- propertyBorderWidth -->
+        <test-method signature="propertyBottom()[pri:0, instance:objectos.css.CssTemplateTest@330e8ce8]" started-at="2023-08-18T13:50:51 BRT" name="propertyBottom" description="[#404] Preflight 10
+
+- bottom
+" finished-at="2023-08-18T13:50:51 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- propertyBottom -->
+        <test-method signature="propertyBoxShadow()[pri:0, instance:objectos.css.CssTemplateTest@330e8ce8]" started-at="2023-08-18T13:50:51 BRT" name="propertyBoxShadow" description="[#420] Preflight 14
+
+- box-shadow
+" finished-at="2023-08-18T13:50:51 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- propertyBoxShadow -->
+        <test-method signature="propertyBoxSizing()[pri:0, instance:objectos.css.CssTemplateTest@330e8ce8]" started-at="2023-08-18T13:50:51 BRT" name="propertyBoxSizing" description="[#394] Preflight 01
+
+- box-sizing
+" finished-at="2023-08-18T13:50:51 BRT" duration-ms="0" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- propertyBoxSizing -->
+        <test-method signature="propertyColor()[pri:0, instance:objectos.css.CssTemplateTest@330e8ce8]" started-at="2023-08-18T13:50:51 BRT" name="propertyColor" description="[#397] Preflight 04
+
+- color
+" finished-at="2023-08-18T13:50:51 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- propertyColor -->
+        <test-method signature="propertyCursor()[pri:0, instance:objectos.css.CssTemplateTest@330e8ce8]" started-at="2023-08-18T13:50:51 BRT" name="propertyCursor" finished-at="2023-08-18T13:50:51 BRT" duration-ms="0" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- propertyCursor -->
+        <test-method signature="propertyDisplay()[pri:0, instance:objectos.css.CssTemplateTest@330e8ce8]" started-at="2023-08-18T13:50:51 BRT" name="propertyDisplay" description="[#389] Preflight
+
+- display
+" finished-at="2023-08-18T13:50:51 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- propertyDisplay -->
+        <test-method signature="propertyFilter()[pri:0, instance:objectos.css.CssTemplateTest@330e8ce8]" started-at="2023-08-18T13:50:51 BRT" name="propertyFilter" finished-at="2023-08-18T13:50:51 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- propertyFilter -->
+        <test-method signature="propertyFlexDirection()[pri:0, instance:objectos.css.CssTemplateTest@330e8ce8]" started-at="2023-08-18T13:50:51 BRT" name="propertyFlexDirection" description="[#459] flex-direction
+" finished-at="2023-08-18T13:50:51 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- propertyFlexDirection -->
+        <test-method signature="propertyFont()[pri:0, instance:objectos.css.CssTemplateTest@330e8ce8]" started-at="2023-08-18T13:50:51 BRT" name="propertyFont" description="[#419] Preflight 15
+
+- font
+" finished-at="2023-08-18T13:50:51 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- propertyFont -->
+        <test-method signature="propertyFontFamily()[pri:0, instance:objectos.css.CssTemplateTest@330e8ce8]" started-at="2023-08-18T13:50:51 BRT" name="propertyFontFamily" description="[#395] Preflight 02
+
+- font-family
+" finished-at="2023-08-18T13:50:51 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- propertyFontFamily -->
+        <test-method signature="propertyFontFeatureSettings()[pri:0, instance:objectos.css.CssTemplateTest@330e8ce8]" started-at="2023-08-18T13:50:51 BRT" name="propertyFontFeatureSettings" description="[#395] Preflight 02
+
+- font-feature-settings
+" finished-at="2023-08-18T13:50:51 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- propertyFontFeatureSettings -->
+        <test-method signature="propertyFontSize()[pri:0, instance:objectos.css.CssTemplateTest@330e8ce8]" started-at="2023-08-18T13:50:51 BRT" name="propertyFontSize" description="[#398] Preflight 06
+
+- font-size
+" finished-at="2023-08-18T13:50:51 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- propertyFontSize -->
+        <test-method signature="propertyFontVariationSettings()[pri:0, instance:objectos.css.CssTemplateTest@330e8ce8]" started-at="2023-08-18T13:50:51 BRT" name="propertyFontVariationSettings" description="[#395] Preflight 02
+
+- font-variation-settings
+" finished-at="2023-08-18T13:50:51 BRT" duration-ms="0" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- propertyFontVariationSettings -->
+        <test-method signature="propertyFontWeight()[pri:0, instance:objectos.css.CssTemplateTest@330e8ce8]" started-at="2023-08-18T13:50:51 BRT" name="propertyFontWeight" description="[#398] Preflight 06
+
+- font-weight
+" finished-at="2023-08-18T13:50:51 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- propertyFontWeight -->
+        <test-method signature="propertyGridColumn()[pri:0, instance:objectos.css.CssTemplateTest@330e8ce8]" started-at="2023-08-18T13:50:51 BRT" name="propertyGridColumn" finished-at="2023-08-18T13:50:51 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- propertyGridColumn -->
+        <test-method signature="propertyGridTemplateColumns()[pri:0, instance:objectos.css.CssTemplateTest@330e8ce8]" started-at="2023-08-18T13:50:51 BRT" name="propertyGridTemplateColumns" finished-at="2023-08-18T13:50:51 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- propertyGridTemplateColumns -->
+        <test-method signature="propertyHeight()[pri:0, instance:objectos.css.CssTemplateTest@330e8ce8]" started-at="2023-08-18T13:50:51 BRT" name="propertyHeight" description="[#397] Preflight 04
+
+- height
+" finished-at="2023-08-18T13:50:51 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- propertyHeight -->
+        <test-method signature="propertyJustifyContent()[pri:0, instance:objectos.css.CssTemplateTest@330e8ce8]" started-at="2023-08-18T13:50:51 BRT" name="propertyJustifyContent" description="[#459] justify-content
+" finished-at="2023-08-18T13:50:51 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- propertyJustifyContent -->
+        <test-method signature="propertyLineHeight()[pri:0, instance:objectos.css.CssTemplateTest@330e8ce8]" started-at="2023-08-18T13:50:51 BRT" name="propertyLineHeight" description="[#395] Preflight 02
+
+- line-height
+" finished-at="2023-08-18T13:50:51 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- propertyLineHeight -->
+        <test-method signature="propertyListStyle()[pri:0, instance:objectos.css.CssTemplateTest@330e8ce8]" started-at="2023-08-18T13:50:51 BRT" name="propertyListStyle" description="[#422] Preflight 16
+
+- list-style-image
+" finished-at="2023-08-18T13:50:51 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- propertyListStyle -->
+        <test-method signature="propertyListStyleImage()[pri:0, instance:objectos.css.CssTemplateTest@330e8ce8]" started-at="2023-08-18T13:50:51 BRT" name="propertyListStyleImage" description="[#422] Preflight 16
+
+- list-style-image
+" finished-at="2023-08-18T13:50:51 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- propertyListStyleImage -->
+        <test-method signature="propertyListStylePosition()[pri:0, instance:objectos.css.CssTemplateTest@330e8ce8]" started-at="2023-08-18T13:50:51 BRT" name="propertyListStylePosition" description="[#422] Preflight 16
+
+- list-style-position
+" finished-at="2023-08-18T13:50:51 BRT" duration-ms="0" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- propertyListStylePosition -->
+        <test-method signature="propertyListStyleType()[pri:0, instance:objectos.css.CssTemplateTest@330e8ce8]" started-at="2023-08-18T13:50:51 BRT" name="propertyListStyleType" description="[#422] Preflight 16
+
+- list-style-type
+" finished-at="2023-08-18T13:50:51 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- propertyListStyleType -->
+        <test-method signature="propertyMargin()[pri:0, instance:objectos.css.CssTemplateTest@330e8ce8]" started-at="2023-08-18T13:50:51 BRT" name="propertyMargin" description="[#396] Preflight 03
+
+- margin
+" finished-at="2023-08-18T13:50:51 BRT" duration-ms="0" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- propertyMargin -->
+        <test-method signature="propertyMaxWidth()[pri:0, instance:objectos.css.CssTemplateTest@330e8ce8]" started-at="2023-08-18T13:50:51 BRT" name="propertyMaxWidth" finished-at="2023-08-18T13:50:51 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- propertyMaxWidth -->
+        <test-method signature="propertyMinHeight()[pri:0, instance:objectos.css.CssTemplateTest@330e8ce8]" started-at="2023-08-18T13:50:51 BRT" name="propertyMinHeight" description="[#459] min-height
+" finished-at="2023-08-18T13:50:51 BRT" duration-ms="0" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- propertyMinHeight -->
+        <test-method signature="propertyMinWidth()[pri:0, instance:objectos.css.CssTemplateTest@330e8ce8]" started-at="2023-08-18T13:50:51 BRT" name="propertyMinWidth" description="[#459] min-width
+" finished-at="2023-08-18T13:50:51 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- propertyMinWidth -->
+        <test-method signature="propertyOpacity()[pri:0, instance:objectos.css.CssTemplateTest@330e8ce8]" started-at="2023-08-18T13:50:51 BRT" name="propertyOpacity" finished-at="2023-08-18T13:50:51 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- propertyOpacity -->
+        <test-method signature="propertyOutline()[pri:0, instance:objectos.css.CssTemplateTest@330e8ce8]" started-at="2023-08-18T13:50:51 BRT" name="propertyOutline" description="[#420] Preflight 14
+
+- outline
+" finished-at="2023-08-18T13:50:51 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- propertyOutline -->
+        <test-method signature="propertyOutlineColor()[pri:0, instance:objectos.css.CssTemplateTest@330e8ce8]" started-at="2023-08-18T13:50:51 BRT" name="propertyOutlineColor" description="[#420] Preflight 14
+
+- outline-color
+" finished-at="2023-08-18T13:50:51 BRT" duration-ms="0" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- propertyOutlineColor -->
+        <test-method signature="propertyOutlineOffset()[pri:0, instance:objectos.css.CssTemplateTest@330e8ce8]" started-at="2023-08-18T13:50:51 BRT" name="propertyOutlineOffset" description="[#419] Preflight 15
+
+- outline-offset
+" finished-at="2023-08-18T13:50:51 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- propertyOutlineOffset -->
+        <test-method signature="propertyOutlineStyle()[pri:0, instance:objectos.css.CssTemplateTest@330e8ce8]" started-at="2023-08-18T13:50:51 BRT" name="propertyOutlineStyle" description="[#420] Preflight 14
+
+- outline-style
+" finished-at="2023-08-18T13:50:51 BRT" duration-ms="0" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- propertyOutlineStyle -->
+        <test-method signature="propertyOutlineWidth()[pri:0, instance:objectos.css.CssTemplateTest@330e8ce8]" started-at="2023-08-18T13:50:51 BRT" name="propertyOutlineWidth" description="[#420] Preflight 14
+
+- outline-width
+" finished-at="2023-08-18T13:50:51 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- propertyOutlineWidth -->
+        <test-method signature="propertyPadding()[pri:0, instance:objectos.css.CssTemplateTest@330e8ce8]" started-at="2023-08-18T13:50:51 BRT" name="propertyPadding" description="[#418] Preflight 12
+
+- padding
+" finished-at="2023-08-18T13:50:51 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- propertyPadding -->
+        <test-method signature="propertyPaddingBlock()[pri:0, instance:objectos.css.CssTemplateTest@330e8ce8]" started-at="2023-08-18T13:50:51 BRT" name="propertyPaddingBlock" description="- padding-block
+" finished-at="2023-08-18T13:50:51 BRT" duration-ms="0" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- propertyPaddingBlock -->
+        <test-method signature="propertyPaddingInline()[pri:0, instance:objectos.css.CssTemplateTest@330e8ce8]" started-at="2023-08-18T13:50:51 BRT" name="propertyPaddingInline" description="- padding-inline
+" finished-at="2023-08-18T13:50:51 BRT" duration-ms="0" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- propertyPaddingInline -->
+        <test-method signature="propertyPosition()[pri:0, instance:objectos.css.CssTemplateTest@330e8ce8]" started-at="2023-08-18T13:50:51 BRT" name="propertyPosition" description="[#404] Preflight 10
+
+- position
+" finished-at="2023-08-18T13:50:51 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- propertyPosition -->
+        <test-method signature="propertyResize()[pri:0, instance:objectos.css.CssTemplateTest@330e8ce8]" started-at="2023-08-18T13:50:51 BRT" name="propertyResize" finished-at="2023-08-18T13:50:51 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- propertyResize -->
+        <test-method signature="propertyTabSize()[pri:0, instance:objectos.css.CssTemplateTest@330e8ce8]" started-at="2023-08-18T13:50:51 BRT" name="propertyTabSize" description="[#395] Preflight 02
+
+- tab-size
+- -moz-tab-size
+" finished-at="2023-08-18T13:50:51 BRT" duration-ms="0" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- propertyTabSize -->
+        <test-method signature="propertyTextDecoration()[pri:0, instance:objectos.css.CssTemplateTest@330e8ce8]" started-at="2023-08-18T13:50:51 BRT" name="propertyTextDecoration" description="[#399] Preflight 06
+
+- text-decoration
+" finished-at="2023-08-18T13:50:51 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- propertyTextDecoration -->
+        <test-method signature="propertyTextDecorationColor()[pri:0, instance:objectos.css.CssTemplateTest@330e8ce8]" started-at="2023-08-18T13:50:51 BRT" name="propertyTextDecorationColor" description="[#399] Preflight 06
+
+- text-decoration-color
+" finished-at="2023-08-18T13:50:51 BRT" duration-ms="0" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- propertyTextDecorationColor -->
+        <test-method signature="propertyTextDecorationLine()[pri:0, instance:objectos.css.CssTemplateTest@330e8ce8]" started-at="2023-08-18T13:50:51 BRT" name="propertyTextDecorationLine" description="[#399] Preflight 06
+
+- text-decoration-line
+" finished-at="2023-08-18T13:50:51 BRT" duration-ms="0" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- propertyTextDecorationLine -->
+        <test-method signature="propertyTextDecorationStyle()[pri:0, instance:objectos.css.CssTemplateTest@330e8ce8]" started-at="2023-08-18T13:50:51 BRT" name="propertyTextDecorationStyle" description="[#399] Preflight 06
+
+- text-decoration-style
+" finished-at="2023-08-18T13:50:51 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- propertyTextDecorationStyle -->
+        <test-method signature="propertyTextDecorationThickness()[pri:0, instance:objectos.css.CssTemplateTest@330e8ce8]" started-at="2023-08-18T13:50:51 BRT" name="propertyTextDecorationThickness" description="[#399] Preflight 06
+
+- text-decoration-thickness
+" finished-at="2023-08-18T13:50:51 BRT" duration-ms="0" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- propertyTextDecorationThickness -->
+        <test-method signature="propertyTextIndent()[pri:0, instance:objectos.css.CssTemplateTest@330e8ce8]" started-at="2023-08-18T13:50:51 BRT" name="propertyTextIndent" description="[#417] Preflight 11
+
+- text-indent
+" finished-at="2023-08-18T13:50:51 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- propertyTextIndent -->
+        <test-method signature="propertyTextSizeAdjust()[pri:0, instance:objectos.css.CssTemplateTest@330e8ce8]" started-at="2023-08-18T13:50:51 BRT" name="propertyTextSizeAdjust" description="[#395] Preflight 02
+
+- -webkit-text-size-adjust
+" finished-at="2023-08-18T13:50:51 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- propertyTextSizeAdjust -->
+        <test-method signature="propertyTextTransform()[pri:0, instance:objectos.css.CssTemplateTest@330e8ce8]" started-at="2023-08-18T13:50:51 BRT" name="propertyTextTransform" description="[#418] Preflight 12
+
+- text-transform
+" finished-at="2023-08-18T13:50:51 BRT" duration-ms="0" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- propertyTextTransform -->
+        <test-method signature="propertyTop()[pri:0, instance:objectos.css.CssTemplateTest@330e8ce8]" started-at="2023-08-18T13:50:51 BRT" name="propertyTop" description="[#404] Preflight 10
+
+- top
+" finished-at="2023-08-18T13:50:51 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- propertyTop -->
+        <test-method signature="propertyVerticalAlign()[pri:0, instance:objectos.css.CssTemplateTest@330e8ce8]" started-at="2023-08-18T13:50:51 BRT" name="propertyVerticalAlign" description="[#404] Preflight 10
+
+- vertical-align
+" finished-at="2023-08-18T13:50:51 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- propertyVerticalAlign -->
+        <test-method signature="selectorAttribute()[pri:0, instance:objectos.css.CssTemplateTest@330e8ce8]" started-at="2023-08-18T13:50:51 BRT" name="selectorAttribute" finished-at="2023-08-18T13:50:51 BRT" duration-ms="0" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- selectorAttribute -->
+        <test-method signature="selectorClass()[pri:0, instance:objectos.css.CssTemplateTest@330e8ce8]" started-at="2023-08-18T13:50:51 BRT" name="selectorClass" finished-at="2023-08-18T13:50:51 BRT" duration-ms="0" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- selectorClass -->
+        <test-method signature="selectorJoined()[pri:0, instance:objectos.css.CssTemplateTest@330e8ce8]" started-at="2023-08-18T13:50:51 BRT" name="selectorJoined" finished-at="2023-08-18T13:50:51 BRT" duration-ms="0" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- selectorJoined -->
+        <test-method signature="selectorList()[pri:0, instance:objectos.css.CssTemplateTest@330e8ce8]" started-at="2023-08-18T13:50:51 BRT" name="selectorList" description="[#394] Preflight 01
+
+- selector list
+" finished-at="2023-08-18T13:50:51 BRT" duration-ms="0" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- selectorList -->
+        <test-method signature="selectorTypes()[pri:0, instance:objectos.css.CssTemplateTest@330e8ce8]" started-at="2023-08-18T13:50:51 BRT" name="selectorTypes" description="[#401] Preflight 07
+[#402] Preflight 08
+[#403] Preflight 09
+
+- type selectors
+" finished-at="2023-08-18T13:50:51 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- selectorTypes -->
+        <test-method signature="selectorUniversal()[pri:0, instance:objectos.css.CssTemplateTest@330e8ce8]" started-at="2023-08-18T13:50:51 BRT" name="selectorUniversal" description="[#394] Preflight 01
+
+- universal selector
+" finished-at="2023-08-18T13:50:51 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- selectorUniversal -->
+      </class> <!-- objectos.css.CssTemplateTest -->
+      <class name="objectos.css.select.GeneralSiblingSelectorTest">
+        <test-method signature="toStringTest()[pri:0, instance:objectos.css.select.GeneralSiblingSelectorTest@505d6fd1]" started-at="2023-08-18T13:50:51 BRT" name="toStringTest" finished-at="2023-08-18T13:50:51 BRT" duration-ms="4" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- toStringTest -->
+      </class> <!-- objectos.css.select.GeneralSiblingSelectorTest -->
+      <class name="objectos.css.internal.BytesTest">
+        <test-method signature="standardName()[pri:0, instance:objectos.css.internal.BytesTest@14ca80b4]" started-at="2023-08-18T13:50:51 BRT" name="standardName" finished-at="2023-08-18T13:50:51 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- standardName -->
+        <test-method signature="varInt()[pri:0, instance:objectos.css.internal.BytesTest@14ca80b4]" started-at="2023-08-18T13:50:51 BRT" name="varInt" finished-at="2023-08-18T13:50:51 BRT" duration-ms="0" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- varInt -->
+      </class> <!-- objectos.css.internal.BytesTest -->
+      <class name="objectos.css.select.PseudoElementSelectorTest">
+        <test-method signature="toStringTest()[pri:0, instance:objectos.css.select.PseudoElementSelectorTest@5bf3e120]" started-at="2023-08-18T13:50:51 BRT" name="toStringTest" finished-at="2023-08-18T13:50:51 BRT" duration-ms="0" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- toStringTest -->
+      </class> <!-- objectos.css.select.PseudoElementSelectorTest -->
+      <class name="objectos.css.sheet.Pass0Test">
+        <test-method is-config="true" signature="_beforeMethod()[pri:0, instance:objectos.css.sheet.Pass0Test@437fe1ce]" started-at="2023-08-18T13:50:51 BRT" name="_beforeMethod" finished-at="2023-08-18T13:50:51 BRT" duration-ms="9" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- _beforeMethod -->
+        <test-method signature="testCase00()[pri:0, instance:objectos.css.sheet.Pass0Test@437fe1ce]" started-at="2023-08-18T13:50:51 BRT" name="testCase00" finished-at="2023-08-18T13:50:51 BRT" duration-ms="61" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase00 -->
+        <test-method is-config="true" signature="_beforeMethod()[pri:0, instance:objectos.css.sheet.Pass0Test@437fe1ce]" started-at="2023-08-18T13:50:51 BRT" name="_beforeMethod" finished-at="2023-08-18T13:50:51 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- _beforeMethod -->
+        <test-method signature="testCase01()[pri:0, instance:objectos.css.sheet.Pass0Test@437fe1ce]" started-at="2023-08-18T13:50:51 BRT" name="testCase01" finished-at="2023-08-18T13:50:51 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase01 -->
+        <test-method is-config="true" signature="_beforeMethod()[pri:0, instance:objectos.css.sheet.Pass0Test@437fe1ce]" started-at="2023-08-18T13:50:51 BRT" name="_beforeMethod" finished-at="2023-08-18T13:50:51 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- _beforeMethod -->
+        <test-method signature="testCase08()[pri:0, instance:objectos.css.sheet.Pass0Test@437fe1ce]" started-at="2023-08-18T13:50:51 BRT" name="testCase08" finished-at="2023-08-18T13:50:51 BRT" duration-ms="3" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase08 -->
+        <test-method signature="testCase09()[pri:0, instance:objectos.css.sheet.Pass0Test@437fe1ce]" started-at="2023-08-18T13:50:51 BRT" name="testCase09" finished-at="2023-08-18T13:50:51 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase09 -->
+        <test-method is-config="true" signature="_beforeMethod()[pri:0, instance:objectos.css.sheet.Pass0Test@437fe1ce]" started-at="2023-08-18T13:50:51 BRT" name="_beforeMethod" finished-at="2023-08-18T13:50:51 BRT" duration-ms="0" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- _beforeMethod -->
+        <test-method signature="testCase17()[pri:0, instance:objectos.css.sheet.Pass0Test@437fe1ce]" started-at="2023-08-18T13:50:51 BRT" name="testCase17" finished-at="2023-08-18T13:50:51 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase17 -->
+        <test-method is-config="true" signature="_beforeMethod()[pri:0, instance:objectos.css.sheet.Pass0Test@437fe1ce]" started-at="2023-08-18T13:50:51 BRT" name="_beforeMethod" finished-at="2023-08-18T13:50:51 BRT" duration-ms="0" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- _beforeMethod -->
+        <test-method signature="testCase25()[pri:0, instance:objectos.css.sheet.Pass0Test@437fe1ce]" started-at="2023-08-18T13:50:51 BRT" name="testCase25" finished-at="2023-08-18T13:50:51 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase25 -->
+        <test-method is-config="true" signature="_beforeMethod()[pri:0, instance:objectos.css.sheet.Pass0Test@437fe1ce]" started-at="2023-08-18T13:50:51 BRT" name="_beforeMethod" finished-at="2023-08-18T13:50:51 BRT" duration-ms="0" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- _beforeMethod -->
+        <test-method signature="testCase27()[pri:0, instance:objectos.css.sheet.Pass0Test@437fe1ce]" started-at="2023-08-18T13:50:51 BRT" name="testCase27" finished-at="2023-08-18T13:50:51 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase27 -->
+        <test-method is-config="true" signature="_beforeMethod()[pri:0, instance:objectos.css.sheet.Pass0Test@437fe1ce]" started-at="2023-08-18T13:50:51 BRT" name="_beforeMethod" finished-at="2023-08-18T13:50:51 BRT" duration-ms="0" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- _beforeMethod -->
+        <test-method signature="testCase32()[pri:0, instance:objectos.css.sheet.Pass0Test@437fe1ce]" started-at="2023-08-18T13:50:51 BRT" name="testCase32" finished-at="2023-08-18T13:50:51 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase32 -->
+        <test-method is-config="true" signature="_beforeMethod()[pri:0, instance:objectos.css.sheet.Pass0Test@437fe1ce]" started-at="2023-08-18T13:50:51 BRT" name="_beforeMethod" finished-at="2023-08-18T13:50:51 BRT" duration-ms="0" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- _beforeMethod -->
+      </class> <!-- objectos.css.sheet.Pass0Test -->
+    </test> <!-- Surefire test -->
+  </suite> <!-- Surefire suite -->
+</testng-results>

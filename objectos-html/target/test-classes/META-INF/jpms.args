@@ -1,0 +1,4 @@
+--patch-module
+objectos.html=_
+--add-reads
+objectos.html=ALL-UNNAMED

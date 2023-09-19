@@ -1,0 +1,4 @@
+--patch-module
+objectos.carbonated=_
+--add-reads
+objectos.carbonated=ALL-UNNAMED

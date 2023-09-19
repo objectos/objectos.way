@@ -1,0 +1,29 @@
+package br.com.objectos.way.css;
+
+import br.com.objectos.way.css.common.lang.Position;
+import javax.annotation.Generated;
+
+@Generated("br.com.objectos.way.css.selfgen.BuilderTypeProcessor")
+public final class GeneratedRuleSetBuilderPositionBuilder<SELF extends GeneratedRuleSetBuilder<SELF>> {
+  private final SELF outer;
+
+  GeneratedRuleSetBuilderPositionBuilder(SELF outer) {
+    this.outer = outer;
+  }
+
+  public SELF staticValue() {
+    return outer.position(Position.STATIC);
+  }
+
+  public SELF relative() {
+    return outer.position(Position.RELATIVE);
+  }
+
+  public SELF absolute() {
+    return outer.position(Position.ABSOLUTE);
+  }
+
+  public SELF fixed() {
+    return outer.position(Position.FIXED);
+  }
+}

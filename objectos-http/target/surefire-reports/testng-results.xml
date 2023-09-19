@@ -1,0 +1,458 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testng-results ignored="1" total="77" passed="76" failed="0" skipped="0">
+  <reporter-output>
+  </reporter-output>
+  <suite started-at="2023-08-18T13:51:04 BRT" name="Surefire suite" finished-at="2023-08-18T13:51:04 BRT" duration-ms="320">
+    <groups>
+    </groups>
+    <test started-at="2023-08-18T13:51:04 BRT" name="Surefire test" finished-at="2023-08-18T13:51:04 BRT" duration-ms="320">
+      <class name="objectos.http.internal.HttpExchangeTest">
+        <test-method signature="http003()[pri:0, instance:objectos.http.internal.HttpExchangeTest@759d26fb]" started-at="2023-08-18T13:51:04 BRT" name="http003" finished-at="2023-08-18T13:51:04 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- http003 -->
+        <test-method signature="http004()[pri:0, instance:objectos.http.internal.HttpExchangeTest@759d26fb]" started-at="2023-08-18T13:51:04 BRT" name="http004" finished-at="2023-08-18T13:51:04 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- http004 -->
+      </class> <!-- objectos.http.internal.HttpExchangeTest -->
+      <class name="objectos.http.internal.HttpExchangeHandleTest">
+        <test-method signature="handle()[pri:0, instance:objectos.http.internal.HttpExchangeHandleTest@7205765b]" started-at="2023-08-18T13:51:04 BRT" name="handle" description="[#448] HANDLE --&gt; HANDLE_INVOKE
+
+- sets closeConnection
+- resets responseBody
+- creates responseHeaders
+" finished-at="2023-08-18T13:51:04 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- handle -->
+        <test-method signature="handleInvoke()[pri:0, instance:objectos.http.internal.HttpExchangeHandleTest@7205765b]" started-at="2023-08-18T13:51:04 BRT" name="handleInvoke" finished-at="2023-08-18T13:51:04 BRT" duration-ms="2" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- handleInvoke -->
+        <test-method signature="http001()[pri:0, instance:objectos.http.internal.HttpExchangeHandleTest@7205765b]" started-at="2023-08-18T13:51:04 BRT" name="http001" finished-at="2023-08-18T13:51:04 BRT" duration-ms="21" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- http001 -->
+        <test-method signature="http004()[pri:0, instance:objectos.http.internal.HttpExchangeHandleTest@7205765b]" started-at="2023-08-18T13:51:04 BRT" name="http004" finished-at="2023-08-18T13:51:04 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- http004 -->
+      </class> <!-- objectos.http.internal.HttpExchangeHandleTest -->
+      <class name="objectos.http.internal.HeaderValueTest">
+        <test-method signature="unsignedLongValue()[pri:0, instance:objectos.http.internal.HeaderValueTest@29d89d5d]" started-at="2023-08-18T13:51:04 BRT" name="unsignedLongValue" finished-at="2023-08-18T13:51:04 BRT" duration-ms="9" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- unsignedLongValue -->
+      </class> <!-- objectos.http.internal.HeaderValueTest -->
+      <class name="objectos.http.internal.HttpExchangeParseHeaderTest">
+        <test-method signature="http001()[pri:0, instance:objectos.http.internal.HttpExchangeParseHeaderTest@2053d869]" started-at="2023-08-18T13:51:04 BRT" name="http001" finished-at="2023-08-18T13:51:04 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- http001 -->
+        <test-method signature="http006()[pri:0, instance:objectos.http.internal.HttpExchangeParseHeaderTest@2053d869]" started-at="2023-08-18T13:51:04 BRT" name="http006" finished-at="2023-08-18T13:51:04 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- http006 -->
+        <test-method signature="parseHeader()[pri:0, instance:objectos.http.internal.HttpExchangeParseHeaderTest@2053d869]" started-at="2023-08-18T13:51:04 BRT" name="parseHeader" description="[#445] HTTP 001: PARSE_HEADER --&gt; PARSE_HEADER_NAME
+
+- resets header name
+" finished-at="2023-08-18T13:51:04 BRT" duration-ms="0" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- parseHeader -->
+        <test-method signature="parseHeaderName()[pri:0, instance:objectos.http.internal.HttpExchangeParseHeaderTest@2053d869]" started-at="2023-08-18T13:51:04 BRT" name="parseHeaderName" description="[#444] HTTP 001: PARSE_HEADER_NAME --&gt; PARSE_HEADER_VALUE
+
+- bufferIndex ends after colon
+" finished-at="2023-08-18T13:51:04 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- parseHeaderName -->
+        <test-method signature="parseHeaderNameToClientErrorBadRequest()[pri:0, instance:objectos.http.internal.HttpExchangeParseHeaderTest@2053d869]" started-at="2023-08-18T13:51:04 BRT" name="parseHeaderNameToClientErrorBadRequest" description="[#444] HTTP 001: PARSE_HEADER_NAME --&gt; CLIENT_ERROR::BAD_REQUEST
+
+- buffer index remains unchanged
+- not header name set
+" finished-at="2023-08-18T13:51:04 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- parseHeaderNameToClientErrorBadRequest -->
+        <test-method signature="parseHeaderNameToInputRead()[pri:0, instance:objectos.http.internal.HttpExchangeParseHeaderTest@2053d869]" started-at="2023-08-18T13:51:04 BRT" name="parseHeaderNameToInputRead" description="[#444] HTTP 001: PARSE_HEADER_NAME --&gt; INPUT_READ
+
+- buffer index remains unchanged
+- not header name set
+" finished-at="2023-08-18T13:51:04 BRT" duration-ms="0" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- parseHeaderNameToInputRead -->
+        <test-method signature="parseHeaderNameToParseHeaderValue()[pri:0, instance:objectos.http.internal.HttpExchangeParseHeaderTest@2053d869]" started-at="2023-08-18T13:51:04 BRT" name="parseHeaderNameToParseHeaderValue" description="[#452] HTTP 001: PARSE_HEADER_NAME --&gt; PARSE_HEADER_VALUE (not found)
+
+- header name is unknown
+" finished-at="2023-08-18T13:51:04 BRT" duration-ms="0" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- parseHeaderNameToParseHeaderValue -->
+        <test-method signature="parseHeaderToClientErrorBadRequest()[pri:0, instance:objectos.http.internal.HttpExchangeParseHeaderTest@2053d869]" started-at="2023-08-18T13:51:04 BRT" name="parseHeaderToClientErrorBadRequest" description="[#446] HTTP 001: PARSE_HEADER --&gt; CLIENT_ERROR::BAD_REQUEST
+" finished-at="2023-08-18T13:51:04 BRT" duration-ms="0" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- parseHeaderToClientErrorBadRequest -->
+        <test-method signature="parseHeaderToHandle()[pri:0, instance:objectos.http.internal.HttpExchangeParseHeaderTest@2053d869]" started-at="2023-08-18T13:51:04 BRT" name="parseHeaderToHandle" description="[#444] HTTP 001: PARSE_HEADER --&gt; HANDLE
+" finished-at="2023-08-18T13:51:04 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- parseHeaderToHandle -->
+        <test-method signature="parseHeaderToInputRead()[pri:0, instance:objectos.http.internal.HttpExchangeParseHeaderTest@2053d869]" started-at="2023-08-18T13:51:04 BRT" name="parseHeaderToInputRead" description="[#446] HTTP 001: PARSE_HEADER --&gt; INPUT_READ
+" finished-at="2023-08-18T13:51:04 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- parseHeaderToInputRead -->
+        <test-method signature="parseHeaderValue()[pri:0, instance:objectos.http.internal.HttpExchangeParseHeaderTest@2053d869]" started-at="2023-08-18T13:51:04 BRT" name="parseHeaderValue" description="[#444] HTTP 001: PARSE_HEADER_VALUE --&gt; PARSE_HEADER
+
+- happy path
+" finished-at="2023-08-18T13:51:04 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- parseHeaderValue -->
+        <test-method signature="parseHeaderValueEmptyValue()[pri:0, instance:objectos.http.internal.HttpExchangeParseHeaderTest@2053d869]" started-at="2023-08-18T13:51:04 BRT" name="parseHeaderValueEmptyValue" description="[#444] HTTP 001: PARSE_HEADER_VALUE --&gt; PARSE_HEADER
+
+- semi-happy path: empty value
+" finished-at="2023-08-18T13:51:04 BRT" duration-ms="0" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- parseHeaderValueEmptyValue -->
+        <test-method signature="parseHeaderValueHeaderNameIsUnknown()[pri:0, instance:objectos.http.internal.HttpExchangeParseHeaderTest@2053d869]" started-at="2023-08-18T13:51:04 BRT" name="parseHeaderValueHeaderNameIsUnknown" description="[#452] HTTP 001: PARSE_HEADER_VALUE --&gt; PARSE_HEADER
+
+- semi-happy path: header name is unknown
+" finished-at="2023-08-18T13:51:04 BRT" duration-ms="0" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- parseHeaderValueHeaderNameIsUnknown -->
+        <test-method signature="parseHeaderValueToClientErrorBadRequest()[pri:0, instance:objectos.http.internal.HttpExchangeParseHeaderTest@2053d869]" started-at="2023-08-18T13:51:04 BRT" name="parseHeaderValueToClientErrorBadRequest" description="[#444] HTTP 001: PARSE_HEADER_VALUE --&gt; CLIENT_ERROR::BAD_REQUEST
+" finished-at="2023-08-18T13:51:04 BRT" duration-ms="0" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- parseHeaderValueToClientErrorBadRequest -->
+        <test-method signature="parseHeaderValueToInputRead()[pri:0, instance:objectos.http.internal.HttpExchangeParseHeaderTest@2053d869]" started-at="2023-08-18T13:51:04 BRT" name="parseHeaderValueToInputRead" description="[#444] HTTP 001: PARSE_HEADER_VALUE --&gt; INPUT_READ
+" finished-at="2023-08-18T13:51:04 BRT" duration-ms="0" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- parseHeaderValueToInputRead -->
+      </class> <!-- objectos.http.internal.HttpExchangeParseHeaderTest -->
+      <class name="objectos.http.internal.HttpChunkedCharsTest">
+        <test-method signature="http002()[pri:0, instance:objectos.http.internal.HttpChunkedCharsTest@4bb33f74]" started-at="2023-08-18T13:51:04 BRT" name="http002" finished-at="2023-08-18T13:51:04 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- http002 -->
+      </class> <!-- objectos.http.internal.HttpChunkedCharsTest -->
+      <class name="objectos.http.internal.HttpExchangeInputTest">
+        <test-method signature="http001()[pri:0, instance:objectos.http.internal.HttpExchangeInputTest@47987356]" started-at="2023-08-18T13:51:04 BRT" name="http001" finished-at="2023-08-18T13:51:04 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- http001 -->
+        <test-method signature="input()[pri:0, instance:objectos.http.internal.HttpExchangeInputTest@47987356]" started-at="2023-08-18T13:51:04 BRT" name="input" description="[#427] HTTP 001: INPUT alias to INPUT_READ --&gt; REQUEST_LINE
+" finished-at="2023-08-18T13:51:04 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- input -->
+        <test-method signature="inputRead01()[pri:0, instance:objectos.http.internal.HttpExchangeInputTest@47987356]" started-at="2023-08-18T13:51:04 BRT" name="inputRead01" description="[#428] HTTP 001: INPUT_READ --&gt; CLOSE
+
+- Socket::getInputStream throws
+" finished-at="2023-08-18T13:51:04 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- inputRead01 -->
+        <test-method signature="inputRead02()[pri:0, instance:objectos.http.internal.HttpExchangeInputTest@47987356]" started-at="2023-08-18T13:51:04 BRT" name="inputRead02" description="[#428] HTTP 001: INPUT_READ --&gt; CLOSE
+
+- InputStream::read throws
+" finished-at="2023-08-18T13:51:04 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- inputRead02 -->
+        <test-method signature="inputRead03()[pri:0, instance:objectos.http.internal.HttpExchangeInputTest@47987356]" started-at="2023-08-18T13:51:04 BRT" name="inputRead03" description="[#428] HTTP 001: INPUT_READ --&gt; CLOSE
+
+- EOF
+" finished-at="2023-08-18T13:51:04 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- inputRead03 -->
+      </class> <!-- objectos.http.internal.HttpExchangeInputTest -->
+      <class name="objectos.http.HttpTest">
+        <test-method is-config="true" signature="start()[pri:0, instance:objectos.http.HttpTest@3b6ddd1d]" started-at="2023-08-18T13:51:04 BRT" name="start" finished-at="2023-08-18T13:51:04 BRT" duration-ms="6" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- start -->
+        <test-method signature="http001()[pri:0, instance:objectos.http.HttpTest@3b6ddd1d]" started-at="2023-08-18T13:51:04 BRT" name="http001" finished-at="2023-08-18T13:51:04 BRT" duration-ms="14" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- http001 -->
+        <test-method signature="http002()[pri:0, instance:objectos.http.HttpTest@3b6ddd1d]" started-at="2023-08-18T13:51:04 BRT" name="http002" finished-at="2023-08-18T13:51:04 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- http002 -->
+        <test-method signature="http003()[pri:0, instance:objectos.http.HttpTest@3b6ddd1d]" started-at="2023-08-18T13:51:04 BRT" name="http003" finished-at="2023-08-18T13:51:04 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- http003 -->
+        <test-method signature="http004()[pri:0, instance:objectos.http.HttpTest@3b6ddd1d]" started-at="2023-08-18T13:51:04 BRT" name="http004" finished-at="2023-08-18T13:51:04 BRT" duration-ms="14" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- http004 -->
+        <test-method signature="http005()[pri:0, instance:objectos.http.HttpTest@3b6ddd1d]" started-at="2023-08-18T13:51:04 BRT" name="http005" finished-at="2023-08-18T13:51:04 BRT" duration-ms="45" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- http005 -->
+        <test-method signature="http006()[pri:0, instance:objectos.http.HttpTest@3b6ddd1d]" started-at="2023-08-18T13:51:04 BRT" name="http006" finished-at="2023-08-18T13:51:04 BRT" duration-ms="2" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- http006 -->
+        <test-method is-config="true" signature="stop()[pri:0, instance:objectos.http.HttpTest@3b6ddd1d]" started-at="2023-08-18T13:51:04 BRT" name="stop" finished-at="2023-08-18T13:51:04 BRT" duration-ms="0" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- stop -->
+      </class> <!-- objectos.http.HttpTest -->
+      <class name="objectos.http.util.UrlEncodedFormTest">
+        <test-method signature="testCase01()[pri:0, instance:objectos.http.util.UrlEncodedFormTest@22ef9844]" started-at="2023-08-18T13:51:04 BRT" name="testCase01" finished-at="2023-08-18T13:51:04 BRT" duration-ms="7" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase01 -->
+        <test-method signature="testCase02()[pri:0, instance:objectos.http.util.UrlEncodedFormTest@22ef9844]" started-at="2023-08-18T13:51:04 BRT" name="testCase02" finished-at="2023-08-18T13:51:04 BRT" duration-ms="0" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase02 -->
+      </class> <!-- objectos.http.util.UrlEncodedFormTest -->
+      <class name="objectos.http.internal.HttpExchangeRequestBodyTest">
+        <test-method signature="http006()[pri:0, instance:objectos.http.internal.HttpExchangeRequestBodyTest@3d5c822d]" started-at="2023-08-18T13:51:04 BRT" name="http006" finished-at="2023-08-18T13:51:04 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- http006 -->
+      </class> <!-- objectos.http.internal.HttpExchangeRequestBodyTest -->
+      <class name="objectos.http.internal.BytesTest">
+        <test-method signature="toLowerCase()[pri:0, instance:objectos.http.internal.BytesTest@14555e0a]" started-at="2023-08-18T13:51:04 BRT" name="toLowerCase" finished-at="2023-08-18T13:51:04 BRT" duration-ms="0" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- toLowerCase -->
+      </class> <!-- objectos.http.internal.BytesTest -->
+      <class name="objectos.http.internal.HttpExchangeResultTest">
+        <test-method signature="http001()[pri:0, instance:objectos.http.internal.HttpExchangeResultTest@4d02f94e]" started-at="2023-08-18T13:51:04 BRT" name="http001" finished-at="2023-08-18T13:51:04 BRT" duration-ms="28" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- http001 -->
+        <test-method signature="result()[pri:0, instance:objectos.http.internal.HttpExchangeResultTest@4d02f94e]" started-at="2023-08-18T13:51:04 BRT" name="result" description="[#450] RESULT --&gt; STOP
+" finished-at="2023-08-18T13:51:04 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- result -->
+        <test-method signature="resultToSetup()[pri:0, instance:objectos.http.internal.HttpExchangeResultTest@4d02f94e]" started-at="2023-08-18T13:51:04 BRT" name="resultToSetup" description="[#453] RESULT --&gt; SETUP
+" finished-at="2023-08-18T13:51:04 BRT" duration-ms="0" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- resultToSetup -->
+      </class> <!-- objectos.http.internal.HttpExchangeResultTest -->
+      <class name="objectos.http.internal.HttpExchangeSetupTest">
+        <test-method signature="http001()[pri:0, instance:objectos.http.internal.HttpExchangeSetupTest@1e683a3e]" started-at="2023-08-18T13:51:04 BRT" name="http001" finished-at="2023-08-18T13:51:04 BRT" duration-ms="0" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- http001 -->
+        <test-method signature="setup01()[pri:0, instance:objectos.http.internal.HttpExchangeSetupTest@1e683a3e]" started-at="2023-08-18T13:51:04 BRT" name="setup01" description="[#426] HTTP 001: SETUP --&gt; INPUT
+
+- buffer must be reset
+" finished-at="2023-08-18T13:51:04 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- setup01 -->
+      </class> <!-- objectos.http.internal.HttpExchangeSetupTest -->
+      <class name="objectos.http.internal.HttpExchangeOutputTest">
+        <test-method signature="http001()[pri:0, instance:objectos.http.internal.HttpExchangeOutputTest@2b48a640]" started-at="2023-08-18T13:51:04 BRT" name="http001" finished-at="2023-08-18T13:51:04 BRT" duration-ms="0" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- http001 -->
+        <test-method signature="http002()[pri:0, instance:objectos.http.internal.HttpExchangeOutputTest@2b48a640]" started-at="2023-08-18T13:51:04 BRT" name="http002" finished-at="2023-08-18T13:51:04 BRT" duration-ms="2" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- http002 -->
+        <test-method signature="output()[pri:0, instance:objectos.http.internal.HttpExchangeOutputTest@2b48a640]" started-at="2023-08-18T13:51:04 BRT" name="output" description="[#449] OUTPUT --&gt; OUTPUT_STATUS
+
+- buffer reset
+- responseHeaderIndex reset
+" finished-at="2023-08-18T13:51:04 BRT" duration-ms="0" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- output -->
+        <test-method signature="outputBody()[pri:0, instance:objectos.http.internal.HttpExchangeOutputTest@2b48a640]" started-at="2023-08-18T13:51:04 BRT" name="outputBody" description="[#449] OUTPUT_BODY --&gt; RESULT
+" finished-at="2023-08-18T13:51:04 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- outputBody -->
+        <test-method signature="outputBodyToErrorWrite()[pri:0, instance:objectos.http.internal.HttpExchangeOutputTest@2b48a640]" started-at="2023-08-18T13:51:04 BRT" name="outputBodyToErrorWrite" description="[#449] OUTPUT_BODY --&gt; ERROR_WRITE
+" finished-at="2023-08-18T13:51:04 BRT" duration-ms="0" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- outputBodyToErrorWrite -->
+        <test-method signature="outputBuffer()[pri:0, instance:objectos.http.internal.HttpExchangeOutputTest@2b48a640]" started-at="2023-08-18T13:51:04 BRT" name="outputBuffer" description="[#449] OUTPUT_BUFFER --&gt; next action
+" finished-at="2023-08-18T13:51:04 BRT" duration-ms="0" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- outputBuffer -->
+        <test-method signature="outputBufferToClose()[pri:0, instance:objectos.http.internal.HttpExchangeOutputTest@2b48a640]" started-at="2023-08-18T13:51:04 BRT" name="outputBufferToClose" description="[#449] OUTPUT_BUFFER --&gt; ERROR_WRITE::fails to get output stream
+" finished-at="2023-08-18T13:51:04 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- outputBufferToClose -->
+        <test-method signature="outputBufferToCloseOnWrite()[pri:0, instance:objectos.http.internal.HttpExchangeOutputTest@2b48a640]" started-at="2023-08-18T13:51:04 BRT" name="outputBufferToCloseOnWrite" description="[#449] OUTPUT_BUFFER --&gt; ERROR_WRITE::output stream throws on write
+" finished-at="2023-08-18T13:51:04 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- outputBufferToCloseOnWrite -->
+        <test-method signature="outputHeader()[pri:0, instance:objectos.http.internal.HttpExchangeOutputTest@2b48a640]" started-at="2023-08-18T13:51:04 BRT" name="outputHeader" description="[#449] OUTPUT_HEADER --&gt; OUTPUT_HEADER
+
+- buffer should contain data
+- bufferLimit should be updated
+- responseHeaderIndex should be updated
+" finished-at="2023-08-18T13:51:04 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- outputHeader -->
+        <test-method signature="outputHeaderToOutputBufferBufferFull()[pri:0, instance:objectos.http.internal.HttpExchangeOutputTest@2b48a640]" started-at="2023-08-18T13:51:04 BRT" name="outputHeaderToOutputBufferBufferFull" description="[#449] OUTPUT_HEADER --&gt; OUTPUT_BUFFER (buffer full)
+" finished-at="2023-08-18T13:51:04 BRT" duration-ms="0" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- outputHeaderToOutputBufferBufferFull -->
+        <test-method signature="outputHeaderToOutputTerminator()[pri:0, instance:objectos.http.internal.HttpExchangeOutputTest@2b48a640]" started-at="2023-08-18T13:51:04 BRT" name="outputHeaderToOutputTerminator" description="[#449] OUTPUT_HEADER --&gt; OUTPUT_TERMINATOR
+" finished-at="2023-08-18T13:51:04 BRT" duration-ms="0" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- outputHeaderToOutputTerminator -->
+        <test-method signature="outputStatus()[pri:0, instance:objectos.http.internal.HttpExchangeOutputTest@2b48a640]" started-at="2023-08-18T13:51:04 BRT" name="outputStatus" description="[#449] OUTPUT_STATUS --&gt; OUTPUT_HEADER
+
+- buffer reset
+- responseHeaderIndex reset
+" finished-at="2023-08-18T13:51:04 BRT" duration-ms="0" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- outputStatus -->
+        <test-method signature="outputTerminator()[pri:0, instance:objectos.http.internal.HttpExchangeOutputTest@2b48a640]" started-at="2023-08-18T13:51:04 BRT" name="outputTerminator" description="[#449] OUTPUT_TERMINATOR --&gt; OUTPUT_BODY
+" finished-at="2023-08-18T13:51:04 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- outputTerminator -->
+        <test-method signature="outputTerminatorToOutputBuffer()[pri:0, instance:objectos.http.internal.HttpExchangeOutputTest@2b48a640]" started-at="2023-08-18T13:51:04 BRT" name="outputTerminatorToOutputBuffer" description="[#449] OUTPUT_TERMINATOR --&gt; OUTPUT_BUFFER
+" finished-at="2023-08-18T13:51:04 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- outputTerminatorToOutputBuffer -->
+      </class> <!-- objectos.http.internal.HttpExchangeOutputTest -->
+      <class name="objectos.http.internal.HttpExchangeRequestLineTest">
+        <test-method signature="http001()[pri:0, instance:objectos.http.internal.HttpExchangeRequestLineTest@7a419da4]" started-at="2023-08-18T13:51:04 BRT" name="http001" finished-at="2023-08-18T13:51:04 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- http001 -->
+        <test-method signature="http006()[pri:0, instance:objectos.http.internal.HttpExchangeRequestLineTest@7a419da4]" started-at="2023-08-18T13:51:04 BRT" name="http006" finished-at="2023-08-18T13:51:04 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- http006 -->
+        <test-method signature="requestLine()[pri:0, instance:objectos.http.internal.HttpExchangeRequestLineTest@7a419da4]" started-at="2023-08-18T13:51:04 BRT" name="requestLine" description="[#429] HTTP 001: REQUEST_LINE --&gt; REQUEST_LINE_METHOD
+" finished-at="2023-08-18T13:51:04 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- requestLine -->
+        <test-method signature="requestLineMethod()[pri:0, instance:objectos.http.internal.HttpExchangeRequestLineTest@7a419da4]" started-at="2023-08-18T13:51:04 BRT" name="requestLineMethod" description="[#431] HTTP 001: REQUEST_LINE_METHOD --&gt; REQUEST_LINE_TARGET
+
+- check if bufferIndex is updated
+" finished-at="2023-08-18T13:51:04 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- requestLineMethod -->
+        <test-method signature="requestLineMethodP()[pri:0, instance:objectos.http.internal.HttpExchangeRequestLineTest@7a419da4]" started-at="2023-08-18T13:51:04 BRT" name="requestLineMethodP" description="[#491] HTTP 006: REQUEST_LINE_METHOD_P --&gt; REQUEST_LINE_TARGET
+" finished-at="2023-08-18T13:51:04 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- requestLineMethodP -->
+        <test-method signature="requestLineMethodPToInputRead()[pri:0, instance:objectos.http.internal.HttpExchangeRequestLineTest@7a419da4]" started-at="2023-08-18T13:51:04 BRT" name="requestLineMethodPToInputRead" description="[#491] HTTP 006: REQUEST_LINE_METHOD_P --&gt; INPUT_READ
+" finished-at="2023-08-18T13:51:04 BRT" duration-ms="0" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- requestLineMethodPToInputRead -->
+        <test-method signature="requestLineMethodToClientErrorBadRequest()[pri:0, instance:objectos.http.internal.HttpExchangeRequestLineTest@7a419da4]" started-at="2023-08-18T13:51:04 BRT" name="requestLineMethodToClientErrorBadRequest" description="[#432] HTTP 001: REQUEST_LINE_METHOD --&gt; CLIENT_ERROR::BAD_REQUEST
+
+- bufferIndex is NOT updated
+" finished-at="2023-08-18T13:51:04 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- requestLineMethodToClientErrorBadRequest -->
+        <test-method signature="requestLineMethodToInputRead()[pri:0, instance:objectos.http.internal.HttpExchangeRequestLineTest@7a419da4]" started-at="2023-08-18T13:51:04 BRT" name="requestLineMethodToInputRead" description="[#433] HTTP 001: REQUEST_LINE_METHOD --&gt; INPUT_READ
+" finished-at="2023-08-18T13:51:04 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- requestLineMethodToInputRead -->
+        <test-method signature="requestLineTarget()[pri:0, instance:objectos.http.internal.HttpExchangeRequestLineTest@7a419da4]" started-at="2023-08-18T13:51:04 BRT" name="requestLineTarget" description="[#434] HTTP 001: REQUEST_LINE_TARGET --&gt; REQUEST_LINE_VERSION
+
+- bufferIndex should be after SP
+- requestTarget should contain the correct indices
+" finished-at="2023-08-18T13:51:04 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- requestLineTarget -->
+        <test-method signature="requestLineTargetToClientErrorUriTooLong()[pri:0, instance:objectos.http.internal.HttpExchangeRequestLineTest@7a419da4]" started-at="2023-08-18T13:51:04 BRT" name="requestLineTargetToClientErrorUriTooLong" description="[#436] HTTP 001: REQUEST_LINE_TARGET --&gt; CLIENT_ERROR::URI_TOO_LONG
+" finished-at="2023-08-18T13:51:04 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- requestLineTargetToClientErrorUriTooLong -->
+        <test-method signature="requestLineTargetToInputRead()[pri:0, instance:objectos.http.internal.HttpExchangeRequestLineTest@7a419da4]" started-at="2023-08-18T13:51:04 BRT" name="requestLineTargetToInputRead" description="[#435] HTTP 001: REQUEST_LINE_TARGET --&gt; INPUT_READ
+
+- bufferIndex should not have been updated
+" finished-at="2023-08-18T13:51:04 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- requestLineTargetToInputRead -->
+        <test-method signature="requestLineToClientErrorBadRequest()[pri:0, instance:objectos.http.internal.HttpExchangeRequestLineTest@7a419da4]" started-at="2023-08-18T13:51:04 BRT" name="requestLineToClientErrorBadRequest" description="[#430] REQUEST_LINE --&gt; CLIENT_ERROR::BAD_REQUEST
+
+- buffer should remain untouched
+" finished-at="2023-08-18T13:51:04 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- requestLineToClientErrorBadRequest -->
+        <test-method signature="requestLineToRequestLineMethodP()[pri:0, instance:objectos.http.internal.HttpExchangeRequestLineTest@7a419da4]" started-at="2023-08-18T13:51:04 BRT" name="requestLineToRequestLineMethodP" description="[#491] HTTP 006: REQUEST_LINE --&gt; REQUEST_LINE_METHOD_P
+" finished-at="2023-08-18T13:51:04 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- requestLineToRequestLineMethodP -->
+        <test-method signature="requestLineVersion01()[pri:0, instance:objectos.http.internal.HttpExchangeRequestLineTest@7a419da4]" started-at="2023-08-18T13:51:04 BRT" name="requestLineVersion01" description="[#437] HTTP 001: REQUEST_LINE_VERSION --&gt; PARSE_HEADER
+
+- bufferIndex is after CRLF
+- version has correct values
+" finished-at="2023-08-18T13:51:04 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- requestLineVersion01 -->
+        <test-method signature="requestLineVersion02LF()[pri:0, instance:objectos.http.internal.HttpExchangeRequestLineTest@7a419da4]" started-at="2023-08-18T13:51:04 BRT" name="requestLineVersion02LF" description="[#437] HTTP 001: REQUEST_LINE_VERSION --&gt; PARSE_HEADER
+
+- client line terminator is LF only
+" finished-at="2023-08-18T13:51:04 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- requestLineVersion02LF -->
+        <test-method signature="requestLineVersionToClientErrorBadRequest()[pri:0, instance:objectos.http.internal.HttpExchangeRequestLineTest@7a419da4]" started-at="2023-08-18T13:51:04 BRT" name="requestLineVersionToClientErrorBadRequest" description="[#438] HTTP 001: REQUEST_LINE_VERSION --&gt; CLIENT_ERROR::BAD_REQUEST
+" finished-at="2023-08-18T13:51:04 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- requestLineVersionToClientErrorBadRequest -->
+        <test-method signature="requestLineVersionToClientErrorUriTooLong()[pri:0, instance:objectos.http.internal.HttpExchangeRequestLineTest@7a419da4]" started-at="2023-08-18T13:51:04 BRT" name="requestLineVersionToClientErrorUriTooLong" description="[#440] HTTP 001: REQUEST_LINE_VERSION --&gt; CLIENT_ERROR::URI_TOO_LONG
+" finished-at="2023-08-18T13:51:04 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- requestLineVersionToClientErrorUriTooLong -->
+        <test-method signature="requestLineVersionToInputRead()[pri:0, instance:objectos.http.internal.HttpExchangeRequestLineTest@7a419da4]" started-at="2023-08-18T13:51:04 BRT" name="requestLineVersionToInputRead" description="[#439] HTTP 001: REQUEST_LINE_VERSION --&gt; INPUT_READ
+" finished-at="2023-08-18T13:51:04 BRT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- requestLineVersionToInputRead -->
+      </class> <!-- objectos.http.internal.HttpExchangeRequestLineTest -->
+      <class name="objectos.http.internal.ServerSocketThreadTest">
+        <test-method signature="testCase01()[pri:0, instance:objectos.http.internal.ServerSocketThreadTest@3c73951]" started-at="2023-08-18T13:51:04 BRT" name="testCase01" finished-at="2023-08-18T13:51:04 BRT" duration-ms="27" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testCase01 -->
+      </class> <!-- objectos.http.internal.ServerSocketThreadTest -->
+    </test> <!-- Surefire test -->
+  </suite> <!-- Surefire suite -->
+</testng-results>

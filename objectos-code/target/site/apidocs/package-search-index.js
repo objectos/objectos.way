@@ -1,0 +1,1 @@
+packageSearchIndex = [{"l":"All Packages","u":"allpackages-index.html"},{"m":"objectos.code","l":"objectos.code"},{"m":"objectos.code","l":"objectos.code.tmpl"}];updateSearchResults();
