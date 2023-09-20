@@ -380,12 +380,23 @@ SGEN_JAVACX += --module-version $(VERSION)
 SGEN_JAVACX += --release $(SGEN_JAVA_RELEASE)
 SGEN_JAVACX += $(SGEN_DIRTY)
 
+## selfgen jar path
+SGEN_JAR := $(SGEN_WORK)/$(SGEN)-$(VERSION).jar
+
+## code jar command
+SGEN_JARX = $(JAR)
+SGEN_JARX += --create
+SGEN_JARX += --file $(SGEN_JAR)
+SGEN_JARX += --module-version $(VERSION)
+SGEN_JARX += -C $(SGEN_CLASS_OUTPUT)
+SGEN_JARX += .
+
 ## marker to indicate when selfgen was last run
 SGEN_MARKER = $(WAY_WORK)/selfgen-marker
 
 ## selfgen runtime deps
-SGEN_RUNTIME_DEPS = $(SGEN_COMPILE_DEPS)
-SGEN_RUNTIME_DEPS += $(SGEN_CLASS_OUTPUT)
+SGEN_RUNTIME_DEPS = $(SGEN_JAR)
+SGEN_RUNTIME_DEPS += $(SGEN_COMPILE_DEPS)
 
 ## selfgen java command
 SGEN_JAVAX = $(JAVA)
@@ -395,6 +406,63 @@ SGEN_JAVAX += --enable-preview
 endif
 SGEN_JAVAX += --module $(SGEN)/$(SGEN).Main
 SGEN_JAVAX += $(WAY_MAIN)
+
+#
+# objectos.selfgen test options
+#
+
+## test base dir
+SGEN_TEST = $(SGEN)/test
+
+## test source files 
+SGEN_TEST_SOURCES = $(shell find ${SGEN_TEST} -type f -name '*.java' -print)
+
+## test source files modified since last compilation
+SGEN_TEST_DIRTY :=
+
+## test class output path
+SGEN_TEST_CLASS_OUTPUT = $(SGEN_WORK)/test
+
+## test compiled classes
+SGEN_TEST_CLASSES = $(SGEN_TEST_SOURCES:$(SGEN_TEST)/%.java=$(SGEN_TEST_CLASS_OUTPUT)/%.class)
+
+## test compile-time dependencies
+SGEN_TEST_COMPILE_DEPS = $(CODE_JAR)
+SGEN_TEST_COMPILE_DEPS += $(SGEN_JAR)
+SGEN_TEST_COMPILE_DEPS += $(call dependency,org.testng,testng,$(TESTNG_VERSION))
+
+## test javac command
+SGEN_TEST_JAVACX = $(JAVAC)
+SGEN_TEST_JAVACX += -d $(SGEN_TEST_CLASS_OUTPUT)
+SGEN_TEST_JAVACX += -g
+SGEN_TEST_JAVACX += -Xlint:all
+SGEN_TEST_JAVACX += --class-path $(call class-path,$(SGEN_TEST_COMPILE_DEPS))
+SGEN_TEST_JAVACX += --release $(SGEN_JAVA_RELEASE)
+SGEN_TEST_JAVACX += --enable-preview
+SGEN_TEST_JAVACX += $(SGEN_TEST_DIRTY)
+
+## test runtime dependencies
+SGEN_TEST_RUNTIME_DEPS = $(SGEN_TEST_COMPILE_DEPS)
+SGEN_TEST_RUNTIME_DEPS += $(call dependency,com.beust,jcommander,$(JCOMMANDER_VERSION))
+SGEN_TEST_RUNTIME_DEPS += $(call dependency,org.slf4j,slf4j-api,$(SLF4J_VERSION))
+SGEN_TEST_RUNTIME_DEPS += $(call dependency,org.slf4j,slf4j-nop,$(SLF4J_VERSION))
+
+## test runtime exports
+SGEN_TEST_JAVAX_EXPORTS := objectos.selfgen.html
+
+## test runtime output path
+SGEN_TEST_RUNTIME_OUTPUT = $(SGEN_WORK)/test-output
+
+## test java command
+SGEN_TEST_JAVAX = $(JAVA)
+SGEN_TEST_JAVAX += --module-path $(call module-path,$(SGEN_TEST_RUNTIME_DEPS))
+SGEN_TEST_JAVAX += --add-modules org.testng
+SGEN_TEST_JAVAX += --add-reads $(SGEN)=org.testng
+SGEN_TEST_JAVAX += $(foreach pkg,$(SGEN_TEST_JAVAX_EXPORTS),--add-exports $(SGEN)/$(pkg)=org.testng)
+SGEN_TEST_JAVAX += --patch-module $(SGEN)=$(SGEN_TEST_CLASS_OUTPUT)
+SGEN_TEST_JAVAX += --enable-preview
+SGEN_TEST_JAVAX += --module $(SGEN)/$(SGEN).RunTests
+SGEN_TEST_JAVAX += $(SGEN_TEST_RUNTIME_OUTPUT)
 
 #
 # Targets
@@ -415,7 +483,7 @@ jar: way@jar
 .PHONY: way@jar
 way@jar: $(WAY_JAR)
 
-$(WAY_JAR): $(WAY_CLASSES) $(WAY_LICENSE)
+$(WAY_JAR): $(SGEN_MARKER) $(WAY_CLASSES) $(WAY_LICENSE)
 	if [ -n "$(WAY_DIRTY)" ]; then \
 		$(WAY_JAVACX); \
 	fi
@@ -447,12 +515,15 @@ $(CODE_LICENSE): LICENSE
 .PHONY: selfgen
 selfgen: $(SGEN_MARKER)
 
-$(SGEN_MARKER): $(SGEN_COMPILE_DEPS) $(SGEN_CLASSES)
+$(SGEN_MARKER): $(SGEN_JAR)
+	$(SGEN_JAVAX)
+	touch $(SGEN_MARKER)
+
+$(SGEN_JAR): $(SGEN_COMPILE_DEPS) $(SGEN_CLASSES)
 	if [ -n "$(SGEN_DIRTY)" ]; then \
 		$(SGEN_JAVACX); \
 	fi
-	$(SGEN_JAVAX)
-	touch $(SGEN_MARKER)
+	$(SGEN_JARX)
 
 $(SGEN_CLASSES): $(SGEN_CLASS_OUTPUT)/%.class: $(SGEN_MAIN)/%.java
 	$(eval SGEN_DIRTY += $$<)
@@ -462,7 +533,7 @@ $(LOCAL_REPO_PATH)/%.jar:
 	$(REMOTE_REPO_CURLX) --output $@ $(@:$(LOCAL_REPO_PATH)/%.jar=$(REMOTE_REPO_URL)/%.jar)
 
 .PHONY: test
-test: code@test way@test
+test: code@test selfgen@test way@test
 
 .PHONY: way@test
 way@test: $(WAY_TEST_CLASSES) $(WAY_TEST_RUNTIME_DEPS)  
@@ -483,3 +554,13 @@ code@test: $(CODE_TEST_CLASSES) $(CODE_TEST_RUNTIME_DEPS)
 	
 $(CODE_TEST_CLASSES): $(CODE_TEST_CLASS_OUTPUT)/%.class: $(CODE_TEST)/%.java
 	$(eval CODE_TEST_DIRTY += $$<)
+
+.PHONY: selfgen@test
+selfgen@test: $(SGEN_TEST_CLASSES) $(SGEN_TEST_RUNTIME_DEPS)  
+	if [ -n "$(SGEN_TEST_DIRTY)" ]; then \
+		$(SGEN_TEST_JAVACX); \
+	fi
+	$(SGEN_TEST_JAVAX)
+	
+$(SGEN_TEST_CLASSES): $(SGEN_TEST_CLASS_OUTPUT)/%.class: $(SGEN_TEST)/%.java
+	$(eval SGEN_TEST_DIRTY += $$<)
