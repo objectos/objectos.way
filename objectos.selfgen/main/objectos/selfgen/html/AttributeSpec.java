@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.selfgen.html.internal;
+package objectos.selfgen.html;
 
 import java.util.Iterator;
 import java.util.LinkedHashSet;
@@ -22,7 +22,7 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
 import objectos.code.ClassName;
-import objectos.selfgen.html.util.JavaNames;
+import objectos.selfgen.util.JavaNames;
 
 abstract class AttributeSpec {
 

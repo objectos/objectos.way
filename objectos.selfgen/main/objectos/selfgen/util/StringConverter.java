@@ -13,9 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.selfgen.html.util;
-
-import objectos.lang.Check;
+package objectos.selfgen.util;
 
 /**
  * A class for converting strings by applying a series of user defined

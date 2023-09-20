@@ -13,12 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.selfgen.html;
+package objectos.selfgen;
 
 import java.io.IOException;
 import java.util.Set;
-import objectos.selfgen.html.internal.CategorySpec;
-import objectos.selfgen.html.internal.HtmlSelfGen;
+import objectos.selfgen.html.CategorySpec;
+import objectos.selfgen.html.HtmlSelfGen;
 
 public final class HtmlSpec extends HtmlSelfGen {
 

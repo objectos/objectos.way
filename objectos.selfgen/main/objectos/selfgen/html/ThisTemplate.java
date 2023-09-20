@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.selfgen.html.internal;
+package objectos.selfgen.html;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -23,7 +23,7 @@ import java.nio.file.StandardOpenOption;
 import objectos.code.ClassName;
 import objectos.code.Code;
 import objectos.code.Code.ImportList;
-import objectos.lang.Check;
+import objectos.selfgen.util.Check;
 
 abstract class ThisTemplate {
 

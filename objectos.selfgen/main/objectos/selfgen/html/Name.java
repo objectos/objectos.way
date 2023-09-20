@@ -13,24 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.selfgen.html.internal;
+package objectos.selfgen.html;
 
-public enum AttributeKind {
-
-  STRING,
-
-  BOOLEAN,
-
-  ID,
-
-  CLASS_NAME;
-
-  public final boolean isBoolean() {
-    return BOOLEAN.equals(this);
-  }
-
-  public final boolean isString() {
-    return STRING.equals(this);
-  }
-
-}
+interface Name {}

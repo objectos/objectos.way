@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.selfgen.html.util;
+package objectos.selfgen.util;
 
 /**
  * A state-machine for Unicode code point conversion participating in a
