@@ -518,6 +518,7 @@ selfgen: $(SGEN_MARKER)
 
 $(SGEN_MARKER): $(SGEN_JAR)
 	$(SGEN_JAVAX)
+	mkdir -p $(WAY_WORK)
 	touch $(SGEN_MARKER)
 
 $(SGEN_JAR): $(SGEN_COMPILE_DEPS) $(SGEN_CLASSES)
