@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.way;
+package objectos.http;
 
 import java.util.List;
 import org.testng.TestNG;
@@ -26,34 +26,27 @@ public class RunTests {
     XmlSuite suite;
     suite = new XmlSuite();
 
-    suite.setName("Objectos Way");
+    suite.setName("Objectos HTTP");
 
     XmlTest test;
     test = new XmlTest(suite);
 
     test.setName("All");
 
-    List<XmlPackage> packages;
-    packages = List.of(
-      new XmlPackage("objectos.css"),
-      new XmlPackage("objectos.css.internal"),
-      new XmlPackage("objectos.css.util"),
-      new XmlPackage("objectos.html"),
-      new XmlPackage("objectos.html.internal"),
-      new XmlPackage("objectos.html.tmpl"),
-      new XmlPackage("objectos.http"),
-      new XmlPackage("objectos.http.internal"),
-      new XmlPackage("objectos.http.util"),
-      new XmlPackage("objectos.lang"),
-      new XmlPackage("objectos.util")
+    test.setXmlPackages(
+      List.of(
+        new XmlPackage("objectos.http"),
+        new XmlPackage("objectos.http.internal"),
+        new XmlPackage("objectos.http.util")
+      )
     );
-
-    test.setXmlPackages(packages);
 
     TestNG ng;
     ng = new TestNG();
 
-    ng.setOutputDirectory(args[0]);
+    if (args.length > 0) {
+      ng.setOutputDirectory(args[0]);
+    }
 
     ng.setXmlSuites(
       List.of(suite)

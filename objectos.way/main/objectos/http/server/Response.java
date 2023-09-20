@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2022-2023 Objectos Software LTDA.
+ * Copyright (C) 2016-2023 Objectos Software LTDA.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,17 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-/**
- * Defines the Objectos Way API.
- */
-module objectos.way {
-  exports objectos.css;
-  exports objectos.css.tmpl;
-  exports objectos.css.util;
-  exports objectos.html;
-  exports objectos.html.tmpl;
-  exports objectos.http;
-  exports objectos.http.media;
-  exports objectos.http.server;
-  exports objectos.http.util;
+package objectos.http.server;
+
+import java.nio.charset.Charset;
+import objectos.http.Http.Header;
+import objectos.http.Http.Status;
+import objectos.lang.CharWritable;
+
+public interface Response {
+
+  void header(Header.Name name, String value);
+
+  void send(byte[] data);
+
+  void send(CharWritable entity, Charset charset);
+
+  void status(Status status);
+
 }
