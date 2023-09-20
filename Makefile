@@ -374,6 +374,7 @@ SGEN_JAVACX += -g
 SGEN_JAVACX += -Xlint:all
 SGEN_JAVACX += -Xpkginfo:always
 ifeq ($(SGEN_ENABLE_PREVIEW), 1)
+SGEN_JAVACX += -Xmaxwarns 500
 SGEN_JAVACX += --enable-preview
 endif
 SGEN_JAVACX += --module-path $(call module-path,$(SGEN_COMPILE_DEPS))

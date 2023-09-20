@@ -20,6 +20,7 @@ import java.util.Set;
 import objectos.selfgen.html.CategorySpec;
 import objectos.selfgen.html.HtmlSelfGen;
 
+@SuppressWarnings("exports")
 public final class HtmlSpec extends HtmlSelfGen {
 
   private HtmlSpec() {}

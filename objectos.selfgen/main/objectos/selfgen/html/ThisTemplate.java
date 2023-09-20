@@ -23,7 +23,7 @@ import java.nio.file.StandardOpenOption;
 import objectos.code.ClassName;
 import objectos.code.Code;
 import objectos.code.Code.ImportList;
-import objectos.selfgen.util.Check;
+import objectos.lang.Check;
 
 abstract class ThisTemplate {
 
