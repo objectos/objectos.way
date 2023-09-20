@@ -212,7 +212,8 @@ WAY_TEST_RUNTIME_DEPS += $(call dependency,org.slf4j,slf4j-api,$(SLF4J_VERSION))
 WAY_TEST_RUNTIME_DEPS += $(call dependency,org.slf4j,slf4j-nop,$(SLF4J_VERSION))
 
 ## test runtime exports
-WAY_TEST_JAVAX_EXPORTS := objectos.html.internal
+WAY_TEST_JAVAX_EXPORTS := objectos.css.internal
+WAY_TEST_JAVAX_EXPORTS += objectos.html.internal
 WAY_TEST_JAVAX_EXPORTS += objectos.lang
 WAY_TEST_JAVAX_EXPORTS += objectos.util
 
