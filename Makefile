@@ -450,7 +450,8 @@ SGEN_TEST_RUNTIME_DEPS += $(call dependency,org.slf4j,slf4j-api,$(SLF4J_VERSION)
 SGEN_TEST_RUNTIME_DEPS += $(call dependency,org.slf4j,slf4j-nop,$(SLF4J_VERSION))
 
 ## test runtime exports
-SGEN_TEST_JAVAX_EXPORTS := objectos.selfgen.html
+SGEN_TEST_JAVAX_EXPORTS := objectos.selfgen.css
+SGEN_TEST_JAVAX_EXPORTS += objectos.selfgen.html
 
 ## test runtime output path
 SGEN_TEST_RUNTIME_OUTPUT = $(SGEN_WORK)/test-output
@@ -473,10 +474,16 @@ SGEN_TEST_JAVAX += $(SGEN_TEST_RUNTIME_OUTPUT)
 .PHONY: all
 all: jar
 
-.PHONY: clean
-clean:
+.PHONY: clean way@clean code@clean selfgen@clean
+clean: way@clean code@clean selfgen@clean
+
+way@clean:
 	rm -rf $(WAY_WORK)/*
+	
+code@clean:
 	rm -rf $(CODE_WORK)/*
+
+selfgen@clean:
 	rm -rf $(SGEN_WORK)/*
 
 .PHONY: jar

@@ -16,6 +16,7 @@
 package objectos.selfgen.css;
 
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -24,8 +25,19 @@ import java.util.stream.Collectors;
 
 final class LengthUnitStep extends ThisTemplate {
 
+  private LengthType lengthType;
+
   public LengthUnitStep(CssSelfGen spec) {
     super(spec);
+  }
+
+  @Override
+  public void writeTo(Path directory) throws IOException {
+    lengthType = spec.lengthType;
+
+    if (lengthType != null) {
+      super.writeTo(directory);
+    }
   }
 
   @Override
@@ -77,9 +89,6 @@ final class LengthUnitStep extends ThisTemplate {
   private String lengthUnits() {
     List<String> result;
     result = new ArrayList<>();
-
-    LengthType lengthType;
-    lengthType = spec.lengthType;
 
     Collection<String> unsorted;
     unsorted = lengthType.units;

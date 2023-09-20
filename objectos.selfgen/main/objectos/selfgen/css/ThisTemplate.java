@@ -156,6 +156,11 @@ abstract class ThisTemplate {
     Path file;
     file = className.toPath(directory);
 
+    Path parent;
+    parent = file.getParent();
+
+    Files.createDirectories(parent);
+
     Files.writeString(
       file, contents, StandardCharsets.UTF_8,
       StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);

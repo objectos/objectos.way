@@ -16,6 +16,7 @@
 package objectos.selfgen.css;
 
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
@@ -25,8 +26,19 @@ import objectos.code.ClassName;
 
 final class GeneratedColorStep extends ThisTemplate {
 
+  private ColorValue colorValue;
+
   public GeneratedColorStep(CssSelfGen spec) {
     super(spec);
+  }
+
+  @Override
+  public void writeTo(Path directory) throws IOException {
+    colorValue = spec.colorValue;
+
+    if (colorValue != null) {
+      super.writeTo(directory);
+    }
   }
 
   @Override
@@ -63,9 +75,6 @@ final class GeneratedColorStep extends ThisTemplate {
   private String colors() {
     List<String> result;
     result = new ArrayList<>();
-
-    ColorValue colorValue;
-    colorValue = spec.colorValue;
 
     Collection<ColorName> unsorted;
     unsorted = colorValue.names;
