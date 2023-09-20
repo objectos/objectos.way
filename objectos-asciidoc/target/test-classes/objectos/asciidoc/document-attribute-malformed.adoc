@@ -1,7 +1,0 @@
-= Title
-:a: A
-:b B
-
-* {a}
-* {b}
-* {author}

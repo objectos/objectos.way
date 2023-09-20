@@ -1,5 +1,0 @@
-= URL macros
-
-foo https://example.com[link] bar
-
-foo *bar https://example.com[link] baz* 
