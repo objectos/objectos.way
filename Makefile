@@ -107,8 +107,11 @@ SELFGEN_TEST_JAVAX_EXPORTS += objectos.selfgen.html
 # objectos.way options
 # 
 
-## way directory/module name
+## way directory
 WAY := objectos.way
+
+## way module
+WAY_MODULE := $(WAY)
 
 ## way module version
 WAY_VERSION := $(VERSION)
@@ -119,8 +122,8 @@ WAY_JAVA_RELEASE := 21
 ## way --enable-preview ?
 WAY_ENABLE_PREVIEW := 0
 
-SGEN_JAVA_RELEASE = 21
-SGEN_ENABLE_PREVIEW = 1
+## way jar name
+WAY_JAR_NAME := $(WAY)
 
 # Delete the default suffixes
 .SUFFIXES:
@@ -626,6 +629,125 @@ $(WAY_CLASSES): $(WAY_CLASS_OUTPUT)/%.class: $(WAY_MAIN)/%.java
 	$(eval WAY_DIRTY += $$<)
 
 #
+# objectos.way jar options
+#
+
+## objectos.way license 'artifact'
+WAY_LICENSE = $(WAY_CLASS_OUTPUT)/META-INF/LICENSE
+
+## objectos.way jar file path
+WAY_JAR_FILE = $(WAY_WORK)/$(WAY_JAR_NAME)-$(WAY_VERSION).jar
+
+## objectos.way jar command
+WAY_JARX = $(JAR)
+WAY_JARX += --create
+WAY_JARX += --file $(WAY_JAR_FILE)
+WAY_JARX += --module-version $(WAY_VERSION)
+WAY_JARX += -C $(WAY_CLASS_OUTPUT)
+WAY_JARX += .
+
+#
+# objectos.way jar targets
+#
+
+$(WAY_JAR_FILE): $(WAY_COMPILE_MARKER) $(WAY_LICENSE)
+	$(WAY_JARX)
+
+$(WAY_LICENSE): LICENSE
+	mkdir --parents $(@D)
+	cp LICENSE $(@D)
+
+#
+# objectos.way test compilation options
+#
+
+## objectos.way test source directory
+WAY_TEST = $(WAY)/test
+
+## objectos.way test source files 
+WAY_TEST_SOURCES = $(shell find ${WAY_TEST} -type f -name '*.java' -print)
+
+## objectos.way test source files modified since last compilation
+WAY_TEST_DIRTY :=
+
+## objectos.way test class output path
+WAY_TEST_CLASS_OUTPUT = $(WAY_WORK)/test
+
+## objectos.way test compiled classes
+WAY_TEST_CLASSES = $(WAY_TEST_SOURCES:$(WAY_TEST)/%.java=$(WAY_TEST_CLASS_OUTPUT)/%.class)
+
+## objectos.way test compile-time dependencies
+# WAY_TEST_COMPILE_DEPS =
+
+## objectos.way test javac command
+WAY_TEST_JAVACX = $(JAVAC)
+WAY_TEST_JAVACX += -d $(WAY_TEST_CLASS_OUTPUT)
+WAY_TEST_JAVACX += -g
+WAY_TEST_JAVACX += -Xlint:all
+WAY_TEST_JAVACX += --class-path $(call class-path,$(WAY_TEST_COMPILE_DEPS))
+ifeq ($(WAY_ENABLE_PREVIEW),1)
+WAY_TEST_JAVACX += --enable-preview
+endif
+WAY_TEST_JAVACX += --release $(WAY_JAVA_RELEASE)
+WAY_TEST_JAVACX += $(WAY_TEST_DIRTY)
+
+## objectos.way test compilation marker
+WAY_TEST_COMPILE_MARKER = $(WAY_WORK)/test-compile-marker
+
+#
+# objectos.way test compilation targets
+#
+
+$(WAY_TEST_COMPILE_MARKER): $(WAY_TEST_COMPILE_DEPS) $(WAY_TEST_CLASSES) 
+	if [ -n "$(WAY_DIRTY)" ]; then \
+		$(WAY_TEST_JAVACX); \
+		touch $(WAY_TEST_COMPILE_MARKER); \
+	fi
+
+$(WAY_TEST_CLASSES): $(WAY_TEST_CLASS_OUTPUT)/%.class: $(WAY_TEST)/%.java
+	$(eval WAY_TEST_DIRTY += $$<)
+
+#
+# objectos.way test execution options
+#
+
+## objectos.way test runtime dependencies
+# WAY_TEST_RUNTIME_DEPS =
+
+## objectos.way test main class
+ifndef WAY_TEST_MAIN
+WAY_TEST_MAIN = $(WAY_MODULE).RunTests
+endif
+
+## objectos.way test runtime output path
+WAY_TEST_RUNTIME_OUTPUT = $(WAY_WORK)/test-output
+
+## objectos.way test java command
+WAY_TEST_JAVAX = $(JAVA)
+WAY_TEST_JAVAX += --module-path $(call module-path,$(WAY_TEST_RUNTIME_DEPS))
+WAY_TEST_JAVAX += --add-modules org.testng
+WAY_TEST_JAVAX += --add-reads $(WAY_MODULE)=org.testng
+ifdef WAY_TEST_JAVAX_EXPORTS
+WAY_TEST_JAVAX += $(foreach pkg,$(WAY_TEST_JAVAX_EXPORTS),--add-exports $(WAY_MODULE)/$(pkg)=org.testng)
+endif
+ifeq ($(WAY_ENABLE_PREVIEW),1)
+WAY_TEST_JAVAX += --enable-preview
+endif
+WAY_TEST_JAVAX += --patch-module $(WAY_MODULE)=$(WAY_TEST_CLASS_OUTPUT)
+WAY_TEST_JAVAX += --module $(WAY_MODULE)/$(WAY_TEST_MAIN)
+WAY_TEST_JAVAX += $(WAY_TEST_RUNTIME_OUTPUT)
+
+## objectos.way test execution marker
+WAY_TEST_RUN_MARKER = $(WAY_TEST_RUNTIME_OUTPUT)/index.html
+
+#
+# objectos.way test execution targets
+#
+
+$(WAY_TEST_RUN_MARKER): $(WAY_TEST_COMPILE_MARKER) 
+	$(WAY_TEST_JAVAX)
+
+#
 # Targets section
 #
 
@@ -670,6 +792,30 @@ selfgen@jar: $(SELFGEN_JAR_FILE)
 
 .PHONY: selfgen@test
 selfgen@test: $(SELFGEN_TEST_RUN_MARKER)
+
+## marker to indicate when selfgen was last run
+SELFGEN_MARKER = $(WAY_WORK)/selfgen-marker
+
+## selfgen runtime deps
+SELFGEN_RUNTIME_DEPS = $(SELFGEN_JAR_FILE)
+SELFGEN_RUNTIME_DEPS += $(SELFGEN_COMPILE_DEPS)
+
+## selfgen java command
+SELFGEN_JAVAX = $(JAVA)
+SELFGEN_JAVAX += --module-path $(call module-path,$(SELFGEN_RUNTIME_DEPS))
+ifeq ($(SELFGEN_ENABLE_PREVIEW), 1)
+SELFGEN_JAVAX += --enable-preview
+endif
+SELFGEN_JAVAX += --module $(SELFGEN)/$(SELFGEN).Main
+SELFGEN_JAVAX += $(WAY_MAIN)
+
+.PHONY: selfgen
+selfgen: $(SELFGEN_MARKER)
+
+$(SELFGEN_MARKER): $(SELFGEN_JAR_FILE)
+	$(SELFGEN_JAVAX)
+	mkdir --parents $(@D)
+	touch $(SELFGEN_MARKER)
 
 #
 # objectos.way targets

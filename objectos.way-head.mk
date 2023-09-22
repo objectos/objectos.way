@@ -107,8 +107,11 @@ SELFGEN_TEST_JAVAX_EXPORTS += objectos.selfgen.html
 # objectos.way options
 # 
 
-## way directory/module name
+## way directory
 WAY := objectos.way
+
+## way module
+WAY_MODULE := $(WAY)
 
 ## way module version
 WAY_VERSION := $(VERSION)
@@ -119,8 +122,8 @@ WAY_JAVA_RELEASE := 21
 ## way --enable-preview ?
 WAY_ENABLE_PREVIEW := 0
 
-SGEN_JAVA_RELEASE = 21
-SGEN_ENABLE_PREVIEW = 1
+## way jar name
+WAY_JAR_NAME := $(WAY)
 
 # Delete the default suffixes
 .SUFFIXES:
