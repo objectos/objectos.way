@@ -154,6 +154,7 @@ WAY_ARTIFACT_ID := $(ARTIFACT_ID)
 #
 # Default target
 #
+
 .PHONY: all
 all: jar
 
@@ -241,7 +242,7 @@ $(LOCAL_REPO_PATH)/%.jar:
 #
 
 ## objectos.code source directory
-CODE_MAIN = $(CODE)/main
+CODE_MAIN = $(CODE_MODULE)/main
 
 ## objectos.code source files
 CODE_SOURCES = $(shell find ${CODE_MAIN} -type f -name '*.java' -print)
@@ -250,7 +251,7 @@ CODE_SOURCES = $(shell find ${CODE_MAIN} -type f -name '*.java' -print)
 CODE_DIRTY :=
 
 ## objectos.code work dir
-CODE_WORK = $(CODE)/work
+CODE_WORK = $(CODE_MODULE)/work
 
 ## objectos.code class output path
 CODE_CLASS_OUTPUT = $(CODE_WORK)/main
@@ -330,7 +331,7 @@ $(CODE_LICENSE): LICENSE
 #
 
 ## objectos.code test source directory
-CODE_TEST = $(CODE)/test
+CODE_TEST = $(CODE_MODULE)/test
 
 ## objectos.code test source files 
 CODE_TEST_SOURCES = $(shell find ${CODE_TEST} -type f -name '*.java' -print)
@@ -420,7 +421,7 @@ $(CODE_TEST_RUN_MARKER): $(CODE_TEST_COMPILE_MARKER)
 #
 
 ## objectos.selfgen source directory
-SELFGEN_MAIN = $(SELFGEN)/main
+SELFGEN_MAIN = $(SELFGEN_MODULE)/main
 
 ## objectos.selfgen source files
 SELFGEN_SOURCES = $(shell find ${SELFGEN_MAIN} -type f -name '*.java' -print)
@@ -429,7 +430,7 @@ SELFGEN_SOURCES = $(shell find ${SELFGEN_MAIN} -type f -name '*.java' -print)
 SELFGEN_DIRTY :=
 
 ## objectos.selfgen work dir
-SELFGEN_WORK = $(SELFGEN)/work
+SELFGEN_WORK = $(SELFGEN_MODULE)/work
 
 ## objectos.selfgen class output path
 SELFGEN_CLASS_OUTPUT = $(SELFGEN_WORK)/main
@@ -509,7 +510,7 @@ $(SELFGEN_LICENSE): LICENSE
 #
 
 ## objectos.selfgen test source directory
-SELFGEN_TEST = $(SELFGEN)/test
+SELFGEN_TEST = $(SELFGEN_MODULE)/test
 
 ## objectos.selfgen test source files 
 SELFGEN_TEST_SOURCES = $(shell find ${SELFGEN_TEST} -type f -name '*.java' -print)
@@ -599,7 +600,7 @@ $(SELFGEN_TEST_RUN_MARKER): $(SELFGEN_TEST_COMPILE_MARKER)
 #
 
 ## objectos.way source directory
-WAY_MAIN = $(WAY)/main
+WAY_MAIN = $(WAY_MODULE)/main
 
 ## objectos.way source files
 WAY_SOURCES = $(shell find ${WAY_MAIN} -type f -name '*.java' -print)
@@ -608,7 +609,7 @@ WAY_SOURCES = $(shell find ${WAY_MAIN} -type f -name '*.java' -print)
 WAY_DIRTY :=
 
 ## objectos.way work dir
-WAY_WORK = $(WAY)/work
+WAY_WORK = $(WAY_MODULE)/work
 
 ## objectos.way class output path
 WAY_CLASS_OUTPUT = $(WAY_WORK)/main
@@ -688,7 +689,7 @@ $(WAY_LICENSE): LICENSE
 #
 
 ## objectos.way test source directory
-WAY_TEST = $(WAY)/test
+WAY_TEST = $(WAY_MODULE)/test
 
 ## objectos.way test source files 
 WAY_TEST_SOURCES = $(shell find ${WAY_TEST} -type f -name '*.java' -print)
@@ -787,7 +788,7 @@ WAY_INSTALL = $(call dependency,$(WAY_GROUP_ID),$(WAY_ARTIFACT_ID),$(WAY_VERSION
 $(WAY_INSTALL): $(WAY_JAR_FILE)
 	mkdir --parents $(@D)
 	cp $(WAY_JAR_FILE) $@
-	
+
 #
 # Targets section
 #

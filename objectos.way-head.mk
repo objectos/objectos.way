@@ -154,6 +154,7 @@ WAY_ARTIFACT_ID := $(ARTIFACT_ID)
 #
 # Default target
 #
+
 .PHONY: all
 all: jar
 
