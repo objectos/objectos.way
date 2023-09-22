@@ -37,5 +37,8 @@ way@clean:
 .PHONY: code@compile
 code@compile: $(CODE_COMPILE_MARKER)
 
+.PHONY: code@jar
+code@jar: $(CODE_JAR_FILE)
+
 .PHONY: way@compile
 way@compile: $(WAY_COMPILE_MARKER)

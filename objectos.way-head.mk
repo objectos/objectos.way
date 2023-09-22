@@ -44,6 +44,9 @@ CODE_JAVA_RELEASE := 21
 ## code --enable-preview ?
 CODE_ENABLE_PREVIEW := 1
 
+## code jar name
+CODE_JAR_NAME := $(CODE)
+
 #
 # objectos.way options
 # 

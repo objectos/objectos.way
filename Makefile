@@ -44,6 +44,9 @@ CODE_JAVA_RELEASE := 21
 ## code --enable-preview ?
 CODE_ENABLE_PREVIEW := 1
 
+## code jar name
+CODE_JAR_NAME := $(CODE)
+
 #
 # objectos.way options
 # 
@@ -157,6 +160,35 @@ $(CODE_CLASSES): $(CODE_CLASS_OUTPUT)/%.class: $(CODE_MAIN)/%.java
 	$(eval CODE_DIRTY += $$<)
 
 #
+# objectos.code jar options
+#
+
+## objectos.code license 'artifact'
+CODE_LICENSE = $(CODE_CLASS_OUTPUT)/META-INF/LICENSE
+
+## objectos.code jar file path
+CODE_JAR_FILE = $(CODE_WORK)/$(CODE_JAR_NAME)-$(CODE_VERSION).jar
+
+## objectos.code jar command
+CODE_JARX = $(JAR)
+CODE_JARX += --create
+CODE_JARX += --file $(CODE_JAR_FILE)
+CODE_JARX += --module-version $(CODE_VERSION)
+CODE_JARX += -C $(CODE_CLASS_OUTPUT)
+CODE_JARX += .
+
+#
+# objectos.code jar targets
+#
+
+$(CODE_JAR_FILE): $(CODE_COMPILE_MARKER) $(CODE_LICENSE)
+	$(CODE_JARX)
+
+$(CODE_LICENSE): LICENSE
+	mkdir --parents $(@D)
+	cp LICENSE $(@D)
+
+#
 # objectos.way compilation options
 #
 
@@ -220,18 +252,27 @@ $(WAY_CLASSES): $(WAY_CLASS_OUTPUT)/%.class: $(WAY_MAIN)/%.java
 # Targets
 #
 
-.PHONY: clean code@clean way@clean
-
+.PHONY: clean
 clean: code@clean way@clean
 
+.PHONY: test
+test:
+
+# maybe use eval for module@target targets?
+
+.PHONY: code@clean
 code@clean:
 	rm -rf $(CODE_WORK)/*
 
+.PHONY: way@clean
 way@clean:
 	rm -rf $(WAY_WORK)/*
 
 .PHONY: code@compile
 code@compile: $(CODE_COMPILE_MARKER)
+
+.PHONY: code@jar
+code@jar: $(CODE_JAR_FILE)
 
 .PHONY: way@compile
 way@compile: $(WAY_COMPILE_MARKER)
