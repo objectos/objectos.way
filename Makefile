@@ -64,6 +64,46 @@ CODE_TEST_RUNTIME_DEPS += $(call dependency,org.slf4j,slf4j-nop,$(SLF4J_VERSION)
 CODE_TEST_JAVAX_EXPORTS := objectos.code.internal
 
 #
+# objectos.selfgen options
+#
+
+## selfgen directory
+SELFGEN := objectos.selfgen
+
+## selfgen module
+SELFGEN_MODULE := $(SELFGEN)
+
+## selfgen module version
+SELFGEN_VERSION := $(VERSION)
+
+## selfgen javac --release option
+SELFGEN_JAVA_RELEASE := 21
+
+## selfgen --enable-preview ?
+SELFGEN_ENABLE_PREVIEW := 1
+
+## selfgen compile deps
+SELFGEN_COMPILE_DEPS = $(CODE_JAR_FILE) 
+
+## selfgen jar name
+SELFGEN_JAR_NAME := $(SELFGEN)
+
+## selfgen test compile deps
+SELFGEN_TEST_COMPILE_DEPS = $(CODE_JAR_FILE)
+SELFGEN_TEST_COMPILE_DEPS += $(SELFGEN_JAR_FILE)
+SELFGEN_TEST_COMPILE_DEPS += $(call dependency,org.testng,testng,$(TESTNG_VERSION))
+
+## selfgen test runtime dependencies
+SELFGEN_TEST_RUNTIME_DEPS = $(SELFGEN_TEST_COMPILE_DEPS)
+SELFGEN_TEST_RUNTIME_DEPS += $(call dependency,com.beust,jcommander,$(JCOMMANDER_VERSION))
+SELFGEN_TEST_RUNTIME_DEPS += $(call dependency,org.slf4j,slf4j-api,$(SLF4J_VERSION))
+SELFGEN_TEST_RUNTIME_DEPS += $(call dependency,org.slf4j,slf4j-nop,$(SLF4J_VERSION))
+
+## seflgen test runtime exports
+SELFGEN_TEST_JAVAX_EXPORTS := objectos.selfgen.css
+SELFGEN_TEST_JAVAX_EXPORTS += objectos.selfgen.html
+
+#
 # objectos.way options
 # 
 
@@ -114,6 +154,58 @@ JAR := $(JAVA_HOME_BIN)/jar
 
 ## javadoc command
 JAVADOC := $(JAVA_HOME_BIN)/javadoc
+
+#
+# Dependencies related options & functions
+#
+
+## local repository path
+LOCAL_REPO_PATH := $(HOME)/.cache/objectos
+
+## remote repository URL
+REMOTE_REPO_URL := https://repo.maven.apache.org/maven2
+
+## remote repository curl
+REMOTE_REPO_CURLX = $(CURL)
+REMOTE_REPO_CURLX += --create-dirs
+
+## dependency function
+## 
+## syntax:
+## $(call dependency,[GROUP_ID],[ARTIFACT_ID],[VERSION])
+dot := .
+solidus := /
+
+dependency = $(LOCAL_REPO_PATH)/$(subst $(dot),$(solidus),$(1))/$(2)/$(3)/$(2)-$(3).jar
+
+## class-path function
+##
+## syntax:
+## $(call class-path,[list of deps])
+ifeq ($(OS),Windows_NT)
+CLASS_PATH_SEPARATOR := ;
+else
+CLASS_PATH_SEPARATOR := :
+endif
+empty :=
+space := $(empty) $(empty)
+
+class-path = $(subst $(space),$(CLASS_PATH_SEPARATOR),$(1))
+
+## module-path function
+##
+## syntax:
+## $(call module-path,[list of deps])
+MODULE_PATH_SEPARATOR := :
+
+module-path = $(subst $(space),$(MODULE_PATH_SEPARATOR),$(1))
+
+#
+# Gets the dependency from the remote repository
+#
+
+$(LOCAL_REPO_PATH)/%.jar:	
+	$(REMOTE_REPO_CURLX) --output $@ $(@:$(LOCAL_REPO_PATH)/%.jar=$(REMOTE_REPO_URL)/%.jar)
 
 #
 # objectos.code compilation options
@@ -203,58 +295,6 @@ $(CODE_JAR_FILE): $(CODE_COMPILE_MARKER) $(CODE_LICENSE)
 $(CODE_LICENSE): LICENSE
 	mkdir --parents $(@D)
 	cp LICENSE $(@D)
-
-#
-# Dependencies related options & functions
-#
-
-## local repository path
-LOCAL_REPO_PATH := $(HOME)/.cache/objectos
-
-## remote repository URL
-REMOTE_REPO_URL := https://repo.maven.apache.org/maven2
-
-## remote repository curl
-REMOTE_REPO_CURLX = $(CURL)
-REMOTE_REPO_CURLX += --create-dirs
-
-## dependency function
-## 
-## syntax:
-## $(call dependency,[GROUP_ID],[ARTIFACT_ID],[VERSION])
-dot := .
-solidus := /
-
-dependency = $(LOCAL_REPO_PATH)/$(subst $(dot),$(solidus),$(1))/$(2)/$(3)/$(2)-$(3).jar
-
-## class-path function
-##
-## syntax:
-## $(call class-path,[list of deps])
-ifeq ($(OS),Windows_NT)
-CLASS_PATH_SEPARATOR := ;
-else
-CLASS_PATH_SEPARATOR := :
-endif
-empty :=
-space := $(empty) $(empty)
-
-class-path = $(subst $(space),$(CLASS_PATH_SEPARATOR),$(1))
-
-## module-path function
-##
-## syntax:
-## $(call module-path,[list of deps])
-MODULE_PATH_SEPARATOR := :
-
-module-path = $(subst $(space),$(MODULE_PATH_SEPARATOR),$(1))
-
-#
-# Gets the dependency from the remote repository
-#
-
-$(LOCAL_REPO_PATH)/%.jar:	
-	$(REMOTE_REPO_CURLX) --output $@ $(@:$(LOCAL_REPO_PATH)/%.jar=$(REMOTE_REPO_URL)/%.jar)
 
 #
 # objectos.code test compilation options
@@ -347,6 +387,185 @@ $(CODE_TEST_RUN_MARKER): $(CODE_TEST_COMPILE_MARKER)
 	$(CODE_TEST_JAVAX)
 
 #
+# objectos.selfgen compilation options
+#
+
+## objectos.selfgen source directory
+SELFGEN_MAIN = $(SELFGEN)/main
+
+## objectos.selfgen source files
+SELFGEN_SOURCES = $(shell find ${SELFGEN_MAIN} -type f -name '*.java' -print)
+
+## objectos.selfgen source files modified since last compilation
+SELFGEN_DIRTY :=
+
+## objectos.selfgen work dir
+SELFGEN_WORK = $(SELFGEN)/work
+
+## objectos.selfgen class output path
+SELFGEN_CLASS_OUTPUT = $(SELFGEN_WORK)/main
+
+## objectos.selfgen compiled classes
+SELFGEN_CLASSES = $(SELFGEN_SOURCES:$(SELFGEN_MAIN)/%.java=$(SELFGEN_CLASS_OUTPUT)/%.class)
+
+## objectos.selfgen compile-time dependencies
+# SELFGEN_COMPILE_DEPS = 
+
+## objectos.selfgen compile-time module-path
+SELFGEN_COMPILE_MODULE_PATH = $(call module-path,$(SELFGEN_COMPILE_DEPS))
+ 
+## objectos.selfgen javac command
+SELFGEN_JAVACX = $(JAVAC)
+SELFGEN_JAVACX += -d $(SELFGEN_CLASS_OUTPUT)
+SELFGEN_JAVACX += -g
+SELFGEN_JAVACX += -Xlint:all
+SELFGEN_JAVACX += -Xpkginfo:always
+ifeq ($(SELFGEN_ENABLE_PREVIEW),1)
+SELFGEN_JAVACX += --enable-preview
+endif
+ifneq ($(SELFGEN_COMPILE_MODULE_PATH),)
+SELFGEN_JAVACX += --module-path $(SELFGEN_COMPILE_MODULE_PATH)
+endif
+SELFGEN_JAVACX += --module-version $(SELFGEN_VERSION)
+SELFGEN_JAVACX += --release $(SELFGEN_JAVA_RELEASE)
+SELFGEN_JAVACX += $(SELFGEN_DIRTY)
+
+## objectos.selfgen compilation marker
+SELFGEN_COMPILE_MARKER = $(SELFGEN_WORK)/compile-marker
+
+#
+# objectos.selfgen compilation targets
+#
+
+$(SELFGEN_COMPILE_MARKER): $(SELFGEN_COMPILE_DEPS) $(SELFGEN_CLASSES)
+	if [ -n "$(SELFGEN_DIRTY)" ]; then \
+		$(SELFGEN_JAVACX); \
+		touch $(SELFGEN_COMPILE_MARKER); \
+	fi
+
+$(SELFGEN_CLASSES): $(SELFGEN_CLASS_OUTPUT)/%.class: $(SELFGEN_MAIN)/%.java
+	$(eval SELFGEN_DIRTY += $$<)
+
+#
+# objectos.selfgen jar options
+#
+
+## objectos.selfgen license 'artifact'
+SELFGEN_LICENSE = $(SELFGEN_CLASS_OUTPUT)/META-INF/LICENSE
+
+## objectos.selfgen jar file path
+SELFGEN_JAR_FILE = $(SELFGEN_WORK)/$(SELFGEN_JAR_NAME)-$(SELFGEN_VERSION).jar
+
+## objectos.selfgen jar command
+SELFGEN_JARX = $(JAR)
+SELFGEN_JARX += --create
+SELFGEN_JARX += --file $(SELFGEN_JAR_FILE)
+SELFGEN_JARX += --module-version $(SELFGEN_VERSION)
+SELFGEN_JARX += -C $(SELFGEN_CLASS_OUTPUT)
+SELFGEN_JARX += .
+
+#
+# objectos.selfgen jar targets
+#
+
+$(SELFGEN_JAR_FILE): $(SELFGEN_COMPILE_MARKER) $(SELFGEN_LICENSE)
+	$(SELFGEN_JARX)
+
+$(SELFGEN_LICENSE): LICENSE
+	mkdir --parents $(@D)
+	cp LICENSE $(@D)
+
+#
+# objectos.selfgen test compilation options
+#
+
+## objectos.selfgen test source directory
+SELFGEN_TEST = $(SELFGEN)/test
+
+## objectos.selfgen test source files 
+SELFGEN_TEST_SOURCES = $(shell find ${SELFGEN_TEST} -type f -name '*.java' -print)
+
+## objectos.selfgen test source files modified since last compilation
+SELFGEN_TEST_DIRTY :=
+
+## objectos.selfgen test class output path
+SELFGEN_TEST_CLASS_OUTPUT = $(SELFGEN_WORK)/test
+
+## objectos.selfgen test compiled classes
+SELFGEN_TEST_CLASSES = $(SELFGEN_TEST_SOURCES:$(SELFGEN_TEST)/%.java=$(SELFGEN_TEST_CLASS_OUTPUT)/%.class)
+
+## objectos.selfgen test compile-time dependencies
+# SELFGEN_TEST_COMPILE_DEPS =
+
+## objectos.selfgen test javac command
+SELFGEN_TEST_JAVACX = $(JAVAC)
+SELFGEN_TEST_JAVACX += -d $(SELFGEN_TEST_CLASS_OUTPUT)
+SELFGEN_TEST_JAVACX += -g
+SELFGEN_TEST_JAVACX += -Xlint:all
+SELFGEN_TEST_JAVACX += --class-path $(call class-path,$(SELFGEN_TEST_COMPILE_DEPS))
+ifeq ($(SELFGEN_ENABLE_PREVIEW),1)
+SELFGEN_TEST_JAVACX += --enable-preview
+endif
+SELFGEN_TEST_JAVACX += --release $(SELFGEN_JAVA_RELEASE)
+SELFGEN_TEST_JAVACX += $(SELFGEN_TEST_DIRTY)
+
+## objectos.selfgen test compilation marker
+SELFGEN_TEST_COMPILE_MARKER = $(SELFGEN_WORK)/test-compile-marker
+
+#
+# objectos.selfgen test compilation targets
+#
+
+$(SELFGEN_TEST_COMPILE_MARKER): $(SELFGEN_TEST_COMPILE_DEPS) $(SELFGEN_TEST_CLASSES) 
+	if [ -n "$(SELFGEN_DIRTY)" ]; then \
+		$(SELFGEN_TEST_JAVACX); \
+		touch $(SELFGEN_TEST_COMPILE_MARKER); \
+	fi
+
+$(SELFGEN_TEST_CLASSES): $(SELFGEN_TEST_CLASS_OUTPUT)/%.class: $(SELFGEN_TEST)/%.java
+	$(eval SELFGEN_TEST_DIRTY += $$<)
+
+#
+# objectos.selfgen test execution options
+#
+
+## objectos.selfgen test runtime dependencies
+# SELFGEN_TEST_RUNTIME_DEPS =
+
+## objectos.selfgen test main class
+ifndef SELFGEN_TEST_MAIN
+SELFGEN_TEST_MAIN = $(SELFGEN_MODULE).RunTests
+endif
+
+## objectos.selfgen test runtime output path
+SELFGEN_TEST_RUNTIME_OUTPUT = $(SELFGEN_WORK)/test-output
+
+## objectos.selfgen test java command
+SELFGEN_TEST_JAVAX = $(JAVA)
+SELFGEN_TEST_JAVAX += --module-path $(call module-path,$(SELFGEN_TEST_RUNTIME_DEPS))
+SELFGEN_TEST_JAVAX += --add-modules org.testng
+SELFGEN_TEST_JAVAX += --add-reads $(SELFGEN_MODULE)=org.testng
+ifdef SELFGEN_TEST_JAVAX_EXPORTS
+SELFGEN_TEST_JAVAX += $(foreach pkg,$(SELFGEN_TEST_JAVAX_EXPORTS),--add-exports $(SELFGEN_MODULE)/$(pkg)=org.testng)
+endif
+ifeq ($(SELFGEN_ENABLE_PREVIEW),1)
+SELFGEN_TEST_JAVAX += --enable-preview
+endif
+SELFGEN_TEST_JAVAX += --patch-module $(SELFGEN_MODULE)=$(SELFGEN_TEST_CLASS_OUTPUT)
+SELFGEN_TEST_JAVAX += --module $(SELFGEN_MODULE)/$(SELFGEN_TEST_MAIN)
+SELFGEN_TEST_JAVAX += $(SELFGEN_TEST_RUNTIME_OUTPUT)
+
+## objectos.selfgen test execution marker
+SELFGEN_TEST_RUN_MARKER = $(SELFGEN_TEST_RUNTIME_OUTPUT)/index.html
+
+#
+# objectos.selfgen test execution targets
+#
+
+$(SELFGEN_TEST_RUN_MARKER): $(SELFGEN_TEST_COMPILE_MARKER) 
+	$(SELFGEN_TEST_JAVAX)
+
+#
 # objectos.way compilation options
 #
 
@@ -411,12 +630,12 @@ $(WAY_CLASSES): $(WAY_CLASS_OUTPUT)/%.class: $(WAY_MAIN)/%.java
 #
 
 .PHONY: clean
-clean: code@clean way@clean
+clean: code@clean selfgen@clean way@clean
 
 .PHONY: test
-test: code@test
+test: code@test selfgen@test
 
-# maybe use eval for module@target targets?
+# maybe use eval for module targets?
 
 #
 # objectos.code targets
@@ -434,6 +653,23 @@ code@jar: $(CODE_JAR_FILE)
 
 .PHONY: code@test
 code@test: $(CODE_TEST_RUN_MARKER)
+
+#
+# objectos.selfgen targets
+#
+
+.PHONY: selfgen@clean
+selfgen@clean:
+	rm -rf $(SELFGEN_WORK)/*
+
+.PHONY: selfgen@compile
+selfgen@compile: $(SELFGEN_COMPILE_MARKER)
+
+.PHONY: selfgen@jar
+selfgen@jar: $(SELFGEN_JAR_FILE)
+
+.PHONY: selfgen@test
+selfgen@test: $(SELFGEN_TEST_RUN_MARKER)
 
 #
 # objectos.way targets

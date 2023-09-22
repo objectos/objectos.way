@@ -19,12 +19,12 @@
 #
 
 .PHONY: clean
-clean: code@clean way@clean
+clean: code@clean selfgen@clean way@clean
 
 .PHONY: test
-test: code@test
+test: code@test selfgen@test
 
-# maybe use eval for module@target targets?
+# maybe use eval for module targets?
 
 #
 # objectos.code targets
@@ -42,6 +42,23 @@ code@jar: $(CODE_JAR_FILE)
 
 .PHONY: code@test
 code@test: $(CODE_TEST_RUN_MARKER)
+
+#
+# objectos.selfgen targets
+#
+
+.PHONY: selfgen@clean
+selfgen@clean:
+	rm -rf $(SELFGEN_WORK)/*
+
+.PHONY: selfgen@compile
+selfgen@compile: $(SELFGEN_COMPILE_MARKER)
+
+.PHONY: selfgen@jar
+selfgen@jar: $(SELFGEN_JAR_FILE)
+
+.PHONY: selfgen@test
+selfgen@test: $(SELFGEN_TEST_RUN_MARKER)
 
 #
 # objectos.way targets

@@ -64,6 +64,46 @@ CODE_TEST_RUNTIME_DEPS += $(call dependency,org.slf4j,slf4j-nop,$(SLF4J_VERSION)
 CODE_TEST_JAVAX_EXPORTS := objectos.code.internal
 
 #
+# objectos.selfgen options
+#
+
+## selfgen directory
+SELFGEN := objectos.selfgen
+
+## selfgen module
+SELFGEN_MODULE := $(SELFGEN)
+
+## selfgen module version
+SELFGEN_VERSION := $(VERSION)
+
+## selfgen javac --release option
+SELFGEN_JAVA_RELEASE := 21
+
+## selfgen --enable-preview ?
+SELFGEN_ENABLE_PREVIEW := 1
+
+## selfgen compile deps
+SELFGEN_COMPILE_DEPS = $(CODE_JAR_FILE) 
+
+## selfgen jar name
+SELFGEN_JAR_NAME := $(SELFGEN)
+
+## selfgen test compile deps
+SELFGEN_TEST_COMPILE_DEPS = $(CODE_JAR_FILE)
+SELFGEN_TEST_COMPILE_DEPS += $(SELFGEN_JAR_FILE)
+SELFGEN_TEST_COMPILE_DEPS += $(call dependency,org.testng,testng,$(TESTNG_VERSION))
+
+## selfgen test runtime dependencies
+SELFGEN_TEST_RUNTIME_DEPS = $(SELFGEN_TEST_COMPILE_DEPS)
+SELFGEN_TEST_RUNTIME_DEPS += $(call dependency,com.beust,jcommander,$(JCOMMANDER_VERSION))
+SELFGEN_TEST_RUNTIME_DEPS += $(call dependency,org.slf4j,slf4j-api,$(SLF4J_VERSION))
+SELFGEN_TEST_RUNTIME_DEPS += $(call dependency,org.slf4j,slf4j-nop,$(SLF4J_VERSION))
+
+## seflgen test runtime exports
+SELFGEN_TEST_JAVAX_EXPORTS := objectos.selfgen.css
+SELFGEN_TEST_JAVAX_EXPORTS += objectos.selfgen.html
+
+#
 # objectos.way options
 # 
 
