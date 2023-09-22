@@ -47,6 +47,10 @@ CODE_ENABLE_PREVIEW := 1
 ## code jar name
 CODE_JAR_NAME := $(CODE)
 
+## code test compile deps
+CODE_TEST_COMPILE_DEPS = $(CODE_JAR_FILE)
+CODE_TEST_COMPILE_DEPS += $(call dependency,org.testng,testng,$(TESTNG_VERSION))
+
 #
 # objectos.way options
 # 
@@ -153,8 +157,8 @@ CODE_COMPILE_MARKER = $(CODE_WORK)/compile-marker
 $(CODE_COMPILE_MARKER): $(CODE_COMPILE_DEPS) $(CODE_CLASSES)
 	if [ -n "$(CODE_DIRTY)" ]; then \
 		$(CODE_JAVACX); \
+		touch $(CODE_COMPILE_MARKER); \
 	fi
-	touch $(CODE_COMPILE_MARKER)
 
 $(CODE_CLASSES): $(CODE_CLASS_OUTPUT)/%.class: $(CODE_MAIN)/%.java
 	$(eval CODE_DIRTY += $$<)
@@ -187,6 +191,108 @@ $(CODE_JAR_FILE): $(CODE_COMPILE_MARKER) $(CODE_LICENSE)
 $(CODE_LICENSE): LICENSE
 	mkdir --parents $(@D)
 	cp LICENSE $(@D)
+
+#
+# Dependencies related options & functions
+#
+
+## local repository path
+LOCAL_REPO_PATH := $(HOME)/.cache/objectos
+
+## remote repository URL
+REMOTE_REPO_URL := https://repo.maven.apache.org/maven2
+
+## remote repository curl
+REMOTE_REPO_CURLX = $(CURL)
+REMOTE_REPO_CURLX += --create-dirs
+
+## dependency function
+## 
+## syntax:
+## $(call dependency,[GROUP_ID],[ARTIFACT_ID],[VERSION])
+dot := .
+solidus := /
+
+dependency = $(LOCAL_REPO_PATH)/$(subst $(dot),$(solidus),$(1))/$(2)/$(3)/$(2)-$(3).jar
+
+## class-path function
+##
+## syntax:
+## $(call class-path,[list of deps])
+ifeq ($(OS),Windows_NT)
+CLASS_PATH_SEPARATOR := ;
+else
+CLASS_PATH_SEPARATOR := :
+endif
+empty :=
+space := $(empty) $(empty)
+
+class-path = $(subst $(space),$(CLASS_PATH_SEPARATOR),$(1))
+
+## module-path function
+##
+## syntax:
+## $(call module-path,[list of deps])
+MODULE_PATH_SEPARATOR := :
+
+module-path = $(subst $(space),$(MODULE_PATH_SEPARATOR),$(1))
+
+#
+# Gets the dependency from the remote repository
+#
+
+$(LOCAL_REPO_PATH)/%.jar:	
+	$(REMOTE_REPO_CURLX) --output $@ $(@:$(LOCAL_REPO_PATH)/%.jar=$(REMOTE_REPO_URL)/%.jar)
+
+#
+# objectos.code test compilation options
+#
+
+## objectos.code test source directory
+CODE_TEST = $(CODE)/test
+
+## objectos.code test source files 
+CODE_TEST_SOURCES = $(shell find ${CODE_TEST} -type f -name '*.java' -print)
+
+## objectos.code test source files modified since last compilation
+CODE_TEST_DIRTY :=
+
+## objectos.code test class output path
+CODE_TEST_CLASS_OUTPUT = $(CODE_WORK)/test
+
+## objectos.code test compiled classes
+CODE_TEST_CLASSES = $(CODE_TEST_SOURCES:$(CODE_TEST)/%.java=$(CODE_TEST_CLASS_OUTPUT)/%.class)
+
+## objectos.code test compile-time dependencies
+# CODE_TEST_COMPILE_DEPS =
+
+## objectos.code test javac command
+CODE_TEST_JAVACX = $(JAVAC)
+CODE_TEST_JAVACX += -d $(CODE_TEST_CLASS_OUTPUT)
+CODE_TEST_JAVACX += -g
+CODE_TEST_JAVACX += -Xlint:all
+CODE_TEST_JAVACX += --class-path $(call class-path,$(CODE_TEST_COMPILE_DEPS))
+ifdef CODE_ENABLE_PREVIEW
+CODE_TEST_JAVACX += --enable-preview
+endif
+CODE_TEST_JAVACX += --release $(CODE_JAVA_RELEASE)
+CODE_TEST_JAVACX += $(CODE_DIRTY)
+
+## objectos.code test compilation marker
+CODE_TEST_COMPILE_MARKER = $(CODE_WORK)/test-compile-marker
+
+#
+# objectos.code test compilation targets
+#
+
+$(CODE_TEST_COMPILE_MARKER): $(CODE_TEST_COMPILE_DEPS) $(CODE_TEST_CLASSES) 
+	if [ -n "$(CODE_DIRTY)" ]; then \
+		$(CODE_TEST_JAVACX); \
+		touch $(CODE_TEST_COMPILE_MARKER); \
+	fi
+
+$(CODE_TEST_CLASSES): $(CODE_TEST_CLASS_OUTPUT)/%.class: $(CODE_TEST)/%.java
+	$(eval CODE_TEST_DIRTY += $$<)
 
 #
 # objectos.way compilation options
@@ -242,37 +348,48 @@ WAY_COMPILE_MARKER = $(WAY_WORK)/compile-marker
 $(WAY_COMPILE_MARKER): $(WAY_COMPILE_DEPS) $(WAY_CLASSES)
 	if [ -n "$(WAY_DIRTY)" ]; then \
 		$(WAY_JAVACX); \
+		touch $(WAY_COMPILE_MARKER); \
 	fi
-	touch $(WAY_COMPILE_MARKER)
 
 $(WAY_CLASSES): $(WAY_CLASS_OUTPUT)/%.class: $(WAY_MAIN)/%.java
 	$(eval WAY_DIRTY += $$<)
 
 #
-# Targets
+# Targets section
 #
 
 .PHONY: clean
 clean: code@clean way@clean
 
 .PHONY: test
-test:
+test: code@test
 
 # maybe use eval for module@target targets?
+
+#
+# objectos.code targets
+#
 
 .PHONY: code@clean
 code@clean:
 	rm -rf $(CODE_WORK)/*
-
-.PHONY: way@clean
-way@clean:
-	rm -rf $(WAY_WORK)/*
 
 .PHONY: code@compile
 code@compile: $(CODE_COMPILE_MARKER)
 
 .PHONY: code@jar
 code@jar: $(CODE_JAR_FILE)
+
+.PHONY: code@test
+code@test: $(CODE_TEST_COMPILE_MARKER)
+
+#
+# objectos.way targets
+#
+
+.PHONY: way@clean
+way@clean:
+	rm -rf $(WAY_WORK)/*
 
 .PHONY: way@compile
 way@compile: $(WAY_COMPILE_MARKER)

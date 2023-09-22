@@ -15,30 +15,41 @@
 #
 
 #
-# Targets
+# Targets section
 #
 
 .PHONY: clean
 clean: code@clean way@clean
 
 .PHONY: test
-test:
+test: code@test
 
 # maybe use eval for module@target targets?
+
+#
+# objectos.code targets
+#
 
 .PHONY: code@clean
 code@clean:
 	rm -rf $(CODE_WORK)/*
-
-.PHONY: way@clean
-way@clean:
-	rm -rf $(WAY_WORK)/*
 
 .PHONY: code@compile
 code@compile: $(CODE_COMPILE_MARKER)
 
 .PHONY: code@jar
 code@jar: $(CODE_JAR_FILE)
+
+.PHONY: code@test
+code@test: $(CODE_TEST_COMPILE_MARKER)
+
+#
+# objectos.way targets
+#
+
+.PHONY: way@clean
+way@clean:
+	rm -rf $(WAY_WORK)/*
 
 .PHONY: way@compile
 way@compile: $(WAY_COMPILE_MARKER)

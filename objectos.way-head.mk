@@ -47,6 +47,10 @@ CODE_ENABLE_PREVIEW := 1
 ## code jar name
 CODE_JAR_NAME := $(CODE)
 
+## code test compile deps
+CODE_TEST_COMPILE_DEPS = $(CODE_JAR_FILE)
+CODE_TEST_COMPILE_DEPS += $(call dependency,org.testng,testng,$(TESTNG_VERSION))
+
 #
 # objectos.way options
 # 
