@@ -20,6 +20,8 @@
 # Objectos Way
 #
 
+GROUP_ID := br.com.objectos
+ARTIFACT_ID := objectos.way
 VERSION := 0.1.0-SNAPSHOT
 
 ## Deps versions
@@ -141,6 +143,10 @@ WAY_TEST_JAVAX_EXPORTS += objectos.html.internal
 WAY_TEST_JAVAX_EXPORTS += objectos.http.internal
 WAY_TEST_JAVAX_EXPORTS += objectos.lang
 WAY_TEST_JAVAX_EXPORTS += objectos.util
+
+## install coordinates
+WAY_GROUP_ID := $(GROUP_ID)
+WAY_ARTIFACT_ID := $(ARTIFACT_ID)
 
 # Delete the default suffixes
 .SUFFIXES:
@@ -768,6 +774,21 @@ $(WAY_TEST_RUN_MARKER): $(WAY_TEST_COMPILE_MARKER)
 	$(WAY_TEST_JAVAX)
 
 #
+# objectos.way install options
+#
+
+## objectos.way install location
+WAY_INSTALL = $(call dependency,$(WAY_GROUP_ID),$(WAY_ARTIFACT_ID),$(WAY_VERSION))
+
+#
+# objectos.way install target
+#
+
+$(WAY_INSTALL): $(WAY_JAR_FILE)
+	mkdir --parents $(@D)
+	cp $(WAY_JAR_FILE) $@
+	
+#
 # Targets section
 #
 
@@ -776,6 +797,9 @@ clean: code@clean selfgen@clean way@clean
 
 .PHONY: test
 test: code@test selfgen@test way@test
+
+.PHONY: install
+install: way@install
 
 # maybe use eval for module targets?
 
@@ -850,3 +874,6 @@ way@jar: $(SELFGEN_MARKER) $(WAY_JAR_FILE)
 
 .PHONY: way@test
 way@test: $(WAY_TEST_RUN_MARKER)
+
+.PHONY: way@install
+way@install: $(WAY_INSTALL)

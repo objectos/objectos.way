@@ -20,6 +20,8 @@
 # Objectos Way
 #
 
+GROUP_ID := br.com.objectos
+ARTIFACT_ID := objectos.way
 VERSION := 0.1.0-SNAPSHOT
 
 ## Deps versions
@@ -141,6 +143,10 @@ WAY_TEST_JAVAX_EXPORTS += objectos.html.internal
 WAY_TEST_JAVAX_EXPORTS += objectos.http.internal
 WAY_TEST_JAVAX_EXPORTS += objectos.lang
 WAY_TEST_JAVAX_EXPORTS += objectos.util
+
+## install coordinates
+WAY_GROUP_ID := $(GROUP_ID)
+WAY_ARTIFACT_ID := $(ARTIFACT_ID)
 
 # Delete the default suffixes
 .SUFFIXES:

@@ -24,6 +24,9 @@ clean: code@clean selfgen@clean way@clean
 .PHONY: test
 test: code@test selfgen@test way@test
 
+.PHONY: install
+install: way@install
+
 # maybe use eval for module targets?
 
 #
@@ -97,3 +100,6 @@ way@jar: $(SELFGEN_MARKER) $(WAY_JAR_FILE)
 
 .PHONY: way@test
 way@test: $(WAY_TEST_RUN_MARKER)
+
+.PHONY: way@install
+way@install: $(WAY_INSTALL)
