@@ -41,7 +41,7 @@ code@compile: $(CODE_COMPILE_MARKER)
 code@jar: $(CODE_JAR_FILE)
 
 .PHONY: code@test
-code@test: $(CODE_TEST_COMPILE_MARKER)
+code@test: $(CODE_TEST_RUN_MARKER)
 
 #
 # objectos.way targets

@@ -32,8 +32,11 @@ SLF4J_VERSION := 1.7.36
 # objectos.code options
 #
 
-## code directory/module name
+## code directory
 CODE := objectos.code
+
+## code module
+CODE_MODULE := $(CODE)
 
 ## code module version
 CODE_VERSION := $(VERSION)
@@ -50,6 +53,15 @@ CODE_JAR_NAME := $(CODE)
 ## code test compile deps
 CODE_TEST_COMPILE_DEPS = $(CODE_JAR_FILE)
 CODE_TEST_COMPILE_DEPS += $(call dependency,org.testng,testng,$(TESTNG_VERSION))
+
+## code test runtime dependencies
+CODE_TEST_RUNTIME_DEPS = $(CODE_TEST_COMPILE_DEPS)
+CODE_TEST_RUNTIME_DEPS += $(call dependency,com.beust,jcommander,$(JCOMMANDER_VERSION))
+CODE_TEST_RUNTIME_DEPS += $(call dependency,org.slf4j,slf4j-api,$(SLF4J_VERSION))
+CODE_TEST_RUNTIME_DEPS += $(call dependency,org.slf4j,slf4j-nop,$(SLF4J_VERSION))
+
+## test runtime exports
+CODE_TEST_JAVAX_EXPORTS := objectos.code.internal
 
 #
 # objectos.way options
@@ -137,7 +149,7 @@ CODE_JAVACX += -d $(CODE_CLASS_OUTPUT)
 CODE_JAVACX += -g
 CODE_JAVACX += -Xlint:all
 CODE_JAVACX += -Xpkginfo:always
-ifdef CODE_ENABLE_PREVIEW
+ifeq ($(CODE_ENABLE_PREVIEW),1)
 CODE_JAVACX += --enable-preview
 endif
 ifneq ($(CODE_COMPILE_MODULE_PATH),)
@@ -272,11 +284,11 @@ CODE_TEST_JAVACX += -d $(CODE_TEST_CLASS_OUTPUT)
 CODE_TEST_JAVACX += -g
 CODE_TEST_JAVACX += -Xlint:all
 CODE_TEST_JAVACX += --class-path $(call class-path,$(CODE_TEST_COMPILE_DEPS))
-ifdef CODE_ENABLE_PREVIEW
+ifeq ($(CODE_ENABLE_PREVIEW),1)
 CODE_TEST_JAVACX += --enable-preview
 endif
 CODE_TEST_JAVACX += --release $(CODE_JAVA_RELEASE)
-CODE_TEST_JAVACX += $(CODE_DIRTY)
+CODE_TEST_JAVACX += $(CODE_TEST_DIRTY)
 
 ## objectos.code test compilation marker
 CODE_TEST_COMPILE_MARKER = $(CODE_WORK)/test-compile-marker
@@ -293,6 +305,46 @@ $(CODE_TEST_COMPILE_MARKER): $(CODE_TEST_COMPILE_DEPS) $(CODE_TEST_CLASSES)
 
 $(CODE_TEST_CLASSES): $(CODE_TEST_CLASS_OUTPUT)/%.class: $(CODE_TEST)/%.java
 	$(eval CODE_TEST_DIRTY += $$<)
+
+#
+# objectos.code test execution options
+#
+
+## objectos.code test runtime dependencies
+# CODE_TEST_RUNTIME_DEPS =
+
+## objectos.code test main class
+ifndef CODE_TEST_MAIN
+CODE_TEST_MAIN = $(CODE_MODULE).RunTests
+endif
+
+## objectos.code test runtime output path
+CODE_TEST_RUNTIME_OUTPUT = $(CODE_WORK)/test-output
+
+## objectos.code test java command
+CODE_TEST_JAVAX = $(JAVA)
+CODE_TEST_JAVAX += --module-path $(call module-path,$(CODE_TEST_RUNTIME_DEPS))
+CODE_TEST_JAVAX += --add-modules org.testng
+CODE_TEST_JAVAX += --add-reads $(CODE_MODULE)=org.testng
+ifdef CODE_TEST_JAVAX_EXPORTS
+CODE_TEST_JAVAX += $(foreach pkg,$(CODE_TEST_JAVAX_EXPORTS),--add-exports $(CODE_MODULE)/$(pkg)=org.testng)
+endif
+ifeq ($(CODE_ENABLE_PREVIEW),1)
+CODE_TEST_JAVAX += --enable-preview
+endif
+CODE_TEST_JAVAX += --patch-module $(CODE_MODULE)=$(CODE_TEST_CLASS_OUTPUT)
+CODE_TEST_JAVAX += --module $(CODE_MODULE)/$(CODE_TEST_MAIN)
+CODE_TEST_JAVAX += $(CODE_TEST_RUNTIME_OUTPUT)
+
+## objectos.code test execution marker
+CODE_TEST_RUN_MARKER = $(CODE_TEST_RUNTIME_OUTPUT)/index.html
+
+#
+# objectos.code test execution targets
+#
+
+$(CODE_TEST_RUN_MARKER): $(CODE_TEST_COMPILE_MARKER) 
+	$(CODE_TEST_JAVAX)
 
 #
 # objectos.way compilation options
@@ -328,7 +380,7 @@ WAY_JAVACX += -d $(WAY_CLASS_OUTPUT)
 WAY_JAVACX += -g
 WAY_JAVACX += -Xlint:all
 WAY_JAVACX += -Xpkginfo:always
-ifdef WAY_ENABLE_PREVIEW
+ifeq ($(WAY_ENABLE_PREVIEW),1)
 WAY_JAVACX += --enable-preview
 endif
 ifneq ($(WAY_COMPILE_MODULE_PATH),)
@@ -381,7 +433,7 @@ code@compile: $(CODE_COMPILE_MARKER)
 code@jar: $(CODE_JAR_FILE)
 
 .PHONY: code@test
-code@test: $(CODE_TEST_COMPILE_MARKER)
+code@test: $(CODE_TEST_RUN_MARKER)
 
 #
 # objectos.way targets
