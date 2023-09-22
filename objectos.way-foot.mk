@@ -22,7 +22,7 @@
 clean: code@clean selfgen@clean way@clean
 
 .PHONY: test
-test: code@test selfgen@test
+test: code@test selfgen@test way@test
 
 # maybe use eval for module targets?
 
@@ -92,5 +92,8 @@ $(SELFGEN_MARKER): $(SELFGEN_JAR_FILE)
 way@clean:
 	rm -rf $(WAY_WORK)/*
 
-.PHONY: way@compile
-way@compile: $(WAY_COMPILE_MARKER)
+.PHONY: way@jar
+way@jar: $(SELFGEN_MARKER) $(WAY_JAR_FILE)
+
+.PHONY: way@test
+way@test: $(WAY_TEST_RUN_MARKER)

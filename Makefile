@@ -125,6 +125,23 @@ WAY_ENABLE_PREVIEW := 0
 ## way jar name
 WAY_JAR_NAME := $(WAY)
 
+## way test compile-time dependencies
+WAY_TEST_COMPILE_DEPS = $(WAY_JAR_FILE)
+WAY_TEST_COMPILE_DEPS += $(call dependency,org.testng,testng,$(TESTNG_VERSION))
+
+## way test runtime dependencies
+WAY_TEST_RUNTIME_DEPS = $(WAY_TEST_COMPILE_DEPS)
+WAY_TEST_RUNTIME_DEPS += $(call dependency,com.beust,jcommander,$(JCOMMANDER_VERSION))
+WAY_TEST_RUNTIME_DEPS += $(call dependency,org.slf4j,slf4j-api,$(SLF4J_VERSION))
+WAY_TEST_RUNTIME_DEPS += $(call dependency,org.slf4j,slf4j-nop,$(SLF4J_VERSION))
+
+## way test runtime exports
+WAY_TEST_JAVAX_EXPORTS := objectos.css.internal
+WAY_TEST_JAVAX_EXPORTS += objectos.html.internal
+WAY_TEST_JAVAX_EXPORTS += objectos.http.internal
+WAY_TEST_JAVAX_EXPORTS += objectos.lang
+WAY_TEST_JAVAX_EXPORTS += objectos.util
+
 # Delete the default suffixes
 .SUFFIXES:
 
@@ -132,7 +149,10 @@ WAY_JAR_NAME := $(WAY)
 # Default target
 #
 .PHONY: all
-all: way@compile
+all: jar
+
+.PHONY: jar
+jar: way@jar
 
 #
 # Defines the java tools
@@ -341,7 +361,7 @@ CODE_TEST_COMPILE_MARKER = $(CODE_WORK)/test-compile-marker
 #
 
 $(CODE_TEST_COMPILE_MARKER): $(CODE_TEST_COMPILE_DEPS) $(CODE_TEST_CLASSES) 
-	if [ -n "$(CODE_DIRTY)" ]; then \
+	if [ -n "$(CODE_TEST_DIRTY)" ]; then \
 		$(CODE_TEST_JAVACX); \
 		touch $(CODE_TEST_COMPILE_MARKER); \
 	fi
@@ -520,7 +540,7 @@ SELFGEN_TEST_COMPILE_MARKER = $(SELFGEN_WORK)/test-compile-marker
 #
 
 $(SELFGEN_TEST_COMPILE_MARKER): $(SELFGEN_TEST_COMPILE_DEPS) $(SELFGEN_TEST_CLASSES) 
-	if [ -n "$(SELFGEN_DIRTY)" ]; then \
+	if [ -n "$(SELFGEN_TEST_DIRTY)" ]; then \
 		$(SELFGEN_TEST_JAVACX); \
 		touch $(SELFGEN_TEST_COMPILE_MARKER); \
 	fi
@@ -699,7 +719,7 @@ WAY_TEST_COMPILE_MARKER = $(WAY_WORK)/test-compile-marker
 #
 
 $(WAY_TEST_COMPILE_MARKER): $(WAY_TEST_COMPILE_DEPS) $(WAY_TEST_CLASSES) 
-	if [ -n "$(WAY_DIRTY)" ]; then \
+	if [ -n "$(WAY_TEST_DIRTY)" ]; then \
 		$(WAY_TEST_JAVACX); \
 		touch $(WAY_TEST_COMPILE_MARKER); \
 	fi
@@ -755,7 +775,7 @@ $(WAY_TEST_RUN_MARKER): $(WAY_TEST_COMPILE_MARKER)
 clean: code@clean selfgen@clean way@clean
 
 .PHONY: test
-test: code@test selfgen@test
+test: code@test selfgen@test way@test
 
 # maybe use eval for module targets?
 
@@ -806,7 +826,7 @@ SELFGEN_JAVAX += --module-path $(call module-path,$(SELFGEN_RUNTIME_DEPS))
 ifeq ($(SELFGEN_ENABLE_PREVIEW), 1)
 SELFGEN_JAVAX += --enable-preview
 endif
-SELFGEN_JAVAX += --module $(SELFGEN)/$(SELFGEN).Main
+SELFGEN_JAVAX += --module $(SELFGEN_MODULE)/$(SELFGEN_MODULE).Main
 SELFGEN_JAVAX += $(WAY_MAIN)
 
 .PHONY: selfgen
@@ -825,5 +845,8 @@ $(SELFGEN_MARKER): $(SELFGEN_JAR_FILE)
 way@clean:
 	rm -rf $(WAY_WORK)/*
 
-.PHONY: way@compile
-way@compile: $(WAY_COMPILE_MARKER)
+.PHONY: way@jar
+way@jar: $(SELFGEN_MARKER) $(WAY_JAR_FILE)
+
+.PHONY: way@test
+way@test: $(WAY_TEST_RUN_MARKER)

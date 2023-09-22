@@ -125,6 +125,23 @@ WAY_ENABLE_PREVIEW := 0
 ## way jar name
 WAY_JAR_NAME := $(WAY)
 
+## way test compile-time dependencies
+WAY_TEST_COMPILE_DEPS = $(WAY_JAR_FILE)
+WAY_TEST_COMPILE_DEPS += $(call dependency,org.testng,testng,$(TESTNG_VERSION))
+
+## way test runtime dependencies
+WAY_TEST_RUNTIME_DEPS = $(WAY_TEST_COMPILE_DEPS)
+WAY_TEST_RUNTIME_DEPS += $(call dependency,com.beust,jcommander,$(JCOMMANDER_VERSION))
+WAY_TEST_RUNTIME_DEPS += $(call dependency,org.slf4j,slf4j-api,$(SLF4J_VERSION))
+WAY_TEST_RUNTIME_DEPS += $(call dependency,org.slf4j,slf4j-nop,$(SLF4J_VERSION))
+
+## way test runtime exports
+WAY_TEST_JAVAX_EXPORTS := objectos.css.internal
+WAY_TEST_JAVAX_EXPORTS += objectos.html.internal
+WAY_TEST_JAVAX_EXPORTS += objectos.http.internal
+WAY_TEST_JAVAX_EXPORTS += objectos.lang
+WAY_TEST_JAVAX_EXPORTS += objectos.util
+
 # Delete the default suffixes
 .SUFFIXES:
 
@@ -132,4 +149,7 @@ WAY_JAR_NAME := $(WAY)
 # Default target
 #
 .PHONY: all
-all: way@compile
+all: jar
+
+.PHONY: jar
+jar: way@jar
