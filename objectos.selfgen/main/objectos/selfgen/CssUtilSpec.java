@@ -20,11 +20,11 @@ import java.util.List;
 import objectos.selfgen.css.util.CssUtilSelfGen;
 import objectos.selfgen.css.util.Names;
 import objectos.selfgen.css.util.Prefix;
+import objectos.selfgen.css.util.Prefix.Breakpoint;
 import objectos.selfgen.css.util.PropertyClass;
 import objectos.selfgen.css.util.SelectorKind;
 import objectos.selfgen.css.util.StyleMethod;
 import objectos.selfgen.css.util.Value;
-import objectos.selfgen.css.util.Prefix.Breakpoint;
 
 final class CssUtilSpec extends CssUtilSelfGen {
 
@@ -73,6 +73,9 @@ final class CssUtilSpec extends CssUtilSelfGen {
     colors = $colors();
 
     spacing = $spacing();
+
+    // B
+    backgroundColor();
 
     // C
 
@@ -423,6 +426,14 @@ final class CssUtilSpec extends CssUtilSelfGen {
       name("V80", rem(20)),
       name("V96", rem(24))
     );
+  }
+
+  private void backgroundColor() {
+    for (Prefix prefix : responsive) {
+      generate(prefix, simpleName("BackgroundColor"), methods("backgroundColor"), colors);
+    }
+
+    generateHover(hover, simpleName("BackgroundColor"), methods("backgroundColor"), colors);
   }
 
   private void color() {

@@ -33,6 +33,7 @@ public final class Framework extends CssTemplate {
 
 
   private void All() {
+    AllBackgroundColor();
     AllColor();
     AllDisplay();
     AllFlexDirection();
@@ -71,6 +72,7 @@ public final class Framework extends CssTemplate {
   }
 
   private void Small() {
+    SmallBackgroundColor();
     SmallColor();
     SmallDisplay();
     SmallFlexDirection();
@@ -109,6 +111,7 @@ public final class Framework extends CssTemplate {
   }
 
   private void Medium() {
+    MediumBackgroundColor();
     MediumColor();
     MediumDisplay();
     MediumFlexDirection();
@@ -147,6 +150,7 @@ public final class Framework extends CssTemplate {
   }
 
   private void Large() {
+    LargeBackgroundColor();
     LargeColor();
     LargeDisplay();
     LargeFlexDirection();
@@ -185,6 +189,7 @@ public final class Framework extends CssTemplate {
   }
 
   private void XLarge() {
+    XLargeBackgroundColor();
     XLargeColor();
     XLargeDisplay();
     XLargeFlexDirection();
@@ -223,6 +228,7 @@ public final class Framework extends CssTemplate {
   }
 
   private void XLarge2() {
+    XLarge2BackgroundColor();
     XLarge2Color();
     XLarge2Display();
     XLarge2FlexDirection();
@@ -261,10 +267,1353 @@ public final class Framework extends CssTemplate {
   }
 
   private void Hover() {
+    HoverBackgroundColor();
     HoverColor();
     HoverTextDecoration();
   }
 
+
+  private void AllBackgroundColor() {
+    style(
+      All.BackgroundColor.TRANSPARENT,
+
+      backgroundColor(transparent)
+    )
+;
+    style(
+      All.BackgroundColor.BLACK,
+
+      backgroundColor(hex("#000"))
+    )
+;
+    style(
+      All.BackgroundColor.WHITE,
+
+      backgroundColor(hex("#ffffff"))
+    )
+;
+    style(
+      All.BackgroundColor.SLATE_050,
+
+      backgroundColor(hex("#f8fafc"))
+    )
+;
+    style(
+      All.BackgroundColor.SLATE_100,
+
+      backgroundColor(hex("#f1f5f9"))
+    )
+;
+    style(
+      All.BackgroundColor.SLATE_200,
+
+      backgroundColor(hex("#e2e8f0"))
+    )
+;
+    style(
+      All.BackgroundColor.SLATE_300,
+
+      backgroundColor(hex("#cbd5e1"))
+    )
+;
+    style(
+      All.BackgroundColor.SLATE_400,
+
+      backgroundColor(hex("#94a3b8"))
+    )
+;
+    style(
+      All.BackgroundColor.SLATE_500,
+
+      backgroundColor(hex("#64748b"))
+    )
+;
+    style(
+      All.BackgroundColor.SLATE_600,
+
+      backgroundColor(hex("#475569"))
+    )
+;
+    style(
+      All.BackgroundColor.SLATE_700,
+
+      backgroundColor(hex("#334155"))
+    )
+;
+    style(
+      All.BackgroundColor.SLATE_800,
+
+      backgroundColor(hex("#1e293b"))
+    )
+;
+    style(
+      All.BackgroundColor.SLATE_900,
+
+      backgroundColor(hex("#0f172a"))
+    )
+;
+    style(
+      All.BackgroundColor.GRAY_050,
+
+      backgroundColor(hex("#f9fafb"))
+    )
+;
+    style(
+      All.BackgroundColor.GRAY_100,
+
+      backgroundColor(hex("#f3f4f6"))
+    )
+;
+    style(
+      All.BackgroundColor.GRAY_200,
+
+      backgroundColor(hex("#e5e7eb"))
+    )
+;
+    style(
+      All.BackgroundColor.GRAY_300,
+
+      backgroundColor(hex("#d1d5db"))
+    )
+;
+    style(
+      All.BackgroundColor.GRAY_400,
+
+      backgroundColor(hex("#9ca3af"))
+    )
+;
+    style(
+      All.BackgroundColor.GRAY_500,
+
+      backgroundColor(hex("#6b7280"))
+    )
+;
+    style(
+      All.BackgroundColor.GRAY_600,
+
+      backgroundColor(hex("#4b5563"))
+    )
+;
+    style(
+      All.BackgroundColor.GRAY_700,
+
+      backgroundColor(hex("#374151"))
+    )
+;
+    style(
+      All.BackgroundColor.GRAY_800,
+
+      backgroundColor(hex("#1f2937"))
+    )
+;
+    style(
+      All.BackgroundColor.GRAY_900,
+
+      backgroundColor(hex("#111827"))
+    )
+;
+    style(
+      All.BackgroundColor.ZINC_050,
+
+      backgroundColor(hex("#fafafa"))
+    )
+;
+    style(
+      All.BackgroundColor.ZINC_100,
+
+      backgroundColor(hex("#f4f4f5"))
+    )
+;
+    style(
+      All.BackgroundColor.ZINC_200,
+
+      backgroundColor(hex("#e4e4e7"))
+    )
+;
+    style(
+      All.BackgroundColor.ZINC_300,
+
+      backgroundColor(hex("#d4d4d8"))
+    )
+;
+    style(
+      All.BackgroundColor.ZINC_400,
+
+      backgroundColor(hex("#a1a1aa"))
+    )
+;
+    style(
+      All.BackgroundColor.ZINC_500,
+
+      backgroundColor(hex("#71717a"))
+    )
+;
+    style(
+      All.BackgroundColor.ZINC_600,
+
+      backgroundColor(hex("#52525b"))
+    )
+;
+    style(
+      All.BackgroundColor.ZINC_700,
+
+      backgroundColor(hex("#3f3f46"))
+    )
+;
+    style(
+      All.BackgroundColor.ZINC_800,
+
+      backgroundColor(hex("#27272a"))
+    )
+;
+    style(
+      All.BackgroundColor.ZINC_900,
+
+      backgroundColor(hex("#18181b"))
+    )
+;
+    style(
+      All.BackgroundColor.NEUTRAL_050,
+
+      backgroundColor(hex("#fafafa"))
+    )
+;
+    style(
+      All.BackgroundColor.NEUTRAL_100,
+
+      backgroundColor(hex("#f5f5f5"))
+    )
+;
+    style(
+      All.BackgroundColor.NEUTRAL_200,
+
+      backgroundColor(hex("#e5e5e5"))
+    )
+;
+    style(
+      All.BackgroundColor.NEUTRAL_300,
+
+      backgroundColor(hex("#d4d4d4"))
+    )
+;
+    style(
+      All.BackgroundColor.NEUTRAL_400,
+
+      backgroundColor(hex("#a3a3a3"))
+    )
+;
+    style(
+      All.BackgroundColor.NEUTRAL_500,
+
+      backgroundColor(hex("#737373"))
+    )
+;
+    style(
+      All.BackgroundColor.NEUTRAL_600,
+
+      backgroundColor(hex("#525252"))
+    )
+;
+    style(
+      All.BackgroundColor.NEUTRAL_700,
+
+      backgroundColor(hex("#404040"))
+    )
+;
+    style(
+      All.BackgroundColor.NEUTRAL_800,
+
+      backgroundColor(hex("#262626"))
+    )
+;
+    style(
+      All.BackgroundColor.NEUTRAL_900,
+
+      backgroundColor(hex("#171717"))
+    )
+;
+    style(
+      All.BackgroundColor.STONE_050,
+
+      backgroundColor(hex("#fafaf9"))
+    )
+;
+    style(
+      All.BackgroundColor.STONE_100,
+
+      backgroundColor(hex("#f5f5f4"))
+    )
+;
+    style(
+      All.BackgroundColor.STONE_200,
+
+      backgroundColor(hex("#e7e5e4"))
+    )
+;
+    style(
+      All.BackgroundColor.STONE_300,
+
+      backgroundColor(hex("#d6d3d1"))
+    )
+;
+    style(
+      All.BackgroundColor.STONE_400,
+
+      backgroundColor(hex("#a8a29e"))
+    )
+;
+    style(
+      All.BackgroundColor.STONE_500,
+
+      backgroundColor(hex("#78716c"))
+    )
+;
+    style(
+      All.BackgroundColor.STONE_600,
+
+      backgroundColor(hex("#57534e"))
+    )
+;
+    style(
+      All.BackgroundColor.STONE_700,
+
+      backgroundColor(hex("#44403c"))
+    )
+;
+    style(
+      All.BackgroundColor.STONE_800,
+
+      backgroundColor(hex("#292524"))
+    )
+;
+    style(
+      All.BackgroundColor.STONE_900,
+
+      backgroundColor(hex("#1c1917"))
+    )
+;
+    style(
+      All.BackgroundColor.RED_050,
+
+      backgroundColor(hex("#fef2f2"))
+    )
+;
+    style(
+      All.BackgroundColor.RED_100,
+
+      backgroundColor(hex("#fee2e2"))
+    )
+;
+    style(
+      All.BackgroundColor.RED_200,
+
+      backgroundColor(hex("#fecaca"))
+    )
+;
+    style(
+      All.BackgroundColor.RED_300,
+
+      backgroundColor(hex("#fca5a5"))
+    )
+;
+    style(
+      All.BackgroundColor.RED_400,
+
+      backgroundColor(hex("#f87171"))
+    )
+;
+    style(
+      All.BackgroundColor.RED_500,
+
+      backgroundColor(hex("#ef4444"))
+    )
+;
+    style(
+      All.BackgroundColor.RED_600,
+
+      backgroundColor(hex("#dc2626"))
+    )
+;
+    style(
+      All.BackgroundColor.RED_700,
+
+      backgroundColor(hex("#b91c1c"))
+    )
+;
+    style(
+      All.BackgroundColor.RED_800,
+
+      backgroundColor(hex("#991b1b"))
+    )
+;
+    style(
+      All.BackgroundColor.RED_900,
+
+      backgroundColor(hex("#7f1d1d"))
+    )
+;
+    style(
+      All.BackgroundColor.ORANGE_050,
+
+      backgroundColor(hex("#fff7ed"))
+    )
+;
+    style(
+      All.BackgroundColor.ORANGE_100,
+
+      backgroundColor(hex("#ffedd5"))
+    )
+;
+    style(
+      All.BackgroundColor.ORANGE_200,
+
+      backgroundColor(hex("#fed7aa"))
+    )
+;
+    style(
+      All.BackgroundColor.ORANGE_300,
+
+      backgroundColor(hex("#fdba74"))
+    )
+;
+    style(
+      All.BackgroundColor.ORANGE_400,
+
+      backgroundColor(hex("#fb923c"))
+    )
+;
+    style(
+      All.BackgroundColor.ORANGE_500,
+
+      backgroundColor(hex("#f97316"))
+    )
+;
+    style(
+      All.BackgroundColor.ORANGE_600,
+
+      backgroundColor(hex("#ea580c"))
+    )
+;
+    style(
+      All.BackgroundColor.ORANGE_700,
+
+      backgroundColor(hex("#c2410c"))
+    )
+;
+    style(
+      All.BackgroundColor.ORANGE_800,
+
+      backgroundColor(hex("#9a3412"))
+    )
+;
+    style(
+      All.BackgroundColor.ORANGE_900,
+
+      backgroundColor(hex("#7c2d12"))
+    )
+;
+    style(
+      All.BackgroundColor.AMBER_050,
+
+      backgroundColor(hex("#fffbeb"))
+    )
+;
+    style(
+      All.BackgroundColor.AMBER_100,
+
+      backgroundColor(hex("#fef3c7"))
+    )
+;
+    style(
+      All.BackgroundColor.AMBER_200,
+
+      backgroundColor(hex("#fde68a"))
+    )
+;
+    style(
+      All.BackgroundColor.AMBER_300,
+
+      backgroundColor(hex("#fcd34d"))
+    )
+;
+    style(
+      All.BackgroundColor.AMBER_400,
+
+      backgroundColor(hex("#fbbf24"))
+    )
+;
+    style(
+      All.BackgroundColor.AMBER_500,
+
+      backgroundColor(hex("#f59e0b"))
+    )
+;
+    style(
+      All.BackgroundColor.AMBER_600,
+
+      backgroundColor(hex("#d97706"))
+    )
+;
+    style(
+      All.BackgroundColor.AMBER_700,
+
+      backgroundColor(hex("#b45309"))
+    )
+;
+    style(
+      All.BackgroundColor.AMBER_800,
+
+      backgroundColor(hex("#92400e"))
+    )
+;
+    style(
+      All.BackgroundColor.AMBER_900,
+
+      backgroundColor(hex("#78350f"))
+    )
+;
+    style(
+      All.BackgroundColor.YELLOW_050,
+
+      backgroundColor(hex("#fefce8"))
+    )
+;
+    style(
+      All.BackgroundColor.YELLOW_100,
+
+      backgroundColor(hex("#fef9c3"))
+    )
+;
+    style(
+      All.BackgroundColor.YELLOW_200,
+
+      backgroundColor(hex("#fef08a"))
+    )
+;
+    style(
+      All.BackgroundColor.YELLOW_300,
+
+      backgroundColor(hex("#fde047"))
+    )
+;
+    style(
+      All.BackgroundColor.YELLOW_400,
+
+      backgroundColor(hex("#facc15"))
+    )
+;
+    style(
+      All.BackgroundColor.YELLOW_500,
+
+      backgroundColor(hex("#eab308"))
+    )
+;
+    style(
+      All.BackgroundColor.YELLOW_600,
+
+      backgroundColor(hex("#ca8a04"))
+    )
+;
+    style(
+      All.BackgroundColor.YELLOW_700,
+
+      backgroundColor(hex("#a16207"))
+    )
+;
+    style(
+      All.BackgroundColor.YELLOW_800,
+
+      backgroundColor(hex("#854d0e"))
+    )
+;
+    style(
+      All.BackgroundColor.YELLOW_900,
+
+      backgroundColor(hex("#713f12"))
+    )
+;
+    style(
+      All.BackgroundColor.LIME_050,
+
+      backgroundColor(hex("#f7fee7"))
+    )
+;
+    style(
+      All.BackgroundColor.LIME_100,
+
+      backgroundColor(hex("#ecfccb"))
+    )
+;
+    style(
+      All.BackgroundColor.LIME_200,
+
+      backgroundColor(hex("#d9f99d"))
+    )
+;
+    style(
+      All.BackgroundColor.LIME_300,
+
+      backgroundColor(hex("#bef264"))
+    )
+;
+    style(
+      All.BackgroundColor.LIME_400,
+
+      backgroundColor(hex("#a3e635"))
+    )
+;
+    style(
+      All.BackgroundColor.LIME_500,
+
+      backgroundColor(hex("#84cc16"))
+    )
+;
+    style(
+      All.BackgroundColor.LIME_600,
+
+      backgroundColor(hex("#65a30d"))
+    )
+;
+    style(
+      All.BackgroundColor.LIME_700,
+
+      backgroundColor(hex("#4d7c0f"))
+    )
+;
+    style(
+      All.BackgroundColor.LIME_800,
+
+      backgroundColor(hex("#3f6212"))
+    )
+;
+    style(
+      All.BackgroundColor.LIME_900,
+
+      backgroundColor(hex("#365314"))
+    )
+;
+    style(
+      All.BackgroundColor.GREEN_050,
+
+      backgroundColor(hex("#f0fdf4"))
+    )
+;
+    style(
+      All.BackgroundColor.GREEN_100,
+
+      backgroundColor(hex("#dcfce7"))
+    )
+;
+    style(
+      All.BackgroundColor.GREEN_200,
+
+      backgroundColor(hex("#bbf7d0"))
+    )
+;
+    style(
+      All.BackgroundColor.GREEN_300,
+
+      backgroundColor(hex("#86efac"))
+    )
+;
+    style(
+      All.BackgroundColor.GREEN_400,
+
+      backgroundColor(hex("#4ade80"))
+    )
+;
+    style(
+      All.BackgroundColor.GREEN_500,
+
+      backgroundColor(hex("#22c55e"))
+    )
+;
+    style(
+      All.BackgroundColor.GREEN_600,
+
+      backgroundColor(hex("#16a34a"))
+    )
+;
+    style(
+      All.BackgroundColor.GREEN_700,
+
+      backgroundColor(hex("#15803d"))
+    )
+;
+    style(
+      All.BackgroundColor.GREEN_800,
+
+      backgroundColor(hex("#166534"))
+    )
+;
+    style(
+      All.BackgroundColor.GREEN_900,
+
+      backgroundColor(hex("#14532d"))
+    )
+;
+    style(
+      All.BackgroundColor.EMERALD_050,
+
+      backgroundColor(hex("#ecfdf5"))
+    )
+;
+    style(
+      All.BackgroundColor.EMERALD_100,
+
+      backgroundColor(hex("#d1fae5"))
+    )
+;
+    style(
+      All.BackgroundColor.EMERALD_200,
+
+      backgroundColor(hex("#a7f3d0"))
+    )
+;
+    style(
+      All.BackgroundColor.EMERALD_300,
+
+      backgroundColor(hex("#6ee7b7"))
+    )
+;
+    style(
+      All.BackgroundColor.EMERALD_400,
+
+      backgroundColor(hex("#34d399"))
+    )
+;
+    style(
+      All.BackgroundColor.EMERALD_500,
+
+      backgroundColor(hex("#10b981"))
+    )
+;
+    style(
+      All.BackgroundColor.EMERALD_600,
+
+      backgroundColor(hex("#059669"))
+    )
+;
+    style(
+      All.BackgroundColor.EMERALD_700,
+
+      backgroundColor(hex("#047857"))
+    )
+;
+    style(
+      All.BackgroundColor.EMERALD_800,
+
+      backgroundColor(hex("#065f46"))
+    )
+;
+    style(
+      All.BackgroundColor.EMERALD_900,
+
+      backgroundColor(hex("#064e3b"))
+    )
+;
+    style(
+      All.BackgroundColor.TEAL_050,
+
+      backgroundColor(hex("#f0fdfa"))
+    )
+;
+    style(
+      All.BackgroundColor.TEAL_100,
+
+      backgroundColor(hex("#ccfbf1"))
+    )
+;
+    style(
+      All.BackgroundColor.TEAL_200,
+
+      backgroundColor(hex("#99f6e4"))
+    )
+;
+    style(
+      All.BackgroundColor.TEAL_300,
+
+      backgroundColor(hex("#5eead4"))
+    )
+;
+    style(
+      All.BackgroundColor.TEAL_400,
+
+      backgroundColor(hex("#2dd4bf"))
+    )
+;
+    style(
+      All.BackgroundColor.TEAL_500,
+
+      backgroundColor(hex("#14b8a6"))
+    )
+;
+    style(
+      All.BackgroundColor.TEAL_600,
+
+      backgroundColor(hex("#0d9488"))
+    )
+;
+    style(
+      All.BackgroundColor.TEAL_700,
+
+      backgroundColor(hex("#0f766e"))
+    )
+;
+    style(
+      All.BackgroundColor.TEAL_800,
+
+      backgroundColor(hex("#115e59"))
+    )
+;
+    style(
+      All.BackgroundColor.TEAL_900,
+
+      backgroundColor(hex("#134e4a"))
+    )
+;
+    style(
+      All.BackgroundColor.CYAN_050,
+
+      backgroundColor(hex("#ecfeff"))
+    )
+;
+    style(
+      All.BackgroundColor.CYAN_100,
+
+      backgroundColor(hex("#cffafe"))
+    )
+;
+    style(
+      All.BackgroundColor.CYAN_200,
+
+      backgroundColor(hex("#a5f3fc"))
+    )
+;
+    style(
+      All.BackgroundColor.CYAN_300,
+
+      backgroundColor(hex("#67e8f9"))
+    )
+;
+    style(
+      All.BackgroundColor.CYAN_400,
+
+      backgroundColor(hex("#22d3ee"))
+    )
+;
+    style(
+      All.BackgroundColor.CYAN_500,
+
+      backgroundColor(hex("#06b6d4"))
+    )
+;
+    style(
+      All.BackgroundColor.CYAN_600,
+
+      backgroundColor(hex("#0891b2"))
+    )
+;
+    style(
+      All.BackgroundColor.CYAN_700,
+
+      backgroundColor(hex("#0e7490"))
+    )
+;
+    style(
+      All.BackgroundColor.CYAN_800,
+
+      backgroundColor(hex("#155e75"))
+    )
+;
+    style(
+      All.BackgroundColor.CYAN_900,
+
+      backgroundColor(hex("#164e63"))
+    )
+;
+    style(
+      All.BackgroundColor.SKY_050,
+
+      backgroundColor(hex("#f0f9ff"))
+    )
+;
+    style(
+      All.BackgroundColor.SKY_100,
+
+      backgroundColor(hex("#e0f2fe"))
+    )
+;
+    style(
+      All.BackgroundColor.SKY_200,
+
+      backgroundColor(hex("#bae6fd"))
+    )
+;
+    style(
+      All.BackgroundColor.SKY_300,
+
+      backgroundColor(hex("#7dd3fc"))
+    )
+;
+    style(
+      All.BackgroundColor.SKY_400,
+
+      backgroundColor(hex("#38bdf8"))
+    )
+;
+    style(
+      All.BackgroundColor.SKY_500,
+
+      backgroundColor(hex("#0ea5e9"))
+    )
+;
+    style(
+      All.BackgroundColor.SKY_600,
+
+      backgroundColor(hex("#0284c7"))
+    )
+;
+    style(
+      All.BackgroundColor.SKY_700,
+
+      backgroundColor(hex("#0369a1"))
+    )
+;
+    style(
+      All.BackgroundColor.SKY_800,
+
+      backgroundColor(hex("#075985"))
+    )
+;
+    style(
+      All.BackgroundColor.SKY_900,
+
+      backgroundColor(hex("#0c4a6e"))
+    )
+;
+    style(
+      All.BackgroundColor.BLUE_050,
+
+      backgroundColor(hex("#eff6ff"))
+    )
+;
+    style(
+      All.BackgroundColor.BLUE_100,
+
+      backgroundColor(hex("#dbeafe"))
+    )
+;
+    style(
+      All.BackgroundColor.BLUE_200,
+
+      backgroundColor(hex("#bfdbfe"))
+    )
+;
+    style(
+      All.BackgroundColor.BLUE_300,
+
+      backgroundColor(hex("#93c5fd"))
+    )
+;
+    style(
+      All.BackgroundColor.BLUE_400,
+
+      backgroundColor(hex("#60a5fa"))
+    )
+;
+    style(
+      All.BackgroundColor.BLUE_500,
+
+      backgroundColor(hex("#3b82f6"))
+    )
+;
+    style(
+      All.BackgroundColor.BLUE_600,
+
+      backgroundColor(hex("#2563eb"))
+    )
+;
+    style(
+      All.BackgroundColor.BLUE_700,
+
+      backgroundColor(hex("#1d4ed8"))
+    )
+;
+    style(
+      All.BackgroundColor.BLUE_800,
+
+      backgroundColor(hex("#1e40af"))
+    )
+;
+    style(
+      All.BackgroundColor.BLUE_900,
+
+      backgroundColor(hex("#1e3a8a"))
+    )
+;
+    style(
+      All.BackgroundColor.INDIGO_050,
+
+      backgroundColor(hex("#eef2ff"))
+    )
+;
+    style(
+      All.BackgroundColor.INDIGO_100,
+
+      backgroundColor(hex("#e0e7ff"))
+    )
+;
+    style(
+      All.BackgroundColor.INDIGO_200,
+
+      backgroundColor(hex("#c7d2fe"))
+    )
+;
+    style(
+      All.BackgroundColor.INDIGO_300,
+
+      backgroundColor(hex("#a5b4fc"))
+    )
+;
+    style(
+      All.BackgroundColor.INDIGO_400,
+
+      backgroundColor(hex("#818cf8"))
+    )
+;
+    style(
+      All.BackgroundColor.INDIGO_500,
+
+      backgroundColor(hex("#6366f1"))
+    )
+;
+    style(
+      All.BackgroundColor.INDIGO_600,
+
+      backgroundColor(hex("#4f46e5"))
+    )
+;
+    style(
+      All.BackgroundColor.INDIGO_700,
+
+      backgroundColor(hex("#4338ca"))
+    )
+;
+    style(
+      All.BackgroundColor.INDIGO_800,
+
+      backgroundColor(hex("#3730a3"))
+    )
+;
+    style(
+      All.BackgroundColor.INDIGO_900,
+
+      backgroundColor(hex("#312e81"))
+    )
+;
+    style(
+      All.BackgroundColor.VIOLET_050,
+
+      backgroundColor(hex("#f5f3ff"))
+    )
+;
+    style(
+      All.BackgroundColor.VIOLET_100,
+
+      backgroundColor(hex("#ede9fe"))
+    )
+;
+    style(
+      All.BackgroundColor.VIOLET_200,
+
+      backgroundColor(hex("#ddd6fe"))
+    )
+;
+    style(
+      All.BackgroundColor.VIOLET_300,
+
+      backgroundColor(hex("#c4b5fd"))
+    )
+;
+    style(
+      All.BackgroundColor.VIOLET_400,
+
+      backgroundColor(hex("#a78bfa"))
+    )
+;
+    style(
+      All.BackgroundColor.VIOLET_500,
+
+      backgroundColor(hex("#8b5cf6"))
+    )
+;
+    style(
+      All.BackgroundColor.VIOLET_600,
+
+      backgroundColor(hex("#7c3aed"))
+    )
+;
+    style(
+      All.BackgroundColor.VIOLET_700,
+
+      backgroundColor(hex("#6d28d9"))
+    )
+;
+    style(
+      All.BackgroundColor.VIOLET_800,
+
+      backgroundColor(hex("#5b21b6"))
+    )
+;
+    style(
+      All.BackgroundColor.VIOLET_900,
+
+      backgroundColor(hex("#4c1d95"))
+    )
+;
+    style(
+      All.BackgroundColor.PURPLE_050,
+
+      backgroundColor(hex("#faf5ff"))
+    )
+;
+    style(
+      All.BackgroundColor.PURPLE_100,
+
+      backgroundColor(hex("#f3e8ff"))
+    )
+;
+    style(
+      All.BackgroundColor.PURPLE_200,
+
+      backgroundColor(hex("#e9d5ff"))
+    )
+;
+    style(
+      All.BackgroundColor.PURPLE_300,
+
+      backgroundColor(hex("#d8b4fe"))
+    )
+;
+    style(
+      All.BackgroundColor.PURPLE_400,
+
+      backgroundColor(hex("#c084fc"))
+    )
+;
+    style(
+      All.BackgroundColor.PURPLE_500,
+
+      backgroundColor(hex("#a855f7"))
+    )
+;
+    style(
+      All.BackgroundColor.PURPLE_600,
+
+      backgroundColor(hex("#9333ea"))
+    )
+;
+    style(
+      All.BackgroundColor.PURPLE_700,
+
+      backgroundColor(hex("#7e22ce"))
+    )
+;
+    style(
+      All.BackgroundColor.PURPLE_800,
+
+      backgroundColor(hex("#6b21a8"))
+    )
+;
+    style(
+      All.BackgroundColor.PURPLE_900,
+
+      backgroundColor(hex("#581c87"))
+    )
+;
+    style(
+      All.BackgroundColor.FUCHSIA_050,
+
+      backgroundColor(hex("#fdf4ff"))
+    )
+;
+    style(
+      All.BackgroundColor.FUCHSIA_100,
+
+      backgroundColor(hex("#fae8ff"))
+    )
+;
+    style(
+      All.BackgroundColor.FUCHSIA_200,
+
+      backgroundColor(hex("#f5d0fe"))
+    )
+;
+    style(
+      All.BackgroundColor.FUCHSIA_300,
+
+      backgroundColor(hex("#f0abfc"))
+    )
+;
+    style(
+      All.BackgroundColor.FUCHSIA_400,
+
+      backgroundColor(hex("#e879f9"))
+    )
+;
+    style(
+      All.BackgroundColor.FUCHSIA_500,
+
+      backgroundColor(hex("#d946ef"))
+    )
+;
+    style(
+      All.BackgroundColor.FUCHSIA_600,
+
+      backgroundColor(hex("#c026d3"))
+    )
+;
+    style(
+      All.BackgroundColor.FUCHSIA_700,
+
+      backgroundColor(hex("#a21caf"))
+    )
+;
+    style(
+      All.BackgroundColor.FUCHSIA_800,
+
+      backgroundColor(hex("#86198f"))
+    )
+;
+    style(
+      All.BackgroundColor.FUCHSIA_900,
+
+      backgroundColor(hex("#701a75"))
+    )
+;
+    style(
+      All.BackgroundColor.PINK_050,
+
+      backgroundColor(hex("#fdf2f8"))
+    )
+;
+    style(
+      All.BackgroundColor.PINK_100,
+
+      backgroundColor(hex("#fce7f3"))
+    )
+;
+    style(
+      All.BackgroundColor.PINK_200,
+
+      backgroundColor(hex("#fbcfe8"))
+    )
+;
+    style(
+      All.BackgroundColor.PINK_300,
+
+      backgroundColor(hex("#f9a8d4"))
+    )
+;
+    style(
+      All.BackgroundColor.PINK_400,
+
+      backgroundColor(hex("#f472b6"))
+    )
+;
+    style(
+      All.BackgroundColor.PINK_500,
+
+      backgroundColor(hex("#ec4899"))
+    )
+;
+    style(
+      All.BackgroundColor.PINK_600,
+
+      backgroundColor(hex("#db2777"))
+    )
+;
+    style(
+      All.BackgroundColor.PINK_700,
+
+      backgroundColor(hex("#be185d"))
+    )
+;
+    style(
+      All.BackgroundColor.PINK_800,
+
+      backgroundColor(hex("#9d174d"))
+    )
+;
+    style(
+      All.BackgroundColor.PINK_900,
+
+      backgroundColor(hex("#831843"))
+    )
+;
+    style(
+      All.BackgroundColor.ROSE_050,
+
+      backgroundColor(hex("#fff1f2"))
+    )
+;
+    style(
+      All.BackgroundColor.ROSE_100,
+
+      backgroundColor(hex("#ffe4e6"))
+    )
+;
+    style(
+      All.BackgroundColor.ROSE_200,
+
+      backgroundColor(hex("#fecdd3"))
+    )
+;
+    style(
+      All.BackgroundColor.ROSE_300,
+
+      backgroundColor(hex("#fda4af"))
+    )
+;
+    style(
+      All.BackgroundColor.ROSE_400,
+
+      backgroundColor(hex("#fb7185"))
+    )
+;
+    style(
+      All.BackgroundColor.ROSE_500,
+
+      backgroundColor(hex("#f43f5e"))
+    )
+;
+    style(
+      All.BackgroundColor.ROSE_600,
+
+      backgroundColor(hex("#e11d48"))
+    )
+;
+    style(
+      All.BackgroundColor.ROSE_700,
+
+      backgroundColor(hex("#be123c"))
+    )
+;
+    style(
+      All.BackgroundColor.ROSE_800,
+
+      backgroundColor(hex("#9f1239"))
+    )
+;
+    style(
+      All.BackgroundColor.ROSE_900,
+
+      backgroundColor(hex("#881337"))
+    )
+;
+
+  }
 
   private void AllColor() {
     style(
@@ -6880,6 +8229,1351 @@ public final class Framework extends CssTemplate {
       width(fitContent)
     )
 ;
+
+  }
+
+  private void SmallBackgroundColor() {
+    media(
+      minWidth(px(640)),
+
+      style(
+        Small.BackgroundColor.TRANSPARENT,
+
+        backgroundColor(transparent)
+      )
+  ,
+      style(
+        Small.BackgroundColor.BLACK,
+
+        backgroundColor(hex("#000"))
+      )
+  ,
+      style(
+        Small.BackgroundColor.WHITE,
+
+        backgroundColor(hex("#ffffff"))
+      )
+  ,
+      style(
+        Small.BackgroundColor.SLATE_050,
+
+        backgroundColor(hex("#f8fafc"))
+      )
+  ,
+      style(
+        Small.BackgroundColor.SLATE_100,
+
+        backgroundColor(hex("#f1f5f9"))
+      )
+  ,
+      style(
+        Small.BackgroundColor.SLATE_200,
+
+        backgroundColor(hex("#e2e8f0"))
+      )
+  ,
+      style(
+        Small.BackgroundColor.SLATE_300,
+
+        backgroundColor(hex("#cbd5e1"))
+      )
+  ,
+      style(
+        Small.BackgroundColor.SLATE_400,
+
+        backgroundColor(hex("#94a3b8"))
+      )
+  ,
+      style(
+        Small.BackgroundColor.SLATE_500,
+
+        backgroundColor(hex("#64748b"))
+      )
+  ,
+      style(
+        Small.BackgroundColor.SLATE_600,
+
+        backgroundColor(hex("#475569"))
+      )
+  ,
+      style(
+        Small.BackgroundColor.SLATE_700,
+
+        backgroundColor(hex("#334155"))
+      )
+  ,
+      style(
+        Small.BackgroundColor.SLATE_800,
+
+        backgroundColor(hex("#1e293b"))
+      )
+  ,
+      style(
+        Small.BackgroundColor.SLATE_900,
+
+        backgroundColor(hex("#0f172a"))
+      )
+  ,
+      style(
+        Small.BackgroundColor.GRAY_050,
+
+        backgroundColor(hex("#f9fafb"))
+      )
+  ,
+      style(
+        Small.BackgroundColor.GRAY_100,
+
+        backgroundColor(hex("#f3f4f6"))
+      )
+  ,
+      style(
+        Small.BackgroundColor.GRAY_200,
+
+        backgroundColor(hex("#e5e7eb"))
+      )
+  ,
+      style(
+        Small.BackgroundColor.GRAY_300,
+
+        backgroundColor(hex("#d1d5db"))
+      )
+  ,
+      style(
+        Small.BackgroundColor.GRAY_400,
+
+        backgroundColor(hex("#9ca3af"))
+      )
+  ,
+      style(
+        Small.BackgroundColor.GRAY_500,
+
+        backgroundColor(hex("#6b7280"))
+      )
+  ,
+      style(
+        Small.BackgroundColor.GRAY_600,
+
+        backgroundColor(hex("#4b5563"))
+      )
+  ,
+      style(
+        Small.BackgroundColor.GRAY_700,
+
+        backgroundColor(hex("#374151"))
+      )
+  ,
+      style(
+        Small.BackgroundColor.GRAY_800,
+
+        backgroundColor(hex("#1f2937"))
+      )
+  ,
+      style(
+        Small.BackgroundColor.GRAY_900,
+
+        backgroundColor(hex("#111827"))
+      )
+  ,
+      style(
+        Small.BackgroundColor.ZINC_050,
+
+        backgroundColor(hex("#fafafa"))
+      )
+  ,
+      style(
+        Small.BackgroundColor.ZINC_100,
+
+        backgroundColor(hex("#f4f4f5"))
+      )
+  ,
+      style(
+        Small.BackgroundColor.ZINC_200,
+
+        backgroundColor(hex("#e4e4e7"))
+      )
+  ,
+      style(
+        Small.BackgroundColor.ZINC_300,
+
+        backgroundColor(hex("#d4d4d8"))
+      )
+  ,
+      style(
+        Small.BackgroundColor.ZINC_400,
+
+        backgroundColor(hex("#a1a1aa"))
+      )
+  ,
+      style(
+        Small.BackgroundColor.ZINC_500,
+
+        backgroundColor(hex("#71717a"))
+      )
+  ,
+      style(
+        Small.BackgroundColor.ZINC_600,
+
+        backgroundColor(hex("#52525b"))
+      )
+  ,
+      style(
+        Small.BackgroundColor.ZINC_700,
+
+        backgroundColor(hex("#3f3f46"))
+      )
+  ,
+      style(
+        Small.BackgroundColor.ZINC_800,
+
+        backgroundColor(hex("#27272a"))
+      )
+  ,
+      style(
+        Small.BackgroundColor.ZINC_900,
+
+        backgroundColor(hex("#18181b"))
+      )
+  ,
+      style(
+        Small.BackgroundColor.NEUTRAL_050,
+
+        backgroundColor(hex("#fafafa"))
+      )
+  ,
+      style(
+        Small.BackgroundColor.NEUTRAL_100,
+
+        backgroundColor(hex("#f5f5f5"))
+      )
+  ,
+      style(
+        Small.BackgroundColor.NEUTRAL_200,
+
+        backgroundColor(hex("#e5e5e5"))
+      )
+  ,
+      style(
+        Small.BackgroundColor.NEUTRAL_300,
+
+        backgroundColor(hex("#d4d4d4"))
+      )
+  ,
+      style(
+        Small.BackgroundColor.NEUTRAL_400,
+
+        backgroundColor(hex("#a3a3a3"))
+      )
+  ,
+      style(
+        Small.BackgroundColor.NEUTRAL_500,
+
+        backgroundColor(hex("#737373"))
+      )
+  ,
+      style(
+        Small.BackgroundColor.NEUTRAL_600,
+
+        backgroundColor(hex("#525252"))
+      )
+  ,
+      style(
+        Small.BackgroundColor.NEUTRAL_700,
+
+        backgroundColor(hex("#404040"))
+      )
+  ,
+      style(
+        Small.BackgroundColor.NEUTRAL_800,
+
+        backgroundColor(hex("#262626"))
+      )
+  ,
+      style(
+        Small.BackgroundColor.NEUTRAL_900,
+
+        backgroundColor(hex("#171717"))
+      )
+  ,
+      style(
+        Small.BackgroundColor.STONE_050,
+
+        backgroundColor(hex("#fafaf9"))
+      )
+  ,
+      style(
+        Small.BackgroundColor.STONE_100,
+
+        backgroundColor(hex("#f5f5f4"))
+      )
+  ,
+      style(
+        Small.BackgroundColor.STONE_200,
+
+        backgroundColor(hex("#e7e5e4"))
+      )
+  ,
+      style(
+        Small.BackgroundColor.STONE_300,
+
+        backgroundColor(hex("#d6d3d1"))
+      )
+  ,
+      style(
+        Small.BackgroundColor.STONE_400,
+
+        backgroundColor(hex("#a8a29e"))
+      )
+  ,
+      style(
+        Small.BackgroundColor.STONE_500,
+
+        backgroundColor(hex("#78716c"))
+      )
+  ,
+      style(
+        Small.BackgroundColor.STONE_600,
+
+        backgroundColor(hex("#57534e"))
+      )
+  ,
+      style(
+        Small.BackgroundColor.STONE_700,
+
+        backgroundColor(hex("#44403c"))
+      )
+  ,
+      style(
+        Small.BackgroundColor.STONE_800,
+
+        backgroundColor(hex("#292524"))
+      )
+  ,
+      style(
+        Small.BackgroundColor.STONE_900,
+
+        backgroundColor(hex("#1c1917"))
+      )
+  ,
+      style(
+        Small.BackgroundColor.RED_050,
+
+        backgroundColor(hex("#fef2f2"))
+      )
+  ,
+      style(
+        Small.BackgroundColor.RED_100,
+
+        backgroundColor(hex("#fee2e2"))
+      )
+  ,
+      style(
+        Small.BackgroundColor.RED_200,
+
+        backgroundColor(hex("#fecaca"))
+      )
+  ,
+      style(
+        Small.BackgroundColor.RED_300,
+
+        backgroundColor(hex("#fca5a5"))
+      )
+  ,
+      style(
+        Small.BackgroundColor.RED_400,
+
+        backgroundColor(hex("#f87171"))
+      )
+  ,
+      style(
+        Small.BackgroundColor.RED_500,
+
+        backgroundColor(hex("#ef4444"))
+      )
+  ,
+      style(
+        Small.BackgroundColor.RED_600,
+
+        backgroundColor(hex("#dc2626"))
+      )
+  ,
+      style(
+        Small.BackgroundColor.RED_700,
+
+        backgroundColor(hex("#b91c1c"))
+      )
+  ,
+      style(
+        Small.BackgroundColor.RED_800,
+
+        backgroundColor(hex("#991b1b"))
+      )
+  ,
+      style(
+        Small.BackgroundColor.RED_900,
+
+        backgroundColor(hex("#7f1d1d"))
+      )
+  ,
+      style(
+        Small.BackgroundColor.ORANGE_050,
+
+        backgroundColor(hex("#fff7ed"))
+      )
+  ,
+      style(
+        Small.BackgroundColor.ORANGE_100,
+
+        backgroundColor(hex("#ffedd5"))
+      )
+  ,
+      style(
+        Small.BackgroundColor.ORANGE_200,
+
+        backgroundColor(hex("#fed7aa"))
+      )
+  ,
+      style(
+        Small.BackgroundColor.ORANGE_300,
+
+        backgroundColor(hex("#fdba74"))
+      )
+  ,
+      style(
+        Small.BackgroundColor.ORANGE_400,
+
+        backgroundColor(hex("#fb923c"))
+      )
+  ,
+      style(
+        Small.BackgroundColor.ORANGE_500,
+
+        backgroundColor(hex("#f97316"))
+      )
+  ,
+      style(
+        Small.BackgroundColor.ORANGE_600,
+
+        backgroundColor(hex("#ea580c"))
+      )
+  ,
+      style(
+        Small.BackgroundColor.ORANGE_700,
+
+        backgroundColor(hex("#c2410c"))
+      )
+  ,
+      style(
+        Small.BackgroundColor.ORANGE_800,
+
+        backgroundColor(hex("#9a3412"))
+      )
+  ,
+      style(
+        Small.BackgroundColor.ORANGE_900,
+
+        backgroundColor(hex("#7c2d12"))
+      )
+  ,
+      style(
+        Small.BackgroundColor.AMBER_050,
+
+        backgroundColor(hex("#fffbeb"))
+      )
+  ,
+      style(
+        Small.BackgroundColor.AMBER_100,
+
+        backgroundColor(hex("#fef3c7"))
+      )
+  ,
+      style(
+        Small.BackgroundColor.AMBER_200,
+
+        backgroundColor(hex("#fde68a"))
+      )
+  ,
+      style(
+        Small.BackgroundColor.AMBER_300,
+
+        backgroundColor(hex("#fcd34d"))
+      )
+  ,
+      style(
+        Small.BackgroundColor.AMBER_400,
+
+        backgroundColor(hex("#fbbf24"))
+      )
+  ,
+      style(
+        Small.BackgroundColor.AMBER_500,
+
+        backgroundColor(hex("#f59e0b"))
+      )
+  ,
+      style(
+        Small.BackgroundColor.AMBER_600,
+
+        backgroundColor(hex("#d97706"))
+      )
+  ,
+      style(
+        Small.BackgroundColor.AMBER_700,
+
+        backgroundColor(hex("#b45309"))
+      )
+  ,
+      style(
+        Small.BackgroundColor.AMBER_800,
+
+        backgroundColor(hex("#92400e"))
+      )
+  ,
+      style(
+        Small.BackgroundColor.AMBER_900,
+
+        backgroundColor(hex("#78350f"))
+      )
+  ,
+      style(
+        Small.BackgroundColor.YELLOW_050,
+
+        backgroundColor(hex("#fefce8"))
+      )
+  ,
+      style(
+        Small.BackgroundColor.YELLOW_100,
+
+        backgroundColor(hex("#fef9c3"))
+      )
+  ,
+      style(
+        Small.BackgroundColor.YELLOW_200,
+
+        backgroundColor(hex("#fef08a"))
+      )
+  ,
+      style(
+        Small.BackgroundColor.YELLOW_300,
+
+        backgroundColor(hex("#fde047"))
+      )
+  ,
+      style(
+        Small.BackgroundColor.YELLOW_400,
+
+        backgroundColor(hex("#facc15"))
+      )
+  ,
+      style(
+        Small.BackgroundColor.YELLOW_500,
+
+        backgroundColor(hex("#eab308"))
+      )
+  ,
+      style(
+        Small.BackgroundColor.YELLOW_600,
+
+        backgroundColor(hex("#ca8a04"))
+      )
+  ,
+      style(
+        Small.BackgroundColor.YELLOW_700,
+
+        backgroundColor(hex("#a16207"))
+      )
+  ,
+      style(
+        Small.BackgroundColor.YELLOW_800,
+
+        backgroundColor(hex("#854d0e"))
+      )
+  ,
+      style(
+        Small.BackgroundColor.YELLOW_900,
+
+        backgroundColor(hex("#713f12"))
+      )
+  ,
+      style(
+        Small.BackgroundColor.LIME_050,
+
+        backgroundColor(hex("#f7fee7"))
+      )
+  ,
+      style(
+        Small.BackgroundColor.LIME_100,
+
+        backgroundColor(hex("#ecfccb"))
+      )
+  ,
+      style(
+        Small.BackgroundColor.LIME_200,
+
+        backgroundColor(hex("#d9f99d"))
+      )
+  ,
+      style(
+        Small.BackgroundColor.LIME_300,
+
+        backgroundColor(hex("#bef264"))
+      )
+  ,
+      style(
+        Small.BackgroundColor.LIME_400,
+
+        backgroundColor(hex("#a3e635"))
+      )
+  ,
+      style(
+        Small.BackgroundColor.LIME_500,
+
+        backgroundColor(hex("#84cc16"))
+      )
+  ,
+      style(
+        Small.BackgroundColor.LIME_600,
+
+        backgroundColor(hex("#65a30d"))
+      )
+  ,
+      style(
+        Small.BackgroundColor.LIME_700,
+
+        backgroundColor(hex("#4d7c0f"))
+      )
+  ,
+      style(
+        Small.BackgroundColor.LIME_800,
+
+        backgroundColor(hex("#3f6212"))
+      )
+  ,
+      style(
+        Small.BackgroundColor.LIME_900,
+
+        backgroundColor(hex("#365314"))
+      )
+  ,
+      style(
+        Small.BackgroundColor.GREEN_050,
+
+        backgroundColor(hex("#f0fdf4"))
+      )
+  ,
+      style(
+        Small.BackgroundColor.GREEN_100,
+
+        backgroundColor(hex("#dcfce7"))
+      )
+  ,
+      style(
+        Small.BackgroundColor.GREEN_200,
+
+        backgroundColor(hex("#bbf7d0"))
+      )
+  ,
+      style(
+        Small.BackgroundColor.GREEN_300,
+
+        backgroundColor(hex("#86efac"))
+      )
+  ,
+      style(
+        Small.BackgroundColor.GREEN_400,
+
+        backgroundColor(hex("#4ade80"))
+      )
+  ,
+      style(
+        Small.BackgroundColor.GREEN_500,
+
+        backgroundColor(hex("#22c55e"))
+      )
+  ,
+      style(
+        Small.BackgroundColor.GREEN_600,
+
+        backgroundColor(hex("#16a34a"))
+      )
+  ,
+      style(
+        Small.BackgroundColor.GREEN_700,
+
+        backgroundColor(hex("#15803d"))
+      )
+  ,
+      style(
+        Small.BackgroundColor.GREEN_800,
+
+        backgroundColor(hex("#166534"))
+      )
+  ,
+      style(
+        Small.BackgroundColor.GREEN_900,
+
+        backgroundColor(hex("#14532d"))
+      )
+  ,
+      style(
+        Small.BackgroundColor.EMERALD_050,
+
+        backgroundColor(hex("#ecfdf5"))
+      )
+  ,
+      style(
+        Small.BackgroundColor.EMERALD_100,
+
+        backgroundColor(hex("#d1fae5"))
+      )
+  ,
+      style(
+        Small.BackgroundColor.EMERALD_200,
+
+        backgroundColor(hex("#a7f3d0"))
+      )
+  ,
+      style(
+        Small.BackgroundColor.EMERALD_300,
+
+        backgroundColor(hex("#6ee7b7"))
+      )
+  ,
+      style(
+        Small.BackgroundColor.EMERALD_400,
+
+        backgroundColor(hex("#34d399"))
+      )
+  ,
+      style(
+        Small.BackgroundColor.EMERALD_500,
+
+        backgroundColor(hex("#10b981"))
+      )
+  ,
+      style(
+        Small.BackgroundColor.EMERALD_600,
+
+        backgroundColor(hex("#059669"))
+      )
+  ,
+      style(
+        Small.BackgroundColor.EMERALD_700,
+
+        backgroundColor(hex("#047857"))
+      )
+  ,
+      style(
+        Small.BackgroundColor.EMERALD_800,
+
+        backgroundColor(hex("#065f46"))
+      )
+  ,
+      style(
+        Small.BackgroundColor.EMERALD_900,
+
+        backgroundColor(hex("#064e3b"))
+      )
+  ,
+      style(
+        Small.BackgroundColor.TEAL_050,
+
+        backgroundColor(hex("#f0fdfa"))
+      )
+  ,
+      style(
+        Small.BackgroundColor.TEAL_100,
+
+        backgroundColor(hex("#ccfbf1"))
+      )
+  ,
+      style(
+        Small.BackgroundColor.TEAL_200,
+
+        backgroundColor(hex("#99f6e4"))
+      )
+  ,
+      style(
+        Small.BackgroundColor.TEAL_300,
+
+        backgroundColor(hex("#5eead4"))
+      )
+  ,
+      style(
+        Small.BackgroundColor.TEAL_400,
+
+        backgroundColor(hex("#2dd4bf"))
+      )
+  ,
+      style(
+        Small.BackgroundColor.TEAL_500,
+
+        backgroundColor(hex("#14b8a6"))
+      )
+  ,
+      style(
+        Small.BackgroundColor.TEAL_600,
+
+        backgroundColor(hex("#0d9488"))
+      )
+  ,
+      style(
+        Small.BackgroundColor.TEAL_700,
+
+        backgroundColor(hex("#0f766e"))
+      )
+  ,
+      style(
+        Small.BackgroundColor.TEAL_800,
+
+        backgroundColor(hex("#115e59"))
+      )
+  ,
+      style(
+        Small.BackgroundColor.TEAL_900,
+
+        backgroundColor(hex("#134e4a"))
+      )
+  ,
+      style(
+        Small.BackgroundColor.CYAN_050,
+
+        backgroundColor(hex("#ecfeff"))
+      )
+  ,
+      style(
+        Small.BackgroundColor.CYAN_100,
+
+        backgroundColor(hex("#cffafe"))
+      )
+  ,
+      style(
+        Small.BackgroundColor.CYAN_200,
+
+        backgroundColor(hex("#a5f3fc"))
+      )
+  ,
+      style(
+        Small.BackgroundColor.CYAN_300,
+
+        backgroundColor(hex("#67e8f9"))
+      )
+  ,
+      style(
+        Small.BackgroundColor.CYAN_400,
+
+        backgroundColor(hex("#22d3ee"))
+      )
+  ,
+      style(
+        Small.BackgroundColor.CYAN_500,
+
+        backgroundColor(hex("#06b6d4"))
+      )
+  ,
+      style(
+        Small.BackgroundColor.CYAN_600,
+
+        backgroundColor(hex("#0891b2"))
+      )
+  ,
+      style(
+        Small.BackgroundColor.CYAN_700,
+
+        backgroundColor(hex("#0e7490"))
+      )
+  ,
+      style(
+        Small.BackgroundColor.CYAN_800,
+
+        backgroundColor(hex("#155e75"))
+      )
+  ,
+      style(
+        Small.BackgroundColor.CYAN_900,
+
+        backgroundColor(hex("#164e63"))
+      )
+  ,
+      style(
+        Small.BackgroundColor.SKY_050,
+
+        backgroundColor(hex("#f0f9ff"))
+      )
+  ,
+      style(
+        Small.BackgroundColor.SKY_100,
+
+        backgroundColor(hex("#e0f2fe"))
+      )
+  ,
+      style(
+        Small.BackgroundColor.SKY_200,
+
+        backgroundColor(hex("#bae6fd"))
+      )
+  ,
+      style(
+        Small.BackgroundColor.SKY_300,
+
+        backgroundColor(hex("#7dd3fc"))
+      )
+  ,
+      style(
+        Small.BackgroundColor.SKY_400,
+
+        backgroundColor(hex("#38bdf8"))
+      )
+  ,
+      style(
+        Small.BackgroundColor.SKY_500,
+
+        backgroundColor(hex("#0ea5e9"))
+      )
+  ,
+      style(
+        Small.BackgroundColor.SKY_600,
+
+        backgroundColor(hex("#0284c7"))
+      )
+  ,
+      style(
+        Small.BackgroundColor.SKY_700,
+
+        backgroundColor(hex("#0369a1"))
+      )
+  ,
+      style(
+        Small.BackgroundColor.SKY_800,
+
+        backgroundColor(hex("#075985"))
+      )
+  ,
+      style(
+        Small.BackgroundColor.SKY_900,
+
+        backgroundColor(hex("#0c4a6e"))
+      )
+  ,
+      style(
+        Small.BackgroundColor.BLUE_050,
+
+        backgroundColor(hex("#eff6ff"))
+      )
+  ,
+      style(
+        Small.BackgroundColor.BLUE_100,
+
+        backgroundColor(hex("#dbeafe"))
+      )
+  ,
+      style(
+        Small.BackgroundColor.BLUE_200,
+
+        backgroundColor(hex("#bfdbfe"))
+      )
+  ,
+      style(
+        Small.BackgroundColor.BLUE_300,
+
+        backgroundColor(hex("#93c5fd"))
+      )
+  ,
+      style(
+        Small.BackgroundColor.BLUE_400,
+
+        backgroundColor(hex("#60a5fa"))
+      )
+  ,
+      style(
+        Small.BackgroundColor.BLUE_500,
+
+        backgroundColor(hex("#3b82f6"))
+      )
+  ,
+      style(
+        Small.BackgroundColor.BLUE_600,
+
+        backgroundColor(hex("#2563eb"))
+      )
+  ,
+      style(
+        Small.BackgroundColor.BLUE_700,
+
+        backgroundColor(hex("#1d4ed8"))
+      )
+  ,
+      style(
+        Small.BackgroundColor.BLUE_800,
+
+        backgroundColor(hex("#1e40af"))
+      )
+  ,
+      style(
+        Small.BackgroundColor.BLUE_900,
+
+        backgroundColor(hex("#1e3a8a"))
+      )
+  ,
+      style(
+        Small.BackgroundColor.INDIGO_050,
+
+        backgroundColor(hex("#eef2ff"))
+      )
+  ,
+      style(
+        Small.BackgroundColor.INDIGO_100,
+
+        backgroundColor(hex("#e0e7ff"))
+      )
+  ,
+      style(
+        Small.BackgroundColor.INDIGO_200,
+
+        backgroundColor(hex("#c7d2fe"))
+      )
+  ,
+      style(
+        Small.BackgroundColor.INDIGO_300,
+
+        backgroundColor(hex("#a5b4fc"))
+      )
+  ,
+      style(
+        Small.BackgroundColor.INDIGO_400,
+
+        backgroundColor(hex("#818cf8"))
+      )
+  ,
+      style(
+        Small.BackgroundColor.INDIGO_500,
+
+        backgroundColor(hex("#6366f1"))
+      )
+  ,
+      style(
+        Small.BackgroundColor.INDIGO_600,
+
+        backgroundColor(hex("#4f46e5"))
+      )
+  ,
+      style(
+        Small.BackgroundColor.INDIGO_700,
+
+        backgroundColor(hex("#4338ca"))
+      )
+  ,
+      style(
+        Small.BackgroundColor.INDIGO_800,
+
+        backgroundColor(hex("#3730a3"))
+      )
+  ,
+      style(
+        Small.BackgroundColor.INDIGO_900,
+
+        backgroundColor(hex("#312e81"))
+      )
+  ,
+      style(
+        Small.BackgroundColor.VIOLET_050,
+
+        backgroundColor(hex("#f5f3ff"))
+      )
+  ,
+      style(
+        Small.BackgroundColor.VIOLET_100,
+
+        backgroundColor(hex("#ede9fe"))
+      )
+  ,
+      style(
+        Small.BackgroundColor.VIOLET_200,
+
+        backgroundColor(hex("#ddd6fe"))
+      )
+  ,
+      style(
+        Small.BackgroundColor.VIOLET_300,
+
+        backgroundColor(hex("#c4b5fd"))
+      )
+  ,
+      style(
+        Small.BackgroundColor.VIOLET_400,
+
+        backgroundColor(hex("#a78bfa"))
+      )
+  ,
+      style(
+        Small.BackgroundColor.VIOLET_500,
+
+        backgroundColor(hex("#8b5cf6"))
+      )
+  ,
+      style(
+        Small.BackgroundColor.VIOLET_600,
+
+        backgroundColor(hex("#7c3aed"))
+      )
+  ,
+      style(
+        Small.BackgroundColor.VIOLET_700,
+
+        backgroundColor(hex("#6d28d9"))
+      )
+  ,
+      style(
+        Small.BackgroundColor.VIOLET_800,
+
+        backgroundColor(hex("#5b21b6"))
+      )
+  ,
+      style(
+        Small.BackgroundColor.VIOLET_900,
+
+        backgroundColor(hex("#4c1d95"))
+      )
+  ,
+      style(
+        Small.BackgroundColor.PURPLE_050,
+
+        backgroundColor(hex("#faf5ff"))
+      )
+  ,
+      style(
+        Small.BackgroundColor.PURPLE_100,
+
+        backgroundColor(hex("#f3e8ff"))
+      )
+  ,
+      style(
+        Small.BackgroundColor.PURPLE_200,
+
+        backgroundColor(hex("#e9d5ff"))
+      )
+  ,
+      style(
+        Small.BackgroundColor.PURPLE_300,
+
+        backgroundColor(hex("#d8b4fe"))
+      )
+  ,
+      style(
+        Small.BackgroundColor.PURPLE_400,
+
+        backgroundColor(hex("#c084fc"))
+      )
+  ,
+      style(
+        Small.BackgroundColor.PURPLE_500,
+
+        backgroundColor(hex("#a855f7"))
+      )
+  ,
+      style(
+        Small.BackgroundColor.PURPLE_600,
+
+        backgroundColor(hex("#9333ea"))
+      )
+  ,
+      style(
+        Small.BackgroundColor.PURPLE_700,
+
+        backgroundColor(hex("#7e22ce"))
+      )
+  ,
+      style(
+        Small.BackgroundColor.PURPLE_800,
+
+        backgroundColor(hex("#6b21a8"))
+      )
+  ,
+      style(
+        Small.BackgroundColor.PURPLE_900,
+
+        backgroundColor(hex("#581c87"))
+      )
+  ,
+      style(
+        Small.BackgroundColor.FUCHSIA_050,
+
+        backgroundColor(hex("#fdf4ff"))
+      )
+  ,
+      style(
+        Small.BackgroundColor.FUCHSIA_100,
+
+        backgroundColor(hex("#fae8ff"))
+      )
+  ,
+      style(
+        Small.BackgroundColor.FUCHSIA_200,
+
+        backgroundColor(hex("#f5d0fe"))
+      )
+  ,
+      style(
+        Small.BackgroundColor.FUCHSIA_300,
+
+        backgroundColor(hex("#f0abfc"))
+      )
+  ,
+      style(
+        Small.BackgroundColor.FUCHSIA_400,
+
+        backgroundColor(hex("#e879f9"))
+      )
+  ,
+      style(
+        Small.BackgroundColor.FUCHSIA_500,
+
+        backgroundColor(hex("#d946ef"))
+      )
+  ,
+      style(
+        Small.BackgroundColor.FUCHSIA_600,
+
+        backgroundColor(hex("#c026d3"))
+      )
+  ,
+      style(
+        Small.BackgroundColor.FUCHSIA_700,
+
+        backgroundColor(hex("#a21caf"))
+      )
+  ,
+      style(
+        Small.BackgroundColor.FUCHSIA_800,
+
+        backgroundColor(hex("#86198f"))
+      )
+  ,
+      style(
+        Small.BackgroundColor.FUCHSIA_900,
+
+        backgroundColor(hex("#701a75"))
+      )
+  ,
+      style(
+        Small.BackgroundColor.PINK_050,
+
+        backgroundColor(hex("#fdf2f8"))
+      )
+  ,
+      style(
+        Small.BackgroundColor.PINK_100,
+
+        backgroundColor(hex("#fce7f3"))
+      )
+  ,
+      style(
+        Small.BackgroundColor.PINK_200,
+
+        backgroundColor(hex("#fbcfe8"))
+      )
+  ,
+      style(
+        Small.BackgroundColor.PINK_300,
+
+        backgroundColor(hex("#f9a8d4"))
+      )
+  ,
+      style(
+        Small.BackgroundColor.PINK_400,
+
+        backgroundColor(hex("#f472b6"))
+      )
+  ,
+      style(
+        Small.BackgroundColor.PINK_500,
+
+        backgroundColor(hex("#ec4899"))
+      )
+  ,
+      style(
+        Small.BackgroundColor.PINK_600,
+
+        backgroundColor(hex("#db2777"))
+      )
+  ,
+      style(
+        Small.BackgroundColor.PINK_700,
+
+        backgroundColor(hex("#be185d"))
+      )
+  ,
+      style(
+        Small.BackgroundColor.PINK_800,
+
+        backgroundColor(hex("#9d174d"))
+      )
+  ,
+      style(
+        Small.BackgroundColor.PINK_900,
+
+        backgroundColor(hex("#831843"))
+      )
+  ,
+      style(
+        Small.BackgroundColor.ROSE_050,
+
+        backgroundColor(hex("#fff1f2"))
+      )
+  ,
+      style(
+        Small.BackgroundColor.ROSE_100,
+
+        backgroundColor(hex("#ffe4e6"))
+      )
+  ,
+      style(
+        Small.BackgroundColor.ROSE_200,
+
+        backgroundColor(hex("#fecdd3"))
+      )
+  ,
+      style(
+        Small.BackgroundColor.ROSE_300,
+
+        backgroundColor(hex("#fda4af"))
+      )
+  ,
+      style(
+        Small.BackgroundColor.ROSE_400,
+
+        backgroundColor(hex("#fb7185"))
+      )
+  ,
+      style(
+        Small.BackgroundColor.ROSE_500,
+
+        backgroundColor(hex("#f43f5e"))
+      )
+  ,
+      style(
+        Small.BackgroundColor.ROSE_600,
+
+        backgroundColor(hex("#e11d48"))
+      )
+  ,
+      style(
+        Small.BackgroundColor.ROSE_700,
+
+        backgroundColor(hex("#be123c"))
+      )
+  ,
+      style(
+        Small.BackgroundColor.ROSE_800,
+
+        backgroundColor(hex("#9f1239"))
+      )
+  ,
+      style(
+        Small.BackgroundColor.ROSE_900,
+
+        backgroundColor(hex("#881337"))
+      )
+    );
 
   }
 
@@ -13600,6 +16294,1351 @@ public final class Framework extends CssTemplate {
         Small.Width.FIT,
 
         width(fitContent)
+      )
+    );
+
+  }
+
+  private void MediumBackgroundColor() {
+    media(
+      minWidth(px(768)),
+
+      style(
+        Medium.BackgroundColor.TRANSPARENT,
+
+        backgroundColor(transparent)
+      )
+  ,
+      style(
+        Medium.BackgroundColor.BLACK,
+
+        backgroundColor(hex("#000"))
+      )
+  ,
+      style(
+        Medium.BackgroundColor.WHITE,
+
+        backgroundColor(hex("#ffffff"))
+      )
+  ,
+      style(
+        Medium.BackgroundColor.SLATE_050,
+
+        backgroundColor(hex("#f8fafc"))
+      )
+  ,
+      style(
+        Medium.BackgroundColor.SLATE_100,
+
+        backgroundColor(hex("#f1f5f9"))
+      )
+  ,
+      style(
+        Medium.BackgroundColor.SLATE_200,
+
+        backgroundColor(hex("#e2e8f0"))
+      )
+  ,
+      style(
+        Medium.BackgroundColor.SLATE_300,
+
+        backgroundColor(hex("#cbd5e1"))
+      )
+  ,
+      style(
+        Medium.BackgroundColor.SLATE_400,
+
+        backgroundColor(hex("#94a3b8"))
+      )
+  ,
+      style(
+        Medium.BackgroundColor.SLATE_500,
+
+        backgroundColor(hex("#64748b"))
+      )
+  ,
+      style(
+        Medium.BackgroundColor.SLATE_600,
+
+        backgroundColor(hex("#475569"))
+      )
+  ,
+      style(
+        Medium.BackgroundColor.SLATE_700,
+
+        backgroundColor(hex("#334155"))
+      )
+  ,
+      style(
+        Medium.BackgroundColor.SLATE_800,
+
+        backgroundColor(hex("#1e293b"))
+      )
+  ,
+      style(
+        Medium.BackgroundColor.SLATE_900,
+
+        backgroundColor(hex("#0f172a"))
+      )
+  ,
+      style(
+        Medium.BackgroundColor.GRAY_050,
+
+        backgroundColor(hex("#f9fafb"))
+      )
+  ,
+      style(
+        Medium.BackgroundColor.GRAY_100,
+
+        backgroundColor(hex("#f3f4f6"))
+      )
+  ,
+      style(
+        Medium.BackgroundColor.GRAY_200,
+
+        backgroundColor(hex("#e5e7eb"))
+      )
+  ,
+      style(
+        Medium.BackgroundColor.GRAY_300,
+
+        backgroundColor(hex("#d1d5db"))
+      )
+  ,
+      style(
+        Medium.BackgroundColor.GRAY_400,
+
+        backgroundColor(hex("#9ca3af"))
+      )
+  ,
+      style(
+        Medium.BackgroundColor.GRAY_500,
+
+        backgroundColor(hex("#6b7280"))
+      )
+  ,
+      style(
+        Medium.BackgroundColor.GRAY_600,
+
+        backgroundColor(hex("#4b5563"))
+      )
+  ,
+      style(
+        Medium.BackgroundColor.GRAY_700,
+
+        backgroundColor(hex("#374151"))
+      )
+  ,
+      style(
+        Medium.BackgroundColor.GRAY_800,
+
+        backgroundColor(hex("#1f2937"))
+      )
+  ,
+      style(
+        Medium.BackgroundColor.GRAY_900,
+
+        backgroundColor(hex("#111827"))
+      )
+  ,
+      style(
+        Medium.BackgroundColor.ZINC_050,
+
+        backgroundColor(hex("#fafafa"))
+      )
+  ,
+      style(
+        Medium.BackgroundColor.ZINC_100,
+
+        backgroundColor(hex("#f4f4f5"))
+      )
+  ,
+      style(
+        Medium.BackgroundColor.ZINC_200,
+
+        backgroundColor(hex("#e4e4e7"))
+      )
+  ,
+      style(
+        Medium.BackgroundColor.ZINC_300,
+
+        backgroundColor(hex("#d4d4d8"))
+      )
+  ,
+      style(
+        Medium.BackgroundColor.ZINC_400,
+
+        backgroundColor(hex("#a1a1aa"))
+      )
+  ,
+      style(
+        Medium.BackgroundColor.ZINC_500,
+
+        backgroundColor(hex("#71717a"))
+      )
+  ,
+      style(
+        Medium.BackgroundColor.ZINC_600,
+
+        backgroundColor(hex("#52525b"))
+      )
+  ,
+      style(
+        Medium.BackgroundColor.ZINC_700,
+
+        backgroundColor(hex("#3f3f46"))
+      )
+  ,
+      style(
+        Medium.BackgroundColor.ZINC_800,
+
+        backgroundColor(hex("#27272a"))
+      )
+  ,
+      style(
+        Medium.BackgroundColor.ZINC_900,
+
+        backgroundColor(hex("#18181b"))
+      )
+  ,
+      style(
+        Medium.BackgroundColor.NEUTRAL_050,
+
+        backgroundColor(hex("#fafafa"))
+      )
+  ,
+      style(
+        Medium.BackgroundColor.NEUTRAL_100,
+
+        backgroundColor(hex("#f5f5f5"))
+      )
+  ,
+      style(
+        Medium.BackgroundColor.NEUTRAL_200,
+
+        backgroundColor(hex("#e5e5e5"))
+      )
+  ,
+      style(
+        Medium.BackgroundColor.NEUTRAL_300,
+
+        backgroundColor(hex("#d4d4d4"))
+      )
+  ,
+      style(
+        Medium.BackgroundColor.NEUTRAL_400,
+
+        backgroundColor(hex("#a3a3a3"))
+      )
+  ,
+      style(
+        Medium.BackgroundColor.NEUTRAL_500,
+
+        backgroundColor(hex("#737373"))
+      )
+  ,
+      style(
+        Medium.BackgroundColor.NEUTRAL_600,
+
+        backgroundColor(hex("#525252"))
+      )
+  ,
+      style(
+        Medium.BackgroundColor.NEUTRAL_700,
+
+        backgroundColor(hex("#404040"))
+      )
+  ,
+      style(
+        Medium.BackgroundColor.NEUTRAL_800,
+
+        backgroundColor(hex("#262626"))
+      )
+  ,
+      style(
+        Medium.BackgroundColor.NEUTRAL_900,
+
+        backgroundColor(hex("#171717"))
+      )
+  ,
+      style(
+        Medium.BackgroundColor.STONE_050,
+
+        backgroundColor(hex("#fafaf9"))
+      )
+  ,
+      style(
+        Medium.BackgroundColor.STONE_100,
+
+        backgroundColor(hex("#f5f5f4"))
+      )
+  ,
+      style(
+        Medium.BackgroundColor.STONE_200,
+
+        backgroundColor(hex("#e7e5e4"))
+      )
+  ,
+      style(
+        Medium.BackgroundColor.STONE_300,
+
+        backgroundColor(hex("#d6d3d1"))
+      )
+  ,
+      style(
+        Medium.BackgroundColor.STONE_400,
+
+        backgroundColor(hex("#a8a29e"))
+      )
+  ,
+      style(
+        Medium.BackgroundColor.STONE_500,
+
+        backgroundColor(hex("#78716c"))
+      )
+  ,
+      style(
+        Medium.BackgroundColor.STONE_600,
+
+        backgroundColor(hex("#57534e"))
+      )
+  ,
+      style(
+        Medium.BackgroundColor.STONE_700,
+
+        backgroundColor(hex("#44403c"))
+      )
+  ,
+      style(
+        Medium.BackgroundColor.STONE_800,
+
+        backgroundColor(hex("#292524"))
+      )
+  ,
+      style(
+        Medium.BackgroundColor.STONE_900,
+
+        backgroundColor(hex("#1c1917"))
+      )
+  ,
+      style(
+        Medium.BackgroundColor.RED_050,
+
+        backgroundColor(hex("#fef2f2"))
+      )
+  ,
+      style(
+        Medium.BackgroundColor.RED_100,
+
+        backgroundColor(hex("#fee2e2"))
+      )
+  ,
+      style(
+        Medium.BackgroundColor.RED_200,
+
+        backgroundColor(hex("#fecaca"))
+      )
+  ,
+      style(
+        Medium.BackgroundColor.RED_300,
+
+        backgroundColor(hex("#fca5a5"))
+      )
+  ,
+      style(
+        Medium.BackgroundColor.RED_400,
+
+        backgroundColor(hex("#f87171"))
+      )
+  ,
+      style(
+        Medium.BackgroundColor.RED_500,
+
+        backgroundColor(hex("#ef4444"))
+      )
+  ,
+      style(
+        Medium.BackgroundColor.RED_600,
+
+        backgroundColor(hex("#dc2626"))
+      )
+  ,
+      style(
+        Medium.BackgroundColor.RED_700,
+
+        backgroundColor(hex("#b91c1c"))
+      )
+  ,
+      style(
+        Medium.BackgroundColor.RED_800,
+
+        backgroundColor(hex("#991b1b"))
+      )
+  ,
+      style(
+        Medium.BackgroundColor.RED_900,
+
+        backgroundColor(hex("#7f1d1d"))
+      )
+  ,
+      style(
+        Medium.BackgroundColor.ORANGE_050,
+
+        backgroundColor(hex("#fff7ed"))
+      )
+  ,
+      style(
+        Medium.BackgroundColor.ORANGE_100,
+
+        backgroundColor(hex("#ffedd5"))
+      )
+  ,
+      style(
+        Medium.BackgroundColor.ORANGE_200,
+
+        backgroundColor(hex("#fed7aa"))
+      )
+  ,
+      style(
+        Medium.BackgroundColor.ORANGE_300,
+
+        backgroundColor(hex("#fdba74"))
+      )
+  ,
+      style(
+        Medium.BackgroundColor.ORANGE_400,
+
+        backgroundColor(hex("#fb923c"))
+      )
+  ,
+      style(
+        Medium.BackgroundColor.ORANGE_500,
+
+        backgroundColor(hex("#f97316"))
+      )
+  ,
+      style(
+        Medium.BackgroundColor.ORANGE_600,
+
+        backgroundColor(hex("#ea580c"))
+      )
+  ,
+      style(
+        Medium.BackgroundColor.ORANGE_700,
+
+        backgroundColor(hex("#c2410c"))
+      )
+  ,
+      style(
+        Medium.BackgroundColor.ORANGE_800,
+
+        backgroundColor(hex("#9a3412"))
+      )
+  ,
+      style(
+        Medium.BackgroundColor.ORANGE_900,
+
+        backgroundColor(hex("#7c2d12"))
+      )
+  ,
+      style(
+        Medium.BackgroundColor.AMBER_050,
+
+        backgroundColor(hex("#fffbeb"))
+      )
+  ,
+      style(
+        Medium.BackgroundColor.AMBER_100,
+
+        backgroundColor(hex("#fef3c7"))
+      )
+  ,
+      style(
+        Medium.BackgroundColor.AMBER_200,
+
+        backgroundColor(hex("#fde68a"))
+      )
+  ,
+      style(
+        Medium.BackgroundColor.AMBER_300,
+
+        backgroundColor(hex("#fcd34d"))
+      )
+  ,
+      style(
+        Medium.BackgroundColor.AMBER_400,
+
+        backgroundColor(hex("#fbbf24"))
+      )
+  ,
+      style(
+        Medium.BackgroundColor.AMBER_500,
+
+        backgroundColor(hex("#f59e0b"))
+      )
+  ,
+      style(
+        Medium.BackgroundColor.AMBER_600,
+
+        backgroundColor(hex("#d97706"))
+      )
+  ,
+      style(
+        Medium.BackgroundColor.AMBER_700,
+
+        backgroundColor(hex("#b45309"))
+      )
+  ,
+      style(
+        Medium.BackgroundColor.AMBER_800,
+
+        backgroundColor(hex("#92400e"))
+      )
+  ,
+      style(
+        Medium.BackgroundColor.AMBER_900,
+
+        backgroundColor(hex("#78350f"))
+      )
+  ,
+      style(
+        Medium.BackgroundColor.YELLOW_050,
+
+        backgroundColor(hex("#fefce8"))
+      )
+  ,
+      style(
+        Medium.BackgroundColor.YELLOW_100,
+
+        backgroundColor(hex("#fef9c3"))
+      )
+  ,
+      style(
+        Medium.BackgroundColor.YELLOW_200,
+
+        backgroundColor(hex("#fef08a"))
+      )
+  ,
+      style(
+        Medium.BackgroundColor.YELLOW_300,
+
+        backgroundColor(hex("#fde047"))
+      )
+  ,
+      style(
+        Medium.BackgroundColor.YELLOW_400,
+
+        backgroundColor(hex("#facc15"))
+      )
+  ,
+      style(
+        Medium.BackgroundColor.YELLOW_500,
+
+        backgroundColor(hex("#eab308"))
+      )
+  ,
+      style(
+        Medium.BackgroundColor.YELLOW_600,
+
+        backgroundColor(hex("#ca8a04"))
+      )
+  ,
+      style(
+        Medium.BackgroundColor.YELLOW_700,
+
+        backgroundColor(hex("#a16207"))
+      )
+  ,
+      style(
+        Medium.BackgroundColor.YELLOW_800,
+
+        backgroundColor(hex("#854d0e"))
+      )
+  ,
+      style(
+        Medium.BackgroundColor.YELLOW_900,
+
+        backgroundColor(hex("#713f12"))
+      )
+  ,
+      style(
+        Medium.BackgroundColor.LIME_050,
+
+        backgroundColor(hex("#f7fee7"))
+      )
+  ,
+      style(
+        Medium.BackgroundColor.LIME_100,
+
+        backgroundColor(hex("#ecfccb"))
+      )
+  ,
+      style(
+        Medium.BackgroundColor.LIME_200,
+
+        backgroundColor(hex("#d9f99d"))
+      )
+  ,
+      style(
+        Medium.BackgroundColor.LIME_300,
+
+        backgroundColor(hex("#bef264"))
+      )
+  ,
+      style(
+        Medium.BackgroundColor.LIME_400,
+
+        backgroundColor(hex("#a3e635"))
+      )
+  ,
+      style(
+        Medium.BackgroundColor.LIME_500,
+
+        backgroundColor(hex("#84cc16"))
+      )
+  ,
+      style(
+        Medium.BackgroundColor.LIME_600,
+
+        backgroundColor(hex("#65a30d"))
+      )
+  ,
+      style(
+        Medium.BackgroundColor.LIME_700,
+
+        backgroundColor(hex("#4d7c0f"))
+      )
+  ,
+      style(
+        Medium.BackgroundColor.LIME_800,
+
+        backgroundColor(hex("#3f6212"))
+      )
+  ,
+      style(
+        Medium.BackgroundColor.LIME_900,
+
+        backgroundColor(hex("#365314"))
+      )
+  ,
+      style(
+        Medium.BackgroundColor.GREEN_050,
+
+        backgroundColor(hex("#f0fdf4"))
+      )
+  ,
+      style(
+        Medium.BackgroundColor.GREEN_100,
+
+        backgroundColor(hex("#dcfce7"))
+      )
+  ,
+      style(
+        Medium.BackgroundColor.GREEN_200,
+
+        backgroundColor(hex("#bbf7d0"))
+      )
+  ,
+      style(
+        Medium.BackgroundColor.GREEN_300,
+
+        backgroundColor(hex("#86efac"))
+      )
+  ,
+      style(
+        Medium.BackgroundColor.GREEN_400,
+
+        backgroundColor(hex("#4ade80"))
+      )
+  ,
+      style(
+        Medium.BackgroundColor.GREEN_500,
+
+        backgroundColor(hex("#22c55e"))
+      )
+  ,
+      style(
+        Medium.BackgroundColor.GREEN_600,
+
+        backgroundColor(hex("#16a34a"))
+      )
+  ,
+      style(
+        Medium.BackgroundColor.GREEN_700,
+
+        backgroundColor(hex("#15803d"))
+      )
+  ,
+      style(
+        Medium.BackgroundColor.GREEN_800,
+
+        backgroundColor(hex("#166534"))
+      )
+  ,
+      style(
+        Medium.BackgroundColor.GREEN_900,
+
+        backgroundColor(hex("#14532d"))
+      )
+  ,
+      style(
+        Medium.BackgroundColor.EMERALD_050,
+
+        backgroundColor(hex("#ecfdf5"))
+      )
+  ,
+      style(
+        Medium.BackgroundColor.EMERALD_100,
+
+        backgroundColor(hex("#d1fae5"))
+      )
+  ,
+      style(
+        Medium.BackgroundColor.EMERALD_200,
+
+        backgroundColor(hex("#a7f3d0"))
+      )
+  ,
+      style(
+        Medium.BackgroundColor.EMERALD_300,
+
+        backgroundColor(hex("#6ee7b7"))
+      )
+  ,
+      style(
+        Medium.BackgroundColor.EMERALD_400,
+
+        backgroundColor(hex("#34d399"))
+      )
+  ,
+      style(
+        Medium.BackgroundColor.EMERALD_500,
+
+        backgroundColor(hex("#10b981"))
+      )
+  ,
+      style(
+        Medium.BackgroundColor.EMERALD_600,
+
+        backgroundColor(hex("#059669"))
+      )
+  ,
+      style(
+        Medium.BackgroundColor.EMERALD_700,
+
+        backgroundColor(hex("#047857"))
+      )
+  ,
+      style(
+        Medium.BackgroundColor.EMERALD_800,
+
+        backgroundColor(hex("#065f46"))
+      )
+  ,
+      style(
+        Medium.BackgroundColor.EMERALD_900,
+
+        backgroundColor(hex("#064e3b"))
+      )
+  ,
+      style(
+        Medium.BackgroundColor.TEAL_050,
+
+        backgroundColor(hex("#f0fdfa"))
+      )
+  ,
+      style(
+        Medium.BackgroundColor.TEAL_100,
+
+        backgroundColor(hex("#ccfbf1"))
+      )
+  ,
+      style(
+        Medium.BackgroundColor.TEAL_200,
+
+        backgroundColor(hex("#99f6e4"))
+      )
+  ,
+      style(
+        Medium.BackgroundColor.TEAL_300,
+
+        backgroundColor(hex("#5eead4"))
+      )
+  ,
+      style(
+        Medium.BackgroundColor.TEAL_400,
+
+        backgroundColor(hex("#2dd4bf"))
+      )
+  ,
+      style(
+        Medium.BackgroundColor.TEAL_500,
+
+        backgroundColor(hex("#14b8a6"))
+      )
+  ,
+      style(
+        Medium.BackgroundColor.TEAL_600,
+
+        backgroundColor(hex("#0d9488"))
+      )
+  ,
+      style(
+        Medium.BackgroundColor.TEAL_700,
+
+        backgroundColor(hex("#0f766e"))
+      )
+  ,
+      style(
+        Medium.BackgroundColor.TEAL_800,
+
+        backgroundColor(hex("#115e59"))
+      )
+  ,
+      style(
+        Medium.BackgroundColor.TEAL_900,
+
+        backgroundColor(hex("#134e4a"))
+      )
+  ,
+      style(
+        Medium.BackgroundColor.CYAN_050,
+
+        backgroundColor(hex("#ecfeff"))
+      )
+  ,
+      style(
+        Medium.BackgroundColor.CYAN_100,
+
+        backgroundColor(hex("#cffafe"))
+      )
+  ,
+      style(
+        Medium.BackgroundColor.CYAN_200,
+
+        backgroundColor(hex("#a5f3fc"))
+      )
+  ,
+      style(
+        Medium.BackgroundColor.CYAN_300,
+
+        backgroundColor(hex("#67e8f9"))
+      )
+  ,
+      style(
+        Medium.BackgroundColor.CYAN_400,
+
+        backgroundColor(hex("#22d3ee"))
+      )
+  ,
+      style(
+        Medium.BackgroundColor.CYAN_500,
+
+        backgroundColor(hex("#06b6d4"))
+      )
+  ,
+      style(
+        Medium.BackgroundColor.CYAN_600,
+
+        backgroundColor(hex("#0891b2"))
+      )
+  ,
+      style(
+        Medium.BackgroundColor.CYAN_700,
+
+        backgroundColor(hex("#0e7490"))
+      )
+  ,
+      style(
+        Medium.BackgroundColor.CYAN_800,
+
+        backgroundColor(hex("#155e75"))
+      )
+  ,
+      style(
+        Medium.BackgroundColor.CYAN_900,
+
+        backgroundColor(hex("#164e63"))
+      )
+  ,
+      style(
+        Medium.BackgroundColor.SKY_050,
+
+        backgroundColor(hex("#f0f9ff"))
+      )
+  ,
+      style(
+        Medium.BackgroundColor.SKY_100,
+
+        backgroundColor(hex("#e0f2fe"))
+      )
+  ,
+      style(
+        Medium.BackgroundColor.SKY_200,
+
+        backgroundColor(hex("#bae6fd"))
+      )
+  ,
+      style(
+        Medium.BackgroundColor.SKY_300,
+
+        backgroundColor(hex("#7dd3fc"))
+      )
+  ,
+      style(
+        Medium.BackgroundColor.SKY_400,
+
+        backgroundColor(hex("#38bdf8"))
+      )
+  ,
+      style(
+        Medium.BackgroundColor.SKY_500,
+
+        backgroundColor(hex("#0ea5e9"))
+      )
+  ,
+      style(
+        Medium.BackgroundColor.SKY_600,
+
+        backgroundColor(hex("#0284c7"))
+      )
+  ,
+      style(
+        Medium.BackgroundColor.SKY_700,
+
+        backgroundColor(hex("#0369a1"))
+      )
+  ,
+      style(
+        Medium.BackgroundColor.SKY_800,
+
+        backgroundColor(hex("#075985"))
+      )
+  ,
+      style(
+        Medium.BackgroundColor.SKY_900,
+
+        backgroundColor(hex("#0c4a6e"))
+      )
+  ,
+      style(
+        Medium.BackgroundColor.BLUE_050,
+
+        backgroundColor(hex("#eff6ff"))
+      )
+  ,
+      style(
+        Medium.BackgroundColor.BLUE_100,
+
+        backgroundColor(hex("#dbeafe"))
+      )
+  ,
+      style(
+        Medium.BackgroundColor.BLUE_200,
+
+        backgroundColor(hex("#bfdbfe"))
+      )
+  ,
+      style(
+        Medium.BackgroundColor.BLUE_300,
+
+        backgroundColor(hex("#93c5fd"))
+      )
+  ,
+      style(
+        Medium.BackgroundColor.BLUE_400,
+
+        backgroundColor(hex("#60a5fa"))
+      )
+  ,
+      style(
+        Medium.BackgroundColor.BLUE_500,
+
+        backgroundColor(hex("#3b82f6"))
+      )
+  ,
+      style(
+        Medium.BackgroundColor.BLUE_600,
+
+        backgroundColor(hex("#2563eb"))
+      )
+  ,
+      style(
+        Medium.BackgroundColor.BLUE_700,
+
+        backgroundColor(hex("#1d4ed8"))
+      )
+  ,
+      style(
+        Medium.BackgroundColor.BLUE_800,
+
+        backgroundColor(hex("#1e40af"))
+      )
+  ,
+      style(
+        Medium.BackgroundColor.BLUE_900,
+
+        backgroundColor(hex("#1e3a8a"))
+      )
+  ,
+      style(
+        Medium.BackgroundColor.INDIGO_050,
+
+        backgroundColor(hex("#eef2ff"))
+      )
+  ,
+      style(
+        Medium.BackgroundColor.INDIGO_100,
+
+        backgroundColor(hex("#e0e7ff"))
+      )
+  ,
+      style(
+        Medium.BackgroundColor.INDIGO_200,
+
+        backgroundColor(hex("#c7d2fe"))
+      )
+  ,
+      style(
+        Medium.BackgroundColor.INDIGO_300,
+
+        backgroundColor(hex("#a5b4fc"))
+      )
+  ,
+      style(
+        Medium.BackgroundColor.INDIGO_400,
+
+        backgroundColor(hex("#818cf8"))
+      )
+  ,
+      style(
+        Medium.BackgroundColor.INDIGO_500,
+
+        backgroundColor(hex("#6366f1"))
+      )
+  ,
+      style(
+        Medium.BackgroundColor.INDIGO_600,
+
+        backgroundColor(hex("#4f46e5"))
+      )
+  ,
+      style(
+        Medium.BackgroundColor.INDIGO_700,
+
+        backgroundColor(hex("#4338ca"))
+      )
+  ,
+      style(
+        Medium.BackgroundColor.INDIGO_800,
+
+        backgroundColor(hex("#3730a3"))
+      )
+  ,
+      style(
+        Medium.BackgroundColor.INDIGO_900,
+
+        backgroundColor(hex("#312e81"))
+      )
+  ,
+      style(
+        Medium.BackgroundColor.VIOLET_050,
+
+        backgroundColor(hex("#f5f3ff"))
+      )
+  ,
+      style(
+        Medium.BackgroundColor.VIOLET_100,
+
+        backgroundColor(hex("#ede9fe"))
+      )
+  ,
+      style(
+        Medium.BackgroundColor.VIOLET_200,
+
+        backgroundColor(hex("#ddd6fe"))
+      )
+  ,
+      style(
+        Medium.BackgroundColor.VIOLET_300,
+
+        backgroundColor(hex("#c4b5fd"))
+      )
+  ,
+      style(
+        Medium.BackgroundColor.VIOLET_400,
+
+        backgroundColor(hex("#a78bfa"))
+      )
+  ,
+      style(
+        Medium.BackgroundColor.VIOLET_500,
+
+        backgroundColor(hex("#8b5cf6"))
+      )
+  ,
+      style(
+        Medium.BackgroundColor.VIOLET_600,
+
+        backgroundColor(hex("#7c3aed"))
+      )
+  ,
+      style(
+        Medium.BackgroundColor.VIOLET_700,
+
+        backgroundColor(hex("#6d28d9"))
+      )
+  ,
+      style(
+        Medium.BackgroundColor.VIOLET_800,
+
+        backgroundColor(hex("#5b21b6"))
+      )
+  ,
+      style(
+        Medium.BackgroundColor.VIOLET_900,
+
+        backgroundColor(hex("#4c1d95"))
+      )
+  ,
+      style(
+        Medium.BackgroundColor.PURPLE_050,
+
+        backgroundColor(hex("#faf5ff"))
+      )
+  ,
+      style(
+        Medium.BackgroundColor.PURPLE_100,
+
+        backgroundColor(hex("#f3e8ff"))
+      )
+  ,
+      style(
+        Medium.BackgroundColor.PURPLE_200,
+
+        backgroundColor(hex("#e9d5ff"))
+      )
+  ,
+      style(
+        Medium.BackgroundColor.PURPLE_300,
+
+        backgroundColor(hex("#d8b4fe"))
+      )
+  ,
+      style(
+        Medium.BackgroundColor.PURPLE_400,
+
+        backgroundColor(hex("#c084fc"))
+      )
+  ,
+      style(
+        Medium.BackgroundColor.PURPLE_500,
+
+        backgroundColor(hex("#a855f7"))
+      )
+  ,
+      style(
+        Medium.BackgroundColor.PURPLE_600,
+
+        backgroundColor(hex("#9333ea"))
+      )
+  ,
+      style(
+        Medium.BackgroundColor.PURPLE_700,
+
+        backgroundColor(hex("#7e22ce"))
+      )
+  ,
+      style(
+        Medium.BackgroundColor.PURPLE_800,
+
+        backgroundColor(hex("#6b21a8"))
+      )
+  ,
+      style(
+        Medium.BackgroundColor.PURPLE_900,
+
+        backgroundColor(hex("#581c87"))
+      )
+  ,
+      style(
+        Medium.BackgroundColor.FUCHSIA_050,
+
+        backgroundColor(hex("#fdf4ff"))
+      )
+  ,
+      style(
+        Medium.BackgroundColor.FUCHSIA_100,
+
+        backgroundColor(hex("#fae8ff"))
+      )
+  ,
+      style(
+        Medium.BackgroundColor.FUCHSIA_200,
+
+        backgroundColor(hex("#f5d0fe"))
+      )
+  ,
+      style(
+        Medium.BackgroundColor.FUCHSIA_300,
+
+        backgroundColor(hex("#f0abfc"))
+      )
+  ,
+      style(
+        Medium.BackgroundColor.FUCHSIA_400,
+
+        backgroundColor(hex("#e879f9"))
+      )
+  ,
+      style(
+        Medium.BackgroundColor.FUCHSIA_500,
+
+        backgroundColor(hex("#d946ef"))
+      )
+  ,
+      style(
+        Medium.BackgroundColor.FUCHSIA_600,
+
+        backgroundColor(hex("#c026d3"))
+      )
+  ,
+      style(
+        Medium.BackgroundColor.FUCHSIA_700,
+
+        backgroundColor(hex("#a21caf"))
+      )
+  ,
+      style(
+        Medium.BackgroundColor.FUCHSIA_800,
+
+        backgroundColor(hex("#86198f"))
+      )
+  ,
+      style(
+        Medium.BackgroundColor.FUCHSIA_900,
+
+        backgroundColor(hex("#701a75"))
+      )
+  ,
+      style(
+        Medium.BackgroundColor.PINK_050,
+
+        backgroundColor(hex("#fdf2f8"))
+      )
+  ,
+      style(
+        Medium.BackgroundColor.PINK_100,
+
+        backgroundColor(hex("#fce7f3"))
+      )
+  ,
+      style(
+        Medium.BackgroundColor.PINK_200,
+
+        backgroundColor(hex("#fbcfe8"))
+      )
+  ,
+      style(
+        Medium.BackgroundColor.PINK_300,
+
+        backgroundColor(hex("#f9a8d4"))
+      )
+  ,
+      style(
+        Medium.BackgroundColor.PINK_400,
+
+        backgroundColor(hex("#f472b6"))
+      )
+  ,
+      style(
+        Medium.BackgroundColor.PINK_500,
+
+        backgroundColor(hex("#ec4899"))
+      )
+  ,
+      style(
+        Medium.BackgroundColor.PINK_600,
+
+        backgroundColor(hex("#db2777"))
+      )
+  ,
+      style(
+        Medium.BackgroundColor.PINK_700,
+
+        backgroundColor(hex("#be185d"))
+      )
+  ,
+      style(
+        Medium.BackgroundColor.PINK_800,
+
+        backgroundColor(hex("#9d174d"))
+      )
+  ,
+      style(
+        Medium.BackgroundColor.PINK_900,
+
+        backgroundColor(hex("#831843"))
+      )
+  ,
+      style(
+        Medium.BackgroundColor.ROSE_050,
+
+        backgroundColor(hex("#fff1f2"))
+      )
+  ,
+      style(
+        Medium.BackgroundColor.ROSE_100,
+
+        backgroundColor(hex("#ffe4e6"))
+      )
+  ,
+      style(
+        Medium.BackgroundColor.ROSE_200,
+
+        backgroundColor(hex("#fecdd3"))
+      )
+  ,
+      style(
+        Medium.BackgroundColor.ROSE_300,
+
+        backgroundColor(hex("#fda4af"))
+      )
+  ,
+      style(
+        Medium.BackgroundColor.ROSE_400,
+
+        backgroundColor(hex("#fb7185"))
+      )
+  ,
+      style(
+        Medium.BackgroundColor.ROSE_500,
+
+        backgroundColor(hex("#f43f5e"))
+      )
+  ,
+      style(
+        Medium.BackgroundColor.ROSE_600,
+
+        backgroundColor(hex("#e11d48"))
+      )
+  ,
+      style(
+        Medium.BackgroundColor.ROSE_700,
+
+        backgroundColor(hex("#be123c"))
+      )
+  ,
+      style(
+        Medium.BackgroundColor.ROSE_800,
+
+        backgroundColor(hex("#9f1239"))
+      )
+  ,
+      style(
+        Medium.BackgroundColor.ROSE_900,
+
+        backgroundColor(hex("#881337"))
       )
     );
 
@@ -20327,6 +24366,1351 @@ public final class Framework extends CssTemplate {
 
   }
 
+  private void LargeBackgroundColor() {
+    media(
+      minWidth(px(1024)),
+
+      style(
+        Large.BackgroundColor.TRANSPARENT,
+
+        backgroundColor(transparent)
+      )
+  ,
+      style(
+        Large.BackgroundColor.BLACK,
+
+        backgroundColor(hex("#000"))
+      )
+  ,
+      style(
+        Large.BackgroundColor.WHITE,
+
+        backgroundColor(hex("#ffffff"))
+      )
+  ,
+      style(
+        Large.BackgroundColor.SLATE_050,
+
+        backgroundColor(hex("#f8fafc"))
+      )
+  ,
+      style(
+        Large.BackgroundColor.SLATE_100,
+
+        backgroundColor(hex("#f1f5f9"))
+      )
+  ,
+      style(
+        Large.BackgroundColor.SLATE_200,
+
+        backgroundColor(hex("#e2e8f0"))
+      )
+  ,
+      style(
+        Large.BackgroundColor.SLATE_300,
+
+        backgroundColor(hex("#cbd5e1"))
+      )
+  ,
+      style(
+        Large.BackgroundColor.SLATE_400,
+
+        backgroundColor(hex("#94a3b8"))
+      )
+  ,
+      style(
+        Large.BackgroundColor.SLATE_500,
+
+        backgroundColor(hex("#64748b"))
+      )
+  ,
+      style(
+        Large.BackgroundColor.SLATE_600,
+
+        backgroundColor(hex("#475569"))
+      )
+  ,
+      style(
+        Large.BackgroundColor.SLATE_700,
+
+        backgroundColor(hex("#334155"))
+      )
+  ,
+      style(
+        Large.BackgroundColor.SLATE_800,
+
+        backgroundColor(hex("#1e293b"))
+      )
+  ,
+      style(
+        Large.BackgroundColor.SLATE_900,
+
+        backgroundColor(hex("#0f172a"))
+      )
+  ,
+      style(
+        Large.BackgroundColor.GRAY_050,
+
+        backgroundColor(hex("#f9fafb"))
+      )
+  ,
+      style(
+        Large.BackgroundColor.GRAY_100,
+
+        backgroundColor(hex("#f3f4f6"))
+      )
+  ,
+      style(
+        Large.BackgroundColor.GRAY_200,
+
+        backgroundColor(hex("#e5e7eb"))
+      )
+  ,
+      style(
+        Large.BackgroundColor.GRAY_300,
+
+        backgroundColor(hex("#d1d5db"))
+      )
+  ,
+      style(
+        Large.BackgroundColor.GRAY_400,
+
+        backgroundColor(hex("#9ca3af"))
+      )
+  ,
+      style(
+        Large.BackgroundColor.GRAY_500,
+
+        backgroundColor(hex("#6b7280"))
+      )
+  ,
+      style(
+        Large.BackgroundColor.GRAY_600,
+
+        backgroundColor(hex("#4b5563"))
+      )
+  ,
+      style(
+        Large.BackgroundColor.GRAY_700,
+
+        backgroundColor(hex("#374151"))
+      )
+  ,
+      style(
+        Large.BackgroundColor.GRAY_800,
+
+        backgroundColor(hex("#1f2937"))
+      )
+  ,
+      style(
+        Large.BackgroundColor.GRAY_900,
+
+        backgroundColor(hex("#111827"))
+      )
+  ,
+      style(
+        Large.BackgroundColor.ZINC_050,
+
+        backgroundColor(hex("#fafafa"))
+      )
+  ,
+      style(
+        Large.BackgroundColor.ZINC_100,
+
+        backgroundColor(hex("#f4f4f5"))
+      )
+  ,
+      style(
+        Large.BackgroundColor.ZINC_200,
+
+        backgroundColor(hex("#e4e4e7"))
+      )
+  ,
+      style(
+        Large.BackgroundColor.ZINC_300,
+
+        backgroundColor(hex("#d4d4d8"))
+      )
+  ,
+      style(
+        Large.BackgroundColor.ZINC_400,
+
+        backgroundColor(hex("#a1a1aa"))
+      )
+  ,
+      style(
+        Large.BackgroundColor.ZINC_500,
+
+        backgroundColor(hex("#71717a"))
+      )
+  ,
+      style(
+        Large.BackgroundColor.ZINC_600,
+
+        backgroundColor(hex("#52525b"))
+      )
+  ,
+      style(
+        Large.BackgroundColor.ZINC_700,
+
+        backgroundColor(hex("#3f3f46"))
+      )
+  ,
+      style(
+        Large.BackgroundColor.ZINC_800,
+
+        backgroundColor(hex("#27272a"))
+      )
+  ,
+      style(
+        Large.BackgroundColor.ZINC_900,
+
+        backgroundColor(hex("#18181b"))
+      )
+  ,
+      style(
+        Large.BackgroundColor.NEUTRAL_050,
+
+        backgroundColor(hex("#fafafa"))
+      )
+  ,
+      style(
+        Large.BackgroundColor.NEUTRAL_100,
+
+        backgroundColor(hex("#f5f5f5"))
+      )
+  ,
+      style(
+        Large.BackgroundColor.NEUTRAL_200,
+
+        backgroundColor(hex("#e5e5e5"))
+      )
+  ,
+      style(
+        Large.BackgroundColor.NEUTRAL_300,
+
+        backgroundColor(hex("#d4d4d4"))
+      )
+  ,
+      style(
+        Large.BackgroundColor.NEUTRAL_400,
+
+        backgroundColor(hex("#a3a3a3"))
+      )
+  ,
+      style(
+        Large.BackgroundColor.NEUTRAL_500,
+
+        backgroundColor(hex("#737373"))
+      )
+  ,
+      style(
+        Large.BackgroundColor.NEUTRAL_600,
+
+        backgroundColor(hex("#525252"))
+      )
+  ,
+      style(
+        Large.BackgroundColor.NEUTRAL_700,
+
+        backgroundColor(hex("#404040"))
+      )
+  ,
+      style(
+        Large.BackgroundColor.NEUTRAL_800,
+
+        backgroundColor(hex("#262626"))
+      )
+  ,
+      style(
+        Large.BackgroundColor.NEUTRAL_900,
+
+        backgroundColor(hex("#171717"))
+      )
+  ,
+      style(
+        Large.BackgroundColor.STONE_050,
+
+        backgroundColor(hex("#fafaf9"))
+      )
+  ,
+      style(
+        Large.BackgroundColor.STONE_100,
+
+        backgroundColor(hex("#f5f5f4"))
+      )
+  ,
+      style(
+        Large.BackgroundColor.STONE_200,
+
+        backgroundColor(hex("#e7e5e4"))
+      )
+  ,
+      style(
+        Large.BackgroundColor.STONE_300,
+
+        backgroundColor(hex("#d6d3d1"))
+      )
+  ,
+      style(
+        Large.BackgroundColor.STONE_400,
+
+        backgroundColor(hex("#a8a29e"))
+      )
+  ,
+      style(
+        Large.BackgroundColor.STONE_500,
+
+        backgroundColor(hex("#78716c"))
+      )
+  ,
+      style(
+        Large.BackgroundColor.STONE_600,
+
+        backgroundColor(hex("#57534e"))
+      )
+  ,
+      style(
+        Large.BackgroundColor.STONE_700,
+
+        backgroundColor(hex("#44403c"))
+      )
+  ,
+      style(
+        Large.BackgroundColor.STONE_800,
+
+        backgroundColor(hex("#292524"))
+      )
+  ,
+      style(
+        Large.BackgroundColor.STONE_900,
+
+        backgroundColor(hex("#1c1917"))
+      )
+  ,
+      style(
+        Large.BackgroundColor.RED_050,
+
+        backgroundColor(hex("#fef2f2"))
+      )
+  ,
+      style(
+        Large.BackgroundColor.RED_100,
+
+        backgroundColor(hex("#fee2e2"))
+      )
+  ,
+      style(
+        Large.BackgroundColor.RED_200,
+
+        backgroundColor(hex("#fecaca"))
+      )
+  ,
+      style(
+        Large.BackgroundColor.RED_300,
+
+        backgroundColor(hex("#fca5a5"))
+      )
+  ,
+      style(
+        Large.BackgroundColor.RED_400,
+
+        backgroundColor(hex("#f87171"))
+      )
+  ,
+      style(
+        Large.BackgroundColor.RED_500,
+
+        backgroundColor(hex("#ef4444"))
+      )
+  ,
+      style(
+        Large.BackgroundColor.RED_600,
+
+        backgroundColor(hex("#dc2626"))
+      )
+  ,
+      style(
+        Large.BackgroundColor.RED_700,
+
+        backgroundColor(hex("#b91c1c"))
+      )
+  ,
+      style(
+        Large.BackgroundColor.RED_800,
+
+        backgroundColor(hex("#991b1b"))
+      )
+  ,
+      style(
+        Large.BackgroundColor.RED_900,
+
+        backgroundColor(hex("#7f1d1d"))
+      )
+  ,
+      style(
+        Large.BackgroundColor.ORANGE_050,
+
+        backgroundColor(hex("#fff7ed"))
+      )
+  ,
+      style(
+        Large.BackgroundColor.ORANGE_100,
+
+        backgroundColor(hex("#ffedd5"))
+      )
+  ,
+      style(
+        Large.BackgroundColor.ORANGE_200,
+
+        backgroundColor(hex("#fed7aa"))
+      )
+  ,
+      style(
+        Large.BackgroundColor.ORANGE_300,
+
+        backgroundColor(hex("#fdba74"))
+      )
+  ,
+      style(
+        Large.BackgroundColor.ORANGE_400,
+
+        backgroundColor(hex("#fb923c"))
+      )
+  ,
+      style(
+        Large.BackgroundColor.ORANGE_500,
+
+        backgroundColor(hex("#f97316"))
+      )
+  ,
+      style(
+        Large.BackgroundColor.ORANGE_600,
+
+        backgroundColor(hex("#ea580c"))
+      )
+  ,
+      style(
+        Large.BackgroundColor.ORANGE_700,
+
+        backgroundColor(hex("#c2410c"))
+      )
+  ,
+      style(
+        Large.BackgroundColor.ORANGE_800,
+
+        backgroundColor(hex("#9a3412"))
+      )
+  ,
+      style(
+        Large.BackgroundColor.ORANGE_900,
+
+        backgroundColor(hex("#7c2d12"))
+      )
+  ,
+      style(
+        Large.BackgroundColor.AMBER_050,
+
+        backgroundColor(hex("#fffbeb"))
+      )
+  ,
+      style(
+        Large.BackgroundColor.AMBER_100,
+
+        backgroundColor(hex("#fef3c7"))
+      )
+  ,
+      style(
+        Large.BackgroundColor.AMBER_200,
+
+        backgroundColor(hex("#fde68a"))
+      )
+  ,
+      style(
+        Large.BackgroundColor.AMBER_300,
+
+        backgroundColor(hex("#fcd34d"))
+      )
+  ,
+      style(
+        Large.BackgroundColor.AMBER_400,
+
+        backgroundColor(hex("#fbbf24"))
+      )
+  ,
+      style(
+        Large.BackgroundColor.AMBER_500,
+
+        backgroundColor(hex("#f59e0b"))
+      )
+  ,
+      style(
+        Large.BackgroundColor.AMBER_600,
+
+        backgroundColor(hex("#d97706"))
+      )
+  ,
+      style(
+        Large.BackgroundColor.AMBER_700,
+
+        backgroundColor(hex("#b45309"))
+      )
+  ,
+      style(
+        Large.BackgroundColor.AMBER_800,
+
+        backgroundColor(hex("#92400e"))
+      )
+  ,
+      style(
+        Large.BackgroundColor.AMBER_900,
+
+        backgroundColor(hex("#78350f"))
+      )
+  ,
+      style(
+        Large.BackgroundColor.YELLOW_050,
+
+        backgroundColor(hex("#fefce8"))
+      )
+  ,
+      style(
+        Large.BackgroundColor.YELLOW_100,
+
+        backgroundColor(hex("#fef9c3"))
+      )
+  ,
+      style(
+        Large.BackgroundColor.YELLOW_200,
+
+        backgroundColor(hex("#fef08a"))
+      )
+  ,
+      style(
+        Large.BackgroundColor.YELLOW_300,
+
+        backgroundColor(hex("#fde047"))
+      )
+  ,
+      style(
+        Large.BackgroundColor.YELLOW_400,
+
+        backgroundColor(hex("#facc15"))
+      )
+  ,
+      style(
+        Large.BackgroundColor.YELLOW_500,
+
+        backgroundColor(hex("#eab308"))
+      )
+  ,
+      style(
+        Large.BackgroundColor.YELLOW_600,
+
+        backgroundColor(hex("#ca8a04"))
+      )
+  ,
+      style(
+        Large.BackgroundColor.YELLOW_700,
+
+        backgroundColor(hex("#a16207"))
+      )
+  ,
+      style(
+        Large.BackgroundColor.YELLOW_800,
+
+        backgroundColor(hex("#854d0e"))
+      )
+  ,
+      style(
+        Large.BackgroundColor.YELLOW_900,
+
+        backgroundColor(hex("#713f12"))
+      )
+  ,
+      style(
+        Large.BackgroundColor.LIME_050,
+
+        backgroundColor(hex("#f7fee7"))
+      )
+  ,
+      style(
+        Large.BackgroundColor.LIME_100,
+
+        backgroundColor(hex("#ecfccb"))
+      )
+  ,
+      style(
+        Large.BackgroundColor.LIME_200,
+
+        backgroundColor(hex("#d9f99d"))
+      )
+  ,
+      style(
+        Large.BackgroundColor.LIME_300,
+
+        backgroundColor(hex("#bef264"))
+      )
+  ,
+      style(
+        Large.BackgroundColor.LIME_400,
+
+        backgroundColor(hex("#a3e635"))
+      )
+  ,
+      style(
+        Large.BackgroundColor.LIME_500,
+
+        backgroundColor(hex("#84cc16"))
+      )
+  ,
+      style(
+        Large.BackgroundColor.LIME_600,
+
+        backgroundColor(hex("#65a30d"))
+      )
+  ,
+      style(
+        Large.BackgroundColor.LIME_700,
+
+        backgroundColor(hex("#4d7c0f"))
+      )
+  ,
+      style(
+        Large.BackgroundColor.LIME_800,
+
+        backgroundColor(hex("#3f6212"))
+      )
+  ,
+      style(
+        Large.BackgroundColor.LIME_900,
+
+        backgroundColor(hex("#365314"))
+      )
+  ,
+      style(
+        Large.BackgroundColor.GREEN_050,
+
+        backgroundColor(hex("#f0fdf4"))
+      )
+  ,
+      style(
+        Large.BackgroundColor.GREEN_100,
+
+        backgroundColor(hex("#dcfce7"))
+      )
+  ,
+      style(
+        Large.BackgroundColor.GREEN_200,
+
+        backgroundColor(hex("#bbf7d0"))
+      )
+  ,
+      style(
+        Large.BackgroundColor.GREEN_300,
+
+        backgroundColor(hex("#86efac"))
+      )
+  ,
+      style(
+        Large.BackgroundColor.GREEN_400,
+
+        backgroundColor(hex("#4ade80"))
+      )
+  ,
+      style(
+        Large.BackgroundColor.GREEN_500,
+
+        backgroundColor(hex("#22c55e"))
+      )
+  ,
+      style(
+        Large.BackgroundColor.GREEN_600,
+
+        backgroundColor(hex("#16a34a"))
+      )
+  ,
+      style(
+        Large.BackgroundColor.GREEN_700,
+
+        backgroundColor(hex("#15803d"))
+      )
+  ,
+      style(
+        Large.BackgroundColor.GREEN_800,
+
+        backgroundColor(hex("#166534"))
+      )
+  ,
+      style(
+        Large.BackgroundColor.GREEN_900,
+
+        backgroundColor(hex("#14532d"))
+      )
+  ,
+      style(
+        Large.BackgroundColor.EMERALD_050,
+
+        backgroundColor(hex("#ecfdf5"))
+      )
+  ,
+      style(
+        Large.BackgroundColor.EMERALD_100,
+
+        backgroundColor(hex("#d1fae5"))
+      )
+  ,
+      style(
+        Large.BackgroundColor.EMERALD_200,
+
+        backgroundColor(hex("#a7f3d0"))
+      )
+  ,
+      style(
+        Large.BackgroundColor.EMERALD_300,
+
+        backgroundColor(hex("#6ee7b7"))
+      )
+  ,
+      style(
+        Large.BackgroundColor.EMERALD_400,
+
+        backgroundColor(hex("#34d399"))
+      )
+  ,
+      style(
+        Large.BackgroundColor.EMERALD_500,
+
+        backgroundColor(hex("#10b981"))
+      )
+  ,
+      style(
+        Large.BackgroundColor.EMERALD_600,
+
+        backgroundColor(hex("#059669"))
+      )
+  ,
+      style(
+        Large.BackgroundColor.EMERALD_700,
+
+        backgroundColor(hex("#047857"))
+      )
+  ,
+      style(
+        Large.BackgroundColor.EMERALD_800,
+
+        backgroundColor(hex("#065f46"))
+      )
+  ,
+      style(
+        Large.BackgroundColor.EMERALD_900,
+
+        backgroundColor(hex("#064e3b"))
+      )
+  ,
+      style(
+        Large.BackgroundColor.TEAL_050,
+
+        backgroundColor(hex("#f0fdfa"))
+      )
+  ,
+      style(
+        Large.BackgroundColor.TEAL_100,
+
+        backgroundColor(hex("#ccfbf1"))
+      )
+  ,
+      style(
+        Large.BackgroundColor.TEAL_200,
+
+        backgroundColor(hex("#99f6e4"))
+      )
+  ,
+      style(
+        Large.BackgroundColor.TEAL_300,
+
+        backgroundColor(hex("#5eead4"))
+      )
+  ,
+      style(
+        Large.BackgroundColor.TEAL_400,
+
+        backgroundColor(hex("#2dd4bf"))
+      )
+  ,
+      style(
+        Large.BackgroundColor.TEAL_500,
+
+        backgroundColor(hex("#14b8a6"))
+      )
+  ,
+      style(
+        Large.BackgroundColor.TEAL_600,
+
+        backgroundColor(hex("#0d9488"))
+      )
+  ,
+      style(
+        Large.BackgroundColor.TEAL_700,
+
+        backgroundColor(hex("#0f766e"))
+      )
+  ,
+      style(
+        Large.BackgroundColor.TEAL_800,
+
+        backgroundColor(hex("#115e59"))
+      )
+  ,
+      style(
+        Large.BackgroundColor.TEAL_900,
+
+        backgroundColor(hex("#134e4a"))
+      )
+  ,
+      style(
+        Large.BackgroundColor.CYAN_050,
+
+        backgroundColor(hex("#ecfeff"))
+      )
+  ,
+      style(
+        Large.BackgroundColor.CYAN_100,
+
+        backgroundColor(hex("#cffafe"))
+      )
+  ,
+      style(
+        Large.BackgroundColor.CYAN_200,
+
+        backgroundColor(hex("#a5f3fc"))
+      )
+  ,
+      style(
+        Large.BackgroundColor.CYAN_300,
+
+        backgroundColor(hex("#67e8f9"))
+      )
+  ,
+      style(
+        Large.BackgroundColor.CYAN_400,
+
+        backgroundColor(hex("#22d3ee"))
+      )
+  ,
+      style(
+        Large.BackgroundColor.CYAN_500,
+
+        backgroundColor(hex("#06b6d4"))
+      )
+  ,
+      style(
+        Large.BackgroundColor.CYAN_600,
+
+        backgroundColor(hex("#0891b2"))
+      )
+  ,
+      style(
+        Large.BackgroundColor.CYAN_700,
+
+        backgroundColor(hex("#0e7490"))
+      )
+  ,
+      style(
+        Large.BackgroundColor.CYAN_800,
+
+        backgroundColor(hex("#155e75"))
+      )
+  ,
+      style(
+        Large.BackgroundColor.CYAN_900,
+
+        backgroundColor(hex("#164e63"))
+      )
+  ,
+      style(
+        Large.BackgroundColor.SKY_050,
+
+        backgroundColor(hex("#f0f9ff"))
+      )
+  ,
+      style(
+        Large.BackgroundColor.SKY_100,
+
+        backgroundColor(hex("#e0f2fe"))
+      )
+  ,
+      style(
+        Large.BackgroundColor.SKY_200,
+
+        backgroundColor(hex("#bae6fd"))
+      )
+  ,
+      style(
+        Large.BackgroundColor.SKY_300,
+
+        backgroundColor(hex("#7dd3fc"))
+      )
+  ,
+      style(
+        Large.BackgroundColor.SKY_400,
+
+        backgroundColor(hex("#38bdf8"))
+      )
+  ,
+      style(
+        Large.BackgroundColor.SKY_500,
+
+        backgroundColor(hex("#0ea5e9"))
+      )
+  ,
+      style(
+        Large.BackgroundColor.SKY_600,
+
+        backgroundColor(hex("#0284c7"))
+      )
+  ,
+      style(
+        Large.BackgroundColor.SKY_700,
+
+        backgroundColor(hex("#0369a1"))
+      )
+  ,
+      style(
+        Large.BackgroundColor.SKY_800,
+
+        backgroundColor(hex("#075985"))
+      )
+  ,
+      style(
+        Large.BackgroundColor.SKY_900,
+
+        backgroundColor(hex("#0c4a6e"))
+      )
+  ,
+      style(
+        Large.BackgroundColor.BLUE_050,
+
+        backgroundColor(hex("#eff6ff"))
+      )
+  ,
+      style(
+        Large.BackgroundColor.BLUE_100,
+
+        backgroundColor(hex("#dbeafe"))
+      )
+  ,
+      style(
+        Large.BackgroundColor.BLUE_200,
+
+        backgroundColor(hex("#bfdbfe"))
+      )
+  ,
+      style(
+        Large.BackgroundColor.BLUE_300,
+
+        backgroundColor(hex("#93c5fd"))
+      )
+  ,
+      style(
+        Large.BackgroundColor.BLUE_400,
+
+        backgroundColor(hex("#60a5fa"))
+      )
+  ,
+      style(
+        Large.BackgroundColor.BLUE_500,
+
+        backgroundColor(hex("#3b82f6"))
+      )
+  ,
+      style(
+        Large.BackgroundColor.BLUE_600,
+
+        backgroundColor(hex("#2563eb"))
+      )
+  ,
+      style(
+        Large.BackgroundColor.BLUE_700,
+
+        backgroundColor(hex("#1d4ed8"))
+      )
+  ,
+      style(
+        Large.BackgroundColor.BLUE_800,
+
+        backgroundColor(hex("#1e40af"))
+      )
+  ,
+      style(
+        Large.BackgroundColor.BLUE_900,
+
+        backgroundColor(hex("#1e3a8a"))
+      )
+  ,
+      style(
+        Large.BackgroundColor.INDIGO_050,
+
+        backgroundColor(hex("#eef2ff"))
+      )
+  ,
+      style(
+        Large.BackgroundColor.INDIGO_100,
+
+        backgroundColor(hex("#e0e7ff"))
+      )
+  ,
+      style(
+        Large.BackgroundColor.INDIGO_200,
+
+        backgroundColor(hex("#c7d2fe"))
+      )
+  ,
+      style(
+        Large.BackgroundColor.INDIGO_300,
+
+        backgroundColor(hex("#a5b4fc"))
+      )
+  ,
+      style(
+        Large.BackgroundColor.INDIGO_400,
+
+        backgroundColor(hex("#818cf8"))
+      )
+  ,
+      style(
+        Large.BackgroundColor.INDIGO_500,
+
+        backgroundColor(hex("#6366f1"))
+      )
+  ,
+      style(
+        Large.BackgroundColor.INDIGO_600,
+
+        backgroundColor(hex("#4f46e5"))
+      )
+  ,
+      style(
+        Large.BackgroundColor.INDIGO_700,
+
+        backgroundColor(hex("#4338ca"))
+      )
+  ,
+      style(
+        Large.BackgroundColor.INDIGO_800,
+
+        backgroundColor(hex("#3730a3"))
+      )
+  ,
+      style(
+        Large.BackgroundColor.INDIGO_900,
+
+        backgroundColor(hex("#312e81"))
+      )
+  ,
+      style(
+        Large.BackgroundColor.VIOLET_050,
+
+        backgroundColor(hex("#f5f3ff"))
+      )
+  ,
+      style(
+        Large.BackgroundColor.VIOLET_100,
+
+        backgroundColor(hex("#ede9fe"))
+      )
+  ,
+      style(
+        Large.BackgroundColor.VIOLET_200,
+
+        backgroundColor(hex("#ddd6fe"))
+      )
+  ,
+      style(
+        Large.BackgroundColor.VIOLET_300,
+
+        backgroundColor(hex("#c4b5fd"))
+      )
+  ,
+      style(
+        Large.BackgroundColor.VIOLET_400,
+
+        backgroundColor(hex("#a78bfa"))
+      )
+  ,
+      style(
+        Large.BackgroundColor.VIOLET_500,
+
+        backgroundColor(hex("#8b5cf6"))
+      )
+  ,
+      style(
+        Large.BackgroundColor.VIOLET_600,
+
+        backgroundColor(hex("#7c3aed"))
+      )
+  ,
+      style(
+        Large.BackgroundColor.VIOLET_700,
+
+        backgroundColor(hex("#6d28d9"))
+      )
+  ,
+      style(
+        Large.BackgroundColor.VIOLET_800,
+
+        backgroundColor(hex("#5b21b6"))
+      )
+  ,
+      style(
+        Large.BackgroundColor.VIOLET_900,
+
+        backgroundColor(hex("#4c1d95"))
+      )
+  ,
+      style(
+        Large.BackgroundColor.PURPLE_050,
+
+        backgroundColor(hex("#faf5ff"))
+      )
+  ,
+      style(
+        Large.BackgroundColor.PURPLE_100,
+
+        backgroundColor(hex("#f3e8ff"))
+      )
+  ,
+      style(
+        Large.BackgroundColor.PURPLE_200,
+
+        backgroundColor(hex("#e9d5ff"))
+      )
+  ,
+      style(
+        Large.BackgroundColor.PURPLE_300,
+
+        backgroundColor(hex("#d8b4fe"))
+      )
+  ,
+      style(
+        Large.BackgroundColor.PURPLE_400,
+
+        backgroundColor(hex("#c084fc"))
+      )
+  ,
+      style(
+        Large.BackgroundColor.PURPLE_500,
+
+        backgroundColor(hex("#a855f7"))
+      )
+  ,
+      style(
+        Large.BackgroundColor.PURPLE_600,
+
+        backgroundColor(hex("#9333ea"))
+      )
+  ,
+      style(
+        Large.BackgroundColor.PURPLE_700,
+
+        backgroundColor(hex("#7e22ce"))
+      )
+  ,
+      style(
+        Large.BackgroundColor.PURPLE_800,
+
+        backgroundColor(hex("#6b21a8"))
+      )
+  ,
+      style(
+        Large.BackgroundColor.PURPLE_900,
+
+        backgroundColor(hex("#581c87"))
+      )
+  ,
+      style(
+        Large.BackgroundColor.FUCHSIA_050,
+
+        backgroundColor(hex("#fdf4ff"))
+      )
+  ,
+      style(
+        Large.BackgroundColor.FUCHSIA_100,
+
+        backgroundColor(hex("#fae8ff"))
+      )
+  ,
+      style(
+        Large.BackgroundColor.FUCHSIA_200,
+
+        backgroundColor(hex("#f5d0fe"))
+      )
+  ,
+      style(
+        Large.BackgroundColor.FUCHSIA_300,
+
+        backgroundColor(hex("#f0abfc"))
+      )
+  ,
+      style(
+        Large.BackgroundColor.FUCHSIA_400,
+
+        backgroundColor(hex("#e879f9"))
+      )
+  ,
+      style(
+        Large.BackgroundColor.FUCHSIA_500,
+
+        backgroundColor(hex("#d946ef"))
+      )
+  ,
+      style(
+        Large.BackgroundColor.FUCHSIA_600,
+
+        backgroundColor(hex("#c026d3"))
+      )
+  ,
+      style(
+        Large.BackgroundColor.FUCHSIA_700,
+
+        backgroundColor(hex("#a21caf"))
+      )
+  ,
+      style(
+        Large.BackgroundColor.FUCHSIA_800,
+
+        backgroundColor(hex("#86198f"))
+      )
+  ,
+      style(
+        Large.BackgroundColor.FUCHSIA_900,
+
+        backgroundColor(hex("#701a75"))
+      )
+  ,
+      style(
+        Large.BackgroundColor.PINK_050,
+
+        backgroundColor(hex("#fdf2f8"))
+      )
+  ,
+      style(
+        Large.BackgroundColor.PINK_100,
+
+        backgroundColor(hex("#fce7f3"))
+      )
+  ,
+      style(
+        Large.BackgroundColor.PINK_200,
+
+        backgroundColor(hex("#fbcfe8"))
+      )
+  ,
+      style(
+        Large.BackgroundColor.PINK_300,
+
+        backgroundColor(hex("#f9a8d4"))
+      )
+  ,
+      style(
+        Large.BackgroundColor.PINK_400,
+
+        backgroundColor(hex("#f472b6"))
+      )
+  ,
+      style(
+        Large.BackgroundColor.PINK_500,
+
+        backgroundColor(hex("#ec4899"))
+      )
+  ,
+      style(
+        Large.BackgroundColor.PINK_600,
+
+        backgroundColor(hex("#db2777"))
+      )
+  ,
+      style(
+        Large.BackgroundColor.PINK_700,
+
+        backgroundColor(hex("#be185d"))
+      )
+  ,
+      style(
+        Large.BackgroundColor.PINK_800,
+
+        backgroundColor(hex("#9d174d"))
+      )
+  ,
+      style(
+        Large.BackgroundColor.PINK_900,
+
+        backgroundColor(hex("#831843"))
+      )
+  ,
+      style(
+        Large.BackgroundColor.ROSE_050,
+
+        backgroundColor(hex("#fff1f2"))
+      )
+  ,
+      style(
+        Large.BackgroundColor.ROSE_100,
+
+        backgroundColor(hex("#ffe4e6"))
+      )
+  ,
+      style(
+        Large.BackgroundColor.ROSE_200,
+
+        backgroundColor(hex("#fecdd3"))
+      )
+  ,
+      style(
+        Large.BackgroundColor.ROSE_300,
+
+        backgroundColor(hex("#fda4af"))
+      )
+  ,
+      style(
+        Large.BackgroundColor.ROSE_400,
+
+        backgroundColor(hex("#fb7185"))
+      )
+  ,
+      style(
+        Large.BackgroundColor.ROSE_500,
+
+        backgroundColor(hex("#f43f5e"))
+      )
+  ,
+      style(
+        Large.BackgroundColor.ROSE_600,
+
+        backgroundColor(hex("#e11d48"))
+      )
+  ,
+      style(
+        Large.BackgroundColor.ROSE_700,
+
+        backgroundColor(hex("#be123c"))
+      )
+  ,
+      style(
+        Large.BackgroundColor.ROSE_800,
+
+        backgroundColor(hex("#9f1239"))
+      )
+  ,
+      style(
+        Large.BackgroundColor.ROSE_900,
+
+        backgroundColor(hex("#881337"))
+      )
+    );
+
+  }
+
   private void LargeColor() {
     media(
       minWidth(px(1024)),
@@ -27044,6 +32428,1351 @@ public final class Framework extends CssTemplate {
         Large.Width.FIT,
 
         width(fitContent)
+      )
+    );
+
+  }
+
+  private void XLargeBackgroundColor() {
+    media(
+      minWidth(px(1280)),
+
+      style(
+        XLarge.BackgroundColor.TRANSPARENT,
+
+        backgroundColor(transparent)
+      )
+  ,
+      style(
+        XLarge.BackgroundColor.BLACK,
+
+        backgroundColor(hex("#000"))
+      )
+  ,
+      style(
+        XLarge.BackgroundColor.WHITE,
+
+        backgroundColor(hex("#ffffff"))
+      )
+  ,
+      style(
+        XLarge.BackgroundColor.SLATE_050,
+
+        backgroundColor(hex("#f8fafc"))
+      )
+  ,
+      style(
+        XLarge.BackgroundColor.SLATE_100,
+
+        backgroundColor(hex("#f1f5f9"))
+      )
+  ,
+      style(
+        XLarge.BackgroundColor.SLATE_200,
+
+        backgroundColor(hex("#e2e8f0"))
+      )
+  ,
+      style(
+        XLarge.BackgroundColor.SLATE_300,
+
+        backgroundColor(hex("#cbd5e1"))
+      )
+  ,
+      style(
+        XLarge.BackgroundColor.SLATE_400,
+
+        backgroundColor(hex("#94a3b8"))
+      )
+  ,
+      style(
+        XLarge.BackgroundColor.SLATE_500,
+
+        backgroundColor(hex("#64748b"))
+      )
+  ,
+      style(
+        XLarge.BackgroundColor.SLATE_600,
+
+        backgroundColor(hex("#475569"))
+      )
+  ,
+      style(
+        XLarge.BackgroundColor.SLATE_700,
+
+        backgroundColor(hex("#334155"))
+      )
+  ,
+      style(
+        XLarge.BackgroundColor.SLATE_800,
+
+        backgroundColor(hex("#1e293b"))
+      )
+  ,
+      style(
+        XLarge.BackgroundColor.SLATE_900,
+
+        backgroundColor(hex("#0f172a"))
+      )
+  ,
+      style(
+        XLarge.BackgroundColor.GRAY_050,
+
+        backgroundColor(hex("#f9fafb"))
+      )
+  ,
+      style(
+        XLarge.BackgroundColor.GRAY_100,
+
+        backgroundColor(hex("#f3f4f6"))
+      )
+  ,
+      style(
+        XLarge.BackgroundColor.GRAY_200,
+
+        backgroundColor(hex("#e5e7eb"))
+      )
+  ,
+      style(
+        XLarge.BackgroundColor.GRAY_300,
+
+        backgroundColor(hex("#d1d5db"))
+      )
+  ,
+      style(
+        XLarge.BackgroundColor.GRAY_400,
+
+        backgroundColor(hex("#9ca3af"))
+      )
+  ,
+      style(
+        XLarge.BackgroundColor.GRAY_500,
+
+        backgroundColor(hex("#6b7280"))
+      )
+  ,
+      style(
+        XLarge.BackgroundColor.GRAY_600,
+
+        backgroundColor(hex("#4b5563"))
+      )
+  ,
+      style(
+        XLarge.BackgroundColor.GRAY_700,
+
+        backgroundColor(hex("#374151"))
+      )
+  ,
+      style(
+        XLarge.BackgroundColor.GRAY_800,
+
+        backgroundColor(hex("#1f2937"))
+      )
+  ,
+      style(
+        XLarge.BackgroundColor.GRAY_900,
+
+        backgroundColor(hex("#111827"))
+      )
+  ,
+      style(
+        XLarge.BackgroundColor.ZINC_050,
+
+        backgroundColor(hex("#fafafa"))
+      )
+  ,
+      style(
+        XLarge.BackgroundColor.ZINC_100,
+
+        backgroundColor(hex("#f4f4f5"))
+      )
+  ,
+      style(
+        XLarge.BackgroundColor.ZINC_200,
+
+        backgroundColor(hex("#e4e4e7"))
+      )
+  ,
+      style(
+        XLarge.BackgroundColor.ZINC_300,
+
+        backgroundColor(hex("#d4d4d8"))
+      )
+  ,
+      style(
+        XLarge.BackgroundColor.ZINC_400,
+
+        backgroundColor(hex("#a1a1aa"))
+      )
+  ,
+      style(
+        XLarge.BackgroundColor.ZINC_500,
+
+        backgroundColor(hex("#71717a"))
+      )
+  ,
+      style(
+        XLarge.BackgroundColor.ZINC_600,
+
+        backgroundColor(hex("#52525b"))
+      )
+  ,
+      style(
+        XLarge.BackgroundColor.ZINC_700,
+
+        backgroundColor(hex("#3f3f46"))
+      )
+  ,
+      style(
+        XLarge.BackgroundColor.ZINC_800,
+
+        backgroundColor(hex("#27272a"))
+      )
+  ,
+      style(
+        XLarge.BackgroundColor.ZINC_900,
+
+        backgroundColor(hex("#18181b"))
+      )
+  ,
+      style(
+        XLarge.BackgroundColor.NEUTRAL_050,
+
+        backgroundColor(hex("#fafafa"))
+      )
+  ,
+      style(
+        XLarge.BackgroundColor.NEUTRAL_100,
+
+        backgroundColor(hex("#f5f5f5"))
+      )
+  ,
+      style(
+        XLarge.BackgroundColor.NEUTRAL_200,
+
+        backgroundColor(hex("#e5e5e5"))
+      )
+  ,
+      style(
+        XLarge.BackgroundColor.NEUTRAL_300,
+
+        backgroundColor(hex("#d4d4d4"))
+      )
+  ,
+      style(
+        XLarge.BackgroundColor.NEUTRAL_400,
+
+        backgroundColor(hex("#a3a3a3"))
+      )
+  ,
+      style(
+        XLarge.BackgroundColor.NEUTRAL_500,
+
+        backgroundColor(hex("#737373"))
+      )
+  ,
+      style(
+        XLarge.BackgroundColor.NEUTRAL_600,
+
+        backgroundColor(hex("#525252"))
+      )
+  ,
+      style(
+        XLarge.BackgroundColor.NEUTRAL_700,
+
+        backgroundColor(hex("#404040"))
+      )
+  ,
+      style(
+        XLarge.BackgroundColor.NEUTRAL_800,
+
+        backgroundColor(hex("#262626"))
+      )
+  ,
+      style(
+        XLarge.BackgroundColor.NEUTRAL_900,
+
+        backgroundColor(hex("#171717"))
+      )
+  ,
+      style(
+        XLarge.BackgroundColor.STONE_050,
+
+        backgroundColor(hex("#fafaf9"))
+      )
+  ,
+      style(
+        XLarge.BackgroundColor.STONE_100,
+
+        backgroundColor(hex("#f5f5f4"))
+      )
+  ,
+      style(
+        XLarge.BackgroundColor.STONE_200,
+
+        backgroundColor(hex("#e7e5e4"))
+      )
+  ,
+      style(
+        XLarge.BackgroundColor.STONE_300,
+
+        backgroundColor(hex("#d6d3d1"))
+      )
+  ,
+      style(
+        XLarge.BackgroundColor.STONE_400,
+
+        backgroundColor(hex("#a8a29e"))
+      )
+  ,
+      style(
+        XLarge.BackgroundColor.STONE_500,
+
+        backgroundColor(hex("#78716c"))
+      )
+  ,
+      style(
+        XLarge.BackgroundColor.STONE_600,
+
+        backgroundColor(hex("#57534e"))
+      )
+  ,
+      style(
+        XLarge.BackgroundColor.STONE_700,
+
+        backgroundColor(hex("#44403c"))
+      )
+  ,
+      style(
+        XLarge.BackgroundColor.STONE_800,
+
+        backgroundColor(hex("#292524"))
+      )
+  ,
+      style(
+        XLarge.BackgroundColor.STONE_900,
+
+        backgroundColor(hex("#1c1917"))
+      )
+  ,
+      style(
+        XLarge.BackgroundColor.RED_050,
+
+        backgroundColor(hex("#fef2f2"))
+      )
+  ,
+      style(
+        XLarge.BackgroundColor.RED_100,
+
+        backgroundColor(hex("#fee2e2"))
+      )
+  ,
+      style(
+        XLarge.BackgroundColor.RED_200,
+
+        backgroundColor(hex("#fecaca"))
+      )
+  ,
+      style(
+        XLarge.BackgroundColor.RED_300,
+
+        backgroundColor(hex("#fca5a5"))
+      )
+  ,
+      style(
+        XLarge.BackgroundColor.RED_400,
+
+        backgroundColor(hex("#f87171"))
+      )
+  ,
+      style(
+        XLarge.BackgroundColor.RED_500,
+
+        backgroundColor(hex("#ef4444"))
+      )
+  ,
+      style(
+        XLarge.BackgroundColor.RED_600,
+
+        backgroundColor(hex("#dc2626"))
+      )
+  ,
+      style(
+        XLarge.BackgroundColor.RED_700,
+
+        backgroundColor(hex("#b91c1c"))
+      )
+  ,
+      style(
+        XLarge.BackgroundColor.RED_800,
+
+        backgroundColor(hex("#991b1b"))
+      )
+  ,
+      style(
+        XLarge.BackgroundColor.RED_900,
+
+        backgroundColor(hex("#7f1d1d"))
+      )
+  ,
+      style(
+        XLarge.BackgroundColor.ORANGE_050,
+
+        backgroundColor(hex("#fff7ed"))
+      )
+  ,
+      style(
+        XLarge.BackgroundColor.ORANGE_100,
+
+        backgroundColor(hex("#ffedd5"))
+      )
+  ,
+      style(
+        XLarge.BackgroundColor.ORANGE_200,
+
+        backgroundColor(hex("#fed7aa"))
+      )
+  ,
+      style(
+        XLarge.BackgroundColor.ORANGE_300,
+
+        backgroundColor(hex("#fdba74"))
+      )
+  ,
+      style(
+        XLarge.BackgroundColor.ORANGE_400,
+
+        backgroundColor(hex("#fb923c"))
+      )
+  ,
+      style(
+        XLarge.BackgroundColor.ORANGE_500,
+
+        backgroundColor(hex("#f97316"))
+      )
+  ,
+      style(
+        XLarge.BackgroundColor.ORANGE_600,
+
+        backgroundColor(hex("#ea580c"))
+      )
+  ,
+      style(
+        XLarge.BackgroundColor.ORANGE_700,
+
+        backgroundColor(hex("#c2410c"))
+      )
+  ,
+      style(
+        XLarge.BackgroundColor.ORANGE_800,
+
+        backgroundColor(hex("#9a3412"))
+      )
+  ,
+      style(
+        XLarge.BackgroundColor.ORANGE_900,
+
+        backgroundColor(hex("#7c2d12"))
+      )
+  ,
+      style(
+        XLarge.BackgroundColor.AMBER_050,
+
+        backgroundColor(hex("#fffbeb"))
+      )
+  ,
+      style(
+        XLarge.BackgroundColor.AMBER_100,
+
+        backgroundColor(hex("#fef3c7"))
+      )
+  ,
+      style(
+        XLarge.BackgroundColor.AMBER_200,
+
+        backgroundColor(hex("#fde68a"))
+      )
+  ,
+      style(
+        XLarge.BackgroundColor.AMBER_300,
+
+        backgroundColor(hex("#fcd34d"))
+      )
+  ,
+      style(
+        XLarge.BackgroundColor.AMBER_400,
+
+        backgroundColor(hex("#fbbf24"))
+      )
+  ,
+      style(
+        XLarge.BackgroundColor.AMBER_500,
+
+        backgroundColor(hex("#f59e0b"))
+      )
+  ,
+      style(
+        XLarge.BackgroundColor.AMBER_600,
+
+        backgroundColor(hex("#d97706"))
+      )
+  ,
+      style(
+        XLarge.BackgroundColor.AMBER_700,
+
+        backgroundColor(hex("#b45309"))
+      )
+  ,
+      style(
+        XLarge.BackgroundColor.AMBER_800,
+
+        backgroundColor(hex("#92400e"))
+      )
+  ,
+      style(
+        XLarge.BackgroundColor.AMBER_900,
+
+        backgroundColor(hex("#78350f"))
+      )
+  ,
+      style(
+        XLarge.BackgroundColor.YELLOW_050,
+
+        backgroundColor(hex("#fefce8"))
+      )
+  ,
+      style(
+        XLarge.BackgroundColor.YELLOW_100,
+
+        backgroundColor(hex("#fef9c3"))
+      )
+  ,
+      style(
+        XLarge.BackgroundColor.YELLOW_200,
+
+        backgroundColor(hex("#fef08a"))
+      )
+  ,
+      style(
+        XLarge.BackgroundColor.YELLOW_300,
+
+        backgroundColor(hex("#fde047"))
+      )
+  ,
+      style(
+        XLarge.BackgroundColor.YELLOW_400,
+
+        backgroundColor(hex("#facc15"))
+      )
+  ,
+      style(
+        XLarge.BackgroundColor.YELLOW_500,
+
+        backgroundColor(hex("#eab308"))
+      )
+  ,
+      style(
+        XLarge.BackgroundColor.YELLOW_600,
+
+        backgroundColor(hex("#ca8a04"))
+      )
+  ,
+      style(
+        XLarge.BackgroundColor.YELLOW_700,
+
+        backgroundColor(hex("#a16207"))
+      )
+  ,
+      style(
+        XLarge.BackgroundColor.YELLOW_800,
+
+        backgroundColor(hex("#854d0e"))
+      )
+  ,
+      style(
+        XLarge.BackgroundColor.YELLOW_900,
+
+        backgroundColor(hex("#713f12"))
+      )
+  ,
+      style(
+        XLarge.BackgroundColor.LIME_050,
+
+        backgroundColor(hex("#f7fee7"))
+      )
+  ,
+      style(
+        XLarge.BackgroundColor.LIME_100,
+
+        backgroundColor(hex("#ecfccb"))
+      )
+  ,
+      style(
+        XLarge.BackgroundColor.LIME_200,
+
+        backgroundColor(hex("#d9f99d"))
+      )
+  ,
+      style(
+        XLarge.BackgroundColor.LIME_300,
+
+        backgroundColor(hex("#bef264"))
+      )
+  ,
+      style(
+        XLarge.BackgroundColor.LIME_400,
+
+        backgroundColor(hex("#a3e635"))
+      )
+  ,
+      style(
+        XLarge.BackgroundColor.LIME_500,
+
+        backgroundColor(hex("#84cc16"))
+      )
+  ,
+      style(
+        XLarge.BackgroundColor.LIME_600,
+
+        backgroundColor(hex("#65a30d"))
+      )
+  ,
+      style(
+        XLarge.BackgroundColor.LIME_700,
+
+        backgroundColor(hex("#4d7c0f"))
+      )
+  ,
+      style(
+        XLarge.BackgroundColor.LIME_800,
+
+        backgroundColor(hex("#3f6212"))
+      )
+  ,
+      style(
+        XLarge.BackgroundColor.LIME_900,
+
+        backgroundColor(hex("#365314"))
+      )
+  ,
+      style(
+        XLarge.BackgroundColor.GREEN_050,
+
+        backgroundColor(hex("#f0fdf4"))
+      )
+  ,
+      style(
+        XLarge.BackgroundColor.GREEN_100,
+
+        backgroundColor(hex("#dcfce7"))
+      )
+  ,
+      style(
+        XLarge.BackgroundColor.GREEN_200,
+
+        backgroundColor(hex("#bbf7d0"))
+      )
+  ,
+      style(
+        XLarge.BackgroundColor.GREEN_300,
+
+        backgroundColor(hex("#86efac"))
+      )
+  ,
+      style(
+        XLarge.BackgroundColor.GREEN_400,
+
+        backgroundColor(hex("#4ade80"))
+      )
+  ,
+      style(
+        XLarge.BackgroundColor.GREEN_500,
+
+        backgroundColor(hex("#22c55e"))
+      )
+  ,
+      style(
+        XLarge.BackgroundColor.GREEN_600,
+
+        backgroundColor(hex("#16a34a"))
+      )
+  ,
+      style(
+        XLarge.BackgroundColor.GREEN_700,
+
+        backgroundColor(hex("#15803d"))
+      )
+  ,
+      style(
+        XLarge.BackgroundColor.GREEN_800,
+
+        backgroundColor(hex("#166534"))
+      )
+  ,
+      style(
+        XLarge.BackgroundColor.GREEN_900,
+
+        backgroundColor(hex("#14532d"))
+      )
+  ,
+      style(
+        XLarge.BackgroundColor.EMERALD_050,
+
+        backgroundColor(hex("#ecfdf5"))
+      )
+  ,
+      style(
+        XLarge.BackgroundColor.EMERALD_100,
+
+        backgroundColor(hex("#d1fae5"))
+      )
+  ,
+      style(
+        XLarge.BackgroundColor.EMERALD_200,
+
+        backgroundColor(hex("#a7f3d0"))
+      )
+  ,
+      style(
+        XLarge.BackgroundColor.EMERALD_300,
+
+        backgroundColor(hex("#6ee7b7"))
+      )
+  ,
+      style(
+        XLarge.BackgroundColor.EMERALD_400,
+
+        backgroundColor(hex("#34d399"))
+      )
+  ,
+      style(
+        XLarge.BackgroundColor.EMERALD_500,
+
+        backgroundColor(hex("#10b981"))
+      )
+  ,
+      style(
+        XLarge.BackgroundColor.EMERALD_600,
+
+        backgroundColor(hex("#059669"))
+      )
+  ,
+      style(
+        XLarge.BackgroundColor.EMERALD_700,
+
+        backgroundColor(hex("#047857"))
+      )
+  ,
+      style(
+        XLarge.BackgroundColor.EMERALD_800,
+
+        backgroundColor(hex("#065f46"))
+      )
+  ,
+      style(
+        XLarge.BackgroundColor.EMERALD_900,
+
+        backgroundColor(hex("#064e3b"))
+      )
+  ,
+      style(
+        XLarge.BackgroundColor.TEAL_050,
+
+        backgroundColor(hex("#f0fdfa"))
+      )
+  ,
+      style(
+        XLarge.BackgroundColor.TEAL_100,
+
+        backgroundColor(hex("#ccfbf1"))
+      )
+  ,
+      style(
+        XLarge.BackgroundColor.TEAL_200,
+
+        backgroundColor(hex("#99f6e4"))
+      )
+  ,
+      style(
+        XLarge.BackgroundColor.TEAL_300,
+
+        backgroundColor(hex("#5eead4"))
+      )
+  ,
+      style(
+        XLarge.BackgroundColor.TEAL_400,
+
+        backgroundColor(hex("#2dd4bf"))
+      )
+  ,
+      style(
+        XLarge.BackgroundColor.TEAL_500,
+
+        backgroundColor(hex("#14b8a6"))
+      )
+  ,
+      style(
+        XLarge.BackgroundColor.TEAL_600,
+
+        backgroundColor(hex("#0d9488"))
+      )
+  ,
+      style(
+        XLarge.BackgroundColor.TEAL_700,
+
+        backgroundColor(hex("#0f766e"))
+      )
+  ,
+      style(
+        XLarge.BackgroundColor.TEAL_800,
+
+        backgroundColor(hex("#115e59"))
+      )
+  ,
+      style(
+        XLarge.BackgroundColor.TEAL_900,
+
+        backgroundColor(hex("#134e4a"))
+      )
+  ,
+      style(
+        XLarge.BackgroundColor.CYAN_050,
+
+        backgroundColor(hex("#ecfeff"))
+      )
+  ,
+      style(
+        XLarge.BackgroundColor.CYAN_100,
+
+        backgroundColor(hex("#cffafe"))
+      )
+  ,
+      style(
+        XLarge.BackgroundColor.CYAN_200,
+
+        backgroundColor(hex("#a5f3fc"))
+      )
+  ,
+      style(
+        XLarge.BackgroundColor.CYAN_300,
+
+        backgroundColor(hex("#67e8f9"))
+      )
+  ,
+      style(
+        XLarge.BackgroundColor.CYAN_400,
+
+        backgroundColor(hex("#22d3ee"))
+      )
+  ,
+      style(
+        XLarge.BackgroundColor.CYAN_500,
+
+        backgroundColor(hex("#06b6d4"))
+      )
+  ,
+      style(
+        XLarge.BackgroundColor.CYAN_600,
+
+        backgroundColor(hex("#0891b2"))
+      )
+  ,
+      style(
+        XLarge.BackgroundColor.CYAN_700,
+
+        backgroundColor(hex("#0e7490"))
+      )
+  ,
+      style(
+        XLarge.BackgroundColor.CYAN_800,
+
+        backgroundColor(hex("#155e75"))
+      )
+  ,
+      style(
+        XLarge.BackgroundColor.CYAN_900,
+
+        backgroundColor(hex("#164e63"))
+      )
+  ,
+      style(
+        XLarge.BackgroundColor.SKY_050,
+
+        backgroundColor(hex("#f0f9ff"))
+      )
+  ,
+      style(
+        XLarge.BackgroundColor.SKY_100,
+
+        backgroundColor(hex("#e0f2fe"))
+      )
+  ,
+      style(
+        XLarge.BackgroundColor.SKY_200,
+
+        backgroundColor(hex("#bae6fd"))
+      )
+  ,
+      style(
+        XLarge.BackgroundColor.SKY_300,
+
+        backgroundColor(hex("#7dd3fc"))
+      )
+  ,
+      style(
+        XLarge.BackgroundColor.SKY_400,
+
+        backgroundColor(hex("#38bdf8"))
+      )
+  ,
+      style(
+        XLarge.BackgroundColor.SKY_500,
+
+        backgroundColor(hex("#0ea5e9"))
+      )
+  ,
+      style(
+        XLarge.BackgroundColor.SKY_600,
+
+        backgroundColor(hex("#0284c7"))
+      )
+  ,
+      style(
+        XLarge.BackgroundColor.SKY_700,
+
+        backgroundColor(hex("#0369a1"))
+      )
+  ,
+      style(
+        XLarge.BackgroundColor.SKY_800,
+
+        backgroundColor(hex("#075985"))
+      )
+  ,
+      style(
+        XLarge.BackgroundColor.SKY_900,
+
+        backgroundColor(hex("#0c4a6e"))
+      )
+  ,
+      style(
+        XLarge.BackgroundColor.BLUE_050,
+
+        backgroundColor(hex("#eff6ff"))
+      )
+  ,
+      style(
+        XLarge.BackgroundColor.BLUE_100,
+
+        backgroundColor(hex("#dbeafe"))
+      )
+  ,
+      style(
+        XLarge.BackgroundColor.BLUE_200,
+
+        backgroundColor(hex("#bfdbfe"))
+      )
+  ,
+      style(
+        XLarge.BackgroundColor.BLUE_300,
+
+        backgroundColor(hex("#93c5fd"))
+      )
+  ,
+      style(
+        XLarge.BackgroundColor.BLUE_400,
+
+        backgroundColor(hex("#60a5fa"))
+      )
+  ,
+      style(
+        XLarge.BackgroundColor.BLUE_500,
+
+        backgroundColor(hex("#3b82f6"))
+      )
+  ,
+      style(
+        XLarge.BackgroundColor.BLUE_600,
+
+        backgroundColor(hex("#2563eb"))
+      )
+  ,
+      style(
+        XLarge.BackgroundColor.BLUE_700,
+
+        backgroundColor(hex("#1d4ed8"))
+      )
+  ,
+      style(
+        XLarge.BackgroundColor.BLUE_800,
+
+        backgroundColor(hex("#1e40af"))
+      )
+  ,
+      style(
+        XLarge.BackgroundColor.BLUE_900,
+
+        backgroundColor(hex("#1e3a8a"))
+      )
+  ,
+      style(
+        XLarge.BackgroundColor.INDIGO_050,
+
+        backgroundColor(hex("#eef2ff"))
+      )
+  ,
+      style(
+        XLarge.BackgroundColor.INDIGO_100,
+
+        backgroundColor(hex("#e0e7ff"))
+      )
+  ,
+      style(
+        XLarge.BackgroundColor.INDIGO_200,
+
+        backgroundColor(hex("#c7d2fe"))
+      )
+  ,
+      style(
+        XLarge.BackgroundColor.INDIGO_300,
+
+        backgroundColor(hex("#a5b4fc"))
+      )
+  ,
+      style(
+        XLarge.BackgroundColor.INDIGO_400,
+
+        backgroundColor(hex("#818cf8"))
+      )
+  ,
+      style(
+        XLarge.BackgroundColor.INDIGO_500,
+
+        backgroundColor(hex("#6366f1"))
+      )
+  ,
+      style(
+        XLarge.BackgroundColor.INDIGO_600,
+
+        backgroundColor(hex("#4f46e5"))
+      )
+  ,
+      style(
+        XLarge.BackgroundColor.INDIGO_700,
+
+        backgroundColor(hex("#4338ca"))
+      )
+  ,
+      style(
+        XLarge.BackgroundColor.INDIGO_800,
+
+        backgroundColor(hex("#3730a3"))
+      )
+  ,
+      style(
+        XLarge.BackgroundColor.INDIGO_900,
+
+        backgroundColor(hex("#312e81"))
+      )
+  ,
+      style(
+        XLarge.BackgroundColor.VIOLET_050,
+
+        backgroundColor(hex("#f5f3ff"))
+      )
+  ,
+      style(
+        XLarge.BackgroundColor.VIOLET_100,
+
+        backgroundColor(hex("#ede9fe"))
+      )
+  ,
+      style(
+        XLarge.BackgroundColor.VIOLET_200,
+
+        backgroundColor(hex("#ddd6fe"))
+      )
+  ,
+      style(
+        XLarge.BackgroundColor.VIOLET_300,
+
+        backgroundColor(hex("#c4b5fd"))
+      )
+  ,
+      style(
+        XLarge.BackgroundColor.VIOLET_400,
+
+        backgroundColor(hex("#a78bfa"))
+      )
+  ,
+      style(
+        XLarge.BackgroundColor.VIOLET_500,
+
+        backgroundColor(hex("#8b5cf6"))
+      )
+  ,
+      style(
+        XLarge.BackgroundColor.VIOLET_600,
+
+        backgroundColor(hex("#7c3aed"))
+      )
+  ,
+      style(
+        XLarge.BackgroundColor.VIOLET_700,
+
+        backgroundColor(hex("#6d28d9"))
+      )
+  ,
+      style(
+        XLarge.BackgroundColor.VIOLET_800,
+
+        backgroundColor(hex("#5b21b6"))
+      )
+  ,
+      style(
+        XLarge.BackgroundColor.VIOLET_900,
+
+        backgroundColor(hex("#4c1d95"))
+      )
+  ,
+      style(
+        XLarge.BackgroundColor.PURPLE_050,
+
+        backgroundColor(hex("#faf5ff"))
+      )
+  ,
+      style(
+        XLarge.BackgroundColor.PURPLE_100,
+
+        backgroundColor(hex("#f3e8ff"))
+      )
+  ,
+      style(
+        XLarge.BackgroundColor.PURPLE_200,
+
+        backgroundColor(hex("#e9d5ff"))
+      )
+  ,
+      style(
+        XLarge.BackgroundColor.PURPLE_300,
+
+        backgroundColor(hex("#d8b4fe"))
+      )
+  ,
+      style(
+        XLarge.BackgroundColor.PURPLE_400,
+
+        backgroundColor(hex("#c084fc"))
+      )
+  ,
+      style(
+        XLarge.BackgroundColor.PURPLE_500,
+
+        backgroundColor(hex("#a855f7"))
+      )
+  ,
+      style(
+        XLarge.BackgroundColor.PURPLE_600,
+
+        backgroundColor(hex("#9333ea"))
+      )
+  ,
+      style(
+        XLarge.BackgroundColor.PURPLE_700,
+
+        backgroundColor(hex("#7e22ce"))
+      )
+  ,
+      style(
+        XLarge.BackgroundColor.PURPLE_800,
+
+        backgroundColor(hex("#6b21a8"))
+      )
+  ,
+      style(
+        XLarge.BackgroundColor.PURPLE_900,
+
+        backgroundColor(hex("#581c87"))
+      )
+  ,
+      style(
+        XLarge.BackgroundColor.FUCHSIA_050,
+
+        backgroundColor(hex("#fdf4ff"))
+      )
+  ,
+      style(
+        XLarge.BackgroundColor.FUCHSIA_100,
+
+        backgroundColor(hex("#fae8ff"))
+      )
+  ,
+      style(
+        XLarge.BackgroundColor.FUCHSIA_200,
+
+        backgroundColor(hex("#f5d0fe"))
+      )
+  ,
+      style(
+        XLarge.BackgroundColor.FUCHSIA_300,
+
+        backgroundColor(hex("#f0abfc"))
+      )
+  ,
+      style(
+        XLarge.BackgroundColor.FUCHSIA_400,
+
+        backgroundColor(hex("#e879f9"))
+      )
+  ,
+      style(
+        XLarge.BackgroundColor.FUCHSIA_500,
+
+        backgroundColor(hex("#d946ef"))
+      )
+  ,
+      style(
+        XLarge.BackgroundColor.FUCHSIA_600,
+
+        backgroundColor(hex("#c026d3"))
+      )
+  ,
+      style(
+        XLarge.BackgroundColor.FUCHSIA_700,
+
+        backgroundColor(hex("#a21caf"))
+      )
+  ,
+      style(
+        XLarge.BackgroundColor.FUCHSIA_800,
+
+        backgroundColor(hex("#86198f"))
+      )
+  ,
+      style(
+        XLarge.BackgroundColor.FUCHSIA_900,
+
+        backgroundColor(hex("#701a75"))
+      )
+  ,
+      style(
+        XLarge.BackgroundColor.PINK_050,
+
+        backgroundColor(hex("#fdf2f8"))
+      )
+  ,
+      style(
+        XLarge.BackgroundColor.PINK_100,
+
+        backgroundColor(hex("#fce7f3"))
+      )
+  ,
+      style(
+        XLarge.BackgroundColor.PINK_200,
+
+        backgroundColor(hex("#fbcfe8"))
+      )
+  ,
+      style(
+        XLarge.BackgroundColor.PINK_300,
+
+        backgroundColor(hex("#f9a8d4"))
+      )
+  ,
+      style(
+        XLarge.BackgroundColor.PINK_400,
+
+        backgroundColor(hex("#f472b6"))
+      )
+  ,
+      style(
+        XLarge.BackgroundColor.PINK_500,
+
+        backgroundColor(hex("#ec4899"))
+      )
+  ,
+      style(
+        XLarge.BackgroundColor.PINK_600,
+
+        backgroundColor(hex("#db2777"))
+      )
+  ,
+      style(
+        XLarge.BackgroundColor.PINK_700,
+
+        backgroundColor(hex("#be185d"))
+      )
+  ,
+      style(
+        XLarge.BackgroundColor.PINK_800,
+
+        backgroundColor(hex("#9d174d"))
+      )
+  ,
+      style(
+        XLarge.BackgroundColor.PINK_900,
+
+        backgroundColor(hex("#831843"))
+      )
+  ,
+      style(
+        XLarge.BackgroundColor.ROSE_050,
+
+        backgroundColor(hex("#fff1f2"))
+      )
+  ,
+      style(
+        XLarge.BackgroundColor.ROSE_100,
+
+        backgroundColor(hex("#ffe4e6"))
+      )
+  ,
+      style(
+        XLarge.BackgroundColor.ROSE_200,
+
+        backgroundColor(hex("#fecdd3"))
+      )
+  ,
+      style(
+        XLarge.BackgroundColor.ROSE_300,
+
+        backgroundColor(hex("#fda4af"))
+      )
+  ,
+      style(
+        XLarge.BackgroundColor.ROSE_400,
+
+        backgroundColor(hex("#fb7185"))
+      )
+  ,
+      style(
+        XLarge.BackgroundColor.ROSE_500,
+
+        backgroundColor(hex("#f43f5e"))
+      )
+  ,
+      style(
+        XLarge.BackgroundColor.ROSE_600,
+
+        backgroundColor(hex("#e11d48"))
+      )
+  ,
+      style(
+        XLarge.BackgroundColor.ROSE_700,
+
+        backgroundColor(hex("#be123c"))
+      )
+  ,
+      style(
+        XLarge.BackgroundColor.ROSE_800,
+
+        backgroundColor(hex("#9f1239"))
+      )
+  ,
+      style(
+        XLarge.BackgroundColor.ROSE_900,
+
+        backgroundColor(hex("#881337"))
       )
     );
 
@@ -33771,6 +40500,1351 @@ public final class Framework extends CssTemplate {
 
   }
 
+  private void XLarge2BackgroundColor() {
+    media(
+      minWidth(px(1536)),
+
+      style(
+        XLarge2.BackgroundColor.TRANSPARENT,
+
+        backgroundColor(transparent)
+      )
+  ,
+      style(
+        XLarge2.BackgroundColor.BLACK,
+
+        backgroundColor(hex("#000"))
+      )
+  ,
+      style(
+        XLarge2.BackgroundColor.WHITE,
+
+        backgroundColor(hex("#ffffff"))
+      )
+  ,
+      style(
+        XLarge2.BackgroundColor.SLATE_050,
+
+        backgroundColor(hex("#f8fafc"))
+      )
+  ,
+      style(
+        XLarge2.BackgroundColor.SLATE_100,
+
+        backgroundColor(hex("#f1f5f9"))
+      )
+  ,
+      style(
+        XLarge2.BackgroundColor.SLATE_200,
+
+        backgroundColor(hex("#e2e8f0"))
+      )
+  ,
+      style(
+        XLarge2.BackgroundColor.SLATE_300,
+
+        backgroundColor(hex("#cbd5e1"))
+      )
+  ,
+      style(
+        XLarge2.BackgroundColor.SLATE_400,
+
+        backgroundColor(hex("#94a3b8"))
+      )
+  ,
+      style(
+        XLarge2.BackgroundColor.SLATE_500,
+
+        backgroundColor(hex("#64748b"))
+      )
+  ,
+      style(
+        XLarge2.BackgroundColor.SLATE_600,
+
+        backgroundColor(hex("#475569"))
+      )
+  ,
+      style(
+        XLarge2.BackgroundColor.SLATE_700,
+
+        backgroundColor(hex("#334155"))
+      )
+  ,
+      style(
+        XLarge2.BackgroundColor.SLATE_800,
+
+        backgroundColor(hex("#1e293b"))
+      )
+  ,
+      style(
+        XLarge2.BackgroundColor.SLATE_900,
+
+        backgroundColor(hex("#0f172a"))
+      )
+  ,
+      style(
+        XLarge2.BackgroundColor.GRAY_050,
+
+        backgroundColor(hex("#f9fafb"))
+      )
+  ,
+      style(
+        XLarge2.BackgroundColor.GRAY_100,
+
+        backgroundColor(hex("#f3f4f6"))
+      )
+  ,
+      style(
+        XLarge2.BackgroundColor.GRAY_200,
+
+        backgroundColor(hex("#e5e7eb"))
+      )
+  ,
+      style(
+        XLarge2.BackgroundColor.GRAY_300,
+
+        backgroundColor(hex("#d1d5db"))
+      )
+  ,
+      style(
+        XLarge2.BackgroundColor.GRAY_400,
+
+        backgroundColor(hex("#9ca3af"))
+      )
+  ,
+      style(
+        XLarge2.BackgroundColor.GRAY_500,
+
+        backgroundColor(hex("#6b7280"))
+      )
+  ,
+      style(
+        XLarge2.BackgroundColor.GRAY_600,
+
+        backgroundColor(hex("#4b5563"))
+      )
+  ,
+      style(
+        XLarge2.BackgroundColor.GRAY_700,
+
+        backgroundColor(hex("#374151"))
+      )
+  ,
+      style(
+        XLarge2.BackgroundColor.GRAY_800,
+
+        backgroundColor(hex("#1f2937"))
+      )
+  ,
+      style(
+        XLarge2.BackgroundColor.GRAY_900,
+
+        backgroundColor(hex("#111827"))
+      )
+  ,
+      style(
+        XLarge2.BackgroundColor.ZINC_050,
+
+        backgroundColor(hex("#fafafa"))
+      )
+  ,
+      style(
+        XLarge2.BackgroundColor.ZINC_100,
+
+        backgroundColor(hex("#f4f4f5"))
+      )
+  ,
+      style(
+        XLarge2.BackgroundColor.ZINC_200,
+
+        backgroundColor(hex("#e4e4e7"))
+      )
+  ,
+      style(
+        XLarge2.BackgroundColor.ZINC_300,
+
+        backgroundColor(hex("#d4d4d8"))
+      )
+  ,
+      style(
+        XLarge2.BackgroundColor.ZINC_400,
+
+        backgroundColor(hex("#a1a1aa"))
+      )
+  ,
+      style(
+        XLarge2.BackgroundColor.ZINC_500,
+
+        backgroundColor(hex("#71717a"))
+      )
+  ,
+      style(
+        XLarge2.BackgroundColor.ZINC_600,
+
+        backgroundColor(hex("#52525b"))
+      )
+  ,
+      style(
+        XLarge2.BackgroundColor.ZINC_700,
+
+        backgroundColor(hex("#3f3f46"))
+      )
+  ,
+      style(
+        XLarge2.BackgroundColor.ZINC_800,
+
+        backgroundColor(hex("#27272a"))
+      )
+  ,
+      style(
+        XLarge2.BackgroundColor.ZINC_900,
+
+        backgroundColor(hex("#18181b"))
+      )
+  ,
+      style(
+        XLarge2.BackgroundColor.NEUTRAL_050,
+
+        backgroundColor(hex("#fafafa"))
+      )
+  ,
+      style(
+        XLarge2.BackgroundColor.NEUTRAL_100,
+
+        backgroundColor(hex("#f5f5f5"))
+      )
+  ,
+      style(
+        XLarge2.BackgroundColor.NEUTRAL_200,
+
+        backgroundColor(hex("#e5e5e5"))
+      )
+  ,
+      style(
+        XLarge2.BackgroundColor.NEUTRAL_300,
+
+        backgroundColor(hex("#d4d4d4"))
+      )
+  ,
+      style(
+        XLarge2.BackgroundColor.NEUTRAL_400,
+
+        backgroundColor(hex("#a3a3a3"))
+      )
+  ,
+      style(
+        XLarge2.BackgroundColor.NEUTRAL_500,
+
+        backgroundColor(hex("#737373"))
+      )
+  ,
+      style(
+        XLarge2.BackgroundColor.NEUTRAL_600,
+
+        backgroundColor(hex("#525252"))
+      )
+  ,
+      style(
+        XLarge2.BackgroundColor.NEUTRAL_700,
+
+        backgroundColor(hex("#404040"))
+      )
+  ,
+      style(
+        XLarge2.BackgroundColor.NEUTRAL_800,
+
+        backgroundColor(hex("#262626"))
+      )
+  ,
+      style(
+        XLarge2.BackgroundColor.NEUTRAL_900,
+
+        backgroundColor(hex("#171717"))
+      )
+  ,
+      style(
+        XLarge2.BackgroundColor.STONE_050,
+
+        backgroundColor(hex("#fafaf9"))
+      )
+  ,
+      style(
+        XLarge2.BackgroundColor.STONE_100,
+
+        backgroundColor(hex("#f5f5f4"))
+      )
+  ,
+      style(
+        XLarge2.BackgroundColor.STONE_200,
+
+        backgroundColor(hex("#e7e5e4"))
+      )
+  ,
+      style(
+        XLarge2.BackgroundColor.STONE_300,
+
+        backgroundColor(hex("#d6d3d1"))
+      )
+  ,
+      style(
+        XLarge2.BackgroundColor.STONE_400,
+
+        backgroundColor(hex("#a8a29e"))
+      )
+  ,
+      style(
+        XLarge2.BackgroundColor.STONE_500,
+
+        backgroundColor(hex("#78716c"))
+      )
+  ,
+      style(
+        XLarge2.BackgroundColor.STONE_600,
+
+        backgroundColor(hex("#57534e"))
+      )
+  ,
+      style(
+        XLarge2.BackgroundColor.STONE_700,
+
+        backgroundColor(hex("#44403c"))
+      )
+  ,
+      style(
+        XLarge2.BackgroundColor.STONE_800,
+
+        backgroundColor(hex("#292524"))
+      )
+  ,
+      style(
+        XLarge2.BackgroundColor.STONE_900,
+
+        backgroundColor(hex("#1c1917"))
+      )
+  ,
+      style(
+        XLarge2.BackgroundColor.RED_050,
+
+        backgroundColor(hex("#fef2f2"))
+      )
+  ,
+      style(
+        XLarge2.BackgroundColor.RED_100,
+
+        backgroundColor(hex("#fee2e2"))
+      )
+  ,
+      style(
+        XLarge2.BackgroundColor.RED_200,
+
+        backgroundColor(hex("#fecaca"))
+      )
+  ,
+      style(
+        XLarge2.BackgroundColor.RED_300,
+
+        backgroundColor(hex("#fca5a5"))
+      )
+  ,
+      style(
+        XLarge2.BackgroundColor.RED_400,
+
+        backgroundColor(hex("#f87171"))
+      )
+  ,
+      style(
+        XLarge2.BackgroundColor.RED_500,
+
+        backgroundColor(hex("#ef4444"))
+      )
+  ,
+      style(
+        XLarge2.BackgroundColor.RED_600,
+
+        backgroundColor(hex("#dc2626"))
+      )
+  ,
+      style(
+        XLarge2.BackgroundColor.RED_700,
+
+        backgroundColor(hex("#b91c1c"))
+      )
+  ,
+      style(
+        XLarge2.BackgroundColor.RED_800,
+
+        backgroundColor(hex("#991b1b"))
+      )
+  ,
+      style(
+        XLarge2.BackgroundColor.RED_900,
+
+        backgroundColor(hex("#7f1d1d"))
+      )
+  ,
+      style(
+        XLarge2.BackgroundColor.ORANGE_050,
+
+        backgroundColor(hex("#fff7ed"))
+      )
+  ,
+      style(
+        XLarge2.BackgroundColor.ORANGE_100,
+
+        backgroundColor(hex("#ffedd5"))
+      )
+  ,
+      style(
+        XLarge2.BackgroundColor.ORANGE_200,
+
+        backgroundColor(hex("#fed7aa"))
+      )
+  ,
+      style(
+        XLarge2.BackgroundColor.ORANGE_300,
+
+        backgroundColor(hex("#fdba74"))
+      )
+  ,
+      style(
+        XLarge2.BackgroundColor.ORANGE_400,
+
+        backgroundColor(hex("#fb923c"))
+      )
+  ,
+      style(
+        XLarge2.BackgroundColor.ORANGE_500,
+
+        backgroundColor(hex("#f97316"))
+      )
+  ,
+      style(
+        XLarge2.BackgroundColor.ORANGE_600,
+
+        backgroundColor(hex("#ea580c"))
+      )
+  ,
+      style(
+        XLarge2.BackgroundColor.ORANGE_700,
+
+        backgroundColor(hex("#c2410c"))
+      )
+  ,
+      style(
+        XLarge2.BackgroundColor.ORANGE_800,
+
+        backgroundColor(hex("#9a3412"))
+      )
+  ,
+      style(
+        XLarge2.BackgroundColor.ORANGE_900,
+
+        backgroundColor(hex("#7c2d12"))
+      )
+  ,
+      style(
+        XLarge2.BackgroundColor.AMBER_050,
+
+        backgroundColor(hex("#fffbeb"))
+      )
+  ,
+      style(
+        XLarge2.BackgroundColor.AMBER_100,
+
+        backgroundColor(hex("#fef3c7"))
+      )
+  ,
+      style(
+        XLarge2.BackgroundColor.AMBER_200,
+
+        backgroundColor(hex("#fde68a"))
+      )
+  ,
+      style(
+        XLarge2.BackgroundColor.AMBER_300,
+
+        backgroundColor(hex("#fcd34d"))
+      )
+  ,
+      style(
+        XLarge2.BackgroundColor.AMBER_400,
+
+        backgroundColor(hex("#fbbf24"))
+      )
+  ,
+      style(
+        XLarge2.BackgroundColor.AMBER_500,
+
+        backgroundColor(hex("#f59e0b"))
+      )
+  ,
+      style(
+        XLarge2.BackgroundColor.AMBER_600,
+
+        backgroundColor(hex("#d97706"))
+      )
+  ,
+      style(
+        XLarge2.BackgroundColor.AMBER_700,
+
+        backgroundColor(hex("#b45309"))
+      )
+  ,
+      style(
+        XLarge2.BackgroundColor.AMBER_800,
+
+        backgroundColor(hex("#92400e"))
+      )
+  ,
+      style(
+        XLarge2.BackgroundColor.AMBER_900,
+
+        backgroundColor(hex("#78350f"))
+      )
+  ,
+      style(
+        XLarge2.BackgroundColor.YELLOW_050,
+
+        backgroundColor(hex("#fefce8"))
+      )
+  ,
+      style(
+        XLarge2.BackgroundColor.YELLOW_100,
+
+        backgroundColor(hex("#fef9c3"))
+      )
+  ,
+      style(
+        XLarge2.BackgroundColor.YELLOW_200,
+
+        backgroundColor(hex("#fef08a"))
+      )
+  ,
+      style(
+        XLarge2.BackgroundColor.YELLOW_300,
+
+        backgroundColor(hex("#fde047"))
+      )
+  ,
+      style(
+        XLarge2.BackgroundColor.YELLOW_400,
+
+        backgroundColor(hex("#facc15"))
+      )
+  ,
+      style(
+        XLarge2.BackgroundColor.YELLOW_500,
+
+        backgroundColor(hex("#eab308"))
+      )
+  ,
+      style(
+        XLarge2.BackgroundColor.YELLOW_600,
+
+        backgroundColor(hex("#ca8a04"))
+      )
+  ,
+      style(
+        XLarge2.BackgroundColor.YELLOW_700,
+
+        backgroundColor(hex("#a16207"))
+      )
+  ,
+      style(
+        XLarge2.BackgroundColor.YELLOW_800,
+
+        backgroundColor(hex("#854d0e"))
+      )
+  ,
+      style(
+        XLarge2.BackgroundColor.YELLOW_900,
+
+        backgroundColor(hex("#713f12"))
+      )
+  ,
+      style(
+        XLarge2.BackgroundColor.LIME_050,
+
+        backgroundColor(hex("#f7fee7"))
+      )
+  ,
+      style(
+        XLarge2.BackgroundColor.LIME_100,
+
+        backgroundColor(hex("#ecfccb"))
+      )
+  ,
+      style(
+        XLarge2.BackgroundColor.LIME_200,
+
+        backgroundColor(hex("#d9f99d"))
+      )
+  ,
+      style(
+        XLarge2.BackgroundColor.LIME_300,
+
+        backgroundColor(hex("#bef264"))
+      )
+  ,
+      style(
+        XLarge2.BackgroundColor.LIME_400,
+
+        backgroundColor(hex("#a3e635"))
+      )
+  ,
+      style(
+        XLarge2.BackgroundColor.LIME_500,
+
+        backgroundColor(hex("#84cc16"))
+      )
+  ,
+      style(
+        XLarge2.BackgroundColor.LIME_600,
+
+        backgroundColor(hex("#65a30d"))
+      )
+  ,
+      style(
+        XLarge2.BackgroundColor.LIME_700,
+
+        backgroundColor(hex("#4d7c0f"))
+      )
+  ,
+      style(
+        XLarge2.BackgroundColor.LIME_800,
+
+        backgroundColor(hex("#3f6212"))
+      )
+  ,
+      style(
+        XLarge2.BackgroundColor.LIME_900,
+
+        backgroundColor(hex("#365314"))
+      )
+  ,
+      style(
+        XLarge2.BackgroundColor.GREEN_050,
+
+        backgroundColor(hex("#f0fdf4"))
+      )
+  ,
+      style(
+        XLarge2.BackgroundColor.GREEN_100,
+
+        backgroundColor(hex("#dcfce7"))
+      )
+  ,
+      style(
+        XLarge2.BackgroundColor.GREEN_200,
+
+        backgroundColor(hex("#bbf7d0"))
+      )
+  ,
+      style(
+        XLarge2.BackgroundColor.GREEN_300,
+
+        backgroundColor(hex("#86efac"))
+      )
+  ,
+      style(
+        XLarge2.BackgroundColor.GREEN_400,
+
+        backgroundColor(hex("#4ade80"))
+      )
+  ,
+      style(
+        XLarge2.BackgroundColor.GREEN_500,
+
+        backgroundColor(hex("#22c55e"))
+      )
+  ,
+      style(
+        XLarge2.BackgroundColor.GREEN_600,
+
+        backgroundColor(hex("#16a34a"))
+      )
+  ,
+      style(
+        XLarge2.BackgroundColor.GREEN_700,
+
+        backgroundColor(hex("#15803d"))
+      )
+  ,
+      style(
+        XLarge2.BackgroundColor.GREEN_800,
+
+        backgroundColor(hex("#166534"))
+      )
+  ,
+      style(
+        XLarge2.BackgroundColor.GREEN_900,
+
+        backgroundColor(hex("#14532d"))
+      )
+  ,
+      style(
+        XLarge2.BackgroundColor.EMERALD_050,
+
+        backgroundColor(hex("#ecfdf5"))
+      )
+  ,
+      style(
+        XLarge2.BackgroundColor.EMERALD_100,
+
+        backgroundColor(hex("#d1fae5"))
+      )
+  ,
+      style(
+        XLarge2.BackgroundColor.EMERALD_200,
+
+        backgroundColor(hex("#a7f3d0"))
+      )
+  ,
+      style(
+        XLarge2.BackgroundColor.EMERALD_300,
+
+        backgroundColor(hex("#6ee7b7"))
+      )
+  ,
+      style(
+        XLarge2.BackgroundColor.EMERALD_400,
+
+        backgroundColor(hex("#34d399"))
+      )
+  ,
+      style(
+        XLarge2.BackgroundColor.EMERALD_500,
+
+        backgroundColor(hex("#10b981"))
+      )
+  ,
+      style(
+        XLarge2.BackgroundColor.EMERALD_600,
+
+        backgroundColor(hex("#059669"))
+      )
+  ,
+      style(
+        XLarge2.BackgroundColor.EMERALD_700,
+
+        backgroundColor(hex("#047857"))
+      )
+  ,
+      style(
+        XLarge2.BackgroundColor.EMERALD_800,
+
+        backgroundColor(hex("#065f46"))
+      )
+  ,
+      style(
+        XLarge2.BackgroundColor.EMERALD_900,
+
+        backgroundColor(hex("#064e3b"))
+      )
+  ,
+      style(
+        XLarge2.BackgroundColor.TEAL_050,
+
+        backgroundColor(hex("#f0fdfa"))
+      )
+  ,
+      style(
+        XLarge2.BackgroundColor.TEAL_100,
+
+        backgroundColor(hex("#ccfbf1"))
+      )
+  ,
+      style(
+        XLarge2.BackgroundColor.TEAL_200,
+
+        backgroundColor(hex("#99f6e4"))
+      )
+  ,
+      style(
+        XLarge2.BackgroundColor.TEAL_300,
+
+        backgroundColor(hex("#5eead4"))
+      )
+  ,
+      style(
+        XLarge2.BackgroundColor.TEAL_400,
+
+        backgroundColor(hex("#2dd4bf"))
+      )
+  ,
+      style(
+        XLarge2.BackgroundColor.TEAL_500,
+
+        backgroundColor(hex("#14b8a6"))
+      )
+  ,
+      style(
+        XLarge2.BackgroundColor.TEAL_600,
+
+        backgroundColor(hex("#0d9488"))
+      )
+  ,
+      style(
+        XLarge2.BackgroundColor.TEAL_700,
+
+        backgroundColor(hex("#0f766e"))
+      )
+  ,
+      style(
+        XLarge2.BackgroundColor.TEAL_800,
+
+        backgroundColor(hex("#115e59"))
+      )
+  ,
+      style(
+        XLarge2.BackgroundColor.TEAL_900,
+
+        backgroundColor(hex("#134e4a"))
+      )
+  ,
+      style(
+        XLarge2.BackgroundColor.CYAN_050,
+
+        backgroundColor(hex("#ecfeff"))
+      )
+  ,
+      style(
+        XLarge2.BackgroundColor.CYAN_100,
+
+        backgroundColor(hex("#cffafe"))
+      )
+  ,
+      style(
+        XLarge2.BackgroundColor.CYAN_200,
+
+        backgroundColor(hex("#a5f3fc"))
+      )
+  ,
+      style(
+        XLarge2.BackgroundColor.CYAN_300,
+
+        backgroundColor(hex("#67e8f9"))
+      )
+  ,
+      style(
+        XLarge2.BackgroundColor.CYAN_400,
+
+        backgroundColor(hex("#22d3ee"))
+      )
+  ,
+      style(
+        XLarge2.BackgroundColor.CYAN_500,
+
+        backgroundColor(hex("#06b6d4"))
+      )
+  ,
+      style(
+        XLarge2.BackgroundColor.CYAN_600,
+
+        backgroundColor(hex("#0891b2"))
+      )
+  ,
+      style(
+        XLarge2.BackgroundColor.CYAN_700,
+
+        backgroundColor(hex("#0e7490"))
+      )
+  ,
+      style(
+        XLarge2.BackgroundColor.CYAN_800,
+
+        backgroundColor(hex("#155e75"))
+      )
+  ,
+      style(
+        XLarge2.BackgroundColor.CYAN_900,
+
+        backgroundColor(hex("#164e63"))
+      )
+  ,
+      style(
+        XLarge2.BackgroundColor.SKY_050,
+
+        backgroundColor(hex("#f0f9ff"))
+      )
+  ,
+      style(
+        XLarge2.BackgroundColor.SKY_100,
+
+        backgroundColor(hex("#e0f2fe"))
+      )
+  ,
+      style(
+        XLarge2.BackgroundColor.SKY_200,
+
+        backgroundColor(hex("#bae6fd"))
+      )
+  ,
+      style(
+        XLarge2.BackgroundColor.SKY_300,
+
+        backgroundColor(hex("#7dd3fc"))
+      )
+  ,
+      style(
+        XLarge2.BackgroundColor.SKY_400,
+
+        backgroundColor(hex("#38bdf8"))
+      )
+  ,
+      style(
+        XLarge2.BackgroundColor.SKY_500,
+
+        backgroundColor(hex("#0ea5e9"))
+      )
+  ,
+      style(
+        XLarge2.BackgroundColor.SKY_600,
+
+        backgroundColor(hex("#0284c7"))
+      )
+  ,
+      style(
+        XLarge2.BackgroundColor.SKY_700,
+
+        backgroundColor(hex("#0369a1"))
+      )
+  ,
+      style(
+        XLarge2.BackgroundColor.SKY_800,
+
+        backgroundColor(hex("#075985"))
+      )
+  ,
+      style(
+        XLarge2.BackgroundColor.SKY_900,
+
+        backgroundColor(hex("#0c4a6e"))
+      )
+  ,
+      style(
+        XLarge2.BackgroundColor.BLUE_050,
+
+        backgroundColor(hex("#eff6ff"))
+      )
+  ,
+      style(
+        XLarge2.BackgroundColor.BLUE_100,
+
+        backgroundColor(hex("#dbeafe"))
+      )
+  ,
+      style(
+        XLarge2.BackgroundColor.BLUE_200,
+
+        backgroundColor(hex("#bfdbfe"))
+      )
+  ,
+      style(
+        XLarge2.BackgroundColor.BLUE_300,
+
+        backgroundColor(hex("#93c5fd"))
+      )
+  ,
+      style(
+        XLarge2.BackgroundColor.BLUE_400,
+
+        backgroundColor(hex("#60a5fa"))
+      )
+  ,
+      style(
+        XLarge2.BackgroundColor.BLUE_500,
+
+        backgroundColor(hex("#3b82f6"))
+      )
+  ,
+      style(
+        XLarge2.BackgroundColor.BLUE_600,
+
+        backgroundColor(hex("#2563eb"))
+      )
+  ,
+      style(
+        XLarge2.BackgroundColor.BLUE_700,
+
+        backgroundColor(hex("#1d4ed8"))
+      )
+  ,
+      style(
+        XLarge2.BackgroundColor.BLUE_800,
+
+        backgroundColor(hex("#1e40af"))
+      )
+  ,
+      style(
+        XLarge2.BackgroundColor.BLUE_900,
+
+        backgroundColor(hex("#1e3a8a"))
+      )
+  ,
+      style(
+        XLarge2.BackgroundColor.INDIGO_050,
+
+        backgroundColor(hex("#eef2ff"))
+      )
+  ,
+      style(
+        XLarge2.BackgroundColor.INDIGO_100,
+
+        backgroundColor(hex("#e0e7ff"))
+      )
+  ,
+      style(
+        XLarge2.BackgroundColor.INDIGO_200,
+
+        backgroundColor(hex("#c7d2fe"))
+      )
+  ,
+      style(
+        XLarge2.BackgroundColor.INDIGO_300,
+
+        backgroundColor(hex("#a5b4fc"))
+      )
+  ,
+      style(
+        XLarge2.BackgroundColor.INDIGO_400,
+
+        backgroundColor(hex("#818cf8"))
+      )
+  ,
+      style(
+        XLarge2.BackgroundColor.INDIGO_500,
+
+        backgroundColor(hex("#6366f1"))
+      )
+  ,
+      style(
+        XLarge2.BackgroundColor.INDIGO_600,
+
+        backgroundColor(hex("#4f46e5"))
+      )
+  ,
+      style(
+        XLarge2.BackgroundColor.INDIGO_700,
+
+        backgroundColor(hex("#4338ca"))
+      )
+  ,
+      style(
+        XLarge2.BackgroundColor.INDIGO_800,
+
+        backgroundColor(hex("#3730a3"))
+      )
+  ,
+      style(
+        XLarge2.BackgroundColor.INDIGO_900,
+
+        backgroundColor(hex("#312e81"))
+      )
+  ,
+      style(
+        XLarge2.BackgroundColor.VIOLET_050,
+
+        backgroundColor(hex("#f5f3ff"))
+      )
+  ,
+      style(
+        XLarge2.BackgroundColor.VIOLET_100,
+
+        backgroundColor(hex("#ede9fe"))
+      )
+  ,
+      style(
+        XLarge2.BackgroundColor.VIOLET_200,
+
+        backgroundColor(hex("#ddd6fe"))
+      )
+  ,
+      style(
+        XLarge2.BackgroundColor.VIOLET_300,
+
+        backgroundColor(hex("#c4b5fd"))
+      )
+  ,
+      style(
+        XLarge2.BackgroundColor.VIOLET_400,
+
+        backgroundColor(hex("#a78bfa"))
+      )
+  ,
+      style(
+        XLarge2.BackgroundColor.VIOLET_500,
+
+        backgroundColor(hex("#8b5cf6"))
+      )
+  ,
+      style(
+        XLarge2.BackgroundColor.VIOLET_600,
+
+        backgroundColor(hex("#7c3aed"))
+      )
+  ,
+      style(
+        XLarge2.BackgroundColor.VIOLET_700,
+
+        backgroundColor(hex("#6d28d9"))
+      )
+  ,
+      style(
+        XLarge2.BackgroundColor.VIOLET_800,
+
+        backgroundColor(hex("#5b21b6"))
+      )
+  ,
+      style(
+        XLarge2.BackgroundColor.VIOLET_900,
+
+        backgroundColor(hex("#4c1d95"))
+      )
+  ,
+      style(
+        XLarge2.BackgroundColor.PURPLE_050,
+
+        backgroundColor(hex("#faf5ff"))
+      )
+  ,
+      style(
+        XLarge2.BackgroundColor.PURPLE_100,
+
+        backgroundColor(hex("#f3e8ff"))
+      )
+  ,
+      style(
+        XLarge2.BackgroundColor.PURPLE_200,
+
+        backgroundColor(hex("#e9d5ff"))
+      )
+  ,
+      style(
+        XLarge2.BackgroundColor.PURPLE_300,
+
+        backgroundColor(hex("#d8b4fe"))
+      )
+  ,
+      style(
+        XLarge2.BackgroundColor.PURPLE_400,
+
+        backgroundColor(hex("#c084fc"))
+      )
+  ,
+      style(
+        XLarge2.BackgroundColor.PURPLE_500,
+
+        backgroundColor(hex("#a855f7"))
+      )
+  ,
+      style(
+        XLarge2.BackgroundColor.PURPLE_600,
+
+        backgroundColor(hex("#9333ea"))
+      )
+  ,
+      style(
+        XLarge2.BackgroundColor.PURPLE_700,
+
+        backgroundColor(hex("#7e22ce"))
+      )
+  ,
+      style(
+        XLarge2.BackgroundColor.PURPLE_800,
+
+        backgroundColor(hex("#6b21a8"))
+      )
+  ,
+      style(
+        XLarge2.BackgroundColor.PURPLE_900,
+
+        backgroundColor(hex("#581c87"))
+      )
+  ,
+      style(
+        XLarge2.BackgroundColor.FUCHSIA_050,
+
+        backgroundColor(hex("#fdf4ff"))
+      )
+  ,
+      style(
+        XLarge2.BackgroundColor.FUCHSIA_100,
+
+        backgroundColor(hex("#fae8ff"))
+      )
+  ,
+      style(
+        XLarge2.BackgroundColor.FUCHSIA_200,
+
+        backgroundColor(hex("#f5d0fe"))
+      )
+  ,
+      style(
+        XLarge2.BackgroundColor.FUCHSIA_300,
+
+        backgroundColor(hex("#f0abfc"))
+      )
+  ,
+      style(
+        XLarge2.BackgroundColor.FUCHSIA_400,
+
+        backgroundColor(hex("#e879f9"))
+      )
+  ,
+      style(
+        XLarge2.BackgroundColor.FUCHSIA_500,
+
+        backgroundColor(hex("#d946ef"))
+      )
+  ,
+      style(
+        XLarge2.BackgroundColor.FUCHSIA_600,
+
+        backgroundColor(hex("#c026d3"))
+      )
+  ,
+      style(
+        XLarge2.BackgroundColor.FUCHSIA_700,
+
+        backgroundColor(hex("#a21caf"))
+      )
+  ,
+      style(
+        XLarge2.BackgroundColor.FUCHSIA_800,
+
+        backgroundColor(hex("#86198f"))
+      )
+  ,
+      style(
+        XLarge2.BackgroundColor.FUCHSIA_900,
+
+        backgroundColor(hex("#701a75"))
+      )
+  ,
+      style(
+        XLarge2.BackgroundColor.PINK_050,
+
+        backgroundColor(hex("#fdf2f8"))
+      )
+  ,
+      style(
+        XLarge2.BackgroundColor.PINK_100,
+
+        backgroundColor(hex("#fce7f3"))
+      )
+  ,
+      style(
+        XLarge2.BackgroundColor.PINK_200,
+
+        backgroundColor(hex("#fbcfe8"))
+      )
+  ,
+      style(
+        XLarge2.BackgroundColor.PINK_300,
+
+        backgroundColor(hex("#f9a8d4"))
+      )
+  ,
+      style(
+        XLarge2.BackgroundColor.PINK_400,
+
+        backgroundColor(hex("#f472b6"))
+      )
+  ,
+      style(
+        XLarge2.BackgroundColor.PINK_500,
+
+        backgroundColor(hex("#ec4899"))
+      )
+  ,
+      style(
+        XLarge2.BackgroundColor.PINK_600,
+
+        backgroundColor(hex("#db2777"))
+      )
+  ,
+      style(
+        XLarge2.BackgroundColor.PINK_700,
+
+        backgroundColor(hex("#be185d"))
+      )
+  ,
+      style(
+        XLarge2.BackgroundColor.PINK_800,
+
+        backgroundColor(hex("#9d174d"))
+      )
+  ,
+      style(
+        XLarge2.BackgroundColor.PINK_900,
+
+        backgroundColor(hex("#831843"))
+      )
+  ,
+      style(
+        XLarge2.BackgroundColor.ROSE_050,
+
+        backgroundColor(hex("#fff1f2"))
+      )
+  ,
+      style(
+        XLarge2.BackgroundColor.ROSE_100,
+
+        backgroundColor(hex("#ffe4e6"))
+      )
+  ,
+      style(
+        XLarge2.BackgroundColor.ROSE_200,
+
+        backgroundColor(hex("#fecdd3"))
+      )
+  ,
+      style(
+        XLarge2.BackgroundColor.ROSE_300,
+
+        backgroundColor(hex("#fda4af"))
+      )
+  ,
+      style(
+        XLarge2.BackgroundColor.ROSE_400,
+
+        backgroundColor(hex("#fb7185"))
+      )
+  ,
+      style(
+        XLarge2.BackgroundColor.ROSE_500,
+
+        backgroundColor(hex("#f43f5e"))
+      )
+  ,
+      style(
+        XLarge2.BackgroundColor.ROSE_600,
+
+        backgroundColor(hex("#e11d48"))
+      )
+  ,
+      style(
+        XLarge2.BackgroundColor.ROSE_700,
+
+        backgroundColor(hex("#be123c"))
+      )
+  ,
+      style(
+        XLarge2.BackgroundColor.ROSE_800,
+
+        backgroundColor(hex("#9f1239"))
+      )
+  ,
+      style(
+        XLarge2.BackgroundColor.ROSE_900,
+
+        backgroundColor(hex("#881337"))
+      )
+    );
+
+  }
+
   private void XLarge2Color() {
     media(
       minWidth(px(1536)),
@@ -40490,6 +48564,1348 @@ public final class Framework extends CssTemplate {
         width(fitContent)
       )
     );
+
+  }
+
+  private void HoverBackgroundColor() {
+    style(
+      Hover.BackgroundColor.TRANSPARENT, _hover,
+
+      backgroundColor(transparent)
+    )
+;
+    style(
+      Hover.BackgroundColor.BLACK, _hover,
+
+      backgroundColor(hex("#000"))
+    )
+;
+    style(
+      Hover.BackgroundColor.WHITE, _hover,
+
+      backgroundColor(hex("#ffffff"))
+    )
+;
+    style(
+      Hover.BackgroundColor.SLATE_050, _hover,
+
+      backgroundColor(hex("#f8fafc"))
+    )
+;
+    style(
+      Hover.BackgroundColor.SLATE_100, _hover,
+
+      backgroundColor(hex("#f1f5f9"))
+    )
+;
+    style(
+      Hover.BackgroundColor.SLATE_200, _hover,
+
+      backgroundColor(hex("#e2e8f0"))
+    )
+;
+    style(
+      Hover.BackgroundColor.SLATE_300, _hover,
+
+      backgroundColor(hex("#cbd5e1"))
+    )
+;
+    style(
+      Hover.BackgroundColor.SLATE_400, _hover,
+
+      backgroundColor(hex("#94a3b8"))
+    )
+;
+    style(
+      Hover.BackgroundColor.SLATE_500, _hover,
+
+      backgroundColor(hex("#64748b"))
+    )
+;
+    style(
+      Hover.BackgroundColor.SLATE_600, _hover,
+
+      backgroundColor(hex("#475569"))
+    )
+;
+    style(
+      Hover.BackgroundColor.SLATE_700, _hover,
+
+      backgroundColor(hex("#334155"))
+    )
+;
+    style(
+      Hover.BackgroundColor.SLATE_800, _hover,
+
+      backgroundColor(hex("#1e293b"))
+    )
+;
+    style(
+      Hover.BackgroundColor.SLATE_900, _hover,
+
+      backgroundColor(hex("#0f172a"))
+    )
+;
+    style(
+      Hover.BackgroundColor.GRAY_050, _hover,
+
+      backgroundColor(hex("#f9fafb"))
+    )
+;
+    style(
+      Hover.BackgroundColor.GRAY_100, _hover,
+
+      backgroundColor(hex("#f3f4f6"))
+    )
+;
+    style(
+      Hover.BackgroundColor.GRAY_200, _hover,
+
+      backgroundColor(hex("#e5e7eb"))
+    )
+;
+    style(
+      Hover.BackgroundColor.GRAY_300, _hover,
+
+      backgroundColor(hex("#d1d5db"))
+    )
+;
+    style(
+      Hover.BackgroundColor.GRAY_400, _hover,
+
+      backgroundColor(hex("#9ca3af"))
+    )
+;
+    style(
+      Hover.BackgroundColor.GRAY_500, _hover,
+
+      backgroundColor(hex("#6b7280"))
+    )
+;
+    style(
+      Hover.BackgroundColor.GRAY_600, _hover,
+
+      backgroundColor(hex("#4b5563"))
+    )
+;
+    style(
+      Hover.BackgroundColor.GRAY_700, _hover,
+
+      backgroundColor(hex("#374151"))
+    )
+;
+    style(
+      Hover.BackgroundColor.GRAY_800, _hover,
+
+      backgroundColor(hex("#1f2937"))
+    )
+;
+    style(
+      Hover.BackgroundColor.GRAY_900, _hover,
+
+      backgroundColor(hex("#111827"))
+    )
+;
+    style(
+      Hover.BackgroundColor.ZINC_050, _hover,
+
+      backgroundColor(hex("#fafafa"))
+    )
+;
+    style(
+      Hover.BackgroundColor.ZINC_100, _hover,
+
+      backgroundColor(hex("#f4f4f5"))
+    )
+;
+    style(
+      Hover.BackgroundColor.ZINC_200, _hover,
+
+      backgroundColor(hex("#e4e4e7"))
+    )
+;
+    style(
+      Hover.BackgroundColor.ZINC_300, _hover,
+
+      backgroundColor(hex("#d4d4d8"))
+    )
+;
+    style(
+      Hover.BackgroundColor.ZINC_400, _hover,
+
+      backgroundColor(hex("#a1a1aa"))
+    )
+;
+    style(
+      Hover.BackgroundColor.ZINC_500, _hover,
+
+      backgroundColor(hex("#71717a"))
+    )
+;
+    style(
+      Hover.BackgroundColor.ZINC_600, _hover,
+
+      backgroundColor(hex("#52525b"))
+    )
+;
+    style(
+      Hover.BackgroundColor.ZINC_700, _hover,
+
+      backgroundColor(hex("#3f3f46"))
+    )
+;
+    style(
+      Hover.BackgroundColor.ZINC_800, _hover,
+
+      backgroundColor(hex("#27272a"))
+    )
+;
+    style(
+      Hover.BackgroundColor.ZINC_900, _hover,
+
+      backgroundColor(hex("#18181b"))
+    )
+;
+    style(
+      Hover.BackgroundColor.NEUTRAL_050, _hover,
+
+      backgroundColor(hex("#fafafa"))
+    )
+;
+    style(
+      Hover.BackgroundColor.NEUTRAL_100, _hover,
+
+      backgroundColor(hex("#f5f5f5"))
+    )
+;
+    style(
+      Hover.BackgroundColor.NEUTRAL_200, _hover,
+
+      backgroundColor(hex("#e5e5e5"))
+    )
+;
+    style(
+      Hover.BackgroundColor.NEUTRAL_300, _hover,
+
+      backgroundColor(hex("#d4d4d4"))
+    )
+;
+    style(
+      Hover.BackgroundColor.NEUTRAL_400, _hover,
+
+      backgroundColor(hex("#a3a3a3"))
+    )
+;
+    style(
+      Hover.BackgroundColor.NEUTRAL_500, _hover,
+
+      backgroundColor(hex("#737373"))
+    )
+;
+    style(
+      Hover.BackgroundColor.NEUTRAL_600, _hover,
+
+      backgroundColor(hex("#525252"))
+    )
+;
+    style(
+      Hover.BackgroundColor.NEUTRAL_700, _hover,
+
+      backgroundColor(hex("#404040"))
+    )
+;
+    style(
+      Hover.BackgroundColor.NEUTRAL_800, _hover,
+
+      backgroundColor(hex("#262626"))
+    )
+;
+    style(
+      Hover.BackgroundColor.NEUTRAL_900, _hover,
+
+      backgroundColor(hex("#171717"))
+    )
+;
+    style(
+      Hover.BackgroundColor.STONE_050, _hover,
+
+      backgroundColor(hex("#fafaf9"))
+    )
+;
+    style(
+      Hover.BackgroundColor.STONE_100, _hover,
+
+      backgroundColor(hex("#f5f5f4"))
+    )
+;
+    style(
+      Hover.BackgroundColor.STONE_200, _hover,
+
+      backgroundColor(hex("#e7e5e4"))
+    )
+;
+    style(
+      Hover.BackgroundColor.STONE_300, _hover,
+
+      backgroundColor(hex("#d6d3d1"))
+    )
+;
+    style(
+      Hover.BackgroundColor.STONE_400, _hover,
+
+      backgroundColor(hex("#a8a29e"))
+    )
+;
+    style(
+      Hover.BackgroundColor.STONE_500, _hover,
+
+      backgroundColor(hex("#78716c"))
+    )
+;
+    style(
+      Hover.BackgroundColor.STONE_600, _hover,
+
+      backgroundColor(hex("#57534e"))
+    )
+;
+    style(
+      Hover.BackgroundColor.STONE_700, _hover,
+
+      backgroundColor(hex("#44403c"))
+    )
+;
+    style(
+      Hover.BackgroundColor.STONE_800, _hover,
+
+      backgroundColor(hex("#292524"))
+    )
+;
+    style(
+      Hover.BackgroundColor.STONE_900, _hover,
+
+      backgroundColor(hex("#1c1917"))
+    )
+;
+    style(
+      Hover.BackgroundColor.RED_050, _hover,
+
+      backgroundColor(hex("#fef2f2"))
+    )
+;
+    style(
+      Hover.BackgroundColor.RED_100, _hover,
+
+      backgroundColor(hex("#fee2e2"))
+    )
+;
+    style(
+      Hover.BackgroundColor.RED_200, _hover,
+
+      backgroundColor(hex("#fecaca"))
+    )
+;
+    style(
+      Hover.BackgroundColor.RED_300, _hover,
+
+      backgroundColor(hex("#fca5a5"))
+    )
+;
+    style(
+      Hover.BackgroundColor.RED_400, _hover,
+
+      backgroundColor(hex("#f87171"))
+    )
+;
+    style(
+      Hover.BackgroundColor.RED_500, _hover,
+
+      backgroundColor(hex("#ef4444"))
+    )
+;
+    style(
+      Hover.BackgroundColor.RED_600, _hover,
+
+      backgroundColor(hex("#dc2626"))
+    )
+;
+    style(
+      Hover.BackgroundColor.RED_700, _hover,
+
+      backgroundColor(hex("#b91c1c"))
+    )
+;
+    style(
+      Hover.BackgroundColor.RED_800, _hover,
+
+      backgroundColor(hex("#991b1b"))
+    )
+;
+    style(
+      Hover.BackgroundColor.RED_900, _hover,
+
+      backgroundColor(hex("#7f1d1d"))
+    )
+;
+    style(
+      Hover.BackgroundColor.ORANGE_050, _hover,
+
+      backgroundColor(hex("#fff7ed"))
+    )
+;
+    style(
+      Hover.BackgroundColor.ORANGE_100, _hover,
+
+      backgroundColor(hex("#ffedd5"))
+    )
+;
+    style(
+      Hover.BackgroundColor.ORANGE_200, _hover,
+
+      backgroundColor(hex("#fed7aa"))
+    )
+;
+    style(
+      Hover.BackgroundColor.ORANGE_300, _hover,
+
+      backgroundColor(hex("#fdba74"))
+    )
+;
+    style(
+      Hover.BackgroundColor.ORANGE_400, _hover,
+
+      backgroundColor(hex("#fb923c"))
+    )
+;
+    style(
+      Hover.BackgroundColor.ORANGE_500, _hover,
+
+      backgroundColor(hex("#f97316"))
+    )
+;
+    style(
+      Hover.BackgroundColor.ORANGE_600, _hover,
+
+      backgroundColor(hex("#ea580c"))
+    )
+;
+    style(
+      Hover.BackgroundColor.ORANGE_700, _hover,
+
+      backgroundColor(hex("#c2410c"))
+    )
+;
+    style(
+      Hover.BackgroundColor.ORANGE_800, _hover,
+
+      backgroundColor(hex("#9a3412"))
+    )
+;
+    style(
+      Hover.BackgroundColor.ORANGE_900, _hover,
+
+      backgroundColor(hex("#7c2d12"))
+    )
+;
+    style(
+      Hover.BackgroundColor.AMBER_050, _hover,
+
+      backgroundColor(hex("#fffbeb"))
+    )
+;
+    style(
+      Hover.BackgroundColor.AMBER_100, _hover,
+
+      backgroundColor(hex("#fef3c7"))
+    )
+;
+    style(
+      Hover.BackgroundColor.AMBER_200, _hover,
+
+      backgroundColor(hex("#fde68a"))
+    )
+;
+    style(
+      Hover.BackgroundColor.AMBER_300, _hover,
+
+      backgroundColor(hex("#fcd34d"))
+    )
+;
+    style(
+      Hover.BackgroundColor.AMBER_400, _hover,
+
+      backgroundColor(hex("#fbbf24"))
+    )
+;
+    style(
+      Hover.BackgroundColor.AMBER_500, _hover,
+
+      backgroundColor(hex("#f59e0b"))
+    )
+;
+    style(
+      Hover.BackgroundColor.AMBER_600, _hover,
+
+      backgroundColor(hex("#d97706"))
+    )
+;
+    style(
+      Hover.BackgroundColor.AMBER_700, _hover,
+
+      backgroundColor(hex("#b45309"))
+    )
+;
+    style(
+      Hover.BackgroundColor.AMBER_800, _hover,
+
+      backgroundColor(hex("#92400e"))
+    )
+;
+    style(
+      Hover.BackgroundColor.AMBER_900, _hover,
+
+      backgroundColor(hex("#78350f"))
+    )
+;
+    style(
+      Hover.BackgroundColor.YELLOW_050, _hover,
+
+      backgroundColor(hex("#fefce8"))
+    )
+;
+    style(
+      Hover.BackgroundColor.YELLOW_100, _hover,
+
+      backgroundColor(hex("#fef9c3"))
+    )
+;
+    style(
+      Hover.BackgroundColor.YELLOW_200, _hover,
+
+      backgroundColor(hex("#fef08a"))
+    )
+;
+    style(
+      Hover.BackgroundColor.YELLOW_300, _hover,
+
+      backgroundColor(hex("#fde047"))
+    )
+;
+    style(
+      Hover.BackgroundColor.YELLOW_400, _hover,
+
+      backgroundColor(hex("#facc15"))
+    )
+;
+    style(
+      Hover.BackgroundColor.YELLOW_500, _hover,
+
+      backgroundColor(hex("#eab308"))
+    )
+;
+    style(
+      Hover.BackgroundColor.YELLOW_600, _hover,
+
+      backgroundColor(hex("#ca8a04"))
+    )
+;
+    style(
+      Hover.BackgroundColor.YELLOW_700, _hover,
+
+      backgroundColor(hex("#a16207"))
+    )
+;
+    style(
+      Hover.BackgroundColor.YELLOW_800, _hover,
+
+      backgroundColor(hex("#854d0e"))
+    )
+;
+    style(
+      Hover.BackgroundColor.YELLOW_900, _hover,
+
+      backgroundColor(hex("#713f12"))
+    )
+;
+    style(
+      Hover.BackgroundColor.LIME_050, _hover,
+
+      backgroundColor(hex("#f7fee7"))
+    )
+;
+    style(
+      Hover.BackgroundColor.LIME_100, _hover,
+
+      backgroundColor(hex("#ecfccb"))
+    )
+;
+    style(
+      Hover.BackgroundColor.LIME_200, _hover,
+
+      backgroundColor(hex("#d9f99d"))
+    )
+;
+    style(
+      Hover.BackgroundColor.LIME_300, _hover,
+
+      backgroundColor(hex("#bef264"))
+    )
+;
+    style(
+      Hover.BackgroundColor.LIME_400, _hover,
+
+      backgroundColor(hex("#a3e635"))
+    )
+;
+    style(
+      Hover.BackgroundColor.LIME_500, _hover,
+
+      backgroundColor(hex("#84cc16"))
+    )
+;
+    style(
+      Hover.BackgroundColor.LIME_600, _hover,
+
+      backgroundColor(hex("#65a30d"))
+    )
+;
+    style(
+      Hover.BackgroundColor.LIME_700, _hover,
+
+      backgroundColor(hex("#4d7c0f"))
+    )
+;
+    style(
+      Hover.BackgroundColor.LIME_800, _hover,
+
+      backgroundColor(hex("#3f6212"))
+    )
+;
+    style(
+      Hover.BackgroundColor.LIME_900, _hover,
+
+      backgroundColor(hex("#365314"))
+    )
+;
+    style(
+      Hover.BackgroundColor.GREEN_050, _hover,
+
+      backgroundColor(hex("#f0fdf4"))
+    )
+;
+    style(
+      Hover.BackgroundColor.GREEN_100, _hover,
+
+      backgroundColor(hex("#dcfce7"))
+    )
+;
+    style(
+      Hover.BackgroundColor.GREEN_200, _hover,
+
+      backgroundColor(hex("#bbf7d0"))
+    )
+;
+    style(
+      Hover.BackgroundColor.GREEN_300, _hover,
+
+      backgroundColor(hex("#86efac"))
+    )
+;
+    style(
+      Hover.BackgroundColor.GREEN_400, _hover,
+
+      backgroundColor(hex("#4ade80"))
+    )
+;
+    style(
+      Hover.BackgroundColor.GREEN_500, _hover,
+
+      backgroundColor(hex("#22c55e"))
+    )
+;
+    style(
+      Hover.BackgroundColor.GREEN_600, _hover,
+
+      backgroundColor(hex("#16a34a"))
+    )
+;
+    style(
+      Hover.BackgroundColor.GREEN_700, _hover,
+
+      backgroundColor(hex("#15803d"))
+    )
+;
+    style(
+      Hover.BackgroundColor.GREEN_800, _hover,
+
+      backgroundColor(hex("#166534"))
+    )
+;
+    style(
+      Hover.BackgroundColor.GREEN_900, _hover,
+
+      backgroundColor(hex("#14532d"))
+    )
+;
+    style(
+      Hover.BackgroundColor.EMERALD_050, _hover,
+
+      backgroundColor(hex("#ecfdf5"))
+    )
+;
+    style(
+      Hover.BackgroundColor.EMERALD_100, _hover,
+
+      backgroundColor(hex("#d1fae5"))
+    )
+;
+    style(
+      Hover.BackgroundColor.EMERALD_200, _hover,
+
+      backgroundColor(hex("#a7f3d0"))
+    )
+;
+    style(
+      Hover.BackgroundColor.EMERALD_300, _hover,
+
+      backgroundColor(hex("#6ee7b7"))
+    )
+;
+    style(
+      Hover.BackgroundColor.EMERALD_400, _hover,
+
+      backgroundColor(hex("#34d399"))
+    )
+;
+    style(
+      Hover.BackgroundColor.EMERALD_500, _hover,
+
+      backgroundColor(hex("#10b981"))
+    )
+;
+    style(
+      Hover.BackgroundColor.EMERALD_600, _hover,
+
+      backgroundColor(hex("#059669"))
+    )
+;
+    style(
+      Hover.BackgroundColor.EMERALD_700, _hover,
+
+      backgroundColor(hex("#047857"))
+    )
+;
+    style(
+      Hover.BackgroundColor.EMERALD_800, _hover,
+
+      backgroundColor(hex("#065f46"))
+    )
+;
+    style(
+      Hover.BackgroundColor.EMERALD_900, _hover,
+
+      backgroundColor(hex("#064e3b"))
+    )
+;
+    style(
+      Hover.BackgroundColor.TEAL_050, _hover,
+
+      backgroundColor(hex("#f0fdfa"))
+    )
+;
+    style(
+      Hover.BackgroundColor.TEAL_100, _hover,
+
+      backgroundColor(hex("#ccfbf1"))
+    )
+;
+    style(
+      Hover.BackgroundColor.TEAL_200, _hover,
+
+      backgroundColor(hex("#99f6e4"))
+    )
+;
+    style(
+      Hover.BackgroundColor.TEAL_300, _hover,
+
+      backgroundColor(hex("#5eead4"))
+    )
+;
+    style(
+      Hover.BackgroundColor.TEAL_400, _hover,
+
+      backgroundColor(hex("#2dd4bf"))
+    )
+;
+    style(
+      Hover.BackgroundColor.TEAL_500, _hover,
+
+      backgroundColor(hex("#14b8a6"))
+    )
+;
+    style(
+      Hover.BackgroundColor.TEAL_600, _hover,
+
+      backgroundColor(hex("#0d9488"))
+    )
+;
+    style(
+      Hover.BackgroundColor.TEAL_700, _hover,
+
+      backgroundColor(hex("#0f766e"))
+    )
+;
+    style(
+      Hover.BackgroundColor.TEAL_800, _hover,
+
+      backgroundColor(hex("#115e59"))
+    )
+;
+    style(
+      Hover.BackgroundColor.TEAL_900, _hover,
+
+      backgroundColor(hex("#134e4a"))
+    )
+;
+    style(
+      Hover.BackgroundColor.CYAN_050, _hover,
+
+      backgroundColor(hex("#ecfeff"))
+    )
+;
+    style(
+      Hover.BackgroundColor.CYAN_100, _hover,
+
+      backgroundColor(hex("#cffafe"))
+    )
+;
+    style(
+      Hover.BackgroundColor.CYAN_200, _hover,
+
+      backgroundColor(hex("#a5f3fc"))
+    )
+;
+    style(
+      Hover.BackgroundColor.CYAN_300, _hover,
+
+      backgroundColor(hex("#67e8f9"))
+    )
+;
+    style(
+      Hover.BackgroundColor.CYAN_400, _hover,
+
+      backgroundColor(hex("#22d3ee"))
+    )
+;
+    style(
+      Hover.BackgroundColor.CYAN_500, _hover,
+
+      backgroundColor(hex("#06b6d4"))
+    )
+;
+    style(
+      Hover.BackgroundColor.CYAN_600, _hover,
+
+      backgroundColor(hex("#0891b2"))
+    )
+;
+    style(
+      Hover.BackgroundColor.CYAN_700, _hover,
+
+      backgroundColor(hex("#0e7490"))
+    )
+;
+    style(
+      Hover.BackgroundColor.CYAN_800, _hover,
+
+      backgroundColor(hex("#155e75"))
+    )
+;
+    style(
+      Hover.BackgroundColor.CYAN_900, _hover,
+
+      backgroundColor(hex("#164e63"))
+    )
+;
+    style(
+      Hover.BackgroundColor.SKY_050, _hover,
+
+      backgroundColor(hex("#f0f9ff"))
+    )
+;
+    style(
+      Hover.BackgroundColor.SKY_100, _hover,
+
+      backgroundColor(hex("#e0f2fe"))
+    )
+;
+    style(
+      Hover.BackgroundColor.SKY_200, _hover,
+
+      backgroundColor(hex("#bae6fd"))
+    )
+;
+    style(
+      Hover.BackgroundColor.SKY_300, _hover,
+
+      backgroundColor(hex("#7dd3fc"))
+    )
+;
+    style(
+      Hover.BackgroundColor.SKY_400, _hover,
+
+      backgroundColor(hex("#38bdf8"))
+    )
+;
+    style(
+      Hover.BackgroundColor.SKY_500, _hover,
+
+      backgroundColor(hex("#0ea5e9"))
+    )
+;
+    style(
+      Hover.BackgroundColor.SKY_600, _hover,
+
+      backgroundColor(hex("#0284c7"))
+    )
+;
+    style(
+      Hover.BackgroundColor.SKY_700, _hover,
+
+      backgroundColor(hex("#0369a1"))
+    )
+;
+    style(
+      Hover.BackgroundColor.SKY_800, _hover,
+
+      backgroundColor(hex("#075985"))
+    )
+;
+    style(
+      Hover.BackgroundColor.SKY_900, _hover,
+
+      backgroundColor(hex("#0c4a6e"))
+    )
+;
+    style(
+      Hover.BackgroundColor.BLUE_050, _hover,
+
+      backgroundColor(hex("#eff6ff"))
+    )
+;
+    style(
+      Hover.BackgroundColor.BLUE_100, _hover,
+
+      backgroundColor(hex("#dbeafe"))
+    )
+;
+    style(
+      Hover.BackgroundColor.BLUE_200, _hover,
+
+      backgroundColor(hex("#bfdbfe"))
+    )
+;
+    style(
+      Hover.BackgroundColor.BLUE_300, _hover,
+
+      backgroundColor(hex("#93c5fd"))
+    )
+;
+    style(
+      Hover.BackgroundColor.BLUE_400, _hover,
+
+      backgroundColor(hex("#60a5fa"))
+    )
+;
+    style(
+      Hover.BackgroundColor.BLUE_500, _hover,
+
+      backgroundColor(hex("#3b82f6"))
+    )
+;
+    style(
+      Hover.BackgroundColor.BLUE_600, _hover,
+
+      backgroundColor(hex("#2563eb"))
+    )
+;
+    style(
+      Hover.BackgroundColor.BLUE_700, _hover,
+
+      backgroundColor(hex("#1d4ed8"))
+    )
+;
+    style(
+      Hover.BackgroundColor.BLUE_800, _hover,
+
+      backgroundColor(hex("#1e40af"))
+    )
+;
+    style(
+      Hover.BackgroundColor.BLUE_900, _hover,
+
+      backgroundColor(hex("#1e3a8a"))
+    )
+;
+    style(
+      Hover.BackgroundColor.INDIGO_050, _hover,
+
+      backgroundColor(hex("#eef2ff"))
+    )
+;
+    style(
+      Hover.BackgroundColor.INDIGO_100, _hover,
+
+      backgroundColor(hex("#e0e7ff"))
+    )
+;
+    style(
+      Hover.BackgroundColor.INDIGO_200, _hover,
+
+      backgroundColor(hex("#c7d2fe"))
+    )
+;
+    style(
+      Hover.BackgroundColor.INDIGO_300, _hover,
+
+      backgroundColor(hex("#a5b4fc"))
+    )
+;
+    style(
+      Hover.BackgroundColor.INDIGO_400, _hover,
+
+      backgroundColor(hex("#818cf8"))
+    )
+;
+    style(
+      Hover.BackgroundColor.INDIGO_500, _hover,
+
+      backgroundColor(hex("#6366f1"))
+    )
+;
+    style(
+      Hover.BackgroundColor.INDIGO_600, _hover,
+
+      backgroundColor(hex("#4f46e5"))
+    )
+;
+    style(
+      Hover.BackgroundColor.INDIGO_700, _hover,
+
+      backgroundColor(hex("#4338ca"))
+    )
+;
+    style(
+      Hover.BackgroundColor.INDIGO_800, _hover,
+
+      backgroundColor(hex("#3730a3"))
+    )
+;
+    style(
+      Hover.BackgroundColor.INDIGO_900, _hover,
+
+      backgroundColor(hex("#312e81"))
+    )
+;
+    style(
+      Hover.BackgroundColor.VIOLET_050, _hover,
+
+      backgroundColor(hex("#f5f3ff"))
+    )
+;
+    style(
+      Hover.BackgroundColor.VIOLET_100, _hover,
+
+      backgroundColor(hex("#ede9fe"))
+    )
+;
+    style(
+      Hover.BackgroundColor.VIOLET_200, _hover,
+
+      backgroundColor(hex("#ddd6fe"))
+    )
+;
+    style(
+      Hover.BackgroundColor.VIOLET_300, _hover,
+
+      backgroundColor(hex("#c4b5fd"))
+    )
+;
+    style(
+      Hover.BackgroundColor.VIOLET_400, _hover,
+
+      backgroundColor(hex("#a78bfa"))
+    )
+;
+    style(
+      Hover.BackgroundColor.VIOLET_500, _hover,
+
+      backgroundColor(hex("#8b5cf6"))
+    )
+;
+    style(
+      Hover.BackgroundColor.VIOLET_600, _hover,
+
+      backgroundColor(hex("#7c3aed"))
+    )
+;
+    style(
+      Hover.BackgroundColor.VIOLET_700, _hover,
+
+      backgroundColor(hex("#6d28d9"))
+    )
+;
+    style(
+      Hover.BackgroundColor.VIOLET_800, _hover,
+
+      backgroundColor(hex("#5b21b6"))
+    )
+;
+    style(
+      Hover.BackgroundColor.VIOLET_900, _hover,
+
+      backgroundColor(hex("#4c1d95"))
+    )
+;
+    style(
+      Hover.BackgroundColor.PURPLE_050, _hover,
+
+      backgroundColor(hex("#faf5ff"))
+    )
+;
+    style(
+      Hover.BackgroundColor.PURPLE_100, _hover,
+
+      backgroundColor(hex("#f3e8ff"))
+    )
+;
+    style(
+      Hover.BackgroundColor.PURPLE_200, _hover,
+
+      backgroundColor(hex("#e9d5ff"))
+    )
+;
+    style(
+      Hover.BackgroundColor.PURPLE_300, _hover,
+
+      backgroundColor(hex("#d8b4fe"))
+    )
+;
+    style(
+      Hover.BackgroundColor.PURPLE_400, _hover,
+
+      backgroundColor(hex("#c084fc"))
+    )
+;
+    style(
+      Hover.BackgroundColor.PURPLE_500, _hover,
+
+      backgroundColor(hex("#a855f7"))
+    )
+;
+    style(
+      Hover.BackgroundColor.PURPLE_600, _hover,
+
+      backgroundColor(hex("#9333ea"))
+    )
+;
+    style(
+      Hover.BackgroundColor.PURPLE_700, _hover,
+
+      backgroundColor(hex("#7e22ce"))
+    )
+;
+    style(
+      Hover.BackgroundColor.PURPLE_800, _hover,
+
+      backgroundColor(hex("#6b21a8"))
+    )
+;
+    style(
+      Hover.BackgroundColor.PURPLE_900, _hover,
+
+      backgroundColor(hex("#581c87"))
+    )
+;
+    style(
+      Hover.BackgroundColor.FUCHSIA_050, _hover,
+
+      backgroundColor(hex("#fdf4ff"))
+    )
+;
+    style(
+      Hover.BackgroundColor.FUCHSIA_100, _hover,
+
+      backgroundColor(hex("#fae8ff"))
+    )
+;
+    style(
+      Hover.BackgroundColor.FUCHSIA_200, _hover,
+
+      backgroundColor(hex("#f5d0fe"))
+    )
+;
+    style(
+      Hover.BackgroundColor.FUCHSIA_300, _hover,
+
+      backgroundColor(hex("#f0abfc"))
+    )
+;
+    style(
+      Hover.BackgroundColor.FUCHSIA_400, _hover,
+
+      backgroundColor(hex("#e879f9"))
+    )
+;
+    style(
+      Hover.BackgroundColor.FUCHSIA_500, _hover,
+
+      backgroundColor(hex("#d946ef"))
+    )
+;
+    style(
+      Hover.BackgroundColor.FUCHSIA_600, _hover,
+
+      backgroundColor(hex("#c026d3"))
+    )
+;
+    style(
+      Hover.BackgroundColor.FUCHSIA_700, _hover,
+
+      backgroundColor(hex("#a21caf"))
+    )
+;
+    style(
+      Hover.BackgroundColor.FUCHSIA_800, _hover,
+
+      backgroundColor(hex("#86198f"))
+    )
+;
+    style(
+      Hover.BackgroundColor.FUCHSIA_900, _hover,
+
+      backgroundColor(hex("#701a75"))
+    )
+;
+    style(
+      Hover.BackgroundColor.PINK_050, _hover,
+
+      backgroundColor(hex("#fdf2f8"))
+    )
+;
+    style(
+      Hover.BackgroundColor.PINK_100, _hover,
+
+      backgroundColor(hex("#fce7f3"))
+    )
+;
+    style(
+      Hover.BackgroundColor.PINK_200, _hover,
+
+      backgroundColor(hex("#fbcfe8"))
+    )
+;
+    style(
+      Hover.BackgroundColor.PINK_300, _hover,
+
+      backgroundColor(hex("#f9a8d4"))
+    )
+;
+    style(
+      Hover.BackgroundColor.PINK_400, _hover,
+
+      backgroundColor(hex("#f472b6"))
+    )
+;
+    style(
+      Hover.BackgroundColor.PINK_500, _hover,
+
+      backgroundColor(hex("#ec4899"))
+    )
+;
+    style(
+      Hover.BackgroundColor.PINK_600, _hover,
+
+      backgroundColor(hex("#db2777"))
+    )
+;
+    style(
+      Hover.BackgroundColor.PINK_700, _hover,
+
+      backgroundColor(hex("#be185d"))
+    )
+;
+    style(
+      Hover.BackgroundColor.PINK_800, _hover,
+
+      backgroundColor(hex("#9d174d"))
+    )
+;
+    style(
+      Hover.BackgroundColor.PINK_900, _hover,
+
+      backgroundColor(hex("#831843"))
+    )
+;
+    style(
+      Hover.BackgroundColor.ROSE_050, _hover,
+
+      backgroundColor(hex("#fff1f2"))
+    )
+;
+    style(
+      Hover.BackgroundColor.ROSE_100, _hover,
+
+      backgroundColor(hex("#ffe4e6"))
+    )
+;
+    style(
+      Hover.BackgroundColor.ROSE_200, _hover,
+
+      backgroundColor(hex("#fecdd3"))
+    )
+;
+    style(
+      Hover.BackgroundColor.ROSE_300, _hover,
+
+      backgroundColor(hex("#fda4af"))
+    )
+;
+    style(
+      Hover.BackgroundColor.ROSE_400, _hover,
+
+      backgroundColor(hex("#fb7185"))
+    )
+;
+    style(
+      Hover.BackgroundColor.ROSE_500, _hover,
+
+      backgroundColor(hex("#f43f5e"))
+    )
+;
+    style(
+      Hover.BackgroundColor.ROSE_600, _hover,
+
+      backgroundColor(hex("#e11d48"))
+    )
+;
+    style(
+      Hover.BackgroundColor.ROSE_700, _hover,
+
+      backgroundColor(hex("#be123c"))
+    )
+;
+    style(
+      Hover.BackgroundColor.ROSE_800, _hover,
+
+      backgroundColor(hex("#9f1239"))
+    )
+;
+    style(
+      Hover.BackgroundColor.ROSE_900, _hover,
+
+      backgroundColor(hex("#881337"))
+    )
+;
 
   }
 

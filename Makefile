@@ -291,8 +291,8 @@ CODE_COMPILE_MARKER = $(CODE_WORK)/compile-marker
 $(CODE_COMPILE_MARKER): $(CODE_COMPILE_DEPS) $(CODE_CLASSES)
 	if [ -n "$(CODE_DIRTY)" ]; then \
 		$(CODE_JAVACX); \
-		touch $(CODE_COMPILE_MARKER); \
 	fi
+	touch $(CODE_COMPILE_MARKER); \
 
 $(CODE_CLASSES): $(CODE_CLASS_OUTPUT)/%.class: $(CODE_MAIN)/%.java
 	$(eval CODE_DIRTY += $$<)
@@ -470,8 +470,8 @@ SELFGEN_COMPILE_MARKER = $(SELFGEN_WORK)/compile-marker
 $(SELFGEN_COMPILE_MARKER): $(SELFGEN_COMPILE_DEPS) $(SELFGEN_CLASSES)
 	if [ -n "$(SELFGEN_DIRTY)" ]; then \
 		$(SELFGEN_JAVACX); \
-		touch $(SELFGEN_COMPILE_MARKER); \
 	fi
+	touch $(SELFGEN_COMPILE_MARKER); \
 
 $(SELFGEN_CLASSES): $(SELFGEN_CLASS_OUTPUT)/%.class: $(SELFGEN_MAIN)/%.java
 	$(eval SELFGEN_DIRTY += $$<)
@@ -649,8 +649,8 @@ WAY_COMPILE_MARKER = $(WAY_WORK)/compile-marker
 $(WAY_COMPILE_MARKER): $(WAY_COMPILE_DEPS) $(WAY_CLASSES)
 	if [ -n "$(WAY_DIRTY)" ]; then \
 		$(WAY_JAVACX); \
-		touch $(WAY_COMPILE_MARKER); \
 	fi
+	touch $(WAY_COMPILE_MARKER); \
 
 $(WAY_CLASSES): $(WAY_CLASS_OUTPUT)/%.class: $(WAY_MAIN)/%.java
 	$(eval WAY_DIRTY += $$<)
