@@ -52,6 +52,7 @@ public class ByteCodeFauxGenerator extends FauxGenerator {
     value("SELECTOR_ATTR_VALUE");
     value("SELECTOR_CLASS");
     value("SELECTOR_COMBINATOR");
+    value("SELECTOR_ID");
     value("SELECTOR_PSEUDO_CLASS");
     value("SELECTOR_PSEUDO_ELEMENT");
     value("SELECTOR_TYPE");

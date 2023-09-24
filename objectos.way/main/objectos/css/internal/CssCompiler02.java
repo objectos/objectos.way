@@ -934,6 +934,12 @@ final class CssCompiler02 extends CssCompiler01 {
           auxAdd(ByteCode.SELECTOR_COMBINATOR, main[index++]);
         }
 
+        case ByteProto.SELECTOR_ID -> {
+          selectorCount = selectorComma(selectorCount);
+
+          auxAdd(ByteCode.SELECTOR_ID, main[index++], main[index++]);
+        }
+
         case ByteProto.SELECTOR_PSEUDO_CLASS -> {
           selectorCount = selectorComma(selectorCount);
 

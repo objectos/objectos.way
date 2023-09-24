@@ -53,39 +53,40 @@ final class ByteProto {
   public static final byte SELECTOR_ATTR_VALUE = -23;
   public static final byte SELECTOR_CLASS = -24;
   public static final byte SELECTOR_COMBINATOR = -25;
-  public static final byte SELECTOR_PSEUDO_CLASS = -26;
-  public static final byte SELECTOR_PSEUDO_ELEMENT = -27;
-  public static final byte SELECTOR_TYPE = -28;
+  public static final byte SELECTOR_ID = -26;
+  public static final byte SELECTOR_PSEUDO_CLASS = -27;
+  public static final byte SELECTOR_PSEUDO_ELEMENT = -28;
+  public static final byte SELECTOR_TYPE = -29;
 
   //properties
 
-  public static final byte DECLARATION = -29;
-  public static final byte FUNCTION = -30;
-  public static final byte FUNCTION_STANDARD = -31;
-  public static final byte PROPERTY_CUSTOM = -32;
-  public static final byte PROPERTY_STANDARD = -33;
-  public static final byte VAR_FUNCTION = -34;
+  public static final byte DECLARATION = -30;
+  public static final byte FUNCTION = -31;
+  public static final byte FUNCTION_STANDARD = -32;
+  public static final byte PROPERTY_CUSTOM = -33;
+  public static final byte PROPERTY_STANDARD = -34;
+  public static final byte VAR_FUNCTION = -35;
 
   //property values
 
-  public static final byte COLOR_HEX = -35;
-  public static final byte COMMA = -36;
-  public static final byte FR_DOUBLE = -37;
-  public static final byte FR_INT = -38;
-  public static final byte JAVA_DOUBLE = -39;
-  public static final byte JAVA_INT = -40;
-  public static final byte JAVA_STRING = -41;
-  public static final byte LENGTH_DOUBLE = -42;
-  public static final byte LENGTH_INT = -43;
-  public static final byte LITERAL_DOUBLE = -44;
-  public static final byte LITERAL_INT = -45;
-  public static final byte LITERAL_STRING = -46;
-  public static final byte PERCENTAGE_DOUBLE = -47;
-  public static final byte PERCENTAGE_INT = -48;
-  public static final byte RAW = -49;
-  public static final byte STANDARD_NAME = -50;
-  public static final byte URL = -51;
-  public static final byte ZERO = -52;
+  public static final byte COLOR_HEX = -36;
+  public static final byte COMMA = -37;
+  public static final byte FR_DOUBLE = -38;
+  public static final byte FR_INT = -39;
+  public static final byte JAVA_DOUBLE = -40;
+  public static final byte JAVA_INT = -41;
+  public static final byte JAVA_STRING = -42;
+  public static final byte LENGTH_DOUBLE = -43;
+  public static final byte LENGTH_INT = -44;
+  public static final byte LITERAL_DOUBLE = -45;
+  public static final byte LITERAL_INT = -46;
+  public static final byte LITERAL_STRING = -47;
+  public static final byte PERCENTAGE_DOUBLE = -48;
+  public static final byte PERCENTAGE_INT = -49;
+  public static final byte RAW = -50;
+  public static final byte STANDARD_NAME = -51;
+  public static final byte URL = -52;
+  public static final byte ZERO = -53;
 
   private ByteProto() {}
 

@@ -21,6 +21,7 @@ import objectos.css.tmpl.Api;
 import objectos.css.tmpl.Api.ColorValue;
 import objectos.css.util.ClassSelector;
 import objectos.css.util.CustomProperty;
+import objectos.css.util.IdSelector;
 import objectos.css.util.Length;
 import objectos.css.util.Percentage;
 import org.testng.annotations.Test;
@@ -2386,6 +2387,24 @@ public class CssTemplateTest {
 
       """
       .test {}
+      """
+    );
+  }
+
+  @Test
+  public void selectorId() {
+    test(
+      new CssTemplate() {
+        @Override
+        protected void definition() {
+          style(
+            IdSelector.of("test")
+          );
+        }
+      },
+
+      """
+      #test {}
       """
     );
   }

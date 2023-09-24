@@ -20,6 +20,7 @@ import objectos.css.tmpl.Api;
 import objectos.css.tmpl.Api.FilterFunction;
 import objectos.css.util.ClassSelector;
 import objectos.css.util.CustomProperty;
+import objectos.css.util.IdSelector;
 import objectos.util.ByteArrays;
 import objectos.util.ObjectArrays;
 
@@ -746,6 +747,20 @@ class CssCompiler01 extends CssTemplateApi {
       );
     }
 
+    else if (value instanceof IdSelector selector) {
+      String string;
+      string = selector.toString();
+
+      int index;
+      index = objectAdd(string);
+
+      auxAdd(
+        ByteProto.SELECTOR_ID,
+        Bytes.two0(index),
+        Bytes.two1(index)
+      );
+    }
+
     else if (value instanceof StandardPseudoClassSelector selector) {
       auxAdd(
         ByteProto.SELECTOR_PSEUDO_CLASS,
@@ -945,6 +960,7 @@ class CssCompiler01 extends CssTemplateApi {
         }
 
         case ByteProto.SELECTOR_CLASS,
+             ByteProto.SELECTOR_ID,
              ByteProto.STANDARD_NAME -> {
           mainAdd(marker, aux[index++], aux[index++]);
         }
@@ -1230,35 +1246,35 @@ class CssCompiler01 extends CssTemplateApi {
         // keep startIndex handy
         int startIndex;
         startIndex = contents;
-
+        
         // decode the element's length
         byte lengthByte;
         lengthByte = aux[index++];
-
+        
         int length;
         length = Bytes.toInt(lengthByte, 0);
-
+        
         // point to next element
         contents += length;
-
+        
         // keep the old proto handy
         byte proto;
         proto = main[startIndex];
-
+        
         // mark this element
         main[startIndex] = ByteProto.markedOf(length);
-
+        
         // ensure main can hold at least 3 elements
         // 0   - ByteProto
         // 1-2 - variable length
         main = ByteArrays.growIfNecessary(main, mainIndex + 2);
-
+        
         // byte proto
         main[mainIndex++] = proto;
-
+        
         // variable length
         length = mainIndex - startIndex;
-
+        
         mainIndex = Bytes.varInt(main, mainIndex, length);
         }
         */
