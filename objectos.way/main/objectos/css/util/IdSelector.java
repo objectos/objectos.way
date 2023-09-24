@@ -16,13 +16,11 @@
 package objectos.css.util;
 
 import java.util.Objects;
+import objectos.css.internal.SeqId;
 import objectos.css.tmpl.Api;
 import objectos.html.tmpl.Api.ExternalAttribute;
 import objectos.lang.Check;
 
-/**
- * @since 0.7
- */
 public record IdSelector(String id) implements ExternalAttribute.Id, Api.SelectorInstruction {
 
   public IdSelector {
@@ -33,6 +31,24 @@ public record IdSelector(String id) implements ExternalAttribute.Id, Api.Selecto
 
   public static IdSelector of(String id) {
     return new IdSelector(id);
+  }
+
+  /**
+   * Returns a new distinct id selector whose value is 4 characters in
+   * length. Each returned value is distinct from any of the previously returned
+   * values.
+   *
+   * @return a newly created id selector
+   */
+  public static IdSelector next() {
+    String id;
+    id = SeqIdHolder.INSTANCE.next();
+
+    return new IdSelector(id);
+  }
+
+  private static class SeqIdHolder {
+    static final SeqId INSTANCE = new SeqId();
   }
 
   @Override

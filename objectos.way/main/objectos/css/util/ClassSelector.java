@@ -21,9 +21,6 @@ import objectos.css.tmpl.Api;
 import objectos.html.tmpl.Api.ExternalAttribute;
 import objectos.lang.Check;
 
-/**
- * @since 0.7
- */
 public record ClassSelector(String className)
     implements ExternalAttribute.StyleClass, Api.SelectorInstruction {
 
