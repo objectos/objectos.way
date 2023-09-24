@@ -45,6 +45,7 @@ import objectos.css.util.IdSelector;
 import objectos.html.HtmlComponent;
 import objectos.html.HtmlTemplate;
 import objectos.html.tmpl.Api.ElementContents;
+import objectos.html.tmpl.Api.SvgInstruction;
 import objectos.lang.Check;
 
 /**
@@ -55,7 +56,7 @@ public class TablerIcons extends HtmlComponent {
 
   private IdSelector id;
 
-  private String strokeWidth = "2";
+  private String strokeWidth;
 
   /**
    * Creates a new instance of this class bound to the specified template.
@@ -65,6 +66,8 @@ public class TablerIcons extends HtmlComponent {
    */
   public TablerIcons(HtmlTemplate parent) {
     super(parent);
+
+    reset();
   }
 
   /**
@@ -103,7 +106,7 @@ public class TablerIcons extends HtmlComponent {
    */
   public final ElementContents paw() {
     // @formatter:off
-    return svg(
+    return icon(
       id != null ? id : noop(),
 
       xmlns("http://www.w3.org/2000/svg"),
@@ -126,6 +129,21 @@ public class TablerIcons extends HtmlComponent {
       path(d("M5.69 12.918c.816 -.352 1.054 -1.719 .536 -3.052c-.436 -1.124 -1.271 -1.866 -2.009 -1.866c-.14 0 -.277 .027 -.407 .082c-.816 .352 -1.054 1.719 -.536 3.052c.436 1.124 1.271 1.866 2.009 1.866c.14 0 .277 -.027 .407 -.082z"))
     );
     // @formatter:on
+  }
+
+  private ElementContents icon(SvgInstruction... contents) {
+    ElementContents svg;
+    svg = svg(contents);
+
+    reset();
+
+    return svg;
+  }
+
+  private void reset() {
+    id = null;
+
+    strokeWidth = "2";
   }
 
 }
