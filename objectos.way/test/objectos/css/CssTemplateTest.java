@@ -423,7 +423,16 @@ public class CssTemplateTest {
             borderColor(blue, red, green),
             borderColor(teal, yellow, aqua, fuchsia),
             borderColor(transparent, navy, gray, maroon),
-            borderColor(inherit)
+            borderColor(inherit),
+
+            borderTopColor(blue),
+            borderTopColor(inherit),
+            borderRightColor(blue),
+            borderRightColor(inherit),
+            borderBottomColor(blue),
+            borderBottomColor(inherit),
+            borderLeftColor(blue),
+            borderLeftColor(inherit)
           );
         }
       },
@@ -436,6 +445,14 @@ public class CssTemplateTest {
         border-color: teal yellow aqua fuchsia;
         border-color: transparent navy gray maroon;
         border-color: inherit;
+        border-top-color: blue;
+        border-top-color: inherit;
+        border-right-color: blue;
+        border-right-color: inherit;
+        border-bottom-color: blue;
+        border-bottom-color: inherit;
+        border-left-color: blue;
+        border-left-color: inherit;
       }
       """
     );

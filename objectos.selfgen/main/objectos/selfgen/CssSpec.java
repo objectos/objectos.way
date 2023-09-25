@@ -686,6 +686,22 @@ final class CssSpec extends CssSelfGen {
       sig(color, "top", color, "horizontal", color, "bottom"),
       sig(color, "top", color, "right", color, "bottom", color, "left")
     );
+
+    var names = List.of(
+      "border-top-color",
+      "border-right-color",
+      "border-bottom-color",
+      "border-left-color"
+    );
+
+    for (var name : names) {
+      property(
+        name,
+
+        sig(globalKeyword, "value"),
+        sig(color, "color")
+      );
+    }
   }
 
   private void borderRadius() {

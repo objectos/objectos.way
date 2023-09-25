@@ -1724,6 +1724,18 @@ abstract class GeneratedCssTemplate {
     return InternalInstruction.INSTANCE;
   }
 
+  protected final StyleDeclaration borderBottomColor(GlobalKeyword value) {
+    Check.notNull(value, "value == null");
+    declaration(Property.BORDER_BOTTOM_COLOR, value);
+    return InternalInstruction.INSTANCE;
+  }
+
+  protected final StyleDeclaration borderBottomColor(ColorValue color) {
+    Check.notNull(color, "color == null");
+    declaration(Property.BORDER_BOTTOM_COLOR, color);
+    return InternalInstruction.INSTANCE;
+  }
+
   protected final StyleDeclaration borderBottomLeftRadius(GlobalKeyword value) {
     Check.notNull(value, "value == null");
     declaration(Property.BORDER_BOTTOM_LEFT_RADIUS, value);
@@ -1849,6 +1861,18 @@ abstract class GeneratedCssTemplate {
     return InternalInstruction.INSTANCE;
   }
 
+  protected final StyleDeclaration borderLeftColor(GlobalKeyword value) {
+    Check.notNull(value, "value == null");
+    declaration(Property.BORDER_LEFT_COLOR, value);
+    return InternalInstruction.INSTANCE;
+  }
+
+  protected final StyleDeclaration borderLeftColor(ColorValue color) {
+    Check.notNull(color, "color == null");
+    declaration(Property.BORDER_LEFT_COLOR, color);
+    return InternalInstruction.INSTANCE;
+  }
+
   protected final StyleDeclaration borderLeftWidth(GlobalKeyword value) {
     Check.notNull(value, "value == null");
     declaration(Property.BORDER_LEFT_WIDTH, value);
@@ -1921,6 +1945,18 @@ abstract class GeneratedCssTemplate {
     Check.notNull(value2, "value2 == null");
     Check.notNull(value3, "value3 == null");
     declaration(Property.BORDER_RIGHT, value1, value2, value3);
+    return InternalInstruction.INSTANCE;
+  }
+
+  protected final StyleDeclaration borderRightColor(GlobalKeyword value) {
+    Check.notNull(value, "value == null");
+    declaration(Property.BORDER_RIGHT_COLOR, value);
+    return InternalInstruction.INSTANCE;
+  }
+
+  protected final StyleDeclaration borderRightColor(ColorValue color) {
+    Check.notNull(color, "color == null");
+    declaration(Property.BORDER_RIGHT_COLOR, color);
     return InternalInstruction.INSTANCE;
   }
 
@@ -2015,6 +2051,18 @@ abstract class GeneratedCssTemplate {
     Check.notNull(value2, "value2 == null");
     Check.notNull(value3, "value3 == null");
     declaration(Property.BORDER_TOP, value1, value2, value3);
+    return InternalInstruction.INSTANCE;
+  }
+
+  protected final StyleDeclaration borderTopColor(GlobalKeyword value) {
+    Check.notNull(value, "value == null");
+    declaration(Property.BORDER_TOP_COLOR, value);
+    return InternalInstruction.INSTANCE;
+  }
+
+  protected final StyleDeclaration borderTopColor(ColorValue color) {
+    Check.notNull(color, "color == null");
+    declaration(Property.BORDER_TOP_COLOR, color);
     return InternalInstruction.INSTANCE;
   }
 

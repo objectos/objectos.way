@@ -39,6 +39,8 @@ public enum Property {
 
   BORDER_BOTTOM("border-bottom"),
 
+  BORDER_BOTTOM_COLOR("border-bottom-color"),
+
   BORDER_BOTTOM_LEFT_RADIUS("border-bottom-left-radius"),
 
   BORDER_BOTTOM_RIGHT_RADIUS("border-bottom-right-radius"),
@@ -51,11 +53,15 @@ public enum Property {
 
   BORDER_LEFT("border-left"),
 
+  BORDER_LEFT_COLOR("border-left-color"),
+
   BORDER_LEFT_WIDTH("border-left-width"),
 
   BORDER_RADIUS("border-radius"),
 
   BORDER_RIGHT("border-right"),
+
+  BORDER_RIGHT_COLOR("border-right-color"),
 
   BORDER_RIGHT_WIDTH("border-right-width"),
 
@@ -64,6 +70,8 @@ public enum Property {
   BORDER_STYLE("border-style"),
 
   BORDER_TOP("border-top"),
+
+  BORDER_TOP_COLOR("border-top-color"),
 
   BORDER_TOP_LEFT_RADIUS("border-top-left-radius"),
 
