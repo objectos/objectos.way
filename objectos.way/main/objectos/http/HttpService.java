@@ -15,6 +15,7 @@
  */
 package objectos.http;
 
+import java.io.IOException;
 import java.net.Socket;
 import java.net.SocketAddress;
 import java.util.function.Supplier;
@@ -26,9 +27,9 @@ import objectos.lang.Check;
 import objectos.lang.NoteSink;
 
 /**
- * @since 4
+ *
  */
-public final class HttpService {
+public final class HttpService implements AutoCloseable {
 
   private final SocketAddress address;
 
@@ -94,7 +95,12 @@ public final class HttpService {
     };
   }
 
-  public final void startService() throws Exception {
+  @Override
+  public final void close() {
+    serverThread.interrupt();
+  }
+
+  public final void startService() throws IOException {
     ThisSelectorThreadAdapter adapter;
     adapter = new ThisSelectorThreadAdapter();
 
@@ -103,7 +109,7 @@ public final class HttpService {
     serverThread.start();
   }
 
-  public final void stopService() throws Exception {
+  public final void stopService() {
     serverThread.interrupt();
   }
 
