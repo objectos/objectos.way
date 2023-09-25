@@ -42,8 +42,8 @@
 package objectos.icon;
 
 import objectos.css.util.IdSelector;
+import objectos.html.BaseTemplateDsl;
 import objectos.html.HtmlComponent;
-import objectos.html.HtmlTemplate;
 import objectos.html.tmpl.Api.ElementContents;
 import objectos.html.tmpl.Api.SvgInstruction;
 import objectos.lang.Check;
@@ -64,7 +64,7 @@ public class TablerIcons extends HtmlComponent {
    * @param parent
    *        the template in which icons will be drawn
    */
-  public TablerIcons(HtmlTemplate parent) {
+  public TablerIcons(BaseTemplateDsl parent) {
     super(parent);
 
     reset();
@@ -100,6 +100,20 @@ public class TablerIcons extends HtmlComponent {
   }
 
   /**
+   * Renders the <a href="https://tabler-icons.io/i/menu-2">menu-2</a> icon.
+   *
+   * @return the {@code svg} element
+   */
+  public final ElementContents menu2() {
+    return icon(
+      path(stroke("none"), d("M0 0h24v24H0z"), fill("none")),
+      path(d("M4 6l16 0")),
+      path(d("M4 12l16 0")),
+      path(d("M4 18l16 0"))
+    );
+  }
+
+  /**
    * Renders the <a href="https://tabler-icons.io/i/paw">paw</a> icon.
    *
    * @return the {@code svg} element
@@ -107,20 +121,6 @@ public class TablerIcons extends HtmlComponent {
   public final ElementContents paw() {
     // @formatter:off
     return icon(
-      id != null ? id : noop(),
-
-      xmlns("http://www.w3.org/2000/svg"),
-      width("24"),
-      height("24"),
-      fill("#2c2c2b"),
-      fillRule("evenodd"),
-      viewBox("0 0 24 24"),
-      strokeWidth(strokeWidth),
-      stroke("currentColor"),
-      fill("none"),
-      strokeLinecap("round"),
-      strokeLinejoin("round"),
-
       path(stroke("none"), d("M0 0h24v24H0z"), fill("none")),
       path(d("M14.7 13.5c-1.1 -2 -1.441 -2.5 -2.7 -2.5c-1.259 0 -1.736 .755 -2.836 2.747c-.942 1.703 -2.846 1.845 -3.321 3.291c-.097 .265 -.145 .677 -.143 .962c0 1.176 .787 2 1.8 2c1.259 0 3 -1 4.5 -1s3.241 1 4.5 1c1.013 0 1.8 -.823 1.8 -2c0 -.285 -.049 -.697 -.146 -.962c-.475 -1.451 -2.512 -1.835 -3.454 -3.538z")),
       path(d("M20.188 8.082a1.039 1.039 0 0 0 -.406 -.082h-.015c-.735 .012 -1.56 .75 -1.993 1.866c-.519 1.335 -.28 2.7 .538 3.052c.129 .055 .267 .082 .406 .082c.739 0 1.575 -.742 2.011 -1.866c.516 -1.335 .273 -2.7 -.54 -3.052z")),
@@ -133,7 +133,21 @@ public class TablerIcons extends HtmlComponent {
 
   private ElementContents icon(SvgInstruction... contents) {
     ElementContents svg;
-    svg = svg(contents);
+    svg = svg(
+      id != null ? id : noop(),
+
+      xmlns("http://www.w3.org/2000/svg"),
+      width("24"),
+      height("24"),
+      viewBox("0 0 24 24"),
+      strokeWidth(strokeWidth),
+      stroke("currentColor"),
+      fill("none"),
+      strokeLinecap("round"),
+      strokeLinejoin("round"),
+
+      flatten(contents)
+    );
 
     reset();
 

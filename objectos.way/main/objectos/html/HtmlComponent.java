@@ -33,7 +33,7 @@ import objectos.lang.Check;
  */
 public non-sealed abstract class HtmlComponent extends BaseTemplateDsl {
 
-  private final HtmlTemplate parent;
+  private final BaseTemplateDsl parent;
 
   /**
    * Creates a new component bound to the specified {@code parent} template.
@@ -41,7 +41,7 @@ public non-sealed abstract class HtmlComponent extends BaseTemplateDsl {
    * @param parent
    *        the template instance for which this component will be bound to.
    */
-  public HtmlComponent(HtmlTemplate parent) {
+  public HtmlComponent(BaseTemplateDsl parent) {
     this.parent = Check.notNull(parent, "parent == null");
   }
 
