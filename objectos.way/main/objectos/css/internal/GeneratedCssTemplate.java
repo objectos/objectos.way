@@ -146,6 +146,7 @@ import objectos.css.tmpl.Api.TopValue;
 import objectos.css.tmpl.Api.TrackSize;
 import objectos.css.tmpl.Api.VerticalAlignValue;
 import objectos.css.tmpl.Api.WordBreakValue;
+import objectos.css.tmpl.Api.ZIndexValue;
 import objectos.css.util.Color;
 import objectos.lang.Check;
 
@@ -3407,6 +3408,23 @@ abstract class GeneratedCssTemplate {
   protected final StyleDeclaration wordBreak(WordBreakValue value) {
     Check.notNull(value, "value == null");
     declaration(Property.WORD_BREAK, value);
+    return InternalInstruction.INSTANCE;
+  }
+
+  protected final StyleDeclaration zIndex(GlobalKeyword value) {
+    Check.notNull(value, "value == null");
+    declaration(Property.Z_INDEX, value);
+    return InternalInstruction.INSTANCE;
+  }
+
+  protected final StyleDeclaration zIndex(ZIndexValue value) {
+    Check.notNull(value, "value == null");
+    declaration(Property.Z_INDEX, value);
+    return InternalInstruction.INSTANCE;
+  }
+
+  protected final StyleDeclaration zIndex(int value) {
+    declaration(Property.Z_INDEX, value);
     return InternalInstruction.INSTANCE;
   }
 

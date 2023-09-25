@@ -2389,6 +2389,36 @@ public class CssTemplateTest {
     );
   }
 
+  @Test(description = """
+  [#502] z-index
+  """)
+  public void propertyZIndex() {
+    test(
+      new CssTemplate() {
+        @Override
+        protected void definition() {
+          style(
+            div,
+
+            zIndex(auto),
+            zIndex(20),
+            zIndex(l(10)),
+            zIndex(inherit)
+          );
+        }
+      },
+
+      """
+      div {
+        z-index: auto;
+        z-index: 20;
+        z-index: 10;
+        z-index: inherit;
+      }
+      """
+    );
+  }
+
   @Test
   public void selectorAttribute() {
     test(

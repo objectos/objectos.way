@@ -215,6 +215,9 @@ final class CssSpec extends CssSelfGen {
 
     width();
     wordBreak();
+
+    // Z
+    zIndex();
   }
 
   private void $defineColor() {
@@ -2464,6 +2467,23 @@ final class CssSpec extends CssSelfGen {
 
       sig(globalKeyword, "value"),
       sig(wordBreakValue, "value")
+    );
+  }
+
+  private void zIndex() {
+    ValueType value = t(
+      "ZIndexValue",
+
+      k("auto"),
+      intType
+    );
+
+    property(
+      "z-index",
+
+      sig(globalKeyword, "value"),
+      sig(value, "value"),
+      sig(INT, "value")
     );
   }
 

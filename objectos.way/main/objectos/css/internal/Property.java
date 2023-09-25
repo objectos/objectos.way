@@ -225,6 +225,8 @@ public enum Property {
 
   WORD_BREAK("word-break"),
 
+  Z_INDEX("z-index"),
+
   _MOZ_APPEARANCE("-moz-appearance"),
 
   _MOZ_TAB_SIZE("-moz-tab-size"),

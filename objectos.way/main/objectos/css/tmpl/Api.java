@@ -224,6 +224,8 @@ public final class Api {
 
   public sealed interface WordBreakValue extends PropertyValue {}
 
+  public sealed interface ZIndexValue extends PropertyValue {}
+
   public sealed interface ValueInstruction extends
       AlignItemsValue,
       AppearanceValue,
@@ -304,7 +306,8 @@ public final class Api {
       TrackBreadthValue,
       TrackSize,
       VerticalAlignValue,
-      WordBreakValue permits StandardName {}
+      WordBreakValue,
+      ZIndexValue permits StandardName {}
 
   public sealed interface MinmaxFunction extends TrackSize {}
 
@@ -314,7 +317,7 @@ public final class Api {
       MinmaxFunction,
       RepeatFunction permits InternalInstruction {}
 
-  public sealed interface AutoKeyword extends AppearanceValue, BottomValue, CursorValue, HeightOrWidthValue, LeftValue, MarginValue, MinHeightOrWidthValue, OutlineStyleValue, PointerEventsValue, QuotesValue, RightValue, TextDecorationThicknessValue, TextSizeAdjustValue, TopValue, TrackBreadthValue {}
+  public sealed interface AutoKeyword extends AppearanceValue, BottomValue, CursorValue, HeightOrWidthValue, LeftValue, MarginValue, MinHeightOrWidthValue, OutlineStyleValue, PointerEventsValue, QuotesValue, RightValue, TextDecorationThicknessValue, TextSizeAdjustValue, TopValue, TrackBreadthValue, ZIndexValue {}
 
   public sealed interface BaselineKeyword extends AlignItemsValue, VerticalAlignValue {}
 
@@ -451,7 +454,7 @@ public final class Api {
 
   public sealed interface DoubleLiteral extends LineHeightValue, NumberValue permits InternalInstruction {}
 
-  public sealed interface IntLiteral extends FontWeightValue, LineHeightValue, NumberValue permits InternalInstruction {}
+  public sealed interface IntLiteral extends FontWeightValue, LineHeightValue, NumberValue, ZIndexValue permits InternalInstruction {}
 
   public sealed interface Url extends FilterValue, Image permits InternalInstruction {}
 
