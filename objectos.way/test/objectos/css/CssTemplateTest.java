@@ -1946,6 +1946,40 @@ public class CssTemplateTest {
   }
 
   @Test(description = """
+  [#499] objectos.www landing
+
+  - right
+  """)
+  public void propertyRight() {
+    test(
+      new CssTemplate() {
+        @Override
+        protected void definition() {
+          style(
+            div,
+
+            right(auto),
+            right(px(3)),
+            right(em(2.4)),
+            right(pct(10)),
+            right(inherit)
+          );
+        }
+      },
+
+      """
+      div {
+        right: auto;
+        right: 3px;
+        right: 2.4em;
+        right: 10%;
+        right: inherit;
+      }
+      """
+    );
+  }
+
+  @Test(description = """
   [#395] Preflight 02
 
   - tab-size

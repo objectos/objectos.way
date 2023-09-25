@@ -117,6 +117,7 @@ import objectos.css.tmpl.Api.RepeatFunction;
 import objectos.css.tmpl.Api.ResizeValue;
 import objectos.css.tmpl.Api.RidgeKeyword;
 import objectos.css.tmpl.Api.RightKeyword;
+import objectos.css.tmpl.Api.RightValue;
 import objectos.css.tmpl.Api.RubyKeyword;
 import objectos.css.tmpl.Api.Selector;
 import objectos.css.tmpl.Api.SelfPosition;
@@ -3137,6 +3138,18 @@ abstract class GeneratedCssTemplate {
   protected final StyleDeclaration resize(ResizeValue value) {
     Check.notNull(value, "value == null");
     declaration(Property.RESIZE, value);
+    return InternalInstruction.INSTANCE;
+  }
+
+  protected final StyleDeclaration right(GlobalKeyword value) {
+    Check.notNull(value, "value == null");
+    declaration(Property.RIGHT, value);
+    return InternalInstruction.INSTANCE;
+  }
+
+  protected final StyleDeclaration right(RightValue value) {
+    Check.notNull(value, "value == null");
+    declaration(Property.RIGHT, value);
     return InternalInstruction.INSTANCE;
   }
 

@@ -197,6 +197,8 @@ public enum Property {
 
   RESIZE("resize"),
 
+  RIGHT("right"),
+
   TAB_SIZE("tab-size"),
 
   TEXT_ALIGN("text-align"),

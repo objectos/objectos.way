@@ -148,7 +148,7 @@ public final class Api {
 
   public sealed interface LeftValue extends PropertyValue {}
 
-  public sealed interface LengthPercentage extends BottomValue, FontSizeValue, HeightOrWidthValue, LeftValue, LetterSpacingValue, LineHeightValue, MarginValue, MaxHeightOrWidthValue, TextDecorationThicknessValue, TopValue, TrackBreadthValue, VerticalAlignValue {}
+  public sealed interface LengthPercentage extends BottomValue, FontSizeValue, HeightOrWidthValue, LeftValue, LetterSpacingValue, LineHeightValue, MarginValue, MaxHeightOrWidthValue, RightValue, TextDecorationThicknessValue, TopValue, TrackBreadthValue, VerticalAlignValue {}
 
   public sealed interface LetterSpacingValue extends PropertyValue {}
 
@@ -189,6 +189,8 @@ public final class Api {
   public sealed interface QuotesValue extends PropertyValue {}
 
   public sealed interface ResizeValue extends PropertyValue {}
+
+  public sealed interface RightValue extends PropertyValue {}
 
   public sealed interface SelfPosition extends AlignItemsValue {}
 
@@ -286,6 +288,7 @@ public final class Api {
       PositionValue,
       QuotesValue,
       ResizeValue,
+      RightValue,
       SelfPosition,
       SpanValue,
       TextAlignValue,
@@ -311,7 +314,7 @@ public final class Api {
       MinmaxFunction,
       RepeatFunction permits InternalInstruction {}
 
-  public sealed interface AutoKeyword extends AppearanceValue, BottomValue, CursorValue, HeightOrWidthValue, LeftValue, MarginValue, MinHeightOrWidthValue, OutlineStyleValue, PointerEventsValue, QuotesValue, TextDecorationThicknessValue, TextSizeAdjustValue, TopValue, TrackBreadthValue {}
+  public sealed interface AutoKeyword extends AppearanceValue, BottomValue, CursorValue, HeightOrWidthValue, LeftValue, MarginValue, MinHeightOrWidthValue, OutlineStyleValue, PointerEventsValue, QuotesValue, RightValue, TextDecorationThicknessValue, TextSizeAdjustValue, TopValue, TrackBreadthValue {}
 
   public sealed interface BaselineKeyword extends AlignItemsValue, VerticalAlignValue {}
 

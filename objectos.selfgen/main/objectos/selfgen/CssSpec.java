@@ -191,6 +191,7 @@ final class CssSpec extends CssSelfGen {
     // R
 
     resize();
+    right();
 
     // T
 
@@ -2193,6 +2194,22 @@ final class CssSpec extends CssSelfGen {
 
       sig(globalKeyword, "value"),
       sig(resizeValue, "value")
+    );
+  }
+
+  private void right() {
+    var value = t(
+      "RightValue",
+
+      k("auto"),
+      lengthPercentage
+    );
+
+    property(
+      "right",
+
+      sig(globalKeyword, "value"),
+      sig(value, "value")
     );
   }
 
