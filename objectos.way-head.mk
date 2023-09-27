@@ -127,6 +127,15 @@ WAY_ENABLE_PREVIEW := 0
 ## way jar name
 WAY_JAR_NAME := $(WAY)
 
+## way JS source
+WAY_JS_SRC = $(WAY)/js/objectos.way.js
+
+## way JS artifact
+WAY_JS_ARTIFACT = $(WAY_CLASS_OUTPUT)/objectos/js/objectos.way.js
+
+## way jar file reqs
+WAY_JAR_FILE_REQS_MORE = $(WAY_JS_ARTIFACT)
+
 ## way test compile-time dependencies
 WAY_TEST_COMPILE_DEPS = $(WAY_JAR_FILE)
 WAY_TEST_COMPILE_DEPS += $(call dependency,org.testng,testng,$(TESTNG_VERSION))

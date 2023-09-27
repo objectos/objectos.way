@@ -95,6 +95,10 @@ $(SELFGEN_MARKER): $(SELFGEN_JAR_FILE)
 way@clean:
 	rm -rf $(WAY_WORK)/*
 
+$(WAY_JS_ARTIFACT): $(WAY_JS_SRC)
+	mkdir --parents $(@D)
+	cp $< $@
+
 .PHONY: way@jar
 way@jar: $(SELFGEN_MARKER) $(WAY_JAR_FILE)
 

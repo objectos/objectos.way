@@ -80,6 +80,8 @@ public final class Http {
 
     Status OK_200 = HttpStatus.OK;
 
+    Status INTERNAL_SERVER_ERROR_500 = HttpStatus.INTERNAL_SERVER_ERROR;
+
     Status SEE_OTHER_303 = HttpStatus.SEE_OTHER;
 
     Status NOT_FOUND_404 = HttpStatus.NOT_FOUND;

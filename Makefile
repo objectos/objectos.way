@@ -127,6 +127,15 @@ WAY_ENABLE_PREVIEW := 0
 ## way jar name
 WAY_JAR_NAME := $(WAY)
 
+## way JS source
+WAY_JS_SRC = $(WAY)/js/objectos.way.js
+
+## way JS artifact
+WAY_JS_ARTIFACT = $(WAY_CLASS_OUTPUT)/objectos/js/objectos.way.js
+
+## way jar file reqs
+WAY_JAR_FILE_REQS_MORE = $(WAY_JS_ARTIFACT)
+
 ## way test compile-time dependencies
 WAY_TEST_COMPILE_DEPS = $(WAY_JAR_FILE)
 WAY_TEST_COMPILE_DEPS += $(call dependency,org.testng,testng,$(TESTNG_VERSION))
@@ -315,11 +324,18 @@ CODE_JARX += --module-version $(CODE_VERSION)
 CODE_JARX += -C $(CODE_CLASS_OUTPUT)
 CODE_JARX += .
 
+## requirements of the CODE_JAR_FILE target
+CODE_JAR_FILE_REQS = $(CODE_COMPILE_MARKER)
+CODE_JAR_FILE_REQS += $(CODE_LICENSE)
+ifdef CODE_JAR_FILE_REQS_MORE
+CODE_JAR_FILE_REQS += $(CODE_JAR_FILE_REQS_MORE)
+endif
+
 #
 # objectos.code jar targets
 #
 
-$(CODE_JAR_FILE): $(CODE_COMPILE_MARKER) $(CODE_LICENSE)
+$(CODE_JAR_FILE): $(CODE_JAR_FILE_REQS)
 	$(CODE_JARX)
 
 $(CODE_LICENSE): LICENSE
@@ -494,11 +510,18 @@ SELFGEN_JARX += --module-version $(SELFGEN_VERSION)
 SELFGEN_JARX += -C $(SELFGEN_CLASS_OUTPUT)
 SELFGEN_JARX += .
 
+## requirements of the SELFGEN_JAR_FILE target
+SELFGEN_JAR_FILE_REQS = $(SELFGEN_COMPILE_MARKER)
+SELFGEN_JAR_FILE_REQS += $(SELFGEN_LICENSE)
+ifdef SELFGEN_JAR_FILE_REQS_MORE
+SELFGEN_JAR_FILE_REQS += $(SELFGEN_JAR_FILE_REQS_MORE)
+endif
+
 #
 # objectos.selfgen jar targets
 #
 
-$(SELFGEN_JAR_FILE): $(SELFGEN_COMPILE_MARKER) $(SELFGEN_LICENSE)
+$(SELFGEN_JAR_FILE): $(SELFGEN_JAR_FILE_REQS)
 	$(SELFGEN_JARX)
 
 $(SELFGEN_LICENSE): LICENSE
@@ -673,11 +696,18 @@ WAY_JARX += --module-version $(WAY_VERSION)
 WAY_JARX += -C $(WAY_CLASS_OUTPUT)
 WAY_JARX += .
 
+## requirements of the WAY_JAR_FILE target
+WAY_JAR_FILE_REQS = $(WAY_COMPILE_MARKER)
+WAY_JAR_FILE_REQS += $(WAY_LICENSE)
+ifdef WAY_JAR_FILE_REQS_MORE
+WAY_JAR_FILE_REQS += $(WAY_JAR_FILE_REQS_MORE)
+endif
+
 #
 # objectos.way jar targets
 #
 
-$(WAY_JAR_FILE): $(WAY_COMPILE_MARKER) $(WAY_LICENSE)
+$(WAY_JAR_FILE): $(WAY_JAR_FILE_REQS)
 	$(WAY_JARX)
 
 $(WAY_LICENSE): LICENSE
@@ -869,6 +899,10 @@ $(SELFGEN_MARKER): $(SELFGEN_JAR_FILE)
 .PHONY: way@clean
 way@clean:
 	rm -rf $(WAY_WORK)/*
+
+$(WAY_JS_ARTIFACT): $(WAY_JS_SRC)
+	mkdir --parents $(@D)
+	cp $< $@
 
 .PHONY: way@jar
 way@jar: $(SELFGEN_MARKER) $(WAY_JAR_FILE)
