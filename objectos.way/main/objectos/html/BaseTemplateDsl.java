@@ -16,11 +16,11 @@
 package objectos.html;
 
 import objectos.html.internal.Ambiguous;
+import objectos.html.internal.AttributeName;
 import objectos.html.internal.HtmlTemplateApi;
 import objectos.html.internal.InternalFragment;
 import objectos.html.internal.InternalInstruction;
 import objectos.html.internal.InternalNoOp;
-import objectos.html.internal.StandardAttributeName;
 import objectos.html.internal.StandardElementName;
 import objectos.html.tmpl.Api;
 import objectos.html.tmpl.FragmentLambda;
@@ -236,12 +236,12 @@ public sealed abstract class BaseTemplateDsl
   }
 
   @Override
-  final void attribute(StandardAttributeName name) {
+  final void attribute(AttributeName name) {
     api().attribute(name);
   }
 
   @Override
-  final void attribute(StandardAttributeName name, String value) {
+  final void attribute(AttributeName name, String value) {
     HtmlTemplateApi api;
     api = api();
 

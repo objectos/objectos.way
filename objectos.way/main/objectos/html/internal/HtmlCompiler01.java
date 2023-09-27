@@ -63,7 +63,7 @@ class HtmlCompiler01 extends HtmlTemplateApi {
   }
 
   @Override
-  public final void attribute(StandardAttributeName name) {
+  public final void attribute(AttributeName name) {
     int ordinal;
     ordinal = name.getCode();
 
@@ -78,7 +78,7 @@ class HtmlCompiler01 extends HtmlTemplateApi {
   }
 
   @Override
-  public final void attribute(StandardAttributeName name, String value) {
+  public final void attribute(AttributeName name, String value) {
     int ordinal;
     ordinal = name.getCode();
 

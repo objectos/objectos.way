@@ -75,9 +75,9 @@ final class BaseAttributeDslStep extends ThisTemplate {
 
       abstract \{HTML_TEMPLATE_API} api();
 
-      abstract void attribute(\{STD_ATTR_NAME} name);
+      abstract void attribute(\{ATTRIBUTE_NAME} name);
 
-      abstract void attribute(\{STD_ATTR_NAME} name, String value);
+      abstract void attribute(\{ATTRIBUTE_NAME} name, String value);
     }
     """;
   }

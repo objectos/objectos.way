@@ -25,9 +25,9 @@ public abstract class HtmlTemplateApi {
 
   public abstract void ambiguous(Ambiguous name, String value);
 
-  public abstract void attribute(StandardAttributeName name);
+  public abstract void attribute(AttributeName name);
 
-  public abstract void attribute(StandardAttributeName name, String value);
+  public abstract void attribute(AttributeName name, String value);
 
   public abstract void compilationBegin();
 

@@ -73,6 +73,7 @@ public class BaseAttributeDslStepTest {
        */
       package objectos.html;
 
+      import objectos.html.internal.AttributeName;
       import objectos.html.internal.HtmlTemplateApi;
       import objectos.html.internal.InternalInstruction;
       import objectos.html.internal.StandardAttributeName;
@@ -140,9 +141,9 @@ public class BaseAttributeDslStepTest {
 
         abstract HtmlTemplateApi api();
 
-        abstract void attribute(StandardAttributeName name);
+        abstract void attribute(AttributeName name);
 
-        abstract void attribute(StandardAttributeName name, String value);
+        abstract void attribute(AttributeName name, String value);
       }
       """
     );
