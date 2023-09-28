@@ -15,22 +15,19 @@
  */
 package objectos.html.internal;
 
-public sealed abstract class CustomAttributeName implements AttributeName {
+public enum CustomAttributeName implements AttributeName {
 
-  public static final PathTo PATH_TO = new PathTo();
+  DATA_WAY_CLICK(AttributeKind.STRING, "data-way-click"),
 
-  private static final CustomAttributeName[] ARRAY = {
-      PATH_TO
-  };
+  PATH_TO(AttributeKind.STRING, "href");
 
-  private final int code;
+  private static final CustomAttributeName[] ARRAY = values();
 
   private final AttributeKind kind;
 
   private final String name;
 
-  CustomAttributeName(int code, AttributeKind kind, String name) {
-    this.code = code;
+  private CustomAttributeName(AttributeKind kind, String name) {
     this.kind = kind;
     this.name = name;
   }
@@ -43,7 +40,7 @@ public sealed abstract class CustomAttributeName implements AttributeName {
 
   @Override
   public final int getCode() {
-    return code;
+    return StandardAttributeName.size() + ordinal();
   }
 
   @Override
@@ -54,12 +51,6 @@ public sealed abstract class CustomAttributeName implements AttributeName {
   @Override
   public final String getName() {
     return name;
-  }
-
-  public static final class PathTo extends CustomAttributeName {
-    private PathTo() {
-      super(StandardAttributeName.size() + 0, AttributeKind.STRING, "href");
-    }
   }
 
 }

@@ -17,6 +17,7 @@ package objectos.html;
 
 import objectos.html.internal.Ambiguous;
 import objectos.html.internal.AttributeName;
+import objectos.html.internal.CustomAttributeName;
 import objectos.html.internal.HtmlTemplateApi;
 import objectos.html.internal.InternalFragment;
 import objectos.html.internal.InternalInstruction;
@@ -34,6 +35,14 @@ public sealed abstract class BaseTemplateDsl
     permits HtmlComponent, HtmlTemplate {
 
   BaseTemplateDsl() {}
+
+  protected final Api.ElementContents dataWayClick(String text) {
+    Check.notNull(text, "text == null");
+
+    api().attribute(CustomAttributeName.DATA_WAY_CLICK, text);
+
+    return InternalInstruction.INSTANCE;
+  }
 
   /**
    * Flattens the specified instructions so that each of the specified

@@ -58,8 +58,8 @@ public final class InternalCompiledHtml implements Html {
           int ordinal;
           ordinal = Bytes.decodeInt(ordinalByte);
 
-          StandardAttributeName name;
-          name = StandardAttributeName.getByCode(ordinal);
+          AttributeName name;
+          name = AttributeName.getByCode(ordinal);
 
           out.append(name.getName());
         }
