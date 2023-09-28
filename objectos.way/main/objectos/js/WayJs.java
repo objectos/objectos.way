@@ -20,10 +20,14 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import objectos.html.BaseTemplateDsl;
+import objectos.html.HtmlComponent;
 
-public final class WayJs {
+public final class WayJs extends HtmlComponent {
 
-  private WayJs() {}
+  public WayJs(BaseTemplateDsl parent) {
+    super(parent);
+  }
 
   public static byte[] getBytes() throws IOException {
     URL resource;
