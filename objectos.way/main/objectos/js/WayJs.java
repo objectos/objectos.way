@@ -20,8 +20,12 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import objectos.css.util.ClassSelector;
+import objectos.css.util.IdSelector;
 import objectos.html.BaseTemplateDsl;
 import objectos.html.HtmlComponent;
+import objectos.html.tmpl.Api.ElementContents;
+import objectos.lang.Check;
 
 public final class WayJs extends HtmlComponent {
 
@@ -43,6 +47,42 @@ public final class WayJs extends HtmlComponent {
 
       return out.toByteArray();
     }
+  }
+
+  public final ElementContents click(Command... commands) {
+    Check.notNull(commands, "commands == null");
+
+    StringBuilder json;
+    json = new StringBuilder();
+
+    json.append('[');
+
+    if (commands.length > 0) {
+      Command c;
+      c = commands[0];
+
+      c.acceptJsonBuilder(json);
+
+      for (int i = 1; i < commands.length; i++) {
+        json.append(',');
+
+        c = commands[i];
+
+        c.acceptJsonBuilder(json);
+      }
+    }
+
+    json.append(']');
+
+    return dataWayClick(json.toString());
+  }
+
+  public final Command replaceClass(IdSelector id, ClassSelector from, ClassSelector to) {
+    Check.notNull(id, "id == null");
+    Check.notNull(from, "from == null");
+    Check.notNull(to, "to == null");
+
+    return new Command.ReplaceClass(id, from, to);
   }
 
 }
