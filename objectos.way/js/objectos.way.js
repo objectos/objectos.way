@@ -14,67 +14,67 @@
  * limitations under the License.
  */
 (function() {
-	
-	"use strict";
-	
-	function clickListener(event) {
-		const target = event.target;
-		
-		const dataset = target.dataset;
-		
-		const click = dataset.wayClick;
-		
-		if (!click) {
-			return;
-		}
-		
-		const arr = JSON.parse(click);
-		
-		if (!Array.isArray(arr)) {
-			return;
-		}
-		
-		for (const obj of arr) {
-			const cmd = obj.cmd;
-			const args = obj.args;
-			
-			if (!cmd || !args) {
-				continue;
-			}
-			
-			switch (cmd) {
-				case "replace-class":
+
+  "use strict";
+
+  function clickListener(event) {
+    const target = event.target;
+
+    const dataset = target.dataset;
+
+    const click = dataset.wayClick;
+
+    if (!click) {
+      return;
+    }
+
+    const arr = JSON.parse(click);
+
+    if (!Array.isArray(arr)) {
+      return;
+    }
+
+    for (const obj of arr) {
+      const cmd = obj.cmd;
+      const args = obj.args;
+
+      if (!cmd || !args) {
+        continue;
+      }
+
+      switch (cmd) {
+        case "replace-class":
           if (args.length !== 3) {
             return;
           }
-          
+
           const id = args[0];
-          
+
           const el = document.getElementById(id);
-          
+
           if (!el) {
             return;
           }
 
           const classList = el.classList;
-          
+
           const classA = args[1];
-          
+
           const classB = args[2];
-          
+
           classList.replace(classA, classB);
-          
-					break;		
-			}
-		}
-	}
-	
-	function domLoaded() {
-		const body = document.body;
-		
-		body.addEventListener("click", clickListener);
-	} 
-	
-	window.addEventListener("DOMContentLoaded", domLoaded);
-	
+
+          break;
+      }
+    }
+  }
+
+  function domLoaded() {
+    const body = document.body;
+
+    body.addEventListener("click", clickListener);
+  }
+
+  window.addEventListener("DOMContentLoaded", domLoaded);
+
 })();
