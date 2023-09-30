@@ -950,6 +950,52 @@ WAY_POM_SEDX += $(WAY_POM_SOURCE)
 $(WAY_POM_FILE): $(WAY_POM_SOURCE) Makefile
 	$(WAY_POM_SEDX)
 
+## include ossrh config
+## - OSSRH_GPG_KEY
+## - OSSRH_GPG_PASSPHRASE
+## - OSSRH_USERNAME
+## - OSSRH_PASSWORD
+-include $(HOME)/.config/objectos/ossrh-config.mk
+
+## objectos.way gpg command
+WAY_GPGX = $(GPG)
+WAY_GPGX += --armor
+WAY_GPGX += --batch
+WAY_GPGX += --default-key $(OSSRH_GPG_KEY)
+WAY_GPGX += --detach-sign
+WAY_GPGX += --passphrase $(OSSRH_GPG_PASSPHRASE)
+WAY_GPGX += --pinentry-mode loopback
+WAY_GPGX += --yes
+
+## objectos.way ossrh bundle jar file
+WAY_OSSRH_BUNDLE = $(WAY_WORK)/$(WAY_ARTIFACT_ID)-$(WAY_VERSION)-bundle.jar
+
+## objectos.way ossrh bundle contents
+WAY_OSSRH_CONTENTS = $(WAY_POM_FILE)
+WAY_OSSRH_CONTENTS += $(WAY_JAR_FILE)
+WAY_OSSRH_CONTENTS += $(WAY_SOURCE_JAR_FILE)
+WAY_OSSRH_CONTENTS += $(WAY_JAVADOC_JAR_FILE)
+
+## objectos.way ossrh sigs
+WAY_OSSRH_SIGS = $(WAY_OSSRH_CONTENTS:%=%.asc)
+
+## ossrh jar command
+WAY_OSSRH_JARX = $(JAR)
+WAY_OSSRH_JARX += --create
+WAY_OSSRH_JARX += --file $(WAY_OSSRH_BUNDLE)
+WAY_OSSRH_JARX += $(WAY_OSSRH_CONTENTS:$(WAY_WORK)/%=-C $(WAY_WORK) %)
+WAY_OSSRH_JARX += $(WAY_OSSRH_SIGS:$(WAY_WORK)/%=-C $(WAY_WORK) %)
+
+#
+# objectos.way ossrh bundle targets
+#
+
+$(WAY_OSSRH_BUNDLE): $(WAY_OSSRH_SIGS)
+	$(WAY_OSSRH_JARX)
+
+%.asc: %
+	@$(WAY_GPGX) $<
+
 #
 # Targets section
 #
@@ -1055,3 +1101,7 @@ way@clean-javadoc:
 
 .PHONY: way@pom
 way@pom: $(WAY_POM_FILE)
+
+.PHONY: way@ossrh-bundle
+way@ossrh-bundle: $(WAY_OSSRH_BUNDLE)
+

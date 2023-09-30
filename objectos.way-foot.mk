@@ -119,3 +119,7 @@ way@clean-javadoc:
 
 .PHONY: way@pom
 way@pom: $(WAY_POM_FILE)
+
+.PHONY: way@ossrh-bundle
+way@ossrh-bundle: $(WAY_OSSRH_BUNDLE)
+
