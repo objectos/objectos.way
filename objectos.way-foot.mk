@@ -107,3 +107,6 @@ way@test: $(WAY_TEST_RUN_MARKER)
 
 .PHONY: way@install
 way@install: $(WAY_INSTALL)
+
+.PHONY: way@source-jar
+way@source-jar: $(WAY_SOURCE_JAR_FILE)

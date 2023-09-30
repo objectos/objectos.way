@@ -820,6 +820,27 @@ $(WAY_INSTALL): $(WAY_JAR_FILE)
 	cp $(WAY_JAR_FILE) $@
 
 #
+# objectos.way source-jar options
+#
+
+## objectos.way source-jar file
+WAY_SOURCE_JAR_FILE = $(WAY_WORK)/$(WAY_JAR_NAME)-$(WAY_VERSION)-sources.jar
+
+## objectos.way source-jar command
+WAY_SOURCE_JARX = $(JAR)
+WAY_SOURCE_JARX += --create
+WAY_SOURCE_JARX += --file $(WAY_SOURCE_JAR_FILE)
+WAY_SOURCE_JARX += -C $(WAY_MAIN)
+WAY_SOURCE_JARX += .
+
+#
+# objectos.way source-jar targets
+#
+
+$(WAY_SOURCE_JAR_FILE): $(WAY_SOURCES)
+	$(WAY_SOURCE_JARX)
+	
+#
 # Targets section
 #
 
@@ -912,3 +933,6 @@ way@test: $(WAY_TEST_RUN_MARKER)
 
 .PHONY: way@install
 way@install: $(WAY_INSTALL)
+
+.PHONY: way@source-jar
+way@source-jar: $(WAY_SOURCE_JAR_FILE)
