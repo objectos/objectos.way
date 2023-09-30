@@ -30,6 +30,9 @@ install: way@install
 .PHONY: ossrh
 ossrh: way@ossrh
 
+.PHONY: gh-release
+gh-release: way@gh-release
+
 # maybe use eval for module targets?
 
 #
@@ -128,5 +131,7 @@ way@ossrh: $(WAY_OSSRH_MARKER)
 
 way@ossrh-bundle: $(WAY_OSSRH_BUNDLE)
 
-.PHONY: way@gh-release-body
+.PHONY: way@gh-release way@gh-release-body
+way@gh-release: $(WAY_GH_RELEASE_MARKER)
+
 way@gh-release-body: $(WAY_GH_RELEASE_BODY)

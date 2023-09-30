@@ -1066,9 +1066,7 @@ $(WAY_OSSRH_UPLOAD_JSON): $(WAY_OSSRH_BUNDLE)
 	$(WAY_OSSRH_UPLOAD_CURLX)
 
 #
-# objectos.way GitHub release body:
-#
-# Generates the markdown file that will serve as the GH release body
+# objectos.way GitHub release
 #
 
 ## objectos.way GitHub API
@@ -1091,7 +1089,7 @@ WAY_GH_MILESTONE_JQX += '.[] | select(.title == "$(WAY_GH_MILESTONE_TITLE)") | .
 WAY_GH_MILESTONE_ID = $(shell $(WAY_GH_MILESTONE_CURLX) | $(WAY_GH_MILESTONE_JQX))
 
 ## objectos.way Issues from GitHub
-WAY_GH_ISSUES_JSON = $(WAY_WORK)/github-issues.json
+WAY_GH_ISSUES_JSON = $(WAY_WORK)/gh-issues.json
 
 ## objectos.way GitHub issues curl command
 WAY_GH_ISSUES_CURLX = $(CURL)
@@ -1100,7 +1098,7 @@ WAY_GH_ISSUES_CURLX += >
 WAY_GH_ISSUES_CURLX += $(WAY_GH_ISSUES_JSON)
 
 ##
-WAY_GH_RELEASE_BODY = $(WAY_WORK)/github-release.md
+WAY_GH_RELEASE_BODY = $(WAY_WORK)/gh-release.md
 
 ## objectos.way Filter and format issues
 WAY_GH_ISSUES_JQX = $(JQ)
@@ -1111,9 +1109,41 @@ WAY_GH_ISSUES_JQX += $(WAY_GH_ISSUES_JSON)
 
 WAY_gh_issues = $(let LABEL,$1,$(WAY_GH_ISSUES_JQX))
 
+##
+WAY_GH_RELEASE_JSON := $(WAY_WORK)/gh-release.json
+
+## objectos.way git tag name to be generated
+WAY_GH_TAG := $(WAY_GH_MILESTONE_TITLE)
+
+##
+WAY_GH_RELEASE_JQX = $(JQ)
+WAY_GH_RELEASE_JQX += --raw-input
+WAY_GH_RELEASE_JQX += --slurp
+WAY_GH_RELEASE_JQX += '. as $$body | {"tag_name":"$(WAY_GH_TAG)","name":"Release $(WAY_GH_TAG)","body":$$body,"draft":true,"prerelease":false,"generate_release_notes":false}'
+WAY_GH_RELEASE_JQX += $(WAY_GH_RELEASE_BODY)
+
+## 
+WAY_GH_RELEASE_CURLX = $(CURL)
+WAY_GH_RELEASE_CURLX += --data-binary "@$(WAY_GH_RELEASE_JSON)"
+WAY_GH_RELEASE_CURLX += --header "Accept: application/vnd.github+json"
+WAY_GH_RELEASE_CURLX += --header "Authorization: Bearer $(GH_TOKEN)"
+WAY_GH_RELEASE_CURLX += --header "X-GitHub-Api-Version: 2022-11-28"
+WAY_GH_RELEASE_CURLX += --location
+WAY_GH_RELEASE_CURLX += --request POST
+WAY_GH_RELEASE_CURLX +=  $(WAY_GH_API)/releases
+
+##
+WAY_GH_RELEASE_MARKER = $(WAY_WORK)/gh-release-marker 
+
 #
-# objectos.way GitHub release body targets
+# objectos.way GitHub release targets
 #
+
+$(WAY_GH_RELEASE_MARKER): $(WAY_GH_RELEASE_JSON)
+	@$(WAY_GH_RELEASE_CURLX)
+
+$(WAY_GH_RELEASE_JSON): $(WAY_GH_RELEASE_BODY)
+	$(WAY_GH_RELEASE_JQX) > $(WAY_GH_RELEASE_JSON) 
 
 $(WAY_GH_ISSUES_JSON):
 	$(WAY_GH_ISSUES_CURLX)
@@ -1150,6 +1180,9 @@ install: way@install
 
 .PHONY: ossrh
 ossrh: way@ossrh
+
+.PHONY: gh-release
+gh-release: way@gh-release
 
 # maybe use eval for module targets?
 
@@ -1249,5 +1282,7 @@ way@ossrh: $(WAY_OSSRH_MARKER)
 
 way@ossrh-bundle: $(WAY_OSSRH_BUNDLE)
 
-.PHONY: way@gh-release-body
+.PHONY: way@gh-release way@gh-release-body
+way@gh-release: $(WAY_GH_RELEASE_MARKER)
+
 way@gh-release-body: $(WAY_GH_RELEASE_BODY)
