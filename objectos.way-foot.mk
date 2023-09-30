@@ -116,3 +116,6 @@ way@javadoc: $(WAY_JAVADOC_JAR_FILE)
 
 way@clean-javadoc:
 	rm -r $(WAY_JAVADOC_OUTPUT)
+
+.PHONY: way@pom
+way@pom: $(WAY_POM_FILE)

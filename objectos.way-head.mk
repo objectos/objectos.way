@@ -157,7 +157,7 @@ WAY_TEST_JAVAX_EXPORTS += objectos.util
 WAY_GROUP_ID := $(GROUP_ID)
 WAY_ARTIFACT_ID := $(ARTIFACT_ID)
 
-## way copyright years for javadoc/pom
+## way copyright years for javadoc
 WAY_COPYRIGHT_YEARS := 2022-2023
 
 ## way javadoc snippet path

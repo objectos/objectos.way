@@ -157,7 +157,7 @@ WAY_TEST_JAVAX_EXPORTS += objectos.util
 WAY_GROUP_ID := $(GROUP_ID)
 WAY_ARTIFACT_ID := $(ARTIFACT_ID)
 
-## way copyright years for javadoc/pom
+## way copyright years for javadoc
 WAY_COPYRIGHT_YEARS := 2022-2023
 
 ## way javadoc snippet path
@@ -177,7 +177,7 @@ all: jar
 jar: way@jar
 
 #
-# Defines the java tools
+# Defines the tools
 #
 
 ## configures JAVA_HOME_BIN
@@ -199,6 +199,19 @@ JAR := $(JAVA_HOME_BIN)/jar
 
 ## javadoc command
 JAVADOC := $(JAVA_HOME_BIN)/javadoc
+
+## curl common options
+CURL := curl
+CURL += --fail
+
+## gpg common options
+GPG := gpg
+
+## jq common options
+JQ := jq
+
+## sed common options
+SED := sed
 
 #
 # Dependencies related options & functions
@@ -903,6 +916,41 @@ $(WAY_JAVADOC_MARKER): $(WAY_SOURCES)
 	$(WAY_JAVADOCX)
 
 #
+# Provides the pom target:
+#
+# - generates a pom.xml suitable for deploying to a maven repository
+# 
+# Requirements:
+#
+# - you must provide the pom template $(MODULE)/pom.xml.tmpl
+
+## objectos.way pom source
+WAY_POM_SOURCE = $(WAY_MODULE)/pom.xml.tmpl
+
+## objectos.way pom file
+WAY_POM_FILE = $(WAY_WORK)/pom.xml
+
+## objectos.way pom external variables
+# WAY_POM_VARIABLES = 
+
+## objectos.way ossrh pom sed command
+WAY_POM_SEDX = $(SED)
+WAY_POM_SEDX += $(foreach var,$(POM_VARIABLES),--expression='s/@$(var)@/$($(var))/g')
+WAY_POM_SEDX += --expression='s/@COPYRIGHT_YEARS@/$(WAY_COPYRIGHT_YEARS)/g'
+WAY_POM_SEDX += --expression='s/@ARTIFACT_ID@/$(WAY_ARTIFACT_ID)/g'
+WAY_POM_SEDX += --expression='s/@GROUP_ID@/$(WAY_GROUP_ID)/g'
+WAY_POM_SEDX += --expression='s/@VERSION@/$(WAY_VERSION)/g'
+WAY_POM_SEDX += --expression='w $(WAY_POM_FILE)'
+WAY_POM_SEDX += $(WAY_POM_SOURCE)
+
+#
+# Targets
+#
+
+$(WAY_POM_FILE): $(WAY_POM_SOURCE) Makefile
+	$(WAY_POM_SEDX)
+
+#
 # Targets section
 #
 
@@ -1004,3 +1052,6 @@ way@javadoc: $(WAY_JAVADOC_JAR_FILE)
 
 way@clean-javadoc:
 	rm -r $(WAY_JAVADOC_OUTPUT)
+
+.PHONY: way@pom
+way@pom: $(WAY_POM_FILE)
