@@ -320,7 +320,7 @@ $(CODE_COMPILE_MARKER): $(CODE_COMPILE_DEPS) $(CODE_CLASSES)
 	if [ -n "$(CODE_DIRTY)" ]; then \
 		$(CODE_JAVACX); \
 	fi
-	touch $(CODE_COMPILE_MARKER); \
+	touch $@
 
 $(CODE_CLASSES): $(CODE_CLASS_OUTPUT)/%.class: $(CODE_MAIN)/%.java
 	$(eval CODE_DIRTY += $$<)
@@ -406,7 +406,7 @@ $(CODE_TEST_COMPILE_MARKER): $(CODE_TEST_COMPILE_DEPS) $(CODE_TEST_CLASSES)
 	if [ -n "$(CODE_TEST_DIRTY)" ]; then \
 		$(CODE_TEST_JAVACX); \
 	fi
-	touch $(CODE_TEST_COMPILE_MARKER); \
+	touch $@
 
 $(CODE_TEST_CLASSES): $(CODE_TEST_CLASS_OUTPUT)/%.class: $(CODE_TEST)/%.java
 	$(eval CODE_TEST_DIRTY += $$<)
@@ -506,7 +506,7 @@ $(SELFGEN_COMPILE_MARKER): $(SELFGEN_COMPILE_DEPS) $(SELFGEN_CLASSES)
 	if [ -n "$(SELFGEN_DIRTY)" ]; then \
 		$(SELFGEN_JAVACX); \
 	fi
-	touch $(SELFGEN_COMPILE_MARKER); \
+	touch $@
 
 $(SELFGEN_CLASSES): $(SELFGEN_CLASS_OUTPUT)/%.class: $(SELFGEN_MAIN)/%.java
 	$(eval SELFGEN_DIRTY += $$<)
@@ -592,7 +592,7 @@ $(SELFGEN_TEST_COMPILE_MARKER): $(SELFGEN_TEST_COMPILE_DEPS) $(SELFGEN_TEST_CLAS
 	if [ -n "$(SELFGEN_TEST_DIRTY)" ]; then \
 		$(SELFGEN_TEST_JAVACX); \
 	fi
-	touch $(SELFGEN_TEST_COMPILE_MARKER); \
+	touch $@
 
 $(SELFGEN_TEST_CLASSES): $(SELFGEN_TEST_CLASS_OUTPUT)/%.class: $(SELFGEN_TEST)/%.java
 	$(eval SELFGEN_TEST_DIRTY += $$<)
@@ -636,6 +636,17 @@ SELFGEN_TEST_RUN_MARKER = $(SELFGEN_TEST_RUNTIME_OUTPUT)/index.html
 
 $(SELFGEN_TEST_RUN_MARKER): $(SELFGEN_TEST_COMPILE_MARKER) 
 	$(SELFGEN_TEST_JAVAX)
+
+## include ossrh config
+## - OSSRH_GPG_KEY
+## - OSSRH_GPG_PASSPHRASE
+## - OSSRH_USERNAME
+## - OSSRH_PASSWORD
+-include $(HOME)/.config/objectos/ossrh-config.mk
+
+## include GH config
+## - GH_TOKEN
+-include $(HOME)/.config/objectos/gh-config.mk
 
 #
 # objectos.way compilation options
@@ -692,7 +703,7 @@ $(WAY_COMPILE_MARKER): $(WAY_COMPILE_DEPS) $(WAY_CLASSES)
 	if [ -n "$(WAY_DIRTY)" ]; then \
 		$(WAY_JAVACX); \
 	fi
-	touch $(WAY_COMPILE_MARKER); \
+	touch $@
 
 $(WAY_CLASSES): $(WAY_CLASS_OUTPUT)/%.class: $(WAY_MAIN)/%.java
 	$(eval WAY_DIRTY += $$<)
@@ -778,7 +789,7 @@ $(WAY_TEST_COMPILE_MARKER): $(WAY_TEST_COMPILE_DEPS) $(WAY_TEST_CLASSES)
 	if [ -n "$(WAY_TEST_DIRTY)" ]; then \
 		$(WAY_TEST_JAVACX); \
 	fi
-	touch $(WAY_TEST_COMPILE_MARKER); \
+	touch $@
 
 $(WAY_TEST_CLASSES): $(WAY_TEST_CLASS_OUTPUT)/%.class: $(WAY_TEST)/%.java
 	$(eval WAY_TEST_DIRTY += $$<)
@@ -836,7 +847,7 @@ WAY_INSTALL = $(call dependency,$(WAY_GROUP_ID),$(WAY_ARTIFACT_ID),$(WAY_VERSION
 
 $(WAY_INSTALL): $(WAY_JAR_FILE)
 	mkdir --parents $(@D)
-	cp $(WAY_JAR_FILE) $@
+	cp $< $@
 
 #
 # objectos.way source-jar options
@@ -950,13 +961,6 @@ WAY_POM_SEDX += $(WAY_POM_SOURCE)
 $(WAY_POM_FILE): $(WAY_POM_SOURCE) Makefile
 	$(WAY_POM_SEDX)
 
-## include ossrh config
-## - OSSRH_GPG_KEY
-## - OSSRH_GPG_PASSPHRASE
-## - OSSRH_USERNAME
-## - OSSRH_PASSWORD
--include $(HOME)/.config/objectos/ossrh-config.mk
-
 ## objectos.way gpg command
 WAY_GPGX = $(GPG)
 WAY_GPGX += --armor
@@ -979,7 +983,7 @@ WAY_OSSRH_CONTENTS += $(WAY_JAVADOC_JAR_FILE)
 ## objectos.way ossrh sigs
 WAY_OSSRH_SIGS = $(WAY_OSSRH_CONTENTS:%=%.asc)
 
-## ossrh jar command
+## objectos.way ossrh bundle jar command
 WAY_OSSRH_JARX = $(JAR)
 WAY_OSSRH_JARX += --create
 WAY_OSSRH_JARX += --file $(WAY_OSSRH_BUNDLE)
@@ -996,6 +1000,141 @@ $(WAY_OSSRH_BUNDLE): $(WAY_OSSRH_SIGS)
 %.asc: %
 	@$(WAY_GPGX) $<
 
+## objectos.way ossrh cookies
+WAY_OSSRH_COOKIES = $(WAY_WORK)/ossrh-cookies.txt 
+
+## objectos.way ossrh login curl command
+WAY_OSSRH_LOGIN_CURLX = $(CURL)
+WAY_OSSRH_LOGIN_CURLX += --cookie-jar $(WAY_OSSRH_COOKIES)
+WAY_OSSRH_LOGIN_CURLX += --output /dev/null
+WAY_OSSRH_LOGIN_CURLX += --request GET
+WAY_OSSRH_LOGIN_CURLX += --silent
+WAY_OSSRH_LOGIN_CURLX += --url https://oss.sonatype.org/service/local/authentication/login
+WAY_OSSRH_LOGIN_CURLX += --user $(OSSRH_USERNAME):$(OSSRH_PASSWORD)
+
+## objectos.way ossrh response json
+WAY_OSSRH_UPLOAD_JSON = $(WAY_WORK)/ossrh-upload.json
+
+## objectos.way ossrh upload curl command
+WAY_OSSRH_UPLOAD_CURLX = $(CURL)
+WAY_OSSRH_UPLOAD_CURLX += --cookie $(WAY_OSSRH_COOKIES)
+WAY_OSSRH_UPLOAD_CURLX += --header 'Content-Type: multipart/form-data'
+WAY_OSSRH_UPLOAD_CURLX += --form file=@$(WAY_OSSRH_BUNDLE)
+WAY_OSSRH_UPLOAD_CURLX += --output $(WAY_OSSRH_UPLOAD_JSON)
+WAY_OSSRH_UPLOAD_CURLX += --request POST
+WAY_OSSRH_UPLOAD_CURLX += --url https://oss.sonatype.org/service/local/staging/bundle_upload
+
+## objectos.way ossrh repository id sed parsing
+WAY_OSSRH_SEDX = $(SED)
+WAY_OSSRH_SEDX += --regexp-extended
+WAY_OSSRH_SEDX += --silent
+WAY_OSSRH_SEDX += 's/^.*repositories\/(.*)".*/\1/p'
+WAY_OSSRH_SEDX += $(WAY_OSSRH_UPLOAD_JSON)
+
+## objectos.way repository id
+WAY_OSSRH_REPOSITORY_ID = $(shell $(WAY_OSSRH_SEDX))
+
+## objectos.way ossrh release curl command
+WAY_OSSRH_RELEASE_CURLX = $(CURL)
+WAY_OSSRH_RELEASE_CURLX += --cookie $(WAY_OSSRH_COOKIES)
+WAY_OSSRH_RELEASE_CURLX += --data '{"data":{"autoDropAfterRelease":true,"description":"","stagedRepositoryIds":["$(WAY_OSSRH_REPOSITORY_ID)"]}}'
+WAY_OSSRH_RELEASE_CURLX += --header 'Content-Type: application/json'
+WAY_OSSRH_RELEASE_CURLX += --request POST
+WAY_OSSRH_RELEASE_CURLX += --url https://oss.sonatype.org/service/local/staging/bulk/promote
+
+## objectos.way ossrh marker
+WAY_OSSRH_MARKER = $(WAY_WORK)/ossrh-marker
+
+#
+# objectos.way ossrh targets
+#
+
+WAY_OSSRH_MARKER: $(WAY_OSSRH_UPLOAD_JSON)
+	@for i in 1 2 3; do \
+	  echo "Waiting before release..."; \
+	  sleep 45; \
+	  echo "Trying to release $(WAY_OSSRH_REPOSITORY_ID)"; \
+	  $(WAY_OSSRH_RELEASE_CURLX); \
+	  if [ $$? -eq 0 ]; then \
+	    exit 0; \
+	  fi \
+	done
+	touch $@
+
+$(WAY_OSSRH_UPLOAD_JSON): $(WAY_OSSRH_BUNDLE)
+	@$(WAY_OSSRH_LOGIN_CURLX)
+	$(WAY_OSSRH_UPLOAD_CURLX)
+
+#
+# objectos.way GitHub release body:
+#
+# Generates the markdown file that will serve as the GH release body
+#
+
+## objectos.way GitHub API
+ifndef WAY_GH_API
+WAY_GH_API = https://api.github.com/repos/objectos/$(WAY_ARTIFACT_ID)
+endif
+
+## objectos.way GitHub milestone title
+WAY_GH_MILESTONE_TITLE = v$(WAY_VERSION)
+
+## objectos.way GitHub milestones curl command
+WAY_GH_MILESTONE_CURLX = $(CURL)
+WAY_GH_MILESTONE_CURLX += '$(WAY_GH_API)/milestones'
+
+## objectos.way GitHub milestone number parsing
+WAY_GH_MILESTONE_JQX = $(JQ)
+WAY_GH_MILESTONE_JQX += '.[] | select(.title == "$(WAY_GH_MILESTONE_TITLE)") | .number'
+
+## objectos.way GitHub milestone ID
+WAY_GH_MILESTONE_ID = $(shell $(WAY_GH_MILESTONE_CURLX) | $(WAY_GH_MILESTONE_JQX))
+
+## objectos.way Issues from GitHub
+WAY_GH_ISSUES_JSON = $(WAY_WORK)/github-issues.json
+
+## objectos.way GitHub issues curl command
+WAY_GH_ISSUES_CURLX = $(CURL)
+WAY_GH_ISSUES_CURLX += '$(WAY_GH_API)/issues?milestone=$(WAY_GH_MILESTONE_ID)&per_page=100&state=all'
+WAY_GH_ISSUES_CURLX += >
+WAY_GH_ISSUES_CURLX += $(WAY_GH_ISSUES_JSON)
+
+##
+WAY_GH_RELEASE_BODY = $(WAY_WORK)/github-release.md
+
+## objectos.way Filter and format issues
+WAY_GH_ISSUES_JQX = $(JQ)
+WAY_GH_ISSUES_JQX += --arg LABEL "$(LABEL)"
+WAY_GH_ISSUES_JQX += --raw-output
+WAY_GH_ISSUES_JQX += 'sort_by(.number) | [.[] | {number: .number, title: .title, label: .labels[] | select(.name) | .name}] | .[] | select(.label == $$LABEL) | "- \(.title) \#\(.number)"'
+WAY_GH_ISSUES_JQX += $(WAY_GH_ISSUES_JSON)
+
+WAY_gh_issues = $(let LABEL,$1,$(WAY_GH_ISSUES_JQX))
+
+#
+# objectos.way GitHub release body targets
+#
+
+$(WAY_GH_ISSUES_JSON):
+	$(WAY_GH_ISSUES_CURLX)
+
+$(WAY_GH_RELEASE_BODY): $(WAY_GH_ISSUES_JSON)
+	echo '## New features' > $(WAY_GH_RELEASE_BODY)
+	echo '' >> $(WAY_GH_RELEASE_BODY)
+	$(call WAY_gh_issues,t:feature) >> $(WAY_GH_RELEASE_BODY) 
+	echo '' >> $(WAY_GH_RELEASE_BODY)
+	echo '## Enhancements' >> $(WAY_GH_RELEASE_BODY)
+	echo '' >> $(WAY_GH_RELEASE_BODY)
+	$(call WAY_gh_issues,t:enhancement) >> $(WAY_GH_RELEASE_BODY) 
+	echo '' >> $(WAY_GH_RELEASE_BODY)
+	echo '## Bug Fixes' >> $(WAY_GH_RELEASE_BODY)
+	echo '' >> $(WAY_GH_RELEASE_BODY)
+	$(call WAY_gh_issues,t:bug) >> $(WAY_GH_RELEASE_BODY) 
+	echo '' >> $(WAY_GH_RELEASE_BODY)
+	echo '## Documentation' >> $(WAY_GH_RELEASE_BODY)
+	echo '' >> $(WAY_GH_RELEASE_BODY)
+	$(call WAY_gh_issues,t:documentation) >> $(WAY_GH_RELEASE_BODY) 
+
 #
 # Targets section
 #
@@ -1008,6 +1147,9 @@ test: code@test selfgen@test way@test
 
 .PHONY: install
 install: way@install
+
+.PHONY: ossrh
+ossrh: way@ossrh
 
 # maybe use eval for module targets?
 
@@ -1102,6 +1244,10 @@ way@clean-javadoc:
 .PHONY: way@pom
 way@pom: $(WAY_POM_FILE)
 
-.PHONY: way@ossrh-bundle
+.PHONY: way@ossrh way@ossrh-bundle
+way@ossrh: $(WAY_OSSRH_MARKER)
+
 way@ossrh-bundle: $(WAY_OSSRH_BUNDLE)
 
+.PHONY: way@gh-release-body
+way@gh-release-body: $(WAY_GH_RELEASE_BODY)

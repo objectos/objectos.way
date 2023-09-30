@@ -27,6 +27,9 @@ test: code@test selfgen@test way@test
 .PHONY: install
 install: way@install
 
+.PHONY: ossrh
+ossrh: way@ossrh
+
 # maybe use eval for module targets?
 
 #
@@ -120,6 +123,10 @@ way@clean-javadoc:
 .PHONY: way@pom
 way@pom: $(WAY_POM_FILE)
 
-.PHONY: way@ossrh-bundle
+.PHONY: way@ossrh way@ossrh-bundle
+way@ossrh: $(WAY_OSSRH_MARKER)
+
 way@ossrh-bundle: $(WAY_OSSRH_BUNDLE)
 
+.PHONY: way@gh-release-body
+way@gh-release-body: $(WAY_GH_RELEASE_BODY)
