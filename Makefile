@@ -22,7 +22,7 @@
 
 GROUP_ID := br.com.objectos
 ARTIFACT_ID := objectos.way
-VERSION := 0.1.0-SNAPSHOT
+VERSION := 0.1.0
 
 ## Deps versions
 
@@ -1049,7 +1049,7 @@ WAY_OSSRH_MARKER = $(WAY_WORK)/ossrh-marker
 # objectos.way ossrh targets
 #
 
-WAY_OSSRH_MARKER: $(WAY_OSSRH_UPLOAD_JSON)
+$(WAY_OSSRH_MARKER): $(WAY_OSSRH_UPLOAD_JSON)
 	@for i in 1 2 3; do \
 	  echo "Waiting before release..."; \
 	  sleep 45; \
@@ -1141,6 +1141,7 @@ WAY_GH_RELEASE_MARKER = $(WAY_WORK)/gh-release-marker
 
 $(WAY_GH_RELEASE_MARKER): $(WAY_GH_RELEASE_JSON)
 	@$(WAY_GH_RELEASE_CURLX)
+	touch $@
 
 $(WAY_GH_RELEASE_JSON): $(WAY_GH_RELEASE_BODY)
 	$(WAY_GH_RELEASE_JQX) > $(WAY_GH_RELEASE_JSON) 
