@@ -153,9 +153,15 @@ WAY_TEST_JAVAX_EXPORTS += objectos.http.internal
 WAY_TEST_JAVAX_EXPORTS += objectos.lang
 WAY_TEST_JAVAX_EXPORTS += objectos.util
 
-## install coordinates
+## way install coordinates
 WAY_GROUP_ID := $(GROUP_ID)
 WAY_ARTIFACT_ID := $(ARTIFACT_ID)
+
+## way copyright years for javadoc/pom
+WAY_COPYRIGHT_YEARS := 2022-2023
+
+## way javadoc snippet path
+WAY_JAVADOC_SNIPPET_PATH := WAY_TEST
 
 # Delete the default suffixes
 .SUFFIXES:

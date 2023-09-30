@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 /**
- * Provides SVG icons suitable for using with {@link HtmlTemplate} classes.
+ * Provides SVG icons suitable for using with {@link objectos.html.HtmlTemplate}
+ * classes.
  */
 package objectos.icon;

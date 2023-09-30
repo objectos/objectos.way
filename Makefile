@@ -153,9 +153,15 @@ WAY_TEST_JAVAX_EXPORTS += objectos.http.internal
 WAY_TEST_JAVAX_EXPORTS += objectos.lang
 WAY_TEST_JAVAX_EXPORTS += objectos.util
 
-## install coordinates
+## way install coordinates
 WAY_GROUP_ID := $(GROUP_ID)
 WAY_ARTIFACT_ID := $(ARTIFACT_ID)
+
+## way copyright years for javadoc/pom
+WAY_COPYRIGHT_YEARS := 2022-2023
+
+## way javadoc snippet path
+WAY_JAVADOC_SNIPPET_PATH := WAY_TEST
 
 # Delete the default suffixes
 .SUFFIXES:
@@ -841,6 +847,62 @@ $(WAY_SOURCE_JAR_FILE): $(WAY_SOURCES)
 	$(WAY_SOURCE_JARX)
 	
 #
+# objectos.way javadoc options
+#
+
+## objectos.way javadoc output path
+WAY_JAVADOC_OUTPUT = $(WAY_WORK)/javadoc
+
+## objectos.way javadoc marker
+WAY_JAVADOC_MARKER = $(WAY_JAVADOC_OUTPUT)/index.html
+
+## objectos.way javadoc command
+WAY_JAVADOCX = $(JAVADOC)
+WAY_JAVADOCX += -d $(WAY_JAVADOC_OUTPUT)
+ifeq ($(WAY_ENABLE_PREVIEW),1)
+WAY_JAVADOCX += --enable-preview
+endif
+WAY_JAVADOCX += --module $(WAY_MODULE)
+ifneq ($(WAY_COMPILE_MODULE_PATH),)
+WAY_JAVADOCX += --module-path $(WAY_COMPILE_MODULE_PATH)
+endif
+WAY_JAVADOCX += --module-source-path "./*/main"
+WAY_JAVADOCX += --release $(WAY_JAVA_RELEASE)
+WAY_JAVADOCX += --show-module-contents api
+WAY_JAVADOCX += --show-packages exported
+ifdef WAY_JAVADOC_SNIPPET_PATH
+WAY_JAVADOCX += --snippet-path $($(WAY_JAVADOC_SNIPPET_PATH))
+endif 
+WAY_JAVADOCX += -bottom 'Copyright &\#169; $(WAY_COPYRIGHT_YEARS) <a href="https://www.objectos.com.br/">Objectos Software LTDA</a>. All rights reserved.'
+WAY_JAVADOCX += -charset 'UTF-8'
+WAY_JAVADOCX += -docencoding 'UTF-8'
+WAY_JAVADOCX += -doctitle '$(WAY_GROUP_ID):$(WAY_ARTIFACT_ID) $(WAY_VERSION) API'
+WAY_JAVADOCX += -encoding 'UTF-8'
+WAY_JAVADOCX += -use
+WAY_JAVADOCX += -version
+WAY_JAVADOCX += -windowtitle '$(WAY_GROUP_ID):$(WAY_ARTIFACT_ID) $(WAY_VERSION) API'
+
+## objectos.way javadoc jar file
+WAY_JAVADOC_JAR_FILE = $(WAY_WORK)/$(WAY_ARTIFACT_ID)-$(WAY_VERSION)-javadoc.jar
+
+## objectos.way javadoc jar command
+WAY_JAVADOC_JARX = $(JAR)
+WAY_JAVADOC_JARX += --create
+WAY_JAVADOC_JARX += --file $(WAY_JAVADOC_JAR_FILE)
+WAY_JAVADOC_JARX += -C $(WAY_JAVADOC_OUTPUT)
+WAY_JAVADOC_JARX += .
+
+#
+# objectos.way javadoc targets
+#
+
+$(WAY_JAVADOC_JAR_FILE): $(WAY_JAVADOC_MARKER)
+	$(WAY_JAVADOC_JARX)
+
+$(WAY_JAVADOC_MARKER): $(WAY_SOURCES)
+	$(WAY_JAVADOCX)
+
+#
 # Targets section
 #
 
@@ -919,7 +981,7 @@ $(SELFGEN_MARKER): $(SELFGEN_JAR_FILE)
 
 .PHONY: way@clean
 way@clean:
-	rm -rf $(WAY_WORK)/*
+	rm -r $(WAY_WORK)/*
 
 $(WAY_JS_ARTIFACT): $(WAY_JS_SRC)
 	mkdir --parents $(@D)
@@ -936,3 +998,9 @@ way@install: $(WAY_INSTALL)
 
 .PHONY: way@source-jar
 way@source-jar: $(WAY_SOURCE_JAR_FILE)
+
+.PHONY: way@javadoc way@clean-javadoc
+way@javadoc: $(WAY_JAVADOC_JAR_FILE)
+
+way@clean-javadoc:
+	rm -r $(WAY_JAVADOC_OUTPUT)

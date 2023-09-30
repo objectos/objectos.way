@@ -93,7 +93,7 @@ $(SELFGEN_MARKER): $(SELFGEN_JAR_FILE)
 
 .PHONY: way@clean
 way@clean:
-	rm -rf $(WAY_WORK)/*
+	rm -r $(WAY_WORK)/*
 
 $(WAY_JS_ARTIFACT): $(WAY_JS_SRC)
 	mkdir --parents $(@D)
@@ -110,3 +110,9 @@ way@install: $(WAY_INSTALL)
 
 .PHONY: way@source-jar
 way@source-jar: $(WAY_SOURCE_JAR_FILE)
+
+.PHONY: way@javadoc way@clean-javadoc
+way@javadoc: $(WAY_JAVADOC_JAR_FILE)
+
+way@clean-javadoc:
+	rm -r $(WAY_JAVADOC_OUTPUT)
