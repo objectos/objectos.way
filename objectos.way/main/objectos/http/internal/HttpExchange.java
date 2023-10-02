@@ -182,21 +182,27 @@ public final class HttpExchange implements Exchange, Runnable, objectos.http.Htt
       stepOne();
     }
 
-    if (error != null) {
-      if (error instanceof Error e) {
-        throw e;
-      }
+    throwErrorIfNecessary();
+  }
 
-      if (error instanceof RuntimeException e) {
-        throw e;
-      }
-
-      if (error instanceof IOException e) {
-        throw e;
-      }
-
-      throw new IOException(error);
+  private void throwErrorIfNecessary() throws IOException {
+    if (error == null) {
+      return;
     }
+
+    if (error instanceof Error e) {
+      throw e;
+    }
+
+    if (error instanceof RuntimeException e) {
+      throw e;
+    }
+
+    if (error instanceof IOException e) {
+      throw e;
+    }
+
+    throw new IOException(error);
   }
 
   @Override
@@ -242,6 +248,27 @@ public final class HttpExchange implements Exchange, Runnable, objectos.http.Htt
     checkStateHandle();
 
     responseBody = data;
+  }
+
+  @Override
+  public final void executeResponsePhase() throws IOException {
+    checkStateHandle();
+
+    method = null;
+
+    if (requestHeaders != null) {
+      requestHeaders.clear();
+    }
+
+    requestTarget = null;
+
+    state = _OUTPUT;
+
+    while (state < _RESULT) {
+      stepOne();
+    }
+
+    throwErrorIfNecessary();
   }
 
   private void checkStateHandle() {

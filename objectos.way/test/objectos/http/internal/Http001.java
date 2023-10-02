@@ -48,7 +48,7 @@ public final class Http001 implements Handler {
       Hello World!
       """.replace("<CRLF>\n", "\r\n");
 
-  static final ZonedDateTime DATE = ZonedDateTime.of(
+  public static final ZonedDateTime DATE = ZonedDateTime.of(
     LocalDate.of(2023, 6, 28),
     LocalTime.of(9, 8, 43),
     ZoneId.of("GMT-3")

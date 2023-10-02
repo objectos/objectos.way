@@ -56,14 +56,20 @@ public class HttpExchangeTest {
       exchange.header(Http.Header.CONTENT_LENGTH, Long.toString(bytes.length));
 
       ZonedDateTime date;
-      date = ZonedDateTime.now();
+      date = Http001.DATE;
 
       exchange.header(Http.Header.DATE, Http.formatDate(date));
 
       exchange.body(bytes);
 
       assertTrue(exchange.hasResponse());
+
+      exchange.executeResponsePhase();
+
+      assertFalse(exchange.keepAlive());
     }
+
+    assertEquals(socket.outputAsString(), Http001.OUTPUT);
   }
 
 }

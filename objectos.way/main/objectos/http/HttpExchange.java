@@ -46,7 +46,7 @@ public sealed interface HttpExchange extends AutoCloseable
   }
 
   /**
-   * Closes this exchange (and its underlying socket).
+   * Closes and ends this exchange by closing its underlying socket.
    *
    * @throws IOException
    *         if an I/O error occurs
@@ -82,5 +82,13 @@ public sealed interface HttpExchange extends AutoCloseable
   void header(Http.Header.Name name, String value);
 
   void body(byte[] data);
+
+  /**
+   * Sends the configured response to the remote client.
+   *
+   * @throws IOException
+   *         if an I/O error occurs
+   */
+  void executeResponsePhase() throws IOException;
 
 }
