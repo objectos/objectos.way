@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Map;
 import org.testng.annotations.Test;
 
+@SuppressWarnings("resource")
 public class HttpExchangeParseHeaderTest {
 
   @Test
@@ -39,7 +40,7 @@ public class HttpExchangeParseHeaderTest {
     assertEquals(exchange.bufferIndex, Http001.INPUT.requestLength());
     assertEquals(exchange.bufferLimit, Http001.INPUT.requestLength());
     assertEquals(exchange.error, null);
-    assertEquals(exchange.keepAlive, false);
+    assertEquals(exchange.keepAlive, true);
     assertEquals(exchange.method, HttpMethod.GET);
     assertEquals(exchange.requestBody, null);
     // request headers parsed
@@ -74,7 +75,7 @@ public class HttpExchangeParseHeaderTest {
     assertEquals(exchange.bufferIndex, Http006.INPUT.requestLength() - 24);
     assertEquals(exchange.bufferLimit, Http006.INPUT.requestLength());
     assertEquals(exchange.error, null);
-    assertEquals(exchange.keepAlive, false);
+    assertEquals(exchange.keepAlive, true);
     assertEquals(exchange.method, HttpMethod.POST);
     assertEquals(exchange.requestBody, null);
     // request headers parsed

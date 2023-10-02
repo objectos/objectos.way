@@ -22,7 +22,7 @@ import java.io.OutputStream;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
 
-class TestableSocket extends Socket {
+public class TestableSocket extends Socket {
 
   private static class ThrowsOnGetOutput extends TestableSocket {
     @Override

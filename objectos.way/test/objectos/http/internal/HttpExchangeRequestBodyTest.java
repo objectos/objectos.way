@@ -37,7 +37,7 @@ public class HttpExchangeRequestBodyTest {
     assertEquals(exchange.bufferIndex, Http006.INPUT.requestLength());
     assertEquals(exchange.bufferLimit, Http006.INPUT.requestLength());
     assertEquals(exchange.error, null);
-    assertEquals(exchange.keepAlive, false);
+    assertEquals(exchange.keepAlive, true);
     assertEquals(exchange.method, HttpMethod.POST);
     // request body should have been created
     assertEquals(exchange.requestBody.toString(), "email=user%40example.com");

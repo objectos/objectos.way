@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.Map;
 import org.testng.annotations.Test;
 
+@SuppressWarnings("resource")
 public class HttpExchangeResultTest {
 
   @Test

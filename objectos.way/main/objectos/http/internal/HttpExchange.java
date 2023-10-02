@@ -33,7 +33,7 @@ import objectos.lang.Note1;
 import objectos.lang.NoteSink;
 import objectos.util.GrowableList;
 
-public final class HttpExchange implements Exchange, Runnable {
+public final class HttpExchange implements Exchange, Runnable, objectos.http.HttpExchange {
 
   public static final Note1<IOException> EIO_READ_ERROR = Note1.error();
 
@@ -148,6 +148,9 @@ public final class HttpExchange implements Exchange, Runnable {
 
     this.socket = socket;
 
+    // keepAlive() must return true on the first call
+    keepAlive = true;
+
     state = _SETUP;
   }
 
@@ -155,6 +158,21 @@ public final class HttpExchange implements Exchange, Runnable {
    * For testing purposes only.
    */
   HttpExchange() {}
+
+  @Override
+  public final void close() throws IOException {
+    socket.close();
+  }
+
+  @Override
+  public final boolean keepAlive() {
+    return keepAlive;
+  }
+
+  @Override
+  public final void executeRequestPhase() {
+    throw new UnsupportedOperationException("Implement me");
+  }
 
   @Override
   public final Request request() {

@@ -34,6 +34,7 @@ import objectos.http.server.Response;
 import objectos.util.GrowableList;
 import org.testng.annotations.Test;
 
+@SuppressWarnings("resource")
 public class HttpExchangeHandleTest {
 
   @Test

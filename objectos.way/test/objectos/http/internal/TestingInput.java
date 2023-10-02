@@ -58,7 +58,7 @@ public interface TestingInput {
     exchange.buffer = new byte[512];
     exchange.bufferIndex = -1;
     exchange.bufferLimit = -1;
-    exchange.keepAlive = false;
+    exchange.keepAlive = true;
     exchange.error = null;
     exchange.handlerSupplier = TestingHandler.INSTANCE;
     exchange.method = null;

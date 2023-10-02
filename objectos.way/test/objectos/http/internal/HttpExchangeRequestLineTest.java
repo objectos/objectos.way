@@ -23,6 +23,7 @@ import java.util.Arrays;
 import java.util.List;
 import org.testng.annotations.Test;
 
+@SuppressWarnings("resource")
 public class HttpExchangeRequestLineTest {
 
   @Test
@@ -40,7 +41,7 @@ public class HttpExchangeRequestLineTest {
     assertEquals(exchange.bufferIndex, "GET / HTTP/1.1\r\n".length());
     assertEquals(exchange.bufferLimit, Http001.INPUT.requestLength());
     assertEquals(exchange.error, null);
-    assertEquals(exchange.keepAlive, false);
+    assertEquals(exchange.keepAlive, true);
     // expect correct method
     assertEquals(exchange.method, HttpMethod.GET);
     assertEquals(exchange.requestHeaders, null);
@@ -73,7 +74,7 @@ public class HttpExchangeRequestLineTest {
     assertEquals(exchange.bufferIndex, "POST /login HTTP/1.1\r\n".length());
     assertEquals(exchange.bufferLimit, Http006.INPUT.requestLength());
     assertEquals(exchange.error, null);
-    assertEquals(exchange.keepAlive, false);
+    assertEquals(exchange.keepAlive, true);
     // expect correct method
     assertEquals(exchange.method, HttpMethod.POST);
     assertEquals(exchange.requestHeaders, null);

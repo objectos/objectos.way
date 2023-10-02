@@ -24,6 +24,7 @@ import java.util.Map;
 import objectos.http.Http;
 import org.testng.annotations.Test;
 
+@SuppressWarnings("resource")
 public class HttpExchangeOutputTest {
 
   @Test

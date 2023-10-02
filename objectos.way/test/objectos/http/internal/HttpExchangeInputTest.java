@@ -24,6 +24,7 @@ import java.net.Socket;
 import objectos.lang.Note1;
 import org.testng.annotations.Test;
 
+@SuppressWarnings("resource")
 public class HttpExchangeInputTest {
 
   @Test
@@ -40,7 +41,7 @@ public class HttpExchangeInputTest {
     assertEquals(exchange.bufferIndex, 0);
     assertEquals(exchange.bufferLimit, Http001.INPUT.requestLength());
     assertEquals(exchange.error, null);
-    assertEquals(exchange.keepAlive, false);
+    assertEquals(exchange.keepAlive, true);
     assertEquals(exchange.method, null);
     assertEquals(exchange.requestHeaders, null);
     assertEquals(exchange.requestHeaderName, null);
