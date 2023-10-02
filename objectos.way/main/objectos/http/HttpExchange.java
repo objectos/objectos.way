@@ -75,4 +75,12 @@ public sealed interface HttpExchange extends AutoCloseable
    */
   Http.Method method();
 
+  boolean hasResponse();
+
+  void status(Http.Status status);
+
+  void header(Http.Header.Name name, String value);
+
+  void body(byte[] data);
+
 }

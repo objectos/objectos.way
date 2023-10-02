@@ -178,7 +178,7 @@ public final class HttpExchange implements Exchange, Runnable, objectos.http.Htt
       return;
     }
 
-    while (state < _HANDLE) {
+    while (state < _HANDLE_INVOKE) {
       stepOne();
     }
 
@@ -201,10 +201,55 @@ public final class HttpExchange implements Exchange, Runnable, objectos.http.Htt
 
   @Override
   public final Method method() {
-    Check.state(state == _HANDLE,
-      "Request has not been parsed yet or response has already been sent.");
+    checkStateHandle();
 
     return method;
+  }
+
+  @Override
+  public final boolean hasResponse() {
+    checkStateHandle();
+
+    return status != null;
+  }
+
+  @Override
+  public final void status(Http.Status status) {
+    Check.notNull(status, "status == null");
+
+    checkStateHandle();
+
+    this.status = status;
+  }
+
+  @Override
+  public final void header(Http.Header.Name name, String value) {
+    Check.notNull(name, "name == null");
+    Check.notNull(value, "value == null");
+
+    checkStateHandle();
+
+    HttpResponseHeader header;
+    header = new HttpResponseHeader(name, value);
+
+    responseHeaders.add(header);
+  }
+
+  @Override
+  public final void body(byte[] data) {
+    Check.notNull(data, "data == null");
+
+    checkStateHandle();
+
+    responseBody = data;
+  }
+
+  private void checkStateHandle() {
+    if (state != _HANDLE_INVOKE) {
+      throw new IllegalStateException(
+        "Request has not been parsed yet or response has already been sent."
+      );
+    }
   }
 
   @Override

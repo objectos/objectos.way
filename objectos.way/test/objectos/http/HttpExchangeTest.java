@@ -16,9 +16,12 @@
 package objectos.http;
 
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertTrue;
 
 import java.io.IOException;
+import java.time.ZonedDateTime;
+import objectos.http.internal.Bytes;
 import objectos.http.internal.Http001;
 import objectos.http.internal.TestableSocket;
 import objectos.http.internal.TestingInput.RegularInput;
@@ -40,6 +43,26 @@ public class HttpExchangeTest {
       exchange.executeRequestPhase();
 
       assertEquals(exchange.method(), Http.Method.GET);
+
+      assertFalse(exchange.hasResponse());
+
+      byte[] bytes;
+      bytes = Bytes.utf8("Hello World!\n");
+
+      exchange.status(Http.Status.OK_200);
+
+      exchange.header(Http.Header.CONTENT_TYPE, "text/plain; charset=utf-8");
+
+      exchange.header(Http.Header.CONTENT_LENGTH, Long.toString(bytes.length));
+
+      ZonedDateTime date;
+      date = ZonedDateTime.now();
+
+      exchange.header(Http.Header.DATE, Http.formatDate(date));
+
+      exchange.body(bytes);
+
+      assertTrue(exchange.hasResponse());
     }
   }
 
