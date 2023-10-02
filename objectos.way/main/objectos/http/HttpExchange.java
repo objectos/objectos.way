@@ -23,6 +23,10 @@ import objectos.lang.Check;
 import objectos.lang.NoOpNoteSink;
 import objectos.lang.NoteSink;
 
+/**
+ * Represents the server-side view of an HTTP exchange. This class allows for
+ * writing an HTTP server.
+ */
 public sealed interface HttpExchange extends AutoCloseable
     permits objectos.http.internal.HttpExchange {
 
@@ -41,11 +45,34 @@ public sealed interface HttpExchange extends AutoCloseable
     return new objectos.http.internal.HttpExchange(bufferSize, handlerSupplier, noteSink, socket);
   }
 
+  /**
+   * Closes this exchange (and its underlying socket).
+   *
+   * @throws IOException
+   *         if an I/O error occurs
+   */
   @Override
   void close() throws IOException;
 
   boolean keepAlive();
 
-  void executeRequestPhase();
+  /**
+   * Parses the HTTP request.
+   *
+   * @throws IOException
+   *         if an I/O error occurs
+   */
+  void executeRequestPhase() throws IOException;
+
+  /**
+   * Returns the request HTTP method.
+   *
+   * @return the request HTTP method
+   *
+   * @throws IllegalStateException
+   *         if the request has not been parsed or if the response has already
+   *         been sent to the client.
+   */
+  Http.Method method();
 
 }

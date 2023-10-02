@@ -15,6 +15,7 @@
  */
 package objectos.http;
 
+import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
 
 import java.io.IOException;
@@ -31,10 +32,14 @@ public class HttpExchangeTest {
     input = Http001.INPUT;
 
     TestableSocket socket;
-    socket = TestableSocket.of(input);
+    socket = TestableSocket.of(input.request());
 
     try (HttpExchange exchange = HttpExchange.of(socket)) {
       assertTrue(exchange.keepAlive());
+
+      exchange.executeRequestPhase();
+
+      assertEquals(exchange.method(), Http.Method.GET);
     }
   }
 

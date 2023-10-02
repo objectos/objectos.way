@@ -25,10 +25,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
 import objectos.http.Http;
+import objectos.http.Http.Method;
 import objectos.http.server.Exchange;
 import objectos.http.server.Handler;
 import objectos.http.server.Request;
 import objectos.http.server.Response;
+import objectos.lang.Check;
 import objectos.lang.Note1;
 import objectos.lang.NoteSink;
 import objectos.util.GrowableList;
@@ -86,7 +88,7 @@ public final class HttpExchange implements Exchange, Runnable, objectos.http.Htt
   static final byte _RESULT_CLOSE = 24;
   static final byte _RESULT_ERROR_WRITE = 25;
 
-  static final byte _STOP = 0;
+  static final byte _STOP = 100;
 
   byte[] buffer;
 
@@ -170,8 +172,39 @@ public final class HttpExchange implements Exchange, Runnable, objectos.http.Htt
   }
 
   @Override
-  public final void executeRequestPhase() {
-    throw new UnsupportedOperationException("Implement me");
+  public final void executeRequestPhase() throws IOException {
+    if (state != _SETUP) {
+      // invalid initial state
+      return;
+    }
+
+    while (state < _HANDLE) {
+      stepOne();
+    }
+
+    if (error != null) {
+      if (error instanceof Error e) {
+        throw e;
+      }
+
+      if (error instanceof RuntimeException e) {
+        throw e;
+      }
+
+      if (error instanceof IOException e) {
+        throw e;
+      }
+
+      throw new IOException(error);
+    }
+  }
+
+  @Override
+  public final Method method() {
+    Check.state(state == _HANDLE,
+      "Request has not been parsed yet or response has already been sent.");
+
+    return method;
   }
 
   @Override
