@@ -22,6 +22,10 @@ import static org.testng.Assert.assertNull;
 import java.util.Arrays;
 import java.util.List;
 import objectos.http.server.Segments;
+import objectos.http.server.Segments.Segments1;
+import objectos.http.server.Segments.Segments2;
+import objectos.http.server.Segments.Segments3;
+import objectos.http.server.Segments.SegmentsN;
 import org.testng.annotations.Test;
 
 @SuppressWarnings("resource")
@@ -394,23 +398,42 @@ public class HttpExchangeRequestLineTest {
     HttpExchange exchange;
     exchange = new HttpExchange();
 
-    byte[] bytes;
-    bytes = "GET / HTTP/1.1".getBytes();
+    record Data(String requestLine, String path, Segments segments) {}
 
-    exchange.buffer = bytes;
-    exchange.bufferIndex = 5;
-    exchange.bufferLimit = bytes.length;
-    exchange.requestTargetStart = 4;
-    exchange.state = HttpExchange._REQUEST_LINE_PATH;
+    List<Data> dataList = List.of(
+      new Data("GET / HTTP/1.1", "/", new Segments1("")),
+      new Data("GET /index.html HTTP/1.1", "/index.html", new Segments1("index.html")),
+      new Data("GET /foo/bar HTTP/1.1", "/foo/bar", new Segments2("foo", "bar")),
+      new Data("GET //bar HTTP/1.1", "//bar", new Segments2("", "bar")),
+      new Data("GET /foo/ HTTP/1.1", "/foo/", new Segments2("foo", "")),
+      new Data("GET /a/b/c HTTP/1.1", "/a/b/c", new Segments3("a", "b", "c")),
+      new Data("GET /a/b/c/d/e/f HTTP/1.1", "/a/b/c/d/e/f",
+        new SegmentsN(List.of("a", "b", "c", "d", "e", "f")))
+    );
 
-    exchange.stepOne();
+    for (var data : dataList) {
+      String requestLine;
+      requestLine = data.requestLine;
 
-    assertEquals(exchange.bufferIndex, 6);
-    assertNotNull(exchange.requestTarget);
-    assertEquals(exchange.requestTarget.start(), 4);
-    assertEquals(exchange.requestTarget.end(), 5);
-    assertEquals(exchange.segments, new Segments.Segments1(""));
-    assertEquals(exchange.state, HttpExchange._REQUEST_LINE_VERSION);
+      byte[] bytes;
+      bytes = requestLine.getBytes();
+
+      exchange.buffer = bytes;
+      exchange.bufferIndex = 5;
+      exchange.bufferLimit = bytes.length;
+      exchange.requestTargetStart = 4;
+      exchange.segments = null;
+      exchange.state = HttpExchange._REQUEST_LINE_PATH;
+
+      exchange.stepOne();
+
+      assertEquals(exchange.bufferIndex, 5 + data.path.length());
+      assertNotNull(exchange.requestTarget);
+      assertEquals(exchange.requestTarget.start(), 4);
+      assertEquals(exchange.requestTarget.end(), 5 + data.path.length() - 1);
+      assertEquals(exchange.segments, data.segments);
+      assertEquals(exchange.state, HttpExchange._REQUEST_LINE_VERSION);
+    }
   }
 
   @Test(description = """
