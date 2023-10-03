@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.EnumMap;
 import java.util.List;
@@ -30,6 +31,7 @@ import objectos.http.server.Exchange;
 import objectos.http.server.Handler;
 import objectos.http.server.Request;
 import objectos.http.server.Response;
+import objectos.http.server.Segments;
 import objectos.lang.Check;
 import objectos.lang.Note1;
 import objectos.lang.NoteSink;
@@ -119,6 +121,8 @@ public final class HttpExchange implements Exchange, Runnable, objectos.http.Htt
 
   HttpRequestTarget requestTarget;
 
+  int requestTargetStart;
+
   private HttpResponse response;
 
   Object responseBody;
@@ -126,6 +130,8 @@ public final class HttpExchange implements Exchange, Runnable, objectos.http.Htt
   List<HttpResponseHeader> responseHeaders;
 
   int responseHeadersIndex;
+
+  Segments segments;
 
   Socket socket;
 
@@ -214,6 +220,13 @@ public final class HttpExchange implements Exchange, Runnable, objectos.http.Htt
   }
 
   @Override
+  public final Segments segments() {
+    checkStateHandle();
+
+    return segments;
+  }
+
+  @Override
   public final boolean hasResponse() {
     checkStateHandle();
 
@@ -262,6 +275,8 @@ public final class HttpExchange implements Exchange, Runnable, objectos.http.Htt
     }
 
     requestTarget = null;
+
+    segments = null;
 
     state = _OUTPUT;
 
@@ -446,6 +461,8 @@ public final class HttpExchange implements Exchange, Runnable, objectos.http.Htt
       }
 
       requestTarget = null;
+
+      segments = null;
     }
   }
 
@@ -1079,40 +1096,15 @@ public final class HttpExchange implements Exchange, Runnable, objectos.http.Htt
       b = bufferGet(index);
 
       switch (b) {
-        /*
-        case Bytes.SOLIDUS -> {
-          int length;
-          length = index - pathStart;
-
-          String value;
-          value = new String(buffer, pathStart, length, StandardCharsets.UTF_8);
-
-          if (segments == null) {
-            segments = new Segments.Segments1(value);
-          } else {
-            segments = segments.append(value);
-          }
-
-          // bufferIndex immediately after the '/' char
-
-          bufferIndex = index + 1;
-        }
-        */
+        case Bytes.SOLIDUS -> requestLinePathSegment(index);
 
         case Bytes.SP -> {
 
           // SP found, store the indices
 
-          // include the first '/'
+          requestTarget = new HttpRequestTarget(buffer, requestTargetStart, index);
 
-          int start;
-          start = pathStart - 1;
-
-          requestTarget = new HttpRequestTarget(buffer, start, index);
-
-          // bufferIndex immediately after the SP char
-
-          bufferIndex = index + 1;
+          requestLinePathSegment(index);
 
           return _REQUEST_LINE_VERSION;
         }
@@ -1123,6 +1115,21 @@ public final class HttpExchange implements Exchange, Runnable, objectos.http.Htt
     // Read more data if possible
 
     return toInputReadIfPossible(state, HttpStatus.URI_TOO_LONG);
+  }
+
+  private void requestLinePathSegment(int index) {
+    String value;
+    value = new String(buffer, bufferIndex, index - bufferIndex, StandardCharsets.UTF_8);
+
+    if (segments == null) {
+      segments = new Segments.Segments1(value);
+    } else {
+      segments = segments.append(value);
+    }
+
+    // bufferIndex immediately after the last read char
+
+    bufferIndex = index + 1;
   }
 
   private byte requestLineTarget() {
@@ -1142,6 +1149,8 @@ public final class HttpExchange implements Exchange, Runnable, objectos.http.Htt
       // first char IS NOT '/' => BAD_REQUEST
       return toClientError(HttpStatus.BAD_REQUEST);
     }
+
+    requestTargetStart = targetStart;
 
     // bufferIndex immediately after the '/' char
 

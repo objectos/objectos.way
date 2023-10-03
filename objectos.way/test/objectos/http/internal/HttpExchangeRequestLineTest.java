@@ -21,6 +21,7 @@ import static org.testng.Assert.assertNull;
 
 import java.util.Arrays;
 import java.util.List;
+import objectos.http.server.Segments;
 import org.testng.annotations.Test;
 
 @SuppressWarnings("resource")
@@ -387,6 +388,7 @@ public class HttpExchangeRequestLineTest {
 
   - bufferIndex should be after SP
   - requestTarget should contain the correct indices
+  - segments should have been created correctly
   """)
   public void requestLinePath() {
     HttpExchange exchange;
@@ -398,6 +400,7 @@ public class HttpExchangeRequestLineTest {
     exchange.buffer = bytes;
     exchange.bufferIndex = 5;
     exchange.bufferLimit = bytes.length;
+    exchange.requestTargetStart = 4;
     exchange.state = HttpExchange._REQUEST_LINE_PATH;
 
     exchange.stepOne();
@@ -406,6 +409,7 @@ public class HttpExchangeRequestLineTest {
     assertNotNull(exchange.requestTarget);
     assertEquals(exchange.requestTarget.start(), 4);
     assertEquals(exchange.requestTarget.end(), 5);
+    assertEquals(exchange.segments, new Segments.Segments1(""));
     assertEquals(exchange.state, HttpExchange._REQUEST_LINE_VERSION);
   }
 

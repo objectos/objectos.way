@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.net.Socket;
 import java.util.function.Supplier;
 import objectos.http.server.Handler;
+import objectos.http.server.Segments;
 import objectos.lang.Check;
 import objectos.lang.NoOpNoteSink;
 import objectos.lang.NoteSink;
@@ -74,6 +75,8 @@ public sealed interface HttpExchange extends AutoCloseable
    *         been sent to the client.
    */
   Http.Method method();
+
+  Segments segments();
 
   /**
    * Sends the configured response to the remote client.
