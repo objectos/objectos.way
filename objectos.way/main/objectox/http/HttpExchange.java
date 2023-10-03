@@ -119,7 +119,7 @@ public final class HttpExchange implements Exchange, Runnable, objectos.http.Htt
 
   Map<HeaderName, HeaderValue> requestHeaders;
 
-  HttpRequestTarget requestTarget;
+  HttpRequestPath requestTarget;
 
   int requestTargetStart;
 
@@ -1102,7 +1102,7 @@ public final class HttpExchange implements Exchange, Runnable, objectos.http.Htt
 
           // SP found, store the indices
 
-          requestTarget = new HttpRequestTarget(buffer, requestTargetStart, index);
+          requestTarget = new HttpRequestPath(buffer, requestTargetStart, index);
 
           requestLinePathSegment(index);
 

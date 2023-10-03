@@ -429,8 +429,8 @@ public class HttpExchangeRequestLineTest {
 
       assertEquals(exchange.bufferIndex, 5 + data.path.length());
       assertNotNull(exchange.requestTarget);
-      assertEquals(exchange.requestTarget.start(), 4);
-      assertEquals(exchange.requestTarget.end(), 5 + data.path.length() - 1);
+      assertEquals(exchange.requestTarget.start, 4);
+      assertEquals(exchange.requestTarget.end, 5 + data.path.length() - 1);
       assertEquals(exchange.segments, data.segments);
       assertEquals(exchange.state, HttpExchange._REQUEST_LINE_VERSION);
     }
