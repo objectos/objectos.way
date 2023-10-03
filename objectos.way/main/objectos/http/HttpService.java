@@ -19,12 +19,12 @@ import java.io.IOException;
 import java.net.Socket;
 import java.net.SocketAddress;
 import java.util.function.Supplier;
-import objectos.http.internal.HttpExchange;
-import objectos.http.internal.ServerSocketThread;
-import objectos.http.internal.ServerSocketThreadAdapter;
 import objectos.http.server.Handler;
 import objectos.lang.Check;
 import objectos.lang.NoteSink;
+import objectox.http.HttpExchange;
+import objectox.http.ServerSocketThread;
+import objectox.http.ServerSocketThreadAdapter;
 
 /**
  *

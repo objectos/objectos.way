@@ -13,23 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.http.server;
+package objectox.http;
 
-import objectos.http.Http.Header.Name;
-import objectos.http.Http.Header.Value;
-import objectox.http.HttpRequestBody;
-import objectos.http.Http.Method;
+import objectos.lang.NoOpNoteSink;
+import objectos.lang.Note;
 
-public interface Request {
+class TestableNoteSink extends NoOpNoteSink {
 
-  sealed interface Body permits HttpRequestBody {}
-
-  Body body();
-
-  Value header(Name name);
-
-  Method method();
-
-  String path();
+  @Override
+  public boolean isEnabled(Note note) {
+    return true;
+  }
 
 }

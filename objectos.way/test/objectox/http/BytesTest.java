@@ -13,23 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.http.server;
+package objectox.http;
 
-import objectos.http.Http.Header.Name;
-import objectos.http.Http.Header.Value;
-import objectox.http.HttpRequestBody;
-import objectos.http.Http.Method;
+import static org.testng.Assert.assertEquals;
 
-public interface Request {
+import org.testng.annotations.Test;
 
-  sealed interface Body permits HttpRequestBody {}
+public class BytesTest {
 
-  Body body();
+  @Test
+  public void toLowerCase() {
+    byte[] in = {'A', 'B', 'C', 'a', 'b', 'c'};
+    byte[] ou = {'a', 'b', 'c', 'a', 'b', 'c'};
 
-  Value header(Name name);
+    for (int i = 0; i < in.length; i++) {
+      byte input = in[i];
 
-  Method method();
+      byte res = Bytes.toLowerCase(input);
 
-  String path();
+      assertEquals(res, ou[i]);
+    }
+  }
 
 }

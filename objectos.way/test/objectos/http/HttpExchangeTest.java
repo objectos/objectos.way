@@ -21,10 +21,10 @@ import static org.testng.Assert.assertTrue;
 
 import java.io.IOException;
 import java.time.ZonedDateTime;
-import objectos.http.internal.Bytes;
-import objectos.http.internal.Http001;
-import objectos.http.internal.TestableSocket;
-import objectos.http.internal.TestingInput.RegularInput;
+import objectox.http.Bytes;
+import objectox.http.Http001;
+import objectox.http.TestableSocket;
+import objectox.http.TestingInput.RegularInput;
 import org.testng.annotations.Test;
 
 public class HttpExchangeTest {

@@ -29,7 +29,7 @@ import objectos.lang.NoteSink;
  * writing an HTTP server.
  */
 public sealed interface HttpExchange extends AutoCloseable
-    permits objectos.http.internal.HttpExchange {
+    permits objectox.http.HttpExchange {
 
   static HttpExchange of(Socket socket) {
     Check.notNull(socket, "socket == null");
@@ -43,7 +43,7 @@ public sealed interface HttpExchange extends AutoCloseable
     NoteSink noteSink;
     noteSink = NoOpNoteSink.getInstance();
 
-    return new objectos.http.internal.HttpExchange(bufferSize, handlerSupplier, noteSink, socket);
+    return new objectox.http.HttpExchange(bufferSize, handlerSupplier, noteSink, socket);
   }
 
   /**

@@ -13,23 +13,4 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.http.server;
-
-import objectos.http.Http.Header.Name;
-import objectos.http.Http.Header.Value;
-import objectox.http.HttpRequestBody;
-import objectos.http.Http.Method;
-
-public interface Request {
-
-  sealed interface Body permits HttpRequestBody {}
-
-  Body body();
-
-  Value header(Name name);
-
-  Method method();
-
-  String path();
-
-}
+package objectox.http;

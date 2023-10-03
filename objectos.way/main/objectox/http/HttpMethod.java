@@ -13,23 +13,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.http.server;
+package objectox.http;
 
-import objectos.http.Http.Header.Name;
-import objectos.http.Http.Header.Value;
-import objectox.http.HttpRequestBody;
-import objectos.http.Http.Method;
+import java.nio.charset.StandardCharsets;
+import objectos.http.Http;
 
-public interface Request {
+public enum HttpMethod implements Http.Method {
 
-  sealed interface Body permits HttpRequestBody {}
+  CONNECT,
 
-  Body body();
+  DELETE,
 
-  Value header(Name name);
+  GET,
 
-  Method method();
+  HEAD,
 
-  String path();
+  OPTIONS,
+
+  PATCH,
+
+  POST,
+
+  PUT,
+
+  TRACE;
+
+  final byte[] nameAndSpace = (name() + " ").getBytes(StandardCharsets.UTF_8);
 
 }

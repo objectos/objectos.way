@@ -13,23 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.http.server;
+package objectox.http;
 
-import objectos.http.Http.Header.Name;
-import objectos.http.Http.Header.Value;
-import objectox.http.HttpRequestBody;
-import objectos.http.Http.Method;
+import java.nio.charset.StandardCharsets;
+import objectos.http.Http;
 
-public interface Request {
+record HttpResponseHeader(Http.Header.Name name, String value) {
 
-  sealed interface Body permits HttpRequestBody {}
+  public final byte[] bytes() {
+    String text;
+    text = toString() + "\r\n";
 
-  Body body();
+    return text.getBytes(StandardCharsets.UTF_8);
+  }
 
-  Value header(Name name);
-
-  Method method();
-
-  String path();
+  @Override
+  public final String toString() {
+    return name.capitalized() + ": " + value;
+  }
 
 }

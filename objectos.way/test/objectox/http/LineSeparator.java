@@ -13,23 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.http.server;
+package objectox.http;
 
-import objectos.http.Http.Header.Name;
-import objectos.http.Http.Header.Value;
-import objectox.http.HttpRequestBody;
-import objectos.http.Http.Method;
+public enum LineSeparator {
 
-public interface Request {
+  CRLF,
 
-  sealed interface Body permits HttpRequestBody {}
+  LF,
 
-  Body body();
-
-  Value header(Name name);
-
-  Method method();
-
-  String path();
+  MIXED;
 
 }

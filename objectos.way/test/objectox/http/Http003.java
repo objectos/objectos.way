@@ -13,23 +13,32 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.http.server;
+package objectox.http;
 
-import objectos.http.Http.Header.Name;
-import objectos.http.Http.Header.Value;
-import objectox.http.HttpRequestBody;
-import objectos.http.Http.Method;
+import objectos.http.server.Exchange;
+import objectos.http.server.Handler;
+import objectox.http.TestingInput.RegularInput;
 
-public interface Request {
+/**
+ * Unknown request headers
+ */
+public final class Http003 implements Handler {
 
-  sealed interface Body permits HttpRequestBody {}
+  public static final RegularInput INPUT = new RegularInput(
+    """
+    GET / HTTP/1.1
+    Host: www.example.com
+    Connection: close
+    Foo: Bar
 
-  Body body();
+    """.replace("\n", "\r\n")
+  );
 
-  Value header(Name name);
+  public static final String OUTPUT = Http001.OUTPUT;
 
-  Method method();
-
-  String path();
+  @Override
+  public final void handle(Exchange exchange) {
+    throw new UnsupportedOperationException();
+  }
 
 }

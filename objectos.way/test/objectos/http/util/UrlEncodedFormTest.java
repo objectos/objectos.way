@@ -17,8 +17,8 @@ package objectos.http.util;
 
 import static org.testng.Assert.assertEquals;
 
-import objectos.http.internal.Bytes;
-import objectos.http.internal.InBufferRequestBody;
+import objectox.http.Bytes;
+import objectox.http.InBufferRequestBody;
 import org.testng.annotations.Test;
 
 public class UrlEncodedFormTest {

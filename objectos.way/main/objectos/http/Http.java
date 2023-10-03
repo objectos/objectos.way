@@ -23,9 +23,9 @@ import java.time.temporal.ChronoField;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
-import objectos.http.internal.HeaderName;
-import objectos.http.internal.HttpMethod;
-import objectos.http.internal.HttpStatus;
+import objectox.http.HeaderName;
+import objectox.http.HttpMethod;
+import objectox.http.HttpStatus;
 
 public final class Http {
 
@@ -68,7 +68,7 @@ public final class Http {
 
   }
 
-  public sealed interface Method permits objectos.http.internal.HttpMethod {
+  public sealed interface Method permits objectox.http.HttpMethod {
 
     Method GET = HttpMethod.GET;
 
@@ -76,11 +76,13 @@ public final class Http {
 
   }
 
-  public sealed interface Status permits objectos.http.internal.HttpStatus {
+  public sealed interface Status permits objectox.http.HttpStatus {
 
     Status OK_200 = HttpStatus.OK;
 
     Status INTERNAL_SERVER_ERROR_500 = HttpStatus.INTERNAL_SERVER_ERROR;
+
+    Status MOVED_PERMANENTLY_301 = HttpStatus.MOVED_PERMANENTLY;
 
     Status SEE_OTHER_303 = HttpStatus.SEE_OTHER;
 

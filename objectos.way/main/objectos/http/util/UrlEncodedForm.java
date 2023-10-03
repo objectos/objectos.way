@@ -15,11 +15,11 @@
  */
 package objectos.http.util;
 
-import objectos.http.internal.Bytes;
-import objectos.http.internal.InBufferRequestBody;
 import objectos.http.server.Request.Body;
 import objectos.util.GrowableMap;
 import objectos.util.UnmodifiableMap;
+import objectox.http.Bytes;
+import objectox.http.InBufferRequestBody;
 
 public final class UrlEncodedForm {
 

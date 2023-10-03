@@ -13,23 +13,50 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.http.server;
+package objectox.http;
 
+import java.util.Map;
 import objectos.http.Http.Header.Name;
 import objectos.http.Http.Header.Value;
-import objectox.http.HttpRequestBody;
 import objectos.http.Http.Method;
+import objectos.http.server.Request;
 
-public interface Request {
+final class HttpRequest implements Request {
 
-  sealed interface Body permits HttpRequestBody {}
+  private final HttpExchange outer;
 
-  Body body();
+  HttpRequest(HttpExchange outer) {
+    this.outer = outer;
+  }
 
-  Value header(Name name);
+  @Override
+  public final Value header(Name name) {
+    Map<HeaderName, HeaderValue> map;
+    map = outer.requestHeaders;
 
-  Method method();
+    Value value;
+    value = map.get(name);
 
-  String path();
+    if (value == null) {
+      value = Value.NULL;
+    }
+
+    return value;
+  }
+
+  @Override
+  public final Method method() {
+    return outer.method;
+  }
+
+  @Override
+  public final String path() {
+    return outer.requestTarget.toString();
+  }
+
+  @Override
+  public final Body body() {
+    return outer.requestBody;
+  }
 
 }
