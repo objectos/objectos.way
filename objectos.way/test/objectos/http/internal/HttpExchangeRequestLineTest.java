@@ -313,10 +313,7 @@ public class HttpExchangeRequestLineTest {
   }
 
   @Test(description = """
-  [#434] HTTP 001: REQUEST_LINE_TARGET --> REQUEST_LINE_VERSION
-
-  - bufferIndex should be after SP
-  - requestTarget should contain the correct indices
+  [#516] HTTP 001: REQUEST_LINE_TARGET --> REQUEST_LINE_PATH
   """)
   public void requestLineTarget() {
     HttpExchange exchange;
@@ -325,6 +322,7 @@ public class HttpExchangeRequestLineTest {
     byte[] bytes;
     bytes = "GET / HTTP/1.1".getBytes();
 
+    // buffer is full
     exchange.buffer = bytes;
     exchange.bufferIndex = 4;
     exchange.bufferLimit = bytes.length;
@@ -332,26 +330,22 @@ public class HttpExchangeRequestLineTest {
 
     exchange.stepOne();
 
-    assertEquals(exchange.bufferIndex, 6);
-    assertNotNull(exchange.requestTarget);
-    assertEquals(exchange.requestTarget.start(), 4);
-    assertEquals(exchange.requestTarget.end(), 5);
-    assertEquals(exchange.state, HttpExchange._REQUEST_LINE_VERSION);
+    assertEquals(exchange.bufferIndex, 5);
+    assertNull(exchange.requestTarget);
+    assertEquals(exchange.state, HttpExchange._REQUEST_LINE_PATH);
   }
 
   @Test(description = """
-  [#435] HTTP 001: REQUEST_LINE_TARGET --> INPUT_READ
-
-  - bufferIndex should not have been updated
+  [#516] HTTP 001: REQUEST_LINE_TARGET --> INPUT_READ
   """)
   public void requestLineTargetToInputRead() {
     HttpExchange exchange;
     exchange = new HttpExchange();
 
     byte[] bytes;
-    bytes = "GET /".getBytes();
+    bytes = "GET ".getBytes();
 
-    // buffer is not full
+    // buffer is NOT full
     exchange.buffer = Arrays.copyOf(bytes, bytes.length + 1);
     exchange.bufferIndex = 4;
     exchange.bufferLimit = bytes.length;
@@ -365,14 +359,14 @@ public class HttpExchangeRequestLineTest {
   }
 
   @Test(description = """
-  [#436] HTTP 001: REQUEST_LINE_TARGET --> CLIENT_ERROR::URI_TOO_LONG
+  [#516] HTTP 001: REQUEST_LINE_TARGET --> CLIENT_ERROR::BAD_REQUEST
   """)
-  public void requestLineTargetToClientErrorUriTooLong() {
+  public void requestLineTargetToClientErrorBadRequest() {
     HttpExchange exchange;
     exchange = new HttpExchange();
 
     byte[] bytes;
-    bytes = "GET /attack!".getBytes();
+    bytes = "GET foo/bar HTTP/1.1".getBytes();
 
     // buffer is full
     exchange.buffer = bytes;
@@ -383,6 +377,82 @@ public class HttpExchangeRequestLineTest {
     exchange.stepOne();
 
     assertEquals(exchange.bufferIndex, 4);
+    assertNull(exchange.requestTarget);
+    assertEquals(exchange.state, HttpExchange._CLIENT_ERROR);
+    assertEquals(exchange.status, HttpStatus.BAD_REQUEST);
+  }
+
+  @Test(description = """
+  [#434] HTTP 001: REQUEST_LINE_PATH --> REQUEST_LINE_VERSION
+
+  - bufferIndex should be after SP
+  - requestTarget should contain the correct indices
+  """)
+  public void requestLinePath() {
+    HttpExchange exchange;
+    exchange = new HttpExchange();
+
+    byte[] bytes;
+    bytes = "GET / HTTP/1.1".getBytes();
+
+    exchange.buffer = bytes;
+    exchange.bufferIndex = 5;
+    exchange.bufferLimit = bytes.length;
+    exchange.state = HttpExchange._REQUEST_LINE_PATH;
+
+    exchange.stepOne();
+
+    assertEquals(exchange.bufferIndex, 6);
+    assertNotNull(exchange.requestTarget);
+    assertEquals(exchange.requestTarget.start(), 4);
+    assertEquals(exchange.requestTarget.end(), 5);
+    assertEquals(exchange.state, HttpExchange._REQUEST_LINE_VERSION);
+  }
+
+  @Test(description = """
+  [#435] HTTP 001: REQUEST_LINE_PATH --> INPUT_READ
+
+  - bufferIndex should not have been updated
+  """)
+  public void requestLinePathToInputRead() {
+    HttpExchange exchange;
+    exchange = new HttpExchange();
+
+    byte[] bytes;
+    bytes = "GET /".getBytes();
+
+    // buffer is not full
+    exchange.buffer = Arrays.copyOf(bytes, bytes.length + 1);
+    exchange.bufferIndex = 5;
+    exchange.bufferLimit = bytes.length;
+    exchange.state = HttpExchange._REQUEST_LINE_TARGET;
+
+    exchange.stepOne();
+
+    assertEquals(exchange.bufferIndex, 5);
+    assertNull(exchange.requestTarget);
+    assertEquals(exchange.state, HttpExchange._INPUT_READ);
+  }
+
+  @Test(description = """
+  [#436] HTTP 001: REQUEST_LINE_PATH --> CLIENT_ERROR::URI_TOO_LONG
+  """)
+  public void requestLinePathToClientErrorUriTooLong() {
+    HttpExchange exchange;
+    exchange = new HttpExchange();
+
+    byte[] bytes;
+    bytes = "GET /attack!".getBytes();
+
+    // buffer is full
+    exchange.buffer = bytes;
+    exchange.bufferIndex = 5;
+    exchange.bufferLimit = bytes.length;
+    exchange.state = HttpExchange._REQUEST_LINE_PATH;
+
+    exchange.stepOne();
+
+    assertEquals(exchange.bufferIndex, 5);
     assertNull(exchange.requestTarget);
     assertEquals(exchange.state, HttpExchange._CLIENT_ERROR);
     assertEquals(exchange.status, HttpStatus.URI_TOO_LONG);

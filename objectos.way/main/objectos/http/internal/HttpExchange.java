@@ -54,39 +54,40 @@ public final class HttpExchange implements Exchange, Runnable, objectos.http.Htt
   static final byte _REQUEST_LINE_METHOD = 5;
   static final byte _REQUEST_LINE_METHOD_P = 6;
   static final byte _REQUEST_LINE_TARGET = 7;
-  static final byte _REQUEST_LINE_VERSION = 8;
+  static final byte _REQUEST_LINE_PATH = 8;
+  static final byte _REQUEST_LINE_VERSION = 9;
 
   // Input / Parse header phase
 
-  static final byte _PARSE_HEADER = 9;
-  static final byte _PARSE_HEADER_NAME = 10;
-  static final byte _PARSE_HEADER_NAME_CASE_INSENSITIVE = 11;
-  static final byte _PARSE_HEADER_VALUE = 12;
+  static final byte _PARSE_HEADER = 10;
+  static final byte _PARSE_HEADER_NAME = 11;
+  static final byte _PARSE_HEADER_NAME_CASE_INSENSITIVE = 12;
+  static final byte _PARSE_HEADER_VALUE = 13;
 
   // Input / Request Body
 
-  static final byte _REQUEST_BODY = 13;
+  static final byte _REQUEST_BODY = 14;
 
   // Handle phase
 
-  static final byte _HANDLE = 14;
-  static final byte _HANDLE_INVOKE = 15;
+  static final byte _HANDLE = 15;
+  static final byte _HANDLE_INVOKE = 16;
 
   // Output phase
 
-  static final byte _OUTPUT = 16;
-  static final byte _OUTPUT_BODY = 17;
-  static final byte _OUTPUT_BUFFER = 18;
-  static final byte _OUTPUT_HEADER = 19;
-  static final byte _OUTPUT_TERMINATOR = 20;
-  static final byte _OUTPUT_STATUS = 21;
-  static final byte _CLIENT_ERROR = 22;
+  static final byte _OUTPUT = 17;
+  static final byte _OUTPUT_BODY = 18;
+  static final byte _OUTPUT_BUFFER = 19;
+  static final byte _OUTPUT_HEADER = 20;
+  static final byte _OUTPUT_TERMINATOR = 21;
+  static final byte _OUTPUT_STATUS = 22;
+  static final byte _CLIENT_ERROR = 23;
 
   // Result phase
 
-  static final byte _RESULT = 23;
-  static final byte _RESULT_CLOSE = 24;
-  static final byte _RESULT_ERROR_WRITE = 25;
+  static final byte _RESULT = 24;
+  static final byte _RESULT_CLOSE = 25;
+  static final byte _RESULT_ERROR_WRITE = 26;
 
   static final byte _STOP = 100;
 
@@ -329,6 +330,7 @@ public final class HttpExchange implements Exchange, Runnable, objectos.http.Htt
       case _REQUEST_LINE_METHOD -> requestLineMethod();
       case _REQUEST_LINE_METHOD_P -> requestLineMethodP();
       case _REQUEST_LINE_TARGET -> requestLineTarget();
+      case _REQUEST_LINE_PATH -> requestLinePath();
       case _REQUEST_LINE_VERSION -> requestLineVersion();
 
       // Input / Parse Header phase
@@ -1066,26 +1068,54 @@ public final class HttpExchange implements Exchange, Runnable, objectos.http.Htt
     };
   }
 
-  private byte requestLineTarget() {
+  private byte requestLinePath() {
     // we will look for the first SP char
 
-    int targetStart;
-    targetStart = bufferIndex;
+    int pathStart;
+    pathStart = bufferIndex;
 
-    for (int index = targetStart; bufferHasIndex(index); index++) {
+    for (int index = pathStart; bufferHasIndex(index); index++) {
       byte b;
       b = bufferGet(index);
 
-      if (b == Bytes.SP) {
-        // SP found, store the indices
+      switch (b) {
+        /*
+        case Bytes.SOLIDUS -> {
+          int length;
+          length = index - pathStart;
 
-        requestTarget = new HttpRequestTarget(buffer, targetStart, index);
+          String value;
+          value = new String(buffer, pathStart, length, StandardCharsets.UTF_8);
 
-        // bufferIndex immediately after the SP char
+          if (segments == null) {
+            segments = new Segments.Segments1(value);
+          } else {
+            segments = segments.append(value);
+          }
 
-        bufferIndex = index + 1;
+          // bufferIndex immediately after the '/' char
 
-        return _REQUEST_LINE_VERSION;
+          bufferIndex = index + 1;
+        }
+        */
+
+        case Bytes.SP -> {
+
+          // SP found, store the indices
+
+          // include the first '/'
+
+          int start;
+          start = pathStart - 1;
+
+          requestTarget = new HttpRequestTarget(buffer, start, index);
+
+          // bufferIndex immediately after the SP char
+
+          bufferIndex = index + 1;
+
+          return _REQUEST_LINE_VERSION;
+        }
       }
     }
 
@@ -1093,6 +1123,31 @@ public final class HttpExchange implements Exchange, Runnable, objectos.http.Htt
     // Read more data if possible
 
     return toInputReadIfPossible(state, HttpStatus.URI_TOO_LONG);
+  }
+
+  private byte requestLineTarget() {
+    // we will check if the request target starts with a '/' char
+
+    int targetStart;
+    targetStart = bufferIndex;
+
+    if (!bufferHasIndex(targetStart)) {
+      return toInputRead(state);
+    }
+
+    byte b;
+    b = bufferGet(targetStart);
+
+    if (b != Bytes.SOLIDUS) {
+      // first char IS NOT '/' => BAD_REQUEST
+      return toClientError(HttpStatus.BAD_REQUEST);
+    }
+
+    // bufferIndex immediately after the '/' char
+
+    bufferIndex = targetStart + 1;
+
+    return _REQUEST_LINE_PATH;
   }
 
   private byte requestLineVersion() {

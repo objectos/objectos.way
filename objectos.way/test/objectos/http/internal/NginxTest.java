@@ -326,6 +326,21 @@ public class NginxTest {
   Content-Type: text/html
   Content-Length: 157
   Connection: close
+
+  ---
+
+  Target does not start with /
+
+  GET foo/bar HTTP/1.1
+  Host: localhost
+  Connection: close
+  
+  HTTP/1.1 400 Bad Request
+  Server: nginx/1.24.0
+  Date: Tue, 03 Oct 2023 13:49:35 GMT
+  Content-Type: text/html
+  Content-Length: 157
+  Connection: close
   
   */
 
@@ -333,13 +348,11 @@ public class NginxTest {
   public void getOk() throws IOException {
     try (Socket socket = new Socket(address, port)) {
       req(socket, """
-      POST /post HTTP/1.1
+      GET foo/bar HTTP/1.1
       Host: localhost
       Connection: close
-      Content-Length: -22
-      Content-Type: application/x-www-form-urlencoded
 
-      email=user@example.com""".replace("\n", "\r\n"));
+      """.replace("\n", "\r\n"));
 
       String resp;
       resp = resp(socket);
