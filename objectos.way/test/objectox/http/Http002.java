@@ -73,6 +73,21 @@ public final class Http002 implements Handler {
 
   static final Http002 INSTANCE = new Http002();
 
+  public static void response(HttpExchange exchange) {
+    exchange.status(Http.Status.OK_200);
+
+    exchange.header(Http.Header.CONTENT_TYPE, "text/plain; charset=utf-8");
+
+    exchange.header(Http.Header.DATE, Http.formatDate(DATE));
+
+    exchange.header(Http.Header.TRANSFER_ENCODING, "chunked");
+
+    ThisEntity entity;
+    entity = new ThisEntity();
+
+    exchange.body(entity, StandardCharsets.UTF_8);
+  }
+
   @Override
   public final void handle(Exchange exchange) {
     Response response;

@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
+import java.nio.charset.Charset;
 import java.util.Arrays;
 import java.util.EnumMap;
 import java.util.List;
@@ -31,6 +32,7 @@ import objectos.http.server.Exchange;
 import objectos.http.server.Handler;
 import objectos.http.server.Request;
 import objectos.http.server.Response;
+import objectos.lang.CharWritable;
 import objectos.lang.Check;
 import objectos.lang.Note1;
 import objectos.lang.NoteSink;
@@ -87,8 +89,6 @@ public final class HttpExchange implements Exchange, Runnable, objectos.http.Htt
   // Result phase
 
   static final byte _RESULT = 24;
-  static final byte _RESULT_CLOSE = 25;
-  static final byte _RESULT_ERROR_WRITE = 26;
 
   static final byte _STOP = 100;
 
@@ -154,7 +154,6 @@ public final class HttpExchange implements Exchange, Runnable, objectos.http.Htt
 
     this.socket = socket;
 
-    // keepAlive() must return true on the first call
     keepAlive = true;
 
     state = _SETUP;
@@ -166,13 +165,13 @@ public final class HttpExchange implements Exchange, Runnable, objectos.http.Htt
   HttpExchange() {}
 
   @Override
-  public final void close() throws IOException {
-    socket.close();
+  public final boolean active() {
+    return keepAlive;
   }
 
   @Override
-  public final boolean keepAlive() {
-    return keepAlive;
+  public final void close() throws IOException {
+    socket.close();
   }
 
   @Override
@@ -253,6 +252,10 @@ public final class HttpExchange implements Exchange, Runnable, objectos.http.Htt
 
     checkStateHandle();
 
+    if (name == HeaderName.CONNECTION && value.equalsIgnoreCase("close")) {
+      keepAlive = false;
+    }
+
     HttpResponseHeader header;
     header = new HttpResponseHeader(name, value);
 
@@ -269,6 +272,16 @@ public final class HttpExchange implements Exchange, Runnable, objectos.http.Htt
   }
 
   @Override
+  public final void body(CharWritable entity, Charset charset) {
+    Check.notNull(entity, "entity == null");
+    Check.notNull(charset, "charset == null");
+
+    checkStateHandle();
+
+    responseBody = new HttpChunkedChars(this, entity, charset);
+  }
+
+  @Override
   public final void executeResponsePhase() throws IOException {
     checkStateHandle();
 
@@ -282,7 +295,7 @@ public final class HttpExchange implements Exchange, Runnable, objectos.http.Htt
 
     state = _OUTPUT;
 
-    while (state < _RESULT) {
+    while (state <= _RESULT) {
       stepOne();
     }
 
@@ -321,8 +334,27 @@ public final class HttpExchange implements Exchange, Runnable, objectos.http.Htt
 
   @Override
   public final void run() {
-    while (isActive()) {
-      stepOne();
+    try (this) {
+      while (active()) {
+        executeRequestPhase();
+
+        if (hasResponse()) {
+          throw new UnsupportedOperationException("Implement me");
+        }
+
+        Handler handler;
+        handler = handlerSupplier.get();
+
+        handler.handle(this);
+
+        if (!hasResponse()) {
+          throw new UnsupportedOperationException("Implement me");
+        }
+
+        executeResponsePhase();
+      }
+    } catch (IOException e) {
+      e.printStackTrace();
     }
   }
 
@@ -377,7 +409,6 @@ public final class HttpExchange implements Exchange, Runnable, objectos.http.Htt
       // Result phase
 
       case _RESULT -> result();
-      case _RESULT_CLOSE -> resultClose();
 
       case _CLIENT_ERROR -> {
         throw new UnsupportedOperationException(
@@ -493,7 +524,9 @@ public final class HttpExchange implements Exchange, Runnable, objectos.http.Htt
     }
 
     if (bytesRead < 0) {
-      return _RESULT_CLOSE;
+      keepAlive = false;
+
+      return _RESULT;
     }
 
     bufferLimit += bytesRead;
@@ -509,56 +542,42 @@ public final class HttpExchange implements Exchange, Runnable, objectos.http.Htt
 
   private byte outputBody() {
     try {
-      return outputBody0();
-    } catch (IOException e) {
-      error = e;
+      OutputStream outputStream;
+      outputStream = socket.getOutputStream();
 
-      return _RESULT_ERROR_WRITE;
-    } finally {
-      bufferIndex = bufferLimit = -1;
+      // write headers + terminator
+      outputStream.write(buffer, 0, bufferLimit);
 
-      responseBody = null;
-
-      if (responseHeaders != null) {
-        responseHeaders.clear();
+      if (responseBody == null) {
+        return _RESULT;
       }
 
-      responseHeadersIndex = -1;
+      if (responseBody instanceof byte[] bytes) {
+        outputStream.write(bytes, 0, bytes.length);
 
-      status = null;
+        return _RESULT;
+      }
 
-      versionMajor = versionMinor = -1;
+      if (responseBody instanceof HttpChunkedChars entity) {
+        bufferLimit = 0;
+
+        entity.write();
+
+        return _RESULT;
+      }
+
+      throw new UnsupportedOperationException(
+        "Implement me :: type=" + responseBody.getClass()
+      );
+    } catch (IOException e) {
+      return toResult(e);
     }
   }
 
-  private byte outputBody0() throws IOException {
-    OutputStream outputStream;
-    outputStream = socket.getOutputStream();
+  private byte toResult(IOException e) {
+    error = e;
 
-    // write headers + terminator
-    outputStream.write(buffer, 0, bufferLimit);
-
-    if (responseBody == null) {
-      return _RESULT;
-    }
-
-    if (responseBody instanceof byte[] bytes) {
-      outputStream.write(bytes, 0, bytes.length);
-
-      return _RESULT;
-    }
-
-    if (responseBody instanceof HttpChunkedChars entity) {
-      bufferLimit = 0;
-
-      entity.write();
-
-      return _RESULT;
-    }
-
-    throw new UnsupportedOperationException(
-      "Implement me :: type=" + responseBody.getClass()
-    );
+    return _RESULT;
   }
 
   private byte outputBuffer() {
@@ -572,9 +591,7 @@ public final class HttpExchange implements Exchange, Runnable, objectos.http.Htt
 
       return nextAction;
     } catch (IOException e) {
-      error = e;
-
-      return _RESULT_ERROR_WRITE;
+      return toResult(e);
     }
   }
 
@@ -638,7 +655,16 @@ public final class HttpExchange implements Exchange, Runnable, objectos.http.Htt
 
       // TODO log irrecoverable error
 
-      return _RESULT_CLOSE;
+      error = new IOException("""
+      Buffer is not large enough to write out status line.
+
+      buffer.length=%d
+      requiredLength=%d
+
+      Please increase the internal buffer size
+      """.formatted(buffer.length, requiredLength));
+
+      return _RESULT;
     }
 
     byte[] bytes;
@@ -1235,23 +1261,29 @@ public final class HttpExchange implements Exchange, Runnable, objectos.http.Htt
   }
 
   private byte result() {
+    bufferIndex = bufferLimit = -1;
+
+    if (error != null) {
+      keepAlive = false;
+    }
+
+    responseBody = null;
+
+    if (responseHeaders != null) {
+      responseHeaders.clear();
+    }
+
+    responseHeadersIndex = -1;
+
+    status = null;
+
+    versionMajor = versionMinor = -1;
+
     if (keepAlive) {
       return _SETUP;
+    } else {
+      return _STOP;
     }
-
-    return resultClose();
-  }
-
-  private byte resultClose() {
-    try {
-      socket.close();
-    } catch (IOException e) {
-      throw new UnsupportedOperationException(
-        "We should log this"
-      );
-    }
-
-    return _STOP;
   }
 
   private byte setup() {
@@ -1299,7 +1331,7 @@ public final class HttpExchange implements Exchange, Runnable, objectos.http.Htt
 
     noteSink.send(EIO_READ_ERROR, e);
 
-    return _RESULT_CLOSE;
+    return _RESULT;
   }
 
   private byte toInputReadIfPossible(byte onRead, HttpStatus onBufferFull) {

@@ -38,7 +38,7 @@ public class HttpExchangeTest {
     socket = TestableSocket.of(input.request());
 
     try (HttpExchange exchange = HttpExchange.of(socket)) {
-      assertTrue(exchange.keepAlive());
+      assertTrue(exchange.active());
 
       exchange.executeRequestPhase();
 
@@ -68,7 +68,7 @@ public class HttpExchangeTest {
 
       exchange.executeResponsePhase();
 
-      assertFalse(exchange.keepAlive());
+      assertFalse(exchange.active());
     }
 
     assertEquals(socket.outputAsString(), Http001.OUTPUT);

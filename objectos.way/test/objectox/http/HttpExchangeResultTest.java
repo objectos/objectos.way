@@ -46,8 +46,6 @@ public class HttpExchangeResultTest {
     assertEquals(exchange.responseBody, null);
     assertEquals(exchange.responseHeaders, List.of());
     assertEquals(exchange.responseHeadersIndex, -1);
-    // socket closed
-    assertEquals(exchange.socket.isClosed(), true);
     assertEquals(exchange.state, HttpExchange._STOP);
     assertEquals(exchange.status, null);
     assertEquals(exchange.versionMajor, -1);
@@ -67,7 +65,6 @@ public class HttpExchangeResultTest {
 
     exchange.stepOne();
 
-    assertEquals(exchange.socket.isClosed(), true);
     assertEquals(exchange.state, HttpExchange._STOP);
   }
 
@@ -84,7 +81,6 @@ public class HttpExchangeResultTest {
 
     exchange.stepOne();
 
-    assertEquals(exchange.socket.isClosed(), false);
     assertEquals(exchange.state, HttpExchange._SETUP);
   }
 

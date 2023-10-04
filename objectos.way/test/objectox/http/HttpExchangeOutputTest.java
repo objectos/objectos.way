@@ -16,8 +16,10 @@
 package objectox.http;
 
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertSame;
 
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -28,17 +30,18 @@ import org.testng.annotations.Test;
 public class HttpExchangeOutputTest {
 
   @Test
-  public void http001() {
+  public void http001() throws IOException {
     HttpExchange exchange;
     exchange = new HttpExchange();
 
     Http001.INPUT.accept(exchange);
 
-    while (exchange.state < HttpExchange._RESULT) {
-      exchange.stepOne();
-    }
+    exchange.executeRequestPhase();
 
-    // buffer exhausted and reset
+    Http001.response(exchange);
+
+    exchange.executeResponsePhase();
+
     assertEquals(exchange.bufferIndex, -1);
     assertEquals(exchange.bufferLimit, -1);
     assertEquals(exchange.error, null);
@@ -51,7 +54,7 @@ public class HttpExchangeOutputTest {
     assertEquals(exchange.responseHeaders, List.of());
     assertEquals(exchange.responseHeadersIndex, -1);
     assertEquals(exchange.socket.isClosed(), false);
-    assertEquals(exchange.state, HttpExchange._RESULT);
+    assertEquals(exchange.state, HttpExchange._STOP);
     // status won't be used from this point forward
     assertEquals(exchange.status, null);
     // version won't be used from this point forward
@@ -65,15 +68,17 @@ public class HttpExchangeOutputTest {
   }
 
   @Test
-  public void http002() {
+  public void http002() throws IOException {
     HttpExchange exchange;
     exchange = new HttpExchange();
 
     Http002.INPUT.accept(exchange);
 
-    while (exchange.state < HttpExchange._RESULT) {
-      exchange.stepOne();
-    }
+    exchange.executeRequestPhase();
+
+    Http002.response(exchange);
+
+    exchange.executeResponsePhase();
 
     // buffer exhausted and reset
     assertEquals(exchange.bufferIndex, -1);
@@ -88,7 +93,7 @@ public class HttpExchangeOutputTest {
     assertEquals(exchange.responseHeaders, List.of());
     assertEquals(exchange.responseHeadersIndex, -1);
     assertEquals(exchange.socket.isClosed(), false);
-    assertEquals(exchange.state, HttpExchange._RESULT);
+    assertEquals(exchange.state, HttpExchange._STOP);
     // status won't be used from this point forward
     assertEquals(exchange.status, null);
     // version won't be used from this point forward
@@ -152,6 +157,31 @@ public class HttpExchangeOutputTest {
     assertEquals(exchange.bufferIndex, 0);
     assertEquals(exchange.bufferLimit, 17);
     assertEquals(exchange.state, HttpExchange._OUTPUT_HEADER);
+  }
+
+  @Test(description = """
+  [#522] OUTPUT_STATUS --> RESULT
+
+  - buffer not large enough for status line
+  """)
+  public void outputStatusToResult() {
+    HttpExchange exchange;
+    exchange = new HttpExchange();
+
+    exchange.buffer = new byte[3]; // too small
+    exchange.bufferIndex = 0;
+    exchange.bufferLimit = 0;
+    exchange.state = HttpExchange._OUTPUT_STATUS;
+    exchange.status = HttpStatus.OK;
+    exchange.versionMajor = 1;
+    exchange.versionMinor = 1;
+
+    exchange.stepOne();
+
+    assertEquals(exchange.bufferIndex, 0);
+    assertEquals(exchange.bufferLimit, 0);
+    assertNotNull(exchange.error);
+    assertEquals(exchange.state, HttpExchange._RESULT);
   }
 
   // OUTPUT_HEADER
@@ -276,7 +306,7 @@ public class HttpExchangeOutputTest {
 
     assertEquals(exchange.bufferLimit, 5);
     assertSame(exchange.error, socket.thrown);
-    assertEquals(exchange.state, HttpExchange._RESULT_ERROR_WRITE);
+    assertEquals(exchange.state, HttpExchange._RESULT);
   }
 
   @Test(description = """
@@ -299,7 +329,7 @@ public class HttpExchangeOutputTest {
 
     assertEquals(exchange.bufferLimit, 5);
     assertSame(exchange.error, socket.thrown);
-    assertEquals(exchange.state, HttpExchange._RESULT_ERROR_WRITE);
+    assertEquals(exchange.state, HttpExchange._RESULT);
   }
 
   // OUTPUT_TERMINATOR
@@ -397,7 +427,7 @@ public class HttpExchangeOutputTest {
     exchange.stepOne();
 
     assertEquals(exchange.error, socket.thrown);
-    assertEquals(exchange.state, HttpExchange._RESULT_ERROR_WRITE);
+    assertEquals(exchange.state, HttpExchange._RESULT);
   }
 
   private HttpResponseHeader hrh(Http.Header.Name name, String value) {

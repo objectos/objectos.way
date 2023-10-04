@@ -17,8 +17,10 @@ package objectos.http;
 
 import java.io.IOException;
 import java.net.Socket;
+import java.nio.charset.Charset;
 import java.util.function.Supplier;
 import objectos.http.server.Handler;
+import objectos.lang.CharWritable;
 import objectos.lang.Check;
 import objectos.lang.NoOpNoteSink;
 import objectos.lang.NoteSink;
@@ -54,7 +56,7 @@ public sealed interface HttpExchange extends AutoCloseable
   @Override
   void close() throws IOException;
 
-  boolean keepAlive();
+  boolean active();
 
   /**
    * Parses the HTTP request.
@@ -99,5 +101,7 @@ public sealed interface HttpExchange extends AutoCloseable
   void header(Http.Header.Name name, String value);
 
   void body(byte[] data);
+
+  void body(CharWritable entity, Charset charset);
 
 }

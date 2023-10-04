@@ -115,7 +115,7 @@ public class HttpExchangeInputTest {
     assertEquals(exchange.bufferIndex, 0);
     assertEquals(exchange.bufferLimit, 0);
     assertSame(exchange.error, error);
-    assertEquals(exchange.state, HttpExchange._RESULT_CLOSE);
+    assertEquals(exchange.state, HttpExchange._RESULT);
 
     assertSame(noteSink.note1, HttpExchange.EIO_READ_ERROR);
     assertSame(noteSink.value1, error);
@@ -157,7 +157,7 @@ public class HttpExchangeInputTest {
     assertEquals(exchange.bufferIndex, 0);
     assertEquals(exchange.bufferLimit, 0);
     assertSame(exchange.error, error);
-    assertEquals(exchange.state, HttpExchange._RESULT_CLOSE);
+    assertEquals(exchange.state, HttpExchange._RESULT);
 
     assertSame(noteSink.note1, HttpExchange.EIO_READ_ERROR);
     assertSame(noteSink.value1, error);
@@ -183,7 +183,7 @@ public class HttpExchangeInputTest {
 
     assertEquals(exchange.bufferIndex, 0);
     assertEquals(exchange.bufferLimit, 0);
-    assertEquals(exchange.state, HttpExchange._RESULT_CLOSE);
+    assertEquals(exchange.state, HttpExchange._RESULT);
   }
 
 }

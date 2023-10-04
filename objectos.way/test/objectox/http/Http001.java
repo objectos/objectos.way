@@ -56,6 +56,21 @@ public final class Http001 implements Handler {
 
   static final Http001 INSTANCE = new Http001();
 
+  public static void response(HttpExchange exchange) {
+    final byte[] bytes;
+    bytes = Bytes.utf8("Hello World!\n");
+
+    exchange.status(Http.Status.OK_200);
+
+    exchange.header(Http.Header.CONTENT_TYPE, "text/plain; charset=utf-8");
+
+    exchange.header(Http.Header.CONTENT_LENGTH, Long.toString(bytes.length));
+
+    exchange.header(Http.Header.DATE, Http.formatDate(DATE));
+
+    exchange.body(bytes);
+  }
+
   @Override
   public final void handle(Exchange exchange) {
     Response response;

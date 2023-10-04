@@ -17,6 +17,7 @@ package objectox.http;
 
 import static org.testng.Assert.assertEquals;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import org.testng.annotations.Test;
@@ -24,14 +25,16 @@ import org.testng.annotations.Test;
 public class HttpExchangeTest {
 
   @Test
-  public void http003() {
+  public void http003() throws IOException {
     HttpExchange exchange;
     exchange = new HttpExchange();
 
-    Http003.INPUT.accept(exchange);
+    try (exchange) {
+      Http003.INPUT.accept(exchange);
 
-    while (exchange.isActive()) {
-      exchange.stepOne();
+      while (exchange.isActive()) {
+        exchange.stepOne();
+      }
     }
 
     assertEquals(exchange.bufferIndex, -1);
@@ -58,14 +61,16 @@ public class HttpExchangeTest {
   }
 
   @Test
-  public void http004() {
+  public void http004() throws IOException {
     HttpExchange exchange;
     exchange = new HttpExchange();
 
-    Http004.INPUT.accept(exchange);
+    try (exchange) {
+      Http004.INPUT.accept(exchange);
 
-    while (exchange.isActive()) {
-      exchange.stepOne();
+      while (exchange.isActive()) {
+        exchange.stepOne();
+      }
     }
 
     assertEquals(exchange.bufferIndex, -1);
