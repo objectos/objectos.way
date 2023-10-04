@@ -429,7 +429,7 @@ public class HttpExchangeRequestLineTest {
 
       assertEquals(path.toString(), data.path);
       assertEquals(path.start, 4);
-      assertEquals(path.end, 5 + data.path.length() - 1);
+      assertEquals(path.end(), 5 + data.path.length() - 1);
 
       List<String> segments;
       segments = new ArrayList<>();

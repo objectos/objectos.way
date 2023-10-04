@@ -1090,10 +1090,6 @@ public final class HttpExchange implements Exchange, Runnable, objectos.http.Htt
 
         case Bytes.SP -> {
 
-          // SP found, store the indices
-
-          requestPath.end(index);
-
           requestLinePathSegment(index);
 
           return _REQUEST_LINE_VERSION;

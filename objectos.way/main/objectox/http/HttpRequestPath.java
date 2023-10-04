@@ -16,6 +16,7 @@
 package objectox.http;
 
 import java.nio.charset.StandardCharsets;
+import objectos.lang.Check;
 import objectos.util.IntArrays;
 
 final class HttpRequestPath {
@@ -23,8 +24,6 @@ final class HttpRequestPath {
   final byte[] buffer;
 
   final int start;
-
-  int end;
 
   int[] segments = new int[10];
 
@@ -35,7 +34,6 @@ final class HttpRequestPath {
   public HttpRequestPath(byte[] buffer, int start, int end) {
     this.buffer = buffer;
     this.start = start;
-    this.end = end;
   }
 
   public HttpRequestPath(byte[] buffer, int start) {
@@ -43,8 +41,15 @@ final class HttpRequestPath {
     this.start = start;
   }
 
-  public final void end(int value) {
-    end = value;
+  public final int end() {
+    Check.state(segmentsSize > 0, "no segments were defined");
+
+    int endIndex;
+    endIndex = segmentsSize * 2;
+
+    endIndex -= 1;
+
+    return segments[endIndex];
   }
 
   public final void segment(int start, int end) {
@@ -84,6 +89,9 @@ final class HttpRequestPath {
 
   @Override
   public final String toString() {
+    int end;
+    end = end();
+
     return new String(buffer, start, end - start, StandardCharsets.UTF_8);
   }
 

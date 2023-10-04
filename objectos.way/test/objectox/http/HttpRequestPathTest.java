@@ -31,8 +31,6 @@ public class HttpRequestPathTest {
 
     path.segment(1, 1);
 
-    path.end(1);
-
     assertEquals(path.toString(), "/");
     assertEquals(path.nextSegment(), "");
     assertEquals(path.nextSegment(), null);
@@ -48,8 +46,6 @@ public class HttpRequestPathTest {
     path = new HttpRequestPath(bytes, 0);
 
     path.segment(1, 4);
-
-    path.end(4);
 
     assertEquals(path.toString(), "/foo");
     assertEquals(path.nextSegment(), "foo");
@@ -69,8 +65,6 @@ public class HttpRequestPathTest {
 
     path.segment(5, 5);
 
-    path.end(5);
-
     assertEquals(path.toString(), "/foo/");
     assertEquals(path.nextSegment(), "foo");
     assertEquals(path.nextSegment(), "");
@@ -89,8 +83,6 @@ public class HttpRequestPathTest {
     path.segment(1, 2);
 
     path.segment(3, 4);
-
-    path.end(4);
 
     assertEquals(path.toString(), "/a/b");
     assertEquals(path.nextSegment(), "a");
@@ -124,8 +116,6 @@ public class HttpRequestPathTest {
     path.segment(15, 16);
 
     path.segment(17, 18);
-
-    path.end(18);
 
     assertEquals(path.toString(), "/a/b/c/d/e/f/g/h/i");
     assertEquals(path.nextSegment(), "a");
