@@ -41,7 +41,7 @@ public class HttpExchangeTest {
     assertEquals(exchange.method, null);
     assertEquals(exchange.requestHeaders, Map.of());
     assertEquals(exchange.requestHeaderName, null);
-    assertEquals(exchange.requestTarget, null);
+    assertEquals(exchange.requestPath, null);
     assertEquals(exchange.responseBody, null);
     assertEquals(exchange.responseHeaders, List.of());
     assertEquals(exchange.responseHeadersIndex, -1);
@@ -75,7 +75,7 @@ public class HttpExchangeTest {
     assertEquals(exchange.method, null);
     assertEquals(exchange.requestHeaders, Map.of());
     assertEquals(exchange.requestHeaderName, null);
-    assertEquals(exchange.requestTarget, null);
+    assertEquals(exchange.requestPath, null);
     assertEquals(exchange.responseBody, null);
     assertEquals(exchange.responseHeaders, List.of());
     assertEquals(exchange.responseHeadersIndex, -1);

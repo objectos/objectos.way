@@ -64,7 +64,7 @@ public interface TestingInput {
     exchange.method = null;
     exchange.requestHeaders = null;
     exchange.requestHeaderName = null;
-    exchange.requestTarget = null;
+    exchange.requestPath = null;
     exchange.responseBody = null;
     exchange.responseHeaders = null;
     exchange.responseHeadersIndex = -1;

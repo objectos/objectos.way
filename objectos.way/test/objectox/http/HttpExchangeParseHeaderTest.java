@@ -49,7 +49,7 @@ public class HttpExchangeParseHeaderTest {
       HeaderName.CONNECTION, TestingInput.hv("close")
     ));
     assertEquals(exchange.requestHeaderName, null);
-    assertEquals(exchange.requestTarget.toString(), "/");
+    assertEquals(exchange.requestPath.toString(), "/");
     assertEquals(exchange.responseBody, null);
     assertEquals(exchange.responseHeaders, null);
     assertEquals(exchange.responseHeadersIndex, -1);
@@ -85,7 +85,7 @@ public class HttpExchangeParseHeaderTest {
       HeaderName.CONTENT_TYPE, TestingInput.hv("application/x-www-form-urlencoded")
     ));
     assertEquals(exchange.requestHeaderName, null);
-    assertEquals(exchange.requestTarget.toString(), "/login");
+    assertEquals(exchange.requestPath.toString(), "/login");
     assertEquals(exchange.responseBody, null);
     assertEquals(exchange.responseHeaders, null);
     assertEquals(exchange.responseHeadersIndex, -1);

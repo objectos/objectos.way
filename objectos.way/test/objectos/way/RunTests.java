@@ -42,10 +42,10 @@ public class RunTests {
       new XmlPackage("objectos.html.internal"),
       new XmlPackage("objectos.html.tmpl"),
       new XmlPackage("objectos.http"),
-      new XmlPackage("objectos.http.internal"),
       new XmlPackage("objectos.http.util"),
       new XmlPackage("objectos.lang"),
-      new XmlPackage("objectos.util")
+      new XmlPackage("objectos.util"),
+      new XmlPackage("objectox.http")
     );
 
     test.setXmlPackages(packages);

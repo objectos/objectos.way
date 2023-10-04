@@ -59,7 +59,7 @@ public class HttpExchangeHandleTest {
     assertEquals(exchange.requestHeaders, Map.of());
     assertEquals(exchange.requestHeaderName, null);
     // request target won't be used from this point forward
-    assertEquals(exchange.requestTarget, null);
+    assertEquals(exchange.requestPath, null);
     // response body set
     assertEquals(exchange.responseBody, Bytes.utf8("Hello World!\n"));
     // response headers set
@@ -99,7 +99,7 @@ public class HttpExchangeHandleTest {
     assertEquals(exchange.requestHeaders, Map.of());
     assertEquals(exchange.requestHeaderName, null);
     // request target won't be used from this point forward
-    assertEquals(exchange.requestTarget, null);
+    assertEquals(exchange.requestPath, null);
     // response body set
     assertEquals(exchange.responseBody, Bytes.utf8(Http004.BODY01));
     // response headers set

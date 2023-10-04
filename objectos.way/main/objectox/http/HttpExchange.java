@@ -19,7 +19,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
-import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.EnumMap;
 import java.util.List;
@@ -31,7 +30,6 @@ import objectos.http.server.Exchange;
 import objectos.http.server.Handler;
 import objectos.http.server.Request;
 import objectos.http.server.Response;
-import objectos.http.server.Segments;
 import objectos.lang.Check;
 import objectos.lang.Note1;
 import objectos.lang.NoteSink;
@@ -119,9 +117,7 @@ public final class HttpExchange implements Exchange, Runnable, objectos.http.Htt
 
   Map<HeaderName, HeaderValue> requestHeaders;
 
-  HttpRequestPath requestTarget;
-
-  int requestTargetStart;
+  HttpRequestPath requestPath;
 
   private HttpResponse response;
 
@@ -130,8 +126,6 @@ public final class HttpExchange implements Exchange, Runnable, objectos.http.Htt
   List<HttpResponseHeader> responseHeaders;
 
   int responseHeadersIndex;
-
-  Segments segments;
 
   Socket socket;
 
@@ -220,10 +214,10 @@ public final class HttpExchange implements Exchange, Runnable, objectos.http.Htt
   }
 
   @Override
-  public final Segments segments() {
+  public final String nextSegment() {
     checkStateHandle();
 
-    return segments;
+    return requestPath.nextSegment();
   }
 
   @Override
@@ -274,9 +268,7 @@ public final class HttpExchange implements Exchange, Runnable, objectos.http.Htt
       requestHeaders.clear();
     }
 
-    requestTarget = null;
-
-    segments = null;
+    requestPath = null;
 
     state = _OUTPUT;
 
@@ -460,9 +452,7 @@ public final class HttpExchange implements Exchange, Runnable, objectos.http.Htt
         requestHeaders.clear();
       }
 
-      requestTarget = null;
-
-      segments = null;
+      requestPath = null;
     }
   }
 
@@ -1102,7 +1092,7 @@ public final class HttpExchange implements Exchange, Runnable, objectos.http.Htt
 
           // SP found, store the indices
 
-          requestTarget = new HttpRequestPath(buffer, requestTargetStart, index);
+          requestPath.end(index);
 
           requestLinePathSegment(index);
 
@@ -1118,14 +1108,9 @@ public final class HttpExchange implements Exchange, Runnable, objectos.http.Htt
   }
 
   private void requestLinePathSegment(int index) {
-    String value;
-    value = new String(buffer, bufferIndex, index - bufferIndex, StandardCharsets.UTF_8);
+    // add new segment to our request path
 
-    if (segments == null) {
-      segments = new Segments.Segments1(value);
-    } else {
-      segments = segments.append(value);
-    }
+    requestPath.segment(bufferIndex, index);
 
     // bufferIndex immediately after the last read char
 
@@ -1150,7 +1135,9 @@ public final class HttpExchange implements Exchange, Runnable, objectos.http.Htt
       return toClientError(HttpStatus.BAD_REQUEST);
     }
 
-    requestTargetStart = targetStart;
+    // create our HttpRequestPath instance before next state
+
+    requestPath = new HttpRequestPath(buffer, targetStart);
 
     // bufferIndex immediately after the '/' char
 

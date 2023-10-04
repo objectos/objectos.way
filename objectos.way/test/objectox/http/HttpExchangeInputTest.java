@@ -45,7 +45,7 @@ public class HttpExchangeInputTest {
     assertEquals(exchange.method, null);
     assertEquals(exchange.requestHeaders, null);
     assertEquals(exchange.requestHeaderName, null);
-    assertEquals(exchange.requestTarget, null);
+    assertEquals(exchange.requestPath, null);
     assertEquals(exchange.responseBody, null);
     assertEquals(exchange.responseHeaders, null);
     assertEquals(exchange.responseHeadersIndex, -1);

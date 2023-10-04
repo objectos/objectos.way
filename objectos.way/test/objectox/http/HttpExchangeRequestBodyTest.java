@@ -47,7 +47,7 @@ public class HttpExchangeRequestBodyTest {
       HeaderName.CONTENT_TYPE, TestingInput.hv("application/x-www-form-urlencoded")
     ));
     assertEquals(exchange.requestHeaderName, null);
-    assertEquals(exchange.requestTarget.toString(), "/login");
+    assertEquals(exchange.requestPath.toString(), "/login");
     assertEquals(exchange.responseBody, null);
     assertEquals(exchange.responseHeaders, null);
     assertEquals(exchange.responseHeadersIndex, -1);

@@ -51,7 +51,7 @@ final class HttpRequest implements Request {
 
   @Override
   public final String path() {
-    return outer.requestTarget.toString();
+    return outer.requestPath.toString();
   }
 
   @Override
