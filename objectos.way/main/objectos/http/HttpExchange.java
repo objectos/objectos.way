@@ -76,12 +76,11 @@ public sealed interface HttpExchange extends AutoCloseable
   Http.Method method();
 
   /**
-   * Returns the next segment of the request path or {@code null} if there are
-   * no more segments remaining.
+   * Returns the decoded path component of the request target.
    *
-   * @return the next segment or {@code null} if there are no more segments
+   * @return the decoded path component of the request target.
    */
-  String nextSegment();
+  String path();
 
   /**
    * Sends the configured response to the remote client.
@@ -92,6 +91,8 @@ public sealed interface HttpExchange extends AutoCloseable
   void executeResponsePhase() throws IOException;
 
   boolean hasResponse();
+
+  Http.Status status();
 
   void status(Http.Status status);
 

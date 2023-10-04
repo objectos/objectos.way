@@ -16,10 +16,8 @@
 package objectox.http;
 
 import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertNull;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import org.testng.annotations.Test;
@@ -332,8 +330,7 @@ public class HttpExchangeRequestLineTest {
     exchange.stepOne();
 
     assertEquals(exchange.bufferIndex, 5);
-    assertNotNull(exchange.requestPath);
-    assertEquals(exchange.requestPath.start, 4);
+    assertNull(exchange.requestPath);
     assertEquals(exchange.state, HttpExchange._REQUEST_LINE_PATH);
   }
 
@@ -395,17 +392,16 @@ public class HttpExchangeRequestLineTest {
     HttpExchange exchange;
     exchange = new HttpExchange();
 
-    record Data(String requestLine, String path, List<String> segments) {}
+    record Data(String requestLine, String path) {}
 
     List<Data> dataList = List.of(
-      new Data("GET / HTTP/1.1", "/", List.of("")),
-      new Data("GET /index.html HTTP/1.1", "/index.html", List.of("index.html")),
-      new Data("GET /foo/bar HTTP/1.1", "/foo/bar", List.of("foo", "bar")),
-      new Data("GET //bar HTTP/1.1", "//bar", List.of("", "bar")),
-      new Data("GET /foo/ HTTP/1.1", "/foo/", List.of("foo", "")),
-      new Data("GET /a/b/c HTTP/1.1", "/a/b/c", List.of("a", "b", "c")),
-      new Data("GET /a/b/c/d/e/f HTTP/1.1", "/a/b/c/d/e/f",
-        List.of("a", "b", "c", "d", "e", "f"))
+      new Data("GET / HTTP/1.1", "/"),
+      new Data("GET /index.html HTTP/1.1", "/index.html"),
+      new Data("GET /foo/bar HTTP/1.1", "/foo/bar"),
+      new Data("GET //bar HTTP/1.1", "//bar"),
+      new Data("GET /foo/ HTTP/1.1", "/foo/"),
+      new Data("GET /a/b/c HTTP/1.1", "/a/b/c"),
+      new Data("GET /a/b/c/d/e/f HTTP/1.1", "/a/b/c/d/e/f")
     );
 
     for (var data : dataList) {
@@ -418,29 +414,13 @@ public class HttpExchangeRequestLineTest {
       exchange.buffer = bytes;
       exchange.bufferIndex = 5;
       exchange.bufferLimit = bytes.length;
-      exchange.requestPath = new HttpRequestPath(bytes, 4);
+      exchange.requestPathStart = 4;
       exchange.state = HttpExchange._REQUEST_LINE_PATH;
 
       exchange.stepOne();
 
       assertEquals(exchange.bufferIndex, 5 + data.path.length());
-
-      HttpRequestPath path = exchange.requestPath;
-
-      assertEquals(path.toString(), data.path);
-      assertEquals(path.start, 4);
-      assertEquals(path.end(), 5 + data.path.length() - 1);
-
-      List<String> segments;
-      segments = new ArrayList<>();
-
-      String s = path.nextSegment();
-      while (s != null) {
-        segments.add(s);
-        s = path.nextSegment();
-      }
-
-      assertEquals(segments, data.segments);
+      assertEquals(exchange.requestPath.toString(), data.path);
       assertEquals(exchange.state, HttpExchange._REQUEST_LINE_VERSION);
     }
   }
@@ -488,7 +468,7 @@ public class HttpExchangeRequestLineTest {
 
     exchange.stepOne();
 
-    assertEquals(exchange.bufferIndex, 5);
+    assertEquals(exchange.bufferIndex, 12);
     assertNull(exchange.requestPath);
     assertEquals(exchange.state, HttpExchange._CLIENT_ERROR);
     assertEquals(exchange.status, HttpStatus.URI_TOO_LONG);

@@ -26,6 +26,7 @@ import java.util.Map;
 import java.util.function.Supplier;
 import objectos.http.Http;
 import objectos.http.Http.Method;
+import objectos.http.Http.Status;
 import objectos.http.server.Exchange;
 import objectos.http.server.Handler;
 import objectos.http.server.Request;
@@ -118,6 +119,8 @@ public final class HttpExchange implements Exchange, Runnable, objectos.http.Htt
   Map<HeaderName, HeaderValue> requestHeaders;
 
   HttpRequestPath requestPath;
+
+  int requestPathStart;
 
   private HttpResponse response;
 
@@ -214,10 +217,17 @@ public final class HttpExchange implements Exchange, Runnable, objectos.http.Htt
   }
 
   @Override
-  public final String nextSegment() {
+  public final String path() {
     checkStateHandle();
 
-    return requestPath.nextSegment();
+    return requestPath.toString();
+  }
+
+  @Override
+  public final Status status() {
+    checkStateHandle();
+
+    return status;
   }
 
   @Override
@@ -1078,19 +1088,23 @@ public final class HttpExchange implements Exchange, Runnable, objectos.http.Htt
   private byte requestLinePath() {
     // we will look for the first SP char
 
-    int pathStart;
-    pathStart = bufferIndex;
-
-    for (int index = pathStart; bufferHasIndex(index); index++) {
+    for (; bufferHasIndex(bufferIndex); bufferIndex++) {
       byte b;
-      b = bufferGet(index);
+      b = bufferGet(bufferIndex);
 
       switch (b) {
-        case Bytes.SOLIDUS -> requestLinePathSegment(index);
+        case Bytes.QUESTION_MARK -> {
+          throw new UnsupportedOperationException(
+            "Implement me :: query component"
+          );
+        }
 
         case Bytes.SP -> {
+          requestPath = new HttpRequestPath(buffer, requestPathStart, bufferIndex);
 
-          requestLinePathSegment(index);
+          // bufferIndex immediately after the SP char
+
+          bufferIndex = bufferIndex + 1;
 
           return _REQUEST_LINE_VERSION;
         }
@@ -1101,16 +1115,6 @@ public final class HttpExchange implements Exchange, Runnable, objectos.http.Htt
     // Read more data if possible
 
     return toInputReadIfPossible(state, HttpStatus.URI_TOO_LONG);
-  }
-
-  private void requestLinePathSegment(int index) {
-    // add new segment to our request path
-
-    requestPath.segment(bufferIndex, index);
-
-    // bufferIndex immediately after the last read char
-
-    bufferIndex = index + 1;
   }
 
   private byte requestLineTarget() {
@@ -1131,9 +1135,9 @@ public final class HttpExchange implements Exchange, Runnable, objectos.http.Htt
       return toClientError(HttpStatus.BAD_REQUEST);
     }
 
-    // create our HttpRequestPath instance before next state
+    // mark request path start
 
-    requestPath = new HttpRequestPath(buffer, targetStart);
+    requestPathStart = targetStart;
 
     // bufferIndex immediately after the '/' char
 

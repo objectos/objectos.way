@@ -27,14 +27,9 @@ public class HttpRequestPathTest {
     bytes = Bytes.utf8("/");
 
     HttpRequestPath path;
-    path = new HttpRequestPath(bytes, 0);
-
-    path.segment(1, 1);
+    path = new HttpRequestPath(bytes, 0, 1);
 
     assertEquals(path.toString(), "/");
-    assertEquals(path.nextSegment(), "");
-    assertEquals(path.nextSegment(), null);
-    assertEquals(path.nextSegment(), null);
   }
 
   @Test
@@ -43,92 +38,9 @@ public class HttpRequestPathTest {
     bytes = Bytes.utf8("/foo");
 
     HttpRequestPath path;
-    path = new HttpRequestPath(bytes, 0);
-
-    path.segment(1, 4);
+    path = new HttpRequestPath(bytes, 0, 4);
 
     assertEquals(path.toString(), "/foo");
-    assertEquals(path.nextSegment(), "foo");
-    assertEquals(path.nextSegment(), null);
-    assertEquals(path.nextSegment(), null);
-  }
-
-  @Test
-  public void singleWithSlash() {
-    byte[] bytes;
-    bytes = Bytes.utf8("/foo/");
-
-    HttpRequestPath path;
-    path = new HttpRequestPath(bytes, 0);
-
-    path.segment(1, 4);
-
-    path.segment(5, 5);
-
-    assertEquals(path.toString(), "/foo/");
-    assertEquals(path.nextSegment(), "foo");
-    assertEquals(path.nextSegment(), "");
-    assertEquals(path.nextSegment(), null);
-    assertEquals(path.nextSegment(), null);
-  }
-
-  @Test
-  public void two() {
-    byte[] bytes;
-    bytes = Bytes.utf8("/a/b");
-
-    HttpRequestPath path;
-    path = new HttpRequestPath(bytes, 0);
-
-    path.segment(1, 2);
-
-    path.segment(3, 4);
-
-    assertEquals(path.toString(), "/a/b");
-    assertEquals(path.nextSegment(), "a");
-    assertEquals(path.nextSegment(), "b");
-    assertEquals(path.nextSegment(), null);
-    assertEquals(path.nextSegment(), null);
-  }
-
-  @Test
-  public void forceArrayResize() {
-    byte[] bytes;
-    bytes = Bytes.utf8("/a/b/c/d/e/f/g/h/i");
-
-    HttpRequestPath path;
-    path = new HttpRequestPath(bytes, 0);
-
-    path.segment(1, 2);
-
-    path.segment(3, 4);
-
-    path.segment(5, 6);
-
-    path.segment(7, 8);
-
-    path.segment(9, 10);
-
-    path.segment(11, 12);
-
-    path.segment(13, 14);
-
-    path.segment(15, 16);
-
-    path.segment(17, 18);
-
-    assertEquals(path.toString(), "/a/b/c/d/e/f/g/h/i");
-    assertEquals(path.nextSegment(), "a");
-    assertEquals(path.nextSegment(), "b");
-    assertEquals(path.nextSegment(), "c");
-    assertEquals(path.nextSegment(), "d");
-    assertEquals(path.nextSegment(), "e");
-    assertEquals(path.nextSegment(), "f");
-    assertEquals(path.nextSegment(), "g");
-    assertEquals(path.nextSegment(), "h");
-    assertEquals(path.nextSegment(), "i");
-    assertEquals(path.nextSegment(), null);
-    assertEquals(path.nextSegment(), null);
   }
 
 }

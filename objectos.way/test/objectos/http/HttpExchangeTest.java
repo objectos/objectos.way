@@ -44,6 +44,8 @@ public class HttpExchangeTest {
 
       assertEquals(exchange.method(), Http.Method.GET);
 
+      assertEquals(exchange.path(), "/");
+
       assertFalse(exchange.hasResponse());
 
       byte[] bytes;
