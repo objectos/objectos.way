@@ -15,9 +15,9 @@
  */
 package objectox.http;
 
-import objectos.http.server.Request;
+import objectos.http.server.Body;
 
-public sealed abstract class HttpRequestBody implements Request.Body permits InBufferRequestBody {
+public sealed abstract class HttpRequestBody implements Body permits InBufferRequestBody {
 
   HttpRequestBody() {}
 

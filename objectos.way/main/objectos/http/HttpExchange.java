@@ -18,7 +18,7 @@ package objectos.http;
 import java.io.IOException;
 import java.net.Socket;
 import java.nio.charset.Charset;
-import objectos.http.server.Request.Body;
+import objectos.http.server.Body;
 import objectos.lang.CharWritable;
 import objectos.lang.Check;
 import objectos.lang.NoOpNoteSink;

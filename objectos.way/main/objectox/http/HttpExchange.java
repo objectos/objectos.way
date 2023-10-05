@@ -29,17 +29,14 @@ import objectos.http.Http.Header.Name;
 import objectos.http.Http.Header.Value;
 import objectos.http.Http.Method;
 import objectos.http.Http.Status;
-import objectos.http.server.Exchange;
-import objectos.http.server.Request;
-import objectos.http.server.Request.Body;
-import objectos.http.server.Response;
+import objectos.http.server.Body;
 import objectos.lang.CharWritable;
 import objectos.lang.Check;
 import objectos.lang.Note1;
 import objectos.lang.NoteSink;
 import objectos.util.GrowableList;
 
-public final class HttpExchange implements Exchange, objectos.http.HttpExchange {
+public final class HttpExchange implements objectos.http.HttpExchange {
 
   public static final Note1<IOException> EIO_READ_ERROR = Note1.error();
 
@@ -114,8 +111,6 @@ public final class HttpExchange implements Exchange, objectos.http.HttpExchange 
 
   NoteSink noteSink;
 
-  Request request;
-
   HttpRequestBody requestBody;
 
   HeaderName requestHeaderName;
@@ -125,8 +120,6 @@ public final class HttpExchange implements Exchange, objectos.http.HttpExchange 
   HttpRequestPath requestPath;
 
   int requestPathStart;
-
-  private HttpResponse response;
 
   Object responseBody;
 
@@ -309,28 +302,6 @@ public final class HttpExchange implements Exchange, objectos.http.HttpExchange 
         "Request has not been parsed yet or response has already been sent."
       );
     }
-  }
-
-  @Override
-  public final Request request() {
-    // TODO check state
-
-    if (request == null) {
-      request = new HttpRequest(this);
-    }
-
-    return request;
-  }
-
-  @Override
-  public final Response response() {
-    // TODO check state
-
-    if (response == null) {
-      response = new HttpResponse(this);
-    }
-
-    return response;
   }
 
   final void stepOne() {

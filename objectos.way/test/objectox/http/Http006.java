@@ -22,7 +22,7 @@ import java.time.ZonedDateTime;
 import objectos.http.Http;
 import objectos.http.Http.Status;
 import objectos.http.HttpExchange;
-import objectos.http.server.Request.Body;
+import objectos.http.server.Body;
 import objectos.http.util.UrlEncodedForm;
 import objectox.http.TestingInput.RegularInput;
 
