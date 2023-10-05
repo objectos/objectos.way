@@ -21,10 +21,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.InetAddress;
-import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
+import java.util.concurrent.TimeUnit;
 import objectox.http.Http001;
 import objectox.http.Http002;
 import objectox.http.Http003;
@@ -37,52 +37,64 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-public class HttpTest {
+public class HttpTest implements Runnable {
 
-  private InetAddress address;
-
-  private int port;
+  private ServerSocket serverSocket;
 
   private Thread server;
 
   @SuppressWarnings("resource")
   @BeforeClass
   public void start() throws Exception {
+    InetAddress address;
     address = InetAddress.getLoopbackAddress();
 
-    try (ServerSocket socket = new ServerSocket(0)) {
-      port = socket.getLocalPort();
+    serverSocket = new ServerSocket(0, 50, address);
+
+    server = Thread.ofPlatform().start(this);
+
+    synchronized (this) {
+      TimeUnit.SECONDS.timedWait(this, 2);
+    }
+  }
+
+  @Override
+  public final void run() {
+    synchronized (this) {
+      notifyAll();
     }
 
-    InetSocketAddress socketAddress;
-    socketAddress = new InetSocketAddress(address, port);
+    do {
+      Socket socket;
 
-    server = Thread.ofPlatform().start(() -> {
-      try (ServerSocket serverSocket = new ServerSocket()) {
-        serverSocket.bind(socketAddress);
+      try {
+        socket = serverSocket.accept();
+      } catch (IOException e) {
+        e.printStackTrace();
 
-        while (!Thread.currentThread().isInterrupted()) {
-          Socket socket;
-          socket = serverSocket.accept();
+        return;
+      }
 
-          try (HttpExchange exchange = HttpExchange.of(socket, 512)) {
-            while (exchange.active()) {
-              TestingHandler handler;
-              handler = TestingHandler.INSTANCE;
+      try (HttpExchange exchange = HttpExchange.of(socket, 512)) {
+        while (exchange.active()) {
+          TestingHandler handler;
+          handler = TestingHandler.INSTANCE;
 
-              handler.acceptHttpExchange(exchange);
-            }
-          }
+          handler.acceptHttpExchange(exchange);
         }
       } catch (IOException e) {
         e.printStackTrace();
       }
-    });
+    } while (!Thread.currentThread().isInterrupted());
+
+    try {
+      serverSocket.close();
+    } catch (IOException ignored) {}
   }
 
   @Test
   public void http001() throws IOException {
-    try (Socket socket = new Socket(address, port)) {
+    try (Socket socket = newSocket()) {
       req(socket, Http001.INPUT);
 
       assertEquals(
@@ -95,7 +107,7 @@ public class HttpTest {
 
   @Test
   public void http002() throws IOException {
-    try (Socket socket = new Socket(address, port)) {
+    try (Socket socket = newSocket()) {
       req(socket, Http002.INPUT);
 
       assertEquals(
@@ -108,7 +120,7 @@ public class HttpTest {
 
   @Test
   public void http003() throws IOException {
-    try (Socket socket = new Socket(address, port)) {
+    try (Socket socket = newSocket()) {
       req(socket, Http003.INPUT);
 
       assertEquals(
@@ -121,7 +133,7 @@ public class HttpTest {
 
   @Test(timeOut = 1000)
   public void http004() throws IOException {
-    try (Socket socket = new Socket(address, port)) {
+    try (Socket socket = newSocket()) {
       req(socket, Http004.INPUT01);
 
       resp(socket, Http004.OUTPUT01);
@@ -134,7 +146,7 @@ public class HttpTest {
 
   @Test(timeOut = 1000)
   public void http005() throws IOException {
-    try (Socket socket = new Socket(address, port)) {
+    try (Socket socket = newSocket()) {
       req(socket, Http005.INPUT01);
 
       resp(socket, Http005.OUTPUT01);
@@ -147,7 +159,7 @@ public class HttpTest {
 
   @Test(timeOut = 1000)
   public void http006() throws IOException {
-    try (Socket socket = new Socket(address, port)) {
+    try (Socket socket = newSocket()) {
       req(socket, Http006.INPUT);
 
       resp(socket, Http006.OUTPUT);
@@ -159,6 +171,10 @@ public class HttpTest {
     if (server != null) {
       server.interrupt();
     }
+  }
+
+  private Socket newSocket() throws IOException {
+    return new Socket(serverSocket.getInetAddress(), serverSocket.getLocalPort());
   }
 
   private void req(Socket socket, RegularInput input) throws IOException {
