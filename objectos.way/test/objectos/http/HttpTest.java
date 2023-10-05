@@ -43,9 +43,8 @@ public class HttpTest implements Runnable {
 
   private Thread server;
 
-  @SuppressWarnings("resource")
   @BeforeClass
-  public void start() throws Exception {
+  public void start() throws IOException, InterruptedException {
     InetAddress address;
     address = InetAddress.getLoopbackAddress();
 
@@ -64,12 +63,14 @@ public class HttpTest implements Runnable {
       notifyAll();
     }
 
-    do {
+    while (!Thread.currentThread().isInterrupted()) {
       Socket socket;
 
       try {
         socket = serverSocket.accept();
       } catch (IOException e) {
+        System.err.println("Failed to accept client connection");
+
         e.printStackTrace();
 
         return;
@@ -83,13 +84,17 @@ public class HttpTest implements Runnable {
           handler.acceptHttpExchange(exchange);
         }
       } catch (IOException e) {
+        System.err.println("Failed to close socket");
+
         e.printStackTrace();
       }
-    } while (!Thread.currentThread().isInterrupted());
+    }
 
     try {
       serverSocket.close();
-    } catch (IOException ignored) {}
+    } catch (IOException ignored) {
+      // test finished already...
+    }
   }
 
   @Test

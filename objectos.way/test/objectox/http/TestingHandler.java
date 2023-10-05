@@ -15,53 +15,14 @@
  */
 package objectox.http;
 
-import java.util.function.Supplier;
 import objectos.http.Http.Method;
 import objectos.http.HttpExchange;
-import objectos.http.server.Exchange;
-import objectos.http.server.Handler;
-import objectos.http.server.Request;
 
-public final class TestingHandler implements Handler, Supplier<Handler> {
+public final class TestingHandler {
 
   public static final TestingHandler INSTANCE = new TestingHandler();
 
   private TestingHandler() {}
-
-  @Override
-  public final Handler get() { return this; }
-
-  @Override
-  public final void handle(Exchange exchange) {
-    Request request;
-    request = exchange.request();
-
-    switch (request.path()) {
-      case "/" -> Http001.INSTANCE.handle(exchange);
-
-      case "/chunked.txt" -> Http002.INSTANCE.handle(exchange);
-
-      case "/login" -> login(exchange);
-
-      case "/login.css" -> Http004.INSTANCE.handle(exchange);
-    }
-  }
-
-  private void login(Exchange exchange) {
-    Request request;
-    request = exchange.request();
-
-    Method method;
-    method = request.method();
-
-    if (method == Method.GET) {
-      Http004.INSTANCE.handle(exchange);
-    }
-
-    else if (method == Method.POST) {
-      Http006.INSTANCE.handle(exchange);
-    }
-  }
 
   public final void acceptHttpExchange(HttpExchange exchange) {
     if (exchange.hasResponse()) {

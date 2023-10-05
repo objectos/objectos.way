@@ -24,14 +24,12 @@ import java.util.Arrays;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Supplier;
 import objectos.http.Http;
 import objectos.http.Http.Header.Name;
 import objectos.http.Http.Header.Value;
 import objectos.http.Http.Method;
 import objectos.http.Http.Status;
 import objectos.http.server.Exchange;
-import objectos.http.server.Handler;
 import objectos.http.server.Request;
 import objectos.http.server.Request.Body;
 import objectos.http.server.Response;
@@ -41,7 +39,7 @@ import objectos.lang.Note1;
 import objectos.lang.NoteSink;
 import objectos.util.GrowableList;
 
-public final class HttpExchange implements Exchange, Runnable, objectos.http.HttpExchange {
+public final class HttpExchange implements Exchange, objectos.http.HttpExchange {
 
   public static final Note1<IOException> EIO_READ_ERROR = Note1.error();
 
@@ -108,8 +106,6 @@ public final class HttpExchange implements Exchange, Runnable, objectos.http.Htt
 
   IOException error;
 
-  Supplier<Handler> handlerSupplier;
-
   boolean keepAlive;
 
   HttpMethod method;
@@ -149,14 +145,11 @@ public final class HttpExchange implements Exchange, Runnable, objectos.http.Htt
   byte versionMinor;
 
   public HttpExchange(int bufferSize,
-                      Supplier<Handler> handlerSupplier,
                       NoteSink noteSink,
                       Socket socket) {
     // there's a small chance we won't use the buffer
     // but, as it is used in many places in this class, we create it eagerly
     this.buffer = new byte[bufferSize];
-
-    this.handlerSupplier = handlerSupplier;
 
     this.noteSink = noteSink;
 
@@ -338,32 +331,6 @@ public final class HttpExchange implements Exchange, Runnable, objectos.http.Htt
     }
 
     return response;
-  }
-
-  @Override
-  public final void run() {
-    try (this) {
-      while (active()) {
-        executeRequestPhase();
-
-        if (hasResponse()) {
-          throw new UnsupportedOperationException("Implement me");
-        }
-
-        Handler handler;
-        handler = handlerSupplier.get();
-
-        handler.handle(this);
-
-        if (!hasResponse()) {
-          throw new UnsupportedOperationException("Implement me");
-        }
-
-        executeResponsePhase();
-      }
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
   }
 
   final void stepOne() {

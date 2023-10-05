@@ -18,8 +18,6 @@ package objectos.http;
 import java.io.IOException;
 import java.net.Socket;
 import java.nio.charset.Charset;
-import java.util.function.Supplier;
-import objectos.http.server.Handler;
 import objectos.http.server.Request.Body;
 import objectos.lang.CharWritable;
 import objectos.lang.Check;
@@ -41,13 +39,10 @@ public sealed interface HttpExchange extends AutoCloseable
     Check.notNull(socket, "socket == null");
     Check.argument(bufferSize > 128, "buffer size must be > 128");
 
-    Supplier<Handler> handlerSupplier;
-    handlerSupplier = null;
-
     NoteSink noteSink;
     noteSink = NoOpNoteSink.getInstance();
 
-    return new objectox.http.HttpExchange(bufferSize, handlerSupplier, noteSink, socket);
+    return new objectox.http.HttpExchange(bufferSize, noteSink, socket);
   }
 
   /**

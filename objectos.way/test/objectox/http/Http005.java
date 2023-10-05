@@ -15,27 +15,12 @@
  */
 package objectox.http;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
-import objectos.http.Http;
-import objectos.http.server.Exchange;
-import objectos.http.server.Handler;
-import objectos.http.server.Request;
-import objectos.http.server.Response;
 import objectox.http.TestingInput.KeepAliveInput;
 
 /**
  * Keep-Alive request
  */
-public final class Http005 implements Handler {
-
-  private static final ZonedDateTime DATE = ZonedDateTime.of(
-    LocalDate.of(2023, 7, 7),
-    LocalTime.of(11, 11, 45),
-    ZoneId.of("GMT-3")
-  );
+public final class Http005 {
 
   public static final String INPUT01 = """
     GET /login HTTP/1.1
@@ -90,46 +75,5 @@ public final class Http005 implements Handler {
   public static final String OUTPUT = OUTPUT01 + OUTPUT02;
 
   public static final Http005 INSTANCE = new Http005();
-
-  @Override
-  public final void handle(Exchange exchange) {
-    Request request;
-    request = exchange.request();
-
-    Response response;
-    response = exchange.response();
-
-    switch (request.path()) {
-      case "/login" -> {
-        final byte[] bytes;
-        bytes = Bytes.utf8(BODY01);
-
-        response.status(Http.Status.OK_200);
-
-        response.header(Http.Header.CONTENT_TYPE, "text/html; charset=utf-8");
-
-        response.header(Http.Header.CONTENT_LENGTH, Long.toString(bytes.length));
-
-        response.header(Http.Header.DATE, Http.formatDate(DATE));
-
-        response.send(bytes);
-      }
-
-      case "/login.css" -> {
-        final byte[] bytes;
-        bytes = Bytes.utf8(BODY02);
-
-        response.status(Http.Status.OK_200);
-
-        response.header(Http.Header.CONTENT_TYPE, "text/css; charset=utf-8");
-
-        response.header(Http.Header.CONTENT_LENGTH, Long.toString(bytes.length));
-
-        response.header(Http.Header.DATE, Http.formatDate(DATE));
-
-        response.send(bytes);
-      }
-    }
-  }
 
 }

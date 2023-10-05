@@ -15,14 +15,12 @@
  */
 package objectox.http;
 
-import objectos.http.server.Exchange;
-import objectos.http.server.Handler;
 import objectox.http.TestingInput.RegularInput;
 
 /**
  * Unknown request headers
  */
-public final class Http003 implements Handler {
+public final class Http003 {
 
   public static final RegularInput INPUT = new RegularInput(
     """
@@ -38,11 +36,6 @@ public final class Http003 implements Handler {
 
   public static void response(HttpExchange exchange) {
     Http001.response(exchange);
-  }
-
-  @Override
-  public final void handle(Exchange exchange) {
-    throw new UnsupportedOperationException();
   }
 
 }

@@ -22,16 +22,13 @@ import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import objectos.http.Http;
-import objectos.http.server.Exchange;
-import objectos.http.server.Handler;
-import objectos.http.server.Response;
 import objectos.lang.CharWritable;
 import objectox.http.TestingInput.RegularInput;
 
 /**
  * Transfer-Encoding: Chunked
  */
-public final class Http002 implements Handler {
+public final class Http002 {
 
   public static final RegularInput INPUT = new RegularInput(
     """
@@ -86,25 +83,6 @@ public final class Http002 implements Handler {
     entity = new ThisEntity();
 
     exchange.body(entity, StandardCharsets.UTF_8);
-  }
-
-  @Override
-  public final void handle(Exchange exchange) {
-    Response response;
-    response = exchange.response();
-
-    response.status(Http.Status.OK_200);
-
-    response.header(Http.Header.CONTENT_TYPE, "text/plain; charset=utf-8");
-
-    response.header(Http.Header.DATE, Http.formatDate(DATE));
-
-    response.header(Http.Header.TRANSFER_ENCODING, "chunked");
-
-    ThisEntity entity;
-    entity = new ThisEntity();
-
-    response.send(entity, StandardCharsets.UTF_8);
   }
 
   public static CharWritable newEntity() {

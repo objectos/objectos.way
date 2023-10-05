@@ -20,16 +20,12 @@ import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import objectos.http.Http;
-import objectos.http.server.Exchange;
-import objectos.http.server.Handler;
-import objectos.http.server.Request;
-import objectos.http.server.Response;
 import objectox.http.TestingInput.KeepAliveInput;
 
 /**
  * Keep-Alive request
  */
-public final class Http004 implements Handler {
+public final class Http004 {
 
   private static final ZonedDateTime DATE = ZonedDateTime.of(
     LocalDate.of(2023, 7, 7),
@@ -126,47 +122,6 @@ public final class Http004 implements Handler {
         exchange.header(Http.Header.DATE, Http.formatDate(DATE));
 
         exchange.body(bytes);
-      }
-    }
-  }
-
-  @Override
-  public final void handle(Exchange exchange) {
-    Request request;
-    request = exchange.request();
-
-    Response response;
-    response = exchange.response();
-
-    switch (request.path()) {
-      case "/login" -> {
-        final byte[] bytes;
-        bytes = Bytes.utf8(BODY01);
-
-        response.status(Http.Status.OK_200);
-
-        response.header(Http.Header.CONTENT_TYPE, "text/html; charset=utf-8");
-
-        response.header(Http.Header.CONTENT_LENGTH, Long.toString(bytes.length));
-
-        response.header(Http.Header.DATE, Http.formatDate(DATE));
-
-        response.send(bytes);
-      }
-
-      case "/login.css" -> {
-        final byte[] bytes;
-        bytes = Bytes.utf8(BODY02);
-
-        response.status(Http.Status.OK_200);
-
-        response.header(Http.Header.CONTENT_TYPE, "text/css; charset=utf-8");
-
-        response.header(Http.Header.CONTENT_LENGTH, Long.toString(bytes.length));
-
-        response.header(Http.Header.DATE, Http.formatDate(DATE));
-
-        response.send(bytes);
       }
     }
   }
