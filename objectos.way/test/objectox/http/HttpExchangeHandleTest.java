@@ -17,21 +17,11 @@ package objectox.http;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
+import static org.testng.Assert.assertTrue;
 
 import java.nio.charset.StandardCharsets;
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Supplier;
-import java.util.stream.Collectors;
-import objectos.http.Http;
-import objectos.http.server.Exchange;
-import objectos.http.server.Handler;
-import objectos.http.server.Response;
-import objectos.util.GrowableList;
 import org.testng.annotations.Test;
 
 @SuppressWarnings("resource")
@@ -44,22 +34,22 @@ public class HttpExchangeHandleTest {
 
     Http001.INPUT.accept(exchange);
 
-    while (exchange.state < HttpExchange._OUTPUT) {
-      exchange.stepOne();
-    }
+    assertTrue(exchange.active());
+
+    Http001.response(exchange);
 
     assertEquals(exchange.bufferIndex, Http001.INPUT.requestLength());
     assertEquals(exchange.bufferLimit, Http001.INPUT.requestLength());
     assertEquals(exchange.error, null);
     // "Connection: close" should set the property
     assertEquals(exchange.keepAlive, false);
-    // method won't be used from this point forward
-    assertEquals(exchange.method, null);
-    // request headers won't be used from this point forward
-    assertEquals(exchange.requestHeaders, Map.of());
+    assertEquals(exchange.method, HttpMethod.GET);
+    assertEquals(exchange.requestHeaders, Map.of(
+      HeaderName.HOST, TestingInput.hv("www.example.com"),
+      HeaderName.CONNECTION, TestingInput.hv("close")
+    ));
     assertEquals(exchange.requestHeaderName, null);
-    // request target won't be used from this point forward
-    assertEquals(exchange.requestPath, null);
+    assertEquals(exchange.requestPath.toString(), "/");
     // response body set
     assertEquals(exchange.responseBody, Bytes.utf8("Hello World!\n"));
     // response headers set
@@ -70,7 +60,7 @@ public class HttpExchangeHandleTest {
     ));
     assertEquals(exchange.responseHeadersIndex, -1);
     assertEquals(exchange.socket.isClosed(), false);
-    assertEquals(exchange.state, HttpExchange._OUTPUT);
+    assertEquals(exchange.state, HttpExchange._HANDLE_INVOKE);
     // response status set
     assertEquals(exchange.status, HttpStatus.OK);
     assertEquals(exchange.versionMajor, 1);
@@ -84,22 +74,23 @@ public class HttpExchangeHandleTest {
 
     Http004.INPUT.accept(exchange);
 
-    while (exchange.state < HttpExchange._OUTPUT) {
-      exchange.stepOne();
-    }
+    assertTrue(exchange.active());
+
+    Http004.response(exchange);
 
     assertEquals(exchange.bufferIndex, Http004.INPUT01.length());
     assertEquals(exchange.bufferLimit, Http004.INPUT01.length());
     assertEquals(exchange.error, null);
     // "Connection: close" should set the property
     assertEquals(exchange.keepAlive, true);
-    // method won't be used from this point forward
-    assertEquals(exchange.method, null);
+    assertEquals(exchange.method, HttpMethod.GET);
     // request headers won't be used from this point forward
-    assertEquals(exchange.requestHeaders, Map.of());
+    assertEquals(exchange.requestHeaders, Map.of(
+      HeaderName.HOST, TestingInput.hv("www.example.com"),
+      HeaderName.CONNECTION, TestingInput.hv("keep-alive")
+    ));
     assertEquals(exchange.requestHeaderName, null);
-    // request target won't be used from this point forward
-    assertEquals(exchange.requestPath, null);
+    assertEquals(exchange.requestPath.toString(), "/login");
     // response body set
     assertEquals(exchange.responseBody, Bytes.utf8(Http004.BODY01));
     // response headers set
@@ -110,7 +101,7 @@ public class HttpExchangeHandleTest {
     ));
     assertEquals(exchange.responseHeadersIndex, -1);
     assertEquals(exchange.socket.isClosed(), false);
-    assertEquals(exchange.state, HttpExchange._OUTPUT);
+    assertEquals(exchange.state, HttpExchange._HANDLE_INVOKE);
     // response status set
     assertEquals(exchange.status, HttpStatus.OK);
     assertEquals(exchange.versionMajor, 1);
@@ -152,65 +143,6 @@ public class HttpExchangeHandleTest {
       assertNotNull(exchange.responseHeaders);
       assertEquals(exchange.state, HttpExchange._HANDLE_INVOKE);
     }
-  }
-
-  @Test
-  public void handleInvoke() {
-    HttpExchange exchange;
-    exchange = new HttpExchange();
-
-    final byte[] bytes;
-    bytes = Bytes.utf8("Hello world!\n");
-
-    ZonedDateTime date;
-    date = ZonedDateTime.of(
-      LocalDate.of(2023, 6, 28),
-      LocalTime.of(9, 8, 43),
-      ZoneId.of("GMT-3")
-    );
-
-    class ThisHandler implements Handler, Supplier<Handler> {
-      @Override
-      public Handler get() { return this; }
-
-      @Override
-      public void handle(Exchange exchange) {
-        Response response;
-        response = exchange.response();
-
-        response.status(Http.Status.OK_200);
-
-        response.header(Http.Header.CONTENT_TYPE, "text/plain; charset=utf-8");
-
-        response.header(Http.Header.CONTENT_LENGTH, Long.toString(bytes.length));
-
-        response.header(Http.Header.DATE, Http.formatDate(date));
-
-        response.send(bytes);
-      }
-    }
-
-    exchange.handlerSupplier = new ThisHandler();
-    exchange.responseBody = new byte[0];
-    exchange.responseHeaders = new GrowableList<>();
-    exchange.state = HttpExchange._HANDLE_INVOKE;
-
-    exchange.stepOne();
-
-    assertEquals(exchange.responseBody, bytes);
-    assertEquals(
-      exchange.responseHeaders.stream()
-          .map(Object::toString)
-          .collect(Collectors.joining("\n", "", "\n")),
-
-      """
-      Content-Type: text/plain; charset=utf-8
-      Content-Length: 13
-      Date: Wed, 28 Jun 2023 12:08:43 GMT
-      """
-    );
-    assertEquals(exchange.state, HttpExchange._OUTPUT);
-    assertEquals(exchange.status, HttpStatus.OK);
   }
 
   private HeaderValue hv(String string) {

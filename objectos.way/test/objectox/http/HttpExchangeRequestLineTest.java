@@ -131,11 +131,11 @@ public class HttpExchangeRequestLineTest {
   }
 
   @Test(description = """
-  [#430] REQUEST_LINE --> CLIENT_ERROR::BAD_REQUEST
+  [#430] REQUEST_LINE --> REQUEST_ERROR::BAD_REQUEST
 
   - buffer should remain untouched
   """)
-  public void requestLineToClientErrorBadRequest() {
+  public void requestLineToRequestErrorBadRequest() {
     HttpExchange exchange;
     exchange = new HttpExchange();
 
@@ -150,7 +150,7 @@ public class HttpExchangeRequestLineTest {
     exchange.stepOne();
 
     assertEquals(exchange.bufferIndex, 0);
-    assertEquals(exchange.state, HttpExchange._CLIENT_ERROR);
+    assertEquals(exchange.state, HttpExchange._REQUEST_ERROR);
     assertEquals(exchange.status, HttpStatus.BAD_REQUEST);
   }
 
@@ -206,11 +206,11 @@ public class HttpExchangeRequestLineTest {
   }
 
   @Test(description = """
-  [#432] HTTP 001: REQUEST_LINE_METHOD --> CLIENT_ERROR::BAD_REQUEST
+  [#432] HTTP 001: REQUEST_LINE_METHOD --> REQUEST_ERROR::BAD_REQUEST
 
   - bufferIndex is NOT updated
   """)
-  public void requestLineMethodToClientErrorBadRequest() {
+  public void requestLineMethodToRequestErrorBadRequest() {
     HttpExchange exchange;
     exchange = new HttpExchange();
 
@@ -226,7 +226,7 @@ public class HttpExchangeRequestLineTest {
     exchange.stepOne();
 
     assertEquals(exchange.bufferIndex, 0);
-    assertEquals(exchange.state, HttpExchange._CLIENT_ERROR);
+    assertEquals(exchange.state, HttpExchange._REQUEST_ERROR);
     assertEquals(exchange.status, HttpStatus.BAD_REQUEST);
   }
 
@@ -358,9 +358,9 @@ public class HttpExchangeRequestLineTest {
   }
 
   @Test(description = """
-  [#516] HTTP 001: REQUEST_LINE_TARGET --> CLIENT_ERROR::BAD_REQUEST
+  [#516] HTTP 001: REQUEST_LINE_TARGET --> REQUEST_ERROR::BAD_REQUEST
   """)
-  public void requestLineTargetToClientErrorBadRequest() {
+  public void requestLineTargetToRequestErrorBadRequest() {
     HttpExchange exchange;
     exchange = new HttpExchange();
 
@@ -377,7 +377,7 @@ public class HttpExchangeRequestLineTest {
 
     assertEquals(exchange.bufferIndex, 4);
     assertNull(exchange.requestPath);
-    assertEquals(exchange.state, HttpExchange._CLIENT_ERROR);
+    assertEquals(exchange.state, HttpExchange._REQUEST_ERROR);
     assertEquals(exchange.status, HttpStatus.BAD_REQUEST);
   }
 
@@ -451,9 +451,9 @@ public class HttpExchangeRequestLineTest {
   }
 
   @Test(description = """
-  [#436] HTTP 001: REQUEST_LINE_PATH --> CLIENT_ERROR::URI_TOO_LONG
+  [#436] HTTP 001: REQUEST_LINE_PATH --> REQUEST_ERROR::URI_TOO_LONG
   """)
-  public void requestLinePathToClientErrorUriTooLong() {
+  public void requestLinePathToRequestErrorUriTooLong() {
     HttpExchange exchange;
     exchange = new HttpExchange();
 
@@ -470,7 +470,7 @@ public class HttpExchangeRequestLineTest {
 
     assertEquals(exchange.bufferIndex, 12);
     assertNull(exchange.requestPath);
-    assertEquals(exchange.state, HttpExchange._CLIENT_ERROR);
+    assertEquals(exchange.state, HttpExchange._REQUEST_ERROR);
     assertEquals(exchange.status, HttpStatus.URI_TOO_LONG);
   }
 
@@ -530,9 +530,9 @@ public class HttpExchangeRequestLineTest {
   }
 
   @Test(description = """
-  [#438] HTTP 001: REQUEST_LINE_VERSION --> CLIENT_ERROR::BAD_REQUEST
+  [#438] HTTP 001: REQUEST_LINE_VERSION --> REQUEST_ERROR::BAD_REQUEST
   """)
-  public void requestLineVersionToClientErrorBadRequest() {
+  public void requestLineVersionToRequestErrorBadRequest() {
     HttpExchange exchange;
     exchange = new HttpExchange();
 
@@ -559,7 +559,7 @@ public class HttpExchangeRequestLineTest {
       exchange.stepOne();
 
       assertEquals(exchange.bufferIndex, 6);
-      assertEquals(exchange.state, HttpExchange._CLIENT_ERROR);
+      assertEquals(exchange.state, HttpExchange._REQUEST_ERROR);
       assertEquals(exchange.status, HttpStatus.BAD_REQUEST);
       assertEquals(exchange.versionMajor, 0);
       assertEquals(exchange.versionMinor, 0);
@@ -589,9 +589,9 @@ public class HttpExchangeRequestLineTest {
   }
 
   @Test(description = """
-  [#440] HTTP 001: REQUEST_LINE_VERSION --> CLIENT_ERROR::URI_TOO_LONG
+  [#440] HTTP 001: REQUEST_LINE_VERSION --> REQUEST_ERROR::URI_TOO_LONG
   """)
-  public void requestLineVersionToClientErrorUriTooLong() {
+  public void requestLineVersionToRequestErrorUriTooLong() {
     HttpExchange exchange;
     exchange = new HttpExchange();
 
@@ -606,7 +606,7 @@ public class HttpExchangeRequestLineTest {
     exchange.stepOne();
 
     assertEquals(exchange.bufferIndex, 6);
-    assertEquals(exchange.state, HttpExchange._CLIENT_ERROR);
+    assertEquals(exchange.state, HttpExchange._REQUEST_ERROR);
     assertEquals(exchange.status, HttpStatus.URI_TOO_LONG);
   }
 

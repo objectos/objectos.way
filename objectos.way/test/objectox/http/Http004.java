@@ -93,6 +93,43 @@ public final class Http004 implements Handler {
 
   public static final Http004 INSTANCE = new Http004();
 
+  public static void response(objectos.http.HttpExchange exchange) {
+    String path;
+    path = exchange.path();
+
+    switch (path) {
+      case "/login" -> {
+        final byte[] bytes;
+        bytes = Bytes.utf8(BODY01);
+
+        exchange.status(Http.Status.OK_200);
+
+        exchange.header(Http.Header.CONTENT_TYPE, "text/html; charset=utf-8");
+
+        exchange.header(Http.Header.CONTENT_LENGTH, Long.toString(bytes.length));
+
+        exchange.header(Http.Header.DATE, Http.formatDate(DATE));
+
+        exchange.body(bytes);
+      }
+
+      case "/login.css" -> {
+        final byte[] bytes;
+        bytes = Bytes.utf8(BODY02);
+
+        exchange.status(Http.Status.OK_200);
+
+        exchange.header(Http.Header.CONTENT_TYPE, "text/css; charset=utf-8");
+
+        exchange.header(Http.Header.CONTENT_LENGTH, Long.toString(bytes.length));
+
+        exchange.header(Http.Header.DATE, Http.formatDate(DATE));
+
+        exchange.body(bytes);
+      }
+    }
+  }
+
   @Override
   public final void handle(Exchange exchange) {
     Request request;

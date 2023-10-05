@@ -21,6 +21,7 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import objectos.http.Http;
 import objectos.http.Http.Status;
+import objectos.http.HttpExchange;
 import objectos.http.server.Exchange;
 import objectos.http.server.Handler;
 import objectos.http.server.Request;
@@ -63,6 +64,76 @@ public final class Http006 implements Handler {
   );
 
   static final Http006 INSTANCE = new Http006();
+
+  public static void response(HttpExchange exchange) {
+    Http.Method method;
+    method = exchange.method();
+
+    if (method != Http.Method.POST) {
+      sendText(
+        exchange,
+        Http.Status.NOT_FOUND_404,
+        "Not found on this server\n"
+      );
+
+      return;
+    }
+
+    Http.Header.Value contentType;
+    contentType = exchange.header(Http.Header.CONTENT_TYPE);
+
+    if (!contentType.contentEquals("application/x-www-form-urlencoded")) {
+      sendText(
+        exchange,
+        Http.Status.UNSUPPORTED_MEDIA_TYPE_415,
+        "Requested content-type is not supported\n"
+      );
+
+      return;
+    }
+
+    Body body;
+    body = exchange.body();
+
+    UrlEncodedForm form;
+    form = UrlEncodedForm.parse(body);
+
+    String email;
+    email = form.get("email");
+
+    if (email == null) {
+      sendText(
+        exchange,
+        Http.Status.UNPROCESSABLE_CONTENT_422,
+        "Email is required\n"
+      );
+
+      return;
+    }
+
+    exchange.header(Http.Header.LOCATION, "/app");
+
+    sendText(
+      exchange,
+      Http.Status.SEE_OTHER_303,
+      "Hello %s. Please enter your password.\n".formatted(email)
+    );
+  }
+
+  private static void sendText(HttpExchange exchange, Status status, String message) {
+    exchange.status(status);
+
+    final byte[] bytes;
+    bytes = Bytes.utf8(message);
+
+    exchange.header(Http.Header.CONTENT_TYPE, "text/plain; charset=utf-8");
+
+    exchange.header(Http.Header.CONTENT_LENGTH, Long.toString(bytes.length));
+
+    exchange.header(Http.Header.DATE, Http.formatDate(DATE));
+
+    exchange.body(bytes);
+  }
 
   @Override
   public final void handle(Exchange exchange) {

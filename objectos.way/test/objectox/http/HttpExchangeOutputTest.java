@@ -16,8 +16,10 @@
 package objectox.http;
 
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertSame;
+import static org.testng.Assert.assertTrue;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -36,11 +38,11 @@ public class HttpExchangeOutputTest {
 
     Http001.INPUT.accept(exchange);
 
-    exchange.executeRequestPhase();
+    assertTrue(exchange.active());
 
     Http001.response(exchange);
 
-    exchange.executeResponsePhase();
+    assertFalse(exchange.active());
 
     assertEquals(exchange.bufferIndex, -1);
     assertEquals(exchange.bufferLimit, -1);
@@ -74,11 +76,11 @@ public class HttpExchangeOutputTest {
 
     Http002.INPUT.accept(exchange);
 
-    exchange.executeRequestPhase();
+    assertTrue(exchange.active());
 
     Http002.response(exchange);
 
-    exchange.executeResponsePhase();
+    assertFalse(exchange.active());
 
     // buffer exhausted and reset
     assertEquals(exchange.bufferIndex, -1);

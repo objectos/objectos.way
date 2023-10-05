@@ -36,6 +36,10 @@ public final class Http003 implements Handler {
 
   public static final String OUTPUT = Http001.OUTPUT;
 
+  public static void response(HttpExchange exchange) {
+    Http001.response(exchange);
+  }
+
   @Override
   public final void handle(Exchange exchange) {
     throw new UnsupportedOperationException();

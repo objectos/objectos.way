@@ -26,11 +26,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
 import objectos.http.Http;
+import objectos.http.Http.Header.Name;
+import objectos.http.Http.Header.Value;
 import objectos.http.Http.Method;
 import objectos.http.Http.Status;
 import objectos.http.server.Exchange;
 import objectos.http.server.Handler;
 import objectos.http.server.Request;
+import objectos.http.server.Request.Body;
 import objectos.http.server.Response;
 import objectos.lang.CharWritable;
 import objectos.lang.Check;
@@ -50,47 +53,52 @@ public final class HttpExchange implements Exchange, Runnable, objectos.http.Htt
 
   static final byte _INPUT = 2;
   static final byte _INPUT_READ = 3;
+  static final byte _INPUT_READ_EOF = 4;
+  static final byte _INPUT_READ_ERROR = 5;
 
   // Input / Request Line phase
 
-  static final byte _REQUEST_LINE = 4;
-  static final byte _REQUEST_LINE_METHOD = 5;
-  static final byte _REQUEST_LINE_METHOD_P = 6;
-  static final byte _REQUEST_LINE_TARGET = 7;
-  static final byte _REQUEST_LINE_PATH = 8;
-  static final byte _REQUEST_LINE_VERSION = 9;
+  static final byte _REQUEST_LINE = 6;
+  static final byte _REQUEST_LINE_METHOD = 7;
+  static final byte _REQUEST_LINE_METHOD_P = 8;
+  static final byte _REQUEST_LINE_TARGET = 9;
+  static final byte _REQUEST_LINE_PATH = 10;
+  static final byte _REQUEST_LINE_VERSION = 11;
 
   // Input / Parse header phase
 
-  static final byte _PARSE_HEADER = 10;
-  static final byte _PARSE_HEADER_NAME = 11;
-  static final byte _PARSE_HEADER_NAME_CASE_INSENSITIVE = 12;
-  static final byte _PARSE_HEADER_VALUE = 13;
+  static final byte _PARSE_HEADER = 12;
+  static final byte _PARSE_HEADER_NAME = 13;
+  static final byte _PARSE_HEADER_NAME_CASE_INSENSITIVE = 14;
+  static final byte _PARSE_HEADER_VALUE = 15;
 
   // Input / Request Body
 
-  static final byte _REQUEST_BODY = 14;
+  static final byte _REQUEST_BODY = 16;
 
   // Handle phase
 
-  static final byte _HANDLE = 15;
-  static final byte _HANDLE_INVOKE = 16;
+  static final byte _HANDLE = 17;
 
   // Output phase
 
-  static final byte _OUTPUT = 17;
-  static final byte _OUTPUT_BODY = 18;
-  static final byte _OUTPUT_BUFFER = 19;
-  static final byte _OUTPUT_HEADER = 20;
-  static final byte _OUTPUT_TERMINATOR = 21;
-  static final byte _OUTPUT_STATUS = 22;
-  static final byte _CLIENT_ERROR = 23;
+  static final byte _OUTPUT = 18;
+  static final byte _OUTPUT_BODY = 19;
+  static final byte _OUTPUT_BUFFER = 20;
+  static final byte _OUTPUT_HEADER = 21;
+  static final byte _OUTPUT_TERMINATOR = 22;
+  static final byte _OUTPUT_STATUS = 23;
 
   // Result phase
 
   static final byte _RESULT = 24;
 
-  static final byte _STOP = 100;
+  // Non-executable states
+
+  static final byte _KEEP_ALIVE = 25;
+  static final byte _HANDLE_INVOKE = 26;
+  static final byte _REQUEST_ERROR = 27;
+  static final byte _STOP = 28;
 
   byte[] buffer;
 
@@ -98,7 +106,7 @@ public final class HttpExchange implements Exchange, Runnable, objectos.http.Htt
 
   int bufferLimit;
 
-  Throwable error;
+  IOException error;
 
   Supplier<Handler> handlerSupplier;
 
@@ -166,7 +174,39 @@ public final class HttpExchange implements Exchange, Runnable, objectos.http.Htt
 
   @Override
   public final boolean active() {
-    return keepAlive;
+    return switch (state) {
+      case _SETUP -> executeRequestPhase();
+
+      case _HANDLE_INVOKE -> executeResponsePhase();
+
+      default -> throw new UnsupportedOperationException(
+        "Implement me :: state=" + state
+      );
+    };
+  }
+
+  private boolean executeRequestPhase() {
+    while (state <= _HANDLE) {
+      stepOne();
+    }
+
+    return state != _STOP;
+  }
+
+  private boolean executeResponsePhase() {
+    state = _OUTPUT;
+
+    while (state <= _RESULT) {
+      stepOne();
+    }
+
+    if (state == _KEEP_ALIVE) {
+      state = _SETUP;
+
+      return executeRequestPhase();
+    } else {
+      return state != _STOP;
+    }
   }
 
   @Override
@@ -175,37 +215,26 @@ public final class HttpExchange implements Exchange, Runnable, objectos.http.Htt
   }
 
   @Override
-  public final void executeRequestPhase() throws IOException {
-    if (state != _SETUP) {
-      // invalid initial state
-      return;
-    }
+  public final Body body() {
+    checkStateHandle();
 
-    while (state < _HANDLE_INVOKE) {
-      stepOne();
-    }
-
-    throwErrorIfNecessary();
+    return requestBody;
   }
 
-  private void throwErrorIfNecessary() throws IOException {
-    if (error == null) {
-      return;
+  @Override
+  public final Value header(Name name) {
+    Check.notNull(name, "name == null");
+
+    checkStateHandle();
+
+    Value value;
+    value = requestHeaders.get(name);
+
+    if (value == null) {
+      value = Value.NULL;
     }
 
-    if (error instanceof Error e) {
-      throw e;
-    }
-
-    if (error instanceof RuntimeException e) {
-      throw e;
-    }
-
-    if (error instanceof IOException e) {
-      throw e;
-    }
-
-    throw new IOException(error);
+    return value;
   }
 
   @Override
@@ -281,27 +310,6 @@ public final class HttpExchange implements Exchange, Runnable, objectos.http.Htt
     responseBody = new HttpChunkedChars(this, entity, charset);
   }
 
-  @Override
-  public final void executeResponsePhase() throws IOException {
-    checkStateHandle();
-
-    method = null;
-
-    if (requestHeaders != null) {
-      requestHeaders.clear();
-    }
-
-    requestPath = null;
-
-    state = _OUTPUT;
-
-    while (state <= _RESULT) {
-      stepOne();
-    }
-
-    throwErrorIfNecessary();
-  }
-
   private void checkStateHandle() {
     if (state != _HANDLE_INVOKE) {
       throw new IllegalStateException(
@@ -358,10 +366,6 @@ public final class HttpExchange implements Exchange, Runnable, objectos.http.Htt
     }
   }
 
-  final boolean isActive() {
-    return state != _STOP;
-  }
-
   final void stepOne() {
     state = switch (state) {
       // Setup phase
@@ -372,6 +376,8 @@ public final class HttpExchange implements Exchange, Runnable, objectos.http.Htt
 
       case _INPUT -> input();
       case _INPUT_READ -> inputRead();
+      case _INPUT_READ_EOF -> inputReadEof();
+      case _INPUT_READ_ERROR -> inputReadError();
 
       // Input / Request Line phase
 
@@ -395,7 +401,6 @@ public final class HttpExchange implements Exchange, Runnable, objectos.http.Htt
       // Handle phase
 
       case _HANDLE -> handle();
-      case _HANDLE_INVOKE -> handleInvoke();
 
       // Output phase
 
@@ -410,7 +415,7 @@ public final class HttpExchange implements Exchange, Runnable, objectos.http.Htt
 
       case _RESULT -> result();
 
-      case _CLIENT_ERROR -> {
+      case _REQUEST_ERROR -> {
         throw new UnsupportedOperationException(
           "status=" + status, error
         );
@@ -472,31 +477,6 @@ public final class HttpExchange implements Exchange, Runnable, objectos.http.Htt
     return versionMajor == 1 && versionMinor >= 1;
   }
 
-  private byte handleInvoke() {
-    try {
-      Handler handler;
-      handler = handlerSupplier.get();
-
-      handler.handle(this);
-
-      return _OUTPUT;
-    } catch (Throwable t) {
-      error = t;
-
-      return toClientError(HttpStatus.INTERNAL_SERVER_ERROR);
-    } finally {
-      // TODO log handle phase
-
-      method = null;
-
-      if (requestHeaders != null) {
-        requestHeaders.clear();
-      }
-
-      requestPath = null;
-    }
-  }
-
   private byte input() {
     nextAction = _REQUEST_LINE;
 
@@ -509,7 +489,9 @@ public final class HttpExchange implements Exchange, Runnable, objectos.http.Htt
     try {
       inputStream = socket.getInputStream();
     } catch (IOException e) {
-      return toInputReadError(e);
+      error = e;
+
+      return _INPUT_READ_ERROR;
     }
 
     int writableLength;
@@ -520,18 +502,34 @@ public final class HttpExchange implements Exchange, Runnable, objectos.http.Htt
     try {
       bytesRead = inputStream.read(buffer, bufferLimit, writableLength);
     } catch (IOException e) {
-      return toInputReadError(e);
+      error = e;
+
+      return _INPUT_READ_ERROR;
     }
 
     if (bytesRead < 0) {
-      keepAlive = false;
-
-      return _RESULT;
+      return _INPUT_READ_EOF;
     }
 
     bufferLimit += bytesRead;
 
     return nextAction;
+  }
+
+  private byte inputReadEof() {
+    reset();
+
+    keepAlive = false;
+
+    return _STOP;
+  }
+
+  private byte inputReadError() {
+    noteSink.send(EIO_READ_ERROR, error);
+
+    error = null;
+
+    return inputReadEof();
   }
 
   private byte output() {
@@ -970,7 +968,7 @@ public final class HttpExchange implements Exchange, Runnable, objectos.http.Htt
     length = contentLength.unsignedLongValue();
 
     if (length < 0) {
-      return toClientError(HttpStatus.BAD_REQUEST);
+      return toRequestError(HttpStatus.BAD_REQUEST);
     }
 
     // maybe we already have the body in our buffer...
@@ -1026,7 +1024,7 @@ public final class HttpExchange implements Exchange, Runnable, objectos.http.Htt
       // first char does not match any candidate
       // we are sure this is a bad request
 
-      default -> toClientError(HttpStatus.BAD_REQUEST);
+      default -> toRequestError(HttpStatus.BAD_REQUEST);
     };
   }
 
@@ -1061,7 +1059,7 @@ public final class HttpExchange implements Exchange, Runnable, objectos.http.Htt
       // clear method candidate just in case...
       method = null;
 
-      return toClientError(HttpStatus.BAD_REQUEST);
+      return toRequestError(HttpStatus.BAD_REQUEST);
     }
 
     // request OK so far...
@@ -1107,7 +1105,7 @@ public final class HttpExchange implements Exchange, Runnable, objectos.http.Htt
       // it does not match any candidate
       // we are sure this is a bad request
 
-      default -> toClientError(HttpStatus.BAD_REQUEST);
+      default -> toRequestError(HttpStatus.BAD_REQUEST);
     };
   }
 
@@ -1158,7 +1156,7 @@ public final class HttpExchange implements Exchange, Runnable, objectos.http.Htt
 
     if (b != Bytes.SOLIDUS) {
       // first char IS NOT '/' => BAD_REQUEST
-      return toClientError(HttpStatus.BAD_REQUEST);
+      return toRequestError(HttpStatus.BAD_REQUEST);
     }
 
     // mark request path start
@@ -1205,7 +1203,7 @@ public final class HttpExchange implements Exchange, Runnable, objectos.http.Htt
 
       // buffer does not start with 'HTTP/' => bad request
 
-      return toClientError(HttpStatus.BAD_REQUEST);
+      return toRequestError(HttpStatus.BAD_REQUEST);
     }
 
     byte maybeMajor;
@@ -1214,13 +1212,13 @@ public final class HttpExchange implements Exchange, Runnable, objectos.http.Htt
     if (!Bytes.isDigit(maybeMajor)) {
       // major version is not a digit => bad request
 
-      return toClientError(HttpStatus.BAD_REQUEST);
+      return toRequestError(HttpStatus.BAD_REQUEST);
     }
 
     if (buffer[index++] != '.') {
       // major version not followed by a DOT => bad request
 
-      return toClientError(HttpStatus.BAD_REQUEST);
+      return toRequestError(HttpStatus.BAD_REQUEST);
     }
 
     versionMajor = (byte) (maybeMajor - 0x30);
@@ -1231,7 +1229,7 @@ public final class HttpExchange implements Exchange, Runnable, objectos.http.Htt
     if (!Bytes.isDigit(maybeMinor)) {
       // minor version is not a digit => bad request
 
-      return toClientError(HttpStatus.BAD_REQUEST);
+      return toRequestError(HttpStatus.BAD_REQUEST);
     }
 
     versionMinor = (byte) (maybeMinor - 0x30);
@@ -1257,15 +1255,21 @@ public final class HttpExchange implements Exchange, Runnable, objectos.http.Htt
 
     // no line terminator after version => bad request
 
-    return toClientError(HttpStatus.BAD_REQUEST);
+    return toRequestError(HttpStatus.BAD_REQUEST);
   }
 
-  private byte result() {
+  private void reset() {
     bufferIndex = bufferLimit = -1;
 
-    if (error != null) {
-      keepAlive = false;
+    method = null;
+
+    if (requestHeaders != null) {
+      requestHeaders.clear();
     }
+
+    requestPath = null;
+
+    requestPathStart = -1;
 
     responseBody = null;
 
@@ -1278,12 +1282,16 @@ public final class HttpExchange implements Exchange, Runnable, objectos.http.Htt
     status = null;
 
     versionMajor = versionMinor = -1;
+  }
 
-    if (keepAlive) {
-      return _SETUP;
-    } else {
-      return _STOP;
+  private byte result() {
+    reset();
+
+    if (error != null) {
+      keepAlive = false;
     }
+
+    return keepAlive ? _KEEP_ALIVE : _STOP;
   }
 
   private byte setup() {
@@ -1296,10 +1304,10 @@ public final class HttpExchange implements Exchange, Runnable, objectos.http.Htt
     return _INPUT;
   }
 
-  private byte toClientError(HttpStatus error) {
+  private byte toRequestError(HttpStatus error) {
     status = error;
 
-    return _CLIENT_ERROR;
+    return _REQUEST_ERROR;
   }
 
   private byte toHandleOrRequestBody() {
@@ -1326,21 +1334,13 @@ public final class HttpExchange implements Exchange, Runnable, objectos.http.Htt
     return _INPUT_READ;
   }
 
-  private byte toInputReadError(IOException e) {
-    error = e;
-
-    noteSink.send(EIO_READ_ERROR, e);
-
-    return _RESULT;
-  }
-
   private byte toInputReadIfPossible(byte onRead, HttpStatus onBufferFull) {
     if (bufferLimit < buffer.length) {
       return toInputRead(onRead);
     }
 
     if (bufferLimit == buffer.length) {
-      return toClientError(onBufferFull);
+      return toRequestError(onBufferFull);
     }
 
     // buffer limit overflow!!!

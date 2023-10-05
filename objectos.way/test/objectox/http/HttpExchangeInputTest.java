@@ -76,99 +76,9 @@ public class HttpExchangeInputTest {
   }
 
   @Test(description = """
-  [#428] HTTP 001: INPUT_READ --> CLOSE
-
-  - Socket::getInputStream throws
+  [#428] HTTP 001: INPUT_READ --> INPUT_READ_EOF
   """)
-  public void inputRead01() {
-    IOException error;
-    error = new IOException();
-
-    HttpExchange exchange;
-    exchange = new HttpExchange();
-
-    var noteSink = new TestableNoteSink() {
-      Note1<?> note1;
-      Object value1;
-
-      @Override
-      public <T1> void send(Note1<T1> note, T1 v1) {
-        note1 = note;
-        value1 = v1;
-      }
-    };
-
-    exchange.bufferIndex = 0;
-    exchange.bufferLimit = 0;
-    exchange.nextAction = HttpExchange._REQUEST_LINE;
-    exchange.noteSink = noteSink;
-    exchange.socket = new Socket() {
-      @Override
-      public InputStream getInputStream() throws IOException {
-        throw error;
-      }
-    };
-    exchange.state = HttpExchange._INPUT_READ;
-
-    exchange.stepOne();
-
-    assertEquals(exchange.bufferIndex, 0);
-    assertEquals(exchange.bufferLimit, 0);
-    assertSame(exchange.error, error);
-    assertEquals(exchange.state, HttpExchange._RESULT);
-
-    assertSame(noteSink.note1, HttpExchange.EIO_READ_ERROR);
-    assertSame(noteSink.value1, error);
-  }
-
-  @Test(description = """
-  [#428] HTTP 001: INPUT_READ --> CLOSE
-
-  - InputStream::read throws
-  """)
-  public void inputRead02() {
-    IOException error;
-    error = new IOException();
-
-    var noteSink = new TestableNoteSink() {
-      Note1<?> note1;
-      Object value1;
-
-      @Override
-      public <T1> void send(Note1<T1> note, T1 v1) {
-        note1 = note;
-        value1 = v1;
-      }
-    };
-
-    HttpExchange exchange;
-    exchange = new HttpExchange();
-
-    exchange.buffer = new byte[64];
-    exchange.bufferIndex = 0;
-    exchange.bufferLimit = 0;
-    exchange.nextAction = HttpExchange._REQUEST_LINE;
-    exchange.noteSink = noteSink;
-    exchange.socket = TestableSocket.of(error);
-    exchange.state = HttpExchange._INPUT_READ;
-
-    exchange.stepOne();
-
-    assertEquals(exchange.bufferIndex, 0);
-    assertEquals(exchange.bufferLimit, 0);
-    assertSame(exchange.error, error);
-    assertEquals(exchange.state, HttpExchange._RESULT);
-
-    assertSame(noteSink.note1, HttpExchange.EIO_READ_ERROR);
-    assertSame(noteSink.value1, error);
-  }
-
-  @Test(description = """
-  [#428] HTTP 001: INPUT_READ --> CLOSE
-
-  - EOF
-  """)
-  public void inputRead03() {
+  public void inputReadToInputReadEof() {
     HttpExchange exchange;
     exchange = new HttpExchange();
 
@@ -183,7 +93,119 @@ public class HttpExchangeInputTest {
 
     assertEquals(exchange.bufferIndex, 0);
     assertEquals(exchange.bufferLimit, 0);
-    assertEquals(exchange.state, HttpExchange._RESULT);
+    assertEquals(exchange.state, HttpExchange._INPUT_READ_EOF);
+  }
+
+  @Test(description = """
+  [#428] HTTP 001: INPUT_READ --> INPUT_READ_ERROR
+
+  - Socket::getInputStream throws
+  """)
+  public void inputReadToInputReadError01() {
+    IOException error;
+    error = new IOException();
+
+    HttpExchange exchange;
+    exchange = new HttpExchange();
+
+    exchange.bufferIndex = 0;
+    exchange.bufferLimit = 0;
+    exchange.nextAction = HttpExchange._REQUEST_LINE;
+    exchange.socket = new Socket() {
+      @Override
+      public InputStream getInputStream() throws IOException {
+        throw error;
+      }
+    };
+    exchange.state = HttpExchange._INPUT_READ;
+
+    exchange.stepOne();
+
+    assertEquals(exchange.bufferIndex, 0);
+    assertEquals(exchange.bufferLimit, 0);
+    assertSame(exchange.error, error);
+    assertEquals(exchange.state, HttpExchange._INPUT_READ_ERROR);
+  }
+
+  @Test(description = """
+  [#428] HTTP 001: INPUT_READ --> INPUT_READ_ERROR
+
+  - InputStream::read throws
+  """)
+  public void inputReadToInputReadError02() {
+    IOException error;
+    error = new IOException();
+
+    HttpExchange exchange;
+    exchange = new HttpExchange();
+
+    exchange.buffer = new byte[64];
+    exchange.bufferIndex = 0;
+    exchange.bufferLimit = 0;
+    exchange.nextAction = HttpExchange._REQUEST_LINE;
+    exchange.socket = TestableSocket.of(error);
+    exchange.state = HttpExchange._INPUT_READ;
+
+    exchange.stepOne();
+
+    assertEquals(exchange.bufferIndex, 0);
+    assertEquals(exchange.bufferLimit, 0);
+    assertSame(exchange.error, error);
+    assertEquals(exchange.state, HttpExchange._INPUT_READ_ERROR);
+  }
+
+  @Test(description = """
+  [#523] HTTP: INPUT_READ_ERROR -> STOP
+
+  - state should be reset
+  """)
+  public void inputReadEof() {
+    HttpExchange exchange;
+    exchange = new HttpExchange();
+
+    exchange.bufferIndex = 1;
+    exchange.bufferLimit = 2;
+    exchange.state = HttpExchange._INPUT_READ_EOF;
+
+    exchange.stepOne();
+
+    assertEquals(exchange.bufferIndex, -1);
+    assertEquals(exchange.bufferLimit, -1);
+    assertEquals(exchange.state, HttpExchange._STOP);
+  }
+
+  @Test(description = """
+  [#523] HTTP: INPUT_READ_ERROR -> STOP
+  """)
+  public void inputReadError() {
+    IOException error;
+    error = new IOException();
+
+    HttpExchange exchange;
+    exchange = new HttpExchange();
+
+    var noteSink = new TestableNoteSink() {
+      Note1<?> note1;
+      Object value1;
+
+      @Override
+      public <T1> void send(Note1<T1> note, T1 v1) {
+        note1 = note;
+        value1 = v1;
+      }
+    };
+
+    exchange.error = error;
+    exchange.noteSink = noteSink;
+    exchange.state = HttpExchange._INPUT_READ_ERROR;
+
+    exchange.stepOne();
+
+    assertEquals(exchange.error, null);
+    assertEquals(exchange.state, HttpExchange._STOP);
+
+    assertSame(noteSink.note1, HttpExchange.EIO_READ_ERROR);
+    assertSame(noteSink.value1, error);
   }
 
 }

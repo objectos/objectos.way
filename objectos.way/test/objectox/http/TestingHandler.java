@@ -17,6 +17,7 @@ package objectox.http;
 
 import java.util.function.Supplier;
 import objectos.http.Http.Method;
+import objectos.http.HttpExchange;
 import objectos.http.server.Exchange;
 import objectos.http.server.Handler;
 import objectos.http.server.Request;
@@ -59,6 +60,33 @@ public final class TestingHandler implements Handler, Supplier<Handler> {
 
     else if (method == Method.POST) {
       Http006.INSTANCE.handle(exchange);
+    }
+  }
+
+  public final void acceptHttpExchange(HttpExchange exchange) {
+    if (exchange.hasResponse()) {
+      throw new UnsupportedOperationException("Implement me");
+    }
+
+    switch (exchange.path()) {
+      case "/" -> { Http001.response(exchange); return; }
+
+      case "/chunked.txt" -> { Http002.response(exchange); return; }
+    }
+
+    Method method;
+    method = exchange.method();
+
+    if (method == Method.GET) {
+      Http004.response(exchange);
+    }
+
+    else if (method == Method.POST) {
+      Http006.response(exchange);
+    }
+
+    if (!exchange.hasResponse()) {
+      throw new UnsupportedOperationException("Implement me");
     }
   }
 

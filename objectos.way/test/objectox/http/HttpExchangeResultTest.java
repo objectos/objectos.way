@@ -16,6 +16,8 @@
 package objectox.http;
 
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertFalse;
+import static org.testng.Assert.assertTrue;
 
 import java.util.List;
 import java.util.Map;
@@ -31,9 +33,11 @@ public class HttpExchangeResultTest {
 
     Http001.INPUT.accept(exchange);
 
-    while (exchange.isActive()) {
-      exchange.stepOne();
-    }
+    assertTrue(exchange.active());
+
+    Http001.response(exchange);
+
+    assertFalse(exchange.active());
 
     assertEquals(exchange.bufferIndex, -1);
     assertEquals(exchange.bufferLimit, -1);
@@ -81,7 +85,7 @@ public class HttpExchangeResultTest {
 
     exchange.stepOne();
 
-    assertEquals(exchange.state, HttpExchange._SETUP);
+    assertEquals(exchange.state, HttpExchange._KEEP_ALIVE);
   }
 
 }

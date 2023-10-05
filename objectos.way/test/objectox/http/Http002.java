@@ -73,7 +73,7 @@ public final class Http002 implements Handler {
 
   static final Http002 INSTANCE = new Http002();
 
-  public static void response(HttpExchange exchange) {
+  public static void response(objectos.http.HttpExchange exchange) {
     exchange.status(Http.Status.OK_200);
 
     exchange.header(Http.Header.CONTENT_TYPE, "text/plain; charset=utf-8");

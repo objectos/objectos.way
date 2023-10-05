@@ -56,7 +56,7 @@ public final class Http001 implements Handler {
 
   static final Http001 INSTANCE = new Http001();
 
-  public static void response(HttpExchange exchange) {
+  public static void response(objectos.http.HttpExchange exchange) {
     final byte[] bytes;
     bytes = Bytes.utf8("Hello World!\n");
 

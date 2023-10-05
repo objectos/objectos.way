@@ -40,8 +40,6 @@ public class HttpExchangeTest {
     try (HttpExchange exchange = HttpExchange.of(socket)) {
       assertTrue(exchange.active());
 
-      exchange.executeRequestPhase();
-
       assertEquals(exchange.method(), Http.Method.GET);
 
       assertEquals(exchange.path(), "/");
@@ -65,8 +63,6 @@ public class HttpExchangeTest {
       exchange.body(bytes);
 
       assertTrue(exchange.hasResponse());
-
-      exchange.executeResponsePhase();
 
       assertFalse(exchange.active());
     }

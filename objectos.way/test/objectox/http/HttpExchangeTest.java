@@ -16,10 +16,10 @@
 package objectox.http;
 
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertFalse;
+import static org.testng.Assert.assertTrue;
 
 import java.io.IOException;
-import java.util.List;
-import java.util.Map;
 import org.testng.annotations.Test;
 
 public class HttpExchangeTest {
@@ -29,30 +29,13 @@ public class HttpExchangeTest {
     HttpExchange exchange;
     exchange = new HttpExchange();
 
-    try (exchange) {
-      Http003.INPUT.accept(exchange);
+    Http003.INPUT.accept(exchange);
 
-      while (exchange.isActive()) {
-        exchange.stepOne();
-      }
-    }
+    assertTrue(exchange.active());
 
-    assertEquals(exchange.bufferIndex, -1);
-    assertEquals(exchange.bufferLimit, -1);
-    assertEquals(exchange.error, null);
-    assertEquals(exchange.keepAlive, false);
-    assertEquals(exchange.method, null);
-    assertEquals(exchange.requestHeaders, Map.of());
-    assertEquals(exchange.requestHeaderName, null);
-    assertEquals(exchange.requestPath, null);
-    assertEquals(exchange.responseBody, null);
-    assertEquals(exchange.responseHeaders, List.of());
-    assertEquals(exchange.responseHeadersIndex, -1);
-    assertEquals(exchange.socket.isClosed(), true);
-    assertEquals(exchange.state, HttpExchange._STOP);
-    assertEquals(exchange.status, null);
-    assertEquals(exchange.versionMajor, -1);
-    assertEquals(exchange.versionMinor, -1);
+    Http003.response(exchange);
+
+    assertFalse(exchange.active());
 
     TestableSocket socket;
     socket = (TestableSocket) exchange.socket;
@@ -65,30 +48,17 @@ public class HttpExchangeTest {
     HttpExchange exchange;
     exchange = new HttpExchange();
 
-    try (exchange) {
-      Http004.INPUT.accept(exchange);
+    Http004.INPUT.accept(exchange);
 
-      while (exchange.isActive()) {
-        exchange.stepOne();
-      }
-    }
+    assertTrue(exchange.active());
 
-    assertEquals(exchange.bufferIndex, -1);
-    assertEquals(exchange.bufferLimit, -1);
-    assertEquals(exchange.error, null);
-    assertEquals(exchange.keepAlive, false);
-    assertEquals(exchange.method, null);
-    assertEquals(exchange.requestHeaders, Map.of());
-    assertEquals(exchange.requestHeaderName, null);
-    assertEquals(exchange.requestPath, null);
-    assertEquals(exchange.responseBody, null);
-    assertEquals(exchange.responseHeaders, List.of());
-    assertEquals(exchange.responseHeadersIndex, -1);
-    assertEquals(exchange.socket.isClosed(), true);
-    assertEquals(exchange.state, HttpExchange._STOP);
-    assertEquals(exchange.status, null);
-    assertEquals(exchange.versionMajor, -1);
-    assertEquals(exchange.versionMinor, -1);
+    Http004.response(exchange);
+
+    assertTrue(exchange.active());
+
+    Http004.response(exchange);
+
+    assertFalse(exchange.active());
 
     TestableSocket socket;
     socket = (TestableSocket) exchange.socket;

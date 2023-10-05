@@ -149,9 +149,9 @@ public class HttpExchangeParseHeaderTest {
   }
 
   @Test(description = """
-  [#446] HTTP 001: PARSE_HEADER --> CLIENT_ERROR::BAD_REQUEST
+  [#446] HTTP 001: PARSE_HEADER --> REQUEST_ERROR::BAD_REQUEST
   """)
-  public void parseHeaderToClientErrorBadRequest() {
+  public void parseHeaderToRequestErrorBadRequest() {
     HttpExchange exchange;
     exchange = new HttpExchange();
 
@@ -167,7 +167,7 @@ public class HttpExchangeParseHeaderTest {
 
     assertEquals(exchange.bufferIndex, 0);
     assertEquals(exchange.bufferLimit, 1);
-    assertEquals(exchange.state, HttpExchange._CLIENT_ERROR);
+    assertEquals(exchange.state, HttpExchange._REQUEST_ERROR);
     assertEquals(exchange.status, HttpStatus.BAD_REQUEST);
   }
 
@@ -271,12 +271,12 @@ public class HttpExchangeParseHeaderTest {
   }
 
   @Test(description = """
-  [#444] HTTP 001: PARSE_HEADER_NAME --> CLIENT_ERROR::BAD_REQUEST
+  [#444] HTTP 001: PARSE_HEADER_NAME --> REQUEST_ERROR::BAD_REQUEST
 
   - buffer index remains unchanged
   - not header name set
   """)
-  public void parseHeaderNameToClientErrorBadRequest() {
+  public void parseHeaderNameToRequestErrorBadRequest() {
     HttpExchange exchange;
     exchange = new HttpExchange();
 
@@ -293,7 +293,7 @@ public class HttpExchangeParseHeaderTest {
 
     assertEquals(exchange.bufferIndex, 0);
     assertEquals(exchange.requestHeaderName, null);
-    assertEquals(exchange.state, HttpExchange._CLIENT_ERROR);
+    assertEquals(exchange.state, HttpExchange._REQUEST_ERROR);
     assertEquals(exchange.status, HttpStatus.BAD_REQUEST);
   }
 
@@ -468,9 +468,9 @@ public class HttpExchangeParseHeaderTest {
   }
 
   @Test(description = """
-  [#444] HTTP 001: PARSE_HEADER_VALUE --> CLIENT_ERROR::BAD_REQUEST
+  [#444] HTTP 001: PARSE_HEADER_VALUE --> REQUEST_ERROR::BAD_REQUEST
   """)
-  public void parseHeaderValueToClientErrorBadRequest() {
+  public void parseHeaderValueToRequestErrorBadRequest() {
     HttpExchange exchange;
     exchange = new HttpExchange();
 
@@ -488,7 +488,7 @@ public class HttpExchangeParseHeaderTest {
 
     assertEquals(exchange.bufferIndex, 5);
     assertEquals(exchange.requestHeaders, null);
-    assertEquals(exchange.state, HttpExchange._CLIENT_ERROR);
+    assertEquals(exchange.state, HttpExchange._REQUEST_ERROR);
     assertEquals(exchange.status, HttpStatus.BAD_REQUEST);
   }
 

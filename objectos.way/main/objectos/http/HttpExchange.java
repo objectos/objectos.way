@@ -20,6 +20,7 @@ import java.net.Socket;
 import java.nio.charset.Charset;
 import java.util.function.Supplier;
 import objectos.http.server.Handler;
+import objectos.http.server.Request.Body;
 import objectos.lang.CharWritable;
 import objectos.lang.Check;
 import objectos.lang.NoOpNoteSink;
@@ -33,10 +34,12 @@ public sealed interface HttpExchange extends AutoCloseable
     permits objectox.http.HttpExchange {
 
   static HttpExchange of(Socket socket) {
-    Check.notNull(socket, "socket == null");
+    return of(socket, 1024);
+  }
 
-    int bufferSize;
-    bufferSize = 1024;
+  static HttpExchange of(Socket socket, int bufferSize) {
+    Check.notNull(socket, "socket == null");
+    Check.argument(bufferSize > 128, "buffer size must be > 128");
 
     Supplier<Handler> handlerSupplier;
     handlerSupplier = null;
@@ -59,14 +62,6 @@ public sealed interface HttpExchange extends AutoCloseable
   boolean active();
 
   /**
-   * Parses the HTTP request.
-   *
-   * @throws IOException
-   *         if an I/O error occurs
-   */
-  void executeRequestPhase() throws IOException;
-
-  /**
    * Returns the request HTTP method.
    *
    * @return the request HTTP method
@@ -84,13 +79,9 @@ public sealed interface HttpExchange extends AutoCloseable
    */
   String path();
 
-  /**
-   * Sends the configured response to the remote client.
-   *
-   * @throws IOException
-   *         if an I/O error occurs
-   */
-  void executeResponsePhase() throws IOException;
+  Http.Header.Value header(Http.Header.Name name);
+
+  Body body();
 
   boolean hasResponse();
 

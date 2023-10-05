@@ -43,8 +43,9 @@ public class HttpTest {
 
   private int port;
 
-  private HttpService server;
+  private Thread server;
 
+  @SuppressWarnings("resource")
   @BeforeClass
   public void start() throws Exception {
     address = InetAddress.getLoopbackAddress();
@@ -56,12 +57,27 @@ public class HttpTest {
     InetSocketAddress socketAddress;
     socketAddress = new InetSocketAddress(address, port);
 
-    server = HttpService.create(
-      socketAddress, TestingHandler.INSTANCE,
-      HttpService.bufferSize(512)
-    );
+    server = Thread.ofPlatform().start(() -> {
+      try (ServerSocket serverSocket = new ServerSocket()) {
+        serverSocket.bind(socketAddress);
 
-    server.startService();
+        while (!Thread.currentThread().isInterrupted()) {
+          Socket socket;
+          socket = serverSocket.accept();
+
+          try (HttpExchange exchange = HttpExchange.of(socket, 512)) {
+            while (exchange.active()) {
+              TestingHandler handler;
+              handler = TestingHandler.INSTANCE;
+
+              handler.acceptHttpExchange(exchange);
+            }
+          }
+        }
+      } catch (IOException e) {
+        e.printStackTrace();
+      }
+    });
   }
 
   @Test
@@ -141,7 +157,7 @@ public class HttpTest {
   @AfterClass(alwaysRun = true)
   public void stop() throws Exception {
     if (server != null) {
-      server.stopService();
+      server.interrupt();
     }
   }
 
