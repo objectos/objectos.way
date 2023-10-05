@@ -16,6 +16,7 @@
 package objectos.way;
 
 import java.util.List;
+import java.util.stream.Stream;
 import org.testng.TestNG;
 import org.testng.xml.XmlPackage;
 import org.testng.xml.XmlSuite;
@@ -28,27 +29,31 @@ public class RunTests {
 
     suite.setName("Objectos Way");
 
-    XmlTest test;
-    test = new XmlTest(suite);
+    test(suite, "Objectos Lang", pkgs(
+      "objectos.lang"
+    ));
 
-    test.setName("All");
+    test(suite, "Objectos Util", pkgs(
+      "objectos.util"
+    ));
 
-    List<XmlPackage> packages;
-    packages = List.of(
-      new XmlPackage("objectos.css"),
-      new XmlPackage("objectos.css.internal"),
-      new XmlPackage("objectos.css.util"),
-      new XmlPackage("objectos.html"),
-      new XmlPackage("objectos.html.internal"),
-      new XmlPackage("objectos.html.tmpl"),
-      new XmlPackage("objectos.http"),
-      new XmlPackage("objectos.http.util"),
-      new XmlPackage("objectos.lang"),
-      new XmlPackage("objectos.util"),
-      new XmlPackage("objectox.http")
-    );
+    test(suite, "Objectos HTML", pkgs(
+      "objectos.html",
+      "objectos.html.internal",
+      "objectos.html.tmpl"
+    ));
 
-    test.setXmlPackages(packages);
+    test(suite, "Objectos CSS", pkgs(
+      "objectos.css",
+      "objectos.css.internal",
+      "objectos.css.util"
+    ));
+
+    test(suite, "Objectos HTTP", pkgs(
+      "objectos.http",
+      "objectos.http.util",
+      "objectox.http"
+    ));
 
     TestNG ng;
     ng = new TestNG();
@@ -59,8 +64,25 @@ public class RunTests {
       List.of(suite)
     );
 
+    ng.setVerbose(2);
+
     ng.run();
 
     System.exit(ng.getStatus());
+  }
+
+  private static void test(XmlSuite suite, String testName, List<XmlPackage> pkgs) {
+    XmlTest test;
+    test = new XmlTest(suite);
+
+    test.setName(testName);
+
+    test.setXmlPackages(pkgs);
+  }
+
+  private static List<XmlPackage> pkgs(String... names) {
+    return Stream.of(names)
+        .map(XmlPackage::new)
+        .toList();
   }
 }
