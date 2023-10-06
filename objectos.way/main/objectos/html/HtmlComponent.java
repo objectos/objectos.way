@@ -16,7 +16,7 @@
 package objectos.html;
 
 import objectos.html.internal.HtmlTemplateApi;
-import objectos.lang.Check;
+import objectox.lang.Check;
 
 /**
  * Allow for creating <em>components</em>, objects that can render parts of a

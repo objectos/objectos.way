@@ -149,8 +149,8 @@ WAY_TEST_RUNTIME_DEPS += $(call dependency,org.slf4j,slf4j-nop,$(SLF4J_VERSION))
 ## way test runtime exports
 WAY_TEST_JAVAX_EXPORTS := objectos.css.internal
 WAY_TEST_JAVAX_EXPORTS += objectos.html.internal
-WAY_TEST_JAVAX_EXPORTS += objectos.lang
 WAY_TEST_JAVAX_EXPORTS += objectos.util
+WAY_TEST_JAVAX_EXPORTS += objectox.lang
 WAY_TEST_JAVAX_EXPORTS += objectox.http
 
 ## way install coordinates

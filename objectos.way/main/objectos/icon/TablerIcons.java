@@ -46,7 +46,7 @@ import objectos.html.BaseTemplateDsl;
 import objectos.html.HtmlComponent;
 import objectos.html.tmpl.Api.ElementContents;
 import objectos.html.tmpl.Api.SvgInstruction;
-import objectos.lang.Check;
+import objectox.lang.Check;
 
 /**
  * Provides SVG icons from the <a href="https://tabler-icons.io/">tabler

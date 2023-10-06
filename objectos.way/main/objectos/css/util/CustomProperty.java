@@ -17,8 +17,8 @@ package objectos.css.util;
 
 import objectos.css.internal.RandomStringGenerator;
 import objectos.css.tmpl.Api;
-import objectos.lang.Equals;
-import objectos.lang.HashCode;
+import objectox.lang.Equals;
+import objectox.lang.HashCode;
 
 public class CustomProperty<T extends Api.PropertyValue> {
 

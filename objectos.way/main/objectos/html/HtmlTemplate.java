@@ -17,7 +17,7 @@ package objectos.html;
 
 import objectos.html.internal.HtmlCompiler02;
 import objectos.html.internal.HtmlTemplateApi;
-import objectos.lang.Check;
+import objectox.lang.Check;
 
 /**
  * A template in pure Java for generating HTML.

@@ -22,7 +22,7 @@ import static org.testng.Assert.assertTrue;
 
 import java.util.Arrays;
 import java.util.concurrent.ThreadLocalRandom;
-import objectos.lang.Check;
+import objectox.lang.Check;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 

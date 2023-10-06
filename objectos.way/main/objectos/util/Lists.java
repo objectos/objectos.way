@@ -19,8 +19,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Objects;
-import objectos.lang.Check;
-import objectos.lang.ToString;
+import objectox.lang.Check;
+import objectox.lang.ToString;
 
 /**
  * This class provides {@code static} utility methods for {@link java.util.List}

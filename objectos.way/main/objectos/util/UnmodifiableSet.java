@@ -17,7 +17,7 @@ package objectos.util;
 
 import java.util.Iterator;
 import java.util.Set;
-import objectos.lang.Check;
+import objectox.lang.Check;
 
 /**
  * An unmodifiable implementation of the {@link Set} interface.

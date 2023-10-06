@@ -30,11 +30,11 @@ import objectos.http.Http.Header.Value;
 import objectos.http.Http.Method;
 import objectos.http.Http.Status;
 import objectos.http.server.Body;
-import objectos.lang.CharWritable;
-import objectos.lang.Check;
-import objectos.lang.Note1;
-import objectos.lang.NoteSink;
 import objectos.util.GrowableList;
+import objectox.lang.CharWritable;
+import objectox.lang.Check;
+import objectox.lang.Note1;
+import objectox.lang.NoteSink;
 
 public final class HttpExchange implements objectos.http.HttpExchange {
 

@@ -30,7 +30,8 @@ public class RunTests {
     suite.setName("Objectos Way");
 
     test(suite, "Objectos Lang", pkgs(
-      "objectos.lang"
+      "objectos.lang",
+      "objectox.lang"
     ));
 
     test(suite, "Objectos Util", pkgs(

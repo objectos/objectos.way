@@ -22,8 +22,8 @@ import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import objectos.http.Http;
-import objectos.lang.CharWritable;
 import objectox.http.TestingInput.RegularInput;
+import objectox.lang.CharWritable;
 
 /**
  * Transfer-Encoding: Chunked

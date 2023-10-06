@@ -25,7 +25,7 @@ import objectos.css.util.IdSelector;
 import objectos.html.BaseTemplateDsl;
 import objectos.html.HtmlComponent;
 import objectos.html.tmpl.Api.ElementContents;
-import objectos.lang.Check;
+import objectox.lang.Check;
 
 public final class WayJs extends HtmlComponent {
 

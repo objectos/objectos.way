@@ -39,7 +39,7 @@ import objectos.css.tmpl.Api.Zero;
 import objectos.css.util.CustomProperty;
 import objectos.css.util.Length;
 import objectos.css.util.Percentage;
-import objectos.lang.Check;
+import objectox.lang.Check;
 
 public abstract class InternalCssTemplate extends GeneratedCssTemplate {
 

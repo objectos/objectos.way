@@ -17,7 +17,7 @@ package objectos.css.util;
 
 import java.util.Random;
 import objectos.css.tmpl.Api;
-import objectos.lang.Check;
+import objectox.lang.Check;
 
 public class Next {
 

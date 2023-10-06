@@ -19,10 +19,10 @@ import java.io.IOException;
 import java.net.Socket;
 import java.nio.charset.Charset;
 import objectos.http.server.Body;
-import objectos.lang.CharWritable;
-import objectos.lang.Check;
-import objectos.lang.NoOpNoteSink;
-import objectos.lang.NoteSink;
+import objectox.lang.CharWritable;
+import objectox.lang.Check;
+import objectox.lang.NoOpNoteSink;
+import objectox.lang.NoteSink;
 
 /**
  * Represents the server-side view of an HTTP exchange. This class allows for

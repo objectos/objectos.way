@@ -25,7 +25,7 @@ import objectos.html.internal.InternalNoOp;
 import objectos.html.internal.StandardElementName;
 import objectos.html.tmpl.Api;
 import objectos.html.tmpl.FragmentLambda;
-import objectos.lang.Check;
+import objectox.lang.Check;
 
 /**
  * Provides utility methods for Objectos HTML templates.

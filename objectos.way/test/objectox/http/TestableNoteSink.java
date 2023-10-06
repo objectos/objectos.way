@@ -15,8 +15,8 @@
  */
 package objectox.http;
 
-import objectos.lang.NoOpNoteSink;
-import objectos.lang.Note;
+import objectox.lang.NoOpNoteSink;
+import objectox.lang.Note;
 
 class TestableNoteSink extends NoOpNoteSink {
 

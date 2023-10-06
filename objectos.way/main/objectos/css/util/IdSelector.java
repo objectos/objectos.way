@@ -19,7 +19,7 @@ import java.util.Objects;
 import objectos.css.internal.SeqId;
 import objectos.css.tmpl.Api;
 import objectos.html.tmpl.Api.ExternalAttribute;
-import objectos.lang.Check;
+import objectox.lang.Check;
 
 public record IdSelector(String id) implements ExternalAttribute.Id, Api.SelectorInstruction {
 

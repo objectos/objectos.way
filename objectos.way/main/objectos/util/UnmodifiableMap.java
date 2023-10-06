@@ -18,7 +18,7 @@ package objectos.util;
 import java.util.Map;
 import java.util.function.BiFunction;
 import java.util.function.Function;
-import objectos.lang.Check;
+import objectox.lang.Check;
 
 /**
  * A hash-based unmodifiable implementation of the {@link Map} interface.

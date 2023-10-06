@@ -18,9 +18,9 @@ package objectos.css.internal;
 import java.util.Locale;
 import java.util.Random;
 import java.util.Set;
-import objectos.lang.Check;
-import objectos.lang.RandomString;
 import objectos.util.GrowableSet;
+import objectox.lang.Check;
+import objectox.lang.RandomString;
 
 public final class RandomStringGenerator {
 

@@ -17,7 +17,7 @@ package objectos.util;
 
 import java.util.Collection;
 import java.util.function.Predicate;
-import objectos.lang.ToString;
+import objectox.lang.ToString;
 
 /**
  * The base {@link Collection} interface for the Objectos Util collections API.
