@@ -309,6 +309,9 @@ CODE_JAVACX += --module-version $(CODE_VERSION)
 CODE_JAVACX += --release $(CODE_JAVA_RELEASE)
 CODE_JAVACX += $(CODE_DIRTY)
 
+## objectos.code resources
+# CODE_RESOURCES =
+
 ## objectos.code compilation marker
 CODE_COMPILE_MARKER = $(CODE_WORK)/compile-marker
 
@@ -316,7 +319,7 @@ CODE_COMPILE_MARKER = $(CODE_WORK)/compile-marker
 # objectos.code compilation targets
 #
 
-$(CODE_COMPILE_MARKER): $(CODE_COMPILE_DEPS) $(CODE_CLASSES)
+$(CODE_COMPILE_MARKER): $(CODE_COMPILE_DEPS) $(CODE_CLASSES) $(CODE_RESOURCES)
 	if [ -n "$(CODE_DIRTY)" ]; then \
 		$(CODE_JAVACX); \
 	fi
@@ -495,6 +498,9 @@ SELFGEN_JAVACX += --module-version $(SELFGEN_VERSION)
 SELFGEN_JAVACX += --release $(SELFGEN_JAVA_RELEASE)
 SELFGEN_JAVACX += $(SELFGEN_DIRTY)
 
+## objectos.selfgen resources
+# SELFGEN_RESOURCES =
+
 ## objectos.selfgen compilation marker
 SELFGEN_COMPILE_MARKER = $(SELFGEN_WORK)/compile-marker
 
@@ -502,7 +508,7 @@ SELFGEN_COMPILE_MARKER = $(SELFGEN_WORK)/compile-marker
 # objectos.selfgen compilation targets
 #
 
-$(SELFGEN_COMPILE_MARKER): $(SELFGEN_COMPILE_DEPS) $(SELFGEN_CLASSES)
+$(SELFGEN_COMPILE_MARKER): $(SELFGEN_COMPILE_DEPS) $(SELFGEN_CLASSES) $(SELFGEN_RESOURCES)
 	if [ -n "$(SELFGEN_DIRTY)" ]; then \
 		$(SELFGEN_JAVACX); \
 	fi
@@ -692,6 +698,9 @@ WAY_JAVACX += --module-version $(WAY_VERSION)
 WAY_JAVACX += --release $(WAY_JAVA_RELEASE)
 WAY_JAVACX += $(WAY_DIRTY)
 
+## objectos.way resources
+# WAY_RESOURCES =
+
 ## objectos.way compilation marker
 WAY_COMPILE_MARKER = $(WAY_WORK)/compile-marker
 
@@ -699,7 +708,7 @@ WAY_COMPILE_MARKER = $(WAY_WORK)/compile-marker
 # objectos.way compilation targets
 #
 
-$(WAY_COMPILE_MARKER): $(WAY_COMPILE_DEPS) $(WAY_CLASSES)
+$(WAY_COMPILE_MARKER): $(WAY_COMPILE_DEPS) $(WAY_CLASSES) $(WAY_RESOURCES)
 	if [ -n "$(WAY_DIRTY)" ]; then \
 		$(WAY_JAVACX); \
 	fi
