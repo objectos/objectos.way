@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2022-2023 Objectos Software LTDA.
+ * Copyright (C) 2023 Objectos Software LTDA.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,20 +13,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-/**
- * Defines the Objectos Way API.
- */
-module objectos.way {
-  exports objectos.css;
-  exports objectos.css.tmpl;
-  exports objectos.css.util;
-  exports objectos.html;
-  exports objectos.html.tmpl;
-  exports objectos.http;
-  exports objectos.http.media;
-  exports objectos.http.server;
-  exports objectos.http.util;
-  exports objectos.icon;
-  exports objectos.js;
-  exports objectos.lang;
+package objectos.lang;
+
+final class ShutdownHookListenerImpl implements ShutdownHook.Listener {
+
+  boolean called;
+
+  Exception exception;
+
+  ShutdownHookListenerImpl() {}
+
+  ShutdownHookListenerImpl(Exception exception) {
+    this.exception = exception;
+  }
+
+  @Override
+  public final void onShutdownHook() throws Exception {
+    called = true;
+
+    if (exception != null) {
+      throw exception;
+    }
+  }
+
 }
