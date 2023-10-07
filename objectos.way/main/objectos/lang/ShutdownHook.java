@@ -22,11 +22,22 @@ import objectox.lang.Check;
 
 /**
  * An utility for registering objects with the JVM shutdown hook facility.
+ *
+ * @see Runtime#addShutdownHook(Thread)
  */
 public final class ShutdownHook {
 
+  /**
+   * An object that gets notified when the {@code ShutdownHook} is run.
+   */
   public interface Listener {
 
+    /**
+     * Called once by the {@code ShutdownHook} on the JVM shutdown.
+     *
+     * @throws Exception
+     *         if this hook cannot be executed normally
+     */
     void onShutdownHook() throws Exception;
 
   }
@@ -39,6 +50,11 @@ public final class ShutdownHook {
 
   private ShutdownHook() {}
 
+  /**
+   * Returns the {@code ShutdownHook} singleton.
+   *
+   * @return the {@code ShutdownHook} singleton
+   */
   public static ShutdownHook of() {
     return ShutdownHookLazy.INSTANCE;
   }
@@ -56,18 +72,51 @@ public final class ShutdownHook {
     }
   }
 
+  /**
+   * Closes the specified {@link AutoCloseable} instance when this shutdown
+   * hook runs.
+   *
+   * <p>
+   * In other words, the closeable {@link AutoCloseable#close()} method is
+   * called by the shutdown hook when the latter runs.
+   *
+   * @param closeable
+   *        the auto closeable instance to be closed
+   */
   public final void addAutoCloseable(AutoCloseable closeable) {
     Check.notNull(closeable, "closeable == null");
 
     addHook(closeable);
   }
 
+  /**
+   * Notifies the specified {@link ShutdownHook.Listener} instance when this
+   * shutdown hook runs.
+   *
+   * <p>
+   * In other words, the listener {@link ShutdownHook.Listener#onShutdownHook()}
+   * method is called by the shutdown hook when the latter runs.
+   *
+   * @param listener
+   *        the listener instance to be notified
+   */
   public final void addListener(ShutdownHook.Listener listener) {
     Check.notNull(listener, "listener == null");
 
     addHook(listener);
   }
 
+  /**
+   * Interrupts the specified {@link Thread} instance when this shutdown hook
+   * runs.
+   *
+   * <p>
+   * In other words, the thread {@link Thread#interrupt()} is called by the
+   * shutdown hook when the latter runs.
+   *
+   * @param thread
+   *        the thread instance to be interrupted
+   */
   public final void addThread(Thread thread) {
     Check.notNull(thread, "thread == null");
 
