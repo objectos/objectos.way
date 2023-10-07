@@ -49,6 +49,19 @@ public class ShutdownHookTest {
 
     hook.addAutoCloseable(dirtyCloseable);
 
+    ShutdownHookListenerImpl cleanListener;
+    cleanListener = new ShutdownHookListenerImpl();
+
+    hook.addListener(cleanListener);
+
+    Exception exception;
+    exception = new Exception();
+
+    ShutdownHookListenerImpl dirtyListener;
+    dirtyListener = new ShutdownHookListenerImpl(exception);
+
+    hook.addListener(dirtyListener);
+
     class SomeThread extends Thread {
       private boolean intCalled;
 
@@ -93,12 +106,18 @@ public class ShutdownHookTest {
 
       assertTrue(someThread.intCalled);
 
+      assertTrue(cleanListener.called);
+
+      assertTrue(dirtyListener.called);
+
       List<Exception> exceptions;
       exceptions = logger.exceptions;
 
-      assertEquals(exceptions.size(), 1);
+      assertEquals(exceptions.size(), 2);
 
       assertSame(exceptions.get(0), ioException);
+
+      assertSame(exceptions.get(1), exception);
 
       Runtime runtime;
       runtime = Runtime.getRuntime();

@@ -28,6 +28,12 @@ import objectox.lang.NoteSink;
  */
 public final class ShutdownHook {
 
+  public interface Listener {
+
+    void onShutdownHook() throws Exception;
+
+  }
+
   private static final Note1<Throwable> CAUGHT_EXCEPTION = Note1.warn();
 
   private static final Note1<Long> FINISHED = Note1.info();
@@ -38,9 +44,7 @@ public final class ShutdownHook {
 
   private Job job;
 
-  private List<AutoCloseable> autoCloseables;
-
-  private List<Thread> threads;
+  private List<Object> hooks;
 
   private ShutdownHook() {}
 
@@ -64,32 +68,32 @@ public final class ShutdownHook {
   public final void addAutoCloseable(AutoCloseable closeable) {
     Check.notNull(closeable, "closeable == null");
 
-    if (autoCloseables == null) {
-      synchronized (this) {
-        if (autoCloseables == null) {
-          autoCloseables = new GrowableList<>();
-        }
-      }
-    }
+    addHook(closeable);
+  }
 
-    synchronized (autoCloseables) {
-      autoCloseables.add(closeable);
-    }
+  public final void addListener(ShutdownHook.Listener listener) {
+    Check.notNull(listener, "listener == null");
+
+    addHook(listener);
   }
 
   public final void addThread(Thread thread) {
     Check.notNull(thread, "thread == null");
 
-    if (threads == null) {
+    addHook(thread);
+  }
+
+  private void addHook(Object hook) {
+    if (hooks == null) {
       synchronized (this) {
-        if (threads == null) {
-          threads = new GrowableList<>();
+        if (hooks == null) {
+          hooks = new GrowableList<>();
         }
       }
     }
 
-    synchronized (threads) {
-      threads.add(thread);
+    synchronized (hooks) {
+      hooks.add(hook);
     }
   }
 
@@ -133,12 +137,8 @@ public final class ShutdownHook {
 
       noteSink.send(STARTED);
 
-      if (autoCloseables != null) {
-        doCloseables();
-      }
-
-      if (threads != null) {
-        doThreads();
+      if (hooks != null) {
+        doHooks();
       }
 
       long totalTime;
@@ -147,28 +147,31 @@ public final class ShutdownHook {
       noteSink.send(FINISHED, totalTime);
     }
 
-    private void doCloseables() {
-      for (int i = 0; i < autoCloseables.size(); i++) {
-        AutoCloseable c;
-        c = autoCloseables.get(i);
+    private void doHooks() {
+      for (int i = 0, size = hooks.size(); i < size; i++) {
+        Object hook;
+        hook = hooks.get(i);
 
         try {
-          c.close();
-        } catch (Exception e) {
-          log(e);
-        }
-      }
-    }
 
-    private void doThreads() {
-      for (int i = threads.size() - 1; i >= 0; i--) {
-        Thread t;
-        t = threads.get(i);
+          if (hook instanceof AutoCloseable c) {
+            c.close();
+          }
 
-        try {
-          t.interrupt();
-        } catch (Exception e) {
-          log(e);
+          else if (hook instanceof ShutdownHook.Listener l) {
+            l.onShutdownHook();
+          }
+
+          else if (hook instanceof Thread t) {
+            t.interrupt();
+          }
+
+          else {
+            throw new AssertionError("Unknown hook type=" + hook.getClass());
+          }
+
+        } catch (Throwable t) {
+          log(t);
         }
       }
     }
