@@ -181,7 +181,7 @@ public final class ShutdownHook {
       long totalTime;
       totalTime = System.currentTimeMillis() - startTime;
 
-      logger.log(Level.INFO, "Finished in %d ms", totalTime);
+      logger.log(Level.INFO, "Finished in {0,number} ms", totalTime);
     }
 
     private void doHooks() {
