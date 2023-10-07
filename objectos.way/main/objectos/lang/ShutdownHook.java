@@ -15,13 +15,10 @@
  */
 package objectos.lang;
 
+import java.lang.System.Logger.Level;
 import java.util.List;
 import objectos.util.GrowableList;
 import objectox.lang.Check;
-import objectox.lang.NoOpNoteSink;
-import objectox.lang.Note0;
-import objectox.lang.Note1;
-import objectox.lang.NoteSink;
 
 /**
  * An utility for registering objects with the JVM shutdown hook facility.
@@ -34,13 +31,7 @@ public final class ShutdownHook {
 
   }
 
-  private static final Note1<Throwable> CAUGHT_EXCEPTION = Note1.warn();
-
-  private static final Note1<Long> FINISHED = Note1.info();
-
-  private static final Note0 STARTED = Note0.info();
-
-  private NoteSink noteSink = NoOpNoteSink.getInstance();
+  private System.Logger logger = System.getLogger(ShutdownHook.class.getName());
 
   private Job job;
 
@@ -97,12 +88,9 @@ public final class ShutdownHook {
     }
   }
 
-  public synchronized final void noteSink(NoteSink sink) {
-    this.noteSink = Check.notNull(sink, "sink == null");
-  }
-
-  final void log(Throwable e) {
-    noteSink.send(CAUGHT_EXCEPTION, e);
+  // visible for testing
+  final void logger(System.Logger logger) {
+    this.logger = Check.notNull(logger, "logger == null");
   }
 
   // visible for testing
@@ -135,7 +123,7 @@ public final class ShutdownHook {
       long startTime;
       startTime = System.currentTimeMillis();
 
-      noteSink.send(STARTED);
+      logger.log(Level.INFO, "Started");
 
       if (hooks != null) {
         doHooks();
@@ -144,7 +132,7 @@ public final class ShutdownHook {
       long totalTime;
       totalTime = System.currentTimeMillis() - startTime;
 
-      noteSink.send(FINISHED, totalTime);
+      logger.log(Level.INFO, "Finished in %d ms", totalTime);
     }
 
     private void doHooks() {
@@ -171,7 +159,7 @@ public final class ShutdownHook {
           }
 
         } catch (Throwable t) {
-          log(t);
+          logger.log(Level.WARNING, () -> "Failed to run hook " + hook, t);
         }
       }
     }

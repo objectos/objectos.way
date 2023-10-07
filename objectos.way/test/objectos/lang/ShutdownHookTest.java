@@ -34,7 +34,7 @@ public class ShutdownHookTest {
     ShutdownHookLogger logger;
     logger = new ShutdownHookLogger();
 
-    hook.noteSink(logger);
+    hook.logger(logger);
 
     CloseableImpl cleanClosable;
     cleanClosable = new CloseableImpl();
@@ -110,7 +110,7 @@ public class ShutdownHookTest {
 
       assertTrue(dirtyListener.called);
 
-      List<Exception> exceptions;
+      List<Throwable> exceptions;
       exceptions = logger.exceptions;
 
       assertEquals(exceptions.size(), 2);
