@@ -28,12 +28,6 @@ import objectox.lang.NoteSink;
  */
 public final class ShutdownHook {
 
-  public interface Listener {
-
-    void onShutdownHook() throws Exception;
-
-  }
-
   private static final Note1<Throwable> CAUGHT_EXCEPTION = Note1.warn();
 
   private static final Note1<Long> FINISHED = Note1.info();
@@ -45,8 +39,6 @@ public final class ShutdownHook {
   private Job job;
 
   private List<AutoCloseable> autoCloseables;
-
-  private List<Listener> listeners;
 
   private List<Thread> threads;
 
@@ -82,21 +74,6 @@ public final class ShutdownHook {
 
     synchronized (autoCloseables) {
       autoCloseables.add(closeable);
-    }
-  }
-  public final void addListener(ShutdownHook.Listener listener) {
-    Check.notNull(listener, "listener == null");
-
-    if (listeners == null) {
-      synchronized (this) {
-        if (listeners == null) {
-          listeners = new GrowableList<>();
-        }
-      }
-    }
-
-    synchronized (listeners) {
-      listeners.add(listener);
     }
   }
 
@@ -160,10 +137,6 @@ public final class ShutdownHook {
         doCloseables();
       }
 
-      if (listeners != null) {
-        doListeners();
-      }
-
       if (threads != null) {
         doThreads();
       }
@@ -181,19 +154,6 @@ public final class ShutdownHook {
 
         try {
           c.close();
-        } catch (Exception e) {
-          log(e);
-        }
-      }
-    }
-
-    private void doListeners() {
-      for (int i = listeners.size() - 1; i >= 0; i--) {
-        ShutdownHook.Listener l;
-        l = listeners.get(i);
-
-        try {
-          l.onShutdownHook();
         } catch (Exception e) {
           log(e);
         }
