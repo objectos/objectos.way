@@ -163,6 +163,8 @@ public enum Property {
 
   MIN_WIDTH("min-width"),
 
+  OBJECT_FIT("object-fit"),
+
   OPACITY("opacity"),
 
   OUTLINE("outline"),

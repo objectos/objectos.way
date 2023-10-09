@@ -102,6 +102,7 @@ import objectos.css.tmpl.Api.MinmaxValue;
 import objectos.css.tmpl.Api.NoneKeyword;
 import objectos.css.tmpl.Api.NormalKeyword;
 import objectos.css.tmpl.Api.NumberValue;
+import objectos.css.tmpl.Api.ObjectFitValue;
 import objectos.css.tmpl.Api.OpacityDeclaration;
 import objectos.css.tmpl.Api.OutlineStyleValue;
 import objectos.css.tmpl.Api.OutlineValue;
@@ -875,6 +876,8 @@ abstract class GeneratedCssTemplate {
 
   protected static final FlexDirectionValue columnReverse = StandardName.columnReverse;
 
+  protected static final ObjectFitValue contain = StandardName.contain;
+
   protected static final ContentBoxKeyword contentBox = StandardName.contentBox;
 
   protected static final DisplayBoxValue contents = StandardName.contents;
@@ -882,6 +885,8 @@ abstract class GeneratedCssTemplate {
   protected static final CursorValue contextMenu = StandardName.contextMenu;
 
   protected static final CursorValue copy = StandardName.copy;
+
+  protected static final ObjectFitValue cover = StandardName.cover;
 
   protected static final CursorValue crosshair = StandardName.crosshair;
 
@@ -922,6 +927,8 @@ abstract class GeneratedCssTemplate {
   protected static final FontFamilyValue fangsong = StandardName.fangsong;
 
   protected static final FontFamilyValue fantasy = StandardName.fantasy;
+
+  protected static final ObjectFitValue fill = StandardName.fill;
 
   protected static final BaselinePosition first = StandardName.first;
 
@@ -1200,6 +1207,8 @@ abstract class GeneratedCssTemplate {
   protected static final OverflowPosition safe = StandardName.safe;
 
   protected static final FontFamilyValue sansSerif = StandardName.sansSerif;
+
+  protected static final ObjectFitValue scaleDown = StandardName.scaleDown;
 
   protected static final BackgroundAttachmentValue scroll = StandardName.scroll;
 
@@ -2859,6 +2868,18 @@ abstract class GeneratedCssTemplate {
   protected final StyleDeclaration mozTabSize(LengthValue value) {
     Check.notNull(value, "value == null");
     declaration(Property._MOZ_TAB_SIZE, value);
+    return InternalInstruction.INSTANCE;
+  }
+
+  protected final StyleDeclaration objectFit(GlobalKeyword value) {
+    Check.notNull(value, "value == null");
+    declaration(Property.OBJECT_FIT, value);
+    return InternalInstruction.INSTANCE;
+  }
+
+  protected final StyleDeclaration objectFit(ObjectFitValue value) {
+    Check.notNull(value, "value == null");
+    declaration(Property.OBJECT_FIT, value);
     return InternalInstruction.INSTANCE;
   }
 

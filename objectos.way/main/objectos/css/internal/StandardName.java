@@ -126,6 +126,8 @@ public enum StandardName implements SelectorInstruction, ColorValue, ValueInstru
 
   columnReverse("column-reverse"),
 
+  contain("contain"),
+
   contentBox("content-box"),
 
   contents("contents"),
@@ -133,6 +135,8 @@ public enum StandardName implements SelectorInstruction, ColorValue, ValueInstru
   contextMenu("context-menu"),
 
   copy("copy"),
+
+  cover("cover"),
 
   crosshair("crosshair"),
 
@@ -173,6 +177,8 @@ public enum StandardName implements SelectorInstruction, ColorValue, ValueInstru
   fangsong("fangsong"),
 
   fantasy("fantasy"),
+
+  fill("fill"),
 
   first("first"),
 
@@ -451,6 +457,8 @@ public enum StandardName implements SelectorInstruction, ColorValue, ValueInstru
   safe("safe"),
 
   sansSerif("sans-serif"),
+
+  scaleDown("scale-down"),
 
   scroll("scroll"),
 

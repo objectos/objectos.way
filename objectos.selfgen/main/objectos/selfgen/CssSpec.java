@@ -169,6 +169,7 @@ final class CssSpec extends CssSelfGen {
 
     // O
 
+    objectFit();
     opacity();
     outlineColor();
     outlineOffset();
@@ -1967,6 +1968,25 @@ final class CssSpec extends CssSelfGen {
       sig(globalKeyword, "value"),
       sig(value, "value"),
       sig(percentage, "value")
+    );
+  }
+
+  private void objectFit() {
+    var objectFit = t(
+      "ObjectFitValue",
+
+      k("contain"),
+      k("cover"),
+      k("fill"),
+      k("none"),
+      k("scale-down")
+    );
+
+    property(
+      "object-fit",
+
+      sig(globalKeyword, "value"),
+      sig(objectFit, "value")
     );
   }
 

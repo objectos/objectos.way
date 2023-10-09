@@ -176,6 +176,8 @@ public final class Api {
 
   public sealed interface NumberValue extends PropertyValue {}
 
+  public sealed interface ObjectFitValue extends PropertyValue {}
+
   public sealed interface OutlineStyleValue extends OutlineValue {}
 
   public sealed interface OutlineValue extends PropertyValue {}
@@ -283,6 +285,7 @@ public final class Api {
       MinHeightOrWidthValue,
       MinmaxValue,
       NumberValue,
+      ObjectFitValue,
       OutlineStyleValue,
       OutlineValue,
       OverflowPosition,
@@ -367,7 +370,7 @@ public final class Api {
 
   public sealed interface MinContentKeyword extends HeightOrWidthValue, MaxHeightOrWidthValue, MinHeightOrWidthValue, TrackBreadthValue {}
 
-  public sealed interface NoneKeyword extends AppearanceValue, BackgroundImageValue, ContentValue, CursorValue, DisplayBoxValue, FilterValue, GridTemplateColumnsValue, LineStyle, ListStyleImageValue, ListStyleTypeValue, MaxHeightOrWidthValue, OutlineStyleValue, PointerEventsValue, QuotesValue, ResizeValue, TextDecorationLineSingleValue, TextSizeAdjustValue, TextTransformValue {}
+  public sealed interface NoneKeyword extends AppearanceValue, BackgroundImageValue, ContentValue, CursorValue, DisplayBoxValue, FilterValue, GridTemplateColumnsValue, LineStyle, ListStyleImageValue, ListStyleTypeValue, MaxHeightOrWidthValue, ObjectFitValue, OutlineStyleValue, PointerEventsValue, QuotesValue, ResizeValue, TextDecorationLineSingleValue, TextSizeAdjustValue, TextTransformValue {}
 
   public sealed interface NormalKeyword extends AlignItemsValue, ContentValue, FontFeatureSettingsValue, FontStyleValue, FontVariationSettingsValue, FontWeightValue, JustifyContentValue, LetterSpacingValue, LineHeightValue, WordBreakValue {}
 

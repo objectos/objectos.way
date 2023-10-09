@@ -1572,6 +1572,38 @@ public class CssTemplateTest {
   }
 
   @Test
+  public void propertyObjectFit() {
+    test(
+      new CssTemplate() {
+        @Override
+        protected void definition() {
+          style(
+            div,
+
+            objectFit(contain),
+            objectFit(cover),
+            objectFit(fill),
+            objectFit(none),
+            objectFit(scaleDown),
+            objectFit(inherit)
+          );
+        }
+      },
+
+      """
+      div {
+        object-fit: contain;
+        object-fit: cover;
+        object-fit: fill;
+        object-fit: none;
+        object-fit: scale-down;
+        object-fit: inherit;
+      }
+      """
+    );
+  }
+
+  @Test
   public void propertyOpacity() {
     test(
       new CssTemplate() {
