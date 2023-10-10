@@ -25,8 +25,6 @@ package objectos.lang;
  * interface can be {@code null}.
  *
  * @see Note
- *
- * @since 0.2
  */
 public interface NoteSink {
 

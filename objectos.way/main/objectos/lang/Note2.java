@@ -61,7 +61,7 @@ public final class Note2<T1, T2> extends Note {
     Check.notNull(source, "source == null");
     Check.notNull(key, "key == null");
 
-    return new Note2<>(source(source), key, Level.DEBUG);
+    return new Note2<>(NoOpNoteSink.source(source), key, Level.DEBUG);
   }
 
   /**
@@ -85,7 +85,7 @@ public final class Note2<T1, T2> extends Note {
     Check.notNull(source, "source == null");
     Check.notNull(key, "key == null");
 
-    return new Note2<>(source(source), key, Level.ERROR);
+    return new Note2<>(NoOpNoteSink.source(source), key, Level.ERROR);
   }
 
   /**
@@ -109,7 +109,7 @@ public final class Note2<T1, T2> extends Note {
     Check.notNull(source, "source == null");
     Check.notNull(key, "key == null");
 
-    return new Note2<>(source(source), key, Level.INFO);
+    return new Note2<>(NoOpNoteSink.source(source), key, Level.INFO);
   }
 
   /**
@@ -133,7 +133,7 @@ public final class Note2<T1, T2> extends Note {
     Check.notNull(source, "source == null");
     Check.notNull(key, "key == null");
 
-    return new Note2<>(source(source), key, Level.TRACE);
+    return new Note2<>(NoOpNoteSink.source(source), key, Level.TRACE);
   }
 
   /**
@@ -157,11 +157,7 @@ public final class Note2<T1, T2> extends Note {
     Check.notNull(source, "source == null");
     Check.notNull(key, "key == null");
 
-    return new Note2<>(source(source), key, Level.WARN);
-  }
-
-  private static String source(Class<?> source) {
-    return source.getCanonicalName();
+    return new Note2<>(NoOpNoteSink.source(source), key, Level.WARN);
   }
 
 }
