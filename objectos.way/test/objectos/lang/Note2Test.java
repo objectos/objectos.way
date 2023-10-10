@@ -13,31 +13,48 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectox.lang;
+package objectos.lang;
 
 import static org.testng.Assert.assertEquals;
 
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-public class Event0Test {
+public class Note2Test {
 
-  final Note0 TRACE = Note0.trace();
+  private Note2<Void, Void> TRACE;
 
-  final Note0 DEBUG = Note0.debug();
+  private Note2<Void, Void> DEBUG;
 
-  final Note0 INFO = Note0.info();
+  private Note2<Void, Void> INFO;
 
-  final Note0 WARN = Note0.warn();
+  private Note2<Void, Void> WARN;
 
-  final Note0 ERROR = Note0.error();
+  private Note2<Void, Void> ERROR;
+
+  @BeforeClass
+  public void beforeClass() {
+    Class<?> s;
+    s = getClass();
+
+    TRACE = Note2.trace(s, "TRACE");
+
+    DEBUG = Note2.debug(s, "DEBUG");
+
+    INFO = Note2.info(s, "INFO");
+
+    WARN = Note2.warn(s, "WARN");
+
+    ERROR = Note2.error(s, "ERROR");
+  }
 
   @Test
   public void key() {
-    assertEquals(TRACE.key(), "Event0Test.java:24");
-    assertEquals(DEBUG.key(), "Event0Test.java:26");
-    assertEquals(INFO.key(), "Event0Test.java:28");
-    assertEquals(WARN.key(), "Event0Test.java:30");
-    assertEquals(ERROR.key(), "Event0Test.java:32");
+    assertEquals(TRACE.key(), "TRACE");
+    assertEquals(DEBUG.key(), "DEBUG");
+    assertEquals(INFO.key(), "INFO");
+    assertEquals(WARN.key(), "WARN");
+    assertEquals(ERROR.key(), "ERROR");
   }
 
   @Test
@@ -51,11 +68,17 @@ public class Event0Test {
 
   @Test
   public void source() {
-    assertEquals(TRACE.source(), "objectox.lang.Event0Test");
-    assertEquals(DEBUG.source(), "objectox.lang.Event0Test");
-    assertEquals(INFO.source(), "objectox.lang.Event0Test");
-    assertEquals(WARN.source(), "objectox.lang.Event0Test");
-    assertEquals(ERROR.source(), "objectox.lang.Event0Test");
+    Class<?> s;
+    s = getClass();
+
+    String name;
+    name = s.getCanonicalName();
+
+    assertEquals(TRACE.source(), name);
+    assertEquals(DEBUG.source(), name);
+    assertEquals(INFO.source(), name);
+    assertEquals(WARN.source(), name);
+    assertEquals(ERROR.source(), name);
   }
 
 }

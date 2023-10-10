@@ -15,7 +15,6 @@
  */
 package objectos.lang;
 
-import java.lang.System.Logger.Level;
 import java.util.List;
 import objectos.util.GrowableList;
 import objectox.lang.Check;
@@ -42,7 +41,7 @@ public final class ShutdownHook {
 
   }
 
-  private System.Logger logger = System.getLogger(ShutdownHook.class.getName());
+  private NoteSink noteSink = NoOpNoteSink.of();
 
   private Job job;
 
@@ -123,6 +122,21 @@ public final class ShutdownHook {
     addHook(thread);
   }
 
+  /**
+   * Sets this hook's {@code NoteSink} value to the specified value.
+   *
+   * <p>
+   * Please note that this hook does not synchronize the access to the internal
+   * note sink value. In other words, the behavior of this class is not defined
+   * if this method is invoked while the JVM shutdown process is executing.
+   *
+   * @param sink
+   *        the new sink value
+   */
+  public final void noteSink(NoteSink sink) {
+    noteSink = Check.notNull(sink, "sink == null");
+  }
+
   private void addHook(Object hook) {
     if (hooks == null) {
       synchronized (this) {
@@ -135,11 +149,6 @@ public final class ShutdownHook {
     synchronized (hooks) {
       hooks.add(hook);
     }
-  }
-
-  // visible for testing
-  final void logger(System.Logger logger) {
-    this.logger = Check.notNull(logger, "logger == null");
   }
 
   // visible for testing
@@ -162,6 +171,35 @@ public final class ShutdownHook {
     runtime.addShutdownHook(job);
   }
 
+  /*
+   * Note objects will be used only during JVM shutdown.
+   * So we create them lazily during Job execution.
+   */
+  static class Events {
+
+    static final Note0 START;
+
+    static final Note1<Object> EXECUTION_START;
+
+    static final Note2<Object, Throwable> EXECUTION_ERROR;
+
+    static final LongNote FINISH;
+
+    static {
+      Class<?> s;
+      s = ShutdownHook.class;
+
+      START = Note0.info(s, "Start");
+
+      EXECUTION_START = Note1.debug(s, "Execution start [hook]");
+
+      EXECUTION_ERROR = Note2.warn(s, "Execution error [hook] [exception]");
+
+      FINISH = LongNote.info(s, "Finish [Total time in ms]");
+    }
+
+  }
+
   private class Job extends Thread {
     Job() {
       super("ShutdownHook");
@@ -172,7 +210,7 @@ public final class ShutdownHook {
       long startTime;
       startTime = System.currentTimeMillis();
 
-      logger.log(Level.INFO, "Started");
+      noteSink.send(Events.START);
 
       if (hooks != null) {
         doHooks();
@@ -181,13 +219,15 @@ public final class ShutdownHook {
       long totalTime;
       totalTime = System.currentTimeMillis() - startTime;
 
-      logger.log(Level.INFO, "Finished in {0,number} ms", totalTime);
+      noteSink.send(Events.FINISH, totalTime);
     }
 
     private void doHooks() {
       for (int i = 0, size = hooks.size(); i < size; i++) {
         Object hook;
         hook = hooks.get(i);
+
+        noteSink.send(Events.EXECUTION_START, hook);
 
         try {
 
@@ -208,7 +248,7 @@ public final class ShutdownHook {
           }
 
         } catch (Throwable t) {
-          logger.log(Level.WARNING, () -> "Failed to run hook " + hook, t);
+          noteSink.send(Events.EXECUTION_ERROR, hook, t);
         }
       }
     }

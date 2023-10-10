@@ -13,31 +13,48 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectox.lang;
+package objectos.lang;
 
 import static org.testng.Assert.assertEquals;
 
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-public class Event3Test {
+public class Note0Test {
 
-  final Note3<Void, Void, Void> TRACE = Note3.trace();
+  private Note0 TRACE;
 
-  final Note3<Void, Void, Void> DEBUG = Note3.debug();
+  private Note0 DEBUG;
 
-  final Note3<Void, Void, Void> INFO = Note3.info();
+  private Note0 INFO;
 
-  final Note3<Void, Void, Void> WARN = Note3.warn();
+  private Note0 WARN;
 
-  final Note3<Void, Void, Void> ERROR = Note3.error();
+  private Note0 ERROR;
+
+  @BeforeClass
+  public void beforeClass() {
+    Class<?> s;
+    s = getClass();
+
+    TRACE = Note0.trace(s, "TRACE");
+
+    DEBUG = Note0.debug(s, "DEBUG");
+
+    INFO = Note0.info(s, "INFO");
+
+    WARN = Note0.warn(s, "WARN");
+
+    ERROR = Note0.error(s, "ERROR");
+  }
 
   @Test
   public void key() {
-    assertEquals(TRACE.key(), "Event3Test.java:24");
-    assertEquals(DEBUG.key(), "Event3Test.java:26");
-    assertEquals(INFO.key(), "Event3Test.java:28");
-    assertEquals(WARN.key(), "Event3Test.java:30");
-    assertEquals(ERROR.key(), "Event3Test.java:32");
+    assertEquals(TRACE.key(), "TRACE");
+    assertEquals(DEBUG.key(), "DEBUG");
+    assertEquals(INFO.key(), "INFO");
+    assertEquals(WARN.key(), "WARN");
+    assertEquals(ERROR.key(), "ERROR");
   }
 
   @Test
@@ -51,11 +68,17 @@ public class Event3Test {
 
   @Test
   public void source() {
-    assertEquals(TRACE.source(), "objectox.lang.Event3Test");
-    assertEquals(DEBUG.source(), "objectox.lang.Event3Test");
-    assertEquals(INFO.source(), "objectox.lang.Event3Test");
-    assertEquals(WARN.source(), "objectox.lang.Event3Test");
-    assertEquals(ERROR.source(), "objectox.lang.Event3Test");
+    Class<?> s;
+    s = getClass();
+
+    String name;
+    name = s.getCanonicalName();
+
+    assertEquals(TRACE.source(), name);
+    assertEquals(DEBUG.source(), name);
+    assertEquals(INFO.source(), name);
+    assertEquals(WARN.source(), name);
+    assertEquals(ERROR.source(), name);
   }
 
 }

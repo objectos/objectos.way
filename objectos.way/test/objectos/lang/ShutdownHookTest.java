@@ -34,7 +34,7 @@ public class ShutdownHookTest {
     ShutdownHookLogger logger;
     logger = new ShutdownHookLogger();
 
-    hook.logger(logger);
+    hook.noteSink(logger);
 
     CloseableImpl cleanClosable;
     cleanClosable = new CloseableImpl();

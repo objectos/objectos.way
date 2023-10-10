@@ -15,7 +15,7 @@
  */
 /**
  * Provides utilities for working with instances whose type is of the
- * {@code java.lang} package.
+ * {@code java.lang} package and a type-safe note sink API.
  *
  * <h2>Handling of {@code null} arguments</h2>
  *

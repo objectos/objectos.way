@@ -40,8 +40,8 @@
  * reference can be found in classes listed below:
  *
  * <ul>
- * <li>{@link objectox.lang.Note}
- * <li>{@link objectox.lang.NoteSink}
+ * <li>{@link objectos.lang.Note}
+ * <li>{@link objectos.lang.NoteSink}
  * </ul>
  *
  * <h2>Handling of {@code null} arguments</h2>

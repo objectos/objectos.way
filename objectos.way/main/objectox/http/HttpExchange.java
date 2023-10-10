@@ -30,15 +30,22 @@ import objectos.http.Http.Header.Value;
 import objectos.http.Http.Method;
 import objectos.http.Http.Status;
 import objectos.http.server.Body;
+import objectos.lang.Note1;
+import objectos.lang.NoteSink;
 import objectos.util.GrowableList;
 import objectox.lang.CharWritable;
 import objectox.lang.Check;
-import objectox.lang.Note1;
-import objectox.lang.NoteSink;
 
 public final class HttpExchange implements objectos.http.HttpExchange {
 
-  public static final Note1<IOException> EIO_READ_ERROR = Note1.error();
+  public static final Note1<IOException> EIO_READ_ERROR;
+
+  static {
+    Class<?> s;
+    s = HttpExchange.class;
+
+    EIO_READ_ERROR = Note1.error(s, "I/O read error");
+  }
 
   // Setup phase
 

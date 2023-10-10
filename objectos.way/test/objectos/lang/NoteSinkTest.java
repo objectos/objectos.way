@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectox.lang;
+package objectos.lang;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
@@ -25,45 +25,75 @@ import org.testng.annotations.Test;
 
 public class NoteSinkTest {
 
-  static final Note0 DEBUG0 = Note0.debug();
+  static final Note0 DEBUG0;
 
-  static final Note1<Arg1> DEBUG1 = Note1.debug();
+  static final Note1<Arg1> DEBUG1;
 
-  static final Note2<Arg1, Arg2> DEBUG2 = Note2.debug();
+  static final Note2<Arg1, Arg2> DEBUG2;
 
-  static final Note3<Arg1, Arg2, Duo<Arg1, Arg2>> DEBUG3 = Note3.debug();
+  static final Note3<Arg1, Arg2, Duo<Arg1, Arg2>> DEBUG3;
 
-  static final Note0 ERROR0 = Note0.error();
+  static final Note0 ERROR0;
 
-  static final Note1<Arg1> ERROR1 = Note1.error();
+  static final Note1<Arg1> ERROR1;
 
-  static final Note2<Arg1, Arg2> ERROR2 = Note2.error();
+  static final Note2<Arg1, Arg2> ERROR2;
 
-  static final Note3<Arg1, Arg2, Duo<Arg1, Arg2>> ERROR3 = Note3.error();
+  static final Note3<Arg1, Arg2, Duo<Arg1, Arg2>> ERROR3;
 
-  static final Note0 INFO0 = Note0.info();
+  static final Note0 INFO0;
 
-  static final Note1<Arg1> INFO1 = Note1.info();
+  static final Note1<Arg1> INFO1;
 
-  static final Note2<Arg1, Arg2> INFO2 = Note2.info();
+  static final Note2<Arg1, Arg2> INFO2;
 
-  static final Note3<Arg1, Arg2, Duo<Arg1, Arg2>> INFO3 = Note3.info();
+  static final Note3<Arg1, Arg2, Duo<Arg1, Arg2>> INFO3;
 
-  static final Note0 TRACE0 = Note0.trace();
+  static final Note0 TRACE0;
 
-  static final Note1<Arg1> TRACE1 = Note1.trace();
+  static final Note1<Arg1> TRACE1;
 
-  static final Note2<Arg1, Arg2> TRACE2 = Note2.trace();
+  static final Note2<Arg1, Arg2> TRACE2;
 
-  static final Note3<Arg1, Arg2, Duo<Arg1, Arg2>> TRACE3 = Note3.trace();
+  static final Note3<Arg1, Arg2, Duo<Arg1, Arg2>> TRACE3;
 
-  static final Note0 WARN0 = Note0.warn();
+  static final Note0 WARN0;
 
-  static final Note1<Arg1> WARN1 = Note1.warn();
+  static final Note1<Arg1> WARN1;
 
-  static final Note2<Arg1, Arg2> WARN2 = Note2.warn();
+  static final Note2<Arg1, Arg2> WARN2;
 
-  static final Note3<Arg1, Arg2, Duo<Arg1, Arg2>> WARN3 = Note3.warn();
+  static final Note3<Arg1, Arg2, Duo<Arg1, Arg2>> WARN3;
+
+  static {
+    Class<?> s;
+    s = NoteSinkTest.class;
+
+    DEBUG0 = Note0.debug(s, "DEBUG0");
+    DEBUG1 = Note1.debug(s, "DEBUG1");
+    DEBUG2 = Note2.debug(s, "DEBUG2");
+    DEBUG3 = Note3.debug(s, "DEBUG3");
+
+    ERROR0 = Note0.error(s, "ERROR0");
+    ERROR1 = Note1.error(s, "ERROR1");
+    ERROR2 = Note2.error(s, "ERROR2");
+    ERROR3 = Note3.error(s, "ERROR3");
+
+    INFO0 = Note0.info(s, "INFO0");
+    INFO1 = Note1.info(s, "INFO1");
+    INFO2 = Note2.info(s, "INFO2");
+    INFO3 = Note3.info(s, "INFO3");
+
+    TRACE0 = Note0.trace(s, "TRACE0");
+    TRACE1 = Note1.trace(s, "TRACE1");
+    TRACE2 = Note2.trace(s, "TRACE2");
+    TRACE3 = Note3.trace(s, "TRACE3");
+
+    WARN0 = Note0.warn(s, "WARN0");
+    WARN1 = Note1.warn(s, "WARN1");
+    WARN2 = Note2.warn(s, "WARN2");
+    WARN3 = Note3.warn(s, "WARN3");
+  }
 
   @Test
   public void isEnabled() {
@@ -199,6 +229,11 @@ public class NoteSinkTest {
     @Override
     public final void send(Note0 event) {
       set(event);
+    }
+
+    @Override
+    public final void send(LongNote note, long value) {
+      throw new UnsupportedOperationException("Implement me");
     }
 
     @Override

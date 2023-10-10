@@ -13,19 +13,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectox.lang;
+package objectos.lang;
 
-final class Arg2 {
+import static org.testng.Assert.assertEquals;
 
-  final int value;
+import org.testng.annotations.Test;
 
-  Arg2(int value) {
-    this.value = value;
-  }
+public class LevelTest {
 
-  @Override
-  public final String toString() {
-    return Integer.toString(value);
+  @Test
+  public void orderingTest() {
+    Level[] values;
+    values = Level.values();
+
+    assertEquals(values.length, 5);
+
+    assertEquals(values[0], Level.TRACE);
+
+    assertEquals(values[1], Level.DEBUG);
+
+    assertEquals(values[2], Level.INFO);
+
+    assertEquals(values[3], Level.WARN);
+
+    assertEquals(values[4], Level.ERROR);
   }
 
 }

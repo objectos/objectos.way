@@ -13,22 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectox.lang;
+package objectos.lang;
 
-final class Duo<T1, T2> {
+final class Arg1 {
 
-  final T1 value1;
+  final int value;
 
-  final T2 value2;
-
-  Duo(T1 value1, T2 value2) {
-    this.value1 = value1;
-    this.value2 = value2;
+  Arg1(int value) {
+    this.value = value;
   }
 
   @Override
   public final String toString() {
-    return "value1=" + value1 + ":value2=" + value2;
+    return Integer.toString(value);
   }
 
 }

@@ -17,28 +17,16 @@ package objectos.lang;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.ResourceBundle;
-import java.util.function.Supplier;
 
-final class ShutdownHookLogger implements System.Logger {
+final class ShutdownHookLogger extends NoOpNoteSink {
 
   final List<Throwable> exceptions = new ArrayList<Throwable>();
 
   @Override
-  public String getName() { return null; }
-
-  @Override
-  public boolean isLoggable(Level level) { return false; }
-
-  @Override
-  public void log(Level level, ResourceBundle bundle, String msg, Throwable thrown) {}
-
-  @Override
-  public void log(Level level, ResourceBundle bundle, String format, Object... params) {}
-
-  @Override
-  public void log(Level level, Supplier<String> msgSupplier, Throwable thrown) {
-    exceptions.add(thrown);
+  public <T1, T2> void send(Note2<T1, T2> note, T1 v1, T2 v2) {
+    if (v2 instanceof Throwable t) {
+      exceptions.add(t);
+    }
   }
 
 }

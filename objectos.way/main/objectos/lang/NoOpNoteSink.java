@@ -13,14 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectox.lang;
+package objectos.lang;
+
+import objectox.lang.Check;
 
 /**
  * A no-op {@code NoteSink} implementation (for the most part). The one
  * exception is the {@link NoteSink#replace(NoteSink)} operation that actually
  * returns the supplied value.
- *
- * @since 0.2
  */
 public class NoOpNoteSink implements NoteSink {
 
@@ -37,7 +37,7 @@ public class NoOpNoteSink implements NoteSink {
    *
    * @return the {@code static} instance
    */
-  public static NoOpNoteSink getInstance() {
+  public static NoOpNoteSink of() {
     return INSTANCE;
   }
 
@@ -45,7 +45,7 @@ public class NoOpNoteSink implements NoteSink {
    * Returns {@code false}.
    *
    * @param note
-   *        an note instance (ignored)
+   *        a note instance (ignored)
    *
    * @return {@code false}
    */
@@ -73,7 +73,7 @@ public class NoOpNoteSink implements NoteSink {
    * Does nothing, this is a no-op sink.
    *
    * @param note
-   *        an note instance (ignored)
+   *        a note instance (ignored)
    */
   @Override
   public void send(Note0 note) {
@@ -84,7 +84,20 @@ public class NoOpNoteSink implements NoteSink {
    * Does nothing, this is a no-op sink.
    *
    * @param note
-   *        an note instance (ignored)
+   *        a note instance (ignored)
+   * @param value
+   *        a value (ignored)
+   */
+  @Override
+  public void send(LongNote note, long value) {
+    // noop
+  }
+
+  /**
+   * Does nothing, this is a no-op sink.
+   *
+   * @param note
+   *        a note instance (ignored)
    * @param v1
    *        a value (ignored)
    */
@@ -97,7 +110,7 @@ public class NoOpNoteSink implements NoteSink {
    * Does nothing, this is a no-op sink.
    *
    * @param note
-   *        an note instance (ignored)
+   *        a note instance (ignored)
    * @param v1
    *        a first value (ignored)
    * @param v2
@@ -112,7 +125,7 @@ public class NoOpNoteSink implements NoteSink {
    * Does nothing, this is a no-op sink.
    *
    * @param note
-   *        an note instance (ignored)
+   *        a note instance (ignored)
    * @param v1
    *        a first value (ignored)
    * @param v2
@@ -123,6 +136,10 @@ public class NoOpNoteSink implements NoteSink {
   @Override
   public <T1, T2, T3> void send(Note3<T1, T2, T3> note, T1 v1, T2 v2, T3 v3) {
     // noop
+  }
+
+  static String source(Class<?> source) {
+    return source.getCanonicalName();
   }
 
 }

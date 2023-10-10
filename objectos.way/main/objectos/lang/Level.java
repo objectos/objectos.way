@@ -13,13 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectox.lang;
+package objectos.lang;
 
 /**
  * Represents the severity of a `Note`. They may be used by `NoteSink` instances
  * to limit which notes are actually sent.
- *
- * @since 0.2
  */
 public enum Level {
 

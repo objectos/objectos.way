@@ -21,7 +21,7 @@ import static org.testng.Assert.assertSame;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.Socket;
-import objectox.lang.Note1;
+import objectos.lang.Note1;
 import org.testng.annotations.Test;
 
 @SuppressWarnings("resource")

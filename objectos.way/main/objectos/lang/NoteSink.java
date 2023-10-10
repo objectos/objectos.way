@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectox.lang;
+package objectos.lang;
 
 /**
  * An object responsible for sending the notes of a program; it behaves as an
@@ -59,6 +59,16 @@ public interface NoteSink {
    *        an note instance
    */
   void send(Note0 note);
+
+  /**
+   * Sends the given note that takes a {@code long} argument.
+   *
+   * @param note
+   *        an note instance
+   * @param value
+   *        argument of the consumed note
+   */
+  void send(LongNote note, long value);
 
   /**
    * Sends the given note that takes one argument.
