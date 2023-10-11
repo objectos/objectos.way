@@ -49,27 +49,6 @@ public class ShutdownHookTest {
 
     hook.addAutoCloseable(dirtyCloseable);
 
-    ShutdownHookListenerImpl cleanListener;
-    cleanListener = new ShutdownHookListenerImpl();
-
-    hook.addListener(cleanListener);
-
-    Exception exception;
-    exception = new Exception();
-
-    ShutdownHookListenerImpl dirtyListener;
-    dirtyListener = new ShutdownHookListenerImpl(exception);
-
-    hook.addListener(dirtyListener);
-
-    List<Object> hooks;
-    hooks = noteSink.hooks;
-
-    assertSame(hooks.get(0), cleanClosable);
-    assertSame(hooks.get(1), dirtyCloseable);
-    assertSame(hooks.get(2), cleanListener);
-    assertSame(hooks.get(3), dirtyListener);
-
     class SomeThread extends Thread {
       private boolean intCalled;
 
@@ -104,6 +83,14 @@ public class ShutdownHookTest {
 
     someThread.start();
 
+    List<Object> hooks;
+    hooks = noteSink.hooks;
+
+    assertEquals(hooks.size(), 3);
+    assertSame(hooks.get(0), cleanClosable);
+    assertSame(hooks.get(1), dirtyCloseable);
+    assertSame(hooks.get(2), someThread);
+
     try {
       Thread thread;
       thread = hook.startAndJoinThread();
@@ -114,18 +101,12 @@ public class ShutdownHookTest {
 
       assertTrue(someThread.intCalled);
 
-      assertTrue(cleanListener.called);
-
-      assertTrue(dirtyListener.called);
-
       List<Throwable> exceptions;
       exceptions = noteSink.exceptions;
 
-      assertEquals(exceptions.size(), 2);
+      assertEquals(exceptions.size(), 1);
 
       assertSame(exceptions.get(0), ioException);
-
-      assertSame(exceptions.get(1), exception);
 
       Runtime runtime;
       runtime = Runtime.getRuntime();

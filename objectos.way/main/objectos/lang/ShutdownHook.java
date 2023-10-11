@@ -35,21 +35,6 @@ public final class ShutdownHook {
     REGISTRATION = Note1.info(s, "Registration [hook]");
   }
 
-  /**
-   * An object that gets notified when the {@code ShutdownHook} is run.
-   */
-  public interface Listener {
-
-    /**
-     * Called once by the {@code ShutdownHook} on the JVM shutdown.
-     *
-     * @throws Exception
-     *         if this hook cannot be executed normally
-     */
-    void onShutdownHook() throws Exception;
-
-  }
-
   private NoteSink noteSink = NoOpNoteSink.of();
 
   private Job job;
@@ -95,23 +80,6 @@ public final class ShutdownHook {
     Check.notNull(closeable, "closeable == null");
 
     addHook(closeable);
-  }
-
-  /**
-   * Notifies the specified {@link ShutdownHook.Listener} instance when this
-   * shutdown hook runs.
-   *
-   * <p>
-   * In other words, the listener {@link ShutdownHook.Listener#onShutdownHook()}
-   * method is called by the shutdown hook when the latter runs.
-   *
-   * @param listener
-   *        the listener instance to be notified
-   */
-  public final void addListener(ShutdownHook.Listener listener) {
-    Check.notNull(listener, "listener == null");
-
-    addHook(listener);
   }
 
   /**
@@ -244,10 +212,6 @@ public final class ShutdownHook {
 
           if (hook instanceof AutoCloseable c) {
             c.close();
-          }
-
-          else if (hook instanceof ShutdownHook.Listener l) {
-            l.onShutdownHook();
           }
 
           else if (hook instanceof Thread t) {
