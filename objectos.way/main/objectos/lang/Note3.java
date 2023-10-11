@@ -16,6 +16,7 @@
 package objectos.lang;
 
 import objectox.lang.Check;
+import objectox.lang.Notes;
 
 /**
  * A note that takes three arguments.
@@ -37,8 +38,8 @@ public final class Note3<T1, T2, T3> extends Note {
    * @param level
    *        the severity of this note
    */
-  public Note3(String source, Object key, Level level) {
-    super(source, key, level);
+  Note3(Level level, String source, Object key) {
+    super(level, source, key);
   }
 
   /**
@@ -63,7 +64,7 @@ public final class Note3<T1, T2, T3> extends Note {
     Check.notNull(source, "source == null");
     Check.notNull(key, "key == null");
 
-    return new Note3<>(NoOpNoteSink.source(source), key, Level.DEBUG);
+    return new Note3<>(Level.DEBUG, Notes.source(source), key);
   }
 
   /**
@@ -88,7 +89,7 @@ public final class Note3<T1, T2, T3> extends Note {
     Check.notNull(source, "source == null");
     Check.notNull(key, "key == null");
 
-    return new Note3<>(NoOpNoteSink.source(source), key, Level.ERROR);
+    return new Note3<>(Level.ERROR, Notes.source(source), key);
   }
 
   /**
@@ -113,7 +114,7 @@ public final class Note3<T1, T2, T3> extends Note {
     Check.notNull(source, "source == null");
     Check.notNull(key, "key == null");
 
-    return new Note3<>(NoOpNoteSink.source(source), key, Level.INFO);
+    return new Note3<>(Level.INFO, Notes.source(source), key);
   }
 
   /**
@@ -138,7 +139,7 @@ public final class Note3<T1, T2, T3> extends Note {
     Check.notNull(source, "source == null");
     Check.notNull(key, "key == null");
 
-    return new Note3<>(NoOpNoteSink.source(source), key, Level.TRACE);
+    return new Note3<>(Level.TRACE, Notes.source(source), key);
   }
 
   /**
@@ -163,7 +164,7 @@ public final class Note3<T1, T2, T3> extends Note {
     Check.notNull(source, "source == null");
     Check.notNull(key, "key == null");
 
-    return new Note3<>(NoOpNoteSink.source(source), key, Level.WARN);
+    return new Note3<>(Level.WARN, Notes.source(source), key);
   }
 
 }

@@ -138,8 +138,4 @@ public class NoOpNoteSink implements NoteSink {
     // noop
   }
 
-  static String source(Class<?> source) {
-    return source.getCanonicalName();
-  }
-
 }

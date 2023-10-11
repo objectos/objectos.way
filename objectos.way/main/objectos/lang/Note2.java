@@ -16,6 +16,7 @@
 package objectos.lang;
 
 import objectox.lang.Check;
+import objectox.lang.Notes;
 
 /**
  * A note that takes two arguments.
@@ -28,16 +29,16 @@ public final class Note2<T1, T2> extends Note {
   /**
    * Creates a new note instance.
    *
+   * @param level
+   *        the severity of this note
    * @param source
    *        a name to identify the source class this note is bound to
    * @param key
    *        a key that uniquely identifies this note within the given
    *        {@code source}
-   * @param level
-   *        the severity of this note
    */
-  public Note2(String source, Object key, Level level) {
-    super(source, key, level);
+  Note2(Level level, String source, Object key) {
+    super(level, source, key);
   }
 
   /**
@@ -61,7 +62,7 @@ public final class Note2<T1, T2> extends Note {
     Check.notNull(source, "source == null");
     Check.notNull(key, "key == null");
 
-    return new Note2<>(NoOpNoteSink.source(source), key, Level.DEBUG);
+    return new Note2<>(Level.DEBUG, Notes.source(source), key);
   }
 
   /**
@@ -85,7 +86,7 @@ public final class Note2<T1, T2> extends Note {
     Check.notNull(source, "source == null");
     Check.notNull(key, "key == null");
 
-    return new Note2<>(NoOpNoteSink.source(source), key, Level.ERROR);
+    return new Note2<>(Level.ERROR, Notes.source(source), key);
   }
 
   /**
@@ -109,7 +110,7 @@ public final class Note2<T1, T2> extends Note {
     Check.notNull(source, "source == null");
     Check.notNull(key, "key == null");
 
-    return new Note2<>(NoOpNoteSink.source(source), key, Level.INFO);
+    return new Note2<>(Level.INFO, Notes.source(source), key);
   }
 
   /**
@@ -133,7 +134,7 @@ public final class Note2<T1, T2> extends Note {
     Check.notNull(source, "source == null");
     Check.notNull(key, "key == null");
 
-    return new Note2<>(NoOpNoteSink.source(source), key, Level.TRACE);
+    return new Note2<>(Level.TRACE, Notes.source(source), key);
   }
 
   /**
@@ -157,7 +158,7 @@ public final class Note2<T1, T2> extends Note {
     Check.notNull(source, "source == null");
     Check.notNull(key, "key == null");
 
-    return new Note2<>(NoOpNoteSink.source(source), key, Level.WARN);
+    return new Note2<>(Level.WARN, Notes.source(source), key);
   }
 
 }

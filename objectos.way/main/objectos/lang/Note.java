@@ -80,44 +80,21 @@ import objectox.lang.HashCode;
  * This class represents an event in an event listener context. However it is
  * not named {@code Event} as the name is an overloaded term in programming. In
  * order to avoid name clashes this class is named {@code Note} instead.
- *
- * @since 0.2
  */
-public abstract class Note {
+public sealed abstract class Note permits LongNote, Note0, Note1, Note2, Note3 {
+
+  private final Level level;
 
   private final String source;
 
   private final Object key;
 
-  private final Level level;
+  Note(Level level, String source, Object key) {
+    this.level = Check.notNull(level, "level == null");
 
-  Note(String source, Object key, Level level) {
     this.source = Check.notNull(source, "source == null");
 
     this.key = Check.notNull(key, "key == null");
-
-    this.level = Check.notNull(level, "level == null");
-  }
-
-  static <E extends Note> E create(Level l, Constructor<E> c) {
-    StackWalker w;
-    w = StackWalker.getInstance();
-
-    return w.walk(s -> {
-      var skip = s.skip(2);
-
-      var maybe = skip.findFirst();
-
-      var f = maybe.orElseThrow();
-
-      var source = f.getClassName();
-
-      var key = f.getFileName();
-
-      key = key + ":" + f.getLineNumber();
-
-      return c.create(source, key, l);
-    });
   }
 
   /**
@@ -171,16 +148,6 @@ public abstract class Note {
   }
 
   /**
-   * Returns the key of this note. The key of an note is an object that
-   * uniquely identifies an note within a given source.
-   *
-   * @return the key of this note
-   */
-  public final Object key() {
-    return key;
-  }
-
-  /**
    * Returns the severity level of this note.
    *
    * @return the severity level of this note
@@ -198,6 +165,16 @@ public abstract class Note {
    */
   public final String source() {
     return source;
+  }
+
+  /**
+   * Returns the key of this note. The key of an note is an object that
+   * uniquely identifies an note within a given source.
+   *
+   * @return the key of this note
+   */
+  public final Object key() {
+    return key;
   }
 
   /**
@@ -230,13 +207,6 @@ public abstract class Note {
     sb.append(']');
 
     return sb.toString();
-  }
-
-  @FunctionalInterface
-  interface Constructor<E extends Note> {
-
-    E create(String source, String key, Level level);
-
   }
 
 }

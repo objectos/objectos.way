@@ -16,6 +16,7 @@
 package objectos.lang;
 
 import objectox.lang.Check;
+import objectox.lang.Notes;
 
 /**
  * A note that takes a {@code long} argument.
@@ -25,16 +26,16 @@ public final class LongNote extends Note {
   /**
    * Creates a new note instance.
    *
+   * @param level
+   *        the severity of this note
    * @param source
    *        a name to identify the source class this note is bound to
    * @param key
    *        a key that uniquely identifies this note within the given
    *        {@code source}
-   * @param level
-   *        the severity of this note
    */
-  public LongNote(String source, Object key, Level level) {
-    super(source, key, level);
+  LongNote(Level level, String source, Object key) {
+    super(level, source, key);
   }
 
   /**
@@ -56,7 +57,7 @@ public final class LongNote extends Note {
     Check.notNull(source, "source == null");
     Check.notNull(key, "key == null");
 
-    return new LongNote(NoOpNoteSink.source(source), key, Level.INFO);
+    return new LongNote(Level.INFO, Notes.source(source), key);
   }
 
 }
