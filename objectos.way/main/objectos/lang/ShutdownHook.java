@@ -26,6 +26,15 @@ import objectox.lang.Check;
  */
 public final class ShutdownHook {
 
+  static final Note1<Object> REGISTRATION;
+
+  static {
+    Class<?> s;
+    s = ShutdownHook.class;
+
+    REGISTRATION = Note1.info(s, "Registration [hook]");
+  }
+
   /**
    * An object that gets notified when the {@code ShutdownHook} is run.
    */
@@ -147,6 +156,8 @@ public final class ShutdownHook {
     }
 
     synchronized (hooks) {
+      noteSink.send(REGISTRATION, hook);
+
       hooks.add(hook);
     }
   }

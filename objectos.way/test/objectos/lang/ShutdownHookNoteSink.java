@@ -15,12 +15,21 @@
  */
 package objectos.lang;
 
-import java.util.ArrayList;
 import java.util.List;
+import objectos.util.GrowableList;
 
-final class ShutdownHookLogger extends NoOpNoteSink {
+final class ShutdownHookNoteSink extends NoOpNoteSink {
 
-  final List<Throwable> exceptions = new ArrayList<Throwable>();
+  final List<Throwable> exceptions = new GrowableList<>();
+
+  final List<Object> hooks = new GrowableList<>();
+
+  @Override
+  public <T1> void send(Note1<T1> note, T1 v1) {
+    if (note == ShutdownHook.REGISTRATION) {
+      hooks.add(v1);
+    }
+  }
 
   @Override
   public <T1, T2> void send(Note2<T1, T2> note, T1 v1, T2 v2) {

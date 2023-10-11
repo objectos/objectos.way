@@ -31,10 +31,10 @@ public class ShutdownHookTest {
     final ShutdownHook hook;
     hook = ShutdownHook.of();
 
-    ShutdownHookLogger logger;
-    logger = new ShutdownHookLogger();
+    ShutdownHookNoteSink noteSink;
+    noteSink = new ShutdownHookNoteSink();
 
-    hook.noteSink(logger);
+    hook.noteSink(noteSink);
 
     CloseableImpl cleanClosable;
     cleanClosable = new CloseableImpl();
@@ -61,6 +61,14 @@ public class ShutdownHookTest {
     dirtyListener = new ShutdownHookListenerImpl(exception);
 
     hook.addListener(dirtyListener);
+
+    List<Object> hooks;
+    hooks = noteSink.hooks;
+
+    assertSame(hooks.get(0), cleanClosable);
+    assertSame(hooks.get(1), dirtyCloseable);
+    assertSame(hooks.get(2), cleanListener);
+    assertSame(hooks.get(3), dirtyListener);
 
     class SomeThread extends Thread {
       private boolean intCalled;
@@ -111,7 +119,7 @@ public class ShutdownHookTest {
       assertTrue(dirtyListener.called);
 
       List<Throwable> exceptions;
-      exceptions = logger.exceptions;
+      exceptions = noteSink.exceptions;
 
       assertEquals(exceptions.size(), 2);
 
