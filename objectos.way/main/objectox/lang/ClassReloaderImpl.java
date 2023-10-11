@@ -34,30 +34,31 @@ import java.util.List;
 import java.util.Map;
 import objectos.lang.ClassReloader;
 import objectos.lang.Note1;
+import objectos.lang.Note2;
 import objectos.lang.NoteSink;
 import objectos.util.GrowableMap;
 
 public final class ClassReloaderImpl implements objectos.lang.ClassReloader {
 
-  static final Note1<Directory> WATCH;
+  static final Note2<Path, String> WATCH;
 
   static final Note1<WatchKey> UNKNOWN_WATCH_KEY;
 
-  static final Note1<WatchEvent<?>> FS_EVENT;
+  static final Note2<WatchEvent.Kind<?>, Object> FS_EVENT;
 
-  static final Note1<Class<?>> CLASS_LOAD;
+  static final Note1<Class<?>> LOAD;
 
   static {
     Class<?> s;
     s = ClassReloader.class;
 
-    WATCH = Note1.info(s, "Watch");
+    WATCH = Note2.info(s, "Watch");
 
     UNKNOWN_WATCH_KEY = Note1.warn(s, "Unknown watch key");
 
-    FS_EVENT = Note1.trace(s, "File system event");
+    FS_EVENT = Note2.trace(s, "FS");
 
-    CLASS_LOAD = Note1.trace(s, "Class load");
+    LOAD = Note1.trace(s, "Load");
   }
 
   record Directory(Path path, String packageName) {
@@ -95,7 +96,7 @@ public final class ClassReloaderImpl implements objectos.lang.ClassReloader {
 
   private void init() throws IOException {
     for (var directory : directories) {
-      noteSink.send(WATCH, directory);
+      noteSink.send(WATCH, directory.path, directory.packageName);
 
       Path path;
       path = directory.path();
@@ -166,7 +167,7 @@ public final class ClassReloaderImpl implements objectos.lang.ClassReloader {
       }
 
       for (WatchEvent<?> event : key.pollEvents()) {
-        noteSink.send(FS_EVENT, event);
+        noteSink.send(FS_EVENT, event.kind(), event.context());
 
         WatchEvent.Kind<?> kind;
         kind = event.kind();
@@ -277,7 +278,7 @@ public final class ClassReloaderImpl implements objectos.lang.ClassReloader {
         Class<?> clazz;
         clazz = defineClass(name, bytes, 0, bytes.length);
 
-        noteSink.send(CLASS_LOAD, clazz);
+        noteSink.send(LOAD, clazz);
 
         return clazz;
       } catch (NoSuchFileException e) {
