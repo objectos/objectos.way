@@ -146,6 +146,9 @@ WAY_TEST_RUNTIME_DEPS += $(call dependency,com.beust,jcommander,$(JCOMMANDER_VER
 WAY_TEST_RUNTIME_DEPS += $(call dependency,org.slf4j,slf4j-api,$(SLF4J_VERSION))
 WAY_TEST_RUNTIME_DEPS += $(call dependency,org.slf4j,slf4j-nop,$(SLF4J_VERSION))
 
+## way test runtime reads
+WAY_TEST_JAVAX_READS := java.compiler
+
 ## way test runtime exports
 WAY_TEST_JAVAX_EXPORTS := objectos.css.internal
 WAY_TEST_JAVAX_EXPORTS += objectos.html.internal
@@ -434,6 +437,9 @@ CODE_TEST_JAVAX = $(JAVA)
 CODE_TEST_JAVAX += --module-path $(call module-path,$(CODE_TEST_RUNTIME_DEPS))
 CODE_TEST_JAVAX += --add-modules org.testng
 CODE_TEST_JAVAX += --add-reads $(CODE_MODULE)=org.testng
+ifdef CODE_TEST_JAVAX_READS
+CODE_TEST_JAVAX += $(foreach mod,$(CODE_TEST_JAVAX_READS),--add-reads $(CODE_MODULE)=$(mod))
+endif
 ifdef CODE_TEST_JAVAX_EXPORTS
 CODE_TEST_JAVAX += $(foreach pkg,$(CODE_TEST_JAVAX_EXPORTS),--add-exports $(CODE_MODULE)/$(pkg)=org.testng)
 endif
@@ -623,6 +629,9 @@ SELFGEN_TEST_JAVAX = $(JAVA)
 SELFGEN_TEST_JAVAX += --module-path $(call module-path,$(SELFGEN_TEST_RUNTIME_DEPS))
 SELFGEN_TEST_JAVAX += --add-modules org.testng
 SELFGEN_TEST_JAVAX += --add-reads $(SELFGEN_MODULE)=org.testng
+ifdef SELFGEN_TEST_JAVAX_READS
+SELFGEN_TEST_JAVAX += $(foreach mod,$(SELFGEN_TEST_JAVAX_READS),--add-reads $(SELFGEN_MODULE)=$(mod))
+endif
 ifdef SELFGEN_TEST_JAVAX_EXPORTS
 SELFGEN_TEST_JAVAX += $(foreach pkg,$(SELFGEN_TEST_JAVAX_EXPORTS),--add-exports $(SELFGEN_MODULE)/$(pkg)=org.testng)
 endif
@@ -823,6 +832,9 @@ WAY_TEST_JAVAX = $(JAVA)
 WAY_TEST_JAVAX += --module-path $(call module-path,$(WAY_TEST_RUNTIME_DEPS))
 WAY_TEST_JAVAX += --add-modules org.testng
 WAY_TEST_JAVAX += --add-reads $(WAY_MODULE)=org.testng
+ifdef WAY_TEST_JAVAX_READS
+WAY_TEST_JAVAX += $(foreach mod,$(WAY_TEST_JAVAX_READS),--add-reads $(WAY_MODULE)=$(mod))
+endif
 ifdef WAY_TEST_JAVAX_EXPORTS
 WAY_TEST_JAVAX += $(foreach pkg,$(WAY_TEST_JAVAX_EXPORTS),--add-exports $(WAY_MODULE)/$(pkg)=org.testng)
 endif

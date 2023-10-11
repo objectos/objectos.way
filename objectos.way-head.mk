@@ -146,6 +146,9 @@ WAY_TEST_RUNTIME_DEPS += $(call dependency,com.beust,jcommander,$(JCOMMANDER_VER
 WAY_TEST_RUNTIME_DEPS += $(call dependency,org.slf4j,slf4j-api,$(SLF4J_VERSION))
 WAY_TEST_RUNTIME_DEPS += $(call dependency,org.slf4j,slf4j-nop,$(SLF4J_VERSION))
 
+## way test runtime reads
+WAY_TEST_JAVAX_READS := java.compiler
+
 ## way test runtime exports
 WAY_TEST_JAVAX_EXPORTS := objectos.css.internal
 WAY_TEST_JAVAX_EXPORTS += objectos.html.internal

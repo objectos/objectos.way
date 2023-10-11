@@ -11,6 +11,7 @@ package objectos.lang;
 
 import java.io.IOException;
 import java.nio.file.Path;
+import objectox.lang.ClassReloaderBuilder;
 
 /**
  * Reloads an specified class and its dependencies if changes were observed in
@@ -73,7 +74,7 @@ public sealed interface ClassReloader
    * @return a newly created builder instance
    */
   static Builder builder() {
-    throw new UnsupportedOperationException("Implement me");
+    return new ClassReloaderBuilder();
   }
 
   /**

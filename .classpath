@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry kind="src" output="objectos.way/work/main" path="objectos.way/main"/>
+	<classpathentry kind="src" output="objectos.way/work/main" path="objectos.way/main">
+		<attributes>
+			<attribute name="module" value="true"/>
+			<attribute name="add-reads" value="objectos.way=java.compiler"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="src" output="objectos.way/work/test" path="objectos.way/test">
 		<attributes>
 			<attribute name="test" value="true"/>
