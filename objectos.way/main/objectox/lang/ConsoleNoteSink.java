@@ -13,12 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectox.lang.note;
+package objectox.lang;
 
-import java.util.List;
-import java.util.concurrent.locks.Condition;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
+import java.io.PrintStream;
 import objectos.lang.Level;
 import objectos.lang.LongNote;
 import objectos.lang.Note;
@@ -27,66 +24,17 @@ import objectos.lang.Note1;
 import objectos.lang.Note2;
 import objectos.lang.Note3;
 import objectos.lang.NoteSink;
-import objectos.util.GrowableList;
 
-public final class ConsoleNoteSink implements objectos.lang.note.ConsoleNoteSink, Runnable {
+public final class ConsoleNoteSink implements NoteSink {
 
   private final Level level;
 
-  private final Lock lock = new ReentrantLock();
-
-  private final Condition notEmpty = lock.newCondition();
-
-  private final List<Log> logs = new GrowableList<>();
-
   private final Layout layout = new StandardLayout();
 
-  private Thread thread;
+  private final PrintStream stream = System.out;
 
   public ConsoleNoteSink(Level level) {
     this.level = level;
-  }
-
-  public final ConsoleNoteSink start() {
-    thread = Thread.ofVirtual()
-        .name("sysout")
-        .start(this);
-
-    return this;
-  }
-
-  @Override
-  public final void run() {
-    while (!thread.isInterrupted()) {
-      lock.lock();
-      try {
-        while (logs.isEmpty()) {
-          notEmpty.await();
-        }
-
-        writeAll();
-      } catch (InterruptedException e) {
-        break;
-      } finally {
-        lock.unlock();
-      }
-    }
-  }
-
-  private void writeAll() {
-    for (var log : logs) {
-      String s;
-      s = log.format(layout);
-
-      System.out.println(s);
-    }
-
-    logs.clear();
-  }
-
-  @Override
-  public final void onShutdownHook() {
-    thread.interrupt();
   }
 
   @Override
@@ -184,14 +132,10 @@ public final class ConsoleNoteSink implements objectos.lang.note.ConsoleNoteSink
   }
 
   private void addLog(Log log) {
-    lock.lock();
-    try {
-      logs.add(log);
+    String s;
+    s = log.format(layout);
 
-      notEmpty.signal();
-    } finally {
-      lock.unlock();
-    }
+    stream.println(s);
   }
 
 }

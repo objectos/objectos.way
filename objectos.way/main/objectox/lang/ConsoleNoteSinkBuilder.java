@@ -13,18 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectox.lang.note;
+package objectox.lang;
 
-public interface Layout {
+import objectos.lang.Level;
+import objectos.lang.NoteSink;
+import objectos.lang.NoteSink.OfConsole;
 
-  String formatLog0(Log0 log0);
+public final class ConsoleNoteSinkBuilder implements NoteSink.OfConsole {
 
-  String formatLog1(Log1 log);
+  private Level level = Level.TRACE;
 
-  String formatLog2(Log2 log);
+  @Override
+  public final OfConsole level(Level level) {
+    this.level = Check.notNull(level, "level == null");
+    return this;
+  }
 
-  String formatLog3(Log3 log);
-
-  String formatLongLog(LongLog log);
+  @Override
+  public final NoteSink start() {
+    return new ConsoleNoteSink(level);
+  }
 
 }

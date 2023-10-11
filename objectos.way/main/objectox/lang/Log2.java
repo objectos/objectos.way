@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectox.lang.note;
+package objectox.lang;
 
 import objectos.lang.Note2;
 

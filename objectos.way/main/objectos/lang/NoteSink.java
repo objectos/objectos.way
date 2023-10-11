@@ -15,6 +15,8 @@
  */
 package objectos.lang;
 
+import objectox.lang.ConsoleNoteSinkBuilder;
+
 /**
  * An object responsible for sending the notes of a program; it behaves as an
  * event listener.
@@ -27,6 +29,24 @@ package objectos.lang;
  * @see Note
  */
 public interface NoteSink {
+
+  /**
+   * A builder for {@link NoteSink} objects that writes out notes to the system
+   * console.
+   */
+  sealed interface OfConsole
+      extends objectox.lang.NoteSinkBuilder<OfConsole>
+      permits ConsoleNoteSinkBuilder {}
+
+  /**
+   * Returns a builder for creating a note sink object that writes out notes to
+   * the system console.
+   *
+   * @return a new builder
+   */
+  static OfConsole ofConsole() {
+    return new ConsoleNoteSinkBuilder();
+  }
 
   /**
    * Returns {@code true} if the given {@code note} would be sent by this

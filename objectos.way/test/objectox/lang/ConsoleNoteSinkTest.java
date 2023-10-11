@@ -13,15 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.lang.note;
+package objectox.lang;
 
 import static org.testng.Assert.assertTrue;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
-import java.util.concurrent.TimeUnit;
 import objectos.lang.Level;
 import objectos.lang.Note0;
+import objectos.lang.NoteSink;
 import org.testng.annotations.Test;
 
 public class ConsoleNoteSinkTest {
@@ -49,14 +49,10 @@ public class ConsoleNoteSinkTest {
 
       System.setOut(stream);
 
-      ConsoleNoteSink noteSink;
-      noteSink = ConsoleNoteSink.of(Level.INFO);
+      NoteSink noteSink;
+      noteSink = NoteSink.ofConsole().level(Level.TRACE).start();
 
       noteSink.send(NOTE0);
-
-      TimeUnit.MILLISECONDS.sleep(50);
-
-      noteSink.onShutdownHook();
 
       byte[] bytes;
       bytes = outputStream.toByteArray();
@@ -65,7 +61,7 @@ public class ConsoleNoteSinkTest {
       string = new String(bytes);
 
       assertTrue(string.endsWith(
-        "INFO  --- [main           ] objectos.lang.note.ConsoleNoteSinkTest   : NOTE0\n"), string);
+        "INFO  --- [main           ] objectox.lang.ConsoleNoteSinkTest        : NOTE0\n"), string);
     } finally {
       System.setOut(original);
     }

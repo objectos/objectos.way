@@ -13,21 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.lang.note;
+package objectox.lang;
 
-import objectos.lang.Level;
-import objectos.lang.NoteSink;
-import objectos.lang.ShutdownHook;
-import objectox.lang.Check;
+import objectos.lang.Note1;
 
-public sealed interface ConsoleNoteSink extends NoteSink, ShutdownHook.Listener
-    permits objectox.lang.note.ConsoleNoteSink {
+public final class Log1 extends Log {
 
-  @SuppressWarnings("resource")
-  static ConsoleNoteSink of(Level level) {
-    Check.notNull(level, "level == null");
+  final Object value;
 
-    return new objectox.lang.note.ConsoleNoteSink(level).start();
+  Log1(Note1<?> note, Object value) {
+    super(note);
+
+    this.value = value;
+  }
+
+  @Override
+  final String format(Layout layout) {
+    return layout.formatLog1(this);
   }
 
 }

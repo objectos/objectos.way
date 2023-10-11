@@ -150,8 +150,8 @@ WAY_TEST_RUNTIME_DEPS += $(call dependency,org.slf4j,slf4j-nop,$(SLF4J_VERSION))
 WAY_TEST_JAVAX_EXPORTS := objectos.css.internal
 WAY_TEST_JAVAX_EXPORTS += objectos.html.internal
 WAY_TEST_JAVAX_EXPORTS += objectos.util
-WAY_TEST_JAVAX_EXPORTS += objectox.lang
 WAY_TEST_JAVAX_EXPORTS += objectox.http
+WAY_TEST_JAVAX_EXPORTS += objectox.lang
 
 ## way install coordinates
 WAY_GROUP_ID := $(GROUP_ID)

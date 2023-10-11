@@ -13,31 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectox.lang.note;
+package objectox.lang;
 
-import objectos.lang.Note3;
+import objectos.lang.Note0;
 
-public final class Log3 extends Log {
+public final class Log0 extends Log {
 
-  final Object value1;
-
-  final Object value2;
-
-  final Object value3;
-
-  Log3(Note3<?, ?, ?> note,
-       Object value1,
-       Object value2,
-       Object value3) {
+  Log0(Note0 note) {
     super(note);
-    this.value1 = value1;
-    this.value2 = value2;
-    this.value3 = value3;
   }
 
   @Override
   final String format(Layout layout) {
-    return layout.formatLog3(this);
+    return layout.formatLog0(this);
   }
 
 }
