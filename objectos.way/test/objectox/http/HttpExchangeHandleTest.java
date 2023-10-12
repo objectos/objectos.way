@@ -22,6 +22,7 @@ import static org.testng.Assert.assertTrue;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map;
+import objectos.http.Http;
 import org.testng.annotations.Test;
 
 @SuppressWarnings("resource")
@@ -43,7 +44,7 @@ public class HttpExchangeHandleTest {
     assertEquals(exchange.error, null);
     // "Connection: close" should set the property
     assertEquals(exchange.keepAlive, false);
-    assertEquals(exchange.method, HttpMethod.GET);
+    assertEquals(exchange.method, Http.Method.GET);
     assertEquals(exchange.requestHeaders, Map.of(
       HeaderName.HOST, TestingInput.hv("www.example.com"),
       HeaderName.CONNECTION, TestingInput.hv("close")
@@ -83,7 +84,7 @@ public class HttpExchangeHandleTest {
     assertEquals(exchange.error, null);
     // "Connection: close" should set the property
     assertEquals(exchange.keepAlive, true);
-    assertEquals(exchange.method, HttpMethod.GET);
+    assertEquals(exchange.method, Http.Method.GET);
     // request headers won't be used from this point forward
     assertEquals(exchange.requestHeaders, Map.of(
       HeaderName.HOST, TestingInput.hv("www.example.com"),

@@ -18,6 +18,7 @@ package objectox.http;
 import static org.testng.Assert.assertEquals;
 
 import java.util.Map;
+import objectos.http.Http;
 import org.testng.annotations.Test;
 
 public class HttpExchangeRequestBodyTest {
@@ -38,7 +39,7 @@ public class HttpExchangeRequestBodyTest {
     assertEquals(exchange.bufferLimit, Http006.INPUT.requestLength());
     assertEquals(exchange.error, null);
     assertEquals(exchange.keepAlive, true);
-    assertEquals(exchange.method, HttpMethod.POST);
+    assertEquals(exchange.method, Http.Method.POST);
     // request body should have been created
     assertEquals(exchange.requestBody.toString(), "email=user%40example.com");
     assertEquals(exchange.requestHeaders, Map.of(

@@ -121,6 +121,11 @@ public final class ClassReloaderImpl implements objectos.lang.ClassReloader {
     return clazz;
   }
 
+  @Override
+  public final String toString() {
+    return "ClassReloader[" + binaryName + "]";
+  }
+
   private void reloadIfNecessary() throws ClassNotFoundException, IOException {
     if (clazz == null) {
       synchronized (this) {

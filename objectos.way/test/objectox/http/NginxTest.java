@@ -342,13 +342,28 @@ public class NginxTest {
   Content-Length: 157
   Connection: close
   
+  ---
+  
+  POST when expect GET
+  
+  POST /index.html HTTP/1.1
+  Host: localhost
+  Connection: close
+  
+  HTTP/1.1 405 Not Allowed
+  Server: nginx/1.24.0
+  Date: Thu, 12 Oct 2023 13:12:39 GMT
+  Content-Type: text/html
+  Content-Length: 157
+  Connection: close
+  
   */
 
   @Test(enabled = false)
   public void getOk() throws IOException {
     try (Socket socket = new Socket(address, port)) {
       req(socket, """
-      GET foo/bar HTTP/1.1
+      POST /index.html HTTP/1.1
       Host: localhost
       Connection: close
 

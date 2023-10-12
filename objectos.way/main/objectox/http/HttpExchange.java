@@ -20,6 +20,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.EnumMap;
 import java.util.List;
@@ -45,6 +46,25 @@ public final class HttpExchange implements objectos.http.HttpExchange {
     s = HttpExchange.class;
 
     EIO_READ_ERROR = Note1.error(s, "I/O read error");
+  }
+
+  private static final Map<Method, byte[]> METHOD_NAME_AND_SPACE;
+
+  static {
+    Map<Method, byte[]> map;
+    map = new EnumMap<>(Method.class);
+
+    for (var method : Method.values()) {
+      String name;
+      name = method.name();
+
+      byte[] value;
+      value = (name + " ").getBytes(StandardCharsets.UTF_8);
+
+      map.put(method, value);
+    }
+
+    METHOD_NAME_AND_SPACE = map;
   }
 
   // Setup phase
@@ -112,7 +132,7 @@ public final class HttpExchange implements objectos.http.HttpExchange {
 
   boolean keepAlive;
 
-  HttpMethod method;
+  Http.Method method;
 
   byte nextAction;
 
@@ -952,19 +972,19 @@ public final class HttpExchange implements objectos.http.HttpExchange {
     // based on the first char, we select out method candidate
 
     return switch (first) {
-      case 'C' -> toRequestLineMethod(HttpMethod.CONNECT);
+      case 'C' -> toRequestLineMethod(Http.Method.CONNECT);
 
-      case 'D' -> toRequestLineMethod(HttpMethod.DELETE);
+      case 'D' -> toRequestLineMethod(Http.Method.DELETE);
 
-      case 'G' -> toRequestLineMethod(HttpMethod.GET);
+      case 'G' -> toRequestLineMethod(Http.Method.GET);
 
-      case 'H' -> toRequestLineMethod(HttpMethod.HEAD);
+      case 'H' -> toRequestLineMethod(Http.Method.HEAD);
 
-      case 'O' -> toRequestLineMethod(HttpMethod.OPTIONS);
+      case 'O' -> toRequestLineMethod(Http.Method.OPTIONS);
 
       case 'P' -> _REQUEST_LINE_METHOD_P;
 
-      case 'T' -> toRequestLineMethod(HttpMethod.TRACE);
+      case 'T' -> toRequestLineMethod(Http.Method.TRACE);
 
       // first char does not match any candidate
       // we are sure this is a bad request
@@ -982,7 +1002,7 @@ public final class HttpExchange implements objectos.http.HttpExchange {
     // we'll check if the buffer contents matches 'METHOD SP'
 
     byte[] candidateBytes;
-    candidateBytes = method.nameAndSpace;
+    candidateBytes = METHOD_NAME_AND_SPACE.get(method);
 
     int requiredIndex;
     requiredIndex = candidateStart + candidateBytes.length;
@@ -1041,11 +1061,11 @@ public final class HttpExchange implements objectos.http.HttpExchange {
     // based on the second char, we select out method candidate
 
     return switch (secondChar) {
-      case 'A' -> toRequestLineMethod(HttpMethod.PATCH);
+      case 'A' -> toRequestLineMethod(Http.Method.PATCH);
 
-      case 'O' -> toRequestLineMethod(HttpMethod.POST);
+      case 'O' -> toRequestLineMethod(Http.Method.POST);
 
-      case 'U' -> toRequestLineMethod(HttpMethod.PUT);
+      case 'U' -> toRequestLineMethod(Http.Method.PUT);
 
       // it does not match any candidate
       // we are sure this is a bad request
@@ -1296,7 +1316,7 @@ public final class HttpExchange implements objectos.http.HttpExchange {
     );
   }
 
-  private byte toRequestLineMethod(HttpMethod maybe) {
+  private byte toRequestLineMethod(Http.Method maybe) {
     method = maybe;
 
     return _REQUEST_LINE_METHOD;

@@ -20,6 +20,7 @@ import static org.testng.Assert.assertNull;
 
 import java.util.Arrays;
 import java.util.List;
+import objectos.http.Http;
 import org.testng.annotations.Test;
 
 @SuppressWarnings("resource")
@@ -42,7 +43,7 @@ public class HttpExchangeRequestLineTest {
     assertEquals(exchange.error, null);
     assertEquals(exchange.keepAlive, true);
     // expect correct method
-    assertEquals(exchange.method, HttpMethod.GET);
+    assertEquals(exchange.method, Http.Method.GET);
     assertEquals(exchange.requestHeaders, null);
     assertEquals(exchange.requestHeaderName, null);
     // expect correct parsed target
@@ -75,7 +76,7 @@ public class HttpExchangeRequestLineTest {
     assertEquals(exchange.error, null);
     assertEquals(exchange.keepAlive, true);
     // expect correct method
-    assertEquals(exchange.method, HttpMethod.POST);
+    assertEquals(exchange.method, Http.Method.POST);
     assertEquals(exchange.requestHeaders, null);
     assertEquals(exchange.requestHeaderName, null);
     // expect correct parsed target
@@ -98,15 +99,15 @@ public class HttpExchangeRequestLineTest {
     HttpExchange exchange;
     exchange = new HttpExchange();
 
-    record Pair(String request, HttpMethod method) {}
+    record Pair(String request, Http.Method method) {}
 
     List<Pair> pairs = List.of(
-      new Pair("CONNECT /", HttpMethod.CONNECT),
-      new Pair("DELETE /", HttpMethod.DELETE),
-      new Pair("HEAD /", HttpMethod.HEAD),
-      new Pair("GET /", HttpMethod.GET),
-      new Pair("OPTIONS /", HttpMethod.OPTIONS),
-      new Pair("TRACE /", HttpMethod.TRACE)
+      new Pair("CONNECT /", Http.Method.CONNECT),
+      new Pair("DELETE /", Http.Method.DELETE),
+      new Pair("HEAD /", Http.Method.HEAD),
+      new Pair("GET /", Http.Method.GET),
+      new Pair("OPTIONS /", Http.Method.OPTIONS),
+      new Pair("TRACE /", Http.Method.TRACE)
     );
 
     for (var pair : pairs) {
@@ -196,7 +197,7 @@ public class HttpExchangeRequestLineTest {
     exchange.buffer = bytes;
     exchange.bufferIndex = 0;
     exchange.bufferLimit = bytes.length;
-    exchange.method = HttpMethod.GET;
+    exchange.method = Http.Method.GET;
     exchange.state = HttpExchange._REQUEST_LINE_METHOD;
 
     exchange.stepOne();
@@ -220,7 +221,7 @@ public class HttpExchangeRequestLineTest {
     exchange.buffer = bytes;
     exchange.bufferIndex = 0;
     exchange.bufferLimit = bytes.length;
-    exchange.method = HttpMethod.GET;
+    exchange.method = Http.Method.GET;
     exchange.state = HttpExchange._REQUEST_LINE_METHOD;
 
     exchange.stepOne();
@@ -243,7 +244,7 @@ public class HttpExchangeRequestLineTest {
     exchange.buffer = bytes;
     exchange.bufferIndex = 0;
     exchange.bufferLimit = bytes.length;
-    exchange.method = HttpMethod.GET;
+    exchange.method = Http.Method.GET;
     exchange.state = HttpExchange._REQUEST_LINE_METHOD;
 
     exchange.stepOne();
@@ -260,12 +261,12 @@ public class HttpExchangeRequestLineTest {
     HttpExchange exchange;
     exchange = new HttpExchange();
 
-    record Pair(String request, HttpMethod method) {}
+    record Pair(String request, Http.Method method) {}
 
     List<Pair> pairs = List.of(
-      new Pair("PATCH /", HttpMethod.PATCH),
-      new Pair("POST /", HttpMethod.POST),
-      new Pair("PUT /", HttpMethod.PUT)
+      new Pair("PATCH /", Http.Method.PATCH),
+      new Pair("POST /", Http.Method.POST),
+      new Pair("PUT /", Http.Method.PUT)
     );
 
     for (var pair : pairs) {

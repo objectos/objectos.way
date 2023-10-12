@@ -24,7 +24,6 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 import objectox.http.HeaderName;
-import objectox.http.HttpMethod;
 import objectox.http.HttpStatus;
 
 public final class Http {
@@ -68,11 +67,55 @@ public final class Http {
 
   }
 
-  public sealed interface Method permits objectox.http.HttpMethod {
+  /**
+   * The HTTP methods.
+   */
+  public enum Method {
 
-    Method GET = HttpMethod.GET;
+    /**
+     * The CONNECT method.
+     */
+    CONNECT,
 
-    Method POST = HttpMethod.POST;
+    /**
+     * The DELETE method.
+     */
+    DELETE,
+
+    /**
+     * The GET method.
+     */
+    GET,
+
+    /**
+     * The HEAD method.
+     */
+    HEAD,
+
+    /**
+     * The OPTIONS method.
+     */
+    OPTIONS,
+
+    /**
+     * The PATCH method.
+     */
+    PATCH,
+
+    /**
+     * The POST method.
+     */
+    POST,
+
+    /**
+     * The PUT method.
+     */
+    PUT,
+
+    /**
+     * The TRACE method.
+     */
+    TRACE;
 
   }
 
