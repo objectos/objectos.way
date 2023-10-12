@@ -20,6 +20,8 @@ import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertTrue;
 
 import java.io.IOException;
+import objectos.http.Http;
+import objectos.http.Http.Method;
 import org.testng.annotations.Test;
 
 public class HttpExchangeTest {
@@ -64,6 +66,22 @@ public class HttpExchangeTest {
     socket = (TestableSocket) exchange.socket;
 
     assertEquals(socket.outputAsString(), Http004.OUTPUT);
+  }
+
+  @SuppressWarnings("resource")
+  @Test
+  public void methodIs() {
+    HttpExchange exchange;
+    exchange = new HttpExchange();
+
+    exchange.method = Http.Method.GET;
+    exchange.state = HttpExchange._HANDLE_INVOKE;
+
+    assertEquals(exchange.methodIs(Method.GET), true);
+    assertEquals(exchange.methodIs(Method.GET, Method.POST), true);
+    assertEquals(exchange.methodIs(Method.POST, Method.GET), true);
+    assertEquals(exchange.methodIs(Method.POST), false);
+    assertEquals(exchange.methodIs(Method.POST, Method.DELETE), false);
   }
 
 }
