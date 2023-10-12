@@ -146,8 +146,6 @@ public final class HttpExchange implements objectos.http.HttpExchange {
 
   HttpRequestPath requestPath;
 
-  int requestPathStart;
-
   Object responseBody;
 
   List<HttpResponseHeader> responseHeaders;
@@ -1107,8 +1105,10 @@ public final class HttpExchange implements objectos.http.HttpExchange {
           );
         }
 
+        case Bytes.SOLIDUS -> requestPath.slash(bufferIndex);
+
         case Bytes.SP -> {
-          requestPath = new HttpRequestPath(buffer, requestPathStart, bufferIndex);
+          requestPath.end(bufferIndex);
 
           // bufferIndex immediately after the SP char
 
@@ -1119,8 +1119,9 @@ public final class HttpExchange implements objectos.http.HttpExchange {
       }
     }
 
-    // SP char was not found.
-    // Read more data if possible
+    // SP char was not found
+    // -> read more data if possible
+    // -> fail with uri too long if buffer is full
 
     return toInputReadIfPossible(state, HttpStatus.URI_TOO_LONG);
   }
@@ -1145,7 +1146,9 @@ public final class HttpExchange implements objectos.http.HttpExchange {
 
     // mark request path start
 
-    requestPathStart = targetStart;
+    requestPath = new HttpRequestPath(buffer);
+
+    requestPath.slash(targetStart);
 
     // bufferIndex immediately after the '/' char
 
@@ -1252,8 +1255,6 @@ public final class HttpExchange implements objectos.http.HttpExchange {
     }
 
     requestPath = null;
-
-    requestPathStart = -1;
 
     responseBody = null;
 
