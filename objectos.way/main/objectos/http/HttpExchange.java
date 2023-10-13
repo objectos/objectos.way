@@ -57,17 +57,6 @@ public sealed interface HttpExchange extends AutoCloseable
   boolean active();
 
   /**
-   * Returns the request HTTP method.
-   *
-   * @return the request HTTP method
-   *
-   * @throws IllegalStateException
-   *         if the request has not been parsed or if the response has already
-   *         been sent to the client.
-   */
-  Http.Method method();
-
-  /**
    * Checks if the request method is equal to the specified method.
    *
    * @param method
@@ -76,7 +65,7 @@ public sealed interface HttpExchange extends AutoCloseable
    * @return {@code true} if the request method is equal to the specified method
    *         and {@code false} otherwise
    */
-  boolean methodIs(Http.Method method);
+  boolean is(Http.Method method);
 
   /**
    * Checks if the request method is equal to the one of the two specified
@@ -90,7 +79,18 @@ public sealed interface HttpExchange extends AutoCloseable
    * @return {@code true} if the request method is equal to one of the specified
    *         methods and {@code false} otherwise
    */
-  boolean methodIs(Http.Method method1, Http.Method method2);
+  boolean is(Http.Method method1, Http.Method method2);
+
+  /**
+   * Returns the request HTTP method.
+   *
+   * @return the request HTTP method
+   *
+   * @throws IllegalStateException
+   *         if the request has not been parsed or if the response has already
+   *         been sent to the client.
+   */
+  Http.Method method();
 
   /**
    * Returns the decoded path component of the request target.

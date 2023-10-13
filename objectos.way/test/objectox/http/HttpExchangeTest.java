@@ -70,18 +70,18 @@ public class HttpExchangeTest {
 
   @SuppressWarnings("resource")
   @Test
-  public void methodIs() {
+  public void is_method() {
     HttpExchange exchange;
     exchange = new HttpExchange();
 
     exchange.method = Http.Method.GET;
     exchange.state = HttpExchange._HANDLE_INVOKE;
 
-    assertEquals(exchange.methodIs(Method.GET), true);
-    assertEquals(exchange.methodIs(Method.GET, Method.POST), true);
-    assertEquals(exchange.methodIs(Method.POST, Method.GET), true);
-    assertEquals(exchange.methodIs(Method.POST), false);
-    assertEquals(exchange.methodIs(Method.POST, Method.DELETE), false);
+    assertEquals(exchange.is(Method.GET), true);
+    assertEquals(exchange.is(Method.GET, Method.POST), true);
+    assertEquals(exchange.is(Method.POST, Method.GET), true);
+    assertEquals(exchange.is(Method.POST), false);
+    assertEquals(exchange.is(Method.POST, Method.DELETE), false);
   }
 
 }

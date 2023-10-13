@@ -256,7 +256,7 @@ public final class HttpExchange implements objectos.http.HttpExchange {
   }
 
   @Override
-  public final boolean methodIs(Method method) {
+  public final boolean is(Method method) {
     Check.notNull(method, "method == null");
 
     checkStateHandle();
@@ -265,7 +265,7 @@ public final class HttpExchange implements objectos.http.HttpExchange {
   }
 
   @Override
-  public final boolean methodIs(Method method1, Method method2) {
+  public final boolean is(Method method1, Method method2) {
     Check.notNull(method1, "method1 == null");
     Check.notNull(method2, "method2 == null");
 
