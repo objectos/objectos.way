@@ -56,6 +56,10 @@ public sealed interface HttpExchange extends AutoCloseable
 
   boolean active();
 
+  boolean matches(Segment pat);
+
+  boolean matches(Segment pat1, Segment pat2);
+
   /**
    * Returns the request HTTP method.
    *
@@ -73,6 +77,8 @@ public sealed interface HttpExchange extends AutoCloseable
    * @return the decoded path component of the request target.
    */
   String path();
+
+  String segment(int index);
 
   Http.Header.Value header(Http.Header.Name name);
 

@@ -16,6 +16,7 @@
 package objectox.http;
 
 import java.nio.charset.StandardCharsets;
+import objectos.http.Segment;
 import objectos.util.IntArrays;
 import objectox.lang.Check;
 
@@ -41,6 +42,23 @@ final class HttpRequestPath {
 
   public final void end(int index) {
     end = index;
+  }
+
+  public final boolean matches(Segment s0) {
+    if (segmentCount() == 1) {
+      return match(s0, segment(0));
+    }
+
+    return false;
+  }
+
+  public final boolean matches(Segment s0, Segment s1) {
+    if (segmentCount() == 2) {
+      return match(s0, segment(0))
+          && match(s1, segment(1));
+    }
+
+    return false;
   }
 
   public final String segment(int index) {
@@ -81,6 +99,16 @@ final class HttpRequestPath {
     start = slash[0];
 
     return new String(buffer, start, end - start, StandardCharsets.UTF_8);
+  }
+
+  private boolean match(Segment segment, String value) {
+    return switch (segment) {
+      case SegmentExact exact -> exact.matches(value);
+
+      case SegmentKind.ALWAYS_TRUE -> true;
+
+      default -> false;
+    };
   }
 
 }

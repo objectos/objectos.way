@@ -17,9 +17,16 @@ package objectox.http;
 
 import static org.testng.Assert.assertEquals;
 
+import objectos.http.Segment;
 import org.testng.annotations.Test;
 
 public class HttpRequestPathTest {
+
+  private static final Segment ANY = Segment.ofAny();
+
+  private static final Segment EMPTY = Segment.of();
+
+  private static final Segment FOO = Segment.of("foo");
 
   @Test
   public void root() {
@@ -36,6 +43,14 @@ public class HttpRequestPathTest {
     assertEquals(path.toString(), "/");
     assertEquals(path.segmentCount(), 1);
     assertEquals(path.segment(0), "");
+
+    // matcher
+
+    assertEquals(path.matches(EMPTY), true);
+    assertEquals(path.matches(ANY), true);
+    assertEquals(path.matches(FOO), false);
+    assertEquals(path.matches(EMPTY, EMPTY), false);
+    assertEquals(path.matches(FOO, EMPTY), false);
   }
 
   @Test
@@ -53,6 +68,14 @@ public class HttpRequestPathTest {
     assertEquals(path.toString(), "/foo");
     assertEquals(path.segmentCount(), 1);
     assertEquals(path.segment(0), "foo");
+
+    // matcher
+
+    assertEquals(path.matches(EMPTY), false);
+    assertEquals(path.matches(ANY), true);
+    assertEquals(path.matches(FOO), true);
+    assertEquals(path.matches(EMPTY, EMPTY), false);
+    assertEquals(path.matches(FOO, EMPTY), false);
   }
 
   @Test
@@ -71,6 +94,16 @@ public class HttpRequestPathTest {
     assertEquals(path.segmentCount(), 2);
     assertEquals(path.segment(0), "foo");
     assertEquals(path.segment(1), "");
+
+    // matcher
+
+    assertEquals(path.matches(EMPTY), false);
+    assertEquals(path.matches(ANY), false);
+    assertEquals(path.matches(FOO), false);
+    assertEquals(path.matches(EMPTY, EMPTY), false);
+    assertEquals(path.matches(FOO, EMPTY), true);
+    assertEquals(path.matches(FOO, ANY), true);
+    assertEquals(path.matches(ANY, ANY), true);
   }
 
   @Test
@@ -89,6 +122,20 @@ public class HttpRequestPathTest {
     assertEquals(path.segmentCount(), 2);
     assertEquals(path.segment(0), "a");
     assertEquals(path.segment(1), "b");
+
+    // matcher
+
+    Segment a = Segment.of("a");
+    Segment b = Segment.of("b");
+
+    assertEquals(path.matches(EMPTY), false);
+    assertEquals(path.matches(ANY), false);
+    assertEquals(path.matches(FOO), false);
+    assertEquals(path.matches(ANY, ANY), true);
+    assertEquals(path.matches(a, b), true);
+    assertEquals(path.matches(a, Segment.of("B")), false);
+    assertEquals(path.matches(ANY, b), true);
+    assertEquals(path.matches(a, ANY), true);
   }
 
   @Test

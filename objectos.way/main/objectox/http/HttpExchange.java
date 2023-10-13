@@ -30,6 +30,7 @@ import objectos.http.Http.Header.Name;
 import objectos.http.Http.Header.Value;
 import objectos.http.Http.Method;
 import objectos.http.Http.Status;
+import objectos.http.Segment;
 import objectos.http.server.Body;
 import objectos.lang.Note1;
 import objectos.lang.NoteSink;
@@ -249,6 +250,20 @@ public final class HttpExchange implements objectos.http.HttpExchange {
   }
 
   @Override
+  public final boolean matches(Segment pat) {
+    checkStateHandle();
+
+    return requestPath.matches(pat);
+  }
+
+  @Override
+  public final boolean matches(Segment pat1, Segment pat2) {
+    checkStateHandle();
+
+    return requestPath.matches(pat1, pat2);
+  }
+
+  @Override
   public final Method method() {
     checkStateHandle();
 
@@ -260,6 +275,13 @@ public final class HttpExchange implements objectos.http.HttpExchange {
     checkStateHandle();
 
     return requestPath.toString();
+  }
+
+  @Override
+  public final String segment(int index) {
+    checkStateHandle();
+
+    return requestPath.segment(index);
   }
 
   @Override

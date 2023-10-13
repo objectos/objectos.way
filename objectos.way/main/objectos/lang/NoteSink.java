@@ -34,6 +34,7 @@ public interface NoteSink {
    * A builder for {@link NoteSink} objects that writes out notes to the system
    * console.
    */
+  @SuppressWarnings("exports")
   sealed interface OfConsole
       extends objectox.lang.NoteSinkBuilder<OfConsole>
       permits ConsoleNoteSinkBuilder {}
