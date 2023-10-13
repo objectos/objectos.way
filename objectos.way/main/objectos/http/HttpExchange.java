@@ -57,31 +57,6 @@ public sealed interface HttpExchange extends AutoCloseable
   boolean active();
 
   /**
-   * Checks if the request method is equal to the specified method.
-   *
-   * @param method
-   *        the method to be tested
-   *
-   * @return {@code true} if the request method is equal to the specified method
-   *         and {@code false} otherwise
-   */
-  boolean is(Http.Method method);
-
-  /**
-   * Checks if the request method is equal to the one of the two specified
-   * methods.
-   *
-   * @param method1
-   *        a method to be tested
-   * @param method2
-   *        another method to be tested
-   *
-   * @return {@code true} if the request method is equal to one of the specified
-   *         methods and {@code false} otherwise
-   */
-  boolean is(Http.Method method1, Http.Method method2);
-
-  /**
    * Returns the request HTTP method.
    *
    * @return the request HTTP method

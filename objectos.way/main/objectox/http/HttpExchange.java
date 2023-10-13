@@ -256,25 +256,6 @@ public final class HttpExchange implements objectos.http.HttpExchange {
   }
 
   @Override
-  public final boolean is(Method method) {
-    Check.notNull(method, "method == null");
-
-    checkStateHandle();
-
-    return method.equals(this.method);
-  }
-
-  @Override
-  public final boolean is(Method method1, Method method2) {
-    Check.notNull(method1, "method1 == null");
-    Check.notNull(method2, "method2 == null");
-
-    checkStateHandle();
-
-    return method1.equals(method) || method2.equals(method);
-  }
-
-  @Override
   public final String path() {
     checkStateHandle();
 
