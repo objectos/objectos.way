@@ -56,7 +56,8 @@ public sealed interface ClassReloader
      * Creates a {@code ClassReloader} instance for reloading the class with the
      * specified binary name from the current state of this builder.
      *
-     * @param the binary name of the class
+     * @param binaryName
+     *        the binary name of the class
      *
      * @return a new {@code ClassReloader} instance from the current state of
      *         this builder
