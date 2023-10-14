@@ -15,8 +15,8 @@
  */
 package objectos.css.util;
 
+import objectos.css.internal.ClassSelectorSeqId;
 import objectos.css.internal.RandomStringGenerator;
-import objectos.css.internal.SeqId;
 import objectos.css.tmpl.Api;
 import objectos.html.tmpl.Api.ExternalAttribute;
 import objectox.lang.Check;
@@ -39,13 +39,9 @@ public record ClassSelector(String className)
    */
   public static ClassSelector next() {
     String id;
-    id = SeqIdHolder.INSTANCE.next();
+    id = ClassSelectorSeqId.next();
 
     return new ClassSelector(id);
-  }
-
-  private static class SeqIdHolder {
-    static final SeqId INSTANCE = new SeqId();
   }
 
   public static ClassSelector of(String className) {
