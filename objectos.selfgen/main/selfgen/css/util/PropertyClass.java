@@ -13,8 +13,32 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.selfgen.css.util;
+package selfgen.css.util;
 
+import java.util.ArrayList;
 import java.util.List;
+import objectos.lang.Check;
 
-public record Methods(List<String> values) {}
+public final class PropertyClass {
+
+  final String simpleName;
+
+  final List<String> constants = new ArrayList<>();
+
+  String javadoc;
+
+  public PropertyClass(String simpleName) {
+    this.simpleName = Check.notNull(simpleName, "simpleName == null");
+  }
+
+  public final void add(String name) {
+    Check.notNull(name, "name == null");
+
+    constants.add(name);
+  }
+
+  public final void javadoc(String value) {
+    javadoc = value;
+  }
+
+}

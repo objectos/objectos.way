@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.selfgen.css.util;
+package selfgen.css.util;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -38,6 +38,11 @@ abstract class ThisTemplate {
   static final ClassName CSS_TEMPLATE = ClassName.of(CSS, "CssTemplate");
 
   static final ClassName OVERRIDE = ClassName.of(Override.class);
+
+  static final ClassName STYLE_CLASS
+      = ClassName.of("objectos.html.tmpl", "Api", "ExternalAttribute", "StyleClass");
+
+  static final ClassName CLASS_SEQ_ID = ClassName.of("objectox.css", "ClassSelectorSeqId");
 
   final CssUtilSelfGen spec;
 
@@ -68,6 +73,11 @@ abstract class ThisTemplate {
 
     Path file;
     file = className.toPath(directory);
+
+    Path parent;
+    parent = file.getParent();
+
+    Files.createDirectories(parent);
 
     Files.writeString(
       file, contents, StandardCharsets.UTF_8,

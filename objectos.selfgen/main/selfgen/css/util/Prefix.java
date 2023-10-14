@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.selfgen.css.util;
+package selfgen.css.util;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -64,23 +64,8 @@ public sealed abstract class Prefix {
     return new Simple(className);
   }
 
-  public final PropertyClass propertyClass(SimpleName simpleName) {
-    String value;
-    value = simpleName.name();
-
-    return propertyClass(value);
-  }
-
-  public final PropertyClass propertyClass(String simpleName) {
-    ClassName propertyClassName;
-    propertyClassName = ClassName.of(className, simpleName);
-
-    PropertyClass propertyClass;
-    propertyClass = new PropertyClass(propertyClassName);
-
-    propertyClassList.add(propertyClass);
-
-    return propertyClass;
+  public final void add(PropertyClass property) {
+    propertyClassList.add(property);
   }
 
 }

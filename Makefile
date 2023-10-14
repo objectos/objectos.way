@@ -104,6 +104,7 @@ SELFGEN_TEST_RUNTIME_DEPS += $(call dependency,org.slf4j,slf4j-nop,$(SLF4J_VERSI
 ## seflgen test runtime exports
 SELFGEN_TEST_JAVAX_EXPORTS := objectos.selfgen.css
 SELFGEN_TEST_JAVAX_EXPORTS += objectos.selfgen.html
+SELFGEN_TEST_JAVAX_EXPORTS += selfgen.css.util
 
 #
 # objectos.way options

@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.selfgen.css.util;
-
-public record SimpleName(String name) {}
+/**
+ * @since 0.7.1
+ */
+package selfgen.css.util;

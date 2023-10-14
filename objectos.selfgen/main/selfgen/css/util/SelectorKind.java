@@ -13,29 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.selfgen.css.util;
+package selfgen.css.util;
 
-import java.util.ArrayList;
-import java.util.List;
-import objectos.code.ClassName;
+public enum SelectorKind {
 
-public final class PropertyClass {
+  STANDARD,
 
-  final ClassName className;
+  ALL_BUT_FIRST,
 
-  final List<StyleMethod> styleMethodList = new ArrayList<>();
-
-  PropertyClass(ClassName className) {
-    this.className = className;
-  }
-
-  public final StyleMethod style(SelectorKind kind, String constantName) {
-    StyleMethod method;
-    method = new StyleMethod(kind, constantName);
-
-    styleMethodList.add(method);
-
-    return method;
-  }
+  HOVER;
 
 }

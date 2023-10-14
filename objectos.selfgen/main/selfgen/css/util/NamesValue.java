@@ -13,7 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-/**
- * @since 0.7.1
- */
-package objectos.selfgen.css.util;
+package selfgen.css.util;
+
+import java.util.List;
+
+public interface NamesValue {
+
+  void acceptList(List<NamedArguments> list);
+
+}

@@ -13,15 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.selfgen.css.util;
+package selfgen.css.util;
 
-import java.util.List;
-
-public record Names(List<NamedArguments> values) implements NamesValue {
-
-  @Override
-  public final void acceptList(List<NamedArguments> list) {
-    list.addAll(values);
-  }
-
-}
+public record SimpleName(String name) {}

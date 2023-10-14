@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.selfgen.css.util;
+package selfgen.css.util;
 
 import java.io.IOException;
 import java.nio.file.Path;
@@ -21,14 +21,16 @@ import java.util.ArrayList;
 import java.util.List;
 import objectos.code.Code;
 import objectos.lang.Check;
-import objectos.selfgen.css.util.Prefix.Breakpoint;
-import objectos.selfgen.css.util.Prefix.Simple;
+import selfgen.css.util.Prefix.Breakpoint;
+import selfgen.css.util.Prefix.Simple;
 
 public abstract class CssUtilSelfGen {
 
   final Code code = Code.of();
 
   final List<Prefix> prefixList = new ArrayList<>();
+
+  final List<PropertyClass> properties = new ArrayList<>();
 
   protected CssUtilSelfGen() {}
 
@@ -41,9 +43,17 @@ public abstract class CssUtilSelfGen {
 
     compile();
 
-    writeTo(new FrameworkClassStep(this), directory);
+    writeTo(new PropertyEnumStep(this), directory);
 
-    writeTo(new PrefixClassStep(this), directory);
+    //writeTo(new FrameworkClassStep(this), directory);
+
+    //writeTo(new PrefixClassStep(this), directory);
+  }
+
+  protected final void add(PropertyClass p) {
+    Check.notNull(p, "p == null");
+
+    properties.add(p);
   }
 
   protected final Breakpoint breakpoint(String name, int length) {
@@ -63,17 +73,17 @@ public abstract class CssUtilSelfGen {
 
   protected final void generate(
       Prefix prefix, SimpleName simpleName, Methods methods, Names names) {
-    generate(SelectorKind.STANDARD, prefix, simpleName, methods, names);
+    //generate(SelectorKind.STANDARD, prefix, simpleName, methods, names);
   }
 
   protected final void generateAllButFirst(
       Prefix prefix, SimpleName simpleName, Methods methods, Names names) {
-    generate(SelectorKind.ALL_BUT_FIRST, prefix, simpleName, methods, names);
+    //generate(SelectorKind.ALL_BUT_FIRST, prefix, simpleName, methods, names);
   }
 
   protected final void generateHover(
       Prefix prefix, SimpleName simpleName, Methods methods, Names names) {
-    generate(SelectorKind.HOVER, prefix, simpleName, methods, names);
+    //generate(SelectorKind.HOVER, prefix, simpleName, methods, names);
   }
 
   protected final Value hex(String value) {
@@ -187,21 +197,6 @@ public abstract class CssUtilSelfGen {
 
   private void compile() {
     definition();
-  }
-
-  private void generate(
-      SelectorKind kind, Prefix prefix, SimpleName simpleName, Methods methods, Names names) {
-    PropertyClass propertyClass;
-    propertyClass = prefix.propertyClass(simpleName);
-
-    for (NamedArguments value : names.values()) {
-      StyleMethod styleMethod;
-      styleMethod = propertyClass.style(kind, value.constantName);
-
-      for (String methodName : methods.values()) {
-        styleMethod.addDeclaration(methodName, value.values);
-      }
-    }
   }
 
   private void writeTo(ThisTemplate template, Path directory) throws IOException {

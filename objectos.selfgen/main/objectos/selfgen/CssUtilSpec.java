@@ -17,23 +17,20 @@ package objectos.selfgen;
 
 import java.io.IOException;
 import java.util.List;
-import objectos.selfgen.css.util.CssUtilSelfGen;
-import objectos.selfgen.css.util.Names;
-import objectos.selfgen.css.util.Prefix;
-import objectos.selfgen.css.util.Prefix.Breakpoint;
-import objectos.selfgen.css.util.PropertyClass;
-import objectos.selfgen.css.util.SelectorKind;
-import objectos.selfgen.css.util.StyleMethod;
-import objectos.selfgen.css.util.Value;
+import selfgen.css.util.CssUtilSelfGen;
+import selfgen.css.util.Names;
+import selfgen.css.util.Prefix;
+import selfgen.css.util.Prefix.Breakpoint;
+import selfgen.css.util.PropertyClass;
+import selfgen.css.util.Value;
 
 final class CssUtilSpec extends CssUtilSelfGen {
 
-  private Breakpoint prefixAll;
   private Breakpoint prefixSmall;
   private Breakpoint prefixMedium;
   private Breakpoint prefixLarge;
-  private Breakpoint prefixXLarge;
-  private Breakpoint prefixXLarge2;
+  private Breakpoint prefixExtra;
+  private Breakpoint prefixMax;
   private Prefix hover;
 
   private List<Prefix> responsive;
@@ -52,20 +49,18 @@ final class CssUtilSpec extends CssUtilSelfGen {
   @Override
   protected final void definition() {
     // breakpoints
-    prefixAll = breakpoint("All", 0);
     prefixSmall = breakpoint("Small", 640);
     prefixMedium = breakpoint("Medium", 768);
     prefixLarge = breakpoint("Large", 1024);
-    prefixXLarge = breakpoint("XLarge", 1280);
-    prefixXLarge2 = breakpoint("XLarge2", 1536);
+    prefixExtra = breakpoint("Extra", 1280);
+    prefixMax = breakpoint("Max", 1536);
 
     responsive = List.of(
-      prefixAll,
       prefixSmall,
       prefixMedium,
       prefixLarge,
-      prefixXLarge,
-      prefixXLarge2
+      prefixExtra,
+      prefixMax
     );
 
     hover = prefix("Hover");
@@ -446,30 +441,36 @@ final class CssUtilSpec extends CssUtilSelfGen {
   }
 
   private void display() {
-    Names names;
-    names = names(
-      name("HIDDEN", k("none")),
-      name("BLOCK", k("block")),
-      name("FLOW_ROOT", k("flowRoot")),
-      name("INLINE_BLOCK", k("inlineBlock")),
-      name("INLINE", k("inline")),
-      name("FLEX", k("flex")),
-      name("INLINE_FLEX", k("inlineFlex")),
-      name("GRID", k("grid")),
-      name("INLINE_GRID", k("inlineGrid")),
-      name("TABLE", k("table")),
-      name("TABLE_CAPTION", k("tableCaption")),
-      name("TABLE_CELL", k("tableCell")),
-      name("TABLE_COLUMN", k("tableColumn")),
-      name("TABLE_COLUMN_GROUP", k("tableColumnGroup")),
-      name("TABLE_FOOTER_GROUP", k("tableFooterGroup")),
-      name("TABLE_HEADER_GROUP", k("tableHeaderGroup")),
-      name("TABLE_ROW_GROUP", k("tableRowGroup")),
-      name("TABLE_ROW", k("tableRow"))
-    );
+    var p = new PropertyClass("Display");
+
+    p.javadoc("""
+    /**
+     * Utility classes for the {@code display} CSS property.
+     */""");
+
+    p.add("NONE");
+    p.add("BLOCK");
+    p.add("FLOW_ROOT");
+    p.add("INLINE_BLOCK");
+    p.add("INLINE");
+    p.add("FLEX");
+    p.add("INLINE_FLEX");
+    p.add("GRID");
+    p.add("INLINE_GRID");
+    p.add("TABLE");
+    p.add("TABLE_CAPTION");
+    p.add("TABLE_CELL");
+    p.add("TABLE_COLUMN");
+    p.add("TABLE_COLUMN_GROUP");
+    p.add("TABLE_FOOTER_GROUP");
+    p.add("TABLE_HEADER_GROUP");
+    p.add("TABLE_ROW_GROUP");
+    p.add("TABLE_ROW");
+
+    add(p);
 
     for (Prefix prefix : responsive) {
-      generate(prefix, simpleName("Display"), methods("display"), names);
+      prefix.add(p);
     }
   }
 
@@ -487,6 +488,7 @@ final class CssUtilSpec extends CssUtilSelfGen {
     }
   }
 
+  @SuppressWarnings("unused")
   private void fontSize() {
     record FontSize(String name, Value fontSize, Value lineHeight) {}
 
@@ -508,20 +510,6 @@ final class CssUtilSpec extends CssUtilSelfGen {
       new FontSize("X_LARGE8", rem(6), one),
       new FontSize("X_LARGE9", rem(8), one)
     );
-
-    for (Prefix prefix : responsive) {
-      PropertyClass propertyClass;
-      propertyClass = prefix.propertyClass("FontSize");
-
-      for (FontSize value : values) {
-        StyleMethod styleMethod;
-        styleMethod = propertyClass.style(SelectorKind.STANDARD, value.name);
-
-        styleMethod.addDeclaration("fontSize", value.fontSize);
-
-        styleMethod.addDeclaration("lineHeight", value.lineHeight);
-      }
-    }
   }
 
   private void fontStyle() {
@@ -714,8 +702,8 @@ final class CssUtilSpec extends CssUtilSelfGen {
       name("SCREEN_SMALL", px(prefixSmall.length)),
       name("SCREEN_MEDIUM", px(prefixMedium.length)),
       name("SCREEN_LARGE", px(prefixLarge.length)),
-      name("SCREEN_X_LARGE", px(prefixXLarge.length)),
-      name("SCREEN_X_LARGE2", px(prefixXLarge2.length))
+      name("SCREEN_X_LARGE", px(prefixExtra.length)),
+      name("SCREEN_X_LARGE2", px(prefixMax.length))
     );
 
     for (Prefix prefix : responsive) {

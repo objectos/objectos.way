@@ -13,14 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.selfgen.css.util;
+package selfgen.css.util;
 
-public enum SelectorKind {
+import java.util.List;
 
-  STANDARD,
+public record Names(List<NamedArguments> values) implements NamesValue {
 
-  ALL_BUT_FIRST,
-
-  HOVER;
+  @Override
+  public final void acceptList(List<NamedArguments> list) {
+    list.addAll(values);
+  }
 
 }

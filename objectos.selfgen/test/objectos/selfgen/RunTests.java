@@ -36,7 +36,8 @@ public class RunTests {
     test.setXmlPackages(
       List.of(
         new XmlPackage("objectos.selfgen.css"),
-        new XmlPackage("objectos.selfgen.html")
+        new XmlPackage("objectos.selfgen.html"),
+        new XmlPackage("selfgen.css.util")
       )
     );
 
