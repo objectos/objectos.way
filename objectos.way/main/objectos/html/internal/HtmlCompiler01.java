@@ -299,7 +299,7 @@ class HtmlCompiler01 extends HtmlTemplateApi {
 
     else if (value instanceof Api.ExternalAttribute.Id ext) {
       int index;
-      index = externalValue(ext.value());
+      index = externalValue(ext.id());
 
       auxAdd(
         ByteProto.ATTRIBUTE_ID,
@@ -311,7 +311,7 @@ class HtmlCompiler01 extends HtmlTemplateApi {
 
     else if (value instanceof Api.ExternalAttribute.StyleClass ext) {
       int index;
-      index = externalValue(ext.value());
+      index = externalValue(ext.className());
 
       auxAdd(
         ByteProto.ATTRIBUTE_CLASS,

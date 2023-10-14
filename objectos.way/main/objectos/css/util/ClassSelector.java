@@ -60,13 +60,13 @@ public record ClassSelector(String className)
   }
 
   @Override
-  public final String toString() {
-    return "." + className;
+  public final String className() {
+    return className;
   }
 
   @Override
-  public final String value() {
-    return className;
+  public final String toString() {
+    return "." + className;
   }
 
 }

@@ -167,7 +167,7 @@ public class ApiStepTest {
              *
              * @return the value of this {@code id} attribute
              */
-            String value();
+            String id();
           }
 
           /**
@@ -179,7 +179,7 @@ public class ApiStepTest {
              *
              * @return the value of this {@code class} attribute
              */
-            String value();
+            String className();
           }
 
           /**
@@ -191,7 +191,7 @@ public class ApiStepTest {
              *
              * @return an iterator over the values of this set
              */
-            Iterator<String> value();
+            Iterator<String> classNames();
           }
         }
 

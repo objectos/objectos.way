@@ -52,13 +52,13 @@ public record IdSelector(String id) implements ExternalAttribute.Id, Api.Selecto
   }
 
   @Override
-  public final String toString() {
-    return "#" + id;
+  public final String id() {
+    return id;
   }
 
   @Override
-  public final String value() {
-    return id;
+  public final String toString() {
+    return "#" + id;
   }
 
 }

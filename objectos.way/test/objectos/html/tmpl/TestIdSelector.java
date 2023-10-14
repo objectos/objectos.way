@@ -24,7 +24,7 @@ public final class TestIdSelector implements Api.ExternalAttribute.Id {
   }
 
   @Override
-  public final String value() {
+  public final String id() {
     return id;
   }
 

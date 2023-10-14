@@ -24,7 +24,7 @@ public final class TestClassSelector implements Api.ExternalAttribute.StyleClass
   }
 
   @Override
-  public final String value() {
+  public final String className() {
     return value;
   }
 

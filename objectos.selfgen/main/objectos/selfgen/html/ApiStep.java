@@ -113,7 +113,7 @@ final class ApiStep extends ThisTemplate {
            *
            * @return the value of this {@code id} attribute
            */
-          String value();
+          String id();
         }
 
         /**
@@ -125,7 +125,7 @@ final class ApiStep extends ThisTemplate {
            *
            * @return the value of this {@code class} attribute
            */
-          String value();
+          String className();
         }
 
         /**
@@ -137,7 +137,7 @@ final class ApiStep extends ThisTemplate {
            *
            * @return an iterator over the values of this set
            */
-          \{iterator}<String> value();
+          \{iterator}<String> classNames();
         }
       }
 

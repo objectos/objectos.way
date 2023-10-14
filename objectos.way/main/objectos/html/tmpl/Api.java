@@ -1476,7 +1476,7 @@ public final class Api {
        *
        * @return the value of this {@code id} attribute
        */
-      String value();
+      String id();
     }
 
     /**
@@ -1488,7 +1488,7 @@ public final class Api {
        *
        * @return the value of this {@code class} attribute
        */
-      String value();
+      String className();
     }
 
     /**
@@ -1500,7 +1500,7 @@ public final class Api {
        *
        * @return an iterator over the values of this set
        */
-      Iterator<String> value();
+      Iterator<String> classNames();
     }
   }
 
