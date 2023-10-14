@@ -47,7 +47,7 @@ public class CssSelfGen02NumberTypeTest {
   @Test
   public void generatedCssTemplate() {
     assertEquals(
-      result.get("objectos/css/internal/GeneratedCssTemplate.java"),
+      result.get("objectox/css/GeneratedCssTemplate.java"),
 
       """
       /*
@@ -65,7 +65,7 @@ public class CssSelfGen02NumberTypeTest {
        * See the License for the specific language governing permissions and
        * limitations under the License.
        */
-      package objectos.css.internal;
+      package objectox.css;
 
       import objectos.css.tmpl.Api.Selector;
       import objectos.css.tmpl.Api.StyleDeclaration;

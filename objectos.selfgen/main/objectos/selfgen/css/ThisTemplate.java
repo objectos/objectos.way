@@ -31,7 +31,7 @@ abstract class ThisTemplate {
 
   static final String CSS = "objectos.css";
 
-  static final String CSS_INTERNAL = "objectos.css.internal";
+  static final String CSS_INTERNAL = "objectox.css";
 
   static final String CSS_OM = "objectos.css.om";
 

@@ -52,7 +52,7 @@ public class CssSelfGen14UrlTypeTest {
   @Test
   public void generatedCssTemplate() {
     assertEquals(
-      result.get("objectos/css/internal/GeneratedCssTemplate.java"),
+      result.get("objectox/css/GeneratedCssTemplate.java"),
 
       """
       /*
@@ -70,7 +70,7 @@ public class CssSelfGen14UrlTypeTest {
        * See the License for the specific language governing permissions and
        * limitations under the License.
        */
-      package objectos.css.internal;
+      package objectox.css;
 
       import objectos.css.tmpl.Api.Image;
       import objectos.css.tmpl.Api.PropertyValue;

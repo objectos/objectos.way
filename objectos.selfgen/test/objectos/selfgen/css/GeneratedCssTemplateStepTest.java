@@ -68,7 +68,7 @@ public class GeneratedCssTemplateStepTest {
        * See the License for the specific language governing permissions and
        * limitations under the License.
        */
-      package objectos.css.internal;
+      package objectox.css;
 
       import objectos.css.tmpl.Api.LengthValue;
       import objectos.css.tmpl.Api.LineWidth;
@@ -189,7 +189,7 @@ public class GeneratedCssTemplateStepTest {
        * See the License for the specific language governing permissions and
        * limitations under the License.
        */
-      package objectos.css.internal;
+      package objectox.css;
 
       import objectos.css.tmpl.Api.Selector;
 
@@ -277,7 +277,7 @@ public class GeneratedCssTemplateStepTest {
        * See the License for the specific language governing permissions and
        * limitations under the License.
        */
-      package objectos.css.internal;
+      package objectox.css;
 
       import objectos.css.tmpl.Api.ColorValue;
       import objectos.css.tmpl.Api.GlobalKeyword;
@@ -365,7 +365,7 @@ public class GeneratedCssTemplateStepTest {
     }
 
     String string;
-    string = result.get("objectos/css/internal/GeneratedCssTemplate.java");
+    string = result.get("objectox/css/GeneratedCssTemplate.java");
 
     assertEquals(string, expected);
   }

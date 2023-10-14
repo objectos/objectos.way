@@ -61,7 +61,7 @@ public class StandardSelectorStepTest {
   @Test
   public void type() {
     assertEquals(
-      result.get("objectos/css/internal/StandardTypeSelector.java"),
+      result.get("objectox/css/StandardTypeSelector.java"),
 
       """
       /*
@@ -79,7 +79,7 @@ public class StandardSelectorStepTest {
        * See the License for the specific language governing permissions and
        * limitations under the License.
        */
-      package objectos.css.internal;
+      package objectox.css;
 
       import objectos.css.tmpl.Api.SelectorInstruction;
 
@@ -113,7 +113,7 @@ public class StandardSelectorStepTest {
   @Test
   public void pseudoClass() {
     assertEquals(
-      result.get("objectos/css/internal/StandardPseudoClassSelector.java"),
+      result.get("objectox/css/StandardPseudoClassSelector.java"),
 
       """
       /*
@@ -131,7 +131,7 @@ public class StandardSelectorStepTest {
        * See the License for the specific language governing permissions and
        * limitations under the License.
        */
-      package objectos.css.internal;
+      package objectox.css;
 
       import objectos.css.tmpl.Api.SelectorInstruction;
 
@@ -165,7 +165,7 @@ public class StandardSelectorStepTest {
   @Test
   public void pseudoElement() {
     assertEquals(
-      result.get("objectos/css/internal/StandardPseudoElementSelector.java"),
+      result.get("objectox/css/StandardPseudoElementSelector.java"),
 
       """
       /*
@@ -183,7 +183,7 @@ public class StandardSelectorStepTest {
        * See the License for the specific language governing permissions and
        * limitations under the License.
        */
-      package objectos.css.internal;
+      package objectox.css;
 
       import objectos.css.tmpl.Api.SelectorInstruction;
 

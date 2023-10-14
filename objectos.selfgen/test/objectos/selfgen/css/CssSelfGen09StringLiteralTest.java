@@ -56,7 +56,7 @@ public class CssSelfGen09StringLiteralTest {
   @Test
   public void generatedCssTemplate() {
     assertEquals(
-      result.get("objectos/css/internal/GeneratedCssTemplate.java"),
+      result.get("objectox/css/GeneratedCssTemplate.java"),
 
       """
       /*
@@ -74,7 +74,7 @@ public class CssSelfGen09StringLiteralTest {
        * See the License for the specific language governing permissions and
        * limitations under the License.
        */
-      package objectos.css.internal;
+      package objectox.css;
 
       import objectos.css.tmpl.Api.FontFamilyValue;
       import objectos.css.tmpl.Api.Selector;

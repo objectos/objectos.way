@@ -48,7 +48,7 @@ public class CssSelfGen03PercentageTypeTest {
   @Test
   public void generatedCssTemplate() {
     assertEquals(
-      result.get("objectos/css/internal/GeneratedCssTemplate.java"),
+      result.get("objectox/css/GeneratedCssTemplate.java"),
 
       """
       /*
@@ -66,7 +66,7 @@ public class CssSelfGen03PercentageTypeTest {
        * See the License for the specific language governing permissions and
        * limitations under the License.
        */
-      package objectos.css.internal;
+      package objectox.css;
 
       import objectos.css.tmpl.Api.LineHeightValue;
       import objectos.css.tmpl.Api.PropertyValue;

@@ -68,7 +68,7 @@ public class StandardNameTest {
   @Test
   public void all() {
     assertEquals(
-      result.get("objectos/css/internal/StandardName.java"),
+      result.get("objectox/css/StandardName.java"),
 
       """
       /*
@@ -86,7 +86,7 @@ public class StandardNameTest {
        * See the License for the specific language governing permissions and
        * limitations under the License.
        */
-      package objectos.css.internal;
+      package objectox.css;
 
       import objectos.css.tmpl.Api.ColorValue;
       import objectos.css.tmpl.Api.SelectorInstruction;
