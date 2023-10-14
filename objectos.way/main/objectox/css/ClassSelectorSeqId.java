@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016-2023 Objectos Software LTDA.
+ * Copyright (C) 2023 Objectos Software LTDA.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,27 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.css.util;
+package objectox.css;
 
-import objectos.css.tmpl.Api;
-import objectox.css.InternalColor;
+public final class ClassSelectorSeqId {
+  private static final SeqId INSTANCE = new SeqId();
 
-/**
- * @since 0.7
- */
-public sealed abstract class Color
-    extends GeneratedColor
-    implements Api.ColorValue
-    permits InternalColor {
+  private ClassSelectorSeqId() {}
 
-  protected Color() {}
-
-  public static Color named(String name) {
-    return new InternalColor(name.toString());
+  public static String next() {
+    return INSTANCE.next();
   }
-
-  public static Color ofHex(String hex) {
-    return new InternalColor(hex.toString());
-  }
-
 }

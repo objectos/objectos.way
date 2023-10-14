@@ -15,9 +15,9 @@
  */
 package objectos.css.util;
 
-import objectos.css.internal.InternalLength;
-import objectos.css.internal.LengthUnit;
 import objectos.css.tmpl.Api;
+import objectox.css.InternalLength;
+import objectox.css.LengthUnit;
 
 public sealed abstract class Length
     implements Api.LengthValue

@@ -13,27 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.css.util;
+package objectox.css;
 
-import objectos.css.tmpl.Api;
-import objectox.css.InternalColor;
+import static org.testng.Assert.assertTrue;
 
-/**
- * @since 0.7
- */
-public sealed abstract class Color
-    extends GeneratedColor
-    implements Api.ColorValue
-    permits InternalColor {
+import org.testng.annotations.Test;
 
-  protected Color() {}
+public class StandardTypeSelectorTest {
 
-  public static Color named(String name) {
-    return new InternalColor(name.toString());
-  }
+  @Test
+  public void varIntLimit() {
+    StandardTypeSelector[] values;
+    values = StandardTypeSelector.values();
 
-  public static Color ofHex(String hex) {
-    return new InternalColor(hex.toString());
+    //System.out.println(values.length);
+
+    assertTrue(values.length < 128);
   }
 
 }

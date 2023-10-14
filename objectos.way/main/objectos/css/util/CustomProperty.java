@@ -15,8 +15,8 @@
  */
 package objectos.css.util;
 
-import objectos.css.internal.RandomStringGenerator;
 import objectos.css.tmpl.Api;
+import objectox.css.RandomStringGenerator;
 import objectox.lang.Equals;
 import objectox.lang.HashCode;
 

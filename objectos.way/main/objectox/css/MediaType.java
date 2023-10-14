@@ -13,27 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.css.util;
+package objectox.css;
 
+import java.util.Locale;
 import objectos.css.tmpl.Api;
-import objectox.css.InternalColor;
 
-/**
- * @since 0.7
- */
-public sealed abstract class Color
-    extends GeneratedColor
-    implements Api.ColorValue
-    permits InternalColor {
+public enum MediaType implements Api.MediaQuery {
 
-  protected Color() {}
+  ALL,
 
-  public static Color named(String name) {
-    return new InternalColor(name.toString());
-  }
+  PRINT,
 
-  public static Color ofHex(String hex) {
-    return new InternalColor(hex.toString());
+  SCREEN;
+
+  private static final MediaType[] VALUES = values();
+
+  final String cssName = name().toLowerCase(Locale.US);
+
+  public static MediaType ofOrdinal(int ordinal) {
+    return VALUES[ordinal];
   }
 
 }

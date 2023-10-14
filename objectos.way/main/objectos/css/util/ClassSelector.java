@@ -15,10 +15,10 @@
  */
 package objectos.css.util;
 
-import objectos.css.internal.ClassSelectorSeqId;
-import objectos.css.internal.RandomStringGenerator;
 import objectos.css.tmpl.Api;
 import objectos.html.tmpl.Api.ExternalAttribute;
+import objectox.css.ClassSelectorSeqId;
+import objectox.css.RandomStringGenerator;
 import objectox.lang.Check;
 
 public record ClassSelector(String className)

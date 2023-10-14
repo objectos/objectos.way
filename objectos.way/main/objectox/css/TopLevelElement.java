@@ -13,27 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.css.util;
+package objectox.css;
 
-import objectos.css.tmpl.Api;
-import objectox.css.InternalColor;
+import java.io.IOException;
 
-/**
- * @since 0.7
- */
-public sealed abstract class Color
-    extends GeneratedColor
-    implements Api.ColorValue
-    permits InternalColor {
+public interface TopLevelElement {
 
-  protected Color() {}
-
-  public static Color named(String name) {
-    return new InternalColor(name.toString());
-  }
-
-  public static Color ofHex(String hex) {
-    return new InternalColor(hex.toString());
-  }
+  void writeTo(Appendable dest) throws IOException;
 
 }

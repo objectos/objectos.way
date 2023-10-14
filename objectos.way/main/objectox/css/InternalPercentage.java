@@ -13,27 +13,33 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.css.util;
+package objectox.css;
 
-import objectos.css.tmpl.Api;
-import objectox.css.InternalColor;
+import objectos.css.util.Percentage;
 
-/**
- * @since 0.7
- */
-public sealed abstract class Color
-    extends GeneratedColor
-    implements Api.ColorValue
-    permits InternalColor {
+public final class InternalPercentage extends Percentage {
 
-  protected Color() {}
+  final String raw;
 
-  public static Color named(String name) {
-    return new InternalColor(name.toString());
+  InternalPercentage(String raw) {
+    this.raw = raw;
   }
 
-  public static Color ofHex(String hex) {
-    return new InternalColor(hex.toString());
+  public static InternalPercentage of(double value) {
+    return new InternalPercentage(
+      Double.toString(value) + "%"
+    );
+  }
+
+  public static InternalPercentage of(int value) {
+    return new InternalPercentage(
+      Integer.toString(value) + "%"
+    );
+  }
+
+  @Override
+  public final String toString() {
+    return raw;
   }
 
 }

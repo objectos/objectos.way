@@ -15,6 +15,6 @@
  */
 package objectos.css;
 
-import objectos.css.internal.InternalAttributeOperator;
+import objectox.css.InternalAttributeOperator;
 
 public sealed interface AttributeOperator permits InternalAttributeOperator {}

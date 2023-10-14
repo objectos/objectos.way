@@ -13,27 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.css.util;
+package objectox.css;
 
-import objectos.css.tmpl.Api;
-import objectox.css.InternalColor;
+import static java.lang.System.out;
 
-/**
- * @since 0.7
- */
-public sealed abstract class Color
-    extends GeneratedColor
-    implements Api.ColorValue
-    permits InternalColor {
+abstract class FauxGenerator {
 
-  protected Color() {}
+  int value = -1;
 
-  public static Color named(String name) {
-    return new InternalColor(name.toString());
+  public abstract void execute();
+
+  final void comment(String string) {
+    out.println();
+    out.println("// " + string);
+    out.println();
   }
 
-  public static Color ofHex(String hex) {
-    return new InternalColor(hex.toString());
+  final void value(String string) {
+    out.println("public static final byte " + string + " = " + value-- + ";");
   }
 
 }

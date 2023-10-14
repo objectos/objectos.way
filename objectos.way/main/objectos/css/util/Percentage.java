@@ -15,8 +15,8 @@
  */
 package objectos.css.util;
 
-import objectos.css.internal.InternalPercentage;
 import objectos.css.tmpl.Api;
+import objectox.css.InternalPercentage;
 
 public sealed abstract class Percentage
     implements Api.PercentageValue

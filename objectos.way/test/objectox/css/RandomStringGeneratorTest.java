@@ -13,27 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.css.util;
+package objectox.css;
 
-import objectos.css.tmpl.Api;
-import objectox.css.InternalColor;
+import static org.testng.Assert.assertEquals;
 
-/**
- * @since 0.7
- */
-public sealed abstract class Color
-    extends GeneratedColor
-    implements Api.ColorValue
-    permits InternalColor {
+import org.testng.annotations.Test;
 
-  protected Color() {}
+public class RandomStringGeneratorTest {
 
-  public static Color named(String name) {
-    return new InternalColor(name.toString());
-  }
+  @Test(description = """
+  Verifies setSeed generates the same sequence of pseudo random every time.
+  """)
+  public void setSeed() {
+    long seed;
+    seed = 1233456789L;
 
-  public static Color ofHex(String hex) {
-    return new InternalColor(hex.toString());
+    RandomStringGenerator.randomSeed(seed);
+
+    assertEquals(RandomStringGenerator.nextString(3), "2os");
+    assertEquals(RandomStringGenerator.nextString(4), "63Iy");
+    assertEquals(RandomStringGenerator.nextString(5), "ankzJ");
   }
 
 }

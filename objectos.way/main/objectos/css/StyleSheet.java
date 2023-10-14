@@ -15,6 +15,6 @@
  */
 package objectos.css;
 
-import objectos.css.internal.CompiledStyleSheet;
+import objectox.css.CompiledStyleSheet;
 
 public sealed interface StyleSheet permits CompiledStyleSheet {}

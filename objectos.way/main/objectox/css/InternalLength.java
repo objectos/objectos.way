@@ -13,27 +13,33 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.css.util;
+package objectox.css;
 
-import objectos.css.tmpl.Api;
-import objectox.css.InternalColor;
+import objectos.css.util.Length;
 
-/**
- * @since 0.7
- */
-public sealed abstract class Color
-    extends GeneratedColor
-    implements Api.ColorValue
-    permits InternalColor {
+public final class InternalLength extends Length {
 
-  protected Color() {}
+  final String raw;
 
-  public static Color named(String name) {
-    return new InternalColor(name.toString());
+  InternalLength(String raw) {
+    this.raw = raw;
   }
 
-  public static Color ofHex(String hex) {
-    return new InternalColor(hex.toString());
+  public static InternalLength of(double value, LengthUnit unit) {
+    return new InternalLength(
+      Double.toString(value) + unit.cssName
+    );
+  }
+
+  public static InternalLength of(int value, LengthUnit unit) {
+    return new InternalLength(
+      Integer.toString(value) + unit.cssName
+    );
+  }
+
+  @Override
+  public final String toString() {
+    return raw;
   }
 
 }

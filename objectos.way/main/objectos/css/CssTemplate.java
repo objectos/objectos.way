@@ -15,7 +15,7 @@
  */
 package objectos.css;
 
-import objectos.css.internal.InternalCssTemplate;
+import objectox.css.InternalCssTemplate;
 
 /**
  * TODO
