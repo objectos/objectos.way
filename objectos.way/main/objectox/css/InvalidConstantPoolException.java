@@ -15,31 +15,14 @@
  */
 package objectox.css;
 
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertNotNull;
-
 import java.io.IOException;
-import org.testng.annotations.Test;
 
-public class ConstantPoolTest {
+public class InvalidConstantPoolException extends IOException {
 
-  @Test
-  public void pool01() throws IOException {
-    ConstantPool.Builder builder;
-    builder = new ConstantPool.Builder(Pool01.class.getName());
+  private static final long serialVersionUID = 1L;
 
-    builder.loadResource();
-
-    assertNotNull(builder.bytes);
-    assertEquals(builder.bytes.length, 737);
-    assertEquals(builder.bytesIndex, 0);
-    assertEquals(builder.cpCount, 0);
-
-    builder.verifyMagic();
-
-    builder.parseConstantPoolCount();
-
-    assertEquals(builder.cpCount, 36);
+  public InvalidConstantPoolException(String message) {
+    super(message);
   }
 
 }

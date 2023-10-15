@@ -29,6 +29,10 @@ public class ConstantPool {
 
     byte[] bytes;
 
+    int bytesIndex;
+
+    int cpCount;
+
     public Builder(String binaryName) {
       this.binaryName = Check.notNull(binaryName, "binaryName == null");
     }
@@ -56,8 +60,64 @@ public class ConstantPool {
       }
 
       try (in; ByteArrayOutputStream out = new ByteArrayOutputStream()) {
+        in.transferTo(out);
+
         bytes = out.toByteArray();
       }
+    }
+
+    final void verifyMagic() throws IOException {
+      if (bytes.length < 4) {
+        throw invalidMagic();
+      }
+
+      int magic;
+      magic = readU4();
+
+      if (magic != 0xCAFEBABE) {
+        throw invalidMagic();
+      }
+    }
+
+    final void parseConstantPoolCount() {
+      // skip minor/major
+      bytesIndex += 4;
+
+      cpCount = readU2();
+    }
+
+    private int readU2() {
+      byte b1;
+      b1 = nextByte();
+
+      byte b0;
+      b0 = nextByte();
+
+      return Bytes.intValue(b0, b1);
+    }
+
+    private int readU4() {
+      byte b3;
+      b3 = nextByte();
+
+      byte b2;
+      b2 = nextByte();
+
+      byte b1;
+      b1 = nextByte();
+
+      byte b0;
+      b0 = nextByte();
+
+      return Bytes.intValue(b0, b1, b2, b3);
+    }
+
+    private byte nextByte() {
+      return bytes[bytesIndex++];
+    }
+
+    private IOException invalidMagic() {
+      return new InvalidConstantPoolException("Magic number not found");
     }
 
   }
