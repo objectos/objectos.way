@@ -19,27 +19,39 @@ import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 
 import java.io.IOException;
+import java.util.List;
 import org.testng.annotations.Test;
 
 public class ConstantPoolTest {
 
   @Test
   public void pool01() throws IOException {
-    ConstantPool.Builder builder;
-    builder = new ConstantPool.Builder(Pool01.class.getName());
+    ConstantPool pool;
+    pool = new ConstantPool(Pool01.class.getName());
 
-    builder.loadResource();
+    pool.loadResource();
 
-    assertNotNull(builder.bytes);
-    assertEquals(builder.bytes.length, 737);
-    assertEquals(builder.bytesIndex, 0);
-    assertEquals(builder.cpCount, 0);
+    assertNotNull(pool.bytes);
+    assertEquals(pool.bytes.length, 737);
+    assertEquals(pool.bytesIndex, 0);
+    assertEquals(pool.constantPoolCount, 0);
 
-    builder.verifyMagic();
+    pool.verifyMagic();
 
-    builder.parseConstantPoolCount();
+    pool.parseConstantPoolCount();
 
-    assertEquals(builder.cpCount, 36);
+    assertEquals(pool.constantPoolCount, 36);
+
+    pool.parseConstantPoolIndex();
+
+    assertNotNull(pool.constantPoolIndex);
+    assertEquals(pool.constantPoolIndex.length, 36);
+
+    List<UtilityRef> refs;
+    refs = pool.findAll();
+
+    assertEquals(refs.size(), 1);
+    assertEquals(refs.get(0), new UtilityRef("objectos.css.util.Display", "BLOCK"));
   }
 
 }
