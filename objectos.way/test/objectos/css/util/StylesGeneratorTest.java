@@ -13,16 +13,32 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectox.css;
+package objectos.css.util;
 
-import objectos.css.util.Display;
-import objectos.html.HtmlTemplate;
+import static org.testng.Assert.assertEquals;
 
-class Pool01 extends HtmlTemplate {
+import java.io.IOException;
+import objectox.css.Utility01;
+import org.testng.annotations.Test;
 
-  @Override
-  protected void definition() {
-    div(Display.BLOCK);
+public class StylesGeneratorTest {
+
+  @Test
+  public void utility01() throws IOException {
+    StylesGenerator generator;
+    generator = StylesGenerator.of();
+
+    generator.add(Utility01.class);
+
+    assertEquals(
+      generator.generate(),
+
+      """
+      %s {
+        display: block;
+      }
+      """.formatted(Display.BLOCK.className())
+    );
   }
 
 }

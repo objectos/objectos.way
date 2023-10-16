@@ -22,33 +22,33 @@ import java.io.IOException;
 import java.util.List;
 import org.testng.annotations.Test;
 
-public class ConstantPoolTest {
+public class UtilityRefParserTest {
 
   @Test
-  public void pool01() throws IOException {
-    ConstantPool pool;
-    pool = new ConstantPool(Pool01.class.getName());
+  public void utility01() throws IOException {
+    UtilityRefParser parser;
+    parser = new UtilityRefParser();
 
-    pool.loadResource();
+    parser.loadResource(Utility01.class.getName());
 
-    assertNotNull(pool.bytes);
-    assertEquals(pool.bytes.length, 737);
-    assertEquals(pool.bytesIndex, 0);
-    assertEquals(pool.constantPoolCount, 0);
+    assertNotNull(parser.bytes);
+    assertEquals(parser.bytes.length, 746);
+    assertEquals(parser.bytesIndex, 0);
+    assertEquals(parser.constantPoolCount, 0);
 
-    pool.verifyMagic();
+    parser.verifyMagic();
 
-    pool.parseConstantPoolCount();
+    parser.parseConstantPoolCount();
 
-    assertEquals(pool.constantPoolCount, 36);
+    assertEquals(parser.constantPoolCount, 36);
 
-    pool.parseConstantPoolIndex();
+    parser.parseConstantPoolIndex();
 
-    assertNotNull(pool.constantPoolIndex);
-    assertEquals(pool.constantPoolIndex.length, 36);
+    assertNotNull(parser.constantPoolIndex);
+    assertEquals(parser.constantPoolIndex.length, 36);
 
     List<UtilityRef> refs;
-    refs = pool.findAll();
+    refs = parser.findAll();
 
     assertEquals(refs.size(), 1);
     assertEquals(refs.get(0), new UtilityRef("objectos.css.util.Display", "BLOCK"));

@@ -22,9 +22,8 @@ import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
-import objectox.lang.Check;
 
-public class ConstantPool {
+public class UtilityRefParser {
 
   sealed interface Entry {}
 
@@ -63,8 +62,6 @@ public class ConstantPool {
   static final byte CONSTANT_Module = 19;
   static final byte CONSTANT_Package = 20;
 
-  private final String binaryName;
-
   byte[] bytes;
 
   int bytesIndex;
@@ -75,11 +72,19 @@ public class ConstantPool {
 
   Entry[] entries;
 
-  ConstantPool(String binaryName) {
-    this.binaryName = Check.notNull(binaryName, "binaryName == null");
+  public final List<UtilityRef> parse(String binaryName) throws IOException {
+    loadResource(binaryName);
+
+    verifyMagic();
+
+    parseConstantPoolCount();
+
+    parseConstantPoolIndex();
+
+    return findAll();
   }
 
-  public final List<UtilityRef> findAll() throws IOException {
+  final List<UtilityRef> findAll() throws IOException {
     List<UtilityRef> result;
     result = new ArrayList<>();
 
@@ -252,7 +257,7 @@ public class ConstantPool {
     throw new UnsupportedOperationException("Implement me :: non ascii");
   }
 
-  final void loadResource() throws IOException {
+  final void loadResource(String binaryName) throws IOException {
     String resourceName;
     resourceName = binaryName.replace('.', '/');
 
@@ -275,6 +280,14 @@ public class ConstantPool {
 
       bytes = out.toByteArray();
     }
+
+    bytesIndex = 0;
+
+    constantPoolCount = 0;
+
+    constantPoolIndex = null;
+
+    entries = null;
   }
 
   final void verifyMagic() throws IOException {
