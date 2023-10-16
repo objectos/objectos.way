@@ -17,7 +17,10 @@ package selfgen.css.util;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import objectos.code.ClassName;
+import objectos.code.Code;
 import objectos.lang.Check;
 
 public sealed abstract class Prefix {
@@ -66,6 +69,38 @@ public sealed abstract class Prefix {
 
   public final void add(PropertyClass property) {
     propertyClassList.add(property);
+  }
+
+  final String generate(Code code) {
+    return code."""
+    public final class \{className.simpleName()} {
+
+      private \{className.simpleName()}() {}
+
+    \{generateProperties(code)}
+
+    }""";
+  }
+
+  private String generateProperties(Code code) {
+    List<String> result;
+    result = new ArrayList<>();
+
+    for (var property : propertyClassList) {
+      String s;
+      s = property.generate(code);
+
+      s = property.javadoc + "\n" + s;
+
+      s = Code.indent(s, 2);
+
+      result.add(s);
+    }
+
+    Stream<String> stream;
+    stream = result.stream();
+
+    return stream.collect(Collectors.joining("\n\n"));
   }
 
 }

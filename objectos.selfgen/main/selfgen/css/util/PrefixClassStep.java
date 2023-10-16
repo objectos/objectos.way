@@ -13,21 +13,21 @@ import java.util.stream.Collectors;
 import objectos.code.ClassName;
 import objectos.code.Code;
 
-final class PropertyEnumStep extends ThisTemplate {
+final class PrefixClassStep extends ThisTemplate {
 
-  private PropertyClass property;
+  private Prefix prefix;
 
-  PropertyEnumStep(CssUtilSelfGen spec) {
+  PrefixClassStep(CssUtilSelfGen spec) {
     super(spec);
   }
 
   @Override
   public final void writeTo(Path directory) throws IOException {
-    List<PropertyClass> properties;
-    properties = spec.properties;
+    List<Prefix> prefixes;
+    prefixes = spec.prefixList;
 
-    for (var property : properties) {
-      this.property = property;
+    for (var prefix : prefixes) {
+      this.prefix = prefix;
 
       super.writeTo(directory);
     }
@@ -35,10 +35,7 @@ final class PropertyEnumStep extends ThisTemplate {
 
   @Override
   final String contents() {
-    ClassName cn;
-    cn = ClassName.of(CSS_UTIL, property.simpleName);
-
-    className(cn);
+    className(prefix.className);
 
     return code."""
     /*
@@ -58,14 +55,13 @@ final class PropertyEnumStep extends ThisTemplate {
      */
     package \{packageName};
     \{importList}
-    \{property.javadoc}
     \{GENERATED_MSG}
-    \{generateProperty()}
+    \{generatePrefix()}
     """;
   }
 
-  final String generateProperty() {
-    return property.generate(code);
+  final String generatePrefix() {
+    return prefix.generate(code);
   }
 
 }

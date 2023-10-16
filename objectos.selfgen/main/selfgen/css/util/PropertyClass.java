@@ -15,11 +15,15 @@
  */
 package selfgen.css.util;
 
-import java.util.ArrayList;
-import java.util.List;
+import objectos.code.ClassName;
+import objectos.code.Code;
 import objectos.lang.Check;
 
-public sealed abstract class PropertyClass {
+public sealed abstract class PropertyClass permits StandardProperty {
+
+  static final ClassName STYLE_CLASS = ThisTemplate.STYLE_CLASS;
+
+  static final ClassName CLASS_SEQ_ID = ThisTemplate.CLASS_SEQ_ID;
 
   final String simpleName;
 
@@ -33,30 +37,6 @@ public sealed abstract class PropertyClass {
     javadoc = value;
   }
 
-  public static final class Standard extends PropertyClass {
-
-    final String propertyName;
-
-    final List<Constant1> constants = new ArrayList<>();
-
-    public Standard(String simpleName, String propertyName) {
-      super(simpleName);
-
-      this.propertyName = propertyName;
-    }
-
-    public final void add(String name, String value) {
-      Check.notNull(name, "name == null");
-      Check.notNull(value, "value == null");
-
-      Constant1 cte;
-      cte = new Constant1(name, value);
-
-      constants.add(cte);
-    }
-
-  }
-
-  static record Constant1(String name, String value) {}
+  abstract String generate(Code code);
 
 }

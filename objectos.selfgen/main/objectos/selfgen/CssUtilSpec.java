@@ -21,7 +21,7 @@ import selfgen.css.util.CssUtilSelfGen;
 import selfgen.css.util.Names;
 import selfgen.css.util.Prefix;
 import selfgen.css.util.Prefix.Breakpoint;
-import selfgen.css.util.PropertyClass;
+import selfgen.css.util.StandardProperty;
 import selfgen.css.util.Value;
 
 final class CssUtilSpec extends CssUtilSelfGen {
@@ -441,7 +441,8 @@ final class CssUtilSpec extends CssUtilSelfGen {
   }
 
   private void display() {
-    var p = new PropertyClass.Standard("Display", "display");
+    StandardProperty p;
+    p = new StandardProperty("Display", "display");
 
     p.javadoc("""
     /**

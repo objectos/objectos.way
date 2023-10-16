@@ -45,9 +45,7 @@ public abstract class CssUtilSelfGen {
 
     writeTo(new PropertyEnumStep(this), directory);
 
-    //writeTo(new FrameworkClassStep(this), directory);
-
-    //writeTo(new PrefixClassStep(this), directory);
+    writeTo(new PrefixClassStep(this), directory);
   }
 
   protected final void add(PropertyClass p) {
