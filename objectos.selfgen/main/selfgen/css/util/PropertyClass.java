@@ -19,26 +19,44 @@ import java.util.ArrayList;
 import java.util.List;
 import objectos.lang.Check;
 
-public final class PropertyClass {
+public sealed abstract class PropertyClass {
 
   final String simpleName;
 
-  final List<String> constants = new ArrayList<>();
-
   String javadoc;
 
-  public PropertyClass(String simpleName) {
+  PropertyClass(String simpleName) {
     this.simpleName = Check.notNull(simpleName, "simpleName == null");
-  }
-
-  public final void add(String name) {
-    Check.notNull(name, "name == null");
-
-    constants.add(name);
   }
 
   public final void javadoc(String value) {
     javadoc = value;
   }
+
+  public static final class Standard extends PropertyClass {
+
+    final String propertyName;
+
+    final List<Constant1> constants = new ArrayList<>();
+
+    public Standard(String simpleName, String propertyName) {
+      super(simpleName);
+
+      this.propertyName = propertyName;
+    }
+
+    public final void add(String name, String value) {
+      Check.notNull(name, "name == null");
+      Check.notNull(value, "value == null");
+
+      Constant1 cte;
+      cte = new Constant1(name, value);
+
+      constants.add(cte);
+    }
+
+  }
+
+  static record Constant1(String name, String value) {}
 
 }

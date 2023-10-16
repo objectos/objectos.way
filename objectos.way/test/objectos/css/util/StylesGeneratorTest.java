@@ -34,9 +34,7 @@ public class StylesGeneratorTest {
       generator.generate(),
 
       """
-      %s {
-        display: block;
-      }
+      .%s { display: block }
       """.formatted(Display.BLOCK.className())
     );
   }

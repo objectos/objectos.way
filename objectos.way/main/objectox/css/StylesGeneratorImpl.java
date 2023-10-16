@@ -61,11 +61,9 @@ public final class StylesGeneratorImpl implements objectos.css.util.StylesGenera
 
     if (display != null) {
       for (var v : display) {
-        out.append("""
-        %s {
-          display: %s;
-        }
-        """.formatted(v.className(), v.name().toLowerCase()));
+        out.append(v.toString());
+
+        out.append('\n');
       }
     }
 

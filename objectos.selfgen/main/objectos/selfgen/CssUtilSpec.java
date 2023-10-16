@@ -441,31 +441,31 @@ final class CssUtilSpec extends CssUtilSelfGen {
   }
 
   private void display() {
-    var p = new PropertyClass("Display");
+    var p = new PropertyClass.Standard("Display", "display");
 
     p.javadoc("""
     /**
      * Utility classes for the {@code display} CSS property.
      */""");
 
-    p.add("NONE");
-    p.add("BLOCK");
-    p.add("FLOW_ROOT");
-    p.add("INLINE_BLOCK");
-    p.add("INLINE");
-    p.add("FLEX");
-    p.add("INLINE_FLEX");
-    p.add("GRID");
-    p.add("INLINE_GRID");
-    p.add("TABLE");
-    p.add("TABLE_CAPTION");
-    p.add("TABLE_CELL");
-    p.add("TABLE_COLUMN");
-    p.add("TABLE_COLUMN_GROUP");
-    p.add("TABLE_FOOTER_GROUP");
-    p.add("TABLE_HEADER_GROUP");
-    p.add("TABLE_ROW_GROUP");
-    p.add("TABLE_ROW");
+    p.add("NONE", "none");
+    p.add("BLOCK", "block");
+    p.add("FLOW_ROOT", "flow-root");
+    p.add("INLINE_BLOCK", "inline-block");
+    p.add("INLINE", "inline");
+    p.add("FLEX", "flex");
+    p.add("INLINE_FLEX", "inline-flex");
+    p.add("GRID", "grid");
+    p.add("INLINE_GRID", "inline-grid");
+    p.add("TABLE", "table");
+    p.add("TABLE_CAPTION", "table-caption");
+    p.add("TABLE_CELL", "table-cell");
+    p.add("TABLE_COLUMN", "table-column");
+    p.add("TABLE_COLUMN_GROUP", "table-column-group");
+    p.add("TABLE_FOOTER_GROUP", "table-footer-group");
+    p.add("TABLE_HEADER_GROUP", "table-header-group");
+    p.add("TABLE_ROW_GROUP", "table-row-group");
+    p.add("TABLE_ROW", "table-row");
 
     add(p);
 

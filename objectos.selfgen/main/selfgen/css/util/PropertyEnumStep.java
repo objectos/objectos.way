@@ -11,6 +11,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import objectos.code.ClassName;
+import objectos.code.Code;
+import selfgen.css.util.PropertyClass.Constant1;
 
 final class PropertyEnumStep extends ThisTemplate {
 
@@ -64,28 +66,51 @@ final class PropertyEnumStep extends ThisTemplate {
   }
 
   final String generateProperty() {
-    return code."""
-    public enum \{property.simpleName} implements \{STYLE_CLASS} {
-    \{generatePropertyConstants()}
-      private final String className = \{CLASS_SEQ_ID}.next();
+    return switch (property) {
+      case PropertyClass.Standard std -> code."""
+        public enum \{std.simpleName} implements \{STYLE_CLASS} {
+        \{generatePropertyConstants(std)}
+          private final String className = \{CLASS_SEQ_ID}.next();
 
-      @Override
-      public final String className() {
-        return className;
-      }
+          private final String value;
 
-    }""";
+          private \{std.simpleName}(String value) {
+            this.value = value;
+          }
+
+          /**
+           * Returns the CSS class name.
+           *
+           * @return the CSS class name
+           */
+          @Override
+          public final String className() {
+            return className;
+          }
+
+          /**
+           * Returns the CSS style rule represented by this utility class.
+           *
+           * @return the CSS style rule
+           */
+          @Override
+          public final String toString() {
+            return "." + className + " { \{std.propertyName}: " + value + " }";
+          }
+
+        }""";
+    };
   }
 
-  private String generatePropertyConstants() {
+  private String generatePropertyConstants(PropertyClass.Standard std) {
     List<String> result;
     result = new ArrayList<>();
 
-    List<String> constants;
-    constants = property.constants;
+    List<Constant1> constants;
+    constants = std.constants;
 
-    for (var constantName : constants) {
-      result.add("  " + constantName);
+    for (var cte : constants) {
+      result.add("  " + cte.name() + "(\"" + Code.escape(cte.value()) + "\")");
     }
 
     return result.stream().collect(Collectors.joining(",\n\n", "\n", ";\n"));
