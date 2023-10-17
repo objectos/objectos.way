@@ -444,11 +444,6 @@ final class CssUtilSpec extends CssUtilSelfGen {
     StandardProperty p;
     p = new StandardProperty("Display", "display");
 
-    p.javadoc("""
-    /**
-     * Utility classes for the {@code display} CSS property.
-     */""");
-
     p.add("NONE", "none");
     p.add("BLOCK", "block");
     p.add("FLOW_ROOT", "flow-root");
@@ -545,35 +540,76 @@ final class CssUtilSpec extends CssUtilSelfGen {
   }
 
   private void height() {
-    Names names;
-    names = names(
-      spacing,
-      name("AUTO", k("auto")),
-      name("P1_2", pct(50)),
-      name("P1_3", pct(33.333333)),
-      name("P2_3", pct(66.666667)),
-      name("P1_4", pct(25)),
-      name("P2_4", pct(50)),
-      name("P3_4", pct(75)),
-      name("P1_5", pct(20)),
-      name("P2_5", pct(40)),
-      name("P3_5", pct(60)),
-      name("P4_5", pct(80)),
-      name("P1_6", pct(16.666667)),
-      name("P2_6", pct(33.333333)),
-      name("P3_6", pct(50)),
-      name("P4_6", pct(66.666667)),
-      name("P5_6", pct(83.333333)),
-      name("FULL", pct(100)),
-      name("SCREEN", vh(100)),
-      name("MIN", k("minContent")),
-      name("MAX", k("maxContent")),
-      name("FIT", k("fitContent"))
-    );
+    StandardProperty p;
+    p = new StandardProperty("Height", "height");
+
+    spacing(p);
+
+    p.add("AUTO", "auto");
+    p.add("HALF", "50%");
+    p.add("THIRD1", "33.333333%");
+    p.add("THIRD2", "66.666667%");
+    p.add("QUARTER1", "25%");
+    p.add("QUARTER2", "50%");
+    p.add("QUARTER3", "75%");
+    p.add("FIFTH1", "20%");
+    p.add("FIFTH2", "40%");
+    p.add("FIFTH3", "60%");
+    p.add("FIFTH4", "80%");
+    p.add("SIXTH1", "16.666667%");
+    p.add("SIXTH2", "33.333333%");
+    p.add("SIXTH3", "50%");
+    p.add("SIXTH4", "66.666667%");
+    p.add("SIXTH5", "83.333333%");
+    p.add("FULL", "100%");
+    p.add("SCREEN", "100vh");
+    p.add("MIN", "min-content");
+    p.add("MAX", "max-content");
+    p.add("FIT", "fit-content");
+
+    add(p);
 
     for (Prefix prefix : responsive) {
-      generate(prefix, simpleName("Height"), methods("height"), names);
+      prefix.add(p);
     }
+  }
+
+  private void spacing(StandardProperty p) {
+    p.add("PX0", "0px");
+    p.add("PX1", "1px");
+    p.add("PX2", "0.125rem");
+    p.add("PX4", "0.25rem");
+    p.add("PX6", "0.375rem");
+    p.add("PX8", "0.5rem");
+    p.add("PX10", "0.625rem");
+    p.add("PX12", "0.75rem");
+    p.add("PX14", "0.875rem");
+    p.add("PX16", "1rem");
+    p.add("PX20", "1.25rem");
+    p.add("PX24", "1.5rem");
+    p.add("PX28", "1.75rem");
+    p.add("PX32", "2rem");
+    p.add("PX36", "2.25rem");
+    p.add("PX40", "2.5rem");
+    p.add("PX44", "2.75rem");
+    p.add("PX48", "3rem");
+    p.add("PX56", "3.5rem");
+    p.add("PX64", "4rem");
+    p.add("PX80", "5rem");
+    p.add("PX96", "6rem");
+    p.add("PX112", "7rem");
+    p.add("PX128", "8rem");
+    p.add("PX144", "9rem");
+    p.add("PX160", "10rem");
+    p.add("PX176", "11rem");
+    p.add("PX192", "12rem");
+    p.add("PX208", "13rem");
+    p.add("PX224", "14rem");
+    p.add("PX240", "15rem");
+    p.add("PX256", "16rem");
+    p.add("PX288", "18rem");
+    p.add("PX320", "20rem");
+    p.add("PX384", "24rem");
   }
 
   private void justifyContent() {
@@ -813,45 +849,48 @@ final class CssUtilSpec extends CssUtilSelfGen {
   }
 
   private void width() {
-    Names names;
-    names = names(
-      spacing,
-      name("AUTO", k("auto")),
-      name("P1_2", pct(50)),
-      name("P1_3", pct(33.333333)),
-      name("P2_3", pct(66.666667)),
-      name("P1_4", pct(25)),
-      name("P2_4", pct(50)),
-      name("P3_4", pct(75)),
-      name("P1_5", pct(20)),
-      name("P2_5", pct(40)),
-      name("P3_5", pct(60)),
-      name("P4_5", pct(80)),
-      name("P1_6", pct(16.666667)),
-      name("P2_6", pct(33.333333)),
-      name("P3_6", pct(50)),
-      name("P4_6", pct(66.666667)),
-      name("P5_6", pct(83.333333)),
-      name("P1_12", pct(8.333333)),
-      name("P2_12", pct(16.666667)),
-      name("P3_12", pct(25)),
-      name("P4_12", pct(33.333333)),
-      name("P5_12", pct(41.666667)),
-      name("P6_12", pct(50)),
-      name("P7_12", pct(58.333333)),
-      name("P8_12", pct(66.666667)),
-      name("P9_12", pct(75)),
-      name("P10_12", pct(83.333333)),
-      name("P11_12", pct(91.666667)),
-      name("FULL", pct(100)),
-      name("SCREEN", vw(100)),
-      name("MIN", k("minContent")),
-      name("MAX", k("maxContent")),
-      name("FIT", k("fitContent"))
-    );
+    StandardProperty p;
+    p = new StandardProperty("Width", "width");
+
+    spacing(p);
+
+    p.add("AUTO", "auto");
+    p.add("HALF", "50%");
+    p.add("THIRD1", "33.333333%");
+    p.add("THIRD2", "66.666667%");
+    p.add("QUARTER1", "25%");
+    p.add("QUARTER2", "50%");
+    p.add("QUARTER3", "75%");
+    p.add("FIFTH1", "20%");
+    p.add("FIFTH2", "40%");
+    p.add("FIFTH3", "60%");
+    p.add("FIFTH4", "80%");
+    p.add("SIXTH1", "16.666667%");
+    p.add("SIXTH2", "33.333333%");
+    p.add("SIXTH3", "50%");
+    p.add("SIXTH4", "66.666667%");
+    p.add("SIXTH5", "83.333333%");
+    p.add("TWELFTH1", "8.333333%");
+    p.add("TWELFTH2", "16.666667%");
+    p.add("TWELFTH3", "25%");
+    p.add("TWELFTH4", "33.333333%");
+    p.add("TWELFTH5", "41.666667%");
+    p.add("TWELFTH6", "50%");
+    p.add("TWELFTH7", "58.333333%");
+    p.add("TWELFTH8", "66.666667%");
+    p.add("TWELFTH9", "75%");
+    p.add("TWELFTH10", "83.333333%");
+    p.add("TWELFTH11", "91.666667%");
+    p.add("FULL", "100%");
+    p.add("SCREEN", "100vh");
+    p.add("MIN", "min-content");
+    p.add("MAX", "max-content");
+    p.add("FIT", "fit-content");
+
+    add(p);
 
     for (Prefix prefix : responsive) {
-      generate(prefix, simpleName("Width"), methods("width"), names);
+      prefix.add(p);
     }
   }
 

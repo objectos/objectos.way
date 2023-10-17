@@ -15,9 +15,10 @@
  */
 package objectos.css.util;
 
-import java.io.IOException;
 import objectos.lang.NoOpNoteSink;
+import objectos.lang.NoteSink;
 import objectox.css.util.StylesGeneratorImpl;
+import objectox.lang.Check;
 
 public sealed interface StylesGenerator permits StylesGeneratorImpl {
 
@@ -28,7 +29,13 @@ public sealed interface StylesGenerator permits StylesGeneratorImpl {
     return new StylesGeneratorImpl(noteSink);
   }
 
-  void scan(Class<?> clazz) throws IOException;
+  static StylesGenerator of(NoteSink noteSink) {
+    Check.notNull(noteSink, "noteSink == null");
+
+    return new StylesGeneratorImpl(noteSink);
+  }
+
+  void scan(Class<?> clazz);
 
   String generate();
 

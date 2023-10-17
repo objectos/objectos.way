@@ -27,16 +27,12 @@ public sealed abstract class PropertyClass permits StandardProperty {
 
   final String simpleName;
 
-  String javadoc;
-
   PropertyClass(String simpleName) {
     this.simpleName = Check.notNull(simpleName, "simpleName == null");
   }
 
-  public final void javadoc(String value) {
-    javadoc = value;
-  }
-
   abstract String generate(Code code);
+
+  abstract String javadoc(Code code);
 
 }

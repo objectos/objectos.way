@@ -90,7 +90,7 @@ public sealed abstract class Prefix {
       String s;
       s = property.generate(code);
 
-      s = property.javadoc + "\n" + s;
+      s = property.javadoc(code) + "\n" + s;
 
       s = Code.indent(s, 2);
 

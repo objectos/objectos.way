@@ -19,11 +19,6 @@ public class PropertyEnumStepTest {
       protected void definition() {
         var p = new StandardProperty("Display", "display");
 
-        p.javadoc("""
-        /**
-         * Utility classes for the {@code display} CSS property.
-         */""");
-
         p.add("BLOCK", "block");
         p.add("FLEX", "flex");
         p.add("INLINE_FLEX", "inline-flex");

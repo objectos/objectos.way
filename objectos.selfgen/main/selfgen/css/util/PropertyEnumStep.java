@@ -58,10 +58,14 @@ final class PropertyEnumStep extends ThisTemplate {
      */
     package \{packageName};
     \{importList}
-    \{property.javadoc}
+    \{generateJavadoc()}
     \{GENERATED_MSG}
     \{generateProperty()}
     """;
+  }
+
+  final String generateJavadoc() {
+    return property.javadoc(code);
   }
 
   final String generateProperty() {

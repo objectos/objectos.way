@@ -71,6 +71,14 @@ public final class StandardProperty extends PropertyClass {
     }""";
   }
 
+  @Override
+  final String javadoc(Code code) {
+    return code."""
+    /**
+     * Utility classes for the {@code \{propertyName}} CSS property.
+     */""";
+  }
+
   private String generatePropertyConstants() {
     List<String> result;
     result = new ArrayList<>();
