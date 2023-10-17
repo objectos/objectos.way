@@ -21,6 +21,8 @@ import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
 import java.util.Set;
+import objectos.css.util.Breakpoint;
+import objectos.css.util.Length;
 import objectos.css.util.StylesGenerator;
 import objectos.html.tmpl.Api.ExternalAttribute.StyleClass;
 import objectos.lang.Note1;
@@ -703,15 +705,41 @@ public final class StylesGeneratorImpl implements StylesGenerator {
       generate0(prefix, values);
     }
 
-    return out.toString();
+    String result;
+    result = out.toString();
+
+    out = null;
+
+    utilities = null;
+
+    return result;
   }
 
   private void generate0(String prefix, Map<String, Set<String>> properties) {
     switch (prefix) {
       case "" -> generate1("", properties);
 
+      case "Small" -> generate1(Breakpoint.SM, "  ", properties);
+
+      case "Medium" -> generate1(Breakpoint.MD, "  ", properties);
+
+      case "Large" -> generate1(Breakpoint.LG, "  ", properties);
+
+      case "Extra" -> generate1(Breakpoint.XL, "  ", properties);
+
+      case "Max" -> generate1(Breakpoint.X2L, "  ", properties);
+
       default -> noteSink.send(UNKNOWN_PREFIX, prefix);
     }
+  }
+
+  private void generate1(
+      Length breakpoint, String indentation, Map<String, Set<String>> properties) {
+    out.append("@media (min-width: " + breakpoint + ") {\n");
+
+    generate1(indentation, properties);
+
+    out.append("}\n");
   }
 
   private void generate1(String indentation, Map<String, Set<String>> properties) {

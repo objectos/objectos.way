@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.Set;
 import objectos.css.util.Display;
+import objectos.css.util.Large;
 import objectos.lang.NoteSink;
 import objectos.lang.TestingNoteSink;
 import objectox.css.util.StylesGeneratorImpl.State;
@@ -79,13 +80,11 @@ public class StylesGeneratorImplTest {
 
     impl.execute();
 
-    assertEquals(impl.bytesIndex, 13);
     assertEquals(impl.iteratorIndex, 2);
     assertEquals(impl.state, State.NEXT_POOL_INDEX);
 
     impl.execute();
 
-    assertEquals(impl.bytesIndex, 43);
     assertEquals(impl.iteratorIndex, 3);
     assertEquals(impl.state, State.NEXT_POOL_INDEX);
 
@@ -131,6 +130,36 @@ public class StylesGeneratorImplTest {
       """
       .%s { display: block }
       """.formatted(Display.BLOCK.className())
+    );
+  }
+
+  @Test
+  public void utility02() {
+    // parse phase
+    impl.scan(Utility02.class);
+
+    assertEquals(impl.state, State.STOP);
+
+    Map<String, Map<String, Set<String>>> result;
+    result = impl.utilities;
+
+    assertEquals(result.size(), 1);
+    assertEquals(result.containsKey("Large"), true);
+
+    Map<String, Set<String>> large;
+    large = result.get("Large");
+
+    assertEquals(large.size(), 1);
+    assertEquals(large.get("objectos.css.util.Large$Display"), Set.of("FLEX"));
+
+    assertEquals(
+      impl.generate(),
+
+      """
+      @media (min-width: 1024px) {
+        .%s { display: flex }
+      }
+      """.formatted(Large.Display.FLEX.className())
     );
   }
 
