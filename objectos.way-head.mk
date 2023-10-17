@@ -154,6 +154,7 @@ WAY_TEST_JAVAX_READS := java.compiler
 WAY_TEST_JAVAX_EXPORTS := objectos.html.internal
 WAY_TEST_JAVAX_EXPORTS += objectos.util
 WAY_TEST_JAVAX_EXPORTS += objectox.css
+WAY_TEST_JAVAX_EXPORTS += objectox.css.util
 WAY_TEST_JAVAX_EXPORTS += objectox.http
 WAY_TEST_JAVAX_EXPORTS += objectox.lang
 

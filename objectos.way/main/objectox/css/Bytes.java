@@ -206,10 +206,6 @@ final class Bytes {
     return name.cssName;
   }
 
-  public static int toUnsignedInt(byte b) {
-    return b & BYTE_MASK;
-  }
-
   public static int toInt(byte b, int shift) {
     return (b & BYTE_MASK) << shift;
   }

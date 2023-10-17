@@ -13,16 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectox.css;
+package objectox.css.util;
 
-import objectos.css.util.Display;
+import objectos.css.util.Large;
 import objectos.html.HtmlTemplate;
 
-public final class Utility01 extends HtmlTemplate {
+public final class Utility02 extends HtmlTemplate {
 
   @Override
   protected void definition() {
-    div(Display.BLOCK);
+    div(
+      Large.Display.FLEX
+    );
   }
 
 }

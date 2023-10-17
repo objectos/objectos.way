@@ -47,7 +47,8 @@ public class RunTests {
     test(suite, "Objectos CSS", pkgs(
       "objectos.css",
       "objectos.css.util",
-      "objectox.css"
+      "objectox.css",
+      "objectox.css.util"
     ));
 
     test(suite, "Objectos HTTP", pkgs(

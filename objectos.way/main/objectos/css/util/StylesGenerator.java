@@ -16,16 +16,20 @@
 package objectos.css.util;
 
 import java.io.IOException;
-import objectox.css.StylesGeneratorImpl;
+import objectos.lang.NoOpNoteSink;
+import objectox.css.util.StylesGeneratorImpl;
 
 public sealed interface StylesGenerator permits StylesGeneratorImpl {
 
   static StylesGenerator of() {
-    return new StylesGeneratorImpl();
+    NoOpNoteSink noteSink;
+    noteSink = NoOpNoteSink.of();
+
+    return new StylesGeneratorImpl(noteSink);
   }
 
-  StylesGenerator add(Class<?> clazz);
+  void scan(Class<?> clazz) throws IOException;
 
-  String generate() throws IOException;
+  String generate();
 
 }
