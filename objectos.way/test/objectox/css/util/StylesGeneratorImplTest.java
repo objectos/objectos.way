@@ -20,6 +20,8 @@ import static org.testng.Assert.assertNotNull;
 
 import java.io.IOException;
 import java.util.Map;
+import java.util.Set;
+import objectos.css.util.Display;
 import objectos.lang.NoteSink;
 import objectos.lang.TestingNoteSink;
 import objectox.css.util.StylesGeneratorImpl.State;
@@ -111,20 +113,17 @@ public class StylesGeneratorImplTest {
 
     assertEquals(impl.state, State.STOP);
 
-    Map<String, Map<String, String>> result;
-    result = impl.result;
+    Map<String, Map<String, Set<String>>> result;
+    result = impl.utilities;
 
     assertEquals(result.size(), 1);
     assertEquals(result.containsKey(""), true);
 
-    Map<String, String> unprefixed;
+    Map<String, Set<String>> unprefixed;
     unprefixed = result.get("");
 
     assertEquals(unprefixed.size(), 1);
-    assertEquals(unprefixed.get("Display"), "BLOCK");
-
-    /*
-
+    assertEquals(unprefixed.get("objectos.css.util.Display"), Set.of("BLOCK"));
 
     assertEquals(
       impl.generate(),
@@ -133,7 +132,6 @@ public class StylesGeneratorImplTest {
       .%s { display: block }
       """.formatted(Display.BLOCK.className())
     );
-    */
   }
 
 }

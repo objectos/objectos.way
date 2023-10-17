@@ -20,11 +20,14 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
+import java.util.Set;
 import objectos.css.util.StylesGenerator;
+import objectos.html.tmpl.Api.ExternalAttribute.StyleClass;
 import objectos.lang.Note1;
 import objectos.lang.Note2;
 import objectos.lang.NoteSink;
 import objectos.util.GrowableMap;
+import objectos.util.GrowableSet;
 import objectox.lang.Bytes;
 import objectox.lang.Check;
 
@@ -40,6 +43,12 @@ public final class StylesGeneratorImpl implements StylesGenerator {
 
   static final Note2<String, String> INVALID_CLASS;
 
+  static final Note1<String> UNKNOWN_PREFIX;
+
+  static final Note1<String> UNKNOWN_PROPERTY;
+
+  static final Note2<String, String> UNKNOWN_UTILITY;
+
   static {
     Class<?> s;
     s = StylesGenerator.class;
@@ -51,6 +60,12 @@ public final class StylesGeneratorImpl implements StylesGenerator {
     CLASS_LOADED = Note1.debug(s, "Class file loaded");
 
     INVALID_CLASS = Note2.error(s, "Invalid class file");
+
+    UNKNOWN_PREFIX = Note1.error(s, "Unknown prefix");
+
+    UNKNOWN_PROPERTY = Note1.error(s, "Unknown property");
+
+    UNKNOWN_UTILITY = Note2.error(s, "Unknown utility");
   }
 
   private final NoteSink noteSink;
@@ -130,7 +145,9 @@ public final class StylesGeneratorImpl implements StylesGenerator {
 
   // generator state
 
-  Map<String, Map<String, String>> result;
+  Map<String, Map<String, Set<String>>> utilities;
+
+  StringBuilder out;
 
   public StylesGeneratorImpl(NoteSink noteSink) {
     this.noteSink = noteSink;
@@ -365,7 +382,7 @@ public final class StylesGeneratorImpl implements StylesGenerator {
     return State.NEXT_POOL_INDEX;
   }
 
-  private static final String CSS_UTIL = "objectos/css/util/";
+  private static final String CSS_UTIL = "objectos.css.util.";
 
   private State executeNextPoolEntry() {
     if (iteratorIndex == constantPoolIndex.length) {
@@ -408,7 +425,7 @@ public final class StylesGeneratorImpl implements StylesGenerator {
     }
 
     String fullName;
-    fullName = className.name;
+    fullName = className.name.replace('/', '.');
 
     if (!fullName.startsWith(CSS_UTIL)) {
       // not in our package -> continue
@@ -425,7 +442,7 @@ public final class StylesGeneratorImpl implements StylesGenerator {
     simpleName = className.name.substring(length);
 
     int dotIndex;
-    dotIndex = simpleName.indexOf('/');
+    dotIndex = simpleName.indexOf('.');
 
     if (dotIndex >= 0) {
       // we're not interested in classes in a sub-package
@@ -464,20 +481,29 @@ public final class StylesGeneratorImpl implements StylesGenerator {
       simpleName = simpleName.substring(dollarIndex + 1);
     }
 
-    if (result == null) {
-      result = new GrowableMap<>();
+    if (utilities == null) {
+      utilities = new GrowableMap<>();
     }
 
-    Map<String, String> pairs;
-    pairs = result.get(prefix);
+    Map<String, Set<String>> properties;
+    properties = utilities.get(prefix);
 
-    if (pairs == null) {
-      pairs = new GrowableMap<>();
+    if (properties == null) {
+      properties = new GrowableMap<>();
 
-      result.put(prefix, pairs);
+      utilities.put(prefix, properties);
     }
 
-    pairs.put(simpleName, nameAndType.name);
+    Set<String> propertyValues;
+    propertyValues = properties.get(fullName);
+
+    if (propertyValues == null) {
+      propertyValues = new GrowableSet<>();
+
+      properties.put(fullName, propertyValues);
+    }
+
+    propertyValues.add(nameAndType.name);
 
     return State.NEXT_POOL_ENTRY;
   }
@@ -657,7 +683,95 @@ public final class StylesGeneratorImpl implements StylesGenerator {
 
   @Override
   public final String generate() {
-    throw new UnsupportedOperationException("Implement me");
+    if (utilities == null) {
+      return "";
+    }
+
+    if (utilities.isEmpty()) {
+      return "";
+    }
+
+    out = new StringBuilder();
+
+    for (var entry : utilities.entrySet()) {
+      String prefix;
+      prefix = entry.getKey();
+
+      Map<String, Set<String>> values;
+      values = entry.getValue();
+
+      generate0(prefix, values);
+    }
+
+    return out.toString();
+  }
+
+  private void generate0(String prefix, Map<String, Set<String>> properties) {
+    switch (prefix) {
+      case "" -> generate1("", properties);
+
+      default -> noteSink.send(UNKNOWN_PREFIX, prefix);
+    }
+  }
+
+  private void generate1(String indentation, Map<String, Set<String>> properties) {
+    for (var entry : properties.entrySet()) {
+      String propertyName;
+      propertyName = entry.getKey();
+
+      Set<String> constants;
+      constants = entry.getValue();
+
+      generate2(indentation, propertyName, constants);
+    }
+  }
+
+  @SuppressWarnings("unchecked")
+  private <T extends Enum<T>> void generate2(
+      String indentation, String propertyName, Set<String> constants) {
+    Class<? extends StylesGeneratorImpl> thisClass;
+    thisClass = getClass();
+
+    ClassLoader loader;
+    loader = thisClass.getClassLoader();
+
+    Class<?> clazz;
+
+    try {
+      clazz = loader.loadClass(propertyName);
+    } catch (ClassNotFoundException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+
+      return;
+    }
+
+    if (!clazz.isEnum()) {
+      return;
+    }
+
+    if (!StyleClass.class.isAssignableFrom(clazz)) {
+      return;
+    }
+
+    Class<T> enumClass;
+    enumClass = (Class<T>) clazz;
+
+    for (var constant : constants) {
+      T instance;
+
+      try {
+        instance = Enum.valueOf(enumClass, constant);
+      } catch (IllegalArgumentException e) {
+        return;
+      }
+
+      out.append(indentation);
+
+      out.append(instance.toString());
+
+      out.append('\n');
+    }
   }
 
 }
