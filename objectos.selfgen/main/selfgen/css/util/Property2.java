@@ -11,25 +11,30 @@ import java.util.stream.Collectors;
 import objectos.code.Code;
 import objectos.lang.Check;
 
-public final class StandardProperty extends PropertyClass {
+public final class Property2 extends PropertyClass {
 
   static record Constant(String name, String value) {}
 
-  final String propertyName;
+  final String propertyName1;
+
+  final String propertyName2;
 
   final List<Constant> constants = new ArrayList<>();
 
-  public StandardProperty(String simpleName, String propertyName) {
+  public Property2(String simpleName, String propertyName1, String propertyName2) {
     super(simpleName);
 
-    this.propertyName = propertyName;
+    this.propertyName1 = propertyName1;
+
+    this.propertyName2 = propertyName2;
   }
 
+  @Override
   public final void add(String name, String value) {
     Check.notNull(name, "name == null");
     Check.notNull(value, "value == null");
 
-    StandardProperty.Constant cte;
+    Constant cte;
     cte = new Constant(name, value);
 
     constants.add(cte);
@@ -65,7 +70,7 @@ public final class StandardProperty extends PropertyClass {
        */
       @Override
       public final String toString() {
-        return "." + className + " { \{propertyName}: " + value + " }";
+        return "." + className + " { \{propertyName1}: " + value + "; \{propertyName2}: " + value + " }";
       }
 
     }""";
@@ -75,7 +80,7 @@ public final class StandardProperty extends PropertyClass {
   final String javadoc(Code code) {
     return code."""
     /**
-     * Utility classes for the {@code \{propertyName}} CSS property.
+     * Utility classes for the {@code \{propertyName1}} and {@code \{propertyName2}} CSS properties.
      */""";
   }
 

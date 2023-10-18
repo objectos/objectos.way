@@ -17,7 +17,7 @@ public class PropertyEnumStepTest {
     var spec = new CssUtilSelfGen() {
       @Override
       protected void definition() {
-        var p = new StandardProperty("Display", "display");
+        var p = new Property1("Display", "display");
 
         p.add("BLOCK", "block");
         p.add("FLEX", "flex");

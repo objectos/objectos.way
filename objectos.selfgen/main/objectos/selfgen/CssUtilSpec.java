@@ -21,7 +21,9 @@ import selfgen.css.util.CssUtilSelfGen;
 import selfgen.css.util.Names;
 import selfgen.css.util.Prefix;
 import selfgen.css.util.Prefix.Breakpoint;
-import selfgen.css.util.StandardProperty;
+import selfgen.css.util.Property1;
+import selfgen.css.util.Property2;
+import selfgen.css.util.PropertyClass;
 import selfgen.css.util.Value;
 
 final class CssUtilSpec extends CssUtilSelfGen {
@@ -91,6 +93,9 @@ final class CssUtilSpec extends CssUtilSelfGen {
     // H
 
     height();
+
+    // I
+    inset();
 
     // J
 
@@ -441,8 +446,8 @@ final class CssUtilSpec extends CssUtilSelfGen {
   }
 
   private void display() {
-    StandardProperty p;
-    p = new StandardProperty("Display", "display");
+    Property1 p;
+    p = new Property1("Display", "display");
 
     p.add("NONE", "none");
     p.add("BLOCK", "block");
@@ -540,8 +545,8 @@ final class CssUtilSpec extends CssUtilSelfGen {
   }
 
   private void height() {
-    StandardProperty p;
-    p = new StandardProperty("Height", "height");
+    Property1 p;
+    p = new Property1("Height", "height");
 
     spacing(p);
 
@@ -574,42 +579,37 @@ final class CssUtilSpec extends CssUtilSelfGen {
     }
   }
 
-  private void spacing(StandardProperty p) {
-    p.add("PX0", "0px");
-    p.add("PX1", "1px");
-    p.add("PX2", "0.125rem");
-    p.add("PX4", "0.25rem");
-    p.add("PX6", "0.375rem");
-    p.add("PX8", "0.5rem");
-    p.add("PX10", "0.625rem");
-    p.add("PX12", "0.75rem");
-    p.add("PX14", "0.875rem");
-    p.add("PX16", "1rem");
-    p.add("PX20", "1.25rem");
-    p.add("PX24", "1.5rem");
-    p.add("PX28", "1.75rem");
-    p.add("PX32", "2rem");
-    p.add("PX36", "2.25rem");
-    p.add("PX40", "2.5rem");
-    p.add("PX44", "2.75rem");
-    p.add("PX48", "3rem");
-    p.add("PX56", "3.5rem");
-    p.add("PX64", "4rem");
-    p.add("PX80", "5rem");
-    p.add("PX96", "6rem");
-    p.add("PX112", "7rem");
-    p.add("PX128", "8rem");
-    p.add("PX144", "9rem");
-    p.add("PX160", "10rem");
-    p.add("PX176", "11rem");
-    p.add("PX192", "12rem");
-    p.add("PX208", "13rem");
-    p.add("PX224", "14rem");
-    p.add("PX240", "15rem");
-    p.add("PX256", "16rem");
-    p.add("PX288", "18rem");
-    p.add("PX320", "20rem");
-    p.add("PX384", "24rem");
+  private void inset() {
+    List<PropertyClass> props;
+    props = List.of(
+      new Property1("Top", "top"),
+      new Property1("Right", "right"),
+      new Property1("Bottom", "bottom"),
+      new Property1("Left", "left"),
+      new Property1("Inset", "inset"),
+
+      new Property2("InsetX", "left", "right"),
+      new Property2("InsetY", "top", "bottom")
+    );
+
+    for (var p : props) {
+      spacing(p);
+
+      p.add("AUTO", "auto");
+      p.add("HALF", "50%");
+      p.add("THIRD1", "33.333333%");
+      p.add("THIRD2", "66.666667%");
+      p.add("QUARTER1", "25%");
+      p.add("QUARTER2", "50%");
+      p.add("QUARTER3", "75%");
+      p.add("FULL", "100%");
+
+      add(p);
+
+      for (Prefix prefix : responsive) {
+        prefix.add(p);
+      }
+    }
   }
 
   private void justifyContent() {
@@ -849,8 +849,8 @@ final class CssUtilSpec extends CssUtilSelfGen {
   }
 
   private void width() {
-    StandardProperty p;
-    p = new StandardProperty("Width", "width");
+    Property1 p;
+    p = new Property1("Width", "width");
 
     spacing(p);
 
@@ -892,6 +892,44 @@ final class CssUtilSpec extends CssUtilSelfGen {
     for (Prefix prefix : responsive) {
       prefix.add(p);
     }
+  }
+
+  private void spacing(PropertyClass p) {
+    p.add("PX0", "0px");
+    p.add("PX1", "1px");
+    p.add("PX2", "0.125rem");
+    p.add("PX4", "0.25rem");
+    p.add("PX6", "0.375rem");
+    p.add("PX8", "0.5rem");
+    p.add("PX10", "0.625rem");
+    p.add("PX12", "0.75rem");
+    p.add("PX14", "0.875rem");
+    p.add("PX16", "1rem");
+    p.add("PX20", "1.25rem");
+    p.add("PX24", "1.5rem");
+    p.add("PX28", "1.75rem");
+    p.add("PX32", "2rem");
+    p.add("PX36", "2.25rem");
+    p.add("PX40", "2.5rem");
+    p.add("PX44", "2.75rem");
+    p.add("PX48", "3rem");
+    p.add("PX56", "3.5rem");
+    p.add("PX64", "4rem");
+    p.add("PX80", "5rem");
+    p.add("PX96", "6rem");
+    p.add("PX112", "7rem");
+    p.add("PX128", "8rem");
+    p.add("PX144", "9rem");
+    p.add("PX160", "10rem");
+    p.add("PX176", "11rem");
+    p.add("PX192", "12rem");
+    p.add("PX208", "13rem");
+    p.add("PX224", "14rem");
+    p.add("PX240", "15rem");
+    p.add("PX256", "16rem");
+    p.add("PX288", "18rem");
+    p.add("PX320", "20rem");
+    p.add("PX384", "24rem");
   }
 
 }

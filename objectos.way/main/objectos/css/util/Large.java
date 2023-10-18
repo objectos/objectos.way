@@ -242,6 +242,853 @@ public final class Large {
   }
 
   /**
+   * Utility classes for the {@code top} CSS property.
+   */
+  public enum Top implements StyleClass {
+
+    PX0("0px"),
+
+    PX1("1px"),
+
+    PX2("0.125rem"),
+
+    PX4("0.25rem"),
+
+    PX6("0.375rem"),
+
+    PX8("0.5rem"),
+
+    PX10("0.625rem"),
+
+    PX12("0.75rem"),
+
+    PX14("0.875rem"),
+
+    PX16("1rem"),
+
+    PX20("1.25rem"),
+
+    PX24("1.5rem"),
+
+    PX28("1.75rem"),
+
+    PX32("2rem"),
+
+    PX36("2.25rem"),
+
+    PX40("2.5rem"),
+
+    PX44("2.75rem"),
+
+    PX48("3rem"),
+
+    PX56("3.5rem"),
+
+    PX64("4rem"),
+
+    PX80("5rem"),
+
+    PX96("6rem"),
+
+    PX112("7rem"),
+
+    PX128("8rem"),
+
+    PX144("9rem"),
+
+    PX160("10rem"),
+
+    PX176("11rem"),
+
+    PX192("12rem"),
+
+    PX208("13rem"),
+
+    PX224("14rem"),
+
+    PX240("15rem"),
+
+    PX256("16rem"),
+
+    PX288("18rem"),
+
+    PX320("20rem"),
+
+    PX384("24rem"),
+
+    AUTO("auto"),
+
+    HALF("50%"),
+
+    THIRD1("33.333333%"),
+
+    THIRD2("66.666667%"),
+
+    QUARTER1("25%"),
+
+    QUARTER2("50%"),
+
+    QUARTER3("75%"),
+
+    FULL("100%");
+
+    private final String className = ClassSelectorSeqId.next();
+
+    private final String value;
+
+    private Top(String value) {
+      this.value = value;
+    }
+
+    /**
+     * Returns the CSS class name.
+     *
+     * @return the CSS class name
+     */
+    @Override
+    public final String className() {
+      return className;
+    }
+
+    /**
+     * Returns the CSS style rule represented by this utility class.
+     *
+     * @return the CSS style rule
+     */
+    @Override
+    public final String toString() {
+      return "." + className + " { top: " + value + " }";
+    }
+
+  }
+
+  /**
+   * Utility classes for the {@code right} CSS property.
+   */
+  public enum Right implements StyleClass {
+
+    PX0("0px"),
+
+    PX1("1px"),
+
+    PX2("0.125rem"),
+
+    PX4("0.25rem"),
+
+    PX6("0.375rem"),
+
+    PX8("0.5rem"),
+
+    PX10("0.625rem"),
+
+    PX12("0.75rem"),
+
+    PX14("0.875rem"),
+
+    PX16("1rem"),
+
+    PX20("1.25rem"),
+
+    PX24("1.5rem"),
+
+    PX28("1.75rem"),
+
+    PX32("2rem"),
+
+    PX36("2.25rem"),
+
+    PX40("2.5rem"),
+
+    PX44("2.75rem"),
+
+    PX48("3rem"),
+
+    PX56("3.5rem"),
+
+    PX64("4rem"),
+
+    PX80("5rem"),
+
+    PX96("6rem"),
+
+    PX112("7rem"),
+
+    PX128("8rem"),
+
+    PX144("9rem"),
+
+    PX160("10rem"),
+
+    PX176("11rem"),
+
+    PX192("12rem"),
+
+    PX208("13rem"),
+
+    PX224("14rem"),
+
+    PX240("15rem"),
+
+    PX256("16rem"),
+
+    PX288("18rem"),
+
+    PX320("20rem"),
+
+    PX384("24rem"),
+
+    AUTO("auto"),
+
+    HALF("50%"),
+
+    THIRD1("33.333333%"),
+
+    THIRD2("66.666667%"),
+
+    QUARTER1("25%"),
+
+    QUARTER2("50%"),
+
+    QUARTER3("75%"),
+
+    FULL("100%");
+
+    private final String className = ClassSelectorSeqId.next();
+
+    private final String value;
+
+    private Right(String value) {
+      this.value = value;
+    }
+
+    /**
+     * Returns the CSS class name.
+     *
+     * @return the CSS class name
+     */
+    @Override
+    public final String className() {
+      return className;
+    }
+
+    /**
+     * Returns the CSS style rule represented by this utility class.
+     *
+     * @return the CSS style rule
+     */
+    @Override
+    public final String toString() {
+      return "." + className + " { right: " + value + " }";
+    }
+
+  }
+
+  /**
+   * Utility classes for the {@code bottom} CSS property.
+   */
+  public enum Bottom implements StyleClass {
+
+    PX0("0px"),
+
+    PX1("1px"),
+
+    PX2("0.125rem"),
+
+    PX4("0.25rem"),
+
+    PX6("0.375rem"),
+
+    PX8("0.5rem"),
+
+    PX10("0.625rem"),
+
+    PX12("0.75rem"),
+
+    PX14("0.875rem"),
+
+    PX16("1rem"),
+
+    PX20("1.25rem"),
+
+    PX24("1.5rem"),
+
+    PX28("1.75rem"),
+
+    PX32("2rem"),
+
+    PX36("2.25rem"),
+
+    PX40("2.5rem"),
+
+    PX44("2.75rem"),
+
+    PX48("3rem"),
+
+    PX56("3.5rem"),
+
+    PX64("4rem"),
+
+    PX80("5rem"),
+
+    PX96("6rem"),
+
+    PX112("7rem"),
+
+    PX128("8rem"),
+
+    PX144("9rem"),
+
+    PX160("10rem"),
+
+    PX176("11rem"),
+
+    PX192("12rem"),
+
+    PX208("13rem"),
+
+    PX224("14rem"),
+
+    PX240("15rem"),
+
+    PX256("16rem"),
+
+    PX288("18rem"),
+
+    PX320("20rem"),
+
+    PX384("24rem"),
+
+    AUTO("auto"),
+
+    HALF("50%"),
+
+    THIRD1("33.333333%"),
+
+    THIRD2("66.666667%"),
+
+    QUARTER1("25%"),
+
+    QUARTER2("50%"),
+
+    QUARTER3("75%"),
+
+    FULL("100%");
+
+    private final String className = ClassSelectorSeqId.next();
+
+    private final String value;
+
+    private Bottom(String value) {
+      this.value = value;
+    }
+
+    /**
+     * Returns the CSS class name.
+     *
+     * @return the CSS class name
+     */
+    @Override
+    public final String className() {
+      return className;
+    }
+
+    /**
+     * Returns the CSS style rule represented by this utility class.
+     *
+     * @return the CSS style rule
+     */
+    @Override
+    public final String toString() {
+      return "." + className + " { bottom: " + value + " }";
+    }
+
+  }
+
+  /**
+   * Utility classes for the {@code left} CSS property.
+   */
+  public enum Left implements StyleClass {
+
+    PX0("0px"),
+
+    PX1("1px"),
+
+    PX2("0.125rem"),
+
+    PX4("0.25rem"),
+
+    PX6("0.375rem"),
+
+    PX8("0.5rem"),
+
+    PX10("0.625rem"),
+
+    PX12("0.75rem"),
+
+    PX14("0.875rem"),
+
+    PX16("1rem"),
+
+    PX20("1.25rem"),
+
+    PX24("1.5rem"),
+
+    PX28("1.75rem"),
+
+    PX32("2rem"),
+
+    PX36("2.25rem"),
+
+    PX40("2.5rem"),
+
+    PX44("2.75rem"),
+
+    PX48("3rem"),
+
+    PX56("3.5rem"),
+
+    PX64("4rem"),
+
+    PX80("5rem"),
+
+    PX96("6rem"),
+
+    PX112("7rem"),
+
+    PX128("8rem"),
+
+    PX144("9rem"),
+
+    PX160("10rem"),
+
+    PX176("11rem"),
+
+    PX192("12rem"),
+
+    PX208("13rem"),
+
+    PX224("14rem"),
+
+    PX240("15rem"),
+
+    PX256("16rem"),
+
+    PX288("18rem"),
+
+    PX320("20rem"),
+
+    PX384("24rem"),
+
+    AUTO("auto"),
+
+    HALF("50%"),
+
+    THIRD1("33.333333%"),
+
+    THIRD2("66.666667%"),
+
+    QUARTER1("25%"),
+
+    QUARTER2("50%"),
+
+    QUARTER3("75%"),
+
+    FULL("100%");
+
+    private final String className = ClassSelectorSeqId.next();
+
+    private final String value;
+
+    private Left(String value) {
+      this.value = value;
+    }
+
+    /**
+     * Returns the CSS class name.
+     *
+     * @return the CSS class name
+     */
+    @Override
+    public final String className() {
+      return className;
+    }
+
+    /**
+     * Returns the CSS style rule represented by this utility class.
+     *
+     * @return the CSS style rule
+     */
+    @Override
+    public final String toString() {
+      return "." + className + " { left: " + value + " }";
+    }
+
+  }
+
+  /**
+   * Utility classes for the {@code inset} CSS property.
+   */
+  public enum Inset implements StyleClass {
+
+    PX0("0px"),
+
+    PX1("1px"),
+
+    PX2("0.125rem"),
+
+    PX4("0.25rem"),
+
+    PX6("0.375rem"),
+
+    PX8("0.5rem"),
+
+    PX10("0.625rem"),
+
+    PX12("0.75rem"),
+
+    PX14("0.875rem"),
+
+    PX16("1rem"),
+
+    PX20("1.25rem"),
+
+    PX24("1.5rem"),
+
+    PX28("1.75rem"),
+
+    PX32("2rem"),
+
+    PX36("2.25rem"),
+
+    PX40("2.5rem"),
+
+    PX44("2.75rem"),
+
+    PX48("3rem"),
+
+    PX56("3.5rem"),
+
+    PX64("4rem"),
+
+    PX80("5rem"),
+
+    PX96("6rem"),
+
+    PX112("7rem"),
+
+    PX128("8rem"),
+
+    PX144("9rem"),
+
+    PX160("10rem"),
+
+    PX176("11rem"),
+
+    PX192("12rem"),
+
+    PX208("13rem"),
+
+    PX224("14rem"),
+
+    PX240("15rem"),
+
+    PX256("16rem"),
+
+    PX288("18rem"),
+
+    PX320("20rem"),
+
+    PX384("24rem"),
+
+    AUTO("auto"),
+
+    HALF("50%"),
+
+    THIRD1("33.333333%"),
+
+    THIRD2("66.666667%"),
+
+    QUARTER1("25%"),
+
+    QUARTER2("50%"),
+
+    QUARTER3("75%"),
+
+    FULL("100%");
+
+    private final String className = ClassSelectorSeqId.next();
+
+    private final String value;
+
+    private Inset(String value) {
+      this.value = value;
+    }
+
+    /**
+     * Returns the CSS class name.
+     *
+     * @return the CSS class name
+     */
+    @Override
+    public final String className() {
+      return className;
+    }
+
+    /**
+     * Returns the CSS style rule represented by this utility class.
+     *
+     * @return the CSS style rule
+     */
+    @Override
+    public final String toString() {
+      return "." + className + " { inset: " + value + " }";
+    }
+
+  }
+
+  /**
+   * Utility classes for the {@code left} and {@code right} CSS properties.
+   */
+  public enum InsetX implements StyleClass {
+
+    PX0("0px"),
+
+    PX1("1px"),
+
+    PX2("0.125rem"),
+
+    PX4("0.25rem"),
+
+    PX6("0.375rem"),
+
+    PX8("0.5rem"),
+
+    PX10("0.625rem"),
+
+    PX12("0.75rem"),
+
+    PX14("0.875rem"),
+
+    PX16("1rem"),
+
+    PX20("1.25rem"),
+
+    PX24("1.5rem"),
+
+    PX28("1.75rem"),
+
+    PX32("2rem"),
+
+    PX36("2.25rem"),
+
+    PX40("2.5rem"),
+
+    PX44("2.75rem"),
+
+    PX48("3rem"),
+
+    PX56("3.5rem"),
+
+    PX64("4rem"),
+
+    PX80("5rem"),
+
+    PX96("6rem"),
+
+    PX112("7rem"),
+
+    PX128("8rem"),
+
+    PX144("9rem"),
+
+    PX160("10rem"),
+
+    PX176("11rem"),
+
+    PX192("12rem"),
+
+    PX208("13rem"),
+
+    PX224("14rem"),
+
+    PX240("15rem"),
+
+    PX256("16rem"),
+
+    PX288("18rem"),
+
+    PX320("20rem"),
+
+    PX384("24rem"),
+
+    AUTO("auto"),
+
+    HALF("50%"),
+
+    THIRD1("33.333333%"),
+
+    THIRD2("66.666667%"),
+
+    QUARTER1("25%"),
+
+    QUARTER2("50%"),
+
+    QUARTER3("75%"),
+
+    FULL("100%");
+
+    private final String className = ClassSelectorSeqId.next();
+
+    private final String value;
+
+    private InsetX(String value) {
+      this.value = value;
+    }
+
+    /**
+     * Returns the CSS class name.
+     *
+     * @return the CSS class name
+     */
+    @Override
+    public final String className() {
+      return className;
+    }
+
+    /**
+     * Returns the CSS style rule represented by this utility class.
+     *
+     * @return the CSS style rule
+     */
+    @Override
+    public final String toString() {
+      return "." + className + " { left: " + value + "; right: " + value + " }";
+    }
+
+  }
+
+  /**
+   * Utility classes for the {@code top} and {@code bottom} CSS properties.
+   */
+  public enum InsetY implements StyleClass {
+
+    PX0("0px"),
+
+    PX1("1px"),
+
+    PX2("0.125rem"),
+
+    PX4("0.25rem"),
+
+    PX6("0.375rem"),
+
+    PX8("0.5rem"),
+
+    PX10("0.625rem"),
+
+    PX12("0.75rem"),
+
+    PX14("0.875rem"),
+
+    PX16("1rem"),
+
+    PX20("1.25rem"),
+
+    PX24("1.5rem"),
+
+    PX28("1.75rem"),
+
+    PX32("2rem"),
+
+    PX36("2.25rem"),
+
+    PX40("2.5rem"),
+
+    PX44("2.75rem"),
+
+    PX48("3rem"),
+
+    PX56("3.5rem"),
+
+    PX64("4rem"),
+
+    PX80("5rem"),
+
+    PX96("6rem"),
+
+    PX112("7rem"),
+
+    PX128("8rem"),
+
+    PX144("9rem"),
+
+    PX160("10rem"),
+
+    PX176("11rem"),
+
+    PX192("12rem"),
+
+    PX208("13rem"),
+
+    PX224("14rem"),
+
+    PX240("15rem"),
+
+    PX256("16rem"),
+
+    PX288("18rem"),
+
+    PX320("20rem"),
+
+    PX384("24rem"),
+
+    AUTO("auto"),
+
+    HALF("50%"),
+
+    THIRD1("33.333333%"),
+
+    THIRD2("66.666667%"),
+
+    QUARTER1("25%"),
+
+    QUARTER2("50%"),
+
+    QUARTER3("75%"),
+
+    FULL("100%");
+
+    private final String className = ClassSelectorSeqId.next();
+
+    private final String value;
+
+    private InsetY(String value) {
+      this.value = value;
+    }
+
+    /**
+     * Returns the CSS class name.
+     *
+     * @return the CSS class name
+     */
+    @Override
+    public final String className() {
+      return className;
+    }
+
+    /**
+     * Returns the CSS style rule represented by this utility class.
+     *
+     * @return the CSS style rule
+     */
+    @Override
+    public final String toString() {
+      return "." + className + " { top: " + value + "; bottom: " + value + " }";
+    }
+
+  }
+
+  /**
    * Utility classes for the {@code width} CSS property.
    */
   public enum Width implements StyleClass {

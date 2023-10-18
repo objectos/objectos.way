@@ -19,7 +19,7 @@ import objectos.code.ClassName;
 import objectos.code.Code;
 import objectos.lang.Check;
 
-public sealed abstract class PropertyClass permits StandardProperty {
+public sealed abstract class PropertyClass permits Property1, Property2 {
 
   static final ClassName STYLE_CLASS = ThisTemplate.STYLE_CLASS;
 
@@ -30,6 +30,8 @@ public sealed abstract class PropertyClass permits StandardProperty {
   PropertyClass(String simpleName) {
     this.simpleName = Check.notNull(simpleName, "simpleName == null");
   }
+
+  public abstract void add(String name, String value);
 
   abstract String generate(Code code);
 
