@@ -1824,6 +1824,51 @@ public final class Extra {
   }
 
   /**
+   * Utility classes for the {@code position} CSS property.
+   */
+  public enum Position implements StyleClass {
+
+    STATIC("static"),
+
+    FIXED("fixed"),
+
+    ABSOLUTE("absolute"),
+
+    RELATIVE("relative"),
+
+    STICKY("sticky");
+
+    private final String className = ClassSelectorSeqId.next();
+
+    private final String value;
+
+    private Position(String value) {
+      this.value = value;
+    }
+
+    /**
+     * Returns the CSS class name.
+     *
+     * @return the CSS class name
+     */
+    @Override
+    public final String className() {
+      return className;
+    }
+
+    /**
+     * Returns the CSS style rule represented by this utility class.
+     *
+     * @return the CSS style rule
+     */
+    @Override
+    public final String toString() {
+      return "." + className + " { position: " + value + " }";
+    }
+
+  }
+
+  /**
    * Utility classes for the {@code width} CSS property.
    */
   public enum Width implements StyleClass {
@@ -1988,6 +2033,55 @@ public final class Extra {
     @Override
     public final String toString() {
       return "." + className + " { width: " + value + " }";
+    }
+
+  }
+
+  /**
+   * Utility classes for the {@code z-index} CSS property.
+   */
+  public enum ZIndex implements StyleClass {
+
+    V0("0"),
+
+    V10("10"),
+
+    V20("20"),
+
+    V30("30"),
+
+    V40("40"),
+
+    V50("50"),
+
+    AUTO("auto");
+
+    private final String className = ClassSelectorSeqId.next();
+
+    private final String value;
+
+    private ZIndex(String value) {
+      this.value = value;
+    }
+
+    /**
+     * Returns the CSS class name.
+     *
+     * @return the CSS class name
+     */
+    @Override
+    public final String className() {
+      return className;
+    }
+
+    /**
+     * Returns the CSS style rule represented by this utility class.
+     *
+     * @return the CSS style rule
+     */
+    @Override
+    public final String toString() {
+      return "." + className + " { z-index: " + value + " }";
     }
 
   }

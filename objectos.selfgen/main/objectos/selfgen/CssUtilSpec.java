@@ -117,6 +117,7 @@ final class CssUtilSpec extends CssUtilSelfGen {
     // P
 
     padding();
+    position();
 
     // S
 
@@ -135,6 +136,10 @@ final class CssUtilSpec extends CssUtilSelfGen {
     // W
 
     width();
+
+    // Z
+
+    zIndex();
   }
 
   private Names $colors() {
@@ -784,6 +789,23 @@ final class CssUtilSpec extends CssUtilSelfGen {
     }
   }
 
+  private void position() {
+    Property1 p;
+    p = new Property1("Position", "position");
+
+    p.add("STATIC", "static");
+    p.add("FIXED", "fixed");
+    p.add("ABSOLUTE", "absolute");
+    p.add("RELATIVE", "relative");
+    p.add("STICKY", "sticky");
+
+    add(p);
+
+    for (Prefix prefix : responsive) {
+      prefix.add(p);
+    }
+  }
+
   private void space() {
     for (Prefix prefix : responsive) {
       generateAllButFirst(prefix, simpleName("SpaceX"), methods("marginLeft"), spacing);
@@ -891,6 +913,25 @@ final class CssUtilSpec extends CssUtilSelfGen {
     p.add("MIN", "min-content");
     p.add("MAX", "max-content");
     p.add("FIT", "fit-content");
+
+    add(p);
+
+    for (Prefix prefix : responsive) {
+      prefix.add(p);
+    }
+  }
+
+  private void zIndex() {
+    Property1 p;
+    p = new Property1("ZIndex", "z-index");
+
+    p.add("V0", "0");
+    p.add("V10", "10");
+    p.add("V20", "20");
+    p.add("V30", "30");
+    p.add("V40", "40");
+    p.add("V50", "50");
+    p.add("AUTO", "auto");
 
     add(p);
 
