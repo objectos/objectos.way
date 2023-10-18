@@ -508,4 +508,111 @@ public final class Hover {
 
   }
 
+  /**
+   * Utility classes for the {@code cursor} CSS property.
+   */
+  public enum Cursor implements StyleClass {
+
+    AUTO("auto"),
+
+    DEFAULT("default"),
+
+    POINTER("pointer"),
+
+    WAIT("wait"),
+
+    TEXT("text"),
+
+    MOVE("move"),
+
+    HELP("help"),
+
+    NOT_ALLOWED("not-allowed"),
+
+    NONE("none"),
+
+    CONTEXT_MENU("context-menu"),
+
+    PROGRESS("progress"),
+
+    CELL("cell"),
+
+    CROSSHAIR("crosshair"),
+
+    VERTICAL_TEXT("vertical-text"),
+
+    ALIAS("alias"),
+
+    COPY("copy"),
+
+    NO_DROP("no-drop"),
+
+    GRAB("grab"),
+
+    GRABBING("grabbing"),
+
+    ALL_SCROLL("all-scroll"),
+
+    COL_RESIZE("col-resize"),
+
+    ROW_RESIZE("row-resize"),
+
+    N_RESIZE("n-resize"),
+
+    E_RESIZE("e-resize"),
+
+    S_RESIZE("s-resize"),
+
+    W_RESIZE("w-resize"),
+
+    NE_RESIZE("ne-resize"),
+
+    NW_RESIZE("nw-resize"),
+
+    SE_RESIZE("se-resize"),
+
+    SW_RESIZE("sw-resize"),
+
+    EW_RESIZE("ew-resize"),
+
+    NS_RESIZE("ns-resize"),
+
+    NESW_RESIZE("nesw-resize"),
+
+    NWSE_RESIZE("nwse-resize"),
+
+    ZOOM_IN("zoom-in"),
+
+    ZOOM_OUT("zoom-out");
+
+    private final String className = ClassSelectorSeqId.next();
+
+    private final String value;
+
+    private Cursor(String value) {
+      this.value = value;
+    }
+
+    /**
+     * Returns the CSS class name.
+     *
+     * @return the CSS class name
+     */
+    @Override
+    public final String className() {
+      return className;
+    }
+
+    /**
+     * Returns the CSS style rule represented by this utility class.
+     *
+     * @return the CSS style rule
+     */
+    @Override
+    public final String toString() {
+      return "." + className + ":hover" + " { cursor: " + value + " }";
+    }
+
+  }
+
 }

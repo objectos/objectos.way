@@ -640,6 +640,8 @@ final class CssUtilSpec extends CssUtilSelfGen {
     for (Prefix prefix : responsive) {
       prefix.add(p);
     }
+
+    Prefix.HOVER.add(p);
   }
 
   private void display() {
@@ -743,33 +745,37 @@ final class CssUtilSpec extends CssUtilSelfGen {
   }
 
   private void fontStyle() {
-    Names names;
-    names = names(
-      name("ITALIC", k("italic")),
-      name("NORMAL", k("normal"))
-    );
+    Property1 p;
+    p = new Property1("FontStyle", "font-style");
+
+    p.add("ITALIC", "italic");
+    p.add("NORMAL", "normal");
+
+    add(p);
 
     for (Prefix prefix : responsive) {
-      generate(prefix, simpleName("FontStyle"), methods("fontStyle"), names);
+      prefix.add(p);
     }
   }
 
   private void fontWeight() {
-    Names names;
-    names = names(
-      name("THIN", l(100)),
-      name("EXTRALIGHT", l(200)),
-      name("LIGHT", l(300)),
-      name("NORMAL", l(400)),
-      name("MEDIUM", l(500)),
-      name("SEMIBOLD", l(600)),
-      name("BOLD", l(700)),
-      name("EXTRABOLD", l(800)),
-      name("BLOCK", l(900))
-    );
+    Property1 p;
+    p = new Property1("FontWeight", "font-weight");
+
+    p.add("THIN", "100");
+    p.add("EXTRALIGHT", "200");
+    p.add("LIGHT", "300");
+    p.add("NORMAL", "400");
+    p.add("MEDIUM", "500");
+    p.add("SEMIBOLD", "600");
+    p.add("BOLD", "700");
+    p.add("EXTRABOLD", "800");
+    p.add("BLACK", "900");
+
+    add(p);
 
     for (Prefix prefix : responsive) {
-      generate(prefix, simpleName("FontWeight"), methods("fontWeight"), names);
+      prefix.add(p);
     }
   }
 

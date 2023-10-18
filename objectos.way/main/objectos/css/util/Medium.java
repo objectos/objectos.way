@@ -4714,6 +4714,98 @@ public final class Medium {
   }
 
   /**
+   * Utility classes for the {@code font-style} CSS property.
+   */
+  public enum FontStyle implements StyleClass {
+
+    ITALIC("italic"),
+
+    NORMAL("normal");
+
+    private final String className = ClassSelectorSeqId.next();
+
+    private final String value;
+
+    private FontStyle(String value) {
+      this.value = value;
+    }
+
+    /**
+     * Returns the CSS class name.
+     *
+     * @return the CSS class name
+     */
+    @Override
+    public final String className() {
+      return className;
+    }
+
+    /**
+     * Returns the CSS style rule represented by this utility class.
+     *
+     * @return the CSS style rule
+     */
+    @Override
+    public final String toString() {
+      return "." + className + " { font-style: " + value + " }";
+    }
+
+  }
+
+  /**
+   * Utility classes for the {@code font-weight} CSS property.
+   */
+  public enum FontWeight implements StyleClass {
+
+    THIN("100"),
+
+    EXTRALIGHT("200"),
+
+    LIGHT("300"),
+
+    NORMAL("400"),
+
+    MEDIUM("500"),
+
+    SEMIBOLD("600"),
+
+    BOLD("700"),
+
+    EXTRABOLD("800"),
+
+    BLACK("900");
+
+    private final String className = ClassSelectorSeqId.next();
+
+    private final String value;
+
+    private FontWeight(String value) {
+      this.value = value;
+    }
+
+    /**
+     * Returns the CSS class name.
+     *
+     * @return the CSS class name
+     */
+    @Override
+    public final String className() {
+      return className;
+    }
+
+    /**
+     * Returns the CSS style rule represented by this utility class.
+     *
+     * @return the CSS style rule
+     */
+    @Override
+    public final String toString() {
+      return "." + className + " { font-weight: " + value + " }";
+    }
+
+  }
+
+  /**
    * Utility classes for the {@code height} CSS property.
    */
   public enum Height implements StyleClass {
