@@ -108,6 +108,7 @@ final class CssUtilSpec extends CssUtilSelfGen {
     // C
 
     color();
+    cursor();
 
     // D
 
@@ -539,6 +540,54 @@ final class CssUtilSpec extends CssUtilSelfGen {
     generateHover(hover, simpleName("Color"), methods("color"), colors);
   }
 
+  private void cursor() {
+    Property1 p;
+    p = new Property1("Cursor", "cursor");
+
+    p.add("AUTO", "auto");
+    p.add("DEFAULT", "default");
+    p.add("POINTER", "pointer");
+    p.add("WAIT", "wait");
+    p.add("TEXT", "text");
+    p.add("MOVE", "move");
+    p.add("HELP", "help");
+    p.add("NOT_ALLOWED", "not-allowed");
+    p.add("NONE", "none");
+    p.add("CONTEXT_MENU", "context-menu");
+    p.add("PROGRESS", "progress");
+    p.add("CELL", "cell");
+    p.add("CROSSHAIR", "crosshair");
+    p.add("VERTICAL_TEXT", "vertical-text");
+    p.add("ALIAS", "alias");
+    p.add("COPY", "copy");
+    p.add("NO_DROP", "no-drop");
+    p.add("GRAB", "grab");
+    p.add("GRABBING", "grabbing");
+    p.add("ALL_SCROLL", "all-scroll");
+    p.add("COL_RESIZE", "col-resize");
+    p.add("ROW_RESIZE", "row-resize");
+    p.add("N_RESIZE", "n-resize");
+    p.add("E_RESIZE", "e-resize");
+    p.add("S_RESIZE", "s-resize");
+    p.add("W_RESIZE", "w-resize");
+    p.add("NE_RESIZE", "ne-resize");
+    p.add("NW_RESIZE", "nw-resize");
+    p.add("SE_RESIZE", "se-resize");
+    p.add("SW_RESIZE", "sw-resize");
+    p.add("EW_RESIZE", "ew-resize");
+    p.add("NS_RESIZE", "ns-resize");
+    p.add("NESW_RESIZE", "nesw-resize");
+    p.add("NWSE_RESIZE", "nwse-resize");
+    p.add("ZOOM_IN", "zoom-in");
+    p.add("ZOOM_OUT", "zoom-out");
+
+    add(p);
+
+    for (Prefix prefix : responsive) {
+      prefix.add(p);
+    }
+  }
+
   private void display() {
     Property1 p;
     p = new Property1("Display", "display");
@@ -759,18 +808,20 @@ final class CssUtilSpec extends CssUtilSelfGen {
   }
 
   private void letterSpacing() {
-    Names names;
-    names = names(
-      name("TIGHTER", rem(-0.05)),
-      name("TIGHT", rem(-0.025)),
-      name("NORMAL", rem(0)),
-      name("WIDE", rem(0.025)),
-      name("WIDER", rem(0.05)),
-      name("WIDEST", rem(0.1))
-    );
+    Property1 p;
+    p = new Property1("LetterSpacing", "letter-spacing");
+
+    p.add("TIGHTER", "-0.05em");
+    p.add("TIGHT", "-0.025em");
+    p.add("NORMAL", "0em");
+    p.add("WIDE", "0.025em");
+    p.add("WIDER", "0.05em");
+    p.add("WIDEST", "0.1em");
+
+    add(p);
 
     for (Prefix prefix : responsive) {
-      generate(prefix, simpleName("LetterSpacing"), methods("letterSpacing"), names);
+      prefix.add(p);
     }
   }
 
