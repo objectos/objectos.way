@@ -24,6 +24,151 @@ public final class Medium {
   private Medium() {}
 
   /**
+   * Utility classes for the {@code align-content} CSS property.
+   */
+  public enum AlignContent implements StyleClass {
+
+    NORMAL("normal"),
+
+    CENTER("center"),
+
+    START("flex-start"),
+
+    END("flex-end"),
+
+    BETWEEN("space-between"),
+
+    AROUND("space-around"),
+
+    EVENLY("space-evenly"),
+
+    BASELINE("baseline"),
+
+    STRETCH("stretch");
+
+    private final String className = ClassSelectorSeqId.next();
+
+    private final String value;
+
+    private AlignContent(String value) {
+      this.value = value;
+    }
+
+    /**
+     * Returns the CSS class name.
+     *
+     * @return the CSS class name
+     */
+    @Override
+    public final String className() {
+      return className;
+    }
+
+    /**
+     * Returns the CSS style rule represented by this utility class.
+     *
+     * @return the CSS style rule
+     */
+    @Override
+    public final String toString() {
+      return "." + className + " { align-content: " + value + " }";
+    }
+
+  }
+
+  /**
+   * Utility classes for the {@code align-items} CSS property.
+   */
+  public enum AlignItems implements StyleClass {
+
+    START("flex-start"),
+
+    END("flex-end"),
+
+    CENTER("center"),
+
+    BASELINE("baseline"),
+
+    STRETCH("stretch");
+
+    private final String className = ClassSelectorSeqId.next();
+
+    private final String value;
+
+    private AlignItems(String value) {
+      this.value = value;
+    }
+
+    /**
+     * Returns the CSS class name.
+     *
+     * @return the CSS class name
+     */
+    @Override
+    public final String className() {
+      return className;
+    }
+
+    /**
+     * Returns the CSS style rule represented by this utility class.
+     *
+     * @return the CSS style rule
+     */
+    @Override
+    public final String toString() {
+      return "." + className + " { align-items: " + value + " }";
+    }
+
+  }
+
+  /**
+   * Utility classes for the {@code align-self} CSS property.
+   */
+  public enum AlignSelf implements StyleClass {
+
+    AUTO("auto"),
+
+    START("flex-start"),
+
+    END("flex-end"),
+
+    CENTER("center"),
+
+    STRETCH("stretch"),
+
+    BASELINE("baseline");
+
+    private final String className = ClassSelectorSeqId.next();
+
+    private final String value;
+
+    private AlignSelf(String value) {
+      this.value = value;
+    }
+
+    /**
+     * Returns the CSS class name.
+     *
+     * @return the CSS class name
+     */
+    @Override
+    public final String className() {
+      return className;
+    }
+
+    /**
+     * Returns the CSS style rule represented by this utility class.
+     *
+     * @return the CSS style rule
+     */
+    @Override
+    public final String toString() {
+      return "." + className + " { align-self: " + value + " }";
+    }
+
+  }
+
+  /**
    * Utility classes for the {@code display} CSS property.
    */
   public enum Display implements StyleClass {
@@ -90,6 +235,131 @@ public final class Medium {
     @Override
     public final String toString() {
       return "." + className + " { display: " + value + " }";
+    }
+
+  }
+
+  /**
+   * Utility classes for the {@code flex} CSS property.
+   */
+  public enum Flex implements StyleClass {
+
+    ONE("1 1 0%"),
+
+    AUTO("1 1 auto"),
+
+    INITIAL("0 1 auto"),
+
+    NONE("none");
+
+    private final String className = ClassSelectorSeqId.next();
+
+    private final String value;
+
+    private Flex(String value) {
+      this.value = value;
+    }
+
+    /**
+     * Returns the CSS class name.
+     *
+     * @return the CSS class name
+     */
+    @Override
+    public final String className() {
+      return className;
+    }
+
+    /**
+     * Returns the CSS style rule represented by this utility class.
+     *
+     * @return the CSS style rule
+     */
+    @Override
+    public final String toString() {
+      return "." + className + " { flex: " + value + " }";
+    }
+
+  }
+
+  /**
+   * Utility classes for the {@code flex-direction} CSS property.
+   */
+  public enum FlexDirection implements StyleClass {
+
+    ROW("row"),
+
+    ROW_REVERSE("row-reverse"),
+
+    COLUMN("column"),
+
+    COLUMN_REVERSE("column-reverse");
+
+    private final String className = ClassSelectorSeqId.next();
+
+    private final String value;
+
+    private FlexDirection(String value) {
+      this.value = value;
+    }
+
+    /**
+     * Returns the CSS class name.
+     *
+     * @return the CSS class name
+     */
+    @Override
+    public final String className() {
+      return className;
+    }
+
+    /**
+     * Returns the CSS style rule represented by this utility class.
+     *
+     * @return the CSS style rule
+     */
+    @Override
+    public final String toString() {
+      return "." + className + " { flex-direction: " + value + " }";
+    }
+
+  }
+
+  /**
+   * Utility classes for the {@code flex-grow} CSS property.
+   */
+  public enum FlexGrow implements StyleClass {
+
+    V1("1"),
+
+    V0("0");
+
+    private final String className = ClassSelectorSeqId.next();
+
+    private final String value;
+
+    private FlexGrow(String value) {
+      this.value = value;
+    }
+
+    /**
+     * Returns the CSS class name.
+     *
+     * @return the CSS class name
+     */
+    @Override
+    public final String className() {
+      return className;
+    }
+
+    /**
+     * Returns the CSS style rule represented by this utility class.
+     *
+     * @return the CSS style rule
+     */
+    @Override
+    public final String toString() {
+      return "." + className + " { flex-grow: " + value + " }";
     }
 
   }
@@ -1084,6 +1354,57 @@ public final class Medium {
     @Override
     public final String toString() {
       return "." + className + " { top: " + value + "; bottom: " + value + " }";
+    }
+
+  }
+
+  /**
+   * Utility classes for the {@code justify-content} CSS property.
+   */
+  public enum JustifyContent implements StyleClass {
+
+    NORMAL("normal"),
+
+    START("flex-start"),
+
+    END("flex-end"),
+
+    CENTER("center"),
+
+    BETWEEN("space-between"),
+
+    AROUND("space-around"),
+
+    EVENLY("space-evenly"),
+
+    STRETCH("stretch");
+
+    private final String className = ClassSelectorSeqId.next();
+
+    private final String value;
+
+    private JustifyContent(String value) {
+      this.value = value;
+    }
+
+    /**
+     * Returns the CSS class name.
+     *
+     * @return the CSS class name
+     */
+    @Override
+    public final String className() {
+      return className;
+    }
+
+    /**
+     * Returns the CSS style rule represented by this utility class.
+     *
+     * @return the CSS style rule
+     */
+    @Override
+    public final String toString() {
+      return "." + className + " { justify-content: " + value + " }";
     }
 
   }

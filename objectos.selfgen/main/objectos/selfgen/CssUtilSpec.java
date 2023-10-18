@@ -12,6 +12,30 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ *
+ * Based on:
+ * https://github.com/tailwindlabs/tailwindcss/blob/master/stubs/config.full.js
+ *
+ * Copyright (c) Adam Wathan <adam.wathan@gmail.com>
+ * Copyright (c) Jonathan Reinink <jonathan@reinink.ca>
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
  */
 package objectos.selfgen;
 
@@ -71,6 +95,12 @@ final class CssUtilSpec extends CssUtilSelfGen {
 
     spacing = $spacing();
 
+    // A
+
+    alignContent();
+    alignItems();
+    alignSelf();
+
     // B
 
     backgroundColor();
@@ -85,7 +115,9 @@ final class CssUtilSpec extends CssUtilSelfGen {
 
     // F
 
+    flex();
     flexDirection();
+    flexGrow();
     fontSize();
     fontStyle();
     fontWeight();
@@ -95,6 +127,7 @@ final class CssUtilSpec extends CssUtilSelfGen {
     height();
 
     // I
+
     inset();
 
     // J
@@ -434,6 +467,62 @@ final class CssUtilSpec extends CssUtilSelfGen {
     );
   }
 
+  private void alignContent() {
+    Property1 p;
+    p = new Property1("AlignContent", "align-content");
+
+    p.add("NORMAL", "normal");
+    p.add("CENTER", "center");
+    p.add("START", "flex-start");
+    p.add("END", "flex-end");
+    p.add("BETWEEN", "space-between");
+    p.add("AROUND", "space-around");
+    p.add("EVENLY", "space-evenly");
+    p.add("BASELINE", "baseline");
+    p.add("STRETCH", "stretch");
+
+    add(p);
+
+    for (Prefix prefix : responsive) {
+      prefix.add(p);
+    }
+  }
+
+  private void alignItems() {
+    Property1 p;
+    p = new Property1("AlignItems", "align-items");
+
+    p.add("START", "flex-start");
+    p.add("END", "flex-end");
+    p.add("CENTER", "center");
+    p.add("BASELINE", "baseline");
+    p.add("STRETCH", "stretch");
+
+    add(p);
+
+    for (Prefix prefix : responsive) {
+      prefix.add(p);
+    }
+  }
+
+  private void alignSelf() {
+    Property1 p;
+    p = new Property1("AlignSelf", "align-self");
+
+    p.add("AUTO", "auto");
+    p.add("START", "flex-start");
+    p.add("END", "flex-end");
+    p.add("CENTER", "center");
+    p.add("STRETCH", "stretch");
+    p.add("BASELINE", "baseline");
+
+    add(p);
+
+    for (Prefix prefix : responsive) {
+      prefix.add(p);
+    }
+  }
+
   private void backgroundColor() {
     for (Prefix prefix : responsive) {
       generate(prefix, simpleName("BackgroundColor"), methods("backgroundColor"), colors);
@@ -480,17 +569,49 @@ final class CssUtilSpec extends CssUtilSelfGen {
     }
   }
 
-  private void flexDirection() {
-    Names names;
-    names = names(
-      name("ROW", k("row")),
-      name("ROW_REVERSE", k("rowReverse")),
-      name("COLUMN", k("column")),
-      name("COLUMN_REVERSE", k("columnReverse"))
-    );
+  private void flex() {
+    Property1 p;
+    p = new Property1("Flex", "flex");
+
+    p.add("ONE", "1 1 0%");
+    p.add("AUTO", "1 1 auto");
+    p.add("INITIAL", "0 1 auto");
+    p.add("NONE", "none");
+
+    add(p);
 
     for (Prefix prefix : responsive) {
-      generate(prefix, simpleName("FlexDirection"), methods("flexDirection"), names);
+      prefix.add(p);
+    }
+  }
+
+  private void flexDirection() {
+    Property1 p;
+    p = new Property1("FlexDirection", "flex-direction");
+
+    p.add("ROW", "row");
+    p.add("ROW_REVERSE", "row-reverse");
+    p.add("COLUMN", "column");
+    p.add("COLUMN_REVERSE", "column-reverse");
+
+    add(p);
+
+    for (Prefix prefix : responsive) {
+      prefix.add(p);
+    }
+  }
+
+  private void flexGrow() {
+    Property1 p;
+    p = new Property1("FlexGrow", "flex-grow");
+
+    p.add("V1", "1");
+    p.add("V0", "0");
+
+    add(p);
+
+    for (Prefix prefix : responsive) {
+      prefix.add(p);
     }
   }
 
@@ -618,17 +739,22 @@ final class CssUtilSpec extends CssUtilSelfGen {
   }
 
   private void justifyContent() {
-    Names names;
-    names = names(
-      name("START", k("flexStart")),
-      name("CENTER", k("center")),
-      name("END", k("flexEnd")),
-      name("BETWEEN", k("spaceBetween")),
-      name("AROUND", k("spaceAround"))
-    );
+    Property1 p;
+    p = new Property1("JustifyContent", "justify-content");
+
+    p.add("NORMAL", "normal");
+    p.add("START", "flex-start");
+    p.add("END", "flex-end");
+    p.add("CENTER", "center");
+    p.add("BETWEEN", "space-between");
+    p.add("AROUND", "space-around");
+    p.add("EVENLY", "space-evenly");
+    p.add("STRETCH", "stretch");
+
+    add(p);
 
     for (Prefix prefix : responsive) {
-      generate(prefix, simpleName("JustifyContent"), methods("justifyContent"), names);
+      prefix.add(p);
     }
   }
 
