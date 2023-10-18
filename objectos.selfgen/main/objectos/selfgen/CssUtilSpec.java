@@ -762,20 +762,25 @@ final class CssUtilSpec extends CssUtilSelfGen {
   }
 
   private void padding() {
-    for (Prefix prefix : responsive) {
-      generate(prefix, simpleName("Padding"), methods("padding"), spacing);
+    List<PropertyClass> props;
+    props = List.of(
+      new Property1("Padding", "padding"),
+      new Property1("PaddingTop", "padding-top"),
+      new Property1("PaddingRight", "padding-right"),
+      new Property1("PaddingBottom", "padding-bottom"),
+      new Property1("PaddingLeft", "padding-left"),
+      new Property2("PaddingX", "padding-right", "padding-left"),
+      new Property2("PaddingY", "padding-top", "padding-bottom")
+    );
 
-      generate(prefix, simpleName("PaddingX"), methods("paddingRight", "paddingLeft"), spacing);
+    for (var p : props) {
+      spacing(p);
 
-      generate(prefix, simpleName("PaddingY"), methods("paddingTop", "paddingBottom"), spacing);
+      add(p);
 
-      generate(prefix, simpleName("PaddingTop"), methods("paddingTop"), spacing);
-
-      generate(prefix, simpleName("PaddingRight"), methods("paddingRight"), spacing);
-
-      generate(prefix, simpleName("PaddingBottom"), methods("paddingBottom"), spacing);
-
-      generate(prefix, simpleName("PaddingLeft"), methods("paddingLeft"), spacing);
+      for (Prefix prefix : responsive) {
+        prefix.add(p);
+      }
     }
   }
 

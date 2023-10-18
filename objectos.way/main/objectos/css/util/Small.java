@@ -1089,6 +1089,741 @@ public final class Small {
   }
 
   /**
+   * Utility classes for the {@code padding} CSS property.
+   */
+  public enum Padding implements StyleClass {
+
+    PX0("0px"),
+
+    PX1("1px"),
+
+    PX2("0.125rem"),
+
+    PX4("0.25rem"),
+
+    PX6("0.375rem"),
+
+    PX8("0.5rem"),
+
+    PX10("0.625rem"),
+
+    PX12("0.75rem"),
+
+    PX14("0.875rem"),
+
+    PX16("1rem"),
+
+    PX20("1.25rem"),
+
+    PX24("1.5rem"),
+
+    PX28("1.75rem"),
+
+    PX32("2rem"),
+
+    PX36("2.25rem"),
+
+    PX40("2.5rem"),
+
+    PX44("2.75rem"),
+
+    PX48("3rem"),
+
+    PX56("3.5rem"),
+
+    PX64("4rem"),
+
+    PX80("5rem"),
+
+    PX96("6rem"),
+
+    PX112("7rem"),
+
+    PX128("8rem"),
+
+    PX144("9rem"),
+
+    PX160("10rem"),
+
+    PX176("11rem"),
+
+    PX192("12rem"),
+
+    PX208("13rem"),
+
+    PX224("14rem"),
+
+    PX240("15rem"),
+
+    PX256("16rem"),
+
+    PX288("18rem"),
+
+    PX320("20rem"),
+
+    PX384("24rem");
+
+    private final String className = ClassSelectorSeqId.next();
+
+    private final String value;
+
+    private Padding(String value) {
+      this.value = value;
+    }
+
+    /**
+     * Returns the CSS class name.
+     *
+     * @return the CSS class name
+     */
+    @Override
+    public final String className() {
+      return className;
+    }
+
+    /**
+     * Returns the CSS style rule represented by this utility class.
+     *
+     * @return the CSS style rule
+     */
+    @Override
+    public final String toString() {
+      return "." + className + " { padding: " + value + " }";
+    }
+
+  }
+
+  /**
+   * Utility classes for the {@code padding-top} CSS property.
+   */
+  public enum PaddingTop implements StyleClass {
+
+    PX0("0px"),
+
+    PX1("1px"),
+
+    PX2("0.125rem"),
+
+    PX4("0.25rem"),
+
+    PX6("0.375rem"),
+
+    PX8("0.5rem"),
+
+    PX10("0.625rem"),
+
+    PX12("0.75rem"),
+
+    PX14("0.875rem"),
+
+    PX16("1rem"),
+
+    PX20("1.25rem"),
+
+    PX24("1.5rem"),
+
+    PX28("1.75rem"),
+
+    PX32("2rem"),
+
+    PX36("2.25rem"),
+
+    PX40("2.5rem"),
+
+    PX44("2.75rem"),
+
+    PX48("3rem"),
+
+    PX56("3.5rem"),
+
+    PX64("4rem"),
+
+    PX80("5rem"),
+
+    PX96("6rem"),
+
+    PX112("7rem"),
+
+    PX128("8rem"),
+
+    PX144("9rem"),
+
+    PX160("10rem"),
+
+    PX176("11rem"),
+
+    PX192("12rem"),
+
+    PX208("13rem"),
+
+    PX224("14rem"),
+
+    PX240("15rem"),
+
+    PX256("16rem"),
+
+    PX288("18rem"),
+
+    PX320("20rem"),
+
+    PX384("24rem");
+
+    private final String className = ClassSelectorSeqId.next();
+
+    private final String value;
+
+    private PaddingTop(String value) {
+      this.value = value;
+    }
+
+    /**
+     * Returns the CSS class name.
+     *
+     * @return the CSS class name
+     */
+    @Override
+    public final String className() {
+      return className;
+    }
+
+    /**
+     * Returns the CSS style rule represented by this utility class.
+     *
+     * @return the CSS style rule
+     */
+    @Override
+    public final String toString() {
+      return "." + className + " { padding-top: " + value + " }";
+    }
+
+  }
+
+  /**
+   * Utility classes for the {@code padding-right} CSS property.
+   */
+  public enum PaddingRight implements StyleClass {
+
+    PX0("0px"),
+
+    PX1("1px"),
+
+    PX2("0.125rem"),
+
+    PX4("0.25rem"),
+
+    PX6("0.375rem"),
+
+    PX8("0.5rem"),
+
+    PX10("0.625rem"),
+
+    PX12("0.75rem"),
+
+    PX14("0.875rem"),
+
+    PX16("1rem"),
+
+    PX20("1.25rem"),
+
+    PX24("1.5rem"),
+
+    PX28("1.75rem"),
+
+    PX32("2rem"),
+
+    PX36("2.25rem"),
+
+    PX40("2.5rem"),
+
+    PX44("2.75rem"),
+
+    PX48("3rem"),
+
+    PX56("3.5rem"),
+
+    PX64("4rem"),
+
+    PX80("5rem"),
+
+    PX96("6rem"),
+
+    PX112("7rem"),
+
+    PX128("8rem"),
+
+    PX144("9rem"),
+
+    PX160("10rem"),
+
+    PX176("11rem"),
+
+    PX192("12rem"),
+
+    PX208("13rem"),
+
+    PX224("14rem"),
+
+    PX240("15rem"),
+
+    PX256("16rem"),
+
+    PX288("18rem"),
+
+    PX320("20rem"),
+
+    PX384("24rem");
+
+    private final String className = ClassSelectorSeqId.next();
+
+    private final String value;
+
+    private PaddingRight(String value) {
+      this.value = value;
+    }
+
+    /**
+     * Returns the CSS class name.
+     *
+     * @return the CSS class name
+     */
+    @Override
+    public final String className() {
+      return className;
+    }
+
+    /**
+     * Returns the CSS style rule represented by this utility class.
+     *
+     * @return the CSS style rule
+     */
+    @Override
+    public final String toString() {
+      return "." + className + " { padding-right: " + value + " }";
+    }
+
+  }
+
+  /**
+   * Utility classes for the {@code padding-bottom} CSS property.
+   */
+  public enum PaddingBottom implements StyleClass {
+
+    PX0("0px"),
+
+    PX1("1px"),
+
+    PX2("0.125rem"),
+
+    PX4("0.25rem"),
+
+    PX6("0.375rem"),
+
+    PX8("0.5rem"),
+
+    PX10("0.625rem"),
+
+    PX12("0.75rem"),
+
+    PX14("0.875rem"),
+
+    PX16("1rem"),
+
+    PX20("1.25rem"),
+
+    PX24("1.5rem"),
+
+    PX28("1.75rem"),
+
+    PX32("2rem"),
+
+    PX36("2.25rem"),
+
+    PX40("2.5rem"),
+
+    PX44("2.75rem"),
+
+    PX48("3rem"),
+
+    PX56("3.5rem"),
+
+    PX64("4rem"),
+
+    PX80("5rem"),
+
+    PX96("6rem"),
+
+    PX112("7rem"),
+
+    PX128("8rem"),
+
+    PX144("9rem"),
+
+    PX160("10rem"),
+
+    PX176("11rem"),
+
+    PX192("12rem"),
+
+    PX208("13rem"),
+
+    PX224("14rem"),
+
+    PX240("15rem"),
+
+    PX256("16rem"),
+
+    PX288("18rem"),
+
+    PX320("20rem"),
+
+    PX384("24rem");
+
+    private final String className = ClassSelectorSeqId.next();
+
+    private final String value;
+
+    private PaddingBottom(String value) {
+      this.value = value;
+    }
+
+    /**
+     * Returns the CSS class name.
+     *
+     * @return the CSS class name
+     */
+    @Override
+    public final String className() {
+      return className;
+    }
+
+    /**
+     * Returns the CSS style rule represented by this utility class.
+     *
+     * @return the CSS style rule
+     */
+    @Override
+    public final String toString() {
+      return "." + className + " { padding-bottom: " + value + " }";
+    }
+
+  }
+
+  /**
+   * Utility classes for the {@code padding-left} CSS property.
+   */
+  public enum PaddingLeft implements StyleClass {
+
+    PX0("0px"),
+
+    PX1("1px"),
+
+    PX2("0.125rem"),
+
+    PX4("0.25rem"),
+
+    PX6("0.375rem"),
+
+    PX8("0.5rem"),
+
+    PX10("0.625rem"),
+
+    PX12("0.75rem"),
+
+    PX14("0.875rem"),
+
+    PX16("1rem"),
+
+    PX20("1.25rem"),
+
+    PX24("1.5rem"),
+
+    PX28("1.75rem"),
+
+    PX32("2rem"),
+
+    PX36("2.25rem"),
+
+    PX40("2.5rem"),
+
+    PX44("2.75rem"),
+
+    PX48("3rem"),
+
+    PX56("3.5rem"),
+
+    PX64("4rem"),
+
+    PX80("5rem"),
+
+    PX96("6rem"),
+
+    PX112("7rem"),
+
+    PX128("8rem"),
+
+    PX144("9rem"),
+
+    PX160("10rem"),
+
+    PX176("11rem"),
+
+    PX192("12rem"),
+
+    PX208("13rem"),
+
+    PX224("14rem"),
+
+    PX240("15rem"),
+
+    PX256("16rem"),
+
+    PX288("18rem"),
+
+    PX320("20rem"),
+
+    PX384("24rem");
+
+    private final String className = ClassSelectorSeqId.next();
+
+    private final String value;
+
+    private PaddingLeft(String value) {
+      this.value = value;
+    }
+
+    /**
+     * Returns the CSS class name.
+     *
+     * @return the CSS class name
+     */
+    @Override
+    public final String className() {
+      return className;
+    }
+
+    /**
+     * Returns the CSS style rule represented by this utility class.
+     *
+     * @return the CSS style rule
+     */
+    @Override
+    public final String toString() {
+      return "." + className + " { padding-left: " + value + " }";
+    }
+
+  }
+
+  /**
+   * Utility classes for the {@code padding-right} and {@code padding-left} CSS properties.
+   */
+  public enum PaddingX implements StyleClass {
+
+    PX0("0px"),
+
+    PX1("1px"),
+
+    PX2("0.125rem"),
+
+    PX4("0.25rem"),
+
+    PX6("0.375rem"),
+
+    PX8("0.5rem"),
+
+    PX10("0.625rem"),
+
+    PX12("0.75rem"),
+
+    PX14("0.875rem"),
+
+    PX16("1rem"),
+
+    PX20("1.25rem"),
+
+    PX24("1.5rem"),
+
+    PX28("1.75rem"),
+
+    PX32("2rem"),
+
+    PX36("2.25rem"),
+
+    PX40("2.5rem"),
+
+    PX44("2.75rem"),
+
+    PX48("3rem"),
+
+    PX56("3.5rem"),
+
+    PX64("4rem"),
+
+    PX80("5rem"),
+
+    PX96("6rem"),
+
+    PX112("7rem"),
+
+    PX128("8rem"),
+
+    PX144("9rem"),
+
+    PX160("10rem"),
+
+    PX176("11rem"),
+
+    PX192("12rem"),
+
+    PX208("13rem"),
+
+    PX224("14rem"),
+
+    PX240("15rem"),
+
+    PX256("16rem"),
+
+    PX288("18rem"),
+
+    PX320("20rem"),
+
+    PX384("24rem");
+
+    private final String className = ClassSelectorSeqId.next();
+
+    private final String value;
+
+    private PaddingX(String value) {
+      this.value = value;
+    }
+
+    /**
+     * Returns the CSS class name.
+     *
+     * @return the CSS class name
+     */
+    @Override
+    public final String className() {
+      return className;
+    }
+
+    /**
+     * Returns the CSS style rule represented by this utility class.
+     *
+     * @return the CSS style rule
+     */
+    @Override
+    public final String toString() {
+      return "." + className + " { padding-right: " + value + "; padding-left: " + value + " }";
+    }
+
+  }
+
+  /**
+   * Utility classes for the {@code padding-top} and {@code padding-bottom} CSS properties.
+   */
+  public enum PaddingY implements StyleClass {
+
+    PX0("0px"),
+
+    PX1("1px"),
+
+    PX2("0.125rem"),
+
+    PX4("0.25rem"),
+
+    PX6("0.375rem"),
+
+    PX8("0.5rem"),
+
+    PX10("0.625rem"),
+
+    PX12("0.75rem"),
+
+    PX14("0.875rem"),
+
+    PX16("1rem"),
+
+    PX20("1.25rem"),
+
+    PX24("1.5rem"),
+
+    PX28("1.75rem"),
+
+    PX32("2rem"),
+
+    PX36("2.25rem"),
+
+    PX40("2.5rem"),
+
+    PX44("2.75rem"),
+
+    PX48("3rem"),
+
+    PX56("3.5rem"),
+
+    PX64("4rem"),
+
+    PX80("5rem"),
+
+    PX96("6rem"),
+
+    PX112("7rem"),
+
+    PX128("8rem"),
+
+    PX144("9rem"),
+
+    PX160("10rem"),
+
+    PX176("11rem"),
+
+    PX192("12rem"),
+
+    PX208("13rem"),
+
+    PX224("14rem"),
+
+    PX240("15rem"),
+
+    PX256("16rem"),
+
+    PX288("18rem"),
+
+    PX320("20rem"),
+
+    PX384("24rem");
+
+    private final String className = ClassSelectorSeqId.next();
+
+    private final String value;
+
+    private PaddingY(String value) {
+      this.value = value;
+    }
+
+    /**
+     * Returns the CSS class name.
+     *
+     * @return the CSS class name
+     */
+    @Override
+    public final String className() {
+      return className;
+    }
+
+    /**
+     * Returns the CSS style rule represented by this utility class.
+     *
+     * @return the CSS style rule
+     */
+    @Override
+    public final String toString() {
+      return "." + className + " { padding-top: " + value + "; padding-bottom: " + value + " }";
+    }
+
+  }
+
+  /**
    * Utility classes for the {@code width} CSS property.
    */
   public enum Width implements StyleClass {
