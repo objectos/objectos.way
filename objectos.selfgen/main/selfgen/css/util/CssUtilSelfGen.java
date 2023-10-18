@@ -21,14 +21,10 @@ import java.util.ArrayList;
 import java.util.List;
 import objectos.code.Code;
 import objectos.lang.Check;
-import selfgen.css.util.Prefix.Breakpoint;
-import selfgen.css.util.Prefix.Simple;
 
 public abstract class CssUtilSelfGen {
 
   final Code code = Code.of();
-
-  final List<Prefix> prefixList = new ArrayList<>();
 
   final List<PropertyClass> properties = new ArrayList<>();
 
@@ -52,15 +48,6 @@ public abstract class CssUtilSelfGen {
     Check.notNull(p, "p == null");
 
     properties.add(p);
-  }
-
-  protected final Breakpoint breakpoint(String name, int length) {
-    Breakpoint breakpoint;
-    breakpoint = Prefix.ofBreakpoint(name, length);
-
-    prefixList.add(breakpoint);
-
-    return breakpoint;
   }
 
   protected final Value ch(int value) {
@@ -152,15 +139,6 @@ public abstract class CssUtilSelfGen {
 
   protected final Value pct(int value) {
     return new Value.MethodInt("pct", value);
-  }
-
-  protected final Simple prefix(String name) {
-    Simple simple;
-    simple = Prefix.ofSimple(name);
-
-    prefixList.add(simple);
-
-    return simple;
   }
 
   protected final Value px(int value) {

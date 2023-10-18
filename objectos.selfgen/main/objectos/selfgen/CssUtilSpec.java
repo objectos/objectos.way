@@ -41,10 +41,10 @@ package objectos.selfgen;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Set;
 import selfgen.css.util.CssUtilSelfGen;
 import selfgen.css.util.Names;
 import selfgen.css.util.Prefix;
-import selfgen.css.util.Prefix.Breakpoint;
 import selfgen.css.util.Property1;
 import selfgen.css.util.Property2;
 import selfgen.css.util.PropertyClass;
@@ -52,14 +52,7 @@ import selfgen.css.util.Value;
 
 final class CssUtilSpec extends CssUtilSelfGen {
 
-  private Breakpoint prefixSmall;
-  private Breakpoint prefixMedium;
-  private Breakpoint prefixLarge;
-  private Breakpoint prefixExtra;
-  private Breakpoint prefixMax;
-  private Prefix hover;
-
-  private List<Prefix> responsive;
+  private final Set<Prefix> responsive = Prefix.RESPONSIVE;
 
   private Names colors;
 
@@ -74,23 +67,6 @@ final class CssUtilSpec extends CssUtilSelfGen {
 
   @Override
   protected final void definition() {
-    // breakpoints
-    prefixSmall = breakpoint("Small", 640);
-    prefixMedium = breakpoint("Medium", 768);
-    prefixLarge = breakpoint("Large", 1024);
-    prefixExtra = breakpoint("Extra", 1280);
-    prefixMax = breakpoint("Max", 1536);
-
-    responsive = List.of(
-      prefixSmall,
-      prefixMedium,
-      prefixLarge,
-      prefixExtra,
-      prefixMax
-    );
-
-    hover = prefix("Hover");
-
     colors = $colors();
 
     spacing = $spacing();
@@ -525,11 +501,18 @@ final class CssUtilSpec extends CssUtilSelfGen {
   }
 
   private void backgroundColor() {
+    Property1 p;
+    p = new Property1("BackgroundColor", "background-color");
+
+    colors(p);
+
+    add(p);
+
     for (Prefix prefix : responsive) {
-      generate(prefix, simpleName("BackgroundColor"), methods("backgroundColor"), colors);
+      prefix.add(p);
     }
 
-    generateHover(hover, simpleName("BackgroundColor"), methods("backgroundColor"), colors);
+    Prefix.HOVER.add(p);
   }
 
   private void color() {
@@ -537,7 +520,7 @@ final class CssUtilSpec extends CssUtilSelfGen {
       generate(prefix, simpleName("Color"), methods("color"), colors);
     }
 
-    generateHover(hover, simpleName("Color"), methods("color"), colors);
+    // generateHover(hover, simpleName("Color"), methods("color"), colors);
   }
 
   private void cursor() {
@@ -917,12 +900,12 @@ final class CssUtilSpec extends CssUtilSelfGen {
       name("MIN", k("minContent")),
       name("MAX", k("maxContent")),
       name("FIT", k("fitContent")),
-      name("PROSE", ch(65)),
-      name("SCREEN_SMALL", px(prefixSmall.length)),
-      name("SCREEN_MEDIUM", px(prefixMedium.length)),
-      name("SCREEN_LARGE", px(prefixLarge.length)),
-      name("SCREEN_X_LARGE", px(prefixExtra.length)),
-      name("SCREEN_X_LARGE2", px(prefixMax.length))
+      name("PROSE", ch(65))
+    //name("SCREEN_SMALL", px(prefixSmall.length)),
+    //name("SCREEN_MEDIUM", px(prefixMedium.length)),
+    //name("SCREEN_LARGE", px(prefixLarge.length)),
+    //name("SCREEN_X_LARGE", px(prefixExtra.length)),
+    //name("SCREEN_X_LARGE2", px(prefixMax.length))
     );
 
     for (Prefix prefix : responsive) {
@@ -1017,7 +1000,7 @@ final class CssUtilSpec extends CssUtilSelfGen {
       generate(prefix, simpleName("TextDecoration"), methods("textDecoration"), names);
     }
 
-    generateHover(hover, simpleName("TextDecoration"), methods("textDecoration"), names);
+    //generateHover(hover, simpleName("TextDecoration"), methods("textDecoration"), names);
   }
 
   private void textTransform() {
@@ -1115,6 +1098,278 @@ final class CssUtilSpec extends CssUtilSelfGen {
     for (Prefix prefix : responsive) {
       prefix.add(p);
     }
+  }
+
+  private void colors(PropertyClass p) {
+    p.add("TRANSPARENT", "transparent");
+
+    p.add("BLACK", rgb("#000000"));
+    p.add("WHITE", rgb("#ffffff"));
+
+    p.add("SLATE_050", rgb("#f8fafc"));
+    p.add("SLATE_100", rgb("#f1f5f9"));
+    p.add("SLATE_200", rgb("#e2e8f0"));
+    p.add("SLATE_300", rgb("#cbd5e1"));
+    p.add("SLATE_400", rgb("#94a3b8"));
+    p.add("SLATE_500", rgb("#64748b"));
+    p.add("SLATE_600", rgb("#475569"));
+    p.add("SLATE_700", rgb("#334155"));
+    p.add("SLATE_800", rgb("#1e293b"));
+    p.add("SLATE_900", rgb("#0f172a"));
+
+    p.add("GRAY_050", rgb("#f9fafb"));
+    p.add("GRAY_100", rgb("#f3f4f6"));
+    p.add("GRAY_200", rgb("#e5e7eb"));
+    p.add("GRAY_300", rgb("#d1d5db"));
+    p.add("GRAY_400", rgb("#9ca3af"));
+    p.add("GRAY_500", rgb("#6b7280"));
+    p.add("GRAY_600", rgb("#4b5563"));
+    p.add("GRAY_700", rgb("#374151"));
+    p.add("GRAY_800", rgb("#1f2937"));
+    p.add("GRAY_900", rgb("#111827"));
+
+    p.add("ZINC_050", rgb("#fafafa"));
+    p.add("ZINC_100", rgb("#f4f4f5"));
+    p.add("ZINC_200", rgb("#e4e4e7"));
+    p.add("ZINC_300", rgb("#d4d4d8"));
+    p.add("ZINC_400", rgb("#a1a1aa"));
+    p.add("ZINC_500", rgb("#71717a"));
+    p.add("ZINC_600", rgb("#52525b"));
+    p.add("ZINC_700", rgb("#3f3f46"));
+    p.add("ZINC_800", rgb("#27272a"));
+    p.add("ZINC_900", rgb("#18181b"));
+
+    p.add("NEUTRAL_050", rgb("#fafafa"));
+    p.add("NEUTRAL_100", rgb("#f5f5f5"));
+    p.add("NEUTRAL_200", rgb("#e5e5e5"));
+    p.add("NEUTRAL_300", rgb("#d4d4d4"));
+    p.add("NEUTRAL_400", rgb("#a3a3a3"));
+    p.add("NEUTRAL_500", rgb("#737373"));
+    p.add("NEUTRAL_600", rgb("#525252"));
+    p.add("NEUTRAL_700", rgb("#404040"));
+    p.add("NEUTRAL_800", rgb("#262626"));
+    p.add("NEUTRAL_900", rgb("#171717"));
+
+    p.add("STONE_050", rgb("#fafaf9"));
+    p.add("STONE_100", rgb("#f5f5f4"));
+    p.add("STONE_200", rgb("#e7e5e4"));
+    p.add("STONE_300", rgb("#d6d3d1"));
+    p.add("STONE_400", rgb("#a8a29e"));
+    p.add("STONE_500", rgb("#78716c"));
+    p.add("STONE_600", rgb("#57534e"));
+    p.add("STONE_700", rgb("#44403c"));
+    p.add("STONE_800", rgb("#292524"));
+    p.add("STONE_900", rgb("#1c1917"));
+
+    p.add("RED_050", rgb("#fef2f2"));
+    p.add("RED_100", rgb("#fee2e2"));
+    p.add("RED_200", rgb("#fecaca"));
+    p.add("RED_300", rgb("#fca5a5"));
+    p.add("RED_400", rgb("#f87171"));
+    p.add("RED_500", rgb("#ef4444"));
+    p.add("RED_600", rgb("#dc2626"));
+    p.add("RED_700", rgb("#b91c1c"));
+    p.add("RED_800", rgb("#991b1b"));
+    p.add("RED_900", rgb("#7f1d1d"));
+
+    p.add("ORANGE_050", rgb("#fff7ed"));
+    p.add("ORANGE_100", rgb("#ffedd5"));
+    p.add("ORANGE_200", rgb("#fed7aa"));
+    p.add("ORANGE_300", rgb("#fdba74"));
+    p.add("ORANGE_400", rgb("#fb923c"));
+    p.add("ORANGE_500", rgb("#f97316"));
+    p.add("ORANGE_600", rgb("#ea580c"));
+    p.add("ORANGE_700", rgb("#c2410c"));
+    p.add("ORANGE_800", rgb("#9a3412"));
+    p.add("ORANGE_900", rgb("#7c2d12"));
+
+    p.add("AMBER_050", rgb("#fffbeb"));
+    p.add("AMBER_100", rgb("#fef3c7"));
+    p.add("AMBER_200", rgb("#fde68a"));
+    p.add("AMBER_300", rgb("#fcd34d"));
+    p.add("AMBER_400", rgb("#fbbf24"));
+    p.add("AMBER_500", rgb("#f59e0b"));
+    p.add("AMBER_600", rgb("#d97706"));
+    p.add("AMBER_700", rgb("#b45309"));
+    p.add("AMBER_800", rgb("#92400e"));
+    p.add("AMBER_900", rgb("#78350f"));
+
+    p.add("YELLOW_050", rgb("#fefce8"));
+    p.add("YELLOW_100", rgb("#fef9c3"));
+    p.add("YELLOW_200", rgb("#fef08a"));
+    p.add("YELLOW_300", rgb("#fde047"));
+    p.add("YELLOW_400", rgb("#facc15"));
+    p.add("YELLOW_500", rgb("#eab308"));
+    p.add("YELLOW_600", rgb("#ca8a04"));
+    p.add("YELLOW_700", rgb("#a16207"));
+    p.add("YELLOW_800", rgb("#854d0e"));
+    p.add("YELLOW_900", rgb("#713f12"));
+
+    p.add("LIME_050", rgb("#f7fee7"));
+    p.add("LIME_100", rgb("#ecfccb"));
+    p.add("LIME_200", rgb("#d9f99d"));
+    p.add("LIME_300", rgb("#bef264"));
+    p.add("LIME_400", rgb("#a3e635"));
+    p.add("LIME_500", rgb("#84cc16"));
+    p.add("LIME_600", rgb("#65a30d"));
+    p.add("LIME_700", rgb("#4d7c0f"));
+    p.add("LIME_800", rgb("#3f6212"));
+    p.add("LIME_900", rgb("#365314"));
+
+    p.add("GREEN_050", rgb("#f0fdf4"));
+    p.add("GREEN_100", rgb("#dcfce7"));
+    p.add("GREEN_200", rgb("#bbf7d0"));
+    p.add("GREEN_300", rgb("#86efac"));
+    p.add("GREEN_400", rgb("#4ade80"));
+    p.add("GREEN_500", rgb("#22c55e"));
+    p.add("GREEN_600", rgb("#16a34a"));
+    p.add("GREEN_700", rgb("#15803d"));
+    p.add("GREEN_800", rgb("#166534"));
+    p.add("GREEN_900", rgb("#14532d"));
+
+    p.add("EMERALD_050", rgb("#ecfdf5"));
+    p.add("EMERALD_100", rgb("#d1fae5"));
+    p.add("EMERALD_200", rgb("#a7f3d0"));
+    p.add("EMERALD_300", rgb("#6ee7b7"));
+    p.add("EMERALD_400", rgb("#34d399"));
+    p.add("EMERALD_500", rgb("#10b981"));
+    p.add("EMERALD_600", rgb("#059669"));
+    p.add("EMERALD_700", rgb("#047857"));
+    p.add("EMERALD_800", rgb("#065f46"));
+    p.add("EMERALD_900", rgb("#064e3b"));
+
+    p.add("TEAL_050", rgb("#f0fdfa"));
+    p.add("TEAL_100", rgb("#ccfbf1"));
+    p.add("TEAL_200", rgb("#99f6e4"));
+    p.add("TEAL_300", rgb("#5eead4"));
+    p.add("TEAL_400", rgb("#2dd4bf"));
+    p.add("TEAL_500", rgb("#14b8a6"));
+    p.add("TEAL_600", rgb("#0d9488"));
+    p.add("TEAL_700", rgb("#0f766e"));
+    p.add("TEAL_800", rgb("#115e59"));
+    p.add("TEAL_900", rgb("#134e4a"));
+
+    p.add("CYAN_050", rgb("#ecfeff"));
+    p.add("CYAN_100", rgb("#cffafe"));
+    p.add("CYAN_200", rgb("#a5f3fc"));
+    p.add("CYAN_300", rgb("#67e8f9"));
+    p.add("CYAN_400", rgb("#22d3ee"));
+    p.add("CYAN_500", rgb("#06b6d4"));
+    p.add("CYAN_600", rgb("#0891b2"));
+    p.add("CYAN_700", rgb("#0e7490"));
+    p.add("CYAN_800", rgb("#155e75"));
+    p.add("CYAN_900", rgb("#164e63"));
+
+    p.add("SKY_050", rgb("#f0f9ff"));
+    p.add("SKY_100", rgb("#e0f2fe"));
+    p.add("SKY_200", rgb("#bae6fd"));
+    p.add("SKY_300", rgb("#7dd3fc"));
+    p.add("SKY_400", rgb("#38bdf8"));
+    p.add("SKY_500", rgb("#0ea5e9"));
+    p.add("SKY_600", rgb("#0284c7"));
+    p.add("SKY_700", rgb("#0369a1"));
+    p.add("SKY_800", rgb("#075985"));
+    p.add("SKY_900", rgb("#0c4a6e"));
+
+    p.add("BLUE_050", rgb("#eff6ff"));
+    p.add("BLUE_100", rgb("#dbeafe"));
+    p.add("BLUE_200", rgb("#bfdbfe"));
+    p.add("BLUE_300", rgb("#93c5fd"));
+    p.add("BLUE_400", rgb("#60a5fa"));
+    p.add("BLUE_500", rgb("#3b82f6"));
+    p.add("BLUE_600", rgb("#2563eb"));
+    p.add("BLUE_700", rgb("#1d4ed8"));
+    p.add("BLUE_800", rgb("#1e40af"));
+    p.add("BLUE_900", rgb("#1e3a8a"));
+
+    p.add("INDIGO_050", rgb("#eef2ff"));
+    p.add("INDIGO_100", rgb("#e0e7ff"));
+    p.add("INDIGO_200", rgb("#c7d2fe"));
+    p.add("INDIGO_300", rgb("#a5b4fc"));
+    p.add("INDIGO_400", rgb("#818cf8"));
+    p.add("INDIGO_500", rgb("#6366f1"));
+    p.add("INDIGO_600", rgb("#4f46e5"));
+    p.add("INDIGO_700", rgb("#4338ca"));
+    p.add("INDIGO_800", rgb("#3730a3"));
+    p.add("INDIGO_900", rgb("#312e81"));
+
+    p.add("VIOLET_050", rgb("#f5f3ff"));
+    p.add("VIOLET_100", rgb("#ede9fe"));
+    p.add("VIOLET_200", rgb("#ddd6fe"));
+    p.add("VIOLET_300", rgb("#c4b5fd"));
+    p.add("VIOLET_400", rgb("#a78bfa"));
+    p.add("VIOLET_500", rgb("#8b5cf6"));
+    p.add("VIOLET_600", rgb("#7c3aed"));
+    p.add("VIOLET_700", rgb("#6d28d9"));
+    p.add("VIOLET_800", rgb("#5b21b6"));
+    p.add("VIOLET_900", rgb("#4c1d95"));
+
+    p.add("PURPLE_050", rgb("#faf5ff"));
+    p.add("PURPLE_100", rgb("#f3e8ff"));
+    p.add("PURPLE_200", rgb("#e9d5ff"));
+    p.add("PURPLE_300", rgb("#d8b4fe"));
+    p.add("PURPLE_400", rgb("#c084fc"));
+    p.add("PURPLE_500", rgb("#a855f7"));
+    p.add("PURPLE_600", rgb("#9333ea"));
+    p.add("PURPLE_700", rgb("#7e22ce"));
+    p.add("PURPLE_800", rgb("#6b21a8"));
+    p.add("PURPLE_900", rgb("#581c87"));
+
+    p.add("FUCHSIA_050", rgb("#fdf4ff"));
+    p.add("FUCHSIA_100", rgb("#fae8ff"));
+    p.add("FUCHSIA_200", rgb("#f5d0fe"));
+    p.add("FUCHSIA_300", rgb("#f0abfc"));
+    p.add("FUCHSIA_400", rgb("#e879f9"));
+    p.add("FUCHSIA_500", rgb("#d946ef"));
+    p.add("FUCHSIA_600", rgb("#c026d3"));
+    p.add("FUCHSIA_700", rgb("#a21caf"));
+    p.add("FUCHSIA_800", rgb("#86198f"));
+    p.add("FUCHSIA_900", rgb("#701a75"));
+
+    p.add("PINK_050", rgb("#fdf2f8"));
+    p.add("PINK_100", rgb("#fce7f3"));
+    p.add("PINK_200", rgb("#fbcfe8"));
+    p.add("PINK_300", rgb("#f9a8d4"));
+    p.add("PINK_400", rgb("#f472b6"));
+    p.add("PINK_500", rgb("#ec4899"));
+    p.add("PINK_600", rgb("#db2777"));
+    p.add("PINK_700", rgb("#be185d"));
+    p.add("PINK_800", rgb("#9d174d"));
+    p.add("PINK_900", rgb("#831843"));
+
+    p.add("ROSE_050", rgb("#fff1f2"));
+    p.add("ROSE_100", rgb("#ffe4e6"));
+    p.add("ROSE_200", rgb("#fecdd3"));
+    p.add("ROSE_300", rgb("#fda4af"));
+    p.add("ROSE_400", rgb("#fb7185"));
+    p.add("ROSE_500", rgb("#f43f5e"));
+    p.add("ROSE_600", rgb("#e11d48"));
+    p.add("ROSE_700", rgb("#be123c"));
+    p.add("ROSE_800", rgb("#9f1239"));
+    p.add("ROSE_900", rgb("#881337"));
+  }
+
+  private String rgb(String hex) {
+    int r;
+    r = rgb0(hex.charAt(1), hex.charAt(2));
+
+    int g;
+    g = rgb0(hex.charAt(3), hex.charAt(4));
+
+    int b;
+    b = rgb0(hex.charAt(5), hex.charAt(6));
+
+    return "rgb(" + r + " " + g + " " + b + ")";
+  }
+
+  private int rgb0(char h, char l) {
+    int high;
+    high = Character.digit(h, 16);
+
+    int low;
+    low = Character.digit(l, 16);
+
+    return (high << 4) | low;
   }
 
   private void spacing(PropertyClass p) {

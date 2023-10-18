@@ -23,10 +23,7 @@ final class PrefixClassStep extends ThisTemplate {
 
   @Override
   public final void writeTo(Path directory) throws IOException {
-    List<Prefix> prefixes;
-    prefixes = spec.prefixList;
-
-    for (var prefix : prefixes) {
+    for (var prefix : Prefix.values()) {
       this.prefix = prefix;
 
       super.writeTo(directory);
@@ -35,7 +32,7 @@ final class PrefixClassStep extends ThisTemplate {
 
   @Override
   final String contents() {
-    className(prefix.className);
+    className(ClassName.of(CSS_UTIL, prefix.simpleName));
 
     return code."""
     /*

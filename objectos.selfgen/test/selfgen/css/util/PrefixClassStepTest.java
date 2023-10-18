@@ -25,11 +25,11 @@ public class PrefixClassStepTest {
 
         add(p);
 
-        var medium = breakpoint("Medium", 768);
+        var medium = Prefix.MEDIUM;
 
         medium.add(p);
 
-        var large = breakpoint("Large", 1024);
+        var large = Prefix.LARGE;
 
         large.add(p);
       }

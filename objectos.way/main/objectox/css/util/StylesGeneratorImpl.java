@@ -717,7 +717,7 @@ public final class StylesGeneratorImpl implements StylesGenerator {
 
   private void generate0(String prefix, Map<String, Set<String>> properties) {
     switch (prefix) {
-      case "" -> generate1("", properties);
+      case "", "Hover" -> generate1("", properties);
 
       case "Small" -> generate1(Breakpoint.SM, "  ", properties);
 

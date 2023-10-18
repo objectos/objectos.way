@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.Set;
 import objectos.css.util.Display;
+import objectos.css.util.Hover;
 import objectos.css.util.Large;
 import objectos.lang.NoteSink;
 import objectos.lang.TestingNoteSink;
@@ -160,6 +161,34 @@ public class StylesGeneratorImplTest {
         .%s { display: flex }
       }
       """.formatted(Large.Display.FLEX.className())
+    );
+  }
+
+  @Test
+  public void utility03() {
+    // parse phase
+    impl.scan(Utility03.class);
+
+    assertEquals(impl.state, State.STOP);
+
+    Map<String, Map<String, Set<String>>> result;
+    result = impl.utilities;
+
+    assertEquals(result.size(), 1);
+    assertEquals(result.containsKey("Hover"), true);
+
+    Map<String, Set<String>> hover;
+    hover = result.get("Hover");
+
+    assertEquals(hover.size(), 1);
+    assertEquals(hover.get("objectos.css.util.Hover$BackgroundColor"), Set.of("SLATE_100"));
+
+    assertEquals(
+      impl.generate(),
+
+      """
+      .%s:hover { background-color: rgb(241 245 249) }
+      """.formatted(Hover.BackgroundColor.SLATE_100.className())
     );
   }
 

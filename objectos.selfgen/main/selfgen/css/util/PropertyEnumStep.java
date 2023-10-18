@@ -69,7 +69,7 @@ final class PropertyEnumStep extends ThisTemplate {
   }
 
   final String generateProperty() {
-    return property.generate(code);
+    return property.generate(code, SelectorKind.STANDARD);
   }
 
 }

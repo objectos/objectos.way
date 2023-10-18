@@ -37,7 +37,7 @@ public final class Property1 extends PropertyClass {
   }
 
   @Override
-  final String generate(Code code) {
+  final String generate(Code code, SelectorKind selector) {
     return code."""
     public enum \{simpleName} implements \{STYLE_CLASS} {
     \{generatePropertyConstants()}
@@ -66,7 +66,7 @@ public final class Property1 extends PropertyClass {
        */
       @Override
       public final String toString() {
-        return "." + className + " { \{propertyName}: " + value + " }";
+        return \{selector.code} + " { \{propertyName}: " + value + " }";
       }
 
     }""";

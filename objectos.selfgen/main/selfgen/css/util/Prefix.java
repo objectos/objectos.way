@@ -16,55 +16,45 @@
 package selfgen.css.util;
 
 import java.util.ArrayList;
+import java.util.EnumSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import objectos.code.ClassName;
 import objectos.code.Code;
 import objectos.lang.Check;
 
-public sealed abstract class Prefix {
+public enum Prefix {
 
-  public static final class Breakpoint extends Prefix {
-    public final int length;
+  SMALL("Small"),
 
-    private Breakpoint(ClassName className, int length) {
-      super(className);
-      this.length = length;
-    }
-  }
+  MEDIUM("Medium"),
 
-  public static final class Simple extends Prefix {
-    private Simple(ClassName className) {
-      super(className);
-    }
-  }
+  LARGE("Large"),
 
-  final ClassName className;
+  EXTRA("Extra"),
+
+  MAX("Max"),
+
+  HOVER("Hover", SelectorKind.HOVER);
+
+  public static final Set<Prefix> RESPONSIVE = EnumSet.range(SMALL, MAX);
+
+  final String simpleName;
+
+  final SelectorKind selector;
 
   final List<PropertyClass> propertyClassList = new ArrayList<>();
 
-  Prefix(ClassName className) {
-    this.className = className;
+  Prefix(String simpleName) {
+    this(simpleName, SelectorKind.STANDARD);
   }
 
-  public static Breakpoint ofBreakpoint(String simpleName, int length) {
-    Check.notNull(simpleName, "simpleName == null");
-    Check.argument(length >= 0, "Length must not be negative");
+  Prefix(String simpleName, SelectorKind selector) {
+    this.simpleName = simpleName;
 
-    ClassName className;
-    className = ClassName.of(ThisTemplate.CSS_UTIL, simpleName);
-
-    return new Breakpoint(className, length);
-  }
-
-  public static Simple ofSimple(String simpleName) {
-    Check.notNull(simpleName, "simpleName == null");
-
-    ClassName className;
-    className = ClassName.of(ThisTemplate.CSS_UTIL, simpleName);
-
-    return new Simple(className);
+    this.selector = selector;
   }
 
   public final void add(PropertyClass property) {
@@ -73,9 +63,9 @@ public sealed abstract class Prefix {
 
   final String generate(Code code) {
     return code."""
-    public final class \{className.simpleName()} {
+    public final class \{simpleName} {
 
-      private \{className.simpleName()}() {}
+      private \{simpleName}() {}
 
     \{generateProperties(code)}
 
@@ -88,7 +78,7 @@ public sealed abstract class Prefix {
 
     for (var property : propertyClassList) {
       String s;
-      s = property.generate(code);
+      s = property.generate(code, selector);
 
       s = property.javadoc(code) + "\n" + s;
 

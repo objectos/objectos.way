@@ -33,7 +33,7 @@ public sealed abstract class PropertyClass permits Property1, Property2 {
 
   public abstract void add(String name, String value);
 
-  abstract String generate(Code code);
+  abstract String generate(Code code, SelectorKind selector);
 
   abstract String javadoc(Code code);
 

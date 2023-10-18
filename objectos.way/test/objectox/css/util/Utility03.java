@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015-2023 Objectos Software LTDA.
+ * Copyright (C) 2023 Objectos Software LTDA.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,18 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package selfgen.css.util;
+package objectox.css.util;
 
-public enum SelectorKind {
+import objectos.css.util.Hover;
+import objectos.html.HtmlTemplate;
 
-  STANDARD("\".\" + className"),
+public final class Utility03 extends HtmlTemplate {
 
-  HOVER("\".\" + className + \":hover\"");
-
-  public final String code;
-
-  private SelectorKind(String code) {
-    this.code = code;
+  @Override
+  protected void definition() {
+    div(
+      Hover.BackgroundColor.SLATE_100
+    );
   }
 
 }
