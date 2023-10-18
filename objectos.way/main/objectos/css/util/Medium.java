@@ -5806,6 +5806,755 @@ public final class Medium {
   }
 
   /**
+   * Utility classes for the {@code margin} CSS property.
+   */
+  public enum Margin implements StyleClass {
+
+    PX0("0px"),
+
+    PX1("1px"),
+
+    PX2("0.125rem"),
+
+    PX4("0.25rem"),
+
+    PX6("0.375rem"),
+
+    PX8("0.5rem"),
+
+    PX10("0.625rem"),
+
+    PX12("0.75rem"),
+
+    PX14("0.875rem"),
+
+    PX16("1rem"),
+
+    PX20("1.25rem"),
+
+    PX24("1.5rem"),
+
+    PX28("1.75rem"),
+
+    PX32("2rem"),
+
+    PX36("2.25rem"),
+
+    PX40("2.5rem"),
+
+    PX44("2.75rem"),
+
+    PX48("3rem"),
+
+    PX56("3.5rem"),
+
+    PX64("4rem"),
+
+    PX80("5rem"),
+
+    PX96("6rem"),
+
+    PX112("7rem"),
+
+    PX128("8rem"),
+
+    PX144("9rem"),
+
+    PX160("10rem"),
+
+    PX176("11rem"),
+
+    PX192("12rem"),
+
+    PX208("13rem"),
+
+    PX224("14rem"),
+
+    PX240("15rem"),
+
+    PX256("16rem"),
+
+    PX288("18rem"),
+
+    PX320("20rem"),
+
+    PX384("24rem"),
+
+    AUTO("auto");
+
+    private final String className = ClassSelectorSeqId.next();
+
+    private final String value;
+
+    private Margin(String value) {
+      this.value = value;
+    }
+
+    /**
+     * Returns the CSS class name.
+     *
+     * @return the CSS class name
+     */
+    @Override
+    public final String className() {
+      return className;
+    }
+
+    /**
+     * Returns the CSS style rule represented by this utility class.
+     *
+     * @return the CSS style rule
+     */
+    @Override
+    public final String toString() {
+      return "." + className + " { margin: " + value + " }";
+    }
+
+  }
+
+  /**
+   * Utility classes for the {@code margin-top} CSS property.
+   */
+  public enum MarginTop implements StyleClass {
+
+    PX0("0px"),
+
+    PX1("1px"),
+
+    PX2("0.125rem"),
+
+    PX4("0.25rem"),
+
+    PX6("0.375rem"),
+
+    PX8("0.5rem"),
+
+    PX10("0.625rem"),
+
+    PX12("0.75rem"),
+
+    PX14("0.875rem"),
+
+    PX16("1rem"),
+
+    PX20("1.25rem"),
+
+    PX24("1.5rem"),
+
+    PX28("1.75rem"),
+
+    PX32("2rem"),
+
+    PX36("2.25rem"),
+
+    PX40("2.5rem"),
+
+    PX44("2.75rem"),
+
+    PX48("3rem"),
+
+    PX56("3.5rem"),
+
+    PX64("4rem"),
+
+    PX80("5rem"),
+
+    PX96("6rem"),
+
+    PX112("7rem"),
+
+    PX128("8rem"),
+
+    PX144("9rem"),
+
+    PX160("10rem"),
+
+    PX176("11rem"),
+
+    PX192("12rem"),
+
+    PX208("13rem"),
+
+    PX224("14rem"),
+
+    PX240("15rem"),
+
+    PX256("16rem"),
+
+    PX288("18rem"),
+
+    PX320("20rem"),
+
+    PX384("24rem"),
+
+    AUTO("auto");
+
+    private final String className = ClassSelectorSeqId.next();
+
+    private final String value;
+
+    private MarginTop(String value) {
+      this.value = value;
+    }
+
+    /**
+     * Returns the CSS class name.
+     *
+     * @return the CSS class name
+     */
+    @Override
+    public final String className() {
+      return className;
+    }
+
+    /**
+     * Returns the CSS style rule represented by this utility class.
+     *
+     * @return the CSS style rule
+     */
+    @Override
+    public final String toString() {
+      return "." + className + " { margin-top: " + value + " }";
+    }
+
+  }
+
+  /**
+   * Utility classes for the {@code margin-right} CSS property.
+   */
+  public enum MarginRight implements StyleClass {
+
+    PX0("0px"),
+
+    PX1("1px"),
+
+    PX2("0.125rem"),
+
+    PX4("0.25rem"),
+
+    PX6("0.375rem"),
+
+    PX8("0.5rem"),
+
+    PX10("0.625rem"),
+
+    PX12("0.75rem"),
+
+    PX14("0.875rem"),
+
+    PX16("1rem"),
+
+    PX20("1.25rem"),
+
+    PX24("1.5rem"),
+
+    PX28("1.75rem"),
+
+    PX32("2rem"),
+
+    PX36("2.25rem"),
+
+    PX40("2.5rem"),
+
+    PX44("2.75rem"),
+
+    PX48("3rem"),
+
+    PX56("3.5rem"),
+
+    PX64("4rem"),
+
+    PX80("5rem"),
+
+    PX96("6rem"),
+
+    PX112("7rem"),
+
+    PX128("8rem"),
+
+    PX144("9rem"),
+
+    PX160("10rem"),
+
+    PX176("11rem"),
+
+    PX192("12rem"),
+
+    PX208("13rem"),
+
+    PX224("14rem"),
+
+    PX240("15rem"),
+
+    PX256("16rem"),
+
+    PX288("18rem"),
+
+    PX320("20rem"),
+
+    PX384("24rem"),
+
+    AUTO("auto");
+
+    private final String className = ClassSelectorSeqId.next();
+
+    private final String value;
+
+    private MarginRight(String value) {
+      this.value = value;
+    }
+
+    /**
+     * Returns the CSS class name.
+     *
+     * @return the CSS class name
+     */
+    @Override
+    public final String className() {
+      return className;
+    }
+
+    /**
+     * Returns the CSS style rule represented by this utility class.
+     *
+     * @return the CSS style rule
+     */
+    @Override
+    public final String toString() {
+      return "." + className + " { margin-right: " + value + " }";
+    }
+
+  }
+
+  /**
+   * Utility classes for the {@code margin-bottom} CSS property.
+   */
+  public enum MarginBottom implements StyleClass {
+
+    PX0("0px"),
+
+    PX1("1px"),
+
+    PX2("0.125rem"),
+
+    PX4("0.25rem"),
+
+    PX6("0.375rem"),
+
+    PX8("0.5rem"),
+
+    PX10("0.625rem"),
+
+    PX12("0.75rem"),
+
+    PX14("0.875rem"),
+
+    PX16("1rem"),
+
+    PX20("1.25rem"),
+
+    PX24("1.5rem"),
+
+    PX28("1.75rem"),
+
+    PX32("2rem"),
+
+    PX36("2.25rem"),
+
+    PX40("2.5rem"),
+
+    PX44("2.75rem"),
+
+    PX48("3rem"),
+
+    PX56("3.5rem"),
+
+    PX64("4rem"),
+
+    PX80("5rem"),
+
+    PX96("6rem"),
+
+    PX112("7rem"),
+
+    PX128("8rem"),
+
+    PX144("9rem"),
+
+    PX160("10rem"),
+
+    PX176("11rem"),
+
+    PX192("12rem"),
+
+    PX208("13rem"),
+
+    PX224("14rem"),
+
+    PX240("15rem"),
+
+    PX256("16rem"),
+
+    PX288("18rem"),
+
+    PX320("20rem"),
+
+    PX384("24rem"),
+
+    AUTO("auto");
+
+    private final String className = ClassSelectorSeqId.next();
+
+    private final String value;
+
+    private MarginBottom(String value) {
+      this.value = value;
+    }
+
+    /**
+     * Returns the CSS class name.
+     *
+     * @return the CSS class name
+     */
+    @Override
+    public final String className() {
+      return className;
+    }
+
+    /**
+     * Returns the CSS style rule represented by this utility class.
+     *
+     * @return the CSS style rule
+     */
+    @Override
+    public final String toString() {
+      return "." + className + " { margin-bottom: " + value + " }";
+    }
+
+  }
+
+  /**
+   * Utility classes for the {@code margin-left} CSS property.
+   */
+  public enum MarginLeft implements StyleClass {
+
+    PX0("0px"),
+
+    PX1("1px"),
+
+    PX2("0.125rem"),
+
+    PX4("0.25rem"),
+
+    PX6("0.375rem"),
+
+    PX8("0.5rem"),
+
+    PX10("0.625rem"),
+
+    PX12("0.75rem"),
+
+    PX14("0.875rem"),
+
+    PX16("1rem"),
+
+    PX20("1.25rem"),
+
+    PX24("1.5rem"),
+
+    PX28("1.75rem"),
+
+    PX32("2rem"),
+
+    PX36("2.25rem"),
+
+    PX40("2.5rem"),
+
+    PX44("2.75rem"),
+
+    PX48("3rem"),
+
+    PX56("3.5rem"),
+
+    PX64("4rem"),
+
+    PX80("5rem"),
+
+    PX96("6rem"),
+
+    PX112("7rem"),
+
+    PX128("8rem"),
+
+    PX144("9rem"),
+
+    PX160("10rem"),
+
+    PX176("11rem"),
+
+    PX192("12rem"),
+
+    PX208("13rem"),
+
+    PX224("14rem"),
+
+    PX240("15rem"),
+
+    PX256("16rem"),
+
+    PX288("18rem"),
+
+    PX320("20rem"),
+
+    PX384("24rem"),
+
+    AUTO("auto");
+
+    private final String className = ClassSelectorSeqId.next();
+
+    private final String value;
+
+    private MarginLeft(String value) {
+      this.value = value;
+    }
+
+    /**
+     * Returns the CSS class name.
+     *
+     * @return the CSS class name
+     */
+    @Override
+    public final String className() {
+      return className;
+    }
+
+    /**
+     * Returns the CSS style rule represented by this utility class.
+     *
+     * @return the CSS style rule
+     */
+    @Override
+    public final String toString() {
+      return "." + className + " { margin-left: " + value + " }";
+    }
+
+  }
+
+  /**
+   * Utility classes for the {@code margin-right} and {@code margin-left} CSS properties.
+   */
+  public enum MarginX implements StyleClass {
+
+    PX0("0px"),
+
+    PX1("1px"),
+
+    PX2("0.125rem"),
+
+    PX4("0.25rem"),
+
+    PX6("0.375rem"),
+
+    PX8("0.5rem"),
+
+    PX10("0.625rem"),
+
+    PX12("0.75rem"),
+
+    PX14("0.875rem"),
+
+    PX16("1rem"),
+
+    PX20("1.25rem"),
+
+    PX24("1.5rem"),
+
+    PX28("1.75rem"),
+
+    PX32("2rem"),
+
+    PX36("2.25rem"),
+
+    PX40("2.5rem"),
+
+    PX44("2.75rem"),
+
+    PX48("3rem"),
+
+    PX56("3.5rem"),
+
+    PX64("4rem"),
+
+    PX80("5rem"),
+
+    PX96("6rem"),
+
+    PX112("7rem"),
+
+    PX128("8rem"),
+
+    PX144("9rem"),
+
+    PX160("10rem"),
+
+    PX176("11rem"),
+
+    PX192("12rem"),
+
+    PX208("13rem"),
+
+    PX224("14rem"),
+
+    PX240("15rem"),
+
+    PX256("16rem"),
+
+    PX288("18rem"),
+
+    PX320("20rem"),
+
+    PX384("24rem"),
+
+    AUTO("auto");
+
+    private final String className = ClassSelectorSeqId.next();
+
+    private final String value;
+
+    private MarginX(String value) {
+      this.value = value;
+    }
+
+    /**
+     * Returns the CSS class name.
+     *
+     * @return the CSS class name
+     */
+    @Override
+    public final String className() {
+      return className;
+    }
+
+    /**
+     * Returns the CSS style rule represented by this utility class.
+     *
+     * @return the CSS style rule
+     */
+    @Override
+    public final String toString() {
+      return "." + className + " { margin-right: " + value + "; margin-left: " + value + " }";
+    }
+
+  }
+
+  /**
+   * Utility classes for the {@code margin-top} and {@code margin-bottom} CSS properties.
+   */
+  public enum MarginY implements StyleClass {
+
+    PX0("0px"),
+
+    PX1("1px"),
+
+    PX2("0.125rem"),
+
+    PX4("0.25rem"),
+
+    PX6("0.375rem"),
+
+    PX8("0.5rem"),
+
+    PX10("0.625rem"),
+
+    PX12("0.75rem"),
+
+    PX14("0.875rem"),
+
+    PX16("1rem"),
+
+    PX20("1.25rem"),
+
+    PX24("1.5rem"),
+
+    PX28("1.75rem"),
+
+    PX32("2rem"),
+
+    PX36("2.25rem"),
+
+    PX40("2.5rem"),
+
+    PX44("2.75rem"),
+
+    PX48("3rem"),
+
+    PX56("3.5rem"),
+
+    PX64("4rem"),
+
+    PX80("5rem"),
+
+    PX96("6rem"),
+
+    PX112("7rem"),
+
+    PX128("8rem"),
+
+    PX144("9rem"),
+
+    PX160("10rem"),
+
+    PX176("11rem"),
+
+    PX192("12rem"),
+
+    PX208("13rem"),
+
+    PX224("14rem"),
+
+    PX240("15rem"),
+
+    PX256("16rem"),
+
+    PX288("18rem"),
+
+    PX320("20rem"),
+
+    PX384("24rem"),
+
+    AUTO("auto");
+
+    private final String className = ClassSelectorSeqId.next();
+
+    private final String value;
+
+    private MarginY(String value) {
+      this.value = value;
+    }
+
+    /**
+     * Returns the CSS class name.
+     *
+     * @return the CSS class name
+     */
+    @Override
+    public final String className() {
+      return className;
+    }
+
+    /**
+     * Returns the CSS style rule represented by this utility class.
+     *
+     * @return the CSS style rule
+     */
+    @Override
+    public final String toString() {
+      return "." + className + " { margin-top: " + value + "; margin-bottom: " + value + " }";
+    }
+
+  }
+
+  /**
    * Utility classes for the {@code padding} CSS property.
    */
   public enum Padding implements StyleClass {

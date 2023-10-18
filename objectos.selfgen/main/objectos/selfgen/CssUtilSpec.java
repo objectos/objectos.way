@@ -928,26 +928,28 @@ final class CssUtilSpec extends CssUtilSelfGen {
   }
 
   private void margin() {
-    Names names;
-    names = names(
-      name("AUTO", k("auto")),
-      spacing
+    List<PropertyClass> props;
+    props = List.of(
+      new Property1("Margin", "margin"),
+      new Property1("MarginTop", "margin-top"),
+      new Property1("MarginRight", "margin-right"),
+      new Property1("MarginBottom", "margin-bottom"),
+      new Property1("MarginLeft", "margin-left"),
+
+      new Property2("MarginX", "margin-right", "margin-left"),
+      new Property2("MarginY", "margin-top", "margin-bottom")
     );
 
-    for (Prefix prefix : responsive) {
-      generate(prefix, simpleName("Margin"), methods("margin"), names);
+    for (var p : props) {
+      spacing(p);
 
-      generate(prefix, simpleName("MarginX"), methods("marginRight", "marginLeft"), names);
+      p.add("AUTO", "auto");
 
-      generate(prefix, simpleName("MarginY"), methods("marginTop", "marginBottom"), names);
+      add(p);
 
-      generate(prefix, simpleName("MarginTop"), methods("marginTop"), names);
-
-      generate(prefix, simpleName("MarginRight"), methods("marginRight"), names);
-
-      generate(prefix, simpleName("MarginBottom"), methods("marginBottom"), names);
-
-      generate(prefix, simpleName("MarginLeft"), methods("marginLeft"), names);
+      for (Prefix prefix : responsive) {
+        prefix.add(p);
+      }
     }
   }
 
