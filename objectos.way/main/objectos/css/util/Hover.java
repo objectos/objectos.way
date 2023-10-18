@@ -28,6 +28,10 @@ public final class Hover {
    */
   public enum BackgroundColor implements StyleClass {
 
+    INHERIT("inherit"),
+
+    CURRENT("currentColor"),
+
     TRANSPARENT("transparent"),
 
     BLACK("rgb(0 0 0)"),

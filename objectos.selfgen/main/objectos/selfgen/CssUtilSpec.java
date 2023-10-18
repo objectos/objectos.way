@@ -80,6 +80,9 @@ final class CssUtilSpec extends CssUtilSelfGen {
     // B
 
     backgroundColor();
+    borderColor();
+    borderStyle();
+    borderWidth();
 
     // C
 
@@ -513,6 +516,74 @@ final class CssUtilSpec extends CssUtilSelfGen {
     }
 
     Prefix.HOVER.add(p);
+  }
+
+  private void borderColor() {
+    List<PropertyClass> props;
+    props = List.of(
+      new Property1("BorderColor", "border-color"),
+      new Property1("BorderTopColor", "border-top-color"),
+      new Property1("BorderRightColor", "border-right-color"),
+      new Property1("BorderBottomColor", "border-bottom-color"),
+      new Property1("BorderLeftColor", "border-left-color"),
+      new Property2("BorderXColor", "border-right-color", "border-left-color"),
+      new Property2("BorderYColor", "border-top-color", "border-bottom-color")
+    );
+
+    for (var p : props) {
+      colors(p);
+
+      add(p);
+
+      for (Prefix prefix : responsive) {
+        prefix.add(p);
+      }
+    }
+  }
+
+  private void borderStyle() {
+    Property1 p;
+    p = new Property1("BorderStyle", "border-style");
+
+    p.add("SOLID", "solid");
+    p.add("DASHED", "dashed");
+    p.add("DOTTED", "dotted");
+    p.add("DOUBLE", "double");
+    p.add("HIDDEN", "hidden");
+    p.add("NONE", "none");
+
+    add(p);
+
+    for (Prefix prefix : responsive) {
+      prefix.add(p);
+    }
+  }
+
+  private void borderWidth() {
+    List<PropertyClass> props;
+    props = List.of(
+      new Property1("BorderWidth", "border-width"),
+      new Property1("BorderTopWidth", "border-top-width"),
+      new Property1("BorderRightWidth", "border-right-width"),
+      new Property1("BorderBottomWidth", "border-bottom-width"),
+      new Property1("BorderLeftWidth", "border-left-width"),
+      new Property2("BorderXWidth", "border-right-width", "border-left-width"),
+      new Property2("BorderYWidth", "border-top-width", "border-bottom-width")
+    );
+
+    for (var p : props) {
+      p.add("PX0", "0px");
+      p.add("PX1", "1px");
+      p.add("PX2", "2px");
+      p.add("PX4", "4px");
+      p.add("PX8", "8px");
+
+      add(p);
+
+      for (Prefix prefix : responsive) {
+        prefix.add(p);
+      }
+    }
   }
 
   private void color() {
@@ -1101,6 +1172,8 @@ final class CssUtilSpec extends CssUtilSelfGen {
   }
 
   private void colors(PropertyClass p) {
+    p.add("INHERIT", "inherit");
+    p.add("CURRENT", "currentColor");
     p.add("TRANSPARENT", "transparent");
 
     p.add("BLACK", rgb("#000000"));
