@@ -6447,6 +6447,69 @@ public final class Small {
   }
 
   /**
+   * Utility classes for the {@code line-height} CSS property.
+   */
+  public enum LineHeight implements StyleClass {
+
+    NONE("1"),
+
+    TIGHT("1.25"),
+
+    SNUG("1.375"),
+
+    NORMAL("1.5"),
+
+    RELAXED("1.625"),
+
+    LOOSE("2"),
+
+    PX12("0.75rem"),
+
+    PX16("1rem"),
+
+    PX20("1.25rem"),
+
+    PX24("1.5rem"),
+
+    PX28("1.75rem"),
+
+    PX32("2rem"),
+
+    PX36("2.25rem"),
+
+    PX40("2.5rem");
+
+    private final String className = ClassSelectorSeqId.next();
+
+    private final String value;
+
+    private LineHeight(String value) {
+      this.value = value;
+    }
+
+    /**
+     * Returns the CSS class name.
+     *
+     * @return the CSS class name
+     */
+    @Override
+    public final String className() {
+      return className;
+    }
+
+    /**
+     * Returns the CSS style rule represented by this utility class.
+     *
+     * @return the CSS style rule
+     */
+    @Override
+    public final String toString() {
+      return "." + className + " { line-height: " + value + " }";
+    }
+
+  }
+
+  /**
    * Utility classes for the {@code margin} CSS property.
    */
   public enum Margin implements StyleClass {
@@ -7191,6 +7254,51 @@ public final class Small {
     @Override
     public final String toString() {
       return "." + className + " { margin-top: " + value + "; margin-bottom: " + value + " }";
+    }
+
+  }
+
+  /**
+   * Utility classes for the {@code object-fit} CSS property.
+   */
+  public enum ObjectFit implements StyleClass {
+
+    CONTAIN("contain"),
+
+    COVER("cover"),
+
+    FILL("fill"),
+
+    NONE("none"),
+
+    SCALE_DOWN("scale-down");
+
+    private final String className = ClassSelectorSeqId.next();
+
+    private final String value;
+
+    private ObjectFit(String value) {
+      this.value = value;
+    }
+
+    /**
+     * Returns the CSS class name.
+     *
+     * @return the CSS class name
+     */
+    @Override
+    public final String className() {
+      return className;
+    }
+
+    /**
+     * Returns the CSS style rule represented by this utility class.
+     *
+     * @return the CSS style rule
+     */
+    @Override
+    public final String toString() {
+      return "." + className + " { object-fit: " + value + " }";
     }
 
   }
