@@ -15,8 +15,8 @@
  */
 package objectos.js;
 
-import objectos.css.util.ClassSelector;
 import objectos.css.util.IdSelector;
+import objectos.html.tmpl.Api.ExternalAttribute.StyleClass;
 
 public sealed abstract class Command {
 
@@ -51,10 +51,10 @@ public sealed abstract class Command {
   static final class ReplaceClass extends Command {
 
     final IdSelector id;
-    final ClassSelector from;
-    final ClassSelector to;
+    final StyleClass from;
+    final StyleClass to;
 
-    public ReplaceClass(IdSelector id, ClassSelector from, ClassSelector to) {
+    public ReplaceClass(IdSelector id, StyleClass from, StyleClass to) {
       this.id = id;
       this.from = from;
       this.to = to;

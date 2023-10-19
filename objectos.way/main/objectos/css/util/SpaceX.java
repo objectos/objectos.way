@@ -119,7 +119,7 @@ public enum SpaceX implements StyleClass {
    */
   @Override
   public final String toString() {
-    return "." + className + " > :not([hidden)) ~ :not([hidden]) { margin-left: " + value + " }";
+    return "." + className + " > :not([hidden]) ~ :not([hidden]) { margin-left: " + value + " }";
   }
 
 }

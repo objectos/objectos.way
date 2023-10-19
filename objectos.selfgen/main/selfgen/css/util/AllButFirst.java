@@ -64,7 +64,7 @@ public final class AllButFirst extends PropertyClass {
        */
       @Override
       public final String toString() {
-        return \{selector.code} + " > :not([hidden)) ~ :not([hidden]) { \{propertyName}: " + value + " }";
+        return \{selector.code} + " > :not([hidden]) ~ :not([hidden]) { \{propertyName}: " + value + " }";
       }
 
     }""";

@@ -7132,6 +7132,67 @@ public final class Medium {
   }
 
   /**
+   * Utility classes for the {@code opacity} CSS property.
+   */
+  public enum Opacity implements StyleClass {
+
+    P0("0"),
+
+    P5("0.05"),
+
+    P10("0.1"),
+
+    P20("0.2"),
+
+    P30("0.3"),
+
+    P40("0.4"),
+
+    P50("0.5"),
+
+    P60("0.6"),
+
+    P70("0.7"),
+
+    P80("0.8"),
+
+    P90("0.9"),
+
+    P95("0.95"),
+
+    P100("1");
+
+    private final String className = ClassSelectorSeqId.next();
+
+    private final String value;
+
+    private Opacity(String value) {
+      this.value = value;
+    }
+
+    /**
+     * Returns the CSS class name.
+     *
+     * @return the CSS class name
+     */
+    @Override
+    public final String className() {
+      return className;
+    }
+
+    /**
+     * Returns the CSS style rule represented by this utility class.
+     *
+     * @return the CSS style rule
+     */
+    @Override
+    public final String toString() {
+      return "." + className + " { opacity: " + value + " }";
+    }
+
+  }
+
+  /**
    * Utility classes for the {@code padding} CSS property.
    */
   public enum Padding implements StyleClass {
@@ -8011,7 +8072,7 @@ public final class Medium {
      */
     @Override
     public final String toString() {
-      return "." + className + " > :not([hidden)) ~ :not([hidden]) { margin-left: " + value + " }";
+      return "." + className + " > :not([hidden]) ~ :not([hidden]) { margin-left: " + value + " }";
     }
 
   }
@@ -8116,7 +8177,7 @@ public final class Medium {
      */
     @Override
     public final String toString() {
-      return "." + className + " > :not([hidden)) ~ :not([hidden]) { margin-top: " + value + " }";
+      return "." + className + " > :not([hidden]) ~ :not([hidden]) { margin-top: " + value + " }";
     }
 
   }

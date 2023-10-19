@@ -120,6 +120,9 @@ final class CssUtilSpec extends CssUtilSelfGen {
     maxWidth();
     minHeight();
 
+    // O
+    opacity();
+
     // P
 
     padding();
@@ -239,6 +242,8 @@ final class CssUtilSpec extends CssUtilSelfGen {
       for (Prefix prefix : responsive) {
         prefix.add(p);
       }
+
+      Prefix.HOVER.add(p);
     }
   }
 
@@ -710,6 +715,31 @@ final class CssUtilSpec extends CssUtilSelfGen {
 
     for (Prefix prefix : responsive) {
       generate(prefix, simpleName("MinHeight"), methods("minHeight"), names);
+    }
+  }
+
+  private void opacity() {
+    Property1 p;
+    p = new Property1("Opacity", "opacity");
+
+    p.add("P0", "0");
+    p.add("P5", "0.05");
+    p.add("P10", "0.1");
+    p.add("P20", "0.2");
+    p.add("P30", "0.3");
+    p.add("P40", "0.4");
+    p.add("P50", "0.5");
+    p.add("P60", "0.6");
+    p.add("P70", "0.7");
+    p.add("P80", "0.8");
+    p.add("P90", "0.9");
+    p.add("P95", "0.95");
+    p.add("P100", "1");
+
+    add(p);
+
+    for (Prefix prefix : responsive) {
+      prefix.add(p);
     }
   }
 
