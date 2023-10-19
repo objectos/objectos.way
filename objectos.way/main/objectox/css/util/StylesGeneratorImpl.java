@@ -19,6 +19,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import objectos.css.util.Breakpoint;
@@ -683,6 +684,10 @@ public final class StylesGeneratorImpl implements StylesGenerator {
     return bytes[bytesIndex++];
   }
 
+  private static final List<String> PREFIXES = List.of(
+    "", "Small", "Medium", "Large", "Extra", "Max", "Hover"
+  );
+
   @Override
   public final String generate() {
     if (utilities == null) {
@@ -695,12 +700,13 @@ public final class StylesGeneratorImpl implements StylesGenerator {
 
     out = new StringBuilder();
 
-    for (var entry : utilities.entrySet()) {
-      String prefix;
-      prefix = entry.getKey();
-
+    for (var prefix : PREFIXES) {
       Map<String, Set<String>> values;
-      values = entry.getValue();
+      values = utilities.get(prefix);
+
+      if (values == null) {
+        continue;
+      }
 
       generate0(prefix, values);
     }

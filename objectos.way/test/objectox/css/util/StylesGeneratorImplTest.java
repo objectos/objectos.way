@@ -192,4 +192,34 @@ public class StylesGeneratorImplTest {
     );
   }
 
+  @Test(enabled = false)
+  public void utility04() {
+    // parse phase
+    impl.scan(Utility04.class);
+
+    assertEquals(
+      impl.generate(),
+
+      """
+      .aaag { color: rgb(241 245 249) }
+      @media (min-width: 640px) {
+        .aahi { color: rgb(226 232 240) }
+      }
+      @media (min-width: 768px) {
+        .aaok { color: rgb(203 213 225) }
+      }
+      @media (min-width: 1024px) {
+        .aavm { color: rgb(148 163 184) }
+      }
+      @media (min-width: 1280px) {
+        .aa2o { color: rgb(100 116 139) }
+      }
+      @media (min-width: 1536px) {
+        .abdq { color: rgb(71 85 105) }
+      }
+      .abks:hover { color: rgb(51 65 85) }
+      """.formatted(Hover.BackgroundColor.SLATE_100.className())
+    );
+  }
+
 }
