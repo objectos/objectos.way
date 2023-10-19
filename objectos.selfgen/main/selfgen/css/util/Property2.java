@@ -13,8 +13,6 @@ import objectos.lang.Check;
 
 public final class Property2 extends PropertyClass {
 
-  static record Constant(String name, String value) {}
-
   final String propertyName1;
 
   final String propertyName2;

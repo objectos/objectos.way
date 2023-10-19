@@ -11,13 +11,13 @@ import java.util.stream.Collectors;
 import objectos.code.Code;
 import objectos.lang.Check;
 
-public final class Property1 extends PropertyClass {
+public final class AllButFirst extends PropertyClass {
 
   private final String propertyName;
 
   private final List<Constant> constants = new ArrayList<>();
 
-  public Property1(String simpleName, String propertyName) {
+  public AllButFirst(String simpleName, String propertyName) {
     super(simpleName);
 
     this.propertyName = propertyName;
@@ -64,7 +64,7 @@ public final class Property1 extends PropertyClass {
        */
       @Override
       public final String toString() {
-        return \{selector.code} + " { \{propertyName}: " + value + " }";
+        return \{selector.code} + " > :not([hidden)) ~ :not([hidden]) { \{propertyName}: " + value + " }";
       }
 
     }""";
