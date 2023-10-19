@@ -803,15 +803,20 @@ final class CssUtilSpec extends CssUtilSelfGen {
   }
 
   private void textAlign() {
-    Names names = names(
-      name("LEFT", k("left")),
-      name("CENTER", k("center")),
-      name("RIGHT", k("right")),
-      name("JUSTIFY", k("justify"))
-    );
+    Property1 p;
+    p = new Property1("TextAlign", "text-align");
+
+    p.add("LEFT", "left");
+    p.add("CENTER", "center");
+    p.add("RIGHT", "right");
+    p.add("JUSTIFY", "justify");
+    p.add("START", "start");
+    p.add("END", "end");
+
+    add(p);
 
     for (Prefix prefix : responsive) {
-      generate(prefix, simpleName("TextAlign"), methods("textAlign"), names);
+      prefix.add(p);
     }
   }
 

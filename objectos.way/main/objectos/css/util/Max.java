@@ -8247,6 +8247,53 @@ public final class Max {
   }
 
   /**
+   * Utility classes for the {@code text-align} CSS property.
+   */
+  public enum TextAlign implements StyleClass {
+
+    LEFT("left"),
+
+    CENTER("center"),
+
+    RIGHT("right"),
+
+    JUSTIFY("justify"),
+
+    START("start"),
+
+    END("end");
+
+    private final String className = ClassSelectorSeqId.next();
+
+    private final String value;
+
+    private TextAlign(String value) {
+      this.value = value;
+    }
+
+    /**
+     * Returns the CSS class name.
+     *
+     * @return the CSS class name
+     */
+    @Override
+    public final String className() {
+      return className;
+    }
+
+    /**
+     * Returns the CSS style rule represented by this utility class.
+     *
+     * @return the CSS style rule
+     */
+    @Override
+    public final String toString() {
+      return "." + className + " { text-align: " + value + " }";
+    }
+
+  }
+
+  /**
    * Utility classes for the {@code width} CSS property.
    */
   public enum Width implements StyleClass {
