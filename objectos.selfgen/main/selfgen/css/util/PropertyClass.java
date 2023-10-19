@@ -19,7 +19,7 @@ import objectos.code.ClassName;
 import objectos.code.Code;
 import objectos.lang.Check;
 
-public sealed abstract class PropertyClass permits AllButFirst, Property1, Property2 {
+public sealed abstract class PropertyClass permits AllButFirst, Property1, Property2, Property2x2 {
 
   static final ClassName STYLE_CLASS = ThisTemplate.STYLE_CLASS;
 
@@ -31,7 +31,13 @@ public sealed abstract class PropertyClass permits AllButFirst, Property1, Prope
     this.simpleName = Check.notNull(simpleName, "simpleName == null");
   }
 
-  public abstract void add(String name, String value);
+  public void add(String name, String value) {
+    throw new UnsupportedOperationException();
+  }
+
+  public void add(String name, String value1, String value2) {
+    throw new UnsupportedOperationException();
+  }
 
   abstract String generate(Code code, SelectorKind selector);
 

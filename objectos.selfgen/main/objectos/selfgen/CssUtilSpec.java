@@ -48,8 +48,8 @@ import selfgen.css.util.Names;
 import selfgen.css.util.Prefix;
 import selfgen.css.util.Property1;
 import selfgen.css.util.Property2;
+import selfgen.css.util.Property2x2;
 import selfgen.css.util.PropertyClass;
-import selfgen.css.util.Value;
 
 final class CssUtilSpec extends CssUtilSelfGen {
 
@@ -433,28 +433,29 @@ final class CssUtilSpec extends CssUtilSelfGen {
     }
   }
 
-  @SuppressWarnings("unused")
   private void fontSize() {
-    record FontSize(String name, Value fontSize, Value lineHeight) {}
+    Property2x2 p;
+    p = new Property2x2("FontSize", "font-size", "line-height");
 
-    Value one;
-    one = new Value.LiteralInt(1);
+    p.add("XS", "0.75rem", "1rem");
+    p.add("SM", "0.875rem", "1.25rem");
+    p.add("BASE", "1rem", "1.5rem");
+    p.add("LG", "1.125rem", "1.75rem");
+    p.add("XL", "1.25rem", "1.75rem");
+    p.add("XL2", "1.5rem", "2rem");
+    p.add("XL3", "1.875rem", "2.25rem");
+    p.add("XL4", "2.25rem", "2.5rem");
+    p.add("XL5", "3rem", "1");
+    p.add("XL6", "3.75rem", "1");
+    p.add("XL7", "4.5rem", "1");
+    p.add("XL8", "6rem", "1");
+    p.add("XL9", "8rem", "1");
 
-    List<FontSize> values = List.of(
-      new FontSize("X_SMALL", rem(0.75), rem(1)),
-      new FontSize("SMALL", rem(0.875), rem(1.25)),
-      new FontSize("BASE", rem(1), rem(1.5)),
-      new FontSize("LARGE", rem(1.125), rem(1.75)),
-      new FontSize("X_LARGE", rem(1.25), rem(1.75)),
-      new FontSize("X_LARGE2", rem(1.5), rem(2)),
-      new FontSize("X_LARGE3", rem(1.875), rem(2.25)),
-      new FontSize("X_LARGE4", rem(2.25), rem(2.5)),
-      new FontSize("X_LARGE5", rem(3), one),
-      new FontSize("X_LARGE6", rem(3.75), one),
-      new FontSize("X_LARGE7", rem(4.5), one),
-      new FontSize("X_LARGE8", rem(6), one),
-      new FontSize("X_LARGE9", rem(8), one)
-    );
+    add(p);
+
+    for (Prefix prefix : responsive) {
+      prefix.add(p);
+    }
   }
 
   private void fontStyle() {

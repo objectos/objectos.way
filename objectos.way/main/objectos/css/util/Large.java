@@ -5199,6 +5199,70 @@ public final class Large {
   }
 
   /**
+   * Utility classes for the {@code font-size} and {@code line-height} CSS properties.
+   */
+  public enum FontSize implements StyleClass {
+
+    XS("0.75rem", "1rem"),
+
+    SM("0.875rem", "1.25rem"),
+
+    BASE("1rem", "1.5rem"),
+
+    LG("1.125rem", "1.75rem"),
+
+    XL("1.25rem", "1.75rem"),
+
+    XL2("1.5rem", "2rem"),
+
+    XL3("1.875rem", "2.25rem"),
+
+    XL4("2.25rem", "2.5rem"),
+
+    XL5("3rem", "1"),
+
+    XL6("3.75rem", "1"),
+
+    XL7("4.5rem", "1"),
+
+    XL8("6rem", "1"),
+
+    XL9("8rem", "1");
+
+    private final String className = ClassSelectorSeqId.next();
+
+    private final String value1;
+
+    private final String value2;
+
+    private FontSize(String value1, String value2) {
+      this.value1 = value1;
+      this.value2 = value2;
+    }
+
+    /**
+     * Returns the CSS class name.
+     *
+     * @return the CSS class name
+     */
+    @Override
+    public final String className() {
+      return className;
+    }
+
+    /**
+     * Returns the CSS style rule represented by this utility class.
+     *
+     * @return the CSS style rule
+     */
+    @Override
+    public final String toString() {
+      return "." + className + " { font-size: " + value1 + "; line-height: " + value2 + " }";
+    }
+
+  }
+
+  /**
    * Utility classes for the {@code font-style} CSS property.
    */
   public enum FontStyle implements StyleClass {
