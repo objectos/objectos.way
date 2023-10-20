@@ -4049,6 +4049,271 @@ public final class Extra {
   }
 
   /**
+   * Utility classes for the {@code border-radius} CSS property.
+   */
+  public enum BorderRadius implements StyleClass {
+
+    PX0("0px"),
+
+    PX2("0.125rem"),
+
+    PX4("0.25rem"),
+
+    PX6("0.375rem"),
+
+    PX8("0.5rem"),
+
+    PX12("0.75rem"),
+
+    PX16("1rem"),
+
+    PX24("1.5rem"),
+
+    FULL("9999px");
+
+    private final String className = ClassSelectorSeqId.next();
+
+    private final String value;
+
+    private BorderRadius(String value) {
+      this.value = value;
+    }
+
+    /**
+     * Returns the CSS class name.
+     *
+     * @return the CSS class name
+     */
+    @Override
+    public final String className() {
+      return className;
+    }
+
+    /**
+     * Returns the CSS style rule represented by this utility class.
+     *
+     * @return the CSS style rule
+     */
+    @Override
+    public final String toString() {
+      return "." + className + " { border-radius: " + value + " }";
+    }
+
+  }
+
+  /**
+   * Utility classes for the {@code border-top-left-radius} and {@code border-top-right-radius} CSS properties.
+   */
+  public enum BorderTopRadius implements StyleClass {
+
+    PX0("0px"),
+
+    PX2("0.125rem"),
+
+    PX4("0.25rem"),
+
+    PX6("0.375rem"),
+
+    PX8("0.5rem"),
+
+    PX12("0.75rem"),
+
+    PX16("1rem"),
+
+    PX24("1.5rem"),
+
+    FULL("9999px");
+
+    private final String className = ClassSelectorSeqId.next();
+
+    private final String value;
+
+    private BorderTopRadius(String value) {
+      this.value = value;
+    }
+
+    /**
+     * Returns the CSS class name.
+     *
+     * @return the CSS class name
+     */
+    @Override
+    public final String className() {
+      return className;
+    }
+
+    /**
+     * Returns the CSS style rule represented by this utility class.
+     *
+     * @return the CSS style rule
+     */
+    @Override
+    public final String toString() {
+      return "." + className + " { border-top-left-radius: " + value + "; border-top-right-radius: " + value + " }";
+    }
+
+  }
+
+  /**
+   * Utility classes for the {@code border-top-right-radius} and {@code border-bottom-right-radius} CSS properties.
+   */
+  public enum BorderRightRadius implements StyleClass {
+
+    PX0("0px"),
+
+    PX2("0.125rem"),
+
+    PX4("0.25rem"),
+
+    PX6("0.375rem"),
+
+    PX8("0.5rem"),
+
+    PX12("0.75rem"),
+
+    PX16("1rem"),
+
+    PX24("1.5rem"),
+
+    FULL("9999px");
+
+    private final String className = ClassSelectorSeqId.next();
+
+    private final String value;
+
+    private BorderRightRadius(String value) {
+      this.value = value;
+    }
+
+    /**
+     * Returns the CSS class name.
+     *
+     * @return the CSS class name
+     */
+    @Override
+    public final String className() {
+      return className;
+    }
+
+    /**
+     * Returns the CSS style rule represented by this utility class.
+     *
+     * @return the CSS style rule
+     */
+    @Override
+    public final String toString() {
+      return "." + className + " { border-top-right-radius: " + value + "; border-bottom-right-radius: " + value + " }";
+    }
+
+  }
+
+  /**
+   * Utility classes for the {@code border-bottom-left-radius} and {@code border-bottom-right-radius} CSS properties.
+   */
+  public enum BorderBottomRadius implements StyleClass {
+
+    PX0("0px"),
+
+    PX2("0.125rem"),
+
+    PX4("0.25rem"),
+
+    PX6("0.375rem"),
+
+    PX8("0.5rem"),
+
+    PX12("0.75rem"),
+
+    PX16("1rem"),
+
+    PX24("1.5rem"),
+
+    FULL("9999px");
+
+    private final String className = ClassSelectorSeqId.next();
+
+    private final String value;
+
+    private BorderBottomRadius(String value) {
+      this.value = value;
+    }
+
+    /**
+     * Returns the CSS class name.
+     *
+     * @return the CSS class name
+     */
+    @Override
+    public final String className() {
+      return className;
+    }
+
+    /**
+     * Returns the CSS style rule represented by this utility class.
+     *
+     * @return the CSS style rule
+     */
+    @Override
+    public final String toString() {
+      return "." + className + " { border-bottom-left-radius: " + value + "; border-bottom-right-radius: " + value + " }";
+    }
+
+  }
+
+  /**
+   * Utility classes for the {@code border-top-left-radius} and {@code border-bottom-left-radius} CSS properties.
+   */
+  public enum BorderLeftRadius implements StyleClass {
+
+    PX0("0px"),
+
+    PX2("0.125rem"),
+
+    PX4("0.25rem"),
+
+    PX6("0.375rem"),
+
+    PX8("0.5rem"),
+
+    PX12("0.75rem"),
+
+    PX16("1rem"),
+
+    PX24("1.5rem"),
+
+    FULL("9999px");
+
+    private final String className = ClassSelectorSeqId.next();
+
+    private final String value;
+
+    private BorderLeftRadius(String value) {
+      this.value = value;
+    }
+
+    /**
+     * Returns the CSS class name.
+     *
+     * @return the CSS class name
+     */
+    @Override
+    public final String className() {
+      return className;
+    }
+
+    /**
+     * Returns the CSS style rule represented by this utility class.
+     *
+     * @return the CSS style rule
+     */
+    @Override
+    public final String toString() {
+      return "." + className + " { border-top-left-radius: " + value + "; border-bottom-left-radius: " + value + " }";
+    }
+
+  }
+
+  /**
    * Utility classes for the {@code border-style} CSS property.
    */
   public enum BorderStyle implements StyleClass {
@@ -7254,6 +7519,134 @@ public final class Extra {
     @Override
     public final String toString() {
       return "." + className + " { margin-top: " + value + "; margin-bottom: " + value + " }";
+    }
+
+  }
+
+  /**
+   * Utility classes for the {@code max-width} CSS property.
+   */
+  public enum MaxWidth implements StyleClass {
+
+    PX0("0px"),
+
+    NONE("none"),
+
+    PX320("20rem"),
+
+    PX384("24rem"),
+
+    PX448("28rem"),
+
+    PX512("32rem"),
+
+    PX576("36rem"),
+
+    PX672("42rem"),
+
+    PX768("48rem"),
+
+    PX896("56rem"),
+
+    PX1024("64rem"),
+
+    PX1152("72rem"),
+
+    PX1280("80rem"),
+
+    FULL("100%"),
+
+    MIN("min-content"),
+
+    MAX("max-content"),
+
+    FIT("fit-content"),
+
+    PROSE("65ch"),
+
+    SCREEN_SMALL("640px"),
+
+    SCREEN_MEDIUM("768px"),
+
+    SCREEN_LARGE("1024px"),
+
+    SCREEN_EXTRA("1280px"),
+
+    SCREEN_MAX("1536px");
+
+    private final String className = ClassSelectorSeqId.next();
+
+    private final String value;
+
+    private MaxWidth(String value) {
+      this.value = value;
+    }
+
+    /**
+     * Returns the CSS class name.
+     *
+     * @return the CSS class name
+     */
+    @Override
+    public final String className() {
+      return className;
+    }
+
+    /**
+     * Returns the CSS style rule represented by this utility class.
+     *
+     * @return the CSS style rule
+     */
+    @Override
+    public final String toString() {
+      return "." + className + " { max-width: " + value + " }";
+    }
+
+  }
+
+  /**
+   * Utility classes for the {@code min-height} CSS property.
+   */
+  public enum MinHeight implements StyleClass {
+
+    PX0("0px"),
+
+    FULL("100%"),
+
+    SCREEN("100vh"),
+
+    MIN("min-content"),
+
+    MAX("max-content"),
+
+    FIT("fit-content");
+
+    private final String className = ClassSelectorSeqId.next();
+
+    private final String value;
+
+    private MinHeight(String value) {
+      this.value = value;
+    }
+
+    /**
+     * Returns the CSS class name.
+     *
+     * @return the CSS class name
+     */
+    @Override
+    public final String className() {
+      return className;
+    }
+
+    /**
+     * Returns the CSS style rule represented by this utility class.
+     *
+     * @return the CSS style rule
+     */
+    @Override
+    public final String toString() {
+      return "." + className + " { min-height: " + value + " }";
     }
 
   }

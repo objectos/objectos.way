@@ -74,6 +74,7 @@ final class CssUtilSpec extends CssUtilSelfGen {
 
     backgroundColor();
     borderColor();
+    borderRadius();
     borderStyle();
     borderWidth();
 
@@ -245,6 +246,37 @@ final class CssUtilSpec extends CssUtilSelfGen {
       }
 
       Prefix.HOVER.add(p);
+    }
+  }
+
+  private void borderRadius() {
+    // @formatter:off
+    List<PropertyClass> props;
+    props = List.of(
+      new Property1("BorderRadius", "border-radius"),
+      new Property2("BorderTopRadius", "border-top-left-radius", "border-top-right-radius"),
+      new Property2("BorderRightRadius", "border-top-right-radius", "border-bottom-right-radius"),
+      new Property2("BorderBottomRadius", "border-bottom-left-radius", "border-bottom-right-radius"),
+      new Property2("BorderLeftRadius", "border-top-left-radius", "border-bottom-left-radius")
+    );
+    // @formatter:on
+
+    for (PropertyClass p : props) {
+      p.add("PX0", "0px");
+      p.add("PX2", "0.125rem");
+      p.add("PX4", "0.25rem");
+      p.add("PX6", "0.375rem");
+      p.add("PX8", "0.5rem");
+      p.add("PX12", "0.75rem");
+      p.add("PX16", "1rem");
+      p.add("PX24", "1.5rem");
+      p.add("FULL", "9999px");
+
+      add(p);
+
+      for (Prefix prefix : responsive) {
+        prefix.add(p);
+      }
     }
   }
 
@@ -678,48 +710,55 @@ final class CssUtilSpec extends CssUtilSelfGen {
   }
 
   private void maxWidth() {
-    Names names;
-    names = names(
-      name("V0", zero()),
-      name("NONE", k("none")),
-      name("X_SMALL", rem(20)),
-      name("SMALL", rem(24)),
-      name("MEDIUM", rem(28)),
-      name("LARGE", rem(32)),
-      name("X_LARGE", rem(36)),
-      name("X_LARGE2", rem(42)),
-      name("X_LARGE3", rem(48)),
-      name("X_LARGE4", rem(56)),
-      name("X_LARGE5", rem(64)),
-      name("X_LARGE6", rem(72)),
-      name("X_LARGE7", rem(80)),
-      name("FULL", pct(100)),
-      name("MIN", k("minContent")),
-      name("MAX", k("maxContent")),
-      name("FIT", k("fitContent")),
-      name("PROSE", ch(65))
-    //name("SCREEN_SMALL", px(prefixSmall.length)),
-    //name("SCREEN_MEDIUM", px(prefixMedium.length)),
-    //name("SCREEN_LARGE", px(prefixLarge.length)),
-    //name("SCREEN_X_LARGE", px(prefixExtra.length)),
-    //name("SCREEN_X_LARGE2", px(prefixMax.length))
-    );
+    Property1 p;
+    p = new Property1("MaxWidth", "max-width");
+
+    p.add("PX0", "0px");
+    p.add("NONE", "none");
+    p.add("PX320", "20rem");
+    p.add("PX384", "24rem");
+    p.add("PX448", "28rem");
+    p.add("PX512", "32rem");
+    p.add("PX576", "36rem");
+    p.add("PX672", "42rem");
+    p.add("PX768", "48rem");
+    p.add("PX896", "56rem");
+    p.add("PX1024", "64rem");
+    p.add("PX1152", "72rem");
+    p.add("PX1280", "80rem");
+    p.add("FULL", "100%");
+    p.add("MIN", "min-content");
+    p.add("MAX", "max-content");
+    p.add("FIT", "fit-content");
+    p.add("PROSE", "65ch");
+    p.add("SCREEN_SMALL", "640px");
+    p.add("SCREEN_MEDIUM", "768px");
+    p.add("SCREEN_LARGE", "1024px");
+    p.add("SCREEN_EXTRA", "1280px");
+    p.add("SCREEN_MAX", "1536px");
+
+    add(p);
 
     for (Prefix prefix : responsive) {
-      generate(prefix, simpleName("MaxWidth"), methods("maxWidth"), names);
+      prefix.add(p);
     }
   }
 
   private void minHeight() {
-    Names names;
-    names = names(
-      name("V0", zero()),
-      name("FULL", pct(100)),
-      name("SCREEN", vh(100))
-    );
+    Property1 p;
+    p = new Property1("MinHeight", "min-height");
+
+    p.add("PX0", "0px");
+    p.add("FULL", "100%");
+    p.add("SCREEN", "100vh");
+    p.add("MIN", "min-content");
+    p.add("MAX", "max-content");
+    p.add("FIT", "fit-content");
+
+    add(p);
 
     for (Prefix prefix : responsive) {
-      generate(prefix, simpleName("MinHeight"), methods("minHeight"), names);
+      prefix.add(p);
     }
   }
 
