@@ -15,14 +15,14 @@
  */
 package objectox.css.util;
 
-import objectos.css.util.Display;
+import objectos.css.util.All;
 import objectos.html.HtmlTemplate;
 
 public final class Utility01 extends HtmlTemplate {
 
   @Override
   protected void definition() {
-    div(Display.BLOCK);
+    div(All.Display.BLOCK);
   }
 
 }

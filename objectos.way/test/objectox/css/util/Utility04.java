@@ -15,13 +15,13 @@
  */
 package objectox.css.util;
 
+import objectos.css.util.All;
 import objectos.css.util.Extra;
 import objectos.css.util.Hover;
 import objectos.css.util.Large;
 import objectos.css.util.Max;
 import objectos.css.util.Medium;
 import objectos.css.util.Small;
-import objectos.css.util.TextColor;
 import objectos.html.HtmlTemplate;
 
 public final class Utility04 extends HtmlTemplate {
@@ -29,13 +29,13 @@ public final class Utility04 extends HtmlTemplate {
   @Override
   protected void definition() {
     div(
-      TextColor.SLATE_100,
-      Small.TextColor.SLATE_200,
-      Medium.TextColor.SLATE_300,
-      Large.TextColor.SLATE_400,
-      Extra.TextColor.SLATE_500,
-      Max.TextColor.SLATE_600,
-      Hover.TextColor.SLATE_700
+        All.TextColor.SLATE_100,
+        Small.TextColor.SLATE_200,
+        Medium.TextColor.SLATE_300,
+        Large.TextColor.SLATE_400,
+        Extra.TextColor.SLATE_500,
+        Max.TextColor.SLATE_600,
+        Hover.TextColor.SLATE_700
     );
   }
 

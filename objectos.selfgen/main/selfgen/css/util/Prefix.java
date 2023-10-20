@@ -27,6 +27,8 @@ import objectos.lang.Check;
 
 public enum Prefix {
 
+  ALL("All"),
+
   SMALL("Small"),
 
   MEDIUM("Medium"),
@@ -39,7 +41,7 @@ public enum Prefix {
 
   HOVER("Hover", SelectorKind.HOVER);
 
-  public static final Set<Prefix> RESPONSIVE = EnumSet.range(SMALL, MAX);
+  public static final Set<Prefix> RESPONSIVE = EnumSet.range(ALL, MAX);
 
   final String simpleName;
 

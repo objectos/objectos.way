@@ -23,8 +23,6 @@ public class PrefixClassStepTest {
         p.add("FLEX", "flex");
         p.add("INLINE_FLEX", "inline-flex");
 
-        add(p);
-
         var medium = Prefix.MEDIUM;
 
         medium.add(p);
@@ -38,9 +36,9 @@ public class PrefixClassStepTest {
     var result = Util.generate(spec);
 
     assertEquals(
-      result.get("objectos/css/util/Medium.java"),
+        result.get("objectos/css/util/Medium.java"),
 
-      """
+        """
       /*
        * Copyright (C) 2023 Objectos Software LTDA.
        *

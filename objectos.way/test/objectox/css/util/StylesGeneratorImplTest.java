@@ -21,7 +21,7 @@ import static org.testng.Assert.assertNotNull;
 import java.io.IOException;
 import java.util.Map;
 import java.util.Set;
-import objectos.css.util.Display;
+import objectos.css.util.All;
 import objectos.css.util.Hover;
 import objectos.css.util.Large;
 import objectos.lang.NoteSink;
@@ -75,7 +75,7 @@ public class StylesGeneratorImplTest {
     impl.execute();
 
     assertEquals(impl.bytesIndex, 10);
-    assertEquals(impl.constantPoolIndex.length, 36);
+    assertEquals(impl.constantPoolIndex.length, 39);
     assertEquals(impl.iteratorIndex, 1);
     assertEquals(impl.state, State.NEXT_POOL_INDEX);
 
@@ -89,11 +89,11 @@ public class StylesGeneratorImplTest {
     assertEquals(impl.iteratorIndex, 3);
     assertEquals(impl.state, State.NEXT_POOL_INDEX);
 
-    for (int i = 3; i <= 36; i++) {
+    for (int i = 3; i <= 39; i++) {
       impl.execute();
     }
 
-    assertEquals(impl.bytesIndex, 573);
+    assertEquals(impl.bytesIndex, 618);
     assertEquals(impl.iteratorIndex, 1);
     assertEquals(impl.state, State.NEXT_POOL_ENTRY);
 
@@ -107,7 +107,7 @@ public class StylesGeneratorImplTest {
     assertEquals(impl.iteratorIndex, 3);
     assertEquals(impl.state, State.NEXT_POOL_ENTRY);
 
-    for (int i = 3; i <= 36; i++) {
+    for (int i = 3; i <= 39; i++) {
       impl.execute();
     }
 
@@ -117,20 +117,20 @@ public class StylesGeneratorImplTest {
     result = impl.utilities;
 
     assertEquals(result.size(), 1);
-    assertEquals(result.containsKey(""), true);
+    assertEquals(result.containsKey("All"), true);
 
-    Map<String, Set<String>> unprefixed;
-    unprefixed = result.get("");
+    Map<String, Set<String>> all;
+    all = result.get("All");
 
-    assertEquals(unprefixed.size(), 1);
-    assertEquals(unprefixed.get("objectos.css.util.Display"), Set.of("BLOCK"));
+    assertEquals(all.size(), 1);
+    assertEquals(all.get("objectos.css.util.All$Display"), Set.of("BLOCK"));
 
     assertEquals(
-      impl.generate(),
+        impl.generate(),
 
-      """
+        """
       .%s { display: block }
-      """.formatted(Display.BLOCK.className())
+      """.formatted(All.Display.BLOCK.className())
     );
   }
 
@@ -154,9 +154,9 @@ public class StylesGeneratorImplTest {
     assertEquals(large.get("objectos.css.util.Large$Display"), Set.of("FLEX"));
 
     assertEquals(
-      impl.generate(),
+        impl.generate(),
 
-      """
+        """
       @media (min-width: 1024px) {
         .%s { display: flex }
       }
@@ -184,9 +184,9 @@ public class StylesGeneratorImplTest {
     assertEquals(hover.get("objectos.css.util.Hover$BackgroundColor"), Set.of("SLATE_100"));
 
     assertEquals(
-      impl.generate(),
+        impl.generate(),
 
-      """
+        """
       .%s:hover { background-color: rgb(241 245 249) }
       """.formatted(Hover.BackgroundColor.SLATE_100.className())
     );
@@ -198,9 +198,9 @@ public class StylesGeneratorImplTest {
     impl.scan(Utility04.class);
 
     assertEquals(
-      impl.generate(),
+        impl.generate(),
 
-      """
+        """
       .aaag { color: rgb(241 245 249) }
       @media (min-width: 640px) {
         .aahi { color: rgb(226 232 240) }

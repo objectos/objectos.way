@@ -167,8 +167,6 @@ final class CssUtilSpec extends CssUtilSelfGen {
     p.add("BASELINE", "baseline");
     p.add("STRETCH", "stretch");
 
-    add(p);
-
     for (Prefix prefix : responsive) {
       prefix.add(p);
     }
@@ -183,8 +181,6 @@ final class CssUtilSpec extends CssUtilSelfGen {
     p.add("CENTER", "center");
     p.add("BASELINE", "baseline");
     p.add("STRETCH", "stretch");
-
-    add(p);
 
     for (Prefix prefix : responsive) {
       prefix.add(p);
@@ -202,8 +198,6 @@ final class CssUtilSpec extends CssUtilSelfGen {
     p.add("STRETCH", "stretch");
     p.add("BASELINE", "baseline");
 
-    add(p);
-
     for (Prefix prefix : responsive) {
       prefix.add(p);
     }
@@ -215,8 +209,6 @@ final class CssUtilSpec extends CssUtilSelfGen {
 
     colors(p);
 
-    add(p);
-
     for (Prefix prefix : responsive) {
       prefix.add(p);
     }
@@ -227,19 +219,17 @@ final class CssUtilSpec extends CssUtilSelfGen {
   private void borderColor() {
     List<PropertyClass> props;
     props = List.of(
-      new Property1("BorderColor", "border-color"),
-      new Property1("BorderTopColor", "border-top-color"),
-      new Property1("BorderRightColor", "border-right-color"),
-      new Property1("BorderBottomColor", "border-bottom-color"),
-      new Property1("BorderLeftColor", "border-left-color"),
-      new Property2("BorderXColor", "border-right-color", "border-left-color"),
-      new Property2("BorderYColor", "border-top-color", "border-bottom-color")
+        new Property1("BorderColor", "border-color"),
+        new Property1("BorderTopColor", "border-top-color"),
+        new Property1("BorderRightColor", "border-right-color"),
+        new Property1("BorderBottomColor", "border-bottom-color"),
+        new Property1("BorderLeftColor", "border-left-color"),
+        new Property2("BorderXColor", "border-right-color", "border-left-color"),
+        new Property2("BorderYColor", "border-top-color", "border-bottom-color")
     );
 
     for (var p : props) {
       colors(p);
-
-      add(p);
 
       for (Prefix prefix : responsive) {
         prefix.add(p);
@@ -272,8 +262,6 @@ final class CssUtilSpec extends CssUtilSelfGen {
       p.add("PX24", "1.5rem");
       p.add("FULL", "9999px");
 
-      add(p);
-
       for (Prefix prefix : responsive) {
         prefix.add(p);
       }
@@ -291,8 +279,6 @@ final class CssUtilSpec extends CssUtilSelfGen {
     p.add("HIDDEN", "hidden");
     p.add("NONE", "none");
 
-    add(p);
-
     for (Prefix prefix : responsive) {
       prefix.add(p);
     }
@@ -301,13 +287,13 @@ final class CssUtilSpec extends CssUtilSelfGen {
   private void borderWidth() {
     List<PropertyClass> props;
     props = List.of(
-      new Property1("BorderWidth", "border-width"),
-      new Property1("BorderTopWidth", "border-top-width"),
-      new Property1("BorderRightWidth", "border-right-width"),
-      new Property1("BorderBottomWidth", "border-bottom-width"),
-      new Property1("BorderLeftWidth", "border-left-width"),
-      new Property2("BorderXWidth", "border-right-width", "border-left-width"),
-      new Property2("BorderYWidth", "border-top-width", "border-bottom-width")
+        new Property1("BorderWidth", "border-width"),
+        new Property1("BorderTopWidth", "border-top-width"),
+        new Property1("BorderRightWidth", "border-right-width"),
+        new Property1("BorderBottomWidth", "border-bottom-width"),
+        new Property1("BorderLeftWidth", "border-left-width"),
+        new Property2("BorderXWidth", "border-right-width", "border-left-width"),
+        new Property2("BorderYWidth", "border-top-width", "border-bottom-width")
     );
 
     for (var p : props) {
@@ -316,8 +302,6 @@ final class CssUtilSpec extends CssUtilSelfGen {
       p.add("PX2", "2px");
       p.add("PX4", "4px");
       p.add("PX8", "8px");
-
-      add(p);
 
       for (Prefix prefix : responsive) {
         prefix.add(p);
@@ -330,8 +314,6 @@ final class CssUtilSpec extends CssUtilSelfGen {
     p = new Property1("TextColor", "color");
 
     colors(p);
-
-    add(p);
 
     for (Prefix prefix : responsive) {
       prefix.add(p);
@@ -381,8 +363,6 @@ final class CssUtilSpec extends CssUtilSelfGen {
     p.add("ZOOM_IN", "zoom-in");
     p.add("ZOOM_OUT", "zoom-out");
 
-    add(p);
-
     for (Prefix prefix : responsive) {
       prefix.add(p);
     }
@@ -413,8 +393,6 @@ final class CssUtilSpec extends CssUtilSelfGen {
     p.add("TABLE_ROW_GROUP", "table-row-group");
     p.add("TABLE_ROW", "table-row");
 
-    add(p);
-
     for (Prefix prefix : responsive) {
       prefix.add(p);
     }
@@ -428,8 +406,6 @@ final class CssUtilSpec extends CssUtilSelfGen {
     p.add("AUTO", "1 1 auto");
     p.add("INITIAL", "0 1 auto");
     p.add("NONE", "none");
-
-    add(p);
 
     for (Prefix prefix : responsive) {
       prefix.add(p);
@@ -445,8 +421,6 @@ final class CssUtilSpec extends CssUtilSelfGen {
     p.add("COLUMN", "column");
     p.add("COLUMN_REVERSE", "column-reverse");
 
-    add(p);
-
     for (Prefix prefix : responsive) {
       prefix.add(p);
     }
@@ -458,8 +432,6 @@ final class CssUtilSpec extends CssUtilSelfGen {
 
     p.add("V1", "1");
     p.add("V0", "0");
-
-    add(p);
 
     for (Prefix prefix : responsive) {
       prefix.add(p);
@@ -484,8 +456,6 @@ final class CssUtilSpec extends CssUtilSelfGen {
     p.add("XL8", "6rem", "1");
     p.add("XL9", "8rem", "1");
 
-    add(p);
-
     for (Prefix prefix : responsive) {
       prefix.add(p);
     }
@@ -497,8 +467,6 @@ final class CssUtilSpec extends CssUtilSelfGen {
 
     p.add("ITALIC", "italic");
     p.add("NORMAL", "normal");
-
-    add(p);
 
     for (Prefix prefix : responsive) {
       prefix.add(p);
@@ -518,8 +486,6 @@ final class CssUtilSpec extends CssUtilSelfGen {
     p.add("BOLD", "700");
     p.add("EXTRABOLD", "800");
     p.add("BLACK", "900");
-
-    add(p);
 
     for (Prefix prefix : responsive) {
       prefix.add(p);
@@ -554,8 +520,6 @@ final class CssUtilSpec extends CssUtilSelfGen {
     p.add("MAX", "max-content");
     p.add("FIT", "fit-content");
 
-    add(p);
-
     for (Prefix prefix : responsive) {
       prefix.add(p);
     }
@@ -564,14 +528,14 @@ final class CssUtilSpec extends CssUtilSelfGen {
   private void inset() {
     List<PropertyClass> props;
     props = List.of(
-      new Property1("Top", "top"),
-      new Property1("Right", "right"),
-      new Property1("Bottom", "bottom"),
-      new Property1("Left", "left"),
-      new Property1("Inset", "inset"),
+        new Property1("Top", "top"),
+        new Property1("Right", "right"),
+        new Property1("Bottom", "bottom"),
+        new Property1("Left", "left"),
+        new Property1("Inset", "inset"),
 
-      new Property2("InsetX", "left", "right"),
-      new Property2("InsetY", "top", "bottom")
+        new Property2("InsetX", "left", "right"),
+        new Property2("InsetY", "top", "bottom")
     );
 
     for (var p : props) {
@@ -585,8 +549,6 @@ final class CssUtilSpec extends CssUtilSelfGen {
       p.add("QUARTER2", "50%");
       p.add("QUARTER3", "75%");
       p.add("FULL", "100%");
-
-      add(p);
 
       for (Prefix prefix : responsive) {
         prefix.add(p);
@@ -607,8 +569,6 @@ final class CssUtilSpec extends CssUtilSelfGen {
     p.add("EVENLY", "space-evenly");
     p.add("STRETCH", "stretch");
 
-    add(p);
-
     for (Prefix prefix : responsive) {
       prefix.add(p);
     }
@@ -624,8 +584,6 @@ final class CssUtilSpec extends CssUtilSelfGen {
     p.add("WIDE", "0.025em");
     p.add("WIDER", "0.05em");
     p.add("WIDEST", "0.1em");
-
-    add(p);
 
     for (Prefix prefix : responsive) {
       prefix.add(p);
@@ -651,8 +609,6 @@ final class CssUtilSpec extends CssUtilSelfGen {
     p.add("PX36", "2.25rem");
     p.add("PX40", "2.5rem");
 
-    add(p);
-
     for (Prefix prefix : responsive) {
       prefix.add(p);
     }
@@ -661,8 +617,8 @@ final class CssUtilSpec extends CssUtilSelfGen {
   private void listStylePosition() {
     Names names;
     names = names(
-      name("INSIDE", k("inside")),
-      name("OUTSIDE", k("outside"))
+        name("INSIDE", k("inside")),
+        name("OUTSIDE", k("outside"))
     );
 
     for (Prefix prefix : responsive) {
@@ -673,9 +629,9 @@ final class CssUtilSpec extends CssUtilSelfGen {
   private void listStyleType() {
     Names names;
     names = names(
-      name("NONE", k("none")),
-      name("DISC", k("disc")),
-      name("DECIMAL", k("decimal"))
+        name("NONE", k("none")),
+        name("DISC", k("disc")),
+        name("DECIMAL", k("decimal"))
     );
 
     for (Prefix prefix : responsive) {
@@ -686,22 +642,20 @@ final class CssUtilSpec extends CssUtilSelfGen {
   private void margin() {
     List<PropertyClass> props;
     props = List.of(
-      new Property1("Margin", "margin"),
-      new Property1("MarginTop", "margin-top"),
-      new Property1("MarginRight", "margin-right"),
-      new Property1("MarginBottom", "margin-bottom"),
-      new Property1("MarginLeft", "margin-left"),
+        new Property1("Margin", "margin"),
+        new Property1("MarginTop", "margin-top"),
+        new Property1("MarginRight", "margin-right"),
+        new Property1("MarginBottom", "margin-bottom"),
+        new Property1("MarginLeft", "margin-left"),
 
-      new Property2("MarginX", "margin-right", "margin-left"),
-      new Property2("MarginY", "margin-top", "margin-bottom")
+        new Property2("MarginX", "margin-right", "margin-left"),
+        new Property2("MarginY", "margin-top", "margin-bottom")
     );
 
     for (var p : props) {
       spacing(p);
 
       p.add("AUTO", "auto");
-
-      add(p);
 
       for (Prefix prefix : responsive) {
         prefix.add(p);
@@ -737,8 +691,6 @@ final class CssUtilSpec extends CssUtilSelfGen {
     p.add("SCREEN_EXTRA", "1280px");
     p.add("SCREEN_MAX", "1536px");
 
-    add(p);
-
     for (Prefix prefix : responsive) {
       prefix.add(p);
     }
@@ -755,8 +707,6 @@ final class CssUtilSpec extends CssUtilSelfGen {
     p.add("MAX", "max-content");
     p.add("FIT", "fit-content");
 
-    add(p);
-
     for (Prefix prefix : responsive) {
       prefix.add(p);
     }
@@ -771,8 +721,6 @@ final class CssUtilSpec extends CssUtilSelfGen {
     p.add("FILL", "fill");
     p.add("NONE", "none");
     p.add("SCALE_DOWN", "scale-down");
-
-    add(p);
 
     for (Prefix prefix : responsive) {
       prefix.add(p);
@@ -797,8 +745,6 @@ final class CssUtilSpec extends CssUtilSelfGen {
     p.add("P95", "0.95");
     p.add("P100", "1");
 
-    add(p);
-
     for (Prefix prefix : responsive) {
       prefix.add(p);
     }
@@ -807,19 +753,17 @@ final class CssUtilSpec extends CssUtilSelfGen {
   private void padding() {
     List<PropertyClass> props;
     props = List.of(
-      new Property1("Padding", "padding"),
-      new Property1("PaddingTop", "padding-top"),
-      new Property1("PaddingRight", "padding-right"),
-      new Property1("PaddingBottom", "padding-bottom"),
-      new Property1("PaddingLeft", "padding-left"),
-      new Property2("PaddingX", "padding-right", "padding-left"),
-      new Property2("PaddingY", "padding-top", "padding-bottom")
+        new Property1("Padding", "padding"),
+        new Property1("PaddingTop", "padding-top"),
+        new Property1("PaddingRight", "padding-right"),
+        new Property1("PaddingBottom", "padding-bottom"),
+        new Property1("PaddingLeft", "padding-left"),
+        new Property2("PaddingX", "padding-right", "padding-left"),
+        new Property2("PaddingY", "padding-top", "padding-bottom")
     );
 
     for (var p : props) {
       spacing(p);
-
-      add(p);
 
       for (Prefix prefix : responsive) {
         prefix.add(p);
@@ -837,8 +781,6 @@ final class CssUtilSpec extends CssUtilSelfGen {
     p.add("RELATIVE", "relative");
     p.add("STICKY", "sticky");
 
-    add(p);
-
     for (Prefix prefix : responsive) {
       prefix.add(p);
     }
@@ -847,14 +789,12 @@ final class CssUtilSpec extends CssUtilSelfGen {
   private void space() {
     List<PropertyClass> props;
     props = List.of(
-      new AllButFirst("SpaceX", "margin-left"),
-      new AllButFirst("SpaceY", "margin-top")
+        new AllButFirst("SpaceX", "margin-left"),
+        new AllButFirst("SpaceY", "margin-top")
     );
 
     for (var p : props) {
       spacing(p);
-
-      add(p);
 
       for (Prefix prefix : responsive) {
         prefix.add(p);
@@ -873,8 +813,6 @@ final class CssUtilSpec extends CssUtilSelfGen {
     p.add("START", "start");
     p.add("END", "end");
 
-    add(p);
-
     for (Prefix prefix : responsive) {
       prefix.add(p);
     }
@@ -883,10 +821,10 @@ final class CssUtilSpec extends CssUtilSelfGen {
   private void textDecoration() {
     Names names;
     names = names(
-      name("UNDERLINE", k("underline")),
-      name("LINE_THROUGH", k("lineThrough")),
-      name("STRIKE", k("lineThrough")),
-      name("NONE", k("none"))
+        name("UNDERLINE", k("underline")),
+        name("LINE_THROUGH", k("lineThrough")),
+        name("STRIKE", k("lineThrough")),
+        name("NONE", k("none"))
     );
 
     for (Prefix prefix : responsive) {
@@ -899,10 +837,10 @@ final class CssUtilSpec extends CssUtilSelfGen {
   private void textTransform() {
     Names names;
     names = names(
-      name("UPPERCASE", k("uppercase")),
-      name("LOWERCASE", k("lowercase")),
-      name("CAPITALIZE", k("capitalize")),
-      name("NONE", k("none"))
+        name("UPPERCASE", k("uppercase")),
+        name("LOWERCASE", k("lowercase")),
+        name("CAPITALIZE", k("capitalize")),
+        name("NONE", k("none"))
     );
 
     for (Prefix prefix : responsive) {
@@ -913,14 +851,14 @@ final class CssUtilSpec extends CssUtilSelfGen {
   private void verticalAlign() {
     Names names;
     names = names(
-      name("BASELINE", k("baseline")),
-      name("TOP", k("top")),
-      name("MIDDLE", k("middle")),
-      name("BOTTOM", k("bottom")),
-      name("TEXT_TOP", k("textTop")),
-      name("TEXT_BOTTOM", k("textBottom")),
-      name("SUB_ALIGN", k("sub")),
-      name("SUPER_ALIGN", k("super_"))
+        name("BASELINE", k("baseline")),
+        name("TOP", k("top")),
+        name("MIDDLE", k("middle")),
+        name("BOTTOM", k("bottom")),
+        name("TEXT_TOP", k("textTop")),
+        name("TEXT_BOTTOM", k("textBottom")),
+        name("SUB_ALIGN", k("sub")),
+        name("SUPER_ALIGN", k("super_"))
     );
 
     for (Prefix prefix : responsive) {
@@ -967,8 +905,6 @@ final class CssUtilSpec extends CssUtilSelfGen {
     p.add("MAX", "max-content");
     p.add("FIT", "fit-content");
 
-    add(p);
-
     for (Prefix prefix : responsive) {
       prefix.add(p);
     }
@@ -985,8 +921,6 @@ final class CssUtilSpec extends CssUtilSelfGen {
     p.add("V40", "40");
     p.add("V50", "50");
     p.add("AUTO", "auto");
-
-    add(p);
 
     for (Prefix prefix : responsive) {
       prefix.add(p);

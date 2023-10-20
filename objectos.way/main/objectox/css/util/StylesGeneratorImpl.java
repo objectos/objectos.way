@@ -184,7 +184,7 @@ public final class StylesGeneratorImpl implements StylesGenerator {
       case NEXT_POOL_ENTRY -> executeNextPoolEntry();
 
       case STOP -> throw new IllegalStateException(
-        "STOP is a non-executable state"
+          "STOP is a non-executable state"
       );
     };
   }
@@ -468,21 +468,21 @@ public final class StylesGeneratorImpl implements StylesGenerator {
       return State.NEXT_POOL_ENTRY;
     }
 
-    // assume no prefix
-
-    String prefix;
-    prefix = "";
-
-    // it might be an inner type like Max$Display
+    // it must be an inner type like All$Display
 
     int dollarIndex;
     dollarIndex = simpleName.indexOf('$');
 
-    if (dollarIndex > 0) {
-      prefix = simpleName.substring(0, dollarIndex);
+    if (dollarIndex < 0) {
+      // no prefix found
 
-      simpleName = simpleName.substring(dollarIndex + 1);
+      return State.NEXT_POOL_ENTRY;
     }
+
+    String prefix;
+    prefix = simpleName.substring(0, dollarIndex);
+
+    simpleName = simpleName.substring(dollarIndex + 1);
 
     if (utilities == null) {
       utilities = new GrowableMap<>();
@@ -685,7 +685,7 @@ public final class StylesGeneratorImpl implements StylesGenerator {
   }
 
   private static final List<String> PREFIXES = List.of(
-    "", "Small", "Medium", "Large", "Extra", "Max", "Hover"
+      "All", "Small", "Medium", "Large", "Extra", "Max", "Hover"
   );
 
   @Override
@@ -723,7 +723,7 @@ public final class StylesGeneratorImpl implements StylesGenerator {
 
   private void generate0(String prefix, Map<String, Set<String>> properties) {
     switch (prefix) {
-      case "", "Hover" -> generate1("", properties);
+      case "All", "Hover" -> generate1("", properties);
 
       case "Small" -> generate1(Breakpoint.SM, "  ", properties);
 

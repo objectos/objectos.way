@@ -26,8 +26,6 @@ public abstract class CssUtilSelfGen {
 
   final Code code = Code.of();
 
-  final List<PropertyClass> properties = new ArrayList<>();
-
   protected CssUtilSelfGen() {}
 
   public final void execute(String[] args) throws IOException {
@@ -39,15 +37,7 @@ public abstract class CssUtilSelfGen {
 
     compile();
 
-    writeTo(new PropertyEnumStep(this), directory);
-
     writeTo(new PrefixClassStep(this), directory);
-  }
-
-  protected final void add(PropertyClass p) {
-    Check.notNull(p, "p == null");
-
-    properties.add(p);
   }
 
   protected final Value ch(int value) {
