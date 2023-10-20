@@ -22,7 +22,7 @@
 
 GROUP_ID := br.com.objectos
 ARTIFACT_ID := objectos.way
-VERSION := 0.2.0-SNAPSHOT
+VERSION := 0.1.3
 
 ## Deps versions
 
@@ -1188,7 +1188,11 @@ $(WAY_GH_RELEASE_BODY): $(WAY_GH_ISSUES_JSON)
 	echo '## Documentation' >> $(WAY_GH_RELEASE_BODY)
 	echo '' >> $(WAY_GH_RELEASE_BODY)
 	$(call WAY_gh_issues,t:documentation) >> $(WAY_GH_RELEASE_BODY) 
-
+	echo '' >> $(WAY_GH_RELEASE_BODY)
+	echo '## Work' >> $(WAY_GH_RELEASE_BODY)
+	echo '' >> $(WAY_GH_RELEASE_BODY)
+	$(call WAY_gh_issues,t:work) >> $(WAY_GH_RELEASE_BODY) 
+	
 #
 # Targets section
 #
