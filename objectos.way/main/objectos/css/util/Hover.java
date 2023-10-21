@@ -4495,4 +4495,47 @@ public final class Hover {
 
   }
 
+  /**
+   * Utility classes for the {@code text-decoration} CSS property.
+   */
+  public enum TextDecoration implements StyleClass {
+
+    UNDERLINE("underline"),
+
+    OVERLINE("overline"),
+
+    LINE_THROUGH("line-through"),
+
+    NONE("none");
+
+    private final String className = ClassSelectorSeqId.next();
+
+    private final String value;
+
+    private TextDecoration(String value) {
+      this.value = value;
+    }
+
+    /**
+     * Returns the CSS class name.
+     *
+     * @return the CSS class name
+     */
+    @Override
+    public final String className() {
+      return className;
+    }
+
+    /**
+     * Returns the CSS style rule represented by this utility class.
+     *
+     * @return the CSS style rule
+     */
+    @Override
+    public final String toString() {
+      return "." + className + ":hover" + " { text-decoration: " + value + " }";
+    }
+
+  }
+
 }

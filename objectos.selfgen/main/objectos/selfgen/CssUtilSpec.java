@@ -819,32 +819,32 @@ final class CssUtilSpec extends CssUtilSelfGen {
   }
 
   private void textDecoration() {
-    Names names;
-    names = names(
-        name("UNDERLINE", k("underline")),
-        name("LINE_THROUGH", k("lineThrough")),
-        name("STRIKE", k("lineThrough")),
-        name("NONE", k("none"))
-    );
+    Property1 p;
+    p = new Property1("TextDecoration", "text-decoration");
+
+    p.add("UNDERLINE", "underline");
+    p.add("OVERLINE", "overline");
+    p.add("LINE_THROUGH", "line-through");
+    p.add("NONE", "none");
 
     for (Prefix prefix : responsive) {
-      generate(prefix, simpleName("TextDecoration"), methods("textDecoration"), names);
+      prefix.add(p);
     }
 
-    //generateHover(hover, simpleName("TextDecoration"), methods("textDecoration"), names);
+    Prefix.HOVER.add(p);
   }
 
   private void textTransform() {
-    Names names;
-    names = names(
-        name("UPPERCASE", k("uppercase")),
-        name("LOWERCASE", k("lowercase")),
-        name("CAPITALIZE", k("capitalize")),
-        name("NONE", k("none"))
-    );
+    Property1 p;
+    p = new Property1("TextTransform", "text-transform");
+
+    p.add("UPPERCASE", "uppercase");
+    p.add("LOWERCASE", "lowercase");
+    p.add("CAPITALIZE", "capitalize");
+    p.add("NONE", "none");
 
     for (Prefix prefix : responsive) {
-      generate(prefix, simpleName("TextTransform"), methods("textTransform"), names);
+      prefix.add(p);
     }
   }
 

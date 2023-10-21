@@ -8795,6 +8795,92 @@ public final class Max {
   }
 
   /**
+   * Utility classes for the {@code text-decoration} CSS property.
+   */
+  public enum TextDecoration implements StyleClass {
+
+    UNDERLINE("underline"),
+
+    OVERLINE("overline"),
+
+    LINE_THROUGH("line-through"),
+
+    NONE("none");
+
+    private final String className = ClassSelectorSeqId.next();
+
+    private final String value;
+
+    private TextDecoration(String value) {
+      this.value = value;
+    }
+
+    /**
+     * Returns the CSS class name.
+     *
+     * @return the CSS class name
+     */
+    @Override
+    public final String className() {
+      return className;
+    }
+
+    /**
+     * Returns the CSS style rule represented by this utility class.
+     *
+     * @return the CSS style rule
+     */
+    @Override
+    public final String toString() {
+      return "." + className + " { text-decoration: " + value + " }";
+    }
+
+  }
+
+  /**
+   * Utility classes for the {@code text-transform} CSS property.
+   */
+  public enum TextTransform implements StyleClass {
+
+    UPPERCASE("uppercase"),
+
+    LOWERCASE("lowercase"),
+
+    CAPITALIZE("capitalize"),
+
+    NONE("none");
+
+    private final String className = ClassSelectorSeqId.next();
+
+    private final String value;
+
+    private TextTransform(String value) {
+      this.value = value;
+    }
+
+    /**
+     * Returns the CSS class name.
+     *
+     * @return the CSS class name
+     */
+    @Override
+    public final String className() {
+      return className;
+    }
+
+    /**
+     * Returns the CSS style rule represented by this utility class.
+     *
+     * @return the CSS style rule
+     */
+    @Override
+    public final String toString() {
+      return "." + className + " { text-transform: " + value + " }";
+    }
+
+  }
+
+  /**
    * Utility classes for the {@code width} CSS property.
    */
   public enum Width implements StyleClass {
