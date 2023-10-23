@@ -40,7 +40,7 @@ public final class ClassReloaderImpl implements objectos.lang.ClassReloader {
 
   static final Note2<Path, String> WATCH;
 
-  static final Note1<WatchKey> UNKNOWN_WATCH_KEY;
+  static final Note1<WatchKey> WATCH_KEY_IGNORED;
 
   static final Note2<WatchEvent.Kind<?>, Object> FS_EVENT;
 
@@ -52,7 +52,7 @@ public final class ClassReloaderImpl implements objectos.lang.ClassReloader {
 
     WATCH = Note2.info(s, "Watch");
 
-    UNKNOWN_WATCH_KEY = Note1.warn(s, "Unknown watch key");
+    WATCH_KEY_IGNORED = Note1.debug(s, "Watch key ignored");
 
     FS_EVENT = Note2.trace(s, "FS");
 
@@ -161,7 +161,7 @@ public final class ClassReloaderImpl implements objectos.lang.ClassReloader {
       directory = keys.get(key);
 
       if (directory == null) {
-        noteSink.send(UNKNOWN_WATCH_KEY, key);
+        noteSink.send(WATCH_KEY_IGNORED, key);
 
         continue;
       }
