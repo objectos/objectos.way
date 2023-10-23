@@ -19,6 +19,8 @@ import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
 
 import java.lang.reflect.Constructor;
+import java.nio.file.FileSystem;
+import java.nio.file.FileSystems;
 import java.nio.file.Path;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
@@ -35,9 +37,9 @@ public class ClassReloaderTest {
       subjectSrc = Path.of("test", "Subject.java");
 
       helper.writeJavaFile(
-        subjectSrc,
+          subjectSrc,
 
-        """
+          """
         package test;
 
         public class Subject implements java.util.function.Supplier<String> {
@@ -65,9 +67,77 @@ public class ClassReloaderTest {
 
         // second subject version
         helper.writeJavaFile(
+            subjectSrc,
+
+            """
+          package test;
+
+          public class Subject implements java.util.function.Supplier<String> {
+            public String get() {
+              return "B";
+            }
+          }
+          """
+        );
+
+        assertTrue(helper.compile());
+
+        TimeUnit.MILLISECONDS.sleep(5);
+
+        String secondGet;
+        secondGet = newInstanceAndGet(reloader);
+
+        assertEquals(secondGet, "B");
+      }
+    }
+  }
+
+  @Test
+  public void watchService() throws Exception {
+    try (ClassReloaderHelper helper = ClassReloaderHelper.of()) {
+      // first subject version
+      Path subjectSrc;
+      subjectSrc = Path.of("test", "Subject.java");
+
+      helper.writeJavaFile(
           subjectSrc,
 
           """
+        package test;
+
+        public class Subject implements java.util.function.Supplier<String> {
+          public String get() {
+            return "A";
+          }
+        }
+        """
+      );
+
+      assertTrue(helper.compile());
+
+      Builder builder;
+      builder = ClassReloader.builder();
+
+      builder.noteSink(TestingNoteSink.INSTANCE);
+
+      FileSystem fileSystem;
+      fileSystem = FileSystems.getDefault();
+
+      builder.watchService(fileSystem.newWatchService());
+
+      builder.watch(helper.classOutput(), "test");
+
+      try (ClassReloader reloader = builder.of("test.Subject")) {
+        String firstGet;
+        firstGet = newInstanceAndGet(reloader);
+
+        assertEquals(firstGet, "A");
+
+        // second subject version
+        helper.writeJavaFile(
+            subjectSrc,
+
+            """
           package test;
 
           public class Subject implements java.util.function.Supplier<String> {

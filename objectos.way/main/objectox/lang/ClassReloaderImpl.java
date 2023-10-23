@@ -18,8 +18,6 @@ package objectox.lang;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.ClosedWatchServiceException;
-import java.nio.file.FileSystem;
-import java.nio.file.FileSystems;
 import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
@@ -86,10 +84,7 @@ public final class ClassReloaderImpl implements objectos.lang.ClassReloader {
 
     directories = builder.directories.toUnmodifiableList();
 
-    FileSystem fileSystem;
-    fileSystem = FileSystems.getDefault();
-
-    service = fileSystem.newWatchService();
+    service = builder.watchService;
 
     init();
   }
@@ -236,10 +231,10 @@ public final class ClassReloaderImpl implements objectos.lang.ClassReloader {
   private void registerImpl(Path directory) throws IOException {
     WatchKey key;
     key = directory.register(
-      service,
-      StandardWatchEventKinds.ENTRY_CREATE,
-      StandardWatchEventKinds.ENTRY_DELETE,
-      StandardWatchEventKinds.ENTRY_MODIFY
+        service,
+        StandardWatchEventKinds.ENTRY_CREATE,
+        StandardWatchEventKinds.ENTRY_DELETE,
+        StandardWatchEventKinds.ENTRY_MODIFY
     );
 
     keys.put(key, directory);

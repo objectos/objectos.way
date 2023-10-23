@@ -11,6 +11,7 @@ package objectos.lang;
 
 import java.io.IOException;
 import java.nio.file.Path;
+import java.nio.file.WatchService;
 import objectox.lang.ClassReloaderBuilder;
 
 /**
@@ -34,6 +35,16 @@ public sealed interface ClassReloader
      * @return this builder
      */
     Builder noteSink(NoteSink noteSink);
+
+    /**
+     * Sets the {@link WatchService} instance.
+     *
+     * @param service
+     *        the watch service instance
+     * 
+     * @return this builder
+     */
+    Builder watchService(WatchService service);
 
     /**
      * Watches the specified directory for changes and recursively looks for

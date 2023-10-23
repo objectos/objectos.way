@@ -16,8 +16,11 @@
 package objectox.lang;
 
 import java.io.IOException;
+import java.nio.file.FileSystem;
+import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.WatchService;
 import objectos.lang.ClassReloader;
 import objectos.lang.ClassReloader.Builder;
 import objectos.lang.NoOpNoteSink;
@@ -29,6 +32,8 @@ public final class ClassReloaderBuilder implements ClassReloader.Builder {
   final GrowableList<ClassReloaderImpl.Directory> directories = new GrowableList<>();
 
   NoteSink noteSink = NoOpNoteSink.of();
+
+  WatchService watchService;
 
   @Override
   public final Builder watch(Path directory, String prefix) {
@@ -51,8 +56,22 @@ public final class ClassReloaderBuilder implements ClassReloader.Builder {
   }
 
   @Override
+  public final Builder watchService(WatchService service) {
+    watchService = Check.notNull(service, "service == null");
+
+    return this;
+  }
+
+  @Override
   public final ClassReloader of(String binaryName) throws IOException {
     Check.notNull(binaryName, "binaryName == null");
+
+    if (watchService == null) {
+      FileSystem fileSystem;
+      fileSystem = FileSystems.getDefault();
+
+      watchService = fileSystem.newWatchService();
+    }
 
     return new ClassReloaderImpl(binaryName, this);
   }
