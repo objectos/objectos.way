@@ -7758,6 +7758,141 @@ public final class Max {
   }
 
   /**
+   * Utility classes for the {@code overflow} CSS property.
+   */
+  public enum Overflow implements StyleClass {
+
+    AUTO("auto"),
+
+    HIDDEN("hidden"),
+
+    CLIP("clip"),
+
+    VISIBLE("visible"),
+
+    SCROLL("scroll");
+
+    private final String className = ClassSelectorSeqId.next();
+
+    private final String value;
+
+    private Overflow(String value) {
+      this.value = value;
+    }
+
+    /**
+     * Returns the CSS class name.
+     *
+     * @return the CSS class name
+     */
+    @Override
+    public final String className() {
+      return className;
+    }
+
+    /**
+     * Returns the CSS style rule represented by this utility class.
+     *
+     * @return the CSS style rule
+     */
+    @Override
+    public final String toString() {
+      return "." + className + " { overflow: " + value + " }";
+    }
+
+  }
+
+  /**
+   * Utility classes for the {@code overflow-x} CSS property.
+   */
+  public enum OverflowX implements StyleClass {
+
+    AUTO("auto"),
+
+    HIDDEN("hidden"),
+
+    CLIP("clip"),
+
+    VISIBLE("visible"),
+
+    SCROLL("scroll");
+
+    private final String className = ClassSelectorSeqId.next();
+
+    private final String value;
+
+    private OverflowX(String value) {
+      this.value = value;
+    }
+
+    /**
+     * Returns the CSS class name.
+     *
+     * @return the CSS class name
+     */
+    @Override
+    public final String className() {
+      return className;
+    }
+
+    /**
+     * Returns the CSS style rule represented by this utility class.
+     *
+     * @return the CSS style rule
+     */
+    @Override
+    public final String toString() {
+      return "." + className + " { overflow-x: " + value + " }";
+    }
+
+  }
+
+  /**
+   * Utility classes for the {@code overflow-y} CSS property.
+   */
+  public enum OverflowY implements StyleClass {
+
+    AUTO("auto"),
+
+    HIDDEN("hidden"),
+
+    CLIP("clip"),
+
+    VISIBLE("visible"),
+
+    SCROLL("scroll");
+
+    private final String className = ClassSelectorSeqId.next();
+
+    private final String value;
+
+    private OverflowY(String value) {
+      this.value = value;
+    }
+
+    /**
+     * Returns the CSS class name.
+     *
+     * @return the CSS class name
+     */
+    @Override
+    public final String className() {
+      return className;
+    }
+
+    /**
+     * Returns the CSS style rule represented by this utility class.
+     *
+     * @return the CSS style rule
+     */
+    @Override
+    public final String toString() {
+      return "." + className + " { overflow-y: " + value + " }";
+    }
+
+  }
+
+  /**
    * Utility classes for the {@code padding} CSS property.
    */
   public enum Padding implements StyleClass {

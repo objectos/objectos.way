@@ -122,8 +122,10 @@ final class CssUtilSpec extends CssUtilSelfGen {
     minHeight();
 
     // O
+
     objectFit();
     opacity();
+    overflow();
 
     // P
 
@@ -747,6 +749,27 @@ final class CssUtilSpec extends CssUtilSelfGen {
 
     for (Prefix prefix : responsive) {
       prefix.add(p);
+    }
+  }
+
+  private void overflow() {
+    List<PropertyClass> props;
+    props = List.of(
+        new Property1("Overflow", "overflow"),
+        new Property1("OverflowX", "overflow-x"),
+        new Property1("OverflowY", "overflow-y")
+    );
+
+    for (PropertyClass p : props) {
+      p.add("AUTO", "auto");
+      p.add("HIDDEN", "hidden");
+      p.add("CLIP", "clip");
+      p.add("VISIBLE", "visible");
+      p.add("SCROLL", "scroll");
+
+      for (Prefix prefix : responsive) {
+        prefix.add(p);
+      }
     }
   }
 
