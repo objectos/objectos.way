@@ -617,27 +617,27 @@ final class CssUtilSpec extends CssUtilSelfGen {
   }
 
   private void listStylePosition() {
-    Names names;
-    names = names(
-        name("INSIDE", k("inside")),
-        name("OUTSIDE", k("outside"))
-    );
+    Property1 p;
+    p = new Property1("ListStylePosition", "list-style-position");
+
+    p.add("INSIDE", "inside");
+    p.add("OUTSIDE", "outside");
 
     for (Prefix prefix : responsive) {
-      generate(prefix, simpleName("ListStylePosition"), methods("listStylePosition"), names);
+      prefix.add(p);
     }
   }
 
   private void listStyleType() {
-    Names names;
-    names = names(
-        name("NONE", k("none")),
-        name("DISC", k("disc")),
-        name("DECIMAL", k("decimal"))
-    );
+    Property1 p;
+    p = new Property1("ListStyleType", "list-style-type");
+
+    p.add("NONE", "none");
+    p.add("DISC", "disc");
+    p.add("DECIMAL", "decimal");
 
     for (Prefix prefix : responsive) {
-      generate(prefix, simpleName("ListStyleType"), methods("listStyleType"), names);
+      prefix.add(p);
     }
   }
 

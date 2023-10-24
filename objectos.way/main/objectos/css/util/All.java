@@ -6775,6 +6775,86 @@ public final class All {
   }
 
   /**
+   * Utility classes for the {@code list-style-position} CSS property.
+   */
+  public enum ListStylePosition implements StyleClass {
+
+    INSIDE("inside"),
+
+    OUTSIDE("outside");
+
+    private final String className = ClassSelectorSeqId.next();
+
+    private final String value;
+
+    private ListStylePosition(String value) {
+      this.value = value;
+    }
+
+    /**
+     * Returns the CSS class name.
+     *
+     * @return the CSS class name
+     */
+    @Override
+    public final String className() {
+      return className;
+    }
+
+    /**
+     * Returns the CSS style rule represented by this utility class.
+     *
+     * @return the CSS style rule
+     */
+    @Override
+    public final String toString() {
+      return "." + className + " { list-style-position: " + value + " }";
+    }
+
+  }
+
+  /**
+   * Utility classes for the {@code list-style-type} CSS property.
+   */
+  public enum ListStyleType implements StyleClass {
+
+    NONE("none"),
+
+    DISC("disc"),
+
+    DECIMAL("decimal");
+
+    private final String className = ClassSelectorSeqId.next();
+
+    private final String value;
+
+    private ListStyleType(String value) {
+      this.value = value;
+    }
+
+    /**
+     * Returns the CSS class name.
+     *
+     * @return the CSS class name
+     */
+    @Override
+    public final String className() {
+      return className;
+    }
+
+    /**
+     * Returns the CSS style rule represented by this utility class.
+     *
+     * @return the CSS style rule
+     */
+    @Override
+    public final String toString() {
+      return "." + className + " { list-style-type: " + value + " }";
+    }
+
+  }
+
+  /**
    * Utility classes for the {@code margin} CSS property.
    */
   public enum Margin implements StyleClass {
