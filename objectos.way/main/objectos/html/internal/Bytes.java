@@ -40,12 +40,13 @@ public final class Bytes {
   }
 
   public static int decodeVarInt(byte int0, byte int1) {
-    int value;
-    value = int0 & VARINT_MAX1;
+    int b0;
+    b0 = int0 & VARINT_MAX1;
 
-    value |= int1 << 7;
+    int b1;
+    b1 = toInt(int1, 7);
 
-    return value;
+    return b0 | b1;
   }
 
   public static byte encodeInt0(int value) {
@@ -83,7 +84,7 @@ public final class Bytes {
     }
 
     throw new IllegalArgumentException(
-      "HtmlTemplate is too large"
+        "HtmlTemplate is too large"
     );
   }
 
@@ -122,7 +123,7 @@ public final class Bytes {
     }
 
     throw new IllegalArgumentException(
-      "HtmlTemplate is too large"
+        "HtmlTemplate is too large"
     );
   }
 

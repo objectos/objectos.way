@@ -49,16 +49,16 @@ class HtmlCompiler01 extends HtmlTemplateApi {
     object = objectAdd(value);
 
     mainAdd(
-      ByteProto.AMBIGUOUS1,
+        ByteProto.AMBIGUOUS1,
 
-      // name
-      Bytes.encodeInt0(ordinal),
+        // name
+        Bytes.encodeInt0(ordinal),
 
-      // value
-      Bytes.encodeInt0(object),
-      Bytes.encodeInt1(object),
+        // value
+        Bytes.encodeInt0(object),
+        Bytes.encodeInt1(object),
 
-      ByteProto.INTERNAL5
+        ByteProto.INTERNAL5
     );
   }
 
@@ -68,12 +68,12 @@ class HtmlCompiler01 extends HtmlTemplateApi {
     ordinal = name.getCode();
 
     mainAdd(
-      ByteProto.ATTRIBUTE0,
+        ByteProto.ATTRIBUTE0,
 
-      // name
-      Bytes.encodeInt0(ordinal),
+        // name
+        Bytes.encodeInt0(ordinal),
 
-      ByteProto.INTERNAL3
+        ByteProto.INTERNAL3
     );
   }
 
@@ -86,16 +86,16 @@ class HtmlCompiler01 extends HtmlTemplateApi {
     object = objectAdd(value);
 
     mainAdd(
-      ByteProto.ATTRIBUTE1,
+        ByteProto.ATTRIBUTE1,
 
-      // name
-      Bytes.encodeInt0(ordinal),
+        // name
+        Bytes.encodeInt0(ordinal),
 
-      // value
-      Bytes.encodeInt0(object),
-      Bytes.encodeInt1(object),
+        // value
+        Bytes.encodeInt0(object),
+        Bytes.encodeInt1(object),
 
-      ByteProto.INTERNAL5
+        ByteProto.INTERNAL5
     );
   }
 
@@ -125,15 +125,15 @@ class HtmlCompiler01 extends HtmlTemplateApi {
     commonBegin();
 
     mainAdd(
-      ByteProto.ELEMENT,
+        ByteProto.ELEMENT,
 
-      // length takes 2 bytes
-      ByteProto.NULL,
-      ByteProto.NULL,
+        // length takes 2 bytes
+        ByteProto.NULL,
+        ByteProto.NULL,
 
-      ByteProto.STANDARD_NAME,
+        ByteProto.STANDARD_NAME,
 
-      Bytes.encodeName(name)
+        Bytes.encodeName(name)
     );
   }
 
@@ -214,7 +214,7 @@ class HtmlCompiler01 extends HtmlTemplateApi {
 
               default -> {
                 throw new UnsupportedOperationException(
-                  "Implement me :: proto=" + proto
+                    "Implement me :: proto=" + proto
                 );
               }
             }
@@ -222,7 +222,7 @@ class HtmlCompiler01 extends HtmlTemplateApi {
         }
 
         default -> throw new UnsupportedOperationException(
-          "Implement me :: mark=" + mark
+            "Implement me :: mark=" + mark
         );
       }
     }
@@ -290,7 +290,7 @@ class HtmlCompiler01 extends HtmlTemplateApi {
         case ByteProto.INTERNAL5 -> mainContents -= 5 - 2;
 
         default -> throw new UnsupportedOperationException(
-          "Implement me :: proto=" + proto
+            "Implement me :: proto=" + proto
         );
       }
 
@@ -302,10 +302,10 @@ class HtmlCompiler01 extends HtmlTemplateApi {
       index = externalValue(ext.id());
 
       auxAdd(
-        ByteProto.ATTRIBUTE_ID,
+          ByteProto.ATTRIBUTE_ID,
 
-        Bytes.encodeInt0(index),
-        Bytes.encodeInt1(index)
+          Bytes.encodeInt0(index),
+          Bytes.encodeInt1(index)
       );
     }
 
@@ -314,10 +314,10 @@ class HtmlCompiler01 extends HtmlTemplateApi {
       index = externalValue(ext.className());
 
       auxAdd(
-        ByteProto.ATTRIBUTE_CLASS,
+          ByteProto.ATTRIBUTE_CLASS,
 
-        Bytes.encodeInt0(index),
-        Bytes.encodeInt1(index)
+          Bytes.encodeInt0(index),
+          Bytes.encodeInt1(index)
       );
     }
 
@@ -327,7 +327,7 @@ class HtmlCompiler01 extends HtmlTemplateApi {
 
     else {
       throw new UnsupportedOperationException(
-        "Implement me :: type=" + value.getClass()
+          "Implement me :: type=" + value.getClass()
       );
     }
   }
@@ -337,11 +337,11 @@ class HtmlCompiler01 extends HtmlTemplateApi {
     commonBegin();
 
     mainAdd(
-      ByteProto.FLATTEN,
+        ByteProto.FLATTEN,
 
-      // length takes 2 bytes
-      ByteProto.NULL,
-      ByteProto.NULL
+        // length takes 2 bytes
+        ByteProto.NULL,
+        ByteProto.NULL
     );
   }
 
@@ -361,13 +361,13 @@ class HtmlCompiler01 extends HtmlTemplateApi {
     object = objectAdd(value);
 
     mainAdd(
-      ByteProto.RAW,
+        ByteProto.RAW,
 
-      // value
-      Bytes.encodeInt0(object),
-      Bytes.encodeInt1(object),
+        // value
+        Bytes.encodeInt0(object),
+        Bytes.encodeInt1(object),
 
-      ByteProto.INTERNAL4
+        ByteProto.INTERNAL4
     );
   }
 
@@ -377,13 +377,13 @@ class HtmlCompiler01 extends HtmlTemplateApi {
     object = objectAdd(value);
 
     mainAdd(
-      ByteProto.TEXT,
+        ByteProto.TEXT,
 
-      // value
-      Bytes.encodeInt0(object),
-      Bytes.encodeInt1(object),
+        // value
+        Bytes.encodeInt0(object),
+        Bytes.encodeInt1(object),
 
-      ByteProto.INTERNAL4
+        ByteProto.INTERNAL4
     );
   }
 
@@ -564,7 +564,7 @@ class HtmlCompiler01 extends HtmlTemplateApi {
 
         default -> {
           throw new UnsupportedOperationException(
-            "Implement me :: proto=" + proto
+              "Implement me :: proto=" + proto
           );
         }
       }
@@ -618,7 +618,7 @@ class HtmlCompiler01 extends HtmlTemplateApi {
 
         default -> {
           throw new UnsupportedOperationException(
-            "Implement me :: proto=" + proto
+              "Implement me :: proto=" + proto
           );
         }
       }
@@ -743,11 +743,11 @@ class HtmlCompiler01 extends HtmlTemplateApi {
     startIndex = mainIndex;
 
     mainAdd(
-      ByteProto.FRAGMENT,
+        ByteProto.FRAGMENT,
 
-      // length takes 2 bytes
-      ByteProto.NULL,
-      ByteProto.NULL
+        // length takes 2 bytes
+        ByteProto.NULL,
+        ByteProto.NULL
     );
 
     return startIndex;
