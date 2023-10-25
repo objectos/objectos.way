@@ -16,7 +16,6 @@
 package objectos.html.internal;
 
 import objectos.html.tmpl.Api;
-import objectos.html.tmpl.FragmentLambda;
 import objectos.util.ByteArrays;
 import objectos.util.ObjectArrays;
 
@@ -346,16 +345,6 @@ class HtmlCompiler01 extends HtmlTemplateApi {
   }
 
   @Override
-  public final void fragment(FragmentLambda action) {
-    int startIndex;
-    startIndex = fragmentBegin();
-
-    action.execute();
-
-    fragmentEnd(startIndex);
-  }
-
-  @Override
   public final void raw(String value) {
     int object;
     object = objectAdd(value);
@@ -607,6 +596,8 @@ class HtmlCompiler01 extends HtmlTemplateApi {
           break loop;
         }
 
+        case ByteProto.FRAGMENT -> index = encodeFragment(index);
+
         case ByteProto.MARKED -> index = encodeMarked(index);
 
         case ByteProto.MARKED4 -> index += 4;
@@ -736,7 +727,8 @@ class HtmlCompiler01 extends HtmlTemplateApi {
     return objectAdd(result);
   }
 
-  private int fragmentBegin() {
+  @Override
+  public final int fragmentBegin() {
     // we mark:
     // 1) the start of the contents of the current declaration
     int startIndex;
@@ -753,7 +745,8 @@ class HtmlCompiler01 extends HtmlTemplateApi {
     return startIndex;
   }
 
-  private void fragmentEnd(int startIndex) {
+  @Override
+  public final void fragmentEnd(int startIndex) {
     // ensure main can hold 4 more elements
     main = ByteArrays.growIfNecessary(main, mainIndex + 3);
 

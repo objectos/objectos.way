@@ -17,7 +17,6 @@ package objectos.html.internal;
 
 import objectos.html.Html;
 import objectos.html.tmpl.Api;
-import objectos.html.tmpl.FragmentLambda;
 
 public abstract class HtmlTemplateApi {
 
@@ -47,7 +46,9 @@ public abstract class HtmlTemplateApi {
 
   public abstract void flattenBegin();
 
-  public abstract void fragment(FragmentLambda action);
+  public abstract int fragmentBegin();
+
+  public abstract void fragmentEnd(int index);
 
   public void optimize() {
     throw new UnsupportedOperationException();

@@ -42,15 +42,15 @@ public class HtmlCompiler02Test {
     result = compiler.compile();
 
     test(
-      result,
+        result,
 
-      ByteCode.START_TAG,
-      (byte) StandardElementName.HTML.ordinal(),
-      ByteCode.GT,
+        ByteCode.START_TAG,
+        (byte) StandardElementName.HTML.ordinal(),
+        ByteCode.GT,
 
-      ByteCode.END_TAG,
-      (byte) StandardElementName.HTML.ordinal(),
-      ByteCode.NL
+        ByteCode.END_TAG,
+        (byte) StandardElementName.HTML.ordinal(),
+        ByteCode.NL
     );
   }
 
@@ -77,23 +77,23 @@ public class HtmlCompiler02Test {
     result = compiler.compile();
 
     test(
-      result,
+        result,
 
-      ByteCode.START_TAG,
-      (byte) StandardElementName.HTML.ordinal(),
-      ByteCode.SPACE,
-      ByteCode.ATTR_NAME,
-      (byte) StandardAttributeName.LANG.ordinal(),
-      ByteCode.ATTR_VALUE_START,
-      ByteCode.ATTR_VALUE,
-      Bytes.encodeInt0(0),
-      Bytes.encodeInt1(0),
-      ByteCode.ATTR_VALUE_END,
-      ByteCode.GT,
+        ByteCode.START_TAG,
+        (byte) StandardElementName.HTML.ordinal(),
+        ByteCode.SPACE,
+        ByteCode.ATTR_NAME,
+        (byte) StandardAttributeName.LANG.ordinal(),
+        ByteCode.ATTR_VALUE_START,
+        ByteCode.ATTR_VALUE,
+        Bytes.encodeInt0(0),
+        Bytes.encodeInt1(0),
+        ByteCode.ATTR_VALUE_END,
+        ByteCode.GT,
 
-      ByteCode.END_TAG,
-      (byte) StandardElementName.HTML.ordinal(),
-      ByteCode.NL
+        ByteCode.END_TAG,
+        (byte) StandardElementName.HTML.ordinal(),
+        ByteCode.NL
     );
   }
 
@@ -122,31 +122,31 @@ public class HtmlCompiler02Test {
     result = compiler.compile();
 
     test(
-      result,
+        result,
 
-      ByteCode.START_TAG,
-      (byte) StandardElementName.HTML.ordinal(),
-      ByteCode.SPACE,
-      ByteCode.ATTR_NAME,
-      (byte) StandardAttributeName.CLASS.ordinal(),
-      ByteCode.ATTR_VALUE_START,
-      ByteCode.ATTR_VALUE,
-      Bytes.encodeInt0(0),
-      Bytes.encodeInt1(0),
-      ByteCode.ATTR_VALUE_END,
-      ByteCode.SPACE,
-      ByteCode.ATTR_NAME,
-      (byte) StandardAttributeName.LANG.ordinal(),
-      ByteCode.ATTR_VALUE_START,
-      ByteCode.ATTR_VALUE,
-      Bytes.encodeInt0(1),
-      Bytes.encodeInt1(1),
-      ByteCode.ATTR_VALUE_END,
-      ByteCode.GT,
+        ByteCode.START_TAG,
+        (byte) StandardElementName.HTML.ordinal(),
+        ByteCode.SPACE,
+        ByteCode.ATTR_NAME,
+        (byte) StandardAttributeName.CLASS.ordinal(),
+        ByteCode.ATTR_VALUE_START,
+        ByteCode.ATTR_VALUE,
+        Bytes.encodeInt0(0),
+        Bytes.encodeInt1(0),
+        ByteCode.ATTR_VALUE_END,
+        ByteCode.SPACE,
+        ByteCode.ATTR_NAME,
+        (byte) StandardAttributeName.LANG.ordinal(),
+        ByteCode.ATTR_VALUE_START,
+        ByteCode.ATTR_VALUE,
+        Bytes.encodeInt0(1),
+        Bytes.encodeInt1(1),
+        ByteCode.ATTR_VALUE_END,
+        ByteCode.GT,
 
-      ByteCode.END_TAG,
-      (byte) StandardElementName.HTML.ordinal(),
-      ByteCode.NL
+        ByteCode.END_TAG,
+        (byte) StandardElementName.HTML.ordinal(),
+        ByteCode.NL
     );
   }
 
@@ -174,26 +174,26 @@ public class HtmlCompiler02Test {
     result = compiler.compile();
 
     test(
-      result,
+        result,
 
-      ByteCode.START_TAG,
-      (byte) StandardElementName.HTML.ordinal(),
-      ByteCode.GT,
+        ByteCode.START_TAG,
+        (byte) StandardElementName.HTML.ordinal(),
+        ByteCode.GT,
 
-      ByteCode.NL_OPTIONAL,
-      ByteCode.TAB, (byte) 1,
+        ByteCode.NL_OPTIONAL,
+        ByteCode.TAB, (byte) 1,
 
-      ByteCode.START_TAG,
-      (byte) StandardElementName.HEAD.ordinal(),
-      ByteCode.GT,
-      ByteCode.END_TAG,
-      (byte) StandardElementName.HEAD.ordinal(),
+        ByteCode.START_TAG,
+        (byte) StandardElementName.HEAD.ordinal(),
+        ByteCode.GT,
+        ByteCode.END_TAG,
+        (byte) StandardElementName.HEAD.ordinal(),
 
-      ByteCode.NL_OPTIONAL,
+        ByteCode.NL_OPTIONAL,
 
-      ByteCode.END_TAG,
-      (byte) StandardElementName.HTML.ordinal(),
-      ByteCode.NL
+        ByteCode.END_TAG,
+        (byte) StandardElementName.HTML.ordinal(),
+        ByteCode.NL
     );
   }
 
@@ -220,18 +220,18 @@ public class HtmlCompiler02Test {
     result = compiler.compile();
 
     test(
-      result,
+        result,
 
-      ByteCode.DOCTYPE,
-      ByteCode.NL_OPTIONAL,
+        ByteCode.DOCTYPE,
+        ByteCode.NL_OPTIONAL,
 
-      ByteCode.START_TAG,
-      (byte) StandardElementName.HTML.ordinal(),
-      ByteCode.GT,
+        ByteCode.START_TAG,
+        (byte) StandardElementName.HTML.ordinal(),
+        ByteCode.GT,
 
-      ByteCode.END_TAG,
-      (byte) StandardElementName.HTML.ordinal(),
-      ByteCode.NL
+        ByteCode.END_TAG,
+        (byte) StandardElementName.HTML.ordinal(),
+        ByteCode.NL
     );
   }
 
@@ -253,7 +253,11 @@ public class HtmlCompiler02Test {
       compiler.elementEnd();
     };
 
-    compiler.fragment(action);
+    int index = compiler.fragmentBegin();
+
+    action.execute();
+
+    compiler.fragmentEnd(index);
 
     compiler.elementBegin(StandardElementName.HEAD);
     compiler.elementValue(InternalInstruction.INSTANCE);
@@ -271,45 +275,45 @@ public class HtmlCompiler02Test {
     result = compiler.compile();
 
     test(
-      result,
+        result,
 
-      ByteCode.START_TAG,
-      (byte) StandardElementName.HTML.ordinal(),
-      ByteCode.GT,
+        ByteCode.START_TAG,
+        (byte) StandardElementName.HTML.ordinal(),
+        ByteCode.GT,
 
-      ByteCode.NL_OPTIONAL,
-      ByteCode.TAB, (byte) 1,
+        ByteCode.NL_OPTIONAL,
+        ByteCode.TAB, (byte) 1,
 
-      ByteCode.START_TAG,
-      (byte) StandardElementName.HEAD.ordinal(),
-      ByteCode.GT,
+        ByteCode.START_TAG,
+        (byte) StandardElementName.HEAD.ordinal(),
+        ByteCode.GT,
 
-      ByteCode.NL_OPTIONAL,
-      ByteCode.TAB, (byte) 2,
+        ByteCode.NL_OPTIONAL,
+        ByteCode.TAB, (byte) 2,
 
-      ByteCode.START_TAG,
-      (byte) StandardElementName.META.ordinal(),
-      ByteCode.SPACE,
-      ByteCode.ATTR_NAME,
-      (byte) StandardAttributeName.CHARSET.ordinal(),
-      ByteCode.ATTR_VALUE_START,
-      ByteCode.ATTR_VALUE,
-      Bytes.encodeInt0(0),
-      Bytes.encodeInt1(0),
-      ByteCode.ATTR_VALUE_END,
-      ByteCode.GT,
+        ByteCode.START_TAG,
+        (byte) StandardElementName.META.ordinal(),
+        ByteCode.SPACE,
+        ByteCode.ATTR_NAME,
+        (byte) StandardAttributeName.CHARSET.ordinal(),
+        ByteCode.ATTR_VALUE_START,
+        ByteCode.ATTR_VALUE,
+        Bytes.encodeInt0(0),
+        Bytes.encodeInt1(0),
+        ByteCode.ATTR_VALUE_END,
+        ByteCode.GT,
 
-      ByteCode.NL_OPTIONAL,
-      ByteCode.TAB, (byte) 1,
+        ByteCode.NL_OPTIONAL,
+        ByteCode.TAB, (byte) 1,
 
-      ByteCode.END_TAG,
-      (byte) StandardElementName.HEAD.ordinal(),
+        ByteCode.END_TAG,
+        (byte) StandardElementName.HEAD.ordinal(),
 
-      ByteCode.NL_OPTIONAL,
+        ByteCode.NL_OPTIONAL,
 
-      ByteCode.END_TAG,
-      (byte) StandardElementName.HTML.ordinal(),
-      ByteCode.NL
+        ByteCode.END_TAG,
+        (byte) StandardElementName.HTML.ordinal(),
+        ByteCode.NL
     );
   }
 
@@ -345,43 +349,43 @@ public class HtmlCompiler02Test {
     result = compiler.compile();
 
     test(
-      result,
+        result,
 
-      ByteCode.START_TAG,
-      (byte) StandardElementName.HTML.ordinal(),
-      ByteCode.SPACE,
-      ByteCode.ATTR_NAME,
-      (byte) StandardAttributeName.ID.ordinal(),
-      ByteCode.ATTR_VALUE_START,
-      ByteCode.ATTR_VALUE,
-      Bytes.encodeInt0(1),
-      Bytes.encodeInt1(1),
-      ByteCode.ATTR_VALUE_END,
-      ByteCode.GT,
+        ByteCode.START_TAG,
+        (byte) StandardElementName.HTML.ordinal(),
+        ByteCode.SPACE,
+        ByteCode.ATTR_NAME,
+        (byte) StandardAttributeName.ID.ordinal(),
+        ByteCode.ATTR_VALUE_START,
+        ByteCode.ATTR_VALUE,
+        Bytes.encodeInt0(1),
+        Bytes.encodeInt1(1),
+        ByteCode.ATTR_VALUE_END,
+        ByteCode.GT,
 
-      ByteCode.NL_OPTIONAL,
-      ByteCode.TAB, (byte) 1,
+        ByteCode.NL_OPTIONAL,
+        ByteCode.TAB, (byte) 1,
 
-      ByteCode.START_TAG,
-      (byte) StandardElementName.BODY.ordinal(),
-      ByteCode.SPACE,
-      ByteCode.ATTR_NAME,
-      (byte) StandardAttributeName.ID.ordinal(),
-      ByteCode.ATTR_VALUE_START,
-      ByteCode.ATTR_VALUE,
-      Bytes.encodeInt0(0),
-      Bytes.encodeInt1(0),
-      ByteCode.ATTR_VALUE_END,
-      ByteCode.GT,
+        ByteCode.START_TAG,
+        (byte) StandardElementName.BODY.ordinal(),
+        ByteCode.SPACE,
+        ByteCode.ATTR_NAME,
+        (byte) StandardAttributeName.ID.ordinal(),
+        ByteCode.ATTR_VALUE_START,
+        ByteCode.ATTR_VALUE,
+        Bytes.encodeInt0(0),
+        Bytes.encodeInt1(0),
+        ByteCode.ATTR_VALUE_END,
+        ByteCode.GT,
 
-      ByteCode.END_TAG,
-      (byte) StandardElementName.BODY.ordinal(),
+        ByteCode.END_TAG,
+        (byte) StandardElementName.BODY.ordinal(),
 
-      ByteCode.NL_OPTIONAL,
+        ByteCode.NL_OPTIONAL,
 
-      ByteCode.END_TAG,
-      (byte) StandardElementName.HTML.ordinal(),
-      ByteCode.NL
+        ByteCode.END_TAG,
+        (byte) StandardElementName.HTML.ordinal(),
+        ByteCode.NL
     );
   }
 
@@ -416,42 +420,42 @@ public class HtmlCompiler02Test {
     result = compiler.compile();
 
     test(
-      result,
+        result,
 
-      ByteCode.START_TAG,
-      (byte) StandardElementName.HTML.ordinal(),
-      ByteCode.GT,
+        ByteCode.START_TAG,
+        (byte) StandardElementName.HTML.ordinal(),
+        ByteCode.GT,
 
-      ByteCode.NL_OPTIONAL,
-      ByteCode.TAB, (byte) 1,
+        ByteCode.NL_OPTIONAL,
+        ByteCode.TAB, (byte) 1,
 
-      ByteCode.START_TAG,
-      (byte) StandardElementName.BODY.ordinal(),
-      ByteCode.GT,
+        ByteCode.START_TAG,
+        (byte) StandardElementName.BODY.ordinal(),
+        ByteCode.GT,
 
-      ByteCode.NL_OPTIONAL,
-      ByteCode.TAB, (byte) 2,
+        ByteCode.NL_OPTIONAL,
+        ByteCode.TAB, (byte) 2,
 
-      ByteCode.START_TAG,
-      (byte) StandardElementName.P.ordinal(),
-      ByteCode.GT,
-      ByteCode.TEXT,
-      Bytes.encodeInt0(0),
-      Bytes.encodeInt1(0),
-      ByteCode.END_TAG,
-      (byte) StandardElementName.P.ordinal(),
+        ByteCode.START_TAG,
+        (byte) StandardElementName.P.ordinal(),
+        ByteCode.GT,
+        ByteCode.TEXT,
+        Bytes.encodeInt0(0),
+        Bytes.encodeInt1(0),
+        ByteCode.END_TAG,
+        (byte) StandardElementName.P.ordinal(),
 
-      ByteCode.NL_OPTIONAL,
-      ByteCode.TAB, (byte) 1,
+        ByteCode.NL_OPTIONAL,
+        ByteCode.TAB, (byte) 1,
 
-      ByteCode.END_TAG,
-      (byte) StandardElementName.BODY.ordinal(),
+        ByteCode.END_TAG,
+        (byte) StandardElementName.BODY.ordinal(),
 
-      ByteCode.NL_OPTIONAL,
+        ByteCode.NL_OPTIONAL,
 
-      ByteCode.END_TAG,
-      (byte) StandardElementName.HTML.ordinal(),
-      ByteCode.NL
+        ByteCode.END_TAG,
+        (byte) StandardElementName.HTML.ordinal(),
+        ByteCode.NL
     );
   }
 
@@ -489,59 +493,59 @@ public class HtmlCompiler02Test {
     result = compiler.compile();
 
     test(
-      result,
+        result,
 
-      ByteCode.START_TAG,
-      (byte) StandardElementName.HTML.ordinal(),
-      ByteCode.GT,
+        ByteCode.START_TAG,
+        (byte) StandardElementName.HTML.ordinal(),
+        ByteCode.GT,
 
-      ByteCode.NL_OPTIONAL,
-      ByteCode.TAB, (byte) 1,
+        ByteCode.NL_OPTIONAL,
+        ByteCode.TAB, (byte) 1,
 
-      ByteCode.START_TAG,
-      (byte) StandardElementName.HEAD.ordinal(),
-      ByteCode.GT,
+        ByteCode.START_TAG,
+        (byte) StandardElementName.HEAD.ordinal(),
+        ByteCode.GT,
 
-      ByteCode.NL_OPTIONAL,
-      ByteCode.TAB, (byte) 2,
+        ByteCode.NL_OPTIONAL,
+        ByteCode.TAB, (byte) 2,
 
-      ByteCode.START_TAG,
-      (byte) StandardElementName.TITLE.ordinal(),
-      ByteCode.GT,
-      ByteCode.TEXT,
-      Bytes.encodeInt0(0),
-      Bytes.encodeInt1(0),
-      ByteCode.END_TAG,
-      (byte) StandardElementName.TITLE.ordinal(),
+        ByteCode.START_TAG,
+        (byte) StandardElementName.TITLE.ordinal(),
+        ByteCode.GT,
+        ByteCode.TEXT,
+        Bytes.encodeInt0(0),
+        Bytes.encodeInt1(0),
+        ByteCode.END_TAG,
+        (byte) StandardElementName.TITLE.ordinal(),
 
-      ByteCode.NL_OPTIONAL,
-      ByteCode.TAB, (byte) 1,
-      ByteCode.END_TAG,
-      (byte) StandardElementName.HEAD.ordinal(),
+        ByteCode.NL_OPTIONAL,
+        ByteCode.TAB, (byte) 1,
+        ByteCode.END_TAG,
+        (byte) StandardElementName.HEAD.ordinal(),
 
-      ByteCode.NL_OPTIONAL,
-      ByteCode.TAB, (byte) 1,
+        ByteCode.NL_OPTIONAL,
+        ByteCode.TAB, (byte) 1,
 
-      ByteCode.START_TAG,
-      (byte) StandardElementName.BODY.ordinal(),
-      ByteCode.SPACE,
-      ByteCode.ATTR_NAME,
-      (byte) StandardAttributeName.TITLE.ordinal(),
-      ByteCode.ATTR_VALUE_START,
-      ByteCode.ATTR_VALUE,
-      Bytes.encodeInt0(1),
-      Bytes.encodeInt1(1),
-      ByteCode.ATTR_VALUE_END,
-      ByteCode.GT,
+        ByteCode.START_TAG,
+        (byte) StandardElementName.BODY.ordinal(),
+        ByteCode.SPACE,
+        ByteCode.ATTR_NAME,
+        (byte) StandardAttributeName.TITLE.ordinal(),
+        ByteCode.ATTR_VALUE_START,
+        ByteCode.ATTR_VALUE,
+        Bytes.encodeInt0(1),
+        Bytes.encodeInt1(1),
+        ByteCode.ATTR_VALUE_END,
+        ByteCode.GT,
 
-      ByteCode.END_TAG,
-      (byte) StandardElementName.BODY.ordinal(),
+        ByteCode.END_TAG,
+        (byte) StandardElementName.BODY.ordinal(),
 
-      ByteCode.NL_OPTIONAL,
+        ByteCode.NL_OPTIONAL,
 
-      ByteCode.END_TAG,
-      (byte) StandardElementName.HTML.ordinal(),
-      ByteCode.NL
+        ByteCode.END_TAG,
+        (byte) StandardElementName.HTML.ordinal(),
+        ByteCode.NL
     );
   }
 
@@ -571,25 +575,25 @@ public class HtmlCompiler02Test {
     result = compiler.compile();
 
     test(
-      result,
+        result,
 
-      ByteCode.START_TAG,
-      (byte) StandardElementName.BODY.ordinal(),
-      ByteCode.GT,
+        ByteCode.START_TAG,
+        (byte) StandardElementName.BODY.ordinal(),
+        ByteCode.GT,
 
-      ByteCode.NL_OPTIONAL,
-      ByteCode.TAB, (byte) 1,
+        ByteCode.NL_OPTIONAL,
+        ByteCode.TAB, (byte) 1,
 
-      ByteCode.START_TAG,
-      (byte) StandardElementName.NAV.ordinal(),
-      ByteCode.GT,
-      ByteCode.END_TAG,
-      (byte) StandardElementName.NAV.ordinal(),
+        ByteCode.START_TAG,
+        (byte) StandardElementName.NAV.ordinal(),
+        ByteCode.GT,
+        ByteCode.END_TAG,
+        (byte) StandardElementName.NAV.ordinal(),
 
-      ByteCode.NL_OPTIONAL,
-      ByteCode.END_TAG,
-      (byte) StandardElementName.BODY.ordinal(),
-      ByteCode.NL
+        ByteCode.NL_OPTIONAL,
+        ByteCode.END_TAG,
+        (byte) StandardElementName.BODY.ordinal(),
+        ByteCode.NL
     );
   }
 
@@ -616,23 +620,23 @@ public class HtmlCompiler02Test {
     result = compiler.compile();
 
     test(
-      result,
+        result,
 
-      ByteCode.START_TAG,
-      (byte) StandardElementName.STYLE.ordinal(),
-      ByteCode.GT,
+        ByteCode.START_TAG,
+        (byte) StandardElementName.STYLE.ordinal(),
+        ByteCode.GT,
 
-      ByteCode.NL_OPTIONAL,
-      ByteCode.TAB_BLOCK, (byte) 1,
+        ByteCode.NL_OPTIONAL,
+        ByteCode.TAB_BLOCK, (byte) 1,
 
-      ByteCode.TEXT_STYLE,
-      Bytes.encodeInt0(0),
-      Bytes.encodeInt1(0),
+        ByteCode.TEXT_STYLE,
+        Bytes.encodeInt0(0),
+        Bytes.encodeInt1(0),
 
-      ByteCode.NL_OPTIONAL,
-      ByteCode.END_TAG,
-      (byte) StandardElementName.STYLE.ordinal(),
-      ByteCode.NL
+        ByteCode.NL_OPTIONAL,
+        ByteCode.END_TAG,
+        (byte) StandardElementName.STYLE.ordinal(),
+        ByteCode.NL
     );
   }
 
@@ -663,27 +667,27 @@ public class HtmlCompiler02Test {
     result = compiler.compile();
 
     test(
-      result,
+        result,
 
-      ByteCode.START_TAG,
-      (byte) StandardElementName.INPUT.ordinal(),
+        ByteCode.START_TAG,
+        (byte) StandardElementName.INPUT.ordinal(),
 
-      ByteCode.SPACE,
-      ByteCode.ATTR_NAME,
-      (byte) StandardAttributeName.TYPE.ordinal(),
-      ByteCode.ATTR_VALUE_START,
-      ByteCode.ATTR_VALUE,
-      Bytes.encodeInt0(0),
-      Bytes.encodeInt1(0),
-      ByteCode.ATTR_VALUE_END,
+        ByteCode.SPACE,
+        ByteCode.ATTR_NAME,
+        (byte) StandardAttributeName.TYPE.ordinal(),
+        ByteCode.ATTR_VALUE_START,
+        ByteCode.ATTR_VALUE,
+        Bytes.encodeInt0(0),
+        Bytes.encodeInt1(0),
+        ByteCode.ATTR_VALUE_END,
 
-      ByteCode.SPACE,
-      ByteCode.ATTR_NAME,
-      (byte) StandardAttributeName.REQUIRED.ordinal(),
+        ByteCode.SPACE,
+        ByteCode.ATTR_NAME,
+        (byte) StandardAttributeName.REQUIRED.ordinal(),
 
-      ByteCode.GT,
+        ByteCode.GT,
 
-      ByteCode.NL
+        ByteCode.NL
     );
   }
 
@@ -721,26 +725,26 @@ public class HtmlCompiler02Test {
     result = compiler.compile();
 
     test(
-      result,
+        result,
 
-      ByteCode.START_TAG,
-      (byte) StandardElementName.FORM.ordinal(),
-      ByteCode.GT,
+        ByteCode.START_TAG,
+        (byte) StandardElementName.FORM.ordinal(),
+        ByteCode.GT,
 
-      ByteCode.START_TAG,
-      (byte) StandardElementName.LABEL.ordinal(),
-      ByteCode.GT,
-      ByteCode.END_TAG,
-      (byte) StandardElementName.LABEL.ordinal(),
+        ByteCode.START_TAG,
+        (byte) StandardElementName.LABEL.ordinal(),
+        ByteCode.GT,
+        ByteCode.END_TAG,
+        (byte) StandardElementName.LABEL.ordinal(),
 
-      ByteCode.START_TAG,
-      (byte) StandardElementName.INPUT.ordinal(),
-      ByteCode.GT,
+        ByteCode.START_TAG,
+        (byte) StandardElementName.INPUT.ordinal(),
+        ByteCode.GT,
 
-      ByteCode.END_TAG,
-      (byte) StandardElementName.FORM.ordinal(),
+        ByteCode.END_TAG,
+        (byte) StandardElementName.FORM.ordinal(),
 
-      ByteCode.NL
+        ByteCode.NL
     );
   }
 
@@ -750,7 +754,7 @@ public class HtmlCompiler02Test {
 
     if (result.length != expected.length) {
       throw new AssertionError(
-        """
+          """
         Arrays don't have the same size.
 
         Actual  : %s
@@ -761,7 +765,7 @@ public class HtmlCompiler02Test {
 
     if (!Arrays.equals(result, expected)) {
       throw new AssertionError(
-        """
+          """
         Arrays don't have the same content.
 
         Actual  : %s

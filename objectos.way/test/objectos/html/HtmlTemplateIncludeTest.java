@@ -29,22 +29,22 @@ public class HtmlTemplateIncludeTest {
   """)
   public void testCase01() {
     test(
-      new HtmlTemplate() {
-        @Override
-        protected final void definition() {
-          html(
-            head(
-              include(this::head0)
-            )
-          );
-        }
+        new HtmlTemplate() {
+          @Override
+          protected final void definition() {
+            html(
+                head(
+                    include(this::head0)
+                )
+            );
+          }
 
-        private void head0() {
-          meta(charset("utf-8"));
-        }
-      },
+          private void head0() {
+            meta(charset("utf-8"));
+          }
+        },
 
-      """
+        """
       <html>
       <head>
       <meta charset="utf-8">
@@ -61,28 +61,28 @@ public class HtmlTemplateIncludeTest {
   """)
   public void testCase02() {
     test(
-      new HtmlTemplate() {
-        @Override
-        protected final void definition() {
-          html(
-            body(
-              include(this::body0)
-            )
-          );
-        }
+        new HtmlTemplate() {
+          @Override
+          protected final void definition() {
+            html(
+                body(
+                    include(this::body0)
+                )
+            );
+          }
 
-        private void body0() {
-          header(
-            include(this::hero)
-          );
-        }
+          private void body0() {
+            header(
+                include(this::hero)
+            );
+          }
 
-        private void hero() {
-          nav();
-        }
-      },
+          private void hero() {
+            nav();
+          }
+        },
 
-      """
+        """
       <html>
       <body>
       <header>
@@ -101,29 +101,29 @@ public class HtmlTemplateIncludeTest {
   """)
   public void testCase03() {
     test(
-      new HtmlTemplate() {
-        @Override
-        protected final void definition() {
-          html(
-            include(this::head0),
-            include(this::body0)
-          );
-        }
+        new HtmlTemplate() {
+          @Override
+          protected final void definition() {
+            html(
+                include(this::head0),
+                include(this::body0)
+            );
+          }
 
-        private void head0() {
-          head(
-            meta()
-          );
-        }
+          private void head0() {
+            head(
+                meta()
+            );
+          }
 
-        private void body0() {
-          body(
-            header()
-          );
-        }
-      },
+          private void body0() {
+            body(
+                header()
+            );
+          }
+        },
 
-      """
+        """
       <html>
       <head>
       <meta>
@@ -143,35 +143,35 @@ public class HtmlTemplateIncludeTest {
   """)
   public void testCase04() {
     test(
-      new HtmlTemplate() {
-        private final HtmlTemplate nav = new HtmlTemplate() {
+        new HtmlTemplate() {
+          private final HtmlTemplate nav = new HtmlTemplate() {
+            @Override
+            protected final void definition() {
+              nav(
+                  a("o7html")
+              );
+            }
+          };
+
+          private final HtmlTemplate hero = new HtmlTemplate() {
+            @Override
+            protected final void definition() {
+              section(
+                  p("is cool")
+              );
+            }
+          };
+
           @Override
           protected final void definition() {
-            nav(
-              a("o7html")
+            body(
+                include(nav),
+                include(hero)
             );
           }
-        };
+        },
 
-        private final HtmlTemplate hero = new HtmlTemplate() {
-          @Override
-          protected final void definition() {
-            section(
-              p("is cool")
-            );
-          }
-        };
-
-        @Override
-        protected final void definition() {
-          body(
-            include(nav),
-            include(hero)
-          );
-        }
-      },
-
-      """
+        """
       <body>
       <nav><a>o7html</a></nav>
       <section>
@@ -189,36 +189,36 @@ public class HtmlTemplateIncludeTest {
   """)
   public void testCase05() {
     test(
-      new HtmlTemplate() {
-        @Override
-        protected final void definition() {
-          div(
-            include(this::f0),
+        new HtmlTemplate() {
+          @Override
+          protected final void definition() {
+            div(
+                include(this::f0),
 
-            main(
-              article(
-                include(this::f1)
-              )
-            ),
+                main(
+                    article(
+                        include(this::f1)
+                    )
+                ),
 
-            include(this::f2)
-          );
-        }
+                include(this::f2)
+            );
+          }
 
-        private void f0() {
-          div(id("f0"));
-        }
+          private void f0() {
+            div(id("f0"));
+          }
 
-        private void f1() {
-          div(id("f1"));
-        }
+          private void f1() {
+            div(id("f1"));
+          }
 
-        private void f2() {
-          div(id("f2"));
-        }
-      },
+          private void f2() {
+            div(id("f2"));
+          }
+        },
 
-      """
+        """
       <div>
       <div id="f0"></div>
       <main>
@@ -239,21 +239,21 @@ public class HtmlTemplateIncludeTest {
   """)
   public void testCase06() {
     test(
-      new HtmlTemplate() {
-        @Override
-        protected final void definition() {
-          head(
-            include(this::head0)
-          );
-        }
+        new HtmlTemplate() {
+          @Override
+          protected final void definition() {
+            head(
+                include(this::head0)
+            );
+          }
 
-        private void head0() {
-          meta(charset("utf-8"));
-          title("Test Case 34");
-        }
-      },
+          private void head0() {
+            meta(charset("utf-8"));
+            title("Test Case 34");
+          }
+        },
 
-      """
+        """
       <head>
       <meta charset="utf-8">
       <title>Test Case 34</title>
@@ -269,18 +269,18 @@ public class HtmlTemplateIncludeTest {
   """)
   public void testCase07() {
     test(
-      new HtmlTemplate() {
-        @Override
-        protected final void definition() {
-          h1(include(this::heading1));
-        }
+        new HtmlTemplate() {
+          @Override
+          protected final void definition() {
+            h1(include(this::heading1));
+          }
 
-        private void heading1() {
-          t("abc");
-        }
-      },
+          private void heading1() {
+            t("abc");
+          }
+        },
 
-      """
+        """
       <h1>abc</h1>
       """
     );
@@ -293,18 +293,18 @@ public class HtmlTemplateIncludeTest {
   """)
   public void testCase08() {
     test(
-      new HtmlTemplate() {
-        @Override
-        protected final void definition() {
-          h1(include(this::heading1));
-        }
+        new HtmlTemplate() {
+          @Override
+          protected final void definition() {
+            h1(include(this::heading1));
+          }
 
-        private void heading1() {
-          raw("abc");
-        }
-      },
+          private void heading1() {
+            raw("abc");
+          }
+        },
 
-      """
+        """
       <h1>abc</h1>
       """
     );
@@ -317,28 +317,28 @@ public class HtmlTemplateIncludeTest {
       @Override
       protected final void definition() {
         div(
-          className("component"),
+            className("component"),
 
-          div(
-            className("wrapper"),
+            div(
+                className("wrapper"),
 
-            t("foobar")
-          )
+                t("foobar")
+            )
         );
       }
     };
 
     test(
-      new HtmlTemplate() {
-        @Override
-        protected final void definition() {
-          body(
-            include(component)
-          );
-        }
-      },
+        new HtmlTemplate() {
+          @Override
+          protected final void definition() {
+            body(
+                include(component)
+            );
+          }
+        },
 
-      """
+        """
       <body>
       <div class="component">
       <div class="wrapper">foobar</div>
@@ -355,26 +355,26 @@ public class HtmlTemplateIncludeTest {
       @Override
       protected final void definition() {
         div(
-          className("component")
+            className("component")
         );
       }
     };
 
     test(
-      new HtmlTemplate() {
-        @Override
-        protected final void definition() {
-          body(include(this::body));
-        }
+        new HtmlTemplate() {
+          @Override
+          protected final void definition() {
+            body(include(this::body));
+          }
 
-        private void body() {
-          h1("Test");
+          private void body() {
+            h1("Test");
 
-          include(component);
-        }
-      },
+            include(component);
+          }
+        },
 
-      """
+        """
       <body>
       <h1>Test</h1>
       <div class="component"></div>
@@ -392,31 +392,31 @@ public class HtmlTemplateIncludeTest {
 
       public final void render(Api.ElementContents child) {
         div(
-          className("component"),
+            className("component"),
 
-          child
+            child
         );
       }
     }
 
     test(
-      new HtmlTemplate() {
-        @Override
-        protected final void definition() {
-          body(include(this::body));
-        }
+        new HtmlTemplate() {
+          @Override
+          protected final void definition() {
+            body(include(this::body));
+          }
 
-        private void body() {
-          h1("Test");
+          private void body() {
+            h1("Test");
 
-          Component component;
-          component = new Component(this);
+            Component component;
+            component = new Component(this);
 
-          component.render(p("Text"));
-        }
-      },
+            component.render(p("Text"));
+          }
+        },
 
-      """
+        """
       <body>
       <h1>Test</h1>
       <div class="component">
@@ -436,8 +436,8 @@ public class HtmlTemplateIncludeTest {
 
       public final Api.ElementContents render(Api.ElementContents e) {
         return div(
-          className("c1"),
-          e
+            className("c1"),
+            e
         );
       }
     }
@@ -449,35 +449,35 @@ public class HtmlTemplateIncludeTest {
 
       public final Api.ElementContents render(Api.ElementContents e) {
         return div(
-          className("c2"),
-          e
+            className("c2"),
+            e
         );
       }
     }
 
     test(
-      new HtmlTemplate() {
-        @Override
-        protected final void definition() {
-          body(include(this::body));
-        }
+        new HtmlTemplate() {
+          @Override
+          protected final void definition() {
+            body(include(this::body));
+          }
 
-        private void body() {
-          Component1 c1;
-          c1 = new Component1(this);
+          private void body() {
+            Component1 c1;
+            c1 = new Component1(this);
 
-          Component2 c2;
-          c2 = new Component2(this);
+            Component2 c2;
+            c2 = new Component2(this);
 
-          h1("Test");
+            h1("Test");
 
-          c1.render(
-            c2.render(t("A"))
-          );
-        }
-      },
+            c1.render(
+                c2.render(t("A"))
+            );
+          }
+        },
 
-      """
+        """
       <body>
       <h1>Test</h1>
       <div class="c1">
@@ -497,7 +497,7 @@ public class HtmlTemplateIncludeTest {
 
       public final Api.ElementContents render(Api.UnorderedListInstruction... elements) {
         return nav(
-          ul(elements)
+            ul(elements)
         );
       }
     }
@@ -507,30 +507,30 @@ public class HtmlTemplateIncludeTest {
 
       public final Api.ElementContents render(Api.AnchorInstruction... elements) {
         return li(
-          a(elements)
+            a(elements)
         );
       }
     }
 
     test(
-      new HtmlTemplate() {
-        @Override
-        protected final void definition() {
-          Navigation navigation = new Navigation(this);
+        new HtmlTemplate() {
+          @Override
+          protected final void definition() {
+            Navigation navigation = new Navigation(this);
 
-          Link link = new Link(this);
+            Link link = new Link(this);
 
-          header(
-            navigation.render(
-              link.render(href("#"), t("Products")),
+            header(
+                navigation.render(
+                    link.render(href("#"), t("Products")),
 
-              link.render(href("#"), t("Services"))
-            )
-          );
-        }
-      },
+                    link.render(href("#"), t("Services"))
+                )
+            );
+          }
+        },
 
-      """
+        """
       <header>
       <nav>
       <ul>
@@ -540,6 +540,63 @@ public class HtmlTemplateIncludeTest {
       </nav>
       </header>
       """
+    );
+  }
+
+  @Test
+  public void testCase14() {
+    class Contents extends HtmlTemplate {
+      @Override
+      protected void definition() {
+        head("hd");
+
+        body("bd");
+      }
+    }
+
+    test(
+        new HtmlTemplate() {
+          @Override
+          protected final void definition() {
+            html(
+                include(new Contents())
+            );
+          }
+        },
+
+        """
+        <html>
+        <head>hd</head>
+        <body>bd</body>
+        </html>
+        """
+    );
+  }
+
+  @Test
+  public void testCase15() {
+    test(
+        new HtmlTemplate() {
+          @Override
+          protected final void definition() {
+            html(
+                include(this::contents)
+            );
+          }
+
+          private void contents() {
+            head("hd");
+
+            body("bd");
+          }
+        },
+
+        """
+        <html>
+        <head>hd</head>
+        <body>bd</body>
+        </html>
+        """
     );
   }
 

@@ -146,7 +146,15 @@ public sealed abstract class BaseTemplateDsl
   protected final Api.Fragment include(FragmentLambda fragment) {
     Check.notNull(fragment, "fragment == null");
 
-    api().fragment(fragment);
+    HtmlTemplateApi api;
+    api = api();
+
+    int index;
+    index = api.fragmentBegin();
+
+    fragment.execute();
+
+    api.fragmentEnd(index);
 
     return InternalFragment.INSTANCE;
   }
@@ -163,9 +171,17 @@ public sealed abstract class BaseTemplateDsl
     Check.notNull(template, "template == null");
 
     try {
-      template.api = api();
+      HtmlTemplateApi api;
+      api = api();
+
+      int index;
+      index = api.fragmentBegin();
+
+      template.api = api;
 
       template.definition();
+
+      api.fragmentEnd(index);
     } finally {
       template.api = null;
     }
