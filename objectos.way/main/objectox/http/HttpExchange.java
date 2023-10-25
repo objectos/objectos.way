@@ -21,6 +21,7 @@ import java.io.OutputStream;
 import java.net.Socket;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.EnumMap;
 import java.util.List;
@@ -192,7 +193,7 @@ public final class HttpExchange implements objectos.http.HttpExchange {
       case _HANDLE_INVOKE -> executeResponsePhase();
 
       default -> throw new UnsupportedOperationException(
-        "Implement me :: state=" + state
+          "Implement me :: state=" + state
       );
     };
   }
@@ -278,6 +279,34 @@ public final class HttpExchange implements objectos.http.HttpExchange {
   }
 
   @Override
+  public final Path resolveAgainst(Path directory) {
+    Check.notNull(directory, "directory == null");
+
+    Check.state(status == null, "status has already been set");
+
+    // path() implicitly invokes checkStateHandle
+
+    String path;
+    path = path();
+
+    if (path.isEmpty()) {
+      return directory;
+    }
+
+    // path should start with '/'
+    // else status was set to bad request
+
+    path = path.substring(1);
+
+    Path resolved;
+    resolved = directory.resolve(path);
+
+    resolved = resolved.normalize();
+
+    return resolved;
+  }
+
+  @Override
   public final String segment(int index) {
     checkStateHandle();
 
@@ -346,7 +375,7 @@ public final class HttpExchange implements objectos.http.HttpExchange {
   private void checkStateHandle() {
     if (state != _HANDLE_INVOKE) {
       throw new IllegalStateException(
-        "Request has not been parsed yet or response has already been sent."
+          "Request has not been parsed yet or response has already been sent."
       );
     }
   }
@@ -402,12 +431,12 @@ public final class HttpExchange implements objectos.http.HttpExchange {
 
       case _REQUEST_ERROR -> {
         throw new UnsupportedOperationException(
-          "status=" + status, error
+            "status=" + status, error
         );
       }
 
       default -> throw new UnsupportedOperationException(
-        "Implement me :: state=" + state
+          "Implement me :: state=" + state
       );
     };
   }
@@ -421,8 +450,8 @@ public final class HttpExchange implements objectos.http.HttpExchange {
     }
 
     return Arrays.equals(
-      buffer, start, requiredIndex,
-      target, 0, target.length);
+        buffer, start, requiredIndex,
+        target, 0, target.length);
   }
 
   private byte bufferGet(int index) {
@@ -550,7 +579,7 @@ public final class HttpExchange implements objectos.http.HttpExchange {
       }
 
       throw new UnsupportedOperationException(
-        "Implement me :: type=" + responseBody.getClass()
+          "Implement me :: type=" + responseBody.getClass()
       );
     } catch (IOException e) {
       return toResult(e);
@@ -785,29 +814,29 @@ public final class HttpExchange implements objectos.http.HttpExchange {
 
     return switch (first) {
       case 'A' -> parseHeaderName0(nameStart,
-        HeaderName.ACCEPT_ENCODING
+          HeaderName.ACCEPT_ENCODING
       );
 
       case 'C' -> parseHeaderName0(nameStart,
-        HeaderName.CONNECTION,
-        HeaderName.CONTENT_LENGTH,
-        HeaderName.CONTENT_TYPE
+          HeaderName.CONNECTION,
+          HeaderName.CONTENT_LENGTH,
+          HeaderName.CONTENT_TYPE
       );
 
       case 'D' -> parseHeaderName0(nameStart,
-        HeaderName.DATE
+          HeaderName.DATE
       );
 
       case 'H' -> parseHeaderName0(nameStart,
-        HeaderName.HOST
+          HeaderName.HOST
       );
 
       case 'T' -> parseHeaderName0(nameStart,
-        HeaderName.TRANSFER_ENCODING
+          HeaderName.TRANSFER_ENCODING
       );
 
       case 'U' -> parseHeaderName0(nameStart,
-        HeaderName.USER_AGENT
+          HeaderName.USER_AGENT
       );
 
       default -> _PARSE_HEADER_VALUE;
@@ -943,7 +972,7 @@ public final class HttpExchange implements objectos.http.HttpExchange {
       // TODO multipart/form-data?
 
       throw new UnsupportedOperationException(
-        "Implement me :: probably chunked transfer encoding"
+          "Implement me :: probably chunked transfer encoding"
       );
     }
 
@@ -972,7 +1001,7 @@ public final class HttpExchange implements objectos.http.HttpExchange {
     }
 
     throw new UnsupportedOperationException(
-      "Implement me :: read more body"
+        "Implement me :: read more body"
     );
   }
 
@@ -1104,7 +1133,7 @@ public final class HttpExchange implements objectos.http.HttpExchange {
       switch (b) {
         case Bytes.QUESTION_MARK -> {
           throw new UnsupportedOperationException(
-            "Implement me :: query component"
+              "Implement me :: query component"
           );
         }
 
@@ -1309,7 +1338,7 @@ public final class HttpExchange implements objectos.http.HttpExchange {
 
     if (requestHeaders.containsKey(HeaderName.TRANSFER_ENCODING)) {
       throw new UnsupportedOperationException(
-        "Implement me :: maybe chunked?"
+          "Implement me :: maybe chunked?"
       );
     }
 
@@ -1335,7 +1364,7 @@ public final class HttpExchange implements objectos.http.HttpExchange {
     // programming error
 
     throw new UnsupportedOperationException(
-      "Implement me :: Internal Server Error"
+        "Implement me :: Internal Server Error"
     );
   }
 

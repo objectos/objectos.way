@@ -18,6 +18,7 @@ package objectos.http;
 import java.io.IOException;
 import java.net.Socket;
 import java.nio.charset.Charset;
+import java.nio.file.Path;
 import objectos.http.server.Body;
 import objectos.lang.NoOpNoteSink;
 import objectos.lang.NoteSink;
@@ -77,6 +78,8 @@ public sealed interface HttpExchange extends AutoCloseable
    * @return the decoded path component of the request target.
    */
   String path();
+
+  Path resolveAgainst(Path directory);
 
   String segment(int index);
 

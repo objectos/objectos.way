@@ -66,7 +66,7 @@ final class HttpRequestPath {
 
     if (index < 0 || index >= slashIndex) {
       throw new IndexOutOfBoundsException(
-        "Index out of range: " + index + "; valid values: 0 <= index < " + slashIndex
+          "Index out of range: " + index + "; valid values: 0 <= index < " + slashIndex
       );
     }
 
