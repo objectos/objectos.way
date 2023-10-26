@@ -15,6 +15,9 @@
  */
 package objectox.lang;
 
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.Writer;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -39,7 +42,7 @@ public class StandardLayout implements Layout {
     StringBuilder out;
     out = format0(log);
 
-    formatValue(out, log.value);
+    formatLastValue(out, log.value);
 
     return formatReturn(out);
   }
@@ -51,7 +54,7 @@ public class StandardLayout implements Layout {
 
     formatValue(out, log.value1);
 
-    formatValue(out, log.value2);
+    formatLastValue(out, log.value2);
 
     return formatReturn(out);
   }
@@ -65,7 +68,7 @@ public class StandardLayout implements Layout {
 
     formatValue(out, log.value2);
 
-    formatValue(out, log.value3);
+    formatLastValue(out, log.value3);
 
     return formatReturn(out);
   }
@@ -131,6 +134,49 @@ public class StandardLayout implements Layout {
     out.append(' ');
 
     out.append(value);
+  }
+
+  private void formatLastValue(StringBuilder out, Object value) {
+    if (value instanceof Throwable t) {
+      formatThrowable(out, t);
+    } else {
+      formatValue(out, value);
+    }
+  }
+
+  private void formatThrowable(StringBuilder out, Throwable t) {
+    StringBuilderWriter writer;
+    writer = new StringBuilderWriter(out);
+
+    PrintWriter printWriter;
+    printWriter = new PrintWriter(writer);
+
+    t.printStackTrace(printWriter);
+  }
+
+  private static class StringBuilderWriter extends Writer {
+
+    private final StringBuilder out;
+
+    public StringBuilderWriter(StringBuilder out) {
+      this.out = out;
+    }
+
+    @Override
+    public void write(char[] cbuf, int off, int len) throws IOException {
+      out.append(cbuf, off, len);
+    }
+
+    @Override
+    public void flush() {
+      // noop, not buffered
+    }
+
+    @Override
+    public void close() {
+      // noop, in-memory only
+    }
+
   }
 
 }
