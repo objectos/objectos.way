@@ -284,22 +284,13 @@ public final class HttpExchange implements objectos.http.HttpExchange {
 
     Check.state(status == null, "status has already been set");
 
-    // path() implicitly invokes checkStateHandle
+    checkStateHandle();
 
-    String path;
-    path = path();
-
-    if (path.isEmpty()) {
-      return directory;
-    }
-
-    // path should start with '/'
-    // else status was set to bad request
-
-    path = path.substring(1);
+    Path relative;
+    relative = requestPath.toPath();
 
     Path resolved;
-    resolved = directory.resolve(path);
+    resolved = directory.resolve(relative);
 
     resolved = resolved.normalize();
 

@@ -16,6 +16,7 @@
 package objectox.http;
 
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Path;
 import objectos.http.Segment;
 import objectos.util.IntArrays;
 import objectox.lang.Check;
@@ -89,6 +90,27 @@ final class HttpRequestPath {
 
   public final int segmentCount() {
     return slashIndex;
+  }
+
+  public final Path toPath() {
+    Check.state(slashIndex > 0, "no slashs were defined");
+
+    return switch (slashIndex) {
+      case 1 -> Path.of(segment(0));
+
+      case 2 -> Path.of(segment(0), segment(1));
+
+      default -> {
+        String[] rest;
+        rest = new String[slashIndex - 1];
+
+        for (int i = 1; i < slashIndex; i++) {
+          rest[i - 1] = segment(i);
+        }
+
+        yield Path.of(segment(0), rest);
+      }
+    };
   }
 
   @Override

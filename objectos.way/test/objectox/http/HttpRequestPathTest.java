@@ -17,6 +17,7 @@ package objectox.http;
 
 import static org.testng.Assert.assertEquals;
 
+import java.nio.file.Path;
 import objectos.http.Segment;
 import org.testng.annotations.Test;
 
@@ -51,6 +52,10 @@ public class HttpRequestPathTest {
     assertEquals(path.matches(FOO), false);
     assertEquals(path.matches(EMPTY, EMPTY), false);
     assertEquals(path.matches(FOO, EMPTY), false);
+
+    // toPath
+
+    assertEquals(path.toPath(), Path.of(""));
   }
 
   @Test
@@ -76,6 +81,10 @@ public class HttpRequestPathTest {
     assertEquals(path.matches(FOO), true);
     assertEquals(path.matches(EMPTY, EMPTY), false);
     assertEquals(path.matches(FOO, EMPTY), false);
+
+    // toPath
+
+    assertEquals(path.toPath(), Path.of("foo"));
   }
 
   @Test
@@ -104,6 +113,10 @@ public class HttpRequestPathTest {
     assertEquals(path.matches(FOO, EMPTY), true);
     assertEquals(path.matches(FOO, ANY), true);
     assertEquals(path.matches(ANY, ANY), true);
+
+    // toPath
+
+    assertEquals(path.toPath(), Path.of("foo", ""));
   }
 
   @Test
@@ -136,6 +149,10 @@ public class HttpRequestPathTest {
     assertEquals(path.matches(a, Segment.of("B")), false);
     assertEquals(path.matches(ANY, b), true);
     assertEquals(path.matches(a, ANY), true);
+
+    // toPath
+
+    assertEquals(path.toPath(), Path.of("a", "b"));
   }
 
   @Test
@@ -170,6 +187,10 @@ public class HttpRequestPathTest {
     assertEquals(path.segment(6), "g");
     assertEquals(path.segment(7), "h");
     assertEquals(path.segment(8), "i");
+
+    // toPath
+
+    assertEquals(path.toPath(), Path.of("a", "b", "c", "d", "e", "f", "g", "h", "i"));
   }
 
 }
