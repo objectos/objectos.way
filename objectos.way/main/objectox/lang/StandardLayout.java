@@ -145,6 +145,8 @@ public class StandardLayout implements Layout {
   }
 
   private void formatThrowable(StringBuilder out, Throwable t) {
+    out.append('\n');
+
     StringBuilderWriter writer;
     writer = new StringBuilderWriter(out);
 

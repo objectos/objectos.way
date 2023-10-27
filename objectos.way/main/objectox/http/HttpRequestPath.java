@@ -95,7 +95,8 @@ final class HttpRequestPath {
   public final Path toPath() {
     Check.state(slashIndex > 0, "no slashs were defined");
 
-    return switch (slashIndex) {
+    Path path;
+    path = switch (slashIndex) {
       case 1 -> Path.of(segment(0));
 
       case 2 -> Path.of(segment(0), segment(1));
@@ -111,6 +112,8 @@ final class HttpRequestPath {
         yield Path.of(segment(0), rest);
       }
     };
+
+    return path.normalize();
   }
 
   @Override

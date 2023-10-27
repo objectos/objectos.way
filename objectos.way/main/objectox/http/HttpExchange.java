@@ -279,6 +279,13 @@ public final class HttpExchange implements objectos.http.HttpExchange {
   }
 
   @Override
+  public final Path toRelativePath() {
+    checkStateHandle();
+
+    return requestPath.toPath();
+  }
+
+  @Override
   public final Path resolveAgainst(Path directory) {
     Check.notNull(directory, "directory == null");
 

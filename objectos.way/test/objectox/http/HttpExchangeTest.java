@@ -70,6 +70,41 @@ public class HttpExchangeTest {
   }
 
   @Test
+  public void toRelativePath() {
+    record Pair(String path, Path expected) {}
+
+    List<Pair> pairs = List.of(
+        new Pair("/index.html", Path.of("index.html")),
+        new Pair("/./index.html", Path.of("index.html")),
+        new Pair("/foo/index.html", Path.of("foo", "index.html")),
+        new Pair("/foo/../foo/../foo/index.html", Path.of("foo", "index.html"))
+    );
+
+    for (var pair : pairs) {
+      Path result;
+      result = toRelativePath(pair.path);
+
+      assertEquals(result, pair.expected);
+    }
+  }
+
+  private Path toRelativePath(String path) {
+    String input = """
+        GET %s HTTP/1.1
+        Host: www.example.com
+        Connection: close
+
+        """.formatted(path);
+
+    HttpExchange exchange;
+    exchange = ofInput(input);
+
+    assertTrue(exchange.active());
+
+    return exchange.toRelativePath();
+  }
+
+  @Test
   public void resolveAgainst() {
     String tmpdir;
     tmpdir = System.getProperty("java.io.tmpdir");

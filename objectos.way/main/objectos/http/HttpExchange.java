@@ -79,6 +79,8 @@ public sealed interface HttpExchange extends AutoCloseable
    */
   String path();
 
+  Path toRelativePath();
+
   Path resolveAgainst(Path directory);
 
   String segment(int index);
