@@ -23,31 +23,31 @@ import objectos.util.ObjectArrays;
 public final class HtmlCompiler02 extends HtmlCompiler01 {
 
   private static final Set<StandardElementName> PHRASING = EnumSet.of(
-    StandardElementName.A,
-    StandardElementName.ABBR,
-    StandardElementName.B,
-    StandardElementName.BR,
-    StandardElementName.BUTTON,
-    StandardElementName.CODE,
-    StandardElementName.EM,
-    StandardElementName.IMG,
-    StandardElementName.INPUT,
-    StandardElementName.KBD,
-    StandardElementName.LABEL,
-    StandardElementName.LINK,
-    StandardElementName.META,
-    StandardElementName.PROGRESS,
-    StandardElementName.SAMP,
-    StandardElementName.SCRIPT,
-    StandardElementName.SELECT,
-    StandardElementName.SMALL,
-    StandardElementName.SPAN,
-    StandardElementName.STRONG,
-    StandardElementName.SUB,
-    StandardElementName.SUP,
-    StandardElementName.SVG,
-    StandardElementName.TEMPLATE,
-    StandardElementName.TEXTAREA
+      StandardElementName.A,
+      StandardElementName.ABBR,
+      StandardElementName.B,
+      StandardElementName.BR,
+      StandardElementName.BUTTON,
+      StandardElementName.CODE,
+      StandardElementName.EM,
+      StandardElementName.IMG,
+      StandardElementName.INPUT,
+      StandardElementName.KBD,
+      StandardElementName.LABEL,
+      StandardElementName.LINK,
+      StandardElementName.META,
+      StandardElementName.PROGRESS,
+      StandardElementName.SAMP,
+      StandardElementName.SCRIPT,
+      StandardElementName.SELECT,
+      StandardElementName.SMALL,
+      StandardElementName.SPAN,
+      StandardElementName.STRONG,
+      StandardElementName.SUB,
+      StandardElementName.SUP,
+      StandardElementName.SVG,
+      StandardElementName.TEMPLATE,
+      StandardElementName.TEXTAREA
   );
 
   private static final int IDX_NEW_LINE = 0;
@@ -74,7 +74,7 @@ public final class HtmlCompiler02 extends HtmlCompiler01 {
     }
 
     return new InternalCompiledHtml(
-      Arrays.copyOfRange(aux, IDX_AUX, auxIndex), objects
+        Arrays.copyOfRange(aux, IDX_AUX, auxIndex), objects
     );
   }
 
@@ -135,8 +135,24 @@ public final class HtmlCompiler02 extends HtmlCompiler01 {
 
         case ByteProto.MARKED5 -> 5 - 1;
 
+        case ByteProto.TEXT -> {
+          byte b0;
+          b0 = main[index++];
+
+          byte b1;
+          b1 = main[index++];
+
+          auxAdd(ByteCode.TEXT, b0, b1);
+
+          // prevent new line after this text
+          elemCount = 0;
+
+          // skip ByteProto.INTERNAL4
+          yield 1;
+        }
+
         default -> throw new UnsupportedOperationException(
-          "Implement me :: proto=" + proto
+            "Implement me :: proto=" + proto
         );
       };
 
@@ -232,7 +248,7 @@ public final class HtmlCompiler02 extends HtmlCompiler01 {
       }
 
       default -> throw new IllegalArgumentException(
-        "Malformed element. Expected name but found=" + proto
+          "Malformed element. Expected name but found=" + proto
       );
     }
 
@@ -359,7 +375,7 @@ public final class HtmlCompiler02 extends HtmlCompiler01 {
         }
 
         default -> throw new UnsupportedOperationException(
-          "Implement me :: proto=" + proto
+            "Implement me :: proto=" + proto
         );
       }
     }
@@ -545,7 +561,7 @@ public final class HtmlCompiler02 extends HtmlCompiler01 {
         }
 
         default -> throw new UnsupportedOperationException(
-          "Implement me :: proto=" + proto
+            "Implement me :: proto=" + proto
         );
       }
     }
@@ -601,17 +617,17 @@ public final class HtmlCompiler02 extends HtmlCompiler01 {
     if (aux[IDX_ATTR_FIRST] == _TRUE || aux[IDX_ATTR_VALUE] == _FALSE) {
       // this is the first attribute
       auxAdd(
-        ByteCode.SPACE,
-        ByteCode.ATTR_NAME, attr
+          ByteCode.SPACE,
+          ByteCode.ATTR_NAME, attr
       );
     }
 
     else {
       // this is a new attribute
       auxAdd(
-        ByteCode.ATTR_VALUE_END,
-        ByteCode.SPACE,
-        ByteCode.ATTR_NAME, attr
+          ByteCode.ATTR_VALUE_END,
+          ByteCode.SPACE,
+          ByteCode.ATTR_NAME, attr
       );
     }
 
@@ -626,29 +642,29 @@ public final class HtmlCompiler02 extends HtmlCompiler01 {
     if (aux[IDX_ATTR_FIRST] == _TRUE) {
       // this is the first attribute
       auxAdd(
-        ByteCode.SPACE,
-        ByteCode.ATTR_NAME, attr,
-        ByteCode.ATTR_VALUE_START,
-        ByteCode.ATTR_VALUE, value0, value1
+          ByteCode.SPACE,
+          ByteCode.ATTR_NAME, attr,
+          ByteCode.ATTR_VALUE_START,
+          ByteCode.ATTR_VALUE, value0, value1
       );
     }
 
     else if (aux[IDX_ATTR_PROTO] != attr) {
       // this is a new attribute
       auxAdd(
-        ByteCode.ATTR_VALUE_END,
-        ByteCode.SPACE,
-        ByteCode.ATTR_NAME, attr,
-        ByteCode.ATTR_VALUE_START,
-        ByteCode.ATTR_VALUE, value0, value1
+          ByteCode.ATTR_VALUE_END,
+          ByteCode.SPACE,
+          ByteCode.ATTR_NAME, attr,
+          ByteCode.ATTR_VALUE_START,
+          ByteCode.ATTR_VALUE, value0, value1
       );
     }
 
     else {
       // this is a new value of the same attribute
       auxAdd(
-        ByteCode.SPACE,
-        ByteCode.ATTR_VALUE, value0, value1
+          ByteCode.SPACE,
+          ByteCode.ATTR_VALUE, value0, value1
       );
     }
 

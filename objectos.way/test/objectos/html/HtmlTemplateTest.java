@@ -987,6 +987,28 @@ public class HtmlTemplateTest {
     );
   }
 
+  @Test(description = """
+  HtmlTemplate TC47
+
+  - text at root
+  """)
+  public void testCase47() {
+    test(
+        new HtmlTemplate() {
+          @Override
+          protected final void definition() {
+            span("foo");
+            t("bar");
+            span("zaz");
+          }
+        },
+
+        """
+        <span>foo</span>bar<span>zaz</span>
+        """
+    );
+  }
+
   private void test(HtmlTemplate template, String expected) {
     String result;
     result = template.toString();
