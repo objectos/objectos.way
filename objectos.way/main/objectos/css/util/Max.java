@@ -5464,6 +5464,47 @@ public final class Max {
   }
 
   /**
+   * Utility classes for the {@code flex-wrap} CSS property.
+   */
+  public enum FlexWrap implements StyleClass {
+
+    WRAP("wrap"),
+
+    WRAP_REVERSE("wrap-reverse"),
+
+    NOWRAP("nowrap");
+
+    private final String className = ClassSelectorSeqId.next();
+
+    private final String value;
+
+    private FlexWrap(String value) {
+      this.value = value;
+    }
+
+    /**
+     * Returns the CSS class name.
+     *
+     * @return the CSS class name
+     */
+    @Override
+    public final String className() {
+      return className;
+    }
+
+    /**
+     * Returns the CSS style rule represented by this utility class.
+     *
+     * @return the CSS style rule
+     */
+    @Override
+    public final String toString() {
+      return "." + className + " { flex-wrap: " + value + " }";
+    }
+
+  }
+
+  /**
    * Utility classes for the {@code font-size} and {@code line-height} CSS properties.
    */
   public enum FontSize implements StyleClass {
