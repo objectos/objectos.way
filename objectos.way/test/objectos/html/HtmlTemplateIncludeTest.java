@@ -600,7 +600,7 @@ public class HtmlTemplateIncludeTest {
 		);
 	}
 
-	@Test(enabled = false, description = "it should allow offsets > 66k")
+	@Test(description = "it should allow offsets > 66k")
 	public void testCase16() {
 		final int COUNT = 8300;
 

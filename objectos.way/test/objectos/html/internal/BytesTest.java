@@ -104,6 +104,37 @@ public class BytesTest {
 	}
 
 	@Test
+	public void length3() {
+		byte[] buf = new byte[5];
+
+		// values [0,255] = 1 byte
+		length3(buf, 0);
+		length3(buf, 1);
+		length3(buf, 2);
+		length3(buf, 126);
+		length3(buf, 127);
+
+		// values [256,65535] = 2 bytes
+		length3(buf, 256);
+		length3(buf, 257);
+		length3(buf, 5678);
+		length3(buf, 65534);
+		length3(buf, 65535);
+
+		// values [65536,16777215] = 3 bytes (7 + 7 + 7 bits)
+		length3(buf, 65536);
+		length3(buf, 65537);
+		length3(buf, 1097151);
+		length3(buf, 2097150);
+		length3(buf, 16777215);
+	}
+
+	private void length3(byte[] buf, int value) {
+		assertEquals(Bytes.encodeLength3(buf, 0, value), 3);
+		assertEquals(Bytes.decodeLength3(buf[0], buf[1], buf[2]), value);
+	}
+
+	@Test
 	public void varIntMax() {
 		assertEquals(Bytes.VARINT_MAX2, 0b1111111_1111111);
 	}

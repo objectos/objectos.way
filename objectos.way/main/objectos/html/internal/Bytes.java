@@ -43,6 +43,10 @@ public final class Bytes {
 		return (byte) (value >>> 8);
 	}
 
+	public static byte encodeInt2(int value) {
+		return (byte) (value >>> 16);
+	}
+
 	public static byte encodeName(StandardElementName name) {
 		int ordinal;
 		ordinal = name.ordinal();
@@ -206,6 +210,49 @@ public final class Bytes {
 		intValue = value & VARINT_MAX1;
 
 		return intValue << shift;
+	}
+
+	static final int FIXED1_MAX = (1 << 8) - 1;
+
+	static final int FIXED2_MAX = (1 << 16) - 1;
+
+	static final int FIXED3_MAX = (1 << 24) - 1;
+
+	public static int encodeLength3(byte[] buf, int off, int length) {
+		if (length < 0) {
+			throw new IllegalArgumentException("Length has to be >= 0");
+		}
+
+		if (length <= FIXED3_MAX) {
+			buf[off++] = (byte) length;
+
+			length = length >>> 8;
+
+			buf[off++] = (byte) length;
+
+			length = length >>> 8;
+
+			buf[off++] = (byte) length;
+
+			return off;
+		}
+
+		throw new IllegalArgumentException(
+				"HtmlTemplate is too large :: length=" + length
+		);
+	}
+
+	public static int decodeLength3(byte b0, byte b1, byte b2) {
+		int int0;
+		int0 = toInt(b0, 0);
+
+		int int1;
+		int1 = toInt(b1, 8);
+
+		int int2;
+		int2 = toInt(b2, 16);
+
+		return int0 | int1 | int2;
 	}
 
 }

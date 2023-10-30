@@ -196,7 +196,9 @@ class HtmlCompiler01 extends HtmlTemplateApi {
 								continue loop;
 							}
 
-							case ByteProto.MARKED -> contents = encodeMarked(contents);
+							case ByteProto.LENGTH2 -> contents = encodeLength2(contents);
+
+							case ByteProto.LENGTH3 -> contents = encodeLength3(contents);
 
 							case ByteProto.MARKED3 -> contents += 3;
 
@@ -458,7 +460,7 @@ class HtmlCompiler01 extends HtmlTemplateApi {
 		startIndex = contents;
 
 		// mark this element
-		main[contents++] = ByteProto.MARKED;
+		main[contents++] = ByteProto.LENGTH2;
 
 		// decode the length
 		byte len0;
@@ -491,7 +493,7 @@ class HtmlCompiler01 extends HtmlTemplateApi {
 		index = contents;
 
 		// mark this fragment
-		main[index++] = ByteProto.MARKED;
+		main[index++] = ByteProto.LENGTH2;
 
 		// decode the length
 		byte len0;
@@ -571,7 +573,7 @@ class HtmlCompiler01 extends HtmlTemplateApi {
 		index = contents;
 
 		// mark this fragment
-		main[index++] = ByteProto.MARKED;
+		main[index++] = ByteProto.LENGTH3;
 
 		// decode the length
 		byte len0;
@@ -580,9 +582,12 @@ class HtmlCompiler01 extends HtmlTemplateApi {
 		byte len1;
 		len1 = main[index++];
 
+		byte len2;
+		len2 = main[index++];
+
 		// point to next element
 		int offset;
-		offset = Bytes.decodeInt(len0, len1);
+		offset = Bytes.decodeLength3(len0, len1, len2);
 
 		int maxIndex;
 		maxIndex = index + offset;
@@ -602,7 +607,9 @@ class HtmlCompiler01 extends HtmlTemplateApi {
 
 				case ByteProto.FRAGMENT -> index = encodeFragment(index);
 
-				case ByteProto.MARKED -> index = encodeMarked(index);
+				case ByteProto.LENGTH2 -> index = encodeLength2(index);
+
+				case ByteProto.LENGTH3 -> index = encodeLength3(index);
 
 				case ByteProto.MARKED4 -> index += 4;
 
@@ -703,7 +710,7 @@ class HtmlCompiler01 extends HtmlTemplateApi {
 		return contents + offset;
 	}
 
-	private int encodeMarked(int contents) {
+	private int encodeLength2(int contents) {
 		contents++;
 
 		// decode the length
@@ -715,6 +722,26 @@ class HtmlCompiler01 extends HtmlTemplateApi {
 
 		int length;
 		length = Bytes.decodeInt(len0, len1);
+
+		// point to next element
+		return contents + length;
+	}
+
+	private int encodeLength3(int contents) {
+		contents++;
+
+		// decode the length
+		byte len0;
+		len0 = main[contents++];
+
+		byte len1;
+		len1 = main[contents++];
+
+		byte len2;
+		len2 = main[contents++];
+
+		int length;
+		length = Bytes.decodeLength3(len0, len1, len2);
 
 		// point to next element
 		return contents + length;
@@ -741,7 +768,8 @@ class HtmlCompiler01 extends HtmlTemplateApi {
 		mainAdd(
 				ByteProto.FRAGMENT,
 
-				// length takes 2 bytes
+				// length takes 3 bytes
+				ByteProto.NULL,
 				ByteProto.NULL,
 				ByteProto.NULL
 		);
@@ -751,7 +779,34 @@ class HtmlCompiler01 extends HtmlTemplateApi {
 
 	@Override
 	public final void fragmentEnd(int startIndex) {
-		commonEnd(startIndex, startIndex);
+		// ensure main can hold 5 more elements
+		// - ByteProto.END
+		// - length
+		// - length
+		// - length
+		// - ByteProto.INTERNAL
+		main = ByteArrays.growIfNecessary(main, mainIndex + 4);
+
+		// mark the end
+		main[mainIndex++] = ByteProto.END;
+
+		// store the distance to the contents (yes, reversed)
+		int length;
+		length = mainIndex - startIndex - 1;
+
+		mainIndex = Bytes.encodeCommonEnd(main, mainIndex, length);
+
+		// trailer proto
+		main[mainIndex++] = ByteProto.INTERNAL;
+
+		// set the end index of the declaration
+		length = mainIndex - startIndex;
+
+		// skip ByteProto.FOO + len0 + len1 + len2
+		length -= 4;
+
+		// we skip the first byte proto
+		Bytes.encodeLength3(main, startIndex + 1, length);
 	}
 
 	private void mainAdd(byte b0) {
