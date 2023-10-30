@@ -471,17 +471,17 @@ class HtmlCompiler01 extends HtmlTemplateApi {
 		int offset;
 		offset = Bytes.decodeInt(len0, len1);
 
-		// ensure main can hold least 3 elements
+		// ensure main can hold least 4 elements
 		// 0   - ByteProto
-		// 1-2 - variable length
-		main = ByteArrays.growIfNecessary(main, mainIndex + 2);
+		// 1-3 - variable length
+		main = ByteArrays.growIfNecessary(main, mainIndex + 3);
 
 		main[mainIndex++] = proto;
 
 		int length;
 		length = mainIndex - startIndex;
 
-		mainIndex = Bytes.encodeVarInt(main, mainIndex, length);
+		mainIndex = Bytes.encodeOffset(main, mainIndex, length);
 
 		return contents + offset;
 	}
@@ -529,30 +529,26 @@ class HtmlCompiler01 extends HtmlTemplateApi {
 					int elementIndex;
 					elementIndex = index;
 
-					len0 = main[index++];
+					do {
+						len0 = main[index++];
+					} while (len0 < 0);
 
 					int len;
-					len = len0;
-
-					if (len < 0) {
-						len1 = main[index++];
-
-						len = Bytes.decodeVarInt(len0, len1);
-					}
+					len = Bytes.decodeOffset(main, elementIndex, index);
 
 					elementIndex -= len;
 
-					// ensure main can hold least 3 elements
+					// ensure main can hold least 4 elements
 					// 0   - ByteProto
-					// 1-2 - variable length
-					main = ByteArrays.growIfNecessary(main, mainIndex + 2);
+					// 1-3 - variable length
+					main = ByteArrays.growIfNecessary(main, mainIndex + 3);
 
 					main[mainIndex++] = proto;
 
 					int length;
 					length = mainIndex - elementIndex;
 
-					mainIndex = Bytes.encodeVarInt(main, mainIndex, length);
+					mainIndex = Bytes.encodeOffset(main, mainIndex, length);
 				}
 
 				case ByteProto.END -> {
@@ -638,17 +634,17 @@ class HtmlCompiler01 extends HtmlTemplateApi {
 		int offset;
 		offset = 3;
 
-		// ensure main can hold least 3 elements
+		// ensure main can hold least 4 elements
 		// 0   - ByteProto
-		// 1-2 - variable length
-		main = ByteArrays.growIfNecessary(main, mainIndex + 2);
+		// 1-3 - variable length
+		main = ByteArrays.growIfNecessary(main, mainIndex + 3);
 
 		main[mainIndex++] = proto;
 
 		int length;
 		length = mainIndex - startIndex;
 
-		mainIndex = Bytes.encodeVarInt(main, mainIndex, length);
+		mainIndex = Bytes.encodeOffset(main, mainIndex, length);
 
 		return contents + offset;
 	}
@@ -665,17 +661,17 @@ class HtmlCompiler01 extends HtmlTemplateApi {
 		int offset;
 		offset = 4;
 
-		// ensure main can hold least 3 elements
+		// ensure main can hold least 4 elements
 		// 0   - ByteProto
-		// 1-2 - variable length
-		main = ByteArrays.growIfNecessary(main, mainIndex + 2);
+		// 1-3 - variable length
+		main = ByteArrays.growIfNecessary(main, mainIndex + 3);
 
 		main[mainIndex++] = proto;
 
 		int length;
 		length = mainIndex - startIndex;
 
-		mainIndex = Bytes.encodeVarInt(main, mainIndex, length);
+		mainIndex = Bytes.encodeOffset(main, mainIndex, length);
 
 		return contents + offset;
 	}
@@ -692,17 +688,17 @@ class HtmlCompiler01 extends HtmlTemplateApi {
 		int offset;
 		offset = 5;
 
-		// ensure main can hold least 3 elements
+		// ensure main can hold least 4 elements
 		// 0   - ByteProto
-		// 1-2 - variable length
-		main = ByteArrays.growIfNecessary(main, mainIndex + 2);
+		// 1-3 - variable length
+		main = ByteArrays.growIfNecessary(main, mainIndex + 3);
 
 		main[mainIndex++] = proto;
 
 		int length;
 		length = mainIndex - startIndex;
 
-		mainIndex = Bytes.encodeVarInt(main, mainIndex, length);
+		mainIndex = Bytes.encodeOffset(main, mainIndex, length);
 
 		return contents + offset;
 	}

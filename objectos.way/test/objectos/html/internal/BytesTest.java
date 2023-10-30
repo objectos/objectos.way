@@ -104,38 +104,13 @@ public class BytesTest {
 	}
 
 	@Test
-	public void varIntR() {
-		byte[] buf = new byte[2];
-		int off = 0;
-		int value = 17482;
-		int valbin = 0b0100_0100_0100_1010;
-
-		assertEquals(value, valbin);
-
-		byte l = (byte) 0b1100_1010;
-		byte h = (byte) 0b1000_1000;
-
-		assertEquals(l, -54);
-		assertEquals(h, -120);
-
-		int off2 = Bytes.encodeCommonEnd(buf, off, value);
-
-		assertEquals(off2, 2);
-		assertEquals(buf[0], -120);
-		assertEquals(buf[1], -54);
-
-		assertEquals(value, (l & 0x7F) | (h & 0xFF) << 7);
-		assertEquals(value, Bytes.decodeVarInt(buf[1], buf[0]));
-	}
-
-	@Test
 	public void varIntMax() {
-		assertEquals(Bytes.VARINT_MAX2, 0b1111_1111_111_1111);
+		assertEquals(Bytes.VARINT_MAX2, 0b1111111_1111111);
 	}
 
 	@Test
 	public void rVarIntMax() {
-		assertEquals(Bytes.COMMON_END_MAX2, 0b111_1111_111_1111);
+		assertEquals(Bytes.VARINT_MAX2, 0b111_1111_111_1111);
 	}
 
 }
