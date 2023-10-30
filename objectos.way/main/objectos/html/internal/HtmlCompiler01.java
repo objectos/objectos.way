@@ -21,800 +21,785 @@ import objectos.util.ObjectArrays;
 
 class HtmlCompiler01 extends HtmlTemplateApi {
 
-  byte[] aux;
+	byte[] aux;
 
-  int auxIndex;
+	int auxIndex;
 
-  int auxStart;
+	int auxStart;
 
-  byte[] main;
+	byte[] main;
 
-  int mainContents;
+	int mainContents;
 
-  int mainIndex;
+	int mainIndex;
 
-  int mainStart;
+	int mainStart;
 
-  Object[] objectArray;
+	Object[] objectArray;
 
-  int objectIndex;
+	int objectIndex;
 
-  @Override
-  public final void ambiguous(Ambiguous name, String value) {
-    int ordinal;
-    ordinal = name.ordinal();
+	@Override
+	public final void ambiguous(Ambiguous name, String value) {
+		int ordinal;
+		ordinal = name.ordinal();
 
-    int object;
-    object = objectAdd(value);
+		int object;
+		object = objectAdd(value);
 
-    mainAdd(
-        ByteProto.AMBIGUOUS1,
+		mainAdd(
+				ByteProto.AMBIGUOUS1,
 
-        // name
-        Bytes.encodeInt0(ordinal),
+				// name
+				Bytes.encodeInt0(ordinal),
 
-        // value
-        Bytes.encodeInt0(object),
-        Bytes.encodeInt1(object),
+				// value
+				Bytes.encodeInt0(object),
+				Bytes.encodeInt1(object),
 
-        ByteProto.INTERNAL5
-    );
-  }
+				ByteProto.INTERNAL5
+		);
+	}
 
-  @Override
-  public final void attribute(AttributeName name) {
-    int ordinal;
-    ordinal = name.getCode();
+	@Override
+	public final void attribute(AttributeName name) {
+		int ordinal;
+		ordinal = name.getCode();
 
-    mainAdd(
-        ByteProto.ATTRIBUTE0,
+		mainAdd(
+				ByteProto.ATTRIBUTE0,
 
-        // name
-        Bytes.encodeInt0(ordinal),
+				// name
+				Bytes.encodeInt0(ordinal),
 
-        ByteProto.INTERNAL3
-    );
-  }
+				ByteProto.INTERNAL3
+		);
+	}
 
-  @Override
-  public final void attribute(AttributeName name, String value) {
-    int ordinal;
-    ordinal = name.getCode();
+	@Override
+	public final void attribute(AttributeName name, String value) {
+		int ordinal;
+		ordinal = name.getCode();
 
-    int object;
-    object = objectAdd(value);
+		int object;
+		object = objectAdd(value);
 
-    mainAdd(
-        ByteProto.ATTRIBUTE1,
+		mainAdd(
+				ByteProto.ATTRIBUTE1,
 
-        // name
-        Bytes.encodeInt0(ordinal),
+				// name
+				Bytes.encodeInt0(ordinal),
 
-        // value
-        Bytes.encodeInt0(object),
-        Bytes.encodeInt1(object),
+				// value
+				Bytes.encodeInt0(object),
+				Bytes.encodeInt1(object),
 
-        ByteProto.INTERNAL5
-    );
-  }
+				ByteProto.INTERNAL5
+		);
+	}
 
-  @Override
-  public final void compilationBegin() {
-    aux = new byte[128];
+	@Override
+	public final void compilationBegin() {
+		aux = new byte[128];
 
-    auxIndex = 0;
+		auxIndex = 0;
 
-    main = new byte[256];
+		main = new byte[256];
 
-    mainIndex = 0;
-  }
+		mainIndex = 0;
+	}
 
-  @Override
-  public final void compilationEnd() {
-    // noop
-  }
+	@Override
+	public final void compilationEnd() {
+		// noop
+	}
 
-  @Override
-  public final void doctype() {
-    mainAdd(ByteProto.DOCTYPE);
-  }
+	@Override
+	public final void doctype() {
+		mainAdd(ByteProto.DOCTYPE);
+	}
 
-  @Override
-  public final void elementBegin(StandardElementName name) {
-    commonBegin();
+	@Override
+	public final void elementBegin(StandardElementName name) {
+		commonBegin();
 
-    mainAdd(
-        ByteProto.ELEMENT,
+		mainAdd(
+				ByteProto.ELEMENT,
 
-        // length takes 2 bytes
-        ByteProto.NULL,
-        ByteProto.NULL,
+				// length takes 2 bytes
+				ByteProto.NULL,
+				ByteProto.NULL,
 
-        ByteProto.STANDARD_NAME,
+				ByteProto.STANDARD_NAME,
 
-        Bytes.encodeName(name)
-    );
-  }
+				Bytes.encodeName(name)
+		);
+	}
 
-  @Override
-  public final void elementEnd() {
-    // we iterate over each value added via elementValue(Instruction)
-    int index;
-    index = auxStart;
+	@Override
+	public final void elementEnd() {
+		// we iterate over each value added via elementValue(Instruction)
+		int index;
+		index = auxStart;
 
-    int indexMax;
-    indexMax = auxIndex;
+		int indexMax;
+		indexMax = auxIndex;
 
-    int contents;
-    contents = mainContents;
+		int contents;
+		contents = mainContents;
 
-    loop: while (index < indexMax) {
-      byte mark;
-      mark = aux[index++];
+		loop: while (index < indexMax) {
+			byte mark;
+			mark = aux[index++];
 
-      switch (mark) {
-        case ByteProto.ATTRIBUTE_CLASS,
-             ByteProto.ATTRIBUTE_ID,
-             ByteProto.TEXT -> {
-          mainAdd(mark, aux[index++], aux[index++]);
-        }
+			switch (mark) {
+				case	ByteProto.ATTRIBUTE_CLASS,
+							ByteProto.ATTRIBUTE_ID,
+							ByteProto.TEXT -> {
+					mainAdd(mark, aux[index++], aux[index++]);
+				}
 
-        case ByteProto.INTERNAL -> {
-          while (true) {
-            byte proto;
-            proto = main[contents];
+				case ByteProto.INTERNAL -> {
+					while (true) {
+						byte proto;
+						proto = main[contents];
 
-            switch (proto) {
-              case ByteProto.ATTRIBUTE0 -> {
-                contents = encodeInternal3(contents, proto);
+						switch (proto) {
+							case ByteProto.ATTRIBUTE0 -> {
+								contents = encodeInternal3(contents, proto);
 
-                continue loop;
-              }
+								continue loop;
+							}
 
-              case ByteProto.AMBIGUOUS1,
-                   ByteProto.ATTRIBUTE1 -> {
-                contents = encodeInternal5(contents, proto);
+							case	ByteProto.AMBIGUOUS1,
+										ByteProto.ATTRIBUTE1 -> {
+								contents = encodeInternal5(contents, proto);
 
-                continue loop;
-              }
+								continue loop;
+							}
 
-              case ByteProto.ELEMENT -> {
-                contents = encodeElement(contents, proto);
+							case ByteProto.ELEMENT -> {
+								contents = encodeElement(contents, proto);
 
-                continue loop;
-              }
+								continue loop;
+							}
 
-              case ByteProto.FLATTEN -> {
-                contents = encodeFlatten(contents);
+							case ByteProto.FLATTEN -> {
+								contents = encodeFlatten(contents);
 
-                continue loop;
-              }
+								continue loop;
+							}
 
-              case ByteProto.FRAGMENT -> {
-                contents = encodeFragment(contents);
+							case ByteProto.FRAGMENT -> {
+								contents = encodeFragment(contents);
 
-                continue loop;
-              }
+								continue loop;
+							}
 
-              case ByteProto.MARKED -> contents = encodeMarked(contents);
+							case ByteProto.MARKED -> contents = encodeMarked(contents);
 
-              case ByteProto.MARKED3 -> contents += 3;
+							case ByteProto.MARKED3 -> contents += 3;
 
-              case ByteProto.MARKED4 -> contents += 4;
+							case ByteProto.MARKED4 -> contents += 4;
 
-              case ByteProto.MARKED5 -> contents += 5;
+							case ByteProto.MARKED5 -> contents += 5;
 
-              case ByteProto.RAW,
-                   ByteProto.TEXT -> {
-                contents = encodeInternal4(contents, proto);
+							case	ByteProto.RAW,
+										ByteProto.TEXT -> {
+								contents = encodeInternal4(contents, proto);
 
-                continue loop;
-              }
+								continue loop;
+							}
 
-              default -> {
-                throw new UnsupportedOperationException(
-                    "Implement me :: proto=" + proto
-                );
-              }
-            }
-          }
-        }
+							default -> {
+								throw new UnsupportedOperationException(
+										"Implement me :: proto=" + proto
+								);
+							}
+						}
+					}
+				}
 
-        default -> throw new UnsupportedOperationException(
-            "Implement me :: mark=" + mark
-        );
-      }
-    }
+				default -> throw new UnsupportedOperationException(
+						"Implement me :: mark=" + mark
+				);
+			}
+		}
 
-    // ensure main can hold 4 more elements
-    main = ByteArrays.growIfNecessary(main, mainIndex + 3);
+		commonEnd(mainContents, mainStart);
 
-    // mark the end
-    main[mainIndex++] = ByteProto.END;
+		// we clear the aux list
+		auxIndex = auxStart;
+	}
 
-    // store the distance to the contents (yes, reversed)
-    int length;
-    length = mainIndex - mainContents - 1;
+	@Override
+	public final void elementValue(Api.Instruction value) {
+		if (value == InternalInstruction.INSTANCE || value == InternalFragment.INSTANCE) {
+			// @ ByteProto
+			mainContents--;
 
-    mainIndex = Bytes.encodeVarIntR(main, mainIndex, length);
+			byte proto;
+			proto = main[mainContents--];
 
-    // trailer proto
-    main[mainIndex++] = ByteProto.INTERNAL;
+			switch (proto) {
+				case ByteProto.INTERNAL -> {
+					int endIndex;
+					endIndex = mainContents;
 
-    // set the end index of the declaration
-    length = mainIndex - mainStart;
+					byte maybeNeg;
 
-    // skip ByteProto.FOO + len0 + len1
-    length -= 3;
+					do {
+						maybeNeg = main[mainContents--];
+					} while (maybeNeg < 0);
 
-    // we skip the first byte proto
-    main[mainStart + 1] = Bytes.encodeInt0(length);
-    main[mainStart + 2] = Bytes.encodeInt1(length);
+					int length;
+					length = Bytes.decodeCommonEnd(main, mainContents, endIndex);
 
-    // we clear the aux list
-    auxIndex = auxStart;
-  }
+					mainContents -= length;
+				}
 
-  @Override
-  public final void elementValue(Api.Instruction value) {
-    if (value == InternalInstruction.INSTANCE || value == InternalFragment.INSTANCE) {
-      // @ ByteProto
-      mainContents--;
+				case ByteProto.INTERNAL3 -> mainContents -= 3 - 2;
 
-      byte proto;
-      proto = main[mainContents--];
+				case ByteProto.INTERNAL4 -> mainContents -= 4 - 2;
 
-      switch (proto) {
-        case ByteProto.INTERNAL -> {
-          byte len0;
-          len0 = main[mainContents--];
+				case ByteProto.INTERNAL5 -> mainContents -= 5 - 2;
 
-          int length;
-          length = len0;
+				default -> throw new UnsupportedOperationException(
+						"Implement me :: proto=" + proto
+				);
+			}
 
-          if (length < 0) {
-            byte len1;
-            len1 = main[mainContents--];
+			auxAdd(ByteProto.INTERNAL);
+		}
 
-            length = Bytes.decodeVarInt(len0, len1);
-          }
+		else if (value instanceof Api.ExternalAttribute.Id ext) {
+			int index;
+			index = externalValue(ext.id());
 
-          mainContents -= length;
-        }
+			auxAdd(
+					ByteProto.ATTRIBUTE_ID,
 
-        case ByteProto.INTERNAL3 -> mainContents -= 3 - 2;
+					Bytes.encodeInt0(index),
+					Bytes.encodeInt1(index)
+			);
+		}
 
-        case ByteProto.INTERNAL4 -> mainContents -= 4 - 2;
+		else if (value instanceof Api.ExternalAttribute.StyleClass ext) {
+			int index;
+			index = externalValue(ext.className());
 
-        case ByteProto.INTERNAL5 -> mainContents -= 5 - 2;
+			auxAdd(
+					ByteProto.ATTRIBUTE_CLASS,
+
+					Bytes.encodeInt0(index),
+					Bytes.encodeInt1(index)
+			);
+		}
+
+		else if (value == InternalNoOp.INSTANCE) {
+			// no-op
+		}
+
+		else {
+			throw new UnsupportedOperationException(
+					"Implement me :: type=" + value.getClass()
+			);
+		}
+	}
+
+	@Override
+	public final void flattenBegin() {
+		commonBegin();
+
+		mainAdd(
+				ByteProto.FLATTEN,
+
+				// length takes 2 bytes
+				ByteProto.NULL,
+				ByteProto.NULL
+		);
+	}
+
+	@Override
+	public final void raw(String value) {
+		int object;
+		object = objectAdd(value);
+
+		mainAdd(
+				ByteProto.RAW,
+
+				// value
+				Bytes.encodeInt0(object),
+				Bytes.encodeInt1(object),
+
+				ByteProto.INTERNAL4
+		);
+	}
+
+	@Override
+	public final void text(String value) {
+		int object;
+		object = objectAdd(value);
+
+		mainAdd(
+				ByteProto.TEXT,
+
+				// value
+				Bytes.encodeInt0(object),
+				Bytes.encodeInt1(object),
+
+				ByteProto.INTERNAL4
+		);
+	}
+
+	final void auxAdd(byte b0) {
+		aux = ByteArrays.growIfNecessary(aux, auxIndex + 0);
+		aux[auxIndex++] = b0;
+	}
+
+	final void auxAdd(byte b0, byte b1) {
+		aux = ByteArrays.growIfNecessary(aux, auxIndex + 1);
+		aux[auxIndex++] = b0;
+		aux[auxIndex++] = b1;
+	}
+
+	final void auxAdd(byte b0, byte b1, byte b2) {
+		aux = ByteArrays.growIfNecessary(aux, auxIndex + 2);
+		aux[auxIndex++] = b0;
+		aux[auxIndex++] = b1;
+		aux[auxIndex++] = b2;
+	}
+
+	final void auxAdd(byte b0, byte b1, byte b2, byte b3) {
+		aux = ByteArrays.growIfNecessary(aux, auxIndex + 3);
+		aux[auxIndex++] = b0;
+		aux[auxIndex++] = b1;
+		aux[auxIndex++] = b2;
+		aux[auxIndex++] = b3;
+	}
+
+	final void auxAdd(byte b0, byte b1, byte b2, byte b3, byte b4) {
+		aux = ByteArrays.growIfNecessary(aux, auxIndex + 4);
+		aux[auxIndex++] = b0;
+		aux[auxIndex++] = b1;
+		aux[auxIndex++] = b2;
+		aux[auxIndex++] = b3;
+		aux[auxIndex++] = b4;
+	}
+
+	final void auxAdd(byte b0, byte b1, byte b2, byte b3, byte b4, byte b5, byte b6) {
+		aux = ByteArrays.growIfNecessary(aux, auxIndex + 6);
+		aux[auxIndex++] = b0;
+		aux[auxIndex++] = b1;
+		aux[auxIndex++] = b2;
+		aux[auxIndex++] = b3;
+		aux[auxIndex++] = b4;
+		aux[auxIndex++] = b5;
+		aux[auxIndex++] = b6;
+	}
+
+	final void auxAdd(byte b0, byte b1, byte b2, byte b3, byte b4, byte b5, byte b6, byte b7) {
+		aux = ByteArrays.growIfNecessary(aux, auxIndex + 7);
+		aux[auxIndex++] = b0;
+		aux[auxIndex++] = b1;
+		aux[auxIndex++] = b2;
+		aux[auxIndex++] = b3;
+		aux[auxIndex++] = b4;
+		aux[auxIndex++] = b5;
+		aux[auxIndex++] = b6;
+		aux[auxIndex++] = b7;
+	}
+
+	private void commonBegin() {
+		// we mark the start of our aux list
+		auxStart = auxIndex;
+
+		// we mark:
+		// 1) the start of the contents of the current declaration
+		// 2) the start of our main list
+		mainContents = mainStart = mainIndex;
+	}
+
+	private void commonEnd(int contentsIndex, int startIndex) {
+		// ensure main can hold 5 more elements
+		// - ByteProto.END
+		// - length
+		// - length
+		// - length
+		// - ByteProto.INTERNAL
+		main = ByteArrays.growIfNecessary(main, mainIndex + 4);
+
+		// mark the end
+		main[mainIndex++] = ByteProto.END;
+
+		// store the distance to the contents (yes, reversed)
+		int length;
+		length = mainIndex - contentsIndex - 1;
+
+		mainIndex = Bytes.encodeCommonEnd(main, mainIndex, length);
+
+		// trailer proto
+		main[mainIndex++] = ByteProto.INTERNAL;
+
+		// set the end index of the declaration
+		length = mainIndex - startIndex;
+
+		// skip ByteProto.FOO + len0 + len1
+		length -= 3;
+
+		// we skip the first byte proto
+		main[startIndex + 1] = Bytes.encodeInt0(length);
+		main[startIndex + 2] = Bytes.encodeInt1(length);
+	}
+
+	private int encodeElement(int contents, byte proto) {
+		// keep the start index handy
+		int startIndex;
+		startIndex = contents;
 
-        default -> throw new UnsupportedOperationException(
-            "Implement me :: proto=" + proto
-        );
-      }
+		// mark this element
+		main[contents++] = ByteProto.MARKED;
 
-      auxAdd(ByteProto.INTERNAL);
-    }
+		// decode the length
+		byte len0;
+		len0 = main[contents++];
+
+		byte len1;
+		len1 = main[contents++];
+
+		// point to next element
+		int offset;
+		offset = Bytes.decodeInt(len0, len1);
+
+		// ensure main can hold least 3 elements
+		// 0   - ByteProto
+		// 1-2 - variable length
+		main = ByteArrays.growIfNecessary(main, mainIndex + 2);
+
+		main[mainIndex++] = proto;
 
-    else if (value instanceof Api.ExternalAttribute.Id ext) {
-      int index;
-      index = externalValue(ext.id());
+		int length;
+		length = mainIndex - startIndex;
+
+		mainIndex = Bytes.encodeVarInt(main, mainIndex, length);
+
+		return contents + offset;
+	}
 
-      auxAdd(
-          ByteProto.ATTRIBUTE_ID,
+	private int encodeFlatten(int contents) {
+		int index;
+		index = contents;
 
-          Bytes.encodeInt0(index),
-          Bytes.encodeInt1(index)
-      );
-    }
+		// mark this fragment
+		main[index++] = ByteProto.MARKED;
 
-    else if (value instanceof Api.ExternalAttribute.StyleClass ext) {
-      int index;
-      index = externalValue(ext.className());
+		// decode the length
+		byte len0;
+		len0 = main[index++];
 
-      auxAdd(
-          ByteProto.ATTRIBUTE_CLASS,
+		byte len1;
+		len1 = main[index++];
 
-          Bytes.encodeInt0(index),
-          Bytes.encodeInt1(index)
-      );
-    }
-
-    else if (value == InternalNoOp.INSTANCE) {
-      // no-op
-    }
-
-    else {
-      throw new UnsupportedOperationException(
-          "Implement me :: type=" + value.getClass()
-      );
-    }
-  }
-
-  @Override
-  public final void flattenBegin() {
-    commonBegin();
-
-    mainAdd(
-        ByteProto.FLATTEN,
-
-        // length takes 2 bytes
-        ByteProto.NULL,
-        ByteProto.NULL
-    );
-  }
-
-  @Override
-  public final void raw(String value) {
-    int object;
-    object = objectAdd(value);
-
-    mainAdd(
-        ByteProto.RAW,
-
-        // value
-        Bytes.encodeInt0(object),
-        Bytes.encodeInt1(object),
-
-        ByteProto.INTERNAL4
-    );
-  }
-
-  @Override
-  public final void text(String value) {
-    int object;
-    object = objectAdd(value);
-
-    mainAdd(
-        ByteProto.TEXT,
-
-        // value
-        Bytes.encodeInt0(object),
-        Bytes.encodeInt1(object),
-
-        ByteProto.INTERNAL4
-    );
-  }
-
-  final void auxAdd(byte b0) {
-    aux = ByteArrays.growIfNecessary(aux, auxIndex + 0);
-    aux[auxIndex++] = b0;
-  }
-
-  final void auxAdd(byte b0, byte b1) {
-    aux = ByteArrays.growIfNecessary(aux, auxIndex + 1);
-    aux[auxIndex++] = b0;
-    aux[auxIndex++] = b1;
-  }
-
-  final void auxAdd(byte b0, byte b1, byte b2) {
-    aux = ByteArrays.growIfNecessary(aux, auxIndex + 2);
-    aux[auxIndex++] = b0;
-    aux[auxIndex++] = b1;
-    aux[auxIndex++] = b2;
-  }
-
-  final void auxAdd(byte b0, byte b1, byte b2, byte b3) {
-    aux = ByteArrays.growIfNecessary(aux, auxIndex + 3);
-    aux[auxIndex++] = b0;
-    aux[auxIndex++] = b1;
-    aux[auxIndex++] = b2;
-    aux[auxIndex++] = b3;
-  }
-
-  final void auxAdd(byte b0, byte b1, byte b2, byte b3, byte b4) {
-    aux = ByteArrays.growIfNecessary(aux, auxIndex + 4);
-    aux[auxIndex++] = b0;
-    aux[auxIndex++] = b1;
-    aux[auxIndex++] = b2;
-    aux[auxIndex++] = b3;
-    aux[auxIndex++] = b4;
-  }
-
-  final void auxAdd(byte b0, byte b1, byte b2, byte b3, byte b4, byte b5, byte b6) {
-    aux = ByteArrays.growIfNecessary(aux, auxIndex + 6);
-    aux[auxIndex++] = b0;
-    aux[auxIndex++] = b1;
-    aux[auxIndex++] = b2;
-    aux[auxIndex++] = b3;
-    aux[auxIndex++] = b4;
-    aux[auxIndex++] = b5;
-    aux[auxIndex++] = b6;
-  }
-
-  final void auxAdd(byte b0, byte b1, byte b2, byte b3, byte b4, byte b5, byte b6, byte b7) {
-    aux = ByteArrays.growIfNecessary(aux, auxIndex + 7);
-    aux[auxIndex++] = b0;
-    aux[auxIndex++] = b1;
-    aux[auxIndex++] = b2;
-    aux[auxIndex++] = b3;
-    aux[auxIndex++] = b4;
-    aux[auxIndex++] = b5;
-    aux[auxIndex++] = b6;
-    aux[auxIndex++] = b7;
-  }
+		// point to next element
+		int offset;
+		offset = Bytes.decodeInt(len0, len1);
 
-  private void commonBegin() {
-    // we mark the start of our aux list
-    auxStart = auxIndex;
+		int maxIndex;
+		maxIndex = index + offset;
 
-    // we mark:
-    // 1) the start of the contents of the current declaration
-    // 2) the start of our main list
-    mainContents = mainStart = mainIndex;
-  }
+		loop: while (index < maxIndex) {
+			byte proto;
+			proto = main[index++];
 
-  private int encodeElement(int contents, byte proto) {
-    // keep the start index handy
-    int startIndex;
-    startIndex = contents;
+			switch (proto) {
+				case	ByteProto.ATTRIBUTE_CLASS,
+							ByteProto.ATTRIBUTE_ID -> {
+					byte idx0;
+					idx0 = main[index++];
 
-    // mark this element
-    main[contents++] = ByteProto.MARKED;
+					byte idx1;
+					idx1 = main[index++];
 
-    // decode the length
-    byte len0;
-    len0 = main[contents++];
+					mainAdd(proto, idx0, idx1);
+				}
 
-    byte len1;
-    len1 = main[contents++];
-
-    // point to next element
-    int offset;
-    offset = Bytes.decodeInt(len0, len1);
+				case	ByteProto.ATTRIBUTE1,
+							ByteProto.ELEMENT,
+							ByteProto.TEXT -> {
+					int elementIndex;
+					elementIndex = index;
 
-    // ensure main can hold least 3 elements
-    // 0   - ByteProto
-    // 1-2 - variable length
-    main = ByteArrays.growIfNecessary(main, mainIndex + 2);
+					len0 = main[index++];
 
-    main[mainIndex++] = proto;
+					int len;
+					len = len0;
 
-    int length;
-    length = mainIndex - startIndex;
+					if (len < 0) {
+						len1 = main[index++];
 
-    mainIndex = Bytes.encodeVarInt(main, mainIndex, length);
+						len = Bytes.decodeVarInt(len0, len1);
+					}
 
-    return contents + offset;
-  }
+					elementIndex -= len;
 
-  private int encodeFlatten(int contents) {
-    int index;
-    index = contents;
+					// ensure main can hold least 3 elements
+					// 0   - ByteProto
+					// 1-2 - variable length
+					main = ByteArrays.growIfNecessary(main, mainIndex + 2);
 
-    // mark this fragment
-    main[index++] = ByteProto.MARKED;
+					main[mainIndex++] = proto;
 
-    // decode the length
-    byte len0;
-    len0 = main[index++];
+					int length;
+					length = mainIndex - elementIndex;
 
-    byte len1;
-    len1 = main[index++];
+					mainIndex = Bytes.encodeVarInt(main, mainIndex, length);
+				}
 
-    // point to next element
-    int offset;
-    offset = Bytes.decodeInt(len0, len1);
+				case ByteProto.END -> {
+					break loop;
+				}
 
-    int maxIndex;
-    maxIndex = index + offset;
+				default -> {
+					throw new UnsupportedOperationException(
+							"Implement me :: proto=" + proto
+					);
+				}
+			}
+		}
 
-    loop: while (index < maxIndex) {
-      byte proto;
-      proto = main[index++];
+		return maxIndex;
+	}
 
-      switch (proto) {
-        case ByteProto.ATTRIBUTE_CLASS,
-             ByteProto.ATTRIBUTE_ID -> {
-          byte idx0;
-          idx0 = main[index++];
+	private int encodeFragment(int contents) {
+		int index;
+		index = contents;
 
-          byte idx1;
-          idx1 = main[index++];
+		// mark this fragment
+		main[index++] = ByteProto.MARKED;
 
-          mainAdd(proto, idx0, idx1);
-        }
+		// decode the length
+		byte len0;
+		len0 = main[index++];
 
-        case ByteProto.ATTRIBUTE1,
-             ByteProto.ELEMENT,
-             ByteProto.TEXT -> {
-          int elementIndex;
-          elementIndex = index;
+		byte len1;
+		len1 = main[index++];
 
-          len0 = main[index++];
+		// point to next element
+		int offset;
+		offset = Bytes.decodeInt(len0, len1);
 
-          int len;
-          len = len0;
+		int maxIndex;
+		maxIndex = index + offset;
 
-          if (len < 0) {
-            len1 = main[index++];
+		loop: while (index < maxIndex) {
+			byte proto;
+			proto = main[index];
 
-            len = Bytes.decodeVarInt(len0, len1);
-          }
+			switch (proto) {
+				case ByteProto.AMBIGUOUS1 -> index = encodeInternal5(index, proto);
 
-          elementIndex -= len;
+				case ByteProto.ELEMENT -> index = encodeElement(index, proto);
 
-          // ensure main can hold least 3 elements
-          // 0   - ByteProto
-          // 1-2 - variable length
-          main = ByteArrays.growIfNecessary(main, mainIndex + 2);
+				case ByteProto.END -> {
+					break loop;
+				}
 
-          main[mainIndex++] = proto;
+				case ByteProto.FRAGMENT -> index = encodeFragment(index);
 
-          int length;
-          length = mainIndex - elementIndex;
+				case ByteProto.MARKED -> index = encodeMarked(index);
 
-          mainIndex = Bytes.encodeVarInt(main, mainIndex, length);
-        }
+				case ByteProto.MARKED4 -> index += 4;
 
-        case ByteProto.END -> {
-          break loop;
-        }
+				case ByteProto.MARKED5 -> index += 5;
 
-        default -> {
-          throw new UnsupportedOperationException(
-              "Implement me :: proto=" + proto
-          );
-        }
-      }
-    }
+				case	ByteProto.RAW,
+							ByteProto.TEXT -> index = encodeInternal4(index, proto);
 
-    return maxIndex;
-  }
+				default -> {
+					throw new UnsupportedOperationException(
+							"Implement me :: proto=" + proto
+					);
+				}
+			}
+		}
 
-  private int encodeFragment(int contents) {
-    int index;
-    index = contents;
+		return maxIndex;
+	}
 
-    // mark this fragment
-    main[index++] = ByteProto.MARKED;
+	private int encodeInternal3(int contents, byte proto) {
+		// keep the start index handy
+		int startIndex;
+		startIndex = contents;
 
-    // decode the length
-    byte len0;
-    len0 = main[index++];
+		// mark this element
+		main[contents] = ByteProto.MARKED3;
 
-    byte len1;
-    len1 = main[index++];
+		// point to next
+		int offset;
+		offset = 3;
 
-    // point to next element
-    int offset;
-    offset = Bytes.decodeInt(len0, len1);
+		// ensure main can hold least 3 elements
+		// 0   - ByteProto
+		// 1-2 - variable length
+		main = ByteArrays.growIfNecessary(main, mainIndex + 2);
 
-    int maxIndex;
-    maxIndex = index + offset;
+		main[mainIndex++] = proto;
 
-    loop: while (index < maxIndex) {
-      byte proto;
-      proto = main[index];
+		int length;
+		length = mainIndex - startIndex;
 
-      switch (proto) {
-        case ByteProto.AMBIGUOUS1 -> index = encodeInternal5(index, proto);
+		mainIndex = Bytes.encodeVarInt(main, mainIndex, length);
 
-        case ByteProto.ELEMENT -> index = encodeElement(index, proto);
+		return contents + offset;
+	}
 
-        case ByteProto.END -> {
-          break loop;
-        }
+	private int encodeInternal4(int contents, byte proto) {
+		// keep the start index handy
+		int startIndex;
+		startIndex = contents;
 
-        case ByteProto.FRAGMENT -> index = encodeFragment(index);
+		// mark this element
+		main[contents] = ByteProto.MARKED4;
 
-        case ByteProto.MARKED -> index = encodeMarked(index);
+		// point to next
+		int offset;
+		offset = 4;
 
-        case ByteProto.MARKED4 -> index += 4;
+		// ensure main can hold least 3 elements
+		// 0   - ByteProto
+		// 1-2 - variable length
+		main = ByteArrays.growIfNecessary(main, mainIndex + 2);
 
-        case ByteProto.MARKED5 -> index += 5;
+		main[mainIndex++] = proto;
 
-        case ByteProto.RAW,
-             ByteProto.TEXT -> index = encodeInternal4(index, proto);
+		int length;
+		length = mainIndex - startIndex;
 
-        default -> {
-          throw new UnsupportedOperationException(
-              "Implement me :: proto=" + proto
-          );
-        }
-      }
-    }
+		mainIndex = Bytes.encodeVarInt(main, mainIndex, length);
 
-    return maxIndex;
-  }
+		return contents + offset;
+	}
 
-  private int encodeInternal3(int contents, byte proto) {
-    // keep the start index handy
-    int startIndex;
-    startIndex = contents;
+	private int encodeInternal5(int contents, byte proto) {
+		// keep the start index handy
+		int startIndex;
+		startIndex = contents;
 
-    // mark this element
-    main[contents] = ByteProto.MARKED3;
+		// mark this element
+		main[contents] = ByteProto.MARKED5;
 
-    // point to next
-    int offset;
-    offset = 3;
+		// point to next
+		int offset;
+		offset = 5;
 
-    // ensure main can hold least 3 elements
-    // 0   - ByteProto
-    // 1-2 - variable length
-    main = ByteArrays.growIfNecessary(main, mainIndex + 2);
+		// ensure main can hold least 3 elements
+		// 0   - ByteProto
+		// 1-2 - variable length
+		main = ByteArrays.growIfNecessary(main, mainIndex + 2);
 
-    main[mainIndex++] = proto;
+		main[mainIndex++] = proto;
 
-    int length;
-    length = mainIndex - startIndex;
+		int length;
+		length = mainIndex - startIndex;
 
-    mainIndex = Bytes.encodeVarInt(main, mainIndex, length);
+		mainIndex = Bytes.encodeVarInt(main, mainIndex, length);
 
-    return contents + offset;
-  }
+		return contents + offset;
+	}
 
-  private int encodeInternal4(int contents, byte proto) {
-    // keep the start index handy
-    int startIndex;
-    startIndex = contents;
+	private int encodeMarked(int contents) {
+		contents++;
 
-    // mark this element
-    main[contents] = ByteProto.MARKED4;
+		// decode the length
+		byte len0;
+		len0 = main[contents++];
 
-    // point to next
-    int offset;
-    offset = 4;
+		byte len1;
+		len1 = main[contents++];
 
-    // ensure main can hold least 3 elements
-    // 0   - ByteProto
-    // 1-2 - variable length
-    main = ByteArrays.growIfNecessary(main, mainIndex + 2);
+		int length;
+		length = Bytes.decodeInt(len0, len1);
 
-    main[mainIndex++] = proto;
+		// point to next element
+		return contents + length;
+	}
 
-    int length;
-    length = mainIndex - startIndex;
+	private int externalValue(String value) {
+		String result;
+		result = value;
 
-    mainIndex = Bytes.encodeVarInt(main, mainIndex, length);
+		if (value == null) {
+			result = "null";
+		}
 
-    return contents + offset;
-  }
+		return objectAdd(result);
+	}
 
-  private int encodeInternal5(int contents, byte proto) {
-    // keep the start index handy
-    int startIndex;
-    startIndex = contents;
+	@Override
+	public final int fragmentBegin() {
+		// we mark:
+		// 1) the start of the contents of the current declaration
+		int startIndex;
+		startIndex = mainIndex;
 
-    // mark this element
-    main[contents] = ByteProto.MARKED5;
+		mainAdd(
+				ByteProto.FRAGMENT,
 
-    // point to next
-    int offset;
-    offset = 5;
+				// length takes 2 bytes
+				ByteProto.NULL,
+				ByteProto.NULL
+		);
 
-    // ensure main can hold least 3 elements
-    // 0   - ByteProto
-    // 1-2 - variable length
-    main = ByteArrays.growIfNecessary(main, mainIndex + 2);
+		return startIndex;
+	}
 
-    main[mainIndex++] = proto;
+	@Override
+	public final void fragmentEnd(int startIndex) {
+		commonEnd(startIndex, startIndex);
+	}
 
-    int length;
-    length = mainIndex - startIndex;
+	private void mainAdd(byte b0) {
+		main = ByteArrays.growIfNecessary(main, mainIndex + 0);
+		main[mainIndex++] = b0;
+	}
 
-    mainIndex = Bytes.encodeVarInt(main, mainIndex, length);
+	private void mainAdd(byte b0, byte b1, byte b2) {
+		main = ByteArrays.growIfNecessary(main, mainIndex + 2);
+		main[mainIndex++] = b0;
+		main[mainIndex++] = b1;
+		main[mainIndex++] = b2;
+	}
 
-    return contents + offset;
-  }
+	private void mainAdd(byte b0, byte b1, byte b2, byte b3) {
+		main = ByteArrays.growIfNecessary(main, mainIndex + 3);
+		main[mainIndex++] = b0;
+		main[mainIndex++] = b1;
+		main[mainIndex++] = b2;
+		main[mainIndex++] = b3;
+	}
 
-  private int encodeMarked(int contents) {
-    contents++;
+	private void mainAdd(byte b0, byte b1, byte b2, byte b3, byte b4) {
+		main = ByteArrays.growIfNecessary(main, mainIndex + 4);
+		main[mainIndex++] = b0;
+		main[mainIndex++] = b1;
+		main[mainIndex++] = b2;
+		main[mainIndex++] = b3;
+		main[mainIndex++] = b4;
+	}
 
-    // decode the length
-    byte len0;
-    len0 = main[contents++];
+	private int objectAdd(Object value) {
+		if (objectArray == null) {
+			objectArray = new Object[10];
+		}
 
-    byte len1;
-    len1 = main[contents++];
+		objectArray = ObjectArrays.growIfNecessary(objectArray, objectIndex);
 
-    int length;
-    length = Bytes.decodeInt(len0, len1);
+		int index;
+		index = objectIndex++;
 
-    // point to next element
-    return contents + length;
-  }
+		objectArray[index] = value;
 
-  private int externalValue(String value) {
-    String result;
-    result = value;
-
-    if (value == null) {
-      result = "null";
-    }
-
-    return objectAdd(result);
-  }
-
-  @Override
-  public final int fragmentBegin() {
-    // we mark:
-    // 1) the start of the contents of the current declaration
-    int startIndex;
-    startIndex = mainIndex;
-
-    mainAdd(
-        ByteProto.FRAGMENT,
-
-        // length takes 2 bytes
-        ByteProto.NULL,
-        ByteProto.NULL
-    );
-
-    return startIndex;
-  }
-
-  @Override
-  public final void fragmentEnd(int startIndex) {
-    // ensure main can hold 4 more elements
-    main = ByteArrays.growIfNecessary(main, mainIndex + 3);
-
-    // mark the end
-    main[mainIndex++] = ByteProto.END;
-
-    // store the distance to the contents (yes, reversed)
-    int length;
-    length = mainIndex - startIndex - 1;
-
-    mainIndex = Bytes.encodeVarIntR(main, mainIndex, length);
-
-    // trailer proto
-    main[mainIndex++] = ByteProto.INTERNAL;
-
-    // set the end index of the declaration
-    length = mainIndex - startIndex;
-
-    // skip ByteProto.FOO + len0 + len1
-    length -= 3;
-
-    // we skip the first byte proto
-    main[startIndex + 1] = Bytes.encodeInt0(length);
-    main[startIndex + 2] = Bytes.encodeInt1(length);
-  }
-
-  private void mainAdd(byte b0) {
-    main = ByteArrays.growIfNecessary(main, mainIndex + 0);
-    main[mainIndex++] = b0;
-  }
-
-  private void mainAdd(byte b0, byte b1, byte b2) {
-    main = ByteArrays.growIfNecessary(main, mainIndex + 2);
-    main[mainIndex++] = b0;
-    main[mainIndex++] = b1;
-    main[mainIndex++] = b2;
-  }
-
-  private void mainAdd(byte b0, byte b1, byte b2, byte b3) {
-    main = ByteArrays.growIfNecessary(main, mainIndex + 3);
-    main[mainIndex++] = b0;
-    main[mainIndex++] = b1;
-    main[mainIndex++] = b2;
-    main[mainIndex++] = b3;
-  }
-
-  private void mainAdd(byte b0, byte b1, byte b2, byte b3, byte b4) {
-    main = ByteArrays.growIfNecessary(main, mainIndex + 4);
-    main[mainIndex++] = b0;
-    main[mainIndex++] = b1;
-    main[mainIndex++] = b2;
-    main[mainIndex++] = b3;
-    main[mainIndex++] = b4;
-  }
-
-  private int objectAdd(Object value) {
-    if (objectArray == null) {
-      objectArray = new Object[10];
-    }
-
-    objectArray = ObjectArrays.growIfNecessary(objectArray, objectIndex);
-
-    int index;
-    index = objectIndex++;
-
-    objectArray[index] = value;
-
-    return index;
-  }
+		return index;
+	}
 
 }
