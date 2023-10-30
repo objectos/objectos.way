@@ -1009,7 +1009,7 @@ public class HtmlTemplateTest {
 		);
 	}
 
-	@Test(enabled = false, description = """
+	@Test(description = """
   HtmlTemplate TC48
 
   - element with many children
@@ -1025,6 +1025,8 @@ public class HtmlTemplateTest {
 		for (int i = 0; i < COUNT; i++) {
 			expected.append("<hr>\n");
 		}
+
+		expected.setLength(expected.length() - 1);
 
 		expected.append("</html>\n");
 

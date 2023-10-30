@@ -735,11 +735,10 @@ public final class HtmlCompiler02 extends HtmlCompiler01 {
 
 	private int skipVarInt(int index) {
 		byte len0;
-		len0 = main[index++];
 
-		if (len0 < 0) {
-			index++;
-		}
+		do {
+			len0 = main[index++];
+		} while (len0 < 0);
 
 		return index;
 	}

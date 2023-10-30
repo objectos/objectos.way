@@ -613,6 +613,8 @@ public class HtmlTemplateIncludeTest {
 			expected.append("<hr>\n");
 		}
 
+		expected.setLength(expected.length() - 1);
+
 		expected.append("</html>\n");
 
 		test(
