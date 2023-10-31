@@ -15,9 +15,11 @@
  */
 package objectos.notes;
 
+import java.io.PrintStream;
 import objectos.lang.Level;
 import objectos.lang.NoteSink;
 import objectos.notes.internal.InternalConsoleNoteSink;
+import objectos.notes.internal.InternalConsoleNoteSink.OptionValue;
 import objectox.lang.Check;
 
 /**
@@ -25,9 +27,24 @@ import objectox.lang.Check;
  */
 public sealed interface ConsoleNoteSink extends NoteSink permits InternalConsoleNoteSink {
 
+	sealed interface Option permits OptionValue {
+
+		static Option target(PrintStream stream) {
+			Check.notNull(stream, "stream == null");
+
+			return new OptionValue() {
+				@Override
+				public final void accept(InternalConsoleNoteSink builder) {
+					builder.target(stream);
+				}
+			};
+		}
+
+	}
+
 	/**
 	 * Creates a new {@code ConsoleNoteSink} instance with the specified note sink
-	 * level.
+	 * level and options.
 	 *
 	 * <p>
 	 * The returned note sink instance will send notes whose level is greater or
@@ -35,13 +52,28 @@ public sealed interface ConsoleNoteSink extends NoteSink permits InternalConsole
 	 *
 	 * @param level
 	 *        the level
+	 * @param options
+	 *        configure the returned instance with these options
 	 *
 	 * @return a new {@code ConsoleNoteSink} instance
 	 */
-	static ConsoleNoteSink of(Level level) {
+	static ConsoleNoteSink of(Level level, Option... options) {
 		Check.notNull(level, "level == null");
+		Check.notNull(options, "options == null");
 
-		return new InternalConsoleNoteSink(level);
+		InternalConsoleNoteSink instance;
+		instance = new InternalConsoleNoteSink(level);
+
+		for (int i = 0; i < options.length; i++) {
+			Option o;
+			o = options[i];
+
+			Check.notNull(o, "options[", i, "] == null");
+
+			((OptionValue) o).accept(instance);
+		}
+
+		return instance;
 	}
 
 }

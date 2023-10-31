@@ -28,14 +28,24 @@ import objectos.notes.ConsoleNoteSink;
 
 public final class InternalConsoleNoteSink implements ConsoleNoteSink {
 
+	public non-sealed static abstract class OptionValue implements ConsoleNoteSink.Option {
+
+		public abstract void accept(InternalConsoleNoteSink builder);
+
+	}
+
 	private final Level level;
 
 	private final Layout layout = new StandardLayout();
 
-	private final PrintStream stream = System.out;
+	private PrintStream stream = System.out;
 
 	public InternalConsoleNoteSink(Level level) {
 		this.level = level;
+	}
+
+	public final void target(PrintStream stream) {
+		this.stream = stream;
 	}
 
 	@Override

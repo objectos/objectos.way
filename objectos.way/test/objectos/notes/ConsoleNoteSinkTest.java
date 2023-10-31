@@ -53,72 +53,48 @@ public class ConsoleNoteSinkTest {
 
 	@Test
 	public void send() {
-		PrintStream original;
-		original = System.out;
+		ThisStream stream;
+		stream = new ThisStream();
 
-		try {
-			ByteArrayOutputStream outputStream;
-			outputStream = new ByteArrayOutputStream();
+		NoteSink noteSink = ConsoleNoteSink.of(
+				Level.TRACE,
 
-			PrintStream stream;
-			stream = new PrintStream(outputStream);
+				ConsoleNoteSink.Option.target(stream)
+		);
 
-			System.setOut(stream);
+		noteSink.send(NOTE0);
 
-			NoteSink noteSink;
-			noteSink = ConsoleNoteSink.of(Level.TRACE);
+		String string;
+		string = stream.toString();
 
-			noteSink.send(NOTE0);
-
-			byte[] bytes;
-			bytes = outputStream.toByteArray();
-
-			String string;
-			string = new String(bytes);
-
-			assertTrue(string.endsWith(
-					"INFO  --- [main           ] objectos.notes.ConsoleNoteSinkTest       : NOTE0\n"), string);
-		} finally {
-			System.setOut(original);
-		}
+		assertTrue(string.endsWith(
+				"INFO  --- [main           ] objectos.notes.ConsoleNoteSinkTest       : NOTE0\n"), string);
 	}
 
 	@Test
 	public void throwable() {
-		PrintStream original;
-		original = System.out;
+		ThisStream stream;
+		stream = new ThisStream();
 
-		try {
-			ByteArrayOutputStream outputStream;
-			outputStream = new ByteArrayOutputStream();
+		NoteSink noteSink = ConsoleNoteSink.of(
+				Level.TRACE,
 
-			PrintStream stream;
-			stream = new PrintStream(outputStream);
+				ConsoleNoteSink.Option.target(stream)
+		);
 
-			System.setOut(stream);
+		Throwable ignore = ignore();
 
-			NoteSink noteSink;
-			noteSink = ConsoleNoteSink.of(Level.TRACE);
+		noteSink.send(THROW1, throwable1());
+		noteSink.send(THROW2, ignore, throwable2());
+		noteSink.send(THROW3, ignore, ignore, throwable3());
 
-			Throwable ignore = ignore();
+		String string;
+		string = stream.toString();
 
-			noteSink.send(THROW1, throwable1());
-			noteSink.send(THROW2, ignore, throwable2());
-			noteSink.send(THROW3, ignore, ignore, throwable3());
-
-			byte[] bytes;
-			bytes = outputStream.toByteArray();
-
-			String string;
-			string = new String(bytes);
-
-			assertFalse(string.contains("objectos.notes.ConsoleNoteSinkTest.ignore(ConsoleNoteSinkTest.java:"), string);
-			assertTrue(string.contains("objectos.notes.ConsoleNoteSinkTest.throwable1(ConsoleNoteSinkTest.java:"), string);
-			assertTrue(string.contains("objectos.notes.ConsoleNoteSinkTest.throwable2(ConsoleNoteSinkTest.java:"), string);
-			assertTrue(string.contains("objectos.notes.ConsoleNoteSinkTest.throwable3(ConsoleNoteSinkTest.java:"), string);
-		} finally {
-			System.setOut(original);
-		}
+		assertFalse(string.contains("objectos.notes.ConsoleNoteSinkTest.ignore(ConsoleNoteSinkTest.java:"), string);
+		assertTrue(string.contains("objectos.notes.ConsoleNoteSinkTest.throwable1(ConsoleNoteSinkTest.java:"), string);
+		assertTrue(string.contains("objectos.notes.ConsoleNoteSinkTest.throwable2(ConsoleNoteSinkTest.java:"), string);
+		assertTrue(string.contains("objectos.notes.ConsoleNoteSinkTest.throwable3(ConsoleNoteSinkTest.java:"), string);
 	}
 
 	private Throwable ignore() {
@@ -135,6 +111,25 @@ public class ConsoleNoteSinkTest {
 
 	private Throwable throwable3() {
 		return new Throwable();
+	}
+
+	private static class ThisStream extends PrintStream {
+
+		public ThisStream() {
+			super(new ByteArrayOutputStream());
+		}
+
+		@Override
+		public final String toString() {
+			ByteArrayOutputStream byteStream;
+			byteStream = (ByteArrayOutputStream) out;
+
+			byte[] bytes;
+			bytes = byteStream.toByteArray();
+
+			return new String(bytes);
+		}
+
 	}
 
 }
