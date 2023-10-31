@@ -16,48 +16,47 @@
 package objectos.lang;
 
 import objectox.lang.Check;
-import objectox.lang.Notes;
 
 /**
  * A note that takes a {@code long} argument.
  */
 public final class LongNote extends Note {
 
-  /**
-   * Creates a new note instance.
-   *
-   * @param level
-   *        the severity of this note
-   * @param source
-   *        a name to identify the source class this note is bound to
-   * @param key
-   *        a key that uniquely identifies this note within the given
-   *        {@code source}
-   */
-  LongNote(Level level, String source, Object key) {
-    super(level, source, key);
-  }
+	/**
+	 * Creates a new note instance.
+	 *
+	 * @param level
+	 *        the severity of this note
+	 * @param source
+	 *        a name to identify the source class this note is bound to
+	 * @param key
+	 *        a key that uniquely identifies this note within the given
+	 *        {@code source}
+	 */
+	LongNote(Level level, String source, Object key) {
+		super(level, source, key);
+	}
 
-  /**
-   * Creates a new v note with the specified source and key.
-   *
-   * <p>
-   * The actual <strong>{@code source}</strong> value will be the canonical name
-   * of the specified class instance.
-   *
-   * @param source
-   *        a class instance whose canonical name will be used as the source of
-   *        this note
-   * @param key
-   *        the object instance to be used as key of this note
-   *
-   * @return a new INFO note
-   */
-  public static LongNote info(Class<?> source, Object key) {
-    Check.notNull(source, "source == null");
-    Check.notNull(key, "key == null");
+	/**
+	 * Creates a new v note with the specified source and key.
+	 *
+	 * <p>
+	 * The actual <strong>{@code source}</strong> value will be the canonical name
+	 * of the specified class instance.
+	 *
+	 * @param source
+	 *        a class instance whose canonical name will be used as the source of
+	 *        this note
+	 * @param key
+	 *        the object instance to be used as key of this note
+	 *
+	 * @return a new INFO note
+	 */
+	public static LongNote info(Class<?> source, Object key) {
+		Check.notNull(source, "source == null");
+		Check.notNull(key, "key == null");
 
-    return new LongNote(Level.INFO, Notes.source(source), key);
-  }
+		return new LongNote(Level.INFO, source(source), key);
+	}
 
 }

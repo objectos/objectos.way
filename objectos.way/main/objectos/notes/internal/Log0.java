@@ -13,25 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectox.lang;
+package objectos.notes.internal;
 
-import objectos.lang.Level;
-import objectos.lang.NoteSink;
-import objectos.lang.NoteSink.OfConsole;
+import objectos.lang.Note0;
 
-public final class ConsoleNoteSinkBuilder implements NoteSink.OfConsole {
+public final class Log0 extends Log {
 
-  private Level level = Level.TRACE;
-
-  @Override
-  public final OfConsole level(Level level) {
-    this.level = Check.notNull(level, "level == null");
-    return this;
+  Log0(Note0 note) {
+    super(note);
   }
 
   @Override
-  public final NoteSink start() {
-    return new ConsoleNoteSink(level);
+  final String format(Layout layout) {
+    return layout.formatLog0(this);
   }
 
 }

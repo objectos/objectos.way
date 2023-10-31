@@ -15,14 +15,14 @@
  */
 package objectos.lang;
 
+import objectos.notes.ConsoleNoteSink;
+
 public class TestingNoteSink {
 
-  public static final NoteSink INSTANCE;
+	public static final NoteSink INSTANCE;
 
-  static {
-    INSTANCE = NoteSink.ofConsole()
-        .level(Level.TRACE)
-        .start();
-  }
+	static {
+		INSTANCE = ConsoleNoteSink.of(Level.TRACE);
+	}
 
 }

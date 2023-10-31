@@ -13,22 +13,41 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectox.lang;
+package objectos.notes.internal;
 
-import objectos.lang.LongNote;
+import objectos.lang.Level;
+import objectos.lang.Note;
 
-public final class LongLog extends Log {
+public abstract class Log {
 
-  final long value;
+  final long timestamp;
 
-  LongLog(LongNote note, long value) {
-    super(note);
-    this.value = value;
+  final String thread;
+
+  final Level level;
+
+  final String source;
+
+  final String key;
+
+  Log(Note note) {
+    timestamp = System.currentTimeMillis();
+
+    Thread currentThread;
+    currentThread = Thread.currentThread();
+
+    thread = currentThread.getName();
+
+    level = note.level();
+
+    source = note.source();
+
+    Object key;
+    key = note.key();
+
+    this.key = String.valueOf(key);
   }
 
-  @Override
-  final String format(Layout layout) {
-    return layout.formatLongLog(this);
-  }
+  abstract String format(Layout layout);
 
 }

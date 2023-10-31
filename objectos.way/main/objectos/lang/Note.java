@@ -83,130 +83,134 @@ import objectox.lang.HashCode;
  */
 public sealed abstract class Note permits LongNote, Note0, Note1, Note2, Note3 {
 
-  private final Level level;
+	private final Level level;
 
-  private final String source;
+	private final String source;
 
-  private final Object key;
+	private final Object key;
 
-  Note(Level level, String source, Object key) {
-    this.level = Check.notNull(level, "level == null");
+	Note(Level level, String source, Object key) {
+		this.level = Check.notNull(level, "level == null");
 
-    this.source = Check.notNull(source, "source == null");
+		this.source = Check.notNull(source, "source == null");
 
-    this.key = Check.notNull(key, "key == null");
-  }
+		this.key = Check.notNull(key, "key == null");
+	}
 
-  /**
-   * <p>
-   * Compares the specified object with this note for equality. Returns
-   * {@code true} if and only if
-   *
-   * <ul>
-   * <li>the specified object is also a {@code Note};</li>
-   * <li>the specified object is of the same subclass of {@code Note};</li>
-   * <li>both notes have source classes that are equal to each other; and</li>
-   * <li>both notes have keys that are equal to each other.</li>
-   * </ul>
-   *
-   * @param obj
-   *        the object to be compared for equality with this note
-   *
-   * @return {@code true} if the specified object is equal to this note
-   */
-  @Override
-  public final boolean equals(Object obj) {
-    return obj instanceof Note that && Equals.of(
-      getClass(), that.getClass(),
-      source, that.source,
-      key, that.key
-    );
-  }
+	static String source(Class<?> source) {
+		return source.getCanonicalName();
+	}
 
-  /**
-   * Returns the hash code value of this note.
-   *
-   * @return the hash code value of this note
-   */
-  @Override
-  public final int hashCode() {
-    return HashCode.of(key, source);
-  }
+	/**
+	 * <p>
+	 * Compares the specified object with this note for equality. Returns
+	 * {@code true} if and only if
+	 *
+	 * <ul>
+	 * <li>the specified object is also a {@code Note};</li>
+	 * <li>the specified object is of the same subclass of {@code Note};</li>
+	 * <li>both notes have source classes that are equal to each other; and</li>
+	 * <li>both notes have keys that are equal to each other.</li>
+	 * </ul>
+	 *
+	 * @param obj
+	 *        the object to be compared for equality with this note
+	 *
+	 * @return {@code true} if the specified object is equal to this note
+	 */
+	@Override
+	public final boolean equals(Object obj) {
+		return obj instanceof Note that && Equals.of(
+				getClass(), that.getClass(),
+				source, that.source,
+				key, that.key
+		);
+	}
 
-  /**
-   * Returns {@code true} if this note would be sent at the specified
-   * {@code level}.
-   *
-   * @param level
-   *        the level to check against
-   *
-   * @return {@code true} if this note would be sent at the specified
-   *         {@code level}
-   */
-  public final boolean isEnabled(Level level) {
-    return this.level.compareTo(level) >= 0;
-  }
+	/**
+	 * Returns the hash code value of this note.
+	 *
+	 * @return the hash code value of this note
+	 */
+	@Override
+	public final int hashCode() {
+		return HashCode.of(key, source);
+	}
 
-  /**
-   * Returns the severity level of this note.
-   *
-   * @return the severity level of this note
-   */
-  public final Level level() {
-    return level;
-  }
+	/**
+	 * Returns {@code true} if this note would be sent at the specified
+	 * {@code level}.
+	 *
+	 * @param level
+	 *        the level to check against
+	 *
+	 * @return {@code true} if this note would be sent at the specified
+	 *         {@code level}
+	 */
+	public final boolean isEnabled(Level level) {
+		return this.level.compareTo(level) >= 0;
+	}
 
-  /**
-   * Returns the source of this note. The source of an note is a name
-   * that indicates the origin of a note. The source is typically
-   * the fully qualified name of the class where the note is declared.
-   *
-   * @return the source of this note
-   */
-  public final String source() {
-    return source;
-  }
+	/**
+	 * Returns the severity level of this note.
+	 *
+	 * @return the severity level of this note
+	 */
+	public final Level level() {
+		return level;
+	}
 
-  /**
-   * Returns the key of this note. The key of an note is an object that
-   * uniquely identifies an note within a given source.
-   *
-   * @return the key of this note
-   */
-  public final Object key() {
-    return key;
-  }
+	/**
+	 * Returns the source of this note. The source of an note is a name
+	 * that indicates the origin of a note. The source is typically
+	 * the fully qualified name of the class where the note is declared.
+	 *
+	 * @return the source of this note
+	 */
+	public final String source() {
+		return source;
+	}
 
-  /**
-   * Returns a string representation of this note.
-   *
-   * @return a string representation of this note
-   */
-  @Override
-  public final String toString() {
-    StringBuilder sb;
-    sb = new StringBuilder();
+	/**
+	 * Returns the key of this note. The key of an note is an object that
+	 * uniquely identifies an note within a given source.
+	 *
+	 * @return the key of this note
+	 */
+	public final Object key() {
+		return key;
+	}
 
-    Class<? extends Note> type;
-    type = getClass();
+	/**
+	 * Returns a string representation of this note.
+	 *
+	 * @return a string representation of this note
+	 */
+	@Override
+	public final String toString() {
+		StringBuilder sb;
+		sb = new StringBuilder();
 
-    sb.append(type.getSimpleName());
+		Class<? extends Note> type;
+		type = getClass();
 
-    sb.append('[');
+		sb.append(type.getSimpleName());
 
-    sb.append(source);
+		sb.append('[');
 
-    sb.append(',');
+		sb.append(source);
 
-    sb.append(level.name());
+		sb.append(',');
 
-    sb.append(',');
+		sb.append(level.name());
 
-    sb.append(key);
+		sb.append(',');
 
-    sb.append(']');
+		sb.append(key);
 
-    return sb.toString();
-  }
+		sb.append(']');
+
+		return sb.toString();
+	}
 
 }

@@ -16,7 +16,6 @@
 package objectos.lang;
 
 import objectox.lang.Check;
-import objectox.lang.Notes;
 
 /**
  * A note that takes one argument.
@@ -25,134 +24,134 @@ import objectox.lang.Notes;
  */
 public final class Note1<T1> extends Note {
 
-  /**
-   * Creates a new note instance.
-   *
-   * @param level
-   *        the severity of this note
-   * @param source
-   *        a name to identify the source class this note is bound to
-   * @param key
-   *        a key that uniquely identifies this note within the given
-   *        {@code source}
-   */
-  Note1(Level level, String source, Object key) {
-    super(level, source, key);
-  }
+	/**
+	 * Creates a new note instance.
+	 *
+	 * @param level
+	 *        the severity of this note
+	 * @param source
+	 *        a name to identify the source class this note is bound to
+	 * @param key
+	 *        a key that uniquely identifies this note within the given
+	 *        {@code source}
+	 */
+	Note1(Level level, String source, Object key) {
+		super(level, source, key);
+	}
 
-  /**
-   * Creates a new DEBUG note with the specified source and key.
-   *
-   * <p>
-   * The actual <strong>{@code source}</strong> value will be the canonical name
-   * of the specified class instance.
-   *
-   * @param <T1> the type of the log argument
-   * @param source
-   *        a class instance whose canonical name will be used as the source of
-   *        this note
-   * @param key
-   *        the object instance to be used as key of this note
-   *
-   * @return a new DEBUG note
-   */
-  public static <T1> Note1<T1> debug(Class<?> source, Object key) {
-    Check.notNull(source, "source == null");
-    Check.notNull(key, "key == null");
+	/**
+	 * Creates a new DEBUG note with the specified source and key.
+	 *
+	 * <p>
+	 * The actual <strong>{@code source}</strong> value will be the canonical name
+	 * of the specified class instance.
+	 *
+	 * @param <T1> the type of the log argument
+	 * @param source
+	 *        a class instance whose canonical name will be used as the source of
+	 *        this note
+	 * @param key
+	 *        the object instance to be used as key of this note
+	 *
+	 * @return a new DEBUG note
+	 */
+	public static <T1> Note1<T1> debug(Class<?> source, Object key) {
+		Check.notNull(source, "source == null");
+		Check.notNull(key, "key == null");
 
-    return new Note1<>(Level.DEBUG, Notes.source(source), key);
-  }
+		return new Note1<>(Level.DEBUG, source(source), key);
+	}
 
-  /**
-   * Creates a new ERROR note with the specified source and key.
-   *
-   * <p>
-   * The actual <strong>{@code source}</strong> value will be the canonical name
-   * of the specified class instance.
-   *
-   * @param <T1> the type of the log argument
-   * @param source
-   *        a class instance whose canonical name will be used as the source of
-   *        this note
-   * @param key
-   *        the object instance to be used as key of this note
-   *
-   * @return a new ERROR note
-   */
-  public static <T1> Note1<T1> error(Class<?> source, Object key) {
-    Check.notNull(source, "source == null");
-    Check.notNull(key, "key == null");
+	/**
+	 * Creates a new ERROR note with the specified source and key.
+	 *
+	 * <p>
+	 * The actual <strong>{@code source}</strong> value will be the canonical name
+	 * of the specified class instance.
+	 *
+	 * @param <T1> the type of the log argument
+	 * @param source
+	 *        a class instance whose canonical name will be used as the source of
+	 *        this note
+	 * @param key
+	 *        the object instance to be used as key of this note
+	 *
+	 * @return a new ERROR note
+	 */
+	public static <T1> Note1<T1> error(Class<?> source, Object key) {
+		Check.notNull(source, "source == null");
+		Check.notNull(key, "key == null");
 
-    return new Note1<>(Level.ERROR, Notes.source(source), key);
-  }
+		return new Note1<>(Level.ERROR, source(source), key);
+	}
 
-  /**
-   * Creates a new INFO note with the specified source and key.
-   *
-   * <p>
-   * The actual <strong>{@code source}</strong> value will be the canonical name
-   * of the specified class instance.
-   *
-   * @param <T1> the type of the log argument
-   * @param source
-   *        a class instance whose canonical name will be used as the source of
-   *        this note
-   * @param key
-   *        the object instance to be used as key of this note
-   *
-   * @return a new INFO note
-   */
-  public static <T1> Note1<T1> info(Class<?> source, Object key) {
-    Check.notNull(source, "source == null");
-    Check.notNull(key, "key == null");
+	/**
+	 * Creates a new INFO note with the specified source and key.
+	 *
+	 * <p>
+	 * The actual <strong>{@code source}</strong> value will be the canonical name
+	 * of the specified class instance.
+	 *
+	 * @param <T1> the type of the log argument
+	 * @param source
+	 *        a class instance whose canonical name will be used as the source of
+	 *        this note
+	 * @param key
+	 *        the object instance to be used as key of this note
+	 *
+	 * @return a new INFO note
+	 */
+	public static <T1> Note1<T1> info(Class<?> source, Object key) {
+		Check.notNull(source, "source == null");
+		Check.notNull(key, "key == null");
 
-    return new Note1<>(Level.INFO, Notes.source(source), key);
-  }
+		return new Note1<>(Level.INFO, source(source), key);
+	}
 
-  /**
-   * Creates a new TRACE note with the specified source and key.
-   *
-   * <p>
-   * The actual <strong>{@code source}</strong> value will be the canonical name
-   * of the specified class instance.
-   *
-   * @param <T1> the type of the log argument
-   * @param source
-   *        a class instance whose canonical name will be used as the source of
-   *        this note
-   * @param key
-   *        the object instance to be used as key of this note
-   *
-   * @return a new TRACE note
-   */
-  public static <T1> Note1<T1> trace(Class<?> source, Object key) {
-    Check.notNull(source, "source == null");
-    Check.notNull(key, "key == null");
+	/**
+	 * Creates a new TRACE note with the specified source and key.
+	 *
+	 * <p>
+	 * The actual <strong>{@code source}</strong> value will be the canonical name
+	 * of the specified class instance.
+	 *
+	 * @param <T1> the type of the log argument
+	 * @param source
+	 *        a class instance whose canonical name will be used as the source of
+	 *        this note
+	 * @param key
+	 *        the object instance to be used as key of this note
+	 *
+	 * @return a new TRACE note
+	 */
+	public static <T1> Note1<T1> trace(Class<?> source, Object key) {
+		Check.notNull(source, "source == null");
+		Check.notNull(key, "key == null");
 
-    return new Note1<>(Level.TRACE, Notes.source(source), key);
-  }
+		return new Note1<>(Level.TRACE, source(source), key);
+	}
 
-  /**
-   * Creates a new WARN note with the specified source and key.
-   *
-   * <p>
-   * The actual <strong>{@code source}</strong> value will be the canonical name
-   * of the specified class instance.
-   *
-   * @param <T1> the type of the log argument
-   * @param source
-   *        a class instance whose canonical name will be used as the source of
-   *        this note
-   * @param key
-   *        the object instance to be used as key of this note
-   *
-   * @return a new WARN note
-   */
-  public static <T1> Note1<T1> warn(Class<?> source, Object key) {
-    Check.notNull(source, "source == null");
-    Check.notNull(key, "key == null");
+	/**
+	 * Creates a new WARN note with the specified source and key.
+	 *
+	 * <p>
+	 * The actual <strong>{@code source}</strong> value will be the canonical name
+	 * of the specified class instance.
+	 *
+	 * @param <T1> the type of the log argument
+	 * @param source
+	 *        a class instance whose canonical name will be used as the source of
+	 *        this note
+	 * @param key
+	 *        the object instance to be used as key of this note
+	 *
+	 * @return a new WARN note
+	 */
+	public static <T1> Note1<T1> warn(Class<?> source, Object key) {
+		Check.notNull(source, "source == null");
+		Check.notNull(key, "key == null");
 
-    return new Note1<>(Level.WARN, Notes.source(source), key);
-  }
+		return new Note1<>(Level.WARN, source(source), key);
+	}
 
 }

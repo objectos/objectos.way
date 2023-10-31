@@ -13,14 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectox.lang;
+package objectos.notes.internal;
 
-public final class Notes {
+import objectos.lang.Note1;
 
-  private Notes() {}
+public final class Log1 extends Log {
 
-  public static String source(Class<?> source) {
-    return source.getCanonicalName();
+  final Object value;
+
+  Log1(Note1<?> note, Object value) {
+    super(note);
+
+    this.value = value;
+  }
+
+  @Override
+  final String format(Layout layout) {
+    return layout.formatLog1(this);
   }
 
 }

@@ -13,25 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectox.lang;
+package objectos.notes.internal;
 
-import objectos.lang.Note2;
+import objectos.lang.LongNote;
 
-public final class Log2 extends Log {
+public final class LongLog extends Log {
 
-  final Object value1;
+  final long value;
 
-  final Object value2;
-
-  Log2(Note2<?, ?> note, Object value1, Object value2) {
+  LongLog(LongNote note, long value) {
     super(note);
-    this.value1 = value1;
-    this.value2 = value2;
+    this.value = value;
   }
 
   @Override
   final String format(Layout layout) {
-    return layout.formatLog2(this);
+    return layout.formatLongLog(this);
   }
 
 }

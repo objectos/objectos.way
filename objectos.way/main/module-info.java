@@ -17,16 +17,17 @@
  * Defines the Objectos Way API.
  */
 module objectos.way {
-  exports objectos.css;
-  exports objectos.css.tmpl;
-  exports objectos.css.util;
-  exports objectos.html;
-  exports objectos.html.tmpl;
-  exports objectos.http;
-  exports objectos.http.media;
-  exports objectos.http.server;
-  exports objectos.http.util;
-  exports objectos.icon;
-  exports objectos.js;
-  exports objectos.lang;
+	exports objectos.css;
+	exports objectos.css.tmpl;
+	exports objectos.css.util;
+	exports objectos.html;
+	exports objectos.html.tmpl;
+	exports objectos.http;
+	exports objectos.http.media;
+	exports objectos.http.server;
+	exports objectos.http.util;
+	exports objectos.icon;
+	exports objectos.js;
+	exports objectos.lang;
+	exports objectos.notes;
 }

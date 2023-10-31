@@ -13,19 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectox.lang;
-
-import objectos.lang.Note0;
-
-public final class Log0 extends Log {
-
-  Log0(Note0 note) {
-    super(note);
-  }
-
-  @Override
-  final String format(Layout layout) {
-    return layout.formatLog0(this);
-  }
-
-}
+/**
+ * Provides {@link objectos.lang.NoteSink} implementations.
+ */
+package objectos.notes;
