@@ -599,6 +599,10 @@ class HtmlCompiler01 extends HtmlTemplateApi {
 			switch (proto) {
 				case ByteProto.AMBIGUOUS1 -> index = encodeInternal5(index, proto);
 
+				case ByteProto.ATTRIBUTE0 -> index = encodeInternal3(index, proto);
+
+				case ByteProto.ATTRIBUTE1 -> index = encodeInternal5(index, proto);
+
 				case ByteProto.ELEMENT -> index = encodeElement(index, proto);
 
 				case ByteProto.END -> {

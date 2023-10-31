@@ -637,6 +637,28 @@ public class HtmlTemplateIncludeTest {
 		);
 	}
 
+	@Test(description = "it should allow attributes at the root of lambda")
+	public void testCase17() {
+		test(
+				new HtmlTemplate() {
+					@Override
+					protected final void definition() {
+						input(include(this::attributes));
+					}
+
+					private void attributes() {
+						id("foo");
+
+						disabled();
+					}
+				},
+
+				"""
+        <input id="foo" disabled>
+        """
+		);
+	}
+
 	private void test(HtmlTemplate template, String expected) {
 		String result;
 		result = template.toString();
