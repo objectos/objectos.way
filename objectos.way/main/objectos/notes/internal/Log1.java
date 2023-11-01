@@ -28,9 +28,4 @@ public final class Log1 extends Log {
 		this.value = value;
 	}
 
-	@Override
-	final String format(Layout layout) {
-		return layout.formatLog1(this);
-	}
-
 }

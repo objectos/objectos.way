@@ -16,39 +16,155 @@
 package objectos.notes.internal;
 
 import java.io.IOException;
-import objectos.lang.LongNote;
-import objectos.lang.Note;
-import objectos.lang.Note0;
-import objectos.lang.Note1;
-import objectos.lang.Note2;
-import objectos.lang.Note3;
-import objectos.lang.NoteSink;
+import java.nio.ByteBuffer;
+import java.nio.channels.WritableByteChannel;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
+import objectos.lang.Level;
 import objectos.notes.FileNoteSink;
 
-public final class StandardFileNoteSink implements FileNoteSink {
+public final class StandardFileNoteSink extends AbstractNoteSink implements FileNoteSink {
+
+	public non-sealed static abstract class OptionValue implements FileNoteSink.Option {
+
+		public abstract void accept(StandardFileNoteSink builder);
+
+	}
+
+	private final Path file;
+
+	private final Lock lock = new ReentrantLock();
+
+	private WritableByteChannel channel;
+
+	private ByteBuffer buffer;
+
+	private volatile boolean active;
+
+	public StandardFileNoteSink(Path file, Level level) {
+		super(level);
+
+		this.file = file;
+	}
+
+	public final void start() throws IOException {
+		lock.lock();
+		try {
+			channel = Files.newByteChannel(file, StandardOpenOption.WRITE, StandardOpenOption.CREATE, StandardOpenOption.APPEND);
+
+			buffer = ByteBuffer.allocateDirect(4096);
+
+			active = true;
+
+			send(FileNoteSink.STARTED, file, level);
+		} finally {
+			lock.unlock();
+		}
+	}
 
 	@Override
-	public void close() throws IOException {}
+	public final void close() throws IOException {
+		lock.lock();
+		try {
+			closeImpl();
+		} finally {
+			lock.unlock();
+		}
+	}
+
+	private void closeImpl() throws IOException {
+		channel.close();
+
+		active = false;
+	}
 
 	@Override
-	public boolean isEnabled(Note note) { return false; }
+	final void addLog(Log0 log) {
+		String s;
+		s = layout.formatLog0(log);
+
+		print(s);
+	}
 
 	@Override
-	public NoteSink replace(NoteSink sink) { return null; }
+	final void addLog(Log1 log) {
+		String s;
+		s = layout.formatLog1(log);
+
+		print(s);
+	}
 
 	@Override
-	public void send(Note0 note) {}
+	final void addLog(Log2 log) {
+		String s;
+		s = layout.formatLog2(log);
+
+		print(s);
+	}
 
 	@Override
-	public void send(LongNote note, long value) {}
+	final void addLog(Log3 log) {
+		String s;
+		s = layout.formatLog3(log);
+
+		print(s);
+	}
 
 	@Override
-	public <T1> void send(Note1<T1> note, T1 v1) {}
+	final void addLog(LongLog log) {
+		String s;
+		s = layout.formatLongLog(log);
 
-	@Override
-	public <T1, T2> void send(Note2<T1, T2> note, T1 v1, T2 v2) {}
+		print(s);
+	}
 
-	@Override
-	public <T1, T2, T3> void send(Note3<T1, T2, T3> note, T1 v1, T2 v2, T3 v3) {}
+	private void print(String s) {
+		if (!active) {
+			return;
+		}
+
+		byte[] bytes;
+		bytes = s.getBytes(StandardCharsets.UTF_8);
+
+		int remaining;
+		remaining = bytes.length;
+
+		lock.lock();
+		try {
+			while (remaining > 0) {
+				buffer.clear();
+
+				int length;
+				length = Math.min(remaining, buffer.remaining());
+
+				int offset;
+				offset = bytes.length - remaining;
+
+				buffer.put(bytes, offset, length);
+
+				buffer.flip();
+
+				while (buffer.hasRemaining()) {
+					channel.write(buffer);
+				}
+
+				remaining -= length;
+			}
+		} catch (IOException e) {
+
+			// not much we can do here
+
+			e.printStackTrace();
+
+			active = false;
+
+		} finally {
+			lock.unlock();
+		}
+	}
 
 }

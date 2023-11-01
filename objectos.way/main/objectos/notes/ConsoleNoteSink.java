@@ -19,14 +19,14 @@ import java.io.PrintStream;
 import java.time.Clock;
 import objectos.lang.Level;
 import objectos.lang.NoteSink;
-import objectos.notes.internal.InternalConsoleNoteSink;
-import objectos.notes.internal.InternalConsoleNoteSink.OptionValue;
+import objectos.notes.internal.StandardConsoleNoteSink;
+import objectos.notes.internal.StandardConsoleNoteSink.OptionValue;
 import objectox.lang.Check;
 
 /**
  * A {@link NoteSink} object that writes out notes to the system console.
  */
-public sealed interface ConsoleNoteSink extends NoteSink permits InternalConsoleNoteSink {
+public sealed interface ConsoleNoteSink extends NoteSink permits StandardConsoleNoteSink {
 
 	/**
 	 * Configures the creation of a {@link ConsoleNoteSink} instance.
@@ -46,7 +46,7 @@ public sealed interface ConsoleNoteSink extends NoteSink permits InternalConsole
 
 			return new OptionValue() {
 				@Override
-				public final void accept(InternalConsoleNoteSink builder) {
+				public final void accept(StandardConsoleNoteSink builder) {
 					builder.clock(clock);
 				}
 			};
@@ -69,7 +69,7 @@ public sealed interface ConsoleNoteSink extends NoteSink permits InternalConsole
 
 			return new OptionValue() {
 				@Override
-				public final void accept(InternalConsoleNoteSink builder) {
+				public final void accept(StandardConsoleNoteSink builder) {
 					builder.target(stream);
 				}
 			};
@@ -99,8 +99,8 @@ public sealed interface ConsoleNoteSink extends NoteSink permits InternalConsole
 		Check.notNull(level, "level == null");
 		Check.notNull(options, "options == null");
 
-		InternalConsoleNoteSink instance;
-		instance = new InternalConsoleNoteSink(level);
+		StandardConsoleNoteSink instance;
+		instance = new StandardConsoleNoteSink(level);
 
 		for (int i = 0; i < options.length; i++) {
 			Option o;

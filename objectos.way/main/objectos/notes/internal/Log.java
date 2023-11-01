@@ -50,6 +50,4 @@ public abstract class Log {
 		this.key = String.valueOf(key);
 	}
 
-	abstract String format(Layout layout);
-
 }

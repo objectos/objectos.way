@@ -28,9 +28,4 @@ public final class LongLog extends Log {
 		this.value = value;
 	}
 
-	@Override
-	final String format(Layout layout) {
-		return layout.formatLongLog(this);
-	}
-
 }

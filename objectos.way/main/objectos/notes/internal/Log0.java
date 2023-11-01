@@ -24,9 +24,4 @@ public final class Log0 extends Log {
 		super(clock, note);
 	}
 
-	@Override
-	final String format(Layout layout) {
-		return layout.formatLog0(this);
-	}
-
 }

@@ -15,7 +15,6 @@
  */
 package objectos.notes.internal;
 
-import java.io.PrintStream;
 import java.time.Clock;
 import objectos.lang.Level;
 import objectos.lang.LongNote;
@@ -25,34 +24,21 @@ import objectos.lang.Note1;
 import objectos.lang.Note2;
 import objectos.lang.Note3;
 import objectos.lang.NoteSink;
-import objectos.notes.ConsoleNoteSink;
 
-public final class InternalConsoleNoteSink implements ConsoleNoteSink {
+abstract class AbstractNoteSink implements NoteSink {
 
-	public non-sealed static abstract class OptionValue implements ConsoleNoteSink.Option {
+	final Level level;
 
-		public abstract void accept(InternalConsoleNoteSink builder);
+	Clock clock = Clock.systemDefaultZone();
 
-	}
+	final Layout layout = new StandardLayout();
 
-	private final Level level;
-
-	private final Layout layout = new StandardLayout();
-
-	private Clock clock = Clock.systemDefaultZone();
-
-	private PrintStream stream = System.out;
-
-	public InternalConsoleNoteSink(Level level) {
+	public AbstractNoteSink(Level level) {
 		this.level = level;
 	}
 
 	public final void clock(Clock clock) {
 		this.clock = clock;
-	}
-
-	public final void target(PrintStream stream) {
-		this.stream = stream;
 	}
 
 	@Override
@@ -149,11 +135,14 @@ public final class InternalConsoleNoteSink implements ConsoleNoteSink {
 		addLog(log);
 	}
 
-	private void addLog(Log log) {
-		String s;
-		s = log.format(layout);
+	abstract void addLog(Log0 log);
 
-		stream.println(s);
-	}
+	abstract void addLog(Log1 log);
+
+	abstract void addLog(Log2 log);
+
+	abstract void addLog(Log3 log);
+
+	abstract void addLog(LongLog log);
 
 }

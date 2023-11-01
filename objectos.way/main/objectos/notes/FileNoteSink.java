@@ -18,10 +18,12 @@ package objectos.notes;
 import java.io.Closeable;
 import java.io.IOException;
 import java.nio.file.Path;
+import java.time.Clock;
 import objectos.lang.Level;
 import objectos.lang.Note2;
 import objectos.lang.NoteSink;
 import objectos.notes.internal.StandardFileNoteSink;
+import objectos.notes.internal.StandardFileNoteSink.OptionValue;
 import objectox.lang.Check;
 
 /**
@@ -31,15 +33,55 @@ import objectox.lang.Check;
 public sealed interface FileNoteSink extends Closeable, NoteSink permits StandardFileNoteSink {
 
 	/**
+	 * Configures the creation of a {@link FileNoteSink} instance.
+	 */
+	sealed interface Option permits OptionValue {
+
+		/**
+		 * Defines the clock instance from which timestamps will be obtained.
+		 *
+		 * @param clock
+		 *        the clock instance
+		 *
+		 * @return an option instance
+		 */
+		static Option clock(Clock clock) {
+			Check.notNull(clock, "clock == null");
+
+			return new OptionValue() {
+				@Override
+				public final void accept(StandardFileNoteSink builder) {
+					builder.clock(clock);
+				}
+			};
+		}
+
+	}
+
+	/**
 	 * A note indicating that the instance has started successfully.
 	 */
 	Note2<Path, Level> STARTED = Note2.info(FileNoteSink.class, "Started");
 
-	static FileNoteSink create(Path file, Level level) throws IOException {
+	static FileNoteSink create(Path file, Level level, Option... options) throws IOException {
 		Check.notNull(file, "file == null");
 		Check.notNull(level, "level == null");
 
-		return null;
+		StandardFileNoteSink instance;
+		instance = new StandardFileNoteSink(file, level);
+
+		for (int i = 0; i < options.length; i++) {
+			Option o;
+			o = options[i];
+
+			Check.notNull(o, "options[", i, "] == null");
+
+			((OptionValue) o).accept(instance);
+		}
+
+		instance.start();
+
+		return instance;
 	}
 
 }

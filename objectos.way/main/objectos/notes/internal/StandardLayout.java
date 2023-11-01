@@ -32,6 +32,8 @@ public class StandardLayout implements Layout {
 		StringBuilder out;
 		out = format0(log);
 
+		out.append('\n');
+
 		return out.toString();
 	}
 
@@ -41,6 +43,8 @@ public class StandardLayout implements Layout {
 		out = format0(log);
 
 		formatLastValue(out, log.value);
+
+		out.append('\n');
 
 		return out.toString();
 	}
@@ -53,6 +57,8 @@ public class StandardLayout implements Layout {
 		formatValue(out, log.value1);
 
 		formatLastValue(out, log.value2);
+
+		out.append('\n');
 
 		return out.toString();
 	}
@@ -68,6 +74,8 @@ public class StandardLayout implements Layout {
 
 		formatLastValue(out, log.value3);
 
+		out.append('\n');
+
 		return out.toString();
 	}
 
@@ -77,6 +85,8 @@ public class StandardLayout implements Layout {
 		out = format0(log);
 
 		formatValue(out, Long.toString(log.value));
+
+		out.append('\n');
 
 		return out.toString();
 	}
