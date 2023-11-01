@@ -16,6 +16,7 @@
 package objectos.notes;
 
 import java.io.PrintStream;
+import java.time.Clock;
 import objectos.lang.Level;
 import objectos.lang.NoteSink;
 import objectos.notes.internal.InternalConsoleNoteSink;
@@ -27,8 +28,42 @@ import objectox.lang.Check;
  */
 public sealed interface ConsoleNoteSink extends NoteSink permits InternalConsoleNoteSink {
 
+	/**
+	 * Configures the creation of a {@link ConsoleNoteSink} instance.
+	 */
 	sealed interface Option permits OptionValue {
 
+		/**
+		 * Defines the clock instance from which timestamps will be obtained.
+		 *
+		 * @param clock
+		 *        the clock instance
+		 *
+		 * @return an option instance
+		 */
+		static Option clock(Clock clock) {
+			Check.notNull(clock, "clock == null");
+
+			return new OptionValue() {
+				@Override
+				public final void accept(InternalConsoleNoteSink builder) {
+					builder.clock(clock);
+				}
+			};
+		}
+
+		/**
+		 * Defines the print stream instance to which notes are written to.
+		 *
+		 * <p>
+		 * If this option is not specified then notes will be written to
+		 * {@link System#out}.
+		 *
+		 * @param stream
+		 *        the target to where notes will be written to
+		 *
+		 * @return an option instance
+		 */
 		static Option target(PrintStream stream) {
 			Check.notNull(stream, "stream == null");
 
@@ -49,6 +84,9 @@ public sealed interface ConsoleNoteSink extends NoteSink permits InternalConsole
 	 * <p>
 	 * The returned note sink instance will send notes whose level is greater or
 	 * equal to the specified level.
+	 *
+	 * <p>
+	 * Options are applied at the declared order.
 	 *
 	 * @param level
 	 *        the level

@@ -16,6 +16,7 @@
 package objectos.notes.internal;
 
 import java.io.PrintStream;
+import java.time.Clock;
 import objectos.lang.Level;
 import objectos.lang.LongNote;
 import objectos.lang.Note;
@@ -38,10 +39,16 @@ public final class InternalConsoleNoteSink implements ConsoleNoteSink {
 
 	private final Layout layout = new StandardLayout();
 
+	private Clock clock = Clock.systemDefaultZone();
+
 	private PrintStream stream = System.out;
 
 	public InternalConsoleNoteSink(Level level) {
 		this.level = level;
+	}
+
+	public final void clock(Clock clock) {
+		this.clock = clock;
 	}
 
 	public final void target(PrintStream stream) {
@@ -73,7 +80,7 @@ public final class InternalConsoleNoteSink implements ConsoleNoteSink {
 		}
 
 		Log0 log;
-		log = new Log0(note);
+		log = new Log0(clock, note);
 
 		addLog(log);
 	}
@@ -89,7 +96,7 @@ public final class InternalConsoleNoteSink implements ConsoleNoteSink {
 		}
 
 		LongLog log;
-		log = new LongLog(note, value);
+		log = new LongLog(clock, note, value);
 
 		addLog(log);
 	}
@@ -105,7 +112,7 @@ public final class InternalConsoleNoteSink implements ConsoleNoteSink {
 		}
 
 		Log1 log;
-		log = new Log1(note, v1);
+		log = new Log1(clock, note, v1);
 
 		addLog(log);
 	}
@@ -121,7 +128,7 @@ public final class InternalConsoleNoteSink implements ConsoleNoteSink {
 		}
 
 		Log2 log;
-		log = new Log2(note, v1, v2);
+		log = new Log2(clock, note, v1, v2);
 
 		addLog(log);
 	}
@@ -137,7 +144,7 @@ public final class InternalConsoleNoteSink implements ConsoleNoteSink {
 		}
 
 		Log3 log;
-		log = new Log3(note, v1, v2, v3);
+		log = new Log3(clock, note, v1, v2, v3);
 
 		addLog(log);
 	}

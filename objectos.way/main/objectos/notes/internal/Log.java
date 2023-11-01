@@ -15,39 +15,41 @@
  */
 package objectos.notes.internal;
 
+import java.time.Clock;
+import java.time.ZonedDateTime;
 import objectos.lang.Level;
 import objectos.lang.Note;
 
 public abstract class Log {
 
-  final long timestamp;
+	final ZonedDateTime timestamp;
 
-  final String thread;
+	final String thread;
 
-  final Level level;
+	final Level level;
 
-  final String source;
+	final String source;
 
-  final String key;
+	final String key;
 
-  Log(Note note) {
-    timestamp = System.currentTimeMillis();
+	Log(Clock clock, Note note) {
+		timestamp = ZonedDateTime.now(clock);
 
-    Thread currentThread;
-    currentThread = Thread.currentThread();
+		Thread currentThread;
+		currentThread = Thread.currentThread();
 
-    thread = currentThread.getName();
+		thread = currentThread.getName();
 
-    level = note.level();
+		level = note.level();
 
-    source = note.source();
+		source = note.source();
 
-    Object key;
-    key = note.key();
+		Object key;
+		key = note.key();
 
-    this.key = String.valueOf(key);
-  }
+		this.key = String.valueOf(key);
+	}
 
-  abstract String format(Layout layout);
+	abstract String format(Layout layout);
 
 }

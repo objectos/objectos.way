@@ -15,20 +15,22 @@
  */
 package objectos.notes.internal;
 
+import java.time.Clock;
 import objectos.lang.LongNote;
 
 public final class LongLog extends Log {
 
-  final long value;
+	final long value;
 
-  LongLog(LongNote note, long value) {
-    super(note);
-    this.value = value;
-  }
+	LongLog(Clock clock, LongNote note, long value) {
+		super(clock, note);
 
-  @Override
-  final String format(Layout layout) {
-    return layout.formatLongLog(this);
-  }
+		this.value = value;
+	}
+
+	@Override
+	final String format(Layout layout) {
+		return layout.formatLongLog(this);
+	}
 
 }

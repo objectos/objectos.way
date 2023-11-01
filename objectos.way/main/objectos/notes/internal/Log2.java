@@ -15,23 +15,26 @@
  */
 package objectos.notes.internal;
 
+import java.time.Clock;
 import objectos.lang.Note2;
 
 public final class Log2 extends Log {
 
-  final Object value1;
+	final Object value1;
 
-  final Object value2;
+	final Object value2;
 
-  Log2(Note2<?, ?> note, Object value1, Object value2) {
-    super(note);
-    this.value1 = value1;
-    this.value2 = value2;
-  }
+	Log2(Clock clock, Note2<?, ?> note, Object value1, Object value2) {
+		super(clock, note);
 
-  @Override
-  final String format(Layout layout) {
-    return layout.formatLog2(this);
-  }
+		this.value1 = value1;
+
+		this.value2 = value2;
+	}
+
+	@Override
+	final String format(Layout layout) {
+		return layout.formatLog2(this);
+	}
 
 }

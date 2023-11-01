@@ -15,13 +15,14 @@
  */
 package objectos.notes;
 
-import static org.testng.Assert.assertFalse;
-import static org.testng.Assert.assertTrue;
+import static org.testng.Assert.assertEquals;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.stream.Collectors;
 import objectos.lang.Level;
-import objectos.lang.Note0;
 import objectos.lang.Note1;
 import objectos.lang.Note2;
 import objectos.lang.Note3;
@@ -29,8 +30,6 @@ import objectos.lang.NoteSink;
 import org.testng.annotations.Test;
 
 public class ConsoleNoteSinkTest {
-
-	static final Note0 NOTE0;
 
 	static final Note1<Throwable> THROW1;
 
@@ -41,8 +40,6 @@ public class ConsoleNoteSinkTest {
 	static {
 		Class<?> s;
 		s = ConsoleNoteSinkTest.class;
-
-		NOTE0 = Note0.info(s, "NOTE0");
 
 		THROW1 = Note1.error(s, "THROW1");
 
@@ -59,16 +56,29 @@ public class ConsoleNoteSinkTest {
 		NoteSink noteSink = ConsoleNoteSink.of(
 				Level.TRACE,
 
+				ConsoleNoteSink.Option.clock(
+						new TestingClock(2023, 10, 31)
+				),
+
 				ConsoleNoteSink.Option.target(stream)
 		);
 
-		noteSink.send(NOTE0);
+		TestingNotes.sendAll0(noteSink);
 
 		String string;
 		string = stream.toString();
 
-		assertTrue(string.endsWith(
-				"INFO  --- [main           ] objectos.notes.ConsoleNoteSinkTest       : NOTE0\n"), string);
+		assertEquals(
+				string,
+
+				"""
+				2023-10-31 10:00:00.000 TRACE --- [main           ] objectos.notes.TestingNotes              : TRACE0
+				2023-10-31 10:01:00.000 DEBUG --- [main           ] objectos.notes.TestingNotes              : DEBUG0
+				2023-10-31 10:02:00.000 INFO  --- [main           ] objectos.notes.TestingNotes              : INFO0
+				2023-10-31 10:03:00.000 WARN  --- [main           ] objectos.notes.TestingNotes              : WARN0
+				2023-10-31 10:04:00.000 ERROR --- [main           ] objectos.notes.TestingNotes              : ERROR0
+				"""
+		);
 	}
 
 	@Test
@@ -79,38 +89,62 @@ public class ConsoleNoteSinkTest {
 		NoteSink noteSink = ConsoleNoteSink.of(
 				Level.TRACE,
 
+				ConsoleNoteSink.Option.clock(
+						new TestingClock(
+								LocalDateTime.of(2023, 10, 31, 11, 12, 13).atZone(ZoneId.systemDefault())
+						)
+				),
+
 				ConsoleNoteSink.Option.target(stream)
 		);
 
-		Throwable ignore = ignore();
+		Throwable ignore = TestingStackTraces.ignore();
 
-		noteSink.send(THROW1, throwable1());
-		noteSink.send(THROW2, ignore, throwable2());
-		noteSink.send(THROW3, ignore, ignore, throwable3());
+		noteSink.send(THROW1, TestingStackTraces.throwable1());
+		noteSink.send(THROW2, ignore, TestingStackTraces.throwable2());
+		noteSink.send(THROW3, ignore, ignore, TestingStackTraces.throwable3());
 
 		String string;
 		string = stream.toString();
 
-		assertFalse(string.contains("objectos.notes.ConsoleNoteSinkTest.ignore(ConsoleNoteSinkTest.java:"), string);
-		assertTrue(string.contains("objectos.notes.ConsoleNoteSinkTest.throwable1(ConsoleNoteSinkTest.java:"), string);
-		assertTrue(string.contains("objectos.notes.ConsoleNoteSinkTest.throwable2(ConsoleNoteSinkTest.java:"), string);
-		assertTrue(string.contains("objectos.notes.ConsoleNoteSinkTest.throwable3(ConsoleNoteSinkTest.java:"), string);
-	}
+		string = string.lines()
+				.filter(line -> {
+					if (!line.startsWith("\tat")) {
+						return true;
+					}
 
-	private Throwable ignore() {
-		return new Throwable();
-	}
+					return line.startsWith("\tat objectos")
+							&& !line.contains("RunTests");
+				})
+				.map(line -> {
+					if (!line.startsWith("\tat objectos")) {
+						return line;
+					}
 
-	private Throwable throwable1() {
-		return new Throwable();
-	}
+					return line.replaceFirst("objectos.way(@.*)/", "objectos.way/");
+				})
+				.collect(Collectors.joining("\n"));
 
-	private Throwable throwable2() {
-		return new Throwable();
-	}
+		assertEquals(
+				string,
 
-	private Throwable throwable3() {
-		return new Throwable();
+				"""
+				2023-10-31 11:12:13.000 ERROR --- [main           ] objectos.notes.ConsoleNoteSinkTest       : THROW1
+				java.lang.Throwable
+					at objectos.way/objectos.notes.TestingStackTraces.throwable1(TestingStackTraces.java:27)
+					at objectos.way/objectos.notes.ConsoleNoteSinkTest.throwable(ConsoleNoteSinkTest.java:103)
+
+				2023-10-31 11:13:13.000 ERROR --- [main           ] objectos.notes.ConsoleNoteSinkTest       : THROW2 java.lang.Throwable
+				java.lang.Throwable
+					at objectos.way/objectos.notes.TestingStackTraces.throwable2(TestingStackTraces.java:31)
+					at objectos.way/objectos.notes.ConsoleNoteSinkTest.throwable(ConsoleNoteSinkTest.java:104)
+
+				2023-10-31 11:14:13.000 ERROR --- [main           ] objectos.notes.ConsoleNoteSinkTest       : THROW3 java.lang.Throwable java.lang.Throwable
+				java.lang.Throwable
+					at objectos.way/objectos.notes.TestingStackTraces.throwable3(TestingStackTraces.java:35)
+					at objectos.way/objectos.notes.ConsoleNoteSinkTest.throwable(ConsoleNoteSinkTest.java:105)
+				"""
+		);
 	}
 
 	private static class ThisStream extends PrintStream {
