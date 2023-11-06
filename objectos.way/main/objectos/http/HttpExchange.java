@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.net.Socket;
 import java.nio.charset.Charset;
 import java.nio.file.Path;
+import objectos.http.Http.Method;
 import objectos.http.server.Body;
 import objectos.lang.NoOpNoteSink;
 import objectos.lang.NoteSink;
@@ -71,6 +72,18 @@ public sealed interface HttpExchange extends AutoCloseable
 	 *         been sent to the client.
 	 */
 	Http.Method method();
+
+	/**
+	 * Tests if the request HTTP method is equal to one of the two specified
+	 * methods.
+	 *
+	 * @param m1 the first method candidate
+	 * @param m2 the second method candidate
+	 *
+	 * @return {@code true} if (and only if) the request method is equal to
+	 *         {@code m1} or is equal to {@code m2}
+	 */
+	boolean methodIn(Method m1, Method m2);
 
 	/**
 	 * Returns the decoded path component of the request target.

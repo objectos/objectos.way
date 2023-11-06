@@ -22,142 +22,176 @@ import static org.testng.Assert.assertTrue;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.List;
+import objectos.http.Http.Method;
 import objectox.http.TestingInput.RegularInput;
 import org.testng.annotations.Test;
 
 public class HttpExchangeTest {
 
-  @Test
-  public void http003() throws IOException {
-    HttpExchange exchange;
-    exchange = new HttpExchange();
+	@Test
+	public void http003() throws IOException {
+		HttpExchange exchange;
+		exchange = new HttpExchange();
 
-    Http003.INPUT.accept(exchange);
+		Http003.INPUT.accept(exchange);
 
-    assertTrue(exchange.active());
+		assertTrue(exchange.active());
 
-    Http003.response(exchange);
+		Http003.response(exchange);
 
-    assertFalse(exchange.active());
+		assertFalse(exchange.active());
 
-    TestableSocket socket;
-    socket = (TestableSocket) exchange.socket;
+		TestableSocket socket;
+		socket = (TestableSocket) exchange.socket;
 
-    assertEquals(socket.outputAsString(), Http003.OUTPUT);
-  }
+		assertEquals(socket.outputAsString(), Http003.OUTPUT);
+	}
 
-  @Test
-  public void http004() throws IOException {
-    HttpExchange exchange;
-    exchange = new HttpExchange();
+	@Test
+	public void http004() throws IOException {
+		HttpExchange exchange;
+		exchange = new HttpExchange();
 
-    Http004.INPUT.accept(exchange);
+		Http004.INPUT.accept(exchange);
 
-    assertTrue(exchange.active());
+		assertTrue(exchange.active());
 
-    Http004.response(exchange);
+		Http004.response(exchange);
 
-    assertTrue(exchange.active());
+		assertTrue(exchange.active());
 
-    Http004.response(exchange);
+		Http004.response(exchange);
 
-    assertFalse(exchange.active());
+		assertFalse(exchange.active());
 
-    TestableSocket socket;
-    socket = (TestableSocket) exchange.socket;
+		TestableSocket socket;
+		socket = (TestableSocket) exchange.socket;
 
-    assertEquals(socket.outputAsString(), Http004.OUTPUT);
-  }
+		assertEquals(socket.outputAsString(), Http004.OUTPUT);
+	}
 
-  @Test
-  public void toRelativePath() {
-    record Pair(String path, Path expected) {}
+	@Test
+	public void methodIn() {
+		HttpExchange get;
+		get = ofMethod(Method.GET);
 
-    List<Pair> pairs = List.of(
-        new Pair("/index.html", Path.of("index.html")),
-        new Pair("/./index.html", Path.of("index.html")),
-        new Pair("/foo/index.html", Path.of("foo", "index.html")),
-        new Pair("/foo/../foo/../foo/index.html", Path.of("foo", "index.html"))
-    );
+		assertEquals(get.methodIn(Method.GET, Method.POST), true);
+		assertEquals(get.methodIn(Method.POST, Method.GET), true);
+		assertEquals(get.methodIn(Method.POST, Method.PUT), false);
 
-    for (var pair : pairs) {
-      Path result;
-      result = toRelativePath(pair.path);
+		HttpExchange post;
+		post = ofMethod(Method.POST);
 
-      assertEquals(result, pair.expected);
-    }
-  }
+		assertEquals(post.methodIn(Method.GET, Method.POST), true);
+		assertEquals(post.methodIn(Method.POST, Method.GET), true);
+		assertEquals(post.methodIn(Method.DELETE, Method.PUT), false);
+	}
 
-  private Path toRelativePath(String path) {
-    String input = """
+	private HttpExchange ofMethod(Method method) {
+		String input = """
+        %s / HTTP/1.1
+        Host: www.example.com
+        Connection: close
+
+        """.formatted(method.name());
+
+		HttpExchange exchange;
+		exchange = ofInput(input);
+
+		assertTrue(exchange.active());
+
+		return exchange;
+	}
+
+	@Test
+	public void toRelativePath() {
+		record Pair(String path, Path expected) {}
+
+		List<Pair> pairs = List.of(
+				new Pair("/index.html", Path.of("index.html")),
+				new Pair("/./index.html", Path.of("index.html")),
+				new Pair("/foo/index.html", Path.of("foo", "index.html")),
+				new Pair("/foo/../foo/../foo/index.html", Path.of("foo", "index.html"))
+		);
+
+		for (var pair : pairs) {
+			Path result;
+			result = toRelativePath(pair.path);
+
+			assertEquals(result, pair.expected);
+		}
+	}
+
+	private Path toRelativePath(String path) {
+		String input = """
         GET %s HTTP/1.1
         Host: www.example.com
         Connection: close
 
         """.formatted(path);
 
-    HttpExchange exchange;
-    exchange = ofInput(input);
+		HttpExchange exchange;
+		exchange = ofInput(input);
 
-    assertTrue(exchange.active());
+		assertTrue(exchange.active());
 
-    return exchange.toRelativePath();
-  }
+		return exchange.toRelativePath();
+	}
 
-  @Test
-  public void resolveAgainst() {
-    String tmpdir;
-    tmpdir = System.getProperty("java.io.tmpdir");
+	@Test
+	public void resolveAgainst() {
+		String tmpdir;
+		tmpdir = System.getProperty("java.io.tmpdir");
 
-    Path tmp;
-    tmp = Path.of(tmpdir);
+		Path tmp;
+		tmp = Path.of(tmpdir);
 
-    record Pair(String path, Path expected) {}
+		record Pair(String path, Path expected) {}
 
-    List<Pair> pairs = List.of(
-        new Pair("/index.html", tmp.resolve("index.html")),
-        new Pair("/./index.html", tmp.resolve("index.html")),
-        new Pair("/foo/index.html", tmp.resolve(Path.of("foo", "index.html"))),
-        new Pair("/foo/../foo/../foo/index.html", tmp.resolve(Path.of("foo", "index.html")))
-    );
+		List<Pair> pairs = List.of(
+				new Pair("/index.html", tmp.resolve("index.html")),
+				new Pair("/./index.html", tmp.resolve("index.html")),
+				new Pair("/foo/index.html", tmp.resolve(Path.of("foo", "index.html"))),
+				new Pair("/foo/../foo/../foo/index.html", tmp.resolve(Path.of("foo", "index.html")))
+		);
 
-    for (var pair : pairs) {
-      Path result;
-      result = resolveAgainst(tmp, pair.path);
+		for (var pair : pairs) {
+			Path result;
+			result = resolveAgainst(tmp, pair.path);
 
-      assertEquals(result, pair.expected);
-    }
-  }
+			assertEquals(result, pair.expected);
+		}
+	}
 
-  private Path resolveAgainst(Path directory, String path) {
-    String input = """
+	private Path resolveAgainst(Path directory, String path) {
+		String input = """
         GET %s HTTP/1.1
         Host: www.example.com
         Connection: close
 
         """.formatted(path);
 
-    HttpExchange exchange;
-    exchange = ofInput(input);
+		HttpExchange exchange;
+		exchange = ofInput(input);
 
-    assertTrue(exchange.active());
+		assertTrue(exchange.active());
 
-    return exchange.resolveAgainst(directory);
-  }
+		return exchange.resolveAgainst(directory);
+	}
 
-  private HttpExchange ofInput(String s) {
-    String request;
-    request = s.replace("\n", "\r\n");
+	private HttpExchange ofInput(String s) {
+		String request;
+		request = s.replace("\n", "\r\n");
 
-    RegularInput input;
-    input = new RegularInput(request);
+		RegularInput input;
+		input = new RegularInput(request);
 
-    HttpExchange exchange;
-    exchange = new HttpExchange();
+		HttpExchange exchange;
+		exchange = new HttpExchange();
 
-    input.accept(exchange);
+		input.accept(exchange);
 
-    return exchange;
-  }
+		return exchange;
+	}
 
 }

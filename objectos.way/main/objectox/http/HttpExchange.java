@@ -272,6 +272,13 @@ public final class HttpExchange implements objectos.http.HttpExchange {
 	}
 
 	@Override
+	public final boolean methodIn(Method m1, Method m2) {
+		checkStateHandle();
+
+		return method.equals(m1) || method.equals(m2);
+	}
+
+	@Override
 	public final String path() {
 		checkStateHandle();
 
