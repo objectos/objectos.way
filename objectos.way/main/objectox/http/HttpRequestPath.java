@@ -23,117 +23,127 @@ import objectox.lang.Check;
 
 final class HttpRequestPath {
 
-  final byte[] buffer;
+	final byte[] buffer;
 
-  int[] slash = new int[10];
+	private final int startIndex;
 
-  private int slashIndex;
+	int[] slash = new int[10];
 
-  private int end;
+	private int slashIndex;
 
-  public HttpRequestPath(byte[] buffer) {
-    this.buffer = buffer;
-  }
+	private String value;
 
-  public final void slash(int index) {
-    slash = IntArrays.growIfNecessary(slash, slashIndex);
+	public HttpRequestPath(byte[] buffer, int startIndex) {
+		this.buffer = buffer;
 
-    slash[slashIndex++] = index;
-  }
+		this.startIndex = startIndex;
+	}
 
-  public final void end(int index) {
-    end = index;
-  }
+	public final void slash(int index) {
+		slash = IntArrays.growIfNecessary(slash, slashIndex);
 
-  public final boolean matches(Segment s0) {
-    if (segmentCount() == 1) {
-      return match(s0, segment(0));
-    }
+		slash[slashIndex++] = toOffset(index);
+	}
 
-    return false;
-  }
+	public final void end(int index) {
+		Check.state(slashIndex > 0, "no slashs were defined");
 
-  public final boolean matches(Segment s0, Segment s1) {
-    if (segmentCount() == 2) {
-      return match(s0, segment(0))
-          && match(s1, segment(1));
-    }
+		int length;
+		length = toOffset(index);
 
-    return false;
-  }
+		value = new String(buffer, startIndex, length, StandardCharsets.UTF_8);
+	}
 
-  public final String segment(int index) {
-    Check.state(slashIndex > 0, "no slashs were defined");
+	public final boolean matches(Segment s0) {
+		if (segmentCount() == 1) {
+			return match(s0, segment(0));
+		}
 
-    if (index < 0 || index >= slashIndex) {
-      throw new IndexOutOfBoundsException(
-          "Index out of range: " + index + "; valid values: 0 <= index < " + slashIndex
-      );
-    }
+		return false;
+	}
 
-    int segmentStart;
-    segmentStart = slash[index] + 1;
+	public final boolean matches(Segment s0, Segment s1) {
+		if (segmentCount() == 2) {
+			return match(s0, segment(0))
+					&& match(s1, segment(1));
+		}
 
-    int segmentEnd;
+		return false;
+	}
 
-    int nextIndex;
-    nextIndex = index + 1;
+	public final String segment(int index) {
+		Check.state(slashIndex > 0, "no slashs were defined");
 
-    if (nextIndex == slashIndex) {
-      segmentEnd = end;
-    } else {
-      segmentEnd = slash[nextIndex];
-    }
+		if (index < 0 || index >= slashIndex) {
+			throw new IndexOutOfBoundsException(
+					"Index out of range: " + index + "; valid values: 0 <= index < " + slashIndex
+			);
+		}
 
-    return new String(buffer, segmentStart, segmentEnd - segmentStart, StandardCharsets.UTF_8);
-  }
+		int segmentStart;
+		segmentStart = slash[index] + 1;
 
-  public final int segmentCount() {
-    return slashIndex;
-  }
+		int segmentEnd;
 
-  public final Path toPath() {
-    Check.state(slashIndex > 0, "no slashs were defined");
+		int nextIndex;
+		nextIndex = index + 1;
 
-    Path path;
-    path = switch (slashIndex) {
-      case 1 -> Path.of(segment(0));
+		if (nextIndex == slashIndex) {
+			segmentEnd = value.length();
+		} else {
+			segmentEnd = slash[nextIndex];
+		}
 
-      case 2 -> Path.of(segment(0), segment(1));
+		return value.substring(segmentStart, segmentEnd);
+	}
 
-      default -> {
-        String[] rest;
-        rest = new String[slashIndex - 1];
+	public final int segmentCount() {
+		return slashIndex;
+	}
 
-        for (int i = 1; i < slashIndex; i++) {
-          rest[i - 1] = segment(i);
-        }
+	public final Path toPath() {
+		Check.state(slashIndex > 0, "no slashs were defined");
 
-        yield Path.of(segment(0), rest);
-      }
-    };
+		Path path;
+		path = switch (slashIndex) {
+			case 1 -> Path.of(segment(0));
 
-    return path.normalize();
-  }
+			case 2 -> Path.of(segment(0), segment(1));
 
-  @Override
-  public final String toString() {
-    Check.state(slashIndex > 0, "no slashs were defined");
+			default -> {
+				String[] rest;
+				rest = new String[slashIndex - 1];
 
-    int start;
-    start = slash[0];
+				for (int i = 1; i < slashIndex; i++) {
+					rest[i - 1] = segment(i);
+				}
 
-    return new String(buffer, start, end - start, StandardCharsets.UTF_8);
-  }
+				yield Path.of(segment(0), rest);
+			}
+		};
 
-  private boolean match(Segment segment, String value) {
-    return switch (segment) {
-      case SegmentExact exact -> exact.matches(value);
+		return path.normalize();
+	}
 
-      case SegmentKind.ALWAYS_TRUE -> true;
+	@Override
+	public final String toString() {
+		Check.state(value != null, "no slashs were defined");
 
-      default -> false;
-    };
-  }
+		return value;
+	}
+
+	private boolean match(Segment segment, String value) {
+		return switch (segment) {
+			case SegmentExact exact -> exact.matches(value);
+
+			case SegmentKind.ALWAYS_TRUE -> true;
+
+			default -> false;
+		};
+	}
+
+	private int toOffset(int index) {
+		return index - startIndex;
+	}
 
 }

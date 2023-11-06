@@ -23,174 +23,166 @@ import org.testng.annotations.Test;
 
 public class HttpRequestPathTest {
 
-  private static final Segment ANY = Segment.ofAny();
+	private static final Segment ANY = Segment.ofAny();
 
-  private static final Segment EMPTY = Segment.of();
+	private static final Segment EMPTY = Segment.of();
 
-  private static final Segment FOO = Segment.of("foo");
+	private static final Segment FOO = Segment.of("foo");
 
-  @Test
-  public void root() {
-    byte[] bytes;
-    bytes = Bytes.utf8("/[GARBAGE]");
+	@Test
+	public void root() {
+		HttpRequestPath path;
+		path = ofString("/[GARBAGE]");
 
-    HttpRequestPath path;
-    path = new HttpRequestPath(bytes);
+		path.slash(0);
 
-    path.slash(0);
+		path.end(1);
 
-    path.end(1);
+		assertEquals(path.toString(), "/");
+		assertEquals(path.segmentCount(), 1);
+		assertEquals(path.segment(0), "");
 
-    assertEquals(path.toString(), "/");
-    assertEquals(path.segmentCount(), 1);
-    assertEquals(path.segment(0), "");
+		// matcher
 
-    // matcher
+		assertEquals(path.matches(EMPTY), true);
+		assertEquals(path.matches(ANY), true);
+		assertEquals(path.matches(FOO), false);
+		assertEquals(path.matches(EMPTY, EMPTY), false);
+		assertEquals(path.matches(FOO, EMPTY), false);
 
-    assertEquals(path.matches(EMPTY), true);
-    assertEquals(path.matches(ANY), true);
-    assertEquals(path.matches(FOO), false);
-    assertEquals(path.matches(EMPTY, EMPTY), false);
-    assertEquals(path.matches(FOO, EMPTY), false);
+		// toPath
 
-    // toPath
+		assertEquals(path.toPath(), Path.of(""));
+	}
 
-    assertEquals(path.toPath(), Path.of(""));
-  }
+	@Test
+	public void single() {
+		HttpRequestPath path;
+		path = ofString("/foo[GARBAGE]");
 
-  @Test
-  public void single() {
-    byte[] bytes;
-    bytes = Bytes.utf8("/foo[GARBAGE]");
+		path.slash(0);
 
-    HttpRequestPath path;
-    path = new HttpRequestPath(bytes);
+		path.end(4);
 
-    path.slash(0);
+		assertEquals(path.toString(), "/foo");
+		assertEquals(path.segmentCount(), 1);
+		assertEquals(path.segment(0), "foo");
 
-    path.end(4);
+		// matcher
 
-    assertEquals(path.toString(), "/foo");
-    assertEquals(path.segmentCount(), 1);
-    assertEquals(path.segment(0), "foo");
+		assertEquals(path.matches(EMPTY), false);
+		assertEquals(path.matches(ANY), true);
+		assertEquals(path.matches(FOO), true);
+		assertEquals(path.matches(EMPTY, EMPTY), false);
+		assertEquals(path.matches(FOO, EMPTY), false);
 
-    // matcher
+		// toPath
 
-    assertEquals(path.matches(EMPTY), false);
-    assertEquals(path.matches(ANY), true);
-    assertEquals(path.matches(FOO), true);
-    assertEquals(path.matches(EMPTY, EMPTY), false);
-    assertEquals(path.matches(FOO, EMPTY), false);
+		assertEquals(path.toPath(), Path.of("foo"));
+	}
 
-    // toPath
+	@Test
+	public void singleWithSlash() {
+		HttpRequestPath path;
+		path = ofString("/foo/[GARBAGE]");
 
-    assertEquals(path.toPath(), Path.of("foo"));
-  }
+		path.slash(0);
+		path.slash(4);
+		path.end(5);
 
-  @Test
-  public void singleWithSlash() {
-    byte[] bytes;
-    bytes = Bytes.utf8("/foo/[GARBAGE]");
+		assertEquals(path.toString(), "/foo/");
+		assertEquals(path.segmentCount(), 2);
+		assertEquals(path.segment(0), "foo");
+		assertEquals(path.segment(1), "");
 
-    HttpRequestPath path;
-    path = new HttpRequestPath(bytes);
+		// matcher
 
-    path.slash(0);
-    path.slash(4);
-    path.end(5);
+		assertEquals(path.matches(EMPTY), false);
+		assertEquals(path.matches(ANY), false);
+		assertEquals(path.matches(FOO), false);
+		assertEquals(path.matches(EMPTY, EMPTY), false);
+		assertEquals(path.matches(FOO, EMPTY), true);
+		assertEquals(path.matches(FOO, ANY), true);
+		assertEquals(path.matches(ANY, ANY), true);
 
-    assertEquals(path.toString(), "/foo/");
-    assertEquals(path.segmentCount(), 2);
-    assertEquals(path.segment(0), "foo");
-    assertEquals(path.segment(1), "");
+		// toPath
 
-    // matcher
+		assertEquals(path.toPath(), Path.of("foo", ""));
+	}
 
-    assertEquals(path.matches(EMPTY), false);
-    assertEquals(path.matches(ANY), false);
-    assertEquals(path.matches(FOO), false);
-    assertEquals(path.matches(EMPTY, EMPTY), false);
-    assertEquals(path.matches(FOO, EMPTY), true);
-    assertEquals(path.matches(FOO, ANY), true);
-    assertEquals(path.matches(ANY, ANY), true);
+	@Test
+	public void two() {
+		HttpRequestPath path;
+		path = ofString("/a/b[GARBAGE]");
 
-    // toPath
+		path.slash(0);
+		path.slash(2);
+		path.end(4);
 
-    assertEquals(path.toPath(), Path.of("foo", ""));
-  }
+		assertEquals(path.toString(), "/a/b");
+		assertEquals(path.segmentCount(), 2);
+		assertEquals(path.segment(0), "a");
+		assertEquals(path.segment(1), "b");
 
-  @Test
-  public void two() {
-    byte[] bytes;
-    bytes = Bytes.utf8("/a/b[GARBAGE]");
+		// matcher
 
-    HttpRequestPath path;
-    path = new HttpRequestPath(bytes);
+		Segment a = Segment.of("a");
+		Segment b = Segment.of("b");
 
-    path.slash(0);
-    path.slash(2);
-    path.end(4);
+		assertEquals(path.matches(EMPTY), false);
+		assertEquals(path.matches(ANY), false);
+		assertEquals(path.matches(FOO), false);
+		assertEquals(path.matches(ANY, ANY), true);
+		assertEquals(path.matches(a, b), true);
+		assertEquals(path.matches(a, Segment.of("B")), false);
+		assertEquals(path.matches(ANY, b), true);
+		assertEquals(path.matches(a, ANY), true);
 
-    assertEquals(path.toString(), "/a/b");
-    assertEquals(path.segmentCount(), 2);
-    assertEquals(path.segment(0), "a");
-    assertEquals(path.segment(1), "b");
+		// toPath
 
-    // matcher
+		assertEquals(path.toPath(), Path.of("a", "b"));
+	}
 
-    Segment a = Segment.of("a");
-    Segment b = Segment.of("b");
+	@Test
+	public void forceArrayResize() {
+		HttpRequestPath path;
+		path = ofString("/a/b/c/d/e/f/g/h/i[GARBAGE]");
 
-    assertEquals(path.matches(EMPTY), false);
-    assertEquals(path.matches(ANY), false);
-    assertEquals(path.matches(FOO), false);
-    assertEquals(path.matches(ANY, ANY), true);
-    assertEquals(path.matches(a, b), true);
-    assertEquals(path.matches(a, Segment.of("B")), false);
-    assertEquals(path.matches(ANY, b), true);
-    assertEquals(path.matches(a, ANY), true);
+		path.slash = new int[2];
 
-    // toPath
+		path.slash(0);
+		path.slash(2);
+		path.slash(4);
+		path.slash(6);
+		path.slash(8);
+		path.slash(10);
+		path.slash(12);
+		path.slash(14);
+		path.slash(16);
+		path.end(18);
 
-    assertEquals(path.toPath(), Path.of("a", "b"));
-  }
+		assertEquals(path.toString(), "/a/b/c/d/e/f/g/h/i");
+		assertEquals(path.segmentCount(), 9);
+		assertEquals(path.segment(0), "a");
+		assertEquals(path.segment(1), "b");
+		assertEquals(path.segment(2), "c");
+		assertEquals(path.segment(3), "d");
+		assertEquals(path.segment(4), "e");
+		assertEquals(path.segment(5), "f");
+		assertEquals(path.segment(6), "g");
+		assertEquals(path.segment(7), "h");
+		assertEquals(path.segment(8), "i");
 
-  @Test
-  public void forceArrayResize() {
-    byte[] bytes;
-    bytes = Bytes.utf8("/a/b/c/d/e/f/g/h/i[GARBAGE]");
+		// toPath
 
-    HttpRequestPath path;
-    path = new HttpRequestPath(bytes);
+		assertEquals(path.toPath(), Path.of("a", "b", "c", "d", "e", "f", "g", "h", "i"));
+	}
 
-    path.slash = new int[2];
+	private HttpRequestPath ofString(String s) {
+		byte[] bytes;
+		bytes = Bytes.utf8(s);
 
-    path.slash(0);
-    path.slash(2);
-    path.slash(4);
-    path.slash(6);
-    path.slash(8);
-    path.slash(10);
-    path.slash(12);
-    path.slash(14);
-    path.slash(16);
-    path.end(18);
-
-    assertEquals(path.toString(), "/a/b/c/d/e/f/g/h/i");
-    assertEquals(path.segmentCount(), 9);
-    assertEquals(path.segment(0), "a");
-    assertEquals(path.segment(1), "b");
-    assertEquals(path.segment(2), "c");
-    assertEquals(path.segment(3), "d");
-    assertEquals(path.segment(4), "e");
-    assertEquals(path.segment(5), "f");
-    assertEquals(path.segment(6), "g");
-    assertEquals(path.segment(7), "h");
-    assertEquals(path.segment(8), "i");
-
-    // toPath
-
-    assertEquals(path.toPath(), Path.of("a", "b", "c", "d", "e", "f", "g", "h", "i"));
-  }
+		return new HttpRequestPath(bytes, 0);
+	}
 
 }

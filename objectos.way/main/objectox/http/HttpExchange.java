@@ -41,631 +41,643 @@ import objectox.lang.Check;
 
 public final class HttpExchange implements objectos.http.HttpExchange {
 
-  public static final Note1<IOException> EIO_READ_ERROR;
+	public static final Note1<IOException> EIO_READ_ERROR;
 
-  static {
-    Class<?> s;
-    s = HttpExchange.class;
+	static {
+		Class<?> s;
+		s = HttpExchange.class;
 
-    EIO_READ_ERROR = Note1.error(s, "I/O read error");
-  }
+		EIO_READ_ERROR = Note1.error(s, "I/O read error");
+	}
 
-  private static final Map<Method, byte[]> METHOD_NAME_AND_SPACE;
+	private static final Map<Method, byte[]> METHOD_NAME_AND_SPACE;
 
-  static {
-    Map<Method, byte[]> map;
-    map = new EnumMap<>(Method.class);
+	static {
+		Map<Method, byte[]> map;
+		map = new EnumMap<>(Method.class);
 
-    for (var method : Method.values()) {
-      String name;
-      name = method.name();
+		for (var method : Method.values()) {
+			String name;
+			name = method.name();
 
-      byte[] value;
-      value = (name + " ").getBytes(StandardCharsets.UTF_8);
+			byte[] value;
+			value = (name + " ").getBytes(StandardCharsets.UTF_8);
 
-      map.put(method, value);
-    }
+			map.put(method, value);
+		}
 
-    METHOD_NAME_AND_SPACE = map;
-  }
+		METHOD_NAME_AND_SPACE = map;
+	}
 
-  // Setup phase
+	// Setup phase
 
-  static final byte _SETUP = 1;
+	static final byte _SETUP = 1;
 
-  // Input phase
+	// Input phase
 
-  static final byte _INPUT = 2;
-  static final byte _INPUT_READ = 3;
-  static final byte _INPUT_READ_EOF = 4;
-  static final byte _INPUT_READ_ERROR = 5;
+	static final byte _INPUT = 2;
+	static final byte _INPUT_READ = 3;
+	static final byte _INPUT_READ_EOF = 4;
+	static final byte _INPUT_READ_ERROR = 5;
 
-  // Input / Request Line phase
+	// Input / Request Line phase
 
-  static final byte _REQUEST_LINE = 6;
-  static final byte _REQUEST_LINE_METHOD = 7;
-  static final byte _REQUEST_LINE_METHOD_P = 8;
-  static final byte _REQUEST_LINE_TARGET = 9;
-  static final byte _REQUEST_LINE_PATH = 10;
-  static final byte _REQUEST_LINE_VERSION = 11;
+	static final byte _REQUEST_LINE = 6;
+	static final byte _REQUEST_LINE_METHOD = 7;
+	static final byte _REQUEST_LINE_METHOD_P = 8;
+	static final byte _REQUEST_LINE_TARGET = 9;
+	static final byte _REQUEST_LINE_PATH = 10;
+	static final byte _REQUEST_LINE_VERSION = 11;
 
-  // Input / Parse header phase
+	// Input / Parse header phase
 
-  static final byte _PARSE_HEADER = 12;
-  static final byte _PARSE_HEADER_NAME = 13;
-  static final byte _PARSE_HEADER_NAME_CASE_INSENSITIVE = 14;
-  static final byte _PARSE_HEADER_VALUE = 15;
+	static final byte _PARSE_HEADER = 12;
+	static final byte _PARSE_HEADER_NAME = 13;
+	static final byte _PARSE_HEADER_NAME_CASE_INSENSITIVE = 14;
+	static final byte _PARSE_HEADER_VALUE = 15;
 
-  // Input / Request Body
+	// Input / Request Body
 
-  static final byte _REQUEST_BODY = 16;
+	static final byte _REQUEST_BODY = 16;
 
-  // Handle phase
+	// Handle phase
 
-  static final byte _HANDLE = 17;
+	static final byte _HANDLE = 17;
 
-  // Output phase
+	// Output phase
 
-  static final byte _OUTPUT = 18;
-  static final byte _OUTPUT_BODY = 19;
-  static final byte _OUTPUT_BUFFER = 20;
-  static final byte _OUTPUT_HEADER = 21;
-  static final byte _OUTPUT_TERMINATOR = 22;
-  static final byte _OUTPUT_STATUS = 23;
+	static final byte _OUTPUT = 18;
+	static final byte _OUTPUT_BODY = 19;
+	static final byte _OUTPUT_BUFFER = 20;
+	static final byte _OUTPUT_HEADER = 21;
+	static final byte _OUTPUT_TERMINATOR = 22;
+	static final byte _OUTPUT_STATUS = 23;
 
-  // Result phase
+	// Result phase
 
-  static final byte _RESULT = 24;
+	static final byte _RESULT = 24;
 
-  // Non-executable states
+	// Non-executable states
 
-  static final byte _KEEP_ALIVE = 25;
-  static final byte _HANDLE_INVOKE = 26;
-  static final byte _REQUEST_ERROR = 27;
-  static final byte _STOP = 28;
+	static final byte _KEEP_ALIVE = 25;
+	static final byte _HANDLE_INVOKE = 26;
+	static final byte _REQUEST_ERROR = 27;
+	static final byte _STOP = 28;
 
-  byte[] buffer;
+	byte[] buffer;
 
-  int bufferIndex;
+	int bufferIndex;
 
-  int bufferLimit;
+	int bufferLimit;
 
-  IOException error;
+	IOException error;
 
-  boolean keepAlive;
+	boolean keepAlive;
 
-  Http.Method method;
+	Http.Method method;
 
-  byte nextAction;
+	byte nextAction;
 
-  NoteSink noteSink;
+	NoteSink noteSink;
 
-  HttpRequestBody requestBody;
+	HttpRequestBody requestBody;
 
-  HeaderName requestHeaderName;
+	HeaderName requestHeaderName;
 
-  Map<HeaderName, HeaderValue> requestHeaders;
+	Map<HeaderName, HeaderValue> requestHeaders;
 
-  HttpRequestPath requestPath;
+	HttpRequestPath requestPath;
 
-  Object responseBody;
+	Object responseBody;
 
-  List<HttpResponseHeader> responseHeaders;
+	List<HttpResponseHeader> responseHeaders;
 
-  int responseHeadersIndex;
+	int responseHeadersIndex;
 
-  Socket socket;
+	Socket socket;
 
-  byte state;
+	byte state;
 
-  Http.Status status;
+	Http.Status status;
 
-  byte versionMajor;
+	byte versionMajor;
 
-  byte versionMinor;
+	byte versionMinor;
 
-  public HttpExchange(int bufferSize,
-                      NoteSink noteSink,
-                      Socket socket) {
-    // there's a small chance we won't use the buffer
-    // but, as it is used in many places in this class, we create it eagerly
-    this.buffer = new byte[bufferSize];
+	public HttpExchange(int bufferSize,
+											NoteSink noteSink,
+											Socket socket) {
+		// there's a small chance we won't use the buffer
+		// but, as it is used in many places in this class, we create it eagerly
+		this.buffer = new byte[bufferSize];
 
-    this.noteSink = noteSink;
+		this.noteSink = noteSink;
 
-    this.socket = socket;
+		this.socket = socket;
 
-    keepAlive = true;
+		keepAlive = true;
 
-    state = _SETUP;
-  }
+		state = _SETUP;
+	}
 
-  /**
-   * For testing purposes only.
-   */
-  HttpExchange() {}
+	/**
+	 * For testing purposes only.
+	 */
+	HttpExchange() {}
 
-  @Override
-  public final boolean active() {
-    return switch (state) {
-      case _SETUP -> executeRequestPhase();
+	@Override
+	public final boolean active() {
+		return switch (state) {
+			case _SETUP -> executeRequestPhase();
 
-      case _HANDLE_INVOKE -> executeResponsePhase();
+			case _HANDLE_INVOKE -> executeResponsePhase();
 
-      default -> throw new UnsupportedOperationException(
-          "Implement me :: state=" + state
-      );
-    };
-  }
+			default -> throw new UnsupportedOperationException(
+					"Implement me :: state=" + state
+			);
+		};
+	}
 
-  private boolean executeRequestPhase() {
-    while (state <= _HANDLE) {
-      stepOne();
-    }
+	private boolean executeRequestPhase() {
+		while (state <= _HANDLE) {
+			stepOne();
+		}
 
-    return state != _STOP;
-  }
+		return state != _STOP;
+	}
 
-  private boolean executeResponsePhase() {
-    state = _OUTPUT;
+	private boolean executeResponsePhase() {
+		state = _OUTPUT;
 
-    while (state <= _RESULT) {
-      stepOne();
-    }
+		while (state <= _RESULT) {
+			stepOne();
+		}
 
-    if (state == _KEEP_ALIVE) {
-      state = _SETUP;
+		if (state == _KEEP_ALIVE) {
+			state = _SETUP;
 
-      return executeRequestPhase();
-    } else {
-      return state != _STOP;
-    }
-  }
+			return executeRequestPhase();
+		} else {
+			return state != _STOP;
+		}
+	}
 
-  @Override
-  public final void close() throws IOException {
-    socket.close();
-  }
+	@Override
+	public final void close() throws IOException {
+		socket.close();
+	}
 
-  @Override
-  public final Body body() {
-    checkStateHandle();
+	@Override
+	public final Body body() {
+		checkStateHandle();
 
-    return requestBody;
-  }
+		return requestBody;
+	}
 
-  @Override
-  public final Value header(Name name) {
-    Check.notNull(name, "name == null");
+	@Override
+	public final Value header(Name name) {
+		Check.notNull(name, "name == null");
 
-    checkStateHandle();
+		checkStateHandle();
 
-    Value value;
-    value = requestHeaders.get(name);
+		Value value;
+		value = requestHeaders.get(name);
 
-    if (value == null) {
-      value = Value.NULL;
-    }
+		if (value == null) {
+			value = Value.NULL;
+		}
 
-    return value;
-  }
+		return value;
+	}
 
-  @Override
-  public final boolean matches(Segment pat) {
-    checkStateHandle();
+	@Override
+	public final boolean matches(Segment pat) {
+		checkStateHandle();
 
-    return requestPath.matches(pat);
-  }
+		return requestPath.matches(pat);
+	}
 
-  @Override
-  public final boolean matches(Segment pat1, Segment pat2) {
-    checkStateHandle();
+	@Override
+	public final boolean matches(Segment pat1, Segment pat2) {
+		checkStateHandle();
 
-    return requestPath.matches(pat1, pat2);
-  }
+		return requestPath.matches(pat1, pat2);
+	}
 
-  @Override
-  public final Method method() {
-    checkStateHandle();
+	@Override
+	public final Method method() {
+		checkStateHandle();
 
-    return method;
-  }
+		return method;
+	}
 
-  @Override
-  public final String path() {
-    checkStateHandle();
+	@Override
+	public final String path() {
+		checkStateHandle();
 
-    return requestPath.toString();
-  }
+		return requestPath.toString();
+	}
 
-  @Override
-  public final Path toRelativePath() {
-    checkStateHandle();
+	@Override
+	public final boolean pathEquals(String s) {
+		Check.notNull(s, "s == null");
 
-    return requestPath.toPath();
-  }
+		checkStateHandle();
 
-  @Override
-  public final Path resolveAgainst(Path directory) {
-    Check.notNull(directory, "directory == null");
+		String value;
+		value = requestPath.toString();
 
-    Check.state(status == null, "status has already been set");
+		return value.equals(s);
+	}
 
-    checkStateHandle();
+	@Override
+	public final Path toRelativePath() {
+		checkStateHandle();
 
-    Path relative;
-    relative = requestPath.toPath();
+		return requestPath.toPath();
+	}
 
-    Path resolved;
-    resolved = directory.resolve(relative);
+	@Override
+	public final Path resolveAgainst(Path directory) {
+		Check.notNull(directory, "directory == null");
 
-    resolved = resolved.normalize();
+		Check.state(status == null, "status has already been set");
 
-    return resolved;
-  }
+		checkStateHandle();
 
-  @Override
-  public final String segment(int index) {
-    checkStateHandle();
+		Path relative;
+		relative = requestPath.toPath();
 
-    return requestPath.segment(index);
-  }
+		Path resolved;
+		resolved = directory.resolve(relative);
 
-  @Override
-  public final Status status() {
-    checkStateHandle();
+		resolved = resolved.normalize();
 
-    return status;
-  }
+		return resolved;
+	}
 
-  @Override
-  public final boolean hasResponse() {
-    checkStateHandle();
+	@Override
+	public final String segment(int index) {
+		checkStateHandle();
 
-    return status != null;
-  }
+		return requestPath.segment(index);
+	}
 
-  @Override
-  public final void status(Http.Status status) {
-    Check.notNull(status, "status == null");
+	@Override
+	public final Status status() {
+		checkStateHandle();
 
-    checkStateHandle();
+		return status;
+	}
 
-    this.status = status;
-  }
+	@Override
+	public final boolean hasResponse() {
+		checkStateHandle();
 
-  @Override
-  public final void header(Http.Header.Name name, String value) {
-    Check.notNull(name, "name == null");
-    Check.notNull(value, "value == null");
+		return status != null;
+	}
 
-    checkStateHandle();
+	@Override
+	public final void status(Http.Status status) {
+		Check.notNull(status, "status == null");
 
-    if (name == HeaderName.CONNECTION && value.equalsIgnoreCase("close")) {
-      keepAlive = false;
-    }
+		checkStateHandle();
 
-    HttpResponseHeader header;
-    header = new HttpResponseHeader(name, value);
+		this.status = status;
+	}
 
-    responseHeaders.add(header);
-  }
+	@Override
+	public final void header(Http.Header.Name name, String value) {
+		Check.notNull(name, "name == null");
+		Check.notNull(value, "value == null");
 
-  @Override
-  public final void body(byte[] data) {
-    Check.notNull(data, "data == null");
+		checkStateHandle();
 
-    checkStateHandle();
+		if (name == HeaderName.CONNECTION && value.equalsIgnoreCase("close")) {
+			keepAlive = false;
+		}
 
-    responseBody = data;
-  }
+		HttpResponseHeader header;
+		header = new HttpResponseHeader(name, value);
 
-  @Override
-  public final void body(CharWritable entity, Charset charset) {
-    Check.notNull(entity, "entity == null");
-    Check.notNull(charset, "charset == null");
+		responseHeaders.add(header);
+	}
 
-    checkStateHandle();
+	@Override
+	public final void body(byte[] data) {
+		Check.notNull(data, "data == null");
 
-    responseBody = new HttpChunkedChars(this, entity, charset);
-  }
+		checkStateHandle();
 
-  private void checkStateHandle() {
-    if (state != _HANDLE_INVOKE) {
-      throw new IllegalStateException(
-          "Request has not been parsed yet or response has already been sent."
-      );
-    }
-  }
+		responseBody = data;
+	}
 
-  final void stepOne() {
-    state = switch (state) {
-      // Setup phase
+	@Override
+	public final void body(CharWritable entity, Charset charset) {
+		Check.notNull(entity, "entity == null");
+		Check.notNull(charset, "charset == null");
 
-      case _SETUP -> setup();
+		checkStateHandle();
 
-      // Input phase
+		responseBody = new HttpChunkedChars(this, entity, charset);
+	}
 
-      case _INPUT -> input();
-      case _INPUT_READ -> inputRead();
-      case _INPUT_READ_EOF -> inputReadEof();
-      case _INPUT_READ_ERROR -> inputReadError();
+	private void checkStateHandle() {
+		if (state != _HANDLE_INVOKE) {
+			throw new IllegalStateException(
+					"Request has not been parsed yet or response has already been sent."
+			);
+		}
+	}
 
-      // Input / Request Line phase
+	final void stepOne() {
+		state = switch (state) {
+			// Setup phase
 
-      case _REQUEST_LINE -> requestLine();
-      case _REQUEST_LINE_METHOD -> requestLineMethod();
-      case _REQUEST_LINE_METHOD_P -> requestLineMethodP();
-      case _REQUEST_LINE_TARGET -> requestLineTarget();
-      case _REQUEST_LINE_PATH -> requestLinePath();
-      case _REQUEST_LINE_VERSION -> requestLineVersion();
+			case _SETUP -> setup();
 
-      // Input / Parse Header phase
+			// Input phase
 
-      case _PARSE_HEADER -> parseHeader();
-      case _PARSE_HEADER_NAME -> parseHeaderName();
-      case _PARSE_HEADER_VALUE -> parseHeaderValue();
+			case _INPUT -> input();
+			case _INPUT_READ -> inputRead();
+			case _INPUT_READ_EOF -> inputReadEof();
+			case _INPUT_READ_ERROR -> inputReadError();
 
-      // Input / Request Body
+			// Input / Request Line phase
 
-      case _REQUEST_BODY -> requestBody();
+			case _REQUEST_LINE -> requestLine();
+			case _REQUEST_LINE_METHOD -> requestLineMethod();
+			case _REQUEST_LINE_METHOD_P -> requestLineMethodP();
+			case _REQUEST_LINE_TARGET -> requestLineTarget();
+			case _REQUEST_LINE_PATH -> requestLinePath();
+			case _REQUEST_LINE_VERSION -> requestLineVersion();
 
-      // Handle phase
+			// Input / Parse Header phase
 
-      case _HANDLE -> handle();
+			case _PARSE_HEADER -> parseHeader();
+			case _PARSE_HEADER_NAME -> parseHeaderName();
+			case _PARSE_HEADER_VALUE -> parseHeaderValue();
 
-      // Output phase
+			// Input / Request Body
 
-      case _OUTPUT -> output();
-      case _OUTPUT_BODY -> outputBody();
-      case _OUTPUT_BUFFER -> outputBuffer();
-      case _OUTPUT_HEADER -> outputHeader();
-      case _OUTPUT_TERMINATOR -> outputTerminator();
-      case _OUTPUT_STATUS -> outputStatus();
+			case _REQUEST_BODY -> requestBody();
 
-      // Result phase
+			// Handle phase
 
-      case _RESULT -> result();
+			case _HANDLE -> handle();
 
-      case _REQUEST_ERROR -> {
-        throw new UnsupportedOperationException(
-            "status=" + status, error
-        );
-      }
+			// Output phase
 
-      default -> throw new UnsupportedOperationException(
-          "Implement me :: state=" + state
-      );
-    };
-  }
+			case _OUTPUT -> output();
+			case _OUTPUT_BODY -> outputBody();
+			case _OUTPUT_BUFFER -> outputBuffer();
+			case _OUTPUT_HEADER -> outputHeader();
+			case _OUTPUT_TERMINATOR -> outputTerminator();
+			case _OUTPUT_STATUS -> outputStatus();
 
-  private boolean bufferEquals(byte[] target, int start) {
-    int requiredIndex;
-    requiredIndex = start + target.length;
+			// Result phase
 
-    if (!bufferHasIndex(requiredIndex)) {
-      return false;
-    }
+			case _RESULT -> result();
 
-    return Arrays.equals(
-        buffer, start, requiredIndex,
-        target, 0, target.length);
-  }
+			case _REQUEST_ERROR -> {
+				throw new UnsupportedOperationException(
+						"status=" + status, error
+				);
+			}
 
-  private byte bufferGet(int index) {
-    return buffer[index];
-  }
+			default -> throw new UnsupportedOperationException(
+					"Implement me :: state=" + state
+			);
+		};
+	}
 
-  private boolean bufferHasIndex(int index) {
-    return index < bufferLimit;
-  }
+	private boolean bufferEquals(byte[] target, int start) {
+		int requiredIndex;
+		requiredIndex = start + target.length;
 
-  private byte handle() {
-    keepAlive = handle0KeepAlive();
+		if (!bufferHasIndex(requiredIndex)) {
+			return false;
+		}
 
-    responseBody = null;
+		return Arrays.equals(
+				buffer, start, requiredIndex,
+				target, 0, target.length);
+	}
 
-    if (responseHeaders == null) {
-      responseHeaders = new GrowableList<>();
-    } else {
-      responseHeaders.clear();
-    }
+	private byte bufferGet(int index) {
+		return buffer[index];
+	}
 
-    return _HANDLE_INVOKE;
-  }
+	private boolean bufferHasIndex(int index) {
+		return index < bufferLimit;
+	}
 
-  private boolean handle0KeepAlive() {
-    HeaderValue connection;
-    connection = requestHeaders.getOrDefault(HeaderName.CONNECTION, HeaderValue.EMPTY);
+	private byte handle() {
+		keepAlive = handle0KeepAlive();
 
-    if (connection.contentEquals(Bytes.KEEP_ALIVE)) {
-      return true;
-    }
+		responseBody = null;
 
-    if (connection.contentEquals(Bytes.CLOSE)) {
-      return false;
-    }
+		if (responseHeaders == null) {
+			responseHeaders = new GrowableList<>();
+		} else {
+			responseHeaders.clear();
+		}
 
-    return versionMajor == 1 && versionMinor >= 1;
-  }
+		return _HANDLE_INVOKE;
+	}
 
-  private byte input() {
-    nextAction = _REQUEST_LINE;
+	private boolean handle0KeepAlive() {
+		HeaderValue connection;
+		connection = requestHeaders.getOrDefault(HeaderName.CONNECTION, HeaderValue.EMPTY);
 
-    return inputRead();
-  }
+		if (connection.contentEquals(Bytes.KEEP_ALIVE)) {
+			return true;
+		}
 
-  private byte inputRead() {
-    InputStream inputStream;
+		if (connection.contentEquals(Bytes.CLOSE)) {
+			return false;
+		}
 
-    try {
-      inputStream = socket.getInputStream();
-    } catch (IOException e) {
-      error = e;
+		return versionMajor == 1 && versionMinor >= 1;
+	}
 
-      return _INPUT_READ_ERROR;
-    }
+	private byte input() {
+		nextAction = _REQUEST_LINE;
 
-    int writableLength;
-    writableLength = buffer.length - bufferLimit;
+		return inputRead();
+	}
 
-    int bytesRead;
+	private byte inputRead() {
+		InputStream inputStream;
 
-    try {
-      bytesRead = inputStream.read(buffer, bufferLimit, writableLength);
-    } catch (IOException e) {
-      error = e;
+		try {
+			inputStream = socket.getInputStream();
+		} catch (IOException e) {
+			error = e;
 
-      return _INPUT_READ_ERROR;
-    }
+			return _INPUT_READ_ERROR;
+		}
 
-    if (bytesRead < 0) {
-      return _INPUT_READ_EOF;
-    }
+		int writableLength;
+		writableLength = buffer.length - bufferLimit;
 
-    bufferLimit += bytesRead;
+		int bytesRead;
 
-    return nextAction;
-  }
+		try {
+			bytesRead = inputStream.read(buffer, bufferLimit, writableLength);
+		} catch (IOException e) {
+			error = e;
 
-  private byte inputReadEof() {
-    reset();
+			return _INPUT_READ_ERROR;
+		}
 
-    keepAlive = false;
+		if (bytesRead < 0) {
+			return _INPUT_READ_EOF;
+		}
 
-    return _STOP;
-  }
+		bufferLimit += bytesRead;
 
-  private byte inputReadError() {
-    noteSink.send(EIO_READ_ERROR, error);
+		return nextAction;
+	}
 
-    error = null;
+	private byte inputReadEof() {
+		reset();
 
-    return inputReadEof();
-  }
+		keepAlive = false;
 
-  private byte output() {
-    bufferIndex = bufferLimit = responseHeadersIndex = 0;
+		return _STOP;
+	}
 
-    return _OUTPUT_STATUS;
-  }
+	private byte inputReadError() {
+		noteSink.send(EIO_READ_ERROR, error);
 
-  private byte outputBody() {
-    try {
-      OutputStream outputStream;
-      outputStream = socket.getOutputStream();
+		error = null;
 
-      // write headers + terminator
-      outputStream.write(buffer, 0, bufferLimit);
+		return inputReadEof();
+	}
 
-      if (responseBody == null) {
-        return _RESULT;
-      }
+	private byte output() {
+		bufferIndex = bufferLimit = responseHeadersIndex = 0;
 
-      if (responseBody instanceof byte[] bytes) {
-        outputStream.write(bytes, 0, bytes.length);
+		return _OUTPUT_STATUS;
+	}
 
-        return _RESULT;
-      }
+	private byte outputBody() {
+		try {
+			OutputStream outputStream;
+			outputStream = socket.getOutputStream();
 
-      if (responseBody instanceof HttpChunkedChars entity) {
-        bufferLimit = 0;
+			// write headers + terminator
+			outputStream.write(buffer, 0, bufferLimit);
 
-        entity.write();
+			if (responseBody == null) {
+				return _RESULT;
+			}
 
-        return _RESULT;
-      }
+			if (responseBody instanceof byte[] bytes) {
+				outputStream.write(bytes, 0, bytes.length);
 
-      throw new UnsupportedOperationException(
-          "Implement me :: type=" + responseBody.getClass()
-      );
-    } catch (IOException e) {
-      return toResult(e);
-    }
-  }
+				return _RESULT;
+			}
 
-  private byte toResult(IOException e) {
-    error = e;
+			if (responseBody instanceof HttpChunkedChars entity) {
+				bufferLimit = 0;
 
-    return _RESULT;
-  }
+				entity.write();
 
-  private byte outputBuffer() {
-    try {
-      OutputStream outputStream;
-      outputStream = socket.getOutputStream();
+				return _RESULT;
+			}
 
-      outputStream.write(buffer, 0, bufferLimit);
+			throw new UnsupportedOperationException(
+					"Implement me :: type=" + responseBody.getClass()
+			);
+		} catch (IOException e) {
+			return toResult(e);
+		}
+	}
 
-      bufferLimit = 0;
+	private byte toResult(IOException e) {
+		error = e;
 
-      return nextAction;
-    } catch (IOException e) {
-      return toResult(e);
-    }
-  }
+		return _RESULT;
+	}
 
-  private byte outputHeader() {
-    if (responseHeadersIndex == responseHeaders.size()) {
-      return _OUTPUT_TERMINATOR;
-    }
+	private byte outputBuffer() {
+		try {
+			OutputStream outputStream;
+			outputStream = socket.getOutputStream();
 
-    HttpResponseHeader header;
-    header = responseHeaders.get(responseHeadersIndex);
+			outputStream.write(buffer, 0, bufferLimit);
 
-    byte[] headerBytes;
-    headerBytes = header.bytes();
+			bufferLimit = 0;
 
-    int headerLength;
-    headerLength = headerBytes.length;
+			return nextAction;
+		} catch (IOException e) {
+			return toResult(e);
+		}
+	}
 
-    int requiredLength;
-    requiredLength = bufferLimit + headerLength;
+	private byte outputHeader() {
+		if (responseHeadersIndex == responseHeaders.size()) {
+			return _OUTPUT_TERMINATOR;
+		}
 
-    if (buffer.length < requiredLength) {
-      nextAction = _OUTPUT_HEADER;
+		HttpResponseHeader header;
+		header = responseHeaders.get(responseHeadersIndex);
 
-      return _OUTPUT_BUFFER;
-    }
+		byte[] headerBytes;
+		headerBytes = header.bytes();
 
-    System.arraycopy(headerBytes, 0, buffer, bufferLimit, headerLength);
+		int headerLength;
+		headerLength = headerBytes.length;
 
-    bufferLimit += headerLength;
+		int requiredLength;
+		requiredLength = bufferLimit + headerLength;
 
-    responseHeadersIndex++;
+		if (buffer.length < requiredLength) {
+			nextAction = _OUTPUT_HEADER;
 
-    return _OUTPUT_HEADER;
-  }
+			return _OUTPUT_BUFFER;
+		}
 
-  private byte outputStatus() {
-    // Buffer will be large enough for status line.
-    // Enforced during server creation (in theory).
-    // In any case, let's be sure...
+		System.arraycopy(headerBytes, 0, buffer, bufferLimit, headerLength);
 
-    int requiredLength;
+		bufferLimit += headerLength;
 
-    Version version;
-    version = Version.HTTP_1_1;
+		responseHeadersIndex++;
 
-    requiredLength = version.responseBytes.length;
+		return _OUTPUT_HEADER;
+	}
 
-    byte[] statusBytes;
+	private byte outputStatus() {
+		// Buffer will be large enough for status line.
+		// Enforced during server creation (in theory).
+		// In any case, let's be sure...
 
-    if (status instanceof HttpStatus internal) {
-      statusBytes = internal.responseBytes;
-    } else {
-      statusBytes = HttpStatus.responseBytes(status);
-    }
+		int requiredLength;
 
-    requiredLength += statusBytes.length;
+		Version version;
+		version = Version.HTTP_1_1;
 
-    if (buffer.length < requiredLength) {
-      // we could send the response unbuffered.
-      // Instead this should be considered a bug in the library
+		requiredLength = version.responseBytes.length;
 
-      // TODO log irrecoverable error
+		byte[] statusBytes;
 
-      error = new IOException("""
+		if (status instanceof HttpStatus internal) {
+			statusBytes = internal.responseBytes;
+		} else {
+			statusBytes = HttpStatus.responseBytes(status);
+		}
+
+		requiredLength += statusBytes.length;
+
+		if (buffer.length < requiredLength) {
+			// we could send the response unbuffered.
+			// Instead this should be considered a bug in the library
+
+			// TODO log irrecoverable error
+
+			error = new IOException("""
       Buffer is not large enough to write out status line.
 
       buffer.length=%d
@@ -674,702 +686,702 @@ public final class HttpExchange implements objectos.http.HttpExchange {
       Please increase the internal buffer size
       """.formatted(buffer.length, requiredLength));
 
-      return _RESULT;
-    }
+			return _RESULT;
+		}
 
-    byte[] bytes;
-    bytes = version.responseBytes;
+		byte[] bytes;
+		bytes = version.responseBytes;
 
-    System.arraycopy(bytes, 0, buffer, bufferLimit, bytes.length);
+		System.arraycopy(bytes, 0, buffer, bufferLimit, bytes.length);
 
-    bufferLimit += bytes.length;
+		bufferLimit += bytes.length;
 
-    bytes = statusBytes;
+		bytes = statusBytes;
 
-    System.arraycopy(bytes, 0, buffer, bufferLimit, bytes.length);
+		System.arraycopy(bytes, 0, buffer, bufferLimit, bytes.length);
 
-    bufferLimit += bytes.length;
+		bufferLimit += bytes.length;
 
-    return _OUTPUT_HEADER;
-  }
+		return _OUTPUT_HEADER;
+	}
 
-  private byte outputTerminator() {
-    // buffer must be large enough to hold CR + LF
+	private byte outputTerminator() {
+		// buffer must be large enough to hold CR + LF
 
-    int requiredLength;
-    requiredLength = bufferLimit + 2;
+		int requiredLength;
+		requiredLength = bufferLimit + 2;
 
-    if (buffer.length < requiredLength) {
-      // buffer is not large enough
-      // flush buffer and try again
+		if (buffer.length < requiredLength) {
+			// buffer is not large enough
+			// flush buffer and try again
 
-      nextAction = _OUTPUT_TERMINATOR;
+			nextAction = _OUTPUT_TERMINATOR;
 
-      return _OUTPUT_BUFFER;
-    }
+			return _OUTPUT_BUFFER;
+		}
 
-    buffer[bufferLimit++] = Bytes.CR;
+		buffer[bufferLimit++] = Bytes.CR;
 
-    buffer[bufferLimit++] = Bytes.LF;
+		buffer[bufferLimit++] = Bytes.LF;
 
-    return _OUTPUT_BODY;
-  }
+		return _OUTPUT_BODY;
+	}
 
-  private byte parseHeader() {
-    // if the buffer matches CRLF or LF then header has ended
-    // otherwise, we will try to parse the header field name
+	private byte parseHeader() {
+		// if the buffer matches CRLF or LF then header has ended
+		// otherwise, we will try to parse the header field name
 
-    int index;
-    index = bufferIndex;
+		int index;
+		index = bufferIndex;
 
-    if (!bufferHasIndex(index)) {
-      // ask for more data
+		if (!bufferHasIndex(index)) {
+			// ask for more data
 
-      return toInputReadIfPossible(state, HttpStatus.BAD_REQUEST);
-    }
+			return toInputReadIfPossible(state, HttpStatus.BAD_REQUEST);
+		}
 
-    // we'll check if buffer is CRLF
+		// we'll check if buffer is CRLF
 
-    final byte first;
-    first = bufferGet(index++);
+		final byte first;
+		first = bufferGet(index++);
 
-    if (first == Bytes.CR) {
-      // ok, first is CR
+		if (first == Bytes.CR) {
+			// ok, first is CR
 
-      if (!bufferHasIndex(index)) {
-        // ask for more data
+			if (!bufferHasIndex(index)) {
+				// ask for more data
 
-        return toInputReadIfPossible(state, HttpStatus.BAD_REQUEST);
-      }
+				return toInputReadIfPossible(state, HttpStatus.BAD_REQUEST);
+			}
 
-      final byte second;
-      second = bufferGet(index++);
+			final byte second;
+			second = bufferGet(index++);
 
-      if (second == Bytes.LF) {
-        bufferIndex = index;
+			if (second == Bytes.LF) {
+				bufferIndex = index;
 
-        return toHandleOrRequestBody();
-      }
+				return toHandleOrRequestBody();
+			}
 
-      // not sure the best way to handle this case
+			// not sure the best way to handle this case
 
-      return _PARSE_HEADER_NAME;
-    }
+			return _PARSE_HEADER_NAME;
+		}
 
-    if (first == Bytes.LF) {
-      bufferIndex = index;
+		if (first == Bytes.LF) {
+			bufferIndex = index;
 
-      return toHandleOrRequestBody();
-    }
+			return toHandleOrRequestBody();
+		}
 
-    return _PARSE_HEADER_NAME;
-  }
+		return _PARSE_HEADER_NAME;
+	}
 
-  private byte parseHeaderName() {
-    // we reset any previous found header name
+	private byte parseHeaderName() {
+		// we reset any previous found header name
 
-    requestHeaderName = null;
+		requestHeaderName = null;
 
-    // we will search the buffer for a ':' char
+		// we will search the buffer for a ':' char
 
-    final int nameStart;
-    nameStart = bufferIndex;
+		final int nameStart;
+		nameStart = bufferIndex;
 
-    int colonIndex;
-    colonIndex = nameStart;
+		int colonIndex;
+		colonIndex = nameStart;
 
-    boolean found;
-    found = false;
+		boolean found;
+		found = false;
 
-    for (; bufferHasIndex(colonIndex); colonIndex++) {
-      byte b;
-      b = bufferGet(colonIndex);
+		for (; bufferHasIndex(colonIndex); colonIndex++) {
+			byte b;
+			b = bufferGet(colonIndex);
 
-      if (b == Bytes.COLON) {
-        found = true;
+			if (b == Bytes.COLON) {
+				found = true;
 
-        break;
-      }
-    }
+				break;
+			}
+		}
 
-    if (!found) {
-      // ':' was not found
-      // read more data if possible
+		if (!found) {
+			// ':' was not found
+			// read more data if possible
 
-      return toInputReadIfPossible(state, HttpStatus.BAD_REQUEST);
-    }
+			return toInputReadIfPossible(state, HttpStatus.BAD_REQUEST);
+		}
 
-    // we will use the first char as hash code
+		// we will use the first char as hash code
 
-    final byte first;
-    first = bufferGet(nameStart);
+		final byte first;
+		first = bufferGet(nameStart);
 
-    // bufferIndex will resume immediately after colon
+		// bufferIndex will resume immediately after colon
 
-    bufferIndex = colonIndex + 1;
+		bufferIndex = colonIndex + 1;
 
-    // ad hoc hash map
+		// ad hoc hash map
 
-    return switch (first) {
-      case 'A' -> parseHeaderName0(nameStart,
-          HeaderName.ACCEPT_ENCODING
-      );
+		return switch (first) {
+			case 'A' -> parseHeaderName0(nameStart,
+					HeaderName.ACCEPT_ENCODING
+			);
 
-      case 'C' -> parseHeaderName0(nameStart,
-          HeaderName.CONNECTION,
-          HeaderName.CONTENT_LENGTH,
-          HeaderName.CONTENT_TYPE
-      );
+			case 'C' -> parseHeaderName0(nameStart,
+					HeaderName.CONNECTION,
+					HeaderName.CONTENT_LENGTH,
+					HeaderName.CONTENT_TYPE
+			);
 
-      case 'D' -> parseHeaderName0(nameStart,
-          HeaderName.DATE
-      );
+			case 'D' -> parseHeaderName0(nameStart,
+					HeaderName.DATE
+			);
 
-      case 'H' -> parseHeaderName0(nameStart,
-          HeaderName.HOST
-      );
+			case 'H' -> parseHeaderName0(nameStart,
+					HeaderName.HOST
+			);
 
-      case 'T' -> parseHeaderName0(nameStart,
-          HeaderName.TRANSFER_ENCODING
-      );
+			case 'T' -> parseHeaderName0(nameStart,
+					HeaderName.TRANSFER_ENCODING
+			);
 
-      case 'U' -> parseHeaderName0(nameStart,
-          HeaderName.USER_AGENT
-      );
+			case 'U' -> parseHeaderName0(nameStart,
+					HeaderName.USER_AGENT
+			);
 
-      default -> _PARSE_HEADER_VALUE;
-    };
-  }
+			default -> _PARSE_HEADER_VALUE;
+		};
+	}
 
-  private byte parseHeaderName0(int nameStart, HeaderName candidate) {
-    final byte[] candidateBytes;
-    candidateBytes = candidate.bytes;
+	private byte parseHeaderName0(int nameStart, HeaderName candidate) {
+		final byte[] candidateBytes;
+		candidateBytes = candidate.bytes;
 
-    if (bufferEquals(candidateBytes, nameStart)) {
-      requestHeaderName = candidate;
-    }
+		if (bufferEquals(candidateBytes, nameStart)) {
+			requestHeaderName = candidate;
+		}
 
-    return _PARSE_HEADER_VALUE;
-  }
+		return _PARSE_HEADER_VALUE;
+	}
 
-  private byte parseHeaderName0(int nameStart, HeaderName c0, HeaderName c1, HeaderName c2) {
-    byte result;
-    result = parseHeaderName0(nameStart, c0);
+	private byte parseHeaderName0(int nameStart, HeaderName c0, HeaderName c1, HeaderName c2) {
+		byte result;
+		result = parseHeaderName0(nameStart, c0);
 
-    if (requestHeaderName != null) {
-      return result;
-    }
+		if (requestHeaderName != null) {
+			return result;
+		}
 
-    result = parseHeaderName0(nameStart, c1);
+		result = parseHeaderName0(nameStart, c1);
 
-    if (requestHeaderName != null) {
-      return result;
-    }
+		if (requestHeaderName != null) {
+			return result;
+		}
 
-    return parseHeaderName0(nameStart, c2);
-  }
+		return parseHeaderName0(nameStart, c2);
+	}
 
-  private byte parseHeaderValue() {
-    int valueStart;
-    valueStart = bufferIndex;
+	private byte parseHeaderValue() {
+		int valueStart;
+		valueStart = bufferIndex;
 
-    // we search for the LF char that marks the end-of-line
+		// we search for the LF char that marks the end-of-line
 
-    int lfIndex = valueStart;
+		int lfIndex = valueStart;
 
-    boolean found;
-    found = false;
+		boolean found;
+		found = false;
 
-    for (; bufferHasIndex(lfIndex); lfIndex++) {
-      byte b;
-      b = bufferGet(lfIndex);
+		for (; bufferHasIndex(lfIndex); lfIndex++) {
+			byte b;
+			b = bufferGet(lfIndex);
 
-      if (b == Bytes.LF) {
-        found = true;
+			if (b == Bytes.LF) {
+				found = true;
 
-        break;
-      }
-    }
+				break;
+			}
+		}
 
-    if (!found) {
-      // LF was not found
+		if (!found) {
+			// LF was not found
 
-      return toInputReadIfPossible(state, HttpStatus.BAD_REQUEST);
-    }
+			return toInputReadIfPossible(state, HttpStatus.BAD_REQUEST);
+		}
 
-    // we'll trim any SP, HTAB or CR from the end of the value
+		// we'll trim any SP, HTAB or CR from the end of the value
 
-    int valueEnd;
-    valueEnd = lfIndex;
+		int valueEnd;
+		valueEnd = lfIndex;
 
-    loop: for (; valueEnd > valueStart; valueEnd--) {
-      byte b;
-      b = bufferGet(valueEnd - 1);
+		loop: for (; valueEnd > valueStart; valueEnd--) {
+			byte b;
+			b = bufferGet(valueEnd - 1);
 
-      switch (b) {
-        case Bytes.SP, Bytes.HTAB, Bytes.CR -> {
-          continue loop;
-        }
+			switch (b) {
+				case Bytes.SP, Bytes.HTAB, Bytes.CR -> {
+					continue loop;
+				}
 
-        default -> {
-          break loop;
-        }
-      }
-    }
+				default -> {
+					break loop;
+				}
+			}
+		}
 
-    // we'll trim any OWS, if found, from the start of the value
+		// we'll trim any OWS, if found, from the start of the value
 
-    for (; valueStart < valueEnd; valueStart++) {
-      byte b;
-      b = bufferGet(valueStart);
+		for (; valueStart < valueEnd; valueStart++) {
+			byte b;
+			b = bufferGet(valueStart);
 
-      if (!Bytes.isOptionalWhitespace(b)) {
-        break;
-      }
-    }
+			if (!Bytes.isOptionalWhitespace(b)) {
+				break;
+			}
+		}
 
-    if (requestHeaderName != null) {
-      HeaderValue headerValue;
-      headerValue = new HeaderValue(buffer, valueStart, valueEnd);
+		if (requestHeaderName != null) {
+			HeaderValue headerValue;
+			headerValue = new HeaderValue(buffer, valueStart, valueEnd);
 
-      if (requestHeaders == null) {
-        requestHeaders = new EnumMap<>(HeaderName.class);
-      }
+			if (requestHeaders == null) {
+				requestHeaders = new EnumMap<>(HeaderName.class);
+			}
 
-      HeaderValue previousValue;
-      previousValue = requestHeaders.put(requestHeaderName, headerValue);
+			HeaderValue previousValue;
+			previousValue = requestHeaders.put(requestHeaderName, headerValue);
 
-      if (previousValue != null) {
-        throw new UnsupportedOperationException("Implement me");
-      }
+			if (previousValue != null) {
+				throw new UnsupportedOperationException("Implement me");
+			}
 
-      // reset header name just in case
+			// reset header name just in case
 
-      requestHeaderName = null;
-    }
+			requestHeaderName = null;
+		}
 
-    // we have found the value.
-    // bufferIndex should point to the position immediately after the LF char
+		// we have found the value.
+		// bufferIndex should point to the position immediately after the LF char
 
-    bufferIndex = lfIndex + 1;
+		bufferIndex = lfIndex + 1;
 
-    return _PARSE_HEADER;
-  }
+		return _PARSE_HEADER;
+	}
 
-  private byte requestBody() {
-    // reset our state
+	private byte requestBody() {
+		// reset our state
 
-    requestBody = null;
+		requestBody = null;
 
-    // Let's check if this is a fixed length or a chunked transfer
+		// Let's check if this is a fixed length or a chunked transfer
 
-    HeaderValue contentLength;
-    contentLength = requestHeaders.get(HeaderName.CONTENT_LENGTH);
+		HeaderValue contentLength;
+		contentLength = requestHeaders.get(HeaderName.CONTENT_LENGTH);
 
-    if (contentLength == null) {
-      // TODO multipart/form-data?
+		if (contentLength == null) {
+			// TODO multipart/form-data?
 
-      throw new UnsupportedOperationException(
-          "Implement me :: probably chunked transfer encoding"
-      );
-    }
+			throw new UnsupportedOperationException(
+					"Implement me :: probably chunked transfer encoding"
+			);
+		}
 
-    // this is a fixed length body, let's see if the length is valid
+		// this is a fixed length body, let's see if the length is valid
 
-    long length;
-    length = contentLength.unsignedLongValue();
+		long length;
+		length = contentLength.unsignedLongValue();
 
-    if (length < 0) {
-      return toRequestError(HttpStatus.BAD_REQUEST);
-    }
+		if (length < 0) {
+			return toRequestError(HttpStatus.BAD_REQUEST);
+		}
 
-    // maybe we already have the body in our buffer...
+		// maybe we already have the body in our buffer...
 
-    int bufferRemaining;
-    bufferRemaining = bufferLimit - bufferIndex;
+		int bufferRemaining;
+		bufferRemaining = bufferLimit - bufferIndex;
 
-    if (bufferRemaining == length) {
-      // the body has already been read into our buffer
+		if (bufferRemaining == length) {
+			// the body has already been read into our buffer
 
-      requestBody = HttpRequestBody.inBuffer(buffer, bufferIndex, bufferLimit);
+			requestBody = HttpRequestBody.inBuffer(buffer, bufferIndex, bufferLimit);
 
-      bufferIndex = bufferLimit;
+			bufferIndex = bufferLimit;
 
-      return _HANDLE;
-    }
+			return _HANDLE;
+		}
 
-    throw new UnsupportedOperationException(
-        "Implement me :: read more body"
-    );
-  }
+		throw new UnsupportedOperationException(
+				"Implement me :: read more body"
+		);
+	}
 
-  private byte requestLine() {
-    int methodStart;
-    methodStart = bufferIndex;
+	private byte requestLine() {
+		int methodStart;
+		methodStart = bufferIndex;
 
-    // the next call is safe.
-    //
-    // if we got here, InputStream::read returned at least 1 byte
-    // InputStream::read only returns 0 when len == 0 in read(array, off, len)
-    // otherwise it returns > 0, or -1 when EOF or throws IOException
+		// the next call is safe.
+		//
+		// if we got here, InputStream::read returned at least 1 byte
+		// InputStream::read only returns 0 when len == 0 in read(array, off, len)
+		// otherwise it returns > 0, or -1 when EOF or throws IOException
 
-    byte first;
-    first = bufferGet(methodStart);
+		byte first;
+		first = bufferGet(methodStart);
 
-    // based on the first char, we select out method candidate
+		// based on the first char, we select out method candidate
 
-    return switch (first) {
-      case 'C' -> toRequestLineMethod(Http.Method.CONNECT);
+		return switch (first) {
+			case 'C' -> toRequestLineMethod(Http.Method.CONNECT);
 
-      case 'D' -> toRequestLineMethod(Http.Method.DELETE);
+			case 'D' -> toRequestLineMethod(Http.Method.DELETE);
 
-      case 'G' -> toRequestLineMethod(Http.Method.GET);
+			case 'G' -> toRequestLineMethod(Http.Method.GET);
 
-      case 'H' -> toRequestLineMethod(Http.Method.HEAD);
+			case 'H' -> toRequestLineMethod(Http.Method.HEAD);
 
-      case 'O' -> toRequestLineMethod(Http.Method.OPTIONS);
+			case 'O' -> toRequestLineMethod(Http.Method.OPTIONS);
 
-      case 'P' -> _REQUEST_LINE_METHOD_P;
+			case 'P' -> _REQUEST_LINE_METHOD_P;
 
-      case 'T' -> toRequestLineMethod(Http.Method.TRACE);
+			case 'T' -> toRequestLineMethod(Http.Method.TRACE);
 
-      // first char does not match any candidate
-      // we are sure this is a bad request
+			// first char does not match any candidate
+			// we are sure this is a bad request
 
-      default -> toRequestError(HttpStatus.BAD_REQUEST);
-    };
-  }
+			default -> toRequestError(HttpStatus.BAD_REQUEST);
+		};
+	}
 
-  private byte requestLineMethod() {
-    // method candidate @ start of the buffer
+	private byte requestLineMethod() {
+		// method candidate @ start of the buffer
 
-    int candidateStart;
-    candidateStart = bufferIndex;
+		int candidateStart;
+		candidateStart = bufferIndex;
 
-    // we'll check if the buffer contents matches 'METHOD SP'
+		// we'll check if the buffer contents matches 'METHOD SP'
 
-    byte[] candidateBytes;
-    candidateBytes = METHOD_NAME_AND_SPACE.get(method);
+		byte[] candidateBytes;
+		candidateBytes = METHOD_NAME_AND_SPACE.get(method);
 
-    int requiredIndex;
-    requiredIndex = candidateStart + candidateBytes.length;
+		int requiredIndex;
+		requiredIndex = candidateStart + candidateBytes.length;
 
-    if (!bufferHasIndex(requiredIndex)) {
-      // we don't have enough bytes in the buffer...
-      // assuming the client is slow on sending data
+		if (!bufferHasIndex(requiredIndex)) {
+			// we don't have enough bytes in the buffer...
+			// assuming the client is slow on sending data
 
-      // clear method candidate just in case...
-      method = null;
+			// clear method candidate just in case...
+			method = null;
 
-      return toInputRead(state);
-    }
+			return toInputRead(state);
+		}
 
-    if (!bufferEquals(candidateBytes, candidateStart)) {
-      // we have enough bytes and they don't match our 'method name + SP'
-      // respond with bad request
+		if (!bufferEquals(candidateBytes, candidateStart)) {
+			// we have enough bytes and they don't match our 'method name + SP'
+			// respond with bad request
 
-      // clear method candidate just in case...
-      method = null;
+			// clear method candidate just in case...
+			method = null;
 
-      return toRequestError(HttpStatus.BAD_REQUEST);
-    }
+			return toRequestError(HttpStatus.BAD_REQUEST);
+		}
 
-    // request OK so far...
-    // update the bufferIndex
+		// request OK so far...
+		// update the bufferIndex
 
-    bufferIndex = requiredIndex;
+		bufferIndex = requiredIndex;
 
-    // continue to request target
+		// continue to request target
 
-    return _REQUEST_LINE_TARGET;
-  }
+		return _REQUEST_LINE_TARGET;
+	}
 
-  private byte requestLineMethodP() {
-    // method starts with a P. It might be:
-    // - PATCH
-    // - POST
-    // - PUT
-    //
-    // so we'll peek at the second character
+	private byte requestLineMethodP() {
+		// method starts with a P. It might be:
+		// - PATCH
+		// - POST
+		// - PUT
+		//
+		// so we'll peek at the second character
 
-    int secondCharIndex;
-    secondCharIndex = bufferIndex + 1;
+		int secondCharIndex;
+		secondCharIndex = bufferIndex + 1;
 
-    if (!bufferHasIndex(secondCharIndex)) {
-      // we don't have enough bytes in the buffer...
-      // assuming the client is slow on sending data
+		if (!bufferHasIndex(secondCharIndex)) {
+			// we don't have enough bytes in the buffer...
+			// assuming the client is slow on sending data
 
-      return toInputRead(state);
-    }
+			return toInputRead(state);
+		}
 
-    byte secondChar;
-    secondChar = bufferGet(secondCharIndex);
+		byte secondChar;
+		secondChar = bufferGet(secondCharIndex);
 
-    // based on the second char, we select out method candidate
+		// based on the second char, we select out method candidate
 
-    return switch (secondChar) {
-      case 'A' -> toRequestLineMethod(Http.Method.PATCH);
+		return switch (secondChar) {
+			case 'A' -> toRequestLineMethod(Http.Method.PATCH);
 
-      case 'O' -> toRequestLineMethod(Http.Method.POST);
+			case 'O' -> toRequestLineMethod(Http.Method.POST);
 
-      case 'U' -> toRequestLineMethod(Http.Method.PUT);
+			case 'U' -> toRequestLineMethod(Http.Method.PUT);
 
-      // it does not match any candidate
-      // we are sure this is a bad request
+			// it does not match any candidate
+			// we are sure this is a bad request
 
-      default -> toRequestError(HttpStatus.BAD_REQUEST);
-    };
-  }
+			default -> toRequestError(HttpStatus.BAD_REQUEST);
+		};
+	}
 
-  private byte requestLinePath() {
-    // we will look for the first SP char
+	private byte requestLinePath() {
+		// we will look for the first SP char
 
-    for (; bufferHasIndex(bufferIndex); bufferIndex++) {
-      byte b;
-      b = bufferGet(bufferIndex);
+		for (; bufferHasIndex(bufferIndex); bufferIndex++) {
+			byte b;
+			b = bufferGet(bufferIndex);
 
-      switch (b) {
-        case Bytes.QUESTION_MARK -> {
-          throw new UnsupportedOperationException(
-              "Implement me :: query component"
-          );
-        }
+			switch (b) {
+				case Bytes.QUESTION_MARK -> {
+					throw new UnsupportedOperationException(
+							"Implement me :: query component"
+					);
+				}
 
-        case Bytes.SOLIDUS -> requestPath.slash(bufferIndex);
+				case Bytes.SOLIDUS -> requestPath.slash(bufferIndex);
 
-        case Bytes.SP -> {
-          requestPath.end(bufferIndex);
+				case Bytes.SP -> {
+					requestPath.end(bufferIndex);
 
-          // bufferIndex immediately after the SP char
+					// bufferIndex immediately after the SP char
 
-          bufferIndex = bufferIndex + 1;
+					bufferIndex = bufferIndex + 1;
 
-          return _REQUEST_LINE_VERSION;
-        }
-      }
-    }
+					return _REQUEST_LINE_VERSION;
+				}
+			}
+		}
 
-    // SP char was not found
-    // -> read more data if possible
-    // -> fail with uri too long if buffer is full
+		// SP char was not found
+		// -> read more data if possible
+		// -> fail with uri too long if buffer is full
 
-    return toInputReadIfPossible(state, HttpStatus.URI_TOO_LONG);
-  }
+		return toInputReadIfPossible(state, HttpStatus.URI_TOO_LONG);
+	}
 
-  private byte requestLineTarget() {
-    // we will check if the request target starts with a '/' char
+	private byte requestLineTarget() {
+		// we will check if the request target starts with a '/' char
 
-    int targetStart;
-    targetStart = bufferIndex;
+		int targetStart;
+		targetStart = bufferIndex;
 
-    if (!bufferHasIndex(targetStart)) {
-      return toInputRead(state);
-    }
+		if (!bufferHasIndex(targetStart)) {
+			return toInputRead(state);
+		}
 
-    byte b;
-    b = bufferGet(targetStart);
+		byte b;
+		b = bufferGet(targetStart);
 
-    if (b != Bytes.SOLIDUS) {
-      // first char IS NOT '/' => BAD_REQUEST
-      return toRequestError(HttpStatus.BAD_REQUEST);
-    }
+		if (b != Bytes.SOLIDUS) {
+			// first char IS NOT '/' => BAD_REQUEST
+			return toRequestError(HttpStatus.BAD_REQUEST);
+		}
 
-    // mark request path start
+		// mark request path start
 
-    requestPath = new HttpRequestPath(buffer);
+		requestPath = new HttpRequestPath(buffer, targetStart);
 
-    requestPath.slash(targetStart);
+		requestPath.slash(targetStart);
 
-    // bufferIndex immediately after the '/' char
+		// bufferIndex immediately after the '/' char
 
-    bufferIndex = targetStart + 1;
+		bufferIndex = targetStart + 1;
 
-    return _REQUEST_LINE_PATH;
-  }
+		return _REQUEST_LINE_PATH;
+	}
 
-  private byte requestLineVersion() {
-    int versionStart;
-    versionStart = bufferIndex;
+	private byte requestLineVersion() {
+		int versionStart;
+		versionStart = bufferIndex;
 
-    // 'H' 'T' 'T' 'P' '/' '1' '.' '1' = 8 bytes
+		// 'H' 'T' 'T' 'P' '/' '1' '.' '1' = 8 bytes
 
-    int versionLength;
-    versionLength = 8;
+		int versionLength;
+		versionLength = 8;
 
-    int versionEnd;
-    versionEnd = versionStart + versionLength - 1;
+		int versionEnd;
+		versionEnd = versionStart + versionLength - 1;
 
-    // versionEnd is @ CR
-    // lineEnd is @ LF
+		// versionEnd is @ CR
+		// lineEnd is @ LF
 
-    int lineEnd;
-    lineEnd = versionEnd + 1;
+		int lineEnd;
+		lineEnd = versionEnd + 1;
 
-    if (!bufferHasIndex(lineEnd)) {
-      return toInputReadIfPossible(state, HttpStatus.URI_TOO_LONG);
-    }
+		if (!bufferHasIndex(lineEnd)) {
+			return toInputReadIfPossible(state, HttpStatus.URI_TOO_LONG);
+		}
 
-    int index;
-    index = versionStart;
+		int index;
+		index = versionStart;
 
-    if (buffer[index++] != 'H' ||
-        buffer[index++] != 'T' ||
-        buffer[index++] != 'T' ||
-        buffer[index++] != 'P' ||
-        buffer[index++] != '/') {
+		if (buffer[index++] != 'H' ||
+				buffer[index++] != 'T' ||
+				buffer[index++] != 'T' ||
+				buffer[index++] != 'P' ||
+				buffer[index++] != '/') {
 
-      // buffer does not start with 'HTTP/' => bad request
+			// buffer does not start with 'HTTP/' => bad request
 
-      return toRequestError(HttpStatus.BAD_REQUEST);
-    }
+			return toRequestError(HttpStatus.BAD_REQUEST);
+		}
 
-    byte maybeMajor;
-    maybeMajor = buffer[index++];
+		byte maybeMajor;
+		maybeMajor = buffer[index++];
 
-    if (!Bytes.isDigit(maybeMajor)) {
-      // major version is not a digit => bad request
+		if (!Bytes.isDigit(maybeMajor)) {
+			// major version is not a digit => bad request
 
-      return toRequestError(HttpStatus.BAD_REQUEST);
-    }
+			return toRequestError(HttpStatus.BAD_REQUEST);
+		}
 
-    if (buffer[index++] != '.') {
-      // major version not followed by a DOT => bad request
+		if (buffer[index++] != '.') {
+			// major version not followed by a DOT => bad request
 
-      return toRequestError(HttpStatus.BAD_REQUEST);
-    }
+			return toRequestError(HttpStatus.BAD_REQUEST);
+		}
 
-    versionMajor = (byte) (maybeMajor - 0x30);
+		versionMajor = (byte) (maybeMajor - 0x30);
 
-    byte maybeMinor;
-    maybeMinor = buffer[index++];
+		byte maybeMinor;
+		maybeMinor = buffer[index++];
 
-    if (!Bytes.isDigit(maybeMinor)) {
-      // minor version is not a digit => bad request
+		if (!Bytes.isDigit(maybeMinor)) {
+			// minor version is not a digit => bad request
 
-      return toRequestError(HttpStatus.BAD_REQUEST);
-    }
+			return toRequestError(HttpStatus.BAD_REQUEST);
+		}
 
-    versionMinor = (byte) (maybeMinor - 0x30);
+		versionMinor = (byte) (maybeMinor - 0x30);
 
-    byte crOrLf;
-    crOrLf = buffer[index++];
+		byte crOrLf;
+		crOrLf = buffer[index++];
 
-    if (crOrLf == Bytes.CR && buffer[index++] == Bytes.LF) {
-      // bufferIndex resumes immediately after CRLF
+		if (crOrLf == Bytes.CR && buffer[index++] == Bytes.LF) {
+			// bufferIndex resumes immediately after CRLF
 
-      bufferIndex = index;
+			bufferIndex = index;
 
-      return _PARSE_HEADER;
-    }
+			return _PARSE_HEADER;
+		}
 
-    if (crOrLf == Bytes.LF) {
-      // bufferIndex resumes immediately after LF
+		if (crOrLf == Bytes.LF) {
+			// bufferIndex resumes immediately after LF
 
-      bufferIndex = index;
+			bufferIndex = index;
 
-      return _PARSE_HEADER;
-    }
+			return _PARSE_HEADER;
+		}
 
-    // no line terminator after version => bad request
+		// no line terminator after version => bad request
 
-    return toRequestError(HttpStatus.BAD_REQUEST);
-  }
+		return toRequestError(HttpStatus.BAD_REQUEST);
+	}
 
-  private void reset() {
-    bufferIndex = bufferLimit = -1;
+	private void reset() {
+		bufferIndex = bufferLimit = -1;
 
-    method = null;
+		method = null;
 
-    if (requestHeaders != null) {
-      requestHeaders.clear();
-    }
+		if (requestHeaders != null) {
+			requestHeaders.clear();
+		}
 
-    requestPath = null;
+		requestPath = null;
 
-    responseBody = null;
+		responseBody = null;
 
-    if (responseHeaders != null) {
-      responseHeaders.clear();
-    }
+		if (responseHeaders != null) {
+			responseHeaders.clear();
+		}
 
-    responseHeadersIndex = -1;
+		responseHeadersIndex = -1;
 
-    status = null;
+		status = null;
 
-    versionMajor = versionMinor = -1;
-  }
+		versionMajor = versionMinor = -1;
+	}
 
-  private byte result() {
-    reset();
+	private byte result() {
+		reset();
 
-    if (error != null) {
-      keepAlive = false;
-    }
+		if (error != null) {
+			keepAlive = false;
+		}
 
-    return keepAlive ? _KEEP_ALIVE : _STOP;
-  }
+		return keepAlive ? _KEEP_ALIVE : _STOP;
+	}
 
-  private byte setup() {
-    // TODO set timeout
+	private byte setup() {
+		// TODO set timeout
 
-    // we ensure the buffer is reset
+		// we ensure the buffer is reset
 
-    bufferIndex = bufferLimit = 0;
+		bufferIndex = bufferLimit = 0;
 
-    return _INPUT;
-  }
+		return _INPUT;
+	}
 
-  private byte toRequestError(HttpStatus error) {
-    status = error;
+	private byte toRequestError(HttpStatus error) {
+		status = error;
 
-    return _REQUEST_ERROR;
-  }
+		return _REQUEST_ERROR;
+	}
 
-  private byte toHandleOrRequestBody() {
-    if (requestHeaders == null) {
-      return _HANDLE;
-    }
+	private byte toHandleOrRequestBody() {
+		if (requestHeaders == null) {
+			return _HANDLE;
+		}
 
-    if (requestHeaders.containsKey(HeaderName.CONTENT_LENGTH)) {
-      return _REQUEST_BODY;
-    }
+		if (requestHeaders.containsKey(HeaderName.CONTENT_LENGTH)) {
+			return _REQUEST_BODY;
+		}
 
-    if (requestHeaders.containsKey(HeaderName.TRANSFER_ENCODING)) {
-      throw new UnsupportedOperationException(
-          "Implement me :: maybe chunked?"
-      );
-    }
+		if (requestHeaders.containsKey(HeaderName.TRANSFER_ENCODING)) {
+			throw new UnsupportedOperationException(
+					"Implement me :: maybe chunked?"
+			);
+		}
 
-    return _HANDLE;
-  }
+		return _HANDLE;
+	}
 
-  private byte toInputRead(byte onRead) {
-    nextAction = onRead;
+	private byte toInputRead(byte onRead) {
+		nextAction = onRead;
 
-    return _INPUT_READ;
-  }
+		return _INPUT_READ;
+	}
 
-  private byte toInputReadIfPossible(byte onRead, HttpStatus onBufferFull) {
-    if (bufferLimit < buffer.length) {
-      return toInputRead(onRead);
-    }
+	private byte toInputReadIfPossible(byte onRead, HttpStatus onBufferFull) {
+		if (bufferLimit < buffer.length) {
+			return toInputRead(onRead);
+		}
 
-    if (bufferLimit == buffer.length) {
-      return toRequestError(onBufferFull);
-    }
+		if (bufferLimit == buffer.length) {
+			return toRequestError(onBufferFull);
+		}
 
-    // buffer limit overflow!!!
-    // programming error
+		// buffer limit overflow!!!
+		// programming error
 
-    throw new UnsupportedOperationException(
-        "Implement me :: Internal Server Error"
-    );
-  }
+		throw new UnsupportedOperationException(
+				"Implement me :: Internal Server Error"
+		);
+	}
 
-  private byte toRequestLineMethod(Http.Method maybe) {
-    method = maybe;
+	private byte toRequestLineMethod(Http.Method maybe) {
+		method = maybe;
 
-    return _REQUEST_LINE_METHOD;
-  }
+		return _REQUEST_LINE_METHOD;
+	}
 
 }

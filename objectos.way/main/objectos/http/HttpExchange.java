@@ -30,75 +30,86 @@ import objectox.lang.Check;
  * writing an HTTP server.
  */
 public sealed interface HttpExchange extends AutoCloseable
-    permits objectox.http.HttpExchange {
+		permits objectox.http.HttpExchange {
 
-  static HttpExchange of(Socket socket) {
-    return of(socket, 1024);
-  }
+	static HttpExchange of(Socket socket) {
+		return of(socket, 1024);
+	}
 
-  static HttpExchange of(Socket socket, int bufferSize) {
-    Check.notNull(socket, "socket == null");
-    Check.argument(bufferSize > 128, "buffer size must be > 128");
+	static HttpExchange of(Socket socket, int bufferSize) {
+		Check.notNull(socket, "socket == null");
+		Check.argument(bufferSize > 128, "buffer size must be > 128");
 
-    NoteSink noteSink;
-    noteSink = NoOpNoteSink.of();
+		NoteSink noteSink;
+		noteSink = NoOpNoteSink.of();
 
-    return new objectox.http.HttpExchange(bufferSize, noteSink, socket);
-  }
+		return new objectox.http.HttpExchange(bufferSize, noteSink, socket);
+	}
 
-  /**
-   * Closes and ends this exchange by closing its underlying socket.
-   *
-   * @throws IOException
-   *         if an I/O error occurs
-   */
-  @Override
-  void close() throws IOException;
+	/**
+	 * Closes and ends this exchange by closing its underlying socket.
+	 *
+	 * @throws IOException
+	 *         if an I/O error occurs
+	 */
+	@Override
+	void close() throws IOException;
 
-  boolean active();
+	boolean active();
 
-  boolean matches(Segment pat);
+	boolean matches(Segment pat);
 
-  boolean matches(Segment pat1, Segment pat2);
+	boolean matches(Segment pat1, Segment pat2);
 
-  /**
-   * Returns the request HTTP method.
-   *
-   * @return the request HTTP method
-   *
-   * @throws IllegalStateException
-   *         if the request has not been parsed or if the response has already
-   *         been sent to the client.
-   */
-  Http.Method method();
+	/**
+	 * Returns the request HTTP method.
+	 *
+	 * @return the request HTTP method
+	 *
+	 * @throws IllegalStateException
+	 *         if the request has not been parsed or if the response has already
+	 *         been sent to the client.
+	 */
+	Http.Method method();
 
-  /**
-   * Returns the decoded path component of the request target.
-   *
-   * @return the decoded path component of the request target.
-   */
-  String path();
+	/**
+	 * Returns the decoded path component of the request target.
+	 *
+	 * @return the decoded path component of the request target.
+	 */
+	String path();
 
-  Path toRelativePath();
+	/**
+	 * Compares the decoded path component of this request's target to the
+	 * specified string. Returns {@code true} if the decoded path is equal to the
+	 * specified string.
+	 *
+	 * @param s the string to compare for equality
+	 *
+	 * @return {@code true} if the decoded path is equal to the specified string
+	 */
+	boolean pathEquals(String s);
 
-  Path resolveAgainst(Path directory);
+	Path toRelativePath();
 
-  String segment(int index);
+	Path resolveAgainst(Path directory);
 
-  Http.Header.Value header(Http.Header.Name name);
+	String segment(int index);
 
-  Body body();
+	Http.Header.Value header(Http.Header.Name name);
 
-  boolean hasResponse();
+	Body body();
 
-  Http.Status status();
+	boolean hasResponse();
 
-  void status(Http.Status status);
+	Http.Status status();
 
-  void header(Http.Header.Name name, String value);
+	void status(Http.Status status);
 
-  void body(byte[] data);
+	void header(Http.Header.Name name, String value);
 
-  void body(CharWritable entity, Charset charset);
+	void body(byte[] data);
+
+	void body(CharWritable entity, Charset charset);
 
 }
