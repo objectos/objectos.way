@@ -17,6 +17,6 @@ package objectos.http;
 
 public interface HttpModule {
 
-  void acceptHttpExchange(HttpExchange exchange) throws Exception;
+	void handle(HttpExchange exchange);
 
 }
