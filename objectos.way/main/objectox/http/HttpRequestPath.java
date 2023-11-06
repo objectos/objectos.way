@@ -71,6 +71,20 @@ final class HttpRequestPath {
 		return false;
 	}
 
+	public final boolean pathEquals(String s) {
+		String value;
+		value = toString();
+
+		return value.equals(s);
+	}
+
+	public final boolean pathStartsWith(String prefix) {
+		String value;
+		value = toString();
+
+		return value.startsWith(prefix);
+	}
+
 	public final String segment(int index) {
 		Check.state(slashIndex > 0, "no slashs were defined");
 

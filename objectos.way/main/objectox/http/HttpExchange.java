@@ -284,10 +284,16 @@ public final class HttpExchange implements objectos.http.HttpExchange {
 
 		checkStateHandle();
 
-		String value;
-		value = requestPath.toString();
+		return requestPath.pathEquals(s);
+	}
 
-		return value.equals(s);
+	@Override
+	public final boolean pathStartsWith(String prefix) {
+		Check.notNull(prefix, "prefix == null");
+
+		checkStateHandle();
+
+		return requestPath.pathStartsWith(prefix);
 	}
 
 	@Override

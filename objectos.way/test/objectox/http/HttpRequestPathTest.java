@@ -39,6 +39,10 @@ public class HttpRequestPathTest {
 		path.end(1);
 
 		assertEquals(path.toString(), "/");
+		assertEquals(path.pathEquals("/"), true);
+		assertEquals(path.pathEquals("/false"), false);
+		assertEquals(path.pathStartsWith("/"), true);
+		assertEquals(path.pathStartsWith("/false"), false);
 		assertEquals(path.segmentCount(), 1);
 		assertEquals(path.segment(0), "");
 
@@ -65,6 +69,10 @@ public class HttpRequestPathTest {
 		path.end(4);
 
 		assertEquals(path.toString(), "/foo");
+		assertEquals(path.pathEquals("/foo"), true);
+		assertEquals(path.pathEquals("/false"), false);
+		assertEquals(path.pathStartsWith("/"), true);
+		assertEquals(path.pathStartsWith("/false"), false);
 		assertEquals(path.segmentCount(), 1);
 		assertEquals(path.segment(0), "foo");
 
@@ -91,6 +99,10 @@ public class HttpRequestPathTest {
 		path.end(5);
 
 		assertEquals(path.toString(), "/foo/");
+		assertEquals(path.pathEquals("/foo/"), true);
+		assertEquals(path.pathEquals("/foo"), false);
+		assertEquals(path.pathStartsWith("/foo"), true);
+		assertEquals(path.pathStartsWith("/false"), false);
 		assertEquals(path.segmentCount(), 2);
 		assertEquals(path.segment(0), "foo");
 		assertEquals(path.segment(1), "");
@@ -120,6 +132,10 @@ public class HttpRequestPathTest {
 		path.end(4);
 
 		assertEquals(path.toString(), "/a/b");
+		assertEquals(path.pathEquals("/a/b"), true);
+		assertEquals(path.pathEquals("/foo"), false);
+		assertEquals(path.pathStartsWith("/a/b"), true);
+		assertEquals(path.pathStartsWith("/false"), false);
 		assertEquals(path.segmentCount(), 2);
 		assertEquals(path.segment(0), "a");
 		assertEquals(path.segment(1), "b");
@@ -162,6 +178,10 @@ public class HttpRequestPathTest {
 		path.end(18);
 
 		assertEquals(path.toString(), "/a/b/c/d/e/f/g/h/i");
+		assertEquals(path.pathEquals("/a/b/c/d/e/f/g/h/i"), true);
+		assertEquals(path.pathEquals("/foo"), false);
+		assertEquals(path.pathStartsWith("/a/b"), true);
+		assertEquals(path.pathStartsWith("/false"), false);
 		assertEquals(path.segmentCount(), 9);
 		assertEquals(path.segment(0), "a");
 		assertEquals(path.segment(1), "b");

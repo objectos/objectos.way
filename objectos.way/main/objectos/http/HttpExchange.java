@@ -86,9 +86,21 @@ public sealed interface HttpExchange extends AutoCloseable
 	 *
 	 * @param s the string to compare for equality
 	 *
-	 * @return {@code true} if the decoded path is equal to the specified string
+	 * @return {@code true} if the decoded path is equal to the specified string;
+	 *         {@code false} otherwise
 	 */
 	boolean pathEquals(String s);
+
+	/**
+	 * Tests if the decoded path component of this request's target starts with
+	 * the specified prefix.
+	 *
+	 * @param prefix the prefix
+	 *
+	 * @return {@code true} if the decoded path starts with specified prefix;
+	 *         {@code false} otherwise.
+	 */
+	boolean pathStartsWith(String prefix);
 
 	Path toRelativePath();
 
