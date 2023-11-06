@@ -58,6 +58,8 @@ public sealed interface HttpExchange extends AutoCloseable
 
 	boolean active();
 
+	// Request methods
+
 	boolean matches(Segment pat);
 
 	boolean matches(Segment pat1, Segment pat2);
@@ -121,6 +123,8 @@ public sealed interface HttpExchange extends AutoCloseable
 
 	String segment(int index);
 
+	// Response methods
+
 	Http.Header.Value header(Http.Header.Name name);
 
 	Body body();
@@ -128,6 +132,13 @@ public sealed interface HttpExchange extends AutoCloseable
 	boolean hasResponse();
 
 	Http.Status status();
+
+	/**
+	 * Tests if a status value is present.
+	 *
+	 * @return {@code true} if a status value is present; {@code false} otherwise
+	 */
+	boolean statusPresent();
 
 	void status(Http.Status status);
 

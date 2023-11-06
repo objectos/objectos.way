@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.util.List;
 import objectos.http.Http.Method;
+import objectos.http.Http.Status;
 import objectox.http.TestingInput.RegularInput;
 import org.testng.annotations.Test;
 
@@ -177,6 +178,18 @@ public class HttpExchangeTest {
 		assertTrue(exchange.active());
 
 		return exchange.resolveAgainst(directory);
+	}
+
+	@Test
+	public void statusPresent() {
+		HttpExchange http;
+		http = ofMethod(Method.GET);
+
+		assertEquals(http.statusPresent(), false);
+
+		http.status(Status.OK_200);
+
+		assertEquals(http.statusPresent(), true);
 	}
 
 	private HttpExchange ofInput(String s) {

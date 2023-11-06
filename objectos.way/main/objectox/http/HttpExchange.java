@@ -344,6 +344,13 @@ public final class HttpExchange implements objectos.http.HttpExchange {
 	}
 
 	@Override
+	public final boolean statusPresent() {
+		checkStateHandle();
+
+		return status != null;
+	}
+
+	@Override
 	public final boolean hasResponse() {
 		checkStateHandle();
 
