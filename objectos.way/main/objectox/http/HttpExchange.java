@@ -304,36 +304,17 @@ public final class HttpExchange implements objectos.http.HttpExchange {
 	}
 
 	@Override
-	public final Path toRelativePath() {
-		checkStateHandle();
-
-		return requestPath.toPath();
-	}
-
-	@Override
-	public final Path resolveAgainst(Path directory) {
-		Check.notNull(directory, "directory == null");
-
-		Check.state(status == null, "status has already been set");
-
-		checkStateHandle();
-
-		Path relative;
-		relative = requestPath.toPath();
-
-		Path resolved;
-		resolved = directory.resolve(relative);
-
-		resolved = resolved.normalize();
-
-		return resolved;
-	}
-
-	@Override
 	public final String segment(int index) {
 		checkStateHandle();
 
 		return requestPath.segment(index);
+	}
+
+	@Override
+	public final Path segmentsAsPath() {
+		checkStateHandle();
+
+		return requestPath.toPath();
 	}
 
 	@Override

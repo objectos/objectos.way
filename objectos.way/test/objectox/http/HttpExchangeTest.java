@@ -105,7 +105,7 @@ public class HttpExchangeTest {
 	}
 
 	@Test
-	public void toRelativePath() {
+	public void segmentsAsPath() {
 		record Pair(String path, Path expected) {}
 
 		List<Pair> pairs = List.of(
@@ -117,13 +117,13 @@ public class HttpExchangeTest {
 
 		for (var pair : pairs) {
 			Path result;
-			result = toRelativePath(pair.path);
+			result = segmentsAsPath(pair.path);
 
 			assertEquals(result, pair.expected);
 		}
 	}
 
-	private Path toRelativePath(String path) {
+	private Path segmentsAsPath(String path) {
 		String input = """
         GET %s HTTP/1.1
         Host: www.example.com
@@ -136,48 +136,7 @@ public class HttpExchangeTest {
 
 		assertTrue(exchange.active());
 
-		return exchange.toRelativePath();
-	}
-
-	@Test
-	public void resolveAgainst() {
-		String tmpdir;
-		tmpdir = System.getProperty("java.io.tmpdir");
-
-		Path tmp;
-		tmp = Path.of(tmpdir);
-
-		record Pair(String path, Path expected) {}
-
-		List<Pair> pairs = List.of(
-				new Pair("/index.html", tmp.resolve("index.html")),
-				new Pair("/./index.html", tmp.resolve("index.html")),
-				new Pair("/foo/index.html", tmp.resolve(Path.of("foo", "index.html"))),
-				new Pair("/foo/../foo/../foo/index.html", tmp.resolve(Path.of("foo", "index.html")))
-		);
-
-		for (var pair : pairs) {
-			Path result;
-			result = resolveAgainst(tmp, pair.path);
-
-			assertEquals(result, pair.expected);
-		}
-	}
-
-	private Path resolveAgainst(Path directory, String path) {
-		String input = """
-        GET %s HTTP/1.1
-        Host: www.example.com
-        Connection: close
-
-        """.formatted(path);
-
-		HttpExchange exchange;
-		exchange = ofInput(input);
-
-		assertTrue(exchange.active());
-
-		return exchange.resolveAgainst(directory);
+		return exchange.segmentsAsPath();
 	}
 
 	@Test

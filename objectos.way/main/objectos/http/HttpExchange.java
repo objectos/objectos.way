@@ -117,11 +117,28 @@ public sealed interface HttpExchange extends AutoCloseable
 	 */
 	boolean pathStartsWith(String prefix);
 
-	Path toRelativePath();
-
-	Path resolveAgainst(Path directory);
-
 	String segment(int index);
+
+	/**
+	 * Returns all of the segments that makes up the path component of this
+	 * request's target as a relative {@link Path} instance. The returned is path
+	 * instance is {@linkplain Path#normalize() normalized}.
+	 *
+	 * <p>
+	 * Examples:
+	 *
+	 * <pre>
+	 * GET / HTTP/1.1                   => Path.of("")
+	 * POST /foo HTTP/1.1               => Path.of("foo")
+	 * DELETE /foo/ HTTP/1.1            => Path.of("foo", "")
+	 * HEAD /dir/foo.html HTTP/1.1      => Path.of("dir", "foo.html")
+	 * GET /dir/foo.html?q=abc HTTP/1.1 => Path.of("dir", "foo.html")
+	 * GET /dir/../foo.html HTTP/1.1    => Path.of("foo.html")
+	 * </pre>
+	 *
+	 * @return a newly created and normalized {@link Path} instance
+	 */
+	Path segmentsAsPath();
 
 	// Response methods
 
