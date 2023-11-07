@@ -33,6 +33,7 @@ import objectos.http.Http.Method;
 import objectos.http.Http.Status;
 import objectos.http.Segment;
 import objectos.http.server.Body;
+import objectos.lang.NoOpNoteSink;
 import objectos.lang.Note1;
 import objectos.lang.NoteSink;
 import objectos.util.GrowableList;
@@ -40,6 +41,32 @@ import objectox.lang.CharWritable;
 import objectox.lang.Check;
 
 public final class HttpExchange implements objectos.http.HttpExchange {
+
+	public non-sealed static abstract class OptionValue implements objectos.http.HttpExchange.Option {
+
+		OptionValue() {}
+
+		public static OptionValue bufferSize(int size) {
+			return new OptionValue() {
+				@Override
+				public final void accept(HttpExchange builder) {
+					builder.buffer = new byte[size];
+				}
+			};
+		}
+
+		public static OptionValue noteSink(NoteSink noteSink) {
+			return new OptionValue() {
+				@Override
+				public final void accept(HttpExchange builder) {
+					builder.noteSink = noteSink;
+				}
+			};
+		}
+
+		public abstract void accept(HttpExchange builder);
+
+	}
 
 	public static final Note1<IOException> EIO_READ_ERROR;
 
@@ -138,7 +165,7 @@ public final class HttpExchange implements objectos.http.HttpExchange {
 
 	byte nextAction;
 
-	NoteSink noteSink;
+	NoteSink noteSink = NoOpNoteSink.of();
 
 	HttpRequestBody requestBody;
 
@@ -164,15 +191,7 @@ public final class HttpExchange implements objectos.http.HttpExchange {
 
 	byte versionMinor;
 
-	public HttpExchange(int bufferSize,
-											NoteSink noteSink,
-											Socket socket) {
-		// there's a small chance we won't use the buffer
-		// but, as it is used in many places in this class, we create it eagerly
-		this.buffer = new byte[bufferSize];
-
-		this.noteSink = noteSink;
-
+	public HttpExchange(Socket socket) {
 		this.socket = socket;
 
 		keepAlive = true;
@@ -184,6 +203,14 @@ public final class HttpExchange implements objectos.http.HttpExchange {
 	 * For testing purposes only.
 	 */
 	HttpExchange() {}
+
+	public final HttpExchange init() {
+		if (buffer == null) {
+			buffer = new byte[1024];
+		}
+
+		return this;
+	}
 
 	@Override
 	public final boolean active() {

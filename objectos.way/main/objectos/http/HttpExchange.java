@@ -21,7 +21,6 @@ import java.nio.charset.Charset;
 import java.nio.file.Path;
 import objectos.http.Http.Method;
 import objectos.http.server.Body;
-import objectos.lang.NoOpNoteSink;
 import objectos.lang.NoteSink;
 import objectox.lang.CharWritable;
 import objectox.lang.Check;
@@ -33,18 +32,61 @@ import objectox.lang.Check;
 public sealed interface HttpExchange extends AutoCloseable
 		permits objectox.http.HttpExchange {
 
-	static HttpExchange of(Socket socket) {
-		return of(socket, 1024);
+	/**
+	 * Configures the creation of a {@link HttpExchange} instance.
+	 */
+	sealed interface Option permits objectox.http.HttpExchange.OptionValue {
+
+		/**
+		 * Defines the size in bytes of the buffer.
+		 *
+		 * @param size
+		 *        the buffer size
+		 *
+		 * @return an option instance
+		 */
+		static Option bufferSize(int size) {
+			Check.argument(size > 128, "buffer size must be > 128");
+
+			return objectox.http.HttpExchange.OptionValue.bufferSize(size);
+		}
+
+		/**
+		 * Defines the note sink to be used by the http exchange instance.
+		 *
+		 * @param noteSink
+		 *        the note sink instance
+		 *
+		 * @return an option instance
+		 */
+		static Option noteSink(NoteSink noteSink) {
+			Check.notNull(noteSink, "noteSink == null");
+
+			return objectox.http.HttpExchange.OptionValue.noteSink(noteSink);
+		}
+
 	}
 
-	static HttpExchange of(Socket socket, int bufferSize) {
+	@SuppressWarnings("resource")
+	static HttpExchange of(Socket socket) {
 		Check.notNull(socket, "socket == null");
-		Check.argument(bufferSize > 128, "buffer size must be > 128");
 
-		NoteSink noteSink;
-		noteSink = NoOpNoteSink.of();
+		objectox.http.HttpExchange instance;
+		instance = new objectox.http.HttpExchange(socket);
 
-		return new objectox.http.HttpExchange(bufferSize, noteSink, socket);
+		return instance.init();
+	}
+
+	static HttpExchange of(Socket socket, Option option) {
+		Check.notNull(socket, "socket == null");
+		Check.notNull(option, "option == null");
+
+		objectox.http.HttpExchange instance;
+		instance = new objectox.http.HttpExchange(socket);
+
+		((objectox.http.HttpExchange.OptionValue) option).accept(instance);
+
+		return instance.init();
 	}
 
 	/**

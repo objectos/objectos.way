@@ -17,6 +17,7 @@ package objectox.http;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
+import static org.testng.Assert.assertSame;
 import static org.testng.Assert.assertTrue;
 
 import java.io.IOException;
@@ -24,6 +25,8 @@ import java.nio.file.Path;
 import java.util.List;
 import objectos.http.Http.Method;
 import objectos.http.Http.Status;
+import objectos.lang.NoteSink;
+import objectos.lang.TestingNoteSink;
 import objectox.http.TestingInput.RegularInput;
 import org.testng.annotations.Test;
 
@@ -69,6 +72,28 @@ public class HttpExchangeTest {
 		socket = (TestableSocket) exchange.socket;
 
 		assertEquals(socket.outputAsString(), Http004.OUTPUT);
+	}
+
+	@Test
+	public void ofShouldSetTheNoteSink() throws IOException {
+		TestableSocket socket;
+		socket = TestableSocket.of();
+
+		NoteSink noteSink;
+		noteSink = TestingNoteSink.INSTANCE;
+
+		objectos.http.HttpExchange exchange = objectos.http.HttpExchange.of(
+				socket,
+
+				objectos.http.HttpExchange.Option.noteSink(noteSink)
+		);
+
+		try (exchange) {
+			HttpExchange x;
+			x = (HttpExchange) exchange;
+
+			assertSame(x.noteSink, noteSink);
+		}
 	}
 
 	@Test

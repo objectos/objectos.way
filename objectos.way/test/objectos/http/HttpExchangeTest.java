@@ -29,45 +29,45 @@ import org.testng.annotations.Test;
 
 public class HttpExchangeTest {
 
-  @Test
-  public void http001() throws IOException {
-    RegularInput input;
-    input = Http001.INPUT;
+	@Test
+	public void http001() throws IOException {
+		RegularInput input;
+		input = Http001.INPUT;
 
-    TestableSocket socket;
-    socket = TestableSocket.of(input.request());
+		TestableSocket socket;
+		socket = TestableSocket.of(input.request());
 
-    try (HttpExchange exchange = HttpExchange.of(socket)) {
-      assertTrue(exchange.active());
+		try (HttpExchange exchange = HttpExchange.of(socket)) {
+			assertTrue(exchange.active());
 
-      assertEquals(exchange.method(), Http.Method.GET);
+			assertEquals(exchange.method(), Http.Method.GET);
 
-      assertEquals(exchange.path(), "/");
+			assertEquals(exchange.path(), "/");
 
-      assertFalse(exchange.hasResponse());
+			assertFalse(exchange.hasResponse());
 
-      byte[] bytes;
-      bytes = Bytes.utf8("Hello World!\n");
+			byte[] bytes;
+			bytes = Bytes.utf8("Hello World!\n");
 
-      exchange.status(Http.Status.OK_200);
+			exchange.status(Http.Status.OK_200);
 
-      exchange.header(Http.Header.CONTENT_TYPE, "text/plain; charset=utf-8");
+			exchange.header(Http.Header.CONTENT_TYPE, "text/plain; charset=utf-8");
 
-      exchange.header(Http.Header.CONTENT_LENGTH, Long.toString(bytes.length));
+			exchange.header(Http.Header.CONTENT_LENGTH, Long.toString(bytes.length));
 
-      ZonedDateTime date;
-      date = Http001.DATE;
+			ZonedDateTime date;
+			date = Http001.DATE;
 
-      exchange.header(Http.Header.DATE, Http.formatDate(date));
+			exchange.header(Http.Header.DATE, Http.formatDate(date));
 
-      exchange.body(bytes);
+			exchange.body(bytes);
 
-      assertTrue(exchange.hasResponse());
+			assertTrue(exchange.hasResponse());
 
-      assertFalse(exchange.active());
-    }
+			assertFalse(exchange.active());
+		}
 
-    assertEquals(socket.outputAsString(), Http001.OUTPUT);
-  }
+		assertEquals(socket.outputAsString(), Http001.OUTPUT);
+	}
 
 }
