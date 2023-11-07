@@ -25,6 +25,9 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
 import java.util.concurrent.TimeUnit;
+import objectos.http.HttpExchange.Option;
+import objectos.lang.NoteSink;
+import objectos.lang.TestingNoteSink;
 import objectox.http.Http001;
 import objectox.http.Http002;
 import objectox.http.Http003;
@@ -63,6 +66,15 @@ public class HttpTest implements Runnable {
 			notifyAll();
 		}
 
+		Option bufferSizeOption;
+		bufferSizeOption = HttpExchange.Option.bufferSize(512);
+
+		NoteSink noteSink;
+		noteSink = TestingNoteSink.INSTANCE;
+
+		Option noteSinkOption;
+		noteSinkOption = HttpExchange.Option.noteSink(noteSink);
+
 		while (!Thread.currentThread().isInterrupted()) {
 			Socket socket;
 
@@ -77,9 +89,7 @@ public class HttpTest implements Runnable {
 			}
 
 			HttpExchange exchange = HttpExchange.of(
-					socket,
-
-					HttpExchange.Option.bufferSize(512)
+					socket, bufferSizeOption, noteSinkOption
 			);
 
 			try (exchange) {

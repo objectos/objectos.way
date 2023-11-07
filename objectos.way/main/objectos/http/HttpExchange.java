@@ -17,10 +17,12 @@ package objectos.http;
 
 import java.io.IOException;
 import java.net.Socket;
+import java.net.SocketAddress;
 import java.nio.charset.Charset;
 import java.nio.file.Path;
 import objectos.http.Http.Method;
 import objectos.http.server.Body;
+import objectos.lang.Note1;
 import objectos.lang.NoteSink;
 import objectox.lang.CharWritable;
 import objectox.lang.Check;
@@ -31,6 +33,25 @@ import objectox.lang.Check;
  */
 public sealed interface HttpExchange extends AutoCloseable
 		permits objectox.http.HttpExchange {
+
+	/**
+	 * Note indicating an I/O read error occurred.
+	 */
+	Note1<IOException> IO_READ_ERROR = Note1.error(HttpExchange.class, "I/O read error");
+
+	Note1<Processed> PROCESSED = Note1.trace(HttpExchange.class, "Processed");
+
+	sealed interface Processed permits objectox.http.HttpExchange.ProcessedRecord {
+		SocketAddress remoteAddress();
+
+		Method method();
+
+		String target();
+
+		Http.Status status();
+
+		long processingTime();
+	}
 
 	/**
 	 * Configures the creation of a {@link HttpExchange} instance.
@@ -85,6 +106,21 @@ public sealed interface HttpExchange extends AutoCloseable
 		instance = new objectox.http.HttpExchange(socket);
 
 		((objectox.http.HttpExchange.OptionValue) option).accept(instance);
+
+		return instance.init();
+	}
+
+	static HttpExchange of(Socket socket, Option option1, Option option2) {
+		Check.notNull(socket, "socket == null");
+		Check.notNull(option1, "option1 == null");
+		Check.notNull(option2, "option2 == null");
+
+		objectox.http.HttpExchange instance;
+		instance = new objectox.http.HttpExchange(socket);
+
+		((objectox.http.HttpExchange.OptionValue) option1).accept(instance);
+
+		((objectox.http.HttpExchange.OptionValue) option2).accept(instance);
 
 		return instance.init();
 	}

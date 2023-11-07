@@ -17,10 +17,15 @@ package objectos.http;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
+import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertTrue;
 
 import java.io.IOException;
 import java.time.ZonedDateTime;
+import objectos.http.HttpExchange.Processed;
+import objectos.lang.NoOpNoteSink;
+import objectos.lang.Note;
+import objectos.lang.Note1;
 import objectox.http.Bytes;
 import objectox.http.Http001;
 import objectox.http.TestableSocket;
@@ -37,7 +42,24 @@ public class HttpExchangeTest {
 		TestableSocket socket;
 		socket = TestableSocket.of(input.request());
 
-		try (HttpExchange exchange = HttpExchange.of(socket)) {
+		var noteSink = new NoOpNoteSink() {
+			Processed processed;
+
+			@Override
+			public boolean isEnabled(Note note) { return true; }
+
+			@Override
+			public <T1> void send(Note1<T1> note, T1 v1) {
+				if (note == HttpExchange.PROCESSED) {
+					processed = (Processed) v1;
+				}
+			}
+		};
+
+		HttpExchange exchange;
+		exchange = HttpExchange.of(socket, HttpExchange.Option.noteSink(noteSink));
+
+		try (exchange) {
 			assertTrue(exchange.active());
 
 			assertEquals(exchange.method(), Http.Method.GET);
@@ -65,6 +87,13 @@ public class HttpExchangeTest {
 			assertTrue(exchange.hasResponse());
 
 			assertFalse(exchange.active());
+
+			Processed processed;
+			processed = noteSink.processed;
+
+			assertNotNull(processed);
+			assertEquals(processed.method(), Http.Method.GET);
+			assertEquals(processed.status(), Http.Status.OK_200);
 		}
 
 		assertEquals(socket.outputAsString(), Http001.OUTPUT);

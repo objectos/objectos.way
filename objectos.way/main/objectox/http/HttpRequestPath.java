@@ -139,6 +139,16 @@ final class HttpRequestPath {
 		return path.normalize();
 	}
 
+	public String targetOr(String other) {
+		String result = other;
+
+		if (value != null) {
+			result = value;
+		}
+
+		return result;
+	}
+
 	@Override
 	public final String toString() {
 		Check.state(value != null, "no slashs were defined");

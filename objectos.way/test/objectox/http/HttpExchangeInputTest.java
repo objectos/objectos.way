@@ -204,7 +204,7 @@ public class HttpExchangeInputTest {
     assertEquals(exchange.error, null);
     assertEquals(exchange.state, HttpExchange._STOP);
 
-    assertSame(noteSink.note1, HttpExchange.EIO_READ_ERROR);
+    assertSame(noteSink.note1, HttpExchange.IO_READ_ERROR);
     assertSame(noteSink.value1, error);
   }
 

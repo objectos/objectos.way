@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
+import java.net.SocketAddress;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
@@ -34,7 +35,6 @@ import objectos.http.Http.Status;
 import objectos.http.Segment;
 import objectos.http.server.Body;
 import objectos.lang.NoOpNoteSink;
-import objectos.lang.Note1;
 import objectos.lang.NoteSink;
 import objectos.util.GrowableList;
 import objectox.lang.CharWritable;
@@ -68,14 +68,12 @@ public final class HttpExchange implements objectos.http.HttpExchange {
 
 	}
 
-	public static final Note1<IOException> EIO_READ_ERROR;
-
-	static {
-		Class<?> s;
-		s = HttpExchange.class;
-
-		EIO_READ_ERROR = Note1.error(s, "I/O read error");
-	}
+	public record ProcessedRecord(SocketAddress remoteAddress,
+																Method method,
+																String target,
+																Status status,
+																long processingTime)
+			implements objectos.http.HttpExchange.Processed {}
 
 	private static final Map<Method, byte[]> METHOD_NAME_AND_SPACE;
 
@@ -182,6 +180,8 @@ public final class HttpExchange implements objectos.http.HttpExchange {
 	int responseHeadersIndex;
 
 	Socket socket;
+
+	long startTime;
 
 	byte state;
 
@@ -577,7 +577,7 @@ public final class HttpExchange implements objectos.http.HttpExchange {
 	}
 
 	private byte inputReadError() {
-		noteSink.send(EIO_READ_ERROR, error);
+		noteSink.send(IO_READ_ERROR, error);
 
 		error = null;
 
@@ -1340,6 +1340,27 @@ public final class HttpExchange implements objectos.http.HttpExchange {
 	}
 
 	private byte result() {
+		if (noteSink.isEnabled(PROCESSED)) {
+			SocketAddress remoteAddress;
+			remoteAddress = socket.getRemoteSocketAddress();
+
+			String target;
+
+			if (requestPath != null) {
+				target = requestPath.targetOr("-");
+			} else {
+				target = "-";
+			}
+
+			long processingTime;
+			processingTime = System.currentTimeMillis() - startTime;
+
+			ProcessedRecord log;
+			log = new ProcessedRecord(remoteAddress, method, target, status, processingTime);
+
+			noteSink.send(PROCESSED, log);
+		}
+
 		reset();
 
 		if (error != null) {
@@ -1350,6 +1371,8 @@ public final class HttpExchange implements objectos.http.HttpExchange {
 	}
 
 	private byte setup() {
+		startTime = System.currentTimeMillis();
+
 		// TODO set timeout
 
 		// we ensure the buffer is reset
