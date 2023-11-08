@@ -135,6 +135,7 @@ public class HttpExchangeTest {
 
 		List<Pair> pairs = List.of(
 				new Pair("/index.html", Path.of("index.html")),
+				new Pair("/index.html?v1", Path.of("index.html")),
 				new Pair("/./index.html", Path.of("index.html")),
 				new Pair("/foo/index.html", Path.of("foo", "index.html")),
 				new Pair("/foo/../foo/../foo/index.html", Path.of("foo", "index.html"))

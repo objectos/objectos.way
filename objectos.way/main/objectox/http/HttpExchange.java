@@ -112,42 +112,43 @@ public final class HttpExchange implements objectos.http.HttpExchange {
 	static final byte _REQUEST_LINE_METHOD_P = 8;
 	static final byte _REQUEST_LINE_TARGET = 9;
 	static final byte _REQUEST_LINE_PATH = 10;
-	static final byte _REQUEST_LINE_VERSION = 11;
+	static final byte _REQUEST_LINE_QUERY = 11;
+	static final byte _REQUEST_LINE_VERSION = 12;
 
 	// Input / Parse header phase
 
-	static final byte _PARSE_HEADER = 12;
-	static final byte _PARSE_HEADER_NAME = 13;
-	static final byte _PARSE_HEADER_NAME_CASE_INSENSITIVE = 14;
-	static final byte _PARSE_HEADER_VALUE = 15;
+	static final byte _PARSE_HEADER = 13;
+	static final byte _PARSE_HEADER_NAME = 14;
+	static final byte _PARSE_HEADER_NAME_CASE_INSENSITIVE = 15;
+	static final byte _PARSE_HEADER_VALUE = 16;
 
 	// Input / Request Body
 
-	static final byte _REQUEST_BODY = 16;
+	static final byte _REQUEST_BODY = 17;
 
 	// Handle phase
 
-	static final byte _HANDLE = 17;
+	static final byte _HANDLE = 18;
 
 	// Output phase
 
-	static final byte _OUTPUT = 18;
-	static final byte _OUTPUT_BODY = 19;
-	static final byte _OUTPUT_BUFFER = 20;
-	static final byte _OUTPUT_HEADER = 21;
-	static final byte _OUTPUT_TERMINATOR = 22;
-	static final byte _OUTPUT_STATUS = 23;
+	static final byte _OUTPUT = 19;
+	static final byte _OUTPUT_BODY = 20;
+	static final byte _OUTPUT_BUFFER = 21;
+	static final byte _OUTPUT_HEADER = 22;
+	static final byte _OUTPUT_TERMINATOR = 23;
+	static final byte _OUTPUT_STATUS = 24;
 
 	// Result phase
 
-	static final byte _RESULT = 24;
+	static final byte _RESULT = 25;
 
 	// Non-executable states
 
-	static final byte _KEEP_ALIVE = 25;
-	static final byte _HANDLE_INVOKE = 26;
-	static final byte _REQUEST_ERROR = 27;
-	static final byte _STOP = 28;
+	static final byte _KEEP_ALIVE = 26;
+	static final byte _HANDLE_INVOKE = 27;
+	static final byte _REQUEST_ERROR = 28;
+	static final byte _STOP = 29;
 
 	byte[] buffer;
 
@@ -438,6 +439,7 @@ public final class HttpExchange implements objectos.http.HttpExchange {
 			case _REQUEST_LINE_METHOD_P -> requestLineMethodP();
 			case _REQUEST_LINE_TARGET -> requestLineTarget();
 			case _REQUEST_LINE_PATH -> requestLinePath();
+			case _REQUEST_LINE_QUERY -> requestLineQuery();
 			case _REQUEST_LINE_VERSION -> requestLineVersion();
 
 			// Input / Parse Header phase
@@ -1170,9 +1172,13 @@ public final class HttpExchange implements objectos.http.HttpExchange {
 
 			switch (b) {
 				case Bytes.QUESTION_MARK -> {
-					throw new UnsupportedOperationException(
-							"Implement me :: query component"
-					);
+					requestPath.end(bufferIndex);
+
+					// bufferIndex immediately after the ? char
+
+					bufferIndex = bufferIndex + 1;
+
+					return _REQUEST_LINE_QUERY;
 				}
 
 				case Bytes.SOLIDUS -> requestPath.slash(bufferIndex);
@@ -1186,6 +1192,29 @@ public final class HttpExchange implements objectos.http.HttpExchange {
 
 					return _REQUEST_LINE_VERSION;
 				}
+			}
+		}
+
+		// SP char was not found
+		// -> read more data if possible
+		// -> fail with uri too long if buffer is full
+
+		return toInputReadIfPossible(state, HttpStatus.URI_TOO_LONG);
+	}
+
+	private byte requestLineQuery() {
+		// we will look for the first SP char
+
+		for (; bufferHasIndex(bufferIndex); bufferIndex++) {
+			byte b;
+			b = bufferGet(bufferIndex);
+
+			if (b == Bytes.SP) {
+				// bufferIndex immediately after the SP char
+
+				bufferIndex = bufferIndex + 1;
+
+				return _REQUEST_LINE_VERSION;
 			}
 		}
 
