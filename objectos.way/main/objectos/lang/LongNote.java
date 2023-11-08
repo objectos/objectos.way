@@ -38,7 +38,29 @@ public final class LongNote extends Note {
 	}
 
 	/**
-	 * Creates a new v note with the specified source and key.
+	 * Creates a new DEBUG note with the specified source and key.
+	 *
+	 * <p>
+	 * The actual <strong>{@code source}</strong> value will be the canonical name
+	 * of the specified class instance.
+	 *
+	 * @param source
+	 *        a class instance whose canonical name will be used as the source of
+	 *        this note
+	 * @param key
+	 *        the object instance to be used as key of this note
+	 *
+	 * @return a new DEBUG note
+	 */
+	public static LongNote debug(Class<?> source, Object key) {
+		Check.notNull(source, "source == null");
+		Check.notNull(key, "key == null");
+
+		return new LongNote(Level.DEBUG, source(source), key);
+	}
+
+	/**
+	 * Creates a new INFO note with the specified source and key.
 	 *
 	 * <p>
 	 * The actual <strong>{@code source}</strong> value will be the canonical name
