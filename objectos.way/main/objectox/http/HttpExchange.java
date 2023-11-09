@@ -25,8 +25,10 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.EnumMap;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import objectos.http.Http;
 import objectos.http.Http.Header.Name;
 import objectos.http.Http.Header.Value;
@@ -168,9 +170,11 @@ public final class HttpExchange implements objectos.http.HttpExchange {
 
 	HttpRequestBody requestBody;
 
-	HeaderName requestHeaderName;
+	Object requestHeaderName;
 
 	Map<HeaderName, HeaderValue> requestHeaders;
+
+	Map<String, HeaderValue> requestHeadersUnknown;
 
 	HttpRequestPath requestPath;
 
@@ -504,6 +508,13 @@ public final class HttpExchange implements objectos.http.HttpExchange {
 
 	private byte handle() {
 		keepAlive = handle0KeepAlive();
+
+		if (requestHeadersUnknown != null && !requestHeadersUnknown.isEmpty()) {
+			Set<String> names;
+			names = requestHeadersUnknown.keySet();
+
+			noteSink.send(UKNOWN_HEADER_NAMES, names);
+		}
 
 		responseBody = null;
 
@@ -879,7 +890,14 @@ public final class HttpExchange implements objectos.http.HttpExchange {
 					HeaderName.USER_AGENT
 			);
 
-			default -> _PARSE_HEADER_VALUE;
+			default -> {
+				int length;
+				length = colonIndex - nameStart;
+
+				requestHeaderName = new String(buffer, nameStart, length);
+
+				yield _PARSE_HEADER_VALUE;
+			}
 		};
 	}
 
@@ -970,7 +988,7 @@ public final class HttpExchange implements objectos.http.HttpExchange {
 			}
 		}
 
-		if (requestHeaderName != null) {
+		if (requestHeaderName instanceof HeaderName headerName) {
 			HeaderValue headerValue;
 			headerValue = new HeaderValue(buffer, valueStart, valueEnd);
 
@@ -979,16 +997,32 @@ public final class HttpExchange implements objectos.http.HttpExchange {
 			}
 
 			HeaderValue previousValue;
-			previousValue = requestHeaders.put(requestHeaderName, headerValue);
+			previousValue = requestHeaders.put(headerName, headerValue);
 
 			if (previousValue != null) {
 				throw new UnsupportedOperationException("Implement me");
 			}
-
-			// reset header name just in case
-
-			requestHeaderName = null;
 		}
+
+		else if (requestHeaderName instanceof String name) {
+			HeaderValue headerValue;
+			headerValue = new HeaderValue(buffer, valueStart, valueEnd);
+
+			if (requestHeadersUnknown == null) {
+				requestHeadersUnknown = new HashMap<>();
+			}
+
+			HeaderValue previousValue;
+			previousValue = requestHeadersUnknown.put(name, headerValue);
+
+			if (previousValue != null) {
+				throw new UnsupportedOperationException("Implement me");
+			}
+		}
+
+		// reset header name just in case
+
+		requestHeaderName = null;
 
 		// we have found the value.
 		// bufferIndex should point to the position immediately after the LF char
@@ -1351,6 +1385,10 @@ public final class HttpExchange implements objectos.http.HttpExchange {
 
 		if (requestHeaders != null) {
 			requestHeaders.clear();
+		}
+
+		if (requestHeadersUnknown != null) {
+			requestHeadersUnknown.clear();
 		}
 
 		requestPath = null;

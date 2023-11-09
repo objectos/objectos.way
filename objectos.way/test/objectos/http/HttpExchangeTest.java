@@ -26,6 +26,8 @@ import objectos.http.HttpExchange.Processed;
 import objectos.lang.NoOpNoteSink;
 import objectos.lang.Note;
 import objectos.lang.Note1;
+import objectos.lang.NoteSink;
+import objectos.lang.TestingNoteSink;
 import objectox.http.Bytes;
 import objectox.http.Http001;
 import objectox.http.TestableSocket;
@@ -97,6 +99,33 @@ public class HttpExchangeTest {
 		}
 
 		assertEquals(socket.outputAsString(), Http001.OUTPUT);
+	}
+
+	@Test
+	public void unknownRequestHeaders() throws IOException {
+		TestableSocket socket;
+		socket = TestableSocket.of("""
+		GET / HTTP/1.1
+		Host: www.example.com
+		Connection: close
+		Foo: bar
+
+		""".replace("\n", "\r\n"));
+
+		NoteSink noteSink;
+		noteSink = TestingNoteSink.INSTANCE;
+
+		HttpExchange exchange;
+		exchange = HttpExchange.of(socket, HttpExchange.Option.noteSink(noteSink));
+
+		try (exchange) {
+			assertTrue(exchange.active());
+
+			assertEquals(exchange.header(Http.Header.HOST).toString(), "www.example.com");
+			assertEquals(exchange.header(Http.Header.CONNECTION).toString(), "close");
+			assertEquals(exchange.method(), Http.Method.GET);
+			assertEquals(exchange.path(), "/");
+		}
 	}
 
 }

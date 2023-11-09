@@ -20,6 +20,7 @@ import java.net.Socket;
 import java.net.SocketAddress;
 import java.nio.charset.Charset;
 import java.nio.file.Path;
+import java.util.Set;
 import objectos.http.Http.Method;
 import objectos.http.server.Body;
 import objectos.lang.Note1;
@@ -40,6 +41,8 @@ public sealed interface HttpExchange extends AutoCloseable
 	Note1<IOException> IO_READ_ERROR = Note1.error(HttpExchange.class, "I/O read error");
 
 	Note1<Processed> PROCESSED = Note1.trace(HttpExchange.class, "Processed");
+
+	Note1<Set<String>> UKNOWN_HEADER_NAMES = Note1.trace(HttpExchange.class, "Unknown header names");
 
 	sealed interface Processed permits objectox.http.HttpExchange.ProcessedRecord {
 		SocketAddress remoteAddress();
