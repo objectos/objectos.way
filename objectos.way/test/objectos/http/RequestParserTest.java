@@ -19,10 +19,12 @@ import static org.testng.Assert.assertEquals;
 
 import java.io.InputStream;
 import objectos.http.RequestParser.Result;
+import objectos.http.req.GetRequest;
+import objectos.http.req.HeadRequest;
 import objectos.lang.NoteSink;
 import objectos.lang.TestingNoteSink;
+import objectos.way.HappyPath;
 import objectox.http.TestableInputStream;
-import objectox.http.req.GetRequestResult;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
@@ -41,6 +43,7 @@ public class RequestParserTest {
 	}
 
 	@Test(description = "It should parse a GET request")
+	@HappyPath
 	public void testCase01() {
 		String s = """
 		GET / HTTP/1.1
@@ -52,9 +55,47 @@ public class RequestParserTest {
 		InputStream in;
 		in = TestableInputStream.of(s);
 
-		Result result = parser.parse(in);
+		Result result;
+		result = parser.parse(in);
 
-		assertEquals(result instanceof GetRequestResult, true);
+		assertEquals(result instanceof GetRequest, true);
+
+		GetRequest res;
+		res = (GetRequest) result;
+
+		assertEquals(res.header(Http.Header.ACCEPT_ENCODING), null);
+		assertEquals(res.header(Http.Header.HOST), "www.example.com");
+		assertEquals(res.header(Http.Header.CONNECTION), "close");
+		assertEquals(res.keepAlive(), false);
+		assertEquals(res.path(), "/");
+	}
+
+	@Test(description = "It should parse a HEAD request")
+	@HappyPath
+	public void testCase02() {
+		String s = """
+		HEAD /index.html HTTP/1.1
+		Host: www.example.com
+		Connection: close
+
+		""".replace("\n", "\r\n");
+
+		InputStream in;
+		in = TestableInputStream.of(s);
+
+		Result result;
+		result = parser.parse(in);
+
+		assertEquals(result instanceof HeadRequest, true);
+
+		HeadRequest res;
+		res = (HeadRequest) result;
+
+		assertEquals(res.header(Http.Header.ACCEPT_ENCODING), null);
+		assertEquals(res.header(Http.Header.HOST), "www.example.com");
+		assertEquals(res.header(Http.Header.CONNECTION), "close");
+		assertEquals(res.keepAlive(), false);
+		assertEquals(res.path(), "/index.html");
 	}
 
 }

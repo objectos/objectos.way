@@ -22,7 +22,7 @@
 
 GROUP_ID := br.com.objectos
 ARTIFACT_ID := objectos.way
-VERSION := 0.1.5.3
+VERSION := 0.1.5.4-SNAPSHOT
 
 ## Deps versions
 

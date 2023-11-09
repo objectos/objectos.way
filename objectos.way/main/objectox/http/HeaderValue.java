@@ -20,90 +20,90 @@ import java.util.Arrays;
 import objectos.http.Http;
 import objectos.util.ByteArrays;
 
-record HeaderValue(byte[] buffer, int start, int end) implements Http.Header.Value {
+public record HeaderValue(byte[] buffer, int start, int end) implements Http.Header.Value {
 
-  public static final HeaderValue EMPTY = new HeaderValue(ByteArrays.empty(), 0, 0);
+	public static final HeaderValue EMPTY = new HeaderValue(ByteArrays.empty(), 0, 0);
 
-  public final boolean contentEquals(byte[] that) {
-    int thisLength;
-    thisLength = end - start;
+	public final boolean contentEquals(byte[] that) {
+		int thisLength;
+		thisLength = end - start;
 
-    if (thisLength != that.length) {
-      return false;
-    }
+		if (thisLength != that.length) {
+			return false;
+		}
 
-    for (int offset = 0; offset < thisLength; offset++) {
-      byte ch;
-      ch = buffer[start + offset];
+		for (int offset = 0; offset < thisLength; offset++) {
+			byte ch;
+			ch = buffer[start + offset];
 
-      byte thisLow;
-      thisLow = Bytes.toLowerCase(ch);
+			byte thisLow;
+			thisLow = Bytes.toLowerCase(ch);
 
-      byte thatLow;
-      thatLow = that[offset];
+			byte thatLow;
+			thatLow = that[offset];
 
-      if (thisLow != thatLow) {
-        return false;
-      }
-    }
+			if (thisLow != thatLow) {
+				return false;
+			}
+		}
 
-    return true;
-  }
+		return true;
+	}
 
-  @Override
-  public final boolean contentEquals(CharSequence cs) {
-    String s;
-    s = toString();
+	@Override
+	public final boolean contentEquals(CharSequence cs) {
+		String s;
+		s = toString();
 
-    return s.contentEquals(cs);
-  }
+		return s.contentEquals(cs);
+	}
 
-  @Override
-  public final boolean equals(Object obj) {
-    return obj == this ||
-        obj instanceof HeaderValue that
-            && Arrays.equals(buffer, start, end, that.buffer, that.start, that.end);
-  }
+	@Override
+	public final boolean equals(Object obj) {
+		return obj == this ||
+				obj instanceof HeaderValue that
+						&& Arrays.equals(buffer, start, end, that.buffer, that.start, that.end);
+	}
 
-  @Override
-  public final String toString() {
-    return new String(buffer, start, end - start, StandardCharsets.UTF_8);
-  }
+	@Override
+	public final String toString() {
+		return new String(buffer, start, end - start, StandardCharsets.UTF_8);
+	}
 
-  public final long unsignedLongValue() {
-    int thisLength;
-    thisLength = end - start;
+	public final long unsignedLongValue() {
+		int thisLength;
+		thisLength = end - start;
 
-    if (thisLength > 19) {
-      // larger than max long positive value
+		if (thisLength > 19) {
+			// larger than max long positive value
 
-      return Long.MIN_VALUE;
-    }
+			return Long.MIN_VALUE;
+		}
 
-    long result;
-    result = 0;
+		long result;
+		result = 0;
 
-    for (int i = start; i < end; i++) {
-      byte d;
-      d = buffer[i];
+		for (int i = start; i < end; i++) {
+			byte d;
+			d = buffer[i];
 
-      if (!Bytes.isDigit(d)) {
-        return Long.MIN_VALUE;
-      }
+			if (!Bytes.isDigit(d)) {
+				return Long.MIN_VALUE;
+			}
 
-      result *= 10;
+			result *= 10;
 
-      long l;
-      l = (long) d & 0xF;
+			long l;
+			l = (long) d & 0xF;
 
-      result += l;
-    }
+			result += l;
+		}
 
-    if (result < 0) {
-      return Long.MIN_VALUE;
-    }
+		if (result < 0) {
+			return Long.MIN_VALUE;
+		}
 
-    return result;
-  }
+		return result;
+	}
 
 }

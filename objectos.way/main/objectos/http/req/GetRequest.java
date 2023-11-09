@@ -15,6 +15,6 @@
  */
 package objectos.http.req;
 
-import objectox.http.req.GetRequestResult;
+import objectox.http.req.RequestResult.GetRequestResult;
 
 public sealed interface GetRequest extends Request permits GetRequestResult {}

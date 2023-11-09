@@ -15,20 +15,6 @@
  */
 package objectos.http.req;
 
-import objectos.http.Http.Header.Name;
-import objectos.http.RequestParser;
-import objectox.http.req.RequestResult;
+import objectox.http.req.RequestResult.HeadRequestResult;
 
-public sealed interface Request extends RequestParser.Result
-		permits
-		RequestResult,
-		GetRequest,
-		HeadRequest {
-
-	String header(Name name);
-
-	boolean keepAlive();
-
-	String path();
-
-}
+public sealed interface HeadRequest extends Request permits HeadRequestResult {}

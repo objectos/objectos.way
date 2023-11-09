@@ -13,13 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectox.http.req;
+package objectos.way;
 
-import objectos.http.req.GetRequest;
+import static java.lang.annotation.ElementType.METHOD;
+import static java.lang.annotation.RetentionPolicy.SOURCE;
 
-public final class GetRequestResult implements GetRequest {
+import java.lang.annotation.Retention;
+import java.lang.annotation.Target;
 
-	@Override
-	public final String path() { return null; }
-
-}
+/**
+ * Indicates that the annotated test method exercises the happy path.
+ */
+@Retention(SOURCE)
+@Target(METHOD)
+public @interface HappyPath {}

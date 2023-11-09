@@ -21,7 +21,7 @@ import objectos.http.Segment;
 import objectos.util.IntArrays;
 import objectox.lang.Check;
 
-final class HttpRequestPath {
+public final class HttpRequestPath {
 
 	final byte[] buffer;
 

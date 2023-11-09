@@ -26,7 +26,7 @@ import objectos.http.Http.Method;
 import objectos.http.RequestParser;
 import objectos.lang.NoteSink;
 import objectox.http.req.BadRequestReason;
-import objectox.http.req.GetRequestResult;
+import objectox.http.req.RequestResult;
 
 public final class InputStreamRequestParser {
 
@@ -56,8 +56,6 @@ public final class InputStreamRequestParser {
 	// Input phase
 
 	static final byte _INPUT_READ = 3;
-	static final byte _INPUT_READ_EOF = 4;
-	static final byte _INPUT_READ_ERROR = 5;
 
 	// Input / Request Line phase
 
@@ -95,9 +93,6 @@ public final class InputStreamRequestParser {
 
 	private final InputStream inputStream;
 
-	@SuppressWarnings("unused")
-	private boolean keepAlive;
-
 	private Http.Method method;
 
 	private byte nextAction;
@@ -132,16 +127,23 @@ public final class InputStreamRequestParser {
 			stepOne();
 		}
 
+		if (error != null) {
+			throw new UnsupportedOperationException("Implement me", error);
+		}
+
 		if (badRequest != null) {
 			throw new UnsupportedOperationException(
 					"Implement me :: " + badRequest
 			);
 		}
 
+		boolean keepAlive;
 		keepAlive = handle0KeepAlive();
 
 		return switch (method) {
-			case GET -> new GetRequestResult();
+			case GET -> new RequestResult.GetRequestResult(keepAlive, requestHeaders, requestPath);
+
+			case HEAD -> new RequestResult.HeadRequestResult(keepAlive, requestHeaders, requestPath);
 
 			default -> throw new UnsupportedOperationException("Implement me");
 		};
@@ -171,8 +173,6 @@ public final class InputStreamRequestParser {
 			// Input phase
 
 			case _INPUT_READ -> inputRead();
-			case _INPUT_READ_EOF -> inputReadEof();
-			case _INPUT_READ_ERROR -> inputReadError();
 
 			// Input / Request Line phase
 
@@ -243,30 +243,18 @@ public final class InputStreamRequestParser {
 		} catch (IOException e) {
 			error = e;
 
-			return _INPUT_READ_ERROR;
+			return _STOP;
 		}
 
 		if (bytesRead < 0) {
-			return _INPUT_READ_EOF;
+			error = new IOException("Unexpected EOF");
+
+			return _STOP;
 		}
 
 		bufferLimit += bytesRead;
 
 		return nextAction;
-	}
-
-	private byte inputReadEof() {
-		keepAlive = false;
-
-		return _STOP;
-	}
-
-	private byte inputReadError() {
-		noteSink.send(objectos.http.HttpExchange.IO_READ_ERROR, error);
-
-		error = null;
-
-		return inputReadEof();
 	}
 
 	private byte requestLine() {
