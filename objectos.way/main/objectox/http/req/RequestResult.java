@@ -93,6 +93,10 @@ public sealed abstract class RequestResult {
 		return requestPath.toString();
 	}
 
+	public final String segment(int index) {
+		return requestPath.segment(index);
+	}
+
 	public final Path segmentsAsPath() {
 		return requestPath.toPath();
 	}

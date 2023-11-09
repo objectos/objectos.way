@@ -35,6 +35,8 @@ public sealed interface Request extends RequestParser.Result
 
 	String path();
 
+	String segment(int index);
+
 	Path segmentsAsPath();
 
 }

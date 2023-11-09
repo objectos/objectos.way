@@ -76,6 +76,7 @@ public class RequestParserTest {
 		assertEquals(res.matches(FOO), false);
 		assertEquals(res.matches(FILENAME, FILENAME), false);
 		assertEquals(res.path(), "/");
+		assertEquals(res.segment(0), "");
 		assertEquals(res.segmentsAsPath(), Path.of(""));
 	}
 
@@ -108,6 +109,7 @@ public class RequestParserTest {
 		assertEquals(res.matches(FOO), false);
 		assertEquals(res.matches(FILENAME, FILENAME), false);
 		assertEquals(res.path(), "/index.html");
+		assertEquals(res.segment(0), "index.html");
 		assertEquals(res.segmentsAsPath(), Path.of("index.html"));
 	}
 
