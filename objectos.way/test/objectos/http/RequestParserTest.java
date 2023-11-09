@@ -18,6 +18,7 @@ package objectos.http;
 import static org.testng.Assert.assertEquals;
 
 import java.io.InputStream;
+import java.nio.file.Path;
 import objectos.http.RequestParser.Result;
 import objectos.http.req.GetRequest;
 import objectos.http.req.HeadRequest;
@@ -29,6 +30,10 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 public class RequestParserTest {
+
+	private static final Segment FILENAME = Segment.ofAny();
+
+	private static final Segment FOO = Segment.of("foo");
 
 	private RequestParser parser;
 
@@ -67,7 +72,11 @@ public class RequestParserTest {
 		assertEquals(res.header(Http.Header.HOST), "www.example.com");
 		assertEquals(res.header(Http.Header.CONNECTION), "close");
 		assertEquals(res.keepAlive(), false);
+		assertEquals(res.matches(FILENAME), true);
+		assertEquals(res.matches(FOO), false);
+		assertEquals(res.matches(FILENAME, FILENAME), false);
 		assertEquals(res.path(), "/");
+		assertEquals(res.segmentsAsPath(), Path.of(""));
 	}
 
 	@Test(description = "It should parse a HEAD request")
@@ -95,7 +104,11 @@ public class RequestParserTest {
 		assertEquals(res.header(Http.Header.HOST), "www.example.com");
 		assertEquals(res.header(Http.Header.CONNECTION), "close");
 		assertEquals(res.keepAlive(), false);
+		assertEquals(res.matches(FILENAME), true);
+		assertEquals(res.matches(FOO), false);
+		assertEquals(res.matches(FILENAME, FILENAME), false);
 		assertEquals(res.path(), "/index.html");
+		assertEquals(res.segmentsAsPath(), Path.of("index.html"));
 	}
 
 }

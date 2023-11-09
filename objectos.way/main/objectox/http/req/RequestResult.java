@@ -15,18 +15,19 @@
  */
 package objectox.http.req;
 
+import java.nio.file.Path;
 import java.util.Map;
 import objectos.http.Http.Header.Name;
 import objectos.http.Http.Header.Value;
+import objectos.http.Segment;
 import objectos.http.req.GetRequest;
 import objectos.http.req.HeadRequest;
-import objectos.http.req.Request;
 import objectox.http.HeaderName;
 import objectox.http.HeaderValue;
 import objectox.http.HttpRequestPath;
 import objectox.lang.Check;
 
-public sealed abstract class RequestResult implements Request {
+public sealed abstract class RequestResult {
 
 	public static final class GetRequestResult extends RequestResult implements GetRequest {
 
@@ -58,7 +59,6 @@ public sealed abstract class RequestResult implements Request {
 		this.requestPath = requestPath;
 	}
 
-	@Override
 	public final String header(Name name) {
 		Check.notNull(name, "name == null");
 
@@ -67,19 +67,34 @@ public sealed abstract class RequestResult implements Request {
 
 		if (value == null) {
 			return null;
-		} else {
-			return value.toString();
 		}
+
+		return value.toString();
 	}
 
-	@Override
 	public final boolean keepAlive() {
 		return keepAlive;
 	}
 
-	@Override
+	public final boolean matches(Segment seg) {
+		Check.notNull(seg, "seg == null");
+
+		return requestPath.matches(seg);
+	}
+
+	public final boolean matches(Segment seg1, Segment seg2) {
+		Check.notNull(seg1, "seg1 == null");
+		Check.notNull(seg2, "seg2 == null");
+
+		return requestPath.matches(seg1, seg2);
+	}
+
 	public final String path() {
 		return requestPath.toString();
+	}
+
+	public final Path segmentsAsPath() {
+		return requestPath.toPath();
 	}
 
 }

@@ -15,13 +15,13 @@
  */
 package objectos.http.req;
 
+import java.nio.file.Path;
 import objectos.http.Http.Header.Name;
 import objectos.http.RequestParser;
-import objectox.http.req.RequestResult;
+import objectos.http.Segment;
 
 public sealed interface Request extends RequestParser.Result
 		permits
-		RequestResult,
 		GetRequest,
 		HeadRequest {
 
@@ -29,6 +29,12 @@ public sealed interface Request extends RequestParser.Result
 
 	boolean keepAlive();
 
+	boolean matches(Segment seg);
+
+	boolean matches(Segment seg1, Segment seg2);
+
 	String path();
+
+	Path segmentsAsPath();
 
 }
