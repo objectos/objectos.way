@@ -1,0 +1,70 @@
+/*
+ * Copyright (C) 2023 Objectos Software LTDA.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package objectos.http;
+
+import java.io.IOException;
+import java.net.InetAddress;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.util.concurrent.TimeUnit;
+import objectos.lang.NoteSink;
+import objectos.lang.TestingNoteSink;
+import org.testng.annotations.BeforeClass;
+
+public class MarketingSiteTest implements SocketTaskFactory {
+
+	private RequestParser requestParser;
+
+	@SuppressWarnings("unused")
+	private Thread server;
+
+	@BeforeClass
+	public void beforeClass() throws IOException, InterruptedException {
+		NoteSink noteSink;
+		noteSink = TestingNoteSink.INSTANCE;
+
+		requestParser = RequestParser.of(
+				RequestParser.Option.noteSink(noteSink)
+		);
+
+		int randomPort;
+		randomPort = 0;
+
+		int backlogDefaultValue;
+		backlogDefaultValue = 50;
+
+		InetAddress address;
+		address = InetAddress.getLoopbackAddress();
+
+		ServerSocket serverSocket;
+		serverSocket = new ServerSocket(randomPort, backlogDefaultValue, address);
+
+		server = new TestingServer(noteSink, serverSocket, this);
+
+		synchronized (this) {
+			TimeUnit.SECONDS.timedWait(this, 2);
+		}
+	}
+
+	@Override
+	public final Runnable createTask(Socket socket) {
+		NoteSink noteSink;
+		noteSink = TestingNoteSink.INSTANCE;
+
+		return new MarketingSiteTask(noteSink, requestParser, socket);
+	}
+
+}

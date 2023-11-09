@@ -33,7 +33,24 @@ public sealed interface Request extends RequestParser.Result
 
 	boolean matches(Segment seg1, Segment seg2);
 
+	/**
+	 * Returns the decoded path component of this request's target.
+	 *
+	 * @return the decoded path component of this request's target.
+	 */
 	String path();
+
+	/**
+	 * Compares the decoded path component of this request's target to the
+	 * specified string. Returns {@code true} if the decoded path is equal to the
+	 * specified string.
+	 *
+	 * @param s the string to compare for equality
+	 *
+	 * @return {@code true} if the decoded path is equal to the specified string;
+	 *         {@code false} otherwise
+	 */
+	boolean pathEquals(String s);
 
 	String segment(int index);
 

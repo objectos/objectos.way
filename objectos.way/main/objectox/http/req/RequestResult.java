@@ -93,6 +93,12 @@ public sealed abstract class RequestResult {
 		return requestPath.toString();
 	}
 
+	public final boolean pathEquals(String s) {
+		Check.notNull(s, "s == null");
+
+		return requestPath.pathEquals(s);
+	}
+
 	public final String segment(int index) {
 		return requestPath.segment(index);
 	}
