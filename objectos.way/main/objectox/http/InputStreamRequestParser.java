@@ -23,16 +23,12 @@ import java.util.EnumMap;
 import java.util.Map;
 import objectos.http.Http;
 import objectos.http.Http.Method;
-import objectos.lang.LongNote;
+import objectos.http.RequestParser;
 import objectos.lang.NoteSink;
+import objectox.http.req.BadRequestReason;
+import objectox.http.req.GetRequestResult;
 
-public final class RequestParser {
-
-	static final LongNote READ_BYTES = LongNote.debug(RequestParser.class, "Read bytes");
-
-	public interface RequestResult {
-
-	}
+public final class InputStreamRequestParser {
 
 	private static final Map<Method, byte[]> METHOD_NAME_AND_SPACE;
 
@@ -123,7 +119,7 @@ public final class RequestParser {
 
 	private byte versionMinor;
 
-	public RequestParser(NoteSink noteSink, InputStream inputStream) {
+	public InputStreamRequestParser(NoteSink noteSink, InputStream inputStream) {
 		this.noteSink = noteSink;
 
 		this.inputStream = inputStream;
@@ -131,7 +127,7 @@ public final class RequestParser {
 		state = _START;
 	}
 
-	public final RequestResult parse() {
+	public final RequestParser.Result parse() {
 		while (state != _STOP) {
 			stepOne();
 		}
@@ -243,7 +239,7 @@ public final class RequestParser {
 		try {
 			bytesRead = inputStream.read(buffer, bufferLimit, writableLength);
 
-			noteSink.send(READ_BYTES, bytesRead);
+			noteSink.send(RequestParser.READ_BYTES, bytesRead);
 		} catch (IOException e) {
 			error = e;
 

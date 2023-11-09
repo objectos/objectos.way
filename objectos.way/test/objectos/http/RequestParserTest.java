@@ -13,17 +13,32 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectox.http;
+package objectos.http;
 
 import static org.testng.Assert.assertEquals;
 
 import java.io.InputStream;
+import objectos.http.RequestParser.Result;
 import objectos.lang.NoteSink;
 import objectos.lang.TestingNoteSink;
-import objectox.http.RequestParser.RequestResult;
+import objectox.http.TestableInputStream;
+import objectox.http.req.GetRequestResult;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 public class RequestParserTest {
+
+	private RequestParser parser;
+
+	@BeforeClass
+	public void beforeClass() {
+		NoteSink noteSink;
+		noteSink = TestingNoteSink.INSTANCE;
+
+		parser = RequestParser.of(
+				RequestParser.Option.noteSink(noteSink)
+		);
+	}
 
 	@Test(description = "It should parse a GET request")
 	public void testCase01() {
@@ -34,23 +49,12 @@ public class RequestParserTest {
 
 		""".replace("\n", "\r\n");
 
-		RequestResult result;
-		result = parse(s);
-
-		assertEquals(result instanceof GetRequestResult, true);
-	}
-
-	private RequestParser.RequestResult parse(String s) {
-		NoteSink noteSink;
-		noteSink = TestingNoteSink.INSTANCE;
-
 		InputStream in;
 		in = TestableInputStream.of(s);
 
-		RequestParser parser;
-		parser = new RequestParser(noteSink, in);
+		Result result = parser.parse(in);
 
-		return parser.parse();
+		assertEquals(result instanceof GetRequestResult, true);
 	}
 
 }

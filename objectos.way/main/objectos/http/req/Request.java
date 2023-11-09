@@ -13,10 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectox.http;
+package objectos.http.req;
 
-import objectox.http.RequestParser.RequestResult;
+import objectos.http.RequestParser;
 
-final class GetRequestResult implements RequestResult {
+public sealed interface Request extends RequestParser.Result permits GetRequest {
+
+	String path();
 
 }
