@@ -20,8 +20,6 @@ import static org.testng.Assert.assertEquals;
 import java.io.InputStream;
 import java.nio.file.Path;
 import objectos.http.RequestParser.Result;
-import objectos.http.req.GetRequest;
-import objectos.http.req.HeadRequest;
 import objectos.lang.NoteSink;
 import objectos.lang.TestingNoteSink;
 import objectos.way.HappyPath;

@@ -15,14 +15,21 @@
  */
 package objectos.http;
 
+import static org.testng.Assert.assertEquals;
+
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.nio.charset.StandardCharsets;
 import java.util.concurrent.TimeUnit;
 import objectos.lang.NoteSink;
 import objectos.lang.TestingNoteSink;
+import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
+import org.testng.annotations.Test;
 
 public class MarketingSiteTest implements SocketTaskFactory {
 
@@ -30,6 +37,8 @@ public class MarketingSiteTest implements SocketTaskFactory {
 
 	@SuppressWarnings("unused")
 	private Thread server;
+
+	private ServerSocket serverSocket;
 
 	@BeforeClass
 	public void beforeClass() throws IOException, InterruptedException {
@@ -49,14 +58,20 @@ public class MarketingSiteTest implements SocketTaskFactory {
 		InetAddress address;
 		address = InetAddress.getLoopbackAddress();
 
-		ServerSocket serverSocket;
 		serverSocket = new ServerSocket(randomPort, backlogDefaultValue, address);
 
 		server = new TestingServer(noteSink, serverSocket, this);
 
+		server.start();
+
 		synchronized (this) {
 			TimeUnit.SECONDS.timedWait(this, 2);
 		}
+	}
+
+	@AfterClass(alwaysRun = true)
+	public void afterClass() {
+		server.interrupt();
 	}
 
 	@Override
@@ -65,6 +80,59 @@ public class MarketingSiteTest implements SocketTaskFactory {
 		noteSink = TestingNoteSink.INSTANCE;
 
 		return new MarketingSiteTask(noteSink, requestParser, socket);
+	}
+
+	@Test(enabled = false, description = """
+	it should redirect '/' to '/index.html'
+	""")
+	public void testCase01() throws IOException {
+		try (Socket socket = newSocket()) {
+			req(socket, """
+			GET / HTTP/1.1
+			Host: www.example.com
+			Connection: close
+
+			""".replace("\n", "\r\n"));
+
+			resp(socket, """
+      HTTP/1.1 200 OK<CRLF>
+      Content-Type: text/plain; charset=utf-8<CRLF>
+      Content-Length: 13<CRLF>
+      Date: Wed, 28 Jun 2023 12:08:43 GMT<CRLF>
+      <CRLF>
+      Hello World!
+			""".replace("<CRLF>\n", "\r\n"));
+		}
+	}
+
+	private Socket newSocket() throws IOException {
+		return new Socket(serverSocket.getInetAddress(), serverSocket.getLocalPort());
+	}
+
+	private void req(Socket socket, String string) throws IOException {
+		OutputStream out;
+		out = socket.getOutputStream();
+
+		byte[] bytes;
+		bytes = string.getBytes(StandardCharsets.UTF_8);
+
+		out.write(bytes);
+	}
+
+	private void resp(Socket socket, String expected) throws IOException {
+		byte[] expectedBytes;
+		expectedBytes = expected.getBytes(StandardCharsets.UTF_8);
+
+		InputStream in;
+		in = socket.getInputStream();
+
+		byte[] bytes;
+		bytes = in.readNBytes(expectedBytes.length);
+
+		String res;
+		res = new String(bytes, StandardCharsets.UTF_8);
+
+		assertEquals(res, expected);
 	}
 
 }

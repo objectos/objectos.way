@@ -13,8 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.http.req;
+package objectos.http;
 
-import objectox.http.req.RequestResult.GetRequestResult;
+public interface HttpAction {
 
-public sealed interface GetRequest extends Request permits GetRequestResult {}
+	boolean shouldHandle(Request request);
+
+	Response handle(Request request);
+
+}

@@ -19,8 +19,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
-import objectos.http.RequestParser.Result;
-import objectos.http.req.Request;
 import objectos.lang.Note1;
 import objectos.lang.NoteSink;
 
@@ -54,12 +52,22 @@ final class MarketingSiteTask implements Runnable {
 	@Override
 	public final void run() {
 		try (socket) {
-			InputStream inputStream;
-			inputStream = socket.getInputStream();
-
 			while (shouldExecute()) {
+				InputStream inputStream;
+				inputStream = socket.getInputStream();
+
+				RequestParser.Result result;
+				result = requestParser.parse(inputStream);
+
 				Response resp;
-				resp = execute(inputStream);
+
+				try {
+					resp = execute(result);
+				} catch (Throwable t) {
+					t.printStackTrace();
+
+					return;
+				}
 
 				OutputStream outputStream;
 				outputStream = socket.getOutputStream();
@@ -75,16 +83,48 @@ final class MarketingSiteTask implements Runnable {
 		return !stop && !Thread.currentThread().isInterrupted();
 	}
 
-	private Response execute(InputStream inputStream) {
-		Result result;
-		result = requestParser.parse(inputStream);
-
+	private Response execute(RequestParser.Result result) {
 		return switch (result) {
 			case Request req -> handle(req);
 		};
 	}
 
 	private Response handle(Request req) {
+		HttpAction action;
+		action = new MarketingSiteRootRedirect();
+
+		if (action.shouldHandle(req)) {
+			return action.handle(req);
+		}
+
+		throw new UnsupportedOperationException("Implement me");
+	}
+
+}
+
+final class MarketingSiteRootRedirect implements HttpAction {
+
+	@Override
+	public final boolean shouldHandle(Request req) {
+		return req.pathEquals("/");
+	}
+
+	@Override
+	public final Response handle(Request req) {
+		return switch (req) {
+			case GetRequest get -> movedPermanently("/index.html");
+
+			case HeadRequest head -> movedPermanently("/index.html");
+
+			default -> methodNotAllowed();
+		};
+	}
+
+	private Response methodNotAllowed() {
+		throw new UnsupportedOperationException("Implement me");
+	}
+
+	private Response movedPermanently(String location) {
 		throw new UnsupportedOperationException("Implement me");
 	}
 

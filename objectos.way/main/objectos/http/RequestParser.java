@@ -16,7 +16,6 @@
 package objectos.http;
 
 import java.io.InputStream;
-import objectos.http.req.Request;
 import objectos.lang.LongNote;
 import objectos.lang.NoteSink;
 import objectox.http.RequestParserFacade;

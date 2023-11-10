@@ -13,12 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.http.req;
+package objectos.http;
 
 import java.nio.file.Path;
 import objectos.http.Http.Header.Name;
-import objectos.http.RequestParser;
-import objectos.http.Segment;
 
 public sealed interface Request extends RequestParser.Result
 		permits
