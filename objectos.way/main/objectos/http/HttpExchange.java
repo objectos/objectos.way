@@ -245,4 +245,6 @@ public sealed interface HttpExchange extends AutoCloseable permits objectox.http
 
 	void body(CharWritable entity, Charset charset);
 
+	void bodyClear();
+
 }

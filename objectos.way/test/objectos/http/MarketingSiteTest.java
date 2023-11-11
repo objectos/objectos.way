@@ -93,7 +93,7 @@ public class MarketingSiteTest implements SocketTaskFactory {
 		NoteSink noteSink;
 		noteSink = TestingNoteSink.INSTANCE;
 
-		return new MarketingSiteTask(clock, noteSink, socket);
+		return new MarketingSite(clock, noteSink, socket);
 	}
 
 	@Test(description = """
@@ -114,6 +114,30 @@ public class MarketingSiteTest implements SocketTaskFactory {
 			Date: Fri, 10 Nov 2023 10:43:00 GMT
 
 			""".replace("\n", "\r\n"));
+		}
+	}
+
+	@Test(description = """
+	GET /index.html should return 200 OK
+	""")
+	public void testCase02() throws IOException {
+		try (Socket socket = newSocket()) {
+			req(socket, """
+			GET /index.html HTTP/1.1
+			Host: www.example.com
+			Connection: close
+
+			""".replace("\n", "\r\n"));
+
+			resp(socket, """
+			HTTP/1.1 200 OK<CRLF>
+			Content-Length: 30<CRLF>
+			Content-Type: text/html; charset=utf-8<CRLF>
+			Date: Fri, 10 Nov 2023 10:43:00 GMT<CRLF>
+			<CRLF>
+			<!DOCTYPE html>
+			<h1>home</h1>
+			""".replace("<CRLF>\n", "\r\n"));
 		}
 	}
 

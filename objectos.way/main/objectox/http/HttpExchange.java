@@ -415,6 +415,13 @@ public final class HttpExchange implements objectos.http.HttpExchange {
 		responseBody = new HttpChunkedChars(this, entity, charset);
 	}
 
+	@Override
+	public final void bodyClear() {
+		checkStateHandle();
+
+		responseBody = null;
+	}
+
 	private void checkStateHandle() {
 		if (state != _HANDLE_INVOKE) {
 			throw new IllegalStateException(

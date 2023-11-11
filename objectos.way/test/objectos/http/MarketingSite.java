@@ -18,16 +18,17 @@ package objectos.http;
 import java.io.IOException;
 import java.net.Socket;
 import java.time.Clock;
+import objectos.html.HtmlTemplate;
 import objectos.lang.Note1;
 import objectos.lang.NoteSink;
 
-final class MarketingSiteTask extends AbstractHttpModule implements Runnable {
+final class MarketingSite extends AbstractHttpModule implements Runnable {
 
 	static final Note1<IOException> IO_ERROR;
 
 	static {
 		Class<?> source;
-		source = MarketingSiteTask.class;
+		source = MarketingSite.class;
 
 		IO_ERROR = Note1.error(source, "I/O error");
 	}
@@ -36,7 +37,7 @@ final class MarketingSiteTask extends AbstractHttpModule implements Runnable {
 
 	private final Socket socket;
 
-	public MarketingSiteTask(Clock clock, NoteSink noteSink, Socket socket) {
+	public MarketingSite(Clock clock, NoteSink noteSink, Socket socket) {
 		super(clock);
 
 		this.noteSink = noteSink;
@@ -95,7 +96,15 @@ final class MarketingSiteRoot extends AbstractHttpModule {
 		switch (fileName) {
 			case "" -> movedPermanently("/index.html");
 
-			default -> notFound();
+			case "index.html" -> textHtml(MarketingSiteHome::new);
 		}
+	}
+}
+
+final class MarketingSiteHome extends HtmlTemplate {
+	@Override
+	protected void definition() {
+		doctype();
+		h1("home");
 	}
 }
