@@ -32,8 +32,7 @@ import objectox.lang.Check;
  * Represents the server-side view of an HTTP exchange. This class allows for
  * writing an HTTP server.
  */
-public sealed interface HttpExchange extends AutoCloseable
-		permits objectox.http.HttpExchange {
+public sealed interface HttpExchange extends AutoCloseable permits objectox.http.HttpExchange {
 
 	/**
 	 * Note indicating an I/O read error occurred.
@@ -141,6 +140,8 @@ public sealed interface HttpExchange extends AutoCloseable
 
 	// Request methods
 
+	Http.Header.Value header(Http.Header.Name name);
+
 	boolean matches(Segment pat);
 
 	boolean matches(Segment pat1, Segment pat2);
@@ -222,8 +223,6 @@ public sealed interface HttpExchange extends AutoCloseable
 	Path segmentsAsPath();
 
 	// Response methods
-
-	Http.Header.Value header(Http.Header.Name name);
 
 	Body body();
 

@@ -43,6 +43,10 @@ final class TestingServer extends Thread {
 
 	@Override
 	public final void run() {
+		synchronized (taskFactory) {
+			taskFactory.notifyAll();
+		}
+
 		Note1<ServerSocket> startNote;
 		startNote = Note1.info(getClass(), "Start");
 

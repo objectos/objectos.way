@@ -24,6 +24,11 @@ import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
+import java.time.Clock;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.concurrent.TimeUnit;
 import objectos.lang.NoteSink;
 import objectos.lang.TestingNoteSink;
@@ -32,8 +37,6 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 public class MarketingSiteTest implements SocketTaskFactory {
-
-	private RequestParser requestParser;
 
 	@SuppressWarnings("unused")
 	private Thread server;
@@ -44,10 +47,6 @@ public class MarketingSiteTest implements SocketTaskFactory {
 	public void beforeClass() throws IOException, InterruptedException {
 		NoteSink noteSink;
 		noteSink = TestingNoteSink.INSTANCE;
-
-		requestParser = RequestParser.of(
-				RequestParser.Option.noteSink(noteSink)
-		);
 
 		int randomPort;
 		randomPort = 0;
@@ -76,13 +75,28 @@ public class MarketingSiteTest implements SocketTaskFactory {
 
 	@Override
 	public final Runnable createTask(Socket socket) {
+		LocalDateTime dateTime;
+		dateTime = LocalDateTime.of(2023, 11, 10, 10, 43);
+
+		ZoneId zone;
+		zone = ZoneId.of("GMT");
+
+		ZonedDateTime zoned;
+		zoned = dateTime.atZone(zone);
+
+		Instant fixedInstant;
+		fixedInstant = zoned.toInstant();
+
+		Clock clock;
+		clock = Clock.fixed(fixedInstant, zone);
+
 		NoteSink noteSink;
 		noteSink = TestingNoteSink.INSTANCE;
 
-		return new MarketingSiteTask(noteSink, requestParser, socket);
+		return new MarketingSiteTask(clock, noteSink, socket);
 	}
 
-	@Test(enabled = false, description = """
+	@Test(description = """
 	it should redirect '/' to '/index.html'
 	""")
 	public void testCase01() throws IOException {
@@ -95,13 +109,11 @@ public class MarketingSiteTest implements SocketTaskFactory {
 			""".replace("\n", "\r\n"));
 
 			resp(socket, """
-      HTTP/1.1 200 OK<CRLF>
-      Content-Type: text/plain; charset=utf-8<CRLF>
-      Content-Length: 13<CRLF>
-      Date: Wed, 28 Jun 2023 12:08:43 GMT<CRLF>
-      <CRLF>
-      Hello World!
-			""".replace("<CRLF>\n", "\r\n"));
+			HTTP/1.1 301 MOVED PERMANENTLY
+			Location: /index.html
+			Date: Fri, 10 Nov 2023 10:43:00 GMT
+
+			""".replace("\n", "\r\n"));
 		}
 	}
 

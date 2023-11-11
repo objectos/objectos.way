@@ -16,13 +16,12 @@
 package objectos.http;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.net.Socket;
+import java.time.Clock;
 import objectos.lang.Note1;
 import objectos.lang.NoteSink;
 
-final class MarketingSiteTask implements Runnable {
+final class MarketingSiteTask extends AbstractHttpModule implements Runnable {
 
 	static final Note1<IOException> IO_ERROR;
 
@@ -35,97 +34,68 @@ final class MarketingSiteTask implements Runnable {
 
 	private final NoteSink noteSink;
 
-	private final RequestParser requestParser;
-
 	private final Socket socket;
 
-	private boolean stop;
+	public MarketingSiteTask(Clock clock, NoteSink noteSink, Socket socket) {
+		super(clock);
 
-	public MarketingSiteTask(NoteSink noteSink, RequestParser requestParser, Socket socket) {
 		this.noteSink = noteSink;
-
-		this.requestParser = requestParser;
 
 		this.socket = socket;
 	}
 
 	@Override
 	public final void run() {
-		try (socket) {
-			while (shouldExecute()) {
-				InputStream inputStream;
-				inputStream = socket.getInputStream();
+		HttpExchange exchange;
+		exchange = HttpExchange.of(socket, HttpExchange.Option.noteSink(noteSink));
 
-				RequestParser.Result result;
-				result = requestParser.parse(inputStream);
-
-				Response resp;
-
-				try {
-					resp = execute(result);
-				} catch (Throwable t) {
-					t.printStackTrace();
-
-					return;
-				}
-
-				OutputStream outputStream;
-				outputStream = socket.getOutputStream();
-
-				resp.writeTo(outputStream);
+		try (exchange) {
+			while (exchange.active()) {
+				//				MaybeRequest maybeReq;
+				//				maybeReq = exchange.parseRequest();
+				//
+				//				try (maybeReq) {
+				//					handle(maybeReq);
+				//				}
+				handle(exchange);
 			}
 		} catch (IOException e) {
 			noteSink.send(IO_ERROR, e);
 		}
 	}
 
-	private boolean shouldExecute() {
-		return !stop && !Thread.currentThread().isInterrupted();
-	}
+	private static final Segment FILENAME = Segment.ofAny();
 
-	private Response execute(RequestParser.Result result) {
-		return switch (result) {
-			case Request req -> handle(req);
-		};
-	}
+	@Override
+	protected final void definition() {
+		if (matches(FILENAME)) {
+			MarketingSiteRoot root;
+			root = new MarketingSiteRoot(clock);
 
-	private Response handle(Request req) {
-		HttpAction action;
-		action = new MarketingSiteRootRedirect();
-
-		if (action.shouldHandle(req)) {
-			return action.handle(req);
+			root.handle(http);
 		}
 
-		throw new UnsupportedOperationException("Implement me");
+		else {
+			notFound();
+		}
 	}
 
 }
 
-final class MarketingSiteRootRedirect implements HttpAction {
-
-	@Override
-	public final boolean shouldHandle(Request req) {
-		return req.pathEquals("/");
+final class MarketingSiteRoot extends AbstractHttpModule {
+	protected MarketingSiteRoot(Clock clock) {
+		super(clock);
 	}
 
 	@Override
-	public final Response handle(Request req) {
-		return switch (req) {
-			case GetRequest get -> movedPermanently("/index.html");
+	protected final void definition() {
+		String fileName;
+		fileName = segment(0);
 
-			case HeadRequest head -> movedPermanently("/index.html");
+		switch (fileName) {
+			case "" -> movedPermanently("/index.html");
 
-			default -> methodNotAllowed();
-		};
+			default -> notFound();
+		}
 	}
-
-	private Response methodNotAllowed() {
-		throw new UnsupportedOperationException("Implement me");
-	}
-
-	private Response movedPermanently(String location) {
-		throw new UnsupportedOperationException("Implement me");
-	}
-
 }
