@@ -141,6 +141,70 @@ public class MarketingSiteTest implements SocketTaskFactory {
 		}
 	}
 
+	@Test(description = """
+	HEAD /index.html should return 200 OK
+	""")
+	public void testCase03() throws IOException {
+		try (Socket socket = newSocket()) {
+			req(socket, """
+			HEAD /index.html HTTP/1.1
+			Host: www.example.com
+			Connection: close
+
+			""".replace("\n", "\r\n"));
+
+			resp(socket, """
+			HTTP/1.1 200 OK<CRLF>
+			Content-Length: 30<CRLF>
+			Content-Type: text/html; charset=utf-8<CRLF>
+			Date: Fri, 10 Nov 2023 10:43:00 GMT<CRLF>
+			<CRLF>
+			""".replace("<CRLF>\n", "\r\n"));
+		}
+	}
+
+	@Test(description = """
+	Other methods to /index.html should return 405 METHOD NOT ALLOWED
+	""")
+	public void testCase04() throws IOException {
+		try (Socket socket = newSocket()) {
+			req(socket, """
+			TRACE /index.html HTTP/1.1
+			Host: www.example.com
+			Connection: close
+
+			""".replace("\n", "\r\n"));
+
+			resp(socket, """
+			HTTP/1.1 405 METHOD NOT ALLOWED<CRLF>
+			Connection: close<CRLF>
+			Date: Fri, 10 Nov 2023 10:43:00 GMT<CRLF>
+			<CRLF>
+			""".replace("<CRLF>\n", "\r\n"));
+		}
+	}
+
+	@Test(description = """
+	GET /i-do-not-exist should return 404
+	""")
+	public void testCase05() throws IOException {
+		try (Socket socket = newSocket()) {
+			req(socket, """
+			GET /i-do-not-exist HTTP/1.1
+			Host: www.example.com
+			Connection: close
+
+			""".replace("\n", "\r\n"));
+
+			resp(socket, """
+			HTTP/1.1 404 NOT FOUND<CRLF>
+			Connection: close<CRLF>
+			Date: Fri, 10 Nov 2023 10:43:00 GMT<CRLF>
+			<CRLF>
+			""".replace("<CRLF>\n", "\r\n"));
+		}
+	}
+
 	private Socket newSocket() throws IOException {
 		return new Socket(serverSocket.getInetAddress(), serverSocket.getLocalPort());
 	}

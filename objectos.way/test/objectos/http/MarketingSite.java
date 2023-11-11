@@ -97,6 +97,8 @@ final class MarketingSiteRoot extends AbstractHttpModule {
 			case "" -> movedPermanently("/index.html");
 
 			case "index.html" -> textHtml(MarketingSiteHome::new);
+
+			default -> notFound();
 		}
 	}
 }
