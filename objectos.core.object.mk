@@ -18,35 +18,29 @@
 # objectos.core.object options
 #
 
-## code directory
+## module directory
 CORE_OBJECT = objectos.core.object
 
-## code module
+## module
 CORE_OBJECT_MODULE = $(CORE_OBJECT)
 
-## group id
-CORE_OBJECT_GROUP_ID = $(GROUP_ID)
-
-## artifact id
-CORE_OBJECT_ARTIFACT_ID = $(CORE_OBJECT_MODULE)
-
-## code module version
+## module version
 CORE_OBJECT_VERSION = $(VERSION)
 
-## code javac --release option
+## javac --release option
 CORE_OBJECT_JAVA_RELEASE = $(JAVA_RELEASE)
 
-## code --enable-preview ?
+## --enable-preview ?
 CORE_OBJECT_ENABLE_PREVIEW = 1
 
-## code jar name
+## jar name
 CORE_OBJECT_JAR_NAME = $(CORE_OBJECT)
 
-## code test compile deps
+## test compile deps
 CORE_OBJECT_TEST_COMPILE_DEPS = $(CORE_OBJECT_JAR_FILE)
 CORE_OBJECT_TEST_COMPILE_DEPS += $(call dependency,org.testng,testng,$(TESTNG_VERSION))
 
-## code test runtime dependencies
+## test runtime dependencies
 CORE_OBJECT_TEST_RUNTIME_DEPS = $(CORE_OBJECT_TEST_COMPILE_DEPS)
 CORE_OBJECT_TEST_RUNTIME_DEPS += $(call dependency,com.beust,jcommander,$(JCOMMANDER_VERSION))
 CORE_OBJECT_TEST_RUNTIME_DEPS += $(call dependency,org.slf4j,slf4j-api,$(SLF4J_VERSION))
@@ -55,17 +49,15 @@ CORE_OBJECT_TEST_RUNTIME_DEPS += $(call dependency,org.slf4j,slf4j-nop,$(SLF4J_V
 ## test runtime exports
 CORE_OBJECT_TEST_JAVAX_EXPORTS := objectos.core.object.internal
 
+## install coordinates
+CORE_OBJECT_GROUP_ID = $(GROUP_ID)
+CORE_OBJECT_ARTIFACT_ID = $(CORE_OBJECT_MODULE)
+
 #
 # objectos.core.object targets
 #
 
-CORE_OBJECT_TASKS = COMPILE_TASK
-CORE_OBJECT_TASKS += JAR_TASK
-CORE_OBJECT_TASKS += TEST_COMPILE_TASK
-CORE_OBJECT_TASKS += TEST_RUN_TASK
-CORE_OBJECT_TASKS += INSTALL_TASK
-
-$(foreach task,$(CORE_OBJECT_TASKS),$(eval $(call $(task),CORE_OBJECT_)))
+$(foreach task,$(MODULE_TASKS),$(eval $(call $(task),CORE_OBJECT_)))
 
 .PHONY: core.object@clean
 core.object@clean:
@@ -82,3 +74,6 @@ core.object@test: $(CORE_OBJECT_TEST_RUN_MARKER)
 
 .PHONY: core.object@install
 core.object@install: $(CORE_OBJECT_INSTALL)
+
+.PHONY: core.object@source-jar
+core.object@source-jar: $(CORE_OBJECT_SOURCE_JAR_FILE)

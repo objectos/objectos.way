@@ -35,6 +35,14 @@ JAVA_RELEASE := 21
 # Delete the default suffixes
 .SUFFIXES:
 
+## common module tasks
+MODULE_TASKS = COMPILE_TASK
+MODULE_TASKS += JAR_TASK
+MODULE_TASKS += TEST_COMPILE_TASK
+MODULE_TASKS += TEST_RUN_TASK
+MODULE_TASKS += INSTALL_TASK
+MODULE_TASKS += SOURCE_JAR_TASK
+
 #
 # Default target
 #
@@ -47,6 +55,7 @@ jar: way@jar
 
 print-%::
 	@echo $* = $($*)
+
 #
 # Defines the tools
 #
@@ -345,7 +354,7 @@ $$($(1)TEST_RUN_MARKER): $$($(1)TEST_COMPILE_MARKER)
 endef
 
 #
-# install options
+# install task
 #
 
 define INSTALL_TASK
@@ -363,6 +372,31 @@ $$($(1)INSTALL): $$($(1)JAR_FILE)
 
 endef
 
+#
+# source-jar task
+#
+
+define SOURCE_JAR_TASK
+
+## source-jar file
+$(1)SOURCE_JAR_FILE = $$($(1)WORK)/$$($(1)JAR_NAME)-$$($(1)VERSION)-sources.jar
+
+## source-jar command
+$(1)SOURCE_JARX = $$(JAR)
+$(1)SOURCE_JARX += --create
+$(1)SOURCE_JARX += --file $$($(1)SOURCE_JAR_FILE)
+$(1)SOURCE_JARX += -C $$($(1)MAIN)
+$(1)SOURCE_JARX += .
+
+#
+# source-jar targets
+#
+
+$$($(1)SOURCE_JAR_FILE): $$($(1)SOURCES)
+	$$($(1)SOURCE_JARX)
+	
+endef
+
 ## include ossrh config
 ## - OSSRH_GPG_KEY
 ## - OSSRH_GPG_PASSPHRASE
@@ -378,35 +412,29 @@ endef
 # objectos.core.object options
 #
 
-## code directory
+## module directory
 CORE_OBJECT = objectos.core.object
 
-## code module
+## module
 CORE_OBJECT_MODULE = $(CORE_OBJECT)
 
-## group id
-CORE_OBJECT_GROUP_ID = $(GROUP_ID)
-
-## artifact id
-CORE_OBJECT_ARTIFACT_ID = $(CORE_OBJECT_MODULE)
-
-## code module version
+## module version
 CORE_OBJECT_VERSION = $(VERSION)
 
-## code javac --release option
+## javac --release option
 CORE_OBJECT_JAVA_RELEASE = $(JAVA_RELEASE)
 
-## code --enable-preview ?
+## --enable-preview ?
 CORE_OBJECT_ENABLE_PREVIEW = 1
 
-## code jar name
+## jar name
 CORE_OBJECT_JAR_NAME = $(CORE_OBJECT)
 
-## code test compile deps
+## test compile deps
 CORE_OBJECT_TEST_COMPILE_DEPS = $(CORE_OBJECT_JAR_FILE)
 CORE_OBJECT_TEST_COMPILE_DEPS += $(call dependency,org.testng,testng,$(TESTNG_VERSION))
 
-## code test runtime dependencies
+## test runtime dependencies
 CORE_OBJECT_TEST_RUNTIME_DEPS = $(CORE_OBJECT_TEST_COMPILE_DEPS)
 CORE_OBJECT_TEST_RUNTIME_DEPS += $(call dependency,com.beust,jcommander,$(JCOMMANDER_VERSION))
 CORE_OBJECT_TEST_RUNTIME_DEPS += $(call dependency,org.slf4j,slf4j-api,$(SLF4J_VERSION))
@@ -415,17 +443,15 @@ CORE_OBJECT_TEST_RUNTIME_DEPS += $(call dependency,org.slf4j,slf4j-nop,$(SLF4J_V
 ## test runtime exports
 CORE_OBJECT_TEST_JAVAX_EXPORTS := objectos.core.object.internal
 
+## install coordinates
+CORE_OBJECT_GROUP_ID = $(GROUP_ID)
+CORE_OBJECT_ARTIFACT_ID = $(CORE_OBJECT_MODULE)
+
 #
 # objectos.core.object targets
 #
 
-CORE_OBJECT_TASKS = COMPILE_TASK
-CORE_OBJECT_TASKS += JAR_TASK
-CORE_OBJECT_TASKS += TEST_COMPILE_TASK
-CORE_OBJECT_TASKS += TEST_RUN_TASK
-CORE_OBJECT_TASKS += INSTALL_TASK
-
-$(foreach task,$(CORE_OBJECT_TASKS),$(eval $(call $(task),CORE_OBJECT_)))
+$(foreach task,$(MODULE_TASKS),$(eval $(call $(task),CORE_OBJECT_)))
 
 .PHONY: core.object@clean
 core.object@clean:
@@ -442,6 +468,9 @@ core.object@test: $(CORE_OBJECT_TEST_RUN_MARKER)
 
 .PHONY: core.object@install
 core.object@install: $(CORE_OBJECT_INSTALL)
+
+.PHONY: core.object@source-jar
+core.object@source-jar: $(CORE_OBJECT_SOURCE_JAR_FILE)
 
 #
 # objectos.code options
@@ -661,30 +690,30 @@ WAY_COPYRIGHT_YEARS := 2022-2023
 ## way javadoc snippet path
 WAY_JAVADOC_SNIPPET_PATH := WAY_TEST
 
+## way sub modules
+WAY_SUBMODULES = core.object
+
 #
 # objectos.way targets
 #
 
-WAY_TASKS = COMPILE_TASK
-WAY_TASKS += JAR_TASK
-WAY_TASKS += TEST_COMPILE_TASK
-WAY_TASKS += TEST_RUN_TASK
-WAY_TASKS += INSTALL_TASK
-
-$(foreach task,$(WAY_TASKS),$(eval $(call $(task),WAY_)))
+$(foreach task,$(MODULE_TASKS),$(eval $(call $(task),WAY_)))
 
 #
 # Targets section
 #
 
 .PHONY: clean
-clean: core.object@clean code@clean selfgen@clean way@clean
+clean: $(foreach mod,$(WAY_SUBMODULES),$(mod)@clean) code@clean selfgen@clean way@clean 
 
 .PHONY: test
-test: core.object@test code@test selfgen@test way@test
+test: $(foreach mod,$(WAY_SUBMODULES),$(mod)@test) code@test selfgen@test way@test
 
 .PHONY: install
-install: core.object@install way@install
+install: $(foreach mod,$(WAY_SUBMODULES),$(mod)@install) way@install
+
+.PHONY: source-jar
+source-jar: $(foreach mod,$(WAY_SUBMODULES),$(mod)@source-jar) way@source-jar 
 
 .PHONY: ossrh
 ossrh: way@ossrh

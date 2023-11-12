@@ -80,30 +80,30 @@ WAY_COPYRIGHT_YEARS := 2022-2023
 ## way javadoc snippet path
 WAY_JAVADOC_SNIPPET_PATH := WAY_TEST
 
+## way sub modules
+WAY_SUBMODULES = core.object
+
 #
 # objectos.way targets
 #
 
-WAY_TASKS = COMPILE_TASK
-WAY_TASKS += JAR_TASK
-WAY_TASKS += TEST_COMPILE_TASK
-WAY_TASKS += TEST_RUN_TASK
-WAY_TASKS += INSTALL_TASK
-
-$(foreach task,$(WAY_TASKS),$(eval $(call $(task),WAY_)))
+$(foreach task,$(MODULE_TASKS),$(eval $(call $(task),WAY_)))
 
 #
 # Targets section
 #
 
 .PHONY: clean
-clean: core.object@clean code@clean selfgen@clean way@clean
+clean: $(foreach mod,$(WAY_SUBMODULES),$(mod)@clean) code@clean selfgen@clean way@clean 
 
 .PHONY: test
-test: core.object@test code@test selfgen@test way@test
+test: $(foreach mod,$(WAY_SUBMODULES),$(mod)@test) code@test selfgen@test way@test
 
 .PHONY: install
-install: core.object@install way@install
+install: $(foreach mod,$(WAY_SUBMODULES),$(mod)@install) way@install
+
+.PHONY: source-jar
+source-jar: $(foreach mod,$(WAY_SUBMODULES),$(mod)@source-jar) way@source-jar 
 
 .PHONY: ossrh
 ossrh: way@ossrh
