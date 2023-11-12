@@ -228,22 +228,11 @@ module-path = $(subst $(space),$(MODULE_PATH_SEPARATOR),$(1))
 $(LOCAL_REPO_PATH)/%.jar:	
 	$(REMOTE_REPO_CURLX) --output $@ $(@:$(LOCAL_REPO_PATH)/%.jar=$(REMOTE_REPO_URL)/%.jar)
 
-## include ossrh config
-## - OSSRH_GPG_KEY
-## - OSSRH_GPG_PASSPHRASE
-## - OSSRH_USERNAME
-## - OSSRH_PASSWORD
--include $(HOME)/.config/objectos/ossrh-config.mk
-
-## include GH config
-## - GH_TOKEN
--include $(HOME)/.config/objectos/gh-config.mk
-
 #
 # compilation options
 #
 
-define COMPILE
+define COMPILE_TASK
 
 ## source directory
 $(1)MAIN = $$($(1)MODULE)/main
@@ -305,471 +294,58 @@ $$($(1)CLASSES): $$($(1)CLASS_OUTPUT)/%.class: $$($(1)MAIN)/%.java
 	$$(eval $(1)DIRTY += $$$$<)
 
 endef
+
 #
-# objectos.way jar options
+# jar options
 #
 
-## objectos.way license 'artifact'
-WAY_LICENSE = $(WAY_CLASS_OUTPUT)/META-INF/LICENSE
+define JAR_TASK
 
-## objectos.way jar file path
-WAY_JAR_FILE = $(WAY_WORK)/$(WAY_JAR_NAME)-$(WAY_VERSION).jar
+## license 'artifact'
+$(1)LICENSE = $$($(1)CLASS_OUTPUT)/META-INF/LICENSE
 
-## objectos.way jar command
-WAY_JARX = $(JAR)
-WAY_JARX += --create
-WAY_JARX += --file $(WAY_JAR_FILE)
-WAY_JARX += --module-version $(WAY_VERSION)
-WAY_JARX += -C $(WAY_CLASS_OUTPUT)
-WAY_JARX += .
+## jar file path
+$(1)JAR_FILE = $$($(1)WORK)/$$($(1)JAR_NAME)-$$($(1)VERSION).jar
 
-## requirements of the WAY_JAR_FILE target
-WAY_JAR_FILE_REQS = $(WAY_COMPILE_MARKER)
-WAY_JAR_FILE_REQS += $(WAY_LICENSE)
-ifdef WAY_JAR_FILE_REQS_MORE
-WAY_JAR_FILE_REQS += $(WAY_JAR_FILE_REQS_MORE)
+## jar command
+$(1)JARX = $$(JAR)
+$(1)JARX += --create
+$(1)JARX += --file $$($(1)JAR_FILE)
+$(1)JARX += --module-version $$($(1)VERSION)
+$(1)JARX += -C $$($(1)CLASS_OUTPUT)
+$(1)JARX += .
+
+## requirements of the $(1)JAR_FILE target
+$(1)JAR_FILE_REQS = $$($(1)COMPILE_MARKER)
+$(1)JAR_FILE_REQS += $$($(1)LICENSE)
+ifdef $(1)JAR_FILE_REQS_MORE
+$(1)JAR_FILE_REQS += $$($(1)JAR_FILE_REQS_MORE)
 endif
 
 #
-# objectos.way jar targets
+# jar targets
 #
 
-$(WAY_JAR_FILE): $(WAY_JAR_FILE_REQS)
-	$(WAY_JARX)
+$$($(1)JAR_FILE): $$($(1)JAR_FILE_REQS)
+	$$($(1)JARX)
 
-$(WAY_LICENSE): LICENSE
-	mkdir --parents $(@D)
-	cp LICENSE $(@D)
+$$($(1)LICENSE): LICENSE
+	mkdir --parents $$(@D)
+	cp LICENSE $$(@D)
 
-#
-# objectos.way test compilation options
-#
+endef
 
-## objectos.way test source directory
-WAY_TEST = $(WAY_MODULE)/test
+## include ossrh config
+## - OSSRH_GPG_KEY
+## - OSSRH_GPG_PASSPHRASE
+## - OSSRH_USERNAME
+## - OSSRH_PASSWORD
+-include $(HOME)/.config/objectos/ossrh-config.mk
 
-## objectos.way test source files 
-WAY_TEST_SOURCES = $(shell find ${WAY_TEST} -type f -name '*.java' -print)
+## include GH config
+## - GH_TOKEN
+-include $(HOME)/.config/objectos/gh-config.mk
 
-## objectos.way test source files modified since last compilation
-WAY_TEST_DIRTY :=
-
-## objectos.way test class output path
-WAY_TEST_CLASS_OUTPUT = $(WAY_WORK)/test
-
-## objectos.way test compiled classes
-WAY_TEST_CLASSES = $(WAY_TEST_SOURCES:$(WAY_TEST)/%.java=$(WAY_TEST_CLASS_OUTPUT)/%.class)
-
-## objectos.way test compile-time dependencies
-# WAY_TEST_COMPILE_DEPS =
-
-## objectos.way test javac command
-WAY_TEST_JAVACX = $(JAVAC)
-WAY_TEST_JAVACX += -d $(WAY_TEST_CLASS_OUTPUT)
-WAY_TEST_JAVACX += -g
-WAY_TEST_JAVACX += -Xlint:all
-WAY_TEST_JAVACX += --class-path $(call class-path,$(WAY_TEST_COMPILE_DEPS))
-ifeq ($(WAY_ENABLE_PREVIEW),1)
-WAY_TEST_JAVACX += --enable-preview
-endif
-WAY_TEST_JAVACX += --release $(WAY_JAVA_RELEASE)
-WAY_TEST_JAVACX += $(WAY_TEST_DIRTY)
-
-## objectos.way test compilation marker
-WAY_TEST_COMPILE_MARKER = $(WAY_WORK)/test-compile-marker
-
-#
-# objectos.way test compilation targets
-#
-
-$(WAY_TEST_COMPILE_MARKER): $(WAY_TEST_COMPILE_DEPS) $(WAY_TEST_CLASSES) 
-	if [ -n "$(WAY_TEST_DIRTY)" ]; then \
-		$(WAY_TEST_JAVACX); \
-	fi
-	touch $@
-
-$(WAY_TEST_CLASSES): $(WAY_TEST_CLASS_OUTPUT)/%.class: $(WAY_TEST)/%.java
-	$(eval WAY_TEST_DIRTY += $$<)
-
-#
-# objectos.way test execution options
-#
-
-## objectos.way test runtime dependencies
-# WAY_TEST_RUNTIME_DEPS =
-
-## objectos.way test main class
-ifndef WAY_TEST_MAIN
-WAY_TEST_MAIN = $(WAY_MODULE).RunTests
-endif
-
-## objectos.way test runtime output path
-WAY_TEST_RUNTIME_OUTPUT = $(WAY_WORK)/test-output
-
-## objectos.way test java command
-WAY_TEST_JAVAX = $(JAVA)
-WAY_TEST_JAVAX += --module-path $(call module-path,$(WAY_TEST_RUNTIME_DEPS))
-WAY_TEST_JAVAX += --add-modules org.testng
-WAY_TEST_JAVAX += --add-reads $(WAY_MODULE)=org.testng
-ifdef WAY_TEST_JAVAX_READS
-WAY_TEST_JAVAX += $(foreach mod,$(WAY_TEST_JAVAX_READS),--add-reads $(WAY_MODULE)=$(mod))
-endif
-ifdef WAY_TEST_JAVAX_EXPORTS
-WAY_TEST_JAVAX += $(foreach pkg,$(WAY_TEST_JAVAX_EXPORTS),--add-exports $(WAY_MODULE)/$(pkg)=org.testng)
-endif
-ifeq ($(WAY_ENABLE_PREVIEW),1)
-WAY_TEST_JAVAX += --enable-preview
-endif
-WAY_TEST_JAVAX += --patch-module $(WAY_MODULE)=$(WAY_TEST_CLASS_OUTPUT)
-WAY_TEST_JAVAX += --module $(WAY_MODULE)/$(WAY_TEST_MAIN)
-WAY_TEST_JAVAX += $(WAY_TEST_RUNTIME_OUTPUT)
-
-## objectos.way test execution marker
-WAY_TEST_RUN_MARKER = $(WAY_TEST_RUNTIME_OUTPUT)/index.html
-
-#
-# objectos.way test execution targets
-#
-
-$(WAY_TEST_RUN_MARKER): $(WAY_TEST_COMPILE_MARKER) 
-	$(WAY_TEST_JAVAX)
-
-#
-# objectos.way install options
-#
-
-## objectos.way install location
-WAY_INSTALL = $(call dependency,$(WAY_GROUP_ID),$(WAY_ARTIFACT_ID),$(WAY_VERSION))
-
-#
-# objectos.way install target
-#
-
-$(WAY_INSTALL): $(WAY_JAR_FILE)
-	mkdir --parents $(@D)
-	cp $< $@
-
-#
-# objectos.way source-jar options
-#
-
-## objectos.way source-jar file
-WAY_SOURCE_JAR_FILE = $(WAY_WORK)/$(WAY_JAR_NAME)-$(WAY_VERSION)-sources.jar
-
-## objectos.way source-jar command
-WAY_SOURCE_JARX = $(JAR)
-WAY_SOURCE_JARX += --create
-WAY_SOURCE_JARX += --file $(WAY_SOURCE_JAR_FILE)
-WAY_SOURCE_JARX += -C $(WAY_MAIN)
-WAY_SOURCE_JARX += .
-
-#
-# objectos.way source-jar targets
-#
-
-$(WAY_SOURCE_JAR_FILE): $(WAY_SOURCES)
-	$(WAY_SOURCE_JARX)
-	
-#
-# objectos.way javadoc options
-#
-
-## objectos.way javadoc output path
-WAY_JAVADOC_OUTPUT = $(WAY_WORK)/javadoc
-
-## objectos.way javadoc marker
-WAY_JAVADOC_MARKER = $(WAY_JAVADOC_OUTPUT)/index.html
-
-## objectos.way javadoc command
-WAY_JAVADOCX = $(JAVADOC)
-WAY_JAVADOCX += -d $(WAY_JAVADOC_OUTPUT)
-ifeq ($(WAY_ENABLE_PREVIEW),1)
-WAY_JAVADOCX += --enable-preview
-endif
-WAY_JAVADOCX += --module $(WAY_MODULE)
-ifneq ($(WAY_COMPILE_MODULE_PATH),)
-WAY_JAVADOCX += --module-path $(WAY_COMPILE_MODULE_PATH)
-endif
-WAY_JAVADOCX += --module-source-path "./*/main"
-WAY_JAVADOCX += --release $(WAY_JAVA_RELEASE)
-WAY_JAVADOCX += --show-module-contents api
-WAY_JAVADOCX += --show-packages exported
-ifdef WAY_JAVADOC_SNIPPET_PATH
-WAY_JAVADOCX += --snippet-path $($(WAY_JAVADOC_SNIPPET_PATH))
-endif 
-WAY_JAVADOCX += -bottom 'Copyright &\#169; $(WAY_COPYRIGHT_YEARS) <a href="https://www.objectos.com.br/">Objectos Software LTDA</a>. All rights reserved.'
-WAY_JAVADOCX += -charset 'UTF-8'
-WAY_JAVADOCX += -docencoding 'UTF-8'
-WAY_JAVADOCX += -doctitle '$(WAY_GROUP_ID):$(WAY_ARTIFACT_ID) $(WAY_VERSION) API'
-WAY_JAVADOCX += -encoding 'UTF-8'
-WAY_JAVADOCX += -use
-WAY_JAVADOCX += -version
-WAY_JAVADOCX += -windowtitle '$(WAY_GROUP_ID):$(WAY_ARTIFACT_ID) $(WAY_VERSION) API'
-
-## objectos.way javadoc jar file
-WAY_JAVADOC_JAR_FILE = $(WAY_WORK)/$(WAY_ARTIFACT_ID)-$(WAY_VERSION)-javadoc.jar
-
-## objectos.way javadoc jar command
-WAY_JAVADOC_JARX = $(JAR)
-WAY_JAVADOC_JARX += --create
-WAY_JAVADOC_JARX += --file $(WAY_JAVADOC_JAR_FILE)
-WAY_JAVADOC_JARX += -C $(WAY_JAVADOC_OUTPUT)
-WAY_JAVADOC_JARX += .
-
-#
-# objectos.way javadoc targets
-#
-
-$(WAY_JAVADOC_JAR_FILE): $(WAY_JAVADOC_MARKER)
-	$(WAY_JAVADOC_JARX)
-
-$(WAY_JAVADOC_MARKER): $(WAY_SOURCES)
-	$(WAY_JAVADOCX)
-
-#
-# Provides the pom target:
-#
-# - generates a pom.xml suitable for deploying to a maven repository
-# 
-# Requirements:
-#
-# - you must provide the pom template $(MODULE)/pom.xml.tmpl
-
-## objectos.way pom source
-WAY_POM_SOURCE = $(WAY_MODULE)/pom.xml.tmpl
-
-## objectos.way pom file
-WAY_POM_FILE = $(WAY_WORK)/pom.xml
-
-## objectos.way pom external variables
-# WAY_POM_VARIABLES = 
-
-## objectos.way ossrh pom sed command
-WAY_POM_SEDX = $(SED)
-WAY_POM_SEDX += $(foreach var,$(POM_VARIABLES),--expression='s/@$(var)@/$($(var))/g')
-WAY_POM_SEDX += --expression='s/@COPYRIGHT_YEARS@/$(WAY_COPYRIGHT_YEARS)/g'
-WAY_POM_SEDX += --expression='s/@ARTIFACT_ID@/$(WAY_ARTIFACT_ID)/g'
-WAY_POM_SEDX += --expression='s/@GROUP_ID@/$(WAY_GROUP_ID)/g'
-WAY_POM_SEDX += --expression='s/@VERSION@/$(WAY_VERSION)/g'
-WAY_POM_SEDX += --expression='w $(WAY_POM_FILE)'
-WAY_POM_SEDX += $(WAY_POM_SOURCE)
-
-#
-# Targets
-#
-
-$(WAY_POM_FILE): $(WAY_POM_SOURCE) Makefile
-	$(WAY_POM_SEDX)
-
-## objectos.way gpg command
-WAY_GPGX = $(GPG)
-WAY_GPGX += --armor
-WAY_GPGX += --batch
-WAY_GPGX += --default-key $(OSSRH_GPG_KEY)
-WAY_GPGX += --detach-sign
-WAY_GPGX += --passphrase $(OSSRH_GPG_PASSPHRASE)
-WAY_GPGX += --pinentry-mode loopback
-WAY_GPGX += --yes
-
-## objectos.way ossrh bundle jar file
-WAY_OSSRH_BUNDLE = $(WAY_WORK)/$(WAY_ARTIFACT_ID)-$(WAY_VERSION)-bundle.jar
-
-## objectos.way ossrh bundle contents
-WAY_OSSRH_CONTENTS = $(WAY_POM_FILE)
-WAY_OSSRH_CONTENTS += $(WAY_JAR_FILE)
-WAY_OSSRH_CONTENTS += $(WAY_SOURCE_JAR_FILE)
-WAY_OSSRH_CONTENTS += $(WAY_JAVADOC_JAR_FILE)
-
-## objectos.way ossrh sigs
-WAY_OSSRH_SIGS = $(WAY_OSSRH_CONTENTS:%=%.asc)
-
-## objectos.way ossrh bundle jar command
-WAY_OSSRH_JARX = $(JAR)
-WAY_OSSRH_JARX += --create
-WAY_OSSRH_JARX += --file $(WAY_OSSRH_BUNDLE)
-WAY_OSSRH_JARX += $(WAY_OSSRH_CONTENTS:$(WAY_WORK)/%=-C $(WAY_WORK) %)
-WAY_OSSRH_JARX += $(WAY_OSSRH_SIGS:$(WAY_WORK)/%=-C $(WAY_WORK) %)
-
-#
-# objectos.way ossrh bundle targets
-#
-
-$(WAY_OSSRH_BUNDLE): $(WAY_OSSRH_SIGS)
-	$(WAY_OSSRH_JARX)
-
-%.asc: %
-	@$(WAY_GPGX) $<
-
-## objectos.way ossrh cookies
-WAY_OSSRH_COOKIES = $(WAY_WORK)/ossrh-cookies.txt 
-
-## objectos.way ossrh login curl command
-WAY_OSSRH_LOGIN_CURLX = $(CURL)
-WAY_OSSRH_LOGIN_CURLX += --cookie-jar $(WAY_OSSRH_COOKIES)
-WAY_OSSRH_LOGIN_CURLX += --output /dev/null
-WAY_OSSRH_LOGIN_CURLX += --request GET
-WAY_OSSRH_LOGIN_CURLX += --silent
-WAY_OSSRH_LOGIN_CURLX += --url https://oss.sonatype.org/service/local/authentication/login
-WAY_OSSRH_LOGIN_CURLX += --user $(OSSRH_USERNAME):$(OSSRH_PASSWORD)
-
-## objectos.way ossrh response json
-WAY_OSSRH_UPLOAD_JSON = $(WAY_WORK)/ossrh-upload.json
-
-## objectos.way ossrh upload curl command
-WAY_OSSRH_UPLOAD_CURLX = $(CURL)
-WAY_OSSRH_UPLOAD_CURLX += --cookie $(WAY_OSSRH_COOKIES)
-WAY_OSSRH_UPLOAD_CURLX += --header 'Content-Type: multipart/form-data'
-WAY_OSSRH_UPLOAD_CURLX += --form file=@$(WAY_OSSRH_BUNDLE)
-WAY_OSSRH_UPLOAD_CURLX += --output $(WAY_OSSRH_UPLOAD_JSON)
-WAY_OSSRH_UPLOAD_CURLX += --request POST
-WAY_OSSRH_UPLOAD_CURLX += --url https://oss.sonatype.org/service/local/staging/bundle_upload
-
-## objectos.way ossrh repository id sed parsing
-WAY_OSSRH_SEDX = $(SED)
-WAY_OSSRH_SEDX += --regexp-extended
-WAY_OSSRH_SEDX += --silent
-WAY_OSSRH_SEDX += 's/^.*repositories\/(.*)".*/\1/p'
-WAY_OSSRH_SEDX += $(WAY_OSSRH_UPLOAD_JSON)
-
-## objectos.way repository id
-WAY_OSSRH_REPOSITORY_ID = $(shell $(WAY_OSSRH_SEDX))
-
-## objectos.way ossrh release curl command
-WAY_OSSRH_RELEASE_CURLX = $(CURL)
-WAY_OSSRH_RELEASE_CURLX += --cookie $(WAY_OSSRH_COOKIES)
-WAY_OSSRH_RELEASE_CURLX += --data '{"data":{"autoDropAfterRelease":true,"description":"","stagedRepositoryIds":["$(WAY_OSSRH_REPOSITORY_ID)"]}}'
-WAY_OSSRH_RELEASE_CURLX += --header 'Content-Type: application/json'
-WAY_OSSRH_RELEASE_CURLX += --request POST
-WAY_OSSRH_RELEASE_CURLX += --url https://oss.sonatype.org/service/local/staging/bulk/promote
-
-## objectos.way ossrh marker
-WAY_OSSRH_MARKER = $(WAY_WORK)/ossrh-marker
-
-#
-# objectos.way ossrh targets
-#
-
-$(WAY_OSSRH_MARKER): $(WAY_OSSRH_UPLOAD_JSON)
-	@for i in 1 2 3; do \
-	  echo "Waiting before release..."; \
-	  sleep 45; \
-	  echo "Trying to release $(WAY_OSSRH_REPOSITORY_ID)"; \
-	  $(WAY_OSSRH_RELEASE_CURLX); \
-	  if [ $$? -eq 0 ]; then \
-	    exit 0; \
-	  fi \
-	done
-	touch $@
-
-$(WAY_OSSRH_UPLOAD_JSON): $(WAY_OSSRH_BUNDLE)
-	@$(WAY_OSSRH_LOGIN_CURLX)
-	$(WAY_OSSRH_UPLOAD_CURLX)
-
-#
-# objectos.way GitHub release
-#
-
-## objectos.way GitHub API
-ifndef WAY_GH_API
-WAY_GH_API = https://api.github.com/repos/objectos/$(WAY_ARTIFACT_ID)
-endif
-
-## objectos.way GitHub milestone title
-WAY_GH_MILESTONE_TITLE = v$(WAY_VERSION)
-
-## objectos.way GitHub milestones curl command
-WAY_GH_MILESTONE_CURLX = $(CURL)
-WAY_GH_MILESTONE_CURLX += '$(WAY_GH_API)/milestones'
-
-## objectos.way GitHub milestone number parsing
-WAY_GH_MILESTONE_JQX = $(JQ)
-WAY_GH_MILESTONE_JQX += '.[] | select(.title == "$(WAY_GH_MILESTONE_TITLE)") | .number'
-
-## objectos.way GitHub milestone ID
-WAY_GH_MILESTONE_ID = $(shell $(WAY_GH_MILESTONE_CURLX) | $(WAY_GH_MILESTONE_JQX))
-
-## objectos.way Issues from GitHub
-WAY_GH_ISSUES_JSON = $(WAY_WORK)/gh-issues.json
-
-## objectos.way GitHub issues curl command
-WAY_GH_ISSUES_CURLX = $(CURL)
-WAY_GH_ISSUES_CURLX += '$(WAY_GH_API)/issues?milestone=$(WAY_GH_MILESTONE_ID)&per_page=100&state=all'
-WAY_GH_ISSUES_CURLX += >
-WAY_GH_ISSUES_CURLX += $(WAY_GH_ISSUES_JSON)
-
-##
-WAY_GH_RELEASE_BODY = $(WAY_WORK)/gh-release.md
-
-## objectos.way Filter and format issues
-WAY_GH_ISSUES_JQX = $(JQ)
-WAY_GH_ISSUES_JQX += --arg LABEL "$(LABEL)"
-WAY_GH_ISSUES_JQX += --raw-output
-WAY_GH_ISSUES_JQX += 'sort_by(.number) | [.[] | {number: .number, title: .title, label: .labels[] | select(.name) | .name}] | .[] | select(.label == $$LABEL) | "- \(.title) \#\(.number)"'
-WAY_GH_ISSUES_JQX += $(WAY_GH_ISSUES_JSON)
-
-WAY_gh_issues = $(let LABEL,$1,$(WAY_GH_ISSUES_JQX))
-
-##
-WAY_GH_RELEASE_JSON := $(WAY_WORK)/gh-release.json
-
-## objectos.way git tag name to be generated
-WAY_GH_TAG := $(WAY_GH_MILESTONE_TITLE)
-
-##
-WAY_GH_RELEASE_JQX = $(JQ)
-WAY_GH_RELEASE_JQX += --raw-input
-WAY_GH_RELEASE_JQX += --slurp
-WAY_GH_RELEASE_JQX += '. as $$body | {"tag_name":"$(WAY_GH_TAG)","name":"Release $(WAY_GH_TAG)","body":$$body,"draft":true,"prerelease":false,"generate_release_notes":false}'
-WAY_GH_RELEASE_JQX += $(WAY_GH_RELEASE_BODY)
-
-## 
-WAY_GH_RELEASE_CURLX = $(CURL)
-WAY_GH_RELEASE_CURLX += --data-binary "@$(WAY_GH_RELEASE_JSON)"
-WAY_GH_RELEASE_CURLX += --header "Accept: application/vnd.github+json"
-WAY_GH_RELEASE_CURLX += --header "Authorization: Bearer $(GH_TOKEN)"
-WAY_GH_RELEASE_CURLX += --header "X-GitHub-Api-Version: 2022-11-28"
-WAY_GH_RELEASE_CURLX += --location
-WAY_GH_RELEASE_CURLX += --request POST
-WAY_GH_RELEASE_CURLX +=  $(WAY_GH_API)/releases
-
-##
-WAY_GH_RELEASE_MARKER = $(WAY_WORK)/gh-release-marker 
-
-#
-# objectos.way GitHub release targets
-#
-
-$(WAY_GH_RELEASE_MARKER): $(WAY_GH_RELEASE_JSON)
-	@$(WAY_GH_RELEASE_CURLX)
-	touch $@
-
-$(WAY_GH_RELEASE_JSON): $(WAY_GH_RELEASE_BODY)
-	$(WAY_GH_RELEASE_JQX) > $(WAY_GH_RELEASE_JSON) 
-
-$(WAY_GH_ISSUES_JSON):
-	$(WAY_GH_ISSUES_CURLX)
-
-$(WAY_GH_RELEASE_BODY): $(WAY_GH_ISSUES_JSON)
-	echo '## New features' > $(WAY_GH_RELEASE_BODY)
-	echo '' >> $(WAY_GH_RELEASE_BODY)
-	$(call WAY_gh_issues,t:feature) >> $(WAY_GH_RELEASE_BODY) 
-	echo '' >> $(WAY_GH_RELEASE_BODY)
-	echo '## Enhancements' >> $(WAY_GH_RELEASE_BODY)
-	echo '' >> $(WAY_GH_RELEASE_BODY)
-	$(call WAY_gh_issues,t:enhancement) >> $(WAY_GH_RELEASE_BODY) 
-	echo '' >> $(WAY_GH_RELEASE_BODY)
-	echo '## Bug Fixes' >> $(WAY_GH_RELEASE_BODY)
-	echo '' >> $(WAY_GH_RELEASE_BODY)
-	$(call WAY_gh_issues,t:defect) >> $(WAY_GH_RELEASE_BODY) 
-	echo '' >> $(WAY_GH_RELEASE_BODY)
-	echo '## Documentation' >> $(WAY_GH_RELEASE_BODY)
-	echo '' >> $(WAY_GH_RELEASE_BODY)
-	$(call WAY_gh_issues,t:documentation) >> $(WAY_GH_RELEASE_BODY) 
-	echo '' >> $(WAY_GH_RELEASE_BODY)
-	echo '## Work' >> $(WAY_GH_RELEASE_BODY)
-	echo '' >> $(WAY_GH_RELEASE_BODY)
-	$(call WAY_gh_issues,t:work) >> $(WAY_GH_RELEASE_BODY) 
-	
 #
 # objectos.code options
 #
@@ -809,13 +385,14 @@ CODE_TEST_JAVAX_EXPORTS := objectos.code.internal
 # objectos.code targets
 #
 
-CODE_PREFIX = CODE_
+CODE_TASKS = COMPILE_TASK
+CODE_TASKS += JAR_TASK
 
-$(eval $(call COMPILE,$(CODE_PREFIX)))
+$(foreach task,$(CODE_TASKS),$(eval $(call $(task),CODE_)))
 
 .PHONY: code@clean
 code@clean:
-	echo "rm -rf $(CODE_WORK)/*"
+	rm -rf $(CODE_WORK)/*
 
 .PHONY: code@compile
 code@compile: $(CODE_COMPILE_MARKER)
@@ -875,9 +452,10 @@ SELFGEN_TEST_JAVAX_EXPORTS += selfgen.css.util
 # objectos.selfgen targets
 #
 
-SELFGEN_PREFIX = SELFGEN_
+SELFGEN_TASKS = COMPILE_TASK
+SELFGEN_TASKS += JAR_TASK
 
-$(eval $(call COMPILE,$(SELFGEN_PREFIX)))
+$(foreach task,$(SELFGEN_TASKS),$(eval $(call $(task),SELFGEN_)))
 
 .PHONY: selfgen@clean
 selfgen@clean:

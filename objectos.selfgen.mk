@@ -63,9 +63,10 @@ SELFGEN_TEST_JAVAX_EXPORTS += selfgen.css.util
 # objectos.selfgen targets
 #
 
-SELFGEN_PREFIX = SELFGEN_
+SELFGEN_TASKS = COMPILE_TASK
+SELFGEN_TASKS += JAR_TASK
 
-$(eval $(call COMPILE,$(SELFGEN_PREFIX)))
+$(foreach task,$(SELFGEN_TASKS),$(eval $(call $(task),SELFGEN_)))
 
 .PHONY: selfgen@clean
 selfgen@clean:
