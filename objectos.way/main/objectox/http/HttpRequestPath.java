@@ -17,8 +17,8 @@ package objectox.http;
 
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
+import objectos.core.object.Check;
 import objectos.http.Segment;
-import objectos.lang.object.Check;
 import objectos.util.IntArrays;
 
 public final class HttpRequestPath {

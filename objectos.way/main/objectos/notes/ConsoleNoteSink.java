@@ -19,7 +19,7 @@ import java.io.PrintStream;
 import java.time.Clock;
 import objectos.core.notes.Level;
 import objectos.core.notes.NoteSink;
-import objectos.lang.object.Check;
+import objectos.core.object.Check;
 import objectos.notes.internal.StandardConsoleNoteSink;
 import objectos.notes.internal.StandardConsoleNoteSink.OptionValue;
 

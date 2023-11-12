@@ -15,7 +15,7 @@
  */
 package objectos.core.notes;
 
-import objectos.lang.object.Check;
+import objectos.core.object.Check;
 
 /**
  * A note that takes a {@code long} argument.

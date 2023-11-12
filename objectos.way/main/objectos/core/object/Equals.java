@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.lang.object;
+package objectos.core.object;
 
 /**
  * Provides {@code static} convenience methods for implementing

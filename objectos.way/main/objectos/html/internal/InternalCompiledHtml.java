@@ -16,8 +16,8 @@
 package objectos.html.internal;
 
 import java.io.IOException;
+import objectos.core.object.Check;
 import objectos.html.Html;
-import objectos.lang.object.Check;
 
 public final class InternalCompiledHtml implements Html {
 

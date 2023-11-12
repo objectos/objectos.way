@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2022-2023 Objectos Software LTDA.
+ * Copyright (C) 2023 Objectos Software LTDA.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,25 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.lang.object;
-
-class TSObject0 extends AbstractToStringObject {
-
-  final Object typeName;
-
-  TSObject0() {
-    this.typeName = this;
-  }
-
-  TSObject0(Object typeName) {
-    this.typeName = typeName;
-  }
-
-  @Override
-  public void formatToString(StringBuilder toString, int level) {
-    ToString.format(
-      toString, level, typeName
-    );
-  }
-
-}
+/**
+ * Provides utility classes for implementing
+ * {@link java.lang.Object#equals(Object)}, {@link java.lang.Object#hashCode()}
+ * and {@link java.lang.Object#toString()} methods. Also provides a class that
+ * helps constructors and methods check if they were invoked correctly or not.
+ */
+package objectos.core.object;

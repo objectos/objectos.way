@@ -16,7 +16,7 @@
 package objectos.css;
 
 import java.io.IOException;
-import objectos.lang.object.Check;
+import objectos.core.object.Check;
 import objectox.css.StandardStyleSheetWriter;
 
 public sealed interface StyleSheetWriter permits StandardStyleSheetWriter {

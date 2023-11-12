@@ -16,7 +16,7 @@
 package objectos.util;
 
 import java.util.Arrays;
-import objectos.lang.object.Check;
+import objectos.core.object.Check;
 
 /**
  * <p>

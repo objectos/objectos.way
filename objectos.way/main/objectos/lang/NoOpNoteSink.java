@@ -22,7 +22,7 @@ import objectos.core.notes.Note1;
 import objectos.core.notes.Note2;
 import objectos.core.notes.Note3;
 import objectos.core.notes.NoteSink;
-import objectos.lang.object.Check;
+import objectos.core.object.Check;
 
 /**
  * A no-op {@code NoteSink} implementation (for the most part). The one

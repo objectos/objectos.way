@@ -18,7 +18,7 @@ package objectox.css;
 import java.util.Locale;
 import java.util.Random;
 import java.util.Set;
-import objectos.lang.object.Check;
+import objectos.core.object.Check;
 import objectos.util.GrowableSet;
 import objectox.lang.RandomString;
 

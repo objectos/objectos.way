@@ -13,28 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.lang.object;
+package objectos.core.object;
 
-final class ComponentInt {
+class TSObject0 extends AbstractToStringObject {
 
-  private final int value;
+  final Object typeName;
 
-  ComponentInt(int value) {
-    this.value = value;
+  TSObject0() {
+    this.typeName = this;
+  }
+
+  TSObject0(Object typeName) {
+    this.typeName = typeName;
   }
 
   @Override
-  public final boolean equals(Object obj) {
-    return obj == this || obj instanceof ComponentInt && equals0((ComponentInt) obj);
-  }
-
-  @Override
-  public final int hashCode() {
-    return value;
-  }
-
-  private boolean equals0(ComponentInt that) {
-    return value == that.value;
+  public void formatToString(StringBuilder toString, int level) {
+    ToString.format(
+      toString, level, typeName
+    );
   }
 
 }

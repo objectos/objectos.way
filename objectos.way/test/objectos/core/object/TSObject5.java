@@ -13,15 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.lang.object;
+package objectos.core.object;
 
-class TSObject4 extends TSObject3 {
+class TSObject5 extends TSObject4 {
 
-  final String name4;
+  final String name5;
 
-  final Object value4;
+  final Object value5;
 
-  TSObject4(Object typeName,
+  TSObject5(Object typeName,
             String name1,
             Object value1,
             String name2,
@@ -29,23 +29,27 @@ class TSObject4 extends TSObject3 {
             String name3,
             Object value3,
             String name4,
-            Object value4) {
-    super(typeName, name1, value1, name2, value2, name3, value3);
-    this.name4 = name4;
-    this.value4 = value4;
+            Object value4,
+            String name5,
+            Object value5) {
+    super(typeName, name1, value1, name2, value2, name3, value3, name4, value4);
+    this.name5 = name5;
+    this.value5 = value5;
   }
 
-  TSObject4(String name1,
+  TSObject5(String name1,
             Object value1,
             String name2,
             Object value2,
             String name3,
             Object value3,
             String name4,
-            Object value4) {
-    super(name1, value1, name2, value2, name3, value3);
-    this.name4 = name4;
-    this.value4 = value4;
+            Object value4,
+            String name5,
+            Object value5) {
+    super(name1, value1, name2, value2, name3, value3, name4, value4);
+    this.name5 = name5;
+    this.value5 = value5;
   }
 
   @Override
@@ -55,7 +59,8 @@ class TSObject4 extends TSObject3 {
         name1, value1,
         name2, value2,
         name3, value3,
-        name4, value4
+        name4, value4,
+        name5, value5
     );
   }
 
