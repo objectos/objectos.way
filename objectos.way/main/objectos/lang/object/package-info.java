@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2022-2023 Objectos Software LTDA.
+ * Copyright (C) 2023 Objectos Software LTDA.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,31 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.core.object;
-
-class TSObject1 extends TSObject0 {
-
-  final String name1;
-
-  final Object value1;
-
-  TSObject1(Object typeName, String name1, Object value1) {
-    super(typeName);
-    this.name1 = name1;
-    this.value1 = value1;
-  }
-
-  TSObject1(String name1, Object value1) {
-    this.name1 = name1;
-    this.value1 = value1;
-  }
-
-  @Override
-  public void formatToString(StringBuilder sb, int depth) {
-    ToString.format(
-        sb, depth, typeName,
-        name1, value1
-    );
-  }
-
-}
+/**
+ * Provides utility classes for implementing
+ * {@link java.lang.Object#equals(Object)}, {@link java.lang.Object#hashCode()}
+ * and {@link java.lang.Object#toString()} methods. Also provides a class that
+ * helps constructors and methods check if they were invoked correctly or not.
+ */
+package objectos.lang.object;

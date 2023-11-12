@@ -22,9 +22,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.WatchService;
 import objectos.core.notes.NoteSink;
-import objectos.core.object.Check;
 import objectos.lang.ClassReloader;
 import objectos.lang.ClassReloader.Builder;
+import objectos.lang.object.Check;
 import objectos.lang.NoOpNoteSink;
 import objectos.util.GrowableList;
 

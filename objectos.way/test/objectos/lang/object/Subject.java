@@ -13,13 +13,34 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.core.object;
+package objectos.lang.object;
 
-abstract class AbstractToStringObject implements ToString.Formattable {
+class Subject {
+
+  private final ComponentInt a;
+
+  private final ComponentString b;
+
+  Subject(ComponentInt a, ComponentString b) {
+    this.a = a;
+    this.b = b;
+  }
 
   @Override
-  public final String toString() {
-    return ToString.of(this);
+  public final boolean equals(Object obj) {
+    return obj == this || obj instanceof Subject && equals0((Subject) obj);
+  }
+
+  private boolean equals0(Subject obj) {
+    return Equals.of(
+      a, obj.a,
+      b, obj.b
+    );
+  }
+
+  @Override
+  public final int hashCode() {
+    return HashCode.of(a, b);
   }
 
 }

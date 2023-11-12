@@ -22,7 +22,7 @@ import java.time.Clock;
 import objectos.core.notes.Level;
 import objectos.core.notes.Note2;
 import objectos.core.notes.NoteSink;
-import objectos.core.object.Check;
+import objectos.lang.object.Check;
 import objectos.notes.internal.StandardFileNoteSink;
 import objectos.notes.internal.StandardFileNoteSink.OptionValue;
 

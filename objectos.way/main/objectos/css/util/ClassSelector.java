@@ -15,9 +15,9 @@
  */
 package objectos.css.util;
 
-import objectos.core.object.Check;
 import objectos.css.tmpl.Api;
 import objectos.html.tmpl.Api.ExternalAttribute;
+import objectos.lang.object.Check;
 import objectox.css.ClassSelectorSeqId;
 import objectox.css.RandomStringGenerator;
 

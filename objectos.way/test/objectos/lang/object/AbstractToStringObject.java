@@ -13,23 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.core.object;
+package objectos.lang.object;
 
-final class SimpleToStringObject implements ToString.Formattable {
-
-  private final Object value;
-
-  SimpleToStringObject(Object value) {
-    this.value = value;
-  }
-
-  @Override
-  public final void formatToString(StringBuilder sb, int depth) {
-    ToString.format(
-      sb, depth, this,
-      "value", value
-    );
-  }
+abstract class AbstractToStringObject implements ToString.Formattable {
 
   @Override
   public final String toString() {

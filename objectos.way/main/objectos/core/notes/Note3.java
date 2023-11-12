@@ -15,7 +15,7 @@
  */
 package objectos.core.notes;
 
-import objectos.core.object.Check;
+import objectos.lang.object.Check;
 
 /**
  * A note that takes three arguments.

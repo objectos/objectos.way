@@ -26,11 +26,11 @@
  * <h3>{@code Object}</h3>
  *
  * <ul>
- * <li>{@link objectos.core.object.Check}
- * <li>{@link objectos.core.object.Equals}
- * <li>{@link objectos.core.object.HashCode}
- * <li>{@link objectos.core.object.ToString}
- * <li>{@link objectos.core.object.ToString.Formattable}
+ * <li>{@link objectos.lang.object.Check}
+ * <li>{@link objectos.lang.object.Equals}
+ * <li>{@link objectos.lang.object.HashCode}
+ * <li>{@link objectos.lang.object.ToString}
+ * <li>{@link objectos.lang.object.ToString.Formattable}
  * </ul>
  *
  * <h2>Note sink API</h2>

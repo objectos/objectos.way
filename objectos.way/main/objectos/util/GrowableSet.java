@@ -20,7 +20,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.RandomAccess;
 import java.util.Set;
-import objectos.core.object.Check;
+import objectos.lang.object.Check;
 
 /**
  * A hash-based {@link Set} and {@link GrowableCollection} implementation.

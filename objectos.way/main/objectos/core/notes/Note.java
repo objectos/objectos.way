@@ -15,9 +15,9 @@
  */
 package objectos.core.notes;
 
-import objectos.core.object.Check;
-import objectos.core.object.Equals;
-import objectos.core.object.HashCode;
+import objectos.lang.object.Check;
+import objectos.lang.object.Equals;
+import objectos.lang.object.HashCode;
 
 /**
  * A {@code Note} is an event of a program execution that can be consumed by a
