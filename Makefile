@@ -42,6 +42,8 @@ MODULE_TASKS += TEST_COMPILE_TASK
 MODULE_TASKS += TEST_RUN_TASK
 MODULE_TASKS += INSTALL_TASK
 MODULE_TASKS += SOURCE_JAR_TASK
+MODULE_TASKS += JAVADOC_TASK
+MODULE_TASKS += POM_TASK
 
 #
 # Default target
@@ -397,6 +399,105 @@ $$($(1)SOURCE_JAR_FILE): $$($(1)SOURCES)
 	
 endef
 
+#
+# javadoc task
+#
+
+define JAVADOC_TASK
+
+## javadoc output path
+$(1)JAVADOC_OUTPUT = $$($(1)WORK)/javadoc
+
+## javadoc marker
+$(1)JAVADOC_MARKER = $$($(1)JAVADOC_OUTPUT)/index.html
+
+## javadoc command
+$(1)JAVADOCX = $$(JAVADOC)
+$(1)JAVADOCX += -d $$($(1)JAVADOC_OUTPUT)
+ifeq ($$($(1)ENABLE_PREVIEW),1)
+$(1)JAVADOCX += --enable-preview
+endif
+$(1)JAVADOCX += --module $$($(1)MODULE)
+ifneq ($$($(1)COMPILE_MODULE_PATH),)
+$(1)JAVADOCX += --module-path $$($(1)COMPILE_MODULE_PATH)
+endif
+$(1)JAVADOCX += --module-source-path "./*/main"
+$(1)JAVADOCX += --release $$($(1)JAVA_RELEASE)
+$(1)JAVADOCX += --show-module-contents api
+$(1)JAVADOCX += --show-packages exported
+ifdef $(1)JAVADOC_SNIPPET_PATH
+$(1)JAVADOCX += --snippet-path $$($$($(1)JAVADOC_SNIPPET_PATH))
+endif 
+$(1)JAVADOCX += -bottom 'Copyright &\#169; $$($(1)COPYRIGHT_YEARS) <a href="https://www.objectos.com.br/">Objectos Software LTDA</a>. All rights reserved.'
+$(1)JAVADOCX += -charset 'UTF-8'
+$(1)JAVADOCX += -docencoding 'UTF-8'
+$(1)JAVADOCX += -doctitle '$$($(1)GROUP_ID):$$($(1)ARTIFACT_ID) $$($(1)VERSION) API'
+$(1)JAVADOCX += -encoding 'UTF-8'
+$(1)JAVADOCX += -use
+$(1)JAVADOCX += -version
+$(1)JAVADOCX += -windowtitle '$$($(1)GROUP_ID):$$($(1)ARTIFACT_ID) $$($(1)VERSION) API'
+
+## javadoc jar file
+$(1)JAVADOC_JAR_FILE = $$($(1)WORK)/$$($(1)ARTIFACT_ID)-$$($(1)VERSION)-javadoc.jar
+
+## javadoc jar command
+$(1)JAVADOC_JARX = $$(JAR)
+$(1)JAVADOC_JARX += --create
+$(1)JAVADOC_JARX += --file $$($(1)JAVADOC_JAR_FILE)
+$(1)JAVADOC_JARX += -C $$($(1)JAVADOC_OUTPUT)
+$(1)JAVADOC_JARX += .
+
+#
+# javadoc targets
+#
+
+$$($(1)JAVADOC_JAR_FILE): $$($(1)JAVADOC_MARKER)
+	$$($(1)JAVADOC_JARX)
+
+$$($(1)JAVADOC_MARKER): $$($(1)SOURCES)
+	$$($(1)JAVADOCX)
+
+endef
+
+#
+# Provides the pom target:
+#
+# - generates a pom.xml suitable for deploying to a maven repository
+# 
+# Requirements:
+#
+# - you must provide the pom template $$(MODULE)/pom.xml.tmpl
+
+define POM_TASK
+
+## pom source
+$(1)POM_SOURCE = $$($(1)MODULE)/pom.xml.tmpl
+
+## pom file
+$(1)POM_FILE = $$($(1)WORK)/pom.xml
+
+## pom external variables
+# $(1)POM_VARIABLES = 
+
+## ossrh pom sed command
+$(1)POM_SEDX = $$(SED)
+$(1)POM_SEDX += $$(foreach var,$$(POM_VARIABLES),--expression='s/@$$(var)@/$$($$(var))/g')
+$(1)POM_SEDX += --expression='s/@COPYRIGHT_YEARS@/$$($(1)COPYRIGHT_YEARS)/g'
+$(1)POM_SEDX += --expression='s/@ARTIFACT_ID@/$$($(1)ARTIFACT_ID)/g'
+$(1)POM_SEDX += --expression='s/@GROUP_ID@/$$($(1)GROUP_ID)/g'
+$(1)POM_SEDX += --expression='s/@VERSION@/$$($(1)VERSION)/g'
+$(1)POM_SEDX += --expression='s/@DESCRIPTION@/$$($(1)DESCRIPTION)/g'
+$(1)POM_SEDX += --expression='w $$($(1)POM_FILE)'
+$(1)POM_SEDX += $$($(1)POM_SOURCE)
+
+#
+# Targets
+#
+
+$$($(1)POM_FILE): $$($(1)POM_SOURCE) Makefile
+	$$($(1)POM_SEDX)
+
+endef
 ## include ossrh config
 ## - OSSRH_GPG_KEY
 ## - OSSRH_GPG_PASSPHRASE
@@ -447,6 +548,15 @@ CORE_OBJECT_TEST_JAVAX_EXPORTS := objectos.core.object.internal
 CORE_OBJECT_GROUP_ID = $(GROUP_ID)
 CORE_OBJECT_ARTIFACT_ID = $(CORE_OBJECT_MODULE)
 
+## copyright years for javadoc
+CORE_OBJECT_COPYRIGHT_YEARS := 2022-2023
+
+## javadoc snippet path
+# CORE_OBJECT_JAVADOC_SNIPPET_PATH := CORE_OBJECT_TEST
+
+## pom description
+CORE_OBJECT_DESCRIPTION = Utilities for java.lang.Object instances
+
 #
 # objectos.core.object targets
 #
@@ -471,6 +581,12 @@ core.object@install: $(CORE_OBJECT_INSTALL)
 
 .PHONY: core.object@source-jar
 core.object@source-jar: $(CORE_OBJECT_SOURCE_JAR_FILE)
+
+.PHONY: core.object@javadoc
+core.object@javadoc: $(CORE_OBJECT_JAVADOC_JAR_FILE)
+
+.PHONY: core.object@pom
+core.object@pom: $(CORE_OBJECT_POM_FILE)
 
 #
 # objectos.code options
@@ -714,6 +830,12 @@ install: $(foreach mod,$(WAY_SUBMODULES),$(mod)@install) way@install
 
 .PHONY: source-jar
 source-jar: $(foreach mod,$(WAY_SUBMODULES),$(mod)@source-jar) way@source-jar 
+
+.PHONY: javadoc
+javadoc: $(foreach mod,$(WAY_SUBMODULES),$(mod)@javadoc) way@javadoc 
+
+.PHONY: pom
+pom: $(foreach mod,$(WAY_SUBMODULES),$(mod)@pom) way@pom 
 
 .PHONY: ossrh
 ossrh: way@ossrh

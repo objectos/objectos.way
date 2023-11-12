@@ -53,6 +53,15 @@ CORE_OBJECT_TEST_JAVAX_EXPORTS := objectos.core.object.internal
 CORE_OBJECT_GROUP_ID = $(GROUP_ID)
 CORE_OBJECT_ARTIFACT_ID = $(CORE_OBJECT_MODULE)
 
+## copyright years for javadoc
+CORE_OBJECT_COPYRIGHT_YEARS := 2022-2023
+
+## javadoc snippet path
+# CORE_OBJECT_JAVADOC_SNIPPET_PATH := CORE_OBJECT_TEST
+
+## pom description
+CORE_OBJECT_DESCRIPTION = Utilities for java.lang.Object instances
+
 #
 # objectos.core.object targets
 #
@@ -77,3 +86,9 @@ core.object@install: $(CORE_OBJECT_INSTALL)
 
 .PHONY: core.object@source-jar
 core.object@source-jar: $(CORE_OBJECT_SOURCE_JAR_FILE)
+
+.PHONY: core.object@javadoc
+core.object@javadoc: $(CORE_OBJECT_JAVADOC_JAR_FILE)
+
+.PHONY: core.object@pom
+core.object@pom: $(CORE_OBJECT_POM_FILE)

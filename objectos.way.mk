@@ -105,6 +105,12 @@ install: $(foreach mod,$(WAY_SUBMODULES),$(mod)@install) way@install
 .PHONY: source-jar
 source-jar: $(foreach mod,$(WAY_SUBMODULES),$(mod)@source-jar) way@source-jar 
 
+.PHONY: javadoc
+javadoc: $(foreach mod,$(WAY_SUBMODULES),$(mod)@javadoc) way@javadoc 
+
+.PHONY: pom
+pom: $(foreach mod,$(WAY_SUBMODULES),$(mod)@pom) way@pom 
+
 .PHONY: ossrh
 ossrh: way@ossrh
 
