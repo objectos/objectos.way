@@ -22,17 +22,17 @@ import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import objectos.core.notes.Note1;
+import objectos.core.notes.Note2;
+import objectos.core.notes.NoteSink;
+import objectos.core.object.Check;
 import objectos.css.util.Breakpoint;
 import objectos.css.util.Length;
 import objectos.css.util.StylesGenerator;
 import objectos.html.tmpl.Api.ExternalAttribute.StyleClass;
-import objectos.lang.Note1;
-import objectos.lang.Note2;
-import objectos.lang.NoteSink;
 import objectos.util.GrowableMap;
 import objectos.util.GrowableSet;
 import objectox.lang.Bytes;
-import objectox.lang.Check;
 
 public final class StylesGeneratorImpl implements StylesGenerator {
 

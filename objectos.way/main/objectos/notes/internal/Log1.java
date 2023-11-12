@@ -16,7 +16,7 @@
 package objectos.notes.internal;
 
 import java.time.Clock;
-import objectos.lang.Note1;
+import objectos.core.notes.Note1;
 
 public final class Log1 extends Log {
 

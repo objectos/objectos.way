@@ -21,6 +21,7 @@ import static org.testng.Assert.assertTrue;
 import java.util.Arrays;
 import java.util.BitSet;
 import java.util.Random;
+import objectos.core.object.RandomString;
 import org.testng.annotations.Test;
 
 public class RandomStringTest {

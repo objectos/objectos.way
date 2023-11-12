@@ -19,7 +19,7 @@ import java.util.Arrays;
 import java.util.Map;
 import java.util.function.BiFunction;
 import java.util.function.Function;
-import objectox.lang.Check;
+import objectos.core.object.Check;
 
 /**
  * A hash-based implementation of the {@link Map} interface.

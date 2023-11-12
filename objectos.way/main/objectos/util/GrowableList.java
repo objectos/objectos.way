@@ -23,7 +23,7 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.RandomAccess;
 import java.util.function.UnaryOperator;
-import objectox.lang.Check;
+import objectos.core.object.Check;
 
 /**
  * An array-based {@link GrowableCollection} and

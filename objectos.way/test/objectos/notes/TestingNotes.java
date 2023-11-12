@@ -16,11 +16,11 @@
 package objectos.notes;
 
 import java.time.LocalDate;
-import objectos.lang.Note0;
-import objectos.lang.Note1;
-import objectos.lang.Note2;
-import objectos.lang.Note3;
-import objectos.lang.NoteSink;
+import objectos.core.notes.Note0;
+import objectos.core.notes.Note1;
+import objectos.core.notes.Note2;
+import objectos.core.notes.Note3;
+import objectos.core.notes.NoteSink;
 
 final class TestingNotes {
 

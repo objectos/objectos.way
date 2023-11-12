@@ -15,6 +15,8 @@
  */
 package objectos.lang;
 
+import objectos.core.notes.Level;
+import objectos.core.notes.NoteSink;
 import objectos.notes.ConsoleNoteSink;
 
 public class TestingNoteSink {

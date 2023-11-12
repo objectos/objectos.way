@@ -16,8 +16,13 @@
 package objectos.lang;
 
 import java.util.List;
+import objectos.core.notes.LongNote;
+import objectos.core.notes.Note0;
+import objectos.core.notes.Note1;
+import objectos.core.notes.Note2;
+import objectos.core.notes.NoteSink;
+import objectos.core.object.Check;
 import objectos.util.GrowableList;
-import objectox.lang.Check;
 
 /**
  * An utility for registering objects with the JVM shutdown hook facility.

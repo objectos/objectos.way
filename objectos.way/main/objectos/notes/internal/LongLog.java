@@ -16,7 +16,7 @@
 package objectos.notes.internal;
 
 import java.time.Clock;
-import objectos.lang.LongNote;
+import objectos.core.notes.LongNote;
 
 public final class LongLog extends Log {
 

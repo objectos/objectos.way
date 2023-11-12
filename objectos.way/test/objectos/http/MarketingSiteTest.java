@@ -30,7 +30,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.concurrent.TimeUnit;
-import objectos.lang.NoteSink;
+import objectos.core.notes.NoteSink;
 import objectos.lang.TestingNoteSink;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;

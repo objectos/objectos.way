@@ -15,6 +15,7 @@
  */
 package objectox.css;
 
+import objectos.core.object.Check;
 import objectos.css.AttributeOperator;
 import objectos.css.CssTemplate;
 import objectos.css.StyleSheet;
@@ -39,7 +40,6 @@ import objectos.css.tmpl.Api.Zero;
 import objectos.css.util.CustomProperty;
 import objectos.css.util.Length;
 import objectos.css.util.Percentage;
-import objectox.lang.Check;
 
 public abstract class InternalCssTemplate extends GeneratedCssTemplate {
 

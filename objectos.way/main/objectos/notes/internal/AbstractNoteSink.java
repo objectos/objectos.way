@@ -16,14 +16,14 @@
 package objectos.notes.internal;
 
 import java.time.Clock;
-import objectos.lang.Level;
-import objectos.lang.LongNote;
-import objectos.lang.Note;
-import objectos.lang.Note0;
-import objectos.lang.Note1;
-import objectos.lang.Note2;
-import objectos.lang.Note3;
-import objectos.lang.NoteSink;
+import objectos.core.notes.Level;
+import objectos.core.notes.LongNote;
+import objectos.core.notes.Note;
+import objectos.core.notes.Note0;
+import objectos.core.notes.Note1;
+import objectos.core.notes.Note2;
+import objectos.core.notes.Note3;
+import objectos.core.notes.NoteSink;
 
 abstract class AbstractNoteSink implements NoteSink {
 

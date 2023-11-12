@@ -15,10 +15,10 @@
  */
 package objectos.css.util;
 
+import objectos.core.notes.NoteSink;
+import objectos.core.object.Check;
 import objectos.lang.NoOpNoteSink;
-import objectos.lang.NoteSink;
 import objectox.css.util.StylesGeneratorImpl;
-import objectox.lang.Check;
 
 public sealed interface StylesGenerator permits StylesGeneratorImpl {
 

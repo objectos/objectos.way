@@ -15,7 +15,7 @@
  */
 package objectox.css;
 
-import objectox.lang.Check;
+import objectos.core.object.Check;
 
 final class Bytes {
 

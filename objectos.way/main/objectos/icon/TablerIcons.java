@@ -41,12 +41,12 @@
  */
 package objectos.icon;
 
+import objectos.core.object.Check;
 import objectos.css.util.IdSelector;
 import objectos.html.BaseTemplateDsl;
 import objectos.html.HtmlComponent;
 import objectos.html.tmpl.Api.ElementContents;
 import objectos.html.tmpl.Api.SvgInstruction;
-import objectox.lang.Check;
 
 /**
  * Provides SVG icons from the <a href="https://tabler-icons.io/">tabler

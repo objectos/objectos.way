@@ -16,7 +16,7 @@
 package objectos.util;
 
 import java.util.Random;
-import objectox.lang.RandomString;
+import objectos.core.object.RandomString;
 
 /**
  * Provides {@code static} methods for generating random byte arrays, string and

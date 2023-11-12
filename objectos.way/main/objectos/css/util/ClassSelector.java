@@ -15,11 +15,11 @@
  */
 package objectos.css.util;
 
+import objectos.core.object.Check;
 import objectos.css.tmpl.Api;
 import objectos.html.tmpl.Api.ExternalAttribute;
 import objectox.css.ClassSelectorSeqId;
 import objectox.css.RandomStringGenerator;
-import objectox.lang.Check;
 
 public record ClassSelector(String className)
     implements ExternalAttribute.StyleClass, Api.SelectorInstruction {

@@ -15,6 +15,7 @@
  */
 package objectos.html;
 
+import objectos.core.object.Check;
 import objectos.html.internal.Ambiguous;
 import objectos.html.internal.AttributeName;
 import objectos.html.internal.CustomAttributeName;
@@ -25,7 +26,6 @@ import objectos.html.internal.InternalNoOp;
 import objectos.html.internal.StandardElementName;
 import objectos.html.tmpl.Api;
 import objectos.html.tmpl.FragmentLambda;
-import objectox.lang.Check;
 
 /**
  * Provides utility methods for Objectos HTML templates.

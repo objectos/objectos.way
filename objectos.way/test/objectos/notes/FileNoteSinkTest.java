@@ -20,7 +20,7 @@ import static org.testng.Assert.assertEquals;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import objectos.lang.Level;
+import objectos.core.notes.Level;
 import objectos.way.Rmdir;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;

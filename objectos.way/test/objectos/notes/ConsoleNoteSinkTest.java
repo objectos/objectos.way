@@ -22,11 +22,11 @@ import java.io.PrintStream;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.stream.Collectors;
-import objectos.lang.Level;
-import objectos.lang.Note1;
-import objectos.lang.Note2;
-import objectos.lang.Note3;
-import objectos.lang.NoteSink;
+import objectos.core.notes.Level;
+import objectos.core.notes.Note1;
+import objectos.core.notes.Note2;
+import objectos.core.notes.Note3;
+import objectos.core.notes.NoteSink;
 import org.testng.annotations.Test;
 
 public class ConsoleNoteSinkTest {

@@ -19,9 +19,9 @@ import java.lang.reflect.Array;
 import java.util.Collection;
 import java.util.Map;
 import java.util.function.BiFunction;
-import objectox.lang.Check;
-import objectox.lang.HashCode;
-import objectox.lang.ToString;
+import objectos.core.object.Check;
+import objectos.core.object.HashCode;
+import objectos.core.object.ToString;
 
 abstract class AbstractArrayBasedMap<K, V> implements Map<K, V>, ToString.Formattable {
 

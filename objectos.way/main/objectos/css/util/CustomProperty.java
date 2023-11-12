@@ -15,10 +15,10 @@
  */
 package objectos.css.util;
 
+import objectos.core.object.Equals;
+import objectos.core.object.HashCode;
 import objectos.css.tmpl.Api;
 import objectox.css.RandomStringGenerator;
-import objectox.lang.Equals;
-import objectox.lang.HashCode;
 
 public class CustomProperty<T extends Api.PropertyValue> {
 

@@ -21,9 +21,9 @@ import java.net.Socket;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
-import objectos.lang.Note0;
-import objectos.lang.Note1;
-import objectos.lang.NoteSink;
+import objectos.core.notes.Note0;
+import objectos.core.notes.Note1;
+import objectos.core.notes.NoteSink;
 
 final class TestingServer extends Thread {
 

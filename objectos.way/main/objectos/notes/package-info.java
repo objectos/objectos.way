@@ -14,6 +14,6 @@
  * limitations under the License.
  */
 /**
- * Provides {@link objectos.lang.NoteSink} implementations.
+ * Provides {@link objectos.core.notes.NoteSink} implementations.
  */
 package objectos.notes;

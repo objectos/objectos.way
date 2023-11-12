@@ -17,11 +17,11 @@ package objectos.notes;
 
 import java.io.PrintStream;
 import java.time.Clock;
-import objectos.lang.Level;
-import objectos.lang.NoteSink;
+import objectos.core.notes.Level;
+import objectos.core.notes.NoteSink;
+import objectos.core.object.Check;
 import objectos.notes.internal.StandardConsoleNoteSink;
 import objectos.notes.internal.StandardConsoleNoteSink.OptionValue;
-import objectox.lang.Check;
 
 /**
  * A {@link NoteSink} object that writes out notes to the system console.

@@ -16,7 +16,7 @@
 package objectos.notes.internal;
 
 import java.io.PrintStream;
-import objectos.lang.Level;
+import objectos.core.notes.Level;
 import objectos.notes.ConsoleNoteSink;
 
 public final class StandardConsoleNoteSink extends AbstractNoteSink implements ConsoleNoteSink {

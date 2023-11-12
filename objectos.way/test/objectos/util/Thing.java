@@ -25,7 +25,7 @@ import java.util.HexFormat;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import objectox.lang.ToString;
+import objectos.core.object.ToString;
 
 final class Thing implements ToString.Formattable {
 

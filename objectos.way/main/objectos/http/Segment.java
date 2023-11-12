@@ -15,9 +15,9 @@
  */
 package objectos.http;
 
+import objectos.core.object.Check;
 import objectox.http.SegmentExact;
 import objectox.http.SegmentKind;
-import objectox.lang.Check;
 
 public sealed interface Segment permits SegmentExact, SegmentKind {
 

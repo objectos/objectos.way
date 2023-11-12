@@ -15,7 +15,14 @@
  */
 package objectos.lang;
 
-import objectox.lang.Check;
+import objectos.core.notes.LongNote;
+import objectos.core.notes.Note;
+import objectos.core.notes.Note0;
+import objectos.core.notes.Note1;
+import objectos.core.notes.Note2;
+import objectos.core.notes.Note3;
+import objectos.core.notes.NoteSink;
+import objectos.core.object.Check;
 
 /**
  * A no-op {@code NoteSink} implementation (for the most part). The one

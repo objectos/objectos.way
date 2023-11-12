@@ -26,11 +26,11 @@
  * <h3>{@code Object}</h3>
  *
  * <ul>
- * <li>{@link objectox.lang.Check}
- * <li>{@link objectox.lang.Equals}
- * <li>{@link objectox.lang.HashCode}
- * <li>{@link objectox.lang.ToString}
- * <li>{@link objectox.lang.ToString.Formattable}
+ * <li>{@link objectos.core.object.Check}
+ * <li>{@link objectos.core.object.Equals}
+ * <li>{@link objectos.core.object.HashCode}
+ * <li>{@link objectos.core.object.ToString}
+ * <li>{@link objectos.core.object.ToString.Formattable}
  * </ul>
  *
  * <h2>Note sink API</h2>
@@ -40,8 +40,8 @@
  * reference can be found in classes listed below:
  *
  * <ul>
- * <li>{@link objectos.lang.Note}
- * <li>{@link objectos.lang.NoteSink}
+ * <li>{@link objectos.core.notes.Note}
+ * <li>{@link objectos.core.notes.NoteSink}
  * </ul>
  *
  * <h2>Handling of {@code null} arguments</h2>

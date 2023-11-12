@@ -16,10 +16,10 @@
 package objectos.css.util;
 
 import java.util.Objects;
+import objectos.core.object.Check;
 import objectos.css.tmpl.Api;
 import objectos.html.tmpl.Api.ExternalAttribute;
 import objectox.css.SeqId;
-import objectox.lang.Check;
 
 public record IdSelector(String id) implements ExternalAttribute.Id, Api.SelectorInstruction {
 

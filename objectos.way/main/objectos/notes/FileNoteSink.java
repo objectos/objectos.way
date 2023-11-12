@@ -19,12 +19,12 @@ import java.io.Closeable;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.time.Clock;
-import objectos.lang.Level;
-import objectos.lang.Note2;
-import objectos.lang.NoteSink;
+import objectos.core.notes.Level;
+import objectos.core.notes.Note2;
+import objectos.core.notes.NoteSink;
+import objectos.core.object.Check;
 import objectos.notes.internal.StandardFileNoteSink;
 import objectos.notes.internal.StandardFileNoteSink.OptionValue;
-import objectox.lang.Check;
 
 /**
  * A {@link NoteSink} that must be closed in order to release the resources it

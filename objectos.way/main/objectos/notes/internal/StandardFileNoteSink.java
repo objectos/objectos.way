@@ -24,7 +24,7 @@ import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
-import objectos.lang.Level;
+import objectos.core.notes.Level;
 import objectos.notes.FileNoteSink;
 
 public final class StandardFileNoteSink extends AbstractNoteSink implements FileNoteSink {
