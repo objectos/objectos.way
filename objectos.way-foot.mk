@@ -36,6 +36,10 @@ gh-release: way@gh-release
 # maybe use eval for module targets?
 
 #
+# objectos.core.object targets
+#
+
+#
 # objectos.code targets
 #
 
