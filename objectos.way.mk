@@ -111,6 +111,9 @@ javadoc: $(foreach mod,$(WAY_SUBMODULES),$(mod)@javadoc) way@javadoc
 .PHONY: pom
 pom: $(foreach mod,$(WAY_SUBMODULES),$(mod)@pom) way@pom 
 
+.PHONY: ossrh-prepare
+ossrh-prepare: $(foreach mod,$(WAY_SUBMODULES),$(mod)@ossrh-prepare) way@ossrh-prepare
+
 .PHONY: ossrh
 ossrh: way@ossrh
 
@@ -145,6 +148,9 @@ way@clean-javadoc:
 
 .PHONY: way@pom
 way@pom: $(WAY_POM_FILE)
+
+.PHONY: way@ossrh-prepare
+way@ossrh-prepare: $(WAY_OSSRH_PREPARE)
 
 .PHONY: way@ossrh way@ossrh-bundle
 way@ossrh: $(WAY_OSSRH_MARKER)

@@ -44,6 +44,7 @@ MODULE_TASKS += INSTALL_TASK
 MODULE_TASKS += SOURCE_JAR_TASK
 MODULE_TASKS += JAVADOC_TASK
 MODULE_TASKS += POM_TASK
+MODULE_TASKS += OSSRH_PREPARE_TASK
 
 #
 # Default target
@@ -505,6 +506,36 @@ endef
 ## - OSSRH_PASSWORD
 -include $(HOME)/.config/objectos/ossrh-config.mk
 
+## gpg command
+GPGX = $(GPG)
+GPGX += --armor
+GPGX += --batch
+GPGX += --default-key $(OSSRH_GPG_KEY)
+GPGX += --detach-sign
+GPGX += --passphrase $(OSSRH_GPG_PASSPHRASE)
+GPGX += --pinentry-mode loopback
+GPGX += --yes
+
+%.asc: %
+	@$(GPGX) $<
+
+define OSSRH_PREPARE_TASK
+
+## ossrh bundle contents
+$(1)OSSRH_CONTENTS = $$($(1)POM_FILE)
+$(1)OSSRH_CONTENTS += $$($(1)JAR_FILE)
+$(1)OSSRH_CONTENTS += $$($(1)SOURCE_JAR_FILE)
+$(1)OSSRH_CONTENTS += $$($(1)JAVADOC_JAR_FILE)
+
+## ossrh sigs
+$(1)OSSRH_SIGS = $$($(1)OSSRH_CONTENTS:%=%.asc)
+
+## contents + sigs
+$(1)OSSRH_PREPARE = $$($(1)OSSRH_CONTENTS)
+$(1)OSSRH_PREPARE += $$($(1)OSSRH_SIGS)
+
+endef
+
 ## include GH config
 ## - GH_TOKEN
 -include $(HOME)/.config/objectos/gh-config.mk
@@ -587,6 +618,10 @@ core.object@javadoc: $(CORE_OBJECT_JAVADOC_JAR_FILE)
 
 .PHONY: core.object@pom
 core.object@pom: $(CORE_OBJECT_POM_FILE)
+
+.PHONY: core.object@ossrh-prepare
+core.object@ossrh-prepare: $(CORE_OBJECT_OSSRH_PREPARE)
+
 
 #
 # objectos.code options
@@ -837,6 +872,9 @@ javadoc: $(foreach mod,$(WAY_SUBMODULES),$(mod)@javadoc) way@javadoc
 .PHONY: pom
 pom: $(foreach mod,$(WAY_SUBMODULES),$(mod)@pom) way@pom 
 
+.PHONY: ossrh-prepare
+ossrh-prepare: $(foreach mod,$(WAY_SUBMODULES),$(mod)@ossrh-prepare) way@ossrh-prepare
+
 .PHONY: ossrh
 ossrh: way@ossrh
 
@@ -871,6 +909,9 @@ way@clean-javadoc:
 
 .PHONY: way@pom
 way@pom: $(WAY_POM_FILE)
+
+.PHONY: way@ossrh-prepare
+way@ossrh-prepare: $(WAY_OSSRH_PREPARE)
 
 .PHONY: way@ossrh way@ossrh-bundle
 way@ossrh: $(WAY_OSSRH_MARKER)

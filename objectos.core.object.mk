@@ -92,3 +92,7 @@ core.object@javadoc: $(CORE_OBJECT_JAVADOC_JAR_FILE)
 
 .PHONY: core.object@pom
 core.object@pom: $(CORE_OBJECT_POM_FILE)
+
+.PHONY: core.object@ossrh-prepare
+core.object@ossrh-prepare: $(CORE_OBJECT_OSSRH_PREPARE)
+
