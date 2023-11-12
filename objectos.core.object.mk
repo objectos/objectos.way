@@ -24,6 +24,12 @@ CORE_OBJECT = objectos.core.object
 ## code module
 CORE_OBJECT_MODULE = $(CORE_OBJECT)
 
+## group id
+CORE_OBJECT_GROUP_ID = $(GROUP_ID)
+
+## artifact id
+CORE_OBJECT_ARTIFACT_ID = $(CORE_OBJECT_MODULE)
+
 ## code module version
 CORE_OBJECT_VERSION = $(VERSION)
 
@@ -57,6 +63,7 @@ CORE_OBJECT_TASKS = COMPILE_TASK
 CORE_OBJECT_TASKS += JAR_TASK
 CORE_OBJECT_TASKS += TEST_COMPILE_TASK
 CORE_OBJECT_TASKS += TEST_RUN_TASK
+CORE_OBJECT_TASKS += INSTALL_TASK
 
 $(foreach task,$(CORE_OBJECT_TASKS),$(eval $(call $(task),CORE_OBJECT_)))
 
@@ -72,3 +79,6 @@ core.object@jar: $(CORE_OBJECT_JAR_FILE)
 
 .PHONY: core.object@test
 core.object@test: $(CORE_OBJECT_TEST_RUN_MARKER)
+
+.PHONY: core.object@install
+core.object@install: $(CORE_OBJECT_INSTALL)

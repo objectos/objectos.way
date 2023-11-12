@@ -88,6 +88,7 @@ WAY_TASKS = COMPILE_TASK
 WAY_TASKS += JAR_TASK
 WAY_TASKS += TEST_COMPILE_TASK
 WAY_TASKS += TEST_RUN_TASK
+WAY_TASKS += INSTALL_TASK
 
 $(foreach task,$(WAY_TASKS),$(eval $(call $(task),WAY_)))
 
@@ -102,7 +103,7 @@ clean: core.object@clean code@clean selfgen@clean way@clean
 test: core.object@test code@test selfgen@test way@test
 
 .PHONY: install
-install: way@install
+install: core.object@install way@install
 
 .PHONY: ossrh
 ossrh: way@ossrh

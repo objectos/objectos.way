@@ -344,6 +344,25 @@ $$($(1)TEST_RUN_MARKER): $$($(1)TEST_COMPILE_MARKER)
 
 endef
 
+#
+# install options
+#
+
+define INSTALL_TASK
+
+## install location
+$(1)INSTALL = $$(call dependency,$$($(1)GROUP_ID),$$($(1)ARTIFACT_ID),$$($(1)VERSION))
+
+#
+# install target
+#
+
+$$($(1)INSTALL): $$($(1)JAR_FILE)
+	mkdir --parents $$(@D)
+	cp $$< $$@
+
+endef
+
 ## include ossrh config
 ## - OSSRH_GPG_KEY
 ## - OSSRH_GPG_PASSPHRASE
@@ -364,6 +383,12 @@ CORE_OBJECT = objectos.core.object
 
 ## code module
 CORE_OBJECT_MODULE = $(CORE_OBJECT)
+
+## group id
+CORE_OBJECT_GROUP_ID = $(GROUP_ID)
+
+## artifact id
+CORE_OBJECT_ARTIFACT_ID = $(CORE_OBJECT_MODULE)
 
 ## code module version
 CORE_OBJECT_VERSION = $(VERSION)
@@ -398,6 +423,7 @@ CORE_OBJECT_TASKS = COMPILE_TASK
 CORE_OBJECT_TASKS += JAR_TASK
 CORE_OBJECT_TASKS += TEST_COMPILE_TASK
 CORE_OBJECT_TASKS += TEST_RUN_TASK
+CORE_OBJECT_TASKS += INSTALL_TASK
 
 $(foreach task,$(CORE_OBJECT_TASKS),$(eval $(call $(task),CORE_OBJECT_)))
 
@@ -413,6 +439,9 @@ core.object@jar: $(CORE_OBJECT_JAR_FILE)
 
 .PHONY: core.object@test
 core.object@test: $(CORE_OBJECT_TEST_RUN_MARKER)
+
+.PHONY: core.object@install
+core.object@install: $(CORE_OBJECT_INSTALL)
 
 #
 # objectos.code options
@@ -640,6 +669,7 @@ WAY_TASKS = COMPILE_TASK
 WAY_TASKS += JAR_TASK
 WAY_TASKS += TEST_COMPILE_TASK
 WAY_TASKS += TEST_RUN_TASK
+WAY_TASKS += INSTALL_TASK
 
 $(foreach task,$(WAY_TASKS),$(eval $(call $(task),WAY_)))
 
@@ -654,7 +684,7 @@ clean: core.object@clean code@clean selfgen@clean way@clean
 test: core.object@test code@test selfgen@test way@test
 
 .PHONY: install
-install: way@install
+install: core.object@install way@install
 
 .PHONY: ossrh
 ossrh: way@ossrh
