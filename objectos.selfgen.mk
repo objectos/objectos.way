@@ -1,0 +1,105 @@
+#
+# Copyright (C) 2023 Objectos Software LTDA.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+
+#
+# objectos.selfgen options
+#
+
+## selfgen directory
+SELFGEN := objectos.selfgen
+
+## selfgen module
+SELFGEN_MODULE := $(SELFGEN)
+
+## selfgen module version
+SELFGEN_VERSION := $(VERSION)
+
+## selfgen javac --release option
+SELFGEN_JAVA_RELEASE := 21
+
+## selfgen --enable-preview ?
+SELFGEN_ENABLE_PREVIEW := 1
+
+## selfgen compile deps
+SELFGEN_COMPILE_DEPS = $(CODE_JAR_FILE) 
+
+## selfgen jar name
+SELFGEN_JAR_NAME := $(SELFGEN)
+
+## selfgen test compile deps
+SELFGEN_TEST_COMPILE_DEPS = $(CODE_JAR_FILE)
+SELFGEN_TEST_COMPILE_DEPS += $(SELFGEN_JAR_FILE)
+SELFGEN_TEST_COMPILE_DEPS += $(call dependency,org.testng,testng,$(TESTNG_VERSION))
+
+## selfgen test runtime dependencies
+SELFGEN_TEST_RUNTIME_DEPS = $(SELFGEN_TEST_COMPILE_DEPS)
+SELFGEN_TEST_RUNTIME_DEPS += $(call dependency,com.beust,jcommander,$(JCOMMANDER_VERSION))
+SELFGEN_TEST_RUNTIME_DEPS += $(call dependency,org.slf4j,slf4j-api,$(SLF4J_VERSION))
+SELFGEN_TEST_RUNTIME_DEPS += $(call dependency,org.slf4j,slf4j-nop,$(SLF4J_VERSION))
+
+## seflgen test runtime exports
+SELFGEN_TEST_JAVAX_EXPORTS := objectos.selfgen.css
+SELFGEN_TEST_JAVAX_EXPORTS += objectos.selfgen.html
+SELFGEN_TEST_JAVAX_EXPORTS += selfgen.css.util
+
+#
+# objectos.code targets
+#
+
+#
+# objectos.selfgen targets
+#
+
+SELFGEN_PREFIX = SELFGEN_
+
+$(eval $(call COMPILE,$(SELFGEN_PREFIX)))
+
+.PHONY: selfgen@clean
+selfgen@clean:
+	rm -rf $(SELFGEN_WORK)/*
+
+.PHONY: selfgen@compile
+selfgen@compile: $(SELFGEN_COMPILE_MARKER)
+
+.PHONY: selfgen@jar
+selfgen@jar: $(SELFGEN_JAR_FILE)
+
+.PHONY: selfgen@test
+selfgen@test: $(SELFGEN_TEST_RUN_MARKER)
+
+## marker to indicate when selfgen was last run
+SELFGEN_MARKER = $(WAY_WORK)/selfgen-marker
+
+## selfgen runtime deps
+SELFGEN_RUNTIME_DEPS = $(SELFGEN_JAR_FILE)
+SELFGEN_RUNTIME_DEPS += $(SELFGEN_COMPILE_DEPS)
+
+## selfgen java command
+SELFGEN_JAVAX = $(JAVA)
+SELFGEN_JAVAX += --module-path $(call module-path,$(SELFGEN_RUNTIME_DEPS))
+ifeq ($(SELFGEN_ENABLE_PREVIEW), 1)
+SELFGEN_JAVAX += --enable-preview
+endif
+SELFGEN_JAVAX += --module $(SELFGEN_MODULE)/$(SELFGEN_MODULE).Main
+SELFGEN_JAVAX += $(WAY_MAIN)
+
+.PHONY: selfgen
+selfgen: $(SELFGEN_MARKER)
+
+$(SELFGEN_MARKER): $(SELFGEN_JAR_FILE)
+	$(SELFGEN_JAVAX)
+	mkdir --parents $(@D)
+	touch $(SELFGEN_MARKER)
