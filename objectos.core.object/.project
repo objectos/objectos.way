@@ -1,11 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-	<name>objectos.way</name>
+	<name>objectos.way:objectos.core.object</name>
 	<comment></comment>
 	<projects>
-		<project>objectos.code</project>		
-		<project>objectos.core.object</project>
-		<project>objectos.selfgen</project>		
 	</projects>
 	<buildSpec>
 		<buildCommand>
