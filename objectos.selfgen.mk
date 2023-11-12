@@ -28,7 +28,7 @@ SELFGEN_MODULE := $(SELFGEN)
 SELFGEN_VERSION := $(VERSION)
 
 ## selfgen javac --release option
-SELFGEN_JAVA_RELEASE := 21
+SELFGEN_JAVA_RELEASE := $(JAVA_RELEASE)
 
 ## selfgen --enable-preview ?
 SELFGEN_ENABLE_PREVIEW := 1
@@ -65,6 +65,8 @@ SELFGEN_TEST_JAVAX_EXPORTS += selfgen.css.util
 
 SELFGEN_TASKS = COMPILE_TASK
 SELFGEN_TASKS += JAR_TASK
+SELFGEN_TASKS += TEST_COMPILE_TASK
+SELFGEN_TASKS += TEST_RUN_TASK
 
 $(foreach task,$(SELFGEN_TASKS),$(eval $(call $(task),SELFGEN_)))
 
@@ -82,7 +84,7 @@ selfgen@jar: $(SELFGEN_JAR_FILE)
 selfgen@test: $(SELFGEN_TEST_RUN_MARKER)
 
 ## marker to indicate when selfgen was last run
-SELFGEN_MARKER = $(WAY_WORK)/selfgen-marker
+SELFGEN_MARKER = $(SELFGEN_WORK)/selfgen-marker
 
 ## selfgen runtime deps
 SELFGEN_RUNTIME_DEPS = $(SELFGEN_JAR_FILE)

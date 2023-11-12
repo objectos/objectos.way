@@ -15,14 +15,91 @@
 #
 
 #
+# objectos.way options
+# 
+
+## way directory
+WAY := objectos.way
+
+## way module
+WAY_MODULE := $(WAY)
+
+## way module version
+WAY_VERSION := $(VERSION)
+
+## way javac --release option
+WAY_JAVA_RELEASE := 21
+
+## way --enable-preview ?
+WAY_ENABLE_PREVIEW := 0
+
+## way compile deps
+WAY_COMPILE_DEPS = $(CORE_OBJECT_JAR_FILE)
+
+## way jar name
+WAY_JAR_NAME := $(WAY)
+
+## way JS source
+WAY_JS_SRC = $(WAY)/js/objectos.way.js
+
+## way JS artifact
+WAY_JS_ARTIFACT = $(WAY_CLASS_OUTPUT)/objectos/js/objectos.way.js
+
+## way jar file reqs
+WAY_JAR_FILE_REQS_MORE = $(WAY_JS_ARTIFACT)
+
+## way test compile-time dependencies
+WAY_TEST_COMPILE_DEPS = $(WAY_COMPILE_DEPS)
+WAY_TEST_COMPILE_DEPS += $(WAY_JAR_FILE)
+WAY_TEST_COMPILE_DEPS += $(call dependency,org.testng,testng,$(TESTNG_VERSION))
+
+## way test runtime dependencies
+WAY_TEST_RUNTIME_DEPS = $(WAY_TEST_COMPILE_DEPS)
+WAY_TEST_RUNTIME_DEPS += $(call dependency,com.beust,jcommander,$(JCOMMANDER_VERSION))
+WAY_TEST_RUNTIME_DEPS += $(call dependency,org.slf4j,slf4j-api,$(SLF4J_VERSION))
+WAY_TEST_RUNTIME_DEPS += $(call dependency,org.slf4j,slf4j-nop,$(SLF4J_VERSION))
+
+## way test runtime reads
+WAY_TEST_JAVAX_READS := java.compiler
+
+## way test runtime exports
+WAY_TEST_JAVAX_EXPORTS := objectos.html.internal
+WAY_TEST_JAVAX_EXPORTS += objectos.util
+WAY_TEST_JAVAX_EXPORTS += objectox.css
+WAY_TEST_JAVAX_EXPORTS += objectox.css.util
+WAY_TEST_JAVAX_EXPORTS += objectox.http
+WAY_TEST_JAVAX_EXPORTS += objectox.lang
+
+## way install coordinates
+WAY_GROUP_ID := $(GROUP_ID)
+WAY_ARTIFACT_ID := $(ARTIFACT_ID)
+
+## way copyright years for javadoc
+WAY_COPYRIGHT_YEARS := 2022-2023
+
+## way javadoc snippet path
+WAY_JAVADOC_SNIPPET_PATH := WAY_TEST
+
+#
+# objectos.way targets
+#
+
+WAY_TASKS = COMPILE_TASK
+WAY_TASKS += JAR_TASK
+WAY_TASKS += TEST_COMPILE_TASK
+WAY_TASKS += TEST_RUN_TASK
+
+$(foreach task,$(WAY_TASKS),$(eval $(call $(task),WAY_)))
+
+#
 # Targets section
 #
 
 .PHONY: clean
-clean: code@clean selfgen@clean way@clean
+clean: core.object@clean code@clean selfgen@clean way@clean
 
 .PHONY: test
-test: code@test selfgen@test way@test
+test: core.object@test code@test selfgen@test way@test
 
 .PHONY: install
 install: way@install
@@ -33,15 +110,9 @@ ossrh: way@ossrh
 .PHONY: gh-release
 gh-release: way@gh-release
 
-# maybe use eval for module targets?
-
-#
-# objectos.way targets
-#
-
 .PHONY: way@clean
 way@clean:
-	rm -r $(WAY_WORK)/*
+	rm -rf $(WAY_WORK)/*
 
 $(WAY_JS_ARTIFACT): $(WAY_JS_SRC)
 	mkdir --parents $(@D)
@@ -174,4 +245,3 @@ eclipse-gen:
 	echo "$$SETTINGS_CORE_RESOURCES" > $(ECLIPSE_MODULE_NAME)/.settings/org.eclipse.core.resources.prefs
 	echo "$$SETTINGS_JDT_CORE" > $(ECLIPSE_MODULE_NAME)/.settings/org.eclipse.jdt.core.prefs
 	echo "$$SETTINGS_JDT_UI" > $(ECLIPSE_MODULE_NAME)/.settings/org.eclipse.jdt.ui.prefs
-	

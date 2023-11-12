@@ -55,6 +55,8 @@ CODE_TEST_JAVAX_EXPORTS := objectos.code.internal
 
 CODE_TASKS = COMPILE_TASK
 CODE_TASKS += JAR_TASK
+CODE_TASKS += TEST_COMPILE_TASK
+CODE_TASKS += TEST_RUN_TASK
 
 $(foreach task,$(CODE_TASKS),$(eval $(call $(task),CODE_)))
 

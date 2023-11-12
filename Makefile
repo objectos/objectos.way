@@ -32,100 +32,6 @@ SLF4J_VERSION := 1.7.36
 
 JAVA_RELEASE := 21
 
-#
-# objectos.core.object options
-#
-
-## directory
-CORE_OBJECT := objectos.core.object
-
-## module
-CORE_OBJECT_MODULE := $(CORE_OBJECT)
-
-## module version
-CORE_OBJECT_VERSION := $(VERSION)
-
-## javac --release option
-CORE_OBJECT_JAVA_RELEASE := $(JAVA_RELEASE)
-
-## --enable-preview ?
-CORE_OBJECT_ENABLE_PREVIEW := 0
-
-## jar name
-CORE_OBJECT_JAR_NAME := $(CORE_OBJECT)
-
-## test compile deps
-CORE_OBJECT_TEST_COMPILE_DEPS = $(CORE_OBJECT_JAR_FILE)
-CORE_OBJECT_TEST_COMPILE_DEPS += $(call dependency,org.testng,testng,$(TESTNG_VERSION))
-
-## test runtime dependencies
-CORE_OBJECT_TEST_RUNTIME_DEPS = $(CODE_TEST_COMPILE_DEPS)
-CORE_OBJECT_TEST_RUNTIME_DEPS += $(call dependency,com.beust,jcommander,$(JCOMMANDER_VERSION))
-CORE_OBJECT_TEST_RUNTIME_DEPS += $(call dependency,org.slf4j,slf4j-api,$(SLF4J_VERSION))
-CORE_OBJECT_TEST_RUNTIME_DEPS += $(call dependency,org.slf4j,slf4j-nop,$(SLF4J_VERSION))
-
-#
-# objectos.way options
-# 
-
-## way directory
-WAY := objectos.way
-
-## way module
-WAY_MODULE := $(WAY)
-
-## way module version
-WAY_VERSION := $(VERSION)
-
-## way javac --release option
-WAY_JAVA_RELEASE := 21
-
-## way --enable-preview ?
-WAY_ENABLE_PREVIEW := 0
-
-## way jar name
-WAY_JAR_NAME := $(WAY)
-
-## way JS source
-WAY_JS_SRC = $(WAY)/js/objectos.way.js
-
-## way JS artifact
-WAY_JS_ARTIFACT = $(WAY_CLASS_OUTPUT)/objectos/js/objectos.way.js
-
-## way jar file reqs
-WAY_JAR_FILE_REQS_MORE = $(WAY_JS_ARTIFACT)
-
-## way test compile-time dependencies
-WAY_TEST_COMPILE_DEPS = $(WAY_JAR_FILE)
-WAY_TEST_COMPILE_DEPS += $(call dependency,org.testng,testng,$(TESTNG_VERSION))
-
-## way test runtime dependencies
-WAY_TEST_RUNTIME_DEPS = $(WAY_TEST_COMPILE_DEPS)
-WAY_TEST_RUNTIME_DEPS += $(call dependency,com.beust,jcommander,$(JCOMMANDER_VERSION))
-WAY_TEST_RUNTIME_DEPS += $(call dependency,org.slf4j,slf4j-api,$(SLF4J_VERSION))
-WAY_TEST_RUNTIME_DEPS += $(call dependency,org.slf4j,slf4j-nop,$(SLF4J_VERSION))
-
-## way test runtime reads
-WAY_TEST_JAVAX_READS := java.compiler
-
-## way test runtime exports
-WAY_TEST_JAVAX_EXPORTS := objectos.html.internal
-WAY_TEST_JAVAX_EXPORTS += objectos.util
-WAY_TEST_JAVAX_EXPORTS += objectox.css
-WAY_TEST_JAVAX_EXPORTS += objectox.css.util
-WAY_TEST_JAVAX_EXPORTS += objectox.http
-WAY_TEST_JAVAX_EXPORTS += objectox.lang
-
-## way install coordinates
-WAY_GROUP_ID := $(GROUP_ID)
-WAY_ARTIFACT_ID := $(ARTIFACT_ID)
-
-## way copyright years for javadoc
-WAY_COPYRIGHT_YEARS := 2022-2023
-
-## way javadoc snippet path
-WAY_JAVADOC_SNIPPET_PATH := WAY_TEST
-
 # Delete the default suffixes
 .SUFFIXES:
 
@@ -139,6 +45,8 @@ all: jar
 .PHONY: jar
 jar: way@jar
 
+print-%::
+	@echo $* = $($*)
 #
 # Defines the tools
 #
@@ -335,6 +243,107 @@ $$($(1)LICENSE): LICENSE
 
 endef
 
+#
+# test compilation options
+#
+
+define TEST_COMPILE_TASK
+
+## test source directory
+$(1)TEST = $$($(1)MODULE)/test
+
+## test source files 
+$(1)TEST_SOURCES = $$(shell find $${$(1)TEST} -type f -name '*.java' -print)
+
+## test source files modified since last compilation
+$(1)TEST_DIRTY :=
+
+## test class output path
+$(1)TEST_CLASS_OUTPUT = $$($(1)WORK)/test
+
+## test compiled classes
+$(1)TEST_CLASSES = $$($(1)TEST_SOURCES:$$($(1)TEST)/%.java=$$($(1)TEST_CLASS_OUTPUT)/%.class)
+
+## test compile-time dependencies
+# $(1)TEST_COMPILE_DEPS =
+
+## test javac command
+$(1)TEST_JAVACX = $$(JAVAC)
+$(1)TEST_JAVACX += -d $$($(1)TEST_CLASS_OUTPUT)
+$(1)TEST_JAVACX += -g
+$(1)TEST_JAVACX += -Xlint:all
+$(1)TEST_JAVACX += --class-path $$(call class-path,$$($(1)TEST_COMPILE_DEPS))
+ifeq ($$($(1)ENABLE_PREVIEW),1)
+$(1)TEST_JAVACX += --enable-preview
+endif
+$(1)TEST_JAVACX += --release $$($(1)JAVA_RELEASE)
+$(1)TEST_JAVACX += $$($(1)TEST_DIRTY)
+
+## test compilation marker
+$(1)TEST_COMPILE_MARKER = $$($(1)WORK)/test-compile-marker
+
+#
+# test compilation targets
+#
+
+$$($(1)TEST_COMPILE_MARKER): $$($(1)TEST_COMPILE_DEPS) $$($(1)TEST_CLASSES) 
+	if [ -n "$$($(1)TEST_DIRTY)" ]; then \
+		$$($(1)TEST_JAVACX); \
+	fi
+	touch $$@
+
+$$($(1)TEST_CLASSES): $$($(1)TEST_CLASS_OUTPUT)/%.class: $$($(1)TEST)/%.java
+	$$(eval $(1)TEST_DIRTY += $$$$<)
+
+endef
+
+#
+# test execution options
+#
+
+define TEST_RUN_TASK
+
+## test runtime dependencies
+# $(1)TEST_RUNTIME_DEPS =
+
+## test main class
+ifndef $(1)TEST_MAIN
+$(1)TEST_MAIN = $$($(1)MODULE).RunTests
+endif
+
+## test runtime output path
+$(1)TEST_RUNTIME_OUTPUT = $$($(1)WORK)/test-output
+
+## test java command
+$(1)TEST_JAVAX = $$(JAVA)
+$(1)TEST_JAVAX += --module-path $$(call module-path,$$($(1)TEST_RUNTIME_DEPS))
+$(1)TEST_JAVAX += --add-modules org.testng
+$(1)TEST_JAVAX += --add-reads $$($(1)MODULE)=org.testng
+ifdef $(1)TEST_JAVAX_READS
+$(1)TEST_JAVAX += $$(foreach mod,$$($(1)TEST_JAVAX_READS),--add-reads $$($(1)MODULE)=$$(mod))
+endif
+ifdef $(1)TEST_JAVAX_EXPORTS
+$(1)TEST_JAVAX += $$(foreach pkg,$$($(1)TEST_JAVAX_EXPORTS),--add-exports $$($(1)MODULE)/$$(pkg)=org.testng)
+endif
+ifeq ($$($(1)ENABLE_PREVIEW),1)
+$(1)TEST_JAVAX += --enable-preview
+endif
+$(1)TEST_JAVAX += --patch-module $$($(1)MODULE)=$$($(1)TEST_CLASS_OUTPUT)
+$(1)TEST_JAVAX += --module $$($(1)MODULE)/$$($(1)TEST_MAIN)
+$(1)TEST_JAVAX += $$($(1)TEST_RUNTIME_OUTPUT)
+
+## test execution marker
+$(1)TEST_RUN_MARKER = $$($(1)TEST_RUNTIME_OUTPUT)/index.html
+
+#
+# test execution targets
+#
+
+$$($(1)TEST_RUN_MARKER): $$($(1)TEST_COMPILE_MARKER) 
+	$$($(1)TEST_JAVAX)
+
+endef
+
 ## include ossrh config
 ## - OSSRH_GPG_KEY
 ## - OSSRH_GPG_PASSPHRASE
@@ -345,6 +354,65 @@ endef
 ## include GH config
 ## - GH_TOKEN
 -include $(HOME)/.config/objectos/gh-config.mk
+
+#
+# objectos.core.object options
+#
+
+## code directory
+CORE_OBJECT = objectos.core.object
+
+## code module
+CORE_OBJECT_MODULE = $(CORE_OBJECT)
+
+## code module version
+CORE_OBJECT_VERSION = $(VERSION)
+
+## code javac --release option
+CORE_OBJECT_JAVA_RELEASE = $(JAVA_RELEASE)
+
+## code --enable-preview ?
+CORE_OBJECT_ENABLE_PREVIEW = 1
+
+## code jar name
+CORE_OBJECT_JAR_NAME = $(CORE_OBJECT)
+
+## code test compile deps
+CORE_OBJECT_TEST_COMPILE_DEPS = $(CORE_OBJECT_JAR_FILE)
+CORE_OBJECT_TEST_COMPILE_DEPS += $(call dependency,org.testng,testng,$(TESTNG_VERSION))
+
+## code test runtime dependencies
+CORE_OBJECT_TEST_RUNTIME_DEPS = $(CORE_OBJECT_TEST_COMPILE_DEPS)
+CORE_OBJECT_TEST_RUNTIME_DEPS += $(call dependency,com.beust,jcommander,$(JCOMMANDER_VERSION))
+CORE_OBJECT_TEST_RUNTIME_DEPS += $(call dependency,org.slf4j,slf4j-api,$(SLF4J_VERSION))
+CORE_OBJECT_TEST_RUNTIME_DEPS += $(call dependency,org.slf4j,slf4j-nop,$(SLF4J_VERSION))
+
+## test runtime exports
+CORE_OBJECT_TEST_JAVAX_EXPORTS := objectos.core.object.internal
+
+#
+# objectos.core.object targets
+#
+
+CORE_OBJECT_TASKS = COMPILE_TASK
+CORE_OBJECT_TASKS += JAR_TASK
+CORE_OBJECT_TASKS += TEST_COMPILE_TASK
+CORE_OBJECT_TASKS += TEST_RUN_TASK
+
+$(foreach task,$(CORE_OBJECT_TASKS),$(eval $(call $(task),CORE_OBJECT_)))
+
+.PHONY: core.object@clean
+core.object@clean:
+	rm -rf $(CORE_OBJECT_WORK)/*
+
+.PHONY: core.object@compile
+core.object@compile: $(CORE_OBJECT_COMPILE_MARKER)
+
+.PHONY: core.object@jar
+core.object@jar: $(CORE_OBJECT_JAR_FILE)
+
+.PHONY: core.object@test
+core.object@test: $(CORE_OBJECT_TEST_RUN_MARKER)
 
 #
 # objectos.code options
@@ -387,6 +455,8 @@ CODE_TEST_JAVAX_EXPORTS := objectos.code.internal
 
 CODE_TASKS = COMPILE_TASK
 CODE_TASKS += JAR_TASK
+CODE_TASKS += TEST_COMPILE_TASK
+CODE_TASKS += TEST_RUN_TASK
 
 $(foreach task,$(CODE_TASKS),$(eval $(call $(task),CODE_)))
 
@@ -417,7 +487,7 @@ SELFGEN_MODULE := $(SELFGEN)
 SELFGEN_VERSION := $(VERSION)
 
 ## selfgen javac --release option
-SELFGEN_JAVA_RELEASE := 21
+SELFGEN_JAVA_RELEASE := $(JAVA_RELEASE)
 
 ## selfgen --enable-preview ?
 SELFGEN_ENABLE_PREVIEW := 1
@@ -454,6 +524,8 @@ SELFGEN_TEST_JAVAX_EXPORTS += selfgen.css.util
 
 SELFGEN_TASKS = COMPILE_TASK
 SELFGEN_TASKS += JAR_TASK
+SELFGEN_TASKS += TEST_COMPILE_TASK
+SELFGEN_TASKS += TEST_RUN_TASK
 
 $(foreach task,$(SELFGEN_TASKS),$(eval $(call $(task),SELFGEN_)))
 
@@ -471,7 +543,7 @@ selfgen@jar: $(SELFGEN_JAR_FILE)
 selfgen@test: $(SELFGEN_TEST_RUN_MARKER)
 
 ## marker to indicate when selfgen was last run
-SELFGEN_MARKER = $(WAY_WORK)/selfgen-marker
+SELFGEN_MARKER = $(SELFGEN_WORK)/selfgen-marker
 
 ## selfgen runtime deps
 SELFGEN_RUNTIME_DEPS = $(SELFGEN_JAR_FILE)
@@ -495,14 +567,91 @@ $(SELFGEN_MARKER): $(SELFGEN_JAR_FILE)
 	touch $(SELFGEN_MARKER)
 
 #
+# objectos.way options
+# 
+
+## way directory
+WAY := objectos.way
+
+## way module
+WAY_MODULE := $(WAY)
+
+## way module version
+WAY_VERSION := $(VERSION)
+
+## way javac --release option
+WAY_JAVA_RELEASE := 21
+
+## way --enable-preview ?
+WAY_ENABLE_PREVIEW := 0
+
+## way compile deps
+WAY_COMPILE_DEPS = $(CORE_OBJECT_JAR_FILE)
+
+## way jar name
+WAY_JAR_NAME := $(WAY)
+
+## way JS source
+WAY_JS_SRC = $(WAY)/js/objectos.way.js
+
+## way JS artifact
+WAY_JS_ARTIFACT = $(WAY_CLASS_OUTPUT)/objectos/js/objectos.way.js
+
+## way jar file reqs
+WAY_JAR_FILE_REQS_MORE = $(WAY_JS_ARTIFACT)
+
+## way test compile-time dependencies
+WAY_TEST_COMPILE_DEPS = $(WAY_COMPILE_DEPS)
+WAY_TEST_COMPILE_DEPS += $(WAY_JAR_FILE)
+WAY_TEST_COMPILE_DEPS += $(call dependency,org.testng,testng,$(TESTNG_VERSION))
+
+## way test runtime dependencies
+WAY_TEST_RUNTIME_DEPS = $(WAY_TEST_COMPILE_DEPS)
+WAY_TEST_RUNTIME_DEPS += $(call dependency,com.beust,jcommander,$(JCOMMANDER_VERSION))
+WAY_TEST_RUNTIME_DEPS += $(call dependency,org.slf4j,slf4j-api,$(SLF4J_VERSION))
+WAY_TEST_RUNTIME_DEPS += $(call dependency,org.slf4j,slf4j-nop,$(SLF4J_VERSION))
+
+## way test runtime reads
+WAY_TEST_JAVAX_READS := java.compiler
+
+## way test runtime exports
+WAY_TEST_JAVAX_EXPORTS := objectos.html.internal
+WAY_TEST_JAVAX_EXPORTS += objectos.util
+WAY_TEST_JAVAX_EXPORTS += objectox.css
+WAY_TEST_JAVAX_EXPORTS += objectox.css.util
+WAY_TEST_JAVAX_EXPORTS += objectox.http
+WAY_TEST_JAVAX_EXPORTS += objectox.lang
+
+## way install coordinates
+WAY_GROUP_ID := $(GROUP_ID)
+WAY_ARTIFACT_ID := $(ARTIFACT_ID)
+
+## way copyright years for javadoc
+WAY_COPYRIGHT_YEARS := 2022-2023
+
+## way javadoc snippet path
+WAY_JAVADOC_SNIPPET_PATH := WAY_TEST
+
+#
+# objectos.way targets
+#
+
+WAY_TASKS = COMPILE_TASK
+WAY_TASKS += JAR_TASK
+WAY_TASKS += TEST_COMPILE_TASK
+WAY_TASKS += TEST_RUN_TASK
+
+$(foreach task,$(WAY_TASKS),$(eval $(call $(task),WAY_)))
+
+#
 # Targets section
 #
 
 .PHONY: clean
-clean: code@clean selfgen@clean way@clean
+clean: core.object@clean code@clean selfgen@clean way@clean
 
 .PHONY: test
-test: code@test selfgen@test way@test
+test: core.object@test code@test selfgen@test way@test
 
 .PHONY: install
 install: way@install
@@ -513,15 +662,9 @@ ossrh: way@ossrh
 .PHONY: gh-release
 gh-release: way@gh-release
 
-# maybe use eval for module targets?
-
-#
-# objectos.way targets
-#
-
 .PHONY: way@clean
 way@clean:
-	rm -r $(WAY_WORK)/*
+	rm -rf $(WAY_WORK)/*
 
 $(WAY_JS_ARTIFACT): $(WAY_JS_SRC)
 	mkdir --parents $(@D)
@@ -654,4 +797,3 @@ eclipse-gen:
 	echo "$$SETTINGS_CORE_RESOURCES" > $(ECLIPSE_MODULE_NAME)/.settings/org.eclipse.core.resources.prefs
 	echo "$$SETTINGS_JDT_CORE" > $(ECLIPSE_MODULE_NAME)/.settings/org.eclipse.jdt.core.prefs
 	echo "$$SETTINGS_JDT_UI" > $(ECLIPSE_MODULE_NAME)/.settings/org.eclipse.jdt.ui.prefs
-	
