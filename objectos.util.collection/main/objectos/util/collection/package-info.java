@@ -14,26 +14,12 @@
  * limitations under the License.
  */
 /**
- * Defines the Objectos Way API.
+ * Provides base implementations of collections.
+ *
+ * <h2>Null Pointers</h2>
+ *
+ * <p>
+ * Unless otherwise specified, methods in this package will throw a
+ * {@link NullPointerException} if given a {@code null} argument.
  */
-module objectos.way {
-	exports objectos.css;
-	exports objectos.css.tmpl;
-	exports objectos.css.util;
-	exports objectos.html;
-	exports objectos.html.tmpl;
-	exports objectos.http;
-	exports objectos.http.media;
-	exports objectos.http.server;
-	exports objectos.http.util;
-	exports objectos.icon;
-	exports objectos.js;
-	exports objectos.lang;
-
-	requires objectos.lang.object;
-	requires objectos.notes;
-	requires objectos.util.array;
-	requires objectos.util.list;
-	requires objectos.util.map;
-	requires objectos.util.set;
-}
+package objectos.util.collection;

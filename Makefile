@@ -22,7 +22,7 @@
 
 GROUP_ID := br.com.objectos
 ARTIFACT_ID := objectos.way
-VERSION := 0.1.5.5-SNAPSHOT
+VERSION := 0.2.0-SNAPSHOT
 
 ## Deps versions
 
@@ -568,6 +568,158 @@ endef
 -include $(HOME)/.config/objectos/gh-config.mk
 
 #
+# objectos.code options
+#
+
+## code directory
+CODE = objectos.code
+
+## code module
+CODE_MODULE = $(CODE)
+
+## code module version
+CODE_VERSION = $(VERSION)
+
+## code javac --release option
+CODE_JAVA_RELEASE = $(JAVA_RELEASE)
+
+## code --enable-preview ?
+CODE_ENABLE_PREVIEW = 1
+
+## code jar name
+CODE_JAR_NAME = $(CODE)
+
+## code test compile deps
+CODE_TEST_COMPILE_DEPS = $(CODE_JAR_FILE)
+CODE_TEST_COMPILE_DEPS += $(call dependency,org.testng,testng,$(TESTNG_VERSION))
+
+## code test runtime dependencies
+CODE_TEST_RUNTIME_DEPS = $(CODE_TEST_COMPILE_DEPS)
+CODE_TEST_RUNTIME_DEPS += $(call dependency,com.beust,jcommander,$(JCOMMANDER_VERSION))
+CODE_TEST_RUNTIME_DEPS += $(call dependency,org.slf4j,slf4j-api,$(SLF4J_VERSION))
+CODE_TEST_RUNTIME_DEPS += $(call dependency,org.slf4j,slf4j-nop,$(SLF4J_VERSION))
+
+## test runtime exports
+CODE_TEST_JAVAX_EXPORTS := objectos.code.internal
+
+#
+# objectos.code targets
+#
+
+CODE_TASKS = COMPILE_TASK
+CODE_TASKS += JAR_TASK
+CODE_TASKS += TEST_COMPILE_TASK
+CODE_TASKS += TEST_RUN_TASK
+
+$(foreach task,$(CODE_TASKS),$(eval $(call $(task),CODE_)))
+
+.PHONY: code@clean
+code@clean:
+	rm -rf $(CODE_WORK)/*
+
+.PHONY: code@compile
+code@compile: $(CODE_COMPILE_MARKER)
+
+.PHONY: code@jar
+code@jar: $(CODE_JAR_FILE)
+
+.PHONY: code@test
+code@test: $(CODE_TEST_RUN_MARKER)
+
+#
+# objectos.selfgen options
+#
+
+## selfgen directory
+SELFGEN := objectos.selfgen
+
+## selfgen module
+SELFGEN_MODULE := $(SELFGEN)
+
+## selfgen module version
+SELFGEN_VERSION := $(VERSION)
+
+## selfgen javac --release option
+SELFGEN_JAVA_RELEASE := $(JAVA_RELEASE)
+
+## selfgen --enable-preview ?
+SELFGEN_ENABLE_PREVIEW := 1
+
+## selfgen compile deps
+SELFGEN_COMPILE_DEPS = $(CODE_JAR_FILE) 
+
+## selfgen jar name
+SELFGEN_JAR_NAME := $(SELFGEN)
+
+## selfgen test compile deps
+SELFGEN_TEST_COMPILE_DEPS = $(CODE_JAR_FILE)
+SELFGEN_TEST_COMPILE_DEPS += $(SELFGEN_JAR_FILE)
+SELFGEN_TEST_COMPILE_DEPS += $(call dependency,org.testng,testng,$(TESTNG_VERSION))
+
+## selfgen test runtime dependencies
+SELFGEN_TEST_RUNTIME_DEPS = $(SELFGEN_TEST_COMPILE_DEPS)
+SELFGEN_TEST_RUNTIME_DEPS += $(call dependency,com.beust,jcommander,$(JCOMMANDER_VERSION))
+SELFGEN_TEST_RUNTIME_DEPS += $(call dependency,org.slf4j,slf4j-api,$(SLF4J_VERSION))
+SELFGEN_TEST_RUNTIME_DEPS += $(call dependency,org.slf4j,slf4j-nop,$(SLF4J_VERSION))
+
+## seflgen test runtime exports
+SELFGEN_TEST_JAVAX_EXPORTS := objectos.selfgen.css
+SELFGEN_TEST_JAVAX_EXPORTS += objectos.selfgen.html
+SELFGEN_TEST_JAVAX_EXPORTS += selfgen.css.util
+
+#
+# objectos.code targets
+#
+
+#
+# objectos.selfgen targets
+#
+
+SELFGEN_TASKS = COMPILE_TASK
+SELFGEN_TASKS += JAR_TASK
+SELFGEN_TASKS += TEST_COMPILE_TASK
+SELFGEN_TASKS += TEST_RUN_TASK
+
+$(foreach task,$(SELFGEN_TASKS),$(eval $(call $(task),SELFGEN_)))
+
+.PHONY: selfgen@clean
+selfgen@clean:
+	rm -rf $(SELFGEN_WORK)/*
+
+.PHONY: selfgen@compile
+selfgen@compile: $(SELFGEN_COMPILE_MARKER)
+
+.PHONY: selfgen@jar
+selfgen@jar: $(SELFGEN_JAR_FILE)
+
+.PHONY: selfgen@test
+selfgen@test: $(SELFGEN_TEST_RUN_MARKER)
+
+## marker to indicate when selfgen was last run
+SELFGEN_MARKER = $(SELFGEN_WORK)/selfgen-marker
+
+## selfgen runtime deps
+SELFGEN_RUNTIME_DEPS = $(SELFGEN_JAR_FILE)
+SELFGEN_RUNTIME_DEPS += $(SELFGEN_COMPILE_DEPS)
+
+## selfgen java command
+SELFGEN_JAVAX = $(JAVA)
+SELFGEN_JAVAX += --module-path $(call module-path,$(SELFGEN_RUNTIME_DEPS))
+ifeq ($(SELFGEN_ENABLE_PREVIEW), 1)
+SELFGEN_JAVAX += --enable-preview
+endif
+SELFGEN_JAVAX += --module $(SELFGEN_MODULE)/$(SELFGEN_MODULE).Main
+SELFGEN_JAVAX += $(WAY_MAIN)
+
+.PHONY: selfgen
+selfgen: $(SELFGEN_MARKER)
+
+$(SELFGEN_MARKER): $(SELFGEN_JAR_FILE)
+	$(SELFGEN_JAVAX)
+	mkdir --parents $(@D)
+	touch $(SELFGEN_MARKER)
+
+#
 # objectos.lang.object
 #
 
@@ -988,156 +1140,427 @@ notes.file@pom: $(NOTES_FILE_POM_FILE)
 notes.file@ossrh-prepare: $(NOTES_FILE_OSSRH_PREPARE)
 
 #
-# objectos.code options
+# objectos.util.array options
 #
 
-## code directory
-CODE = objectos.code
+## module directory
+UTIL_ARRAY = objectos.util.array
 
-## code module
-CODE_MODULE = $(CODE)
+## module
+UTIL_ARRAY_MODULE = $(UTIL_ARRAY)
 
-## code module version
-CODE_VERSION = $(VERSION)
+## module version
+UTIL_ARRAY_VERSION = $(VERSION)
 
-## code javac --release option
-CODE_JAVA_RELEASE = $(JAVA_RELEASE)
+## javac --release option
+UTIL_ARRAY_JAVA_RELEASE = $(JAVA_RELEASE)
 
-## code --enable-preview ?
-CODE_ENABLE_PREVIEW = 1
+## --enable-preview ?
+UTIL_ARRAY_ENABLE_PREVIEW = 0
 
-## code jar name
-CODE_JAR_NAME = $(CODE)
+## compile deps
+UTIL_ARRAY_COMPILE_DEPS = $(LANG_OBJECT_JAR_FILE)
 
-## code test compile deps
-CODE_TEST_COMPILE_DEPS = $(CODE_JAR_FILE)
-CODE_TEST_COMPILE_DEPS += $(call dependency,org.testng,testng,$(TESTNG_VERSION))
+## jar name
+UTIL_ARRAY_JAR_NAME = $(UTIL_ARRAY)
 
-## code test runtime dependencies
-CODE_TEST_RUNTIME_DEPS = $(CODE_TEST_COMPILE_DEPS)
-CODE_TEST_RUNTIME_DEPS += $(call dependency,com.beust,jcommander,$(JCOMMANDER_VERSION))
-CODE_TEST_RUNTIME_DEPS += $(call dependency,org.slf4j,slf4j-api,$(SLF4J_VERSION))
-CODE_TEST_RUNTIME_DEPS += $(call dependency,org.slf4j,slf4j-nop,$(SLF4J_VERSION))
+## test compile deps
+UTIL_ARRAY_TEST_COMPILE_DEPS = $(UTIL_ARRAY_COMPILE_DEPS)
+UTIL_ARRAY_TEST_COMPILE_DEPS += $(UTIL_ARRAY_JAR_FILE)
+UTIL_ARRAY_TEST_COMPILE_DEPS += $(call dependency,org.testng,testng,$(TESTNG_VERSION))
 
-## test runtime exports
-CODE_TEST_JAVAX_EXPORTS := objectos.code.internal
+## test runtime dependencies
+UTIL_ARRAY_TEST_RUNTIME_DEPS = $(UTIL_ARRAY_TEST_COMPILE_DEPS)
+UTIL_ARRAY_TEST_RUNTIME_DEPS += $(call dependency,com.beust,jcommander,$(JCOMMANDER_VERSION))
+UTIL_ARRAY_TEST_RUNTIME_DEPS += $(call dependency,org.slf4j,slf4j-api,$(SLF4J_VERSION))
+UTIL_ARRAY_TEST_RUNTIME_DEPS += $(call dependency,org.slf4j,slf4j-nop,$(SLF4J_VERSION))
 
-#
-# objectos.code targets
-#
+## install coordinates
+UTIL_ARRAY_GROUP_ID = $(GROUP_ID)
+UTIL_ARRAY_ARTIFACT_ID = $(UTIL_ARRAY_MODULE)
 
-CODE_TASKS = COMPILE_TASK
-CODE_TASKS += JAR_TASK
-CODE_TASKS += TEST_COMPILE_TASK
-CODE_TASKS += TEST_RUN_TASK
+## copyright years for javadoc
+UTIL_ARRAY_COPYRIGHT_YEARS := 2022-2023
 
-$(foreach task,$(CODE_TASKS),$(eval $(call $(task),CODE_)))
+## javadoc snippet path
+# UTIL_ARRAY_JAVADOC_SNIPPET_PATH := UTIL_ARRAY_TEST
 
-.PHONY: code@clean
-code@clean:
-	rm -rf $(CODE_WORK)/*
-
-.PHONY: code@compile
-code@compile: $(CODE_COMPILE_MARKER)
-
-.PHONY: code@jar
-code@jar: $(CODE_JAR_FILE)
-
-.PHONY: code@test
-code@test: $(CODE_TEST_RUN_MARKER)
+## pom description
+UTIL_ARRAY_DESCRIPTION = Utilities for working with arrays of primitives and references
 
 #
-# objectos.selfgen options
+# objectos.util.array targets
 #
 
-## selfgen directory
-SELFGEN := objectos.selfgen
+$(foreach task,$(MODULE_TASKS),$(eval $(call $(task),UTIL_ARRAY_)))
 
-## selfgen module
-SELFGEN_MODULE := $(SELFGEN)
+.PHONY: util.array@clean
+util.array@clean:
+	rm -rf $(UTIL_ARRAY_WORK)/*
 
-## selfgen module version
-SELFGEN_VERSION := $(VERSION)
+.PHONY: util.array@compile
+util.array@compile: $(UTIL_ARRAY_COMPILE_MARKER)
 
-## selfgen javac --release option
-SELFGEN_JAVA_RELEASE := $(JAVA_RELEASE)
+.PHONY: util.array@jar
+util.array@jar: $(UTIL_ARRAY_JAR_FILE)
 
-## selfgen --enable-preview ?
-SELFGEN_ENABLE_PREVIEW := 1
+.PHONY: util.array@test
+util.array@test: $(UTIL_ARRAY_TEST_RUN_MARKER)
 
-## selfgen compile deps
-SELFGEN_COMPILE_DEPS = $(CODE_JAR_FILE) 
+.PHONY: util.array@install
+util.array@install: $(UTIL_ARRAY_INSTALL)
 
-## selfgen jar name
-SELFGEN_JAR_NAME := $(SELFGEN)
+.PHONY: util.array@source-jar
+util.array@source-jar: $(UTIL_ARRAY_SOURCE_JAR_FILE)
 
-## selfgen test compile deps
-SELFGEN_TEST_COMPILE_DEPS = $(CODE_JAR_FILE)
-SELFGEN_TEST_COMPILE_DEPS += $(SELFGEN_JAR_FILE)
-SELFGEN_TEST_COMPILE_DEPS += $(call dependency,org.testng,testng,$(TESTNG_VERSION))
+.PHONY: util.array@javadoc
+util.array@javadoc: $(UTIL_ARRAY_JAVADOC_JAR_FILE)
 
-## selfgen test runtime dependencies
-SELFGEN_TEST_RUNTIME_DEPS = $(SELFGEN_TEST_COMPILE_DEPS)
-SELFGEN_TEST_RUNTIME_DEPS += $(call dependency,com.beust,jcommander,$(JCOMMANDER_VERSION))
-SELFGEN_TEST_RUNTIME_DEPS += $(call dependency,org.slf4j,slf4j-api,$(SLF4J_VERSION))
-SELFGEN_TEST_RUNTIME_DEPS += $(call dependency,org.slf4j,slf4j-nop,$(SLF4J_VERSION))
+.PHONY: util.array@pom
+util.array@pom: $(UTIL_ARRAY_POM_FILE)
 
-## seflgen test runtime exports
-SELFGEN_TEST_JAVAX_EXPORTS := objectos.selfgen.css
-SELFGEN_TEST_JAVAX_EXPORTS += objectos.selfgen.html
-SELFGEN_TEST_JAVAX_EXPORTS += selfgen.css.util
+.PHONY: util.array@ossrh-prepare
+util.array@ossrh-prepare: $(UTIL_ARRAY_OSSRH_PREPARE)
+
 
 #
-# objectos.code targets
+# objectos.util.collection options
 #
 
+## module directory
+UTIL_COLLECTION = objectos.util.collection
+
+## module
+UTIL_COLLECTION_MODULE = $(UTIL_COLLECTION)
+
+## module version
+UTIL_COLLECTION_VERSION = $(VERSION)
+
+## javac --release option
+UTIL_COLLECTION_JAVA_RELEASE = $(JAVA_RELEASE)
+
+## --enable-preview ?
+UTIL_COLLECTION_ENABLE_PREVIEW = 0
+
+## compile deps
+UTIL_COLLECTION_COMPILE_DEPS = $(LANG_OBJECT_JAR_FILE)
+
+## jar name
+UTIL_COLLECTION_JAR_NAME = $(UTIL_COLLECTION)
+
+## test compile deps
+UTIL_COLLECTION_TEST_COMPILE_DEPS = $(UTIL_COLLECTION_COMPILE_DEPS)
+UTIL_COLLECTION_TEST_COMPILE_DEPS += $(UTIL_COLLECTION_JAR_FILE)
+UTIL_COLLECTION_TEST_COMPILE_DEPS += $(call dependency,org.testng,testng,$(TESTNG_VERSION))
+
+## test runtime dependencies
+UTIL_COLLECTION_TEST_RUNTIME_DEPS = $(UTIL_COLLECTION_TEST_COMPILE_DEPS)
+UTIL_COLLECTION_TEST_RUNTIME_DEPS += $(call dependency,com.beust,jcommander,$(JCOMMANDER_VERSION))
+UTIL_COLLECTION_TEST_RUNTIME_DEPS += $(call dependency,org.slf4j,slf4j-api,$(SLF4J_VERSION))
+UTIL_COLLECTION_TEST_RUNTIME_DEPS += $(call dependency,org.slf4j,slf4j-nop,$(SLF4J_VERSION))
+
+## install coordinates
+UTIL_COLLECTION_GROUP_ID = $(GROUP_ID)
+UTIL_COLLECTION_ARTIFACT_ID = $(UTIL_COLLECTION_MODULE)
+
+## copyright years for javadoc
+UTIL_COLLECTION_COPYRIGHT_YEARS := 2022-2023
+
+## javadoc snippet path
+# UTIL_COLLECTION_JAVADOC_SNIPPET_PATH := UTIL_COLLECTION_TEST
+
+## pom description
+UTIL_COLLECTION_DESCRIPTION = Utilities for working with arrays of primitives and references
+
 #
-# objectos.selfgen targets
+# objectos.util.collection targets
 #
 
-SELFGEN_TASKS = COMPILE_TASK
-SELFGEN_TASKS += JAR_TASK
-SELFGEN_TASKS += TEST_COMPILE_TASK
-SELFGEN_TASKS += TEST_RUN_TASK
+$(foreach task,$(MODULE_TASKS),$(eval $(call $(task),UTIL_COLLECTION_)))
 
-$(foreach task,$(SELFGEN_TASKS),$(eval $(call $(task),SELFGEN_)))
+.PHONY: util.collection@clean
+util.collection@clean:
+	rm -rf $(UTIL_COLLECTION_WORK)/*
 
-.PHONY: selfgen@clean
-selfgen@clean:
-	rm -rf $(SELFGEN_WORK)/*
+.PHONY: util.collection@compile
+util.collection@compile: $(UTIL_COLLECTION_COMPILE_MARKER)
 
-.PHONY: selfgen@compile
-selfgen@compile: $(SELFGEN_COMPILE_MARKER)
+.PHONY: util.collection@jar
+util.collection@jar: $(UTIL_COLLECTION_JAR_FILE)
 
-.PHONY: selfgen@jar
-selfgen@jar: $(SELFGEN_JAR_FILE)
+.PHONY: util.collection@test
+util.collection@test: $(UTIL_COLLECTION_TEST_RUN_MARKER)
 
-.PHONY: selfgen@test
-selfgen@test: $(SELFGEN_TEST_RUN_MARKER)
+.PHONY: util.collection@install
+util.collection@install: $(UTIL_COLLECTION_INSTALL)
 
-## marker to indicate when selfgen was last run
-SELFGEN_MARKER = $(SELFGEN_WORK)/selfgen-marker
+.PHONY: util.collection@source-jar
+util.collection@source-jar: $(UTIL_COLLECTION_SOURCE_JAR_FILE)
 
-## selfgen runtime deps
-SELFGEN_RUNTIME_DEPS = $(SELFGEN_JAR_FILE)
-SELFGEN_RUNTIME_DEPS += $(SELFGEN_COMPILE_DEPS)
+.PHONY: util.collection@javadoc
+util.collection@javadoc: $(UTIL_COLLECTION_JAVADOC_JAR_FILE)
 
-## selfgen java command
-SELFGEN_JAVAX = $(JAVA)
-SELFGEN_JAVAX += --module-path $(call module-path,$(SELFGEN_RUNTIME_DEPS))
-ifeq ($(SELFGEN_ENABLE_PREVIEW), 1)
-SELFGEN_JAVAX += --enable-preview
-endif
-SELFGEN_JAVAX += --module $(SELFGEN_MODULE)/$(SELFGEN_MODULE).Main
-SELFGEN_JAVAX += $(WAY_MAIN)
+.PHONY: util.collection@pom
+util.collection@pom: $(UTIL_COLLECTION_POM_FILE)
 
-.PHONY: selfgen
-selfgen: $(SELFGEN_MARKER)
+.PHONY: util.collection@ossrh-prepare
+util.collection@ossrh-prepare: $(UTIL_COLLECTION_OSSRH_PREPARE)
 
-$(SELFGEN_MARKER): $(SELFGEN_JAR_FILE)
-	$(SELFGEN_JAVAX)
-	mkdir --parents $(@D)
-	touch $(SELFGEN_MARKER)
+
+#
+# objectos.util.list options
+#
+
+## module directory
+UTIL_LIST = objectos.util.list
+
+## module
+UTIL_LIST_MODULE = $(UTIL_LIST)
+
+## module version
+UTIL_LIST_VERSION = $(VERSION)
+
+## javac --release option
+UTIL_LIST_JAVA_RELEASE = $(JAVA_RELEASE)
+
+## --enable-preview ?
+UTIL_LIST_ENABLE_PREVIEW = 0
+
+## compile deps
+UTIL_LIST_COMPILE_DEPS = $(LANG_OBJECT_JAR_FILE)
+UTIL_LIST_COMPILE_DEPS += $(UTIL_ARRAY_JAR_FILE)
+UTIL_LIST_COMPILE_DEPS += $(UTIL_COLLECTION_JAR_FILE)
+
+## jar name
+UTIL_LIST_JAR_NAME = $(UTIL_LIST)
+
+## test compile deps
+UTIL_LIST_TEST_COMPILE_DEPS = $(UTIL_LIST_COMPILE_DEPS)
+UTIL_LIST_TEST_COMPILE_DEPS += $(UTIL_LIST_JAR_FILE)
+UTIL_LIST_TEST_COMPILE_DEPS += $(call dependency,org.testng,testng,$(TESTNG_VERSION))
+
+## test runtime dependencies
+UTIL_LIST_TEST_RUNTIME_DEPS = $(UTIL_LIST_TEST_COMPILE_DEPS)
+UTIL_LIST_TEST_RUNTIME_DEPS += $(call dependency,com.beust,jcommander,$(JCOMMANDER_VERSION))
+UTIL_LIST_TEST_RUNTIME_DEPS += $(call dependency,org.slf4j,slf4j-api,$(SLF4J_VERSION))
+UTIL_LIST_TEST_RUNTIME_DEPS += $(call dependency,org.slf4j,slf4j-nop,$(SLF4J_VERSION))
+
+## install coordinates
+UTIL_LIST_GROUP_ID = $(GROUP_ID)
+UTIL_LIST_ARTIFACT_ID = $(UTIL_LIST_MODULE)
+
+## copyright years for javadoc
+UTIL_LIST_COPYRIGHT_YEARS := 2022-2023
+
+## javadoc snippet path
+# UTIL_LIST_JAVADOC_SNIPPET_PATH := UTIL_LIST_TEST
+
+## pom description
+UTIL_LIST_DESCRIPTION = Special-purpose java.util.List implementations
+
+#
+# objectos.util.list targets
+#
+
+$(foreach task,$(MODULE_TASKS),$(eval $(call $(task),UTIL_LIST_)))
+
+.PHONY: util.list@clean
+util.list@clean:
+	rm -rf $(UTIL_LIST_WORK)/*
+
+.PHONY: util.list@compile
+util.list@compile: $(UTIL_LIST_COMPILE_MARKER)
+
+.PHONY: util.list@jar
+util.list@jar: $(UTIL_LIST_JAR_FILE)
+
+.PHONY: util.list@test
+util.list@test: $(UTIL_LIST_TEST_RUN_MARKER)
+
+.PHONY: util.list@install
+util.list@install: $(UTIL_LIST_INSTALL)
+
+.PHONY: util.list@source-jar
+util.list@source-jar: $(UTIL_LIST_SOURCE_JAR_FILE)
+
+.PHONY: util.list@javadoc
+util.list@javadoc: $(UTIL_LIST_JAVADOC_JAR_FILE)
+
+.PHONY: util.list@pom
+util.list@pom: $(UTIL_LIST_POM_FILE)
+
+.PHONY: util.list@ossrh-prepare
+util.list@ossrh-prepare: $(UTIL_LIST_OSSRH_PREPARE)
+
+#
+# objectos.util.set options
+#
+
+## module directory
+UTIL_SET = objectos.util.set
+
+## module
+UTIL_SET_MODULE = $(UTIL_SET)
+
+## module version
+UTIL_SET_VERSION = $(VERSION)
+
+## javac --release option
+UTIL_SET_JAVA_RELEASE = $(JAVA_RELEASE)
+
+## --enable-preview ?
+UTIL_SET_ENABLE_PREVIEW = 0
+
+## compile deps
+UTIL_SET_COMPILE_DEPS = $(LANG_OBJECT_JAR_FILE)
+UTIL_SET_COMPILE_DEPS += $(UTIL_ARRAY_JAR_FILE)
+UTIL_SET_COMPILE_DEPS += $(UTIL_COLLECTION_JAR_FILE)
+
+## jar name
+UTIL_SET_JAR_NAME = $(UTIL_SET)
+
+## test compile deps
+UTIL_SET_TEST_COMPILE_DEPS = $(UTIL_SET_COMPILE_DEPS)
+UTIL_SET_TEST_COMPILE_DEPS += $(UTIL_SET_JAR_FILE)
+UTIL_SET_TEST_COMPILE_DEPS += $(call dependency,org.testng,testng,$(TESTNG_VERSION))
+
+## test runtime dependencies
+UTIL_SET_TEST_RUNTIME_DEPS = $(UTIL_SET_TEST_COMPILE_DEPS)
+UTIL_SET_TEST_RUNTIME_DEPS += $(call dependency,com.beust,jcommander,$(JCOMMANDER_VERSION))
+UTIL_SET_TEST_RUNTIME_DEPS += $(call dependency,org.slf4j,slf4j-api,$(SLF4J_VERSION))
+UTIL_SET_TEST_RUNTIME_DEPS += $(call dependency,org.slf4j,slf4j-nop,$(SLF4J_VERSION))
+
+## install coordinates
+UTIL_SET_GROUP_ID = $(GROUP_ID)
+UTIL_SET_ARTIFACT_ID = $(UTIL_SET_MODULE)
+
+## copyright years for javadoc
+UTIL_SET_COPYRIGHT_YEARS := 2022-2023
+
+## javadoc snippet path
+# UTIL_SET_JAVADOC_SNIPPET_PATH := UTIL_SET_TEST
+
+## pom description
+UTIL_SET_DESCRIPTION = Special-purpose java.util.Set implementations
+
+#
+# objectos.util.set targets
+#
+
+$(foreach task,$(MODULE_TASKS),$(eval $(call $(task),UTIL_SET_)))
+
+.PHONY: util.set@clean
+util.set@clean:
+	rm -rf $(UTIL_SET_WORK)/*
+
+.PHONY: util.set@compile
+util.set@compile: $(UTIL_SET_COMPILE_MARKER)
+
+.PHONY: util.set@jar
+util.set@jar: $(UTIL_SET_JAR_FILE)
+
+.PHONY: util.set@test
+util.set@test: $(UTIL_SET_TEST_RUN_MARKER)
+
+.PHONY: util.set@install
+util.set@install: $(UTIL_SET_INSTALL)
+
+.PHONY: util.set@source-jar
+util.set@source-jar: $(UTIL_SET_SOURCE_JAR_FILE)
+
+.PHONY: util.set@javadoc
+util.set@javadoc: $(UTIL_SET_JAVADOC_JAR_FILE)
+
+.PHONY: util.set@pom
+util.set@pom: $(UTIL_SET_POM_FILE)
+
+.PHONY: util.set@ossrh-prepare
+util.set@ossrh-prepare: $(UTIL_SET_OSSRH_PREPARE)
+
+#
+# objectos.util.map options
+#
+
+## module directory
+UTIL_MAP = objectos.util.map
+
+## module
+UTIL_MAP_MODULE = $(UTIL_MAP)
+
+## module version
+UTIL_MAP_VERSION = $(VERSION)
+
+## javac --release option
+UTIL_MAP_JAVA_RELEASE = $(JAVA_RELEASE)
+
+## --enable-preview ?
+UTIL_MAP_ENABLE_PREVIEW = 0
+
+## compile deps
+UTIL_MAP_COMPILE_DEPS = $(LANG_OBJECT_JAR_FILE)
+UTIL_MAP_COMPILE_DEPS += $(UTIL_ARRAY_JAR_FILE)
+UTIL_MAP_COMPILE_DEPS += $(UTIL_COLLECTION_JAR_FILE)
+
+## jar name
+UTIL_MAP_JAR_NAME = $(UTIL_MAP)
+
+## test compile deps
+UTIL_MAP_TEST_COMPILE_DEPS = $(UTIL_MAP_COMPILE_DEPS)
+UTIL_MAP_TEST_COMPILE_DEPS += $(UTIL_MAP_JAR_FILE)
+UTIL_MAP_TEST_COMPILE_DEPS += $(call dependency,org.testng,testng,$(TESTNG_VERSION))
+
+## test runtime dependencies
+UTIL_MAP_TEST_RUNTIME_DEPS = $(UTIL_MAP_TEST_COMPILE_DEPS)
+UTIL_MAP_TEST_RUNTIME_DEPS += $(call dependency,com.beust,jcommander,$(JCOMMANDER_VERSION))
+UTIL_MAP_TEST_RUNTIME_DEPS += $(call dependency,org.slf4j,slf4j-api,$(SLF4J_VERSION))
+UTIL_MAP_TEST_RUNTIME_DEPS += $(call dependency,org.slf4j,slf4j-nop,$(SLF4J_VERSION))
+
+## install coordinates
+UTIL_MAP_GROUP_ID = $(GROUP_ID)
+UTIL_MAP_ARTIFACT_ID = $(UTIL_MAP_MODULE)
+
+## copyright years for javadoc
+UTIL_MAP_COPYRIGHT_YEARS := 2022-2023
+
+## javadoc snippet path
+# UTIL_MAP_JAVADOC_SNIPPET_PATH := UTIL_MAP_TEST
+
+## pom description
+UTIL_MAP_DESCRIPTION = Special-purpose java.util.Set implementations
+
+#
+# objectos.util.map targets
+#
+
+$(foreach task,$(MODULE_TASKS),$(eval $(call $(task),UTIL_MAP_)))
+
+.PHONY: util.map@clean
+util.map@clean:
+	rm -rf $(UTIL_MAP_WORK)/*
+
+.PHONY: util.map@compile
+util.map@compile: $(UTIL_MAP_COMPILE_MARKER)
+
+.PHONY: util.map@jar
+util.map@jar: $(UTIL_MAP_JAR_FILE)
+
+.PHONY: util.map@test
+util.map@test: $(UTIL_MAP_TEST_RUN_MARKER)
+
+.PHONY: util.map@install
+util.map@install: $(UTIL_MAP_INSTALL)
+
+.PHONY: util.map@source-jar
+util.map@source-jar: $(UTIL_MAP_SOURCE_JAR_FILE)
+
+.PHONY: util.map@javadoc
+util.map@javadoc: $(UTIL_MAP_JAVADOC_JAR_FILE)
+
+.PHONY: util.map@pom
+util.map@pom: $(UTIL_MAP_POM_FILE)
+
+.PHONY: util.map@ossrh-prepare
+util.map@ossrh-prepare: $(UTIL_MAP_OSSRH_PREPARE)
 
 #
 # objectos.way options
@@ -1161,6 +1584,11 @@ WAY_ENABLE_PREVIEW := 0
 ## way compile deps
 WAY_COMPILE_DEPS = $(LANG_OBJECT_JAR_FILE)
 WAY_COMPILE_DEPS += $(NOTES_JAR_FILE)
+WAY_COMPILE_DEPS += $(UTIL_ARRAY_JAR_FILE)
+WAY_COMPILE_DEPS += $(UTIL_COLLECTION_JAR_FILE)
+WAY_COMPILE_DEPS += $(UTIL_LIST_JAR_FILE)
+WAY_COMPILE_DEPS += $(UTIL_MAP_JAR_FILE)
+WAY_COMPILE_DEPS += $(UTIL_SET_JAR_FILE)
 
 ## way jar name
 WAY_JAR_NAME := $(WAY)
@@ -1219,6 +1647,11 @@ WAY_SUBMODULES += notes
 WAY_SUBMODULES += notes.base
 WAY_SUBMODULES += notes.console
 WAY_SUBMODULES += notes.file
+WAY_SUBMODULES += util.array
+WAY_SUBMODULES += util.collection
+WAY_SUBMODULES += util.list
+WAY_SUBMODULES += util.set
+WAY_SUBMODULES += util.map
 
 ## way bundle contents
 WAY_OSSRH_BUNDLE_CONTENTS = $(CORE_OBJECT_OSSRH_PREPARE)
@@ -1226,6 +1659,11 @@ WAY_OSSRH_BUNDLE_CONTENTS += $(NOTES_OSSRH_PREPARE)
 WAY_OSSRH_BUNDLE_CONTENTS += $(NOTES_BASE_OSSRH_PREPARE)
 WAY_OSSRH_BUNDLE_CONTENTS += $(NOTES_CONSOLE_OSSRH_PREPARE)
 WAY_OSSRH_BUNDLE_CONTENTS += $(NOTES_FILE_OSSRH_PREPARE)
+WAY_OSSRH_BUNDLE_CONTENTS += $(UTIL_ARRAY_OSSRH_PREPARE)
+WAY_OSSRH_BUNDLE_CONTENTS += $(UTIL_COLLECTION_OSSRH_PREPARE)
+WAY_OSSRH_BUNDLE_CONTENTS += $(UTIL_LIST_OSSRH_PREPARE)
+WAY_OSSRH_BUNDLE_CONTENTS += $(UTIL_SET_OSSRH_PREPARE)
+WAY_OSSRH_BUNDLE_CONTENTS += $(UTIL_MAP_OSSRH_PREPARE)
 WAY_OSSRH_BUNDLE_CONTENTS += $(WAY_OSSRH_PREPARE)
 
 #

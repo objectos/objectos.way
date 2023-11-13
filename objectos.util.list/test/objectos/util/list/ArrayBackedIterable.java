@@ -13,27 +13,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-/**
- * Defines the Objectos Way API.
- */
-module objectos.way {
-	exports objectos.css;
-	exports objectos.css.tmpl;
-	exports objectos.css.util;
-	exports objectos.html;
-	exports objectos.html.tmpl;
-	exports objectos.http;
-	exports objectos.http.media;
-	exports objectos.http.server;
-	exports objectos.http.util;
-	exports objectos.icon;
-	exports objectos.js;
-	exports objectos.lang;
+package objectos.util.list;
 
-	requires objectos.lang.object;
-	requires objectos.notes;
-	requires objectos.util.array;
-	requires objectos.util.list;
-	requires objectos.util.map;
-	requires objectos.util.set;
+import java.util.Arrays;
+import java.util.Iterator;
+
+final class ArrayBackedIterable<E> implements Iterable<E> {
+
+	private final E[] array;
+
+	ArrayBackedIterable(E[] array) {
+		this.array = array;
+	}
+
+	@SafeVarargs
+	@SuppressWarnings("varargs")
+	public static <E> ArrayBackedIterable<E> of(E... elements) {
+		E[] copy = Arrays.copyOf(elements, elements.length);
+
+		return new ArrayBackedIterable<>(copy);
+	}
+
+	@Override
+	public final Iterator<E> iterator() {
+		return new ArrayBackedIterator<E>(array);
+	}
+
 }

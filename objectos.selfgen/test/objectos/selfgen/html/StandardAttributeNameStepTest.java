@@ -21,29 +21,29 @@ import org.testng.annotations.Test;
 
 public class StandardAttributeNameStepTest {
 
-  @Test(description = "it should generate an class for each distinct attribute defined")
-  public void execute() {
-    HtmlSelfGen spec;
-    spec = new HtmlSelfGen() {
-      @Override
-      protected final void definition() {
-        rootElement()
-            .attribute("hidden").booleanType()
-            .attributeEnd();
+	@Test(description = "it should generate an class for each distinct attribute defined")
+	public void execute() {
+		HtmlSelfGen spec;
+		spec = new HtmlSelfGen() {
+			@Override
+			protected final void definition() {
+				rootElement()
+						.attribute("hidden").booleanType()
+						.attributeEnd();
 
-        element("meta")
-            .attribute("charset")
-            .noEndTag();
-      }
-    }.prepare();
+				element("meta")
+						.attribute("charset")
+						.noEndTag();
+			}
+		}.prepare();
 
-    StandardAttributeNameStep template;
-    template = new StandardAttributeNameStep(spec);
+		StandardAttributeNameStep template;
+		template = new StandardAttributeNameStep(spec);
 
-    assertEquals(
-      template.toString(),
+		assertEquals(
+				template.toString(),
 
-      """
+				"""
       /*
        * Copyright (C) 2015-2023 Objectos Software LTDA.
        *
@@ -61,7 +61,7 @@ public class StandardAttributeNameStepTest {
        */
       package objectos.html.internal;
 
-      import objectos.util.UnmodifiableMap;
+      import objectos.util.map.UnmodifiableMap;
 
       /**
        * TODO
@@ -121,7 +121,7 @@ public class StandardAttributeNameStepTest {
         }
       }
       """
-    );
-  }
+		);
+	}
 
 }
