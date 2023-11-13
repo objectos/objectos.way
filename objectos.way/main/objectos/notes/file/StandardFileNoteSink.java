@@ -25,12 +25,12 @@ import java.nio.file.StandardOpenOption;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 import objectos.notes.Level;
-import objectos.notes.internal.AbstractNoteSink;
-import objectos.notes.internal.Log0;
-import objectos.notes.internal.Log1;
-import objectos.notes.internal.Log2;
-import objectos.notes.internal.Log3;
-import objectos.notes.internal.LongLog;
+import objectos.notes.base.AbstractNoteSink;
+import objectos.notes.base.Log0;
+import objectos.notes.base.Log1;
+import objectos.notes.base.Log2;
+import objectos.notes.base.Log3;
+import objectos.notes.base.LongLog;
 
 final class StandardFileNoteSink extends AbstractNoteSink implements FileNoteSink {
 

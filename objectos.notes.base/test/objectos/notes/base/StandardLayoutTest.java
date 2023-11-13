@@ -13,18 +13,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.notes.internal;
+package objectos.notes.base;
 
-public interface Layout {
+import static org.testng.Assert.assertEquals;
 
-  String formatLog0(Log0 log0);
+import org.testng.annotations.Test;
 
-  String formatLog1(Log1 log);
+public class StandardLayoutTest {
 
-  String formatLog2(Log2 log);
+	private final Layout layout = new StandardLayout();
 
-  String formatLog3(Log3 log);
+	@Test
+	public void test() {
+		TestingClock clock;
+		clock = new TestingClock(2023, 10, 31);
 
-  String formatLongLog(LongLog log);
+		Log0 log0;
+		log0 = new Log0(clock, TestingNotes.TRACE0);
+
+		assertEquals(
+				layout.formatLog0(log0),
+				"2023-10-31 10:00:00.000 TRACE --- [main           ] objectos.notes.base.TestingNotes         : TRACE0\n"
+		);
+	}
 
 }

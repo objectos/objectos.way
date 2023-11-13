@@ -13,31 +13,41 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.notes.internal;
+package objectos.notes.base;
 
 import java.time.Clock;
-import objectos.notes.Note3;
+import java.time.ZonedDateTime;
+import objectos.notes.Level;
+import objectos.notes.Note;
 
-public final class Log3 extends Log {
+public abstract class Log {
 
-	final Object value1;
+	final ZonedDateTime timestamp;
 
-	final Object value2;
+	final String thread;
 
-	final Object value3;
+	final Level level;
 
-	Log3(	Clock clock,
-				Note3<?, ?, ?> note,
-				Object value1,
-				Object value2,
-				Object value3) {
-		super(clock, note);
+	final String source;
 
-		this.value1 = value1;
+	final String key;
 
-		this.value2 = value2;
+	Log(Clock clock, Note note) {
+		timestamp = ZonedDateTime.now(clock);
 
-		this.value3 = value3;
+		Thread currentThread;
+		currentThread = Thread.currentThread();
+
+		thread = currentThread.getName();
+
+		level = note.level();
+
+		source = note.source();
+
+		Object key;
+		key = note.key();
+
+		this.key = String.valueOf(key);
 	}
 
 }

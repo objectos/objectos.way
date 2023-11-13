@@ -16,4 +16,4 @@
 /**
  * Base classes for writing {@link objectos.notes.NoteSink} implementations.
  */
-package objectos.notes.internal;
+package objectos.notes.base;

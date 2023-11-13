@@ -13,19 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.notes.internal;
+package objectos.notes.base;
 
 import java.time.Clock;
-import objectos.notes.Note1;
+import objectos.notes.Note0;
 
-public final class Log1 extends Log {
+public final class Log0 extends Log {
 
-	final Object value;
-
-	Log1(Clock clock, Note1<?> note, Object value) {
+	Log0(Clock clock, Note0 note) {
 		super(clock, note);
-
-		this.value = value;
 	}
 
 }

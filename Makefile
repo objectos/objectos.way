@@ -659,7 +659,7 @@ NOTES_VERSION = $(VERSION)
 NOTES_JAVA_RELEASE = $(JAVA_RELEASE)
 
 ## --enable-preview ?
-NOTES_ENABLE_PREVIEW = 1
+NOTES_ENABLE_PREVIEW = 0
 
 ## compile deps
 NOTES_COMPILE_DEPS = $(LANG_OBJECT_JAR_FILE)
@@ -728,6 +728,93 @@ notes@pom: $(NOTES_POM_FILE)
 .PHONY: notes@ossrh-prepare
 notes@ossrh-prepare: $(NOTES_OSSRH_PREPARE)
 
+
+#
+# objectos.notes options
+#
+
+## module directory
+NOTES_BASE = objectos.notes.base
+
+## module
+NOTES_BASE_MODULE = $(NOTES_BASE)
+
+## module version
+NOTES_BASE_VERSION = $(VERSION)
+
+## javac --release option
+NOTES_BASE_JAVA_RELEASE = $(JAVA_RELEASE)
+
+## --enable-preview ?
+NOTES_BASE_ENABLE_PREVIEW = 0
+
+## compile deps
+NOTES_BASE_COMPILE_DEPS = $(LANG_OBJECT_JAR_FILE)
+NOTES_BASE_COMPILE_DEPS += $(NOTES_JAR_FILE)
+
+## jar name
+NOTES_BASE_JAR_NAME = $(NOTES_BASE)
+
+## test compile deps
+NOTES_BASE_TEST_COMPILE_DEPS = $(NOTES_BASE_COMPILE_DEPS)
+NOTES_BASE_TEST_COMPILE_DEPS += $(NOTES_BASE_JAR_FILE)
+NOTES_BASE_TEST_COMPILE_DEPS += $(call dependency,org.testng,testng,$(TESTNG_VERSION))
+
+## test runtime dependencies
+NOTES_BASE_TEST_RUNTIME_DEPS = $(NOTES_BASE_TEST_COMPILE_DEPS)
+NOTES_BASE_TEST_RUNTIME_DEPS += $(call dependency,com.beust,jcommander,$(JCOMMANDER_VERSION))
+NOTES_BASE_TEST_RUNTIME_DEPS += $(call dependency,org.slf4j,slf4j-api,$(SLF4J_VERSION))
+NOTES_BASE_TEST_RUNTIME_DEPS += $(call dependency,org.slf4j,slf4j-nop,$(SLF4J_VERSION))
+
+## test runtime exports
+NOTES_BASE_TEST_JAVAX_EXPORTS := objectos.notes.internal
+
+## install coordinates
+NOTES_BASE_GROUP_ID = $(GROUP_ID)
+NOTES_BASE_ARTIFACT_ID = $(NOTES_BASE_MODULE)
+
+## copyright years for javadoc
+NOTES_BASE_COPYRIGHT_YEARS := 2022-2023
+
+## javadoc snippet path
+# NOTES_BASE_JAVADOC_SNIPPET_PATH := NOTES_BASE_TEST
+
+## pom description
+NOTES_BASE_DESCRIPTION = Base classes to write note sink implementations
+
+#
+# objectos.notes targets
+#
+
+$(foreach task,$(MODULE_TASKS),$(eval $(call $(task),NOTES_BASE_)))
+
+.PHONY: notes.base@clean
+notes.base@clean:
+	rm -rf $(NOTES_BASE_WORK)/*
+
+.PHONY: notes.base@compile
+notes.base@compile: $(NOTES_BASE_COMPILE_MARKER)
+
+.PHONY: notes.base@jar
+notes.base@jar: $(NOTES_BASE_JAR_FILE)
+
+.PHONY: notes.base@test
+notes.base@test: $(NOTES_BASE_TEST_RUN_MARKER)
+
+.PHONY: notes.base@install
+notes.base@install: $(NOTES_BASE_INSTALL)
+
+.PHONY: notes.base@source-jar
+notes.base@source-jar: $(NOTES_BASE_SOURCE_JAR_FILE)
+
+.PHONY: notes.base@javadoc
+notes.base@javadoc: $(NOTES_BASE_JAVADOC_JAR_FILE)
+
+.PHONY: notes.base@pom
+notes.base@pom: $(NOTES_BASE_POM_FILE)
+
+.PHONY: notes.base@ossrh-prepare
+notes.base@ossrh-prepare: $(NOTES_BASE_OSSRH_PREPARE)
 
 #
 # objectos.code options
@@ -903,6 +990,7 @@ WAY_ENABLE_PREVIEW := 0
 ## way compile deps
 WAY_COMPILE_DEPS = $(LANG_OBJECT_JAR_FILE)
 WAY_COMPILE_DEPS += $(NOTES_JAR_FILE)
+WAY_COMPILE_DEPS += $(NOTES_BASE_JAR_FILE)
 
 ## way jar name
 WAY_JAR_NAME := $(WAY)
@@ -951,10 +1039,12 @@ WAY_JAVADOC_SNIPPET_PATH := WAY_TEST
 ## way sub modules
 WAY_SUBMODULES = core.object
 WAY_SUBMODULES += notes
+WAY_SUBMODULES += notes.base
 
 ## way bundle contents
 WAY_OSSRH_BUNDLE_CONTENTS = $(CORE_OBJECT_OSSRH_PREPARE)
 WAY_OSSRH_BUNDLE_CONTENTS += $(NOTES_OSSRH_PREPARE)
+WAY_OSSRH_BUNDLE_CONTENTS += $(NOTES_BASE_OSSRH_PREPARE)
 WAY_OSSRH_BUNDLE_CONTENTS += $(WAY_OSSRH_PREPARE)
 
 #
