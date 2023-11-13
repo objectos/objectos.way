@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2022-2023 Objectos Software LTDA.
+ * Copyright (C) 2023 Objectos Software LTDA.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,22 +14,10 @@
  * limitations under the License.
  */
 /**
- * Defines the Objectos Way API.
+ * Type-safe note sink API.
  */
-module objectos.way {
-	exports objectos.css;
-	exports objectos.css.tmpl;
-	exports objectos.css.util;
-	exports objectos.html;
-	exports objectos.html.tmpl;
-	exports objectos.http;
-	exports objectos.http.media;
-	exports objectos.http.server;
-	exports objectos.http.util;
-	exports objectos.icon;
-	exports objectos.js;
-	exports objectos.lang;
+module objectos.notes {
+	exports objectos.notes;
 
 	requires objectos.core.object;
-	requires objectos.notes;
 }
