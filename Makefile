@@ -475,7 +475,7 @@ define POM_TASK
 $(1)POM_SOURCE = $$($(1)MODULE)/pom.xml.tmpl
 
 ## pom file
-$(1)POM_FILE = $$($(1)WORK)/pom.xml
+$(1)POM_FILE = $$($(1)WORK)/$$($(1)JAR_NAME)-$$($(1)VERSION).pom
 
 ## pom external variables
 # $(1)POM_VARIABLES = 
@@ -533,6 +533,29 @@ $(1)OSSRH_SIGS = $$($(1)OSSRH_CONTENTS:%=%.asc)
 ## contents + sigs
 $(1)OSSRH_PREPARE = $$($(1)OSSRH_CONTENTS)
 $(1)OSSRH_PREPARE += $$($(1)OSSRH_SIGS)
+
+endef
+
+define OSSRH_BUNDLE_TASK
+
+## ossrh bundle jar file
+$(1)OSSRH_BUNDLE = $$($(1)WORK)/$$($(1)ARTIFACT_ID)-$$($(1)VERSION)-bundle.jar
+
+## ossrh bundle contents
+#$(1)OSSRH_BUNDLE_CONTENTS =
+
+## ossrh bundle jar command
+$(1)OSSRH_JARX = $$(JAR)
+$(1)OSSRH_JARX += --create
+$(1)OSSRH_JARX += --file $$($(1)OSSRH_BUNDLE)
+$(1)OSSRH_JARX += $$(foreach file,$$($(1)OSSRH_BUNDLE_CONTENTS), -C $$(dir $$(file)) $$(notdir $$(file)))
+
+#
+# ossrh bundle targets
+#
+
+$$($(1)OSSRH_BUNDLE): $$($(1)OSSRH_BUNDLE_CONTENTS)
+	$$($(1)OSSRH_JARX)
 
 endef
 
@@ -844,11 +867,16 @@ WAY_JAVADOC_SNIPPET_PATH := WAY_TEST
 ## way sub modules
 WAY_SUBMODULES = core.object
 
+## way bundle contents
+WAY_OSSRH_BUNDLE_CONTENTS = $(CORE_OBJECT_OSSRH_PREPARE)
+WAY_OSSRH_BUNDLE_CONTENTS += $(WAY_OSSRH_PREPARE)
+
 #
 # objectos.way targets
 #
 
 $(foreach task,$(MODULE_TASKS),$(eval $(call $(task),WAY_)))
+$(eval $(call OSSRH_BUNDLE_TASK,WAY_))
 
 #
 # Targets section
@@ -874,6 +902,9 @@ pom: $(foreach mod,$(WAY_SUBMODULES),$(mod)@pom) way@pom
 
 .PHONY: ossrh-prepare
 ossrh-prepare: $(foreach mod,$(WAY_SUBMODULES),$(mod)@ossrh-prepare) way@ossrh-prepare
+
+.PHONY: ossrh-bundle
+ossrh-bundle: way@ossrh-bundle
 
 .PHONY: ossrh
 ossrh: way@ossrh

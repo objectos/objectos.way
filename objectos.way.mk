@@ -83,11 +83,16 @@ WAY_JAVADOC_SNIPPET_PATH := WAY_TEST
 ## way sub modules
 WAY_SUBMODULES = core.object
 
+## way bundle contents
+WAY_OSSRH_BUNDLE_CONTENTS = $(CORE_OBJECT_OSSRH_PREPARE)
+WAY_OSSRH_BUNDLE_CONTENTS += $(WAY_OSSRH_PREPARE)
+
 #
 # objectos.way targets
 #
 
 $(foreach task,$(MODULE_TASKS),$(eval $(call $(task),WAY_)))
+$(eval $(call OSSRH_BUNDLE_TASK,WAY_))
 
 #
 # Targets section
@@ -113,6 +118,9 @@ pom: $(foreach mod,$(WAY_SUBMODULES),$(mod)@pom) way@pom
 
 .PHONY: ossrh-prepare
 ossrh-prepare: $(foreach mod,$(WAY_SUBMODULES),$(mod)@ossrh-prepare) way@ossrh-prepare
+
+.PHONY: ossrh-bundle
+ossrh-bundle: way@ossrh-bundle
 
 .PHONY: ossrh
 ossrh: way@ossrh
