@@ -25,7 +25,7 @@
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry combineaccessrules="false" kind="src" path="/objectos.way:objectos.core.object">
+	<classpathentry combineaccessrules="false" kind="src" path="/objectos.way:objectos.lang.object">
 		<attributes>
 			<attribute name="module" value="true"/>
 		</attributes>

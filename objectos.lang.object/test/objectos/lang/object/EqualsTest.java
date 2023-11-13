@@ -13,13 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.core.object;
+package objectos.lang.object;
 
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertTrue;
 
 import java.util.UUID;
-import objectos.lang.object.Equals;
 import org.testng.annotations.Test;
 
 public class EqualsTest {

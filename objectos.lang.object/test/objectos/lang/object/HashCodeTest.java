@@ -13,13 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.core.object;
+package objectos.lang.object;
 
 import static org.testng.Assert.assertEquals;
 
 import java.io.File;
 import java.util.Arrays;
-import objectos.lang.object.HashCode;
 import org.testng.annotations.Test;
 
 public class HashCodeTest {

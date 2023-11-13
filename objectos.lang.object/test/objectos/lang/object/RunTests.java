@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.core.object;
+package objectos.lang.object;
 
 import java.util.List;
 import org.testng.TestNG;
@@ -35,7 +35,7 @@ public class RunTests {
 
 		test.setXmlPackages(
 				List.of(
-						new XmlPackage("objectos.core.object")
+						new XmlPackage("objectos.lang.object")
 				)
 		);
 

@@ -30,6 +30,6 @@ module objectos.way {
 	exports objectos.js;
 	exports objectos.lang;
 
-	requires objectos.core.object;
+	requires objectos.lang.object;
 	requires objectos.notes;
 }

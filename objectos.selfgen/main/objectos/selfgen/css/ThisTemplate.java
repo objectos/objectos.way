@@ -39,7 +39,7 @@ abstract class ThisTemplate {
 
 	static final String CSS_UTIL = "objectos.css.util";
 
-	static final ClassName CHECK = ClassName.of("objectos.core.object", "Check");
+	static final ClassName CHECK = ClassName.of("objectos.lang.object", "Check");
 
 	static final ClassName OVERRIDE = ClassName.of(Override.class);
 

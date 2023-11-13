@@ -13,29 +13,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.core.object;
+package objectos.lang.object;
 
-import objectos.lang.object.ToString;
+final class ComponentString {
 
-final class SimpleToStringObject implements ToString.Formattable {
+  private final String value;
 
-  private final Object value;
-
-  SimpleToStringObject(Object value) {
+  ComponentString(String value) {
     this.value = value;
   }
 
   @Override
-  public final void formatToString(StringBuilder sb, int depth) {
-    ToString.format(
-      sb, depth, this,
-      "value", value
-    );
+  public final boolean equals(Object obj) {
+    return obj == this || obj instanceof ComponentString && equals0((ComponentString) obj);
   }
 
   @Override
-  public final String toString() {
-    return ToString.of(this);
+  public final int hashCode() {
+    return value.hashCode();
+  }
+
+  private boolean equals0(ComponentString that) {
+    return Equals.of(
+      value, that.value
+    );
   }
 
 }

@@ -13,26 +13,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.core.object;
+package objectos.lang.object;
 
-import objectos.lang.object.ToString;
+class TSObject1 extends TSObject0 {
 
-class TSObject0 extends AbstractToStringObject {
+  final String name1;
 
-  final Object typeName;
+  final Object value1;
 
-  TSObject0() {
-    this.typeName = this;
+  TSObject1(Object typeName, String name1, Object value1) {
+    super(typeName);
+    this.name1 = name1;
+    this.value1 = value1;
   }
 
-  TSObject0(Object typeName) {
-    this.typeName = typeName;
+  TSObject1(String name1, Object value1) {
+    this.name1 = name1;
+    this.value1 = value1;
   }
 
   @Override
-  public void formatToString(StringBuilder toString, int level) {
+  public void formatToString(StringBuilder sb, int depth) {
     ToString.format(
-      toString, level, typeName
+        sb, depth, typeName,
+        name1, value1
     );
   }
 

@@ -13,35 +13,34 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.core.object;
+package objectos.lang.object;
 
-import objectos.lang.object.ToString;
+class Subject {
 
-class TSObject2 extends TSObject1 {
+  private final ComponentInt a;
 
-  final String name2;
+  private final ComponentString b;
 
-  final Object value2;
-
-  TSObject2(Object typeName, String name1, Object value1, String name2, Object value2) {
-    super(typeName, name1, value1);
-    this.name2 = name2;
-    this.value2 = value2;
-  }
-
-  TSObject2(String name1, Object value1, String name2, Object value2) {
-    super(name1, value1);
-    this.name2 = name2;
-    this.value2 = value2;
+  Subject(ComponentInt a, ComponentString b) {
+    this.a = a;
+    this.b = b;
   }
 
   @Override
-  public void formatToString(StringBuilder sb, int depth) {
-    ToString.format(
-        sb, depth, typeName,
-        name1, value1,
-        name2, value2
+  public final boolean equals(Object obj) {
+    return obj == this || obj instanceof Subject && equals0((Subject) obj);
+  }
+
+  private boolean equals0(Subject obj) {
+    return Equals.of(
+      a, obj.a,
+      b, obj.b
     );
+  }
+
+  @Override
+  public final int hashCode() {
+    return HashCode.of(a, b);
   }
 
 }

@@ -13,9 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.core.object;
-
-import objectos.lang.object.ToString;
+package objectos.lang.object;
 
 abstract class AbstractToStringObject implements ToString.Formattable {
 

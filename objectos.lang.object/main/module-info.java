@@ -14,10 +14,8 @@
  * limitations under the License.
  */
 /**
- * Type-safe note sink API.
+ * Utilities for {@code java.lang.Object} instances.
  */
-module objectos.notes {
-	exports objectos.notes;
-
-	requires objectos.lang.object;
+module objectos.lang.object {
+	exports objectos.lang.object;
 }

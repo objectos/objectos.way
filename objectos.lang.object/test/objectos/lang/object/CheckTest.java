@@ -13,11 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.core.object;
+package objectos.lang.object;
 
 import static org.testng.Assert.assertEquals;
 
-import objectos.lang.object.Check;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 

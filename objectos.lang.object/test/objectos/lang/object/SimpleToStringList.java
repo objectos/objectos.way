@@ -13,10 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.core.object;
+package objectos.lang.object;
 
 import java.util.Arrays;
-import objectos.lang.object.ToString;
 
 final class SimpleToStringList implements ToString.Formattable {
 

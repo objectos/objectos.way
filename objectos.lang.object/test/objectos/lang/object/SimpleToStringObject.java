@@ -13,37 +13,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.core.object;
+package objectos.lang.object;
 
-import objectos.lang.object.Equals;
-import objectos.lang.object.HashCode;
+final class SimpleToStringObject implements ToString.Formattable {
 
-class Subject {
+  private final Object value;
 
-  private final ComponentInt a;
-
-  private final ComponentString b;
-
-  Subject(ComponentInt a, ComponentString b) {
-    this.a = a;
-    this.b = b;
+  SimpleToStringObject(Object value) {
+    this.value = value;
   }
 
   @Override
-  public final boolean equals(Object obj) {
-    return obj == this || obj instanceof Subject && equals0((Subject) obj);
-  }
-
-  private boolean equals0(Subject obj) {
-    return Equals.of(
-      a, obj.a,
-      b, obj.b
+  public final void formatToString(StringBuilder sb, int depth) {
+    ToString.format(
+      sb, depth, this,
+      "value", value
     );
   }
 
   @Override
-  public final int hashCode() {
-    return HashCode.of(a, b);
+  public final String toString() {
+    return ToString.of(this);
   }
 
 }

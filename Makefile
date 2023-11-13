@@ -564,87 +564,83 @@ endef
 -include $(HOME)/.config/objectos/gh-config.mk
 
 #
-# objectos.core.object options
+# objectos.lang.object
 #
 
 ## module directory
-CORE_OBJECT = objectos.core.object
+LANG_OBJECT = objectos.lang.object
 
 ## module
-CORE_OBJECT_MODULE = $(CORE_OBJECT)
+LANG_OBJECT_MODULE = $(LANG_OBJECT)
 
 ## module version
-CORE_OBJECT_VERSION = $(VERSION)
+LANG_OBJECT_VERSION = $(VERSION)
 
 ## javac --release option
-CORE_OBJECT_JAVA_RELEASE = $(JAVA_RELEASE)
+LANG_OBJECT_JAVA_RELEASE = $(JAVA_RELEASE)
 
 ## --enable-preview ?
-CORE_OBJECT_ENABLE_PREVIEW = 1
+LANG_OBJECT_ENABLE_PREVIEW = 0
 
 ## jar name
-CORE_OBJECT_JAR_NAME = $(CORE_OBJECT)
+LANG_OBJECT_JAR_NAME = $(LANG_OBJECT)
 
 ## test compile deps
-CORE_OBJECT_TEST_COMPILE_DEPS = $(CORE_OBJECT_JAR_FILE)
-CORE_OBJECT_TEST_COMPILE_DEPS += $(call dependency,org.testng,testng,$(TESTNG_VERSION))
+LANG_OBJECT_TEST_COMPILE_DEPS = $(LANG_OBJECT_JAR_FILE)
+LANG_OBJECT_TEST_COMPILE_DEPS += $(call dependency,org.testng,testng,$(TESTNG_VERSION))
 
 ## test runtime dependencies
-CORE_OBJECT_TEST_RUNTIME_DEPS = $(CORE_OBJECT_TEST_COMPILE_DEPS)
-CORE_OBJECT_TEST_RUNTIME_DEPS += $(call dependency,com.beust,jcommander,$(JCOMMANDER_VERSION))
-CORE_OBJECT_TEST_RUNTIME_DEPS += $(call dependency,org.slf4j,slf4j-api,$(SLF4J_VERSION))
-CORE_OBJECT_TEST_RUNTIME_DEPS += $(call dependency,org.slf4j,slf4j-nop,$(SLF4J_VERSION))
-
-## test runtime exports
-CORE_OBJECT_TEST_JAVAX_EXPORTS := objectos.core.object.internal
+LANG_OBJECT_TEST_RUNTIME_DEPS = $(LANG_OBJECT_TEST_COMPILE_DEPS)
+LANG_OBJECT_TEST_RUNTIME_DEPS += $(call dependency,com.beust,jcommander,$(JCOMMANDER_VERSION))
+LANG_OBJECT_TEST_RUNTIME_DEPS += $(call dependency,org.slf4j,slf4j-api,$(SLF4J_VERSION))
+LANG_OBJECT_TEST_RUNTIME_DEPS += $(call dependency,org.slf4j,slf4j-nop,$(SLF4J_VERSION))
 
 ## install coordinates
-CORE_OBJECT_GROUP_ID = $(GROUP_ID)
-CORE_OBJECT_ARTIFACT_ID = $(CORE_OBJECT_MODULE)
+LANG_OBJECT_GROUP_ID = $(GROUP_ID)
+LANG_OBJECT_ARTIFACT_ID = $(LANG_OBJECT_MODULE)
 
 ## copyright years for javadoc
-CORE_OBJECT_COPYRIGHT_YEARS := 2022-2023
+LANG_OBJECT_COPYRIGHT_YEARS := 2022-2023
 
 ## javadoc snippet path
-# CORE_OBJECT_JAVADOC_SNIPPET_PATH := CORE_OBJECT_TEST
+# LANG_OBJECT_JAVADOC_SNIPPET_PATH := LANG_OBJECT_TEST
 
 ## pom description
-CORE_OBJECT_DESCRIPTION = Utilities for java.lang.Object instances
+LANG_OBJECT_DESCRIPTION = Utilities for java.lang.Object instances
 
 #
-# objectos.core.object targets
+# objectos.lang.object targets
 #
 
-$(foreach task,$(MODULE_TASKS),$(eval $(call $(task),CORE_OBJECT_)))
+$(foreach task,$(MODULE_TASKS),$(eval $(call $(task),LANG_OBJECT_)))
 
 .PHONY: core.object@clean
 core.object@clean:
-	rm -rf $(CORE_OBJECT_WORK)/*
+	rm -rf $(LANG_OBJECT_WORK)/*
 
 .PHONY: core.object@compile
-core.object@compile: $(CORE_OBJECT_COMPILE_MARKER)
+core.object@compile: $(LANG_OBJECT_COMPILE_MARKER)
 
 .PHONY: core.object@jar
-core.object@jar: $(CORE_OBJECT_JAR_FILE)
+core.object@jar: $(LANG_OBJECT_JAR_FILE)
 
 .PHONY: core.object@test
-core.object@test: $(CORE_OBJECT_TEST_RUN_MARKER)
+core.object@test: $(LANG_OBJECT_TEST_RUN_MARKER)
 
 .PHONY: core.object@install
-core.object@install: $(CORE_OBJECT_INSTALL)
+core.object@install: $(LANG_OBJECT_INSTALL)
 
 .PHONY: core.object@source-jar
-core.object@source-jar: $(CORE_OBJECT_SOURCE_JAR_FILE)
+core.object@source-jar: $(LANG_OBJECT_SOURCE_JAR_FILE)
 
 .PHONY: core.object@javadoc
-core.object@javadoc: $(CORE_OBJECT_JAVADOC_JAR_FILE)
+core.object@javadoc: $(LANG_OBJECT_JAVADOC_JAR_FILE)
 
 .PHONY: core.object@pom
-core.object@pom: $(CORE_OBJECT_POM_FILE)
+core.object@pom: $(LANG_OBJECT_POM_FILE)
 
 .PHONY: core.object@ossrh-prepare
-core.object@ossrh-prepare: $(CORE_OBJECT_OSSRH_PREPARE)
-
+core.object@ossrh-prepare: $(LANG_OBJECT_OSSRH_PREPARE)
 
 #
 # objectos.notes options
@@ -666,7 +662,7 @@ NOTES_JAVA_RELEASE = $(JAVA_RELEASE)
 NOTES_ENABLE_PREVIEW = 1
 
 ## compile deps
-NOTES_COMPILE_DEPS = $(CORE_OBJECT_JAR_FILE)
+NOTES_COMPILE_DEPS = $(LANG_OBJECT_JAR_FILE)
 
 ## jar name
 NOTES_JAR_NAME = $(NOTES)
@@ -905,7 +901,7 @@ WAY_JAVA_RELEASE := 21
 WAY_ENABLE_PREVIEW := 0
 
 ## way compile deps
-WAY_COMPILE_DEPS = $(CORE_OBJECT_JAR_FILE)
+WAY_COMPILE_DEPS = $(LANG_OBJECT_JAR_FILE)
 WAY_COMPILE_DEPS += $(NOTES_JAR_FILE)
 
 ## way jar name
