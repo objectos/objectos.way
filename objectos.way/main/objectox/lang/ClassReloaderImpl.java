@@ -30,10 +30,10 @@ import java.nio.file.WatchService;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.List;
 import java.util.Map;
-import objectos.core.notes.Note1;
-import objectos.core.notes.Note2;
-import objectos.core.notes.NoteSink;
 import objectos.lang.ClassReloader;
+import objectos.notes.Note1;
+import objectos.notes.Note2;
+import objectos.notes.NoteSink;
 import objectos.util.GrowableMap;
 
 public final class ClassReloaderImpl implements objectos.lang.ClassReloader {

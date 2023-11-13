@@ -17,8 +17,8 @@ package objectos.notes.internal;
 
 import java.time.Clock;
 import java.time.ZonedDateTime;
-import objectos.core.notes.Level;
-import objectos.core.notes.Note;
+import objectos.notes.Level;
+import objectos.notes.Note;
 
 public abstract class Log {
 

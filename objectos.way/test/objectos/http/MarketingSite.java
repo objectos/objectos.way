@@ -18,9 +18,9 @@ package objectos.http;
 import java.io.IOException;
 import java.net.Socket;
 import java.time.Clock;
-import objectos.core.notes.Note1;
-import objectos.core.notes.NoteSink;
 import objectos.html.HtmlTemplate;
+import objectos.notes.Note1;
+import objectos.notes.NoteSink;
 
 final class MarketingSite extends AbstractHttpModule implements Runnable {
 

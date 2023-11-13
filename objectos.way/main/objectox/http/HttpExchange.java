@@ -29,7 +29,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import objectos.core.notes.NoteSink;
 import objectos.core.object.Check;
 import objectos.http.Http;
 import objectos.http.Http.Header.Name;
@@ -39,6 +38,7 @@ import objectos.http.Http.Status;
 import objectos.http.Segment;
 import objectos.http.server.Body;
 import objectos.lang.NoOpNoteSink;
+import objectos.notes.NoteSink;
 import objectos.util.GrowableList;
 import objectox.lang.CharWritable;
 

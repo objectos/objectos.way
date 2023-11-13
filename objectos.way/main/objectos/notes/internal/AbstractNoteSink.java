@@ -16,22 +16,22 @@
 package objectos.notes.internal;
 
 import java.time.Clock;
-import objectos.core.notes.Level;
-import objectos.core.notes.LongNote;
-import objectos.core.notes.Note;
-import objectos.core.notes.Note0;
-import objectos.core.notes.Note1;
-import objectos.core.notes.Note2;
-import objectos.core.notes.Note3;
-import objectos.core.notes.NoteSink;
+import objectos.notes.Level;
+import objectos.notes.LongNote;
+import objectos.notes.Note;
+import objectos.notes.Note0;
+import objectos.notes.Note1;
+import objectos.notes.Note2;
+import objectos.notes.Note3;
+import objectos.notes.NoteSink;
 
-abstract class AbstractNoteSink implements NoteSink {
+public abstract class AbstractNoteSink implements NoteSink {
 
-	final Level level;
+	protected final Level level;
 
-	Clock clock = Clock.systemDefaultZone();
+	protected Clock clock = Clock.systemDefaultZone();
 
-	final Layout layout = new StandardLayout();
+	protected final Layout layout = new StandardLayout();
 
 	public AbstractNoteSink(Level level) {
 		this.level = level;
@@ -135,14 +135,14 @@ abstract class AbstractNoteSink implements NoteSink {
 		addLog(log);
 	}
 
-	abstract void addLog(Log0 log);
+	protected abstract void addLog(Log0 log);
 
-	abstract void addLog(Log1 log);
+	protected abstract void addLog(Log1 log);
 
-	abstract void addLog(Log2 log);
+	protected abstract void addLog(Log2 log);
 
-	abstract void addLog(Log3 log);
+	protected abstract void addLog(Log3 log);
 
-	abstract void addLog(LongLog log);
+	protected abstract void addLog(LongLog log);
 
 }

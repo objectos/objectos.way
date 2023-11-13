@@ -12,7 +12,7 @@ package objectos.lang;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.WatchService;
-import objectos.core.notes.NoteSink;
+import objectos.notes.NoteSink;
 import objectox.lang.ClassReloaderBuilder;
 
 /**

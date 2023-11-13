@@ -21,11 +21,11 @@ import java.net.SocketAddress;
 import java.nio.charset.Charset;
 import java.nio.file.Path;
 import java.util.Set;
-import objectos.core.notes.Note1;
-import objectos.core.notes.NoteSink;
 import objectos.core.object.Check;
 import objectos.http.Http.Method;
 import objectos.http.server.Body;
+import objectos.notes.Note1;
+import objectos.notes.NoteSink;
 import objectox.lang.CharWritable;
 
 /**

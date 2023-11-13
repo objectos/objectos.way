@@ -15,9 +15,9 @@
  */
 package objectos.css.util;
 
-import objectos.core.notes.NoteSink;
 import objectos.core.object.Check;
 import objectos.lang.NoOpNoteSink;
+import objectos.notes.NoteSink;
 import objectox.css.util.StylesGeneratorImpl;
 
 public sealed interface StylesGenerator permits StylesGeneratorImpl {

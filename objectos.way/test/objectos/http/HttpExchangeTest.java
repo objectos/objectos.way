@@ -22,12 +22,12 @@ import static org.testng.Assert.assertTrue;
 
 import java.io.IOException;
 import java.time.ZonedDateTime;
-import objectos.core.notes.Note;
-import objectos.core.notes.Note1;
-import objectos.core.notes.NoteSink;
 import objectos.http.HttpExchange.Processed;
 import objectos.lang.NoOpNoteSink;
 import objectos.lang.TestingNoteSink;
+import objectos.notes.Note;
+import objectos.notes.Note1;
+import objectos.notes.NoteSink;
 import objectox.http.Bytes;
 import objectox.http.Http001;
 import objectox.http.TestableSocket;

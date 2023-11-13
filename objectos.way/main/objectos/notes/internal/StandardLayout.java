@@ -20,7 +20,7 @@ import java.io.PrintWriter;
 import java.io.Writer;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
-import objectos.core.notes.Level;
+import objectos.notes.Level;
 
 public class StandardLayout implements Layout {
 

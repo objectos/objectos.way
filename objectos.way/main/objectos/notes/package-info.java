@@ -14,6 +14,6 @@
  * limitations under the License.
  */
 /**
- * Provides {@link objectos.core.notes.NoteSink} implementations.
+ * Provides a type-safe note sink API.
  */
 package objectos.notes;

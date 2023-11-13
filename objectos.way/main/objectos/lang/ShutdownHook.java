@@ -16,12 +16,12 @@
 package objectos.lang;
 
 import java.util.List;
-import objectos.core.notes.LongNote;
-import objectos.core.notes.Note0;
-import objectos.core.notes.Note1;
-import objectos.core.notes.Note2;
-import objectos.core.notes.NoteSink;
 import objectos.core.object.Check;
+import objectos.notes.LongNote;
+import objectos.notes.Note0;
+import objectos.notes.Note1;
+import objectos.notes.Note2;
+import objectos.notes.NoteSink;
 import objectos.util.GrowableList;
 
 /**
