@@ -16,8 +16,8 @@
 package objectos.http.util;
 
 import objectos.http.server.Body;
-import objectos.util.GrowableMap;
-import objectos.util.UnmodifiableMap;
+import objectos.util.map.GrowableMap;
+import objectos.util.map.UnmodifiableMap;
 import objectox.http.Bytes;
 import objectox.http.InBufferRequestBody;
 

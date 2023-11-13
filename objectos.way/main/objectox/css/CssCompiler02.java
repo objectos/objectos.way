@@ -18,7 +18,7 @@ package objectox.css;
 import java.util.Arrays;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import objectos.util.ObjectArrays;
+import objectos.util.array.ObjectArrays;
 
 final class CssCompiler02 extends CssCompiler01 {
 

@@ -18,7 +18,7 @@ package objectos.lang;
 import java.util.List;
 import objectos.notes.Note1;
 import objectos.notes.Note2;
-import objectos.util.GrowableList;
+import objectos.util.list.GrowableList;
 
 final class ShutdownHookNoteSink extends NoOpNoteSink {
 

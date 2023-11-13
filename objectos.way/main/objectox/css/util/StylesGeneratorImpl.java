@@ -30,8 +30,8 @@ import objectos.lang.object.Check;
 import objectos.notes.Note1;
 import objectos.notes.Note2;
 import objectos.notes.NoteSink;
-import objectos.util.GrowableMap;
-import objectos.util.GrowableSet;
+import objectos.util.map.GrowableMap;
+import objectos.util.set.GrowableSet;
 import objectox.lang.Bytes;
 
 public final class StylesGeneratorImpl implements StylesGenerator {

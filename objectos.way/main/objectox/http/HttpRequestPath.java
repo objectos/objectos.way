@@ -19,7 +19,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import objectos.http.Segment;
 import objectos.lang.object.Check;
-import objectos.util.IntArrays;
+import objectos.util.array.IntArrays;
 
 public final class HttpRequestPath {
 

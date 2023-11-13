@@ -18,7 +18,7 @@ package objectox.http;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import objectos.http.Http;
-import objectos.util.ByteArrays;
+import objectos.util.array.ByteArrays;
 
 public record HeaderValue(byte[] buffer, int start, int end) implements Http.Header.Value {
 

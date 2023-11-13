@@ -21,8 +21,8 @@ import objectos.css.tmpl.Api.FilterFunction;
 import objectos.css.util.ClassSelector;
 import objectos.css.util.CustomProperty;
 import objectos.css.util.IdSelector;
-import objectos.util.ByteArrays;
-import objectos.util.ObjectArrays;
+import objectos.util.array.ByteArrays;
+import objectos.util.array.ObjectArrays;
 
 class CssCompiler01 extends CssTemplateApi {
 

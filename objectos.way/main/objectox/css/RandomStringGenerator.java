@@ -19,7 +19,7 @@ import java.util.Locale;
 import java.util.Random;
 import java.util.Set;
 import objectos.lang.object.Check;
-import objectos.util.GrowableSet;
+import objectos.util.set.GrowableSet;
 import objectox.lang.RandomString;
 
 public final class RandomStringGenerator {

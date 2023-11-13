@@ -25,8 +25,8 @@ import objectos.lang.ClassReloader;
 import objectos.lang.ClassReloader.Builder;
 import objectos.lang.object.Check;
 import objectos.notes.NoteSink;
+import objectos.util.list.GrowableList;
 import objectos.lang.NoOpNoteSink;
-import objectos.util.GrowableList;
 
 public final class ClassReloaderBuilder implements ClassReloader.Builder {
 

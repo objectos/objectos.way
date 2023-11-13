@@ -15,7 +15,7 @@
  */
 package objectos.html.internal;
 
-import objectos.util.UnmodifiableMap;
+import objectos.util.map.UnmodifiableMap;
 
 /**
  * TODO

@@ -39,7 +39,7 @@ import objectos.http.server.Body;
 import objectos.lang.NoOpNoteSink;
 import objectos.lang.object.Check;
 import objectos.notes.NoteSink;
-import objectos.util.GrowableList;
+import objectos.util.list.GrowableList;
 import objectox.lang.CharWritable;
 
 public final class HttpExchange implements objectos.http.HttpExchange {

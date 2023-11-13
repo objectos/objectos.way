@@ -15,8 +15,8 @@
  */
 package objectos.html.internal;
 
-import objectos.util.UnmodifiableMap;
-import objectos.util.GrowableMap;
+import objectos.util.map.GrowableMap;
+import objectos.util.map.UnmodifiableMap;
 
 class NamesBuilder {
 

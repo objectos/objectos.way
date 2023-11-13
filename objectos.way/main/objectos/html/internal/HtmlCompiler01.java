@@ -16,8 +16,8 @@
 package objectos.html.internal;
 
 import objectos.html.tmpl.Api;
-import objectos.util.ByteArrays;
-import objectos.util.ObjectArrays;
+import objectos.util.array.ByteArrays;
+import objectos.util.array.ObjectArrays;
 
 class HtmlCompiler01 extends HtmlTemplateApi {
 

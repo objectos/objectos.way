@@ -26,7 +26,7 @@ import javax.tools.JavaFileObject;
 import javax.tools.StandardJavaFileManager;
 import javax.tools.StandardLocation;
 import javax.tools.ToolProvider;
-import objectos.util.GrowableList;
+import objectos.util.list.GrowableList;
 import objectos.way.Rmdir;
 
 final class ClassReloaderHelper implements AutoCloseable {

@@ -18,7 +18,7 @@ package objectos.html.internal;
 import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.Set;
-import objectos.util.ObjectArrays;
+import objectos.util.array.ObjectArrays;
 
 public final class HtmlCompiler02 extends HtmlCompiler01 {
 

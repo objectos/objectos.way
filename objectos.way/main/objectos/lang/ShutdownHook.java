@@ -22,7 +22,7 @@ import objectos.notes.Note0;
 import objectos.notes.Note1;
 import objectos.notes.Note2;
 import objectos.notes.NoteSink;
-import objectos.util.GrowableList;
+import objectos.util.list.GrowableList;
 
 /**
  * An utility for registering objects with the JVM shutdown hook facility.

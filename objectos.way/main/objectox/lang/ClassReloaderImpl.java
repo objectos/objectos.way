@@ -34,7 +34,7 @@ import objectos.lang.ClassReloader;
 import objectos.notes.Note1;
 import objectos.notes.Note2;
 import objectos.notes.NoteSink;
-import objectos.util.GrowableMap;
+import objectos.util.map.GrowableMap;
 
 public final class ClassReloaderImpl implements objectos.lang.ClassReloader {
 
