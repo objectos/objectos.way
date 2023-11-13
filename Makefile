@@ -329,7 +329,11 @@ $(1)TEST_RUNTIME_OUTPUT = $$($(1)WORK)/test-output
 ## test java command
 $(1)TEST_JAVAX = $$(JAVA)
 $(1)TEST_JAVAX += --module-path $$(call module-path,$$($(1)TEST_RUNTIME_DEPS))
+ifdef $(1)TEST_JAVAX_MODULES
+$(1)TEST_JAVAX += $$(foreach mod,$$($(1)TEST_JAVAX_MODULES),--add-modules $$(mod))
+else
 $(1)TEST_JAVAX += --add-modules org.testng
+endif
 $(1)TEST_JAVAX += --add-reads $$($(1)MODULE)=org.testng
 ifdef $(1)TEST_JAVAX_READS
 $(1)TEST_JAVAX += $$(foreach mod,$$($(1)TEST_JAVAX_READS),--add-reads $$($(1)MODULE)=$$(mod))
@@ -766,9 +770,6 @@ NOTES_BASE_TEST_RUNTIME_DEPS += $(call dependency,com.beust,jcommander,$(JCOMMAN
 NOTES_BASE_TEST_RUNTIME_DEPS += $(call dependency,org.slf4j,slf4j-api,$(SLF4J_VERSION))
 NOTES_BASE_TEST_RUNTIME_DEPS += $(call dependency,org.slf4j,slf4j-nop,$(SLF4J_VERSION))
 
-## test runtime exports
-NOTES_BASE_TEST_JAVAX_EXPORTS := objectos.notes.internal
-
 ## install coordinates
 NOTES_BASE_GROUP_ID = $(GROUP_ID)
 NOTES_BASE_ARTIFACT_ID = $(NOTES_BASE_MODULE)
@@ -815,6 +816,176 @@ notes.base@pom: $(NOTES_BASE_POM_FILE)
 
 .PHONY: notes.base@ossrh-prepare
 notes.base@ossrh-prepare: $(NOTES_BASE_OSSRH_PREPARE)
+
+#
+# objectos.notes options
+#
+
+## module directory
+NOTES_CONSOLE = objectos.notes.console
+
+## module
+NOTES_CONSOLE_MODULE = $(NOTES_CONSOLE)
+
+## module version
+NOTES_CONSOLE_VERSION = $(VERSION)
+
+## javac --release option
+NOTES_CONSOLE_JAVA_RELEASE = $(JAVA_RELEASE)
+
+## --enable-preview ?
+NOTES_CONSOLE_ENABLE_PREVIEW = 0
+
+## compile deps
+NOTES_CONSOLE_COMPILE_DEPS = $(LANG_OBJECT_JAR_FILE)
+NOTES_CONSOLE_COMPILE_DEPS += $(NOTES_JAR_FILE)
+NOTES_CONSOLE_COMPILE_DEPS += $(NOTES_BASE_JAR_FILE)
+
+## jar name
+NOTES_CONSOLE_JAR_NAME = $(NOTES_CONSOLE)
+
+## test compile deps
+NOTES_CONSOLE_TEST_COMPILE_DEPS = $(NOTES_CONSOLE_COMPILE_DEPS)
+NOTES_CONSOLE_TEST_COMPILE_DEPS += $(NOTES_CONSOLE_JAR_FILE)
+NOTES_CONSOLE_TEST_COMPILE_DEPS += $(call dependency,org.testng,testng,$(TESTNG_VERSION))
+
+## test runtime dependencies
+NOTES_CONSOLE_TEST_RUNTIME_DEPS = $(NOTES_CONSOLE_TEST_COMPILE_DEPS)
+NOTES_CONSOLE_TEST_RUNTIME_DEPS += $(call dependency,com.beust,jcommander,$(JCOMMANDER_VERSION))
+NOTES_CONSOLE_TEST_RUNTIME_DEPS += $(call dependency,org.slf4j,slf4j-api,$(SLF4J_VERSION))
+NOTES_CONSOLE_TEST_RUNTIME_DEPS += $(call dependency,org.slf4j,slf4j-nop,$(SLF4J_VERSION))
+
+## install coordinates
+NOTES_CONSOLE_GROUP_ID = $(GROUP_ID)
+NOTES_CONSOLE_ARTIFACT_ID = $(NOTES_CONSOLE_MODULE)
+
+## copyright years for javadoc
+NOTES_CONSOLE_COPYRIGHT_YEARS := 2022-2023
+
+## javadoc snippet path
+# NOTES_CONSOLE_JAVADOC_SNIPPET_PATH := NOTES_CONSOLE_TEST
+
+## pom description
+NOTES_CONSOLE_DESCRIPTION = NoteSink implementation that writes out notes to the system console.
+
+#
+# objectos.notes targets
+#
+
+$(foreach task,$(MODULE_TASKS),$(eval $(call $(task),NOTES_CONSOLE_)))
+
+.PHONY: notes.console@clean
+notes.console@clean:
+	rm -rf $(NOTES_CONSOLE_WORK)/*
+
+.PHONY: notes.console@compile
+notes.console@compile: $(NOTES_CONSOLE_COMPILE_MARKER)
+
+.PHONY: notes.console@jar
+notes.console@jar: $(NOTES_CONSOLE_JAR_FILE)
+
+.PHONY: notes.console@test
+notes.console@test: $(NOTES_CONSOLE_TEST_RUN_MARKER)
+
+.PHONY: notes.console@install
+notes.console@install: $(NOTES_CONSOLE_INSTALL)
+
+.PHONY: notes.console@source-jar
+notes.console@source-jar: $(NOTES_CONSOLE_SOURCE_JAR_FILE)
+
+.PHONY: notes.console@javadoc
+notes.console@javadoc: $(NOTES_CONSOLE_JAVADOC_JAR_FILE)
+
+.PHONY: notes.console@pom
+notes.console@pom: $(NOTES_CONSOLE_POM_FILE)
+
+.PHONY: notes.console@ossrh-prepare
+notes.console@ossrh-prepare: $(NOTES_CONSOLE_OSSRH_PREPARE)
+
+#
+# objectos.notes options
+#
+
+## module directory
+NOTES_FILE = objectos.notes.file
+
+## module
+NOTES_FILE_MODULE = $(NOTES_FILE)
+
+## module version
+NOTES_FILE_VERSION = $(VERSION)
+
+## javac --release option
+NOTES_FILE_JAVA_RELEASE = $(JAVA_RELEASE)
+
+## --enable-preview ?
+NOTES_FILE_ENABLE_PREVIEW = 0
+
+## compile deps
+NOTES_FILE_COMPILE_DEPS = $(LANG_OBJECT_JAR_FILE)
+NOTES_FILE_COMPILE_DEPS += $(NOTES_JAR_FILE)
+NOTES_FILE_COMPILE_DEPS += $(NOTES_BASE_JAR_FILE)
+
+## jar name
+NOTES_FILE_JAR_NAME = $(NOTES_FILE)
+
+## test compile deps
+NOTES_FILE_TEST_COMPILE_DEPS = $(NOTES_FILE_COMPILE_DEPS)
+NOTES_FILE_TEST_COMPILE_DEPS += $(NOTES_FILE_JAR_FILE)
+NOTES_FILE_TEST_COMPILE_DEPS += $(call dependency,org.testng,testng,$(TESTNG_VERSION))
+
+## test runtime dependencies
+NOTES_FILE_TEST_RUNTIME_DEPS = $(NOTES_FILE_TEST_COMPILE_DEPS)
+NOTES_FILE_TEST_RUNTIME_DEPS += $(call dependency,com.beust,jcommander,$(JCOMMANDER_VERSION))
+NOTES_FILE_TEST_RUNTIME_DEPS += $(call dependency,org.slf4j,slf4j-api,$(SLF4J_VERSION))
+NOTES_FILE_TEST_RUNTIME_DEPS += $(call dependency,org.slf4j,slf4j-nop,$(SLF4J_VERSION))
+
+## install coordinates
+NOTES_FILE_GROUP_ID = $(GROUP_ID)
+NOTES_FILE_ARTIFACT_ID = $(NOTES_FILE_MODULE)
+
+## copyright years for javadoc
+NOTES_FILE_COPYRIGHT_YEARS := 2022-2023
+
+## javadoc snippet path
+# NOTES_FILE_JAVADOC_SNIPPET_PATH := NOTES_FILE_TEST
+
+## pom description
+NOTES_FILE_DESCRIPTION = NoteSink implementation that writes out notes to a regular file.
+
+#
+# objectos.notes targets
+#
+
+$(foreach task,$(MODULE_TASKS),$(eval $(call $(task),NOTES_FILE_)))
+
+.PHONY: notes.file@clean
+notes.file@clean:
+	rm -rf $(NOTES_FILE_WORK)/*
+
+.PHONY: notes.file@compile
+notes.file@compile: $(NOTES_FILE_COMPILE_MARKER)
+
+.PHONY: notes.file@jar
+notes.file@jar: $(NOTES_FILE_JAR_FILE)
+
+.PHONY: notes.file@test
+notes.file@test: $(NOTES_FILE_TEST_RUN_MARKER)
+
+.PHONY: notes.file@install
+notes.file@install: $(NOTES_FILE_INSTALL)
+
+.PHONY: notes.file@source-jar
+notes.file@source-jar: $(NOTES_FILE_SOURCE_JAR_FILE)
+
+.PHONY: notes.file@javadoc
+notes.file@javadoc: $(NOTES_FILE_JAVADOC_JAR_FILE)
+
+.PHONY: notes.file@pom
+notes.file@pom: $(NOTES_FILE_POM_FILE)
+
+.PHONY: notes.file@ossrh-prepare
+notes.file@ossrh-prepare: $(NOTES_FILE_OSSRH_PREPARE)
 
 #
 # objectos.code options
@@ -990,7 +1161,6 @@ WAY_ENABLE_PREVIEW := 0
 ## way compile deps
 WAY_COMPILE_DEPS = $(LANG_OBJECT_JAR_FILE)
 WAY_COMPILE_DEPS += $(NOTES_JAR_FILE)
-WAY_COMPILE_DEPS += $(NOTES_BASE_JAR_FILE)
 
 ## way jar name
 WAY_JAR_NAME := $(WAY)
@@ -1006,20 +1176,27 @@ WAY_JAR_FILE_REQS_MORE = $(WAY_JS_ARTIFACT)
 
 ## way test compile-time dependencies
 WAY_TEST_COMPILE_DEPS = $(WAY_COMPILE_DEPS)
+WAY_TEST_COMPILE_DEPS += $(NOTES_CONSOLE_JAR_FILE)
 WAY_TEST_COMPILE_DEPS += $(WAY_JAR_FILE)
 WAY_TEST_COMPILE_DEPS += $(call dependency,org.testng,testng,$(TESTNG_VERSION))
 
 ## way test runtime dependencies
 WAY_TEST_RUNTIME_DEPS = $(WAY_TEST_COMPILE_DEPS)
+WAY_TEST_RUNTIME_DEPS += $(NOTES_BASE_JAR_FILE)
 WAY_TEST_RUNTIME_DEPS += $(call dependency,com.beust,jcommander,$(JCOMMANDER_VERSION))
 WAY_TEST_RUNTIME_DEPS += $(call dependency,org.slf4j,slf4j-api,$(SLF4J_VERSION))
 WAY_TEST_RUNTIME_DEPS += $(call dependency,org.slf4j,slf4j-nop,$(SLF4J_VERSION))
 
+## way test runtime modules
+WAY_TEST_JAVAX_MODULES = org.testng
+WAY_TEST_JAVAX_MODULES += objectos.notes.console
+
 ## way test runtime reads
-WAY_TEST_JAVAX_READS := java.compiler
+WAY_TEST_JAVAX_READS = java.compiler
+WAY_TEST_JAVAX_READS += objectos.notes.console
 
 ## way test runtime exports
-WAY_TEST_JAVAX_EXPORTS := objectos.html.internal
+WAY_TEST_JAVAX_EXPORTS = objectos.html.internal
 WAY_TEST_JAVAX_EXPORTS += objectos.util
 WAY_TEST_JAVAX_EXPORTS += objectox.css
 WAY_TEST_JAVAX_EXPORTS += objectox.css.util
@@ -1040,11 +1217,15 @@ WAY_JAVADOC_SNIPPET_PATH := WAY_TEST
 WAY_SUBMODULES = core.object
 WAY_SUBMODULES += notes
 WAY_SUBMODULES += notes.base
+WAY_SUBMODULES += notes.console
+WAY_SUBMODULES += notes.file
 
 ## way bundle contents
 WAY_OSSRH_BUNDLE_CONTENTS = $(CORE_OBJECT_OSSRH_PREPARE)
 WAY_OSSRH_BUNDLE_CONTENTS += $(NOTES_OSSRH_PREPARE)
 WAY_OSSRH_BUNDLE_CONTENTS += $(NOTES_BASE_OSSRH_PREPARE)
+WAY_OSSRH_BUNDLE_CONTENTS += $(NOTES_CONSOLE_OSSRH_PREPARE)
+WAY_OSSRH_BUNDLE_CONTENTS += $(NOTES_FILE_OSSRH_PREPARE)
 WAY_OSSRH_BUNDLE_CONTENTS += $(WAY_OSSRH_PREPARE)
 
 #

@@ -36,7 +36,6 @@ WAY_ENABLE_PREVIEW := 0
 ## way compile deps
 WAY_COMPILE_DEPS = $(LANG_OBJECT_JAR_FILE)
 WAY_COMPILE_DEPS += $(NOTES_JAR_FILE)
-WAY_COMPILE_DEPS += $(NOTES_BASE_JAR_FILE)
 
 ## way jar name
 WAY_JAR_NAME := $(WAY)
@@ -52,20 +51,27 @@ WAY_JAR_FILE_REQS_MORE = $(WAY_JS_ARTIFACT)
 
 ## way test compile-time dependencies
 WAY_TEST_COMPILE_DEPS = $(WAY_COMPILE_DEPS)
+WAY_TEST_COMPILE_DEPS += $(NOTES_CONSOLE_JAR_FILE)
 WAY_TEST_COMPILE_DEPS += $(WAY_JAR_FILE)
 WAY_TEST_COMPILE_DEPS += $(call dependency,org.testng,testng,$(TESTNG_VERSION))
 
 ## way test runtime dependencies
 WAY_TEST_RUNTIME_DEPS = $(WAY_TEST_COMPILE_DEPS)
+WAY_TEST_RUNTIME_DEPS += $(NOTES_BASE_JAR_FILE)
 WAY_TEST_RUNTIME_DEPS += $(call dependency,com.beust,jcommander,$(JCOMMANDER_VERSION))
 WAY_TEST_RUNTIME_DEPS += $(call dependency,org.slf4j,slf4j-api,$(SLF4J_VERSION))
 WAY_TEST_RUNTIME_DEPS += $(call dependency,org.slf4j,slf4j-nop,$(SLF4J_VERSION))
 
+## way test runtime modules
+WAY_TEST_JAVAX_MODULES = org.testng
+WAY_TEST_JAVAX_MODULES += objectos.notes.console
+
 ## way test runtime reads
-WAY_TEST_JAVAX_READS := java.compiler
+WAY_TEST_JAVAX_READS = java.compiler
+WAY_TEST_JAVAX_READS += objectos.notes.console
 
 ## way test runtime exports
-WAY_TEST_JAVAX_EXPORTS := objectos.html.internal
+WAY_TEST_JAVAX_EXPORTS = objectos.html.internal
 WAY_TEST_JAVAX_EXPORTS += objectos.util
 WAY_TEST_JAVAX_EXPORTS += objectox.css
 WAY_TEST_JAVAX_EXPORTS += objectox.css.util
@@ -86,11 +92,15 @@ WAY_JAVADOC_SNIPPET_PATH := WAY_TEST
 WAY_SUBMODULES = core.object
 WAY_SUBMODULES += notes
 WAY_SUBMODULES += notes.base
+WAY_SUBMODULES += notes.console
+WAY_SUBMODULES += notes.file
 
 ## way bundle contents
 WAY_OSSRH_BUNDLE_CONTENTS = $(CORE_OBJECT_OSSRH_PREPARE)
 WAY_OSSRH_BUNDLE_CONTENTS += $(NOTES_OSSRH_PREPARE)
 WAY_OSSRH_BUNDLE_CONTENTS += $(NOTES_BASE_OSSRH_PREPARE)
+WAY_OSSRH_BUNDLE_CONTENTS += $(NOTES_CONSOLE_OSSRH_PREPARE)
+WAY_OSSRH_BUNDLE_CONTENTS += $(NOTES_FILE_OSSRH_PREPARE)
 WAY_OSSRH_BUNDLE_CONTENTS += $(WAY_OSSRH_PREPARE)
 
 #

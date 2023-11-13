@@ -51,9 +51,6 @@ NOTES_BASE_TEST_RUNTIME_DEPS += $(call dependency,com.beust,jcommander,$(JCOMMAN
 NOTES_BASE_TEST_RUNTIME_DEPS += $(call dependency,org.slf4j,slf4j-api,$(SLF4J_VERSION))
 NOTES_BASE_TEST_RUNTIME_DEPS += $(call dependency,org.slf4j,slf4j-nop,$(SLF4J_VERSION))
 
-## test runtime exports
-NOTES_BASE_TEST_JAVAX_EXPORTS := objectos.notes.internal
-
 ## install coordinates
 NOTES_BASE_GROUP_ID = $(GROUP_ID)
 NOTES_BASE_ARTIFACT_ID = $(NOTES_BASE_MODULE)

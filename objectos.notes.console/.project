@@ -1,15 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-	<name>objectos.way</name>
+	<name>objectos.way:objectos.notes.console</name>
 	<comment></comment>
 	<projects>
-		<project>objectos.code</project>		
-		<project>objectos.core.object</project>
-		<project>objectos.notes</project>
-		<project>objectos.notes.base</project>
-		<project>objectos.notes.console</project>
-		<project>objectos.notes.file</project>
-		<project>objectos.selfgen</project>		
 	</projects>
 	<buildSpec>
 		<buildCommand>

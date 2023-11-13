@@ -21,7 +21,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import objectos.notes.Level;
-import objectos.way.Rmdir;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -60,12 +59,12 @@ public class FileNoteSinkTest {
 					string,
 
 					"""
-					2023-11-01 10:00:00.000 INFO  --- [main           ] objectos.notes.FileNoteSink              : Started %s TRACE
-					2023-11-01 10:01:00.000 TRACE --- [main           ] objectos.notes.TestingNotes              : TRACE0
-					2023-11-01 10:02:00.000 DEBUG --- [main           ] objectos.notes.TestingNotes              : DEBUG0
-					2023-11-01 10:03:00.000 INFO  --- [main           ] objectos.notes.TestingNotes              : INFO0
-					2023-11-01 10:04:00.000 WARN  --- [main           ] objectos.notes.TestingNotes              : WARN0
-					2023-11-01 10:05:00.000 ERROR --- [main           ] objectos.notes.TestingNotes              : ERROR0
+					2023-11-01 10:00:00.000 INFO  --- [main           ] objectos.notes.file.FileNoteSink         : Started %s TRACE
+					2023-11-01 10:01:00.000 TRACE --- [main           ] objectos.notes.file.TestingNotes         : TRACE0
+					2023-11-01 10:02:00.000 DEBUG --- [main           ] objectos.notes.file.TestingNotes         : DEBUG0
+					2023-11-01 10:03:00.000 INFO  --- [main           ] objectos.notes.file.TestingNotes         : INFO0
+					2023-11-01 10:04:00.000 WARN  --- [main           ] objectos.notes.file.TestingNotes         : WARN0
+					2023-11-01 10:05:00.000 ERROR --- [main           ] objectos.notes.file.TestingNotes         : ERROR0
 					""".formatted(file)
 			);
 		} finally {

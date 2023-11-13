@@ -72,11 +72,11 @@ public class ConsoleNoteSinkTest {
 				string,
 
 				"""
-				2023-10-31 10:00:00.000 TRACE --- [main           ] objectos.notes.TestingNotes              : TRACE0
-				2023-10-31 10:01:00.000 DEBUG --- [main           ] objectos.notes.TestingNotes              : DEBUG0
-				2023-10-31 10:02:00.000 INFO  --- [main           ] objectos.notes.TestingNotes              : INFO0
-				2023-10-31 10:03:00.000 WARN  --- [main           ] objectos.notes.TestingNotes              : WARN0
-				2023-10-31 10:04:00.000 ERROR --- [main           ] objectos.notes.TestingNotes              : ERROR0
+				2023-10-31 10:00:00.000 TRACE --- [main           ] objectos.notes.console.TestingNotes      : TRACE0
+				2023-10-31 10:01:00.000 DEBUG --- [main           ] objectos.notes.console.TestingNotes      : DEBUG0
+				2023-10-31 10:02:00.000 INFO  --- [main           ] objectos.notes.console.TestingNotes      : INFO0
+				2023-10-31 10:03:00.000 WARN  --- [main           ] objectos.notes.console.TestingNotes      : WARN0
+				2023-10-31 10:04:00.000 ERROR --- [main           ] objectos.notes.console.TestingNotes      : ERROR0
 				"""
 		);
 	}
@@ -121,7 +121,7 @@ public class ConsoleNoteSinkTest {
 						return line;
 					}
 
-					return line.replaceFirst("objectos.way(@.*)/", "objectos.way/");
+					return line.replaceFirst("objectos.notes.console(@.*)/", "objectos.notes.console/");
 				})
 				.collect(Collectors.joining("\n"));
 
@@ -129,20 +129,20 @@ public class ConsoleNoteSinkTest {
 				string,
 
 				"""
-				2023-10-31 11:12:13.000 ERROR --- [main           ] objectos.notes.ConsoleNoteSinkTest       : THROW1
+				2023-10-31 11:12:13.000 ERROR --- [main           ] jectos.notes.console.ConsoleNoteSinkTest : THROW1
 				java.lang.Throwable
-					at objectos.way/objectos.notes.TestingStackTraces.throwable1(TestingStackTraces.java:27)
-					at objectos.way/objectos.notes.ConsoleNoteSinkTest.throwable(ConsoleNoteSinkTest.java:103)
+					at objectos.notes.console/objectos.notes.console.TestingStackTraces.throwable1(TestingStackTraces.java:27)
+					at objectos.notes.console/objectos.notes.console.ConsoleNoteSinkTest.throwable(ConsoleNoteSinkTest.java:103)
 
-				2023-10-31 11:13:13.000 ERROR --- [main           ] objectos.notes.ConsoleNoteSinkTest       : THROW2 java.lang.Throwable
+				2023-10-31 11:13:13.000 ERROR --- [main           ] jectos.notes.console.ConsoleNoteSinkTest : THROW2 java.lang.Throwable
 				java.lang.Throwable
-					at objectos.way/objectos.notes.TestingStackTraces.throwable2(TestingStackTraces.java:31)
-					at objectos.way/objectos.notes.ConsoleNoteSinkTest.throwable(ConsoleNoteSinkTest.java:104)
+					at objectos.notes.console/objectos.notes.console.TestingStackTraces.throwable2(TestingStackTraces.java:31)
+					at objectos.notes.console/objectos.notes.console.ConsoleNoteSinkTest.throwable(ConsoleNoteSinkTest.java:104)
 
-				2023-10-31 11:14:13.000 ERROR --- [main           ] objectos.notes.ConsoleNoteSinkTest       : THROW3 java.lang.Throwable java.lang.Throwable
+				2023-10-31 11:14:13.000 ERROR --- [main           ] jectos.notes.console.ConsoleNoteSinkTest : THROW3 java.lang.Throwable java.lang.Throwable
 				java.lang.Throwable
-					at objectos.way/objectos.notes.TestingStackTraces.throwable3(TestingStackTraces.java:35)
-					at objectos.way/objectos.notes.ConsoleNoteSinkTest.throwable(ConsoleNoteSinkTest.java:105)
+					at objectos.notes.console/objectos.notes.console.TestingStackTraces.throwable3(TestingStackTraces.java:35)
+					at objectos.notes.console/objectos.notes.console.ConsoleNoteSinkTest.throwable(ConsoleNoteSinkTest.java:105)
 				"""
 		);
 	}
