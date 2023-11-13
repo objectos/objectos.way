@@ -56,10 +56,6 @@ SELFGEN_TEST_JAVAX_EXPORTS += objectos.selfgen.html
 SELFGEN_TEST_JAVAX_EXPORTS += selfgen.css.util
 
 #
-# objectos.code targets
-#
-
-#
 # objectos.selfgen targets
 #
 

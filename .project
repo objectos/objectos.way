@@ -3,8 +3,9 @@
 	<name>objectos.way</name>
 	<comment></comment>
 	<projects>
-		<project>objectos.code</project>		
-		<project>objectos.core.object</project>
+		<project>objectos.code</project>
+		<project>objectos.html</project>
+		<project>objectos.lang.object</project>
 		<project>objectos.notes</project>
 		<project>objectos.notes.base</project>
 		<project>objectos.notes.console</project>

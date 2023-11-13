@@ -568,158 +568,6 @@ endef
 -include $(HOME)/.config/objectos/gh-config.mk
 
 #
-# objectos.code options
-#
-
-## code directory
-CODE = objectos.code
-
-## code module
-CODE_MODULE = $(CODE)
-
-## code module version
-CODE_VERSION = $(VERSION)
-
-## code javac --release option
-CODE_JAVA_RELEASE = $(JAVA_RELEASE)
-
-## code --enable-preview ?
-CODE_ENABLE_PREVIEW = 1
-
-## code jar name
-CODE_JAR_NAME = $(CODE)
-
-## code test compile deps
-CODE_TEST_COMPILE_DEPS = $(CODE_JAR_FILE)
-CODE_TEST_COMPILE_DEPS += $(call dependency,org.testng,testng,$(TESTNG_VERSION))
-
-## code test runtime dependencies
-CODE_TEST_RUNTIME_DEPS = $(CODE_TEST_COMPILE_DEPS)
-CODE_TEST_RUNTIME_DEPS += $(call dependency,com.beust,jcommander,$(JCOMMANDER_VERSION))
-CODE_TEST_RUNTIME_DEPS += $(call dependency,org.slf4j,slf4j-api,$(SLF4J_VERSION))
-CODE_TEST_RUNTIME_DEPS += $(call dependency,org.slf4j,slf4j-nop,$(SLF4J_VERSION))
-
-## test runtime exports
-CODE_TEST_JAVAX_EXPORTS := objectos.code.internal
-
-#
-# objectos.code targets
-#
-
-CODE_TASKS = COMPILE_TASK
-CODE_TASKS += JAR_TASK
-CODE_TASKS += TEST_COMPILE_TASK
-CODE_TASKS += TEST_RUN_TASK
-
-$(foreach task,$(CODE_TASKS),$(eval $(call $(task),CODE_)))
-
-.PHONY: code@clean
-code@clean:
-	rm -rf $(CODE_WORK)/*
-
-.PHONY: code@compile
-code@compile: $(CODE_COMPILE_MARKER)
-
-.PHONY: code@jar
-code@jar: $(CODE_JAR_FILE)
-
-.PHONY: code@test
-code@test: $(CODE_TEST_RUN_MARKER)
-
-#
-# objectos.selfgen options
-#
-
-## selfgen directory
-SELFGEN := objectos.selfgen
-
-## selfgen module
-SELFGEN_MODULE := $(SELFGEN)
-
-## selfgen module version
-SELFGEN_VERSION := $(VERSION)
-
-## selfgen javac --release option
-SELFGEN_JAVA_RELEASE := $(JAVA_RELEASE)
-
-## selfgen --enable-preview ?
-SELFGEN_ENABLE_PREVIEW := 1
-
-## selfgen compile deps
-SELFGEN_COMPILE_DEPS = $(CODE_JAR_FILE) 
-
-## selfgen jar name
-SELFGEN_JAR_NAME := $(SELFGEN)
-
-## selfgen test compile deps
-SELFGEN_TEST_COMPILE_DEPS = $(CODE_JAR_FILE)
-SELFGEN_TEST_COMPILE_DEPS += $(SELFGEN_JAR_FILE)
-SELFGEN_TEST_COMPILE_DEPS += $(call dependency,org.testng,testng,$(TESTNG_VERSION))
-
-## selfgen test runtime dependencies
-SELFGEN_TEST_RUNTIME_DEPS = $(SELFGEN_TEST_COMPILE_DEPS)
-SELFGEN_TEST_RUNTIME_DEPS += $(call dependency,com.beust,jcommander,$(JCOMMANDER_VERSION))
-SELFGEN_TEST_RUNTIME_DEPS += $(call dependency,org.slf4j,slf4j-api,$(SLF4J_VERSION))
-SELFGEN_TEST_RUNTIME_DEPS += $(call dependency,org.slf4j,slf4j-nop,$(SLF4J_VERSION))
-
-## seflgen test runtime exports
-SELFGEN_TEST_JAVAX_EXPORTS := objectos.selfgen.css
-SELFGEN_TEST_JAVAX_EXPORTS += objectos.selfgen.html
-SELFGEN_TEST_JAVAX_EXPORTS += selfgen.css.util
-
-#
-# objectos.code targets
-#
-
-#
-# objectos.selfgen targets
-#
-
-SELFGEN_TASKS = COMPILE_TASK
-SELFGEN_TASKS += JAR_TASK
-SELFGEN_TASKS += TEST_COMPILE_TASK
-SELFGEN_TASKS += TEST_RUN_TASK
-
-$(foreach task,$(SELFGEN_TASKS),$(eval $(call $(task),SELFGEN_)))
-
-.PHONY: selfgen@clean
-selfgen@clean:
-	rm -rf $(SELFGEN_WORK)/*
-
-.PHONY: selfgen@compile
-selfgen@compile: $(SELFGEN_COMPILE_MARKER)
-
-.PHONY: selfgen@jar
-selfgen@jar: $(SELFGEN_JAR_FILE)
-
-.PHONY: selfgen@test
-selfgen@test: $(SELFGEN_TEST_RUN_MARKER)
-
-## marker to indicate when selfgen was last run
-SELFGEN_MARKER = $(SELFGEN_WORK)/selfgen-marker
-
-## selfgen runtime deps
-SELFGEN_RUNTIME_DEPS = $(SELFGEN_JAR_FILE)
-SELFGEN_RUNTIME_DEPS += $(SELFGEN_COMPILE_DEPS)
-
-## selfgen java command
-SELFGEN_JAVAX = $(JAVA)
-SELFGEN_JAVAX += --module-path $(call module-path,$(SELFGEN_RUNTIME_DEPS))
-ifeq ($(SELFGEN_ENABLE_PREVIEW), 1)
-SELFGEN_JAVAX += --enable-preview
-endif
-SELFGEN_JAVAX += --module $(SELFGEN_MODULE)/$(SELFGEN_MODULE).Main
-SELFGEN_JAVAX += $(WAY_MAIN)
-
-.PHONY: selfgen
-selfgen: $(SELFGEN_MARKER)
-
-$(SELFGEN_MARKER): $(SELFGEN_JAR_FILE)
-	$(SELFGEN_JAVAX)
-	mkdir --parents $(@D)
-	touch $(SELFGEN_MARKER)
-
-#
 # objectos.lang.object
 #
 
@@ -1563,6 +1411,271 @@ util.map@pom: $(UTIL_MAP_POM_FILE)
 util.map@ossrh-prepare: $(UTIL_MAP_OSSRH_PREPARE)
 
 #
+# objectos.code options
+#
+
+## code directory
+CODE = objectos.code
+
+## code module
+CODE_MODULE = $(CODE)
+
+## code module version
+CODE_VERSION = $(VERSION)
+
+## code javac --release option
+CODE_JAVA_RELEASE = $(JAVA_RELEASE)
+
+## code --enable-preview ?
+CODE_ENABLE_PREVIEW = 1
+
+## code jar name
+CODE_JAR_NAME = $(CODE)
+
+## code test compile deps
+CODE_TEST_COMPILE_DEPS = $(CODE_JAR_FILE)
+CODE_TEST_COMPILE_DEPS += $(call dependency,org.testng,testng,$(TESTNG_VERSION))
+
+## code test runtime dependencies
+CODE_TEST_RUNTIME_DEPS = $(CODE_TEST_COMPILE_DEPS)
+CODE_TEST_RUNTIME_DEPS += $(call dependency,com.beust,jcommander,$(JCOMMANDER_VERSION))
+CODE_TEST_RUNTIME_DEPS += $(call dependency,org.slf4j,slf4j-api,$(SLF4J_VERSION))
+CODE_TEST_RUNTIME_DEPS += $(call dependency,org.slf4j,slf4j-nop,$(SLF4J_VERSION))
+
+## test runtime exports
+CODE_TEST_JAVAX_EXPORTS := objectos.code.internal
+
+#
+# objectos.code targets
+#
+
+CODE_TASKS = COMPILE_TASK
+CODE_TASKS += JAR_TASK
+CODE_TASKS += TEST_COMPILE_TASK
+CODE_TASKS += TEST_RUN_TASK
+
+$(foreach task,$(CODE_TASKS),$(eval $(call $(task),CODE_)))
+
+.PHONY: code@clean
+code@clean:
+	rm -rf $(CODE_WORK)/*
+
+.PHONY: code@compile
+code@compile: $(CODE_COMPILE_MARKER)
+
+.PHONY: code@jar
+code@jar: $(CODE_JAR_FILE)
+
+.PHONY: code@test
+code@test: $(CODE_TEST_RUN_MARKER)
+
+#
+# objectos.selfgen options
+#
+
+## selfgen directory
+SELFGEN := objectos.selfgen
+
+## selfgen module
+SELFGEN_MODULE := $(SELFGEN)
+
+## selfgen module version
+SELFGEN_VERSION := $(VERSION)
+
+## selfgen javac --release option
+SELFGEN_JAVA_RELEASE := $(JAVA_RELEASE)
+
+## selfgen --enable-preview ?
+SELFGEN_ENABLE_PREVIEW := 1
+
+## selfgen compile deps
+SELFGEN_COMPILE_DEPS = $(CODE_JAR_FILE) 
+
+## selfgen jar name
+SELFGEN_JAR_NAME := $(SELFGEN)
+
+## selfgen test compile deps
+SELFGEN_TEST_COMPILE_DEPS = $(CODE_JAR_FILE)
+SELFGEN_TEST_COMPILE_DEPS += $(SELFGEN_JAR_FILE)
+SELFGEN_TEST_COMPILE_DEPS += $(call dependency,org.testng,testng,$(TESTNG_VERSION))
+
+## selfgen test runtime dependencies
+SELFGEN_TEST_RUNTIME_DEPS = $(SELFGEN_TEST_COMPILE_DEPS)
+SELFGEN_TEST_RUNTIME_DEPS += $(call dependency,com.beust,jcommander,$(JCOMMANDER_VERSION))
+SELFGEN_TEST_RUNTIME_DEPS += $(call dependency,org.slf4j,slf4j-api,$(SLF4J_VERSION))
+SELFGEN_TEST_RUNTIME_DEPS += $(call dependency,org.slf4j,slf4j-nop,$(SLF4J_VERSION))
+
+## seflgen test runtime exports
+SELFGEN_TEST_JAVAX_EXPORTS := objectos.selfgen.css
+SELFGEN_TEST_JAVAX_EXPORTS += objectos.selfgen.html
+SELFGEN_TEST_JAVAX_EXPORTS += selfgen.css.util
+
+#
+# objectos.selfgen targets
+#
+
+SELFGEN_TASKS = COMPILE_TASK
+SELFGEN_TASKS += JAR_TASK
+SELFGEN_TASKS += TEST_COMPILE_TASK
+SELFGEN_TASKS += TEST_RUN_TASK
+
+$(foreach task,$(SELFGEN_TASKS),$(eval $(call $(task),SELFGEN_)))
+
+.PHONY: selfgen@clean
+selfgen@clean:
+	rm -rf $(SELFGEN_WORK)/*
+
+.PHONY: selfgen@compile
+selfgen@compile: $(SELFGEN_COMPILE_MARKER)
+
+.PHONY: selfgen@jar
+selfgen@jar: $(SELFGEN_JAR_FILE)
+
+.PHONY: selfgen@test
+selfgen@test: $(SELFGEN_TEST_RUN_MARKER)
+
+## marker to indicate when selfgen was last run
+SELFGEN_MARKER = $(SELFGEN_WORK)/selfgen-marker
+
+## selfgen runtime deps
+SELFGEN_RUNTIME_DEPS = $(SELFGEN_JAR_FILE)
+SELFGEN_RUNTIME_DEPS += $(SELFGEN_COMPILE_DEPS)
+
+## selfgen java command
+SELFGEN_JAVAX = $(JAVA)
+SELFGEN_JAVAX += --module-path $(call module-path,$(SELFGEN_RUNTIME_DEPS))
+ifeq ($(SELFGEN_ENABLE_PREVIEW), 1)
+SELFGEN_JAVAX += --enable-preview
+endif
+SELFGEN_JAVAX += --module $(SELFGEN_MODULE)/$(SELFGEN_MODULE).Main
+SELFGEN_JAVAX += $(WAY_MAIN)
+
+.PHONY: selfgen
+selfgen: $(SELFGEN_MARKER)
+
+$(SELFGEN_MARKER): $(SELFGEN_JAR_FILE)
+	$(SELFGEN_JAVAX)
+	mkdir --parents $(@D)
+	touch $(SELFGEN_MARKER)
+
+#
+# objectos.html options
+#
+
+## module directory
+HTML = objectos.html
+
+## module
+HTML_MODULE = $(HTML)
+
+## module version
+HTML_VERSION = $(VERSION)
+
+## javac --release option
+HTML_JAVA_RELEASE = $(JAVA_RELEASE)
+
+## --enable-preview ?
+HTML_ENABLE_PREVIEW = 0
+
+## compile deps
+HTML_COMPILE_DEPS = $(LANG_OBJECT_JAR_FILE)
+HTML_COMPILE_DEPS += $(UTIL_ARRAY_JAR_FILE)
+HTML_COMPILE_DEPS += $(UTIL_COLLECTION_JAR_FILE)
+HTML_COMPILE_DEPS += $(UTIL_MAP_JAR_FILE)
+
+## marker to indicate when selfgen was last run
+HTML_SELFGEN_MARKER = $(HTML)/work/selfgen-marker
+
+## make selfgen a req for html compilation
+HTML_RESOURCES = $(HTML_SELFGEN_MARKER)
+
+## jar name
+HTML_JAR_NAME = $(HTML)
+
+## test compile deps
+HTML_TEST_COMPILE_DEPS = $(HTML_COMPILE_DEPS)
+HTML_TEST_COMPILE_DEPS += $(HTML_JAR_FILE)
+HTML_TEST_COMPILE_DEPS += $(call dependency,org.testng,testng,$(TESTNG_VERSION))
+
+## test runtime dependencies
+HTML_TEST_RUNTIME_DEPS = $(HTML_TEST_COMPILE_DEPS)
+HTML_TEST_RUNTIME_DEPS += $(call dependency,com.beust,jcommander,$(JCOMMANDER_VERSION))
+HTML_TEST_RUNTIME_DEPS += $(call dependency,org.slf4j,slf4j-api,$(SLF4J_VERSION))
+HTML_TEST_RUNTIME_DEPS += $(call dependency,org.slf4j,slf4j-nop,$(SLF4J_VERSION))
+
+## test runtime exports
+HTML_TEST_JAVAX_EXPORTS = objectos.html.internal
+
+## install coordinates
+HTML_GROUP_ID = $(GROUP_ID)
+HTML_ARTIFACT_ID = $(HTML_MODULE)
+
+## copyright years for javadoc
+HTML_COPYRIGHT_YEARS := 2022-2023
+
+## javadoc snippet path
+HTML_JAVADOC_SNIPPET_PATH := HTML_TEST
+
+## pom description
+HTML_DESCRIPTION = Generate HTML using pure Java
+
+#
+# eval tasks
+#
+
+$(foreach task,$(MODULE_TASKS),$(eval $(call $(task),HTML_)))
+
+#
+# objectos.html selfgen
+#
+
+## html selfgen java command
+HTML_SELFGEN_JAVAX = $(JAVA)
+HTML_SELFGEN_JAVAX += --module-path $(call module-path,$(SELFGEN_RUNTIME_DEPS))
+ifeq ($(SELFGEN_ENABLE_PREVIEW), 1)
+HTML_SELFGEN_JAVAX += --enable-preview
+endif
+HTML_SELFGEN_JAVAX += --module $(SELFGEN_MODULE)/$(SELFGEN_MODULE).HtmlSpec
+HTML_SELFGEN_JAVAX += $(HTML_MAIN)
+
+$(HTML_SELFGEN_MARKER): $(SELFGEN_JAR_FILE)
+	$(HTML_SELFGEN_JAVAX)
+	mkdir --parents $(@D)
+	touch $@
+
+#
+# objectos.html targets
+#
+
+.PHONY: html@clean
+html@clean:
+	rm -rf $(HTML_WORK)/*
+
+.PHONY: html@compile
+html@compile: $(HTML_SELFGEN_MARKER) $(HTML_COMPILE_MARKER)
+
+.PHONY: html@jar
+html@jar: $(HTML_JAR_FILE)
+
+.PHONY: html@test
+html@test: $(HTML_TEST_RUN_MARKER)
+
+.PHONY: html@install
+html@install: $(HTML_INSTALL)
+
+.PHONY: html@source-jar
+html@source-jar: $(HTML_SOURCE_JAR_FILE)
+
+.PHONY: html@javadoc
+html@javadoc: $(HTML_JAVADOC_JAR_FILE)
+
+.PHONY: html@pom
+html@pom: $(HTML_POM_FILE)
+
+.PHONY: html@ossrh-prepare
+html@ossrh-prepare: $(HTML_OSSRH_PREPARE)
+
+#
 # objectos.way options
 # 
 
@@ -1589,6 +1702,7 @@ WAY_COMPILE_DEPS += $(UTIL_COLLECTION_JAR_FILE)
 WAY_COMPILE_DEPS += $(UTIL_LIST_JAR_FILE)
 WAY_COMPILE_DEPS += $(UTIL_MAP_JAR_FILE)
 WAY_COMPILE_DEPS += $(UTIL_SET_JAR_FILE)
+WAY_COMPILE_DEPS += $(HTML_JAR_FILE)
 
 ## way jar name
 WAY_JAR_NAME := $(WAY)
@@ -1624,9 +1738,7 @@ WAY_TEST_JAVAX_READS = java.compiler
 WAY_TEST_JAVAX_READS += objectos.notes.console
 
 ## way test runtime exports
-WAY_TEST_JAVAX_EXPORTS = objectos.html.internal
-WAY_TEST_JAVAX_EXPORTS += objectos.util
-WAY_TEST_JAVAX_EXPORTS += objectox.css
+WAY_TEST_JAVAX_EXPORTS = objectox.css
 WAY_TEST_JAVAX_EXPORTS += objectox.css.util
 WAY_TEST_JAVAX_EXPORTS += objectox.http
 WAY_TEST_JAVAX_EXPORTS += objectox.lang
@@ -1652,6 +1764,7 @@ WAY_SUBMODULES += util.collection
 WAY_SUBMODULES += util.list
 WAY_SUBMODULES += util.set
 WAY_SUBMODULES += util.map
+WAY_SUBMODULES += html
 
 ## way bundle contents
 WAY_OSSRH_BUNDLE_CONTENTS = $(CORE_OBJECT_OSSRH_PREPARE)
@@ -1664,6 +1777,7 @@ WAY_OSSRH_BUNDLE_CONTENTS += $(UTIL_COLLECTION_OSSRH_PREPARE)
 WAY_OSSRH_BUNDLE_CONTENTS += $(UTIL_LIST_OSSRH_PREPARE)
 WAY_OSSRH_BUNDLE_CONTENTS += $(UTIL_SET_OSSRH_PREPARE)
 WAY_OSSRH_BUNDLE_CONTENTS += $(UTIL_MAP_OSSRH_PREPARE)
+WAY_OSSRH_BUNDLE_CONTENTS += $(HTML_OSSRH_PREPARE)
 WAY_OSSRH_BUNDLE_CONTENTS += $(WAY_OSSRH_PREPARE)
 
 #

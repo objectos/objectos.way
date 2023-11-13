@@ -23,24 +23,24 @@ import objectos.html.internal.InternalCompiledHtml;
  */
 public sealed interface Html permits InternalCompiledHtml {
 
-  /**
-   * Writes the HTML represented by this object to the specified
-   * {@link Appendable} instance.
-   *
-   * @param out
-   *        the HTML code will be written to this object
-   *
-   * @throws IOException
-   *         if an I/O error occurs
-   */
-  void writeTo(Appendable out) throws IOException;
+	/**
+	 * Writes the HTML represented by this object to the specified
+	 * {@link Appendable} instance.
+	 *
+	 * @param out
+	 *        the HTML code will be written to this object
+	 *
+	 * @throws IOException
+	 *         if an I/O error occurs
+	 */
+	void writeTo(Appendable out) throws IOException;
 
-  /**
-   * Returns the HTML represented by this object.
-   *
-   * @return the HTML represented by this object
-   */
-  @Override
-  String toString();
+	/**
+	 * Returns the HTML represented by this object.
+	 *
+	 * @return the HTML represented by this object
+	 */
+	@Override
+	String toString();
 
 }
