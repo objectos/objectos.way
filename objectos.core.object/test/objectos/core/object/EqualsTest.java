@@ -19,6 +19,7 @@ import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertTrue;
 
 import java.util.UUID;
+import objectos.lang.object.Equals;
 import org.testng.annotations.Test;
 
 public class EqualsTest {

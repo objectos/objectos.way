@@ -19,6 +19,7 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
+import objectos.lang.object.ToString;
 import java.util.Set;
 
 final class SimpleToStringMap implements ToString.Formattable {

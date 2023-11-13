@@ -15,6 +15,8 @@
  */
 package objectos.core.object;
 
+import objectos.lang.object.ToString;
+
 class TSObject2 extends TSObject1 {
 
   final String name2;

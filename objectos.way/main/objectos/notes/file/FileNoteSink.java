@@ -19,7 +19,7 @@ import java.io.Closeable;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.time.Clock;
-import objectos.core.object.Check;
+import objectos.lang.object.Check;
 import objectos.notes.Level;
 import objectos.notes.Note2;
 import objectos.notes.NoteSink;

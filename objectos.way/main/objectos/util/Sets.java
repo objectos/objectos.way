@@ -18,7 +18,7 @@ package objectos.util;
 import java.lang.reflect.Array;
 import java.util.NoSuchElementException;
 import java.util.Set;
-import objectos.core.object.Check;
+import objectos.lang.object.Check;
 
 final class Sets {
 

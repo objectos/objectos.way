@@ -19,8 +19,8 @@ import java.util.Collection;
 import java.util.List;
 import java.util.RandomAccess;
 import java.util.function.Predicate;
-import objectos.core.object.Check;
-import objectos.core.object.ToString;
+import objectos.lang.object.Check;
+import objectos.lang.object.ToString;
 
 /**
  * The base {@link Collection} implementation of the Objectos Util collections

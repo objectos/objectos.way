@@ -15,7 +15,7 @@
  */
 package objectos.http;
 
-import objectos.core.object.Check;
+import objectos.lang.object.Check;
 import objectox.http.SegmentExact;
 import objectox.http.SegmentKind;
 

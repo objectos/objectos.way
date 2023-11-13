@@ -16,7 +16,7 @@
 package objectos.lang;
 
 import java.util.List;
-import objectos.core.object.Check;
+import objectos.lang.object.Check;
 import objectos.notes.LongNote;
 import objectos.notes.Note0;
 import objectos.notes.Note1;

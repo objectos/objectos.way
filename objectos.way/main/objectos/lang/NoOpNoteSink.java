@@ -15,7 +15,7 @@
  */
 package objectos.lang;
 
-import objectos.core.object.Check;
+import objectos.lang.object.Check;
 import objectos.notes.LongNote;
 import objectos.notes.Note;
 import objectos.notes.Note0;

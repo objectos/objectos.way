@@ -17,5 +17,5 @@
  * Utilities for {@code java.lang.Object} instances.
  */
 module objectos.core.object {
-	exports objectos.core.object;
+	exports objectos.lang.object;
 }

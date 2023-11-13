@@ -16,9 +16,9 @@
 package objectos.css.util;
 
 import java.util.Objects;
-import objectos.core.object.Check;
 import objectos.css.tmpl.Api;
 import objectos.html.tmpl.Api.ExternalAttribute;
+import objectos.lang.object.Check;
 import objectox.css.SeqId;
 
 public record IdSelector(String id) implements ExternalAttribute.Id, Api.SelectorInstruction {

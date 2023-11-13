@@ -17,7 +17,7 @@ package objectos.notes.console;
 
 import java.io.PrintStream;
 import java.time.Clock;
-import objectos.core.object.Check;
+import objectos.lang.object.Check;
 import objectos.notes.Level;
 import objectos.notes.NoteSink;
 

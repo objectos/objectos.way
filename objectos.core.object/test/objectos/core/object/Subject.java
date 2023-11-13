@@ -15,6 +15,9 @@
  */
 package objectos.core.object;
 
+import objectos.lang.object.Equals;
+import objectos.lang.object.HashCode;
+
 class Subject {
 
   private final ComponentInt a;

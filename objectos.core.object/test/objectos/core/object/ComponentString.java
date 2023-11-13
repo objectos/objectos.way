@@ -15,6 +15,8 @@
  */
 package objectos.core.object;
 
+import objectos.lang.object.Equals;
+
 final class ComponentString {
 
   private final String value;

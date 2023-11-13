@@ -16,6 +16,7 @@
 package objectos.core.object;
 
 import java.util.Arrays;
+import objectos.lang.object.ToString;
 
 final class SimpleToStringList implements ToString.Formattable {
 

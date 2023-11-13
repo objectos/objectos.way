@@ -15,7 +15,7 @@
  */
 package objectos.util;
 
-import objectos.core.object.Check;
+import objectos.lang.object.Check;
 
 /**
  * <p>

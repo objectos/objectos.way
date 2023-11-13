@@ -17,7 +17,7 @@ package objectox.lang;
 
 import java.security.SecureRandom;
 import java.util.Random;
-import objectos.core.object.Check;
+import objectos.lang.object.Check;
 
 /**
  * A {@code RandomString} is used to generate random string values

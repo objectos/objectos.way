@@ -19,6 +19,7 @@ import static org.testng.Assert.assertEquals;
 
 import java.io.File;
 import java.util.Arrays;
+import objectos.lang.object.HashCode;
 import org.testng.annotations.Test;
 
 public class HashCodeTest {

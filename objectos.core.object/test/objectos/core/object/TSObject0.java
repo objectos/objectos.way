@@ -15,6 +15,8 @@
  */
 package objectos.core.object;
 
+import objectos.lang.object.ToString;
+
 class TSObject0 extends AbstractToStringObject {
 
   final Object typeName;

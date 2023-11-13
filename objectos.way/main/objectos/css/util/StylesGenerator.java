@@ -15,8 +15,8 @@
  */
 package objectos.css.util;
 
-import objectos.core.object.Check;
 import objectos.lang.NoOpNoteSink;
+import objectos.lang.object.Check;
 import objectos.notes.NoteSink;
 import objectox.css.util.StylesGeneratorImpl;
 

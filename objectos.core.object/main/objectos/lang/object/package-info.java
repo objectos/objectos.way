@@ -19,4 +19,4 @@
  * and {@link java.lang.Object#toString()} methods. Also provides a class that
  * helps constructors and methods check if they were invoked correctly or not.
  */
-package objectos.core.object;
+package objectos.lang.object;

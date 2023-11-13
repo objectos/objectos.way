@@ -15,6 +15,8 @@
  */
 package objectos.core.object;
 
+import objectos.lang.object.ToString;
+
 final class SimpleToStringObject implements ToString.Formattable {
 
   private final Object value;

@@ -15,6 +15,8 @@
  */
 package objectos.core.object;
 
+import objectos.lang.object.ToString;
+
 abstract class AbstractToStringObject implements ToString.Formattable {
 
   @Override

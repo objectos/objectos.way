@@ -17,6 +17,7 @@ package objectos.core.object;
 
 import static org.testng.Assert.assertEquals;
 
+import objectos.lang.object.Check;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
