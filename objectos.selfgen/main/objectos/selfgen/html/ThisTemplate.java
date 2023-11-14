@@ -37,8 +37,6 @@ abstract class ThisTemplate {
 
 	static final String HTML_INTERNAL = "objectos.html.internal";
 
-	static final ClassName INTERNAL_INSTRUCTION = ClassName.of(HTML_INTERNAL, "InternalInstruction");
-
 	static final String HTML_TMPL = "objectos.html.tmpl";
 
 	static final ClassName API = ClassName.of(HTML_TMPL, "Api");

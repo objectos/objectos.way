@@ -59,6 +59,8 @@ final class ApiStep extends ThisTemplate {
      */
     \{GENERATED_MSG}
     public final class \{simpleName} {
+      public static final Attribute ATTRIBUTE = new Attribute();
+
       public static final ElementContents GLOBAL_INSTRUCTION = new ElementContents();
 
       public static final Fragment FRAGMENT = new Fragment();
@@ -82,8 +84,7 @@ final class ApiStep extends ThisTemplate {
        */
       public sealed interface GlobalAttribute
           extends
-    \{extendsAll}
-          permits ExternalAttribute, \{INTERNAL_INSTRUCTION} {}
+    \{extendsAll} {}
 
       /**
        * An instruction for an HTML attribute provided by an external object.
@@ -125,6 +126,16 @@ final class ApiStep extends ThisTemplate {
            */
           \{iterator}<String> classNames();
         }
+      }
+      
+      /**
+       * The attribute instruction.
+       */
+      public static final class Attribute
+          implements 
+    \{extendsAttribute()},
+          \{GLOBAL_ATTRIBUTE} {
+        private Attribute() {}
       }
 
       /**
@@ -213,8 +224,7 @@ final class ApiStep extends ThisTemplate {
            */
           public sealed interface \{thisSimpleName}
               extends
-        \{superTypes}
-              permits \{INTERNAL_INSTRUCTION} {}
+        \{superTypes} {}
 
         """
       );
@@ -230,6 +240,16 @@ final class ApiStep extends ThisTemplate {
       .collect(Collectors.joining(",\n"));
 
     return Code.indent(all, 6);
+  }
+  
+  private String extendsAttribute() {
+    String s = spec.attributes().stream()
+        .map(spec -> spec.instructionClassName)
+        .filter(cn -> cn != null)
+        .map(ClassName::simpleName)
+        .collect(Collectors.joining(",\n"));
+
+    return Code.indent(s, 6);
   }
 
   private String extendsElementContents() {

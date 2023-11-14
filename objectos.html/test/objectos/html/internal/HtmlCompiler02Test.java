@@ -67,7 +67,7 @@ public class HtmlCompiler02Test {
 		compiler.attribute(StandardAttributeName.LANG, "pt-BR");
 
 		compiler.elementBegin(StandardElementName.HTML);
-		compiler.elementValue(InternalInstruction.INSTANCE);
+		compiler.elementValue(Api.ATTRIBUTE);
 		compiler.elementEnd();
 
 		compiler.compilationEnd();
@@ -111,8 +111,8 @@ public class HtmlCompiler02Test {
 		compiler.attribute(StandardAttributeName.LANG, "pt-BR");
 
 		compiler.elementBegin(StandardElementName.HTML);
-		compiler.elementValue(InternalInstruction.INSTANCE);
-		compiler.elementValue(InternalInstruction.INSTANCE);
+		compiler.elementValue(Api.ATTRIBUTE);
+		compiler.elementValue(Api.ATTRIBUTE);
 		compiler.elementEnd();
 
 		compiler.compilationEnd();
@@ -164,7 +164,7 @@ public class HtmlCompiler02Test {
 		compiler.elementEnd();
 
 		compiler.elementBegin(StandardElementName.HTML);
-		compiler.elementValue(InternalInstruction.INSTANCE);
+		compiler.elementValue(Api.GLOBAL_INSTRUCTION);
 		compiler.elementEnd();
 
 		compiler.compilationEnd();
@@ -250,7 +250,7 @@ public class HtmlCompiler02Test {
 			compiler.attribute(StandardAttributeName.CHARSET, "utf-8");
 
 			compiler.elementBegin(StandardElementName.META);
-			compiler.elementValue(InternalInstruction.INSTANCE);
+			compiler.elementValue(Api.ATTRIBUTE);
 			compiler.elementEnd();
 		};
 
@@ -261,11 +261,11 @@ public class HtmlCompiler02Test {
 		compiler.fragmentEnd(index);
 
 		compiler.elementBegin(StandardElementName.HEAD);
-		compiler.elementValue(InternalInstruction.INSTANCE);
+		compiler.elementValue(Api.GLOBAL_INSTRUCTION);
 		compiler.elementEnd();
 
 		compiler.elementBegin(StandardElementName.HTML);
-		compiler.elementValue(InternalInstruction.INSTANCE);
+		compiler.elementValue(Api.GLOBAL_INSTRUCTION);
 		compiler.elementEnd();
 
 		compiler.compilationEnd();
@@ -339,7 +339,7 @@ public class HtmlCompiler02Test {
 
 		compiler.elementBegin(StandardElementName.HTML);
 		compiler.elementValue(foo);
-		compiler.elementValue(InternalInstruction.INSTANCE);
+		compiler.elementValue(Api.GLOBAL_INSTRUCTION);
 		compiler.elementEnd();
 
 		compiler.compilationEnd();
@@ -402,15 +402,15 @@ public class HtmlCompiler02Test {
 		compiler.text("o7html");
 
 		compiler.elementBegin(StandardElementName.P);
-		compiler.elementValue(InternalInstruction.INSTANCE);
+		compiler.elementValue(Api.GLOBAL_INSTRUCTION);
 		compiler.elementEnd();
 
 		compiler.elementBegin(StandardElementName.BODY);
-		compiler.elementValue(InternalInstruction.INSTANCE);
+		compiler.elementValue(Api.GLOBAL_INSTRUCTION);
 		compiler.elementEnd();
 
 		compiler.elementBegin(StandardElementName.HTML);
-		compiler.elementValue(InternalInstruction.INSTANCE);
+		compiler.elementValue(Api.GLOBAL_INSTRUCTION);
 		compiler.elementEnd();
 
 		compiler.compilationEnd();
@@ -472,18 +472,18 @@ public class HtmlCompiler02Test {
 		compiler.ambiguous(Ambiguous.TITLE, "element");
 
 		compiler.elementBegin(StandardElementName.HEAD);
-		compiler.elementValue(InternalInstruction.INSTANCE);
+		compiler.elementValue(Api.GLOBAL_INSTRUCTION);
 		compiler.elementEnd();
 
 		compiler.ambiguous(Ambiguous.TITLE, "attribute");
 
 		compiler.elementBegin(StandardElementName.BODY);
-		compiler.elementValue(InternalInstruction.INSTANCE);
+		compiler.elementValue(Api.GLOBAL_INSTRUCTION);
 		compiler.elementEnd();
 
 		compiler.elementBegin(StandardElementName.HTML);
-		compiler.elementValue(InternalInstruction.INSTANCE);
-		compiler.elementValue(InternalInstruction.INSTANCE);
+		compiler.elementValue(Api.GLOBAL_INSTRUCTION);
+		compiler.elementValue(Api.GLOBAL_INSTRUCTION);
 		compiler.elementEnd();
 
 		compiler.compilationEnd();
@@ -610,7 +610,7 @@ public class HtmlCompiler02Test {
 		compiler.text("ul > li {}");
 
 		compiler.elementBegin(StandardElementName.STYLE);
-		compiler.elementValue(InternalInstruction.INSTANCE);
+		compiler.elementValue(Api.GLOBAL_INSTRUCTION);
 		compiler.elementEnd();
 
 		compiler.compilationEnd();
@@ -656,8 +656,8 @@ public class HtmlCompiler02Test {
 		compiler.attribute(StandardAttributeName.REQUIRED);
 
 		compiler.elementBegin(StandardElementName.INPUT);
-		compiler.elementValue(InternalInstruction.INSTANCE);
-		compiler.elementValue(InternalInstruction.INSTANCE);
+		compiler.elementValue(Api.ATTRIBUTE);
+		compiler.elementValue(Api.ATTRIBUTE);
 		compiler.elementEnd();
 
 		compiler.compilationEnd();
@@ -710,12 +710,12 @@ public class HtmlCompiler02Test {
 		compiler.elementEnd();
 
 		compiler.flattenBegin();
-		compiler.elementValue(InternalInstruction.INSTANCE);
-		compiler.elementValue(InternalInstruction.INSTANCE);
+		compiler.elementValue(Api.GLOBAL_INSTRUCTION);
+		compiler.elementValue(Api.GLOBAL_INSTRUCTION);
 		compiler.elementEnd();
 
 		compiler.elementBegin(StandardElementName.FORM);
-		compiler.elementValue(InternalInstruction.INSTANCE);
+		compiler.elementValue(Api.GLOBAL_INSTRUCTION);
 		compiler.elementEnd();
 
 		compiler.compilationEnd();

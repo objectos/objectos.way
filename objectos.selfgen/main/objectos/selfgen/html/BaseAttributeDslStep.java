@@ -21,11 +21,11 @@ import java.util.stream.Collectors;
 import objectos.code.ClassName;
 
 final class BaseAttributeDslStep extends ThisTemplate {
-  public BaseAttributeDslStep(HtmlSelfGen spec) {
-    super(spec);
-  }
+	public BaseAttributeDslStep(HtmlSelfGen spec) {
+		super(spec);
+	}
 
-  @Override
+	@Override
   final String contents() {
     className(
       ClassName.of("objectos.html", "BaseAttributeDsl")
@@ -69,8 +69,7 @@ final class BaseAttributeDslStep extends ThisTemplate {
        */
       protected final \{CLIP_PATH_ATTRIBUTE} clipPath(String value) {
         api().attribute(\{STD_ATTR_NAME}.CLIPPATH, value);
-
-        return \{INTERNAL_INSTRUCTION}.INSTANCE;
+        return \{API}.ATTRIBUTE;
       }
 
       abstract \{HTML_TEMPLATE_API} api();
@@ -82,7 +81,7 @@ final class BaseAttributeDslStep extends ThisTemplate {
     """;
   }
 
-  private String attributes() {
+	private String attributes() {
     List<String> methods;
     methods = new ArrayList<>();
 
@@ -129,7 +128,7 @@ final class BaseAttributeDslStep extends ThisTemplate {
                */
               protected final \{returnType} \{name}(String value) {
                 attribute(\{STD_ATTR_NAME}.\{constantName}, value);
-                return \{INTERNAL_INSTRUCTION}.INSTANCE;
+                return \{API}.ATTRIBUTE;
               }
             """
          );
@@ -145,7 +144,7 @@ final class BaseAttributeDslStep extends ThisTemplate {
                */
               protected final \{returnType} \{name}() {
                 attribute(\{STD_ATTR_NAME}.\{constantName});
-                return \{INTERNAL_INSTRUCTION}.INSTANCE;
+                return \{API}.ATTRIBUTE;
               }
             """
          );

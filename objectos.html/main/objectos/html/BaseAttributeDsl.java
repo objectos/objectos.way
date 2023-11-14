@@ -17,8 +17,8 @@ package objectos.html;
 
 import objectos.html.internal.AttributeName;
 import objectos.html.internal.HtmlTemplateApi;
-import objectos.html.internal.InternalInstruction;
 import objectos.html.internal.StandardAttributeName;
+import objectos.html.tmpl.Api;
 import objectos.html.tmpl.Api.AlignmentBaselineAttribute;
 import objectos.html.tmpl.Api.AutocompleteAttribute;
 import objectos.html.tmpl.Api.BaselineShiftAttribute;
@@ -131,7 +131,7 @@ public sealed abstract class BaseAttributeDsl permits BaseElementDsl {
    */
   protected final GlobalAttribute accesskey(String value) {
     attribute(StandardAttributeName.ACCESSKEY, value);
-    return InternalInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -144,7 +144,7 @@ public sealed abstract class BaseAttributeDsl permits BaseElementDsl {
    */
   protected final FormInstruction action(String value) {
     attribute(StandardAttributeName.ACTION, value);
-    return InternalInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -157,7 +157,7 @@ public sealed abstract class BaseAttributeDsl permits BaseElementDsl {
    */
   protected final TableInstruction align(String value) {
     attribute(StandardAttributeName.ALIGN, value);
-    return InternalInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -170,7 +170,7 @@ public sealed abstract class BaseAttributeDsl permits BaseElementDsl {
    */
   protected final AlignmentBaselineAttribute alignmentBaseline(String value) {
     attribute(StandardAttributeName.ALIGNMENTBASELINE, value);
-    return InternalInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -183,7 +183,7 @@ public sealed abstract class BaseAttributeDsl permits BaseElementDsl {
    */
   protected final ImageInstruction alt(String value) {
     attribute(StandardAttributeName.ALT, value);
-    return InternalInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -196,7 +196,7 @@ public sealed abstract class BaseAttributeDsl permits BaseElementDsl {
    */
   protected final GlobalAttribute ariaHidden(String value) {
     attribute(StandardAttributeName.ARIAHIDDEN, value);
-    return InternalInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -206,7 +206,7 @@ public sealed abstract class BaseAttributeDsl permits BaseElementDsl {
    */
   protected final ScriptInstruction async() {
     attribute(StandardAttributeName.ASYNC);
-    return InternalInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -219,7 +219,7 @@ public sealed abstract class BaseAttributeDsl permits BaseElementDsl {
    */
   protected final AutocompleteAttribute autocomplete(String value) {
     attribute(StandardAttributeName.AUTOCOMPLETE, value);
-    return InternalInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -229,7 +229,7 @@ public sealed abstract class BaseAttributeDsl permits BaseElementDsl {
    */
   protected final InputInstruction autofocus() {
     attribute(StandardAttributeName.AUTOFOCUS);
-    return InternalInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -242,7 +242,7 @@ public sealed abstract class BaseAttributeDsl permits BaseElementDsl {
    */
   protected final BaselineShiftAttribute baselineShift(String value) {
     attribute(StandardAttributeName.BASELINESHIFT, value);
-    return InternalInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -255,7 +255,7 @@ public sealed abstract class BaseAttributeDsl permits BaseElementDsl {
    */
   protected final TableInstruction border(String value) {
     attribute(StandardAttributeName.BORDER, value);
-    return InternalInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -268,7 +268,7 @@ public sealed abstract class BaseAttributeDsl permits BaseElementDsl {
    */
   protected final TableInstruction cellpadding(String value) {
     attribute(StandardAttributeName.CELLPADDING, value);
-    return InternalInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -281,7 +281,7 @@ public sealed abstract class BaseAttributeDsl permits BaseElementDsl {
    */
   protected final TableInstruction cellspacing(String value) {
     attribute(StandardAttributeName.CELLSPACING, value);
-    return InternalInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -294,7 +294,7 @@ public sealed abstract class BaseAttributeDsl permits BaseElementDsl {
    */
   protected final MetaInstruction charset(String value) {
     attribute(StandardAttributeName.CHARSET, value);
-    return InternalInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -307,7 +307,7 @@ public sealed abstract class BaseAttributeDsl permits BaseElementDsl {
    */
   protected final BlockquoteInstruction cite(String value) {
     attribute(StandardAttributeName.CITE, value);
-    return InternalInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -320,7 +320,7 @@ public sealed abstract class BaseAttributeDsl permits BaseElementDsl {
    */
   protected final GlobalAttribute className(String value) {
     attribute(StandardAttributeName.CLASS, value);
-    return InternalInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -333,7 +333,7 @@ public sealed abstract class BaseAttributeDsl permits BaseElementDsl {
    */
   protected final ClipRuleAttribute clipRule(String value) {
     attribute(StandardAttributeName.CLIPRULE, value);
-    return InternalInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -346,7 +346,7 @@ public sealed abstract class BaseAttributeDsl permits BaseElementDsl {
    */
   protected final ColorAttribute color(String value) {
     attribute(StandardAttributeName.COLOR, value);
-    return InternalInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -359,7 +359,7 @@ public sealed abstract class BaseAttributeDsl permits BaseElementDsl {
    */
   protected final ColorInterpolationAttribute colorInterpolation(String value) {
     attribute(StandardAttributeName.COLORINTERPOLATION, value);
-    return InternalInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -372,7 +372,7 @@ public sealed abstract class BaseAttributeDsl permits BaseElementDsl {
    */
   protected final ColorInterpolationFiltersAttribute colorInterpolationFilters(String value) {
     attribute(StandardAttributeName.COLORINTERPOLATIONFILTERS, value);
-    return InternalInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -385,7 +385,7 @@ public sealed abstract class BaseAttributeDsl permits BaseElementDsl {
    */
   protected final TextAreaInstruction cols(String value) {
     attribute(StandardAttributeName.COLS, value);
-    return InternalInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -398,7 +398,7 @@ public sealed abstract class BaseAttributeDsl permits BaseElementDsl {
    */
   protected final MetaInstruction content(String value) {
     attribute(StandardAttributeName.CONTENT, value);
-    return InternalInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -411,7 +411,7 @@ public sealed abstract class BaseAttributeDsl permits BaseElementDsl {
    */
   protected final GlobalAttribute contenteditable(String value) {
     attribute(StandardAttributeName.CONTENTEDITABLE, value);
-    return InternalInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -424,7 +424,7 @@ public sealed abstract class BaseAttributeDsl permits BaseElementDsl {
    */
   protected final CrossoriginAttribute crossorigin(String value) {
     attribute(StandardAttributeName.CROSSORIGIN, value);
-    return InternalInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -437,7 +437,7 @@ public sealed abstract class BaseAttributeDsl permits BaseElementDsl {
    */
   protected final CursorAttribute cursor(String value) {
     attribute(StandardAttributeName.CURSOR, value);
-    return InternalInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -450,7 +450,7 @@ public sealed abstract class BaseAttributeDsl permits BaseElementDsl {
    */
   protected final DAttribute d(String value) {
     attribute(StandardAttributeName.D, value);
-    return InternalInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -460,7 +460,7 @@ public sealed abstract class BaseAttributeDsl permits BaseElementDsl {
    */
   protected final ScriptInstruction defer() {
     attribute(StandardAttributeName.DEFER);
-    return InternalInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -473,7 +473,7 @@ public sealed abstract class BaseAttributeDsl permits BaseElementDsl {
    */
   protected final GlobalAttribute dir(String value) {
     attribute(StandardAttributeName.DIR, value);
-    return InternalInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -486,7 +486,7 @@ public sealed abstract class BaseAttributeDsl permits BaseElementDsl {
    */
   protected final DirectionAttribute direction(String value) {
     attribute(StandardAttributeName.DIRECTION, value);
-    return InternalInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -499,7 +499,7 @@ public sealed abstract class BaseAttributeDsl permits BaseElementDsl {
    */
   protected final TextAreaInstruction dirname(String value) {
     attribute(StandardAttributeName.DIRNAME, value);
-    return InternalInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -509,7 +509,7 @@ public sealed abstract class BaseAttributeDsl permits BaseElementDsl {
    */
   protected final DisabledAttribute disabled() {
     attribute(StandardAttributeName.DISABLED);
-    return InternalInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -522,7 +522,7 @@ public sealed abstract class BaseAttributeDsl permits BaseElementDsl {
    */
   protected final DisplayAttribute display(String value) {
     attribute(StandardAttributeName.DISPLAY, value);
-    return InternalInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -535,7 +535,7 @@ public sealed abstract class BaseAttributeDsl permits BaseElementDsl {
    */
   protected final DominantBaselineAttribute dominantBaseline(String value) {
     attribute(StandardAttributeName.DOMINANTBASELINE, value);
-    return InternalInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -548,7 +548,7 @@ public sealed abstract class BaseAttributeDsl permits BaseElementDsl {
    */
   protected final GlobalAttribute draggable(String value) {
     attribute(StandardAttributeName.DRAGGABLE, value);
-    return InternalInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -561,7 +561,7 @@ public sealed abstract class BaseAttributeDsl permits BaseElementDsl {
    */
   protected final FormInstruction enctype(String value) {
     attribute(StandardAttributeName.ENCTYPE, value);
-    return InternalInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -574,7 +574,7 @@ public sealed abstract class BaseAttributeDsl permits BaseElementDsl {
    */
   protected final FillAttribute fill(String value) {
     attribute(StandardAttributeName.FILL, value);
-    return InternalInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -587,7 +587,7 @@ public sealed abstract class BaseAttributeDsl permits BaseElementDsl {
    */
   protected final FillOpacityAttribute fillOpacity(String value) {
     attribute(StandardAttributeName.FILLOPACITY, value);
-    return InternalInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -600,7 +600,7 @@ public sealed abstract class BaseAttributeDsl permits BaseElementDsl {
    */
   protected final FillRuleAttribute fillRule(String value) {
     attribute(StandardAttributeName.FILLRULE, value);
-    return InternalInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -613,7 +613,7 @@ public sealed abstract class BaseAttributeDsl permits BaseElementDsl {
    */
   protected final FilterAttribute filter(String value) {
     attribute(StandardAttributeName.FILTER, value);
-    return InternalInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -626,7 +626,7 @@ public sealed abstract class BaseAttributeDsl permits BaseElementDsl {
    */
   protected final FloodColorAttribute floodColor(String value) {
     attribute(StandardAttributeName.FLOODCOLOR, value);
-    return InternalInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -639,7 +639,7 @@ public sealed abstract class BaseAttributeDsl permits BaseElementDsl {
    */
   protected final FloodOpacityAttribute floodOpacity(String value) {
     attribute(StandardAttributeName.FLOODOPACITY, value);
-    return InternalInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -652,7 +652,7 @@ public sealed abstract class BaseAttributeDsl permits BaseElementDsl {
    */
   protected final FontFamilyAttribute fontFamily(String value) {
     attribute(StandardAttributeName.FONTFAMILY, value);
-    return InternalInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -665,7 +665,7 @@ public sealed abstract class BaseAttributeDsl permits BaseElementDsl {
    */
   protected final FontSizeAttribute fontSize(String value) {
     attribute(StandardAttributeName.FONTSIZE, value);
-    return InternalInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -678,7 +678,7 @@ public sealed abstract class BaseAttributeDsl permits BaseElementDsl {
    */
   protected final FontSizeAdjustAttribute fontSizeAdjust(String value) {
     attribute(StandardAttributeName.FONTSIZEADJUST, value);
-    return InternalInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -691,7 +691,7 @@ public sealed abstract class BaseAttributeDsl permits BaseElementDsl {
    */
   protected final FontStretchAttribute fontStretch(String value) {
     attribute(StandardAttributeName.FONTSTRETCH, value);
-    return InternalInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -704,7 +704,7 @@ public sealed abstract class BaseAttributeDsl permits BaseElementDsl {
    */
   protected final FontStyleAttribute fontStyle(String value) {
     attribute(StandardAttributeName.FONTSTYLE, value);
-    return InternalInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -717,7 +717,7 @@ public sealed abstract class BaseAttributeDsl permits BaseElementDsl {
    */
   protected final FontVariantAttribute fontVariant(String value) {
     attribute(StandardAttributeName.FONTVARIANT, value);
-    return InternalInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -730,7 +730,7 @@ public sealed abstract class BaseAttributeDsl permits BaseElementDsl {
    */
   protected final FontWeightAttribute fontWeight(String value) {
     attribute(StandardAttributeName.FONTWEIGHT, value);
-    return InternalInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -743,7 +743,7 @@ public sealed abstract class BaseAttributeDsl permits BaseElementDsl {
    */
   protected final LabelInstruction forAttr(String value) {
     attribute(StandardAttributeName.FOR, value);
-    return InternalInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -756,7 +756,7 @@ public sealed abstract class BaseAttributeDsl permits BaseElementDsl {
    */
   protected final LabelInstruction forElement(String value) {
     attribute(StandardAttributeName.FOR, value);
-    return InternalInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -769,7 +769,7 @@ public sealed abstract class BaseAttributeDsl permits BaseElementDsl {
    */
   protected final GlyphOrientationHorizontalAttribute glyphOrientationHorizontal(String value) {
     attribute(StandardAttributeName.GLYPHORIENTATIONHORIZONTAL, value);
-    return InternalInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -782,7 +782,7 @@ public sealed abstract class BaseAttributeDsl permits BaseElementDsl {
    */
   protected final GlyphOrientationVerticalAttribute glyphOrientationVertical(String value) {
     attribute(StandardAttributeName.GLYPHORIENTATIONVERTICAL, value);
-    return InternalInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -795,7 +795,7 @@ public sealed abstract class BaseAttributeDsl permits BaseElementDsl {
    */
   protected final HeightAttribute height(String value) {
     attribute(StandardAttributeName.HEIGHT, value);
-    return InternalInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -805,7 +805,7 @@ public sealed abstract class BaseAttributeDsl permits BaseElementDsl {
    */
   protected final GlobalAttribute hidden() {
     attribute(StandardAttributeName.HIDDEN);
-    return InternalInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -818,7 +818,7 @@ public sealed abstract class BaseAttributeDsl permits BaseElementDsl {
    */
   protected final HrefAttribute href(String value) {
     attribute(StandardAttributeName.HREF, value);
-    return InternalInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -831,7 +831,7 @@ public sealed abstract class BaseAttributeDsl permits BaseElementDsl {
    */
   protected final MetaInstruction httpEquiv(String value) {
     attribute(StandardAttributeName.HTTPEQUIV, value);
-    return InternalInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -844,7 +844,7 @@ public sealed abstract class BaseAttributeDsl permits BaseElementDsl {
    */
   protected final GlobalAttribute id(String value) {
     attribute(StandardAttributeName.ID, value);
-    return InternalInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -857,7 +857,7 @@ public sealed abstract class BaseAttributeDsl permits BaseElementDsl {
    */
   protected final ImageRenderingAttribute imageRendering(String value) {
     attribute(StandardAttributeName.IMAGERENDERING, value);
-    return InternalInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -870,7 +870,7 @@ public sealed abstract class BaseAttributeDsl permits BaseElementDsl {
    */
   protected final ScriptInstruction integrity(String value) {
     attribute(StandardAttributeName.INTEGRITY, value);
-    return InternalInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -883,7 +883,7 @@ public sealed abstract class BaseAttributeDsl permits BaseElementDsl {
    */
   protected final GlobalAttribute lang(String value) {
     attribute(StandardAttributeName.LANG, value);
-    return InternalInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -896,7 +896,7 @@ public sealed abstract class BaseAttributeDsl permits BaseElementDsl {
    */
   protected final LetterSpacingAttribute letterSpacing(String value) {
     attribute(StandardAttributeName.LETTERSPACING, value);
-    return InternalInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -909,7 +909,7 @@ public sealed abstract class BaseAttributeDsl permits BaseElementDsl {
    */
   protected final LightingColorAttribute lightingColor(String value) {
     attribute(StandardAttributeName.LIGHTINGCOLOR, value);
-    return InternalInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -922,7 +922,7 @@ public sealed abstract class BaseAttributeDsl permits BaseElementDsl {
    */
   protected final MarkerEndAttribute markerEnd(String value) {
     attribute(StandardAttributeName.MARKEREND, value);
-    return InternalInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -935,7 +935,7 @@ public sealed abstract class BaseAttributeDsl permits BaseElementDsl {
    */
   protected final MarkerMidAttribute markerMid(String value) {
     attribute(StandardAttributeName.MARKERMID, value);
-    return InternalInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -948,7 +948,7 @@ public sealed abstract class BaseAttributeDsl permits BaseElementDsl {
    */
   protected final MarkerStartAttribute markerStart(String value) {
     attribute(StandardAttributeName.MARKERSTART, value);
-    return InternalInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -961,7 +961,7 @@ public sealed abstract class BaseAttributeDsl permits BaseElementDsl {
    */
   protected final MaskAttribute mask(String value) {
     attribute(StandardAttributeName.MASK, value);
-    return InternalInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -974,7 +974,7 @@ public sealed abstract class BaseAttributeDsl permits BaseElementDsl {
    */
   protected final MaskTypeAttribute maskType(String value) {
     attribute(StandardAttributeName.MASKTYPE, value);
-    return InternalInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -987,7 +987,7 @@ public sealed abstract class BaseAttributeDsl permits BaseElementDsl {
    */
   protected final TextAreaInstruction maxlength(String value) {
     attribute(StandardAttributeName.MAXLENGTH, value);
-    return InternalInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -1000,7 +1000,7 @@ public sealed abstract class BaseAttributeDsl permits BaseElementDsl {
    */
   protected final LinkInstruction media(String value) {
     attribute(StandardAttributeName.MEDIA, value);
-    return InternalInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -1013,7 +1013,7 @@ public sealed abstract class BaseAttributeDsl permits BaseElementDsl {
    */
   protected final FormInstruction method(String value) {
     attribute(StandardAttributeName.METHOD, value);
-    return InternalInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -1026,7 +1026,7 @@ public sealed abstract class BaseAttributeDsl permits BaseElementDsl {
    */
   protected final TextAreaInstruction minlength(String value) {
     attribute(StandardAttributeName.MINLENGTH, value);
-    return InternalInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -1036,7 +1036,7 @@ public sealed abstract class BaseAttributeDsl permits BaseElementDsl {
    */
   protected final SelectInstruction multiple() {
     attribute(StandardAttributeName.MULTIPLE);
-    return InternalInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -1049,7 +1049,7 @@ public sealed abstract class BaseAttributeDsl permits BaseElementDsl {
    */
   protected final NameAttribute name(String value) {
     attribute(StandardAttributeName.NAME, value);
-    return InternalInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -1059,7 +1059,7 @@ public sealed abstract class BaseAttributeDsl permits BaseElementDsl {
    */
   protected final ScriptInstruction nomodule() {
     attribute(StandardAttributeName.NOMODULE);
-    return InternalInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -1072,7 +1072,7 @@ public sealed abstract class BaseAttributeDsl permits BaseElementDsl {
    */
   protected final BodyInstruction onafterprint(String value) {
     attribute(StandardAttributeName.ONAFTERPRINT, value);
-    return InternalInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -1085,7 +1085,7 @@ public sealed abstract class BaseAttributeDsl permits BaseElementDsl {
    */
   protected final BodyInstruction onbeforeprint(String value) {
     attribute(StandardAttributeName.ONBEFOREPRINT, value);
-    return InternalInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -1098,7 +1098,7 @@ public sealed abstract class BaseAttributeDsl permits BaseElementDsl {
    */
   protected final BodyInstruction onbeforeunload(String value) {
     attribute(StandardAttributeName.ONBEFOREUNLOAD, value);
-    return InternalInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -1111,7 +1111,7 @@ public sealed abstract class BaseAttributeDsl permits BaseElementDsl {
    */
   protected final GlobalAttribute onclick(String value) {
     attribute(StandardAttributeName.ONCLICK, value);
-    return InternalInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -1124,7 +1124,7 @@ public sealed abstract class BaseAttributeDsl permits BaseElementDsl {
    */
   protected final BodyInstruction onhashchange(String value) {
     attribute(StandardAttributeName.ONHASHCHANGE, value);
-    return InternalInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -1137,7 +1137,7 @@ public sealed abstract class BaseAttributeDsl permits BaseElementDsl {
    */
   protected final BodyInstruction onlanguagechange(String value) {
     attribute(StandardAttributeName.ONLANGUAGECHANGE, value);
-    return InternalInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -1150,7 +1150,7 @@ public sealed abstract class BaseAttributeDsl permits BaseElementDsl {
    */
   protected final BodyInstruction onmessage(String value) {
     attribute(StandardAttributeName.ONMESSAGE, value);
-    return InternalInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -1163,7 +1163,7 @@ public sealed abstract class BaseAttributeDsl permits BaseElementDsl {
    */
   protected final BodyInstruction onoffline(String value) {
     attribute(StandardAttributeName.ONOFFLINE, value);
-    return InternalInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -1176,7 +1176,7 @@ public sealed abstract class BaseAttributeDsl permits BaseElementDsl {
    */
   protected final BodyInstruction ononline(String value) {
     attribute(StandardAttributeName.ONONLINE, value);
-    return InternalInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -1189,7 +1189,7 @@ public sealed abstract class BaseAttributeDsl permits BaseElementDsl {
    */
   protected final BodyInstruction onpagehide(String value) {
     attribute(StandardAttributeName.ONPAGEHIDE, value);
-    return InternalInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -1202,7 +1202,7 @@ public sealed abstract class BaseAttributeDsl permits BaseElementDsl {
    */
   protected final BodyInstruction onpageshow(String value) {
     attribute(StandardAttributeName.ONPAGESHOW, value);
-    return InternalInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -1215,7 +1215,7 @@ public sealed abstract class BaseAttributeDsl permits BaseElementDsl {
    */
   protected final BodyInstruction onpopstate(String value) {
     attribute(StandardAttributeName.ONPOPSTATE, value);
-    return InternalInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -1228,7 +1228,7 @@ public sealed abstract class BaseAttributeDsl permits BaseElementDsl {
    */
   protected final BodyInstruction onrejectionhandled(String value) {
     attribute(StandardAttributeName.ONREJECTIONHANDLED, value);
-    return InternalInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -1241,7 +1241,7 @@ public sealed abstract class BaseAttributeDsl permits BaseElementDsl {
    */
   protected final BodyInstruction onstorage(String value) {
     attribute(StandardAttributeName.ONSTORAGE, value);
-    return InternalInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -1254,7 +1254,7 @@ public sealed abstract class BaseAttributeDsl permits BaseElementDsl {
    */
   protected final GlobalAttribute onsubmit(String value) {
     attribute(StandardAttributeName.ONSUBMIT, value);
-    return InternalInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -1267,7 +1267,7 @@ public sealed abstract class BaseAttributeDsl permits BaseElementDsl {
    */
   protected final BodyInstruction onunhandledrejection(String value) {
     attribute(StandardAttributeName.ONUNHANDLEDREJECTION, value);
-    return InternalInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -1280,7 +1280,7 @@ public sealed abstract class BaseAttributeDsl permits BaseElementDsl {
    */
   protected final BodyInstruction onunload(String value) {
     attribute(StandardAttributeName.ONUNLOAD, value);
-    return InternalInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -1293,7 +1293,7 @@ public sealed abstract class BaseAttributeDsl permits BaseElementDsl {
    */
   protected final OpacityAttribute opacity(String value) {
     attribute(StandardAttributeName.OPACITY, value);
-    return InternalInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -1303,7 +1303,7 @@ public sealed abstract class BaseAttributeDsl permits BaseElementDsl {
    */
   protected final DetailsInstruction open() {
     attribute(StandardAttributeName.OPEN);
-    return InternalInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -1316,7 +1316,7 @@ public sealed abstract class BaseAttributeDsl permits BaseElementDsl {
    */
   protected final OverflowAttribute overflow(String value) {
     attribute(StandardAttributeName.OVERFLOW, value);
-    return InternalInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -1329,7 +1329,7 @@ public sealed abstract class BaseAttributeDsl permits BaseElementDsl {
    */
   protected final PaintOrderAttribute paintOrder(String value) {
     attribute(StandardAttributeName.PAINTORDER, value);
-    return InternalInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -1342,7 +1342,7 @@ public sealed abstract class BaseAttributeDsl permits BaseElementDsl {
    */
   protected final PlaceholderAttribute placeholder(String value) {
     attribute(StandardAttributeName.PLACEHOLDER, value);
-    return InternalInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -1355,7 +1355,7 @@ public sealed abstract class BaseAttributeDsl permits BaseElementDsl {
    */
   protected final PointerEventsAttribute pointerEvents(String value) {
     attribute(StandardAttributeName.POINTEREVENTS, value);
-    return InternalInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -1368,7 +1368,7 @@ public sealed abstract class BaseAttributeDsl permits BaseElementDsl {
    */
   protected final MetaInstruction property(String value) {
     attribute(StandardAttributeName.PROPERTY, value);
-    return InternalInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -1378,7 +1378,7 @@ public sealed abstract class BaseAttributeDsl permits BaseElementDsl {
    */
   protected final ReadonlyAttribute readonly() {
     attribute(StandardAttributeName.READONLY);
-    return InternalInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -1391,7 +1391,7 @@ public sealed abstract class BaseAttributeDsl permits BaseElementDsl {
    */
   protected final ReferrerpolicyAttribute referrerpolicy(String value) {
     attribute(StandardAttributeName.REFERRERPOLICY, value);
-    return InternalInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -1404,7 +1404,7 @@ public sealed abstract class BaseAttributeDsl permits BaseElementDsl {
    */
   protected final LinkInstruction rel(String value) {
     attribute(StandardAttributeName.REL, value);
-    return InternalInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -1414,7 +1414,7 @@ public sealed abstract class BaseAttributeDsl permits BaseElementDsl {
    */
   protected final RequiredAttribute required() {
     attribute(StandardAttributeName.REQUIRED);
-    return InternalInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -1427,7 +1427,7 @@ public sealed abstract class BaseAttributeDsl permits BaseElementDsl {
    */
   protected final LinkInstruction rev(String value) {
     attribute(StandardAttributeName.REV, value);
-    return InternalInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -1437,7 +1437,7 @@ public sealed abstract class BaseAttributeDsl permits BaseElementDsl {
    */
   protected final OrderedListInstruction reversed() {
     attribute(StandardAttributeName.REVERSED);
-    return InternalInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -1450,7 +1450,7 @@ public sealed abstract class BaseAttributeDsl permits BaseElementDsl {
    */
   protected final GlobalAttribute role(String value) {
     attribute(StandardAttributeName.ROLE, value);
-    return InternalInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -1463,7 +1463,7 @@ public sealed abstract class BaseAttributeDsl permits BaseElementDsl {
    */
   protected final TextAreaInstruction rows(String value) {
     attribute(StandardAttributeName.ROWS, value);
-    return InternalInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -1473,7 +1473,7 @@ public sealed abstract class BaseAttributeDsl permits BaseElementDsl {
    */
   protected final OptionInstruction selected() {
     attribute(StandardAttributeName.SELECTED);
-    return InternalInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -1486,7 +1486,7 @@ public sealed abstract class BaseAttributeDsl permits BaseElementDsl {
    */
   protected final ShapeRenderingAttribute shapeRendering(String value) {
     attribute(StandardAttributeName.SHAPERENDERING, value);
-    return InternalInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -1499,7 +1499,7 @@ public sealed abstract class BaseAttributeDsl permits BaseElementDsl {
    */
   protected final SelectInstruction size(String value) {
     attribute(StandardAttributeName.SIZE, value);
-    return InternalInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -1512,7 +1512,7 @@ public sealed abstract class BaseAttributeDsl permits BaseElementDsl {
    */
   protected final LinkInstruction sizes(String value) {
     attribute(StandardAttributeName.SIZES, value);
-    return InternalInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -1525,7 +1525,7 @@ public sealed abstract class BaseAttributeDsl permits BaseElementDsl {
    */
   protected final GlobalAttribute spellcheck(String value) {
     attribute(StandardAttributeName.SPELLCHECK, value);
-    return InternalInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -1538,7 +1538,7 @@ public sealed abstract class BaseAttributeDsl permits BaseElementDsl {
    */
   protected final SrcAttribute src(String value) {
     attribute(StandardAttributeName.SRC, value);
-    return InternalInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -1551,7 +1551,7 @@ public sealed abstract class BaseAttributeDsl permits BaseElementDsl {
    */
   protected final ImageInstruction srcset(String value) {
     attribute(StandardAttributeName.SRCSET, value);
-    return InternalInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -1564,7 +1564,7 @@ public sealed abstract class BaseAttributeDsl permits BaseElementDsl {
    */
   protected final OrderedListInstruction start(String value) {
     attribute(StandardAttributeName.START, value);
-    return InternalInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -1577,7 +1577,7 @@ public sealed abstract class BaseAttributeDsl permits BaseElementDsl {
    */
   protected final StopColorAttribute stopColor(String value) {
     attribute(StandardAttributeName.STOPCOLOR, value);
-    return InternalInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -1590,7 +1590,7 @@ public sealed abstract class BaseAttributeDsl permits BaseElementDsl {
    */
   protected final StopOpacityAttribute stopOpacity(String value) {
     attribute(StandardAttributeName.STOPOPACITY, value);
-    return InternalInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -1603,7 +1603,7 @@ public sealed abstract class BaseAttributeDsl permits BaseElementDsl {
    */
   protected final StrokeAttribute stroke(String value) {
     attribute(StandardAttributeName.STROKE, value);
-    return InternalInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -1616,7 +1616,7 @@ public sealed abstract class BaseAttributeDsl permits BaseElementDsl {
    */
   protected final StrokeDasharrayAttribute strokeDasharray(String value) {
     attribute(StandardAttributeName.STROKEDASHARRAY, value);
-    return InternalInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -1629,7 +1629,7 @@ public sealed abstract class BaseAttributeDsl permits BaseElementDsl {
    */
   protected final StrokeDashoffsetAttribute strokeDashoffset(String value) {
     attribute(StandardAttributeName.STROKEDASHOFFSET, value);
-    return InternalInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -1642,7 +1642,7 @@ public sealed abstract class BaseAttributeDsl permits BaseElementDsl {
    */
   protected final StrokeLinecapAttribute strokeLinecap(String value) {
     attribute(StandardAttributeName.STROKELINECAP, value);
-    return InternalInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -1655,7 +1655,7 @@ public sealed abstract class BaseAttributeDsl permits BaseElementDsl {
    */
   protected final StrokeLinejoinAttribute strokeLinejoin(String value) {
     attribute(StandardAttributeName.STROKELINEJOIN, value);
-    return InternalInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -1668,7 +1668,7 @@ public sealed abstract class BaseAttributeDsl permits BaseElementDsl {
    */
   protected final StrokeMiterlimitAttribute strokeMiterlimit(String value) {
     attribute(StandardAttributeName.STROKEMITERLIMIT, value);
-    return InternalInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -1681,7 +1681,7 @@ public sealed abstract class BaseAttributeDsl permits BaseElementDsl {
    */
   protected final StrokeOpacityAttribute strokeOpacity(String value) {
     attribute(StandardAttributeName.STROKEOPACITY, value);
-    return InternalInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -1694,7 +1694,7 @@ public sealed abstract class BaseAttributeDsl permits BaseElementDsl {
    */
   protected final StrokeWidthAttribute strokeWidth(String value) {
     attribute(StandardAttributeName.STROKEWIDTH, value);
-    return InternalInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -1707,7 +1707,7 @@ public sealed abstract class BaseAttributeDsl permits BaseElementDsl {
    */
   protected final GlobalAttribute inlineStyle(String value) {
     attribute(StandardAttributeName.STYLE, value);
-    return InternalInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -1720,7 +1720,7 @@ public sealed abstract class BaseAttributeDsl permits BaseElementDsl {
    */
   protected final GlobalAttribute tabindex(String value) {
     attribute(StandardAttributeName.TABINDEX, value);
-    return InternalInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -1733,7 +1733,7 @@ public sealed abstract class BaseAttributeDsl permits BaseElementDsl {
    */
   protected final TargetAttribute target(String value) {
     attribute(StandardAttributeName.TARGET, value);
-    return InternalInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -1746,7 +1746,7 @@ public sealed abstract class BaseAttributeDsl permits BaseElementDsl {
    */
   protected final TextAnchorAttribute textAnchor(String value) {
     attribute(StandardAttributeName.TEXTANCHOR, value);
-    return InternalInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -1759,7 +1759,7 @@ public sealed abstract class BaseAttributeDsl permits BaseElementDsl {
    */
   protected final TextDecorationAttribute textDecoration(String value) {
     attribute(StandardAttributeName.TEXTDECORATION, value);
-    return InternalInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -1772,7 +1772,7 @@ public sealed abstract class BaseAttributeDsl permits BaseElementDsl {
    */
   protected final TextOverflowAttribute textOverflow(String value) {
     attribute(StandardAttributeName.TEXTOVERFLOW, value);
-    return InternalInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -1785,7 +1785,7 @@ public sealed abstract class BaseAttributeDsl permits BaseElementDsl {
    */
   protected final TextRenderingAttribute textRendering(String value) {
     attribute(StandardAttributeName.TEXTRENDERING, value);
-    return InternalInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -1798,7 +1798,7 @@ public sealed abstract class BaseAttributeDsl permits BaseElementDsl {
    */
   protected final TransformAttribute transform(String value) {
     attribute(StandardAttributeName.TRANSFORM, value);
-    return InternalInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -1811,7 +1811,7 @@ public sealed abstract class BaseAttributeDsl permits BaseElementDsl {
    */
   protected final TransformOriginAttribute transformOrigin(String value) {
     attribute(StandardAttributeName.TRANSFORMORIGIN, value);
-    return InternalInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -1824,7 +1824,7 @@ public sealed abstract class BaseAttributeDsl permits BaseElementDsl {
    */
   protected final GlobalAttribute translate(String value) {
     attribute(StandardAttributeName.TRANSLATE, value);
-    return InternalInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -1837,7 +1837,7 @@ public sealed abstract class BaseAttributeDsl permits BaseElementDsl {
    */
   protected final TypeAttribute type(String value) {
     attribute(StandardAttributeName.TYPE, value);
-    return InternalInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -1850,7 +1850,7 @@ public sealed abstract class BaseAttributeDsl permits BaseElementDsl {
    */
   protected final UnicodeBidiAttribute unicodeBidi(String value) {
     attribute(StandardAttributeName.UNICODEBIDI, value);
-    return InternalInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -1863,7 +1863,7 @@ public sealed abstract class BaseAttributeDsl permits BaseElementDsl {
    */
   protected final ValueAttribute value(String value) {
     attribute(StandardAttributeName.VALUE, value);
-    return InternalInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -1876,7 +1876,7 @@ public sealed abstract class BaseAttributeDsl permits BaseElementDsl {
    */
   protected final VectorEffectAttribute vectorEffect(String value) {
     attribute(StandardAttributeName.VECTOREFFECT, value);
-    return InternalInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -1889,7 +1889,7 @@ public sealed abstract class BaseAttributeDsl permits BaseElementDsl {
    */
   protected final SvgInstruction viewBox(String value) {
     attribute(StandardAttributeName.VIEWBOX, value);
-    return InternalInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -1902,7 +1902,7 @@ public sealed abstract class BaseAttributeDsl permits BaseElementDsl {
    */
   protected final VisibilityAttribute visibility(String value) {
     attribute(StandardAttributeName.VISIBILITY, value);
-    return InternalInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -1915,7 +1915,7 @@ public sealed abstract class BaseAttributeDsl permits BaseElementDsl {
    */
   protected final WhiteSpaceAttribute whiteSpace(String value) {
     attribute(StandardAttributeName.WHITESPACE, value);
-    return InternalInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -1928,7 +1928,7 @@ public sealed abstract class BaseAttributeDsl permits BaseElementDsl {
    */
   protected final WidthAttribute width(String value) {
     attribute(StandardAttributeName.WIDTH, value);
-    return InternalInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -1941,7 +1941,7 @@ public sealed abstract class BaseAttributeDsl permits BaseElementDsl {
    */
   protected final WordSpacingAttribute wordSpacing(String value) {
     attribute(StandardAttributeName.WORDSPACING, value);
-    return InternalInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -1954,7 +1954,7 @@ public sealed abstract class BaseAttributeDsl permits BaseElementDsl {
    */
   protected final TextAreaInstruction wrap(String value) {
     attribute(StandardAttributeName.WRAP, value);
-    return InternalInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -1967,7 +1967,7 @@ public sealed abstract class BaseAttributeDsl permits BaseElementDsl {
    */
   protected final WritingModeAttribute writingMode(String value) {
     attribute(StandardAttributeName.WRITINGMODE, value);
-    return InternalInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -1980,7 +1980,7 @@ public sealed abstract class BaseAttributeDsl permits BaseElementDsl {
    */
   protected final SvgInstruction xmlns(String value) {
     attribute(StandardAttributeName.XMLNS, value);
-    return InternalInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -1993,8 +1993,7 @@ public sealed abstract class BaseAttributeDsl permits BaseElementDsl {
    */
   protected final ClipPathAttribute clipPath(String value) {
     api().attribute(StandardAttributeName.CLIPPATH, value);
-
-    return InternalInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   abstract HtmlTemplateApi api();

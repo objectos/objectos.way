@@ -19,7 +19,6 @@ import objectos.html.internal.Ambiguous;
 import objectos.html.internal.AttributeName;
 import objectos.html.internal.CustomAttributeName;
 import objectos.html.internal.HtmlTemplateApi;
-import objectos.html.internal.InternalInstruction;
 import objectos.html.internal.StandardElementName;
 import objectos.html.tmpl.Api;
 import objectos.html.tmpl.FragmentLambda;
@@ -296,7 +295,7 @@ public sealed abstract class BaseTemplateDsl
 		api.text(text);
 
 		api.elementBegin(name);
-		api.elementValue(InternalInstruction.INSTANCE);
+		api.elementValue(Api.GLOBAL_INSTRUCTION);
 		api.elementEnd();
 	}
 
