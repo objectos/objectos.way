@@ -50,7 +50,6 @@ final class InternalInstructionStep extends ThisTemplate {
     \{GENERATED_MSG}
     public enum \{simpleName} implements
     \{superTypes()}
-        \{AMBIGUOUS_INST},
         \{GLOBAL_ATTRIBUTE} {
       INSTANCE;
     }

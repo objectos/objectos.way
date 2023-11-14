@@ -16,7 +16,6 @@
 package objectos.html.internal;
 
 import objectos.html.tmpl.Api.AlignmentBaselineAttribute;
-import objectos.html.tmpl.Api.AmbiguousInstruction;
 import objectos.html.tmpl.Api.AutocompleteAttribute;
 import objectos.html.tmpl.Api.BaselineShiftAttribute;
 import objectos.html.tmpl.Api.ClipPathAttribute;
@@ -180,7 +179,6 @@ public enum InternalInstruction implements
     WordSpacingAttribute,
     WritingModeAttribute,
 
-    AmbiguousInstruction,
     GlobalAttribute {
   INSTANCE;
 }

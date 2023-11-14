@@ -80,20 +80,6 @@ final class ApiStep extends ThisTemplate {
     \{elements()}
     \{attributes()}
       /**
-       * An instruction which may represent either an HTML attribute or an HTML element depending
-       * on the context it is used.
-       *
-       * <p>
-       * For example, the {@code title} instruction will usually render the {@code title}
-       * global attribute. However, when used as a child of the {@code head} element
-       * it will render the {@code title} element.
-       */
-      public sealed interface AmbiguousInstruction
-          extends
-    \{extendsAll}
-          permits \{INTERNAL_INSTRUCTION} {}
-
-      /**
        * Represents an HTML global attribute such as the {@code id} attribute for example.
        */
       public sealed interface GlobalAttribute

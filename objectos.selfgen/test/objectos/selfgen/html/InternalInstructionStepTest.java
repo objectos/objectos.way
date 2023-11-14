@@ -65,7 +65,6 @@ public class InternalInstructionStepTest {
        */
       package objectos.html.internal;
 
-      import objectos.html.tmpl.Api.AmbiguousInstruction;
       import objectos.html.tmpl.Api.DisabledAttribute;
       import objectos.html.tmpl.Api.GlobalAttribute;
 
@@ -76,7 +75,6 @@ public class InternalInstructionStepTest {
       public enum InternalInstruction implements
           DisabledAttribute,
 
-          AmbiguousInstruction,
           GlobalAttribute {
         INSTANCE;
       }

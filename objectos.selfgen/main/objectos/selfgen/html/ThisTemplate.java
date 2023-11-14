@@ -49,8 +49,6 @@ abstract class ThisTemplate {
 
 	static final ClassName INSTRUCTION = ClassName.of(API, "Instruction");
 
-	static final ClassName AMBIGUOUS_INST = ClassName.of(API, "AmbiguousInstruction");
-
 	static final ClassName GLOBAL_ATTRIBUTE = ClassName.of(API, "GlobalAttribute");
 
 	static final ClassName EXTERNAL_ATTRIBUTE = ClassName.of(API, "ExternalAttribute");
