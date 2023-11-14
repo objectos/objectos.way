@@ -65,6 +65,8 @@ final class ApiStep extends ThisTemplate {
      */
     \{GENERATED_MSG}
     public final class \{simpleName} {
+      public static final ElementContents GLOBAL_INSTRUCTION = new ElementContents();
+      
       private \{simpleName} () {}
 
       /**
@@ -144,10 +146,11 @@ final class ApiStep extends ThisTemplate {
       /**
        * An instruction which can be used as a child of any element.
        */
-      public sealed interface ElementContents
-          extends
-    \{extendsElementContents()}
-          permits \{INTERNAL_INSTRUCTION} {}
+      public static final class ElementContents
+          implements
+    \{extendsElementContents()} {
+        private ElementContents() {}
+      }
 
       /**
        * The fragment instruction.

@@ -21,33 +21,33 @@ import org.testng.annotations.Test;
 
 public class InternalInstructionStepTest {
 
-  @Test
-  public void execute() {
-    HtmlSelfGen spec = new HtmlSelfGen() {
-      @Override
-      protected final void definition() {
-        element("a").simpleName("Anchor");
+	@Test
+	public void execute() {
+		HtmlSelfGen spec = new HtmlSelfGen() {
+			@Override
+			protected final void definition() {
+				element("a").simpleName("Anchor");
 
-        element("div");
+				element("div");
 
-        element("meta");
+				element("meta");
 
-        element("option")
-            .attribute("disabled").booleanType()
-            .attribute("label");
+				element("option")
+						.attribute("disabled").booleanType()
+						.attribute("label");
 
-        element("select")
-            .attribute("disabled").booleanType();
-      }
-    }.prepare();
+				element("select")
+						.attribute("disabled").booleanType();
+			}
+		}.prepare();
 
-    InternalInstructionStep template;
-    template = new InternalInstructionStep(spec);
+		InternalInstructionStep template;
+		template = new InternalInstructionStep(spec);
 
-    assertEquals(
-      template.toString(),
+		assertEquals(
+				template.toString(),
 
-      """
+				"""
       /*
        * Copyright (C) 2015-2023 Objectos Software LTDA.
        *
@@ -67,7 +67,6 @@ public class InternalInstructionStepTest {
 
       import objectos.html.tmpl.Api.AmbiguousInstruction;
       import objectos.html.tmpl.Api.DisabledAttribute;
-      import objectos.html.tmpl.Api.ElementContents;
       import objectos.html.tmpl.Api.GlobalAttribute;
 
       /**
@@ -78,12 +77,11 @@ public class InternalInstructionStepTest {
           DisabledAttribute,
 
           AmbiguousInstruction,
-          GlobalAttribute,
-          ElementContents {
+          GlobalAttribute {
         INSTANCE;
       }
       """
-    );
-  }
+		);
+	}
 
 }

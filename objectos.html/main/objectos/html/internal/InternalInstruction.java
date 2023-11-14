@@ -31,7 +31,6 @@ import objectos.html.tmpl.Api.DirectionAttribute;
 import objectos.html.tmpl.Api.DisabledAttribute;
 import objectos.html.tmpl.Api.DisplayAttribute;
 import objectos.html.tmpl.Api.DominantBaselineAttribute;
-import objectos.html.tmpl.Api.ElementContents;
 import objectos.html.tmpl.Api.FillAttribute;
 import objectos.html.tmpl.Api.FillOpacityAttribute;
 import objectos.html.tmpl.Api.FillRuleAttribute;
@@ -182,7 +181,6 @@ public enum InternalInstruction implements
     WritingModeAttribute,
 
     AmbiguousInstruction,
-    GlobalAttribute,
-    ElementContents {
+    GlobalAttribute {
   INSTANCE;
 }

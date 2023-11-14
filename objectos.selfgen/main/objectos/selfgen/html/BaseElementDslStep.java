@@ -21,13 +21,13 @@ import java.util.stream.Collectors;
 import objectos.code.ClassName;
 
 final class BaseElementDslStep extends ThisTemplate {
-  private static final ClassName AMBIGUOUS = ClassName.of(HTML_INTERNAL, "Ambiguous");
+	private static final ClassName AMBIGUOUS = ClassName.of(HTML_INTERNAL, "Ambiguous");
 
-  public BaseElementDslStep(HtmlSelfGen spec) {
-    super(spec);
-  }
+	public BaseElementDslStep(HtmlSelfGen spec) {
+		super(spec);
+	}
 
-  @Override
+	@Override
   final String contents() {
     className(
       ClassName.of("objectos.html", "BaseElementDsl")
@@ -75,7 +75,7 @@ final class BaseElementDslStep extends ThisTemplate {
     """;
   }
 
-  private String elements() {
+	private String elements() {
     List<String> methods;
     methods = new ArrayList<>();
 
@@ -104,7 +104,7 @@ final class BaseElementDslStep extends ThisTemplate {
            */
           protected final \{ELEMENT_CONTENTS} \{methodName}(\{paramType}... contents) {
             element(\{STD_ELEMENT_NAME}.\{constantName}, contents);
-            return \{INTERNAL_INSTRUCTION}.INSTANCE;
+            return \{API}.GLOBAL_INSTRUCTION;
           }
         """
       );
@@ -123,7 +123,7 @@ final class BaseElementDslStep extends ThisTemplate {
              */
             protected final \{ELEMENT_CONTENTS} \{methodName}(String text) {
               element(\{STD_ELEMENT_NAME}.\{constantName}, text);
-              return \{INTERNAL_INSTRUCTION}.INSTANCE;
+              return \{API}.GLOBAL_INSTRUCTION;
             }
           """
         );
@@ -142,7 +142,7 @@ final class BaseElementDslStep extends ThisTemplate {
              */
             protected final \{ELEMENT_CONTENTS} \{methodName}(String text) {
               ambiguous(\{AMBIGUOUS}.\{constantName}, text);
-              return \{INTERNAL_INSTRUCTION}.INSTANCE;
+              return \{API}.GLOBAL_INSTRUCTION;
             }
           """
         );

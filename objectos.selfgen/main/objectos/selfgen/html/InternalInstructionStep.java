@@ -18,11 +18,11 @@ package objectos.selfgen.html;
 import objectos.code.ClassName;
 
 final class InternalInstructionStep extends ThisTemplate {
-  public InternalInstructionStep(HtmlSelfGen spec) {
-    super(spec);
-  }
+	public InternalInstructionStep(HtmlSelfGen spec) {
+		super(spec);
+	}
 
-  @Override
+	@Override
   final String contents() {
     className(INTERNAL_INSTRUCTION);
 
@@ -51,14 +51,13 @@ final class InternalInstructionStep extends ThisTemplate {
     public enum \{simpleName} implements
     \{superTypes()}
         \{AMBIGUOUS_INST},
-        \{GLOBAL_ATTRIBUTE},
-        \{ELEMENT_CONTENTS} {
+        \{GLOBAL_ATTRIBUTE} {
       INSTANCE;
     }
     """;
   }
 
-  private String superTypes() {
+	private String superTypes() {
     StringBuilder sb;
     sb = new StringBuilder();
 

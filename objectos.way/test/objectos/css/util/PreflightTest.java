@@ -17,6 +17,7 @@ package objectos.css.util;
 
 import static org.testng.Assert.assertEquals;
 
+import objectos.css.reset.Preflight;
 import org.testng.annotations.Test;
 
 public class PreflightTest {
