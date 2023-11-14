@@ -77,7 +77,7 @@ import objectos.html.internal.Ambiguous;
 import objectos.html.internal.StandardElementName;
 import objectos.html.tmpl.Api;
 import objectos.html.tmpl.Api.AnchorInstruction;
-import objectos.html.tmpl.Api.ElementContents;
+import objectos.html.tmpl.Api.Element;
 import objectos.html.tmpl.Api.Instruction;
 import objectos.html.tmpl.Api.MetaInstruction;
 import objectos.html.tmpl.Api.OptionInstruction;
@@ -99,9 +99,9 @@ public sealed abstract class BaseElementDsl extends BaseAttributeDsl permits Bas
    *
    * @return an instruction representing this element.
    */
-  protected final ElementContents a(AnchorInstruction... contents) {
+  protected final Element a(AnchorInstruction... contents) {
     element(StandardElementName.A, contents);
-    return Api.GLOBAL_INSTRUCTION;
+    return Api.ELEMENT;
   }
 
   /**
@@ -112,9 +112,9 @@ public sealed abstract class BaseElementDsl extends BaseAttributeDsl permits Bas
    *
    * @return an instruction representing this element.
    */
-  protected final ElementContents a(String text) {
+  protected final Element a(String text) {
     element(StandardElementName.A, text);
-    return Api.GLOBAL_INSTRUCTION;
+    return Api.ELEMENT;
   }
 
   /**
@@ -125,9 +125,9 @@ public sealed abstract class BaseElementDsl extends BaseAttributeDsl permits Bas
    *
    * @return an instruction representing this element.
    */
-  protected final ElementContents meta(MetaInstruction... contents) {
+  protected final Element meta(MetaInstruction... contents) {
     element(StandardElementName.META, contents);
-    return Api.GLOBAL_INSTRUCTION;
+    return Api.ELEMENT;
   }
 
   /**
@@ -138,9 +138,9 @@ public sealed abstract class BaseElementDsl extends BaseAttributeDsl permits Bas
    *
    * @return an instruction representing this element.
    */
-  protected final ElementContents option(OptionInstruction... contents) {
+  protected final Element option(OptionInstruction... contents) {
     element(StandardElementName.OPTION, contents);
-    return Api.GLOBAL_INSTRUCTION;
+    return Api.ELEMENT;
   }
 
   /**
@@ -151,9 +151,9 @@ public sealed abstract class BaseElementDsl extends BaseAttributeDsl permits Bas
    *
    * @return an instruction representing this element.
    */
-  protected final ElementContents option(String text) {
+  protected final Element option(String text) {
     element(StandardElementName.OPTION, text);
-    return Api.GLOBAL_INSTRUCTION;
+    return Api.ELEMENT;
   }
 
   /**
@@ -164,9 +164,9 @@ public sealed abstract class BaseElementDsl extends BaseAttributeDsl permits Bas
    *
    * @return an instruction representing this element.
    */
-  protected final ElementContents select(SelectInstruction... contents) {
+  protected final Element select(SelectInstruction... contents) {
     element(StandardElementName.SELECT, contents);
-    return Api.GLOBAL_INSTRUCTION;
+    return Api.ELEMENT;
   }
 
   /**
@@ -177,9 +177,9 @@ public sealed abstract class BaseElementDsl extends BaseAttributeDsl permits Bas
    *
    * @return an instruction representing this element.
    */
-  protected final ElementContents select(String text) {
+  protected final Element select(String text) {
     element(StandardElementName.SELECT, text);
-    return Api.GLOBAL_INSTRUCTION;
+    return Api.ELEMENT;
   }
 
   /**
@@ -190,9 +190,9 @@ public sealed abstract class BaseElementDsl extends BaseAttributeDsl permits Bas
    *
    * @return an instruction representing this element.
    */
-  protected final ElementContents title(TitleInstruction... contents) {
+  protected final Element title(TitleInstruction... contents) {
     element(StandardElementName.TITLE, contents);
-    return Api.GLOBAL_INSTRUCTION;
+    return Api.ELEMENT;
   }
 
   /**
@@ -203,9 +203,9 @@ public sealed abstract class BaseElementDsl extends BaseAttributeDsl permits Bas
    *
    * @return an instruction representing this attribute or element.
    */
-  protected final ElementContents title(String text) {
+  protected final Element title(String text) {
     ambiguous(Ambiguous.TITLE, text);
-    return Api.GLOBAL_INSTRUCTION;
+    return Api.ELEMENT;
   }
 
   /**

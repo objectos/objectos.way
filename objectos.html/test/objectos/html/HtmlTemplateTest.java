@@ -554,7 +554,7 @@ public class HtmlTemplateTest {
 				new HtmlTemplate() {
 					@Override
 					protected final void definition() {
-						Api.ElementContents[] children = new Api.ElementContents[count];
+						Api.Element[] children = new Api.Element[count];
 						for (int i = 0; i < count; i++) {
 							children[i] = li(Integer.toString(i));
 						}

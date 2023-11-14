@@ -23,66 +23,66 @@ import java.net.URL;
 import objectos.css.util.IdSelector;
 import objectos.html.BaseTemplateDsl;
 import objectos.html.HtmlComponent;
-import objectos.html.tmpl.Api.ElementContents;
+import objectos.html.tmpl.Api.Element;
 import objectos.html.tmpl.Api.ExternalAttribute.StyleClass;
 import objectos.lang.object.Check;
 
 public final class WayJs extends HtmlComponent {
 
-  public WayJs(BaseTemplateDsl parent) {
-    super(parent);
-  }
+	public WayJs(BaseTemplateDsl parent) {
+		super(parent);
+	}
 
-  public static byte[] getBytes() throws IOException {
-    URL resource;
-    resource = WayJs.class.getResource("objectos.way.js");
+	public static byte[] getBytes() throws IOException {
+		URL resource;
+		resource = WayJs.class.getResource("objectos.way.js");
 
-    if (resource == null) {
-      throw new FileNotFoundException();
-    }
+		if (resource == null) {
+			throw new FileNotFoundException();
+		}
 
-    try (InputStream in = resource.openStream();
-        ByteArrayOutputStream out = new ByteArrayOutputStream()) {
-      in.transferTo(out);
+		try (InputStream in = resource.openStream();
+				ByteArrayOutputStream out = new ByteArrayOutputStream()) {
+			in.transferTo(out);
 
-      return out.toByteArray();
-    }
-  }
+			return out.toByteArray();
+		}
+	}
 
-  public final ElementContents click(Command... commands) {
-    Check.notNull(commands, "commands == null");
+	public final Element click(Command... commands) {
+		Check.notNull(commands, "commands == null");
 
-    StringBuilder json;
-    json = new StringBuilder();
+		StringBuilder json;
+		json = new StringBuilder();
 
-    json.append('[');
+		json.append('[');
 
-    if (commands.length > 0) {
-      Command c;
-      c = commands[0];
+		if (commands.length > 0) {
+			Command c;
+			c = commands[0];
 
-      c.acceptJsonBuilder(json);
+			c.acceptJsonBuilder(json);
 
-      for (int i = 1; i < commands.length; i++) {
-        json.append(',');
+			for (int i = 1; i < commands.length; i++) {
+				json.append(',');
 
-        c = commands[i];
+				c = commands[i];
 
-        c.acceptJsonBuilder(json);
-      }
-    }
+				c.acceptJsonBuilder(json);
+			}
+		}
 
-    json.append(']');
+		json.append(']');
 
-    return dataWayClick(json.toString());
-  }
+		return dataWayClick(json.toString());
+	}
 
-  public final Command replaceClass(IdSelector id, StyleClass from, StyleClass to) {
-    Check.notNull(id, "id == null");
-    Check.notNull(from, "from == null");
-    Check.notNull(to, "to == null");
+	public final Command replaceClass(IdSelector id, StyleClass from, StyleClass to) {
+		Check.notNull(id, "id == null");
+		Check.notNull(from, "from == null");
+		Check.notNull(to, "to == null");
 
-    return new Command.ReplaceClass(id, from, to);
-  }
+		return new Command.ReplaceClass(id, from, to);
+	}
 
 }

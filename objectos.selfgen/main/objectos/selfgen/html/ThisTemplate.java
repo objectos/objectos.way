@@ -51,7 +51,7 @@ abstract class ThisTemplate {
 
 	static final ClassName EXTERNAL_ATTRIBUTE = ClassName.of(API, "ExternalAttribute");
 
-	static final ClassName ELEMENT_CONTENTS = ClassName.of(API, "ElementContents");
+	static final ClassName ELEMENT_CONTENTS = ClassName.of(API, "Element");
 
 	static final ClassName HTML_TEMPLATE_API = ClassName.of(HTML_INTERNAL, "HtmlTemplateApi");
 

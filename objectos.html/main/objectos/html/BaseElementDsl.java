@@ -33,7 +33,7 @@ import objectos.html.tmpl.Api.DefinitionTermInstruction;
 import objectos.html.tmpl.Api.DefsInstruction;
 import objectos.html.tmpl.Api.DetailsInstruction;
 import objectos.html.tmpl.Api.DivInstruction;
-import objectos.html.tmpl.Api.ElementContents;
+import objectos.html.tmpl.Api.Element;
 import objectos.html.tmpl.Api.EmphasisInstruction;
 import objectos.html.tmpl.Api.FieldsetInstruction;
 import objectos.html.tmpl.Api.FigureInstruction;
@@ -109,9 +109,9 @@ public sealed abstract class BaseElementDsl extends BaseAttributeDsl permits Bas
    *
    * @return an instruction representing this element.
    */
-  protected final ElementContents a(AnchorInstruction... contents) {
+  protected final Element a(AnchorInstruction... contents) {
     element(StandardElementName.A, contents);
-    return Api.GLOBAL_INSTRUCTION;
+    return Api.ELEMENT;
   }
 
   /**
@@ -122,9 +122,9 @@ public sealed abstract class BaseElementDsl extends BaseAttributeDsl permits Bas
    *
    * @return an instruction representing this element.
    */
-  protected final ElementContents a(String text) {
+  protected final Element a(String text) {
     element(StandardElementName.A, text);
-    return Api.GLOBAL_INSTRUCTION;
+    return Api.ELEMENT;
   }
 
   /**
@@ -135,9 +135,9 @@ public sealed abstract class BaseElementDsl extends BaseAttributeDsl permits Bas
    *
    * @return an instruction representing this element.
    */
-  protected final ElementContents abbr(AbbreviationInstruction... contents) {
+  protected final Element abbr(AbbreviationInstruction... contents) {
     element(StandardElementName.ABBR, contents);
-    return Api.GLOBAL_INSTRUCTION;
+    return Api.ELEMENT;
   }
 
   /**
@@ -148,9 +148,9 @@ public sealed abstract class BaseElementDsl extends BaseAttributeDsl permits Bas
    *
    * @return an instruction representing this element.
    */
-  protected final ElementContents abbr(String text) {
+  protected final Element abbr(String text) {
     element(StandardElementName.ABBR, text);
-    return Api.GLOBAL_INSTRUCTION;
+    return Api.ELEMENT;
   }
 
   /**
@@ -161,9 +161,9 @@ public sealed abstract class BaseElementDsl extends BaseAttributeDsl permits Bas
    *
    * @return an instruction representing this element.
    */
-  protected final ElementContents article(ArticleInstruction... contents) {
+  protected final Element article(ArticleInstruction... contents) {
     element(StandardElementName.ARTICLE, contents);
-    return Api.GLOBAL_INSTRUCTION;
+    return Api.ELEMENT;
   }
 
   /**
@@ -174,9 +174,9 @@ public sealed abstract class BaseElementDsl extends BaseAttributeDsl permits Bas
    *
    * @return an instruction representing this element.
    */
-  protected final ElementContents article(String text) {
+  protected final Element article(String text) {
     element(StandardElementName.ARTICLE, text);
-    return Api.GLOBAL_INSTRUCTION;
+    return Api.ELEMENT;
   }
 
   /**
@@ -187,9 +187,9 @@ public sealed abstract class BaseElementDsl extends BaseAttributeDsl permits Bas
    *
    * @return an instruction representing this element.
    */
-  protected final ElementContents b(BringAttentionToInstruction... contents) {
+  protected final Element b(BringAttentionToInstruction... contents) {
     element(StandardElementName.B, contents);
-    return Api.GLOBAL_INSTRUCTION;
+    return Api.ELEMENT;
   }
 
   /**
@@ -200,9 +200,9 @@ public sealed abstract class BaseElementDsl extends BaseAttributeDsl permits Bas
    *
    * @return an instruction representing this element.
    */
-  protected final ElementContents b(String text) {
+  protected final Element b(String text) {
     element(StandardElementName.B, text);
-    return Api.GLOBAL_INSTRUCTION;
+    return Api.ELEMENT;
   }
 
   /**
@@ -213,9 +213,9 @@ public sealed abstract class BaseElementDsl extends BaseAttributeDsl permits Bas
    *
    * @return an instruction representing this element.
    */
-  protected final ElementContents blockquote(BlockquoteInstruction... contents) {
+  protected final Element blockquote(BlockquoteInstruction... contents) {
     element(StandardElementName.BLOCKQUOTE, contents);
-    return Api.GLOBAL_INSTRUCTION;
+    return Api.ELEMENT;
   }
 
   /**
@@ -226,9 +226,9 @@ public sealed abstract class BaseElementDsl extends BaseAttributeDsl permits Bas
    *
    * @return an instruction representing this element.
    */
-  protected final ElementContents blockquote(String text) {
+  protected final Element blockquote(String text) {
     element(StandardElementName.BLOCKQUOTE, text);
-    return Api.GLOBAL_INSTRUCTION;
+    return Api.ELEMENT;
   }
 
   /**
@@ -239,9 +239,9 @@ public sealed abstract class BaseElementDsl extends BaseAttributeDsl permits Bas
    *
    * @return an instruction representing this element.
    */
-  protected final ElementContents body(BodyInstruction... contents) {
+  protected final Element body(BodyInstruction... contents) {
     element(StandardElementName.BODY, contents);
-    return Api.GLOBAL_INSTRUCTION;
+    return Api.ELEMENT;
   }
 
   /**
@@ -252,9 +252,9 @@ public sealed abstract class BaseElementDsl extends BaseAttributeDsl permits Bas
    *
    * @return an instruction representing this element.
    */
-  protected final ElementContents body(String text) {
+  protected final Element body(String text) {
     element(StandardElementName.BODY, text);
-    return Api.GLOBAL_INSTRUCTION;
+    return Api.ELEMENT;
   }
 
   /**
@@ -265,9 +265,9 @@ public sealed abstract class BaseElementDsl extends BaseAttributeDsl permits Bas
    *
    * @return an instruction representing this element.
    */
-  protected final ElementContents br(LineBreakInstruction... contents) {
+  protected final Element br(LineBreakInstruction... contents) {
     element(StandardElementName.BR, contents);
-    return Api.GLOBAL_INSTRUCTION;
+    return Api.ELEMENT;
   }
 
   /**
@@ -278,9 +278,9 @@ public sealed abstract class BaseElementDsl extends BaseAttributeDsl permits Bas
    *
    * @return an instruction representing this element.
    */
-  protected final ElementContents button(ButtonInstruction... contents) {
+  protected final Element button(ButtonInstruction... contents) {
     element(StandardElementName.BUTTON, contents);
-    return Api.GLOBAL_INSTRUCTION;
+    return Api.ELEMENT;
   }
 
   /**
@@ -291,9 +291,9 @@ public sealed abstract class BaseElementDsl extends BaseAttributeDsl permits Bas
    *
    * @return an instruction representing this element.
    */
-  protected final ElementContents button(String text) {
+  protected final Element button(String text) {
     element(StandardElementName.BUTTON, text);
-    return Api.GLOBAL_INSTRUCTION;
+    return Api.ELEMENT;
   }
 
   /**
@@ -304,9 +304,9 @@ public sealed abstract class BaseElementDsl extends BaseAttributeDsl permits Bas
    *
    * @return an instruction representing this element.
    */
-  protected final ElementContents clipPath(ClipPathInstruction... contents) {
+  protected final Element clipPath(ClipPathInstruction... contents) {
     element(StandardElementName.CLIPPATH, contents);
-    return Api.GLOBAL_INSTRUCTION;
+    return Api.ELEMENT;
   }
 
   /**
@@ -317,9 +317,9 @@ public sealed abstract class BaseElementDsl extends BaseAttributeDsl permits Bas
    *
    * @return an instruction representing this element.
    */
-  protected final ElementContents code(CodeInstruction... contents) {
+  protected final Element code(CodeInstruction... contents) {
     element(StandardElementName.CODE, contents);
-    return Api.GLOBAL_INSTRUCTION;
+    return Api.ELEMENT;
   }
 
   /**
@@ -330,9 +330,9 @@ public sealed abstract class BaseElementDsl extends BaseAttributeDsl permits Bas
    *
    * @return an instruction representing this element.
    */
-  protected final ElementContents code(String text) {
+  protected final Element code(String text) {
     element(StandardElementName.CODE, text);
-    return Api.GLOBAL_INSTRUCTION;
+    return Api.ELEMENT;
   }
 
   /**
@@ -343,9 +343,9 @@ public sealed abstract class BaseElementDsl extends BaseAttributeDsl permits Bas
    *
    * @return an instruction representing this element.
    */
-  protected final ElementContents dd(DefinitionDescriptionInstruction... contents) {
+  protected final Element dd(DefinitionDescriptionInstruction... contents) {
     element(StandardElementName.DD, contents);
-    return Api.GLOBAL_INSTRUCTION;
+    return Api.ELEMENT;
   }
 
   /**
@@ -356,9 +356,9 @@ public sealed abstract class BaseElementDsl extends BaseAttributeDsl permits Bas
    *
    * @return an instruction representing this element.
    */
-  protected final ElementContents dd(String text) {
+  protected final Element dd(String text) {
     element(StandardElementName.DD, text);
-    return Api.GLOBAL_INSTRUCTION;
+    return Api.ELEMENT;
   }
 
   /**
@@ -369,9 +369,9 @@ public sealed abstract class BaseElementDsl extends BaseAttributeDsl permits Bas
    *
    * @return an instruction representing this element.
    */
-  protected final ElementContents defs(DefsInstruction... contents) {
+  protected final Element defs(DefsInstruction... contents) {
     element(StandardElementName.DEFS, contents);
-    return Api.GLOBAL_INSTRUCTION;
+    return Api.ELEMENT;
   }
 
   /**
@@ -382,9 +382,9 @@ public sealed abstract class BaseElementDsl extends BaseAttributeDsl permits Bas
    *
    * @return an instruction representing this element.
    */
-  protected final ElementContents defs(String text) {
+  protected final Element defs(String text) {
     element(StandardElementName.DEFS, text);
-    return Api.GLOBAL_INSTRUCTION;
+    return Api.ELEMENT;
   }
 
   /**
@@ -395,9 +395,9 @@ public sealed abstract class BaseElementDsl extends BaseAttributeDsl permits Bas
    *
    * @return an instruction representing this element.
    */
-  protected final ElementContents details(DetailsInstruction... contents) {
+  protected final Element details(DetailsInstruction... contents) {
     element(StandardElementName.DETAILS, contents);
-    return Api.GLOBAL_INSTRUCTION;
+    return Api.ELEMENT;
   }
 
   /**
@@ -408,9 +408,9 @@ public sealed abstract class BaseElementDsl extends BaseAttributeDsl permits Bas
    *
    * @return an instruction representing this element.
    */
-  protected final ElementContents details(String text) {
+  protected final Element details(String text) {
     element(StandardElementName.DETAILS, text);
-    return Api.GLOBAL_INSTRUCTION;
+    return Api.ELEMENT;
   }
 
   /**
@@ -421,9 +421,9 @@ public sealed abstract class BaseElementDsl extends BaseAttributeDsl permits Bas
    *
    * @return an instruction representing this element.
    */
-  protected final ElementContents div(DivInstruction... contents) {
+  protected final Element div(DivInstruction... contents) {
     element(StandardElementName.DIV, contents);
-    return Api.GLOBAL_INSTRUCTION;
+    return Api.ELEMENT;
   }
 
   /**
@@ -434,9 +434,9 @@ public sealed abstract class BaseElementDsl extends BaseAttributeDsl permits Bas
    *
    * @return an instruction representing this element.
    */
-  protected final ElementContents div(String text) {
+  protected final Element div(String text) {
     element(StandardElementName.DIV, text);
-    return Api.GLOBAL_INSTRUCTION;
+    return Api.ELEMENT;
   }
 
   /**
@@ -447,9 +447,9 @@ public sealed abstract class BaseElementDsl extends BaseAttributeDsl permits Bas
    *
    * @return an instruction representing this element.
    */
-  protected final ElementContents dl(DefinitionListInstruction... contents) {
+  protected final Element dl(DefinitionListInstruction... contents) {
     element(StandardElementName.DL, contents);
-    return Api.GLOBAL_INSTRUCTION;
+    return Api.ELEMENT;
   }
 
   /**
@@ -460,9 +460,9 @@ public sealed abstract class BaseElementDsl extends BaseAttributeDsl permits Bas
    *
    * @return an instruction representing this element.
    */
-  protected final ElementContents dl(String text) {
+  protected final Element dl(String text) {
     element(StandardElementName.DL, text);
-    return Api.GLOBAL_INSTRUCTION;
+    return Api.ELEMENT;
   }
 
   /**
@@ -473,9 +473,9 @@ public sealed abstract class BaseElementDsl extends BaseAttributeDsl permits Bas
    *
    * @return an instruction representing this element.
    */
-  protected final ElementContents dt(DefinitionTermInstruction... contents) {
+  protected final Element dt(DefinitionTermInstruction... contents) {
     element(StandardElementName.DT, contents);
-    return Api.GLOBAL_INSTRUCTION;
+    return Api.ELEMENT;
   }
 
   /**
@@ -486,9 +486,9 @@ public sealed abstract class BaseElementDsl extends BaseAttributeDsl permits Bas
    *
    * @return an instruction representing this element.
    */
-  protected final ElementContents dt(String text) {
+  protected final Element dt(String text) {
     element(StandardElementName.DT, text);
-    return Api.GLOBAL_INSTRUCTION;
+    return Api.ELEMENT;
   }
 
   /**
@@ -499,9 +499,9 @@ public sealed abstract class BaseElementDsl extends BaseAttributeDsl permits Bas
    *
    * @return an instruction representing this element.
    */
-  protected final ElementContents em(EmphasisInstruction... contents) {
+  protected final Element em(EmphasisInstruction... contents) {
     element(StandardElementName.EM, contents);
-    return Api.GLOBAL_INSTRUCTION;
+    return Api.ELEMENT;
   }
 
   /**
@@ -512,9 +512,9 @@ public sealed abstract class BaseElementDsl extends BaseAttributeDsl permits Bas
    *
    * @return an instruction representing this element.
    */
-  protected final ElementContents em(String text) {
+  protected final Element em(String text) {
     element(StandardElementName.EM, text);
-    return Api.GLOBAL_INSTRUCTION;
+    return Api.ELEMENT;
   }
 
   /**
@@ -525,9 +525,9 @@ public sealed abstract class BaseElementDsl extends BaseAttributeDsl permits Bas
    *
    * @return an instruction representing this element.
    */
-  protected final ElementContents fieldset(FieldsetInstruction... contents) {
+  protected final Element fieldset(FieldsetInstruction... contents) {
     element(StandardElementName.FIELDSET, contents);
-    return Api.GLOBAL_INSTRUCTION;
+    return Api.ELEMENT;
   }
 
   /**
@@ -538,9 +538,9 @@ public sealed abstract class BaseElementDsl extends BaseAttributeDsl permits Bas
    *
    * @return an instruction representing this element.
    */
-  protected final ElementContents fieldset(String text) {
+  protected final Element fieldset(String text) {
     element(StandardElementName.FIELDSET, text);
-    return Api.GLOBAL_INSTRUCTION;
+    return Api.ELEMENT;
   }
 
   /**
@@ -551,9 +551,9 @@ public sealed abstract class BaseElementDsl extends BaseAttributeDsl permits Bas
    *
    * @return an instruction representing this element.
    */
-  protected final ElementContents figure(FigureInstruction... contents) {
+  protected final Element figure(FigureInstruction... contents) {
     element(StandardElementName.FIGURE, contents);
-    return Api.GLOBAL_INSTRUCTION;
+    return Api.ELEMENT;
   }
 
   /**
@@ -564,9 +564,9 @@ public sealed abstract class BaseElementDsl extends BaseAttributeDsl permits Bas
    *
    * @return an instruction representing this element.
    */
-  protected final ElementContents figure(String text) {
+  protected final Element figure(String text) {
     element(StandardElementName.FIGURE, text);
-    return Api.GLOBAL_INSTRUCTION;
+    return Api.ELEMENT;
   }
 
   /**
@@ -577,9 +577,9 @@ public sealed abstract class BaseElementDsl extends BaseAttributeDsl permits Bas
    *
    * @return an instruction representing this element.
    */
-  protected final ElementContents footer(FooterInstruction... contents) {
+  protected final Element footer(FooterInstruction... contents) {
     element(StandardElementName.FOOTER, contents);
-    return Api.GLOBAL_INSTRUCTION;
+    return Api.ELEMENT;
   }
 
   /**
@@ -590,9 +590,9 @@ public sealed abstract class BaseElementDsl extends BaseAttributeDsl permits Bas
    *
    * @return an instruction representing this element.
    */
-  protected final ElementContents footer(String text) {
+  protected final Element footer(String text) {
     element(StandardElementName.FOOTER, text);
-    return Api.GLOBAL_INSTRUCTION;
+    return Api.ELEMENT;
   }
 
   /**
@@ -603,9 +603,9 @@ public sealed abstract class BaseElementDsl extends BaseAttributeDsl permits Bas
    *
    * @return an instruction representing this element.
    */
-  protected final ElementContents form(FormInstruction... contents) {
+  protected final Element form(FormInstruction... contents) {
     element(StandardElementName.FORM, contents);
-    return Api.GLOBAL_INSTRUCTION;
+    return Api.ELEMENT;
   }
 
   /**
@@ -616,9 +616,9 @@ public sealed abstract class BaseElementDsl extends BaseAttributeDsl permits Bas
    *
    * @return an instruction representing this attribute or element.
    */
-  protected final ElementContents form(String text) {
+  protected final Element form(String text) {
     ambiguous(Ambiguous.FORM, text);
-    return Api.GLOBAL_INSTRUCTION;
+    return Api.ELEMENT;
   }
 
   /**
@@ -629,9 +629,9 @@ public sealed abstract class BaseElementDsl extends BaseAttributeDsl permits Bas
    *
    * @return an instruction representing this element.
    */
-  protected final ElementContents g(GInstruction... contents) {
+  protected final Element g(GInstruction... contents) {
     element(StandardElementName.G, contents);
-    return Api.GLOBAL_INSTRUCTION;
+    return Api.ELEMENT;
   }
 
   /**
@@ -642,9 +642,9 @@ public sealed abstract class BaseElementDsl extends BaseAttributeDsl permits Bas
    *
    * @return an instruction representing this element.
    */
-  protected final ElementContents g(String text) {
+  protected final Element g(String text) {
     element(StandardElementName.G, text);
-    return Api.GLOBAL_INSTRUCTION;
+    return Api.ELEMENT;
   }
 
   /**
@@ -655,9 +655,9 @@ public sealed abstract class BaseElementDsl extends BaseAttributeDsl permits Bas
    *
    * @return an instruction representing this element.
    */
-  protected final ElementContents h1(Heading1Instruction... contents) {
+  protected final Element h1(Heading1Instruction... contents) {
     element(StandardElementName.H1, contents);
-    return Api.GLOBAL_INSTRUCTION;
+    return Api.ELEMENT;
   }
 
   /**
@@ -668,9 +668,9 @@ public sealed abstract class BaseElementDsl extends BaseAttributeDsl permits Bas
    *
    * @return an instruction representing this element.
    */
-  protected final ElementContents h1(String text) {
+  protected final Element h1(String text) {
     element(StandardElementName.H1, text);
-    return Api.GLOBAL_INSTRUCTION;
+    return Api.ELEMENT;
   }
 
   /**
@@ -681,9 +681,9 @@ public sealed abstract class BaseElementDsl extends BaseAttributeDsl permits Bas
    *
    * @return an instruction representing this element.
    */
-  protected final ElementContents h2(Heading2Instruction... contents) {
+  protected final Element h2(Heading2Instruction... contents) {
     element(StandardElementName.H2, contents);
-    return Api.GLOBAL_INSTRUCTION;
+    return Api.ELEMENT;
   }
 
   /**
@@ -694,9 +694,9 @@ public sealed abstract class BaseElementDsl extends BaseAttributeDsl permits Bas
    *
    * @return an instruction representing this element.
    */
-  protected final ElementContents h2(String text) {
+  protected final Element h2(String text) {
     element(StandardElementName.H2, text);
-    return Api.GLOBAL_INSTRUCTION;
+    return Api.ELEMENT;
   }
 
   /**
@@ -707,9 +707,9 @@ public sealed abstract class BaseElementDsl extends BaseAttributeDsl permits Bas
    *
    * @return an instruction representing this element.
    */
-  protected final ElementContents h3(Heading3Instruction... contents) {
+  protected final Element h3(Heading3Instruction... contents) {
     element(StandardElementName.H3, contents);
-    return Api.GLOBAL_INSTRUCTION;
+    return Api.ELEMENT;
   }
 
   /**
@@ -720,9 +720,9 @@ public sealed abstract class BaseElementDsl extends BaseAttributeDsl permits Bas
    *
    * @return an instruction representing this element.
    */
-  protected final ElementContents h3(String text) {
+  protected final Element h3(String text) {
     element(StandardElementName.H3, text);
-    return Api.GLOBAL_INSTRUCTION;
+    return Api.ELEMENT;
   }
 
   /**
@@ -733,9 +733,9 @@ public sealed abstract class BaseElementDsl extends BaseAttributeDsl permits Bas
    *
    * @return an instruction representing this element.
    */
-  protected final ElementContents h4(Heading4Instruction... contents) {
+  protected final Element h4(Heading4Instruction... contents) {
     element(StandardElementName.H4, contents);
-    return Api.GLOBAL_INSTRUCTION;
+    return Api.ELEMENT;
   }
 
   /**
@@ -746,9 +746,9 @@ public sealed abstract class BaseElementDsl extends BaseAttributeDsl permits Bas
    *
    * @return an instruction representing this element.
    */
-  protected final ElementContents h4(String text) {
+  protected final Element h4(String text) {
     element(StandardElementName.H4, text);
-    return Api.GLOBAL_INSTRUCTION;
+    return Api.ELEMENT;
   }
 
   /**
@@ -759,9 +759,9 @@ public sealed abstract class BaseElementDsl extends BaseAttributeDsl permits Bas
    *
    * @return an instruction representing this element.
    */
-  protected final ElementContents h5(Heading5Instruction... contents) {
+  protected final Element h5(Heading5Instruction... contents) {
     element(StandardElementName.H5, contents);
-    return Api.GLOBAL_INSTRUCTION;
+    return Api.ELEMENT;
   }
 
   /**
@@ -772,9 +772,9 @@ public sealed abstract class BaseElementDsl extends BaseAttributeDsl permits Bas
    *
    * @return an instruction representing this element.
    */
-  protected final ElementContents h5(String text) {
+  protected final Element h5(String text) {
     element(StandardElementName.H5, text);
-    return Api.GLOBAL_INSTRUCTION;
+    return Api.ELEMENT;
   }
 
   /**
@@ -785,9 +785,9 @@ public sealed abstract class BaseElementDsl extends BaseAttributeDsl permits Bas
    *
    * @return an instruction representing this element.
    */
-  protected final ElementContents h6(Heading6Instruction... contents) {
+  protected final Element h6(Heading6Instruction... contents) {
     element(StandardElementName.H6, contents);
-    return Api.GLOBAL_INSTRUCTION;
+    return Api.ELEMENT;
   }
 
   /**
@@ -798,9 +798,9 @@ public sealed abstract class BaseElementDsl extends BaseAttributeDsl permits Bas
    *
    * @return an instruction representing this element.
    */
-  protected final ElementContents h6(String text) {
+  protected final Element h6(String text) {
     element(StandardElementName.H6, text);
-    return Api.GLOBAL_INSTRUCTION;
+    return Api.ELEMENT;
   }
 
   /**
@@ -811,9 +811,9 @@ public sealed abstract class BaseElementDsl extends BaseAttributeDsl permits Bas
    *
    * @return an instruction representing this element.
    */
-  protected final ElementContents head(HeadInstruction... contents) {
+  protected final Element head(HeadInstruction... contents) {
     element(StandardElementName.HEAD, contents);
-    return Api.GLOBAL_INSTRUCTION;
+    return Api.ELEMENT;
   }
 
   /**
@@ -824,9 +824,9 @@ public sealed abstract class BaseElementDsl extends BaseAttributeDsl permits Bas
    *
    * @return an instruction representing this element.
    */
-  protected final ElementContents head(String text) {
+  protected final Element head(String text) {
     element(StandardElementName.HEAD, text);
-    return Api.GLOBAL_INSTRUCTION;
+    return Api.ELEMENT;
   }
 
   /**
@@ -837,9 +837,9 @@ public sealed abstract class BaseElementDsl extends BaseAttributeDsl permits Bas
    *
    * @return an instruction representing this element.
    */
-  protected final ElementContents header(HeaderInstruction... contents) {
+  protected final Element header(HeaderInstruction... contents) {
     element(StandardElementName.HEADER, contents);
-    return Api.GLOBAL_INSTRUCTION;
+    return Api.ELEMENT;
   }
 
   /**
@@ -850,9 +850,9 @@ public sealed abstract class BaseElementDsl extends BaseAttributeDsl permits Bas
    *
    * @return an instruction representing this element.
    */
-  protected final ElementContents header(String text) {
+  protected final Element header(String text) {
     element(StandardElementName.HEADER, text);
-    return Api.GLOBAL_INSTRUCTION;
+    return Api.ELEMENT;
   }
 
   /**
@@ -863,9 +863,9 @@ public sealed abstract class BaseElementDsl extends BaseAttributeDsl permits Bas
    *
    * @return an instruction representing this element.
    */
-  protected final ElementContents hgroup(HeadingGroupInstruction... contents) {
+  protected final Element hgroup(HeadingGroupInstruction... contents) {
     element(StandardElementName.HGROUP, contents);
-    return Api.GLOBAL_INSTRUCTION;
+    return Api.ELEMENT;
   }
 
   /**
@@ -876,9 +876,9 @@ public sealed abstract class BaseElementDsl extends BaseAttributeDsl permits Bas
    *
    * @return an instruction representing this element.
    */
-  protected final ElementContents hgroup(String text) {
+  protected final Element hgroup(String text) {
     element(StandardElementName.HGROUP, text);
-    return Api.GLOBAL_INSTRUCTION;
+    return Api.ELEMENT;
   }
 
   /**
@@ -889,9 +889,9 @@ public sealed abstract class BaseElementDsl extends BaseAttributeDsl permits Bas
    *
    * @return an instruction representing this element.
    */
-  protected final ElementContents hr(HorizontalRuleInstruction... contents) {
+  protected final Element hr(HorizontalRuleInstruction... contents) {
     element(StandardElementName.HR, contents);
-    return Api.GLOBAL_INSTRUCTION;
+    return Api.ELEMENT;
   }
 
   /**
@@ -902,9 +902,9 @@ public sealed abstract class BaseElementDsl extends BaseAttributeDsl permits Bas
    *
    * @return an instruction representing this element.
    */
-  protected final ElementContents html(HtmlInstruction... contents) {
+  protected final Element html(HtmlInstruction... contents) {
     element(StandardElementName.HTML, contents);
-    return Api.GLOBAL_INSTRUCTION;
+    return Api.ELEMENT;
   }
 
   /**
@@ -915,9 +915,9 @@ public sealed abstract class BaseElementDsl extends BaseAttributeDsl permits Bas
    *
    * @return an instruction representing this element.
    */
-  protected final ElementContents html(String text) {
+  protected final Element html(String text) {
     element(StandardElementName.HTML, text);
-    return Api.GLOBAL_INSTRUCTION;
+    return Api.ELEMENT;
   }
 
   /**
@@ -928,9 +928,9 @@ public sealed abstract class BaseElementDsl extends BaseAttributeDsl permits Bas
    *
    * @return an instruction representing this element.
    */
-  protected final ElementContents img(ImageInstruction... contents) {
+  protected final Element img(ImageInstruction... contents) {
     element(StandardElementName.IMG, contents);
-    return Api.GLOBAL_INSTRUCTION;
+    return Api.ELEMENT;
   }
 
   /**
@@ -941,9 +941,9 @@ public sealed abstract class BaseElementDsl extends BaseAttributeDsl permits Bas
    *
    * @return an instruction representing this element.
    */
-  protected final ElementContents input(InputInstruction... contents) {
+  protected final Element input(InputInstruction... contents) {
     element(StandardElementName.INPUT, contents);
-    return Api.GLOBAL_INSTRUCTION;
+    return Api.ELEMENT;
   }
 
   /**
@@ -954,9 +954,9 @@ public sealed abstract class BaseElementDsl extends BaseAttributeDsl permits Bas
    *
    * @return an instruction representing this element.
    */
-  protected final ElementContents kbd(KeyboardInputInstruction... contents) {
+  protected final Element kbd(KeyboardInputInstruction... contents) {
     element(StandardElementName.KBD, contents);
-    return Api.GLOBAL_INSTRUCTION;
+    return Api.ELEMENT;
   }
 
   /**
@@ -967,9 +967,9 @@ public sealed abstract class BaseElementDsl extends BaseAttributeDsl permits Bas
    *
    * @return an instruction representing this element.
    */
-  protected final ElementContents kbd(String text) {
+  protected final Element kbd(String text) {
     element(StandardElementName.KBD, text);
-    return Api.GLOBAL_INSTRUCTION;
+    return Api.ELEMENT;
   }
 
   /**
@@ -980,9 +980,9 @@ public sealed abstract class BaseElementDsl extends BaseAttributeDsl permits Bas
    *
    * @return an instruction representing this element.
    */
-  protected final ElementContents label(LabelInstruction... contents) {
+  protected final Element label(LabelInstruction... contents) {
     element(StandardElementName.LABEL, contents);
-    return Api.GLOBAL_INSTRUCTION;
+    return Api.ELEMENT;
   }
 
   /**
@@ -993,9 +993,9 @@ public sealed abstract class BaseElementDsl extends BaseAttributeDsl permits Bas
    *
    * @return an instruction representing this attribute or element.
    */
-  protected final ElementContents label(String text) {
+  protected final Element label(String text) {
     ambiguous(Ambiguous.LABEL, text);
-    return Api.GLOBAL_INSTRUCTION;
+    return Api.ELEMENT;
   }
 
   /**
@@ -1006,9 +1006,9 @@ public sealed abstract class BaseElementDsl extends BaseAttributeDsl permits Bas
    *
    * @return an instruction representing this element.
    */
-  protected final ElementContents legend(LegendInstruction... contents) {
+  protected final Element legend(LegendInstruction... contents) {
     element(StandardElementName.LEGEND, contents);
-    return Api.GLOBAL_INSTRUCTION;
+    return Api.ELEMENT;
   }
 
   /**
@@ -1019,9 +1019,9 @@ public sealed abstract class BaseElementDsl extends BaseAttributeDsl permits Bas
    *
    * @return an instruction representing this element.
    */
-  protected final ElementContents legend(String text) {
+  protected final Element legend(String text) {
     element(StandardElementName.LEGEND, text);
-    return Api.GLOBAL_INSTRUCTION;
+    return Api.ELEMENT;
   }
 
   /**
@@ -1032,9 +1032,9 @@ public sealed abstract class BaseElementDsl extends BaseAttributeDsl permits Bas
    *
    * @return an instruction representing this element.
    */
-  protected final ElementContents li(ListItemInstruction... contents) {
+  protected final Element li(ListItemInstruction... contents) {
     element(StandardElementName.LI, contents);
-    return Api.GLOBAL_INSTRUCTION;
+    return Api.ELEMENT;
   }
 
   /**
@@ -1045,9 +1045,9 @@ public sealed abstract class BaseElementDsl extends BaseAttributeDsl permits Bas
    *
    * @return an instruction representing this element.
    */
-  protected final ElementContents li(String text) {
+  protected final Element li(String text) {
     element(StandardElementName.LI, text);
-    return Api.GLOBAL_INSTRUCTION;
+    return Api.ELEMENT;
   }
 
   /**
@@ -1058,9 +1058,9 @@ public sealed abstract class BaseElementDsl extends BaseAttributeDsl permits Bas
    *
    * @return an instruction representing this element.
    */
-  protected final ElementContents link(LinkInstruction... contents) {
+  protected final Element link(LinkInstruction... contents) {
     element(StandardElementName.LINK, contents);
-    return Api.GLOBAL_INSTRUCTION;
+    return Api.ELEMENT;
   }
 
   /**
@@ -1071,9 +1071,9 @@ public sealed abstract class BaseElementDsl extends BaseAttributeDsl permits Bas
    *
    * @return an instruction representing this element.
    */
-  protected final ElementContents main(MainInstruction... contents) {
+  protected final Element main(MainInstruction... contents) {
     element(StandardElementName.MAIN, contents);
-    return Api.GLOBAL_INSTRUCTION;
+    return Api.ELEMENT;
   }
 
   /**
@@ -1084,9 +1084,9 @@ public sealed abstract class BaseElementDsl extends BaseAttributeDsl permits Bas
    *
    * @return an instruction representing this element.
    */
-  protected final ElementContents main(String text) {
+  protected final Element main(String text) {
     element(StandardElementName.MAIN, text);
-    return Api.GLOBAL_INSTRUCTION;
+    return Api.ELEMENT;
   }
 
   /**
@@ -1097,9 +1097,9 @@ public sealed abstract class BaseElementDsl extends BaseAttributeDsl permits Bas
    *
    * @return an instruction representing this element.
    */
-  protected final ElementContents menu(MenuInstruction... contents) {
+  protected final Element menu(MenuInstruction... contents) {
     element(StandardElementName.MENU, contents);
-    return Api.GLOBAL_INSTRUCTION;
+    return Api.ELEMENT;
   }
 
   /**
@@ -1110,9 +1110,9 @@ public sealed abstract class BaseElementDsl extends BaseAttributeDsl permits Bas
    *
    * @return an instruction representing this element.
    */
-  protected final ElementContents menu(String text) {
+  protected final Element menu(String text) {
     element(StandardElementName.MENU, text);
-    return Api.GLOBAL_INSTRUCTION;
+    return Api.ELEMENT;
   }
 
   /**
@@ -1123,9 +1123,9 @@ public sealed abstract class BaseElementDsl extends BaseAttributeDsl permits Bas
    *
    * @return an instruction representing this element.
    */
-  protected final ElementContents meta(MetaInstruction... contents) {
+  protected final Element meta(MetaInstruction... contents) {
     element(StandardElementName.META, contents);
-    return Api.GLOBAL_INSTRUCTION;
+    return Api.ELEMENT;
   }
 
   /**
@@ -1136,9 +1136,9 @@ public sealed abstract class BaseElementDsl extends BaseAttributeDsl permits Bas
    *
    * @return an instruction representing this element.
    */
-  protected final ElementContents nav(NavInstruction... contents) {
+  protected final Element nav(NavInstruction... contents) {
     element(StandardElementName.NAV, contents);
-    return Api.GLOBAL_INSTRUCTION;
+    return Api.ELEMENT;
   }
 
   /**
@@ -1149,9 +1149,9 @@ public sealed abstract class BaseElementDsl extends BaseAttributeDsl permits Bas
    *
    * @return an instruction representing this element.
    */
-  protected final ElementContents nav(String text) {
+  protected final Element nav(String text) {
     element(StandardElementName.NAV, text);
-    return Api.GLOBAL_INSTRUCTION;
+    return Api.ELEMENT;
   }
 
   /**
@@ -1162,9 +1162,9 @@ public sealed abstract class BaseElementDsl extends BaseAttributeDsl permits Bas
    *
    * @return an instruction representing this element.
    */
-  protected final ElementContents ol(OrderedListInstruction... contents) {
+  protected final Element ol(OrderedListInstruction... contents) {
     element(StandardElementName.OL, contents);
-    return Api.GLOBAL_INSTRUCTION;
+    return Api.ELEMENT;
   }
 
   /**
@@ -1175,9 +1175,9 @@ public sealed abstract class BaseElementDsl extends BaseAttributeDsl permits Bas
    *
    * @return an instruction representing this element.
    */
-  protected final ElementContents ol(String text) {
+  protected final Element ol(String text) {
     element(StandardElementName.OL, text);
-    return Api.GLOBAL_INSTRUCTION;
+    return Api.ELEMENT;
   }
 
   /**
@@ -1188,9 +1188,9 @@ public sealed abstract class BaseElementDsl extends BaseAttributeDsl permits Bas
    *
    * @return an instruction representing this element.
    */
-  protected final ElementContents optgroup(OptionGroupInstruction... contents) {
+  protected final Element optgroup(OptionGroupInstruction... contents) {
     element(StandardElementName.OPTGROUP, contents);
-    return Api.GLOBAL_INSTRUCTION;
+    return Api.ELEMENT;
   }
 
   /**
@@ -1201,9 +1201,9 @@ public sealed abstract class BaseElementDsl extends BaseAttributeDsl permits Bas
    *
    * @return an instruction representing this element.
    */
-  protected final ElementContents optgroup(String text) {
+  protected final Element optgroup(String text) {
     element(StandardElementName.OPTGROUP, text);
-    return Api.GLOBAL_INSTRUCTION;
+    return Api.ELEMENT;
   }
 
   /**
@@ -1214,9 +1214,9 @@ public sealed abstract class BaseElementDsl extends BaseAttributeDsl permits Bas
    *
    * @return an instruction representing this element.
    */
-  protected final ElementContents option(OptionInstruction... contents) {
+  protected final Element option(OptionInstruction... contents) {
     element(StandardElementName.OPTION, contents);
-    return Api.GLOBAL_INSTRUCTION;
+    return Api.ELEMENT;
   }
 
   /**
@@ -1227,9 +1227,9 @@ public sealed abstract class BaseElementDsl extends BaseAttributeDsl permits Bas
    *
    * @return an instruction representing this element.
    */
-  protected final ElementContents option(String text) {
+  protected final Element option(String text) {
     element(StandardElementName.OPTION, text);
-    return Api.GLOBAL_INSTRUCTION;
+    return Api.ELEMENT;
   }
 
   /**
@@ -1240,9 +1240,9 @@ public sealed abstract class BaseElementDsl extends BaseAttributeDsl permits Bas
    *
    * @return an instruction representing this element.
    */
-  protected final ElementContents p(ParagraphInstruction... contents) {
+  protected final Element p(ParagraphInstruction... contents) {
     element(StandardElementName.P, contents);
-    return Api.GLOBAL_INSTRUCTION;
+    return Api.ELEMENT;
   }
 
   /**
@@ -1253,9 +1253,9 @@ public sealed abstract class BaseElementDsl extends BaseAttributeDsl permits Bas
    *
    * @return an instruction representing this element.
    */
-  protected final ElementContents p(String text) {
+  protected final Element p(String text) {
     element(StandardElementName.P, text);
-    return Api.GLOBAL_INSTRUCTION;
+    return Api.ELEMENT;
   }
 
   /**
@@ -1266,9 +1266,9 @@ public sealed abstract class BaseElementDsl extends BaseAttributeDsl permits Bas
    *
    * @return an instruction representing this element.
    */
-  protected final ElementContents path(PathInstruction... contents) {
+  protected final Element path(PathInstruction... contents) {
     element(StandardElementName.PATH, contents);
-    return Api.GLOBAL_INSTRUCTION;
+    return Api.ELEMENT;
   }
 
   /**
@@ -1279,9 +1279,9 @@ public sealed abstract class BaseElementDsl extends BaseAttributeDsl permits Bas
    *
    * @return an instruction representing this element.
    */
-  protected final ElementContents path(String text) {
+  protected final Element path(String text) {
     element(StandardElementName.PATH, text);
-    return Api.GLOBAL_INSTRUCTION;
+    return Api.ELEMENT;
   }
 
   /**
@@ -1292,9 +1292,9 @@ public sealed abstract class BaseElementDsl extends BaseAttributeDsl permits Bas
    *
    * @return an instruction representing this element.
    */
-  protected final ElementContents pre(PreInstruction... contents) {
+  protected final Element pre(PreInstruction... contents) {
     element(StandardElementName.PRE, contents);
-    return Api.GLOBAL_INSTRUCTION;
+    return Api.ELEMENT;
   }
 
   /**
@@ -1305,9 +1305,9 @@ public sealed abstract class BaseElementDsl extends BaseAttributeDsl permits Bas
    *
    * @return an instruction representing this element.
    */
-  protected final ElementContents pre(String text) {
+  protected final Element pre(String text) {
     element(StandardElementName.PRE, text);
-    return Api.GLOBAL_INSTRUCTION;
+    return Api.ELEMENT;
   }
 
   /**
@@ -1318,9 +1318,9 @@ public sealed abstract class BaseElementDsl extends BaseAttributeDsl permits Bas
    *
    * @return an instruction representing this element.
    */
-  protected final ElementContents progress(ProgressInstruction... contents) {
+  protected final Element progress(ProgressInstruction... contents) {
     element(StandardElementName.PROGRESS, contents);
-    return Api.GLOBAL_INSTRUCTION;
+    return Api.ELEMENT;
   }
 
   /**
@@ -1331,9 +1331,9 @@ public sealed abstract class BaseElementDsl extends BaseAttributeDsl permits Bas
    *
    * @return an instruction representing this element.
    */
-  protected final ElementContents progress(String text) {
+  protected final Element progress(String text) {
     element(StandardElementName.PROGRESS, text);
-    return Api.GLOBAL_INSTRUCTION;
+    return Api.ELEMENT;
   }
 
   /**
@@ -1344,9 +1344,9 @@ public sealed abstract class BaseElementDsl extends BaseAttributeDsl permits Bas
    *
    * @return an instruction representing this element.
    */
-  protected final ElementContents samp(SampleOutputInstruction... contents) {
+  protected final Element samp(SampleOutputInstruction... contents) {
     element(StandardElementName.SAMP, contents);
-    return Api.GLOBAL_INSTRUCTION;
+    return Api.ELEMENT;
   }
 
   /**
@@ -1357,9 +1357,9 @@ public sealed abstract class BaseElementDsl extends BaseAttributeDsl permits Bas
    *
    * @return an instruction representing this element.
    */
-  protected final ElementContents samp(String text) {
+  protected final Element samp(String text) {
     element(StandardElementName.SAMP, text);
-    return Api.GLOBAL_INSTRUCTION;
+    return Api.ELEMENT;
   }
 
   /**
@@ -1370,9 +1370,9 @@ public sealed abstract class BaseElementDsl extends BaseAttributeDsl permits Bas
    *
    * @return an instruction representing this element.
    */
-  protected final ElementContents script(ScriptInstruction... contents) {
+  protected final Element script(ScriptInstruction... contents) {
     element(StandardElementName.SCRIPT, contents);
-    return Api.GLOBAL_INSTRUCTION;
+    return Api.ELEMENT;
   }
 
   /**
@@ -1383,9 +1383,9 @@ public sealed abstract class BaseElementDsl extends BaseAttributeDsl permits Bas
    *
    * @return an instruction representing this element.
    */
-  protected final ElementContents script(String text) {
+  protected final Element script(String text) {
     element(StandardElementName.SCRIPT, text);
-    return Api.GLOBAL_INSTRUCTION;
+    return Api.ELEMENT;
   }
 
   /**
@@ -1396,9 +1396,9 @@ public sealed abstract class BaseElementDsl extends BaseAttributeDsl permits Bas
    *
    * @return an instruction representing this element.
    */
-  protected final ElementContents section(SectionInstruction... contents) {
+  protected final Element section(SectionInstruction... contents) {
     element(StandardElementName.SECTION, contents);
-    return Api.GLOBAL_INSTRUCTION;
+    return Api.ELEMENT;
   }
 
   /**
@@ -1409,9 +1409,9 @@ public sealed abstract class BaseElementDsl extends BaseAttributeDsl permits Bas
    *
    * @return an instruction representing this element.
    */
-  protected final ElementContents section(String text) {
+  protected final Element section(String text) {
     element(StandardElementName.SECTION, text);
-    return Api.GLOBAL_INSTRUCTION;
+    return Api.ELEMENT;
   }
 
   /**
@@ -1422,9 +1422,9 @@ public sealed abstract class BaseElementDsl extends BaseAttributeDsl permits Bas
    *
    * @return an instruction representing this element.
    */
-  protected final ElementContents select(SelectInstruction... contents) {
+  protected final Element select(SelectInstruction... contents) {
     element(StandardElementName.SELECT, contents);
-    return Api.GLOBAL_INSTRUCTION;
+    return Api.ELEMENT;
   }
 
   /**
@@ -1435,9 +1435,9 @@ public sealed abstract class BaseElementDsl extends BaseAttributeDsl permits Bas
    *
    * @return an instruction representing this element.
    */
-  protected final ElementContents select(String text) {
+  protected final Element select(String text) {
     element(StandardElementName.SELECT, text);
-    return Api.GLOBAL_INSTRUCTION;
+    return Api.ELEMENT;
   }
 
   /**
@@ -1448,9 +1448,9 @@ public sealed abstract class BaseElementDsl extends BaseAttributeDsl permits Bas
    *
    * @return an instruction representing this element.
    */
-  protected final ElementContents small(SmallInstruction... contents) {
+  protected final Element small(SmallInstruction... contents) {
     element(StandardElementName.SMALL, contents);
-    return Api.GLOBAL_INSTRUCTION;
+    return Api.ELEMENT;
   }
 
   /**
@@ -1461,9 +1461,9 @@ public sealed abstract class BaseElementDsl extends BaseAttributeDsl permits Bas
    *
    * @return an instruction representing this element.
    */
-  protected final ElementContents small(String text) {
+  protected final Element small(String text) {
     element(StandardElementName.SMALL, text);
-    return Api.GLOBAL_INSTRUCTION;
+    return Api.ELEMENT;
   }
 
   /**
@@ -1474,9 +1474,9 @@ public sealed abstract class BaseElementDsl extends BaseAttributeDsl permits Bas
    *
    * @return an instruction representing this element.
    */
-  protected final ElementContents span(SpanInstruction... contents) {
+  protected final Element span(SpanInstruction... contents) {
     element(StandardElementName.SPAN, contents);
-    return Api.GLOBAL_INSTRUCTION;
+    return Api.ELEMENT;
   }
 
   /**
@@ -1487,9 +1487,9 @@ public sealed abstract class BaseElementDsl extends BaseAttributeDsl permits Bas
    *
    * @return an instruction representing this element.
    */
-  protected final ElementContents span(String text) {
+  protected final Element span(String text) {
     element(StandardElementName.SPAN, text);
-    return Api.GLOBAL_INSTRUCTION;
+    return Api.ELEMENT;
   }
 
   /**
@@ -1500,9 +1500,9 @@ public sealed abstract class BaseElementDsl extends BaseAttributeDsl permits Bas
    *
    * @return an instruction representing this element.
    */
-  protected final ElementContents strong(StrongInstruction... contents) {
+  protected final Element strong(StrongInstruction... contents) {
     element(StandardElementName.STRONG, contents);
-    return Api.GLOBAL_INSTRUCTION;
+    return Api.ELEMENT;
   }
 
   /**
@@ -1513,9 +1513,9 @@ public sealed abstract class BaseElementDsl extends BaseAttributeDsl permits Bas
    *
    * @return an instruction representing this element.
    */
-  protected final ElementContents strong(String text) {
+  protected final Element strong(String text) {
     element(StandardElementName.STRONG, text);
-    return Api.GLOBAL_INSTRUCTION;
+    return Api.ELEMENT;
   }
 
   /**
@@ -1526,9 +1526,9 @@ public sealed abstract class BaseElementDsl extends BaseAttributeDsl permits Bas
    *
    * @return an instruction representing this element.
    */
-  protected final ElementContents style(StyleInstruction... contents) {
+  protected final Element style(StyleInstruction... contents) {
     element(StandardElementName.STYLE, contents);
-    return Api.GLOBAL_INSTRUCTION;
+    return Api.ELEMENT;
   }
 
   /**
@@ -1539,9 +1539,9 @@ public sealed abstract class BaseElementDsl extends BaseAttributeDsl permits Bas
    *
    * @return an instruction representing this element.
    */
-  protected final ElementContents style(String text) {
+  protected final Element style(String text) {
     element(StandardElementName.STYLE, text);
-    return Api.GLOBAL_INSTRUCTION;
+    return Api.ELEMENT;
   }
 
   /**
@@ -1552,9 +1552,9 @@ public sealed abstract class BaseElementDsl extends BaseAttributeDsl permits Bas
    *
    * @return an instruction representing this element.
    */
-  protected final ElementContents sub(SubscriptInstruction... contents) {
+  protected final Element sub(SubscriptInstruction... contents) {
     element(StandardElementName.SUB, contents);
-    return Api.GLOBAL_INSTRUCTION;
+    return Api.ELEMENT;
   }
 
   /**
@@ -1565,9 +1565,9 @@ public sealed abstract class BaseElementDsl extends BaseAttributeDsl permits Bas
    *
    * @return an instruction representing this element.
    */
-  protected final ElementContents sub(String text) {
+  protected final Element sub(String text) {
     element(StandardElementName.SUB, text);
-    return Api.GLOBAL_INSTRUCTION;
+    return Api.ELEMENT;
   }
 
   /**
@@ -1578,9 +1578,9 @@ public sealed abstract class BaseElementDsl extends BaseAttributeDsl permits Bas
    *
    * @return an instruction representing this element.
    */
-  protected final ElementContents summary(SummaryInstruction... contents) {
+  protected final Element summary(SummaryInstruction... contents) {
     element(StandardElementName.SUMMARY, contents);
-    return Api.GLOBAL_INSTRUCTION;
+    return Api.ELEMENT;
   }
 
   /**
@@ -1591,9 +1591,9 @@ public sealed abstract class BaseElementDsl extends BaseAttributeDsl permits Bas
    *
    * @return an instruction representing this element.
    */
-  protected final ElementContents summary(String text) {
+  protected final Element summary(String text) {
     element(StandardElementName.SUMMARY, text);
-    return Api.GLOBAL_INSTRUCTION;
+    return Api.ELEMENT;
   }
 
   /**
@@ -1604,9 +1604,9 @@ public sealed abstract class BaseElementDsl extends BaseAttributeDsl permits Bas
    *
    * @return an instruction representing this element.
    */
-  protected final ElementContents sup(SuperscriptInstruction... contents) {
+  protected final Element sup(SuperscriptInstruction... contents) {
     element(StandardElementName.SUP, contents);
-    return Api.GLOBAL_INSTRUCTION;
+    return Api.ELEMENT;
   }
 
   /**
@@ -1617,9 +1617,9 @@ public sealed abstract class BaseElementDsl extends BaseAttributeDsl permits Bas
    *
    * @return an instruction representing this element.
    */
-  protected final ElementContents sup(String text) {
+  protected final Element sup(String text) {
     element(StandardElementName.SUP, text);
-    return Api.GLOBAL_INSTRUCTION;
+    return Api.ELEMENT;
   }
 
   /**
@@ -1630,9 +1630,9 @@ public sealed abstract class BaseElementDsl extends BaseAttributeDsl permits Bas
    *
    * @return an instruction representing this element.
    */
-  protected final ElementContents svg(SvgInstruction... contents) {
+  protected final Element svg(SvgInstruction... contents) {
     element(StandardElementName.SVG, contents);
-    return Api.GLOBAL_INSTRUCTION;
+    return Api.ELEMENT;
   }
 
   /**
@@ -1643,9 +1643,9 @@ public sealed abstract class BaseElementDsl extends BaseAttributeDsl permits Bas
    *
    * @return an instruction representing this element.
    */
-  protected final ElementContents svg(String text) {
+  protected final Element svg(String text) {
     element(StandardElementName.SVG, text);
-    return Api.GLOBAL_INSTRUCTION;
+    return Api.ELEMENT;
   }
 
   /**
@@ -1656,9 +1656,9 @@ public sealed abstract class BaseElementDsl extends BaseAttributeDsl permits Bas
    *
    * @return an instruction representing this element.
    */
-  protected final ElementContents table(TableInstruction... contents) {
+  protected final Element table(TableInstruction... contents) {
     element(StandardElementName.TABLE, contents);
-    return Api.GLOBAL_INSTRUCTION;
+    return Api.ELEMENT;
   }
 
   /**
@@ -1669,9 +1669,9 @@ public sealed abstract class BaseElementDsl extends BaseAttributeDsl permits Bas
    *
    * @return an instruction representing this element.
    */
-  protected final ElementContents table(String text) {
+  protected final Element table(String text) {
     element(StandardElementName.TABLE, text);
-    return Api.GLOBAL_INSTRUCTION;
+    return Api.ELEMENT;
   }
 
   /**
@@ -1682,9 +1682,9 @@ public sealed abstract class BaseElementDsl extends BaseAttributeDsl permits Bas
    *
    * @return an instruction representing this element.
    */
-  protected final ElementContents tbody(TableBodyInstruction... contents) {
+  protected final Element tbody(TableBodyInstruction... contents) {
     element(StandardElementName.TBODY, contents);
-    return Api.GLOBAL_INSTRUCTION;
+    return Api.ELEMENT;
   }
 
   /**
@@ -1695,9 +1695,9 @@ public sealed abstract class BaseElementDsl extends BaseAttributeDsl permits Bas
    *
    * @return an instruction representing this element.
    */
-  protected final ElementContents tbody(String text) {
+  protected final Element tbody(String text) {
     element(StandardElementName.TBODY, text);
-    return Api.GLOBAL_INSTRUCTION;
+    return Api.ELEMENT;
   }
 
   /**
@@ -1708,9 +1708,9 @@ public sealed abstract class BaseElementDsl extends BaseAttributeDsl permits Bas
    *
    * @return an instruction representing this element.
    */
-  protected final ElementContents td(TableDataInstruction... contents) {
+  protected final Element td(TableDataInstruction... contents) {
     element(StandardElementName.TD, contents);
-    return Api.GLOBAL_INSTRUCTION;
+    return Api.ELEMENT;
   }
 
   /**
@@ -1721,9 +1721,9 @@ public sealed abstract class BaseElementDsl extends BaseAttributeDsl permits Bas
    *
    * @return an instruction representing this element.
    */
-  protected final ElementContents td(String text) {
+  protected final Element td(String text) {
     element(StandardElementName.TD, text);
-    return Api.GLOBAL_INSTRUCTION;
+    return Api.ELEMENT;
   }
 
   /**
@@ -1734,9 +1734,9 @@ public sealed abstract class BaseElementDsl extends BaseAttributeDsl permits Bas
    *
    * @return an instruction representing this element.
    */
-  protected final ElementContents template(TemplateInstruction... contents) {
+  protected final Element template(TemplateInstruction... contents) {
     element(StandardElementName.TEMPLATE, contents);
-    return Api.GLOBAL_INSTRUCTION;
+    return Api.ELEMENT;
   }
 
   /**
@@ -1747,9 +1747,9 @@ public sealed abstract class BaseElementDsl extends BaseAttributeDsl permits Bas
    *
    * @return an instruction representing this element.
    */
-  protected final ElementContents template(String text) {
+  protected final Element template(String text) {
     element(StandardElementName.TEMPLATE, text);
-    return Api.GLOBAL_INSTRUCTION;
+    return Api.ELEMENT;
   }
 
   /**
@@ -1760,9 +1760,9 @@ public sealed abstract class BaseElementDsl extends BaseAttributeDsl permits Bas
    *
    * @return an instruction representing this element.
    */
-  protected final ElementContents textarea(TextAreaInstruction... contents) {
+  protected final Element textarea(TextAreaInstruction... contents) {
     element(StandardElementName.TEXTAREA, contents);
-    return Api.GLOBAL_INSTRUCTION;
+    return Api.ELEMENT;
   }
 
   /**
@@ -1773,9 +1773,9 @@ public sealed abstract class BaseElementDsl extends BaseAttributeDsl permits Bas
    *
    * @return an instruction representing this element.
    */
-  protected final ElementContents textarea(String text) {
+  protected final Element textarea(String text) {
     element(StandardElementName.TEXTAREA, text);
-    return Api.GLOBAL_INSTRUCTION;
+    return Api.ELEMENT;
   }
 
   /**
@@ -1786,9 +1786,9 @@ public sealed abstract class BaseElementDsl extends BaseAttributeDsl permits Bas
    *
    * @return an instruction representing this element.
    */
-  protected final ElementContents th(TableHeaderInstruction... contents) {
+  protected final Element th(TableHeaderInstruction... contents) {
     element(StandardElementName.TH, contents);
-    return Api.GLOBAL_INSTRUCTION;
+    return Api.ELEMENT;
   }
 
   /**
@@ -1799,9 +1799,9 @@ public sealed abstract class BaseElementDsl extends BaseAttributeDsl permits Bas
    *
    * @return an instruction representing this element.
    */
-  protected final ElementContents th(String text) {
+  protected final Element th(String text) {
     element(StandardElementName.TH, text);
-    return Api.GLOBAL_INSTRUCTION;
+    return Api.ELEMENT;
   }
 
   /**
@@ -1812,9 +1812,9 @@ public sealed abstract class BaseElementDsl extends BaseAttributeDsl permits Bas
    *
    * @return an instruction representing this element.
    */
-  protected final ElementContents thead(TableHeadInstruction... contents) {
+  protected final Element thead(TableHeadInstruction... contents) {
     element(StandardElementName.THEAD, contents);
-    return Api.GLOBAL_INSTRUCTION;
+    return Api.ELEMENT;
   }
 
   /**
@@ -1825,9 +1825,9 @@ public sealed abstract class BaseElementDsl extends BaseAttributeDsl permits Bas
    *
    * @return an instruction representing this element.
    */
-  protected final ElementContents thead(String text) {
+  protected final Element thead(String text) {
     element(StandardElementName.THEAD, text);
-    return Api.GLOBAL_INSTRUCTION;
+    return Api.ELEMENT;
   }
 
   /**
@@ -1838,9 +1838,9 @@ public sealed abstract class BaseElementDsl extends BaseAttributeDsl permits Bas
    *
    * @return an instruction representing this element.
    */
-  protected final ElementContents title(TitleInstruction... contents) {
+  protected final Element title(TitleInstruction... contents) {
     element(StandardElementName.TITLE, contents);
-    return Api.GLOBAL_INSTRUCTION;
+    return Api.ELEMENT;
   }
 
   /**
@@ -1851,9 +1851,9 @@ public sealed abstract class BaseElementDsl extends BaseAttributeDsl permits Bas
    *
    * @return an instruction representing this attribute or element.
    */
-  protected final ElementContents title(String text) {
+  protected final Element title(String text) {
     ambiguous(Ambiguous.TITLE, text);
-    return Api.GLOBAL_INSTRUCTION;
+    return Api.ELEMENT;
   }
 
   /**
@@ -1864,9 +1864,9 @@ public sealed abstract class BaseElementDsl extends BaseAttributeDsl permits Bas
    *
    * @return an instruction representing this element.
    */
-  protected final ElementContents tr(TableRowInstruction... contents) {
+  protected final Element tr(TableRowInstruction... contents) {
     element(StandardElementName.TR, contents);
-    return Api.GLOBAL_INSTRUCTION;
+    return Api.ELEMENT;
   }
 
   /**
@@ -1877,9 +1877,9 @@ public sealed abstract class BaseElementDsl extends BaseAttributeDsl permits Bas
    *
    * @return an instruction representing this element.
    */
-  protected final ElementContents tr(String text) {
+  protected final Element tr(String text) {
     element(StandardElementName.TR, text);
-    return Api.GLOBAL_INSTRUCTION;
+    return Api.ELEMENT;
   }
 
   /**
@@ -1890,9 +1890,9 @@ public sealed abstract class BaseElementDsl extends BaseAttributeDsl permits Bas
    *
    * @return an instruction representing this element.
    */
-  protected final ElementContents ul(UnorderedListInstruction... contents) {
+  protected final Element ul(UnorderedListInstruction... contents) {
     element(StandardElementName.UL, contents);
-    return Api.GLOBAL_INSTRUCTION;
+    return Api.ELEMENT;
   }
 
   /**
@@ -1903,9 +1903,9 @@ public sealed abstract class BaseElementDsl extends BaseAttributeDsl permits Bas
    *
    * @return an instruction representing this element.
    */
-  protected final ElementContents ul(String text) {
+  protected final Element ul(String text) {
     element(StandardElementName.UL, text);
-    return Api.GLOBAL_INSTRUCTION;
+    return Api.ELEMENT;
   }
 
   /**

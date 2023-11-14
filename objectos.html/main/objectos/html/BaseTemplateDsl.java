@@ -33,12 +33,12 @@ public sealed abstract class BaseTemplateDsl
 
 	BaseTemplateDsl() {}
 
-	protected final Api.ElementContents dataWayClick(String text) {
+	protected final Api.Element dataWayClick(String text) {
 		Check.notNull(text, "text == null");
 
 		api().attribute(CustomAttributeName.DATA_WAY_CLICK, text);
 
-		return Api.GLOBAL_INSTRUCTION;
+		return Api.ELEMENT;
 	}
 
 	/**
@@ -81,7 +81,7 @@ public sealed abstract class BaseTemplateDsl
 	 *
 	 * @return an instruction representing this flatten operation
 	 */
-	protected final Api.ElementContents flatten(Api.Instruction... contents) {
+	protected final Api.Element flatten(Api.Instruction... contents) {
 		Check.notNull(contents, "contents == null");
 
 		HtmlTemplateApi api;
@@ -98,7 +98,7 @@ public sealed abstract class BaseTemplateDsl
 
 		api.elementEnd();
 
-		return Api.GLOBAL_INSTRUCTION;
+		return Api.ELEMENT;
 	}
 
 	/**
@@ -215,12 +215,12 @@ public sealed abstract class BaseTemplateDsl
 		return Api.NOOP;
 	}
 
-	protected final Api.ElementContents raw(String text) {
+	protected final Api.Element raw(String text) {
 		Check.notNull(text, "text == null");
 
 		api().raw(text);
 
-		return Api.GLOBAL_INSTRUCTION;
+		return Api.ELEMENT;
 	}
 
 	/**
@@ -244,12 +244,12 @@ public sealed abstract class BaseTemplateDsl
 	 *
 	 * @return an instruction representing the text node
 	 */
-	protected final Api.ElementContents t(String text) {
+	protected final Api.Element t(String text) {
 		Check.notNull(text, "text == null");
 
 		api().text(text);
 
-		return Api.GLOBAL_INSTRUCTION;
+		return Api.ELEMENT;
 	}
 
 	@Override
@@ -295,7 +295,7 @@ public sealed abstract class BaseTemplateDsl
 		api.text(text);
 
 		api.elementBegin(name);
-		api.elementValue(Api.GLOBAL_INSTRUCTION);
+		api.elementValue(Api.ELEMENT);
 		api.elementEnd();
 	}
 

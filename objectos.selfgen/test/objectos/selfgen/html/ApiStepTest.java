@@ -76,7 +76,7 @@ import java.util.Iterator;
 public final class Api {
   public static final Attribute ATTRIBUTE = new Attribute();
 
-  public static final ElementContents GLOBAL_INSTRUCTION = new ElementContents();
+  public static final Element ELEMENT = new Element();
 
   public static final Fragment FRAGMENT = new Fragment();
 
@@ -191,15 +191,15 @@ public final class Api {
   }
 
   /**
-   * An instruction which can be used as a child of any element.
+   * The element instruction.
    */
-  public static final class ElementContents
+  public static final class Element
       implements
       AnchorInstruction,
       DivInstruction,
       OptionInstruction,
       SelectInstruction {
-    private ElementContents() {}
+    private Element() {}
   }
 
   /**

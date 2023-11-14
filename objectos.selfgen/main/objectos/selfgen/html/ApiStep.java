@@ -61,7 +61,7 @@ final class ApiStep extends ThisTemplate {
     public final class \{simpleName} {
       public static final Attribute ATTRIBUTE = new Attribute();
 
-      public static final ElementContents GLOBAL_INSTRUCTION = new ElementContents();
+      public static final Element ELEMENT = new Element();
 
       public static final Fragment FRAGMENT = new Fragment();
 
@@ -139,12 +139,12 @@ final class ApiStep extends ThisTemplate {
       }
 
       /**
-       * An instruction which can be used as a child of any element.
+       * The element instruction.
        */
-      public static final class ElementContents
+      public static final class Element
           implements
     \{extendsElementContents()} {
-        private ElementContents() {}
+        private Element() {}
       }
 
       /**

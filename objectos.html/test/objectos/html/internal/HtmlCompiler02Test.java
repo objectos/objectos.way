@@ -164,7 +164,7 @@ public class HtmlCompiler02Test {
 		compiler.elementEnd();
 
 		compiler.elementBegin(StandardElementName.HTML);
-		compiler.elementValue(Api.GLOBAL_INSTRUCTION);
+		compiler.elementValue(Api.ELEMENT);
 		compiler.elementEnd();
 
 		compiler.compilationEnd();
@@ -261,11 +261,11 @@ public class HtmlCompiler02Test {
 		compiler.fragmentEnd(index);
 
 		compiler.elementBegin(StandardElementName.HEAD);
-		compiler.elementValue(Api.GLOBAL_INSTRUCTION);
+		compiler.elementValue(Api.ELEMENT);
 		compiler.elementEnd();
 
 		compiler.elementBegin(StandardElementName.HTML);
-		compiler.elementValue(Api.GLOBAL_INSTRUCTION);
+		compiler.elementValue(Api.ELEMENT);
 		compiler.elementEnd();
 
 		compiler.compilationEnd();
@@ -339,7 +339,7 @@ public class HtmlCompiler02Test {
 
 		compiler.elementBegin(StandardElementName.HTML);
 		compiler.elementValue(foo);
-		compiler.elementValue(Api.GLOBAL_INSTRUCTION);
+		compiler.elementValue(Api.ELEMENT);
 		compiler.elementEnd();
 
 		compiler.compilationEnd();
@@ -402,15 +402,15 @@ public class HtmlCompiler02Test {
 		compiler.text("o7html");
 
 		compiler.elementBegin(StandardElementName.P);
-		compiler.elementValue(Api.GLOBAL_INSTRUCTION);
+		compiler.elementValue(Api.ELEMENT);
 		compiler.elementEnd();
 
 		compiler.elementBegin(StandardElementName.BODY);
-		compiler.elementValue(Api.GLOBAL_INSTRUCTION);
+		compiler.elementValue(Api.ELEMENT);
 		compiler.elementEnd();
 
 		compiler.elementBegin(StandardElementName.HTML);
-		compiler.elementValue(Api.GLOBAL_INSTRUCTION);
+		compiler.elementValue(Api.ELEMENT);
 		compiler.elementEnd();
 
 		compiler.compilationEnd();
@@ -472,18 +472,18 @@ public class HtmlCompiler02Test {
 		compiler.ambiguous(Ambiguous.TITLE, "element");
 
 		compiler.elementBegin(StandardElementName.HEAD);
-		compiler.elementValue(Api.GLOBAL_INSTRUCTION);
+		compiler.elementValue(Api.ELEMENT);
 		compiler.elementEnd();
 
 		compiler.ambiguous(Ambiguous.TITLE, "attribute");
 
 		compiler.elementBegin(StandardElementName.BODY);
-		compiler.elementValue(Api.GLOBAL_INSTRUCTION);
+		compiler.elementValue(Api.ELEMENT);
 		compiler.elementEnd();
 
 		compiler.elementBegin(StandardElementName.HTML);
-		compiler.elementValue(Api.GLOBAL_INSTRUCTION);
-		compiler.elementValue(Api.GLOBAL_INSTRUCTION);
+		compiler.elementValue(Api.ELEMENT);
+		compiler.elementValue(Api.ELEMENT);
 		compiler.elementEnd();
 
 		compiler.compilationEnd();
@@ -610,7 +610,7 @@ public class HtmlCompiler02Test {
 		compiler.text("ul > li {}");
 
 		compiler.elementBegin(StandardElementName.STYLE);
-		compiler.elementValue(Api.GLOBAL_INSTRUCTION);
+		compiler.elementValue(Api.ELEMENT);
 		compiler.elementEnd();
 
 		compiler.compilationEnd();
@@ -710,12 +710,12 @@ public class HtmlCompiler02Test {
 		compiler.elementEnd();
 
 		compiler.flattenBegin();
-		compiler.elementValue(Api.GLOBAL_INSTRUCTION);
-		compiler.elementValue(Api.GLOBAL_INSTRUCTION);
+		compiler.elementValue(Api.ELEMENT);
+		compiler.elementValue(Api.ELEMENT);
 		compiler.elementEnd();
 
 		compiler.elementBegin(StandardElementName.FORM);
-		compiler.elementValue(Api.GLOBAL_INSTRUCTION);
+		compiler.elementValue(Api.ELEMENT);
 		compiler.elementEnd();
 
 		compiler.compilationEnd();

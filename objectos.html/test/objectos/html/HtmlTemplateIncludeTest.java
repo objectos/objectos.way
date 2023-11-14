@@ -390,7 +390,7 @@ public class HtmlTemplateIncludeTest {
 				super(parent);
 			}
 
-			public final void render(Api.ElementContents child) {
+			public final void render(Api.Element child) {
 				div(
 						className("component"),
 
@@ -434,7 +434,7 @@ public class HtmlTemplateIncludeTest {
 				super(parent);
 			}
 
-			public final Api.ElementContents render(Api.ElementContents e) {
+			public final Api.Element render(Api.Element e) {
 				return div(
 						className("c1"),
 						e
@@ -447,7 +447,7 @@ public class HtmlTemplateIncludeTest {
 				super(parent);
 			}
 
-			public final Api.ElementContents render(Api.ElementContents e) {
+			public final Api.Element render(Api.Element e) {
 				return div(
 						className("c2"),
 						e
@@ -495,7 +495,7 @@ public class HtmlTemplateIncludeTest {
 				super(parent);
 			}
 
-			public final Api.ElementContents render(Api.UnorderedListInstruction... elements) {
+			public final Api.Element render(Api.UnorderedListInstruction... elements) {
 				return nav(
 						ul(elements)
 				);
@@ -505,7 +505,7 @@ public class HtmlTemplateIncludeTest {
 		class Link extends HtmlComponent {
 			public Link(HtmlTemplate parent) { super(parent); }
 
-			public final Api.ElementContents render(Api.AnchorInstruction... elements) {
+			public final Api.Element render(Api.AnchorInstruction... elements) {
 				return li(
 						a(elements)
 				);

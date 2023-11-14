@@ -104,7 +104,7 @@ final class BaseElementDslStep extends ThisTemplate {
            */
           protected final \{ELEMENT_CONTENTS} \{methodName}(\{paramType}... contents) {
             element(\{STD_ELEMENT_NAME}.\{constantName}, contents);
-            return \{API}.GLOBAL_INSTRUCTION;
+            return \{API}.ELEMENT;
           }
         """
       );
@@ -123,7 +123,7 @@ final class BaseElementDslStep extends ThisTemplate {
              */
             protected final \{ELEMENT_CONTENTS} \{methodName}(String text) {
               element(\{STD_ELEMENT_NAME}.\{constantName}, text);
-              return \{API}.GLOBAL_INSTRUCTION;
+              return \{API}.ELEMENT;
             }
           """
         );
@@ -142,7 +142,7 @@ final class BaseElementDslStep extends ThisTemplate {
              */
             protected final \{ELEMENT_CONTENTS} \{methodName}(String text) {
               ambiguous(\{AMBIGUOUS}.\{constantName}, text);
-              return \{API}.GLOBAL_INSTRUCTION;
+              return \{API}.ELEMENT;
             }
           """
         );

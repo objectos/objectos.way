@@ -45,7 +45,7 @@ package objectos.icon;
 
 import objectos.html.BaseTemplateDsl;
 import objectos.html.HtmlComponent;
-import objectos.html.tmpl.Api.ElementContents;
+import objectos.html.tmpl.Api.Element;
 import objectos.html.tmpl.Api.SvgInstruction;
 
 /**
@@ -70,7 +70,7 @@ public class BootstrapIcons extends HtmlComponent {
 	 *
 	 * @return the {@code svg} element
 	 */
-	public final ElementContents envelope(SvgInstruction... contents) {
+	public final Element envelope(SvgInstruction... contents) {
 		// @formatter:off
     return icon(
       flatten(contents),
@@ -87,7 +87,7 @@ public class BootstrapIcons extends HtmlComponent {
 	 *
 	 * @return the {@code svg} element
 	 */
-	public final ElementContents envelopeFill(SvgInstruction... contents) {
+	public final Element envelopeFill(SvgInstruction... contents) {
 		// @formatter:off
     return icon(
       flatten(contents),
@@ -103,7 +103,7 @@ public class BootstrapIcons extends HtmlComponent {
 	 *
 	 * @return the {@code svg} element
 	 */
-	public final ElementContents github(SvgInstruction... contents) {
+	public final Element github(SvgInstruction... contents) {
 		// @formatter:off
     return icon(
       flatten(contents),
@@ -119,7 +119,7 @@ public class BootstrapIcons extends HtmlComponent {
 	 *
 	 * @return the {@code svg} element
 	 */
-	public final ElementContents linkedin(SvgInstruction... contents) {
+	public final Element linkedin(SvgInstruction... contents) {
 		// @formatter:off
     return icon(
       flatten(contents),
@@ -135,7 +135,7 @@ public class BootstrapIcons extends HtmlComponent {
 	 *
 	 * @return the {@code svg} element
 	 */
-	public final ElementContents threeDots(SvgInstruction... contents) {
+	public final Element threeDots(SvgInstruction... contents) {
 		// @formatter:off
     return icon(
       flatten(contents),
@@ -151,7 +151,7 @@ public class BootstrapIcons extends HtmlComponent {
 	 *
 	 * @return the {@code svg} element
 	 */
-	public final ElementContents twitter(SvgInstruction... contents) {
+	public final Element twitter(SvgInstruction... contents) {
 		// @formatter:off
     return icon(
       flatten(contents),
@@ -167,7 +167,7 @@ public class BootstrapIcons extends HtmlComponent {
 	 *
 	 * @return the {@code svg} element
 	 */
-	public final ElementContents twitterX(SvgInstruction... contents) {
+	public final Element twitterX(SvgInstruction... contents) {
 		// @formatter:off
     return icon(
       flatten(contents),
@@ -181,7 +181,7 @@ public class BootstrapIcons extends HtmlComponent {
 	 *
 	 * @return the {@code svg} element
 	 */
-	public final ElementContents x(SvgInstruction... contents) {
+	public final Element x(SvgInstruction... contents) {
 		// @formatter:off
     return icon(
       flatten(contents),
@@ -190,7 +190,7 @@ public class BootstrapIcons extends HtmlComponent {
     // @formatter:on
 	}
 
-	private ElementContents icon(SvgInstruction... contents) {
+	private Element icon(SvgInstruction... contents) {
 		return svg(
 				xmlns("http://www.w3.org/2000/svg"),
 				width("16"),

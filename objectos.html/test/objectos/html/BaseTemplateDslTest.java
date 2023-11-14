@@ -18,44 +18,44 @@ package objectos.html;
 import static org.testng.Assert.assertEquals;
 
 import objectos.html.tmpl.Api;
-import objectos.html.tmpl.Api.ElementContents;
+import objectos.html.tmpl.Api.Element;
 import org.testng.annotations.Test;
 
 public class BaseTemplateDslTest {
 
-  @Test
-  public void javadoc_include() {
-    // @start region="IncludeExample"
-    class IncludeExample extends HtmlTemplate {
-      @Override
-      protected void definition() {
-        doctype();
-        html(
-          head(
-            include(this::head0)
-          ),
-          body(
-            include(this::body0)
-          )
-        );
-      }
+	@Test
+	public void javadoc_include() {
+		// @start region="IncludeExample"
+		class IncludeExample extends HtmlTemplate {
+			@Override
+			protected void definition() {
+				doctype();
+				html(
+						head(
+								include(this::head0)
+						),
+						body(
+								include(this::body0)
+						)
+				);
+			}
 
-      private void head0() {
-        title("Include fragment example");
-      }
+			private void head0() {
+				title("Include fragment example");
+			}
 
-      private void body0() {
-        h1("Objectos HTML");
+			private void body0() {
+				h1("Objectos HTML");
 
-        p("Using the include instruction");
-      }
-    }
-    // @end
+				p("Using the include instruction");
+			}
+		}
+		// @end
 
-    assertEquals(
-      new IncludeExample().toString(),
+		assertEquals(
+				new IncludeExample().toString(),
 
-      """
+				"""
       <!DOCTYPE html>
       <html>
       <head>
@@ -67,46 +67,46 @@ public class BaseTemplateDslTest {
       </body>
       </html>
       """
-    );
-  }
+		);
+	}
 
-  @Test
-  public void javadoc_flatten() {
-    // @start region="flatten"
-    class MyComponent extends HtmlComponent {
-      public MyComponent(HtmlTemplate parent) { super(parent); }
+	@Test
+	public void javadoc_flatten() {
+		// @start region="flatten"
+		class MyComponent extends HtmlComponent {
+			public MyComponent(HtmlTemplate parent) { super(parent); }
 
-      public ElementContents render(Api.Instruction... contents) {
-        return div(
-          className("my-component"),
+			public Element render(Api.Instruction... contents) {
+				return div(
+						className("my-component"),
 
-          flatten(contents) // @highlight substring="flatten"
-        );
-      }
-    }
+						flatten(contents) // @highlight substring="flatten"
+				);
+			}
+		}
 
-    class MyTemplate extends HtmlTemplate {
-      @Override
-      protected void definition() {
-        MyComponent comp = new MyComponent(this);
+		class MyTemplate extends HtmlTemplate {
+			@Override
+			protected void definition() {
+				MyComponent comp = new MyComponent(this);
 
-        body(
-          comp.render(
-            h1("Flatten example"),
+				body(
+						comp.render(
+								h1("Flatten example"),
 
-            p("First paragraph"),
+								p("First paragraph"),
 
-            p("Second paragraph")
-          )
-        );
-      }
-    }
-    // @end
+								p("Second paragraph")
+						)
+				);
+			}
+		}
+		// @end
 
-    assertEquals(
-      new MyTemplate().toString(),
+		assertEquals(
+				new MyTemplate().toString(),
 
-      """
+				"""
       <body>
       <div class="my-component">
       <h1>Flatten example</h1>
@@ -115,78 +115,78 @@ public class BaseTemplateDslTest {
       </div>
       </body>
       """
-    );
-  }
+		);
+	}
 
-  @Test
-  public void javadoc_noop() {
-    class NoopExample extends HtmlTemplate {
-      boolean error_;
+	@Test
+	public void javadoc_noop() {
+		class NoopExample extends HtmlTemplate {
+			boolean error_;
 
-      @Override
-      protected void definition() {
-        // @start region="noop"
-        boolean error = isError();
+			@Override
+			protected void definition() {
+				// @start region="noop"
+				boolean error = isError();
 
-        div(
-          className("alert"),
-          error ? className("alert-error") : noop(),
-          t("This is an alert!")
-        );
-        // @end
-      }
+				div(
+						className("alert"),
+						error ? className("alert-error") : noop(),
+						t("This is an alert!")
+				);
+				// @end
+			}
 
-      private boolean isError() {
-        return error_;
-      }
-    }
+			private boolean isError() {
+				return error_;
+			}
+		}
 
-    NoopExample example;
-    example = new NoopExample();
+		NoopExample example;
+		example = new NoopExample();
 
-    assertEquals(
-      example.toString(),
+		assertEquals(
+				example.toString(),
 
-      """
+				"""
       <div class="alert">This is an alert!</div>
       """
-    );
+		);
 
-    example.error_ = true;
+		example.error_ = true;
 
-    assertEquals(
-      example.toString(),
+		assertEquals(
+				example.toString(),
 
-      """
+				"""
       <div class="alert alert-error">This is an alert!</div>
       """
-    );
-  }
+		);
+	}
 
-  @Test
-  public void javadoc_text() {
-    class Example extends HtmlTemplate {
-      @Override
-      protected void definition() {
-        // @start region="text"
-        p(
-          strong("This is in bold"),
-          t(" & this is not")
-        );
-        // @end
-      }
-    }
+	@Test
+	public void javadoc_text() {
+		class Example extends HtmlTemplate {
+			@Override
+			protected void definition() {
+				// @start region="text"
+				p(
+						strong("This is in bold"),
+						t(" & this is not")
+				);
+				// @end
+			}
+		}
 
-    Example example;
-    example = new Example();
+		Example example;
+		example = new Example();
 
-    assertEquals(
-      example.toString(),
+		assertEquals(
+				example.toString(),
 
-      """
+				"""
       <p><strong>This is in bold</strong> &amp; this is not</p>
       """
-    );
-  }
+		);
+	}
 
 }
