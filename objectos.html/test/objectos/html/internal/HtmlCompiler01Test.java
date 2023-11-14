@@ -16,8 +16,8 @@
 package objectos.html.internal;
 
 import java.util.Arrays;
+import objectos.html.FragmentLambda;
 import objectos.html.tmpl.Api;
-import objectos.html.tmpl.FragmentLambda;
 import objectos.html.tmpl.TestClassSelector;
 import objectos.html.tmpl.TestIdSelector;
 import org.testng.annotations.Test;

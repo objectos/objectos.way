@@ -21,7 +21,6 @@ import objectos.html.internal.CustomAttributeName;
 import objectos.html.internal.HtmlTemplateApi;
 import objectos.html.internal.StandardElementName;
 import objectos.html.tmpl.Api;
-import objectos.html.tmpl.FragmentLambda;
 import objectos.lang.object.Check;
 
 /**

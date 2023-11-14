@@ -13,9 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.html.tmpl;
-
-import objectos.html.BaseTemplateDsl;
+package objectos.html;
 
 /**
  * A delayed set of instructions of a template.
