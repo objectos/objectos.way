@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016-2023 Objectos Software LTDA.
+ * Copyright (C) 2023 Objectos Software LTDA.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,6 +14,15 @@
  * limitations under the License.
  */
 /**
- * @since 0.7
+ *
  */
-package objectos.css.util;
+module objectos.html.style {
+	exports objectos.html.style;
+
+	requires transitive objectos.html.tmpl;
+	requires transitive objectos.notes;
+
+	requires objectos.lang.object;
+	requires objectos.util.map;
+	requires objectos.util.set;
+}

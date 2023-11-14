@@ -15,24 +15,24 @@ import objectos.code.Code;
 
 final class PrefixClassStep extends ThisTemplate {
 
-  private Prefix prefix;
+	private Prefix prefix;
 
-  PrefixClassStep(CssUtilSelfGen spec) {
-    super(spec);
-  }
+	PrefixClassStep(CssUtilSelfGen spec) {
+		super(spec);
+	}
 
-  @Override
-  public final void writeTo(Path directory) throws IOException {
-    for (var prefix : Prefix.values()) {
-      this.prefix = prefix;
+	@Override
+	public final void writeTo(Path directory) throws IOException {
+		for (var prefix : Prefix.values()) {
+			this.prefix = prefix;
 
-      super.writeTo(directory);
-    }
-  }
+			super.writeTo(directory);
+		}
+	}
 
-  @Override
+	@Override
   final String contents() {
-    className(ClassName.of(CSS_UTIL, prefix.simpleName));
+    className(ClassName.of(HTML_STYLE, prefix.simpleName));
 
     return code."""
     /*
@@ -57,8 +57,8 @@ final class PrefixClassStep extends ThisTemplate {
     """;
   }
 
-  final String generatePrefix() {
-    return prefix.generate(code);
-  }
+	final String generatePrefix() {
+		return prefix.generate(code);
+	}
 
 }

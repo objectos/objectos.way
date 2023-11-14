@@ -13,17 +13,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectox.css.util;
+package objectox.html.style;
 
-import objectos.css.util.Hover;
 import objectos.html.HtmlTemplate;
+import objectos.html.style.All;
+import objectos.html.style.Extra;
+import objectos.html.style.Hover;
+import objectos.html.style.Large;
+import objectos.html.style.Max;
+import objectos.html.style.Medium;
+import objectos.html.style.Small;
 
-public final class Utility03 extends HtmlTemplate {
+public final class Utility04 extends HtmlTemplate {
 
   @Override
   protected void definition() {
     div(
-      Hover.BackgroundColor.SLATE_100
+        All.TextColor.SLATE_100,
+        Small.TextColor.SLATE_200,
+        Medium.TextColor.SLATE_300,
+        Large.TextColor.SLATE_400,
+        Extra.TextColor.SLATE_500,
+        Max.TextColor.SLATE_600,
+        Hover.TextColor.SLATE_700
     );
   }
 

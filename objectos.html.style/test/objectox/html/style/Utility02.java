@@ -13,29 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectox.css.util;
+package objectox.html.style;
 
-import objectos.css.util.All;
-import objectos.css.util.Extra;
-import objectos.css.util.Hover;
-import objectos.css.util.Large;
-import objectos.css.util.Max;
-import objectos.css.util.Medium;
-import objectos.css.util.Small;
 import objectos.html.HtmlTemplate;
+import objectos.html.style.Large;
 
-public final class Utility04 extends HtmlTemplate {
+public final class Utility02 extends HtmlTemplate {
 
   @Override
   protected void definition() {
     div(
-        All.TextColor.SLATE_100,
-        Small.TextColor.SLATE_200,
-        Medium.TextColor.SLATE_300,
-        Large.TextColor.SLATE_400,
-        Extra.TextColor.SLATE_500,
-        Max.TextColor.SLATE_600,
-        Hover.TextColor.SLATE_700
+      Large.Display.FLEX
     );
   }
 

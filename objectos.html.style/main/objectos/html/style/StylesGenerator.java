@@ -13,30 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.css.util;
+package objectos.html.style;
 
-import objectos.lang.NoOpNoteSink;
 import objectos.lang.object.Check;
 import objectos.notes.NoteSink;
-import objectox.css.util.StylesGeneratorImpl;
+import objectox.html.style.StylesGeneratorImpl;
 
 public sealed interface StylesGenerator permits StylesGeneratorImpl {
 
-  static StylesGenerator of() {
-    NoOpNoteSink noteSink;
-    noteSink = NoOpNoteSink.of();
+	static StylesGenerator of(NoteSink noteSink) {
+		Check.notNull(noteSink, "noteSink == null");
 
-    return new StylesGeneratorImpl(noteSink);
-  }
+		return new StylesGeneratorImpl(noteSink);
+	}
 
-  static StylesGenerator of(NoteSink noteSink) {
-    Check.notNull(noteSink, "noteSink == null");
+	void scan(Class<?> clazz);
 
-    return new StylesGeneratorImpl(noteSink);
-  }
-
-  void scan(Class<?> clazz);
-
-  String generate();
+	String generate();
 
 }

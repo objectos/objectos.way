@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Objectos Software LTDA.
+ * Copyright (C) 2016-2023 Objectos Software LTDA.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,16 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectox.css.util;
-
-import objectos.css.util.All;
-import objectos.html.HtmlTemplate;
-
-public final class Utility01 extends HtmlTemplate {
-
-  @Override
-  protected void definition() {
-    div(All.Display.BLOCK);
-  }
-
-}
+/**
+ * @since 0.7
+ */
+package objectos.html.style;

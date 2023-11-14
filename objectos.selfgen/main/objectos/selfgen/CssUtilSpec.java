@@ -51,7 +51,7 @@ import selfgen.css.util.Property2;
 import selfgen.css.util.Property2x2;
 import selfgen.css.util.PropertyClass;
 
-final class CssUtilSpec extends CssUtilSelfGen {
+public final class CssUtilSpec extends CssUtilSelfGen {
 
 	private final Set<Prefix> responsive = Prefix.RESPONSIVE;
 

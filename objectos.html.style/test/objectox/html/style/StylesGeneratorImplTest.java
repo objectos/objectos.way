@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectox.css.util;
+package objectox.html.style;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
@@ -21,12 +21,13 @@ import static org.testng.Assert.assertNotNull;
 import java.io.IOException;
 import java.util.Map;
 import java.util.Set;
-import objectos.css.util.All;
-import objectos.css.util.Hover;
-import objectos.css.util.Large;
-import objectos.lang.TestingNoteSink;
+import objectos.html.style.All;
+import objectos.html.style.Hover;
+import objectos.html.style.Large;
+import objectos.notes.Level;
 import objectos.notes.NoteSink;
-import objectox.css.util.StylesGeneratorImpl.State;
+import objectos.notes.console.ConsoleNoteSink;
+import objectox.html.style.StylesGeneratorImpl.State;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
@@ -37,7 +38,7 @@ public class StylesGeneratorImplTest {
 	@BeforeClass
 	public void beforeClass() {
 		NoteSink noteSink;
-		noteSink = TestingNoteSink.INSTANCE;
+		noteSink = ConsoleNoteSink.of(Level.TRACE);
 
 		impl = new StylesGeneratorImpl(noteSink);
 	}
@@ -122,7 +123,7 @@ public class StylesGeneratorImplTest {
 		all = result.get("All");
 
 		assertEquals(all.size(), 1);
-		assertEquals(all.get("objectos.css.util.All$Display"), Set.of("BLOCK"));
+		assertEquals(all.get("objectos.html.style.All$Display"), Set.of("BLOCK"));
 
 		assertEquals(
 				impl.generate(),
@@ -150,7 +151,7 @@ public class StylesGeneratorImplTest {
 		large = result.get("Large");
 
 		assertEquals(large.size(), 1);
-		assertEquals(large.get("objectos.css.util.Large$Display"), Set.of("FLEX"));
+		assertEquals(large.get("objectos.html.style.Large$Display"), Set.of("FLEX"));
 
 		assertEquals(
 				impl.generate(),
@@ -180,7 +181,7 @@ public class StylesGeneratorImplTest {
 		hover = result.get("Hover");
 
 		assertEquals(hover.size(), 1);
-		assertEquals(hover.get("objectos.css.util.Hover$BackgroundColor"), Set.of("SLATE_100"));
+		assertEquals(hover.get("objectos.html.style.Hover$BackgroundColor"), Set.of("SLATE_100"));
 
 		assertEquals(
 				impl.generate(),

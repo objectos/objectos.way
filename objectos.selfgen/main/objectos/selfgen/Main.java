@@ -12,6 +12,5 @@ public final class Main {
 
 	public static void main(String[] args) throws IOException {
 		CssSpec.main(args);
-		CssUtilSpec.main(args);
 	}
 }
