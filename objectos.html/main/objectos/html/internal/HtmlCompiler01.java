@@ -236,7 +236,7 @@ class HtmlCompiler01 extends HtmlTemplateApi {
 
 	@Override
 	public final void elementValue(Api.Instruction value) {
-		if (value == Api.GLOBAL_INSTRUCTION || value == InternalInstruction.INSTANCE || value == InternalFragment.INSTANCE) {
+		if (value == Api.GLOBAL_INSTRUCTION || value == InternalInstruction.INSTANCE || value == Api.FRAGMENT) {
 			// @ ByteProto
 			mainContents--;
 
@@ -298,7 +298,7 @@ class HtmlCompiler01 extends HtmlTemplateApi {
 			);
 		}
 
-		else if (value == InternalNoOp.INSTANCE) {
+		else if (value == Api.NOOP) {
 			// no-op
 		}
 

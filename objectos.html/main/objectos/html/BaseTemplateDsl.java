@@ -19,9 +19,7 @@ import objectos.html.internal.Ambiguous;
 import objectos.html.internal.AttributeName;
 import objectos.html.internal.CustomAttributeName;
 import objectos.html.internal.HtmlTemplateApi;
-import objectos.html.internal.InternalFragment;
 import objectos.html.internal.InternalInstruction;
-import objectos.html.internal.InternalNoOp;
 import objectos.html.internal.StandardElementName;
 import objectos.html.tmpl.Api;
 import objectos.html.tmpl.FragmentLambda;
@@ -156,7 +154,7 @@ public sealed abstract class BaseTemplateDsl
 
 		api.fragmentEnd(index);
 
-		return InternalFragment.INSTANCE;
+		return Api.FRAGMENT;
 	}
 
 	/**
@@ -186,7 +184,7 @@ public sealed abstract class BaseTemplateDsl
 			template.api = null;
 		}
 
-		return InternalFragment.INSTANCE;
+		return Api.FRAGMENT;
 	}
 
 	/**
@@ -215,7 +213,7 @@ public sealed abstract class BaseTemplateDsl
 	 * @return the no-op instruction.
 	 */
 	protected final Api.NoOp noop() {
-		return InternalNoOp.INSTANCE;
+		return Api.NOOP;
 	}
 
 	protected final Api.ElementContents raw(String text) {

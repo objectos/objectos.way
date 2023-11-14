@@ -16,763 +16,764 @@
 package objectos.html.internal;
 
 import java.util.Arrays;
+import objectos.html.tmpl.Api;
 import objectos.html.tmpl.FragmentLambda;
 import objectos.html.tmpl.TestIdSelector;
 import org.testng.annotations.Test;
 
 public class HtmlCompiler02Test {
 
-  @Test(description = """
+	@Test(description = """
   <html></html>
   """)
-  public void testCase00() {
-    HtmlCompiler02 compiler;
-    compiler = new HtmlCompiler02();
+	public void testCase00() {
+		HtmlCompiler02 compiler;
+		compiler = new HtmlCompiler02();
 
-    compiler.compilationBegin();
+		compiler.compilationBegin();
 
-    compiler.elementBegin(StandardElementName.HTML);
-    compiler.elementEnd();
+		compiler.elementBegin(StandardElementName.HTML);
+		compiler.elementEnd();
 
-    compiler.compilationEnd();
+		compiler.compilationEnd();
 
-    compiler.optimize();
+		compiler.optimize();
 
-    InternalCompiledHtml result;
-    result = compiler.compile();
+		InternalCompiledHtml result;
+		result = compiler.compile();
 
-    test(
-        result,
+		test(
+				result,
 
-        ByteCode.START_TAG,
-        (byte) StandardElementName.HTML.ordinal(),
-        ByteCode.GT,
+				ByteCode.START_TAG,
+				(byte) StandardElementName.HTML.ordinal(),
+				ByteCode.GT,
 
-        ByteCode.END_TAG,
-        (byte) StandardElementName.HTML.ordinal(),
-        ByteCode.NL
-    );
-  }
+				ByteCode.END_TAG,
+				(byte) StandardElementName.HTML.ordinal(),
+				ByteCode.NL
+		);
+	}
 
-  @Test(description = """
+	@Test(description = """
   <html lang="pt-BR"></html>
   """)
-  public void testCase01() {
-    HtmlCompiler02 compiler;
-    compiler = new HtmlCompiler02();
+	public void testCase01() {
+		HtmlCompiler02 compiler;
+		compiler = new HtmlCompiler02();
 
-    compiler.compilationBegin();
+		compiler.compilationBegin();
 
-    compiler.attribute(StandardAttributeName.LANG, "pt-BR");
+		compiler.attribute(StandardAttributeName.LANG, "pt-BR");
 
-    compiler.elementBegin(StandardElementName.HTML);
-    compiler.elementValue(InternalInstruction.INSTANCE);
-    compiler.elementEnd();
+		compiler.elementBegin(StandardElementName.HTML);
+		compiler.elementValue(InternalInstruction.INSTANCE);
+		compiler.elementEnd();
 
-    compiler.compilationEnd();
+		compiler.compilationEnd();
 
-    compiler.optimize();
+		compiler.optimize();
 
-    InternalCompiledHtml result;
-    result = compiler.compile();
+		InternalCompiledHtml result;
+		result = compiler.compile();
 
-    test(
-        result,
+		test(
+				result,
 
-        ByteCode.START_TAG,
-        (byte) StandardElementName.HTML.ordinal(),
-        ByteCode.SPACE,
-        ByteCode.ATTR_NAME,
-        (byte) StandardAttributeName.LANG.ordinal(),
-        ByteCode.ATTR_VALUE_START,
-        ByteCode.ATTR_VALUE,
-        Bytes.encodeInt0(0),
-        Bytes.encodeInt1(0),
-        ByteCode.ATTR_VALUE_END,
-        ByteCode.GT,
+				ByteCode.START_TAG,
+				(byte) StandardElementName.HTML.ordinal(),
+				ByteCode.SPACE,
+				ByteCode.ATTR_NAME,
+				(byte) StandardAttributeName.LANG.ordinal(),
+				ByteCode.ATTR_VALUE_START,
+				ByteCode.ATTR_VALUE,
+				Bytes.encodeInt0(0),
+				Bytes.encodeInt1(0),
+				ByteCode.ATTR_VALUE_END,
+				ByteCode.GT,
 
-        ByteCode.END_TAG,
-        (byte) StandardElementName.HTML.ordinal(),
-        ByteCode.NL
-    );
-  }
+				ByteCode.END_TAG,
+				(byte) StandardElementName.HTML.ordinal(),
+				ByteCode.NL
+		);
+	}
 
-  @Test(description = """
+	@Test(description = """
   <html class="no-js" lang="pt-BR"></html>
   """)
-  public void testCase02() {
-    HtmlCompiler02 compiler;
-    compiler = new HtmlCompiler02();
+	public void testCase02() {
+		HtmlCompiler02 compiler;
+		compiler = new HtmlCompiler02();
 
-    compiler.compilationBegin();
+		compiler.compilationBegin();
 
-    compiler.attribute(StandardAttributeName.CLASS, "no-js");
-    compiler.attribute(StandardAttributeName.LANG, "pt-BR");
+		compiler.attribute(StandardAttributeName.CLASS, "no-js");
+		compiler.attribute(StandardAttributeName.LANG, "pt-BR");
 
-    compiler.elementBegin(StandardElementName.HTML);
-    compiler.elementValue(InternalInstruction.INSTANCE);
-    compiler.elementValue(InternalInstruction.INSTANCE);
-    compiler.elementEnd();
+		compiler.elementBegin(StandardElementName.HTML);
+		compiler.elementValue(InternalInstruction.INSTANCE);
+		compiler.elementValue(InternalInstruction.INSTANCE);
+		compiler.elementEnd();
 
-    compiler.compilationEnd();
+		compiler.compilationEnd();
 
-    compiler.optimize();
+		compiler.optimize();
 
-    InternalCompiledHtml result;
-    result = compiler.compile();
+		InternalCompiledHtml result;
+		result = compiler.compile();
 
-    test(
-        result,
+		test(
+				result,
 
-        ByteCode.START_TAG,
-        (byte) StandardElementName.HTML.ordinal(),
-        ByteCode.SPACE,
-        ByteCode.ATTR_NAME,
-        (byte) StandardAttributeName.CLASS.ordinal(),
-        ByteCode.ATTR_VALUE_START,
-        ByteCode.ATTR_VALUE,
-        Bytes.encodeInt0(0),
-        Bytes.encodeInt1(0),
-        ByteCode.ATTR_VALUE_END,
-        ByteCode.SPACE,
-        ByteCode.ATTR_NAME,
-        (byte) StandardAttributeName.LANG.ordinal(),
-        ByteCode.ATTR_VALUE_START,
-        ByteCode.ATTR_VALUE,
-        Bytes.encodeInt0(1),
-        Bytes.encodeInt1(1),
-        ByteCode.ATTR_VALUE_END,
-        ByteCode.GT,
+				ByteCode.START_TAG,
+				(byte) StandardElementName.HTML.ordinal(),
+				ByteCode.SPACE,
+				ByteCode.ATTR_NAME,
+				(byte) StandardAttributeName.CLASS.ordinal(),
+				ByteCode.ATTR_VALUE_START,
+				ByteCode.ATTR_VALUE,
+				Bytes.encodeInt0(0),
+				Bytes.encodeInt1(0),
+				ByteCode.ATTR_VALUE_END,
+				ByteCode.SPACE,
+				ByteCode.ATTR_NAME,
+				(byte) StandardAttributeName.LANG.ordinal(),
+				ByteCode.ATTR_VALUE_START,
+				ByteCode.ATTR_VALUE,
+				Bytes.encodeInt0(1),
+				Bytes.encodeInt1(1),
+				ByteCode.ATTR_VALUE_END,
+				ByteCode.GT,
 
-        ByteCode.END_TAG,
-        (byte) StandardElementName.HTML.ordinal(),
-        ByteCode.NL
-    );
-  }
+				ByteCode.END_TAG,
+				(byte) StandardElementName.HTML.ordinal(),
+				ByteCode.NL
+		);
+	}
 
-  @Test(description = """
+	@Test(description = """
   <html><head></head></html>
   """)
-  public void testCase03() {
-    HtmlCompiler02 compiler;
-    compiler = new HtmlCompiler02();
+	public void testCase03() {
+		HtmlCompiler02 compiler;
+		compiler = new HtmlCompiler02();
 
-    compiler.compilationBegin();
+		compiler.compilationBegin();
 
-    compiler.elementBegin(StandardElementName.HEAD);
-    compiler.elementEnd();
+		compiler.elementBegin(StandardElementName.HEAD);
+		compiler.elementEnd();
 
-    compiler.elementBegin(StandardElementName.HTML);
-    compiler.elementValue(InternalInstruction.INSTANCE);
-    compiler.elementEnd();
+		compiler.elementBegin(StandardElementName.HTML);
+		compiler.elementValue(InternalInstruction.INSTANCE);
+		compiler.elementEnd();
 
-    compiler.compilationEnd();
+		compiler.compilationEnd();
 
-    compiler.optimize();
+		compiler.optimize();
 
-    InternalCompiledHtml result;
-    result = compiler.compile();
+		InternalCompiledHtml result;
+		result = compiler.compile();
 
-    test(
-        result,
+		test(
+				result,
 
-        ByteCode.START_TAG,
-        (byte) StandardElementName.HTML.ordinal(),
-        ByteCode.GT,
+				ByteCode.START_TAG,
+				(byte) StandardElementName.HTML.ordinal(),
+				ByteCode.GT,
 
-        ByteCode.NL_OPTIONAL,
-        ByteCode.TAB, (byte) 1,
+				ByteCode.NL_OPTIONAL,
+				ByteCode.TAB, (byte) 1,
 
-        ByteCode.START_TAG,
-        (byte) StandardElementName.HEAD.ordinal(),
-        ByteCode.GT,
-        ByteCode.END_TAG,
-        (byte) StandardElementName.HEAD.ordinal(),
+				ByteCode.START_TAG,
+				(byte) StandardElementName.HEAD.ordinal(),
+				ByteCode.GT,
+				ByteCode.END_TAG,
+				(byte) StandardElementName.HEAD.ordinal(),
 
-        ByteCode.NL_OPTIONAL,
+				ByteCode.NL_OPTIONAL,
 
-        ByteCode.END_TAG,
-        (byte) StandardElementName.HTML.ordinal(),
-        ByteCode.NL
-    );
-  }
+				ByteCode.END_TAG,
+				(byte) StandardElementName.HTML.ordinal(),
+				ByteCode.NL
+		);
+	}
 
-  @Test(description = """
+	@Test(description = """
   <!DOCTYPE html>
   <html></html>
   """)
-  public void testCase09() {
-    HtmlCompiler02 compiler;
-    compiler = new HtmlCompiler02();
+	public void testCase09() {
+		HtmlCompiler02 compiler;
+		compiler = new HtmlCompiler02();
 
-    compiler.compilationBegin();
+		compiler.compilationBegin();
 
-    compiler.doctype();
+		compiler.doctype();
 
-    compiler.elementBegin(StandardElementName.HTML);
-    compiler.elementEnd();
+		compiler.elementBegin(StandardElementName.HTML);
+		compiler.elementEnd();
 
-    compiler.compilationEnd();
+		compiler.compilationEnd();
 
-    compiler.optimize();
+		compiler.optimize();
 
-    InternalCompiledHtml result;
-    result = compiler.compile();
+		InternalCompiledHtml result;
+		result = compiler.compile();
 
-    test(
-        result,
+		test(
+				result,
 
-        ByteCode.DOCTYPE,
-        ByteCode.NL_OPTIONAL,
+				ByteCode.DOCTYPE,
+				ByteCode.NL_OPTIONAL,
 
-        ByteCode.START_TAG,
-        (byte) StandardElementName.HTML.ordinal(),
-        ByteCode.GT,
+				ByteCode.START_TAG,
+				(byte) StandardElementName.HTML.ordinal(),
+				ByteCode.GT,
 
-        ByteCode.END_TAG,
-        (byte) StandardElementName.HTML.ordinal(),
-        ByteCode.NL
-    );
-  }
+				ByteCode.END_TAG,
+				(byte) StandardElementName.HTML.ordinal(),
+				ByteCode.NL
+		);
+	}
 
-  @Test(description = """
+	@Test(description = """
   fragment inclusion
   """)
-  public void testCase10() {
-    HtmlCompiler02 compiler;
-    compiler = new HtmlCompiler02();
+	public void testCase10() {
+		HtmlCompiler02 compiler;
+		compiler = new HtmlCompiler02();
 
-    compiler.compilationBegin();
+		compiler.compilationBegin();
 
-    FragmentLambda action;
-    action = () -> {
-      compiler.attribute(StandardAttributeName.CHARSET, "utf-8");
+		FragmentLambda action;
+		action = () -> {
+			compiler.attribute(StandardAttributeName.CHARSET, "utf-8");
 
-      compiler.elementBegin(StandardElementName.META);
-      compiler.elementValue(InternalInstruction.INSTANCE);
-      compiler.elementEnd();
-    };
+			compiler.elementBegin(StandardElementName.META);
+			compiler.elementValue(InternalInstruction.INSTANCE);
+			compiler.elementEnd();
+		};
 
-    int index = compiler.fragmentBegin();
+		int index = compiler.fragmentBegin();
 
-    action.execute();
+		action.execute();
 
-    compiler.fragmentEnd(index);
+		compiler.fragmentEnd(index);
 
-    compiler.elementBegin(StandardElementName.HEAD);
-    compiler.elementValue(InternalInstruction.INSTANCE);
-    compiler.elementEnd();
+		compiler.elementBegin(StandardElementName.HEAD);
+		compiler.elementValue(InternalInstruction.INSTANCE);
+		compiler.elementEnd();
 
-    compiler.elementBegin(StandardElementName.HTML);
-    compiler.elementValue(InternalInstruction.INSTANCE);
-    compiler.elementEnd();
+		compiler.elementBegin(StandardElementName.HTML);
+		compiler.elementValue(InternalInstruction.INSTANCE);
+		compiler.elementEnd();
 
-    compiler.compilationEnd();
+		compiler.compilationEnd();
 
-    compiler.optimize();
+		compiler.optimize();
 
-    InternalCompiledHtml result;
-    result = compiler.compile();
+		InternalCompiledHtml result;
+		result = compiler.compile();
 
-    test(
-        result,
+		test(
+				result,
 
-        ByteCode.START_TAG,
-        (byte) StandardElementName.HTML.ordinal(),
-        ByteCode.GT,
+				ByteCode.START_TAG,
+				(byte) StandardElementName.HTML.ordinal(),
+				ByteCode.GT,
 
-        ByteCode.NL_OPTIONAL,
-        ByteCode.TAB, (byte) 1,
+				ByteCode.NL_OPTIONAL,
+				ByteCode.TAB, (byte) 1,
 
-        ByteCode.START_TAG,
-        (byte) StandardElementName.HEAD.ordinal(),
-        ByteCode.GT,
+				ByteCode.START_TAG,
+				(byte) StandardElementName.HEAD.ordinal(),
+				ByteCode.GT,
 
-        ByteCode.NL_OPTIONAL,
-        ByteCode.TAB, (byte) 2,
+				ByteCode.NL_OPTIONAL,
+				ByteCode.TAB, (byte) 2,
 
-        ByteCode.START_TAG,
-        (byte) StandardElementName.META.ordinal(),
-        ByteCode.SPACE,
-        ByteCode.ATTR_NAME,
-        (byte) StandardAttributeName.CHARSET.ordinal(),
-        ByteCode.ATTR_VALUE_START,
-        ByteCode.ATTR_VALUE,
-        Bytes.encodeInt0(0),
-        Bytes.encodeInt1(0),
-        ByteCode.ATTR_VALUE_END,
-        ByteCode.GT,
+				ByteCode.START_TAG,
+				(byte) StandardElementName.META.ordinal(),
+				ByteCode.SPACE,
+				ByteCode.ATTR_NAME,
+				(byte) StandardAttributeName.CHARSET.ordinal(),
+				ByteCode.ATTR_VALUE_START,
+				ByteCode.ATTR_VALUE,
+				Bytes.encodeInt0(0),
+				Bytes.encodeInt1(0),
+				ByteCode.ATTR_VALUE_END,
+				ByteCode.GT,
 
-        ByteCode.NL_OPTIONAL,
-        ByteCode.TAB, (byte) 1,
+				ByteCode.NL_OPTIONAL,
+				ByteCode.TAB, (byte) 1,
 
-        ByteCode.END_TAG,
-        (byte) StandardElementName.HEAD.ordinal(),
+				ByteCode.END_TAG,
+				(byte) StandardElementName.HEAD.ordinal(),
 
-        ByteCode.NL_OPTIONAL,
+				ByteCode.NL_OPTIONAL,
 
-        ByteCode.END_TAG,
-        (byte) StandardElementName.HTML.ordinal(),
-        ByteCode.NL
-    );
-  }
+				ByteCode.END_TAG,
+				(byte) StandardElementName.HTML.ordinal(),
+				ByteCode.NL
+		);
+	}
 
-  @Test(description = """
+	@Test(description = """
   External id attributes
   """)
-  public void testCase13() {
-    TestIdSelector foo;
-    foo = new TestIdSelector("foo");
+	public void testCase13() {
+		TestIdSelector foo;
+		foo = new TestIdSelector("foo");
 
-    TestIdSelector bar;
-    bar = new TestIdSelector("bar");
+		TestIdSelector bar;
+		bar = new TestIdSelector("bar");
 
-    HtmlCompiler02 compiler;
-    compiler = new HtmlCompiler02();
+		HtmlCompiler02 compiler;
+		compiler = new HtmlCompiler02();
 
-    compiler.compilationBegin();
+		compiler.compilationBegin();
 
-    compiler.elementBegin(StandardElementName.BODY);
-    compiler.elementValue(bar);
-    compiler.elementEnd();
+		compiler.elementBegin(StandardElementName.BODY);
+		compiler.elementValue(bar);
+		compiler.elementEnd();
 
-    compiler.elementBegin(StandardElementName.HTML);
-    compiler.elementValue(foo);
-    compiler.elementValue(InternalInstruction.INSTANCE);
-    compiler.elementEnd();
+		compiler.elementBegin(StandardElementName.HTML);
+		compiler.elementValue(foo);
+		compiler.elementValue(InternalInstruction.INSTANCE);
+		compiler.elementEnd();
 
-    compiler.compilationEnd();
+		compiler.compilationEnd();
 
-    compiler.optimize();
+		compiler.optimize();
 
-    InternalCompiledHtml result;
-    result = compiler.compile();
+		InternalCompiledHtml result;
+		result = compiler.compile();
 
-    test(
-        result,
+		test(
+				result,
 
-        ByteCode.START_TAG,
-        (byte) StandardElementName.HTML.ordinal(),
-        ByteCode.SPACE,
-        ByteCode.ATTR_NAME,
-        (byte) StandardAttributeName.ID.ordinal(),
-        ByteCode.ATTR_VALUE_START,
-        ByteCode.ATTR_VALUE,
-        Bytes.encodeInt0(1),
-        Bytes.encodeInt1(1),
-        ByteCode.ATTR_VALUE_END,
-        ByteCode.GT,
+				ByteCode.START_TAG,
+				(byte) StandardElementName.HTML.ordinal(),
+				ByteCode.SPACE,
+				ByteCode.ATTR_NAME,
+				(byte) StandardAttributeName.ID.ordinal(),
+				ByteCode.ATTR_VALUE_START,
+				ByteCode.ATTR_VALUE,
+				Bytes.encodeInt0(1),
+				Bytes.encodeInt1(1),
+				ByteCode.ATTR_VALUE_END,
+				ByteCode.GT,
 
-        ByteCode.NL_OPTIONAL,
-        ByteCode.TAB, (byte) 1,
+				ByteCode.NL_OPTIONAL,
+				ByteCode.TAB, (byte) 1,
 
-        ByteCode.START_TAG,
-        (byte) StandardElementName.BODY.ordinal(),
-        ByteCode.SPACE,
-        ByteCode.ATTR_NAME,
-        (byte) StandardAttributeName.ID.ordinal(),
-        ByteCode.ATTR_VALUE_START,
-        ByteCode.ATTR_VALUE,
-        Bytes.encodeInt0(0),
-        Bytes.encodeInt1(0),
-        ByteCode.ATTR_VALUE_END,
-        ByteCode.GT,
+				ByteCode.START_TAG,
+				(byte) StandardElementName.BODY.ordinal(),
+				ByteCode.SPACE,
+				ByteCode.ATTR_NAME,
+				(byte) StandardAttributeName.ID.ordinal(),
+				ByteCode.ATTR_VALUE_START,
+				ByteCode.ATTR_VALUE,
+				Bytes.encodeInt0(0),
+				Bytes.encodeInt1(0),
+				ByteCode.ATTR_VALUE_END,
+				ByteCode.GT,
 
-        ByteCode.END_TAG,
-        (byte) StandardElementName.BODY.ordinal(),
+				ByteCode.END_TAG,
+				(byte) StandardElementName.BODY.ordinal(),
 
-        ByteCode.NL_OPTIONAL,
+				ByteCode.NL_OPTIONAL,
 
-        ByteCode.END_TAG,
-        (byte) StandardElementName.HTML.ordinal(),
-        ByteCode.NL
-    );
-  }
+				ByteCode.END_TAG,
+				(byte) StandardElementName.HTML.ordinal(),
+				ByteCode.NL
+		);
+	}
 
-  @Test(description = """
+	@Test(description = """
   Text child element
   """)
-  public void testCase14() {
-    HtmlCompiler02 compiler;
-    compiler = new HtmlCompiler02();
+	public void testCase14() {
+		HtmlCompiler02 compiler;
+		compiler = new HtmlCompiler02();
 
-    compiler.compilationBegin();
+		compiler.compilationBegin();
 
-    compiler.text("o7html");
+		compiler.text("o7html");
 
-    compiler.elementBegin(StandardElementName.P);
-    compiler.elementValue(InternalInstruction.INSTANCE);
-    compiler.elementEnd();
+		compiler.elementBegin(StandardElementName.P);
+		compiler.elementValue(InternalInstruction.INSTANCE);
+		compiler.elementEnd();
 
-    compiler.elementBegin(StandardElementName.BODY);
-    compiler.elementValue(InternalInstruction.INSTANCE);
-    compiler.elementEnd();
+		compiler.elementBegin(StandardElementName.BODY);
+		compiler.elementValue(InternalInstruction.INSTANCE);
+		compiler.elementEnd();
 
-    compiler.elementBegin(StandardElementName.HTML);
-    compiler.elementValue(InternalInstruction.INSTANCE);
-    compiler.elementEnd();
+		compiler.elementBegin(StandardElementName.HTML);
+		compiler.elementValue(InternalInstruction.INSTANCE);
+		compiler.elementEnd();
 
-    compiler.compilationEnd();
+		compiler.compilationEnd();
 
-    compiler.optimize();
+		compiler.optimize();
 
-    InternalCompiledHtml result;
-    result = compiler.compile();
+		InternalCompiledHtml result;
+		result = compiler.compile();
 
-    test(
-        result,
+		test(
+				result,
 
-        ByteCode.START_TAG,
-        (byte) StandardElementName.HTML.ordinal(),
-        ByteCode.GT,
+				ByteCode.START_TAG,
+				(byte) StandardElementName.HTML.ordinal(),
+				ByteCode.GT,
 
-        ByteCode.NL_OPTIONAL,
-        ByteCode.TAB, (byte) 1,
+				ByteCode.NL_OPTIONAL,
+				ByteCode.TAB, (byte) 1,
 
-        ByteCode.START_TAG,
-        (byte) StandardElementName.BODY.ordinal(),
-        ByteCode.GT,
+				ByteCode.START_TAG,
+				(byte) StandardElementName.BODY.ordinal(),
+				ByteCode.GT,
 
-        ByteCode.NL_OPTIONAL,
-        ByteCode.TAB, (byte) 2,
+				ByteCode.NL_OPTIONAL,
+				ByteCode.TAB, (byte) 2,
 
-        ByteCode.START_TAG,
-        (byte) StandardElementName.P.ordinal(),
-        ByteCode.GT,
-        ByteCode.TEXT,
-        Bytes.encodeInt0(0),
-        Bytes.encodeInt1(0),
-        ByteCode.END_TAG,
-        (byte) StandardElementName.P.ordinal(),
+				ByteCode.START_TAG,
+				(byte) StandardElementName.P.ordinal(),
+				ByteCode.GT,
+				ByteCode.TEXT,
+				Bytes.encodeInt0(0),
+				Bytes.encodeInt1(0),
+				ByteCode.END_TAG,
+				(byte) StandardElementName.P.ordinal(),
 
-        ByteCode.NL_OPTIONAL,
-        ByteCode.TAB, (byte) 1,
+				ByteCode.NL_OPTIONAL,
+				ByteCode.TAB, (byte) 1,
 
-        ByteCode.END_TAG,
-        (byte) StandardElementName.BODY.ordinal(),
+				ByteCode.END_TAG,
+				(byte) StandardElementName.BODY.ordinal(),
 
-        ByteCode.NL_OPTIONAL,
+				ByteCode.NL_OPTIONAL,
 
-        ByteCode.END_TAG,
-        (byte) StandardElementName.HTML.ordinal(),
-        ByteCode.NL
-    );
-  }
+				ByteCode.END_TAG,
+				(byte) StandardElementName.HTML.ordinal(),
+				ByteCode.NL
+		);
+	}
 
-  @Test(description = """
+	@Test(description = """
   Ambiguous
   """)
-  public void testCase16() {
-    HtmlCompiler02 compiler;
-    compiler = new HtmlCompiler02();
+	public void testCase16() {
+		HtmlCompiler02 compiler;
+		compiler = new HtmlCompiler02();
 
-    compiler.compilationBegin();
+		compiler.compilationBegin();
 
-    compiler.ambiguous(Ambiguous.TITLE, "element");
+		compiler.ambiguous(Ambiguous.TITLE, "element");
 
-    compiler.elementBegin(StandardElementName.HEAD);
-    compiler.elementValue(InternalInstruction.INSTANCE);
-    compiler.elementEnd();
+		compiler.elementBegin(StandardElementName.HEAD);
+		compiler.elementValue(InternalInstruction.INSTANCE);
+		compiler.elementEnd();
 
-    compiler.ambiguous(Ambiguous.TITLE, "attribute");
+		compiler.ambiguous(Ambiguous.TITLE, "attribute");
 
-    compiler.elementBegin(StandardElementName.BODY);
-    compiler.elementValue(InternalInstruction.INSTANCE);
-    compiler.elementEnd();
+		compiler.elementBegin(StandardElementName.BODY);
+		compiler.elementValue(InternalInstruction.INSTANCE);
+		compiler.elementEnd();
 
-    compiler.elementBegin(StandardElementName.HTML);
-    compiler.elementValue(InternalInstruction.INSTANCE);
-    compiler.elementValue(InternalInstruction.INSTANCE);
-    compiler.elementEnd();
+		compiler.elementBegin(StandardElementName.HTML);
+		compiler.elementValue(InternalInstruction.INSTANCE);
+		compiler.elementValue(InternalInstruction.INSTANCE);
+		compiler.elementEnd();
 
-    compiler.compilationEnd();
+		compiler.compilationEnd();
 
-    compiler.optimize();
+		compiler.optimize();
 
-    InternalCompiledHtml result;
-    result = compiler.compile();
+		InternalCompiledHtml result;
+		result = compiler.compile();
 
-    test(
-        result,
+		test(
+				result,
 
-        ByteCode.START_TAG,
-        (byte) StandardElementName.HTML.ordinal(),
-        ByteCode.GT,
+				ByteCode.START_TAG,
+				(byte) StandardElementName.HTML.ordinal(),
+				ByteCode.GT,
 
-        ByteCode.NL_OPTIONAL,
-        ByteCode.TAB, (byte) 1,
+				ByteCode.NL_OPTIONAL,
+				ByteCode.TAB, (byte) 1,
 
-        ByteCode.START_TAG,
-        (byte) StandardElementName.HEAD.ordinal(),
-        ByteCode.GT,
+				ByteCode.START_TAG,
+				(byte) StandardElementName.HEAD.ordinal(),
+				ByteCode.GT,
 
-        ByteCode.NL_OPTIONAL,
-        ByteCode.TAB, (byte) 2,
+				ByteCode.NL_OPTIONAL,
+				ByteCode.TAB, (byte) 2,
 
-        ByteCode.START_TAG,
-        (byte) StandardElementName.TITLE.ordinal(),
-        ByteCode.GT,
-        ByteCode.TEXT,
-        Bytes.encodeInt0(0),
-        Bytes.encodeInt1(0),
-        ByteCode.END_TAG,
-        (byte) StandardElementName.TITLE.ordinal(),
+				ByteCode.START_TAG,
+				(byte) StandardElementName.TITLE.ordinal(),
+				ByteCode.GT,
+				ByteCode.TEXT,
+				Bytes.encodeInt0(0),
+				Bytes.encodeInt1(0),
+				ByteCode.END_TAG,
+				(byte) StandardElementName.TITLE.ordinal(),
 
-        ByteCode.NL_OPTIONAL,
-        ByteCode.TAB, (byte) 1,
-        ByteCode.END_TAG,
-        (byte) StandardElementName.HEAD.ordinal(),
+				ByteCode.NL_OPTIONAL,
+				ByteCode.TAB, (byte) 1,
+				ByteCode.END_TAG,
+				(byte) StandardElementName.HEAD.ordinal(),
 
-        ByteCode.NL_OPTIONAL,
-        ByteCode.TAB, (byte) 1,
+				ByteCode.NL_OPTIONAL,
+				ByteCode.TAB, (byte) 1,
 
-        ByteCode.START_TAG,
-        (byte) StandardElementName.BODY.ordinal(),
-        ByteCode.SPACE,
-        ByteCode.ATTR_NAME,
-        (byte) StandardAttributeName.TITLE.ordinal(),
-        ByteCode.ATTR_VALUE_START,
-        ByteCode.ATTR_VALUE,
-        Bytes.encodeInt0(1),
-        Bytes.encodeInt1(1),
-        ByteCode.ATTR_VALUE_END,
-        ByteCode.GT,
+				ByteCode.START_TAG,
+				(byte) StandardElementName.BODY.ordinal(),
+				ByteCode.SPACE,
+				ByteCode.ATTR_NAME,
+				(byte) StandardAttributeName.TITLE.ordinal(),
+				ByteCode.ATTR_VALUE_START,
+				ByteCode.ATTR_VALUE,
+				Bytes.encodeInt0(1),
+				Bytes.encodeInt1(1),
+				ByteCode.ATTR_VALUE_END,
+				ByteCode.GT,
 
-        ByteCode.END_TAG,
-        (byte) StandardElementName.BODY.ordinal(),
+				ByteCode.END_TAG,
+				(byte) StandardElementName.BODY.ordinal(),
 
-        ByteCode.NL_OPTIONAL,
+				ByteCode.NL_OPTIONAL,
 
-        ByteCode.END_TAG,
-        (byte) StandardElementName.HTML.ordinal(),
-        ByteCode.NL
-    );
-  }
+				ByteCode.END_TAG,
+				(byte) StandardElementName.HTML.ordinal(),
+				ByteCode.NL
+		);
+	}
 
-  @Test(description = """
+	@Test(description = """
   include template
   """)
-  public void testCase20() {
-    HtmlCompiler02 compiler;
-    compiler = new HtmlCompiler02();
+	public void testCase20() {
+		HtmlCompiler02 compiler;
+		compiler = new HtmlCompiler02();
 
-    compiler.compilationBegin();
+		compiler.compilationBegin();
 
-    // template begin
-    compiler.elementBegin(StandardElementName.NAV);
-    compiler.elementEnd();
-    // template end
+		// template begin
+		compiler.elementBegin(StandardElementName.NAV);
+		compiler.elementEnd();
+		// template end
 
-    compiler.elementBegin(StandardElementName.BODY);
-    compiler.elementValue(InternalFragment.INSTANCE);
-    compiler.elementEnd();
+		compiler.elementBegin(StandardElementName.BODY);
+		compiler.elementValue(Api.FRAGMENT);
+		compiler.elementEnd();
 
-    compiler.compilationEnd();
+		compiler.compilationEnd();
 
-    compiler.optimize();
+		compiler.optimize();
 
-    InternalCompiledHtml result;
-    result = compiler.compile();
+		InternalCompiledHtml result;
+		result = compiler.compile();
 
-    test(
-        result,
+		test(
+				result,
 
-        ByteCode.START_TAG,
-        (byte) StandardElementName.BODY.ordinal(),
-        ByteCode.GT,
+				ByteCode.START_TAG,
+				(byte) StandardElementName.BODY.ordinal(),
+				ByteCode.GT,
 
-        ByteCode.NL_OPTIONAL,
-        ByteCode.TAB, (byte) 1,
+				ByteCode.NL_OPTIONAL,
+				ByteCode.TAB, (byte) 1,
 
-        ByteCode.START_TAG,
-        (byte) StandardElementName.NAV.ordinal(),
-        ByteCode.GT,
-        ByteCode.END_TAG,
-        (byte) StandardElementName.NAV.ordinal(),
+				ByteCode.START_TAG,
+				(byte) StandardElementName.NAV.ordinal(),
+				ByteCode.GT,
+				ByteCode.END_TAG,
+				(byte) StandardElementName.NAV.ordinal(),
 
-        ByteCode.NL_OPTIONAL,
-        ByteCode.END_TAG,
-        (byte) StandardElementName.BODY.ordinal(),
-        ByteCode.NL
-    );
-  }
+				ByteCode.NL_OPTIONAL,
+				ByteCode.END_TAG,
+				(byte) StandardElementName.BODY.ordinal(),
+				ByteCode.NL
+		);
+	}
 
-  @Test(description = """
+	@Test(description = """
   style/script => raw
   """)
-  public void testCase25() {
-    HtmlCompiler02 compiler;
-    compiler = new HtmlCompiler02();
+	public void testCase25() {
+		HtmlCompiler02 compiler;
+		compiler = new HtmlCompiler02();
 
-    compiler.compilationBegin();
+		compiler.compilationBegin();
 
-    compiler.text("ul > li {}");
+		compiler.text("ul > li {}");
 
-    compiler.elementBegin(StandardElementName.STYLE);
-    compiler.elementValue(InternalInstruction.INSTANCE);
-    compiler.elementEnd();
+		compiler.elementBegin(StandardElementName.STYLE);
+		compiler.elementValue(InternalInstruction.INSTANCE);
+		compiler.elementEnd();
 
-    compiler.compilationEnd();
+		compiler.compilationEnd();
 
-    compiler.optimize();
+		compiler.optimize();
 
-    InternalCompiledHtml result;
-    result = compiler.compile();
+		InternalCompiledHtml result;
+		result = compiler.compile();
 
-    test(
-        result,
+		test(
+				result,
 
-        ByteCode.START_TAG,
-        (byte) StandardElementName.STYLE.ordinal(),
-        ByteCode.GT,
+				ByteCode.START_TAG,
+				(byte) StandardElementName.STYLE.ordinal(),
+				ByteCode.GT,
 
-        ByteCode.NL_OPTIONAL,
-        ByteCode.TAB_BLOCK, (byte) 1,
+				ByteCode.NL_OPTIONAL,
+				ByteCode.TAB_BLOCK, (byte) 1,
 
-        ByteCode.TEXT_STYLE,
-        Bytes.encodeInt0(0),
-        Bytes.encodeInt1(0),
+				ByteCode.TEXT_STYLE,
+				Bytes.encodeInt0(0),
+				Bytes.encodeInt1(0),
 
-        ByteCode.NL_OPTIONAL,
-        ByteCode.END_TAG,
-        (byte) StandardElementName.STYLE.ordinal(),
-        ByteCode.NL
-    );
-  }
+				ByteCode.NL_OPTIONAL,
+				ByteCode.END_TAG,
+				(byte) StandardElementName.STYLE.ordinal(),
+				ByteCode.NL
+		);
+	}
 
-  @Test(description = """
+	@Test(description = """
   HtmlTemplate TC31
 
   - email input
   """)
-  public void testCase31() {
-    HtmlCompiler02 compiler;
-    compiler = new HtmlCompiler02();
+	public void testCase31() {
+		HtmlCompiler02 compiler;
+		compiler = new HtmlCompiler02();
 
-    compiler.compilationBegin();
+		compiler.compilationBegin();
 
-    compiler.attribute(StandardAttributeName.TYPE, "email");
-    compiler.attribute(StandardAttributeName.REQUIRED);
+		compiler.attribute(StandardAttributeName.TYPE, "email");
+		compiler.attribute(StandardAttributeName.REQUIRED);
 
-    compiler.elementBegin(StandardElementName.INPUT);
-    compiler.elementValue(InternalInstruction.INSTANCE);
-    compiler.elementValue(InternalInstruction.INSTANCE);
-    compiler.elementEnd();
+		compiler.elementBegin(StandardElementName.INPUT);
+		compiler.elementValue(InternalInstruction.INSTANCE);
+		compiler.elementValue(InternalInstruction.INSTANCE);
+		compiler.elementEnd();
 
-    compiler.compilationEnd();
+		compiler.compilationEnd();
 
-    compiler.optimize();
+		compiler.optimize();
 
-    InternalCompiledHtml result;
-    result = compiler.compile();
+		InternalCompiledHtml result;
+		result = compiler.compile();
 
-    test(
-        result,
+		test(
+				result,
 
-        ByteCode.START_TAG,
-        (byte) StandardElementName.INPUT.ordinal(),
+				ByteCode.START_TAG,
+				(byte) StandardElementName.INPUT.ordinal(),
 
-        ByteCode.SPACE,
-        ByteCode.ATTR_NAME,
-        (byte) StandardAttributeName.TYPE.ordinal(),
-        ByteCode.ATTR_VALUE_START,
-        ByteCode.ATTR_VALUE,
-        Bytes.encodeInt0(0),
-        Bytes.encodeInt1(0),
-        ByteCode.ATTR_VALUE_END,
+				ByteCode.SPACE,
+				ByteCode.ATTR_NAME,
+				(byte) StandardAttributeName.TYPE.ordinal(),
+				ByteCode.ATTR_VALUE_START,
+				ByteCode.ATTR_VALUE,
+				Bytes.encodeInt0(0),
+				Bytes.encodeInt1(0),
+				ByteCode.ATTR_VALUE_END,
 
-        ByteCode.SPACE,
-        ByteCode.ATTR_NAME,
-        (byte) StandardAttributeName.REQUIRED.ordinal(),
+				ByteCode.SPACE,
+				ByteCode.ATTR_NAME,
+				(byte) StandardAttributeName.REQUIRED.ordinal(),
 
-        ByteCode.GT,
+				ByteCode.GT,
 
-        ByteCode.NL
-    );
-  }
+				ByteCode.NL
+		);
+	}
 
-  @Test(description = """
+	@Test(description = """
   HtmlTemplate TC46
 
   - flatten instruction
   """)
-  public void testCase46() {
-    HtmlCompiler02 compiler;
-    compiler = new HtmlCompiler02();
+	public void testCase46() {
+		HtmlCompiler02 compiler;
+		compiler = new HtmlCompiler02();
 
-    compiler.compilationBegin();
+		compiler.compilationBegin();
 
-    compiler.elementBegin(StandardElementName.LABEL);
-    compiler.elementEnd();
+		compiler.elementBegin(StandardElementName.LABEL);
+		compiler.elementEnd();
 
-    compiler.elementBegin(StandardElementName.INPUT);
-    compiler.elementEnd();
+		compiler.elementBegin(StandardElementName.INPUT);
+		compiler.elementEnd();
 
-    compiler.flattenBegin();
-    compiler.elementValue(InternalInstruction.INSTANCE);
-    compiler.elementValue(InternalInstruction.INSTANCE);
-    compiler.elementEnd();
+		compiler.flattenBegin();
+		compiler.elementValue(InternalInstruction.INSTANCE);
+		compiler.elementValue(InternalInstruction.INSTANCE);
+		compiler.elementEnd();
 
-    compiler.elementBegin(StandardElementName.FORM);
-    compiler.elementValue(InternalInstruction.INSTANCE);
-    compiler.elementEnd();
+		compiler.elementBegin(StandardElementName.FORM);
+		compiler.elementValue(InternalInstruction.INSTANCE);
+		compiler.elementEnd();
 
-    compiler.compilationEnd();
+		compiler.compilationEnd();
 
-    compiler.optimize();
+		compiler.optimize();
 
-    InternalCompiledHtml result;
-    result = compiler.compile();
+		InternalCompiledHtml result;
+		result = compiler.compile();
 
-    test(
-        result,
+		test(
+				result,
 
-        ByteCode.START_TAG,
-        (byte) StandardElementName.FORM.ordinal(),
-        ByteCode.GT,
+				ByteCode.START_TAG,
+				(byte) StandardElementName.FORM.ordinal(),
+				ByteCode.GT,
 
-        ByteCode.START_TAG,
-        (byte) StandardElementName.LABEL.ordinal(),
-        ByteCode.GT,
-        ByteCode.END_TAG,
-        (byte) StandardElementName.LABEL.ordinal(),
+				ByteCode.START_TAG,
+				(byte) StandardElementName.LABEL.ordinal(),
+				ByteCode.GT,
+				ByteCode.END_TAG,
+				(byte) StandardElementName.LABEL.ordinal(),
 
-        ByteCode.START_TAG,
-        (byte) StandardElementName.INPUT.ordinal(),
-        ByteCode.GT,
+				ByteCode.START_TAG,
+				(byte) StandardElementName.INPUT.ordinal(),
+				ByteCode.GT,
 
-        ByteCode.END_TAG,
-        (byte) StandardElementName.FORM.ordinal(),
+				ByteCode.END_TAG,
+				(byte) StandardElementName.FORM.ordinal(),
 
-        ByteCode.NL
-    );
-  }
+				ByteCode.NL
+		);
+	}
 
-  private void test(InternalCompiledHtml markup, byte... expected) {
-    byte[] result;
-    result = markup.main;
+	private void test(InternalCompiledHtml markup, byte... expected) {
+		byte[] result;
+		result = markup.main;
 
-    if (result.length != expected.length) {
-      throw new AssertionError(
-          """
+		if (result.length != expected.length) {
+			throw new AssertionError(
+					"""
         Arrays don't have the same size.
 
         Actual  : %s
         Expected: %s
         """.formatted(Arrays.toString(result), Arrays.toString(expected))
-      );
-    }
+			);
+		}
 
-    if (!Arrays.equals(result, expected)) {
-      throw new AssertionError(
-          """
+		if (!Arrays.equals(result, expected)) {
+			throw new AssertionError(
+					"""
         Arrays don't have the same content.
 
         Actual  : %s
         Expected: %s
         """.formatted(Arrays.toString(result), Arrays.toString(expected))
-      );
-    }
-  }
+			);
+		}
+	}
 
 }

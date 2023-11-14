@@ -33,12 +33,6 @@ final class ApiStep extends ThisTemplate {
     ClassName iterator;
     iterator = ClassName.of(Iterator.class);
 
-    ClassName internalFragment;
-    internalFragment = ClassName.of(HTML_INTERNAL, "InternalFragment");
-
-    ClassName internalNoOp;
-    internalNoOp = ClassName.of(HTML_INTERNAL, "InternalNoOp");
-
     String extendsAll;
     extendsAll = extendsAll();
 
@@ -66,7 +60,11 @@ final class ApiStep extends ThisTemplate {
     \{GENERATED_MSG}
     public final class \{simpleName} {
       public static final ElementContents GLOBAL_INSTRUCTION = new ElementContents();
-      
+
+      public static final Fragment FRAGMENT = new Fragment();
+
+      public static final NoOp NOOP = new NoOp();
+
       private \{simpleName} () {}
 
       /**
@@ -141,18 +139,20 @@ final class ApiStep extends ThisTemplate {
       /**
        * The fragment instruction.
        */
-      public sealed interface Fragment
-          extends
-    \{extendsAll}
-          permits \{internalFragment} {}
+      public static final class Fragment
+          implements
+    \{extendsAll} {
+        private Fragment() {}
+      }
 
       /**
        * The no-op instruction.
        */
-      public sealed interface NoOp
-          extends
-    \{extendsAll}
-          permits \{internalNoOp} {}
+      public static final class NoOp
+          implements
+    \{extendsAll} {
+        private NoOp() {}
+      }
     }
     """;
   }

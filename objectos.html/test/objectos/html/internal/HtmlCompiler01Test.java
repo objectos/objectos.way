@@ -16,6 +16,7 @@
 package objectos.html.internal;
 
 import java.util.Arrays;
+import objectos.html.tmpl.Api;
 import objectos.html.tmpl.FragmentLambda;
 import objectos.html.tmpl.TestClassSelector;
 import objectos.html.tmpl.TestIdSelector;
@@ -240,7 +241,7 @@ public class HtmlCompiler01Test {
 		compiler.fragmentEnd(index);
 
 		compiler.elementBegin(StandardElementName.HEAD);
-		compiler.elementValue(InternalFragment.INSTANCE);
+		compiler.elementValue(Api.FRAGMENT);
 		compiler.elementEnd();
 
 		compiler.elementBegin(StandardElementName.HTML);
@@ -523,7 +524,7 @@ public class HtmlCompiler01Test {
 		// template end
 
 		compiler.elementBegin(StandardElementName.BODY);
-		compiler.elementValue(InternalFragment.INSTANCE);
+		compiler.elementValue(Api.FRAGMENT);
 		compiler.elementEnd();
 
 		compiler.compilationEnd();
