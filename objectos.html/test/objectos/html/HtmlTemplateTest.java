@@ -18,8 +18,6 @@ package objectos.html;
 import static org.testng.Assert.assertEquals;
 
 import objectos.html.tmpl.Api;
-import objectos.html.tmpl.TestClassSelector;
-import objectos.html.tmpl.TestIdSelector;
 import org.testng.annotations.Test;
 
 public class HtmlTemplateTest {

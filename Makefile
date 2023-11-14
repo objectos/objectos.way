@@ -46,6 +46,10 @@ MODULE_TASKS += JAVADOC_TASK
 MODULE_TASKS += POM_TASK
 MODULE_TASKS += OSSRH_PREPARE_TASK
 
+## test-related tasks
+TEST_TASKS = TEST_COMPILE_TASK
+TEST_TASKS += TEST_RUN_TASK
+
 #
 # Default target
 #
@@ -1559,6 +1563,103 @@ $(SELFGEN_MARKER): $(SELFGEN_JAR_FILE)
 	touch $(SELFGEN_MARKER)
 
 #
+# objectos.html.tmpl options
+#
+
+## module directory
+HTML_TMPL = objectos.html.tmpl
+
+## module
+HTML_TMPL_MODULE = $(HTML_TMPL)
+
+## module version
+HTML_TMPL_VERSION = $(VERSION)
+
+## javac --release option
+HTML_TMPL_JAVA_RELEASE = $(JAVA_RELEASE)
+
+## --enable-preview ?
+HTML_TMPL_ENABLE_PREVIEW = 0
+
+## marker to indicate when selfgen was last run
+HTML_TMPL_SELFGEN_MARKER = $(HTML_TMPL)/work/selfgen-marker
+
+## make selfgen a req for html compilation
+HTML_TMPL_RESOURCES = $(HTML_TMPL_SELFGEN_MARKER)
+
+## jar name
+HTML_TMPL_JAR_NAME = $(HTML_TMPL)
+
+## install coordinates
+HTML_TMPL_GROUP_ID = $(GROUP_ID)
+HTML_TMPL_ARTIFACT_ID = $(HTML_TMPL_MODULE)
+
+## copyright years for javadoc
+HTML_TMPL_COPYRIGHT_YEARS := 2022-2023
+
+## pom description
+HTML_TMPL_DESCRIPTION = Defines the types of the Objectos HTML domain specific language
+
+#
+# eval tasks
+#
+
+HTML_TMPL_TASKS = $(filter-out $(TEST_TASKS), $(MODULE_TASKS))
+
+$(foreach task,$(HTML_TMPL_TASKS),$(eval $(call $(task),HTML_TMPL_)))
+
+#
+# objectos.html.tmpl selfgen
+#
+
+## html selfgen java command
+HTML_TMPL_SELFGEN_JAVAX = $(JAVA)
+HTML_TMPL_SELFGEN_JAVAX += --module-path $(call module-path,$(SELFGEN_RUNTIME_DEPS))
+ifeq ($(SELFGEN_ENABLE_PREVIEW), 1)
+HTML_TMPL_SELFGEN_JAVAX += --enable-preview
+endif
+HTML_TMPL_SELFGEN_JAVAX += --module $(SELFGEN_MODULE)/$(SELFGEN_MODULE).HtmlSpec
+HTML_TMPL_SELFGEN_JAVAX += $(HTML_TMPL_MAIN)
+HTML_TMPL_SELFGEN_JAVAX += api
+
+$(HTML_TMPL_SELFGEN_MARKER): $(SELFGEN_JAR_FILE)
+	$(HTML_TMPL_SELFGEN_JAVAX)
+	mkdir --parents $(@D)
+	touch $@
+
+#
+# objectos.html.tmpl targets
+#
+
+.PHONY: html.tmpl@clean
+html.tmpl@clean:
+	rm -rf $(HTML_TMPL_WORK)/*
+
+.PHONY: html.tmpl@compile
+html.tmpl@compile: $(HTML_TMPL_SELFGEN_MARKER) $(HTML_TMPL_COMPILE_MARKER)
+
+.PHONY: html.tmpl@jar
+html.tmpl@jar: $(HTML_TMPL_JAR_FILE)
+
+.PHONY: html.tmpl@test
+html.tmpl@test:
+
+.PHONY: html.tmpl@install
+html.tmpl@install: $(HTML_TMPL_INSTALL)
+
+.PHONY: html.tmpl@source-jar
+html.tmpl@source-jar: $(HTML_TMPL_SOURCE_JAR_FILE)
+
+.PHONY: html.tmpl@javadoc
+html.tmpl@javadoc: $(HTML_TMPL_JAVADOC_JAR_FILE)
+
+.PHONY: html.tmpl@pom
+html.tmpl@pom: $(HTML_TMPL_POM_FILE)
+
+.PHONY: html.tmpl@ossrh-prepare
+html.tmpl@ossrh-prepare: $(HTML_TMPL_OSSRH_PREPARE)
+
+#
 # objectos.html options
 #
 
@@ -1582,6 +1683,7 @@ HTML_COMPILE_DEPS = $(LANG_OBJECT_JAR_FILE)
 HTML_COMPILE_DEPS += $(UTIL_ARRAY_JAR_FILE)
 HTML_COMPILE_DEPS += $(UTIL_COLLECTION_JAR_FILE)
 HTML_COMPILE_DEPS += $(UTIL_MAP_JAR_FILE)
+HTML_COMPILE_DEPS += $(HTML_TMPL_JAR_FILE)
 
 ## marker to indicate when selfgen was last run
 HTML_SELFGEN_MARKER = $(HTML)/work/selfgen-marker
@@ -1637,6 +1739,7 @@ HTML_SELFGEN_JAVAX += --enable-preview
 endif
 HTML_SELFGEN_JAVAX += --module $(SELFGEN_MODULE)/$(SELFGEN_MODULE).HtmlSpec
 HTML_SELFGEN_JAVAX += $(HTML_MAIN)
+HTML_SELFGEN_JAVAX += html
 
 $(HTML_SELFGEN_MARKER): $(SELFGEN_JAR_FILE)
 	$(HTML_SELFGEN_JAVAX)
@@ -1702,6 +1805,7 @@ WAY_COMPILE_DEPS += $(UTIL_COLLECTION_JAR_FILE)
 WAY_COMPILE_DEPS += $(UTIL_LIST_JAR_FILE)
 WAY_COMPILE_DEPS += $(UTIL_MAP_JAR_FILE)
 WAY_COMPILE_DEPS += $(UTIL_SET_JAR_FILE)
+WAY_COMPILE_DEPS += $(HTML_TMPL_JAR_FILE)
 WAY_COMPILE_DEPS += $(HTML_JAR_FILE)
 
 ## way jar name
@@ -1764,6 +1868,7 @@ WAY_SUBMODULES += util.collection
 WAY_SUBMODULES += util.list
 WAY_SUBMODULES += util.set
 WAY_SUBMODULES += util.map
+WAY_SUBMODULES += html.tmpl
 WAY_SUBMODULES += html
 
 ## way bundle contents
@@ -1777,6 +1882,7 @@ WAY_OSSRH_BUNDLE_CONTENTS += $(UTIL_COLLECTION_OSSRH_PREPARE)
 WAY_OSSRH_BUNDLE_CONTENTS += $(UTIL_LIST_OSSRH_PREPARE)
 WAY_OSSRH_BUNDLE_CONTENTS += $(UTIL_SET_OSSRH_PREPARE)
 WAY_OSSRH_BUNDLE_CONTENTS += $(UTIL_MAP_OSSRH_PREPARE)
+WAY_OSSRH_BUNDLE_CONTENTS += $(HTML_TMPL_OSSRH_PREPARE)
 WAY_OSSRH_BUNDLE_CONTENTS += $(HTML_OSSRH_PREPARE)
 WAY_OSSRH_BUNDLE_CONTENTS += $(WAY_OSSRH_PREPARE)
 

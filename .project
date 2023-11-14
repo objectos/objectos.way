@@ -5,6 +5,7 @@
 	<projects>
 		<project>objectos.code</project>
 		<project>objectos.html</project>
+		<project>objectos.html.tmpl</project>
 		<project>objectos.lang.object</project>
 		<project>objectos.notes</project>
 		<project>objectos.notes.base</project>

@@ -14,14 +14,8 @@
  * limitations under the License.
  */
 /**
- * Generate HTML using pure Java.
+ * Defines the types of the Objectos HTML domain specific language.
  */
-module objectos.html {
-	exports objectos.html;
-
-	requires transitive objectos.html.tmpl;
-
-	requires objectos.lang.object;
-	requires objectos.util.array;
-	requires objectos.util.map;
+module objectos.html.tmpl {
+	exports objectos.html.tmpl;
 }

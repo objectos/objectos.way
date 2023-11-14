@@ -13,19 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.html.tmpl;
+package objectos.html;
 
-public final class TestClassSelector implements Api.ExternalAttribute.StyleClass {
+import objectos.html.tmpl.Api;
 
-  private final String value;
+public final class TestIdSelector implements Api.ExternalAttribute.Id {
 
-  public TestClassSelector(String value) {
-    this.value = value;
-  }
+	private final String id;
 
-  @Override
-  public final String className() {
-    return value;
-  }
+	public TestIdSelector(String id) {
+		this.id = id;
+	}
+
+	@Override
+	public final String id() {
+		return id;
+	}
 
 }

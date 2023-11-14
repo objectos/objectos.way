@@ -46,21 +46,32 @@ public abstract class HtmlSelfGen {
 	protected HtmlSelfGen() {}
 
 	public final void execute(String[] args) throws IOException {
-		var srcDir = args[0];
+		String srcDir;
+		srcDir = args[0];
 
-		var directory = Path.of(srcDir);
+		Path directory;
+		directory = Path.of(srcDir);
+
+		String mode;
+		mode = args[1];
 
 		prepare();
 
-		writeTo(new ApiStep(this), directory);
+		switch (mode) {
+			case "api" -> {
+				writeTo(new ApiStep(this), directory);
+			}
 
-		writeTo(new BaseAttributeDslStep(this), directory);
+			case "html" -> {
+				writeTo(new BaseAttributeDslStep(this), directory);
 
-		writeTo(new BaseElementDslStep(this), directory);
+				writeTo(new BaseElementDslStep(this), directory);
 
-		writeTo(new StandardAttributeNameStep(this), directory);
+				writeTo(new StandardAttributeNameStep(this), directory);
 
-		writeTo(new StandardElementNameStep(this), directory);
+				writeTo(new StandardElementNameStep(this), directory);
+			}
+		}
 	}
 
 	public final Set<String> elementNames() {
