@@ -25,11 +25,11 @@ import objectos.code.ClassName;
 
 final class ApiStep extends ThisTemplate {
 
-  public ApiStep(CssSelfGen spec) {
-    super(spec);
-  }
+	public ApiStep(CssSelfGen spec) {
+		super(spec);
+	}
 
-  @Override
+	@Override
   final String contents() {
     className(API);
 
@@ -58,7 +58,7 @@ final class ApiStep extends ThisTemplate {
     """;
   }
 
-  private String body() {
+	private String body() {
     List<String> result;
     result = new ArrayList<>();
 
@@ -93,7 +93,7 @@ final class ApiStep extends ThisTemplate {
     return result.stream().collect(Collectors.joining("\n", "\n", ""));
   }
 
-  private void style(List<String> result) {
+	private void style(List<String> result) {
     result.add(code."""
       public sealed interface \{MEDIA_RULE_ELEM.simpleName()} {}
     """);
@@ -177,7 +177,7 @@ final class ApiStep extends ThisTemplate {
     """);
   }
 
-  private void selectors(List<String> result) {
+	private void selectors(List<String> result) {
     result.add(code."""
       public sealed interface \{SELECTOR.simpleName()} extends \{STYLE_RULE_ELEM} {}
     """);
@@ -186,17 +186,17 @@ final class ApiStep extends ThisTemplate {
     COMBINATOR = ClassName.of(CSS_INTERNAL, "Combinator");
 
     ClassName CLASS_SELECTOR;
-    CLASS_SELECTOR = ClassName.of(CSS_UTIL, "ClassSelector");
+    CLASS_SELECTOR = ClassName.of(CSS_TMPL, "ClassSelector");
 
     ClassName ID_SELECTOR;
-    ID_SELECTOR = ClassName.of(CSS_UTIL, "IdSelector");
+    ID_SELECTOR = ClassName.of(CSS_TMPL, "IdSelector");
 
     result.add(code."""
       public sealed interface \{SELECTOR_INSTRUCTION.simpleName()} extends \{SELECTOR} permits \{COMBINATOR}, \{INTERNAL_INSTRUCTION}, \{STANDARD_NAME}, \{CLASS_SELECTOR}, \{ID_SELECTOR}, \{STANDARD_PSEUDO_CLASS_SELECTOR}, \{STANDARD_PSEUDO_ELEMENT_SELECTOR}, \{STANDARD_TYPE_SELECTOR} {}
     """);
   }
 
-  private void valueTypes(List<String> result) {
+	private void valueTypes(List<String> result) {
     result.add(code."""
       public sealed interface \{PROPERTY_VALUE.simpleName()} {}
     """);
@@ -242,7 +242,7 @@ final class ApiStep extends ThisTemplate {
     """);
   }
 
-  private String extendsClause(Collection<ClassName> types) {
+	private String extendsClause(Collection<ClassName> types) {
     List<ClassName> sorted;
     sorted = new ArrayList<>(types);
 
@@ -264,7 +264,7 @@ final class ApiStep extends ThisTemplate {
     return names.stream().collect(Collectors.joining(", "));
   }
 
-  private void functions(List<String> result) {
+	private void functions(List<String> result) {
     List<String> superTypes;
     superTypes = new ArrayList<>();
 
@@ -298,7 +298,7 @@ final class ApiStep extends ThisTemplate {
     """);
   }
 
-  private void keywords(List<String> result) {
+	private void keywords(List<String> result) {
     Iterator<KeywordName> iterator;
     iterator = spec.keywords.values().stream()
         .filter(KeywordName::shouldGenerate)
@@ -337,7 +337,7 @@ final class ApiStep extends ThisTemplate {
     """);
   }
 
-  private void colorValue(List<String> result) {
+	private void colorValue(List<String> result) {
     ColorValue colorValue;
     colorValue = spec.colorValue;
 
@@ -353,7 +353,7 @@ final class ApiStep extends ThisTemplate {
     """);
   }
 
-  private void lengthType(List<String> result) {
+	private void lengthType(List<String> result) {
     LengthType lengthType;
     lengthType = spec.lengthType;
 
@@ -369,7 +369,7 @@ final class ApiStep extends ThisTemplate {
     """);
   }
 
-  private void percentageType(List<String> result) {
+	private void percentageType(List<String> result) {
     PercentageType percentageType;
     percentageType = spec.percentageType;
 
@@ -385,7 +385,7 @@ final class ApiStep extends ThisTemplate {
     """);
   }
 
-  private void flexValue(List<String> result) {
+	private void flexValue(List<String> result) {
     FlexValue flexValue;
     flexValue = spec.flexValue;
 
@@ -401,7 +401,7 @@ final class ApiStep extends ThisTemplate {
     """);
   }
 
-  private void literalTypes(List<String> result) {
+	private void literalTypes(List<String> result) {
     StringType stringType;
     stringType = spec.stringType;
 
@@ -439,7 +439,7 @@ final class ApiStep extends ThisTemplate {
     }
   }
 
-  private void url(List<String> result) {
+	private void url(List<String> result) {
     UrlType urlType;
     urlType = spec.urlType;
 
@@ -455,7 +455,7 @@ final class ApiStep extends ThisTemplate {
     """);
   }
 
-  private void zero(List<String> result) {
+	private void zero(List<String> result) {
     ZeroType zeroType;
     zeroType = spec.zeroType;
 

@@ -13,36 +13,32 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.css.util;
+package objectos.css.tmpl;
 
 import static org.testng.Assert.assertEquals;
 
+import java.util.Random;
 import org.testng.annotations.Test;
 
-public class ClassSelectorTest {
+public class NextTest {
 
   @Test
-  public void next() {
-    ClassSelector selector;
-    selector = ClassSelector.next();
+  public void test() {
+    Next.Builder b;
+    b = Next.builder();
 
-    assertEquals(selector.className().length(), 4);
-  }
+    b.random(new Random(123456789L));
 
-  @Test
-  public void randomClassSelector() {
-    ClassSelector selector;
-    selector = ClassSelector.randomClassSelector(5);
+    b.nameLength(6);
 
-    assertEquals(selector.className().length(), 5);
-  }
+    Next next;
+    next = b.build();
 
-  @Test(description = "It should add the dot '.' character")
-  public void toStringTest() {
-    ClassSelector selector;
-    selector = ClassSelector.of("abc");
+    assertEquals(next.classSelector(), ClassSelector.of("ufczvl"));
+    assertEquals(next.classSelector(), ClassSelector.of("bwrnib"));
 
-    assertEquals(selector.toString(), ".abc");
+    assertEquals(next.customProperty(), CustomProperty.named("--apvswh"));
+    assertEquals(next.customProperty(), CustomProperty.named("--ateivq"));
   }
 
 }

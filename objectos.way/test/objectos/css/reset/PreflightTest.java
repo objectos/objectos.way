@@ -13,11 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.css.util;
+package objectos.css.reset;
 
 import static org.testng.Assert.assertEquals;
 
-import objectos.css.reset.Preflight;
 import org.testng.annotations.Test;
 
 public class PreflightTest {

@@ -37,8 +37,6 @@ abstract class ThisTemplate {
 
 	static final String CSS_TMPL = "objectos.css.tmpl";
 
-	static final String CSS_UTIL = "objectos.css.util";
-
 	static final ClassName CHECK = ClassName.of("objectos.lang.object", "Check");
 
 	static final ClassName OVERRIDE = ClassName.of(Override.class);
@@ -97,7 +95,7 @@ abstract class ThisTemplate {
 
 	//
 
-	static final ClassName COLOR = ClassName.of(CSS_UTIL, "Color");
+	static final ClassName COLOR = ClassName.of(CSS_TMPL, "Color");
 
 	static final ClassName INTERNAL_INSTRUCTION
 			= ClassName.of(CSS_INTERNAL, "InternalInstruction");
@@ -105,11 +103,11 @@ abstract class ThisTemplate {
 	static final ClassName INTERNAL_ZERO
 			= ClassName.of(CSS_INTERNAL, "InternalZero");
 
-	static final ClassName LENGTH = ClassName.of(CSS_UTIL, "Length");
+	static final ClassName LENGTH = ClassName.of(CSS_TMPL, "Length");
 
 	static final ClassName LENGTH_UNIT = ClassName.of(CSS_INTERNAL, "LengthUnit");
 
-	static final ClassName PERCENTAGE = ClassName.of(CSS_UTIL, "Percentage");
+	static final ClassName PERCENTAGE = ClassName.of(CSS_TMPL, "Percentage");
 
 	static final ClassName PROPERTY = ClassName.of(CSS_INTERNAL, "Property");
 

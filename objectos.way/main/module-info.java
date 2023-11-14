@@ -19,7 +19,7 @@
 module objectos.way {
 	exports objectos.css;
 	exports objectos.css.tmpl;
-	exports objectos.css.util;
+	exports objectos.css.reset;
 	exports objectos.http;
 	exports objectos.http.media;
 	exports objectos.http.server;

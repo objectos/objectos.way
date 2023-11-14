@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.css.util;
+package objectos.css.tmpl;
 
 import static org.testng.Assert.assertEquals;
 

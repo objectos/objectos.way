@@ -15,7 +15,7 @@
  */
 package objectos.js;
 
-import objectos.css.util.IdSelector;
+import objectos.css.tmpl.IdSelector;
 import objectos.html.tmpl.Api.ExternalAttribute.StyleClass;
 
 public sealed abstract class Command {

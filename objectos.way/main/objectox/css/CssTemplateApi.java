@@ -18,8 +18,8 @@ package objectox.css;
 import objectos.css.AttributeOperator;
 import objectos.css.StyleSheet;
 import objectos.css.tmpl.Api;
+import objectos.css.tmpl.CustomProperty;
 import objectos.css.tmpl.Api.FilterFunction;
-import objectos.css.util.CustomProperty;
 
 public abstract class CssTemplateApi {
 

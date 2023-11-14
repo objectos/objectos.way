@@ -15,6 +15,8 @@
  */
 package objectos.css.util;
 
+import objectos.css.tmpl.Length;
+
 /**
  * Defines the standard breakpoints for responsive design.
  */

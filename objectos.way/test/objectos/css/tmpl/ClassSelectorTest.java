@@ -13,30 +13,36 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.css.util;
+package objectos.css.tmpl;
 
 import static org.testng.Assert.assertEquals;
 
 import org.testng.annotations.Test;
 
-public class ColorTest {
+public class ClassSelectorTest {
 
   @Test
-  public void ofHex() {
-    assertEquals(
-      Color.ofHex("#71f2C9").toString(),
-      "#71f2C9"
-    );
+  public void next() {
+    ClassSelector selector;
+    selector = ClassSelector.next();
 
-    assertEquals(
-      Color.ofHex("#f00").toString(),
-      "#f00"
-    );
+    assertEquals(selector.className().length(), 4);
+  }
 
-    assertEquals(
-      Color.ofHex("#33AA3380").toString(),
-      "#33AA3380"
-    );
+  @Test
+  public void randomClassSelector() {
+    ClassSelector selector;
+    selector = ClassSelector.randomClassSelector(5);
+
+    assertEquals(selector.className().length(), 5);
+  }
+
+  @Test(description = "It should add the dot '.' character")
+  public void toStringTest() {
+    ClassSelector selector;
+    selector = ClassSelector.of("abc");
+
+    assertEquals(selector.toString(), ".abc");
   }
 
 }

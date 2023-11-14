@@ -19,6 +19,9 @@ import objectos.css.AttributeOperator;
 import objectos.css.CssTemplate;
 import objectos.css.StyleSheet;
 import objectos.css.tmpl.Api;
+import objectos.css.tmpl.CustomProperty;
+import objectos.css.tmpl.Length;
+import objectos.css.tmpl.Percentage;
 import objectos.css.tmpl.Api.BoxShadowDeclaration;
 import objectos.css.tmpl.Api.BoxShadowHashDeclaration;
 import objectos.css.tmpl.Api.ColorValue;
@@ -36,9 +39,6 @@ import objectos.css.tmpl.Api.StyleRule;
 import objectos.css.tmpl.Api.StyleRuleElement;
 import objectos.css.tmpl.Api.Url;
 import objectos.css.tmpl.Api.Zero;
-import objectos.css.util.CustomProperty;
-import objectos.css.util.Length;
-import objectos.css.util.Percentage;
 import objectos.lang.object.Check;
 
 public abstract class InternalCssTemplate extends GeneratedCssTemplate {

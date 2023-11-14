@@ -15,7 +15,7 @@
  */
 package objectox.css;
 
-import objectos.css.util.Percentage;
+import objectos.css.tmpl.Percentage;
 
 public final class InternalPercentage extends Percentage {
 

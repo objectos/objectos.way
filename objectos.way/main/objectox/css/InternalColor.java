@@ -15,7 +15,7 @@
  */
 package objectox.css;
 
-import objectos.css.util.Color;
+import objectos.css.tmpl.Color;
 
 public final class InternalColor extends Color {
 

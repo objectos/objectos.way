@@ -26,25 +26,25 @@ import objectos.code.ClassName;
 
 final class GeneratedColorStep extends ThisTemplate {
 
-  private ColorValue colorValue;
+	private ColorValue colorValue;
 
-  public GeneratedColorStep(CssSelfGen spec) {
-    super(spec);
-  }
+	public GeneratedColorStep(CssSelfGen spec) {
+		super(spec);
+	}
 
-  @Override
-  public void writeTo(Path directory) throws IOException {
-    colorValue = spec.colorValue;
+	@Override
+	public void writeTo(Path directory) throws IOException {
+		colorValue = spec.colorValue;
 
-    if (colorValue != null) {
-      super.writeTo(directory);
-    }
-  }
+		if (colorValue != null) {
+			super.writeTo(directory);
+		}
+	}
 
-  @Override
+	@Override
   final String contents() {
     className(
-      ClassName.of(CSS_UTIL, "GeneratedColor")
+      ClassName.of(CSS_TMPL, "GeneratedColor")
     );
 
     return code."""
@@ -72,7 +72,7 @@ final class GeneratedColorStep extends ThisTemplate {
     """;
   }
 
-  private String colors() {
+	private String colors() {
     List<String> result;
     result = new ArrayList<>();
 

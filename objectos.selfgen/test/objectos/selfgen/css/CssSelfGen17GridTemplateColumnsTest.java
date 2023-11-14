@@ -84,10 +84,6 @@ public class CssSelfGen17GridTemplateColumnsTest {
        */
       package objectos.css.tmpl;
 
-      import objectos.css.util.ClassSelector;
-      import objectos.css.util.IdSelector;
-      import objectos.css.util.Length;
-      import objectos.css.util.Percentage;
       import objectox.css.Combinator;
       import objectox.css.InternalInstruction;
       import objectox.css.InternalZero;

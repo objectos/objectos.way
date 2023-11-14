@@ -15,7 +15,7 @@
  */
 package objectox.css;
 
-import objectos.css.util.Length;
+import objectos.css.tmpl.Length;
 
 public final class InternalLength extends Length {
 

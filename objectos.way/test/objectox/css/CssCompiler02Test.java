@@ -16,9 +16,9 @@
 package objectox.css;
 
 import java.util.Arrays;
+import objectos.css.tmpl.ClassSelector;
+import objectos.css.tmpl.CustomProperty;
 import objectos.css.tmpl.Api.ColorValue;
-import objectos.css.util.ClassSelector;
-import objectos.css.util.CustomProperty;
 import org.testng.annotations.Test;
 
 public class CssCompiler02Test {

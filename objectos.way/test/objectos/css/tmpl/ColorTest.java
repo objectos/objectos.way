@@ -13,32 +13,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.css.util;
+package objectos.css.tmpl;
 
 import static org.testng.Assert.assertEquals;
 
-import java.util.Random;
 import org.testng.annotations.Test;
 
-public class NextTest {
+public class ColorTest {
 
   @Test
-  public void test() {
-    Next.Builder b;
-    b = Next.builder();
+  public void ofHex() {
+    assertEquals(
+      Color.ofHex("#71f2C9").toString(),
+      "#71f2C9"
+    );
 
-    b.random(new Random(123456789L));
+    assertEquals(
+      Color.ofHex("#f00").toString(),
+      "#f00"
+    );
 
-    b.nameLength(6);
-
-    Next next;
-    next = b.build();
-
-    assertEquals(next.classSelector(), ClassSelector.of("ufczvl"));
-    assertEquals(next.classSelector(), ClassSelector.of("bwrnib"));
-
-    assertEquals(next.customProperty(), CustomProperty.named("--apvswh"));
-    assertEquals(next.customProperty(), CustomProperty.named("--ateivq"));
+    assertEquals(
+      Color.ofHex("#33AA3380").toString(),
+      "#33AA3380"
+    );
   }
 
 }
