@@ -24,9 +24,9 @@ import java.nio.file.WatchService;
 import objectos.lang.ClassReloader;
 import objectos.lang.ClassReloader.Builder;
 import objectos.lang.object.Check;
+import objectos.notes.NoOpNoteSink;
 import objectos.notes.NoteSink;
 import objectos.util.list.GrowableList;
-import objectos.lang.NoOpNoteSink;
 
 public final class ClassReloaderBuilder implements ClassReloader.Builder {
 

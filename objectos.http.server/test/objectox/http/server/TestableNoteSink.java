@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2022-2023 Objectos Software LTDA.
+ * Copyright (C) 2016-2023 Objectos Software LTDA.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,25 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-/**
- * Defines the Objectos Way API.
- */
-module objectos.way {
-	exports objectos.css.random;
-	exports objectos.css.reset;
-	exports objectos.css.select;
-	exports objectos.http.media;
-	exports objectos.icon;
-	exports objectos.js;
-	exports objectos.lang;
+package objectox.http.server;
 
-	requires transitive objectos.css;
-	requires transitive objectos.html;
-	requires transitive objectos.notes;
+import objectos.notes.NoOpNoteSink;
+import objectos.notes.Note;
 
-	requires objectos.lang.object;
-	requires objectos.util.array;
-	requires objectos.util.list;
-	requires objectos.util.map;
-	requires objectos.util.set;
+class TestableNoteSink extends NoOpNoteSink {
+
+  @Override
+  public boolean isEnabled(Note note) {
+    return true;
+  }
+
 }

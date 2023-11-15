@@ -13,25 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package objectos.http.server;
+
+import java.io.IOException;
+
 /**
- * Defines the Objectos Way API.
+ * An object that can write out its string representation.
  */
-module objectos.way {
-	exports objectos.css.random;
-	exports objectos.css.reset;
-	exports objectos.css.select;
-	exports objectos.http.media;
-	exports objectos.icon;
-	exports objectos.js;
-	exports objectos.lang;
+public interface CharWritable {
 
-	requires transitive objectos.css;
-	requires transitive objectos.html;
-	requires transitive objectos.notes;
+  /**
+   * Writes this object's textual representation to the appendable.
+   *
+   * @param dest the appendable where to write characters into.
+   *
+   * @throws IOException if an I/O error occurs
+   */
+  default void writeTo(Appendable dest) throws IOException {
+    dest.append(toString());
+  }
 
-	requires objectos.lang.object;
-	requires objectos.util.array;
-	requires objectos.util.list;
-	requires objectos.util.map;
-	requires objectos.util.set;
 }

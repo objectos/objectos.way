@@ -16,6 +16,7 @@
 package objectos.lang;
 
 import java.util.List;
+import objectos.notes.NoOpNoteSink;
 import objectos.notes.Note1;
 import objectos.notes.Note2;
 import objectos.util.list.GrowableList;
