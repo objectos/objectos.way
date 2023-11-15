@@ -13,32 +13,32 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.lang;
+package objectos.lang.runtime;
 
+import java.util.ArrayList;
 import java.util.List;
 import objectos.notes.NoOpNoteSink;
 import objectos.notes.Note1;
 import objectos.notes.Note2;
-import objectos.util.list.GrowableList;
 
 final class ShutdownHookNoteSink extends NoOpNoteSink {
 
-  final List<Throwable> exceptions = new GrowableList<>();
+	final List<Throwable> exceptions = new ArrayList<>();
 
-  final List<Object> hooks = new GrowableList<>();
+	final List<Object> hooks = new ArrayList<>();
 
-  @Override
-  public <T1> void send(Note1<T1> note, T1 v1) {
-    if (note == ShutdownHook.REGISTRATION) {
-      hooks.add(v1);
-    }
-  }
+	@Override
+	public <T1> void send(Note1<T1> note, T1 v1) {
+		if (note == ShutdownHook.REGISTRATION) {
+			hooks.add(v1);
+		}
+	}
 
-  @Override
-  public <T1, T2> void send(Note2<T1, T2> note, T1 v1, T2 v2) {
-    if (v2 instanceof Throwable t) {
-      exceptions.add(t);
-    }
-  }
+	@Override
+	public <T1, T2> void send(Note2<T1, T2> note, T1 v1, T2 v2) {
+		if (v2 instanceof Throwable t) {
+			exceptions.add(t);
+		}
+	}
 
 }

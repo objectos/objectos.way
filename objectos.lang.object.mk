@@ -65,30 +65,30 @@ LANG_OBJECT_DESCRIPTION = Utilities for java.lang.Object instances
 
 $(foreach task,$(MODULE_TASKS),$(eval $(call $(task),LANG_OBJECT_)))
 
-.PHONY: core.object@clean
-core.object@clean:
+.PHONY: lang.object@clean
+lang.object@clean:
 	rm -rf $(LANG_OBJECT_WORK)/*
 
-.PHONY: core.object@compile
-core.object@compile: $(LANG_OBJECT_COMPILE_MARKER)
+.PHONY: lang.object@compile
+lang.object@compile: $(LANG_OBJECT_COMPILE_MARKER)
 
-.PHONY: core.object@jar
-core.object@jar: $(LANG_OBJECT_JAR_FILE)
+.PHONY: lang.object@jar
+lang.object@jar: $(LANG_OBJECT_JAR_FILE)
 
-.PHONY: core.object@test
-core.object@test: $(LANG_OBJECT_TEST_RUN_MARKER)
+.PHONY: lang.object@test
+lang.object@test: $(LANG_OBJECT_TEST_RUN_MARKER)
 
-.PHONY: core.object@install
-core.object@install: $(LANG_OBJECT_INSTALL)
+.PHONY: lang.object@install
+lang.object@install: $(LANG_OBJECT_INSTALL)
 
-.PHONY: core.object@source-jar
-core.object@source-jar: $(LANG_OBJECT_SOURCE_JAR_FILE)
+.PHONY: lang.object@source-jar
+lang.object@source-jar: $(LANG_OBJECT_SOURCE_JAR_FILE)
 
-.PHONY: core.object@javadoc
-core.object@javadoc: $(LANG_OBJECT_JAVADOC_JAR_FILE)
+.PHONY: lang.object@javadoc
+lang.object@javadoc: $(LANG_OBJECT_JAVADOC_JAR_FILE)
 
-.PHONY: core.object@pom
-core.object@pom: $(LANG_OBJECT_POM_FILE)
+.PHONY: lang.object@pom
+lang.object@pom: $(LANG_OBJECT_POM_FILE)
 
-.PHONY: core.object@ossrh-prepare
-core.object@ossrh-prepare: $(LANG_OBJECT_OSSRH_PREPARE)
+.PHONY: lang.object@ossrh-prepare
+lang.object@ossrh-prepare: $(LANG_OBJECT_OSSRH_PREPARE)
