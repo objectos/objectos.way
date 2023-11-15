@@ -16,10 +16,10 @@
 package objectox.css;
 
 import objectos.css.AttributeOperator;
+import objectos.css.select.ClassSelector;
+import objectos.css.select.IdSelector;
 import objectos.css.tmpl.Api;
-import objectos.css.tmpl.ClassSelector;
 import objectos.css.tmpl.CustomProperty;
-import objectos.css.tmpl.IdSelector;
 import objectos.css.tmpl.Api.FilterFunction;
 import objectos.util.array.ByteArrays;
 import objectos.util.array.ObjectArrays;

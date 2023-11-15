@@ -41,7 +41,7 @@
  */
 package objectos.icon;
 
-import objectos.css.tmpl.IdSelector;
+import objectos.css.select.IdSelector;
 import objectos.html.BaseTemplateDsl;
 import objectos.html.HtmlComponent;
 import objectos.html.tmpl.Api.Element;

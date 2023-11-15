@@ -17,10 +17,10 @@ package objectos.css;
 
 import static org.testng.Assert.assertEquals;
 
+import objectos.css.select.ClassSelector;
+import objectos.css.select.IdSelector;
 import objectos.css.tmpl.Api;
-import objectos.css.tmpl.ClassSelector;
 import objectos.css.tmpl.CustomProperty;
-import objectos.css.tmpl.IdSelector;
 import objectos.css.tmpl.Length;
 import objectos.css.tmpl.Percentage;
 import objectos.css.tmpl.Api.ColorValue;

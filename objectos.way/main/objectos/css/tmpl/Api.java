@@ -55,7 +55,11 @@ public final class Api {
 
   public sealed interface Selector extends StyleRuleElement {}
 
-  public sealed interface SelectorInstruction extends Selector permits Combinator, InternalInstruction, StandardName, ClassSelector, IdSelector, StandardPseudoClassSelector, StandardPseudoElementSelector, StandardTypeSelector {}
+  public sealed interface SelectorInstruction extends Selector permits ExternalClassSelector, ExternalIdSelector, Combinator, InternalInstruction, StandardName, StandardPseudoClassSelector, StandardPseudoElementSelector, StandardTypeSelector {}
+
+  public non-sealed interface ExternalClassSelector extends SelectorInstruction {}
+
+  public non-sealed interface ExternalIdSelector extends SelectorInstruction {}
 
   public sealed interface PropertyValue {}
 

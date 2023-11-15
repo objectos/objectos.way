@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.css.tmpl;
+package objectos.css.select;
 
 import static org.testng.Assert.assertEquals;
 
@@ -21,28 +21,28 @@ import org.testng.annotations.Test;
 
 public class ClassSelectorTest {
 
-  @Test
-  public void next() {
-    ClassSelector selector;
-    selector = ClassSelector.next();
+	@Test
+	public void next() {
+		ClassSelector selector;
+		selector = ClassSelector.next();
 
-    assertEquals(selector.className().length(), 4);
-  }
+		assertEquals(selector.className().length(), 4);
+	}
 
-  @Test
-  public void randomClassSelector() {
-    ClassSelector selector;
-    selector = ClassSelector.randomClassSelector(5);
+	@Test
+	public void randomClassSelector() {
+		ClassSelector selector;
+		selector = ClassSelector.randomClassSelector(5);
 
-    assertEquals(selector.className().length(), 5);
-  }
+		assertEquals(selector.className().length(), 5);
+	}
 
-  @Test(description = "It should add the dot '.' character")
-  public void toStringTest() {
-    ClassSelector selector;
-    selector = ClassSelector.of("abc");
+	@Test(description = "It should add the dot '.' character")
+	public void toStringTest() {
+		ClassSelector selector;
+		selector = ClassSelector.of("abc");
 
-    assertEquals(selector.toString(), ".abc");
-  }
+		assertEquals(selector.toString(), ".abc");
+	}
 
 }

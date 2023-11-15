@@ -13,20 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.css.tmpl;
+package objectox.css;
 
-import static org.testng.Assert.assertEquals;
+import objectos.css.tmpl.Api;
 
-import org.testng.annotations.Test;
+public class ThisClassSelector implements Api.ExternalClassSelector {
 
-public class IdSelectorTest {
+	private final String value;
 
-  @Test
-  public void next() {
-    IdSelector selector;
-    selector = IdSelector.next();
+	public ThisClassSelector(String value) {
+		this.value = value;
+	}
 
-    assertEquals(selector.id().length(), 4);
-  }
+	public static ThisClassSelector of(String value) {
+		return new ThisClassSelector(value);
+	}
+
+	@Override
+	public String toString() {
+		return "." + value;
+	}
 
 }

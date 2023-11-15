@@ -185,14 +185,12 @@ final class ApiStep extends ThisTemplate {
     ClassName COMBINATOR;
     COMBINATOR = ClassName.of(CSS_INTERNAL, "Combinator");
 
-    ClassName CLASS_SELECTOR;
-    CLASS_SELECTOR = ClassName.of(CSS_TMPL, "ClassSelector");
-
-    ClassName ID_SELECTOR;
-    ID_SELECTOR = ClassName.of(CSS_TMPL, "IdSelector");
-
     result.add(code."""
-      public sealed interface \{SELECTOR_INSTRUCTION.simpleName()} extends \{SELECTOR} permits \{COMBINATOR}, \{INTERNAL_INSTRUCTION}, \{STANDARD_NAME}, \{CLASS_SELECTOR}, \{ID_SELECTOR}, \{STANDARD_PSEUDO_CLASS_SELECTOR}, \{STANDARD_PSEUDO_ELEMENT_SELECTOR}, \{STANDARD_TYPE_SELECTOR} {}
+      public sealed interface \{SELECTOR_INSTRUCTION.simpleName()} extends \{SELECTOR} permits ExternalClassSelector, ExternalIdSelector, \{COMBINATOR}, \{INTERNAL_INSTRUCTION}, \{STANDARD_NAME}, \{STANDARD_PSEUDO_CLASS_SELECTOR}, \{STANDARD_PSEUDO_ELEMENT_SELECTOR}, \{STANDARD_TYPE_SELECTOR} {}
+
+      public non-sealed interface ExternalClassSelector extends \{SELECTOR_INSTRUCTION.simpleName()} {}
+
+      public non-sealed interface ExternalIdSelector extends \{SELECTOR_INSTRUCTION.simpleName()} {}
     """);
   }
 

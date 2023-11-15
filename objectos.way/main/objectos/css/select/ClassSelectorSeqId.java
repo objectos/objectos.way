@@ -13,14 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectox.css;
+package objectos.css.select;
 
-public final class ClassSelectorSeqId {
-  private static final SeqId INSTANCE = new SeqId();
+final class ClassSelectorSeqId {
+	private static final SeqId INSTANCE = new SeqId();
 
-  private ClassSelectorSeqId() {}
+	private ClassSelectorSeqId() {}
 
-  public static String next() {
-    return INSTANCE.next();
-  }
+	public static String next() {
+		return INSTANCE.next();
+	}
 }
