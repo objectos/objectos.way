@@ -13,26 +13,34 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectox.css;
+package objectos.css.random;
 
 import static org.testng.Assert.assertEquals;
 
+import java.util.Random;
+import objectos.css.select.ClassSelector;
+import objectos.css.tmpl.CustomProperty;
 import org.testng.annotations.Test;
 
-public class RandomStringGeneratorTest {
+public class NextTest {
 
-  @Test(description = """
-  Verifies setSeed generates the same sequence of pseudo random every time.
-  """)
-  public void setSeed() {
-    long seed;
-    seed = 1233456789L;
+	@Test
+	public void test() {
+		Next.Builder b;
+		b = Next.builder();
 
-    RandomStringGenerator.randomSeed(seed);
+		b.random(new Random(123456789L));
 
-    assertEquals(RandomStringGenerator.nextString(3), "2os");
-    assertEquals(RandomStringGenerator.nextString(4), "63Iy");
-    assertEquals(RandomStringGenerator.nextString(5), "ankzJ");
-  }
+		b.nameLength(6);
+
+		Next next;
+		next = b.build();
+
+		assertEquals(next.classSelector(), ClassSelector.of("ufczvl"));
+		assertEquals(next.classSelector(), ClassSelector.of("bwrnib"));
+
+		assertEquals(next.customProperty(), CustomProperty.named("--apvswh"));
+		assertEquals(next.customProperty(), CustomProperty.named("--ateivq"));
+	}
 
 }

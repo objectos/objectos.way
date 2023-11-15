@@ -13,14 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.css.select;
+package objectos.css;
 
-final class ClassSelectorSeqId {
-	private static final SeqId INSTANCE = new SeqId();
+import objectos.css.tmpl.Api.ExternalClassSelector;
 
-	private ClassSelectorSeqId() {}
+final class ThisClassSelector implements ExternalClassSelector {
 
-	public static String next() {
-		return INSTANCE.next();
+	private final String value;
+
+	public ThisClassSelector(String value) {
+		this.value = value;
 	}
+
+	@Override
+	public String toString() {
+		return "." + value;
+	}
+
 }

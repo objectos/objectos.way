@@ -3,7 +3,7 @@
  *
  * Reprodução parcial ou total proibida.
  */
-package objectos.css.select;
+package objectos.css.random;
 
 import static org.testng.Assert.assertEquals;
 

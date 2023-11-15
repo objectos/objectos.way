@@ -22,11 +22,11 @@ import org.testng.annotations.Test;
 public class IdSelectorTest {
 
 	@Test
-	public void next() {
-		IdSelector selector;
-		selector = IdSelector.next();
+	public void of() {
+		IdSelector foo;
+		foo = IdSelector.of("foo");
 
-		assertEquals(selector.id().length(), 4);
+		assertEquals(foo.toString(), "#foo");
 	}
 
 }

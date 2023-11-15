@@ -13,9 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.css.select;
+package objectos.css.random;
 
 import java.util.Random;
+import objectos.css.select.ClassSelector;
 import objectos.css.tmpl.Api;
 import objectos.css.tmpl.CustomProperty;
 import objectos.lang.object.Check;

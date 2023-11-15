@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016-2023 Objectos Software LTDA.
+ * Copyright (C) 2023 Objectos Software LTDA.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,20 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.css.select;
+package objectos.css;
 
-import static org.testng.Assert.assertEquals;
+import objectos.css.tmpl.Api.ExternalIdSelector;
 
-import org.testng.annotations.Test;
+final class ThisIdSelector implements ExternalIdSelector {
 
-public class ClassSelectorTest {
+	private final String value;
 
-	@Test(description = "It should add the dot '.' character")
-	public void of() {
-		ClassSelector selector;
-		selector = ClassSelector.of("abc");
+	public ThisIdSelector(String value) {
+		this.value = value;
+	}
 
-		assertEquals(selector.toString(), ".abc");
+	@Override
+	public String toString() {
+		return "#" + value;
 	}
 
 }

@@ -17,8 +17,6 @@
  * Defines the Objectos Way API.
  */
 module objectos.way {
-	exports objectos.css;
-	exports objectos.css.tmpl;
 	exports objectos.css.reset;
 	exports objectos.http;
 	exports objectos.http.media;
@@ -28,9 +26,11 @@ module objectos.way {
 	exports objectos.js;
 	exports objectos.lang;
 
-	requires objectos.html;
+	requires transitive objectos.css;
+	requires transitive objectos.html;
+	requires transitive objectos.notes;
+
 	requires objectos.lang.object;
-	requires objectos.notes;
 	requires objectos.util.array;
 	requires objectos.util.list;
 	requires objectos.util.map;

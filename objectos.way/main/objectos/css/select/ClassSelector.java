@@ -15,43 +15,24 @@
  */
 package objectos.css.select;
 
-import objectos.css.tmpl.Api;
+import objectos.css.tmpl.Api.ExternalClassSelector;
 import objectos.html.tmpl.Api.ExternalAttribute;
 import objectos.lang.object.Check;
-import objectox.css.RandomStringGenerator;
 
-public record ClassSelector(String className)
-		implements ExternalAttribute.StyleClass, Api.ExternalClassSelector {
+public final class ClassSelector implements ExternalAttribute.StyleClass, ExternalClassSelector {
 
-	public ClassSelector {
+	private final String className;
+
+	private ClassSelector(String className) {
 		Check.notNull(className, "className == null");
 
 		Check.argument(!className.isBlank(), "className must not be blank");
-	}
 
-	/**
-	 * Returns a new distinct class selector whose value is 4 characters in
-	 * length. Each returned value is distinct from any of the previously returned
-	 * values.
-	 *
-	 * @return a newly created class selector
-	 */
-	public static ClassSelector next() {
-		String id;
-		id = ClassSelectorSeqId.next();
-
-		return new ClassSelector(id);
+		this.className = className;
 	}
 
 	public static ClassSelector of(String className) {
 		return new ClassSelector(className);
-	}
-
-	public static ClassSelector randomClassSelector(int length) {
-		String name;
-		name = RandomStringGenerator.nextName(length);
-
-		return new ClassSelector(name);
 	}
 
 	@Override

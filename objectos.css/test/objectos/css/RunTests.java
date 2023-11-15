@@ -22,38 +22,38 @@ import org.testng.xml.XmlSuite;
 import org.testng.xml.XmlTest;
 
 public class RunTests {
-  public static void main(String[] args) {
-    XmlSuite suite;
-    suite = new XmlSuite();
+	public static void main(String[] args) {
+		XmlSuite suite;
+		suite = new XmlSuite();
 
-    suite.setName("Objectos CSS");
+		suite.setName("Objectos CSS");
 
-    XmlTest test;
-    test = new XmlTest(suite);
+		XmlTest test;
+		test = new XmlTest(suite);
 
-    test.setName("All");
+		test.setName("All");
 
-    test.setXmlPackages(
-      List.of(
-        new XmlPackage("objectos.css"),
-        new XmlPackage("objectos.css.internal"),
-        new XmlPackage("objectos.css.util")
-      )
-    );
+		test.setXmlPackages(
+				List.of(
+						new XmlPackage("objectos.css"),
+						new XmlPackage("objectos.css.tmpl"),
+						new XmlPackage("objectox.css")
+				)
+		);
 
-    TestNG ng;
-    ng = new TestNG();
+		TestNG ng;
+		ng = new TestNG();
 
-    if (args.length > 0) {
-      ng.setOutputDirectory(args[0]);
-    }
+		if (args.length > 0) {
+			ng.setOutputDirectory(args[0]);
+		}
 
-    ng.setXmlSuites(
-      List.of(suite)
-    );
+		ng.setXmlSuites(
+				List.of(suite)
+		);
 
-    ng.run();
+		ng.run();
 
-    System.exit(ng.getStatus());
-  }
+		System.exit(ng.getStatus());
+	}
 }

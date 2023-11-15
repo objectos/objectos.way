@@ -1908,6 +1908,118 @@ html.style@pom: $(HTML_STYLE_POM_FILE)
 html.style@ossrh-prepare: $(HTML_STYLE_OSSRH_PREPARE)
 
 #
+# objectos.css options
+#
+
+## module directory
+CSS = objectos.css
+
+## module
+CSS_MODULE = $(CSS)
+
+## module version
+CSS_VERSION = $(VERSION)
+
+## javac --release option
+CSS_JAVA_RELEASE = $(JAVA_RELEASE)
+
+## --enable-preview ?
+CSS_ENABLE_PREVIEW = 0
+
+## compile deps
+CSS_COMPILE_DEPS = $(LANG_OBJECT_JAR_FILE)
+CSS_COMPILE_DEPS += $(UTIL_ARRAY_JAR_FILE)
+
+## marker to indicate when selfgen was last run
+CSS_SELFGEN_MARKER = $(CSS)/work/selfgen-marker
+
+## make selfgen a req for html compilation
+CSS_RESOURCES = $(CSS_SELFGEN_MARKER)
+
+## jar name
+CSS_JAR_NAME = $(CSS)
+
+## test compile deps
+CSS_TEST_COMPILE_DEPS = $(CSS_COMPILE_DEPS)
+CSS_TEST_COMPILE_DEPS += $(CSS_JAR_FILE)
+CSS_TEST_COMPILE_DEPS += $(call dependency,org.testng,testng,$(TESTNG_VERSION))
+
+## test runtime dependencies
+CSS_TEST_RUNTIME_DEPS = $(CSS_TEST_COMPILE_DEPS)
+CSS_TEST_RUNTIME_DEPS += $(call dependency,com.beust,jcommander,$(JCOMMANDER_VERSION))
+CSS_TEST_RUNTIME_DEPS += $(call dependency,org.slf4j,slf4j-api,$(SLF4J_VERSION))
+CSS_TEST_RUNTIME_DEPS += $(call dependency,org.slf4j,slf4j-nop,$(SLF4J_VERSION))
+
+## test runtime exports
+CSS_TEST_JAVAX_EXPORTS = objectox.css
+
+## install coordinates
+CSS_GROUP_ID = $(GROUP_ID)
+CSS_ARTIFACT_ID = $(CSS_MODULE)
+
+## copyright years for javadoc
+CSS_COPYRIGHT_YEARS := 2022-2023
+
+## pom description
+CSS_DESCRIPTION = Generate CSS using pure Java
+
+#
+# eval tasks
+#
+
+$(foreach task,$(MODULE_TASKS),$(eval $(call $(task),CSS_)))
+
+#
+# objectos.css selfgen
+#
+
+## html selfgen java command
+CSS_SELFGEN_JAVAX = $(JAVA)
+CSS_SELFGEN_JAVAX += --module-path $(call module-path,$(SELFGEN_RUNTIME_DEPS))
+ifeq ($(SELFGEN_ENABLE_PREVIEW), 1)
+CSS_SELFGEN_JAVAX += --enable-preview
+endif
+CSS_SELFGEN_JAVAX += --module $(SELFGEN_MODULE)/$(SELFGEN_MODULE).CssSpec
+CSS_SELFGEN_JAVAX += $(CSS_MAIN)
+
+$(CSS_SELFGEN_MARKER): $(SELFGEN_JAR_FILE)
+	$(CSS_SELFGEN_JAVAX)
+	mkdir --parents $(@D)
+	touch $@
+
+#
+# objectos.css targets
+#
+
+.PHONY: css@clean
+css@clean:
+	rm -rf $(CSS_WORK)/*
+
+.PHONY: css@compile
+css@compile: $(CSS_SELFGEN_MARKER) $(CSS_COMPILE_MARKER)
+
+.PHONY: css@jar
+css@jar: $(CSS_JAR_FILE)
+
+.PHONY: css@test
+css@test: $(CSS_TEST_RUN_MARKER)
+
+.PHONY: css@install
+css@install: $(CSS_INSTALL)
+
+.PHONY: css@source-jar
+css@source-jar: $(CSS_SOURCE_JAR_FILE)
+
+.PHONY: css@javadoc
+css@javadoc: $(CSS_JAVADOC_JAR_FILE)
+
+.PHONY: css@pom
+css@pom: $(CSS_POM_FILE)
+
+.PHONY: css@ossrh-prepare
+css@ossrh-prepare: $(CSS_OSSRH_PREPARE)
+
+#
 # objectos.way options
 # 
 
@@ -1936,6 +2048,7 @@ WAY_COMPILE_DEPS += $(UTIL_MAP_JAR_FILE)
 WAY_COMPILE_DEPS += $(UTIL_SET_JAR_FILE)
 WAY_COMPILE_DEPS += $(HTML_TMPL_JAR_FILE)
 WAY_COMPILE_DEPS += $(HTML_JAR_FILE)
+WAY_COMPILE_DEPS += $(CSS_JAR_FILE)
 
 ## way jar name
 WAY_JAR_NAME := $(WAY)
@@ -2000,6 +2113,7 @@ WAY_SUBMODULES += util.map
 WAY_SUBMODULES += html.tmpl
 WAY_SUBMODULES += html
 WAY_SUBMODULES += html.style
+WAY_SUBMODULES += css
 
 ## way bundle contents
 WAY_OSSRH_BUNDLE_CONTENTS = $(CORE_OBJECT_OSSRH_PREPARE)
@@ -2015,6 +2129,7 @@ WAY_OSSRH_BUNDLE_CONTENTS += $(UTIL_MAP_OSSRH_PREPARE)
 WAY_OSSRH_BUNDLE_CONTENTS += $(HTML_TMPL_OSSRH_PREPARE)
 WAY_OSSRH_BUNDLE_CONTENTS += $(HTML_OSSRH_PREPARE)
 WAY_OSSRH_BUNDLE_CONTENTS += $(HTML_STYLE_OSSRH_PREPARE)
+WAY_OSSRH_BUNDLE_CONTENTS += $(CSS_OSSRH_PREPARE)
 WAY_OSSRH_BUNDLE_CONTENTS += $(WAY_OSSRH_PREPARE)
 
 #

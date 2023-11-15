@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectox.css;
+package objectos.css.random;
 
 import java.util.Locale;
 import java.util.Random;

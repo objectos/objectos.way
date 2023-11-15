@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016-2023 Objectos Software LTDA.
+ * Copyright (C) 2023 Objectos Software LTDA.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,20 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.css.select;
+/**
+ *
+ */
+module objectos.css {
+	exports objectos.css;
+	exports objectos.css.tmpl;
 
-import static org.testng.Assert.assertEquals;
-
-import org.testng.annotations.Test;
-
-public class ClassSelectorTest {
-
-	@Test(description = "It should add the dot '.' character")
-	public void of() {
-		ClassSelector selector;
-		selector = ClassSelector.of("abc");
-
-		assertEquals(selector.toString(), ".abc");
-	}
-
+	requires objectos.lang.object;
+	requires objectos.util.array;
 }
