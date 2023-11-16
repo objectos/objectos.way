@@ -31,6 +31,20 @@ public final class ClassSelector implements ExternalAttribute.StyleClass, Extern
 		this.className = className;
 	}
 
+	/**
+	 * Returns a new distinct class selector whose value is 4 characters in
+	 * length. Each returned value is distinct from any of the previously returned
+	 * values.
+	 *
+	 * @return a newly created class selector
+	 */
+	public static ClassSelector next() {
+		String id;
+		id = ClassSelectorSeqId.next();
+
+		return new ClassSelector(id);
+	}
+
 	public static ClassSelector of(String className) {
 		return new ClassSelector(className);
 	}

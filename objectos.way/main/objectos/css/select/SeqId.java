@@ -3,7 +3,7 @@
  *
  * Reprodução parcial ou total proibida.
  */
-package objectos.css.random;
+package objectos.css.select;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
