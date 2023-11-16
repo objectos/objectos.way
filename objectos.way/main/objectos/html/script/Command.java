@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.js;
+package objectos.html.script;
 
 import objectos.css.select.IdSelector;
 import objectos.html.tmpl.Api.ExternalAttribute.StyleClass;

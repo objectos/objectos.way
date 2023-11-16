@@ -1779,6 +1779,86 @@ html@pom: $(HTML_POM_FILE)
 html@ossrh-prepare: $(HTML_OSSRH_PREPARE)
 
 #
+# objectos.html.icon options
+#
+
+## module directory
+HTML_ICON = objectos.html.icon
+
+## module
+HTML_ICON_MODULE = $(HTML_ICON)
+
+## module version
+HTML_ICON_VERSION = $(VERSION)
+
+## javac --release option
+HTML_ICON_JAVA_RELEASE = $(JAVA_RELEASE)
+
+## --enable-preview ?
+HTML_ICON_ENABLE_PREVIEW = 0
+
+## compile deps
+HTML_ICON_COMPILE_DEPS = $(LANG_OBJECT_JAR_FILE)
+HTML_ICON_COMPILE_DEPS += $(UTIL_ARRAY_JAR_FILE)
+HTML_ICON_COMPILE_DEPS += $(UTIL_COLLECTION_JAR_FILE)
+HTML_ICON_COMPILE_DEPS += $(UTIL_MAP_JAR_FILE)
+HTML_ICON_COMPILE_DEPS += $(HTML_TMPL_JAR_FILE)
+HTML_ICON_COMPILE_DEPS += $(HTML_JAR_FILE)
+
+## jar name
+HTML_ICON_JAR_NAME = $(HTML_ICON)
+
+## install coordinates
+HTML_ICON_GROUP_ID = $(GROUP_ID)
+HTML_ICON_ARTIFACT_ID = $(HTML_ICON_MODULE)
+
+## copyright years for javadoc
+HTML_ICON_COPYRIGHT_YEARS := 2022-2023
+
+## pom description
+HTML_ICON_DESCRIPTION = Defines the types of the Objectos HTML domain specific language
+
+#
+# eval tasks
+#
+
+HTML_ICON_TASKS = $(filter-out $(TEST_TASKS), $(MODULE_TASKS))
+
+$(foreach task,$(HTML_ICON_TASKS),$(eval $(call $(task),HTML_ICON_)))
+
+#
+# objectos.html.icon targets
+#
+
+.PHONY: html.icon@clean
+html.icon@clean:
+	rm -rf $(HTML_ICON_WORK)/*
+
+.PHONY: html.icon@compile
+html.icon@compile: $(HTML_ICON_COMPILE_MARKER)
+
+.PHONY: html.icon@jar
+html.icon@jar: $(HTML_ICON_JAR_FILE)
+
+.PHONY: html.icon@test
+html.icon@test:
+
+.PHONY: html.icon@install
+html.icon@install: $(HTML_ICON_INSTALL)
+
+.PHONY: html.icon@source-jar
+html.icon@source-jar: $(HTML_ICON_SOURCE_JAR_FILE)
+
+.PHONY: html.icon@javadoc
+html.icon@javadoc: $(HTML_ICON_JAVADOC_JAR_FILE)
+
+.PHONY: html.icon@pom
+html.icon@pom: $(HTML_ICON_POM_FILE)
+
+.PHONY: html.icon@ossrh-prepare
+html.icon@ossrh-prepare: $(HTML_ICON_OSSRH_PREPARE)
+
+#
 # objectos.html.style options
 #
 
@@ -2406,6 +2486,7 @@ WAY_SUBMODULES += util.set
 WAY_SUBMODULES += util.map
 WAY_SUBMODULES += html.tmpl
 WAY_SUBMODULES += html
+WAY_SUBMODULES += html.icon
 WAY_SUBMODULES += html.style
 WAY_SUBMODULES += css
 WAY_SUBMODULES += http
@@ -2425,6 +2506,7 @@ WAY_OSSRH_BUNDLE_CONTENTS += $(UTIL_SET_OSSRH_PREPARE)
 WAY_OSSRH_BUNDLE_CONTENTS += $(UTIL_MAP_OSSRH_PREPARE)
 WAY_OSSRH_BUNDLE_CONTENTS += $(HTML_TMPL_OSSRH_PREPARE)
 WAY_OSSRH_BUNDLE_CONTENTS += $(HTML_OSSRH_PREPARE)
+WAY_OSSRH_BUNDLE_CONTENTS += $(HTML_ICON_OSSRH_PREPARE)
 WAY_OSSRH_BUNDLE_CONTENTS += $(HTML_STYLE_OSSRH_PREPARE)
 WAY_OSSRH_BUNDLE_CONTENTS += $(CSS_OSSRH_PREPARE)
 WAY_OSSRH_BUNDLE_CONTENTS += $(HTTP_OSSRH_PREPARE)

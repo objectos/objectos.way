@@ -14,6 +14,12 @@
  * limitations under the License.
  */
 /**
- * Provides classes for creating interactive web applications.
+ *
  */
-package objectos.js;
+module objectos.html.icon {
+	exports objectos.html.icon;
+
+	requires transitive objectos.html;
+
+	requires objectos.lang.object;
+}

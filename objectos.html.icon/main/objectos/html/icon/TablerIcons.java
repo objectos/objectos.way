@@ -39,11 +39,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.icon;
+package objectos.html.icon;
 
-import objectos.css.select.IdSelector;
 import objectos.html.BaseTemplateDsl;
 import objectos.html.HtmlComponent;
+import objectos.html.tmpl.Api;
 import objectos.html.tmpl.Api.Element;
 import objectos.html.tmpl.Api.SvgInstruction;
 import objectos.lang.object.Check;
@@ -54,7 +54,7 @@ import objectos.lang.object.Check;
  */
 public class TablerIcons extends HtmlComponent {
 
-	private IdSelector id;
+	private Api.ExternalAttribute.Id id;
 
 	private String strokeWidth;
 
@@ -78,7 +78,7 @@ public class TablerIcons extends HtmlComponent {
 	 *
 	 * @return this instance
 	 */
-	public final TablerIcons id(IdSelector id) {
+	public final TablerIcons id(Api.ExternalAttribute.Id id) {
 		this.id = Check.notNull(id, "id == null");
 
 		return this;
