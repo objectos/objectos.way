@@ -767,7 +767,7 @@ way@clean:
 	rm -rf $(WAY_WORK)/*
 
 .PHONY: way@jar
-way@jar: $(SELFGEN_MARKER) $(WAY_JAR_FILE)
+way@jar: $(WAY_JAR_FILE)
 
 .PHONY: way@test
 way@test: $(WAY_TEST_RUN_MARKER)

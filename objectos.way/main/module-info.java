@@ -21,7 +21,6 @@ module objectos.way {
 	exports objectos.css.reset;
 	exports objectos.css.select;
 	exports objectos.http.media;
-	exports objectos.lang;
 
 	requires transitive objectos.css;
 	requires transitive objectos.html;
