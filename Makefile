@@ -1859,6 +1859,103 @@ html.icon@pom: $(HTML_ICON_POM_FILE)
 html.icon@ossrh-prepare: $(HTML_ICON_OSSRH_PREPARE)
 
 #
+# objectos.html.script options
+#
+
+## module directory
+HTML_SCRIPT = objectos.html.script
+
+## module
+HTML_SCRIPT_MODULE = $(HTML_SCRIPT)
+
+## module version
+HTML_SCRIPT_VERSION = $(VERSION)
+
+## javac --release option
+HTML_SCRIPT_JAVA_RELEASE = $(JAVA_RELEASE)
+
+## --enable-preview ?
+HTML_SCRIPT_ENABLE_PREVIEW = 0
+
+## compile deps
+HTML_SCRIPT_COMPILE_DEPS = $(LANG_OBJECT_JAR_FILE)
+HTML_SCRIPT_COMPILE_DEPS += $(UTIL_ARRAY_JAR_FILE)
+HTML_SCRIPT_COMPILE_DEPS += $(UTIL_COLLECTION_JAR_FILE)
+HTML_SCRIPT_COMPILE_DEPS += $(UTIL_MAP_JAR_FILE)
+HTML_SCRIPT_COMPILE_DEPS += $(HTML_TMPL_JAR_FILE)
+HTML_SCRIPT_COMPILE_DEPS += $(HTML_JAR_FILE)
+
+## jar name
+HTML_SCRIPT_JAR_NAME = $(HTML_SCRIPT)
+
+## JS source
+HTML_SCRIPT_JS_SRC = $(HTML_SCRIPT)/js/objectos.way.js
+
+## JS artifact
+HTML_SCRIPT_JS_ARTIFACT = $(HTML_SCRIPT_CLASS_OUTPUT)/objectos/html/script/objectos.way.js
+
+## jar file reqs
+HTML_SCRIPT_JAR_FILE_REQS_MORE = $(HTML_SCRIPT_JS_ARTIFACT)
+
+## install coordinates
+HTML_SCRIPT_GROUP_ID = $(GROUP_ID)
+HTML_SCRIPT_ARTIFACT_ID = $(HTML_SCRIPT_MODULE)
+
+## copyright years for javadoc
+HTML_SCRIPT_COPYRIGHT_YEARS := 2022-2023
+
+## pom description
+HTML_SCRIPT_DESCRIPTION = Defines the types of the Objectos HTML domain specific language
+
+#
+# eval tasks
+#
+
+HTML_SCRIPT_TASKS = $(filter-out $(TEST_TASKS), $(MODULE_TASKS))
+
+$(foreach task,$(HTML_SCRIPT_TASKS),$(eval $(call $(task),HTML_SCRIPT_)))
+
+#
+# JS targets
+#
+
+$(HTML_SCRIPT_JS_ARTIFACT): $(HTML_SCRIPT_JS_SRC)
+	mkdir --parents $(@D)
+	cp $< $@
+
+#
+# objectos.html.script targets
+#
+
+.PHONY: html.script@clean
+html.script@clean:
+	rm -rf $(HTML_SCRIPT_WORK)/*
+
+.PHONY: html.script@compile
+html.script@compile: $(HTML_SCRIPT_COMPILE_MARKER)
+
+.PHONY: html.script@jar
+html.script@jar: $(HTML_SCRIPT_JAR_FILE)
+
+.PHONY: html.script@test
+html.script@test:
+
+.PHONY: html.script@install
+html.script@install: $(HTML_SCRIPT_INSTALL)
+
+.PHONY: html.script@source-jar
+html.script@source-jar: $(HTML_SCRIPT_SOURCE_JAR_FILE)
+
+.PHONY: html.script@javadoc
+html.script@javadoc: $(HTML_SCRIPT_JAVADOC_JAR_FILE)
+
+.PHONY: html.script@pom
+html.script@pom: $(HTML_SCRIPT_POM_FILE)
+
+.PHONY: html.script@ossrh-prepare
+html.script@ossrh-prepare: $(HTML_SCRIPT_OSSRH_PREPARE)
+
+#
 # objectos.html.style options
 #
 
@@ -2427,15 +2524,6 @@ WAY_COMPILE_DEPS += $(CSS_JAR_FILE)
 ## way jar name
 WAY_JAR_NAME := $(WAY)
 
-## way JS source
-WAY_JS_SRC = $(WAY)/js/objectos.way.js
-
-## way JS artifact
-WAY_JS_ARTIFACT = $(WAY_CLASS_OUTPUT)/objectos/js/objectos.way.js
-
-## way jar file reqs
-WAY_JAR_FILE_REQS_MORE = $(WAY_JS_ARTIFACT)
-
 ## way test compile-time dependencies
 WAY_TEST_COMPILE_DEPS = $(WAY_COMPILE_DEPS)
 WAY_TEST_COMPILE_DEPS += $(NOTES_CONSOLE_JAR_FILE)
@@ -2487,6 +2575,7 @@ WAY_SUBMODULES += util.map
 WAY_SUBMODULES += html.tmpl
 WAY_SUBMODULES += html
 WAY_SUBMODULES += html.icon
+WAY_SUBMODULES += html.script
 WAY_SUBMODULES += html.style
 WAY_SUBMODULES += css
 WAY_SUBMODULES += http
@@ -2507,6 +2596,7 @@ WAY_OSSRH_BUNDLE_CONTENTS += $(UTIL_MAP_OSSRH_PREPARE)
 WAY_OSSRH_BUNDLE_CONTENTS += $(HTML_TMPL_OSSRH_PREPARE)
 WAY_OSSRH_BUNDLE_CONTENTS += $(HTML_OSSRH_PREPARE)
 WAY_OSSRH_BUNDLE_CONTENTS += $(HTML_ICON_OSSRH_PREPARE)
+WAY_OSSRH_BUNDLE_CONTENTS += $(HTML_SCRIPT_OSSRH_PREPARE)
 WAY_OSSRH_BUNDLE_CONTENTS += $(HTML_STYLE_OSSRH_PREPARE)
 WAY_OSSRH_BUNDLE_CONTENTS += $(CSS_OSSRH_PREPARE)
 WAY_OSSRH_BUNDLE_CONTENTS += $(HTTP_OSSRH_PREPARE)
@@ -2558,10 +2648,6 @@ gh-release: way@gh-release
 .PHONY: way@clean
 way@clean:
 	rm -rf $(WAY_WORK)/*
-
-$(WAY_JS_ARTIFACT): $(WAY_JS_SRC)
-	mkdir --parents $(@D)
-	cp $< $@
 
 .PHONY: way@jar
 way@jar: $(SELFGEN_MARKER) $(WAY_JAR_FILE)

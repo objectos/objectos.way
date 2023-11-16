@@ -20,11 +20,10 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
-import objectos.css.select.IdSelector;
 import objectos.html.BaseTemplateDsl;
 import objectos.html.HtmlComponent;
 import objectos.html.tmpl.Api.Element;
-import objectos.html.tmpl.Api.ExternalAttribute.StyleClass;
+import objectos.html.tmpl.Api.ExternalAttribute;
 import objectos.lang.object.Check;
 
 public final class WayJs extends HtmlComponent {
@@ -77,7 +76,9 @@ public final class WayJs extends HtmlComponent {
 		return dataWayClick(json.toString());
 	}
 
-	public final Command replaceClass(IdSelector id, StyleClass from, StyleClass to) {
+	public final Command replaceClass(ExternalAttribute.Id id,
+																		ExternalAttribute.StyleClass from,
+																		ExternalAttribute.StyleClass to) {
 		Check.notNull(id, "id == null");
 		Check.notNull(from, "from == null");
 		Check.notNull(to, "to == null");

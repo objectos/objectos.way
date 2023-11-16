@@ -6,6 +6,7 @@
 		<project>objectos.code</project>
 		<project>objectos.html</project>
 		<project>objectos.html.icon</project>
+		<project>objectos.html.script</project>
 		<project>objectos.html.tmpl</project>
 		<project>objectos.http</project>
 		<project>objectos.http.server</project>
