@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectox.lang;
+package objectox.lang.classloader;
 
 import java.io.File;
 import java.io.IOException;
@@ -30,13 +30,13 @@ import java.nio.file.WatchService;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.List;
 import java.util.Map;
-import objectos.lang.ClassReloader;
+import objectos.lang.classloader.ClassReloader;
 import objectos.notes.Note1;
 import objectos.notes.Note2;
 import objectos.notes.NoteSink;
 import objectos.util.map.GrowableMap;
 
-public final class ClassReloaderImpl implements objectos.lang.ClassReloader {
+public final class ClassReloaderImpl implements objectos.lang.classloader.ClassReloader {
 
   static final Note2<Path, String> WATCH;
 

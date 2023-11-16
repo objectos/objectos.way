@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectox.lang;
+package objectox.lang.classloader;
 
 import java.io.IOException;
 import java.nio.file.FileSystem;
@@ -21,8 +21,8 @@ import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.WatchService;
-import objectos.lang.ClassReloader;
-import objectos.lang.ClassReloader.Builder;
+import objectos.lang.classloader.ClassReloader;
+import objectos.lang.classloader.ClassReloader.Builder;
 import objectos.lang.object.Check;
 import objectos.notes.NoOpNoteSink;
 import objectos.notes.NoteSink;

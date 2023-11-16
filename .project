@@ -10,6 +10,7 @@
 		<project>objectos.html.tmpl</project>
 		<project>objectos.http</project>
 		<project>objectos.http.server</project>
+		<project>objectos.lang.classloader</project>
 		<project>objectos.lang.object</project>
 		<project>objectos.lang.runtime</project>
 		<project>objectos.notes</project>

@@ -7,25 +7,25 @@
  *
  * Source is available for educational purposes only.
  */
-package objectos.lang;
+package objectos.lang.classloader;
 
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.WatchService;
 import objectos.notes.NoteSink;
-import objectox.lang.ClassReloaderBuilder;
+import objectox.lang.classloader.ClassReloaderBuilder;
 
 /**
  * Reloads an specified class and its dependencies if changes were observed in
  * configured directories.
  */
 public sealed interface ClassReloader
-    extends AutoCloseable permits objectox.lang.ClassReloaderImpl {
+    extends AutoCloseable permits objectox.lang.classloader.ClassReloaderImpl {
 
   /**
    * A builder for {@link ClassReloader} objects.
    */
-  sealed interface Builder permits objectox.lang.ClassReloaderBuilder {
+  sealed interface Builder permits objectox.lang.classloader.ClassReloaderBuilder {
 
     /**
      * Sets the note sink instance.
