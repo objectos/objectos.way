@@ -34,9 +34,7 @@ NOTES_CONSOLE_JAVA_RELEASE = $(JAVA_RELEASE)
 NOTES_CONSOLE_ENABLE_PREVIEW = 0
 
 ## compile deps
-NOTES_CONSOLE_COMPILE_DEPS = $(LANG_OBJECT_JAR_FILE)
-NOTES_CONSOLE_COMPILE_DEPS += $(NOTES_JAR_FILE)
-NOTES_CONSOLE_COMPILE_DEPS += $(NOTES_BASE_JAR_FILE)
+NOTES_CONSOLE_COMPILE_DEPS = $(call module-gav,$(NOTES_BASE))
 
 ## jar name
 NOTES_CONSOLE_JAR_NAME = $(NOTES_CONSOLE)
@@ -70,9 +68,6 @@ NOTES_CONSOLE_DESCRIPTION = NoteSink implementation that writes out notes to the
 #
 
 $(foreach task,$(MODULE_TASKS),$(eval $(call $(task),NOTES_CONSOLE_,notes.console@)))
-
-.PHONY: notes.console@compile
-notes.console@compile: $(NOTES_CONSOLE_COMPILE_MARKER)
 
 .PHONY: notes.console@jar
 notes.console@jar: $(NOTES_CONSOLE_JAR_FILE)

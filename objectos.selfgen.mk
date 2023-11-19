@@ -25,6 +25,8 @@ SELFGEN := objectos.selfgen
 SELFGEN_MODULE := $(SELFGEN)
 
 ## selfgen module version
+SELFGEN_GROUP_ID := $(GROUP_ID)
+SELFGEN_ARTIFACT_ID := $(SELFGEN)
 SELFGEN_VERSION := $(VERSION)
 
 ## selfgen javac --release option
@@ -34,7 +36,7 @@ SELFGEN_JAVA_RELEASE := $(JAVA_RELEASE)
 SELFGEN_ENABLE_PREVIEW := 1
 
 ## selfgen compile deps
-SELFGEN_COMPILE_DEPS = $(CODE_JAR_FILE) 
+SELFGEN_COMPILE_DEPS = $(call module-gav,$(CODE)) 
 
 ## selfgen jar name
 SELFGEN_JAR_NAME := $(SELFGEN)
@@ -64,11 +66,9 @@ SELFGEN_TASKS += COMPILE_TASK
 SELFGEN_TASKS += JAR_TASK
 SELFGEN_TASKS += TEST_COMPILE_TASK
 SELFGEN_TASKS += TEST_RUN_TASK
+SELFGEN_TASKS += INSTALL_TASK
 
 $(foreach task,$(SELFGEN_TASKS),$(eval $(call $(task),SELFGEN_,selfgen@)))
-
-.PHONY: selfgen@compile
-selfgen@compile: $(SELFGEN_COMPILE_MARKER)
 
 .PHONY: selfgen@jar
 selfgen@jar: $(SELFGEN_JAR_FILE)
@@ -77,5 +77,5 @@ selfgen@jar: $(SELFGEN_JAR_FILE)
 selfgen@test: $(SELFGEN_TEST_RUN_MARKER)
 
 ## selfgen runtime deps
-SELFGEN_RUNTIME_DEPS = $(SELFGEN_JAR_FILE)
+SELFGEN_RUNTIME_DEPS  = $(call module-gav,$(SELFGEN))
 SELFGEN_RUNTIME_DEPS += $(SELFGEN_COMPILE_DEPS)

@@ -36,8 +36,8 @@ HTML_TMPL_ENABLE_PREVIEW = 0
 ## marker to indicate when selfgen was last run
 HTML_TMPL_SELFGEN_MARKER = $(HTML_TMPL)/work/selfgen-marker
 
-## make selfgen a req for html compilation
-HTML_TMPL_RESOURCES = $(HTML_TMPL_SELFGEN_MARKER)
+## compilation depends on selfgen
+HTML_TMPL_COMPILE_REQS_MORE = $(HTML_TMPL_SELFGEN_MARKER)
 
 ## jar name
 HTML_TMPL_JAR_NAME = $(HTML_TMPL)
@@ -82,9 +82,6 @@ $(HTML_TMPL_SELFGEN_MARKER): $(SELFGEN_JAR_FILE)
 #
 # objectos.html.tmpl targets
 #
-
-.PHONY: html.tmpl@compile
-html.tmpl@compile: $(HTML_TMPL_SELFGEN_MARKER) $(HTML_TMPL_COMPILE_MARKER)
 
 .PHONY: html.tmpl@jar
 html.tmpl@jar: $(HTML_TMPL_JAR_FILE)

@@ -34,14 +34,14 @@ HTML_JAVA_RELEASE = $(JAVA_RELEASE)
 HTML_ENABLE_PREVIEW = 0
 
 ## compile deps
-HTML_COMPILE_DEPS = $(LANG_OBJECT_JAR_FILE)
-HTML_COMPILE_DEPS += $(UTIL_ARRAY_JAR_FILE)
-HTML_COMPILE_DEPS += $(UTIL_COLLECTION_JAR_FILE)
-HTML_COMPILE_DEPS += $(UTIL_MAP_JAR_FILE)
-HTML_COMPILE_DEPS += $(HTML_TMPL_JAR_FILE)
+HTML_COMPILE_DEPS  = $(call module-gav,$(HTML_TMPL))
+HTML_COMPILE_DEPS += $(call module-gav,$(UTIL_MAP))
 
 ## marker to indicate when selfgen was last run
 HTML_SELFGEN_MARKER = $(HTML)/work/selfgen-marker
+
+## compilation depends on selfgen
+HTML_COMPILE_REQS_MORE = $(HTML_SELFGEN_MARKER)
 
 ## make selfgen a req for html compilation
 HTML_RESOURCES = $(HTML_SELFGEN_MARKER)
@@ -104,9 +104,6 @@ $(HTML_SELFGEN_MARKER): $(SELFGEN_JAR_FILE)
 #
 # objectos.html targets
 #
-
-.PHONY: html@compile
-html@compile: $(HTML_SELFGEN_MARKER) $(HTML_COMPILE_MARKER)
 
 .PHONY: html@jar
 html@jar: $(HTML_JAR_FILE)

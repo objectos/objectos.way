@@ -24,7 +24,9 @@ NOTES = objectos.notes
 ## module
 NOTES_MODULE = $(NOTES)
 
-## module version
+## module coordinates
+NOTES_GROUP_ID = $(GROUP_ID)
+NOTES_ARTIFACT_ID = $(NOTES)
 NOTES_VERSION = $(VERSION)
 
 ## javac --release option
@@ -34,7 +36,7 @@ NOTES_JAVA_RELEASE = $(JAVA_RELEASE)
 NOTES_ENABLE_PREVIEW = 0
 
 ## compile deps
-NOTES_COMPILE_DEPS = $(LANG_OBJECT_JAR_FILE)
+NOTES_COMPILE_DEPS = $(call module-gav,$(LANG_OBJECT))
 
 ## jar name
 NOTES_JAR_NAME = $(NOTES)
@@ -53,10 +55,6 @@ NOTES_TEST_RUNTIME_DEPS += $(call dependency,org.slf4j,slf4j-nop,$(SLF4J_VERSION
 ## test runtime exports
 NOTES_TEST_JAVAX_EXPORTS := objectos.notes.internal
 
-## install coordinates
-NOTES_GROUP_ID = $(GROUP_ID)
-NOTES_ARTIFACT_ID = $(NOTES_MODULE)
-
 ## copyright years for javadoc
 NOTES_COPYRIGHT_YEARS := 2022-2023
 
@@ -71,9 +69,6 @@ NOTES_DESCRIPTION = Type-safe note sink API
 #
 
 $(foreach task,$(MODULE_TASKS),$(eval $(call $(task),NOTES_,notes@)))
-
-.PHONY: notes@compile
-notes@compile: $(NOTES_COMPILE_MARKER)
 
 .PHONY: notes@jar
 notes@jar: $(NOTES_JAR_FILE)

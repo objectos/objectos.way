@@ -24,7 +24,9 @@ LANG_OBJECT = objectos.lang.object
 ## module
 LANG_OBJECT_MODULE = $(LANG_OBJECT)
 
-## module version
+## module coordinates
+LANG_OBJECT_GROUP_ID = $(GROUP_ID)
+LANG_OBJECT_ARTIFACT_ID = $(LANG_OBJECT_MODULE)
 LANG_OBJECT_VERSION = $(VERSION)
 
 ## javac --release option
@@ -32,6 +34,9 @@ LANG_OBJECT_JAVA_RELEASE = $(JAVA_RELEASE)
 
 ## --enable-preview ?
 LANG_OBJECT_ENABLE_PREVIEW = 0
+
+## compile deps
+LANG_OBJECT_COMPILE_DEPS =
 
 ## jar name
 LANG_OBJECT_JAR_NAME = $(LANG_OBJECT)
@@ -45,10 +50,6 @@ LANG_OBJECT_TEST_RUNTIME_DEPS = $(LANG_OBJECT_TEST_COMPILE_DEPS)
 LANG_OBJECT_TEST_RUNTIME_DEPS += $(call dependency,com.beust,jcommander,$(JCOMMANDER_VERSION))
 LANG_OBJECT_TEST_RUNTIME_DEPS += $(call dependency,org.slf4j,slf4j-api,$(SLF4J_VERSION))
 LANG_OBJECT_TEST_RUNTIME_DEPS += $(call dependency,org.slf4j,slf4j-nop,$(SLF4J_VERSION))
-
-## install coordinates
-LANG_OBJECT_GROUP_ID = $(GROUP_ID)
-LANG_OBJECT_ARTIFACT_ID = $(LANG_OBJECT_MODULE)
 
 ## copyright years for javadoc
 LANG_OBJECT_COPYRIGHT_YEARS := 2022-2023
@@ -64,9 +65,6 @@ LANG_OBJECT_DESCRIPTION = Utilities for java.lang.Object instances
 #
 
 $(foreach task,$(MODULE_TASKS),$(eval $(call $(task),LANG_OBJECT_,lang.object@)))
-
-.PHONY: lang.object@compile
-lang.object@compile: $(LANG_OBJECT_COMPILE_MARKER)
 
 .PHONY: lang.object@jar
 lang.object@jar: $(LANG_OBJECT_JAR_FILE)

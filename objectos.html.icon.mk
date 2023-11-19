@@ -34,12 +34,8 @@ HTML_ICON_JAVA_RELEASE = $(JAVA_RELEASE)
 HTML_ICON_ENABLE_PREVIEW = 0
 
 ## compile deps
-HTML_ICON_COMPILE_DEPS = $(LANG_OBJECT_JAR_FILE)
-HTML_ICON_COMPILE_DEPS += $(UTIL_ARRAY_JAR_FILE)
-HTML_ICON_COMPILE_DEPS += $(UTIL_COLLECTION_JAR_FILE)
-HTML_ICON_COMPILE_DEPS += $(UTIL_MAP_JAR_FILE)
-HTML_ICON_COMPILE_DEPS += $(HTML_TMPL_JAR_FILE)
-HTML_ICON_COMPILE_DEPS += $(HTML_JAR_FILE)
+HTML_ICON_COMPILE_DEPS  = $(call module-gav,$(HTML))
+HTML_ICON_COMPILE_DEPS += $(call module-gav,$(UTIL_MAP))
 
 ## jar name
 HTML_ICON_JAR_NAME = $(HTML_ICON)
@@ -65,9 +61,6 @@ $(foreach task,$(HTML_ICON_TASKS),$(eval $(call $(task),HTML_ICON_,html.icon@)))
 #
 # objectos.html.icon targets
 #
-
-.PHONY: html.icon@compile
-html.icon@compile: $(HTML_ICON_COMPILE_MARKER)
 
 .PHONY: html.icon@jar
 html.icon@jar: $(HTML_ICON_JAR_FILE)

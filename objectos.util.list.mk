@@ -34,9 +34,8 @@ UTIL_LIST_JAVA_RELEASE = $(JAVA_RELEASE)
 UTIL_LIST_ENABLE_PREVIEW = 0
 
 ## compile deps
-UTIL_LIST_COMPILE_DEPS = $(LANG_OBJECT_JAR_FILE)
-UTIL_LIST_COMPILE_DEPS += $(UTIL_ARRAY_JAR_FILE)
-UTIL_LIST_COMPILE_DEPS += $(UTIL_COLLECTION_JAR_FILE)
+UTIL_LIST_COMPILE_DEPS  = $(call module-gav,$(UTIL_ARRAY))
+UTIL_LIST_COMPILE_DEPS += $(call module-gav,$(UTIL_COLLECTION))
 
 ## jar name
 UTIL_LIST_JAR_NAME = $(UTIL_LIST)
@@ -70,9 +69,6 @@ UTIL_LIST_DESCRIPTION = Special-purpose java.util.List implementations
 #
 
 $(foreach task,$(MODULE_TASKS),$(eval $(call $(task),UTIL_LIST_,util.list@)))
-
-.PHONY: util.list@compile
-util.list@compile: $(UTIL_LIST_COMPILE_MARKER)
 
 .PHONY: util.list@jar
 util.list@jar: $(UTIL_LIST_JAR_FILE)

@@ -34,7 +34,7 @@ UTIL_COLLECTION_JAVA_RELEASE = $(JAVA_RELEASE)
 UTIL_COLLECTION_ENABLE_PREVIEW = 0
 
 ## compile deps
-UTIL_COLLECTION_COMPILE_DEPS = $(LANG_OBJECT_JAR_FILE)
+UTIL_COLLECTION_COMPILE_DEPS = $(call module-gav,$(LANG_OBJECT))
 
 ## jar name
 UTIL_COLLECTION_JAR_NAME = $(UTIL_COLLECTION)
@@ -68,9 +68,6 @@ UTIL_COLLECTION_DESCRIPTION = Utilities for working with arrays of primitives an
 #
 
 $(foreach task,$(MODULE_TASKS),$(eval $(call $(task),UTIL_COLLECTION_,util.collection@)))
-
-.PHONY: util.collection@compile
-util.collection@compile: $(UTIL_COLLECTION_COMPILE_MARKER)
 
 .PHONY: util.collection@jar
 util.collection@jar: $(UTIL_COLLECTION_JAR_FILE)

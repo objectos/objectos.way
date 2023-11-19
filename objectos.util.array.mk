@@ -34,7 +34,7 @@ UTIL_ARRAY_JAVA_RELEASE = $(JAVA_RELEASE)
 UTIL_ARRAY_ENABLE_PREVIEW = 0
 
 ## compile deps
-UTIL_ARRAY_COMPILE_DEPS = $(LANG_OBJECT_JAR_FILE)
+UTIL_ARRAY_COMPILE_DEPS = $(call module-gav,$(LANG_OBJECT))
 
 ## jar name
 UTIL_ARRAY_JAR_NAME = $(UTIL_ARRAY)
@@ -68,9 +68,6 @@ UTIL_ARRAY_DESCRIPTION = Utilities for working with arrays of primitives and ref
 #
 
 $(foreach task,$(MODULE_TASKS),$(eval $(call $(task),UTIL_ARRAY_,util.array@)))
-
-.PHONY: util.array@compile
-util.array@compile: $(UTIL_ARRAY_COMPILE_MARKER)
 
 .PHONY: util.array@jar
 util.array@jar: $(UTIL_ARRAY_JAR_FILE)

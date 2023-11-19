@@ -34,9 +34,8 @@ UTIL_MAP_JAVA_RELEASE = $(JAVA_RELEASE)
 UTIL_MAP_ENABLE_PREVIEW = 0
 
 ## compile deps
-UTIL_MAP_COMPILE_DEPS = $(LANG_OBJECT_JAR_FILE)
-UTIL_MAP_COMPILE_DEPS += $(UTIL_ARRAY_JAR_FILE)
-UTIL_MAP_COMPILE_DEPS += $(UTIL_COLLECTION_JAR_FILE)
+UTIL_MAP_COMPILE_DEPS  = $(call module-gav,$(UTIL_ARRAY))
+UTIL_MAP_COMPILE_DEPS += $(call module-gav,$(UTIL_COLLECTION))
 
 ## jar name
 UTIL_MAP_JAR_NAME = $(UTIL_MAP)
@@ -70,9 +69,6 @@ UTIL_MAP_DESCRIPTION = Special-purpose java.util.Set implementations
 #
 
 $(foreach task,$(MODULE_TASKS),$(eval $(call $(task),UTIL_MAP_,util.map@)))
-
-.PHONY: util.map@compile
-util.map@compile: $(UTIL_MAP_COMPILE_MARKER)
 
 .PHONY: util.map@jar
 util.map@jar: $(UTIL_MAP_JAR_FILE)

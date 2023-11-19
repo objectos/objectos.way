@@ -34,9 +34,7 @@ NOTES_FILE_JAVA_RELEASE = $(JAVA_RELEASE)
 NOTES_FILE_ENABLE_PREVIEW = 0
 
 ## compile deps
-NOTES_FILE_COMPILE_DEPS = $(LANG_OBJECT_JAR_FILE)
-NOTES_FILE_COMPILE_DEPS += $(NOTES_JAR_FILE)
-NOTES_FILE_COMPILE_DEPS += $(NOTES_BASE_JAR_FILE)
+NOTES_FILE_COMPILE_DEPS = $(call module-gav,$(NOTES_BASE))
 
 ## jar name
 NOTES_FILE_JAR_NAME = $(NOTES_FILE)
@@ -70,9 +68,6 @@ NOTES_FILE_DESCRIPTION = NoteSink implementation that writes out notes to a regu
 #
 
 $(foreach task,$(MODULE_TASKS),$(eval $(call $(task),NOTES_FILE_,notes.file@)))
-
-.PHONY: notes.file@compile
-notes.file@compile: $(NOTES_FILE_COMPILE_MARKER)
 
 .PHONY: notes.file@jar
 notes.file@jar: $(NOTES_FILE_JAR_FILE)

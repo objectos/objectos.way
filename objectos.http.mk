@@ -65,9 +65,6 @@ HTTP_DESCRIPTION = HTTP related types
 
 $(foreach task,$(MODULE_TASKS),$(eval $(call $(task),HTTP_,http@)))
 
-.PHONY: http@compile
-http@compile: $(HTTP_COMPILE_MARKER)
-
 .PHONY: http@jar
 http@jar: $(HTTP_JAR_FILE)
 

@@ -34,13 +34,10 @@ HTTP_SERVER_JAVA_RELEASE = $(JAVA_RELEASE)
 HTTP_SERVER_ENABLE_PREVIEW = 0
 
 ## compile deps
-HTTP_SERVER_COMPILE_DEPS = $(LANG_OBJECT_JAR_FILE)
-HTTP_SERVER_COMPILE_DEPS += $(NOTES_JAR_FILE)
-HTTP_SERVER_COMPILE_DEPS += $(UTIL_ARRAY_JAR_FILE)
-HTTP_SERVER_COMPILE_DEPS += $(UTIL_COLLECTION_JAR_FILE)
-HTTP_SERVER_COMPILE_DEPS += $(UTIL_LIST_JAR_FILE)
-HTTP_SERVER_COMPILE_DEPS += $(UTIL_MAP_JAR_FILE)
-HTTP_SERVER_COMPILE_DEPS += $(HTTP_JAR_FILE)
+HTTP_SERVER_COMPILE_DEPS  = $(call module-gav,$(HTTP))
+HTTP_SERVER_COMPILE_DEPS += $(call module-gav,$(NOTES))
+HTTP_SERVER_COMPILE_DEPS += $(call module-gav,$(UTIL_LIST))
+HTTP_SERVER_COMPILE_DEPS += $(call module-gav,$(UTIL_MAP))
 
 ## jar name
 HTTP_SERVER_JAR_NAME = $(HTTP_SERVER)
@@ -89,29 +86,8 @@ HTTP_SERVER_DESCRIPTION = Utility-first styling for Objectos HTML templates
 $(foreach task,$(MODULE_TASKS),$(eval $(call $(task),HTTP_SERVER_,http.server@)))
 
 #
-# objectos.http.server selfgen
-#
-
-## html selfgen java command
-HTTP_SERVER_SELFGEN_JAVAX = $(JAVA)
-HTTP_SERVER_SELFGEN_JAVAX += --module-path $(call module-path,$(SELFGEN_RUNTIME_DEPS))
-ifeq ($(SELFGEN_ENABLE_PREVIEW), 1)
-HTTP_SERVER_SELFGEN_JAVAX += --enable-preview
-endif
-HTTP_SERVER_SELFGEN_JAVAX += --module $(SELFGEN_MODULE)/$(SELFGEN_MODULE).CssUtilSpec
-HTTP_SERVER_SELFGEN_JAVAX += $(HTTP_SERVER_MAIN)
-
-$(HTTP_SERVER_SELFGEN_MARKER): $(SELFGEN_JAR_FILE)
-	$(HTTP_SERVER_SELFGEN_JAVAX)
-	mkdir --parents $(@D)
-	touch $@
-
-#
 # objectos.http.server targets
 #
-
-.PHONY: http.server@compile
-http.server@compile: $(HTTP_SERVER_SELFGEN_MARKER) $(HTTP_SERVER_COMPILE_MARKER)
 
 .PHONY: http.server@jar
 http.server@jar: $(HTTP_SERVER_JAR_FILE)

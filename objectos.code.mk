@@ -15,7 +15,7 @@
 #
 
 #
-# objectos.code options
+# objectos.code
 #
 
 ## code directory
@@ -24,7 +24,9 @@ CODE = objectos.code
 ## code module
 CODE_MODULE = $(CODE)
 
-## code module version
+## code coordinates
+CODE_GROUP_ID = $(GROUP_ID)
+CODE_ARTIFACT_ID = $(CODE)
 CODE_VERSION = $(VERSION)
 
 ## code javac --release option
@@ -58,11 +60,9 @@ CODE_TASKS += COMPILE_TASK
 CODE_TASKS += JAR_TASK
 CODE_TASKS += TEST_COMPILE_TASK
 CODE_TASKS += TEST_RUN_TASK
+CODE_TASKS += INSTALL_TASK
 
 $(foreach task,$(CODE_TASKS),$(eval $(call $(task),CODE_,code@)))
-
-.PHONY: code@compile
-code@compile: $(CODE_COMPILE_MARKER)
 
 .PHONY: code@jar
 code@jar: $(CODE_JAR_FILE)

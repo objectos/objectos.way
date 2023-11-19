@@ -34,11 +34,13 @@ CSS_JAVA_RELEASE = $(JAVA_RELEASE)
 CSS_ENABLE_PREVIEW = 0
 
 ## compile deps
-CSS_COMPILE_DEPS = $(LANG_OBJECT_JAR_FILE)
-CSS_COMPILE_DEPS += $(UTIL_ARRAY_JAR_FILE)
+CSS_COMPILE_DEPS  = $(call module-gav,$(UTIL_ARRAY))
 
 ## marker to indicate when selfgen was last run
 CSS_SELFGEN_MARKER = $(CSS)/work/selfgen-marker
+
+## compile reqs
+CSS_COMPILE_REQS_MORE = $(CSS_SELFGEN_MARKER)
 
 ## make selfgen a req for html compilation
 CSS_RESOURCES = $(CSS_SELFGEN_MARKER)
@@ -97,9 +99,6 @@ $(CSS_SELFGEN_MARKER): $(SELFGEN_JAR_FILE)
 #
 # objectos.css targets
 #
-
-.PHONY: css@compile
-css@compile: $(CSS_SELFGEN_MARKER) $(CSS_COMPILE_MARKER)
 
 .PHONY: css@jar
 css@jar: $(CSS_JAR_FILE)

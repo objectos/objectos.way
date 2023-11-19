@@ -34,8 +34,7 @@ NOTES_BASE_JAVA_RELEASE = $(JAVA_RELEASE)
 NOTES_BASE_ENABLE_PREVIEW = 0
 
 ## compile deps
-NOTES_BASE_COMPILE_DEPS = $(LANG_OBJECT_JAR_FILE)
-NOTES_BASE_COMPILE_DEPS += $(NOTES_JAR_FILE)
+NOTES_BASE_COMPILE_DEPS = $(call module-gav,$(NOTES))
 
 ## jar name
 NOTES_BASE_JAR_NAME = $(NOTES_BASE)
@@ -69,9 +68,6 @@ NOTES_BASE_DESCRIPTION = Base classes to write note sink implementations
 #
 
 $(foreach task,$(MODULE_TASKS),$(eval $(call $(task),NOTES_BASE_,notes.base@)))
-
-.PHONY: notes.base@compile
-notes.base@compile: $(NOTES_BASE_COMPILE_MARKER)
 
 .PHONY: notes.base@jar
 notes.base@jar: $(NOTES_BASE_JAR_FILE)

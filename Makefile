@@ -37,6 +37,9 @@ JAVA_RELEASE := 21
 # Delete the default suffixes
 .SUFFIXES:
 
+## local objectos dir
+OBJECTOS_DIR = .objectos
+
 #
 # Default target
 #
@@ -90,6 +93,9 @@ JQ := jq
 ## sed common options
 SED := sed
 
+## tr common options
+TR := tr
+
 #
 # Dependencies related options & functions
 #
@@ -108,8 +114,11 @@ REMOTE_REPO_CURLX += --create-dirs
 ## 
 ## syntax:
 ## $(call dependency,[GROUP_ID],[ARTIFACT_ID],[VERSION])
+colon := :
 dot := .
 solidus := /
+
+mk-dependency = $(subst $(dot),$(solidus),$(1))/$(2)/$(3)/$(2)-$(3).jar
 
 dependency = $(LOCAL_REPO_PATH)/$(subst $(dot),$(solidus),$(1))/$(2)/$(3)/$(2)-$(3).jar
 
@@ -134,6 +143,30 @@ class-path = $(subst $(space),$(CLASS_PATH_SEPARATOR),$(1))
 MODULE_PATH_SEPARATOR := :
 
 module-path = $(subst $(space),$(MODULE_PATH_SEPARATOR),$(1))
+
+ifndef OBJECTOS_DIR
+$(error The variable OBJECTOS_DIR was not defined)
+endif
+
+## to-resolutions
+
+mk-resolution = $(OBJECTOS_DIR)/resolution/$(1)
+
+to-resolutions = $(foreach dep,$(1),$(call mk-resolution,$(dep)))
+
+## to-resolved-jar
+
+word-solidus = $(word $(2), $(subst $(solidus),$(space),$(1)))
+
+mk-resolved-jar = $(call mk-dependency,$(call word-solidus,$(1),1),$(call word-solidus,$(1),2),$(call word-solidus,$(1),3))
+
+to-resolved-jar = $(foreach dep,$(1),$(call to-resolutions,$(dep)))
+
+## to-jars
+
+to-jars-paths = $(foreach res,$(call to-resolutions,$(1)),$(file < $(res)))
+
+to-jars = $(foreach jar,$(call to-jars-paths,$(1)),$(LOCAL_REPO_PATH)/$(jar))
 
 #
 # Gets the dependency from the remote repository
@@ -187,8 +220,14 @@ $(1)CLASSES = $$($(1)SOURCES:$$($(1)MAIN)/%.java=$$($(1)CLASS_OUTPUT)/%.class)
 ## compile-time dependencies
 # $(1)COMPILE_DEPS = 
 
+## compile-time required resolutions
+$(1)COMPILE_RESOLUTIONS = $$(call to-resolutions,$$($(1)COMPILE_DEPS))
+
+## compile-time required jars
+$(1)COMPILE_JARS = $$(call to-jars,$$($(1)COMPILE_DEPS))
+
 ## compile-time module-path
-$(1)COMPILE_MODULE_PATH = $$(call module-path,$$($(1)COMPILE_DEPS))
+$(1)COMPILE_MODULE_PATH = $$(call module-path,$$($(1)COMPILE_JARS))
  
 ## javac command
 $(1)JAVACX = $$(JAVAC)
@@ -199,7 +238,7 @@ $(1)JAVACX += -Xpkginfo:always
 ifeq ($$($(1)ENABLE_PREVIEW),1)
 $(1)JAVACX += --enable-preview
 endif
-ifneq ($$($(1)COMPILE_MODULE_PATH),)
+ifneq ($$($(1)COMPILE_DEPS),)
 $(1)JAVACX += --module-path $$($(1)COMPILE_MODULE_PATH)
 endif
 $(1)JAVACX += --module-version $$($(1)VERSION)
@@ -212,18 +251,62 @@ $(1)JAVACX += $$($(1)DIRTY)
 ## compilation marker
 $(1)COMPILE_MARKER = $$($(1)WORK)/compile-marker
 
+## compilation requirements
+$(1)COMPILE_REQS  = $$($(1)COMPILE_RESOLUTIONS)
+$(1)COMPILE_REQS += $$($(1)CLASSES)
+ifdef $(1)RESOURCES
+$(1)COMPILE_REQS += $$($(1)RESOURCES)
+endif
+ifdef $(1)COMPILE_REQS_MORE
+$(1)COMPILE_REQS += $$($(1)COMPILE_REQS_MORE)
+endif
+
 #
 # compilation targets
 #
 
-$$($(1)COMPILE_MARKER): $$($(1)COMPILE_DEPS) $$($(1)CLASSES) $$($(1)RESOURCES)
+.PHONY: $(2)compile
+$(2)compile: $$($(1)COMPILE_MARKER)
+
+.PHONY: $(2)compile-jars
+$(2)compile-jars: $$($(1)COMPILE_JARS)
+
+$$($(1)COMPILE_MARKER): $$($(1)COMPILE_REQS)
 	if [ -n "$$($(1)DIRTY)" ]; then \
+		$(MAKE) $(2)compile-jars; \
 		$$($(1)JAVACX); \
 	fi
 	touch $$@
 
 $$($(1)CLASSES): $$($(1)CLASS_OUTPUT)/%.class: $$($(1)MAIN)/%.java
 	$$(eval $(1)DIRTY += $$$$<)
+
+#
+# compilation deps generation
+#
+
+## project or global objectos dir
+ifndef OBJECTOS_DIR
+$$(error The variable OBJECTOS_DIR was not defined)
+endif
+
+## resolution cache file
+$(1)RESOLUTION = $$(OBJECTOS_DIR)/resolution/$$($(1)GROUP_ID)/$$($(1)ARTIFACT_ID)/$$($(1)VERSION)
+
+## resolution cache file reqs
+ifndef $(1)RESOLUTION_REQS
+$(1)RESOLUTION_REQS = $$($(1)MODULE).mk
+endif
+
+$(1)RESOLUTION_DEPS  = $$($(1)GROUP_ID)/$$($(1)ARTIFACT_ID)/$$($(1)VERSION)
+$(1)RESOLUTION_DEPS += $$($(1)COMPILE_DEPS)
+
+$(1)RESOLUTION_JARS  = $$(call mk-dependency,$$($(1)GROUP_ID),$$($(1)ARTIFACT_ID),$$($(1)VERSION))
+$(1)RESOLUTION_JARS += $$(call to-jars-paths,$$($(1)COMPILE_DEPS))
+
+$$($(1)RESOLUTION): $$($(1)RESOLUTION_REQS)
+	mkdir --parents $$(@D)
+	echo "$$(sort $$($(1)RESOLUTION_JARS))" | $(TR) ' ' '\n' >> $$($(1)RESOLUTION)
 
 endef
 
@@ -623,6 +706,12 @@ MODULE_TASKS += OSSRH_PREPARE_TASK
 TEST_TASKS  = TEST_COMPILE_TASK
 TEST_TASKS += TEST_RUN_TASK
 
+## @ names
+AT_MODULES = $(foreach mod,$(MODULES),$(subst objectos.,,$(mod)))
+
+## generate module gav
+module-gav = $(GROUP_ID)/$(1)/$(VERSION)
+
 ## include each modules's makefile
 
 include $(foreach mod,$(MODULES),$(mod).mk)
@@ -747,7 +836,7 @@ WAY_OSSRH_BUNDLE_CONTENTS += $(WAY_OSSRH_PREPARE)
 # objectos.way targets
 #
 
-$(foreach task,$(MODULE_TASKS),$(eval $(call $(task),WAY_)))
+$(foreach task,$(MODULE_TASKS),$(eval $(call $(task),WAY_,way@)))
 $(eval $(call OSSRH_BUNDLE_TASK,WAY_))
 
 #
@@ -756,6 +845,9 @@ $(eval $(call OSSRH_BUNDLE_TASK,WAY_))
 
 .PHONY: clean
 clean: $(foreach mod,$(WAY_SUBMODULES),$(mod)@clean) code@clean selfgen@clean way@clean 
+
+.PHONY: compile
+compile: $(foreach mod,$(AT_MODULES),$(mod)@compile)
 
 .PHONY: test
 test: $(foreach mod,$(WAY_SUBMODULES),$(mod)@test) code@test selfgen@test way@test
@@ -783,10 +875,6 @@ ossrh: way@ossrh
 
 .PHONY: gh-release
 gh-release: way@gh-release
-
-.PHONY: way@clean
-way@clean:
-	rm -rf $(WAY_WORK)/*
 
 .PHONY: way@jar
 way@jar: $(WAY_JAR_FILE)
