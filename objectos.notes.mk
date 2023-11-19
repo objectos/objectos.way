@@ -70,11 +70,7 @@ NOTES_DESCRIPTION = Type-safe note sink API
 # objectos.notes targets
 #
 
-$(foreach task,$(MODULE_TASKS),$(eval $(call $(task),NOTES_)))
-
-.PHONY: notes@clean
-notes@clean:
-	rm -rf $(NOTES_WORK)/*
+$(foreach task,$(MODULE_TASKS),$(eval $(call $(task),NOTES_,notes@)))
 
 .PHONY: notes@compile
 notes@compile: $(NOTES_COMPILE_MARKER)

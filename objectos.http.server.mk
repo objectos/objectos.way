@@ -86,7 +86,7 @@ HTTP_SERVER_DESCRIPTION = Utility-first styling for Objectos HTML templates
 # eval tasks
 #
 
-$(foreach task,$(MODULE_TASKS),$(eval $(call $(task),HTTP_SERVER_)))
+$(foreach task,$(MODULE_TASKS),$(eval $(call $(task),HTTP_SERVER_,http.server@)))
 
 #
 # objectos.http.server selfgen
@@ -109,10 +109,6 @@ $(HTTP_SERVER_SELFGEN_MARKER): $(SELFGEN_JAR_FILE)
 #
 # objectos.http.server targets
 #
-
-.PHONY: http.server@clean
-http.server@clean:
-	rm -rf $(HTTP_SERVER_WORK)/*
 
 .PHONY: http.server@compile
 http.server@compile: $(HTTP_SERVER_SELFGEN_MARKER) $(HTTP_SERVER_COMPILE_MARKER)

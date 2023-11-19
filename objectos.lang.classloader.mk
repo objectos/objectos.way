@@ -83,15 +83,11 @@ LANG_CLASSLOADER_DESCRIPTION = Utilities for java.lang.ClassLoader
 # eval tasks
 #
 
-$(foreach task,$(MODULE_TASKS),$(eval $(call $(task),LANG_CLASSLOADER_)))
+$(foreach task,$(MODULE_TASKS),$(eval $(call $(task),LANG_CLASSLOADER_,lang.classloader@)))
 
 #
 # objectos.lang.classloader targets
 #
-
-.PHONY: lang.classloader@clean
-lang.classloader@clean:
-	rm -rf $(LANG_CLASSLOADER_WORK)/*
 
 .PHONY: lang.classloader@compile
 lang.classloader@compile: $(LANG_CLASSLOADER_SELFGEN_MARKER) $(LANG_CLASSLOADER_COMPILE_MARKER)

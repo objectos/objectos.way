@@ -69,7 +69,7 @@ HTML_SCRIPT_DESCRIPTION = Defines the types of the Objectos HTML domain specific
 
 HTML_SCRIPT_TASKS = $(filter-out $(TEST_TASKS), $(MODULE_TASKS))
 
-$(foreach task,$(HTML_SCRIPT_TASKS),$(eval $(call $(task),HTML_SCRIPT_)))
+$(foreach task,$(HTML_SCRIPT_TASKS),$(eval $(call $(task),HTML_SCRIPT_,html.script@)))
 
 #
 # JS targets
@@ -82,10 +82,6 @@ $(HTML_SCRIPT_JS_ARTIFACT): $(HTML_SCRIPT_JS_SRC)
 #
 # objectos.html.script targets
 #
-
-.PHONY: html.script@clean
-html.script@clean:
-	rm -rf $(HTML_SCRIPT_WORK)/*
 
 .PHONY: html.script@compile
 html.script@compile: $(HTML_SCRIPT_COMPILE_MARKER)

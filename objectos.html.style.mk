@@ -91,7 +91,7 @@ HTML_STYLE_DESCRIPTION = Utility-first styling for Objectos HTML templates
 # eval tasks
 #
 
-$(foreach task,$(MODULE_TASKS),$(eval $(call $(task),HTML_STYLE_)))
+$(foreach task,$(MODULE_TASKS),$(eval $(call $(task),HTML_STYLE_,html.style@)))
 
 #
 # objectos.html.style selfgen
@@ -114,10 +114,6 @@ $(HTML_STYLE_SELFGEN_MARKER): $(SELFGEN_JAR_FILE)
 #
 # objectos.html.style targets
 #
-
-.PHONY: html.style@clean
-html.style@clean:
-	rm -rf $(HTML_STYLE_WORK)/*
 
 .PHONY: html.style@compile
 html.style@compile: $(HTML_STYLE_SELFGEN_MARKER) $(HTML_STYLE_COMPILE_MARKER)

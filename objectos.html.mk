@@ -80,7 +80,7 @@ HTML_DESCRIPTION = Generate HTML using pure Java
 # eval tasks
 #
 
-$(foreach task,$(MODULE_TASKS),$(eval $(call $(task),HTML_)))
+$(foreach task,$(MODULE_TASKS),$(eval $(call $(task),HTML_,html@)))
 
 #
 # objectos.html selfgen
@@ -104,10 +104,6 @@ $(HTML_SELFGEN_MARKER): $(SELFGEN_JAR_FILE)
 #
 # objectos.html targets
 #
-
-.PHONY: html@clean
-html@clean:
-	rm -rf $(HTML_WORK)/*
 
 .PHONY: html@compile
 html@compile: $(HTML_SELFGEN_MARKER) $(HTML_COMPILE_MARKER)

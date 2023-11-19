@@ -69,11 +69,7 @@ NOTES_FILE_DESCRIPTION = NoteSink implementation that writes out notes to a regu
 # objectos.notes targets
 #
 
-$(foreach task,$(MODULE_TASKS),$(eval $(call $(task),NOTES_FILE_)))
-
-.PHONY: notes.file@clean
-notes.file@clean:
-	rm -rf $(NOTES_FILE_WORK)/*
+$(foreach task,$(MODULE_TASKS),$(eval $(call $(task),NOTES_FILE_,notes.file@)))
 
 .PHONY: notes.file@compile
 notes.file@compile: $(NOTES_FILE_COMPILE_MARKER)

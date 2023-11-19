@@ -68,11 +68,7 @@ NOTES_BASE_DESCRIPTION = Base classes to write note sink implementations
 # objectos.notes targets
 #
 
-$(foreach task,$(MODULE_TASKS),$(eval $(call $(task),NOTES_BASE_)))
-
-.PHONY: notes.base@clean
-notes.base@clean:
-	rm -rf $(NOTES_BASE_WORK)/*
+$(foreach task,$(MODULE_TASKS),$(eval $(call $(task),NOTES_BASE_,notes.base@)))
 
 .PHONY: notes.base@compile
 notes.base@compile: $(NOTES_BASE_COMPILE_MARKER)

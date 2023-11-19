@@ -69,11 +69,7 @@ UTIL_MAP_DESCRIPTION = Special-purpose java.util.Set implementations
 # objectos.util.map targets
 #
 
-$(foreach task,$(MODULE_TASKS),$(eval $(call $(task),UTIL_MAP_)))
-
-.PHONY: util.map@clean
-util.map@clean:
-	rm -rf $(UTIL_MAP_WORK)/*
+$(foreach task,$(MODULE_TASKS),$(eval $(call $(task),UTIL_MAP_,util.map@)))
 
 .PHONY: util.map@compile
 util.map@compile: $(UTIL_MAP_COMPILE_MARKER)

@@ -69,11 +69,7 @@ UTIL_SET_DESCRIPTION = Special-purpose java.util.Set implementations
 # objectos.util.set targets
 #
 
-$(foreach task,$(MODULE_TASKS),$(eval $(call $(task),UTIL_SET_)))
-
-.PHONY: util.set@clean
-util.set@clean:
-	rm -rf $(UTIL_SET_WORK)/*
+$(foreach task,$(MODULE_TASKS),$(eval $(call $(task),UTIL_SET_,util.set@)))
 
 .PHONY: util.set@compile
 util.set@compile: $(UTIL_SET_COMPILE_MARKER)

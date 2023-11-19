@@ -58,7 +58,7 @@ HTML_TMPL_DESCRIPTION = Defines the types of the Objectos HTML domain specific l
 
 HTML_TMPL_TASKS = $(filter-out $(TEST_TASKS), $(MODULE_TASKS))
 
-$(foreach task,$(HTML_TMPL_TASKS),$(eval $(call $(task),HTML_TMPL_)))
+$(foreach task,$(HTML_TMPL_TASKS),$(eval $(call $(task),HTML_TMPL_,html.tmpl@)))
 
 #
 # objectos.html.tmpl selfgen
@@ -82,10 +82,6 @@ $(HTML_TMPL_SELFGEN_MARKER): $(SELFGEN_JAR_FILE)
 #
 # objectos.html.tmpl targets
 #
-
-.PHONY: html.tmpl@clean
-html.tmpl@clean:
-	rm -rf $(HTML_TMPL_WORK)/*
 
 .PHONY: html.tmpl@compile
 html.tmpl@compile: $(HTML_TMPL_SELFGEN_MARKER) $(HTML_TMPL_COMPILE_MARKER)

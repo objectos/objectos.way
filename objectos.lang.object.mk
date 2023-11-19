@@ -63,11 +63,7 @@ LANG_OBJECT_DESCRIPTION = Utilities for java.lang.Object instances
 # objectos.lang.object targets
 #
 
-$(foreach task,$(MODULE_TASKS),$(eval $(call $(task),LANG_OBJECT_)))
-
-.PHONY: lang.object@clean
-lang.object@clean:
-	rm -rf $(LANG_OBJECT_WORK)/*
+$(foreach task,$(MODULE_TASKS),$(eval $(call $(task),LANG_OBJECT_,lang.object@)))
 
 .PHONY: lang.object@compile
 lang.object@compile: $(LANG_OBJECT_COMPILE_MARKER)

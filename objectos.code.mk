@@ -53,16 +53,13 @@ CODE_TEST_JAVAX_EXPORTS := objectos.code.internal
 # objectos.code targets
 #
 
-CODE_TASKS = COMPILE_TASK
+CODE_TASKS  = CLEAN_TASK
+CODE_TASKS += COMPILE_TASK
 CODE_TASKS += JAR_TASK
 CODE_TASKS += TEST_COMPILE_TASK
 CODE_TASKS += TEST_RUN_TASK
 
-$(foreach task,$(CODE_TASKS),$(eval $(call $(task),CODE_)))
-
-.PHONY: code@clean
-code@clean:
-	rm -rf $(CODE_WORK)/*
+$(foreach task,$(CODE_TASKS),$(eval $(call $(task),CODE_,code@)))
 
 .PHONY: code@compile
 code@compile: $(CODE_COMPILE_MARKER)

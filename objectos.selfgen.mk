@@ -59,16 +59,13 @@ SELFGEN_TEST_JAVAX_EXPORTS += selfgen.css.util
 # objectos.selfgen targets
 #
 
-SELFGEN_TASKS = COMPILE_TASK
+SELFGEN_TASKS  = CLEAN_TASK
+SELFGEN_TASKS += COMPILE_TASK
 SELFGEN_TASKS += JAR_TASK
 SELFGEN_TASKS += TEST_COMPILE_TASK
 SELFGEN_TASKS += TEST_RUN_TASK
 
-$(foreach task,$(SELFGEN_TASKS),$(eval $(call $(task),SELFGEN_)))
-
-.PHONY: selfgen@clean
-selfgen@clean:
-	rm -rf $(SELFGEN_WORK)/*
+$(foreach task,$(SELFGEN_TASKS),$(eval $(call $(task),SELFGEN_,selfgen@)))
 
 .PHONY: selfgen@compile
 selfgen@compile: $(SELFGEN_COMPILE_MARKER)

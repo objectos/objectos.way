@@ -67,11 +67,7 @@ UTIL_ARRAY_DESCRIPTION = Utilities for working with arrays of primitives and ref
 # objectos.util.array targets
 #
 
-$(foreach task,$(MODULE_TASKS),$(eval $(call $(task),UTIL_ARRAY_)))
-
-.PHONY: util.array@clean
-util.array@clean:
-	rm -rf $(UTIL_ARRAY_WORK)/*
+$(foreach task,$(MODULE_TASKS),$(eval $(call $(task),UTIL_ARRAY_,util.array@)))
 
 .PHONY: util.array@compile
 util.array@compile: $(UTIL_ARRAY_COMPILE_MARKER)

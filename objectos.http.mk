@@ -63,11 +63,7 @@ HTTP_DESCRIPTION = HTTP related types
 # objectos.http targets
 #
 
-$(foreach task,$(MODULE_TASKS),$(eval $(call $(task),HTTP_)))
-
-.PHONY: http@clean
-http@clean:
-	rm -rf $(HTTP_WORK)/*
+$(foreach task,$(MODULE_TASKS),$(eval $(call $(task),HTTP_,http@)))
 
 .PHONY: http@compile
 http@compile: $(HTTP_COMPILE_MARKER)

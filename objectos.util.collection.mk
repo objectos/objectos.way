@@ -67,11 +67,7 @@ UTIL_COLLECTION_DESCRIPTION = Utilities for working with arrays of primitives an
 # objectos.util.collection targets
 #
 
-$(foreach task,$(MODULE_TASKS),$(eval $(call $(task),UTIL_COLLECTION_)))
-
-.PHONY: util.collection@clean
-util.collection@clean:
-	rm -rf $(UTIL_COLLECTION_WORK)/*
+$(foreach task,$(MODULE_TASKS),$(eval $(call $(task),UTIL_COLLECTION_,util.collection@)))
 
 .PHONY: util.collection@compile
 util.collection@compile: $(UTIL_COLLECTION_COMPILE_MARKER)

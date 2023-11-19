@@ -74,11 +74,7 @@ LANG_RUNTIME_DESCRIPTION = Utilities for the java.lang.Runtime class
 # objectos.lang.runtime targets
 #
 
-$(foreach task,$(MODULE_TASKS),$(eval $(call $(task),LANG_RUNTIME_)))
-
-.PHONY: lang.runtime@clean
-lang.runtime@clean:
-	rm -rf $(LANG_RUNTIME_WORK)/*
+$(foreach task,$(MODULE_TASKS),$(eval $(call $(task),LANG_RUNTIME_,lang.runtime@)))
 
 .PHONY: lang.runtime@compile
 lang.runtime@compile: $(LANG_RUNTIME_COMPILE_MARKER)

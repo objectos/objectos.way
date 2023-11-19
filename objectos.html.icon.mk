@@ -60,15 +60,11 @@ HTML_ICON_DESCRIPTION = Defines the types of the Objectos HTML domain specific l
 
 HTML_ICON_TASKS = $(filter-out $(TEST_TASKS), $(MODULE_TASKS))
 
-$(foreach task,$(HTML_ICON_TASKS),$(eval $(call $(task),HTML_ICON_)))
+$(foreach task,$(HTML_ICON_TASKS),$(eval $(call $(task),HTML_ICON_,html.icon@)))
 
 #
 # objectos.html.icon targets
 #
-
-.PHONY: html.icon@clean
-html.icon@clean:
-	rm -rf $(HTML_ICON_WORK)/*
 
 .PHONY: html.icon@compile
 html.icon@compile: $(HTML_ICON_COMPILE_MARKER)

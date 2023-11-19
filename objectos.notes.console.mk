@@ -69,11 +69,7 @@ NOTES_CONSOLE_DESCRIPTION = NoteSink implementation that writes out notes to the
 # objectos.notes targets
 #
 
-$(foreach task,$(MODULE_TASKS),$(eval $(call $(task),NOTES_CONSOLE_)))
-
-.PHONY: notes.console@clean
-notes.console@clean:
-	rm -rf $(NOTES_CONSOLE_WORK)/*
+$(foreach task,$(MODULE_TASKS),$(eval $(call $(task),NOTES_CONSOLE_,notes.console@)))
 
 .PHONY: notes.console@compile
 notes.console@compile: $(NOTES_CONSOLE_COMPILE_MARKER)

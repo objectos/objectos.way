@@ -69,11 +69,7 @@ UTIL_LIST_DESCRIPTION = Special-purpose java.util.List implementations
 # objectos.util.list targets
 #
 
-$(foreach task,$(MODULE_TASKS),$(eval $(call $(task),UTIL_LIST_)))
-
-.PHONY: util.list@clean
-util.list@clean:
-	rm -rf $(UTIL_LIST_WORK)/*
+$(foreach task,$(MODULE_TASKS),$(eval $(call $(task),UTIL_LIST_,util.list@)))
 
 .PHONY: util.list@compile
 util.list@compile: $(UTIL_LIST_COMPILE_MARKER)

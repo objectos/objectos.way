@@ -74,7 +74,7 @@ CSS_DESCRIPTION = Generate CSS using pure Java
 # eval tasks
 #
 
-$(foreach task,$(MODULE_TASKS),$(eval $(call $(task),CSS_)))
+$(foreach task,$(MODULE_TASKS),$(eval $(call $(task),CSS_,css@)))
 
 #
 # objectos.css selfgen
@@ -97,10 +97,6 @@ $(CSS_SELFGEN_MARKER): $(SELFGEN_JAR_FILE)
 #
 # objectos.css targets
 #
-
-.PHONY: css@clean
-css@clean:
-	rm -rf $(CSS_WORK)/*
 
 .PHONY: css@compile
 css@compile: $(CSS_SELFGEN_MARKER) $(CSS_COMPILE_MARKER)

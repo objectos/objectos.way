@@ -74,6 +74,9 @@ JAR := $(JAVA_HOME_BIN)/jar
 ## javadoc command
 JAVADOC := $(JAVA_HOME_BIN)/javadoc
 
+## cat common options
+CAT := cat
+
 ## curl common options
 CURL := curl
 CURL += --fail
@@ -140,6 +143,27 @@ $(LOCAL_REPO_PATH)/%.jar:
 	$(REMOTE_REPO_CURLX) --output $@ $(@:$(LOCAL_REPO_PATH)/%.jar=$(REMOTE_REPO_URL)/%.jar)
 
 #
+# clean task
+#
+
+define CLEAN_TASK
+
+## work dir
+$(1)WORK = $$($(1)MODULE)/work
+
+## targets
+
+.PHONY: $(2)clean
+$(2)clean:
+ifneq ($$($(1)WORK),)
+	rm -rf $$($(1)WORK)/*
+else
+	@echo "Cannot clean: $(1)WORK was not defined!"
+endif
+	
+endef
+
+#
 # compilation options
 #
 
@@ -153,9 +177,6 @@ $(1)SOURCES = $$(shell find $${$(1)MAIN} -type f -name '*.java' -print)
 
 ## source files modified since last compilation
 $(1)DIRTY :=
-
-## work dir
-$(1)WORK = $$($(1)MODULE)/work
 
 ## class output path
 $(1)CLASS_OUTPUT = $$($(1)WORK)/main
@@ -587,7 +608,8 @@ MODULES += objectos.lang.classloader
 MODULES += objectos.lang.runtime
 
 ## common module tasks
-MODULE_TASKS = COMPILE_TASK
+MODULE_TASKS  = CLEAN_TASK
+MODULE_TASKS += COMPILE_TASK
 MODULE_TASKS += JAR_TASK
 MODULE_TASKS += TEST_COMPILE_TASK
 MODULE_TASKS += TEST_RUN_TASK
@@ -598,7 +620,7 @@ MODULE_TASKS += POM_TASK
 MODULE_TASKS += OSSRH_PREPARE_TASK
 
 ## test-related tasks
-TEST_TASKS = TEST_COMPILE_TASK
+TEST_TASKS  = TEST_COMPILE_TASK
 TEST_TASKS += TEST_RUN_TASK
 
 ## include each modules's makefile
