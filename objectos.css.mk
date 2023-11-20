@@ -95,9 +95,6 @@ $(CSS_SELFGEN_MARKER): $(SELFGEN_RUNTIME_JARS)
 # objectos.css targets
 #
 
-.PHONY: css@test
-css@test: $(CSS_TEST_RUN_MARKER)
-
 .PHONY: css@install
 css@install: $(CSS_INSTALL)
 

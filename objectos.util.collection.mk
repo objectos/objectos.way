@@ -62,9 +62,6 @@ UTIL_COLLECTION_DESCRIPTION = Utilities for working with arrays of primitives an
 
 $(foreach task,$(MODULE_TASKS),$(eval $(call $(task),UTIL_COLLECTION_,util.collection@)))
 
-.PHONY: util.collection@test
-util.collection@test: $(UTIL_COLLECTION_TEST_RUN_MARKER)
-
 .PHONY: util.collection@install
 util.collection@install: $(UTIL_COLLECTION_INSTALL)
 

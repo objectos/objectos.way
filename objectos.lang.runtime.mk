@@ -66,9 +66,6 @@ LANG_RUNTIME_DESCRIPTION = Utilities for the java.lang.Runtime class
 
 $(foreach task,$(MODULE_TASKS),$(eval $(call $(task),LANG_RUNTIME_,lang.runtime@)))
 
-.PHONY: lang.runtime@test
-lang.runtime@test: $(LANG_RUNTIME_TEST_RUN_MARKER)
-
 .PHONY: lang.runtime@install
 lang.runtime@install: $(LANG_RUNTIME_INSTALL)
 

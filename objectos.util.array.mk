@@ -62,9 +62,6 @@ UTIL_ARRAY_DESCRIPTION = Utilities for working with arrays of primitives and ref
 
 $(foreach task,$(MODULE_TASKS),$(eval $(call $(task),UTIL_ARRAY_,util.array@)))
 
-.PHONY: util.array@test
-util.array@test: $(UTIL_ARRAY_TEST_RUN_MARKER)
-
 .PHONY: util.array@install
 util.array@install: $(UTIL_ARRAY_INSTALL)
 

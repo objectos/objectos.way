@@ -80,9 +80,6 @@ $(foreach task,$(MODULE_TASKS),$(eval $(call $(task),HTTP_SERVER_,http.server@))
 # objectos.http.server targets
 #
 
-.PHONY: http.server@test
-http.server@test: $(HTTP_SERVER_TEST_RUN_MARKER)
-
 .PHONY: http.server@install
 http.server@install: $(HTTP_SERVER_INSTALL)
 

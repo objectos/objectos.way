@@ -60,9 +60,6 @@ HTTP_DESCRIPTION = HTTP related types
 
 $(foreach task,$(MODULE_TASKS),$(eval $(call $(task),HTTP_,http@)))
 
-.PHONY: http@test
-http@test: $(HTTP_TEST_RUN_MARKER)
-
 .PHONY: http@install
 http@install: $(HTTP_INSTALL)
 

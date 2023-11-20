@@ -65,9 +65,6 @@ NOTES_DESCRIPTION = Type-safe note sink API
 
 $(foreach task,$(MODULE_TASKS),$(eval $(call $(task),NOTES_,notes@)))
 
-.PHONY: notes@test
-notes@test: $(NOTES_TEST_RUN_MARKER)
-
 .PHONY: notes@install
 notes@install: $(NOTES_INSTALL)
 

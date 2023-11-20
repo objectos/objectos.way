@@ -98,9 +98,6 @@ $(HTML_SELFGEN_MARKER): $(SELFGEN_JAR_FILE)
 # objectos.html targets
 #
 
-.PHONY: html@test
-html@test: $(HTML_TEST_RUN_MARKER)
-
 .PHONY: html@install
 html@install: $(HTML_INSTALL)
 

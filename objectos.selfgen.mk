@@ -65,9 +65,6 @@ SELFGEN_TASKS += INSTALL_TASK
 
 $(foreach task,$(SELFGEN_TASKS),$(eval $(call $(task),SELFGEN_,selfgen@)))
 
-.PHONY: selfgen@test
-selfgen@test: $(SELFGEN_TEST_RUN_MARKER)
-
 #
 # objectos.selfgen runtime stuff
 #

@@ -62,9 +62,6 @@ NOTES_CONSOLE_DESCRIPTION = NoteSink implementation that writes out notes to the
 
 $(foreach task,$(MODULE_TASKS),$(eval $(call $(task),NOTES_CONSOLE_,notes.console@)))
 
-.PHONY: notes.console@test
-notes.console@test: $(NOTES_CONSOLE_TEST_RUN_MARKER)
-
 .PHONY: notes.console@install
 notes.console@install: $(NOTES_CONSOLE_INSTALL)
 

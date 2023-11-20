@@ -63,9 +63,6 @@ UTIL_SET_DESCRIPTION = Special-purpose java.util.Set implementations
 
 $(foreach task,$(MODULE_TASKS),$(eval $(call $(task),UTIL_SET_,util.set@)))
 
-.PHONY: util.set@test
-util.set@test: $(UTIL_SET_TEST_RUN_MARKER)
-
 .PHONY: util.set@install
 util.set@install: $(UTIL_SET_INSTALL)
 
