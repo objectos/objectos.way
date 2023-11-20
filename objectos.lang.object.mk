@@ -38,9 +38,6 @@ LANG_OBJECT_ENABLE_PREVIEW = 0
 ## compile deps
 LANG_OBJECT_COMPILE_DEPS =
 
-## jar name
-LANG_OBJECT_JAR_NAME = $(LANG_OBJECT)
-
 ## test compile deps
 LANG_OBJECT_TEST_COMPILE_DEPS  = $(call module-gav,$(LANG_OBJECT))
 LANG_OBJECT_TEST_COMPILE_DEPS += $(TESTNG)
@@ -63,9 +60,6 @@ LANG_OBJECT_DESCRIPTION = Utilities for java.lang.Object instances
 #
 
 $(foreach task,$(MODULE_TASKS),$(eval $(call $(task),LANG_OBJECT_,lang.object@)))
-
-.PHONY: lang.object@jar
-lang.object@jar: $(LANG_OBJECT_JAR_FILE)
 
 .PHONY: lang.object@test
 lang.object@test: $(LANG_OBJECT_TEST_RUN_MARKER)

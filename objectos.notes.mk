@@ -38,9 +38,6 @@ NOTES_ENABLE_PREVIEW = 0
 ## compile deps
 NOTES_COMPILE_DEPS = $(call module-gav,$(LANG_OBJECT))
 
-## jar name
-NOTES_JAR_NAME = $(NOTES)
-
 ## test compile deps
 NOTES_TEST_COMPILE_DEPS  = $(NOTES_COMPILE_DEPS)
 NOTES_TEST_COMPILE_DEPS += $(call module-gav,$(NOTES))
@@ -67,9 +64,6 @@ NOTES_DESCRIPTION = Type-safe note sink API
 #
 
 $(foreach task,$(MODULE_TASKS),$(eval $(call $(task),NOTES_,notes@)))
-
-.PHONY: notes@jar
-notes@jar: $(NOTES_JAR_FILE)
 
 .PHONY: notes@test
 notes@test: $(NOTES_TEST_RUN_MARKER)

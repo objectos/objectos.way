@@ -41,9 +41,6 @@ HTML_TMPL_SELFGEN_MARKER = $(HTML_TMPL)/work/selfgen-marker
 ## compilation depends on selfgen
 HTML_TMPL_COMPILE_REQS_MORE = $(HTML_TMPL_SELFGEN_MARKER)
 
-## jar name
-HTML_TMPL_JAR_NAME = $(HTML_TMPL)
-
 ## copyright years for javadoc
 HTML_TMPL_COPYRIGHT_YEARS := 2022-2023
 
@@ -80,9 +77,6 @@ $(HTML_TMPL_SELFGEN_MARKER): $(SELFGEN_RUNTIME_JARS)
 #
 # objectos.html.tmpl targets
 #
-
-.PHONY: html.tmpl@jar
-html.tmpl@jar: $(HTML_TMPL_JAR_FILE)
 
 .PHONY: html.tmpl@test-compile
 html.tmpl@test-compile:

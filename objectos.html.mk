@@ -25,6 +25,8 @@ HTML = objectos.html
 HTML_MODULE = $(HTML)
 
 ## module version
+HTML_GROUP_ID = $(GROUP_ID)
+HTML_ARTIFACT_ID = $(HTML_MODULE)
 HTML_VERSION = $(VERSION)
 
 ## javac --release option
@@ -46,9 +48,6 @@ HTML_COMPILE_REQS_MORE = $(HTML_SELFGEN_MARKER)
 ## make selfgen a req for html compilation
 HTML_RESOURCES = $(HTML_SELFGEN_MARKER)
 
-## jar name
-HTML_JAR_NAME = $(HTML)
-
 ## test compile deps
 HTML_TEST_COMPILE_DEPS  = $(HTML_COMPILE_DEPS)
 HTML_TEST_COMPILE_DEPS += $(call module-gav,$(HTML))
@@ -60,10 +59,6 @@ HTML_TEST_RUNTIME_DEPS += $(SLF4J_NOP)
 
 ## test runtime exports
 HTML_TEST_JAVAX_EXPORTS = objectos.html.internal
-
-## install coordinates
-HTML_GROUP_ID = $(GROUP_ID)
-HTML_ARTIFACT_ID = $(HTML_MODULE)
 
 ## copyright years for javadoc
 HTML_COPYRIGHT_YEARS := 2022-2023
@@ -102,9 +97,6 @@ $(HTML_SELFGEN_MARKER): $(SELFGEN_JAR_FILE)
 #
 # objectos.html targets
 #
-
-.PHONY: html@jar
-html@jar: $(HTML_JAR_FILE)
 
 .PHONY: html@test
 html@test: $(HTML_TEST_RUN_MARKER)

@@ -48,9 +48,6 @@ HTML_STYLE_COMPILE_REQS_MORE = $(HTML_STYLE_SELFGEN_MARKER)
 ## make selfgen a req for compilation
 HTML_STYLE_RESOURCES = $(HTML_STYLE_SELFGEN_MARKER)
 
-## jar name
-HTML_STYLE_JAR_NAME = $(HTML_STYLE)
-
 ## test compile deps
 HTML_STYLE_TEST_COMPILE_DEPS  = $(HTML_STYLE_COMPILE_DEPS)
 HTML_STYLE_TEST_COMPILE_DEPS += $(call module-gav,$(HTML_STYLE))
@@ -110,9 +107,6 @@ $(HTML_STYLE_SELFGEN_MARKER): $(SELFGEN_JAR_FILE)
 #
 # objectos.html.style targets
 #
-
-.PHONY: html.style@jar
-html.style@jar: $(HTML_STYLE_JAR_FILE)
 
 .PHONY: html.style@test
 html.style@test: $(HTML_STYLE_TEST_RUN_MARKER)

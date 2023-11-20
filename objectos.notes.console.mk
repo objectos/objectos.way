@@ -25,6 +25,8 @@ NOTES_CONSOLE = objectos.notes.console
 NOTES_CONSOLE_MODULE = $(NOTES_CONSOLE)
 
 ## module version
+NOTES_CONSOLE_GROUP_ID = $(GROUP_ID)
+NOTES_CONSOLE_ARTIFACT_ID = $(NOTES_CONSOLE_MODULE)
 NOTES_CONSOLE_VERSION = $(VERSION)
 
 ## javac --release option
@@ -36,9 +38,6 @@ NOTES_CONSOLE_ENABLE_PREVIEW = 0
 ## compile deps
 NOTES_CONSOLE_COMPILE_DEPS = $(call module-gav,$(NOTES_BASE))
 
-## jar name
-NOTES_CONSOLE_JAR_NAME = $(NOTES_CONSOLE)
-
 ## test compile deps
 NOTES_CONSOLE_TEST_COMPILE_DEPS  = $(NOTES_CONSOLE_COMPILE_DEPS)
 NOTES_CONSOLE_TEST_COMPILE_DEPS += $(call module-gav,$(NOTES_CONSOLE))
@@ -47,10 +46,6 @@ NOTES_CONSOLE_TEST_COMPILE_DEPS += $(TESTNG)
 ## test runtime dependencies
 NOTES_CONSOLE_TEST_RUNTIME_DEPS  = $(NOTES_CONSOLE_TEST_COMPILE_DEPS)
 NOTES_CONSOLE_TEST_RUNTIME_DEPS += $(SLF4J_NOP)
-
-## install coordinates
-NOTES_CONSOLE_GROUP_ID = $(GROUP_ID)
-NOTES_CONSOLE_ARTIFACT_ID = $(NOTES_CONSOLE_MODULE)
 
 ## copyright years for javadoc
 NOTES_CONSOLE_COPYRIGHT_YEARS := 2022-2023
@@ -66,9 +61,6 @@ NOTES_CONSOLE_DESCRIPTION = NoteSink implementation that writes out notes to the
 #
 
 $(foreach task,$(MODULE_TASKS),$(eval $(call $(task),NOTES_CONSOLE_,notes.console@)))
-
-.PHONY: notes.console@jar
-notes.console@jar: $(NOTES_CONSOLE_JAR_FILE)
 
 .PHONY: notes.console@test
 notes.console@test: $(NOTES_CONSOLE_TEST_RUN_MARKER)

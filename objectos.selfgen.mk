@@ -38,9 +38,6 @@ SELFGEN_ENABLE_PREVIEW := 1
 ## selfgen compile deps
 SELFGEN_COMPILE_DEPS = $(call module-gav,$(CODE)) 
 
-## selfgen jar name
-SELFGEN_JAR_NAME := $(SELFGEN)
-
 ## selfgen test compile deps
 SELFGEN_TEST_COMPILE_DEPS  = $(SELFGEN_COMPILE_DEPS)
 SELFGEN_TEST_COMPILE_DEPS += $(call module-gav,$(SELFGEN))
@@ -67,9 +64,6 @@ SELFGEN_TASKS += TEST_RUN_TASK
 SELFGEN_TASKS += INSTALL_TASK
 
 $(foreach task,$(SELFGEN_TASKS),$(eval $(call $(task),SELFGEN_,selfgen@)))
-
-.PHONY: selfgen@jar
-selfgen@jar: $(SELFGEN_JAR_FILE)
 
 .PHONY: selfgen@test
 selfgen@test: $(SELFGEN_TEST_RUN_MARKER)

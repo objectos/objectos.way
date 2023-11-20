@@ -633,7 +633,7 @@ $(1)RESOLUTION_JARS += $$(call to-jars-paths,$$($(1)COMPILE_DEPS))
 
 $$($(1)RESOLUTION): $$($(1)RESOLUTION_REQS)
 	mkdir --parents $$(@D)
-	echo "$$(sort $$($(1)RESOLUTION_JARS))" | $(TR) ' ' '\n' >> $$($(1)RESOLUTION)
+	echo "$$(sort $$($(1)RESOLUTION_JARS))" | $(TR) ' ' '\n' > $$($(1)RESOLUTION)
 
 endef
 
@@ -647,7 +647,7 @@ define JAR_TASK
 $(1)LICENSE = $$($(1)CLASS_OUTPUT)/META-INF/LICENSE
 
 ## jar file path
-$(1)JAR_FILE = $$($(1)WORK)/$$($(1)JAR_NAME)-$$($(1)VERSION).jar
+$(1)JAR_FILE = $$($(1)WORK)/$$($(1)ARTIFACT_ID)-$$($(1)VERSION).jar
 
 ## jar command
 $(1)JARX = $$(JAR)
@@ -658,7 +658,7 @@ $(1)JARX += -C $$($(1)CLASS_OUTPUT)
 $(1)JARX += .
 
 ## requirements of the $(1)JAR_FILE target
-$(1)JAR_FILE_REQS = $$($(1)COMPILE_MARKER)
+$(1)JAR_FILE_REQS  = $$($(1)COMPILE_MARKER)
 $(1)JAR_FILE_REQS += $$($(1)LICENSE)
 ifdef $(1)JAR_FILE_REQS_MORE
 $(1)JAR_FILE_REQS += $$($(1)JAR_FILE_REQS_MORE)
@@ -667,6 +667,9 @@ endif
 #
 # jar targets
 #
+
+.PHONY: $(2)jar
+$(2)jar: $$($(1)JAR_FILE)
 
 $$($(1)JAR_FILE): $$($(1)JAR_FILE_REQS)
 	$$($(1)JARX)
@@ -815,10 +818,17 @@ $(1)INSTALL = $$(call dependency,$$($(1)GROUP_ID),$$($(1)ARTIFACT_ID),$$($(1)VER
 # install target
 #
 
+.PHONY: $(2)install
+$(2)install: $$($(1)INSTALL)
+
+.PHONY: $(2)clean-install
+$(2)clean-install:
+	rm -f $$($(1)INSTALL)
+
 $$($(1)INSTALL): $$($(1)JAR_FILE)
 	mkdir --parents $$(@D)
 	cp $$< $$@
-
+	
 endef
 
 #
@@ -1063,7 +1073,8 @@ TEST_TASKS  = TEST_COMPILE_TASK
 TEST_TASKS += TEST_RUN_TASK
 
 ## @ names
-AT_MODULES = $(foreach mod,$(MODULES),$(subst objectos.,,$(mod)))
+AT_MODULES  = $(foreach mod,$(MODULES),$(subst objectos.,,$(mod)))
+AT_MODULES += way
 
 ## generate module gav
 module-gav = $(GROUP_ID)/$(1)/$(VERSION)
@@ -1083,7 +1094,9 @@ WAY := objectos.way
 WAY_MODULE := $(WAY)
 
 ## way module version
-WAY_VERSION := $(VERSION)
+WAY_GROUP_ID = $(GROUP_ID)
+WAY_ARTIFACT_ID = $(ARTIFACT_ID)
+WAY_VERSION = $(VERSION)
 
 ## way javac --release option
 WAY_JAVA_RELEASE := 21
@@ -1092,32 +1105,21 @@ WAY_JAVA_RELEASE := 21
 WAY_ENABLE_PREVIEW := 0
 
 ## way compile deps
-WAY_COMPILE_DEPS = $(LANG_OBJECT_JAR_FILE)
-WAY_COMPILE_DEPS += $(NOTES_JAR_FILE)
-WAY_COMPILE_DEPS += $(UTIL_ARRAY_JAR_FILE)
-WAY_COMPILE_DEPS += $(UTIL_COLLECTION_JAR_FILE)
-WAY_COMPILE_DEPS += $(UTIL_LIST_JAR_FILE)
-WAY_COMPILE_DEPS += $(UTIL_MAP_JAR_FILE)
-WAY_COMPILE_DEPS += $(UTIL_SET_JAR_FILE)
-WAY_COMPILE_DEPS += $(HTML_TMPL_JAR_FILE)
-WAY_COMPILE_DEPS += $(HTML_JAR_FILE)
-WAY_COMPILE_DEPS += $(CSS_JAR_FILE)
-
-## way jar name
-WAY_JAR_NAME := $(WAY)
+WAY_COMPILE_DEPS  = $(call module-gav,$(CSS))
+WAY_COMPILE_DEPS += $(call module-gav,$(HTML))
+WAY_COMPILE_DEPS += $(call module-gav,$(NOTES))
+WAY_COMPILE_DEPS += $(call module-gav,$(UTIL_LIST))
+WAY_COMPILE_DEPS += $(call module-gav,$(UTIL_SET))
 
 ## way test compile-time dependencies
-WAY_TEST_COMPILE_DEPS = $(WAY_COMPILE_DEPS)
-WAY_TEST_COMPILE_DEPS += $(NOTES_CONSOLE_JAR_FILE)
-WAY_TEST_COMPILE_DEPS += $(WAY_JAR_FILE)
-WAY_TEST_COMPILE_DEPS += $(call dependency,org.testng,testng,$(TESTNG_VERSION))
+WAY_TEST_COMPILE_DEPS  = $(WAY_COMPILE_DEPS)
+WAY_TEST_COMPILE_DEPS += $(call module-gav,$(WAY))
+WAY_TEST_COMPILE_DEPS += $(call module-gav,$(NOTES_CONSOLE))
+WAY_TEST_COMPILE_DEPS += $(TESTNG)
 
 ## way test runtime dependencies
-WAY_TEST_RUNTIME_DEPS = $(WAY_TEST_COMPILE_DEPS)
-WAY_TEST_RUNTIME_DEPS += $(NOTES_BASE_JAR_FILE)
-WAY_TEST_RUNTIME_DEPS += $(call dependency,com.beust,jcommander,$(JCOMMANDER_VERSION))
-WAY_TEST_RUNTIME_DEPS += $(call dependency,org.slf4j,slf4j-api,$(SLF4J_VERSION))
-WAY_TEST_RUNTIME_DEPS += $(call dependency,org.slf4j,slf4j-nop,$(SLF4J_VERSION))
+WAY_TEST_RUNTIME_DEPS  = $(WAY_TEST_COMPILE_DEPS)
+WAY_TEST_RUNTIME_DEPS += $(SLF4J_NOP)
 
 ## way test runtime modules
 WAY_TEST_JAVAX_MODULES = org.testng
@@ -1132,10 +1134,6 @@ WAY_TEST_JAVAX_EXPORTS = objectox.css
 WAY_TEST_JAVAX_EXPORTS += objectox.css.util
 WAY_TEST_JAVAX_EXPORTS += objectox.http
 WAY_TEST_JAVAX_EXPORTS += objectox.lang
-
-## way install coordinates
-WAY_GROUP_ID := $(GROUP_ID)
-WAY_ARTIFACT_ID := $(ARTIFACT_ID)
 
 ## way copyright years for javadoc
 WAY_COPYRIGHT_YEARS := 2022-2023
@@ -1200,10 +1198,13 @@ $(eval $(call OSSRH_BUNDLE_TASK,WAY_))
 #
 
 .PHONY: clean
-clean: $(foreach mod,$(WAY_SUBMODULES),$(mod)@clean) code@clean selfgen@clean way@clean 
+clean: $(foreach mod,$(AT_MODULES),$(mod)@clean) $(foreach mod,$(AT_MODULES),$(mod)@clean-install)
 
 .PHONY: compile
 compile: $(foreach mod,$(AT_MODULES),$(mod)@compile)
+
+.PHONY: jar
+jar: $(foreach mod,$(AT_MODULES),$(mod)@jar)
 
 .PHONY: test-compile
 test-compile: $(foreach mod,$(AT_MODULES),$(mod)@test-compile)
@@ -1234,9 +1235,6 @@ ossrh: way@ossrh
 
 .PHONY: gh-release
 gh-release: way@gh-release
-
-.PHONY: way@jar
-way@jar: $(WAY_JAR_FILE)
 
 .PHONY: way@test
 way@test: $(WAY_TEST_RUN_MARKER)

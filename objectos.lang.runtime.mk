@@ -25,6 +25,8 @@ LANG_RUNTIME = objectos.lang.runtime
 LANG_RUNTIME_MODULE = $(LANG_RUNTIME)
 
 ## module version
+LANG_RUNTIME_GROUP_ID = $(GROUP_ID)
+LANG_RUNTIME_ARTIFACT_ID = $(LANG_RUNTIME_MODULE)
 LANG_RUNTIME_VERSION = $(VERSION)
 
 ## javac --release option
@@ -37,9 +39,6 @@ LANG_RUNTIME_ENABLE_PREVIEW = 0
 LANG_RUNTIME_COMPILE_DEPS  = $(call module-gav,$(NOTES))
 LANG_RUNTIME_COMPILE_DEPS += $(call module-gav,$(UTIL_LIST))
 
-## jar name
-LANG_RUNTIME_JAR_NAME = $(LANG_RUNTIME)
-
 ## test compile deps
 LANG_RUNTIME_TEST_COMPILE_DEPS  = $(LANG_RUNTIME_COMPILE_DEPS)
 LANG_RUNTIME_TEST_COMPILE_DEPS += $(call module-gav,$(LANG_RUNTIME))
@@ -51,10 +50,6 @@ LANG_RUNTIME_TEST_RUNTIME_DEPS += $(SLF4J_NOP)
 
 ## test runtime exports
 #LANG_RUNTIME_TEST_JAVAX_EXPORTS := objectos.lang.runtime.internal
-
-## install coordinates
-LANG_RUNTIME_GROUP_ID = $(GROUP_ID)
-LANG_RUNTIME_ARTIFACT_ID = $(LANG_RUNTIME_MODULE)
 
 ## copyright years for javadoc
 LANG_RUNTIME_COPYRIGHT_YEARS := 2022-2023
@@ -70,9 +65,6 @@ LANG_RUNTIME_DESCRIPTION = Utilities for the java.lang.Runtime class
 #
 
 $(foreach task,$(MODULE_TASKS),$(eval $(call $(task),LANG_RUNTIME_,lang.runtime@)))
-
-.PHONY: lang.runtime@jar
-lang.runtime@jar: $(LANG_RUNTIME_JAR_FILE)
 
 .PHONY: lang.runtime@test
 lang.runtime@test: $(LANG_RUNTIME_TEST_RUN_MARKER)

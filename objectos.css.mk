@@ -45,9 +45,6 @@ CSS_COMPILE_REQS_MORE = $(CSS_SELFGEN_MARKER)
 ## make selfgen a req for html compilation
 CSS_RESOURCES = $(CSS_SELFGEN_MARKER)
 
-## jar name
-CSS_JAR_NAME = $(CSS)
-
 ## test compile deps
 CSS_TEST_COMPILE_DEPS  = $(CSS_COMPILE_DEPS)
 CSS_TEST_COMPILE_DEPS += $(call module-gav,$(CSS))
@@ -89,7 +86,7 @@ endif
 CSS_SELFGEN_JAVAX += --module $(SELFGEN_MODULE)/$(SELFGEN_MODULE).CssSpec
 CSS_SELFGEN_JAVAX += $(CSS_MAIN)
 
-$(CSS_SELFGEN_MARKER): $(SELFGEN_JAR_FILE)
+$(CSS_SELFGEN_MARKER): $(SELFGEN_RUNTIME_JARS)
 	$(CSS_SELFGEN_JAVAX)
 	mkdir --parents $(@D)
 	touch $@
@@ -97,9 +94,6 @@ $(CSS_SELFGEN_MARKER): $(SELFGEN_JAR_FILE)
 #
 # objectos.css targets
 #
-
-.PHONY: css@jar
-css@jar: $(CSS_JAR_FILE)
 
 .PHONY: css@test
 css@test: $(CSS_TEST_RUN_MARKER)

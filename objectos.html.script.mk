@@ -37,9 +37,6 @@ HTML_SCRIPT_ENABLE_PREVIEW = 0
 HTML_SCRIPT_COMPILE_DEPS  = $(call module-gav,$(HTML))
 HTML_SCRIPT_COMPILE_DEPS += $(call module-gav,$(UTIL_MAP))
 
-## jar name
-HTML_SCRIPT_JAR_NAME = $(HTML_SCRIPT)
-
 ## JS source
 HTML_SCRIPT_JS_SRC = $(HTML_SCRIPT)/js/objectos.way.js
 
@@ -78,9 +75,6 @@ $(HTML_SCRIPT_JS_ARTIFACT): $(HTML_SCRIPT_JS_SRC)
 #
 # objectos.html.script targets
 #
-
-.PHONY: html.script@jar
-html.script@jar: $(HTML_SCRIPT_JAR_FILE)
 
 .PHONY: html.script@test-compile
 html.script@test-compile:

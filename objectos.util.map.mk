@@ -39,9 +39,6 @@ UTIL_MAP_ENABLE_PREVIEW = 0
 UTIL_MAP_COMPILE_DEPS  = $(call module-gav,$(UTIL_ARRAY))
 UTIL_MAP_COMPILE_DEPS += $(call module-gav,$(UTIL_COLLECTION))
 
-## jar name
-UTIL_MAP_JAR_NAME = $(UTIL_MAP)
-
 ## test compile deps
 UTIL_MAP_TEST_COMPILE_DEPS  = $(UTIL_MAP_COMPILE_DEPS)
 UTIL_MAP_TEST_COMPILE_DEPS += $(call module-gav,$(UTIL_MAP))
@@ -65,9 +62,6 @@ UTIL_MAP_DESCRIPTION = Special-purpose java.util.Set implementations
 #
 
 $(foreach task,$(MODULE_TASKS),$(eval $(call $(task),UTIL_MAP_,util.map@)))
-
-.PHONY: util.map@jar
-util.map@jar: $(UTIL_MAP_JAR_FILE)
 
 .PHONY: util.map@test
 util.map@test: $(UTIL_MAP_TEST_RUN_MARKER)

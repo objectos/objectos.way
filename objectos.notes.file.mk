@@ -25,6 +25,8 @@ NOTES_FILE = objectos.notes.file
 NOTES_FILE_MODULE = $(NOTES_FILE)
 
 ## module version
+NOTES_FILE_GROUP_ID = $(GROUP_ID)
+NOTES_FILE_ARTIFACT_ID = $(NOTES_FILE_MODULE)
 NOTES_FILE_VERSION = $(VERSION)
 
 ## javac --release option
@@ -36,9 +38,6 @@ NOTES_FILE_ENABLE_PREVIEW = 0
 ## compile deps
 NOTES_FILE_COMPILE_DEPS = $(call module-gav,$(NOTES_BASE))
 
-## jar name
-NOTES_FILE_JAR_NAME = $(NOTES_FILE)
-
 ## test compile deps
 NOTES_FILE_TEST_COMPILE_DEPS  = $(NOTES_FILE_COMPILE_DEPS)
 NOTES_FILE_TEST_COMPILE_DEPS += $(call module-gav,$(NOTES_FILE))
@@ -47,10 +46,6 @@ NOTES_FILE_TEST_COMPILE_DEPS += $(TESTNG)
 ## test runtime dependencies
 NOTES_FILE_TEST_RUNTIME_DEPS  = $(NOTES_FILE_TEST_COMPILE_DEPS)
 NOTES_FILE_TEST_RUNTIME_DEPS += $(SLF4J_NOP)
-
-## install coordinates
-NOTES_FILE_GROUP_ID = $(GROUP_ID)
-NOTES_FILE_ARTIFACT_ID = $(NOTES_FILE_MODULE)
 
 ## copyright years for javadoc
 NOTES_FILE_COPYRIGHT_YEARS := 2022-2023
@@ -66,9 +61,6 @@ NOTES_FILE_DESCRIPTION = NoteSink implementation that writes out notes to a regu
 #
 
 $(foreach task,$(MODULE_TASKS),$(eval $(call $(task),NOTES_FILE_,notes.file@)))
-
-.PHONY: notes.file@jar
-notes.file@jar: $(NOTES_FILE_JAR_FILE)
 
 .PHONY: notes.file@test
 notes.file@test: $(NOTES_FILE_TEST_RUN_MARKER)

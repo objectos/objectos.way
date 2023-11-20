@@ -24,7 +24,9 @@ HTTP_SERVER = objectos.http.server
 ## module
 HTTP_SERVER_MODULE = $(HTTP_SERVER)
 
-## module version
+## module coordinates
+HTTP_SERVER_GROUP_ID = $(GROUP_ID)
+HTTP_SERVER_ARTIFACT_ID = $(HTTP_SERVER)
 HTTP_SERVER_VERSION = $(VERSION)
 
 ## javac --release option
@@ -38,9 +40,6 @@ HTTP_SERVER_COMPILE_DEPS  = $(call module-gav,$(HTTP))
 HTTP_SERVER_COMPILE_DEPS += $(call module-gav,$(NOTES))
 HTTP_SERVER_COMPILE_DEPS += $(call module-gav,$(UTIL_LIST))
 HTTP_SERVER_COMPILE_DEPS += $(call module-gav,$(UTIL_MAP))
-
-## jar name
-HTTP_SERVER_JAR_NAME = $(HTTP_SERVER)
 
 ## test compile deps
 HTTP_SERVER_TEST_COMPILE_DEPS  = $(HTTP_SERVER_COMPILE_DEPS)
@@ -65,10 +64,6 @@ HTTP_SERVER_TEST_JAVAX_READS += objectos.notes.console
 ## test runtime exports
 HTTP_SERVER_TEST_JAVAX_EXPORTS = objectox.http.server
 
-## install coordinates
-HTTP_SERVER_GROUP_ID = $(GROUP_ID)
-HTTP_SERVER_ARTIFACT_ID = $(HTTP_SERVER_MODULE)
-
 ## copyright years for javadoc
 HTTP_SERVER_COPYRIGHT_YEARS := 2022-2023
 
@@ -84,9 +79,6 @@ $(foreach task,$(MODULE_TASKS),$(eval $(call $(task),HTTP_SERVER_,http.server@))
 #
 # objectos.http.server targets
 #
-
-.PHONY: http.server@jar
-http.server@jar: $(HTTP_SERVER_JAR_FILE)
 
 .PHONY: http.server@test
 http.server@test: $(HTTP_SERVER_TEST_RUN_MARKER)

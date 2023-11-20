@@ -25,6 +25,8 @@ HTML_ICON = objectos.html.icon
 HTML_ICON_MODULE = $(HTML_ICON)
 
 ## module version
+HTML_ICON_GROUP_ID = $(GROUP_ID)
+HTML_ICON_ARTIFACT_ID = $(HTML_ICON_MODULE)
 HTML_ICON_VERSION = $(VERSION)
 
 ## javac --release option
@@ -36,13 +38,6 @@ HTML_ICON_ENABLE_PREVIEW = 0
 ## compile deps
 HTML_ICON_COMPILE_DEPS  = $(call module-gav,$(HTML))
 HTML_ICON_COMPILE_DEPS += $(call module-gav,$(UTIL_MAP))
-
-## jar name
-HTML_ICON_JAR_NAME = $(HTML_ICON)
-
-## install coordinates
-HTML_ICON_GROUP_ID = $(GROUP_ID)
-HTML_ICON_ARTIFACT_ID = $(HTML_ICON_MODULE)
 
 ## copyright years for javadoc
 HTML_ICON_COPYRIGHT_YEARS := 2022-2023
@@ -61,9 +56,6 @@ $(foreach task,$(HTML_ICON_TASKS),$(eval $(call $(task),HTML_ICON_,html.icon@)))
 #
 # objectos.html.icon targets
 #
-
-.PHONY: html.icon@jar
-html.icon@jar: $(HTML_ICON_JAR_FILE)
 
 .PHONY: html.icon@test-compile
 html.icon@test-compile:

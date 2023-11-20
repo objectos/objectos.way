@@ -35,9 +35,6 @@ CODE_JAVA_RELEASE = $(JAVA_RELEASE)
 ## code --enable-preview ?
 CODE_ENABLE_PREVIEW = 1
 
-## code jar name
-CODE_JAR_NAME = $(CODE)
-
 ## code test compile deps
 CODE_TEST_COMPILE_DEPS  = $(call module-gav,$(CODE))
 CODE_TEST_COMPILE_DEPS += $(TESTNG)
@@ -61,9 +58,6 @@ CODE_TASKS += TEST_RUN_TASK
 CODE_TASKS += INSTALL_TASK
 
 $(foreach task,$(CODE_TASKS),$(eval $(call $(task),CODE_,code@)))
-
-.PHONY: code@jar
-code@jar: $(CODE_JAR_FILE)
 
 .PHONY: code@test
 code@test: $(CODE_TEST_RUN_MARKER)

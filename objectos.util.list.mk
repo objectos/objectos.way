@@ -39,9 +39,6 @@ UTIL_LIST_ENABLE_PREVIEW = 0
 UTIL_LIST_COMPILE_DEPS  = $(call module-gav,$(UTIL_ARRAY))
 UTIL_LIST_COMPILE_DEPS += $(call module-gav,$(UTIL_COLLECTION))
 
-## jar name
-UTIL_LIST_JAR_NAME = $(UTIL_LIST)
-
 ## test compile deps
 UTIL_LIST_TEST_COMPILE_DEPS  = $(UTIL_LIST_COMPILE_DEPS)
 UTIL_LIST_TEST_COMPILE_DEPS += $(call module-gav,$(UTIL_LIST))
@@ -65,9 +62,6 @@ UTIL_LIST_DESCRIPTION = Special-purpose java.util.List implementations
 #
 
 $(foreach task,$(MODULE_TASKS),$(eval $(call $(task),UTIL_LIST_,util.list@)))
-
-.PHONY: util.list@jar
-util.list@jar: $(UTIL_LIST_JAR_FILE)
 
 .PHONY: util.list@test
 util.list@test: $(UTIL_LIST_TEST_RUN_MARKER)

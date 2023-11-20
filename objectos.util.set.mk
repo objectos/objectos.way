@@ -39,9 +39,6 @@ UTIL_SET_ENABLE_PREVIEW = 0
 UTIL_SET_COMPILE_DEPS  = $(call module-gav,$(UTIL_ARRAY))
 UTIL_SET_COMPILE_DEPS += $(call module-gav,$(UTIL_COLLECTION))
 
-## jar name
-UTIL_SET_JAR_NAME = $(UTIL_SET)
-
 ## test compile deps
 UTIL_SET_TEST_COMPILE_DEPS  = $(UTIL_SET_COMPILE_DEPS)
 UTIL_SET_TEST_COMPILE_DEPS += $(call module-gav,$(UTIL_SET))
@@ -65,9 +62,6 @@ UTIL_SET_DESCRIPTION = Special-purpose java.util.Set implementations
 #
 
 $(foreach task,$(MODULE_TASKS),$(eval $(call $(task),UTIL_SET_,util.set@)))
-
-.PHONY: util.set@jar
-util.set@jar: $(UTIL_SET_JAR_FILE)
 
 .PHONY: util.set@test
 util.set@test: $(UTIL_SET_TEST_RUN_MARKER)

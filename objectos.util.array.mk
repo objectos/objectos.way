@@ -38,9 +38,6 @@ UTIL_ARRAY_ENABLE_PREVIEW = 0
 ## compile deps
 UTIL_ARRAY_COMPILE_DEPS = $(call module-gav,$(LANG_OBJECT))
 
-## jar name
-UTIL_ARRAY_JAR_NAME = $(UTIL_ARRAY)
-
 ## test compile deps
 UTIL_ARRAY_TEST_COMPILE_DEPS  = $(UTIL_ARRAY_COMPILE_DEPS)
 UTIL_ARRAY_TEST_COMPILE_DEPS += $(call module-gav,$(UTIL_ARRAY))
@@ -64,9 +61,6 @@ UTIL_ARRAY_DESCRIPTION = Utilities for working with arrays of primitives and ref
 #
 
 $(foreach task,$(MODULE_TASKS),$(eval $(call $(task),UTIL_ARRAY_,util.array@)))
-
-.PHONY: util.array@jar
-util.array@jar: $(UTIL_ARRAY_JAR_FILE)
 
 .PHONY: util.array@test
 util.array@test: $(UTIL_ARRAY_TEST_RUN_MARKER)

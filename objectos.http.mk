@@ -33,9 +33,6 @@ HTTP_JAVA_RELEASE = $(JAVA_RELEASE)
 ## --enable-preview ?
 HTTP_ENABLE_PREVIEW = 0
 
-## jar name
-HTTP_JAR_NAME = $(HTTP)
-
 ## test compile deps
 HTTP_TEST_COMPILE_DEPS  = $(call module-gav,$(HTTP))
 HTTP_TEST_COMPILE_DEPS += $(TESTNG)
@@ -62,9 +59,6 @@ HTTP_DESCRIPTION = HTTP related types
 #
 
 $(foreach task,$(MODULE_TASKS),$(eval $(call $(task),HTTP_,http@)))
-
-.PHONY: http@jar
-http@jar: $(HTTP_JAR_FILE)
 
 .PHONY: http@test
 http@test: $(HTTP_TEST_RUN_MARKER)

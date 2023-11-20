@@ -38,9 +38,6 @@ LANG_CLASSLOADER_COMPILE_DEPS  = $(call module-gav,$(NOTES))
 LANG_CLASSLOADER_COMPILE_DEPS += $(call module-gav,$(UTIL_LIST))
 LANG_CLASSLOADER_COMPILE_DEPS += $(call module-gav,$(UTIL_MAP))
 
-## jar name
-LANG_CLASSLOADER_JAR_NAME = $(LANG_CLASSLOADER)
-
 ## test compile deps
 LANG_CLASSLOADER_TEST_COMPILE_DEPS  = $(LANG_CLASSLOADER_COMPILE_DEPS)
 LANG_CLASSLOADER_TEST_COMPILE_DEPS += $(call module-gav,$(LANG_CLASSLOADER))
@@ -82,9 +79,6 @@ $(foreach task,$(MODULE_TASKS),$(eval $(call $(task),LANG_CLASSLOADER_,lang.clas
 #
 # objectos.lang.classloader targets
 #
-
-.PHONY: lang.classloader@jar
-lang.classloader@jar: $(LANG_CLASSLOADER_JAR_FILE)
 
 .PHONY: lang.classloader@test
 lang.classloader@test: $(LANG_CLASSLOADER_TEST_RUN_MARKER)
