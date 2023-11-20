@@ -39,14 +39,12 @@ CODE_ENABLE_PREVIEW = 1
 CODE_JAR_NAME = $(CODE)
 
 ## code test compile deps
-CODE_TEST_COMPILE_DEPS = $(CODE_JAR_FILE)
-CODE_TEST_COMPILE_DEPS += $(call dependency,org.testng,testng,$(TESTNG_VERSION))
+CODE_TEST_COMPILE_DEPS  = $(call module-gav,$(CODE))
+CODE_TEST_COMPILE_DEPS += org.testng/testng/$(TESTNG_VERSION)
 
 ## code test runtime dependencies
-CODE_TEST_RUNTIME_DEPS = $(CODE_TEST_COMPILE_DEPS)
-CODE_TEST_RUNTIME_DEPS += $(call dependency,com.beust,jcommander,$(JCOMMANDER_VERSION))
-CODE_TEST_RUNTIME_DEPS += $(call dependency,org.slf4j,slf4j-api,$(SLF4J_VERSION))
-CODE_TEST_RUNTIME_DEPS += $(call dependency,org.slf4j,slf4j-nop,$(SLF4J_VERSION))
+CODE_TEST_RUNTIME_DEPS  = $(CODE_TEST_COMPILE_DEPS)
+CODE_TEST_RUNTIME_DEPS += org.slf4j/slf4j-nop/$(SLF4J_VERSION)
 
 ## test runtime exports
 CODE_TEST_JAVAX_EXPORTS := objectos.code.internal
