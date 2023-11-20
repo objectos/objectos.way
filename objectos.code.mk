@@ -40,11 +40,11 @@ CODE_JAR_NAME = $(CODE)
 
 ## code test compile deps
 CODE_TEST_COMPILE_DEPS  = $(call module-gav,$(CODE))
-CODE_TEST_COMPILE_DEPS += org.testng/testng/$(TESTNG_VERSION)
+CODE_TEST_COMPILE_DEPS += $(TESTNG)
 
 ## code test runtime dependencies
 CODE_TEST_RUNTIME_DEPS  = $(CODE_TEST_COMPILE_DEPS)
-CODE_TEST_RUNTIME_DEPS += org.slf4j/slf4j-nop/$(SLF4J_VERSION)
+CODE_TEST_RUNTIME_DEPS += $(SLF4J_NOP)
 
 ## test runtime exports
 CODE_TEST_JAVAX_EXPORTS := objectos.code.internal

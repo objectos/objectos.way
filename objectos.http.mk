@@ -37,14 +37,12 @@ HTTP_ENABLE_PREVIEW = 0
 HTTP_JAR_NAME = $(HTTP)
 
 ## test compile deps
-HTTP_TEST_COMPILE_DEPS = $(HTTP_JAR_FILE)
-HTTP_TEST_COMPILE_DEPS += $(call dependency,org.testng,testng,$(TESTNG_VERSION))
+HTTP_TEST_COMPILE_DEPS  = $(call module-gav,$(HTTP))
+HTTP_TEST_COMPILE_DEPS += $(TESTNG)
 
 ## test runtime dependencies
-HTTP_TEST_RUNTIME_DEPS = $(HTTP_TEST_COMPILE_DEPS)
-HTTP_TEST_RUNTIME_DEPS += $(call dependency,com.beust,jcommander,$(JCOMMANDER_VERSION))
-HTTP_TEST_RUNTIME_DEPS += $(call dependency,org.slf4j,slf4j-api,$(SLF4J_VERSION))
-HTTP_TEST_RUNTIME_DEPS += $(call dependency,org.slf4j,slf4j-nop,$(SLF4J_VERSION))
+HTTP_TEST_RUNTIME_DEPS  = $(HTTP_TEST_COMPILE_DEPS)
+HTTP_TEST_RUNTIME_DEPS += $(SLF4J_NOP)
 
 ## install coordinates
 HTTP_GROUP_ID = $(GROUP_ID)

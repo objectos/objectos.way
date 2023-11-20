@@ -84,6 +84,9 @@ $(HTML_TMPL_SELFGEN_MARKER): $(SELFGEN_RUNTIME_JARS)
 .PHONY: html.tmpl@jar
 html.tmpl@jar: $(HTML_TMPL_JAR_FILE)
 
+.PHONY: html.tmpl@test-compile
+html.tmpl@test-compile:
+
 .PHONY: html.tmpl@test
 html.tmpl@test:
 

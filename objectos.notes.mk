@@ -42,15 +42,13 @@ NOTES_COMPILE_DEPS = $(call module-gav,$(LANG_OBJECT))
 NOTES_JAR_NAME = $(NOTES)
 
 ## test compile deps
-NOTES_TEST_COMPILE_DEPS = $(NOTES_COMPILE_DEPS)
-NOTES_TEST_COMPILE_DEPS += $(NOTES_JAR_FILE)
-NOTES_TEST_COMPILE_DEPS += $(call dependency,org.testng,testng,$(TESTNG_VERSION))
+NOTES_TEST_COMPILE_DEPS  = $(NOTES_COMPILE_DEPS)
+NOTES_TEST_COMPILE_DEPS += $(call module-gav,$(NOTES))
+NOTES_TEST_COMPILE_DEPS += $(TESTNG)
 
 ## test runtime dependencies
-NOTES_TEST_RUNTIME_DEPS = $(NOTES_TEST_COMPILE_DEPS)
-NOTES_TEST_RUNTIME_DEPS += $(call dependency,com.beust,jcommander,$(JCOMMANDER_VERSION))
-NOTES_TEST_RUNTIME_DEPS += $(call dependency,org.slf4j,slf4j-api,$(SLF4J_VERSION))
-NOTES_TEST_RUNTIME_DEPS += $(call dependency,org.slf4j,slf4j-nop,$(SLF4J_VERSION))
+NOTES_TEST_RUNTIME_DEPS  = $(NOTES_TEST_COMPILE_DEPS)
+NOTES_TEST_RUNTIME_DEPS += $(SLF4J_NOP)
 
 ## test runtime exports
 NOTES_TEST_JAVAX_EXPORTS := objectos.notes.internal

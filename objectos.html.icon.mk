@@ -65,6 +65,9 @@ $(foreach task,$(HTML_ICON_TASKS),$(eval $(call $(task),HTML_ICON_,html.icon@)))
 .PHONY: html.icon@jar
 html.icon@jar: $(HTML_ICON_JAR_FILE)
 
+.PHONY: html.icon@test-compile
+html.icon@test-compile:
+
 .PHONY: html.icon@test
 html.icon@test:
 

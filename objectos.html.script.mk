@@ -82,6 +82,9 @@ $(HTML_SCRIPT_JS_ARTIFACT): $(HTML_SCRIPT_JS_SRC)
 .PHONY: html.script@jar
 html.script@jar: $(HTML_SCRIPT_JAR_FILE)
 
+.PHONY: html.script@test-compile
+html.script@test-compile:
+
 .PHONY: html.script@test
 html.script@test:
 

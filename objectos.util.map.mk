@@ -25,6 +25,8 @@ UTIL_MAP = objectos.util.map
 UTIL_MAP_MODULE = $(UTIL_MAP)
 
 ## module version
+UTIL_MAP_GROUP_ID = $(GROUP_ID)
+UTIL_MAP_ARTIFACT_ID = $(UTIL_MAP_MODULE)
 UTIL_MAP_VERSION = $(VERSION)
 
 ## javac --release option
@@ -41,19 +43,13 @@ UTIL_MAP_COMPILE_DEPS += $(call module-gav,$(UTIL_COLLECTION))
 UTIL_MAP_JAR_NAME = $(UTIL_MAP)
 
 ## test compile deps
-UTIL_MAP_TEST_COMPILE_DEPS = $(UTIL_MAP_COMPILE_DEPS)
-UTIL_MAP_TEST_COMPILE_DEPS += $(UTIL_MAP_JAR_FILE)
-UTIL_MAP_TEST_COMPILE_DEPS += $(call dependency,org.testng,testng,$(TESTNG_VERSION))
+UTIL_MAP_TEST_COMPILE_DEPS  = $(UTIL_MAP_COMPILE_DEPS)
+UTIL_MAP_TEST_COMPILE_DEPS += $(call module-gav,$(UTIL_MAP))
+UTIL_MAP_TEST_COMPILE_DEPS += $(TESTNG)
 
 ## test runtime dependencies
-UTIL_MAP_TEST_RUNTIME_DEPS = $(UTIL_MAP_TEST_COMPILE_DEPS)
-UTIL_MAP_TEST_RUNTIME_DEPS += $(call dependency,com.beust,jcommander,$(JCOMMANDER_VERSION))
-UTIL_MAP_TEST_RUNTIME_DEPS += $(call dependency,org.slf4j,slf4j-api,$(SLF4J_VERSION))
-UTIL_MAP_TEST_RUNTIME_DEPS += $(call dependency,org.slf4j,slf4j-nop,$(SLF4J_VERSION))
-
-## install coordinates
-UTIL_MAP_GROUP_ID = $(GROUP_ID)
-UTIL_MAP_ARTIFACT_ID = $(UTIL_MAP_MODULE)
+UTIL_MAP_TEST_RUNTIME_DEPS  = $(UTIL_MAP_TEST_COMPILE_DEPS)
+UTIL_MAP_TEST_RUNTIME_DEPS += $(SLF4J_NOP)
 
 ## copyright years for javadoc
 UTIL_MAP_COPYRIGHT_YEARS := 2022-2023

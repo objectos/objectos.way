@@ -25,6 +25,8 @@ UTIL_SET = objectos.util.set
 UTIL_SET_MODULE = $(UTIL_SET)
 
 ## module version
+UTIL_SET_GROUP_ID = $(GROUP_ID)
+UTIL_SET_ARTIFACT_ID = $(UTIL_SET_MODULE)
 UTIL_SET_VERSION = $(VERSION)
 
 ## javac --release option
@@ -41,19 +43,13 @@ UTIL_SET_COMPILE_DEPS += $(call module-gav,$(UTIL_COLLECTION))
 UTIL_SET_JAR_NAME = $(UTIL_SET)
 
 ## test compile deps
-UTIL_SET_TEST_COMPILE_DEPS = $(UTIL_SET_COMPILE_DEPS)
-UTIL_SET_TEST_COMPILE_DEPS += $(UTIL_SET_JAR_FILE)
-UTIL_SET_TEST_COMPILE_DEPS += $(call dependency,org.testng,testng,$(TESTNG_VERSION))
+UTIL_SET_TEST_COMPILE_DEPS  = $(UTIL_SET_COMPILE_DEPS)
+UTIL_SET_TEST_COMPILE_DEPS += $(call module-gav,$(UTIL_SET))
+UTIL_SET_TEST_COMPILE_DEPS += $(TESTNG)
 
 ## test runtime dependencies
-UTIL_SET_TEST_RUNTIME_DEPS = $(UTIL_SET_TEST_COMPILE_DEPS)
-UTIL_SET_TEST_RUNTIME_DEPS += $(call dependency,com.beust,jcommander,$(JCOMMANDER_VERSION))
-UTIL_SET_TEST_RUNTIME_DEPS += $(call dependency,org.slf4j,slf4j-api,$(SLF4J_VERSION))
-UTIL_SET_TEST_RUNTIME_DEPS += $(call dependency,org.slf4j,slf4j-nop,$(SLF4J_VERSION))
-
-## install coordinates
-UTIL_SET_GROUP_ID = $(GROUP_ID)
-UTIL_SET_ARTIFACT_ID = $(UTIL_SET_MODULE)
+UTIL_SET_TEST_RUNTIME_DEPS  = $(UTIL_SET_TEST_COMPILE_DEPS)
+UTIL_SET_TEST_RUNTIME_DEPS += $(SLF4J_NOP)
 
 ## copyright years for javadoc
 UTIL_SET_COPYRIGHT_YEARS := 2022-2023

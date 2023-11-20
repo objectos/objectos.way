@@ -49,15 +49,13 @@ CSS_RESOURCES = $(CSS_SELFGEN_MARKER)
 CSS_JAR_NAME = $(CSS)
 
 ## test compile deps
-CSS_TEST_COMPILE_DEPS = $(CSS_COMPILE_DEPS)
-CSS_TEST_COMPILE_DEPS += $(CSS_JAR_FILE)
-CSS_TEST_COMPILE_DEPS += $(call dependency,org.testng,testng,$(TESTNG_VERSION))
+CSS_TEST_COMPILE_DEPS  = $(CSS_COMPILE_DEPS)
+CSS_TEST_COMPILE_DEPS += $(call module-gav,$(CSS))
+CSS_TEST_COMPILE_DEPS += $(TESTNG)
 
 ## test runtime dependencies
-CSS_TEST_RUNTIME_DEPS = $(CSS_TEST_COMPILE_DEPS)
-CSS_TEST_RUNTIME_DEPS += $(call dependency,com.beust,jcommander,$(JCOMMANDER_VERSION))
-CSS_TEST_RUNTIME_DEPS += $(call dependency,org.slf4j,slf4j-api,$(SLF4J_VERSION))
-CSS_TEST_RUNTIME_DEPS += $(call dependency,org.slf4j,slf4j-nop,$(SLF4J_VERSION))
+CSS_TEST_RUNTIME_DEPS  = $(CSS_TEST_COMPILE_DEPS)
+CSS_TEST_RUNTIME_DEPS += $(SLF4J_NOP)
 
 ## test runtime exports
 CSS_TEST_JAVAX_EXPORTS = objectox.css

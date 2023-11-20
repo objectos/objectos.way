@@ -50,15 +50,13 @@ HTML_RESOURCES = $(HTML_SELFGEN_MARKER)
 HTML_JAR_NAME = $(HTML)
 
 ## test compile deps
-HTML_TEST_COMPILE_DEPS = $(HTML_COMPILE_DEPS)
-HTML_TEST_COMPILE_DEPS += $(HTML_JAR_FILE)
-HTML_TEST_COMPILE_DEPS += $(call dependency,org.testng,testng,$(TESTNG_VERSION))
+HTML_TEST_COMPILE_DEPS  = $(HTML_COMPILE_DEPS)
+HTML_TEST_COMPILE_DEPS += $(call module-gav,$(HTML))
+HTML_TEST_COMPILE_DEPS += $(TESTNG)
 
 ## test runtime dependencies
-HTML_TEST_RUNTIME_DEPS = $(HTML_TEST_COMPILE_DEPS)
-HTML_TEST_RUNTIME_DEPS += $(call dependency,com.beust,jcommander,$(JCOMMANDER_VERSION))
-HTML_TEST_RUNTIME_DEPS += $(call dependency,org.slf4j,slf4j-api,$(SLF4J_VERSION))
-HTML_TEST_RUNTIME_DEPS += $(call dependency,org.slf4j,slf4j-nop,$(SLF4J_VERSION))
+HTML_TEST_RUNTIME_DEPS  = $(HTML_TEST_COMPILE_DEPS)
+HTML_TEST_RUNTIME_DEPS += $(SLF4J_NOP)
 
 ## test runtime exports
 HTML_TEST_JAVAX_EXPORTS = objectos.html.internal

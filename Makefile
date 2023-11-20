@@ -715,7 +715,7 @@ $(1)TEST_JAVACX = $$(JAVAC)
 $(1)TEST_JAVACX += -d $$($(1)TEST_CLASS_OUTPUT)
 $(1)TEST_JAVACX += -g
 $(1)TEST_JAVACX += -Xlint:all
-$(1)TEST_JAVACX += --class-path $$(call class-path,$$($(1)TEST_COMPILE_DEPS))
+$(1)TEST_JAVACX += --class-path $$($(1)TEST_COMPILE_CLASS_PATH)
 ifeq ($$($(1)ENABLE_PREVIEW),1)
 $(1)TEST_JAVACX += --enable-preview
 endif
@@ -1204,6 +1204,9 @@ clean: $(foreach mod,$(WAY_SUBMODULES),$(mod)@clean) code@clean selfgen@clean wa
 
 .PHONY: compile
 compile: $(foreach mod,$(AT_MODULES),$(mod)@compile)
+
+.PHONY: test-compile
+test-compile: $(foreach mod,$(AT_MODULES),$(mod)@test-compile)
 
 .PHONY: test
 test: $(foreach mod,$(WAY_SUBMODULES),$(mod)@test) code@test selfgen@test way@test
