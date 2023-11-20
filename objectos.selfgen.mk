@@ -42,12 +42,12 @@ SELFGEN_COMPILE_DEPS = $(call module-gav,$(CODE))
 SELFGEN_JAR_NAME := $(SELFGEN)
 
 ## selfgen test compile deps
-SELFGEN_TEST_COMPILE_DEPS = $(CODE_JAR_FILE)
+SELFGEN_TEST_COMPILE_DEPS  = $(CODE_JAR_FILE)
 SELFGEN_TEST_COMPILE_DEPS += $(SELFGEN_JAR_FILE)
 SELFGEN_TEST_COMPILE_DEPS += $(call dependency,org.testng,testng,$(TESTNG_VERSION))
 
 ## selfgen test runtime dependencies
-SELFGEN_TEST_RUNTIME_DEPS = $(SELFGEN_TEST_COMPILE_DEPS)
+SELFGEN_TEST_RUNTIME_DEPS  = $(SELFGEN_TEST_COMPILE_DEPS)
 SELFGEN_TEST_RUNTIME_DEPS += $(call dependency,com.beust,jcommander,$(JCOMMANDER_VERSION))
 SELFGEN_TEST_RUNTIME_DEPS += $(call dependency,org.slf4j,slf4j-api,$(SLF4J_VERSION))
 SELFGEN_TEST_RUNTIME_DEPS += $(call dependency,org.slf4j,slf4j-nop,$(SLF4J_VERSION))
@@ -76,6 +76,10 @@ selfgen@jar: $(SELFGEN_JAR_FILE)
 .PHONY: selfgen@test
 selfgen@test: $(SELFGEN_TEST_RUN_MARKER)
 
-## selfgen runtime deps
-SELFGEN_RUNTIME_DEPS  = $(call module-gav,$(SELFGEN))
-SELFGEN_RUNTIME_DEPS += $(SELFGEN_COMPILE_DEPS)
+#
+# objectos.selfgen runtime stuff
+#
+
+## selfgen runtime jars
+SELFGEN_RUNTIME_JARS  = $(call dependency,$(SELFGEN_GROUP_ID),$(SELFGEN_ARTIFACT_ID),$(SELFGEN_VERSION))
+SELFGEN_RUNTIME_JARS += $(SELFGEN_COMPILE_JARS)

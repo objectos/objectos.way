@@ -84,7 +84,7 @@ $(foreach task,$(MODULE_TASKS),$(eval $(call $(task),CSS_,css@)))
 
 ## html selfgen java command
 CSS_SELFGEN_JAVAX = $(JAVA)
-CSS_SELFGEN_JAVAX += --module-path $(call module-path,$(SELFGEN_RUNTIME_DEPS))
+CSS_SELFGEN_JAVAX += --module-path $(call module-path,$(SELFGEN_RUNTIME_JARS))
 ifeq ($(SELFGEN_ENABLE_PREVIEW), 1)
 CSS_SELFGEN_JAVAX += --enable-preview
 endif

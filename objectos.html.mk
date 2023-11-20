@@ -88,7 +88,7 @@ $(foreach task,$(MODULE_TASKS),$(eval $(call $(task),HTML_,html@)))
 
 ## html selfgen java command
 HTML_SELFGEN_JAVAX = $(JAVA)
-HTML_SELFGEN_JAVAX += --module-path $(call module-path,$(SELFGEN_RUNTIME_DEPS))
+HTML_SELFGEN_JAVAX += --module-path $(call module-path,$(SELFGEN_RUNTIME_JARS))
 ifeq ($(SELFGEN_ENABLE_PREVIEW), 1)
 HTML_SELFGEN_JAVAX += --enable-preview
 endif

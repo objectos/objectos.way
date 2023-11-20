@@ -35,6 +35,7 @@ HTML_STYLE_ENABLE_PREVIEW = 0
 
 ## compile deps
 HTML_STYLE_COMPILE_DEPS  = $(call module-gav,$(HTML))
+HTML_STYLE_COMPILE_DEPS += $(call module-gav,$(NOTES))
 HTML_STYLE_COMPILE_DEPS += $(call module-gav,$(UTIL_MAP))
 HTML_STYLE_COMPILE_DEPS += $(call module-gav,$(UTIL_SET))
 
@@ -98,7 +99,7 @@ $(foreach task,$(MODULE_TASKS),$(eval $(call $(task),HTML_STYLE_,html.style@)))
 
 ## html selfgen java command
 HTML_STYLE_SELFGEN_JAVAX = $(JAVA)
-HTML_STYLE_SELFGEN_JAVAX += --module-path $(call module-path,$(SELFGEN_RUNTIME_DEPS))
+HTML_STYLE_SELFGEN_JAVAX += --module-path $(call module-path,$(SELFGEN_RUNTIME_JARS))
 ifeq ($(SELFGEN_ENABLE_PREVIEW), 1)
 HTML_STYLE_SELFGEN_JAVAX += --enable-preview
 endif

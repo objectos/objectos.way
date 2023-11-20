@@ -15,7 +15,7 @@
 #
 
 #
-# objectos.html.tmpl options
+# objectos.html.tmpl
 #
 
 ## module directory
@@ -24,7 +24,9 @@ HTML_TMPL = objectos.html.tmpl
 ## module
 HTML_TMPL_MODULE = $(HTML_TMPL)
 
-## module version
+## module coordinates
+HTML_TMPL_GROUP_ID = $(GROUP_ID)
+HTML_TMPL_ARTIFACT_ID = $(HTML_TMPL)
 HTML_TMPL_VERSION = $(VERSION)
 
 ## javac --release option
@@ -41,10 +43,6 @@ HTML_TMPL_COMPILE_REQS_MORE = $(HTML_TMPL_SELFGEN_MARKER)
 
 ## jar name
 HTML_TMPL_JAR_NAME = $(HTML_TMPL)
-
-## install coordinates
-HTML_TMPL_GROUP_ID = $(GROUP_ID)
-HTML_TMPL_ARTIFACT_ID = $(HTML_TMPL_MODULE)
 
 ## copyright years for javadoc
 HTML_TMPL_COPYRIGHT_YEARS := 2022-2023
@@ -66,7 +64,7 @@ $(foreach task,$(HTML_TMPL_TASKS),$(eval $(call $(task),HTML_TMPL_,html.tmpl@)))
 
 ## html selfgen java command
 HTML_TMPL_SELFGEN_JAVAX = $(JAVA)
-HTML_TMPL_SELFGEN_JAVAX += --module-path $(call module-path,$(SELFGEN_RUNTIME_DEPS))
+HTML_TMPL_SELFGEN_JAVAX += --module-path $(call module-path,$(SELFGEN_RUNTIME_JARS))
 ifeq ($(SELFGEN_ENABLE_PREVIEW), 1)
 HTML_TMPL_SELFGEN_JAVAX += --enable-preview
 endif
@@ -74,7 +72,7 @@ HTML_TMPL_SELFGEN_JAVAX += --module $(SELFGEN_MODULE)/$(SELFGEN_MODULE).HtmlSpec
 HTML_TMPL_SELFGEN_JAVAX += $(HTML_TMPL_MAIN)
 HTML_TMPL_SELFGEN_JAVAX += api
 
-$(HTML_TMPL_SELFGEN_MARKER): $(SELFGEN_JAR_FILE)
+$(HTML_TMPL_SELFGEN_MARKER): $(SELFGEN_RUNTIME_JARS)
 	$(HTML_TMPL_SELFGEN_JAVAX)
 	mkdir --parents $(@D)
 	touch $@
