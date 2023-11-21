@@ -51,7 +51,7 @@ OBJECTOS_DIR = .objectos
 #
 
 .PHONY: all
-all: jar
+all: resolve-external-deps test
 
 .PHONY: jar
 jar: way@jar
