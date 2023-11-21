@@ -26,7 +26,7 @@ UTIL_LIST_MODULE = $(UTIL_LIST)
 
 ## module version
 UTIL_LIST_GROUP_ID = $(GROUP_ID)
-UTIL_LIST_ARTIFACT_ID = $(UTIL_LIST_MODULE)
+UTIL_LIST_ARTIFACT_ID = $(UTIL_LIST)
 UTIL_LIST_VERSION = $(VERSION)
 
 ## javac --release option
@@ -68,9 +68,6 @@ util.list@source-jar: $(UTIL_LIST_SOURCE_JAR_FILE)
 
 .PHONY: util.list@javadoc
 util.list@javadoc: $(UTIL_LIST_JAVADOC_JAR_FILE)
-
-.PHONY: util.list@pom
-util.list@pom: $(UTIL_LIST_POM_FILE)
 
 .PHONY: util.list@ossrh-prepare
 util.list@ossrh-prepare: $(UTIL_LIST_OSSRH_PREPARE)

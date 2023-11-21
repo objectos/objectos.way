@@ -86,8 +86,5 @@ http.server@source-jar: $(HTTP_SERVER_SOURCE_JAR_FILE)
 .PHONY: http.server@javadoc
 http.server@javadoc: $(HTTP_SERVER_JAVADOC_JAR_FILE)
 
-.PHONY: http.server@pom
-http.server@pom: $(HTTP_SERVER_POM_FILE)
-
 .PHONY: http.server@ossrh-prepare
 http.server@ossrh-prepare: $(HTTP_SERVER_OSSRH_PREPARE)

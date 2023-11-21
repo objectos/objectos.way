@@ -71,9 +71,6 @@ notes@source-jar: $(NOTES_SOURCE_JAR_FILE)
 .PHONY: notes@javadoc
 notes@javadoc: $(NOTES_JAVADOC_JAR_FILE)
 
-.PHONY: notes@pom
-notes@pom: $(NOTES_POM_FILE)
-
 .PHONY: notes@ossrh-prepare
 notes@ossrh-prepare: $(NOTES_OSSRH_PREPARE)
 

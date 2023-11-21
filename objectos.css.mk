@@ -25,6 +25,8 @@ CSS = objectos.css
 CSS_MODULE = $(CSS)
 
 ## module version
+CSS_GROUP_ID = $(GROUP_ID)
+CSS_ARTIFACT_ID = $(CSS)
 CSS_VERSION = $(VERSION)
 
 ## javac --release option
@@ -56,10 +58,6 @@ CSS_TEST_RUNTIME_DEPS += $(SLF4J_NOP)
 
 ## test runtime exports
 CSS_TEST_JAVAX_EXPORTS = objectox.css
-
-## install coordinates
-CSS_GROUP_ID = $(GROUP_ID)
-CSS_ARTIFACT_ID = $(CSS_MODULE)
 
 ## copyright years for javadoc
 CSS_COPYRIGHT_YEARS := 2022-2023
@@ -100,9 +98,6 @@ css@source-jar: $(CSS_SOURCE_JAR_FILE)
 
 .PHONY: css@javadoc
 css@javadoc: $(CSS_JAVADOC_JAR_FILE)
-
-.PHONY: css@pom
-css@pom: $(CSS_POM_FILE)
 
 .PHONY: css@ossrh-prepare
 css@ossrh-prepare: $(CSS_OSSRH_PREPARE)

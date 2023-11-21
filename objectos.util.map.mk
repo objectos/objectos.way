@@ -26,7 +26,7 @@ UTIL_MAP_MODULE = $(UTIL_MAP)
 
 ## module version
 UTIL_MAP_GROUP_ID = $(GROUP_ID)
-UTIL_MAP_ARTIFACT_ID = $(UTIL_MAP_MODULE)
+UTIL_MAP_ARTIFACT_ID = $(UTIL_MAP)
 UTIL_MAP_VERSION = $(VERSION)
 
 ## javac --release option
@@ -68,9 +68,6 @@ util.map@source-jar: $(UTIL_MAP_SOURCE_JAR_FILE)
 
 .PHONY: util.map@javadoc
 util.map@javadoc: $(UTIL_MAP_JAVADOC_JAR_FILE)
-
-.PHONY: util.map@pom
-util.map@pom: $(UTIL_MAP_POM_FILE)
 
 .PHONY: util.map@ossrh-prepare
 util.map@ossrh-prepare: $(UTIL_MAP_OSSRH_PREPARE)

@@ -69,8 +69,5 @@ html.icon@source-jar: $(HTML_ICON_SOURCE_JAR_FILE)
 .PHONY: html.icon@javadoc
 html.icon@javadoc: $(HTML_ICON_JAVADOC_JAR_FILE)
 
-.PHONY: html.icon@pom
-html.icon@pom: $(HTML_ICON_POM_FILE)
-
 .PHONY: html.icon@ossrh-prepare
 html.icon@ossrh-prepare: $(HTML_ICON_OSSRH_PREPARE)

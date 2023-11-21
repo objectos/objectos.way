@@ -72,9 +72,6 @@ lang.runtime@source-jar: $(LANG_RUNTIME_SOURCE_JAR_FILE)
 .PHONY: lang.runtime@javadoc
 lang.runtime@javadoc: $(LANG_RUNTIME_JAVADOC_JAR_FILE)
 
-.PHONY: lang.runtime@pom
-lang.runtime@pom: $(LANG_RUNTIME_POM_FILE)
-
 .PHONY: lang.runtime@ossrh-prepare
 lang.runtime@ossrh-prepare: $(LANG_RUNTIME_OSSRH_PREPARE)
 

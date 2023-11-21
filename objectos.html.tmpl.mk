@@ -90,8 +90,5 @@ html.tmpl@source-jar: $(HTML_TMPL_SOURCE_JAR_FILE)
 .PHONY: html.tmpl@javadoc
 html.tmpl@javadoc: $(HTML_TMPL_JAVADOC_JAR_FILE)
 
-.PHONY: html.tmpl@pom
-html.tmpl@pom: $(HTML_TMPL_POM_FILE)
-
 .PHONY: html.tmpl@ossrh-prepare
 html.tmpl@ossrh-prepare: $(HTML_TMPL_OSSRH_PREPARE)

@@ -26,7 +26,7 @@ UTIL_SET_MODULE = $(UTIL_SET)
 
 ## module version
 UTIL_SET_GROUP_ID = $(GROUP_ID)
-UTIL_SET_ARTIFACT_ID = $(UTIL_SET_MODULE)
+UTIL_SET_ARTIFACT_ID = $(UTIL_SET)
 UTIL_SET_VERSION = $(VERSION)
 
 ## javac --release option
@@ -68,9 +68,6 @@ util.set@source-jar: $(UTIL_SET_SOURCE_JAR_FILE)
 
 .PHONY: util.set@javadoc
 util.set@javadoc: $(UTIL_SET_JAVADOC_JAR_FILE)
-
-.PHONY: util.set@pom
-util.set@pom: $(UTIL_SET_POM_FILE)
 
 .PHONY: util.set@ossrh-prepare
 util.set@ossrh-prepare: $(UTIL_SET_OSSRH_PREPARE)

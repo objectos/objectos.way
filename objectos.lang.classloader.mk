@@ -25,6 +25,8 @@ LANG_CLASSLOADER = objectos.lang.classloader
 LANG_CLASSLOADER_MODULE = $(LANG_CLASSLOADER)
 
 ## module version
+LANG_CLASSLOADER_GROUP_ID = $(GROUP_ID)
+LANG_CLASSLOADER_ARTIFACT_ID = $(LANG_CLASSLOADER)
 LANG_CLASSLOADER_VERSION = $(VERSION)
 
 ## javac --release option
@@ -60,10 +62,6 @@ LANG_CLASSLOADER_TEST_JAVAX_READS += objectos.notes.console
 ## test runtime exports
 LANG_CLASSLOADER_TEST_JAVAX_EXPORTS = objectox.lang.classloader
 
-## install coordinates
-LANG_CLASSLOADER_GROUP_ID = $(GROUP_ID)
-LANG_CLASSLOADER_ARTIFACT_ID = $(LANG_CLASSLOADER_MODULE)
-
 ## copyright years for javadoc
 LANG_CLASSLOADER_COPYRIGHT_YEARS := 2022-2023
 
@@ -85,9 +83,6 @@ lang.classloader@source-jar: $(LANG_CLASSLOADER_SOURCE_JAR_FILE)
 
 .PHONY: lang.classloader@javadoc
 lang.classloader@javadoc: $(LANG_CLASSLOADER_JAVADOC_JAR_FILE)
-
-.PHONY: lang.classloader@pom
-lang.classloader@pom: $(LANG_CLASSLOADER_POM_FILE)
 
 .PHONY: lang.classloader@ossrh-prepare
 lang.classloader@ossrh-prepare: $(LANG_CLASSLOADER_OSSRH_PREPARE)

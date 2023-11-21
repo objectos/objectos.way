@@ -25,6 +25,8 @@ HTML_STYLE = objectos.html.style
 HTML_STYLE_MODULE = $(HTML_STYLE)
 
 ## module version
+HTML_STYLE_GROUP_ID = $(GROUP_ID)
+HTML_STYLE_ARTIFACT_ID = $(HTML_STYLE)
 HTML_STYLE_VERSION = $(VERSION)
 
 ## javac --release option
@@ -70,10 +72,6 @@ HTML_STYLE_TEST_JAVAX_READS += objectos.notes.console
 ## test runtime exports
 HTML_STYLE_TEST_JAVAX_EXPORTS = objectox.html.style
 
-## install coordinates
-HTML_STYLE_GROUP_ID = $(GROUP_ID)
-HTML_STYLE_ARTIFACT_ID = $(HTML_STYLE_MODULE)
-
 ## copyright years for javadoc
 HTML_STYLE_COPYRIGHT_YEARS := 2022-2023
 
@@ -113,9 +111,6 @@ html.style@source-jar: $(HTML_STYLE_SOURCE_JAR_FILE)
 
 .PHONY: html.style@javadoc
 html.style@javadoc: $(HTML_STYLE_JAVADOC_JAR_FILE)
-
-.PHONY: html.style@pom
-html.style@pom: $(HTML_STYLE_POM_FILE)
 
 .PHONY: html.style@ossrh-prepare
 html.style@ossrh-prepare: $(HTML_STYLE_OSSRH_PREPARE)

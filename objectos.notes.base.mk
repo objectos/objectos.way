@@ -25,6 +25,8 @@ NOTES_BASE = objectos.notes.base
 NOTES_BASE_MODULE = $(NOTES_BASE)
 
 ## module version
+NOTES_BASE_GROUP_ID = $(GROUP_ID)
+NOTES_BASE_ARTIFACT_ID = $(NOTES_BASE)
 NOTES_BASE_VERSION = $(VERSION)
 
 ## javac --release option
@@ -44,10 +46,6 @@ NOTES_BASE_TEST_COMPILE_DEPS += $(TESTNG)
 ## test runtime dependencies
 NOTES_BASE_TEST_RUNTIME_DEPS  = $(NOTES_BASE_TEST_COMPILE_DEPS)
 NOTES_BASE_TEST_RUNTIME_DEPS += $(SLF4J_NOP)
-
-## install coordinates
-NOTES_BASE_GROUP_ID = $(GROUP_ID)
-NOTES_BASE_ARTIFACT_ID = $(NOTES_BASE_MODULE)
 
 ## copyright years for javadoc
 NOTES_BASE_COPYRIGHT_YEARS := 2022-2023
@@ -69,9 +67,6 @@ notes.base@source-jar: $(NOTES_BASE_SOURCE_JAR_FILE)
 
 .PHONY: notes.base@javadoc
 notes.base@javadoc: $(NOTES_BASE_JAVADOC_JAR_FILE)
-
-.PHONY: notes.base@pom
-notes.base@pom: $(NOTES_BASE_POM_FILE)
 
 .PHONY: notes.base@ossrh-prepare
 notes.base@ossrh-prepare: $(NOTES_BASE_OSSRH_PREPARE)

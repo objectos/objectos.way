@@ -58,3 +58,6 @@ CODE_TASKS += TEST_RUN_TASK
 CODE_TASKS += INSTALL_TASK
 
 $(foreach task,$(CODE_TASKS),$(eval $(call $(task),CODE_,code@)))
+
+.PHONY: code@pom
+code@pom:

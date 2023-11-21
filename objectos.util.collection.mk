@@ -26,7 +26,7 @@ UTIL_COLLECTION_MODULE = $(UTIL_COLLECTION)
 
 ## module version
 UTIL_COLLECTION_GROUP_ID = $(GROUP_ID)
-UTIL_COLLECTION_ARTIFACT_ID = $(UTIL_COLLECTION_MODULE)
+UTIL_COLLECTION_ARTIFACT_ID = $(UTIL_COLLECTION)
 UTIL_COLLECTION_VERSION = $(VERSION)
 
 ## javac --release option
@@ -67,9 +67,6 @@ util.collection@source-jar: $(UTIL_COLLECTION_SOURCE_JAR_FILE)
 
 .PHONY: util.collection@javadoc
 util.collection@javadoc: $(UTIL_COLLECTION_JAVADOC_JAR_FILE)
-
-.PHONY: util.collection@pom
-util.collection@pom: $(UTIL_COLLECTION_POM_FILE)
 
 .PHONY: util.collection@ossrh-prepare
 util.collection@ossrh-prepare: $(UTIL_COLLECTION_OSSRH_PREPARE)

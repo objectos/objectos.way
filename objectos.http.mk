@@ -25,6 +25,8 @@ HTTP = objectos.http
 HTTP_MODULE = $(HTTP)
 
 ## module version
+HTTP_GROUP_ID = $(GROUP_ID)
+HTTP_ARTIFACT_ID = $(HTTP_MODULE)
 HTTP_VERSION = $(VERSION)
 
 ## javac --release option
@@ -40,10 +42,6 @@ HTTP_TEST_COMPILE_DEPS += $(TESTNG)
 ## test runtime dependencies
 HTTP_TEST_RUNTIME_DEPS  = $(HTTP_TEST_COMPILE_DEPS)
 HTTP_TEST_RUNTIME_DEPS += $(SLF4J_NOP)
-
-## install coordinates
-HTTP_GROUP_ID = $(GROUP_ID)
-HTTP_ARTIFACT_ID = $(HTTP_MODULE)
 
 ## copyright years for javadoc
 HTTP_COPYRIGHT_YEARS := 2022-2023
@@ -65,9 +63,6 @@ http@source-jar: $(HTTP_SOURCE_JAR_FILE)
 
 .PHONY: http@javadoc
 http@javadoc: $(HTTP_JAVADOC_JAR_FILE)
-
-.PHONY: http@pom
-http@pom: $(HTTP_POM_FILE)
 
 .PHONY: http@ossrh-prepare
 http@ossrh-prepare: $(HTTP_OSSRH_PREPARE)

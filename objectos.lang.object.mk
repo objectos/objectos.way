@@ -67,8 +67,5 @@ lang.object@source-jar: $(LANG_OBJECT_SOURCE_JAR_FILE)
 .PHONY: lang.object@javadoc
 lang.object@javadoc: $(LANG_OBJECT_JAVADOC_JAR_FILE)
 
-.PHONY: lang.object@pom
-lang.object@pom: $(LANG_OBJECT_POM_FILE)
-
 .PHONY: lang.object@ossrh-prepare
 lang.object@ossrh-prepare: $(LANG_OBJECT_OSSRH_PREPARE)

@@ -51,13 +51,103 @@ OBJECTOS_DIR = .objectos
 #
 
 .PHONY: all
-all: resolve-external-deps test
+all: resolve-external-deps test install
 
 .PHONY: jar
 jar: way@jar
 
 print-%::
 	@echo $* = $($*)
+
+
+#
+# pom template
+#
+
+# $(1) = copyright years
+# $(2) = group id
+# $(3) = artifact id
+# $(4) = version
+# $(5) = description
+# $(6) = deps
+define POM_TMPL
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Copyright (C) $(1) Objectos Software LTDA.
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+	<modelVersion>4.0.0</modelVersion>
+	
+	<groupId>$(2)</groupId>
+	<artifactId>$(3)</artifactId>
+	<version>$(4)</version>
+	<name>$(2):$(3)</name>
+
+	<description>
+	$(5)
+	</description>
+
+	<url>https://www.objectos.com.br/</url>
+
+	<inceptionYear>2022</inceptionYear>
+
+	<licenses>
+		<license>
+			<name>The Apache License, Version 2.0</name>
+			<url>https://www.apache.org/licenses/LICENSE-2.0</url>
+			<distribution>repo</distribution>
+		</license>
+	</licenses>
+
+	<scm>
+		<connection>scm:git:git://github.com/objectos/objectos.way.git</connection>
+		<developerConnection>scm:git:ssh://git@github.com/objectos/objectos.way.git</developerConnection>
+		<url>https://github.com/objectos/objectos.way</url>
+		<tag>HEAD</tag>
+	</scm>
+
+	<organization>
+		<name>Objectos Software LTDA</name>
+		<url>https://www.objectos.com.br/</url>
+	</organization>
+
+	<developers>
+		<developer>
+			<id>objectos</id>
+			<name>Objectos Software LTDA</name>
+			<email>opensource@objectos.com.br</email>
+			<organization>Objectos Software LTDA</organization>
+			<organizationUrl>https://www.objectos.com.br/</organizationUrl>
+		</developer>
+	</developers>
+	
+	<dependencies>
+$(6)
+	</dependencies>
+	
+</project>
+endef
+
+#
+# mk-pom function
+#
+
+mk-pom = $(call POM_TMPL,$($(1)COPYRIGHT_YEARS),$($(1)GROUP_ID),$($(1)ARTIFACT_ID),$($(1)VERSION),$($(1)DESCRIPTION),$($(1)POM_DEPENDENCIES))
 
 #
 # Defines the tools
@@ -151,7 +241,7 @@ MODULE_PATH_SEPARATOR := :
 module-path = $(subst $(space),$(MODULE_PATH_SEPARATOR),$(1))
 
 ifndef OBJECTOS_DIR
-$(error The variable OBJECTOS_DIR was not defined)
+$(error The required variable OBJECTOS_DIR was not defined)
 endif
 
 ## to-resolutions
@@ -500,6 +590,7 @@ RESOLVEX += --resolution-dir $(RESOLUTION_DIR)
 
 $(RESOLVER_JAVA): export src = $(RESOLVER_SRC)
 $(RESOLVER_JAVA):
+	mkdir --parents $(@D)
 	echo "$${src}" > $@
 
 #
@@ -611,11 +702,6 @@ $$($(1)CLASSES): $$($(1)CLASS_OUTPUT)/%.class: $$($(1)MAIN)/%.java
 #
 # compilation deps generation
 #
-
-## project or global objectos dir
-ifndef OBJECTOS_DIR
-$$(error The variable OBJECTOS_DIR was not defined)
-endif
 
 ## resolution cache file
 $(1)RESOLUTION = $$(OBJECTOS_DIR)/resolution/$$($(1)GROUP_ID)/$$($(1)ARTIFACT_ID)/$$($(1)VERSION)
@@ -945,36 +1031,45 @@ endef
 #
 # - you must provide the pom template $$(MODULE)/pom.xml.tmpl
 
+define POM_DEPENDENCY
+		<dependency>
+			<groupId>$(1)</groupId>
+			<artifactId>$(2)</artifactId>
+			<version>$(3)</version>
+		</dependency>
+
+endef
+
+mk-pom-dep = $(call POM_DEPENDENCY,$(call word-solidus,$(1),1),$(call word-solidus,$(1),2),$(call word-solidus,$(1),3))
+
 define POM_TASK
 
 ## pom source
-$(1)POM_SOURCE = $$($(1)MODULE)/pom.xml.tmpl
+ifndef mk-pom
+$$(error The required mk-pom function was not defined)
+endif
 
 ## pom file
-$(1)POM_FILE = $$($(1)WORK)/$$($(1)JAR_NAME)-$$($(1)VERSION).pom
+$(1)POM_FILE = $$($(1)WORK)/$$($(1)ARTIFACT_ID)-$$($(1)VERSION).pom
 
-## pom external variables
-# $(1)POM_VARIABLES = 
+## deps
+$(1)POM_DEPENDENCIES = $$(foreach dep,$$($(1)COMPILE_DEPS),$$(call mk-pom-dep,$$(dep)))
 
-## ossrh pom sed command
-$(1)POM_SEDX = $$(SED)
-$(1)POM_SEDX += $$(foreach var,$$(POM_VARIABLES),--expression='s/@$$(var)@/$$($$(var))/g')
-$(1)POM_SEDX += --expression='s/@COPYRIGHT_YEARS@/$$($(1)COPYRIGHT_YEARS)/g'
-$(1)POM_SEDX += --expression='s/@ARTIFACT_ID@/$$($(1)ARTIFACT_ID)/g'
-$(1)POM_SEDX += --expression='s/@GROUP_ID@/$$($(1)GROUP_ID)/g'
-$(1)POM_SEDX += --expression='s/@VERSION@/$$($(1)VERSION)/g'
-$(1)POM_SEDX += --expression='s/@DESCRIPTION@/$$($(1)DESCRIPTION)/g'
-$(1)POM_SEDX += --expression='w $$($(1)POM_FILE)'
-$(1)POM_SEDX += $$($(1)POM_SOURCE)
+## contents
+$(1)POM_CONTENTS = $$(call mk-pom,$(1))
 
 #
 # Targets
 #
 
-$$($(1)POM_FILE): $$($(1)POM_SOURCE) Makefile
-	$$($(1)POM_SEDX)
+.PHONY: $(2)pom
+$(2)pom: $$($(1)POM_FILE)
+
+$$($(1)POM_FILE): Makefile
+	$$(file > $$@,$$($(1)POM_CONTENTS))
 
 endef
+
 ## include ossrh config
 ## - OSSRH_GPG_KEY
 ## - OSSRH_GPG_PASSPHRASE
@@ -1093,11 +1188,17 @@ TEST_TASKS  = TEST_COMPILE_TASK
 TEST_TASKS += TEST_RUN_TASK
 
 ## @ names
-AT_MODULES  = $(foreach mod,$(MODULES),$(subst objectos.,,$(mod)))
+AT_MODULES := $(foreach mod,$(MODULES),$(subst objectos.,,$(mod)))
 AT_MODULES += way
 
 ## generate module gav
 module-gav = $(GROUP_ID)/$(1)/$(VERSION)
+
+## generate common module values
+LOWER_MODULES := $(foreach mod,$(AT_MODULES),$(subst .,_,$(mod)_))
+UPPER_MODULES := $(shell echo $(LOWER_MODULES) | tr a-z A-Z)
+
+$(foreach mod,$(UPPER_MODULES),$(eval $(mod)POM_SOURCE := pom.xml.tmpl))
 
 ## include each modules's makefile
 
@@ -1245,7 +1346,7 @@ source-jar: $(foreach mod,$(WAY_SUBMODULES),$(mod)@source-jar) way@source-jar
 javadoc: $(foreach mod,$(WAY_SUBMODULES),$(mod)@javadoc) way@javadoc 
 
 .PHONY: pom
-pom: $(foreach mod,$(WAY_SUBMODULES),$(mod)@pom) way@pom 
+pom: $(foreach mod,$(AT_MODULES),$(mod)@pom) 
 
 .PHONY: ossrh-prepare
 ossrh-prepare: $(foreach mod,$(WAY_SUBMODULES),$(mod)@ossrh-prepare) way@ossrh-prepare

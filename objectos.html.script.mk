@@ -25,6 +25,8 @@ HTML_SCRIPT = objectos.html.script
 HTML_SCRIPT_MODULE = $(HTML_SCRIPT)
 
 ## module version
+HTML_SCRIPT_GROUP_ID = $(GROUP_ID)
+HTML_SCRIPT_ARTIFACT_ID = $(HTML_SCRIPT)
 HTML_SCRIPT_VERSION = $(VERSION)
 
 ## javac --release option
@@ -45,10 +47,6 @@ HTML_SCRIPT_JS_ARTIFACT = $(HTML_SCRIPT_CLASS_OUTPUT)/objectos/html/script/objec
 
 ## jar file reqs
 HTML_SCRIPT_JAR_FILE_REQS_MORE = $(HTML_SCRIPT_JS_ARTIFACT)
-
-## install coordinates
-HTML_SCRIPT_GROUP_ID = $(GROUP_ID)
-HTML_SCRIPT_ARTIFACT_ID = $(HTML_SCRIPT_MODULE)
 
 ## copyright years for javadoc
 HTML_SCRIPT_COPYRIGHT_YEARS := 2022-2023
@@ -87,9 +85,6 @@ html.script@source-jar: $(HTML_SCRIPT_SOURCE_JAR_FILE)
 
 .PHONY: html.script@javadoc
 html.script@javadoc: $(HTML_SCRIPT_JAVADOC_JAR_FILE)
-
-.PHONY: html.script@pom
-html.script@pom: $(HTML_SCRIPT_POM_FILE)
 
 .PHONY: html.script@ossrh-prepare
 html.script@ossrh-prepare: $(HTML_SCRIPT_OSSRH_PREPARE)

@@ -68,9 +68,6 @@ util.array@source-jar: $(UTIL_ARRAY_SOURCE_JAR_FILE)
 .PHONY: util.array@javadoc
 util.array@javadoc: $(UTIL_ARRAY_JAVADOC_JAR_FILE)
 
-.PHONY: util.array@pom
-util.array@pom: $(UTIL_ARRAY_POM_FILE)
-
 .PHONY: util.array@ossrh-prepare
 util.array@ossrh-prepare: $(UTIL_ARRAY_OSSRH_PREPARE)
 

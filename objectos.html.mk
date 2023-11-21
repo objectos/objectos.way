@@ -104,8 +104,5 @@ html@source-jar: $(HTML_SOURCE_JAR_FILE)
 .PHONY: html@javadoc
 html@javadoc: $(HTML_JAVADOC_JAR_FILE)
 
-.PHONY: html@pom
-html@pom: $(HTML_POM_FILE)
-
 .PHONY: html@ossrh-prepare
 html@ossrh-prepare: $(HTML_OSSRH_PREPARE)
