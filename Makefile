@@ -1236,7 +1236,7 @@ test-compile: $(foreach mod,$(AT_MODULES),$(mod)@test-compile)
 test: $(foreach mod,$(AT_MODULES),$(mod)@test)
 
 .PHONY: install
-install: $(foreach mod,$(WAY_SUBMODULES),$(mod)@install) way@install
+install: $(foreach mod,$(AT_MODULES),$(mod)@install)
 
 .PHONY: source-jar
 source-jar: $(foreach mod,$(WAY_SUBMODULES),$(mod)@source-jar) way@source-jar 
@@ -1258,9 +1258,6 @@ ossrh: way@ossrh
 
 .PHONY: gh-release
 gh-release: way@gh-release
-
-.PHONY: way@install
-way@install: $(WAY_INSTALL)
 
 .PHONY: way@source-jar
 way@source-jar: $(WAY_SOURCE_JAR_FILE)

@@ -82,9 +82,6 @@ html.script@test-compile:
 .PHONY: html.script@test
 html.script@test:
 
-.PHONY: html.script@install
-html.script@install: $(HTML_SCRIPT_INSTALL)
-
 .PHONY: html.script@source-jar
 html.script@source-jar: $(HTML_SCRIPT_SOURCE_JAR_FILE)
 

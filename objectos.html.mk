@@ -98,9 +98,6 @@ $(HTML_SELFGEN_MARKER): $(SELFGEN_JAR_FILE)
 # objectos.html targets
 #
 
-.PHONY: html@install
-html@install: $(HTML_INSTALL)
-
 .PHONY: html@source-jar
 html@source-jar: $(HTML_SOURCE_JAR_FILE)
 

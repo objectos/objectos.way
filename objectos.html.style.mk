@@ -108,9 +108,6 @@ $(HTML_STYLE_SELFGEN_MARKER): $(SELFGEN_JAR_FILE)
 # objectos.html.style targets
 #
 
-.PHONY: html.style@install
-html.style@install: $(HTML_STYLE_INSTALL)
-
 .PHONY: html.style@source-jar
 html.style@source-jar: $(HTML_STYLE_SOURCE_JAR_FILE)
 

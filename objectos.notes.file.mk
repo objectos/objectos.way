@@ -62,9 +62,6 @@ NOTES_FILE_DESCRIPTION = NoteSink implementation that writes out notes to a regu
 
 $(foreach task,$(MODULE_TASKS),$(eval $(call $(task),NOTES_FILE_,notes.file@)))
 
-.PHONY: notes.file@install
-notes.file@install: $(NOTES_FILE_INSTALL)
-
 .PHONY: notes.file@source-jar
 notes.file@source-jar: $(NOTES_FILE_SOURCE_JAR_FILE)
 

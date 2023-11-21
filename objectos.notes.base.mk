@@ -64,9 +64,6 @@ NOTES_BASE_DESCRIPTION = Base classes to write note sink implementations
 
 $(foreach task,$(MODULE_TASKS),$(eval $(call $(task),NOTES_BASE_,notes.base@)))
 
-.PHONY: notes.base@install
-notes.base@install: $(NOTES_BASE_INSTALL)
-
 .PHONY: notes.base@source-jar
 notes.base@source-jar: $(NOTES_BASE_SOURCE_JAR_FILE)
 

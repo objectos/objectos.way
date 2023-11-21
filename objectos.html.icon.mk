@@ -63,9 +63,6 @@ html.icon@test-compile:
 .PHONY: html.icon@test
 html.icon@test:
 
-.PHONY: html.icon@install
-html.icon@install: $(HTML_ICON_INSTALL)
-
 .PHONY: html.icon@source-jar
 html.icon@source-jar: $(HTML_ICON_SOURCE_JAR_FILE)
 

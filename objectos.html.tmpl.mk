@@ -84,9 +84,6 @@ html.tmpl@test-compile:
 .PHONY: html.tmpl@test
 html.tmpl@test:
 
-.PHONY: html.tmpl@install
-html.tmpl@install: $(HTML_TMPL_INSTALL)
-
 .PHONY: html.tmpl@source-jar
 html.tmpl@source-jar: $(HTML_TMPL_SOURCE_JAR_FILE)
 

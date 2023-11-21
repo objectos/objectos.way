@@ -63,9 +63,6 @@ UTIL_LIST_DESCRIPTION = Special-purpose java.util.List implementations
 
 $(foreach task,$(MODULE_TASKS),$(eval $(call $(task),UTIL_LIST_,util.list@)))
 
-.PHONY: util.list@install
-util.list@install: $(UTIL_LIST_INSTALL)
-
 .PHONY: util.list@source-jar
 util.list@source-jar: $(UTIL_LIST_SOURCE_JAR_FILE)
 

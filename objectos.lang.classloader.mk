@@ -80,9 +80,6 @@ $(foreach task,$(MODULE_TASKS),$(eval $(call $(task),LANG_CLASSLOADER_,lang.clas
 # objectos.lang.classloader targets
 #
 
-.PHONY: lang.classloader@install
-lang.classloader@install: $(LANG_CLASSLOADER_INSTALL)
-
 .PHONY: lang.classloader@source-jar
 lang.classloader@source-jar: $(LANG_CLASSLOADER_SOURCE_JAR_FILE)
 

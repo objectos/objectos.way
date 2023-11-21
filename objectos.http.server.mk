@@ -80,9 +80,6 @@ $(foreach task,$(MODULE_TASKS),$(eval $(call $(task),HTTP_SERVER_,http.server@))
 # objectos.http.server targets
 #
 
-.PHONY: http.server@install
-http.server@install: $(HTTP_SERVER_INSTALL)
-
 .PHONY: http.server@source-jar
 http.server@source-jar: $(HTTP_SERVER_SOURCE_JAR_FILE)
 

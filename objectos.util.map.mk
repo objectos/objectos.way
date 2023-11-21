@@ -63,9 +63,6 @@ UTIL_MAP_DESCRIPTION = Special-purpose java.util.Set implementations
 
 $(foreach task,$(MODULE_TASKS),$(eval $(call $(task),UTIL_MAP_,util.map@)))
 
-.PHONY: util.map@install
-util.map@install: $(UTIL_MAP_INSTALL)
-
 .PHONY: util.map@source-jar
 util.map@source-jar: $(UTIL_MAP_SOURCE_JAR_FILE)
 

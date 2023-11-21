@@ -95,9 +95,6 @@ $(CSS_SELFGEN_MARKER): $(SELFGEN_RUNTIME_JARS)
 # objectos.css targets
 #
 
-.PHONY: css@install
-css@install: $(CSS_INSTALL)
-
 .PHONY: css@source-jar
 css@source-jar: $(CSS_SOURCE_JAR_FILE)
 

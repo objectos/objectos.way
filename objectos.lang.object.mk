@@ -61,9 +61,6 @@ LANG_OBJECT_DESCRIPTION = Utilities for java.lang.Object instances
 
 $(foreach task,$(MODULE_TASKS),$(eval $(call $(task),LANG_OBJECT_,lang.object@)))
 
-.PHONY: lang.object@install
-lang.object@install: $(LANG_OBJECT_INSTALL)
-
 .PHONY: lang.object@source-jar
 lang.object@source-jar: $(LANG_OBJECT_SOURCE_JAR_FILE)
 
