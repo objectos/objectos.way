@@ -73,5 +73,11 @@ $(foreach task,$(SELFGEN_TASKS),$(eval $(call $(task),SELFGEN_,selfgen@)))
 SELFGEN_RUNTIME_JARS  = $(call dependency,$(SELFGEN_GROUP_ID),$(SELFGEN_ARTIFACT_ID),$(SELFGEN_VERSION))
 SELFGEN_RUNTIME_JARS += $(SELFGEN_COMPILE_JARS)
 
+.PHONY: selfgen@clean-install-pom
+selfgen@clean-install-pom:
+
+.PHONY: selfgen@install-pom
+selfgen@install-pom:
+
 .PHONY: selfgen@pom
 selfgen@pom:

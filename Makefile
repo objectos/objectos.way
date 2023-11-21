@@ -767,6 +767,32 @@ $$($(1)LICENSE): LICENSE
 endef
 
 #
+# install task
+#
+
+define INSTALL_TASK
+
+## install location
+$(1)INSTALL = $$(call dependency,$$($(1)GROUP_ID),$$($(1)ARTIFACT_ID),$$($(1)VERSION))
+
+#
+# install target
+#
+
+.PHONY: $(2)install
+$(2)install: $$($(1)INSTALL)
+
+.PHONY: $(2)clean-install
+$(2)clean-install:
+	rm -f $$($(1)INSTALL)
+
+$$($(1)INSTALL): $$($(1)JAR_FILE)
+	mkdir --parents $$(@D)
+	cp $$< $$@
+	
+endef
+
+#
 # test compilation options
 #
 
@@ -912,32 +938,6 @@ $$($(1)TEST_RUN_MARKER): $$($(1)TEST_RUNTIME_REQS)
 endef
 
 #
-# install task
-#
-
-define INSTALL_TASK
-
-## install location
-$(1)INSTALL = $$(call dependency,$$($(1)GROUP_ID),$$($(1)ARTIFACT_ID),$$($(1)VERSION))
-
-#
-# install target
-#
-
-.PHONY: $(2)install
-$(2)install: $$($(1)INSTALL)
-
-.PHONY: $(2)clean-install
-$(2)clean-install:
-	rm -f $$($(1)INSTALL)
-
-$$($(1)INSTALL): $$($(1)JAR_FILE)
-	mkdir --parents $$(@D)
-	cp $$< $$@
-	
-endef
-
-#
 # source-jar task
 #
 
@@ -1070,6 +1070,32 @@ $$($(1)POM_FILE): Makefile
 
 endef
 
+#
+# install task
+#
+
+define INSTALL_POM_TASK
+
+## pom install location
+$(1)INSTALL_POM = $$(basename $$($(1)INSTALL)).pom
+
+#
+# install target
+#
+
+.PHONY: $(2)install-pom
+$(2)install-pom: $$($(1)INSTALL_POM)
+
+.PHONY: $(2)clean-install-pom
+$(2)clean-install-pom:
+	rm -f $$($(1)INSTALL_POM)
+
+$$($(1)INSTALL_POM): $$($(1)POM_FILE)
+	mkdir --parents $$(@D)
+	cp $$< $$@
+	
+endef
+
 ## include ossrh config
 ## - OSSRH_GPG_KEY
 ## - OSSRH_GPG_PASSPHRASE
@@ -1181,6 +1207,7 @@ MODULE_TASKS += INSTALL_TASK
 MODULE_TASKS += SOURCE_JAR_TASK
 MODULE_TASKS += JAVADOC_TASK
 MODULE_TASKS += POM_TASK
+MODULE_TASKS += INSTALL_POM_TASK
 MODULE_TASKS += OSSRH_PREPARE_TASK
 
 ## test-related tasks
@@ -1322,7 +1349,7 @@ $(eval $(call OSSRH_BUNDLE_TASK,WAY_))
 #
 
 .PHONY: clean
-clean: $(foreach mod,$(AT_MODULES),$(mod)@clean) $(foreach mod,$(AT_MODULES),$(mod)@clean-install)
+clean: $(foreach mod,$(AT_MODULES),$(foreach t,clean clean-install clean-install-pom,$(mod)@$(t)))
 
 .PHONY: compile
 compile: $(foreach mod,$(AT_MODULES),$(mod)@compile)
@@ -1337,7 +1364,7 @@ test-compile: $(foreach mod,$(AT_MODULES),$(mod)@test-compile)
 test: $(foreach mod,$(AT_MODULES),$(mod)@test)
 
 .PHONY: install
-install: $(foreach mod,$(AT_MODULES),$(mod)@install)
+install: $(foreach mod,$(AT_MODULES),$(foreach t,install install-pom,$(mod)@$(t)))
 
 .PHONY: source-jar
 source-jar: $(foreach mod,$(WAY_SUBMODULES),$(mod)@source-jar) way@source-jar 

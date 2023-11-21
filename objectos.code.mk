@@ -59,5 +59,11 @@ CODE_TASKS += INSTALL_TASK
 
 $(foreach task,$(CODE_TASKS),$(eval $(call $(task),CODE_,code@)))
 
+.PHONY: code@clean-install-pom
+code@clean-install-pom:
+
+.PHONY: code@install-pom
+code@install-pom:
+
 .PHONY: code@pom
 code@pom:
