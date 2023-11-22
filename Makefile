@@ -1349,7 +1349,10 @@ $(eval $(call OSSRH_BUNDLE_TASK,WAY_))
 #
 
 .PHONY: clean
-clean: $(foreach mod,$(AT_MODULES),$(foreach t,clean clean-install clean-install-pom,$(mod)@$(t)))
+clean: $(foreach mod,$(AT_MODULES),$(mod)@clean)
+
+.PHONY: clean-install
+clean-install: $(foreach mod,$(AT_MODULES),$(foreach t,clean-install clean-install-pom,$(mod)@$(t)))
 
 .PHONY: compile
 compile: $(foreach mod,$(AT_MODULES),$(mod)@compile)
