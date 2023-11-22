@@ -43,9 +43,6 @@ EXTERNAL_DEPS := $(SLF4J_NOP) $(TESTNG)
 # Delete the default suffixes
 .SUFFIXES:
 
-## local objectos dir
-OBJECTOS_DIR = .objectos
-
 #
 # Default target
 #
@@ -150,7 +147,7 @@ endef
 mk-pom = $(call POM_TMPL,$($(1)COPYRIGHT_YEARS),$($(1)GROUP_ID),$($(1)ARTIFACT_ID),$($(1)VERSION),$($(1)DESCRIPTION),$($(1)POM_DEPENDENCIES))
 
 #
-# Defines the tools
+# Tools and global options
 #
 
 ## configures JAVA_HOME_BIN
@@ -158,6 +155,21 @@ ifdef JAVA_HOME
 JAVA_HOME_BIN := $(JAVA_HOME)/bin
 else
 JAVA_HOME_BIN :=
+endif
+
+## local objectos dir
+ifndef OBJECTOS_DIR
+OBJECTOS_DIR := $(HOME)/.cache/objectos
+endif
+
+## local repository path
+ifndef LOCAL_REPO_PATH
+LOCAL_REPO_PATH := $(OBJECTOS_DIR)/repository
+endif
+
+## local resolution dir
+ifndef RESOLUTION_DIR
+RESOLUTION_DIR := $(OBJECTOS_DIR)/resolution
 endif
 
 ## java command
@@ -192,18 +204,19 @@ SED := sed
 ## tr common options
 TR := tr
 
+## mvn command
+MVN := mvn
+MVN += --define maven.repo.local=$(LOCAL_REPO_PATH)
+
 #
 # Dependencies related options & functions
 #
-
-## local repository path
-LOCAL_REPO_PATH := $(HOME)/.cache/objectos
 
 ## remote repository URL
 REMOTE_REPO_URL := https://repo.maven.apache.org/maven2
 
 ## remote repository curl
-REMOTE_REPO_CURLX = $(CURL)
+REMOTE_REPO_CURLX := $(CURL)
 REMOTE_REPO_CURLX += --create-dirs
 
 ## dependency function
@@ -240,13 +253,11 @@ MODULE_PATH_SEPARATOR := :
 
 module-path = $(subst $(space),$(MODULE_PATH_SEPARATOR),$(1))
 
-ifndef OBJECTOS_DIR
-$(error The required variable OBJECTOS_DIR was not defined)
+ifndef RESOLUTION_DIR
+$(error The required variable RESOLUTION_DIR was not defined)
 endif
 
 ## to-resolutions
-
-RESOLUTION_DIR = $(OBJECTOS_DIR)/resolution
 
 mk-resolution = $(RESOLUTION_DIR)/$(1)
 
@@ -535,13 +546,8 @@ final class ThisRepositoryListener extends AbstractRepositoryListener {
 }
 endef
 
-## resolver path
-ifndef RESOLVER_PATH
-RESOLVER_PATH = $(OBJECTOS_DIR)
-endif
-
 ## Resolver.java path
-RESOLVER_JAVA = $(RESOLVER_PATH)/Resolver.java
+RESOLVER_JAVA = $(OBJECTOS_DIR)/Resolver.java
 
 ## Resolver.java deps
 RESOLVER_DEPS  = commons-codec/commons-codec/1.16.0
@@ -680,31 +686,11 @@ $(1)COMPILE_REQS += $$($(1)COMPILE_REQS_MORE)
 endif
 
 #
-# compilation targets
-#
-
-.PHONY: $(2)compile
-$(2)compile: $$($(1)COMPILE_MARKER)
-
-.PHONY: $(2)compile-jars
-$(2)compile-jars: $$($(1)COMPILE_JARS)
-
-$$($(1)COMPILE_MARKER): $$($(1)COMPILE_REQS)
-	if [ -n "$$($(1)DIRTY)" ]; then \
-		$(MAKE) $(2)compile-jars; \
-		$$($(1)JAVACX); \
-	fi
-	touch $$@
-
-$$($(1)CLASSES): $$($(1)CLASS_OUTPUT)/%.class: $$($(1)MAIN)/%.java
-	$$(eval $(1)DIRTY += $$$$<)
-
-#
 # compilation deps generation
 #
 
 ## resolution cache file
-$(1)RESOLUTION = $$(OBJECTOS_DIR)/resolution/$$($(1)GROUP_ID)/$$($(1)ARTIFACT_ID)/$$($(1)VERSION)
+$(1)RESOLUTION = $$(RESOLUTION_DIR)/$$($(1)GROUP_ID)/$$($(1)ARTIFACT_ID)/$$($(1)VERSION)
 
 ## resolution cache file reqs
 ifndef $(1)RESOLUTION_REQS
@@ -720,6 +706,26 @@ $(1)RESOLUTION_JARS += $$(call to-jars-paths,$$($(1)COMPILE_DEPS))
 $$($(1)RESOLUTION): $$($(1)RESOLUTION_REQS)
 	mkdir --parents $$(@D)
 	echo "$$(sort $$($(1)RESOLUTION_JARS))" | $(TR) ' ' '\n' > $$($(1)RESOLUTION)
+
+#
+# compilation targets
+#
+
+.PHONY: $(2)compile
+$(2)compile: $$($(1)COMPILE_MARKER)
+
+.PHONY: $(2)compile-jars
+$(2)compile-jars: $$($(1)COMPILE_JARS) $$($(1)RESOLUTION)
+
+$$($(1)COMPILE_MARKER): $$($(1)COMPILE_REQS)
+	if [ -n "$$($(1)DIRTY)" ]; then \
+		$(MAKE) $(2)compile-jars; \
+		$$($(1)JAVACX); \
+	fi
+	touch $$@
+
+$$($(1)CLASSES): $$($(1)CLASS_OUTPUT)/%.class: $$($(1)MAIN)/%.java
+	$$(eval $(1)DIRTY += $$$$<)
 
 endef
 
