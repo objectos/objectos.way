@@ -267,7 +267,7 @@ to-resolutions = $(foreach dep,$(1),$(call mk-resolution,$(dep)))
 
 to-jars-paths = $(foreach res,$(call to-resolutions,$(1)),$(file < $(res)))
 
-to-jars = $(foreach jar,$(call to-jars-paths,$(1)),$(LOCAL_REPO_PATH)/$(jar))
+to-jars = $(sort $(foreach jar,$(call to-jars-paths,$(1)),$(LOCAL_REPO_PATH)/$(jar)))
 
 #
 # Gets the dependency from the remote repository
@@ -594,10 +594,9 @@ RESOLVEX += --resolution-dir $(RESOLUTION_DIR)
 # resolver rules
 #
 
-$(RESOLVER_JAVA): export src = $(RESOLVER_SRC)
-$(RESOLVER_JAVA):
+$(RESOLVER_JAVA): Makefile
 	mkdir --parents $(@D)
-	echo "$${src}" > $@
+	$(file > $@,$(RESOLVER_SRC))
 
 #
 # clean task
