@@ -854,6 +854,7 @@ $(1)TEST_RESOURCES_OUT = $$($(1)TEST_RESOURCES_SRC:$$($(1)TEST_RESOURCES)/%=$$($
 
 ## target to copy test resources
 $$($(1)TEST_RESOURCES_OUT): $$($(1)TEST_CLASS_OUTPUT)/%: $$($(1)TEST_RESOURCES)/%
+	mkdir --parents $$(@D)
 	cp $$< $$@
 endif
 
@@ -913,8 +914,14 @@ endif
 ## test runtime output path
 $(1)TEST_RUNTIME_OUTPUT = $$($(1)WORK)/test-output
 
+## test system properties
+#$(1)TEST_RUNTIME_SYSPROPS
+
 ## test java command
-$(1)TEST_JAVAX = $$(JAVA)
+$(1)TEST_JAVAX  = $$(JAVA)
+ifdef $(1)TEST_RUNTIME_SYSPROPS
+$(1)TEST_JAVAX += $$(foreach v,$$($(1)TEST_RUNTIME_SYSPROPS),-D$$(v))
+endif
 $(1)TEST_JAVAX += --module-path $$($(1)TEST_RUNTIME_MODULE_PATH)
 ifdef $(1)TEST_JAVAX_MODULES
 $(1)TEST_JAVAX += $$(foreach mod,$$($(1)TEST_JAVAX_MODULES),--add-modules $$(mod))
@@ -1206,6 +1213,7 @@ MODULES += objectos.util.list
 MODULES += objectos.util.set
 MODULES += objectos.util.map
 MODULES += objectos.core.io
+MODULES += objectos.fs
 MODULES += objectos.code
 MODULES += objectos.selfgen
 MODULES += objectos.html.tmpl
