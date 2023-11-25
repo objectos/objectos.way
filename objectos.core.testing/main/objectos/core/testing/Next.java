@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.fs;
+package objectos.core.testing;
 
 import java.util.Random;
 
@@ -27,7 +27,7 @@ import java.util.Random;
  * Please not that this class is designed to be used in testing environments
  * only. It is not designed to be used in production.
  */
-final class Next {
+public final class Next {
 
   private static final Random RANDOM;
 
