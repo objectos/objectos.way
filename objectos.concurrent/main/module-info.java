@@ -13,15 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.core.service;
+/**
+ * Defines the Objectos Concurrent API.
+ */
+module objectos.concurrent {
+  exports objectos.concurrent;
 
-import org.testng.annotations.Test;
+  requires transitive objectos.core.service;
+  requires transitive objectos.notes;
 
-public class ServicesTest {
-
-  @Test
-  public void test() {
-
-  }
-
+  requires objectos.lang.object;
+  requires objectos.util.array;
+  requires objectos.util.list;
 }

@@ -1218,6 +1218,7 @@ MODULES += objectos.core.testing
 MODULES += objectos.fs
 MODULES += objectos.fs.testing
 MODULES += objectos.fs.zip
+MODULES += objectos.concurrent
 MODULES += objectos.code
 MODULES += objectos.selfgen
 MODULES += objectos.html.tmpl

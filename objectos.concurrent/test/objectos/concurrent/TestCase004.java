@@ -13,15 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.core.service;
+package objectos.concurrent;
 
-import org.testng.annotations.Test;
+/**
+ * {@link FixedCpuWorker}
+ *
+ * - start empty (waiting for tasks);
+ * - take single task;
+ * - task completes normally;
+ * - back to waiting.
+ */
+final class TestCase004 {
 
-public class ServicesTest {
+  public static final String DESCRIPTION = "FixedCpuWorker single task (completes normally)";
 
-  @Test
-  public void test() {
-
+  public static FixedExecutionCount takeTask() {
+    return new FixedExecutionCount(2);
   }
 
 }

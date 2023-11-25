@@ -13,15 +13,39 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.core.service;
+package objectos.concurrent;
 
-import org.testng.annotations.Test;
+final class CountingIoTask implements IoTask {
 
-public class ServicesTest {
+  private volatile boolean active = true;
 
-  @Test
-  public void test() {
+  private volatile int counter;
 
+  @Override
+  public final void executeIo() {
+    try {
+      while (active) {
+        counter++;
+
+        Thread.sleep(1);
+      }
+    } catch (InterruptedException e) {
+      return;
+    }
+  }
+
+  public final int get() {
+    return counter;
+  }
+
+  public final void reset() {
+    active = true;
+
+    counter = 0;
+  }
+
+  public final void signalStop() {
+    active = false;
   }
 
 }

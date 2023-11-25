@@ -13,15 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.core.service;
+package objectos.concurrent;
 
-import org.testng.annotations.Test;
+/**
+ * An {@code IoWorker} that can be started and stopped.
+ *
+ * @since 2
+ */
+public abstract class IoWorkerService extends AbstractConcurrentService implements IoWorker {
 
-public class ServicesTest {
-
-  @Test
-  public void test() {
-
-  }
+  /**
+   * Sole constructor.
+   */
+  protected IoWorkerService() {}
 
 }

@@ -13,15 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.core.service;
+package objectos.concurrent;
 
-import org.testng.annotations.Test;
+final class FixedExecutionCount implements CpuTask {
 
-public class ServicesTest {
+  private int count;
 
-  @Test
-  public void test() {
+  private final int stopAt;
 
+  FixedExecutionCount(int stopAt) {
+    this.stopAt = stopAt;
+  }
+
+  @Override
+  public final void executeOne() {
+    count++;
+  }
+
+  @Override
+  public final boolean isActive() {
+    return count != stopAt;
   }
 
 }

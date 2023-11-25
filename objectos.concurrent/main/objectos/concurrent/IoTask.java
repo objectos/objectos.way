@@ -13,15 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.core.service;
+package objectos.concurrent;
 
-import org.testng.annotations.Test;
+/**
+ * An I/O bound task that must be run in a single thread.
+ *
+ * @since 1
+ */
+public interface IoTask {
 
-public class ServicesTest {
-
-  @Test
-  public void test() {
-
-  }
+  /**
+   * Executes this I/O task completely.
+   */
+  void executeIo();
 
 }

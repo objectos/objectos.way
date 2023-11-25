@@ -13,15 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.core.service;
+package objectos.concurrent;
 
-import org.testng.annotations.Test;
+/**
+ * A {@code CpuArray} service that can be started and stopped.
+ *
+ * @since 3
+ */
+public abstract class CpuArrayService extends AbstractConcurrentService implements CpuArray {
 
-public class ServicesTest {
-
-  @Test
-  public void test() {
-
-  }
+  /**
+   * Sole constructor.
+   */
+  protected CpuArrayService() {}
 
 }

@@ -13,15 +13,32 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.core.service;
+package objectos.concurrent;
 
-import org.testng.annotations.Test;
+/**
+ * Executes {@linkplain IoTask I/O bound tasks}.
+ *
+ * @since 2
+ */
+public interface IoWorker {
 
-public class ServicesTest {
+  /**
+   * Cancels (if not yet running) or interrupts (if running) the specified task.
+   *
+   * @param task
+   *        the I/O task to cancel or interrupt
+   *
+   * @return {@code true} if the task was cancelled or interrupted,
+   *         {@code false} otherwise
+   */
+  boolean cancelOrInterrupt(IoTask task);
 
-  @Test
-  public void test() {
-
-  }
+  /**
+   * Submits the specified task for running in this worker.
+   *
+   * @param task
+   *        the I/O task to submit
+   */
+  void submit(IoTask task);
 
 }

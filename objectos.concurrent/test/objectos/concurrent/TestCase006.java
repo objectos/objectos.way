@@ -13,15 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.core.service;
+package objectos.concurrent;
 
-import org.testng.annotations.Test;
+/**
+ * {@link FixedCpuWorker}
+ *
+ * - verify slot handling algo
+ */
+final class TestCase006 {
 
-public class ServicesTest {
+  public static final String DESCRIPTION = "FixedCpuWorker: verify slot handling algo";
 
-  @Test
-  public void test() {
-
+  public static FixedExecutionCount fixedTask(int count) {
+    return new FixedExecutionCount(count);
   }
 
 }

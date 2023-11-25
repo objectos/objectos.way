@@ -13,15 +13,33 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.core.service;
+package objectos.concurrent;
 
-import org.testng.annotations.Test;
+import objectos.notes.Note0;
+import objectos.notes.Note1;
 
-public class ServicesTest {
+abstract class FixedCpuWorkerThreadAdapter {
 
-  @Test
-  public void test() {
+  abstract void assertNull(int index);
 
-  }
+  abstract CpuTask get(int index);
+
+  abstract boolean hasSlot(int index);
+
+  abstract boolean hasTask();
+
+  abstract boolean interrupted();
+
+  abstract void log(Note0 event);
+
+  abstract <T1> void log(Note1<T1> event, T1 t1);
+
+  abstract CpuTask poll();
+
+  abstract void set(int index, CpuTask task);
+
+  abstract boolean shutdown();
+
+  abstract CpuTask take() throws InterruptedException;
 
 }
