@@ -1212,6 +1212,7 @@ MODULES += objectos.util.collection
 MODULES += objectos.util.list
 MODULES += objectos.util.set
 MODULES += objectos.util.map
+MODULES += objectos.core.service
 MODULES += objectos.core.io
 MODULES += objectos.core.testing
 MODULES += objectos.fs
