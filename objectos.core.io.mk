@@ -44,6 +44,9 @@ CORE_IO_TEST_COMPILE_DEPS  = $(CORE_IO_COMPILE_DEPS)
 CORE_IO_TEST_COMPILE_DEPS += $(call module-gav,$(CORE_IO))
 CORE_IO_TEST_COMPILE_DEPS += $(TESTNG)
 
+## test resources
+CORE_IO_TEST_RESOURCES := $(CORE_IO)/test-resources
+
 ## test runtime dependencies
 CORE_IO_TEST_RUNTIME_DEPS  = $(CORE_IO_TEST_COMPILE_DEPS)
 CORE_IO_TEST_RUNTIME_DEPS += $(SLF4J_NOP)
@@ -71,4 +74,3 @@ core.io@javadoc: $(CORE_IO_JAVADOC_JAR_FILE)
 
 .PHONY: core.io@ossrh-prepare
 core.io@ossrh-prepare: $(CORE_IO_OSSRH_PREPARE)
-
