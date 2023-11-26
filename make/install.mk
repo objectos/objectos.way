@@ -20,22 +20,40 @@
 
 define INSTALL_TASK
 
-## install location
-$(1)INSTALL = $$(call dependency,$$($(1)GROUP_ID),$$($(1)ARTIFACT_ID),$$($(1)VERSION))
+## install location (jar)
+$(1)INSTALL = $$(LOCAL_REPO_PATH)/$$(call mk-dependency,$$($(1)GROUP_ID),$$($(1)ARTIFACT_ID),$$($(1)VERSION),jar)
+
+## install location (pom)
+$(1)INSTALL_POM = $$(LOCAL_REPO_PATH)/$$(call mk-dependency,$$($(1)GROUP_ID),$$($(1)ARTIFACT_ID),$$($(1)VERSION),pom)
+
+## install target reqs
+$(1)INSTALL_REQS := $$($(1)INSTALL)
+ifdef $(1)POM_FILE
+$(1)INSTALL_REQS += $$($(1)INSTALL_POM)
+endif
 
 #
 # install target
 #
 
 .PHONY: $(2)install
-$(2)install: $$($(1)INSTALL)
+$(2)install: $$($(1)INSTALL_REQS)
 
 .PHONY: $(2)clean-install
 $(2)clean-install:
 	rm -f $$($(1)INSTALL)
+	ifdef $(1)POM_FILE
+	rm -f $$($(1)INSTALL_POM)
+	endif
 
 $$($(1)INSTALL): $$($(1)JAR_FILE)
 	@mkdir --parents $$(@D)
 	cp $$< $$@
-	
+
+ifdef $(1)POM_FILE
+$$($(1)INSTALL_POM): $$($(1)POM_FILE)
+	@mkdir --parents $$(@D)
+	cp $$< $$@
+endif
+
 endef

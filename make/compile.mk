@@ -94,7 +94,7 @@ endif
 $(1)RESOLUTION_DEPS  = $$($(1)GROUP_ID)/$$($(1)ARTIFACT_ID)/$$($(1)VERSION)
 $(1)RESOLUTION_DEPS += $$($(1)COMPILE_DEPS)
 
-$(1)RESOLUTION_JARS  = $$(call mk-dependency,$$($(1)GROUP_ID),$$($(1)ARTIFACT_ID),$$($(1)VERSION))
+$(1)RESOLUTION_JARS  = $$(call mk-dependency,$$($(1)GROUP_ID),$$($(1)ARTIFACT_ID),$$($(1)VERSION),jar)
 $(1)RESOLUTION_JARS += $$(call to-jars-paths,$$($(1)COMPILE_DEPS))
 
 $$($(1)RESOLUTION): $$($(1)RESOLUTION_REQS)

@@ -45,13 +45,12 @@ INCLUDES += resolver.mk
 INCLUDES += clean.mk
 INCLUDES += compile.mk
 INCLUDES += jar.mk
-INCLUDES += install.mk
 INCLUDES += test-compile.mk
 INCLUDES += test-run.mk
 INCLUDES += source-jar.mk
 INCLUDES += mk-pom.mk
 INCLUDES += pom.mk
-INCLUDES += install-pom.mk
+INCLUDES += install.mk
 INCLUDES += ossrh-config.mk
 INCLUDES += ossrh-prepare.mk
 INCLUDES += ossrh-bundle.mk
@@ -123,11 +122,10 @@ MODULE_TASKS += COMPILE_TASK
 MODULE_TASKS += JAR_TASK
 MODULE_TASKS += TEST_COMPILE_TASK
 MODULE_TASKS += TEST_RUN_TASK
-MODULE_TASKS += INSTALL_TASK
 MODULE_TASKS += SOURCE_JAR_TASK
 MODULE_TASKS += JAVADOC_TASK
 MODULE_TASKS += POM_TASK
-MODULE_TASKS += INSTALL_POM_TASK
+MODULE_TASKS += INSTALL_TASK
 MODULE_TASKS += OSSRH_PREPARE_TASK
 
 ## test-related tasks
@@ -285,7 +283,7 @@ test-compile: $(foreach mod,$(AT_MODULES),$(mod)@test-compile)
 test: $(foreach mod,$(AT_MODULES),$(mod)@test)
 
 .PHONY: install
-install: $(foreach mod,$(AT_MODULES),$(foreach t,install install-pom,$(mod)@$(t)))
+install: $(foreach mod,$(AT_MODULES),$(mod)@install)
 
 .PHONY: source-jar
 source-jar: $(foreach mod,$(WAY_SUBMODULES),$(mod)@source-jar) way@source-jar 

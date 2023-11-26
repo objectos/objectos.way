@@ -33,7 +33,7 @@ colon := :
 dot := .
 solidus := /
 
-mk-dependency = $(subst $(dot),$(solidus),$(1))/$(2)/$(3)/$(2)-$(3).jar
+mk-dependency = $(subst $(dot),$(solidus),$(1))/$(2)/$(3)/$(2)-$(3).$(4)
 
 dependency = $(LOCAL_REPO_PATH)/$(subst $(dot),$(solidus),$(1))/$(2)/$(3)/$(2)-$(3).jar
 
