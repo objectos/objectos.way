@@ -1219,6 +1219,7 @@ MODULES += objectos.fs
 MODULES += objectos.fs.testing
 MODULES += objectos.fs.zip
 MODULES += objectos.concurrent
+MODULES += objectos.mysql
 MODULES += objectos.code
 MODULES += objectos.selfgen
 MODULES += objectos.html.tmpl
