@@ -28,194 +28,196 @@ import objectox.http.StandardHeaderName;
 
 public final class Http {
 
-	public static final class Header {
+  public static final class Header {
 
-		private Header() {}
+    private Header() {}
 
-		public interface Name {
-			String capitalized();
-		}
+    public interface Name {
+      String capitalized();
+    }
 
-		public interface Value {
+    public interface Value {
 
-			Value NULL = new Value() {
-				@Override
-				public final boolean contentEquals(CharSequence cs) { return false; }
-			};
+      Value NULL = new Value() {
+        @Override
+        public final boolean contentEquals(CharSequence cs) { return false; }
+      };
 
-			boolean contentEquals(CharSequence cs);
+      boolean contentEquals(CharSequence cs);
 
-		}
+    }
 
-		public static final Name ACCEPT_ENCODING = StandardHeaderName.ACCEPT_ENCODING;
+    public static final Name ACCEPT_ENCODING = StandardHeaderName.ACCEPT_ENCODING;
 
-		public static final Name CONNECTION = StandardHeaderName.CONNECTION;
+    public static final Name CONNECTION = StandardHeaderName.CONNECTION;
 
-		public static final Name CONTENT_LENGTH = StandardHeaderName.CONTENT_LENGTH;
+    public static final Name CONTENT_LENGTH = StandardHeaderName.CONTENT_LENGTH;
 
-		public static final Name CONTENT_TYPE = StandardHeaderName.CONTENT_TYPE;
+    public static final Name CONTENT_TYPE = StandardHeaderName.CONTENT_TYPE;
 
-		public static final Name DATE = StandardHeaderName.DATE;
+    public static final Name DATE = StandardHeaderName.DATE;
 
-		public static final Name HOST = StandardHeaderName.HOST;
+    public static final Name HOST = StandardHeaderName.HOST;
 
-		public static final Name LOCATION = StandardHeaderName.LOCATION;
+    public static final Name LOCATION = StandardHeaderName.LOCATION;
 
-		public static final Name TRANSFER_ENCODING = StandardHeaderName.TRANSFER_ENCODING;
+    public static final Name TRANSFER_ENCODING = StandardHeaderName.TRANSFER_ENCODING;
 
-		public static final Name USER_AGENT = StandardHeaderName.USER_AGENT;
+    public static final Name USER_AGENT = StandardHeaderName.USER_AGENT;
 
-	}
+  }
 
-	/**
-	 * The HTTP methods.
-	 */
-	public enum Method {
+  /**
+   * The HTTP methods.
+   */
+  public enum Method {
 
-		/**
-		 * The CONNECT method.
-		 */
-		CONNECT,
+    /**
+     * The CONNECT method.
+     */
+    CONNECT,
 
-		/**
-		 * The DELETE method.
-		 */
-		DELETE,
+    /**
+     * The DELETE method.
+     */
+    DELETE,
 
-		/**
-		 * The GET method.
-		 */
-		GET,
+    /**
+     * The GET method.
+     */
+    GET,
 
-		/**
-		 * The HEAD method.
-		 */
-		HEAD,
+    /**
+     * The HEAD method.
+     */
+    HEAD,
 
-		/**
-		 * The OPTIONS method.
-		 */
-		OPTIONS,
+    /**
+     * The OPTIONS method.
+     */
+    OPTIONS,
 
-		/**
-		 * The PATCH method.
-		 */
-		PATCH,
+    /**
+     * The PATCH method.
+     */
+    PATCH,
 
-		/**
-		 * The POST method.
-		 */
-		POST,
+    /**
+     * The POST method.
+     */
+    POST,
 
-		/**
-		 * The PUT method.
-		 */
-		PUT,
+    /**
+     * The PUT method.
+     */
+    PUT,
 
-		/**
-		 * The TRACE method.
-		 */
-		TRACE;
+    /**
+     * The TRACE method.
+     */
+    TRACE;
 
-	}
+  }
 
-	public sealed interface Status permits objectox.http.HttpStatus {
+  public sealed interface Status permits objectox.http.HttpStatus {
 
-		Status OK_200 = HttpStatus.OK;
+    Status OK_200 = HttpStatus.OK;
 
-		Status INTERNAL_SERVER_ERROR_500 = HttpStatus.INTERNAL_SERVER_ERROR;
+    Status MOVED_PERMANENTLY_301 = HttpStatus.MOVED_PERMANENTLY;
 
-		Status MOVED_PERMANENTLY_301 = HttpStatus.MOVED_PERMANENTLY;
+    Status FOUND_302 = HttpStatus.FOUND;
 
-		Status SEE_OTHER_303 = HttpStatus.SEE_OTHER;
+    Status SEE_OTHER_303 = HttpStatus.SEE_OTHER;
 
-		Status NOT_FOUND_404 = HttpStatus.NOT_FOUND;
+    Status NOT_FOUND_404 = HttpStatus.NOT_FOUND;
 
-		Status METHOD_NOT_ALLOWED_405 = HttpStatus.METHOD_NOT_ALLOWED;
+    Status METHOD_NOT_ALLOWED_405 = HttpStatus.METHOD_NOT_ALLOWED;
 
-		Status UNSUPPORTED_MEDIA_TYPE_415 = HttpStatus.UNSUPPORTED_MEDIA_TYPE;
+    Status UNSUPPORTED_MEDIA_TYPE_415 = HttpStatus.UNSUPPORTED_MEDIA_TYPE;
 
-		Status UNPROCESSABLE_CONTENT_422 = HttpStatus.UNPROCESSABLE_CONTENT;
+    Status UNPROCESSABLE_CONTENT_422 = HttpStatus.UNPROCESSABLE_CONTENT;
 
-		int code();
+    Status INTERNAL_SERVER_ERROR_500 = HttpStatus.INTERNAL_SERVER_ERROR;
 
-		String description();
+    int code();
 
-	}
+    String description();
 
-	private static final DateTimeFormatter IMF_FIXDATE;
+  }
 
-	static {
-		DateTimeFormatterBuilder b;
-		b = new DateTimeFormatterBuilder();
+  private static final DateTimeFormatter IMF_FIXDATE;
 
-		Map<Long, String> dow;
-		dow = new HashMap<>();
+  static {
+    DateTimeFormatterBuilder b;
+    b = new DateTimeFormatterBuilder();
 
-		dow.put(1L, "Mon");
-		dow.put(2L, "Tue");
-		dow.put(3L, "Wed");
-		dow.put(4L, "Thu");
-		dow.put(5L, "Fri");
-		dow.put(6L, "Sat");
-		dow.put(7L, "Sun");
+    Map<Long, String> dow;
+    dow = new HashMap<>();
 
-		b.appendText(ChronoField.DAY_OF_WEEK, dow);
+    dow.put(1L, "Mon");
+    dow.put(2L, "Tue");
+    dow.put(3L, "Wed");
+    dow.put(4L, "Thu");
+    dow.put(5L, "Fri");
+    dow.put(6L, "Sat");
+    dow.put(7L, "Sun");
 
-		b.appendLiteral(", ");
+    b.appendText(ChronoField.DAY_OF_WEEK, dow);
 
-		b.appendValue(ChronoField.DAY_OF_MONTH, 2);
+    b.appendLiteral(", ");
 
-		b.appendLiteral(' ');
+    b.appendValue(ChronoField.DAY_OF_MONTH, 2);
 
-		Map<Long, String> moy;
-		moy = new HashMap<>();
+    b.appendLiteral(' ');
 
-		moy.put(1L, "Jan");
-		moy.put(2L, "Feb");
-		moy.put(3L, "Mar");
-		moy.put(4L, "Apr");
-		moy.put(5L, "May");
-		moy.put(6L, "Jun");
-		moy.put(7L, "Jul");
-		moy.put(8L, "Aug");
-		moy.put(9L, "Sep");
-		moy.put(10L, "Oct");
-		moy.put(11L, "Nov");
-		moy.put(12L, "Dec");
+    Map<Long, String> moy;
+    moy = new HashMap<>();
 
-		b.appendText(ChronoField.MONTH_OF_YEAR, moy);
+    moy.put(1L, "Jan");
+    moy.put(2L, "Feb");
+    moy.put(3L, "Mar");
+    moy.put(4L, "Apr");
+    moy.put(5L, "May");
+    moy.put(6L, "Jun");
+    moy.put(7L, "Jul");
+    moy.put(8L, "Aug");
+    moy.put(9L, "Sep");
+    moy.put(10L, "Oct");
+    moy.put(11L, "Nov");
+    moy.put(12L, "Dec");
 
-		b.appendLiteral(' ');
+    b.appendText(ChronoField.MONTH_OF_YEAR, moy);
 
-		b.appendValue(ChronoField.YEAR, 4);
+    b.appendLiteral(' ');
 
-		b.appendLiteral(' ');
+    b.appendValue(ChronoField.YEAR, 4);
 
-		b.appendValue(ChronoField.HOUR_OF_DAY, 2);
+    b.appendLiteral(' ');
 
-		b.appendLiteral(':');
+    b.appendValue(ChronoField.HOUR_OF_DAY, 2);
 
-		b.appendValue(ChronoField.MINUTE_OF_HOUR, 2);
+    b.appendLiteral(':');
 
-		b.appendLiteral(':');
+    b.appendValue(ChronoField.MINUTE_OF_HOUR, 2);
 
-		b.appendValue(ChronoField.SECOND_OF_MINUTE, 2);
+    b.appendLiteral(':');
 
-		b.appendLiteral(' ');
+    b.appendValue(ChronoField.SECOND_OF_MINUTE, 2);
 
-		b.appendOffset("+HHMM", "GMT");
+    b.appendLiteral(' ');
 
-		IMF_FIXDATE = b.toFormatter(Locale.US);
-	}
+    b.appendOffset("+HHMM", "GMT");
 
-	private Http() {}
+    IMF_FIXDATE = b.toFormatter(Locale.US);
+  }
 
-	public static String formatDate(ZonedDateTime date) {
-		ZonedDateTime normalized;
-		normalized = date.withZoneSameInstant(ZoneOffset.UTC);
+  private Http() {}
 
-		return IMF_FIXDATE.format(normalized);
-	}
+  public static String formatDate(ZonedDateTime date) {
+    ZonedDateTime normalized;
+    normalized = date.withZoneSameInstant(ZoneOffset.UTC);
+
+    return IMF_FIXDATE.format(normalized);
+  }
 
 }
