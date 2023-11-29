@@ -683,8 +683,7 @@ public abstract class AbstractMysqlTest {
     setLoginPath = null;
   }
 
-  private void waitReadyForConnections(long offset)
-                                                    throws IOException, InterruptedException, TimeoutException {
+  private void waitReadyForConnections(long offset) throws IOException, InterruptedException, TimeoutException {
     ResolvedPath errorLogObject;
     errorLogObject = fs.errorLogPath;
 

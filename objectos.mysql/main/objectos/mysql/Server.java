@@ -172,9 +172,7 @@ public final class Server extends Executable implements Service {
     }
   }
 
-  private Process initialize0(
-                              String init,
-                              ServerOption additionalOption) throws IOException {
+  private Process initialize0(String init, ServerOption additionalOption) throws IOException {
     ProcessBuilder builder;
     builder = new ProcessBuilder();
 
