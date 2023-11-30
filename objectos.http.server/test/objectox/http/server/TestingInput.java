@@ -47,11 +47,11 @@ public interface TestingInput {
     }
   }
 
-  static HeaderValue hv(String string) {
+  static BufferHeaderValue hv(String string) {
     final byte[] bytes;
     bytes = Bytes.utf8(string);
 
-    return new HeaderValue(bytes, 0, bytes.length);
+    return new BufferHeaderValue(bytes, 0, bytes.length);
   }
 
   private static void regularAccept(HttpExchange exchange) {

@@ -23,7 +23,7 @@ public class HeaderValueTest {
 
   @Test
   public void unsignedLongValue() {
-    HeaderValue hv;
+    BufferHeaderValue hv;
     hv = TestingInput.hv("9223372036854775807");
 
     assertEquals(hv.unsignedLongValue(), 9_223_372_036_854_775_807L);

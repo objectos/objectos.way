@@ -148,11 +148,11 @@ public class HttpExchangeHandleTest {
     }
   }
 
-  private HeaderValue hv(String string) {
+  private BufferHeaderValue hv(String string) {
     byte[] bytes;
     bytes = string.getBytes(StandardCharsets.UTF_8);
 
-    return new HeaderValue(bytes, 0, bytes.length);
+    return new BufferHeaderValue(bytes, 0, bytes.length);
   }
 
 }

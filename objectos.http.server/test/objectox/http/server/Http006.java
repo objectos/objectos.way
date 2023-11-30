@@ -19,6 +19,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import objectos.http.HeaderValue;
 import objectos.http.Http;
 import objectos.http.Http.Status;
 import objectos.http.server.Body;
@@ -75,7 +76,7 @@ public final class Http006 {
       return;
     }
 
-    Http.Header.Value contentType;
+    HeaderValue contentType;
     contentType = exchange.header(Http.Header.CONTENT_TYPE);
 
     if (!contentType.contentEquals("application/x-www-form-urlencoded")) {

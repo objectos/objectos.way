@@ -32,17 +32,6 @@ public final class Http {
 
     private Header() {}
 
-    public interface Value {
-
-      Value NULL = new Value() {
-        @Override
-        public final boolean contentEquals(CharSequence cs) { return false; }
-      };
-
-      boolean contentEquals(CharSequence cs);
-
-    }
-
     public static final HeaderName ACCEPT_ENCODING = StandardHeaderName.ACCEPT_ENCODING;
 
     public static final HeaderName CONNECTION = StandardHeaderName.CONNECTION;
