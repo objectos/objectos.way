@@ -25,6 +25,7 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import objectos.http.HeaderName;
 import objectos.http.Http;
 import objectox.http.HttpStatus;
 import org.testng.annotations.Test;
@@ -433,7 +434,7 @@ public class HttpExchangeOutputTest {
     assertEquals(exchange.state, HttpExchange._RESULT);
   }
 
-  private HttpResponseHeader hrh(Http.Header.Name name, String value) {
+  private HttpResponseHeader hrh(HeaderName name, String value) {
     return new HttpResponseHeader(name, value);
   }
 

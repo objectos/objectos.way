@@ -15,39 +15,41 @@
  */
 package objectox.http;
 
-import objectos.http.Http;
+import objectos.http.HeaderName;
 
-public enum StandardHeaderName implements Http.Header.Name {
+public enum StandardHeaderName implements HeaderName {
 
-	ACCEPT_ENCODING("Accept-Encoding", HeaderType.REQUEST),
+  ACCEPT_ENCODING("Accept-Encoding", HeaderType.REQUEST),
 
-	CONNECTION("Connection", HeaderType.BOTH),
+  CONNECTION("Connection", HeaderType.BOTH),
 
-	CONTENT_LENGTH("Content-Length", HeaderType.BOTH),
+  CONTENT_LENGTH("Content-Length", HeaderType.BOTH),
 
-	CONTENT_TYPE("Content-Type", HeaderType.BOTH),
+  CONTENT_TYPE("Content-Type", HeaderType.BOTH),
 
-	DATE("Date", HeaderType.BOTH),
+  DATE("Date", HeaderType.BOTH),
 
-	HOST("Host", HeaderType.REQUEST),
+  HOST("Host", HeaderType.REQUEST),
 
-	LOCATION("Location", HeaderType.RESPONSE),
+  LOCATION("Location", HeaderType.RESPONSE),
 
-	TRANSFER_ENCODING("Transfer-Encoding", HeaderType.BOTH),
+  TRANSFER_ENCODING("Transfer-Encoding", HeaderType.BOTH),
 
-	USER_AGENT("User-Agent", HeaderType.REQUEST);
+  USER_AGENT("User-Agent", HeaderType.REQUEST);
 
-	public final String name;
+  public final String name;
 
-	public final HeaderType type;
+  public final HeaderType type;
 
-	private StandardHeaderName(String name, HeaderType type) {
-		this.name = name;
+  private StandardHeaderName(String name, HeaderType type) {
+    this.name = name;
 
-		this.type = type;
-	}
+    this.type = type;
+  }
 
-	@Override
-	public final String capitalized() { return name; }
+  @Override
+  public final String capitalized() {
+    return name;
+  }
 
 }

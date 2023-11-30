@@ -32,10 +32,6 @@ public final class Http {
 
     private Header() {}
 
-    public interface Name {
-      String capitalized();
-    }
-
     public interface Value {
 
       Value NULL = new Value() {
@@ -47,23 +43,23 @@ public final class Http {
 
     }
 
-    public static final Name ACCEPT_ENCODING = StandardHeaderName.ACCEPT_ENCODING;
+    public static final HeaderName ACCEPT_ENCODING = StandardHeaderName.ACCEPT_ENCODING;
 
-    public static final Name CONNECTION = StandardHeaderName.CONNECTION;
+    public static final HeaderName CONNECTION = StandardHeaderName.CONNECTION;
 
-    public static final Name CONTENT_LENGTH = StandardHeaderName.CONTENT_LENGTH;
+    public static final HeaderName CONTENT_LENGTH = StandardHeaderName.CONTENT_LENGTH;
 
-    public static final Name CONTENT_TYPE = StandardHeaderName.CONTENT_TYPE;
+    public static final HeaderName CONTENT_TYPE = StandardHeaderName.CONTENT_TYPE;
 
-    public static final Name DATE = StandardHeaderName.DATE;
+    public static final HeaderName DATE = StandardHeaderName.DATE;
 
-    public static final Name HOST = StandardHeaderName.HOST;
+    public static final HeaderName HOST = StandardHeaderName.HOST;
 
-    public static final Name LOCATION = StandardHeaderName.LOCATION;
+    public static final HeaderName LOCATION = StandardHeaderName.LOCATION;
 
-    public static final Name TRANSFER_ENCODING = StandardHeaderName.TRANSFER_ENCODING;
+    public static final HeaderName TRANSFER_ENCODING = StandardHeaderName.TRANSFER_ENCODING;
 
-    public static final Name USER_AGENT = StandardHeaderName.USER_AGENT;
+    public static final HeaderName USER_AGENT = StandardHeaderName.USER_AGENT;
 
   }
 

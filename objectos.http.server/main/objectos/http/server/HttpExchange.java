@@ -21,6 +21,7 @@ import java.net.SocketAddress;
 import java.nio.charset.Charset;
 import java.nio.file.Path;
 import java.util.Set;
+import objectos.http.HeaderName;
 import objectos.http.Http;
 import objectos.http.Http.Method;
 import objectos.lang.object.Check;
@@ -139,7 +140,7 @@ public sealed interface HttpExchange extends AutoCloseable permits objectox.http
 
 	// Request methods
 
-	Http.Header.Value header(Http.Header.Name name);
+	Http.Header.Value header(HeaderName name);
 
 	boolean matches(Segment pat);
 
@@ -238,7 +239,7 @@ public sealed interface HttpExchange extends AutoCloseable permits objectox.http
 
 	void status(Http.Status status);
 
-	void header(Http.Header.Name name, String value);
+	void header(HeaderName name, String value);
 
 	void body(byte[] data);
 

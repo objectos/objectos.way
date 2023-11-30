@@ -29,8 +29,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import objectos.http.HeaderName;
 import objectos.http.Http;
-import objectos.http.Http.Header.Name;
 import objectos.http.Http.Header.Value;
 import objectos.http.Http.Method;
 import objectos.http.Http.Status;
@@ -269,7 +269,7 @@ public final class HttpExchange implements objectos.http.server.HttpExchange {
 	}
 
 	@Override
-	public final Value header(Name name) {
+	public final Value header(HeaderName name) {
 		Check.notNull(name, "name == null");
 
 		checkStateHandle();
@@ -382,7 +382,7 @@ public final class HttpExchange implements objectos.http.server.HttpExchange {
 	}
 
 	@Override
-	public final void header(Http.Header.Name name, String value) {
+	public final void header(HeaderName name, String value) {
 		Check.notNull(name, "name == null");
 		Check.notNull(value, "value == null");
 
