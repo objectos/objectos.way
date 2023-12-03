@@ -27,6 +27,8 @@ public enum StandardHeaderName implements HeaderName {
 
   CONTENT_TYPE("Content-Type", HeaderType.BOTH),
 
+  COOKIE("Cookie", HeaderType.REQUEST),
+
   DATE("Date", HeaderType.BOTH),
 
   HOST("Host", HeaderType.REQUEST),

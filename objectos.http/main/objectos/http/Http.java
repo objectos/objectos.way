@@ -40,6 +40,8 @@ public final class Http {
 
     public static final HeaderName CONTENT_TYPE = StandardHeaderName.CONTENT_TYPE;
 
+    public static final HeaderName COOKIE = StandardHeaderName.COOKIE;
+
     public static final HeaderName DATE = StandardHeaderName.DATE;
 
     public static final HeaderName HOST = StandardHeaderName.HOST;

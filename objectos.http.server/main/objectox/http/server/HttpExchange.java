@@ -902,7 +902,8 @@ public final class HttpExchange implements objectos.http.server.HttpExchange {
       case 'C' -> parseHeaderName0(nameStart,
           StandardHeaderName.CONNECTION,
           StandardHeaderName.CONTENT_LENGTH,
-          StandardHeaderName.CONTENT_TYPE
+          StandardHeaderName.CONTENT_TYPE,
+          StandardHeaderName.COOKIE
       );
 
       case 'D' -> parseHeaderName0(nameStart,
@@ -962,7 +963,9 @@ public final class HttpExchange implements objectos.http.server.HttpExchange {
     return _PARSE_HEADER_VALUE;
   }
 
-  private byte parseHeaderName0(int nameStart, StandardHeaderName c0, StandardHeaderName c1, StandardHeaderName c2) {
+  private byte parseHeaderName0(int nameStart,
+                                StandardHeaderName c0, StandardHeaderName c1, StandardHeaderName c2,
+                                StandardHeaderName c3) {
     byte result;
     result = parseHeaderName0(nameStart, c0);
 
@@ -976,7 +979,13 @@ public final class HttpExchange implements objectos.http.server.HttpExchange {
       return result;
     }
 
-    return parseHeaderName0(nameStart, c2);
+    result = parseHeaderName0(nameStart, c2);
+
+    if (requestHeaderName != null) {
+      return result;
+    }
+
+    return parseHeaderName0(nameStart, c3);
   }
 
   private byte parseHeaderValue() {

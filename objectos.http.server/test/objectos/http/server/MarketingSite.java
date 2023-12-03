@@ -24,89 +24,83 @@ import objectos.notes.NoteSink;
 
 final class MarketingSite extends AbstractHttpModule implements Runnable {
 
-	static final Note1<IOException> IO_ERROR;
+  static final Note1<IOException> IO_ERROR;
 
-	static {
-		Class<?> source;
-		source = MarketingSite.class;
+  static {
+    Class<?> source;
+    source = MarketingSite.class;
 
-		IO_ERROR = Note1.error(source, "I/O error");
-	}
+    IO_ERROR = Note1.error(source, "I/O error");
+  }
 
-	private final NoteSink noteSink;
+  private final NoteSink noteSink;
 
-	private final Socket socket;
+  private final Socket socket;
 
-	public MarketingSite(Clock clock, NoteSink noteSink, Socket socket) {
-		super(clock);
+  public MarketingSite(Clock clock, NoteSink noteSink, Socket socket) {
+    super(clock);
 
-		this.noteSink = noteSink;
+    this.noteSink = noteSink;
 
-		this.socket = socket;
-	}
+    this.socket = socket;
+  }
 
-	@Override
-	public final void run() {
-		HttpExchange exchange;
-		exchange = HttpExchange.of(socket, HttpExchange.Option.noteSink(noteSink));
+  @Override
+  public final void run() {
+    HttpExchange exchange;
+    exchange = HttpExchange.of(socket, HttpExchange.Option.noteSink(noteSink));
 
-		try (exchange) {
-			while (exchange.active()) {
-				//				MaybeRequest maybeReq;
-				//				maybeReq = exchange.parseRequest();
-				//
-				//				try (maybeReq) {
-				//					handle(maybeReq);
-				//				}
-				handle(exchange);
-			}
-		} catch (IOException e) {
-			noteSink.send(IO_ERROR, e);
-		}
-	}
+    try (exchange) {
+      while (exchange.active()) {
+        handle(exchange);
+      }
+    } catch (IOException e) {
+      noteSink.send(IO_ERROR, e);
+    }
+  }
 
-	private static final Segment FILENAME = Segment.ofAny();
+  private static final Segment FILENAME = Segment.ofAny();
 
-	@Override
-	protected final void definition() {
-		if (matches(FILENAME)) {
-			MarketingSiteRoot root;
-			root = new MarketingSiteRoot(clock);
+  @Override
+  protected final void definition() {
+    if (matches(FILENAME)) {
+      MarketingSiteRoot root;
+      root = new MarketingSiteRoot(clock);
 
-			root.handle(http);
-		}
+      root.handle(http);
+    }
 
-		else {
-			notFound();
-		}
-	}
+    else {
+      notFound();
+    }
+  }
 
 }
 
 final class MarketingSiteRoot extends AbstractHttpModule {
-	protected MarketingSiteRoot(Clock clock) {
-		super(clock);
-	}
+  protected MarketingSiteRoot(Clock clock) {
+    super(clock);
+  }
 
-	@Override
-	protected final void definition() {
-		String fileName;
-		fileName = segment(0);
+  @Override
+  protected final void definition() {
+    String fileName;
+    fileName = segment(0);
 
-		switch (fileName) {
-			case "" -> movedPermanently("/index.html");
+    switch (fileName) {
+      case "" -> movedPermanently("/index.html");
 
-			case "index.html" -> textHtml(MarketingSiteHome::new);
+      case "index.html" -> textHtml(MarketingSiteHome::new);
 
-			default -> notFound();
-		}
-	}
+      default -> notFound();
+    }
+  }
 }
 
 final class MarketingSiteHome extends HtmlTemplate {
-	@Override
-	protected void definition() {
-		doctype();
-		h1("home");
-	}
+  @Override
+  protected void definition() {
+    doctype();
+    h1("home");
+  }
 }

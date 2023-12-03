@@ -37,200 +37,200 @@ import org.testng.annotations.Test;
 
 public class MarketingSiteTest implements SocketTaskFactory {
 
-	private Thread server;
+  private Thread server;
 
-	private ServerSocket serverSocket;
+  private ServerSocket serverSocket;
 
-	@BeforeClass
-	public void beforeClass() throws IOException, InterruptedException {
-		NoteSink noteSink;
-		noteSink = TestingNoteSink.INSTANCE;
+  @BeforeClass
+  public void beforeClass() throws IOException, InterruptedException {
+    NoteSink noteSink;
+    noteSink = TestingNoteSink.INSTANCE;
 
-		int randomPort;
-		randomPort = 0;
+    int randomPort;
+    randomPort = 0;
 
-		int backlogDefaultValue;
-		backlogDefaultValue = 50;
+    int backlogDefaultValue;
+    backlogDefaultValue = 50;
 
-		InetAddress address;
-		address = InetAddress.getLoopbackAddress();
+    InetAddress address;
+    address = InetAddress.getLoopbackAddress();
 
-		serverSocket = new ServerSocket(randomPort, backlogDefaultValue, address);
+    serverSocket = new ServerSocket(randomPort, backlogDefaultValue, address);
 
-		server = new TestingServer(noteSink, serverSocket, this);
+    server = new TestingServer(noteSink, serverSocket, this);
 
-		server.start();
+    server.start();
 
-		synchronized (this) {
-			TimeUnit.SECONDS.timedWait(this, 2);
-		}
-	}
+    synchronized (this) {
+      TimeUnit.SECONDS.timedWait(this, 2);
+    }
+  }
 
-	@AfterClass(alwaysRun = true)
-	public void afterClass() {
-		server.interrupt();
-	}
+  @AfterClass(alwaysRun = true)
+  public void afterClass() {
+    server.interrupt();
+  }
 
-	@Override
-	public final Runnable createTask(Socket socket) {
-		LocalDateTime dateTime;
-		dateTime = LocalDateTime.of(2023, 11, 10, 10, 43);
+  @Override
+  public final Runnable createTask(Socket socket) {
+    LocalDateTime dateTime;
+    dateTime = LocalDateTime.of(2023, 11, 10, 10, 43);
 
-		ZoneId zone;
-		zone = ZoneId.of("GMT");
+    ZoneId zone;
+    zone = ZoneId.of("GMT");
 
-		ZonedDateTime zoned;
-		zoned = dateTime.atZone(zone);
+    ZonedDateTime zoned;
+    zoned = dateTime.atZone(zone);
 
-		Instant fixedInstant;
-		fixedInstant = zoned.toInstant();
+    Instant fixedInstant;
+    fixedInstant = zoned.toInstant();
 
-		Clock clock;
-		clock = Clock.fixed(fixedInstant, zone);
+    Clock clock;
+    clock = Clock.fixed(fixedInstant, zone);
 
-		NoteSink noteSink;
-		noteSink = TestingNoteSink.INSTANCE;
+    NoteSink noteSink;
+    noteSink = TestingNoteSink.INSTANCE;
 
-		return new MarketingSite(clock, noteSink, socket);
-	}
+    return new MarketingSite(clock, noteSink, socket);
+  }
 
-	@Test(description = """
-	it should redirect '/' to '/index.html'
-	""")
-	public void testCase01() throws IOException {
-		try (Socket socket = newSocket()) {
-			req(socket, """
-			GET / HTTP/1.1
-			Host: www.example.com
-			Connection: close
+  @Test(description = """
+  it should redirect '/' to '/index.html'
+  """)
+  public void testCase01() throws IOException {
+    try (Socket socket = newSocket()) {
+      req(socket, """
+          GET / HTTP/1.1
+          Host: www.example.com
+          Connection: close
 
-			""".replace("\n", "\r\n"));
+          """.replace("\n", "\r\n"));
 
-			resp(socket, """
-			HTTP/1.1 301 MOVED PERMANENTLY
-			Location: /index.html
-			Date: Fri, 10 Nov 2023 10:43:00 GMT
+      resp(socket, """
+          HTTP/1.1 301 MOVED PERMANENTLY
+          Location: /index.html
+          Date: Fri, 10 Nov 2023 10:43:00 GMT
 
-			""".replace("\n", "\r\n"));
-		}
-	}
+          """.replace("\n", "\r\n"));
+    }
+  }
 
-	@Test(description = """
-	GET /index.html should return 200 OK
-	""")
-	public void testCase02() throws IOException {
-		try (Socket socket = newSocket()) {
-			req(socket, """
-			GET /index.html HTTP/1.1
-			Host: www.example.com
-			Connection: close
+  @Test(description = """
+  GET /index.html should return 200 OK
+  """)
+  public void testCase02() throws IOException {
+    try (Socket socket = newSocket()) {
+      req(socket, """
+          GET /index.html HTTP/1.1
+          Host: www.example.com
+          Connection: close
 
-			""".replace("\n", "\r\n"));
+          """.replace("\n", "\r\n"));
 
-			resp(socket, """
-			HTTP/1.1 200 OK<CRLF>
-			Content-Length: 30<CRLF>
-			Content-Type: text/html; charset=utf-8<CRLF>
-			Date: Fri, 10 Nov 2023 10:43:00 GMT<CRLF>
-			<CRLF>
-			<!DOCTYPE html>
-			<h1>home</h1>
-			""".replace("<CRLF>\n", "\r\n"));
-		}
-	}
+      resp(socket, """
+          HTTP/1.1 200 OK<CRLF>
+          Content-Length: 30<CRLF>
+          Content-Type: text/html; charset=utf-8<CRLF>
+          Date: Fri, 10 Nov 2023 10:43:00 GMT<CRLF>
+          <CRLF>
+          <!DOCTYPE html>
+          <h1>home</h1>
+          """.replace("<CRLF>\n", "\r\n"));
+    }
+  }
 
-	@Test(description = """
-	HEAD /index.html should return 200 OK
-	""")
-	public void testCase03() throws IOException {
-		try (Socket socket = newSocket()) {
-			req(socket, """
-			HEAD /index.html HTTP/1.1
-			Host: www.example.com
-			Connection: close
+  @Test(description = """
+  HEAD /index.html should return 200 OK
+  """)
+  public void testCase03() throws IOException {
+    try (Socket socket = newSocket()) {
+      req(socket, """
+          HEAD /index.html HTTP/1.1
+          Host: www.example.com
+          Connection: close
 
-			""".replace("\n", "\r\n"));
+          """.replace("\n", "\r\n"));
 
-			resp(socket, """
-			HTTP/1.1 200 OK<CRLF>
-			Content-Length: 30<CRLF>
-			Content-Type: text/html; charset=utf-8<CRLF>
-			Date: Fri, 10 Nov 2023 10:43:00 GMT<CRLF>
-			<CRLF>
-			""".replace("<CRLF>\n", "\r\n"));
-		}
-	}
+      resp(socket, """
+          HTTP/1.1 200 OK<CRLF>
+          Content-Length: 30<CRLF>
+          Content-Type: text/html; charset=utf-8<CRLF>
+          Date: Fri, 10 Nov 2023 10:43:00 GMT<CRLF>
+          <CRLF>
+          """.replace("<CRLF>\n", "\r\n"));
+    }
+  }
 
-	@Test(description = """
-	Other methods to /index.html should return 405 METHOD NOT ALLOWED
-	""")
-	public void testCase04() throws IOException {
-		try (Socket socket = newSocket()) {
-			req(socket, """
-			TRACE /index.html HTTP/1.1
-			Host: www.example.com
-			Connection: close
+  @Test(description = """
+  Other methods to /index.html should return 405 METHOD NOT ALLOWED
+  """)
+  public void testCase04() throws IOException {
+    try (Socket socket = newSocket()) {
+      req(socket, """
+          TRACE /index.html HTTP/1.1
+          Host: www.example.com
+          Connection: close
 
-			""".replace("\n", "\r\n"));
+          """.replace("\n", "\r\n"));
 
-			resp(socket, """
-			HTTP/1.1 405 METHOD NOT ALLOWED<CRLF>
-			Connection: close<CRLF>
-			Date: Fri, 10 Nov 2023 10:43:00 GMT<CRLF>
-			<CRLF>
-			""".replace("<CRLF>\n", "\r\n"));
-		}
-	}
+      resp(socket, """
+          HTTP/1.1 405 METHOD NOT ALLOWED<CRLF>
+          Connection: close<CRLF>
+          Date: Fri, 10 Nov 2023 10:43:00 GMT<CRLF>
+          <CRLF>
+          """.replace("<CRLF>\n", "\r\n"));
+    }
+  }
 
-	@Test(description = """
-	GET /i-do-not-exist should return 404
-	""")
-	public void testCase05() throws IOException {
-		try (Socket socket = newSocket()) {
-			req(socket, """
-			GET /i-do-not-exist HTTP/1.1
-			Host: www.example.com
-			Connection: close
+  @Test(description = """
+  GET /i-do-not-exist should return 404
+  """)
+  public void testCase05() throws IOException {
+    try (Socket socket = newSocket()) {
+      req(socket, """
+          GET /i-do-not-exist HTTP/1.1
+          Host: www.example.com
+          Connection: close
 
-			""".replace("\n", "\r\n"));
+          """.replace("\n", "\r\n"));
 
-			resp(socket, """
-			HTTP/1.1 404 NOT FOUND<CRLF>
-			Connection: close<CRLF>
-			Date: Fri, 10 Nov 2023 10:43:00 GMT<CRLF>
-			<CRLF>
-			""".replace("<CRLF>\n", "\r\n"));
-		}
-	}
+      resp(socket, """
+          HTTP/1.1 404 NOT FOUND<CRLF>
+          Connection: close<CRLF>
+          Date: Fri, 10 Nov 2023 10:43:00 GMT<CRLF>
+          <CRLF>
+          """.replace("<CRLF>\n", "\r\n"));
+    }
+  }
 
-	private Socket newSocket() throws IOException {
-		return new Socket(serverSocket.getInetAddress(), serverSocket.getLocalPort());
-	}
+  private Socket newSocket() throws IOException {
+    return new Socket(serverSocket.getInetAddress(), serverSocket.getLocalPort());
+  }
 
-	private void req(Socket socket, String string) throws IOException {
-		OutputStream out;
-		out = socket.getOutputStream();
+  private void req(Socket socket, String string) throws IOException {
+    OutputStream out;
+    out = socket.getOutputStream();
 
-		byte[] bytes;
-		bytes = string.getBytes(StandardCharsets.UTF_8);
+    byte[] bytes;
+    bytes = string.getBytes(StandardCharsets.UTF_8);
 
-		out.write(bytes);
-	}
+    out.write(bytes);
+  }
 
-	private void resp(Socket socket, String expected) throws IOException {
-		byte[] expectedBytes;
-		expectedBytes = expected.getBytes(StandardCharsets.UTF_8);
+  private void resp(Socket socket, String expected) throws IOException {
+    byte[] expectedBytes;
+    expectedBytes = expected.getBytes(StandardCharsets.UTF_8);
 
-		InputStream in;
-		in = socket.getInputStream();
+    InputStream in;
+    in = socket.getInputStream();
 
-		byte[] bytes;
-		bytes = in.readNBytes(expectedBytes.length);
+    byte[] bytes;
+    bytes = in.readNBytes(expectedBytes.length);
 
-		String res;
-		res = new String(bytes, StandardCharsets.UTF_8);
+    String res;
+    res = new String(bytes, StandardCharsets.UTF_8);
 
-		assertEquals(res, expected);
-	}
+    assertEquals(res, expected);
+  }
 
 }

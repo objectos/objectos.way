@@ -35,7 +35,7 @@ import objectox.http.server.TestingInput.RegularInput;
 public final class Http006 {
 
   public static final RegularInput INPUT = new RegularInput(
-    """
+      """
     POST /login HTTP/1.1
     Host: www.example.com
     Content-Length: 24
@@ -55,9 +55,9 @@ public final class Http006 {
       """.replace("<CRLF>\n", "\r\n");
 
   static final ZonedDateTime DATE = ZonedDateTime.of(
-    LocalDate.of(2023, 7, 31),
-    LocalTime.of(7, 54, 43),
-    ZoneId.of("GMT-3")
+      LocalDate.of(2023, 7, 31),
+      LocalTime.of(7, 54, 43),
+      ZoneId.of("GMT-3")
   );
 
   static final Http006 INSTANCE = new Http006();
@@ -68,9 +68,9 @@ public final class Http006 {
 
     if (method != Http.Method.POST) {
       sendText(
-        exchange,
-        Http.Status.NOT_FOUND_404,
-        "Not found on this server\n"
+          exchange,
+          Http.Status.NOT_FOUND_404,
+          "Not found on this server\n"
       );
 
       return;
@@ -81,9 +81,9 @@ public final class Http006 {
 
     if (!contentType.contentEquals("application/x-www-form-urlencoded")) {
       sendText(
-        exchange,
-        Http.Status.UNSUPPORTED_MEDIA_TYPE_415,
-        "Requested content-type is not supported\n"
+          exchange,
+          Http.Status.UNSUPPORTED_MEDIA_TYPE_415,
+          "Requested content-type is not supported\n"
       );
 
       return;
@@ -100,9 +100,9 @@ public final class Http006 {
 
     if (email == null) {
       sendText(
-        exchange,
-        Http.Status.UNPROCESSABLE_CONTENT_422,
-        "Email is required\n"
+          exchange,
+          Http.Status.UNPROCESSABLE_CONTENT_422,
+          "Email is required\n"
       );
 
       return;
@@ -111,9 +111,9 @@ public final class Http006 {
     exchange.header(Http.Header.LOCATION, "/app");
 
     sendText(
-      exchange,
-      Http.Status.SEE_OTHER_303,
-      "Hello %s. Please enter your password.\n".formatted(email)
+        exchange,
+        Http.Status.SEE_OTHER_303,
+        "Hello %s. Please enter your password.\n".formatted(email)
     );
   }
 

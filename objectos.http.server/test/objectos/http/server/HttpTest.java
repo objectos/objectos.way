@@ -41,200 +41,209 @@ import org.testng.annotations.Test;
 
 public class HttpTest implements Runnable {
 
-	private ServerSocket serverSocket;
+  private ServerSocket serverSocket;
 
-	private Thread server;
+  private Thread server;
 
-	@BeforeClass
-	public void start() throws IOException, InterruptedException {
-		InetAddress address;
-		address = InetAddress.getLoopbackAddress();
+  @BeforeClass
+  public void start() throws IOException, InterruptedException {
+    InetAddress address;
+    address = InetAddress.getLoopbackAddress();
 
-		serverSocket = new ServerSocket(0, 50, address);
+    serverSocket = new ServerSocket(0, 50, address);
 
-		server = Thread.ofPlatform().start(this);
+    server = Thread.ofPlatform().start(this);
 
-		synchronized (this) {
-			TimeUnit.SECONDS.timedWait(this, 2);
-		}
-	}
+    synchronized (this) {
+      TimeUnit.SECONDS.timedWait(this, 2);
+    }
+  }
 
-	@Override
-	public final void run() {
-		synchronized (this) {
-			notifyAll();
-		}
+  @Override
+  public final void run() {
+    synchronized (this) {
+      notifyAll();
+    }
 
-		Option bufferSizeOption;
-		bufferSizeOption = HttpExchange.Option.bufferSize(512);
+    Option bufferSizeOption;
+    bufferSizeOption = HttpExchange.Option.bufferSize(512);
 
-		NoteSink noteSink;
-		noteSink = TestingNoteSink.INSTANCE;
+    NoteSink noteSink;
+    noteSink = TestingNoteSink.INSTANCE;
 
-		Option noteSinkOption;
-		noteSinkOption = HttpExchange.Option.noteSink(noteSink);
+    Option noteSinkOption;
+    noteSinkOption = HttpExchange.Option.noteSink(noteSink);
 
-		while (!Thread.currentThread().isInterrupted()) {
-			Socket socket;
+    while (!Thread.currentThread().isInterrupted()) {
+      Socket socket;
 
-			try {
-				socket = serverSocket.accept();
-			} catch (IOException e) {
-				System.err.println("Failed to accept client connection");
+      try {
+        socket = serverSocket.accept();
+      } catch (IOException e) {
+        System.err.println("Failed to accept client connection");
 
-				e.printStackTrace();
+        e.printStackTrace();
 
-				return;
-			}
+        return;
+      }
 
-			HttpExchange exchange = HttpExchange.of(
-					socket, bufferSizeOption, noteSinkOption
-			);
+      HttpExchange exchange = HttpExchange.of(
+          socket, bufferSizeOption, noteSinkOption
+      );
 
-			try (exchange) {
-				while (exchange.active()) {
-					TestingHandler handler;
-					handler = TestingHandler.INSTANCE;
+      try (exchange) {
+        while (exchange.active()) {
+          TestingHandler handler;
+          handler = TestingHandler.INSTANCE;
 
-					handler.acceptHttpExchange(exchange);
-				}
-			} catch (IOException e) {
-				System.err.println("Failed to close socket");
+          handler.acceptHttpExchange(exchange);
+        }
+      } catch (IOException e) {
+        System.err.println("Failed to close socket");
 
-				e.printStackTrace();
-			}
-		}
+        e.printStackTrace();
+      }
+    }
 
-		try {
-			serverSocket.close();
-		} catch (IOException ignored) {
-			// test finished already...
-		}
-	}
+    try {
+      serverSocket.close();
+    } catch (IOException ignored) {
+      // test finished already...
+    }
+  }
 
-	@Test
-	public void http001() throws IOException {
-		try (Socket socket = newSocket()) {
-			req(socket, Http001.INPUT);
+  @Test
+  public void http001() throws IOException {
+    try (Socket socket = newSocket()) {
+      req(socket, Http001.INPUT);
 
-			assertEquals(
-					resp(socket),
+      assertEquals(
+          resp(socket),
 
-					Http001.OUTPUT
-			);
-		}
-	}
+          Http001.OUTPUT
+      );
+    }
+  }
 
-	@Test
-	public void http002() throws IOException {
-		try (Socket socket = newSocket()) {
-			req(socket, Http002.INPUT);
+  @Test
+  public void http002() throws IOException {
+    try (Socket socket = newSocket()) {
+      req(socket, Http002.INPUT);
 
-			assertEquals(
-					resp(socket),
+      assertEquals(
+          resp(socket),
 
-					Http002.OUTPUT
-			);
-		}
-	}
+          Http002.OUTPUT
+      );
+    }
+  }
 
-	@Test
-	public void http003() throws IOException {
-		try (Socket socket = newSocket()) {
-			req(socket, Http003.INPUT);
+  @Test
+  public void http003() throws IOException {
+    try (Socket socket = newSocket()) {
+      req(socket, Http003.INPUT);
 
-			assertEquals(
-					resp(socket),
+      assertEquals(
+          resp(socket),
 
-					Http003.OUTPUT
-			);
-		}
-	}
+          Http003.OUTPUT
+      );
+    }
+  }
 
-	@Test(timeOut = 1000)
-	public void http004() throws IOException {
-		try (Socket socket = newSocket()) {
-			req(socket, Http004.INPUT01);
+  @Test(timeOut = 1000)
+  public void http004() throws IOException {
+    try (Socket socket = newSocket()) {
+      req(socket, Http004.INPUT01);
 
-			resp(socket, Http004.OUTPUT01);
+      resp(socket, Http004.OUTPUT01);
 
-			req(socket, Http004.INPUT02);
+      req(socket, Http004.INPUT02);
 
-			resp(socket, Http004.OUTPUT02);
-		}
-	}
+      resp(socket, Http004.OUTPUT02);
+    }
+  }
 
-	@Test(timeOut = 1000)
-	public void http005() throws IOException {
-		try (Socket socket = newSocket()) {
-			req(socket, Http005.INPUT01);
+  @Test(timeOut = 1000)
+  public void http005() throws IOException {
+    try (Socket socket = newSocket()) {
+      req(socket, Http005.INPUT01);
 
-			resp(socket, Http005.OUTPUT01);
+      resp(socket, Http005.OUTPUT01);
 
-			req(socket, Http005.INPUT02);
+      req(socket, Http005.INPUT02);
 
-			resp(socket, Http005.OUTPUT02);
-		}
-	}
+      resp(socket, Http005.OUTPUT02);
+    }
+  }
 
-	@Test(timeOut = 1000)
-	public void http006() throws IOException {
-		try (Socket socket = newSocket()) {
-			req(socket, Http006.INPUT);
+  @Test(timeOut = 1000)
+  public void http006() throws IOException {
+    try (Socket socket = newSocket()) {
+      req(socket, Http006.INPUT);
 
-			resp(socket, Http006.OUTPUT);
-		}
-	}
+      resp(socket, Http006.OUTPUT);
+    }
+  }
 
-	@AfterClass(alwaysRun = true)
-	public void stop() throws Exception {
-		if (server != null) {
-			server.interrupt();
-		}
-	}
+  @Test(timeOut = 1000)
+  public void http007() throws IOException {
+    try (Socket socket = newSocket()) {
+      req(socket, Http006.INPUT);
 
-	private Socket newSocket() throws IOException {
-		return new Socket(serverSocket.getInetAddress(), serverSocket.getLocalPort());
-	}
+      resp(socket, Http006.OUTPUT);
+    }
+  }
 
-	private void req(Socket socket, RegularInput input) throws IOException {
-		req(socket, input.request());
-	}
+  @AfterClass(alwaysRun = true)
+  public void stop() throws Exception {
+    if (server != null) {
+      server.interrupt();
+    }
+  }
 
-	private void req(Socket socket, String string) throws IOException {
-		OutputStream out;
-		out = socket.getOutputStream();
+  private Socket newSocket() throws IOException {
+    return new Socket(serverSocket.getInetAddress(), serverSocket.getLocalPort());
+  }
 
-		byte[] bytes;
-		bytes = string.getBytes(StandardCharsets.UTF_8);
+  private void req(Socket socket, RegularInput input) throws IOException {
+    req(socket, input.request());
+  }
 
-		out.write(bytes);
-	}
+  private void req(Socket socket, String string) throws IOException {
+    OutputStream out;
+    out = socket.getOutputStream();
 
-	private String resp(Socket s) throws IOException {
-		InputStream in;
-		in = s.getInputStream();
+    byte[] bytes;
+    bytes = string.getBytes(StandardCharsets.UTF_8);
 
-		byte[] bytes;
-		bytes = in.readAllBytes();
+    out.write(bytes);
+  }
 
-		return new String(bytes, StandardCharsets.UTF_8);
-	}
+  private String resp(Socket s) throws IOException {
+    InputStream in;
+    in = s.getInputStream();
 
-	private void resp(Socket socket, String expected) throws IOException {
-		byte[] expectedBytes;
-		expectedBytes = expected.getBytes(StandardCharsets.UTF_8);
+    byte[] bytes;
+    bytes = in.readAllBytes();
 
-		InputStream in;
-		in = socket.getInputStream();
+    return new String(bytes, StandardCharsets.UTF_8);
+  }
 
-		byte[] bytes;
-		bytes = in.readNBytes(expectedBytes.length);
+  private void resp(Socket socket, String expected) throws IOException {
+    byte[] expectedBytes;
+    expectedBytes = expected.getBytes(StandardCharsets.UTF_8);
 
-		String res;
-		res = new String(bytes, StandardCharsets.UTF_8);
+    InputStream in;
+    in = socket.getInputStream();
 
-		assertEquals(res, expected);
-	}
+    byte[] bytes;
+    bytes = in.readNBytes(expectedBytes.length);
+
+    String res;
+    res = new String(bytes, StandardCharsets.UTF_8);
+
+    assertEquals(res, expected);
+  }
 
 }
