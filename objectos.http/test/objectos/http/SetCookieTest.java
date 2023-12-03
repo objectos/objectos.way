@@ -17,13 +17,27 @@ package objectos.http;
 
 import static org.testng.Assert.assertEquals;
 
+import java.time.Duration;
 import org.testng.annotations.Test;
 
-public class StatusTest {
+public class SetCookieTest {
 
   @Test
-  public void description() {
-    assertEquals(Http.Status.INTERNAL_SERVER_ERROR_500.description(), "INTERNAL SERVER ERROR");
+  public void nameValue() {
+    SetCookie set;
+    set = SetCookie.of("PHPSESSID", "298zf09hf012fh2");
+
+    assertEquals(set.toString(), "PHPSESSID=298zf09hf012fh2");
+  }
+
+  @Test
+  public void maxAge() {
+    SetCookie set;
+    set = SetCookie.of("name", "value");
+
+    set.maxAge(Duration.ofMinutes(1));
+
+    assertEquals(set.toString(), "name=value; Max-Age=60");
   }
 
 }

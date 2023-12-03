@@ -33,6 +33,8 @@ public enum StandardHeaderName implements HeaderName {
 
   LOCATION("Location", HeaderType.RESPONSE),
 
+  SET_COOKIE("Set-Cookie", HeaderType.RESPONSE),
+
   TRANSFER_ENCODING("Transfer-Encoding", HeaderType.BOTH),
 
   USER_AGENT("User-Agent", HeaderType.REQUEST);

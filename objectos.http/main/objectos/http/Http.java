@@ -46,6 +46,8 @@ public final class Http {
 
     public static final HeaderName LOCATION = StandardHeaderName.LOCATION;
 
+    public static final HeaderName SET_COOKIE = StandardHeaderName.SET_COOKIE;
+
     public static final HeaderName TRANSFER_ENCODING = StandardHeaderName.TRANSFER_ENCODING;
 
     public static final HeaderName USER_AGENT = StandardHeaderName.USER_AGENT;
