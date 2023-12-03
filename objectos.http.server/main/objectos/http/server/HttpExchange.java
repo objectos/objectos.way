@@ -141,6 +141,8 @@ public sealed interface HttpExchange extends AutoCloseable permits objectox.http
 
   // Request methods
 
+  Body body();
+
   HeaderValue header(HeaderName name);
 
   boolean matches(Segment pat);
@@ -224,8 +226,6 @@ public sealed interface HttpExchange extends AutoCloseable permits objectox.http
   Path segmentsAsPath();
 
   // Response methods
-
-  Body body();
 
   boolean hasResponse();
 
