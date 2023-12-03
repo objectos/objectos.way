@@ -15,6 +15,8 @@
  */
 package objectox.http.server;
 
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 
 public final class InBufferRequestBody extends HttpRequestBody {
@@ -33,6 +35,11 @@ public final class InBufferRequestBody extends HttpRequestBody {
 
   public final byte get(int index) {
     return buffer[index];
+  }
+
+  @Override
+  public final InputStream openStream() {
+    return new ByteArrayInputStream(buffer, start, end - start);
   }
 
   @Override
