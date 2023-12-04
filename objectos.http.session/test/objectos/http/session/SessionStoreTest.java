@@ -16,6 +16,7 @@
 package objectos.http.session;
 
 import static org.testng.Assert.assertNotNull;
+import static org.testng.Assert.assertNull;
 import static org.testng.Assert.assertSame;
 
 import org.testng.annotations.Test;
@@ -42,6 +43,31 @@ public class SessionStoreTest {
     maybe = store.get(id);
 
     assertSame(maybe, session);
+  }
+
+  @Test(description = """
+  It should be possible to store values to and retrieve values from the session.
+  """)
+  public void testCase02() {
+    SessionStore store;
+    store = SessionStore.create();
+
+    Session session;
+    session = store.nextSession();
+
+    Object user;
+    user = "foo";
+
+    assertNull(session.put("user", user));
+    assertSame(session.get("user"), user);
+
+    Object newUser;
+    newUser = "bar";
+
+    assertSame(session.put("user", newUser), user);
+
+    assertSame(session.remove("user"), newUser);
+    assertNull(session.get("user"));
   }
 
 }

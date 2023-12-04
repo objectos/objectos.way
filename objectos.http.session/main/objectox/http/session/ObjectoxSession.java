@@ -15,11 +15,15 @@
  */
 package objectox.http.session;
 
+import java.util.HashMap;
+import java.util.Map;
 import objectos.http.session.Session;
 
 public final class ObjectoxSession implements Session {
 
   private final String id;
+
+  private final Map<String, Object> values = new HashMap<>();
 
   public ObjectoxSession(String id) {
     this.id = id;
@@ -28,6 +32,27 @@ public final class ObjectoxSession implements Session {
   @Override
   public final String id() {
     return id;
+  }
+
+  @Override
+  public final Object get(String name) {
+    synchronized (values) {
+      return values.get(name);
+    }
+  }
+
+  @Override
+  public final Object put(String name, Object value) {
+    synchronized (values) {
+      return values.put(name, value);
+    }
+  }
+
+  @Override
+  public final Object remove(String name) {
+    synchronized (values) {
+      return values.remove(name);
+    }
   }
 
 }

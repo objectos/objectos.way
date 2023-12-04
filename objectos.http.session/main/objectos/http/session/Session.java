@@ -21,4 +21,10 @@ public sealed interface Session permits ObjectoxSession {
 
   String id();
 
+  Object get(String name);
+
+  Object put(String name, Object value);
+
+  Object remove(String name);
+
 }
