@@ -113,6 +113,7 @@ MODULES += objectos.html.style
 MODULES += objectos.css
 MODULES += objectos.http
 MODULES += objectos.http.server
+MODULES += objectos.http.session
 MODULES += objectos.lang.classloader
 MODULES += objectos.lang.runtime
 
