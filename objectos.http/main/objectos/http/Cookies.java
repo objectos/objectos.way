@@ -16,21 +16,41 @@
 package objectos.http;
 
 import java.util.Objects;
-import objectox.http.CookieParser;
-import objectox.http.EmptyCookie;
-import objectox.http.StandardCookie;
+import objectox.http.CookiesParser;
+import objectox.http.EmptyCookies;
+import objectox.http.StandardCookies;
 
-public sealed interface Cookie permits EmptyCookie, StandardCookie {
+public sealed interface Cookies permits EmptyCookies, StandardCookies {
 
-  static Cookie parse(String s) {
+  static Cookies parse(HeaderValue value) {
+    Objects.requireNonNull(value, "value == null");
+
+    if (value == HeaderValue.NULL) {
+      return EmptyCookies.INSTANCE;
+    }
+
+    String s;
+    s = value.toString();
+
+    if (s.isBlank()) {
+      return EmptyCookies.INSTANCE;
+    }
+
+    CookiesParser parser;
+    parser = new CookiesParser(s);
+
+    return parser.parse();
+  }
+
+  static Cookies parse(String s) {
     Objects.requireNonNull(s, "s == null");
 
     if (s.isBlank()) {
-      return EmptyCookie.INSTANCE;
+      return EmptyCookies.INSTANCE;
     }
 
-    CookieParser parser;
-    parser = new CookieParser(s);
+    CookiesParser parser;
+    parser = new CookiesParser(s);
 
     return parser.parse();
   }

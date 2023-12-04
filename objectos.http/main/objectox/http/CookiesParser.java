@@ -17,9 +17,9 @@ package objectox.http;
 
 import java.util.HashMap;
 import java.util.Map;
-import objectos.http.Cookie;
+import objectos.http.Cookies;
 
-public final class CookieParser {
+public final class CookiesParser {
 
   private final Map<String, CookieValue> cookies = new HashMap<>();
 
@@ -33,11 +33,11 @@ public final class CookieParser {
 
   private State state;
 
-  public CookieParser(String s) {
+  public CookiesParser(String s) {
     this.source = s;
   }
 
-  public final Cookie parse() {
+  public final Cookies parse() {
     state = State.START;
 
     while (state != State.STOP) {
@@ -45,9 +45,9 @@ public final class CookieParser {
     }
 
     if (cookies.isEmpty()) {
-      return EmptyCookie.INSTANCE;
+      return EmptyCookies.INSTANCE;
     } else {
-      return new StandardCookie(cookies);
+      return new StandardCookies(cookies);
     }
   }
 

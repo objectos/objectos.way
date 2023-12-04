@@ -15,15 +15,29 @@
  */
 package objectox.http;
 
-import objectos.http.Cookie;
+import java.util.Map;
+import objectos.http.Cookies;
 
-public enum EmptyCookie implements Cookie {
+public final class StandardCookies implements Cookies {
 
-  INSTANCE;
+  private final Map<String, CookieValue> cookies;
+
+  StandardCookies(Map<String, CookieValue> cookies) {
+    this.cookies = cookies;
+  }
 
   @Override
   public final String get(String name) {
-    return null;
+    String res = null;
+
+    CookieValue value;
+    value = cookies.get(name);
+
+    if (value != null) {
+      res = value.get();
+    }
+
+    return res;
   }
 
 }

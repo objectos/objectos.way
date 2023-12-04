@@ -19,14 +19,14 @@ import static org.testng.Assert.assertEquals;
 
 import org.testng.annotations.Test;
 
-public class CookieTest {
+public class CookiesTest {
 
   @Test(description = """
   It should parse a single name-value pair
   """)
   public void testCase01() {
-    Cookie c;
-    c = Cookie.parse("foo=bar");
+    Cookies c;
+    c = Cookies.parse("foo=bar");
 
     assertEquals(c.get("foo"), "bar");
   }
