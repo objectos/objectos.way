@@ -27,4 +27,6 @@ public sealed interface Session permits ObjectoxSession {
 
   Object remove(String name);
 
+  void invalidate();
+
 }

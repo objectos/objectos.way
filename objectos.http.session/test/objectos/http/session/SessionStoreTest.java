@@ -35,7 +35,8 @@ public class SessionStoreTest {
 
     assertNotNull(session);
 
-    String id = session.id();
+    String id;
+    id = session.id();
 
     assertNotNull(id);
 
@@ -68,6 +69,28 @@ public class SessionStoreTest {
 
     assertSame(session.remove("user"), newUser);
     assertNull(session.get("user"));
+  }
+
+  @Test(description = """
+  It should not be possible to retrieve a session after it has been invalidated
+  """)
+  public void testCase03() {
+    SessionStore store;
+    store = SessionStore.create();
+
+    Session session;
+    session = store.nextSession();
+
+    assertNotNull(session);
+
+    String id;
+    id = session.id();
+
+    assertSame(store.get(id), session);
+
+    session.invalidate();
+
+    assertNull(store.get(id));
   }
 
 }

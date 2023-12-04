@@ -25,6 +25,8 @@ public final class ObjectoxSession implements Session {
 
   private final Map<String, Object> values = new HashMap<>();
 
+  volatile boolean valid = true;
+
   public ObjectoxSession(String id) {
     this.id = id;
   }
@@ -53,6 +55,11 @@ public final class ObjectoxSession implements Session {
     synchronized (values) {
       return values.remove(name);
     }
+  }
+
+  @Override
+  public final void invalidate() {
+    valid = false;
   }
 
 }

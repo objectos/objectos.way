@@ -51,7 +51,14 @@ public final class ObjectoxSessionStore implements SessionStore {
 
   @Override
   public final Session get(String id) {
-    return sessions.get(id);
+    ObjectoxSession session;
+    session = sessions.get(id);
+
+    if (session != null && !session.valid) {
+      session = null;
+    }
+
+    return session;
   }
 
   private String nextId() {
