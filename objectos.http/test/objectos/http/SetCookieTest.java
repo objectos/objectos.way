@@ -40,4 +40,14 @@ public class SetCookieTest {
     assertEquals(set.toString(), "name=value; Max-Age=60");
   }
 
+  @Test
+  public void path() {
+    SetCookie set;
+    set = SetCookie.of("name", "value");
+
+    set.path("/foobar");
+
+    assertEquals(set.toString(), "name=value; Path=/foobar");
+  }
+
 }

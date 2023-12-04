@@ -26,6 +26,8 @@ public class SetCookie {
 
   private Duration maxAge;
 
+  private String path;
+
   private SetCookie(String name, String value) {
     this.name = name;
     this.value = value;
@@ -54,6 +56,12 @@ public class SetCookie {
     return this;
   }
 
+  public final SetCookie path(String path) {
+    this.path = Objects.requireNonNull(path, "path == null");
+
+    return this;
+  }
+
   @Override
   public final String toString() {
     StringBuilder s;
@@ -69,6 +77,12 @@ public class SetCookie {
       s.append("; Max-Age=");
 
       s.append(maxAge.getSeconds());
+    }
+
+    if (path != null) {
+      s.append("; Path=");
+
+      s.append(path);
     }
 
     return s.toString();
