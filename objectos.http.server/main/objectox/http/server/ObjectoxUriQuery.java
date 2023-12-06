@@ -77,81 +77,94 @@ public final class ObjectoxUriQuery implements UriQuery {
     return value;
   }
 
+  @Override
+  public final boolean isEmpty() {
+    return params().isEmpty();
+  }
+
   final void end(int endIndex) {
     this.length = endIndex - startIndex;
   }
 
   private Map<String, Object> params() {
     if (params == null) {
-      String source;
-      source = value();
-
-      GrowableMap<String, Object> map;
-      map = new GrowableMap<>();
-
-      StringBuilder sb;
-      sb = new StringBuilder();
-
-      String key;
-      key = null;
-
-      for (int i = 0, len = source.length(); i < len; i++) {
-        char c;
-        c = source.charAt(i);
-
-        switch (c) {
-          case '=' -> {
-            key = sb.toString();
-
-            sb.setLength(0);
-
-            Object oldValue;
-            oldValue = map.put(key, "");
-
-            if (oldValue != null) {
-              throw new UnsupportedOperationException("Implement me");
-            }
-          }
-
-          case '&' -> {
-            String value;
-            value = sb.toString();
-
-            sb.setLength(0);
-
-            if (key == null) {
-              map.put(value, "");
-
-              continue;
-            }
-
-            Object oldValue;
-            oldValue = map.put(key, value);
-
-            if (oldValue != "") {
-              throw new UnsupportedOperationException("Implement me");
-            }
-
-            key = null;
-          }
-
-          default -> sb.append(c);
-        }
-      }
-
-      String value;
-      value = sb.toString();
-
-      if (key != null) {
-        map.put(key, value);
-      } else {
-        map.put(value, "");
-      }
-
-      params = map;
+      params = makeParams();
     }
 
     return params;
+  }
+
+  private Map<String, Object> makeParams() {
+    String source;
+    source = value();
+
+    if (source.isBlank()) {
+      return Map.of();
+    }
+
+    GrowableMap<String, Object> map;
+    map = new GrowableMap<>();
+
+    StringBuilder sb;
+    sb = new StringBuilder();
+
+    String key;
+    key = null;
+
+    for (int i = 0, len = source.length(); i < len; i++) {
+      char c;
+      c = source.charAt(i);
+
+      switch (c) {
+        case '=' -> {
+          key = sb.toString();
+
+          sb.setLength(0);
+
+          Object oldValue;
+          oldValue = map.put(key, "");
+
+          if (oldValue != null) {
+            throw new UnsupportedOperationException("Implement me");
+          }
+        }
+
+        case '&' -> {
+          String value;
+          value = sb.toString();
+
+          sb.setLength(0);
+
+          if (key == null) {
+            map.put(value, "");
+
+            continue;
+          }
+
+          Object oldValue;
+          oldValue = map.put(key, value);
+
+          if (oldValue != "") {
+            throw new UnsupportedOperationException("Implement me");
+          }
+
+          key = null;
+        }
+
+        default -> sb.append(c);
+      }
+    }
+
+    String value;
+    value = sb.toString();
+
+    if (key != null) {
+      map.put(key, value);
+    } else {
+      map.put(value, "");
+    }
+
+    return map;
   }
 
 }

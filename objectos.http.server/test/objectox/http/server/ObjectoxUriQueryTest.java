@@ -30,6 +30,7 @@ public class ObjectoxUriQueryTest {
 
     assertEquals(q.get("foo"), null);
     assertEquals(q.get(""), null);
+    assertEquals(q.isEmpty(), true);
   }
 
   @Test(description = """
@@ -41,6 +42,7 @@ public class ObjectoxUriQueryTest {
 
     assertEquals(q.get("foo"), "bar");
     assertEquals(q.get("x"), null);
+    assertEquals(q.isEmpty(), false);
   }
 
   @Test(description = """
@@ -52,6 +54,7 @@ public class ObjectoxUriQueryTest {
 
     assertEquals(q.get("foo"), "");
     assertEquals(q.get("x"), null);
+    assertEquals(q.isEmpty(), false);
   }
 
   @Test(description = """
@@ -63,6 +66,7 @@ public class ObjectoxUriQueryTest {
 
     assertEquals(q.get("foo"), "");
     assertEquals(q.get("x"), null);
+    assertEquals(q.isEmpty(), false);
   }
 
   @Test(description = """
@@ -75,6 +79,7 @@ public class ObjectoxUriQueryTest {
     assertEquals(q.get("a"), "");
     assertEquals(q.get("foo"), "");
     assertEquals(q.get("x"), null);
+    assertEquals(q.isEmpty(), false);
   }
 
   private ObjectoxUriQuery queryOf(String q) {

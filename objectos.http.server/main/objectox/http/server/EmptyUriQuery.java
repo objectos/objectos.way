@@ -13,14 +13,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.http.server;
+package objectox.http.server;
 
-public interface UriQuery {
+import objectos.http.server.UriQuery;
 
-  String get(String name);
+public enum EmptyUriQuery implements UriQuery {
 
-  String value();
+  INSTANCE;
 
-  boolean isEmpty();
+  @Override
+  public final String get(String name) {
+    return null;
+  }
+
+  @Override
+  public final String value() {
+    return "";
+  }
+
+  @Override
+  public final boolean isEmpty() {
+    return true;
+  }
 
 }

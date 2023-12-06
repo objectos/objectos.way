@@ -344,7 +344,11 @@ public final class HttpExchange implements objectos.http.server.HttpExchange {
   public final UriQuery query() {
     checkStateHandle();
 
-    return query;
+    if (query != null) {
+      return query;
+    }
+
+    return EmptyUriQuery.INSTANCE;
   }
 
   @Override
