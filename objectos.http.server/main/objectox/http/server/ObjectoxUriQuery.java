@@ -18,7 +18,10 @@ package objectox.http.server;
 import java.net.URLDecoder;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.util.Map;
 import objectos.http.server.UriQuery;
+import objectos.lang.object.Check;
+import objectos.util.map.GrowableMap;
 
 public final class ObjectoxUriQuery implements UriQuery {
 
@@ -30,6 +33,8 @@ public final class ObjectoxUriQuery implements UriQuery {
 
   private String value;
 
+  private Map<String, Object> params;
+
   public ObjectoxUriQuery(byte[] buffer, int startIndex) {
     this.buffer = buffer;
 
@@ -38,6 +43,22 @@ public final class ObjectoxUriQuery implements UriQuery {
 
   @Override
   public final String get(String name) {
+    Check.notNull(name, "name == null");
+
+    Map<String, Object> params;
+    params = params();
+
+    Object maybe;
+    maybe = params.get(name);
+
+    if (maybe == null) {
+      return null;
+    }
+
+    if (maybe instanceof String s) {
+      return s;
+    }
+
     throw new UnsupportedOperationException("Implement me");
   }
 
@@ -58,6 +79,79 @@ public final class ObjectoxUriQuery implements UriQuery {
 
   final void end(int endIndex) {
     this.length = endIndex - startIndex;
+  }
+
+  private Map<String, Object> params() {
+    if (params == null) {
+      String source;
+      source = value();
+
+      GrowableMap<String, Object> map;
+      map = new GrowableMap<>();
+
+      StringBuilder sb;
+      sb = new StringBuilder();
+
+      String key;
+      key = null;
+
+      for (int i = 0, len = source.length(); i < len; i++) {
+        char c;
+        c = source.charAt(i);
+
+        switch (c) {
+          case '=' -> {
+            key = sb.toString();
+
+            sb.setLength(0);
+
+            Object oldValue;
+            oldValue = map.put(key, "");
+
+            if (oldValue != null) {
+              throw new UnsupportedOperationException("Implement me");
+            }
+          }
+
+          case '&' -> {
+            String value;
+            value = sb.toString();
+
+            sb.setLength(0);
+
+            if (key == null) {
+              map.put(value, "");
+
+              continue;
+            }
+
+            Object oldValue;
+            oldValue = map.put(key, value);
+
+            if (oldValue != "") {
+              throw new UnsupportedOperationException("Implement me");
+            }
+
+            key = null;
+          }
+
+          default -> sb.append(c);
+        }
+      }
+
+      String value;
+      value = sb.toString();
+
+      if (key != null) {
+        map.put(key, value);
+      } else {
+        map.put(value, "");
+      }
+
+      params = map;
+    }
+
+    return params;
   }
 
 }
