@@ -37,6 +37,7 @@ import objectos.http.Http.Status;
 import objectos.http.server.Body;
 import objectos.http.server.CharWritable;
 import objectos.http.server.Segment;
+import objectos.http.server.UriQuery;
 import objectos.lang.object.Check;
 import objectos.notes.NoOpNoteSink;
 import objectos.notes.NoteSink;
@@ -169,6 +170,8 @@ public final class HttpExchange implements objectos.http.server.HttpExchange {
   byte nextAction;
 
   NoteSink noteSink = NoOpNoteSink.of();
+
+  ObjectoxUriQuery query;
 
   HttpRequestBody requestBody;
 
@@ -335,6 +338,13 @@ public final class HttpExchange implements objectos.http.server.HttpExchange {
     checkStateHandle();
 
     return requestPath.pathStartsWith(prefix);
+  }
+
+  @Override
+  public final UriQuery query() {
+    checkStateHandle();
+
+    return query;
   }
 
   @Override
@@ -1271,6 +1281,8 @@ public final class HttpExchange implements objectos.http.server.HttpExchange {
 
           bufferIndex = bufferIndex + 1;
 
+          query = new ObjectoxUriQuery(buffer, bufferIndex);
+
           return _REQUEST_LINE_QUERY;
         }
 
@@ -1303,6 +1315,8 @@ public final class HttpExchange implements objectos.http.server.HttpExchange {
       b = bufferGet(bufferIndex);
 
       if (b == Bytes.SP) {
+        query.end(bufferIndex);
+
         // bufferIndex immediately after the SP char
 
         bufferIndex = bufferIndex + 1;

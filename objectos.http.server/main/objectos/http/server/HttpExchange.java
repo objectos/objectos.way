@@ -202,6 +202,8 @@ public sealed interface HttpExchange extends AutoCloseable permits objectox.http
    */
   boolean pathStartsWith(String prefix);
 
+  UriQuery query();
+
   String segment(int index);
 
   /**

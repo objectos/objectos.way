@@ -36,75 +36,75 @@ import org.testng.annotations.Test;
 
 public class HttpExchangeTest {
 
-	@Test
-	public void http001() throws IOException {
-		RegularInput input;
-		input = Http001.INPUT;
+  @Test
+  public void http001() throws IOException {
+    RegularInput input;
+    input = Http001.INPUT;
 
-		TestableSocket socket;
-		socket = TestableSocket.of(input.request());
+    TestableSocket socket;
+    socket = TestableSocket.of(input.request());
 
-		var noteSink = new NoOpNoteSink() {
-			Processed processed;
+    var noteSink = new NoOpNoteSink() {
+      Processed processed;
 
-			@Override
-			public boolean isEnabled(Note note) { return true; }
+      @Override
+      public boolean isEnabled(Note note) { return true; }
 
-			@Override
-			public <T1> void send(Note1<T1> note, T1 v1) {
-				if (note == HttpExchange.PROCESSED) {
-					processed = (Processed) v1;
-				}
-			}
-		};
+      @Override
+      public <T1> void send(Note1<T1> note, T1 v1) {
+        if (note == HttpExchange.PROCESSED) {
+          processed = (Processed) v1;
+        }
+      }
+    };
 
-		HttpExchange exchange;
-		exchange = HttpExchange.of(socket, HttpExchange.Option.noteSink(noteSink));
+    HttpExchange exchange;
+    exchange = HttpExchange.of(socket, HttpExchange.Option.noteSink(noteSink));
 
-		try (exchange) {
-			assertTrue(exchange.active());
+    try (exchange) {
+      assertTrue(exchange.active());
 
-			assertEquals(exchange.method(), Http.Method.GET);
+      assertEquals(exchange.method(), Http.Method.GET);
 
-			assertEquals(exchange.path(), "/");
+      assertEquals(exchange.path(), "/");
 
-			assertFalse(exchange.hasResponse());
+      assertFalse(exchange.hasResponse());
 
-			byte[] bytes;
-			bytes = Bytes.utf8("Hello World!\n");
+      byte[] bytes;
+      bytes = Bytes.utf8("Hello World!\n");
 
-			exchange.status(Http.Status.OK_200);
+      exchange.status(Http.Status.OK_200);
 
-			exchange.header(Http.Header.CONTENT_TYPE, "text/plain; charset=utf-8");
+      exchange.header(Http.Header.CONTENT_TYPE, "text/plain; charset=utf-8");
 
-			exchange.header(Http.Header.CONTENT_LENGTH, Long.toString(bytes.length));
+      exchange.header(Http.Header.CONTENT_LENGTH, Long.toString(bytes.length));
 
-			ZonedDateTime date;
-			date = Http001.DATE;
+      ZonedDateTime date;
+      date = Http001.DATE;
 
-			exchange.header(Http.Header.DATE, Http.formatDate(date));
+      exchange.header(Http.Header.DATE, Http.formatDate(date));
 
-			exchange.body(bytes);
+      exchange.body(bytes);
 
-			assertTrue(exchange.hasResponse());
+      assertTrue(exchange.hasResponse());
 
-			assertFalse(exchange.active());
+      assertFalse(exchange.active());
 
-			Processed processed;
-			processed = noteSink.processed;
+      Processed processed;
+      processed = noteSink.processed;
 
-			assertNotNull(processed);
-			assertEquals(processed.method(), Http.Method.GET);
-			assertEquals(processed.status(), Http.Status.OK_200);
-		}
+      assertNotNull(processed);
+      assertEquals(processed.method(), Http.Method.GET);
+      assertEquals(processed.status(), Http.Status.OK_200);
+    }
 
-		assertEquals(socket.outputAsString(), Http001.OUTPUT);
-	}
+    assertEquals(socket.outputAsString(), Http001.OUTPUT);
+  }
 
-	@Test
-	public void unknownRequestHeaders() throws IOException {
-		TestableSocket socket;
-		socket = TestableSocket.of("""
+  @Test
+  public void unknownRequestHeaders() throws IOException {
+    TestableSocket socket;
+    socket = TestableSocket.of("""
 		GET / HTTP/1.1
 		Host: www.example.com
 		Connection: close
@@ -112,20 +112,20 @@ public class HttpExchangeTest {
 
 		""".replace("\n", "\r\n"));
 
-		NoteSink noteSink;
-		noteSink = TestingNoteSink.INSTANCE;
+    NoteSink noteSink;
+    noteSink = TestingNoteSink.INSTANCE;
 
-		HttpExchange exchange;
-		exchange = HttpExchange.of(socket, HttpExchange.Option.noteSink(noteSink));
+    HttpExchange exchange;
+    exchange = HttpExchange.of(socket, HttpExchange.Option.noteSink(noteSink));
 
-		try (exchange) {
-			assertTrue(exchange.active());
+    try (exchange) {
+      assertTrue(exchange.active());
 
-			assertEquals(exchange.header(Http.Header.HOST).toString(), "www.example.com");
-			assertEquals(exchange.header(Http.Header.CONNECTION).toString(), "close");
-			assertEquals(exchange.method(), Http.Method.GET);
-			assertEquals(exchange.path(), "/");
-		}
-	}
+      assertEquals(exchange.header(Http.Header.HOST).toString(), "www.example.com");
+      assertEquals(exchange.header(Http.Header.CONNECTION).toString(), "close");
+      assertEquals(exchange.method(), Http.Method.GET);
+      assertEquals(exchange.path(), "/");
+    }
+  }
 
 }
