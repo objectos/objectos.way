@@ -125,6 +125,24 @@ public class GitRepo {
     return get(task);
   }
 
+  public final ObjectId writeCommit(MutableCommit commit) throws IOException {
+    Check.notNull(commit, "commit == null");
+
+    GitTask<ObjectId> task;
+    task = engine.writeCommit(repository, commit);
+
+    return get(task);
+  }
+
+  public final ObjectId writeTree(MutableTree tree) throws IOException {
+    Check.notNull(tree, "tree == null");
+
+    GitTask<ObjectId> task;
+    task = engine.writeTree(repository, tree);
+
+    return get(task);
+  }
+
   final boolean isBare() {
     return repository.isBare();
   }

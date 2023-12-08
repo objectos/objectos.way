@@ -16,6 +16,7 @@
 package objectos.git;
 
 import java.io.IOException;
+import java.nio.file.Path;
 import objectos.fs.Directory;
 import objectos.fs.testing.TmpDir;
 
@@ -80,6 +81,13 @@ final class TestCase03 extends StageGitCommand<ObjectId> {
     return ObjectId.parse("1cd042294d3933032f5fbb9735034dcbce689dc9");
   }
 
+  public static void repositoryTo(Path root) throws IOException {
+    Path repo;
+    repo = TestingGit2.repo00();
+
+    TestingGit2.copyRecursively(repo, root);
+  }
+
   @Override
   protected final void executeStage(int step) throws Exception {
     switch (step) {
@@ -137,7 +145,7 @@ final class TestCase03 extends StageGitCommand<ObjectId> {
 
         if (parentId.isObjectId()) {
           mutable.addParent(
-            parentId.getObjectId()
+              parentId.getObjectId()
           );
         }
 
@@ -146,12 +154,12 @@ final class TestCase03 extends StageGitCommand<ObjectId> {
         mutable.setCommitter(sourceCommit.getCommitter());
 
         mutable.setMessage(
-          String.join(
-            System.lineSeparator(),
+            String.join(
+                System.lineSeparator(),
 
-            sourceCommit.getMessage(),
-            "source " + sourceCommit.getObjectId().getHexString()
-          )
+                sourceCommit.getMessage(),
+                "source " + sourceCommit.getObjectId().getHexString()
+            )
         );
 
         mutable.setTree(sourceCommit.getTree());

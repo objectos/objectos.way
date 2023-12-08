@@ -110,6 +110,68 @@ public class GitRepoTest {
   }
 
   @Test
+  public void testCase03() throws IOException {
+    Path root;
+    root = Files.createTempDirectory("git-test-");
+
+    try {
+      TestCase03.repositoryTo(root);
+
+      // open repository
+      GitRepo repo;
+      repo = GitRepo.open(TestingNoteSink.INSTANCE, root);
+
+      // write commit
+      MutableCommit input;
+      input = new MutableCommit();
+
+      Identification author;
+      author = new Identification("The Author", "author@example.com", 1615551529, "-0300");
+
+      input.setAuthor(author);
+
+      Identification committer;
+      committer = new Identification("The Committer", "committer@example.com", 1615551530, "+0300");
+
+      input.setCommitter(committer);
+
+      String message;
+      message = "[git] test case 03";
+
+      input.setMessage(message);
+
+      ObjectId parent;
+      parent = ObjectId.parse("b9c4f2db7b4fd742990b518ee3c8ae59eb1d6e93");
+
+      input.addParent(parent);
+
+      ObjectId tree;
+      tree = ObjectId.parse("1cd042294d3933032f5fbb9735034dcbce689dc9");
+
+      input.setTree(tree);
+
+      ObjectId result;
+      result = repo.writeCommit(input);
+
+      Commit commit;
+      commit = repo.readCommit(result);
+
+      assertEquals(commit.getAuthor(), author);
+      assertEquals(commit.getCommitter(), committer);
+      assertEquals(commit.getMessage(), message);
+
+      UnmodifiableList<ObjectId> parents;
+      parents = commit.getParents();
+
+      assertEquals(parents.size(), 1);
+      assertEquals(parents.get(0), parent);
+      assertEquals(commit.getTree(), tree);
+    } finally {
+      TestingGit2.deleteRecursively(root);
+    }
+  }
+
+  @Test
   public void testCase05() throws IOException {
     Path root;
     root = Files.createTempDirectory("git-test-");
@@ -129,7 +191,8 @@ public class GitRepoTest {
       GitRepo repo;
       repo = GitRepo.open(TestingNoteSink.INSTANCE, src);
 
-      GitRepo target = GitRepo.open(TestingNoteSink.INSTANCE, dest);
+      GitRepo target;
+      target = GitRepo.open(TestingNoteSink.INSTANCE, dest);
 
       // copy objects
       UnmodifiableSet<ObjectId> set;
@@ -154,6 +217,15 @@ public class GitRepoTest {
       assertLooseExists(target, it.next());
       assertLooseExists(target, it.next());
       assertLooseExists(target, it.next());
+
+      // write tree
+      MutableTree tree;
+      tree = TestCase05.getMutableTree();
+
+      ObjectId id;
+      id = target.writeTree(tree);
+
+      assertEquals(id, ObjectId.parse("81059b029e0e689eb8cae57cb9f3c27f3061ba9d"));
     } finally {
       TestingGit2.deleteRecursively(root);
     }
