@@ -15,6 +15,7 @@
  */
 package objectos.git;
 
+import java.util.Set;
 import objectos.lang.object.ToString;
 import objectos.util.set.UnmodifiableSet;
 
@@ -22,13 +23,13 @@ final class CopyObjectsTask extends AbstractGitTask<UnmodifiableSet<ObjectId>> {
 
   private final Repository destination;
 
-  private final UnmodifiableSet<ObjectId> objectsToCopy;
+  private final Set<ObjectId> objectsToCopy;
 
   private final Repository source;
 
   CopyObjectsTask(GitEngine engine,
                   Repository source,
-                  UnmodifiableSet<ObjectId> objectsToCopy,
+                  Set<ObjectId> objectsToCopy,
                   Repository destination) {
     super(engine);
 

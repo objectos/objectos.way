@@ -109,4 +109,11 @@ final class TestingGit2 {
     }
   }
 
+  public static void emptyRepo(Path directory) throws IOException {
+    Path objects;
+    objects = directory.resolve("objects");
+
+    Files.createDirectories(objects);
+  }
+
 }

@@ -20,6 +20,7 @@ import static objectos.git.TestingGit.regular;
 import static objectos.git.TestingGit.tree;
 
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -90,10 +91,10 @@ final class TestCase05 extends StageGitCommand<ObjectId> {
 
   public static UnmodifiableSet<ObjectId> getCopyObjectSet() throws InvalidObjectIdFormatException {
     return UnmodifiableSet.of(
-      ObjectId.parse("6eaf9247b35bbc35676d1698313381be80a4bdc4"),
-      ObjectId.parse("4cf27def690a4b1cf92d49a653003cbda787ca5f"),
-      ObjectId.parse("1584aeadeea6a620b0d91016b7aa1eca2f62af46"),
-      ObjectId.parse("fb72221c840907a404a4433b2f3222fda77db320")
+        ObjectId.parse("6eaf9247b35bbc35676d1698313381be80a4bdc4"),
+        ObjectId.parse("4cf27def690a4b1cf92d49a653003cbda787ca5f"),
+        ObjectId.parse("1584aeadeea6a620b0d91016b7aa1eca2f62af46"),
+        ObjectId.parse("fb72221c840907a404a4433b2f3222fda77db320")
     );
   }
 
@@ -106,32 +107,32 @@ final class TestCase05 extends StageGitCommand<ObjectId> {
     root = new MutableTree();
 
     root.addEntry(
-      regular("README.md", "6eaf9247b35bbc35676d1698313381be80a4bdc4")
+        regular("README.md", "6eaf9247b35bbc35676d1698313381be80a4bdc4")
     );
 
     root.addEntry(
-      tree("bin",
-        executable("ci", "1584aeadeea6a620b0d91016b7aa1eca2f62af46"),
-        tree("test",
-          regular("include-me", "fb72221c840907a404a4433b2f3222fda77db320")
-        )
-      )
-    );
-
-    root.addEntry(
-      tree("src",
-        tree("main",
-          tree("java",
-            tree("br",
-              tree("com",
-                tree("objectos",
-                  regular("Main.java", "4cf27def690a4b1cf92d49a653003cbda787ca5f")
-                )
-              )
+        tree("bin",
+            executable("ci", "1584aeadeea6a620b0d91016b7aa1eca2f62af46"),
+            tree("test",
+                regular("include-me", "fb72221c840907a404a4433b2f3222fda77db320")
             )
-          )
         )
-      )
+    );
+
+    root.addEntry(
+        tree("src",
+            tree("main",
+                tree("java",
+                    tree("br",
+                        tree("com",
+                            tree("objectos",
+                                regular("Main.java", "4cf27def690a4b1cf92d49a653003cbda787ca5f")
+                            )
+                        )
+                    )
+                )
+            )
+        )
     );
 
     return root;
@@ -242,7 +243,7 @@ final class TestCase05 extends StageGitCommand<ObjectId> {
 
         if (parentId.isObjectId()) {
           mutable.addParent(
-            parentId.getObjectId()
+              parentId.getObjectId()
           );
         }
 
@@ -251,12 +252,12 @@ final class TestCase05 extends StageGitCommand<ObjectId> {
         mutable.setCommitter(sourceCommit.getCommitter());
 
         mutable.setMessage(
-          String.join(
-            System.lineSeparator(),
+            String.join(
+                System.lineSeparator(),
 
-            sourceCommit.getMessage(),
-            "source " + sourceCommit.getObjectId().getHexString()
-          )
+                sourceCommit.getMessage(),
+                "source " + sourceCommit.getObjectId().getHexString()
+            )
         );
 
         mutable.setTree(rootTreeId);
@@ -340,6 +341,13 @@ final class TestCase05 extends StageGitCommand<ObjectId> {
 
       parentMap.put(id, mutableTree);
     }
+  }
+
+  public static void repositoryTo(Path root) throws IOException {
+    Path repo;
+    repo = TestingGit2.repo00();
+
+    TestingGit2.copyRecursively(repo, root);
   }
 
   /*

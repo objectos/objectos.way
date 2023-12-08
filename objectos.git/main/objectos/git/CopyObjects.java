@@ -17,6 +17,7 @@ package objectos.git;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
+import java.util.Set;
 import java.util.zip.Deflater;
 import objectos.concurrent.Concurrent;
 import objectos.core.io.Charsets;
@@ -46,13 +47,13 @@ final class CopyObjects extends AbstractGitEngineTask {
 
   private Repository repository;
 
-  private UnmodifiableSet<ObjectId> set;
+  private Set<ObjectId> set;
 
   CopyObjects(GitInjector injector) {
     super(injector);
   }
 
-  public final void setInput(Repository src, UnmodifiableSet<ObjectId> objects, Repository dest) {
+  public final void setInput(Repository src, Set<ObjectId> objects, Repository dest) {
     checkSetInput();
 
     repository = Check.notNull(src, "src == null");

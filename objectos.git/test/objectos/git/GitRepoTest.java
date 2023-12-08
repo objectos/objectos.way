@@ -16,14 +16,18 @@
 package objectos.git;
 
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertTrue;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.concurrent.ExecutionException;
+import java.util.Iterator;
+import java.util.Set;
 import objectos.core.io.Charsets;
+import objectos.fs.ResolvedPath;
 import objectos.util.list.UnmodifiableList;
+import objectos.util.set.UnmodifiableSet;
 import org.testng.annotations.Test;
 
 public class GitRepoTest {
@@ -106,7 +110,57 @@ public class GitRepoTest {
   }
 
   @Test
-  public void testCase12() throws IOException, ExecutionException {
+  public void testCase05() throws IOException {
+    Path root;
+    root = Files.createTempDirectory("git-test-");
+
+    try {
+      Path src;
+      src = root.resolve("src");
+
+      TestCase05.repositoryTo(src);
+
+      Path dest;
+      dest = root.resolve("dest");
+
+      TestingGit2.emptyRepo(dest);
+
+      // open repository
+      GitRepo repo;
+      repo = GitRepo.open(TestingNoteSink.INSTANCE, src);
+
+      GitRepo target = GitRepo.open(TestingNoteSink.INSTANCE, dest);
+
+      // copy objects
+      UnmodifiableSet<ObjectId> set;
+      set = TestCase05.getCopyObjectSet();
+
+      Iterator<ObjectId> it;
+      it = set.iterator();
+
+      assertLooseNotFound(target, it.next());
+      assertLooseNotFound(target, it.next());
+      assertLooseNotFound(target, it.next());
+      assertLooseNotFound(target, it.next());
+
+      Set<ObjectId> copied;
+      copied = repo.copyObjects(target, set);
+
+      assertEquals(copied.size(), 4);
+
+      it = copied.iterator();
+
+      assertLooseExists(target, it.next());
+      assertLooseExists(target, it.next());
+      assertLooseExists(target, it.next());
+      assertLooseExists(target, it.next());
+    } finally {
+      TestingGit2.deleteRecursively(root);
+    }
+  }
+
+  @Test
+  public void testCase12() throws IOException {
     Path root;
     root = Files.createTempDirectory("git-test-");
 
@@ -144,6 +198,20 @@ public class GitRepoTest {
     } finally {
       TestingGit2.deleteRecursively(root);
     }
+  }
+
+  private void assertLooseNotFound(GitRepo repo, ObjectId objectId) throws IOException {
+    ResolvedPath resolvedPath;
+    resolvedPath = repo.resolveLooseObject(objectId);
+
+    assertFalse(resolvedPath.exists());
+  }
+
+  private void assertLooseExists(GitRepo repo, ObjectId objectId) throws IOException {
+    ResolvedPath resolvedPath;
+    resolvedPath = repo.resolveLooseObject(objectId);
+
+    assertTrue(resolvedPath.exists());
   }
 
 }

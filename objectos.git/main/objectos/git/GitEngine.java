@@ -26,6 +26,7 @@ import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 import java.util.zip.Deflater;
 import java.util.zip.Inflater;
 import objectos.concurrent.CpuTask;
@@ -265,7 +266,7 @@ public final class GitEngine extends GitInjector {
    *
    * @since 3
    */
-  public final GitTask<UnmodifiableSet<ObjectId>> copyObjects(Repository source, UnmodifiableSet<ObjectId> objects, Repository destination) {
+  public final GitTask<UnmodifiableSet<ObjectId>> copyObjects(Repository source, Set<ObjectId> objects, Repository destination) {
     Check.notNull(source, "source == null");
     Check.notNull(objects, "objects == null");
     Check.notNull(destination, "destination == null");

@@ -18,13 +18,16 @@ package objectos.git;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.Set;
 import java.util.concurrent.ExecutionException;
 import objectos.concurrent.Concurrent;
 import objectos.concurrent.DirectIoWorker;
 import objectos.fs.Directory;
 import objectos.fs.LocalFs;
+import objectos.fs.ResolvedPath;
 import objectos.lang.object.Check;
 import objectos.notes.NoteSink;
+import objectos.util.set.UnmodifiableSet;
 
 public class GitRepo {
 
@@ -76,6 +79,16 @@ public class GitRepo {
     }
   }
 
+  public final Set<ObjectId> copyObjects(GitRepo target, Set<ObjectId> objects) throws IOException {
+    Check.notNull(target, "target == null");
+    Check.notNull(objects, "objects == null");
+
+    GitTask<UnmodifiableSet<ObjectId>> task;
+    task = engine.copyObjects(repository, objects, target.repository);
+
+    return get(task);
+  }
+
   public final MaybeObjectId resolve(RefName ref) throws IOException {
     Check.notNull(ref, "ref == null");
 
@@ -122,6 +135,10 @@ public class GitRepo {
 
   final int getPackFileCount() {
     return repository.getPackFileCount();
+  }
+
+  final ResolvedPath resolveLooseObject(ObjectId objectId) throws IOException {
+    return repository.resolveLooseObject(objectId);
   }
 
 }
