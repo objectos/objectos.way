@@ -85,6 +85,24 @@ public class GitRepo {
     return get(task);
   }
 
+  public final Commit readCommit(ObjectId id) throws IOException {
+    Check.notNull(id, "id == null");
+
+    GitTask<Commit> task;
+    task = engine.readCommit(repository, id);
+
+    return get(task);
+  }
+
+  public final Tree readTree(ObjectId id) throws IOException {
+    Check.notNull(id, "id == null");
+
+    GitTask<Tree> task;
+    task = engine.readTree(repository, id);
+
+    return get(task);
+  }
+
   final boolean isBare() {
     return repository.isBare();
   }
