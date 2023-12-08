@@ -25,6 +25,8 @@ import java.nio.file.Path;
 import java.util.Iterator;
 import java.util.Set;
 import objectos.core.io.Charsets;
+import objectos.core.io.Read;
+import objectos.fs.RegularFile;
 import objectos.fs.ResolvedPath;
 import objectos.util.list.UnmodifiableList;
 import objectos.util.set.UnmodifiableSet;
@@ -150,11 +152,11 @@ public class GitRepoTest {
 
       input.setTree(tree);
 
-      ObjectId result;
-      result = repo.writeCommit(input);
+      ObjectId writtenCommitId;
+      writtenCommitId = repo.writeCommit(input);
 
       Commit commit;
-      commit = repo.readCommit(result);
+      commit = repo.readCommit(writtenCommitId);
 
       assertEquals(commit.getAuthor(), author);
       assertEquals(commit.getCommitter(), committer);
@@ -166,6 +168,31 @@ public class GitRepoTest {
       assertEquals(parents.size(), 1);
       assertEquals(parents.get(0), parent);
       assertEquals(commit.getTree(), tree);
+
+      // update ref
+      ResolvedPath maybeMaster;
+      maybeMaster = repo.resolveLoose(RefName.MASTER);
+
+      RegularFile master;
+      master = maybeMaster.toRegularFile();
+
+      String before;
+      before = Read.string(master, Charsets.utf8());
+
+      assertEquals(before, "717271f0f0ee528c0bb094e8b2f84ea6cef7b39d\n");
+
+      String id;
+      id = "68699720c357a5ce1d4171a65ce801741736ea31";
+
+      MaybeObjectId result;
+      result = repo.updateRef(RefName.MASTER, ObjectId.parse(id));
+
+      assertEquals(result, ObjectId.parse("717271f0f0ee528c0bb094e8b2f84ea6cef7b39d"));
+
+      String after;
+      after = Read.string(master, Charsets.utf8());
+
+      assertEquals(after, "68699720c357a5ce1d4171a65ce801741736ea31\n");
     } finally {
       TestingGit2.deleteRecursively(root);
     }

@@ -125,6 +125,16 @@ public class GitRepo {
     return get(task);
   }
 
+  public final MaybeObjectId updateRef(RefName ref, ObjectId newValue) throws IOException {
+    Check.notNull(ref, "ref == null");
+    Check.notNull(newValue, "newValue == null");
+
+    GitTask<MaybeObjectId> task;
+    task = engine.updateRef(repository, ref, newValue);
+
+    return get(task);
+  }
+
   public final ObjectId writeCommit(MutableCommit commit) throws IOException {
     Check.notNull(commit, "commit == null");
 
@@ -153,6 +163,10 @@ public class GitRepo {
 
   final int getPackFileCount() {
     return repository.getPackFileCount();
+  }
+
+  final ResolvedPath resolveLoose(RefName ref) throws IOException {
+    return repository.resolveLoose(ref);
   }
 
   final ResolvedPath resolveLooseObject(ObjectId objectId) throws IOException {
