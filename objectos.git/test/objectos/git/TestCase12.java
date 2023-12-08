@@ -16,6 +16,7 @@
 package objectos.git;
 
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.concurrent.ExecutionException;
 import objectos.fs.Directory;
 
@@ -107,6 +108,13 @@ final class TestCase12 {
 
   public static ObjectId getTreeDeltified() throws InvalidObjectIdFormatException {
     return ObjectId.parse("33fce4e6ef24da6a9c38bfee54c508a2282202d1");
+  }
+
+  public static void repositoryTo(Path root) throws IOException {
+    Path path;
+    path = TestingGit2.repo02();
+
+    TestingGit2.copyRecursively(path, root);
   }
 
   /*

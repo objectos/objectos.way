@@ -85,6 +85,15 @@ public class GitRepo {
     return get(task);
   }
 
+  public final Blob readBlob(ObjectId id) throws IOException {
+    Check.notNull(id, "id == null");
+
+    GitTask<Blob> task;
+    task = engine.readBlob(repository, id);
+
+    return get(task);
+  }
+
   public final Commit readCommit(ObjectId id) throws IOException {
     Check.notNull(id, "id == null");
 
@@ -105,6 +114,10 @@ public class GitRepo {
 
   final boolean isBare() {
     return repository.isBare();
+  }
+
+  final PackFile getPackFile(int index) {
+    return repository.getPackFile(index);
   }
 
   final int getPackFileCount() {

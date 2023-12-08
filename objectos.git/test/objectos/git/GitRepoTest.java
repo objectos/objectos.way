@@ -21,6 +21,8 @@ import static org.testng.Assert.assertTrue;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.concurrent.ExecutionException;
+import objectos.core.io.Charsets;
 import objectos.util.list.UnmodifiableList;
 import org.testng.annotations.Test;
 
@@ -98,6 +100,47 @@ public class GitRepoTest {
       assertEquals(e0.mode, EntryMode.REGULAR_FILE);
       assertEquals(e0.name, "README.md");
       assertEquals(e0.object, ObjectId.parse("6eaf9247b35bbc35676d1698313381be80a4bdc4"));
+    } finally {
+      TestingGit2.deleteRecursively(root);
+    }
+  }
+
+  @Test
+  public void testCase12() throws IOException, ExecutionException {
+    Path root;
+    root = Files.createTempDirectory("git-test-");
+
+    try {
+      TestCase12.repositoryTo(root);
+
+      // open repository
+      GitRepo repo;
+      repo = GitRepo.open(TestingNoteSink.INSTANCE, root);
+
+      assertEquals(repo.isBare(), true);
+      assertEquals(repo.getPackFileCount(), 1);
+
+      PackFile packFile0;
+      packFile0 = repo.getPackFile(0);
+
+      assertEquals(packFile0.getObjectId(), TestCase12.getPackName());
+
+      // read blob
+      ObjectId blobId;
+      blobId = TestCase12.getBlobDeltified();
+
+      Blob blob;
+      blob = repo.readBlob(blobId);
+
+      assertEquals(
+          blob.toString(Charsets.utf8()),
+
+          """
+          # ObjectosRepo
+
+          This is a git repository meant to be used in tests.
+          """
+      );
     } finally {
       TestingGit2.deleteRecursively(root);
     }
