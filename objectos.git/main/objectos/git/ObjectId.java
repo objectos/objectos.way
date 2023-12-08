@@ -110,8 +110,7 @@ public final class ObjectId extends MaybeObjectId {
     return new InvalidObjectIdFormatException("Invalid char " + c + " at index " + index);
   }
 
-  private static byte[] toByteArray(
-                                    CharSequence chars, int offset) throws InvalidObjectIdFormatException {
+  private static byte[] toByteArray(CharSequence chars, int offset) throws InvalidObjectIdFormatException {
     int length;
     length = chars.length() - offset;
 

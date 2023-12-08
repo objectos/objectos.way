@@ -265,8 +265,7 @@ public final class GitEngine extends GitInjector {
    *
    * @since 3
    */
-  public final GitTask<UnmodifiableSet<ObjectId>> copyObjects(
-                                                              Repository source, UnmodifiableSet<ObjectId> objects, Repository destination) {
+  public final GitTask<UnmodifiableSet<ObjectId>> copyObjects(Repository source, UnmodifiableSet<ObjectId> objects, Repository destination) {
     Check.notNull(source, "source == null");
     Check.notNull(objects, "objects == null");
     Check.notNull(destination, "destination == null");
@@ -304,8 +303,7 @@ public final class GitEngine extends GitInjector {
    *
    * @since 3
    */
-  public final GitTask<MaterializedEntry> materializeEntry(
-                                                           Repository repository, Entry entry, Directory target) {
+  public final GitTask<MaterializedEntry> materializeEntry(Repository repository, Entry entry, Directory target) {
     Check.notNull(repository, "repository == null");
     Check.notNull(entry, "entry == null");
     Check.notNull(target, "target == null");

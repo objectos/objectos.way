@@ -48,6 +48,7 @@ GIT_TEST_COMPILE_DEPS  = $(GIT_COMPILE_DEPS)
 GIT_TEST_COMPILE_DEPS += $(call module-gav,$(GIT))
 GIT_TEST_COMPILE_DEPS += $(call module-gav,$(CORE_SERVICE))
 GIT_TEST_COMPILE_DEPS += $(call module-gav,$(FS_TESTING))
+GIT_TEST_COMPILE_DEPS += $(call module-gav,$(NOTES_CONSOLE))
 GIT_TEST_COMPILE_DEPS += $(TESTNG)
 
 ## test resources
@@ -61,10 +62,12 @@ GIT_TEST_RUNTIME_DEPS += $(SLF4J_NOP)
 GIT_TEST_JAVAX_MODULES  = org.testng
 GIT_TEST_JAVAX_MODULES += objectos.core.service
 GIT_TEST_JAVAX_MODULES += objectos.fs.testing
+GIT_TEST_JAVAX_MODULES += objectos.notes.console
 
 ## test runtime reads
 GIT_TEST_JAVAX_READS  = objectos.core.service
 GIT_TEST_JAVAX_READS += objectos.fs.testing
+GIT_TEST_JAVAX_READS += objectos.notes.console
 
 ## copyright years for javadoc
 GIT_COPYRIGHT_YEARS := 2020-2023

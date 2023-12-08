@@ -187,8 +187,7 @@ final class TestingGit {
 
   private TestingGit() {}
 
-  public static Repository bareRepository(Directory directory)
-                                                               throws IOException, ExecutionException {
+  public static Repository bareRepository(Directory directory) throws IOException, ExecutionException {
     GitEngine engine;
     engine = standardEngineInstance();
 
@@ -349,8 +348,7 @@ final class TestingGit {
     }
   }
 
-  public static UnmodifiableList<String> fetchLogSource(
-                                                        Repository repository) throws GitStubException, IOException, ExecutionException {
+  public static UnmodifiableList<String> fetchLogSource(Repository repository) throws GitStubException, IOException, ExecutionException {
     MaybeObjectId maybe;
     maybe = resolve(repository, Git.MASTER);
 
@@ -442,9 +440,7 @@ final class TestingGit {
     return getDirectory("repo02.git");
   }
 
-  public static MaybeObjectId resolve(
-                                      Repository repository, RefName ref)
-                                                                          throws GitStubException, IOException, ExecutionException {
+  public static MaybeObjectId resolve(Repository repository, RefName ref) throws GitStubException, IOException, ExecutionException {
     GitEngine engine;
     engine = standardEngineInstance();
 
@@ -520,8 +516,7 @@ final class TestingGit {
     return openRepository(target);
   }
 
-  private static Repository openRepository(Directory sourceDirectory)
-                                                                      throws IOException, ExecutionException {
+  private static Repository openRepository(Directory sourceDirectory) throws IOException, ExecutionException {
     GitEngine engine;
     engine = standardEngineInstance();
 

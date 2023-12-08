@@ -16,6 +16,7 @@
 package objectos.git;
 
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.concurrent.ExecutionException;
 import objectos.concurrent.Computation;
 import objectos.fs.Directory;
@@ -81,6 +82,10 @@ final class TestCase00 {
     );
   }
 
+  public static Path repositoryPath() throws IOException {
+    return TestingGit2.repo00();
+  }
+
   public static Directory getDirectory() throws IOException {
     return TestingGit.repo00();
   }
@@ -105,8 +110,15 @@ final class TestCase00 {
     );
   }
 
+  public static void repositoryTo(Path root) throws IOException {
+    Path repo;
+    repo = TestingGit2.repo00();
+
+    TestingGit2.copyRecursively(repo, root);
+  }
+
   /*
-  
+
   $ git cat-file --batch-check --batch-all-objects
   09cb9b7b846756738668aae8369dffe887e2fbba tree 30
   0fc7a9f2457ab0488441ca780d590b1ec26c75ee tree 31
@@ -157,7 +169,7 @@ final class TestCase00 {
   f173feaefcfdd9440b5907d2a0cdf9e0e7dd88bb tree 93
   fa7bdaeb40a7a8b7e7f4b3a280f5393605daf83c tree 41
   fb72221c840907a404a4433b2f3222fda77db320 blob 26
-  
+
    */
 
 }

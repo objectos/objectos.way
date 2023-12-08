@@ -3,10 +3,15 @@
 	<classpathentry kind="src" output="work/main" path="main">
 		<attributes>
 			<attribute name="module" value="true"/>
-			<attribute name="add-reads" value="objectos.git=objectos.core.service:objectos.git=objectos.fs.testing"/>
+			<attribute name="add-reads" value="objectos.git=objectos.core.service:objectos.git=objectos.fs.testing:objectos.git=objectos.notes.console"/>
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="src" output="work/test" path="test">
+		<attributes>
+			<attribute name="test" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="src" output="work/test" path="test-resources">
 		<attributes>
 			<attribute name="test" value="true"/>
 		</attributes>
@@ -20,52 +25,7 @@
 	<classpathentry kind="var" path="M2_REPO/org/slf4j/slf4j-api/1.7.36/slf4j-api-1.7.36.jar"/>
 	<classpathentry kind="var" path="M2_REPO/org/slf4j/slf4j-nop/1.7.36/slf4j-nop-1.7.36.jar"/>
 	<classpathentry kind="var" path="M2_REPO/com/beust/jcommander/1.82/jcommander-1.82.jar"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/objectos.way:objectos.core.service">
-		<attributes>
-			<attribute name="module" value="true"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry combineaccessrules="false" kind="src" path="/objectos.way:objectos.util.set">
-		<attributes>
-			<attribute name="module" value="true"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry combineaccessrules="false" kind="src" path="/objectos.way:objectos.util.list">
-		<attributes>
-			<attribute name="module" value="true"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry combineaccessrules="false" kind="src" path="/objectos.way:objectos.notes">
-		<attributes>
-			<attribute name="module" value="true"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry combineaccessrules="false" kind="src" path="/objectos.way:objectos.lang.object">
-		<attributes>
-			<attribute name="module" value="true"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry combineaccessrules="false" kind="src" path="/objectos.way:objectos.concurrent">
-		<attributes>
-			<attribute name="module" value="true"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry combineaccessrules="false" kind="src" path="/objectos.way:objectos.core.io">
-		<attributes>
-			<attribute name="module" value="true"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry combineaccessrules="false" kind="src" path="/objectos.way:objectos.fs">
-		<attributes>
-			<attribute name="module" value="true"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry combineaccessrules="false" kind="src" path="/objectos.way:objectos.util.array">
-		<attributes>
-			<attribute name="module" value="true"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry combineaccessrules="false" kind="src" path="/objectos.way:objectos.util.collection">
+	<classpathentry combineaccessrules="false" kind="src" path="/objectos.way:objectos.fs.testing">
 		<attributes>
 			<attribute name="module" value="true"/>
 		</attributes>
@@ -75,7 +35,62 @@
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry combineaccessrules="false" kind="src" path="/objectos.way:objectos.fs.testing">
+	<classpathentry combineaccessrules="false" kind="src" path="/objectos.way:objectos.util.collection">
+		<attributes>
+			<attribute name="module" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry combineaccessrules="false" kind="src" path="/objectos.way:objectos.util.array">
+		<attributes>
+			<attribute name="module" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry combineaccessrules="false" kind="src" path="/objectos.way:objectos.fs">
+		<attributes>
+			<attribute name="module" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry combineaccessrules="false" kind="src" path="/objectos.way:objectos.core.io">
+		<attributes>
+			<attribute name="module" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry combineaccessrules="false" kind="src" path="/objectos.way:objectos.concurrent">
+		<attributes>
+			<attribute name="module" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry combineaccessrules="false" kind="src" path="/objectos.way:objectos.lang.object">
+		<attributes>
+			<attribute name="module" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry combineaccessrules="false" kind="src" path="/objectos.way:objectos.notes">
+		<attributes>
+			<attribute name="module" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry combineaccessrules="false" kind="src" path="/objectos.way:objectos.util.list">
+		<attributes>
+			<attribute name="module" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry combineaccessrules="false" kind="src" path="/objectos.way:objectos.util.set">
+		<attributes>
+			<attribute name="module" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry combineaccessrules="false" kind="src" path="/objectos.way:objectos.core.service">
+		<attributes>
+			<attribute name="module" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry combineaccessrules="false" kind="src" path="/objectos.way:objectos.notes.base">
+		<attributes>
+			<attribute name="module" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry combineaccessrules="false" kind="src" path="/objectos.way:objectos.notes.console">
 		<attributes>
 			<attribute name="module" value="true"/>
 		</attributes>
