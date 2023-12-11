@@ -20,7 +20,7 @@
 
 GROUP_ID := br.com.objectos
 ARTIFACT_ID := objectos.way
-VERSION := 0.2.0-SNAPSHOT
+VERSION := 0.2.0
 
 JAVA_RELEASE := 21
 
