@@ -23,7 +23,7 @@ import objectos.lang.object.ToString;
  *
  * @since 1
  */
-public abstract class MaybeObjectId implements ToString.Formattable {
+public abstract class MaybeObjectId {
 
   MaybeObjectId() {}
 
@@ -61,8 +61,6 @@ public abstract class MaybeObjectId implements ToString.Formattable {
    * @return the string representation of this id
    */
   @Override
-  public final String toString() {
-    return ToString.of(this);
-  }
+  public abstract String toString();
 
 }

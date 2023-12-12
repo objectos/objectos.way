@@ -16,18 +16,12 @@
 package objectos.git;
 
 import java.util.NoSuchElementException;
-import objectos.lang.object.ToString;
 
 final class EmptyObjectId extends MaybeObjectId {
 
   static final EmptyObjectId INSTANCE = new EmptyObjectId();
 
   private EmptyObjectId() {}
-
-  @Override
-  public final void formatToString(StringBuilder sb, int depth) {
-    ToString.format(sb, depth, this);
-  }
 
   @Override
   public final ObjectId getObjectId() {
@@ -37,6 +31,11 @@ final class EmptyObjectId extends MaybeObjectId {
   @Override
   public final boolean isObjectId() {
     return false;
+  }
+
+  @Override
+  public final String toString() {
+    return "ObjectId []";
   }
 
 }

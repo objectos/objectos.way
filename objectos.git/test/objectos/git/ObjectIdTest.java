@@ -75,6 +75,14 @@ public class ObjectIdTest {
     assertEquals(id.getHexString(), "d670460b4b4aece5915caf5c68d12f560a9fe3e4");
   }
 
+  @Test
+  public void toStringTest() throws InvalidObjectIdFormatException {
+    ObjectId id;
+    id = ObjectId.parse("d670460b4b4aece5915caf5c68d12f560a9fe3e4");
+
+    assertEquals(id.toString(), "d670460b4b4aece5915caf5c68d12f560a9fe3e4");
+  }
+
   private char toHexChar(int i) {
     return HEX_CHARS[i];
   }

@@ -17,7 +17,6 @@ package objectos.git;
 
 import java.util.Arrays;
 import objectos.lang.object.Check;
-import objectos.lang.object.ToString;
 import objectos.util.array.ByteArrays;
 
 /**
@@ -168,31 +167,6 @@ public final class ObjectId extends MaybeObjectId {
   }
 
   /**
-   * Formats and appends to the {@code toString} builder at the specified
-   * indentation {@code level} a string representation of this id.
-   *
-   * <p>
-   * The string representation <i>may</i> contain:
-   *
-   * <ul>
-   * <li>the simple name of this class; and</li>
-   * <li>the hash value as a hex string.</li>
-   * </ul>
-   *
-   * @param toString
-   *        the builder of a {@code toString} method
-   * @param level
-   *        the indentation level.
-   */
-  @Override
-  public final void formatToString(StringBuilder toString, int level) {
-    ToString.format(
-        toString, level, this,
-        "", getHexString()
-    );
-  }
-
-  /**
    * Returns this id as a hex string.
    *
    * @return this id as a hex string
@@ -241,6 +215,16 @@ public final class ObjectId extends MaybeObjectId {
    * @return this id as a hex string
    */
   public final String print() {
+    return getHexString();
+  }
+
+  /**
+   * Returns this id as a hex string.
+   *
+   * @return this id as a hex string
+   */
+  @Override
+  public final String toString() {
     return getHexString();
   }
 
