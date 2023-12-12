@@ -92,6 +92,10 @@ final class TestingGit2 {
     return parentOf("TEST-INF/repo02.git/HEAD");
   }
 
+  public static Path repo03() throws IOException {
+    return parentOf("TEST-INF/repo03.git/HEAD");
+  }
+
   private static Path parentOf(String resourceName) throws IOException {
     try {
       URL resource;

@@ -299,6 +299,42 @@ public class GitRepoTest {
     }
   }
 
+  @Test(description = """
+  Read commit (submodules) tree entries
+  """)
+  public void testCase15() throws IOException {
+    Path root;
+    root = Files.createTempDirectory("git-test-");
+
+    try {
+      TestCase15.repositoryTo(root);
+
+      // open repository
+      GitRepo repo;
+      repo = GitRepo.open(TestingNoteSink.INSTANCE, root);
+
+      // read tree
+      ObjectId treeId;
+      treeId = TestCase15.treeId();
+
+      Tree tree;
+      tree = repo.readTree(treeId);
+
+      UnmodifiableList<Entry> entries;
+      entries = tree.getEntries();
+
+      assertEquals(entries.size(), 3);
+
+      Entry entry;
+      entry = entries.get(2);
+
+      assertEquals(entry.getMode(), EntryMode.COMMIT);
+      assertEquals(entry.getName(), "git");
+    } finally {
+      TestingGit2.deleteRecursively(root);
+    }
+  }
+
   private void assertLooseNotFound(GitRepo repo, ObjectId objectId) throws IOException {
     ResolvedPath resolvedPath;
     resolvedPath = repo.resolveLooseObject(objectId);

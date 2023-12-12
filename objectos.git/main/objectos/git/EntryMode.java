@@ -37,7 +37,12 @@ public enum EntryMode {
   /**
    * The file mode of a tree object (a directory).
    */
-  TREE("40000");
+  TREE("40000"),
+
+  /**
+   * The file mode of a commit (submodule) object.
+   */
+  COMMIT("160000");
 
   private final byte[] byteArray;
 
@@ -46,16 +51,13 @@ public enum EntryMode {
   }
 
   static EntryMode fromInt(int mode) throws GitStubException {
-    switch (mode) {
-      case 0100644:
-        return REGULAR_FILE;
-      case 0100755:
-        return EXECUTABLE_FILE;
-      case 040000:
-        return TREE;
-      default:
-        throw new GitStubException("mode = " + Integer.toOctalString(mode));
-    }
+    return switch (mode) {
+      case 0100644 -> REGULAR_FILE;
+      case 0100755 -> EXECUTABLE_FILE;
+      case 040000 -> TREE;
+      case 0160000 -> COMMIT;
+      default -> throw new GitStubException("mode = " + Integer.toOctalString(mode));
+    };
   }
 
   /**
@@ -88,28 +90,22 @@ public enum EntryMode {
   }
 
   final String printMode() {
-    switch (this) {
-      case EXECUTABLE_FILE:
-        return "100755";
-      case REGULAR_FILE:
-        return "100644";
-      case TREE:
-        return "040000";
-      default:
-        throw new UnsupportedOperationException("Implement me @ " + name());
-    }
+    return switch (this) {
+      case EXECUTABLE_FILE -> "100755";
+      case REGULAR_FILE -> "100644";
+      case TREE -> "040000";
+      case COMMIT -> "160000";
+      default -> throw new UnsupportedOperationException("Implement me @ " + name());
+    };
   }
 
   final String printType() {
-    switch (this) {
-      case EXECUTABLE_FILE:
-      case REGULAR_FILE:
-        return "blob";
-      case TREE:
-        return "tree";
-      default:
-        throw new UnsupportedOperationException("Implement me @ " + name());
-    }
+    return switch (this) {
+      case EXECUTABLE_FILE, REGULAR_FILE -> "blob";
+      case TREE -> "tree";
+      case COMMIT -> "commit";
+      default -> throw new UnsupportedOperationException("Implement me @ " + name());
+    };
   }
 
 }

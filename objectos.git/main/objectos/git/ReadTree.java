@@ -298,6 +298,9 @@ final class ReadTree implements ObjectReaderAdapter {
       case 040000:
         mode = EntryMode.TREE;
         break;
+      case 0160000:
+        mode = EntryMode.COMMIT;
+        break;
       default:
         return toError(
             new GitStubException("mode = " + Integer.toOctalString(modeOctal))
