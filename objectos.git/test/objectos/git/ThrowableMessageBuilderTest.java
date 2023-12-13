@@ -45,24 +45,22 @@ public class ThrowableMessageBuilderTest {
         .nl();
 
     assertEquals(
-      badObjectMessage.toString(),
+        badObjectMessage.toString(),
 
-      String.join(
-        System.lineSeparator(),
+        String.join(
+            System.lineSeparator(),
 
-        "Failed to inflate object data",
-        "",
-        "No more bytes left to read.",
-        "",
-        "channelReadCount=1234",
-        "channelReadLimit=1220",
-        "        objectId=ObjectId [",
-        "  808ee6fce27d119cfa2dbeacd176439e02e0924d",
-        "]",
-        "           state=_READ_OBJECT",
-        "",
-        ""
-      )
+            "Failed to inflate object data",
+            "",
+            "No more bytes left to read.",
+            "",
+            "channelReadCount=1234",
+            "channelReadLimit=1220",
+            "        objectId=808ee6fce27d119cfa2dbeacd176439e02e0924d",
+            "           state=_READ_OBJECT",
+            "",
+            ""
+        )
     );
   }
 
