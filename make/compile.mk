@@ -85,7 +85,7 @@ $(2)compile-module-path: $$($(1)COMPILE_MODULE_PATH)
 
 $$($(1)COMPILE_MODULE_PATH): $$($(1)COMPILE_DEPS)
 ifneq ($$($(1)COMPILE_DEPS),)
-	cat $$^ | sort | uniq | paste --delimiter='$$(MODULE_PATH_SEPARATOR)' --serial >> $$@
+	cat $$^ | sort | uniq | paste --delimiter='$$(MODULE_PATH_SEPARATOR)' --serial > $$@
 else
 	touch $$@
 endif

@@ -38,21 +38,15 @@ $(1)TEST_CLASSES = $$($(1)TEST_SOURCES:$$($(1)TEST)/%.java=$$($(1)TEST_CLASS_OUT
 ## test compile-time dependencies
 # $(1)TEST_COMPILE_DEPS =
 
-## test compile-time required resolutions
-$(1)TEST_COMPILE_RESOLUTIONS = $$(call to-resolutions,$$($(1)TEST_COMPILE_DEPS))
-
-## test compile-time required jars
-$(1)TEST_COMPILE_JARS = $$(call to-jars,$$($(1)TEST_COMPILE_DEPS))
-
 ## test compile-time class-path
-$(1)TEST_COMPILE_CLASS_PATH = $$(call class-path,$$($(1)TEST_COMPILE_JARS))
+$(1)TEST_COMPILE_CLASS_PATH = $$($(1)WORK)/test-compile-class-path
 
 ## test javac command
 $(1)TEST_JAVACX = $$(JAVAC)
 $(1)TEST_JAVACX += -d $$($(1)TEST_CLASS_OUTPUT)
 $(1)TEST_JAVACX += -g
 $(1)TEST_JAVACX += -Xlint:all
-$(1)TEST_JAVACX += --class-path $$($(1)TEST_COMPILE_CLASS_PATH)
+$(1)TEST_JAVACX += --class-path @$$($(1)TEST_COMPILE_CLASS_PATH)
 ifeq ($$($(1)ENABLE_PREVIEW),1)
 $(1)TEST_JAVACX += --enable-preview
 endif
@@ -79,7 +73,7 @@ endif
 $(1)TEST_COMPILE_MARKER = $$($(1)WORK)/test-compile-marker
 
 ## test compilation requirements
-$(1)TEST_COMPILE_REQS  = $$($(1)TEST_COMPILE_RESOLUTIONS)
+$(1)TEST_COMPILE_REQS := $$($(1)TEST_COMPILE_CLASS_PATH)
 $(1)TEST_COMPILE_REQS += $$($(1)TEST_CLASSES)
 $(1)TEST_COMPILE_REQS += $$($(1)TEST_RESOURCES_OUT)
 
@@ -90,15 +84,24 @@ $(1)TEST_COMPILE_REQS += $$($(1)TEST_RESOURCES_OUT)
 .PHONY: $(2)test-compile
 $(2)test-compile: $$($(1)TEST_COMPILE_MARKER)
 
-.PHONY: $(2)test-compile-jars
-$(2)test-compile-jars: $$($(1)TEST_COMPILE_JARS)
+.PHONY: $(2)test-compile-class-path
+$(2)test-compile-class-path: $$($(1)TEST_COMPILE_CLASS_PATH)
+
+$$($(1)TEST_COMPILE_CLASS_PATH): $$($(1)TEST_COMPILE_DEPS)
+ifneq ($$($(1)TEST_COMPILE_DEPS),)
+	cat $$^ | sort | uniq | paste --delimiter='$$(CLASS_PATH_SEPARATOR)' --serial > $$@
+else
+	touch $$@
+endif
 
 $$($(1)TEST_COMPILE_MARKER): $$($(1)TEST_COMPILE_REQS) 
 	if [ -n "$$($(1)TEST_DIRTY)" ]; then \
-		$(MAKE) $(2)test-compile-jars; \
 		$$($(1)TEST_JAVACX); \
 	fi
-	touch $$@
+	$$(file > $$@,$$($(1)TEST_CLASS_OUTPUT))
+ifneq ($$($(1)TEST_COMPILE_DEPS),)
+	cat $$($(1)TEST_COMPILE_DEPS) | sort | uniq >> $$@
+endif
 
 $$($(1)TEST_CLASSES): $$($(1)TEST_CLASS_OUTPUT)/%.class: $$($(1)TEST)/%.java
 	$$(eval $(1)TEST_DIRTY += $$$$<)

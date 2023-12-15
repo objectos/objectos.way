@@ -29,10 +29,11 @@ JAVA_RELEASE := 21
 SLF4J_VERSION := 1.7.36
 TESTNG_VERSION := 7.7.1
 
-## Deps artifacts
+## Deps markers
 
-SLF4J_NOP := org.slf4j/slf4j-nop/$(SLF4J_VERSION)
-TESTNG := org.testng/testng/$(TESTNG_VERSION)
+RESOLUTION_DIR := work/resolution
+SLF4J_NOP := $(RESOLUTION_DIR)/org.slf4j/slf4j-nop/$(SLF4J_VERSION)
+TESTNG := $(RESOLUTION_DIR)/org.testng/testng/$(TESTNG_VERSION)
 
 EXTERNAL_DEPS := $(SLF4J_NOP) $(TESTNG) 
 
@@ -44,7 +45,7 @@ EXTERNAL_DEPS := $(SLF4J_NOP) $(TESTNG)
 #
 
 .PHONY: all
-all: resolve-external-deps install
+all: compile
 
 ## include make stuff
 INCLUDES := tools.mk
@@ -72,15 +73,6 @@ jar: way@jar
 
 print-%::
 	@echo $* = $($*)
-
-#
-# Dependency mgmt
-#
-
-.PHONY: resolve-external-deps
-resolve-external-deps: export deps = $(EXTERNAL_DEPS) 
-resolve-external-deps: $(RESOLVER_JAVA) $(RESOLVER_DEPS_JARS)
-	for dep in $${deps}; do $(RESOLVEX) $${dep}; done
 
 #
 # objectos.way modules section
@@ -270,6 +262,7 @@ $(eval $(call OSSRH_BUNDLE_TASK,WAY_))
 
 .PHONY: clean
 clean: $(foreach mod,$(AT_MODULES),$(mod)@clean)
+	rm -rf work
 
 .PHONY: clean-install
 clean-install: $(foreach mod,$(AT_MODULES),$(foreach t,clean-install clean-install-pom,$(mod)@$(t)))

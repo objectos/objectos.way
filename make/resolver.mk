@@ -209,7 +209,6 @@ public class Resolver {
         .map(ArtifactResult::getArtifact)
         .map(Artifact::getFile)
         .map(File::toPath)
-        .map(path -> localRepositoryPath.relativize(path))
         .map(Path::toString)
         .sorted()
         .collect(Collectors.joining("\n", "", "\n"));
@@ -288,7 +287,7 @@ endef
 RESOLVER_JAVA = $(OBJECTOS_DIR)/Resolver.java
 
 ## Resolver.java deps
-RESOLVER_DEPS  = commons-codec/commons-codec/1.16.0
+RESOLVER_DEPS := commons-codec/commons-codec/1.16.0
 RESOLVER_DEPS += org.apache.commons/commons-lang3/3.12.0
 RESOLVER_DEPS += org.apache.httpcomponents/httpclient/4.5.14
 RESOLVER_DEPS += org.apache.httpcomponents/httpcore/4.4.16
@@ -321,6 +320,10 @@ dep-to-jar = $(foreach dep,$(1),$(LOCAL_REPO_PATH)/$(call mk-resolved-jar,$(dep)
 ## Resolver.java jars
 RESOLVER_DEPS_JARS = $(call dep-to-jar,$(RESOLVER_DEPS))
 
+ifndef RESOLUTION_DIR
+$(error The required variable RESOLUTION_DIR was not defined)
+endif
+
 ## resolve java command
 RESOLVEX  = $(JAVA)
 RESOLVEX += --class-path $(call class-path,$(RESOLVER_DEPS_JARS))
@@ -331,6 +334,9 @@ RESOLVEX += --resolution-dir $(RESOLUTION_DIR)
 #
 # resolver rules
 #
+
+$(RESOLUTION_DIR)/%: $(RESOLVER_JAVA)
+	$(RESOLVEX) $(@:$(RESOLUTION_DIR)/%=%)
 
 $(RESOLVER_JAVA): Makefile
 	mkdir --parents $(@D)

@@ -35,11 +35,6 @@ ifndef LOCAL_REPO_PATH
 LOCAL_REPO_PATH := $(OBJECTOS_DIR)/repository
 endif
 
-## local resolution dir
-ifndef RESOLUTION_DIR
-RESOLUTION_DIR := $(OBJECTOS_DIR)/resolution
-endif
-
 ## java command
 JAVA := $(JAVA_HOME_BIN)/java
 
