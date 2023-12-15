@@ -28,13 +28,13 @@ public class ShutdownHookTest {
 
   @Test
   public void getShutdownHook() {
-    final ShutdownHook hook;
-    hook = ShutdownHook.of();
-
     ShutdownHookNoteSink noteSink;
     noteSink = new ShutdownHookNoteSink();
 
-    hook.noteSink(noteSink);
+    StandardShutdownHook hook;
+    hook = (StandardShutdownHook) ShutdownHook.of(
+        ShutdownHook.Option.noteSink(noteSink)
+    );
 
     CloseableImpl cleanClosable;
     cleanClosable = new CloseableImpl();
