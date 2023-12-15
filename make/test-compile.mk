@@ -84,9 +84,6 @@ $(1)TEST_COMPILE_REQS += $$($(1)TEST_RESOURCES_OUT)
 .PHONY: $(2)test-compile
 $(2)test-compile: $$($(1)TEST_COMPILE_MARKER)
 
-.PHONY: $(2)test-compile-class-path
-$(2)test-compile-class-path: $$($(1)TEST_COMPILE_CLASS_PATH)
-
 $$($(1)TEST_COMPILE_CLASS_PATH): $$($(1)TEST_COMPILE_DEPS)
 ifneq ($$($(1)TEST_COMPILE_DEPS),)
 	cat $$^ | sort | uniq | paste --delimiter='$$(CLASS_PATH_SEPARATOR)' --serial > $$@
@@ -98,7 +95,6 @@ $$($(1)TEST_COMPILE_MARKER): $$($(1)TEST_COMPILE_REQS)
 	if [ -n "$$($(1)TEST_DIRTY)" ]; then \
 		$$($(1)TEST_JAVACX); \
 	fi
-	$$(file > $$@,$$($(1)TEST_CLASS_OUTPUT))
 ifneq ($$($(1)TEST_COMPILE_DEPS),)
 	cat $$($(1)TEST_COMPILE_DEPS) | sort | uniq >> $$@
 endif

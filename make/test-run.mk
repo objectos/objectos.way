@@ -23,14 +23,8 @@ define TEST_RUN_TASK
 ## test runtime dependencies
 # $(1)TEST_RUNTIME_DEPS =
 
-## test runtime required resolutions
-$(1)TEST_RUNTIME_RESOLUTIONS = $$(call to-resolutions,$$($(1)TEST_RUNTIME_DEPS))
-
-## test runtime required jars
-$(1)TEST_RUNTIME_JARS = $$(call to-jars,$$($(1)TEST_RUNTIME_DEPS))
-
 ## test runtime module-path
-$(1)TEST_RUNTIME_MODULE_PATH = $$(call module-path,$$($(1)TEST_RUNTIME_JARS))
+$(1)TEST_RUNTIME_MODULE_PATH = $$($(1)WORK)/test-runtime-module-path
 
 ## test main class
 ifndef $(1)TEST_MAIN
@@ -48,7 +42,7 @@ $(1)TEST_JAVAX  = $$(JAVA)
 ifdef $(1)TEST_RUNTIME_SYSPROPS
 $(1)TEST_JAVAX += $$(foreach v,$$($(1)TEST_RUNTIME_SYSPROPS),-D$$(v))
 endif
-$(1)TEST_JAVAX += --module-path $$($(1)TEST_RUNTIME_MODULE_PATH)
+$(1)TEST_JAVAX += --module-path @$$($(1)TEST_RUNTIME_MODULE_PATH)
 ifdef $(1)TEST_JAVAX_MODULES
 $(1)TEST_JAVAX += $$(foreach mod,$$($(1)TEST_JAVAX_MODULES),--add-modules $$(mod))
 else
@@ -72,7 +66,7 @@ $(1)TEST_JAVAX += $$($(1)TEST_RUNTIME_OUTPUT)
 $(1)TEST_RUN_MARKER = $$($(1)TEST_RUNTIME_OUTPUT)/index.html
 
 ## test execution requirements
-$(1)TEST_RUNTIME_REQS  = $$($(1)TEST_RUNTIME_RESOLUTIONS)
+$(1)TEST_RUNTIME_REQS := $$($(1)TEST_RUNTIME_MODULE_PATH)
 $(1)TEST_RUNTIME_REQS += $$($(1)TEST_COMPILE_MARKER)
 
 #
@@ -82,11 +76,17 @@ $(1)TEST_RUNTIME_REQS += $$($(1)TEST_COMPILE_MARKER)
 .PHONY: $(2)test
 $(2)test: $$($(1)TEST_RUN_MARKER)
 
-.PHONY: $(2)test-runtime-jars
-$(2)test-runtime-jars: $$($(1)TEST_RUNTIME_JARS)
+.PHONY: $(2)test-runtime-module-path
+$(2)test-runtime-module-path: $$($(1)TEST_RUNTIME_MODULE_PATH)
+
+$$($(1)TEST_RUNTIME_MODULE_PATH): $$($(1)TEST_RUNTIME_DEPS)
+ifneq ($$($(1)TEST_RUNTIME_DEPS),)
+	cat $$^ | sort | uniq | paste --delimiter='$$(MODULE_PATH_SEPARATOR)' --serial > $$@
+else
+	touch $$@
+endif
 
 $$($(1)TEST_RUN_MARKER): $$($(1)TEST_RUNTIME_REQS)
-	$$(MAKE) $(2)test-runtime-jars 
 	$$($(1)TEST_JAVAX)
 
 endef
