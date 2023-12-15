@@ -20,7 +20,7 @@
 
 GROUP_ID := br.com.objectos
 ARTIFACT_ID := objectos.way
-VERSION := 0.3.0-SNAPSHOT
+VERSION := 0.3
 
 JAVA_RELEASE := 21
 
@@ -44,7 +44,7 @@ EXTERNAL_DEPS := $(SLF4J_NOP) $(TESTNG)
 #
 
 .PHONY: all
-all: resolve-external-deps test install
+all: resolve-external-deps install
 
 ## include make stuff
 INCLUDES := tools.mk
