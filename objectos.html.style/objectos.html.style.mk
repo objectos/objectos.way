@@ -90,14 +90,14 @@ $(foreach task,$(MODULE_TASKS),$(eval $(call $(task),HTML_STYLE_,html.style@)))
 
 ## html selfgen java command
 HTML_STYLE_SELFGEN_JAVAX = $(JAVA)
-HTML_STYLE_SELFGEN_JAVAX += --module-path $(call module-path,$(SELFGEN_RUNTIME_JARS))
+HTML_STYLE_SELFGEN_JAVAX += --module-path @$(SELFGEN_RUNTIME_MODULE_PATH)
 ifeq ($(SELFGEN_ENABLE_PREVIEW), 1)
 HTML_STYLE_SELFGEN_JAVAX += --enable-preview
 endif
 HTML_STYLE_SELFGEN_JAVAX += --module $(SELFGEN_MODULE)/$(SELFGEN_MODULE).CssUtilSpec
 HTML_STYLE_SELFGEN_JAVAX += $(HTML_STYLE_MAIN)
 
-$(HTML_STYLE_SELFGEN_MARKER): $(SELFGEN_JAR_FILE)
+$(HTML_STYLE_SELFGEN_MARKER): $(SELFGEN_RUNTIME_MODULE_PATH)
 	$(HTML_STYLE_SELFGEN_JAVAX)
 	mkdir --parents $(@D)
 	touch $@

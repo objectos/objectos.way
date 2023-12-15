@@ -141,7 +141,7 @@ AT_MODULES := $(foreach mod,$(MODULES),$(subst objectos.,,$(mod)))
 AT_MODULES += way
 
 ## generate module gav
-module-gav = $(GROUP_ID)/$(1)/$(VERSION)
+module-gav = $(1)/work/compile-marker
 
 ## generate common module values
 LOWER_MODULES := $(foreach mod,$(AT_MODULES),$(subst .,_,$(mod)_))

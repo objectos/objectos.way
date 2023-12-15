@@ -69,9 +69,11 @@ $(foreach task,$(SELFGEN_TASKS),$(eval $(call $(task),SELFGEN_,selfgen@)))
 # objectos.selfgen runtime stuff
 #
 
-## selfgen runtime jars
-SELFGEN_RUNTIME_JARS  = $(call dependency,$(SELFGEN_GROUP_ID),$(SELFGEN_ARTIFACT_ID),$(SELFGEN_VERSION))
-SELFGEN_RUNTIME_JARS += $(SELFGEN_COMPILE_JARS)
+## selfgen runtime module-path file
+SELFGEN_RUNTIME_MODULE_PATH := $(SELFGEN_WORK)/runtime-module-path
+
+$(SELFGEN_RUNTIME_MODULE_PATH): $(SELFGEN_COMPILE_MARKER)
+	cat $^ | sort | uniq | paste --delimiter='$(MODULE_PATH_SEPARATOR)' --serial >> $@
 
 .PHONY: selfgen@clean-install-pom
 selfgen@clean-install-pom:

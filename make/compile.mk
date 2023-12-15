@@ -26,7 +26,7 @@ $(1)MAIN = $$($(1)MODULE)/main
 ## source files
 $(1)SOURCES = $$(shell find $${$(1)MAIN} -type f -name '*.java' -print)
 
-## source files modified since last compilation
+## source files modified since last compilation (dynamically evaluated)
 $(1)DIRTY :=
 
 ## class output path
@@ -38,15 +38,9 @@ $(1)CLASSES = $$($(1)SOURCES:$$($(1)MAIN)/%.java=$$($(1)CLASS_OUTPUT)/%.class)
 ## compile-time dependencies
 # $(1)COMPILE_DEPS = 
 
-## compile-time required resolutions
-$(1)COMPILE_RESOLUTIONS = $$(call to-resolutions,$$($(1)COMPILE_DEPS))
-
-## compile-time required jars
-$(1)COMPILE_JARS = $$(call to-jars,$$($(1)COMPILE_DEPS))
-
 ## compile-time module-path
-$(1)COMPILE_MODULE_PATH = $$(call module-path,$$($(1)COMPILE_JARS))
- 
+$(1)COMPILE_MODULE_PATH = $$($(1)WORK)/compile-module-path
+
 ## javac command
 $(1)JAVACX = $$(JAVAC)
 $(1)JAVACX += -d $$($(1)CLASS_OUTPUT)
@@ -57,7 +51,7 @@ ifeq ($$($(1)ENABLE_PREVIEW),1)
 $(1)JAVACX += --enable-preview
 endif
 ifneq ($$($(1)COMPILE_DEPS),)
-$(1)JAVACX += --module-path $$($(1)COMPILE_MODULE_PATH)
+$(1)JAVACX += --module-path @$$($(1)COMPILE_MODULE_PATH)
 endif
 $(1)JAVACX += --module-version $$($(1)VERSION)
 $(1)JAVACX += --release $$($(1)JAVA_RELEASE)
@@ -70,7 +64,7 @@ $(1)JAVACX += $$($(1)DIRTY)
 $(1)COMPILE_MARKER = $$($(1)WORK)/compile-marker
 
 ## compilation requirements
-$(1)COMPILE_REQS  = $$($(1)COMPILE_RESOLUTIONS)
+$(1)COMPILE_REQS  = $$($(1)COMPILE_MODULE_PATH)
 $(1)COMPILE_REQS += $$($(1)CLASSES)
 ifdef $(1)RESOURCES
 $(1)COMPILE_REQS += $$($(1)RESOURCES)
@@ -80,43 +74,30 @@ $(1)COMPILE_REQS += $$($(1)COMPILE_REQS_MORE)
 endif
 
 #
-# compilation deps generation
-#
-
-## resolution cache file
-$(1)RESOLUTION = $$(RESOLUTION_DIR)/$$($(1)GROUP_ID)/$$($(1)ARTIFACT_ID)/$$($(1)VERSION)
-
-## resolution cache file reqs
-ifndef $(1)RESOLUTION_REQS
-$(1)RESOLUTION_REQS = $$($(1)MODULE)/$$($(1)MODULE).mk
-endif
-
-$(1)RESOLUTION_DEPS  = $$($(1)GROUP_ID)/$$($(1)ARTIFACT_ID)/$$($(1)VERSION)
-$(1)RESOLUTION_DEPS += $$($(1)COMPILE_DEPS)
-
-$(1)RESOLUTION_JARS  = $$(call mk-dependency,$$($(1)GROUP_ID),$$($(1)ARTIFACT_ID),$$($(1)VERSION),jar)
-$(1)RESOLUTION_JARS += $$(call to-jars-paths,$$($(1)COMPILE_DEPS))
-
-$$($(1)RESOLUTION): $$($(1)RESOLUTION_REQS)
-	mkdir --parents $$(@D)
-	echo "$$(sort $$($(1)RESOLUTION_JARS))" | $(TR) ' ' '\n' > $$($(1)RESOLUTION)
-
-#
 # compilation targets
 #
 
 .PHONY: $(2)compile
 $(2)compile: $$($(1)COMPILE_MARKER)
 
-.PHONY: $(2)compile-jars
-$(2)compile-jars: $$($(1)COMPILE_JARS) $$($(1)RESOLUTION)
+.PHONY: $(2)compile-module-path
+$(2)compile-module-path: $$($(1)COMPILE_MODULE_PATH)
+
+$$($(1)COMPILE_MODULE_PATH): $$($(1)COMPILE_DEPS)
+ifneq ($$($(1)COMPILE_DEPS),)
+	cat $$^ | sort | uniq | paste --delimiter='$$(MODULE_PATH_SEPARATOR)' --serial >> $$@
+else
+	touch $$@
+endif
 
 $$($(1)COMPILE_MARKER): $$($(1)COMPILE_REQS)
 	if [ -n "$$($(1)DIRTY)" ]; then \
-		$(MAKE) $(2)compile-jars; \
 		$$($(1)JAVACX); \
 	fi
-	touch $$@
+	$$(file > $$@,$$($(1)CLASS_OUTPUT))
+ifneq ($$($(1)COMPILE_DEPS),)
+	cat $$($(1)COMPILE_DEPS) | sort | uniq >> $$@
+endif
 
 $$($(1)CLASSES): $$($(1)CLASS_OUTPUT)/%.class: $$($(1)MAIN)/%.java
 	$$(eval $(1)DIRTY += $$$$<)
