@@ -18,6 +18,7 @@
 # Objectos Way
 #
 
+## Coordinates (required even if not installed)
 GROUP_ID := br.com.objectos
 ARTIFACT_ID := objectos.way
 VERSION := 0.4-SNAPSHOT
@@ -25,17 +26,18 @@ VERSION := 0.4-SNAPSHOT
 JAVA_RELEASE := 21
 
 ## Deps versions
-
 SLF4J_VERSION := 1.7.36
 TESTNG_VERSION := 7.7.1
 
-## Deps markers
-
+## Resolution dir (required)
 RESOLUTION_DIR := work/resolution
+
+## Internal dep markers
+module-gav = $(RESOLUTION_DIR)/$(GROUP_ID)/$(1)/$(VERSION)
+
+## External dep markers
 SLF4J_NOP := $(RESOLUTION_DIR)/org.slf4j/slf4j-nop/$(SLF4J_VERSION)
 TESTNG := $(RESOLUTION_DIR)/org.testng/testng/$(TESTNG_VERSION)
-
-EXTERNAL_DEPS := $(SLF4J_NOP) $(TESTNG) 
 
 # Delete the default suffixes
 .SUFFIXES:
@@ -131,9 +133,6 @@ TEST_TASKS += TEST_RUN_TASK
 ## @ names
 AT_MODULES := $(foreach mod,$(MODULES),$(subst objectos.,,$(mod)))
 AT_MODULES += way
-
-## generate module gav
-module-gav = $(1)/work/compile-marker
 
 ## generate common module values
 LOWER_MODULES := $(foreach mod,$(AT_MODULES),$(subst .,_,$(mod)_))
@@ -265,7 +264,7 @@ clean: $(foreach mod,$(AT_MODULES),$(mod)@clean)
 	rm -rf work
 
 .PHONY: clean-install
-clean-install: $(foreach mod,$(AT_MODULES),$(foreach t,clean-install clean-install-pom,$(mod)@$(t)))
+clean-install: $(foreach mod,$(AT_MODULES),$(mod)@clean-install)
 
 .PHONY: compile
 compile: $(foreach mod,$(AT_MODULES),$(mod)@compile)

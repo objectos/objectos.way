@@ -45,7 +45,8 @@ endif
 $(1)POM_FILE = $$($(1)WORK)/$$($(1)ARTIFACT_ID)-$$($(1)VERSION).pom
 
 ## deps
-$(1)POM_DEPENDENCIES = $$(foreach dep,$$($(1)COMPILE_DEPS),$$(call mk-pom-dep,$$(dep)))
+$(1)pom_gavs=$$($(1)COMPILE_DEPS:$$(RESOLUTION_DIR)/%=%)
+$(1)POM_DEPENDENCIES = $$(foreach dep,$$($(1)pom_gavs),$$(call mk-pom-dep,$$(dep)))
 
 ## contents
 $(1)POM_CONTENTS = $$(call mk-pom,$(1))

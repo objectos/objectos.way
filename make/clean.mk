@@ -18,6 +18,10 @@
 # clean task
 #
 
+ifndef RESOLUTION_DIR
+$(error The required variable RESOLUTION_DIR was not defined)
+endif
+
 define CLEAN_TASK
 
 ## work dir
@@ -28,9 +32,9 @@ $(1)WORK = $$($(1)MODULE)/work
 .PHONY: $(2)clean
 $(2)clean:
 ifneq ($$($(1)WORK),)
-	rm -rf $$($(1)WORK)/*
+	rm -rf $$($(1)WORK)/* $$($(1)COMPILE_MARKER)
 else
-	@echo "Cannot clean: $(1)WORK was not defined!"
+	rm -f $$($(1)COMPILE_MARKER)
 endif
 	
 endef

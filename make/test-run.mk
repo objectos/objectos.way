@@ -76,9 +76,6 @@ $(1)TEST_RUNTIME_REQS += $$($(1)TEST_COMPILE_MARKER)
 .PHONY: $(2)test
 $(2)test: $$($(1)TEST_RUN_MARKER)
 
-.PHONY: $(2)test-runtime-module-path
-$(2)test-runtime-module-path: $$($(1)TEST_RUNTIME_MODULE_PATH)
-
 $$($(1)TEST_RUNTIME_MODULE_PATH): $$($(1)TEST_RUNTIME_DEPS)
 ifneq ($$($(1)TEST_RUNTIME_DEPS),)
 	cat $$^ | sort | uniq | paste --delimiter='$$(MODULE_PATH_SEPARATOR)' --serial > $$@

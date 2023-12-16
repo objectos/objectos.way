@@ -18,6 +18,10 @@
 # compilation options
 #
 
+ifndef RESOLUTION_DIR
+$(error The required variable RESOLUTION_DIR was not defined)
+endif
+
 define COMPILE_TASK
 
 ## source directory
@@ -61,7 +65,7 @@ $(1)JAVACX += $$($(1)DIRTY)
 # $(1)RESOURCES =
 
 ## compilation marker
-$(1)COMPILE_MARKER = $$($(1)WORK)/compile-marker
+$(1)COMPILE_MARKER = $$(RESOLUTION_DIR)/$$($(1)GROUP_ID)/$$($(1)ARTIFACT_ID)/$$($(1)VERSION)
 
 ## compilation requirements
 $(1)COMPILE_REQS  = $$($(1)COMPILE_MODULE_PATH)
@@ -91,7 +95,8 @@ $$($(1)COMPILE_MARKER): $$($(1)COMPILE_REQS)
 	if [ -n "$$($(1)DIRTY)" ]; then \
 		$$($(1)JAVACX); \
 	fi
-	$$(file > $$@,$$($(1)CLASS_OUTPUT))
+	mkdir --parents $$(@D)
+	echo "$$($(1)CLASS_OUTPUT)" > $$@
 ifneq ($$($(1)COMPILE_DEPS),)
 	cat $$($(1)COMPILE_DEPS) | sort | uniq >> $$@
 endif

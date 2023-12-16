@@ -42,9 +42,9 @@ $(2)install: $$($(1)INSTALL_REQS)
 .PHONY: $(2)clean-install
 $(2)clean-install:
 	rm -f $$($(1)INSTALL)
-	ifdef $(1)POM_FILE
+ifdef $(1)POM_FILE
 	rm -f $$($(1)INSTALL_POM)
-	endif
+endif
 
 $$($(1)INSTALL): $$($(1)JAR_FILE)
 	@mkdir --parents $$(@D)
