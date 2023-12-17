@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Objectos Software LTDA.
+ * Copyright (C) 2015-2023 Objectos Software LTDA.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,16 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package objectos.html.pseudom;
+
+import objectos.html.HtmlTemplate;
+
 /**
- * Generate HTML using pure Java.
+ * Represents the materialized {@link HtmlTemplate}.
  */
-module objectos.html {
-  exports objectos.html;
-  exports objectos.html.pseudom;
+public interface HtmlDocument {
 
-  requires transitive objectos.html.tmpl;
+  HtmlIterable<HtmlNode> nodes();
 
-  requires objectos.lang.object;
-  requires objectos.util.array;
-  requires objectos.util.map;
 }

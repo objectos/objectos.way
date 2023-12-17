@@ -34,11 +34,10 @@ public class RunTests {
     test.setName("All");
 
     test.setXmlPackages(
-      List.of(
-        new XmlPackage("objectos.html"),
-        new XmlPackage("objectos.html.internal"),
-        new XmlPackage("objectos.html.tmpl")
-      )
+        List.of(
+            new XmlPackage("objectos.html"),
+            new XmlPackage("objectos.html.internal")
+        )
     );
 
     TestNG ng;
@@ -49,7 +48,7 @@ public class RunTests {
     }
 
     ng.setXmlSuites(
-      List.of(suite)
+        List.of(suite)
     );
 
     ng.run();

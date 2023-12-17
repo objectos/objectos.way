@@ -164,7 +164,7 @@ public final class InternalCompiledHtml implements Html {
         }
 
         default -> throw new UnsupportedOperationException(
-          "Implement me :: code=" + code
+            "Implement me :: code=" + code
         );
       }
     }
@@ -203,9 +203,7 @@ public final class InternalCompiledHtml implements Html {
         || 'A' <= c && c <= 'F';
   }
 
-  private int writeAmpersandAttribute(
-      Appendable out, String value, int idx, int len)
-      throws IOException {
+  private int writeAmpersandAttribute(Appendable out, String value, int idx, int len) throws IOException {
     enum State {
       START,
       MAYBE_NAMED,
@@ -293,7 +291,7 @@ public final class InternalCompiledHtml implements Html {
 
         default -> {
           throw new UnsupportedOperationException(
-            "Implement me :: state=" + state
+              "Implement me :: state=" + state
           );
         }
       }
@@ -318,7 +316,7 @@ public final class InternalCompiledHtml implements Html {
 
       default -> {
         throw new UnsupportedOperationException(
-          "Implement me :: state=" + state
+            "Implement me :: state=" + state
         );
       }
     }

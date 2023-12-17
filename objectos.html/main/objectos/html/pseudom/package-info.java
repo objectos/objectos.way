@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Objectos Software LTDA.
+ * Copyright (C) 2015-2023 Objectos Software LTDA.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,15 +14,13 @@
  * limitations under the License.
  */
 /**
- * Generate HTML using pure Java.
+ * Provides the interfaces for the Pseudo Document Object Model (P-DOM).
+ *
+ * <p>
+ * Instances of the interfaces from this package are meant to be consumed
+ * immediately during processing. In other words, instances must not be cached
+ * nor stored for later processing.
+ *
+ * @since 0.5.3
  */
-module objectos.html {
-  exports objectos.html;
-  exports objectos.html.pseudom;
-
-  requires transitive objectos.html.tmpl;
-
-  requires objectos.lang.object;
-  requires objectos.util.array;
-  requires objectos.util.map;
-}
+package objectos.html.pseudom;

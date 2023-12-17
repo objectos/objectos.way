@@ -17,6 +17,7 @@ package objectos.html;
 
 import objectos.html.internal.HtmlCompiler02;
 import objectos.html.internal.HtmlTemplateApi;
+import objectos.html.pseudom.DocumentProcessor;
 import objectos.lang.object.Check;
 
 /**
@@ -55,6 +56,24 @@ public non-sealed abstract class HtmlTemplate extends BaseTemplateDsl {
       api.optimize();
 
       return api.compile();
+    } finally {
+      api = null;
+    }
+  }
+
+  public final void process(DocumentProcessor processor) {
+    Check.notNull(processor, "processor == null");
+
+    try {
+      api = new HtmlCompiler02();
+
+      api.compilationBegin();
+
+      definition();
+
+      api.compilationEnd();
+
+      api.process(processor);
     } finally {
       api = null;
     }

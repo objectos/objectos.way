@@ -18,749 +18,755 @@ package objectos.html.internal;
 import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.Set;
+import objectos.html.pseudom.DocumentProcessor;
 import objectos.util.array.ObjectArrays;
 
 public final class HtmlCompiler02 extends HtmlCompiler01 {
 
-	private static final Set<StandardElementName> PHRASING = EnumSet.of(
-			StandardElementName.A,
-			StandardElementName.ABBR,
-			StandardElementName.B,
-			StandardElementName.BR,
-			StandardElementName.BUTTON,
-			StandardElementName.CODE,
-			StandardElementName.EM,
-			StandardElementName.IMG,
-			StandardElementName.INPUT,
-			StandardElementName.KBD,
-			StandardElementName.LABEL,
-			StandardElementName.LINK,
-			StandardElementName.META,
-			StandardElementName.PROGRESS,
-			StandardElementName.SAMP,
-			StandardElementName.SCRIPT,
-			StandardElementName.SELECT,
-			StandardElementName.SMALL,
-			StandardElementName.SPAN,
-			StandardElementName.STRONG,
-			StandardElementName.SUB,
-			StandardElementName.SUP,
-			StandardElementName.SVG,
-			StandardElementName.TEMPLATE,
-			StandardElementName.TEXTAREA
-	);
+  private static final Set<StandardElementName> PHRASING = EnumSet.of(
+      StandardElementName.A,
+      StandardElementName.ABBR,
+      StandardElementName.B,
+      StandardElementName.BR,
+      StandardElementName.BUTTON,
+      StandardElementName.CODE,
+      StandardElementName.EM,
+      StandardElementName.IMG,
+      StandardElementName.INPUT,
+      StandardElementName.KBD,
+      StandardElementName.LABEL,
+      StandardElementName.LINK,
+      StandardElementName.META,
+      StandardElementName.PROGRESS,
+      StandardElementName.SAMP,
+      StandardElementName.SCRIPT,
+      StandardElementName.SELECT,
+      StandardElementName.SMALL,
+      StandardElementName.SPAN,
+      StandardElementName.STRONG,
+      StandardElementName.SUB,
+      StandardElementName.SUP,
+      StandardElementName.SVG,
+      StandardElementName.TEMPLATE,
+      StandardElementName.TEXTAREA
+  );
 
-	private static final int IDX_NEW_LINE = 0;
+  private static final int IDX_NEW_LINE = 0;
 
-	private static final int IDX_ATTR_FIRST = 1;
+  private static final int IDX_ATTR_FIRST = 1;
 
-	private static final int IDX_ATTR_PROTO = 2;
+  private static final int IDX_ATTR_PROTO = 2;
 
-	private static final int IDX_ATTR_VALUE = 3;
+  private static final int IDX_ATTR_VALUE = 3;
 
-	private static final int IDX_AUX = 4;
+  private static final int IDX_AUX = 4;
 
-	private static final byte _FALSE = 0;
+  private static final byte _FALSE = 0;
 
-	private static final byte _TRUE = -1;
+  private static final byte _TRUE = -1;
 
-	@Override
-	public final InternalCompiledHtml compile() {
-		Object[] objects;
-		objects = ObjectArrays.empty();
+  @Override
+  public final InternalCompiledHtml compile() {
+    Object[] objects;
+    objects = ObjectArrays.empty();
 
-		if (objectArray != null) {
-			objects = Arrays.copyOf(objectArray, objectIndex);
-		}
+    if (objectArray != null) {
+      objects = Arrays.copyOf(objectArray, objectIndex);
+    }
 
-		return new InternalCompiledHtml(
-				Arrays.copyOfRange(aux, IDX_AUX, auxIndex), objects
-		);
-	}
+    return new InternalCompiledHtml(
+        Arrays.copyOfRange(aux, IDX_AUX, auxIndex), objects
+    );
+  }
 
-	@Override
-	public final void optimize() {
-		// holds new line status
-		aux[IDX_NEW_LINE] = _TRUE;
+  @Override
+  public final void process(DocumentProcessor processor) {
+    throw new UnsupportedOperationException("Implement me");
+  }
 
-		// we will use the aux list to store our byte code
-		auxIndex = IDX_AUX;
+  @Override
+  public final void optimize() {
+    // holds new line status
+    aux[IDX_NEW_LINE] = _TRUE;
 
-		// holds decoded length
-		auxStart = 0;
+    // we will use the aux list to store our byte code
+    auxIndex = IDX_AUX;
 
-		// jmp auxiliary
-		mainContents = 0;
+    // holds decoded length
+    auxStart = 0;
 
-		// holds the indentation level
-		mainStart = 0;
+    // jmp auxiliary
+    mainContents = 0;
 
-		// we will iterate over the main list looking for unmarked elements
-		int index;
-		index = 0;
+    // holds the indentation level
+    mainStart = 0;
 
-		int elemCount;
-		elemCount = 0;
+    // we will iterate over the main list looking for unmarked elements
+    int index;
+    index = 0;
 
-		while (index < mainIndex) {
-			byte proto;
-			proto = main[index++];
+    int elemCount;
+    elemCount = 0;
 
-			int length;
-			length = switch (proto) {
-				case ByteProto.DOCTYPE -> {
-					elemCount = newLineIfNecessary(elemCount);
+    while (index < mainIndex) {
+      byte proto;
+      proto = main[index++];
 
-					auxAdd(ByteCode.DOCTYPE);
+      int length;
+      length = switch (proto) {
+        case ByteProto.DOCTYPE -> {
+          elemCount = newLineIfNecessary(elemCount);
 
-					yield 0;
-				}
+          auxAdd(ByteCode.DOCTYPE);
 
-				case ByteProto.ELEMENT -> {
-					elemCount = newLineIfNecessary(elemCount);
+          yield 0;
+        }
 
-					int thisLength;
-					thisLength = Bytes.decodeInt(main[index++], main[index++]);
+        case ByteProto.ELEMENT -> {
+          elemCount = newLineIfNecessary(elemCount);
 
-					element(index, null);
+          int thisLength;
+          thisLength = Bytes.decodeInt(main[index++], main[index++]);
 
-					yield thisLength;
-				}
+          element(index, null);
 
-				case ByteProto.LENGTH2 -> Bytes.decodeInt(main[index++], main[index++]);
+          yield thisLength;
+        }
 
-				case ByteProto.LENGTH3 -> Bytes.decodeLength3(main[index++], main[index++], main[index++]);
+        case ByteProto.LENGTH2 -> Bytes.decodeInt(main[index++], main[index++]);
 
-				case ByteProto.MARKED3 -> 3 - 1;
+        case ByteProto.LENGTH3 -> Bytes.decodeLength3(main[index++], main[index++], main[index++]);
 
-				case ByteProto.MARKED4 -> 4 - 1;
+        case ByteProto.MARKED3 -> 3 - 1;
 
-				case ByteProto.MARKED5 -> 5 - 1;
+        case ByteProto.MARKED4 -> 4 - 1;
 
-				case ByteProto.TEXT -> {
-					byte b0;
-					b0 = main[index++];
+        case ByteProto.MARKED5 -> 5 - 1;
 
-					byte b1;
-					b1 = main[index++];
+        case ByteProto.TEXT -> {
+          byte b0;
+          b0 = main[index++];
 
-					auxAdd(ByteCode.TEXT, b0, b1);
+          byte b1;
+          b1 = main[index++];
 
-					// prevent new line after this text
-					elemCount = 0;
+          auxAdd(ByteCode.TEXT, b0, b1);
 
-					// skip ByteProto.INTERNAL4
-					yield 1;
-				}
+          // prevent new line after this text
+          elemCount = 0;
 
-				default -> throw new UnsupportedOperationException(
-						"Implement me :: proto=" + proto + ";index=" + index
-				);
-			};
+          // skip ByteProto.INTERNAL4
+          yield 1;
+        }
 
-			index += length;
-		}
+        default -> throw new UnsupportedOperationException(
+            "Implement me :: proto=" + proto + ";index=" + index
+        );
+      };
 
-		if (auxIndex > 1) {
-			int lastIndex;
-			lastIndex = auxIndex - 1;
+      index += length;
+    }
 
-			byte last;
-			last = aux[lastIndex];
+    if (auxIndex > 1) {
+      int lastIndex;
+      lastIndex = auxIndex - 1;
 
-			switch (last) {
-				case ByteCode.NL -> {}
+      byte last;
+      last = aux[lastIndex];
 
-				case ByteCode.NL_OPTIONAL -> {
-					aux[lastIndex] = ByteCode.NL;
-				}
+      switch (last) {
+        case ByteCode.NL -> {}
 
-				default -> {
-					auxAdd(ByteCode.NL);
-				}
-			}
-		}
-	}
+        case ByteCode.NL_OPTIONAL -> {
+          aux[lastIndex] = ByteCode.NL;
+        }
 
-	private int decodeLength(int index) {
-		int startIndex;
-		startIndex = index;
+        default -> {
+          auxAdd(ByteCode.NL);
+        }
+      }
+    }
+  }
 
-		byte maybeNeg;
+  private int decodeLength(int index) {
+    int startIndex;
+    startIndex = index;
 
-		do {
-			maybeNeg = main[index++];
-		} while (maybeNeg < 0);
+    byte maybeNeg;
 
-		auxStart = Bytes.decodeOffset(main, startIndex, index);
+    do {
+      maybeNeg = main[index++];
+    } while (maybeNeg < 0);
 
-		return index;
-	}
+    auxStart = Bytes.decodeOffset(main, startIndex, index);
 
-	private void element(int index, StandardElementName parent) {
-		// 1) let's write the start tag fully
-		// -> i.e. with the attributes (if any)
-		StandardElementName name;
-		name = element0StartTag(index, parent);
+    return index;
+  }
 
-		ElementKind elementKind;
-		elementKind = name.getKind();
+  private void element(int index, StandardElementName parent) {
+    // 1) let's write the start tag fully
+    // -> i.e. with the attributes (if any)
+    StandardElementName name;
+    name = element0StartTag(index, parent);
 
-		if (elementKind.isVoid()) {
-			// this element is a void element
-			// -> no children
-			// -> no end tag
+    ElementKind elementKind;
+    elementKind = name.getKind();
 
-			if (isHead(parent) && !wasNewLine()) {
-				auxAdd(ByteCode.NL_OPTIONAL);
+    if (elementKind.isVoid()) {
+      // this element is a void element
+      // -> no children
+      // -> no end tag
 
-				newLine(_TRUE);
-			}
+      if (isHead(parent) && !wasNewLine()) {
+        auxAdd(ByteCode.NL_OPTIONAL);
 
-			return;
-		}
+        newLine(_TRUE);
+      }
 
-		// we'll iterate over the children (if any)
-		element1Children(index, name);
+      return;
+    }
 
-		// finally, write out the end tag
-		element2EndTag(parent, name);
-	}
+    // we'll iterate over the children (if any)
+    element1Children(index, name);
 
-	private StandardElementName element0StartTag(int index, StandardElementName parent) {
-		// we'll keep the name values handy
-		byte nameByte;
+    // finally, write out the end tag
+    element2EndTag(parent, name);
+  }
 
-		// in particular this one will be required by the end tag (if one should be rendered)
-		StandardElementName name;
+  private StandardElementName element0StartTag(int index, StandardElementName parent) {
+    // we'll keep the name values handy
+    byte nameByte;
 
-		// first proto should be the element's name
-		byte proto;
-		proto = main[index++];
+    // in particular this one will be required by the end tag (if one should be rendered)
+    StandardElementName name;
 
-		switch (proto) {
-			case ByteProto.STANDARD_NAME -> {
-				nameByte = main[index++];
+    // first proto should be the element's name
+    byte proto;
+    proto = main[index++];
 
-				int ordinal;
-				ordinal = Bytes.decodeInt(nameByte);
+    switch (proto) {
+      case ByteProto.STANDARD_NAME -> {
+        nameByte = main[index++];
 
-				name = StandardElementName.getByCode(ordinal);
-			}
+        int ordinal;
+        ordinal = Bytes.decodeInt(nameByte);
 
-			default -> throw new IllegalArgumentException(
-					"Malformed element. Expected name but found=" + proto
-			);
-		}
+        name = StandardElementName.getByCode(ordinal);
+      }
 
-		// 'open' the start tag
+      default -> throw new IllegalArgumentException(
+          "Malformed element. Expected name but found=" + proto
+      );
+    }
 
-		element0StartTag0Open(parent, name);
+    // 'open' the start tag
 
-		auxAdd(ByteCode.START_TAG, nameByte);
+    element0StartTag0Open(parent, name);
 
-		// we'll iterate over the attributes (if any)
+    auxAdd(ByteCode.START_TAG, nameByte);
 
-		aux[IDX_ATTR_FIRST] = _TRUE;
+    // we'll iterate over the attributes (if any)
 
-		aux[IDX_ATTR_PROTO] = 0;
+    aux[IDX_ATTR_FIRST] = _TRUE;
 
-		aux[IDX_ATTR_VALUE] = _FALSE;
+    aux[IDX_ATTR_PROTO] = 0;
 
-		loop: while (index < mainIndex) {
-			proto = main[index++];
+    aux[IDX_ATTR_VALUE] = _FALSE;
 
-			switch (proto) {
-				case ByteProto.AMBIGUOUS1 -> {
-					index = jmp(index);
+    loop: while (index < mainIndex) {
+      proto = main[index++];
 
-					byte ordinalByte;
-					ordinalByte = main[mainContents++];
+      switch (proto) {
+        case ByteProto.AMBIGUOUS1 -> {
+          index = jmp(index);
 
-					Ambiguous ambiguous;
-					ambiguous = Ambiguous.decode(ordinalByte);
+          byte ordinalByte;
+          ordinalByte = main[mainContents++];
 
-					if (ambiguous.isAttributeOf(name)) {
-						byte attr;
-						attr = ambiguous.encodeAttribute();
+          Ambiguous ambiguous;
+          ambiguous = Ambiguous.decode(ordinalByte);
 
-						byte v0;
-						v0 = main[mainContents++];
+          if (ambiguous.isAttributeOf(name)) {
+            byte attr;
+            attr = ambiguous.encodeAttribute();
 
-						byte v1;
-						v1 = main[mainContents++];
+            byte v0;
+            v0 = main[mainContents++];
 
-						handleAttr(attr, v0, v1);
-					}
-				}
+            byte v1;
+            v1 = main[mainContents++];
 
-				case ByteProto.ATTRIBUTE0 -> {
-					index = jmp(index);
+            handleAttr(attr, v0, v1);
+          }
+        }
 
-					byte attr;
-					attr = main[mainContents++];
+        case ByteProto.ATTRIBUTE0 -> {
+          index = jmp(index);
 
-					handleAttr(attr);
-				}
+          byte attr;
+          attr = main[mainContents++];
 
-				case ByteProto.ATTRIBUTE1 -> {
-					index = jmp(index);
+          handleAttr(attr);
+        }
 
-					byte attr;
-					attr = main[mainContents++];
+        case ByteProto.ATTRIBUTE1 -> {
+          index = jmp(index);
 
-					byte v0;
-					v0 = main[mainContents++];
+          byte attr;
+          attr = main[mainContents++];
 
-					byte v1;
-					v1 = main[mainContents++];
+          byte v0;
+          v0 = main[mainContents++];
 
-					handleAttr(attr, v0, v1);
-				}
+          byte v1;
+          v1 = main[mainContents++];
 
-				case ByteProto.ATTRIBUTE_CLASS -> {
-					int ordinal;
-					ordinal = StandardAttributeName.CLASS.ordinal();
+          handleAttr(attr, v0, v1);
+        }
 
-					byte attr;
-					attr = Bytes.encodeInt0(ordinal);
+        case ByteProto.ATTRIBUTE_CLASS -> {
+          int ordinal;
+          ordinal = StandardAttributeName.CLASS.ordinal();
 
-					byte v0;
-					v0 = main[index++];
+          byte attr;
+          attr = Bytes.encodeInt0(ordinal);
 
-					byte v1;
-					v1 = main[index++];
+          byte v0;
+          v0 = main[index++];
 
-					handleAttr(attr, v0, v1);
-				}
+          byte v1;
+          v1 = main[index++];
 
-				case ByteProto.ATTRIBUTE_ID -> {
-					int ordinal;
-					ordinal = StandardAttributeName.ID.ordinal();
+          handleAttr(attr, v0, v1);
+        }
 
-					byte attr;
-					attr = Bytes.encodeInt0(ordinal);
+        case ByteProto.ATTRIBUTE_ID -> {
+          int ordinal;
+          ordinal = StandardAttributeName.ID.ordinal();
 
-					byte v0;
-					v0 = main[index++];
+          byte attr;
+          attr = Bytes.encodeInt0(ordinal);
 
-					byte v1;
-					v1 = main[index++];
+          byte v0;
+          v0 = main[index++];
 
-					handleAttr(attr, v0, v1);
-				}
+          byte v1;
+          v1 = main[index++];
 
-				case	ByteProto.ELEMENT,
-							ByteProto.RAW,
-							ByteProto.TEXT -> index = skipVarInt(index);
+          handleAttr(attr, v0, v1);
+        }
 
-				case ByteProto.END -> {
-					if (aux[IDX_ATTR_FIRST] == _FALSE && aux[IDX_ATTR_VALUE] == _TRUE) {
-						auxAdd(ByteCode.ATTR_VALUE_END);
-					}
+        case ByteProto.ELEMENT,
+             ByteProto.RAW,
+             ByteProto.TEXT -> index = skipVarInt(index);
 
-					break loop;
-				}
+        case ByteProto.END -> {
+          if (aux[IDX_ATTR_FIRST] == _FALSE && aux[IDX_ATTR_VALUE] == _TRUE) {
+            auxAdd(ByteCode.ATTR_VALUE_END);
+          }
 
-				case ByteProto.LENGTH2 -> {
-					byte len0;
-					len0 = main[index++];
+          break loop;
+        }
 
-					byte len1;
-					len1 = main[index++];
+        case ByteProto.LENGTH2 -> {
+          byte len0;
+          len0 = main[index++];
 
-					int length;
-					length = Bytes.decodeInt(len0, len1);
+          byte len1;
+          len1 = main[index++];
 
-					index += length;
-				}
+          int length;
+          length = Bytes.decodeInt(len0, len1);
 
-				default -> throw new UnsupportedOperationException(
-						"Implement me :: proto=" + proto
-				);
-			}
-		}
+          index += length;
+        }
 
-		// let's close the start tag
+        default -> throw new UnsupportedOperationException(
+            "Implement me :: proto=" + proto
+        );
+      }
+    }
 
-		auxAdd(ByteCode.GT);
+    // let's close the start tag
 
-		return name;
-	}
+    auxAdd(ByteCode.GT);
 
-	private void element0StartTag0Open(StandardElementName parent, StandardElementName name) {
-		if (isHead(parent) || !PHRASING.contains(name)) {
-			// 1) head children
-			// 2) non-phrasing elements
-			//    => should be written in their own lines
+    return name;
+  }
 
-			if (!wasNewLine()) {
-				// write NL only if one was not written before
-				auxAdd(ByteCode.NL_OPTIONAL);
-			}
+  private void element0StartTag0Open(StandardElementName parent, StandardElementName name) {
+    if (isHead(parent) || !PHRASING.contains(name)) {
+      // 1) head children
+      // 2) non-phrasing elements
+      //    => should be written in their own lines
 
-			indentationWrite();
-		}
-	}
+      if (!wasNewLine()) {
+        // write NL only if one was not written before
+        auxAdd(ByteCode.NL_OPTIONAL);
+      }
 
-	private void element1Children(int index, StandardElementName parent) {
-		// we increase the indentation level before writing out the children
-		indentationInc();
+      indentationWrite();
+    }
+  }
 
-		// for the first child (if any)
-		newLine(_FALSE);
+  private void element1Children(int index, StandardElementName parent) {
+    // we increase the indentation level before writing out the children
+    indentationInc();
 
-		loop: while (index < mainIndex) {
-			byte proto;
-			proto = main[index++];
+    // for the first child (if any)
+    newLine(_FALSE);
 
-			switch (proto) {
-				case ByteProto.AMBIGUOUS1 -> {
-					index = jmp(index);
+    loop: while (index < mainIndex) {
+      byte proto;
+      proto = main[index++];
 
-					// load ambiguous name
+      switch (proto) {
+        case ByteProto.AMBIGUOUS1 -> {
+          index = jmp(index);
 
-					byte ordinalByte;
-					ordinalByte = main[mainContents++];
+          // load ambiguous name
 
-					int ordinal;
-					ordinal = Bytes.decodeInt(ordinalByte);
+          byte ordinalByte;
+          ordinalByte = main[mainContents++];
 
-					Ambiguous ambiguous;
-					ambiguous = Ambiguous.get(ordinal);
+          int ordinal;
+          ordinal = Bytes.decodeInt(ordinalByte);
 
-					if (ambiguous.isAttributeOf(parent)) {
-						// ambiguous was treated as an attribute, continue
-						continue loop;
-					}
+          Ambiguous ambiguous;
+          ambiguous = Ambiguous.get(ordinal);
 
-					StandardElementName element;
-					element = ambiguous.element;
+          if (ambiguous.isAttributeOf(parent)) {
+            // ambiguous was treated as an attribute, continue
+            continue loop;
+          }
 
-					// 'open' the start tag
+          StandardElementName element;
+          element = ambiguous.element;
 
-					element0StartTag0Open(parent, element);
+          // 'open' the start tag
 
-					int nameOrdinal;
-					nameOrdinal = element.ordinal();
+          element0StartTag0Open(parent, element);
 
-					byte nameByte;
-					nameByte = Bytes.encodeInt0(nameOrdinal);
+          int nameOrdinal;
+          nameOrdinal = element.ordinal();
 
-					auxAdd(ByteCode.START_TAG, nameByte, ByteCode.GT);
+          byte nameByte;
+          nameByte = Bytes.encodeInt0(nameOrdinal);
 
-					auxAdd(ByteCode.TEXT, main[mainContents++], main[mainContents++]);
+          auxAdd(ByteCode.START_TAG, nameByte, ByteCode.GT);
 
-					auxAdd(ByteCode.END_TAG, nameByte);
+          auxAdd(ByteCode.TEXT, main[mainContents++], main[mainContents++]);
 
-					element2EndTag0NewLine(parent, element);
-				}
+          auxAdd(ByteCode.END_TAG, nameByte);
 
-				case ByteProto.ATTRIBUTE1 -> index = skipVarInt(index);
+          element2EndTag0NewLine(parent, element);
+        }
 
-				case	ByteProto.ATTRIBUTE_CLASS,
-							ByteProto.ATTRIBUTE_ID -> index += 2;
+        case ByteProto.ATTRIBUTE1 -> index = skipVarInt(index);
 
-				case ByteProto.ELEMENT -> {
-					index = jmp(index);
+        case ByteProto.ATTRIBUTE_CLASS,
+             ByteProto.ATTRIBUTE_ID -> index += 2;
 
-					// skip fixed length
-					mainContents += 2;
+        case ByteProto.ELEMENT -> {
+          index = jmp(index);
 
-					element(mainContents, parent);
-				}
+          // skip fixed length
+          mainContents += 2;
 
-				case ByteProto.END -> {
-					break loop;
-				}
+          element(mainContents, parent);
+        }
 
-				case ByteProto.LENGTH2 -> {
-					byte len0;
-					len0 = main[index++];
+        case ByteProto.END -> {
+          break loop;
+        }
 
-					byte len1;
-					len1 = main[index++];
+        case ByteProto.LENGTH2 -> {
+          byte len0;
+          len0 = main[index++];
 
-					int length;
-					length = Bytes.decodeInt(len0, len1);
+          byte len1;
+          len1 = main[index++];
 
-					index += length;
-				}
+          int length;
+          length = Bytes.decodeInt(len0, len1);
 
-				case ByteProto.STANDARD_NAME -> index += 1;
+          index += length;
+        }
 
-				case ByteProto.RAW -> {
-					index = jmp(index);
+        case ByteProto.STANDARD_NAME -> index += 1;
 
-					byte b0;
-					b0 = main[mainContents++];
+        case ByteProto.RAW -> {
+          index = jmp(index);
 
-					byte b1;
-					b1 = main[mainContents++];
+          byte b0;
+          b0 = main[mainContents++];
 
-					auxAdd(ByteCode.RAW, b0, b1);
-				}
+          byte b1;
+          b1 = main[mainContents++];
 
-				case ByteProto.TEXT -> {
-					index = jmp(index);
+          auxAdd(ByteCode.RAW, b0, b1);
+        }
 
-					byte b0;
-					b0 = main[mainContents++];
+        case ByteProto.TEXT -> {
+          index = jmp(index);
 
-					byte b1;
-					b1 = main[mainContents++];
+          byte b0;
+          b0 = main[mainContents++];
 
-					switch (parent) {
-						case SCRIPT -> {
-							int valueIndex;
-							valueIndex = Bytes.decodeInt(b0, b1);
+          byte b1;
+          b1 = main[mainContents++];
 
-							String value;
-							value = (String) objectArray[valueIndex];
+          switch (parent) {
+            case SCRIPT -> {
+              int valueIndex;
+              valueIndex = Bytes.decodeInt(b0, b1);
 
-							if (!startsWithNewLine(value)) {
-								auxAdd(ByteCode.NL_OPTIONAL);
-							}
+              String value;
+              value = (String) objectArray[valueIndex];
 
-							indentationWriteBlock();
+              if (!startsWithNewLine(value)) {
+                auxAdd(ByteCode.NL_OPTIONAL);
+              }
 
-							auxAdd(ByteCode.TEXT_SCRIPT, b0, b1);
+              indentationWriteBlock();
 
-							if (!endsWithNewLine(value)) {
-								auxAdd(ByteCode.NL_OPTIONAL);
+              auxAdd(ByteCode.TEXT_SCRIPT, b0, b1);
 
-								newLine(_TRUE);
-							}
-						}
+              if (!endsWithNewLine(value)) {
+                auxAdd(ByteCode.NL_OPTIONAL);
 
-						case STYLE -> {
-							int valueIndex;
-							valueIndex = Bytes.decodeInt(b0, b1);
+                newLine(_TRUE);
+              }
+            }
 
-							String value;
-							value = (String) objectArray[valueIndex];
+            case STYLE -> {
+              int valueIndex;
+              valueIndex = Bytes.decodeInt(b0, b1);
 
-							if (!startsWithNewLine(value)) {
-								auxAdd(ByteCode.NL_OPTIONAL);
-							}
+              String value;
+              value = (String) objectArray[valueIndex];
 
-							indentationWriteBlock();
+              if (!startsWithNewLine(value)) {
+                auxAdd(ByteCode.NL_OPTIONAL);
+              }
 
-							auxAdd(ByteCode.TEXT_STYLE, b0, b1);
+              indentationWriteBlock();
 
-							if (!endsWithNewLine(value)) {
-								auxAdd(ByteCode.NL_OPTIONAL);
+              auxAdd(ByteCode.TEXT_STYLE, b0, b1);
 
-								newLine(_TRUE);
-							}
-						}
+              if (!endsWithNewLine(value)) {
+                auxAdd(ByteCode.NL_OPTIONAL);
 
-						default -> {
-							auxAdd(ByteCode.TEXT, b0, b1);
-						}
-					}
-				}
+                newLine(_TRUE);
+              }
+            }
 
-				default -> throw new UnsupportedOperationException(
-						"Implement me :: proto=" + proto
-				);
-			}
-		}
+            default -> {
+              auxAdd(ByteCode.TEXT, b0, b1);
+            }
+          }
+        }
 
-		// we've written all of the children, decrease indentation
-		indentationDec();
-	}
+        default -> throw new UnsupportedOperationException(
+            "Implement me :: proto=" + proto
+        );
+      }
+    }
 
-	private void element2EndTag(StandardElementName parent, StandardElementName name) {
-		int nameOrdinal;
-		nameOrdinal = name.ordinal();
+    // we've written all of the children, decrease indentation
+    indentationDec();
+  }
 
-		byte nameByte;
-		nameByte = Bytes.encodeInt0(nameOrdinal);
+  private void element2EndTag(StandardElementName parent, StandardElementName name) {
+    int nameOrdinal;
+    nameOrdinal = name.ordinal();
 
-		if (wasNewLine()) {
-			indentationWrite();
-		}
+    byte nameByte;
+    nameByte = Bytes.encodeInt0(nameOrdinal);
 
-		auxAdd(ByteCode.END_TAG, nameByte);
+    if (wasNewLine()) {
+      indentationWrite();
+    }
 
-		element2EndTag0NewLine(parent, name);
-	}
+    auxAdd(ByteCode.END_TAG, nameByte);
 
-	private void element2EndTag0NewLine(StandardElementName parent, StandardElementName name) {
-		byte newLine;
-		newLine = _FALSE;
+    element2EndTag0NewLine(parent, name);
+  }
 
-		if (isHead(parent) || !PHRASING.contains(name)) {
-			auxAdd(ByteCode.NL_OPTIONAL);
+  private void element2EndTag0NewLine(StandardElementName parent, StandardElementName name) {
+    byte newLine;
+    newLine = _FALSE;
 
-			newLine = _TRUE;
-		}
+    if (isHead(parent) || !PHRASING.contains(name)) {
+      auxAdd(ByteCode.NL_OPTIONAL);
 
-		newLine(newLine);
-	}
+      newLine = _TRUE;
+    }
 
-	private boolean endsWithNewLine(String value) {
-		int length;
-		length = value.length();
+    newLine(newLine);
+  }
 
-		if (length > 0) {
-			char last;
-			last = value.charAt(length - 1);
+  private boolean endsWithNewLine(String value) {
+    int length;
+    length = value.length();
 
-			return isNewLine(last);
-		} else {
-			return false;
-		}
-	}
+    if (length > 0) {
+      char last;
+      last = value.charAt(length - 1);
 
-	private void handleAttr(byte attr) {
-		if (aux[IDX_ATTR_FIRST] == _TRUE || aux[IDX_ATTR_VALUE] == _FALSE) {
-			// this is the first attribute
-			auxAdd(
-					ByteCode.SPACE,
-					ByteCode.ATTR_NAME, attr
-			);
-		}
+      return isNewLine(last);
+    } else {
+      return false;
+    }
+  }
 
-		else {
-			// this is a new attribute
-			auxAdd(
-					ByteCode.ATTR_VALUE_END,
-					ByteCode.SPACE,
-					ByteCode.ATTR_NAME, attr
-			);
-		}
+  private void handleAttr(byte attr) {
+    if (aux[IDX_ATTR_FIRST] == _TRUE || aux[IDX_ATTR_VALUE] == _FALSE) {
+      // this is the first attribute
+      auxAdd(
+          ByteCode.SPACE,
+          ByteCode.ATTR_NAME, attr
+      );
+    }
 
-		aux[IDX_ATTR_FIRST] = _FALSE;
+    else {
+      // this is a new attribute
+      auxAdd(
+          ByteCode.ATTR_VALUE_END,
+          ByteCode.SPACE,
+          ByteCode.ATTR_NAME, attr
+      );
+    }
 
-		aux[IDX_ATTR_PROTO] = attr;
+    aux[IDX_ATTR_FIRST] = _FALSE;
 
-		aux[IDX_ATTR_VALUE] = _FALSE;
-	}
+    aux[IDX_ATTR_PROTO] = attr;
 
-	private void handleAttr(byte attr, byte value0, byte value1) {
-		if (aux[IDX_ATTR_FIRST] == _TRUE) {
-			// this is the first attribute
-			auxAdd(
-					ByteCode.SPACE,
-					ByteCode.ATTR_NAME, attr,
-					ByteCode.ATTR_VALUE_START,
-					ByteCode.ATTR_VALUE, value0, value1
-			);
-		}
+    aux[IDX_ATTR_VALUE] = _FALSE;
+  }
 
-		else if (aux[IDX_ATTR_PROTO] != attr) {
-			// this is a new attribute
-			auxAdd(
-					ByteCode.ATTR_VALUE_END,
-					ByteCode.SPACE,
-					ByteCode.ATTR_NAME, attr,
-					ByteCode.ATTR_VALUE_START,
-					ByteCode.ATTR_VALUE, value0, value1
-			);
-		}
+  private void handleAttr(byte attr, byte value0, byte value1) {
+    if (aux[IDX_ATTR_FIRST] == _TRUE) {
+      // this is the first attribute
+      auxAdd(
+          ByteCode.SPACE,
+          ByteCode.ATTR_NAME, attr,
+          ByteCode.ATTR_VALUE_START,
+          ByteCode.ATTR_VALUE, value0, value1
+      );
+    }
 
-		else {
-			// this is a new value of the same attribute
-			auxAdd(
-					ByteCode.SPACE,
-					ByteCode.ATTR_VALUE, value0, value1
-			);
-		}
+    else if (aux[IDX_ATTR_PROTO] != attr) {
+      // this is a new attribute
+      auxAdd(
+          ByteCode.ATTR_VALUE_END,
+          ByteCode.SPACE,
+          ByteCode.ATTR_NAME, attr,
+          ByteCode.ATTR_VALUE_START,
+          ByteCode.ATTR_VALUE, value0, value1
+      );
+    }
 
-		aux[IDX_ATTR_FIRST] = _FALSE;
+    else {
+      // this is a new value of the same attribute
+      auxAdd(
+          ByteCode.SPACE,
+          ByteCode.ATTR_VALUE, value0, value1
+      );
+    }
 
-		aux[IDX_ATTR_PROTO] = attr;
+    aux[IDX_ATTR_FIRST] = _FALSE;
 
-		aux[IDX_ATTR_VALUE] = _TRUE;
-	}
+    aux[IDX_ATTR_PROTO] = attr;
 
-	private void indentationDec() {
-		mainStart--;
-	}
+    aux[IDX_ATTR_VALUE] = _TRUE;
+  }
 
-	private void indentationInc() {
-		mainStart++;
-	}
+  private void indentationDec() {
+    mainStart--;
+  }
 
-	private void indentationWrite() {
-		if (mainStart == 0) {
-			return;
-		}
+  private void indentationInc() {
+    mainStart++;
+  }
 
-		auxAdd(ByteCode.TAB, (byte) mainStart);
-	}
+  private void indentationWrite() {
+    if (mainStart == 0) {
+      return;
+    }
 
-	private void indentationWriteBlock() {
-		if (mainStart == 0) {
-			return;
-		}
+    auxAdd(ByteCode.TAB, (byte) mainStart);
+  }
 
-		auxAdd(ByteCode.TAB_BLOCK, (byte) mainStart);
-	}
+  private void indentationWriteBlock() {
+    if (mainStart == 0) {
+      return;
+    }
 
-	private boolean isHead(StandardElementName parent) {
-		// test is null safe
-		return parent == StandardElementName.HEAD;
-	}
+    auxAdd(ByteCode.TAB_BLOCK, (byte) mainStart);
+  }
 
-	private boolean isNewLine(char c) {
-		return c == '\n' || c == '\r';
-	}
+  private boolean isHead(StandardElementName parent) {
+    // test is null safe
+    return parent == StandardElementName.HEAD;
+  }
 
-	private int jmp(int index) {
-		int baseIndex;
-		baseIndex = index;
+  private boolean isNewLine(char c) {
+    return c == '\n' || c == '\r';
+  }
 
-		index = decodeLength(index);
+  private int jmp(int index) {
+    int baseIndex;
+    baseIndex = index;
 
-		mainContents = baseIndex - auxStart;
+    index = decodeLength(index);
 
-		// skip ByteProto
-		mainContents++;
+    mainContents = baseIndex - auxStart;
 
-		return index;
-	}
+    // skip ByteProto
+    mainContents++;
 
-	private void newLine(byte value) {
-		aux[0] = value;
-	}
+    return index;
+  }
 
-	private int newLineIfNecessary(int count) {
-		if (count != 0) {
-			auxAdd(ByteCode.NL_OPTIONAL);
-		}
+  private void newLine(byte value) {
+    aux[0] = value;
+  }
 
-		return count + 1;
-	}
+  private int newLineIfNecessary(int count) {
+    if (count != 0) {
+      auxAdd(ByteCode.NL_OPTIONAL);
+    }
 
-	private int skipVarInt(int index) {
-		byte len0;
+    return count + 1;
+  }
 
-		do {
-			len0 = main[index++];
-		} while (len0 < 0);
+  private int skipVarInt(int index) {
+    byte len0;
 
-		return index;
-	}
+    do {
+      len0 = main[index++];
+    } while (len0 < 0);
 
-	private boolean startsWithNewLine(String value) {
-		int length;
-		length = value.length();
+    return index;
+  }
 
-		if (length > 0) {
-			char first;
-			first = value.charAt(0);
+  private boolean startsWithNewLine(String value) {
+    int length;
+    length = value.length();
 
-			return isNewLine(first);
-		} else {
-			return false;
-		}
-	}
+    if (length > 0) {
+      char first;
+      first = value.charAt(0);
 
-	private boolean wasNewLine() {
-		return aux[0] == _TRUE;
-	}
+      return isNewLine(first);
+    } else {
+      return false;
+    }
+  }
+
+  private boolean wasNewLine() {
+    return aux[0] == _TRUE;
+  }
 
 }

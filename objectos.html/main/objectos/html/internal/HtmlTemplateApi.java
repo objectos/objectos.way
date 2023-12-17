@@ -16,6 +16,7 @@
 package objectos.html.internal;
 
 import objectos.html.Html;
+import objectos.html.pseudom.DocumentProcessor;
 import objectos.html.tmpl.Api;
 
 public abstract class HtmlTemplateApi {
@@ -57,5 +58,9 @@ public abstract class HtmlTemplateApi {
   public abstract void raw(String value);
 
   public abstract void text(String value);
+
+  public void process(DocumentProcessor processor) {
+    throw new UnsupportedOperationException("Implement me");
+  }
 
 }

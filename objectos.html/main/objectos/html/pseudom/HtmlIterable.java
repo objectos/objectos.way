@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Objectos Software LTDA.
+ * Copyright (C) 2015-2023 Objectos Software LTDA.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,16 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package objectos.html.pseudom;
+
+import java.util.Iterator;
+
 /**
- * Generate HTML using pure Java.
+ * An {@link Iterable} which can be traversed only once.
  */
-module objectos.html {
-  exports objectos.html;
-  exports objectos.html.pseudom;
+public interface HtmlIterable<T> extends Iterable<T> {
 
-  requires transitive objectos.html.tmpl;
+  /**
+   * Returns an iterator over elements of type T.
+   *
+   * @return an iterator
+   *
+   * @throws IllegalStateException
+   *         if this {@code Iterable} has already been traversed
+   */
+  @Override
+  Iterator<T> iterator();
 
-  requires objectos.lang.object;
-  requires objectos.util.array;
-  requires objectos.util.map;
 }
