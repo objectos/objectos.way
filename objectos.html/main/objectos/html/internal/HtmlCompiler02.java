@@ -19,6 +19,8 @@ import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.Set;
 import objectos.html.pseudom.DocumentProcessor;
+import objectos.html.pseudom.HtmlNode;
+import objectos.lang.object.Check;
 import objectos.util.array.ObjectArrays;
 
 public final class HtmlCompiler02 extends HtmlCompiler01 {
@@ -81,7 +83,525 @@ public final class HtmlCompiler02 extends HtmlCompiler01 {
 
   @Override
   public final void process(DocumentProcessor processor) {
-    throw new UnsupportedOperationException("Implement me");
+    Check.notNull(processor, "processor == null");
+
+    PseudoHtmlDocument document;
+    document = bootstrap();
+
+    processor.process(document);
+  }
+
+  // visible for testing
+  final PseudoHtmlDocument bootstrap() {
+    // we will use the aux list to store our byte code
+    auxIndex = 0;
+
+    // holds decoded index/length
+    auxStart = 0;
+
+    // jmp auxiliary
+    mainContents = 0;
+
+    // aux counter
+    mainStart = 0;
+
+    processDocument();
+
+    // we reuse objectArray reference to store our pseudo html objects
+    if (objectArray == null) {
+      objectArray = new Object[IDX_OBJECT_INDEX];
+    }
+
+    return pseudoDocument();
+  }
+
+  final void advanceIf(byte required) {
+    byte actual;
+    actual = aux[mainStart++];
+
+    if (actual != required) {
+      throw new IllegalStateException(
+          """
+          Found state '%d' but expected state '%d'
+          """.formatted(actual, required)
+      );
+    }
+  }
+
+  final void elementAttributes() {
+
+  }
+
+  final boolean iteratorHasNext(byte hasNext, byte exhausted) {
+    byte actual;
+    actual = aux[mainStart++];
+
+    if (actual == hasNext) {
+      return true;
+    }
+
+    if (actual == exhausted) {
+      return false;
+    }
+
+    throw new IllegalStateException(
+        """
+        Found state '%d' but expected either '%d' or '%d'
+        """.formatted(actual, hasNext, exhausted)
+    );
+  }
+
+  final HtmlNode nextNode() {
+    byte code;
+    code = aux[mainStart++];
+
+    return switch (code) {
+      case BytePseudo.ELEMENT -> {
+        mainStart = decodeIndex(mainStart);
+
+        PseudoHtmlElement element;
+        element = element();
+
+        element.name = processElement();
+
+        yield element;
+      }
+
+      default -> throw new UnsupportedOperationException("Implement me :: code=" + code);
+    };
+  }
+
+  private void processDocument() {
+    // only allowed invocation order
+    auxAdd(BytePseudo.DOCUMENT_ITERABLE, BytePseudo.DOCUMENT_ITERATOR);
+
+    // we will iterate over the main list looking for unmarked elements
+    int index;
+    index = 0;
+
+    while (index < mainIndex) {
+      byte proto;
+      proto = main[index++];
+
+      int length;
+      length = switch (proto) {
+        case ByteProto.DOCTYPE -> {
+          auxAdd(BytePseudo.DOCUMENT_HAS_NEXT, BytePseudo.DOCTYPE);
+
+          yield 0;
+        }
+
+        case ByteProto.ELEMENT -> {
+          auxAdd(BytePseudo.DOCUMENT_HAS_NEXT, BytePseudo.ELEMENT);
+
+          int thisLength;
+          thisLength = Bytes.decodeInt(main[index++], main[index++]);
+
+          auxIndex = Bytes.encodeOffset(aux, auxIndex, index);
+
+          yield thisLength;
+        }
+
+        case ByteProto.LENGTH2 -> Bytes.decodeInt(main[index++], main[index++]);
+
+        case ByteProto.LENGTH3 -> Bytes.decodeLength3(main[index++], main[index++], main[index++]);
+
+        case ByteProto.MARKED3 -> 3 - 1;
+
+        case ByteProto.MARKED4 -> 4 - 1;
+
+        case ByteProto.MARKED5 -> 5 - 1;
+
+        case ByteProto.TEXT -> {
+          byte b0;
+          b0 = main[index++];
+
+          byte b1;
+          b1 = main[index++];
+
+          auxAdd(BytePseudo.DOCUMENT_HAS_NEXT, BytePseudo.TEXT, b0, b1);
+
+          // skip ByteProto.INTERNAL4
+          yield 1;
+        }
+
+        default -> throw new UnsupportedOperationException(
+            "Implement me :: proto=" + proto + ";index=" + index
+        );
+      };
+
+      index += length;
+    }
+
+    auxAdd(BytePseudo.DOCUMENT_EXHAUSTED);
+  }
+
+  private PseudoHtmlDocument pseudoDocument() {
+    Object pseudo;
+    pseudo = objectArray[IDX_PSEUDO_DOCUMENT];
+
+    if (pseudo == null) {
+      pseudo = objectArray[IDX_PSEUDO_DOCUMENT] = new PseudoHtmlDocument(this);
+    }
+
+    return (PseudoHtmlDocument) pseudo;
+  }
+
+  private StandardElementName processElement() {
+    int elementIndex;
+    elementIndex = auxStart;
+
+    int returnIndex;
+    returnIndex = mainStart;
+
+    StandardElementName name;
+    name = processElement0StartTag(elementIndex);
+
+    // TODO skip children if void tag
+
+    // we'll iterate over the children (if any)
+    processElement1Children(elementIndex, name);
+
+    auxAdd(BytePseudo.RETURN);
+
+    auxIndex = Bytes.encodeOffset(aux, auxIndex, returnIndex);
+
+    return name;
+  }
+
+  private StandardElementName processElement0StartTag(int index) {
+    // we'll keep the name values handy
+    byte nameByte;
+
+    // in particular this one will be required by the end tag (if one should be rendered)
+    StandardElementName name;
+
+    // first proto should be the element's name
+    byte proto;
+    proto = main[index++];
+
+    switch (proto) {
+      case ByteProto.STANDARD_NAME -> {
+        nameByte = main[index++];
+
+        int ordinal;
+        ordinal = Bytes.decodeInt(nameByte);
+
+        name = StandardElementName.getByCode(ordinal);
+      }
+
+      default -> throw new IllegalArgumentException(
+          "Malformed element. Expected name but found=" + proto
+      );
+    }
+
+    // we'll iterate over the attributes (if any)
+    int count = 0;
+
+    byte previous = -1;
+
+    loop: while (index < mainIndex) {
+      proto = main[index++];
+
+      switch (proto) {
+        case ByteProto.AMBIGUOUS1 -> {
+          index = jmp(index);
+
+          byte ordinalByte;
+          ordinalByte = main[mainContents++];
+
+          Ambiguous ambiguous;
+          ambiguous = Ambiguous.decode(ordinalByte);
+
+          if (ambiguous.isAttributeOf(name)) {
+            byte attr;
+            attr = ambiguous.encodeAttribute();
+
+            byte v0;
+            v0 = main[mainContents++];
+
+            byte v1;
+            v1 = main[mainContents++];
+
+            previous = processElementHandleAttr(count++, previous, attr, v0, v1);
+          }
+        }
+
+        case ByteProto.ATTRIBUTE0 -> {
+          index = jmp(index);
+
+          byte attr;
+          attr = main[mainContents++];
+
+          previous = processElementHandleAttr(count++, attr);
+        }
+
+        case ByteProto.ATTRIBUTE1 -> {
+          index = jmp(index);
+
+          byte attr;
+          attr = main[mainContents++];
+
+          byte v0;
+          v0 = main[mainContents++];
+
+          byte v1;
+          v1 = main[mainContents++];
+
+          previous = processElementHandleAttr(count++, previous, attr, v0, v1);
+        }
+
+        case ByteProto.ATTRIBUTE_CLASS -> {
+          int ordinal;
+          ordinal = StandardAttributeName.CLASS.ordinal();
+
+          byte attr;
+          attr = Bytes.encodeInt0(ordinal);
+
+          byte v0;
+          v0 = main[index++];
+
+          byte v1;
+          v1 = main[index++];
+
+          previous = processElementHandleAttr(count++, previous, attr, v0, v1);
+        }
+
+        case ByteProto.ATTRIBUTE_ID -> {
+          int ordinal;
+          ordinal = StandardAttributeName.ID.ordinal();
+
+          byte attr;
+          attr = Bytes.encodeInt0(ordinal);
+
+          byte v0;
+          v0 = main[index++];
+
+          byte v1;
+          v1 = main[index++];
+
+          previous = processElementHandleAttr(count++, previous, attr, v0, v1);
+        }
+
+        case ByteProto.ELEMENT,
+             ByteProto.RAW,
+             ByteProto.TEXT -> index = skipVarInt(index);
+
+        case ByteProto.END -> {
+          if (count > 0) {
+            auxAdd(BytePseudo.ATTR_EXHAUSTED);
+          }
+
+          break loop;
+        }
+
+        case ByteProto.LENGTH2 -> {
+          byte len0;
+          len0 = main[index++];
+
+          byte len1;
+          len1 = main[index++];
+
+          int length;
+          length = Bytes.decodeInt(len0, len1);
+
+          index += length;
+        }
+
+        default -> throw new UnsupportedOperationException(
+            "Implement me :: proto=" + proto
+        );
+      }
+    }
+
+    return name;
+  }
+
+  private byte processElementHandleAttr(int count, byte attr) {
+    if (count == 0) {
+      // this is the first attribute
+
+      auxAdd(
+          BytePseudo.ELEMENT_ATTRS_HAS_NEXT,
+          BytePseudo.ATTR_NAME, attr
+      );
+    }
+
+    else {
+      // this is a new attribute
+      // end value list of the previous one
+
+      auxAdd(
+          BytePseudo.ATTR_EXHAUSTED,
+          BytePseudo.ELEMENT_ATTRS_HAS_NEXT,
+          BytePseudo.ATTR_NAME, attr
+      );
+    }
+
+    return attr;
+  }
+
+  private byte processElementHandleAttr(int count, byte previous, byte attr, byte value0, byte value1) {
+    if (count == 0) {
+      // this is the first attribute
+      auxAdd(
+          BytePseudo.ELEMENT_ATTRS_HAS_NEXT,
+          BytePseudo.ATTR_NAME, attr,
+          BytePseudo.ATTR_HAS_VALUE, value0, value1
+      );
+    }
+
+    else if (previous != attr) {
+      // this is a new attribute
+      auxAdd(
+          BytePseudo.ATTR_EXHAUSTED,
+          BytePseudo.ELEMENT_ATTRS_HAS_NEXT,
+          BytePseudo.ATTR_NAME, attr,
+          BytePseudo.ATTR_HAS_VALUE, value0, value1
+      );
+    }
+
+    else {
+      // this is a new value of the same attribute
+      auxAdd(
+          BytePseudo.ATTR_HAS_VALUE, value0, value1
+      );
+    }
+
+    return attr;
+  }
+
+  private void processElement1Children(int index, StandardElementName parent) {
+    loop: while (index < mainIndex) {
+      byte proto;
+      proto = main[index++];
+
+      switch (proto) {
+        case ByteProto.AMBIGUOUS1 -> {
+          index = jmp(index);
+
+          // load ambiguous name
+
+          byte ordinalByte;
+          ordinalByte = main[mainContents++];
+
+          int ordinal;
+          ordinal = Bytes.decodeInt(ordinalByte);
+
+          Ambiguous ambiguous;
+          ambiguous = Ambiguous.get(ordinal);
+
+          if (ambiguous.isAttributeOf(parent)) {
+            // ambiguous was treated as an attribute, continue
+            continue loop;
+          }
+
+          auxAdd(BytePseudo.ELEMENT_NODES_HAS_NEXT);
+
+          /*
+          StandardElementName element;
+          element = ambiguous.element;
+
+          // 'open' the start tag
+
+          element0StartTag0Open(parent, element);
+
+          int nameOrdinal;
+          nameOrdinal = element.ordinal();
+
+          byte nameByte;
+          nameByte = Bytes.encodeInt0(nameOrdinal);
+
+          auxAdd(ByteCode.START_TAG, nameByte, ByteCode.GT);
+
+          auxAdd(ByteCode.TEXT, main[mainContents++], main[mainContents++]);
+
+          auxAdd(ByteCode.END_TAG, nameByte);
+
+          element2EndTag0NewLine(parent, element);
+          */
+
+          throw new UnsupportedOperationException("Implement me :: ambiguous");
+        }
+
+        case ByteProto.ATTRIBUTE1 -> index = skipVarInt(index);
+
+        case ByteProto.ATTRIBUTE_CLASS,
+             ByteProto.ATTRIBUTE_ID -> index += 2;
+
+        case ByteProto.ELEMENT -> {
+          index = jmp(index);
+
+          // skip fixed length
+          mainContents += 2;
+
+          auxAdd(BytePseudo.ELEMENT_NODES_HAS_NEXT);
+
+          auxIndex = Bytes.encodeOffset(aux, auxIndex, mainContents);
+        }
+
+        case ByteProto.END -> {
+          break loop;
+        }
+
+        case ByteProto.LENGTH2 -> {
+          byte len0;
+          len0 = main[index++];
+
+          byte len1;
+          len1 = main[index++];
+
+          int length;
+          length = Bytes.decodeInt(len0, len1);
+
+          index += length;
+        }
+
+        case ByteProto.STANDARD_NAME -> index += 1;
+
+        case ByteProto.RAW -> {
+          index = jmp(index);
+
+          byte b0;
+          b0 = main[mainContents++];
+
+          byte b1;
+          b1 = main[mainContents++];
+
+          auxAdd(BytePseudo.ELEMENT_NODES_HAS_NEXT, BytePseudo.RAW, b0, b1);
+        }
+
+        case ByteProto.TEXT -> {
+          index = jmp(index);
+
+          byte b0;
+          b0 = main[mainContents++];
+
+          byte b1;
+          b1 = main[mainContents++];
+
+          auxAdd(BytePseudo.ELEMENT_NODES_HAS_NEXT, BytePseudo.TEXT, b0, b1);
+        }
+
+        default -> throw new UnsupportedOperationException(
+            "Implement me :: proto=" + proto
+        );
+      }
+    }
+
+    // we've written all of the children, decrease indentation
+    indentationDec();
+  }
+
+  private PseudoHtmlElement element() {
+    Object pseudo;
+    pseudo = objectArray[IDX_PSEUDO_ELEMENT];
+
+    if (pseudo == null) {
+      pseudo = objectArray[IDX_PSEUDO_ELEMENT] = new PseudoHtmlElement(this);
+    }
+
+    return (PseudoHtmlElement) pseudo;
   }
 
   @Override
@@ -186,6 +706,21 @@ public final class HtmlCompiler02 extends HtmlCompiler01 {
         }
       }
     }
+  }
+
+  private int decodeIndex(int index) {
+    int startIndex;
+    startIndex = index;
+
+    byte maybeNeg;
+
+    do {
+      maybeNeg = aux[index++];
+    } while (maybeNeg < 0);
+
+    auxStart = Bytes.decodeOffset(aux, startIndex, index);
+
+    return index;
   }
 
   private int decodeLength(int index) {

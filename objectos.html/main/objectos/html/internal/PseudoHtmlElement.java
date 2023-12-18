@@ -45,8 +45,15 @@ public final class PseudoHtmlElement
 
   StandardElementName name;
 
+  private final HtmlCompiler02 ctx;
+
+  PseudoHtmlElement(HtmlCompiler02 ctx) {
+    this.ctx = ctx;
+  }
+
   @Override
   public final HtmlIterable<HtmlAttribute> attributes() {
+    ctx.elementAttributes();
     throw new UnsupportedOperationException("Implement me");
   }
 

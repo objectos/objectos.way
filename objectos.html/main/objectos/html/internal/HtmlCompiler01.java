@@ -21,6 +21,11 @@ import objectos.util.array.ObjectArrays;
 
 class HtmlCompiler01 extends HtmlTemplateApi {
 
+  static final int IDX_PSEUDO_DOCUMENT = 0;
+  static final int IDX_PSEUDO_ELEMENT = 1;
+
+  static final int IDX_OBJECT_INDEX = 2;
+
   byte[] aux;
 
   int auxIndex;
@@ -107,6 +112,8 @@ class HtmlCompiler01 extends HtmlTemplateApi {
     main = new byte[256];
 
     mainIndex = 0;
+
+    objectIndex = IDX_OBJECT_INDEX;
   }
 
   @Override
@@ -387,6 +394,16 @@ class HtmlCompiler01 extends HtmlTemplateApi {
     aux[auxIndex++] = b2;
     aux[auxIndex++] = b3;
     aux[auxIndex++] = b4;
+  }
+
+  final void auxAdd(byte b0, byte b1, byte b2, byte b3, byte b4, byte b5) {
+    aux = ByteArrays.growIfNecessary(aux, auxIndex + 5);
+    aux[auxIndex++] = b0;
+    aux[auxIndex++] = b1;
+    aux[auxIndex++] = b2;
+    aux[auxIndex++] = b3;
+    aux[auxIndex++] = b4;
+    aux[auxIndex++] = b5;
   }
 
   final void auxAdd(byte b0, byte b1, byte b2, byte b3, byte b4, byte b5, byte b6) {
@@ -843,14 +860,14 @@ class HtmlCompiler01 extends HtmlTemplateApi {
   }
 
   private int objectAdd(Object value) {
+    int index;
+    index = objectIndex++;
+
     if (objectArray == null) {
       objectArray = new Object[10];
     }
 
     objectArray = ObjectArrays.growIfNecessary(objectArray, objectIndex);
-
-    int index;
-    index = objectIndex++;
 
     objectArray[index] = value;
 
