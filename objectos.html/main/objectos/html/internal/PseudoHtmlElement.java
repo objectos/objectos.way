@@ -24,7 +24,29 @@ import objectos.html.pseudom.HtmlNode;
 public final class PseudoHtmlElement
     implements HtmlElement, HtmlIterable<HtmlNode>, Iterator<HtmlNode> {
 
-  @SuppressWarnings("unused")
+  private class ThisAttributes implements HtmlIterable<HtmlAttribute>, Iterator<HtmlAttribute> {
+
+    @Override
+    public final boolean hasNext() {
+      throw new UnsupportedOperationException("Implement me");
+    }
+
+    @Override
+    public final Iterator<HtmlAttribute> iterator() {
+      player.elementAttributesIterator();
+
+      return this;
+    }
+
+    @Override
+    public final HtmlAttribute next() {
+      throw new UnsupportedOperationException("Implement me");
+    }
+
+  }
+
+  private ThisAttributes attributes;
+
   private final HtmlCompiler02 player;
 
   StandardElementName name;
@@ -35,7 +57,13 @@ public final class PseudoHtmlElement
 
   @Override
   public final HtmlIterable<HtmlAttribute> attributes() {
-    throw new UnsupportedOperationException("Implement me");
+    player.elementAttributes();
+
+    if (attributes == null) {
+      attributes = new ThisAttributes();
+    }
+
+    return attributes;
   }
 
   @Override

@@ -38,17 +38,19 @@ public final class PseudoHtmlDocument
 
   @Override
   public final Iterator<HtmlNode> iterator() {
-    throw new UnsupportedOperationException("Implement me");
+    player.documentIterator();
+
+    return this;
   }
 
   @Override
   public final boolean hasNext() {
-    throw new UnsupportedOperationException("Implement me");
+    return player.documentHasNext();
   }
 
   @Override
   public final HtmlNode next() {
-    throw new UnsupportedOperationException("Implement me");
+    return player.documentNext();
   }
 
 }

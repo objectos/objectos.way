@@ -19,6 +19,7 @@ import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.Set;
 import objectos.html.pseudom.DocumentProcessor;
+import objectos.html.pseudom.HtmlNode;
 import objectos.lang.object.Check;
 import objectos.util.array.ByteArrays;
 import objectos.util.array.ObjectArrays;
@@ -95,6 +96,18 @@ public final class HtmlCompiler02 extends HtmlCompiler01 {
 
   private static final byte _DOCUMENT = -2;
 
+  private static final byte _DOCUMENT_NODES = -3;
+
+  private static final byte _ELEMENT = -4;
+
+  private static final byte _ELEMENT_ATTRS_REQ = -5;
+
+  private static final byte _ELEMENT_ATTRS_ITER = -6;
+
+  private static final int OFFSET_ELEMENT = 0;
+
+  private static final int OFFSET_MAX = OFFSET_ELEMENT;
+
   // visible for testing
   final PseudoHtmlDocument bootstrap() {
     // we will use the aux list as the context stack
@@ -112,7 +125,11 @@ public final class HtmlCompiler02 extends HtmlCompiler01 {
     // we reuse objectArray reference to store our pseudo html objects
     if (objectArray == null) {
       objectArray = new Object[10];
+    } else {
+      objectArray = ObjectArrays.growIfNecessary(objectArray, objectIndex + OFFSET_MAX);
     }
+
+    objectArray[objectIndex + OFFSET_ELEMENT] = new PseudoHtmlElement(this);
 
     return new PseudoHtmlDocument(this);
   }
@@ -121,6 +138,205 @@ public final class HtmlCompiler02 extends HtmlCompiler01 {
     ctxCheck(_START);
 
     ctxSet(0, _DOCUMENT);
+  }
+
+  final void documentIterator() {
+    ctxCheck(_DOCUMENT);
+
+    ctxPushIndex(mainIndex);
+
+    ctxPush(_DOCUMENT_NODES);
+  }
+
+  final boolean documentHasNext() {
+    // state check
+    byte peek;
+    peek = ctxPeek();
+
+    switch (peek) {
+      case _DOCUMENT_NODES -> ctx2proto();
+
+      case _ELEMENT -> {
+        /*
+        elementPop(_DOCUMENT_NODES);
+
+        ctx2proto();
+        */
+        throw new UnsupportedOperationException("Implement me");
+      }
+
+      default -> ctxThrow(peek, _DOCUMENT_NODES);
+    }
+
+    // has next
+    boolean result;
+    result = false;
+
+    loop: while (mainIndex < mainContents) {
+      int proto;
+      proto = main[mainIndex];
+
+      switch (proto) {
+        case ByteProto.DOCTYPE, ByteProto.ELEMENT, ByteProto.TEXT -> {
+          result = true;
+
+          break loop;
+        }
+
+        case ByteProto.LENGTH2 -> {
+          byte b0;
+          b0 = main[mainIndex++];
+
+          byte b1;
+          b1 = main[mainIndex++];
+
+          mainIndex += Bytes.decodeInt(b0, b1);
+        }
+
+        case ByteProto.LENGTH3 -> {
+          byte b0;
+          b0 = main[mainIndex++];
+
+          byte b1;
+          b1 = main[mainIndex++];
+
+          byte b2;
+          b2 = main[mainIndex++];
+
+          mainIndex += Bytes.decodeLength3(b0, b1, b2);
+        }
+
+        case ByteProto.MARKED3 -> mainIndex += 3 - 1;
+
+        case ByteProto.MARKED4 -> mainIndex += 4 - 1;
+
+        case ByteProto.MARKED5 -> mainIndex += 5 - 1;
+
+        default -> throw new UnsupportedOperationException(
+            "Implement me :: proto=" + proto
+        );
+      }
+    }
+
+    proto2ctx();
+
+    return result;
+  }
+
+  final HtmlNode documentNext() {
+    ctxCheck(_DOCUMENT_NODES);
+
+    ctx2proto();
+
+    byte proto;
+    proto = main[mainIndex++];
+
+    return switch (proto) {
+      case ByteProto.DOCTYPE -> {
+        proto2ctx();
+
+        yield PseudoHtmlDocumentType.INSTANCE;
+      }
+
+      case ByteProto.ELEMENT -> {
+        byte b0;
+        b0 = main[mainIndex++];
+
+        byte b1;
+        b1 = main[mainIndex++];
+
+        int thisLength;
+        thisLength = Bytes.decodeInt(b0, b1);
+
+        int elementIndex;
+        elementIndex = mainIndex;
+
+        // we'll keep the name values handy
+        byte nameByte;
+
+        // in particular this one will be required by the end tag (if one should be rendered)
+        StandardElementName name;
+
+        // first proto should be the element's name
+        proto = main[elementIndex++];
+
+        switch (proto) {
+          case ByteProto.STANDARD_NAME -> {
+            nameByte = main[elementIndex++];
+
+            int ordinal;
+            ordinal = Bytes.decodeInt(nameByte);
+
+            name = StandardElementName.getByCode(ordinal);
+          }
+
+          default -> throw new IllegalArgumentException(
+              "Malformed element. Expected name but found=" + proto
+          );
+        }
+
+        mainIndex += thisLength;
+
+        proto2ctx();
+
+        ctxPush(nameByte);
+        ctxPushIndex(mainIndex);
+        ctxPushIndex(elementIndex);
+        ctxPush(_ELEMENT);
+
+        PseudoHtmlElement element;
+        element = htmlElement();
+
+        element.name = name;
+
+        yield element;
+      }
+
+      default -> throw new UnsupportedOperationException(
+          "Implement me :: proto=" + proto
+      );
+    };
+  }
+
+  final void elementAttributes() {
+    ctxCheck(_ELEMENT);
+
+    ctx2proto();
+
+    ctxPushIndex(mainIndex);
+
+    ctxPush(_ELEMENT_ATTRS_REQ);
+  }
+
+  final void elementAttributesIterator() {
+    ctxCheck(_ELEMENT_ATTRS_REQ);
+
+    ctxSet(0, _ELEMENT_ATTRS_ITER);
+  }
+
+  private PseudoHtmlElement htmlElement() {
+    return (PseudoHtmlElement) objectArray[objectIndex + OFFSET_ELEMENT];
+  }
+
+  private void ctx2proto() {
+    byte b0;
+    b0 = aux[auxIndex - 1];
+
+    byte b1;
+    b1 = aux[auxIndex - 2];
+
+    byte b2;
+    b2 = aux[auxIndex - 3];
+
+    mainIndex = Bytes.decodeLength3(b0, b1, b2);
+  }
+
+  private void proto2ctx() {
+    aux[auxIndex - 1] = Bytes.encodeInt0(mainIndex);
+
+    aux[auxIndex - 2] = Bytes.encodeInt1(mainIndex);
+
+    aux[auxIndex - 3] = Bytes.encodeInt2(mainIndex);
   }
 
   private void ctxCheck(byte expected) {
@@ -138,6 +354,27 @@ public final class HtmlCompiler02 extends HtmlCompiler01 {
     aux = ByteArrays.growIfNecessary(aux, auxIndex + 1);
 
     aux[++auxIndex] = v0;
+  }
+
+  private void ctxPush(byte v0, byte v1, byte v2) {
+    aux = ByteArrays.growIfNecessary(aux, auxIndex + 3);
+
+    aux[++auxIndex] = v0;
+    aux[++auxIndex] = v1;
+    aux[++auxIndex] = v2;
+  }
+
+  private void ctxPushIndex(int index) {
+    byte b0;
+    b0 = Bytes.encodeInt0(index);
+
+    byte b1;
+    b1 = Bytes.encodeInt1(index);
+
+    byte b2;
+    b2 = Bytes.encodeInt2(index);
+
+    ctxPush(b2, b1, b0);
   }
 
   private void ctxSet(int offset, byte value) {
