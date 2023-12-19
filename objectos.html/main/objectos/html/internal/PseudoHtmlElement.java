@@ -24,29 +24,7 @@ import objectos.html.pseudom.HtmlNode;
 public final class PseudoHtmlElement
     implements HtmlElement, HtmlIterable<HtmlNode>, Iterator<HtmlNode> {
 
-  private class ThisAttributes implements HtmlIterable<HtmlAttribute>, Iterator<HtmlAttribute> {
-
-    @Override
-    public final boolean hasNext() {
-      return player.elementAttributesHasNext();
-    }
-
-    @Override
-    public final Iterator<HtmlAttribute> iterator() {
-      player.elementAttributesIterator(name);
-
-      return this;
-    }
-
-    @Override
-    public final HtmlAttribute next() {
-      return player.elementAttributesNext();
-    }
-
-  }
-
-  private ThisAttributes attributes;
-
+  @SuppressWarnings("unused")
   private final HtmlCompiler02 player;
 
   StandardElementName name;
@@ -57,18 +35,12 @@ public final class PseudoHtmlElement
 
   @Override
   public final HtmlIterable<HtmlAttribute> attributes() {
-    player.elementAttributes();
-
-    if (attributes == null) {
-      attributes = new ThisAttributes();
-    }
-
-    return attributes;
+    throw new UnsupportedOperationException("Implement me");
   }
 
   @Override
   public final boolean hasNext() {
-    return player.elementNodesHasNext();
+    throw new UnsupportedOperationException("Implement me");
   }
 
   @Override
@@ -78,9 +50,7 @@ public final class PseudoHtmlElement
 
   @Override
   public final Iterator<HtmlNode> iterator() {
-    player.elementNodesIterator();
-
-    return this;
+    throw new UnsupportedOperationException("Implement me");
   }
 
   @Override
@@ -90,14 +60,12 @@ public final class PseudoHtmlElement
 
   @Override
   public final HtmlNode next() {
-    return player.elementNodesNext();
+    throw new UnsupportedOperationException("Implement me");
   }
 
   @Override
   public final HtmlIterable<HtmlNode> nodes() {
-    player.elementNodes();
-
-    return this;
+    throw new UnsupportedOperationException("Implement me");
   }
 
 }

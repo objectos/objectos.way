@@ -21,10 +21,6 @@ import objectos.util.array.ObjectArrays;
 
 class HtmlCompiler01 extends HtmlTemplateApi {
 
-  static final int IDX_PSEUDO_ELEMENT = 0;
-
-  static final int IDX_OBJECT_INDEX = 1;
-
   byte[] aux;
 
   int auxIndex;
@@ -111,8 +107,6 @@ class HtmlCompiler01 extends HtmlTemplateApi {
     main = new byte[256];
 
     mainIndex = 0;
-
-    objectIndex = IDX_OBJECT_INDEX;
   }
 
   @Override

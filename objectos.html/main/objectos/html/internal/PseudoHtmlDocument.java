@@ -23,6 +23,7 @@ import objectos.html.pseudom.HtmlNode;
 public final class PseudoHtmlDocument
     implements HtmlDocument, HtmlIterable<HtmlNode>, Iterator<HtmlNode> {
 
+  @SuppressWarnings("unused")
   private final HtmlCompiler02 player;
 
   public PseudoHtmlDocument(HtmlCompiler02 ctx) {
@@ -31,26 +32,22 @@ public final class PseudoHtmlDocument
 
   @Override
   public final HtmlIterable<HtmlNode> nodes() {
-    player.documentIterable();
-
-    return this;
+    throw new UnsupportedOperationException("Implement me");
   }
 
   @Override
   public final Iterator<HtmlNode> iterator() {
-    player.documentIterator();
-
-    return this;
+    throw new UnsupportedOperationException("Implement me");
   }
 
   @Override
   public final boolean hasNext() {
-    return player.documentHasNext();
+    throw new UnsupportedOperationException("Implement me");
   }
 
   @Override
   public final HtmlNode next() {
-    return player.documentNext();
+    throw new UnsupportedOperationException("Implement me");
   }
 
 }

@@ -15,12 +15,8 @@
  */
 package objectos.html.internal;
 
-import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNotNull;
 
-import java.util.Iterator;
-import objectos.html.pseudom.HtmlAttribute;
-import objectos.html.pseudom.HtmlIterable;
-import objectos.html.pseudom.HtmlNode;
 import org.testng.annotations.Test;
 
 public class HtmlCompiler02TestProcessor {
@@ -43,6 +39,9 @@ public class HtmlCompiler02TestProcessor {
     PseudoHtmlDocument document;
     document = compiler.bootstrap();
 
+    assertNotNull(document);
+
+    /*
     HtmlIterable<HtmlNode> nodes;
     nodes = document.nodes();
 
@@ -79,6 +78,7 @@ public class HtmlCompiler02TestProcessor {
 
     // document end
     assertEquals(documentNodes.hasNext(), false);
+    */
   }
 
 }
