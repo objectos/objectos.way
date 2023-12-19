@@ -21,10 +21,9 @@ import objectos.util.array.ObjectArrays;
 
 class HtmlCompiler01 extends HtmlTemplateApi {
 
-  static final int IDX_PSEUDO_DOCUMENT = 0;
-  static final int IDX_PSEUDO_ELEMENT = 1;
+  static final int IDX_PSEUDO_ELEMENT = 0;
 
-  static final int IDX_OBJECT_INDEX = 2;
+  static final int IDX_OBJECT_INDEX = 1;
 
   byte[] aux;
 

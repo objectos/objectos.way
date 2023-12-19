@@ -78,7 +78,7 @@ public class HtmlCompiler02TestProcessor {
     assertEquals(htmlNodes.hasNext(), false);
 
     // document end
-    assertEquals(documentNodes.hashCode(), false);
+    assertEquals(documentNodes.hasNext(), false);
   }
 
 }

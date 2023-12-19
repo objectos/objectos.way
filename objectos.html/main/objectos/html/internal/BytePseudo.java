@@ -27,30 +27,32 @@ final class BytePseudo {
   //instructions
 
   public static final byte DOCTYPE = -5;
-  public static final byte RETURN = -6;
+  public static final byte NULL = -6;
+  public static final byte RETURN = -7;
 
   //element
 
-  public static final byte ELEMENT = -7;
-  public static final byte ELEMENT_ATTRS_ITERABLE = -8;
-  public static final byte ELEMENT_ATTRS_ITERATOR = -9;
-  public static final byte ELEMENT_ATTRS_HAS_NEXT = -10;
-  public static final byte ELEMENT_ATTRS_EXHAUSTED = -11;
-  public static final byte ELEMENT_NODES_ITERABLE = -12;
-  public static final byte ELEMENT_NODES_ITERATOR = -13;
-  public static final byte ELEMENT_NODES_HAS_NEXT = -14;
-  public static final byte ELEMENT_NODES_EXHAUSTED = -15;
+  public static final byte ELEMENT = -8;
+  public static final byte ELEMENT_START = -9;
+  public static final byte ELEMENT_ATTRS_ITERABLE = -10;
+  public static final byte ELEMENT_ATTRS_ITERATOR = -11;
+  public static final byte ELEMENT_ATTRS_HAS_NEXT = -12;
+  public static final byte ELEMENT_ATTRS_EXHAUSTED = -13;
+  public static final byte ELEMENT_NODES_ITERABLE = -14;
+  public static final byte ELEMENT_NODES_ITERATOR = -15;
+  public static final byte ELEMENT_NODES_HAS_NEXT = -16;
+  public static final byte ELEMENT_NODES_EXHAUSTED = -17;
 
   //attribute
 
-  public static final byte ATTR_NAME = -16;
-  public static final byte ATTR_HAS_VALUE = -17;
-  public static final byte ATTR_EXHAUSTED = -18;
+  public static final byte ATTR_NAME = -18;
+  public static final byte ATTR_HAS_VALUE = -19;
+  public static final byte ATTR_EXHAUSTED = -20;
 
   //text
 
-  public static final byte TEXT = -19;
-  public static final byte RAW = -20;
+  public static final byte TEXT = -21;
+  public static final byte RAW = -22;
 
   private BytePseudo() {}
 

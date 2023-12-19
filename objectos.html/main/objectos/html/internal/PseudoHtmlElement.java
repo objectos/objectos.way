@@ -24,42 +24,51 @@ import objectos.html.pseudom.HtmlNode;
 public final class PseudoHtmlElement
     implements HtmlElement, HtmlIterable<HtmlNode>, Iterator<HtmlNode> {
 
-  final class ThisAttributes implements HtmlIterable<HtmlAttribute>, Iterator<HtmlAttribute> {
+  private class ThisAttributes implements HtmlIterable<HtmlAttribute>, Iterator<HtmlAttribute> {
 
     @Override
     public final boolean hasNext() {
-      throw new UnsupportedOperationException("Implement me");
+      return player.elementAttributesHasNext();
     }
 
     @Override
     public final Iterator<HtmlAttribute> iterator() {
-      throw new UnsupportedOperationException("Implement me");
+      player.elementAttributesIterator(name);
+
+      return this;
     }
 
     @Override
     public final HtmlAttribute next() {
-      throw new UnsupportedOperationException("Implement me");
+      return player.elementAttributesNext();
     }
 
   }
 
+  private ThisAttributes attributes;
+
+  private final HtmlCompiler02 player;
+
   StandardElementName name;
 
-  private final HtmlCompiler02 ctx;
-
-  PseudoHtmlElement(HtmlCompiler02 ctx) {
-    this.ctx = ctx;
+  PseudoHtmlElement(HtmlCompiler02 player) {
+    this.player = player;
   }
 
   @Override
   public final HtmlIterable<HtmlAttribute> attributes() {
-    ctx.elementAttributes();
-    throw new UnsupportedOperationException("Implement me");
+    player.elementAttributes();
+
+    if (attributes == null) {
+      attributes = new ThisAttributes();
+    }
+
+    return attributes;
   }
 
   @Override
   public final boolean hasNext() {
-    throw new UnsupportedOperationException("Implement me");
+    return player.elementNodesHasNext();
   }
 
   @Override
@@ -69,7 +78,9 @@ public final class PseudoHtmlElement
 
   @Override
   public final Iterator<HtmlNode> iterator() {
-    throw new UnsupportedOperationException("Implement me");
+    player.elementNodesIterator();
+
+    return this;
   }
 
   @Override
@@ -79,12 +90,14 @@ public final class PseudoHtmlElement
 
   @Override
   public final HtmlNode next() {
-    throw new UnsupportedOperationException("Implement me");
+    return player.elementNodesNext();
   }
 
   @Override
   public final HtmlIterable<HtmlNode> nodes() {
-    throw new UnsupportedOperationException("Implement me");
+    player.elementNodes();
+
+    return this;
   }
 
 }

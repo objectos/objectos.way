@@ -34,11 +34,13 @@ public class BytePseudoFauxGenerator extends FauxGenerator {
     comment("instructions");
 
     value("DOCTYPE");
+    value("NULL");
     value("RETURN");
 
     comment("element");
 
     value("ELEMENT");
+    value("ELEMENT_START");
     value("ELEMENT_ATTRS_ITERABLE");
     value("ELEMENT_ATTRS_ITERATOR");
     value("ELEMENT_ATTRS_HAS_NEXT");
