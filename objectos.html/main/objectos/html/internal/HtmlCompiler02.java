@@ -20,6 +20,7 @@ import java.util.EnumSet;
 import java.util.Set;
 import objectos.html.pseudom.DocumentProcessor;
 import objectos.lang.object.Check;
+import objectos.util.array.ByteArrays;
 import objectos.util.array.ObjectArrays;
 
 public final class HtmlCompiler02 extends HtmlCompiler01 {
@@ -92,13 +93,15 @@ public final class HtmlCompiler02 extends HtmlCompiler01 {
 
   private static final byte _START = -1;
 
+  private static final byte _DOCUMENT = -2;
+
   // visible for testing
   final PseudoHtmlDocument bootstrap() {
-    // we will use the aux list
-    auxIndex = 0;
+    // we will use the aux list as the context stack
+    auxIndex = -1;
 
     // push initial state
-    auxAdd(_START);
+    ctxPush(_START);
 
     // holds max main index
     mainContents = mainIndex;
@@ -112,6 +115,43 @@ public final class HtmlCompiler02 extends HtmlCompiler01 {
     }
 
     return new PseudoHtmlDocument(this);
+  }
+
+  final void documentIterable() {
+    ctxCheck(_START);
+
+    ctxSet(0, _DOCUMENT);
+  }
+
+  private void ctxCheck(byte expected) {
+    byte actual;
+    actual = ctxPeek();
+
+    ctxThrow(actual, expected);
+  }
+
+  private byte ctxPeek() {
+    return aux[auxIndex];
+  }
+
+  private void ctxPush(byte v0) {
+    aux = ByteArrays.growIfNecessary(aux, auxIndex + 1);
+
+    aux[++auxIndex] = v0;
+  }
+
+  private void ctxSet(int offset, byte value) {
+    aux[auxIndex - offset] = value;
+  }
+
+  private void ctxThrow(byte actual, byte expected) {
+    if (actual != expected) {
+      throw new IllegalStateException(
+          """
+      Found state '%d' but expected state '%d'
+      """.formatted(actual, expected)
+      );
+    }
   }
 
   @Override

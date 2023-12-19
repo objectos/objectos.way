@@ -17,6 +17,8 @@ package objectos.html.internal;
 
 import static org.testng.Assert.assertNotNull;
 
+import objectos.html.pseudom.HtmlIterable;
+import objectos.html.pseudom.HtmlNode;
 import org.testng.annotations.Test;
 
 public class HtmlCompiler02TestProcessor {
@@ -39,12 +41,12 @@ public class HtmlCompiler02TestProcessor {
     PseudoHtmlDocument document;
     document = compiler.bootstrap();
 
-    assertNotNull(document);
-
-    /*
     HtmlIterable<HtmlNode> nodes;
     nodes = document.nodes();
 
+    assertNotNull(nodes);
+
+    /*
     Iterator<HtmlNode> documentNodes;
     documentNodes = nodes.iterator();
 
