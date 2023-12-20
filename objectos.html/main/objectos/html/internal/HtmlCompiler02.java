@@ -19,6 +19,7 @@ import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.Set;
 import objectos.html.pseudom.DocumentProcessor;
+import objectos.html.pseudom.HtmlAttribute;
 import objectos.html.pseudom.HtmlNode;
 import objectos.lang.object.Check;
 import objectos.util.array.ByteArrays;
@@ -92,29 +93,44 @@ public final class HtmlCompiler02 extends HtmlCompiler01 {
     processor.process(document);
   }
 
-  private static final byte _START = -1;
+  static final byte _DOCUMENT_START = -1;
+  static final byte _DOCUMENT_NODES_ITERABLE = -2;
+  static final byte _DOCUMENT_NODES_ITERATOR = -3;
+  static final byte _DOCUMENT_NODES_HAS_NEXT = -4;
+  static final byte _DOCUMENT_NODES_NEXT = -5;
+  static final byte _DOCUMENT_NODES_EXHAUSTED = -6;
 
-  private static final byte _DOCUMENT = -2;
+  static final byte _ELEMENT_START = -7;
+  static final byte _ELEMENT_ATTRS_ITERABLE = -8;
+  static final byte _ELEMENT_ATTRS_ITERATOR = -9;
+  static final byte _ELEMENT_ATTRS_HAS_NEXT = -10;
+  static final byte _ELEMENT_ATTRS_NEXT = -11;
+  static final byte _ELEMENT_ATTRS_EXHAUSTED = -12;
+  static final byte _ELEMENT_NODES_ITERABLE = -13;
+  static final byte _ELEMENT_NODES_ITERATOR = -14;
+  static final byte _ELEMENT_NODES_HAS_NEXT = -15;
+  static final byte _ELEMENT_NODES_NEXT = -16;
+  static final byte _ELEMENT_NODES_EXHAUSTED = -17;
 
-  private static final byte _DOCUMENT_NODES = -3;
-
-  private static final byte _ELEMENT = -4;
-
-  private static final byte _ELEMENT_ATTRS_REQ = -5;
-
-  private static final byte _ELEMENT_ATTRS_ITER = -6;
+  static final byte _ATTRIBUTE_START = -18;
+  static final byte _ATTRIBUTE_VALUES_ITERABLE = -19;
+  static final byte _ATTRIBUTE_VALUES_ITERATOR = -20;
+  static final byte _ATTRIBUTE_VALUES_HAS_NEXT = -21;
+  static final byte _ATTRIBUTE_VALUES_NEXT = -22;
+  static final byte _ATTRIBUTE_VALUES_EXHAUSTED = -23;
 
   private static final int OFFSET_ELEMENT = 0;
+  private static final int OFFSET_ATTRIBUTE = 1;
 
-  private static final int OFFSET_MAX = OFFSET_ELEMENT;
+  private static final int OFFSET_MAX = OFFSET_ATTRIBUTE;
 
   // visible for testing
   final PseudoHtmlDocument bootstrap() {
     // we will use the aux list as the context stack
     auxIndex = -1;
 
-    // push initial state
-    ctxPush(_START);
+    // holds decoded length
+    auxStart = 0;
 
     // holds max main index
     mainContents = mainIndex;
@@ -131,59 +147,83 @@ public final class HtmlCompiler02 extends HtmlCompiler01 {
 
     objectArray[objectIndex + OFFSET_ELEMENT] = new PseudoHtmlElement(this);
 
+    objectArray[objectIndex + OFFSET_ATTRIBUTE] = new PseudoHtmlAttribute(this);
+
+    // push initial state
+    auxPush(
+        // state
+        _DOCUMENT_START,
+
+        // main index
+        Bytes.encodeInt0(mainIndex),
+        Bytes.encodeInt1(mainIndex),
+        Bytes.encodeInt2(mainIndex)
+    );
+
     return new PseudoHtmlDocument(this);
   }
 
   final void documentIterable() {
-    ctxCheck(_START);
-
-    ctxSet(0, _DOCUMENT);
+    stateCAS(_DOCUMENT_START, _DOCUMENT_NODES_ITERABLE);
   }
 
   final void documentIterator() {
-    ctxCheck(_DOCUMENT);
-
-    ctxPushIndex(mainIndex);
-
-    ctxPush(_DOCUMENT_NODES);
+    stateCAS(_DOCUMENT_NODES_ITERABLE, _DOCUMENT_NODES_ITERATOR);
   }
 
   final boolean documentHasNext() {
     // state check
-    byte peek;
-    peek = ctxPeek();
+    byte state;
+    state = aux[auxIndex];
 
-    switch (peek) {
-      case _DOCUMENT_NODES -> ctx2proto();
+    switch (state) {
+      case _DOCUMENT_NODES_ITERATOR -> mainIndexLoad();
 
-      case _ELEMENT -> {
-        /*
-        elementPop(_DOCUMENT_NODES);
+      case _ELEMENT_START -> {
+        int parentIndex;
+        parentIndex = parentIndexLoad();
 
-        ctx2proto();
-        */
-        throw new UnsupportedOperationException("Implement me");
+        // (1) ELEMENT_START
+        // (3) startIndex
+        // (3) parentIndex
+        auxIndex -= 7;
+
+        stateCheck(_DOCUMENT_NODES_NEXT);
+
+        mainIndexLoad();
+
+        if (mainIndex != parentIndex) {
+          throw new IllegalStateException(
+              """
+              Last consumed element was not a child of this document or element
+              """
+          );
+        }
       }
 
-      default -> ctxThrow(peek, _DOCUMENT_NODES);
+      default -> throw new UnsupportedOperationException(
+          "Implement me :: state=" + state
+      );
     }
 
     // has next
-    boolean result;
-    result = false;
+    byte nextState;
+    nextState = _DOCUMENT_NODES_EXHAUSTED;
 
     loop: while (mainIndex < mainContents) {
-      int proto;
+      byte proto;
       proto = main[mainIndex];
 
       switch (proto) {
         case ByteProto.DOCTYPE, ByteProto.ELEMENT, ByteProto.TEXT -> {
-          result = true;
+          nextState = _DOCUMENT_NODES_HAS_NEXT;
 
           break loop;
         }
 
         case ByteProto.LENGTH2 -> {
+          mainIndex++;
+
           byte b0;
           b0 = main[mainIndex++];
 
@@ -194,6 +234,8 @@ public final class HtmlCompiler02 extends HtmlCompiler01 {
         }
 
         case ByteProto.LENGTH3 -> {
+          mainIndex++;
+
           byte b0;
           b0 = main[mainIndex++];
 
@@ -206,11 +248,11 @@ public final class HtmlCompiler02 extends HtmlCompiler01 {
           mainIndex += Bytes.decodeLength3(b0, b1, b2);
         }
 
-        case ByteProto.MARKED3 -> mainIndex += 3 - 1;
+        case ByteProto.MARKED3 -> mainIndex += 3;
 
-        case ByteProto.MARKED4 -> mainIndex += 4 - 1;
+        case ByteProto.MARKED4 -> mainIndex += 4;
 
-        case ByteProto.MARKED5 -> mainIndex += 5 - 1;
+        case ByteProto.MARKED5 -> mainIndex += 5;
 
         default -> throw new UnsupportedOperationException(
             "Implement me :: proto=" + proto
@@ -218,26 +260,31 @@ public final class HtmlCompiler02 extends HtmlCompiler01 {
       }
     }
 
-    proto2ctx();
+    mainIndexStore();
 
-    return result;
+    stateSet(nextState);
+
+    return nextState == _DOCUMENT_NODES_HAS_NEXT;
   }
 
   final HtmlNode documentNext() {
-    ctxCheck(_DOCUMENT_NODES);
+    // state check
+    byte state;
+    state = aux[auxIndex];
 
-    ctx2proto();
+    switch (state) {
+      case _DOCUMENT_NODES_HAS_NEXT -> mainIndexLoad();
 
+      default -> throw new UnsupportedOperationException(
+          "Implement me :: state=" + state
+      );
+    }
+
+    // next
     byte proto;
     proto = main[mainIndex++];
 
     return switch (proto) {
-      case ByteProto.DOCTYPE -> {
-        proto2ctx();
-
-        yield PseudoHtmlDocumentType.INSTANCE;
-      }
-
       case ByteProto.ELEMENT -> {
         byte b0;
         b0 = main[mainIndex++];
@@ -248,48 +295,17 @@ public final class HtmlCompiler02 extends HtmlCompiler01 {
         int thisLength;
         thisLength = Bytes.decodeInt(b0, b1);
 
-        int elementIndex;
-        elementIndex = mainIndex;
+        int elementStart;
+        elementStart = mainIndex;
 
-        // we'll keep the name values handy
-        byte nameByte;
+        int parentIndex;
+        parentIndex = mainIndex + thisLength;
 
-        // in particular this one will be required by the end tag (if one should be rendered)
-        StandardElementName name;
+        mainIndexStore(parentIndex);
 
-        // first proto should be the element's name
-        proto = main[elementIndex++];
+        stateSet(_DOCUMENT_NODES_NEXT);
 
-        switch (proto) {
-          case ByteProto.STANDARD_NAME -> {
-            nameByte = main[elementIndex++];
-
-            int ordinal;
-            ordinal = Bytes.decodeInt(nameByte);
-
-            name = StandardElementName.getByCode(ordinal);
-          }
-
-          default -> throw new IllegalArgumentException(
-              "Malformed element. Expected name but found=" + proto
-          );
-        }
-
-        mainIndex += thisLength;
-
-        proto2ctx();
-
-        ctxPush(nameByte);
-        ctxPushIndex(mainIndex);
-        ctxPushIndex(elementIndex);
-        ctxPush(_ELEMENT);
-
-        PseudoHtmlElement element;
-        element = htmlElement();
-
-        element.name = name;
-
-        yield element;
+        yield element(elementStart, parentIndex);
       }
 
       default -> throw new UnsupportedOperationException(
@@ -298,27 +314,556 @@ public final class HtmlCompiler02 extends HtmlCompiler01 {
     };
   }
 
+  final PseudoHtmlElement element(int startIndex, int parentIndex) {
+    // our iteration index
+    int elementIndex;
+    elementIndex = startIndex;
+
+    StandardElementName name;
+
+    // first proto should be the element's name
+    byte proto;
+    proto = main[elementIndex++];
+
+    switch (proto) {
+      case ByteProto.STANDARD_NAME -> {
+        byte nameByte;
+        nameByte = main[elementIndex++];
+
+        int ordinal;
+        ordinal = Bytes.decodeInt(nameByte);
+
+        name = StandardElementName.getByCode(ordinal);
+      }
+
+      default -> throw new IllegalArgumentException(
+          "Malformed element. Expected name but found=" + proto
+      );
+    }
+
+    auxPush(
+        _ELEMENT_START,
+
+        Bytes.encodeInt0(startIndex),
+        Bytes.encodeInt1(startIndex),
+        Bytes.encodeInt2(startIndex),
+
+        Bytes.encodeInt0(parentIndex),
+        Bytes.encodeInt1(parentIndex),
+        Bytes.encodeInt2(parentIndex)
+    );
+
+    PseudoHtmlElement element;
+    element = htmlElement();
+
+    element.name = name;
+
+    return element;
+  }
+
   final void elementAttributes() {
-    ctxCheck(_ELEMENT);
+    // state check
+    byte state;
+    state = aux[auxIndex];
 
-    ctx2proto();
+    switch (state) {
+      case _ELEMENT_START -> mainIndexLoad();
 
-    ctxPushIndex(mainIndex);
+      default -> throw new UnsupportedOperationException(
+          "Implement me :: state=" + state
+      );
+    }
 
-    ctxPush(_ELEMENT_ATTRS_REQ);
+    // push new context
+    int index;
+    index = mainIndex;
+
+    int parentIndex;
+    parentIndex = mainIndex;
+
+    byte hasNext0 = 0, hasNext1 = 0, hasNext2 = 0;
+
+    auxPush(
+        _ELEMENT_ATTRS_ITERABLE,
+
+        Bytes.encodeInt0(index),
+        Bytes.encodeInt1(index),
+        Bytes.encodeInt2(index),
+
+        Bytes.encodeInt0(parentIndex),
+        Bytes.encodeInt1(parentIndex),
+        Bytes.encodeInt2(parentIndex),
+
+        hasNext0,
+        hasNext1,
+        hasNext2
+    );
   }
 
   final void elementAttributesIterator() {
-    ctxCheck(_ELEMENT_ATTRS_REQ);
+    stateCAS(_ELEMENT_ATTRS_ITERABLE, _ELEMENT_ATTRS_ITERATOR);
+  }
 
-    ctxSet(0, _ELEMENT_ATTRS_ITER);
+  final boolean elementAttributesHasNext(StandardElementName parent) {
+    // state check
+    byte state;
+    state = aux[auxIndex];
+
+    switch (state) {
+      case _ELEMENT_ATTRS_ITERATOR -> mainIndexLoad();
+
+      default -> throw new UnsupportedOperationException(
+          "Implement me :: state=" + state
+      );
+    }
+
+    // has next
+    byte nextState;
+    nextState = _ELEMENT_ATTRS_EXHAUSTED;
+
+    loop: while (mainIndex < mainContents) {
+      byte proto;
+      proto = main[mainIndex++];
+
+      switch (proto) {
+        case ByteProto.STANDARD_NAME -> mainIndex++;
+
+        case ByteProto.AMBIGUOUS1 -> {
+          mainIndex = jmp2(mainIndex);
+
+          byte ordinalByte;
+          ordinalByte = main[auxStart++];
+
+          Ambiguous ambiguous;
+          ambiguous = Ambiguous.decode(ordinalByte);
+
+          if (ambiguous.isAttributeOf(parent)) {
+            byte attr;
+            attr = ambiguous.encodeAttribute();
+
+            byte v0;
+            v0 = main[auxStart++];
+
+            byte v1;
+            v1 = main[auxStart++];
+
+            attrStore(attr, v0, v1);
+
+            nextState = _ELEMENT_ATTRS_HAS_NEXT;
+
+            break loop;
+          }
+        }
+
+        case ByteProto.ATTRIBUTE0 -> {
+          mainIndex = jmp2(mainIndex);
+
+          byte attr;
+          attr = main[auxStart++];
+
+          attrStore(attr, (byte) -1, (byte) -1);
+
+          nextState = _ELEMENT_ATTRS_HAS_NEXT;
+
+          break loop;
+        }
+
+        case ByteProto.ATTRIBUTE1 -> {
+          mainIndex = jmp2(mainIndex);
+
+          byte attr;
+          attr = main[auxStart++];
+
+          byte v0;
+          v0 = main[auxStart++];
+
+          byte v1;
+          v1 = main[auxStart++];
+
+          attrStore(attr, v0, v1);
+
+          nextState = _ELEMENT_ATTRS_HAS_NEXT;
+
+          break loop;
+        }
+
+        case ByteProto.ATTRIBUTE_CLASS -> {
+          int ordinal;
+          ordinal = StandardAttributeName.CLASS.ordinal();
+
+          byte attr;
+          attr = Bytes.encodeInt0(ordinal);
+
+          byte v0;
+          v0 = main[mainIndex++];
+
+          byte v1;
+          v1 = main[mainIndex++];
+
+          attrStore(attr, v0, v1);
+
+          nextState = _ELEMENT_ATTRS_HAS_NEXT;
+
+          break loop;
+        }
+
+        case ByteProto.ATTRIBUTE_ID -> {
+          int ordinal;
+          ordinal = StandardAttributeName.ID.ordinal();
+
+          byte attr;
+          attr = Bytes.encodeInt0(ordinal);
+
+          byte v0;
+          v0 = main[mainIndex++];
+
+          byte v1;
+          v1 = main[mainIndex++];
+
+          attrStore(attr, v0, v1);
+
+          nextState = _ELEMENT_ATTRS_HAS_NEXT;
+
+          break loop;
+        }
+
+        case ByteProto.ELEMENT,
+             ByteProto.RAW,
+             ByteProto.TEXT -> mainIndex = skipVarInt(mainIndex);
+
+        case ByteProto.END -> {
+          if (aux[IDX_ATTR_FIRST] == _FALSE && aux[IDX_ATTR_VALUE] == _TRUE) {
+            auxAdd(ByteCode.ATTR_VALUE_END);
+          }
+
+          break loop;
+        }
+
+        case ByteProto.LENGTH2 -> {
+          byte len0;
+          len0 = main[mainIndex++];
+
+          byte len1;
+          len1 = main[mainIndex++];
+
+          int length;
+          length = Bytes.decodeInt(len0, len1);
+
+          mainIndex += length;
+        }
+
+        default -> throw new UnsupportedOperationException(
+            "Implement me :: proto=" + proto
+        );
+      }
+    }
+
+    if (nextState == _ELEMENT_ATTRS_HAS_NEXT) {
+      mainIndexStore();
+
+      stateSet(nextState);
+
+      return true;
+    }
+
+    // we must pop the _ELEMENT_ATTRS_ITERABLE/ITERATOR context
+    // - (1) _ELEMENT_ATTRS_ITERATOR
+    // - (3) mainIndex
+    // - (3) parentIndex
+    // - (3) hasNext
+    auxIndex -= 10;
+
+    return false;
+  }
+
+  final HtmlAttribute elementAttributesNext() {
+    stateCAS(_ELEMENT_ATTRS_HAS_NEXT, _ELEMENT_ATTRS_NEXT);
+
+    // restore main index
+    mainIndexLoad();
+
+    // restore hasNext
+    final byte attr;
+    attr = aux[auxIndex - 7];
+
+    final byte v0;
+    v0 = aux[auxIndex - 8];
+
+    final byte v1;
+    v1 = aux[auxIndex - 9];
+
+    // our return value
+    final PseudoHtmlAttribute attribute;
+    attribute = (PseudoHtmlAttribute) objectArray[objectIndex + OFFSET_ATTRIBUTE];
+
+    // attribute name
+    final int ordinal;
+    ordinal = Bytes.decodeInt(attr);
+
+    final StandardAttributeName name;
+    name = StandardAttributeName.getByCode(ordinal);
+
+    attribute.name = name;
+
+    // push new context
+    final int index;
+    index = mainIndex;
+
+    final int parentIndex;
+    parentIndex = mainIndex;
+
+    auxPush(
+        _ATTRIBUTE_START,
+
+        Bytes.encodeInt0(index),
+        Bytes.encodeInt1(index),
+        Bytes.encodeInt2(index),
+
+        Bytes.encodeInt0(parentIndex),
+        Bytes.encodeInt1(parentIndex),
+        Bytes.encodeInt2(parentIndex),
+
+        attr,
+        v0,
+        v1
+    );
+
+    return attribute;
+  }
+
+  final void attributeValues() {
+    stateCAS(_ATTRIBUTE_START, _ATTRIBUTE_VALUES_ITERABLE);
+  }
+
+  final void attributeValuesIterator() {
+    stateCAS(_ATTRIBUTE_VALUES_ITERABLE, _ATTRIBUTE_VALUES_ITERATOR);
+  }
+
+  final boolean attributeValuesHasNext() {
+    // state check
+    byte state;
+    state = aux[auxIndex];
+
+    switch (state) {
+      case _ATTRIBUTE_VALUES_ITERATOR -> mainIndexLoad();
+
+      default -> throw new UnsupportedOperationException(
+          "Implement me :: state=" + state
+      );
+    }
+
+    // has next
+
+    return false;
+  }
+
+  final void elementNodes() {
+    // state check
+    byte state;
+    state = aux[auxIndex];
+
+    switch (state) {
+      case _ELEMENT_START -> mainIndexLoad();
+
+      default -> throw new UnsupportedOperationException(
+          "Implement me :: state=" + state
+      );
+    }
+
+    // push new context
+    int index;
+    index = mainIndex;
+
+    int parentIndex;
+    parentIndex = mainIndex;
+
+    auxPush(
+        _ELEMENT_NODES_ITERABLE,
+
+        Bytes.encodeInt0(index),
+        Bytes.encodeInt1(index),
+        Bytes.encodeInt2(index),
+
+        Bytes.encodeInt0(parentIndex),
+        Bytes.encodeInt1(parentIndex),
+        Bytes.encodeInt2(parentIndex)
+    );
+  }
+
+  final void elementNodesIterator() {
+    stateCAS(_ELEMENT_NODES_ITERABLE, _ELEMENT_NODES_ITERATOR);
+  }
+
+  final boolean elementNodesHasNext(StandardElementName parent) {
+    // state check
+    byte state;
+    state = aux[auxIndex];
+
+    switch (state) {
+      case _ELEMENT_NODES_ITERATOR -> mainIndexLoad();
+
+      default -> throw new UnsupportedOperationException(
+          "Implement me :: state=" + state
+      );
+    }
+
+    // has next
+    byte nextState;
+    nextState = _ELEMENT_NODES_EXHAUSTED;
+
+    loop: while (mainIndex < mainContents) {
+      byte proto;
+      proto = main[mainIndex];
+
+      switch (proto) {
+        case ByteProto.AMBIGUOUS1 -> {
+          int index;
+          index = mainIndex + 1;
+
+          index = jmp2(index);
+
+          // load ambiguous name
+
+          byte ordinalByte;
+          ordinalByte = main[auxStart++];
+
+          int ordinal;
+          ordinal = Bytes.decodeInt(ordinalByte);
+
+          Ambiguous ambiguous;
+          ambiguous = Ambiguous.get(ordinal);
+
+          if (ambiguous.isAttributeOf(parent)) {
+            mainIndex = index;
+
+            continue loop;
+          }
+
+          nextState = _ELEMENT_NODES_HAS_NEXT;
+
+          break loop;
+        }
+
+        case ByteProto.ATTRIBUTE1 -> {
+          mainIndex++;
+
+          mainIndex = skipVarInt(mainIndex);
+        }
+
+        case ByteProto.ATTRIBUTE_CLASS,
+             ByteProto.ATTRIBUTE_ID -> mainIndex += 2 + 1;
+
+        case ByteProto.ELEMENT -> {
+          nextState = _ELEMENT_NODES_HAS_NEXT;
+
+          break loop;
+        }
+
+        case ByteProto.END -> {
+          break loop;
+        }
+
+        case ByteProto.LENGTH2 -> {
+          mainIndex++;
+
+          byte len0;
+          len0 = main[mainIndex++];
+
+          byte len1;
+          len1 = main[mainIndex++];
+
+          int length;
+          length = Bytes.decodeInt(len0, len1);
+
+          mainIndex += length;
+        }
+
+        case ByteProto.STANDARD_NAME -> mainIndex += 1 + 1;
+
+        case ByteProto.RAW -> {
+          nextState = _ELEMENT_NODES_HAS_NEXT;
+
+          break loop;
+        }
+
+        case ByteProto.TEXT -> {
+          nextState = _ELEMENT_NODES_HAS_NEXT;
+
+          break loop;
+        }
+
+        default -> throw new UnsupportedOperationException(
+            "Implement me :: proto=" + proto
+        );
+      }
+    }
+
+    if (nextState == _ELEMENT_NODES_HAS_NEXT) {
+      mainIndexStore();
+
+      stateSet(nextState);
+
+      return true;
+    }
+
+    // we should pop ELEMENT_NODES_ITERATOR
+    // - (1) ELEMENT_NODES_ITERATOR
+    // - (3) mainIndex
+    // - (3) parentIndex
+    auxIndex -= 7;
+
+    return false;
+  }
+
+  private void attrStore(byte attr, byte v0, byte v1) {
+    aux[auxIndex - 7] = attr;
+
+    aux[auxIndex - 8] = v0;
+
+    aux[auxIndex - 9] = v1;
   }
 
   private PseudoHtmlElement htmlElement() {
     return (PseudoHtmlElement) objectArray[objectIndex + OFFSET_ELEMENT];
   }
 
-  private void ctx2proto() {
+  private void auxPush(byte v0, byte v1, byte v2, byte v3) {
+    aux = ByteArrays.growIfNecessary(aux, auxIndex + 4);
+
+    aux[++auxIndex] = v3;
+    aux[++auxIndex] = v2;
+    aux[++auxIndex] = v1;
+    aux[++auxIndex] = v0;
+  }
+
+  private void auxPush(byte v0, byte v1, byte v2, byte v3, byte v4, byte v5, byte v6) {
+    aux = ByteArrays.growIfNecessary(aux, auxIndex + 7);
+
+    aux[++auxIndex] = v6;
+    aux[++auxIndex] = v5;
+    aux[++auxIndex] = v4;
+    aux[++auxIndex] = v3;
+    aux[++auxIndex] = v2;
+    aux[++auxIndex] = v1;
+    aux[++auxIndex] = v0;
+  }
+
+  private void auxPush(byte v0, byte v1, byte v2, byte v3, byte v4, byte v5, byte v6, byte v7, byte v8, byte v9) {
+    aux = ByteArrays.growIfNecessary(aux, auxIndex + 10);
+
+    aux[++auxIndex] = v9;
+    aux[++auxIndex] = v8;
+    aux[++auxIndex] = v7;
+    aux[++auxIndex] = v6;
+    aux[++auxIndex] = v5;
+    aux[++auxIndex] = v4;
+    aux[++auxIndex] = v3;
+    aux[++auxIndex] = v2;
+    aux[++auxIndex] = v1;
+    aux[++auxIndex] = v0;
+  }
+
+  private void mainIndexLoad() {
     byte b0;
     b0 = aux[auxIndex - 1];
 
@@ -331,64 +876,52 @@ public final class HtmlCompiler02 extends HtmlCompiler01 {
     mainIndex = Bytes.decodeLength3(b0, b1, b2);
   }
 
-  private void proto2ctx() {
-    aux[auxIndex - 1] = Bytes.encodeInt0(mainIndex);
-
-    aux[auxIndex - 2] = Bytes.encodeInt1(mainIndex);
-
-    aux[auxIndex - 3] = Bytes.encodeInt2(mainIndex);
+  private void mainIndexStore() {
+    mainIndexStore(mainIndex);
   }
 
-  private void ctxCheck(byte expected) {
-    byte actual;
-    actual = ctxPeek();
+  private void mainIndexStore(int value) {
+    aux[auxIndex - 1] = Bytes.encodeInt0(value);
 
-    ctxThrow(actual, expected);
+    aux[auxIndex - 2] = Bytes.encodeInt1(value);
+
+    aux[auxIndex - 3] = Bytes.encodeInt2(value);
   }
 
-  private byte ctxPeek() {
-    return aux[auxIndex];
-  }
-
-  private void ctxPush(byte v0) {
-    aux = ByteArrays.growIfNecessary(aux, auxIndex + 1);
-
-    aux[++auxIndex] = v0;
-  }
-
-  private void ctxPush(byte v0, byte v1, byte v2) {
-    aux = ByteArrays.growIfNecessary(aux, auxIndex + 3);
-
-    aux[++auxIndex] = v0;
-    aux[++auxIndex] = v1;
-    aux[++auxIndex] = v2;
-  }
-
-  private void ctxPushIndex(int index) {
+  private int parentIndexLoad() {
     byte b0;
-    b0 = Bytes.encodeInt0(index);
+    b0 = aux[auxIndex - 4];
 
     byte b1;
-    b1 = Bytes.encodeInt1(index);
+    b1 = aux[auxIndex - 5];
 
     byte b2;
-    b2 = Bytes.encodeInt2(index);
+    b2 = aux[auxIndex - 6];
 
-    ctxPush(b2, b1, b0);
+    return Bytes.decodeLength3(b0, b1, b2);
   }
 
-  private void ctxSet(int offset, byte value) {
-    aux[auxIndex - offset] = value;
-  }
+  private void stateCheck(byte expected) {
+    byte actual;
+    actual = aux[auxIndex];
 
-  private void ctxThrow(byte actual, byte expected) {
     if (actual != expected) {
       throw new IllegalStateException(
           """
-      Found state '%d' but expected state '%d'
-      """.formatted(actual, expected)
+          Found state '%d' but expected state '%d'
+          """.formatted(actual, expected)
       );
     }
+  }
+
+  private void stateCAS(byte expected, byte next) {
+    stateCheck(expected);
+
+    aux[auxIndex] = next;
+  }
+
+  private void stateSet(byte value) {
+    aux[auxIndex] = value;
   }
 
   @Override
@@ -1032,6 +1565,20 @@ public final class HtmlCompiler02 extends HtmlCompiler01 {
 
     // skip ByteProto
     mainContents++;
+
+    return index;
+  }
+
+  private int jmp2(int index) {
+    int baseIndex;
+    baseIndex = index;
+
+    index = decodeLength(index);
+
+    auxStart = baseIndex - auxStart;
+
+    // skip ByteProto
+    auxStart++;
 
     return index;
   }

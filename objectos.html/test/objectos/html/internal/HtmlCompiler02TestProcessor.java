@@ -16,12 +16,14 @@
 package objectos.html.internal;
 
 import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertNotNull;
 
 import java.util.Iterator;
 import objectos.html.pseudom.HtmlAttribute;
+import objectos.html.pseudom.HtmlDocumentType;
+import objectos.html.pseudom.HtmlElement;
 import objectos.html.pseudom.HtmlIterable;
 import objectos.html.pseudom.HtmlNode;
+import objectos.html.tmpl.Api;
 import org.testng.annotations.Test;
 
 public class HtmlCompiler02TestProcessor {
@@ -40,50 +42,166 @@ public class HtmlCompiler02TestProcessor {
 
     compiler.compilationEnd();
 
-    // document
+    assertEquals(
+        test(compiler),
+
+        """
+        <html>
+        </html>
+        """
+    );
+  }
+
+  @Test(description = """
+  <html lang="pt-BR"></html>
+  """)
+  public void testCase01() {
+    HtmlCompiler02 compiler;
+    compiler = new HtmlCompiler02();
+
+    compiler.compilationBegin();
+
+    compiler.attribute(StandardAttributeName.LANG, "pt-BR");
+
+    compiler.elementBegin(StandardElementName.HTML);
+    compiler.elementValue(Api.ATTRIBUTE);
+    compiler.elementEnd();
+
+    compiler.compilationEnd();
+
+    assertEquals(
+        test(compiler),
+
+        """
+        <html lang="pt-BR">
+        </html>
+        """
+    );
+  }
+
+  private String test(HtmlCompiler02 compiler) {
+    StringBuilder out;
+    out = new StringBuilder();
+
     PseudoHtmlDocument document;
     document = compiler.bootstrap();
 
     HtmlIterable<HtmlNode> nodes;
     nodes = document.nodes();
 
-    Iterator<HtmlNode> documentNodes;
-    documentNodes = nodes.iterator();
+    Iterator<HtmlNode> nodesIter;
+    nodesIter = nodes.iterator();
 
-    assertEquals(documentNodes.hasNext(), true);
+    while (nodesIter.hasNext()) {
+      HtmlNode node;
+      node = nodesIter.next();
 
-    // <html>
-    HtmlNode node;
-    node = documentNodes.next();
+      switch (node) {
+        case HtmlDocumentType type -> throw new UnsupportedOperationException("Implement me");
 
-    PseudoHtmlElement html;
-    html = (PseudoHtmlElement) node;
+        case HtmlElement element -> element(out, element);
 
-    assertEquals(html.name(), "html");
+        default -> {
+          Class<? extends HtmlNode> type;
+          type = node.getClass();
 
-    // <html attrs>
+          throw new UnsupportedOperationException(
+              "Implement me :: type=" + type
+          );
+        }
+      }
+    }
+
+    return out.toString();
+  }
+
+  private void element(StringBuilder out, HtmlElement element) {
+    String elementName;
+    elementName = element.name();
+
+    out.append('<');
+    out.append(elementName);
+
     HtmlIterable<HtmlAttribute> attrs;
-    attrs = html.attributes();
+    attrs = element.attributes();
 
     Iterator<HtmlAttribute> attrsIter;
     attrsIter = attrs.iterator();
 
-    assertNotNull(attrsIter);
+    while (attrsIter.hasNext()) {
+      HtmlAttribute attr;
+      attr = attrsIter.next();
 
-    /*
-    assertEquals(attrsIter.hasNext(), false);
+      attribute(out, attr);
+    }
 
-    // <html>children
-    nodes = html.nodes();
+    out.append('>');
+    out.append('\n');
 
-    Iterator<HtmlNode> htmlNodes;
-    htmlNodes = nodes.iterator();
+    if (element.isVoid()) {
+      return;
+    }
 
-    assertEquals(htmlNodes.hasNext(), false);
+    HtmlIterable<HtmlNode> nodes;
+    nodes = element.nodes();
 
-    // document end
-    assertEquals(documentNodes.hasNext(), false);
-    */
+    Iterator<HtmlNode> nodesIter;
+    nodesIter = nodes.iterator();
+
+    while (nodesIter.hasNext()) {
+      HtmlNode node;
+      node = nodesIter.next();
+
+      switch (node) {
+        case HtmlElement child -> element(out, child);
+
+        default -> {
+          Class<? extends HtmlNode> type;
+          type = node.getClass();
+
+          throw new UnsupportedOperationException(
+              "Implement me :: type=" + type
+          );
+        }
+      }
+    }
+
+    out.append('<');
+    out.append('/');
+    out.append(elementName);
+    out.append('>');
+    out.append('\n');
+  }
+
+  private void attribute(StringBuilder out, HtmlAttribute attribute) {
+    String name;
+    name = attribute.name();
+
+    out.append(' ');
+    out.append(name);
+
+    if (attribute.isBoolean()) {
+      return;
+    }
+
+    HtmlIterable<String> values;
+    values = attribute.values();
+
+    Iterator<String> valuesIter;
+    valuesIter = values.iterator();
+
+    if (valuesIter.hasNext()) {
+      out.append('=');
+      out.append('\"');
+      out.append(valuesIter.next());
+
+      while (valuesIter.hasNext()) {
+        out.append(' ');
+        out.append(valuesIter.next());
+      }
+
+      out.append('\"');
+    }
   }
 
 }

@@ -24,6 +24,12 @@ public final class PseudoHtmlAttribute
 
   AttributeName name;
 
+  private final HtmlCompiler02 player;
+
+  public PseudoHtmlAttribute(HtmlCompiler02 player) {
+    this.player = player;
+  }
+
   @Override
   public final String name() {
     return name.getName();
@@ -36,12 +42,14 @@ public final class PseudoHtmlAttribute
 
   @Override
   public final HtmlIterable<String> values() {
-    throw new UnsupportedOperationException("Implement me");
+    player.attributeValues();
+
+    return this;
   }
 
   @Override
   public final boolean hasNext() {
-    throw new UnsupportedOperationException("Implement me");
+    return player.attributeValuesHasNext();
   }
 
   @Override
@@ -51,7 +59,9 @@ public final class PseudoHtmlAttribute
 
   @Override
   public final Iterator<String> iterator() {
-    throw new UnsupportedOperationException("Implement me");
+    player.attributeValuesIterator();
+
+    return this;
   }
 
 }

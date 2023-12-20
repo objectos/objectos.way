@@ -28,7 +28,7 @@ public final class PseudoHtmlElement
 
     @Override
     public final boolean hasNext() {
-      throw new UnsupportedOperationException("Implement me");
+      return player.elementAttributesHasNext(name);
     }
 
     @Override
@@ -40,7 +40,7 @@ public final class PseudoHtmlElement
 
     @Override
     public final HtmlAttribute next() {
-      throw new UnsupportedOperationException("Implement me");
+      return player.elementAttributesNext();
     }
 
   }
@@ -68,7 +68,7 @@ public final class PseudoHtmlElement
 
   @Override
   public final boolean hasNext() {
-    throw new UnsupportedOperationException("Implement me");
+    return player.elementNodesHasNext(name);
   }
 
   @Override
@@ -78,7 +78,9 @@ public final class PseudoHtmlElement
 
   @Override
   public final Iterator<HtmlNode> iterator() {
-    throw new UnsupportedOperationException("Implement me");
+    player.elementNodesIterator();
+
+    return this;
   }
 
   @Override
@@ -93,7 +95,9 @@ public final class PseudoHtmlElement
 
   @Override
   public final HtmlIterable<HtmlNode> nodes() {
-    throw new UnsupportedOperationException("Implement me");
+    player.elementNodes();
+
+    return this;
   }
 
 }
