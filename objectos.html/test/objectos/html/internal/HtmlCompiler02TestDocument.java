@@ -18,6 +18,7 @@ package objectos.html.internal;
 import static org.testng.Assert.assertEquals;
 
 import java.util.Arrays;
+import objectos.html.tmpl.Api;
 import org.testng.annotations.Test;
 
 public class HtmlCompiler02TestDocument {
@@ -85,12 +86,15 @@ public class HtmlCompiler02TestDocument {
     testAux(
         compiler,
 
-        HtmlCompiler02._ELEMENT_START,
-        Bytes.encodeInt0(3), Bytes.encodeInt1(3), Bytes.encodeInt2(3), // @ ByteProto.STD_NAME
+        HtmlCompiler02._DOCUMENT_NODES_NEXT,
         Bytes.encodeInt0(8), Bytes.encodeInt1(8), Bytes.encodeInt2(8),
 
-        HtmlCompiler02._DOCUMENT_NODES_NEXT,
-        Bytes.encodeInt0(8), Bytes.encodeInt1(8), Bytes.encodeInt2(8)
+        HtmlCompiler02._ELEMENT_START,
+        Bytes.encodeInt0(3), Bytes.encodeInt1(3), Bytes.encodeInt2(3),
+        Bytes.encodeInt0(3), Bytes.encodeInt1(3), Bytes.encodeInt2(3),
+        Bytes.encodeInt0(3), Bytes.encodeInt1(3), Bytes.encodeInt2(3),
+        Bytes.encodeInt0(8), Bytes.encodeInt1(8), Bytes.encodeInt2(8),
+        len(4)
     );
 
     // element.attributes
@@ -99,17 +103,15 @@ public class HtmlCompiler02TestDocument {
     testAux(
         compiler,
 
+        HtmlCompiler02._DOCUMENT_NODES_NEXT,
+        Bytes.encodeInt0(8), Bytes.encodeInt1(8), Bytes.encodeInt2(8),
+
         HtmlCompiler02._ELEMENT_ATTRS_ITERABLE,
         Bytes.encodeInt0(3), Bytes.encodeInt1(3), Bytes.encodeInt2(3),
         Bytes.encodeInt0(3), Bytes.encodeInt1(3), Bytes.encodeInt2(3),
-        Bytes.encodeInt0(0), Bytes.encodeInt1(0), Bytes.encodeInt2(0),
-
-        HtmlCompiler02._ELEMENT_START,
         Bytes.encodeInt0(3), Bytes.encodeInt1(3), Bytes.encodeInt2(3),
         Bytes.encodeInt0(8), Bytes.encodeInt1(8), Bytes.encodeInt2(8),
-
-        HtmlCompiler02._DOCUMENT_NODES_NEXT,
-        Bytes.encodeInt0(8), Bytes.encodeInt1(8), Bytes.encodeInt2(8)
+        len(4)
     );
 
     // element.attributes.iterator
@@ -118,17 +120,15 @@ public class HtmlCompiler02TestDocument {
     testAux(
         compiler,
 
+        HtmlCompiler02._DOCUMENT_NODES_NEXT,
+        Bytes.encodeInt0(8), Bytes.encodeInt1(8), Bytes.encodeInt2(8),
+
         HtmlCompiler02._ELEMENT_ATTRS_ITERATOR,
         Bytes.encodeInt0(3), Bytes.encodeInt1(3), Bytes.encodeInt2(3),
         Bytes.encodeInt0(3), Bytes.encodeInt1(3), Bytes.encodeInt2(3),
-        Bytes.encodeInt0(0), Bytes.encodeInt1(0), Bytes.encodeInt2(0),
-
-        HtmlCompiler02._ELEMENT_START,
-        Bytes.encodeInt0(3), Bytes.encodeInt1(3), Bytes.encodeInt2(3), // @ ByteProto.STD_NAME
+        Bytes.encodeInt0(3), Bytes.encodeInt1(3), Bytes.encodeInt2(3),
         Bytes.encodeInt0(8), Bytes.encodeInt1(8), Bytes.encodeInt2(8),
-
-        HtmlCompiler02._DOCUMENT_NODES_NEXT,
-        Bytes.encodeInt0(8), Bytes.encodeInt1(8), Bytes.encodeInt2(8)
+        len(4)
     );
 
     // element.attributes.hasNext
@@ -137,12 +137,15 @@ public class HtmlCompiler02TestDocument {
     testAux(
         compiler,
 
-        HtmlCompiler02._ELEMENT_START,
-        Bytes.encodeInt0(3), Bytes.encodeInt1(3), Bytes.encodeInt2(3), // @ ByteProto.STD_NAME
+        HtmlCompiler02._DOCUMENT_NODES_NEXT,
         Bytes.encodeInt0(8), Bytes.encodeInt1(8), Bytes.encodeInt2(8),
 
-        HtmlCompiler02._DOCUMENT_NODES_NEXT,
-        Bytes.encodeInt0(8), Bytes.encodeInt1(8), Bytes.encodeInt2(8)
+        HtmlCompiler02._ELEMENT_ATTRS_EXHAUSTED,
+        Bytes.encodeInt0(5), Bytes.encodeInt1(5), Bytes.encodeInt2(5),
+        Bytes.encodeInt0(3), Bytes.encodeInt1(3), Bytes.encodeInt2(3),
+        Bytes.encodeInt0(3), Bytes.encodeInt1(3), Bytes.encodeInt2(3),
+        Bytes.encodeInt0(8), Bytes.encodeInt1(8), Bytes.encodeInt2(8),
+        len(4)
     );
 
     // element.nodes
@@ -151,16 +154,15 @@ public class HtmlCompiler02TestDocument {
     testAux(
         compiler,
 
-        HtmlCompiler02._ELEMENT_NODES_ITERABLE,
-        Bytes.encodeInt0(3), Bytes.encodeInt1(3), Bytes.encodeInt2(3),
-        Bytes.encodeInt0(3), Bytes.encodeInt1(3), Bytes.encodeInt2(3),
-
-        HtmlCompiler02._ELEMENT_START,
-        Bytes.encodeInt0(3), Bytes.encodeInt1(3), Bytes.encodeInt2(3), // @ ByteProto.STD_NAME
+        HtmlCompiler02._DOCUMENT_NODES_NEXT,
         Bytes.encodeInt0(8), Bytes.encodeInt1(8), Bytes.encodeInt2(8),
 
-        HtmlCompiler02._DOCUMENT_NODES_NEXT,
-        Bytes.encodeInt0(8), Bytes.encodeInt1(8), Bytes.encodeInt2(8)
+        HtmlCompiler02._ELEMENT_NODES_ITERABLE,
+        Bytes.encodeInt0(5), Bytes.encodeInt1(5), Bytes.encodeInt2(5),
+        Bytes.encodeInt0(3), Bytes.encodeInt1(3), Bytes.encodeInt2(3),
+        Bytes.encodeInt0(3), Bytes.encodeInt1(3), Bytes.encodeInt2(3),
+        Bytes.encodeInt0(8), Bytes.encodeInt1(8), Bytes.encodeInt2(8),
+        len(4)
     );
 
     // element.nodes.iterator
@@ -169,16 +171,15 @@ public class HtmlCompiler02TestDocument {
     testAux(
         compiler,
 
-        HtmlCompiler02._ELEMENT_NODES_ITERATOR,
-        Bytes.encodeInt0(3), Bytes.encodeInt1(3), Bytes.encodeInt2(3),
-        Bytes.encodeInt0(3), Bytes.encodeInt1(3), Bytes.encodeInt2(3),
-
-        HtmlCompiler02._ELEMENT_START,
-        Bytes.encodeInt0(3), Bytes.encodeInt1(3), Bytes.encodeInt2(3), // @ ByteProto.STD_NAME
+        HtmlCompiler02._DOCUMENT_NODES_NEXT,
         Bytes.encodeInt0(8), Bytes.encodeInt1(8), Bytes.encodeInt2(8),
 
-        HtmlCompiler02._DOCUMENT_NODES_NEXT,
-        Bytes.encodeInt0(8), Bytes.encodeInt1(8), Bytes.encodeInt2(8)
+        HtmlCompiler02._ELEMENT_NODES_ITERATOR,
+        Bytes.encodeInt0(5), Bytes.encodeInt1(5), Bytes.encodeInt2(5),
+        Bytes.encodeInt0(3), Bytes.encodeInt1(3), Bytes.encodeInt2(3),
+        Bytes.encodeInt0(3), Bytes.encodeInt1(3), Bytes.encodeInt2(3),
+        Bytes.encodeInt0(8), Bytes.encodeInt1(8), Bytes.encodeInt2(8),
+        len(4)
     );
 
     // element.nodes.hasNext
@@ -187,30 +188,394 @@ public class HtmlCompiler02TestDocument {
     testAux(
         compiler,
 
-        HtmlCompiler02._ELEMENT_START,
-        Bytes.encodeInt0(3), Bytes.encodeInt1(3), Bytes.encodeInt2(3), // @ ByteProto.STD_NAME
+        HtmlCompiler02._DOCUMENT_NODES_NEXT,
         Bytes.encodeInt0(8), Bytes.encodeInt1(8), Bytes.encodeInt2(8),
 
-        HtmlCompiler02._DOCUMENT_NODES_NEXT,
-        Bytes.encodeInt0(8), Bytes.encodeInt1(8), Bytes.encodeInt2(8)
+        HtmlCompiler02._ELEMENT_NODES_EXHAUSTED,
+        Bytes.encodeInt0(5), Bytes.encodeInt1(5), Bytes.encodeInt2(5),
+        Bytes.encodeInt0(5), Bytes.encodeInt1(5), Bytes.encodeInt2(5),
+        Bytes.encodeInt0(3), Bytes.encodeInt1(3), Bytes.encodeInt2(3),
+        Bytes.encodeInt0(8), Bytes.encodeInt1(8), Bytes.encodeInt2(8),
+        len(4)
     );
 
+    // document.nodes.hasNext
     assertEquals(compiler.documentHasNext(), false);
+
+    testAux(
+        compiler,
+
+        HtmlCompiler02._DOCUMENT_NODES_EXHAUSTED,
+        Bytes.encodeInt0(8), Bytes.encodeInt1(8), Bytes.encodeInt2(8)
+    );
+  }
+
+  @Test(description = """
+  <html lang="pt-BR"></html>
+  """)
+  public void testCase01() {
+    HtmlCompiler02 compiler;
+    compiler = new HtmlCompiler02();
+
+    compiler.compilationBegin();
+
+    compiler.attribute(StandardAttributeName.LANG, "pt-BR");
+
+    compiler.elementBegin(StandardElementName.HTML);
+    compiler.elementValue(Api.ATTRIBUTE);
+    compiler.elementEnd();
+
+    compiler.compilationEnd();
+
+    // document
+    compiler.bootstrap();
+
+    compiler.documentIterable();
+    compiler.documentIterator();
+    assertEquals(compiler.documentHasNext(), true);
+    compiler.documentNext();
+
+    // html
+    compiler.elementAttributes();
+
+    // html.attrs.iterator
+    compiler.elementAttributesIterator();
+
+    testAux(
+        compiler,
+
+        HtmlCompiler02._DOCUMENT_NODES_NEXT,
+        Bytes.encodeInt0(15), Bytes.encodeInt1(15), Bytes.encodeInt2(15),
+
+        HtmlCompiler02._ELEMENT_ATTRS_ITERATOR,
+        Bytes.encodeInt0(8), Bytes.encodeInt1(8), Bytes.encodeInt2(8),
+        Bytes.encodeInt0(8), Bytes.encodeInt1(8), Bytes.encodeInt2(8),
+        Bytes.encodeInt0(8), Bytes.encodeInt1(8), Bytes.encodeInt2(8),
+        Bytes.encodeInt0(15), Bytes.encodeInt1(15), Bytes.encodeInt2(15),
+        len(4)
+    );
+
+    // html.attrs.iterator.hasNext
+    assertEquals(compiler.elementAttributesHasNext(StandardElementName.HTML), true);
+
+    testAux(
+        compiler,
+
+        HtmlCompiler02._DOCUMENT_NODES_NEXT,
+        Bytes.encodeInt0(15), Bytes.encodeInt1(15), Bytes.encodeInt2(15),
+
+        HtmlCompiler02._ELEMENT_ATTRS_HAS_NEXT,
+        Bytes.encodeInt0(10), Bytes.encodeInt1(10), Bytes.encodeInt2(10),
+        Bytes.encodeInt0(8), Bytes.encodeInt1(8), Bytes.encodeInt2(8),
+        Bytes.encodeInt0(8), Bytes.encodeInt1(8), Bytes.encodeInt2(8),
+        Bytes.encodeInt0(15), Bytes.encodeInt1(15), Bytes.encodeInt2(15),
+        len(4)
+    );
+
+    // html.attrs.iterator.next => lang="pt-BR"
+    PseudoHtmlAttribute attr;
+    attr = (PseudoHtmlAttribute) compiler.elementAttributesNext();
+
+    assertEquals(attr.name(), "lang");
+    assertEquals(attr.value, "pt-BR");
+
+    testAux(
+        compiler,
+
+        HtmlCompiler02._DOCUMENT_NODES_NEXT,
+        Bytes.encodeInt0(15), Bytes.encodeInt1(15), Bytes.encodeInt2(15),
+
+        HtmlCompiler02._ELEMENT_ATTRS_NEXT,
+        Bytes.encodeInt0(12), Bytes.encodeInt1(12), Bytes.encodeInt2(12),
+        Bytes.encodeInt0(8), Bytes.encodeInt1(8), Bytes.encodeInt2(8),
+        Bytes.encodeInt0(8), Bytes.encodeInt1(8), Bytes.encodeInt2(8),
+        Bytes.encodeInt0(15), Bytes.encodeInt1(15), Bytes.encodeInt2(15),
+        len(4)
+    );
+
+    // lang="pt-BR".values
+    compiler.attributeValues();
+
+    testAux(
+        compiler,
+
+        HtmlCompiler02._DOCUMENT_NODES_NEXT,
+        Bytes.encodeInt0(15), Bytes.encodeInt1(15), Bytes.encodeInt2(15),
+
+        HtmlCompiler02._ATTRIBUTE_VALUES_ITERABLE,
+        Bytes.encodeInt0(12), Bytes.encodeInt1(12), Bytes.encodeInt2(12),
+        Bytes.encodeInt0(8), Bytes.encodeInt1(8), Bytes.encodeInt2(8),
+        Bytes.encodeInt0(8), Bytes.encodeInt1(8), Bytes.encodeInt2(8),
+        Bytes.encodeInt0(15), Bytes.encodeInt1(15), Bytes.encodeInt2(15),
+        len(4)
+    );
+
+    // lang="pt-BR".values.iterator
+    compiler.attributeValuesIterator();
+
+    testAux(
+        compiler,
+
+        HtmlCompiler02._DOCUMENT_NODES_NEXT,
+        Bytes.encodeInt0(15), Bytes.encodeInt1(15), Bytes.encodeInt2(15),
+
+        HtmlCompiler02._ATTRIBUTE_VALUES_ITERATOR,
+        Bytes.encodeInt0(12), Bytes.encodeInt1(12), Bytes.encodeInt2(12),
+        Bytes.encodeInt0(8), Bytes.encodeInt1(8), Bytes.encodeInt2(8),
+        Bytes.encodeInt0(8), Bytes.encodeInt1(8), Bytes.encodeInt2(8),
+        Bytes.encodeInt0(15), Bytes.encodeInt1(15), Bytes.encodeInt2(15),
+        len(4)
+    );
+
+    // lang="pt-BR".values.iterator.hasNext
+    assertEquals(compiler.attributeValuesHasNext(), true);
+
+    testAux(
+        compiler,
+
+        HtmlCompiler02._DOCUMENT_NODES_NEXT,
+        Bytes.encodeInt0(15), Bytes.encodeInt1(15), Bytes.encodeInt2(15),
+
+        HtmlCompiler02._ATTRIBUTE_VALUES_HAS_NEXT,
+        Bytes.encodeInt0(12), Bytes.encodeInt1(12), Bytes.encodeInt2(12),
+        Bytes.encodeInt0(8), Bytes.encodeInt1(8), Bytes.encodeInt2(8),
+        Bytes.encodeInt0(8), Bytes.encodeInt1(8), Bytes.encodeInt2(8),
+        Bytes.encodeInt0(15), Bytes.encodeInt1(15), Bytes.encodeInt2(15),
+        len(4)
+    );
+
+    assertEquals(compiler.attributeValuesNext(attr.value), "pt-BR");
+
+    attr.value = null;
+
+    // lang="pt-BR".values.iterator.hasNext
+    assertEquals(compiler.attributeValuesHasNext(), false);
+
+    testAux(
+        compiler,
+
+        HtmlCompiler02._DOCUMENT_NODES_NEXT,
+        Bytes.encodeInt0(15), Bytes.encodeInt1(15), Bytes.encodeInt2(15),
+
+        HtmlCompiler02._ATTRIBUTE_VALUES_EXHAUSTED,
+        Bytes.encodeInt0(12), Bytes.encodeInt1(12), Bytes.encodeInt2(12),
+        Bytes.encodeInt0(8), Bytes.encodeInt1(8), Bytes.encodeInt2(8),
+        Bytes.encodeInt0(8), Bytes.encodeInt1(8), Bytes.encodeInt2(8),
+        Bytes.encodeInt0(15), Bytes.encodeInt1(15), Bytes.encodeInt2(15),
+        len(4)
+    );
+
+    // html.attributes.hasNext
+    assertEquals(compiler.elementAttributesHasNext(StandardElementName.HTML), false);
+
+    testAux(
+        compiler,
+
+        HtmlCompiler02._DOCUMENT_NODES_NEXT,
+        Bytes.encodeInt0(15), Bytes.encodeInt1(15), Bytes.encodeInt2(15),
+
+        HtmlCompiler02._ELEMENT_ATTRS_EXHAUSTED,
+        Bytes.encodeInt0(12), Bytes.encodeInt1(12), Bytes.encodeInt2(12),
+        Bytes.encodeInt0(8), Bytes.encodeInt1(8), Bytes.encodeInt2(8),
+        Bytes.encodeInt0(8), Bytes.encodeInt1(8), Bytes.encodeInt2(8),
+        Bytes.encodeInt0(15), Bytes.encodeInt1(15), Bytes.encodeInt2(15),
+        len(4)
+    );
+  }
+
+  @Test(description = """
+  <html><head></head></html>
+  """)
+  public void testCase03() {
+    HtmlCompiler02 compiler;
+    compiler = new HtmlCompiler02();
+
+    compiler.compilationBegin();
+
+    compiler.elementBegin(StandardElementName.HEAD);
+    compiler.elementEnd();
+
+    compiler.elementBegin(StandardElementName.HTML);
+    compiler.elementValue(Api.ELEMENT);
+    compiler.elementEnd();
+
+    compiler.compilationEnd();
+
+    // document
+    compiler.bootstrap();
+    compiler.documentIterable();
+    compiler.documentIterator();
+    assertEquals(compiler.documentHasNext(), true);
+
+    // html
+    PseudoHtmlElement html;
+    html = (PseudoHtmlElement) compiler.documentNext();
+
+    assertEquals(html.name, StandardElementName.HTML);
+
+    testAux(
+        compiler,
+
+        HtmlCompiler02._DOCUMENT_NODES_NEXT,
+        Bytes.encodeInt0(18), Bytes.encodeInt1(18), Bytes.encodeInt2(18),
+
+        HtmlCompiler02._ELEMENT_START,
+        Bytes.encodeInt0(11), Bytes.encodeInt1(11), Bytes.encodeInt2(11),
+        Bytes.encodeInt0(11), Bytes.encodeInt1(11), Bytes.encodeInt2(11),
+        Bytes.encodeInt0(11), Bytes.encodeInt1(11), Bytes.encodeInt2(11),
+        Bytes.encodeInt0(18), Bytes.encodeInt1(18), Bytes.encodeInt2(18),
+        len(4)
+    );
+
+    // html.attributes
+    compiler.elementAttributes();
+    compiler.elementAttributesIterator();
+    assertEquals(compiler.elementAttributesHasNext(StandardElementName.HTML), false);
+
+    // html.nodes
+    compiler.elementNodes();
+
+    testAux(
+        compiler,
+
+        HtmlCompiler02._DOCUMENT_NODES_NEXT,
+        Bytes.encodeInt0(18), Bytes.encodeInt1(18), Bytes.encodeInt2(18),
+
+        HtmlCompiler02._ELEMENT_NODES_ITERABLE,
+        Bytes.encodeInt0(15), Bytes.encodeInt1(15), Bytes.encodeInt2(15),
+        Bytes.encodeInt0(11), Bytes.encodeInt1(11), Bytes.encodeInt2(11),
+        Bytes.encodeInt0(11), Bytes.encodeInt1(11), Bytes.encodeInt2(11),
+        Bytes.encodeInt0(18), Bytes.encodeInt1(18), Bytes.encodeInt2(18),
+        len(4)
+    );
+
+    // html.nodes.iterator
+    compiler.elementNodesIterator();
+
+    testAux(
+        compiler,
+
+        HtmlCompiler02._DOCUMENT_NODES_NEXT,
+        Bytes.encodeInt0(18), Bytes.encodeInt1(18), Bytes.encodeInt2(18),
+
+        HtmlCompiler02._ELEMENT_NODES_ITERATOR,
+        Bytes.encodeInt0(15), Bytes.encodeInt1(15), Bytes.encodeInt2(15),
+        Bytes.encodeInt0(11), Bytes.encodeInt1(11), Bytes.encodeInt2(11),
+        Bytes.encodeInt0(11), Bytes.encodeInt1(11), Bytes.encodeInt2(11),
+        Bytes.encodeInt0(18), Bytes.encodeInt1(18), Bytes.encodeInt2(18),
+        len(4)
+    );
+
+    // html.nodes.hasNext
+    assertEquals(compiler.elementNodesHasNext(StandardElementName.HTML), true);
+
+    testAux(
+        compiler,
+
+        HtmlCompiler02._DOCUMENT_NODES_NEXT,
+        Bytes.encodeInt0(18), Bytes.encodeInt1(18), Bytes.encodeInt2(18),
+
+        HtmlCompiler02._ELEMENT_NODES_HAS_NEXT,
+        Bytes.encodeInt0(15), Bytes.encodeInt1(15), Bytes.encodeInt2(15),
+        Bytes.encodeInt0(13), Bytes.encodeInt1(13), Bytes.encodeInt2(13),
+        Bytes.encodeInt0(11), Bytes.encodeInt1(11), Bytes.encodeInt2(11),
+        Bytes.encodeInt0(18), Bytes.encodeInt1(18), Bytes.encodeInt2(18),
+        len(4)
+    );
+
+    // head
+    PseudoHtmlElement head;
+    head = (PseudoHtmlElement) compiler.elementNodesNext();
+
+    assertEquals(head.name(), "head");
+
+    testAux(
+        compiler,
+
+        HtmlCompiler02._DOCUMENT_NODES_NEXT,
+        Bytes.encodeInt0(18), Bytes.encodeInt1(18), Bytes.encodeInt2(18),
+
+        HtmlCompiler02._ELEMENT_NODES_NEXT,
+        Bytes.encodeInt0(15), Bytes.encodeInt1(15), Bytes.encodeInt2(15),
+        Bytes.encodeInt0(15), Bytes.encodeInt1(15), Bytes.encodeInt2(15),
+        Bytes.encodeInt0(11), Bytes.encodeInt1(11), Bytes.encodeInt2(11),
+        Bytes.encodeInt0(18), Bytes.encodeInt1(18), Bytes.encodeInt2(18),
+        len(4),
+
+        HtmlCompiler02._ELEMENT_START,
+        Bytes.encodeInt0(3), Bytes.encodeInt1(3), Bytes.encodeInt2(3),
+        Bytes.encodeInt0(3), Bytes.encodeInt1(3), Bytes.encodeInt2(3),
+        Bytes.encodeInt0(3), Bytes.encodeInt1(3), Bytes.encodeInt2(3),
+        Bytes.encodeInt0(15), Bytes.encodeInt1(15), Bytes.encodeInt2(15),
+        len(14)
+    );
+
+    // head.attributes
+    compiler.elementAttributes();
+    compiler.elementAttributesIterator();
+    assertEquals(compiler.elementAttributesHasNext(StandardElementName.HEAD), false);
+
+    // head.nodes
+    compiler.elementNodes();
+    compiler.elementNodesIterator();
+    assertEquals(compiler.elementNodesHasNext(StandardElementName.HEAD), false);
+
+    testAux(
+        compiler,
+
+        HtmlCompiler02._DOCUMENT_NODES_NEXT,
+        Bytes.encodeInt0(18), Bytes.encodeInt1(18), Bytes.encodeInt2(18),
+
+        HtmlCompiler02._ELEMENT_NODES_NEXT,
+        Bytes.encodeInt0(15), Bytes.encodeInt1(15), Bytes.encodeInt2(15),
+        Bytes.encodeInt0(15), Bytes.encodeInt1(15), Bytes.encodeInt2(15),
+        Bytes.encodeInt0(11), Bytes.encodeInt1(11), Bytes.encodeInt2(11),
+        Bytes.encodeInt0(18), Bytes.encodeInt1(18), Bytes.encodeInt2(18),
+        len(4),
+
+        HtmlCompiler02._ELEMENT_NODES_EXHAUSTED,
+        Bytes.encodeInt0(5), Bytes.encodeInt1(5), Bytes.encodeInt2(5),
+        Bytes.encodeInt0(5), Bytes.encodeInt1(5), Bytes.encodeInt2(5),
+        Bytes.encodeInt0(3), Bytes.encodeInt1(3), Bytes.encodeInt2(3),
+        Bytes.encodeInt0(15), Bytes.encodeInt1(15), Bytes.encodeInt2(15),
+        len(14)
+    );
+
+    // html.nodes.hasNext
+    assertEquals(compiler.elementNodesHasNext(StandardElementName.HTML), false);
+
+    testAux(
+        compiler,
+
+        HtmlCompiler02._DOCUMENT_NODES_NEXT,
+        Bytes.encodeInt0(18), Bytes.encodeInt1(18), Bytes.encodeInt2(18),
+
+        HtmlCompiler02._ELEMENT_NODES_EXHAUSTED,
+        Bytes.encodeInt0(15), Bytes.encodeInt1(15), Bytes.encodeInt2(15),
+        Bytes.encodeInt0(15), Bytes.encodeInt1(15), Bytes.encodeInt2(15),
+        Bytes.encodeInt0(11), Bytes.encodeInt1(11), Bytes.encodeInt2(11),
+        Bytes.encodeInt0(18), Bytes.encodeInt1(18), Bytes.encodeInt2(18),
+        len(4)
+    );
+
+    // document.nodes.hasNext
+    assertEquals(compiler.documentHasNext(), false);
+
+    testAux(
+        compiler,
+
+        HtmlCompiler02._DOCUMENT_NODES_EXHAUSTED,
+        Bytes.encodeInt0(18), Bytes.encodeInt1(18), Bytes.encodeInt2(18)
+    );
+  }
+
+  private byte len(int value) {
+    return (byte) value;
   }
 
   private void testAux(HtmlCompiler02 compiler, byte... expected) {
-    byte[] aux;
-    aux = compiler.aux;
-
-    int length;
-    length = compiler.auxIndex + 1;
-
     byte[] result;
-    result = new byte[length];
-
-    for (int i = 0; i < length; i++) {
-      result[i] = aux[length - i - 1];
-    }
+    result = Arrays.copyOf(compiler.aux, compiler.auxIndex);
 
     if (result.length != expected.length) {
       throw new AssertionError(

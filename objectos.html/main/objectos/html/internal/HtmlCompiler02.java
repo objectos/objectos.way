@@ -112,12 +112,11 @@ public final class HtmlCompiler02 extends HtmlCompiler01 {
   static final byte _ELEMENT_NODES_NEXT = -16;
   static final byte _ELEMENT_NODES_EXHAUSTED = -17;
 
-  static final byte _ATTRIBUTE_START = -18;
-  static final byte _ATTRIBUTE_VALUES_ITERABLE = -19;
-  static final byte _ATTRIBUTE_VALUES_ITERATOR = -20;
-  static final byte _ATTRIBUTE_VALUES_HAS_NEXT = -21;
-  static final byte _ATTRIBUTE_VALUES_NEXT = -22;
-  static final byte _ATTRIBUTE_VALUES_EXHAUSTED = -23;
+  static final byte _ATTRIBUTE_VALUES_ITERABLE = -18;
+  static final byte _ATTRIBUTE_VALUES_ITERATOR = -19;
+  static final byte _ATTRIBUTE_VALUES_HAS_NEXT = -20;
+  static final byte _ATTRIBUTE_VALUES_NEXT = -21;
+  static final byte _ATTRIBUTE_VALUES_EXHAUSTED = -22;
 
   private static final int OFFSET_ELEMENT = 0;
   private static final int OFFSET_ATTRIBUTE = 1;
@@ -126,17 +125,17 @@ public final class HtmlCompiler02 extends HtmlCompiler01 {
 
   // visible for testing
   final PseudoHtmlDocument bootstrap() {
-    // we will use the aux list as the context stack
-    auxIndex = -1;
+    // we will use the aux list to store contexts
+    auxIndex = 0;
 
     // holds decoded length
     auxStart = 0;
 
-    // holds max main index
-    mainContents = mainIndex;
+    // holds maximum main index. DO NOT TOUCH!!!
+    // mainIndex
 
-    // reset main index
-    mainIndex = 0;
+    // holds the current context
+    mainStart = 0;
 
     // we reuse objectArray reference to store our pseudo html objects
     if (objectArray == null) {
@@ -149,16 +148,7 @@ public final class HtmlCompiler02 extends HtmlCompiler01 {
 
     objectArray[objectIndex + OFFSET_ATTRIBUTE] = new PseudoHtmlAttribute(this);
 
-    // push initial state
-    auxPush(
-        // state
-        _DOCUMENT_START,
-
-        // main index
-        Bytes.encodeInt0(mainIndex),
-        Bytes.encodeInt1(mainIndex),
-        Bytes.encodeInt2(mainIndex)
-    );
+    documentCtx();
 
     return new PseudoHtmlDocument(this);
   }
@@ -172,37 +162,38 @@ public final class HtmlCompiler02 extends HtmlCompiler01 {
   }
 
   final boolean documentHasNext() {
+    // our iteration index
+    int index;
+
     // state check
-    byte state;
-    state = aux[auxIndex];
+    switch (statePeek()) {
+      case _DOCUMENT_NODES_ITERATOR, _DOCUMENT_NODES_NEXT -> {
+        // valid state
 
-    switch (state) {
-      case _DOCUMENT_NODES_ITERATOR -> mainIndexLoad();
+        // restore main index from the context
+        index = documentCtxMainIndexLoad();
+      }
 
-      case _ELEMENT_START -> {
+      case _ELEMENT_NODES_EXHAUSTED -> {
         int parentIndex;
-        parentIndex = parentIndexLoad();
-
-        // (1) ELEMENT_START
-        // (3) startIndex
-        // (3) parentIndex
-        auxIndex -= 7;
+        parentIndex = elementCtxRemove();
 
         stateCheck(_DOCUMENT_NODES_NEXT);
 
-        mainIndexLoad();
+        // restore main index from the context
+        index = documentCtxMainIndexLoad();
 
-        if (mainIndex != parentIndex) {
+        if (index != parentIndex) {
           throw new IllegalStateException(
               """
-              Last consumed element was not a child of this document or element
+              Last consumed element was not a child of this document
               """
           );
         }
       }
 
       default -> throw new UnsupportedOperationException(
-          "Implement me :: state=" + state
+          "Implement me :: state=" + statePeek()
       );
     }
 
@@ -210,49 +201,50 @@ public final class HtmlCompiler02 extends HtmlCompiler01 {
     byte nextState;
     nextState = _DOCUMENT_NODES_EXHAUSTED;
 
-    loop: while (mainIndex < mainContents) {
+    loop: while (index < mainIndex) {
       byte proto;
-      proto = main[mainIndex];
+      proto = main[index];
 
       switch (proto) {
         case ByteProto.DOCTYPE, ByteProto.ELEMENT, ByteProto.TEXT -> {
+          // next node found
           nextState = _DOCUMENT_NODES_HAS_NEXT;
 
           break loop;
         }
 
         case ByteProto.LENGTH2 -> {
-          mainIndex++;
+          index++;
 
           byte b0;
-          b0 = main[mainIndex++];
+          b0 = main[index++];
 
           byte b1;
-          b1 = main[mainIndex++];
+          b1 = main[index++];
 
-          mainIndex += Bytes.decodeInt(b0, b1);
+          index += Bytes.decodeInt(b0, b1);
         }
 
         case ByteProto.LENGTH3 -> {
-          mainIndex++;
+          index++;
 
           byte b0;
-          b0 = main[mainIndex++];
+          b0 = main[index++];
 
           byte b1;
-          b1 = main[mainIndex++];
+          b1 = main[index++];
 
           byte b2;
-          b2 = main[mainIndex++];
+          b2 = main[index++];
 
-          mainIndex += Bytes.decodeLength3(b0, b1, b2);
+          index += Bytes.decodeLength3(b0, b1, b2);
         }
 
-        case ByteProto.MARKED3 -> mainIndex += 3;
+        case ByteProto.MARKED3 -> index += 3;
 
-        case ByteProto.MARKED4 -> mainIndex += 4;
+        case ByteProto.MARKED4 -> index += 4;
 
-        case ByteProto.MARKED5 -> mainIndex += 5;
+        case ByteProto.MARKED5 -> index += 5;
 
         default -> throw new UnsupportedOperationException(
             "Implement me :: proto=" + proto
@@ -260,58 +252,92 @@ public final class HtmlCompiler02 extends HtmlCompiler01 {
       }
     }
 
-    mainIndexStore();
-
     stateSet(nextState);
+
+    documentCtxMainIndexStore(index);
 
     return nextState == _DOCUMENT_NODES_HAS_NEXT;
   }
 
   final HtmlNode documentNext() {
-    // state check
-    byte state;
-    state = aux[auxIndex];
+    stateCAS(_DOCUMENT_NODES_HAS_NEXT, _DOCUMENT_NODES_NEXT);
 
-    switch (state) {
-      case _DOCUMENT_NODES_HAS_NEXT -> mainIndexLoad();
-
-      default -> throw new UnsupportedOperationException(
-          "Implement me :: state=" + state
-      );
-    }
+    // restore main index from the context
+    int index;
+    index = documentCtxMainIndexLoad();
 
     // next
     byte proto;
-    proto = main[mainIndex++];
+    proto = main[index++];
 
     return switch (proto) {
+      case ByteProto.DOCTYPE -> {
+        documentCtxMainIndexStore(index);
+
+        yield PseudoHtmlDocumentType.INSTANCE;
+      }
+
       case ByteProto.ELEMENT -> {
         byte b0;
-        b0 = main[mainIndex++];
+        b0 = main[index++];
 
         byte b1;
-        b1 = main[mainIndex++];
+        b1 = main[index++];
 
-        int thisLength;
-        thisLength = Bytes.decodeInt(b0, b1);
+        int length;
+        length = Bytes.decodeInt(b0, b1);
 
-        int elementStart;
-        elementStart = mainIndex;
+        int elementStartIndex;
+        elementStartIndex = index;
 
         int parentIndex;
-        parentIndex = mainIndex + thisLength;
+        parentIndex = index + length;
 
-        mainIndexStore(parentIndex);
+        documentCtxMainIndexStore(parentIndex);
 
-        stateSet(_DOCUMENT_NODES_NEXT);
-
-        yield element(elementStart, parentIndex);
+        yield element(elementStartIndex, parentIndex);
       }
 
       default -> throw new UnsupportedOperationException(
           "Implement me :: proto=" + proto
       );
     };
+  }
+
+  private void documentCtx() {
+    // set current context
+    mainStart = auxIndex;
+
+    // push document context
+    auxAdd(
+        _DOCUMENT_START,
+
+        // main index @ start iteration from the start = 0
+        Bytes.encodeInt0(0),
+        Bytes.encodeInt1(0),
+        Bytes.encodeInt2(0)
+    );
+  }
+
+  private int documentCtxMainIndexLoad() {
+    byte b0;
+    b0 = aux[mainStart + 1];
+
+    byte b1;
+    b1 = aux[mainStart + 2];
+
+    byte b2;
+    b2 = aux[mainStart + 3];
+
+    return Bytes.decodeLength3(b0, b1, b2);
+  }
+
+  private void documentCtxMainIndexStore(int value) {
+    aux[mainStart + 1] = Bytes.encodeInt0(value);
+
+    aux[mainStart + 2] = Bytes.encodeInt1(value);
+
+    aux[mainStart + 3] = Bytes.encodeInt2(value);
   }
 
   final PseudoHtmlElement element(int startIndex, int parentIndex) {
@@ -341,17 +367,7 @@ public final class HtmlCompiler02 extends HtmlCompiler01 {
       );
     }
 
-    auxPush(
-        _ELEMENT_START,
-
-        Bytes.encodeInt0(startIndex),
-        Bytes.encodeInt1(startIndex),
-        Bytes.encodeInt2(startIndex),
-
-        Bytes.encodeInt0(parentIndex),
-        Bytes.encodeInt1(parentIndex),
-        Bytes.encodeInt2(parentIndex)
-    );
+    elementCtx(startIndex, parentIndex);
 
     PseudoHtmlElement element;
     element = htmlElement();
@@ -363,41 +379,17 @@ public final class HtmlCompiler02 extends HtmlCompiler01 {
 
   final void elementAttributes() {
     // state check
-    byte state;
-    state = aux[auxIndex];
-
-    switch (state) {
-      case _ELEMENT_START -> mainIndexLoad();
+    switch (statePeek()) {
+      case _ELEMENT_START -> {
+        // valid state
+      }
 
       default -> throw new UnsupportedOperationException(
-          "Implement me :: state=" + state
+          "Implement me :: state=" + statePeek()
       );
     }
 
-    // push new context
-    int index;
-    index = mainIndex;
-
-    int parentIndex;
-    parentIndex = mainIndex;
-
-    byte hasNext0 = 0, hasNext1 = 0, hasNext2 = 0;
-
-    auxPush(
-        _ELEMENT_ATTRS_ITERABLE,
-
-        Bytes.encodeInt0(index),
-        Bytes.encodeInt1(index),
-        Bytes.encodeInt2(index),
-
-        Bytes.encodeInt0(parentIndex),
-        Bytes.encodeInt1(parentIndex),
-        Bytes.encodeInt2(parentIndex),
-
-        hasNext0,
-        hasNext1,
-        hasNext2
-    );
+    stateSet(_ELEMENT_ATTRS_ITERABLE);
   }
 
   final void elementAttributesIterator() {
@@ -406,30 +398,39 @@ public final class HtmlCompiler02 extends HtmlCompiler01 {
 
   final boolean elementAttributesHasNext(StandardElementName parent) {
     // state check
-    byte state;
-    state = aux[auxIndex];
-
-    switch (state) {
-      case _ELEMENT_ATTRS_ITERATOR -> mainIndexLoad();
+    switch (statePeek()) {
+      case _ELEMENT_ATTRS_ITERATOR,
+           _ATTRIBUTE_VALUES_EXHAUSTED -> {
+        // valid state
+      }
 
       default -> throw new UnsupportedOperationException(
-          "Implement me :: state=" + state
+          "Implement me :: state=" + statePeek()
       );
     }
+
+    // restore index from context
+    int index;
+    index = elementCtxAttrsIndexLoad();
 
     // has next
     byte nextState;
     nextState = _ELEMENT_ATTRS_EXHAUSTED;
 
-    loop: while (mainIndex < mainContents) {
+    loop: while (index < mainIndex) {
+      // assume 'worst case'
+      // in the happy path we should rollback the index
+      int rollbackIndex;
+      rollbackIndex = index;
+
       byte proto;
-      proto = main[mainIndex++];
+      proto = main[index++];
 
       switch (proto) {
-        case ByteProto.STANDARD_NAME -> mainIndex++;
+        case ByteProto.STANDARD_NAME -> index += 1;
 
         case ByteProto.AMBIGUOUS1 -> {
-          mainIndex = jmp2(mainIndex);
+          index = jmp2(index);
 
           byte ordinalByte;
           ordinalByte = main[auxStart++];
@@ -438,16 +439,7 @@ public final class HtmlCompiler02 extends HtmlCompiler01 {
           ambiguous = Ambiguous.decode(ordinalByte);
 
           if (ambiguous.isAttributeOf(parent)) {
-            byte attr;
-            attr = ambiguous.encodeAttribute();
-
-            byte v0;
-            v0 = main[auxStart++];
-
-            byte v1;
-            v1 = main[auxStart++];
-
-            attrStore(attr, v0, v1);
+            index = rollbackIndex;
 
             nextState = _ELEMENT_ATTRS_HAS_NEXT;
 
@@ -455,72 +447,11 @@ public final class HtmlCompiler02 extends HtmlCompiler01 {
           }
         }
 
-        case ByteProto.ATTRIBUTE0 -> {
-          mainIndex = jmp2(mainIndex);
-
-          byte attr;
-          attr = main[auxStart++];
-
-          attrStore(attr, (byte) -1, (byte) -1);
-
-          nextState = _ELEMENT_ATTRS_HAS_NEXT;
-
-          break loop;
-        }
-
-        case ByteProto.ATTRIBUTE1 -> {
-          mainIndex = jmp2(mainIndex);
-
-          byte attr;
-          attr = main[auxStart++];
-
-          byte v0;
-          v0 = main[auxStart++];
-
-          byte v1;
-          v1 = main[auxStart++];
-
-          attrStore(attr, v0, v1);
-
-          nextState = _ELEMENT_ATTRS_HAS_NEXT;
-
-          break loop;
-        }
-
-        case ByteProto.ATTRIBUTE_CLASS -> {
-          int ordinal;
-          ordinal = StandardAttributeName.CLASS.ordinal();
-
-          byte attr;
-          attr = Bytes.encodeInt0(ordinal);
-
-          byte v0;
-          v0 = main[mainIndex++];
-
-          byte v1;
-          v1 = main[mainIndex++];
-
-          attrStore(attr, v0, v1);
-
-          nextState = _ELEMENT_ATTRS_HAS_NEXT;
-
-          break loop;
-        }
-
-        case ByteProto.ATTRIBUTE_ID -> {
-          int ordinal;
-          ordinal = StandardAttributeName.ID.ordinal();
-
-          byte attr;
-          attr = Bytes.encodeInt0(ordinal);
-
-          byte v0;
-          v0 = main[mainIndex++];
-
-          byte v1;
-          v1 = main[mainIndex++];
-
-          attrStore(attr, v0, v1);
+        case ByteProto.ATTRIBUTE0,
+             ByteProto.ATTRIBUTE1,
+             ByteProto.ATTRIBUTE_CLASS,
+             ByteProto.ATTRIBUTE_ID -> {
+          index = rollbackIndex;
 
           nextState = _ELEMENT_ATTRS_HAS_NEXT;
 
@@ -529,27 +460,25 @@ public final class HtmlCompiler02 extends HtmlCompiler01 {
 
         case ByteProto.ELEMENT,
              ByteProto.RAW,
-             ByteProto.TEXT -> mainIndex = skipVarInt(mainIndex);
+             ByteProto.TEXT -> index = skipVarInt(index);
 
         case ByteProto.END -> {
-          if (aux[IDX_ATTR_FIRST] == _FALSE && aux[IDX_ATTR_VALUE] == _TRUE) {
-            auxAdd(ByteCode.ATTR_VALUE_END);
-          }
+          index = rollbackIndex;
 
           break loop;
         }
 
         case ByteProto.LENGTH2 -> {
           byte len0;
-          len0 = main[mainIndex++];
+          len0 = main[index++];
 
           byte len1;
-          len1 = main[mainIndex++];
+          len1 = main[index++];
 
           int length;
           length = Bytes.decodeInt(len0, len1);
 
-          mainIndex += length;
+          index += length;
         }
 
         default -> throw new UnsupportedOperationException(
@@ -558,81 +487,128 @@ public final class HtmlCompiler02 extends HtmlCompiler01 {
       }
     }
 
-    if (nextState == _ELEMENT_ATTRS_HAS_NEXT) {
-      mainIndexStore();
+    elementCtxAttrsIndexStore(index);
 
-      stateSet(nextState);
+    stateSet(nextState);
 
-      return true;
-    }
-
-    // we must pop the _ELEMENT_ATTRS_ITERABLE/ITERATOR context
-    // - (1) _ELEMENT_ATTRS_ITERATOR
-    // - (3) mainIndex
-    // - (3) parentIndex
-    // - (3) hasNext
-    auxIndex -= 10;
-
-    return false;
+    return nextState == _ELEMENT_ATTRS_HAS_NEXT;
   }
 
   final HtmlAttribute elementAttributesNext() {
     stateCAS(_ELEMENT_ATTRS_HAS_NEXT, _ELEMENT_ATTRS_NEXT);
 
     // restore main index
-    mainIndexLoad();
+    int index;
+    index = elementCtxAttrsIndexLoad();
 
-    // restore hasNext
-    final byte attr;
-    attr = aux[auxIndex - 7];
+    // values to set
+    byte attr, v0 = -1, v1 = -1;
 
-    final byte v0;
-    v0 = aux[auxIndex - 8];
+    byte proto;
+    proto = main[index++];
 
-    final byte v1;
-    v1 = aux[auxIndex - 9];
+    switch (proto) {
+      case ByteProto.AMBIGUOUS1 -> {
+        index = jmp2(index);
+
+        byte ordinalByte;
+        ordinalByte = main[auxStart++];
+
+        Ambiguous ambiguous;
+        ambiguous = Ambiguous.decode(ordinalByte);
+
+        attr = ambiguous.encodeAttribute();
+
+        v0 = main[auxStart++];
+
+        v1 = main[auxStart++];
+      }
+
+      case ByteProto.ATTRIBUTE0 -> {
+        index = jmp2(index);
+
+        attr = main[auxStart++];
+      }
+
+      case ByteProto.ATTRIBUTE1 -> {
+        index = jmp2(index);
+
+        attr = main[auxStart++];
+
+        v0 = main[auxStart++];
+
+        v1 = main[auxStart++];
+      }
+
+      case ByteProto.ATTRIBUTE_CLASS -> {
+        int ordinal;
+        ordinal = StandardAttributeName.CLASS.ordinal();
+
+        attr = Bytes.encodeInt0(ordinal);
+
+        v0 = main[index++];
+
+        v1 = main[index++];
+      }
+
+      case ByteProto.ATTRIBUTE_ID -> {
+        int ordinal;
+        ordinal = StandardAttributeName.ID.ordinal();
+
+        attr = Bytes.encodeInt0(ordinal);
+
+        v0 = main[index++];
+
+        v1 = main[index++];
+      }
+
+      default -> {
+        // the previous hasNext should have set the index in the right position
+        // if we got to an invalid proto something bad must have happened
+        throw new IllegalStateException();
+      }
+    }
 
     // our return value
     final PseudoHtmlAttribute attribute;
-    attribute = (PseudoHtmlAttribute) objectArray[objectIndex + OFFSET_ATTRIBUTE];
+    attribute = htmlAttribute();
 
     // attribute name
-    final int ordinal;
+    int ordinal;
     ordinal = Bytes.decodeInt(attr);
 
-    final StandardAttributeName name;
-    name = StandardAttributeName.getByCode(ordinal);
+    attribute.name = StandardAttributeName.getByCode(ordinal);
 
-    attribute.name = name;
+    // attribute value
+    String value;
+    value = null;
 
-    // push new context
-    final int index;
-    index = mainIndex;
+    if (v0 != -1 && v1 != -1) {
+      int objectIndex;
+      objectIndex = Bytes.decodeInt(v0, v1);
 
-    final int parentIndex;
-    parentIndex = mainIndex;
+      Object o;
+      o = objectArray[objectIndex];
 
-    auxPush(
-        _ATTRIBUTE_START,
+      value = o.toString();
+    }
 
-        Bytes.encodeInt0(index),
-        Bytes.encodeInt1(index),
-        Bytes.encodeInt2(index),
+    attribute.value = value;
 
-        Bytes.encodeInt0(parentIndex),
-        Bytes.encodeInt1(parentIndex),
-        Bytes.encodeInt2(parentIndex),
+    // store new state
+    elementCtxAttrsIndexStore(index);
 
-        attr,
-        v0,
-        v1
-    );
+    stateSet(_ELEMENT_ATTRS_NEXT);
 
     return attribute;
   }
 
+  private PseudoHtmlAttribute htmlAttribute() {
+    return (PseudoHtmlAttribute) objectArray[objectIndex + OFFSET_ATTRIBUTE];
+  }
+
   final void attributeValues() {
-    stateCAS(_ATTRIBUTE_START, _ATTRIBUTE_VALUES_ITERABLE);
+    stateCAS(_ELEMENT_ATTRS_NEXT, _ATTRIBUTE_VALUES_ITERABLE);
   }
 
   final void attributeValuesIterator() {
@@ -641,53 +617,115 @@ public final class HtmlCompiler02 extends HtmlCompiler01 {
 
   final boolean attributeValuesHasNext() {
     // state check
-    byte state;
-    state = aux[auxIndex];
-
-    switch (state) {
-      case _ATTRIBUTE_VALUES_ITERATOR -> mainIndexLoad();
+    switch (statePeek()) {
+      case _ATTRIBUTE_VALUES_ITERATOR,
+           _ATTRIBUTE_VALUES_NEXT -> {
+        // valid state
+      }
 
       default -> throw new UnsupportedOperationException(
-          "Implement me :: state=" + state
+          "Implement me :: state=" + statePeek()
       );
     }
 
-    // has next
+    PseudoHtmlAttribute attribute;
+    attribute = htmlAttribute();
 
-    return false;
+    if (attribute.value != null) {
+      stateSet(_ATTRIBUTE_VALUES_HAS_NEXT);
+
+      return true;
+    }
+
+    // restore index from context
+    int index;
+    index = elementCtxAttrsIndexLoad();
+
+    // current attribute
+    AttributeName attributeName;
+    attributeName = attribute.name;
+
+    int attributeCode;
+    attributeCode = attributeName.getCode();
+
+    byte currentAttr;
+    currentAttr = Bytes.encodeInt0(attributeCode);
+
+    // next state
+    byte nextState;
+    nextState = _ATTRIBUTE_VALUES_EXHAUSTED;
+
+    loop: while (index < mainIndex) {
+      // assume 'worst case'
+      // in the happy path we should rollback the index
+      int rollbackIndex;
+      rollbackIndex = index;
+
+      byte proto;
+      proto = main[index++];
+
+      switch (proto) {
+        case ByteProto.ATTRIBUTE1 -> {
+          index = jmp2(index);
+
+          byte attr;
+          attr = main[auxStart++];
+
+          if (attr == currentAttr) {
+            nextState = _ATTRIBUTE_VALUES_HAS_NEXT;
+          } else {
+            index = rollbackIndex;
+          }
+
+          break loop;
+        }
+
+        case ByteProto.ELEMENT,
+             ByteProto.RAW,
+             ByteProto.TEXT -> index = skipVarInt(index);
+
+        case ByteProto.END -> {
+          index = rollbackIndex;
+
+          break loop;
+        }
+
+        default -> throw new UnsupportedOperationException(
+            "Implement me :: proto=" + proto
+        );
+      }
+    }
+
+    elementCtxAttrsIndexStore(index);
+
+    stateSet(nextState);
+
+    return nextState == _ATTRIBUTE_VALUES_HAS_NEXT;
+  }
+
+  final String attributeValuesNext(String maybeNext) {
+    stateCAS(_ATTRIBUTE_VALUES_HAS_NEXT, _ATTRIBUTE_VALUES_NEXT);
+
+    if (maybeNext != null) {
+      return maybeNext;
+    }
+
+    throw new UnsupportedOperationException("Implement me");
   }
 
   final void elementNodes() {
     // state check
-    byte state;
-    state = aux[auxIndex];
-
-    switch (state) {
-      case _ELEMENT_START -> mainIndexLoad();
+    switch (statePeek()) {
+      case _ELEMENT_START, _ELEMENT_ATTRS_EXHAUSTED -> {
+        // valid state
+      }
 
       default -> throw new UnsupportedOperationException(
-          "Implement me :: state=" + state
+          "Implement me :: state=" + statePeek()
       );
     }
 
-    // push new context
-    int index;
-    index = mainIndex;
-
-    int parentIndex;
-    parentIndex = mainIndex;
-
-    auxPush(
-        _ELEMENT_NODES_ITERABLE,
-
-        Bytes.encodeInt0(index),
-        Bytes.encodeInt1(index),
-        Bytes.encodeInt2(index),
-
-        Bytes.encodeInt0(parentIndex),
-        Bytes.encodeInt1(parentIndex),
-        Bytes.encodeInt2(parentIndex)
-    );
+    stateSet(_ELEMENT_NODES_ITERABLE);
   }
 
   final void elementNodesIterator() {
@@ -695,15 +733,45 @@ public final class HtmlCompiler02 extends HtmlCompiler01 {
   }
 
   final boolean elementNodesHasNext(StandardElementName parent) {
+    // iteration index
+    int index;
+
     // state check
-    byte state;
-    state = aux[auxIndex];
+    switch (statePeek()) {
+      case _ELEMENT_NODES_ITERATOR -> {
+        // valid state
 
-    switch (state) {
-      case _ELEMENT_NODES_ITERATOR -> mainIndexLoad();
+        // restore index from context
+        index = elementCtxNodesIndexLoad();
+      }
 
-      default -> throw new UnsupportedOperationException(
-          "Implement me :: state=" + state
+      case _ELEMENT_ATTRS_EXHAUSTED, _ELEMENT_NODES_EXHAUSTED -> {
+        // remove previous element context
+        int parentIndex;
+        parentIndex = elementCtxRemove();
+
+        // restore index from context
+        index = elementCtxNodesIndexLoad();
+
+        if (index != parentIndex) {
+          throw new IllegalStateException(
+              """
+              Last consumed element was not a child of this element
+              """
+          );
+        }
+
+        // restore name
+        PseudoHtmlElement element;
+        element = htmlElement();
+
+        element.name = elementCtxNameLoad();
+      }
+
+      default -> throw new IllegalStateException(
+          """
+          %d state not allowed @ HtmlElement#nodes#hasNext
+          """.formatted(statePeek())
       );
     }
 
@@ -711,15 +779,17 @@ public final class HtmlCompiler02 extends HtmlCompiler01 {
     byte nextState;
     nextState = _ELEMENT_NODES_EXHAUSTED;
 
-    loop: while (mainIndex < mainContents) {
+    loop: while (index < mainIndex) {
+      // assume 'worst case'
+      // in the happy path we rollback the index
+      int rollbackIndex;
+      rollbackIndex = index;
+
       byte proto;
-      proto = main[mainIndex];
+      proto = main[index++];
 
       switch (proto) {
         case ByteProto.AMBIGUOUS1 -> {
-          int index;
-          index = mainIndex + 1;
-
           index = jmp2(index);
 
           // load ambiguous name
@@ -734,63 +804,51 @@ public final class HtmlCompiler02 extends HtmlCompiler01 {
           ambiguous = Ambiguous.get(ordinal);
 
           if (ambiguous.isAttributeOf(parent)) {
-            mainIndex = index;
-
             continue loop;
           }
+
+          index = rollbackIndex;
 
           nextState = _ELEMENT_NODES_HAS_NEXT;
 
           break loop;
         }
 
-        case ByteProto.ATTRIBUTE1 -> {
-          mainIndex++;
-
-          mainIndex = skipVarInt(mainIndex);
-        }
+        case ByteProto.ATTRIBUTE1 -> index = skipVarInt(index);
 
         case ByteProto.ATTRIBUTE_CLASS,
-             ByteProto.ATTRIBUTE_ID -> mainIndex += 2 + 1;
+             ByteProto.ATTRIBUTE_ID -> index += 2;
 
-        case ByteProto.ELEMENT -> {
+        case ByteProto.ELEMENT,
+             ByteProto.RAW,
+             ByteProto.TEXT -> {
+          index = rollbackIndex;
+
           nextState = _ELEMENT_NODES_HAS_NEXT;
 
           break loop;
         }
 
         case ByteProto.END -> {
+          index = rollbackIndex;
+
           break loop;
         }
 
         case ByteProto.LENGTH2 -> {
-          mainIndex++;
-
           byte len0;
-          len0 = main[mainIndex++];
+          len0 = main[index++];
 
           byte len1;
-          len1 = main[mainIndex++];
+          len1 = main[index++];
 
           int length;
           length = Bytes.decodeInt(len0, len1);
 
-          mainIndex += length;
+          index += length;
         }
 
-        case ByteProto.STANDARD_NAME -> mainIndex += 1 + 1;
-
-        case ByteProto.RAW -> {
-          nextState = _ELEMENT_NODES_HAS_NEXT;
-
-          break loop;
-        }
-
-        case ByteProto.TEXT -> {
-          nextState = _ELEMENT_NODES_HAS_NEXT;
-
-          break loop;
-        }
+        case ByteProto.STANDARD_NAME -> index += 1;
 
         default -> throw new UnsupportedOperationException(
             "Implement me :: proto=" + proto
@@ -798,112 +856,205 @@ public final class HtmlCompiler02 extends HtmlCompiler01 {
       }
     }
 
-    if (nextState == _ELEMENT_NODES_HAS_NEXT) {
-      mainIndexStore();
+    elementCtxNodesIndexStore(index);
 
-      stateSet(nextState);
+    stateSet(nextState);
 
-      return true;
-    }
-
-    // we should pop ELEMENT_NODES_ITERATOR
-    // - (1) ELEMENT_NODES_ITERATOR
-    // - (3) mainIndex
-    // - (3) parentIndex
-    auxIndex -= 7;
-
-    return false;
+    return nextState == _ELEMENT_NODES_HAS_NEXT;
   }
 
-  private void attrStore(byte attr, byte v0, byte v1) {
-    aux[auxIndex - 7] = attr;
+  final HtmlNode elementNodesNext() {
+    stateCAS(_ELEMENT_NODES_HAS_NEXT, _ELEMENT_NODES_NEXT);
 
-    aux[auxIndex - 8] = v0;
+    // restore index from context
+    int index;
+    index = elementCtxNodesIndexLoad();
 
-    aux[auxIndex - 9] = v1;
+    byte proto;
+    proto = main[index++];
+
+    return switch (proto) {
+      case ByteProto.ELEMENT -> {
+        index = jmp2(index);
+
+        // skip fixed length
+        auxStart += 2;
+
+        int elementStartIndex;
+        elementStartIndex = auxStart;
+
+        int parentIndex;
+        parentIndex = index;
+
+        elementCtxNodesIndexStore(parentIndex);
+
+        stateSet(_ELEMENT_NODES_NEXT);
+
+        yield element(elementStartIndex, parentIndex);
+      }
+
+      default -> throw new UnsupportedOperationException(
+          "Implement me :: proto=" + proto
+      );
+    };
+  }
+
+  private void elementCtx(int startIndex, int parentIndex) {
+    // current context length
+    int length;
+    length = auxIndex - mainStart;
+
+    // set current context
+    mainStart = auxIndex;
+
+    // ensure aux length
+    aux = ByteArrays.growIfNecessary(aux, auxIndex + 13);
+
+    // 0
+    aux[auxIndex++] = _ELEMENT_START;
+
+    // 1-3 attrs iteration index
+    aux[auxIndex++] = Bytes.encodeInt0(startIndex);
+    aux[auxIndex++] = Bytes.encodeInt1(startIndex);
+    aux[auxIndex++] = Bytes.encodeInt2(startIndex);
+
+    // 4-6 nodes iteration index
+    aux[auxIndex++] = Bytes.encodeInt0(startIndex);
+    aux[auxIndex++] = Bytes.encodeInt1(startIndex);
+    aux[auxIndex++] = Bytes.encodeInt2(startIndex);
+
+    // 7-9 start index
+    aux[auxIndex++] = Bytes.encodeInt0(startIndex);
+    aux[auxIndex++] = Bytes.encodeInt1(startIndex);
+    aux[auxIndex++] = Bytes.encodeInt2(startIndex);
+
+    // 10-12 parent index
+    aux[auxIndex++] = Bytes.encodeInt0(parentIndex);
+    aux[auxIndex++] = Bytes.encodeInt1(parentIndex);
+    aux[auxIndex++] = Bytes.encodeInt2(parentIndex);
+
+    // 13 parent context length
+    aux[auxIndex++] = Bytes.encodeInt0(length);
+  }
+
+  private int elementCtxAttrsIndexLoad() {
+    byte b0;
+    b0 = aux[mainStart + 1];
+
+    byte b1;
+    b1 = aux[mainStart + 2];
+
+    byte b2;
+    b2 = aux[mainStart + 3];
+
+    return Bytes.decodeLength3(b0, b1, b2);
+  }
+
+  private void elementCtxAttrsIndexStore(int value) {
+    aux[mainStart + 1] = Bytes.encodeInt0(value);
+
+    aux[mainStart + 2] = Bytes.encodeInt1(value);
+
+    aux[mainStart + 3] = Bytes.encodeInt2(value);
+  }
+
+  private StandardElementName elementCtxNameLoad() {
+    // restore start index
+    byte b0;
+    b0 = aux[mainStart + 7];
+
+    byte b1;
+    b1 = aux[mainStart + 8];
+
+    byte b2;
+    b2 = aux[mainStart + 9];
+
+    int startIndex;
+    startIndex = Bytes.decodeLength3(b0, b1, b2);
+
+    StandardElementName name;
+
+    // first proto should be the element's name
+    byte proto;
+    proto = main[startIndex++];
+
+    switch (proto) {
+      case ByteProto.STANDARD_NAME -> {
+        byte nameByte;
+        nameByte = main[startIndex++];
+
+        int ordinal;
+        ordinal = Bytes.decodeInt(nameByte);
+
+        name = StandardElementName.getByCode(ordinal);
+      }
+
+      default -> throw new IllegalArgumentException(
+          "Malformed element. Expected name but found=" + proto
+      );
+    }
+
+    return name;
+  }
+
+  private int elementCtxNodesIndexLoad() {
+    byte b0;
+    b0 = aux[mainStart + 4];
+
+    byte b1;
+    b1 = aux[mainStart + 5];
+
+    byte b2;
+    b2 = aux[mainStart + 6];
+
+    return Bytes.decodeLength3(b0, b1, b2);
+  }
+
+  private void elementCtxNodesIndexStore(int value) {
+    aux[mainStart + 4] = Bytes.encodeInt0(value);
+
+    aux[mainStart + 5] = Bytes.encodeInt1(value);
+
+    aux[mainStart + 6] = Bytes.encodeInt2(value);
+  }
+
+  private int elementCtxRemove() {
+    // restore parent index
+    byte b0;
+    b0 = aux[mainStart + 10];
+
+    byte b1;
+    b1 = aux[mainStart + 11];
+
+    byte b2;
+    b2 = aux[mainStart + 12];
+
+    int parentIndex;
+    parentIndex = Bytes.decodeLength3(b0, b1, b2);
+
+    // restore parent length
+    byte len;
+    len = aux[mainStart + 13];
+
+    int length;
+    length = Bytes.decodeInt(len);
+
+    // remove this context
+    auxIndex = mainStart;
+
+    // set parent as the current context
+    mainStart = auxIndex - length;
+
+    return parentIndex;
   }
 
   private PseudoHtmlElement htmlElement() {
     return (PseudoHtmlElement) objectArray[objectIndex + OFFSET_ELEMENT];
   }
 
-  private void auxPush(byte v0, byte v1, byte v2, byte v3) {
-    aux = ByteArrays.growIfNecessary(aux, auxIndex + 4);
-
-    aux[++auxIndex] = v3;
-    aux[++auxIndex] = v2;
-    aux[++auxIndex] = v1;
-    aux[++auxIndex] = v0;
-  }
-
-  private void auxPush(byte v0, byte v1, byte v2, byte v3, byte v4, byte v5, byte v6) {
-    aux = ByteArrays.growIfNecessary(aux, auxIndex + 7);
-
-    aux[++auxIndex] = v6;
-    aux[++auxIndex] = v5;
-    aux[++auxIndex] = v4;
-    aux[++auxIndex] = v3;
-    aux[++auxIndex] = v2;
-    aux[++auxIndex] = v1;
-    aux[++auxIndex] = v0;
-  }
-
-  private void auxPush(byte v0, byte v1, byte v2, byte v3, byte v4, byte v5, byte v6, byte v7, byte v8, byte v9) {
-    aux = ByteArrays.growIfNecessary(aux, auxIndex + 10);
-
-    aux[++auxIndex] = v9;
-    aux[++auxIndex] = v8;
-    aux[++auxIndex] = v7;
-    aux[++auxIndex] = v6;
-    aux[++auxIndex] = v5;
-    aux[++auxIndex] = v4;
-    aux[++auxIndex] = v3;
-    aux[++auxIndex] = v2;
-    aux[++auxIndex] = v1;
-    aux[++auxIndex] = v0;
-  }
-
-  private void mainIndexLoad() {
-    byte b0;
-    b0 = aux[auxIndex - 1];
-
-    byte b1;
-    b1 = aux[auxIndex - 2];
-
-    byte b2;
-    b2 = aux[auxIndex - 3];
-
-    mainIndex = Bytes.decodeLength3(b0, b1, b2);
-  }
-
-  private void mainIndexStore() {
-    mainIndexStore(mainIndex);
-  }
-
-  private void mainIndexStore(int value) {
-    aux[auxIndex - 1] = Bytes.encodeInt0(value);
-
-    aux[auxIndex - 2] = Bytes.encodeInt1(value);
-
-    aux[auxIndex - 3] = Bytes.encodeInt2(value);
-  }
-
-  private int parentIndexLoad() {
-    byte b0;
-    b0 = aux[auxIndex - 4];
-
-    byte b1;
-    b1 = aux[auxIndex - 5];
-
-    byte b2;
-    b2 = aux[auxIndex - 6];
-
-    return Bytes.decodeLength3(b0, b1, b2);
-  }
-
   private void stateCheck(byte expected) {
     byte actual;
-    actual = aux[auxIndex];
+    actual = statePeek();
 
     if (actual != expected) {
       throw new IllegalStateException(
@@ -915,13 +1066,19 @@ public final class HtmlCompiler02 extends HtmlCompiler01 {
   }
 
   private void stateCAS(byte expected, byte next) {
+    // not a real CAS
+    // but it does compare and swap
     stateCheck(expected);
 
-    aux[auxIndex] = next;
+    aux[mainStart] = next;
+  }
+
+  private byte statePeek() {
+    return aux[mainStart];
   }
 
   private void stateSet(byte value) {
-    aux[auxIndex] = value;
+    aux[mainStart] = value;
   }
 
   @Override

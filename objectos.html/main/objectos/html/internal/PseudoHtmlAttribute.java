@@ -26,6 +26,8 @@ public final class PseudoHtmlAttribute
 
   private final HtmlCompiler02 player;
 
+  String value;
+
   public PseudoHtmlAttribute(HtmlCompiler02 player) {
     this.player = player;
   }
@@ -54,7 +56,12 @@ public final class PseudoHtmlAttribute
 
   @Override
   public final String next() {
-    throw new UnsupportedOperationException("Implement me");
+    String result;
+    result = player.attributeValuesNext(value);
+
+    value = null;
+
+    return result;
   }
 
   @Override

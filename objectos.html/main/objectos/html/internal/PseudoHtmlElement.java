@@ -90,7 +90,7 @@ public final class PseudoHtmlElement
 
   @Override
   public final HtmlNode next() {
-    throw new UnsupportedOperationException("Implement me");
+    return player.elementNodesNext();
   }
 
   @Override
