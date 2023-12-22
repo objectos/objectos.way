@@ -120,8 +120,10 @@ public final class HtmlCompiler02 extends HtmlCompiler01 {
 
   private static final int OFFSET_ELEMENT = 0;
   private static final int OFFSET_ATTRIBUTE = 1;
+  private static final int OFFSET_TEXT = 2;
+  private static final int OFFSET_RAW = 3;
 
-  private static final int OFFSET_MAX = OFFSET_ATTRIBUTE;
+  private static final int OFFSET_MAX = OFFSET_RAW;
 
   // visible for testing
   final PseudoHtmlDocument bootstrap() {
@@ -147,6 +149,8 @@ public final class HtmlCompiler02 extends HtmlCompiler01 {
     objectArray[objectIndex + OFFSET_ELEMENT] = new PseudoHtmlElement(this);
 
     objectArray[objectIndex + OFFSET_ATTRIBUTE] = new PseudoHtmlAttribute(this);
+
+    objectArray[objectIndex + OFFSET_TEXT] = new PseudoHtmlText();
 
     documentCtx();
 
@@ -174,7 +178,7 @@ public final class HtmlCompiler02 extends HtmlCompiler01 {
         index = documentCtxMainIndexLoad();
       }
 
-      case _ELEMENT_NODES_EXHAUSTED -> {
+      case _ELEMENT_ATTRS_EXHAUSTED, _ELEMENT_NODES_EXHAUSTED -> {
         int parentIndex;
         parentIndex = elementCtxRemove();
 
@@ -400,6 +404,7 @@ public final class HtmlCompiler02 extends HtmlCompiler01 {
     // state check
     switch (statePeek()) {
       case _ELEMENT_ATTRS_ITERATOR,
+           _ELEMENT_ATTRS_NEXT,
            _ATTRIBUTE_VALUES_EXHAUSTED -> {
         // valid state
       }
@@ -665,6 +670,50 @@ public final class HtmlCompiler02 extends HtmlCompiler01 {
       proto = main[index++];
 
       switch (proto) {
+        case ByteProto.AMBIGUOUS1 -> {
+          index = jmp2(index);
+
+          byte ordinalByte;
+          ordinalByte = main[auxStart++];
+
+          int ordinal;
+          ordinal = Bytes.decodeInt(ordinalByte);
+
+          Ambiguous ambiguous;
+          ambiguous = Ambiguous.get(ordinal);
+
+          // find out the parent
+          PseudoHtmlElement element;
+          element = htmlElement();
+
+          StandardElementName elementName;
+          elementName = element.name;
+
+          if (!ambiguous.isAttributeOf(elementName)) {
+            // this is an element
+            continue loop;
+          }
+
+          // find out if this is the same attribute
+          byte attr;
+          attr = ambiguous.encodeAttribute();
+
+          if (currentAttr == attr) {
+            // this is a new value of the same attribute
+            nextState = _ATTRIBUTE_VALUES_HAS_NEXT;
+          }
+
+          index = rollbackIndex;
+
+          break loop;
+        }
+
+        case ByteProto.ATTRIBUTE0 -> {
+          index = rollbackIndex;
+
+          break loop;
+        }
+
         case ByteProto.ATTRIBUTE1 -> {
           index = jmp2(index);
 
@@ -673,9 +722,25 @@ public final class HtmlCompiler02 extends HtmlCompiler01 {
 
           if (attr == currentAttr) {
             nextState = _ATTRIBUTE_VALUES_HAS_NEXT;
-          } else {
-            index = rollbackIndex;
           }
+
+          index = rollbackIndex;
+
+          break loop;
+        }
+
+        case ByteProto.ATTRIBUTE_CLASS -> {
+          int ordinal;
+          ordinal = StandardAttributeName.CLASS.ordinal();
+
+          byte attr;
+          attr = Bytes.encodeInt0(ordinal);
+
+          if (attr == currentAttr) {
+            nextState = _ATTRIBUTE_VALUES_HAS_NEXT;
+          }
+
+          index = rollbackIndex;
 
           break loop;
         }
@@ -710,7 +775,74 @@ public final class HtmlCompiler02 extends HtmlCompiler01 {
       return maybeNext;
     }
 
-    throw new UnsupportedOperationException("Implement me");
+    // restore index
+    int index;
+    index = elementCtxAttrsIndexLoad();
+
+    byte proto;
+    proto = main[index++];
+
+    return switch (proto) {
+      case ByteProto.AMBIGUOUS1 -> {
+        index = jmp2(index);
+
+        elementCtxAttrsIndexStore(index);
+
+        // skip ordinal
+        auxStart++;
+
+        byte v0;
+        v0 = main[auxStart++];
+
+        byte v1;
+        v1 = main[auxStart++];
+
+        yield toObjectString(v0, v1);
+      }
+
+      case ByteProto.ATTRIBUTE1 -> {
+        index = jmp2(index);
+
+        elementCtxAttrsIndexStore(index);
+
+        // skip ordinal
+        auxStart++;
+
+        byte v0;
+        v0 = main[auxStart++];
+
+        byte v1;
+        v1 = main[auxStart++];
+
+        yield toObjectString(v0, v1);
+      }
+
+      case ByteProto.ATTRIBUTE_CLASS -> {
+        byte v0;
+        v0 = main[index++];
+
+        byte v1;
+        v1 = main[index++];
+
+        elementCtxAttrsIndexStore(index);
+
+        yield toObjectString(v0, v1);
+      }
+
+      default -> throw new UnsupportedOperationException(
+          "Implement me :: proto=" + proto
+      );
+    };
+  }
+
+  private String toObjectString(byte v0, byte v1) {
+    int objectIndex;
+    objectIndex = Bytes.decodeInt(v0, v1);
+
+    Object o;
+    o = objectArray[objectIndex];
+
+    return o.toString();
   }
 
   final void elementNodes() {
@@ -732,13 +864,13 @@ public final class HtmlCompiler02 extends HtmlCompiler01 {
     stateCAS(_ELEMENT_NODES_ITERABLE, _ELEMENT_NODES_ITERATOR);
   }
 
-  final boolean elementNodesHasNext(StandardElementName parent) {
+  final boolean elementNodesHasNext() {
     // iteration index
     int index;
 
     // state check
     switch (statePeek()) {
-      case _ELEMENT_NODES_ITERATOR -> {
+      case _ELEMENT_NODES_ITERATOR, _ELEMENT_NODES_NEXT -> {
         // valid state
 
         // restore index from context
@@ -792,8 +924,6 @@ public final class HtmlCompiler02 extends HtmlCompiler01 {
         case ByteProto.AMBIGUOUS1 -> {
           index = jmp2(index);
 
-          // load ambiguous name
-
           byte ordinalByte;
           ordinalByte = main[auxStart++];
 
@@ -802,6 +932,13 @@ public final class HtmlCompiler02 extends HtmlCompiler01 {
 
           Ambiguous ambiguous;
           ambiguous = Ambiguous.get(ordinal);
+
+          // find out parent element
+          PseudoHtmlElement element;
+          element = htmlElement();
+
+          StandardElementName parent;
+          parent = element.name;
 
           if (ambiguous.isAttributeOf(parent)) {
             continue loop;
@@ -874,6 +1011,56 @@ public final class HtmlCompiler02 extends HtmlCompiler01 {
     proto = main[index++];
 
     return switch (proto) {
+      case ByteProto.AMBIGUOUS1 -> {
+        index = jmp2(index);
+
+        // load ambiguous name
+
+        byte ordinalByte;
+        ordinalByte = main[auxStart++];
+
+        byte v0;
+        v0 = main[auxStart++];
+
+        byte v1;
+        v1 = main[auxStart++];
+
+        int ordinal;
+        ordinal = Bytes.decodeInt(ordinalByte);
+
+        Ambiguous ambiguous;
+        ambiguous = Ambiguous.get(ordinal);
+
+        StandardElementName element;
+        element = ambiguous.element;
+
+        main = ByteArrays.growIfNecessary(main, mainIndex + 13);
+
+        /*00*/main[mainIndex++] = ByteProto.MARKED4;
+        /*01*/main[mainIndex++] = v0;
+        /*02*/main[mainIndex++] = v1;
+        /*03*/main[mainIndex++] = ByteProto.INTERNAL4;
+
+        /*04*/main[mainIndex++] = ByteProto.LENGTH2;
+        /*05*/main[mainIndex++] = Bytes.encodeInt0(7);
+        /*06*/main[mainIndex++] = Bytes.encodeInt0(7);
+        int elementStartIndex = mainIndex;
+        /*07*/main[mainIndex++] = ByteProto.STANDARD_NAME;
+        /*08*/main[mainIndex++] = (byte) element.ordinal();
+        /*09*/main[mainIndex++] = ByteProto.TEXT;
+        /*10*/main[mainIndex++] = Bytes.encodeInt0(10);
+        /*11*/main[mainIndex++] = ByteProto.END;
+        /*12*/main[mainIndex++] = Bytes.encodeInt0(11);
+        /*13*/main[mainIndex++] = ByteProto.INTERNAL;
+
+        int parentIndex;
+        parentIndex = index;
+
+        elementCtxNodesIndexStore(parentIndex);
+
+        yield element(elementStartIndex, parentIndex);
+      }
+
       case ByteProto.ELEMENT -> {
         index = jmp2(index);
 
@@ -888,9 +1075,55 @@ public final class HtmlCompiler02 extends HtmlCompiler01 {
 
         elementCtxNodesIndexStore(parentIndex);
 
-        stateSet(_ELEMENT_NODES_NEXT);
-
         yield element(elementStartIndex, parentIndex);
+      }
+
+      case ByteProto.RAW -> {
+        index = jmp2(index);
+
+        byte v0;
+        v0 = main[auxStart++];
+
+        byte v1;
+        v1 = main[auxStart++];
+
+        elementCtxNodesIndexStore(index);
+
+        // return value
+        PseudoHtmlRawText raw;
+        raw = (PseudoHtmlRawText) objectArray[objectIndex + OFFSET_RAW];
+
+        if (raw == null) {
+          raw = new PseudoHtmlRawText();
+
+          objectArray[objectIndex + OFFSET_RAW] = raw;
+        }
+
+        // text value
+        raw.value = toObjectString(v0, v1);
+
+        yield raw;
+      }
+
+      case ByteProto.TEXT -> {
+        index = jmp2(index);
+
+        byte v0;
+        v0 = main[auxStart++];
+
+        byte v1;
+        v1 = main[auxStart++];
+
+        elementCtxNodesIndexStore(index);
+
+        // return value
+        PseudoHtmlText text;
+        text = (PseudoHtmlText) objectArray[objectIndex + OFFSET_TEXT];
+
+        // text value
+        text.value = toObjectString(v0, v1);
+
+        yield text;
       }
 
       default -> throw new UnsupportedOperationException(

@@ -15,11 +15,13 @@
  */
 package objectos.html.internal;
 
+import java.util.Iterator;
 import java.util.Set;
 import objectos.html.pseudom.HtmlAttribute;
 import objectos.html.pseudom.HtmlDocument;
 import objectos.html.pseudom.HtmlDocumentType;
 import objectos.html.pseudom.HtmlElement;
+import objectos.html.pseudom.HtmlIterable;
 import objectos.html.pseudom.HtmlNode;
 import objectos.html.pseudom.HtmlRawText;
 import objectos.html.pseudom.HtmlText;
@@ -39,10 +41,8 @@ public final class PrettyPrintWriter extends Writer {
       StandardElementName.KBD.getName(),
       StandardElementName.LABEL.getName(),
       StandardElementName.LINK.getName(),
-      StandardElementName.META.getName(),
       StandardElementName.PROGRESS.getName(),
       StandardElementName.SAMP.getName(),
-      StandardElementName.SCRIPT.getName(),
       StandardElementName.SELECT.getName(),
       StandardElementName.SMALL.getName(),
       StandardElementName.SPAN.getName(),
@@ -54,13 +54,19 @@ public final class PrettyPrintWriter extends Writer {
       StandardElementName.TEXTAREA.getName()
   );
 
+  private static final Set<String> TEXT_AS_RAW = Set.of(
+      "script", "style"
+  );
+
   private static final String NL = System.lineSeparator();
 
   @Override
   public final void process(HtmlDocument document) {
-    var nodes = document.nodes();
+    HtmlIterable<HtmlNode> nodes;
+    nodes = document.nodes();
 
-    var nodesIter = nodes.iterator();
+    Iterator<HtmlNode> nodesIter;
+    nodesIter = nodes.iterator();
 
     if (nodesIter.hasNext()) {
       documentNode(nodesIter.next());
@@ -75,8 +81,60 @@ public final class PrettyPrintWriter extends Writer {
     }
   }
 
+  private void documentNode(HtmlNode node) {
+    switch (node) {
+      case HtmlDocumentType doctype -> write("<!DOCTYPE html>");
+
+      case HtmlElement element -> element(element);
+
+      default -> throw new UnsupportedOperationException(
+          "Implement me :: type=" + node.getClass()
+      );
+    }
+  }
+
+  private void element(HtmlElement element) {
+    // start tag
+    String elementName;
+    elementName = element.name();
+
+    write('<');
+    write(elementName);
+
+    for (HtmlAttribute attribute : element.attributes()) {
+      attribute(attribute);
+    }
+
+    write('>');
+
+    if (element.isVoid()) {
+      // void element
+      // - no attrs
+      // - no children
+      // - no end tag
+      return;
+    }
+
+    boolean textAsRaw;
+    textAsRaw = TEXT_AS_RAW.contains(elementName);
+
+    boolean newLine;
+    newLine = false;
+
+    for (HtmlNode node : element.nodes()) {
+      newLine = elementNode(node, textAsRaw, newLine);
+    }
+
+    // end tag
+    write('<');
+    write('/');
+    write(elementName);
+    write('>');
+  }
+
   private void attribute(HtmlAttribute attribute) {
-    var name = attribute.name();
+    String name;
+    name = attribute.name();
 
     write(' ');
     write(name);
@@ -85,9 +143,11 @@ public final class PrettyPrintWriter extends Writer {
       return;
     }
 
-    var values = attribute.values();
+    HtmlIterable<String> values;
+    values = attribute.values();
 
-    var valuesIter = values.iterator();
+    Iterator<String> valuesIter;
+    valuesIter = values.iterator();
 
     if (valuesIter.hasNext()) {
       write('=');
@@ -103,86 +163,55 @@ public final class PrettyPrintWriter extends Writer {
     }
   }
 
-  private void documentNode(HtmlNode node) {
-    if (node instanceof HtmlDocumentType) {
-      documentType();
-    } else if (node instanceof HtmlElement element) {
-      element(element, false);
-    } else {
-      var type = node.getClass();
+  private boolean elementNode(HtmlNode node, boolean textAsRaw, boolean wasNewLine) {
+    boolean newLine;
+    newLine = false;
 
-      throw new UnsupportedOperationException(
-          "Implement me :: type=" + type
-      );
-    }
-  }
+    switch (node) {
+      case HtmlElement child -> {
+        if (isPhrasing(child)) {
+          element(child);
+        } else {
+          if (!wasNewLine) {
+            write(NL);
+          }
 
-  private void documentType() {
-    write("<!DOCTYPE html>");
-  }
+          element(child);
 
-  private void element(HtmlElement element, boolean metadata) {
-    startTag(element);
-
-    if (element.isVoid()) {
-      return;
-    }
-
-    if (isHead(element)) {
-      metadata = true;
-    }
-
-    var newLine = false;
-
-    for (var node : element.nodes()) {
-      newLine = elementNode(node, metadata, newLine);
-    }
-
-    endTag(element);
-  }
-
-  private boolean elementNode(HtmlNode node, boolean metadata, boolean wasNewLine) {
-    var newLine = false;
-
-    if (node instanceof HtmlElement child) {
-      if (!metadata && isPhrasing(child)) {
-        element(child, metadata);
-      } else {
-        if (!wasNewLine) {
           write(NL);
+
+          newLine = true;
         }
-
-        element(child, metadata);
-
-        write(NL);
-
-        newLine = true;
       }
-    } else if (node instanceof HtmlText text) {
-      var value = text.value();
 
-      writeText(value);
-    } else if (node instanceof HtmlRawText raw) {
-      var value = raw.value();
+      case HtmlText text -> {
+        String value;
+        value = text.value();
 
-      if (metadata) {
-        if (!startsWithNewLine(value)) {
-          write(NL);
+        if (textAsRaw) {
+          if (!startsWithNewLine(value)) {
+            write(NL);
+          }
+
+          write(value);
+
+          if (!endsWithNewLine(value)) {
+            write(NL);
+          }
+        } else {
+          writeText(value);
         }
+      }
+
+      case HtmlRawText raw -> {
+        String value;
+        value = raw.value();
 
         write(value);
-
-        if (!endsWithNewLine(value)) {
-          write(NL);
-        }
-      } else {
-        write(value);
       }
-    } else {
-      var type = node.getClass();
 
-      throw new UnsupportedOperationException(
-          "Implement me :: type=" + type
+      default -> throw new UnsupportedOperationException(
+          "Implement me :: type=" + node.getClass()
       );
     }
 
@@ -201,20 +230,6 @@ public final class PrettyPrintWriter extends Writer {
     }
   }
 
-  private void endTag(HtmlElement element) {
-    write('<');
-    write('/');
-    write(element.name());
-    write('>');
-  }
-
-  private boolean isHead(HtmlElement element) {
-    String name;
-    name = element.name();
-
-    return name.equals("head");
-  }
-
   private boolean isNewLine(char c) {
     return c == '\n' || c == '\r';
   }
@@ -227,28 +242,17 @@ public final class PrettyPrintWriter extends Writer {
   }
 
   private boolean startsWithNewLine(String value) {
-    int length = value.length();
+    int length;
+    length = value.length();
 
     if (length > 0) {
-      var first = value.charAt(0);
+      char first;
+      first = value.charAt(0);
 
       return isNewLine(first);
     } else {
       return false;
     }
-  }
-
-  private void startTag(HtmlElement element) {
-    var name = element.name();
-
-    write('<');
-    write(name);
-
-    for (var attribute : element.attributes()) {
-      attribute(attribute);
-    }
-
-    write('>');
   }
 
 }

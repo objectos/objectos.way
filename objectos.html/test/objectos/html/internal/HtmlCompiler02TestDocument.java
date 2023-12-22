@@ -183,7 +183,7 @@ public class HtmlCompiler02TestDocument {
     );
 
     // element.nodes.hasNext
-    assertEquals(compiler.elementNodesHasNext(StandardElementName.HTML), false);
+    assertEquals(compiler.elementNodesHasNext(), false);
 
     testAux(
         compiler,
@@ -467,7 +467,7 @@ public class HtmlCompiler02TestDocument {
     );
 
     // html.nodes.hasNext
-    assertEquals(compiler.elementNodesHasNext(StandardElementName.HTML), true);
+    assertEquals(compiler.elementNodesHasNext(), true);
 
     testAux(
         compiler,
@@ -518,7 +518,7 @@ public class HtmlCompiler02TestDocument {
     // head.nodes
     compiler.elementNodes();
     compiler.elementNodesIterator();
-    assertEquals(compiler.elementNodesHasNext(StandardElementName.HEAD), false);
+    assertEquals(compiler.elementNodesHasNext(), false);
 
     testAux(
         compiler,
@@ -542,7 +542,7 @@ public class HtmlCompiler02TestDocument {
     );
 
     // html.nodes.hasNext
-    assertEquals(compiler.elementNodesHasNext(StandardElementName.HTML), false);
+    assertEquals(compiler.elementNodesHasNext(), false);
 
     testAux(
         compiler,
@@ -566,6 +566,259 @@ public class HtmlCompiler02TestDocument {
 
         HtmlCompiler02._DOCUMENT_NODES_EXHAUSTED,
         Bytes.encodeInt0(18), Bytes.encodeInt1(18), Bytes.encodeInt2(18)
+    );
+  }
+
+  @Test(description = """
+  Ambiguous
+  """)
+  public void testCase16() {
+    HtmlCompiler02 compiler;
+    compiler = new HtmlCompiler02();
+
+    compiler.compilationBegin();
+
+    compiler.ambiguous(Ambiguous.TITLE, "element");
+
+    compiler.elementBegin(StandardElementName.HEAD);
+    compiler.elementValue(Api.ELEMENT);
+    compiler.elementEnd();
+
+    compiler.ambiguous(Ambiguous.TITLE, "attribute");
+
+    compiler.elementBegin(StandardElementName.BODY);
+    compiler.elementValue(Api.ELEMENT);
+    compiler.elementEnd();
+
+    compiler.elementBegin(StandardElementName.HTML);
+    compiler.elementValue(Api.ELEMENT);
+    compiler.elementValue(Api.ELEMENT);
+    compiler.elementEnd();
+
+    compiler.compilationEnd();
+
+    // document
+    compiler.bootstrap();
+    compiler.documentIterable();
+    compiler.documentIterator();
+    assertEquals(compiler.documentHasNext(), true);
+
+    // html
+    PseudoHtmlElement html;
+    html = (PseudoHtmlElement) compiler.documentNext();
+    assertEquals(html.name, StandardElementName.HTML);
+
+    // html.attributes
+    compiler.elementAttributes();
+    compiler.elementAttributesIterator();
+    assertEquals(compiler.elementAttributesHasNext(StandardElementName.HTML), false);
+
+    // html.nodes
+    compiler.elementNodes();
+    compiler.elementNodesIterator();
+    assertEquals(compiler.elementNodesHasNext(), true);
+
+    // head
+    PseudoHtmlElement head;
+    head = (PseudoHtmlElement) compiler.elementNodesNext();
+    assertEquals(head.name, StandardElementName.HEAD);
+
+    // head.attributes
+    compiler.elementAttributes();
+    compiler.elementAttributesIterator();
+    assertEquals(compiler.elementAttributesHasNext(StandardElementName.HEAD), false);
+
+    // head.nodes
+    compiler.elementNodes();
+    compiler.elementNodesIterator();
+    assertEquals(compiler.elementNodesHasNext(), true);
+
+    testAux(
+        compiler,
+
+        HtmlCompiler02._DOCUMENT_NODES_NEXT,
+        Bytes.encodeInt0(42), Bytes.encodeInt1(42), Bytes.encodeInt2(42),
+
+        HtmlCompiler02._ELEMENT_NODES_NEXT,
+        Bytes.encodeInt0(39), Bytes.encodeInt1(39), Bytes.encodeInt2(39),
+        Bytes.encodeInt0(37), Bytes.encodeInt1(37), Bytes.encodeInt2(37),
+        Bytes.encodeInt0(33), Bytes.encodeInt1(33), Bytes.encodeInt2(33),
+        Bytes.encodeInt0(42), Bytes.encodeInt1(42), Bytes.encodeInt2(42),
+        len(4),
+
+        HtmlCompiler02._ELEMENT_NODES_HAS_NEXT,
+        Bytes.encodeInt0(12), Bytes.encodeInt1(12), Bytes.encodeInt2(12),
+        Bytes.encodeInt0(10), Bytes.encodeInt1(10), Bytes.encodeInt2(10),
+        Bytes.encodeInt0(8), Bytes.encodeInt1(8), Bytes.encodeInt2(8),
+        Bytes.encodeInt0(37), Bytes.encodeInt1(37), Bytes.encodeInt2(37),
+        len(14)
+    );
+
+    // title
+    PseudoHtmlElement title;
+    title = (PseudoHtmlElement) compiler.elementNodesNext();
+    assertEquals(title.name, StandardElementName.TITLE);
+  }
+
+  @Test(description = """
+  HtmlTemplate TC31
+
+  - email input
+  """)
+  public void testCase31() {
+    HtmlCompiler02 compiler;
+    compiler = new HtmlCompiler02();
+
+    compiler.compilationBegin();
+
+    compiler.attribute(StandardAttributeName.TYPE, "email");
+    compiler.attribute(StandardAttributeName.REQUIRED);
+
+    compiler.elementBegin(StandardElementName.INPUT);
+    compiler.elementValue(Api.ATTRIBUTE);
+    compiler.elementValue(Api.ATTRIBUTE);
+    compiler.elementEnd();
+
+    compiler.compilationEnd();
+
+    // document
+    compiler.bootstrap();
+    compiler.documentIterable();
+    compiler.documentIterator();
+    assertEquals(compiler.documentHasNext(), true);
+
+    // input
+    PseudoHtmlElement input;
+    input = (PseudoHtmlElement) compiler.documentNext();
+    assertEquals(input.name(), "input");
+
+    testAux(
+        compiler,
+
+        HtmlCompiler02._DOCUMENT_NODES_NEXT,
+        Bytes.encodeInt0(20), Bytes.encodeInt1(20), Bytes.encodeInt2(20),
+
+        HtmlCompiler02._ELEMENT_START,
+        Bytes.encodeInt0(11), Bytes.encodeInt1(11), Bytes.encodeInt2(11),
+        Bytes.encodeInt0(11), Bytes.encodeInt1(11), Bytes.encodeInt2(11),
+        Bytes.encodeInt0(11), Bytes.encodeInt1(11), Bytes.encodeInt2(11),
+        Bytes.encodeInt0(20), Bytes.encodeInt1(20), Bytes.encodeInt2(20),
+        len(4)
+    );
+
+    // input.attrs
+    compiler.elementAttributes();
+    compiler.elementAttributesIterator();
+    assertEquals(compiler.elementAttributesHasNext(StandardElementName.INPUT), true);
+
+    // input[type]
+    PseudoHtmlAttribute type;
+    type = (PseudoHtmlAttribute) compiler.elementAttributesNext();
+    assertEquals(type.name(), "type");
+
+    testAux(
+        compiler,
+
+        HtmlCompiler02._DOCUMENT_NODES_NEXT,
+        Bytes.encodeInt0(20), Bytes.encodeInt1(20), Bytes.encodeInt2(20),
+
+        HtmlCompiler02._ELEMENT_ATTRS_NEXT,
+        Bytes.encodeInt0(15), Bytes.encodeInt1(15), Bytes.encodeInt2(15),
+        Bytes.encodeInt0(11), Bytes.encodeInt1(11), Bytes.encodeInt2(11),
+        Bytes.encodeInt0(11), Bytes.encodeInt1(11), Bytes.encodeInt2(11),
+        Bytes.encodeInt0(20), Bytes.encodeInt1(20), Bytes.encodeInt2(20),
+        len(4)
+    );
+
+    // input[type].values
+    compiler.attributeValues();
+    compiler.attributeValuesIterator();
+    assertEquals(compiler.attributeValuesHasNext(), true);
+    assertEquals(compiler.attributeValuesNext(type.value), "email");
+
+    testAux(
+        compiler,
+
+        HtmlCompiler02._DOCUMENT_NODES_NEXT,
+        Bytes.encodeInt0(20), Bytes.encodeInt1(20), Bytes.encodeInt2(20),
+
+        HtmlCompiler02._ATTRIBUTE_VALUES_NEXT,
+        Bytes.encodeInt0(15), Bytes.encodeInt1(15), Bytes.encodeInt2(15),
+        Bytes.encodeInt0(11), Bytes.encodeInt1(11), Bytes.encodeInt2(11),
+        Bytes.encodeInt0(11), Bytes.encodeInt1(11), Bytes.encodeInt2(11),
+        Bytes.encodeInt0(20), Bytes.encodeInt1(20), Bytes.encodeInt2(20),
+        len(4)
+    );
+
+    // input[type].values.hasNext
+    type.value = null;
+    assertEquals(compiler.attributeValuesHasNext(), false);
+
+    testAux(
+        compiler,
+
+        HtmlCompiler02._DOCUMENT_NODES_NEXT,
+        Bytes.encodeInt0(20), Bytes.encodeInt1(20), Bytes.encodeInt2(20),
+
+        HtmlCompiler02._ATTRIBUTE_VALUES_EXHAUSTED,
+        Bytes.encodeInt0(15), Bytes.encodeInt1(15), Bytes.encodeInt2(15),
+        Bytes.encodeInt0(11), Bytes.encodeInt1(11), Bytes.encodeInt2(11),
+        Bytes.encodeInt0(11), Bytes.encodeInt1(11), Bytes.encodeInt2(11),
+        Bytes.encodeInt0(20), Bytes.encodeInt1(20), Bytes.encodeInt2(20),
+        len(4)
+    );
+
+    // input.attrs.hasNext
+    assertEquals(compiler.elementAttributesHasNext(StandardElementName.INPUT), true);
+
+    testAux(
+        compiler,
+
+        HtmlCompiler02._DOCUMENT_NODES_NEXT,
+        Bytes.encodeInt0(20), Bytes.encodeInt1(20), Bytes.encodeInt2(20),
+
+        HtmlCompiler02._ELEMENT_ATTRS_HAS_NEXT,
+        Bytes.encodeInt0(15), Bytes.encodeInt1(15), Bytes.encodeInt2(15),
+        Bytes.encodeInt0(11), Bytes.encodeInt1(11), Bytes.encodeInt2(11),
+        Bytes.encodeInt0(11), Bytes.encodeInt1(11), Bytes.encodeInt2(11),
+        Bytes.encodeInt0(20), Bytes.encodeInt1(20), Bytes.encodeInt2(20),
+        len(4)
+    );
+
+    // input[required]
+    PseudoHtmlAttribute required;
+    required = (PseudoHtmlAttribute) compiler.elementAttributesNext();
+    assertEquals(required.name(), "required");
+
+    testAux(
+        compiler,
+
+        HtmlCompiler02._DOCUMENT_NODES_NEXT,
+        Bytes.encodeInt0(20), Bytes.encodeInt1(20), Bytes.encodeInt2(20),
+
+        HtmlCompiler02._ELEMENT_ATTRS_NEXT,
+        Bytes.encodeInt0(17), Bytes.encodeInt1(17), Bytes.encodeInt2(17),
+        Bytes.encodeInt0(11), Bytes.encodeInt1(11), Bytes.encodeInt2(11),
+        Bytes.encodeInt0(11), Bytes.encodeInt1(11), Bytes.encodeInt2(11),
+        Bytes.encodeInt0(20), Bytes.encodeInt1(20), Bytes.encodeInt2(20),
+        len(4)
+    );
+
+    // input.attrs.hasNext
+    assertEquals(compiler.elementAttributesHasNext(StandardElementName.INPUT), false);
+
+    testAux(
+        compiler,
+
+        HtmlCompiler02._DOCUMENT_NODES_NEXT,
+        Bytes.encodeInt0(20), Bytes.encodeInt1(20), Bytes.encodeInt2(20),
+
+        HtmlCompiler02._ELEMENT_ATTRS_EXHAUSTED,
+        Bytes.encodeInt0(17), Bytes.encodeInt1(17), Bytes.encodeInt2(17),
+        Bytes.encodeInt0(11), Bytes.encodeInt1(11), Bytes.encodeInt2(11),
+        Bytes.encodeInt0(11), Bytes.encodeInt1(11), Bytes.encodeInt2(11),
+        Bytes.encodeInt0(20), Bytes.encodeInt1(20), Bytes.encodeInt2(20),
+        len(4)
     );
   }
 

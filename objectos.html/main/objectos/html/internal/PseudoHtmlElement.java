@@ -68,7 +68,7 @@ public final class PseudoHtmlElement
 
   @Override
   public final boolean hasNext() {
-    return player.elementNodesHasNext(name);
+    return player.elementNodesHasNext();
   }
 
   @Override
