@@ -87,6 +87,8 @@ public final class PrettyPrintWriter extends Writer {
 
       case HtmlElement element -> element(element);
 
+      case HtmlText text -> writeText(text.value());
+
       default -> throw new UnsupportedOperationException(
           "Implement me :: type=" + node.getClass()
       );

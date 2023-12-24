@@ -961,6 +961,91 @@ public class HtmlTemplateTest2 {
     );
   }
 
+  @Test(description = """
+  HtmlTemplate TC46
+
+  - flatten instruction
+  """)
+  public void testCase46() {
+    test(
+        new HtmlTemplate() {
+          @Override
+          protected final void definition() {
+            form(
+                flatten(
+                    label(),
+                    input()
+                )
+            );
+          }
+        },
+
+        """
+        <form><label></label><input></form>
+        """
+    );
+  }
+
+  @Test(enabled = false, description = """
+  HtmlTemplate TC47
+
+  - text at root
+  """)
+  public void testCase47() {
+    test(
+        new HtmlTemplate() {
+          @Override
+          protected final void definition() {
+            span("foo");
+            t("bar");
+            span("zaz");
+          }
+        },
+
+        """
+        <span>foo</span>bar<span>zaz</span>
+        """
+    );
+  }
+
+  @Test(description = """
+  HtmlTemplate TC48
+
+  - element with many children
+  """)
+  public void testCase48() {
+    final int COUNT = 8300;
+
+    StringBuilder expected;
+    expected = new StringBuilder();
+
+    expected.append("<html>\n");
+
+    for (int i = 0; i < COUNT; i++) {
+      expected.append("<hr>\n");
+    }
+
+    expected.append("</html>\n");
+
+    test(
+        new HtmlTemplate() {
+          @Override
+          protected final void definition() {
+            Api.HtmlInstruction[] children;
+            children = new Api.HtmlInstruction[COUNT];
+
+            for (int i = 0; i < COUNT; i++) {
+              children[i] = hr();
+            }
+
+            html(children);
+          }
+        },
+
+        expected.toString()
+    );
+  }
+
   private void test(HtmlTemplate template, String expected) {
     StringBuilder out;
     out = new StringBuilder();

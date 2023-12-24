@@ -302,6 +302,19 @@ public final class HtmlCompiler02 extends HtmlCompiler01 {
         yield element(elementStartIndex, parentIndex);
       }
 
+      case ByteProto.TEXT -> {
+        byte b0;
+        b0 = main[index++];
+
+        byte b1;
+        b1 = main[index++];
+
+        // skip ByteProto.INTERNAL4
+        documentCtxMainIndexStore(index + 1);
+
+        yield htmlText(b0, b1);
+      }
+
       default -> throw new UnsupportedOperationException(
           "Implement me :: proto=" + proto
       );
@@ -1116,20 +1129,23 @@ public final class HtmlCompiler02 extends HtmlCompiler01 {
 
         elementCtxNodesIndexStore(index);
 
-        // return value
-        PseudoHtmlText text;
-        text = (PseudoHtmlText) objectArray[objectIndex + OFFSET_TEXT];
-
-        // text value
-        text.value = toObjectString(v0, v1);
-
-        yield text;
+        yield htmlText(v0, v1);
       }
 
       default -> throw new UnsupportedOperationException(
           "Implement me :: proto=" + proto
       );
     };
+  }
+
+  private PseudoHtmlText htmlText(byte v0, byte v1) {
+    PseudoHtmlText text;
+    text = (PseudoHtmlText) objectArray[objectIndex + OFFSET_TEXT];
+
+    // text value
+    text.value = toObjectString(v0, v1);
+
+    return text;
   }
 
   private void elementCtx(int startIndex, int parentIndex) {
