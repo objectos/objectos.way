@@ -30,14 +30,8 @@ $(1)MAIN = $$($(1)MODULE)/main
 ## source files
 $(1)SOURCES = $$(shell find $${$(1)MAIN} -type f -name '*.java' -print)
 
-## source files modified since last compilation (dynamically evaluated)
-$(1)DIRTY :=
-
 ## class output path
 $(1)CLASS_OUTPUT = $$($(1)WORK)/main
-
-## compiled classes
-$(1)CLASSES = $$($(1)SOURCES:$$($(1)MAIN)/%.java=$$($(1)CLASS_OUTPUT)/%.class)
 
 ## compile-time dependencies
 # $(1)COMPILE_DEPS = 
@@ -59,7 +53,7 @@ $(1)JAVACX += --module-path @$$($(1)COMPILE_MODULE_PATH)
 endif
 $(1)JAVACX += --module-version $$($(1)VERSION)
 $(1)JAVACX += --release $$($(1)JAVA_RELEASE)
-$(1)JAVACX += $$($(1)DIRTY)
+$(1)JAVACX += $$($(1)SOURCES)
 
 ## resources
 # $(1)RESOURCES =
@@ -69,7 +63,7 @@ $(1)COMPILE_MARKER = $$(RESOLUTION_DIR)/$$($(1)GROUP_ID)/$$($(1)ARTIFACT_ID)/$$(
 
 ## compilation requirements
 $(1)COMPILE_REQS  = $$($(1)COMPILE_MODULE_PATH)
-$(1)COMPILE_REQS += $$($(1)CLASSES)
+$(1)COMPILE_REQS += $$($(1)SOURCES)
 ifdef $(1)RESOURCES
 $(1)COMPILE_REQS += $$($(1)RESOURCES)
 endif
@@ -92,16 +86,11 @@ else
 endif
 
 $$($(1)COMPILE_MARKER): $$($(1)COMPILE_REQS)
-	if [ -n "$$($(1)DIRTY)" ]; then \
-		$$($(1)JAVACX); \
-	fi
+	$$($(1)JAVACX)
 	mkdir --parents $$(@D)
 	echo "$$($(1)CLASS_OUTPUT)" > $$@
 ifneq ($$($(1)COMPILE_DEPS),)
 	cat $$($(1)COMPILE_DEPS) | sort | uniq >> $$@
 endif
-
-$$($(1)CLASSES): $$($(1)CLASS_OUTPUT)/%.class: $$($(1)MAIN)/%.java
-	$$(eval $(1)DIRTY += $$$$<)
 
 endef

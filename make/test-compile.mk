@@ -26,14 +26,8 @@ $(1)TEST = $$($(1)MODULE)/test
 ## test source files 
 $(1)TEST_SOURCES = $$(shell find $${$(1)TEST} -type f -name '*.java' -print)
 
-## test source files modified since last compilation
-$(1)TEST_DIRTY :=
-
 ## test class output path
 $(1)TEST_CLASS_OUTPUT = $$($(1)WORK)/test
-
-## test compiled classes
-$(1)TEST_CLASSES = $$($(1)TEST_SOURCES:$$($(1)TEST)/%.java=$$($(1)TEST_CLASS_OUTPUT)/%.class)
 
 ## test compile-time dependencies
 # $(1)TEST_COMPILE_DEPS =
@@ -51,7 +45,7 @@ ifeq ($$($(1)ENABLE_PREVIEW),1)
 $(1)TEST_JAVACX += --enable-preview
 endif
 $(1)TEST_JAVACX += --release $$($(1)JAVA_RELEASE)
-$(1)TEST_JAVACX += $$($(1)TEST_DIRTY)
+$(1)TEST_JAVACX += $$($(1)TEST_SOURCES)
 
 ## test resources directory
 # $(1)TEST_RESOURCES = $$($(1)MODULE)/test-resources
@@ -74,7 +68,7 @@ $(1)TEST_COMPILE_MARKER = $$($(1)WORK)/test-compile-marker
 
 ## test compilation requirements
 $(1)TEST_COMPILE_REQS := $$($(1)TEST_COMPILE_CLASS_PATH)
-$(1)TEST_COMPILE_REQS += $$($(1)TEST_CLASSES)
+$(1)TEST_COMPILE_REQS += $$($(1)TEST_SOURCES)
 $(1)TEST_COMPILE_REQS += $$($(1)TEST_RESOURCES_OUT)
 
 #
@@ -92,14 +86,9 @@ else
 endif
 
 $$($(1)TEST_COMPILE_MARKER): $$($(1)TEST_COMPILE_REQS) 
-	if [ -n "$$($(1)TEST_DIRTY)" ]; then \
-		$$($(1)TEST_JAVACX); \
-	fi
+	$$($(1)TEST_JAVACX)
 ifneq ($$($(1)TEST_COMPILE_DEPS),)
 	cat $$($(1)TEST_COMPILE_DEPS) | sort | uniq >> $$@
 endif
-
-$$($(1)TEST_CLASSES): $$($(1)TEST_CLASS_OUTPUT)/%.class: $$($(1)TEST)/%.java
-	$$(eval $(1)TEST_DIRTY += $$$$<)
 
 endef
