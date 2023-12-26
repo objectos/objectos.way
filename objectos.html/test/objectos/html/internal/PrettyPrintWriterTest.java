@@ -337,18 +337,8 @@ public class PrettyPrintWriterTest {
   }
 
   private void test(HtmlTemplate template, String expected) {
-    StringBuilder out;
-    out = new StringBuilder();
-
-    PrettyPrintWriter writer;
-    writer = new PrettyPrintWriter();
-
-    writer.out = out;
-
-    template.process(writer);
-
     String result;
-    result = out.toString();
+    result = template.toString();
 
     assertEquals(result, expected);
   }

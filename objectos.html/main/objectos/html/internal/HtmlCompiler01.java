@@ -21,13 +21,13 @@ import objectos.util.array.ObjectArrays;
 
 class HtmlCompiler01 extends HtmlTemplateApi {
 
-  byte[] aux;
+  byte[] aux = new byte[128];
 
   int auxIndex;
 
   int auxStart;
 
-  byte[] main;
+  byte[] main = new byte[256];
 
   int mainContents;
 
@@ -100,13 +100,11 @@ class HtmlCompiler01 extends HtmlTemplateApi {
 
   @Override
   public final void compilationBegin() {
-    aux = new byte[128];
+    auxIndex = auxStart = 0;
 
-    auxIndex = 0;
+    mainContents = mainIndex = mainStart = 0;
 
-    main = new byte[256];
-
-    mainIndex = 0;
+    objectIndex = 0;
   }
 
   @Override

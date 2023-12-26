@@ -21,59 +21,32 @@ import objectos.html.pseudom.DocumentProcessor;
 /**
  * Base {@link DocumentProcessor} implementation suitable for writing HTML
  * files.
- *
- * @since 0.5.1
  */
 public abstract class Writer implements DocumentProcessor {
 
-  private IOException ioException;
-
   public Appendable out;
 
-  public final void throwIfNecessary() throws IOException {
-    if (ioException == null) {
-      return;
-    }
-
-    var toThrow = ioException;
-
-    ioException = null;
-
-    throw toThrow;
-  }
-
   protected final void write(char c) {
-    if (ioException != null) {
-      return;
-    }
-
     try {
       out.append(c);
     } catch (IOException e) {
-      ioException = e;
+      throw new WriterException(e);
     }
   }
 
   protected final void write(String s) {
-    if (ioException != null) {
-      return;
-    }
-
     try {
       out.append(s);
     } catch (IOException e) {
-      ioException = e;
+      throw new WriterException(e);
     }
   }
 
   protected final void writeAttributeValue(String value) {
-    if (ioException != null) {
-      return;
-    }
-
     try {
       for (int idx = 0, len = value.length(); idx < len;) {
-        var c = value.charAt(idx++);
+        char c;
+        c = value.charAt(idx++);
 
         switch (c) {
           case '&' -> idx = writeAmpersandAttribute(value, idx, len);
@@ -90,18 +63,15 @@ public abstract class Writer implements DocumentProcessor {
         }
       }
     } catch (IOException e) {
-      ioException = e;
+      throw new WriterException(e);
     }
   }
 
   protected final void writeText(String value) {
-    if (ioException != null) {
-      return;
-    }
-
     try {
       for (int idx = 0, len = value.length(); idx < len;) {
-        var c = value.charAt(idx++);
+        char c;
+        c = value.charAt(idx++);
 
         switch (c) {
           case '&' -> writeAmpersand();
@@ -114,7 +84,7 @@ public abstract class Writer implements DocumentProcessor {
         }
       }
     } catch (IOException e) {
-      ioException = e;
+      throw new WriterException(e);
     }
   }
 
@@ -226,7 +196,7 @@ public abstract class Writer implements DocumentProcessor {
 
         default -> {
           throw new UnsupportedOperationException(
-            "Implement me :: state=" + state
+              "Implement me :: state=" + state
           );
         }
       }
@@ -251,7 +221,7 @@ public abstract class Writer implements DocumentProcessor {
 
       default -> {
         throw new UnsupportedOperationException(
-          "Implement me :: state=" + state
+            "Implement me :: state=" + state
         );
       }
     }

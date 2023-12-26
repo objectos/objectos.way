@@ -15,7 +15,6 @@
  */
 package objectos.html.internal;
 
-import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.Set;
 import objectos.html.pseudom.DocumentProcessor;
@@ -25,7 +24,7 @@ import objectos.lang.object.Check;
 import objectos.util.array.ByteArrays;
 import objectos.util.array.ObjectArrays;
 
-public final class HtmlCompiler02 extends HtmlCompiler01 {
+public class HtmlCompiler02 extends HtmlCompiler01 {
 
   private static final Set<StandardElementName> PHRASING = EnumSet.of(
       StandardElementName.A,
@@ -70,20 +69,6 @@ public final class HtmlCompiler02 extends HtmlCompiler01 {
   private static final byte _TRUE = -1;
 
   @Override
-  public final InternalCompiledHtml compile() {
-    Object[] objects;
-    objects = ObjectArrays.empty();
-
-    if (objectArray != null) {
-      objects = Arrays.copyOf(objectArray, objectIndex);
-    }
-
-    return new InternalCompiledHtml(
-        Arrays.copyOfRange(aux, IDX_AUX, auxIndex), objects
-    );
-  }
-
-  @Override
   public final void process(DocumentProcessor processor) {
     Check.notNull(processor, "processor == null");
 
@@ -125,8 +110,7 @@ public final class HtmlCompiler02 extends HtmlCompiler01 {
 
   private static final int OFFSET_MAX = OFFSET_RAW;
 
-  // visible for testing
-  final PseudoHtmlDocument bootstrap() {
+  public final PseudoHtmlDocument bootstrap() {
     // we will use the aux list to store contexts
     auxIndex = 0;
 

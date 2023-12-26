@@ -37,8 +37,8 @@ public class HtmlTemplateTest {
         },
 
         """
-      <html></html>
-      """
+        <html></html>
+        """
     );
   }
 
@@ -57,8 +57,8 @@ public class HtmlTemplateTest {
         },
 
         """
-      <html lang="pt-BR"></html>
-      """
+        <html lang="pt-BR"></html>
+        """
     );
   }
 
@@ -799,8 +799,8 @@ public class HtmlTemplateTest {
         },
 
         """
-      <input type="email" required>
-      """
+        <input type="email" required>
+        """
     );
   }
 
@@ -980,8 +980,8 @@ public class HtmlTemplateTest {
         },
 
         """
-      <form><label></label><input></form>
-      """
+        <form><label></label><input></form>
+        """
     );
   }
 
@@ -1002,7 +1002,9 @@ public class HtmlTemplateTest {
         },
 
         """
-        <span>foo</span>bar<span>zaz</span>
+        <span>foo</span>
+        bar
+        <span>zaz</span>
         """
     );
   }
@@ -1023,8 +1025,6 @@ public class HtmlTemplateTest {
     for (int i = 0; i < COUNT; i++) {
       expected.append("<hr>\n");
     }
-
-    expected.setLength(expected.length() - 1);
 
     expected.append("</html>\n");
 

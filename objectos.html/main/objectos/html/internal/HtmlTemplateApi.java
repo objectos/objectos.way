@@ -15,7 +15,6 @@
  */
 package objectos.html.internal;
 
-import objectos.html.Html;
 import objectos.html.pseudom.DocumentProcessor;
 import objectos.html.tmpl.Api;
 
@@ -32,10 +31,6 @@ public abstract class HtmlTemplateApi {
   public abstract void compilationBegin();
 
   public abstract void compilationEnd();
-
-  public Html compile() {
-    throw new UnsupportedOperationException();
-  }
 
   public abstract void doctype();
 
