@@ -595,7 +595,7 @@ public final class HtmlCompiler02 extends HtmlCompiler01 {
     int ordinal;
     ordinal = Bytes.decodeInt(attr);
 
-    attribute.name = StandardAttributeName.getByCode(ordinal);
+    attribute.name = AttributeName.getByCode(ordinal);
 
     // attribute value
     String value;

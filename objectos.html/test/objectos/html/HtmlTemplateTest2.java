@@ -986,7 +986,7 @@ public class HtmlTemplateTest2 {
     );
   }
 
-  @Test(enabled = false, description = """
+  @Test(description = """
   HtmlTemplate TC47
 
   - text at root
@@ -1003,7 +1003,9 @@ public class HtmlTemplateTest2 {
         },
 
         """
-        <span>foo</span>bar<span>zaz</span>
+        <span>foo</span>
+        bar
+        <span>zaz</span>
         """
     );
   }
