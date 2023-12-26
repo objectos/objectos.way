@@ -874,7 +874,7 @@ public class HtmlCompiler02 extends HtmlCompiler01 {
         index = elementCtxNodesIndexLoad();
       }
 
-      case _ELEMENT_ATTRS_EXHAUSTED, _ELEMENT_NODES_EXHAUSTED -> {
+      case _ELEMENT_START, _ELEMENT_ATTRS_EXHAUSTED, _ELEMENT_NODES_EXHAUSTED -> {
         // remove previous element context
         int parentIndex;
         parentIndex = elementCtxRemove();

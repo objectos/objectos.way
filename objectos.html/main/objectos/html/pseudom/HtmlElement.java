@@ -25,4 +25,8 @@ public non-sealed interface HtmlElement extends HtmlNode {
 
   HtmlIterable<HtmlNode> nodes();
 
+  default boolean hasName(String name) {
+    return name().equals(name);
+  }
+
 }
