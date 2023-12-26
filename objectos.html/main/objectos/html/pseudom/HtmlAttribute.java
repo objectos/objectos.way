@@ -23,4 +23,8 @@ public interface HtmlAttribute {
 
   HtmlIterable<String> values();
 
+  default boolean hasName(String name) {
+    return name().equals(name);
+  }
+
 }
