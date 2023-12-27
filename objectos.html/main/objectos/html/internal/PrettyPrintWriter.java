@@ -60,81 +60,124 @@ public final class PrettyPrintWriter extends Writer {
 
   private static final String NL = System.lineSeparator();
 
+  private static final byte START = 1;
+  private static final byte BLOCK_START = 2;
+  private static final byte BLOCK_END = 3;
+  private static final byte PHRASE = 4;
+  private static final byte SCRIPT = 5;
+
   @Override
   public final void process(HtmlDocument document) {
-    HtmlIterable<HtmlNode> nodes;
-    nodes = document.nodes();
+    byte state;
+    state = START;
 
-    Iterator<HtmlNode> nodesIter;
-    nodesIter = nodes.iterator();
+    for (HtmlNode node : document.nodes()) {
+      state = node(state, node);
+    }
 
-    if (nodesIter.hasNext()) {
-      documentNode(nodesIter.next());
-
-      while (nodesIter.hasNext()) {
-        write(NL);
-
-        documentNode(nodesIter.next());
-      }
-
+    if (state != START) {
       write(NL);
     }
   }
 
-  private void documentNode(HtmlNode node) {
-    switch (node) {
-      case HtmlDocumentType doctype -> write("<!DOCTYPE html>");
+  private byte node(byte state, HtmlNode node) {
+    return switch (node) {
+      case HtmlDocumentType doctype -> doctype(state, doctype);
 
-      case HtmlElement element -> element(element);
+      case HtmlElement element -> element(state, element);
 
-      case HtmlText text -> writeText(text.value());
+      case HtmlText text -> text(state, text);
+
+      case HtmlRawText raw -> raw(state, raw);
 
       default -> throw new UnsupportedOperationException(
           "Implement me :: type=" + node.getClass()
       );
-    }
+    };
   }
 
-  private void element(HtmlElement element) {
+  private byte doctype(byte state, HtmlDocumentType doctype) {
+    write("<!DOCTYPE html>");
+
+    return BLOCK_END;
+  }
+
+  private byte element(byte state, HtmlElement element) {
     // start tag
     String elementName;
     elementName = element.name();
+
+    byte nextState;
+
+    byte childState;
+
+    if (PHRASING.contains(elementName)) {
+      nextState = childState = PHRASE;
+
+      if (state == BLOCK_END) {
+        write(NL);
+      }
+    }
+
+    else {
+      if (TEXT_AS_RAW.contains(elementName)) {
+        nextState = childState = SCRIPT;
+      }
+
+      else {
+        nextState = BLOCK_END;
+
+        childState = BLOCK_START;
+      }
+
+      if (state != START) {
+        // we should start this element in the next line
+        // except if we are at the start of the document
+        write(NL);
+      }
+    }
 
     write('<');
     write(elementName);
 
     for (HtmlAttribute attribute : element.attributes()) {
-      attribute(attribute);
+      elementAttribute(attribute);
     }
 
     write('>');
 
-    if (element.isVoid()) {
-      // void element
-      // - no attrs
-      // - no children
-      // - no end tag
-      return;
+    if (!element.isVoid()) {
+      int childCount;
+      childCount = 0;
+
+      for (HtmlNode node : element.nodes()) {
+        childState = node(childState, node);
+
+        childCount++;
+      }
+
+      // do we need a NL before the end tag?
+      if (childCount > 0) {
+        if (nextState == PHRASE && childState == BLOCK_END) {
+          write(NL);
+        }
+
+        else if (nextState != PHRASE && childState != PHRASE) {
+          write(NL);
+        }
+      }
+
+      // end tag
+      write('<');
+      write('/');
+      write(elementName);
+      write('>');
     }
 
-    boolean textAsRaw;
-    textAsRaw = TEXT_AS_RAW.contains(elementName);
-
-    boolean newLine;
-    newLine = false;
-
-    for (HtmlNode node : element.nodes()) {
-      newLine = elementNode(node, textAsRaw, newLine);
-    }
-
-    // end tag
-    write('<');
-    write('/');
-    write(elementName);
-    write('>');
+    return nextState;
   }
 
-  private void attribute(HtmlAttribute attribute) {
+  private void elementAttribute(HtmlAttribute attribute) {
     String name;
     name = attribute.name();
 
@@ -165,96 +208,76 @@ public final class PrettyPrintWriter extends Writer {
     }
   }
 
-  private boolean elementNode(HtmlNode node, boolean textAsRaw, boolean wasNewLine) {
-    boolean newLine;
-    newLine = false;
+  private byte text(byte state, HtmlText text) {
+    String value;
+    value = text.value();
 
-    switch (node) {
-      case HtmlElement child -> {
-        if (isPhrasing(child)) {
-          element(child);
-        } else {
-          if (!wasNewLine) {
-            write(NL);
-          }
-
-          element(child);
-
+    switch (state) {
+      case BLOCK_END -> {
+        if (!endsWithNewLine(value)) {
           write(NL);
-
-          newLine = true;
         }
+
+        writeText(value);
       }
 
-      case HtmlText text -> {
-        String value;
-        value = text.value();
-
-        if (textAsRaw) {
-          if (!startsWithNewLine(value)) {
-            write(NL);
-          }
-
-          write(value);
-
-          if (!endsWithNewLine(value)) {
-            write(NL);
-          }
-        } else {
-          writeText(value);
+      case SCRIPT -> {
+        if (!startsWithNewLine(value)) {
+          write(NL);
         }
-      }
-
-      case HtmlRawText raw -> {
-        String value;
-        value = raw.value();
 
         write(value);
+
+        if (!endsWithNewLine(value)) {
+          write(NL);
+        }
       }
 
-      default -> throw new UnsupportedOperationException(
-          "Implement me :: type=" + node.getClass()
-      );
+      default -> writeText(value);
     }
 
-    return newLine;
+    return PHRASE;
   }
 
-  private boolean endsWithNewLine(String value) {
-    int length = value.length();
+  private byte raw(byte state, HtmlRawText raw) {
+    String value;
+    value = raw.value();
 
-    if (length > 0) {
-      var last = value.charAt(length - 1);
+    write(value);
 
-      return isNewLine(last);
-    } else {
-      return false;
-    }
-  }
-
-  private boolean isNewLine(char c) {
-    return c == '\n' || c == '\r';
-  }
-
-  private boolean isPhrasing(HtmlElement element) {
-    String name;
-    name = element.name();
-
-    return PHRASING.contains(name);
+    return PHRASE;
   }
 
   private boolean startsWithNewLine(String value) {
     int length;
     length = value.length();
 
-    if (length > 0) {
-      char first;
-      first = value.charAt(0);
-
-      return isNewLine(first);
-    } else {
+    if (length == 0) {
       return false;
     }
+
+    char first;
+    first = value.charAt(0);
+
+    return isNewLine(first);
+  }
+
+  private boolean endsWithNewLine(String value) {
+    int length;
+    length = value.length();
+
+    if (length == 0) {
+      return false;
+    }
+
+    char last;
+    last = value.charAt(length - 1);
+
+    return isNewLine(last);
+  }
+
+  private boolean isNewLine(char c) {
+    return c == '\n' || c == '\r';
   }
 
 }

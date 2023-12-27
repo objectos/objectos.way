@@ -1002,9 +1002,7 @@ public class HtmlTemplateTest {
         },
 
         """
-        <span>foo</span>
-        bar
-        <span>zaz</span>
+        <span>foo</span>bar<span>zaz</span>
         """
     );
   }

@@ -585,7 +585,7 @@ public class HtmlCompiler02 extends HtmlCompiler01 {
     String value;
     value = null;
 
-    if (v0 != -1 && v1 != -1) {
+    if (v0 != -1 || v1 != -1) {
       int objectIndex;
       objectIndex = Bytes.decodeInt(v0, v1);
 
