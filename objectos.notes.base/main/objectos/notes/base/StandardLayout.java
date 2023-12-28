@@ -24,162 +24,164 @@ import objectos.notes.Level;
 
 public class StandardLayout implements Layout {
 
-	private final DateTimeFormatter dateFormat
-			= DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS");
+  private final DateTimeFormatter dateFormat
+      = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS");
 
-	@Override
-	public final String formatLog0(Log0 log) {
-		StringBuilder out;
-		out = format0(log);
+  public StandardLayout() {}
 
-		out.append('\n');
+  @Override
+  public final String formatLog0(Log0 log) {
+    StringBuilder out;
+    out = format0(log);
 
-		return out.toString();
-	}
+    out.append('\n');
 
-	@Override
-	public final String formatLog1(Log1 log) {
-		StringBuilder out;
-		out = format0(log);
+    return out.toString();
+  }
 
-		formatLastValue(out, log.value);
+  @Override
+  public final String formatLog1(Log1 log) {
+    StringBuilder out;
+    out = format0(log);
 
-		out.append('\n');
+    formatLastValue(out, log.value);
 
-		return out.toString();
-	}
+    out.append('\n');
 
-	@Override
-	public final String formatLog2(Log2 log) {
-		StringBuilder out;
-		out = format0(log);
+    return out.toString();
+  }
 
-		formatValue(out, log.value1);
+  @Override
+  public final String formatLog2(Log2 log) {
+    StringBuilder out;
+    out = format0(log);
 
-		formatLastValue(out, log.value2);
+    formatValue(out, log.value1);
 
-		out.append('\n');
+    formatLastValue(out, log.value2);
 
-		return out.toString();
-	}
+    out.append('\n');
 
-	@Override
-	public final String formatLog3(Log3 log) {
-		StringBuilder out;
-		out = format0(log);
+    return out.toString();
+  }
 
-		formatValue(out, log.value1);
+  @Override
+  public final String formatLog3(Log3 log) {
+    StringBuilder out;
+    out = format0(log);
 
-		formatValue(out, log.value2);
+    formatValue(out, log.value1);
 
-		formatLastValue(out, log.value3);
+    formatValue(out, log.value2);
 
-		out.append('\n');
+    formatLastValue(out, log.value3);
 
-		return out.toString();
-	}
+    out.append('\n');
 
-	@Override
-	public final String formatLongLog(LongLog log) {
-		StringBuilder out;
-		out = format0(log);
+    return out.toString();
+  }
 
-		formatValue(out, Long.toString(log.value));
+  @Override
+  public final String formatLongLog(LongLog log) {
+    StringBuilder out;
+    out = format0(log);
 
-		out.append('\n');
+    formatValue(out, Long.toString(log.value));
 
-		return out.toString();
-	}
+    out.append('\n');
 
-	private StringBuilder format0(Log log) {
-		StringBuilder out;
-		out = new StringBuilder();
+    return out.toString();
+  }
 
-		ZonedDateTime date;
-		date = log.timestamp;
+  private StringBuilder format0(Log log) {
+    StringBuilder out;
+    out = new StringBuilder();
 
-		out.append(dateFormat.format(date));
+    ZonedDateTime date;
+    date = log.timestamp;
 
-		out.append(' ');
+    out.append(dateFormat.format(date));
 
-		Level level;
-		level = log.level;
+    out.append(' ');
 
-		String levelName;
-		levelName = level.name();
+    Level level;
+    level = log.level;
 
-		Logging.pad(out, levelName, 5);
+    String levelName;
+    levelName = level.name();
 
-		out.append(" --- ");
+    Logging.pad(out, levelName, 5);
 
-		out.append('[');
+    out.append(" --- ");
 
-		Logging.pad(out, log.thread, 15);
+    out.append('[');
 
-		out.append(']');
+    Logging.pad(out, log.thread, 15);
 
-		out.append(' ');
+    out.append(']');
 
-		Logging.abbreviate(out, log.source, 40);
+    out.append(' ');
 
-		out.append(' ');
-		out.append(':');
-		out.append(' ');
+    Logging.abbreviate(out, log.source, 40);
 
-		out.append(log.key);
+    out.append(' ');
+    out.append(':');
+    out.append(' ');
 
-		return out;
-	}
+    out.append(log.key);
 
-	private void formatValue(StringBuilder out, Object value) {
-		out.append(' ');
+    return out;
+  }
 
-		out.append(value);
-	}
+  private void formatValue(StringBuilder out, Object value) {
+    out.append(' ');
 
-	private void formatLastValue(StringBuilder out, Object value) {
-		if (value instanceof Throwable t) {
-			formatThrowable(out, t);
-		} else {
-			formatValue(out, value);
-		}
-	}
+    out.append(value);
+  }
 
-	private void formatThrowable(StringBuilder out, Throwable t) {
-		out.append('\n');
+  private void formatLastValue(StringBuilder out, Object value) {
+    if (value instanceof Throwable t) {
+      formatThrowable(out, t);
+    } else {
+      formatValue(out, value);
+    }
+  }
 
-		StringBuilderWriter writer;
-		writer = new StringBuilderWriter(out);
+  private void formatThrowable(StringBuilder out, Throwable t) {
+    out.append('\n');
 
-		PrintWriter printWriter;
-		printWriter = new PrintWriter(writer);
+    StringBuilderWriter writer;
+    writer = new StringBuilderWriter(out);
 
-		t.printStackTrace(printWriter);
-	}
+    PrintWriter printWriter;
+    printWriter = new PrintWriter(writer);
 
-	private static class StringBuilderWriter extends Writer {
+    t.printStackTrace(printWriter);
+  }
 
-		private final StringBuilder out;
+  private static class StringBuilderWriter extends Writer {
 
-		public StringBuilderWriter(StringBuilder out) {
-			this.out = out;
-		}
+    private final StringBuilder out;
 
-		@Override
-		public void write(char[] cbuf, int off, int len) throws IOException {
-			out.append(cbuf, off, len);
-		}
+    public StringBuilderWriter(StringBuilder out) {
+      this.out = out;
+    }
 
-		@Override
-		public void flush() {
-			// noop, not buffered
-		}
+    @Override
+    public void write(char[] cbuf, int off, int len) throws IOException {
+      out.append(cbuf, off, len);
+    }
 
-		@Override
-		public void close() {
-			// noop, in-memory only
-		}
+    @Override
+    public void flush() {
+      // noop, not buffered
+    }
 
-	}
+    @Override
+    public void close() {
+      // noop, in-memory only
+    }
+
+  }
 
 }

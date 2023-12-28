@@ -15,8 +15,6 @@
  */
 package objectos.http.server;
 
-public interface HttpModule {
-
-  void handle(HttpExchange exchange);
+public non-sealed interface ServerExchangeDone extends ServerExchangeResult {
 
 }

@@ -26,12 +26,12 @@ public class HttpExchangeRequestBodyTest {
 
   @Test
   public void http006() {
-    HttpExchange exchange;
-    exchange = new HttpExchange();
+    ObjectoxHttpExchange exchange;
+    exchange = new ObjectoxHttpExchange();
 
     Http006.INPUT.accept(exchange);
 
-    while (exchange.state < HttpExchange._HANDLE) {
+    while (exchange.state < ObjectoxHttpExchange._HANDLE) {
       exchange.stepOne();
     }
 
@@ -54,7 +54,7 @@ public class HttpExchangeRequestBodyTest {
     assertEquals(exchange.responseHeaders, null);
     assertEquals(exchange.responseHeadersIndex, -1);
     assertEquals(exchange.socket.isClosed(), false);
-    assertEquals(exchange.state, HttpExchange._HANDLE);
+    assertEquals(exchange.state, ObjectoxHttpExchange._HANDLE);
     assertEquals(exchange.status, null);
     assertEquals(exchange.versionMajor, 1);
     assertEquals(exchange.versionMinor, 1);

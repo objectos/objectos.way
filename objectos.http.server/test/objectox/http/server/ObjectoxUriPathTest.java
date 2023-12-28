@@ -21,7 +21,7 @@ import java.nio.file.Path;
 import objectos.http.server.Segment;
 import org.testng.annotations.Test;
 
-public class HttpRequestPathTest {
+public class ObjectoxUriPathTest {
 
   private static final Segment ANY = Segment.ofAny();
 

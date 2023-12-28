@@ -32,12 +32,12 @@ public class HttpExchangeParseHeaderTest {
 
   @Test
   public void http001() {
-    HttpExchange exchange;
-    exchange = new HttpExchange();
+    ObjectoxHttpExchange exchange;
+    exchange = new ObjectoxHttpExchange();
 
     Http001.INPUT.accept(exchange);
 
-    while (exchange.state < HttpExchange._REQUEST_BODY) {
+    while (exchange.state < ObjectoxHttpExchange._REQUEST_BODY) {
       exchange.stepOne();
     }
 
@@ -59,7 +59,7 @@ public class HttpExchangeParseHeaderTest {
     assertEquals(exchange.responseHeaders, null);
     assertEquals(exchange.responseHeadersIndex, -1);
     assertEquals(exchange.socket.isClosed(), false);
-    assertEquals(exchange.state, HttpExchange._HANDLE);
+    assertEquals(exchange.state, ObjectoxHttpExchange._HANDLE);
     assertEquals(exchange.status, null);
     assertEquals(exchange.versionMajor, 1);
     assertEquals(exchange.versionMinor, 1);
@@ -67,12 +67,12 @@ public class HttpExchangeParseHeaderTest {
 
   @Test
   public void http006() {
-    HttpExchange exchange;
-    exchange = new HttpExchange();
+    ObjectoxHttpExchange exchange;
+    exchange = new ObjectoxHttpExchange();
 
     Http006.INPUT.accept(exchange);
 
-    while (exchange.state < HttpExchange._REQUEST_BODY) {
+    while (exchange.state < ObjectoxHttpExchange._REQUEST_BODY) {
       exchange.stepOne();
     }
 
@@ -95,7 +95,7 @@ public class HttpExchangeParseHeaderTest {
     assertEquals(exchange.responseHeaders, null);
     assertEquals(exchange.responseHeadersIndex, -1);
     assertEquals(exchange.socket.isClosed(), false);
-    assertEquals(exchange.state, HttpExchange._REQUEST_BODY);
+    assertEquals(exchange.state, ObjectoxHttpExchange._REQUEST_BODY);
     assertEquals(exchange.status, null);
     assertEquals(exchange.versionMajor, 1);
     assertEquals(exchange.versionMinor, 1);
@@ -109,8 +109,8 @@ public class HttpExchangeParseHeaderTest {
   - resets header name
   """)
   public void parseHeader() {
-    HttpExchange exchange;
-    exchange = new HttpExchange();
+    ObjectoxHttpExchange exchange;
+    exchange = new ObjectoxHttpExchange();
 
     byte[] bytes;
     bytes = Bytes.utf8("FOO");
@@ -118,21 +118,21 @@ public class HttpExchangeParseHeaderTest {
     exchange.buffer = bytes;
     exchange.bufferIndex = 0;
     exchange.bufferLimit = bytes.length;
-    exchange.state = HttpExchange._PARSE_HEADER;
+    exchange.state = ObjectoxHttpExchange._PARSE_HEADER;
 
     exchange.stepOne();
 
     assertEquals(exchange.bufferIndex, 0);
     assertEquals(exchange.bufferLimit, bytes.length);
-    assertEquals(exchange.state, HttpExchange._PARSE_HEADER_NAME);
+    assertEquals(exchange.state, ObjectoxHttpExchange._PARSE_HEADER_NAME);
   }
 
   @Test(description = """
   [#446] HTTP 001: PARSE_HEADER --> INPUT_READ
   """)
   public void parseHeaderToInputRead() {
-    HttpExchange exchange;
-    exchange = new HttpExchange();
+    ObjectoxHttpExchange exchange;
+    exchange = new ObjectoxHttpExchange();
 
     // input resembles an empty line
     // client is very slow...
@@ -143,22 +143,22 @@ public class HttpExchangeParseHeaderTest {
     exchange.buffer = Arrays.copyOf(bytes, 20); /* buffer is not full */
     exchange.bufferIndex = 0;
     exchange.bufferLimit = bytes.length; /* buffer is not full */
-    exchange.state = HttpExchange._PARSE_HEADER;
+    exchange.state = ObjectoxHttpExchange._PARSE_HEADER;
 
     exchange.stepOne();
 
     assertEquals(exchange.bufferIndex, 0);
     assertEquals(exchange.bufferLimit, bytes.length);
-    assertEquals(exchange.nextAction, HttpExchange._PARSE_HEADER);
-    assertEquals(exchange.state, HttpExchange._INPUT_READ);
+    assertEquals(exchange.nextAction, ObjectoxHttpExchange._PARSE_HEADER);
+    assertEquals(exchange.state, ObjectoxHttpExchange._INPUT_READ);
   }
 
   @Test(description = """
   [#446] HTTP 001: PARSE_HEADER --> REQUEST_ERROR::BAD_REQUEST
   """)
   public void parseHeaderToRequestErrorBadRequest() {
-    HttpExchange exchange;
-    exchange = new HttpExchange();
+    ObjectoxHttpExchange exchange;
+    exchange = new ObjectoxHttpExchange();
 
     byte[] bytes;
     bytes = Bytes.utf8("\r");
@@ -166,13 +166,13 @@ public class HttpExchangeParseHeaderTest {
     exchange.buffer = bytes; /* buffer is full */
     exchange.bufferIndex = 0;
     exchange.bufferLimit = 1; /* buffer is full */
-    exchange.state = HttpExchange._PARSE_HEADER;
+    exchange.state = ObjectoxHttpExchange._PARSE_HEADER;
 
     exchange.stepOne();
 
     assertEquals(exchange.bufferIndex, 0);
     assertEquals(exchange.bufferLimit, 1);
-    assertEquals(exchange.state, HttpExchange._REQUEST_ERROR);
+    assertEquals(exchange.state, ObjectoxHttpExchange._REQUEST_ERROR);
     assertEquals(exchange.status, HttpStatus.BAD_REQUEST);
   }
 
@@ -180,8 +180,8 @@ public class HttpExchangeParseHeaderTest {
   [#444] HTTP 001: PARSE_HEADER --> HANDLE
   """)
   public void parseHeaderToHandle() {
-    HttpExchange exchange;
-    exchange = new HttpExchange();
+    ObjectoxHttpExchange exchange;
+    exchange = new ObjectoxHttpExchange();
 
     record Test(String request, int bufferIndex) {}
 
@@ -197,13 +197,13 @@ public class HttpExchangeParseHeaderTest {
       exchange.buffer = bytes;
       exchange.bufferIndex = 0;
       exchange.bufferLimit = bytes.length;
-      exchange.state = HttpExchange._PARSE_HEADER;
+      exchange.state = ObjectoxHttpExchange._PARSE_HEADER;
 
       exchange.stepOne();
 
       assertEquals(exchange.bufferIndex, test.bufferIndex);
       assertEquals(exchange.bufferLimit, bytes.length);
-      assertEquals(exchange.state, HttpExchange._HANDLE);
+      assertEquals(exchange.state, ObjectoxHttpExchange._HANDLE);
     }
   }
 
@@ -215,8 +215,8 @@ public class HttpExchangeParseHeaderTest {
   - bufferIndex ends after colon
   """)
   public void parseHeaderName() {
-    HttpExchange exchange;
-    exchange = new HttpExchange();
+    ObjectoxHttpExchange exchange;
+    exchange = new ObjectoxHttpExchange();
 
     StringBuilder sb;
     sb = new StringBuilder();
@@ -238,7 +238,7 @@ public class HttpExchangeParseHeaderTest {
       exchange.buffer = bytes;
       exchange.bufferIndex = 0;
       exchange.bufferLimit = bytes.length;
-      exchange.state = HttpExchange._PARSE_HEADER_NAME;
+      exchange.state = ObjectoxHttpExchange._PARSE_HEADER_NAME;
 
       exchange.stepOne();
 
@@ -247,7 +247,7 @@ public class HttpExchangeParseHeaderTest {
 
       assertEquals(exchange.bufferIndex, nameBytes.length + 1, headerName.toString());
       assertEquals(exchange.requestHeaderName, headerName);
-      assertEquals(exchange.state, HttpExchange._PARSE_HEADER_VALUE);
+      assertEquals(exchange.state, ObjectoxHttpExchange._PARSE_HEADER_VALUE);
     }
   }
 
@@ -258,8 +258,8 @@ public class HttpExchangeParseHeaderTest {
   - not header name set
   """)
   public void parseHeaderNameToInputRead() {
-    HttpExchange exchange;
-    exchange = new HttpExchange();
+    ObjectoxHttpExchange exchange;
+    exchange = new ObjectoxHttpExchange();
 
     byte[] bytes;
     bytes = Bytes.utf8("Connectio");
@@ -268,14 +268,14 @@ public class HttpExchangeParseHeaderTest {
     exchange.bufferIndex = 0;
     exchange.bufferLimit = bytes.length;
     exchange.requestHeaderName = StandardHeaderName.ACCEPT_ENCODING;
-    exchange.state = HttpExchange._PARSE_HEADER_NAME;
+    exchange.state = ObjectoxHttpExchange._PARSE_HEADER_NAME;
 
     exchange.stepOne();
 
     assertEquals(exchange.bufferIndex, 0);
-    assertEquals(exchange.nextAction, HttpExchange._PARSE_HEADER_NAME);
+    assertEquals(exchange.nextAction, ObjectoxHttpExchange._PARSE_HEADER_NAME);
     assertEquals(exchange.requestHeaderName, null);
-    assertEquals(exchange.state, HttpExchange._INPUT_READ);
+    assertEquals(exchange.state, ObjectoxHttpExchange._INPUT_READ);
   }
 
   @Test(description = """
@@ -285,8 +285,8 @@ public class HttpExchangeParseHeaderTest {
   - not header name set
   """)
   public void parseHeaderNameToRequestErrorBadRequest() {
-    HttpExchange exchange;
-    exchange = new HttpExchange();
+    ObjectoxHttpExchange exchange;
+    exchange = new ObjectoxHttpExchange();
 
     byte[] bytes;
     bytes = Bytes.utf8("Connectio");
@@ -295,13 +295,13 @@ public class HttpExchangeParseHeaderTest {
     exchange.bufferIndex = 0;
     exchange.bufferLimit = bytes.length;
     exchange.requestHeaderName = StandardHeaderName.ACCEPT_ENCODING;
-    exchange.state = HttpExchange._PARSE_HEADER_NAME;
+    exchange.state = ObjectoxHttpExchange._PARSE_HEADER_NAME;
 
     exchange.stepOne();
 
     assertEquals(exchange.bufferIndex, 0);
     assertEquals(exchange.requestHeaderName, null);
-    assertEquals(exchange.state, HttpExchange._REQUEST_ERROR);
+    assertEquals(exchange.state, ObjectoxHttpExchange._REQUEST_ERROR);
     assertEquals(exchange.status, HttpStatus.BAD_REQUEST);
   }
 
@@ -311,8 +311,8 @@ public class HttpExchangeParseHeaderTest {
   - header name is unknown
   """)
   public void parseHeaderNameToParseHeaderValue() {
-    HttpExchange exchange;
-    exchange = new HttpExchange();
+    ObjectoxHttpExchange exchange;
+    exchange = new ObjectoxHttpExchange();
 
     byte[] bytes;
     bytes = Bytes.utf8("Foo: Bar\r\n");
@@ -320,13 +320,13 @@ public class HttpExchangeParseHeaderTest {
     exchange.buffer = bytes;
     exchange.bufferIndex = 0;
     exchange.bufferLimit = bytes.length;
-    exchange.state = HttpExchange._PARSE_HEADER_NAME;
+    exchange.state = ObjectoxHttpExchange._PARSE_HEADER_NAME;
 
     exchange.stepOne();
 
     assertEquals(exchange.bufferIndex, 4);
     assertEquals(exchange.requestHeaderName, "Foo");
-    assertEquals(exchange.state, HttpExchange._PARSE_HEADER_VALUE);
+    assertEquals(exchange.state, ObjectoxHttpExchange._PARSE_HEADER_VALUE);
   }
 
   // PARSE_HEADER_VALUE
@@ -337,8 +337,8 @@ public class HttpExchangeParseHeaderTest {
   - happy path
   """)
   public void parseHeaderValue() {
-    HttpExchange exchange;
-    exchange = new HttpExchange();
+    ObjectoxHttpExchange exchange;
+    exchange = new ObjectoxHttpExchange();
 
     List<String> requests = List.of(
         "Host: foobar\r\n",
@@ -360,14 +360,14 @@ public class HttpExchangeParseHeaderTest {
       exchange.bufferLimit = bytes.length;
       exchange.requestHeaders = null;
       exchange.requestHeaderName = StandardHeaderName.HOST;
-      exchange.state = HttpExchange._PARSE_HEADER_VALUE;
+      exchange.state = ObjectoxHttpExchange._PARSE_HEADER_VALUE;
 
       exchange.stepOne();
 
       assertEquals(exchange.bufferIndex, bytes.length);
       assertEquals(exchange.requestHeaders.size(), 1);
       assertEquals(exchange.requestHeaders.get(StandardHeaderName.HOST).toString(), "foobar");
-      assertEquals(exchange.state, HttpExchange._PARSE_HEADER);
+      assertEquals(exchange.state, ObjectoxHttpExchange._PARSE_HEADER);
     }
   }
 
@@ -377,8 +377,8 @@ public class HttpExchangeParseHeaderTest {
   - semi-happy path: empty value
   """)
   public void parseHeaderValueEmptyValue() {
-    HttpExchange exchange;
-    exchange = new HttpExchange();
+    ObjectoxHttpExchange exchange;
+    exchange = new ObjectoxHttpExchange();
 
     List<String> requests = List.of(
         "Host:\r\n",
@@ -400,14 +400,14 @@ public class HttpExchangeParseHeaderTest {
       exchange.bufferLimit = bytes.length;
       exchange.requestHeaders = null;
       exchange.requestHeaderName = StandardHeaderName.HOST;
-      exchange.state = HttpExchange._PARSE_HEADER_VALUE;
+      exchange.state = ObjectoxHttpExchange._PARSE_HEADER_VALUE;
 
       exchange.stepOne();
 
       assertEquals(exchange.bufferIndex, bytes.length);
       assertEquals(exchange.requestHeaders.size(), 1);
       assertEquals(exchange.requestHeaders.get(StandardHeaderName.HOST).toString(), "");
-      assertEquals(exchange.state, HttpExchange._PARSE_HEADER);
+      assertEquals(exchange.state, ObjectoxHttpExchange._PARSE_HEADER);
     }
   }
 
@@ -417,8 +417,8 @@ public class HttpExchangeParseHeaderTest {
   - semi-happy path: header name is unknown
   """)
   public void parseHeaderValueHeaderNameIsUnknown() {
-    HttpExchange exchange;
-    exchange = new HttpExchange();
+    ObjectoxHttpExchange exchange;
+    exchange = new ObjectoxHttpExchange();
 
     List<String> requests = List.of(
         "Foo: foobar\r\n",
@@ -440,13 +440,13 @@ public class HttpExchangeParseHeaderTest {
       exchange.bufferLimit = bytes.length;
       exchange.requestHeaders = null;
       exchange.requestHeaderName = null;
-      exchange.state = HttpExchange._PARSE_HEADER_VALUE;
+      exchange.state = ObjectoxHttpExchange._PARSE_HEADER_VALUE;
 
       exchange.stepOne();
 
       assertEquals(exchange.bufferIndex, bytes.length);
       assertEquals(exchange.requestHeaders, null);
-      assertEquals(exchange.state, HttpExchange._PARSE_HEADER);
+      assertEquals(exchange.state, ObjectoxHttpExchange._PARSE_HEADER);
     }
   }
 
@@ -454,8 +454,8 @@ public class HttpExchangeParseHeaderTest {
   [#444] HTTP 001: PARSE_HEADER_VALUE --> INPUT_READ
   """)
   public void parseHeaderValueToInputRead() {
-    HttpExchange exchange;
-    exchange = new HttpExchange();
+    ObjectoxHttpExchange exchange;
+    exchange = new ObjectoxHttpExchange();
 
     byte[] bytes;
     bytes = Bytes.utf8("Host: localh");
@@ -465,22 +465,22 @@ public class HttpExchangeParseHeaderTest {
     exchange.bufferLimit = bytes.length;
     exchange.requestHeaders = null;
     exchange.requestHeaderName = StandardHeaderName.HOST;
-    exchange.state = HttpExchange._PARSE_HEADER_VALUE;
+    exchange.state = ObjectoxHttpExchange._PARSE_HEADER_VALUE;
 
     exchange.stepOne();
 
     assertEquals(exchange.bufferIndex, 5);
-    assertEquals(exchange.nextAction, HttpExchange._PARSE_HEADER_VALUE);
+    assertEquals(exchange.nextAction, ObjectoxHttpExchange._PARSE_HEADER_VALUE);
     assertEquals(exchange.requestHeaders, null);
-    assertEquals(exchange.state, HttpExchange._INPUT_READ);
+    assertEquals(exchange.state, ObjectoxHttpExchange._INPUT_READ);
   }
 
   @Test(description = """
   [#444] HTTP 001: PARSE_HEADER_VALUE --> REQUEST_ERROR::BAD_REQUEST
   """)
   public void parseHeaderValueToRequestErrorBadRequest() {
-    HttpExchange exchange;
-    exchange = new HttpExchange();
+    ObjectoxHttpExchange exchange;
+    exchange = new ObjectoxHttpExchange();
 
     byte[] bytes;
     bytes = Bytes.utf8("Host: localh");
@@ -490,13 +490,13 @@ public class HttpExchangeParseHeaderTest {
     exchange.bufferLimit = bytes.length;
     exchange.requestHeaders = null;
     exchange.requestHeaderName = StandardHeaderName.HOST;
-    exchange.state = HttpExchange._PARSE_HEADER_VALUE;
+    exchange.state = ObjectoxHttpExchange._PARSE_HEADER_VALUE;
 
     exchange.stepOne();
 
     assertEquals(exchange.bufferIndex, 5);
     assertEquals(exchange.requestHeaders, null);
-    assertEquals(exchange.state, HttpExchange._REQUEST_ERROR);
+    assertEquals(exchange.state, ObjectoxHttpExchange._REQUEST_ERROR);
     assertEquals(exchange.status, HttpStatus.BAD_REQUEST);
   }
 

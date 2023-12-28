@@ -24,12 +24,12 @@ public class HttpExchangeSetupTest {
 
   @Test
   public void http001() {
-    HttpExchange exchange;
-    exchange = new HttpExchange();
+    ObjectoxHttpExchange exchange;
+    exchange = new ObjectoxHttpExchange();
 
     Http001.INPUT.accept(exchange);
 
-    while (exchange.state < HttpExchange._INPUT) {
+    while (exchange.state < ObjectoxHttpExchange._INPUT) {
       exchange.stepOne();
     }
 
@@ -46,7 +46,7 @@ public class HttpExchangeSetupTest {
     assertEquals(exchange.responseHeaders, null);
     assertEquals(exchange.responseHeadersIndex, -1);
     assertEquals(exchange.socket.isClosed(), false);
-    assertEquals(exchange.state, HttpExchange._INPUT);
+    assertEquals(exchange.state, ObjectoxHttpExchange._INPUT);
     assertEquals(exchange.status, null);
     assertEquals(exchange.versionMajor, -1);
     assertEquals(exchange.versionMinor, -1);
@@ -58,18 +58,18 @@ public class HttpExchangeSetupTest {
   - buffer must be reset
   """)
   public void setup01() {
-    HttpExchange exchange;
-    exchange = new HttpExchange();
+    ObjectoxHttpExchange exchange;
+    exchange = new ObjectoxHttpExchange();
 
     exchange.bufferIndex = -1;
     exchange.bufferLimit = -1;
-    exchange.state = HttpExchange._SETUP;
+    exchange.state = ObjectoxHttpExchange._SETUP;
 
     exchange.stepOne();
 
     assertEquals(exchange.bufferIndex, 0);
     assertEquals(exchange.bufferLimit, 0);
-    assertEquals(exchange.state, HttpExchange._INPUT);
+    assertEquals(exchange.state, ObjectoxHttpExchange._INPUT);
   }
 
 }

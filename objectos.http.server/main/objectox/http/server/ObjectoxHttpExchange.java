@@ -36,7 +36,9 @@ import objectos.http.Http.Method;
 import objectos.http.Http.Status;
 import objectos.http.server.Body;
 import objectos.http.server.CharWritable;
+import objectos.http.server.HttpExchange;
 import objectos.http.server.Segment;
+import objectos.http.server.ServerExchangeResult;
 import objectos.http.server.UriQuery;
 import objectos.lang.object.Check;
 import objectos.notes.NoOpNoteSink;
@@ -45,7 +47,7 @@ import objectos.util.list.GrowableList;
 import objectox.http.HttpStatus;
 import objectox.http.StandardHeaderName;
 
-public final class HttpExchange implements objectos.http.server.HttpExchange {
+public final class ObjectoxHttpExchange implements HttpExchange {
 
   public non-sealed static abstract class OptionValue implements objectos.http.server.HttpExchange.Option {
 
@@ -54,7 +56,7 @@ public final class HttpExchange implements objectos.http.server.HttpExchange {
     public static OptionValue bufferSize(int size) {
       return new OptionValue() {
         @Override
-        public final void accept(HttpExchange builder) {
+        public final void accept(ObjectoxHttpExchange builder) {
           builder.buffer = new byte[size];
         }
       };
@@ -63,13 +65,13 @@ public final class HttpExchange implements objectos.http.server.HttpExchange {
     public static OptionValue noteSink(NoteSink noteSink) {
       return new OptionValue() {
         @Override
-        public final void accept(HttpExchange builder) {
+        public final void accept(ObjectoxHttpExchange builder) {
           builder.noteSink = noteSink;
         }
       };
     }
 
-    public abstract void accept(HttpExchange builder);
+    public abstract void accept(ObjectoxHttpExchange builder);
 
   }
 
@@ -98,6 +100,10 @@ public final class HttpExchange implements objectos.http.server.HttpExchange {
 
     METHOD_NAME_AND_SPACE = map;
   }
+
+  // Config phase
+
+  static final byte _CONFIG = 0;
 
   // Setup phase
 
@@ -161,6 +167,8 @@ public final class HttpExchange implements objectos.http.server.HttpExchange {
 
   int bufferLimit;
 
+  int bufferSize = 1024;
+
   IOException error;
 
   boolean keepAlive;
@@ -201,7 +209,7 @@ public final class HttpExchange implements objectos.http.server.HttpExchange {
 
   byte versionMinor;
 
-  public HttpExchange(Socket socket) {
+  public ObjectoxHttpExchange(Socket socket) {
     this.socket = socket;
 
     keepAlive = true;
@@ -209,12 +217,59 @@ public final class HttpExchange implements objectos.http.server.HttpExchange {
     state = _SETUP;
   }
 
+  public ObjectoxHttpExchange(Socket socket, boolean newApi) {
+    this.socket = socket;
+
+    state = _CONFIG;
+  }
+
   /**
    * For testing purposes only.
    */
-  HttpExchange() {}
+  ObjectoxHttpExchange() {}
 
-  public final HttpExchange init() {
+  // new api
+
+  @Override
+  public final void bufferSize(int size) {
+    checkConfig();
+
+    Check.argument(size >= 128, "buffer size must be >= 128");
+
+    bufferSize = size;
+  }
+
+  @Override
+  public final void noteSink(NoteSink noteSink) {
+    checkConfig();
+
+    this.noteSink = Check.notNull(noteSink, "noteSink == null");
+  }
+
+  private void checkConfig() {
+    Check.state(state == _CONFIG, "This configuration method cannot be called at this moment");
+  }
+
+  @Override
+  public final ServerExchangeResult get() throws IOException {
+    if (state == _CONFIG) {
+      while (state <= _HANDLE) {
+        stepOne();
+      }
+
+      if (error != null) {
+        throw error;
+      }
+
+      return new ObjectoxServerRequest(this);
+    }
+
+    throw new UnsupportedOperationException("Implement me :: state=" + state);
+  }
+
+  // old api
+
+  public final ObjectoxHttpExchange init() {
     if (buffer == null) {
       buffer = new byte[1024];
     }
@@ -448,6 +503,10 @@ public final class HttpExchange implements objectos.http.server.HttpExchange {
 
   final void stepOne() {
     state = switch (state) {
+      // Config phase
+
+      case _CONFIG -> config();
+
       // Setup phase
 
       case _SETUP -> setup();
@@ -506,6 +565,18 @@ public final class HttpExchange implements objectos.http.server.HttpExchange {
           "Implement me :: state=" + state
       );
     };
+  }
+
+  private byte config() {
+    if (buffer == null) {
+      buffer = new byte[bufferSize];
+    }
+
+    if (noteSink == null) {
+      noteSink = NoOpNoteSink.of();
+    }
+
+    return _SETUP;
   }
 
   private boolean bufferEquals(byte[] target, int start) {
@@ -1208,6 +1279,7 @@ public final class HttpExchange implements objectos.http.server.HttpExchange {
       // assuming the client is slow on sending data
 
       // clear method candidate just in case...
+      // TODO 2023-12-17 this is probably wrong...
       method = null;
 
       return toInputRead(state);
@@ -1519,9 +1591,9 @@ public final class HttpExchange implements objectos.http.server.HttpExchange {
 
     // TODO set timeout
 
-    // we ensure the buffer is reset
-
     bufferIndex = bufferLimit = 0;
+
+    error = null;
 
     return _INPUT;
   }

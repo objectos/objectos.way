@@ -28,8 +28,8 @@ public class HttpExchangeResultTest {
 
   @Test
   public void http001() {
-    HttpExchange exchange;
-    exchange = new HttpExchange();
+    ObjectoxHttpExchange exchange;
+    exchange = new ObjectoxHttpExchange();
 
     Http001.INPUT.accept(exchange);
 
@@ -50,7 +50,7 @@ public class HttpExchangeResultTest {
     assertEquals(exchange.responseBody, null);
     assertEquals(exchange.responseHeaders, List.of());
     assertEquals(exchange.responseHeadersIndex, -1);
-    assertEquals(exchange.state, HttpExchange._STOP);
+    assertEquals(exchange.state, ObjectoxHttpExchange._STOP);
     assertEquals(exchange.status, null);
     assertEquals(exchange.versionMajor, -1);
     assertEquals(exchange.versionMinor, -1);
@@ -60,32 +60,32 @@ public class HttpExchangeResultTest {
   [#450] RESULT --> STOP
   """)
   public void result() {
-    HttpExchange exchange;
-    exchange = new HttpExchange();
+    ObjectoxHttpExchange exchange;
+    exchange = new ObjectoxHttpExchange();
 
     exchange.keepAlive = false;
     exchange.socket = TestableSocket.empty();
-    exchange.state = HttpExchange._RESULT;
+    exchange.state = ObjectoxHttpExchange._RESULT;
 
     exchange.stepOne();
 
-    assertEquals(exchange.state, HttpExchange._STOP);
+    assertEquals(exchange.state, ObjectoxHttpExchange._STOP);
   }
 
   @Test(description = """
   [#453] RESULT --> SETUP
   """)
   public void resultToSetup() {
-    HttpExchange exchange;
-    exchange = new HttpExchange();
+    ObjectoxHttpExchange exchange;
+    exchange = new ObjectoxHttpExchange();
 
     exchange.keepAlive = true;
     exchange.socket = TestableSocket.empty();
-    exchange.state = HttpExchange._RESULT;
+    exchange.state = ObjectoxHttpExchange._RESULT;
 
     exchange.stepOne();
 
-    assertEquals(exchange.state, HttpExchange._KEEP_ALIVE);
+    assertEquals(exchange.state, ObjectoxHttpExchange._KEEP_ALIVE);
   }
 
 }

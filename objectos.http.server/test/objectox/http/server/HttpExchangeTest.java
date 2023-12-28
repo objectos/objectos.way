@@ -34,8 +34,8 @@ public class HttpExchangeTest {
 
   @Test
   public void http003() throws IOException {
-    HttpExchange exchange;
-    exchange = new HttpExchange();
+    ObjectoxHttpExchange exchange;
+    exchange = new ObjectoxHttpExchange();
 
     Http003.INPUT.accept(exchange);
 
@@ -53,8 +53,8 @@ public class HttpExchangeTest {
 
   @Test
   public void http004() throws IOException {
-    HttpExchange exchange;
-    exchange = new HttpExchange();
+    ObjectoxHttpExchange exchange;
+    exchange = new ObjectoxHttpExchange();
 
     Http004.INPUT.accept(exchange);
 
@@ -89,8 +89,8 @@ public class HttpExchangeTest {
     );
 
     try (exchange) {
-      HttpExchange x;
-      x = (HttpExchange) exchange;
+      ObjectoxHttpExchange x;
+      x = (ObjectoxHttpExchange) exchange;
 
       assertSame(x.noteSink, noteSink);
     }
@@ -98,14 +98,14 @@ public class HttpExchangeTest {
 
   @Test
   public void methodIn() {
-    HttpExchange get;
+    ObjectoxHttpExchange get;
     get = ofMethod(Method.GET);
 
     assertEquals(get.methodIn(Method.GET, Method.POST), true);
     assertEquals(get.methodIn(Method.POST, Method.GET), true);
     assertEquals(get.methodIn(Method.POST, Method.PUT), false);
 
-    HttpExchange post;
+    ObjectoxHttpExchange post;
     post = ofMethod(Method.POST);
 
     assertEquals(post.methodIn(Method.GET, Method.POST), true);
@@ -113,7 +113,7 @@ public class HttpExchangeTest {
     assertEquals(post.methodIn(Method.DELETE, Method.PUT), false);
   }
 
-  private HttpExchange ofMethod(Method method) {
+  private ObjectoxHttpExchange ofMethod(Method method) {
     String input = """
         %s / HTTP/1.1
         Host: www.example.com
@@ -121,7 +121,7 @@ public class HttpExchangeTest {
 
         """.formatted(method.name());
 
-    HttpExchange exchange;
+    ObjectoxHttpExchange exchange;
     exchange = ofInput(input);
 
     assertTrue(exchange.active());
@@ -157,7 +157,7 @@ public class HttpExchangeTest {
 
         """.formatted(path);
 
-    HttpExchange exchange;
+    ObjectoxHttpExchange exchange;
     exchange = ofInput(input);
 
     assertTrue(exchange.active());
@@ -167,7 +167,7 @@ public class HttpExchangeTest {
 
   @Test
   public void statusPresent() {
-    HttpExchange http;
+    ObjectoxHttpExchange http;
     http = ofMethod(Method.GET);
 
     assertEquals(http.statusPresent(), false);
@@ -177,15 +177,15 @@ public class HttpExchangeTest {
     assertEquals(http.statusPresent(), true);
   }
 
-  private HttpExchange ofInput(String s) {
+  private ObjectoxHttpExchange ofInput(String s) {
     String request;
     request = s.replace("\n", "\r\n");
 
     RegularInput input;
     input = new RegularInput(request);
 
-    HttpExchange exchange;
-    exchange = new HttpExchange();
+    ObjectoxHttpExchange exchange;
+    exchange = new ObjectoxHttpExchange();
 
     input.accept(exchange);
 

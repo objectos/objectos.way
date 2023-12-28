@@ -26,8 +26,8 @@ public class HttpChunkedCharsTest {
 
 	@Test
 	public void http002() throws IOException {
-		HttpExchange outer;
-		outer = new HttpExchange();
+		ObjectoxHttpExchange outer;
+		outer = new ObjectoxHttpExchange();
 
 		TestableSocket socket;
 		socket = TestableSocket.empty();

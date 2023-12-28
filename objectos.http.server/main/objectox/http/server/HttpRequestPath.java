@@ -18,10 +18,11 @@ package objectox.http.server;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import objectos.http.server.Segment;
+import objectos.http.server.UriPath;
 import objectos.lang.object.Check;
 import objectos.util.array.IntArrays;
 
-public final class HttpRequestPath {
+public final class HttpRequestPath implements UriPath {
 
   final byte[] buffer;
 
@@ -52,6 +53,14 @@ public final class HttpRequestPath {
     length = toOffset(index);
 
     value = new String(buffer, startIndex, length, StandardCharsets.UTF_8);
+  }
+
+  @Override
+  public final boolean is(String path) {
+    String value;
+    value = toString();
+
+    return value.equals(path);
   }
 
   public final boolean matches(Segment s0) {

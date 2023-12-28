@@ -28,12 +28,42 @@ import objectos.http.Http.Method;
 import objectos.lang.object.Check;
 import objectos.notes.Note1;
 import objectos.notes.NoteSink;
+import objectox.http.server.ObjectoxHttpExchange;
 
 /**
  * Represents the server-side view of an HTTP exchange. This class allows for
  * writing an HTTP server.
  */
-public sealed interface HttpExchange extends AutoCloseable permits objectox.http.server.HttpExchange {
+public sealed interface HttpExchange extends AutoCloseable permits objectox.http.server.ObjectoxHttpExchange {
+
+  // new API
+
+  static HttpExchange create(Socket socket) {
+    Check.notNull(socket, "socket == null");
+
+    return new ObjectoxHttpExchange(socket, true);
+  }
+
+  // config methods
+
+  void bufferSize(int size);
+
+  void noteSink(NoteSink noteSink);
+
+  // user methods
+
+  /**
+   * Closes and ends this exchange by closing its underlying socket.
+   *
+   * @throws IOException
+   *         if an I/O error occurs
+   */
+  @Override
+  void close() throws IOException;
+
+  ServerExchangeResult get() throws IOException;
+
+  // old API
 
   /**
    * Note indicating an I/O read error occurred.
@@ -44,7 +74,7 @@ public sealed interface HttpExchange extends AutoCloseable permits objectox.http
 
   Note1<Set<String>> UKNOWN_HEADER_NAMES = Note1.trace(HttpExchange.class, "Unknown header names");
 
-  sealed interface Processed permits objectox.http.server.HttpExchange.ProcessedRecord {
+  sealed interface Processed permits objectox.http.server.ObjectoxHttpExchange.ProcessedRecord {
     SocketAddress remoteAddress();
 
     Method method();
@@ -59,7 +89,7 @@ public sealed interface HttpExchange extends AutoCloseable permits objectox.http
   /**
    * Configures the creation of a {@link HttpExchange} instance.
    */
-  sealed interface Option permits objectox.http.server.HttpExchange.OptionValue {
+  sealed interface Option permits objectox.http.server.ObjectoxHttpExchange.OptionValue {
 
     /**
      * Defines the size in bytes of the buffer.
@@ -72,7 +102,7 @@ public sealed interface HttpExchange extends AutoCloseable permits objectox.http
     static Option bufferSize(int size) {
       Check.argument(size > 128, "buffer size must be > 128");
 
-      return objectox.http.server.HttpExchange.OptionValue.bufferSize(size);
+      return objectox.http.server.ObjectoxHttpExchange.OptionValue.bufferSize(size);
     }
 
     /**
@@ -86,7 +116,7 @@ public sealed interface HttpExchange extends AutoCloseable permits objectox.http
     static Option noteSink(NoteSink noteSink) {
       Check.notNull(noteSink, "noteSink == null");
 
-      return objectox.http.server.HttpExchange.OptionValue.noteSink(noteSink);
+      return objectox.http.server.ObjectoxHttpExchange.OptionValue.noteSink(noteSink);
     }
 
   }
@@ -95,8 +125,8 @@ public sealed interface HttpExchange extends AutoCloseable permits objectox.http
   static HttpExchange of(Socket socket) {
     Check.notNull(socket, "socket == null");
 
-    objectox.http.server.HttpExchange instance;
-    instance = new objectox.http.server.HttpExchange(socket);
+    objectox.http.server.ObjectoxHttpExchange instance;
+    instance = new objectox.http.server.ObjectoxHttpExchange(socket);
 
     return instance.init();
   }
@@ -105,10 +135,10 @@ public sealed interface HttpExchange extends AutoCloseable permits objectox.http
     Check.notNull(socket, "socket == null");
     Check.notNull(option, "option == null");
 
-    objectox.http.server.HttpExchange instance;
-    instance = new objectox.http.server.HttpExchange(socket);
+    objectox.http.server.ObjectoxHttpExchange instance;
+    instance = new objectox.http.server.ObjectoxHttpExchange(socket);
 
-    ((objectox.http.server.HttpExchange.OptionValue) option).accept(instance);
+    ((objectox.http.server.ObjectoxHttpExchange.OptionValue) option).accept(instance);
 
     return instance.init();
   }
@@ -118,24 +148,15 @@ public sealed interface HttpExchange extends AutoCloseable permits objectox.http
     Check.notNull(option1, "option1 == null");
     Check.notNull(option2, "option2 == null");
 
-    objectox.http.server.HttpExchange instance;
-    instance = new objectox.http.server.HttpExchange(socket);
+    objectox.http.server.ObjectoxHttpExchange instance;
+    instance = new objectox.http.server.ObjectoxHttpExchange(socket);
 
-    ((objectox.http.server.HttpExchange.OptionValue) option1).accept(instance);
+    ((objectox.http.server.ObjectoxHttpExchange.OptionValue) option1).accept(instance);
 
-    ((objectox.http.server.HttpExchange.OptionValue) option2).accept(instance);
+    ((objectox.http.server.ObjectoxHttpExchange.OptionValue) option2).accept(instance);
 
     return instance.init();
   }
-
-  /**
-   * Closes and ends this exchange by closing its underlying socket.
-   *
-   * @throws IOException
-   *         if an I/O error occurs
-   */
-  @Override
-  void close() throws IOException;
 
   boolean active();
 

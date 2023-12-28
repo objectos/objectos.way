@@ -214,7 +214,7 @@ public final class PrettyPrintWriter extends Writer {
 
     switch (state) {
       case BLOCK_END -> {
-        if (!endsWithNewLine(value)) {
+        if (!startsWithNewLine(value)) {
           write(NL);
         }
 

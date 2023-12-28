@@ -35,8 +35,8 @@ public class HttpExchangeOutputTest {
 
   @Test
   public void http001() throws IOException {
-    HttpExchange exchange;
-    exchange = new HttpExchange();
+    ObjectoxHttpExchange exchange;
+    exchange = new ObjectoxHttpExchange();
 
     Http001.INPUT.accept(exchange);
 
@@ -58,7 +58,7 @@ public class HttpExchangeOutputTest {
     assertEquals(exchange.responseHeaders, List.of());
     assertEquals(exchange.responseHeadersIndex, -1);
     assertEquals(exchange.socket.isClosed(), false);
-    assertEquals(exchange.state, HttpExchange._STOP);
+    assertEquals(exchange.state, ObjectoxHttpExchange._STOP);
     // status won't be used from this point forward
     assertEquals(exchange.status, null);
     // version won't be used from this point forward
@@ -73,8 +73,8 @@ public class HttpExchangeOutputTest {
 
   @Test
   public void http002() throws IOException {
-    HttpExchange exchange;
-    exchange = new HttpExchange();
+    ObjectoxHttpExchange exchange;
+    exchange = new ObjectoxHttpExchange();
 
     Http002.INPUT.accept(exchange);
 
@@ -97,7 +97,7 @@ public class HttpExchangeOutputTest {
     assertEquals(exchange.responseHeaders, List.of());
     assertEquals(exchange.responseHeadersIndex, -1);
     assertEquals(exchange.socket.isClosed(), false);
-    assertEquals(exchange.state, HttpExchange._STOP);
+    assertEquals(exchange.state, ObjectoxHttpExchange._STOP);
     // status won't be used from this point forward
     assertEquals(exchange.status, null);
     // version won't be used from this point forward
@@ -119,20 +119,20 @@ public class HttpExchangeOutputTest {
   - responseHeaderIndex reset
   """)
   public void output() {
-    HttpExchange exchange;
-    exchange = new HttpExchange();
+    ObjectoxHttpExchange exchange;
+    exchange = new ObjectoxHttpExchange();
 
     exchange.bufferIndex = 123;
     exchange.bufferLimit = 123;
     exchange.responseHeadersIndex = 123;
-    exchange.state = HttpExchange._OUTPUT;
+    exchange.state = ObjectoxHttpExchange._OUTPUT;
 
     exchange.stepOne();
 
     assertEquals(exchange.bufferIndex, 0);
     assertEquals(exchange.bufferLimit, 0);
     assertEquals(exchange.responseHeadersIndex, 0);
-    assertEquals(exchange.state, HttpExchange._OUTPUT_STATUS);
+    assertEquals(exchange.state, ObjectoxHttpExchange._OUTPUT_STATUS);
   }
 
   // OUTPUT_STATUS
@@ -144,13 +144,13 @@ public class HttpExchangeOutputTest {
   - responseHeaderIndex reset
   """)
   public void outputStatus() {
-    HttpExchange exchange;
-    exchange = new HttpExchange();
+    ObjectoxHttpExchange exchange;
+    exchange = new ObjectoxHttpExchange();
 
     exchange.buffer = new byte[64];
     exchange.bufferIndex = 0;
     exchange.bufferLimit = 0;
-    exchange.state = HttpExchange._OUTPUT_STATUS;
+    exchange.state = ObjectoxHttpExchange._OUTPUT_STATUS;
     exchange.status = HttpStatus.OK;
     exchange.versionMajor = 1;
     exchange.versionMinor = 1;
@@ -160,7 +160,7 @@ public class HttpExchangeOutputTest {
     assertEquals(Arrays.copyOf(exchange.buffer, 17), Bytes.utf8("HTTP/1.1 200 OK\r\n"));
     assertEquals(exchange.bufferIndex, 0);
     assertEquals(exchange.bufferLimit, 17);
-    assertEquals(exchange.state, HttpExchange._OUTPUT_HEADER);
+    assertEquals(exchange.state, ObjectoxHttpExchange._OUTPUT_HEADER);
   }
 
   @Test(description = """
@@ -169,13 +169,13 @@ public class HttpExchangeOutputTest {
   - buffer not large enough for status line
   """)
   public void outputStatusToResult() {
-    HttpExchange exchange;
-    exchange = new HttpExchange();
+    ObjectoxHttpExchange exchange;
+    exchange = new ObjectoxHttpExchange();
 
     exchange.buffer = new byte[3]; // too small
     exchange.bufferIndex = 0;
     exchange.bufferLimit = 0;
-    exchange.state = HttpExchange._OUTPUT_STATUS;
+    exchange.state = ObjectoxHttpExchange._OUTPUT_STATUS;
     exchange.status = HttpStatus.OK;
     exchange.versionMajor = 1;
     exchange.versionMinor = 1;
@@ -185,7 +185,7 @@ public class HttpExchangeOutputTest {
     assertEquals(exchange.bufferIndex, 0);
     assertEquals(exchange.bufferLimit, 0);
     assertNotNull(exchange.error);
-    assertEquals(exchange.state, HttpExchange._RESULT);
+    assertEquals(exchange.state, ObjectoxHttpExchange._RESULT);
   }
 
   // OUTPUT_HEADER
@@ -198,8 +198,8 @@ public class HttpExchangeOutputTest {
   - responseHeaderIndex should be updated
   """)
   public void outputHeader() {
-    HttpExchange exchange;
-    exchange = new HttpExchange();
+    ObjectoxHttpExchange exchange;
+    exchange = new ObjectoxHttpExchange();
 
     exchange.buffer = new byte[64];
     exchange.bufferIndex = 0;
@@ -209,7 +209,7 @@ public class HttpExchangeOutputTest {
       hrh(Http.Header.CONTENT_TYPE, "text/plain")
     );
     exchange.responseHeadersIndex = 0;
-    exchange.state = HttpExchange._OUTPUT_HEADER;
+    exchange.state = ObjectoxHttpExchange._OUTPUT_HEADER;
 
     exchange.stepOne();
 
@@ -217,15 +217,15 @@ public class HttpExchangeOutputTest {
     assertEquals(exchange.bufferIndex, 0);
     assertEquals(exchange.bufferLimit, 19);
     assertEquals(exchange.responseHeadersIndex, 1);
-    assertEquals(exchange.state, HttpExchange._OUTPUT_HEADER);
+    assertEquals(exchange.state, ObjectoxHttpExchange._OUTPUT_HEADER);
   }
 
   @Test(description = """
   [#449] OUTPUT_HEADER --> OUTPUT_BUFFER (buffer full)
   """)
   public void outputHeaderToOutputBufferBufferFull() {
-    HttpExchange exchange;
-    exchange = new HttpExchange();
+    ObjectoxHttpExchange exchange;
+    exchange = new ObjectoxHttpExchange();
 
     exchange.buffer = new byte[20]; /* large enough for Connection header */
     exchange.bufferLimit = 10; /* but not enough space left... */
@@ -234,35 +234,35 @@ public class HttpExchangeOutputTest {
       hrh(Http.Header.CONTENT_TYPE, "text/plain")
     );
     exchange.responseHeadersIndex = 0;
-    exchange.state = HttpExchange._OUTPUT_HEADER;
+    exchange.state = ObjectoxHttpExchange._OUTPUT_HEADER;
 
     exchange.stepOne();
 
     assertEquals(exchange.buffer, new byte[20]);
     assertEquals(exchange.bufferLimit, 10);
-    assertEquals(exchange.nextAction, HttpExchange._OUTPUT_HEADER);
+    assertEquals(exchange.nextAction, ObjectoxHttpExchange._OUTPUT_HEADER);
     assertEquals(exchange.responseHeadersIndex, 0);
-    assertEquals(exchange.state, HttpExchange._OUTPUT_BUFFER);
+    assertEquals(exchange.state, ObjectoxHttpExchange._OUTPUT_BUFFER);
   }
 
   @Test(description = """
   [#449] OUTPUT_HEADER --> OUTPUT_TERMINATOR
   """)
   public void outputHeaderToOutputTerminator() {
-    HttpExchange exchange;
-    exchange = new HttpExchange();
+    ObjectoxHttpExchange exchange;
+    exchange = new ObjectoxHttpExchange();
 
     exchange.responseHeaders = List.of(
       hrh(Http.Header.CONNECTION, "close"),
       hrh(Http.Header.CONTENT_TYPE, "text/plain")
     );
     exchange.responseHeadersIndex = 2;
-    exchange.state = HttpExchange._OUTPUT_HEADER;
+    exchange.state = ObjectoxHttpExchange._OUTPUT_HEADER;
 
     exchange.stepOne();
 
     assertEquals(exchange.responseHeadersIndex, 2);
-    assertEquals(exchange.state, HttpExchange._OUTPUT_TERMINATOR);
+    assertEquals(exchange.state, ObjectoxHttpExchange._OUTPUT_TERMINATOR);
   }
 
   // OUTPUT_BUFFER
@@ -271,31 +271,31 @@ public class HttpExchangeOutputTest {
   [#449] OUTPUT_BUFFER --> next action
   """)
   public void outputBuffer() {
-    HttpExchange exchange;
-    exchange = new HttpExchange();
+    ObjectoxHttpExchange exchange;
+    exchange = new ObjectoxHttpExchange();
 
     TestableSocket socket;
     socket = TestableSocket.empty();
 
     exchange.buffer = Bytes.utf8("12345xxx");
     exchange.bufferLimit = 5;
-    exchange.nextAction = HttpExchange._STOP;
+    exchange.nextAction = ObjectoxHttpExchange._STOP;
     exchange.socket = socket;
-    exchange.state = HttpExchange._OUTPUT_BUFFER;
+    exchange.state = ObjectoxHttpExchange._OUTPUT_BUFFER;
 
     exchange.stepOne();
 
     assertEquals(socket.outputAsString(), "12345");
     assertEquals(exchange.bufferLimit, 0);
-    assertEquals(exchange.state, HttpExchange._STOP);
+    assertEquals(exchange.state, ObjectoxHttpExchange._STOP);
   }
 
   @Test(description = """
   [#449] OUTPUT_BUFFER --> ERROR_WRITE::fails to get output stream
   """)
   public void outputBufferToClose() {
-    HttpExchange exchange;
-    exchange = new HttpExchange();
+    ObjectoxHttpExchange exchange;
+    exchange = new ObjectoxHttpExchange();
 
     TestableSocket socket;
     socket = TestableSocket.throwsOnGetOutput();
@@ -304,21 +304,21 @@ public class HttpExchangeOutputTest {
     exchange.bufferLimit = 5;
     exchange.error = null;
     exchange.socket = socket;
-    exchange.state = HttpExchange._OUTPUT_BUFFER;
+    exchange.state = ObjectoxHttpExchange._OUTPUT_BUFFER;
 
     exchange.stepOne();
 
     assertEquals(exchange.bufferLimit, 5);
     assertSame(exchange.error, socket.thrown);
-    assertEquals(exchange.state, HttpExchange._RESULT);
+    assertEquals(exchange.state, ObjectoxHttpExchange._RESULT);
   }
 
   @Test(description = """
   [#449] OUTPUT_BUFFER --> ERROR_WRITE::output stream throws on write
   """)
   public void outputBufferToCloseOnWrite() {
-    HttpExchange exchange;
-    exchange = new HttpExchange();
+    ObjectoxHttpExchange exchange;
+    exchange = new ObjectoxHttpExchange();
 
     TestableSocket socket;
     socket = TestableSocket.throwsOnWrite();
@@ -327,13 +327,13 @@ public class HttpExchangeOutputTest {
     exchange.bufferLimit = 5;
     exchange.error = null;
     exchange.socket = socket;
-    exchange.state = HttpExchange._OUTPUT_BUFFER;
+    exchange.state = ObjectoxHttpExchange._OUTPUT_BUFFER;
 
     exchange.stepOne();
 
     assertEquals(exchange.bufferLimit, 5);
     assertSame(exchange.error, socket.thrown);
-    assertEquals(exchange.state, HttpExchange._RESULT);
+    assertEquals(exchange.state, ObjectoxHttpExchange._RESULT);
   }
 
   // OUTPUT_TERMINATOR
@@ -342,8 +342,8 @@ public class HttpExchangeOutputTest {
   [#449] OUTPUT_TERMINATOR --> OUTPUT_BODY
   """)
   public void outputTerminator() {
-    HttpExchange exchange;
-    exchange = new HttpExchange();
+    ObjectoxHttpExchange exchange;
+    exchange = new ObjectoxHttpExchange();
 
     byte[] bytes;
     bytes = Bytes.utf8("last header\r\n");
@@ -351,7 +351,7 @@ public class HttpExchangeOutputTest {
     exchange.buffer = Arrays.copyOf(bytes, 20);
     exchange.bufferLimit = bytes.length;
     exchange.responseBody = new byte[0];
-    exchange.state = HttpExchange._OUTPUT_TERMINATOR;
+    exchange.state = ObjectoxHttpExchange._OUTPUT_TERMINATOR;
 
     exchange.stepOne();
 
@@ -359,27 +359,27 @@ public class HttpExchangeOutputTest {
       Arrays.copyOf(exchange.buffer, exchange.bufferLimit),
       Bytes.utf8("last header\r\n\r\n")
     );
-    assertEquals(exchange.state, HttpExchange._OUTPUT_BODY);
+    assertEquals(exchange.state, ObjectoxHttpExchange._OUTPUT_BODY);
   }
 
   @Test(description = """
   [#449] OUTPUT_TERMINATOR --> OUTPUT_BUFFER
   """)
   public void outputTerminatorToOutputBuffer() {
-    HttpExchange exchange;
-    exchange = new HttpExchange();
+    ObjectoxHttpExchange exchange;
+    exchange = new ObjectoxHttpExchange();
 
     byte[] bytes;
     bytes = Bytes.utf8("last header\r\n");
 
     exchange.buffer = bytes; // buffer is full
     exchange.bufferLimit = bytes.length;
-    exchange.state = HttpExchange._OUTPUT_TERMINATOR;
+    exchange.state = ObjectoxHttpExchange._OUTPUT_TERMINATOR;
 
     exchange.stepOne();
 
-    assertEquals(exchange.nextAction, HttpExchange._OUTPUT_TERMINATOR);
-    assertEquals(exchange.state, HttpExchange._OUTPUT_BUFFER);
+    assertEquals(exchange.nextAction, ObjectoxHttpExchange._OUTPUT_TERMINATOR);
+    assertEquals(exchange.state, ObjectoxHttpExchange._OUTPUT_BUFFER);
   }
 
   // OUTPUT_BODY
@@ -388,8 +388,8 @@ public class HttpExchangeOutputTest {
   [#449] OUTPUT_BODY --> RESULT
   """)
   public void outputBody() {
-    HttpExchange exchange;
-    exchange = new HttpExchange();
+    ObjectoxHttpExchange exchange;
+    exchange = new ObjectoxHttpExchange();
 
     TestableSocket socket;
     socket = TestableSocket.empty();
@@ -401,20 +401,20 @@ public class HttpExchangeOutputTest {
     exchange.bufferLimit = headers.length;
     exchange.responseBody = Bytes.utf8("Hello world!\n");
     exchange.socket = socket;
-    exchange.state = HttpExchange._OUTPUT_BODY;
+    exchange.state = ObjectoxHttpExchange._OUTPUT_BODY;
 
     exchange.stepOne();
 
     assertEquals(socket.outputAsString(), "headers\r\n\r\nHello world!\n");
-    assertEquals(exchange.state, HttpExchange._RESULT);
+    assertEquals(exchange.state, ObjectoxHttpExchange._RESULT);
   }
 
   @Test(description = """
   [#449] OUTPUT_BODY --> ERROR_WRITE
   """)
   public void outputBodyToErrorWrite() {
-    HttpExchange exchange;
-    exchange = new HttpExchange();
+    ObjectoxHttpExchange exchange;
+    exchange = new ObjectoxHttpExchange();
 
     TestableSocket socket;
     socket = TestableSocket.throwsOnGetOutput();
@@ -426,12 +426,12 @@ public class HttpExchangeOutputTest {
     exchange.bufferLimit = headers.length;
     exchange.responseBody = Bytes.utf8("Hello world!\n");
     exchange.socket = socket;
-    exchange.state = HttpExchange._OUTPUT_BODY;
+    exchange.state = ObjectoxHttpExchange._OUTPUT_BODY;
 
     exchange.stepOne();
 
     assertEquals(exchange.error, socket.thrown);
-    assertEquals(exchange.state, HttpExchange._RESULT);
+    assertEquals(exchange.state, ObjectoxHttpExchange._RESULT);
   }
 
   private HttpResponseHeader hrh(HeaderName name, String value) {

@@ -17,11 +17,11 @@ package objectox.http.server;
 
 public interface TestingInput {
 
-  void accept(HttpExchange exchange);
+  void accept(ObjectoxHttpExchange exchange);
 
   public record RegularInput(String request) implements TestingInput {
     @Override
-    public final void accept(HttpExchange exchange) {
+    public final void accept(ObjectoxHttpExchange exchange) {
       TestingInput.regularAccept(exchange);
 
       exchange.socket = TestableSocket.of(request);
@@ -37,7 +37,7 @@ public interface TestingInput {
       this.requests = requests.clone();
     }
     @Override
-    public final void accept(HttpExchange exchange) {
+    public final void accept(ObjectoxHttpExchange exchange) {
       TestingInput.regularAccept(exchange);
 
       Object[] data;
@@ -54,7 +54,7 @@ public interface TestingInput {
     return new BufferHeaderValue(bytes, 0, bytes.length);
   }
 
-  private static void regularAccept(HttpExchange exchange) {
+  private static void regularAccept(ObjectoxHttpExchange exchange) {
     exchange.buffer = new byte[512];
     exchange.bufferIndex = -1;
     exchange.bufferLimit = -1;
@@ -68,7 +68,7 @@ public interface TestingInput {
     exchange.responseHeaders = null;
     exchange.responseHeadersIndex = -1;
     exchange.socket = null;
-    exchange.state = HttpExchange._SETUP;
+    exchange.state = ObjectoxHttpExchange._SETUP;
     exchange.status = null;
     exchange.versionMajor = -1;
     exchange.versionMinor = -1;

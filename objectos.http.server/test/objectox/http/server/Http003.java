@@ -34,7 +34,7 @@ public final class Http003 {
 
   public static final String OUTPUT = Http001.OUTPUT;
 
-  public static void response(HttpExchange exchange) {
+  public static void response(ObjectoxHttpExchange exchange) {
     Http001.response(exchange);
   }
 

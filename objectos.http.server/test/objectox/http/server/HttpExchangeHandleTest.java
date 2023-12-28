@@ -32,8 +32,8 @@ public class HttpExchangeHandleTest {
 
   @Test
   public void http001() {
-    HttpExchange exchange;
-    exchange = new HttpExchange();
+    ObjectoxHttpExchange exchange;
+    exchange = new ObjectoxHttpExchange();
 
     Http001.INPUT.accept(exchange);
 
@@ -63,7 +63,7 @@ public class HttpExchangeHandleTest {
     ));
     assertEquals(exchange.responseHeadersIndex, -1);
     assertEquals(exchange.socket.isClosed(), false);
-    assertEquals(exchange.state, HttpExchange._HANDLE_INVOKE);
+    assertEquals(exchange.state, ObjectoxHttpExchange._HANDLE_INVOKE);
     // response status set
     assertEquals(exchange.status, HttpStatus.OK);
     assertEquals(exchange.versionMajor, 1);
@@ -72,8 +72,8 @@ public class HttpExchangeHandleTest {
 
   @Test
   public void http004() {
-    HttpExchange exchange;
-    exchange = new HttpExchange();
+    ObjectoxHttpExchange exchange;
+    exchange = new ObjectoxHttpExchange();
 
     Http004.INPUT.accept(exchange);
 
@@ -104,7 +104,7 @@ public class HttpExchangeHandleTest {
     ));
     assertEquals(exchange.responseHeadersIndex, -1);
     assertEquals(exchange.socket.isClosed(), false);
-    assertEquals(exchange.state, HttpExchange._HANDLE_INVOKE);
+    assertEquals(exchange.state, ObjectoxHttpExchange._HANDLE_INVOKE);
     // response status set
     assertEquals(exchange.status, HttpStatus.OK);
     assertEquals(exchange.versionMajor, 1);
@@ -119,8 +119,8 @@ public class HttpExchangeHandleTest {
   - creates responseHeaders
   """)
   public void handle() {
-    HttpExchange exchange;
-    exchange = new HttpExchange();
+    ObjectoxHttpExchange exchange;
+    exchange = new ObjectoxHttpExchange();
 
     record Test(String connection, boolean keepAlive) {}
 
@@ -137,14 +137,14 @@ public class HttpExchangeHandleTest {
       exchange.requestHeaders = Map.of(StandardHeaderName.CONNECTION, hv(test.connection));
       exchange.responseBody = Bytes.utf8("body");
       exchange.responseHeaders = null;
-      exchange.state = HttpExchange._HANDLE;
+      exchange.state = ObjectoxHttpExchange._HANDLE;
 
       exchange.stepOne();
 
       assertEquals(exchange.keepAlive, test.keepAlive);
       assertEquals(exchange.responseBody, null);
       assertNotNull(exchange.responseHeaders);
-      assertEquals(exchange.state, HttpExchange._HANDLE_INVOKE);
+      assertEquals(exchange.state, ObjectoxHttpExchange._HANDLE_INVOKE);
     }
   }
 

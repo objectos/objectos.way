@@ -15,8 +15,11 @@
  */
 package objectos.http.server;
 
-public interface HttpModule {
+/**
+ * Represents the path component of the request target.
+ */
+public interface UriPath {
 
-  void handle(HttpExchange exchange);
+  boolean is(String path);
 
 }

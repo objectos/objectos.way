@@ -24,13 +24,13 @@ import objectos.http.server.CharWritable;
 
 final class HttpChunkedChars implements Appendable {
 
-	private final HttpExchange outer;
+	private final ObjectoxHttpExchange outer;
 
 	private final CharWritable entity;
 
 	private final Charset charset;
 
-	public HttpChunkedChars(HttpExchange outer, CharWritable entity, Charset charset) {
+	public HttpChunkedChars(ObjectoxHttpExchange outer, CharWritable entity, Charset charset) {
 		this.outer = outer;
 		this.entity = entity;
 		this.charset = charset;

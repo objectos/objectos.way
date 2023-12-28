@@ -15,8 +15,12 @@
  */
 package objectos.http.server;
 
-public interface HttpModule {
+public sealed interface ServerExchangeResult permits BadRequest, ServerRequest, ServerExchangeDone {
 
-  void handle(HttpExchange exchange);
+  boolean badRequest();
+
+  boolean done();
+
+  boolean serverRequest();
 
 }

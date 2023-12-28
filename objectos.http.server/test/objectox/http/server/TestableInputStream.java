@@ -21,60 +21,60 @@ import java.nio.charset.StandardCharsets;
 
 public final class TestableInputStream extends InputStream {
 
-	public static final TestableInputStream EMPTY = new TestableInputStream(new Object[] {});
+  public static final TestableInputStream EMPTY = new TestableInputStream(new Object[] {});
 
-	static final Object THROW = new Object() {};
+  static final Object THROW = new Object() {};
 
-	private final Object[] data;
+  private final Object[] data;
 
-	private int index;
+  private int index;
 
-	TestableInputStream(Object[] data) {
-		this.data = data;
-	}
+  TestableInputStream(Object[] data) {
+    this.data = data;
+  }
 
-	public static TestableInputStream of(Object... data) {
-		// we assume this is safe in a testing env...
-		return new TestableInputStream(data);
-	}
+  public static TestableInputStream of(Object... data) {
+    // we assume this is safe in a testing env...
+    return new TestableInputStream(data);
+  }
 
-	@Override
-	public final int read() throws IOException {
-		// not used directly by HttpExchange
-		throw new UnsupportedOperationException("Implement me");
-	}
+  @Override
+  public final int read() throws IOException {
+    // not used directly by HttpExchange
+    throw new UnsupportedOperationException("Implement me");
+  }
 
-	@Override
-	public final int read(byte[] b, int off, int len) throws IOException {
-		if (index == data.length) {
-			return -1;
-		}
+  @Override
+  public final int read(byte[] b, int off, int len) throws IOException {
+    if (index == data.length) {
+      return -1;
+    }
 
-		Object next;
-		next = data[index++];
+    Object next;
+    next = data[index++];
 
-		if (next instanceof String s) {
-			next = s.getBytes(StandardCharsets.UTF_8);
-		}
+    if (next instanceof String s) {
+      next = s.getBytes(StandardCharsets.UTF_8);
+    }
 
-		if (next instanceof byte[] bytes) {
-			if (bytes.length > len) {
-				// we cannot write the whole test data into the buffer
-				throw new AssertionError("""
+    if (next instanceof byte[] bytes) {
+      if (bytes.length > len) {
+        // we cannot write the whole test data into the buffer
+        throw new AssertionError("""
         Data @ index=%d too large. Please split your test data.
         """.formatted(index - 1));
-			}
+      }
 
-			System.arraycopy(bytes, 0, b, off, bytes.length);
+      System.arraycopy(bytes, 0, b, off, bytes.length);
 
-			return bytes.length;
-		} else if (next instanceof IOException ioe) {
-			throw ioe;
-		} else {
-			throw new UnsupportedOperationException(
-					"Implement me :: type=" + next.getClass()
-			);
-		}
-	}
+      return bytes.length;
+    } else if (next instanceof IOException ioe) {
+      throw ioe;
+    } else {
+      throw new UnsupportedOperationException(
+          "Implement me :: type=" + next.getClass()
+      );
+    }
+  }
 
 }

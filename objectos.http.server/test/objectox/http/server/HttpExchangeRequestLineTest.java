@@ -31,12 +31,12 @@ public class HttpExchangeRequestLineTest {
 
   @Test
   public void http001() {
-    HttpExchange exchange;
-    exchange = new HttpExchange();
+    ObjectoxHttpExchange exchange;
+    exchange = new ObjectoxHttpExchange();
 
     Http001.INPUT.accept(exchange);
 
-    while (exchange.state < HttpExchange._PARSE_HEADER) {
+    while (exchange.state < ObjectoxHttpExchange._PARSE_HEADER) {
       exchange.stepOne();
     }
 
@@ -55,7 +55,7 @@ public class HttpExchangeRequestLineTest {
     assertEquals(exchange.responseHeaders, null);
     assertEquals(exchange.responseHeadersIndex, -1);
     assertEquals(exchange.socket.isClosed(), false);
-    assertEquals(exchange.state, HttpExchange._PARSE_HEADER);
+    assertEquals(exchange.state, ObjectoxHttpExchange._PARSE_HEADER);
     assertEquals(exchange.status, null);
     // expect correct parsed version major.minor
     assertEquals(exchange.versionMajor, 1);
@@ -64,12 +64,12 @@ public class HttpExchangeRequestLineTest {
 
   @Test
   public void http006() {
-    HttpExchange exchange;
-    exchange = new HttpExchange();
+    ObjectoxHttpExchange exchange;
+    exchange = new ObjectoxHttpExchange();
 
     Http006.INPUT.accept(exchange);
 
-    while (exchange.state < HttpExchange._PARSE_HEADER) {
+    while (exchange.state < ObjectoxHttpExchange._PARSE_HEADER) {
       exchange.stepOne();
     }
 
@@ -88,7 +88,7 @@ public class HttpExchangeRequestLineTest {
     assertEquals(exchange.responseHeaders, null);
     assertEquals(exchange.responseHeadersIndex, -1);
     assertEquals(exchange.socket.isClosed(), false);
-    assertEquals(exchange.state, HttpExchange._PARSE_HEADER);
+    assertEquals(exchange.state, ObjectoxHttpExchange._PARSE_HEADER);
     assertEquals(exchange.status, null);
     // expect correct parsed version major.minor
     assertEquals(exchange.versionMajor, 1);
@@ -99,8 +99,8 @@ public class HttpExchangeRequestLineTest {
   [#429] HTTP 001: REQUEST_LINE --> REQUEST_LINE_METHOD
   """)
   public void requestLine() {
-    HttpExchange exchange;
-    exchange = new HttpExchange();
+    ObjectoxHttpExchange exchange;
+    exchange = new ObjectoxHttpExchange();
 
     record Pair(String request, Http.Method method) {}
 
@@ -123,14 +123,14 @@ public class HttpExchangeRequestLineTest {
       exchange.buffer = bytes;
       exchange.bufferIndex = 0;
       exchange.bufferLimit = bytes.length;
-      exchange.state = HttpExchange._REQUEST_LINE;
+      exchange.state = ObjectoxHttpExchange._REQUEST_LINE;
 
       exchange.stepOne();
 
       assertEquals(exchange.bufferIndex, 0);
       assertEquals(exchange.bufferLimit, bytes.length);
       assertEquals(exchange.method, pair.method);
-      assertEquals(exchange.state, HttpExchange._REQUEST_LINE_METHOD);
+      assertEquals(exchange.state, ObjectoxHttpExchange._REQUEST_LINE_METHOD);
     }
   }
 
@@ -140,8 +140,8 @@ public class HttpExchangeRequestLineTest {
   - buffer should remain untouched
   """)
   public void requestLineToRequestErrorBadRequest() {
-    HttpExchange exchange;
-    exchange = new HttpExchange();
+    ObjectoxHttpExchange exchange;
+    exchange = new ObjectoxHttpExchange();
 
     byte[] bytes;
     bytes = "(GET) /".getBytes();
@@ -149,12 +149,12 @@ public class HttpExchangeRequestLineTest {
     exchange.buffer = bytes;
     exchange.bufferIndex = 0;
     exchange.bufferLimit = bytes.length;
-    exchange.state = HttpExchange._REQUEST_LINE;
+    exchange.state = ObjectoxHttpExchange._REQUEST_LINE;
 
     exchange.stepOne();
 
     assertEquals(exchange.bufferIndex, 0);
-    assertEquals(exchange.state, HttpExchange._REQUEST_ERROR);
+    assertEquals(exchange.state, ObjectoxHttpExchange._REQUEST_ERROR);
     assertEquals(exchange.status, HttpStatus.BAD_REQUEST);
   }
 
@@ -162,8 +162,8 @@ public class HttpExchangeRequestLineTest {
   [#491] HTTP 006: REQUEST_LINE --> REQUEST_LINE_METHOD_P
   """)
   public void requestLineToRequestLineMethodP() {
-    HttpExchange exchange;
-    exchange = new HttpExchange();
+    ObjectoxHttpExchange exchange;
+    exchange = new ObjectoxHttpExchange();
 
     List<String> requests;
     requests = List.of("PATCH /a", "POST /b", "PUT /c");
@@ -175,13 +175,13 @@ public class HttpExchangeRequestLineTest {
       exchange.buffer = bytes;
       exchange.bufferIndex = 0;
       exchange.bufferLimit = bytes.length;
-      exchange.state = HttpExchange._REQUEST_LINE;
+      exchange.state = ObjectoxHttpExchange._REQUEST_LINE;
 
       exchange.stepOne();
 
       assertEquals(exchange.bufferIndex, 0);
       assertEquals(exchange.bufferLimit, bytes.length);
-      assertEquals(exchange.state, HttpExchange._REQUEST_LINE_METHOD_P);
+      assertEquals(exchange.state, ObjectoxHttpExchange._REQUEST_LINE_METHOD_P);
     }
   }
 
@@ -191,8 +191,8 @@ public class HttpExchangeRequestLineTest {
   - check if bufferIndex is updated
   """)
   public void requestLineMethod() {
-    HttpExchange exchange;
-    exchange = new HttpExchange();
+    ObjectoxHttpExchange exchange;
+    exchange = new ObjectoxHttpExchange();
 
     byte[] bytes;
     bytes = "GET /".getBytes();
@@ -201,12 +201,12 @@ public class HttpExchangeRequestLineTest {
     exchange.bufferIndex = 0;
     exchange.bufferLimit = bytes.length;
     exchange.method = Http.Method.GET;
-    exchange.state = HttpExchange._REQUEST_LINE_METHOD;
+    exchange.state = ObjectoxHttpExchange._REQUEST_LINE_METHOD;
 
     exchange.stepOne();
 
     assertEquals(exchange.bufferIndex, 4);
-    assertEquals(exchange.state, HttpExchange._REQUEST_LINE_TARGET);
+    assertEquals(exchange.state, ObjectoxHttpExchange._REQUEST_LINE_TARGET);
   }
 
   @Test(description = """
@@ -215,8 +215,8 @@ public class HttpExchangeRequestLineTest {
   - bufferIndex is NOT updated
   """)
   public void requestLineMethodToRequestErrorBadRequest() {
-    HttpExchange exchange;
-    exchange = new HttpExchange();
+    ObjectoxHttpExchange exchange;
+    exchange = new ObjectoxHttpExchange();
 
     byte[] bytes;
     bytes = "GOT /".getBytes();
@@ -225,12 +225,12 @@ public class HttpExchangeRequestLineTest {
     exchange.bufferIndex = 0;
     exchange.bufferLimit = bytes.length;
     exchange.method = Http.Method.GET;
-    exchange.state = HttpExchange._REQUEST_LINE_METHOD;
+    exchange.state = ObjectoxHttpExchange._REQUEST_LINE_METHOD;
 
     exchange.stepOne();
 
     assertEquals(exchange.bufferIndex, 0);
-    assertEquals(exchange.state, HttpExchange._REQUEST_ERROR);
+    assertEquals(exchange.state, ObjectoxHttpExchange._REQUEST_ERROR);
     assertEquals(exchange.status, HttpStatus.BAD_REQUEST);
   }
 
@@ -238,8 +238,8 @@ public class HttpExchangeRequestLineTest {
   [#433] HTTP 001: REQUEST_LINE_METHOD --> INPUT_READ
   """)
   public void requestLineMethodToInputRead() {
-    HttpExchange exchange;
-    exchange = new HttpExchange();
+    ObjectoxHttpExchange exchange;
+    exchange = new ObjectoxHttpExchange();
 
     byte[] bytes;
     bytes = "GE".getBytes();
@@ -248,21 +248,21 @@ public class HttpExchangeRequestLineTest {
     exchange.bufferIndex = 0;
     exchange.bufferLimit = bytes.length;
     exchange.method = Http.Method.GET;
-    exchange.state = HttpExchange._REQUEST_LINE_METHOD;
+    exchange.state = ObjectoxHttpExchange._REQUEST_LINE_METHOD;
 
     exchange.stepOne();
 
     assertEquals(exchange.bufferIndex, 0);
-    assertEquals(exchange.nextAction, HttpExchange._REQUEST_LINE_METHOD);
-    assertEquals(exchange.state, HttpExchange._INPUT_READ);
+    assertEquals(exchange.nextAction, ObjectoxHttpExchange._REQUEST_LINE_METHOD);
+    assertEquals(exchange.state, ObjectoxHttpExchange._INPUT_READ);
   }
 
   @Test(description = """
   [#491] HTTP 006: REQUEST_LINE_METHOD_P --> REQUEST_LINE_TARGET
   """)
   public void requestLineMethodP() {
-    HttpExchange exchange;
-    exchange = new HttpExchange();
+    ObjectoxHttpExchange exchange;
+    exchange = new ObjectoxHttpExchange();
 
     record Pair(String request, Http.Method method) {}
 
@@ -282,14 +282,14 @@ public class HttpExchangeRequestLineTest {
       exchange.buffer = bytes;
       exchange.bufferIndex = 0;
       exchange.bufferLimit = bytes.length;
-      exchange.state = HttpExchange._REQUEST_LINE_METHOD_P;
+      exchange.state = ObjectoxHttpExchange._REQUEST_LINE_METHOD_P;
 
       exchange.stepOne();
 
       assertEquals(exchange.bufferIndex, 0);
       assertEquals(exchange.bufferLimit, bytes.length);
       assertEquals(exchange.method, pair.method);
-      assertEquals(exchange.state, HttpExchange._REQUEST_LINE_METHOD);
+      assertEquals(exchange.state, ObjectoxHttpExchange._REQUEST_LINE_METHOD);
     }
   }
 
@@ -297,8 +297,8 @@ public class HttpExchangeRequestLineTest {
   [#491] HTTP 006: REQUEST_LINE_METHOD_P --> INPUT_READ
   """)
   public void requestLineMethodPToInputRead() {
-    HttpExchange exchange;
-    exchange = new HttpExchange();
+    ObjectoxHttpExchange exchange;
+    exchange = new ObjectoxHttpExchange();
 
     byte[] bytes;
     bytes = "P".getBytes();
@@ -306,21 +306,21 @@ public class HttpExchangeRequestLineTest {
     exchange.buffer = bytes;
     exchange.bufferIndex = 0;
     exchange.bufferLimit = bytes.length;
-    exchange.state = HttpExchange._REQUEST_LINE_METHOD_P;
+    exchange.state = ObjectoxHttpExchange._REQUEST_LINE_METHOD_P;
 
     exchange.stepOne();
 
     assertEquals(exchange.bufferIndex, 0);
-    assertEquals(exchange.nextAction, HttpExchange._REQUEST_LINE_METHOD_P);
-    assertEquals(exchange.state, HttpExchange._INPUT_READ);
+    assertEquals(exchange.nextAction, ObjectoxHttpExchange._REQUEST_LINE_METHOD_P);
+    assertEquals(exchange.state, ObjectoxHttpExchange._INPUT_READ);
   }
 
   @Test(description = """
   [#516] HTTP 001: REQUEST_LINE_TARGET --> REQUEST_LINE_PATH
   """)
   public void requestLineTarget() {
-    HttpExchange exchange;
-    exchange = new HttpExchange();
+    ObjectoxHttpExchange exchange;
+    exchange = new ObjectoxHttpExchange();
 
     byte[] bytes;
     bytes = "GET / HTTP/1.1".getBytes();
@@ -329,22 +329,22 @@ public class HttpExchangeRequestLineTest {
     exchange.buffer = bytes;
     exchange.bufferIndex = 4;
     exchange.bufferLimit = bytes.length;
-    exchange.state = HttpExchange._REQUEST_LINE_TARGET;
+    exchange.state = ObjectoxHttpExchange._REQUEST_LINE_TARGET;
 
     exchange.stepOne();
 
     assertEquals(exchange.bufferIndex, 5);
     assertNotNull(exchange.requestPath);
     assertEquals(exchange.requestPath.slash[0], 0);
-    assertEquals(exchange.state, HttpExchange._REQUEST_LINE_PATH);
+    assertEquals(exchange.state, ObjectoxHttpExchange._REQUEST_LINE_PATH);
   }
 
   @Test(description = """
   [#516] HTTP 001: REQUEST_LINE_TARGET --> INPUT_READ
   """)
   public void requestLineTargetToInputRead() {
-    HttpExchange exchange;
-    exchange = new HttpExchange();
+    ObjectoxHttpExchange exchange;
+    exchange = new ObjectoxHttpExchange();
 
     byte[] bytes;
     bytes = "GET ".getBytes();
@@ -353,21 +353,21 @@ public class HttpExchangeRequestLineTest {
     exchange.buffer = Arrays.copyOf(bytes, bytes.length + 1);
     exchange.bufferIndex = 4;
     exchange.bufferLimit = bytes.length;
-    exchange.state = HttpExchange._REQUEST_LINE_TARGET;
+    exchange.state = ObjectoxHttpExchange._REQUEST_LINE_TARGET;
 
     exchange.stepOne();
 
     assertEquals(exchange.bufferIndex, 4);
     assertNull(exchange.requestPath);
-    assertEquals(exchange.state, HttpExchange._INPUT_READ);
+    assertEquals(exchange.state, ObjectoxHttpExchange._INPUT_READ);
   }
 
   @Test(description = """
   [#516] HTTP 001: REQUEST_LINE_TARGET --> REQUEST_ERROR::BAD_REQUEST
   """)
   public void requestLineTargetToRequestErrorBadRequest() {
-    HttpExchange exchange;
-    exchange = new HttpExchange();
+    ObjectoxHttpExchange exchange;
+    exchange = new ObjectoxHttpExchange();
 
     byte[] bytes;
     bytes = "GET foo/bar HTTP/1.1".getBytes();
@@ -376,13 +376,13 @@ public class HttpExchangeRequestLineTest {
     exchange.buffer = bytes;
     exchange.bufferIndex = 4;
     exchange.bufferLimit = bytes.length;
-    exchange.state = HttpExchange._REQUEST_LINE_TARGET;
+    exchange.state = ObjectoxHttpExchange._REQUEST_LINE_TARGET;
 
     exchange.stepOne();
 
     assertEquals(exchange.bufferIndex, 4);
     assertNull(exchange.requestPath);
-    assertEquals(exchange.state, HttpExchange._REQUEST_ERROR);
+    assertEquals(exchange.state, ObjectoxHttpExchange._REQUEST_ERROR);
     assertEquals(exchange.status, HttpStatus.BAD_REQUEST);
   }
 
@@ -394,8 +394,8 @@ public class HttpExchangeRequestLineTest {
   - segments should have been created correctly
   """)
   public void requestLinePath() {
-    HttpExchange exchange;
-    exchange = new HttpExchange();
+    ObjectoxHttpExchange exchange;
+    exchange = new ObjectoxHttpExchange();
 
     record Data(String requestLine, String path, List<String> segments) {}
 
@@ -425,7 +425,7 @@ public class HttpExchangeRequestLineTest {
       exchange.bufferLimit = bytes.length;
       exchange.requestPath = path;
       path.slash(4);
-      exchange.state = HttpExchange._REQUEST_LINE_PATH;
+      exchange.state = ObjectoxHttpExchange._REQUEST_LINE_PATH;
 
       exchange.stepOne();
 
@@ -444,7 +444,7 @@ public class HttpExchangeRequestLineTest {
       }
 
       assertEquals(segments, data.segments);
-      assertEquals(exchange.state, HttpExchange._REQUEST_LINE_VERSION);
+      assertEquals(exchange.state, ObjectoxHttpExchange._REQUEST_LINE_VERSION);
     }
   }
 
@@ -452,8 +452,8 @@ public class HttpExchangeRequestLineTest {
   Transition: REQUEST_LINE_PATH --> REQUEST_LINE_QUERY
   """)
   public void requestLinePathToRequestLineQuery() {
-    HttpExchange exchange;
-    exchange = new HttpExchange();
+    ObjectoxHttpExchange exchange;
+    exchange = new ObjectoxHttpExchange();
 
     byte[] bytes;
     bytes = "GET /test?foo=bar HTTP/1.1".getBytes();
@@ -467,13 +467,13 @@ public class HttpExchangeRequestLineTest {
     exchange.bufferIndex = 9;
     exchange.bufferLimit = bytes.length;
     exchange.requestPath = path;
-    exchange.state = HttpExchange._REQUEST_LINE_PATH;
+    exchange.state = ObjectoxHttpExchange._REQUEST_LINE_PATH;
 
     exchange.stepOne();
 
     assertEquals(exchange.bufferIndex, 10); // after '?' char
     assertEquals(exchange.query.startIndex, 10);
-    assertEquals(exchange.state, HttpExchange._REQUEST_LINE_QUERY);
+    assertEquals(exchange.state, ObjectoxHttpExchange._REQUEST_LINE_QUERY);
 
     assertEquals(path.toString(), "/test");
   }
@@ -484,8 +484,8 @@ public class HttpExchangeRequestLineTest {
   - bufferIndex should not have been updated
   """)
   public void requestLinePathToInputRead() {
-    HttpExchange exchange;
-    exchange = new HttpExchange();
+    ObjectoxHttpExchange exchange;
+    exchange = new ObjectoxHttpExchange();
 
     byte[] bytes;
     bytes = "GET /".getBytes();
@@ -494,21 +494,21 @@ public class HttpExchangeRequestLineTest {
     exchange.buffer = Arrays.copyOf(bytes, bytes.length + 1);
     exchange.bufferIndex = 5;
     exchange.bufferLimit = bytes.length;
-    exchange.state = HttpExchange._REQUEST_LINE_TARGET;
+    exchange.state = ObjectoxHttpExchange._REQUEST_LINE_TARGET;
 
     exchange.stepOne();
 
     assertEquals(exchange.bufferIndex, 5);
     assertNull(exchange.requestPath);
-    assertEquals(exchange.state, HttpExchange._INPUT_READ);
+    assertEquals(exchange.state, ObjectoxHttpExchange._INPUT_READ);
   }
 
   @Test(description = """
   [#436] HTTP 001: REQUEST_LINE_PATH --> REQUEST_ERROR::URI_TOO_LONG
   """)
   public void requestLinePathToRequestErrorUriTooLong() {
-    HttpExchange exchange;
-    exchange = new HttpExchange();
+    ObjectoxHttpExchange exchange;
+    exchange = new ObjectoxHttpExchange();
 
     byte[] bytes;
     bytes = "GET /attack!".getBytes();
@@ -517,13 +517,13 @@ public class HttpExchangeRequestLineTest {
     exchange.buffer = bytes;
     exchange.bufferIndex = 5;
     exchange.bufferLimit = bytes.length;
-    exchange.state = HttpExchange._REQUEST_LINE_PATH;
+    exchange.state = ObjectoxHttpExchange._REQUEST_LINE_PATH;
 
     exchange.stepOne();
 
     assertEquals(exchange.bufferIndex, 12);
     assertNull(exchange.requestPath);
-    assertEquals(exchange.state, HttpExchange._REQUEST_ERROR);
+    assertEquals(exchange.state, ObjectoxHttpExchange._REQUEST_ERROR);
     assertEquals(exchange.status, HttpStatus.URI_TOO_LONG);
   }
 
@@ -531,8 +531,8 @@ public class HttpExchangeRequestLineTest {
   Transition: REQUEST_LINE_QUERY --> _REQUEST_LINE_VERSION
   """)
   public void requestLineQuery() {
-    HttpExchange exchange;
-    exchange = new HttpExchange();
+    ObjectoxHttpExchange exchange;
+    exchange = new ObjectoxHttpExchange();
 
     record Data(String requestLine, String query) {}
 
@@ -555,13 +555,13 @@ public class HttpExchangeRequestLineTest {
       exchange.bufferIndex = 6;
       exchange.bufferLimit = bytes.length;
       exchange.query = query;
-      exchange.state = HttpExchange._REQUEST_LINE_QUERY;
+      exchange.state = ObjectoxHttpExchange._REQUEST_LINE_QUERY;
 
       exchange.stepOne();
 
       assertEquals(exchange.bufferIndex, 6 + data.query.length() + 1);
       assertEquals(query.value(), data.query);
-      assertEquals(exchange.state, HttpExchange._REQUEST_LINE_VERSION);
+      assertEquals(exchange.state, ObjectoxHttpExchange._REQUEST_LINE_VERSION);
     }
   }
 
@@ -572,8 +572,8 @@ public class HttpExchangeRequestLineTest {
   - version has correct values
   """)
   public void requestLineVersion01() {
-    HttpExchange exchange;
-    exchange = new HttpExchange();
+    ObjectoxHttpExchange exchange;
+    exchange = new ObjectoxHttpExchange();
 
     // CRLF line terminator
 
@@ -583,12 +583,12 @@ public class HttpExchangeRequestLineTest {
     exchange.buffer = bytes;
     exchange.bufferIndex = 6;
     exchange.bufferLimit = bytes.length;
-    exchange.state = HttpExchange._REQUEST_LINE_VERSION;
+    exchange.state = ObjectoxHttpExchange._REQUEST_LINE_VERSION;
 
     exchange.stepOne();
 
     assertEquals(exchange.bufferIndex, 16);
-    assertEquals(exchange.state, HttpExchange._PARSE_HEADER);
+    assertEquals(exchange.state, ObjectoxHttpExchange._PARSE_HEADER);
     assertEquals(exchange.versionMajor, 1);
     assertEquals(exchange.versionMinor, 1);
   }
@@ -599,8 +599,8 @@ public class HttpExchangeRequestLineTest {
   - client line terminator is LF only
   """)
   public void requestLineVersion02LF() {
-    HttpExchange exchange;
-    exchange = new HttpExchange();
+    ObjectoxHttpExchange exchange;
+    exchange = new ObjectoxHttpExchange();
 
     // LF line terminator
 
@@ -610,12 +610,12 @@ public class HttpExchangeRequestLineTest {
     exchange.buffer = bytes;
     exchange.bufferIndex = 6;
     exchange.bufferLimit = bytes.length;
-    exchange.state = HttpExchange._REQUEST_LINE_VERSION;
+    exchange.state = ObjectoxHttpExchange._REQUEST_LINE_VERSION;
 
     exchange.stepOne();
 
     assertEquals(exchange.bufferIndex, 15);
-    assertEquals(exchange.state, HttpExchange._PARSE_HEADER);
+    assertEquals(exchange.state, ObjectoxHttpExchange._PARSE_HEADER);
     assertEquals(exchange.versionMajor, 1);
     assertEquals(exchange.versionMinor, 1);
   }
@@ -624,8 +624,8 @@ public class HttpExchangeRequestLineTest {
   [#438] HTTP 001: REQUEST_LINE_VERSION --> REQUEST_ERROR::BAD_REQUEST
   """)
   public void requestLineVersionToRequestErrorBadRequest() {
-    HttpExchange exchange;
-    exchange = new HttpExchange();
+    ObjectoxHttpExchange exchange;
+    exchange = new ObjectoxHttpExchange();
 
     List<String> requests;
     requests = List.of(
@@ -644,13 +644,13 @@ public class HttpExchangeRequestLineTest {
       exchange.buffer = bytes;
       exchange.bufferIndex = 6;
       exchange.bufferLimit = bytes.length;
-      exchange.state = HttpExchange._REQUEST_LINE_VERSION;
+      exchange.state = ObjectoxHttpExchange._REQUEST_LINE_VERSION;
       exchange.status = null;
 
       exchange.stepOne();
 
       assertEquals(exchange.bufferIndex, 6);
-      assertEquals(exchange.state, HttpExchange._REQUEST_ERROR);
+      assertEquals(exchange.state, ObjectoxHttpExchange._REQUEST_ERROR);
       assertEquals(exchange.status, HttpStatus.BAD_REQUEST);
       assertEquals(exchange.versionMajor, 0);
       assertEquals(exchange.versionMinor, 0);
@@ -661,8 +661,8 @@ public class HttpExchangeRequestLineTest {
   [#439] HTTP 001: REQUEST_LINE_VERSION --> INPUT_READ
   """)
   public void requestLineVersionToInputRead() {
-    HttpExchange exchange;
-    exchange = new HttpExchange();
+    ObjectoxHttpExchange exchange;
+    exchange = new ObjectoxHttpExchange();
 
     byte[] bytes;
     bytes = "GET / HTTP/1.".getBytes();
@@ -670,21 +670,21 @@ public class HttpExchangeRequestLineTest {
     exchange.buffer = Arrays.copyOf(bytes, bytes.length + 1);
     exchange.bufferIndex = 6;
     exchange.bufferLimit = bytes.length;
-    exchange.state = HttpExchange._REQUEST_LINE_VERSION;
+    exchange.state = ObjectoxHttpExchange._REQUEST_LINE_VERSION;
 
     exchange.stepOne();
 
     assertEquals(exchange.bufferIndex, 6);
-    assertEquals(exchange.nextAction, HttpExchange._REQUEST_LINE_VERSION);
-    assertEquals(exchange.state, HttpExchange._INPUT_READ);
+    assertEquals(exchange.nextAction, ObjectoxHttpExchange._REQUEST_LINE_VERSION);
+    assertEquals(exchange.state, ObjectoxHttpExchange._INPUT_READ);
   }
 
   @Test(description = """
   [#440] HTTP 001: REQUEST_LINE_VERSION --> REQUEST_ERROR::URI_TOO_LONG
   """)
   public void requestLineVersionToRequestErrorUriTooLong() {
-    HttpExchange exchange;
-    exchange = new HttpExchange();
+    ObjectoxHttpExchange exchange;
+    exchange = new ObjectoxHttpExchange();
 
     byte[] bytes;
     bytes = "GET / HTTP/1.".getBytes();
@@ -692,12 +692,12 @@ public class HttpExchangeRequestLineTest {
     exchange.buffer = bytes;
     exchange.bufferIndex = 6;
     exchange.bufferLimit = bytes.length;
-    exchange.state = HttpExchange._REQUEST_LINE_VERSION;
+    exchange.state = ObjectoxHttpExchange._REQUEST_LINE_VERSION;
 
     exchange.stepOne();
 
     assertEquals(exchange.bufferIndex, 6);
-    assertEquals(exchange.state, HttpExchange._REQUEST_ERROR);
+    assertEquals(exchange.state, ObjectoxHttpExchange._REQUEST_ERROR);
     assertEquals(exchange.status, HttpStatus.URI_TOO_LONG);
   }
 

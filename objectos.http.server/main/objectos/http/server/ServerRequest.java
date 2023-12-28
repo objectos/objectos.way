@@ -15,8 +15,13 @@
  */
 package objectos.http.server;
 
-public interface HttpModule {
+public non-sealed interface ServerRequest extends ServerExchangeResult {
 
-  void handle(HttpExchange exchange);
+  /**
+   * Returns the path component of the request target.
+   *
+   * @return the path component of the request target.
+   */
+  UriPath path();
 
 }

@@ -13,10 +13,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.http.server;
+package objectox.http.server;
 
-public interface HttpModule {
+import java.nio.charset.StandardCharsets;
 
-  void handle(HttpExchange exchange);
+enum ObjectoxMethod {
+
+  GET,
+
+  POST,
+
+  PUT,
+
+  DELETE,
+
+  HEAD,
+
+  OPTIONS,
+
+  TRACE,
+
+  PATCH,
+
+  CONNECT;
+
+  final byte[] nameAndSpace = (name() + " ").getBytes(StandardCharsets.UTF_8);
 
 }

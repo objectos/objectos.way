@@ -29,12 +29,12 @@ public class HttpExchangeInputTest {
 
   @Test
   public void http001() {
-    HttpExchange exchange;
-    exchange = new HttpExchange();
+    ObjectoxHttpExchange exchange;
+    exchange = new ObjectoxHttpExchange();
 
     Http001.INPUT.accept(exchange);
 
-    while (exchange.state < HttpExchange._REQUEST_LINE) {
+    while (exchange.state < ObjectoxHttpExchange._REQUEST_LINE) {
       exchange.stepOne();
     }
 
@@ -49,7 +49,7 @@ public class HttpExchangeInputTest {
     assertEquals(exchange.responseBody, null);
     assertEquals(exchange.responseHeaders, null);
     assertEquals(exchange.responseHeadersIndex, -1);
-    assertEquals(exchange.state, HttpExchange._REQUEST_LINE);
+    assertEquals(exchange.state, ObjectoxHttpExchange._REQUEST_LINE);
     assertEquals(exchange.status, null);
     assertEquals(exchange.versionMajor, -1);
     assertEquals(exchange.versionMinor, -1);
@@ -59,41 +59,41 @@ public class HttpExchangeInputTest {
   [#427] HTTP 001: INPUT alias to INPUT_READ --> REQUEST_LINE
   """)
   public void input() {
-    HttpExchange exchange;
-    exchange = new HttpExchange();
+    ObjectoxHttpExchange exchange;
+    exchange = new ObjectoxHttpExchange();
 
     exchange.buffer = new byte[64];
     exchange.bufferIndex = 0;
     exchange.bufferLimit = 0;
     exchange.socket = TestableSocket.of("FOO\r\n");
-    exchange.state = HttpExchange._INPUT;
+    exchange.state = ObjectoxHttpExchange._INPUT;
 
     exchange.stepOne();
 
     assertEquals(exchange.bufferIndex, 0);
     assertEquals(exchange.bufferLimit, 5);
-    assertEquals(exchange.state, HttpExchange._REQUEST_LINE);
+    assertEquals(exchange.state, ObjectoxHttpExchange._REQUEST_LINE);
   }
 
   @Test(description = """
   [#428] HTTP 001: INPUT_READ --> INPUT_READ_EOF
   """)
   public void inputReadToInputReadEof() {
-    HttpExchange exchange;
-    exchange = new HttpExchange();
+    ObjectoxHttpExchange exchange;
+    exchange = new ObjectoxHttpExchange();
 
     exchange.buffer = new byte[64];
     exchange.bufferIndex = 0;
     exchange.bufferLimit = 0;
-    exchange.nextAction = HttpExchange._REQUEST_LINE;
+    exchange.nextAction = ObjectoxHttpExchange._REQUEST_LINE;
     exchange.socket = TestableSocket.empty();
-    exchange.state = HttpExchange._INPUT_READ;
+    exchange.state = ObjectoxHttpExchange._INPUT_READ;
 
     exchange.stepOne();
 
     assertEquals(exchange.bufferIndex, 0);
     assertEquals(exchange.bufferLimit, 0);
-    assertEquals(exchange.state, HttpExchange._INPUT_READ_EOF);
+    assertEquals(exchange.state, ObjectoxHttpExchange._INPUT_READ_EOF);
   }
 
   @Test(description = """
@@ -105,26 +105,26 @@ public class HttpExchangeInputTest {
     IOException error;
     error = new IOException();
 
-    HttpExchange exchange;
-    exchange = new HttpExchange();
+    ObjectoxHttpExchange exchange;
+    exchange = new ObjectoxHttpExchange();
 
     exchange.bufferIndex = 0;
     exchange.bufferLimit = 0;
-    exchange.nextAction = HttpExchange._REQUEST_LINE;
+    exchange.nextAction = ObjectoxHttpExchange._REQUEST_LINE;
     exchange.socket = new Socket() {
       @Override
       public InputStream getInputStream() throws IOException {
         throw error;
       }
     };
-    exchange.state = HttpExchange._INPUT_READ;
+    exchange.state = ObjectoxHttpExchange._INPUT_READ;
 
     exchange.stepOne();
 
     assertEquals(exchange.bufferIndex, 0);
     assertEquals(exchange.bufferLimit, 0);
     assertSame(exchange.error, error);
-    assertEquals(exchange.state, HttpExchange._INPUT_READ_ERROR);
+    assertEquals(exchange.state, ObjectoxHttpExchange._INPUT_READ_ERROR);
   }
 
   @Test(description = """
@@ -136,22 +136,22 @@ public class HttpExchangeInputTest {
     IOException error;
     error = new IOException();
 
-    HttpExchange exchange;
-    exchange = new HttpExchange();
+    ObjectoxHttpExchange exchange;
+    exchange = new ObjectoxHttpExchange();
 
     exchange.buffer = new byte[64];
     exchange.bufferIndex = 0;
     exchange.bufferLimit = 0;
-    exchange.nextAction = HttpExchange._REQUEST_LINE;
+    exchange.nextAction = ObjectoxHttpExchange._REQUEST_LINE;
     exchange.socket = TestableSocket.of(error);
-    exchange.state = HttpExchange._INPUT_READ;
+    exchange.state = ObjectoxHttpExchange._INPUT_READ;
 
     exchange.stepOne();
 
     assertEquals(exchange.bufferIndex, 0);
     assertEquals(exchange.bufferLimit, 0);
     assertSame(exchange.error, error);
-    assertEquals(exchange.state, HttpExchange._INPUT_READ_ERROR);
+    assertEquals(exchange.state, ObjectoxHttpExchange._INPUT_READ_ERROR);
   }
 
   @Test(description = """
@@ -160,18 +160,18 @@ public class HttpExchangeInputTest {
   - state should be reset
   """)
   public void inputReadEof() {
-    HttpExchange exchange;
-    exchange = new HttpExchange();
+    ObjectoxHttpExchange exchange;
+    exchange = new ObjectoxHttpExchange();
 
     exchange.bufferIndex = 1;
     exchange.bufferLimit = 2;
-    exchange.state = HttpExchange._INPUT_READ_EOF;
+    exchange.state = ObjectoxHttpExchange._INPUT_READ_EOF;
 
     exchange.stepOne();
 
     assertEquals(exchange.bufferIndex, -1);
     assertEquals(exchange.bufferLimit, -1);
-    assertEquals(exchange.state, HttpExchange._STOP);
+    assertEquals(exchange.state, ObjectoxHttpExchange._STOP);
   }
 
   @Test(description = """
@@ -181,8 +181,8 @@ public class HttpExchangeInputTest {
     IOException error;
     error = new IOException();
 
-    HttpExchange exchange;
-    exchange = new HttpExchange();
+    ObjectoxHttpExchange exchange;
+    exchange = new ObjectoxHttpExchange();
 
     var noteSink = new TestableNoteSink() {
       Note1<?> note1;
@@ -197,14 +197,14 @@ public class HttpExchangeInputTest {
 
     exchange.error = error;
     exchange.noteSink = noteSink;
-    exchange.state = HttpExchange._INPUT_READ_ERROR;
+    exchange.state = ObjectoxHttpExchange._INPUT_READ_ERROR;
 
     exchange.stepOne();
 
     assertEquals(exchange.error, null);
-    assertEquals(exchange.state, HttpExchange._STOP);
+    assertEquals(exchange.state, ObjectoxHttpExchange._STOP);
 
-    assertSame(noteSink.note1, HttpExchange.IO_READ_ERROR);
+    assertSame(noteSink.note1, ObjectoxHttpExchange.IO_READ_ERROR);
     assertSame(noteSink.value1, error);
   }
 
