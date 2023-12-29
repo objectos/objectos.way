@@ -19,41 +19,41 @@ import objectos.http.Http;
 
 public enum HttpStatus implements Http.Status {
 
-	// 2.x.x
-	OK(200),
+  // 2.x.x
+  OK(200),
 
-	// 3.x.x
-	MOVED_PERMANENTLY(301),
-	FOUND(302),
-	SEE_OTHER(303),
+  // 3.x.x
+  MOVED_PERMANENTLY(301),
+  FOUND(302),
+  SEE_OTHER(303),
 
-	// 4.x.x
-	BAD_REQUEST(400),
-	NOT_FOUND(404),
-	METHOD_NOT_ALLOWED(405),
-	URI_TOO_LONG(414),
-	UNSUPPORTED_MEDIA_TYPE(415),
-	UNPROCESSABLE_CONTENT(422),
+  // 4.x.x
+  BAD_REQUEST(400),
+  NOT_FOUND(404),
+  METHOD_NOT_ALLOWED(405),
+  URI_TOO_LONG(414),
+  UNSUPPORTED_MEDIA_TYPE(415),
+  UNPROCESSABLE_CONTENT(422),
 
-	// 5.x.x
-	INTERNAL_SERVER_ERROR(500),
-	NOT_IMPLEMENTED(501),
-	HTTP_VERSION_NOT_SUPPORTED(505);
+  // 5.x.x
+  INTERNAL_SERVER_ERROR(500),
+  NOT_IMPLEMENTED(501),
+  HTTP_VERSION_NOT_SUPPORTED(505);
 
-	private final int code;
+  private final int code;
 
-	private HttpStatus(int code) {
-		this.code = code;
-	}
+  private HttpStatus(int code) {
+    this.code = code;
+  }
 
-	@Override
-	public final int code() {
-		return code;
-	}
+  @Override
+  public final int code() {
+    return code;
+  }
 
-	@Override
-	public final String description() {
-		return name().replace('_', ' ');
-	}
+  @Override
+  public final String description() {
+    return name().replace('_', ' ');
+  }
 
 }

@@ -16,7 +16,7 @@
 package objectox.http.server;
 
 import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertNotNull;
+import static org.testng.Assert.assertNull;
 
 import java.io.IOException;
 import org.testng.annotations.Test;
@@ -39,17 +39,32 @@ public class ObjectoxRequestLineTest {
 
     line.parse();
 
-    assertEquals(line.method, ObjectoxMethod.GET);
+    // method
+    ObjectoxMethod method;
+    method = line.method;
 
-    assertNotNull(line.path);
+    assertEquals(method, ObjectoxMethod.GET);
+
+    // target
+    HttpRequestPath path;
+    path = line.path;
+
+    assertEquals(path.toString(), "/");
+
+    // version
+    assertEquals(line.versionMajor, 1);
+    assertEquals(line.versionMinor, 1);
+
+    // no status
+    assertNull(line.status);
   }
 
   private ObjectoxRequestLine regularInput(Object... data) {
     TestableInputStream inputStream;
     inputStream = TestableInputStream.of(data);
 
-    Input input;
-    input = new Input(64, inputStream);
+    SocketInput input;
+    input = new SocketInput(64, inputStream);
 
     return new ObjectoxRequestLine(input);
   }
