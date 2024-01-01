@@ -15,6 +15,10 @@
  */
 package objectos.http.server;
 
-public sealed interface ServerExchangeResult permits BadRequest, ServerRequest, ServerExchangeDone {
+import java.io.InputStream;
+
+public interface ServerRequestBody {
+
+  InputStream openStream();
 
 }

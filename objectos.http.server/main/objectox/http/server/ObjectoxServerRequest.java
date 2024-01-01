@@ -15,35 +15,84 @@
  */
 package objectox.http.server;
 
+import java.io.IOException;
+import objectos.http.server.ServerExchangeResult;
 import objectos.http.server.ServerRequest;
+import objectos.http.server.ServerRequestBody;
+import objectos.http.server.ServerRequestHeaders;
 import objectos.http.server.UriPath;
+import objectox.http.StandardHeaderName;
 
-public class ObjectoxServerRequest implements ServerRequest {
+public final class ObjectoxServerRequest implements ServerRequest {
 
-  private final ObjectoxHttpExchange exchange;
+  private final SocketInput input;
 
-  public ObjectoxServerRequest(ObjectoxHttpExchange exchange) {
-    this.exchange = exchange;
+  private ServerRequestBody body;
+
+  private ObjectoxRequestLine requestLine;
+
+  private ServerRequestHeaders requestHeaders;
+
+  public ObjectoxServerRequest(SocketInput input) {
+    this.input = input;
   }
 
   @Override
-  public final boolean badRequest() {
-    return false;
+  public final ServerRequestBody body() {
+    return body;
   }
 
   @Override
-  public final boolean done() {
-    return false;
-  }
-
-  @Override
-  public final boolean serverRequest() {
-    return true;
+  public final ServerRequestHeaders headers() {
+    return requestHeaders;
   }
 
   @Override
   public final UriPath path() {
-    return exchange.requestPath;
+    return requestLine.path;
+  }
+
+  public final ServerExchangeResult get() throws IOException {
+    ObjectoxRequestLine requestLine;
+    requestLine = new ObjectoxRequestLine(input);
+
+    requestLine.parse();
+
+    if (requestLine.status != null) {
+      return ObjectoxBadRequest.INSTANCE;
+    }
+
+    ObjectoxServerRequestHeaders requestHeaders;
+    requestHeaders = new ObjectoxServerRequestHeaders(input);
+
+    requestHeaders.parse();
+
+    if (requestHeaders.status != null) {
+      return ObjectoxBadRequest.INSTANCE;
+    }
+
+    ServerRequestBody body;
+    body = NoServerRequestBody.INSTANCE;
+
+    if (requestHeaders.contains(StandardHeaderName.CONTENT_LENGTH)) {
+      throw new UnsupportedOperationException(
+          "Implement me :: parse body"
+      );
+    }
+
+    if (requestHeaders.contains(StandardHeaderName.TRANSFER_ENCODING)) {
+      throw new UnsupportedOperationException(
+          "Implement me :: maybe chunked?"
+      );
+    }
+
+    this.body = body;
+
+    this.requestLine = requestLine;
+
+    this.requestHeaders = requestHeaders;
+
+    return this;
   }
 
 }

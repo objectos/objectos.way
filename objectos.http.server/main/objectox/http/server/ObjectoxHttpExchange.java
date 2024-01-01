@@ -252,18 +252,6 @@ public final class ObjectoxHttpExchange implements HttpExchange {
 
   @Override
   public final ServerExchangeResult get() throws IOException {
-    if (state == _CONFIG) {
-      while (state <= _HANDLE) {
-        stepOne();
-      }
-
-      if (error != null) {
-        throw error;
-      }
-
-      return new ObjectoxServerRequest(this);
-    }
-
     throw new UnsupportedOperationException("Implement me :: state=" + state);
   }
 

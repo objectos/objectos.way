@@ -19,20 +19,80 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.EnumMap;
 import java.util.Map;
+import objectos.http.HeaderName;
+import objectos.http.server.ServerRequestHeaders;
+import objectos.lang.object.Check;
 import objectox.http.HttpStatus;
 import objectox.http.StandardHeaderName;
 
-public final class ObjectoxRequestHeaders {
+public final class ObjectoxServerRequestHeaders implements ServerRequestHeaders {
 
   private final SocketInput input;
 
-  Object headerName;
+  HeaderName headerName;
+
+  Map<StandardHeaderName, ObjectoxHeader> standardHeaders;
 
   HttpStatus status;
 
-  public ObjectoxRequestHeaders(SocketInput input) {
+  public ObjectoxServerRequestHeaders(SocketInput input) {
     this.input = input;
   }
+
+  // API
+
+  public final boolean contains(HeaderName name) {
+    Check.notNull(name, "name == null");
+
+    int index;
+    index = name.index();
+
+    if (index < 0) {
+      throw new UnsupportedOperationException("Implement me");
+    }
+
+    if (standardHeaders == null) {
+      return false;
+    }
+
+    return standardHeaders.containsKey(name);
+  }
+
+  public final String first(HeaderName name) {
+    Check.notNull(name, "name == null");
+
+    int index;
+    index = name.index();
+
+    if (index < 0) {
+      throw new UnsupportedOperationException("Implement me");
+    }
+
+    if (standardHeaders == null) {
+      return null;
+    }
+
+    ObjectoxHeader maybe;
+    maybe = standardHeaders.get(name);
+
+    if (maybe != null) {
+      return maybe.get();
+    }
+
+    return null;
+  }
+
+  public final int size() {
+    int size = 0;
+
+    if (standardHeaders != null) {
+      size += standardHeaders.size();
+    }
+
+    return size;
+  }
+
+  // Internal
 
   public final void parse() throws IOException {
     input.parseLine();
@@ -50,7 +110,9 @@ public final class ObjectoxRequestHeaders {
         );
       }
 
-      break;
+      parseHeaderValue();
+
+      input.parseLine();
     }
   }
 
@@ -101,7 +163,7 @@ public final class ObjectoxRequestHeaders {
     }
   }
 
-  private static final Map<StandardHeaderName, byte[]> STD_HEADER_NAME_BYTES;
+  static final Map<StandardHeaderName, byte[]> STD_HEADER_NAME_BYTES;
 
   static {
     Map<StandardHeaderName, byte[]> map;
@@ -173,6 +235,29 @@ public final class ObjectoxRequestHeaders {
     }
 
     parseHeaderName0(c3);
+  }
+
+  private void parseHeaderValue() {
+    if (headerName instanceof StandardHeaderName name) {
+      if (standardHeaders == null) {
+        standardHeaders = new EnumMap<>(StandardHeaderName.class);
+      }
+
+      ObjectoxHeader header;
+      header = standardHeaders.get(name);
+
+      if (header == null) {
+        header = new ObjectoxHeader(input, name);
+
+        header.parseValue();
+      } else {
+        header = header.parseAdditionalValue();
+      }
+
+      standardHeaders.put(name, header);
+    } else {
+      throw new UnsupportedOperationException("Implement me");
+    }
   }
 
 }

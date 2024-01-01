@@ -24,4 +24,8 @@ public sealed interface HeaderName permits StandardHeaderName {
 
   String capitalized();
 
+  default int index() {
+    return -1;
+  }
+
 }

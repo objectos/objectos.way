@@ -18,6 +18,7 @@ package objectox.http.server;
 import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 
 final class SocketInput {
@@ -209,6 +210,25 @@ final class SocketInput {
     }
 
     return false;
+  }
+
+  public final int lineLimit() {
+    return lineLimit;
+  }
+
+  public final byte get(int index) {
+    return buffer[index];
+  }
+
+  public final void set(int value) {
+    lineIndex = value;
+  }
+
+  public final String getString(int start, int end) {
+    int length;
+    length = end - start;
+
+    return new String(buffer, start, length, StandardCharsets.UTF_8);
   }
 
   final HttpRequestPath createPath(int targetStart) {

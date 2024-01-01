@@ -13,8 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.http.server;
+package objectox.http.server;
 
-public sealed interface ServerExchangeResult permits BadRequest, ServerRequest, ServerExchangeDone {
+import java.io.InputStream;
+import objectos.http.server.ServerRequestBody;
+
+public class ObjectoxServerRequestBody implements ServerRequestBody {
+
+  @Override
+  public final InputStream openStream() {
+    throw new UnsupportedOperationException("Implement me");
+  }
 
 }

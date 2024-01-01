@@ -21,7 +21,7 @@ import java.io.IOException;
 import objectox.http.StandardHeaderName;
 import org.testng.annotations.Test;
 
-public class ObjectoxRequestHeadersTest {
+public class ObjectoxServerRequestHeadersTest {
 
   @Test(description = """
   GET / HTTP/1.1
@@ -29,7 +29,7 @@ public class ObjectoxRequestHeadersTest {
   Connection: close
   """)
   public void testCase001() throws IOException {
-    ObjectoxRequestHeaders headers;
+    ObjectoxServerRequestHeaders headers;
     headers = regularInput("""
     Host: www.example.com\r
     Connection: close\r
@@ -38,17 +38,19 @@ public class ObjectoxRequestHeadersTest {
 
     headers.parse();
 
-    assertEquals(headers.headerName, StandardHeaderName.HOST);
+    assertEquals(headers.size(), 2);
+    assertEquals(headers.first(StandardHeaderName.HOST), "www.example.com");
+    assertEquals(headers.first(StandardHeaderName.CONNECTION), "close");
   }
 
-  private ObjectoxRequestHeaders regularInput(Object... data) {
+  private ObjectoxServerRequestHeaders regularInput(Object... data) {
     TestableInputStream inputStream;
     inputStream = TestableInputStream.of(data);
 
     SocketInput input;
     input = new SocketInput(64, inputStream);
 
-    return new ObjectoxRequestHeaders(input);
+    return new ObjectoxServerRequestHeaders(input);
   }
 
 }

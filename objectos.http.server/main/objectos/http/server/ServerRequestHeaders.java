@@ -15,6 +15,12 @@
  */
 package objectos.http.server;
 
-public sealed interface ServerExchangeResult permits BadRequest, ServerRequest, ServerExchangeDone {
+import objectos.http.HeaderName;
+
+public interface ServerRequestHeaders {
+
+  String first(HeaderName name);
+
+  int size();
 
 }

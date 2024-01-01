@@ -56,4 +56,9 @@ public enum StandardHeaderName implements HeaderName {
     return name;
   }
 
+  @Override
+  public final int index() {
+    return ordinal();
+  }
+
 }
