@@ -53,13 +53,14 @@ public class SocketInputTest {
     assertEquals(input.next(), '1');
     assertEquals(input.next(), '.');
     assertEquals(input.next(), '1');
-    assertEquals(input.endOfLine(), true);
+    assertEquals(input.consumeIfEndOfLine(), true);
 
     // second line
     input.parseLine();
 
-    assertEquals(input.hasNext(), true);
-    assertEquals(input.peek(), 'H');
+    assertEquals(input.index(), 16);
+    assertEquals(input.consumeIfEmptyLine(), false);
+    assertEquals(input.indexOf(Bytes.COLON), 20);
   }
 
   private SocketInput regularInput(Object... data) {

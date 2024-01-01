@@ -127,6 +127,19 @@ final class SocketInput {
     return lineIndex;
   }
 
+  public final int indexOf(byte needle) {
+    for (int i = lineIndex; i < bufferLimit; i++) {
+      byte maybe;
+      maybe = buffer[i];
+
+      if (maybe == needle) {
+        return i;
+      }
+    }
+
+    return -1;
+  }
+
   public final int indexOf(byte needleA, byte needleB) {
     for (int i = lineIndex; i < bufferLimit; i++) {
       byte maybe;
@@ -154,7 +167,7 @@ final class SocketInput {
     return buffer[lineIndex++];
   }
 
-  public final boolean endOfLine() {
+  public final boolean consumeIfEndOfLine() {
     if (lineIndex < lineLimit) {
       byte next;
       next = next();
@@ -172,6 +185,30 @@ final class SocketInput {
     lineIndex++;
 
     return true;
+  }
+
+  public final boolean consumeIfEmptyLine() {
+    int length;
+    length = lineLimit - lineIndex;
+
+    if (length == 0) {
+      lineIndex++;
+
+      return true;
+    }
+
+    if (length == 1) {
+      byte cr;
+      cr = peek();
+
+      if (cr == Bytes.CR) {
+        lineIndex += 2;
+
+        return true;
+      }
+    }
+
+    return false;
   }
 
   final HttpRequestPath createPath(int targetStart) {

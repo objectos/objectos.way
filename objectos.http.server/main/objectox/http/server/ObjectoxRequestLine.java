@@ -77,7 +77,7 @@ public final class ObjectoxRequestLine {
       return;
     }
 
-    if (!input.endOfLine()) {
+    if (!input.consumeIfEndOfLine()) {
       status = HttpStatus.BAD_REQUEST;
 
       return;
