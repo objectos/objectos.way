@@ -101,9 +101,10 @@ public final class ObjectoxHttpExchange implements HttpExchange {
     METHOD_NAME_AND_SPACE = map;
   }
 
-  // Config phase
+  // new states
 
   static final byte _CONFIG = 0;
+  static final byte _FIRST_REQUEST = 1;
 
   // Setup phase
 
@@ -255,13 +256,22 @@ public final class ObjectoxHttpExchange implements HttpExchange {
   }
 
   @Override
-  public final ServerExchangeResult get() throws IOException {
+  public final boolean hasNext() {
+    if (state == _CONFIG) {
+      return true;
+    }
+
+    throw new UnsupportedOperationException("Implement me");
+  }
+
+  @Override
+  public final ServerExchangeResult next() throws IOException {
     if (state == _CONFIG) {
       socketInput.init(bufferSize);
 
       request = new ObjectoxServerRequest(socketInput);
 
-      state = _SETUP;
+      state = _FIRST_REQUEST;
     }
 
     return request.get();

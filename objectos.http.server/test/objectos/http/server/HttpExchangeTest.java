@@ -53,8 +53,11 @@ public class HttpExchangeTest {
     \r
     """);
 
+    // must always return true
+    assertEquals(exchange.hasNext(), true);
+
     ServerExchangeResult result;
-    result = exchange.get();
+    result = exchange.next();
 
     if (!(result instanceof ServerRequest req)) {
       throw new AssertionError("Expected ServerRequest but got " + result.getClass());

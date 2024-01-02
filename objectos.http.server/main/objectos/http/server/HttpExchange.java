@@ -61,7 +61,9 @@ public sealed interface HttpExchange extends AutoCloseable permits objectox.http
   @Override
   void close() throws IOException;
 
-  ServerExchangeResult get() throws IOException;
+  boolean hasNext();
+
+  ServerExchangeResult next() throws IOException;
 
   // old API
 
