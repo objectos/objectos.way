@@ -24,20 +24,20 @@ public final class ObjectoxHttpServer {
 
   /*
    HTTP 001: Minimal GET request
-
+  
    -- request
    GET / HTTP/1.1\r
    Host: www.example.com\r
    Connection: close\r
    \r
    ---
-
+  
    --- response
-   HTTP/1.1 200 OK<CRLF>
-   Content-Type: text/plain; charset=utf-8<CRLF>
-   Content-Length: 13<CRLF>
-   Date: Wed, 28 Jun 2023 12:08:43 GMT<CRLF>
-   <CRLF>
+   HTTP/1.1 200 OK\r
+   Content-Type: text/plain; charset=utf-8\r
+   Content-Length: 13\r
+   Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+   \r
    Hello World!
    ---
    */

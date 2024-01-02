@@ -60,12 +60,12 @@ public class ObjectoxRequestLineTest {
     assertNull(line.status);
   }
 
-  private ObjectoxRequestLine regularInput(Object... data) {
-    TestableInputStream inputStream;
-    inputStream = TestableInputStream.of(data);
+  private ObjectoxRequestLine regularInput(Object... data) throws IOException {
+    TestableSocket socket;
+    socket = TestableSocket.of(data);
 
     SocketInput input;
-    input = new SocketInput(64, inputStream);
+    input = new SocketInput(socket).init(64);
 
     return new ObjectoxRequestLine(input);
   }

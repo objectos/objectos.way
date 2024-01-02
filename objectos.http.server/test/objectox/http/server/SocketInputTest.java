@@ -31,7 +31,7 @@ public class SocketInputTest {
   Host: www.example.com
   Connection: close
   """)
-  public void testCase01() throws IOException {
+  public void testCase001() throws IOException {
     SocketInput input;
     input = regularInput("""
     GET / HTTP/1.1\r
@@ -69,11 +69,11 @@ public class SocketInputTest {
     assertEquals(input.next(), ':');
   }
 
-  private SocketInput regularInput(Object... data) {
-    TestableInputStream inputStream;
-    inputStream = TestableInputStream.of(data);
+  private SocketInput regularInput(Object... data) throws IOException {
+    TestableSocket socket;
+    socket = TestableSocket.of(data);
 
-    return new SocketInput(64, inputStream);
+    return new SocketInput(socket).init(64);
   }
 
 }

@@ -45,16 +45,21 @@ public class HttpExchangeTest {
   Connection: close
   """)
   public void testCase001() throws IOException {
-    HttpExchange exchange;
-    exchange = regularInput("""
+    TestableSocket socket;
+    socket = TestableSocket.of("""
     GET / HTTP/1.1\r
     Host: www.example.com\r
     Connection: close\r
     \r
     """);
 
+    HttpExchange exchange;
+    exchange = create(socket);
+
     // must always return true
     assertEquals(exchange.hasNext(), true);
+
+    // request phase
 
     ServerExchangeResult result;
     result = exchange.next();
@@ -86,14 +91,43 @@ public class HttpExchangeTest {
     bytes = ObjectoxHttpServer.readAllBytes(body);
 
     assertEquals(bytes.length, 0);
+
+    // response phase
+    /*
+    byte[] msg;
+    msg = "Hello World!\n".getBytes(StandardCharsets.UTF_8);
+    
+    ServerResponse resp;
+    resp = req.response();
+    
+    resp.ok();
+    
+    resp.contentType("text/plain; charset=utf-8");
+    
+    resp.contentLength(msg.length);
+    
+    resp.dateNow();
+    
+    resp.send(msg);
+    
+    assertEquals(
+        socket.outputAsString(),
+    
+        """
+        HTTP/1.1 200 OK\r
+        Content-Type: text/plain; charset=utf-8\r
+        Content-Length: 14\r
+        Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+        \r
+        Hello World!
+        """
+    );
+    
+    assertEquals(exchange.hasNext(), false);
+    */
   }
 
-  private HttpExchange regularInput(String input) {
-    // we do not care about closing the Socket/Exchange as these are all in-memory instances
-    // i.e. no real I/O
-    TestableSocket socket;
-    socket = TestableSocket.of(input);
-
+  private HttpExchange create(TestableSocket socket) {
     HttpExchange exchange;
     exchange = HttpExchange.create(socket);
 

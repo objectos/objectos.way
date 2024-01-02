@@ -18,6 +18,7 @@ package objectox.http.server;
 import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
@@ -40,19 +41,12 @@ final class SocketInput {
     this.socket = socket;
   }
 
-  // visible for testing
-  SocketInput(int bufferSize, InputStream inputStream) {
-    buffer = new byte[bufferSize];
-
-    this.inputStream = inputStream;
-
-    socket = null;
-  }
-
-  public final void init(int bufferSize) throws IOException {
+  public final SocketInput init(int bufferSize) throws IOException {
     buffer = new byte[bufferSize];
 
     inputStream = socket.getInputStream();
+
+    return this;
   }
 
   public final void parseLine() throws IOException {
@@ -245,6 +239,13 @@ final class SocketInput {
     length = end - start;
 
     return new String(buffer, start, length, StandardCharsets.UTF_8);
+  }
+
+  public final SocketOutput toOutput() throws IOException {
+    OutputStream outputStream;
+    outputStream = socket.getOutputStream();
+
+    return new SocketOutput(buffer, outputStream);
   }
 
   final HttpRequestPath createPath(int targetStart) {

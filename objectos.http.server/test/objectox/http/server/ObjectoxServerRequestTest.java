@@ -73,12 +73,12 @@ public class ObjectoxServerRequestTest {
     assertEquals(bytes.length, 0);
   }
 
-  private ObjectoxServerRequest regularInput(Object... data) {
-    TestableInputStream inputStream;
-    inputStream = TestableInputStream.of(data);
+  private ObjectoxServerRequest regularInput(Object... data) throws IOException {
+    TestableSocket socket;
+    socket = TestableSocket.of(data);
 
     SocketInput input;
-    input = new SocketInput(64, inputStream);
+    input = new SocketInput(socket).init(64);
 
     return new ObjectoxServerRequest(input);
   }

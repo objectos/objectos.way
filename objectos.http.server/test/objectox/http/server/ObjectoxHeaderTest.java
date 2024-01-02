@@ -87,11 +87,11 @@ public class ObjectoxHeaderTest {
   }
 
   private ObjectoxHeader regularInput(Object... data) throws IOException {
-    TestableInputStream inputStream;
-    inputStream = TestableInputStream.of(data);
+    TestableSocket socket;
+    socket = TestableSocket.of(data);
 
     SocketInput input;
-    input = new SocketInput(64, inputStream);
+    input = new SocketInput(socket).init(64);
 
     input.parseLine();
 

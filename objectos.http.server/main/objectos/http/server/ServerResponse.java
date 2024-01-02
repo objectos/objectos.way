@@ -15,8 +15,22 @@
  */
 package objectos.http.server;
 
-public sealed interface ServerExchangeResult permits BadRequest, ServerRequest, ServerExchangeDone {
+public interface ServerResponse {
 
-  ServerResponse response();
+  // status
+
+  ServerResponse ok();
+
+  // headers
+
+  ServerResponse contentLength(long value);
+
+  ServerResponse contentType(String value);
+
+  ServerResponse dateNow();
+
+  // send
+
+  void send(byte[] body);
 
 }

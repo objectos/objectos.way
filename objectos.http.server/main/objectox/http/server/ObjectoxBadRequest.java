@@ -16,9 +16,15 @@
 package objectox.http.server;
 
 import objectos.http.server.BadRequest;
+import objectos.http.server.ServerResponse;
 
 public enum ObjectoxBadRequest implements BadRequest {
 
   INSTANCE;
+
+  @Override
+  public final ServerResponse response() {
+    throw new UnsupportedOperationException("Implement me");
+  }
 
 }

@@ -21,6 +21,7 @@ import objectos.http.server.ServerExchangeResult;
 import objectos.http.server.ServerRequest;
 import objectos.http.server.ServerRequestBody;
 import objectos.http.server.ServerRequestHeaders;
+import objectos.http.server.ServerResponse;
 import objectos.http.server.UriPath;
 import objectox.http.StandardHeaderName;
 
@@ -99,6 +100,11 @@ public final class ObjectoxServerRequest implements ServerRequest {
     this.requestHeaders = requestHeaders;
 
     return this;
+  }
+
+  @Override
+  public final ServerResponse response() {
+    throw new UnsupportedOperationException("Implement me");
   }
 
 }
