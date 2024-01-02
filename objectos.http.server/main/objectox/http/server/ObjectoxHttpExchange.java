@@ -181,6 +181,8 @@ public final class ObjectoxHttpExchange implements HttpExchange {
 
   ObjectoxUriQuery query;
 
+  private ObjectoxServerRequest request;
+
   HttpRequestBody requestBody;
 
   Object requestHeaderName;
@@ -198,6 +200,8 @@ public final class ObjectoxHttpExchange implements HttpExchange {
   int responseHeadersIndex;
 
   Socket socket;
+
+  SocketInput socketInput;
 
   long startTime;
 
@@ -218,7 +222,7 @@ public final class ObjectoxHttpExchange implements HttpExchange {
   }
 
   public ObjectoxHttpExchange(Socket socket, boolean newApi) {
-    this.socket = socket;
+    this.socketInput = new SocketInput(socket);
 
     state = _CONFIG;
   }
@@ -252,7 +256,15 @@ public final class ObjectoxHttpExchange implements HttpExchange {
 
   @Override
   public final ServerExchangeResult get() throws IOException {
-    throw new UnsupportedOperationException("Implement me :: state=" + state);
+    if (state == _CONFIG) {
+      socketInput.init(bufferSize);
+
+      request = new ObjectoxServerRequest(socketInput);
+
+      state = _SETUP;
+    }
+
+    return request.get();
   }
 
   // old api

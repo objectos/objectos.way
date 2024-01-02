@@ -15,14 +15,21 @@
  */
 package objectos.http.server;
 
+import objectos.http.Method;
+
+/**
+ * Represents a fully parsed request to the HTTP server. Instances of this
+ * interface <em>do not</em> represent a bad request which could not be fully
+ * parsed.
+ */
 public non-sealed interface ServerRequest extends ServerExchangeResult {
 
   /**
-   * Returns the request message body.
+   * Returns the request method.
+   *
+   * @return the request method
    */
-  ServerRequestBody body();
-
-  ServerRequestHeaders headers();
+  Method method();
 
   /**
    * Returns the path component of the request target.
@@ -30,5 +37,14 @@ public non-sealed interface ServerRequest extends ServerExchangeResult {
    * @return the path component of the request target.
    */
   UriPath path();
+
+  ServerRequestHeaders headers();
+
+  /**
+   * Returns the request message body.
+   *
+   * @return the request message body.
+   */
+  ServerRequestBody body();
 
 }

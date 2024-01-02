@@ -19,6 +19,7 @@ import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNull;
 
 import java.io.IOException;
+import objectox.http.StandardMethod;
 import org.testng.annotations.Test;
 
 public class ObjectoxRequestLineTest {
@@ -31,19 +32,19 @@ public class ObjectoxRequestLineTest {
   public void testCase001() throws IOException {
     ObjectoxRequestLine line;
     line = regularInput("""
-    GET / HTTP/1.1
-    Host: www.example.com
-    Connection: close
-
-    """.replace("\n", "\r\n"));
+    GET / HTTP/1.1\r
+    Host: www.example.com\r
+    Connection: close\r
+    \r
+    """);
 
     line.parse();
 
     // method
-    ObjectoxMethod method;
+    StandardMethod method;
     method = line.method;
 
-    assertEquals(method, ObjectoxMethod.GET);
+    assertEquals(method, StandardMethod.GET);
 
     // target
     HttpRequestPath path;

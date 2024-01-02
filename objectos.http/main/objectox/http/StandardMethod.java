@@ -13,30 +13,55 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectox.http.server;
+package objectox.http;
 
-import java.nio.charset.StandardCharsets;
+import objectos.http.Method;
 
-enum ObjectoxMethod {
+public enum StandardMethod implements Method {
 
-  GET,
+  /**
+   * The CONNECT method.
+   */
+  CONNECT,
 
-  POST,
-
-  PUT,
-
+  /**
+   * The DELETE method.
+   */
   DELETE,
 
+  /**
+   * The GET method.
+   */
+  GET,
+
+  /**
+   * The HEAD method.
+   */
   HEAD,
 
+  /**
+   * The OPTIONS method.
+   */
   OPTIONS,
 
-  TRACE,
-
+  /**
+   * The PATCH method.
+   */
   PATCH,
 
-  CONNECT;
+  /**
+   * The POST method.
+   */
+  POST,
 
-  final byte[] nameAndSpace = (name() + " ").getBytes(StandardCharsets.UTF_8);
+  /**
+   * The PUT method.
+   */
+  PUT,
+
+  /**
+   * The TRACE method.
+   */
+  TRACE;
 
 }

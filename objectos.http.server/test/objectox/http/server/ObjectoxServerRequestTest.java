@@ -19,6 +19,7 @@ import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertSame;
 
 import java.io.IOException;
+import objectos.http.Method;
 import objectos.http.server.ServerExchangeResult;
 import objectos.http.server.ServerRequest;
 import objectos.http.server.ServerRequestBody;
@@ -51,6 +52,7 @@ public class ObjectoxServerRequestTest {
     UriPath path;
     path = req.path();
 
+    assertEquals(req.method(), Method.GET);
     assertEquals(path.is("/"), true);
 
     // headers

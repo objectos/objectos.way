@@ -16,6 +16,7 @@
 package objectox.http.server;
 
 import java.io.IOException;
+import objectos.http.Method;
 import objectos.http.server.ServerExchangeResult;
 import objectos.http.server.ServerRequest;
 import objectos.http.server.ServerRequestBody;
@@ -38,8 +39,13 @@ public final class ObjectoxServerRequest implements ServerRequest {
   }
 
   @Override
-  public final ServerRequestBody body() {
-    return body;
+  public final Method method() {
+    return requestLine.method;
+  }
+
+  @Override
+  public final UriPath path() {
+    return requestLine.path;
   }
 
   @Override
@@ -48,8 +54,8 @@ public final class ObjectoxServerRequest implements ServerRequest {
   }
 
   @Override
-  public final UriPath path() {
-    return requestLine.path;
+  public final ServerRequestBody body() {
+    return body;
   }
 
   public final ServerExchangeResult get() throws IOException {

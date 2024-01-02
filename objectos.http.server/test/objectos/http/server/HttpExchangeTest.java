@@ -23,18 +23,83 @@ import static org.testng.Assert.assertTrue;
 import java.io.IOException;
 import java.time.ZonedDateTime;
 import objectos.http.Http;
+import objectos.http.Method;
 import objectos.http.server.HttpExchange.Processed;
 import objectos.notes.NoOpNoteSink;
 import objectos.notes.Note;
 import objectos.notes.Note1;
 import objectos.notes.NoteSink;
+import objectox.http.StandardHeaderName;
 import objectox.http.server.Bytes;
 import objectox.http.server.Http001;
+import objectox.http.server.ObjectoxHttpServer;
 import objectox.http.server.TestableSocket;
 import objectox.http.server.TestingInput.RegularInput;
 import org.testng.annotations.Test;
 
 public class HttpExchangeTest {
+
+  @Test(description = """
+  GET / HTTP/1.1
+  Host: www.example.com
+  Connection: close
+  """)
+  public void testCase001() throws IOException {
+    HttpExchange exchange;
+    exchange = regularInput("""
+    GET / HTTP/1.1\r
+    Host: www.example.com\r
+    Connection: close\r
+    \r
+    """);
+
+    ServerExchangeResult result;
+    result = exchange.get();
+
+    if (!(result instanceof ServerRequest req)) {
+      throw new AssertionError("Expected ServerRequest but got " + result.getClass());
+    }
+
+    // request line
+    UriPath path;
+    path = req.path();
+
+    assertEquals(req.method(), Method.GET);
+    assertEquals(path.is("/"), true);
+
+    // headers
+    ServerRequestHeaders headers;
+    headers = req.headers();
+
+    assertEquals(headers.size(), 2);
+    assertEquals(headers.first(StandardHeaderName.HOST), "www.example.com");
+    assertEquals(headers.first(StandardHeaderName.CONNECTION), "close");
+
+    // body
+    ServerRequestBody body;
+    body = req.body();
+
+    byte[] bytes;
+    bytes = ObjectoxHttpServer.readAllBytes(body);
+
+    assertEquals(bytes.length, 0);
+  }
+
+  private HttpExchange regularInput(String input) {
+    // we do not care about closing the Socket/Exchange as these are all in-memory instances
+    // i.e. no real I/O
+    TestableSocket socket;
+    socket = TestableSocket.of(input);
+
+    HttpExchange exchange;
+    exchange = HttpExchange.create(socket);
+
+    exchange.bufferSize(128);
+
+    exchange.noteSink(TestingNoteSink.INSTANCE);
+
+    return exchange;
+  }
 
   @Test
   public void http001() throws IOException {

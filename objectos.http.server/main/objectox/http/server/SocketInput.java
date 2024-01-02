@@ -18,14 +18,17 @@ package objectox.http.server;
 import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.Socket;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 
 final class SocketInput {
 
-  private final byte[] buffer;
+  private final Socket socket;
 
-  private final InputStream inputStream;
+  private byte[] buffer;
+
+  private InputStream inputStream;
 
   private int bufferLimit;
 
@@ -33,10 +36,23 @@ final class SocketInput {
 
   private int lineLimit;
 
+  public SocketInput(Socket socket) {
+    this.socket = socket;
+  }
+
+  // visible for testing
   SocketInput(int bufferSize, InputStream inputStream) {
     buffer = new byte[bufferSize];
 
     this.inputStream = inputStream;
+
+    socket = null;
+  }
+
+  public final void init(int bufferSize) throws IOException {
+    buffer = new byte[bufferSize];
+
+    inputStream = socket.getInputStream();
   }
 
   public final void parseLine() throws IOException {

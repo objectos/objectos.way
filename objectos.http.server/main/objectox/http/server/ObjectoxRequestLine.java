@@ -16,13 +16,17 @@
 package objectox.http.server;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.util.EnumMap;
+import java.util.Map;
 import objectox.http.HttpStatus;
+import objectox.http.StandardMethod;
 
 public final class ObjectoxRequestLine {
 
   private final SocketInput input;
 
-  ObjectoxMethod method;
+  StandardMethod method;
 
   HttpRequestPath path;
 
@@ -95,25 +99,44 @@ public final class ObjectoxRequestLine {
     // based on the first char, we select out method candidate
 
     switch (first) {
-      case 'C' -> parseMethod0(ObjectoxMethod.CONNECT);
+      case 'C' -> parseMethod0(StandardMethod.CONNECT);
 
-      case 'D' -> parseMethod0(ObjectoxMethod.DELETE);
+      case 'D' -> parseMethod0(StandardMethod.DELETE);
 
-      case 'G' -> parseMethod0(ObjectoxMethod.GET);
+      case 'G' -> parseMethod0(StandardMethod.GET);
 
-      case 'H' -> parseMethod0(ObjectoxMethod.HEAD);
+      case 'H' -> parseMethod0(StandardMethod.HEAD);
 
-      case 'O' -> parseMethod0(ObjectoxMethod.OPTIONS);
+      case 'O' -> parseMethod0(StandardMethod.OPTIONS);
 
       case 'P' -> parseMethodP();
 
-      case 'T' -> parseMethod0(ObjectoxMethod.TRACE);
+      case 'T' -> parseMethod0(StandardMethod.TRACE);
     }
   }
 
-  private void parseMethod0(ObjectoxMethod candidate) throws IOException {
+  static final Map<StandardMethod, byte[]> STD_METHOD_BYTES;
+
+  static {
+    Map<StandardMethod, byte[]> map;
+    map = new EnumMap<>(StandardMethod.class);
+
+    for (var method : StandardMethod.values()) {
+      String nameAndSpace;
+      nameAndSpace = method.name() + " ";
+
+      byte[] bytes;
+      bytes = nameAndSpace.getBytes(StandardCharsets.UTF_8);
+
+      map.put(method, bytes);
+    }
+
+    STD_METHOD_BYTES = map;
+  }
+
+  private void parseMethod0(StandardMethod candidate) throws IOException {
     byte[] candidateBytes;
-    candidateBytes = candidate.nameAndSpace;
+    candidateBytes = STD_METHOD_BYTES.get(candidate);
 
     if (input.matches(candidateBytes)) {
       method = candidate;
@@ -128,19 +151,19 @@ public final class ObjectoxRequestLine {
 
     // we'll try them in sequence
 
-    parseMethod0(ObjectoxMethod.POST);
+    parseMethod0(StandardMethod.POST);
 
     if (method != null) {
       return;
     }
 
-    parseMethod0(ObjectoxMethod.PUT);
+    parseMethod0(StandardMethod.PUT);
 
     if (method != null) {
       return;
     }
 
-    parseMethod0(ObjectoxMethod.PATCH);
+    parseMethod0(StandardMethod.PATCH);
 
     if (method != null) {
       return;
