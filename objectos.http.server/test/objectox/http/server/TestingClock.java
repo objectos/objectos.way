@@ -13,10 +13,34 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.http.server;
+package objectox.http.server;
 
-public sealed interface ServerExchangeResult permits BadRequest, ServerRequest, ServerExchangeDone {
+import java.time.Clock;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 
-  ServerResponse response();
+public final class TestingClock {
+
+  public static final Clock FIXED;
+
+  static {
+    LocalDateTime dateTime;
+    dateTime = LocalDateTime.of(2023, 6, 28, 12, 8, 43);
+
+    ZoneId zone;
+    zone = ZoneId.of("GMT");
+
+    ZonedDateTime zoned;
+    zoned = dateTime.atZone(zone);
+
+    Instant fixedInstant;
+    fixedInstant = zoned.toInstant();
+
+    FIXED = Clock.fixed(fixedInstant, zone);
+  }
+
+  private TestingClock() {}
 
 }

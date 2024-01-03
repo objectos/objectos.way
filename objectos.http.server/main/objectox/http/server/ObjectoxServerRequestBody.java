@@ -16,9 +16,9 @@
 package objectox.http.server;
 
 import java.io.InputStream;
-import objectos.http.server.ServerRequestBody;
+import objectos.http.server.Body;
 
-public class ObjectoxServerRequestBody implements ServerRequestBody {
+public class ObjectoxServerRequestBody implements Body {
 
   @Override
   public final InputStream openStream() {

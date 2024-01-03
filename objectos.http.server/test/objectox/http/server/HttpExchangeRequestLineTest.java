@@ -47,7 +47,7 @@ public class HttpExchangeRequestLineTest {
     assertEquals(exchange.keepAlive, true);
     // expect correct method
     assertEquals(exchange.method, Http.Method.GET);
-    assertEquals(exchange.requestHeaders, null);
+    assertEquals(exchange.requestHeadersStandard, null);
     assertEquals(exchange.requestHeaderName, null);
     // expect correct parsed target
     assertEquals(exchange.requestPath.toString(), "/");
@@ -80,7 +80,7 @@ public class HttpExchangeRequestLineTest {
     assertEquals(exchange.keepAlive, true);
     // expect correct method
     assertEquals(exchange.method, Http.Method.POST);
-    assertEquals(exchange.requestHeaders, null);
+    assertEquals(exchange.requestHeadersStandard, null);
     assertEquals(exchange.requestHeaderName, null);
     // expect correct parsed target
     assertEquals(exchange.requestPath.toString(), "/login");

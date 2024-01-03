@@ -15,10 +15,6 @@
  */
 package objectos.http.server;
 
-import java.io.InputStream;
-
-public interface ServerRequestBody {
-
-  InputStream openStream();
+public interface ServerResponseResult {
 
 }

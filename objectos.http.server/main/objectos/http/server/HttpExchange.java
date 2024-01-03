@@ -20,6 +20,7 @@ import java.net.Socket;
 import java.net.SocketAddress;
 import java.nio.charset.Charset;
 import java.nio.file.Path;
+import java.time.Clock;
 import java.util.Set;
 import objectos.http.HeaderName;
 import objectos.http.HeaderValue;
@@ -48,6 +49,8 @@ public sealed interface HttpExchange extends AutoCloseable permits objectox.http
 
   void bufferSize(int size);
 
+  void clock(Clock clock);
+
   void noteSink(NoteSink noteSink);
 
   // user methods
@@ -61,9 +64,15 @@ public sealed interface HttpExchange extends AutoCloseable permits objectox.http
   @Override
   void close() throws IOException;
 
-  boolean hasNext();
+  void parse() throws IOException, IllegalStateException;
 
-  ServerExchangeResult next() throws IOException;
+  boolean isBadRequest() throws IllegalStateException;
+
+  ServerRequest toRequest() throws IllegalStateException;
+
+  void commit() throws IOException, IllegalStateException;
+
+  boolean keepAlive();
 
   // old API
 

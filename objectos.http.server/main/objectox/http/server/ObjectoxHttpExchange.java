@@ -23,6 +23,7 @@ import java.net.SocketAddress;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
+import java.time.Clock;
 import java.util.Arrays;
 import java.util.EnumMap;
 import java.util.HashMap;
@@ -38,7 +39,10 @@ import objectos.http.server.Body;
 import objectos.http.server.CharWritable;
 import objectos.http.server.HttpExchange;
 import objectos.http.server.Segment;
-import objectos.http.server.ServerExchangeResult;
+import objectos.http.server.ServerRequest;
+import objectos.http.server.ServerRequestHeaders;
+import objectos.http.server.ServerResponse;
+import objectos.http.server.UriPath;
 import objectos.http.server.UriQuery;
 import objectos.lang.object.Check;
 import objectos.notes.NoOpNoteSink;
@@ -104,7 +108,10 @@ public final class ObjectoxHttpExchange implements HttpExchange {
   // new states
 
   static final byte _CONFIG = 0;
-  static final byte _FIRST_REQUEST = 1;
+  static final byte _PARSE = 1;
+  static final byte _REQUEST = 2;
+  static final byte _RESPONSE = 3;
+  static final byte _COMMITED = 4;
 
   // Setup phase
 
@@ -162,33 +169,25 @@ public final class ObjectoxHttpExchange implements HttpExchange {
   static final byte _REQUEST_ERROR = 28;
   static final byte _STOP = 29;
 
+  // old fields / constructors
+
   byte[] buffer;
 
   int bufferIndex;
 
   int bufferLimit;
 
-  int bufferSize = 1024;
-
   IOException error;
-
-  boolean keepAlive;
 
   Http.Method method;
 
   byte nextAction;
 
-  NoteSink noteSink = NoOpNoteSink.of();
-
   ObjectoxUriQuery query;
-
-  private ObjectoxServerRequest request;
-
-  HttpRequestBody requestBody;
 
   Object requestHeaderName;
 
-  Map<StandardHeaderName, BufferHeaderValue> requestHeaders;
+  Map<StandardHeaderName, BufferHeaderValue> requestHeadersStandard;
 
   Map<String, BufferHeaderValue> requestHeadersUnknown;
 
@@ -200,13 +199,7 @@ public final class ObjectoxHttpExchange implements HttpExchange {
 
   int responseHeadersIndex;
 
-  Socket socket;
-
-  SocketInput socketInput;
-
   long startTime;
-
-  byte state;
 
   Http.Status status;
 
@@ -222,8 +215,34 @@ public final class ObjectoxHttpExchange implements HttpExchange {
     state = _SETUP;
   }
 
+  // new fields / constructors
+
+  int bufferSize = 1024;
+
+  private Clock clock;
+
+  boolean keepAlive;
+
+  NoteSink noteSink = NoOpNoteSink.of();
+
+  private ThisServerRequest request;
+
+  Body requestBody;
+
+  private ObjectoxServerRequestHeaders requestHeaders;
+
+  private ObjectoxRequestLine requestLine;
+
+  private ObjectoxServerResponse response;
+
+  Socket socket;
+
+  SocketInput socketInput;
+
+  byte state;
+
   public ObjectoxHttpExchange(Socket socket, boolean newApi) {
-    this.socketInput = new SocketInput(socket);
+    this.socket = socket;
 
     state = _CONFIG;
   }
@@ -245,6 +264,13 @@ public final class ObjectoxHttpExchange implements HttpExchange {
   }
 
   @Override
+  public final void clock(Clock clock) {
+    checkConfig();
+
+    this.clock = Check.notNull(clock, "clock == null");
+  }
+
+  @Override
   public final void noteSink(NoteSink noteSink) {
     checkConfig();
 
@@ -256,25 +282,198 @@ public final class ObjectoxHttpExchange implements HttpExchange {
   }
 
   @Override
-  public final boolean hasNext() {
-    if (state == _CONFIG) {
-      return true;
+  public final void parse() throws IOException, IllegalStateException {
+    switch (state) {
+      case _CONFIG -> {
+        // lazily build the request line
+        InputStream inputStream;
+        inputStream = socket.getInputStream();
+
+        socketInput = new SocketInput(bufferSize, inputStream);
+
+        requestLine = new ObjectoxRequestLine(socketInput);
+      }
+
+      case _COMMITED -> {
+        socketInput.reset();
+
+        requestLine.reset();
+      }
+
+      default -> throw new UnsupportedOperationException(
+          "Implement me :: state=" + state
+      );
     }
 
-    throw new UnsupportedOperationException("Implement me");
+    state = _PARSE;
+
+    requestLine.parse();
+
+    if (requestLine.badRequest != null) {
+      return;
+    }
+
+    if (requestHeaders == null) {
+      // lazily build request headers
+
+      requestHeaders = new ObjectoxServerRequestHeaders(socketInput);
+    } else {
+      requestHeaders.reset();
+    }
+
+    requestHeaders.parse();
+
+    if (requestHeaders.badRequest != null) {
+      return;
+    }
+
+    // handle body if necessary
+
+    Body body;
+    body = NoServerRequestBody.INSTANCE;
+
+    if (requestHeaders.contains(StandardHeaderName.CONTENT_LENGTH)) {
+      throw new UnsupportedOperationException(
+          "Implement me :: parse body"
+      );
+    }
+
+    if (requestHeaders.contains(StandardHeaderName.TRANSFER_ENCODING)) {
+      throw new UnsupportedOperationException(
+          "Implement me :: maybe chunked?"
+      );
+    }
+
+    requestBody = body;
+
+    // handle keep alive
+
+    keepAlive = false;
+
+    if (requestLine.versionMajor == 1 && requestLine.versionMinor == 1) {
+      keepAlive = true;
+    }
+
+    ObjectoxHeader connection;
+    connection = requestHeaders.getUnchecked(StandardHeaderName.CONNECTION);
+
+    if (connection != null) {
+      if (connection.contentEquals(Bytes.KEEP_ALIVE)) {
+        keepAlive = true;
+      }
+
+      else if (connection.contentEquals(Bytes.CLOSE)) {
+        keepAlive = false;
+      }
+    }
+
+    state = _REQUEST;
   }
 
   @Override
-  public final ServerExchangeResult next() throws IOException {
-    if (state == _CONFIG) {
-      socketInput.init(bufferSize);
+  public final boolean isBadRequest() {
+    Check.state(state == _REQUEST, "Method can only be invoked after a parse() operation");
 
-      request = new ObjectoxServerRequest(socketInput);
+    return requestLine.badRequest != null
+        || requestHeaders.badRequest != null;
+  }
 
-      state = _FIRST_REQUEST;
+  @Override
+  public final ServerRequest toRequest() {
+    Check.state(!isBadRequest(), "Cannot return a ServerRequest instance as this is a bad request");
+
+    if (request == null) {
+      request = new ThisServerRequest();
     }
 
-    return request.get();
+    return request;
+  }
+
+  @Override
+  public final void commit() throws IOException, IllegalStateException {
+    Check.state(state == _RESPONSE, "Cannot commit as we are not in the response phase");
+
+    OutputStream outputStream;
+    outputStream = socket.getOutputStream();
+
+    response.commit(outputStream);
+
+    state = _COMMITED;
+  }
+
+  @Override
+  public final boolean keepAlive() {
+    return keepAlive;
+  }
+
+  private class ThisServerRequest implements ServerRequest {
+
+    @Override
+    public final objectos.http.Method method() {
+      checkRequest();
+
+      return requestLine.method;
+    }
+
+    @Override
+    public final UriPath path() {
+      checkRequest();
+
+      return requestLine.path;
+    }
+
+    @Override
+    public final ServerRequestHeaders headers() {
+      checkRequest();
+
+      return requestHeaders;
+    }
+
+    @Override
+    public final Body body() {
+      checkRequest();
+
+      return requestBody;
+    }
+
+    private void checkRequest() {
+      Check.state(
+          state == _REQUEST,
+
+          """
+          ServerRequest methods can only be invoked:
+          - after a parse() operation; and
+          - before the toResponse() method invocation.
+          """
+      );
+    }
+
+    @Override
+    public final ServerResponse toResponse() {
+      if (response == null) {
+        // input and output share the same buffer
+        byte[] buffer;
+        buffer = socketInput.buffer;
+
+        response = new ObjectoxServerResponse(buffer);
+
+        Clock responseClock;
+        responseClock = clock;
+
+        if (responseClock == null) {
+          responseClock = Clock.systemUTC();
+        }
+
+        response.clock(responseClock);
+      } else {
+        response.reset();
+      }
+
+      state = _RESPONSE;
+
+      return response;
+    }
+
   }
 
   // old api
@@ -343,7 +542,7 @@ public final class ObjectoxHttpExchange implements HttpExchange {
     checkStateHandle();
 
     HeaderValue value;
-    value = requestHeaders.get(name);
+    value = requestHeadersStandard.get(name);
 
     if (value == null) {
       value = HeaderValue.NULL;
@@ -633,7 +832,7 @@ public final class ObjectoxHttpExchange implements HttpExchange {
 
   private boolean handle0KeepAlive() {
     BufferHeaderValue connection;
-    connection = requestHeaders.getOrDefault(StandardHeaderName.CONNECTION, BufferHeaderValue.EMPTY);
+    connection = requestHeadersStandard.getOrDefault(StandardHeaderName.CONNECTION, BufferHeaderValue.EMPTY);
 
     if (connection.contentEquals(Bytes.KEEP_ALIVE)) {
       return true;
@@ -1146,12 +1345,12 @@ public final class ObjectoxHttpExchange implements HttpExchange {
       BufferHeaderValue headerValue;
       headerValue = new BufferHeaderValue(buffer, valueStart, valueEnd);
 
-      if (requestHeaders == null) {
-        requestHeaders = new EnumMap<>(StandardHeaderName.class);
+      if (requestHeadersStandard == null) {
+        requestHeadersStandard = new EnumMap<>(StandardHeaderName.class);
       }
 
       BufferHeaderValue previousValue;
-      previousValue = requestHeaders.put(headerName, headerValue);
+      previousValue = requestHeadersStandard.put(headerName, headerValue);
 
       if (previousValue != null) {
         throw new UnsupportedOperationException("Implement me");
@@ -1194,7 +1393,7 @@ public final class ObjectoxHttpExchange implements HttpExchange {
     // Let's check if this is a fixed length or a chunked transfer
 
     BufferHeaderValue contentLength;
-    contentLength = requestHeaders.get(StandardHeaderName.CONTENT_LENGTH);
+    contentLength = requestHeadersStandard.get(StandardHeaderName.CONTENT_LENGTH);
 
     if (contentLength == null) {
       // TODO multipart/form-data?
@@ -1542,8 +1741,8 @@ public final class ObjectoxHttpExchange implements HttpExchange {
 
     method = null;
 
-    if (requestHeaders != null) {
-      requestHeaders.clear();
+    if (requestHeadersStandard != null) {
+      requestHeadersStandard.clear();
     }
 
     if (requestHeadersUnknown != null) {
@@ -1615,15 +1814,15 @@ public final class ObjectoxHttpExchange implements HttpExchange {
   }
 
   private byte toHandleOrRequestBody() {
-    if (requestHeaders == null) {
+    if (requestHeadersStandard == null) {
       return _HANDLE;
     }
 
-    if (requestHeaders.containsKey(StandardHeaderName.CONTENT_LENGTH)) {
+    if (requestHeadersStandard.containsKey(StandardHeaderName.CONTENT_LENGTH)) {
       return _REQUEST_BODY;
     }
 
-    if (requestHeaders.containsKey(StandardHeaderName.TRANSFER_ENCODING)) {
+    if (requestHeadersStandard.containsKey(StandardHeaderName.TRANSFER_ENCODING)) {
       throw new UnsupportedOperationException(
           "Implement me :: maybe chunked?"
       );

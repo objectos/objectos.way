@@ -18,18 +18,16 @@ package objectox.http.server;
 import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.Socket;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 
 final class SocketInput {
 
-  private final Socket socket;
+  private static final int MAX_BUFFER_SIZE = 1 << 14;
 
-  private byte[] buffer;
+  byte[] buffer;
 
-  private InputStream inputStream;
+  private final InputStream inputStream;
 
   private int bufferLimit;
 
@@ -37,16 +35,46 @@ final class SocketInput {
 
   private int lineLimit;
 
-  public SocketInput(Socket socket) {
-    this.socket = socket;
+  private final int max = 4096;
+
+  public SocketInput(int bufferSize, InputStream inputStream) {
+    int actualSize;
+    actualSize = powerOfTwo(bufferSize);
+
+    this.buffer = new byte[actualSize];
+
+    this.inputStream = inputStream;
   }
 
-  public final SocketInput init(int bufferSize) throws IOException {
-    buffer = new byte[bufferSize];
+  static final int powerOfTwo(int size) {
+    // maybe size is already power of 2
+    int x;
+    x = size - 1;
 
-    inputStream = socket.getInputStream();
+    int leading;
+    leading = Integer.numberOfLeadingZeros(x);
 
-    return this;
+    int n;
+    n = -1 >>> leading;
+
+    if (n < 0) {
+      // should not happen as minimal buffer size is 128
+      throw new IllegalArgumentException("Buffer size is too small");
+    }
+
+    if (n >= MAX_BUFFER_SIZE) {
+      return MAX_BUFFER_SIZE;
+    }
+
+    return n + 1;
+  }
+
+  public final void reset() {
+    bufferLimit = 0;
+
+    lineIndex = 0;
+
+    lineLimit = 0;
   }
 
   public final void parseLine() throws IOException {
@@ -76,8 +104,19 @@ final class SocketInput {
       writableLength = buffer.length - bufferLimit;
 
       if (writableLength == 0) {
-        // buffer is full
-        throw new OverflowException();
+        // buffer is full, try to increase
+
+        if (buffer.length == max) {
+          // cannot increase...
+          throw new OverflowException();
+        }
+
+        int newLength;
+        newLength = buffer.length << 1;
+
+        buffer = Arrays.copyOf(buffer, newLength);
+
+        writableLength = buffer.length - bufferLimit;
       }
 
       int bytesRead;
@@ -239,13 +278,6 @@ final class SocketInput {
     length = end - start;
 
     return new String(buffer, start, length, StandardCharsets.UTF_8);
-  }
-
-  public final SocketOutput toOutput() throws IOException {
-    OutputStream outputStream;
-    outputStream = socket.getOutputStream();
-
-    return new SocketOutput(buffer, outputStream);
   }
 
   final HttpRequestPath createPath(int targetStart) {

@@ -22,7 +22,7 @@ import objectos.http.Method;
  * interface <em>do not</em> represent a bad request which could not be fully
  * parsed.
  */
-public non-sealed interface ServerRequest extends ServerExchangeResult {
+public interface ServerRequest {
 
   /**
    * Returns the request method.
@@ -45,6 +45,8 @@ public non-sealed interface ServerRequest extends ServerExchangeResult {
    *
    * @return the request message body.
    */
-  ServerRequestBody body();
+  Body body();
+
+  ServerResponse toResponse();
 
 }

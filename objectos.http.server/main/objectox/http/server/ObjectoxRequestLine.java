@@ -19,20 +19,19 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.EnumMap;
 import java.util.Map;
-import objectox.http.HttpStatus;
 import objectox.http.StandardMethod;
 
 public final class ObjectoxRequestLine {
 
   private final SocketInput input;
 
+  BadRequestReason badRequest;
+
   StandardMethod method;
 
   HttpRequestPath path;
 
   ObjectoxUriQuery query;
-
-  HttpStatus status;
 
   byte versionMajor;
 
@@ -42,6 +41,18 @@ public final class ObjectoxRequestLine {
     this.input = input;
   }
 
+  public final void reset() {
+    badRequest = null;
+
+    method = null;
+
+    path = null;
+
+    query = null;
+
+    versionMajor = versionMinor = 0;
+  }
+
   public final void parse() throws IOException {
     input.parseLine();
 
@@ -49,23 +60,21 @@ public final class ObjectoxRequestLine {
 
     if (method == null) {
       // parse method failed -> bad request
-      status = HttpStatus.BAD_REQUEST;
+      badRequest = BadRequestReason.INVALID_METHOD;
 
       return;
     }
 
     parsePathStart();
 
-    if (path == null) {
-      // parse path start failed -> bad request
-      status = HttpStatus.BAD_REQUEST;
-
+    if (badRequest != null) {
+      // bad request -> fail
       return;
     }
 
     parsePathRest();
 
-    if (status != null) {
+    if (badRequest != null) {
       // bad request -> fail
       return;
     }
@@ -76,13 +85,13 @@ public final class ObjectoxRequestLine {
 
     parseVersion();
 
-    if (status != null) {
+    if (badRequest != null) {
       // bad request -> fail
       return;
     }
 
     if (!input.consumeIfEndOfLine()) {
-      status = HttpStatus.BAD_REQUEST;
+      badRequest = BadRequestReason.INVALID_REQUEST_LINE_TERMINATOR;
 
       return;
     }
@@ -178,6 +187,8 @@ public final class ObjectoxRequestLine {
 
     if (!input.hasNext()) {
       // reached EOL -> bad request
+      badRequest = BadRequestReason.INVALID_TARGET;
+
       return;
     }
 
@@ -186,6 +197,8 @@ public final class ObjectoxRequestLine {
 
     if (b != Bytes.SOLIDUS) {
       // first char IS NOT '/' => BAD_REQUEST
+      badRequest = BadRequestReason.INVALID_TARGET;
+
       return;
     }
 
@@ -205,7 +218,7 @@ public final class ObjectoxRequestLine {
 
     if (index < 0) {
       // trailing char was not found
-      status = HttpStatus.BAD_REQUEST;
+      badRequest = BadRequestReason.URI_TOO_LONG;
 
       return;
     }
@@ -227,7 +240,7 @@ public final class ObjectoxRequestLine {
 
     if (!input.matches(HTTP_VERSION_PREFIX)) {
       // buffer does not start with 'HTTP/'
-      status = HttpStatus.BAD_REQUEST;
+      badRequest = BadRequestReason.INVALID_PROTOCOL;
 
       return;
     }
@@ -235,7 +248,7 @@ public final class ObjectoxRequestLine {
     // check if we  have '1' '.' '1' = 3 bytes
 
     if (!input.hasNext(3)) {
-      status = HttpStatus.BAD_REQUEST;
+      badRequest = BadRequestReason.INVALID_PROTOCOL;
 
       return;
     }
@@ -245,7 +258,7 @@ public final class ObjectoxRequestLine {
 
     if (!Bytes.isDigit(maybeMajor)) {
       // major version is not a digit => bad request
-      status = HttpStatus.BAD_REQUEST;
+      badRequest = BadRequestReason.INVALID_PROTOCOL;
 
       return;
     }
@@ -255,7 +268,7 @@ public final class ObjectoxRequestLine {
 
     if (maybeDot != '.') {
       // major version not followed by a DOT => bad request
-      status = HttpStatus.BAD_REQUEST;
+      badRequest = BadRequestReason.INVALID_PROTOCOL;
 
       return;
     }
@@ -265,7 +278,7 @@ public final class ObjectoxRequestLine {
 
     if (!Bytes.isDigit(maybeMinor)) {
       // minor version is not a digit => bad request
-      status = HttpStatus.BAD_REQUEST;
+      badRequest = BadRequestReason.INVALID_PROTOCOL;
 
       return;
     }

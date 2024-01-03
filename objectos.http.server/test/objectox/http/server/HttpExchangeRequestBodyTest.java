@@ -43,7 +43,7 @@ public class HttpExchangeRequestBodyTest {
     assertEquals(exchange.method, Http.Method.POST);
     // request body should have been created
     assertEquals(exchange.requestBody.toString(), "email=user%40example.com");
-    assertEquals(exchange.requestHeaders, Map.of(
+    assertEquals(exchange.requestHeadersStandard, Map.of(
       StandardHeaderName.HOST, TestingInput.hv("www.example.com"),
       StandardHeaderName.CONTENT_LENGTH, TestingInput.hv("24"),
       StandardHeaderName.CONTENT_TYPE, TestingInput.hv("application/x-www-form-urlencoded")

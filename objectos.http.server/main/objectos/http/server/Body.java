@@ -16,9 +16,8 @@
 package objectos.http.server;
 
 import java.io.InputStream;
-import objectox.http.server.HttpRequestBody;
 
-public sealed interface Body permits HttpRequestBody {
+public interface Body {
 
   InputStream openStream();
 

@@ -61,7 +61,7 @@ public interface TestingInput {
     exchange.keepAlive = true;
     exchange.error = null;
     exchange.method = null;
-    exchange.requestHeaders = null;
+    exchange.requestHeadersStandard = null;
     exchange.requestHeaderName = null;
     exchange.requestPath = null;
     exchange.responseBody = null;

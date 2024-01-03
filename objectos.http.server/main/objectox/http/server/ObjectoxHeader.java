@@ -37,6 +37,32 @@ class ObjectoxHeader {
 
   // API
 
+  public final boolean contentEquals(byte[] that) {
+    int thisLength;
+    thisLength = valueEnd - valueStart;
+
+    if (thisLength != that.length) {
+      return false;
+    }
+
+    for (int offset = 0; offset < thisLength; offset++) {
+      byte ch;
+      ch = input.get(valueStart + offset);
+
+      byte thisLow;
+      thisLow = Bytes.toLowerCase(ch);
+
+      byte thatLow;
+      thatLow = that[offset];
+
+      if (thisLow != thatLow) {
+        return false;
+      }
+    }
+
+    return true;
+  }
+
   public final String get() {
     if (value == null) {
       value = input.getString(valueStart, valueEnd);

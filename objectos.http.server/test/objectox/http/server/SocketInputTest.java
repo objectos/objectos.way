@@ -69,11 +69,49 @@ public class SocketInputTest {
     assertEquals(input.next(), ':');
   }
 
-  private SocketInput regularInput(Object... data) throws IOException {
-    TestableSocket socket;
-    socket = TestableSocket.of(data);
+  @Test(description = "Line is larger than initial buffer size")
+  public void edge01() throws IOException {
+    String line;
+    line = "GET /abcdefghijklmnopqrstuvwxyz HTTP/1.1\r\n";
 
-    return new SocketInput(socket).init(64);
+    assertEquals(line.length(), 42);
+
+    TestableInputStream inputStream;
+    inputStream = TestableInputStream.of(line);
+
+    SocketInput input;
+    input = new SocketInput(32, inputStream);
+
+    input.parseLine();
+
+    StringBuilder res;
+    res = new StringBuilder();
+
+    while (input.hasNext()) {
+      res.append((char) input.next());
+    }
+
+    assertEquals(res.toString(), "GET /abcdefghijklmnopqrstuvwxyz HTTP/1.1\r");
+  }
+
+  @Test
+  public void powerOfTwo() {
+    assertEquals(SocketInput.powerOfTwo(127), 128);
+    assertEquals(SocketInput.powerOfTwo(128), 128);
+    assertEquals(SocketInput.powerOfTwo(129), 256);
+    assertEquals(SocketInput.powerOfTwo(1023), 1024);
+    assertEquals(SocketInput.powerOfTwo(1024), 1024);
+    assertEquals(SocketInput.powerOfTwo(1025), 2048);
+    assertEquals(SocketInput.powerOfTwo(16383), 16384);
+    assertEquals(SocketInput.powerOfTwo(16384), 16384);
+    assertEquals(SocketInput.powerOfTwo(16385), 16384);
+  }
+
+  private SocketInput regularInput(Object... data) throws IOException {
+    TestableInputStream inputStream;
+    inputStream = TestableInputStream.of(data);
+
+    return new SocketInput(64, inputStream);
   }
 
 }

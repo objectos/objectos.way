@@ -18,20 +18,20 @@ package objectox.http.server;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import objectos.http.server.ServerRequestBody;
+import objectos.http.server.Body;
 
 public final class ObjectoxHttpServer {
 
   /*
    HTTP 001: Minimal GET request
-  
+
    -- request
    GET / HTTP/1.1\r
    Host: www.example.com\r
    Connection: close\r
    \r
    ---
-  
+
    --- response
    HTTP/1.1 200 OK\r
    Content-Type: text/plain; charset=utf-8\r
@@ -44,7 +44,7 @@ public final class ObjectoxHttpServer {
 
   private ObjectoxHttpServer() {}
 
-  public static byte[] readAllBytes(ServerRequestBody body) throws IOException {
+  public static byte[] readAllBytes(Body body) throws IOException {
     try (InputStream in = body.openStream();
         ByteArrayOutputStream out = new ByteArrayOutputStream()) {
       in.transferTo(out);

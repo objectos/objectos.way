@@ -16,9 +16,9 @@
 package objectox.http.server;
 
 import java.io.InputStream;
-import objectos.http.server.ServerRequestBody;
+import objectos.http.server.Body;
 
-public enum NoServerRequestBody implements ServerRequestBody {
+public enum NoServerRequestBody implements Body {
 
   INSTANCE;
 

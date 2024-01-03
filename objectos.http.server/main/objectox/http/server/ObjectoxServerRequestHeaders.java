@@ -22,21 +22,28 @@ import java.util.Map;
 import objectos.http.HeaderName;
 import objectos.http.server.ServerRequestHeaders;
 import objectos.lang.object.Check;
-import objectox.http.HttpStatus;
 import objectox.http.StandardHeaderName;
 
 public final class ObjectoxServerRequestHeaders implements ServerRequestHeaders {
 
   private final SocketInput input;
 
+  BadRequestReason badRequest;
+
   HeaderName headerName;
 
   Map<StandardHeaderName, ObjectoxHeader> standardHeaders;
 
-  HttpStatus status;
-
   public ObjectoxServerRequestHeaders(SocketInput input) {
     this.input = input;
+  }
+
+  public final void reset() {
+    badRequest = null;
+
+    headerName = null;
+
+    standardHeaders.clear();
   }
 
   // API
@@ -58,6 +65,7 @@ public final class ObjectoxServerRequestHeaders implements ServerRequestHeaders 
     return standardHeaders.containsKey(name);
   }
 
+  @Override
   public final String first(HeaderName name) {
     Check.notNull(name, "name == null");
 
@@ -82,6 +90,15 @@ public final class ObjectoxServerRequestHeaders implements ServerRequestHeaders 
     return null;
   }
 
+  public final ObjectoxHeader getUnchecked(StandardHeaderName name) {
+    if (standardHeaders == null) {
+      return null;
+    } else {
+      return standardHeaders.get(name);
+    }
+  }
+
+  @Override
   public final int size() {
     int size = 0;
 
@@ -100,7 +117,7 @@ public final class ObjectoxServerRequestHeaders implements ServerRequestHeaders 
     while (!input.consumeIfEmptyLine()) {
       parseStandardHeaderName();
 
-      if (status != null) {
+      if (badRequest != null) {
         break;
       }
 
@@ -123,7 +140,7 @@ public final class ObjectoxServerRequestHeaders implements ServerRequestHeaders 
 
     // we will use the first char as hash code
     if (!input.hasNext()) {
-      status = HttpStatus.BAD_REQUEST;
+      badRequest = BadRequestReason.INVALID_HEADER;
 
       return;
     }
@@ -195,7 +212,7 @@ public final class ObjectoxServerRequestHeaders implements ServerRequestHeaders 
     if (!input.hasNext()) {
       // matches but reached end of line -> bad request
 
-      status = HttpStatus.BAD_REQUEST;
+      badRequest = BadRequestReason.INVALID_HEADER;
 
       return;
     }
@@ -206,7 +223,7 @@ public final class ObjectoxServerRequestHeaders implements ServerRequestHeaders 
     if (maybeColon != Bytes.COLON) {
       // matches but is not followed by a colon character
 
-      status = HttpStatus.BAD_REQUEST;
+      badRequest = BadRequestReason.INVALID_HEADER;
 
       return;
     }

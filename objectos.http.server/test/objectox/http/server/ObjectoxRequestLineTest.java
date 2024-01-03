@@ -56,16 +56,16 @@ public class ObjectoxRequestLineTest {
     assertEquals(line.versionMajor, 1);
     assertEquals(line.versionMinor, 1);
 
-    // no status
-    assertNull(line.status);
+    // not bad request
+    assertNull(line.badRequest);
   }
 
   private ObjectoxRequestLine regularInput(Object... data) throws IOException {
-    TestableSocket socket;
-    socket = TestableSocket.of(data);
+    TestableInputStream inputStream;
+    inputStream = TestableInputStream.of(data);
 
     SocketInput input;
-    input = new SocketInput(socket).init(64);
+    input = new SocketInput(64, inputStream);
 
     return new ObjectoxRequestLine(input);
   }

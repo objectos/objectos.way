@@ -58,16 +58,28 @@ public final class TestableInputStream extends InputStream {
     }
 
     if (next instanceof byte[] bytes) {
-      if (bytes.length > len) {
-        // we cannot write the whole test data into the buffer
-        throw new AssertionError("""
-        Data @ index=%d too large. Please split your test data.
-        """.formatted(index - 1));
+      int lengthToWrite;
+      lengthToWrite = bytes.length;
+
+      if (lengthToWrite > len) {
+        int remainingLength;
+        remainingLength = lengthToWrite - len;
+
+        byte[] remaining;
+        remaining = new byte[remainingLength];
+
+        System.arraycopy(bytes, len, remaining, 0, remainingLength);
+
+        index -= 1;
+
+        data[index] = remaining;
+
+        lengthToWrite = len;
       }
 
-      System.arraycopy(bytes, 0, b, off, bytes.length);
+      System.arraycopy(bytes, 0, b, off, lengthToWrite);
 
-      return bytes.length;
+      return lengthToWrite;
     } else if (next instanceof IOException ioe) {
       throw ioe;
     } else {

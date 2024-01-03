@@ -59,13 +59,13 @@ public class TestableSocket extends Socket {
 
   public static TestableSocket empty() {
     return new TestableSocket(
-      TestableInputStream.EMPTY
+        TestableInputStream.EMPTY
     );
   }
 
   public static TestableSocket of(Object... data) {
     return new TestableSocket(
-      TestableInputStream.of(data)
+        TestableInputStream.of(data)
     );
   }
 
@@ -92,10 +92,13 @@ public class TestableSocket extends Socket {
   }
 
   public final String outputAsString() {
-    byte[] bytes;
-    bytes = outputStream.toByteArray();
+    return outputStream.toString(StandardCharsets.UTF_8);
+  }
 
-    return new String(bytes, StandardCharsets.UTF_8);
+  public final void outputReset() {
+    if (outputStream != null) {
+      outputStream.reset();
+    }
   }
 
 }

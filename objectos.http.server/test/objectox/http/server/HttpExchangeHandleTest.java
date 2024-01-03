@@ -47,7 +47,7 @@ public class HttpExchangeHandleTest {
     // "Connection: close" should set the property
     assertEquals(exchange.keepAlive, false);
     assertEquals(exchange.method, Http.Method.GET);
-    assertEquals(exchange.requestHeaders, Map.of(
+    assertEquals(exchange.requestHeadersStandard, Map.of(
       StandardHeaderName.HOST, TestingInput.hv("www.example.com"),
       StandardHeaderName.CONNECTION, TestingInput.hv("close")
     ));
@@ -88,7 +88,7 @@ public class HttpExchangeHandleTest {
     assertEquals(exchange.keepAlive, true);
     assertEquals(exchange.method, Http.Method.GET);
     // request headers won't be used from this point forward
-    assertEquals(exchange.requestHeaders, Map.of(
+    assertEquals(exchange.requestHeadersStandard, Map.of(
       StandardHeaderName.HOST, TestingInput.hv("www.example.com"),
       StandardHeaderName.CONNECTION, TestingInput.hv("keep-alive")
     ));
@@ -134,7 +134,7 @@ public class HttpExchangeHandleTest {
 
     for (Test test : tests) {
       exchange.keepAlive = false;
-      exchange.requestHeaders = Map.of(StandardHeaderName.CONNECTION, hv(test.connection));
+      exchange.requestHeadersStandard = Map.of(StandardHeaderName.CONNECTION, hv(test.connection));
       exchange.responseBody = Bytes.utf8("body");
       exchange.responseHeaders = null;
       exchange.state = ObjectoxHttpExchange._HANDLE;

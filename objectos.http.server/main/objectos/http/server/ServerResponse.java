@@ -31,6 +31,6 @@ public interface ServerResponse {
 
   // send
 
-  void send(byte[] body);
+  ServerResponseResult send(byte[] body);
 
 }
