@@ -18,6 +18,8 @@
  */
 @SuppressWarnings("module") // objectos.http.server is a valid module name
 module objectos.http {
-	exports objectos.http;
-	exports objectox.http to objectos.http.server;
+  exports objectos.http;
+  exports objectox.http to objectos.http.server;
+
+  requires objectos.util.map;
 }

@@ -18,7 +18,7 @@ package objectox.http.server;
 import static org.testng.Assert.assertEquals;
 
 import java.io.IOException;
-import objectox.http.StandardHeaderName;
+import objectos.http.HeaderName;
 import org.testng.annotations.Test;
 
 public class ObjectoxServerRequestHeadersTest {
@@ -39,8 +39,26 @@ public class ObjectoxServerRequestHeadersTest {
     headers.parse();
 
     assertEquals(headers.size(), 2);
-    assertEquals(headers.first(StandardHeaderName.HOST), "www.example.com");
-    assertEquals(headers.first(StandardHeaderName.CONNECTION), "close");
+    assertEquals(headers.first(HeaderName.HOST), "www.example.com");
+    assertEquals(headers.first(HeaderName.CONNECTION), "close");
+  }
+
+  @Test
+  public void testCase003() throws IOException {
+    ObjectoxServerRequestHeaders headers;
+    headers = regularInput("""
+    Host: www.example.com\r
+    Connection: close\r
+    Foo: bar\r
+    \r
+    """);
+
+    headers.parse();
+
+    assertEquals(headers.size(), 3);
+    assertEquals(headers.first(HeaderName.HOST), "www.example.com");
+    assertEquals(headers.first(HeaderName.CONNECTION), "close");
+    assertEquals(headers.first(HeaderName.create("Foo")), "bar");
   }
 
   private ObjectoxServerRequestHeaders regularInput(Object... data) throws IOException {

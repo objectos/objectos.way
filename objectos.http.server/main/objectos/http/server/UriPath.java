@@ -22,4 +22,6 @@ public interface UriPath {
 
   boolean is(String path);
 
+  boolean startsWith(String prefix);
+
 }

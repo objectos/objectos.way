@@ -18,6 +18,13 @@ package objectox.http.server;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UncheckedIOException;
+import java.nio.file.FileVisitResult;
+import java.nio.file.FileVisitor;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.SimpleFileVisitor;
+import java.nio.file.attribute.BasicFileAttributes;
 import objectos.http.server.Body;
 
 public final class ObjectoxHttpServer {
@@ -43,6 +50,38 @@ public final class ObjectoxHttpServer {
    */
 
   private ObjectoxHttpServer() {}
+
+  public static Path createTempDir() {
+    try {
+      return Files.createTempDirectory("objectox-http-server-");
+    } catch (IOException e) {
+      throw new UncheckedIOException(e);
+    }
+  }
+
+  private static final FileVisitor<Path> DELETE_RECURSIVELY = new SimpleFileVisitor<Path>() {
+    @Override
+    public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
+      Files.delete(dir);
+      return FileVisitResult.CONTINUE;
+    }
+
+    @Override
+    public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+      Files.delete(file);
+      return FileVisitResult.CONTINUE;
+    }
+  };
+
+  public static void deleteRecursively(Path dir) {
+    if (dir != null) {
+      try {
+        Files.walkFileTree(dir, DELETE_RECURSIVELY);
+      } catch (IOException e) {
+        throw new UncheckedIOException(e);
+      }
+    }
+  }
 
   public static byte[] readAllBytes(Body body) throws IOException {
     try (InputStream in = body.openStream();

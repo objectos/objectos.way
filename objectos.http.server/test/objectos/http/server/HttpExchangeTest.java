@@ -23,7 +23,10 @@ import static org.testng.Assert.assertTrue;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.time.ZonedDateTime;
+import objectos.http.HeaderName;
 import objectos.http.Http;
 import objectos.http.Method;
 import objectos.http.server.HttpExchange.Processed;
@@ -32,7 +35,6 @@ import objectos.notes.Note;
 import objectos.notes.Note1;
 import objectos.notes.NoteSink;
 import objectos.util.array.ByteArrays;
-import objectox.http.StandardHeaderName;
 import objectox.http.server.Bytes;
 import objectox.http.server.Http001;
 import objectox.http.server.ObjectoxHttpServer;
@@ -44,8 +46,8 @@ import org.testng.annotations.Test;
 public class HttpExchangeTest {
 
   @Test(description = """
-  1. GET request with explicity close
-     text/plain response
+  Minimum GET request with explicity close
+  text/plain response
   """)
   public void testCase001() {
     TestableSocket socket;
@@ -93,8 +95,8 @@ public class HttpExchangeTest {
       headers = req.headers();
 
       assertEquals(headers.size(), 2);
-      assertEquals(headers.first(StandardHeaderName.HOST), "www.example.com");
-      assertEquals(headers.first(StandardHeaderName.CONNECTION), "close");
+      assertEquals(headers.first(HeaderName.HOST), "www.example.com");
+      assertEquals(headers.first(HeaderName.CONNECTION), "close");
 
       // body
       Body body;
@@ -130,7 +132,8 @@ public class HttpExchangeTest {
   }
 
   @Test(description = """
-  GET request with keep-alive. Second request with explicit close.
+  1. GET request with implied keep-alive
+  2. GET request with explicit close
   """)
   public void testCase002() {
     TestableSocket socket;
@@ -141,6 +144,7 @@ public class HttpExchangeTest {
     """, """
     GET /login.css HTTP/1.1\r
     Host: www.example.com\r
+    Connection: close\r
     \r
     """);
 
@@ -204,7 +208,7 @@ public class HttpExchangeTest {
       headers = req.headers();
 
       assertEquals(headers.size(), 1);
-      assertEquals(headers.first(StandardHeaderName.HOST), "www.example.com");
+      assertEquals(headers.first(HeaderName.HOST), "www.example.com");
 
       // body
       Body body;
@@ -251,8 +255,9 @@ public class HttpExchangeTest {
       // headers
       headers = req.headers();
 
-      assertEquals(headers.size(), 1);
-      assertEquals(headers.first(StandardHeaderName.HOST), "www.example.com");
+      assertEquals(headers.size(), 2);
+      assertEquals(headers.first(HeaderName.HOST), "www.example.com");
+      assertEquals(headers.first(HeaderName.CONNECTION), "close");
 
       // body
       body = req.body();
@@ -278,7 +283,243 @@ public class HttpExchangeTest {
 
       assertEquals(socket.outputAsString(), resp02);
 
-      assertEquals(http.keepAlive(), true);
+      assertEquals(http.keepAlive(), false);
+    } catch (IOException e) {
+      throw new AssertionError("Failed with IOException", e);
+    }
+  }
+
+  @Test(description = """
+  It should handle unkonwn request headers
+  """)
+  public void testCase003() {
+    TestableSocket socket;
+    socket = TestableSocket.of("""
+    GET / HTTP/1.1\r
+    Host: www.example.com\r
+    Connection: close\r
+    Foo: bar\r
+    \r
+    """);
+
+    String body01 = """
+    Hello World!
+    """;
+
+    String resp01 = """
+    HTTP/1.1 200 OK\r
+    Content-Type: text/plain; charset=utf-8\r
+    Content-Length: 13\r
+    Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+    \r
+    %s""".formatted(body01);
+
+    try (HttpExchange http = HttpExchange.create(socket)) {
+      http.bufferSize(128);
+      http.clock(TestingClock.FIXED);
+      http.noteSink(TestingNoteSink.INSTANCE);
+
+      // request phase
+      http.parse();
+
+      assertEquals(http.isBadRequest(), false);
+
+      ServerRequest req;
+      req = http.toRequest();
+
+      // headers
+      ServerRequestHeaders headers;
+      headers = req.headers();
+
+      assertEquals(headers.size(), 3);
+      assertEquals(headers.first(HeaderName.HOST), "www.example.com");
+      assertEquals(headers.first(HeaderName.CONNECTION), "close");
+      assertEquals(headers.first(HeaderName.create("Foo")), "bar");
+
+      // response phase
+      byte[] msg;
+      msg = body01.getBytes(StandardCharsets.UTF_8);
+
+      ServerResponse resp;
+      resp = req.toResponse();
+
+      resp.ok();
+      resp.contentType("text/plain; charset=utf-8");
+      resp.contentLength(msg.length);
+      resp.dateNow();
+
+      ServerResponseResult result;
+      result = resp.send(msg);
+
+      assertSame(result, resp);
+
+      http.commit();
+
+      assertEquals(socket.outputAsString(), resp01);
+
+      assertEquals(http.keepAlive(), false);
+    } catch (IOException e) {
+      throw new AssertionError("Failed with IOException", e);
+    }
+  }
+
+  @Test(description = """
+  It should be possible to send regular files as a response
+  """)
+  public void testCase004() {
+    TestableSocket socket;
+    socket = TestableSocket.of("""
+    GET /index.html HTTP/1.1\r
+    Host: www.example.com\r
+    Connection: close\r
+    Foo: bar\r
+    \r
+    """);
+
+    String body01 = """
+    <html></html>
+    """;
+
+    String resp01 = """
+    HTTP/1.1 200 OK\r
+    Content-Type: text/html; charset=utf-8\r
+    Content-Length: 14\r
+    Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+    \r
+    %s""".formatted(body01);
+
+    Path dir;
+    dir = null;
+
+    try (HttpExchange http = HttpExchange.create(socket)) {
+      http.bufferSize(128);
+      http.clock(TestingClock.FIXED);
+      http.noteSink(TestingNoteSink.INSTANCE);
+
+      // request phase
+      http.parse();
+
+      assertEquals(http.isBadRequest(), false);
+
+      ServerRequest req;
+      req = http.toRequest();
+
+      // request line
+      UriPath path;
+      path = req.path();
+
+      assertEquals(req.method(), Method.GET);
+      assertEquals(path.is("/index.html"), true);
+
+      // headers
+      ServerRequestHeaders headers;
+      headers = req.headers();
+
+      assertEquals(headers.size(), 3);
+      assertEquals(headers.first(HeaderName.HOST), "www.example.com");
+      assertEquals(headers.first(HeaderName.CONNECTION), "close");
+      assertEquals(headers.first(HeaderName.create("Foo")), "bar");
+
+      // response phase
+      dir = ObjectoxHttpServer.createTempDir();
+
+      Path index;
+      index = dir.resolve("index.html");
+
+      Files.writeString(index, body01, StandardCharsets.UTF_8);
+
+      ServerResponse resp;
+      resp = req.toResponse();
+
+      resp.ok();
+      resp.contentType("text/html; charset=utf-8");
+      resp.contentLength(Files.size(index));
+      resp.dateNow();
+
+      ServerResponseResult result;
+      result = resp.send(index);
+
+      assertSame(result, resp);
+
+      http.commit();
+
+      assertEquals(socket.outputAsString(), resp01);
+
+      assertEquals(http.keepAlive(), false);
+    } catch (IOException e) {
+      throw new AssertionError("Failed with IOException", e);
+    } finally {
+      ObjectoxHttpServer.deleteRecursively(dir);
+    }
+  }
+
+  @Test(description = """
+  Support for the If-None-Match request header and ETAG Response header
+  """)
+  public void testCase005() {
+    TestableSocket socket;
+    socket = TestableSocket.of("""
+    GET /atom.xml HTTP/1.1\r
+    Host: www.example.com\r
+    If-None-Match: some%hash\r
+    Connection: close\r
+    \r
+    """);
+
+    String resp01 = """
+    HTTP/1.1 304 NOT MODIFIED\r
+    Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+    ETag: some%hash\r
+    \r
+    """;
+
+    try (HttpExchange http = HttpExchange.create(socket)) {
+      http.bufferSize(128);
+      http.clock(TestingClock.FIXED);
+      http.noteSink(TestingNoteSink.INSTANCE);
+
+      // request phase
+      http.parse();
+
+      assertEquals(http.isBadRequest(), false);
+
+      ServerRequest req;
+      req = http.toRequest();
+
+      // request line
+      UriPath path;
+      path = req.path();
+
+      assertEquals(req.method(), Method.GET);
+      assertEquals(path.is("/atom.xml"), true);
+
+      // headers
+      ServerRequestHeaders headers;
+      headers = req.headers();
+
+      assertEquals(headers.size(), 3);
+      assertEquals(headers.first(HeaderName.HOST), "www.example.com");
+      assertEquals(headers.first(HeaderName.IF_NONE_MATCH), "some%hash");
+      assertEquals(headers.first(HeaderName.CONNECTION), "close");
+
+      // response phase
+      ServerResponse resp;
+      resp = req.toResponse();
+
+      resp.notModified();
+      resp.dateNow();
+      resp.header(HeaderName.ETAG, "some%hash");
+
+      ServerResponseResult result;
+      result = resp.send();
+
+      assertSame(result, resp);
+
+      http.commit();
+
+      assertEquals(socket.outputAsString(), resp01);
+
+      assertEquals(http.keepAlive(), false);
     } catch (IOException e) {
       throw new AssertionError("Failed with IOException", e);
     }

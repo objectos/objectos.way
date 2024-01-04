@@ -29,9 +29,11 @@ public final class ObjectoxRequestLine {
 
   StandardMethod method;
 
-  HttpRequestPath path;
+  ObjectoxUriPath path;
 
   ObjectoxUriQuery query;
+
+  int startIndex;
 
   byte versionMajor;
 
@@ -46,7 +48,9 @@ public final class ObjectoxRequestLine {
 
     method = null;
 
-    path = null;
+    path.reset();
+
+    startIndex = 0;
 
     query = null;
 
@@ -204,9 +208,7 @@ public final class ObjectoxRequestLine {
 
     // mark request path start
 
-    path = input.createPath(targetStart);
-
-    path.slash(targetStart);
+    startIndex = targetStart;
   }
 
   private void parsePathRest() throws IOException {
@@ -223,7 +225,14 @@ public final class ObjectoxRequestLine {
       return;
     }
 
-    path.end(index);
+    if (path == null) {
+      path = new ObjectoxUriPath();
+    }
+
+    String rawValue;
+    rawValue = input.getString(startIndex, index);
+
+    path.set(rawValue);
 
     byte b;
     b = input.setAndNext(index);

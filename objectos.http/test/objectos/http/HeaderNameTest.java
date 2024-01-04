@@ -13,37 +13,34 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectox.http.server;
+package objectos.http;
 
 import static org.testng.Assert.assertEquals;
 
 import org.testng.annotations.Test;
 
-public class ObjectoxUriPathTest {
+public class HeaderNameTest {
 
-  @Test
-  public void is() {
-    ObjectoxUriPath path;
-    path = new ObjectoxUriPath();
+  @Test(description = """
+  It should be possible to create a custom/unknown header name
+  """)
+  public void testCase01() {
+    HeaderName res;
+    res = HeaderName.create("Foo");
 
-    path.set("/");
-
-    assertEquals(path.is("/"), true);
-    assertEquals(path.is("/index.html"), false);
+    assertEquals(res.capitalized(), "Foo");
+    assertEquals(res.index(), -1);
   }
 
-  @Test
-  public void startsWith() {
-    ObjectoxUriPath path;
-    path = new ObjectoxUriPath();
+  @Test(description = """
+  It should return StandardHeaderName for known header names
+  """)
+  public void testCase02() {
+    HeaderName res;
+    res = HeaderName.create("Connection");
 
-    path.set("/foo/bar.html");
-
-    assertEquals(path.startsWith("/foo"), true);
-    assertEquals(path.startsWith("/foo/"), true);
-    assertEquals(path.startsWith("/foo/bar.html"), true);
-    assertEquals(path.startsWith("/foo/bar.html/"), false);
-    assertEquals(path.startsWith("/goo"), false);
+    assertEquals(res.capitalized(), "Connection");
+    assertEquals(res.index() >= 0, true);
   }
 
 }

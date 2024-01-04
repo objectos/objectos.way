@@ -18,7 +18,7 @@ package objectox.http.server;
 import static org.testng.Assert.assertEquals;
 
 import java.io.IOException;
-import objectox.http.StandardHeaderName;
+import objectos.http.HeaderName;
 import objectox.http.StandardMethod;
 import org.testng.annotations.Test;
 
@@ -63,7 +63,7 @@ public class SocketInputTest {
     assertEquals(input.index(), 16);
     assertEquals(input.consumeIfEmptyLine(), false);
     byte[] host;
-    host = ObjectoxServerRequestHeaders.STD_HEADER_NAME_BYTES.get(StandardHeaderName.HOST);
+    host = ObjectoxServerRequestHeaders.STD_HEADER_NAME_BYTES[HeaderName.HOST.index()];
     assertEquals(input.matches(host), true);
     assertEquals(input.hasNext(), true);
     assertEquals(input.next(), ':');

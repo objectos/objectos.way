@@ -18,8 +18,8 @@ package objectox.http.server;
 import static org.testng.Assert.assertEquals;
 
 import java.util.Map;
+import objectos.http.HeaderName;
 import objectos.http.Http;
-import objectox.http.StandardHeaderName;
 import org.testng.annotations.Test;
 
 public class HttpExchangeRequestBodyTest {
@@ -44,9 +44,9 @@ public class HttpExchangeRequestBodyTest {
     // request body should have been created
     assertEquals(exchange.requestBody.toString(), "email=user%40example.com");
     assertEquals(exchange.requestHeadersStandard, Map.of(
-      StandardHeaderName.HOST, TestingInput.hv("www.example.com"),
-      StandardHeaderName.CONTENT_LENGTH, TestingInput.hv("24"),
-      StandardHeaderName.CONTENT_TYPE, TestingInput.hv("application/x-www-form-urlencoded")
+        HeaderName.HOST, TestingInput.hv("www.example.com"),
+        HeaderName.CONTENT_LENGTH, TestingInput.hv("24"),
+        HeaderName.CONTENT_TYPE, TestingInput.hv("application/x-www-form-urlencoded")
     ));
     assertEquals(exchange.requestHeaderName, null);
     assertEquals(exchange.requestPath.toString(), "/login");

@@ -13,41 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.http.server;
+package objectox.http.server;
 
-import java.nio.file.Path;
-import objectos.http.HeaderName;
+enum NoResponseBody {
 
-public interface ServerResponse {
-
-  // status
-
-  /*
-   * 200 OK
-   */
-  ServerResponse ok();
-
-  /*
-   * 304 NOT MODIFIED
-   */
-  ServerResponse notModified();
-
-  // headers
-
-  ServerResponse contentLength(long value);
-
-  ServerResponse contentType(String value);
-
-  ServerResponse dateNow();
-
-  ServerResponse header(HeaderName name, String value);
-
-  // send
-
-  ServerResponseResult send();
-
-  ServerResponseResult send(byte[] body);
-
-  ServerResponseResult send(Path file);
+  INSTANCE;
 
 }

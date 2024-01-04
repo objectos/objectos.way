@@ -49,7 +49,7 @@ import objectos.notes.NoOpNoteSink;
 import objectos.notes.NoteSink;
 import objectos.util.list.GrowableList;
 import objectox.http.HttpStatus;
-import objectox.http.StandardHeaderName;
+import objectox.http.ObjectoxHeaderName;
 
 public final class ObjectoxHttpExchange implements HttpExchange {
 
@@ -187,7 +187,7 @@ public final class ObjectoxHttpExchange implements HttpExchange {
 
   Object requestHeaderName;
 
-  Map<StandardHeaderName, BufferHeaderValue> requestHeadersStandard;
+  Map<HeaderName, BufferHeaderValue> requestHeadersStandard;
 
   Map<String, BufferHeaderValue> requestHeadersUnknown;
 
@@ -332,13 +332,13 @@ public final class ObjectoxHttpExchange implements HttpExchange {
     Body body;
     body = NoServerRequestBody.INSTANCE;
 
-    if (requestHeaders.contains(StandardHeaderName.CONTENT_LENGTH)) {
+    if (requestHeaders.containsUnchecked(HeaderName.CONTENT_LENGTH)) {
       throw new UnsupportedOperationException(
           "Implement me :: parse body"
       );
     }
 
-    if (requestHeaders.contains(StandardHeaderName.TRANSFER_ENCODING)) {
+    if (requestHeaders.containsUnchecked(HeaderName.TRANSFER_ENCODING)) {
       throw new UnsupportedOperationException(
           "Implement me :: maybe chunked?"
       );
@@ -355,7 +355,7 @@ public final class ObjectoxHttpExchange implements HttpExchange {
     }
 
     ObjectoxHeader connection;
-    connection = requestHeaders.getUnchecked(StandardHeaderName.CONNECTION);
+    connection = requestHeaders.getUnchecked(HeaderName.CONNECTION);
 
     if (connection != null) {
       if (connection.contentEquals(Bytes.KEEP_ALIVE)) {
@@ -666,7 +666,7 @@ public final class ObjectoxHttpExchange implements HttpExchange {
 
     checkStateHandle();
 
-    if (name == StandardHeaderName.CONNECTION && value.equalsIgnoreCase("close")) {
+    if (name == HeaderName.CONNECTION && value.equalsIgnoreCase("close")) {
       keepAlive = false;
     }
 
@@ -832,7 +832,7 @@ public final class ObjectoxHttpExchange implements HttpExchange {
 
   private boolean handle0KeepAlive() {
     BufferHeaderValue connection;
-    connection = requestHeadersStandard.getOrDefault(StandardHeaderName.CONNECTION, BufferHeaderValue.EMPTY);
+    connection = requestHeadersStandard.getOrDefault(HeaderName.CONNECTION, BufferHeaderValue.EMPTY);
 
     if (connection.contentEquals(Bytes.KEEP_ALIVE)) {
       return true;
@@ -1190,30 +1190,30 @@ public final class ObjectoxHttpExchange implements HttpExchange {
 
     return switch (first) {
       case 'A' -> parseHeaderName0(nameStart,
-          StandardHeaderName.ACCEPT_ENCODING
+          HeaderName.ACCEPT_ENCODING
       );
 
       case 'C' -> parseHeaderName0(nameStart,
-          StandardHeaderName.CONNECTION,
-          StandardHeaderName.CONTENT_LENGTH,
-          StandardHeaderName.CONTENT_TYPE,
-          StandardHeaderName.COOKIE
+          HeaderName.CONNECTION,
+          HeaderName.CONTENT_LENGTH,
+          HeaderName.CONTENT_TYPE,
+          HeaderName.COOKIE
       );
 
       case 'D' -> parseHeaderName0(nameStart,
-          StandardHeaderName.DATE
+          HeaderName.DATE
       );
 
       case 'H' -> parseHeaderName0(nameStart,
-          StandardHeaderName.HOST
+          HeaderName.HOST
       );
 
       case 'T' -> parseHeaderName0(nameStart,
-          StandardHeaderName.TRANSFER_ENCODING
+          HeaderName.TRANSFER_ENCODING
       );
 
       case 'U' -> parseHeaderName0(nameStart,
-          StandardHeaderName.USER_AGENT
+          HeaderName.USER_AGENT
       );
 
       default -> {
@@ -1227,28 +1227,34 @@ public final class ObjectoxHttpExchange implements HttpExchange {
     };
   }
 
-  private static final Map<StandardHeaderName, byte[]> STD_HEADER_NAME_BYTES;
+  private static final byte[][] STD_HEADER_NAME_BYTES;
 
   static {
-    Map<StandardHeaderName, byte[]> map;
-    map = new EnumMap<>(StandardHeaderName.class);
+    int size;
+    size = ObjectoxHeaderName.standardNamesSize();
 
-    for (var headerName : StandardHeaderName.values()) {
+    byte[][] map;
+    map = new byte[size][];
+
+    for (int i = 0; i < size; i++) {
+      ObjectoxHeaderName headerName;
+      headerName = ObjectoxHeaderName.standardName(i);
+
       String name;
-      name = headerName.name;
+      name = headerName.capitalized();
 
-      byte[] bytes;
-      bytes = name.getBytes(StandardCharsets.UTF_8);
-
-      map.put(headerName, bytes);
+      map[i] = name.getBytes(StandardCharsets.UTF_8);
     }
 
     STD_HEADER_NAME_BYTES = map;
   }
 
-  private byte parseHeaderName0(int nameStart, StandardHeaderName candidate) {
+  private byte parseHeaderName0(int nameStart, HeaderName candidate) {
+    int candidateIndex;
+    candidateIndex = candidate.index();
+
     final byte[] candidateBytes;
-    candidateBytes = STD_HEADER_NAME_BYTES.get(candidate);
+    candidateBytes = STD_HEADER_NAME_BYTES[candidateIndex];
 
     if (bufferEquals(candidateBytes, nameStart)) {
       requestHeaderName = candidate;
@@ -1258,8 +1264,8 @@ public final class ObjectoxHttpExchange implements HttpExchange {
   }
 
   private byte parseHeaderName0(int nameStart,
-                                StandardHeaderName c0, StandardHeaderName c1, StandardHeaderName c2,
-                                StandardHeaderName c3) {
+                                HeaderName c0, HeaderName c1, HeaderName c2,
+                                HeaderName c3) {
     byte result;
     result = parseHeaderName0(nameStart, c0);
 
@@ -1341,12 +1347,12 @@ public final class ObjectoxHttpExchange implements HttpExchange {
       }
     }
 
-    if (requestHeaderName instanceof StandardHeaderName headerName) {
+    if (requestHeaderName instanceof HeaderName headerName) {
       BufferHeaderValue headerValue;
       headerValue = new BufferHeaderValue(buffer, valueStart, valueEnd);
 
       if (requestHeadersStandard == null) {
-        requestHeadersStandard = new EnumMap<>(StandardHeaderName.class);
+        requestHeadersStandard = new HashMap<>();
       }
 
       BufferHeaderValue previousValue;
@@ -1393,7 +1399,7 @@ public final class ObjectoxHttpExchange implements HttpExchange {
     // Let's check if this is a fixed length or a chunked transfer
 
     BufferHeaderValue contentLength;
-    contentLength = requestHeadersStandard.get(StandardHeaderName.CONTENT_LENGTH);
+    contentLength = requestHeadersStandard.get(HeaderName.CONTENT_LENGTH);
 
     if (contentLength == null) {
       // TODO multipart/form-data?
@@ -1818,11 +1824,11 @@ public final class ObjectoxHttpExchange implements HttpExchange {
       return _HANDLE;
     }
 
-    if (requestHeadersStandard.containsKey(StandardHeaderName.CONTENT_LENGTH)) {
+    if (requestHeadersStandard.containsKey(HeaderName.CONTENT_LENGTH)) {
       return _REQUEST_BODY;
     }
 
-    if (requestHeadersStandard.containsKey(StandardHeaderName.TRANSFER_ENCODING)) {
+    if (requestHeadersStandard.containsKey(HeaderName.TRANSFER_ENCODING)) {
       throw new UnsupportedOperationException(
           "Implement me :: maybe chunked?"
       );

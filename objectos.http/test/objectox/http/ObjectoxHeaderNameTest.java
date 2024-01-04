@@ -13,37 +13,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectox.http.server;
+package objectox.http;
 
 import static org.testng.Assert.assertEquals;
 
 import org.testng.annotations.Test;
 
-public class ObjectoxUriPathTest {
+public class ObjectoxHeaderNameTest {
 
-  @Test
-  public void is() {
-    ObjectoxUriPath path;
-    path = new ObjectoxUriPath();
+  @SuppressWarnings("unlikely-arg-type")
+  @Test(description = "equals() should work fine")
+  public void testCase01() {
+    ObjectoxHeaderName foo1 = new ObjectoxHeaderName("Foo");
+    ObjectoxHeaderName foo2 = new ObjectoxHeaderName("Foo");
+    ObjectoxHeaderName bar = new ObjectoxHeaderName("Bar");
 
-    path.set("/");
-
-    assertEquals(path.is("/"), true);
-    assertEquals(path.is("/index.html"), false);
-  }
-
-  @Test
-  public void startsWith() {
-    ObjectoxUriPath path;
-    path = new ObjectoxUriPath();
-
-    path.set("/foo/bar.html");
-
-    assertEquals(path.startsWith("/foo"), true);
-    assertEquals(path.startsWith("/foo/"), true);
-    assertEquals(path.startsWith("/foo/bar.html"), true);
-    assertEquals(path.startsWith("/foo/bar.html/"), false);
-    assertEquals(path.startsWith("/goo"), false);
+    assertEquals(foo1.equals(foo2), true);
+    assertEquals(foo2.equals(foo1), true);
+    assertEquals(foo2.equals(bar), false);
+    assertEquals(bar.equals(foo2), false);
+    assertEquals(bar.equals(null), false);
+    assertEquals(bar.equals("Bar"), false);
   }
 
 }

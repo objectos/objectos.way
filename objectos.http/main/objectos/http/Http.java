@@ -24,7 +24,6 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 import objectox.http.HttpStatus;
-import objectox.http.StandardHeaderName;
 
 public final class Http {
 
@@ -32,27 +31,27 @@ public final class Http {
 
     private Header() {}
 
-    public static final HeaderName ACCEPT_ENCODING = StandardHeaderName.ACCEPT_ENCODING;
+    public static final HeaderName ACCEPT_ENCODING = HeaderName.ACCEPT_ENCODING;
 
-    public static final HeaderName CONNECTION = StandardHeaderName.CONNECTION;
+    public static final HeaderName CONNECTION = HeaderName.CONNECTION;
 
-    public static final HeaderName CONTENT_LENGTH = StandardHeaderName.CONTENT_LENGTH;
+    public static final HeaderName CONTENT_LENGTH = HeaderName.CONTENT_LENGTH;
 
-    public static final HeaderName CONTENT_TYPE = StandardHeaderName.CONTENT_TYPE;
+    public static final HeaderName CONTENT_TYPE = HeaderName.CONTENT_TYPE;
 
-    public static final HeaderName COOKIE = StandardHeaderName.COOKIE;
+    public static final HeaderName COOKIE = HeaderName.COOKIE;
 
-    public static final HeaderName DATE = StandardHeaderName.DATE;
+    public static final HeaderName DATE = HeaderName.DATE;
 
-    public static final HeaderName HOST = StandardHeaderName.HOST;
+    public static final HeaderName HOST = HeaderName.HOST;
 
-    public static final HeaderName LOCATION = StandardHeaderName.LOCATION;
+    public static final HeaderName LOCATION = HeaderName.LOCATION;
 
-    public static final HeaderName SET_COOKIE = StandardHeaderName.SET_COOKIE;
+    public static final HeaderName SET_COOKIE = HeaderName.SET_COOKIE;
 
-    public static final HeaderName TRANSFER_ENCODING = StandardHeaderName.TRANSFER_ENCODING;
+    public static final HeaderName TRANSFER_ENCODING = HeaderName.TRANSFER_ENCODING;
 
-    public static final HeaderName USER_AGENT = StandardHeaderName.USER_AGENT;
+    public static final HeaderName USER_AGENT = HeaderName.USER_AGENT;
 
   }
 

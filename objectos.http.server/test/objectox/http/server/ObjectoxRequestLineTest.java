@@ -47,7 +47,7 @@ public class ObjectoxRequestLineTest {
     assertEquals(method, StandardMethod.GET);
 
     // target
-    HttpRequestPath path;
+    ObjectoxUriPath path;
     path = line.path;
 
     assertEquals(path.toString(), "/");

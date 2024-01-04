@@ -26,6 +26,7 @@ public enum HttpStatus implements Http.Status {
   MOVED_PERMANENTLY(301),
   FOUND(302),
   SEE_OTHER(303),
+  NOT_MODIFIED(304),
 
   // 4.x.x
   BAD_REQUEST(400),

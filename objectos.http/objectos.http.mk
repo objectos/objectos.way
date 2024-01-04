@@ -35,8 +35,12 @@ HTTP_JAVA_RELEASE = $(JAVA_RELEASE)
 ## --enable-preview ?
 HTTP_ENABLE_PREVIEW = 0
 
+## compile deps
+HTTP_COMPILE_DEPS := $(call module-gav,$(UTIL_MAP))
+
 ## test compile deps
-HTTP_TEST_COMPILE_DEPS  = $(call module-gav,$(HTTP))
+HTTP_TEST_COMPILE_DEPS := $(HTTP_COMPILE_DEPS)
+HTTP_TEST_COMPILE_DEPS += $(call module-gav,$(HTTP))
 HTTP_TEST_COMPILE_DEPS += $(TESTNG)
 
 ## test runtime dependencies
@@ -50,7 +54,10 @@ HTTP_COPYRIGHT_YEARS := 2022-2023
 # HTTP_JAVADOC_SNIPPET_PATH := HTTP_TEST
 
 ## pom description
-HTTP_DESCRIPTION = HTTP related types
+HTTP_DESCRIPTION := HTTP related types
+
+## test runtime exports
+HTTP_TEST_JAVAX_EXPORTS := objectox.http
 
 #
 # objectos.http targets

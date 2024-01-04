@@ -15,17 +15,66 @@
  */
 package objectos.http;
 
-import objectox.http.StandardHeaderName;
+import java.util.Objects;
+import objectox.http.HeaderType;
+import objectox.http.ObjectoxHeaderName;
 
 /**
  * Represents an HTTP header name.
  */
-public sealed interface HeaderName permits StandardHeaderName {
+public sealed abstract class HeaderName permits ObjectoxHeaderName {
 
-  String capitalized();
+  private static ObjectoxHeaderName.Builder BUILDER = new ObjectoxHeaderName.Builder();
 
-  default int index() {
-    return -1;
+  public static final HeaderName ACCEPT_ENCODING = BUILDER.create("Accept-Encoding", HeaderType.REQUEST);
+
+  public static final HeaderName CONNECTION = BUILDER.create("Connection", HeaderType.BOTH);
+
+  public static final HeaderName CONTENT_LENGTH = BUILDER.create("Content-Length", HeaderType.BOTH);
+
+  public static final HeaderName CONTENT_TYPE = BUILDER.create("Content-Type", HeaderType.BOTH);
+
+  public static final HeaderName COOKIE = BUILDER.create("Cookie", HeaderType.REQUEST);
+
+  public static final HeaderName DATE = BUILDER.create("Date", HeaderType.BOTH);
+
+  public static final HeaderName ETAG = BUILDER.create("ETag", HeaderType.RESPONSE);
+
+  public static final HeaderName HOST = BUILDER.create("Host", HeaderType.REQUEST);
+
+  public static final HeaderName IF_NONE_MATCH = BUILDER.create("If-None-Match", HeaderType.REQUEST);
+
+  public static final HeaderName LOCATION = BUILDER.create("Location", HeaderType.RESPONSE);
+
+  public static final HeaderName SET_COOKIE = BUILDER.create("Set-Cookie", HeaderType.RESPONSE);
+
+  public static final HeaderName TRANSFER_ENCODING = BUILDER.create("Transfer-Encoding", HeaderType.BOTH);
+
+  public static final HeaderName USER_AGENT = BUILDER.create("User-Agent", HeaderType.REQUEST);
+
+  static {
+    ObjectoxHeaderName.set(BUILDER);
+
+    BUILDER = null;
   }
+
+  public static HeaderName create(String name) {
+    Objects.requireNonNull(name, "name == null");
+
+    HeaderName headerName;
+    headerName = ObjectoxHeaderName.findByName(name);
+
+    if (headerName == null) {
+      headerName = new ObjectoxHeaderName(name);
+    }
+
+    return headerName;
+  }
+
+  public HeaderName() {}
+
+  public abstract int index();
+
+  public abstract String capitalized();
 
 }

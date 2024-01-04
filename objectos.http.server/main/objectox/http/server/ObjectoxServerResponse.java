@@ -16,18 +16,21 @@
 package objectox.http.server;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.time.Clock;
 import java.time.ZonedDateTime;
 import java.util.EnumMap;
 import java.util.Map;
+import objectos.http.HeaderName;
 import objectos.http.Http;
 import objectos.http.server.ServerResponse;
 import objectos.http.server.ServerResponseResult;
 import objectos.lang.object.Check;
 import objectox.http.HttpStatus;
-import objectox.http.StandardHeaderName;
 
 public class ObjectoxServerResponse implements ServerResponse, ServerResponseResult {
 
@@ -80,12 +83,15 @@ public class ObjectoxServerResponse implements ServerResponse, ServerResponseRes
 
   @Override
   public final ServerResponse ok() {
-    status(HttpStatus.OK);
-
-    return this;
+    return status(HttpStatus.OK);
   }
 
-  private void status(HttpStatus status) {
+  @Override
+  public final ServerResponse notModified() {
+    return status(HttpStatus.NOT_MODIFIED);
+  }
+
+  private ServerResponse status(HttpStatus status) {
     writeBytes(version.responseBytes);
 
     byte[] statusBytes;
@@ -96,6 +102,8 @@ public class ObjectoxServerResponse implements ServerResponse, ServerResponseRes
     }
 
     writeBytes(statusBytes);
+
+    return this;
   }
 
   @Override
@@ -103,12 +111,12 @@ public class ObjectoxServerResponse implements ServerResponse, ServerResponseRes
     String s;
     s = Long.toString(value);
 
-    return header(StandardHeaderName.CONTENT_LENGTH, s);
+    return header(HeaderName.CONTENT_LENGTH, s);
   }
 
   @Override
   public final ServerResponse contentType(String value) {
-    return header(StandardHeaderName.CONTENT_TYPE, value);
+    return header(HeaderName.CONTENT_TYPE, value);
   }
 
   @Override
@@ -119,14 +127,63 @@ public class ObjectoxServerResponse implements ServerResponse, ServerResponseRes
     String formatted;
     formatted = Http.formatDate(now);
 
-    return header(StandardHeaderName.DATE, formatted);
+    return header(HeaderName.DATE, formatted);
+  }
+
+  @Override
+  public final ServerResponse header(HeaderName name, String value) {
+    Check.notNull(name, "name == null");
+    Check.notNull(value, "value == null");
+
+    int index;
+    index = name.index();
+
+    byte[] nameBytes;
+
+    if (index >= 0) {
+      nameBytes = ObjectoxServerRequestHeaders.STD_HEADER_NAME_BYTES[index];
+    } else {
+      String capitalized;
+      capitalized = name.capitalized();
+
+      nameBytes = capitalized.getBytes(StandardCharsets.UTF_8);
+    }
+
+    writeBytes(nameBytes);
+
+    writeBytes(Bytes.COLONSP);
+
+    byte[] valueBytes;
+    valueBytes = value.getBytes(StandardCharsets.UTF_8);
+
+    writeBytes(valueBytes);
+
+    writeBytes(Bytes.CRLF);
+
+    return this;
+  }
+
+  @Override
+  public final ServerResponseResult send() {
+    return body(NoResponseBody.INSTANCE);
   }
 
   @Override
   public final ServerResponseResult send(byte[] body) {
+    return body(body);
+  }
+
+  @Override
+  public final ServerResponseResult send(Path file) {
+    Check.argument(Files.isRegularFile(file), "Path must be of an existing regular file");
+
+    return body(file);
+  }
+
+  private ServerResponseResult body(Object body) {
     writeBytes(Bytes.CRLF);
 
-    this.body = Check.notNull(body, "body == null");
+    this.body = body;
 
     return this;
   }
@@ -143,28 +200,18 @@ public class ObjectoxServerResponse implements ServerResponse, ServerResponseRes
     outputStream.write(buffer, 0, cursor);
 
     switch (body) {
+      case NoResponseBody no -> {}
+
       case byte[] bytes -> outputStream.write(bytes, 0, bytes.length);
+
+      case Path file -> {
+        try (InputStream in = Files.newInputStream(file)) {
+          in.transferTo(outputStream);
+        }
+      }
 
       default -> throw new UnsupportedOperationException("Implement me");
     }
-  }
-
-  private ServerResponse header(StandardHeaderName name, String value) {
-    byte[] nameBytes;
-    nameBytes = ObjectoxServerRequestHeaders.STD_HEADER_NAME_BYTES.get(name);
-
-    writeBytes(nameBytes);
-
-    writeBytes(Bytes.COLONSP);
-
-    byte[] valueBytes;
-    valueBytes = value.getBytes(StandardCharsets.UTF_8);
-
-    writeBytes(valueBytes);
-
-    writeBytes(Bytes.CRLF);
-
-    return this;
   }
 
   private void writeBytes(byte[] bytes) {

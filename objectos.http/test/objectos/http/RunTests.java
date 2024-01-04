@@ -22,36 +22,37 @@ import org.testng.xml.XmlSuite;
 import org.testng.xml.XmlTest;
 
 public class RunTests {
-	public static void main(String[] args) {
-		XmlSuite suite;
-		suite = new XmlSuite();
+  public static void main(String[] args) {
+    XmlSuite suite;
+    suite = new XmlSuite();
 
-		suite.setName("Objectos HTTP");
+    suite.setName("Objectos HTTP");
 
-		XmlTest test;
-		test = new XmlTest(suite);
+    XmlTest test;
+    test = new XmlTest(suite);
 
-		test.setName("All");
+    test.setName("All");
 
-		test.setXmlPackages(
-				List.of(
-						new XmlPackage("objectos.http")
-				)
-		);
+    test.setXmlPackages(
+        List.of(
+            new XmlPackage("objectos.http"),
+            new XmlPackage("objectox.http")
+        )
+    );
 
-		TestNG ng;
-		ng = new TestNG();
+    TestNG ng;
+    ng = new TestNG();
 
-		if (args.length > 0) {
-			ng.setOutputDirectory(args[0]);
-		}
+    if (args.length > 0) {
+      ng.setOutputDirectory(args[0]);
+    }
 
-		ng.setXmlSuites(
-				List.of(suite)
-		);
+    ng.setXmlSuites(
+        List.of(suite)
+    );
 
-		ng.run();
+    ng.run();
 
-		System.exit(ng.getStatus());
-	}
+    System.exit(ng.getStatus());
+  }
 }

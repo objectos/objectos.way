@@ -22,9 +22,9 @@ import static org.testng.Assert.assertTrue;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map;
+import objectos.http.HeaderName;
 import objectos.http.Http;
 import objectox.http.HttpStatus;
-import objectox.http.StandardHeaderName;
 import org.testng.annotations.Test;
 
 @SuppressWarnings("resource")
@@ -48,8 +48,8 @@ public class HttpExchangeHandleTest {
     assertEquals(exchange.keepAlive, false);
     assertEquals(exchange.method, Http.Method.GET);
     assertEquals(exchange.requestHeadersStandard, Map.of(
-      StandardHeaderName.HOST, TestingInput.hv("www.example.com"),
-      StandardHeaderName.CONNECTION, TestingInput.hv("close")
+        HeaderName.HOST, TestingInput.hv("www.example.com"),
+        HeaderName.CONNECTION, TestingInput.hv("close")
     ));
     assertEquals(exchange.requestHeaderName, null);
     assertEquals(exchange.requestPath.toString(), "/");
@@ -57,9 +57,9 @@ public class HttpExchangeHandleTest {
     assertEquals(exchange.responseBody, Bytes.utf8("Hello World!\n"));
     // response headers set
     assertEquals(exchange.responseHeaders, List.of(
-      new HttpResponseHeader(StandardHeaderName.CONTENT_TYPE, "text/plain; charset=utf-8"),
-      new HttpResponseHeader(StandardHeaderName.CONTENT_LENGTH, "13"),
-      new HttpResponseHeader(StandardHeaderName.DATE, "Wed, 28 Jun 2023 12:08:43 GMT")
+        new HttpResponseHeader(HeaderName.CONTENT_TYPE, "text/plain; charset=utf-8"),
+        new HttpResponseHeader(HeaderName.CONTENT_LENGTH, "13"),
+        new HttpResponseHeader(HeaderName.DATE, "Wed, 28 Jun 2023 12:08:43 GMT")
     ));
     assertEquals(exchange.responseHeadersIndex, -1);
     assertEquals(exchange.socket.isClosed(), false);
@@ -89,8 +89,8 @@ public class HttpExchangeHandleTest {
     assertEquals(exchange.method, Http.Method.GET);
     // request headers won't be used from this point forward
     assertEquals(exchange.requestHeadersStandard, Map.of(
-      StandardHeaderName.HOST, TestingInput.hv("www.example.com"),
-      StandardHeaderName.CONNECTION, TestingInput.hv("keep-alive")
+        HeaderName.HOST, TestingInput.hv("www.example.com"),
+        HeaderName.CONNECTION, TestingInput.hv("keep-alive")
     ));
     assertEquals(exchange.requestHeaderName, null);
     assertEquals(exchange.requestPath.toString(), "/login");
@@ -98,9 +98,9 @@ public class HttpExchangeHandleTest {
     assertEquals(exchange.responseBody, Bytes.utf8(Http004.BODY01));
     // response headers set
     assertEquals(exchange.responseHeaders, List.of(
-      new HttpResponseHeader(StandardHeaderName.CONTENT_TYPE, "text/html; charset=utf-8"),
-      new HttpResponseHeader(StandardHeaderName.CONTENT_LENGTH, "171"),
-      new HttpResponseHeader(StandardHeaderName.DATE, "Fri, 07 Jul 2023 14:11:45 GMT")
+        new HttpResponseHeader(HeaderName.CONTENT_TYPE, "text/html; charset=utf-8"),
+        new HttpResponseHeader(HeaderName.CONTENT_LENGTH, "171"),
+        new HttpResponseHeader(HeaderName.DATE, "Fri, 07 Jul 2023 14:11:45 GMT")
     ));
     assertEquals(exchange.responseHeadersIndex, -1);
     assertEquals(exchange.socket.isClosed(), false);
@@ -126,15 +126,15 @@ public class HttpExchangeHandleTest {
 
     List<Test> tests;
     tests = List.of(
-      new Test("Close", false),
-      new Test("close", false),
-      new Test("Keep-Alive", true),
-      new Test("keep-alive", true)
+        new Test("Close", false),
+        new Test("close", false),
+        new Test("Keep-Alive", true),
+        new Test("keep-alive", true)
     );
 
     for (Test test : tests) {
       exchange.keepAlive = false;
-      exchange.requestHeadersStandard = Map.of(StandardHeaderName.CONNECTION, hv(test.connection));
+      exchange.requestHeadersStandard = Map.of(HeaderName.CONNECTION, hv(test.connection));
       exchange.responseBody = Bytes.utf8("body");
       exchange.responseHeaders = null;
       exchange.state = ObjectoxHttpExchange._HANDLE;

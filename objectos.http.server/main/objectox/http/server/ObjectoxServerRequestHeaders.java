@@ -17,12 +17,13 @@ package objectox.http.server;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.util.EnumMap;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Map;
 import objectos.http.HeaderName;
 import objectos.http.server.ServerRequestHeaders;
 import objectos.lang.object.Check;
-import objectox.http.StandardHeaderName;
+import objectox.http.ObjectoxHeaderName;
 
 public final class ObjectoxServerRequestHeaders implements ServerRequestHeaders {
 
@@ -32,7 +33,11 @@ public final class ObjectoxServerRequestHeaders implements ServerRequestHeaders 
 
   HeaderName headerName;
 
-  Map<StandardHeaderName, ObjectoxHeader> standardHeaders;
+  ObjectoxHeader[] standardHeaders;
+
+  int standardHeadersCount;
+
+  Map<HeaderName, ObjectoxHeader> unknownHeaders;
 
   public ObjectoxServerRequestHeaders(SocketInput input) {
     this.input = input;
@@ -43,27 +48,21 @@ public final class ObjectoxServerRequestHeaders implements ServerRequestHeaders 
 
     headerName = null;
 
-    standardHeaders.clear();
-  }
+    if (standardHeaders != null) {
+      // in theory reset will only be called in case of a successful parse
+      // so, in theory, this null check is not necessary
+      // but we do it anyways... just to be safe...
+      standardHeadersCount = 0;
 
-  // API
-
-  public final boolean contains(HeaderName name) {
-    Check.notNull(name, "name == null");
-
-    int index;
-    index = name.index();
-
-    if (index < 0) {
-      throw new UnsupportedOperationException("Implement me");
+      Arrays.fill(standardHeaders, null);
     }
 
-    if (standardHeaders == null) {
-      return false;
+    if (unknownHeaders != null) {
+      unknownHeaders.clear();
     }
-
-    return standardHeaders.containsKey(name);
   }
+
+  // public API
 
   @Override
   public final String first(HeaderName name) {
@@ -72,29 +71,36 @@ public final class ObjectoxServerRequestHeaders implements ServerRequestHeaders 
     int index;
     index = name.index();
 
-    if (index < 0) {
-      throw new UnsupportedOperationException("Implement me");
-    }
+    if (index >= 0) {
 
-    if (standardHeaders == null) {
-      return null;
-    }
+      if (standardHeaders == null) {
+        return null;
+      }
 
-    ObjectoxHeader maybe;
-    maybe = standardHeaders.get(name);
+      ObjectoxHeader maybe;
+      maybe = standardHeaders[index];
 
-    if (maybe != null) {
-      return maybe.get();
-    }
+      if (maybe != null) {
+        return maybe.get();
+      } else {
+        return null;
+      }
 
-    return null;
-  }
-
-  public final ObjectoxHeader getUnchecked(StandardHeaderName name) {
-    if (standardHeaders == null) {
-      return null;
     } else {
-      return standardHeaders.get(name);
+
+      if (unknownHeaders == null) {
+        return null;
+      }
+
+      ObjectoxHeader maybe;
+      maybe = unknownHeaders.get(name);
+
+      if (maybe != null) {
+        return maybe.get();
+      } else {
+        return null;
+      }
+
     }
   }
 
@@ -103,10 +109,38 @@ public final class ObjectoxServerRequestHeaders implements ServerRequestHeaders 
     int size = 0;
 
     if (standardHeaders != null) {
-      size += standardHeaders.size();
+      size += standardHeadersCount;
+    }
+
+    if (unknownHeaders != null) {
+      size += unknownHeaders.size();
     }
 
     return size;
+  }
+
+  // unchecked API
+
+  public final boolean containsUnchecked(HeaderName name) {
+    if (standardHeaders == null) {
+      return false;
+    }
+
+    int index;
+    index = name.index();
+
+    return standardHeaders[index] != null;
+  }
+
+  public final ObjectoxHeader getUnchecked(HeaderName name) {
+    if (standardHeaders == null) {
+      return null;
+    } else {
+      int index;
+      index = name.index();
+
+      return standardHeaders[index];
+    }
   }
 
   // Internal
@@ -122,15 +156,20 @@ public final class ObjectoxServerRequestHeaders implements ServerRequestHeaders 
       }
 
       if (headerName == null) {
-        throw new UnsupportedOperationException(
-            "Implement me :: unknown header name"
-        );
+        parseUnknownHeaderName();
+
+        if (badRequest != null) {
+          break;
+        }
       }
 
       parseHeaderValue();
 
       input.parseLine();
     }
+
+    // clear last header name just in case
+    headerName = null;
   }
 
   private void parseStandardHeaderName() {
@@ -152,56 +191,62 @@ public final class ObjectoxServerRequestHeaders implements ServerRequestHeaders 
 
     switch (first) {
       case 'A' -> parseHeaderName0(
-          StandardHeaderName.ACCEPT_ENCODING
+          HeaderName.ACCEPT_ENCODING
       );
 
       case 'C' -> parseHeaderName0(
-          StandardHeaderName.CONNECTION,
-          StandardHeaderName.CONTENT_LENGTH,
-          StandardHeaderName.CONTENT_TYPE,
-          StandardHeaderName.COOKIE
+          HeaderName.CONNECTION,
+          HeaderName.CONTENT_LENGTH,
+          HeaderName.CONTENT_TYPE,
+          HeaderName.COOKIE
       );
 
       case 'D' -> parseHeaderName0(
-          StandardHeaderName.DATE
+          HeaderName.DATE
       );
 
       case 'H' -> parseHeaderName0(
-          StandardHeaderName.HOST
+          HeaderName.HOST
       );
 
       case 'T' -> parseHeaderName0(
-          StandardHeaderName.TRANSFER_ENCODING
+          HeaderName.TRANSFER_ENCODING
       );
 
       case 'U' -> parseHeaderName0(
-          StandardHeaderName.USER_AGENT
+          HeaderName.USER_AGENT
       );
     }
   }
 
-  static final Map<StandardHeaderName, byte[]> STD_HEADER_NAME_BYTES;
+  static final byte[][] STD_HEADER_NAME_BYTES;
 
   static {
-    Map<StandardHeaderName, byte[]> map;
-    map = new EnumMap<>(StandardHeaderName.class);
+    int size;
+    size = ObjectoxHeaderName.standardNamesSize();
 
-    for (var headerName : StandardHeaderName.values()) {
+    byte[][] map;
+    map = new byte[size][];
+
+    for (int i = 0; i < size; i++) {
+      ObjectoxHeaderName headerName;
+      headerName = ObjectoxHeaderName.standardName(i);
+
       String name;
-      name = headerName.name;
+      name = headerName.capitalized();
 
-      byte[] bytes;
-      bytes = name.getBytes(StandardCharsets.UTF_8);
-
-      map.put(headerName, bytes);
+      map[i] = name.getBytes(StandardCharsets.UTF_8);
     }
 
     STD_HEADER_NAME_BYTES = map;
   }
 
-  private void parseHeaderName0(StandardHeaderName candidate) {
+  private void parseHeaderName0(HeaderName candidate) {
+    int index;
+    index = candidate.index();
+
     final byte[] candidateBytes;
-    candidateBytes = STD_HEADER_NAME_BYTES.get(candidate);
+    candidateBytes = STD_HEADER_NAME_BYTES[index];
 
     if (!input.matches(candidateBytes)) {
       // does not match -> try next
@@ -231,8 +276,8 @@ public final class ObjectoxServerRequestHeaders implements ServerRequestHeaders 
     headerName = candidate;
   }
 
-  private void parseHeaderName0(StandardHeaderName c0, StandardHeaderName c1, StandardHeaderName c2,
-                                StandardHeaderName c3) {
+  private void parseHeaderName0(HeaderName c0, HeaderName c1, HeaderName c2,
+                                HeaderName c3) {
     parseHeaderName0(c0);
 
     if (headerName != null) {
@@ -254,14 +299,71 @@ public final class ObjectoxServerRequestHeaders implements ServerRequestHeaders 
     parseHeaderName0(c3);
   }
 
+  private void parseUnknownHeaderName() {
+    int startIndex;
+    startIndex = input.index();
+
+    int colonIndex;
+    colonIndex = input.indexOf(Bytes.COLON);
+
+    if (colonIndex < 0) {
+      // no colon found
+      badRequest = BadRequestReason.INVALID_HEADER;
+
+      return;
+    }
+
+    if (startIndex == colonIndex) {
+      // empty header name
+      badRequest = BadRequestReason.INVALID_HEADER;
+
+      return;
+    }
+
+    String name;
+    name = input.getString(startIndex, colonIndex);
+
+    headerName = HeaderName.create(name);
+
+    input.setAndNext(colonIndex);
+  }
+
   private void parseHeaderValue() {
-    if (headerName instanceof StandardHeaderName name) {
+    int index;
+    index = headerName.index();
+
+    if (index >= 0) {
       if (standardHeaders == null) {
-        standardHeaders = new EnumMap<>(StandardHeaderName.class);
+        int size;
+        size = ObjectoxHeaderName.standardNamesSize();
+
+        standardHeaders = new ObjectoxHeader[size];
       }
 
       ObjectoxHeader header;
-      header = standardHeaders.get(name);
+      header = standardHeaders[index];
+
+      if (header == null) {
+        header = new ObjectoxHeader(input, headerName);
+
+        header.parseValue();
+
+        standardHeadersCount++;
+      } else {
+        header = header.parseAdditionalValue();
+      }
+
+      standardHeaders[index] = header;
+    } else {
+      if (unknownHeaders == null) {
+        unknownHeaders = new HashMap<>();
+      }
+
+      HeaderName name;
+      name = headerName;
+
+      ObjectoxHeader header;
+      header = unknownHeaders.get(name);
 
       if (header == null) {
         header = new ObjectoxHeader(input, name);
@@ -271,9 +373,7 @@ public final class ObjectoxServerRequestHeaders implements ServerRequestHeaders 
         header = header.parseAdditionalValue();
       }
 
-      standardHeaders.put(name, header);
-    } else {
-      throw new UnsupportedOperationException("Implement me");
+      unknownHeaders.put(name, header);
     }
   }
 
