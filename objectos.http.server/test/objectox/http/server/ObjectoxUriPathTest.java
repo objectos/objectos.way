@@ -17,6 +17,8 @@ package objectox.http.server;
 
 import static org.testng.Assert.assertEquals;
 
+import java.util.List;
+import objectos.http.server.UriPath.Segment;
 import org.testng.annotations.Test;
 
 public class ObjectoxUriPathTest {
@@ -44,6 +46,43 @@ public class ObjectoxUriPathTest {
     assertEquals(path.startsWith("/foo/bar.html"), true);
     assertEquals(path.startsWith("/foo/bar.html/"), false);
     assertEquals(path.startsWith("/goo"), false);
+  }
+
+  @Test
+  public void segments() {
+    ObjectoxUriPath path;
+    path = new ObjectoxUriPath();
+
+    path.set("/");
+
+    List<Segment> segments;
+    segments = path.segments();
+
+    assertEquals(segments.size(), 1);
+    assertEquals(segments.get(0).toString(), "");
+
+    path.set("/index.html");
+
+    segments = path.segments();
+
+    assertEquals(segments.size(), 1);
+    assertEquals(segments.get(0).toString(), "index.html");
+
+    path.set("/foo/");
+
+    segments = path.segments();
+
+    assertEquals(segments.size(), 2);
+    assertEquals(segments.get(0).toString(), "foo");
+    assertEquals(segments.get(1).toString(), "");
+
+    path.set("/foo/index.html");
+
+    segments = path.segments();
+
+    assertEquals(segments.size(), 2);
+    assertEquals(segments.get(0).toString(), "foo");
+    assertEquals(segments.get(1).toString(), "index.html");
   }
 
 }

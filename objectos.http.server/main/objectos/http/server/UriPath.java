@@ -15,13 +15,23 @@
  */
 package objectos.http.server;
 
+import java.util.List;
+
 /**
  * Represents the path component of the request target.
  */
 public interface UriPath {
 
+  interface Segment {
+
+    boolean is(String other);
+
+  }
+
   boolean is(String path);
 
   boolean startsWith(String prefix);
+
+  List<Segment> segments();
 
 }

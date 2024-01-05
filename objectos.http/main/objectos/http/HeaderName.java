@@ -71,7 +71,7 @@ public sealed abstract class HeaderName permits ObjectoxHeaderName {
     return headerName;
   }
 
-  public HeaderName() {}
+  protected HeaderName() {}
 
   public abstract int index();
 

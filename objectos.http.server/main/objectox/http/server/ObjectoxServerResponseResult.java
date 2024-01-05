@@ -13,10 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.http.server;
+package objectox.http.server;
 
-public interface ServerResponseResult {
+import objectos.http.server.ServerResponseResult;
 
-  boolean closeConnection();
+public record ObjectoxServerResponseResult(boolean closeConnection) implements ServerResponseResult {
+
+  public static final ObjectoxServerResponseResult DEFAULT = new ObjectoxServerResponseResult(false);
+
+  public static final ObjectoxServerResponseResult CLOSE = new ObjectoxServerResponseResult(true);
 
 }

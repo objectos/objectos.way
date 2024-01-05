@@ -23,34 +23,36 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.Clock;
 import java.time.ZonedDateTime;
-import java.util.EnumMap;
-import java.util.Map;
 import objectos.http.HeaderName;
 import objectos.http.Http;
+import objectos.http.Status;
 import objectos.http.server.ServerResponse;
 import objectos.http.server.ServerResponseResult;
 import objectos.lang.object.Check;
-import objectox.http.HttpStatus;
+import objectox.http.ObjectoxStatus;
 
-public class ObjectoxServerResponse implements ServerResponse, ServerResponseResult {
+public class ObjectoxServerResponse implements ServerResponse {
 
-  static final Map<HttpStatus, byte[]> HTTP_STATUS_RESPONSE_BYTES;
+  static final byte[][] STATUS_LINES;
 
   static {
-    Map<HttpStatus, byte[]> map;
-    map = new EnumMap<>(HttpStatus.class);
+    int size;
+    size = ObjectoxStatus.size();
 
-    for (var status : HttpStatus.values()) {
+    byte[][] map;
+    map = new byte[size][];
+
+    for (int index = 0; index < size; index++) {
+      ObjectoxStatus status;
+      status = ObjectoxStatus.get(index);
+
       String response;
-      response = Integer.toString(status.code()) + " " + status.description() + "\r\n";
+      response = Integer.toString(status.code()) + " " + status.reasonPhrase() + "\r\n";
 
-      byte[] responseBytes;
-      responseBytes = Bytes.utf8(response);
-
-      map.put(status, responseBytes);
+      map[index] = Bytes.utf8(response);
     }
 
-    HTTP_STATUS_RESPONSE_BYTES = map;
+    STATUS_LINES = map;
   }
 
   private final byte[] buffer;
@@ -58,6 +60,8 @@ public class ObjectoxServerResponse implements ServerResponse, ServerResponseRes
   private Clock clock;
 
   private int cursor;
+
+  private ServerResponseResult result = ObjectoxServerResponseResult.DEFAULT;
 
   private Version version = Version.HTTP_1_1;
 
@@ -79,27 +83,33 @@ public class ObjectoxServerResponse implements ServerResponse, ServerResponseRes
     cursor = 0;
 
     body = null;
+
+    result = ObjectoxServerResponseResult.DEFAULT;
   }
 
   @Override
   public final ServerResponse ok() {
-    return status(HttpStatus.OK);
+    return status(Status.OK);
   }
 
   @Override
   public final ServerResponse notModified() {
-    return status(HttpStatus.NOT_MODIFIED);
+    return status(Status.NOT_MODIFIED);
   }
 
-  private ServerResponse status(HttpStatus status) {
+  @Override
+  public final ServerResponse notFound() {
+    return status(Status.NOT_FOUND);
+  }
+
+  private ServerResponse status(Status status) {
     writeBytes(version.responseBytes);
 
-    byte[] statusBytes;
-    statusBytes = HTTP_STATUS_RESPONSE_BYTES.get(status);
+    ObjectoxStatus internal;
+    internal = (ObjectoxStatus) status;
 
-    if (statusBytes == null) {
-      throw new UnsupportedOperationException("Implement me");
-    }
+    byte[] statusBytes;
+    statusBytes = STATUS_LINES[internal.index];
 
     writeBytes(statusBytes);
 
@@ -135,6 +145,7 @@ public class ObjectoxServerResponse implements ServerResponse, ServerResponseRes
     Check.notNull(name, "name == null");
     Check.notNull(value, "value == null");
 
+    // write our the name
     int index;
     index = name.index();
 
@@ -151,14 +162,21 @@ public class ObjectoxServerResponse implements ServerResponse, ServerResponseRes
 
     writeBytes(nameBytes);
 
+    // write out the separator
     writeBytes(Bytes.COLONSP);
 
+    // write out the value
     byte[] valueBytes;
     valueBytes = value.getBytes(StandardCharsets.UTF_8);
 
     writeBytes(valueBytes);
 
     writeBytes(Bytes.CRLF);
+
+    // handle connection: close if necessary
+    if (name == HeaderName.CONNECTION && value.equalsIgnoreCase("close")) {
+      result = ObjectoxServerResponseResult.CLOSE;
+    }
 
     return this;
   }
@@ -185,7 +203,7 @@ public class ObjectoxServerResponse implements ServerResponse, ServerResponseRes
 
     this.body = body;
 
-    return this;
+    return result;
   }
 
   @Override

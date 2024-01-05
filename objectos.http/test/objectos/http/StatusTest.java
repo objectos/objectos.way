@@ -22,8 +22,8 @@ import org.testng.annotations.Test;
 public class StatusTest {
 
   @Test
-  public void description() {
-    assertEquals(Http.Status.INTERNAL_SERVER_ERROR_500.description(), "INTERNAL SERVER ERROR");
+  public void reasonPhrase() {
+    assertEquals(Status.INTERNAL_SERVER_ERROR.reasonPhrase(), "INTERNAL SERVER ERROR");
   }
 
 }

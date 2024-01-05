@@ -38,6 +38,7 @@ import objectos.util.array.ByteArrays;
 import objectox.http.server.Bytes;
 import objectox.http.server.Http001;
 import objectox.http.server.ObjectoxHttpServer;
+import objectox.http.server.ObjectoxServerResponseResult;
 import objectox.http.server.TestableSocket;
 import objectox.http.server.TestingClock;
 import objectox.http.server.TestingInput.RegularInput;
@@ -119,7 +120,7 @@ public class HttpExchangeTest {
       ServerResponseResult result;
       result = resp.send(msg);
 
-      assertSame(result, resp);
+      assertSame(result, ObjectoxServerResponseResult.DEFAULT);
 
       http.commit();
 
@@ -231,7 +232,7 @@ public class HttpExchangeTest {
       ServerResponseResult result;
       result = resp.send(msg);
 
-      assertSame(result, resp);
+      assertSame(result, ObjectoxServerResponseResult.DEFAULT);
 
       http.commit();
 
@@ -276,7 +277,7 @@ public class HttpExchangeTest {
 
       result = resp.send(msg);
 
-      assertSame(result, resp);
+      assertSame(result, ObjectoxServerResponseResult.DEFAULT);
 
       socket.outputReset();
       http.commit();
@@ -351,7 +352,7 @@ public class HttpExchangeTest {
       ServerResponseResult result;
       result = resp.send(msg);
 
-      assertSame(result, resp);
+      assertSame(result, ObjectoxServerResponseResult.DEFAULT);
 
       http.commit();
 
@@ -439,7 +440,7 @@ public class HttpExchangeTest {
       ServerResponseResult result;
       result = resp.send(index);
 
-      assertSame(result, resp);
+      assertSame(result, ObjectoxServerResponseResult.DEFAULT);
 
       http.commit();
 
@@ -513,13 +514,69 @@ public class HttpExchangeTest {
       ServerResponseResult result;
       result = resp.send();
 
-      assertSame(result, resp);
+      assertSame(result, ObjectoxServerResponseResult.DEFAULT);
 
       http.commit();
 
       assertEquals(socket.outputAsString(), resp01);
 
       assertEquals(http.keepAlive(), false);
+    } catch (IOException e) {
+      throw new AssertionError("Failed with IOException", e);
+    }
+  }
+
+  @Test(description = """
+  Allow for NOT FOUND responses
+  - it should set keep alive to false
+  """)
+  public void testCase006() {
+    TestableSocket socket;
+    socket = TestableSocket.of("""
+    GET /xml-rpc.php HTTP/1.1\r
+    Host: www.example.com\r
+    \r
+    """);
+
+    String resp01 = """
+    HTTP/1.1 404 NOT FOUND\r
+    Connection: close\r
+    Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+    \r
+    """;
+
+    try (HttpExchange http = HttpExchange.create(socket)) {
+      http.bufferSize(128);
+      http.clock(TestingClock.FIXED);
+      http.noteSink(TestingNoteSink.INSTANCE);
+
+      // request phase
+      http.parse();
+
+      assertEquals(http.isBadRequest(), false);
+
+      ServerRequest req;
+      req = http.toRequest();
+
+      // response phase
+      ServerResponse resp;
+      resp = req.toResponse();
+
+      resp.notFound();
+      resp.header(HeaderName.CONNECTION, "close");
+      resp.dateNow();
+
+      ServerResponseResult result;
+      result = resp.send();
+
+      assertSame(result, ObjectoxServerResponseResult.CLOSE);
+
+      http.commit();
+
+      assertEquals(socket.outputAsString(), resp01);
+
+      assertEquals(http.keepAlive(), true);
+      assertEquals(result.closeConnection(), true);
     } catch (IOException e) {
       throw new AssertionError("Failed with IOException", e);
     }

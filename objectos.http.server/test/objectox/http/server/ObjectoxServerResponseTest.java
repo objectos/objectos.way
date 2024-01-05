@@ -43,10 +43,10 @@ public class ObjectoxServerResponseTest {
     ServerResponseResult result;
     result = resp.send(msg);
 
-    assertSame(result, resp);
+    assertSame(result, ObjectoxServerResponseResult.DEFAULT);
 
     assertEquals(
-        result.toString(),
+        resp.toString(),
 
         """
         HTTP/1.1 200 OK\r

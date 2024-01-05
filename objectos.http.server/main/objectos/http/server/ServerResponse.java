@@ -32,6 +32,11 @@ public interface ServerResponse {
    */
   ServerResponse notModified();
 
+  /*
+   * 404 NOT FOUND
+   */
+  ServerResponse notFound();
+
   // headers
 
   ServerResponse contentLength(long value);
