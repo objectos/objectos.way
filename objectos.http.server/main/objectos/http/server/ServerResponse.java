@@ -28,6 +28,11 @@ public interface ServerResponse {
   ServerResponse ok();
 
   /*
+   * 301 MOVED PERMANENTLY
+   */
+  ServerResponse movedPermanently();
+
+  /*
    * 304 NOT MODIFIED
    */
   ServerResponse notModified();
@@ -37,7 +42,14 @@ public interface ServerResponse {
    */
   ServerResponse notFound();
 
+  /*
+   * 405 METHOD NOT ALLOWED
+   */
+  ServerResponse methodNotAllowed();
+
   // headers
+
+  ServerResponse connection(String value);
 
   ServerResponse contentLength(long value);
 
@@ -46,6 +58,8 @@ public interface ServerResponse {
   ServerResponse dateNow();
 
   ServerResponse header(HeaderName name, String value);
+
+  ServerResponse location(String location);
 
   // send
 

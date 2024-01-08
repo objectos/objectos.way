@@ -15,8 +15,4 @@
  */
 package objectos.http.server;
 
-public interface ServerResponseResult {
-
-  boolean closeConnection();
-
-}
+public interface ServerResponseResult {}

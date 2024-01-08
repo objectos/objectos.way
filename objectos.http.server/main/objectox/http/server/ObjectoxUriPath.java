@@ -121,7 +121,8 @@ public final class ObjectoxUriPath implements UriPath {
       return value();
     }
 
-    private String value() {
+    @Override
+    public final String value() {
       if (value == null) {
         value = ObjectoxUriPath.this.value.substring(start, end);
       }

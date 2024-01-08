@@ -17,10 +17,8 @@ package objectox.http.server;
 
 import objectos.http.server.ServerResponseResult;
 
-public record ObjectoxServerResponseResult(boolean closeConnection) implements ServerResponseResult {
+public enum ObjectoxServerResponseResult implements ServerResponseResult {
 
-  public static final ObjectoxServerResponseResult DEFAULT = new ObjectoxServerResponseResult(false);
-
-  public static final ObjectoxServerResponseResult CLOSE = new ObjectoxServerResponseResult(true);
+  INSTANCE;
 
 }

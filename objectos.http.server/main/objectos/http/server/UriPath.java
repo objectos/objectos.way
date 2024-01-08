@@ -26,6 +26,8 @@ public interface UriPath {
 
     boolean is(String other);
 
+    String value();
+
   }
 
   boolean is(String path);

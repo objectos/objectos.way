@@ -15,14 +15,14 @@
  */
 package objectos.http.server;
 
+import java.nio.file.Path;
+import objectos.http.HeaderName;
 import objectos.http.Method;
+import objectos.http.Status;
 
-/**
- * Represents a fully parsed request to the HTTP server. Instances of this
- * interface <em>do not</em> represent a bad request which could not be fully
- * parsed.
- */
-public interface ServerRequest {
+public interface ServerExchange {
+
+  // request
 
   /**
    * Returns the request method.
@@ -47,6 +47,18 @@ public interface ServerRequest {
    */
   Body body();
 
-  ServerResponse response();
+  // response
+
+  void status(Status status);
+
+  void header(HeaderName name, long value);
+
+  void header(HeaderName name, String value);
+
+  void send();
+
+  void send(byte[] body);
+
+  void send(Path file);
 
 }

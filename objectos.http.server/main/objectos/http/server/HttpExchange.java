@@ -35,7 +35,7 @@ import objectox.http.server.ObjectoxHttpExchange;
  * Represents the server-side view of an HTTP exchange. This class allows for
  * writing an HTTP server.
  */
-public sealed interface HttpExchange extends AutoCloseable permits objectox.http.server.ObjectoxHttpExchange {
+public interface HttpExchange extends AutoCloseable {
 
   // new API
 
@@ -66,9 +66,9 @@ public sealed interface HttpExchange extends AutoCloseable permits objectox.http
 
   void parse() throws IOException, IllegalStateException;
 
-  boolean isBadRequest() throws IllegalStateException;
+  boolean badRequest() throws IllegalStateException;
 
-  ServerRequest toRequest() throws IllegalStateException;
+  ServerRequest request() throws IllegalStateException;
 
   void commit() throws IOException, IllegalStateException;
 

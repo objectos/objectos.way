@@ -20,28 +20,36 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
+import objectos.lang.object.Check;
 
-final class SocketInput {
+class SocketInput {
 
-  private static final int MAX_BUFFER_SIZE = 1 << 14;
+  private static final int HARD_MAX_BUFFER_SIZE = 1 << 14;
 
   byte[] buffer;
 
-  private final InputStream inputStream;
+  private InputStream inputStream;
 
-  private int bufferLimit;
+  // also serve as initialBufferSize
+  private int bufferLimit = 1024;
 
-  private int lineIndex;
+  int cursor;
 
   private int lineLimit;
 
-  private final int max = 4096;
+  private int maxBufferSize = 4096;
 
-  public SocketInput(int bufferSize, InputStream inputStream) {
+  public SocketInput() {
+
+  }
+
+  SocketInput(int bufferSize, InputStream inputStream) {
     int actualSize;
     actualSize = powerOfTwo(bufferSize);
 
     this.buffer = new byte[actualSize];
+
+    this.bufferLimit = 0;
 
     this.inputStream = inputStream;
   }
@@ -62,24 +70,42 @@ final class SocketInput {
       throw new IllegalArgumentException("Buffer size is too small");
     }
 
-    if (n >= MAX_BUFFER_SIZE) {
-      return MAX_BUFFER_SIZE;
+    if (n >= HARD_MAX_BUFFER_SIZE) {
+      return HARD_MAX_BUFFER_SIZE;
     }
 
     return n + 1;
   }
 
-  public final void reset() {
+  public void bufferSize(int initial, int max) {
+    Check.argument(initial >= 128, "initial size must be >= 128");
+    Check.argument(max >= 128, "max size must be >= 128");
+    Check.argument(max >= initial, "max size must be >= initial size");
+
+    bufferLimit = powerOfTwo(initial);
+
+    this.maxBufferSize = powerOfTwo(max);
+  }
+
+  final void initSocketInput(InputStream inputStream) {
+    buffer = new byte[bufferLimit];
+
+    this.inputStream = inputStream;
+
+    resetSocketInput();
+  }
+
+  public final void resetSocketInput() {
     bufferLimit = 0;
 
-    lineIndex = 0;
+    cursor = 0;
 
     lineLimit = 0;
   }
 
   public final void parseLine() throws IOException {
     int startIndex;
-    startIndex = lineIndex;
+    startIndex = cursor;
 
     byte needle;
     needle = Bytes.LF;
@@ -106,7 +132,7 @@ final class SocketInput {
       if (writableLength == 0) {
         // buffer is full, try to increase
 
-        if (buffer.length == max) {
+        if (buffer.length == maxBufferSize) {
           // cannot increase...
           throw new OverflowException();
         }
@@ -132,18 +158,18 @@ final class SocketInput {
   }
 
   public final boolean hasNext() {
-    return lineIndex < lineLimit;
+    return cursor < lineLimit;
   }
 
   public final boolean hasNext(int count) {
     int requiredIndex;
-    requiredIndex = lineIndex + count - 1;
+    requiredIndex = cursor + count - 1;
 
     return requiredIndex < lineLimit;
   }
 
   public final byte peek() {
-    return buffer[lineIndex];
+    return buffer[cursor];
   }
 
   public final boolean matches(byte[] bytes) {
@@ -151,7 +177,7 @@ final class SocketInput {
     length = bytes.length;
 
     int toIndex;
-    toIndex = lineIndex + length;
+    toIndex = cursor + length;
 
     if (toIndex >= lineLimit) {
       // outside of line...
@@ -160,12 +186,12 @@ final class SocketInput {
 
     boolean matches;
     matches = Arrays.equals(
-        buffer, lineIndex, toIndex,
+        buffer, cursor, toIndex,
         bytes, 0, length
     );
 
     if (matches) {
-      lineIndex += length;
+      cursor += length;
 
       return true;
     } else {
@@ -174,11 +200,11 @@ final class SocketInput {
   }
 
   public final int index() {
-    return lineIndex;
+    return cursor;
   }
 
   public final int indexOf(byte needle) {
-    for (int i = lineIndex; i < bufferLimit; i++) {
+    for (int i = cursor; i < bufferLimit; i++) {
       byte maybe;
       maybe = buffer[i];
 
@@ -191,7 +217,7 @@ final class SocketInput {
   }
 
   public final int indexOf(byte needleA, byte needleB) {
-    for (int i = lineIndex; i < bufferLimit; i++) {
+    for (int i = cursor; i < bufferLimit; i++) {
       byte maybe;
       maybe = buffer[i];
 
@@ -208,17 +234,17 @@ final class SocketInput {
   }
 
   public final byte setAndNext(int index) {
-    lineIndex = index;
+    cursor = index;
 
     return next();
   }
 
   public final byte next() {
-    return buffer[lineIndex++];
+    return buffer[cursor++];
   }
 
   public final boolean consumeIfEndOfLine() {
-    if (lineIndex < lineLimit) {
+    if (cursor < lineLimit) {
       byte next;
       next = next();
 
@@ -227,22 +253,22 @@ final class SocketInput {
       }
     }
 
-    if (lineIndex != lineLimit) {
+    if (cursor != lineLimit) {
       return false;
     }
 
     // index immediately after LF
-    lineIndex++;
+    cursor++;
 
     return true;
   }
 
   public final boolean consumeIfEmptyLine() {
     int length;
-    length = lineLimit - lineIndex;
+    length = lineLimit - cursor;
 
     if (length == 0) {
-      lineIndex++;
+      cursor++;
 
       return true;
     }
@@ -252,7 +278,7 @@ final class SocketInput {
       cr = peek();
 
       if (cr == Bytes.CR) {
-        lineIndex += 2;
+        cursor += 2;
 
         return true;
       }
@@ -270,7 +296,7 @@ final class SocketInput {
   }
 
   public final void set(int value) {
-    lineIndex = value;
+    cursor = value;
   }
 
   public final String getString(int start, int end) {

@@ -22,8 +22,10 @@ import java.net.Socket;
 import java.net.SocketAddress;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.Clock;
+import java.time.ZonedDateTime;
 import java.util.Arrays;
 import java.util.EnumMap;
 import java.util.HashMap;
@@ -42,6 +44,7 @@ import objectos.http.server.Segment;
 import objectos.http.server.ServerRequest;
 import objectos.http.server.ServerRequestHeaders;
 import objectos.http.server.ServerResponse;
+import objectos.http.server.ServerResponseResult;
 import objectos.http.server.UriPath;
 import objectos.http.server.UriQuery;
 import objectos.lang.object.Check;
@@ -50,6 +53,7 @@ import objectos.notes.NoteSink;
 import objectos.util.list.GrowableList;
 import objectox.http.HttpStatus;
 import objectox.http.ObjectoxHeaderName;
+import objectox.http.ObjectoxStatus;
 
 public final class ObjectoxHttpExchange implements HttpExchange {
 
@@ -233,7 +237,7 @@ public final class ObjectoxHttpExchange implements HttpExchange {
 
   private ObjectoxRequestLine requestLine;
 
-  private ObjectoxServerResponse response;
+  private ThisServerResponse response;
 
   Socket socket;
 
@@ -295,7 +299,7 @@ public final class ObjectoxHttpExchange implements HttpExchange {
       }
 
       case _COMMITED -> {
-        socketInput.reset();
+        socketInput.resetSocketInput();
 
         requestLine.reset();
       }
@@ -371,7 +375,7 @@ public final class ObjectoxHttpExchange implements HttpExchange {
   }
 
   @Override
-  public final boolean isBadRequest() {
+  public final boolean badRequest() {
     Check.state(state == _REQUEST, "Method can only be invoked after a parse() operation");
 
     return requestLine.badRequest != null
@@ -379,8 +383,8 @@ public final class ObjectoxHttpExchange implements HttpExchange {
   }
 
   @Override
-  public final ServerRequest toRequest() {
-    Check.state(!isBadRequest(), "Cannot return a ServerRequest instance as this is a bad request");
+  public final ServerRequest request() {
+    Check.state(!badRequest(), "Cannot return a ServerRequest instance as this is a bad request");
 
     if (request == null) {
       request = new ThisServerRequest();
@@ -449,13 +453,13 @@ public final class ObjectoxHttpExchange implements HttpExchange {
     }
 
     @Override
-    public final ServerResponse toResponse() {
+    public final ServerResponse response() {
       if (response == null) {
         // input and output share the same buffer
         byte[] buffer;
         buffer = socketInput.buffer;
 
-        response = new ObjectoxServerResponse(buffer);
+        response = new ThisServerResponse(buffer);
 
         Clock responseClock;
         responseClock = clock;
@@ -463,8 +467,6 @@ public final class ObjectoxHttpExchange implements HttpExchange {
         if (responseClock == null) {
           responseClock = Clock.systemUTC();
         }
-
-        response.clock(responseClock);
       } else {
         response.reset();
       }
@@ -472,6 +474,239 @@ public final class ObjectoxHttpExchange implements HttpExchange {
       state = _RESPONSE;
 
       return response;
+    }
+
+  }
+
+  public class ThisServerResponse implements ServerResponse {
+
+    static final byte[][] STATUS_LINES;
+
+    static {
+      int size;
+      size = ObjectoxStatus.size();
+
+      byte[][] map;
+      map = new byte[size][];
+
+      for (int index = 0; index < size; index++) {
+        ObjectoxStatus status;
+        status = ObjectoxStatus.get(index);
+
+        String response;
+        response = Integer.toString(status.code()) + " " + status.reasonPhrase() + "\r\n";
+
+        map[index] = Bytes.utf8(response);
+      }
+
+      STATUS_LINES = map;
+    }
+
+    private final byte[] buffer;
+
+    private int cursor;
+
+    private Version version = Version.HTTP_1_1;
+
+    Object body;
+
+    public ThisServerResponse(byte[] buffer) {
+      this.buffer = buffer;
+    }
+
+    public final void version(Version version) {
+      this.version = version;
+    }
+
+    public final void reset() {
+      cursor = 0;
+
+      body = null;
+    }
+
+    @Override
+    public final ServerResponse ok() {
+      return status(objectos.http.Status.OK);
+    }
+
+    @Override
+    public final ServerResponse movedPermanently() {
+      return status(objectos.http.Status.MOVED_PERMANENTLY);
+    }
+
+    @Override
+    public final ServerResponse notModified() {
+      return status(objectos.http.Status.NOT_MODIFIED);
+    }
+
+    @Override
+    public final ServerResponse notFound() {
+      return status(objectos.http.Status.NOT_FOUND);
+    }
+
+    @Override
+    public final ServerResponse methodNotAllowed() {
+      return status(objectos.http.Status.METHOD_NOT_ALLOWED);
+    }
+
+    private ServerResponse status(objectos.http.Status status) {
+      writeBytes(version.responseBytes);
+
+      ObjectoxStatus internal;
+      internal = (ObjectoxStatus) status;
+
+      byte[] statusBytes;
+      statusBytes = STATUS_LINES[internal.index];
+
+      writeBytes(statusBytes);
+
+      return this;
+    }
+
+    @Override
+    public final ServerResponse connection(String value) {
+      Check.notNull(value, "value");
+
+      return header(HeaderName.CONNECTION, value);
+    }
+
+    @Override
+    public final ServerResponse contentLength(long value) {
+      String s;
+      s = Long.toString(value);
+
+      return header(HeaderName.CONTENT_LENGTH, s);
+    }
+
+    @Override
+    public final ServerResponse contentType(String value) {
+      return header(HeaderName.CONTENT_TYPE, value);
+    }
+
+    @Override
+    public final ServerResponse dateNow() {
+      ZonedDateTime now;
+      now = ZonedDateTime.now(clock);
+
+      String formatted;
+      formatted = Http.formatDate(now);
+
+      return header(HeaderName.DATE, formatted);
+    }
+
+    @Override
+    public final ServerResponse header(HeaderName name, String value) {
+      Check.notNull(name, "name == null");
+      Check.notNull(value, "value == null");
+
+      // write our the name
+      int index;
+      index = name.index();
+
+      byte[] nameBytes;
+
+      if (index >= 0) {
+        nameBytes = ObjectoxServerRequestHeaders.STD_HEADER_NAME_BYTES[index];
+      } else {
+        String capitalized;
+        capitalized = name.capitalized();
+
+        nameBytes = capitalized.getBytes(StandardCharsets.UTF_8);
+      }
+
+      writeBytes(nameBytes);
+
+      // write out the separator
+      writeBytes(Bytes.COLONSP);
+
+      // write out the value
+      byte[] valueBytes;
+      valueBytes = value.getBytes(StandardCharsets.UTF_8);
+
+      writeBytes(valueBytes);
+
+      writeBytes(Bytes.CRLF);
+
+      // handle connection: close if necessary
+      if (name == HeaderName.CONNECTION && value.equalsIgnoreCase("close")) {
+        keepAlive = false;
+      }
+
+      return this;
+    }
+
+    @Override
+    public final ServerResponse location(String location) {
+      Check.notNull(location, "location == null");
+
+      return header(HeaderName.LOCATION, location);
+    }
+
+    @Override
+    public final ServerResponseResult send() {
+      return body(NoResponseBody.INSTANCE);
+    }
+
+    @Override
+    public final ServerResponseResult send(byte[] body) {
+      return body(body);
+    }
+
+    @Override
+    public final ServerResponseResult send(Path file) {
+      Check.argument(Files.isRegularFile(file), "Path must be of an existing regular file");
+
+      return body(file);
+    }
+
+    private ServerResponseResult body(Object body) {
+      writeBytes(Bytes.CRLF);
+
+      this.body = body;
+
+      return ObjectoxServerResponseResult.INSTANCE;
+    }
+
+    @Override
+    public final String toString() {
+      return new String(buffer, 0, cursor, StandardCharsets.UTF_8);
+    }
+
+    final void commit(OutputStream outputStream) throws IOException {
+      Check.state(body != null, "Cannot commit: missing ServerResponse::send method invocation");
+
+      // send headers
+      outputStream.write(buffer, 0, cursor);
+
+      switch (body) {
+        case NoResponseBody no -> {}
+
+        case byte[] bytes -> outputStream.write(bytes, 0, bytes.length);
+
+        case Path file -> {
+          try (InputStream in = Files.newInputStream(file)) {
+            in.transferTo(outputStream);
+          }
+        }
+
+        default -> throw new UnsupportedOperationException("Implement me");
+      }
+    }
+
+    private void writeBytes(byte[] bytes) {
+      int length;
+      length = bytes.length;
+
+      int remaining;
+      remaining = buffer.length - cursor;
+
+      if (length > remaining) {
+        throw new UnsupportedOperationException("Implement me");
+      }
+
+      System.arraycopy(bytes, 0, buffer, cursor, length);
+
+      cursor += length;
     }
 
   }
