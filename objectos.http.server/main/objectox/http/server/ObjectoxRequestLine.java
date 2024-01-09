@@ -17,9 +17,8 @@ package objectox.http.server;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.util.EnumMap;
-import java.util.Map;
-import objectox.http.StandardMethod;
+import objectos.http.Method;
+import objectox.http.ObjectoxMethod;
 
 public final class ObjectoxRequestLine {
 
@@ -27,7 +26,7 @@ public final class ObjectoxRequestLine {
 
   BadRequestReason badRequest;
 
-  StandardMethod method;
+  Method method;
 
   ObjectoxUriPath path;
 
@@ -112,44 +111,50 @@ public final class ObjectoxRequestLine {
     // based on the first char, we select out method candidate
 
     switch (first) {
-      case 'C' -> parseMethod0(StandardMethod.CONNECT);
+      case 'C' -> parseMethod0(Method.CONNECT);
 
-      case 'D' -> parseMethod0(StandardMethod.DELETE);
+      case 'D' -> parseMethod0(Method.DELETE);
 
-      case 'G' -> parseMethod0(StandardMethod.GET);
+      case 'G' -> parseMethod0(Method.GET);
 
-      case 'H' -> parseMethod0(StandardMethod.HEAD);
+      case 'H' -> parseMethod0(Method.HEAD);
 
-      case 'O' -> parseMethod0(StandardMethod.OPTIONS);
+      case 'O' -> parseMethod0(Method.OPTIONS);
 
       case 'P' -> parseMethodP();
 
-      case 'T' -> parseMethod0(StandardMethod.TRACE);
+      case 'T' -> parseMethod0(Method.TRACE);
     }
   }
 
-  static final Map<StandardMethod, byte[]> STD_METHOD_BYTES;
+  static final byte[][] STD_METHOD_BYTES;
 
   static {
-    Map<StandardMethod, byte[]> map;
-    map = new EnumMap<>(StandardMethod.class);
+    int size;
+    size = ObjectoxMethod.size();
 
-    for (var method : StandardMethod.values()) {
+    byte[][] map;
+    map = new byte[size][];
+
+    for (int index = 0; index < size; index++) {
+      ObjectoxMethod method;
+      method = ObjectoxMethod.get(index);
+
       String nameAndSpace;
-      nameAndSpace = method.name() + " ";
+      nameAndSpace = method.text() + " ";
 
-      byte[] bytes;
-      bytes = nameAndSpace.getBytes(StandardCharsets.UTF_8);
-
-      map.put(method, bytes);
+      map[index] = nameAndSpace.getBytes(StandardCharsets.UTF_8);
     }
 
     STD_METHOD_BYTES = map;
   }
 
-  private void parseMethod0(StandardMethod candidate) throws IOException {
+  private void parseMethod0(Method candidate) throws IOException {
+    int index;
+    index = candidate.index();
+
     byte[] candidateBytes;
-    candidateBytes = STD_METHOD_BYTES.get(candidate);
+    candidateBytes = STD_METHOD_BYTES[index];
 
     if (input.matches(candidateBytes)) {
       method = candidate;
@@ -164,19 +169,19 @@ public final class ObjectoxRequestLine {
 
     // we'll try them in sequence
 
-    parseMethod0(StandardMethod.POST);
+    parseMethod0(Method.POST);
 
     if (method != null) {
       return;
     }
 
-    parseMethod0(StandardMethod.PUT);
+    parseMethod0(Method.PUT);
 
     if (method != null) {
       return;
     }
 
-    parseMethod0(StandardMethod.PATCH);
+    parseMethod0(Method.PATCH);
 
     if (method != null) {
       return;

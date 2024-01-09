@@ -19,7 +19,7 @@ import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNull;
 
 import java.io.IOException;
-import objectox.http.StandardMethod;
+import objectos.http.Method;
 import org.testng.annotations.Test;
 
 public class ObjectoxRequestLineTest {
@@ -41,10 +41,10 @@ public class ObjectoxRequestLineTest {
     line.parse();
 
     // method
-    StandardMethod method;
+    Method method;
     method = line.method;
 
-    assertEquals(method, StandardMethod.GET);
+    assertEquals(method, Method.GET);
 
     // target
     ObjectoxUriPath path;

@@ -19,7 +19,7 @@ import static org.testng.Assert.assertEquals;
 
 import java.io.IOException;
 import objectos.http.HeaderName;
-import objectox.http.StandardMethod;
+import objectos.http.Method;
 import org.testng.annotations.Test;
 
 public class SocketInputTest {
@@ -45,7 +45,7 @@ public class SocketInputTest {
 
     assertEquals(input.hasNext(), true);
     assertEquals(input.peek(), 'G');
-    assertEquals(input.matches(ObjectoxRequestLine.STD_METHOD_BYTES.get(StandardMethod.GET)), true);
+    assertEquals(input.matches(ObjectoxRequestLine.STD_METHOD_BYTES[Method.GET.index()]), true);
     assertEquals(input.peek(), '/');
     assertEquals(input.index(), 4);
     assertEquals(input.indexOf(Bytes.QUESTION_MARK, Bytes.SP), 5);

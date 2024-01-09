@@ -15,53 +15,82 @@
  */
 package objectos.http;
 
-import objectox.http.StandardMethod;
+import objectox.http.ObjectoxMethod;
 
-public sealed interface Method permits StandardMethod {
+public sealed abstract class Method permits ObjectoxMethod {
+
+  private static ObjectoxMethod.Builder BUILDER = new ObjectoxMethod.Builder();
 
   /**
    * The CONNECT method.
    */
-  Method CONNECT = StandardMethod.CONNECT;
+  public static final Method CONNECT = BUILDER.create("CONNECT");
 
   /**
    * The DELETE method.
    */
-  Method DELETE = StandardMethod.DELETE;
+  public static final Method DELETE = BUILDER.create("DELETE");
 
   /**
    * The GET method.
    */
-  Method GET = StandardMethod.GET;
+  public static final Method GET = BUILDER.create("GET");
 
   /**
    * The HEAD method.
    */
-  Method HEAD = StandardMethod.HEAD;
+  public static final Method HEAD = BUILDER.create("HEAD");
 
   /**
    * The OPTIONS method.
    */
-  Method OPTIONS = StandardMethod.OPTIONS;
+  public static final Method OPTIONS = BUILDER.create("OPTIONS");
 
   /**
    * The PATCH method.
    */
-  Method PATCH = StandardMethod.PATCH;
+  public static final Method PATCH = BUILDER.create("PATCH");
 
   /**
    * The POST method.
    */
-  Method POST = StandardMethod.POST;
+  public static final Method POST = BUILDER.create("POST");
 
   /**
    * The PUT method.
    */
-  Method PUT = StandardMethod.PUT;
+  public static final Method PUT = BUILDER.create("PUT");
 
   /**
    * The TRACE method.
    */
-  Method TRACE = StandardMethod.TRACE;
+  public static final Method TRACE = BUILDER.create("TRACE");
+
+  static {
+    ObjectoxMethod.set(BUILDER);
+
+    BUILDER = null;
+  }
+
+  protected Method() {}
+
+  public final boolean is(Method method) {
+    int index;
+    index = index();
+
+    if (index >= 0) {
+      return index == method.index();
+    } else {
+      return equals(method);
+    }
+  }
+
+  public final boolean is(Method method1, Method method2) {
+    return is(method1) || is(method2);
+  }
+
+  public abstract int index();
+
+  public abstract String text();
 
 }

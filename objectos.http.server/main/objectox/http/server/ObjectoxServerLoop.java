@@ -349,7 +349,7 @@ public final class ObjectoxServerLoop extends SocketInput implements ServerLoop 
   @Override
   public final void send(Path file) {
     checkResponse();
-    Check.argument(Files.isRegularFile(file), "Path must be of an existing regular file");
+    Check.notNull(file, "file == null");
 
     send0(file);
   }
