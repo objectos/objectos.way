@@ -136,6 +136,8 @@ public class HtmlCompiler02 extends HtmlCompiler01 {
 
     objectArray[objectIndex + OFFSET_TEXT] = new PseudoHtmlText();
 
+    objectArray[objectIndex + OFFSET_RAW] = new PseudoHtmlRawText();
+
     documentCtx();
 
     return new PseudoHtmlDocument(this);
@@ -1089,12 +1091,6 @@ public class HtmlCompiler02 extends HtmlCompiler01 {
         // return value
         PseudoHtmlRawText raw;
         raw = (PseudoHtmlRawText) objectArray[objectIndex + OFFSET_RAW];
-
-        if (raw == null) {
-          raw = new PseudoHtmlRawText();
-
-          objectArray[objectIndex + OFFSET_RAW] = raw;
-        }
 
         // text value
         raw.value = toObjectString(v0, v1);
