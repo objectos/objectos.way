@@ -28,6 +28,7 @@ import objectos.http.server.Body;
 import objectos.http.server.ServerLoop;
 import objectos.http.server.ServerRequestHeaders;
 import objectos.http.server.UriPath;
+import objectos.http.server.UriQuery;
 import objectos.lang.object.Check;
 import objectos.notes.NoOpNoteSink;
 import objectos.notes.NoteSink;
@@ -210,6 +211,13 @@ public final class ObjectoxServerLoop extends SocketInput implements ServerLoop 
     checkRequest();
 
     return requestLine.path;
+  }
+
+  @Override
+  public final UriQuery query() {
+    checkRequest();
+
+    return requestLine.query;
   }
 
   @Override

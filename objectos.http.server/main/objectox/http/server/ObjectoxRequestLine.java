@@ -18,6 +18,7 @@ package objectox.http.server;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import objectos.http.Method;
+import objectos.http.server.UriQuery;
 import objectox.http.ObjectoxMethod;
 
 public final class ObjectoxRequestLine {
@@ -30,9 +31,7 @@ public final class ObjectoxRequestLine {
 
   ObjectoxUriPath path;
 
-  ObjectoxUriQuery query;
-
-  int startIndex;
+  UriQuery query = EmptyUriQuery.INSTANCE;
 
   byte versionMajor;
 
@@ -49,9 +48,7 @@ public final class ObjectoxRequestLine {
 
     path.reset();
 
-    startIndex = 0;
-
-    query = null;
+    query = EmptyUriQuery.INSTANCE;
 
     versionMajor = versionMinor = 0;
   }
@@ -68,22 +65,19 @@ public final class ObjectoxRequestLine {
       return;
     }
 
-    parsePathStart();
+    int startIndex;
+    startIndex = parsePathStart();
 
     if (badRequest != null) {
       // bad request -> fail
       return;
     }
 
-    parsePathRest();
+    parsePathRest(startIndex);
 
     if (badRequest != null) {
       // bad request -> fail
       return;
-    }
-
-    if (query != null) {
-      throw new UnsupportedOperationException("Implement me");
     }
 
     parseVersion();
@@ -188,7 +182,7 @@ public final class ObjectoxRequestLine {
     }
   }
 
-  private void parsePathStart() throws IOException {
+  private int parsePathStart() throws IOException {
     // we will check if the request target starts with a '/' char
 
     int targetStart;
@@ -198,7 +192,7 @@ public final class ObjectoxRequestLine {
       // reached EOL -> bad request
       badRequest = BadRequestReason.INVALID_TARGET;
 
-      return;
+      return 0;
     }
 
     byte b;
@@ -208,15 +202,15 @@ public final class ObjectoxRequestLine {
       // first char IS NOT '/' => BAD_REQUEST
       badRequest = BadRequestReason.INVALID_TARGET;
 
-      return;
+      return 0;
     }
 
     // mark request path start
 
-    startIndex = targetStart;
+    return targetStart;
   }
 
-  private void parsePathRest() throws IOException {
+  private void parsePathRest(int startIndex) throws IOException {
     // we will look for the first:
     // - ? char
     // - SP char
@@ -243,8 +237,38 @@ public final class ObjectoxRequestLine {
     b = input.setAndNext(index);
 
     if (b == Bytes.QUESTION_MARK) {
-      throw new UnsupportedOperationException("Implement me");
+      parseQuery();
     }
+  }
+
+  private void parseQuery() {
+    int startIndex;
+    startIndex = input.index();
+
+    int end;
+    end = input.indexOf(Bytes.SP);
+
+    if (end < 0) {
+      // trailing char was not found
+      badRequest = BadRequestReason.URI_TOO_LONG;
+
+      return;
+    }
+
+    String rawValue;
+    rawValue = input.getString(startIndex, end);
+
+    ObjectoxUriQuery q;
+
+    if (query == EmptyUriQuery.INSTANCE) {
+      query = q = new ObjectoxUriQuery();
+    } else {
+      q = (ObjectoxUriQuery) query;
+    }
+
+    q.set(rawValue);
+
+    input.setAndNext(end);
   }
 
   static final byte[] HTTP_VERSION_PREFIX = {'H', 'T', 'T', 'P', '/'};

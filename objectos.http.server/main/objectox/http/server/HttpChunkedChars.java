@@ -24,121 +24,126 @@ import objectos.http.server.CharWritable;
 
 final class HttpChunkedChars implements Appendable {
 
-	private final ObjectoxHttpExchange outer;
+  private final Socket socket;
 
-	private final CharWritable entity;
+  private final byte[] buffer;
 
-	private final Charset charset;
+  private int bufferLimit;
 
-	public HttpChunkedChars(ObjectoxHttpExchange outer, CharWritable entity, Charset charset) {
-		this.outer = outer;
-		this.entity = entity;
-		this.charset = charset;
-	}
+  private final CharWritable entity;
 
-	@Override
-	public final Appendable append(char c) throws IOException {
-		throw new UnsupportedOperationException("Implement me");
-	}
+  private final Charset charset;
 
-	@Override
-	public final Appendable append(CharSequence csq) throws IOException {
-		String s;
-		s = csq.toString();
+  public HttpChunkedChars(Socket socket, byte[] buffer, CharWritable entity, Charset charset) {
+    this.socket = socket;
 
-		byte[] bytes;
-		bytes = s.getBytes(charset);
+    this.buffer = buffer;
 
-		writeBytes(bytes);
+    this.entity = entity;
 
-		return this;
-	}
+    this.charset = charset;
+  }
 
-	private void writeBytes(byte[] bytes) throws IOException {
-		int bytesIndex;
-		bytesIndex = 0;
+  @Override
+  public final Appendable append(char c) throws IOException {
+    throw new UnsupportedOperationException("Implement me");
+  }
 
-		while (bytesIndex < bytes.length) {
-			int bufferRemaining;
-			bufferRemaining = outer.buffer.length - outer.bufferLimit;
+  @Override
+  public final Appendable append(CharSequence csq) throws IOException {
+    String s;
+    s = csq.toString();
 
-			if (bufferRemaining > 0) {
-				int bytesRemaining;
-				bytesRemaining = bytes.length - bytesIndex;
+    byte[] bytes;
+    bytes = s.getBytes(charset);
 
-				int length;
-				length = Math.min(bytesRemaining, bufferRemaining);
+    writeBytes(bytes);
 
-				System.arraycopy(bytes, bytesIndex, outer.buffer, outer.bufferLimit, length);
+    return this;
+  }
 
-				bytesIndex += length;
+  private void writeBytes(byte[] bytes) throws IOException {
+    int bytesIndex;
+    bytesIndex = 0;
 
-				outer.bufferLimit += length;
+    while (bytesIndex < bytes.length) {
+      int bufferRemaining;
+      bufferRemaining = buffer.length - bufferLimit;
 
-				continue;
-			}
+      if (bufferRemaining > 0) {
+        int bytesRemaining;
+        bytesRemaining = bytes.length - bytesIndex;
 
-			if (bufferRemaining == 0) {
-				flush();
+        int length;
+        length = Math.min(bytesRemaining, bufferRemaining);
 
-				continue;
-			}
+        System.arraycopy(bytes, bytesIndex, buffer, bufferLimit, length);
 
-			throw new UnsupportedOperationException("Implement me");
-		}
-	}
+        bytesIndex += length;
 
-	@Override
-	public final Appendable append(CharSequence csq, int start, int end) throws IOException {
-		throw new UnsupportedOperationException("Implement me");
-	}
+        bufferLimit += length;
 
-	public final void write() throws IOException {
-		entity.writeTo(this);
+        continue;
+      }
 
-		int bufferRemaining;
-		bufferRemaining = outer.buffer.length - outer.bufferLimit;
+      if (bufferRemaining == 0) {
+        flush();
 
-		if (bufferRemaining > 0) {
-			flush();
-		}
+        continue;
+      }
 
-		flush();
-	}
+      throw new UnsupportedOperationException("Implement me");
+    }
+  }
 
-	private void flush() throws IOException {
-		Socket socket;
-		socket = outer.socket;
+  @Override
+  public final Appendable append(CharSequence csq, int start, int end) throws IOException {
+    throw new UnsupportedOperationException("Implement me");
+  }
 
-		OutputStream outputStream;
-		outputStream = socket.getOutputStream();
+  public final void write() throws IOException {
+    entity.writeTo(this);
 
-		int chunkLength;
-		chunkLength = outer.bufferLimit;
+    int bufferRemaining;
+    bufferRemaining = buffer.length - bufferLimit;
 
-		String lengthDigits;
-		lengthDigits = Integer.toHexString(chunkLength);
+    if (bufferRemaining > 0) {
+      flush();
+    }
 
-		byte[] lengthBytes;
-		lengthBytes = (lengthDigits + "\r\n").getBytes(StandardCharsets.UTF_8);
+    flush();
+  }
 
-		outputStream.write(lengthBytes, 0, lengthBytes.length);
+  private void flush() throws IOException {
+    OutputStream outputStream;
+    outputStream = socket.getOutputStream();
 
-		int bufferRemaining;
-		bufferRemaining = outer.buffer.length - outer.bufferLimit;
+    int chunkLength;
+    chunkLength = bufferLimit;
 
-		if (bufferRemaining >= 2) {
-			outer.buffer[outer.bufferLimit++] = Bytes.CR;
-			outer.buffer[outer.bufferLimit++] = Bytes.LF;
+    String lengthDigits;
+    lengthDigits = Integer.toHexString(chunkLength);
 
-			outputStream.write(outer.buffer, 0, outer.bufferLimit);
-		} else {
-			outputStream.write(outer.buffer, 0, outer.bufferLimit);
+    byte[] lengthBytes;
+    lengthBytes = (lengthDigits + "\r\n").getBytes(StandardCharsets.UTF_8);
 
-			outputStream.write(Bytes.CRLF);
-		}
+    outputStream.write(lengthBytes, 0, lengthBytes.length);
 
-		outer.bufferLimit = 0;
-	}
+    int bufferRemaining;
+    bufferRemaining = buffer.length - bufferLimit;
+
+    if (bufferRemaining >= 2) {
+      buffer[bufferLimit++] = Bytes.CR;
+      buffer[bufferLimit++] = Bytes.LF;
+
+      outputStream.write(buffer, 0, bufferLimit);
+    } else {
+      outputStream.write(buffer, 0, bufferLimit);
+
+      outputStream.write(Bytes.CRLF);
+    }
+
+    bufferLimit = 0;
+  }
 
 }

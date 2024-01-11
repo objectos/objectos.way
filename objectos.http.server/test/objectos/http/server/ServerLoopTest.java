@@ -72,6 +72,12 @@ public class ServerLoopTest {
       assertEquals(http.method(), Method.GET);
       assertEquals(path.is("/"), true);
 
+      UriQuery query;
+      query = http.query();
+
+      assertEquals(query.isEmpty(), true);
+      assertEquals(query.value(), "");
+
       // headers
       ServerRequestHeaders headers;
       headers = http.headers();
@@ -173,6 +179,12 @@ public class ServerLoopTest {
 
       assertEquals(http.method(), Method.GET);
       assertEquals(path.is("/login"), true);
+
+      UriQuery query;
+      query = http.query();
+
+      assertEquals(query.isEmpty(), true);
+      assertEquals(query.value(), "");
 
       // headers
       ServerRequestHeaders headers;
@@ -353,6 +365,12 @@ public class ServerLoopTest {
       assertEquals(http.method(), Method.GET);
       assertEquals(path.is("/index.html"), true);
 
+      UriQuery query;
+      query = http.query();
+
+      assertEquals(query.isEmpty(), true);
+      assertEquals(query.value(), "");
+
       // headers
       ServerRequestHeaders headers;
       headers = http.headers();
@@ -424,6 +442,12 @@ public class ServerLoopTest {
       assertEquals(http.method(), Method.GET);
       assertEquals(path.is("/atom.xml"), true);
 
+      UriQuery query;
+      query = http.query();
+
+      assertEquals(query.isEmpty(), true);
+      assertEquals(query.value(), "");
+
       // headers
       ServerRequestHeaders headers;
       headers = http.headers();
@@ -477,6 +501,57 @@ public class ServerLoopTest {
       http.parse();
 
       assertEquals(http.badRequest(), false);
+
+      // response phase
+
+      http.status(Status.NOT_FOUND);
+      http.header(HeaderName.CONNECTION, "close");
+      http.header(HeaderName.DATE, "Wed, 28 Jun 2023 12:08:43 GMT");
+      http.send();
+
+      http.commit();
+
+      assertEquals(socket.outputAsString(), resp01);
+
+      assertEquals(http.keepAlive(), false);
+    } catch (IOException e) {
+      throw new AssertionError("Failed with IOException", e);
+    }
+  }
+
+  @Test(description = """
+  Allow for query parameters
+  - happy path
+  """)
+  public void testCase007() {
+    TestableSocket socket;
+    socket = TestableSocket.of("""
+    GET /endpoint?foo=bar HTTP/1.1\r
+    Host: www.example.com\r
+    \r
+    """);
+
+    String resp01 = """
+    HTTP/1.1 404 NOT FOUND\r
+    Connection: close\r
+    Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+    \r
+    """;
+
+    try (ServerLoop http = ServerLoop.create(socket)) {
+      http.bufferSize(128, 128);
+      http.noteSink(TestingNoteSink.INSTANCE);
+
+      // request phase
+      http.parse();
+
+      assertEquals(http.badRequest(), false);
+
+      UriQuery query;
+      query = http.query();
+
+      assertEquals(query.value(), "foo=bar");
+      assertEquals(query.get("foo"), "bar");
 
       // response phase
 

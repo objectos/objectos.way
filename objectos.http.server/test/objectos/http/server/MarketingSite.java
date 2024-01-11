@@ -18,7 +18,9 @@ package objectos.http.server;
 import java.io.IOException;
 import java.net.Socket;
 import java.time.Clock;
+import java.util.List;
 import objectos.html.HtmlTemplate;
+import objectos.http.server.UriPath.Segment;
 import objectos.notes.Note1;
 import objectos.notes.NoteSink;
 
@@ -47,30 +49,43 @@ final class MarketingSite extends AbstractHttpModule implements Runnable {
 
   @Override
   public final void run() {
-    HttpExchange exchange;
-    exchange = HttpExchange.of(socket, HttpExchange.Option.noteSink(noteSink));
+    ServerLoop loop;
+    loop = ServerLoop.create(socket);
 
-    try (exchange) {
-      while (exchange.active()) {
-        handle(exchange);
+    loop.noteSink(noteSink);
+
+    try (loop) {
+      while (!Thread.currentThread().isInterrupted()) {
+        loop.parse();
+
+        if (loop.badRequest()) {
+          throw new UnsupportedOperationException("Implement me");
+        }
+
+        handle(loop);
+
+        loop.commit();
+
+        if (!loop.keepAlive()) {
+          break;
+        }
       }
     } catch (IOException e) {
       noteSink.send(IO_ERROR, e);
     }
   }
 
-  private static final Segment FILENAME = Segment.ofAny();
-
   @Override
   protected final void definition() {
-    if (matches(FILENAME)) {
+    List<Segment> segments;
+    segments = segments();
+
+    if (segments.size() == 1) {
       MarketingSiteRoot root;
       root = new MarketingSiteRoot(clock);
 
       root.handle(http);
-    }
-
-    else {
+    } else {
       notFound();
     }
   }
@@ -78,19 +93,22 @@ final class MarketingSite extends AbstractHttpModule implements Runnable {
 }
 
 final class MarketingSiteRoot extends AbstractHttpModule {
-  protected MarketingSiteRoot(Clock clock) {
+  MarketingSiteRoot(Clock clock) {
     super(clock);
   }
 
   @Override
   protected final void definition() {
+    Segment first;
+    first = segment(0);
+
     String fileName;
-    fileName = segment(0);
+    fileName = first.value();
 
     switch (fileName) {
       case "" -> movedPermanently("/index.html");
 
-      case "index.html" -> textHtml(MarketingSiteHome::new);
+      case "index.html" -> okTextHtml(MarketingSiteHome::new);
 
       default -> notFound();
     }

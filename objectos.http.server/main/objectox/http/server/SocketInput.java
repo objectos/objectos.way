@@ -306,8 +306,4 @@ class SocketInput {
     return new String(buffer, start, length, StandardCharsets.UTF_8);
   }
 
-  final HttpRequestPath createPath(int targetStart) {
-    return new HttpRequestPath(buffer, targetStart);
-  }
-
 }

@@ -38,6 +38,8 @@ public interface ServerExchange {
    */
   UriPath path();
 
+  UriQuery query();
+
   ServerRequestHeaders headers();
 
   /**

@@ -20,6 +20,7 @@ import static org.testng.Assert.assertNull;
 
 import java.io.IOException;
 import objectos.http.Method;
+import objectos.http.server.UriQuery;
 import org.testng.annotations.Test;
 
 public class ObjectoxRequestLineTest {
@@ -46,11 +47,60 @@ public class ObjectoxRequestLineTest {
 
     assertEquals(method, Method.GET);
 
-    // target
+    // path
     ObjectoxUriPath path;
     path = line.path;
 
     assertEquals(path.toString(), "/");
+
+    // query
+    UriQuery query;
+    query = line.query;
+
+    assertEquals(query.isEmpty(), true);
+
+    // version
+    assertEquals(line.versionMajor, 1);
+    assertEquals(line.versionMinor, 1);
+
+    // not bad request
+    assertNull(line.badRequest);
+  }
+
+  @Test(description = """
+  GET /endpoint?foo=bar HTTP/1.1
+  Host: www.example.com
+  """)
+  public void testCase007() throws IOException {
+    ObjectoxRequestLine line;
+    line = regularInput("""
+    GET /endpoint?foo=bar HTTP/1.1\r
+    Host: www.example.com\r
+    \r
+    """);
+
+    line.parse();
+
+    // method
+    Method method;
+    method = line.method;
+
+    assertEquals(method, Method.GET);
+
+    // path
+    ObjectoxUriPath path;
+    path = line.path;
+
+    assertEquals(path.toString(), "/endpoint");
+
+    // query
+    UriQuery query;
+    query = line.query;
+
+    assertEquals(query.isEmpty(), false);
+    assertEquals(query.get("foo"), "bar");
+    assertEquals(query.get("x"), null);
+    assertEquals(query.value(), "foo=bar");
 
     // version
     assertEquals(line.versionMajor, 1);

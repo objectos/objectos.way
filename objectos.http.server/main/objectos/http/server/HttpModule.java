@@ -17,6 +17,6 @@ package objectos.http.server;
 
 public interface HttpModule {
 
-  void handle(HttpExchange exchange);
+  void handle(ServerExchange exchange);
 
 }

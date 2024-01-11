@@ -9,182 +9,150 @@
  */
 package objectos.http.server;
 
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.nio.charset.StandardCharsets;
 import java.time.Clock;
 import java.time.ZonedDateTime;
+import java.util.List;
+import java.util.function.Supplier;
 import objectos.html.HtmlTemplate;
+import objectos.http.HeaderName;
 import objectos.http.Http;
-import objectos.http.Http.Method;
-import objectos.http.Http.Status;
+import objectos.http.Method;
+import objectos.http.Status;
+import objectos.http.server.UriPath.Segment;
 
 public abstract class AbstractHttpModule implements HttpModule {
 
-	protected final Clock clock;
+  protected final Clock clock;
 
-	protected HttpExchange http;
+  protected ServerExchange http;
 
-	protected AbstractHttpModule(Clock clock) {
-		this.clock = clock;
-	}
+  protected AbstractHttpModule(Clock clock) {
+    this.clock = clock;
+  }
 
-	@Override
-	public final void handle(HttpExchange http) {
-		this.http = http;
+  @Override
+  public final void handle(ServerExchange http) {
+    this.http = http;
 
-		try {
-			definition();
-		} finally {
-			this.http = null;
-		}
-	}
+    try {
+      definition();
+    } finally {
+      this.http = null;
+    }
+  }
 
-	protected abstract void definition();
+  protected abstract void definition();
 
-	protected final void ifGetOrHead() {
-		if (!http.methodIn(Method.GET, Method.HEAD)) {
-			methodNotAllowed();
-		}
-	}
+  protected final Segment segment(int index) {
+    List<Segment> segments;
+    segments = segments();
 
-	protected final boolean matches(Segment pat1) {
-		return http.matches(pat1);
-	}
+    return segments.get(index);
+  }
 
-	protected final String segment(int index) {
-		return http.segment(index);
-	}
+  protected final List<Segment> segments() {
+    UriPath path;
+    path = http.path();
 
-	// 200
+    return path.segments();
+  }
 
-	protected final void send(String contentType, Factory<?> factory) {
-		switch (http.method()) {
-			case GET -> sendGet(contentType, factory);
+  // 200 OK
 
-			case HEAD -> sendHead(contentType, factory);
+  protected final void okTextHtml(Supplier<HtmlTemplate> factory) {
+    Method method;
+    method = http.method();
 
-			default -> methodNotAllowed();
-		}
-	}
+    if (method.is(Method.GET)) {
+      HtmlTemplate tmpl;
+      tmpl = factory.get();
 
-	private void sendGet(String contentType, Factory<?> factory) {
-		try {
-			sendGetUnchecked(contentType, factory);
-		} catch (IOException e) {
-			internalServerError(e);
-		}
-	}
+      String s;
+      s = tmpl.toString();
 
-	private void sendGetUnchecked(String contentType, Factory<?> factory) throws IOException {
-		Object o;
-		o = factory.create();
+      byte[] bytes;
+      bytes = s.getBytes(StandardCharsets.UTF_8);
 
-		byte[] data;
+      http.status(Status.OK);
 
-		if (o instanceof byte[] bytes) {
-			data = bytes;
-		} else {
-			String s;
-			s = o.toString();
+      http.header(HeaderName.CONTENT_LENGTH, bytes.length);
 
-			data = s.getBytes(StandardCharsets.UTF_8);
-		}
+      http.header(HeaderName.CONTENT_TYPE, "text/html; charset=utf-8");
 
-		http.status(Status.OK_200);
+      dateNow();
 
-		http.header(Http.Header.CONTENT_LENGTH, Integer.toString(data.length));
+      http.send(bytes);
+    }
 
-		http.header(Http.Header.CONTENT_TYPE, contentType);
+    else if (method.is(Method.HEAD)) {
+      http.status(Status.OK);
 
-		dateNow();
+      http.header(HeaderName.CONTENT_TYPE, "text/html; charset=utf-8");
 
-		http.body(data);
-	}
+      dateNow();
 
-	private void sendHead(String contentType, Factory<?> factory) {
-		try {
-			sendGetUnchecked(contentType, factory);
+      http.send();
+    }
 
-			http.bodyClear();
-		} catch (IOException e) {
-			internalServerError(e);
-		}
-	}
+    else {
+      methodNotAllowed();
+    }
+  }
 
-	// 200 text/html
+  // 301 MOVED PERMANENTLY
 
-	protected final void textHtml(Factory<HtmlTemplate> factory) {
-		send("text/html; charset=utf-8", factory);
-	}
+  protected final void movedPermanently(String location) {
+    Method method;
+    method = http.method();
 
-	// 301
+    if (method.is(Method.GET, Method.HEAD)) {
+      http.status(Status.MOVED_PERMANENTLY);
 
-	protected final void movedPermanently(String location) {
-		http.status(Status.MOVED_PERMANENTLY_301);
+      http.header(HeaderName.LOCATION, location);
 
-		http.header(Http.Header.LOCATION, location);
+      dateNow();
 
-		dateNow();
-	}
+      http.send();
+    }
 
-	// 404
+    else {
+      methodNotAllowed();
+    }
+  }
 
-	protected final void notFound() {
-		http.status(Status.NOT_FOUND_404);
+  // 404 NOT FOUND
 
-		http.header(Http.Header.CONNECTION, "close");
+  protected final void notFound() {
+    http.status(Status.NOT_FOUND);
 
-		dateNow();
-	}
+    http.header(HeaderName.CONNECTION, "close");
 
-	// 405
+    dateNow();
 
-	protected final void methodNotAllowed() {
-		http.status(Status.METHOD_NOT_ALLOWED_405);
+    http.send();
+  }
 
-		http.header(Http.Header.CONNECTION, "close");
+  // 405 METHOD NOT ALLOWED
 
-		dateNow();
-	}
+  protected final void methodNotAllowed() {
+    http.status(Status.METHOD_NOT_ALLOWED);
 
-	// 500
+    http.header(HeaderName.CONNECTION, "close");
 
-	protected final void internalServerError(Throwable t) {
-		StringWriter sw;
-		sw = new StringWriter();
+    dateNow();
 
-		PrintWriter pw;
-		pw = new PrintWriter(sw);
+    http.send();
+  }
 
-		t.printStackTrace(pw);
+  private void dateNow() {
+    ZonedDateTime now;
+    now = ZonedDateTime.now(clock);
 
-		String msg;
-		msg = sw.toString();
+    String date;
+    date = Http.formatDate(now);
 
-		byte[] bytes;
-		bytes = msg.getBytes();
-
-		http.status(Status.INTERNAL_SERVER_ERROR_500);
-
-		http.header(Http.Header.CONTENT_LENGTH, Long.toString(bytes.length));
-
-		http.header(Http.Header.CONTENT_TYPE, "text/plain");
-
-		dateNow();
-
-		http.body(bytes);
-	}
-
-	private void dateNow() {
-		ZonedDateTime now;
-		now = ZonedDateTime.now(clock);
-
-		String formatted;
-		formatted = Http.formatDate(now);
-
-		http.header(Http.Header.DATE, formatted);
-	}
+    http.header(HeaderName.DATE, date);
+  }
 
 }

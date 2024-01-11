@@ -27,57 +27,57 @@ import objectos.notes.NoteSink;
 
 final class TestingServer extends Thread {
 
-	private final NoteSink noteSink;
+  private final NoteSink noteSink;
 
-	private final ServerSocket serverSocket;
+  private final ServerSocket serverSocket;
 
-	private final SocketTaskFactory taskFactory;
+  private final SocketTaskFactory taskFactory;
 
-	public TestingServer(NoteSink noteSink, ServerSocket serverSocket, SocketTaskFactory taskFactory) {
-		this.noteSink = noteSink;
+  public TestingServer(NoteSink noteSink, ServerSocket serverSocket, SocketTaskFactory taskFactory) {
+    this.noteSink = noteSink;
 
-		this.serverSocket = serverSocket;
+    this.serverSocket = serverSocket;
 
-		this.taskFactory = taskFactory;
-	}
+    this.taskFactory = taskFactory;
+  }
 
-	@Override
-	public final void run() {
-		synchronized (taskFactory) {
-			taskFactory.notifyAll();
-		}
+  @Override
+  public final void run() {
+    synchronized (taskFactory) {
+      taskFactory.notifyAll();
+    }
 
-		Note1<ServerSocket> startNote;
-		startNote = Note1.info(getClass(), "Start");
+    Note1<ServerSocket> startNote;
+    startNote = Note1.info(getClass(), "Start");
 
-		noteSink.send(startNote, serverSocket);
+    noteSink.send(startNote, serverSocket);
 
-		try (serverSocket) {
-			ThreadFactory factory;
-			factory = Thread.ofVirtual().name("http-", 1).factory();
+    try (serverSocket) {
+      ThreadFactory factory;
+      factory = Thread.ofVirtual().name("http-", 1).factory();
 
-			try (ExecutorService executor = Executors.newThreadPerTaskExecutor(factory)) {
-				while (!isInterrupted()) {
-					Socket socket;
-					socket = serverSocket.accept();
+      try (ExecutorService executor = Executors.newThreadPerTaskExecutor(factory)) {
+        while (!isInterrupted()) {
+          Socket socket;
+          socket = serverSocket.accept();
 
-					Runnable task;
-					task = taskFactory.createTask(socket);
+          Runnable task;
+          task = taskFactory.createTask(socket);
 
-					executor.submit(task);
-				}
-			}
-		} catch (IOException e) {
-			Note1<IOException> errorNote;
-			errorNote = Note1.info(getClass(), "I/O error");
+          executor.submit(task);
+        }
+      }
+    } catch (IOException e) {
+      Note1<IOException> errorNote;
+      errorNote = Note1.info(getClass(), "I/O error");
 
-			noteSink.send(errorNote, e);
-		}
+      noteSink.send(errorNote, e);
+    }
 
-		Note0 stopNote;
-		stopNote = Note0.info(getClass(), "Stop");
+    Note0 stopNote;
+    stopNote = Note0.info(getClass(), "Stop");
 
-		noteSink.send(stopNote);
-	}
+    noteSink.send(stopNote);
+  }
 
 }

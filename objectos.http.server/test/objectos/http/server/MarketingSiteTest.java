@@ -153,7 +153,6 @@ public class MarketingSiteTest implements SocketTaskFactory {
 
       resp(socket, """
           HTTP/1.1 200 OK<CRLF>
-          Content-Length: 30<CRLF>
           Content-Type: text/html; charset=utf-8<CRLF>
           Date: Fri, 10 Nov 2023 10:43:00 GMT<CRLF>
           <CRLF>

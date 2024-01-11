@@ -83,13 +83,10 @@ public class ObjectoxUriQueryTest {
   }
 
   private ObjectoxUriQuery queryOf(String q) {
-    byte[] bytes;
-    bytes = Bytes.utf8(q);
-
     ObjectoxUriQuery query;
-    query = new ObjectoxUriQuery(bytes, 0);
+    query = new ObjectoxUriQuery();
 
-    query.end(bytes.length);
+    query.set(q);
 
     return query;
   }
