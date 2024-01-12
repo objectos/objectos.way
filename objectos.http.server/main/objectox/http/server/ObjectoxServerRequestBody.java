@@ -15,14 +15,75 @@
  */
 package objectox.http.server;
 
+import java.io.EOFException;
+import java.io.IOException;
 import java.io.InputStream;
+import objectos.http.HeaderName;
 import objectos.http.server.Body;
 
-public class ObjectoxServerRequestBody implements Body {
+class ObjectoxServerRequestBody extends ObjectoxServerRequestHeaders implements Body {
+
+  private enum Kind {
+    EMPTY,
+
+    IN_BUFFER;
+  }
+
+  private Kind kind = Kind.EMPTY;
+
+  ObjectoxServerRequestBody() {}
 
   @Override
   public final InputStream openStream() {
-    throw new UnsupportedOperationException("Implement me");
+    return switch (kind) {
+      case EMPTY -> InputStream.nullInputStream();
+
+      case IN_BUFFER -> openStreamImpl();
+    };
+  }
+
+  final void resetRequestBody() {
+    kind = Kind.EMPTY;
+  }
+
+  final void parseRequestBody() throws IOException {
+    ObjectoxHeader contentLength;
+    contentLength = headerUnchecked(HeaderName.CONTENT_LENGTH);
+
+    if (contentLength != null) {
+      long value;
+      value = contentLength.unsignedLongValue();
+
+      if (value < 0) {
+        badRequest = BadRequestReason.INVALID_HEADER;
+
+        return;
+      }
+
+      if (!canBuffer(value)) {
+        throw new UnsupportedOperationException(
+            "Implement me :: persist request body to file"
+        );
+      }
+
+      int read;
+      read = read(value);
+
+      if (read < 0) {
+        throw new EOFException();
+      }
+
+      kind = Kind.IN_BUFFER;
+
+      return;
+    }
+
+    ObjectoxHeader transferEncoding;
+    transferEncoding = headerUnchecked(HeaderName.TRANSFER_ENCODING);
+
+    if (transferEncoding != null) {
+      throw new UnsupportedOperationException("Implement me");
+    }
   }
 
 }

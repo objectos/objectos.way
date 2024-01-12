@@ -25,11 +25,7 @@ import objectos.http.server.ServerRequestHeaders;
 import objectos.lang.object.Check;
 import objectox.http.ObjectoxHeaderName;
 
-public final class ObjectoxServerRequestHeaders implements ServerRequestHeaders {
-
-  private final SocketInput input;
-
-  BadRequestReason badRequest;
+class ObjectoxServerRequestHeaders extends ObjectoxRequestLine implements ServerRequestHeaders {
 
   HeaderName headerName;
 
@@ -39,28 +35,7 @@ public final class ObjectoxServerRequestHeaders implements ServerRequestHeaders 
 
   Map<HeaderName, ObjectoxHeader> unknownHeaders;
 
-  public ObjectoxServerRequestHeaders(SocketInput input) {
-    this.input = input;
-  }
-
-  public final void reset() {
-    badRequest = null;
-
-    headerName = null;
-
-    if (standardHeaders != null) {
-      // in theory reset will only be called in case of a successful parse
-      // so, in theory, this null check is not necessary
-      // but we do it anyways... just to be safe...
-      standardHeadersCount = 0;
-
-      Arrays.fill(standardHeaders, null);
-    }
-
-    if (unknownHeaders != null) {
-      unknownHeaders.clear();
-    }
-  }
+  ObjectoxServerRequestHeaders() {}
 
   // public API
 
@@ -121,18 +96,7 @@ public final class ObjectoxServerRequestHeaders implements ServerRequestHeaders 
 
   // unchecked API
 
-  public final boolean containsUnchecked(HeaderName name) {
-    if (standardHeaders == null) {
-      return false;
-    }
-
-    int index;
-    index = name.index();
-
-    return standardHeaders[index] != null;
-  }
-
-  public final ObjectoxHeader getUnchecked(HeaderName name) {
+  final ObjectoxHeader headerUnchecked(HeaderName name) {
     if (standardHeaders == null) {
       return null;
     } else {
@@ -145,10 +109,24 @@ public final class ObjectoxServerRequestHeaders implements ServerRequestHeaders 
 
   // Internal
 
-  public final void parse() throws IOException {
-    input.parseLine();
+  final void resetHeaders() {
+    headerName = null;
 
-    while (!input.consumeIfEmptyLine()) {
+    if (standardHeaders != null) {
+      Arrays.fill(standardHeaders, null);
+    }
+
+    standardHeadersCount = 0;
+
+    if (unknownHeaders != null) {
+      unknownHeaders.clear();
+    }
+  }
+
+  final void parseHeaders() throws IOException {
+    parseLine();
+
+    while (!consumeIfEmptyLine()) {
       parseStandardHeaderName();
 
       if (badRequest != null) {
@@ -165,7 +143,7 @@ public final class ObjectoxServerRequestHeaders implements ServerRequestHeaders 
 
       parseHeaderValue();
 
-      input.parseLine();
+      parseLine();
     }
 
     // clear last header name just in case
@@ -178,14 +156,14 @@ public final class ObjectoxServerRequestHeaders implements ServerRequestHeaders 
     headerName = null;
 
     // we will use the first char as hash code
-    if (!input.hasNext()) {
+    if (bufferIndex >= lineLimit) {
       badRequest = BadRequestReason.INVALID_HEADER;
 
       return;
     }
 
     final byte first;
-    first = input.peek();
+    first = buffer[bufferIndex];
 
     // ad hoc hash map
 
@@ -248,13 +226,13 @@ public final class ObjectoxServerRequestHeaders implements ServerRequestHeaders 
     final byte[] candidateBytes;
     candidateBytes = STD_HEADER_NAME_BYTES[index];
 
-    if (!input.matches(candidateBytes)) {
+    if (!matches(candidateBytes)) {
       // does not match -> try next
 
       return;
     }
 
-    if (!input.hasNext()) {
+    if (bufferIndex >= lineLimit) {
       // matches but reached end of line -> bad request
 
       badRequest = BadRequestReason.INVALID_HEADER;
@@ -263,7 +241,7 @@ public final class ObjectoxServerRequestHeaders implements ServerRequestHeaders 
     }
 
     byte maybeColon;
-    maybeColon = input.next();
+    maybeColon = buffer[bufferIndex++];
 
     if (maybeColon != Bytes.COLON) {
       // matches but is not followed by a colon character
@@ -301,10 +279,10 @@ public final class ObjectoxServerRequestHeaders implements ServerRequestHeaders 
 
   private void parseUnknownHeaderName() {
     int startIndex;
-    startIndex = input.index();
+    startIndex = bufferIndex;
 
     int colonIndex;
-    colonIndex = input.indexOf(Bytes.COLON);
+    colonIndex = indexOf(Bytes.COLON);
 
     if (colonIndex < 0) {
       // no colon found
@@ -321,14 +299,26 @@ public final class ObjectoxServerRequestHeaders implements ServerRequestHeaders 
     }
 
     String name;
-    name = input.getString(startIndex, colonIndex);
+    name = bufferToString(startIndex, colonIndex);
 
     headerName = HeaderName.create(name);
 
-    input.setAndNext(colonIndex);
+    // resume immediately after the colon
+    bufferIndex = colonIndex + 1;
   }
 
   private void parseHeaderValue() {
+    int startIndex;
+    startIndex = parseHeaderValueStart();
+
+    int endIndex;
+    endIndex = parseHeaderValueEnd();
+
+    if (startIndex > endIndex) {
+      // value has negative length... is it possible?
+      throw new UnsupportedOperationException("Implement me");
+    }
+
     int index;
     index = headerName.index();
 
@@ -344,13 +334,11 @@ public final class ObjectoxServerRequestHeaders implements ServerRequestHeaders 
       header = standardHeaders[index];
 
       if (header == null) {
-        header = new ObjectoxHeader(input, headerName);
-
-        header.parseValue();
+        header = new ObjectoxHeader(headerName, this, startIndex, endIndex);
 
         standardHeadersCount++;
       } else {
-        header = header.parseAdditionalValue();
+        header = header.add(startIndex, endIndex);
       }
 
       standardHeaders[index] = header;
@@ -366,15 +354,52 @@ public final class ObjectoxServerRequestHeaders implements ServerRequestHeaders 
       header = unknownHeaders.get(name);
 
       if (header == null) {
-        header = new ObjectoxHeader(input, name);
-
-        header.parseValue();
+        header = new ObjectoxHeader(headerName, this, startIndex, endIndex);
       } else {
-        header = header.parseAdditionalValue();
+        header = header.add(startIndex, endIndex);
       }
 
       unknownHeaders.put(name, header);
     }
+  }
+
+  private int parseHeaderValueStart() {
+    // consumes and discard a single leading OWS if present
+    byte maybeOws;
+    maybeOws = buffer[bufferIndex];
+
+    if (Bytes.isOptionalWhitespace(maybeOws)) {
+      // consume and discard leading OWS
+      bufferIndex++;
+    }
+
+    return bufferIndex;
+  }
+
+  private int parseHeaderValueEnd() {
+    int end;
+    end = lineLimit;
+
+    byte maybeCR;
+    maybeCR = buffer[end - 1];
+
+    if (maybeCR == Bytes.CR) {
+      // value ends at the CR of the line end CRLF
+      end = end - 1;
+    }
+
+    byte maybeOWS;
+    maybeOWS = buffer[end - 1];
+
+    if (Bytes.isOptionalWhitespace(maybeOWS)) {
+      // value ends at the trailing OWS
+      end = end - 1;
+    }
+
+    // resume immediately after lineLimite
+    bufferIndex = lineLimit + 1;
+
+    return end;
   }
 
 }

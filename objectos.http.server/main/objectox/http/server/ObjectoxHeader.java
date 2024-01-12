@@ -19,27 +19,33 @@ import objectos.http.HeaderName;
 
 class ObjectoxHeader {
 
+  final HeaderName name;
+
   final SocketInput input;
 
-  final HeaderName name;
+  final int start;
+
+  final int end;
 
   String value;
 
-  int valueStart;
+  public ObjectoxHeader(HeaderName name, SocketInput input, int start, int end) {
+    this.name = name;
 
-  int valueEnd;
-
-  public ObjectoxHeader(SocketInput input, HeaderName name) {
     this.input = input;
 
-    this.name = name;
+    this.start = start;
+
+    this.end = end;
   }
 
-  // API
+  public final ObjectoxHeader add(int startIndex, int endIndex) {
+    throw new UnsupportedOperationException("Implement me");
+  }
 
   public final boolean contentEquals(byte[] that) {
     int thisLength;
-    thisLength = valueEnd - valueStart;
+    thisLength = end - start;
 
     if (thisLength != that.length) {
       return false;
@@ -47,7 +53,7 @@ class ObjectoxHeader {
 
     for (int offset = 0; offset < thisLength; offset++) {
       byte ch;
-      ch = input.get(valueStart + offset);
+      ch = input.get(start + offset);
 
       byte thisLow;
       thisLow = Bytes.toLowerCase(ch);
@@ -65,78 +71,46 @@ class ObjectoxHeader {
 
   public final String get() {
     if (value == null) {
-      value = input.getString(valueStart, valueEnd);
+      value = input.bufferToString(start, end);
     }
 
     return value;
   }
 
-  public final void parseValue() {
-    parseStart();
+  public final long unsignedLongValue() {
+    int thisLength;
+    thisLength = end - start;
 
-    parseEnd();
-  }
+    if (thisLength > 19) {
+      // larger than max long positive value
 
-  public final ObjectoxHeader parseAdditionalValue() {
-    throw new UnsupportedOperationException("Implement me");
-  }
-
-  final void parseStart() {
-    // assume value starts @ current index
-    int start;
-    start = input.index();
-
-    if (!input.hasNext()) {
-      throw new UnsupportedOperationException(
-          "Implement me :: empty value?"
-      );
+      return Long.MIN_VALUE;
     }
 
-    // consumes and discard a single leading OWS if present
-    byte maybeOws;
-    maybeOws = input.peek();
+    long result;
+    result = 0;
 
-    if (Bytes.isOptionalWhitespace(maybeOws)) {
-      // consume and discard leading OWS
-      start += 1;
+    for (int i = start; i < end; i++) {
+      byte d;
+      d = input.get(i);
 
-      input.set(start);
+      if (!Bytes.isDigit(d)) {
+        return Long.MIN_VALUE;
+      }
+
+      result *= 10;
+
+      long l;
+      l = (long) d & 0xF;
+
+      result += l;
     }
 
-    valueStart = start;
-  }
-
-  final void parseEnd() {
-    int lineLimit;
-    lineLimit = input.lineLimit();
-
-    int end;
-    end = lineLimit;
-
-    byte maybeCR;
-    maybeCR = input.get(end - 1);
-
-    if (maybeCR == Bytes.CR) {
-      // value ends at the CR of the line end CRLF
-      end = end - 1;
+    if (result < 0) {
+      return Long.MIN_VALUE;
     }
 
-    byte maybeOWS;
-    maybeOWS = input.get(end - 1);
-
-    if (Bytes.isOptionalWhitespace(maybeOWS)) {
-      // value ends at the trailing OWS
-      end = end - 1;
-    }
-
-    if (valueStart > end) {
-      // value has negative length... is it possible?
-      throw new UnsupportedOperationException("Implement me");
-    }
-
-    valueEnd = end;
-
-    input.set(lineLimit + 1);
+    return result;
   }
 
 }

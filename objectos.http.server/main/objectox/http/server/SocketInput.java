@@ -15,6 +15,7 @@
  */
 package objectox.http.server;
 
+import java.io.ByteArrayInputStream;
 import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -28,30 +29,18 @@ class SocketInput {
 
   byte[] buffer;
 
-  private InputStream inputStream;
+  int bufferIndex;
 
   // also serve as initialBufferSize
-  private int bufferLimit = 1024;
+  int bufferLimit = 1024;
 
-  int cursor;
+  private InputStream inputStream;
 
-  private int lineLimit;
+  int lineLimit;
 
   private int maxBufferSize = 4096;
 
   public SocketInput() {
-
-  }
-
-  SocketInput(int bufferSize, InputStream inputStream) {
-    int actualSize;
-    actualSize = powerOfTwo(bufferSize);
-
-    this.buffer = new byte[actualSize];
-
-    this.bufferLimit = 0;
-
-    this.inputStream = inputStream;
   }
 
   static final int powerOfTwo(int size) {
@@ -78,16 +67,14 @@ class SocketInput {
   }
 
   public void bufferSize(int initial, int max) {
-    Check.argument(initial >= 128, "initial size must be >= 128");
-    Check.argument(max >= 128, "max size must be >= 128");
-    Check.argument(max >= initial, "max size must be >= initial size");
-
     bufferLimit = powerOfTwo(initial);
 
     this.maxBufferSize = powerOfTwo(max);
   }
 
   final void initSocketInput(InputStream inputStream) {
+    Check.state(buffer == null, "SocketInit already initialized");
+
     buffer = new byte[bufferLimit];
 
     this.inputStream = inputStream;
@@ -95,17 +82,17 @@ class SocketInput {
     resetSocketInput();
   }
 
-  public final void resetSocketInput() {
+  final void resetSocketInput() {
     bufferLimit = 0;
 
-    cursor = 0;
+    bufferIndex = 0;
 
     lineLimit = 0;
   }
 
-  public final void parseLine() throws IOException {
+  final void parseLine() throws IOException {
     int startIndex;
-    startIndex = cursor;
+    startIndex = bufferIndex;
 
     byte needle;
     needle = Bytes.LF;
@@ -157,27 +144,12 @@ class SocketInput {
     }
   }
 
-  public final boolean hasNext() {
-    return cursor < lineLimit;
-  }
-
-  public final boolean hasNext(int count) {
-    int requiredIndex;
-    requiredIndex = cursor + count - 1;
-
-    return requiredIndex < lineLimit;
-  }
-
-  public final byte peek() {
-    return buffer[cursor];
-  }
-
-  public final boolean matches(byte[] bytes) {
+  final boolean matches(byte[] bytes) {
     int length;
     length = bytes.length;
 
     int toIndex;
-    toIndex = cursor + length;
+    toIndex = bufferIndex + length;
 
     if (toIndex >= lineLimit) {
       // outside of line...
@@ -186,12 +158,12 @@ class SocketInput {
 
     boolean matches;
     matches = Arrays.equals(
-        buffer, cursor, toIndex,
+        buffer, bufferIndex, toIndex,
         bytes, 0, length
     );
 
     if (matches) {
-      cursor += length;
+      bufferIndex += length;
 
       return true;
     } else {
@@ -199,12 +171,8 @@ class SocketInput {
     }
   }
 
-  public final int index() {
-    return cursor;
-  }
-
-  public final int indexOf(byte needle) {
-    for (int i = cursor; i < bufferLimit; i++) {
+  final int indexOf(byte needle) {
+    for (int i = bufferIndex; i < bufferLimit; i++) {
       byte maybe;
       maybe = buffer[i];
 
@@ -216,8 +184,8 @@ class SocketInput {
     return -1;
   }
 
-  public final int indexOf(byte needleA, byte needleB) {
-    for (int i = cursor; i < bufferLimit; i++) {
+  final int indexOf(byte needleA, byte needleB) {
+    for (int i = bufferIndex; i < bufferLimit; i++) {
       byte maybe;
       maybe = buffer[i];
 
@@ -233,52 +201,49 @@ class SocketInput {
     return -1;
   }
 
-  public final byte setAndNext(int index) {
-    cursor = index;
-
-    return next();
-  }
-
-  public final byte next() {
-    return buffer[cursor++];
-  }
-
-  public final boolean consumeIfEndOfLine() {
-    if (cursor < lineLimit) {
+  final boolean consumeIfEndOfLine() {
+    if (bufferIndex < lineLimit) {
       byte next;
-      next = next();
+      next = buffer[bufferIndex++];
 
       if (next != Bytes.CR) {
         return false;
       }
     }
 
-    if (cursor != lineLimit) {
+    if (bufferIndex != lineLimit) {
       return false;
     }
 
     // index immediately after LF
-    cursor++;
+    bufferIndex++;
 
     return true;
   }
 
-  public final boolean consumeIfEmptyLine() {
+  final String bufferToString(int start, int end) {
     int length;
-    length = lineLimit - cursor;
+    length = end - start;
+
+    return new String(buffer, start, length, StandardCharsets.UTF_8);
+  }
+
+  final boolean consumeIfEmptyLine() {
+    int length;
+    length = lineLimit - bufferIndex;
 
     if (length == 0) {
-      cursor++;
+      bufferIndex++;
 
       return true;
     }
 
     if (length == 1) {
       byte cr;
-      cr = peek();
+      cr = buffer[bufferIndex];
 
       if (cr == Bytes.CR) {
-        cursor += 2;
+        bufferIndex += 2;
 
         return true;
       }
@@ -287,23 +252,71 @@ class SocketInput {
     return false;
   }
 
-  public final int lineLimit() {
-    return lineLimit;
-  }
-
-  public final byte get(int index) {
+  final byte get(int index) {
     return buffer[index];
   }
 
-  public final void set(int value) {
-    cursor = value;
+  final boolean canBuffer(long contentLength) {
+    int maxAvailable;
+    maxAvailable = maxBufferSize - bufferIndex;
+
+    return maxAvailable >= contentLength;
   }
 
-  public final String getString(int start, int end) {
-    int length;
-    length = end - start;
+  final int read(long contentLength) throws IOException {
+    // unread bytes in buffer
+    int unread;
+    unread = bufferLimit - bufferIndex;
 
-    return new String(buffer, start, length, StandardCharsets.UTF_8);
+    if (unread >= contentLength) {
+      // everything is in the buffer already -> do not read
+
+      return 0;
+    }
+
+    // we assume canBuffer was invoked before this method...
+    // i.e. max buffer size can hold everything
+    int length;
+    length = (int) contentLength;
+
+    int requiredBufferLength;
+    requiredBufferLength = bufferIndex + length;
+
+    // must we increase our buffer?
+
+    if (requiredBufferLength > buffer.length) {
+      int newLength;
+      newLength = powerOfTwo(requiredBufferLength);
+
+      buffer = Arrays.copyOf(buffer, newLength);
+    }
+
+    // how many bytes must we read
+
+    int mustReadCount;
+    mustReadCount = length - unread;
+
+    while (mustReadCount > 0) {
+      int read;
+      read = inputStream.read(buffer, bufferLimit, mustReadCount);
+
+      if (read < 0) {
+        return -1;
+      }
+
+      bufferLimit += read;
+
+      mustReadCount -= read;
+    }
+
+    return length;
+  }
+
+  final InputStream openStreamImpl() {
+    int length;
+    length = bufferLimit - bufferIndex;
+
+    return new ByteArrayInputStream(buffer, bufferIndex, length);
   }
 
 }

@@ -22,26 +22,6 @@ import objectox.http.StandardCookies;
 
 public sealed interface Cookies permits EmptyCookies, StandardCookies {
 
-  static Cookies parse(HeaderValue value) {
-    Objects.requireNonNull(value, "value == null");
-
-    if (value == HeaderValue.NULL) {
-      return EmptyCookies.INSTANCE;
-    }
-
-    String s;
-    s = value.toString();
-
-    if (s.isBlank()) {
-      return EmptyCookies.INSTANCE;
-    }
-
-    CookiesParser parser;
-    parser = new CookiesParser(s);
-
-    return parser.parse();
-  }
-
   static Cookies parse(String s) {
     Objects.requireNonNull(s, "s == null");
 

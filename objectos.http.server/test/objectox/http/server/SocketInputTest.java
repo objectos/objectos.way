@@ -43,30 +43,51 @@ public class SocketInputTest {
     // first line
     input.parseLine();
 
-    assertEquals(input.hasNext(), true);
-    assertEquals(input.peek(), 'G');
+    assertEquals(hasNext(input), true);
+    assertEquals(peek(input), 'G');
     assertEquals(input.matches(ObjectoxRequestLine.STD_METHOD_BYTES[Method.GET.index()]), true);
-    assertEquals(input.peek(), '/');
-    assertEquals(input.index(), 4);
+    assertEquals(peek(input), '/');
+    assertEquals(input.bufferIndex, 4);
     assertEquals(input.indexOf(Bytes.QUESTION_MARK, Bytes.SP), 5);
-    assertEquals(input.setAndNext(5), Bytes.SP);
+    input.bufferIndex = 5;
+    assertEquals(next(input), Bytes.SP);
     assertEquals(input.matches(ObjectoxRequestLine.HTTP_VERSION_PREFIX), true);
-    assertEquals(input.hasNext(3), true);
-    assertEquals(input.next(), '1');
-    assertEquals(input.next(), '.');
-    assertEquals(input.next(), '1');
+    assertEquals(hasNext(input, 3), true);
+    assertEquals(next(input), '1');
+    assertEquals(next(input), '.');
+    assertEquals(next(input), '1');
     assertEquals(input.consumeIfEndOfLine(), true);
 
     // second line
     input.parseLine();
 
-    assertEquals(input.index(), 16);
+    assertEquals(input.bufferIndex, 16);
     assertEquals(input.consumeIfEmptyLine(), false);
     byte[] host;
     host = ObjectoxServerRequestHeaders.STD_HEADER_NAME_BYTES[HeaderName.HOST.index()];
     assertEquals(input.matches(host), true);
-    assertEquals(input.hasNext(), true);
-    assertEquals(input.next(), ':');
+    assertEquals(hasNext(input), true);
+    assertEquals(next(input), ':');
+  }
+
+  @Test(description = "Support for request body parsing")
+  public void testCase008() throws IOException {
+    String body;
+    body = "email=user%40example.com";
+
+    SocketInput input;
+    input = regularInput(body);
+
+    long contentLength;
+    contentLength = 24;
+
+    assertEquals(input.canBuffer(contentLength), true);
+
+    int read;
+    read = input.read(24);
+
+    assertEquals(read, 24);
+    assertEquals(input.bufferToString(0, 24), body);
   }
 
   @Test(description = "Line is larger than initial buffer size")
@@ -76,22 +97,28 @@ public class SocketInputTest {
 
     assertEquals(line.length(), 42);
 
+    SocketInput input;
+    input = new SocketInput();
+
+    input.bufferSize(32, 128);
+
     TestableInputStream inputStream;
     inputStream = TestableInputStream.of(line);
 
-    SocketInput input;
-    input = new SocketInput(32, inputStream);
+    input.initSocketInput(inputStream);
 
     input.parseLine();
 
-    StringBuilder res;
-    res = new StringBuilder();
+    StringBuilder sb;
+    sb = new StringBuilder();
 
-    while (input.hasNext()) {
-      res.append((char) input.next());
+    while (hasNext(input)) {
+      sb.append((char) next(input));
     }
 
-    assertEquals(res.toString(), "GET /abcdefghijklmnopqrstuvwxyz HTTP/1.1\r");
+    String res = sb.toString();
+
+    assertEquals(res, "GET /abcdefghijklmnopqrstuvwxyz HTTP/1.1\r");
   }
 
   @Test
@@ -107,11 +134,34 @@ public class SocketInputTest {
     assertEquals(SocketInput.powerOfTwo(16385), 16384);
   }
 
-  private SocketInput regularInput(Object... data) throws IOException {
+  private boolean hasNext(SocketInput input) {
+    return input.bufferIndex < input.lineLimit;
+  }
+
+  private boolean hasNext(SocketInput input, int count) {
+    return input.bufferIndex + count - 1 < input.lineLimit;
+  }
+
+  private byte next(SocketInput input) {
+    return input.buffer[input.bufferIndex++];
+  }
+
+  private byte peek(SocketInput input) {
+    return input.buffer[input.bufferIndex];
+  }
+
+  private SocketInput regularInput(Object... data) {
+    SocketInput input;
+    input = new SocketInput();
+
+    input.bufferSize(64, 128);
+
     TestableInputStream inputStream;
     inputStream = TestableInputStream.of(data);
 
-    return new SocketInput(64, inputStream);
+    input.initSocketInput(inputStream);
+
+    return input;
   }
 
 }

@@ -21,9 +21,7 @@ import objectos.http.Method;
 import objectos.http.server.UriQuery;
 import objectox.http.ObjectoxMethod;
 
-public final class ObjectoxRequestLine {
-
-  private final SocketInput input;
+class ObjectoxRequestLine extends SocketInput {
 
   BadRequestReason badRequest;
 
@@ -37,11 +35,9 @@ public final class ObjectoxRequestLine {
 
   byte versionMinor;
 
-  ObjectoxRequestLine(SocketInput input) {
-    this.input = input;
-  }
+  ObjectoxRequestLine() {}
 
-  public final void reset() {
+  final void resetRequestLine() {
     badRequest = null;
 
     method = null;
@@ -53,8 +49,8 @@ public final class ObjectoxRequestLine {
     versionMajor = versionMinor = 0;
   }
 
-  public final void parse() throws IOException {
-    input.parseLine();
+  final void parseRequestLine() throws IOException {
+    parseLine();
 
     parseMethod();
 
@@ -87,7 +83,7 @@ public final class ObjectoxRequestLine {
       return;
     }
 
-    if (!input.consumeIfEndOfLine()) {
+    if (!consumeIfEndOfLine()) {
       badRequest = BadRequestReason.INVALID_REQUEST_LINE_TERMINATOR;
 
       return;
@@ -95,12 +91,13 @@ public final class ObjectoxRequestLine {
   }
 
   private void parseMethod() throws IOException {
-    if (!input.hasNext()) {
+    if (bufferIndex >= lineLimit) {
+      // empty line... nothing to do
       return;
     }
 
     byte first;
-    first = input.peek();
+    first = buffer[bufferIndex];
 
     // based on the first char, we select out method candidate
 
@@ -150,7 +147,7 @@ public final class ObjectoxRequestLine {
     byte[] candidateBytes;
     candidateBytes = STD_METHOD_BYTES[index];
 
-    if (input.matches(candidateBytes)) {
+    if (matches(candidateBytes)) {
       method = candidate;
     }
   }
@@ -186,9 +183,9 @@ public final class ObjectoxRequestLine {
     // we will check if the request target starts with a '/' char
 
     int targetStart;
-    targetStart = input.index();
+    targetStart = bufferIndex;
 
-    if (!input.hasNext()) {
+    if (bufferIndex >= lineLimit) {
       // reached EOL -> bad request
       badRequest = BadRequestReason.INVALID_TARGET;
 
@@ -196,7 +193,7 @@ public final class ObjectoxRequestLine {
     }
 
     byte b;
-    b = input.next();
+    b = buffer[bufferIndex++];
 
     if (b != Bytes.SOLIDUS) {
       // first char IS NOT '/' => BAD_REQUEST
@@ -215,7 +212,7 @@ public final class ObjectoxRequestLine {
     // - ? char
     // - SP char
     int index;
-    index = input.indexOf(Bytes.QUESTION_MARK, Bytes.SP);
+    index = indexOf(Bytes.QUESTION_MARK, Bytes.SP);
 
     if (index < 0) {
       // trailing char was not found
@@ -229,12 +226,15 @@ public final class ObjectoxRequestLine {
     }
 
     String rawValue;
-    rawValue = input.getString(startIndex, index);
+    rawValue = bufferToString(startIndex, index);
 
     path.set(rawValue);
 
+    // we'll continue at the '?' or SP char
+    bufferIndex = index;
+
     byte b;
-    b = input.setAndNext(index);
+    b = buffer[bufferIndex++];
 
     if (b == Bytes.QUESTION_MARK) {
       parseQuery();
@@ -243,10 +243,10 @@ public final class ObjectoxRequestLine {
 
   private void parseQuery() {
     int startIndex;
-    startIndex = input.index();
+    startIndex = bufferIndex;
 
     int end;
-    end = input.indexOf(Bytes.SP);
+    end = indexOf(Bytes.SP);
 
     if (end < 0) {
       // trailing char was not found
@@ -256,7 +256,7 @@ public final class ObjectoxRequestLine {
     }
 
     String rawValue;
-    rawValue = input.getString(startIndex, end);
+    rawValue = bufferToString(startIndex, end);
 
     ObjectoxUriQuery q;
 
@@ -268,7 +268,8 @@ public final class ObjectoxRequestLine {
 
     q.set(rawValue);
 
-    input.setAndNext(end);
+    // we'll continue immediately after the SP
+    bufferIndex = end + 1;
   }
 
   static final byte[] HTTP_VERSION_PREFIX = {'H', 'T', 'T', 'P', '/'};
@@ -276,7 +277,7 @@ public final class ObjectoxRequestLine {
   private void parseVersion() {
     // 'H' 'T' 'T' 'P' '/' '1' '.' '1' = 8 bytes
 
-    if (!input.matches(HTTP_VERSION_PREFIX)) {
+    if (!matches(HTTP_VERSION_PREFIX)) {
       // buffer does not start with 'HTTP/'
       badRequest = BadRequestReason.INVALID_PROTOCOL;
 
@@ -285,14 +286,17 @@ public final class ObjectoxRequestLine {
 
     // check if we  have '1' '.' '1' = 3 bytes
 
-    if (!input.hasNext(3)) {
+    int requiredIndex;
+    requiredIndex = bufferIndex + 3 - 1;
+
+    if (requiredIndex >= lineLimit) {
       badRequest = BadRequestReason.INVALID_PROTOCOL;
 
       return;
     }
 
     byte maybeMajor;
-    maybeMajor = input.next();
+    maybeMajor = buffer[bufferIndex++];
 
     if (!Bytes.isDigit(maybeMajor)) {
       // major version is not a digit => bad request
@@ -302,7 +306,7 @@ public final class ObjectoxRequestLine {
     }
 
     byte maybeDot;
-    maybeDot = input.next();
+    maybeDot = buffer[bufferIndex++];
 
     if (maybeDot != '.') {
       // major version not followed by a DOT => bad request
@@ -312,7 +316,7 @@ public final class ObjectoxRequestLine {
     }
 
     byte maybeMinor;
-    maybeMinor = input.next();
+    maybeMinor = buffer[bufferIndex++];
 
     if (!Bytes.isDigit(maybeMinor)) {
       // minor version is not a digit => bad request

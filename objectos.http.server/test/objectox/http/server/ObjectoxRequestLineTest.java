@@ -39,7 +39,7 @@ public class ObjectoxRequestLineTest {
     \r
     """);
 
-    line.parse();
+    line.parseRequestLine();
 
     // method
     Method method;
@@ -79,7 +79,7 @@ public class ObjectoxRequestLineTest {
     \r
     """);
 
-    line.parse();
+    line.parseRequestLine();
 
     // method
     Method method;
@@ -111,13 +111,17 @@ public class ObjectoxRequestLineTest {
   }
 
   private ObjectoxRequestLine regularInput(Object... data) throws IOException {
+    ObjectoxRequestLine requestLine;
+    requestLine = new ObjectoxRequestLine();
+
+    requestLine.bufferSize(64, 128);
+
     TestableInputStream inputStream;
     inputStream = TestableInputStream.of(data);
 
-    SocketInput input;
-    input = new SocketInput(64, inputStream);
+    requestLine.initSocketInput(inputStream);
 
-    return new ObjectoxRequestLine(input);
+    return requestLine;
   }
 
 }

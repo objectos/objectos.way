@@ -18,8 +18,9 @@ package objectox.http.server;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
+import objectos.http.server.Body;
 
-public final class InBufferRequestBody extends HttpRequestBody {
+public final class InBufferRequestBody implements Body {
 
   private final byte[] buffer;
 

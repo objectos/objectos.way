@@ -23,6 +23,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import objectos.http.HeaderName;
+import objectos.http.Method;
 import objectos.http.Status;
 import objectos.http.server.Body;
 import objectos.http.server.ServerLoop;
@@ -34,7 +35,7 @@ import objectos.notes.NoOpNoteSink;
 import objectos.notes.NoteSink;
 import objectox.http.ObjectoxStatus;
 
-public final class ObjectoxServerLoop extends SocketInput implements ServerLoop {
+public final class ObjectoxServerLoop extends ObjectoxServerRequestBody implements ServerLoop {
 
   // new states
 
@@ -51,19 +52,13 @@ public final class ObjectoxServerLoop extends SocketInput implements ServerLoop 
   @SuppressWarnings("unused")
   private NoteSink noteSink = NoOpNoteSink.of();
 
-  private Body requestBody;
-
-  private ObjectoxServerRequestHeaders requestHeaders;
-
-  private ObjectoxRequestLine requestLine;
-
   private Object responseBody;
 
   private Socket socket;
 
   private byte state;
 
-  public ObjectoxServerLoop(Socket socket, boolean newApi) {
+  public ObjectoxServerLoop(Socket socket) {
     this.socket = socket;
 
     state = _CONFIG;
@@ -79,6 +74,10 @@ public final class ObjectoxServerLoop extends SocketInput implements ServerLoop 
   @Override
   public final void bufferSize(int initial, int max) {
     checkConfig();
+
+    Check.argument(initial >= 128, "initial size must be >= 128");
+    Check.argument(max >= 128, "max size must be >= 128");
+    Check.argument(max >= initial, "max size must be >= initial size");
 
     super.bufferSize(initial, max);
   }
@@ -107,74 +106,58 @@ public final class ObjectoxServerLoop extends SocketInput implements ServerLoop 
       inputStream = socket.getInputStream();
 
       initSocketInput(inputStream);
-
-      // lazily create request line
-      requestLine = new ObjectoxRequestLine(this);
     }
 
     else if (state == _COMMITED) {
       resetSocketInput();
 
-      requestLine.reset();
+      resetRequestLine();
+
+      resetHeaders();
+
+      resetRequestBody();
     }
 
     else {
-      throw new IllegalStateException();
+      throw new IllegalStateException("""
+      The parse() metod must only be called after:
+      1) loop creation; or
+      2) a successful commit operation
+      """);
     }
 
     state = _PARSE;
 
     // request line
 
-    requestLine.parse();
+    parseRequestLine();
 
-    if (requestLine.badRequest != null) {
+    if (badRequest != null) {
       return;
     }
 
     // request headers
 
-    if (requestHeaders == null) {
-      requestHeaders = new ObjectoxServerRequestHeaders(this);
-    } else {
-      requestHeaders.reset();
-    }
+    parseHeaders();
 
-    requestHeaders.parse();
-
-    if (requestHeaders.badRequest != null) {
+    if (badRequest != null) {
       return;
     }
 
     // request body
 
-    Body body;
-    body = NoServerRequestBody.INSTANCE;
-
-    if (requestHeaders.containsUnchecked(HeaderName.CONTENT_LENGTH)) {
-      throw new UnsupportedOperationException(
-          "Implement me :: parse body"
-      );
-    }
-
-    if (requestHeaders.containsUnchecked(HeaderName.TRANSFER_ENCODING)) {
-      throw new UnsupportedOperationException(
-          "Implement me :: maybe chunked?"
-      );
-    }
-
-    requestBody = body;
+    parseRequestBody();
 
     // handle keep alive
 
     keepAlive = false;
 
-    if (requestLine.versionMajor == 1 && requestLine.versionMinor == 1) {
+    if (versionMajor == 1 && versionMinor == 1) {
       keepAlive = true;
     }
 
     ObjectoxHeader connection;
-    connection = requestHeaders.getUnchecked(HeaderName.CONNECTION);
+    connection = headerUnchecked(HeaderName.CONNECTION);
 
     if (connection != null) {
       if (connection.contentEquals(Bytes.KEEP_ALIVE)) {
@@ -193,45 +176,44 @@ public final class ObjectoxServerLoop extends SocketInput implements ServerLoop 
   public final boolean badRequest() {
     Check.state(state == _REQUEST, "Method can only be invoked after a parse() operation");
 
-    return requestLine.badRequest != null
-        || requestHeaders.badRequest != null;
+    return badRequest != null;
   }
 
   // request
 
   @Override
-  public final objectos.http.Method method() {
+  public final Method method() {
     checkRequest();
 
-    return requestLine.method;
+    return method;
   }
 
   @Override
   public final UriPath path() {
     checkRequest();
 
-    return requestLine.path;
+    return path;
   }
 
   @Override
   public final UriQuery query() {
     checkRequest();
 
-    return requestLine.query;
+    return query;
   }
 
   @Override
   public final ServerRequestHeaders headers() {
     checkRequest();
 
-    return requestHeaders;
+    return this;
   }
 
   @Override
   public final Body body() {
     checkRequest();
 
-    return requestBody;
+    return this;
   }
 
   private void checkRequest() {
@@ -370,7 +352,7 @@ public final class ObjectoxServerLoop extends SocketInput implements ServerLoop 
 
   private void checkResponse() {
     if (state == _REQUEST) {
-      cursor = 0;
+      bufferIndex = 0;
 
       responseBody = null;
 
@@ -397,15 +379,15 @@ public final class ObjectoxServerLoop extends SocketInput implements ServerLoop 
     length = bytes.length;
 
     int remaining;
-    remaining = buffer.length - cursor;
+    remaining = buffer.length - bufferIndex;
 
     if (length > remaining) {
       throw new UnsupportedOperationException("Implement me");
     }
 
-    System.arraycopy(bytes, 0, buffer, cursor, length);
+    System.arraycopy(bytes, 0, buffer, bufferIndex, length);
 
-    cursor += length;
+    bufferIndex += length;
   }
 
   @Override
@@ -417,7 +399,7 @@ public final class ObjectoxServerLoop extends SocketInput implements ServerLoop 
     outputStream = socket.getOutputStream();
 
     // send headers
-    outputStream.write(buffer, 0, cursor);
+    outputStream.write(buffer, 0, bufferIndex);
 
     switch (responseBody) {
       case NoResponseBody no -> {}

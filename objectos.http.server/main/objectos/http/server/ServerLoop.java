@@ -27,7 +27,7 @@ public interface ServerLoop extends Closeable, ServerExchange {
   static ServerLoop create(Socket socket) {
     Check.notNull(socket, "socket == null");
 
-    return new ObjectoxServerLoop(socket, true);
+    return new ObjectoxServerLoop(socket);
   }
 
   // config methods

@@ -17,7 +17,9 @@ package objectos.http.server;
 
 import static org.testng.Assert.assertEquals;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -567,6 +569,78 @@ public class ServerLoopTest {
       assertEquals(http.keepAlive(), false);
     } catch (IOException e) {
       throw new AssertionError("Failed with IOException", e);
+    }
+  }
+
+  @Test(description = """
+  Minimal POST request
+  - happy path
+  """)
+  public void testCase008() {
+    TestableSocket socket;
+    socket = TestableSocket.of("""
+    POST /login HTTP/1.1\r
+    Host: www.example.com\r
+    Content-Length: 24\r
+    Content-Type: application/x-www-form-urlencoded\r
+    \r
+    email=user%40example.com""");
+
+    String body01 = """
+    Hello user@example.com. Please enter your password.
+    """;
+
+    String resp01 = """
+    HTTP/1.1 303 SEE OTHER\r
+    Location: /app\r
+    Content-Type: text/plain; charset=utf-8\r
+    Content-Length: 52\r
+    Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+    \r
+    %s""".formatted(body01);
+
+    try (ServerLoop http = ServerLoop.create(socket)) {
+      http.bufferSize(128, 256);
+      http.noteSink(TestingNoteSink.INSTANCE);
+
+      // request phase
+      http.parse();
+
+      assertEquals(http.badRequest(), false);
+
+      Body requestBody;
+      requestBody = http.body();
+
+      assertEquals(asString(requestBody), "email=user%40example.com");
+
+      // response phase
+
+      http.status(Status.SEE_OTHER);
+      http.header(HeaderName.LOCATION, "/app");
+      http.header(HeaderName.CONTENT_TYPE, "text/plain; charset=utf-8");
+      http.header(HeaderName.CONTENT_LENGTH, "52");
+      http.header(HeaderName.DATE, "Wed, 28 Jun 2023 12:08:43 GMT");
+      http.send(body01.getBytes(StandardCharsets.UTF_8));
+
+      http.commit();
+
+      assertEquals(socket.outputAsString(), resp01);
+
+      assertEquals(http.keepAlive(), true);
+    } catch (IOException e) {
+      throw new AssertionError("Failed with IOException", e);
+    }
+  }
+
+  private String asString(Body body) throws IOException {
+    try (InputStream in = body.openStream();
+        ByteArrayOutputStream out = new ByteArrayOutputStream()) {
+      in.transferTo(out);
+
+      byte[] bytes;
+      bytes = out.toByteArray();
+
+      return new String(bytes, StandardCharsets.UTF_8);
     }
   }
 
