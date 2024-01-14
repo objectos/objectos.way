@@ -50,7 +50,7 @@ public class Resolver {
 
   Path resolutionPath;
 
-  String dependency;
+  String requestedDependency;
 
   Artifact requestedArtifact;
 
@@ -107,7 +107,7 @@ public class Resolver {
         default -> {
           requestedCount++;
 
-          dependency = arg;
+          requestedDependency = arg;
         }
       }
     }
@@ -139,7 +139,7 @@ public class Resolver {
     }
 
     String gav;
-    gav = dependency.replace('/', ':');
+    gav = requestedDependency.replace('/', ':');
 
     requestedArtifact = new DefaultArtifact(gav);
   }
@@ -193,7 +193,7 @@ public class Resolver {
         .collect(Collectors.joining("\n", "", "\n"));
 
     Path targetFile;
-    targetFile = resolutionPath.resolve(dependency);
+    targetFile = resolutionPath.resolve(requestedDependency);
 
     Files.createDirectories(targetFile.getParent());
 
@@ -229,6 +229,8 @@ public class Resolver {
     repositoryListener = new ThisRepositoryListener();
 
     session.setRepositoryListener(repositoryListener);
+
+    session.setSystemProperties(System.getProperties());
 
     return session;
   }
