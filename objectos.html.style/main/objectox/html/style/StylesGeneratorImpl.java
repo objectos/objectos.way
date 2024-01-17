@@ -34,776 +34,771 @@ import objectos.util.set.GrowableSet;
 
 public final class StylesGeneratorImpl implements StylesGenerator {
 
-	// notes
+  // notes
 
-	static final Note1<String> CLASS_NOT_FOUND;
+  static final Note1<String> CLASS_NOT_FOUND;
 
-	static final Note2<String, IOException> CLASS_IO_ERROR;
+  static final Note2<String, IOException> CLASS_IO_ERROR;
 
-	static final Note1<String> CLASS_LOADED;
+  static final Note1<String> CLASS_LOADED;
 
-	static final Note2<String, String> INVALID_CLASS;
+  static final Note2<String, String> INVALID_CLASS;
 
-	static final Note1<String> UNKNOWN_PREFIX;
+  static final Note1<String> UNKNOWN_PREFIX;
 
-	static final Note1<String> UNKNOWN_PROPERTY;
+  static final Note1<String> UNKNOWN_PROPERTY;
 
-	static final Note2<String, String> UNKNOWN_UTILITY;
+  static final Note2<String, String> UNKNOWN_UTILITY;
 
-	static {
-		Class<?> s;
-		s = StylesGenerator.class;
+  static {
+    Class<?> s;
+    s = StylesGenerator.class;
 
-		CLASS_NOT_FOUND = Note1.error(s, "Class file not found");
+    CLASS_NOT_FOUND = Note1.error(s, "Class file not found");
 
-		CLASS_IO_ERROR = Note2.error(s, "Class file I/O error");
+    CLASS_IO_ERROR = Note2.error(s, "Class file I/O error");
 
-		CLASS_LOADED = Note1.debug(s, "Class file loaded");
+    CLASS_LOADED = Note1.debug(s, "Class file loaded");
 
-		INVALID_CLASS = Note2.error(s, "Invalid class file");
+    INVALID_CLASS = Note2.error(s, "Invalid class file");
 
-		UNKNOWN_PREFIX = Note1.error(s, "Unknown prefix");
+    UNKNOWN_PREFIX = Note1.error(s, "Unknown prefix");
 
-		UNKNOWN_PROPERTY = Note1.error(s, "Unknown property");
+    UNKNOWN_PROPERTY = Note1.error(s, "Unknown property");
 
-		UNKNOWN_UTILITY = Note2.error(s, "Unknown utility");
-	}
+    UNKNOWN_UTILITY = Note2.error(s, "Unknown utility");
+  }
 
-	private final NoteSink noteSink;
+  private final NoteSink noteSink;
 
-	// scanner types
+  // scanner types
 
-	sealed interface Entry {}
+  sealed interface Entry {}
 
-	record ClassName(String name) implements Entry {
-		public final String asDescriptor() {
-			return "L" + name + ";";
-		}
-	}
+  record ClassName(String name) implements Entry {
+    public final String asDescriptor() {
+      return "L" + name + ";";
+    }
+  }
 
-	record NameAndType(String name, String descriptor) implements Entry {
-		public final boolean sameType(ClassName className) {
-			String other;
-			other = className.asDescriptor();
+  record NameAndType(String name, String descriptor) implements Entry {
+    public final boolean sameType(ClassName className) {
+      String other;
+      other = className.asDescriptor();
 
-			return descriptor.equals(other);
-		}
-	}
+      return descriptor.equals(other);
+    }
+  }
 
-	record Utf8(String value) implements Entry {}
+  record Utf8(String value) implements Entry {}
 
-	static final byte CONSTANT_Utf8 = 1;
-	static final byte CONSTANT_Integer = 3;
-	static final byte CONSTANT_Float = 4;
-	static final byte CONSTANT_Long = 5;
-	static final byte CONSTANT_Double = 6;
-	static final byte CONSTANT_Class = 7;
-	static final byte CONSTANT_String = 8;
-	static final byte CONSTANT_Fieldref = 9;
-	static final byte CONSTANT_Methodref = 10;
-	static final byte CONSTANT_InterfaceMethodref = 11;
-	static final byte CONSTANT_NameAndType = 12;
-	static final byte CONSTANT_MethodHandle = 15;
-	static final byte CONSTANT_MethodType = 16;
-	static final byte CONSTANT_Dynamic = 17;
-	static final byte CONSTANT_InvokeDynamic = 18;
-	static final byte CONSTANT_Module = 19;
-	static final byte CONSTANT_Package = 20;
+  static final byte CONSTANT_Utf8 = 1;
+  static final byte CONSTANT_Integer = 3;
+  static final byte CONSTANT_Float = 4;
+  static final byte CONSTANT_Long = 5;
+  static final byte CONSTANT_Double = 6;
+  static final byte CONSTANT_Class = 7;
+  static final byte CONSTANT_String = 8;
+  static final byte CONSTANT_Fieldref = 9;
+  static final byte CONSTANT_Methodref = 10;
+  static final byte CONSTANT_InterfaceMethodref = 11;
+  static final byte CONSTANT_NameAndType = 12;
+  static final byte CONSTANT_MethodHandle = 15;
+  static final byte CONSTANT_MethodType = 16;
+  static final byte CONSTANT_Dynamic = 17;
+  static final byte CONSTANT_InvokeDynamic = 18;
+  static final byte CONSTANT_Module = 19;
+  static final byte CONSTANT_Package = 20;
 
-	// scanner states
+  // scanner states
 
-	enum State {
-		STOP,
+  enum State {
+    STOP,
 
-		START,
+    START,
 
-		LOAD_CLASS,
+    LOAD_CLASS,
 
-		VERIFY_MAGIC,
+    VERIFY_MAGIC,
 
-		CONSTANT_POOL_COUNT,
+    CONSTANT_POOL_COUNT,
 
-		NEXT_POOL_INDEX,
+    NEXT_POOL_INDEX,
 
-		NEXT_POOL_ENTRY;
-	}
+    NEXT_POOL_ENTRY;
+  }
 
-	// scanner state
+  // scanner state
 
-	String binaryName;
+  String binaryName;
 
-	byte[] bytes;
+  byte[] bytes;
 
-	int bytesIndex;
+  int bytesIndex;
 
-	int[] constantPoolIndex;
+  int[] constantPoolIndex;
 
-	Entry[] constantPoolEntries;
+  Entry[] constantPoolEntries;
 
-	int iteratorIndex;
+  int iteratorIndex;
 
-	State state;
+  State state;
 
-	// generator state
+  // generator state
 
-	Map<String, Map<String, Set<String>>> utilities;
+  Map<String, Map<String, Set<String>>> utilities;
 
-	StringBuilder out;
+  StringBuilder out;
 
-	public StylesGeneratorImpl(NoteSink noteSink) {
-		this.noteSink = noteSink;
-	}
+  public StylesGeneratorImpl(NoteSink noteSink) {
+    this.noteSink = noteSink;
+  }
 
-	@Override
-	public final void scan(Class<?> clazz) {
-		Check.notNull(clazz, "clazz == null");
+  @Override
+  public final void scan(Class<?> clazz) {
+    Check.notNull(clazz, "clazz == null");
 
-		binaryName = clazz.getName();
+    binaryName = clazz.getName();
 
-		state = State.START;
+    state = State.START;
 
-		while (state != State.STOP) {
-			execute();
-		}
-	}
+    while (state != State.STOP) {
+      execute();
+    }
+  }
 
-	final void execute() {
-		state = switch (state) {
-			case START -> executeStart();
+  final void execute() {
+    state = switch (state) {
+      case START -> executeStart();
 
-			case LOAD_CLASS -> executeLoadClass();
+      case LOAD_CLASS -> executeLoadClass();
 
-			case VERIFY_MAGIC -> executeVerifyMagic();
+      case VERIFY_MAGIC -> executeVerifyMagic();
 
-			case CONSTANT_POOL_COUNT -> executeConstantPoolCount();
+      case CONSTANT_POOL_COUNT -> executeConstantPoolCount();
 
-			case NEXT_POOL_INDEX -> executeNextPoolIndex();
+      case NEXT_POOL_INDEX -> executeNextPoolIndex();
 
-			case NEXT_POOL_ENTRY -> executeNextPoolEntry();
+      case NEXT_POOL_ENTRY -> executeNextPoolEntry();
 
-			case STOP -> throw new IllegalStateException(
-					"STOP is a non-executable state"
-			);
-		};
-	}
+      case STOP -> throw new IllegalStateException(
+          "STOP is a non-executable state"
+      );
+    };
+  }
 
-	private State executeStart() {
-		// reset scanner state if there's an input
+  private State executeStart() {
+    // reset scanner state if there's an input
 
-		if (binaryName != null) {
-			bytes = null;
+    if (binaryName != null) {
+      bytes = null;
 
-			bytesIndex = 0;
+      bytesIndex = 0;
 
-			constantPoolIndex = null;
+      constantPoolIndex = null;
 
-			constantPoolEntries = null;
+      constantPoolEntries = null;
 
-			iteratorIndex = 0;
+      iteratorIndex = 0;
 
-			return State.LOAD_CLASS;
-		}
+      return State.LOAD_CLASS;
+    }
 
-		// there's no input... stop
+    // there's no input... stop
 
-		return State.STOP;
-	}
+    return State.STOP;
+  }
 
-	private State executeLoadClass() {
-		String resourceName;
-		resourceName = binaryName.replace('.', '/');
+  private State executeLoadClass() {
+    String resourceName;
+    resourceName = binaryName.replace('.', '/');
 
-		resourceName += ".class";
+    resourceName += ".class";
 
-		ClassLoader loader;
-		loader = ClassLoader.getSystemClassLoader();
+    ClassLoader loader;
+    loader = ClassLoader.getSystemClassLoader();
 
-		InputStream in;
-		in = loader.getResourceAsStream(resourceName);
+    InputStream in;
+    in = loader.getResourceAsStream(resourceName);
 
-		if (in == null) {
-			noteSink.send(CLASS_NOT_FOUND, binaryName);
+    if (in == null) {
+      noteSink.send(CLASS_NOT_FOUND, binaryName);
 
-			return State.STOP;
-		}
+      return State.STOP;
+    }
 
-		try (in; ByteArrayOutputStream out = new ByteArrayOutputStream()) {
-			in.transferTo(out);
+    try (in; ByteArrayOutputStream out = new ByteArrayOutputStream()) {
+      in.transferTo(out);
 
-			bytes = out.toByteArray();
+      bytes = out.toByteArray();
 
-			noteSink.send(CLASS_LOADED, binaryName);
+      noteSink.send(CLASS_LOADED, binaryName);
 
-			return State.VERIFY_MAGIC;
-		} catch (IOException e) {
-			noteSink.send(CLASS_IO_ERROR, binaryName, e);
+      return State.VERIFY_MAGIC;
+    } catch (IOException e) {
+      noteSink.send(CLASS_IO_ERROR, binaryName, e);
 
-			return State.STOP;
-		}
-	}
+      return State.STOP;
+    }
+  }
 
-	private State executeVerifyMagic() {
-		if (!canRead(4)) {
-			invalidClass("Magic not found");
+  private State executeVerifyMagic() {
+    if (!canRead(4)) {
+      invalidClass("Magic not found");
 
-			return State.STOP;
-		}
+      return State.STOP;
+    }
 
-		int magic;
-		magic = readU4();
+    int magic;
+    magic = readU4();
 
-		if (magic != 0xCAFEBABE) {
-			invalidClass("Magic not found");
+    if (magic != 0xCAFEBABE) {
+      invalidClass("Magic not found");
 
-			return State.STOP;
-		}
+      return State.STOP;
+    }
 
-		return State.CONSTANT_POOL_COUNT;
-	}
+    return State.CONSTANT_POOL_COUNT;
+  }
 
-	private State executeConstantPoolCount() {
-		// minor = 2 bytes
-		// major = 2 bytes
-		// cp count = 2 bytes
+  private State executeConstantPoolCount() {
+    // minor = 2 bytes
+    // major = 2 bytes
+    // cp count = 2 bytes
 
-		if (!canRead(2 + 2 + 2)) {
-			invalidClass("Constant pool count not found");
+    if (!canRead(2 + 2 + 2)) {
+      invalidClass("Constant pool count not found");
 
-			return State.STOP;
-		}
+      return State.STOP;
+    }
 
-		// skip minor
-		bytesIndex += 2;
+    // skip minor
+    bytesIndex += 2;
 
-		// skip major
-		bytesIndex += 2;
+    // skip major
+    bytesIndex += 2;
 
-		int constantPoolCount;
-		constantPoolCount = readU2();
+    int constantPoolCount;
+    constantPoolCount = readU2();
 
-		constantPoolIndex = new int[constantPoolCount];
+    constantPoolIndex = new int[constantPoolCount];
 
-		iteratorIndex = 1;
+    iteratorIndex = 1;
 
-		return State.NEXT_POOL_INDEX;
-	}
+    return State.NEXT_POOL_INDEX;
+  }
 
-	private State executeNextPoolIndex() {
-		if (iteratorIndex == constantPoolIndex.length) {
-			iteratorIndex = 1;
+  private State executeNextPoolIndex() {
+    if (iteratorIndex == constantPoolIndex.length) {
+      iteratorIndex = 1;
 
-			constantPoolEntries = new Entry[constantPoolIndex.length];
+      constantPoolEntries = new Entry[constantPoolIndex.length];
 
-			return State.NEXT_POOL_ENTRY;
-		}
+      return State.NEXT_POOL_ENTRY;
+    }
 
-		int index;
-		index = iteratorIndex++;
+    int index;
+    index = iteratorIndex++;
 
-		constantPoolIndex[index] = bytesIndex;
+    constantPoolIndex[index] = bytesIndex;
 
-		if (!canRead(1)) {
-			invalidClass("Unexpected constant pool end");
+    if (!canRead(1)) {
+      invalidClass("Unexpected constant pool end");
 
-			return State.STOP;
-		}
+      return State.STOP;
+    }
 
-		byte tag;
-		tag = nextByte();
+    byte tag;
+    tag = nextByte();
 
-		switch (tag) {
-			case CONSTANT_Utf8 -> {
-				if (!canRead(2)) {
-					invalidClass("Unexpected constant pool end");
+    switch (tag) {
+      case CONSTANT_Utf8 -> {
+        if (!canRead(2)) {
+          invalidClass("Unexpected constant pool end");
 
-					return State.STOP;
-				}
+          return State.STOP;
+        }
 
-				int length;
-				length = readU2();
+        int length;
+        length = readU2();
 
-				bytesIndex += length;
-			}
+        bytesIndex += length;
+      }
 
-			// u4 bytes;
-			case CONSTANT_Integer -> bytesIndex += 4;
+      // u4 bytes;
+      case CONSTANT_Integer -> bytesIndex += 4;
 
-			// u4 bytes;
-			case CONSTANT_Float -> bytesIndex += 4;
+      // u4 bytes;
+      case CONSTANT_Float -> bytesIndex += 4;
 
-			// u4 high_bytes; u4 low_bytes;
-			case CONSTANT_Long -> bytesIndex += 8;
+      // u4 high_bytes; u4 low_bytes;
+      case CONSTANT_Long -> bytesIndex += 8;
 
-			// u4 high_bytes; u4 low_bytes;
-			case CONSTANT_Double -> bytesIndex += 8;
+      // u4 high_bytes; u4 low_bytes;
+      case CONSTANT_Double -> bytesIndex += 8;
 
-			// u2 name_index;
-			case CONSTANT_Class -> bytesIndex += 2;
+      // u2 name_index;
+      case CONSTANT_Class -> bytesIndex += 2;
 
-			// u2 string_index;
-			case CONSTANT_String -> bytesIndex += 2;
+      // u2 string_index;
+      case CONSTANT_String -> bytesIndex += 2;
 
-			// u2 class_index; u2 name_and_type_index;
-			case CONSTANT_Fieldref -> bytesIndex += 4;
+      // u2 class_index; u2 name_and_type_index;
+      case CONSTANT_Fieldref -> bytesIndex += 4;
 
-			// u2 class_index; u2 name_and_type_index;
-			case CONSTANT_Methodref -> bytesIndex += 4;
+      // u2 class_index; u2 name_and_type_index;
+      case CONSTANT_Methodref -> bytesIndex += 4;
 
-			// u2 class_index; u2 name_and_type_index;
-			case CONSTANT_InterfaceMethodref -> bytesIndex += 4;
+      // u2 class_index; u2 name_and_type_index;
+      case CONSTANT_InterfaceMethodref -> bytesIndex += 4;
 
-			// u2 name_index; u2 descriptor_index;
-			case CONSTANT_NameAndType -> bytesIndex += 4;
+      // u2 name_index; u2 descriptor_index;
+      case CONSTANT_NameAndType -> bytesIndex += 4;
 
-			// u1 reference_kind; u2 reference_index;
-			case CONSTANT_MethodHandle -> bytesIndex += 3;
+      // u1 reference_kind; u2 reference_index;
+      case CONSTANT_MethodHandle -> bytesIndex += 3;
 
-			// u2 descriptor_index;
-			case CONSTANT_MethodType -> bytesIndex += 2;
+      // u2 descriptor_index;
+      case CONSTANT_MethodType -> bytesIndex += 2;
 
-			// u2 bootstrap_method_attr_index; u2 name_and_type_index;
-			case CONSTANT_Dynamic -> bytesIndex += 4;
+      // u2 bootstrap_method_attr_index; u2 name_and_type_index;
+      case CONSTANT_Dynamic -> bytesIndex += 4;
 
-			// u2 bootstrap_method_attr_index; u2 name_and_type_index;
-			case CONSTANT_InvokeDynamic -> bytesIndex += 4;
+      // u2 bootstrap_method_attr_index; u2 name_and_type_index;
+      case CONSTANT_InvokeDynamic -> bytesIndex += 4;
 
-			// u2 name_index;
-			case CONSTANT_Module -> bytesIndex += 2;
+      // u2 name_index;
+      case CONSTANT_Module -> bytesIndex += 2;
 
-			// u2 name_index;
-			case CONSTANT_Package -> bytesIndex += 2;
+      // u2 name_index;
+      case CONSTANT_Package -> bytesIndex += 2;
 
-			default -> {
-				invalidClass("Unknown constant pool tag=" + tag);
+      default -> {
+        invalidClass("Unknown constant pool tag=" + tag);
 
-				return State.STOP;
-			}
-		}
+        return State.STOP;
+      }
+    }
 
-		return State.NEXT_POOL_INDEX;
-	}
+    return State.NEXT_POOL_INDEX;
+  }
 
-	private static final String HTML_STYLE = "objectos.html.style.";
+  private static final String HTML_STYLE = "objectos.html.style.";
 
-	private State executeNextPoolEntry() {
-		if (iteratorIndex == constantPoolIndex.length) {
-			return State.STOP;
-		}
+  private State executeNextPoolEntry() {
+    if (iteratorIndex == constantPoolIndex.length) {
+      return State.STOP;
+    }
 
-		int index;
-		index = iteratorIndex++;
+    int index;
+    index = iteratorIndex++;
 
-		bytesIndex = constantPoolIndex[index];
+    bytesIndex = constantPoolIndex[index];
 
-		// process if Fieldref
+    // process if Fieldref
 
-		byte maybeConstantFieldRef;
-		maybeConstantFieldRef = nextByte();
+    byte maybeConstantFieldRef;
+    maybeConstantFieldRef = nextByte();
 
-		if (maybeConstantFieldRef != CONSTANT_Fieldref) {
-			// not Fieldref -> continue
+    if (maybeConstantFieldRef != CONSTANT_Fieldref) {
+      // not Fieldref -> continue
 
-			return State.NEXT_POOL_ENTRY;
-		}
+      return State.NEXT_POOL_ENTRY;
+    }
 
-		// keep two indices in the stack
+    // keep two indices in the stack
 
-		int classIndex;
-		classIndex = readU2();
+    int classIndex;
+    classIndex = readU2();
 
-		int nameAndTypeIndex;
-		nameAndTypeIndex = readU2();
+    int nameAndTypeIndex;
+    nameAndTypeIndex = readU2();
 
-		// try to load class info
+    // try to load class info
 
-		ClassName className;
-		className = className(classIndex);
+    ClassName className;
+    className = className(classIndex);
 
-		if (className == null) {
-			invalidClass("Malformed constant pool");
+    if (className == null) {
+      invalidClass("Malformed constant pool");
 
-			return State.STOP;
-		}
+      return State.STOP;
+    }
 
-		String fullName;
-		fullName = className.name.replace('/', '.');
+    String fullName;
+    fullName = className.name.replace('/', '.');
 
-		if (!fullName.startsWith(HTML_STYLE)) {
-			// not in our package -> continue
+    if (!fullName.startsWith(HTML_STYLE)) {
+      // not in our package -> continue
 
-			return State.NEXT_POOL_ENTRY;
-		}
+      return State.NEXT_POOL_ENTRY;
+    }
 
-		// let's try to get the simple name of the class
+    // let's try to get the simple name of the class
 
-		int length;
-		length = HTML_STYLE.length();
+    int length;
+    length = HTML_STYLE.length();
 
-		String simpleName;
-		simpleName = className.name.substring(length);
+    String simpleName;
+    simpleName = className.name.substring(length);
 
-		int dotIndex;
-		dotIndex = simpleName.indexOf('.');
+    int dotIndex;
+    dotIndex = simpleName.indexOf('.');
 
-		if (dotIndex >= 0) {
-			// we're not interested in classes in a sub-package
+    if (dotIndex >= 0) {
+      // we're not interested in classes in a sub-package
 
-			return State.NEXT_POOL_ENTRY;
-		}
+      return State.NEXT_POOL_ENTRY;
+    }
 
-		NameAndType nameAndType;
-		nameAndType = nameAndType(nameAndTypeIndex);
+    NameAndType nameAndType;
+    nameAndType = nameAndType(nameAndTypeIndex);
 
-		if (nameAndType == null) {
-			invalidClass("Malformed constant pool");
+    if (nameAndType == null) {
+      invalidClass("Malformed constant pool");
 
-			return State.STOP;
-		}
+      return State.STOP;
+    }
 
-		if (!nameAndType.sameType(className)) {
-			// fieldref is not of the same type
+    if (!nameAndType.sameType(className)) {
+      // fieldref is not of the same type
 
-			return State.NEXT_POOL_ENTRY;
-		}
+      return State.NEXT_POOL_ENTRY;
+    }
 
-		// it must be an inner type like All$Display
+    // it must be an inner type like All$Display
 
-		int dollarIndex;
-		dollarIndex = simpleName.indexOf('$');
+    int dollarIndex;
+    dollarIndex = simpleName.indexOf('$');
 
-		if (dollarIndex < 0) {
-			// no prefix found
+    if (dollarIndex < 0) {
+      // no prefix found
 
-			return State.NEXT_POOL_ENTRY;
-		}
+      return State.NEXT_POOL_ENTRY;
+    }
 
-		String prefix;
-		prefix = simpleName.substring(0, dollarIndex);
+    String prefix;
+    prefix = simpleName.substring(0, dollarIndex);
 
-		simpleName = simpleName.substring(dollarIndex + 1);
+    simpleName = simpleName.substring(dollarIndex + 1);
 
-		if (utilities == null) {
-			utilities = new GrowableMap<>();
-		}
+    if (utilities == null) {
+      utilities = new GrowableMap<>();
+    }
 
-		Map<String, Set<String>> properties;
-		properties = utilities.get(prefix);
+    Map<String, Set<String>> properties;
+    properties = utilities.get(prefix);
 
-		if (properties == null) {
-			properties = new GrowableMap<>();
+    if (properties == null) {
+      properties = new GrowableMap<>();
 
-			utilities.put(prefix, properties);
-		}
+      utilities.put(prefix, properties);
+    }
 
-		Set<String> propertyValues;
-		propertyValues = properties.get(fullName);
+    Set<String> propertyValues;
+    propertyValues = properties.get(fullName);
 
-		if (propertyValues == null) {
-			propertyValues = new GrowableSet<>();
+    if (propertyValues == null) {
+      propertyValues = new GrowableSet<>();
 
-			properties.put(fullName, propertyValues);
-		}
+      properties.put(fullName, propertyValues);
+    }
 
-		propertyValues.add(nameAndType.name);
+    propertyValues.add(nameAndType.name);
 
-		return State.NEXT_POOL_ENTRY;
-	}
+    return State.NEXT_POOL_ENTRY;
+  }
 
-	private ClassName className(int index) {
-		Entry entry;
-		entry = constantPoolEntries[index];
+  private ClassName className(int index) {
+    Entry entry;
+    entry = constantPoolEntries[index];
 
-		if (entry == null) {
-			bytesIndex = constantPoolIndex[index];
+    if (entry == null) {
+      bytesIndex = constantPoolIndex[index];
 
-			byte tag;
-			tag = nextByte();
+      byte tag;
+      tag = nextByte();
 
-			if (tag != CONSTANT_Class) {
-				return null;
-			}
+      if (tag != CONSTANT_Class) {
+        return null;
+      }
 
-			int nameIndex;
-			nameIndex = readU2();
+      int nameIndex;
+      nameIndex = readU2();
 
-			Utf8 name;
-			name = utf8(nameIndex);
+      Utf8 name;
+      name = utf8(nameIndex);
 
-			if (name == null) {
-				return null;
-			}
+      if (name == null) {
+        return null;
+      }
 
-			constantPoolEntries[index] = entry = new ClassName(name.value);
-		}
+      constantPoolEntries[index] = entry = new ClassName(name.value);
+    }
 
-		if (entry instanceof ClassName name) {
-			return name;
-		}
+    if (entry instanceof ClassName name) {
+      return name;
+    }
 
-		return null;
-	}
+    return null;
+  }
 
-	private NameAndType nameAndType(int index) {
-		Entry entry;
-		entry = constantPoolEntries[index];
+  private NameAndType nameAndType(int index) {
+    Entry entry;
+    entry = constantPoolEntries[index];
 
-		if (entry == null) {
-			bytesIndex = constantPoolIndex[index];
+    if (entry == null) {
+      bytesIndex = constantPoolIndex[index];
 
-			byte tag;
-			tag = nextByte();
+      byte tag;
+      tag = nextByte();
 
-			if (tag != CONSTANT_NameAndType) {
-				return null;
-			}
+      if (tag != CONSTANT_NameAndType) {
+        return null;
+      }
 
-			int nameIndex;
-			nameIndex = readU2();
+      int nameIndex;
+      nameIndex = readU2();
 
-			int descriptorIndex;
-			descriptorIndex = readU2();
+      int descriptorIndex;
+      descriptorIndex = readU2();
 
-			Utf8 name;
-			name = utf8(nameIndex);
+      Utf8 name;
+      name = utf8(nameIndex);
 
-			if (name == null) {
-				return null;
-			}
+      if (name == null) {
+        return null;
+      }
 
-			Utf8 descriptor;
-			descriptor = utf8(descriptorIndex);
+      Utf8 descriptor;
+      descriptor = utf8(descriptorIndex);
 
-			if (descriptor == null) {
-				return null;
-			}
+      if (descriptor == null) {
+        return null;
+      }
 
-			constantPoolEntries[index] = entry = new NameAndType(name.value, descriptor.value);
-		}
+      constantPoolEntries[index] = entry = new NameAndType(name.value, descriptor.value);
+    }
 
-		if (entry instanceof NameAndType name) {
-			return name;
-		}
+    if (entry instanceof NameAndType name) {
+      return name;
+    }
 
-		return null;
-	}
+    return null;
+  }
 
-	private Utf8 utf8(int index) {
-		Entry entry;
-		entry = constantPoolEntries[index];
+  private Utf8 utf8(int index) {
+    Entry entry;
+    entry = constantPoolEntries[index];
 
-		if (entry == null) {
-			bytesIndex = constantPoolIndex[index];
+    if (entry == null) {
+      bytesIndex = constantPoolIndex[index];
 
-			byte tag;
-			tag = nextByte();
+      byte tag;
+      tag = nextByte();
 
-			if (tag != CONSTANT_Utf8) {
-				return null;
-			}
+      if (tag != CONSTANT_Utf8) {
+        return null;
+      }
 
-			int length;
-			length = readU2();
+      int length;
+      length = readU2();
 
-			String value;
-			value = utf8Value(length);
+      String value;
+      value = utf8Value(length);
 
-			constantPoolEntries[index] = entry = new Utf8(value);
-		}
+      constantPoolEntries[index] = entry = new Utf8(value);
+    }
 
-		if (entry instanceof Utf8 utf8) {
-			return utf8;
-		}
+    if (entry instanceof Utf8 utf8) {
+      return utf8;
+    }
 
-		return null;
-	}
+    return null;
+  }
 
-	private String utf8Value(int length) {
-		// 1: assume ASCII only
+  private String utf8Value(int length) {
+    // 1: assume ASCII only
 
-		boolean asciiOnly;
-		asciiOnly = true;
+    boolean asciiOnly;
+    asciiOnly = true;
 
-		for (int offset = 0; offset < length; offset++) {
-			byte b;
-			b = bytes[bytesIndex + offset];
+    for (int offset = 0; offset < length; offset++) {
+      byte b;
+      b = bytes[bytesIndex + offset];
 
-			int i;
-			i = Bytes.toUnsignedInt(b);
+      int i;
+      i = Bytes.toUnsignedInt(b);
 
-			if (i > 0x7F) {
-				asciiOnly = false;
+      if (i > 0x7F) {
+        asciiOnly = false;
 
-				break;
-			}
-		}
+        break;
+      }
+    }
 
-		if (asciiOnly) {
-			return new String(bytes, bytesIndex, length, StandardCharsets.UTF_8);
-		}
+    if (asciiOnly) {
+      return new String(bytes, bytesIndex, length, StandardCharsets.UTF_8);
+    }
 
-		throw new UnsupportedOperationException("Implement me :: non ascii");
-	}
+    throw new UnsupportedOperationException("Implement me :: non ascii");
+  }
 
-	private boolean canRead(int qty) {
-		return bytesIndex + qty <= bytes.length;
-	}
+  private boolean canRead(int qty) {
+    return bytesIndex + qty <= bytes.length;
+  }
 
-	private void invalidClass(String message) {
-		noteSink.send(INVALID_CLASS, binaryName, message);
-	}
+  private void invalidClass(String message) {
+    noteSink.send(INVALID_CLASS, binaryName, message);
+  }
 
-	private int readU2() {
-		byte b0;
-		b0 = nextByte();
+  private int readU2() {
+    byte b0;
+    b0 = nextByte();
 
-		byte b1;
-		b1 = nextByte();
+    byte b1;
+    b1 = nextByte();
 
-		return Bytes.toBigEndianInt(b0, b1);
-	}
+    return Bytes.toBigEndianInt(b0, b1);
+  }
 
-	private int readU4() {
-		byte b0;
-		b0 = nextByte();
+  private int readU4() {
+    byte b0;
+    b0 = nextByte();
 
-		byte b1;
-		b1 = nextByte();
+    byte b1;
+    b1 = nextByte();
 
-		byte b2;
-		b2 = nextByte();
+    byte b2;
+    b2 = nextByte();
 
-		byte b3;
-		b3 = nextByte();
+    byte b3;
+    b3 = nextByte();
 
-		return Bytes.toBigEndianInt(b0, b1, b2, b3);
-	}
+    return Bytes.toBigEndianInt(b0, b1, b2, b3);
+  }
 
-	private byte nextByte() {
-		return bytes[bytesIndex++];
-	}
+  private byte nextByte() {
+    return bytes[bytesIndex++];
+  }
 
-	private static final List<String> PREFIXES = List.of(
-			"All", "Small", "Medium", "Large", "Extra", "Max", "Hover"
-	);
+  private static final List<String> PREFIXES = List.of(
+      "All", "Small", "Medium", "Large", "Extra", "Max", "Hover"
+  );
 
-	@Override
-	public final String generate() {
-		if (utilities == null) {
-			return "";
-		}
+  @Override
+  public final String generate() {
+    if (utilities == null) {
+      return "";
+    }
 
-		if (utilities.isEmpty()) {
-			return "";
-		}
+    if (utilities.isEmpty()) {
+      return "";
+    }
 
-		out = new StringBuilder();
+    out = new StringBuilder();
 
-		for (var prefix : PREFIXES) {
-			Map<String, Set<String>> values;
-			values = utilities.get(prefix);
+    for (var prefix : PREFIXES) {
+      Map<String, Set<String>> values;
+      values = utilities.get(prefix);
 
-			if (values == null) {
-				continue;
-			}
+      if (values == null) {
+        continue;
+      }
 
-			generate0(prefix, values);
-		}
+      generate0(prefix, values);
+    }
 
-		String result;
-		result = out.toString();
+    String result;
+    result = out.toString();
 
-		out = null;
+    out = null;
 
-		utilities = null;
+    utilities = null;
 
-		return result;
-	}
+    return result;
+  }
 
-	private void generate0(String prefix, Map<String, Set<String>> properties) {
-		switch (prefix) {
-			case "All", "Hover" -> generate1("", properties);
+  private void generate0(String prefix, Map<String, Set<String>> properties) {
+    switch (prefix) {
+      case "All", "Hover" -> generate1("", properties);
 
-			case "Small" -> generate1(Breakpoint.SM, "  ", properties);
+      case "Small" -> generate1(Breakpoint.SM, "  ", properties);
 
-			case "Medium" -> generate1(Breakpoint.MD, "  ", properties);
+      case "Medium" -> generate1(Breakpoint.MD, "  ", properties);
 
-			case "Large" -> generate1(Breakpoint.LG, "  ", properties);
+      case "Large" -> generate1(Breakpoint.LG, "  ", properties);
 
-			case "Extra" -> generate1(Breakpoint.XL, "  ", properties);
+      case "Extra" -> generate1(Breakpoint.XL, "  ", properties);
 
-			case "Max" -> generate1(Breakpoint.X2L, "  ", properties);
+      case "Max" -> generate1(Breakpoint.X2L, "  ", properties);
 
-			default -> noteSink.send(UNKNOWN_PREFIX, prefix);
-		}
-	}
+      default -> noteSink.send(UNKNOWN_PREFIX, prefix);
+    }
+  }
 
-	private void generate1(
-			int breakpoint, String indentation, Map<String, Set<String>> properties) {
-		out.append("@media (min-width: " + breakpoint + "px) {\n");
+  private void generate1(int breakpoint, String indentation, Map<String, Set<String>> properties) {
+    out.append("@media (min-width: " + breakpoint + "px) {\n");
 
-		generate1(indentation, properties);
+    generate1(indentation, properties);
 
-		out.append("}\n");
-	}
+    out.append("}\n");
+  }
 
-	private void generate1(String indentation, Map<String, Set<String>> properties) {
-		for (var entry : properties.entrySet()) {
-			String propertyName;
-			propertyName = entry.getKey();
+  private void generate1(String indentation, Map<String, Set<String>> properties) {
+    for (var entry : properties.entrySet()) {
+      String propertyName;
+      propertyName = entry.getKey();
 
-			Set<String> constants;
-			constants = entry.getValue();
+      Set<String> constants;
+      constants = entry.getValue();
 
-			generate2(indentation, propertyName, constants);
-		}
-	}
+      generate2(indentation, propertyName, constants);
+    }
+  }
 
-	@SuppressWarnings("unchecked")
-	private <T extends Enum<T>> void generate2(
-			String indentation, String propertyName, Set<String> constants) {
-		Class<? extends StylesGeneratorImpl> thisClass;
-		thisClass = getClass();
+  @SuppressWarnings("unchecked")
+  private <T extends Enum<T>> void generate2(String indentation, String propertyName, Set<String> constants) {
+    Class<? extends StylesGeneratorImpl> thisClass;
+    thisClass = getClass();
 
-		ClassLoader loader;
-		loader = thisClass.getClassLoader();
+    ClassLoader loader;
+    loader = thisClass.getClassLoader();
 
-		Class<?> clazz;
+    Class<?> clazz;
 
-		try {
-			clazz = loader.loadClass(propertyName);
-		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+    try {
+      clazz = loader.loadClass(propertyName);
+    } catch (ClassNotFoundException e) {
+      return;
+    }
 
-			return;
-		}
+    if (!clazz.isEnum()) {
+      return;
+    }
 
-		if (!clazz.isEnum()) {
-			return;
-		}
+    if (!StyleClass.class.isAssignableFrom(clazz)) {
+      return;
+    }
 
-		if (!StyleClass.class.isAssignableFrom(clazz)) {
-			return;
-		}
+    Class<T> enumClass;
+    enumClass = (Class<T>) clazz;
 
-		Class<T> enumClass;
-		enumClass = (Class<T>) clazz;
+    for (var constant : constants) {
+      T instance;
 
-		for (var constant : constants) {
-			T instance;
+      try {
+        instance = Enum.valueOf(enumClass, constant);
+      } catch (IllegalArgumentException e) {
+        return;
+      }
 
-			try {
-				instance = Enum.valueOf(enumClass, constant);
-			} catch (IllegalArgumentException e) {
-				return;
-			}
+      out.append(indentation);
 
-			out.append(indentation);
+      out.append(instance.toString());
 
-			out.append(instance.toString());
-
-			out.append('\n');
-		}
-	}
+      out.append('\n');
+    }
+  }
 
 }

@@ -80,7 +80,7 @@ $(2)compile: $$($(1)COMPILE_MARKER)
 
 $$($(1)COMPILE_MODULE_PATH): $$($(1)COMPILE_DEPS)
 ifneq ($$($(1)COMPILE_DEPS),)
-	cat $$^ | sort | uniq | paste --delimiter='$$(MODULE_PATH_SEPARATOR)' --serial > $$@
+	cat $$^ | sort -u | paste --delimiter='$$(MODULE_PATH_SEPARATOR)' --serial > $$@
 else
 	touch $$@
 endif
@@ -90,7 +90,7 @@ $$($(1)COMPILE_MARKER): $$($(1)COMPILE_REQS)
 	mkdir --parents $$(@D)
 	echo "$$($(1)CLASS_OUTPUT)" > $$@
 ifneq ($$($(1)COMPILE_DEPS),)
-	cat $$($(1)COMPILE_DEPS) | sort | uniq >> $$@
+	cat $$($(1)COMPILE_DEPS) | sort -u >> $$@
 endif
 
 endef

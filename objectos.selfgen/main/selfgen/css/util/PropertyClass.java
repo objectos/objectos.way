@@ -19,7 +19,7 @@ import objectos.code.ClassName;
 import objectos.code.Code;
 import objectos.lang.Check;
 
-public sealed abstract class PropertyClass permits AllButFirst, Property1, Property2, Property2x2 {
+public sealed abstract class PropertyClass permits AllButFirst, Property1, Property2, Property2x2, PropertyCustom {
 
   static final ClassName STYLE_CLASS = ThisTemplate.STYLE_CLASS;
 

@@ -33,174 +33,174 @@ import org.testng.annotations.Test;
 
 public class StylesGeneratorImplTest {
 
-	private StylesGeneratorImpl impl;
+  private StylesGeneratorImpl impl;
 
-	@BeforeClass
-	public void beforeClass() {
-		NoteSink noteSink;
-		noteSink = ConsoleNoteSink.of(Level.TRACE);
+  @BeforeClass
+  public void beforeClass() {
+    NoteSink noteSink;
+    noteSink = ConsoleNoteSink.of(Level.TRACE);
 
-		impl = new StylesGeneratorImpl(noteSink);
-	}
+    impl = new StylesGeneratorImpl(noteSink);
+  }
 
-	@Test
-	public void utility01() throws IOException {
-		// parse phase
-		String binaryName;
-		binaryName = Utility01.class.getName();
+  @Test
+  public void utility01() throws IOException {
+    // parse phase
+    String binaryName;
+    binaryName = Utility01.class.getName();
 
-		impl.binaryName = binaryName;
-		impl.state = State.START;
+    impl.binaryName = binaryName;
+    impl.state = State.START;
 
-		impl.execute();
+    impl.execute();
 
-		assertEquals(impl.binaryName, binaryName);
-		assertEquals(impl.bytes, null);
-		assertEquals(impl.bytesIndex, 0);
-		assertEquals(impl.constantPoolIndex, null);
-		assertEquals(impl.constantPoolEntries, null);
-		assertEquals(impl.iteratorIndex, 0);
-		assertEquals(impl.state, State.LOAD_CLASS);
+    assertEquals(impl.binaryName, binaryName);
+    assertEquals(impl.bytes, null);
+    assertEquals(impl.bytesIndex, 0);
+    assertEquals(impl.constantPoolIndex, null);
+    assertEquals(impl.constantPoolEntries, null);
+    assertEquals(impl.iteratorIndex, 0);
+    assertEquals(impl.state, State.LOAD_CLASS);
 
-		impl.execute();
+    impl.execute();
 
-		assertNotNull(impl.bytes);
-		assertEquals(impl.bytesIndex, 0);
-		assertEquals(impl.state, State.VERIFY_MAGIC);
+    assertNotNull(impl.bytes);
+    assertEquals(impl.bytesIndex, 0);
+    assertEquals(impl.state, State.VERIFY_MAGIC);
 
-		impl.execute();
+    impl.execute();
 
-		assertEquals(impl.bytesIndex, 4);
-		assertEquals(impl.state, State.CONSTANT_POOL_COUNT);
+    assertEquals(impl.bytesIndex, 4);
+    assertEquals(impl.state, State.CONSTANT_POOL_COUNT);
 
-		impl.execute();
+    impl.execute();
 
-		assertEquals(impl.bytesIndex, 10);
-		assertEquals(impl.constantPoolIndex.length, 39);
-		assertEquals(impl.iteratorIndex, 1);
-		assertEquals(impl.state, State.NEXT_POOL_INDEX);
+    assertEquals(impl.bytesIndex, 10);
+    assertEquals(impl.constantPoolIndex.length, 39);
+    assertEquals(impl.iteratorIndex, 1);
+    assertEquals(impl.state, State.NEXT_POOL_INDEX);
 
-		impl.execute();
+    impl.execute();
 
-		assertEquals(impl.iteratorIndex, 2);
-		assertEquals(impl.state, State.NEXT_POOL_INDEX);
+    assertEquals(impl.iteratorIndex, 2);
+    assertEquals(impl.state, State.NEXT_POOL_INDEX);
 
-		impl.execute();
+    impl.execute();
 
-		assertEquals(impl.iteratorIndex, 3);
-		assertEquals(impl.state, State.NEXT_POOL_INDEX);
+    assertEquals(impl.iteratorIndex, 3);
+    assertEquals(impl.state, State.NEXT_POOL_INDEX);
 
-		for (int i = 3; i <= 39; i++) {
-			impl.execute();
-		}
+    for (int i = 3; i <= 39; i++) {
+      impl.execute();
+    }
 
-		assertEquals(impl.iteratorIndex, 1);
-		assertEquals(impl.state, State.NEXT_POOL_ENTRY);
+    assertEquals(impl.iteratorIndex, 1);
+    assertEquals(impl.state, State.NEXT_POOL_ENTRY);
 
-		impl.execute();
+    impl.execute();
 
-		assertEquals(impl.iteratorIndex, 2);
-		assertEquals(impl.state, State.NEXT_POOL_ENTRY);
+    assertEquals(impl.iteratorIndex, 2);
+    assertEquals(impl.state, State.NEXT_POOL_ENTRY);
 
-		impl.execute();
+    impl.execute();
 
-		assertEquals(impl.iteratorIndex, 3);
-		assertEquals(impl.state, State.NEXT_POOL_ENTRY);
+    assertEquals(impl.iteratorIndex, 3);
+    assertEquals(impl.state, State.NEXT_POOL_ENTRY);
 
-		for (int i = 3; i <= 39; i++) {
-			impl.execute();
-		}
+    for (int i = 3; i <= 39; i++) {
+      impl.execute();
+    }
 
-		assertEquals(impl.state, State.STOP);
+    assertEquals(impl.state, State.STOP);
 
-		Map<String, Map<String, Set<String>>> result;
-		result = impl.utilities;
+    Map<String, Map<String, Set<String>>> result;
+    result = impl.utilities;
 
-		assertEquals(result.size(), 1);
-		assertEquals(result.containsKey("All"), true);
+    assertEquals(result.size(), 1);
+    assertEquals(result.containsKey("All"), true);
 
-		Map<String, Set<String>> all;
-		all = result.get("All");
+    Map<String, Set<String>> all;
+    all = result.get("All");
 
-		assertEquals(all.size(), 1);
-		assertEquals(all.get("objectos.html.style.All$Display"), Set.of("BLOCK"));
+    assertEquals(all.size(), 1);
+    assertEquals(all.get("objectos.html.style.All$Display"), Set.of("BLOCK"));
 
-		assertEquals(
-				impl.generate(),
+    assertEquals(
+        impl.generate(),
 
-				"""
+        """
       .%s { display: block }
       """.formatted(All.Display.BLOCK.className())
-		);
-	}
+    );
+  }
 
-	@Test
-	public void utility02() {
-		// parse phase
-		impl.scan(Utility02.class);
+  @Test
+  public void utility02() {
+    // parse phase
+    impl.scan(Utility02.class);
 
-		assertEquals(impl.state, State.STOP);
+    assertEquals(impl.state, State.STOP);
 
-		Map<String, Map<String, Set<String>>> result;
-		result = impl.utilities;
+    Map<String, Map<String, Set<String>>> result;
+    result = impl.utilities;
 
-		assertEquals(result.size(), 1);
-		assertEquals(result.containsKey("Large"), true);
+    assertEquals(result.size(), 1);
+    assertEquals(result.containsKey("Large"), true);
 
-		Map<String, Set<String>> large;
-		large = result.get("Large");
+    Map<String, Set<String>> large;
+    large = result.get("Large");
 
-		assertEquals(large.size(), 1);
-		assertEquals(large.get("objectos.html.style.Large$Display"), Set.of("FLEX"));
+    assertEquals(large.size(), 1);
+    assertEquals(large.get("objectos.html.style.Large$Display"), Set.of("FLEX"));
 
-		assertEquals(
-				impl.generate(),
+    assertEquals(
+        impl.generate(),
 
-				"""
+        """
       @media (min-width: 1024px) {
         .%s { display: flex }
       }
       """.formatted(Large.Display.FLEX.className())
-		);
-	}
+    );
+  }
 
-	@Test
-	public void utility03() {
-		// parse phase
-		impl.scan(Utility03.class);
+  @Test
+  public void utility03() {
+    // parse phase
+    impl.scan(Utility03.class);
 
-		assertEquals(impl.state, State.STOP);
+    assertEquals(impl.state, State.STOP);
 
-		Map<String, Map<String, Set<String>>> result;
-		result = impl.utilities;
+    Map<String, Map<String, Set<String>>> result;
+    result = impl.utilities;
 
-		assertEquals(result.size(), 1);
-		assertEquals(result.containsKey("Hover"), true);
+    assertEquals(result.size(), 1);
+    assertEquals(result.containsKey("Hover"), true);
 
-		Map<String, Set<String>> hover;
-		hover = result.get("Hover");
+    Map<String, Set<String>> hover;
+    hover = result.get("Hover");
 
-		assertEquals(hover.size(), 1);
-		assertEquals(hover.get("objectos.html.style.Hover$BackgroundColor"), Set.of("SLATE_100"));
+    assertEquals(hover.size(), 1);
+    assertEquals(hover.get("objectos.html.style.Hover$BackgroundColor"), Set.of("SLATE_100"));
 
-		assertEquals(
-				impl.generate(),
+    assertEquals(
+        impl.generate(),
 
-				"""
+        """
       .%s:hover { background-color: rgb(241 245 249) }
       """.formatted(Hover.BackgroundColor.SLATE_100.className())
-		);
-	}
+    );
+  }
 
-	@Test(enabled = false)
-	public void utility04() {
-		// parse phase
-		impl.scan(Utility04.class);
+  @Test(enabled = false)
+  public void utility04() {
+    // parse phase
+    impl.scan(Utility04.class);
 
-		assertEquals(
-				impl.generate(),
+    assertEquals(
+        impl.generate(),
 
-				"""
+        """
       .aaag { color: rgb(241 245 249) }
       @media (min-width: 640px) {
         .aahi { color: rgb(226 232 240) }
@@ -219,7 +219,7 @@ public class StylesGeneratorImplTest {
       }
       .abks:hover { color: rgb(51 65 85) }
       """.formatted(Hover.BackgroundColor.SLATE_100.className())
-		);
-	}
+    );
+  }
 
 }

@@ -21,14 +21,14 @@ import objectox.html.style.StylesGeneratorImpl;
 
 public sealed interface StylesGenerator permits StylesGeneratorImpl {
 
-	static StylesGenerator of(NoteSink noteSink) {
-		Check.notNull(noteSink, "noteSink == null");
+  static StylesGenerator of(NoteSink noteSink) {
+    Check.notNull(noteSink, "noteSink == null");
 
-		return new StylesGeneratorImpl(noteSink);
-	}
+    return new StylesGeneratorImpl(noteSink);
+  }
 
-	void scan(Class<?> clazz);
+  void scan(Class<?> clazz);
 
-	String generate();
+  String generate();
 
 }

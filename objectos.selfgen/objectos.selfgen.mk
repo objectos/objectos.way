@@ -73,7 +73,7 @@ $(foreach task,$(SELFGEN_TASKS),$(eval $(call $(task),SELFGEN_,selfgen@)))
 SELFGEN_RUNTIME_MODULE_PATH := $(SELFGEN_WORK)/runtime-module-path
 
 $(SELFGEN_RUNTIME_MODULE_PATH): $(SELFGEN_COMPILE_MARKER)
-	cat $^ | sort | uniq | paste --delimiter='$(MODULE_PATH_SEPARATOR)' --serial >> $@
+	cat $^ | sort -u | paste --delimiter='$(MODULE_PATH_SEPARATOR)' --serial > $@
 
 .PHONY: selfgen@clean-install-pom
 selfgen@clean-install-pom:
