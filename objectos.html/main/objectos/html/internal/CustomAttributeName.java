@@ -19,6 +19,8 @@ public enum CustomAttributeName implements AttributeName {
 
   DATA_WAY_CLICK(AttributeKind.STRING, "data-way-click"),
 
+  DATA_WAY_SUBMIT(AttributeKind.STRING, "data-way-submit"),
+
   PATH_TO(AttributeKind.STRING, "href");
 
   private static final CustomAttributeName[] ARRAY = values();

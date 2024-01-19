@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2023 Objectos Software LTDA.
+# Copyright (C) 2023-2024 Objectos Software LTDA.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -49,7 +49,7 @@ HTML_SCRIPT_JS_ARTIFACT = $(HTML_SCRIPT_CLASS_OUTPUT)/objectos/html/script/objec
 HTML_SCRIPT_JAR_FILE_REQS_MORE = $(HTML_SCRIPT_JS_ARTIFACT)
 
 ## copyright years for javadoc
-HTML_SCRIPT_COPYRIGHT_YEARS := 2022-2023
+HTML_SCRIPT_COPYRIGHT_YEARS := 2022-2024
 
 ## pom description
 HTML_SCRIPT_DESCRIPTION = Defines the types of the Objectos HTML domain specific language

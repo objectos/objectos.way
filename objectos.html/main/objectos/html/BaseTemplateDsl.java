@@ -27,275 +27,283 @@ import objectos.lang.object.Check;
  * Provides utility methods for Objectos HTML templates.
  */
 public sealed abstract class BaseTemplateDsl
-		extends BaseElementDsl
-		permits HtmlComponent, HtmlTemplate {
+    extends BaseElementDsl
+    permits HtmlComponent, HtmlTemplate {
 
-	BaseTemplateDsl() {}
+  BaseTemplateDsl() {}
 
-	protected final Api.Element dataWayClick(String text) {
-		Check.notNull(text, "text == null");
+  protected final Api.Element dataWayClick(String text) {
+    Check.notNull(text, "text == null");
 
-		api().attribute(CustomAttributeName.DATA_WAY_CLICK, text);
+    api().attribute(CustomAttributeName.DATA_WAY_CLICK, text);
 
-		return Api.ELEMENT;
-	}
+    return Api.ELEMENT;
+  }
 
-	/**
-	 * Flattens the specified instructions so that each of the specified
-	 * instructions is individually added, in order, to a receiving element.
-	 *
-	 * <p>
-	 * This is useful, for example, when creating {@link HtmlComponent} instances.
-	 * The following Objectos HTML code:
-	 *
-	 * {@snippet file = "objectos/html/BaseTemplateDslTest.java" region =
-	 * "flatten"}
-	 *
-	 * <p>
-	 * Generates the following HTML:
-	 *
-	 * <pre>{@code
-	 *    <body>
-	 *    <div class="my-component">
-	 *    <h1>Flatten example</h1>
-	 *    <p>First paragraph</p>
-	 *    <p>Second paragraph</p>
-	 *    </div>
-	 *    </body>
-	 * }</pre>
-	 *
-	 * <p>
-	 * The {@code div} instruction is rendered as if it was invoked with four
-	 * distinct instructions:
-	 *
-	 * <ul>
-	 * <li>the {@code class} attribute;
-	 * <li>the {@code h1} element;
-	 * <li>the first {@code p} element; and
-	 * <li>the second {@code p} element.
-	 * </ul>
-	 *
-	 * @param contents
-	 *        the instructions to be flattened
-	 *
-	 * @return an instruction representing this flatten operation
-	 */
-	protected final Api.Element flatten(Api.Instruction... contents) {
-		Check.notNull(contents, "contents == null");
+  protected final Api.Element dataWaySubmit(String text) {
+    Check.notNull(text, "text == null");
 
-		HtmlTemplateApi api;
-		api = api();
+    api().attribute(CustomAttributeName.DATA_WAY_SUBMIT, text);
 
-		api.flattenBegin();
+    return Api.ELEMENT;
+  }
 
-		for (int i = 0; i < contents.length; i++) {
-			Api.Instruction inst;
-			inst = Check.notNull(contents[i], "contents[", i, "] == null");
+  /**
+   * Flattens the specified instructions so that each of the specified
+   * instructions is individually added, in order, to a receiving element.
+   *
+   * <p>
+   * This is useful, for example, when creating {@link HtmlComponent} instances.
+   * The following Objectos HTML code:
+   *
+   * {@snippet file = "objectos/html/BaseTemplateDslTest.java" region =
+   * "flatten"}
+   *
+   * <p>
+   * Generates the following HTML:
+   *
+   * <pre>{@code
+   *    <body>
+   *    <div class="my-component">
+   *    <h1>Flatten example</h1>
+   *    <p>First paragraph</p>
+   *    <p>Second paragraph</p>
+   *    </div>
+   *    </body>
+   * }</pre>
+   *
+   * <p>
+   * The {@code div} instruction is rendered as if it was invoked with four
+   * distinct instructions:
+   *
+   * <ul>
+   * <li>the {@code class} attribute;
+   * <li>the {@code h1} element;
+   * <li>the first {@code p} element; and
+   * <li>the second {@code p} element.
+   * </ul>
+   *
+   * @param contents
+   *        the instructions to be flattened
+   *
+   * @return an instruction representing this flatten operation
+   */
+  protected final Api.Element flatten(Api.Instruction... contents) {
+    Check.notNull(contents, "contents == null");
 
-			api.elementValue(inst);
-		}
+    HtmlTemplateApi api;
+    api = api();
 
-		api.elementEnd();
+    api.flattenBegin();
 
-		return Api.ELEMENT;
-	}
+    for (int i = 0; i < contents.length; i++) {
+      Api.Instruction inst;
+      inst = Check.notNull(contents[i], "contents[", i, "] == null");
 
-	/**
-	 * Includes a fragment into this template represented by the specified lambda.
-	 *
-	 * <p>
-	 * The included fragment MUST only invoke methods this template instance. It
-	 * is common (but not required) for a fragment to be a method reference to
-	 * a private method of the template instance.
-	 *
-	 * <p>
-	 * The following Objectos HTML template:
-	 *
-	 * {@snippet file = "objectos/html/BaseTemplateDslTest.java" region =
-	 * "IncludeExample"}
-	 *
-	 * <p>
-	 * Generates the following HTML:
-	 *
-	 * <pre>{@code
-	 *     <!DOCTYPE html>
-	 *     <html>
-	 *     <head>
-	 *     <title>Include fragment example</title>
-	 *     </head>
-	 *     <body>
-	 *     <h1>Objectos HTML</h1>
-	 *     <p>Using the include instruction</p>
-	 *     </body>
-	 *     </html>
-	 * }</pre>
-	 *
-	 * <p>
-	 * Note that the methods of included method references all return
-	 * {@code void}.
-	 *
-	 * @param fragment
-	 *        the fragment to include
-	 *
-	 * @return an instruction representing this fragment
-	 */
-	protected final Api.Fragment include(FragmentLambda fragment) {
-		Check.notNull(fragment, "fragment == null");
+      api.elementValue(inst);
+    }
 
-		HtmlTemplateApi api;
-		api = api();
+    api.elementEnd();
 
-		int index;
-		index = api.fragmentBegin();
+    return Api.ELEMENT;
+  }
 
-		fragment.execute();
+  /**
+   * Includes a fragment into this template represented by the specified lambda.
+   *
+   * <p>
+   * The included fragment MUST only invoke methods this template instance. It
+   * is common (but not required) for a fragment to be a method reference to
+   * a private method of the template instance.
+   *
+   * <p>
+   * The following Objectos HTML template:
+   *
+   * {@snippet file = "objectos/html/BaseTemplateDslTest.java" region =
+   * "IncludeExample"}
+   *
+   * <p>
+   * Generates the following HTML:
+   *
+   * <pre>{@code
+   *     <!DOCTYPE html>
+   *     <html>
+   *     <head>
+   *     <title>Include fragment example</title>
+   *     </head>
+   *     <body>
+   *     <h1>Objectos HTML</h1>
+   *     <p>Using the include instruction</p>
+   *     </body>
+   *     </html>
+   * }</pre>
+   *
+   * <p>
+   * Note that the methods of included method references all return
+   * {@code void}.
+   *
+   * @param fragment
+   *        the fragment to include
+   *
+   * @return an instruction representing this fragment
+   */
+  protected final Api.Fragment include(FragmentLambda fragment) {
+    Check.notNull(fragment, "fragment == null");
 
-		api.fragmentEnd(index);
+    HtmlTemplateApi api;
+    api = api();
 
-		return Api.FRAGMENT;
-	}
+    int index;
+    index = api.fragmentBegin();
 
-	/**
-	 * Includes the specified template into this template.
-	 *
-	 * @param template
-	 *        the template to be included
-	 *
-	 * @return an instruction representing the inclusion of the template.
-	 */
-	protected final Api.Fragment include(HtmlTemplate template) {
-		Check.notNull(template, "template == null");
+    fragment.execute();
 
-		try {
-			HtmlTemplateApi api;
-			api = api();
+    api.fragmentEnd(index);
 
-			int index;
-			index = api.fragmentBegin();
+    return Api.FRAGMENT;
+  }
 
-			template.api = api;
+  /**
+   * Includes the specified template into this template.
+   *
+   * @param template
+   *        the template to be included
+   *
+   * @return an instruction representing the inclusion of the template.
+   */
+  protected final Api.Fragment include(HtmlTemplate template) {
+    Check.notNull(template, "template == null");
 
-			template.definition();
+    try {
+      HtmlTemplateApi api;
+      api = api();
 
-			api.fragmentEnd(index);
-		} finally {
-			template.api = null;
-		}
+      int index;
+      index = api.fragmentBegin();
 
-		return Api.FRAGMENT;
-	}
+      template.api = api;
 
-	/**
-	 * The no-op instruction.
-	 *
-	 * <p>
-	 * It can be used to conditionally add an attribute or element. For example,
-	 * the following Objectos HTML template:
-	 *
-	 * {@snippet file = "objectos/html/BaseTemplateDslTest.java" region = "noop"}
-	 *
-	 * <p>
-	 * Generates the following when {@code error == false}:
-	 *
-	 * <pre>{@code
-	 *     <div class="alert">This is an alert!</div>
-	 * }</pre>
-	 *
-	 * <p>
-	 * And generates the following when {@code error == true}:
-	 *
-	 * <pre>{@code
-	 *     <div class="alert alert-error">This is an alert!</div>
-	 * }</pre>
-	 *
-	 * @return the no-op instruction.
-	 */
-	protected final Api.NoOp noop() {
-		return Api.NOOP;
-	}
+      template.definition();
 
-	protected final Api.Element raw(String text) {
-		Check.notNull(text, "text == null");
+      api.fragmentEnd(index);
+    } finally {
+      template.api = null;
+    }
 
-		api().raw(text);
+    return Api.FRAGMENT;
+  }
 
-		return Api.ELEMENT;
-	}
+  /**
+   * The no-op instruction.
+   *
+   * <p>
+   * It can be used to conditionally add an attribute or element. For example,
+   * the following Objectos HTML template:
+   *
+   * {@snippet file = "objectos/html/BaseTemplateDslTest.java" region = "noop"}
+   *
+   * <p>
+   * Generates the following when {@code error == false}:
+   *
+   * <pre>{@code
+   *     <div class="alert">This is an alert!</div>
+   * }</pre>
+   *
+   * <p>
+   * And generates the following when {@code error == true}:
+   *
+   * <pre>{@code
+   *     <div class="alert alert-error">This is an alert!</div>
+   * }</pre>
+   *
+   * @return the no-op instruction.
+   */
+  protected final Api.NoOp noop() {
+    return Api.NOOP;
+  }
 
-	/**
-	 * Generates a text node with the specified {@code text} value. The text value
-	 * is escaped before being emitted to the output.
-	 *
-	 * <p>
-	 * The following Objectos HTML template:
-	 *
-	 * {@snippet file = "objectos/html/BaseTemplateDslTest.java" region = "text"}
-	 *
-	 * <p>
-	 * Generates the following HTML:
-	 *
-	 * <pre>{@code
-	 *     <p><strong>This is in bold</strong> &amp; this is not</p>
-	 * }</pre>
-	 *
-	 * @param text
-	 *        the text value to be added
-	 *
-	 * @return an instruction representing the text node
-	 */
-	protected final Api.Element t(String text) {
-		Check.notNull(text, "text == null");
+  protected final Api.Element raw(String text) {
+    Check.notNull(text, "text == null");
 
-		api().text(text);
+    api().raw(text);
 
-		return Api.ELEMENT;
-	}
+    return Api.ELEMENT;
+  }
 
-	@Override
-	final void ambiguous(Ambiguous name, String text) {
-		api().ambiguous(name, text);
-	}
+  /**
+   * Generates a text node with the specified {@code text} value. The text value
+   * is escaped before being emitted to the output.
+   *
+   * <p>
+   * The following Objectos HTML template:
+   *
+   * {@snippet file = "objectos/html/BaseTemplateDslTest.java" region = "text"}
+   *
+   * <p>
+   * Generates the following HTML:
+   *
+   * <pre>{@code
+   *     <p><strong>This is in bold</strong> &amp; this is not</p>
+   * }</pre>
+   *
+   * @param text
+   *        the text value to be added
+   *
+   * @return an instruction representing the text node
+   */
+  protected final Api.Element t(String text) {
+    Check.notNull(text, "text == null");
 
-	@Override
-	final void attribute(AttributeName name) {
-		api().attribute(name);
-	}
+    api().text(text);
 
-	@Override
-	final void attribute(AttributeName name, String value) {
-		HtmlTemplateApi api;
-		api = api();
+    return Api.ELEMENT;
+  }
 
-		api.attribute(name, value);
-	}
+  @Override
+  final void ambiguous(Ambiguous name, String text) {
+    api().ambiguous(name, text);
+  }
 
-	@Override
-	final void element(StandardElementName name, Api.Instruction[] contents) {
-		HtmlTemplateApi api;
-		api = api();
+  @Override
+  final void attribute(AttributeName name) {
+    api().attribute(name);
+  }
 
-		api.elementBegin(name);
+  @Override
+  final void attribute(AttributeName name, String value) {
+    HtmlTemplateApi api;
+    api = api();
 
-		for (int i = 0; i < contents.length; i++) {
-			Api.Instruction inst;
-			inst = Check.notNull(contents[i], "contents[", i, "] == null");
+    api.attribute(name, value);
+  }
 
-			api.elementValue(inst);
-		}
+  @Override
+  final void element(StandardElementName name, Api.Instruction[] contents) {
+    HtmlTemplateApi api;
+    api = api();
 
-		api.elementEnd();
-	}
+    api.elementBegin(name);
 
-	@Override
-	final void element(StandardElementName name, String text) {
-		HtmlTemplateApi api;
-		api = api();
+    for (int i = 0; i < contents.length; i++) {
+      Api.Instruction inst;
+      inst = Check.notNull(contents[i], "contents[", i, "] == null");
 
-		api.text(text);
+      api.elementValue(inst);
+    }
 
-		api.elementBegin(name);
-		api.elementValue(Api.ELEMENT);
-		api.elementEnd();
-	}
+    api.elementEnd();
+  }
+
+  @Override
+  final void element(StandardElementName name, String text) {
+    HtmlTemplateApi api;
+    api = api();
+
+    api.text(text);
+
+    api.elementBegin(name);
+    api.elementValue(Api.ELEMENT);
+    api.elementEnd();
+  }
 
 }

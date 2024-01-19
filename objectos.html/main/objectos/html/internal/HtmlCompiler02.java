@@ -744,6 +744,22 @@ public class HtmlCompiler02 extends HtmlCompiler01 {
           break loop;
         }
 
+        case ByteProto.ATTRIBUTE_ID -> {
+          int ordinal;
+          ordinal = StandardAttributeName.ID.ordinal();
+
+          byte attr;
+          attr = Bytes.encodeInt0(ordinal);
+
+          if (attr == currentAttr) {
+            nextState = _ATTRIBUTE_VALUES_HAS_NEXT;
+          }
+
+          index = rollbackIndex;
+
+          break loop;
+        }
+
         case ByteProto.ELEMENT,
              ByteProto.RAW,
              ByteProto.TEXT -> index = skipVarInt(index);

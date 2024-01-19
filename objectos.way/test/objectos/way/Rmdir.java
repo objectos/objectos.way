@@ -27,7 +27,8 @@ public final class Rmdir {
   private Rmdir() {}
 
   public static void rmdir(Path root) throws IOException {
-    var rm = new SimpleFileVisitor<Path>() {
+    SimpleFileVisitor<Path> rm;
+    rm = new SimpleFileVisitor<Path>() {
       @Override
       public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
         Files.delete(dir);

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Objectos Software LTDA.
+ * Copyright (C) 2023-2024 Objectos Software LTDA.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,62 +28,98 @@ import objectos.lang.object.Check;
 
 public final class WayJs extends HtmlComponent {
 
-	public WayJs(BaseTemplateDsl parent) {
-		super(parent);
-	}
+  public WayJs(BaseTemplateDsl parent) {
+    super(parent);
+  }
 
-	public static byte[] getBytes() throws IOException {
-		URL resource;
-		resource = WayJs.class.getResource("objectos.way.js");
+  public static byte[] getBytes() throws IOException {
+    URL resource;
+    resource = WayJs.class.getResource("objectos.way.js");
 
-		if (resource == null) {
-			throw new FileNotFoundException();
-		}
+    if (resource == null) {
+      throw new FileNotFoundException();
+    }
 
-		try (InputStream in = resource.openStream();
-				ByteArrayOutputStream out = new ByteArrayOutputStream()) {
-			in.transferTo(out);
+    try (InputStream in = resource.openStream();
+        ByteArrayOutputStream out = new ByteArrayOutputStream()) {
+      in.transferTo(out);
 
-			return out.toByteArray();
-		}
-	}
+      return out.toByteArray();
+    }
+  }
 
-	public final Element click(Command... commands) {
-		Check.notNull(commands, "commands == null");
+  public final Element click(Command... commands) {
+    Check.notNull(commands, "commands == null");
 
-		StringBuilder json;
-		json = new StringBuilder();
+    StringBuilder json;
+    json = new StringBuilder();
 
-		json.append('[');
+    json.append('[');
 
-		if (commands.length > 0) {
-			Command c;
-			c = commands[0];
+    if (commands.length > 0) {
+      Command c;
+      c = commands[0];
 
-			c.acceptJsonBuilder(json);
+      c.acceptJsonBuilder(json);
 
-			for (int i = 1; i < commands.length; i++) {
-				json.append(',');
+      for (int i = 1; i < commands.length; i++) {
+        json.append(',');
 
-				c = commands[i];
+        c = commands[i];
 
-				c.acceptJsonBuilder(json);
-			}
-		}
+        c.acceptJsonBuilder(json);
+      }
+    }
 
-		json.append(']');
+    json.append(']');
 
-		return dataWayClick(json.toString());
-	}
+    return dataWayClick(json.toString());
+  }
 
-	public final Command replaceClass(ExternalAttribute.Id id,
-																		ExternalAttribute.StyleClass from,
-																		ExternalAttribute.StyleClass to) {
-		Check.notNull(id, "id == null");
-		Check.notNull(from, "from == null");
-		Check.notNull(to, "to == null");
+  public final Element submit(Command... commands) {
+    Check.notNull(commands, "commands == null");
 
-		return new Command.ReplaceClass(id, from, to);
-	}
+    StringBuilder json;
+    json = new StringBuilder();
+
+    json.append('[');
+
+    if (commands.length > 0) {
+      Command c;
+      c = commands[0];
+
+      c.acceptJsonBuilder(json);
+
+      for (int i = 1; i < commands.length; i++) {
+        json.append(',');
+
+        c = commands[i];
+
+        c.acceptJsonBuilder(json);
+      }
+    }
+
+    json.append(']');
+
+    return dataWaySubmit(json.toString());
+  }
+
+  public final Command replaceClass(ExternalAttribute.Id id,
+                                    ExternalAttribute.StyleClass from,
+                                    ExternalAttribute.StyleClass to) {
+    Check.notNull(id, "id == null");
+    Check.notNull(from, "from == null");
+    Check.notNull(to, "to == null");
+
+    return new Command.ReplaceClass(id, from, to);
+  }
+
+  public final Command swap(ExternalAttribute.Id id,
+                            SwapMode mode) {
+    Check.notNull(id, "id == null");
+    Check.notNull(mode, "mode == null");
+
+    return new Command.Swap(id, mode);
+  }
 
 }

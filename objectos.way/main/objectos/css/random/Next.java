@@ -23,127 +23,127 @@ import objectos.lang.object.Check;
 
 public class Next {
 
-	public static class Builder {
+  public static class Builder {
 
-		private Random random;
+    private Random random;
 
-		private int length = 6;
+    private int length = 6;
 
-		private Builder() {}
+    private Builder() {}
 
-		public final Next build() {
-			if (random == null) {
-				random = new Random();
-			}
+    public final Next build() {
+      if (random == null) {
+        random = new Random();
+      }
 
-			return new Next(random, length);
-		}
+      return new Next(random, length);
+    }
 
-		public final Builder nameLength(int value) {
-			Check.argument(value > 0, "name length must be > 0");
+    public final Builder nameLength(int value) {
+      Check.argument(value > 0, "name length must be > 0");
 
-			length = value;
+      length = value;
 
-			return this;
-		}
+      return this;
+    }
 
-		public final Builder random(Random value) {
-			random = Check.notNull(value, "value == null");
+    public final Builder random(Random value) {
+      random = Check.notNull(value, "value == null");
 
-			return this;
-		}
+      return this;
+    }
 
-	}
+  }
 
-	private static final char[] DICTIONARY = "abcdefghijklmnopqrstuvwxyz".toCharArray();
+  private static final char[] DICTIONARY = "abcdefghijklmnopqrstuvwxyz".toCharArray();
 
-	private static final int MASK = 0x1F;
+  private static final int MASK = 0x1F;
 
-	private final Random random;
+  private final Random random;
 
-	private final int length;
+  private final int length;
 
-	private Next(Random random, int length) {
-		this.random = random;
+  private Next(Random random, int length) {
+    this.random = random;
 
-		this.length = length;
-	}
+    this.length = length;
+  }
 
-	public static Builder builder() {
-		return new Builder();
-	}
+  public static Builder builder() {
+    return new Builder();
+  }
 
-	public final ClassSelector classSelector() {
-		String name;
-		name = cssIdentifier();
+  public final ClassSelector classSelector() {
+    String name;
+    name = cssIdentifier();
 
-		return ClassSelector.of(name);
-	}
+    return ClassSelector.of(name);
+  }
 
-	public final <T extends Api.PropertyValue> CustomProperty<T> customProperty() {
-		String name;
-		name = "--" + cssIdentifier();
+  public final <T extends Api.PropertyValue> CustomProperty<T> customProperty() {
+    String name;
+    name = "--" + cssIdentifier();
 
-		return CustomProperty.named(name);
-	}
+    return CustomProperty.named(name);
+  }
 
-	@SuppressWarnings("fallthrough")
-	private String cssIdentifier() {
-		char[] result;
-		result = new char[length];
+  @SuppressWarnings("fallthrough")
+  private String cssIdentifier() {
+    char[] result;
+    result = new char[length];
 
-		int index;
-		index = 0;
+    int index;
+    index = 0;
 
-		int fullIntCount;
-		fullIntCount = length / 6;
+    int fullIntCount;
+    fullIntCount = length / 6;
 
-		for (int i = 0; i < fullIntCount; i++) {
-			int value;
-			value = random.nextInt();
+    for (int i = 0; i < fullIntCount; i++) {
+      int value;
+      value = random.nextInt();
 
-			result[index++] = DICTIONARY[((value >>> 25) & MASK) % DICTIONARY.length];
+      result[index++] = DICTIONARY[((value >>> 25) & MASK) % DICTIONARY.length];
 
-			result[index++] = DICTIONARY[((value >>> 20) & MASK) % DICTIONARY.length];
+      result[index++] = DICTIONARY[((value >>> 20) & MASK) % DICTIONARY.length];
 
-			result[index++] = DICTIONARY[((value >>> 15) & MASK) % DICTIONARY.length];
+      result[index++] = DICTIONARY[((value >>> 15) & MASK) % DICTIONARY.length];
 
-			result[index++] = DICTIONARY[((value >>> 10) & MASK) % DICTIONARY.length];
+      result[index++] = DICTIONARY[((value >>> 10) & MASK) % DICTIONARY.length];
 
-			result[index++] = DICTIONARY[((value >>> 5) & MASK) % DICTIONARY.length];
+      result[index++] = DICTIONARY[((value >>> 5) & MASK) % DICTIONARY.length];
 
-			result[index++] = DICTIONARY[(value & MASK) % DICTIONARY.length];
-		}
+      result[index++] = DICTIONARY[(value & MASK) % DICTIONARY.length];
+    }
 
-		int lastIntCount;
-		lastIntCount = length % 6;
+    int lastIntCount;
+    lastIntCount = length % 6;
 
-		if (lastIntCount > 0) {
-			int value;
-			value = random.nextInt();
+    if (lastIntCount > 0) {
+      int value;
+      value = random.nextInt();
 
-			switch (lastIntCount) {
-				case 5:
-					result[index + 4] = DICTIONARY[((value >>> 5) & MASK) % DICTIONARY.length];
-					// fall through
-				case 4:
-					result[index + 3] = DICTIONARY[((value >>> 10) & MASK) % DICTIONARY.length];
-					// fall through
-				case 3:
-					result[index + 2] = DICTIONARY[((value >>> 15) & MASK) % DICTIONARY.length];
-					// fall through
-				case 2:
-					result[index + 1] = DICTIONARY[((value >>> 20) & MASK) % DICTIONARY.length];
-					// fall through
-				case 1:
-					result[index + 0] = DICTIONARY[((value >>> 25) & MASK) % DICTIONARY.length];
-					break;
-				default:
-					throw new AssertionError("Should not happen");
-			}
-		}
+      switch (lastIntCount) {
+        case 5:
+          result[index + 4] = DICTIONARY[((value >>> 5) & MASK) % DICTIONARY.length];
+          // fall through
+        case 4:
+          result[index + 3] = DICTIONARY[((value >>> 10) & MASK) % DICTIONARY.length];
+          // fall through
+        case 3:
+          result[index + 2] = DICTIONARY[((value >>> 15) & MASK) % DICTIONARY.length];
+          // fall through
+        case 2:
+          result[index + 1] = DICTIONARY[((value >>> 20) & MASK) % DICTIONARY.length];
+          // fall through
+        case 1:
+          result[index + 0] = DICTIONARY[((value >>> 25) & MASK) % DICTIONARY.length];
+          break;
+        default:
+          throw new AssertionError("Should not happen");
+      }
+    }
 
-		return new String(result);
-	}
+    return new String(result);
+  }
 
 }

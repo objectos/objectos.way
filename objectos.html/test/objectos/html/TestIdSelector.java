@@ -19,15 +19,15 @@ import objectos.html.tmpl.Api;
 
 public final class TestIdSelector implements Api.ExternalAttribute.Id {
 
-	private final String id;
+  private final String id;
 
-	public TestIdSelector(String id) {
-		this.id = id;
-	}
+  public TestIdSelector(String id) {
+    this.id = id;
+  }
 
-	@Override
-	public final String id() {
-		return id;
-	}
+  @Override
+  public final String id() {
+    return id;
+  }
 
 }

@@ -15,66 +15,151 @@
  */
 (function() {
 
-  "use strict";
+    "use strict";
 
-  function clickListener(event) {
-    const target = event.target;
+    function clickListener(event) {
+        const target = event.target;
 
-    const dataset = target.dataset;
+        const dataset = target.dataset;
 
-    const click = dataset.wayClick;
+        const data = dataset.wayClick;
 
-    if (!click) {
-      return;
-    }
-
-    const arr = JSON.parse(click);
-
-    if (!Array.isArray(arr)) {
-      return;
-    }
-
-    for (const obj of arr) {
-      const cmd = obj.cmd;
-      const args = obj.args;
-
-      if (!cmd || !args) {
-        continue;
-      }
-
-      switch (cmd) {
-        case "replace-class":
-          if (args.length !== 3) {
+        if (!data) {
             return;
-          }
+        }
 
-          const id = args[0];
+        const way = JSON.parse(data);
 
-          const el = document.getElementById(id);
-
-          if (!el) {
+        if (!Array.isArray(way)) {
             return;
-          }
+        }
 
-          const classList = el.classList;
-
-          const classA = args[1];
-
-          const classB = args[2];
-
-          classList.replace(classA, classB);
-
-          break;
-      }
+        executeActions(way);
     }
-  }
 
-  function domLoaded() {
-    const body = document.body;
+    function submitListener(event) {
+        const target = event.target;
 
-    body.addEventListener("click", clickListener);
-  }
+        const dataset = target.dataset;
 
-  window.addEventListener("DOMContentLoaded", domLoaded);
+        const data = dataset.waySubmit;
+
+        if (!data) {
+            return;
+        }
+
+        const way = JSON.parse(data);
+
+        if (!Array.isArray(way)) {
+            return;
+        }
+
+        // verify we have all of the required properties
+        const tagName = target.tagName;
+
+        if (tagName !== "FORM") {
+            return;
+        }
+
+        const action = target.getAttribute("action");
+
+        if (!action) {
+            return;
+        }
+
+        const method = target.getAttribute("method");
+
+        if (!method) {
+            return;
+        }
+
+
+        const body = new FormData(target);
+
+        // this is a way form, we shouldn't submit it
+        event.preventDefault();
+
+        const xhr = new XMLHttpRequest();
+
+        xhr.open(method.toUpperCase(), action, true);
+
+        xhr.onload = (_) => {
+            executeActions(way, xhr.response);
+        }
+
+        xhr.send(body);
+    }
+
+    function executeActions(way, resp) {
+        for (const obj of way) {
+            const cmd = obj.cmd;
+
+            const args = obj.args;
+
+            if (!cmd || !args) {
+                continue;
+            }
+
+            switch (cmd) {
+                case "replace-class": {
+                    if (args.length !== 3) {
+                        return;
+                    }
+
+                    const id = args[0];
+
+                    const el = document.getElementById(id);
+
+                    if (!el) {
+                        return;
+                    }
+
+                    const classList = el.classList;
+
+                    const classA = args[1];
+
+                    const classB = args[2];
+
+                    classList.replace(classA, classB);
+
+                    break;
+                }
+
+                case "swap": {
+                    if (args.length !== 2) {
+                        return;
+                    }
+
+                    const id = args[0];
+
+                    const el = document.getElementById(id);
+
+                    if (!el) {
+                        return;
+                    }
+
+                    const mode = args[1];
+
+                    switch (mode) {
+                        case "innerHTML": { el.innerHTML = resp; }
+
+                        case "outerHTML": { el.outerHTML = resp; }
+                    }
+
+                    break;
+                }
+            }
+
+        }
+    }
+
+    function domLoaded() {
+        const body = document.body;
+
+        body.addEventListener("click", clickListener);
+        body.addEventListener("submit", submitListener);
+    }
+
+    window.addEventListener("DOMContentLoaded", domLoaded);
 
 })();

@@ -1045,6 +1045,32 @@ public class HtmlTemplateTest {
     );
   }
 
+  @Test(description = """
+  HtmlTemplate TC49
+
+  - ids and other attributes
+  """)
+  public void testCase49() {
+    test(
+        new HtmlTemplate() {
+          final TestIdSelector FOO = new TestIdSelector("foo");
+
+          @Override
+          protected final void definition() {
+            html(
+                lang("en"),
+                FOO,
+                className("bar")
+            );
+          }
+        },
+
+        """
+      <html lang="en" id="foo" class="bar"></html>
+      """
+    );
+  }
+
   private void test(HtmlTemplate template, String expected) {
     String result;
     result = template.toString();

@@ -13,13 +13,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-/**
- * Interactive web applications.
- */
-module objectos.html.script {
-	exports objectos.html.script;
+package objectos.web;
 
-	requires transitive objectos.html;
+import java.io.IOException;
+import java.nio.file.Path;
+import objectos.notes.NoteSink;
 
-	requires objectos.lang.object;
+public interface WebResources {
+
+  interface Bootstrapper extends AutoCloseable, WebResources {
+
+    void noteSink(NoteSink noteSink);
+
+    void copyDirectory(Path directory);
+
+    @Override
+    void close() throws IOException;
+
+  }
+
+  static Bootstrapper create() {
+    throw new UnsupportedOperationException("Implement me");
+  }
+
+  Path resolve(Path path);
+
 }
