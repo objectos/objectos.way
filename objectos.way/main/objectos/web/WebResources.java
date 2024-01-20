@@ -15,27 +15,10 @@
  */
 package objectos.web;
 
-import java.io.IOException;
 import java.nio.file.Path;
-import objectos.notes.NoteSink;
 
 public interface WebResources {
 
-  interface Bootstrapper extends AutoCloseable, WebResources {
-
-    void noteSink(NoteSink noteSink);
-
-    void copyDirectory(Path directory);
-
-    @Override
-    void close() throws IOException;
-
-  }
-
-  static Bootstrapper create() {
-    throw new UnsupportedOperationException("Implement me");
-  }
-
-  Path resolve(Path path);
+  Path regularFile(Path path);
 
 }

@@ -16,6 +16,7 @@
 package objectos.web;
 
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertNull;
 
 import java.io.IOException;
@@ -25,16 +26,26 @@ import objectos.lang.TestingNoteSink;
 import objectos.way.Rmdir;
 import org.testng.annotations.Test;
 
-public class WebResourcesTest {
+public class DefaultWebResourcesTest {
 
-  @Test(enabled = false, description = """
+  @Test(description = """
   It should copy all of the files from the specified directory
   """)
   public void testCase01() throws IOException {
     Path directory;
     directory = Files.createTempDirectory("way-test-");
 
-    try (WebResources.Bootstrapper resources = WebResources.create()) {
+    Path src;
+    src = directory.resolve("src");
+
+    Files.createDirectories(src);
+
+    Path target;
+    target = directory.resolve("target");
+
+    Files.createDirectories(target);
+
+    try (DefaultWebResources resources = new DefaultWebResources(target)) {
       resources.noteSink(TestingNoteSink.INSTANCE);
 
       Path a;
@@ -46,20 +57,22 @@ public class WebResourcesTest {
       Path c;
       c = Path.of("dir2", "c.txt");
 
-      assertNull(resources.resolve(a));
-      assertNull(resources.resolve(b));
-      assertNull(resources.resolve(c));
+      assertNull(resources.regularFile(a));
+      assertNull(resources.regularFile(b));
+      assertNull(resources.regularFile(c));
 
-      write(directory, a, "AAAA");
-      write(directory, b, "BBBB");
-      write(directory, b, "CCCC");
+      write(src, a, "AAAA");
+      write(src, b, "BBBB");
+      write(src, c, "CCCC");
 
-      resources.copyDirectory(directory);
+      resources.copyDirectory(src);
 
-      assertEquals(Files.readString(resources.resolve(a)), "AAAA");
-      assertEquals(Files.readString(resources.resolve(b)), "BBBB");
-      assertEquals(Files.readString(resources.resolve(c)), "CCCC");
+      assertEquals(Files.readString(resources.regularFile(a)), "AAAA");
+      assertEquals(Files.readString(resources.regularFile(b)), "BBBB");
+      assertEquals(Files.readString(resources.regularFile(c)), "CCCC");
     } finally {
+      assertFalse(Files.exists(target));
+
       Rmdir.rmdir(directory);
     }
   }
