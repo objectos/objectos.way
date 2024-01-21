@@ -1071,6 +1071,38 @@ public class HtmlTemplateTest {
     );
   }
 
+  @Test(description = """
+  HtmlTemplate TC50
+
+  - link elements in head should render in its own line
+  """)
+  public void testCase50() {
+    test(
+        new HtmlTemplate() {
+          @Override
+          protected final void definition() {
+            html(
+                head(
+                    meta(charset("utf-8")),
+                    link(rel("a"), href("a")),
+                    link(rel("b"), href("b"))
+                )
+            );
+          }
+        },
+
+        """
+        <html>
+        <head>
+        <meta charset="utf-8">
+        <link rel="a" href="a">
+        <link rel="b" href="b">
+        </head>
+        </html>
+        """
+    );
+  }
+
   private void test(HtmlTemplate template, String expected) {
     String result;
     result = template.toString();

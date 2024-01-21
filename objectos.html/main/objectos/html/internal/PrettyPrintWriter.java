@@ -40,7 +40,6 @@ public final class PrettyPrintWriter extends Writer {
       StandardElementName.INPUT.getName(),
       StandardElementName.KBD.getName(),
       StandardElementName.LABEL.getName(),
-      StandardElementName.LINK.getName(),
       StandardElementName.PROGRESS.getName(),
       StandardElementName.SAMP.getName(),
       StandardElementName.SELECT.getName(),
