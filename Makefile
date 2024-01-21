@@ -21,7 +21,7 @@
 ## Coordinates (required even if not installed)
 GROUP_ID := br.com.objectos
 ARTIFACT_ID := objectos.way
-VERSION := 0.9-SNAPSHOT
+VERSION := 0.9
 
 JAVA_RELEASE := 21
 
