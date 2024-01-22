@@ -16,79 +16,49 @@
 package objectos.way;
 
 import java.util.List;
-import java.util.stream.Stream;
 import org.testng.TestNG;
 import org.testng.xml.XmlPackage;
 import org.testng.xml.XmlSuite;
 import org.testng.xml.XmlTest;
 
 public class RunTests {
-	public static void main(String[] args) {
-		XmlSuite suite;
-		suite = new XmlSuite();
+  public static void main(String[] args) {
+    XmlSuite suite;
+    suite = new XmlSuite();
 
-		suite.setName("Objectos Way");
+    suite.setName("Objectos Args");
 
-		test(suite, "Objectos Lang", pkgs(
-				"objectos.lang",
-				"objectox.lang"
-		));
+    XmlTest test;
+    test = new XmlTest(suite);
 
-		test(suite, "Objectos Util", pkgs(
-				"objectos.util"
-		));
+    test.setName("All");
 
-		test(suite, "Objectos HTML", pkgs(
-				"objectos.html",
-				"objectos.html.internal",
-				"objectos.html.tmpl"
-		));
+    test.setXmlPackages(
+        List.of(
+            new XmlPackage("objectos.args"),
+            new XmlPackage("objectos.css.random"),
+            new XmlPackage("objectos.css.reset"),
+            new XmlPackage("objectos.css.select"),
+            new XmlPackage("objectos.lang"),
+            new XmlPackage("objectos.way"),
+            new XmlPackage("objectos.web"),
+            new XmlPackage("objectox.lang")
+        )
+    );
 
-		test(suite, "Objectos CSS", pkgs(
-				"objectos.css",
-				"objectos.css.util",
-				"objectox.css",
-				"objectox.css.util"
-		));
+    TestNG ng;
+    ng = new TestNG();
 
-		test(suite, "Objectos HTTP", pkgs(
-				"objectos.http",
-				"objectos.http.util",
-				"objectox.http"
-		));
+    if (args.length > 0) {
+      ng.setOutputDirectory(args[0]);
+    }
 
-		test(suite, "Objectos Notes", pkgs(
-				"objectos.notes"
-		));
+    ng.setXmlSuites(
+        List.of(suite)
+    );
 
-		TestNG ng;
-		ng = new TestNG();
+    ng.run();
 
-		ng.setOutputDirectory(args[0]);
-
-		ng.setXmlSuites(
-				List.of(suite)
-		);
-
-		ng.setVerbose(2);
-
-		ng.run();
-
-		System.exit(ng.getStatus());
-	}
-
-	private static void test(XmlSuite suite, String testName, List<XmlPackage> pkgs) {
-		XmlTest test;
-		test = new XmlTest(suite);
-
-		test.setName(testName);
-
-		test.setXmlPackages(pkgs);
-	}
-
-	private static List<XmlPackage> pkgs(String... names) {
-		return Stream.of(names)
-				.map(XmlPackage::new)
-				.toList();
-	}
+    System.exit(ng.getStatus());
+  }
 }

@@ -21,42 +21,53 @@ import objectos.lang.object.Check;
 
 public final class ClassSelector implements ExternalAttribute.StyleClass, ExternalClassSelector {
 
-	private final String className;
+  private final String className;
 
-	private ClassSelector(String className) {
-		Check.notNull(className, "className == null");
+  private ClassSelector(String className) {
+    Check.notNull(className, "className == null");
 
-		Check.argument(!className.isBlank(), "className must not be blank");
+    Check.argument(!className.isBlank(), "className must not be blank");
 
-		this.className = className;
-	}
+    this.className = className;
+  }
 
-	/**
-	 * Returns a new distinct class selector whose value is 4 characters in
-	 * length. Each returned value is distinct from any of the previously returned
-	 * values.
-	 *
-	 * @return a newly created class selector
-	 */
-	public static ClassSelector next() {
-		String id;
-		id = ClassSelectorSeqId.next();
+  /**
+   * Returns a new distinct class selector whose value is 4 characters in
+   * length. Each returned value is distinct from any of the previously returned
+   * values.
+   *
+   * @return a newly created class selector
+   */
+  public static ClassSelector next() {
+    String id;
+    id = ClassSelectorSeqId.next();
 
-		return new ClassSelector(id);
-	}
+    return new ClassSelector(id);
+  }
 
-	public static ClassSelector of(String className) {
-		return new ClassSelector(className);
-	}
+  public static ClassSelector of(String className) {
+    return new ClassSelector(className);
+  }
 
-	@Override
-	public final String className() {
-		return className;
-	}
+  @Override
+  public final String className() {
+    return className;
+  }
 
-	@Override
-	public final String toString() {
-		return "." + className;
-	}
+  @Override
+  public final String toString() {
+    return "." + className;
+  }
+
+  @Override
+  public final int hashCode() {
+    return className.hashCode();
+  }
+
+  @Override
+  public final boolean equals(Object obj) {
+    return obj == this || obj instanceof ClassSelector that
+        && className.equals(that.className);
+  }
 
 }

@@ -24,23 +24,23 @@ import org.testng.annotations.Test;
 
 public class NextTest {
 
-	@Test
-	public void test() {
-		Next.Builder b;
-		b = Next.builder();
+  @Test
+  public void test() {
+    Next.Builder b;
+    b = Next.builder();
 
-		b.random(new Random(123456789L));
+    b.random(new Random(123456789L));
 
-		b.nameLength(6);
+    b.nameLength(6);
 
-		Next next;
-		next = b.build();
+    Next next;
+    next = b.build();
 
-		assertEquals(next.classSelector(), ClassSelector.of("ufczvl"));
-		assertEquals(next.classSelector(), ClassSelector.of("bwrnib"));
+    assertEquals(next.classSelector(), ClassSelector.of("ufczvl"));
+    assertEquals(next.classSelector(), ClassSelector.of("bwrnib"));
 
-		assertEquals(next.customProperty(), CustomProperty.named("--apvswh"));
-		assertEquals(next.customProperty(), CustomProperty.named("--ateivq"));
-	}
+    assertEquals(next.customProperty(), CustomProperty.named("--apvswh"));
+    assertEquals(next.customProperty(), CustomProperty.named("--ateivq"));
+  }
 
 }

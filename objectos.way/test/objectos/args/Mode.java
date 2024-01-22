@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2022-2023 Objectos Software LTDA.
+ * Copyright (C) 2024 Objectos Software LTDA.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,24 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-/**
- * Defines the Objectos Way API.
- */
-module objectos.way {
-  exports objectos.args;
-  exports objectos.css.random;
-  exports objectos.css.reset;
-  exports objectos.css.select;
-  exports objectos.http.media;
-  exports objectos.web;
+package objectos.args;
 
-  requires transitive objectos.css;
-  requires transitive objectos.html;
-  requires transitive objectos.notes;
+public enum Mode {
 
-  requires objectos.lang.object;
-  requires objectos.util.array;
-  requires objectos.util.list;
-  requires objectos.util.map;
-  requires objectos.util.set;
+  DEV,
+
+  PROD;
+
 }
