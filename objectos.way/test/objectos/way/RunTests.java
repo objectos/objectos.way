@@ -26,7 +26,7 @@ public class RunTests {
     XmlSuite suite;
     suite = new XmlSuite();
 
-    suite.setName("Objectos Args");
+    suite.setName("Objectos Way");
 
     XmlTest test;
     test = new XmlTest(suite);
@@ -35,14 +35,8 @@ public class RunTests {
 
     test.setXmlPackages(
         List.of(
-            new XmlPackage("objectos.args"),
-            new XmlPackage("objectos.css.random"),
-            new XmlPackage("objectos.css.reset"),
-            new XmlPackage("objectos.css.select"),
-            new XmlPackage("objectos.lang"),
-            new XmlPackage("objectos.way"),
-            new XmlPackage("objectos.web"),
-            new XmlPackage("objectox.lang")
+            new XmlPackage("objectos.*"),
+            new XmlPackage("objectox.*")
         )
     );
 

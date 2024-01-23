@@ -21,7 +21,9 @@ module objectos.way {
   exports objectos.css.random;
   exports objectos.css.reset;
   exports objectos.css.select;
+  exports objectos.http;
   exports objectos.http.media;
+  exports objectos.http.server;
   exports objectos.web;
 
   requires transitive objectos.css;

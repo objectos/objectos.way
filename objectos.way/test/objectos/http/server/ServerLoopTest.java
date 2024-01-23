@@ -29,6 +29,7 @@ import objectos.http.Status;
 import objectos.util.array.ByteArrays;
 import objectox.http.server.ObjectoxHttpServer;
 import objectox.http.server.TestableSocket;
+import objectox.http.server.TestingClock;
 import org.testng.annotations.Test;
 
 public class ServerLoopTest {
@@ -627,6 +628,57 @@ public class ServerLoopTest {
       assertEquals(socket.outputAsString(), resp01);
 
       assertEquals(http.keepAlive(), true);
+    } catch (IOException e) {
+      throw new AssertionError("Failed with IOException", e);
+    }
+  }
+
+  @Test(description = """
+  It should resize buffer if necessary when writing out the response headers
+  """)
+  public void testCase009() {
+    TestableSocket socket;
+    socket = TestableSocket.of("""
+    GET / HTTP/1.1\r
+    Host: www.example.com\r
+    Connection: close\r
+    \r
+    """);
+
+    String etag;
+    etag = "AVeryLongEtagValueToTriggerTheBufferResizeWhenWritingOutTheHeaders";
+
+    String resp01 = """
+    HTTP/1.1 200 OK\r
+    Content-Type: text/plain; charset=utf-8\r
+    Content-Length: 5\r
+    Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+    ETag: %s\r
+    \r
+    AAAA
+    """.formatted(etag);
+
+    try (ServerLoop http = ServerLoop.create(socket)) {
+      http.bufferSize(128, 256);
+      http.clock(TestingClock.FIXED);
+      http.noteSink(TestingNoteSink.INSTANCE);
+
+      http.parse();
+
+      assertEquals(http.badRequest(), false);
+
+      http.status(Status.OK);
+      http.header(HeaderName.CONTENT_TYPE, "text/plain; charset=utf-8");
+      http.header(HeaderName.CONTENT_LENGTH, 5);
+      http.header(HeaderName.DATE, "Wed, 28 Jun 2023 12:08:43 GMT");
+      http.header(HeaderName.ETAG, etag);
+      http.send("AAAA\n".getBytes(StandardCharsets.UTF_8));
+
+      http.commit();
+
+      assertEquals(socket.outputAsString(), resp01);
+
+      assertEquals(http.keepAlive(), false);
     } catch (IOException e) {
       throw new AssertionError("Failed with IOException", e);
     }

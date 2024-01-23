@@ -108,8 +108,6 @@ MODULES += objectos.html.icon
 MODULES += objectos.html.script
 MODULES += objectos.html.style
 MODULES += objectos.css
-MODULES += objectos.http
-MODULES += objectos.http.server
 MODULES += objectos.http.session
 MODULES += objectos.lang.classloader
 MODULES += objectos.lang.runtime
@@ -192,9 +190,8 @@ WAY_TEST_JAVAX_READS = java.compiler
 WAY_TEST_JAVAX_READS += objectos.notes.console
 
 ## way test runtime exports
-WAY_TEST_JAVAX_EXPORTS = objectox.css
-WAY_TEST_JAVAX_EXPORTS += objectox.css.util
-WAY_TEST_JAVAX_EXPORTS += objectox.http
+WAY_TEST_JAVAX_EXPORTS := objectox.http
+WAY_TEST_JAVAX_EXPORTS += objectox.http.server
 WAY_TEST_JAVAX_EXPORTS += objectox.lang
 
 ## way copyright years for javadoc
@@ -220,8 +217,6 @@ WAY_SUBMODULES += html.icon
 WAY_SUBMODULES += html.script
 WAY_SUBMODULES += html.style
 WAY_SUBMODULES += css
-WAY_SUBMODULES += http
-WAY_SUBMODULES += http.server
 WAY_SUBMODULES += lang.classloader
 WAY_SUBMODULES += lang.runtime
 
@@ -242,8 +237,6 @@ WAY_OSSRH_BUNDLE_CONTENTS += $(HTML_ICON_OSSRH_PREPARE)
 WAY_OSSRH_BUNDLE_CONTENTS += $(HTML_SCRIPT_OSSRH_PREPARE)
 WAY_OSSRH_BUNDLE_CONTENTS += $(HTML_STYLE_OSSRH_PREPARE)
 WAY_OSSRH_BUNDLE_CONTENTS += $(CSS_OSSRH_PREPARE)
-WAY_OSSRH_BUNDLE_CONTENTS += $(HTTP_OSSRH_PREPARE)
-WAY_OSSRH_BUNDLE_CONTENTS += $(HTTP_SERVER_OSSRH_PREPARE)
 WAY_OSSRH_BUNDLE_CONTENTS += $(LANG_CLASSLOADER_OSSRH_PREPARE)
 WAY_OSSRH_BUNDLE_CONTENTS += $(LANG_RUNTIME_OSSRH_PREPARE)
 WAY_OSSRH_BUNDLE_CONTENTS += $(WAY_OSSRH_PREPARE)

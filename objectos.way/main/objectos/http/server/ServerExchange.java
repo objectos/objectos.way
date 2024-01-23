@@ -57,10 +57,25 @@ public interface ServerExchange {
 
   void header(HeaderName name, String value);
 
+  // pre-made headers
+
+  void dateNow();
+
   void send();
 
   void send(byte[] body);
 
   void send(Path file);
+
+  // pre-made responses
+
+  // 404
+  void notFound();
+
+  // 405
+  void methodNotAllowed();
+
+  // 500
+  void internalServerError(Throwable t);
 
 }

@@ -38,7 +38,7 @@ class SocketInput {
 
   int lineLimit;
 
-  private int maxBufferSize = 4096;
+  int maxBufferSize = 4096;
 
   public SocketInput() {
   }

@@ -18,11 +18,17 @@ package objectox.http.server;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.time.Clock;
+import java.time.ZonedDateTime;
+import java.util.Arrays;
 import objectos.http.HeaderName;
+import objectos.http.Http;
 import objectos.http.Method;
 import objectos.http.Status;
 import objectos.http.server.Body;
@@ -46,6 +52,8 @@ public final class ObjectoxServerLoop extends ObjectoxServerRequestBody implemen
   private static final byte _COMMITED = 4;
 
   // new fields / constructors
+
+  private Clock clock;
 
   private boolean keepAlive;
 
@@ -80,6 +88,13 @@ public final class ObjectoxServerLoop extends ObjectoxServerRequestBody implemen
     Check.argument(max >= initial, "max size must be >= initial size");
 
     super.bufferSize(initial, max);
+  }
+
+  @Override
+  public final void clock(Clock clock) {
+    checkConfig();
+
+    this.clock = Check.notNull(clock, "clock == null");
   }
 
   @Override
@@ -287,6 +302,26 @@ public final class ObjectoxServerLoop extends ObjectoxServerRequestBody implemen
     header0(name, value);
   }
 
+  @Override
+  public final void dateNow() {
+    checkResponse();
+
+    Clock theClock;
+    theClock = clock;
+
+    if (theClock == null) {
+      theClock = Clock.systemUTC();
+    }
+
+    ZonedDateTime now;
+    now = ZonedDateTime.now(theClock);
+
+    String value;
+    value = Http.formatDate(now);
+
+    header0(HeaderName.DATE, value);
+  }
+
   private void header0(HeaderName name, String value) { // write our the name
     int index;
     index = name.index();
@@ -350,6 +385,63 @@ public final class ObjectoxServerLoop extends ObjectoxServerRequestBody implemen
     responseBody = body;
   }
 
+  // 404 NOT FOUND
+
+  @Override
+  public final void notFound() {
+    status(Status.NOT_FOUND);
+
+    dateNow();
+
+    header0(HeaderName.CONNECTION, "close");
+
+    send();
+  }
+
+  // 405 METHOD NOT ALLOWED
+
+  @Override
+  public final void methodNotAllowed() {
+    status(Status.METHOD_NOT_ALLOWED);
+
+    dateNow();
+
+    header0(HeaderName.CONNECTION, "close");
+
+    send();
+  }
+
+  // 500 INTERNAL SERVER ERROR
+
+  @Override
+  public final void internalServerError(Throwable t) {
+    StringWriter sw;
+    sw = new StringWriter();
+
+    PrintWriter pw;
+    pw = new PrintWriter(sw);
+
+    t.printStackTrace(pw);
+
+    String msg;
+    msg = sw.toString();
+
+    byte[] bytes;
+    bytes = msg.getBytes();
+
+    status(Status.INTERNAL_SERVER_ERROR);
+
+    dateNow();
+
+    header(HeaderName.CONTENT_LENGTH, bytes.length);
+
+    header(HeaderName.CONTENT_TYPE, "text/plain");
+
+    header(HeaderName.CONNECTION, "close");
+
+    send(bytes);
+  }
+
   private void checkResponse() {
     if (state == _REQUEST) {
       bufferIndex = 0;
@@ -378,11 +470,21 @@ public final class ObjectoxServerLoop extends ObjectoxServerRequestBody implemen
     int length;
     length = bytes.length;
 
-    int remaining;
-    remaining = buffer.length - bufferIndex;
+    int requiredIndex;
+    requiredIndex = bufferIndex + length;
 
-    if (length > remaining) {
-      throw new UnsupportedOperationException("Implement me");
+    if (requiredIndex >= buffer.length) {
+      int minSize;
+      minSize = requiredIndex + 1;
+
+      int newSize;
+      newSize = powerOfTwo(minSize);
+
+      if (newSize > maxBufferSize) {
+        throw new UnsupportedOperationException("Implement me");
+      }
+
+      buffer = Arrays.copyOf(buffer, newSize);
     }
 
     System.arraycopy(bytes, 0, buffer, bufferIndex, length);

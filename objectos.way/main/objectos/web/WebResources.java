@@ -16,9 +16,12 @@
 package objectos.web;
 
 import java.nio.file.Path;
+import objectos.http.server.ServerExchange;
 
 public interface WebResources {
 
   Path regularFile(Path path);
+
+  void handle(ServerExchange http);
 
 }
