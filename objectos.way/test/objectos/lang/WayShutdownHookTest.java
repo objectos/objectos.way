@@ -13,28 +13,32 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.lang.runtime;
+package objectos.lang;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertSame;
 import static org.testng.Assert.assertTrue;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
+import objectos.notes.Note1;
+import objectos.notes.Note2;
+import objectos.way.TestingNoteSink;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-public class ShutdownHookTest {
+public class WayShutdownHookTest {
 
   @Test
   public void getShutdownHook() {
-    ShutdownHookNoteSink noteSink;
-    noteSink = new ShutdownHookNoteSink();
+    WayShutdownHook hook;
+    hook = new WayShutdownHook();
 
-    StandardShutdownHook hook;
-    hook = (StandardShutdownHook) ShutdownHook.of(
-        ShutdownHook.Option.noteSink(noteSink)
-    );
+    ThisNoteSink noteSink;
+    noteSink = new ThisNoteSink();
+
+    hook.noteSink(noteSink);
 
     CloseableImpl cleanClosable;
     cleanClosable = new CloseableImpl();
@@ -115,6 +119,32 @@ public class ShutdownHookTest {
     } catch (InterruptedException e) {
       Assert.fail("InterruptedException", e);
     }
+  }
+
+  private static class ThisNoteSink extends TestingNoteSink {
+
+    final List<Throwable> exceptions = new ArrayList<>();
+
+    final List<Object> hooks = new ArrayList<>();
+
+    @Override
+    public <T1> void send(Note1<T1> note, T1 v1) {
+      super.send(note, v1);
+
+      if (note == WayShutdownHook.REGISTRATION) {
+        hooks.add(v1);
+      }
+    }
+
+    @Override
+    public <T1, T2> void send(Note2<T1, T2> note, T1 v1, T2 v2) {
+      super.send(note, v1, v2);
+
+      if (v2 instanceof Throwable t) {
+        exceptions.add(t);
+      }
+    }
+
   }
 
 }

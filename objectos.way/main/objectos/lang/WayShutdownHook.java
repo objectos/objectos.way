@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.lang.runtime;
+package objectos.lang;
 
 import java.util.List;
 import objectos.lang.object.Check;
@@ -25,24 +25,34 @@ import objectos.notes.Note2;
 import objectos.notes.NoteSink;
 import objectos.util.list.GrowableList;
 
-final class StandardShutdownHook implements ShutdownHook {
-
-  static final Note1<Object> REGISTRATION;
-
-  static {
-    Class<?> source;
-    source = ShutdownHook.class;
-
-    REGISTRATION = Note1.info(source, "Registration [hook]");
-  }
-
-  private NoteSink noteSink = NoOpNoteSink.of();
-
-  private Job job;
+/**
+ * The standard Objectos Way {@link ShutdownHook} implementation.
+ *
+ * <p>
+ * Instances of this class are not thread-safe.
+ */
+public final class WayShutdownHook implements ShutdownHook {
 
   private final List<Object> hooks = new GrowableList<>();
 
-  StandardShutdownHook() {}
+  private final Job job;
+
+  private NoteSink noteSink = NoOpNoteSink.of();
+
+  public WayShutdownHook() {
+    job = new Job();
+
+    job.setDaemon(true);
+
+    Runtime runtime;
+    runtime = Runtime.getRuntime();
+
+    runtime.addShutdownHook(job);
+  }
+
+  public final void noteSink(NoteSink sink) {
+    noteSink = Check.notNull(sink, "sink == null");
+  }
 
   @Override
   public final void addAutoCloseable(AutoCloseable closeable) {
@@ -58,16 +68,10 @@ final class StandardShutdownHook implements ShutdownHook {
     addHook(thread);
   }
 
-  final void noteSink(NoteSink sink) {
-    noteSink = Check.notNull(sink, "sink == null");
-  }
-
   private void addHook(Object hook) {
-    synchronized (hooks) {
-      noteSink.send(REGISTRATION, hook);
+    noteSink.send(REGISTRATION, hook);
 
-      hooks.add(hook);
-    }
+    hooks.add(hook);
   }
 
   // visible for testing
@@ -77,19 +81,6 @@ final class StandardShutdownHook implements ShutdownHook {
     job.join();
 
     return job;
-  }
-
-  final ShutdownHook register() {
-    job = new Job();
-
-    job.setDaemon(true);
-
-    Runtime runtime;
-    runtime = Runtime.getRuntime();
-
-    runtime.addShutdownHook(job);
-
-    return this;
   }
 
   /*
@@ -108,7 +99,7 @@ final class StandardShutdownHook implements ShutdownHook {
 
     static {
       Class<?> s;
-      s = StandardShutdownHook.class;
+      s = WayShutdownHook.class;
 
       START = Note0.info(s, "Start");
 

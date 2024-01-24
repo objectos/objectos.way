@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Objectos Software LTDA.
+ * Copyright (C) 2023-2024 Objectos Software LTDA.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,10 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.lang.runtime;
+package objectos.web;
 
-non-sealed abstract class OptionValue implements ShutdownHook.Option {
+import java.io.Closeable;
+import java.io.IOException;
+import java.net.InetAddress;
+import java.net.ServerSocket;
+import objectos.notes.Note1;
 
-  public abstract void accept(StandardShutdownHook builder);
+public interface WebServer extends Closeable {
+
+  Note1<ServerSocket> LISTENING = Note1.info(WebServer.class, "Listening");
+
+  void start() throws IOException;
+
+  InetAddress address();
+
+  int port();
 
 }

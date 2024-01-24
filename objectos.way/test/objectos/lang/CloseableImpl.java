@@ -13,31 +13,35 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.lang.runtime;
+package objectos.lang;
 
-import java.util.ArrayList;
-import java.util.List;
-import objectos.notes.NoOpNoteSink;
-import objectos.notes.Note1;
-import objectos.notes.Note2;
+import java.io.Closeable;
+import java.io.IOException;
 
-final class ShutdownHookNoteSink extends NoOpNoteSink {
+final class CloseableImpl implements Closeable {
 
-  final List<Throwable> exceptions = new ArrayList<>();
+  boolean closed;
 
-  final List<Object> hooks = new ArrayList<>();
+  IOException exception;
 
-  @Override
-  public <T1> void send(Note1<T1> note, T1 v1) {
-    if (note == StandardShutdownHook.REGISTRATION) {
-      hooks.add(v1);
-    }
+  CloseableImpl() {}
+
+  CloseableImpl(IOException exception) {
+    this.exception = exception;
   }
 
   @Override
-  public <T1, T2> void send(Note2<T1, T2> note, T1 v1, T2 v2) {
-    if (v2 instanceof Throwable t) {
-      exceptions.add(t);
+  public final void close() throws IOException {
+    closed = true;
+
+    if (exception != null) {
+      throw exception;
+    }
+  }
+
+  public final void throwIoException(IOException exception) throws IOException {
+    if (exception != null) {
+      throw exception;
     }
   }
 

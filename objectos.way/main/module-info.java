@@ -24,6 +24,8 @@ module objectos.way {
   exports objectos.http;
   exports objectos.http.media;
   exports objectos.http.server;
+  exports objectos.http.session;
+  exports objectos.lang;
   exports objectos.web;
 
   requires transitive objectos.css;

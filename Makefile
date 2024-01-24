@@ -108,9 +108,7 @@ MODULES += objectos.html.icon
 MODULES += objectos.html.script
 MODULES += objectos.html.style
 MODULES += objectos.css
-MODULES += objectos.http.session
 MODULES += objectos.lang.classloader
-MODULES += objectos.lang.runtime
 
 ## common module tasks
 MODULE_TASKS  = CLEAN_TASK
@@ -218,7 +216,6 @@ WAY_SUBMODULES += html.script
 WAY_SUBMODULES += html.style
 WAY_SUBMODULES += css
 WAY_SUBMODULES += lang.classloader
-WAY_SUBMODULES += lang.runtime
 
 ## way bundle contents
 WAY_OSSRH_BUNDLE_CONTENTS = $(LANG_OBJECT_OSSRH_PREPARE)
@@ -238,7 +235,6 @@ WAY_OSSRH_BUNDLE_CONTENTS += $(HTML_SCRIPT_OSSRH_PREPARE)
 WAY_OSSRH_BUNDLE_CONTENTS += $(HTML_STYLE_OSSRH_PREPARE)
 WAY_OSSRH_BUNDLE_CONTENTS += $(CSS_OSSRH_PREPARE)
 WAY_OSSRH_BUNDLE_CONTENTS += $(LANG_CLASSLOADER_OSSRH_PREPARE)
-WAY_OSSRH_BUNDLE_CONTENTS += $(LANG_RUNTIME_OSSRH_PREPARE)
 WAY_OSSRH_BUNDLE_CONTENTS += $(WAY_OSSRH_PREPARE)
 
 #

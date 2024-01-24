@@ -15,6 +15,7 @@
  */
 package objectos.http.server;
 
+@FunctionalInterface
 public interface HttpModule {
 
   void handle(ServerExchange exchange);
