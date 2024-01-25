@@ -20,6 +20,7 @@ import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.time.Clock;
+import objectos.http.server.HandlerFactory;
 import objectos.lang.object.Check;
 import objectos.notes.NoOpNoteSink;
 import objectos.notes.NoteSink;
@@ -30,7 +31,7 @@ public class WayWebServer implements WebServer {
 
   private int bufferSizeMax = 4096;
 
-  private Clock clock;
+  private Clock clock = Clock.systemUTC();
 
   private final HandlerFactory factory;
 

@@ -17,10 +17,13 @@ package objectos.web;
 
 import java.nio.file.Path;
 import objectos.http.server.ServerExchange;
+import objectos.notes.Note1;
 
 public interface WebResources {
 
-  Path regularFile(Path path);
+  Note1<Path> CREATED = Note1.debug(WebResources.class, "File created");
+
+  Note1<Path> TRAVERSAL = Note1.error(WebResources.class, "Traversal detected");
 
   void handle(ServerExchange http);
 

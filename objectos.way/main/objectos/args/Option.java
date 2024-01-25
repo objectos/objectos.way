@@ -52,6 +52,10 @@ public abstract class Option<T> {
     this.activator = Objects.requireNonNull(activator, "activator == null");
   }
 
+  public final void description(String description) {
+    // no-op for now...
+  }
+
   public final T get() {
     if (value == null) {
       throw new NoSuchElementException();

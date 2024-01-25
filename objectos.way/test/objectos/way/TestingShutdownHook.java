@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Objectos Software LTDA.
+ * Copyright (C) 2023-2024 Objectos Software LTDA.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,11 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.http.server;
+package objectos.way;
 
-@FunctionalInterface
-public interface HttpModule {
+import objectos.lang.ShutdownHook;
+import objectos.lang.WayShutdownHook;
 
-  void handle(ServerExchange exchange);
+public final class TestingShutdownHook {
+
+  public static final ShutdownHook INSTANCE;
+
+  static {
+    WayShutdownHook shutdownHook;
+    shutdownHook = new WayShutdownHook();
+
+    shutdownHook.noteSink(TestingNoteSink.INSTANCE);
+
+    INSTANCE = shutdownHook;
+  }
+
+  public static void register(AutoCloseable closeable) {
+    INSTANCE.addAutoCloseable(closeable);
+  }
 
 }

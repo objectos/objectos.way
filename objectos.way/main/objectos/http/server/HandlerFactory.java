@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with Objectos UI.  If not, see <https://www.gnu.org/licenses/>.
  */
-package objectos.web;
+package objectos.http.server;
 
 @FunctionalInterface
 public interface HandlerFactory {

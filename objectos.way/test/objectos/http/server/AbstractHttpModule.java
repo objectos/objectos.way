@@ -21,7 +21,7 @@ import objectos.http.Method;
 import objectos.http.Status;
 import objectos.http.server.UriPath.Segment;
 
-public abstract class AbstractHttpModule implements HttpModule {
+public abstract class AbstractHttpModule implements Handler {
 
   protected final Clock clock;
 

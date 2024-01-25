@@ -16,9 +16,15 @@
 package objectos.web;
 
 import java.io.IOException;
+import java.nio.file.FileAlreadyExistsException;
+import java.nio.file.FileVisitResult;
+import java.nio.file.FileVisitor;
 import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
+import java.nio.file.SimpleFileVisitor;
+import java.nio.file.StandardCopyOption;
+import java.nio.file.StandardOpenOption;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.nio.file.attribute.FileTime;
 import java.util.Map;
@@ -27,30 +33,13 @@ import objectos.http.Method;
 import objectos.http.Status;
 import objectos.http.server.ServerExchange;
 import objectos.http.server.UriPath;
+import objectos.io.FileVisitors;
 import objectos.lang.object.Check;
 import objectos.notes.NoOpNoteSink;
-import objectos.notes.Note1;
 import objectos.notes.NoteSink;
 import objectos.util.map.GrowableMap;
 
 public final class WayWebResources implements AutoCloseable, WebResources {
-
-  public static final Note1<Path> CREATED;
-
-  private static final Note1<Path> ABSOLUTE;
-
-  private static final Note1<Path> TRAVERSAL;
-
-  static {
-    Class<?> source;
-    source = WayWebResources.class;
-
-    CREATED = Note1.info(source, "File created");
-
-    ABSOLUTE = Note1.error(source, "Absolute!");
-
-    TRAVERSAL = Note1.error(source, "Traversal!");
-  }
 
   private final Map<String, String> contentTypes = new GrowableMap<>();
 
@@ -58,25 +47,15 @@ public final class WayWebResources implements AutoCloseable, WebResources {
 
   private NoteSink noteSink = NoOpNoteSink.of();
 
-  private final Path root;
+  private final Path rootDirectory;
 
-  public WayWebResources(Path root) {
-    Check.notNull(root, "target == null");
-    checkDirectory(root);
-
-    this.root = root;
+  public WayWebResources() throws IOException {
+    rootDirectory = Files.createTempDirectory("way-web-resources-");
   }
 
-  private static void checkDirectory(Path dir) {
-    if (!Files.isDirectory(dir)) {
-      throw new IllegalArgumentException("""
-          Invalid directory '%s'
-
-          - the path does not exist
-          - the path exists but it is not a directory
-          - the path may exist but it is not accessible
-          """.formatted(dir));
-    }
+  // visible for testing
+  WayWebResources(Path root) {
+    this.rootDirectory = root;
   }
 
   public final WayWebResources contentType(String extension, String contentType) {
@@ -94,6 +73,96 @@ public final class WayWebResources implements AutoCloseable, WebResources {
     return this;
   }
 
+  public final void copyDirectory(Path directory) throws IOException {
+    Check.notNull(directory, "directory == null");
+
+    CopyRecursively copyRecursively;
+    copyRecursively = new CopyRecursively(directory);
+
+    Files.walkFileTree(directory, copyRecursively);
+  }
+
+  private class CopyRecursively extends SimpleFileVisitor<Path> {
+
+    private final Path source;
+
+    public CopyRecursively(Path source) {
+      this.source = source;
+    }
+
+    @Override
+    public final FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
+      Path path;
+      path = source.relativize(dir);
+
+      Path dest;
+      dest = rootDirectory.resolve(path);
+
+      try {
+        Files.copy(dir, dest);
+      } catch (FileAlreadyExistsException e) {
+        if (!Files.isDirectory(dest)) {
+          throw e;
+        }
+      }
+
+      return FileVisitResult.CONTINUE;
+    }
+
+    @Override
+    public final FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+      Path path;
+      path = source.relativize(file);
+
+      Path dest;
+      dest = rootDirectory.resolve(path);
+
+      Files.copy(file, dest, StandardCopyOption.COPY_ATTRIBUTES);
+
+      noteSink.send(CREATED, dest);
+
+      return FileVisitResult.CONTINUE;
+    }
+
+  }
+
+  public final void createNew(Path path, byte[] bytes) throws IOException {
+    Check.argument(!path.isAbsolute(), "Path must not be absolute");
+    Check.notNull(bytes, "bytes == null");
+
+    Path file;
+    file = rootDirectory.resolve(path);
+
+    file = file.normalize();
+
+    if (!file.startsWith(rootDirectory)) {
+      throw new IllegalArgumentException("Traversal detected: " + path);
+    }
+
+    Path parent;
+    parent = file.getParent();
+
+    Files.createDirectories(parent);
+
+    Files.write(file, bytes, StandardOpenOption.CREATE_NEW);
+  }
+
+  final void setLastModifiedTime(Path path, FileTime fileTime) throws IOException {
+    Check.argument(!path.isAbsolute(), "Path must not be absolute");
+    Check.notNull(fileTime, "fileTime == null");
+
+    Path file;
+    file = rootDirectory.resolve(path);
+
+    file = file.normalize();
+
+    if (!file.startsWith(rootDirectory)) {
+      throw new IllegalArgumentException("Traversal detected: " + path);
+    }
+
+    Files.setLastModifiedTime(file, fileTime);
+  }
+
   @Override
   public final void handle(ServerExchange http) {
     UriPath path;
@@ -109,11 +178,11 @@ public final class WayWebResources implements AutoCloseable, WebResources {
     relativePath = Path.of(relative);
 
     Path file;
-    file = root.resolve(relativePath);
+    file = rootDirectory.resolve(relativePath);
 
     file = file.normalize();
 
-    if (!file.startsWith(root)) {
+    if (!file.startsWith(rootDirectory)) {
       noteSink.send(TRAVERSAL, relativePath);
 
       http.notFound();
@@ -200,35 +269,11 @@ public final class WayWebResources implements AutoCloseable, WebResources {
   }
 
   @Override
-  public final Path regularFile(Path path) {
-    Check.notNull(path, "path == null");
-
-    if (path.isAbsolute()) {
-      noteSink.send(ABSOLUTE, path);
-
-      return null;
-    }
-
-    Path file;
-    file = root.resolve(path);
-
-    file = file.normalize();
-
-    if (!file.startsWith(root)) {
-      noteSink.send(TRAVERSAL, path);
-
-      return null;
-    }
-
-    if (!Files.isRegularFile(file)) {
-      return null;
-    }
-
-    return file;
-  }
-
-  @Override
   public final void close() throws IOException {
+    FileVisitor<Path> deleteRecursively;
+    deleteRecursively = FileVisitors.deleteRecursively();
+
+    Files.walkFileTree(rootDirectory, deleteRecursively);
   }
 
 }

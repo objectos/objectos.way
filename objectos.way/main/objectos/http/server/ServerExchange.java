@@ -16,9 +16,11 @@
 package objectos.http.server;
 
 import java.nio.file.Path;
+import java.util.function.Consumer;
 import objectos.http.HeaderName;
 import objectos.http.Method;
 import objectos.http.Status;
+import objectos.lang.object.Check;
 
 public interface ServerExchange {
 
@@ -51,6 +53,67 @@ public interface ServerExchange {
 
   // response
 
+  default void accept(Handler handler) {
+    handler.handle(this);
+  }
+
+  default void methodMatrix(Method method, Consumer<ServerExchange> handler) {
+    Check.notNull(method, "method == null");
+    Check.notNull(handler, "handler == null");
+
+    Method actual;
+    actual = method();
+
+    if (actual.is(method)) {
+      handler.accept(this);
+    } else {
+      methodNotAllowed();
+    }
+  }
+
+  default void methodMatrix(Method method1, Consumer<ServerExchange> handler1,
+                            Method method2, Consumer<ServerExchange> handler2) {
+    Check.notNull(method1, "method1 == null");
+    Check.notNull(handler1, "handler1 == null");
+    Check.notNull(method2, "method2 == null");
+    Check.notNull(handler2, "handler2 == null");
+
+    Method actual;
+    actual = method();
+
+    if (actual.is(method1)) {
+      handler1.accept(this);
+    } else if (actual.is(method2)) {
+      handler2.accept(this);
+    } else {
+      methodNotAllowed();
+    }
+  }
+
+  default void methodMatrix(Method method1, Consumer<ServerExchange> handler1,
+                            Method method2, Consumer<ServerExchange> handler2,
+                            Method method3, Consumer<ServerExchange> handler3) {
+    Check.notNull(method1, "method1 == null");
+    Check.notNull(handler1, "handler1 == null");
+    Check.notNull(method2, "method2 == null");
+    Check.notNull(handler2, "handler2 == null");
+    Check.notNull(method3, "method3 == null");
+    Check.notNull(handler3, "handler3 == null");
+
+    Method actual;
+    actual = method();
+
+    if (actual.is(method1)) {
+      handler1.accept(this);
+    } else if (actual.is(method2)) {
+      handler2.accept(this);
+    } else if (actual.is(method3)) {
+      handler3.accept(this);
+    } else {
+      methodNotAllowed();
+    }
+  }
+
   void status(Status status);
 
   void header(HeaderName name, long value);
@@ -60,6 +123,8 @@ public interface ServerExchange {
   // pre-made headers
 
   void dateNow();
+
+  // response body
 
   void send();
 

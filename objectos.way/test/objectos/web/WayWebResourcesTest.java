@@ -16,15 +16,17 @@
 package objectos.web;
 
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertFalse;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.attribute.FileTime;
 import java.time.Clock;
 import java.time.Instant;
 import objectos.http.server.ServerLoop;
-import objectos.way.Rmdir;
+import objectos.way.TestingDir;
 import objectos.way.TestingNoteSink;
 import objectox.http.server.TestableSocket;
 import objectox.http.server.TestingClock;
@@ -33,20 +35,25 @@ import org.testng.annotations.Test;
 public class WayWebResourcesTest {
 
   @Test(description = """
-  It should serve files from the root directory
+  It should copy directory recursively
   """)
   public void testCase01() throws IOException {
     Path root;
-    root = Files.createTempDirectory("way-test-");
+    root = TestingDir.next();
 
     try (WayWebResources resources = new WayWebResources(root)) {
       resources.contentType(".txt", "text/plain; charset=utf-8");
       resources.noteSink(TestingNoteSink.INSTANCE);
 
+      Path src;
+      src = TestingDir.next();
+
       Path a;
       a = Path.of("a.txt");
 
-      write(root, a, "AAAA\n");
+      write(src, a, "AAAA\n");
+
+      resources.copyDirectory(src);
 
       test(
           resources,
@@ -68,26 +75,27 @@ public class WayWebResourcesTest {
           AAAA
           """
       );
-    } finally {
-      Rmdir.rmdir(root);
     }
+
+    // it should have been deleted by close()
+    assertFalse(Files.exists(root));
   }
 
   @Test(description = """
   It should 404 if the file does not exist
   """)
   public void testCase02() throws IOException {
-    Path root;
-    root = Files.createTempDirectory("way-test-");
-
-    try (WayWebResources resources = new WayWebResources(root)) {
+    try (WayWebResources resources = new WayWebResources()) {
       resources.contentType(".txt", "text/plain; charset=utf-8");
       resources.noteSink(TestingNoteSink.INSTANCE);
+
+      Path src;
+      src = TestingDir.next();
 
       Path a;
       a = Path.of("a.txt");
 
-      write(root, a, "AAAA\n");
+      write(src, a, "AAAA\n");
 
       test(
           resources,
@@ -106,8 +114,6 @@ public class WayWebResourcesTest {
           \r
           """
       );
-    } finally {
-      Rmdir.rmdir(root);
     }
   }
 
@@ -116,16 +122,21 @@ public class WayWebResourcesTest {
   """)
   public void testCase03() throws IOException {
     Path root;
-    root = Files.createTempDirectory("way-test-");
+    root = TestingDir.next();
 
     try (WayWebResources resources = new WayWebResources(root)) {
       resources.contentType(".txt", "text/plain; charset=utf-8");
       resources.noteSink(TestingNoteSink.INSTANCE);
 
+      Path src;
+      src = TestingDir.next();
+
       Path a;
       a = Path.of("a.txt");
 
-      write(root, a, "AAAA\n");
+      write(src, a, "AAAA\n");
+
+      resources.copyDirectory(src);
 
       test(
           resources,
@@ -144,8 +155,56 @@ public class WayWebResourcesTest {
           \r
           """
       );
-    } finally {
-      Rmdir.rmdir(root);
+    }
+  }
+
+  @Test(description = """
+  It should be able to add custom files
+  """)
+  public void testCase04() throws IOException {
+    Path root;
+    root = TestingDir.next();
+
+    try (WayWebResources resources = new WayWebResources(root)) {
+      resources.contentType(".txt", "text/plain; charset=utf-8");
+      resources.noteSink(TestingNoteSink.INSTANCE);
+
+      Path a;
+      a = Path.of("assets", "a.txt");
+
+      resources.createNew(a, "AAAA\n".getBytes(StandardCharsets.UTF_8));
+
+      Clock clock;
+      clock = TestingClock.FIXED;
+
+      Instant instant;
+      instant = clock.instant();
+
+      FileTime fileTime;
+      fileTime = FileTime.from(instant);
+
+      resources.setLastModifiedTime(a, fileTime);
+
+      test(
+          resources,
+
+          """
+          GET /assets/a.txt HTTP/1.1\r
+          Host: www.example.com\r
+          Connection: close\r
+          \r
+          """,
+
+          """
+          HTTP/1.1 200 OK\r
+          Content-Type: text/plain; charset=utf-8\r
+          Content-Length: 5\r
+          Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+          ETag: 18901e7e8f8-5\r
+          \r
+          AAAA
+          """
+      );
     }
   }
 

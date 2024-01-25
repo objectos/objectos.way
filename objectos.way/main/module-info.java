@@ -25,6 +25,7 @@ module objectos.way {
   exports objectos.http.media;
   exports objectos.http.server;
   exports objectos.http.session;
+  exports objectos.io;
   exports objectos.lang;
   exports objectos.web;
 

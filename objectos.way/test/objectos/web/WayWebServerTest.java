@@ -19,71 +19,168 @@ import static org.testng.Assert.assertEquals;
 
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.lang.reflect.Method;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 import objectos.http.HeaderName;
 import objectos.http.Status;
+import objectos.http.server.Handler;
+import objectos.http.server.HandlerFactory;
+import objectos.http.server.ServerExchange;
+import objectos.http.server.ServerRequestHeaders;
+import objectos.http.server.UriPath;
+import objectos.http.server.UriPath.Segment;
 import objectos.notes.Note;
 import objectos.way.TestingNoteSink;
+import objectos.way.TestingShutdownHook;
 import objectox.http.server.TestingClock;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-public class WayWebServerTest {
+public class WayWebServerTest implements Handler {
 
-  @Test(description = """
-  It should default to loopback
-  """)
-  public void testCase01() throws Exception {
-    Handler handler = http -> {
-      http.status(Status.OK);
-      http.header(HeaderName.CONTENT_TYPE, "text/plain");
-      http.header(HeaderName.CONTENT_LENGTH, 5);
-      http.dateNow();
-      http.send("TC01\n".getBytes(StandardCharsets.UTF_8));
-    };
+  private WayWebServer server;
 
-    HandlerFactory factory = () -> handler;
+  @BeforeClass
+  public void startServer() throws Exception {
+    HandlerFactory factory;
+    factory = () -> this;
 
-    WayWebServer server;
     server = new WayWebServer(factory);
 
-    try {
-      server.bufferSize(128, 256);
-      server.clock(TestingClock.FIXED);
-      server.noteSink(new ThisNoteSink(server));
+    TestingShutdownHook.register(server);
 
-      server.start();
+    server.bufferSize(128, 256);
 
-      test(
-          server,
+    server.clock(TestingClock.FIXED);
 
-          """
-          GET / HTTP/1.1\r
-          Host: www.example.com\r
-          Connection: close\r
-          \r
-          """,
+    server.noteSink(new ThisNoteSink(server));
 
-          """
-          HTTP/1.1 200 OK\r
-          Content-Type: text/plain\r
-          Content-Length: 5\r
-          Date: Wed, 28 Jun 2023 12:08:43 GMT\r
-          \r
-          TC01
-          """
-      );
-    } finally {
-      server.close();
-    }
-  }
+    server.start();
 
-  private void test(WayWebServer server, String request, String expectedResponse) throws Exception {
     synchronized (server) {
       server.wait();
     }
+  }
 
+  @Override
+  public final void handle(ServerExchange http) {
+    ServerRequestHeaders headers;
+    headers = http.headers();
+
+    String host;
+    host = headers.first(HeaderName.HOST);
+
+    switch (host) {
+      case "www.example.com" -> handle0(http);
+
+      default -> throw new UnsupportedOperationException("Implement me");
+    }
+  }
+
+  private void handle0(ServerExchange http) {
+    UriPath path;
+    path = http.path();
+
+    List<Segment> segments;
+    segments = path.segments();
+
+    switch (segments.size()) {
+      case 2 -> handle1(http, segments);
+
+      default -> http.notFound();
+    }
+  }
+
+  private void handle1(ServerExchange http, List<Segment> segments) {
+    Segment first;
+    first = segments.getFirst();
+
+    if (!first.is("test")) {
+      http.notFound();
+
+      return;
+    }
+
+    Segment second;
+    second = segments.get(1);
+
+    String methodName;
+    methodName = second.value();
+
+    try {
+      Class<? extends WayWebServerTest> testClass;
+      testClass = getClass();
+
+      Method handlingMethod;
+      handlingMethod = testClass.getDeclaredMethod(methodName, ServerExchange.class);
+
+      handlingMethod.invoke(this, http);
+    } catch (Exception e) {
+      http.internalServerError(e);
+    }
+  }
+
+  @SuppressWarnings("unused")
+  private void testCase01(ServerExchange exchange) {
+    exchange.methodMatrix(objectos.http.Method.GET, this::testCase01Get);
+  }
+
+  private void testCase01Get(ServerExchange http) {
+    http.status(Status.OK);
+    http.header(HeaderName.CONTENT_TYPE, "text/plain");
+    http.header(HeaderName.CONTENT_LENGTH, 5);
+    http.dateNow();
+    http.send("TC01\n".getBytes(StandardCharsets.UTF_8));
+  }
+
+  @Test(description = """
+  methodMatrix with 1 method:
+  - accept declared method
+  - reject other methods
+  """)
+  public void testCase01() throws Exception {
+    test(
+        server,
+
+        """
+        GET /test/testCase01 HTTP/1.1\r
+        Host: www.example.com\r
+        \r
+        """,
+
+        """
+        HTTP/1.1 200 OK\r
+        Content-Type: text/plain\r
+        Content-Length: 5\r
+        Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+        \r
+        TC01
+        """
+    );
+
+    test(
+        server,
+
+        """
+        POST /test/testCase01 HTTP/1.1\r
+        Host: www.example.com\r
+        Connection: close\r
+        \r
+        """,
+
+        """
+        HTTP/1.1 405 METHOD NOT ALLOWED\r
+        Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+        Connection: close\r
+        \r
+        """
+    );
+  }
+
+  private void test(WayWebServer server, String request, String expectedResponse) throws Exception {
     InetAddress address;
     address = server.address();
 
