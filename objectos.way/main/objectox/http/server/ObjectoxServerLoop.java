@@ -32,6 +32,7 @@ import objectos.http.Http;
 import objectos.http.Method;
 import objectos.http.Status;
 import objectos.http.server.Body;
+import objectos.http.server.Handler;
 import objectos.http.server.ServerLoop;
 import objectos.http.server.ServerRequestHeaders;
 import objectos.http.server.UriPath;
@@ -265,6 +266,29 @@ public final class ObjectoxServerLoop extends ObjectoxServerRequestBody implemen
     }
 
     STATUS_LINES = map;
+  }
+
+  @Override
+  public final void methodMatrix(Method method, Handler handler) {
+    Check.notNull(method, "method == null");
+    Check.notNull(handler, "handler == null");
+
+    Method actual;
+    actual = method();
+
+    if (handles(method, actual)) {
+      handler.handle(this);
+    } else {
+      methodNotAllowed();
+    }
+  }
+
+  private boolean handles(Method method, Method actual) {
+    if (method.is(Method.GET)) {
+      return actual.is(Method.GET, Method.HEAD);
+    } else {
+      return actual.is(method);
+    }
   }
 
   @Override
@@ -503,18 +527,20 @@ public final class ObjectoxServerLoop extends ObjectoxServerRequestBody implemen
     // send headers
     outputStream.write(buffer, 0, bufferIndex);
 
-    switch (responseBody) {
-      case NoResponseBody no -> {}
+    if (method != Method.HEAD) {
+      switch (responseBody) {
+        case NoResponseBody no -> {}
 
-      case byte[] bytes -> outputStream.write(bytes, 0, bytes.length);
+        case byte[] bytes -> outputStream.write(bytes, 0, bytes.length);
 
-      case Path file -> {
-        try (InputStream in = Files.newInputStream(file)) {
-          in.transferTo(outputStream);
+        case Path file -> {
+          try (InputStream in = Files.newInputStream(file)) {
+            in.transferTo(outputStream);
+          }
         }
-      }
 
-      default -> throw new UnsupportedOperationException("Implement me");
+        default -> throw new UnsupportedOperationException("Implement me");
+      }
     }
 
     state = _COMMITED;

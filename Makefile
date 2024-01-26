@@ -102,11 +102,6 @@ MODULES += objectos.git
 MODULES += objectos.mysql
 MODULES += objectos.code
 MODULES += objectos.selfgen
-MODULES += objectos.html.tmpl
-MODULES += objectos.html
-MODULES += objectos.html.icon
-MODULES += objectos.html.script
-MODULES += objectos.html.style
 MODULES += objectos.css
 MODULES += objectos.lang.classloader
 
@@ -161,10 +156,13 @@ WAY_ENABLE_PREVIEW := 0
 
 ## way compile deps
 WAY_COMPILE_DEPS  = $(call module-gav,$(CSS))
-WAY_COMPILE_DEPS += $(call module-gav,$(HTML))
 WAY_COMPILE_DEPS += $(call module-gav,$(NOTES))
 WAY_COMPILE_DEPS += $(call module-gav,$(UTIL_LIST))
 WAY_COMPILE_DEPS += $(call module-gav,$(UTIL_SET))
+WAY_COMPILE_DEPS += $(call module-gav,$(UTIL_MAP))
+
+## way resources
+WAY_RESOURCES := $(WAY)/resources
 
 ## way resolution reqs
 WAY_RESOLUTION_REQS = Makefile
@@ -188,7 +186,9 @@ WAY_TEST_JAVAX_READS = java.compiler
 WAY_TEST_JAVAX_READS += objectos.notes.console
 
 ## way test runtime exports
-WAY_TEST_JAVAX_EXPORTS := objectox.http
+WAY_TEST_JAVAX_EXPORTS := objectos.html.internal
+WAY_TEST_JAVAX_EXPORTS += objectox.html.style
+WAY_TEST_JAVAX_EXPORTS += objectox.http
 WAY_TEST_JAVAX_EXPORTS += objectox.http.server
 WAY_TEST_JAVAX_EXPORTS += objectox.lang
 
@@ -209,11 +209,6 @@ WAY_SUBMODULES += util.collection
 WAY_SUBMODULES += util.list
 WAY_SUBMODULES += util.set
 WAY_SUBMODULES += util.map
-WAY_SUBMODULES += html.tmpl
-WAY_SUBMODULES += html
-WAY_SUBMODULES += html.icon
-WAY_SUBMODULES += html.script
-WAY_SUBMODULES += html.style
 WAY_SUBMODULES += css
 WAY_SUBMODULES += lang.classloader
 
@@ -228,11 +223,6 @@ WAY_OSSRH_BUNDLE_CONTENTS += $(UTIL_COLLECTION_OSSRH_PREPARE)
 WAY_OSSRH_BUNDLE_CONTENTS += $(UTIL_LIST_OSSRH_PREPARE)
 WAY_OSSRH_BUNDLE_CONTENTS += $(UTIL_SET_OSSRH_PREPARE)
 WAY_OSSRH_BUNDLE_CONTENTS += $(UTIL_MAP_OSSRH_PREPARE)
-WAY_OSSRH_BUNDLE_CONTENTS += $(HTML_TMPL_OSSRH_PREPARE)
-WAY_OSSRH_BUNDLE_CONTENTS += $(HTML_OSSRH_PREPARE)
-WAY_OSSRH_BUNDLE_CONTENTS += $(HTML_ICON_OSSRH_PREPARE)
-WAY_OSSRH_BUNDLE_CONTENTS += $(HTML_SCRIPT_OSSRH_PREPARE)
-WAY_OSSRH_BUNDLE_CONTENTS += $(HTML_STYLE_OSSRH_PREPARE)
 WAY_OSSRH_BUNDLE_CONTENTS += $(CSS_OSSRH_PREPARE)
 WAY_OSSRH_BUNDLE_CONTENTS += $(LANG_CLASSLOADER_OSSRH_PREPARE)
 WAY_OSSRH_BUNDLE_CONTENTS += $(WAY_OSSRH_PREPARE)

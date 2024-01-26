@@ -138,6 +138,8 @@ public abstract class Option<T> {
     }
 
     if (error != null) {
+      error.printStackTrace();
+
       throw new UnsupportedOperationException("Implement me");
     }
 

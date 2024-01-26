@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023-2024 Objectos Software LTDA.
+ * Copyright (C) 2023 Objectos Software LTDA.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,13 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-/**
- * Interactive web applications.
- */
-module objectos.html.script {
-	exports objectos.html.script;
+package objectos.http;
 
-	requires transitive objectos.html;
+import static org.testng.Assert.assertEquals;
 
-	requires objectos.lang.object;
+import org.testng.annotations.Test;
+
+public class CookiesTest {
+
+  @Test(description = """
+  It should parse a single name-value pair
+  """)
+  public void testCase01() {
+    Cookies c;
+    c = Cookies.parse("foo=bar");
+
+    assertEquals(c.get("foo"), "bar");
+  }
+
 }

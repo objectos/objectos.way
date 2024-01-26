@@ -58,6 +58,19 @@ $(1)JAVACX += $$($(1)SOURCES)
 ## resources
 # $(1)RESOURCES =
 
+ifdef $(1)RESOURCES
+## test resources "source"
+$(1)RESOURCES_SRC = $$(shell find $${$(1)RESOURCES} -type f -print)
+
+## test resources "output"
+$(1)RESOURCES_OUT = $$($(1)RESOURCES_SRC:$$($(1)RESOURCES)/%=$$($(1)CLASS_OUTPUT)/%)
+
+## target to copy test resources
+$$($(1)RESOURCES_OUT): $$($(1)CLASS_OUTPUT)/%: $$($(1)RESOURCES)/%
+	mkdir --parents $$(@D)
+	cp $$< $$@
+endif
+
 ## compilation marker
 $(1)COMPILE_MARKER = $$(RESOLUTION_DIR)/$$($(1)GROUP_ID)/$$($(1)ARTIFACT_ID)/$$($(1)VERSION)
 
@@ -65,7 +78,7 @@ $(1)COMPILE_MARKER = $$(RESOLUTION_DIR)/$$($(1)GROUP_ID)/$$($(1)ARTIFACT_ID)/$$(
 $(1)COMPILE_REQS  = $$($(1)COMPILE_MODULE_PATH)
 $(1)COMPILE_REQS += $$($(1)SOURCES)
 ifdef $(1)RESOURCES
-$(1)COMPILE_REQS += $$($(1)RESOURCES)
+$(1)COMPILE_REQS += $$($(1)RESOURCES_OUT)
 endif
 ifdef $(1)COMPILE_REQS_MORE
 $(1)COMPILE_REQS += $$($(1)COMPILE_REQS_MORE)

@@ -13,16 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-/**
- *
- */
-module objectos.html.style {
-	exports objectos.html.style;
+package objectos.http;
 
-	requires transitive objectos.html.tmpl;
-	requires transitive objectos.notes;
+import static org.testng.Assert.assertEquals;
 
-	requires objectos.lang.object;
-	requires objectos.util.map;
-	requires objectos.util.set;
+import org.testng.annotations.Test;
+
+public class StatusTest {
+
+  @Test
+  public void reasonPhrase() {
+    assertEquals(Status.INTERNAL_SERVER_ERROR.reasonPhrase(), "INTERNAL SERVER ERROR");
+  }
+
 }

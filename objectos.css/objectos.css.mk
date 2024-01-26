@@ -45,7 +45,7 @@ CSS_SELFGEN_MARKER = $(CSS)/work/selfgen-marker
 CSS_COMPILE_REQS_MORE = $(CSS_SELFGEN_MARKER)
 
 ## make selfgen a req for html compilation
-CSS_RESOURCES = $(CSS_SELFGEN_MARKER)
+#CSS_RESOURCES = $(CSS_SELFGEN_MARKER)
 
 ## test compile deps
 CSS_TEST_COMPILE_DEPS  = $(CSS_COMPILE_DEPS)

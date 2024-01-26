@@ -17,6 +17,7 @@ package objectos.web;
 
 import static org.testng.Assert.assertEquals;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.reflect.Method;
@@ -24,6 +25,7 @@ import java.net.InetAddress;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
+import objectos.html.HtmlTemplate;
 import objectos.http.HeaderName;
 import objectos.http.Status;
 import objectos.http.server.Handler;
@@ -124,15 +126,15 @@ public class WayWebServerTest implements Handler {
   }
 
   @SuppressWarnings("unused")
-  private void testCase01(ServerExchange exchange) {
-    exchange.methodMatrix(objectos.http.Method.GET, this::testCase01Get);
+  private void testCase01(ServerExchange http) {
+    http.methodMatrix(objectos.http.Method.GET, this::testCase01Get);
   }
 
   private void testCase01Get(ServerExchange http) {
     http.status(Status.OK);
+    http.dateNow();
     http.header(HeaderName.CONTENT_TYPE, "text/plain");
     http.header(HeaderName.CONTENT_LENGTH, 5);
-    http.dateNow();
     http.send("TC01\n".getBytes(StandardCharsets.UTF_8));
   }
 
@@ -141,74 +143,218 @@ public class WayWebServerTest implements Handler {
   - accept declared method
   - reject other methods
   """)
-  public void testCase01() throws Exception {
-    test(
-        server,
+  public void testCase01() throws IOException {
+    try (Socket socket = newSocket()) {
+      test(socket,
+          """
+          GET /test/testCase01 HTTP/1.1\r
+          Host: www.example.com\r
+          \r
+          """,
 
-        """
-        GET /test/testCase01 HTTP/1.1\r
-        Host: www.example.com\r
-        \r
-        """,
+          """
+          HTTP/1.1 200 OK\r
+          Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+          Content-Type: text/plain\r
+          Content-Length: 5\r
+          \r
+          TC01
+          """
+      );
 
-        """
-        HTTP/1.1 200 OK\r
-        Content-Type: text/plain\r
-        Content-Length: 5\r
-        Date: Wed, 28 Jun 2023 12:08:43 GMT\r
-        \r
-        TC01
-        """
-    );
+      test(socket,
+          """
+          POST /test/testCase01 HTTP/1.1\r
+          Host: www.example.com\r
+          Connection: close\r
+          \r
+          """,
 
-    test(
-        server,
+          """
+          HTTP/1.1 405 METHOD NOT ALLOWED\r
+          Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+          Connection: close\r
+          \r
+          """
+      );
+    }
+  }
 
-        """
-        POST /test/testCase01 HTTP/1.1\r
-        Host: www.example.com\r
-        Connection: close\r
-        \r
-        """,
+  @SuppressWarnings("unused")
+  private void testCase02(ServerExchange http) {
+    http.methodMatrix(objectos.http.Method.GET, this::testCase02Get);
+  }
 
-        """
-        HTTP/1.1 405 METHOD NOT ALLOWED\r
-        Date: Wed, 28 Jun 2023 12:08:43 GMT\r
-        Connection: close\r
-        \r
-        """
+  private void testCase02Get(ServerExchange http) {
+    http.status(Status.OK);
+    http.dateNow();
+    http.header(HeaderName.CONTENT_TYPE, "text/plain");
+    http.header(HeaderName.CONTENT_LENGTH, 5);
+    http.send("TC02\n".getBytes(StandardCharsets.UTF_8));
+  }
+
+  @Test(description = """
+  GET handler should be used for HEAD requests as well
+  """)
+  public void testCase02() throws IOException {
+    try (Socket socket = newSocket()) {
+      test(socket,
+          """
+          HEAD /test/testCase02 HTTP/1.1\r
+          Host: www.example.com\r
+          \r
+          """,
+
+          """
+          HTTP/1.1 200 OK\r
+          Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+          Content-Type: text/plain\r
+          Content-Length: 5\r
+          \r
+          """
+      );
+
+      test(socket,
+          """
+          GET /test/testCase02 HTTP/1.1\r
+          Host: www.example.com\r
+          \r
+          """,
+
+          """
+          HTTP/1.1 200 OK\r
+          Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+          Content-Type: text/plain\r
+          Content-Length: 5\r
+          \r
+          TC02
+          """
+      );
+    }
+  }
+
+  @SuppressWarnings("unused")
+  private void testCase03(ServerExchange http) {
+    http.methodMatrix(
+        objectos.http.Method.GET, this::testCase03Get,
+        objectos.http.Method.POST, this::testCase03Post
     );
   }
 
-  private void test(WayWebServer server, String request, String expectedResponse) throws Exception {
+  private void testCase03Get(ServerExchange http) {
+    http.ok(new SingleParagraph("TC03 GET"));
+  }
+
+  private void testCase03Post(ServerExchange http) {
+    http.ok(new SingleParagraph("TC03 POST"));
+  }
+
+  @Test(description = """
+  It should be possible to send pre-made 200 OK responses
+  """)
+  public void testCase03() throws IOException {
+    try (Socket socket = newSocket()) {
+      test(socket,
+          """
+          HEAD /test/testCase03 HTTP/1.1\r
+          Host: www.example.com\r
+          \r
+          """,
+
+          """
+          HTTP/1.1 200 OK\r
+          Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+          Content-Type: text/html; charset=utf-8\r
+          Content-Length: 31\r
+          \r
+          """
+      );
+
+      test(socket,
+          """
+          GET /test/testCase03 HTTP/1.1\r
+          Host: www.example.com\r
+          \r
+          """,
+
+          """
+          HTTP/1.1 200 OK\r
+          Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+          Content-Type: text/html; charset=utf-8\r
+          Content-Length: 31\r
+          \r
+          <html>
+          <p>TC03 GET</p>
+          </html>
+          """
+      );
+
+      test(socket,
+          """
+          POST /test/testCase03 HTTP/1.1\r
+          Host: www.example.com\r
+          \r
+          """,
+
+          """
+          HTTP/1.1 200 OK\r
+          Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+          Content-Type: text/html; charset=utf-8\r
+          Content-Length: 32\r
+          \r
+          <html>
+          <p>TC03 POST</p>
+          </html>
+          """
+      );
+    }
+  }
+
+  private Socket newSocket() throws IOException {
     InetAddress address;
     address = server.address();
 
     int port;
     port = server.port();
 
-    try (Socket socket = new Socket(address, port)) {
-      OutputStream out;
-      out = socket.getOutputStream();
+    return new Socket(address, port);
+  }
 
-      byte[] requestBytes;
-      requestBytes = request.getBytes(StandardCharsets.UTF_8);
+  private void test(Socket socket, String request, String expectedResponse) throws IOException {
+    OutputStream out;
+    out = socket.getOutputStream();
 
-      out.write(requestBytes);
+    byte[] requestBytes;
+    requestBytes = request.getBytes(StandardCharsets.UTF_8);
 
-      byte[] expectedBytes;
-      expectedBytes = expectedResponse.getBytes(StandardCharsets.UTF_8);
+    out.write(requestBytes);
 
-      InputStream in;
-      in = socket.getInputStream();
+    byte[] expectedBytes;
+    expectedBytes = expectedResponse.getBytes(StandardCharsets.UTF_8);
 
-      byte[] responseBytes;
-      responseBytes = in.readNBytes(expectedBytes.length);
+    InputStream in;
+    in = socket.getInputStream();
 
-      String res;
-      res = new String(responseBytes, StandardCharsets.UTF_8);
+    byte[] responseBytes;
+    responseBytes = in.readNBytes(expectedBytes.length);
 
-      assertEquals(res, expectedResponse);
+    String res;
+    res = new String(responseBytes, StandardCharsets.UTF_8);
+
+    assertEquals(res, expectedResponse);
+  }
+
+  @SuppressWarnings("unused")
+  private static class SingleParagraph extends HtmlTemplate {
+    private final String text;
+
+    public SingleParagraph(String text) { this.text = text; }
+
+    @Override
+    protected final void definition() {
+      html(
+          p(text)
+      );
     }
   }
 

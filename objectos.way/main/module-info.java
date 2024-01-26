@@ -21,6 +21,12 @@ module objectos.way {
   exports objectos.css.random;
   exports objectos.css.reset;
   exports objectos.css.select;
+  exports objectos.html;
+  exports objectos.html.icon;
+  exports objectos.html.pseudom;
+  exports objectos.html.script;
+  exports objectos.html.style;
+  exports objectos.html.tmpl;
   exports objectos.http;
   exports objectos.http.media;
   exports objectos.http.server;
@@ -30,7 +36,6 @@ module objectos.way {
   exports objectos.web;
 
   requires transitive objectos.css;
-  requires transitive objectos.html;
   requires transitive objectos.notes;
 
   requires objectos.lang.object;

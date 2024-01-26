@@ -15,8 +15,9 @@
  */
 package objectos.http.server;
 
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
-import java.util.function.Consumer;
+import objectos.html.HtmlTemplate;
 import objectos.http.HeaderName;
 import objectos.http.Method;
 import objectos.http.Status;
@@ -57,22 +58,22 @@ public interface ServerExchange {
     handler.handle(this);
   }
 
-  default void methodMatrix(Method method, Consumer<ServerExchange> handler) {
+  default void methodMatrix(Method method, Handler handler) {
     Check.notNull(method, "method == null");
     Check.notNull(handler, "handler == null");
 
     Method actual;
     actual = method();
 
-    if (actual.is(method)) {
-      handler.accept(this);
+    if (handles(method, actual)) {
+      handler.handle(this);
     } else {
       methodNotAllowed();
     }
   }
 
-  default void methodMatrix(Method method1, Consumer<ServerExchange> handler1,
-                            Method method2, Consumer<ServerExchange> handler2) {
+  default void methodMatrix(Method method1, Handler handler1,
+                            Method method2, Handler handler2) {
     Check.notNull(method1, "method1 == null");
     Check.notNull(handler1, "handler1 == null");
     Check.notNull(method2, "method2 == null");
@@ -81,18 +82,18 @@ public interface ServerExchange {
     Method actual;
     actual = method();
 
-    if (actual.is(method1)) {
-      handler1.accept(this);
-    } else if (actual.is(method2)) {
-      handler2.accept(this);
+    if (handles(method1, actual)) {
+      handler1.handle(this);
+    } else if (handles(method2, actual)) {
+      handler2.handle(this);
     } else {
       methodNotAllowed();
     }
   }
 
-  default void methodMatrix(Method method1, Consumer<ServerExchange> handler1,
-                            Method method2, Consumer<ServerExchange> handler2,
-                            Method method3, Consumer<ServerExchange> handler3) {
+  default void methodMatrix(Method method1, Handler handler1,
+                            Method method2, Handler handler2,
+                            Method method3, Handler handler3) {
     Check.notNull(method1, "method1 == null");
     Check.notNull(handler1, "handler1 == null");
     Check.notNull(method2, "method2 == null");
@@ -103,14 +104,22 @@ public interface ServerExchange {
     Method actual;
     actual = method();
 
-    if (actual.is(method1)) {
-      handler1.accept(this);
-    } else if (actual.is(method2)) {
-      handler2.accept(this);
-    } else if (actual.is(method3)) {
-      handler3.accept(this);
+    if (handles(method1, actual)) {
+      handler1.handle(this);
+    } else if (handles(method2, actual)) {
+      handler2.handle(this);
+    } else if (handles(method3, actual)) {
+      handler3.handle(this);
     } else {
       methodNotAllowed();
+    }
+  }
+
+  private boolean handles(Method method, Method actual) {
+    if (method.is(Method.GET)) {
+      return actual.is(Method.GET, Method.HEAD);
+    } else {
+      return actual.is(method);
     }
   }
 
@@ -133,6 +142,25 @@ public interface ServerExchange {
   void send(Path file);
 
   // pre-made responses
+
+  // 200
+  default void ok(HtmlTemplate html) {
+    String s; // early implicit null-check
+    s = html.toString();
+
+    status(Status.OK);
+
+    dateNow();
+
+    header(HeaderName.CONTENT_TYPE, "text/html; charset=utf-8");
+
+    byte[] bytes;
+    bytes = s.getBytes(StandardCharsets.UTF_8);
+
+    header(HeaderName.CONTENT_LENGTH, bytes.length);
+
+    send(bytes);
+  }
 
   // 404
   void notFound();
