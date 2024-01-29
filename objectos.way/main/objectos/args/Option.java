@@ -97,7 +97,7 @@ public abstract class Option<T> {
   final int accept(String[] args, int index) {
     if (index < args.length) {
       String arg;
-      arg = args[index];
+      arg = args[index++];
 
       try {
         parseValue(arg);
@@ -106,10 +106,6 @@ public abstract class Option<T> {
       }
     } else {
       parseValue();
-    }
-
-    if (value != null) {
-      index++;
     }
 
     return index;
@@ -138,9 +134,7 @@ public abstract class Option<T> {
     }
 
     if (error != null) {
-      error.printStackTrace();
-
-      throw new UnsupportedOperationException("Implement me");
+      collector.addMessage(error.getMessage());
     }
 
     if (required && value == null) {
