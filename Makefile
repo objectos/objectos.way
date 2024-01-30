@@ -26,6 +26,7 @@ VERSION := 0.11-SNAPSHOT
 JAVA_RELEASE := 21
 
 ## Deps versions
+SELFGEN_VERSION := 0.1
 SLF4J_VERSION := 1.7.36
 TESTNG_VERSION := 7.7.1
 
@@ -101,7 +102,6 @@ MODULES += objectos.concurrent
 MODULES += objectos.git
 MODULES += objectos.mysql
 MODULES += objectos.code
-MODULES += objectos.selfgen
 MODULES += objectos.css
 MODULES += objectos.lang.classloader
 
@@ -193,7 +193,7 @@ WAY_TEST_JAVAX_EXPORTS += objectox.http.server
 WAY_TEST_JAVAX_EXPORTS += objectox.lang
 
 ## way copyright years for javadoc
-WAY_COPYRIGHT_YEARS := 2022-2023
+WAY_COPYRIGHT_YEARS := 2022-2024
 
 ## way javadoc snippet path
 WAY_JAVADOC_SNIPPET_PATH := WAY_TEST
