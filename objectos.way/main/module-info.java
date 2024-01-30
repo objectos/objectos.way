@@ -35,12 +35,5 @@ module objectos.way {
   exports objectos.lang;
   exports objectos.web;
 
-  requires transitive objectos.css;
   requires transitive objectos.notes;
-
-  requires objectos.lang.object;
-  requires objectos.util.array;
-  requires objectos.util.list;
-  requires objectos.util.map;
-  requires objectos.util.set;
 }
