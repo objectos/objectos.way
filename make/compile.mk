@@ -25,7 +25,7 @@ endif
 define COMPILE_TASK
 
 ## source directory
-$(1)MAIN = $$($(1)MODULE)/main
+$(1)MAIN = $$($(1)BASEDIR)/main
 
 ## source files
 $(1)SOURCES = $$(shell find $${$(1)MAIN} -type f -name '*.java' -print)
@@ -91,7 +91,7 @@ endif
 .PHONY: $(2)compile
 $(2)compile: $$($(1)COMPILE_MARKER)
 
-$$($(1)COMPILE_MODULE_PATH): $$($(1)COMPILE_DEPS)
+$$($(1)COMPILE_MODULE_PATH): $$($(1)COMPILE_DEPS) | $$($(1)WORK)
 ifneq ($$($(1)COMPILE_DEPS),)
 	cat $$^ | sort -u | paste --delimiter='$$(MODULE_PATH_SEPARATOR)' --serial > $$@
 else

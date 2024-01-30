@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2023 Objectos Software LTDA.
+# Copyright (C) 2022-2024 Objectos Software LTDA.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -18,27 +18,19 @@
 # Objectos Way
 #
 
-## Coordinates (required even if not installed)
+## Coordinates
 GROUP_ID := br.com.objectos
 ARTIFACT_ID := objectos.way
 VERSION := 0.11-SNAPSHOT
-
-JAVA_RELEASE := 21
-
-## Deps versions
-SELFGEN_VERSION := 0.1
-SLF4J_VERSION := 1.7.36
-TESTNG_VERSION := 7.7.1
+MODULE := $(ARTIFACT_ID)
 
 ## Resolution dir (required)
 RESOLUTION_DIR := work/resolution
 
-## Internal dep markers
-module-gav = $(RESOLUTION_DIR)/$(GROUP_ID)/$(1)/$(VERSION)
-
-## External dep markers
-SLF4J_NOP := $(RESOLUTION_DIR)/org.slf4j/slf4j-nop/$(SLF4J_VERSION)
-TESTNG := $(RESOLUTION_DIR)/org.testng/testng/$(TESTNG_VERSION)
+## Deps versions
+NOTES_VERSION := 0.1
+SLF4J_VERSION := 1.7.36
+TESTNG_VERSION := 7.9.0
 
 # Delete the default suffixes
 .SUFFIXES:
@@ -48,257 +40,106 @@ TESTNG := $(RESOLUTION_DIR)/org.testng/testng/$(TESTNG_VERSION)
 #
 
 .PHONY: all
-all: compile
-
-## include make stuff
-INCLUDES := tools.mk
-INCLUDES += deps.mk
-INCLUDES += resolver.mk
-INCLUDES += clean.mk
-INCLUDES += compile.mk
-INCLUDES += jar.mk
-INCLUDES += test-compile.mk
-INCLUDES += test-run.mk
-INCLUDES += source-jar.mk
-INCLUDES += mk-pom.mk
-INCLUDES += pom.mk
-INCLUDES += install.mk
-INCLUDES += ossrh-config.mk
-INCLUDES += ossrh-prepare.mk
-INCLUDES += ossrh-bundle.mk
-INCLUDES += gh-config.mk
-INCLUDES += eclipse.mk
-
-include $(foreach inc,$(INCLUDES),make/$(inc))
-
-.PHONY: jar
-jar: way@jar
-
-print-%::
-	@echo $* = $($*)
+all: test
 
 #
-# objectos.way modules section
+# way@clean
 #
 
-## all of the modules
-MODULES := objectos.lang.object
-MODULES += objectos.notes
-MODULES += objectos.notes.base
-MODULES += objectos.notes.console
-MODULES += objectos.notes.file
-MODULES += objectos.util.array
-MODULES += objectos.util.collection
-MODULES += objectos.util.list
-MODULES += objectos.util.set
-MODULES += objectos.util.map
-MODULES += objectos.core.service
-MODULES += objectos.core.io
-MODULES += objectos.core.testing
-MODULES += objectos.fs
-MODULES += objectos.fs.testing
-MODULES += objectos.fs.zip
-MODULES += objectos.concurrent
-MODULES += objectos.css
-MODULES += objectos.lang.classloader
+## basedir
+BASEDIR := .
 
-## common module tasks
-MODULE_TASKS  = CLEAN_TASK
-MODULE_TASKS += COMPILE_TASK
-MODULE_TASKS += JAR_TASK
-MODULE_TASKS += TEST_COMPILE_TASK
-MODULE_TASKS += TEST_RUN_TASK
-MODULE_TASKS += SOURCE_JAR_TASK
-MODULE_TASKS += JAVADOC_TASK
-MODULE_TASKS += POM_TASK
-MODULE_TASKS += INSTALL_TASK
-MODULE_TASKS += OSSRH_PREPARE_TASK
-
-## test-related tasks
-TEST_TASKS  = TEST_COMPILE_TASK
-TEST_TASKS += TEST_RUN_TASK
-
-## @ names
-AT_MODULES := $(foreach mod,$(MODULES),$(subst objectos.,,$(mod)))
-AT_MODULES += way
-
-## generate common module values
-LOWER_MODULES := $(foreach mod,$(AT_MODULES),$(subst .,_,$(mod)_))
-UPPER_MODULES := $(shell echo $(LOWER_MODULES) | tr a-z A-Z)
-
-## include each modules's makefile
-
-include $(foreach mod,$(MODULES),$(mod)/$(mod).mk)
+include make/tools.mk
+include make/deps.mk
+include make/resolver.mk
+include make/clean.mk
+$(eval $(call CLEAN_TASK,,))
 
 #
-# objectos.way options
-# 
-
-## way directory
-WAY := objectos.way
-
-## way module
-WAY_MODULE := $(WAY)
-
-## way module version
-WAY_GROUP_ID = $(GROUP_ID)
-WAY_ARTIFACT_ID = $(ARTIFACT_ID)
-WAY_VERSION = $(VERSION)
-
-## way javac --release option
-WAY_JAVA_RELEASE := 21
-
-## way --enable-preview ?
-WAY_ENABLE_PREVIEW := 0
-
-## way compile deps
-WAY_COMPILE_DEPS  = $(call module-gav,$(CSS))
-WAY_COMPILE_DEPS += $(call module-gav,$(NOTES))
-WAY_COMPILE_DEPS += $(call module-gav,$(UTIL_LIST))
-WAY_COMPILE_DEPS += $(call module-gav,$(UTIL_SET))
-WAY_COMPILE_DEPS += $(call module-gav,$(UTIL_MAP))
-
-## way resources
-WAY_RESOURCES := $(WAY)/resources
-
-## way resolution reqs
-WAY_RESOLUTION_REQS = Makefile
-
-## way test compile-time dependencies
-WAY_TEST_COMPILE_DEPS  = $(WAY_COMPILE_DEPS)
-WAY_TEST_COMPILE_DEPS += $(call module-gav,$(WAY))
-WAY_TEST_COMPILE_DEPS += $(call module-gav,$(NOTES_CONSOLE))
-WAY_TEST_COMPILE_DEPS += $(TESTNG)
-
-## way test runtime dependencies
-WAY_TEST_RUNTIME_DEPS  = $(WAY_TEST_COMPILE_DEPS)
-WAY_TEST_RUNTIME_DEPS += $(SLF4J_NOP)
-
-## way test runtime modules
-WAY_TEST_JAVAX_MODULES = org.testng
-WAY_TEST_JAVAX_MODULES += objectos.notes.console
-
-## way test runtime reads
-WAY_TEST_JAVAX_READS = java.compiler
-WAY_TEST_JAVAX_READS += objectos.notes.console
-
-## way test runtime exports
-WAY_TEST_JAVAX_EXPORTS := objectos.html.internal
-WAY_TEST_JAVAX_EXPORTS += objectox.html.style
-WAY_TEST_JAVAX_EXPORTS += objectox.http
-WAY_TEST_JAVAX_EXPORTS += objectox.http.server
-WAY_TEST_JAVAX_EXPORTS += objectox.lang
-
-## way copyright years for javadoc
-WAY_COPYRIGHT_YEARS := 2022-2024
-
-## way javadoc snippet path
-WAY_JAVADOC_SNIPPET_PATH := WAY_TEST
-
-## way sub modules
-WAY_SUBMODULES = lang.object
-WAY_SUBMODULES += notes
-WAY_SUBMODULES += notes.base
-WAY_SUBMODULES += notes.console
-WAY_SUBMODULES += notes.file
-WAY_SUBMODULES += util.array
-WAY_SUBMODULES += util.collection
-WAY_SUBMODULES += util.list
-WAY_SUBMODULES += util.set
-WAY_SUBMODULES += util.map
-WAY_SUBMODULES += css
-WAY_SUBMODULES += lang.classloader
-
-## way bundle contents
-WAY_OSSRH_BUNDLE_CONTENTS = $(LANG_OBJECT_OSSRH_PREPARE)
-WAY_OSSRH_BUNDLE_CONTENTS += $(NOTES_OSSRH_PREPARE)
-WAY_OSSRH_BUNDLE_CONTENTS += $(NOTES_BASE_OSSRH_PREPARE)
-WAY_OSSRH_BUNDLE_CONTENTS += $(NOTES_CONSOLE_OSSRH_PREPARE)
-WAY_OSSRH_BUNDLE_CONTENTS += $(NOTES_FILE_OSSRH_PREPARE)
-WAY_OSSRH_BUNDLE_CONTENTS += $(UTIL_ARRAY_OSSRH_PREPARE)
-WAY_OSSRH_BUNDLE_CONTENTS += $(UTIL_COLLECTION_OSSRH_PREPARE)
-WAY_OSSRH_BUNDLE_CONTENTS += $(UTIL_LIST_OSSRH_PREPARE)
-WAY_OSSRH_BUNDLE_CONTENTS += $(UTIL_SET_OSSRH_PREPARE)
-WAY_OSSRH_BUNDLE_CONTENTS += $(UTIL_MAP_OSSRH_PREPARE)
-WAY_OSSRH_BUNDLE_CONTENTS += $(CSS_OSSRH_PREPARE)
-WAY_OSSRH_BUNDLE_CONTENTS += $(LANG_CLASSLOADER_OSSRH_PREPARE)
-WAY_OSSRH_BUNDLE_CONTENTS += $(WAY_OSSRH_PREPARE)
-
-#
-# objectos.way targets
+# way@compile
 #
 
-$(foreach task,$(MODULE_TASKS),$(eval $(call $(task),WAY_,way@)))
-$(eval $(call OSSRH_BUNDLE_TASK,WAY_))
+## javac --release option
+JAVA_RELEASE = 21
+
+## --enable-preview ?
+ENABLE_PREVIEW = 0
+
+## compile deps
+COMPILE_DEPS := $(RESOLUTION_DIR)/br.com.objectos/objectos.notes/$(NOTES_VERSION)
+
+## resolution trigger
+RESOLUTION_REQS := Makefile
+
+include make/compile.mk
+$(eval $(call COMPILE_TASK,,))
 
 #
-# Targets section
+# way@test-compile
 #
 
-.PHONY: clean
-clean: $(foreach mod,$(AT_MODULES),$(mod)@clean)
-	rm -rf work
+## test compile deps
+TEST_COMPILE_DEPS := $(COMPILE_MARKER)
+TEST_COMPILE_DEPS += $(RESOLUTION_DIR)/org.testng/testng/$(TESTNG_VERSION)
 
-.PHONY: clean-install
-clean-install: $(foreach mod,$(AT_MODULES),$(mod)@clean-install)
+include make/test-compile.mk
+$(eval $(call TEST_COMPILE_TASK,,))
 
-.PHONY: compile
-compile: $(foreach mod,$(AT_MODULES),$(mod)@compile)
+#
+# way@test
+#
 
-.PHONY: jar
-jar: $(foreach mod,$(AT_MODULES),$(mod)@jar)
+## www test runtime dependencies
+TEST_RUNTIME_DEPS := $(TEST_COMPILE_DEPS)
+TEST_RUNTIME_DEPS += $(RESOLUTION_DIR)/org.slf4j/slf4j-nop/$(SLF4J_VERSION)
 
-.PHONY: test-compile
-test-compile: $(foreach mod,$(AT_MODULES),$(mod)@test-compile)
+## test runtime exports
+TEST_JAVAX_EXPORTS := objectos.html.internal
+TEST_JAVAX_EXPORTS += objectos.lang.object
+TEST_JAVAX_EXPORTS += objectos.notes.base
+TEST_JAVAX_EXPORTS += objectos.notes.console
+TEST_JAVAX_EXPORTS += objectos.notes.file
+TEST_JAVAX_EXPORTS += objectos.util.array
+TEST_JAVAX_EXPORTS += objectos.util.collection
+TEST_JAVAX_EXPORTS += objectos.util.list
+TEST_JAVAX_EXPORTS += objectos.util.map
+TEST_JAVAX_EXPORTS += objectos.util.set
+TEST_JAVAX_EXPORTS += objectox.css
+TEST_JAVAX_EXPORTS += objectox.html.style
+TEST_JAVAX_EXPORTS += objectox.http
+TEST_JAVAX_EXPORTS += objectox.http.server
+TEST_JAVAX_EXPORTS += objectox.lang
 
-.PHONY: test
-test: $(foreach mod,$(AT_MODULES),$(mod)@test)
+## test runtime reads
+TEST_JAVAX_READS := java.compiler
 
-.PHONY: install
-install: $(foreach mod,$(AT_MODULES),$(mod)@install)
+include make/test-run.mk
+$(eval $(call TEST_RUN_TASK,,))
 
-.PHONY: source-jar
-source-jar: $(foreach mod,$(WAY_SUBMODULES),$(mod)@source-jar) way@source-jar 
+#
+# way@jar
+#
 
-.PHONY: javadoc
-javadoc: $(foreach mod,$(WAY_SUBMODULES),$(mod)@javadoc) way@javadoc 
+include make/jar.mk
+$(eval $(call JAR_TASK,,))
 
-.PHONY: pom
-pom: $(foreach mod,$(AT_MODULES),$(mod)@pom) 
+#
+# way@pom
+#
 
-.PHONY: ossrh-prepare
-ossrh-prepare: $(foreach mod,$(WAY_SUBMODULES),$(mod)@ossrh-prepare) way@ossrh-prepare
+## pom.xml copyright years
+COPYRIGHT_YEARS := 2022-2024
 
-.PHONY: ossrh-bundle
-ossrh-bundle: way@ossrh-bundle
+## pom.xml description
+DESCRIPTION := Objectos Code is a Java library for generating Java source code. 
 
-.PHONY: ossrh
-ossrh: way@ossrh
+include pom.mk
+include make/pom.mk
+$(eval $(call POM_TASK,,))
 
-.PHONY: gh-release
-gh-release: way@gh-release
+#
+# way@install
+#
 
-.PHONY: way@source-jar
-way@source-jar: $(WAY_SOURCE_JAR_FILE)
-
-.PHONY: way@javadoc way@clean-javadoc
-way@javadoc: $(WAY_JAVADOC_JAR_FILE)
-
-way@clean-javadoc:
-	rm -r $(WAY_JAVADOC_OUTPUT)
-
-.PHONY: way@pom
-way@pom: $(WAY_POM_FILE)
-
-.PHONY: way@ossrh-prepare
-way@ossrh-prepare: $(WAY_OSSRH_PREPARE)
-
-.PHONY: way@ossrh way@ossrh-bundle
-way@ossrh: $(WAY_OSSRH_MARKER)
-
-way@ossrh-bundle: $(WAY_OSSRH_BUNDLE)
-
-.PHONY: way@gh-release way@gh-release-body
-way@gh-release: $(WAY_GH_RELEASE_MARKER)
-
-way@gh-release-body: $(WAY_GH_RELEASE_BODY)
+include make/install.mk
+$(eval $(call INSTALL_TASK,,))

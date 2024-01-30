@@ -79,7 +79,7 @@ $(2)test: $$($(1)TEST_RUNTIME_REQS)
 
 $$($(1)TEST_RUNTIME_MODULE_PATH): $$($(1)TEST_RUNTIME_DEPS)
 ifneq ($$($(1)TEST_RUNTIME_DEPS),)
-	cat $$^ | sort | uniq | paste --delimiter='$$(MODULE_PATH_SEPARATOR)' --serial > $$@
+	cat $$^ | sort -u | paste --delimiter='$$(MODULE_PATH_SEPARATOR)' --serial > $$@
 else
 	touch $$@
 endif

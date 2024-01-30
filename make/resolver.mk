@@ -27,6 +27,9 @@ ifndef RESOLVER_JAVA
 RESOLVER_JAVA := Resolver.java
 endif
 
+## Where to find our Resolver.java source 
+RESOLVER_URL := https://raw.githubusercontent.com/objectos/objectos.mk/main/resolver/src/main/java/Resolver.java
+
 ## Resolver.java deps
 RESOLVER_DEPS := commons-codec/commons-codec/1.16.0
 RESOLVER_DEPS += org.apache.commons/commons-lang3/3.12.0
@@ -72,5 +75,8 @@ RESOLVEX += --resolution-dir $(RESOLUTION_DIR)
 # resolver rules
 #
 
-$(RESOLUTION_DIR)/%: $(RESOLVER_JAVA)
+$(RESOLVER_JAVA):
+	wget --no-verbose $(RESOLVER_URL) 
+
+$(RESOLUTION_DIR)/%: $(RESOLVER_JAVA) $(RESOLVER_DEPS_JARS)
 	$(RESOLVEX) $(@:$(RESOLUTION_DIR)/%=%)

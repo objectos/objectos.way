@@ -101,4 +101,4 @@ endef
 # mk-pom function
 #
 
-mk-pom = $(call POM_TMPL,$($(1)COPYRIGHT_YEARS),$($(1)GROUP_ID),$($(1)ARTIFACT_ID),$($(1)VERSION),$($(1)DESCRIPTION),$($(1)POM_DEPENDENCIES))
+mk-pom = $(call POM_TMPL,$(COPYRIGHT_YEARS),$(GROUP_ID),$(ARTIFACT_ID),$(VERSION),$(DESCRIPTION),$(POM_DEPENDENCIES))

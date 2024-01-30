@@ -21,7 +21,7 @@
 define TEST_COMPILE_TASK
 
 ## test source directory
-$(1)TEST = $$($(1)MODULE)/test
+$(1)TEST = $$($(1)BASEDIR)/test
 
 ## test source files 
 $(1)TEST_SOURCES = $$(shell find $${$(1)TEST} -type f -name '*.java' -print)
@@ -48,7 +48,7 @@ $(1)TEST_JAVACX += --release $$($(1)JAVA_RELEASE)
 $(1)TEST_JAVACX += $$($(1)TEST_SOURCES)
 
 ## test resources directory
-# $(1)TEST_RESOURCES = $$($(1)MODULE)/test-resources
+# $(1)TEST_RESOURCES = $$($(1)BASEDIR)/test-resources
 
 ifdef $(1)TEST_RESOURCES
 ## test resources "source"
