@@ -99,9 +99,6 @@ MODULES += objectos.fs
 MODULES += objectos.fs.testing
 MODULES += objectos.fs.zip
 MODULES += objectos.concurrent
-MODULES += objectos.git
-MODULES += objectos.mysql
-MODULES += objectos.code
 MODULES += objectos.css
 MODULES += objectos.lang.classloader
 
