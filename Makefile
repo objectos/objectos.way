@@ -68,6 +68,9 @@ ENABLE_PREVIEW = 0
 ## compile deps
 COMPILE_DEPS := $(RESOLUTION_DIR)/br.com.objectos/objectos.notes/$(NOTES_VERSION)
 
+## resources
+RESOURCES := resources
+
 ## resolution trigger
 RESOLUTION_REQS := Makefile
 

@@ -36,6 +36,8 @@ module objectos.way {
   exports objectos.io;
   exports objectos.lang;
   exports objectos.lang.classloader;
+  exports objectos.notes.console;
+  exports objectos.notes.file;
   exports objectos.web;
 
   requires transitive objectos.notes;
