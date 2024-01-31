@@ -28,6 +28,7 @@ MODULE := $(ARTIFACT_ID)
 RESOLUTION_DIR := work/resolution
 
 ## Deps versions
+SELFGEN_VERSION := 0.3-SNAPSHOT
 NOTES_VERSION := 0.1
 SLF4J_VERSION := 1.7.36
 TESTNG_VERSION := 7.9.0
@@ -56,6 +57,35 @@ include make/clean.mk
 $(eval $(call CLEAN_TASK,,))
 
 #
+# way@selfgen
+#
+
+## selfgen deps
+SELFGEN_DEPS := $(RESOLUTION_DIR)/br.com.objectos/objectos.selfgen/$(SELFGEN_VERSION)
+
+## selfgen module path
+SELFGEN_MODULE_PATH := $(WORK)/selfgen-module-path
+
+## selfgen marker
+SELFGEN_MARKER := $(WORK)/selfgen-marker
+
+## selfgen java command
+SELFGEN_JAVAX  = $(JAVA)
+SELFGEN_JAVAX += --module-path @$(SELFGEN_MODULE_PATH)
+SELFGEN_JAVAX += --enable-preview
+SELFGEN_JAVAX += --module objectos.selfgen/objectos.selfgen.Main
+SELFGEN_JAVAX += $(MAIN)
+
+.PHONY: selfgen
+selfgen: $(SELFGEN_MARKER)
+
+$(SELFGEN_MODULE_PATH): $(SELFGEN_DEPS)
+	cat $^ | sort -u | paste --delimiter='$(MODULE_PATH_SEPARATOR)' --serial > $@
+
+$(SELFGEN_MARKER): $(SELFGEN_MODULE_PATH)
+	$(SELFGEN_JAVAX) 
+
+#
 # way@compile
 #
 
@@ -67,6 +97,9 @@ ENABLE_PREVIEW = 0
 
 ## compile deps
 COMPILE_DEPS := $(RESOLUTION_DIR)/br.com.objectos/objectos.notes/$(NOTES_VERSION)
+
+## compilation depends on selfgen
+COMPILE_REQS_MORE := $(SELFGEN_MARKER)
 
 ## resources
 RESOURCES := resources
