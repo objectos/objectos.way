@@ -15,19 +15,15 @@
  */
 package objectos.html;
 
-import objectos.html.tmpl.Api;
+import objectos.html.pseudom.HtmlText;
 
-public final class TestIdSelector implements Api.ExternalAttribute.Id, BaseTypes.ExternalAttribute.Id {
+final class PseudoHtmlText implements HtmlText {
 
-  private final String id;
-
-  public TestIdSelector(String id) {
-    this.id = id;
-  }
+  String value;
 
   @Override
-  public final String id() {
-    return id;
+  public final String value() {
+    return value;
   }
 
 }

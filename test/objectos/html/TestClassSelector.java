@@ -17,17 +17,17 @@ package objectos.html;
 
 import objectos.html.tmpl.Api;
 
-public final class TestClassSelector implements Api.ExternalAttribute.StyleClass {
+public final class TestClassSelector implements Api.ExternalAttribute.StyleClass, BaseTypes.ExternalAttribute.StyleClass {
 
-	private final String value;
+  private final String value;
 
-	public TestClassSelector(String value) {
-		this.value = value;
-	}
+  public TestClassSelector(String value) {
+    this.value = value;
+  }
 
-	@Override
-	public final String className() {
-		return value;
-	}
+  @Override
+  public final String className() {
+    return value;
+  }
 
 }

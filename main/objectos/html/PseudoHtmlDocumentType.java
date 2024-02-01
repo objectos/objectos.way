@@ -15,19 +15,8 @@
  */
 package objectos.html;
 
-import objectos.html.tmpl.Api;
+import objectos.html.pseudom.HtmlDocumentType;
 
-public final class TestIdSelector implements Api.ExternalAttribute.Id, BaseTypes.ExternalAttribute.Id {
-
-  private final String id;
-
-  public TestIdSelector(String id) {
-    this.id = id;
-  }
-
-  @Override
-  public final String id() {
-    return id;
-  }
-
+enum PseudoHtmlDocumentType implements HtmlDocumentType {
+  INSTANCE;
 }
