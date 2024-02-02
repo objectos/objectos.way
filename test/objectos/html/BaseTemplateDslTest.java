@@ -17,8 +17,6 @@ package objectos.html;
 
 import static org.testng.Assert.assertEquals;
 
-import objectos.html.tmpl.Api;
-import objectos.html.tmpl.Api.Element;
 import org.testng.annotations.Test;
 
 public class BaseTemplateDslTest {
@@ -76,7 +74,7 @@ public class BaseTemplateDslTest {
     class MyComponent extends HtmlComponent {
       public MyComponent(HtmlTemplate parent) { super(parent); }
 
-      public Element render(Api.Instruction... contents) {
+      public Api.Element render(Api.Instruction... contents) {
         return div(
             className("my-component"),
 

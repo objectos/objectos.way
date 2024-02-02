@@ -15,108 +15,11 @@
  */
 package objectos.html;
 
-import objectos.html.BaseTypes.AlignmentBaselineAttribute;
-import objectos.html.BaseTypes.AutocompleteAttribute;
-import objectos.html.BaseTypes.BaselineShiftAttribute;
-import objectos.html.BaseTypes.BlockquoteInstruction;
-import objectos.html.BaseTypes.BodyInstruction;
-import objectos.html.BaseTypes.ClipPathAttribute;
-import objectos.html.BaseTypes.ClipRuleAttribute;
-import objectos.html.BaseTypes.ColorAttribute;
-import objectos.html.BaseTypes.ColorInterpolationAttribute;
-import objectos.html.BaseTypes.ColorInterpolationFiltersAttribute;
-import objectos.html.BaseTypes.CrossoriginAttribute;
-import objectos.html.BaseTypes.CursorAttribute;
-import objectos.html.BaseTypes.DAttribute;
-import objectos.html.BaseTypes.DetailsInstruction;
-import objectos.html.BaseTypes.DirectionAttribute;
-import objectos.html.BaseTypes.DisabledAttribute;
-import objectos.html.BaseTypes.DisplayAttribute;
-import objectos.html.BaseTypes.DominantBaselineAttribute;
-import objectos.html.BaseTypes.FillAttribute;
-import objectos.html.BaseTypes.FillOpacityAttribute;
-import objectos.html.BaseTypes.FillRuleAttribute;
-import objectos.html.BaseTypes.FilterAttribute;
-import objectos.html.BaseTypes.FloodColorAttribute;
-import objectos.html.BaseTypes.FloodOpacityAttribute;
-import objectos.html.BaseTypes.FontFamilyAttribute;
-import objectos.html.BaseTypes.FontSizeAdjustAttribute;
-import objectos.html.BaseTypes.FontSizeAttribute;
-import objectos.html.BaseTypes.FontStretchAttribute;
-import objectos.html.BaseTypes.FontStyleAttribute;
-import objectos.html.BaseTypes.FontVariantAttribute;
-import objectos.html.BaseTypes.FontWeightAttribute;
-import objectos.html.BaseTypes.FormInstruction;
-import objectos.html.BaseTypes.GlobalAttribute;
-import objectos.html.BaseTypes.GlyphOrientationHorizontalAttribute;
-import objectos.html.BaseTypes.GlyphOrientationVerticalAttribute;
-import objectos.html.BaseTypes.HeightAttribute;
-import objectos.html.BaseTypes.HrefAttribute;
-import objectos.html.BaseTypes.ImageInstruction;
-import objectos.html.BaseTypes.ImageRenderingAttribute;
-import objectos.html.BaseTypes.InputInstruction;
-import objectos.html.BaseTypes.LabelInstruction;
-import objectos.html.BaseTypes.LetterSpacingAttribute;
-import objectos.html.BaseTypes.LightingColorAttribute;
-import objectos.html.BaseTypes.LinkInstruction;
-import objectos.html.BaseTypes.MarkerEndAttribute;
-import objectos.html.BaseTypes.MarkerMidAttribute;
-import objectos.html.BaseTypes.MarkerStartAttribute;
-import objectos.html.BaseTypes.MaskAttribute;
-import objectos.html.BaseTypes.MaskTypeAttribute;
-import objectos.html.BaseTypes.MetaInstruction;
-import objectos.html.BaseTypes.NameAttribute;
-import objectos.html.BaseTypes.OpacityAttribute;
-import objectos.html.BaseTypes.OptionInstruction;
-import objectos.html.BaseTypes.OrderedListInstruction;
-import objectos.html.BaseTypes.OverflowAttribute;
-import objectos.html.BaseTypes.PaintOrderAttribute;
-import objectos.html.BaseTypes.PlaceholderAttribute;
-import objectos.html.BaseTypes.PointerEventsAttribute;
-import objectos.html.BaseTypes.ReadonlyAttribute;
-import objectos.html.BaseTypes.ReferrerpolicyAttribute;
-import objectos.html.BaseTypes.RequiredAttribute;
-import objectos.html.BaseTypes.ScriptInstruction;
-import objectos.html.BaseTypes.SelectInstruction;
-import objectos.html.BaseTypes.ShapeRenderingAttribute;
-import objectos.html.BaseTypes.SrcAttribute;
-import objectos.html.BaseTypes.StopColorAttribute;
-import objectos.html.BaseTypes.StopOpacityAttribute;
-import objectos.html.BaseTypes.StrokeAttribute;
-import objectos.html.BaseTypes.StrokeDasharrayAttribute;
-import objectos.html.BaseTypes.StrokeDashoffsetAttribute;
-import objectos.html.BaseTypes.StrokeLinecapAttribute;
-import objectos.html.BaseTypes.StrokeLinejoinAttribute;
-import objectos.html.BaseTypes.StrokeMiterlimitAttribute;
-import objectos.html.BaseTypes.StrokeOpacityAttribute;
-import objectos.html.BaseTypes.StrokeWidthAttribute;
-import objectos.html.BaseTypes.SvgInstruction;
-import objectos.html.BaseTypes.TableInstruction;
-import objectos.html.BaseTypes.TargetAttribute;
-import objectos.html.BaseTypes.TextAnchorAttribute;
-import objectos.html.BaseTypes.TextAreaInstruction;
-import objectos.html.BaseTypes.TextDecorationAttribute;
-import objectos.html.BaseTypes.TextOverflowAttribute;
-import objectos.html.BaseTypes.TextRenderingAttribute;
-import objectos.html.BaseTypes.TransformAttribute;
-import objectos.html.BaseTypes.TransformOriginAttribute;
-import objectos.html.BaseTypes.TypeAttribute;
-import objectos.html.BaseTypes.UnicodeBidiAttribute;
-import objectos.html.BaseTypes.ValueAttribute;
-import objectos.html.BaseTypes.VectorEffectAttribute;
-import objectos.html.BaseTypes.VisibilityAttribute;
-import objectos.html.BaseTypes.WhiteSpaceAttribute;
-import objectos.html.BaseTypes.WidthAttribute;
-import objectos.html.BaseTypes.WordSpacingAttribute;
-import objectos.html.BaseTypes.WritingModeAttribute;
-
 /**
  * Provides methods for rendering HTML attributes in templates.
  */
 // Generated by objectos.selfgen.HtmlSpec. Do not edit!
 public sealed abstract class TemplateAttributes permits TemplateElements {
-  Html html;
-
   TemplateAttributes() {}
 
   /**
@@ -127,8 +30,8 @@ public sealed abstract class TemplateAttributes permits TemplateElements {
    *
    * @return an instruction representing this attribute.
    */
-  protected final GlobalAttribute accesskey(String value) {
-    return html.accesskey(value);
+  protected final Api.GlobalAttribute accesskey(String value) {
+    return $html().accesskey(value);
   }
 
   /**
@@ -139,8 +42,8 @@ public sealed abstract class TemplateAttributes permits TemplateElements {
    *
    * @return an instruction representing this attribute.
    */
-  protected final FormInstruction action(String value) {
-    return html.action(value);
+  protected final Api.FormValue action(String value) {
+    return $html().action(value);
   }
 
   /**
@@ -151,8 +54,8 @@ public sealed abstract class TemplateAttributes permits TemplateElements {
    *
    * @return an instruction representing this attribute.
    */
-  protected final TableInstruction align(String value) {
-    return html.align(value);
+  protected final Api.TableValue align(String value) {
+    return $html().align(value);
   }
 
   /**
@@ -163,8 +66,8 @@ public sealed abstract class TemplateAttributes permits TemplateElements {
    *
    * @return an instruction representing this attribute.
    */
-  protected final AlignmentBaselineAttribute alignmentBaseline(String value) {
-    return html.alignmentBaseline(value);
+  protected final Api.AlignmentBaselineAttribute alignmentBaseline(String value) {
+    return $html().alignmentBaseline(value);
   }
 
   /**
@@ -175,8 +78,8 @@ public sealed abstract class TemplateAttributes permits TemplateElements {
    *
    * @return an instruction representing this attribute.
    */
-  protected final ImageInstruction alt(String value) {
-    return html.alt(value);
+  protected final Api.ImageValue alt(String value) {
+    return $html().alt(value);
   }
 
   /**
@@ -187,8 +90,8 @@ public sealed abstract class TemplateAttributes permits TemplateElements {
    *
    * @return an instruction representing this attribute.
    */
-  protected final GlobalAttribute ariaHidden(String value) {
-    return html.ariaHidden(value);
+  protected final Api.GlobalAttribute ariaHidden(String value) {
+    return $html().ariaHidden(value);
   }
 
   /**
@@ -196,8 +99,8 @@ public sealed abstract class TemplateAttributes permits TemplateElements {
    *
    * @return an instruction representing this attribute.
    */
-  protected final ScriptInstruction async() {
-    return html.async();
+  protected final Api.ScriptValue async() {
+    return $html().async();
   }
 
   /**
@@ -208,8 +111,8 @@ public sealed abstract class TemplateAttributes permits TemplateElements {
    *
    * @return an instruction representing this attribute.
    */
-  protected final AutocompleteAttribute autocomplete(String value) {
-    return html.autocomplete(value);
+  protected final Api.AutocompleteAttribute autocomplete(String value) {
+    return $html().autocomplete(value);
   }
 
   /**
@@ -217,8 +120,8 @@ public sealed abstract class TemplateAttributes permits TemplateElements {
    *
    * @return an instruction representing this attribute.
    */
-  protected final InputInstruction autofocus() {
-    return html.autofocus();
+  protected final Api.InputValue autofocus() {
+    return $html().autofocus();
   }
 
   /**
@@ -229,8 +132,8 @@ public sealed abstract class TemplateAttributes permits TemplateElements {
    *
    * @return an instruction representing this attribute.
    */
-  protected final BaselineShiftAttribute baselineShift(String value) {
-    return html.baselineShift(value);
+  protected final Api.BaselineShiftAttribute baselineShift(String value) {
+    return $html().baselineShift(value);
   }
 
   /**
@@ -241,8 +144,8 @@ public sealed abstract class TemplateAttributes permits TemplateElements {
    *
    * @return an instruction representing this attribute.
    */
-  protected final TableInstruction border(String value) {
-    return html.border(value);
+  protected final Api.TableValue border(String value) {
+    return $html().border(value);
   }
 
   /**
@@ -253,8 +156,8 @@ public sealed abstract class TemplateAttributes permits TemplateElements {
    *
    * @return an instruction representing this attribute.
    */
-  protected final TableInstruction cellpadding(String value) {
-    return html.cellpadding(value);
+  protected final Api.TableValue cellpadding(String value) {
+    return $html().cellpadding(value);
   }
 
   /**
@@ -265,8 +168,8 @@ public sealed abstract class TemplateAttributes permits TemplateElements {
    *
    * @return an instruction representing this attribute.
    */
-  protected final TableInstruction cellspacing(String value) {
-    return html.cellspacing(value);
+  protected final Api.TableValue cellspacing(String value) {
+    return $html().cellspacing(value);
   }
 
   /**
@@ -277,8 +180,8 @@ public sealed abstract class TemplateAttributes permits TemplateElements {
    *
    * @return an instruction representing this attribute.
    */
-  protected final MetaInstruction charset(String value) {
-    return html.charset(value);
+  protected final Api.MetaValue charset(String value) {
+    return $html().charset(value);
   }
 
   /**
@@ -289,8 +192,8 @@ public sealed abstract class TemplateAttributes permits TemplateElements {
    *
    * @return an instruction representing this attribute.
    */
-  protected final BlockquoteInstruction cite(String value) {
-    return html.cite(value);
+  protected final Api.BlockquoteValue cite(String value) {
+    return $html().cite(value);
   }
 
   /**
@@ -301,8 +204,8 @@ public sealed abstract class TemplateAttributes permits TemplateElements {
    *
    * @return an instruction representing this attribute.
    */
-  protected final GlobalAttribute className(String value) {
-    return html.className(value);
+  protected final Api.GlobalAttribute className(String value) {
+    return $html().className(value);
   }
 
   /**
@@ -313,8 +216,8 @@ public sealed abstract class TemplateAttributes permits TemplateElements {
    *
    * @return an instruction representing this attribute.
    */
-  protected final ClipRuleAttribute clipRule(String value) {
-    return html.clipRule(value);
+  protected final Api.ClipRuleAttribute clipRule(String value) {
+    return $html().clipRule(value);
   }
 
   /**
@@ -325,8 +228,8 @@ public sealed abstract class TemplateAttributes permits TemplateElements {
    *
    * @return an instruction representing this attribute.
    */
-  protected final ColorAttribute color(String value) {
-    return html.color(value);
+  protected final Api.ColorAttribute color(String value) {
+    return $html().color(value);
   }
 
   /**
@@ -337,8 +240,8 @@ public sealed abstract class TemplateAttributes permits TemplateElements {
    *
    * @return an instruction representing this attribute.
    */
-  protected final ColorInterpolationAttribute colorInterpolation(String value) {
-    return html.colorInterpolation(value);
+  protected final Api.ColorInterpolationAttribute colorInterpolation(String value) {
+    return $html().colorInterpolation(value);
   }
 
   /**
@@ -349,8 +252,8 @@ public sealed abstract class TemplateAttributes permits TemplateElements {
    *
    * @return an instruction representing this attribute.
    */
-  protected final ColorInterpolationFiltersAttribute colorInterpolationFilters(String value) {
-    return html.colorInterpolationFilters(value);
+  protected final Api.ColorInterpolationFiltersAttribute colorInterpolationFilters(String value) {
+    return $html().colorInterpolationFilters(value);
   }
 
   /**
@@ -361,8 +264,8 @@ public sealed abstract class TemplateAttributes permits TemplateElements {
    *
    * @return an instruction representing this attribute.
    */
-  protected final TextAreaInstruction cols(String value) {
-    return html.cols(value);
+  protected final Api.TextAreaValue cols(String value) {
+    return $html().cols(value);
   }
 
   /**
@@ -373,8 +276,8 @@ public sealed abstract class TemplateAttributes permits TemplateElements {
    *
    * @return an instruction representing this attribute.
    */
-  protected final MetaInstruction content(String value) {
-    return html.content(value);
+  protected final Api.MetaValue content(String value) {
+    return $html().content(value);
   }
 
   /**
@@ -385,8 +288,8 @@ public sealed abstract class TemplateAttributes permits TemplateElements {
    *
    * @return an instruction representing this attribute.
    */
-  protected final GlobalAttribute contenteditable(String value) {
-    return html.contenteditable(value);
+  protected final Api.GlobalAttribute contenteditable(String value) {
+    return $html().contenteditable(value);
   }
 
   /**
@@ -397,8 +300,8 @@ public sealed abstract class TemplateAttributes permits TemplateElements {
    *
    * @return an instruction representing this attribute.
    */
-  protected final CrossoriginAttribute crossorigin(String value) {
-    return html.crossorigin(value);
+  protected final Api.CrossoriginAttribute crossorigin(String value) {
+    return $html().crossorigin(value);
   }
 
   /**
@@ -409,8 +312,8 @@ public sealed abstract class TemplateAttributes permits TemplateElements {
    *
    * @return an instruction representing this attribute.
    */
-  protected final CursorAttribute cursor(String value) {
-    return html.cursor(value);
+  protected final Api.CursorAttribute cursor(String value) {
+    return $html().cursor(value);
   }
 
   /**
@@ -421,8 +324,8 @@ public sealed abstract class TemplateAttributes permits TemplateElements {
    *
    * @return an instruction representing this attribute.
    */
-  protected final DAttribute d(String value) {
-    return html.d(value);
+  protected final Api.DAttribute d(String value) {
+    return $html().d(value);
   }
 
   /**
@@ -430,8 +333,8 @@ public sealed abstract class TemplateAttributes permits TemplateElements {
    *
    * @return an instruction representing this attribute.
    */
-  protected final ScriptInstruction defer() {
-    return html.defer();
+  protected final Api.ScriptValue defer() {
+    return $html().defer();
   }
 
   /**
@@ -442,8 +345,8 @@ public sealed abstract class TemplateAttributes permits TemplateElements {
    *
    * @return an instruction representing this attribute.
    */
-  protected final GlobalAttribute dir(String value) {
-    return html.dir(value);
+  protected final Api.GlobalAttribute dir(String value) {
+    return $html().dir(value);
   }
 
   /**
@@ -454,8 +357,8 @@ public sealed abstract class TemplateAttributes permits TemplateElements {
    *
    * @return an instruction representing this attribute.
    */
-  protected final DirectionAttribute direction(String value) {
-    return html.direction(value);
+  protected final Api.DirectionAttribute direction(String value) {
+    return $html().direction(value);
   }
 
   /**
@@ -466,8 +369,8 @@ public sealed abstract class TemplateAttributes permits TemplateElements {
    *
    * @return an instruction representing this attribute.
    */
-  protected final TextAreaInstruction dirname(String value) {
-    return html.dirname(value);
+  protected final Api.TextAreaValue dirname(String value) {
+    return $html().dirname(value);
   }
 
   /**
@@ -475,8 +378,8 @@ public sealed abstract class TemplateAttributes permits TemplateElements {
    *
    * @return an instruction representing this attribute.
    */
-  protected final DisabledAttribute disabled() {
-    return html.disabled();
+  protected final Api.DisabledAttribute disabled() {
+    return $html().disabled();
   }
 
   /**
@@ -487,8 +390,8 @@ public sealed abstract class TemplateAttributes permits TemplateElements {
    *
    * @return an instruction representing this attribute.
    */
-  protected final DisplayAttribute display(String value) {
-    return html.display(value);
+  protected final Api.DisplayAttribute display(String value) {
+    return $html().display(value);
   }
 
   /**
@@ -499,8 +402,8 @@ public sealed abstract class TemplateAttributes permits TemplateElements {
    *
    * @return an instruction representing this attribute.
    */
-  protected final DominantBaselineAttribute dominantBaseline(String value) {
-    return html.dominantBaseline(value);
+  protected final Api.DominantBaselineAttribute dominantBaseline(String value) {
+    return $html().dominantBaseline(value);
   }
 
   /**
@@ -511,8 +414,8 @@ public sealed abstract class TemplateAttributes permits TemplateElements {
    *
    * @return an instruction representing this attribute.
    */
-  protected final GlobalAttribute draggable(String value) {
-    return html.draggable(value);
+  protected final Api.GlobalAttribute draggable(String value) {
+    return $html().draggable(value);
   }
 
   /**
@@ -523,8 +426,8 @@ public sealed abstract class TemplateAttributes permits TemplateElements {
    *
    * @return an instruction representing this attribute.
    */
-  protected final FormInstruction enctype(String value) {
-    return html.enctype(value);
+  protected final Api.FormValue enctype(String value) {
+    return $html().enctype(value);
   }
 
   /**
@@ -535,8 +438,8 @@ public sealed abstract class TemplateAttributes permits TemplateElements {
    *
    * @return an instruction representing this attribute.
    */
-  protected final FillAttribute fill(String value) {
-    return html.fill(value);
+  protected final Api.FillAttribute fill(String value) {
+    return $html().fill(value);
   }
 
   /**
@@ -547,8 +450,8 @@ public sealed abstract class TemplateAttributes permits TemplateElements {
    *
    * @return an instruction representing this attribute.
    */
-  protected final FillOpacityAttribute fillOpacity(String value) {
-    return html.fillOpacity(value);
+  protected final Api.FillOpacityAttribute fillOpacity(String value) {
+    return $html().fillOpacity(value);
   }
 
   /**
@@ -559,8 +462,8 @@ public sealed abstract class TemplateAttributes permits TemplateElements {
    *
    * @return an instruction representing this attribute.
    */
-  protected final FillRuleAttribute fillRule(String value) {
-    return html.fillRule(value);
+  protected final Api.FillRuleAttribute fillRule(String value) {
+    return $html().fillRule(value);
   }
 
   /**
@@ -571,8 +474,8 @@ public sealed abstract class TemplateAttributes permits TemplateElements {
    *
    * @return an instruction representing this attribute.
    */
-  protected final FilterAttribute filter(String value) {
-    return html.filter(value);
+  protected final Api.FilterAttribute filter(String value) {
+    return $html().filter(value);
   }
 
   /**
@@ -583,8 +486,8 @@ public sealed abstract class TemplateAttributes permits TemplateElements {
    *
    * @return an instruction representing this attribute.
    */
-  protected final FloodColorAttribute floodColor(String value) {
-    return html.floodColor(value);
+  protected final Api.FloodColorAttribute floodColor(String value) {
+    return $html().floodColor(value);
   }
 
   /**
@@ -595,8 +498,8 @@ public sealed abstract class TemplateAttributes permits TemplateElements {
    *
    * @return an instruction representing this attribute.
    */
-  protected final FloodOpacityAttribute floodOpacity(String value) {
-    return html.floodOpacity(value);
+  protected final Api.FloodOpacityAttribute floodOpacity(String value) {
+    return $html().floodOpacity(value);
   }
 
   /**
@@ -607,8 +510,8 @@ public sealed abstract class TemplateAttributes permits TemplateElements {
    *
    * @return an instruction representing this attribute.
    */
-  protected final FontFamilyAttribute fontFamily(String value) {
-    return html.fontFamily(value);
+  protected final Api.FontFamilyAttribute fontFamily(String value) {
+    return $html().fontFamily(value);
   }
 
   /**
@@ -619,8 +522,8 @@ public sealed abstract class TemplateAttributes permits TemplateElements {
    *
    * @return an instruction representing this attribute.
    */
-  protected final FontSizeAttribute fontSize(String value) {
-    return html.fontSize(value);
+  protected final Api.FontSizeAttribute fontSize(String value) {
+    return $html().fontSize(value);
   }
 
   /**
@@ -631,8 +534,8 @@ public sealed abstract class TemplateAttributes permits TemplateElements {
    *
    * @return an instruction representing this attribute.
    */
-  protected final FontSizeAdjustAttribute fontSizeAdjust(String value) {
-    return html.fontSizeAdjust(value);
+  protected final Api.FontSizeAdjustAttribute fontSizeAdjust(String value) {
+    return $html().fontSizeAdjust(value);
   }
 
   /**
@@ -643,8 +546,8 @@ public sealed abstract class TemplateAttributes permits TemplateElements {
    *
    * @return an instruction representing this attribute.
    */
-  protected final FontStretchAttribute fontStretch(String value) {
-    return html.fontStretch(value);
+  protected final Api.FontStretchAttribute fontStretch(String value) {
+    return $html().fontStretch(value);
   }
 
   /**
@@ -655,8 +558,8 @@ public sealed abstract class TemplateAttributes permits TemplateElements {
    *
    * @return an instruction representing this attribute.
    */
-  protected final FontStyleAttribute fontStyle(String value) {
-    return html.fontStyle(value);
+  protected final Api.FontStyleAttribute fontStyle(String value) {
+    return $html().fontStyle(value);
   }
 
   /**
@@ -667,8 +570,8 @@ public sealed abstract class TemplateAttributes permits TemplateElements {
    *
    * @return an instruction representing this attribute.
    */
-  protected final FontVariantAttribute fontVariant(String value) {
-    return html.fontVariant(value);
+  protected final Api.FontVariantAttribute fontVariant(String value) {
+    return $html().fontVariant(value);
   }
 
   /**
@@ -679,8 +582,8 @@ public sealed abstract class TemplateAttributes permits TemplateElements {
    *
    * @return an instruction representing this attribute.
    */
-  protected final FontWeightAttribute fontWeight(String value) {
-    return html.fontWeight(value);
+  protected final Api.FontWeightAttribute fontWeight(String value) {
+    return $html().fontWeight(value);
   }
 
   /**
@@ -691,8 +594,8 @@ public sealed abstract class TemplateAttributes permits TemplateElements {
    *
    * @return an instruction representing this attribute.
    */
-  protected final LabelInstruction forAttr(String value) {
-    return html.forAttr(value);
+  protected final Api.LabelValue forAttr(String value) {
+    return $html().forAttr(value);
   }
 
   /**
@@ -703,8 +606,8 @@ public sealed abstract class TemplateAttributes permits TemplateElements {
    *
    * @return an instruction representing this attribute.
    */
-  protected final LabelInstruction forElement(String value) {
-    return html.forElement(value);
+  protected final Api.LabelValue forElement(String value) {
+    return $html().forElement(value);
   }
 
   /**
@@ -715,8 +618,8 @@ public sealed abstract class TemplateAttributes permits TemplateElements {
    *
    * @return an instruction representing this attribute.
    */
-  protected final GlyphOrientationHorizontalAttribute glyphOrientationHorizontal(String value) {
-    return html.glyphOrientationHorizontal(value);
+  protected final Api.GlyphOrientationHorizontalAttribute glyphOrientationHorizontal(String value) {
+    return $html().glyphOrientationHorizontal(value);
   }
 
   /**
@@ -727,8 +630,8 @@ public sealed abstract class TemplateAttributes permits TemplateElements {
    *
    * @return an instruction representing this attribute.
    */
-  protected final GlyphOrientationVerticalAttribute glyphOrientationVertical(String value) {
-    return html.glyphOrientationVertical(value);
+  protected final Api.GlyphOrientationVerticalAttribute glyphOrientationVertical(String value) {
+    return $html().glyphOrientationVertical(value);
   }
 
   /**
@@ -739,8 +642,8 @@ public sealed abstract class TemplateAttributes permits TemplateElements {
    *
    * @return an instruction representing this attribute.
    */
-  protected final HeightAttribute height(String value) {
-    return html.height(value);
+  protected final Api.HeightAttribute height(String value) {
+    return $html().height(value);
   }
 
   /**
@@ -748,8 +651,8 @@ public sealed abstract class TemplateAttributes permits TemplateElements {
    *
    * @return an instruction representing this attribute.
    */
-  protected final GlobalAttribute hidden() {
-    return html.hidden();
+  protected final Api.GlobalAttribute hidden() {
+    return $html().hidden();
   }
 
   /**
@@ -760,8 +663,8 @@ public sealed abstract class TemplateAttributes permits TemplateElements {
    *
    * @return an instruction representing this attribute.
    */
-  protected final HrefAttribute href(String value) {
-    return html.href(value);
+  protected final Api.HrefAttribute href(String value) {
+    return $html().href(value);
   }
 
   /**
@@ -772,8 +675,8 @@ public sealed abstract class TemplateAttributes permits TemplateElements {
    *
    * @return an instruction representing this attribute.
    */
-  protected final MetaInstruction httpEquiv(String value) {
-    return html.httpEquiv(value);
+  protected final Api.MetaValue httpEquiv(String value) {
+    return $html().httpEquiv(value);
   }
 
   /**
@@ -784,8 +687,8 @@ public sealed abstract class TemplateAttributes permits TemplateElements {
    *
    * @return an instruction representing this attribute.
    */
-  protected final GlobalAttribute id(String value) {
-    return html.id(value);
+  protected final Api.GlobalAttribute id(String value) {
+    return $html().id(value);
   }
 
   /**
@@ -796,8 +699,8 @@ public sealed abstract class TemplateAttributes permits TemplateElements {
    *
    * @return an instruction representing this attribute.
    */
-  protected final ImageRenderingAttribute imageRendering(String value) {
-    return html.imageRendering(value);
+  protected final Api.ImageRenderingAttribute imageRendering(String value) {
+    return $html().imageRendering(value);
   }
 
   /**
@@ -808,8 +711,8 @@ public sealed abstract class TemplateAttributes permits TemplateElements {
    *
    * @return an instruction representing this attribute.
    */
-  protected final ScriptInstruction integrity(String value) {
-    return html.integrity(value);
+  protected final Api.ScriptValue integrity(String value) {
+    return $html().integrity(value);
   }
 
   /**
@@ -820,8 +723,8 @@ public sealed abstract class TemplateAttributes permits TemplateElements {
    *
    * @return an instruction representing this attribute.
    */
-  protected final GlobalAttribute lang(String value) {
-    return html.lang(value);
+  protected final Api.GlobalAttribute lang(String value) {
+    return $html().lang(value);
   }
 
   /**
@@ -832,8 +735,8 @@ public sealed abstract class TemplateAttributes permits TemplateElements {
    *
    * @return an instruction representing this attribute.
    */
-  protected final LetterSpacingAttribute letterSpacing(String value) {
-    return html.letterSpacing(value);
+  protected final Api.LetterSpacingAttribute letterSpacing(String value) {
+    return $html().letterSpacing(value);
   }
 
   /**
@@ -844,8 +747,8 @@ public sealed abstract class TemplateAttributes permits TemplateElements {
    *
    * @return an instruction representing this attribute.
    */
-  protected final LightingColorAttribute lightingColor(String value) {
-    return html.lightingColor(value);
+  protected final Api.LightingColorAttribute lightingColor(String value) {
+    return $html().lightingColor(value);
   }
 
   /**
@@ -856,8 +759,8 @@ public sealed abstract class TemplateAttributes permits TemplateElements {
    *
    * @return an instruction representing this attribute.
    */
-  protected final MarkerEndAttribute markerEnd(String value) {
-    return html.markerEnd(value);
+  protected final Api.MarkerEndAttribute markerEnd(String value) {
+    return $html().markerEnd(value);
   }
 
   /**
@@ -868,8 +771,8 @@ public sealed abstract class TemplateAttributes permits TemplateElements {
    *
    * @return an instruction representing this attribute.
    */
-  protected final MarkerMidAttribute markerMid(String value) {
-    return html.markerMid(value);
+  protected final Api.MarkerMidAttribute markerMid(String value) {
+    return $html().markerMid(value);
   }
 
   /**
@@ -880,8 +783,8 @@ public sealed abstract class TemplateAttributes permits TemplateElements {
    *
    * @return an instruction representing this attribute.
    */
-  protected final MarkerStartAttribute markerStart(String value) {
-    return html.markerStart(value);
+  protected final Api.MarkerStartAttribute markerStart(String value) {
+    return $html().markerStart(value);
   }
 
   /**
@@ -892,8 +795,8 @@ public sealed abstract class TemplateAttributes permits TemplateElements {
    *
    * @return an instruction representing this attribute.
    */
-  protected final MaskAttribute mask(String value) {
-    return html.mask(value);
+  protected final Api.MaskAttribute mask(String value) {
+    return $html().mask(value);
   }
 
   /**
@@ -904,8 +807,8 @@ public sealed abstract class TemplateAttributes permits TemplateElements {
    *
    * @return an instruction representing this attribute.
    */
-  protected final MaskTypeAttribute maskType(String value) {
-    return html.maskType(value);
+  protected final Api.MaskTypeAttribute maskType(String value) {
+    return $html().maskType(value);
   }
 
   /**
@@ -916,8 +819,8 @@ public sealed abstract class TemplateAttributes permits TemplateElements {
    *
    * @return an instruction representing this attribute.
    */
-  protected final TextAreaInstruction maxlength(String value) {
-    return html.maxlength(value);
+  protected final Api.TextAreaValue maxlength(String value) {
+    return $html().maxlength(value);
   }
 
   /**
@@ -928,8 +831,8 @@ public sealed abstract class TemplateAttributes permits TemplateElements {
    *
    * @return an instruction representing this attribute.
    */
-  protected final LinkInstruction media(String value) {
-    return html.media(value);
+  protected final Api.LinkValue media(String value) {
+    return $html().media(value);
   }
 
   /**
@@ -940,8 +843,8 @@ public sealed abstract class TemplateAttributes permits TemplateElements {
    *
    * @return an instruction representing this attribute.
    */
-  protected final FormInstruction method(String value) {
-    return html.method(value);
+  protected final Api.FormValue method(String value) {
+    return $html().method(value);
   }
 
   /**
@@ -952,8 +855,8 @@ public sealed abstract class TemplateAttributes permits TemplateElements {
    *
    * @return an instruction representing this attribute.
    */
-  protected final TextAreaInstruction minlength(String value) {
-    return html.minlength(value);
+  protected final Api.TextAreaValue minlength(String value) {
+    return $html().minlength(value);
   }
 
   /**
@@ -961,8 +864,8 @@ public sealed abstract class TemplateAttributes permits TemplateElements {
    *
    * @return an instruction representing this attribute.
    */
-  protected final SelectInstruction multiple() {
-    return html.multiple();
+  protected final Api.SelectValue multiple() {
+    return $html().multiple();
   }
 
   /**
@@ -973,8 +876,8 @@ public sealed abstract class TemplateAttributes permits TemplateElements {
    *
    * @return an instruction representing this attribute.
    */
-  protected final NameAttribute name(String value) {
-    return html.name(value);
+  protected final Api.NameAttribute name(String value) {
+    return $html().name(value);
   }
 
   /**
@@ -982,8 +885,8 @@ public sealed abstract class TemplateAttributes permits TemplateElements {
    *
    * @return an instruction representing this attribute.
    */
-  protected final ScriptInstruction nomodule() {
-    return html.nomodule();
+  protected final Api.ScriptValue nomodule() {
+    return $html().nomodule();
   }
 
   /**
@@ -994,8 +897,8 @@ public sealed abstract class TemplateAttributes permits TemplateElements {
    *
    * @return an instruction representing this attribute.
    */
-  protected final BodyInstruction onafterprint(String value) {
-    return html.onafterprint(value);
+  protected final Api.BodyValue onafterprint(String value) {
+    return $html().onafterprint(value);
   }
 
   /**
@@ -1006,8 +909,8 @@ public sealed abstract class TemplateAttributes permits TemplateElements {
    *
    * @return an instruction representing this attribute.
    */
-  protected final BodyInstruction onbeforeprint(String value) {
-    return html.onbeforeprint(value);
+  protected final Api.BodyValue onbeforeprint(String value) {
+    return $html().onbeforeprint(value);
   }
 
   /**
@@ -1018,8 +921,8 @@ public sealed abstract class TemplateAttributes permits TemplateElements {
    *
    * @return an instruction representing this attribute.
    */
-  protected final BodyInstruction onbeforeunload(String value) {
-    return html.onbeforeunload(value);
+  protected final Api.BodyValue onbeforeunload(String value) {
+    return $html().onbeforeunload(value);
   }
 
   /**
@@ -1030,8 +933,8 @@ public sealed abstract class TemplateAttributes permits TemplateElements {
    *
    * @return an instruction representing this attribute.
    */
-  protected final GlobalAttribute onclick(String value) {
-    return html.onclick(value);
+  protected final Api.GlobalAttribute onclick(String value) {
+    return $html().onclick(value);
   }
 
   /**
@@ -1042,8 +945,8 @@ public sealed abstract class TemplateAttributes permits TemplateElements {
    *
    * @return an instruction representing this attribute.
    */
-  protected final BodyInstruction onhashchange(String value) {
-    return html.onhashchange(value);
+  protected final Api.BodyValue onhashchange(String value) {
+    return $html().onhashchange(value);
   }
 
   /**
@@ -1054,8 +957,8 @@ public sealed abstract class TemplateAttributes permits TemplateElements {
    *
    * @return an instruction representing this attribute.
    */
-  protected final BodyInstruction onlanguagechange(String value) {
-    return html.onlanguagechange(value);
+  protected final Api.BodyValue onlanguagechange(String value) {
+    return $html().onlanguagechange(value);
   }
 
   /**
@@ -1066,8 +969,8 @@ public sealed abstract class TemplateAttributes permits TemplateElements {
    *
    * @return an instruction representing this attribute.
    */
-  protected final BodyInstruction onmessage(String value) {
-    return html.onmessage(value);
+  protected final Api.BodyValue onmessage(String value) {
+    return $html().onmessage(value);
   }
 
   /**
@@ -1078,8 +981,8 @@ public sealed abstract class TemplateAttributes permits TemplateElements {
    *
    * @return an instruction representing this attribute.
    */
-  protected final BodyInstruction onoffline(String value) {
-    return html.onoffline(value);
+  protected final Api.BodyValue onoffline(String value) {
+    return $html().onoffline(value);
   }
 
   /**
@@ -1090,8 +993,8 @@ public sealed abstract class TemplateAttributes permits TemplateElements {
    *
    * @return an instruction representing this attribute.
    */
-  protected final BodyInstruction ononline(String value) {
-    return html.ononline(value);
+  protected final Api.BodyValue ononline(String value) {
+    return $html().ononline(value);
   }
 
   /**
@@ -1102,8 +1005,8 @@ public sealed abstract class TemplateAttributes permits TemplateElements {
    *
    * @return an instruction representing this attribute.
    */
-  protected final BodyInstruction onpagehide(String value) {
-    return html.onpagehide(value);
+  protected final Api.BodyValue onpagehide(String value) {
+    return $html().onpagehide(value);
   }
 
   /**
@@ -1114,8 +1017,8 @@ public sealed abstract class TemplateAttributes permits TemplateElements {
    *
    * @return an instruction representing this attribute.
    */
-  protected final BodyInstruction onpageshow(String value) {
-    return html.onpageshow(value);
+  protected final Api.BodyValue onpageshow(String value) {
+    return $html().onpageshow(value);
   }
 
   /**
@@ -1126,8 +1029,8 @@ public sealed abstract class TemplateAttributes permits TemplateElements {
    *
    * @return an instruction representing this attribute.
    */
-  protected final BodyInstruction onpopstate(String value) {
-    return html.onpopstate(value);
+  protected final Api.BodyValue onpopstate(String value) {
+    return $html().onpopstate(value);
   }
 
   /**
@@ -1138,8 +1041,8 @@ public sealed abstract class TemplateAttributes permits TemplateElements {
    *
    * @return an instruction representing this attribute.
    */
-  protected final BodyInstruction onrejectionhandled(String value) {
-    return html.onrejectionhandled(value);
+  protected final Api.BodyValue onrejectionhandled(String value) {
+    return $html().onrejectionhandled(value);
   }
 
   /**
@@ -1150,8 +1053,8 @@ public sealed abstract class TemplateAttributes permits TemplateElements {
    *
    * @return an instruction representing this attribute.
    */
-  protected final BodyInstruction onstorage(String value) {
-    return html.onstorage(value);
+  protected final Api.BodyValue onstorage(String value) {
+    return $html().onstorage(value);
   }
 
   /**
@@ -1162,8 +1065,8 @@ public sealed abstract class TemplateAttributes permits TemplateElements {
    *
    * @return an instruction representing this attribute.
    */
-  protected final GlobalAttribute onsubmit(String value) {
-    return html.onsubmit(value);
+  protected final Api.GlobalAttribute onsubmit(String value) {
+    return $html().onsubmit(value);
   }
 
   /**
@@ -1174,8 +1077,8 @@ public sealed abstract class TemplateAttributes permits TemplateElements {
    *
    * @return an instruction representing this attribute.
    */
-  protected final BodyInstruction onunhandledrejection(String value) {
-    return html.onunhandledrejection(value);
+  protected final Api.BodyValue onunhandledrejection(String value) {
+    return $html().onunhandledrejection(value);
   }
 
   /**
@@ -1186,8 +1089,8 @@ public sealed abstract class TemplateAttributes permits TemplateElements {
    *
    * @return an instruction representing this attribute.
    */
-  protected final BodyInstruction onunload(String value) {
-    return html.onunload(value);
+  protected final Api.BodyValue onunload(String value) {
+    return $html().onunload(value);
   }
 
   /**
@@ -1198,8 +1101,8 @@ public sealed abstract class TemplateAttributes permits TemplateElements {
    *
    * @return an instruction representing this attribute.
    */
-  protected final OpacityAttribute opacity(String value) {
-    return html.opacity(value);
+  protected final Api.OpacityAttribute opacity(String value) {
+    return $html().opacity(value);
   }
 
   /**
@@ -1207,8 +1110,8 @@ public sealed abstract class TemplateAttributes permits TemplateElements {
    *
    * @return an instruction representing this attribute.
    */
-  protected final DetailsInstruction open() {
-    return html.open();
+  protected final Api.DetailsValue open() {
+    return $html().open();
   }
 
   /**
@@ -1219,8 +1122,8 @@ public sealed abstract class TemplateAttributes permits TemplateElements {
    *
    * @return an instruction representing this attribute.
    */
-  protected final OverflowAttribute overflow(String value) {
-    return html.overflow(value);
+  protected final Api.OverflowAttribute overflow(String value) {
+    return $html().overflow(value);
   }
 
   /**
@@ -1231,8 +1134,8 @@ public sealed abstract class TemplateAttributes permits TemplateElements {
    *
    * @return an instruction representing this attribute.
    */
-  protected final PaintOrderAttribute paintOrder(String value) {
-    return html.paintOrder(value);
+  protected final Api.PaintOrderAttribute paintOrder(String value) {
+    return $html().paintOrder(value);
   }
 
   /**
@@ -1243,8 +1146,8 @@ public sealed abstract class TemplateAttributes permits TemplateElements {
    *
    * @return an instruction representing this attribute.
    */
-  protected final PlaceholderAttribute placeholder(String value) {
-    return html.placeholder(value);
+  protected final Api.PlaceholderAttribute placeholder(String value) {
+    return $html().placeholder(value);
   }
 
   /**
@@ -1255,8 +1158,8 @@ public sealed abstract class TemplateAttributes permits TemplateElements {
    *
    * @return an instruction representing this attribute.
    */
-  protected final PointerEventsAttribute pointerEvents(String value) {
-    return html.pointerEvents(value);
+  protected final Api.PointerEventsAttribute pointerEvents(String value) {
+    return $html().pointerEvents(value);
   }
 
   /**
@@ -1267,8 +1170,8 @@ public sealed abstract class TemplateAttributes permits TemplateElements {
    *
    * @return an instruction representing this attribute.
    */
-  protected final MetaInstruction property(String value) {
-    return html.property(value);
+  protected final Api.MetaValue property(String value) {
+    return $html().property(value);
   }
 
   /**
@@ -1276,8 +1179,8 @@ public sealed abstract class TemplateAttributes permits TemplateElements {
    *
    * @return an instruction representing this attribute.
    */
-  protected final ReadonlyAttribute readonly() {
-    return html.readonly();
+  protected final Api.ReadonlyAttribute readonly() {
+    return $html().readonly();
   }
 
   /**
@@ -1288,8 +1191,8 @@ public sealed abstract class TemplateAttributes permits TemplateElements {
    *
    * @return an instruction representing this attribute.
    */
-  protected final ReferrerpolicyAttribute referrerpolicy(String value) {
-    return html.referrerpolicy(value);
+  protected final Api.ReferrerpolicyAttribute referrerpolicy(String value) {
+    return $html().referrerpolicy(value);
   }
 
   /**
@@ -1300,8 +1203,8 @@ public sealed abstract class TemplateAttributes permits TemplateElements {
    *
    * @return an instruction representing this attribute.
    */
-  protected final LinkInstruction rel(String value) {
-    return html.rel(value);
+  protected final Api.LinkValue rel(String value) {
+    return $html().rel(value);
   }
 
   /**
@@ -1309,8 +1212,8 @@ public sealed abstract class TemplateAttributes permits TemplateElements {
    *
    * @return an instruction representing this attribute.
    */
-  protected final RequiredAttribute required() {
-    return html.required();
+  protected final Api.RequiredAttribute required() {
+    return $html().required();
   }
 
   /**
@@ -1321,8 +1224,8 @@ public sealed abstract class TemplateAttributes permits TemplateElements {
    *
    * @return an instruction representing this attribute.
    */
-  protected final LinkInstruction rev(String value) {
-    return html.rev(value);
+  protected final Api.LinkValue rev(String value) {
+    return $html().rev(value);
   }
 
   /**
@@ -1330,8 +1233,8 @@ public sealed abstract class TemplateAttributes permits TemplateElements {
    *
    * @return an instruction representing this attribute.
    */
-  protected final OrderedListInstruction reversed() {
-    return html.reversed();
+  protected final Api.OrderedListValue reversed() {
+    return $html().reversed();
   }
 
   /**
@@ -1342,8 +1245,8 @@ public sealed abstract class TemplateAttributes permits TemplateElements {
    *
    * @return an instruction representing this attribute.
    */
-  protected final GlobalAttribute role(String value) {
-    return html.role(value);
+  protected final Api.GlobalAttribute role(String value) {
+    return $html().role(value);
   }
 
   /**
@@ -1354,8 +1257,8 @@ public sealed abstract class TemplateAttributes permits TemplateElements {
    *
    * @return an instruction representing this attribute.
    */
-  protected final TextAreaInstruction rows(String value) {
-    return html.rows(value);
+  protected final Api.TextAreaValue rows(String value) {
+    return $html().rows(value);
   }
 
   /**
@@ -1363,8 +1266,8 @@ public sealed abstract class TemplateAttributes permits TemplateElements {
    *
    * @return an instruction representing this attribute.
    */
-  protected final OptionInstruction selected() {
-    return html.selected();
+  protected final Api.OptionValue selected() {
+    return $html().selected();
   }
 
   /**
@@ -1375,8 +1278,8 @@ public sealed abstract class TemplateAttributes permits TemplateElements {
    *
    * @return an instruction representing this attribute.
    */
-  protected final ShapeRenderingAttribute shapeRendering(String value) {
-    return html.shapeRendering(value);
+  protected final Api.ShapeRenderingAttribute shapeRendering(String value) {
+    return $html().shapeRendering(value);
   }
 
   /**
@@ -1387,8 +1290,8 @@ public sealed abstract class TemplateAttributes permits TemplateElements {
    *
    * @return an instruction representing this attribute.
    */
-  protected final SelectInstruction size(String value) {
-    return html.size(value);
+  protected final Api.SelectValue size(String value) {
+    return $html().size(value);
   }
 
   /**
@@ -1399,8 +1302,8 @@ public sealed abstract class TemplateAttributes permits TemplateElements {
    *
    * @return an instruction representing this attribute.
    */
-  protected final LinkInstruction sizes(String value) {
-    return html.sizes(value);
+  protected final Api.LinkValue sizes(String value) {
+    return $html().sizes(value);
   }
 
   /**
@@ -1411,8 +1314,8 @@ public sealed abstract class TemplateAttributes permits TemplateElements {
    *
    * @return an instruction representing this attribute.
    */
-  protected final GlobalAttribute spellcheck(String value) {
-    return html.spellcheck(value);
+  protected final Api.GlobalAttribute spellcheck(String value) {
+    return $html().spellcheck(value);
   }
 
   /**
@@ -1423,8 +1326,8 @@ public sealed abstract class TemplateAttributes permits TemplateElements {
    *
    * @return an instruction representing this attribute.
    */
-  protected final SrcAttribute src(String value) {
-    return html.src(value);
+  protected final Api.SrcAttribute src(String value) {
+    return $html().src(value);
   }
 
   /**
@@ -1435,8 +1338,8 @@ public sealed abstract class TemplateAttributes permits TemplateElements {
    *
    * @return an instruction representing this attribute.
    */
-  protected final ImageInstruction srcset(String value) {
-    return html.srcset(value);
+  protected final Api.ImageValue srcset(String value) {
+    return $html().srcset(value);
   }
 
   /**
@@ -1447,8 +1350,8 @@ public sealed abstract class TemplateAttributes permits TemplateElements {
    *
    * @return an instruction representing this attribute.
    */
-  protected final OrderedListInstruction start(String value) {
-    return html.start(value);
+  protected final Api.OrderedListValue start(String value) {
+    return $html().start(value);
   }
 
   /**
@@ -1459,8 +1362,8 @@ public sealed abstract class TemplateAttributes permits TemplateElements {
    *
    * @return an instruction representing this attribute.
    */
-  protected final StopColorAttribute stopColor(String value) {
-    return html.stopColor(value);
+  protected final Api.StopColorAttribute stopColor(String value) {
+    return $html().stopColor(value);
   }
 
   /**
@@ -1471,8 +1374,8 @@ public sealed abstract class TemplateAttributes permits TemplateElements {
    *
    * @return an instruction representing this attribute.
    */
-  protected final StopOpacityAttribute stopOpacity(String value) {
-    return html.stopOpacity(value);
+  protected final Api.StopOpacityAttribute stopOpacity(String value) {
+    return $html().stopOpacity(value);
   }
 
   /**
@@ -1483,8 +1386,8 @@ public sealed abstract class TemplateAttributes permits TemplateElements {
    *
    * @return an instruction representing this attribute.
    */
-  protected final StrokeAttribute stroke(String value) {
-    return html.stroke(value);
+  protected final Api.StrokeAttribute stroke(String value) {
+    return $html().stroke(value);
   }
 
   /**
@@ -1495,8 +1398,8 @@ public sealed abstract class TemplateAttributes permits TemplateElements {
    *
    * @return an instruction representing this attribute.
    */
-  protected final StrokeDasharrayAttribute strokeDasharray(String value) {
-    return html.strokeDasharray(value);
+  protected final Api.StrokeDasharrayAttribute strokeDasharray(String value) {
+    return $html().strokeDasharray(value);
   }
 
   /**
@@ -1507,8 +1410,8 @@ public sealed abstract class TemplateAttributes permits TemplateElements {
    *
    * @return an instruction representing this attribute.
    */
-  protected final StrokeDashoffsetAttribute strokeDashoffset(String value) {
-    return html.strokeDashoffset(value);
+  protected final Api.StrokeDashoffsetAttribute strokeDashoffset(String value) {
+    return $html().strokeDashoffset(value);
   }
 
   /**
@@ -1519,8 +1422,8 @@ public sealed abstract class TemplateAttributes permits TemplateElements {
    *
    * @return an instruction representing this attribute.
    */
-  protected final StrokeLinecapAttribute strokeLinecap(String value) {
-    return html.strokeLinecap(value);
+  protected final Api.StrokeLinecapAttribute strokeLinecap(String value) {
+    return $html().strokeLinecap(value);
   }
 
   /**
@@ -1531,8 +1434,8 @@ public sealed abstract class TemplateAttributes permits TemplateElements {
    *
    * @return an instruction representing this attribute.
    */
-  protected final StrokeLinejoinAttribute strokeLinejoin(String value) {
-    return html.strokeLinejoin(value);
+  protected final Api.StrokeLinejoinAttribute strokeLinejoin(String value) {
+    return $html().strokeLinejoin(value);
   }
 
   /**
@@ -1543,8 +1446,8 @@ public sealed abstract class TemplateAttributes permits TemplateElements {
    *
    * @return an instruction representing this attribute.
    */
-  protected final StrokeMiterlimitAttribute strokeMiterlimit(String value) {
-    return html.strokeMiterlimit(value);
+  protected final Api.StrokeMiterlimitAttribute strokeMiterlimit(String value) {
+    return $html().strokeMiterlimit(value);
   }
 
   /**
@@ -1555,8 +1458,8 @@ public sealed abstract class TemplateAttributes permits TemplateElements {
    *
    * @return an instruction representing this attribute.
    */
-  protected final StrokeOpacityAttribute strokeOpacity(String value) {
-    return html.strokeOpacity(value);
+  protected final Api.StrokeOpacityAttribute strokeOpacity(String value) {
+    return $html().strokeOpacity(value);
   }
 
   /**
@@ -1567,8 +1470,8 @@ public sealed abstract class TemplateAttributes permits TemplateElements {
    *
    * @return an instruction representing this attribute.
    */
-  protected final StrokeWidthAttribute strokeWidth(String value) {
-    return html.strokeWidth(value);
+  protected final Api.StrokeWidthAttribute strokeWidth(String value) {
+    return $html().strokeWidth(value);
   }
 
   /**
@@ -1579,8 +1482,8 @@ public sealed abstract class TemplateAttributes permits TemplateElements {
    *
    * @return an instruction representing this attribute.
    */
-  protected final GlobalAttribute inlineStyle(String value) {
-    return html.inlineStyle(value);
+  protected final Api.GlobalAttribute inlineStyle(String value) {
+    return $html().inlineStyle(value);
   }
 
   /**
@@ -1591,8 +1494,8 @@ public sealed abstract class TemplateAttributes permits TemplateElements {
    *
    * @return an instruction representing this attribute.
    */
-  protected final GlobalAttribute tabindex(String value) {
-    return html.tabindex(value);
+  protected final Api.GlobalAttribute tabindex(String value) {
+    return $html().tabindex(value);
   }
 
   /**
@@ -1603,8 +1506,8 @@ public sealed abstract class TemplateAttributes permits TemplateElements {
    *
    * @return an instruction representing this attribute.
    */
-  protected final TargetAttribute target(String value) {
-    return html.target(value);
+  protected final Api.TargetAttribute target(String value) {
+    return $html().target(value);
   }
 
   /**
@@ -1615,8 +1518,8 @@ public sealed abstract class TemplateAttributes permits TemplateElements {
    *
    * @return an instruction representing this attribute.
    */
-  protected final TextAnchorAttribute textAnchor(String value) {
-    return html.textAnchor(value);
+  protected final Api.TextAnchorAttribute textAnchor(String value) {
+    return $html().textAnchor(value);
   }
 
   /**
@@ -1627,8 +1530,8 @@ public sealed abstract class TemplateAttributes permits TemplateElements {
    *
    * @return an instruction representing this attribute.
    */
-  protected final TextDecorationAttribute textDecoration(String value) {
-    return html.textDecoration(value);
+  protected final Api.TextDecorationAttribute textDecoration(String value) {
+    return $html().textDecoration(value);
   }
 
   /**
@@ -1639,8 +1542,8 @@ public sealed abstract class TemplateAttributes permits TemplateElements {
    *
    * @return an instruction representing this attribute.
    */
-  protected final TextOverflowAttribute textOverflow(String value) {
-    return html.textOverflow(value);
+  protected final Api.TextOverflowAttribute textOverflow(String value) {
+    return $html().textOverflow(value);
   }
 
   /**
@@ -1651,8 +1554,8 @@ public sealed abstract class TemplateAttributes permits TemplateElements {
    *
    * @return an instruction representing this attribute.
    */
-  protected final TextRenderingAttribute textRendering(String value) {
-    return html.textRendering(value);
+  protected final Api.TextRenderingAttribute textRendering(String value) {
+    return $html().textRendering(value);
   }
 
   /**
@@ -1663,8 +1566,8 @@ public sealed abstract class TemplateAttributes permits TemplateElements {
    *
    * @return an instruction representing this attribute.
    */
-  protected final TransformAttribute transform(String value) {
-    return html.transform(value);
+  protected final Api.TransformAttribute transform(String value) {
+    return $html().transform(value);
   }
 
   /**
@@ -1675,8 +1578,8 @@ public sealed abstract class TemplateAttributes permits TemplateElements {
    *
    * @return an instruction representing this attribute.
    */
-  protected final TransformOriginAttribute transformOrigin(String value) {
-    return html.transformOrigin(value);
+  protected final Api.TransformOriginAttribute transformOrigin(String value) {
+    return $html().transformOrigin(value);
   }
 
   /**
@@ -1687,8 +1590,8 @@ public sealed abstract class TemplateAttributes permits TemplateElements {
    *
    * @return an instruction representing this attribute.
    */
-  protected final GlobalAttribute translate(String value) {
-    return html.translate(value);
+  protected final Api.GlobalAttribute translate(String value) {
+    return $html().translate(value);
   }
 
   /**
@@ -1699,8 +1602,8 @@ public sealed abstract class TemplateAttributes permits TemplateElements {
    *
    * @return an instruction representing this attribute.
    */
-  protected final TypeAttribute type(String value) {
-    return html.type(value);
+  protected final Api.TypeAttribute type(String value) {
+    return $html().type(value);
   }
 
   /**
@@ -1711,8 +1614,8 @@ public sealed abstract class TemplateAttributes permits TemplateElements {
    *
    * @return an instruction representing this attribute.
    */
-  protected final UnicodeBidiAttribute unicodeBidi(String value) {
-    return html.unicodeBidi(value);
+  protected final Api.UnicodeBidiAttribute unicodeBidi(String value) {
+    return $html().unicodeBidi(value);
   }
 
   /**
@@ -1723,8 +1626,8 @@ public sealed abstract class TemplateAttributes permits TemplateElements {
    *
    * @return an instruction representing this attribute.
    */
-  protected final ValueAttribute value(String value) {
-    return html.value(value);
+  protected final Api.ValueAttribute value(String value) {
+    return $html().value(value);
   }
 
   /**
@@ -1735,8 +1638,8 @@ public sealed abstract class TemplateAttributes permits TemplateElements {
    *
    * @return an instruction representing this attribute.
    */
-  protected final VectorEffectAttribute vectorEffect(String value) {
-    return html.vectorEffect(value);
+  protected final Api.VectorEffectAttribute vectorEffect(String value) {
+    return $html().vectorEffect(value);
   }
 
   /**
@@ -1747,8 +1650,8 @@ public sealed abstract class TemplateAttributes permits TemplateElements {
    *
    * @return an instruction representing this attribute.
    */
-  protected final SvgInstruction viewBox(String value) {
-    return html.viewBox(value);
+  protected final Api.SvgValue viewBox(String value) {
+    return $html().viewBox(value);
   }
 
   /**
@@ -1759,8 +1662,8 @@ public sealed abstract class TemplateAttributes permits TemplateElements {
    *
    * @return an instruction representing this attribute.
    */
-  protected final VisibilityAttribute visibility(String value) {
-    return html.visibility(value);
+  protected final Api.VisibilityAttribute visibility(String value) {
+    return $html().visibility(value);
   }
 
   /**
@@ -1771,8 +1674,8 @@ public sealed abstract class TemplateAttributes permits TemplateElements {
    *
    * @return an instruction representing this attribute.
    */
-  protected final WhiteSpaceAttribute whiteSpace(String value) {
-    return html.whiteSpace(value);
+  protected final Api.WhiteSpaceAttribute whiteSpace(String value) {
+    return $html().whiteSpace(value);
   }
 
   /**
@@ -1783,8 +1686,8 @@ public sealed abstract class TemplateAttributes permits TemplateElements {
    *
    * @return an instruction representing this attribute.
    */
-  protected final WidthAttribute width(String value) {
-    return html.width(value);
+  protected final Api.WidthAttribute width(String value) {
+    return $html().width(value);
   }
 
   /**
@@ -1795,8 +1698,8 @@ public sealed abstract class TemplateAttributes permits TemplateElements {
    *
    * @return an instruction representing this attribute.
    */
-  protected final WordSpacingAttribute wordSpacing(String value) {
-    return html.wordSpacing(value);
+  protected final Api.WordSpacingAttribute wordSpacing(String value) {
+    return $html().wordSpacing(value);
   }
 
   /**
@@ -1807,8 +1710,8 @@ public sealed abstract class TemplateAttributes permits TemplateElements {
    *
    * @return an instruction representing this attribute.
    */
-  protected final TextAreaInstruction wrap(String value) {
-    return html.wrap(value);
+  protected final Api.TextAreaValue wrap(String value) {
+    return $html().wrap(value);
   }
 
   /**
@@ -1819,8 +1722,8 @@ public sealed abstract class TemplateAttributes permits TemplateElements {
    *
    * @return an instruction representing this attribute.
    */
-  protected final WritingModeAttribute writingMode(String value) {
-    return html.writingMode(value);
+  protected final Api.WritingModeAttribute writingMode(String value) {
+    return $html().writingMode(value);
   }
 
   /**
@@ -1831,8 +1734,8 @@ public sealed abstract class TemplateAttributes permits TemplateElements {
    *
    * @return an instruction representing this attribute.
    */
-  protected final SvgInstruction xmlns(String value) {
-    return html.xmlns(value);
+  protected final Api.SvgValue xmlns(String value) {
+    return $html().xmlns(value);
   }
 
   /**
@@ -1843,7 +1746,9 @@ public sealed abstract class TemplateAttributes permits TemplateElements {
    *
    * @return an instruction representing this attribute.
    */
-  protected final ClipPathAttribute clipPath(String value) {
-    return html.clipPath(value);
+  protected final Api.ClipPathAttribute clipPath(String value) {
+    return $html().clipPath(value);
   }
+
+  abstract Html $html();
 }

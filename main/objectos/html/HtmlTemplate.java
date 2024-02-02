@@ -15,10 +15,9 @@
  */
 package objectos.html;
 
-import objectos.html.internal.HtmlCompiler02;
-import objectos.html.internal.HtmlTemplateApi;
 import objectos.html.internal.PrettyPrintWriter;
 import objectos.html.pseudom.DocumentProcessor;
+import objectos.html.pseudom.HtmlDocument;
 import objectos.lang.object.Check;
 
 /**
@@ -30,9 +29,9 @@ import objectos.lang.object.Check;
  *
  * @see objectos.html
  */
-public non-sealed abstract class HtmlTemplate extends BaseTemplateDsl {
+public non-sealed abstract class HtmlTemplate extends TemplateBase {
 
-  HtmlTemplateApi api;
+  Html html;
 
   /**
    * Sole constructor.
@@ -46,8 +45,8 @@ public non-sealed abstract class HtmlTemplate extends BaseTemplateDsl {
    */
   @Override
   public final String toString() {
-    HtmlCompiler02 compiler;
-    compiler = new HtmlCompiler02();
+    Html compiler;
+    compiler = new Html();
 
     StringBuilder out;
     out = new StringBuilder();
@@ -68,25 +67,28 @@ public non-sealed abstract class HtmlTemplate extends BaseTemplateDsl {
   protected abstract void definition();
 
   @Override
-  final HtmlTemplateApi api() {
-    Check.state(api != null, "api not set");
+  final Html $html() {
+    Check.state(html != null, "html not set");
 
-    return api;
+    return html;
   }
 
-  final void process(HtmlTemplateApi templateApi, DocumentProcessor processor) {
+  final void process(Html templateApi, DocumentProcessor processor) {
     try {
-      api = templateApi;
+      html = templateApi;
 
-      api.compilationBegin();
+      html.compilationBegin();
 
       definition();
 
-      api.compilationEnd();
+      html.compilationEnd();
 
-      api.process(processor);
+      HtmlDocument document;
+      document = html.compile();
+
+      processor.process(document);
     } finally {
-      api = null;
+      html = null;
     }
   }
 

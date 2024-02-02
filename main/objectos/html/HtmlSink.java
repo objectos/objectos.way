@@ -16,14 +16,12 @@
 package objectos.html;
 
 import java.util.Objects;
-import objectos.html.internal.HtmlCompiler02;
 import objectos.html.pseudom.DocumentProcessor;
 
 /**
  * TODO
  */
-@SuppressWarnings("exports")
-public final class HtmlSink extends HtmlCompiler02 {
+public final class HtmlSink {
 
   private HtmlSink() {}
 
@@ -49,7 +47,10 @@ public final class HtmlSink extends HtmlCompiler02 {
     Objects.requireNonNull(template, "template == null");
     Objects.requireNonNull(processor, "processor == null");
 
-    template.process(this, processor);
+    Html html;
+    html = new Html();
+
+    template.process(html, processor);
   }
 
 }

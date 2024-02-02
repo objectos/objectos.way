@@ -15,101 +15,6 @@
  */
 package objectos.html;
 
-import objectos.html.BaseTypes.AlignmentBaselineAttribute;
-import objectos.html.BaseTypes.AttributeInstruction;
-import objectos.html.BaseTypes.AutocompleteAttribute;
-import objectos.html.BaseTypes.BaselineShiftAttribute;
-import objectos.html.BaseTypes.BlockquoteInstruction;
-import objectos.html.BaseTypes.BodyInstruction;
-import objectos.html.BaseTypes.ClipPathAttribute;
-import objectos.html.BaseTypes.ClipRuleAttribute;
-import objectos.html.BaseTypes.ColorAttribute;
-import objectos.html.BaseTypes.ColorInterpolationAttribute;
-import objectos.html.BaseTypes.ColorInterpolationFiltersAttribute;
-import objectos.html.BaseTypes.CrossoriginAttribute;
-import objectos.html.BaseTypes.CursorAttribute;
-import objectos.html.BaseTypes.DAttribute;
-import objectos.html.BaseTypes.DetailsInstruction;
-import objectos.html.BaseTypes.DirectionAttribute;
-import objectos.html.BaseTypes.DisabledAttribute;
-import objectos.html.BaseTypes.DisplayAttribute;
-import objectos.html.BaseTypes.DominantBaselineAttribute;
-import objectos.html.BaseTypes.FillAttribute;
-import objectos.html.BaseTypes.FillOpacityAttribute;
-import objectos.html.BaseTypes.FillRuleAttribute;
-import objectos.html.BaseTypes.FilterAttribute;
-import objectos.html.BaseTypes.FloodColorAttribute;
-import objectos.html.BaseTypes.FloodOpacityAttribute;
-import objectos.html.BaseTypes.FontFamilyAttribute;
-import objectos.html.BaseTypes.FontSizeAdjustAttribute;
-import objectos.html.BaseTypes.FontSizeAttribute;
-import objectos.html.BaseTypes.FontStretchAttribute;
-import objectos.html.BaseTypes.FontStyleAttribute;
-import objectos.html.BaseTypes.FontVariantAttribute;
-import objectos.html.BaseTypes.FontWeightAttribute;
-import objectos.html.BaseTypes.FormInstruction;
-import objectos.html.BaseTypes.GlobalAttribute;
-import objectos.html.BaseTypes.GlyphOrientationHorizontalAttribute;
-import objectos.html.BaseTypes.GlyphOrientationVerticalAttribute;
-import objectos.html.BaseTypes.HeightAttribute;
-import objectos.html.BaseTypes.HrefAttribute;
-import objectos.html.BaseTypes.ImageInstruction;
-import objectos.html.BaseTypes.ImageRenderingAttribute;
-import objectos.html.BaseTypes.InputInstruction;
-import objectos.html.BaseTypes.LabelInstruction;
-import objectos.html.BaseTypes.LetterSpacingAttribute;
-import objectos.html.BaseTypes.LightingColorAttribute;
-import objectos.html.BaseTypes.LinkInstruction;
-import objectos.html.BaseTypes.MarkerEndAttribute;
-import objectos.html.BaseTypes.MarkerMidAttribute;
-import objectos.html.BaseTypes.MarkerStartAttribute;
-import objectos.html.BaseTypes.MaskAttribute;
-import objectos.html.BaseTypes.MaskTypeAttribute;
-import objectos.html.BaseTypes.MetaInstruction;
-import objectos.html.BaseTypes.NameAttribute;
-import objectos.html.BaseTypes.OpacityAttribute;
-import objectos.html.BaseTypes.OptionInstruction;
-import objectos.html.BaseTypes.OrderedListInstruction;
-import objectos.html.BaseTypes.OverflowAttribute;
-import objectos.html.BaseTypes.PaintOrderAttribute;
-import objectos.html.BaseTypes.PlaceholderAttribute;
-import objectos.html.BaseTypes.PointerEventsAttribute;
-import objectos.html.BaseTypes.ReadonlyAttribute;
-import objectos.html.BaseTypes.ReferrerpolicyAttribute;
-import objectos.html.BaseTypes.RequiredAttribute;
-import objectos.html.BaseTypes.ScriptInstruction;
-import objectos.html.BaseTypes.SelectInstruction;
-import objectos.html.BaseTypes.ShapeRenderingAttribute;
-import objectos.html.BaseTypes.SrcAttribute;
-import objectos.html.BaseTypes.StopColorAttribute;
-import objectos.html.BaseTypes.StopOpacityAttribute;
-import objectos.html.BaseTypes.StrokeAttribute;
-import objectos.html.BaseTypes.StrokeDasharrayAttribute;
-import objectos.html.BaseTypes.StrokeDashoffsetAttribute;
-import objectos.html.BaseTypes.StrokeLinecapAttribute;
-import objectos.html.BaseTypes.StrokeLinejoinAttribute;
-import objectos.html.BaseTypes.StrokeMiterlimitAttribute;
-import objectos.html.BaseTypes.StrokeOpacityAttribute;
-import objectos.html.BaseTypes.StrokeWidthAttribute;
-import objectos.html.BaseTypes.SvgInstruction;
-import objectos.html.BaseTypes.TableInstruction;
-import objectos.html.BaseTypes.TargetAttribute;
-import objectos.html.BaseTypes.TextAnchorAttribute;
-import objectos.html.BaseTypes.TextAreaInstruction;
-import objectos.html.BaseTypes.TextDecorationAttribute;
-import objectos.html.BaseTypes.TextOverflowAttribute;
-import objectos.html.BaseTypes.TextRenderingAttribute;
-import objectos.html.BaseTypes.TransformAttribute;
-import objectos.html.BaseTypes.TransformOriginAttribute;
-import objectos.html.BaseTypes.TypeAttribute;
-import objectos.html.BaseTypes.UnicodeBidiAttribute;
-import objectos.html.BaseTypes.ValueAttribute;
-import objectos.html.BaseTypes.VectorEffectAttribute;
-import objectos.html.BaseTypes.VisibilityAttribute;
-import objectos.html.BaseTypes.WhiteSpaceAttribute;
-import objectos.html.BaseTypes.WidthAttribute;
-import objectos.html.BaseTypes.WordSpacingAttribute;
-import objectos.html.BaseTypes.WritingModeAttribute;
 import objectos.html.internal.StandardAttributeName;
 
 /**
@@ -127,9 +32,9 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    *
    * @return an instruction representing this attribute.
    */
-  public final GlobalAttribute accesskey(String value) {
+  public final Api.GlobalAttribute accesskey(String value) {
     attribute(StandardAttributeName.ACCESSKEY, value);
-    return AttributeInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -140,9 +45,9 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    *
    * @return an instruction representing this attribute.
    */
-  public final FormInstruction action(String value) {
+  public final Api.FormValue action(String value) {
     attribute(StandardAttributeName.ACTION, value);
-    return AttributeInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -153,9 +58,9 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    *
    * @return an instruction representing this attribute.
    */
-  public final TableInstruction align(String value) {
+  public final Api.TableValue align(String value) {
     attribute(StandardAttributeName.ALIGN, value);
-    return AttributeInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -166,9 +71,9 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    *
    * @return an instruction representing this attribute.
    */
-  public final AlignmentBaselineAttribute alignmentBaseline(String value) {
+  public final Api.AlignmentBaselineAttribute alignmentBaseline(String value) {
     attribute(StandardAttributeName.ALIGNMENTBASELINE, value);
-    return AttributeInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -179,9 +84,9 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    *
    * @return an instruction representing this attribute.
    */
-  public final ImageInstruction alt(String value) {
+  public final Api.ImageValue alt(String value) {
     attribute(StandardAttributeName.ALT, value);
-    return AttributeInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -192,9 +97,9 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    *
    * @return an instruction representing this attribute.
    */
-  public final GlobalAttribute ariaHidden(String value) {
+  public final Api.GlobalAttribute ariaHidden(String value) {
     attribute(StandardAttributeName.ARIAHIDDEN, value);
-    return AttributeInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -202,9 +107,9 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    *
    * @return an instruction representing this attribute.
    */
-  public final ScriptInstruction async() {
+  public final Api.ScriptValue async() {
     attribute(StandardAttributeName.ASYNC);
-    return AttributeInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -215,9 +120,9 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    *
    * @return an instruction representing this attribute.
    */
-  public final AutocompleteAttribute autocomplete(String value) {
+  public final Api.AutocompleteAttribute autocomplete(String value) {
     attribute(StandardAttributeName.AUTOCOMPLETE, value);
-    return AttributeInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -225,9 +130,9 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    *
    * @return an instruction representing this attribute.
    */
-  public final InputInstruction autofocus() {
+  public final Api.InputValue autofocus() {
     attribute(StandardAttributeName.AUTOFOCUS);
-    return AttributeInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -238,9 +143,9 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    *
    * @return an instruction representing this attribute.
    */
-  public final BaselineShiftAttribute baselineShift(String value) {
+  public final Api.BaselineShiftAttribute baselineShift(String value) {
     attribute(StandardAttributeName.BASELINESHIFT, value);
-    return AttributeInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -251,9 +156,9 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    *
    * @return an instruction representing this attribute.
    */
-  public final TableInstruction border(String value) {
+  public final Api.TableValue border(String value) {
     attribute(StandardAttributeName.BORDER, value);
-    return AttributeInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -264,9 +169,9 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    *
    * @return an instruction representing this attribute.
    */
-  public final TableInstruction cellpadding(String value) {
+  public final Api.TableValue cellpadding(String value) {
     attribute(StandardAttributeName.CELLPADDING, value);
-    return AttributeInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -277,9 +182,9 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    *
    * @return an instruction representing this attribute.
    */
-  public final TableInstruction cellspacing(String value) {
+  public final Api.TableValue cellspacing(String value) {
     attribute(StandardAttributeName.CELLSPACING, value);
-    return AttributeInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -290,9 +195,9 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    *
    * @return an instruction representing this attribute.
    */
-  public final MetaInstruction charset(String value) {
+  public final Api.MetaValue charset(String value) {
     attribute(StandardAttributeName.CHARSET, value);
-    return AttributeInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -303,9 +208,9 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    *
    * @return an instruction representing this attribute.
    */
-  public final BlockquoteInstruction cite(String value) {
+  public final Api.BlockquoteValue cite(String value) {
     attribute(StandardAttributeName.CITE, value);
-    return AttributeInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -316,9 +221,9 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    *
    * @return an instruction representing this attribute.
    */
-  public final GlobalAttribute className(String value) {
+  public final Api.GlobalAttribute className(String value) {
     attribute(StandardAttributeName.CLASS, value);
-    return AttributeInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -329,9 +234,9 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    *
    * @return an instruction representing this attribute.
    */
-  public final ClipRuleAttribute clipRule(String value) {
+  public final Api.ClipRuleAttribute clipRule(String value) {
     attribute(StandardAttributeName.CLIPRULE, value);
-    return AttributeInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -342,9 +247,9 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    *
    * @return an instruction representing this attribute.
    */
-  public final ColorAttribute color(String value) {
+  public final Api.ColorAttribute color(String value) {
     attribute(StandardAttributeName.COLOR, value);
-    return AttributeInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -355,9 +260,9 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    *
    * @return an instruction representing this attribute.
    */
-  public final ColorInterpolationAttribute colorInterpolation(String value) {
+  public final Api.ColorInterpolationAttribute colorInterpolation(String value) {
     attribute(StandardAttributeName.COLORINTERPOLATION, value);
-    return AttributeInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -368,9 +273,9 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    *
    * @return an instruction representing this attribute.
    */
-  public final ColorInterpolationFiltersAttribute colorInterpolationFilters(String value) {
+  public final Api.ColorInterpolationFiltersAttribute colorInterpolationFilters(String value) {
     attribute(StandardAttributeName.COLORINTERPOLATIONFILTERS, value);
-    return AttributeInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -381,9 +286,9 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    *
    * @return an instruction representing this attribute.
    */
-  public final TextAreaInstruction cols(String value) {
+  public final Api.TextAreaValue cols(String value) {
     attribute(StandardAttributeName.COLS, value);
-    return AttributeInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -394,9 +299,9 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    *
    * @return an instruction representing this attribute.
    */
-  public final MetaInstruction content(String value) {
+  public final Api.MetaValue content(String value) {
     attribute(StandardAttributeName.CONTENT, value);
-    return AttributeInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -407,9 +312,9 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    *
    * @return an instruction representing this attribute.
    */
-  public final GlobalAttribute contenteditable(String value) {
+  public final Api.GlobalAttribute contenteditable(String value) {
     attribute(StandardAttributeName.CONTENTEDITABLE, value);
-    return AttributeInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -420,9 +325,9 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    *
    * @return an instruction representing this attribute.
    */
-  public final CrossoriginAttribute crossorigin(String value) {
+  public final Api.CrossoriginAttribute crossorigin(String value) {
     attribute(StandardAttributeName.CROSSORIGIN, value);
-    return AttributeInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -433,9 +338,9 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    *
    * @return an instruction representing this attribute.
    */
-  public final CursorAttribute cursor(String value) {
+  public final Api.CursorAttribute cursor(String value) {
     attribute(StandardAttributeName.CURSOR, value);
-    return AttributeInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -446,9 +351,9 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    *
    * @return an instruction representing this attribute.
    */
-  public final DAttribute d(String value) {
+  public final Api.DAttribute d(String value) {
     attribute(StandardAttributeName.D, value);
-    return AttributeInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -456,9 +361,9 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    *
    * @return an instruction representing this attribute.
    */
-  public final ScriptInstruction defer() {
+  public final Api.ScriptValue defer() {
     attribute(StandardAttributeName.DEFER);
-    return AttributeInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -469,9 +374,9 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    *
    * @return an instruction representing this attribute.
    */
-  public final GlobalAttribute dir(String value) {
+  public final Api.GlobalAttribute dir(String value) {
     attribute(StandardAttributeName.DIR, value);
-    return AttributeInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -482,9 +387,9 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    *
    * @return an instruction representing this attribute.
    */
-  public final DirectionAttribute direction(String value) {
+  public final Api.DirectionAttribute direction(String value) {
     attribute(StandardAttributeName.DIRECTION, value);
-    return AttributeInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -495,9 +400,9 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    *
    * @return an instruction representing this attribute.
    */
-  public final TextAreaInstruction dirname(String value) {
+  public final Api.TextAreaValue dirname(String value) {
     attribute(StandardAttributeName.DIRNAME, value);
-    return AttributeInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -505,9 +410,9 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    *
    * @return an instruction representing this attribute.
    */
-  public final DisabledAttribute disabled() {
+  public final Api.DisabledAttribute disabled() {
     attribute(StandardAttributeName.DISABLED);
-    return AttributeInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -518,9 +423,9 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    *
    * @return an instruction representing this attribute.
    */
-  public final DisplayAttribute display(String value) {
+  public final Api.DisplayAttribute display(String value) {
     attribute(StandardAttributeName.DISPLAY, value);
-    return AttributeInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -531,9 +436,9 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    *
    * @return an instruction representing this attribute.
    */
-  public final DominantBaselineAttribute dominantBaseline(String value) {
+  public final Api.DominantBaselineAttribute dominantBaseline(String value) {
     attribute(StandardAttributeName.DOMINANTBASELINE, value);
-    return AttributeInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -544,9 +449,9 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    *
    * @return an instruction representing this attribute.
    */
-  public final GlobalAttribute draggable(String value) {
+  public final Api.GlobalAttribute draggable(String value) {
     attribute(StandardAttributeName.DRAGGABLE, value);
-    return AttributeInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -557,9 +462,9 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    *
    * @return an instruction representing this attribute.
    */
-  public final FormInstruction enctype(String value) {
+  public final Api.FormValue enctype(String value) {
     attribute(StandardAttributeName.ENCTYPE, value);
-    return AttributeInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -570,9 +475,9 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    *
    * @return an instruction representing this attribute.
    */
-  public final FillAttribute fill(String value) {
+  public final Api.FillAttribute fill(String value) {
     attribute(StandardAttributeName.FILL, value);
-    return AttributeInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -583,9 +488,9 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    *
    * @return an instruction representing this attribute.
    */
-  public final FillOpacityAttribute fillOpacity(String value) {
+  public final Api.FillOpacityAttribute fillOpacity(String value) {
     attribute(StandardAttributeName.FILLOPACITY, value);
-    return AttributeInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -596,9 +501,9 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    *
    * @return an instruction representing this attribute.
    */
-  public final FillRuleAttribute fillRule(String value) {
+  public final Api.FillRuleAttribute fillRule(String value) {
     attribute(StandardAttributeName.FILLRULE, value);
-    return AttributeInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -609,9 +514,9 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    *
    * @return an instruction representing this attribute.
    */
-  public final FilterAttribute filter(String value) {
+  public final Api.FilterAttribute filter(String value) {
     attribute(StandardAttributeName.FILTER, value);
-    return AttributeInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -622,9 +527,9 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    *
    * @return an instruction representing this attribute.
    */
-  public final FloodColorAttribute floodColor(String value) {
+  public final Api.FloodColorAttribute floodColor(String value) {
     attribute(StandardAttributeName.FLOODCOLOR, value);
-    return AttributeInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -635,9 +540,9 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    *
    * @return an instruction representing this attribute.
    */
-  public final FloodOpacityAttribute floodOpacity(String value) {
+  public final Api.FloodOpacityAttribute floodOpacity(String value) {
     attribute(StandardAttributeName.FLOODOPACITY, value);
-    return AttributeInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -648,9 +553,9 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    *
    * @return an instruction representing this attribute.
    */
-  public final FontFamilyAttribute fontFamily(String value) {
+  public final Api.FontFamilyAttribute fontFamily(String value) {
     attribute(StandardAttributeName.FONTFAMILY, value);
-    return AttributeInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -661,9 +566,9 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    *
    * @return an instruction representing this attribute.
    */
-  public final FontSizeAttribute fontSize(String value) {
+  public final Api.FontSizeAttribute fontSize(String value) {
     attribute(StandardAttributeName.FONTSIZE, value);
-    return AttributeInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -674,9 +579,9 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    *
    * @return an instruction representing this attribute.
    */
-  public final FontSizeAdjustAttribute fontSizeAdjust(String value) {
+  public final Api.FontSizeAdjustAttribute fontSizeAdjust(String value) {
     attribute(StandardAttributeName.FONTSIZEADJUST, value);
-    return AttributeInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -687,9 +592,9 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    *
    * @return an instruction representing this attribute.
    */
-  public final FontStretchAttribute fontStretch(String value) {
+  public final Api.FontStretchAttribute fontStretch(String value) {
     attribute(StandardAttributeName.FONTSTRETCH, value);
-    return AttributeInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -700,9 +605,9 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    *
    * @return an instruction representing this attribute.
    */
-  public final FontStyleAttribute fontStyle(String value) {
+  public final Api.FontStyleAttribute fontStyle(String value) {
     attribute(StandardAttributeName.FONTSTYLE, value);
-    return AttributeInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -713,9 +618,9 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    *
    * @return an instruction representing this attribute.
    */
-  public final FontVariantAttribute fontVariant(String value) {
+  public final Api.FontVariantAttribute fontVariant(String value) {
     attribute(StandardAttributeName.FONTVARIANT, value);
-    return AttributeInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -726,9 +631,9 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    *
    * @return an instruction representing this attribute.
    */
-  public final FontWeightAttribute fontWeight(String value) {
+  public final Api.FontWeightAttribute fontWeight(String value) {
     attribute(StandardAttributeName.FONTWEIGHT, value);
-    return AttributeInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -739,9 +644,9 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    *
    * @return an instruction representing this attribute.
    */
-  public final LabelInstruction forAttr(String value) {
+  public final Api.LabelValue forAttr(String value) {
     attribute(StandardAttributeName.FOR, value);
-    return AttributeInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -752,9 +657,9 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    *
    * @return an instruction representing this attribute.
    */
-  public final LabelInstruction forElement(String value) {
+  public final Api.LabelValue forElement(String value) {
     attribute(StandardAttributeName.FOR, value);
-    return AttributeInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -765,9 +670,9 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    *
    * @return an instruction representing this attribute.
    */
-  public final GlyphOrientationHorizontalAttribute glyphOrientationHorizontal(String value) {
+  public final Api.GlyphOrientationHorizontalAttribute glyphOrientationHorizontal(String value) {
     attribute(StandardAttributeName.GLYPHORIENTATIONHORIZONTAL, value);
-    return AttributeInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -778,9 +683,9 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    *
    * @return an instruction representing this attribute.
    */
-  public final GlyphOrientationVerticalAttribute glyphOrientationVertical(String value) {
+  public final Api.GlyphOrientationVerticalAttribute glyphOrientationVertical(String value) {
     attribute(StandardAttributeName.GLYPHORIENTATIONVERTICAL, value);
-    return AttributeInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -791,9 +696,9 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    *
    * @return an instruction representing this attribute.
    */
-  public final HeightAttribute height(String value) {
+  public final Api.HeightAttribute height(String value) {
     attribute(StandardAttributeName.HEIGHT, value);
-    return AttributeInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -801,9 +706,9 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    *
    * @return an instruction representing this attribute.
    */
-  public final GlobalAttribute hidden() {
+  public final Api.GlobalAttribute hidden() {
     attribute(StandardAttributeName.HIDDEN);
-    return AttributeInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -814,9 +719,9 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    *
    * @return an instruction representing this attribute.
    */
-  public final HrefAttribute href(String value) {
+  public final Api.HrefAttribute href(String value) {
     attribute(StandardAttributeName.HREF, value);
-    return AttributeInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -827,9 +732,9 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    *
    * @return an instruction representing this attribute.
    */
-  public final MetaInstruction httpEquiv(String value) {
+  public final Api.MetaValue httpEquiv(String value) {
     attribute(StandardAttributeName.HTTPEQUIV, value);
-    return AttributeInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -840,9 +745,9 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    *
    * @return an instruction representing this attribute.
    */
-  public final GlobalAttribute id(String value) {
+  public final Api.GlobalAttribute id(String value) {
     attribute(StandardAttributeName.ID, value);
-    return AttributeInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -853,9 +758,9 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    *
    * @return an instruction representing this attribute.
    */
-  public final ImageRenderingAttribute imageRendering(String value) {
+  public final Api.ImageRenderingAttribute imageRendering(String value) {
     attribute(StandardAttributeName.IMAGERENDERING, value);
-    return AttributeInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -866,9 +771,9 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    *
    * @return an instruction representing this attribute.
    */
-  public final ScriptInstruction integrity(String value) {
+  public final Api.ScriptValue integrity(String value) {
     attribute(StandardAttributeName.INTEGRITY, value);
-    return AttributeInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -879,9 +784,9 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    *
    * @return an instruction representing this attribute.
    */
-  public final GlobalAttribute lang(String value) {
+  public final Api.GlobalAttribute lang(String value) {
     attribute(StandardAttributeName.LANG, value);
-    return AttributeInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -892,9 +797,9 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    *
    * @return an instruction representing this attribute.
    */
-  public final LetterSpacingAttribute letterSpacing(String value) {
+  public final Api.LetterSpacingAttribute letterSpacing(String value) {
     attribute(StandardAttributeName.LETTERSPACING, value);
-    return AttributeInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -905,9 +810,9 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    *
    * @return an instruction representing this attribute.
    */
-  public final LightingColorAttribute lightingColor(String value) {
+  public final Api.LightingColorAttribute lightingColor(String value) {
     attribute(StandardAttributeName.LIGHTINGCOLOR, value);
-    return AttributeInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -918,9 +823,9 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    *
    * @return an instruction representing this attribute.
    */
-  public final MarkerEndAttribute markerEnd(String value) {
+  public final Api.MarkerEndAttribute markerEnd(String value) {
     attribute(StandardAttributeName.MARKEREND, value);
-    return AttributeInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -931,9 +836,9 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    *
    * @return an instruction representing this attribute.
    */
-  public final MarkerMidAttribute markerMid(String value) {
+  public final Api.MarkerMidAttribute markerMid(String value) {
     attribute(StandardAttributeName.MARKERMID, value);
-    return AttributeInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -944,9 +849,9 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    *
    * @return an instruction representing this attribute.
    */
-  public final MarkerStartAttribute markerStart(String value) {
+  public final Api.MarkerStartAttribute markerStart(String value) {
     attribute(StandardAttributeName.MARKERSTART, value);
-    return AttributeInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -957,9 +862,9 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    *
    * @return an instruction representing this attribute.
    */
-  public final MaskAttribute mask(String value) {
+  public final Api.MaskAttribute mask(String value) {
     attribute(StandardAttributeName.MASK, value);
-    return AttributeInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -970,9 +875,9 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    *
    * @return an instruction representing this attribute.
    */
-  public final MaskTypeAttribute maskType(String value) {
+  public final Api.MaskTypeAttribute maskType(String value) {
     attribute(StandardAttributeName.MASKTYPE, value);
-    return AttributeInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -983,9 +888,9 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    *
    * @return an instruction representing this attribute.
    */
-  public final TextAreaInstruction maxlength(String value) {
+  public final Api.TextAreaValue maxlength(String value) {
     attribute(StandardAttributeName.MAXLENGTH, value);
-    return AttributeInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -996,9 +901,9 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    *
    * @return an instruction representing this attribute.
    */
-  public final LinkInstruction media(String value) {
+  public final Api.LinkValue media(String value) {
     attribute(StandardAttributeName.MEDIA, value);
-    return AttributeInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -1009,9 +914,9 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    *
    * @return an instruction representing this attribute.
    */
-  public final FormInstruction method(String value) {
+  public final Api.FormValue method(String value) {
     attribute(StandardAttributeName.METHOD, value);
-    return AttributeInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -1022,9 +927,9 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    *
    * @return an instruction representing this attribute.
    */
-  public final TextAreaInstruction minlength(String value) {
+  public final Api.TextAreaValue minlength(String value) {
     attribute(StandardAttributeName.MINLENGTH, value);
-    return AttributeInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -1032,9 +937,9 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    *
    * @return an instruction representing this attribute.
    */
-  public final SelectInstruction multiple() {
+  public final Api.SelectValue multiple() {
     attribute(StandardAttributeName.MULTIPLE);
-    return AttributeInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -1045,9 +950,9 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    *
    * @return an instruction representing this attribute.
    */
-  public final NameAttribute name(String value) {
+  public final Api.NameAttribute name(String value) {
     attribute(StandardAttributeName.NAME, value);
-    return AttributeInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -1055,9 +960,9 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    *
    * @return an instruction representing this attribute.
    */
-  public final ScriptInstruction nomodule() {
+  public final Api.ScriptValue nomodule() {
     attribute(StandardAttributeName.NOMODULE);
-    return AttributeInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -1068,9 +973,9 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    *
    * @return an instruction representing this attribute.
    */
-  public final BodyInstruction onafterprint(String value) {
+  public final Api.BodyValue onafterprint(String value) {
     attribute(StandardAttributeName.ONAFTERPRINT, value);
-    return AttributeInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -1081,9 +986,9 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    *
    * @return an instruction representing this attribute.
    */
-  public final BodyInstruction onbeforeprint(String value) {
+  public final Api.BodyValue onbeforeprint(String value) {
     attribute(StandardAttributeName.ONBEFOREPRINT, value);
-    return AttributeInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -1094,9 +999,9 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    *
    * @return an instruction representing this attribute.
    */
-  public final BodyInstruction onbeforeunload(String value) {
+  public final Api.BodyValue onbeforeunload(String value) {
     attribute(StandardAttributeName.ONBEFOREUNLOAD, value);
-    return AttributeInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -1107,9 +1012,9 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    *
    * @return an instruction representing this attribute.
    */
-  public final GlobalAttribute onclick(String value) {
+  public final Api.GlobalAttribute onclick(String value) {
     attribute(StandardAttributeName.ONCLICK, value);
-    return AttributeInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -1120,9 +1025,9 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    *
    * @return an instruction representing this attribute.
    */
-  public final BodyInstruction onhashchange(String value) {
+  public final Api.BodyValue onhashchange(String value) {
     attribute(StandardAttributeName.ONHASHCHANGE, value);
-    return AttributeInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -1133,9 +1038,9 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    *
    * @return an instruction representing this attribute.
    */
-  public final BodyInstruction onlanguagechange(String value) {
+  public final Api.BodyValue onlanguagechange(String value) {
     attribute(StandardAttributeName.ONLANGUAGECHANGE, value);
-    return AttributeInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -1146,9 +1051,9 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    *
    * @return an instruction representing this attribute.
    */
-  public final BodyInstruction onmessage(String value) {
+  public final Api.BodyValue onmessage(String value) {
     attribute(StandardAttributeName.ONMESSAGE, value);
-    return AttributeInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -1159,9 +1064,9 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    *
    * @return an instruction representing this attribute.
    */
-  public final BodyInstruction onoffline(String value) {
+  public final Api.BodyValue onoffline(String value) {
     attribute(StandardAttributeName.ONOFFLINE, value);
-    return AttributeInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -1172,9 +1077,9 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    *
    * @return an instruction representing this attribute.
    */
-  public final BodyInstruction ononline(String value) {
+  public final Api.BodyValue ononline(String value) {
     attribute(StandardAttributeName.ONONLINE, value);
-    return AttributeInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -1185,9 +1090,9 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    *
    * @return an instruction representing this attribute.
    */
-  public final BodyInstruction onpagehide(String value) {
+  public final Api.BodyValue onpagehide(String value) {
     attribute(StandardAttributeName.ONPAGEHIDE, value);
-    return AttributeInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -1198,9 +1103,9 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    *
    * @return an instruction representing this attribute.
    */
-  public final BodyInstruction onpageshow(String value) {
+  public final Api.BodyValue onpageshow(String value) {
     attribute(StandardAttributeName.ONPAGESHOW, value);
-    return AttributeInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -1211,9 +1116,9 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    *
    * @return an instruction representing this attribute.
    */
-  public final BodyInstruction onpopstate(String value) {
+  public final Api.BodyValue onpopstate(String value) {
     attribute(StandardAttributeName.ONPOPSTATE, value);
-    return AttributeInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -1224,9 +1129,9 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    *
    * @return an instruction representing this attribute.
    */
-  public final BodyInstruction onrejectionhandled(String value) {
+  public final Api.BodyValue onrejectionhandled(String value) {
     attribute(StandardAttributeName.ONREJECTIONHANDLED, value);
-    return AttributeInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -1237,9 +1142,9 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    *
    * @return an instruction representing this attribute.
    */
-  public final BodyInstruction onstorage(String value) {
+  public final Api.BodyValue onstorage(String value) {
     attribute(StandardAttributeName.ONSTORAGE, value);
-    return AttributeInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -1250,9 +1155,9 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    *
    * @return an instruction representing this attribute.
    */
-  public final GlobalAttribute onsubmit(String value) {
+  public final Api.GlobalAttribute onsubmit(String value) {
     attribute(StandardAttributeName.ONSUBMIT, value);
-    return AttributeInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -1263,9 +1168,9 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    *
    * @return an instruction representing this attribute.
    */
-  public final BodyInstruction onunhandledrejection(String value) {
+  public final Api.BodyValue onunhandledrejection(String value) {
     attribute(StandardAttributeName.ONUNHANDLEDREJECTION, value);
-    return AttributeInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -1276,9 +1181,9 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    *
    * @return an instruction representing this attribute.
    */
-  public final BodyInstruction onunload(String value) {
+  public final Api.BodyValue onunload(String value) {
     attribute(StandardAttributeName.ONUNLOAD, value);
-    return AttributeInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -1289,9 +1194,9 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    *
    * @return an instruction representing this attribute.
    */
-  public final OpacityAttribute opacity(String value) {
+  public final Api.OpacityAttribute opacity(String value) {
     attribute(StandardAttributeName.OPACITY, value);
-    return AttributeInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -1299,9 +1204,9 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    *
    * @return an instruction representing this attribute.
    */
-  public final DetailsInstruction open() {
+  public final Api.DetailsValue open() {
     attribute(StandardAttributeName.OPEN);
-    return AttributeInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -1312,9 +1217,9 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    *
    * @return an instruction representing this attribute.
    */
-  public final OverflowAttribute overflow(String value) {
+  public final Api.OverflowAttribute overflow(String value) {
     attribute(StandardAttributeName.OVERFLOW, value);
-    return AttributeInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -1325,9 +1230,9 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    *
    * @return an instruction representing this attribute.
    */
-  public final PaintOrderAttribute paintOrder(String value) {
+  public final Api.PaintOrderAttribute paintOrder(String value) {
     attribute(StandardAttributeName.PAINTORDER, value);
-    return AttributeInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -1338,9 +1243,9 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    *
    * @return an instruction representing this attribute.
    */
-  public final PlaceholderAttribute placeholder(String value) {
+  public final Api.PlaceholderAttribute placeholder(String value) {
     attribute(StandardAttributeName.PLACEHOLDER, value);
-    return AttributeInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -1351,9 +1256,9 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    *
    * @return an instruction representing this attribute.
    */
-  public final PointerEventsAttribute pointerEvents(String value) {
+  public final Api.PointerEventsAttribute pointerEvents(String value) {
     attribute(StandardAttributeName.POINTEREVENTS, value);
-    return AttributeInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -1364,9 +1269,9 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    *
    * @return an instruction representing this attribute.
    */
-  public final MetaInstruction property(String value) {
+  public final Api.MetaValue property(String value) {
     attribute(StandardAttributeName.PROPERTY, value);
-    return AttributeInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -1374,9 +1279,9 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    *
    * @return an instruction representing this attribute.
    */
-  public final ReadonlyAttribute readonly() {
+  public final Api.ReadonlyAttribute readonly() {
     attribute(StandardAttributeName.READONLY);
-    return AttributeInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -1387,9 +1292,9 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    *
    * @return an instruction representing this attribute.
    */
-  public final ReferrerpolicyAttribute referrerpolicy(String value) {
+  public final Api.ReferrerpolicyAttribute referrerpolicy(String value) {
     attribute(StandardAttributeName.REFERRERPOLICY, value);
-    return AttributeInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -1400,9 +1305,9 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    *
    * @return an instruction representing this attribute.
    */
-  public final LinkInstruction rel(String value) {
+  public final Api.LinkValue rel(String value) {
     attribute(StandardAttributeName.REL, value);
-    return AttributeInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -1410,9 +1315,9 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    *
    * @return an instruction representing this attribute.
    */
-  public final RequiredAttribute required() {
+  public final Api.RequiredAttribute required() {
     attribute(StandardAttributeName.REQUIRED);
-    return AttributeInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -1423,9 +1328,9 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    *
    * @return an instruction representing this attribute.
    */
-  public final LinkInstruction rev(String value) {
+  public final Api.LinkValue rev(String value) {
     attribute(StandardAttributeName.REV, value);
-    return AttributeInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -1433,9 +1338,9 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    *
    * @return an instruction representing this attribute.
    */
-  public final OrderedListInstruction reversed() {
+  public final Api.OrderedListValue reversed() {
     attribute(StandardAttributeName.REVERSED);
-    return AttributeInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -1446,9 +1351,9 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    *
    * @return an instruction representing this attribute.
    */
-  public final GlobalAttribute role(String value) {
+  public final Api.GlobalAttribute role(String value) {
     attribute(StandardAttributeName.ROLE, value);
-    return AttributeInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -1459,9 +1364,9 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    *
    * @return an instruction representing this attribute.
    */
-  public final TextAreaInstruction rows(String value) {
+  public final Api.TextAreaValue rows(String value) {
     attribute(StandardAttributeName.ROWS, value);
-    return AttributeInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -1469,9 +1374,9 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    *
    * @return an instruction representing this attribute.
    */
-  public final OptionInstruction selected() {
+  public final Api.OptionValue selected() {
     attribute(StandardAttributeName.SELECTED);
-    return AttributeInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -1482,9 +1387,9 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    *
    * @return an instruction representing this attribute.
    */
-  public final ShapeRenderingAttribute shapeRendering(String value) {
+  public final Api.ShapeRenderingAttribute shapeRendering(String value) {
     attribute(StandardAttributeName.SHAPERENDERING, value);
-    return AttributeInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -1495,9 +1400,9 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    *
    * @return an instruction representing this attribute.
    */
-  public final SelectInstruction size(String value) {
+  public final Api.SelectValue size(String value) {
     attribute(StandardAttributeName.SIZE, value);
-    return AttributeInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -1508,9 +1413,9 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    *
    * @return an instruction representing this attribute.
    */
-  public final LinkInstruction sizes(String value) {
+  public final Api.LinkValue sizes(String value) {
     attribute(StandardAttributeName.SIZES, value);
-    return AttributeInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -1521,9 +1426,9 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    *
    * @return an instruction representing this attribute.
    */
-  public final GlobalAttribute spellcheck(String value) {
+  public final Api.GlobalAttribute spellcheck(String value) {
     attribute(StandardAttributeName.SPELLCHECK, value);
-    return AttributeInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -1534,9 +1439,9 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    *
    * @return an instruction representing this attribute.
    */
-  public final SrcAttribute src(String value) {
+  public final Api.SrcAttribute src(String value) {
     attribute(StandardAttributeName.SRC, value);
-    return AttributeInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -1547,9 +1452,9 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    *
    * @return an instruction representing this attribute.
    */
-  public final ImageInstruction srcset(String value) {
+  public final Api.ImageValue srcset(String value) {
     attribute(StandardAttributeName.SRCSET, value);
-    return AttributeInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -1560,9 +1465,9 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    *
    * @return an instruction representing this attribute.
    */
-  public final OrderedListInstruction start(String value) {
+  public final Api.OrderedListValue start(String value) {
     attribute(StandardAttributeName.START, value);
-    return AttributeInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -1573,9 +1478,9 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    *
    * @return an instruction representing this attribute.
    */
-  public final StopColorAttribute stopColor(String value) {
+  public final Api.StopColorAttribute stopColor(String value) {
     attribute(StandardAttributeName.STOPCOLOR, value);
-    return AttributeInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -1586,9 +1491,9 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    *
    * @return an instruction representing this attribute.
    */
-  public final StopOpacityAttribute stopOpacity(String value) {
+  public final Api.StopOpacityAttribute stopOpacity(String value) {
     attribute(StandardAttributeName.STOPOPACITY, value);
-    return AttributeInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -1599,9 +1504,9 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    *
    * @return an instruction representing this attribute.
    */
-  public final StrokeAttribute stroke(String value) {
+  public final Api.StrokeAttribute stroke(String value) {
     attribute(StandardAttributeName.STROKE, value);
-    return AttributeInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -1612,9 +1517,9 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    *
    * @return an instruction representing this attribute.
    */
-  public final StrokeDasharrayAttribute strokeDasharray(String value) {
+  public final Api.StrokeDasharrayAttribute strokeDasharray(String value) {
     attribute(StandardAttributeName.STROKEDASHARRAY, value);
-    return AttributeInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -1625,9 +1530,9 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    *
    * @return an instruction representing this attribute.
    */
-  public final StrokeDashoffsetAttribute strokeDashoffset(String value) {
+  public final Api.StrokeDashoffsetAttribute strokeDashoffset(String value) {
     attribute(StandardAttributeName.STROKEDASHOFFSET, value);
-    return AttributeInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -1638,9 +1543,9 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    *
    * @return an instruction representing this attribute.
    */
-  public final StrokeLinecapAttribute strokeLinecap(String value) {
+  public final Api.StrokeLinecapAttribute strokeLinecap(String value) {
     attribute(StandardAttributeName.STROKELINECAP, value);
-    return AttributeInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -1651,9 +1556,9 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    *
    * @return an instruction representing this attribute.
    */
-  public final StrokeLinejoinAttribute strokeLinejoin(String value) {
+  public final Api.StrokeLinejoinAttribute strokeLinejoin(String value) {
     attribute(StandardAttributeName.STROKELINEJOIN, value);
-    return AttributeInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -1664,9 +1569,9 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    *
    * @return an instruction representing this attribute.
    */
-  public final StrokeMiterlimitAttribute strokeMiterlimit(String value) {
+  public final Api.StrokeMiterlimitAttribute strokeMiterlimit(String value) {
     attribute(StandardAttributeName.STROKEMITERLIMIT, value);
-    return AttributeInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -1677,9 +1582,9 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    *
    * @return an instruction representing this attribute.
    */
-  public final StrokeOpacityAttribute strokeOpacity(String value) {
+  public final Api.StrokeOpacityAttribute strokeOpacity(String value) {
     attribute(StandardAttributeName.STROKEOPACITY, value);
-    return AttributeInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -1690,9 +1595,9 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    *
    * @return an instruction representing this attribute.
    */
-  public final StrokeWidthAttribute strokeWidth(String value) {
+  public final Api.StrokeWidthAttribute strokeWidth(String value) {
     attribute(StandardAttributeName.STROKEWIDTH, value);
-    return AttributeInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -1703,9 +1608,9 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    *
    * @return an instruction representing this attribute.
    */
-  public final GlobalAttribute inlineStyle(String value) {
+  public final Api.GlobalAttribute inlineStyle(String value) {
     attribute(StandardAttributeName.STYLE, value);
-    return AttributeInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -1716,9 +1621,9 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    *
    * @return an instruction representing this attribute.
    */
-  public final GlobalAttribute tabindex(String value) {
+  public final Api.GlobalAttribute tabindex(String value) {
     attribute(StandardAttributeName.TABINDEX, value);
-    return AttributeInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -1729,9 +1634,9 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    *
    * @return an instruction representing this attribute.
    */
-  public final TargetAttribute target(String value) {
+  public final Api.TargetAttribute target(String value) {
     attribute(StandardAttributeName.TARGET, value);
-    return AttributeInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -1742,9 +1647,9 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    *
    * @return an instruction representing this attribute.
    */
-  public final TextAnchorAttribute textAnchor(String value) {
+  public final Api.TextAnchorAttribute textAnchor(String value) {
     attribute(StandardAttributeName.TEXTANCHOR, value);
-    return AttributeInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -1755,9 +1660,9 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    *
    * @return an instruction representing this attribute.
    */
-  public final TextDecorationAttribute textDecoration(String value) {
+  public final Api.TextDecorationAttribute textDecoration(String value) {
     attribute(StandardAttributeName.TEXTDECORATION, value);
-    return AttributeInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -1768,9 +1673,9 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    *
    * @return an instruction representing this attribute.
    */
-  public final TextOverflowAttribute textOverflow(String value) {
+  public final Api.TextOverflowAttribute textOverflow(String value) {
     attribute(StandardAttributeName.TEXTOVERFLOW, value);
-    return AttributeInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -1781,9 +1686,9 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    *
    * @return an instruction representing this attribute.
    */
-  public final TextRenderingAttribute textRendering(String value) {
+  public final Api.TextRenderingAttribute textRendering(String value) {
     attribute(StandardAttributeName.TEXTRENDERING, value);
-    return AttributeInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -1794,9 +1699,9 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    *
    * @return an instruction representing this attribute.
    */
-  public final TransformAttribute transform(String value) {
+  public final Api.TransformAttribute transform(String value) {
     attribute(StandardAttributeName.TRANSFORM, value);
-    return AttributeInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -1807,9 +1712,9 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    *
    * @return an instruction representing this attribute.
    */
-  public final TransformOriginAttribute transformOrigin(String value) {
+  public final Api.TransformOriginAttribute transformOrigin(String value) {
     attribute(StandardAttributeName.TRANSFORMORIGIN, value);
-    return AttributeInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -1820,9 +1725,9 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    *
    * @return an instruction representing this attribute.
    */
-  public final GlobalAttribute translate(String value) {
+  public final Api.GlobalAttribute translate(String value) {
     attribute(StandardAttributeName.TRANSLATE, value);
-    return AttributeInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -1833,9 +1738,9 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    *
    * @return an instruction representing this attribute.
    */
-  public final TypeAttribute type(String value) {
+  public final Api.TypeAttribute type(String value) {
     attribute(StandardAttributeName.TYPE, value);
-    return AttributeInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -1846,9 +1751,9 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    *
    * @return an instruction representing this attribute.
    */
-  public final UnicodeBidiAttribute unicodeBidi(String value) {
+  public final Api.UnicodeBidiAttribute unicodeBidi(String value) {
     attribute(StandardAttributeName.UNICODEBIDI, value);
-    return AttributeInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -1859,9 +1764,9 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    *
    * @return an instruction representing this attribute.
    */
-  public final ValueAttribute value(String value) {
+  public final Api.ValueAttribute value(String value) {
     attribute(StandardAttributeName.VALUE, value);
-    return AttributeInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -1872,9 +1777,9 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    *
    * @return an instruction representing this attribute.
    */
-  public final VectorEffectAttribute vectorEffect(String value) {
+  public final Api.VectorEffectAttribute vectorEffect(String value) {
     attribute(StandardAttributeName.VECTOREFFECT, value);
-    return AttributeInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -1885,9 +1790,9 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    *
    * @return an instruction representing this attribute.
    */
-  public final SvgInstruction viewBox(String value) {
+  public final Api.SvgValue viewBox(String value) {
     attribute(StandardAttributeName.VIEWBOX, value);
-    return AttributeInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -1898,9 +1803,9 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    *
    * @return an instruction representing this attribute.
    */
-  public final VisibilityAttribute visibility(String value) {
+  public final Api.VisibilityAttribute visibility(String value) {
     attribute(StandardAttributeName.VISIBILITY, value);
-    return AttributeInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -1911,9 +1816,9 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    *
    * @return an instruction representing this attribute.
    */
-  public final WhiteSpaceAttribute whiteSpace(String value) {
+  public final Api.WhiteSpaceAttribute whiteSpace(String value) {
     attribute(StandardAttributeName.WHITESPACE, value);
-    return AttributeInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -1924,9 +1829,9 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    *
    * @return an instruction representing this attribute.
    */
-  public final WidthAttribute width(String value) {
+  public final Api.WidthAttribute width(String value) {
     attribute(StandardAttributeName.WIDTH, value);
-    return AttributeInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -1937,9 +1842,9 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    *
    * @return an instruction representing this attribute.
    */
-  public final WordSpacingAttribute wordSpacing(String value) {
+  public final Api.WordSpacingAttribute wordSpacing(String value) {
     attribute(StandardAttributeName.WORDSPACING, value);
-    return AttributeInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -1950,9 +1855,9 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    *
    * @return an instruction representing this attribute.
    */
-  public final TextAreaInstruction wrap(String value) {
+  public final Api.TextAreaValue wrap(String value) {
     attribute(StandardAttributeName.WRAP, value);
-    return AttributeInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -1963,9 +1868,9 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    *
    * @return an instruction representing this attribute.
    */
-  public final WritingModeAttribute writingMode(String value) {
+  public final Api.WritingModeAttribute writingMode(String value) {
     attribute(StandardAttributeName.WRITINGMODE, value);
-    return AttributeInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -1976,9 +1881,9 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    *
    * @return an instruction representing this attribute.
    */
-  public final SvgInstruction xmlns(String value) {
+  public final Api.SvgValue xmlns(String value) {
     attribute(StandardAttributeName.XMLNS, value);
-    return AttributeInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 
   /**
@@ -1989,8 +1894,8 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    *
    * @return an instruction representing this attribute.
    */
-  public final ClipPathAttribute clipPath(String value) {
+  public final Api.ClipPathAttribute clipPath(String value) {
     attribute(StandardAttributeName.CLIPPATH, value);
-    return AttributeInstruction.INSTANCE;
+    return Api.ATTRIBUTE;
   }
 }

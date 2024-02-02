@@ -18,8 +18,6 @@ package objectos.html;
 import static org.testng.Assert.assertEquals;
 
 import java.util.Arrays;
-import objectos.html.BaseTypes.AttributeInstruction;
-import objectos.html.BaseTypes.ElementInstruction;
 import objectos.html.internal.Ambiguous;
 import objectos.html.internal.Bytes;
 import objectos.html.internal.StandardAttributeName;
@@ -227,7 +225,7 @@ public class HtmlTestInternal {
     compiler.attribute(StandardAttributeName.LANG, "pt-BR");
 
     compiler.elementBegin(StandardElementName.HTML);
-    compiler.elementValue(AttributeInstruction.INSTANCE);
+    compiler.elementValue(Api.ATTRIBUTE);
     compiler.elementEnd();
 
     compiler.compilationEnd();
@@ -401,7 +399,7 @@ public class HtmlTestInternal {
     compiler.elementEnd();
 
     compiler.elementBegin(StandardElementName.HTML);
-    compiler.elementValue(ElementInstruction.INSTANCE);
+    compiler.elementValue(Api.ELEMENT);
     compiler.elementEnd();
 
     compiler.compilationEnd();
@@ -586,18 +584,18 @@ public class HtmlTestInternal {
     compiler.ambiguous(Ambiguous.TITLE, "element");
 
     compiler.elementBegin(StandardElementName.HEAD);
-    compiler.elementValue(ElementInstruction.INSTANCE);
+    compiler.elementValue(Api.ELEMENT);
     compiler.elementEnd();
 
     compiler.ambiguous(Ambiguous.TITLE, "attribute");
 
     compiler.elementBegin(StandardElementName.BODY);
-    compiler.elementValue(ElementInstruction.INSTANCE);
+    compiler.elementValue(Api.ELEMENT);
     compiler.elementEnd();
 
     compiler.elementBegin(StandardElementName.HTML);
-    compiler.elementValue(ElementInstruction.INSTANCE);
-    compiler.elementValue(ElementInstruction.INSTANCE);
+    compiler.elementValue(Api.ELEMENT);
+    compiler.elementValue(Api.ELEMENT);
     compiler.elementEnd();
 
     compiler.compilationEnd();
@@ -680,8 +678,8 @@ public class HtmlTestInternal {
     compiler.attribute(StandardAttributeName.REQUIRED);
 
     compiler.elementBegin(StandardElementName.INPUT);
-    compiler.elementValue(AttributeInstruction.INSTANCE);
-    compiler.elementValue(AttributeInstruction.INSTANCE);
+    compiler.elementValue(Api.ATTRIBUTE);
+    compiler.elementValue(Api.ATTRIBUTE);
     compiler.elementEnd();
 
     compiler.compilationEnd();

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015-2023 Objectos Software LTDA.
+ * Copyright (C) 2023 Objectos Software LTDA.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,27 +15,19 @@
  */
 package objectos.html;
 
-import objectos.html.internal.Ambiguous;
-import objectos.html.internal.AttributeName;
 import objectos.html.internal.CustomAttributeName;
-import objectos.html.internal.HtmlTemplateApi;
-import objectos.html.internal.StandardElementName;
-import objectos.html.tmpl.Api;
 import objectos.lang.object.Check;
 
-/**
- * Provides utility methods for Objectos HTML templates.
- */
-public sealed abstract class BaseTemplateDsl
-    extends BaseElementDsl
+public sealed abstract class TemplateBase
+    extends TemplateElements
     permits HtmlComponent, HtmlTemplate {
 
-  BaseTemplateDsl() {}
+  TemplateBase() {}
 
   protected final Api.Element dataWayClick(String text) {
     Check.notNull(text, "text == null");
 
-    api().attribute(CustomAttributeName.DATA_WAY_CLICK, text);
+    $html().attribute(CustomAttributeName.DATA_WAY_CLICK, text);
 
     return Api.ELEMENT;
   }
@@ -43,7 +35,7 @@ public sealed abstract class BaseTemplateDsl
   protected final Api.Element dataWaySubmit(String text) {
     Check.notNull(text, "text == null");
 
-    api().attribute(CustomAttributeName.DATA_WAY_SUBMIT, text);
+    $html().attribute(CustomAttributeName.DATA_WAY_SUBMIT, text);
 
     return Api.ELEMENT;
   }
@@ -89,23 +81,7 @@ public sealed abstract class BaseTemplateDsl
    * @return an instruction representing this flatten operation
    */
   protected final Api.Element flatten(Api.Instruction... contents) {
-    Check.notNull(contents, "contents == null");
-
-    HtmlTemplateApi api;
-    api = api();
-
-    api.flattenBegin();
-
-    for (int i = 0; i < contents.length; i++) {
-      Api.Instruction inst;
-      inst = Check.notNull(contents[i], "contents[", i, "] == null");
-
-      api.elementValue(inst);
-    }
-
-    api.elementEnd();
-
-    return Api.ELEMENT;
+    return $html().flatten(contents);
   }
 
   /**
@@ -148,19 +124,7 @@ public sealed abstract class BaseTemplateDsl
    * @return an instruction representing this fragment
    */
   protected final Api.Fragment include(FragmentLambda fragment) {
-    Check.notNull(fragment, "fragment == null");
-
-    HtmlTemplateApi api;
-    api = api();
-
-    int index;
-    index = api.fragmentBegin();
-
-    fragment.execute();
-
-    api.fragmentEnd(index);
-
-    return Api.FRAGMENT;
+    return $html().include(fragment);
   }
 
   /**
@@ -175,19 +139,19 @@ public sealed abstract class BaseTemplateDsl
     Check.notNull(template, "template == null");
 
     try {
-      HtmlTemplateApi api;
-      api = api();
+      Html api;
+      api = $html();
 
       int index;
       index = api.fragmentBegin();
 
-      template.api = api;
+      template.html = api;
 
       template.definition();
 
       api.fragmentEnd(index);
     } finally {
-      template.api = null;
+      template.html = null;
     }
 
     return Api.FRAGMENT;
@@ -223,11 +187,7 @@ public sealed abstract class BaseTemplateDsl
   }
 
   protected final Api.Element raw(String text) {
-    Check.notNull(text, "text == null");
-
-    api().raw(text);
-
-    return Api.ELEMENT;
+    return $html().raw(text);
   }
 
   /**
@@ -252,58 +212,7 @@ public sealed abstract class BaseTemplateDsl
    * @return an instruction representing the text node
    */
   protected final Api.Element t(String text) {
-    Check.notNull(text, "text == null");
-
-    api().text(text);
-
-    return Api.ELEMENT;
-  }
-
-  @Override
-  final void ambiguous(Ambiguous name, String text) {
-    api().ambiguous(name, text);
-  }
-
-  @Override
-  final void attribute(AttributeName name) {
-    api().attribute(name);
-  }
-
-  @Override
-  final void attribute(AttributeName name, String value) {
-    HtmlTemplateApi api;
-    api = api();
-
-    api.attribute(name, value);
-  }
-
-  @Override
-  final void element(StandardElementName name, Api.Instruction[] contents) {
-    HtmlTemplateApi api;
-    api = api();
-
-    api.elementBegin(name);
-
-    for (int i = 0; i < contents.length; i++) {
-      Api.Instruction inst;
-      inst = Check.notNull(contents[i], "contents[", i, "] == null");
-
-      api.elementValue(inst);
-    }
-
-    api.elementEnd();
-  }
-
-  @Override
-  final void element(StandardElementName name, String text) {
-    HtmlTemplateApi api;
-    api = api();
-
-    api.text(text);
-
-    api.elementBegin(name);
-    api.elementValue(Api.ELEMENT);
-    api.elementEnd();
+    return $html().text(text);
   }
 
 }

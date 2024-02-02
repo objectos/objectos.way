@@ -15,7 +15,6 @@
  */
 package objectos.html;
 
-import objectos.html.internal.HtmlTemplateApi;
 import objectos.lang.object.Check;
 
 /**
@@ -31,9 +30,9 @@ import objectos.lang.object.Check;
  * A component instance may be used to render instructions issued from its
  * parent template.
  */
-public non-sealed abstract class HtmlComponent extends BaseTemplateDsl {
+public non-sealed abstract class HtmlComponent extends TemplateBase {
 
-  private final BaseTemplateDsl parent;
+  private final TemplateBase parent;
 
   /**
    * Creates a new component bound to the specified {@code parent} template.
@@ -41,13 +40,13 @@ public non-sealed abstract class HtmlComponent extends BaseTemplateDsl {
    * @param parent
    *        the template instance for which this component will be bound to.
    */
-  public HtmlComponent(BaseTemplateDsl parent) {
+  public HtmlComponent(TemplateBase parent) {
     this.parent = Check.notNull(parent, "parent == null");
   }
 
   @Override
-  final HtmlTemplateApi api() {
-    return parent.api();
+  final Html $html() {
+    return parent.$html();
   }
 
 }

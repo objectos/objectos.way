@@ -16,7 +16,7 @@
 package objectos.css.select;
 
 import objectos.css.tmpl.Api.ExternalClassSelector;
-import objectos.html.tmpl.Api.ExternalAttribute;
+import objectos.html.Api.ExternalAttribute;
 import objectos.lang.object.Check;
 
 public final class ClassSelector implements ExternalAttribute.StyleClass, ExternalClassSelector {

@@ -20,15 +20,15 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
-import objectos.html.BaseTemplateDsl;
+import objectos.html.Api.Element;
+import objectos.html.Api.ExternalAttribute;
 import objectos.html.HtmlComponent;
-import objectos.html.tmpl.Api.Element;
-import objectos.html.tmpl.Api.ExternalAttribute;
+import objectos.html.TemplateBase;
 import objectos.lang.object.Check;
 
 public final class WayJs extends HtmlComponent {
 
-  public WayJs(BaseTemplateDsl parent) {
+  public WayJs(TemplateBase parent) {
     super(parent);
   }
 

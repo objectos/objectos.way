@@ -17,7 +17,6 @@ package objectos.html;
 
 import static org.testng.Assert.assertEquals;
 
-import objectos.html.tmpl.Api;
 import org.testng.annotations.Test;
 
 public class HtmlTemplateIncludeTest {
@@ -495,7 +494,7 @@ public class HtmlTemplateIncludeTest {
         super(parent);
       }
 
-      public final Api.Element render(Api.UnorderedListInstruction... elements) {
+      public final Api.Element render(Api.UnorderedListValue... elements) {
         return nav(
             ul(elements)
         );
@@ -505,7 +504,7 @@ public class HtmlTemplateIncludeTest {
     class Link extends HtmlComponent {
       public Link(HtmlTemplate parent) { super(parent); }
 
-      public final Api.Element render(Api.AnchorInstruction... elements) {
+      public final Api.Element render(Api.AnchorValue... elements) {
         return li(
             a(elements)
         );

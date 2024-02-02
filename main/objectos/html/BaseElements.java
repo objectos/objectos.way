@@ -15,80 +15,6 @@
  */
 package objectos.html;
 
-import objectos.html.BaseTypes.AbbreviationInstruction;
-import objectos.html.BaseTypes.AnchorInstruction;
-import objectos.html.BaseTypes.ArticleInstruction;
-import objectos.html.BaseTypes.BlockquoteInstruction;
-import objectos.html.BaseTypes.BodyInstruction;
-import objectos.html.BaseTypes.BringAttentionToInstruction;
-import objectos.html.BaseTypes.ButtonInstruction;
-import objectos.html.BaseTypes.ClipPathInstruction;
-import objectos.html.BaseTypes.CodeInstruction;
-import objectos.html.BaseTypes.DefinitionDescriptionInstruction;
-import objectos.html.BaseTypes.DefinitionListInstruction;
-import objectos.html.BaseTypes.DefinitionTermInstruction;
-import objectos.html.BaseTypes.DefsInstruction;
-import objectos.html.BaseTypes.DetailsInstruction;
-import objectos.html.BaseTypes.DivInstruction;
-import objectos.html.BaseTypes.ElementInstruction;
-import objectos.html.BaseTypes.EmphasisInstruction;
-import objectos.html.BaseTypes.FieldsetInstruction;
-import objectos.html.BaseTypes.FigureInstruction;
-import objectos.html.BaseTypes.FooterInstruction;
-import objectos.html.BaseTypes.FormInstruction;
-import objectos.html.BaseTypes.GInstruction;
-import objectos.html.BaseTypes.HeadInstruction;
-import objectos.html.BaseTypes.HeaderInstruction;
-import objectos.html.BaseTypes.Heading1Instruction;
-import objectos.html.BaseTypes.Heading2Instruction;
-import objectos.html.BaseTypes.Heading3Instruction;
-import objectos.html.BaseTypes.Heading4Instruction;
-import objectos.html.BaseTypes.Heading5Instruction;
-import objectos.html.BaseTypes.Heading6Instruction;
-import objectos.html.BaseTypes.HeadingGroupInstruction;
-import objectos.html.BaseTypes.HorizontalRuleInstruction;
-import objectos.html.BaseTypes.HtmlInstruction;
-import objectos.html.BaseTypes.ImageInstruction;
-import objectos.html.BaseTypes.InputInstruction;
-import objectos.html.BaseTypes.KeyboardInputInstruction;
-import objectos.html.BaseTypes.LabelInstruction;
-import objectos.html.BaseTypes.LegendInstruction;
-import objectos.html.BaseTypes.LineBreakInstruction;
-import objectos.html.BaseTypes.LinkInstruction;
-import objectos.html.BaseTypes.ListItemInstruction;
-import objectos.html.BaseTypes.MainInstruction;
-import objectos.html.BaseTypes.MenuInstruction;
-import objectos.html.BaseTypes.MetaInstruction;
-import objectos.html.BaseTypes.NavInstruction;
-import objectos.html.BaseTypes.OptionGroupInstruction;
-import objectos.html.BaseTypes.OptionInstruction;
-import objectos.html.BaseTypes.OrderedListInstruction;
-import objectos.html.BaseTypes.ParagraphInstruction;
-import objectos.html.BaseTypes.PathInstruction;
-import objectos.html.BaseTypes.PreInstruction;
-import objectos.html.BaseTypes.ProgressInstruction;
-import objectos.html.BaseTypes.SampleOutputInstruction;
-import objectos.html.BaseTypes.ScriptInstruction;
-import objectos.html.BaseTypes.SectionInstruction;
-import objectos.html.BaseTypes.SelectInstruction;
-import objectos.html.BaseTypes.SmallInstruction;
-import objectos.html.BaseTypes.SpanInstruction;
-import objectos.html.BaseTypes.StrongInstruction;
-import objectos.html.BaseTypes.StyleInstruction;
-import objectos.html.BaseTypes.SubscriptInstruction;
-import objectos.html.BaseTypes.SummaryInstruction;
-import objectos.html.BaseTypes.SuperscriptInstruction;
-import objectos.html.BaseTypes.SvgInstruction;
-import objectos.html.BaseTypes.TableBodyInstruction;
-import objectos.html.BaseTypes.TableDataInstruction;
-import objectos.html.BaseTypes.TableHeadInstruction;
-import objectos.html.BaseTypes.TableHeaderInstruction;
-import objectos.html.BaseTypes.TableInstruction;
-import objectos.html.BaseTypes.TableRowInstruction;
-import objectos.html.BaseTypes.TemplateInstruction;
-import objectos.html.BaseTypes.TextAreaInstruction;
-import objectos.html.BaseTypes.TitleInstruction;
-import objectos.html.BaseTypes.UnorderedListInstruction;
 import objectos.html.internal.Ambiguous;
 import objectos.html.internal.StandardElementName;
 
@@ -107,9 +33,9 @@ public sealed abstract class BaseElements extends BaseAttributes permits Html {
    *
    * @return an instruction representing this element.
    */
-  public final ElementInstruction a(AnchorInstruction... contents) {
+  public final Api.Element a(Api.AnchorValue... contents) {
     element(StandardElementName.A, contents);
-    return ElementInstruction.INSTANCE;
+    return Api.ELEMENT;
   }
 
   /**
@@ -120,9 +46,9 @@ public sealed abstract class BaseElements extends BaseAttributes permits Html {
    *
    * @return an instruction representing this element.
    */
-  public final ElementInstruction a(String text) {
+  public final Api.Element a(String text) {
     element(StandardElementName.A, text);
-    return ElementInstruction.INSTANCE;
+    return Api.ELEMENT;
   }
 
   /**
@@ -133,9 +59,9 @@ public sealed abstract class BaseElements extends BaseAttributes permits Html {
    *
    * @return an instruction representing this element.
    */
-  public final ElementInstruction abbr(AbbreviationInstruction... contents) {
+  public final Api.Element abbr(Api.AbbreviationValue... contents) {
     element(StandardElementName.ABBR, contents);
-    return ElementInstruction.INSTANCE;
+    return Api.ELEMENT;
   }
 
   /**
@@ -146,9 +72,9 @@ public sealed abstract class BaseElements extends BaseAttributes permits Html {
    *
    * @return an instruction representing this element.
    */
-  public final ElementInstruction abbr(String text) {
+  public final Api.Element abbr(String text) {
     element(StandardElementName.ABBR, text);
-    return ElementInstruction.INSTANCE;
+    return Api.ELEMENT;
   }
 
   /**
@@ -159,9 +85,9 @@ public sealed abstract class BaseElements extends BaseAttributes permits Html {
    *
    * @return an instruction representing this element.
    */
-  public final ElementInstruction article(ArticleInstruction... contents) {
+  public final Api.Element article(Api.ArticleValue... contents) {
     element(StandardElementName.ARTICLE, contents);
-    return ElementInstruction.INSTANCE;
+    return Api.ELEMENT;
   }
 
   /**
@@ -172,9 +98,9 @@ public sealed abstract class BaseElements extends BaseAttributes permits Html {
    *
    * @return an instruction representing this element.
    */
-  public final ElementInstruction article(String text) {
+  public final Api.Element article(String text) {
     element(StandardElementName.ARTICLE, text);
-    return ElementInstruction.INSTANCE;
+    return Api.ELEMENT;
   }
 
   /**
@@ -185,9 +111,9 @@ public sealed abstract class BaseElements extends BaseAttributes permits Html {
    *
    * @return an instruction representing this element.
    */
-  public final ElementInstruction b(BringAttentionToInstruction... contents) {
+  public final Api.Element b(Api.BringAttentionToValue... contents) {
     element(StandardElementName.B, contents);
-    return ElementInstruction.INSTANCE;
+    return Api.ELEMENT;
   }
 
   /**
@@ -198,9 +124,9 @@ public sealed abstract class BaseElements extends BaseAttributes permits Html {
    *
    * @return an instruction representing this element.
    */
-  public final ElementInstruction b(String text) {
+  public final Api.Element b(String text) {
     element(StandardElementName.B, text);
-    return ElementInstruction.INSTANCE;
+    return Api.ELEMENT;
   }
 
   /**
@@ -211,9 +137,9 @@ public sealed abstract class BaseElements extends BaseAttributes permits Html {
    *
    * @return an instruction representing this element.
    */
-  public final ElementInstruction blockquote(BlockquoteInstruction... contents) {
+  public final Api.Element blockquote(Api.BlockquoteValue... contents) {
     element(StandardElementName.BLOCKQUOTE, contents);
-    return ElementInstruction.INSTANCE;
+    return Api.ELEMENT;
   }
 
   /**
@@ -224,9 +150,9 @@ public sealed abstract class BaseElements extends BaseAttributes permits Html {
    *
    * @return an instruction representing this element.
    */
-  public final ElementInstruction blockquote(String text) {
+  public final Api.Element blockquote(String text) {
     element(StandardElementName.BLOCKQUOTE, text);
-    return ElementInstruction.INSTANCE;
+    return Api.ELEMENT;
   }
 
   /**
@@ -237,9 +163,9 @@ public sealed abstract class BaseElements extends BaseAttributes permits Html {
    *
    * @return an instruction representing this element.
    */
-  public final ElementInstruction body(BodyInstruction... contents) {
+  public final Api.Element body(Api.BodyValue... contents) {
     element(StandardElementName.BODY, contents);
-    return ElementInstruction.INSTANCE;
+    return Api.ELEMENT;
   }
 
   /**
@@ -250,9 +176,9 @@ public sealed abstract class BaseElements extends BaseAttributes permits Html {
    *
    * @return an instruction representing this element.
    */
-  public final ElementInstruction body(String text) {
+  public final Api.Element body(String text) {
     element(StandardElementName.BODY, text);
-    return ElementInstruction.INSTANCE;
+    return Api.ELEMENT;
   }
 
   /**
@@ -263,9 +189,9 @@ public sealed abstract class BaseElements extends BaseAttributes permits Html {
    *
    * @return an instruction representing this element.
    */
-  public final ElementInstruction br(LineBreakInstruction... contents) {
+  public final Api.Element br(Api.LineBreakValue... contents) {
     element(StandardElementName.BR, contents);
-    return ElementInstruction.INSTANCE;
+    return Api.ELEMENT;
   }
 
   /**
@@ -276,9 +202,9 @@ public sealed abstract class BaseElements extends BaseAttributes permits Html {
    *
    * @return an instruction representing this element.
    */
-  public final ElementInstruction button(ButtonInstruction... contents) {
+  public final Api.Element button(Api.ButtonValue... contents) {
     element(StandardElementName.BUTTON, contents);
-    return ElementInstruction.INSTANCE;
+    return Api.ELEMENT;
   }
 
   /**
@@ -289,9 +215,9 @@ public sealed abstract class BaseElements extends BaseAttributes permits Html {
    *
    * @return an instruction representing this element.
    */
-  public final ElementInstruction button(String text) {
+  public final Api.Element button(String text) {
     element(StandardElementName.BUTTON, text);
-    return ElementInstruction.INSTANCE;
+    return Api.ELEMENT;
   }
 
   /**
@@ -302,9 +228,9 @@ public sealed abstract class BaseElements extends BaseAttributes permits Html {
    *
    * @return an instruction representing this element.
    */
-  public final ElementInstruction clipPath(ClipPathInstruction... contents) {
+  public final Api.Element clipPath(Api.ClipPathValue... contents) {
     element(StandardElementName.CLIPPATH, contents);
-    return ElementInstruction.INSTANCE;
+    return Api.ELEMENT;
   }
 
   /**
@@ -315,9 +241,9 @@ public sealed abstract class BaseElements extends BaseAttributes permits Html {
    *
    * @return an instruction representing this element.
    */
-  public final ElementInstruction code(CodeInstruction... contents) {
+  public final Api.Element code(Api.CodeValue... contents) {
     element(StandardElementName.CODE, contents);
-    return ElementInstruction.INSTANCE;
+    return Api.ELEMENT;
   }
 
   /**
@@ -328,9 +254,9 @@ public sealed abstract class BaseElements extends BaseAttributes permits Html {
    *
    * @return an instruction representing this element.
    */
-  public final ElementInstruction code(String text) {
+  public final Api.Element code(String text) {
     element(StandardElementName.CODE, text);
-    return ElementInstruction.INSTANCE;
+    return Api.ELEMENT;
   }
 
   /**
@@ -341,9 +267,9 @@ public sealed abstract class BaseElements extends BaseAttributes permits Html {
    *
    * @return an instruction representing this element.
    */
-  public final ElementInstruction dd(DefinitionDescriptionInstruction... contents) {
+  public final Api.Element dd(Api.DefinitionDescriptionValue... contents) {
     element(StandardElementName.DD, contents);
-    return ElementInstruction.INSTANCE;
+    return Api.ELEMENT;
   }
 
   /**
@@ -354,9 +280,9 @@ public sealed abstract class BaseElements extends BaseAttributes permits Html {
    *
    * @return an instruction representing this element.
    */
-  public final ElementInstruction dd(String text) {
+  public final Api.Element dd(String text) {
     element(StandardElementName.DD, text);
-    return ElementInstruction.INSTANCE;
+    return Api.ELEMENT;
   }
 
   /**
@@ -367,9 +293,9 @@ public sealed abstract class BaseElements extends BaseAttributes permits Html {
    *
    * @return an instruction representing this element.
    */
-  public final ElementInstruction defs(DefsInstruction... contents) {
+  public final Api.Element defs(Api.DefsValue... contents) {
     element(StandardElementName.DEFS, contents);
-    return ElementInstruction.INSTANCE;
+    return Api.ELEMENT;
   }
 
   /**
@@ -380,9 +306,9 @@ public sealed abstract class BaseElements extends BaseAttributes permits Html {
    *
    * @return an instruction representing this element.
    */
-  public final ElementInstruction defs(String text) {
+  public final Api.Element defs(String text) {
     element(StandardElementName.DEFS, text);
-    return ElementInstruction.INSTANCE;
+    return Api.ELEMENT;
   }
 
   /**
@@ -393,9 +319,9 @@ public sealed abstract class BaseElements extends BaseAttributes permits Html {
    *
    * @return an instruction representing this element.
    */
-  public final ElementInstruction details(DetailsInstruction... contents) {
+  public final Api.Element details(Api.DetailsValue... contents) {
     element(StandardElementName.DETAILS, contents);
-    return ElementInstruction.INSTANCE;
+    return Api.ELEMENT;
   }
 
   /**
@@ -406,9 +332,9 @@ public sealed abstract class BaseElements extends BaseAttributes permits Html {
    *
    * @return an instruction representing this element.
    */
-  public final ElementInstruction details(String text) {
+  public final Api.Element details(String text) {
     element(StandardElementName.DETAILS, text);
-    return ElementInstruction.INSTANCE;
+    return Api.ELEMENT;
   }
 
   /**
@@ -419,9 +345,9 @@ public sealed abstract class BaseElements extends BaseAttributes permits Html {
    *
    * @return an instruction representing this element.
    */
-  public final ElementInstruction div(DivInstruction... contents) {
+  public final Api.Element div(Api.DivValue... contents) {
     element(StandardElementName.DIV, contents);
-    return ElementInstruction.INSTANCE;
+    return Api.ELEMENT;
   }
 
   /**
@@ -432,9 +358,9 @@ public sealed abstract class BaseElements extends BaseAttributes permits Html {
    *
    * @return an instruction representing this element.
    */
-  public final ElementInstruction div(String text) {
+  public final Api.Element div(String text) {
     element(StandardElementName.DIV, text);
-    return ElementInstruction.INSTANCE;
+    return Api.ELEMENT;
   }
 
   /**
@@ -445,9 +371,9 @@ public sealed abstract class BaseElements extends BaseAttributes permits Html {
    *
    * @return an instruction representing this element.
    */
-  public final ElementInstruction dl(DefinitionListInstruction... contents) {
+  public final Api.Element dl(Api.DefinitionListValue... contents) {
     element(StandardElementName.DL, contents);
-    return ElementInstruction.INSTANCE;
+    return Api.ELEMENT;
   }
 
   /**
@@ -458,9 +384,9 @@ public sealed abstract class BaseElements extends BaseAttributes permits Html {
    *
    * @return an instruction representing this element.
    */
-  public final ElementInstruction dl(String text) {
+  public final Api.Element dl(String text) {
     element(StandardElementName.DL, text);
-    return ElementInstruction.INSTANCE;
+    return Api.ELEMENT;
   }
 
   /**
@@ -471,9 +397,9 @@ public sealed abstract class BaseElements extends BaseAttributes permits Html {
    *
    * @return an instruction representing this element.
    */
-  public final ElementInstruction dt(DefinitionTermInstruction... contents) {
+  public final Api.Element dt(Api.DefinitionTermValue... contents) {
     element(StandardElementName.DT, contents);
-    return ElementInstruction.INSTANCE;
+    return Api.ELEMENT;
   }
 
   /**
@@ -484,9 +410,9 @@ public sealed abstract class BaseElements extends BaseAttributes permits Html {
    *
    * @return an instruction representing this element.
    */
-  public final ElementInstruction dt(String text) {
+  public final Api.Element dt(String text) {
     element(StandardElementName.DT, text);
-    return ElementInstruction.INSTANCE;
+    return Api.ELEMENT;
   }
 
   /**
@@ -497,9 +423,9 @@ public sealed abstract class BaseElements extends BaseAttributes permits Html {
    *
    * @return an instruction representing this element.
    */
-  public final ElementInstruction em(EmphasisInstruction... contents) {
+  public final Api.Element em(Api.EmphasisValue... contents) {
     element(StandardElementName.EM, contents);
-    return ElementInstruction.INSTANCE;
+    return Api.ELEMENT;
   }
 
   /**
@@ -510,9 +436,9 @@ public sealed abstract class BaseElements extends BaseAttributes permits Html {
    *
    * @return an instruction representing this element.
    */
-  public final ElementInstruction em(String text) {
+  public final Api.Element em(String text) {
     element(StandardElementName.EM, text);
-    return ElementInstruction.INSTANCE;
+    return Api.ELEMENT;
   }
 
   /**
@@ -523,9 +449,9 @@ public sealed abstract class BaseElements extends BaseAttributes permits Html {
    *
    * @return an instruction representing this element.
    */
-  public final ElementInstruction fieldset(FieldsetInstruction... contents) {
+  public final Api.Element fieldset(Api.FieldsetValue... contents) {
     element(StandardElementName.FIELDSET, contents);
-    return ElementInstruction.INSTANCE;
+    return Api.ELEMENT;
   }
 
   /**
@@ -536,9 +462,9 @@ public sealed abstract class BaseElements extends BaseAttributes permits Html {
    *
    * @return an instruction representing this element.
    */
-  public final ElementInstruction fieldset(String text) {
+  public final Api.Element fieldset(String text) {
     element(StandardElementName.FIELDSET, text);
-    return ElementInstruction.INSTANCE;
+    return Api.ELEMENT;
   }
 
   /**
@@ -549,9 +475,9 @@ public sealed abstract class BaseElements extends BaseAttributes permits Html {
    *
    * @return an instruction representing this element.
    */
-  public final ElementInstruction figure(FigureInstruction... contents) {
+  public final Api.Element figure(Api.FigureValue... contents) {
     element(StandardElementName.FIGURE, contents);
-    return ElementInstruction.INSTANCE;
+    return Api.ELEMENT;
   }
 
   /**
@@ -562,9 +488,9 @@ public sealed abstract class BaseElements extends BaseAttributes permits Html {
    *
    * @return an instruction representing this element.
    */
-  public final ElementInstruction figure(String text) {
+  public final Api.Element figure(String text) {
     element(StandardElementName.FIGURE, text);
-    return ElementInstruction.INSTANCE;
+    return Api.ELEMENT;
   }
 
   /**
@@ -575,9 +501,9 @@ public sealed abstract class BaseElements extends BaseAttributes permits Html {
    *
    * @return an instruction representing this element.
    */
-  public final ElementInstruction footer(FooterInstruction... contents) {
+  public final Api.Element footer(Api.FooterValue... contents) {
     element(StandardElementName.FOOTER, contents);
-    return ElementInstruction.INSTANCE;
+    return Api.ELEMENT;
   }
 
   /**
@@ -588,9 +514,9 @@ public sealed abstract class BaseElements extends BaseAttributes permits Html {
    *
    * @return an instruction representing this element.
    */
-  public final ElementInstruction footer(String text) {
+  public final Api.Element footer(String text) {
     element(StandardElementName.FOOTER, text);
-    return ElementInstruction.INSTANCE;
+    return Api.ELEMENT;
   }
 
   /**
@@ -601,9 +527,9 @@ public sealed abstract class BaseElements extends BaseAttributes permits Html {
    *
    * @return an instruction representing this element.
    */
-  public final ElementInstruction form(FormInstruction... contents) {
+  public final Api.Element form(Api.FormValue... contents) {
     element(StandardElementName.FORM, contents);
-    return ElementInstruction.INSTANCE;
+    return Api.ELEMENT;
   }
 
   /**
@@ -614,9 +540,9 @@ public sealed abstract class BaseElements extends BaseAttributes permits Html {
    *
    * @return an instruction representing this attribute or element.
    */
-  public final ElementInstruction form(String text) {
+  public final Api.Element form(String text) {
     ambiguous(Ambiguous.FORM, text);
-    return ElementInstruction.INSTANCE;
+    return Api.ELEMENT;
   }
 
   /**
@@ -627,9 +553,9 @@ public sealed abstract class BaseElements extends BaseAttributes permits Html {
    *
    * @return an instruction representing this element.
    */
-  public final ElementInstruction g(GInstruction... contents) {
+  public final Api.Element g(Api.GValue... contents) {
     element(StandardElementName.G, contents);
-    return ElementInstruction.INSTANCE;
+    return Api.ELEMENT;
   }
 
   /**
@@ -640,9 +566,9 @@ public sealed abstract class BaseElements extends BaseAttributes permits Html {
    *
    * @return an instruction representing this element.
    */
-  public final ElementInstruction g(String text) {
+  public final Api.Element g(String text) {
     element(StandardElementName.G, text);
-    return ElementInstruction.INSTANCE;
+    return Api.ELEMENT;
   }
 
   /**
@@ -653,9 +579,9 @@ public sealed abstract class BaseElements extends BaseAttributes permits Html {
    *
    * @return an instruction representing this element.
    */
-  public final ElementInstruction h1(Heading1Instruction... contents) {
+  public final Api.Element h1(Api.Heading1Value... contents) {
     element(StandardElementName.H1, contents);
-    return ElementInstruction.INSTANCE;
+    return Api.ELEMENT;
   }
 
   /**
@@ -666,9 +592,9 @@ public sealed abstract class BaseElements extends BaseAttributes permits Html {
    *
    * @return an instruction representing this element.
    */
-  public final ElementInstruction h1(String text) {
+  public final Api.Element h1(String text) {
     element(StandardElementName.H1, text);
-    return ElementInstruction.INSTANCE;
+    return Api.ELEMENT;
   }
 
   /**
@@ -679,9 +605,9 @@ public sealed abstract class BaseElements extends BaseAttributes permits Html {
    *
    * @return an instruction representing this element.
    */
-  public final ElementInstruction h2(Heading2Instruction... contents) {
+  public final Api.Element h2(Api.Heading2Value... contents) {
     element(StandardElementName.H2, contents);
-    return ElementInstruction.INSTANCE;
+    return Api.ELEMENT;
   }
 
   /**
@@ -692,9 +618,9 @@ public sealed abstract class BaseElements extends BaseAttributes permits Html {
    *
    * @return an instruction representing this element.
    */
-  public final ElementInstruction h2(String text) {
+  public final Api.Element h2(String text) {
     element(StandardElementName.H2, text);
-    return ElementInstruction.INSTANCE;
+    return Api.ELEMENT;
   }
 
   /**
@@ -705,9 +631,9 @@ public sealed abstract class BaseElements extends BaseAttributes permits Html {
    *
    * @return an instruction representing this element.
    */
-  public final ElementInstruction h3(Heading3Instruction... contents) {
+  public final Api.Element h3(Api.Heading3Value... contents) {
     element(StandardElementName.H3, contents);
-    return ElementInstruction.INSTANCE;
+    return Api.ELEMENT;
   }
 
   /**
@@ -718,9 +644,9 @@ public sealed abstract class BaseElements extends BaseAttributes permits Html {
    *
    * @return an instruction representing this element.
    */
-  public final ElementInstruction h3(String text) {
+  public final Api.Element h3(String text) {
     element(StandardElementName.H3, text);
-    return ElementInstruction.INSTANCE;
+    return Api.ELEMENT;
   }
 
   /**
@@ -731,9 +657,9 @@ public sealed abstract class BaseElements extends BaseAttributes permits Html {
    *
    * @return an instruction representing this element.
    */
-  public final ElementInstruction h4(Heading4Instruction... contents) {
+  public final Api.Element h4(Api.Heading4Value... contents) {
     element(StandardElementName.H4, contents);
-    return ElementInstruction.INSTANCE;
+    return Api.ELEMENT;
   }
 
   /**
@@ -744,9 +670,9 @@ public sealed abstract class BaseElements extends BaseAttributes permits Html {
    *
    * @return an instruction representing this element.
    */
-  public final ElementInstruction h4(String text) {
+  public final Api.Element h4(String text) {
     element(StandardElementName.H4, text);
-    return ElementInstruction.INSTANCE;
+    return Api.ELEMENT;
   }
 
   /**
@@ -757,9 +683,9 @@ public sealed abstract class BaseElements extends BaseAttributes permits Html {
    *
    * @return an instruction representing this element.
    */
-  public final ElementInstruction h5(Heading5Instruction... contents) {
+  public final Api.Element h5(Api.Heading5Value... contents) {
     element(StandardElementName.H5, contents);
-    return ElementInstruction.INSTANCE;
+    return Api.ELEMENT;
   }
 
   /**
@@ -770,9 +696,9 @@ public sealed abstract class BaseElements extends BaseAttributes permits Html {
    *
    * @return an instruction representing this element.
    */
-  public final ElementInstruction h5(String text) {
+  public final Api.Element h5(String text) {
     element(StandardElementName.H5, text);
-    return ElementInstruction.INSTANCE;
+    return Api.ELEMENT;
   }
 
   /**
@@ -783,9 +709,9 @@ public sealed abstract class BaseElements extends BaseAttributes permits Html {
    *
    * @return an instruction representing this element.
    */
-  public final ElementInstruction h6(Heading6Instruction... contents) {
+  public final Api.Element h6(Api.Heading6Value... contents) {
     element(StandardElementName.H6, contents);
-    return ElementInstruction.INSTANCE;
+    return Api.ELEMENT;
   }
 
   /**
@@ -796,9 +722,9 @@ public sealed abstract class BaseElements extends BaseAttributes permits Html {
    *
    * @return an instruction representing this element.
    */
-  public final ElementInstruction h6(String text) {
+  public final Api.Element h6(String text) {
     element(StandardElementName.H6, text);
-    return ElementInstruction.INSTANCE;
+    return Api.ELEMENT;
   }
 
   /**
@@ -809,9 +735,9 @@ public sealed abstract class BaseElements extends BaseAttributes permits Html {
    *
    * @return an instruction representing this element.
    */
-  public final ElementInstruction head(HeadInstruction... contents) {
+  public final Api.Element head(Api.HeadValue... contents) {
     element(StandardElementName.HEAD, contents);
-    return ElementInstruction.INSTANCE;
+    return Api.ELEMENT;
   }
 
   /**
@@ -822,9 +748,9 @@ public sealed abstract class BaseElements extends BaseAttributes permits Html {
    *
    * @return an instruction representing this element.
    */
-  public final ElementInstruction head(String text) {
+  public final Api.Element head(String text) {
     element(StandardElementName.HEAD, text);
-    return ElementInstruction.INSTANCE;
+    return Api.ELEMENT;
   }
 
   /**
@@ -835,9 +761,9 @@ public sealed abstract class BaseElements extends BaseAttributes permits Html {
    *
    * @return an instruction representing this element.
    */
-  public final ElementInstruction header(HeaderInstruction... contents) {
+  public final Api.Element header(Api.HeaderValue... contents) {
     element(StandardElementName.HEADER, contents);
-    return ElementInstruction.INSTANCE;
+    return Api.ELEMENT;
   }
 
   /**
@@ -848,9 +774,9 @@ public sealed abstract class BaseElements extends BaseAttributes permits Html {
    *
    * @return an instruction representing this element.
    */
-  public final ElementInstruction header(String text) {
+  public final Api.Element header(String text) {
     element(StandardElementName.HEADER, text);
-    return ElementInstruction.INSTANCE;
+    return Api.ELEMENT;
   }
 
   /**
@@ -861,9 +787,9 @@ public sealed abstract class BaseElements extends BaseAttributes permits Html {
    *
    * @return an instruction representing this element.
    */
-  public final ElementInstruction hgroup(HeadingGroupInstruction... contents) {
+  public final Api.Element hgroup(Api.HeadingGroupValue... contents) {
     element(StandardElementName.HGROUP, contents);
-    return ElementInstruction.INSTANCE;
+    return Api.ELEMENT;
   }
 
   /**
@@ -874,9 +800,9 @@ public sealed abstract class BaseElements extends BaseAttributes permits Html {
    *
    * @return an instruction representing this element.
    */
-  public final ElementInstruction hgroup(String text) {
+  public final Api.Element hgroup(String text) {
     element(StandardElementName.HGROUP, text);
-    return ElementInstruction.INSTANCE;
+    return Api.ELEMENT;
   }
 
   /**
@@ -887,9 +813,9 @@ public sealed abstract class BaseElements extends BaseAttributes permits Html {
    *
    * @return an instruction representing this element.
    */
-  public final ElementInstruction hr(HorizontalRuleInstruction... contents) {
+  public final Api.Element hr(Api.HorizontalRuleValue... contents) {
     element(StandardElementName.HR, contents);
-    return ElementInstruction.INSTANCE;
+    return Api.ELEMENT;
   }
 
   /**
@@ -900,9 +826,9 @@ public sealed abstract class BaseElements extends BaseAttributes permits Html {
    *
    * @return an instruction representing this element.
    */
-  public final ElementInstruction html(HtmlInstruction... contents) {
+  public final Api.Element html(Api.HtmlValue... contents) {
     element(StandardElementName.HTML, contents);
-    return ElementInstruction.INSTANCE;
+    return Api.ELEMENT;
   }
 
   /**
@@ -913,9 +839,9 @@ public sealed abstract class BaseElements extends BaseAttributes permits Html {
    *
    * @return an instruction representing this element.
    */
-  public final ElementInstruction html(String text) {
+  public final Api.Element html(String text) {
     element(StandardElementName.HTML, text);
-    return ElementInstruction.INSTANCE;
+    return Api.ELEMENT;
   }
 
   /**
@@ -926,9 +852,9 @@ public sealed abstract class BaseElements extends BaseAttributes permits Html {
    *
    * @return an instruction representing this element.
    */
-  public final ElementInstruction img(ImageInstruction... contents) {
+  public final Api.Element img(Api.ImageValue... contents) {
     element(StandardElementName.IMG, contents);
-    return ElementInstruction.INSTANCE;
+    return Api.ELEMENT;
   }
 
   /**
@@ -939,9 +865,9 @@ public sealed abstract class BaseElements extends BaseAttributes permits Html {
    *
    * @return an instruction representing this element.
    */
-  public final ElementInstruction input(InputInstruction... contents) {
+  public final Api.Element input(Api.InputValue... contents) {
     element(StandardElementName.INPUT, contents);
-    return ElementInstruction.INSTANCE;
+    return Api.ELEMENT;
   }
 
   /**
@@ -952,9 +878,9 @@ public sealed abstract class BaseElements extends BaseAttributes permits Html {
    *
    * @return an instruction representing this element.
    */
-  public final ElementInstruction kbd(KeyboardInputInstruction... contents) {
+  public final Api.Element kbd(Api.KeyboardInputValue... contents) {
     element(StandardElementName.KBD, contents);
-    return ElementInstruction.INSTANCE;
+    return Api.ELEMENT;
   }
 
   /**
@@ -965,9 +891,9 @@ public sealed abstract class BaseElements extends BaseAttributes permits Html {
    *
    * @return an instruction representing this element.
    */
-  public final ElementInstruction kbd(String text) {
+  public final Api.Element kbd(String text) {
     element(StandardElementName.KBD, text);
-    return ElementInstruction.INSTANCE;
+    return Api.ELEMENT;
   }
 
   /**
@@ -978,9 +904,9 @@ public sealed abstract class BaseElements extends BaseAttributes permits Html {
    *
    * @return an instruction representing this element.
    */
-  public final ElementInstruction label(LabelInstruction... contents) {
+  public final Api.Element label(Api.LabelValue... contents) {
     element(StandardElementName.LABEL, contents);
-    return ElementInstruction.INSTANCE;
+    return Api.ELEMENT;
   }
 
   /**
@@ -991,9 +917,9 @@ public sealed abstract class BaseElements extends BaseAttributes permits Html {
    *
    * @return an instruction representing this attribute or element.
    */
-  public final ElementInstruction label(String text) {
+  public final Api.Element label(String text) {
     ambiguous(Ambiguous.LABEL, text);
-    return ElementInstruction.INSTANCE;
+    return Api.ELEMENT;
   }
 
   /**
@@ -1004,9 +930,9 @@ public sealed abstract class BaseElements extends BaseAttributes permits Html {
    *
    * @return an instruction representing this element.
    */
-  public final ElementInstruction legend(LegendInstruction... contents) {
+  public final Api.Element legend(Api.LegendValue... contents) {
     element(StandardElementName.LEGEND, contents);
-    return ElementInstruction.INSTANCE;
+    return Api.ELEMENT;
   }
 
   /**
@@ -1017,9 +943,9 @@ public sealed abstract class BaseElements extends BaseAttributes permits Html {
    *
    * @return an instruction representing this element.
    */
-  public final ElementInstruction legend(String text) {
+  public final Api.Element legend(String text) {
     element(StandardElementName.LEGEND, text);
-    return ElementInstruction.INSTANCE;
+    return Api.ELEMENT;
   }
 
   /**
@@ -1030,9 +956,9 @@ public sealed abstract class BaseElements extends BaseAttributes permits Html {
    *
    * @return an instruction representing this element.
    */
-  public final ElementInstruction li(ListItemInstruction... contents) {
+  public final Api.Element li(Api.ListItemValue... contents) {
     element(StandardElementName.LI, contents);
-    return ElementInstruction.INSTANCE;
+    return Api.ELEMENT;
   }
 
   /**
@@ -1043,9 +969,9 @@ public sealed abstract class BaseElements extends BaseAttributes permits Html {
    *
    * @return an instruction representing this element.
    */
-  public final ElementInstruction li(String text) {
+  public final Api.Element li(String text) {
     element(StandardElementName.LI, text);
-    return ElementInstruction.INSTANCE;
+    return Api.ELEMENT;
   }
 
   /**
@@ -1056,9 +982,9 @@ public sealed abstract class BaseElements extends BaseAttributes permits Html {
    *
    * @return an instruction representing this element.
    */
-  public final ElementInstruction link(LinkInstruction... contents) {
+  public final Api.Element link(Api.LinkValue... contents) {
     element(StandardElementName.LINK, contents);
-    return ElementInstruction.INSTANCE;
+    return Api.ELEMENT;
   }
 
   /**
@@ -1069,9 +995,9 @@ public sealed abstract class BaseElements extends BaseAttributes permits Html {
    *
    * @return an instruction representing this element.
    */
-  public final ElementInstruction main(MainInstruction... contents) {
+  public final Api.Element main(Api.MainValue... contents) {
     element(StandardElementName.MAIN, contents);
-    return ElementInstruction.INSTANCE;
+    return Api.ELEMENT;
   }
 
   /**
@@ -1082,9 +1008,9 @@ public sealed abstract class BaseElements extends BaseAttributes permits Html {
    *
    * @return an instruction representing this element.
    */
-  public final ElementInstruction main(String text) {
+  public final Api.Element main(String text) {
     element(StandardElementName.MAIN, text);
-    return ElementInstruction.INSTANCE;
+    return Api.ELEMENT;
   }
 
   /**
@@ -1095,9 +1021,9 @@ public sealed abstract class BaseElements extends BaseAttributes permits Html {
    *
    * @return an instruction representing this element.
    */
-  public final ElementInstruction menu(MenuInstruction... contents) {
+  public final Api.Element menu(Api.MenuValue... contents) {
     element(StandardElementName.MENU, contents);
-    return ElementInstruction.INSTANCE;
+    return Api.ELEMENT;
   }
 
   /**
@@ -1108,9 +1034,9 @@ public sealed abstract class BaseElements extends BaseAttributes permits Html {
    *
    * @return an instruction representing this element.
    */
-  public final ElementInstruction menu(String text) {
+  public final Api.Element menu(String text) {
     element(StandardElementName.MENU, text);
-    return ElementInstruction.INSTANCE;
+    return Api.ELEMENT;
   }
 
   /**
@@ -1121,9 +1047,9 @@ public sealed abstract class BaseElements extends BaseAttributes permits Html {
    *
    * @return an instruction representing this element.
    */
-  public final ElementInstruction meta(MetaInstruction... contents) {
+  public final Api.Element meta(Api.MetaValue... contents) {
     element(StandardElementName.META, contents);
-    return ElementInstruction.INSTANCE;
+    return Api.ELEMENT;
   }
 
   /**
@@ -1134,9 +1060,9 @@ public sealed abstract class BaseElements extends BaseAttributes permits Html {
    *
    * @return an instruction representing this element.
    */
-  public final ElementInstruction nav(NavInstruction... contents) {
+  public final Api.Element nav(Api.NavValue... contents) {
     element(StandardElementName.NAV, contents);
-    return ElementInstruction.INSTANCE;
+    return Api.ELEMENT;
   }
 
   /**
@@ -1147,9 +1073,9 @@ public sealed abstract class BaseElements extends BaseAttributes permits Html {
    *
    * @return an instruction representing this element.
    */
-  public final ElementInstruction nav(String text) {
+  public final Api.Element nav(String text) {
     element(StandardElementName.NAV, text);
-    return ElementInstruction.INSTANCE;
+    return Api.ELEMENT;
   }
 
   /**
@@ -1160,9 +1086,9 @@ public sealed abstract class BaseElements extends BaseAttributes permits Html {
    *
    * @return an instruction representing this element.
    */
-  public final ElementInstruction ol(OrderedListInstruction... contents) {
+  public final Api.Element ol(Api.OrderedListValue... contents) {
     element(StandardElementName.OL, contents);
-    return ElementInstruction.INSTANCE;
+    return Api.ELEMENT;
   }
 
   /**
@@ -1173,9 +1099,9 @@ public sealed abstract class BaseElements extends BaseAttributes permits Html {
    *
    * @return an instruction representing this element.
    */
-  public final ElementInstruction ol(String text) {
+  public final Api.Element ol(String text) {
     element(StandardElementName.OL, text);
-    return ElementInstruction.INSTANCE;
+    return Api.ELEMENT;
   }
 
   /**
@@ -1186,9 +1112,9 @@ public sealed abstract class BaseElements extends BaseAttributes permits Html {
    *
    * @return an instruction representing this element.
    */
-  public final ElementInstruction optgroup(OptionGroupInstruction... contents) {
+  public final Api.Element optgroup(Api.OptionGroupValue... contents) {
     element(StandardElementName.OPTGROUP, contents);
-    return ElementInstruction.INSTANCE;
+    return Api.ELEMENT;
   }
 
   /**
@@ -1199,9 +1125,9 @@ public sealed abstract class BaseElements extends BaseAttributes permits Html {
    *
    * @return an instruction representing this element.
    */
-  public final ElementInstruction optgroup(String text) {
+  public final Api.Element optgroup(String text) {
     element(StandardElementName.OPTGROUP, text);
-    return ElementInstruction.INSTANCE;
+    return Api.ELEMENT;
   }
 
   /**
@@ -1212,9 +1138,9 @@ public sealed abstract class BaseElements extends BaseAttributes permits Html {
    *
    * @return an instruction representing this element.
    */
-  public final ElementInstruction option(OptionInstruction... contents) {
+  public final Api.Element option(Api.OptionValue... contents) {
     element(StandardElementName.OPTION, contents);
-    return ElementInstruction.INSTANCE;
+    return Api.ELEMENT;
   }
 
   /**
@@ -1225,9 +1151,9 @@ public sealed abstract class BaseElements extends BaseAttributes permits Html {
    *
    * @return an instruction representing this element.
    */
-  public final ElementInstruction option(String text) {
+  public final Api.Element option(String text) {
     element(StandardElementName.OPTION, text);
-    return ElementInstruction.INSTANCE;
+    return Api.ELEMENT;
   }
 
   /**
@@ -1238,9 +1164,9 @@ public sealed abstract class BaseElements extends BaseAttributes permits Html {
    *
    * @return an instruction representing this element.
    */
-  public final ElementInstruction p(ParagraphInstruction... contents) {
+  public final Api.Element p(Api.ParagraphValue... contents) {
     element(StandardElementName.P, contents);
-    return ElementInstruction.INSTANCE;
+    return Api.ELEMENT;
   }
 
   /**
@@ -1251,9 +1177,9 @@ public sealed abstract class BaseElements extends BaseAttributes permits Html {
    *
    * @return an instruction representing this element.
    */
-  public final ElementInstruction p(String text) {
+  public final Api.Element p(String text) {
     element(StandardElementName.P, text);
-    return ElementInstruction.INSTANCE;
+    return Api.ELEMENT;
   }
 
   /**
@@ -1264,9 +1190,9 @@ public sealed abstract class BaseElements extends BaseAttributes permits Html {
    *
    * @return an instruction representing this element.
    */
-  public final ElementInstruction path(PathInstruction... contents) {
+  public final Api.Element path(Api.PathValue... contents) {
     element(StandardElementName.PATH, contents);
-    return ElementInstruction.INSTANCE;
+    return Api.ELEMENT;
   }
 
   /**
@@ -1277,9 +1203,9 @@ public sealed abstract class BaseElements extends BaseAttributes permits Html {
    *
    * @return an instruction representing this element.
    */
-  public final ElementInstruction path(String text) {
+  public final Api.Element path(String text) {
     element(StandardElementName.PATH, text);
-    return ElementInstruction.INSTANCE;
+    return Api.ELEMENT;
   }
 
   /**
@@ -1290,9 +1216,9 @@ public sealed abstract class BaseElements extends BaseAttributes permits Html {
    *
    * @return an instruction representing this element.
    */
-  public final ElementInstruction pre(PreInstruction... contents) {
+  public final Api.Element pre(Api.PreValue... contents) {
     element(StandardElementName.PRE, contents);
-    return ElementInstruction.INSTANCE;
+    return Api.ELEMENT;
   }
 
   /**
@@ -1303,9 +1229,9 @@ public sealed abstract class BaseElements extends BaseAttributes permits Html {
    *
    * @return an instruction representing this element.
    */
-  public final ElementInstruction pre(String text) {
+  public final Api.Element pre(String text) {
     element(StandardElementName.PRE, text);
-    return ElementInstruction.INSTANCE;
+    return Api.ELEMENT;
   }
 
   /**
@@ -1316,9 +1242,9 @@ public sealed abstract class BaseElements extends BaseAttributes permits Html {
    *
    * @return an instruction representing this element.
    */
-  public final ElementInstruction progress(ProgressInstruction... contents) {
+  public final Api.Element progress(Api.ProgressValue... contents) {
     element(StandardElementName.PROGRESS, contents);
-    return ElementInstruction.INSTANCE;
+    return Api.ELEMENT;
   }
 
   /**
@@ -1329,9 +1255,9 @@ public sealed abstract class BaseElements extends BaseAttributes permits Html {
    *
    * @return an instruction representing this element.
    */
-  public final ElementInstruction progress(String text) {
+  public final Api.Element progress(String text) {
     element(StandardElementName.PROGRESS, text);
-    return ElementInstruction.INSTANCE;
+    return Api.ELEMENT;
   }
 
   /**
@@ -1342,9 +1268,9 @@ public sealed abstract class BaseElements extends BaseAttributes permits Html {
    *
    * @return an instruction representing this element.
    */
-  public final ElementInstruction samp(SampleOutputInstruction... contents) {
+  public final Api.Element samp(Api.SampleOutputValue... contents) {
     element(StandardElementName.SAMP, contents);
-    return ElementInstruction.INSTANCE;
+    return Api.ELEMENT;
   }
 
   /**
@@ -1355,9 +1281,9 @@ public sealed abstract class BaseElements extends BaseAttributes permits Html {
    *
    * @return an instruction representing this element.
    */
-  public final ElementInstruction samp(String text) {
+  public final Api.Element samp(String text) {
     element(StandardElementName.SAMP, text);
-    return ElementInstruction.INSTANCE;
+    return Api.ELEMENT;
   }
 
   /**
@@ -1368,9 +1294,9 @@ public sealed abstract class BaseElements extends BaseAttributes permits Html {
    *
    * @return an instruction representing this element.
    */
-  public final ElementInstruction script(ScriptInstruction... contents) {
+  public final Api.Element script(Api.ScriptValue... contents) {
     element(StandardElementName.SCRIPT, contents);
-    return ElementInstruction.INSTANCE;
+    return Api.ELEMENT;
   }
 
   /**
@@ -1381,9 +1307,9 @@ public sealed abstract class BaseElements extends BaseAttributes permits Html {
    *
    * @return an instruction representing this element.
    */
-  public final ElementInstruction script(String text) {
+  public final Api.Element script(String text) {
     element(StandardElementName.SCRIPT, text);
-    return ElementInstruction.INSTANCE;
+    return Api.ELEMENT;
   }
 
   /**
@@ -1394,9 +1320,9 @@ public sealed abstract class BaseElements extends BaseAttributes permits Html {
    *
    * @return an instruction representing this element.
    */
-  public final ElementInstruction section(SectionInstruction... contents) {
+  public final Api.Element section(Api.SectionValue... contents) {
     element(StandardElementName.SECTION, contents);
-    return ElementInstruction.INSTANCE;
+    return Api.ELEMENT;
   }
 
   /**
@@ -1407,9 +1333,9 @@ public sealed abstract class BaseElements extends BaseAttributes permits Html {
    *
    * @return an instruction representing this element.
    */
-  public final ElementInstruction section(String text) {
+  public final Api.Element section(String text) {
     element(StandardElementName.SECTION, text);
-    return ElementInstruction.INSTANCE;
+    return Api.ELEMENT;
   }
 
   /**
@@ -1420,9 +1346,9 @@ public sealed abstract class BaseElements extends BaseAttributes permits Html {
    *
    * @return an instruction representing this element.
    */
-  public final ElementInstruction select(SelectInstruction... contents) {
+  public final Api.Element select(Api.SelectValue... contents) {
     element(StandardElementName.SELECT, contents);
-    return ElementInstruction.INSTANCE;
+    return Api.ELEMENT;
   }
 
   /**
@@ -1433,9 +1359,9 @@ public sealed abstract class BaseElements extends BaseAttributes permits Html {
    *
    * @return an instruction representing this element.
    */
-  public final ElementInstruction select(String text) {
+  public final Api.Element select(String text) {
     element(StandardElementName.SELECT, text);
-    return ElementInstruction.INSTANCE;
+    return Api.ELEMENT;
   }
 
   /**
@@ -1446,9 +1372,9 @@ public sealed abstract class BaseElements extends BaseAttributes permits Html {
    *
    * @return an instruction representing this element.
    */
-  public final ElementInstruction small(SmallInstruction... contents) {
+  public final Api.Element small(Api.SmallValue... contents) {
     element(StandardElementName.SMALL, contents);
-    return ElementInstruction.INSTANCE;
+    return Api.ELEMENT;
   }
 
   /**
@@ -1459,9 +1385,9 @@ public sealed abstract class BaseElements extends BaseAttributes permits Html {
    *
    * @return an instruction representing this element.
    */
-  public final ElementInstruction small(String text) {
+  public final Api.Element small(String text) {
     element(StandardElementName.SMALL, text);
-    return ElementInstruction.INSTANCE;
+    return Api.ELEMENT;
   }
 
   /**
@@ -1472,9 +1398,9 @@ public sealed abstract class BaseElements extends BaseAttributes permits Html {
    *
    * @return an instruction representing this element.
    */
-  public final ElementInstruction span(SpanInstruction... contents) {
+  public final Api.Element span(Api.SpanValue... contents) {
     element(StandardElementName.SPAN, contents);
-    return ElementInstruction.INSTANCE;
+    return Api.ELEMENT;
   }
 
   /**
@@ -1485,9 +1411,9 @@ public sealed abstract class BaseElements extends BaseAttributes permits Html {
    *
    * @return an instruction representing this element.
    */
-  public final ElementInstruction span(String text) {
+  public final Api.Element span(String text) {
     element(StandardElementName.SPAN, text);
-    return ElementInstruction.INSTANCE;
+    return Api.ELEMENT;
   }
 
   /**
@@ -1498,9 +1424,9 @@ public sealed abstract class BaseElements extends BaseAttributes permits Html {
    *
    * @return an instruction representing this element.
    */
-  public final ElementInstruction strong(StrongInstruction... contents) {
+  public final Api.Element strong(Api.StrongValue... contents) {
     element(StandardElementName.STRONG, contents);
-    return ElementInstruction.INSTANCE;
+    return Api.ELEMENT;
   }
 
   /**
@@ -1511,9 +1437,9 @@ public sealed abstract class BaseElements extends BaseAttributes permits Html {
    *
    * @return an instruction representing this element.
    */
-  public final ElementInstruction strong(String text) {
+  public final Api.Element strong(String text) {
     element(StandardElementName.STRONG, text);
-    return ElementInstruction.INSTANCE;
+    return Api.ELEMENT;
   }
 
   /**
@@ -1524,9 +1450,9 @@ public sealed abstract class BaseElements extends BaseAttributes permits Html {
    *
    * @return an instruction representing this element.
    */
-  public final ElementInstruction style(StyleInstruction... contents) {
+  public final Api.Element style(Api.StyleValue... contents) {
     element(StandardElementName.STYLE, contents);
-    return ElementInstruction.INSTANCE;
+    return Api.ELEMENT;
   }
 
   /**
@@ -1537,9 +1463,9 @@ public sealed abstract class BaseElements extends BaseAttributes permits Html {
    *
    * @return an instruction representing this element.
    */
-  public final ElementInstruction style(String text) {
+  public final Api.Element style(String text) {
     element(StandardElementName.STYLE, text);
-    return ElementInstruction.INSTANCE;
+    return Api.ELEMENT;
   }
 
   /**
@@ -1550,9 +1476,9 @@ public sealed abstract class BaseElements extends BaseAttributes permits Html {
    *
    * @return an instruction representing this element.
    */
-  public final ElementInstruction sub(SubscriptInstruction... contents) {
+  public final Api.Element sub(Api.SubscriptValue... contents) {
     element(StandardElementName.SUB, contents);
-    return ElementInstruction.INSTANCE;
+    return Api.ELEMENT;
   }
 
   /**
@@ -1563,9 +1489,9 @@ public sealed abstract class BaseElements extends BaseAttributes permits Html {
    *
    * @return an instruction representing this element.
    */
-  public final ElementInstruction sub(String text) {
+  public final Api.Element sub(String text) {
     element(StandardElementName.SUB, text);
-    return ElementInstruction.INSTANCE;
+    return Api.ELEMENT;
   }
 
   /**
@@ -1576,9 +1502,9 @@ public sealed abstract class BaseElements extends BaseAttributes permits Html {
    *
    * @return an instruction representing this element.
    */
-  public final ElementInstruction summary(SummaryInstruction... contents) {
+  public final Api.Element summary(Api.SummaryValue... contents) {
     element(StandardElementName.SUMMARY, contents);
-    return ElementInstruction.INSTANCE;
+    return Api.ELEMENT;
   }
 
   /**
@@ -1589,9 +1515,9 @@ public sealed abstract class BaseElements extends BaseAttributes permits Html {
    *
    * @return an instruction representing this element.
    */
-  public final ElementInstruction summary(String text) {
+  public final Api.Element summary(String text) {
     element(StandardElementName.SUMMARY, text);
-    return ElementInstruction.INSTANCE;
+    return Api.ELEMENT;
   }
 
   /**
@@ -1602,9 +1528,9 @@ public sealed abstract class BaseElements extends BaseAttributes permits Html {
    *
    * @return an instruction representing this element.
    */
-  public final ElementInstruction sup(SuperscriptInstruction... contents) {
+  public final Api.Element sup(Api.SuperscriptValue... contents) {
     element(StandardElementName.SUP, contents);
-    return ElementInstruction.INSTANCE;
+    return Api.ELEMENT;
   }
 
   /**
@@ -1615,9 +1541,9 @@ public sealed abstract class BaseElements extends BaseAttributes permits Html {
    *
    * @return an instruction representing this element.
    */
-  public final ElementInstruction sup(String text) {
+  public final Api.Element sup(String text) {
     element(StandardElementName.SUP, text);
-    return ElementInstruction.INSTANCE;
+    return Api.ELEMENT;
   }
 
   /**
@@ -1628,9 +1554,9 @@ public sealed abstract class BaseElements extends BaseAttributes permits Html {
    *
    * @return an instruction representing this element.
    */
-  public final ElementInstruction svg(SvgInstruction... contents) {
+  public final Api.Element svg(Api.SvgValue... contents) {
     element(StandardElementName.SVG, contents);
-    return ElementInstruction.INSTANCE;
+    return Api.ELEMENT;
   }
 
   /**
@@ -1641,9 +1567,9 @@ public sealed abstract class BaseElements extends BaseAttributes permits Html {
    *
    * @return an instruction representing this element.
    */
-  public final ElementInstruction svg(String text) {
+  public final Api.Element svg(String text) {
     element(StandardElementName.SVG, text);
-    return ElementInstruction.INSTANCE;
+    return Api.ELEMENT;
   }
 
   /**
@@ -1654,9 +1580,9 @@ public sealed abstract class BaseElements extends BaseAttributes permits Html {
    *
    * @return an instruction representing this element.
    */
-  public final ElementInstruction table(TableInstruction... contents) {
+  public final Api.Element table(Api.TableValue... contents) {
     element(StandardElementName.TABLE, contents);
-    return ElementInstruction.INSTANCE;
+    return Api.ELEMENT;
   }
 
   /**
@@ -1667,9 +1593,9 @@ public sealed abstract class BaseElements extends BaseAttributes permits Html {
    *
    * @return an instruction representing this element.
    */
-  public final ElementInstruction table(String text) {
+  public final Api.Element table(String text) {
     element(StandardElementName.TABLE, text);
-    return ElementInstruction.INSTANCE;
+    return Api.ELEMENT;
   }
 
   /**
@@ -1680,9 +1606,9 @@ public sealed abstract class BaseElements extends BaseAttributes permits Html {
    *
    * @return an instruction representing this element.
    */
-  public final ElementInstruction tbody(TableBodyInstruction... contents) {
+  public final Api.Element tbody(Api.TableBodyValue... contents) {
     element(StandardElementName.TBODY, contents);
-    return ElementInstruction.INSTANCE;
+    return Api.ELEMENT;
   }
 
   /**
@@ -1693,9 +1619,9 @@ public sealed abstract class BaseElements extends BaseAttributes permits Html {
    *
    * @return an instruction representing this element.
    */
-  public final ElementInstruction tbody(String text) {
+  public final Api.Element tbody(String text) {
     element(StandardElementName.TBODY, text);
-    return ElementInstruction.INSTANCE;
+    return Api.ELEMENT;
   }
 
   /**
@@ -1706,9 +1632,9 @@ public sealed abstract class BaseElements extends BaseAttributes permits Html {
    *
    * @return an instruction representing this element.
    */
-  public final ElementInstruction td(TableDataInstruction... contents) {
+  public final Api.Element td(Api.TableDataValue... contents) {
     element(StandardElementName.TD, contents);
-    return ElementInstruction.INSTANCE;
+    return Api.ELEMENT;
   }
 
   /**
@@ -1719,9 +1645,9 @@ public sealed abstract class BaseElements extends BaseAttributes permits Html {
    *
    * @return an instruction representing this element.
    */
-  public final ElementInstruction td(String text) {
+  public final Api.Element td(String text) {
     element(StandardElementName.TD, text);
-    return ElementInstruction.INSTANCE;
+    return Api.ELEMENT;
   }
 
   /**
@@ -1732,9 +1658,9 @@ public sealed abstract class BaseElements extends BaseAttributes permits Html {
    *
    * @return an instruction representing this element.
    */
-  public final ElementInstruction template(TemplateInstruction... contents) {
+  public final Api.Element template(Api.TemplateValue... contents) {
     element(StandardElementName.TEMPLATE, contents);
-    return ElementInstruction.INSTANCE;
+    return Api.ELEMENT;
   }
 
   /**
@@ -1745,9 +1671,9 @@ public sealed abstract class BaseElements extends BaseAttributes permits Html {
    *
    * @return an instruction representing this element.
    */
-  public final ElementInstruction template(String text) {
+  public final Api.Element template(String text) {
     element(StandardElementName.TEMPLATE, text);
-    return ElementInstruction.INSTANCE;
+    return Api.ELEMENT;
   }
 
   /**
@@ -1758,9 +1684,9 @@ public sealed abstract class BaseElements extends BaseAttributes permits Html {
    *
    * @return an instruction representing this element.
    */
-  public final ElementInstruction textarea(TextAreaInstruction... contents) {
+  public final Api.Element textarea(Api.TextAreaValue... contents) {
     element(StandardElementName.TEXTAREA, contents);
-    return ElementInstruction.INSTANCE;
+    return Api.ELEMENT;
   }
 
   /**
@@ -1771,9 +1697,9 @@ public sealed abstract class BaseElements extends BaseAttributes permits Html {
    *
    * @return an instruction representing this element.
    */
-  public final ElementInstruction textarea(String text) {
+  public final Api.Element textarea(String text) {
     element(StandardElementName.TEXTAREA, text);
-    return ElementInstruction.INSTANCE;
+    return Api.ELEMENT;
   }
 
   /**
@@ -1784,9 +1710,9 @@ public sealed abstract class BaseElements extends BaseAttributes permits Html {
    *
    * @return an instruction representing this element.
    */
-  public final ElementInstruction th(TableHeaderInstruction... contents) {
+  public final Api.Element th(Api.TableHeaderValue... contents) {
     element(StandardElementName.TH, contents);
-    return ElementInstruction.INSTANCE;
+    return Api.ELEMENT;
   }
 
   /**
@@ -1797,9 +1723,9 @@ public sealed abstract class BaseElements extends BaseAttributes permits Html {
    *
    * @return an instruction representing this element.
    */
-  public final ElementInstruction th(String text) {
+  public final Api.Element th(String text) {
     element(StandardElementName.TH, text);
-    return ElementInstruction.INSTANCE;
+    return Api.ELEMENT;
   }
 
   /**
@@ -1810,9 +1736,9 @@ public sealed abstract class BaseElements extends BaseAttributes permits Html {
    *
    * @return an instruction representing this element.
    */
-  public final ElementInstruction thead(TableHeadInstruction... contents) {
+  public final Api.Element thead(Api.TableHeadValue... contents) {
     element(StandardElementName.THEAD, contents);
-    return ElementInstruction.INSTANCE;
+    return Api.ELEMENT;
   }
 
   /**
@@ -1823,9 +1749,9 @@ public sealed abstract class BaseElements extends BaseAttributes permits Html {
    *
    * @return an instruction representing this element.
    */
-  public final ElementInstruction thead(String text) {
+  public final Api.Element thead(String text) {
     element(StandardElementName.THEAD, text);
-    return ElementInstruction.INSTANCE;
+    return Api.ELEMENT;
   }
 
   /**
@@ -1836,9 +1762,9 @@ public sealed abstract class BaseElements extends BaseAttributes permits Html {
    *
    * @return an instruction representing this element.
    */
-  public final ElementInstruction title(TitleInstruction... contents) {
+  public final Api.Element title(Api.TitleValue... contents) {
     element(StandardElementName.TITLE, contents);
-    return ElementInstruction.INSTANCE;
+    return Api.ELEMENT;
   }
 
   /**
@@ -1849,9 +1775,9 @@ public sealed abstract class BaseElements extends BaseAttributes permits Html {
    *
    * @return an instruction representing this attribute or element.
    */
-  public final ElementInstruction title(String text) {
+  public final Api.Element title(String text) {
     ambiguous(Ambiguous.TITLE, text);
-    return ElementInstruction.INSTANCE;
+    return Api.ELEMENT;
   }
 
   /**
@@ -1862,9 +1788,9 @@ public sealed abstract class BaseElements extends BaseAttributes permits Html {
    *
    * @return an instruction representing this element.
    */
-  public final ElementInstruction tr(TableRowInstruction... contents) {
+  public final Api.Element tr(Api.TableRowValue... contents) {
     element(StandardElementName.TR, contents);
-    return ElementInstruction.INSTANCE;
+    return Api.ELEMENT;
   }
 
   /**
@@ -1875,9 +1801,9 @@ public sealed abstract class BaseElements extends BaseAttributes permits Html {
    *
    * @return an instruction representing this element.
    */
-  public final ElementInstruction tr(String text) {
+  public final Api.Element tr(String text) {
     element(StandardElementName.TR, text);
-    return ElementInstruction.INSTANCE;
+    return Api.ELEMENT;
   }
 
   /**
@@ -1888,9 +1814,9 @@ public sealed abstract class BaseElements extends BaseAttributes permits Html {
    *
    * @return an instruction representing this element.
    */
-  public final ElementInstruction ul(UnorderedListInstruction... contents) {
+  public final Api.Element ul(Api.UnorderedListValue... contents) {
     element(StandardElementName.UL, contents);
-    return ElementInstruction.INSTANCE;
+    return Api.ELEMENT;
   }
 
   /**
@@ -1901,13 +1827,9 @@ public sealed abstract class BaseElements extends BaseAttributes permits Html {
    *
    * @return an instruction representing this element.
    */
-  public final ElementInstruction ul(String text) {
+  public final Api.Element ul(String text) {
     element(StandardElementName.UL, text);
-    return ElementInstruction.INSTANCE;
+    return Api.ELEMENT;
   }
 
-  /**
-   * Generates the {@code <!DOCTYPE html>} doctype.
-   */
-  public abstract void doctype();
 }

@@ -15,10 +15,6 @@
  */
 package objectos.html;
 
-import objectos.html.BaseTypes.ElementInstruction;
-import objectos.html.BaseTypes.FragmentInstruction;
-import objectos.html.BaseTypes.Instruction;
-import objectos.html.BaseTypes.NoOpInstruction;
 import objectos.html.internal.Ambiguous;
 import objectos.html.internal.AttributeName;
 import objectos.html.internal.Bytes;
@@ -27,7 +23,6 @@ import objectos.html.internal.StandardElementName;
 import objectos.html.pseudom.HtmlAttribute;
 import objectos.html.pseudom.HtmlDocument;
 import objectos.html.pseudom.HtmlNode;
-import objectos.html.tmpl.Api;
 import objectos.lang.object.Check;
 import objectos.util.array.ByteArrays;
 import objectos.util.array.ObjectArrays;
@@ -67,11 +62,6 @@ public final class Html extends BaseElements {
   private static final int OFFSET_MAX = OFFSET_RAW;
 
   public Html() {}
-
-  @Override
-  public final void doctype() {
-    doctypeImpl();
-  }
 
   /**
    * Flattens the specified instructions so that each of the specified
@@ -113,13 +103,13 @@ public final class Html extends BaseElements {
    *
    * @return an instruction representing this flatten operation
    */
-  public final ElementInstruction flatten(Instruction... contents) {
+  public final Api.Element flatten(Api.Instruction... contents) {
     Check.notNull(contents, "contents == null");
 
     flattenBegin();
 
     for (int i = 0; i < contents.length; i++) {
-      Instruction inst;
+      Api.Instruction inst;
       inst = Check.notNull(contents[i], "contents[", i, "] == null");
 
       elementValue(inst);
@@ -127,7 +117,7 @@ public final class Html extends BaseElements {
 
     elementEnd();
 
-    return ElementInstruction.INSTANCE;
+    return Api.ELEMENT;
   }
 
   /**
@@ -169,7 +159,7 @@ public final class Html extends BaseElements {
    *
    * @return an instruction representing this fragment
    */
-  public final FragmentInstruction include(FragmentLambda fragment) {
+  public final Api.Fragment include(FragmentLambda fragment) {
     Check.notNull(fragment, "fragment == null");
 
     int index;
@@ -179,7 +169,7 @@ public final class Html extends BaseElements {
 
     fragmentEnd(index);
 
-    return FragmentInstruction.INSTANCE;
+    return Api.FRAGMENT;
   }
 
   /**
@@ -192,6 +182,26 @@ public final class Html extends BaseElements {
    */
   public final Api.Fragment include(HtmlTemplate template) {
     Check.notNull(template, "template == null");
+
+    /*
+    try {
+      HtmlTemplateApi api;
+      api = api();
+    
+      int index;
+      index = api.fragmentBegin();
+    
+      template.api = api;
+    
+      template.definition();
+    
+      api.fragmentEnd(index);
+    } finally {
+      template.api = null;
+    }
+    
+    return Api.FRAGMENT;
+    */
 
     throw new UnsupportedOperationException("Implement me");
   }
@@ -221,16 +231,16 @@ public final class Html extends BaseElements {
    *
    * @return the no-op instruction.
    */
-  public final NoOpInstruction noop() {
-    return NoOpInstruction.INSTANCE;
+  public final Api.NoOp noop() {
+    return Api.NOOP;
   }
 
-  public final ElementInstruction raw(String text) {
+  public final Api.Element raw(String text) {
     Check.notNull(text, "text == null");
 
     rawImpl(text);
 
-    return ElementInstruction.INSTANCE;
+    return Api.ELEMENT;
   }
 
   /**
@@ -254,12 +264,12 @@ public final class Html extends BaseElements {
    *
    * @return an instruction representing the text node
    */
-  public final ElementInstruction t(String text) {
+  public final Api.Element text(String text) {
     Check.notNull(text, "text == null");
 
-    text(text);
+    textImpl(text);
 
-    return ElementInstruction.INSTANCE;
+    return Api.ELEMENT;
   }
 
   //

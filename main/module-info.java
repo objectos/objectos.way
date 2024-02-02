@@ -28,7 +28,6 @@ module objectos.way {
   exports objectos.html.pseudom;
   exports objectos.html.script;
   exports objectos.html.style;
-  exports objectos.html.tmpl;
   exports objectos.http;
   exports objectos.http.media;
   exports objectos.http.server;

@@ -15,8 +15,8 @@
  */
 package objectos.html.script;
 
-import objectos.html.tmpl.Api.ExternalAttribute;
-import objectos.html.tmpl.Api.ExternalAttribute.Id;
+import objectos.html.Api.ExternalAttribute;
+import objectos.html.Api.ExternalAttribute.Id;
 
 public sealed abstract class Command {
 

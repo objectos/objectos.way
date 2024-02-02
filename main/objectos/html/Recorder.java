@@ -51,12 +51,15 @@ class Recorder {
     objectIndex = 0;
   }
 
-  final void compilationEnd() {
-    // TODO remove...
+  /**
+   * Generates the {@code <!DOCTYPE html>} doctype.
+   */
+  public final void doctype() {
+    mainAdd(ByteProto.DOCTYPE);
   }
 
-  final void doctypeImpl() {
-    mainAdd(ByteProto.DOCTYPE);
+  final void compilationEnd() {
+    // TODO remove...
   }
 
   final void ambiguous(Ambiguous name, String value) {
@@ -115,11 +118,11 @@ class Recorder {
     );
   }
 
-  final void element(StandardElementName name, BaseTypes.Instruction[] contents) {
+  final void element(StandardElementName name, Api.Instruction[] contents) {
     elementBegin(name);
 
     for (int i = 0; i < contents.length; i++) {
-      BaseTypes.Instruction inst;
+      Api.Instruction inst;
       inst = Check.notNull(contents[i], "contents[", i, "] == null");
 
       elementValue(inst);
@@ -129,10 +132,10 @@ class Recorder {
   }
 
   final void element(StandardElementName name, String text) {
-    text(text);
+    textImpl(text);
 
     elementBegin(name);
-    elementValue(BaseTypes.ElementInstruction.INSTANCE);
+    elementValue(Api.ELEMENT);
     elementEnd();
   }
 
@@ -152,10 +155,10 @@ class Recorder {
     );
   }
 
-  final void elementValue(BaseTypes.Instruction value) {
-    if (value == BaseTypes.AttributeInstruction.INSTANCE ||
-        value == BaseTypes.ElementInstruction.INSTANCE ||
-        value == BaseTypes.FragmentInstruction.INSTANCE) {
+  final void elementValue(Api.Instruction value) {
+    if (value == Api.ATTRIBUTE ||
+        value == Api.ELEMENT ||
+        value == Api.FRAGMENT) {
       // @ ByteProto
       mainContents--;
 
@@ -193,7 +196,7 @@ class Recorder {
       auxAdd(ByteProto.INTERNAL);
     }
 
-    else if (value instanceof BaseTypes.ExternalAttribute.Id ext) {
+    else if (value instanceof Api.ExternalAttribute.Id ext) {
       int index;
       index = externalValue(ext.id());
 
@@ -205,7 +208,7 @@ class Recorder {
       );
     }
 
-    else if (value instanceof BaseTypes.ExternalAttribute.StyleClass ext) {
+    else if (value instanceof Api.ExternalAttribute.StyleClass ext) {
       int index;
       index = externalValue(ext.className());
 
@@ -217,7 +220,7 @@ class Recorder {
       );
     }
 
-    else if (value == BaseTypes.NoOpInstruction.INSTANCE) {
+    else if (value == Api.NOOP) {
       // no-op
     }
 
@@ -352,7 +355,7 @@ class Recorder {
     );
   }
 
-  final void text(String value) {
+  final void textImpl(String value) {
     int object;
     object = objectAdd(value);
 

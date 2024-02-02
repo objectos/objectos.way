@@ -15,9 +15,7 @@
  */
 package objectos.html;
 
-import objectos.html.tmpl.Api;
-
-public final class TestClassSelector implements Api.ExternalAttribute.StyleClass, BaseTypes.ExternalAttribute.StyleClass {
+public final class TestClassSelector implements Api.ExternalAttribute.StyleClass {
 
   private final String value;
 

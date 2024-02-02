@@ -16,7 +16,6 @@
 package objectos.html;
 
 import java.util.Arrays;
-import objectos.html.BaseTypes.ElementInstruction;
 import objectos.html.internal.Ambiguous;
 import objectos.html.internal.Bytes;
 import objectos.html.internal.StandardAttributeName;
@@ -467,11 +466,11 @@ public class RecorderTest {
     html.elementBegin(StandardElementName.NAV);
     html.elementEnd();
     // template end
-    
+
     html.elementBegin(StandardElementName.BODY);
     html.elementValue(BaseApi.FRAGMENT);
     html.elementEnd();
-    
+
     html.compilationEnd();
     */
 
@@ -659,41 +658,41 @@ public class RecorderTest {
     html = new Html();
 
     html.span("foo");
-    html.t("bar");
+    html.text("bar");
     html.span("zaz");
 
     html.compilationBegin();
 
-    html.text("A");
+    html.textImpl("A");
 
     html.flattenBegin();
-    html.elementValue(ElementInstruction.INSTANCE);
+    html.elementValue(Api.ELEMENT);
     html.elementEnd();
 
     html.elementBegin(StandardElementName.DIV);
     html.elementValue(col);
-    html.elementValue(ElementInstruction.INSTANCE);
+    html.elementValue(Api.ELEMENT);
     html.elementEnd();
 
-    html.text("B");
+    html.textImpl("B");
 
     html.flattenBegin();
-    html.elementValue(ElementInstruction.INSTANCE);
+    html.elementValue(Api.ELEMENT);
     html.elementEnd();
 
     html.elementBegin(StandardElementName.DIV);
     html.elementValue(col);
-    html.elementValue(ElementInstruction.INSTANCE);
+    html.elementValue(Api.ELEMENT);
     html.elementEnd();
 
     html.flattenBegin();
-    html.elementValue(ElementInstruction.INSTANCE);
-    html.elementValue(ElementInstruction.INSTANCE);
+    html.elementValue(Api.ELEMENT);
+    html.elementValue(Api.ELEMENT);
     html.elementEnd();
 
     html.elementBegin(StandardElementName.DIV);
     html.elementValue(grd);
-    html.elementValue(ElementInstruction.INSTANCE);
+    html.elementValue(Api.ELEMENT);
     html.elementEnd();
 
     html.compilationEnd();

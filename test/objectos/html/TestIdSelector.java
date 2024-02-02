@@ -15,9 +15,7 @@
  */
 package objectos.html;
 
-import objectos.html.tmpl.Api;
-
-public final class TestIdSelector implements Api.ExternalAttribute.Id, BaseTypes.ExternalAttribute.Id {
+public final class TestIdSelector implements Api.ExternalAttribute.Id {
 
   private final String id;
 

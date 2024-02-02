@@ -13,27 +13,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.html.internal;
+package objectos.html;
 
 import static org.testng.Assert.assertEquals;
 
 import java.util.Iterator;
+import objectos.html.internal.StandardAttributeName;
+import objectos.html.internal.StandardElementName;
 import objectos.html.pseudom.HtmlAttribute;
 import objectos.html.pseudom.HtmlDocumentType;
 import objectos.html.pseudom.HtmlElement;
 import objectos.html.pseudom.HtmlIterable;
 import objectos.html.pseudom.HtmlNode;
-import objectos.html.tmpl.Api;
 import org.testng.annotations.Test;
 
-public class HtmlCompiler02TestProcessor {
+public class HtmlTestProcessor {
 
   @Test(description = """
   <html></html>
   """)
   public void testCase00() {
-    HtmlCompiler02 compiler;
-    compiler = new HtmlCompiler02();
+    Html compiler;
+    compiler = new Html();
 
     compiler.compilationBegin();
 
@@ -56,8 +57,8 @@ public class HtmlCompiler02TestProcessor {
   <html lang="pt-BR"></html>
   """)
   public void testCase01() {
-    HtmlCompiler02 compiler;
-    compiler = new HtmlCompiler02();
+    Html compiler;
+    compiler = new Html();
 
     compiler.compilationBegin();
 
@@ -79,12 +80,12 @@ public class HtmlCompiler02TestProcessor {
     );
   }
 
-  private String test(HtmlCompiler02 compiler) {
+  private String test(Html compiler) {
     StringBuilder out;
     out = new StringBuilder();
 
     PseudoHtmlDocument document;
-    document = compiler.bootstrap();
+    document = (PseudoHtmlDocument) compiler.compile();
 
     HtmlIterable<HtmlNode> nodes;
     nodes = document.nodes();

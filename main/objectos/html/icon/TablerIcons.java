@@ -41,11 +41,11 @@
  */
 package objectos.html.icon;
 
-import objectos.html.BaseTemplateDsl;
+import objectos.html.Api;
+import objectos.html.Api.Element;
+import objectos.html.Api.SvgValue;
 import objectos.html.HtmlComponent;
-import objectos.html.tmpl.Api;
-import objectos.html.tmpl.Api.Element;
-import objectos.html.tmpl.Api.SvgInstruction;
+import objectos.html.TemplateBase;
 import objectos.lang.object.Check;
 
 /**
@@ -54,72 +54,72 @@ import objectos.lang.object.Check;
  */
 public class TablerIcons extends HtmlComponent {
 
-	private Api.ExternalAttribute.Id id;
+  private Api.ExternalAttribute.Id id;
 
-	private String strokeWidth;
+  private String strokeWidth;
 
-	/**
-	 * Creates a new instance of this class bound to the specified template.
-	 *
-	 * @param parent
-	 *        the template in which icons will be drawn
-	 */
-	public TablerIcons(BaseTemplateDsl parent) {
-		super(parent);
+  /**
+   * Creates a new instance of this class bound to the specified template.
+   *
+   * @param parent
+   *        the template in which icons will be drawn
+   */
+  public TablerIcons(TemplateBase parent) {
+    super(parent);
 
-		reset();
-	}
+    reset();
+  }
 
-	/**
-	 * The value of {@code id} attribute of the rendered SVG element.
-	 *
-	 * @param id
-	 *        the id value
-	 *
-	 * @return this instance
-	 */
-	public final TablerIcons id(Api.ExternalAttribute.Id id) {
-		this.id = Check.notNull(id, "id == null");
+  /**
+   * The value of {@code id} attribute of the rendered SVG element.
+   *
+   * @param id
+   *        the id value
+   *
+   * @return this instance
+   */
+  public final TablerIcons id(Api.ExternalAttribute.Id id) {
+    this.id = Check.notNull(id, "id == null");
 
-		return this;
-	}
+    return this;
+  }
 
-	/**
-	 * The value of the {@code stroke-width} attribute of the rendered SVG
-	 * element.
-	 *
-	 * @param value
-	 *        the width value
-	 *
-	 * @return this instance
-	 */
-	public final TablerIcons strokeWidth(double value) {
-		strokeWidth = Double.toString(value);
+  /**
+   * The value of the {@code stroke-width} attribute of the rendered SVG
+   * element.
+   *
+   * @param value
+   *        the width value
+   *
+   * @return this instance
+   */
+  public final TablerIcons strokeWidth(double value) {
+    strokeWidth = Double.toString(value);
 
-		return this;
-	}
+    return this;
+  }
 
-	/**
-	 * Renders the <a href="https://tabler-icons.io/i/menu-2">menu-2</a> icon.
-	 *
-	 * @return the {@code svg} element
-	 */
-	public final Element menu2() {
-		return icon(
-				path(stroke("none"), d("M0 0h24v24H0z"), fill("none")),
-				path(d("M4 6l16 0")),
-				path(d("M4 12l16 0")),
-				path(d("M4 18l16 0"))
-		);
-	}
+  /**
+   * Renders the <a href="https://tabler-icons.io/i/menu-2">menu-2</a> icon.
+   *
+   * @return the {@code svg} element
+   */
+  public final Element menu2() {
+    return icon(
+        path(stroke("none"), d("M0 0h24v24H0z"), fill("none")),
+        path(d("M4 6l16 0")),
+        path(d("M4 12l16 0")),
+        path(d("M4 18l16 0"))
+    );
+  }
 
-	/**
-	 * Renders the <a href="https://tabler-icons.io/i/paw">paw</a> icon.
-	 *
-	 * @return the {@code svg} element
-	 */
-	public final Element paw() {
-		// @formatter:off
+  /**
+   * Renders the <a href="https://tabler-icons.io/i/paw">paw</a> icon.
+   *
+   * @return the {@code svg} element
+   */
+  public final Element paw() {
+    // @formatter:off
     return icon(
       path(stroke("none"), d("M0 0h24v24H0z"), fill("none")),
       path(d("M14.7 13.5c-1.1 -2 -1.441 -2.5 -2.7 -2.5c-1.259 0 -1.736 .755 -2.836 2.747c-.942 1.703 -2.846 1.845 -3.321 3.291c-.097 .265 -.145 .677 -.143 .962c0 1.176 .787 2 1.8 2c1.259 0 3 -1 4.5 -1s3.241 1 4.5 1c1.013 0 1.8 -.823 1.8 -2c0 -.285 -.049 -.697 -.146 -.962c-.475 -1.451 -2.512 -1.835 -3.454 -3.538z")),
@@ -129,35 +129,35 @@ public class TablerIcons extends HtmlComponent {
       path(d("M5.69 12.918c.816 -.352 1.054 -1.719 .536 -3.052c-.436 -1.124 -1.271 -1.866 -2.009 -1.866c-.14 0 -.277 .027 -.407 .082c-.816 .352 -1.054 1.719 -.536 3.052c.436 1.124 1.271 1.866 2.009 1.866c.14 0 .277 -.027 .407 -.082z"))
     );
     // @formatter:on
-	}
+  }
 
-	private Element icon(SvgInstruction... contents) {
-		Element svg;
-		svg = svg(
-				id != null ? id : noop(),
+  private Element icon(SvgValue... contents) {
+    Element svg;
+    svg = svg(
+        id != null ? id : noop(),
 
-				xmlns("http://www.w3.org/2000/svg"),
-				width("24"),
-				height("24"),
-				viewBox("0 0 24 24"),
-				strokeWidth(strokeWidth),
-				stroke("currentColor"),
-				fill("none"),
-				strokeLinecap("round"),
-				strokeLinejoin("round"),
+        xmlns("http://www.w3.org/2000/svg"),
+        width("24"),
+        height("24"),
+        viewBox("0 0 24 24"),
+        strokeWidth(strokeWidth),
+        stroke("currentColor"),
+        fill("none"),
+        strokeLinecap("round"),
+        strokeLinejoin("round"),
 
-				flatten(contents)
-		);
+        flatten(contents)
+    );
 
-		reset();
+    reset();
 
-		return svg;
-	}
+    return svg;
+  }
 
-	private void reset() {
-		id = null;
+  private void reset() {
+    id = null;
 
-		strokeWidth = "2";
-	}
+    strokeWidth = "2";
+  }
 
 }

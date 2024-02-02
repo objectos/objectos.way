@@ -17,7 +17,6 @@ package objectos.html;
 
 import static org.testng.Assert.assertEquals;
 
-import objectos.html.tmpl.Api;
 import org.testng.annotations.Test;
 
 public class HtmlTemplateTest {
@@ -1030,8 +1029,8 @@ public class HtmlTemplateTest {
         new HtmlTemplate() {
           @Override
           protected final void definition() {
-            Api.HtmlInstruction[] children;
-            children = new Api.HtmlInstruction[COUNT];
+            Api.HtmlValue[] children;
+            children = new Api.HtmlValue[COUNT];
 
             for (int i = 0; i < COUNT; i++) {
               children[i] = hr();
