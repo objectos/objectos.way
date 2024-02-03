@@ -102,8 +102,8 @@ public class SocketInputTest {
 
     input.bufferSize(32, 128);
 
-    TestableInputStream inputStream;
-    inputStream = TestableInputStream.of(line);
+    TestingInputStream inputStream;
+    inputStream = TestingInputStream.of(line);
 
     input.initSocketInput(inputStream);
 
@@ -156,8 +156,8 @@ public class SocketInputTest {
 
     input.bufferSize(64, 128);
 
-    TestableInputStream inputStream;
-    inputStream = TestableInputStream.of(data);
+    TestingInputStream inputStream;
+    inputStream = TestingInputStream.of(data);
 
     input.initSocketInput(inputStream);
 

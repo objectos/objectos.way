@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.html.internal;
+package objectos.html;
 
 import java.util.Iterator;
 import java.util.Set;
@@ -26,7 +26,7 @@ import objectos.html.pseudom.HtmlNode;
 import objectos.html.pseudom.HtmlRawText;
 import objectos.html.pseudom.HtmlText;
 
-public final class PrettyPrintWriter extends Writer {
+final class PrettyPrintWriter extends Writer {
 
   private static final Set<String> PHRASING = Set.of(
       StandardElementName.A.getName(),

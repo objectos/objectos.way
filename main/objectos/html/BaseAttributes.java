@@ -15,8 +15,6 @@
  */
 package objectos.html;
 
-import objectos.html.internal.StandardAttributeName;
-
 /**
  * Provides methods for rendering HTML attributes.
  */

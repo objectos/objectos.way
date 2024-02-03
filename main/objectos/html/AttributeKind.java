@@ -13,22 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.html.internal;
+package objectos.html;
 
-import objectos.util.map.GrowableMap;
-import objectos.util.map.UnmodifiableMap;
+enum AttributeKind {
 
-class NamesBuilder {
+  BOOLEAN,
 
-  private final GrowableMap<String, StandardAttributeName> map = new GrowableMap<>();
-
-  public final UnmodifiableMap<String, StandardAttributeName> build() {
-    return map.toUnmodifiableMap();
-  }
-
-  public final NamesBuilder put(String name, StandardAttributeName value) {
-    map.put(name, value);
-    return this;
-  }
+  STRING;
 
 }

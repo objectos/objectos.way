@@ -15,7 +15,6 @@
  */
 package objectos.html;
 
-import objectos.html.internal.PrettyPrintWriter;
 import objectos.html.pseudom.DocumentProcessor;
 import objectos.html.pseudom.HtmlDocument;
 import objectos.lang.object.Check;

@@ -13,14 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.html.internal;
+package objectos.html;
 
-public interface ElementName {
+import objectos.util.map.GrowableMap;
+import objectos.util.map.UnmodifiableMap;
 
-  int getCode();
+final class NamesBuilder {
 
-  ElementKind getKind();
+  private final GrowableMap<String, StandardAttributeName> map = new GrowableMap<>();
 
-  String getName();
+  public final UnmodifiableMap<String, StandardAttributeName> build() {
+    return map.toUnmodifiableMap();
+  }
+
+  public final NamesBuilder put(String name, StandardAttributeName value) {
+    map.put(name, value);
+    return this;
+  }
 
 }

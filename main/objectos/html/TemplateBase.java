@@ -15,7 +15,6 @@
  */
 package objectos.html;
 
-import objectos.html.internal.CustomAttributeName;
 import objectos.lang.object.Check;
 
 public sealed abstract class TemplateBase

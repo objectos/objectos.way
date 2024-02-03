@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.html.internal;
+package objectos.html;
 
-public final class Bytes {
+final class Bytes {
 
   private static final int BYTE_MASK = 0xFF;
 

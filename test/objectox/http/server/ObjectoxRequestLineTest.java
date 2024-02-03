@@ -116,8 +116,8 @@ public class ObjectoxRequestLineTest {
 
     requestLine.bufferSize(64, 128);
 
-    TestableInputStream inputStream;
-    inputStream = TestableInputStream.of(data);
+    TestingInputStream inputStream;
+    inputStream = TestingInputStream.of(data);
 
     requestLine.initSocketInput(inputStream);
 

@@ -108,8 +108,8 @@ public class ObjectoxServerRequestHeadersTest {
 
     headers.bufferSize(64, 128);
 
-    TestableInputStream inputStream;
-    inputStream = TestableInputStream.of(data);
+    TestingInputStream inputStream;
+    inputStream = TestingInputStream.of(data);
 
     headers.initSocketInput(inputStream);
 

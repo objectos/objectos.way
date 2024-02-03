@@ -15,9 +15,6 @@
  */
 package objectos.html;
 
-import objectos.html.internal.Ambiguous;
-import objectos.html.internal.StandardElementName;
-
 /**
  * Provides methods for rendering HTML elements.
  */

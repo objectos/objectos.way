@@ -13,18 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.html.internal;
+package objectos.html;
 
 import static org.testng.Assert.assertTrue;
 
 import org.testng.annotations.Test;
 
-public class StandardElementNameTest {
+public class StandardAttributeNameTest {
 
   @Test
   public void canBeEncoded_WithSingleByte() {
     int size;
-    size = StandardElementName.size();
+    size = StandardAttributeName.size();
 
     int max;
     max = 1 << 8;

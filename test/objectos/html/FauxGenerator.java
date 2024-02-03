@@ -13,23 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.html.internal;
+package objectos.html;
 
-import static org.testng.Assert.assertTrue;
+import static java.lang.System.out;
 
-import org.testng.annotations.Test;
+abstract class FauxGenerator {
 
-public class StandardAttributeNameTest {
+  int value = -1;
 
-  @Test
-  public void canBeEncoded_WithSingleByte() {
-    int size;
-    size = StandardAttributeName.size();
+  public abstract void execute();
 
-    int max;
-    max = 1 << 8;
+  final void comment(String string) {
+    out.println();
+    out.println("// " + string);
+    out.println();
+  }
 
-    assertTrue(size < max);
+  final void value(String string) {
+    out.println("public static final byte " + string + " = " + value-- + ";");
   }
 
 }

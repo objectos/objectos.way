@@ -13,16 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.html.internal;
+package objectos.html;
 
 import java.util.EnumSet;
 import java.util.Set;
 
-public enum Ambiguous {
+enum Ambiguous {
 
   FORM(StandardAttributeName.FORM, StandardElementName.FORM) {
     static final Set<StandardElementName> ELEMENTS = EnumSet.of(
-      StandardElementName.SELECT, StandardElementName.TEXTAREA
+        StandardElementName.SELECT, StandardElementName.TEXTAREA
     );
 
     @Override

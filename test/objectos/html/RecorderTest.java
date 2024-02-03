@@ -16,10 +16,6 @@
 package objectos.html;
 
 import java.util.Arrays;
-import objectos.html.internal.Ambiguous;
-import objectos.html.internal.Bytes;
-import objectos.html.internal.StandardAttributeName;
-import objectos.html.internal.StandardElementName;
 import org.testng.annotations.Test;
 
 public class RecorderTest {
@@ -466,11 +462,11 @@ public class RecorderTest {
     html.elementBegin(StandardElementName.NAV);
     html.elementEnd();
     // template end
-
+    
     html.elementBegin(StandardElementName.BODY);
     html.elementValue(BaseApi.FRAGMENT);
     html.elementEnd();
-
+    
     html.compilationEnd();
     */
 

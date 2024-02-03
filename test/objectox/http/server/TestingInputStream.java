@@ -18,24 +18,29 @@ package objectox.http.server;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 
-public final class TestableInputStream extends InputStream {
+public final class TestingInputStream extends InputStream {
 
-  public static final TestableInputStream EMPTY = new TestableInputStream(new Object[] {});
-
-  static final Object THROW = new Object() {};
+  public static final TestingInputStream EMPTY = new TestingInputStream(new Object[] {});
 
   private final Object[] data;
 
   private int index;
 
-  TestableInputStream(Object[] data) {
-    this.data = data;
+  private IOException closeError;
+
+  public TestingInputStream(Object... data) {
+    this.data = Arrays.copyOf(data, data.length);
   }
 
-  public static TestableInputStream of(Object... data) {
+  public final void onClose(IOException error) {
+    closeError = error;
+  }
+
+  public static TestingInputStream of(Object... data) {
     // we assume this is safe in a testing env...
-    return new TestableInputStream(data);
+    return new TestingInputStream(data);
   }
 
   @Override
@@ -70,9 +75,7 @@ public final class TestableInputStream extends InputStream {
 
         System.arraycopy(bytes, len, remaining, 0, remainingLength);
 
-        index -= 1;
-
-        data[index] = remaining;
+        data[--index] = remaining;
 
         lengthToWrite = len;
       }
@@ -80,12 +83,23 @@ public final class TestableInputStream extends InputStream {
       System.arraycopy(bytes, 0, b, off, lengthToWrite);
 
       return lengthToWrite;
-    } else if (next instanceof IOException ioe) {
+    }
+
+    else if (next instanceof IOException ioe) {
       throw ioe;
-    } else {
+    }
+
+    else {
       throw new UnsupportedOperationException(
           "Implement me :: type=" + next.getClass()
       );
+    }
+  }
+
+  @Override
+  public final void close() throws IOException {
+    if (closeError != null) {
+      throw closeError;
     }
   }
 

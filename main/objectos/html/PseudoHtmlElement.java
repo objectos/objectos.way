@@ -16,8 +16,6 @@
 package objectos.html;
 
 import java.util.Iterator;
-import objectos.html.internal.ElementKind;
-import objectos.html.internal.StandardElementName;
 import objectos.html.pseudom.HtmlAttribute;
 import objectos.html.pseudom.HtmlElement;
 import objectos.html.pseudom.HtmlIterable;

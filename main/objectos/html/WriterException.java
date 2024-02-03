@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015-2023 Objectos Software LTDA.
+ * Copyright (C) 2023 Objectos Software LTDA.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,24 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.html.internal;
+package objectos.html;
 
-import static java.lang.System.out;
+class WriterException extends RuntimeException {
 
-abstract class FauxGenerator {
+  private static final long serialVersionUID = 2944533121508956748L;
 
-  int value = -1;
-
-  public abstract void execute();
-
-  final void comment(String string) {
-    out.println();
-    out.println("// " + string);
-    out.println();
-  }
-
-  final void value(String string) {
-    out.println("public static final byte " + string + " = " + value-- + ";");
+  public WriterException(Throwable cause) {
+    super(cause);
   }
 
 }

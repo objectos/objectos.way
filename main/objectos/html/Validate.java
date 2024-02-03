@@ -13,29 +13,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.html.internal;
+package objectos.html;
 
-import static org.testng.Assert.assertEquals;
+final class Validate {
 
-import org.testng.Assert;
-import org.testng.annotations.Test;
+  private Validate() {}
 
-public class ValidateTest {
+  public static void pathName(String value) {
+    int length = value.length();
 
-  @Test
-  public void pathName() {
-    invalidPathName("", "Path name must not be empty");
-    invalidPathName("index.html", "Path name must be absolute and start with a '/' character");
-  }
-
-  private void invalidPathName(String value, String message) {
-    try {
-      Validate.pathName(value);
-
-      Assert.fail("Expected pathname to be invalid: " + value);
-    } catch (IllegalArgumentException expected) {
-      assertEquals(expected.getMessage(), message);
+    if (length == 0) {
+      throw new IllegalArgumentException("Path name must not be empty");
     }
+
+    var first = value.charAt(0);
+
+    if (first != '/') {
+      throw new IllegalArgumentException(
+          "Path name must be absolute and start with a '/' character");
+    }
+
+    // ???
+    // probably prevent
+    // - 'index.html?foo'
+    // - 'index.html?foo&abc=345'
+    // - ' /abc\n ' (i.e. whitespace)
   }
 
 }

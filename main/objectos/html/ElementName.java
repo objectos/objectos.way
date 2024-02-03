@@ -13,12 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.html.internal;
+package objectos.html;
 
-public enum AttributeKind {
+interface ElementName {
 
-  BOOLEAN,
+  int getCode();
 
-  STRING;
+  ElementKind getKind();
+
+  String getName();
 
 }

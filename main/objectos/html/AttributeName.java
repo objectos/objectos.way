@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.html.internal;
+package objectos.html;
 
-public interface AttributeName {
+interface AttributeName {
 
   static AttributeName getByCode(int code) {
     if (code < StandardAttributeName.size()) {

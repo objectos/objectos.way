@@ -18,8 +18,6 @@ package objectos.html;
 import static org.testng.Assert.assertEquals;
 
 import java.util.Iterator;
-import objectos.html.internal.StandardAttributeName;
-import objectos.html.internal.StandardElementName;
 import objectos.html.pseudom.HtmlAttribute;
 import objectos.html.pseudom.HtmlDocumentType;
 import objectos.html.pseudom.HtmlElement;

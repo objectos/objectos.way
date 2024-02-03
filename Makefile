@@ -130,8 +130,7 @@ TEST_RUNTIME_DEPS := $(TEST_COMPILE_DEPS)
 TEST_RUNTIME_DEPS += $(RESOLUTION_DIR)/org.slf4j/slf4j-nop/$(SLF4J_VERSION)
 
 ## test runtime exports
-TEST_JAVAX_EXPORTS := objectos.html.internal
-TEST_JAVAX_EXPORTS += objectos.lang.object
+TEST_JAVAX_EXPORTS := objectos.lang.object
 TEST_JAVAX_EXPORTS += objectos.notes.base
 TEST_JAVAX_EXPORTS += objectos.notes.console
 TEST_JAVAX_EXPORTS += objectos.notes.file

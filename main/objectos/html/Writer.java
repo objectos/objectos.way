@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.html.internal;
+package objectos.html;
 
 import java.io.IOException;
 import objectos.html.pseudom.DocumentProcessor;
@@ -22,7 +22,7 @@ import objectos.html.pseudom.DocumentProcessor;
  * Base {@link DocumentProcessor} implementation suitable for writing HTML
  * files.
  */
-public abstract class Writer implements DocumentProcessor {
+abstract class Writer implements DocumentProcessor {
 
   public Appendable out;
 

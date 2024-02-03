@@ -59,13 +59,13 @@ public class TestableSocket extends Socket {
 
   public static TestableSocket empty() {
     return new TestableSocket(
-        TestableInputStream.EMPTY
+        TestingInputStream.EMPTY
     );
   }
 
   public static TestableSocket of(Object... data) {
     return new TestableSocket(
-        TestableInputStream.of(data)
+        TestingInputStream.of(data)
     );
   }
 

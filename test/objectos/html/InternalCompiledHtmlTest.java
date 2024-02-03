@@ -13,11 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.html.internal;
+package objectos.html;
 
 import static org.testng.Assert.assertEquals;
 
-import objectos.html.HtmlTemplate;
 import org.testng.annotations.Test;
 
 public class InternalCompiledHtmlTest {
@@ -29,14 +28,14 @@ public class InternalCompiledHtmlTest {
   """)
   public void testCase01() {
     test(
-      new HtmlTemplate() {
-        @Override
-        protected final void definition() {
-          html();
-        }
-      },
+        new HtmlTemplate() {
+          @Override
+          protected final void definition() {
+            html();
+          }
+        },
 
-      """
+        """
       <html></html>
       """
     );
@@ -49,15 +48,15 @@ public class InternalCompiledHtmlTest {
   """)
   public void testCase02() {
     test(
-      new HtmlTemplate() {
-        @Override
-        protected final void definition() {
-          doctype();
-          html();
-        }
-      },
+        new HtmlTemplate() {
+          @Override
+          protected final void definition() {
+            doctype();
+            html();
+          }
+        },
 
-      """
+        """
       <!DOCTYPE html>
       <html></html>
       """
@@ -71,18 +70,18 @@ public class InternalCompiledHtmlTest {
   """)
   public void testCase03() {
     test(
-      new HtmlTemplate() {
-        @Override
-        protected final void definition() {
-          doctype();
-          html(
-            head(),
-            body()
-          );
-        }
-      },
+        new HtmlTemplate() {
+          @Override
+          protected final void definition() {
+            doctype();
+            html(
+                head(),
+                body()
+            );
+          }
+        },
 
-      """
+        """
       <!DOCTYPE html>
       <html>
       <head></head>
@@ -99,20 +98,20 @@ public class InternalCompiledHtmlTest {
   """)
   public void testCase04() {
     test(
-      new HtmlTemplate() {
-        @Override
-        protected final void definition() {
-          doctype();
-          html(
-            head(
-              meta(charset("utf-8"))
-            ),
-            body()
-          );
-        }
-      },
+        new HtmlTemplate() {
+          @Override
+          protected final void definition() {
+            doctype();
+            html(
+                head(
+                    meta(charset("utf-8"))
+                ),
+                body()
+            );
+          }
+        },
 
-      """
+        """
       <!DOCTYPE html>
       <html>
       <head>
@@ -132,24 +131,24 @@ public class InternalCompiledHtmlTest {
   """)
   public void testCase05() {
     test(
-      new HtmlTemplate() {
-        @Override
-        protected final void definition() {
-          doctype();
-          html(
-            id("a"),
-            head(
-              id("b"),
-              meta(charset("utf-8"))
-            ),
-            body(
-              id("c")
-            )
-          );
-        }
-      },
+        new HtmlTemplate() {
+          @Override
+          protected final void definition() {
+            doctype();
+            html(
+                id("a"),
+                head(
+                    id("b"),
+                    meta(charset("utf-8"))
+                ),
+                body(
+                    id("c")
+                )
+            );
+          }
+        },
 
-      """
+        """
       <!DOCTYPE html>
       <html id="a">
       <head id="b">
@@ -168,19 +167,19 @@ public class InternalCompiledHtmlTest {
   """)
   public void testCase06() {
     test(
-      new HtmlTemplate() {
-        @Override
-        protected final void definition() {
-          doctype();
-          html(
-            body(
-              p("abc")
-            )
-          );
-        }
-      },
+        new HtmlTemplate() {
+          @Override
+          protected final void definition() {
+            doctype();
+            html(
+                body(
+                    p("abc")
+                )
+            );
+          }
+        },
 
-      """
+        """
       <!DOCTYPE html>
       <html>
       <body>
@@ -199,19 +198,19 @@ public class InternalCompiledHtmlTest {
   """)
   public void testCase07() {
     test(
-      new HtmlTemplate() {
-        @Override
-        protected final void definition() {
-          doctype();
-          html(
-            body(
-              p(t("abc "), em("def"), t(" ghi"))
-            )
-          );
-        }
-      },
+        new HtmlTemplate() {
+          @Override
+          protected final void definition() {
+            doctype();
+            html(
+                body(
+                    p(t("abc "), em("def"), t(" ghi"))
+                )
+            );
+          }
+        },
 
-      """
+        """
       <!DOCTYPE html>
       <html>
       <body>
@@ -229,23 +228,23 @@ public class InternalCompiledHtmlTest {
   """)
   public void testCase08() {
     test(
-      new HtmlTemplate() {
-        @Override
-        protected final void definition() {
-          doctype();
-          html(
-            body(
-              ul(
-                li("a"),
-                li(p("b")),
-                li(em("c"))
-              )
-            )
-          );
-        }
-      },
+        new HtmlTemplate() {
+          @Override
+          protected final void definition() {
+            doctype();
+            html(
+                body(
+                    ul(
+                        li("a"),
+                        li(p("b")),
+                        li(em("c"))
+                    )
+                )
+            );
+          }
+        },
 
-      """
+        """
       <!DOCTYPE html>
       <html>
       <body>
@@ -269,32 +268,32 @@ public class InternalCompiledHtmlTest {
   """)
   public void testCase09() {
     test(
-      new HtmlTemplate() {
-        @Override
-        protected final void definition() {
-          doctype();
-          html(
-            head(
-              style(
-                """
+        new HtmlTemplate() {
+          @Override
+          protected final void definition() {
+            doctype();
+            html(
+                head(
+                    style(
+                        """
                 #a {border: 0}
 
                 #b {margin: 0}"""
 
-              ),
-              style(
-                """
+                    ),
+                    style(
+                        """
                 #c {border: 0}
 
                 #d {margin: 0}
                 """
-              )
-            )
-          );
-        }
-      },
+                    )
+                )
+            );
+          }
+        },
 
-      """
+        """
       <!DOCTYPE html>
       <html>
       <head>
@@ -321,15 +320,15 @@ public class InternalCompiledHtmlTest {
   """)
   public void testCase10() {
     test(
-      new HtmlTemplate() {
-        @Override
-        protected final void definition() {
-          doctype();
-          a(href("index.html"), t("a"));
-        }
-      },
+        new HtmlTemplate() {
+          @Override
+          protected final void definition() {
+            doctype();
+            a(href("index.html"), t("a"));
+          }
+        },
 
-      """
+        """
       <!DOCTYPE html>
       <a href="index.html">a</a>
       """

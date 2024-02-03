@@ -15,11 +15,6 @@
  */
 package objectos.html;
 
-import objectos.html.internal.Ambiguous;
-import objectos.html.internal.AttributeName;
-import objectos.html.internal.Bytes;
-import objectos.html.internal.StandardAttributeName;
-import objectos.html.internal.StandardElementName;
 import objectos.html.pseudom.HtmlAttribute;
 import objectos.html.pseudom.HtmlDocument;
 import objectos.html.pseudom.HtmlNode;

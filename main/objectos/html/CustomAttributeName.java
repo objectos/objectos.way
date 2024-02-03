@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.html.internal;
+package objectos.html;
 
-public enum CustomAttributeName implements AttributeName {
+enum CustomAttributeName implements AttributeName {
 
   DATA_WAY_CLICK(AttributeKind.STRING, "data-way-click"),
 

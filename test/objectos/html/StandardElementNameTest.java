@@ -13,27 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.html.internal;
+package objectos.html;
 
-/**
- * https://html.spec.whatwg.org/multipage/syntax.html#elements-2
- */
-public enum ElementKind {
+import static org.testng.Assert.assertTrue;
 
-  VOID,
+import org.testng.annotations.Test;
 
-  TEMPLATE,
+public class StandardElementNameTest {
 
-  RAWTEXT,
+  @Test
+  public void canBeEncoded_WithSingleByte() {
+    int size;
+    size = StandardElementName.size();
 
-  ESCAPABLE,
+    int max;
+    max = 1 << 8;
 
-  FOREIGN,
-
-  NORMAL;
-  
-  public final boolean isVoid() {
-    return equals(VOID);
+    assertTrue(size < max);
   }
 
 }
