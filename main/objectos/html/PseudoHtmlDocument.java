@@ -17,11 +17,11 @@ package objectos.html;
 
 import java.util.Iterator;
 import objectos.html.pseudom.HtmlDocument;
-import objectos.html.pseudom.HtmlIterable;
 import objectos.html.pseudom.HtmlNode;
+import objectos.lang.IterableOnce;
 
 final class PseudoHtmlDocument
-    implements HtmlDocument, HtmlIterable<HtmlNode>, Iterator<HtmlNode> {
+    implements HtmlDocument, IterableOnce<HtmlNode>, Iterator<HtmlNode> {
 
   private final Html player;
 
@@ -30,7 +30,7 @@ final class PseudoHtmlDocument
   }
 
   @Override
-  public final HtmlIterable<HtmlNode> nodes() {
+  public final IterableOnce<HtmlNode> nodes() {
     player.documentIterable();
 
     return this;

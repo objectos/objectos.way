@@ -16,12 +16,13 @@
 package objectos.html.pseudom;
 
 import objectos.html.HtmlTemplate;
+import objectos.lang.IterableOnce;
 
 /**
  * Represents the materialized {@link HtmlTemplate}.
  */
 public interface HtmlDocument {
 
-  HtmlIterable<HtmlNode> nodes();
+  IterableOnce<HtmlNode> nodes();
 
 }

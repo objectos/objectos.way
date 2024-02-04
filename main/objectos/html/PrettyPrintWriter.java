@@ -21,10 +21,10 @@ import objectos.html.pseudom.HtmlAttribute;
 import objectos.html.pseudom.HtmlDocument;
 import objectos.html.pseudom.HtmlDocumentType;
 import objectos.html.pseudom.HtmlElement;
-import objectos.html.pseudom.HtmlIterable;
 import objectos.html.pseudom.HtmlNode;
 import objectos.html.pseudom.HtmlRawText;
 import objectos.html.pseudom.HtmlText;
+import objectos.lang.IterableOnce;
 
 final class PrettyPrintWriter extends Writer {
 
@@ -187,7 +187,7 @@ final class PrettyPrintWriter extends Writer {
       return;
     }
 
-    HtmlIterable<String> values;
+    IterableOnce<String> values;
     values = attribute.values();
 
     Iterator<String> valuesIter;

@@ -18,13 +18,13 @@ package objectos.html;
 import java.util.Iterator;
 import objectos.html.pseudom.HtmlAttribute;
 import objectos.html.pseudom.HtmlElement;
-import objectos.html.pseudom.HtmlIterable;
 import objectos.html.pseudom.HtmlNode;
+import objectos.lang.IterableOnce;
 
 final class PseudoHtmlElement
-    implements HtmlElement, HtmlIterable<HtmlNode>, Iterator<HtmlNode> {
+    implements HtmlElement, IterableOnce<HtmlNode>, Iterator<HtmlNode> {
 
-  private class ThisAttributes implements HtmlIterable<HtmlAttribute>, Iterator<HtmlAttribute> {
+  private class ThisAttributes implements IterableOnce<HtmlAttribute>, Iterator<HtmlAttribute> {
 
     @Override
     public final boolean hasNext() {
@@ -56,7 +56,7 @@ final class PseudoHtmlElement
   }
 
   @Override
-  public final HtmlIterable<HtmlAttribute> attributes() {
+  public final IterableOnce<HtmlAttribute> attributes() {
     player.elementAttributes();
 
     if (attributes == null) {
@@ -94,7 +94,7 @@ final class PseudoHtmlElement
   }
 
   @Override
-  public final HtmlIterable<HtmlNode> nodes() {
+  public final IterableOnce<HtmlNode> nodes() {
     player.elementNodes();
 
     return this;

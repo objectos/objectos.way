@@ -17,10 +17,10 @@ package objectos.html;
 
 import java.util.Iterator;
 import objectos.html.pseudom.HtmlAttribute;
-import objectos.html.pseudom.HtmlIterable;
+import objectos.lang.IterableOnce;
 
 final class PseudoHtmlAttribute
-    implements HtmlAttribute, HtmlIterable<String>, Iterator<String> {
+    implements HtmlAttribute, IterableOnce<String>, Iterator<String> {
 
   AttributeName name;
 
@@ -43,7 +43,7 @@ final class PseudoHtmlAttribute
   }
 
   @Override
-  public final HtmlIterable<String> values() {
+  public final IterableOnce<String> values() {
     player.attributeValues();
 
     return this;

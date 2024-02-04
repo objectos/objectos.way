@@ -15,13 +15,15 @@
  */
 package objectos.html.pseudom;
 
+import objectos.lang.IterableOnce;
+
 public interface HtmlAttribute {
 
   String name();
 
   boolean isBoolean();
 
-  HtmlIterable<String> values();
+  IterableOnce<String> values();
 
   default boolean hasName(String name) {
     return name().equals(name);

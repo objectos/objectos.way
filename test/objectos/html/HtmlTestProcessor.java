@@ -21,8 +21,8 @@ import java.util.Iterator;
 import objectos.html.pseudom.HtmlAttribute;
 import objectos.html.pseudom.HtmlDocumentType;
 import objectos.html.pseudom.HtmlElement;
-import objectos.html.pseudom.HtmlIterable;
 import objectos.html.pseudom.HtmlNode;
+import objectos.lang.IterableOnce;
 import org.testng.annotations.Test;
 
 public class HtmlTestProcessor {
@@ -85,7 +85,7 @@ public class HtmlTestProcessor {
     PseudoHtmlDocument document;
     document = (PseudoHtmlDocument) compiler.compile();
 
-    HtmlIterable<HtmlNode> nodes;
+    IterableOnce<HtmlNode> nodes;
     nodes = document.nodes();
 
     Iterator<HtmlNode> nodesIter;
@@ -121,7 +121,7 @@ public class HtmlTestProcessor {
     out.append('<');
     out.append(elementName);
 
-    HtmlIterable<HtmlAttribute> attrs;
+    IterableOnce<HtmlAttribute> attrs;
     attrs = element.attributes();
 
     Iterator<HtmlAttribute> attrsIter;
@@ -141,7 +141,7 @@ public class HtmlTestProcessor {
       return;
     }
 
-    HtmlIterable<HtmlNode> nodes;
+    IterableOnce<HtmlNode> nodes;
     nodes = element.nodes();
 
     Iterator<HtmlNode> nodesIter;
@@ -183,7 +183,7 @@ public class HtmlTestProcessor {
       return;
     }
 
-    HtmlIterable<String> values;
+    IterableOnce<String> values;
     values = attribute.values();
 
     Iterator<String> valuesIter;

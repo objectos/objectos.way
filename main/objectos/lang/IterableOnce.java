@@ -13,14 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.html.pseudom;
+package objectos.lang;
 
 import java.util.Iterator;
 
 /**
  * An {@link Iterable} which can be traversed only once.
  */
-public interface HtmlIterable<T> extends Iterable<T> {
+public interface IterableOnce<T> extends Iterable<T> {
 
   /**
    * Returns an iterator over elements of type T.

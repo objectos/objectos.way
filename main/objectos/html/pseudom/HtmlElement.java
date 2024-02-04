@@ -15,15 +15,17 @@
  */
 package objectos.html.pseudom;
 
+import objectos.lang.IterableOnce;
+
 public non-sealed interface HtmlElement extends HtmlNode {
 
-  HtmlIterable<HtmlAttribute> attributes();
+  IterableOnce<HtmlAttribute> attributes();
 
   boolean isVoid();
 
   String name();
 
-  HtmlIterable<HtmlNode> nodes();
+  IterableOnce<HtmlNode> nodes();
 
   default boolean hasName(String name) {
     return name().equals(name);

@@ -30,7 +30,10 @@ public class TestingInputStreamTest {
 
   @Test
   public void testCase01() {
-    try (TestingInputStream input = new TestingInputStream("abc")) {
+    TestingInputStream input;
+    input = new TestingInputStream("abc");
+
+    try (input) {
       byte[] buf;
       buf = new byte[3];
 
@@ -57,22 +60,6 @@ public class TestingInputStreamTest {
   }
 
   @Test
-  public void testCase03() {
-    try (TestingInputStream input = new TestingInputStream("abc", "123")) {
-      byte[] buf;
-      buf = new byte[10];
-
-      assertEquals(input.read(buf), 3);
-      assertEquals(utf8(buf, 0, 3), "abc");
-      assertEquals(input.read(buf), 3);
-      assertEquals(utf8(buf, 0, 3), "123");
-      assertEquals(input.read(buf), -1);
-    } catch (IOException e) {
-      Assert.fail("It should not have thrown", e);
-    }
-  }
-
-  @Test
   public void testCase04() {
     try (TestingInputStream input = new TestingInputStream("abc123")) {
       byte[] buf;
@@ -82,6 +69,22 @@ public class TestingInputStreamTest {
       assertEquals(utf8(buf), "abc");
       assertEquals(input.read(buf), 3);
       assertEquals(utf8(buf), "123");
+      assertEquals(input.read(buf), -1);
+    } catch (IOException e) {
+      Assert.fail("It should not have thrown", e);
+    }
+  }
+
+  @Test
+  public void testCase03() {
+    try (TestingInputStream input = new TestingInputStream("abc", "123")) {
+      byte[] buf;
+      buf = new byte[10];
+
+      assertEquals(input.read(buf), 3);
+      assertEquals(utf8(buf, 0, 3), "abc");
+      assertEquals(input.read(buf), 3);
+      assertEquals(utf8(buf, 0, 3), "123");
       assertEquals(input.read(buf), -1);
     } catch (IOException e) {
       Assert.fail("It should not have thrown", e);
