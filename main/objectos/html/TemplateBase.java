@@ -15,13 +15,23 @@
  */
 package objectos.html;
 
+import java.util.function.Consumer;
 import objectos.lang.object.Check;
 
 public sealed abstract class TemplateBase
     extends TemplateElements
+    implements Html.Extensible
     permits HtmlComponent, HtmlTemplate {
 
   TemplateBase() {}
+
+  @Override
+  public final void renderFragment(Consumer<Html> plugin) {
+    Html html;
+    html = $html();
+
+    plugin.accept(html);
+  }
 
   protected final Api.Element dataWayClick(String text) {
     Check.notNull(text, "text == null");

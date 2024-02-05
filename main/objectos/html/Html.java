@@ -15,6 +15,7 @@
  */
 package objectos.html;
 
+import java.util.function.Consumer;
 import objectos.html.pseudom.HtmlAttribute;
 import objectos.html.pseudom.HtmlDocument;
 import objectos.html.pseudom.HtmlNode;
@@ -23,6 +24,12 @@ import objectos.util.array.ByteArrays;
 import objectos.util.array.ObjectArrays;
 
 public final class Html extends BaseElements {
+
+  public interface Extensible {
+
+    void renderFragment(Consumer<Html> fragment);
+
+  }
 
   static final byte _DOCUMENT_START = -1;
   static final byte _DOCUMENT_NODES_ITERABLE = -2;
@@ -168,40 +175,6 @@ public final class Html extends BaseElements {
   }
 
   /**
-   * Includes the specified template into this template.
-   *
-   * @param template
-   *        the template to be included
-   *
-   * @return an instruction representing the inclusion of the template.
-   */
-  public final Api.Fragment include(HtmlTemplate template) {
-    Check.notNull(template, "template == null");
-
-    /*
-    try {
-      HtmlTemplateApi api;
-      api = api();
-    
-      int index;
-      index = api.fragmentBegin();
-    
-      template.api = api;
-    
-      template.definition();
-    
-      api.fragmentEnd(index);
-    } finally {
-      template.api = null;
-    }
-    
-    return Api.FRAGMENT;
-    */
-
-    throw new UnsupportedOperationException("Implement me");
-  }
-
-  /**
    * The no-op instruction.
    *
    * <p>
@@ -265,6 +238,19 @@ public final class Html extends BaseElements {
     textImpl(text);
 
     return Api.ELEMENT;
+  }
+
+  public final Api.Fragment render(Consumer<Html> fragment) {
+    Check.notNull(fragment, "fragment == null");
+
+    int index;
+    index = fragmentBegin();
+
+    fragment.accept(this);
+
+    fragmentEnd(index);
+
+    return Api.FRAGMENT;
   }
 
   //
