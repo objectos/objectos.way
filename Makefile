@@ -134,6 +134,7 @@ TEST_JAVAX_EXPORTS := objectos.lang.object
 TEST_JAVAX_EXPORTS += objectos.notes.base
 TEST_JAVAX_EXPORTS += objectos.notes.console
 TEST_JAVAX_EXPORTS += objectos.notes.file
+TEST_JAVAX_EXPORTS += objectos.ui
 TEST_JAVAX_EXPORTS += objectos.util.array
 TEST_JAVAX_EXPORTS += objectos.util.collection
 TEST_JAVAX_EXPORTS += objectos.util.list

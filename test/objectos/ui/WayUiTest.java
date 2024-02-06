@@ -28,9 +28,9 @@ public class WayUiTest {
   @BeforeClass
   public void setUp() {
     standard = new WayUi()
-        .onHeadStart(html -> {
-          html.meta(html.charset("utf-8"));
-          html.meta(html.name("viewport"), html.content("width=device-width, initial-scale=1"));
+        .onHeadStart(h -> {
+          h.meta(h.charset("utf-8"));
+          h.meta(h.name("viewport"), h.content("width=device-width, initial-scale=1"));
         });
   }
 
