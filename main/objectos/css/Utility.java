@@ -25,47 +25,6 @@ class Utility implements Comparable<Utility> {
     this.kind = kind;
   }
 
-  public static Utility parse(String className) {
-    // static hash map... (sort of)
-    return switch (className) {
-      // Display
-      case "block",
-           "inline-block",
-           "inline",
-           "flex",
-           "inline-flex",
-           "table",
-           "inline-table",
-           "table-caption",
-           "table-cell",
-           "table-column",
-           "table-column-group",
-           "table-footer-group",
-           "table-header-group",
-           "table-row-group",
-           "table-row",
-           "flow-root",
-           "grid",
-           "inline-grid",
-           "contents",
-           "list-item" -> UtilityKind.DISPLAY.name(className);
-      case "hidden" -> UtilityKind.DISPLAY.nameValue(className, "none");
-
-      // Flex Direction
-      case "flex-row" -> UtilityKind.FLEX_DIRECTION.nameValue(className, "row");
-      case "flex-row-reverse" -> UtilityKind.FLEX_DIRECTION.nameValue(className, "row-reverse");
-      case "flex-col" -> UtilityKind.FLEX_DIRECTION.nameValue(className, "column");
-      case "flex-col-reverse" -> UtilityKind.FLEX_DIRECTION.nameValue(className, "column-reverse");
-
-      // Others
-      default -> parse0(className);
-    };
-  }
-
-  private static Utility parse0(String value) {
-    return UNKNOWN;
-  }
-
   @Override
   public final int compareTo(Utility o) {
     return kind.compareTo(o.kind);

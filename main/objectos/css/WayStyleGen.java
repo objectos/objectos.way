@@ -511,7 +511,7 @@ public class WayStyleGen implements StyleGen {
 
       process(candidate);
 
-      beginIndex = endIndex;
+      beginIndex = endIndex + 1;
 
       endIndex = s.indexOf(' ', beginIndex);
     }
@@ -527,9 +527,176 @@ public class WayStyleGen implements StyleGen {
     }
 
     Utility utility;
-    utility = Utility.parse(candidate);
+    utility = util(candidate);
 
     utilities.put(candidate, utility);
+  }
+
+  private Utility util(String className) {
+    // static hash map... (sort of)
+    return switch (className) {
+      // AlignItems
+      case "items-start" -> UtilityKind.ALIGN_ITEMS.nameValue(className, "flex-start");
+      case "items-end" -> UtilityKind.ALIGN_ITEMS.nameValue(className, "flex-end");
+      case "items-center" -> UtilityKind.ALIGN_ITEMS.nameValue(className, "center");
+      case "items-baseline" -> UtilityKind.ALIGN_ITEMS.nameValue(className, "baseline");
+      case "items-stretch" -> UtilityKind.ALIGN_ITEMS.nameValue(className, "stretch");
+
+      // Display
+      case "block",
+           "inline-block",
+           "inline",
+           "flex",
+           "inline-flex",
+           "table",
+           "inline-table",
+           "table-caption",
+           "table-cell",
+           "table-column",
+           "table-column-group",
+           "table-footer-group",
+           "table-header-group",
+           "table-row-group",
+           "table-row",
+           "flow-root",
+           "grid",
+           "inline-grid",
+           "contents",
+           "list-item" -> UtilityKind.DISPLAY.name(className);
+      case "hidden" -> UtilityKind.DISPLAY.nameValue(className, "none");
+
+      // Flex Direction
+      case "flex-row" -> UtilityKind.FLEX_DIRECTION.nameValue(className, "row");
+      case "flex-row-reverse" -> UtilityKind.FLEX_DIRECTION.nameValue(className, "row-reverse");
+      case "flex-col" -> UtilityKind.FLEX_DIRECTION.nameValue(className, "column");
+      case "flex-col-reverse" -> UtilityKind.FLEX_DIRECTION.nameValue(className, "column-reverse");
+
+      // Others
+      default -> util0(className);
+    };
+  }
+
+  private Utility util0(String className) {
+    int dashIndex;
+    dashIndex = className.indexOf('-');
+
+    if (dashIndex < 1) {
+      // the string either:
+      // 1) does not have a dash; or
+      // 2) immediately start with a dash
+      // in any case it is an invalid value
+
+      return Utility.UNKNOWN;
+    }
+
+    String prefix;
+    prefix = className.substring(0, dashIndex);
+
+    return switch (prefix) {
+      case "h" -> height(className, className.substring(dashIndex + 1));
+
+      case "m" -> margin(className, className.substring(dashIndex + 1), UtilityKind.MARGIN);
+      case "mx" -> margin(className, className.substring(dashIndex + 1), UtilityKind.MARGIN_X);
+      case "my" -> margin(className, className.substring(dashIndex + 1), UtilityKind.MARGIN_Y);
+      case "mt" -> margin(className, className.substring(dashIndex + 1), UtilityKind.MARGIN_TOP);
+      case "mr" -> margin(className, className.substring(dashIndex + 1), UtilityKind.MARGIN_RIGHT);
+      case "mb" -> margin(className, className.substring(dashIndex + 1), UtilityKind.MARGIN_BOTTOM);
+      case "ml" -> margin(className, className.substring(dashIndex + 1), UtilityKind.MARGIN_LEFT);
+
+      default -> parse1(className, dashIndex);
+    };
+  }
+
+  private Utility height(String className, String value) {
+    return switch (value) {
+      case "auto" -> UtilityKind.HEIGHT.nameValue(className, "auto");
+      case "1/2" -> UtilityKind.HEIGHT.nameValue(className, "50%");
+      case "1/3" -> UtilityKind.HEIGHT.nameValue(className, "33.333333%");
+      case "2/3" -> UtilityKind.HEIGHT.nameValue(className, "66.666667%");
+      case "1/4" -> UtilityKind.HEIGHT.nameValue(className, "25%");
+      case "2/4" -> UtilityKind.HEIGHT.nameValue(className, "50%");
+      case "3/4" -> UtilityKind.HEIGHT.nameValue(className, "75%");
+      case "1/5" -> UtilityKind.HEIGHT.nameValue(className, "20%");
+      case "2/5" -> UtilityKind.HEIGHT.nameValue(className, "40%");
+      case "3/5" -> UtilityKind.HEIGHT.nameValue(className, "60%");
+      case "4/5" -> UtilityKind.HEIGHT.nameValue(className, "80%");
+      case "1/6" -> UtilityKind.HEIGHT.nameValue(className, "16.666667%");
+      case "2/6" -> UtilityKind.HEIGHT.nameValue(className, "33.333333%");
+      case "3/6" -> UtilityKind.HEIGHT.nameValue(className, "50%");
+      case "4/6" -> UtilityKind.HEIGHT.nameValue(className, "66.666667%");
+      case "5/6" -> UtilityKind.HEIGHT.nameValue(className, "83.333333%");
+      case "full" -> UtilityKind.HEIGHT.nameValue(className, "100%");
+      case "screen" -> UtilityKind.HEIGHT.nameValue(className, "100vh");
+      case "svh" -> UtilityKind.HEIGHT.nameValue(className, "100svh");
+      case "lvh" -> UtilityKind.HEIGHT.nameValue(className, "100lvh");
+      case "dvh" -> UtilityKind.HEIGHT.nameValue(className, "100dvh");
+      case "min" -> UtilityKind.HEIGHT.nameValue(className, "min-content");
+      case "max" -> UtilityKind.HEIGHT.nameValue(className, "max-content");
+      case "fit" -> UtilityKind.HEIGHT.nameValue(className, "fit-content");
+      default -> spacing(className, value, UtilityKind.HEIGHT);
+    };
+  }
+
+  private Utility margin(String className, String value, UtilityKind kind) {
+    return switch (value) {
+      case "auto" -> kind.nameValue(className, "auto");
+      default -> spacing(className, value, kind);
+    };
+  }
+
+  private static final Map<String, String> DEFAULT_SPACING = Map.ofEntries(
+      Map.entry("px", "1px"),
+      Map.entry("0", "0px"),
+      Map.entry("0.5", "0.125rem"),
+      Map.entry("1", "0.25rem"),
+      Map.entry("1.5", "0.375rem"),
+      Map.entry("2", "0.5rem"),
+      Map.entry("2.5", "0.625rem"),
+      Map.entry("3", "0.75rem"),
+      Map.entry("3.5", "0.875rem"),
+      Map.entry("4", "1rem"),
+      Map.entry("5", "1.25rem"),
+      Map.entry("6", "1.5rem"),
+      Map.entry("7", "1.75rem"),
+      Map.entry("8", "2rem"),
+      Map.entry("9", "2.25rem"),
+      Map.entry("10", "2.5rem"),
+      Map.entry("11", "2.75rem"),
+      Map.entry("12", "3rem"),
+      Map.entry("14", "3.5rem"),
+      Map.entry("16", "4rem"),
+      Map.entry("20", "5rem"),
+      Map.entry("24", "6rem"),
+      Map.entry("28", "7rem"),
+      Map.entry("32", "8rem"),
+      Map.entry("36", "9rem"),
+      Map.entry("40", "10rem"),
+      Map.entry("44", "11rem"),
+      Map.entry("48", "12rem"),
+      Map.entry("52", "13rem"),
+      Map.entry("56", "14rem"),
+      Map.entry("60", "15rem"),
+      Map.entry("64", "16rem"),
+      Map.entry("72", "18rem"),
+      Map.entry("80", "20rem"),
+      Map.entry("96", "24rem")
+  );
+
+  private final Map<String, String> spacing = DEFAULT_SPACING;
+
+  private Utility spacing(String className, String value, UtilityKind kind) {
+    String maybe;
+    maybe = spacing.get(value);
+
+    if (maybe != null) {
+      return kind.nameValue(className, maybe);
+    } else {
+      return Utility.UNKNOWN;
+    }
+  }
+
+  private static Utility parse1(String className, int dashIndex) {
+    return Utility.UNKNOWN;
   }
 
   @Override

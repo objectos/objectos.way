@@ -21,12 +21,31 @@ enum UtilityKind {
 
   DISPLAY("display"),
 
-  FLEX_DIRECTION("flex-direction");
+  FLEX_DIRECTION("flex-direction"),
+
+  ALIGN_ITEMS("align-items"),
+
+  MARGIN("margin"),
+  MARGIN_X("margin-left", "margin-right"),
+  MARGIN_Y("margin-top", "margin-bottom"),
+  MARGIN_TOP("margin-top"),
+  MARGIN_RIGHT("margin-right"),
+  MARGIN_BOTTOM("margin-bottom"),
+  MARGIN_LEFT("margin-left"),
+
+  HEIGHT("height");
 
   private final String property1;
 
+  private final String property2;
+
   private UtilityKind(String property1) {
+    this(property1, null);
+  }
+
+  private UtilityKind(String property1, String property2) {
     this.property1 = property1;
+    this.property2 = property2;
   }
 
   final Utility name(String className) {
@@ -49,7 +68,17 @@ enum UtilityKind {
 
     @Override
     public final String toString() {
-      return "." + className + " { " + kind.property1 + ": " + value + " }";
+      String p1;
+      p1 = kind.property1;
+
+      String p2;
+      p2 = kind.property2;
+
+      if (p2 != null) {
+        return "." + className + " { " + p1 + ": " + value + "; " + p2 + ": " + value + " }";
+      }
+
+      return "." + className + " { " + p1 + ": " + value + " }";
     }
   }
 
