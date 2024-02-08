@@ -218,13 +218,13 @@ public class StyleGenTest {
         .h-auto { height: auto }
         .h-px { height: 1px }
         .h-0 { height: 0px }
-        .h-0.5 { height: 0.125rem }
+        .h-0\\.5 { height: 0.125rem }
         .h-1 { height: 0.25rem }
-        .h-1.5 { height: 0.375rem }
+        .h-1\\.5 { height: 0.375rem }
         .h-2 { height: 0.5rem }
-        .h-2.5 { height: 0.625rem }
+        .h-2\\.5 { height: 0.625rem }
         .h-3 { height: 0.75rem }
-        .h-3.5 { height: 0.875rem }
+        .h-3\\.5 { height: 0.875rem }
         .h-4 { height: 1rem }
         .h-5 { height: 1.25rem }
         .h-6 { height: 1.5rem }
@@ -251,21 +251,21 @@ public class StyleGenTest {
         .h-72 { height: 18rem }
         .h-80 { height: 20rem }
         .h-96 { height: 24rem }
-        .h-1/2 { height: 50% }
-        .h-1/3 { height: 33.333333% }
-        .h-2/3 { height: 66.666667% }
-        .h-1/4 { height: 25% }
-        .h-2/4 { height: 50% }
-        .h-3/4 { height: 75% }
-        .h-1/5 { height: 20% }
-        .h-2/5 { height: 40% }
-        .h-3/5 { height: 60% }
-        .h-4/5 { height: 80% }
-        .h-1/6 { height: 16.666667% }
-        .h-2/6 { height: 33.333333% }
-        .h-3/6 { height: 50% }
-        .h-4/6 { height: 66.666667% }
-        .h-5/6 { height: 83.333333% }
+        .h-1\\/2 { height: 50% }
+        .h-1\\/3 { height: 33.333333% }
+        .h-2\\/3 { height: 66.666667% }
+        .h-1\\/4 { height: 25% }
+        .h-2\\/4 { height: 50% }
+        .h-3\\/4 { height: 75% }
+        .h-1\\/5 { height: 20% }
+        .h-2\\/5 { height: 40% }
+        .h-3\\/5 { height: 60% }
+        .h-4\\/5 { height: 80% }
+        .h-1\\/6 { height: 16.666667% }
+        .h-2\\/6 { height: 33.333333% }
+        .h-3\\/6 { height: 50% }
+        .h-4\\/6 { height: 66.666667% }
+        .h-5\\/6 { height: 83.333333% }
         .h-full { height: 100% }
         .h-screen { height: 100vh }
         .h-svh { height: 100svh }
@@ -302,13 +302,13 @@ public class StyleGenTest {
         .m-auto { margin: auto }
         .m-px { margin: 1px }
         .m-0 { margin: 0px }
-        .m-0.5 { margin: 0.125rem }
+        .m-0\\.5 { margin: 0.125rem }
         .m-1 { margin: 0.25rem }
-        .m-1.5 { margin: 0.375rem }
+        .m-1\\.5 { margin: 0.375rem }
         .m-2 { margin: 0.5rem }
-        .m-2.5 { margin: 0.625rem }
+        .m-2\\.5 { margin: 0.625rem }
         .m-3 { margin: 0.75rem }
-        .m-3.5 { margin: 0.875rem }
+        .m-3\\.5 { margin: 0.875rem }
         .m-4 { margin: 1rem }
         .m-5 { margin: 1.25rem }
         .m-6 { margin: 1.5rem }
@@ -334,16 +334,17 @@ public class StyleGenTest {
         .m-64 { margin: 16rem }
         .m-72 { margin: 18rem }
         .m-80 { margin: 20rem }
+        .m-96 { margin: 24rem }
         .mx-auto { margin-left: auto; margin-right: auto }
         .mx-px { margin-left: 1px; margin-right: 1px }
         .mx-0 { margin-left: 0px; margin-right: 0px }
-        .mx-0.5 { margin-left: 0.125rem; margin-right: 0.125rem }
+        .mx-0\\.5 { margin-left: 0.125rem; margin-right: 0.125rem }
         .mx-1 { margin-left: 0.25rem; margin-right: 0.25rem }
-        .mx-1.5 { margin-left: 0.375rem; margin-right: 0.375rem }
+        .mx-1\\.5 { margin-left: 0.375rem; margin-right: 0.375rem }
         .mx-2 { margin-left: 0.5rem; margin-right: 0.5rem }
-        .mx-2.5 { margin-left: 0.625rem; margin-right: 0.625rem }
+        .mx-2\\.5 { margin-left: 0.625rem; margin-right: 0.625rem }
         .mx-3 { margin-left: 0.75rem; margin-right: 0.75rem }
-        .mx-3.5 { margin-left: 0.875rem; margin-right: 0.875rem }
+        .mx-3\\.5 { margin-left: 0.875rem; margin-right: 0.875rem }
         .mx-4 { margin-left: 1rem; margin-right: 1rem }
         .mx-5 { margin-left: 1.25rem; margin-right: 1.25rem }
         .mx-6 { margin-left: 1.5rem; margin-right: 1.5rem }
@@ -369,16 +370,17 @@ public class StyleGenTest {
         .mx-64 { margin-left: 16rem; margin-right: 16rem }
         .mx-72 { margin-left: 18rem; margin-right: 18rem }
         .mx-80 { margin-left: 20rem; margin-right: 20rem }
+        .mx-96 { margin-left: 24rem; margin-right: 24rem }
         .my-auto { margin-top: auto; margin-bottom: auto }
         .my-px { margin-top: 1px; margin-bottom: 1px }
         .my-0 { margin-top: 0px; margin-bottom: 0px }
-        .my-0.5 { margin-top: 0.125rem; margin-bottom: 0.125rem }
+        .my-0\\.5 { margin-top: 0.125rem; margin-bottom: 0.125rem }
         .my-1 { margin-top: 0.25rem; margin-bottom: 0.25rem }
-        .my-1.5 { margin-top: 0.375rem; margin-bottom: 0.375rem }
+        .my-1\\.5 { margin-top: 0.375rem; margin-bottom: 0.375rem }
         .my-2 { margin-top: 0.5rem; margin-bottom: 0.5rem }
-        .my-2.5 { margin-top: 0.625rem; margin-bottom: 0.625rem }
+        .my-2\\.5 { margin-top: 0.625rem; margin-bottom: 0.625rem }
         .my-3 { margin-top: 0.75rem; margin-bottom: 0.75rem }
-        .my-3.5 { margin-top: 0.875rem; margin-bottom: 0.875rem }
+        .my-3\\.5 { margin-top: 0.875rem; margin-bottom: 0.875rem }
         .my-4 { margin-top: 1rem; margin-bottom: 1rem }
         .my-5 { margin-top: 1.25rem; margin-bottom: 1.25rem }
         .my-6 { margin-top: 1.5rem; margin-bottom: 1.5rem }
@@ -404,16 +406,17 @@ public class StyleGenTest {
         .my-64 { margin-top: 16rem; margin-bottom: 16rem }
         .my-72 { margin-top: 18rem; margin-bottom: 18rem }
         .my-80 { margin-top: 20rem; margin-bottom: 20rem }
+        .my-96 { margin-top: 24rem; margin-bottom: 24rem }
         .mt-auto { margin-top: auto }
         .mt-px { margin-top: 1px }
         .mt-0 { margin-top: 0px }
-        .mt-0.5 { margin-top: 0.125rem }
+        .mt-0\\.5 { margin-top: 0.125rem }
         .mt-1 { margin-top: 0.25rem }
-        .mt-1.5 { margin-top: 0.375rem }
+        .mt-1\\.5 { margin-top: 0.375rem }
         .mt-2 { margin-top: 0.5rem }
-        .mt-2.5 { margin-top: 0.625rem }
+        .mt-2\\.5 { margin-top: 0.625rem }
         .mt-3 { margin-top: 0.75rem }
-        .mt-3.5 { margin-top: 0.875rem }
+        .mt-3\\.5 { margin-top: 0.875rem }
         .mt-4 { margin-top: 1rem }
         .mt-5 { margin-top: 1.25rem }
         .mt-6 { margin-top: 1.5rem }
@@ -439,16 +442,17 @@ public class StyleGenTest {
         .mt-64 { margin-top: 16rem }
         .mt-72 { margin-top: 18rem }
         .mt-80 { margin-top: 20rem }
+        .mt-96 { margin-top: 24rem }
         .mr-auto { margin-right: auto }
         .mr-px { margin-right: 1px }
         .mr-0 { margin-right: 0px }
-        .mr-0.5 { margin-right: 0.125rem }
+        .mr-0\\.5 { margin-right: 0.125rem }
         .mr-1 { margin-right: 0.25rem }
-        .mr-1.5 { margin-right: 0.375rem }
+        .mr-1\\.5 { margin-right: 0.375rem }
         .mr-2 { margin-right: 0.5rem }
-        .mr-2.5 { margin-right: 0.625rem }
+        .mr-2\\.5 { margin-right: 0.625rem }
         .mr-3 { margin-right: 0.75rem }
-        .mr-3.5 { margin-right: 0.875rem }
+        .mr-3\\.5 { margin-right: 0.875rem }
         .mr-4 { margin-right: 1rem }
         .mr-5 { margin-right: 1.25rem }
         .mr-6 { margin-right: 1.5rem }
@@ -474,16 +478,17 @@ public class StyleGenTest {
         .mr-64 { margin-right: 16rem }
         .mr-72 { margin-right: 18rem }
         .mr-80 { margin-right: 20rem }
+        .mr-96 { margin-right: 24rem }
         .mb-auto { margin-bottom: auto }
         .mb-px { margin-bottom: 1px }
         .mb-0 { margin-bottom: 0px }
-        .mb-0.5 { margin-bottom: 0.125rem }
+        .mb-0\\.5 { margin-bottom: 0.125rem }
         .mb-1 { margin-bottom: 0.25rem }
-        .mb-1.5 { margin-bottom: 0.375rem }
+        .mb-1\\.5 { margin-bottom: 0.375rem }
         .mb-2 { margin-bottom: 0.5rem }
-        .mb-2.5 { margin-bottom: 0.625rem }
+        .mb-2\\.5 { margin-bottom: 0.625rem }
         .mb-3 { margin-bottom: 0.75rem }
-        .mb-3.5 { margin-bottom: 0.875rem }
+        .mb-3\\.5 { margin-bottom: 0.875rem }
         .mb-4 { margin-bottom: 1rem }
         .mb-5 { margin-bottom: 1.25rem }
         .mb-6 { margin-bottom: 1.5rem }
@@ -509,16 +514,17 @@ public class StyleGenTest {
         .mb-64 { margin-bottom: 16rem }
         .mb-72 { margin-bottom: 18rem }
         .mb-80 { margin-bottom: 20rem }
+        .mb-96 { margin-bottom: 24rem }
         .ml-auto { margin-left: auto }
         .ml-px { margin-left: 1px }
         .ml-0 { margin-left: 0px }
-        .ml-0.5 { margin-left: 0.125rem }
+        .ml-0\\.5 { margin-left: 0.125rem }
         .ml-1 { margin-left: 0.25rem }
-        .ml-1.5 { margin-left: 0.375rem }
+        .ml-1\\.5 { margin-left: 0.375rem }
         .ml-2 { margin-left: 0.5rem }
-        .ml-2.5 { margin-left: 0.625rem }
+        .ml-2\\.5 { margin-left: 0.625rem }
         .ml-3 { margin-left: 0.75rem }
-        .ml-3.5 { margin-left: 0.875rem }
+        .ml-3\\.5 { margin-left: 0.875rem }
         .ml-4 { margin-left: 1rem }
         .ml-5 { margin-left: 1.25rem }
         .ml-6 { margin-left: 1.5rem }
@@ -544,6 +550,46 @@ public class StyleGenTest {
         .ml-64 { margin-left: 16rem }
         .ml-72 { margin-left: 18rem }
         .ml-80 { margin-left: 20rem }
+        .ml-96 { margin-left: 24rem }
+        """
+    );
+  }
+
+  @Test
+  public void responsive() {
+    class Subject extends AbstractSubject {
+      @Override
+      final void classes() {
+        className("m-0 sm:block sm:m-1 md:m-2 lg:m-3 xl:m-4 2xl:m-5");
+      }
+    }
+
+    test(
+        Subject.class,
+
+        """
+        .m-0 { margin: 0px }
+
+        @media (min-width: 640px) {
+          .sm\\:m-1 { margin: 0.25rem }
+          .sm\\:block { display: block }
+        }
+
+        @media (min-width: 768px) {
+          .md\\:m-2 { margin: 0.5rem }
+        }
+
+        @media (min-width: 1024px) {
+          .lg\\:m-3 { margin: 0.75rem }
+        }
+
+        @media (min-width: 1280px) {
+          .xl\\:m-4 { margin: 1rem }
+        }
+
+        @media (min-width: 1536px) {
+          .\\32xl\\:m-5 { margin: 1.25rem }
+        }
         """
     );
   }

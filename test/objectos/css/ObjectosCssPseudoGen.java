@@ -25,46 +25,7 @@ public class ObjectosCssPseudoGen {
     ObjectosCssPseudoGen gen;
     gen = new ObjectosCssPseudoGen();
 
-    gen.classNameSingleLine(MARGIN, "m-");
-    gen.classNameSingleLine(MARGIN, "mx-");
-    gen.classNameSingleLine(MARGIN, "my-");
-    gen.classNameSingleLine(MARGIN, "mt-");
-    gen.classNameSingleLine(MARGIN, "mr-");
-    gen.classNameSingleLine(MARGIN, "mb-");
-    gen.classNameSingleLine(MARGIN, "ml-");
-  }
-
-  private static Map.Entry<String, String> kv(String key, String value) {
-    return Map.entry(key, value);
-  }
-
-  @SuppressWarnings("unchecked")
-  @SafeVarargs
-  private static Map<String, String> seqmap(Object... objects) {
-    Map<String, String> map;
-    map = new LinkedHashMap<>();
-
-    for (var obj : objects) {
-      if (obj instanceof Map.Entry entry) {
-        String key;
-        key = (String) entry.getKey();
-
-        String value;
-        value = (String) entry.getValue();
-
-        map.put(key, value);
-      }
-
-      else if (obj instanceof Map otherMap) {
-        map.putAll(otherMap);
-      }
-
-      else {
-        throw new UnsupportedOperationException("Implement me");
-      }
-    }
-
-    return Collections.unmodifiableMap(map);
+    gen.cases(HEIGHT, "HEIGHT");
   }
 
   private static final Map<String, String> SPACING = seqmap(
@@ -105,26 +66,6 @@ public class ObjectosCssPseudoGen {
       kv("96", "24rem")
   );
 
-  final void classNames(Map<String, String> map) {
-    for (var key : map.keySet()) {
-      System.out.println("className(\"" + key + "\");");
-    }
-  }
-
-  final void classNameSingleLine(Map<String, String> map, String prefix) {
-    String names = map.keySet().stream()
-        .map(s -> prefix + s)
-        .collect(Collectors.joining(" "));
-
-    System.out.println("className(\"" + names + "\");");
-  }
-
-  final void classNameSpacing(String prefix) {
-    for (var key : SPACING.keySet()) {
-      System.out.println("className(\"" + prefix + key + "\");");
-    }
-  }
-
   static final Map<String, String> ALIGN_ITEMS = seqmap(
       kv("items-start", "flex-start"),
       kv("items-end", "flex-end"),
@@ -133,18 +74,14 @@ public class ObjectosCssPseudoGen {
       kv("items-stretch", "stretch")
   );
 
-  final void cases(Map<String, String> map, String kind) {
-    for (var entry : map.entrySet()) {
-      var key = entry.getKey();
+  static final Map<String, String> FLEX_DIRECTION = seqmap(
+      kv("flex-row", "row"),
+      kv("flex-row-reverse", "row-reverse"),
+      kv("flex-col", "column"),
+      kv("flex-col-reverse", "column-reverse")
+  );
 
-      var value = entry.getValue();
-
-      System.out.println("""
-      case "%s" -> UtilityKind.%s.nameValue(className, "%s");""".formatted(key, kind, value));
-    }
-  }
-
-  private static final Map<String, String> HEIGHT = seqmap(
+  static final Map<String, String> HEIGHT = seqmap(
       kv("auto", "auto"),
       kv("1/2", "50%"),
       kv("1/3", "33.333333%"),
@@ -171,20 +108,73 @@ public class ObjectosCssPseudoGen {
       kv("fit", "fit-content")
   );
 
-  final void heigthCases() {
-    for (var entry : HEIGHT.entrySet()) {
+  static final Map<String, String> MARGIN = seqmap(
+      kv("auto", "auto"),
+      SPACING
+  );
+
+  final void cases(Map<String, String> map, String kind) {
+    for (var entry : map.entrySet()) {
       var key = entry.getKey();
 
       var value = entry.getValue();
 
       System.out.println("""
-      case "%s" -> UtilityKind.HEIGHT.nameValue(className, "%s");""".formatted(key, value));
+      case "%s" -> nameValue(%s, "%s");""".formatted(key, kind, value));
     }
   }
 
-  private static final Map<String, String> MARGIN = seqmap(
-      kv("auto", "auto"),
-      SPACING
-  );
+  final void classNames(Map<String, String> map) {
+    for (var key : map.keySet()) {
+      System.out.println("className(\"" + key + "\");");
+    }
+  }
+
+  final void classNameSingleLine(Map<String, String> map, String prefix) {
+    String names = map.keySet().stream()
+        .map(s -> prefix + s)
+        .collect(Collectors.joining(" "));
+
+    System.out.println("className(\"" + names + "\");");
+  }
+
+  final void classNameSpacing(String prefix) {
+    for (var key : SPACING.keySet()) {
+      System.out.println("className(\"" + prefix + key + "\");");
+    }
+  }
+
+  private static Map.Entry<String, String> kv(String key, String value) {
+    return Map.entry(key, value);
+  }
+
+  @SuppressWarnings("unchecked")
+  @SafeVarargs
+  private static Map<String, String> seqmap(Object... objects) {
+    Map<String, String> map;
+    map = new LinkedHashMap<>();
+
+    for (var obj : objects) {
+      if (obj instanceof Map.Entry entry) {
+        String key;
+        key = (String) entry.getKey();
+
+        String value;
+        value = (String) entry.getValue();
+
+        map.put(key, value);
+      }
+
+      else if (obj instanceof Map otherMap) {
+        map.putAll(otherMap);
+      }
+
+      else {
+        throw new UnsupportedOperationException("Implement me");
+      }
+    }
+
+    return Collections.unmodifiableMap(map);
+  }
 
 }
