@@ -61,6 +61,292 @@ public class StyleGenTest {
   }
 
   @Test
+  public void backgroundColor() {
+    class Subject extends AbstractSubject {
+      @Override
+      final void classes() {
+        className("bg-inherit bg-current bg-transparent bg-black bg-white");
+        className("bg-slate-50 bg-slate-100 bg-slate-200 bg-slate-300 bg-slate-400 bg-slate-500 bg-slate-600 bg-slate-700 bg-slate-800 bg-slate-900 bg-slate-950");
+        className("bg-gray-50 bg-gray-100 bg-gray-200 bg-gray-300 bg-gray-400 bg-gray-500 bg-gray-600 bg-gray-700 bg-gray-800 bg-gray-900 bg-gray-950");
+        className("bg-zinc-50 bg-zinc-100 bg-zinc-200 bg-zinc-300 bg-zinc-400 bg-zinc-500 bg-zinc-600 bg-zinc-700 bg-zinc-800 bg-zinc-900 bg-zinc-950");
+        className("bg-neutral-50 bg-neutral-100 bg-neutral-200 bg-neutral-300 bg-neutral-400 bg-neutral-500 bg-neutral-600 bg-neutral-700 bg-neutral-800 bg-neutral-900 bg-neutral-950");
+        className("bg-stone-50 bg-stone-100 bg-stone-200 bg-stone-300 bg-stone-400 bg-stone-500 bg-stone-600 bg-stone-700 bg-stone-800 bg-stone-900 bg-stone-950");
+        className("bg-red-50 bg-red-100 bg-red-200 bg-red-300 bg-red-400 bg-red-500 bg-red-600 bg-red-700 bg-red-800 bg-red-900 bg-red-950");
+        className("bg-orange-50 bg-orange-100 bg-orange-200 bg-orange-300 bg-orange-400 bg-orange-500 bg-orange-600 bg-orange-700 bg-orange-800 bg-orange-900 bg-orange-950");
+        className("bg-amber-50 bg-amber-100 bg-amber-200 bg-amber-300 bg-amber-400 bg-amber-500 bg-amber-600 bg-amber-700 bg-amber-800 bg-amber-900 bg-amber-950");
+        className("bg-yellow-50 bg-yellow-100 bg-yellow-200 bg-yellow-300 bg-yellow-400 bg-yellow-500 bg-yellow-600 bg-yellow-700 bg-yellow-800 bg-yellow-900 bg-yellow-950");
+        className("bg-lime-50 bg-lime-100 bg-lime-200 bg-lime-300 bg-lime-400 bg-lime-500 bg-lime-600 bg-lime-700 bg-lime-800 bg-lime-900 bg-lime-950");
+        className("bg-green-50 bg-green-100 bg-green-200 bg-green-300 bg-green-400 bg-green-500 bg-green-600 bg-green-700 bg-green-800 bg-green-900 bg-green-950");
+        className("bg-emerald-50 bg-emerald-100 bg-emerald-200 bg-emerald-300 bg-emerald-400 bg-emerald-500 bg-emerald-600 bg-emerald-700 bg-emerald-800 bg-emerald-900 bg-emerald-950");
+        className("bg-teal-50 bg-teal-100 bg-teal-200 bg-teal-300 bg-teal-400 bg-teal-500 bg-teal-600 bg-teal-700 bg-teal-800 bg-teal-900 bg-teal-950");
+        className("bg-cyan-50 bg-cyan-100 bg-cyan-200 bg-cyan-300 bg-cyan-400 bg-cyan-500 bg-cyan-600 bg-cyan-700 bg-cyan-800 bg-cyan-900 bg-cyan-950");
+        className("bg-sky-50 bg-sky-100 bg-sky-200 bg-sky-300 bg-sky-400 bg-sky-500 bg-sky-600 bg-sky-700 bg-sky-800 bg-sky-900 bg-sky-950");
+        className("bg-blue-50 bg-blue-100 bg-blue-200 bg-blue-300 bg-blue-400 bg-blue-500 bg-blue-600 bg-blue-700 bg-blue-800 bg-blue-900 bg-blue-950");
+        className("bg-indigo-50 bg-indigo-100 bg-indigo-200 bg-indigo-300 bg-indigo-400 bg-indigo-500 bg-indigo-600 bg-indigo-700 bg-indigo-800 bg-indigo-900 bg-indigo-950");
+        className("bg-violet-50 bg-violet-100 bg-violet-200 bg-violet-300 bg-violet-400 bg-violet-500 bg-violet-600 bg-violet-700 bg-violet-800 bg-violet-900 bg-violet-950");
+        className("bg-purple-50 bg-purple-100 bg-purple-200 bg-purple-300 bg-purple-400 bg-purple-500 bg-purple-600 bg-purple-700 bg-purple-800 bg-purple-900 bg-purple-950");
+        className("bg-fuchsia-50 bg-fuchsia-100 bg-fuchsia-200 bg-fuchsia-300 bg-fuchsia-400 bg-fuchsia-500 bg-fuchsia-600 bg-fuchsia-700 bg-fuchsia-800 bg-fuchsia-900 bg-fuchsia-950");
+        className("bg-pink-50 bg-pink-100 bg-pink-200 bg-pink-300 bg-pink-400 bg-pink-500 bg-pink-600 bg-pink-700 bg-pink-800 bg-pink-900 bg-pink-950");
+        className("bg-rose-50 bg-rose-100 bg-rose-200 bg-rose-300 bg-rose-400 bg-rose-500 bg-rose-600 bg-rose-700 bg-rose-800 bg-rose-900 bg-rose-950");
+      }
+    }
+
+    test(
+        Subject.class,
+
+        """
+        .bg-inherit { background-color: inherit }
+        .bg-current { background-color: currentColor }
+        .bg-transparent { background-color: transparent }
+        .bg-black { background-color: #000000 }
+        .bg-white { background-color: #ffffff }
+        .bg-slate-50 { background-color: #f8fafc }
+        .bg-slate-100 { background-color: #f1f5f9 }
+        .bg-slate-200 { background-color: #e2e8f0 }
+        .bg-slate-300 { background-color: #cbd5e1 }
+        .bg-slate-400 { background-color: #94a3b8 }
+        .bg-slate-500 { background-color: #64748b }
+        .bg-slate-600 { background-color: #475569 }
+        .bg-slate-700 { background-color: #334155 }
+        .bg-slate-800 { background-color: #1e293b }
+        .bg-slate-900 { background-color: #0f172a }
+        .bg-slate-950 { background-color: #020617 }
+        .bg-gray-50 { background-color: #f9fafb }
+        .bg-gray-100 { background-color: #f3f4f6 }
+        .bg-gray-200 { background-color: #e5e7eb }
+        .bg-gray-300 { background-color: #d1d5db }
+        .bg-gray-400 { background-color: #9ca3af }
+        .bg-gray-500 { background-color: #6b7280 }
+        .bg-gray-600 { background-color: #4b5563 }
+        .bg-gray-700 { background-color: #374151 }
+        .bg-gray-800 { background-color: #1f2937 }
+        .bg-gray-900 { background-color: #111827 }
+        .bg-gray-950 { background-color: #030712 }
+        .bg-zinc-50 { background-color: #fafafa }
+        .bg-zinc-100 { background-color: #f4f4f5 }
+        .bg-zinc-200 { background-color: #e4e4e7 }
+        .bg-zinc-300 { background-color: #d4d4d8 }
+        .bg-zinc-400 { background-color: #a1a1aa }
+        .bg-zinc-500 { background-color: #71717a }
+        .bg-zinc-600 { background-color: #52525b }
+        .bg-zinc-700 { background-color: #3f3f46 }
+        .bg-zinc-800 { background-color: #27272a }
+        .bg-zinc-900 { background-color: #18181b }
+        .bg-zinc-950 { background-color: #09090b }
+        .bg-neutral-50 { background-color: #fafafa }
+        .bg-neutral-100 { background-color: #f5f5f5 }
+        .bg-neutral-200 { background-color: #e5e5e5 }
+        .bg-neutral-300 { background-color: #d4d4d4 }
+        .bg-neutral-400 { background-color: #a3a3a3 }
+        .bg-neutral-500 { background-color: #737373 }
+        .bg-neutral-600 { background-color: #525252 }
+        .bg-neutral-700 { background-color: #404040 }
+        .bg-neutral-800 { background-color: #262626 }
+        .bg-neutral-900 { background-color: #171717 }
+        .bg-neutral-950 { background-color: #0a0a0a }
+        .bg-stone-50 { background-color: #fafaf9 }
+        .bg-stone-100 { background-color: #f5f5f4 }
+        .bg-stone-200 { background-color: #e7e5e4 }
+        .bg-stone-300 { background-color: #d6d3d1 }
+        .bg-stone-400 { background-color: #a8a29e }
+        .bg-stone-500 { background-color: #78716c }
+        .bg-stone-600 { background-color: #57534e }
+        .bg-stone-700 { background-color: #44403c }
+        .bg-stone-800 { background-color: #292524 }
+        .bg-stone-900 { background-color: #1c1917 }
+        .bg-stone-950 { background-color: #0c0a09 }
+        .bg-red-50 { background-color: #fef2f2 }
+        .bg-red-100 { background-color: #fee2e2 }
+        .bg-red-200 { background-color: #fecaca }
+        .bg-red-300 { background-color: #fca5a5 }
+        .bg-red-400 { background-color: #f87171 }
+        .bg-red-500 { background-color: #ef4444 }
+        .bg-red-600 { background-color: #dc2626 }
+        .bg-red-700 { background-color: #b91c1c }
+        .bg-red-800 { background-color: #991b1b }
+        .bg-red-900 { background-color: #7f1d1d }
+        .bg-red-950 { background-color: #450a0a }
+        .bg-orange-50 { background-color: #fff7ed }
+        .bg-orange-100 { background-color: #ffedd5 }
+        .bg-orange-200 { background-color: #fed7aa }
+        .bg-orange-300 { background-color: #fdba74 }
+        .bg-orange-400 { background-color: #fb923c }
+        .bg-orange-500 { background-color: #f97316 }
+        .bg-orange-600 { background-color: #ea580c }
+        .bg-orange-700 { background-color: #c2410c }
+        .bg-orange-800 { background-color: #9a3412 }
+        .bg-orange-900 { background-color: #7c2d12 }
+        .bg-orange-950 { background-color: #431407 }
+        .bg-amber-50 { background-color: #fffbeb }
+        .bg-amber-100 { background-color: #fef3c7 }
+        .bg-amber-200 { background-color: #fde68a }
+        .bg-amber-300 { background-color: #fcd34d }
+        .bg-amber-400 { background-color: #fbbf24 }
+        .bg-amber-500 { background-color: #f59e0b }
+        .bg-amber-600 { background-color: #d97706 }
+        .bg-amber-700 { background-color: #b45309 }
+        .bg-amber-800 { background-color: #92400e }
+        .bg-amber-900 { background-color: #78350f }
+        .bg-amber-950 { background-color: #451a03 }
+        .bg-yellow-50 { background-color: #fefce8 }
+        .bg-yellow-100 { background-color: #fef9c3 }
+        .bg-yellow-200 { background-color: #fef08a }
+        .bg-yellow-300 { background-color: #fde047 }
+        .bg-yellow-400 { background-color: #facc15 }
+        .bg-yellow-500 { background-color: #eab308 }
+        .bg-yellow-600 { background-color: #ca8a04 }
+        .bg-yellow-700 { background-color: #a16207 }
+        .bg-yellow-800 { background-color: #854d0e }
+        .bg-yellow-900 { background-color: #713f12 }
+        .bg-yellow-950 { background-color: #422006 }
+        .bg-lime-50 { background-color: #f7fee7 }
+        .bg-lime-100 { background-color: #ecfccb }
+        .bg-lime-200 { background-color: #d9f99d }
+        .bg-lime-300 { background-color: #bef264 }
+        .bg-lime-400 { background-color: #a3e635 }
+        .bg-lime-500 { background-color: #84cc16 }
+        .bg-lime-600 { background-color: #65a30d }
+        .bg-lime-700 { background-color: #4d7c0f }
+        .bg-lime-800 { background-color: #3f6212 }
+        .bg-lime-900 { background-color: #365314 }
+        .bg-lime-950 { background-color: #1a2e05 }
+        .bg-green-50 { background-color: #f0fdf4 }
+        .bg-green-100 { background-color: #dcfce7 }
+        .bg-green-200 { background-color: #bbf7d0 }
+        .bg-green-300 { background-color: #86efac }
+        .bg-green-400 { background-color: #4ade80 }
+        .bg-green-500 { background-color: #22c55e }
+        .bg-green-600 { background-color: #16a34a }
+        .bg-green-700 { background-color: #15803d }
+        .bg-green-800 { background-color: #166534 }
+        .bg-green-900 { background-color: #14532d }
+        .bg-green-950 { background-color: #052e16 }
+        .bg-emerald-50 { background-color: #ecfdf5 }
+        .bg-emerald-100 { background-color: #d1fae5 }
+        .bg-emerald-200 { background-color: #a7f3d0 }
+        .bg-emerald-300 { background-color: #6ee7b7 }
+        .bg-emerald-400 { background-color: #34d399 }
+        .bg-emerald-500 { background-color: #10b981 }
+        .bg-emerald-600 { background-color: #059669 }
+        .bg-emerald-700 { background-color: #047857 }
+        .bg-emerald-800 { background-color: #065f46 }
+        .bg-emerald-900 { background-color: #064e3b }
+        .bg-emerald-950 { background-color: #022c22 }
+        .bg-teal-50 { background-color: #f0fdfa }
+        .bg-teal-100 { background-color: #ccfbf1 }
+        .bg-teal-200 { background-color: #99f6e4 }
+        .bg-teal-300 { background-color: #5eead4 }
+        .bg-teal-400 { background-color: #2dd4bf }
+        .bg-teal-500 { background-color: #14b8a6 }
+        .bg-teal-600 { background-color: #0d9488 }
+        .bg-teal-700 { background-color: #0f766e }
+        .bg-teal-800 { background-color: #115e59 }
+        .bg-teal-900 { background-color: #134e4a }
+        .bg-teal-950 { background-color: #042f2e }
+        .bg-cyan-50 { background-color: #ecfeff }
+        .bg-cyan-100 { background-color: #cffafe }
+        .bg-cyan-200 { background-color: #a5f3fc }
+        .bg-cyan-300 { background-color: #67e8f9 }
+        .bg-cyan-400 { background-color: #22d3ee }
+        .bg-cyan-500 { background-color: #06b6d4 }
+        .bg-cyan-600 { background-color: #0891b2 }
+        .bg-cyan-700 { background-color: #0e7490 }
+        .bg-cyan-800 { background-color: #155e75 }
+        .bg-cyan-900 { background-color: #164e63 }
+        .bg-cyan-950 { background-color: #083344 }
+        .bg-sky-50 { background-color: #f0f9ff }
+        .bg-sky-100 { background-color: #e0f2fe }
+        .bg-sky-200 { background-color: #bae6fd }
+        .bg-sky-300 { background-color: #7dd3fc }
+        .bg-sky-400 { background-color: #38bdf8 }
+        .bg-sky-500 { background-color: #0ea5e9 }
+        .bg-sky-600 { background-color: #0284c7 }
+        .bg-sky-700 { background-color: #0369a1 }
+        .bg-sky-800 { background-color: #075985 }
+        .bg-sky-900 { background-color: #0c4a6e }
+        .bg-sky-950 { background-color: #082f49 }
+        .bg-blue-50 { background-color: #eff6ff }
+        .bg-blue-100 { background-color: #dbeafe }
+        .bg-blue-200 { background-color: #bfdbfe }
+        .bg-blue-300 { background-color: #93c5fd }
+        .bg-blue-400 { background-color: #60a5fa }
+        .bg-blue-500 { background-color: #3b82f6 }
+        .bg-blue-600 { background-color: #2563eb }
+        .bg-blue-700 { background-color: #1d4ed8 }
+        .bg-blue-800 { background-color: #1e40af }
+        .bg-blue-900 { background-color: #1e3a8a }
+        .bg-blue-950 { background-color: #172554 }
+        .bg-indigo-50 { background-color: #eef2ff }
+        .bg-indigo-100 { background-color: #e0e7ff }
+        .bg-indigo-200 { background-color: #c7d2fe }
+        .bg-indigo-300 { background-color: #a5b4fc }
+        .bg-indigo-400 { background-color: #818cf8 }
+        .bg-indigo-500 { background-color: #6366f1 }
+        .bg-indigo-600 { background-color: #4f46e5 }
+        .bg-indigo-700 { background-color: #4338ca }
+        .bg-indigo-800 { background-color: #3730a3 }
+        .bg-indigo-900 { background-color: #312e81 }
+        .bg-indigo-950 { background-color: #1e1b4b }
+        .bg-violet-50 { background-color: #f5f3ff }
+        .bg-violet-100 { background-color: #ede9fe }
+        .bg-violet-200 { background-color: #ddd6fe }
+        .bg-violet-300 { background-color: #c4b5fd }
+        .bg-violet-400 { background-color: #a78bfa }
+        .bg-violet-500 { background-color: #8b5cf6 }
+        .bg-violet-600 { background-color: #7c3aed }
+        .bg-violet-700 { background-color: #6d28d9 }
+        .bg-violet-800 { background-color: #5b21b6 }
+        .bg-violet-900 { background-color: #4c1d95 }
+        .bg-violet-950 { background-color: #2e1065 }
+        .bg-purple-50 { background-color: #faf5ff }
+        .bg-purple-100 { background-color: #f3e8ff }
+        .bg-purple-200 { background-color: #e9d5ff }
+        .bg-purple-300 { background-color: #d8b4fe }
+        .bg-purple-400 { background-color: #c084fc }
+        .bg-purple-500 { background-color: #a855f7 }
+        .bg-purple-600 { background-color: #9333ea }
+        .bg-purple-700 { background-color: #7e22ce }
+        .bg-purple-800 { background-color: #6b21a8 }
+        .bg-purple-900 { background-color: #581c87 }
+        .bg-purple-950 { background-color: #3b0764 }
+        .bg-fuchsia-50 { background-color: #fdf4ff }
+        .bg-fuchsia-100 { background-color: #fae8ff }
+        .bg-fuchsia-200 { background-color: #f5d0fe }
+        .bg-fuchsia-300 { background-color: #f0abfc }
+        .bg-fuchsia-400 { background-color: #e879f9 }
+        .bg-fuchsia-500 { background-color: #d946ef }
+        .bg-fuchsia-600 { background-color: #c026d3 }
+        .bg-fuchsia-700 { background-color: #a21caf }
+        .bg-fuchsia-800 { background-color: #86198f }
+        .bg-fuchsia-900 { background-color: #701a75 }
+        .bg-fuchsia-950 { background-color: #4a044e }
+        .bg-pink-50 { background-color: #fdf2f8 }
+        .bg-pink-100 { background-color: #fce7f3 }
+        .bg-pink-200 { background-color: #fbcfe8 }
+        .bg-pink-300 { background-color: #f9a8d4 }
+        .bg-pink-400 { background-color: #f472b6 }
+        .bg-pink-500 { background-color: #ec4899 }
+        .bg-pink-600 { background-color: #db2777 }
+        .bg-pink-700 { background-color: #be185d }
+        .bg-pink-800 { background-color: #9d174d }
+        .bg-pink-900 { background-color: #831843 }
+        .bg-pink-950 { background-color: #500724 }
+        .bg-rose-50 { background-color: #fff1f2 }
+        .bg-rose-100 { background-color: #ffe4e6 }
+        .bg-rose-200 { background-color: #fecdd3 }
+        .bg-rose-300 { background-color: #fda4af }
+        .bg-rose-400 { background-color: #fb7185 }
+        .bg-rose-500 { background-color: #f43f5e }
+        .bg-rose-600 { background-color: #e11d48 }
+        .bg-rose-700 { background-color: #be123c }
+        .bg-rose-800 { background-color: #9f1239 }
+        .bg-rose-900 { background-color: #881337 }
+        .bg-rose-950 { background-color: #4c0519 }
+        """
+    );
+  }
+
+  @Test
   public void display() {
     class Subject extends AbstractSubject {
       @Override
@@ -274,6 +560,34 @@ public class StyleGenTest {
         .h-min { height: min-content }
         .h-max { height: max-content }
         .h-fit { height: fit-content }
+        """
+    );
+  }
+
+  @Test
+  public void letterSpacing() {
+    class Subject extends AbstractSubject {
+      @Override
+      final void classes() {
+        className("tracking-tighter");
+        className("tracking-tight");
+        className("tracking-normal");
+        className("tracking-wide");
+        className("tracking-wider");
+        className("tracking-widest");
+      }
+    }
+
+    test(
+        Subject.class,
+
+        """
+        .tracking-tighter { letter-spacing: -0.05em }
+        .tracking-tight { letter-spacing: -0.025em }
+        .tracking-normal { letter-spacing: 0em }
+        .tracking-wide { letter-spacing: 0.025em }
+        .tracking-wider { letter-spacing: 0.05em }
+        .tracking-widest { letter-spacing: 0.1em }
         """
     );
   }
@@ -551,6 +865,276 @@ public class StyleGenTest {
         .ml-72 { margin-left: 18rem }
         .ml-80 { margin-left: 20rem }
         .ml-96 { margin-left: 24rem }
+        """
+    );
+  }
+
+  @Test
+  public void padding() {
+    class Subject extends AbstractSubject {
+      @Override
+      final void classes() {
+        // @formatter:off
+        className("p-px p-0 p-0.5 p-1 p-1.5 p-2 p-2.5 p-3 p-3.5 p-4 p-5 p-6 p-7 p-8 p-9 p-10 p-11 p-12 p-14 p-16 p-20 p-24 p-28 p-32 p-36 p-40 p-44 p-48 p-52 p-56 p-60 p-64 p-72 p-80 p-96");
+        className("px-px px-0 px-0.5 px-1 px-1.5 px-2 px-2.5 px-3 px-3.5 px-4 px-5 px-6 px-7 px-8 px-9 px-10 px-11 px-12 px-14 px-16 px-20 px-24 px-28 px-32 px-36 px-40 px-44 px-48 px-52 px-56 px-60 px-64 px-72 px-80 px-96");
+        className("py-px py-0 py-0.5 py-1 py-1.5 py-2 py-2.5 py-3 py-3.5 py-4 py-5 py-6 py-7 py-8 py-9 py-10 py-11 py-12 py-14 py-16 py-20 py-24 py-28 py-32 py-36 py-40 py-44 py-48 py-52 py-56 py-60 py-64 py-72 py-80 py-96");
+        className("pt-px pt-0 pt-0.5 pt-1 pt-1.5 pt-2 pt-2.5 pt-3 pt-3.5 pt-4 pt-5 pt-6 pt-7 pt-8 pt-9 pt-10 pt-11 pt-12 pt-14 pt-16 pt-20 pt-24 pt-28 pt-32 pt-36 pt-40 pt-44 pt-48 pt-52 pt-56 pt-60 pt-64 pt-72 pt-80 pt-96");
+        className("pr-px pr-0 pr-0.5 pr-1 pr-1.5 pr-2 pr-2.5 pr-3 pr-3.5 pr-4 pr-5 pr-6 pr-7 pr-8 pr-9 pr-10 pr-11 pr-12 pr-14 pr-16 pr-20 pr-24 pr-28 pr-32 pr-36 pr-40 pr-44 pr-48 pr-52 pr-56 pr-60 pr-64 pr-72 pr-80 pr-96");
+        className("pb-px pb-0 pb-0.5 pb-1 pb-1.5 pb-2 pb-2.5 pb-3 pb-3.5 pb-4 pb-5 pb-6 pb-7 pb-8 pb-9 pb-10 pb-11 pb-12 pb-14 pb-16 pb-20 pb-24 pb-28 pb-32 pb-36 pb-40 pb-44 pb-48 pb-52 pb-56 pb-60 pb-64 pb-72 pb-80 pb-96");
+        className("pl-px pl-0 pl-0.5 pl-1 pl-1.5 pl-2 pl-2.5 pl-3 pl-3.5 pl-4 pl-5 pl-6 pl-7 pl-8 pl-9 pl-10 pl-11 pl-12 pl-14 pl-16 pl-20 pl-24 pl-28 pl-32 pl-36 pl-40 pl-44 pl-48 pl-52 pl-56 pl-60 pl-64 pl-72 pl-80 pl-96");
+        // @formatter:on
+      }
+    }
+
+    test(
+        Subject.class,
+
+        """
+        .p-px { padding: 1px }
+        .p-0 { padding: 0px }
+        .p-0\\.5 { padding: 0.125rem }
+        .p-1 { padding: 0.25rem }
+        .p-1\\.5 { padding: 0.375rem }
+        .p-2 { padding: 0.5rem }
+        .p-2\\.5 { padding: 0.625rem }
+        .p-3 { padding: 0.75rem }
+        .p-3\\.5 { padding: 0.875rem }
+        .p-4 { padding: 1rem }
+        .p-5 { padding: 1.25rem }
+        .p-6 { padding: 1.5rem }
+        .p-7 { padding: 1.75rem }
+        .p-8 { padding: 2rem }
+        .p-9 { padding: 2.25rem }
+        .p-10 { padding: 2.5rem }
+        .p-11 { padding: 2.75rem }
+        .p-12 { padding: 3rem }
+        .p-14 { padding: 3.5rem }
+        .p-16 { padding: 4rem }
+        .p-20 { padding: 5rem }
+        .p-24 { padding: 6rem }
+        .p-28 { padding: 7rem }
+        .p-32 { padding: 8rem }
+        .p-36 { padding: 9rem }
+        .p-40 { padding: 10rem }
+        .p-44 { padding: 11rem }
+        .p-48 { padding: 12rem }
+        .p-52 { padding: 13rem }
+        .p-56 { padding: 14rem }
+        .p-60 { padding: 15rem }
+        .p-64 { padding: 16rem }
+        .p-72 { padding: 18rem }
+        .p-80 { padding: 20rem }
+        .p-96 { padding: 24rem }
+        .px-px { padding-left: 1px; padding-right: 1px }
+        .px-0 { padding-left: 0px; padding-right: 0px }
+        .px-0\\.5 { padding-left: 0.125rem; padding-right: 0.125rem }
+        .px-1 { padding-left: 0.25rem; padding-right: 0.25rem }
+        .px-1\\.5 { padding-left: 0.375rem; padding-right: 0.375rem }
+        .px-2 { padding-left: 0.5rem; padding-right: 0.5rem }
+        .px-2\\.5 { padding-left: 0.625rem; padding-right: 0.625rem }
+        .px-3 { padding-left: 0.75rem; padding-right: 0.75rem }
+        .px-3\\.5 { padding-left: 0.875rem; padding-right: 0.875rem }
+        .px-4 { padding-left: 1rem; padding-right: 1rem }
+        .px-5 { padding-left: 1.25rem; padding-right: 1.25rem }
+        .px-6 { padding-left: 1.5rem; padding-right: 1.5rem }
+        .px-7 { padding-left: 1.75rem; padding-right: 1.75rem }
+        .px-8 { padding-left: 2rem; padding-right: 2rem }
+        .px-9 { padding-left: 2.25rem; padding-right: 2.25rem }
+        .px-10 { padding-left: 2.5rem; padding-right: 2.5rem }
+        .px-11 { padding-left: 2.75rem; padding-right: 2.75rem }
+        .px-12 { padding-left: 3rem; padding-right: 3rem }
+        .px-14 { padding-left: 3.5rem; padding-right: 3.5rem }
+        .px-16 { padding-left: 4rem; padding-right: 4rem }
+        .px-20 { padding-left: 5rem; padding-right: 5rem }
+        .px-24 { padding-left: 6rem; padding-right: 6rem }
+        .px-28 { padding-left: 7rem; padding-right: 7rem }
+        .px-32 { padding-left: 8rem; padding-right: 8rem }
+        .px-36 { padding-left: 9rem; padding-right: 9rem }
+        .px-40 { padding-left: 10rem; padding-right: 10rem }
+        .px-44 { padding-left: 11rem; padding-right: 11rem }
+        .px-48 { padding-left: 12rem; padding-right: 12rem }
+        .px-52 { padding-left: 13rem; padding-right: 13rem }
+        .px-56 { padding-left: 14rem; padding-right: 14rem }
+        .px-60 { padding-left: 15rem; padding-right: 15rem }
+        .px-64 { padding-left: 16rem; padding-right: 16rem }
+        .px-72 { padding-left: 18rem; padding-right: 18rem }
+        .px-80 { padding-left: 20rem; padding-right: 20rem }
+        .px-96 { padding-left: 24rem; padding-right: 24rem }
+        .py-px { padding-top: 1px; padding-bottom: 1px }
+        .py-0 { padding-top: 0px; padding-bottom: 0px }
+        .py-0\\.5 { padding-top: 0.125rem; padding-bottom: 0.125rem }
+        .py-1 { padding-top: 0.25rem; padding-bottom: 0.25rem }
+        .py-1\\.5 { padding-top: 0.375rem; padding-bottom: 0.375rem }
+        .py-2 { padding-top: 0.5rem; padding-bottom: 0.5rem }
+        .py-2\\.5 { padding-top: 0.625rem; padding-bottom: 0.625rem }
+        .py-3 { padding-top: 0.75rem; padding-bottom: 0.75rem }
+        .py-3\\.5 { padding-top: 0.875rem; padding-bottom: 0.875rem }
+        .py-4 { padding-top: 1rem; padding-bottom: 1rem }
+        .py-5 { padding-top: 1.25rem; padding-bottom: 1.25rem }
+        .py-6 { padding-top: 1.5rem; padding-bottom: 1.5rem }
+        .py-7 { padding-top: 1.75rem; padding-bottom: 1.75rem }
+        .py-8 { padding-top: 2rem; padding-bottom: 2rem }
+        .py-9 { padding-top: 2.25rem; padding-bottom: 2.25rem }
+        .py-10 { padding-top: 2.5rem; padding-bottom: 2.5rem }
+        .py-11 { padding-top: 2.75rem; padding-bottom: 2.75rem }
+        .py-12 { padding-top: 3rem; padding-bottom: 3rem }
+        .py-14 { padding-top: 3.5rem; padding-bottom: 3.5rem }
+        .py-16 { padding-top: 4rem; padding-bottom: 4rem }
+        .py-20 { padding-top: 5rem; padding-bottom: 5rem }
+        .py-24 { padding-top: 6rem; padding-bottom: 6rem }
+        .py-28 { padding-top: 7rem; padding-bottom: 7rem }
+        .py-32 { padding-top: 8rem; padding-bottom: 8rem }
+        .py-36 { padding-top: 9rem; padding-bottom: 9rem }
+        .py-40 { padding-top: 10rem; padding-bottom: 10rem }
+        .py-44 { padding-top: 11rem; padding-bottom: 11rem }
+        .py-48 { padding-top: 12rem; padding-bottom: 12rem }
+        .py-52 { padding-top: 13rem; padding-bottom: 13rem }
+        .py-56 { padding-top: 14rem; padding-bottom: 14rem }
+        .py-60 { padding-top: 15rem; padding-bottom: 15rem }
+        .py-64 { padding-top: 16rem; padding-bottom: 16rem }
+        .py-72 { padding-top: 18rem; padding-bottom: 18rem }
+        .py-80 { padding-top: 20rem; padding-bottom: 20rem }
+        .py-96 { padding-top: 24rem; padding-bottom: 24rem }
+        .pt-px { padding-top: 1px }
+        .pt-0 { padding-top: 0px }
+        .pt-0\\.5 { padding-top: 0.125rem }
+        .pt-1 { padding-top: 0.25rem }
+        .pt-1\\.5 { padding-top: 0.375rem }
+        .pt-2 { padding-top: 0.5rem }
+        .pt-2\\.5 { padding-top: 0.625rem }
+        .pt-3 { padding-top: 0.75rem }
+        .pt-3\\.5 { padding-top: 0.875rem }
+        .pt-4 { padding-top: 1rem }
+        .pt-5 { padding-top: 1.25rem }
+        .pt-6 { padding-top: 1.5rem }
+        .pt-7 { padding-top: 1.75rem }
+        .pt-8 { padding-top: 2rem }
+        .pt-9 { padding-top: 2.25rem }
+        .pt-10 { padding-top: 2.5rem }
+        .pt-11 { padding-top: 2.75rem }
+        .pt-12 { padding-top: 3rem }
+        .pt-14 { padding-top: 3.5rem }
+        .pt-16 { padding-top: 4rem }
+        .pt-20 { padding-top: 5rem }
+        .pt-24 { padding-top: 6rem }
+        .pt-28 { padding-top: 7rem }
+        .pt-32 { padding-top: 8rem }
+        .pt-36 { padding-top: 9rem }
+        .pt-40 { padding-top: 10rem }
+        .pt-44 { padding-top: 11rem }
+        .pt-48 { padding-top: 12rem }
+        .pt-52 { padding-top: 13rem }
+        .pt-56 { padding-top: 14rem }
+        .pt-60 { padding-top: 15rem }
+        .pt-64 { padding-top: 16rem }
+        .pt-72 { padding-top: 18rem }
+        .pt-80 { padding-top: 20rem }
+        .pt-96 { padding-top: 24rem }
+        .pr-px { padding-right: 1px }
+        .pr-0 { padding-right: 0px }
+        .pr-0\\.5 { padding-right: 0.125rem }
+        .pr-1 { padding-right: 0.25rem }
+        .pr-1\\.5 { padding-right: 0.375rem }
+        .pr-2 { padding-right: 0.5rem }
+        .pr-2\\.5 { padding-right: 0.625rem }
+        .pr-3 { padding-right: 0.75rem }
+        .pr-3\\.5 { padding-right: 0.875rem }
+        .pr-4 { padding-right: 1rem }
+        .pr-5 { padding-right: 1.25rem }
+        .pr-6 { padding-right: 1.5rem }
+        .pr-7 { padding-right: 1.75rem }
+        .pr-8 { padding-right: 2rem }
+        .pr-9 { padding-right: 2.25rem }
+        .pr-10 { padding-right: 2.5rem }
+        .pr-11 { padding-right: 2.75rem }
+        .pr-12 { padding-right: 3rem }
+        .pr-14 { padding-right: 3.5rem }
+        .pr-16 { padding-right: 4rem }
+        .pr-20 { padding-right: 5rem }
+        .pr-24 { padding-right: 6rem }
+        .pr-28 { padding-right: 7rem }
+        .pr-32 { padding-right: 8rem }
+        .pr-36 { padding-right: 9rem }
+        .pr-40 { padding-right: 10rem }
+        .pr-44 { padding-right: 11rem }
+        .pr-48 { padding-right: 12rem }
+        .pr-52 { padding-right: 13rem }
+        .pr-56 { padding-right: 14rem }
+        .pr-60 { padding-right: 15rem }
+        .pr-64 { padding-right: 16rem }
+        .pr-72 { padding-right: 18rem }
+        .pr-80 { padding-right: 20rem }
+        .pr-96 { padding-right: 24rem }
+        .pb-px { padding-bottom: 1px }
+        .pb-0 { padding-bottom: 0px }
+        .pb-0\\.5 { padding-bottom: 0.125rem }
+        .pb-1 { padding-bottom: 0.25rem }
+        .pb-1\\.5 { padding-bottom: 0.375rem }
+        .pb-2 { padding-bottom: 0.5rem }
+        .pb-2\\.5 { padding-bottom: 0.625rem }
+        .pb-3 { padding-bottom: 0.75rem }
+        .pb-3\\.5 { padding-bottom: 0.875rem }
+        .pb-4 { padding-bottom: 1rem }
+        .pb-5 { padding-bottom: 1.25rem }
+        .pb-6 { padding-bottom: 1.5rem }
+        .pb-7 { padding-bottom: 1.75rem }
+        .pb-8 { padding-bottom: 2rem }
+        .pb-9 { padding-bottom: 2.25rem }
+        .pb-10 { padding-bottom: 2.5rem }
+        .pb-11 { padding-bottom: 2.75rem }
+        .pb-12 { padding-bottom: 3rem }
+        .pb-14 { padding-bottom: 3.5rem }
+        .pb-16 { padding-bottom: 4rem }
+        .pb-20 { padding-bottom: 5rem }
+        .pb-24 { padding-bottom: 6rem }
+        .pb-28 { padding-bottom: 7rem }
+        .pb-32 { padding-bottom: 8rem }
+        .pb-36 { padding-bottom: 9rem }
+        .pb-40 { padding-bottom: 10rem }
+        .pb-44 { padding-bottom: 11rem }
+        .pb-48 { padding-bottom: 12rem }
+        .pb-52 { padding-bottom: 13rem }
+        .pb-56 { padding-bottom: 14rem }
+        .pb-60 { padding-bottom: 15rem }
+        .pb-64 { padding-bottom: 16rem }
+        .pb-72 { padding-bottom: 18rem }
+        .pb-80 { padding-bottom: 20rem }
+        .pb-96 { padding-bottom: 24rem }
+        .pl-px { padding-left: 1px }
+        .pl-0 { padding-left: 0px }
+        .pl-0\\.5 { padding-left: 0.125rem }
+        .pl-1 { padding-left: 0.25rem }
+        .pl-1\\.5 { padding-left: 0.375rem }
+        .pl-2 { padding-left: 0.5rem }
+        .pl-2\\.5 { padding-left: 0.625rem }
+        .pl-3 { padding-left: 0.75rem }
+        .pl-3\\.5 { padding-left: 0.875rem }
+        .pl-4 { padding-left: 1rem }
+        .pl-5 { padding-left: 1.25rem }
+        .pl-6 { padding-left: 1.5rem }
+        .pl-7 { padding-left: 1.75rem }
+        .pl-8 { padding-left: 2rem }
+        .pl-9 { padding-left: 2.25rem }
+        .pl-10 { padding-left: 2.5rem }
+        .pl-11 { padding-left: 2.75rem }
+        .pl-12 { padding-left: 3rem }
+        .pl-14 { padding-left: 3.5rem }
+        .pl-16 { padding-left: 4rem }
+        .pl-20 { padding-left: 5rem }
+        .pl-24 { padding-left: 6rem }
+        .pl-28 { padding-left: 7rem }
+        .pl-32 { padding-left: 8rem }
+        .pl-36 { padding-left: 9rem }
+        .pl-40 { padding-left: 10rem }
+        .pl-44 { padding-left: 11rem }
+        .pl-48 { padding-left: 12rem }
+        .pl-52 { padding-left: 13rem }
+        .pl-56 { padding-left: 14rem }
+        .pl-60 { padding-left: 15rem }
+        .pl-64 { padding-left: 16rem }
+        .pl-72 { padding-left: 18rem }
+        .pl-80 { padding-left: 20rem }
+        .pl-96 { padding-left: 24rem }
         """
     );
   }

@@ -37,7 +37,19 @@ enum Utility {
 
   FLEX_DIRECTION("flex-direction"),
 
-  ALIGN_ITEMS("align-items");
+  ALIGN_ITEMS("align-items"),
+
+  BACKGROUND_COLOR("background-color"),
+
+  PADDING("padding"),
+  PADDING_X("padding-left", "padding-right"),
+  PADDING_Y("padding-top", "padding-bottom"),
+  PADDING_TOP("padding-top"),
+  PADDING_RIGHT("padding-right"),
+  PADDING_BOTTOM("padding-bottom"),
+  PADDING_LEFT("padding-left"),
+
+  LETTER_SPACING("letter-spacing");
 
   private final String property1;
 

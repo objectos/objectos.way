@@ -15,7 +15,9 @@
  */
 package objectos.css;
 
+import java.io.PrintStream;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -25,7 +27,7 @@ public class ObjectosCssPseudoGen {
     ObjectosCssPseudoGen gen;
     gen = new ObjectosCssPseudoGen();
 
-    gen.cases(HEIGHT, "HEIGHT");
+    gen.classNames(LETTER_SPACING, "tracking-");
   }
 
   private static final Map<String, String> SPACING = seqmap(
@@ -108,6 +110,15 @@ public class ObjectosCssPseudoGen {
       kv("fit", "fit-content")
   );
 
+  static final Map<String, String> LETTER_SPACING = seqmap(
+      kv("tighter", "-0.05em"),
+      kv("tight", "-0.025em"),
+      kv("normal", "0em"),
+      kv("wide", "0.025em"),
+      kv("wider", "0.05em"),
+      kv("widest", "0.1em")
+  );
+
   static final Map<String, String> MARGIN = seqmap(
       kv("auto", "auto"),
       SPACING
@@ -130,18 +141,53 @@ public class ObjectosCssPseudoGen {
     }
   }
 
+  final void classNames(Map<String, String> map, String prefix) {
+    for (var key : map.keySet()) {
+      System.out.println("className(\"" + prefix + key + "\");");
+    }
+  }
+
+  final void classNamesColors(String prefix) {
+    Iterator<String> colors;
+    colors = Palette.DEFAULT.keySet().iterator();
+
+    classNamesColors(prefix, colors, 5);
+
+    while (colors.hasNext()) {
+      classNamesColors(prefix, colors, 11);
+    }
+  }
+
+  private void classNamesColors(String prefix, Iterator<String> colors, int count) {
+    PrintStream ps;
+    ps = System.out;
+
+    ps.append("className(\"");
+
+    int index;
+    index = 0;
+
+    if (index++ < count && colors.hasNext()) {
+      ps.append(prefix);
+      ps.append(colors.next());
+
+      while (index++ < count && colors.hasNext()) {
+        ps.append(' ');
+
+        ps.append(prefix);
+        ps.append(colors.next());
+      }
+    }
+
+    ps.println("\");");
+  }
+
   final void classNameSingleLine(Map<String, String> map, String prefix) {
     String names = map.keySet().stream()
         .map(s -> prefix + s)
         .collect(Collectors.joining(" "));
 
     System.out.println("className(\"" + names + "\");");
-  }
-
-  final void classNameSpacing(String prefix) {
-    for (var key : SPACING.keySet()) {
-      System.out.println("className(\"" + prefix + key + "\");");
-    }
   }
 
   private static Map.Entry<String, String> kv(String key, String value) {
@@ -155,7 +201,7 @@ public class ObjectosCssPseudoGen {
     map = new LinkedHashMap<>();
 
     for (var obj : objects) {
-      if (obj instanceof Map.Entry entry) {
+      if (obj instanceof Map.Entry<?, ?> entry) {
         String key;
         key = (String) entry.getKey();
 
