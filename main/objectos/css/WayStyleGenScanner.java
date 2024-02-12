@@ -25,9 +25,7 @@ import objectos.notes.Note2;
 import objectos.notes.NoteSink;
 import objectox.html.style.Bytes;
 
-class WayStyleGenScanner {
-
-  // notes
+abstract class WayStyleGenScanner {
 
   private static final Note1<String> CLASS_NOT_FOUND;
 
@@ -37,7 +35,7 @@ class WayStyleGenScanner {
 
   private static final Note2<String, String> INVALID_CLASS;
 
-  private static final Note1<Utf8> UTF8;
+  private static final Note1<String> UTF8;
 
   static {
     Class<?> s;
@@ -53,14 +51,6 @@ class WayStyleGenScanner {
 
     UTF8 = Note1.trace(s, "Found");
   }
-
-  NoteSink noteSink = NoOpNoteSink.of();
-
-  // scanner types
-
-  private sealed interface Entry {}
-
-  private record Utf8(String value) implements Entry {}
 
   private static final byte CONSTANT_Utf8 = 1;
   private static final byte CONSTANT_Integer = 3;
@@ -80,97 +70,24 @@ class WayStyleGenScanner {
   private static final byte CONSTANT_Module = 19;
   private static final byte CONSTANT_Package = 20;
 
-  // scanner states
+  NoteSink noteSink = NoOpNoteSink.of();
 
-  private enum State {
-    STOP,
+  private int value;
 
-    START,
+  public WayStyleGenScanner() {}
 
-    LOAD_CLASS,
-
-    VERIFY_MAGIC,
-
-    CONSTANT_POOL_COUNT,
-
-    NEXT_POOL_INDEX,
-
-    NEXT_POOL_ENTRY;
+  public WayStyleGenScanner(NoteSink noteSink) {
+    this.noteSink = noteSink;
   }
-
-  // scanner state
-
-  private byte[] bytes;
-
-  private int bytesIndex;
-
-  private int[] constantPoolIndex;
-
-  private Entry[] constantPoolEntries;
-
-  private int iteratorIndex;
-
-  String name;
-
-  private State state;
 
   public final void scan(Class<?> clazz) {
-    name = clazz.getName();
+    String binaryName;
+    binaryName = clazz.getName();
 
-    state = State.START;
+    // 0. load class file
 
-    while (state != State.STOP) {
-      execute();
-    }
-  }
-
-  void parse(String s) {}
-
-  private void execute() {
-    state = switch (state) {
-      case START -> executeStart();
-
-      case LOAD_CLASS -> executeLoadClass();
-
-      case VERIFY_MAGIC -> executeVerifyMagic();
-
-      case CONSTANT_POOL_COUNT -> executeConstantPoolCount();
-
-      case NEXT_POOL_INDEX -> executeNextPoolIndex();
-
-      case NEXT_POOL_ENTRY -> executeNextPoolEntry();
-
-      case STOP -> throw new IllegalStateException(
-          "STOP is a non-executable state"
-      );
-    };
-  }
-
-  private State executeStart() {
-    // reset scanner state if there's an input
-
-    if (name != null) {
-      bytes = null;
-
-      bytesIndex = 0;
-
-      constantPoolIndex = null;
-
-      constantPoolEntries = null;
-
-      iteratorIndex = 0;
-
-      return State.LOAD_CLASS;
-    }
-
-    // there's no input... stop
-
-    return State.STOP;
-  }
-
-  private State executeLoadClass() {
     String resourceName;
-    resourceName = name.replace('.', '/');
+    resourceName = binaryName.replace('.', '/');
 
     resourceName += ".class";
 
@@ -181,242 +98,266 @@ class WayStyleGenScanner {
     in = loader.getResourceAsStream(resourceName);
 
     if (in == null) {
-      noteSink.send(CLASS_NOT_FOUND, name);
+      noteSink.send(CLASS_NOT_FOUND, binaryName);
 
-      return State.STOP;
+      return;
     }
+
+    byte[] bytes;
 
     try (in; ByteArrayOutputStream out = new ByteArrayOutputStream()) {
       in.transferTo(out);
 
       bytes = out.toByteArray();
 
-      noteSink.send(CLASS_LOADED, name);
-
-      return State.VERIFY_MAGIC;
+      noteSink.send(CLASS_LOADED, binaryName);
     } catch (IOException e) {
-      noteSink.send(CLASS_IO_ERROR, name, e);
+      noteSink.send(CLASS_IO_ERROR, binaryName, e);
 
-      return State.STOP;
-    }
-  }
-
-  private State executeVerifyMagic() {
-    if (!canRead(4)) {
-      invalidClass("Magic not found");
-
-      return State.STOP;
+      return;
     }
 
-    int magic;
-    magic = readU4();
+    // 1. verify magic
 
-    if (magic != 0xCAFEBABE) {
-      invalidClass("Magic not found");
+    if (bytes.length < 4) {
+      // the class file has less bytes than the magic length
+      // -> invalid class
 
-      return State.STOP;
+      noteSink.send(INVALID_CLASS, binaryName, "Magic not found");
     }
 
-    return State.CONSTANT_POOL_COUNT;
-  }
+    int bytesIndex;
+    bytesIndex = 0;
 
-  private State executeConstantPoolCount() {
-    // minor = 2 bytes
-    // major = 2 bytes
-    // cp count = 2 bytes
+    bytesIndex = readU4(bytes, bytesIndex);
 
-    if (!canRead(2 + 2 + 2)) {
-      invalidClass("Constant pool count not found");
+    if (value != 0xCAFEBABE) {
+      // magic does not match expected value
+      // -> invalid class
 
-      return State.STOP;
+      noteSink.send(INVALID_CLASS, binaryName, "Magic not found");
+
+      return;
     }
 
-    // skip minor
-    bytesIndex += 2;
+    // 2. skip minor
 
-    // skip major
-    bytesIndex += 2;
+    if (!canReadU2(bytes, bytesIndex)) {
+      noteSink.send(INVALID_CLASS, binaryName, "Version minor not found");
+
+      return;
+    }
+
+    bytesIndex = readU2(bytes, bytesIndex);
+
+    // 3. skip major
+
+    if (!canReadU2(bytes, bytesIndex)) {
+      noteSink.send(INVALID_CLASS, binaryName, "Version major not found");
+
+      return;
+    }
+
+    bytesIndex = readU2(bytes, bytesIndex);
+
+    // 4. load constant pool count
+
+    if (!canReadU2(bytes, bytesIndex)) {
+      noteSink.send(INVALID_CLASS, binaryName, "Constant pool count not found");
+
+      return;
+    }
+
+    bytesIndex = readU2(bytes, bytesIndex);
 
     int constantPoolCount;
-    constantPoolCount = readU2();
+    constantPoolCount = value;
 
+    // 5. load constant pool index
+
+    int[] constantPoolIndex;
     constantPoolIndex = new int[constantPoolCount];
 
-    iteratorIndex = 1;
+    for (int index = 1; index < constantPoolCount; index++) {
+      if (!canRead(bytes, bytesIndex)) {
+        noteSink.send(INVALID_CLASS, binaryName, "Unexpected constant pool end");
 
-    return State.NEXT_POOL_INDEX;
-  }
-
-  private State executeNextPoolIndex() {
-    if (iteratorIndex == constantPoolIndex.length) {
-      iteratorIndex = 1;
-
-      constantPoolEntries = new Entry[constantPoolIndex.length];
-
-      return State.NEXT_POOL_ENTRY;
-    }
-
-    int index;
-    index = iteratorIndex++;
-
-    constantPoolIndex[index] = bytesIndex;
-
-    if (!canRead(1)) {
-      invalidClass("Unexpected constant pool end");
-
-      return State.STOP;
-    }
-
-    byte tag;
-    tag = nextByte();
-
-    switch (tag) {
-      case CONSTANT_Utf8 -> {
-        if (!canRead(2)) {
-          invalidClass("Unexpected constant pool end");
-
-          return State.STOP;
-        }
-
-        int length;
-        length = readU2();
-
-        bytesIndex += length;
+        return;
       }
 
-      // u4 bytes;
-      case CONSTANT_Integer -> bytesIndex += 4;
-
-      // u4 bytes;
-      case CONSTANT_Float -> bytesIndex += 4;
-
-      // u4 high_bytes; u4 low_bytes;
-      case CONSTANT_Long -> bytesIndex += 8;
-
-      // u4 high_bytes; u4 low_bytes;
-      case CONSTANT_Double -> bytesIndex += 8;
-
-      // u2 name_index;
-      case CONSTANT_Class -> bytesIndex += 2;
-
-      // u2 string_index;
-      case CONSTANT_String -> bytesIndex += 2;
-
-      // u2 class_index; u2 name_and_type_index;
-      case CONSTANT_Fieldref -> bytesIndex += 4;
-
-      // u2 class_index; u2 name_and_type_index;
-      case CONSTANT_Methodref -> bytesIndex += 4;
-
-      // u2 class_index; u2 name_and_type_index;
-      case CONSTANT_InterfaceMethodref -> bytesIndex += 4;
-
-      // u2 name_index; u2 descriptor_index;
-      case CONSTANT_NameAndType -> bytesIndex += 4;
-
-      // u1 reference_kind; u2 reference_index;
-      case CONSTANT_MethodHandle -> bytesIndex += 3;
-
-      // u2 descriptor_index;
-      case CONSTANT_MethodType -> bytesIndex += 2;
-
-      // u2 bootstrap_method_attr_index; u2 name_and_type_index;
-      case CONSTANT_Dynamic -> bytesIndex += 4;
-
-      // u2 bootstrap_method_attr_index; u2 name_and_type_index;
-      case CONSTANT_InvokeDynamic -> bytesIndex += 4;
-
-      // u2 name_index;
-      case CONSTANT_Module -> bytesIndex += 2;
-
-      // u2 name_index;
-      case CONSTANT_Package -> bytesIndex += 2;
-
-      default -> {
-        invalidClass("Unknown constant pool tag=" + tag);
-
-        return State.STOP;
-      }
-    }
-
-    return State.NEXT_POOL_INDEX;
-  }
-
-  private State executeNextPoolEntry() {
-    if (iteratorIndex == constantPoolIndex.length) {
-      return State.STOP;
-    }
-
-    int index;
-    index = iteratorIndex++;
-
-    bytesIndex = constantPoolIndex[index];
-
-    // process if String
-
-    byte maybeString;
-    maybeString = nextByte();
-
-    if (maybeString != CONSTANT_String) {
-      // not String -> continue
-
-      return State.NEXT_POOL_ENTRY;
-    }
-
-    // keep the index in the stack
-
-    int stringIndex;
-    stringIndex = readU2();
-
-    // try to load utf8
-
-    Utf8 utf8;
-    utf8 = utf8(stringIndex);
-
-    if (utf8 == null) {
-      invalidClass("Malformed constant pool");
-
-      return State.STOP;
-    }
-
-    noteSink.send(UTF8, utf8);
-
-    parse(utf8.value);
-
-    return State.NEXT_POOL_ENTRY;
-  }
-
-  private Utf8 utf8(int index) {
-    Entry entry;
-    entry = constantPoolEntries[index];
-
-    if (entry == null) {
-      bytesIndex = constantPoolIndex[index];
+      constantPoolIndex[index] = bytesIndex;
 
       byte tag;
-      tag = nextByte();
+      tag = bytes[bytesIndex++];
 
-      if (tag != CONSTANT_Utf8) {
-        return null;
+      switch (tag) {
+        case CONSTANT_Utf8 -> {
+          if (!canReadU2(bytes, bytesIndex)) {
+            noteSink.send(INVALID_CLASS, binaryName, "Unexpected constant pool end");
+
+            return;
+          }
+
+          bytesIndex = readU2(bytes, bytesIndex);
+
+          int length;
+          length = value;
+
+          bytesIndex += length;
+        }
+
+        // u4 bytes;
+        case CONSTANT_Integer -> bytesIndex += 4;
+
+        // u4 bytes;
+        case CONSTANT_Float -> bytesIndex += 4;
+
+        // u4 high_bytes; u4 low_bytes;
+        case CONSTANT_Long -> bytesIndex += 8;
+
+        // u4 high_bytes; u4 low_bytes;
+        case CONSTANT_Double -> bytesIndex += 8;
+
+        // u2 name_index;
+        case CONSTANT_Class -> bytesIndex += 2;
+
+        // u2 string_index;
+        case CONSTANT_String -> bytesIndex += 2;
+
+        // u2 class_index; u2 name_and_type_index;
+        case CONSTANT_Fieldref -> bytesIndex += 4;
+
+        // u2 class_index; u2 name_and_type_index;
+        case CONSTANT_Methodref -> bytesIndex += 4;
+
+        // u2 class_index; u2 name_and_type_index;
+        case CONSTANT_InterfaceMethodref -> bytesIndex += 4;
+
+        // u2 name_index; u2 descriptor_index;
+        case CONSTANT_NameAndType -> bytesIndex += 4;
+
+        // u1 reference_kind; u2 reference_index;
+        case CONSTANT_MethodHandle -> bytesIndex += 3;
+
+        // u2 descriptor_index;
+        case CONSTANT_MethodType -> bytesIndex += 2;
+
+        // u2 bootstrap_method_attr_index; u2 name_and_type_index;
+        case CONSTANT_Dynamic -> bytesIndex += 4;
+
+        // u2 bootstrap_method_attr_index; u2 name_and_type_index;
+        case CONSTANT_InvokeDynamic -> bytesIndex += 4;
+
+        // u2 name_index;
+        case CONSTANT_Module -> bytesIndex += 2;
+
+        // u2 name_index;
+        case CONSTANT_Package -> bytesIndex += 2;
+
+        default -> {
+          noteSink.send(INVALID_CLASS, binaryName, "Unknown constant pool tag=" + tag);
+
+          return;
+        }
+      }
+    }
+
+    // 6. process constant pool entries
+
+    for (int index = 1; index < constantPoolCount; index++) {
+      bytesIndex = constantPoolIndex[index];
+
+      // process if String
+      //
+      // next read should be safe
+      // -> we have already been at this index in the previous step
+
+      byte maybeString;
+      maybeString = bytes[bytesIndex++];
+
+      if (maybeString != CONSTANT_String) {
+        // not String -> continue
+
+        continue;
       }
 
+      // keep the index in the stack
+      //
+      // next read should be safe
+      // -> we have already been at this index in the previous step
+      bytesIndex = readU2(bytes, bytesIndex);
+
+      int stringIndex;
+      stringIndex = value;
+
+      // try to load utf8
+
+      bytesIndex = constantPoolIndex[stringIndex];
+
+      byte tag;
+      tag = bytes[bytesIndex++];
+
+      if (tag != CONSTANT_Utf8) {
+        noteSink.send(INVALID_CLASS, binaryName, "Malformed constant pool");
+
+        return;
+      }
+
+      bytesIndex = readU2(bytes, bytesIndex);
+
       int length;
-      length = readU2();
+      length = value;
 
-      String value;
-      value = utf8Value(length);
+      String utf8;
+      utf8 = utf8Value(bytes, bytesIndex, length);
 
-      constantPoolEntries[index] = entry = new Utf8(value);
+      noteSink.send(UTF8, utf8);
+
+      onScan(utf8);
     }
-
-    if (entry instanceof Utf8 utf8) {
-      return utf8;
-    }
-
-    return null;
   }
 
-  private String utf8Value(int length) {
+  abstract void onScan(String s);
+
+  private boolean canRead(byte[] bytes, int bytesIndex) {
+    return bytesIndex < bytes.length;
+  }
+
+  private boolean canReadU2(byte[] bytes, int bytesIndex) {
+    return bytesIndex <= bytes.length - 2;
+  }
+
+  private int readU2(byte[] bytes, int bytesIndex) {
+    byte b0;
+    b0 = bytes[bytesIndex++];
+
+    byte b1;
+    b1 = bytes[bytesIndex++];
+
+    value = Bytes.toBigEndianInt(b0, b1);
+
+    return bytesIndex;
+  }
+
+  private int readU4(byte[] bytes, int bytesIndex) {
+    byte b0;
+    b0 = bytes[bytesIndex++];
+
+    byte b1;
+    b1 = bytes[bytesIndex++];
+
+    byte b2;
+    b2 = bytes[bytesIndex++];
+
+    byte b3;
+    b3 = bytes[bytesIndex++];
+
+    value = Bytes.toBigEndianInt(b0, b1, b2, b3);
+
+    return bytesIndex;
+  }
+
+  private String utf8Value(byte[] bytes, int bytesIndex, int length) {
     // 1: assume ASCII only
 
     boolean asciiOnly;
@@ -441,44 +382,6 @@ class WayStyleGenScanner {
     }
 
     throw new UnsupportedOperationException("Implement me :: non ascii");
-  }
-
-  private boolean canRead(int qty) {
-    return bytesIndex + qty <= bytes.length;
-  }
-
-  private void invalidClass(String message) {
-    noteSink.send(INVALID_CLASS, name, message);
-  }
-
-  private int readU2() {
-    byte b0;
-    b0 = nextByte();
-
-    byte b1;
-    b1 = nextByte();
-
-    return Bytes.toBigEndianInt(b0, b1);
-  }
-
-  private int readU4() {
-    byte b0;
-    b0 = nextByte();
-
-    byte b1;
-    b1 = nextByte();
-
-    byte b2;
-    b2 = nextByte();
-
-    byte b3;
-    b3 = nextByte();
-
-    return Bytes.toBigEndianInt(b0, b1, b2, b3);
-  }
-
-  private byte nextByte() {
-    return bytes[bytesIndex++];
   }
 
 }

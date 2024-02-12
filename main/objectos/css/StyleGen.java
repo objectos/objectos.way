@@ -17,8 +17,6 @@ package objectos.css;
 
 public interface StyleGen {
 
-  void scan(Class<?> clazz);
-
-  String generate();
+  String generate(Iterable<Class<?>> classes);
 
 }

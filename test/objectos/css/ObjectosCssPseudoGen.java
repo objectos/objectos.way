@@ -27,7 +27,7 @@ public class ObjectosCssPseudoGen {
     ObjectosCssPseudoGen gen;
     gen = new ObjectosCssPseudoGen();
 
-    gen.classNames(LETTER_SPACING, "tracking-");
+    gen.initVariable(LETTER_SPACING, "letterSpacing");
   }
 
   private static final Map<String, String> SPACING = seqmap(
@@ -74,6 +74,30 @@ public class ObjectosCssPseudoGen {
       kv("items-center", "center"),
       kv("items-baseline", "baseline"),
       kv("items-stretch", "stretch")
+  );
+
+  static final Map<String, String> DISPLAY = seqmap(
+      kv("block", "block"),
+      kv("inline-block", "inline-block"),
+      kv("inline", "inline"),
+      kv("flex", "flex"),
+      kv("inline-flex", "inline-flex"),
+      kv("table", "table"),
+      kv("inline-table", "inline-table"),
+      kv("table-caption", "table-caption"),
+      kv("table-cell", "table-cell"),
+      kv("table-column", "table-column"),
+      kv("table-column-group", "table-column-group"),
+      kv("table-footer-group", "table-footer-group"),
+      kv("table-header-group", "table-header-group"),
+      kv("table-row-group", "table-row-group"),
+      kv("table-row", "table-row"),
+      kv("flow-root", "flow-root"),
+      kv("grid", "grid"),
+      kv("inline-grid", "inline-grid"),
+      kv("contents", "contents"),
+      kv("list-item", "list-item"),
+      kv("hidden", "none")
   );
 
   static final Map<String, String> FLEX_DIRECTION = seqmap(
@@ -190,12 +214,35 @@ public class ObjectosCssPseudoGen {
     System.out.println("className(\"" + names + "\");");
   }
 
+  final void factories(Map<String, String> map, String utility) {
+    for (var entry : map.entrySet()) {
+      var key = entry.getKey();
+
+      var value = entry.getValue();
+
+      System.out.println("""
+      factories.put("%s", %s.factory("%s"));""".formatted(key, utility, value));
+    }
+  }
+
+  final void initVariable(Map<String, String> map, String variable) {
+    System.out.println(variable + " = new GrowableMap<>();");
+
+    for (var entry : map.entrySet()) {
+      var key = entry.getKey();
+
+      var value = entry.getValue();
+
+      System.out.println("""
+      %s.put("%s", "%s");""".formatted(variable, key, value));
+    }
+  }
+
   private static Map.Entry<String, String> kv(String key, String value) {
     return Map.entry(key, value);
   }
 
-  @SuppressWarnings("unchecked")
-  @SafeVarargs
+  @SuppressWarnings({"rawtypes", "unchecked"})
   private static Map<String, String> seqmap(Object... objects) {
     Map<String, String> map;
     map = new LinkedHashMap<>();

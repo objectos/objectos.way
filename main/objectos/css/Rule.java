@@ -32,7 +32,7 @@ class Rule implements Comparable<Rule> {
     this.variants = variants;
   }
 
-  public void accept(WayStyleGen gen) {
+  public void accept(WayStyleGenRound gen) {
     int size;
     size = variants.size();
 

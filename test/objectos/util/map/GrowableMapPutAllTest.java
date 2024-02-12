@@ -18,7 +18,6 @@ package objectos.util.map;
 import static org.testng.Assert.assertEquals;
 
 import java.util.Map;
-import org.testng.Assert;
 
 final class GrowableMapPutAllTest {
 
@@ -35,18 +34,22 @@ final class GrowableMapPutAllTest {
     assertEquals(it.size(), 0);
     assertContents.execute(it);
 
-    try {
-      var map = Map.of(
-        Thing.next(), "1",
-        Thing.next(), "2"
-      );
+    Thing k1;
+    k1 = Thing.next();
 
-      it.putAll(map);
+    Thing k2;
+    k2 = Thing.next();
 
-      Assert.fail("Expected an UnsupportedOperationException");
-    } catch (UnsupportedOperationException expected) {
-      assertContents.execute(it);
-    }
+    var map = Map.of(
+        k1, "1",
+        k2, "2"
+    );
+
+    it.putAll(map);
+
+    assertEquals(it.size(), 2);
+    assertEquals(it.get(k1), "1");
+    assertEquals(it.get(k2), "2");
   }
 
 }

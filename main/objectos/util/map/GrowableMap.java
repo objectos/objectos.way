@@ -29,348 +29,350 @@ import objectos.util.array.ObjectArrays;
  * @param <V> type of the values in this map
  */
 public sealed class GrowableMap<K, V>
-		extends AbstractArrayBasedMap<K, V> permits GrowableSequencedMap {
-
-	private static final float DEFAULT_LOAD_FACTOR = 0.75F;
-
-	private static final int FIRST_RESIZE = 8;
-
-	private static final int MAX_ARRAY_LENGTH = MAX_POSITIVE_POWER_OF_TWO;
-
-	private final float loadFactor = DEFAULT_LOAD_FACTOR;
-
-	private int rehashSize;
-
-	/**
-	 * Creates a new {@code GrowableMap} instance.
-	 */
-	public GrowableMap() {}
-
-	/**
-	 * Removes all of the mappings in this map.
-	 */
-	@Override
-	public void clear() {
-		Arrays.fill(array, null);
-
-		size = 0;
-	}
-
-	/**
-	 * Not implemented in this release. It might be implemented in a future
-	 * release.
-	 *
-	 * @param key
-	 *        ignored (the operation is not implemented)
-	 * @param remappingFunction
-	 *        ignored (the operation is not implemented)
-	 *
-	 * @return this method does not return as it always throw an exception
-	 *
-	 * @throws UnsupportedOperationException
-	 *         always
-	 */
-	@Override
-	public final V compute(K key, BiFunction<? super K, ? super V, ? extends V> remappingFunction) {
-		throw new UnsupportedOperationException("Not yet implemented");
-	}
-
-	/**
-	 * Not implemented in this release. It might be implemented in a future
-	 * release.
-	 *
-	 * @param key
-	 *        ignored (the operation is not implemented)
-	 * @param mappingFunction
-	 *        ignored (the operation is not implemented)
-	 *
-	 * @return this method does not return as it always throws an exception
-	 *
-	 * @throws UnsupportedOperationException
-	 *         this method may be implemented in a future release
-	 */
-	@Override
-	public final V computeIfAbsent(K key, Function<? super K, ? extends V> mappingFunction) {
-		throw new UnsupportedOperationException("Not yet implemented");
-	}
-
-	/**
-	 * Not implemented in this release. It might be implemented in a future
-	 * release.
-	 *
-	 * @param key
-	 *        ignored (the operation is not implemented)
-	 * @param remappingFunction
-	 *        ignored (the operation is not implemented)
-	 *
-	 * @return this method does not return as it always throws an exception
-	 *
-	 * @throws UnsupportedOperationException
-	 *         this method may be implemented in a future release
-	 */
-	@Override
-	public final V computeIfPresent(
-			K key, BiFunction<? super K, ? super V, ? extends V> remappingFunction) {
-		throw new UnsupportedOperationException("Not yet implemented");
-	}
-
-	/**
-	 * Associates the specified value with the specified key in this map. If the
-	 * map previously contained a mapping for the key, the old value is replaced
-	 * by the specified value.
-	 *
-	 * <p>
-	 * A map {@code m} is said to contain a mapping for a key {@code k} if and
-	 * only if {@link #containsKey(Object) m.containsKey(k)} would return
-	 * {@code true}.)
-	 *
-	 * @param key
-	 *        key with which the specified value is to be associated
-	 * @param value
-	 *        value to be associated with the specified key
-	 *
-	 * @return the previous value associated with {@code key}, or
-	 *         {@code null} if there was no mapping for {@code key}.
-	 *
-	 * @throws NullPointerException if the specified key or value is null
-	 */
-	@Override
-	public final V put(K key, V value) {
-		Check.notNull(key, "key == null");
-		Check.notNull(value, "value == null");
-
-		return putUnchecked(key, value);
-	}
-
-	/**
-	 * Not implemented in this release. It might be implemented in a future
-	 * release.
-	 *
-	 * @param m
-	 *        ignored (this operation in not yet implemented)
-	 *
-	 * @throws UnsupportedOperationException
-	 *         this method may be implemented in a future release
-	 */
-	@Override
-	public final void putAll(Map<? extends K, ? extends V> m) {
-		throw new UnsupportedOperationException("Not yet implemented");
-	}
-
-	/**
-	 * Returns an {@link UnmodifiableMap} copy of this map.
-	 *
-	 * <p>
-	 * The returned {@code UnmodifiableMap} will contain all of the entries from
-	 * this
-	 * map.
-	 *
-	 * <p>
-	 * The returned map will be a copy in the sense that, after this method
-	 * returns, modifying this map will have no effect on the returned (copied)
-	 * one.
-	 *
-	 * <p>
-	 * Note, however, that the behaviour of this method is undefined if this map
-	 * is modified while the copy is being made.
-	 *
-	 * @return an {@link UnmodifiableMap} copy of this set
-	 */
-	public UnmodifiableMap<K, V> toUnmodifiableMap() {
-		switch (size) {
-			case 0:
-				return UnmodifiableMap.of();
-			default:
-				var copy = Arrays.copyOf(array, array.length);
-
-				return new UnmodifiableMap<K, V>(copy, size);
-		}
-	}
-
-	void insert(int index, Object key, Object value) {
-		set(index, key, value);
-
-		size++;
-
-		rehashIfNecessary();
-	}
-
-	final V putUnchecked(Object key, Object value) {
-		firstResizeIfNecessary();
-
-		int index, marker;
-		index = marker = hashIndex(key);
-
-		var existing = array[index];
-
-		if (existing == null) {
-			insert(index, key, value);
-
-			return null;
-		}
-
-		else if (existing.equals(key)) {
-			return replace(index, key, value);
-		}
-
-		else {
-			index = index + 2;
-		}
-
-		while (index < array.length) {
-			existing = array[index];
-
-			if (existing == null) {
-				insert(index, key, value);
-
-				return null;
-			}
-
-			else if (existing.equals(key)) {
-				return replace(index, key, value);
-			}
-
-			else {
-				index = index + 2;
-			}
-		}
-
-		index = 0;
-
-		while (index < marker) {
-			existing = array[index];
-
-			if (existing == null) {
-				insert(index, key, value);
-
-				return null;
-			}
-
-			else if (existing.equals(key)) {
-				return replace(index, key, value);
-			}
+    extends AbstractArrayBasedMap<K, V> permits GrowableSequencedMap {
+
+  private static final float DEFAULT_LOAD_FACTOR = 0.75F;
+
+  private static final int FIRST_RESIZE = 8;
+
+  private static final int MAX_ARRAY_LENGTH = MAX_POSITIVE_POWER_OF_TWO;
+
+  private final float loadFactor = DEFAULT_LOAD_FACTOR;
+
+  private int rehashSize;
+
+  /**
+   * Creates a new {@code GrowableMap} instance.
+   */
+  public GrowableMap() {}
+
+  /**
+   * Removes all of the mappings in this map.
+   */
+  @Override
+  public void clear() {
+    Arrays.fill(array, null);
+
+    size = 0;
+  }
+
+  /**
+   * Not implemented in this release. It might be implemented in a future
+   * release.
+   *
+   * @param key
+   *        ignored (the operation is not implemented)
+   * @param remappingFunction
+   *        ignored (the operation is not implemented)
+   *
+   * @return this method does not return as it always throw an exception
+   *
+   * @throws UnsupportedOperationException
+   *         always
+   */
+  @Override
+  public final V compute(K key, BiFunction<? super K, ? super V, ? extends V> remappingFunction) {
+    throw new UnsupportedOperationException("Not yet implemented");
+  }
+
+  /**
+   * Not implemented in this release. It might be implemented in a future
+   * release.
+   *
+   * @param key
+   *        ignored (the operation is not implemented)
+   * @param mappingFunction
+   *        ignored (the operation is not implemented)
+   *
+   * @return this method does not return as it always throws an exception
+   *
+   * @throws UnsupportedOperationException
+   *         this method may be implemented in a future release
+   */
+  @Override
+  public final V computeIfAbsent(K key, Function<? super K, ? extends V> mappingFunction) {
+    throw new UnsupportedOperationException("Not yet implemented");
+  }
+
+  /**
+   * Not implemented in this release. It might be implemented in a future
+   * release.
+   *
+   * @param key
+   *        ignored (the operation is not implemented)
+   * @param remappingFunction
+   *        ignored (the operation is not implemented)
+   *
+   * @return this method does not return as it always throws an exception
+   *
+   * @throws UnsupportedOperationException
+   *         this method may be implemented in a future release
+   */
+  @Override
+  public final V computeIfPresent(
+                                  K key, BiFunction<? super K, ? super V, ? extends V> remappingFunction) {
+    throw new UnsupportedOperationException("Not yet implemented");
+  }
+
+  /**
+   * Associates the specified value with the specified key in this map. If the
+   * map previously contained a mapping for the key, the old value is replaced
+   * by the specified value.
+   *
+   * <p>
+   * A map {@code m} is said to contain a mapping for a key {@code k} if and
+   * only if {@link #containsKey(Object) m.containsKey(k)} would return
+   * {@code true}.)
+   *
+   * @param key
+   *        key with which the specified value is to be associated
+   * @param value
+   *        value to be associated with the specified key
+   *
+   * @return the previous value associated with {@code key}, or
+   *         {@code null} if there was no mapping for {@code key}.
+   *
+   * @throws NullPointerException if the specified key or value is null
+   */
+  @Override
+  public final V put(K key, V value) {
+    Check.notNull(key, "key == null");
+    Check.notNull(value, "value == null");
+
+    return putUnchecked(key, value);
+  }
+
+  /**
+   * Not implemented in this release. It might be implemented in a future
+   * release.
+   *
+   * @param m
+   *        ignored (this operation in not yet implemented)
+   *
+   * @throws UnsupportedOperationException
+   *         this method may be implemented in a future release
+   */
+  @Override
+  public final void putAll(Map<? extends K, ? extends V> m) {
+    for (Map.Entry<? extends K, ? extends V> e : m.entrySet()) {
+      put(e.getKey(), e.getValue());
+    }
+  }
+
+  /**
+   * Returns an {@link UnmodifiableMap} copy of this map.
+   *
+   * <p>
+   * The returned {@code UnmodifiableMap} will contain all of the entries from
+   * this
+   * map.
+   *
+   * <p>
+   * The returned map will be a copy in the sense that, after this method
+   * returns, modifying this map will have no effect on the returned (copied)
+   * one.
+   *
+   * <p>
+   * Note, however, that the behaviour of this method is undefined if this map
+   * is modified while the copy is being made.
+   *
+   * @return an {@link UnmodifiableMap} copy of this set
+   */
+  public UnmodifiableMap<K, V> toUnmodifiableMap() {
+    switch (size) {
+      case 0:
+        return UnmodifiableMap.of();
+      default:
+        var copy = Arrays.copyOf(array, array.length);
+
+        return new UnmodifiableMap<K, V>(copy, size);
+    }
+  }
+
+  void insert(int index, Object key, Object value) {
+    set(index, key, value);
+
+    size++;
+
+    rehashIfNecessary();
+  }
+
+  final V putUnchecked(Object key, Object value) {
+    firstResizeIfNecessary();
+
+    int index, marker;
+    index = marker = hashIndex(key);
+
+    var existing = array[index];
+
+    if (existing == null) {
+      insert(index, key, value);
+
+      return null;
+    }
+
+    else if (existing.equals(key)) {
+      return replace(index, key, value);
+    }
+
+    else {
+      index = index + 2;
+    }
+
+    while (index < array.length) {
+      existing = array[index];
+
+      if (existing == null) {
+        insert(index, key, value);
+
+        return null;
+      }
+
+      else if (existing.equals(key)) {
+        return replace(index, key, value);
+      }
+
+      else {
+        index = index + 2;
+      }
+    }
+
+    index = 0;
+
+    while (index < marker) {
+      existing = array[index];
+
+      if (existing == null) {
+        insert(index, key, value);
+
+        return null;
+      }
+
+      else if (existing.equals(key)) {
+        return replace(index, key, value);
+      }
+
+      else {
+        index = index + 2;
+      }
+    }
+
+    throw new UnsupportedOperationException("Implement me");
+  }
+
+  @SuppressWarnings("unchecked")
+  V replace(int keyIndex, Object key, Object value) {
+    int valueIndex;
+    valueIndex = keyIndex + 1;
 
-			else {
-				index = index + 2;
-			}
-		}
-
-		throw new UnsupportedOperationException("Implement me");
-	}
+    var existingValue = array[valueIndex];
 
-	@SuppressWarnings("unchecked")
-	V replace(int keyIndex, Object key, Object value) {
-		int valueIndex;
-		valueIndex = keyIndex + 1;
+    array[valueIndex] = value;
 
-		var existingValue = array[valueIndex];
+    return (V) existingValue;
+  }
 
-		array[valueIndex] = value;
+  private void firstResizeIfNecessary() {
+    if (array == ObjectArrays.empty()) {
+      resizeTo(FIRST_RESIZE);
+    }
+  }
 
-		return (V) existingValue;
-	}
+  private void rehashIfNecessary() {
+    if (size < rehashSize) {
+      return;
+    }
 
-	private void firstResizeIfNecessary() {
-		if (array == ObjectArrays.empty()) {
-			resizeTo(FIRST_RESIZE);
-		}
-	}
+    if (array.length == MAX_ARRAY_LENGTH) {
+      throw new OutOfMemoryError("backing array already at max allowed length");
+    }
 
-	private void rehashIfNecessary() {
-		if (size < rehashSize) {
-			return;
-		}
+    var previous = array;
 
-		if (array.length == MAX_ARRAY_LENGTH) {
-			throw new OutOfMemoryError("backing array already at max allowed length");
-		}
+    var newLength = array.length << 1;
 
-		var previous = array;
+    if (newLength < 0) {
+      newLength = MAX_ARRAY_LENGTH;
+    }
 
-		var newLength = array.length << 1;
+    resizeTo(newLength);
 
-		if (newLength < 0) {
-			newLength = MAX_ARRAY_LENGTH;
-		}
+    for (int i = 0, length = previous.length; i < length; i = i + 2) {
+      var key = previous[i];
 
-		resizeTo(newLength);
+      if (key == null) {
+        continue;
+      }
 
-		for (int i = 0, length = previous.length; i < length; i = i + 2) {
-			var key = previous[i];
+      var value = previous[i + 1];
 
-			if (key == null) {
-				continue;
-			}
+      rehashPut(key, value);
+    }
+  }
 
-			var value = previous[i + 1];
+  private void rehashPut(Object key, Object value) {
+    int index, marker;
+    index = marker = hashIndex(key);
 
-			rehashPut(key, value);
-		}
-	}
+    var existing = array[index];
 
-	private void rehashPut(Object key, Object value) {
-		int index, marker;
-		index = marker = hashIndex(key);
+    if (existing == null) {
+      set(index, key, value);
 
-		var existing = array[index];
+      return;
+    }
 
-		if (existing == null) {
-			set(index, key, value);
+    else {
+      index = index + 2;
+    }
 
-			return;
-		}
+    while (index < array.length) {
+      existing = array[index];
 
-		else {
-			index = index + 2;
-		}
+      if (existing == null) {
+        set(index, key, value);
 
-		while (index < array.length) {
-			existing = array[index];
+        return;
+      }
 
-			if (existing == null) {
-				set(index, key, value);
+      else {
+        index = index + 2;
+      }
+    }
 
-				return;
-			}
+    index = 0;
 
-			else {
-				index = index + 2;
-			}
-		}
+    while (index < marker) {
+      existing = array[index];
 
-		index = 0;
+      if (existing == null) {
+        set(index, key, value);
 
-		while (index < marker) {
-			existing = array[index];
+        return;
+      }
 
-			if (existing == null) {
-				set(index, key, value);
+      else {
+        index = index + 2;
+      }
+    }
 
-				return;
-			}
+    throw new UnsupportedOperationException("Implement me");
+  }
 
-			else {
-				index = index + 2;
-			}
-		}
+  private void resizeTo(int size) {
+    array = new Object[size];
 
-		throw new UnsupportedOperationException("Implement me");
-	}
+    var hashLength = size >> 1;
 
-	private void resizeTo(int size) {
-		array = new Object[size];
+    hashMask = hashLength - 1;
 
-		var hashLength = size >> 1;
+    rehashSize = (int) (hashLength * loadFactor);
+  }
 
-		hashMask = hashLength - 1;
+  private void set(int index, Object key, Object value) {
+    array[index] = key;
 
-		rehashSize = (int) (hashLength * loadFactor);
-	}
-
-	private void set(int index, Object key, Object value) {
-		array[index] = key;
-
-		array[index + 1] = value;
-	}
+    array[index + 1] = value;
+  }
 
 }

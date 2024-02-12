@@ -16,71 +16,37 @@
 package objectos.css;
 
 import java.util.Map;
-import java.util.TreeMap;
 import objectos.lang.object.Check;
 import objectos.notes.NoteSink;
 
-public class WayStyleGen extends WayStyleGenParser implements StyleGen {
+final class WayStyleGen implements StyleGen {
 
-  private StringBuilder out;
+  private final NoteSink noteSink;
 
-  private Map<Variant, StringBuilder> mediaQueries;
+  private final Map<String, RuleFactory> factories;
 
-  public WayStyleGen() {}
+  private final Map<String, Variant> variants;
 
-  public final WayStyleGen noteSink(NoteSink noteSink) {
-    this.noteSink = Check.notNull(noteSink, "noteSink == null");
+  public WayStyleGen(NoteSink noteSink, Map<String, RuleFactory> factories, Map<String, Variant> variants) {
+    this.noteSink = noteSink;
 
-    return this;
+    this.factories = factories;
+
+    this.variants = variants;
   }
 
   @Override
-  public final String generate() {
-    out = new StringBuilder();
+  public final String generate(Iterable<Class<?>> classes) {
+    Check.notNull(classes, "classes == null");
 
-    rules.values().stream()
-        .filter(o -> o != Rule.NOOP)
-        .sorted()
-        .forEach(rule -> rule.accept(this));
+    WayStyleGenRound round;
+    round = new WayStyleGenRound(noteSink, factories, variants);
 
-    if (mediaQueries != null) {
-
-      for (StringBuilder query : mediaQueries.values()) {
-        if (!out.isEmpty()) {
-          out.append(System.lineSeparator());
-        }
-
-        out.append(query);
-        out.append("}");
-        out.append(System.lineSeparator());
-      }
-
+    for (var clazz : classes) {
+      round.scan(clazz);
     }
 
-    return out.toString();
-  }
-
-  final StringBuilder mediaQuery(Variant variant) {
-    if (mediaQueries == null) {
-      mediaQueries = new TreeMap<>();
-    }
-
-    StringBuilder out;
-    out = mediaQueries.get(variant);
-
-    if (out == null) {
-      out = new StringBuilder();
-
-      variant.writeMediaQueryStart(out);
-
-      mediaQueries.put(variant, out);
-    }
-
-    return out;
-  }
-
-  final StringBuilder topLevel() {
-    return out;
+    return round.generate();
   }
 
 }

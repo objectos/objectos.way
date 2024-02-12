@@ -64,6 +64,10 @@ enum Utility {
     this.property2 = property2;
   }
 
+  final RuleFactory factory(String value) {
+    return new RuleFactory(this, value);
+  }
+
   final Rule nameValue(List<Variant> variants, String className, String value) {
     return new WithNameAndValue(this, variants, className, value);
   }

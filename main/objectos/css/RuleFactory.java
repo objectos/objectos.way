@@ -17,23 +17,10 @@ package objectos.css;
 
 import java.util.List;
 
-abstract class WayStyleGenParser extends WayStyleGenVariants {
+record RuleFactory(Utility utility, String value) {
 
-  @Override
-  final Rule onVariants(String className, List<Variant> variants, String value) {
-    Rule rule;
-    rule = Rule.NOOP;
-
-    RuleFactory factory;
-    factory = findFactory(value);
-
-    if (factory != null) {
-      rule = factory.create(className, variants);
-    }
-
-    return rule;
+  public final Rule create(String className, List<Variant> variants) {
+    return utility.nameValue(variants, className, value);
   }
-
-  abstract RuleFactory findFactory(String value);
 
 }

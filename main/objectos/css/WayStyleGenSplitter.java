@@ -15,7 +15,7 @@
  */
 package objectos.css;
 
-abstract class WayStyleGenSplitter extends WayStyleGenScanner2 {
+abstract class WayStyleGenSplitter extends WayStyleGenScanner {
 
   @Override
   final void onScan(String s) {

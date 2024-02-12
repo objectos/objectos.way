@@ -15,7 +15,7 @@
  */
 package objectos.css;
 
-record Breakpoint(int index, String name, String value) implements Variant {
+record Breakpoint(int index, String value) implements Variant {
 
   @Override
   public final int compareTo(Variant o) {

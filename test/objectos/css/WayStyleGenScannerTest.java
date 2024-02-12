@@ -56,7 +56,7 @@ public class WayStyleGenScannerTest {
     List<String> result;
     result = new ArrayList<>();
 
-    new WayStyleGenScanner2() {
+    new WayStyleGenScanner() {
       @Override
       final void onScan(String s) {
         result.add(s);

@@ -15,16 +15,43 @@
  */
 package objectos.css;
 
+import static objectos.css.Utility.ALIGN_ITEMS;
+import static objectos.css.Utility.DISPLAY;
+import static objectos.css.Utility.FLEX_DIRECTION;
+
 import java.util.Map;
-import objectos.util.map.GrowableSequencedMap;
+import java.util.Map.Entry;
+import objectos.lang.object.Check;
+import objectos.notes.NoOpNoteSink;
+import objectos.notes.NoteSink;
+import objectos.util.map.GrowableMap;
 
-public class Palette {
+public class StyleGenBuilder {
 
-  static final Map<String, String> DEFAULT;
+  private NoteSink noteSink = NoOpNoteSink.of();
 
-  static {
-    GrowableSequencedMap<String, String> colors;
-    colors = new GrowableSequencedMap<>();
+  private final Map<String, Variant> breakpoints = Map.of(
+      "sm", new Breakpoint(0, "640px"),
+      "md", new Breakpoint(1, "768px"),
+      "lg", new Breakpoint(2, "1024px"),
+      "xl", new Breakpoint(3, "1280px"),
+      "2xl", new Breakpoint(4, "1536px")
+  );
+
+  private final Map<String, String> colors;
+
+  private final Map<String, String> spacing;
+
+  private final Map<String, String> height;
+
+  private final Map<String, String> letterSpacing;
+
+  private final Map<String, String> margin;
+
+  private final Map<String, String> padding;
+
+  public StyleGenBuilder() {
+    colors = new GrowableMap<>();
 
     colors.put("inherit", "inherit");
     colors.put("current", "currentColor");
@@ -297,21 +324,188 @@ public class Palette {
     colors.put("rose-900", "#881337");
     colors.put("rose-950", "#4c0519");
 
-    DEFAULT = colors.toUnmodifiableMap();
+    spacing = new GrowableMap<>();
+    spacing.put("px", "1px");
+    spacing.put("0", "0px");
+    spacing.put("0.5", "0.125rem");
+    spacing.put("1", "0.25rem");
+    spacing.put("1.5", "0.375rem");
+    spacing.put("2", "0.5rem");
+    spacing.put("2.5", "0.625rem");
+    spacing.put("3", "0.75rem");
+    spacing.put("3.5", "0.875rem");
+    spacing.put("4", "1rem");
+    spacing.put("5", "1.25rem");
+    spacing.put("6", "1.5rem");
+    spacing.put("7", "1.75rem");
+    spacing.put("8", "2rem");
+    spacing.put("9", "2.25rem");
+    spacing.put("10", "2.5rem");
+    spacing.put("11", "2.75rem");
+    spacing.put("12", "3rem");
+    spacing.put("14", "3.5rem");
+    spacing.put("16", "4rem");
+    spacing.put("20", "5rem");
+    spacing.put("24", "6rem");
+    spacing.put("28", "7rem");
+    spacing.put("32", "8rem");
+    spacing.put("36", "9rem");
+    spacing.put("40", "10rem");
+    spacing.put("44", "11rem");
+    spacing.put("48", "12rem");
+    spacing.put("52", "13rem");
+    spacing.put("56", "14rem");
+    spacing.put("60", "15rem");
+    spacing.put("64", "16rem");
+    spacing.put("72", "18rem");
+    spacing.put("80", "20rem");
+    spacing.put("96", "24rem");
+
+    // H
+    height = new GrowableMap<>();
+    height.putAll(spacing);
+    height.put("auto", "auto");
+    height.put("1/2", "50%");
+    height.put("1/3", "33.333333%");
+    height.put("2/3", "66.666667%");
+    height.put("1/4", "25%");
+    height.put("2/4", "50%");
+    height.put("3/4", "75%");
+    height.put("1/5", "20%");
+    height.put("2/5", "40%");
+    height.put("3/5", "60%");
+    height.put("4/5", "80%");
+    height.put("1/6", "16.666667%");
+    height.put("2/6", "33.333333%");
+    height.put("3/6", "50%");
+    height.put("4/6", "66.666667%");
+    height.put("5/6", "83.333333%");
+    height.put("full", "100%");
+    height.put("screen", "100vh");
+    height.put("svh", "100svh");
+    height.put("lvh", "100lvh");
+    height.put("dvh", "100dvh");
+    height.put("min", "min-content");
+    height.put("max", "max-content");
+    height.put("fit", "fit-content");
+
+    // L
+    letterSpacing = new GrowableMap<>();
+    letterSpacing.put("tighter", "-0.05em");
+    letterSpacing.put("tight", "-0.025em");
+    letterSpacing.put("normal", "0em");
+    letterSpacing.put("wide", "0.025em");
+    letterSpacing.put("wider", "0.05em");
+    letterSpacing.put("widest", "0.1em");
+
+    // M
+    margin = new GrowableMap<>();
+    margin.putAll(spacing);
+    margin.put("auto", "auto");
+
+    // P
+    padding = new GrowableMap<>();
+    padding.putAll(spacing);
   }
 
-  private final Map<String, String> colors;
+  public final StyleGenBuilder noteSink(NoteSink noteSink) {
+    this.noteSink = Check.notNull(noteSink, "noteSink == null");
 
-  private Palette(Map<String, String> colors) {
-    this.colors = colors;
+    return this;
   }
 
-  public static Palette defaultPalette() {
-    return new Palette(DEFAULT);
+  public final StyleGen build() {
+    GrowableMap<String, RuleFactory> factories;
+    factories = new GrowableMap<>();
+
+    // A
+    factories.put("items-start", ALIGN_ITEMS.factory("flex-start"));
+    factories.put("items-end", ALIGN_ITEMS.factory("flex-end"));
+    factories.put("items-center", ALIGN_ITEMS.factory("center"));
+    factories.put("items-baseline", ALIGN_ITEMS.factory("baseline"));
+    factories.put("items-stretch", ALIGN_ITEMS.factory("stretch"));
+
+    // B
+    config(Utility.BACKGROUND_COLOR, "bg-", colors, factories);
+
+    // D
+    factories.put("block", DISPLAY.factory("block"));
+    factories.put("inline-block", DISPLAY.factory("inline-block"));
+    factories.put("inline", DISPLAY.factory("inline"));
+    factories.put("flex", DISPLAY.factory("flex"));
+    factories.put("inline-flex", DISPLAY.factory("inline-flex"));
+    factories.put("table", DISPLAY.factory("table"));
+    factories.put("inline-table", DISPLAY.factory("inline-table"));
+    factories.put("table-caption", DISPLAY.factory("table-caption"));
+    factories.put("table-cell", DISPLAY.factory("table-cell"));
+    factories.put("table-column", DISPLAY.factory("table-column"));
+    factories.put("table-column-group", DISPLAY.factory("table-column-group"));
+    factories.put("table-footer-group", DISPLAY.factory("table-footer-group"));
+    factories.put("table-header-group", DISPLAY.factory("table-header-group"));
+    factories.put("table-row-group", DISPLAY.factory("table-row-group"));
+    factories.put("table-row", DISPLAY.factory("table-row"));
+    factories.put("flow-root", DISPLAY.factory("flow-root"));
+    factories.put("grid", DISPLAY.factory("grid"));
+    factories.put("inline-grid", DISPLAY.factory("inline-grid"));
+    factories.put("contents", DISPLAY.factory("contents"));
+    factories.put("list-item", DISPLAY.factory("list-item"));
+    factories.put("hidden", DISPLAY.factory("none"));
+
+    // F
+    factories.put("flex-row", FLEX_DIRECTION.factory("row"));
+    factories.put("flex-row-reverse", FLEX_DIRECTION.factory("row-reverse"));
+    factories.put("flex-col", FLEX_DIRECTION.factory("column"));
+    factories.put("flex-col-reverse", FLEX_DIRECTION.factory("column-reverse"));
+
+    // H
+    config(Utility.HEIGHT, "h-", height, factories);
+
+    // L
+    config(Utility.LETTER_SPACING, "tracking-", letterSpacing, factories);
+
+    // M
+    config(Utility.MARGIN, "m-", margin, factories);
+    config(Utility.MARGIN_X, "mx-", margin, factories);
+    config(Utility.MARGIN_Y, "my-", margin, factories);
+    config(Utility.MARGIN_TOP, "mt-", margin, factories);
+    config(Utility.MARGIN_RIGHT, "mr-", margin, factories);
+    config(Utility.MARGIN_BOTTOM, "mb-", margin, factories);
+    config(Utility.MARGIN_LEFT, "ml-", margin, factories);
+
+    // P
+    config(Utility.PADDING, "p-", padding, factories);
+    config(Utility.PADDING_X, "px-", padding, factories);
+    config(Utility.PADDING_Y, "py-", padding, factories);
+    config(Utility.PADDING_TOP, "pt-", padding, factories);
+    config(Utility.PADDING_RIGHT, "pr-", padding, factories);
+    config(Utility.PADDING_BOTTOM, "pb-", padding, factories);
+    config(Utility.PADDING_LEFT, "pl-", padding, factories);
+
+    return new WayStyleGen(
+        noteSink,
+
+        factories.toUnmodifiableMap(),
+
+        breakpoints
+    );
   }
 
-  final String get(String className) {
-    return colors.get(className);
+  private void config(Utility utility, String prefix, Map<String, String> values, GrowableMap<String, RuleFactory> factories) {
+    for (Entry<String, String> entry : values.entrySet()) {
+      String key;
+      key = entry.getKey();
+
+      String className;
+      className = prefix + key;
+
+      String value;
+      value = entry.getValue();
+
+      RuleFactory factory;
+      factory = utility.factory(value);
+
+      factories.put(className, factory);
+    }
   }
 
 }

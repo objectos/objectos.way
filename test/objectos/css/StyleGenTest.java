@@ -17,6 +17,7 @@ package objectos.css;
 
 import static org.testng.Assert.assertEquals;
 
+import java.util.Set;
 import objectos.html.HtmlTemplate;
 import objectos.way.TestingNoteSink;
 import org.testng.annotations.Test;
@@ -1179,14 +1180,18 @@ public class StyleGenTest {
   }
 
   private void test(Class<?> type, String expected) {
-    WayStyleGen gen;
-    gen = new WayStyleGen();
+    StyleGenBuilder builder;
+    builder = new StyleGenBuilder();
 
-    gen.noteSink(TestingNoteSink.INSTANCE);
+    builder.noteSink(TestingNoteSink.INSTANCE);
 
-    gen.scan(type);
+    StyleGen gen;
+    gen = builder.build();
 
-    assertEquals(gen.generate(), expected);
+    String result;
+    result = gen.generate(Set.of(type));
+
+    assertEquals(result, expected);
   }
 
 }

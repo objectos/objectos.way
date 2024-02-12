@@ -16,46 +16,61 @@
 package objectos.css;
 
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertSame;
 
 import java.util.List;
-import java.util.Map;
 import org.testng.annotations.Test;
 
 public class WayStyleGenParserTest {
 
-  @Test
-  public void responsive() {
-    WayStyleGenParser parser;
-    parser = new WayStyleGenParser();
+  private final RuleFactory block = new RuleFactory(Utility.DISPLAY, "block");
 
-    parser.parse("sm:block");
-
-    Map<String, Rule> rules;
-    rules = parser.rules;
-
-    assertEquals(rules.size(), 1);
+  @Test(description = "it should search factory by value, not className")
+  public void testCase01() {
+    var parser = new ThisImpl();
 
     Rule rule;
-    rule = rules.values().iterator().next();
+    rule = parser.onVariants("sm:foo", List.of(), "foo");
 
-    List<Variant> variants;
-    variants = rule.variants;
+    assertSame(rule, Rule.NOOP);
 
-    assertEquals(variants.size(), 1);
-    assertEquals(variants.get(0), new Breakpoint(0, "sm", "640px"));
+    assertEquals(parser.findValue, "foo");
   }
 
-  @Test
-  public void responsive_multiple() {
-    WayStyleGenParser parser;
-    parser = new WayStyleGenParser();
+  @Test(description = "it should return rule from factory")
+  public void testCase02() {
+    var parser = new ThisImpl();
 
-    parser.parse("sm:block md:m-0");
+    Rule rule;
+    rule = parser.onVariants("sm:block", List.of(), "block");
 
-    Map<String, Rule> rules;
-    rules = parser.rules;
+    assertEquals(rule.utility, Utility.DISPLAY);
 
-    assertEquals(rules.size(), 2);
+    assertEquals(parser.findValue, "block");
+  }
+
+  private class ThisImpl extends WayStyleGenParser {
+
+    String findValue;
+
+    @Override
+    final RuleFactory findFactory(String value) {
+      this.findValue = value;
+
+      if (value.equals("block")) {
+        return block;
+      }
+
+      else {
+        return null;
+      }
+    }
+
+    @Override
+    final Variant getVariant(String variantName) {
+      throw new UnsupportedOperationException();
+    }
+
   }
 
 }

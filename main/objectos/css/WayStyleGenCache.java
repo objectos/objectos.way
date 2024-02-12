@@ -15,25 +15,34 @@
  */
 package objectos.css;
 
-import java.util.List;
+import java.util.Map;
+import objectos.util.map.GrowableSequencedMap;
 
-abstract class WayStyleGenParser extends WayStyleGenVariants {
+abstract class WayStyleGenCache extends WayStyleGenSplitter {
+
+  final Map<String, Rule> rules = new GrowableSequencedMap<>();
 
   @Override
-  final Rule onVariants(String className, List<Variant> variants, String value) {
-    Rule rule;
-    rule = Rule.NOOP;
+  final void onSplit(String s) {
+    Rule existing;
+    existing = rules.get(s);
 
-    RuleFactory factory;
-    factory = findFactory(value);
+    if (existing == null) {
+      Rule newRule;
+      newRule = onCacheMiss(s);
 
-    if (factory != null) {
-      rule = factory.create(className, variants);
+      rules.put(s, newRule);
     }
 
-    return rule;
+    else {
+      onCacheHit(existing);
+    }
   }
 
-  abstract RuleFactory findFactory(String value);
+  void onCacheHit(Rule existing) {
+    // for testing
+  }
+
+  abstract Rule onCacheMiss(String className);
 
 }
