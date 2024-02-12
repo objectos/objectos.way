@@ -27,9 +27,7 @@ public class ObjectosCssPseudoGen {
     ObjectosCssPseudoGen gen;
     gen = new ObjectosCssPseudoGen();
 
-    gen.classNameSingleLine(POSITION, "");
-
-    gen.cases(POSITION, "POSITION");
+    gen.classNamesColors("text-");
   }
 
   private static final Map<String, String> SPACING = seqmap(

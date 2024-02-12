@@ -1224,6 +1224,294 @@ public class StyleGenTest {
   }
 
   @Test
+  public void textColor() {
+    class Subject extends AbstractSubject {
+      @Override
+      final void classes() {
+        // @formatter:off
+        className("text-inherit text-current text-transparent text-black text-white");
+        className("text-slate-50 text-slate-100 text-slate-200 text-slate-300 text-slate-400 text-slate-500 text-slate-600 text-slate-700 text-slate-800 text-slate-900 text-slate-950");
+        className("text-gray-50 text-gray-100 text-gray-200 text-gray-300 text-gray-400 text-gray-500 text-gray-600 text-gray-700 text-gray-800 text-gray-900 text-gray-950");
+        className("text-zinc-50 text-zinc-100 text-zinc-200 text-zinc-300 text-zinc-400 text-zinc-500 text-zinc-600 text-zinc-700 text-zinc-800 text-zinc-900 text-zinc-950");
+        className("text-neutral-50 text-neutral-100 text-neutral-200 text-neutral-300 text-neutral-400 text-neutral-500 text-neutral-600 text-neutral-700 text-neutral-800 text-neutral-900 text-neutral-950");
+        className("text-stone-50 text-stone-100 text-stone-200 text-stone-300 text-stone-400 text-stone-500 text-stone-600 text-stone-700 text-stone-800 text-stone-900 text-stone-950");
+        className("text-red-50 text-red-100 text-red-200 text-red-300 text-red-400 text-red-500 text-red-600 text-red-700 text-red-800 text-red-900 text-red-950");
+        className("text-orange-50 text-orange-100 text-orange-200 text-orange-300 text-orange-400 text-orange-500 text-orange-600 text-orange-700 text-orange-800 text-orange-900 text-orange-950");
+        className("text-amber-50 text-amber-100 text-amber-200 text-amber-300 text-amber-400 text-amber-500 text-amber-600 text-amber-700 text-amber-800 text-amber-900 text-amber-950");
+        className("text-yellow-50 text-yellow-100 text-yellow-200 text-yellow-300 text-yellow-400 text-yellow-500 text-yellow-600 text-yellow-700 text-yellow-800 text-yellow-900 text-yellow-950");
+        className("text-lime-50 text-lime-100 text-lime-200 text-lime-300 text-lime-400 text-lime-500 text-lime-600 text-lime-700 text-lime-800 text-lime-900 text-lime-950");
+        className("text-green-50 text-green-100 text-green-200 text-green-300 text-green-400 text-green-500 text-green-600 text-green-700 text-green-800 text-green-900 text-green-950");
+        className("text-emerald-50 text-emerald-100 text-emerald-200 text-emerald-300 text-emerald-400 text-emerald-500 text-emerald-600 text-emerald-700 text-emerald-800 text-emerald-900 text-emerald-950");
+        className("text-teal-50 text-teal-100 text-teal-200 text-teal-300 text-teal-400 text-teal-500 text-teal-600 text-teal-700 text-teal-800 text-teal-900 text-teal-950");
+        className("text-cyan-50 text-cyan-100 text-cyan-200 text-cyan-300 text-cyan-400 text-cyan-500 text-cyan-600 text-cyan-700 text-cyan-800 text-cyan-900 text-cyan-950");
+        className("text-sky-50 text-sky-100 text-sky-200 text-sky-300 text-sky-400 text-sky-500 text-sky-600 text-sky-700 text-sky-800 text-sky-900 text-sky-950");
+        className("text-blue-50 text-blue-100 text-blue-200 text-blue-300 text-blue-400 text-blue-500 text-blue-600 text-blue-700 text-blue-800 text-blue-900 text-blue-950");
+        className("text-indigo-50 text-indigo-100 text-indigo-200 text-indigo-300 text-indigo-400 text-indigo-500 text-indigo-600 text-indigo-700 text-indigo-800 text-indigo-900 text-indigo-950");
+        className("text-violet-50 text-violet-100 text-violet-200 text-violet-300 text-violet-400 text-violet-500 text-violet-600 text-violet-700 text-violet-800 text-violet-900 text-violet-950");
+        className("text-purple-50 text-purple-100 text-purple-200 text-purple-300 text-purple-400 text-purple-500 text-purple-600 text-purple-700 text-purple-800 text-purple-900 text-purple-950");
+        className("text-fuchsia-50 text-fuchsia-100 text-fuchsia-200 text-fuchsia-300 text-fuchsia-400 text-fuchsia-500 text-fuchsia-600 text-fuchsia-700 text-fuchsia-800 text-fuchsia-900 text-fuchsia-950");
+        className("text-pink-50 text-pink-100 text-pink-200 text-pink-300 text-pink-400 text-pink-500 text-pink-600 text-pink-700 text-pink-800 text-pink-900 text-pink-950");
+        className("text-rose-50 text-rose-100 text-rose-200 text-rose-300 text-rose-400 text-rose-500 text-rose-600 text-rose-700 text-rose-800 text-rose-900 text-rose-950");
+        // @formatter:on
+      }
+    }
+
+    test(
+        Subject.class,
+
+        """
+        .text-inherit { color: inherit }
+        .text-current { color: currentColor }
+        .text-transparent { color: transparent }
+        .text-black { color: #000000 }
+        .text-white { color: #ffffff }
+        .text-slate-50 { color: #f8fafc }
+        .text-slate-100 { color: #f1f5f9 }
+        .text-slate-200 { color: #e2e8f0 }
+        .text-slate-300 { color: #cbd5e1 }
+        .text-slate-400 { color: #94a3b8 }
+        .text-slate-500 { color: #64748b }
+        .text-slate-600 { color: #475569 }
+        .text-slate-700 { color: #334155 }
+        .text-slate-800 { color: #1e293b }
+        .text-slate-900 { color: #0f172a }
+        .text-slate-950 { color: #020617 }
+        .text-gray-50 { color: #f9fafb }
+        .text-gray-100 { color: #f3f4f6 }
+        .text-gray-200 { color: #e5e7eb }
+        .text-gray-300 { color: #d1d5db }
+        .text-gray-400 { color: #9ca3af }
+        .text-gray-500 { color: #6b7280 }
+        .text-gray-600 { color: #4b5563 }
+        .text-gray-700 { color: #374151 }
+        .text-gray-800 { color: #1f2937 }
+        .text-gray-900 { color: #111827 }
+        .text-gray-950 { color: #030712 }
+        .text-zinc-50 { color: #fafafa }
+        .text-zinc-100 { color: #f4f4f5 }
+        .text-zinc-200 { color: #e4e4e7 }
+        .text-zinc-300 { color: #d4d4d8 }
+        .text-zinc-400 { color: #a1a1aa }
+        .text-zinc-500 { color: #71717a }
+        .text-zinc-600 { color: #52525b }
+        .text-zinc-700 { color: #3f3f46 }
+        .text-zinc-800 { color: #27272a }
+        .text-zinc-900 { color: #18181b }
+        .text-zinc-950 { color: #09090b }
+        .text-neutral-50 { color: #fafafa }
+        .text-neutral-100 { color: #f5f5f5 }
+        .text-neutral-200 { color: #e5e5e5 }
+        .text-neutral-300 { color: #d4d4d4 }
+        .text-neutral-400 { color: #a3a3a3 }
+        .text-neutral-500 { color: #737373 }
+        .text-neutral-600 { color: #525252 }
+        .text-neutral-700 { color: #404040 }
+        .text-neutral-800 { color: #262626 }
+        .text-neutral-900 { color: #171717 }
+        .text-neutral-950 { color: #0a0a0a }
+        .text-stone-50 { color: #fafaf9 }
+        .text-stone-100 { color: #f5f5f4 }
+        .text-stone-200 { color: #e7e5e4 }
+        .text-stone-300 { color: #d6d3d1 }
+        .text-stone-400 { color: #a8a29e }
+        .text-stone-500 { color: #78716c }
+        .text-stone-600 { color: #57534e }
+        .text-stone-700 { color: #44403c }
+        .text-stone-800 { color: #292524 }
+        .text-stone-900 { color: #1c1917 }
+        .text-stone-950 { color: #0c0a09 }
+        .text-red-50 { color: #fef2f2 }
+        .text-red-100 { color: #fee2e2 }
+        .text-red-200 { color: #fecaca }
+        .text-red-300 { color: #fca5a5 }
+        .text-red-400 { color: #f87171 }
+        .text-red-500 { color: #ef4444 }
+        .text-red-600 { color: #dc2626 }
+        .text-red-700 { color: #b91c1c }
+        .text-red-800 { color: #991b1b }
+        .text-red-900 { color: #7f1d1d }
+        .text-red-950 { color: #450a0a }
+        .text-orange-50 { color: #fff7ed }
+        .text-orange-100 { color: #ffedd5 }
+        .text-orange-200 { color: #fed7aa }
+        .text-orange-300 { color: #fdba74 }
+        .text-orange-400 { color: #fb923c }
+        .text-orange-500 { color: #f97316 }
+        .text-orange-600 { color: #ea580c }
+        .text-orange-700 { color: #c2410c }
+        .text-orange-800 { color: #9a3412 }
+        .text-orange-900 { color: #7c2d12 }
+        .text-orange-950 { color: #431407 }
+        .text-amber-50 { color: #fffbeb }
+        .text-amber-100 { color: #fef3c7 }
+        .text-amber-200 { color: #fde68a }
+        .text-amber-300 { color: #fcd34d }
+        .text-amber-400 { color: #fbbf24 }
+        .text-amber-500 { color: #f59e0b }
+        .text-amber-600 { color: #d97706 }
+        .text-amber-700 { color: #b45309 }
+        .text-amber-800 { color: #92400e }
+        .text-amber-900 { color: #78350f }
+        .text-amber-950 { color: #451a03 }
+        .text-yellow-50 { color: #fefce8 }
+        .text-yellow-100 { color: #fef9c3 }
+        .text-yellow-200 { color: #fef08a }
+        .text-yellow-300 { color: #fde047 }
+        .text-yellow-400 { color: #facc15 }
+        .text-yellow-500 { color: #eab308 }
+        .text-yellow-600 { color: #ca8a04 }
+        .text-yellow-700 { color: #a16207 }
+        .text-yellow-800 { color: #854d0e }
+        .text-yellow-900 { color: #713f12 }
+        .text-yellow-950 { color: #422006 }
+        .text-lime-50 { color: #f7fee7 }
+        .text-lime-100 { color: #ecfccb }
+        .text-lime-200 { color: #d9f99d }
+        .text-lime-300 { color: #bef264 }
+        .text-lime-400 { color: #a3e635 }
+        .text-lime-500 { color: #84cc16 }
+        .text-lime-600 { color: #65a30d }
+        .text-lime-700 { color: #4d7c0f }
+        .text-lime-800 { color: #3f6212 }
+        .text-lime-900 { color: #365314 }
+        .text-lime-950 { color: #1a2e05 }
+        .text-green-50 { color: #f0fdf4 }
+        .text-green-100 { color: #dcfce7 }
+        .text-green-200 { color: #bbf7d0 }
+        .text-green-300 { color: #86efac }
+        .text-green-400 { color: #4ade80 }
+        .text-green-500 { color: #22c55e }
+        .text-green-600 { color: #16a34a }
+        .text-green-700 { color: #15803d }
+        .text-green-800 { color: #166534 }
+        .text-green-900 { color: #14532d }
+        .text-green-950 { color: #052e16 }
+        .text-emerald-50 { color: #ecfdf5 }
+        .text-emerald-100 { color: #d1fae5 }
+        .text-emerald-200 { color: #a7f3d0 }
+        .text-emerald-300 { color: #6ee7b7 }
+        .text-emerald-400 { color: #34d399 }
+        .text-emerald-500 { color: #10b981 }
+        .text-emerald-600 { color: #059669 }
+        .text-emerald-700 { color: #047857 }
+        .text-emerald-800 { color: #065f46 }
+        .text-emerald-900 { color: #064e3b }
+        .text-emerald-950 { color: #022c22 }
+        .text-teal-50 { color: #f0fdfa }
+        .text-teal-100 { color: #ccfbf1 }
+        .text-teal-200 { color: #99f6e4 }
+        .text-teal-300 { color: #5eead4 }
+        .text-teal-400 { color: #2dd4bf }
+        .text-teal-500 { color: #14b8a6 }
+        .text-teal-600 { color: #0d9488 }
+        .text-teal-700 { color: #0f766e }
+        .text-teal-800 { color: #115e59 }
+        .text-teal-900 { color: #134e4a }
+        .text-teal-950 { color: #042f2e }
+        .text-cyan-50 { color: #ecfeff }
+        .text-cyan-100 { color: #cffafe }
+        .text-cyan-200 { color: #a5f3fc }
+        .text-cyan-300 { color: #67e8f9 }
+        .text-cyan-400 { color: #22d3ee }
+        .text-cyan-500 { color: #06b6d4 }
+        .text-cyan-600 { color: #0891b2 }
+        .text-cyan-700 { color: #0e7490 }
+        .text-cyan-800 { color: #155e75 }
+        .text-cyan-900 { color: #164e63 }
+        .text-cyan-950 { color: #083344 }
+        .text-sky-50 { color: #f0f9ff }
+        .text-sky-100 { color: #e0f2fe }
+        .text-sky-200 { color: #bae6fd }
+        .text-sky-300 { color: #7dd3fc }
+        .text-sky-400 { color: #38bdf8 }
+        .text-sky-500 { color: #0ea5e9 }
+        .text-sky-600 { color: #0284c7 }
+        .text-sky-700 { color: #0369a1 }
+        .text-sky-800 { color: #075985 }
+        .text-sky-900 { color: #0c4a6e }
+        .text-sky-950 { color: #082f49 }
+        .text-blue-50 { color: #eff6ff }
+        .text-blue-100 { color: #dbeafe }
+        .text-blue-200 { color: #bfdbfe }
+        .text-blue-300 { color: #93c5fd }
+        .text-blue-400 { color: #60a5fa }
+        .text-blue-500 { color: #3b82f6 }
+        .text-blue-600 { color: #2563eb }
+        .text-blue-700 { color: #1d4ed8 }
+        .text-blue-800 { color: #1e40af }
+        .text-blue-900 { color: #1e3a8a }
+        .text-blue-950 { color: #172554 }
+        .text-indigo-50 { color: #eef2ff }
+        .text-indigo-100 { color: #e0e7ff }
+        .text-indigo-200 { color: #c7d2fe }
+        .text-indigo-300 { color: #a5b4fc }
+        .text-indigo-400 { color: #818cf8 }
+        .text-indigo-500 { color: #6366f1 }
+        .text-indigo-600 { color: #4f46e5 }
+        .text-indigo-700 { color: #4338ca }
+        .text-indigo-800 { color: #3730a3 }
+        .text-indigo-900 { color: #312e81 }
+        .text-indigo-950 { color: #1e1b4b }
+        .text-violet-50 { color: #f5f3ff }
+        .text-violet-100 { color: #ede9fe }
+        .text-violet-200 { color: #ddd6fe }
+        .text-violet-300 { color: #c4b5fd }
+        .text-violet-400 { color: #a78bfa }
+        .text-violet-500 { color: #8b5cf6 }
+        .text-violet-600 { color: #7c3aed }
+        .text-violet-700 { color: #6d28d9 }
+        .text-violet-800 { color: #5b21b6 }
+        .text-violet-900 { color: #4c1d95 }
+        .text-violet-950 { color: #2e1065 }
+        .text-purple-50 { color: #faf5ff }
+        .text-purple-100 { color: #f3e8ff }
+        .text-purple-200 { color: #e9d5ff }
+        .text-purple-300 { color: #d8b4fe }
+        .text-purple-400 { color: #c084fc }
+        .text-purple-500 { color: #a855f7 }
+        .text-purple-600 { color: #9333ea }
+        .text-purple-700 { color: #7e22ce }
+        .text-purple-800 { color: #6b21a8 }
+        .text-purple-900 { color: #581c87 }
+        .text-purple-950 { color: #3b0764 }
+        .text-fuchsia-50 { color: #fdf4ff }
+        .text-fuchsia-100 { color: #fae8ff }
+        .text-fuchsia-200 { color: #f5d0fe }
+        .text-fuchsia-300 { color: #f0abfc }
+        .text-fuchsia-400 { color: #e879f9 }
+        .text-fuchsia-500 { color: #d946ef }
+        .text-fuchsia-600 { color: #c026d3 }
+        .text-fuchsia-700 { color: #a21caf }
+        .text-fuchsia-800 { color: #86198f }
+        .text-fuchsia-900 { color: #701a75 }
+        .text-fuchsia-950 { color: #4a044e }
+        .text-pink-50 { color: #fdf2f8 }
+        .text-pink-100 { color: #fce7f3 }
+        .text-pink-200 { color: #fbcfe8 }
+        .text-pink-300 { color: #f9a8d4 }
+        .text-pink-400 { color: #f472b6 }
+        .text-pink-500 { color: #ec4899 }
+        .text-pink-600 { color: #db2777 }
+        .text-pink-700 { color: #be185d }
+        .text-pink-800 { color: #9d174d }
+        .text-pink-900 { color: #831843 }
+        .text-pink-950 { color: #500724 }
+        .text-rose-50 { color: #fff1f2 }
+        .text-rose-100 { color: #ffe4e6 }
+        .text-rose-200 { color: #fecdd3 }
+        .text-rose-300 { color: #fda4af }
+        .text-rose-400 { color: #fb7185 }
+        .text-rose-500 { color: #f43f5e }
+        .text-rose-600 { color: #e11d48 }
+        .text-rose-700 { color: #be123c }
+        .text-rose-800 { color: #9f1239 }
+        .text-rose-900 { color: #881337 }
+        .text-rose-950 { color: #4c0519 }
+        """
+    );
+  }
+
+  @Test
   public void responsive() {
     class Subject extends AbstractSubject {
       @Override

@@ -38,6 +38,7 @@ import static objectos.css.Utility.PADDING_TOP;
 import static objectos.css.Utility.PADDING_X;
 import static objectos.css.Utility.PADDING_Y;
 import static objectos.css.Utility.POSITION;
+import static objectos.css.Utility.TEXT_COLOR;
 
 import java.util.List;
 import java.util.Map;
@@ -191,6 +192,16 @@ abstract class WayStyleGenParser extends WayStyleGenVariants {
 
     if (fontSizeValue != null) {
       return fontSize(fontSizeValue);
+    }
+
+    Map<String, String> colors;
+    colors = config.colors();
+
+    String colorValue;
+    colorValue = colors.get(suffix);
+
+    if (colorValue != null) {
+      return TEXT_COLOR.get(className, variants, colorValue);
     }
 
     return Rule.NOOP;

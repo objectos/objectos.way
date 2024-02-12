@@ -55,6 +55,8 @@ sealed abstract class Utility {
 
   static final Utility LETTER_SPACING = new Single("letter-spacing");
 
+  static final Utility TEXT_COLOR = new Single("color");
+
   // all instances are created in this class
   private static int COUNTER;
 
