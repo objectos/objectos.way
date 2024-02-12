@@ -15,25 +15,160 @@
  */
 package objectos.css;
 
+import static objectos.css.Utility.ALIGN_ITEMS;
+import static objectos.css.Utility.BACKGROUND_COLOR;
+import static objectos.css.Utility.DISPLAY;
+import static objectos.css.Utility.FLEX_DIRECTION;
+import static objectos.css.Utility.HEIGHT;
+import static objectos.css.Utility.LETTER_SPACING;
+import static objectos.css.Utility.LINE_HEIGHT;
+import static objectos.css.Utility.MARGIN;
+import static objectos.css.Utility.MARGIN_BOTTOM;
+import static objectos.css.Utility.MARGIN_LEFT;
+import static objectos.css.Utility.MARGIN_RIGHT;
+import static objectos.css.Utility.MARGIN_TOP;
+import static objectos.css.Utility.MARGIN_X;
+import static objectos.css.Utility.MARGIN_Y;
+import static objectos.css.Utility.PADDING;
+import static objectos.css.Utility.PADDING_BOTTOM;
+import static objectos.css.Utility.PADDING_LEFT;
+import static objectos.css.Utility.PADDING_RIGHT;
+import static objectos.css.Utility.PADDING_TOP;
+import static objectos.css.Utility.PADDING_X;
+import static objectos.css.Utility.PADDING_Y;
+
 import java.util.List;
+import java.util.Map;
 
 abstract class WayStyleGenParser extends WayStyleGenVariants {
 
-  @Override
-  final Rule onVariants(String className, List<Variant> variants, String value) {
-    Rule rule;
-    rule = Rule.NOOP;
+  private final WayStyleGenConfig config;
 
-    RuleFactory factory;
-    factory = findFactory(value);
+  private String className;
 
-    if (factory != null) {
-      rule = factory.create(className, variants);
-    }
+  private List<Variant> variants;
 
-    return rule;
+  WayStyleGenParser(WayStyleGenConfig config) {
+    this.config = config;
   }
 
-  abstract RuleFactory findFactory(String value);
+  @Override
+  final Variant getVariant(String variantName) {
+    return config.getVariant(variantName);
+  }
+
+  @Override
+  final Rule onVariants(String className, List<Variant> variants, String value) {
+    this.className = className;
+
+    this.variants = variants;
+
+    // static hash map... (sort of)
+    return switch (value) {
+      // AlignItems
+      case "items-start" -> nameValue(ALIGN_ITEMS, "flex-start");
+      case "items-end" -> nameValue(ALIGN_ITEMS, "flex-end");
+      case "items-center" -> nameValue(ALIGN_ITEMS, "center");
+      case "items-baseline" -> nameValue(ALIGN_ITEMS, "baseline");
+      case "items-stretch" -> nameValue(ALIGN_ITEMS, "stretch");
+
+      // Display
+      case "block",
+           "inline-block",
+           "inline",
+           "flex",
+           "inline-flex",
+           "table",
+           "inline-table",
+           "table-caption",
+           "table-cell",
+           "table-column",
+           "table-column-group",
+           "table-footer-group",
+           "table-header-group",
+           "table-row-group",
+           "table-row",
+           "flow-root",
+           "grid",
+           "inline-grid",
+           "contents",
+           "list-item" -> nameValue(DISPLAY, value);
+      case "hidden" -> nameValue(DISPLAY, "none");
+
+      // Flex Direction
+      case "flex-row" -> nameValue(FLEX_DIRECTION, "row");
+      case "flex-row-reverse" -> nameValue(FLEX_DIRECTION, "row-reverse");
+      case "flex-col" -> nameValue(FLEX_DIRECTION, "column");
+      case "flex-col-reverse" -> nameValue(FLEX_DIRECTION, "column-reverse");
+
+      // Others
+      default -> prefixWord1(value);
+    };
+  }
+
+  private Rule nameValue(Utility utility, String value) {
+    return utility.nameValue(variants, className, value);
+  }
+
+  /**
+   * Prefixes that are 1 word
+   */
+  private Rule prefixWord1(String value) {
+    int dashIndex;
+    dashIndex = value.indexOf('-');
+
+    if (dashIndex < 1) {
+      // the string either:
+      // 1) does not have a dash; or
+      // 2) immediately start with a dash
+      // in any case it is an invalid value
+
+      return Rule.NOOP;
+    }
+
+    String prefix;
+    prefix = value.substring(0, dashIndex);
+
+    String suffix;
+    suffix = value.substring(dashIndex + 1);
+
+    return switch (prefix) {
+      case "bg" -> config(BACKGROUND_COLOR, config.colors(), suffix);
+
+      case "h" -> config(HEIGHT, config.height(), suffix);
+
+      case "tracking" -> config(LETTER_SPACING, config.letterSpacing(), suffix);
+      case "leading" -> config(LINE_HEIGHT, config.lineHeight(), suffix);
+
+      case "m" -> config(MARGIN, config.margin(), suffix);
+      case "mx" -> config(MARGIN_X, config.margin(), suffix);
+      case "my" -> config(MARGIN_Y, config.margin(), suffix);
+      case "mt" -> config(MARGIN_TOP, config.margin(), suffix);
+      case "mr" -> config(MARGIN_RIGHT, config.margin(), suffix);
+      case "mb" -> config(MARGIN_BOTTOM, config.margin(), suffix);
+      case "ml" -> config(MARGIN_LEFT, config.margin(), suffix);
+
+      case "p" -> config(PADDING, config.padding(), suffix);
+      case "px" -> config(PADDING_X, config.padding(), suffix);
+      case "py" -> config(PADDING_Y, config.padding(), suffix);
+      case "pt" -> config(PADDING_TOP, config.padding(), suffix);
+      case "pr" -> config(PADDING_RIGHT, config.padding(), suffix);
+      case "pb" -> config(PADDING_BOTTOM, config.padding(), suffix);
+      case "pl" -> config(PADDING_LEFT, config.padding(), suffix);
+
+      default -> Rule.NOOP;
+    };
+  }
+
+  private Rule config(Utility utility, Map<String, String> map, String suffix) {
+    String value;
+    value = map.get(suffix);
+
+    if (value != null) {
+      return utility.nameValue(variants, className, value);
+    }
+
+    return Rule.NOOP;
+  }
 
 }

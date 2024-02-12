@@ -27,7 +27,9 @@ public class ObjectosCssPseudoGen {
     ObjectosCssPseudoGen gen;
     gen = new ObjectosCssPseudoGen();
 
-    gen.initVariable(LINE_HEIGHT, "lineHeight");
+    gen.classNameSingleLine(FONT_SIZE, "text-");
+
+    gen.initVariable(FONT_SIZE, "fontSize");
   }
 
   private static final Map<String, String> SPACING = seqmap(
@@ -105,6 +107,22 @@ public class ObjectosCssPseudoGen {
       kv("flex-row-reverse", "row-reverse"),
       kv("flex-col", "column"),
       kv("flex-col-reverse", "column-reverse")
+  );
+
+  static final Map<String, String> FONT_SIZE = seqmap(
+      kv("xs", "0.75rem/1rem"),
+      kv("sm", "0.875rem/1.25rem"),
+      kv("base", "1rem/1.5rem"),
+      kv("lg", "1.125rem/1.75rem"),
+      kv("xl", "1.25rem/1.75rem"),
+      kv("2xl", "1.5rem/2rem"),
+      kv("3xl", "1.875rem/2.25rem"),
+      kv("4xl", "2.25rem/2.5rem"),
+      kv("5xl", "3rem/1"),
+      kv("6xl", "3.75rem/1"),
+      kv("7xl", "4.5rem/1"),
+      kv("8xl", "6rem/1"),
+      kv("9xl", "8rem/1")
   );
 
   static final Map<String, String> HEIGHT = seqmap(

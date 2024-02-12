@@ -429,6 +429,27 @@ public class StyleGenTest {
     );
   }
 
+  @Test(enabled = false)
+  public void fontSize() {
+    class Subject extends AbstractSubject {
+      @Override
+      final void classes() {
+        className("text-xs text-sm text-base text-lg text-xl text-2xl text-3xl text-4xl text-5xl text-6xl text-7xl text-8xl text-9xl");
+      }
+    }
+
+    test(
+        Subject.class,
+
+        """
+        .flex-row { flex-direction: row }
+        .flex-row-reverse { flex-direction: row-reverse }
+        .flex-col { flex-direction: column }
+        .flex-col-reverse { flex-direction: column-reverse }
+        """
+    );
+  }
+
   @Test
   public void height() {
     class Subject extends AbstractSubject {
@@ -1211,13 +1232,10 @@ public class StyleGenTest {
   }
 
   private void test(Class<?> type, String expected) {
-    StyleGenBuilder builder;
-    builder = new StyleGenBuilder();
+    WayStyleGen gen;
+    gen = new WayStyleGen();
 
-    builder.noteSink(TestingNoteSink.INSTANCE);
-
-    StyleGen gen;
-    gen = builder.build();
+    gen.noteSink(TestingNoteSink.INSTANCE);
 
     String result;
     result = gen.generate(Set.of(type));

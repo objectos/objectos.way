@@ -17,24 +17,15 @@ package objectos.css;
 
 import java.util.Map;
 import java.util.TreeMap;
-import objectos.notes.NoteSink;
 
 final class WayStyleGenRound extends WayStyleGenParser {
-
-  private final Map<String, RuleFactory> factories;
-
-  private final Map<String, Variant> variants;
 
   private StringBuilder out;
 
   private Map<Variant, StringBuilder> mediaQueries;
 
-  public WayStyleGenRound(NoteSink noteSink, Map<String, RuleFactory> factories, Map<String, Variant> variants) {
-    this.noteSink = noteSink;
-
-    this.factories = factories;
-
-    this.variants = variants;
+  WayStyleGenRound(WayStyleGenConfig config) {
+    super(config);
   }
 
   public final String generate() {
@@ -60,16 +51,6 @@ final class WayStyleGenRound extends WayStyleGenParser {
     }
 
     return out.toString();
-  }
-
-  @Override
-  final RuleFactory findFactory(String value) {
-    return factories.get(value);
-  }
-
-  @Override
-  final Variant getVariant(String variantName) {
-    return variants.get(variantName);
   }
 
   final StringBuilder mediaQuery(Variant variant) {
