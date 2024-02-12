@@ -17,10 +17,14 @@ package objectos.css;
 
 import static objectos.css.Utility.ALIGN_ITEMS;
 import static objectos.css.Utility.BACKGROUND_COLOR;
+import static objectos.css.Utility.BOTTOM;
 import static objectos.css.Utility.DISPLAY;
+import static objectos.css.Utility.END;
 import static objectos.css.Utility.FLEX_DIRECTION;
 import static objectos.css.Utility.FONT_SIZE;
 import static objectos.css.Utility.HEIGHT;
+import static objectos.css.Utility.INSET;
+import static objectos.css.Utility.LEFT;
 import static objectos.css.Utility.LETTER_SPACING;
 import static objectos.css.Utility.LINE_HEIGHT;
 import static objectos.css.Utility.MARGIN;
@@ -38,7 +42,10 @@ import static objectos.css.Utility.PADDING_TOP;
 import static objectos.css.Utility.PADDING_X;
 import static objectos.css.Utility.PADDING_Y;
 import static objectos.css.Utility.POSITION;
+import static objectos.css.Utility.RIGHT;
+import static objectos.css.Utility.START;
 import static objectos.css.Utility.TEXT_COLOR;
+import static objectos.css.Utility.TOP;
 
 import java.util.List;
 import java.util.Map;
@@ -143,13 +150,24 @@ abstract class WayStyleGenParser extends WayStyleGenVariants {
     suffix = value.substring(dashIndex + 1);
 
     return switch (prefix) {
+      // B
       case "bg" -> config(BACKGROUND_COLOR, config.colors(), suffix);
+      case "bottom" -> config(BOTTOM, config.inset(), suffix);
 
+      // E
+      case "end" -> config(END, config.inset(), suffix);
+
+      // H
       case "h" -> config(HEIGHT, config.height(), suffix);
 
-      case "tracking" -> config(LETTER_SPACING, config.letterSpacing(), suffix);
-      case "leading" -> config(LINE_HEIGHT, config.lineHeight(), suffix);
+      // I
+      case "inset" -> inset(suffix);
 
+      // L
+      case "leading" -> config(LINE_HEIGHT, config.lineHeight(), suffix);
+      case "left" -> config(LEFT, config.inset(), suffix);
+
+      // M
       case "m" -> config(MARGIN, config.margin(), suffix);
       case "mx" -> config(MARGIN_X, config.margin(), suffix);
       case "my" -> config(MARGIN_Y, config.margin(), suffix);
@@ -158,6 +176,7 @@ abstract class WayStyleGenParser extends WayStyleGenVariants {
       case "mb" -> config(MARGIN_BOTTOM, config.margin(), suffix);
       case "ml" -> config(MARGIN_LEFT, config.margin(), suffix);
 
+      // P
       case "p" -> config(PADDING, config.padding(), suffix);
       case "px" -> config(PADDING_X, config.padding(), suffix);
       case "py" -> config(PADDING_Y, config.padding(), suffix);
@@ -166,7 +185,16 @@ abstract class WayStyleGenParser extends WayStyleGenVariants {
       case "pb" -> config(PADDING_BOTTOM, config.padding(), suffix);
       case "pl" -> config(PADDING_LEFT, config.padding(), suffix);
 
+      // R
+      case "right" -> config(RIGHT, config.inset(), suffix);
+
+      // S
+      case "start" -> config(START, config.inset(), suffix);
+
+      // T
       case "text" -> text(suffix);
+      case "top" -> config(TOP, config.inset(), suffix);
+      case "tracking" -> config(LETTER_SPACING, config.letterSpacing(), suffix);
 
       default -> Rule.NOOP;
     };
@@ -178,6 +206,30 @@ abstract class WayStyleGenParser extends WayStyleGenVariants {
 
     if (value != null) {
       return utility.get(className, variants, value);
+    }
+
+    return Rule.NOOP;
+  }
+
+  private Rule inset(String suffix) {
+    int dash;
+    dash = suffix.indexOf('-');
+
+    if (dash < 0) {
+      return config(INSET, config.inset(), suffix);
+    }
+
+    if (dash == 1) {
+      char first;
+      first = suffix.charAt(0);
+
+      return switch (first) {
+        case 'x' -> config(Utility.INSET_X, config.inset(), suffix.substring(dash + 1));
+
+        case 'y' -> config(Utility.INSET_Y, config.inset(), suffix.substring(dash + 1));
+
+        default -> Rule.NOOP;
+      };
     }
 
     return Rule.NOOP;

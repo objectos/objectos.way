@@ -41,6 +41,8 @@ public final class WayStyleGen extends WayStyleGenConfig implements StyleGen {
 
   private final Map<String, String> height;
 
+  private final Map<String, String> inset;
+
   private final Map<String, String> letterSpacing;
   private final Map<String, String> lineHeight;
 
@@ -403,6 +405,18 @@ public final class WayStyleGen extends WayStyleGenConfig implements StyleGen {
     height.put("max", "max-content");
     height.put("fit", "fit-content");
 
+    // I
+    inset = new GrowableMap<>();
+    inset.putAll(spacing);
+    inset.put("auto", "auto");
+    inset.put("1/2", "50%");
+    inset.put("1/3", "33.333333%");
+    inset.put("2/3", "66.666667%");
+    inset.put("1/4", "25%");
+    inset.put("2/4", "50%");
+    inset.put("3/4", "75%");
+    inset.put("full", "100%");
+
     // L
     letterSpacing = new GrowableMap<>();
     letterSpacing.put("tighter", "-0.05em");
@@ -473,6 +487,9 @@ public final class WayStyleGen extends WayStyleGenConfig implements StyleGen {
 
   @Override
   final Map<String, String> height() { return height; }
+
+  @Override
+  final Map<String, String> inset() { return inset; }
 
   @Override
   final Map<String, String> letterSpacing() { return letterSpacing; }

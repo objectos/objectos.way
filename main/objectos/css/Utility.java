@@ -23,6 +23,16 @@ sealed abstract class Utility {
 
   static final Utility POSITION = new Single("position");
 
+  static final Utility INSET = new Single("inset");
+  static final Utility INSET_X = new Axis("left", "right");
+  static final Utility INSET_Y = new Axis("top", "bottom");
+  static final Utility START = new Single("inset-inline-start");
+  static final Utility END = new Single("inset-inline-start");
+  static final Utility TOP = new Single("top");
+  static final Utility RIGHT = new Single("right");
+  static final Utility BOTTOM = new Single("bottom");
+  static final Utility LEFT = new Single("left");
+
   static final Utility MARGIN = new Single("margin");
   static final Utility MARGIN_X = new Axis("margin-left", "margin-right");
   static final Utility MARGIN_Y = new Axis("margin-top", "margin-bottom");

@@ -27,7 +27,7 @@ public class ObjectosCssPseudoGen {
     ObjectosCssPseudoGen gen;
     gen = new ObjectosCssPseudoGen();
 
-    gen.classNamesColors("text-");
+    gen.initVariable(INSET, "inset");
   }
 
   private static final Map<String, String> SPACING = seqmap(
@@ -148,6 +148,17 @@ public class ObjectosCssPseudoGen {
       kv("min", "min-content"),
       kv("max", "max-content"),
       kv("fit", "fit-content")
+  );
+
+  static final Map<String, String> INSET = seqmap(
+      kv("auto", "auto"),
+      kv("1/2", "50%"),
+      kv("1/3", "33.333333%"),
+      kv("2/3", "66.666667%"),
+      kv("1/4", "25%"),
+      kv("2/4", "50%"),
+      kv("3/4", "75%"),
+      kv("full", "100%")
   );
 
   static final Map<String, String> LETTER_SPACING = seqmap(
