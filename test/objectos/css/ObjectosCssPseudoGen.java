@@ -27,7 +27,7 @@ public class ObjectosCssPseudoGen {
     ObjectosCssPseudoGen gen;
     gen = new ObjectosCssPseudoGen();
 
-    gen.initVariable(LETTER_SPACING, "letterSpacing");
+    gen.initVariable(LINE_HEIGHT, "lineHeight");
   }
 
   private static final Map<String, String> SPACING = seqmap(
@@ -141,6 +141,23 @@ public class ObjectosCssPseudoGen {
       kv("wide", "0.025em"),
       kv("wider", "0.05em"),
       kv("widest", "0.1em")
+  );
+
+  static final Map<String, String> LINE_HEIGHT = seqmap(
+      kv("3", "0.75rem"),
+      kv("4", "1rem"),
+      kv("5", "1.25rem"),
+      kv("6", "1.5rem"),
+      kv("7", "1.75rem"),
+      kv("8", "2rem"),
+      kv("9", "2.25rem"),
+      kv("10", "2.5rem"),
+      kv("none", "1"),
+      kv("tight", "1.25"),
+      kv("snug", "1.375"),
+      kv("normal", "1.5"),
+      kv("relaxed", "1.625"),
+      kv("loose", "2")
   );
 
   static final Map<String, String> MARGIN = seqmap(

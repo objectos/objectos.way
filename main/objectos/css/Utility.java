@@ -49,6 +49,7 @@ enum Utility {
   PADDING_BOTTOM("padding-bottom"),
   PADDING_LEFT("padding-left"),
 
+  LINE_HEIGHT("line-height"),
   LETTER_SPACING("letter-spacing");
 
   private final String property1;

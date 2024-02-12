@@ -45,6 +45,7 @@ public class StyleGenBuilder {
   private final Map<String, String> height;
 
   private final Map<String, String> letterSpacing;
+  private final Map<String, String> lineHeight;
 
   private final Map<String, String> margin;
 
@@ -398,6 +399,22 @@ public class StyleGenBuilder {
     letterSpacing.put("wider", "0.05em");
     letterSpacing.put("widest", "0.1em");
 
+    lineHeight = new GrowableMap<>();
+    lineHeight.put("3", "0.75rem");
+    lineHeight.put("4", "1rem");
+    lineHeight.put("5", "1.25rem");
+    lineHeight.put("6", "1.5rem");
+    lineHeight.put("7", "1.75rem");
+    lineHeight.put("8", "2rem");
+    lineHeight.put("9", "2.25rem");
+    lineHeight.put("10", "2.5rem");
+    lineHeight.put("none", "1");
+    lineHeight.put("tight", "1.25");
+    lineHeight.put("snug", "1.375");
+    lineHeight.put("normal", "1.5");
+    lineHeight.put("relaxed", "1.625");
+    lineHeight.put("loose", "2");
+
     // M
     margin = new GrowableMap<>();
     margin.putAll(spacing);
@@ -461,6 +478,7 @@ public class StyleGenBuilder {
     config(Utility.HEIGHT, "h-", height, factories);
 
     // L
+    config(Utility.LINE_HEIGHT, "leading-", lineHeight, factories);
     config(Utility.LETTER_SPACING, "tracking-", letterSpacing, factories);
 
     // M
