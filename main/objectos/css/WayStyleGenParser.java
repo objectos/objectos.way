@@ -37,6 +37,7 @@ import static objectos.css.Utility.PADDING_RIGHT;
 import static objectos.css.Utility.PADDING_TOP;
 import static objectos.css.Utility.PADDING_X;
 import static objectos.css.Utility.PADDING_Y;
+import static objectos.css.Utility.POSITION;
 
 import java.util.List;
 import java.util.Map;
@@ -101,6 +102,13 @@ abstract class WayStyleGenParser extends WayStyleGenVariants {
       case "flex-row-reverse" -> nameValue(FLEX_DIRECTION, "row-reverse");
       case "flex-col" -> nameValue(FLEX_DIRECTION, "column");
       case "flex-col-reverse" -> nameValue(FLEX_DIRECTION, "column-reverse");
+
+      // Position
+      case "static" -> nameValue(POSITION, "static");
+      case "fixed" -> nameValue(POSITION, "fixed");
+      case "absolute" -> nameValue(POSITION, "absolute");
+      case "relative" -> nameValue(POSITION, "relative");
+      case "sticky" -> nameValue(POSITION, "sticky");
 
       // Others
       default -> prefixWord1(value);

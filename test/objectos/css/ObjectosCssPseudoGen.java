@@ -27,9 +27,9 @@ public class ObjectosCssPseudoGen {
     ObjectosCssPseudoGen gen;
     gen = new ObjectosCssPseudoGen();
 
-    gen.classNameSingleLine(FONT_SIZE, "text-");
+    gen.classNameSingleLine(POSITION, "");
 
-    gen.initVariable(FONT_SIZE, "fontSize");
+    gen.cases(POSITION, "POSITION");
   }
 
   private static final Map<String, String> SPACING = seqmap(
@@ -181,6 +181,14 @@ public class ObjectosCssPseudoGen {
   static final Map<String, String> MARGIN = seqmap(
       kv("auto", "auto"),
       SPACING
+  );
+
+  static final Map<String, String> POSITION = seqmap(
+      kv("static", "static"),
+      kv("fixed", "fixed"),
+      kv("absolute", "absolute"),
+      kv("relative", "relative"),
+      kv("sticky", "sticky")
   );
 
   final void cases(Map<String, String> map, String kind) {

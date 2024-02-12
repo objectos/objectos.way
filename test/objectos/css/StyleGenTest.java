@@ -1202,6 +1202,28 @@ public class StyleGenTest {
   }
 
   @Test
+  public void position() {
+    class Subject extends AbstractSubject {
+      @Override
+      final void classes() {
+        className("static fixed absolute relative sticky");
+      }
+    }
+
+    test(
+        Subject.class,
+
+        """
+        .static { position: static }
+        .fixed { position: fixed }
+        .absolute { position: absolute }
+        .relative { position: relative }
+        .sticky { position: sticky }
+        """
+    );
+  }
+
+  @Test
   public void responsive() {
     class Subject extends AbstractSubject {
       @Override

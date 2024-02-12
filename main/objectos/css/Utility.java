@@ -21,6 +21,8 @@ sealed abstract class Utility {
 
   // order is important.
 
+  static final Utility POSITION = new Single("position");
+
   static final Utility MARGIN = new Single("margin");
   static final Utility MARGIN_X = new Axis("margin-left", "margin-right");
   static final Utility MARGIN_Y = new Axis("margin-top", "margin-bottom");
