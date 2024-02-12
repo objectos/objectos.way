@@ -77,14 +77,10 @@ public class WayStyleGenVariantsTest {
 
   private static class ThisRule extends Rule {
 
-    final String className;
-
     final String value;
 
     ThisRule(String className, List<Variant> variants, String value) {
-      super(null, variants);
-
-      this.className = className;
+      super(0, className, variants);
 
       this.value = value;
     }

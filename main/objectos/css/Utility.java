@@ -17,163 +17,131 @@ package objectos.css;
 
 import java.util.List;
 
-enum Utility {
-
-  NOOP(""),
+sealed abstract class Utility {
 
   // order is important.
 
-  MARGIN("margin"),
-  MARGIN_X("margin-left", "margin-right"),
-  MARGIN_Y("margin-top", "margin-bottom"),
-  MARGIN_TOP("margin-top"),
-  MARGIN_RIGHT("margin-right"),
-  MARGIN_BOTTOM("margin-bottom"),
-  MARGIN_LEFT("margin-left"),
+  static final Utility MARGIN = new Single("margin");
+  static final Utility MARGIN_X = new Axis("margin-left", "margin-right");
+  static final Utility MARGIN_Y = new Axis("margin-top", "margin-bottom");
+  static final Utility MARGIN_TOP = new Single("margin-top");
+  static final Utility MARGIN_RIGHT = new Single("margin-right");
+  static final Utility MARGIN_BOTTOM = new Single("margin-bottom");
+  static final Utility MARGIN_LEFT = new Single("margin-left");
 
-  DISPLAY("display"),
+  static final Utility DISPLAY = new Single("display");
 
-  HEIGHT("height"),
+  static final Utility HEIGHT = new Single("height");
 
-  FLEX_DIRECTION("flex-direction"),
+  static final Utility FLEX_DIRECTION = new Single("flex-direction");
 
-  ALIGN_ITEMS("align-items"),
+  static final Utility ALIGN_ITEMS = new Single("align-items");
 
-  BACKGROUND_COLOR("background-color"),
+  static final Utility BACKGROUND_COLOR = new Single("background-color");
 
-  PADDING("padding"),
-  PADDING_X("padding-left", "padding-right"),
-  PADDING_Y("padding-top", "padding-bottom"),
-  PADDING_TOP("padding-top"),
-  PADDING_RIGHT("padding-right"),
-  PADDING_BOTTOM("padding-bottom"),
-  PADDING_LEFT("padding-left"),
+  static final Utility PADDING = new Single("padding");
+  static final Utility PADDING_X = new Axis("padding-left", "padding-right");
+  static final Utility PADDING_Y = new Axis("padding-top", "padding-bottom");
+  static final Utility PADDING_TOP = new Single("padding-top");
+  static final Utility PADDING_RIGHT = new Single("padding-right");
+  static final Utility PADDING_BOTTOM = new Single("padding-bottom");
+  static final Utility PADDING_LEFT = new Single("padding-left");
 
-  LINE_HEIGHT("line-height"),
-  LETTER_SPACING("letter-spacing");
+  static final Utility FONT_SIZE = new Duo("font-size", "line-height");
 
-  private final String property1;
+  static final Utility LINE_HEIGHT = new Single("line-height");
 
-  private final String property2;
+  static final Utility LETTER_SPACING = new Single("letter-spacing");
 
-  private Utility(String property1) {
-    this(property1, null);
+  // all instances are created in this class
+  private static int COUNTER;
+
+  final int index = COUNTER++;
+
+  Utility() {}
+
+  Rule get(String className, List<Variant> variants, String value) {
+    throw new UnsupportedOperationException();
   }
 
-  private Utility(String property1, String property2) {
-    this.property1 = property1;
-    this.property2 = property2;
+  Rule get(String className, List<Variant> variants, String value1, String value2) {
+    throw new UnsupportedOperationException();
   }
 
-  final RuleFactory factory(String value) {
-    return new RuleFactory(this, value);
-  }
+  private static final class Single extends Utility {
 
-  final Rule nameValue(List<Variant> variants, String className, String value) {
-    return new WithNameAndValue(this, variants, className, value);
-  }
+    private final String property;
 
-  private static final class WithNameAndValue extends Rule {
-    private final String className;
-    private final String value;
-
-    public WithNameAndValue(Utility utility, List<Variant> variants, String className, String value) {
-      super(utility, variants);
-      this.className = className;
-      this.value = value;
+    private Single(String property) {
+      this.property = property;
     }
 
     @Override
-    final void writeTo(StringBuilder out) {
-      writeClassName(out, className);
-
-      out.append(" { ");
-
-      String p1;
-      p1 = utility.property1;
-
-      writePropertyValue(out, p1, value);
-
-      String p2;
-      p2 = utility.property2;
-
-      if (p2 != null) {
-        out.append("; ");
-
-        writePropertyValue(out, p2, value);
-      }
-
-      out.append(" }");
-
-      out.append(System.lineSeparator());
+    final Rule get(String className, List<Variant> variants, String value) {
+      return new Rule(index, className, variants) {
+        @Override
+        final void writeProperties(StringBuilder out) {
+          writePropertyValue(out, property, value);
+        }
+      };
     }
 
   }
 
-  static void writeClassName(StringBuilder out, String className) {
-    int length;
-    length = className.length();
+  private static final class Axis extends Utility {
 
-    if (length == 0) {
-      return;
+    private final String property1;
+
+    private final String property2;
+
+    private Axis(String property1, String property2) {
+      this.property1 = property1;
+
+      this.property2 = property2;
     }
 
-    out.append('.');
+    @Override
+    final Rule get(String className, List<Variant> variants, String value) {
+      return new Rule(index, className, variants) {
+        @Override
+        final void writeProperties(StringBuilder out) {
+          writePropertyValue(out, property1, value);
 
-    int index;
-    index = 0;
+          out.append("; ");
 
-    boolean escaped;
-    escaped = false;
-
-    char first;
-    first = className.charAt(index);
-
-    if (0x30 <= first && first <= 0x39) {
-      out.append("\\3");
-      out.append(first);
-
-      index++;
-
-      escaped = true;
-    }
-
-    for (; index < length; index++) {
-      char c;
-      c = className.charAt(index);
-
-      switch (c) {
-        case ' ', ',', '.', '/', ':', '@', '[', ']' -> {
-          out.append("\\");
-
-          out.append(c);
-
-          escaped = false;
+          writePropertyValue(out, property2, value);
         }
-
-        case 'a', 'b', 'c', 'd', 'e', 'f',
-             'A', 'B', 'C', 'D', 'E', 'F',
-             '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' -> {
-          if (escaped) {
-            out.append(' ');
-          }
-
-          out.append(c);
-
-          escaped = false;
-        }
-
-        default -> out.append(c);
-      }
+      };
     }
+
   }
 
-  static void writePropertyValue(StringBuilder out, String property, String value) {
-    out.append(property);
+  private static final class Duo extends Utility {
 
-    out.append(": ");
+    private final String property1;
 
-    out.append(value);
+    private final String property2;
+
+    public Duo(String property1, String property2) {
+      this.property1 = property1;
+
+      this.property2 = property2;
+    }
+
+    @Override
+    final Rule get(String className, List<Variant> variants, String value1, String value2) {
+      return new Rule(index, className, variants) {
+        @Override
+        final void writeProperties(StringBuilder out) {
+          writePropertyValue(out, property1, value1);
+
+          out.append("; ");
+
+          writePropertyValue(out, property2, value2);
+        }
+      };
+    }
+
   }
 
 }

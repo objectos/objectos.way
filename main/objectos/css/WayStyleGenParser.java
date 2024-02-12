@@ -19,6 +19,7 @@ import static objectos.css.Utility.ALIGN_ITEMS;
 import static objectos.css.Utility.BACKGROUND_COLOR;
 import static objectos.css.Utility.DISPLAY;
 import static objectos.css.Utility.FLEX_DIRECTION;
+import static objectos.css.Utility.FONT_SIZE;
 import static objectos.css.Utility.HEIGHT;
 import static objectos.css.Utility.LETTER_SPACING;
 import static objectos.css.Utility.LINE_HEIGHT;
@@ -107,7 +108,7 @@ abstract class WayStyleGenParser extends WayStyleGenVariants {
   }
 
   private Rule nameValue(Utility utility, String value) {
-    return utility.nameValue(variants, className, value);
+    return utility.get(className, variants, value);
   }
 
   /**
@@ -156,6 +157,8 @@ abstract class WayStyleGenParser extends WayStyleGenVariants {
       case "pb" -> config(PADDING_BOTTOM, config.padding(), suffix);
       case "pl" -> config(PADDING_LEFT, config.padding(), suffix);
 
+      case "text" -> text(suffix);
+
       default -> Rule.NOOP;
     };
   }
@@ -165,10 +168,37 @@ abstract class WayStyleGenParser extends WayStyleGenVariants {
     value = map.get(suffix);
 
     if (value != null) {
-      return utility.nameValue(variants, className, value);
+      return utility.get(className, variants, value);
     }
 
     return Rule.NOOP;
+  }
+
+  private Rule text(String suffix) {
+    Map<String, String> fontSize;
+    fontSize = config.fontSize();
+
+    String fontSizeValue;
+    fontSizeValue = fontSize.get(suffix);
+
+    if (fontSizeValue != null) {
+      return fontSize(fontSizeValue);
+    }
+
+    return Rule.NOOP;
+  }
+
+  private Rule fontSize(String value) {
+    int slash;
+    slash = value.indexOf('/');
+
+    String fontSize;
+    fontSize = value.substring(0, slash);
+
+    String lineHeight;
+    lineHeight = value.substring(slash + 1);
+
+    return FONT_SIZE.get(className, variants, fontSize, lineHeight);
   }
 
 }

@@ -26,7 +26,7 @@ public class WayStyleGenCacheTest {
   @Test(description = "cache hit")
   public void testCase01() {
     Rule foo;
-    foo = new Rule(Utility.DISPLAY, List.of());
+    foo = new Rule(0, "foo", List.of());
 
     class Impl extends WayStyleGenCache {
       private Rule hit;
@@ -59,7 +59,7 @@ public class WayStyleGenCacheTest {
   @Test(description = "cache miss")
   public void testCase02() {
     Rule foo;
-    foo = new Rule(Utility.DISPLAY, List.of());
+    foo = new Rule(0, "foo", List.of());
 
     class Impl extends WayStyleGenCache {
       @Override

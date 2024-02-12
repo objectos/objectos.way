@@ -16,23 +16,26 @@
 package objectos.css;
 
 import java.util.List;
-import objectos.util.list.UnmodifiableList;
 
 class Rule implements Comparable<Rule> {
 
-  public static final Rule NOOP = new Rule(Utility.NOOP, UnmodifiableList.of());
+  public static final Rule NOOP = new Rule(-1, "", List.of());
 
-  final Utility utility;
+  final int index;
+
+  final String className;
 
   final List<Variant> variants;
 
-  Rule(Utility utility, List<Variant> variants) {
-    this.utility = utility;
+  Rule(int index, String className, List<Variant> variants) {
+    this.index = index;
+
+    this.className = className;
 
     this.variants = variants;
   }
 
-  public void accept(WayStyleGenRound gen) {
+  public final void accept(WayStyleGenRound gen) {
     int size;
     size = variants.size();
 
@@ -71,16 +74,92 @@ class Rule implements Comparable<Rule> {
 
   @Override
   public final int compareTo(Rule o) {
-    return utility.compareTo(o.utility);
+    return Integer.compare(index, o.index);
   }
 
   @Override
   public String toString() {
-    return utility.toString();
+    return className;
   }
 
-  void writeTo(StringBuilder out) {
-    // noop
+  final void writeTo(StringBuilder out) {
+    writeClassName(out, className);
+
+    out.append(" { ");
+
+    writeProperties(out);
+
+    out.append(" }");
+
+    out.append(System.lineSeparator());
+  }
+
+  private void writeClassName(StringBuilder out, String className) {
+    int length;
+    length = className.length();
+
+    if (length == 0) {
+      return;
+    }
+
+    out.append('.');
+
+    int index;
+    index = 0;
+
+    boolean escaped;
+    escaped = false;
+
+    char first;
+    first = className.charAt(index);
+
+    if (0x30 <= first && first <= 0x39) {
+      out.append("\\3");
+      out.append(first);
+
+      index++;
+
+      escaped = true;
+    }
+
+    for (; index < length; index++) {
+      char c;
+      c = className.charAt(index);
+
+      switch (c) {
+        case ' ', ',', '.', '/', ':', '@', '[', ']' -> {
+          out.append("\\");
+
+          out.append(c);
+
+          escaped = false;
+        }
+
+        case 'a', 'b', 'c', 'd', 'e', 'f',
+             'A', 'B', 'C', 'D', 'E', 'F',
+             '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' -> {
+          if (escaped) {
+            out.append(' ');
+          }
+
+          out.append(c);
+
+          escaped = false;
+        }
+
+        default -> out.append(c);
+      }
+    }
+  }
+
+  void writeProperties(StringBuilder out) {}
+
+  final void writePropertyValue(StringBuilder out, String property, String value) {
+    out.append(property);
+
+    out.append(": ");
+
+    out.append(value);
   }
 
 }

@@ -37,6 +37,8 @@ public final class WayStyleGen extends WayStyleGenConfig implements StyleGen {
 
   private final Map<String, String> spacing;
 
+  private final Map<String, String> fontSize;
+
   private final Map<String, String> height;
 
   private final Map<String, String> letterSpacing;
@@ -357,6 +359,22 @@ public final class WayStyleGen extends WayStyleGenConfig implements StyleGen {
     spacing.put("80", "20rem");
     spacing.put("96", "24rem");
 
+    // F
+    fontSize = new GrowableMap<>();
+    fontSize.put("xs", "0.75rem/1rem");
+    fontSize.put("sm", "0.875rem/1.25rem");
+    fontSize.put("base", "1rem/1.5rem");
+    fontSize.put("lg", "1.125rem/1.75rem");
+    fontSize.put("xl", "1.25rem/1.75rem");
+    fontSize.put("2xl", "1.5rem/2rem");
+    fontSize.put("3xl", "1.875rem/2.25rem");
+    fontSize.put("4xl", "2.25rem/2.5rem");
+    fontSize.put("5xl", "3rem/1");
+    fontSize.put("6xl", "3.75rem/1");
+    fontSize.put("7xl", "4.5rem/1");
+    fontSize.put("8xl", "6rem/1");
+    fontSize.put("9xl", "8rem/1");
+
     // H
     height = new GrowableMap<>();
     height.putAll(spacing);
@@ -449,6 +467,9 @@ public final class WayStyleGen extends WayStyleGenConfig implements StyleGen {
 
   @Override
   final Map<String, String> colors() { return colors; }
+
+  @Override
+  final Map<String, String> fontSize() { return fontSize; }
 
   @Override
   final Map<String, String> height() { return height; }

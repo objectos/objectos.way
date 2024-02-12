@@ -17,22 +17,26 @@ package objectos.css;
 
 import static org.testng.Assert.assertEquals;
 
+import java.util.List;
 import org.testng.annotations.Test;
 
-public class UtilityTest {
+public class RuleTest {
 
   @Test
   public void writeClassName() {
-    testClassName("m-0", ".m-0");
-    testClassName("sm:m-1", ".sm\\:m-1");
-    testClassName("2xl:m-2", ".\\32xl\\:m-2");
+    testClassName("m-0", ".m-0 {  }\n");
+    testClassName("sm:m-1", ".sm\\:m-1 {  }\n");
+    testClassName("2xl:m-2", ".\\32xl\\:m-2 {  }\n");
   }
 
   private void testClassName(String className, String expected) {
     StringBuilder out;
     out = new StringBuilder();
 
-    Utility.writeClassName(out, className);
+    Rule rule;
+    rule = new Rule(0, className, List.of());
+
+    rule.writeTo(out);
 
     assertEquals(out.toString(), expected);
   }
