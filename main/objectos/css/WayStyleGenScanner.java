@@ -72,7 +72,7 @@ abstract class WayStyleGenScanner {
 
   NoteSink noteSink = NoOpNoteSink.of();
 
-  private int value;
+  int intValue;
 
   public WayStyleGenScanner() {}
 
@@ -131,7 +131,7 @@ abstract class WayStyleGenScanner {
 
     bytesIndex = readU4(bytes, bytesIndex);
 
-    if (value != 0xCAFEBABE) {
+    if (intValue != 0xCAFEBABE) {
       // magic does not match expected value
       // -> invalid class
 
@@ -171,7 +171,7 @@ abstract class WayStyleGenScanner {
     bytesIndex = readU2(bytes, bytesIndex);
 
     int constantPoolCount;
-    constantPoolCount = value;
+    constantPoolCount = intValue;
 
     // 5. load constant pool index
 
@@ -201,7 +201,7 @@ abstract class WayStyleGenScanner {
           bytesIndex = readU2(bytes, bytesIndex);
 
           int length;
-          length = value;
+          length = intValue;
 
           bytesIndex += length;
         }
@@ -288,7 +288,7 @@ abstract class WayStyleGenScanner {
       bytesIndex = readU2(bytes, bytesIndex);
 
       int stringIndex;
-      stringIndex = value;
+      stringIndex = intValue;
 
       // try to load utf8
 
@@ -306,7 +306,7 @@ abstract class WayStyleGenScanner {
       bytesIndex = readU2(bytes, bytesIndex);
 
       int length;
-      length = value;
+      length = intValue;
 
       String utf8;
       utf8 = utf8Value(bytes, bytesIndex, length);
@@ -334,7 +334,7 @@ abstract class WayStyleGenScanner {
     byte b1;
     b1 = bytes[bytesIndex++];
 
-    value = Bytes.toBigEndianInt(b0, b1);
+    intValue = Bytes.toBigEndianInt(b0, b1);
 
     return bytesIndex;
   }
@@ -352,7 +352,7 @@ abstract class WayStyleGenScanner {
     byte b3;
     b3 = bytes[bytesIndex++];
 
-    value = Bytes.toBigEndianInt(b0, b1, b2, b3);
+    intValue = Bytes.toBigEndianInt(b0, b1, b2, b3);
 
     return bytesIndex;
   }

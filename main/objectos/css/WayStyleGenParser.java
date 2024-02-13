@@ -152,6 +152,7 @@ abstract class WayStyleGenParser extends WayStyleGenVariants {
     return switch (prefix) {
       // B
       case "bg" -> config(BACKGROUND_COLOR, config.colors(), suffix);
+      case "border" -> border(suffix);
       case "bottom" -> config(BOTTOM, config.inset(), suffix);
 
       // E
@@ -206,6 +207,90 @@ abstract class WayStyleGenParser extends WayStyleGenVariants {
 
     if (value != null) {
       return utility.get(className, variants, value);
+    }
+
+    return Rule.NOOP;
+  }
+
+  private enum Side {
+
+    ALL,
+
+    X,
+
+    Y,
+
+    TOP,
+
+    RIGHT,
+
+    BOTTOM,
+
+    LEFT;
+
+  }
+
+  private Side parseSide(String suffix) {
+    intValue = suffix.indexOf('-');
+
+    if (intValue != 1) {
+      return Side.ALL;
+    }
+
+    char first;
+    first = suffix.charAt(0);
+
+    return switch (first) {
+      case 'x' -> Side.X;
+
+      case 'y' -> Side.Y;
+
+      case 't' -> Side.TOP;
+
+      case 'r' -> Side.RIGHT;
+
+      case 'b' -> Side.BOTTOM;
+
+      case 'l' -> Side.LEFT;
+
+      default -> Side.ALL;
+    };
+  }
+
+  private String parseSideSuffix(Side side, String suffix) {
+    return switch (side) {
+      case ALL -> suffix;
+
+      default -> suffix.substring(intValue + 1);
+    };
+  }
+
+  private Rule border(String suffix) {
+    Side side;
+    side = parseSide(suffix);
+
+    String sideSuffix;
+    sideSuffix = parseSideSuffix(side, suffix);
+
+    Map<String, String> colors;
+    colors = config.colors();
+
+    String color;
+    color = colors.get(sideSuffix);
+
+    if (color != null) {
+      Utility borderColor;
+      borderColor = switch (side) {
+        case ALL -> Utility.BORDER_COLOR;
+        case X -> Utility.BORDER_COLOR_X;
+        case Y -> Utility.BORDER_COLOR_Y;
+        case TOP -> Utility.BORDER_COLOR_TOP;
+        case RIGHT -> Utility.BORDER_COLOR_RIGHT;
+        case BOTTOM -> Utility.BORDER_COLOR_BOTTOM;
+        case LEFT -> Utility.BORDER_COLOR_LEFT;
+      };
+
+      return borderColor.get(className, variants, color);
     }
 
     return Rule.NOOP;

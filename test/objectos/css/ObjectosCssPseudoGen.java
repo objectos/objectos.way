@@ -27,7 +27,7 @@ public class ObjectosCssPseudoGen {
     ObjectosCssPseudoGen gen;
     gen = new ObjectosCssPseudoGen();
 
-    gen.initVariable(INSET, "inset");
+    gen.classNamesColors("border-");
   }
 
   private static final Map<String, String> SPACING = seqmap(
