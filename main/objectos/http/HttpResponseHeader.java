@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023-2024 Objectos Software LTDA.
+ * Copyright (C) 2016-2023 Objectos Software LTDA.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,18 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.web;
+package objectos.http;
 
-import java.nio.file.Path;
-import objectos.http.ServerExchange;
-import objectos.notes.Note1;
+import java.nio.charset.StandardCharsets;
 
-public interface WebResources {
+record HttpResponseHeader(HeaderName name, String value) {
 
-  Note1<Path> CREATED = Note1.debug(WebResources.class, "File created");
+  public final byte[] bytes() {
+    String text;
+    text = toString() + "\r\n";
 
-  Note1<Path> TRAVERSAL = Note1.error(WebResources.class, "Traversal detected");
+    return text.getBytes(StandardCharsets.UTF_8);
+  }
 
-  void handle(ServerExchange http);
+  @Override
+  public final String toString() {
+    return name.capitalized() + ": " + value;
+  }
 
 }

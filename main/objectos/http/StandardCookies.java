@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023-2024 Objectos Software LTDA.
+ * Copyright (C) 2023 Objectos Software LTDA.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,18 +13,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.web;
+package objectos.http;
 
-import java.nio.file.Path;
-import objectos.http.ServerExchange;
-import objectos.notes.Note1;
+import java.util.Map;
 
-public interface WebResources {
+final class StandardCookies implements Cookies {
 
-  Note1<Path> CREATED = Note1.debug(WebResources.class, "File created");
+  private final Map<String, CookieValue> cookies;
 
-  Note1<Path> TRAVERSAL = Note1.error(WebResources.class, "Traversal detected");
+  StandardCookies(Map<String, CookieValue> cookies) {
+    this.cookies = cookies;
+  }
 
-  void handle(ServerExchange http);
+  @Override
+  public final String get(String name) {
+    String res = null;
+
+    CookieValue value;
+    value = cookies.get(name);
+
+    if (value != null) {
+      res = value.get();
+    }
+
+    return res;
+  }
 
 }

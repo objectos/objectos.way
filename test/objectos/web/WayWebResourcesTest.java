@@ -25,11 +25,11 @@ import java.nio.file.Path;
 import java.nio.file.attribute.FileTime;
 import java.time.Clock;
 import java.time.Instant;
-import objectos.http.server.ServerLoop;
+import objectos.http.ServerLoop;
+import objectos.http.TestableSocket;
+import objectos.http.TestingClock;
 import objectos.way.TestingDir;
 import objectos.way.TestingNoteSink;
-import objectox.http.server.TestableSocket;
-import objectox.http.server.TestingClock;
 import org.testng.annotations.Test;
 
 public class WayWebResourcesTest {

@@ -16,8 +16,6 @@
 package objectos.http;
 
 import java.util.Objects;
-import objectox.http.HeaderType;
-import objectox.http.ObjectoxHeaderName;
 
 /**
  * Represents an HTTP header name.

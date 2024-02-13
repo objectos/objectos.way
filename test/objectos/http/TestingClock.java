@@ -15,23 +15,32 @@
  */
 package objectos.http;
 
-import java.util.Objects;
+import java.time.Clock;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 
-public sealed interface Cookies permits EmptyCookies, StandardCookies {
+public final class TestingClock {
 
-  static Cookies parse(String s) {
-    Objects.requireNonNull(s, "s == null");
+  public static final Clock FIXED;
 
-    if (s.isBlank()) {
-      return EmptyCookies.INSTANCE;
-    }
+  static {
+    LocalDateTime dateTime;
+    dateTime = LocalDateTime.of(2023, 6, 28, 12, 8, 43);
 
-    CookiesParser parser;
-    parser = new CookiesParser(s);
+    ZoneId zone;
+    zone = ZoneId.of("GMT");
 
-    return parser.parse();
+    ZonedDateTime zoned;
+    zoned = dateTime.atZone(zone);
+
+    Instant fixedInstant;
+    fixedInstant = zoned.toInstant();
+
+    FIXED = Clock.fixed(fixedInstant, zone);
   }
 
-  String get(String name);
+  private TestingClock() {}
 
 }

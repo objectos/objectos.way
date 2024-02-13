@@ -15,8 +15,6 @@
  */
 package objectos.http;
 
-import objectox.http.ObjectoxMethod;
-
 public sealed abstract class Method permits ObjectoxMethod {
 
   private static ObjectoxMethod.Builder BUILDER = new ObjectoxMethod.Builder();

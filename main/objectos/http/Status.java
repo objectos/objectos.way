@@ -15,8 +15,6 @@
  */
 package objectos.http;
 
-import objectox.http.ObjectoxStatus;
-
 public sealed abstract class Status permits ObjectoxStatus {
 
   private static ObjectoxStatus.Builder BUILDER = new ObjectoxStatus.Builder();
