@@ -1365,6 +1365,31 @@ public class StyleGenTest {
   }
 
   @Test
+  public void justifyContent() {
+    class Subject extends AbstractSubject {
+      @Override
+      final void classes() {
+        className("justify-normal justify-start justify-end justify-center justify-between justify-around justify-evenly justify-stretch");
+      }
+    }
+
+    test(
+        Subject.class,
+
+        """
+        .justify-normal { justify-content: normal }
+        .justify-start { justify-content: flex-start }
+        .justify-end { justify-content: flex-end }
+        .justify-center { justify-content: center }
+        .justify-between { justify-content: space-between }
+        .justify-around { justify-content: space-around }
+        .justify-evenly { justify-content: space-evenly }
+        .justify-stretch { justify-content: stretch }
+        """
+    );
+  }
+
+  @Test
   public void letterSpacing() {
     class Subject extends AbstractSubject {
       @Override

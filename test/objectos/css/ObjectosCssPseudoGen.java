@@ -27,13 +27,7 @@ public class ObjectosCssPseudoGen {
     ObjectosCssPseudoGen gen;
     gen = new ObjectosCssPseudoGen();
 
-    gen.classNameSingleLine(BORDER_WIDTH, "border");
-    gen.classNameSingleLine(BORDER_WIDTH, "border-x");
-    gen.classNameSingleLine(BORDER_WIDTH, "border-y");
-    gen.classNameSingleLine(BORDER_WIDTH, "border-t");
-    gen.classNameSingleLine(BORDER_WIDTH, "border-r");
-    gen.classNameSingleLine(BORDER_WIDTH, "border-b");
-    gen.classNameSingleLine(BORDER_WIDTH, "border-l");
+    gen.cases(JUSTIFY_CONTENT, "JUSTIFY_CONTENT", "justify");
   }
 
   private static final Map<String, String> SPACING = seqmap(
@@ -175,6 +169,17 @@ public class ObjectosCssPseudoGen {
       kv("full", "100%")
   );
 
+  static final Map<String, String> JUSTIFY_CONTENT = seqmap(
+      kv("normal", "normal"),
+      kv("start", "flex-start"),
+      kv("end", "flex-end"),
+      kv("center", "center"),
+      kv("between", "space-between"),
+      kv("around", "space-around"),
+      kv("evenly", "space-evenly"),
+      kv("stretch", "stretch")
+  );
+
   static final Map<String, String> LETTER_SPACING = seqmap(
       kv("tighter", "-0.05em"),
       kv("tight", "-0.025em"),
@@ -214,14 +219,14 @@ public class ObjectosCssPseudoGen {
       kv("sticky", "sticky")
   );
 
-  final void cases(Map<String, String> map, String kind) {
+  final void cases(Map<String, String> map, String kind, String prefix) {
     for (var entry : map.entrySet()) {
       var key = entry.getKey();
 
       var value = entry.getValue();
 
       System.out.println("""
-      case "%s" -> nameValue(%s, "%s");""".formatted(key, kind, value));
+      case "%s-%s" -> nameValue(%s, "%s");""".formatted(prefix, key, kind, value));
     }
   }
 

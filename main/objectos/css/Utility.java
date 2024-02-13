@@ -49,6 +49,8 @@ sealed abstract class Utility {
 
   static final Utility ALIGN_ITEMS = new Single("align-items");
 
+  static final Utility JUSTIFY_CONTENT = new Single("justify-content");
+
   static final Utility BORDER_WIDTH = new Single("border-width");
   static final Utility BORDER_WIDTH_X = new Axis("border-left-width", "border-right-width");
   static final Utility BORDER_WIDTH_Y = new Axis("border-top-width", "border-bottom-width");

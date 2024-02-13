@@ -24,6 +24,7 @@ import static objectos.css.Utility.FLEX_DIRECTION;
 import static objectos.css.Utility.FONT_SIZE;
 import static objectos.css.Utility.HEIGHT;
 import static objectos.css.Utility.INSET;
+import static objectos.css.Utility.JUSTIFY_CONTENT;
 import static objectos.css.Utility.LEFT;
 import static objectos.css.Utility.LETTER_SPACING;
 import static objectos.css.Utility.LINE_HEIGHT;
@@ -110,6 +111,16 @@ abstract class WayStyleGenParser extends WayStyleGenVariants {
       case "flex-row-reverse" -> nameValue(FLEX_DIRECTION, "row-reverse");
       case "flex-col" -> nameValue(FLEX_DIRECTION, "column");
       case "flex-col-reverse" -> nameValue(FLEX_DIRECTION, "column-reverse");
+
+      // Justify Content
+      case "justify-normal" -> nameValue(JUSTIFY_CONTENT, "normal");
+      case "justify-start" -> nameValue(JUSTIFY_CONTENT, "flex-start");
+      case "justify-end" -> nameValue(JUSTIFY_CONTENT, "flex-end");
+      case "justify-center" -> nameValue(JUSTIFY_CONTENT, "center");
+      case "justify-between" -> nameValue(JUSTIFY_CONTENT, "space-between");
+      case "justify-around" -> nameValue(JUSTIFY_CONTENT, "space-around");
+      case "justify-evenly" -> nameValue(JUSTIFY_CONTENT, "space-evenly");
+      case "justify-stretch" -> nameValue(JUSTIFY_CONTENT, "stretch");
 
       // Position
       case "static" -> nameValue(POSITION, "static");
