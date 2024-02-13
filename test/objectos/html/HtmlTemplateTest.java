@@ -1102,6 +1102,36 @@ public class HtmlTemplateTest {
     );
   }
 
+  @Test(description = """
+  HtmlTemplate TC51
+
+  - required attribute inside fragment
+  """)
+  public void testCase51() {
+    test(
+        new HtmlTemplate() {
+          @Override
+          protected final void definition() {
+            html(
+                body(
+                    include(this::body0)
+                )
+            );
+          }
+
+          private void body0() {
+            input(required());
+          }
+        },
+
+        """
+        <html>
+        <body><input required></body>
+        </html>
+        """
+    );
+  }
+
   private void test(HtmlTemplate template, String expected) {
     String result;
     result = template.toString();

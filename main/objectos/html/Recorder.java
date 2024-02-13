@@ -637,6 +637,8 @@ class Recorder {
 
         case ByteProto.LENGTH3 -> index = encodeLength3(index);
 
+        case ByteProto.MARKED3 -> index += 3;
+
         case ByteProto.MARKED4 -> index += 4;
 
         case ByteProto.MARKED5 -> index += 5;

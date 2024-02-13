@@ -15,151 +15,160 @@
  */
 (function() {
 
-    "use strict";
+	"use strict";
 
-    function clickListener(event) {
-        const target = event.target;
+	function clickListener(event) {
+		const target = event.target;
 
-        const dataset = target.dataset;
+		const dataset = target.dataset;
 
-        const data = dataset.wayClick;
+		const data = dataset.wayClick;
 
-        if (!data) {
-            return;
-        }
+		if (!data) {
+			return;
+		}
 
-        const way = JSON.parse(data);
+		const way = JSON.parse(data);
 
-        if (!Array.isArray(way)) {
-            return;
-        }
+		if (!Array.isArray(way)) {
+			return;
+		}
 
-        executeActions(way);
-    }
+		executeActions(way);
+	}
 
-    function submitListener(event) {
-        const target = event.target;
+	function submitListener(event) {
+		const target = event.target;
 
-        const dataset = target.dataset;
+		const dataset = target.dataset;
 
-        const data = dataset.waySubmit;
+		const data = dataset.waySubmit;
 
-        if (!data) {
-            return;
-        }
+		if (!data) {
+			return;
+		}
 
-        const way = JSON.parse(data);
+		const way = JSON.parse(data);
 
-        if (!Array.isArray(way)) {
-            return;
-        }
+		if (!Array.isArray(way)) {
+			return;
+		}
 
-        // verify we have all of the required properties
-        const tagName = target.tagName;
+		// verify we have all of the required properties
+		const tagName = target.tagName;
 
-        if (tagName !== "FORM") {
-            return;
-        }
+		if (tagName !== "FORM") {
+			return;
+		}
 
-        const action = target.getAttribute("action");
+		const action = target.getAttribute("action");
 
-        if (!action) {
-            return;
-        }
+		if (!action) {
+			return;
+		}
 
-        const method = target.getAttribute("method");
+		const method = target.getAttribute("method");
 
-        if (!method) {
-            return;
-        }
+		if (!method) {
+			return;
+		}
 
+		// this is a way form, we shouldn't submit it
+		event.preventDefault();
 
-        const body = new FormData(target);
+		const xhr = new XMLHttpRequest();
 
-        // this is a way form, we shouldn't submit it
-        event.preventDefault();
+		xhr.open(method.toUpperCase(), action, true);
 
-        const xhr = new XMLHttpRequest();
+		xhr.onload = (_) => {
+			executeActions(way, xhr.response);
+		}
 
-        xhr.open(method.toUpperCase(), action, true);
+		const formData = new FormData(target);
 
-        xhr.onload = (_) => {
-            executeActions(way, xhr.response);
-        }
+		const enctype = target.getAttribute("enctype");
 
-        xhr.send(body);
-    }
+		if (enctype && enctype === "multipart/form-data") {
+			xhr.send(formData);
+		} else {
+			const params = new URLSearchParams(formData);
 
-    function executeActions(way, resp) {
-        for (const obj of way) {
-            const cmd = obj.cmd;
+			xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+			
+			xhr.send(params.toString());
+		}
+	}
 
-            const args = obj.args;
+	function executeActions(way, resp) {
+		for (const obj of way) {
+			const cmd = obj.cmd;
 
-            if (!cmd || !args) {
-                continue;
-            }
+			const args = obj.args;
 
-            switch (cmd) {
-                case "replace-class": {
-                    if (args.length !== 3) {
-                        return;
-                    }
+			if (!cmd || !args) {
+				continue;
+			}
 
-                    const id = args[0];
+			switch (cmd) {
+				case "replace-class": {
+					if (args.length !== 3) {
+						return;
+					}
 
-                    const el = document.getElementById(id);
+					const id = args[0];
 
-                    if (!el) {
-                        return;
-                    }
+					const el = document.getElementById(id);
 
-                    const classList = el.classList;
+					if (!el) {
+						return;
+					}
 
-                    const classA = args[1];
+					const classList = el.classList;
 
-                    const classB = args[2];
+					const classA = args[1];
 
-                    classList.replace(classA, classB);
+					const classB = args[2];
 
-                    break;
-                }
+					classList.replace(classA, classB);
 
-                case "swap": {
-                    if (args.length !== 2) {
-                        return;
-                    }
+					break;
+				}
 
-                    const id = args[0];
+				case "swap": {
+					if (args.length !== 2) {
+						return;
+					}
 
-                    const el = document.getElementById(id);
+					const id = args[0];
 
-                    if (!el) {
-                        return;
-                    }
+					const el = document.getElementById(id);
 
-                    const mode = args[1];
+					if (!el) {
+						return;
+					}
 
-                    switch (mode) {
-                        case "innerHTML": { el.innerHTML = resp; }
+					const mode = args[1];
 
-                        case "outerHTML": { el.outerHTML = resp; }
-                    }
+					switch (mode) {
+						case "innerHTML": { el.innerHTML = resp; }
 
-                    break;
-                }
-            }
+						case "outerHTML": { el.outerHTML = resp; }
+					}
 
-        }
-    }
+					break;
+				}
+			}
 
-    function domLoaded() {
-        const body = document.body;
+		}
+	}
 
-        body.addEventListener("click", clickListener);
-        body.addEventListener("submit", submitListener);
-    }
+	function domLoaded() {
+		const body = document.body;
 
-    window.addEventListener("DOMContentLoaded", domLoaded);
+		body.addEventListener("click", clickListener);
+		body.addEventListener("submit", submitListener);
+	}
+
+	window.addEventListener("DOMContentLoaded", domLoaded);
 
 })();
