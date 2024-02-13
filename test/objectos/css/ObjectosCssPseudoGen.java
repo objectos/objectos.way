@@ -27,7 +27,13 @@ public class ObjectosCssPseudoGen {
     ObjectosCssPseudoGen gen;
     gen = new ObjectosCssPseudoGen();
 
-    gen.cases(JUSTIFY_CONTENT, "JUSTIFY_CONTENT", "justify");
+    gen.classNamesColors("border");
+    gen.classNamesColors("border-x");
+    gen.classNamesColors("border-y");
+    gen.classNamesColors("border-t");
+    gen.classNamesColors("border-r");
+    gen.classNamesColors("border-b");
+    gen.classNamesColors("border-l");
   }
 
   private static final Map<String, String> SPACING = seqmap(
@@ -264,12 +270,14 @@ public class ObjectosCssPseudoGen {
 
     if (index++ < count && colors.hasNext()) {
       ps.append(prefix);
+      ps.append('-');
       ps.append(colors.next());
 
       while (index++ < count && colors.hasNext()) {
         ps.append(' ');
 
         ps.append(prefix);
+        ps.append('-');
         ps.append(colors.next());
       }
     }
