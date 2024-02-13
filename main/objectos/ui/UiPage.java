@@ -22,9 +22,9 @@ import objectos.html.FragmentLambda;
 
 public interface UiPage {
 
-  void lang(String value);
+  UiPage lang(String value);
 
-  void title(String value);
+  UiPage title(String value);
 
   void render(FragmentLambda body);
 

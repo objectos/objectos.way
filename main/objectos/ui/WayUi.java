@@ -20,21 +20,20 @@ import objectos.html.Html;
 import objectos.html.TemplateBase;
 import objectos.lang.object.Check;
 
-public class WayUi implements UiBuilder {
+public class WayUi implements UiBinder {
 
   private Consumer<Html> headStart = html -> {};
 
   public WayUi() {}
 
   @Override
-  public final Ui create(TemplateBase parent) {
+  public final Ui bindTo(TemplateBase parent) {
     Check.notNull(parent, "parent == null");
 
     return new ThisUi(parent);
   }
 
-  @Override
-  public final UiBuilder onHeadStart(Consumer<Html> value) {
+  public final WayUi onHeadStart(Consumer<Html> value) {
     headStart = Check.notNull(value, "value == null");
 
     return this;

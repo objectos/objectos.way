@@ -37,13 +37,17 @@ final class WayUiPage implements UiPage {
   }
 
   @Override
-  public final void lang(String value) {
+  public final UiPage lang(String value) {
     lang = Check.notNull(value, "value == null");
+
+    return this;
   }
 
   @Override
-  public final void title(String value) {
+  public final UiPage title(String value) {
     title = Check.notNull(value, "value == null");
+
+    return this;
   }
 
   @Override

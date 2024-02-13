@@ -23,7 +23,7 @@ import org.testng.annotations.Test;
 
 public class WayUiTest {
 
-  private UiBuilder standard;
+  private UiBinder standard;
 
   @BeforeClass
   public void setUp() {
@@ -38,7 +38,7 @@ public class WayUiTest {
   public void testCase01() {
     test(
         new HtmlTemplate() {
-          private final Ui ui = standard.create(this);
+          private final Ui ui = standard.bindTo(this);
 
           private final UiPage page = ui.page();
 
@@ -71,7 +71,7 @@ public class WayUiTest {
   public void testCase02() {
     test(
         new HtmlTemplate() {
-          private final Ui ui = standard.create(this);
+          private final Ui ui = standard.bindTo(this);
 
           private final UiPage page = ui.page();
 

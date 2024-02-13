@@ -18,14 +18,10 @@
  */
 package objectos.ui;
 
-import java.util.function.Consumer;
-import objectos.html.Html;
 import objectos.html.TemplateBase;
 
-public interface UiBuilder {
+public interface UiBinder {
 
-  Ui create(TemplateBase parent);
-
-  UiBuilder onHeadStart(Consumer<Html> value);
+  Ui bindTo(TemplateBase parent);
 
 }
