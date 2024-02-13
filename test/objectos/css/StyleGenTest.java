@@ -4252,6 +4252,96 @@ public class StyleGenTest {
   }
 
   @Test
+  public void width() {
+    class Subject extends AbstractSubject {
+      @Override
+      final void classes() {
+        // @formatter:off
+        className("w-auto w-1/2 w-1/3 w-2/3 w-1/4 w-2/4 w-3/4 w-1/5 w-2/5 w-3/5 w-4/5 w-1/6 w-2/6 w-3/6 w-4/6 w-5/6 w-1/12 w-2/12 w-3/12 w-4/12 w-5/12 w-6/12 w-7/12 w-8/12 w-9/12 w-10/12 w-11/12 w-full w-screen w-svw w-lvw w-dvw w-min w-max w-fit");
+        className("w-px w-0 w-0.5 w-1 w-1.5 w-2 w-2.5 w-3 w-3.5 w-4 w-5 w-6 w-7 w-8 w-9 w-10 w-11 w-12 w-14 w-16 w-20 w-24 w-28 w-32 w-36 w-40 w-44 w-48 w-52 w-56 w-60 w-64 w-72 w-80 w-96");
+        // @formatter:on
+      }
+    }
+
+    test(
+        Subject.class,
+
+        """
+        .w-auto { width: auto }
+        .w-1\\/2 { width: 50% }
+        .w-1\\/3 { width: 33.333333% }
+        .w-2\\/3 { width: 66.666667% }
+        .w-1\\/4 { width: 25% }
+        .w-2\\/4 { width: 50% }
+        .w-3\\/4 { width: 75% }
+        .w-1\\/5 { width: 20% }
+        .w-2\\/5 { width: 40% }
+        .w-3\\/5 { width: 60% }
+        .w-4\\/5 { width: 80% }
+        .w-1\\/6 { width: 16.666667% }
+        .w-2\\/6 { width: 33.333333% }
+        .w-3\\/6 { width: 50% }
+        .w-4\\/6 { width: 66.666667% }
+        .w-5\\/6 { width: 83.333333% }
+        .w-1\\/12 { width: 8.333333% }
+        .w-2\\/12 { width: 16.666667% }
+        .w-3\\/12 { width: 25% }
+        .w-4\\/12 { width: 33.333333% }
+        .w-5\\/12 { width: 41.666667% }
+        .w-6\\/12 { width: 50% }
+        .w-7\\/12 { width: 58.333333% }
+        .w-8\\/12 { width: 66.666667% }
+        .w-9\\/12 { width: 75% }
+        .w-10\\/12 { width: 83.333333% }
+        .w-11\\/12 { width: 91.666667% }
+        .w-full { width: 100% }
+        .w-screen { width: 100vw }
+        .w-svw { width: 100svw }
+        .w-lvw { width: 100lvw }
+        .w-dvw { width: 100dvw }
+        .w-min { width: min-content }
+        .w-max { width: max-content }
+        .w-fit { width: fit-content }
+        .w-px { width: 1px }
+        .w-0 { width: 0px }
+        .w-0\\.5 { width: 0.125rem }
+        .w-1 { width: 0.25rem }
+        .w-1\\.5 { width: 0.375rem }
+        .w-2 { width: 0.5rem }
+        .w-2\\.5 { width: 0.625rem }
+        .w-3 { width: 0.75rem }
+        .w-3\\.5 { width: 0.875rem }
+        .w-4 { width: 1rem }
+        .w-5 { width: 1.25rem }
+        .w-6 { width: 1.5rem }
+        .w-7 { width: 1.75rem }
+        .w-8 { width: 2rem }
+        .w-9 { width: 2.25rem }
+        .w-10 { width: 2.5rem }
+        .w-11 { width: 2.75rem }
+        .w-12 { width: 3rem }
+        .w-14 { width: 3.5rem }
+        .w-16 { width: 4rem }
+        .w-20 { width: 5rem }
+        .w-24 { width: 6rem }
+        .w-28 { width: 7rem }
+        .w-32 { width: 8rem }
+        .w-36 { width: 9rem }
+        .w-40 { width: 10rem }
+        .w-44 { width: 11rem }
+        .w-48 { width: 12rem }
+        .w-52 { width: 13rem }
+        .w-56 { width: 14rem }
+        .w-60 { width: 15rem }
+        .w-64 { width: 16rem }
+        .w-72 { width: 18rem }
+        .w-80 { width: 20rem }
+        .w-96 { width: 24rem }
+        """
+    );
+  }
+
+  @Test
   public void responsive() {
     class Subject extends AbstractSubject {
       @Override

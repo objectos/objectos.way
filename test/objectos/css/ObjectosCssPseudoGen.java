@@ -27,10 +27,7 @@ public class ObjectosCssPseudoGen {
     ObjectosCssPseudoGen gen;
     gen = new ObjectosCssPseudoGen();
 
-    gen.classNamesColors("border-t");
-    gen.classNamesColors("border-r");
-    gen.classNamesColors("border-b");
-    gen.classNamesColors("border-l");
+    gen.initVariable(WIDTH, "width");
   }
 
   private static final Map<String, String> SPACING = seqmap(
@@ -222,6 +219,44 @@ public class ObjectosCssPseudoGen {
       kv("sticky", "sticky")
   );
 
+  static final Map<String, String> WIDTH = seqmap(
+      kv("auto", "auto"),
+      kv("1/2", "50%"),
+      kv("1/3", "33.333333%"),
+      kv("2/3", "66.666667%"),
+      kv("1/4", "25%"),
+      kv("2/4", "50%"),
+      kv("3/4", "75%"),
+      kv("1/5", "20%"),
+      kv("2/5", "40%"),
+      kv("3/5", "60%"),
+      kv("4/5", "80%"),
+      kv("1/6", "16.666667%"),
+      kv("2/6", "33.333333%"),
+      kv("3/6", "50%"),
+      kv("4/6", "66.666667%"),
+      kv("5/6", "83.333333%"),
+      kv("1/12", "8.333333%"),
+      kv("2/12", "16.666667%"),
+      kv("3/12", "25%"),
+      kv("4/12", "33.333333%"),
+      kv("5/12", "41.666667%"),
+      kv("6/12", "50%"),
+      kv("7/12", "58.333333%"),
+      kv("8/12", "66.666667%"),
+      kv("9/12", "75%"),
+      kv("10/12", "83.333333%"),
+      kv("11/12", "91.666667%"),
+      kv("full", "100%"),
+      kv("screen", "100vw"),
+      kv("svw", "100svw"),
+      kv("lvw", "100lvw"),
+      kv("dvw", "100dvw"),
+      kv("min", "min-content"),
+      kv("max", "max-content"),
+      kv("fit", "fit-content")
+  );
+
   final void cases(Map<String, String> map, String kind, String prefix) {
     for (var entry : map.entrySet()) {
       var key = entry.getKey();
@@ -241,7 +276,7 @@ public class ObjectosCssPseudoGen {
 
   final void classNames(Map<String, String> map, String prefix) {
     for (var key : map.keySet()) {
-      System.out.println("className(\"" + prefix + key + "\");");
+      System.out.println("className(\"" + prefix + "-" + key + "\");");
     }
   }
 

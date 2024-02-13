@@ -44,6 +44,7 @@ sealed abstract class Utility {
   static final Utility DISPLAY = new Single("display");
 
   static final Utility HEIGHT = new Single("height");
+  static final Utility WIDTH = new Single("width");
 
   static final Utility FLEX_DIRECTION = new Single("flex-direction");
   static final Utility ALIGN_ITEMS = new Single("align-items");

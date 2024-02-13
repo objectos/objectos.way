@@ -52,6 +52,8 @@ public final class WayStyleGen extends WayStyleGenConfig implements StyleGen {
 
   private final Map<String, String> padding;
 
+  private Map<String, String> width;
+
   public WayStyleGen() {
     colors = new GrowableMap<>();
 
@@ -518,5 +520,56 @@ public final class WayStyleGen extends WayStyleGenConfig implements StyleGen {
 
   @Override
   final Map<String, String> padding() { return padding; }
+
+  @Override
+  final Map<String, String> width() {
+    if (width == null) {
+      width = new GrowableMap<>();
+
+      width.putAll(spacing());
+
+      width.put("auto", "auto");
+      width.put("1/2", "50%");
+      width.put("1/3", "33.333333%");
+      width.put("2/3", "66.666667%");
+      width.put("1/4", "25%");
+      width.put("2/4", "50%");
+      width.put("3/4", "75%");
+      width.put("1/5", "20%");
+      width.put("2/5", "40%");
+      width.put("3/5", "60%");
+      width.put("4/5", "80%");
+      width.put("1/6", "16.666667%");
+      width.put("2/6", "33.333333%");
+      width.put("3/6", "50%");
+      width.put("4/6", "66.666667%");
+      width.put("5/6", "83.333333%");
+      width.put("1/12", "8.333333%");
+      width.put("2/12", "16.666667%");
+      width.put("3/12", "25%");
+      width.put("4/12", "33.333333%");
+      width.put("5/12", "41.666667%");
+      width.put("6/12", "50%");
+      width.put("7/12", "58.333333%");
+      width.put("8/12", "66.666667%");
+      width.put("9/12", "75%");
+      width.put("10/12", "83.333333%");
+      width.put("11/12", "91.666667%");
+      width.put("full", "100%");
+      width.put("screen", "100vw");
+      width.put("svw", "100svw");
+      width.put("lvw", "100lvw");
+      width.put("dvw", "100dvw");
+      width.put("min", "min-content");
+      width.put("max", "max-content");
+      width.put("fit", "fit-content");
+    }
+
+    return width;
+  }
+
+  private Map<String, String> spacing() {
+    return spacing;
+  }
 
 }

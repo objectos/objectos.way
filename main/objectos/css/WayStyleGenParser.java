@@ -48,6 +48,7 @@ import static objectos.css.Utility.RIGHT;
 import static objectos.css.Utility.START;
 import static objectos.css.Utility.TEXT_COLOR;
 import static objectos.css.Utility.TOP;
+import static objectos.css.Utility.WIDTH;
 
 import java.util.List;
 import java.util.Map;
@@ -222,6 +223,9 @@ abstract class WayStyleGenParser extends WayStyleGenVariants {
       case "text" -> text(suffix);
       case "top" -> config(TOP, config.inset(), suffix);
       case "tracking" -> config(LETTER_SPACING, config.letterSpacing(), suffix);
+
+      // W
+      case "w" -> config(WIDTH, config.width(), suffix);
 
       default -> Rule.NOOP;
     };

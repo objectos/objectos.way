@@ -39,4 +39,6 @@ sealed abstract class WayStyleGenConfig permits WayStyleGen {
 
   abstract Map<String, String> padding();
 
+  abstract Map<String, String> width();
+
 }
