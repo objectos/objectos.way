@@ -21,6 +21,8 @@ sealed abstract class WayStyleGenConfig permits WayStyleGen {
 
   abstract Variant getVariant(String variantName);
 
+  abstract Map<String, String> borderWidth();
+
   abstract Map<String, String> colors();
 
   abstract Map<String, String> fontSize();

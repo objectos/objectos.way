@@ -131,23 +131,28 @@ abstract class WayStyleGenParser extends WayStyleGenVariants {
    * Prefixes that are 1 word
    */
   private Rule prefixWord1(String value) {
+    String prefix, suffix;
+
     int dashIndex;
     dashIndex = value.indexOf('-');
 
-    if (dashIndex < 1) {
-      // the string either:
-      // 1) does not have a dash; or
-      // 2) immediately start with a dash
-      // in any case it is an invalid value
+    switch (dashIndex) {
+      case 0 -> {
+        return Rule.NOOP;
+      }
 
-      return Rule.NOOP;
+      case -1 -> {
+        prefix = value;
+
+        suffix = "";
+      }
+
+      default -> {
+        prefix = value.substring(0, dashIndex);
+
+        suffix = value.substring(dashIndex + 1);
+      }
     }
-
-    String prefix;
-    prefix = value.substring(0, dashIndex);
-
-    String suffix;
-    suffix = value.substring(dashIndex + 1);
 
     return switch (prefix) {
       // B
@@ -234,7 +239,16 @@ abstract class WayStyleGenParser extends WayStyleGenVariants {
     intValue = suffix.indexOf('-');
 
     if (intValue != 1) {
-      return Side.ALL;
+      // dash was not found
+
+      if (suffix.length() != 1) {
+        // suffix is in the form '', 'xy', 'xyz', 'abcd', etc...
+        return Side.ALL;
+      }
+
+      // suffix may be 'x', 'y', 't', etc...
+      // we set dash index to 0;
+      intValue = 0;
     }
 
     char first;
@@ -279,8 +293,8 @@ abstract class WayStyleGenParser extends WayStyleGenVariants {
     color = colors.get(sideSuffix);
 
     if (color != null) {
-      Utility borderColor;
-      borderColor = switch (side) {
+      Utility utility;
+      utility = switch (side) {
         case ALL -> Utility.BORDER_COLOR;
         case X -> Utility.BORDER_COLOR_X;
         case Y -> Utility.BORDER_COLOR_Y;
@@ -290,7 +304,28 @@ abstract class WayStyleGenParser extends WayStyleGenVariants {
         case LEFT -> Utility.BORDER_COLOR_LEFT;
       };
 
-      return borderColor.get(className, variants, color);
+      return utility.get(className, variants, color);
+    }
+
+    Map<String, String> borderWidth;
+    borderWidth = config.borderWidth();
+
+    String borderWidthValue;
+    borderWidthValue = borderWidth.get(sideSuffix);
+
+    if (borderWidthValue != null) {
+      Utility utility;
+      utility = switch (side) {
+        case ALL -> Utility.BORDER_WIDTH;
+        case X -> Utility.BORDER_WIDTH_X;
+        case Y -> Utility.BORDER_WIDTH_Y;
+        case TOP -> Utility.BORDER_WIDTH_TOP;
+        case RIGHT -> Utility.BORDER_WIDTH_RIGHT;
+        case BOTTOM -> Utility.BORDER_WIDTH_BOTTOM;
+        case LEFT -> Utility.BORDER_WIDTH_LEFT;
+      };
+
+      return utility.get(className, variants, borderWidthValue);
     }
 
     return Rule.NOOP;

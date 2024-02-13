@@ -33,6 +33,8 @@ public final class WayStyleGen extends WayStyleGenConfig implements StyleGen {
       "2xl", new Breakpoint(4, "1536px")
   );
 
+  private Map<String, String> borderWidth;
+
   private final Map<String, String> colors;
 
   private final Map<String, String> spacing;
@@ -477,6 +479,20 @@ public final class WayStyleGen extends WayStyleGenConfig implements StyleGen {
   @Override
   final Variant getVariant(String variantName) {
     return breakpoints.get(variantName);
+  }
+
+  @Override
+  final Map<String, String> borderWidth() {
+    if (borderWidth == null) {
+      borderWidth = new GrowableMap<>();
+      borderWidth.put("", "1px");
+      borderWidth.put("0", "0px");
+      borderWidth.put("2", "2px");
+      borderWidth.put("4", "4px");
+      borderWidth.put("8", "8px");
+    }
+
+    return borderWidth;
   }
 
   @Override

@@ -27,7 +27,13 @@ public class ObjectosCssPseudoGen {
     ObjectosCssPseudoGen gen;
     gen = new ObjectosCssPseudoGen();
 
-    gen.classNamesColors("border-");
+    gen.classNameSingleLine(BORDER_WIDTH, "border");
+    gen.classNameSingleLine(BORDER_WIDTH, "border-x");
+    gen.classNameSingleLine(BORDER_WIDTH, "border-y");
+    gen.classNameSingleLine(BORDER_WIDTH, "border-t");
+    gen.classNameSingleLine(BORDER_WIDTH, "border-r");
+    gen.classNameSingleLine(BORDER_WIDTH, "border-b");
+    gen.classNameSingleLine(BORDER_WIDTH, "border-l");
   }
 
   private static final Map<String, String> SPACING = seqmap(
@@ -74,6 +80,14 @@ public class ObjectosCssPseudoGen {
       kv("items-center", "center"),
       kv("items-baseline", "baseline"),
       kv("items-stretch", "stretch")
+  );
+
+  static final Map<String, String> BORDER_WIDTH = seqmap(
+      kv("", "1px"),
+      kv("0", "0px"),
+      kv("2", "2px"),
+      kv("4", "4px"),
+      kv("8", "8px")
   );
 
   static final Map<String, String> DISPLAY = seqmap(
@@ -260,7 +274,13 @@ public class ObjectosCssPseudoGen {
 
   final void classNameSingleLine(Map<String, String> map, String prefix) {
     String names = map.keySet().stream()
-        .map(s -> prefix + s)
+        .map(s -> {
+          if (s.isEmpty()) {
+            return prefix;
+          } else {
+            return prefix + '-' + s;
+          }
+        })
         .collect(Collectors.joining(" "));
 
     System.out.println("className(\"" + names + "\");");

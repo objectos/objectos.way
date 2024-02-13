@@ -49,6 +49,14 @@ sealed abstract class Utility {
 
   static final Utility ALIGN_ITEMS = new Single("align-items");
 
+  static final Utility BORDER_WIDTH = new Single("border-width");
+  static final Utility BORDER_WIDTH_X = new Axis("border-left-width", "border-right-width");
+  static final Utility BORDER_WIDTH_Y = new Axis("border-top-width", "border-bottom-width");
+  static final Utility BORDER_WIDTH_TOP = new Single("border-top-width");
+  static final Utility BORDER_WIDTH_RIGHT = new Single("border-right-width");
+  static final Utility BORDER_WIDTH_BOTTOM = new Single("border-bottom-width");
+  static final Utility BORDER_WIDTH_LEFT = new Single("border-left-width");
+
   static final Utility BORDER_COLOR = new Single("border-color");
   static final Utility BORDER_COLOR_X = new Axis("border-left-color", "border-right-color");
   static final Utility BORDER_COLOR_Y = new Axis("border-top-color", "border-bottom-color");
