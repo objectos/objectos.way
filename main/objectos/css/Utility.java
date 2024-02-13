@@ -78,6 +78,8 @@ sealed abstract class Utility {
   static final Utility PADDING_BOTTOM = new Single("padding-bottom");
   static final Utility PADDING_LEFT = new Single("padding-left");
 
+  static final Utility TEXT_ALIGN = new Single("text-align");
+
   static final Utility FONT_SIZE = new Duo("font-size", "line-height");
 
   static final Utility LINE_HEIGHT = new Single("line-height");

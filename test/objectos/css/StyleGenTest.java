@@ -3964,6 +3964,29 @@ public class StyleGenTest {
   }
 
   @Test
+  public void textAlign() {
+    class Subject extends AbstractSubject {
+      @Override
+      final void classes() {
+        className("text-left text-center text-right text-justify text-start text-end");
+      }
+    }
+
+    test(
+        Subject.class,
+
+        """
+        .text-left { text-align: left }
+        .text-center { text-align: center }
+        .text-right { text-align: right }
+        .text-justify { text-align: justify }
+        .text-start { text-align: start }
+        .text-end { text-align: end }
+        """
+    );
+  }
+
+  @Test
   public void textColor() {
     class Subject extends AbstractSubject {
       @Override

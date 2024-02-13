@@ -27,7 +27,9 @@ public class ObjectosCssPseudoGen {
     ObjectosCssPseudoGen gen;
     gen = new ObjectosCssPseudoGen();
 
-    gen.initVariable(WIDTH, "width");
+    gen.classNameSingleLine(TEXT_ALIGN, "text");
+
+    gen.cases(TEXT_ALIGN, "TEXT_ALIGN", "text");
   }
 
   private static final Map<String, String> SPACING = seqmap(
@@ -217,6 +219,15 @@ public class ObjectosCssPseudoGen {
       kv("absolute", "absolute"),
       kv("relative", "relative"),
       kv("sticky", "sticky")
+  );
+
+  static final Map<String, String> TEXT_ALIGN = seqmap(
+      kv("left", "left"),
+      kv("center", "center"),
+      kv("right", "right"),
+      kv("justify", "justify"),
+      kv("start", "start"),
+      kv("end", "end")
   );
 
   static final Map<String, String> WIDTH = seqmap(

@@ -83,7 +83,8 @@ $(SELFGEN_MODULE_PATH): $(SELFGEN_DEPS)
 	cat $^ | sort -u | paste --delimiter='$(MODULE_PATH_SEPARATOR)' --serial > $@
 
 $(SELFGEN_MARKER): $(SELFGEN_MODULE_PATH)
-	$(SELFGEN_JAVAX) 
+	$(SELFGEN_JAVAX)
+	touch $@ 
 
 #
 # way@compile

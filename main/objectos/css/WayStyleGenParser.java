@@ -46,6 +46,7 @@ import static objectos.css.Utility.PADDING_Y;
 import static objectos.css.Utility.POSITION;
 import static objectos.css.Utility.RIGHT;
 import static objectos.css.Utility.START;
+import static objectos.css.Utility.TEXT_ALIGN;
 import static objectos.css.Utility.TEXT_COLOR;
 import static objectos.css.Utility.TOP;
 import static objectos.css.Utility.WIDTH;
@@ -130,6 +131,14 @@ abstract class WayStyleGenParser extends WayStyleGenVariants {
       case "absolute" -> nameValue(POSITION, "absolute");
       case "relative" -> nameValue(POSITION, "relative");
       case "sticky" -> nameValue(POSITION, "sticky");
+
+      // Text Align
+      case "text-left" -> nameValue(TEXT_ALIGN, "left");
+      case "text-center" -> nameValue(TEXT_ALIGN, "center");
+      case "text-right" -> nameValue(TEXT_ALIGN, "right");
+      case "text-justify" -> nameValue(TEXT_ALIGN, "justify");
+      case "text-start" -> nameValue(TEXT_ALIGN, "start");
+      case "text-end" -> nameValue(TEXT_ALIGN, "end");
 
       // Others
       default -> prefixWord1(value);
