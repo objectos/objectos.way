@@ -27,9 +27,6 @@ public class ObjectosCssPseudoGen {
     ObjectosCssPseudoGen gen;
     gen = new ObjectosCssPseudoGen();
 
-    gen.classNamesColors("border");
-    gen.classNamesColors("border-x");
-    gen.classNamesColors("border-y");
     gen.classNamesColors("border-t");
     gen.classNamesColors("border-r");
     gen.classNamesColors("border-b");

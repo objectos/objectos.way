@@ -46,9 +46,7 @@ sealed abstract class Utility {
   static final Utility HEIGHT = new Single("height");
 
   static final Utility FLEX_DIRECTION = new Single("flex-direction");
-
   static final Utility ALIGN_ITEMS = new Single("align-items");
-
   static final Utility JUSTIFY_CONTENT = new Single("justify-content");
 
   static final Utility BORDER_WIDTH = new Single("border-width");
@@ -68,6 +66,8 @@ sealed abstract class Utility {
   static final Utility BORDER_COLOR_LEFT = new Single("border-left-color");
 
   static final Utility BACKGROUND_COLOR = new Single("background-color");
+
+  static final Utility FILL = new Single("fill");
 
   static final Utility PADDING = new Single("padding");
   static final Utility PADDING_X = new Axis("padding-left", "padding-right");

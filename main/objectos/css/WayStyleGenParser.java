@@ -20,6 +20,7 @@ import static objectos.css.Utility.BACKGROUND_COLOR;
 import static objectos.css.Utility.BOTTOM;
 import static objectos.css.Utility.DISPLAY;
 import static objectos.css.Utility.END;
+import static objectos.css.Utility.FILL;
 import static objectos.css.Utility.FLEX_DIRECTION;
 import static objectos.css.Utility.FONT_SIZE;
 import static objectos.css.Utility.HEIGHT;
@@ -173,6 +174,15 @@ abstract class WayStyleGenParser extends WayStyleGenVariants {
 
       // E
       case "end" -> config(END, config.inset(), suffix);
+
+      // F
+      case "fill" -> {
+        if (suffix.equals("none")) {
+          yield FILL.get(className, variants, suffix);
+        } else {
+          yield config(FILL, config.colors(), suffix);
+        }
+      }
 
       // H
       case "h" -> config(HEIGHT, config.height(), suffix);
