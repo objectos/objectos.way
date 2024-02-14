@@ -15,9 +15,9 @@
  */
 package objectos.http;
 
-public sealed abstract class Method permits ObjectoxMethod {
+public sealed abstract class Method permits WayMethod {
 
-  private static ObjectoxMethod.Builder BUILDER = new ObjectoxMethod.Builder();
+  private static WayMethod.Builder BUILDER = new WayMethod.Builder();
 
   /**
    * The CONNECT method.
@@ -65,7 +65,7 @@ public sealed abstract class Method permits ObjectoxMethod {
   public static final Method TRACE = BUILDER.create("TRACE");
 
   static {
-    ObjectoxMethod.set(BUILDER);
+    WayMethod.set(BUILDER);
 
     BUILDER = null;
   }

@@ -18,7 +18,7 @@ package objectos.http;
 import java.util.HashMap;
 import java.util.Map;
 
-final class CookiesParser {
+final class WayCookiesParser {
 
   private final Map<String, CookieValue> cookies = new HashMap<>();
 
@@ -32,7 +32,7 @@ final class CookiesParser {
 
   private State state;
 
-  public CookiesParser(String s) {
+  public WayCookiesParser(String s) {
     this.source = s;
   }
 
@@ -46,7 +46,7 @@ final class CookiesParser {
     if (cookies.isEmpty()) {
       return EmptyCookies.INSTANCE;
     } else {
-      return new StandardCookies(cookies);
+      return new WayCookies(cookies);
     }
   }
 

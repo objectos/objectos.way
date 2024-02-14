@@ -21,7 +21,7 @@ import static org.testng.Assert.assertNull;
 import java.io.IOException;
 import org.testng.annotations.Test;
 
-public class ObjectoxRequestLineTest {
+public class WayRequestLineTest {
 
   @Test(description = """
   GET / HTTP/1.1
@@ -29,7 +29,7 @@ public class ObjectoxRequestLineTest {
   Connection: close
   """)
   public void testCase001() throws IOException {
-    ObjectoxRequestLine line;
+    WayRequestLine line;
     line = regularInput("""
     GET / HTTP/1.1\r
     Host: www.example.com\r
@@ -46,7 +46,7 @@ public class ObjectoxRequestLineTest {
     assertEquals(method, Method.GET);
 
     // path
-    ObjectoxUriPath path;
+    WayUriPath path;
     path = line.path;
 
     assertEquals(path.toString(), "/");
@@ -70,7 +70,7 @@ public class ObjectoxRequestLineTest {
   Host: www.example.com
   """)
   public void testCase007() throws IOException {
-    ObjectoxRequestLine line;
+    WayRequestLine line;
     line = regularInput("""
     GET /endpoint?foo=bar HTTP/1.1\r
     Host: www.example.com\r
@@ -86,7 +86,7 @@ public class ObjectoxRequestLineTest {
     assertEquals(method, Method.GET);
 
     // path
-    ObjectoxUriPath path;
+    WayUriPath path;
     path = line.path;
 
     assertEquals(path.toString(), "/endpoint");
@@ -108,9 +108,9 @@ public class ObjectoxRequestLineTest {
     assertNull(line.badRequest);
   }
 
-  private ObjectoxRequestLine regularInput(Object... data) throws IOException {
-    ObjectoxRequestLine requestLine;
-    requestLine = new ObjectoxRequestLine();
+  private WayRequestLine regularInput(Object... data) throws IOException {
+    WayRequestLine requestLine;
+    requestLine = new WayRequestLine();
 
     requestLine.bufferSize(64, 128);
 

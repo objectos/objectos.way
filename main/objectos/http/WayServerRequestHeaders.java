@@ -22,17 +22,17 @@ import java.util.HashMap;
 import java.util.Map;
 import objectos.lang.object.Check;
 
-class ObjectoxServerRequestHeaders extends ObjectoxRequestLine implements ServerRequestHeaders {
+class WayServerRequestHeaders extends WayRequestLine implements ServerRequestHeaders {
 
   HeaderName headerName;
 
-  ObjectoxHeader[] standardHeaders;
+  WayHeader[] standardHeaders;
 
   int standardHeadersCount;
 
-  Map<HeaderName, ObjectoxHeader> unknownHeaders;
+  Map<HeaderName, WayHeader> unknownHeaders;
 
-  ObjectoxServerRequestHeaders() {}
+  WayServerRequestHeaders() {}
 
   // public API
 
@@ -49,7 +49,7 @@ class ObjectoxServerRequestHeaders extends ObjectoxRequestLine implements Server
         return null;
       }
 
-      ObjectoxHeader maybe;
+      WayHeader maybe;
       maybe = standardHeaders[index];
 
       if (maybe != null) {
@@ -64,7 +64,7 @@ class ObjectoxServerRequestHeaders extends ObjectoxRequestLine implements Server
         return null;
       }
 
-      ObjectoxHeader maybe;
+      WayHeader maybe;
       maybe = unknownHeaders.get(name);
 
       if (maybe != null) {
@@ -93,7 +93,7 @@ class ObjectoxServerRequestHeaders extends ObjectoxRequestLine implements Server
 
   // unchecked API
 
-  final ObjectoxHeader headerUnchecked(HeaderName name) {
+  final WayHeader headerUnchecked(HeaderName name) {
     if (standardHeaders == null) {
       return null;
     } else {
@@ -198,14 +198,14 @@ class ObjectoxServerRequestHeaders extends ObjectoxRequestLine implements Server
 
   static {
     int size;
-    size = ObjectoxHeaderName.standardNamesSize();
+    size = WayHeaderName.standardNamesSize();
 
     byte[][] map;
     map = new byte[size][];
 
     for (int i = 0; i < size; i++) {
-      ObjectoxHeaderName headerName;
-      headerName = ObjectoxHeaderName.standardName(i);
+      WayHeaderName headerName;
+      headerName = WayHeaderName.standardName(i);
 
       String name;
       name = headerName.capitalized();
@@ -322,16 +322,16 @@ class ObjectoxServerRequestHeaders extends ObjectoxRequestLine implements Server
     if (index >= 0) {
       if (standardHeaders == null) {
         int size;
-        size = ObjectoxHeaderName.standardNamesSize();
+        size = WayHeaderName.standardNamesSize();
 
-        standardHeaders = new ObjectoxHeader[size];
+        standardHeaders = new WayHeader[size];
       }
 
-      ObjectoxHeader header;
+      WayHeader header;
       header = standardHeaders[index];
 
       if (header == null) {
-        header = new ObjectoxHeader(headerName, this, startIndex, endIndex);
+        header = new WayHeader(headerName, this, startIndex, endIndex);
 
         standardHeadersCount++;
       } else {
@@ -347,11 +347,11 @@ class ObjectoxServerRequestHeaders extends ObjectoxRequestLine implements Server
       HeaderName name;
       name = headerName;
 
-      ObjectoxHeader header;
+      WayHeader header;
       header = unknownHeaders.get(name);
 
       if (header == null) {
-        header = new ObjectoxHeader(headerName, this, startIndex, endIndex);
+        header = new WayHeader(headerName, this, startIndex, endIndex);
       } else {
         header = header.add(startIndex, endIndex);
       }

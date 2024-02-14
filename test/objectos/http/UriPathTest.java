@@ -21,12 +21,12 @@ import java.util.List;
 import objectos.http.UriPath.Segment;
 import org.testng.annotations.Test;
 
-public class ObjectoxUriPathTest {
+public class UriPathTest {
 
   @Test
   public void is() {
-    ObjectoxUriPath path;
-    path = new ObjectoxUriPath();
+    WayUriPath path;
+    path = new WayUriPath();
 
     path.set("/");
 
@@ -36,8 +36,8 @@ public class ObjectoxUriPathTest {
 
   @Test
   public void startsWith() {
-    ObjectoxUriPath path;
-    path = new ObjectoxUriPath();
+    WayUriPath path;
+    path = new WayUriPath();
 
     path.set("/foo/bar.html");
 
@@ -50,8 +50,8 @@ public class ObjectoxUriPathTest {
 
   @Test
   public void segments() {
-    ObjectoxUriPath path;
-    path = new ObjectoxUriPath();
+    WayUriPath path;
+    path = new WayUriPath();
 
     path.set("/");
 

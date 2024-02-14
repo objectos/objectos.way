@@ -20,9 +20,9 @@ import java.util.Objects;
 /**
  * Represents an HTTP header name.
  */
-public sealed abstract class HeaderName permits ObjectoxHeaderName {
+public sealed abstract class HeaderName permits WayHeaderName {
 
-  private static ObjectoxHeaderName.Builder BUILDER = new ObjectoxHeaderName.Builder();
+  private static WayHeaderName.Builder BUILDER = new WayHeaderName.Builder();
 
   public static final HeaderName ACCEPT_ENCODING = BUILDER.create("Accept-Encoding", HeaderType.REQUEST);
 
@@ -51,7 +51,7 @@ public sealed abstract class HeaderName permits ObjectoxHeaderName {
   public static final HeaderName USER_AGENT = BUILDER.create("User-Agent", HeaderType.REQUEST);
 
   static {
-    ObjectoxHeaderName.set(BUILDER);
+    WayHeaderName.set(BUILDER);
 
     BUILDER = null;
   }
@@ -60,10 +60,10 @@ public sealed abstract class HeaderName permits ObjectoxHeaderName {
     Objects.requireNonNull(name, "name == null");
 
     HeaderName headerName;
-    headerName = ObjectoxHeaderName.findByName(name);
+    headerName = WayHeaderName.findByName(name);
 
     if (headerName == null) {
-      headerName = new ObjectoxHeaderName(name);
+      headerName = new WayHeaderName(name);
     }
 
     return headerName;

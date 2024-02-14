@@ -17,7 +17,7 @@ package objectos.http;
 
 import java.util.Objects;
 
-public sealed interface Cookies permits EmptyCookies, StandardCookies {
+public sealed interface Cookies permits EmptyCookies, WayCookies {
 
   static Cookies parse(String s) {
     Objects.requireNonNull(s, "s == null");
@@ -26,8 +26,8 @@ public sealed interface Cookies permits EmptyCookies, StandardCookies {
       return EmptyCookies.INSTANCE;
     }
 
-    CookiesParser parser;
-    parser = new CookiesParser(s);
+    WayCookiesParser parser;
+    parser = new WayCookiesParser(s);
 
     return parser.parse();
   }

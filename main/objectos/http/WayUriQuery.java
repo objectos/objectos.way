@@ -21,13 +21,13 @@ import java.util.Map;
 import objectos.lang.object.Check;
 import objectos.util.map.GrowableMap;
 
-final class ObjectoxUriQuery implements UriQuery {
+final class WayUriQuery implements UriQuery {
 
   private String value;
 
   private Map<String, Object> params;
 
-  public ObjectoxUriQuery() {
+  public WayUriQuery() {
   }
 
   public final void set(String rawValue) {

@@ -161,7 +161,7 @@ final class ObjectoxServerLoop extends WayServerRequestBody implements ServerLoo
       keepAlive = true;
     }
 
-    ObjectoxHeader connection;
+    WayHeader connection;
     connection = headerUnchecked(HeaderName.CONNECTION);
 
     if (connection != null) {
@@ -239,14 +239,14 @@ final class ObjectoxServerLoop extends WayServerRequestBody implements ServerLoo
 
   static {
     int size;
-    size = ObjectoxStatus.size();
+    size = WayStatus.size();
 
     byte[][] map;
     map = new byte[size][];
 
     for (int index = 0; index < size; index++) {
-      ObjectoxStatus status;
-      status = ObjectoxStatus.get(index);
+      WayStatus status;
+      status = WayStatus.get(index);
 
       String response;
       response = Integer.toString(status.code()) + " " + status.reasonPhrase() + "\r\n";
@@ -289,8 +289,8 @@ final class ObjectoxServerLoop extends WayServerRequestBody implements ServerLoo
 
     writeBytes(version.responseBytes);
 
-    ObjectoxStatus internal;
-    internal = (ObjectoxStatus) status;
+    WayStatus internal;
+    internal = (WayStatus) status;
 
     byte[] statusBytes;
     statusBytes = STATUS_LINES[internal.index];
@@ -342,7 +342,7 @@ final class ObjectoxServerLoop extends WayServerRequestBody implements ServerLoo
     byte[] nameBytes;
 
     if (index >= 0) {
-      nameBytes = ObjectoxServerRequestHeaders.STD_HEADER_NAME_BYTES[index];
+      nameBytes = WayServerRequestHeaders.STD_HEADER_NAME_BYTES[index];
     } else {
       String capitalized;
       capitalized = name.capitalized();

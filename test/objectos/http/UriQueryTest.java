@@ -19,13 +19,13 @@ import static org.testng.Assert.assertEquals;
 
 import org.testng.annotations.Test;
 
-public class ObjectoxUriQueryTest {
+public class UriQueryTest {
 
   @Test(description = """
   UriQuery: empty
   """)
   public void testCase01() {
-    ObjectoxUriQuery q;
+    WayUriQuery q;
     q = queryOf("");
 
     assertEquals(q.get("foo"), null);
@@ -37,7 +37,7 @@ public class ObjectoxUriQueryTest {
   UriQuery: single value
   """)
   public void testCase02() {
-    ObjectoxUriQuery q;
+    WayUriQuery q;
     q = queryOf("foo=bar");
 
     assertEquals(q.get("foo"), "bar");
@@ -49,7 +49,7 @@ public class ObjectoxUriQueryTest {
   UriQuery: name only
   """)
   public void testCase03() {
-    ObjectoxUriQuery q;
+    WayUriQuery q;
     q = queryOf("foo");
 
     assertEquals(q.get("foo"), "");
@@ -61,7 +61,7 @@ public class ObjectoxUriQueryTest {
   UriQuery: empty value
   """)
   public void testCase04() {
-    ObjectoxUriQuery q;
+    WayUriQuery q;
     q = queryOf("foo=");
 
     assertEquals(q.get("foo"), "");
@@ -73,7 +73,7 @@ public class ObjectoxUriQueryTest {
   UriQuery: corner cases
   """)
   public void testCase05() {
-    ObjectoxUriQuery q;
+    WayUriQuery q;
     q = queryOf("a&foo=");
 
     assertEquals(q.get("a"), "");
@@ -82,9 +82,9 @@ public class ObjectoxUriQueryTest {
     assertEquals(q.isEmpty(), false);
   }
 
-  private ObjectoxUriQuery queryOf(String q) {
-    ObjectoxUriQuery query;
-    query = new ObjectoxUriQuery();
+  private WayUriQuery queryOf(String q) {
+    WayUriQuery query;
+    query = new WayUriQuery();
 
     query.set(q);
 

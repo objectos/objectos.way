@@ -15,7 +15,7 @@
  */
 package objectos.http;
 
-class ObjectoxHeader {
+class WayHeader {
 
   final HeaderName name;
 
@@ -27,7 +27,7 @@ class ObjectoxHeader {
 
   String value;
 
-  public ObjectoxHeader(HeaderName name, SocketInput input, int start, int end) {
+  public WayHeader(HeaderName name, SocketInput input, int start, int end) {
     this.name = name;
 
     this.input = input;
@@ -37,7 +37,7 @@ class ObjectoxHeader {
     this.end = end;
   }
 
-  public final ObjectoxHeader add(int startIndex, int endIndex) {
+  public final WayHeader add(int startIndex, int endIndex) {
     throw new UnsupportedOperationException("Implement me");
   }
 

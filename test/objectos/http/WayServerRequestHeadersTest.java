@@ -20,7 +20,7 @@ import static org.testng.Assert.assertEquals;
 import java.io.IOException;
 import org.testng.annotations.Test;
 
-public class ObjectoxServerRequestHeadersTest {
+public class WayServerRequestHeadersTest {
 
   @Test(description = """
   GET / HTTP/1.1
@@ -28,7 +28,7 @@ public class ObjectoxServerRequestHeadersTest {
   Connection: close
   """)
   public void testCase001() throws IOException {
-    ObjectoxServerRequestHeaders headers;
+    WayServerRequestHeaders headers;
     headers = regularInput("""
     Host: www.example.com\r
     Connection: close\r
@@ -44,7 +44,7 @@ public class ObjectoxServerRequestHeadersTest {
 
   @Test
   public void testCase003() throws IOException {
-    ObjectoxServerRequestHeaders headers;
+    WayServerRequestHeaders headers;
     headers = regularInput("""
     Host: www.example.com\r
     Connection: close\r
@@ -65,7 +65,7 @@ public class ObjectoxServerRequestHeadersTest {
   - happy path
   """)
   public void testCase008() throws IOException {
-    ObjectoxServerRequestHeaders headers;
+    WayServerRequestHeaders headers;
     headers = regularInput("""
     Host: www.example.com\r
     Content-Length: 24\r
@@ -83,7 +83,7 @@ public class ObjectoxServerRequestHeadersTest {
 
   @Test
   public void edge001() throws IOException {
-    ObjectoxServerRequestHeaders headers;
+    WayServerRequestHeaders headers;
     headers = regularInput("""
     no-leading-ows:foo\r
     empty-value:\r
@@ -101,9 +101,9 @@ public class ObjectoxServerRequestHeadersTest {
     assertEquals(headers.first(HeaderName.create("trailing-ows2")), "foo");
   }
 
-  private ObjectoxServerRequestHeaders regularInput(Object... data) {
-    ObjectoxServerRequestHeaders headers;
-    headers = new ObjectoxServerRequestHeaders();
+  private WayServerRequestHeaders regularInput(Object... data) {
+    WayServerRequestHeaders headers;
+    headers = new WayServerRequestHeaders();
 
     headers.bufferSize(64, 128);
 

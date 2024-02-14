@@ -18,13 +18,13 @@ package objectos.http;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
-class ObjectoxRequestLine extends SocketInput {
+class WayRequestLine extends SocketInput {
 
   BadRequestReason badRequest;
 
   Method method;
 
-  ObjectoxUriPath path;
+  WayUriPath path;
 
   UriQuery query = EmptyUriQuery.INSTANCE;
 
@@ -32,7 +32,7 @@ class ObjectoxRequestLine extends SocketInput {
 
   byte versionMinor;
 
-  ObjectoxRequestLine() {}
+  WayRequestLine() {}
 
   final void resetRequestLine() {
     badRequest = null;
@@ -119,14 +119,14 @@ class ObjectoxRequestLine extends SocketInput {
 
   static {
     int size;
-    size = ObjectoxMethod.size();
+    size = WayMethod.size();
 
     byte[][] map;
     map = new byte[size][];
 
     for (int index = 0; index < size; index++) {
-      ObjectoxMethod method;
-      method = ObjectoxMethod.get(index);
+      WayMethod method;
+      method = WayMethod.get(index);
 
       String nameAndSpace;
       nameAndSpace = method.text() + " ";
@@ -219,7 +219,7 @@ class ObjectoxRequestLine extends SocketInput {
     }
 
     if (path == null) {
-      path = new ObjectoxUriPath();
+      path = new WayUriPath();
     }
 
     String rawValue;
@@ -255,12 +255,12 @@ class ObjectoxRequestLine extends SocketInput {
     String rawValue;
     rawValue = bufferToString(startIndex, end);
 
-    ObjectoxUriQuery q;
+    WayUriQuery q;
 
     if (query == EmptyUriQuery.INSTANCE) {
-      query = q = new ObjectoxUriQuery();
+      query = q = new WayUriQuery();
     } else {
-      q = (ObjectoxUriQuery) query;
+      q = (WayUriQuery) query;
     }
 
     q.set(rawValue);

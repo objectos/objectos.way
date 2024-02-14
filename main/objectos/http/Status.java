@@ -15,9 +15,9 @@
  */
 package objectos.http;
 
-public sealed abstract class Status permits ObjectoxStatus {
+public sealed abstract class Status permits WayStatus {
 
-  private static ObjectoxStatus.Builder BUILDER = new ObjectoxStatus.Builder();
+  private static WayStatus.Builder BUILDER = new WayStatus.Builder();
 
   // 2.x.x
   public static final Status OK = BUILDER.create(200, "OK");
@@ -42,7 +42,7 @@ public sealed abstract class Status permits ObjectoxStatus {
   public static final Status HTTP_VERSION_NOT_SUPPORTED = BUILDER.create(505, "HTTP_VERSION_NOT_SUPPORTED");
 
   static {
-    ObjectoxStatus.set(BUILDER);
+    WayStatus.set(BUILDER);
 
     BUILDER = null;
   }

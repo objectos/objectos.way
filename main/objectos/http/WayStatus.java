@@ -18,46 +18,50 @@ package objectos.http;
 import java.util.ArrayList;
 import java.util.List;
 
-final class ObjectoxMethod extends Method {
+final class WayStatus extends Status {
 
   static class Builder {
 
-    private final List<ObjectoxMethod> standardValues = new ArrayList<>();
+    private final List<WayStatus> standardValues = new ArrayList<>();
 
     private int index;
 
-    public final ObjectoxMethod create(String text) {
-      ObjectoxMethod result;
-      result = new ObjectoxMethod(index++, text);
+    public final WayStatus create(int code, String reasonPhrase) {
+      WayStatus result;
+      result = new WayStatus(index++, code, reasonPhrase);
 
       standardValues.add(result);
 
       return result;
     }
 
-    public final ObjectoxMethod[] buildValues() {
-      return standardValues.toArray(ObjectoxMethod[]::new);
+    public final WayStatus[] buildValues() {
+      return standardValues.toArray(WayStatus[]::new);
     }
 
   }
 
-  private final int index;
+  public final int index;
 
-  private final String text;
+  public final int code;
 
-  ObjectoxMethod(int index, String text) {
+  public final String reasonPhrase;
+
+  public WayStatus(int index, int code, String reasonPhrase) {
     this.index = index;
 
-    this.text = text;
+    this.code = code;
+
+    this.reasonPhrase = reasonPhrase;
   }
 
-  private static ObjectoxMethod[] VALUES;
+  private static WayStatus[] VALUES;
 
   public static void set(Builder builder) {
     VALUES = builder.buildValues();
   }
 
-  public static ObjectoxMethod get(int index) {
+  public static WayStatus get(int index) {
     return VALUES[index];
   }
 
@@ -65,30 +69,29 @@ final class ObjectoxMethod extends Method {
     return VALUES.length;
   }
 
-  @Override
   public final int index() {
     return index;
   }
 
   @Override
-  public final String text() {
-    return text;
+  public final int code() {
+    return code;
   }
 
   @Override
-  public final String toString() {
-    return text;
+  public final String reasonPhrase() {
+    return reasonPhrase;
   }
 
   @Override
   public final int hashCode() {
-    return text.hashCode();
+    return code;
   }
 
   @Override
   public final boolean equals(Object obj) {
-    return obj == this || obj instanceof ObjectoxMethod that
-        && text.equals(that.text);
+    return obj == this || obj instanceof WayStatus that
+        && code == that.code;
   }
 
 }

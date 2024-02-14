@@ -21,30 +21,30 @@ import java.util.Locale;
 import java.util.Map;
 import objectos.util.map.GrowableMap;
 
-final class ObjectoxHeaderName extends HeaderName {
+final class WayHeaderName extends HeaderName {
 
   static class Builder {
 
-    private final List<ObjectoxHeaderName> standardNames = new ArrayList<>();
+    private final List<WayHeaderName> standardNames = new ArrayList<>();
 
     private int index;
 
     public final HeaderName create(String name, HeaderType type) {
-      ObjectoxHeaderName result;
-      result = new ObjectoxHeaderName(index++, name);
+      WayHeaderName result;
+      result = new WayHeaderName(index++, name);
 
       standardNames.add(result);
 
       return result;
     }
 
-    public final ObjectoxHeaderName[] buildNames() {
-      return standardNames.toArray(ObjectoxHeaderName[]::new);
+    public final WayHeaderName[] buildNames() {
+      return standardNames.toArray(WayHeaderName[]::new);
     }
 
   }
 
-  record HeaderNameType(ObjectoxHeaderName name, HeaderType type) {}
+  record HeaderNameType(WayHeaderName name, HeaderType type) {}
 
   private final int index;
 
@@ -53,7 +53,7 @@ final class ObjectoxHeaderName extends HeaderName {
   @SuppressWarnings("unused")
   private final String lowerCase;
 
-  public ObjectoxHeaderName(int index, String capitalized) {
+  public WayHeaderName(int index, String capitalized) {
     this.index = index;
 
     this.capitalized = capitalized;
@@ -61,32 +61,32 @@ final class ObjectoxHeaderName extends HeaderName {
     this.lowerCase = capitalized.toLowerCase(Locale.US);
   }
 
-  public ObjectoxHeaderName(String name) {
+  public WayHeaderName(String name) {
     this(-1, name);
   }
 
-  private static ObjectoxHeaderName[] STANDARD_NAMES;
+  private static WayHeaderName[] STANDARD_NAMES;
 
-  private static Map<String, ObjectoxHeaderName> FIND_BY_NAME;
+  private static Map<String, WayHeaderName> FIND_BY_NAME;
 
   public static void set(Builder builder) {
     STANDARD_NAMES = builder.buildNames();
 
-    GrowableMap<String, ObjectoxHeaderName> findByName;
+    GrowableMap<String, WayHeaderName> findByName;
     findByName = new GrowableMap<>();
 
-    for (ObjectoxHeaderName value : STANDARD_NAMES) {
+    for (WayHeaderName value : STANDARD_NAMES) {
       findByName.put(value.capitalized, value);
     }
 
     FIND_BY_NAME = findByName.toUnmodifiableMap();
   }
 
-  public static ObjectoxHeaderName findByName(String name) {
+  public static WayHeaderName findByName(String name) {
     return FIND_BY_NAME.get(name);
   }
 
-  public static ObjectoxHeaderName standardName(int index) {
+  public static WayHeaderName standardName(int index) {
     return STANDARD_NAMES[index];
   }
 
@@ -101,7 +101,7 @@ final class ObjectoxHeaderName extends HeaderName {
 
   @Override
   public final boolean equals(Object obj) {
-    return obj == this || obj instanceof ObjectoxHeaderName that
+    return obj == this || obj instanceof WayHeaderName that
         && capitalized.equals(that.capitalized);
   }
 

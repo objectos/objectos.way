@@ -19,7 +19,7 @@ import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStream;
 
-class WayServerRequestBody extends ObjectoxServerRequestHeaders implements Body {
+class WayServerRequestBody extends WayServerRequestHeaders implements Body {
 
   private enum Kind {
     EMPTY,
@@ -45,7 +45,7 @@ class WayServerRequestBody extends ObjectoxServerRequestHeaders implements Body 
   }
 
   final void parseRequestBody() throws IOException {
-    ObjectoxHeader contentLength;
+    WayHeader contentLength;
     contentLength = headerUnchecked(HeaderName.CONTENT_LENGTH);
 
     if (contentLength != null) {
@@ -76,7 +76,7 @@ class WayServerRequestBody extends ObjectoxServerRequestHeaders implements Body 
       return;
     }
 
-    ObjectoxHeader transferEncoding;
+    WayHeader transferEncoding;
     transferEncoding = headerUnchecked(HeaderName.TRANSFER_ENCODING);
 
     if (transferEncoding != null) {

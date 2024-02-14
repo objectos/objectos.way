@@ -19,14 +19,14 @@ import static org.testng.Assert.assertEquals;
 
 import org.testng.annotations.Test;
 
-public class ObjectoxHeaderNameTest {
+public class WayHeaderNameTest {
 
   @SuppressWarnings("unlikely-arg-type")
   @Test(description = "equals() should work fine")
   public void testCase01() {
-    ObjectoxHeaderName foo1 = new ObjectoxHeaderName("Foo");
-    ObjectoxHeaderName foo2 = new ObjectoxHeaderName("Foo");
-    ObjectoxHeaderName bar = new ObjectoxHeaderName("Bar");
+    WayHeaderName foo1 = new WayHeaderName("Foo");
+    WayHeaderName foo2 = new WayHeaderName("Foo");
+    WayHeaderName bar = new WayHeaderName("Bar");
 
     assertEquals(foo1.equals(foo2), true);
     assertEquals(foo2.equals(foo1), true);

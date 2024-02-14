@@ -20,7 +20,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.List;
 import objectos.util.list.GrowableList;
 
-final class ObjectoxUriPath implements UriPath {
+final class WayUriPath implements UriPath {
 
   private String value;
 
@@ -123,7 +123,7 @@ final class ObjectoxUriPath implements UriPath {
     @Override
     public final String value() {
       if (value == null) {
-        value = ObjectoxUriPath.this.value.substring(start, end);
+        value = WayUriPath.this.value.substring(start, end);
       }
 
       return value;

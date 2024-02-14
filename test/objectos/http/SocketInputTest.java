@@ -43,13 +43,13 @@ public class SocketInputTest {
 
     assertEquals(hasNext(input), true);
     assertEquals(peek(input), 'G');
-    assertEquals(input.matches(ObjectoxRequestLine.STD_METHOD_BYTES[Method.GET.index()]), true);
+    assertEquals(input.matches(WayRequestLine.STD_METHOD_BYTES[Method.GET.index()]), true);
     assertEquals(peek(input), '/');
     assertEquals(input.bufferIndex, 4);
     assertEquals(input.indexOf(Bytes.QUESTION_MARK, Bytes.SP), 5);
     input.bufferIndex = 5;
     assertEquals(next(input), Bytes.SP);
-    assertEquals(input.matches(ObjectoxRequestLine.HTTP_VERSION_PREFIX), true);
+    assertEquals(input.matches(WayRequestLine.HTTP_VERSION_PREFIX), true);
     assertEquals(hasNext(input, 3), true);
     assertEquals(next(input), '1');
     assertEquals(next(input), '.');
@@ -62,7 +62,7 @@ public class SocketInputTest {
     assertEquals(input.bufferIndex, 16);
     assertEquals(input.consumeIfEmptyLine(), false);
     byte[] host;
-    host = ObjectoxServerRequestHeaders.STD_HEADER_NAME_BYTES[HeaderName.HOST.index()];
+    host = WayServerRequestHeaders.STD_HEADER_NAME_BYTES[HeaderName.HOST.index()];
     assertEquals(input.matches(host), true);
     assertEquals(hasNext(input), true);
     assertEquals(next(input), ':');
