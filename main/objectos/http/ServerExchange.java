@@ -165,6 +165,30 @@ public interface ServerExchange {
   // 405
   void methodNotAllowed();
 
+  /**
+   * Sends a pre-made 415 Unsupported Media Type response.
+   *
+   * <p>
+   * The response is equivalent to:
+   *
+   * <pre>
+   * ServerExchange http = ...
+   * http.status(Status.UNSUPPORTED_MEDIA_TYPE);
+   * http.dateNow();
+   * http.header(HeaderName.CONNECTION, "close");
+   * http.send();</pre>
+   */
+  // 415
+  default void unsupportedMediaType() {
+    status(Status.UNSUPPORTED_MEDIA_TYPE);
+
+    dateNow();
+
+    header(HeaderName.CONNECTION, "close");
+
+    send();
+  }
+
   // 500
   void internalServerError(Throwable t);
 

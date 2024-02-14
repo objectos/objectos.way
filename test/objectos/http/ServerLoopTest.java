@@ -676,4 +676,45 @@ public class ServerLoopTest {
     }
   }
 
+  @Test(description = """
+  The unsupported media type pre-made response
+  """)
+  public void testCase010() {
+    TestableSocket socket;
+    socket = TestableSocket.of("""
+    POST /login HTTP/1.1\r
+    Host: www.example.com\r
+    Content-Length: 24\r
+    Content-Type: multipart/form-data\r
+    \r
+    email=user%40example.com""");
+
+    String resp01 = """
+    HTTP/1.1 415 UNSUPPORTED MEDIA TYPE\r
+    Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+    Connection: close\r
+    \r
+    """;
+
+    try (WayServerLoop http = new WayServerLoop(socket)) {
+      http.bufferSize(128, 256);
+      http.clock(TestingClock.FIXED);
+      http.noteSink(TestingNoteSink.INSTANCE);
+
+      http.parse();
+
+      assertEquals(http.badRequest(), false);
+
+      http.unsupportedMediaType();
+
+      http.commit();
+
+      assertEquals(socket.outputAsString(), resp01);
+
+      assertEquals(http.keepAlive(), false);
+    } catch (IOException e) {
+      throw new AssertionError("Failed with IOException", e);
+    }
+  }
+
 }
