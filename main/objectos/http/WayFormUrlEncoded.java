@@ -15,28 +15,28 @@
  */
 package objectos.http;
 
+import java.io.IOException;
+import java.io.InputStream;
 import objectos.util.map.GrowableMap;
 import objectos.util.map.UnmodifiableMap;
 
-public final class UrlEncodedForm {
+final class WayFormUrlEncoded implements FormUrlEncoded {
 
   private static final String EMPTY = "";
 
   private final UnmodifiableMap<String, String> map;
 
-  private UrlEncodedForm(UnmodifiableMap<String, String> map) {
+  private WayFormUrlEncoded(UnmodifiableMap<String, String> map) {
     this.map = map;
   }
 
-  public static UrlEncodedForm parse(Body body) {
-    return switch (body) {
-      case InBufferRequestBody buffer -> parse0(buffer);
-
-      default -> throw new IllegalArgumentException("Unexpected value: " + body.getClass());
-    };
+  static WayFormUrlEncoded parse(Body body) throws IOException {
+    try (InputStream in = body.openStream()) {
+      return parse0(in);
+    }
   }
 
-  private static UrlEncodedForm parse0(InBufferRequestBody buffer) {
+  private static WayFormUrlEncoded parse0(InputStream in) throws IOException {
     GrowableMap<String, String> map;
     map = new GrowableMap<>();
 
@@ -46,16 +46,9 @@ public final class UrlEncodedForm {
     String key;
     key = null;
 
-    int index;
-    index = buffer.start;
+    int c;
 
-    while (index < buffer.end) {
-      byte b;
-      b = buffer.get(index++);
-
-      int c;
-      c = Bytes.toInt(b);
-
+    while ((c = in.read()) != -1) {
       switch (c) {
         case '=' -> {
           key = sb.toString();
@@ -91,29 +84,27 @@ public final class UrlEncodedForm {
         }
 
         case '%' -> {
-          if (index >= buffer.end) {
+          c = in.read();
+
+          if (c == -1) {
             throw new IllegalArgumentException(
-              "Invalid % escape sequence: no data"
+                "Invalid % escape sequence: no data"
             );
           }
-
-          byte b0;
-          b0 = buffer.get(index++);
 
           int high;
-          high = Bytes.parseHexDigit(b0);
+          high = Bytes.parseHexDigit(c);
 
-          if (index >= buffer.end) {
+          c = in.read();
+
+          if (c == -1) {
             throw new IllegalArgumentException(
-              "Invalid % escape sequence: not enough data"
+                "Invalid % escape sequence: not enough data"
             );
           }
 
-          byte b1;
-          b1 = buffer.get(index++);
-
           int low;
-          low = Bytes.parseHexDigit(b1);
+          low = Bytes.parseHexDigit(c);
 
           int value;
           value = high << 4 | low;
@@ -132,15 +123,17 @@ public final class UrlEncodedForm {
       map.put(key, value);
     }
 
-    return new UrlEncodedForm(
-      map.toUnmodifiableMap()
+    return new WayFormUrlEncoded(
+        map.toUnmodifiableMap()
     );
   }
 
+  @Override
   public final String get(String key) {
     return map.get(key);
   }
 
+  @Override
   public final int size() {
     return map.size();
   }

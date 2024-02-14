@@ -84,6 +84,10 @@ final class Bytes {
   }
 
   public static int parseHexDigit(byte value) {
+    return parseHexDigit(value);
+  }
+
+  public static int parseHexDigit(int value) {
     return switch (value) {
       case '0' -> 0;
       case '1' -> 1;
@@ -103,7 +107,7 @@ final class Bytes {
       case 'f', 'F' -> 15;
 
       default -> throw new IllegalArgumentException(
-          "Illegal hex char= " + (char) toInt(value)
+          "Illegal hex char= " + (char) value
       );
     };
   }

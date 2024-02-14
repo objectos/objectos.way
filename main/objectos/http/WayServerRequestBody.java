@@ -19,7 +19,7 @@ import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStream;
 
-class ObjectoxServerRequestBody extends ObjectoxServerRequestHeaders implements Body {
+class WayServerRequestBody extends ObjectoxServerRequestHeaders implements Body {
 
   private enum Kind {
     EMPTY,
@@ -29,7 +29,7 @@ class ObjectoxServerRequestBody extends ObjectoxServerRequestHeaders implements 
 
   private Kind kind = Kind.EMPTY;
 
-  ObjectoxServerRequestBody() {}
+  WayServerRequestBody() {}
 
   @Override
   public final InputStream openStream() {

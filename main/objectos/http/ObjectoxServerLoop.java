@@ -31,7 +31,7 @@ import objectos.lang.object.Check;
 import objectos.notes.NoOpNoteSink;
 import objectos.notes.NoteSink;
 
-final class ObjectoxServerLoop extends ObjectoxServerRequestBody implements ServerLoop {
+final class ObjectoxServerLoop extends WayServerRequestBody implements ServerLoop {
 
   // new states
 

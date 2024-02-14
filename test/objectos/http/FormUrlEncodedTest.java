@@ -17,40 +17,59 @@ package objectos.http;
 
 import static org.testng.Assert.assertEquals;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import org.testng.annotations.Test;
 
-public class UrlEncodedFormTest {
+public class FormUrlEncodedTest {
 
   @Test
-  public void testCase01() {
-    InBufferRequestBody body;
+  public void testCase01() throws IOException {
+    Body body;
     body = body("email=user%40example.com");
 
-    UrlEncodedForm form;
-    form = UrlEncodedForm.parse(body);
+    FormUrlEncoded form;
+    form = FormUrlEncoded.parse(body);
 
     assertEquals(form.size(), 1);
     assertEquals(form.get("email"), "user@example.com");
   }
 
   @Test
-  public void testCase02() {
-    InBufferRequestBody body;
+  public void testCase02() throws IOException {
+    Body body;
     body = body("login=foo&password=bar");
 
-    UrlEncodedForm form;
-    form = UrlEncodedForm.parse(body);
+    FormUrlEncoded form;
+    form = FormUrlEncoded.parse(body);
 
     assertEquals(form.size(), 2);
     assertEquals(form.get("login"), "foo");
     assertEquals(form.get("password"), "bar");
   }
 
-  private InBufferRequestBody body(String s) {
-    byte[] bytes;
-    bytes = Bytes.utf8(s);
+  private Body body(String s) {
+    return new ThisBody(s);
+  }
 
-    return new InBufferRequestBody(bytes, 0, bytes.length);
+  private static class ThisBody implements Body {
+
+    private final String value;
+
+    public ThisBody(String value) {
+      this.value = value;
+    }
+
+    @Override
+    public final InputStream openStream() throws IOException {
+      byte[] bytes;
+      bytes = value.getBytes(StandardCharsets.UTF_8);
+
+      return new ByteArrayInputStream(bytes);
+    }
+
   }
 
 }

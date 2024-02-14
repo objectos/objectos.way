@@ -18,13 +18,10 @@ package objectos.http;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNull;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
 import org.testng.annotations.Test;
 
-public class ObjectoxServerRequestBodyTest {
+public class WayServerRequestBodyTest {
 
   @Test(description = """
   GET / HTTP/1.1
@@ -32,7 +29,7 @@ public class ObjectoxServerRequestBodyTest {
   Connection: close
   """)
   public void testCase001() throws IOException {
-    ObjectoxServerRequestBody body;
+    WayServerRequestBody body;
     body = regularInput("""
     Host: www.example.com\r
     Connection: close\r
@@ -51,7 +48,7 @@ public class ObjectoxServerRequestBodyTest {
   - happy path
   """)
   public void testCase008() throws IOException {
-    ObjectoxServerRequestBody body;
+    WayServerRequestBody body;
     body = regularInput("""
     Host: www.example.com\r
     Content-Length: 24\r
@@ -66,9 +63,13 @@ public class ObjectoxServerRequestBodyTest {
     assertEquals(asString(body), "email=user%40example.com");
   }
 
-  private ObjectoxServerRequestBody regularInput(Object... data) {
-    ObjectoxServerRequestBody body;
-    body = new ObjectoxServerRequestBody();
+  private String asString(Body body) throws IOException {
+    return ObjectosHttp.readString(body);
+  }
+
+  private WayServerRequestBody regularInput(Object... data) {
+    WayServerRequestBody body;
+    body = new WayServerRequestBody();
 
     body.bufferSize(64, 128);
 
@@ -78,18 +79,6 @@ public class ObjectoxServerRequestBodyTest {
     body.initSocketInput(inputStream);
 
     return body;
-  }
-
-  private String asString(Body body) throws IOException {
-    try (InputStream in = body.openStream();
-        ByteArrayOutputStream out = new ByteArrayOutputStream()) {
-      in.transferTo(out);
-
-      byte[] bytes;
-      bytes = out.toByteArray();
-
-      return new String(bytes, StandardCharsets.UTF_8);
-    }
   }
 
 }

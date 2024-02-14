@@ -17,9 +17,7 @@ package objectos.http;
 
 import static org.testng.Assert.assertEquals;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -87,7 +85,7 @@ public class ServerLoopTest {
       Body body;
       body = http.body();
 
-      assertEquals(ObjectoxHttpServer.readAllBytes(body), ByteArrays.empty());
+      assertEquals(ObjectosHttp.readAllBytes(body), ByteArrays.empty());
 
       // response phase
       byte[] msg;
@@ -194,7 +192,7 @@ public class ServerLoopTest {
       Body body;
       body = http.body();
 
-      assertEquals(ObjectoxHttpServer.readAllBytes(body), ByteArrays.empty());
+      assertEquals(ObjectosHttp.readAllBytes(body), ByteArrays.empty());
 
       // response phase
       byte[] msg;
@@ -233,7 +231,7 @@ public class ServerLoopTest {
       // body
       body = http.body();
 
-      assertEquals(ObjectoxHttpServer.readAllBytes(body), ByteArrays.empty());
+      assertEquals(ObjectosHttp.readAllBytes(body), ByteArrays.empty());
 
       // response phase
       msg = body02.getBytes(StandardCharsets.UTF_8);
@@ -378,7 +376,7 @@ public class ServerLoopTest {
       assertEquals(headers.first(HeaderName.create("Foo")), "bar");
 
       // response phase
-      dir = ObjectoxHttpServer.createTempDir();
+      dir = ObjectosHttp.createTempDir();
 
       Path index;
       index = dir.resolve("index.html");
@@ -399,7 +397,7 @@ public class ServerLoopTest {
     } catch (IOException e) {
       throw new AssertionError("Failed with IOException", e);
     } finally {
-      ObjectoxHttpServer.deleteRecursively(dir);
+      ObjectosHttp.deleteRecursively(dir);
     }
   }
 
@@ -606,7 +604,7 @@ public class ServerLoopTest {
       Body requestBody;
       requestBody = http.body();
 
-      assertEquals(asString(requestBody), "email=user%40example.com");
+      assertEquals(ObjectosHttp.readString(requestBody), "email=user%40example.com");
 
       // response phase
 
@@ -675,18 +673,6 @@ public class ServerLoopTest {
       assertEquals(http.keepAlive(), false);
     } catch (IOException e) {
       throw new AssertionError("Failed with IOException", e);
-    }
-  }
-
-  private String asString(Body body) throws IOException {
-    try (InputStream in = body.openStream();
-        ByteArrayOutputStream out = new ByteArrayOutputStream()) {
-      in.transferTo(out);
-
-      byte[] bytes;
-      bytes = out.toByteArray();
-
-      return new String(bytes, StandardCharsets.UTF_8);
     }
   }
 

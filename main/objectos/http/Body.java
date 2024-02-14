@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Objectos Software LTDA.
+ * Copyright (C) 2023-2024 Objectos Software LTDA.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,10 +15,14 @@
  */
 package objectos.http;
 
+import java.io.IOException;
 import java.io.InputStream;
 
+/**
+ * Represents the body of a HTTP message.
+ */
 public interface Body {
 
-  InputStream openStream();
+  InputStream openStream() throws IOException;
 
 }

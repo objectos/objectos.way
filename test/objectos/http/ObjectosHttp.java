@@ -19,6 +19,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UncheckedIOException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.FileVisitResult;
 import java.nio.file.FileVisitor;
 import java.nio.file.Files;
@@ -26,7 +27,7 @@ import java.nio.file.Path;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
 
-public final class ObjectoxHttpServer {
+public final class ObjectosHttp {
 
   /*
    HTTP 001: Minimal GET request
@@ -48,7 +49,7 @@ public final class ObjectoxHttpServer {
    ---
    */
 
-  private ObjectoxHttpServer() {}
+  private ObjectosHttp() {}
 
   public static Path createTempDir() {
     try {
@@ -83,12 +84,18 @@ public final class ObjectoxHttpServer {
   }
 
   public static byte[] readAllBytes(Body body) throws IOException {
-    try (InputStream in = body.openStream();
-        ByteArrayOutputStream out = new ByteArrayOutputStream()) {
+    try (InputStream in = body.openStream(); ByteArrayOutputStream out = new ByteArrayOutputStream()) {
       in.transferTo(out);
 
       return out.toByteArray();
     }
+  }
+
+  public static String readString(Body body) throws IOException {
+    byte[] bytes;
+    bytes = readAllBytes(body);
+
+    return new String(bytes, StandardCharsets.UTF_8);
   }
 
 }
