@@ -17,28 +17,8 @@ package objectos.http;
 
 import java.io.Closeable;
 import java.io.IOException;
-import java.net.Socket;
-import java.time.Clock;
-import objectos.lang.object.Check;
-import objectos.notes.NoteSink;
 
 public interface ServerLoop extends Closeable, ServerExchange {
-
-  static ServerLoop create(Socket socket) {
-    Check.notNull(socket, "socket == null");
-
-    return new ObjectoxServerLoop(socket);
-  }
-
-  // config methods
-
-  void bufferSize(int initial, int max);
-
-  void clock(Clock clock);
-
-  void noteSink(NoteSink noteSink);
-
-  // user methods
 
   /**
    * Closes and ends this exchange by closing its underlying socket.

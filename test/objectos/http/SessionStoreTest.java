@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.http.session;
+package objectos.http;
 
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertNull;

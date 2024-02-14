@@ -49,8 +49,8 @@ final class MarketingSite extends AbstractHttpModule implements Runnable {
 
   @Override
   public final void run() {
-    ServerLoop loop;
-    loop = ServerLoop.create(socket);
+    WayServerLoop loop;
+    loop = new WayServerLoop(socket);
 
     loop.noteSink(noteSink);
 

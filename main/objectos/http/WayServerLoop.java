@@ -31,7 +31,7 @@ import objectos.lang.object.Check;
 import objectos.notes.NoOpNoteSink;
 import objectos.notes.NoteSink;
 
-final class ObjectoxServerLoop extends WayServerRequestBody implements ServerLoop {
+public final class WayServerLoop extends WayServerRequestBody implements ServerLoop {
 
   // new states
 
@@ -56,7 +56,7 @@ final class ObjectoxServerLoop extends WayServerRequestBody implements ServerLoo
 
   private byte state;
 
-  public ObjectoxServerLoop(Socket socket) {
+  public WayServerLoop(Socket socket) {
     this.socket = socket;
 
     state = _CONFIG;
@@ -65,7 +65,7 @@ final class ObjectoxServerLoop extends WayServerRequestBody implements ServerLoo
   /**
    * For testing purposes only.
    */
-  ObjectoxServerLoop() {}
+  WayServerLoop() {}
 
   // config
 
@@ -80,14 +80,12 @@ final class ObjectoxServerLoop extends WayServerRequestBody implements ServerLoo
     super.bufferSize(initial, max);
   }
 
-  @Override
   public final void clock(Clock clock) {
     checkConfig();
 
     this.clock = Check.notNull(clock, "clock == null");
   }
 
-  @Override
   public final void noteSink(NoteSink noteSink) {
     checkConfig();
 

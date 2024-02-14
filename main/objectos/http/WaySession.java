@@ -13,13 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectox.http.session;
+package objectos.http;
 
 import java.util.HashMap;
 import java.util.Map;
-import objectos.http.session.Session;
 
-public final class ObjectoxSession implements Session {
+public final class WaySession implements Session {
 
   private final String id;
 
@@ -27,7 +26,7 @@ public final class ObjectoxSession implements Session {
 
   volatile boolean valid = true;
 
-  public ObjectoxSession(String id) {
+  public WaySession(String id) {
     this.id = id;
   }
 

@@ -13,17 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectox.http.session;
+package objectos.http;
 
 import java.security.SecureRandom;
 import java.util.HexFormat;
 import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
-import objectos.http.session.Session;
-import objectos.http.session.SessionStore;
 
-public final class ObjectoxSessionStore implements SessionStore {
+public final class WaySessionStore implements SessionStore {
 
   private static final int ID_LENGTH_IN_BYTES = 16;
 
@@ -31,17 +29,19 @@ public final class ObjectoxSessionStore implements SessionStore {
 
   private final Random random = new SecureRandom();
 
-  private final ConcurrentMap<String, ObjectoxSession> sessions = new ConcurrentHashMap<>();
+  private final ConcurrentMap<String, WaySession> sessions = new ConcurrentHashMap<>();
+
+  public WaySessionStore() {}
 
   @Override
   public final Session nextSession() {
-    ObjectoxSession session, maybeExisting;
+    WaySession session, maybeExisting;
 
     do {
       String id;
       id = nextId();
 
-      session = new ObjectoxSession(id);
+      session = new WaySession(id);
 
       maybeExisting = sessions.putIfAbsent(id, session);
     } while (maybeExisting != null);
@@ -51,7 +51,7 @@ public final class ObjectoxSessionStore implements SessionStore {
 
   @Override
   public final Session get(String id) {
-    ObjectoxSession session;
+    WaySession session;
     session = sessions.get(id);
 
     if (session != null && !session.valid) {

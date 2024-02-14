@@ -13,14 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.http.session;
+package objectos.http;
 
-import objectox.http.session.ObjectoxSessionStore;
-
-public sealed interface SessionStore permits ObjectoxSessionStore {
+public sealed interface SessionStore permits WaySessionStore {
 
   static SessionStore create() {
-    return new ObjectoxSessionStore();
+    return new WaySessionStore();
   }
 
   Session nextSession();

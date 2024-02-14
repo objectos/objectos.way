@@ -51,7 +51,7 @@ public class ServerLoopTest {
     \r
     %s""".formatted(body01);
 
-    try (ServerLoop http = ServerLoop.create(socket)) {
+    try (WayServerLoop http = new WayServerLoop(socket)) {
       http.bufferSize(128, 128);
       http.noteSink(TestingNoteSink.INSTANCE);
 
@@ -159,7 +159,7 @@ public class ServerLoopTest {
     \r
     %s""".formatted(body02);
 
-    try (ServerLoop http = ServerLoop.create(socket)) {
+    try (WayServerLoop http = new WayServerLoop(socket)) {
       http.bufferSize(128, 128);
       http.noteSink(TestingNoteSink.INSTANCE);
 
@@ -278,7 +278,7 @@ public class ServerLoopTest {
     \r
     %s""".formatted(body01);
 
-    try (ServerLoop http = ServerLoop.create(socket)) {
+    try (WayServerLoop http = new WayServerLoop(socket)) {
       http.bufferSize(128, 128);
       http.noteSink(TestingNoteSink.INSTANCE);
 
@@ -344,7 +344,7 @@ public class ServerLoopTest {
     Path dir;
     dir = null;
 
-    try (ServerLoop http = ServerLoop.create(socket)) {
+    try (WayServerLoop http = new WayServerLoop(socket)) {
       http.bufferSize(128, 128);
       http.noteSink(TestingNoteSink.INSTANCE);
 
@@ -421,7 +421,7 @@ public class ServerLoopTest {
     \r
     """;
 
-    try (ServerLoop http = ServerLoop.create(socket)) {
+    try (WayServerLoop http = new WayServerLoop(socket)) {
       http.bufferSize(128, 128);
       http.noteSink(TestingNoteSink.INSTANCE);
 
@@ -488,7 +488,7 @@ public class ServerLoopTest {
     \r
     """;
 
-    try (ServerLoop http = ServerLoop.create(socket)) {
+    try (WayServerLoop http = new WayServerLoop(socket)) {
       http.bufferSize(128, 128);
       http.noteSink(TestingNoteSink.INSTANCE);
 
@@ -533,7 +533,7 @@ public class ServerLoopTest {
     \r
     """;
 
-    try (ServerLoop http = ServerLoop.create(socket)) {
+    try (WayServerLoop http = new WayServerLoop(socket)) {
       http.bufferSize(128, 128);
       http.noteSink(TestingNoteSink.INSTANCE);
 
@@ -592,7 +592,7 @@ public class ServerLoopTest {
     \r
     %s""".formatted(body01);
 
-    try (ServerLoop http = ServerLoop.create(socket)) {
+    try (WayServerLoop http = new WayServerLoop(socket)) {
       http.bufferSize(128, 256);
       http.noteSink(TestingNoteSink.INSTANCE);
 
@@ -650,7 +650,7 @@ public class ServerLoopTest {
     AAAA
     """.formatted(etag);
 
-    try (ServerLoop http = ServerLoop.create(socket)) {
+    try (WayServerLoop http = new WayServerLoop(socket)) {
       http.bufferSize(128, 256);
       http.clock(TestingClock.FIXED);
       http.noteSink(TestingNoteSink.INSTANCE);

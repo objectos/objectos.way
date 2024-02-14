@@ -30,7 +30,6 @@ module objectos.way {
   exports objectos.html.style;
   exports objectos.http;
   exports objectos.http.media;
-  exports objectos.http.session;
   exports objectos.io;
   exports objectos.lang;
   exports objectos.lang.classloader;

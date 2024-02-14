@@ -25,9 +25,9 @@ import java.nio.file.Path;
 import java.nio.file.attribute.FileTime;
 import java.time.Clock;
 import java.time.Instant;
-import objectos.http.ServerLoop;
 import objectos.http.TestableSocket;
 import objectos.http.TestingClock;
+import objectos.http.WayServerLoop;
 import objectos.way.TestingDir;
 import objectos.way.TestingNoteSink;
 import org.testng.annotations.Test;
@@ -212,7 +212,7 @@ public class WayWebResourcesTest {
     TestableSocket socket;
     socket = TestableSocket.of(request);
 
-    try (ServerLoop http = ServerLoop.create(socket)) {
+    try (WayServerLoop http = new WayServerLoop(socket)) {
       http.bufferSize(512, 1024);
       http.clock(TestingClock.FIXED);
       http.noteSink(TestingNoteSink.INSTANCE);

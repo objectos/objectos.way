@@ -19,7 +19,7 @@ import java.util.concurrent.ThreadFactory;
 import objectos.http.Handler;
 import objectos.http.HandlerFactory;
 import objectos.http.ServerExchange;
-import objectos.http.ServerLoop;
+import objectos.http.WayServerLoop;
 import objectos.notes.Note0;
 import objectos.notes.Note1;
 import objectos.notes.NoteSink;
@@ -102,8 +102,8 @@ final class WebServerLoop implements Runnable {
 
     @Override
     public final void run() {
-      ServerLoop loop;
-      loop = ServerLoop.create(socket);
+      WayServerLoop loop;
+      loop = new WayServerLoop(socket);
 
       loop.bufferSize(1024, 4096);
 
