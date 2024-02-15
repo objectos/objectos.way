@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Objectos Software LTDA.
+ * Copyright (C) 2023-2024 Objectos Software LTDA.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,12 +15,20 @@
  */
 package objectos.http;
 
-public interface SessionStore {
+import java.io.Closeable;
+import java.io.IOException;
+import java.net.InetAddress;
+import java.net.ServerSocket;
+import objectos.notes.Note1;
 
-  Session nextSession();
+public interface HttpServer extends Closeable {
 
-  Session get(Cookies cookies);
+  Note1<ServerSocket> LISTENING = Note1.info(HttpServer.class, "Listening");
 
-  Session get(String id);
+  void start() throws IOException;
+
+  InetAddress address();
+
+  int port();
 
 }

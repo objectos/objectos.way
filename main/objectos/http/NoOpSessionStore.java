@@ -13,22 +13,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.web;
+package objectos.http;
 
-import java.io.Closeable;
-import java.io.IOException;
-import java.net.InetAddress;
-import java.net.ServerSocket;
-import objectos.notes.Note1;
+final class NoOpSessionStore implements SessionStore {
 
-public interface WebServer extends Closeable {
+  static final SessionStore INSTANCE = new NoOpSessionStore();
 
-  Note1<ServerSocket> LISTENING = Note1.info(WebServer.class, "Listening");
+  private NoOpSessionStore() {}
 
-  void start() throws IOException;
+  @Override
+  public final Session nextSession() {
+    throw new UnsupportedOperationException();
+  }
 
-  InetAddress address();
+  @Override
+  public final Session get(Cookies cookies) {
+    return null;
+  }
 
-  int port();
+  @Override
+  public final Session get(String id) {
+    return null;
+  }
 
 }

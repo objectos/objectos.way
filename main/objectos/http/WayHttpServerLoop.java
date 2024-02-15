@@ -7,7 +7,7 @@
  *
  * Source is available for educational purposes only.
  */
-package objectos.web;
+package objectos.http;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -16,15 +16,11 @@ import java.time.Clock;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
-import objectos.http.Handler;
-import objectos.http.HandlerFactory;
-import objectos.http.ServerExchange;
-import objectos.http.WayServerLoop;
 import objectos.notes.Note0;
 import objectos.notes.Note1;
 import objectos.notes.NoteSink;
 
-final class WebServerLoop implements Runnable {
+final class WayHttpServerLoop implements Runnable {
 
   public static final Note1<IOException> IO_ERROR;
 
@@ -34,7 +30,7 @@ final class WebServerLoop implements Runnable {
 
   static {
     Class<?> source;
-    source = WebServerLoop.class;
+    source = WayHttpServerLoop.class;
 
     IO_ERROR = Note1.error(source, "I/O Error");
 
@@ -51,11 +47,13 @@ final class WebServerLoop implements Runnable {
 
   NoteSink noteSink;
 
+  SessionStore sessionStore;
+
   final ServerSocket serverSocket;
 
   final HandlerFactory handlerFactory;
 
-  public WebServerLoop(ServerSocket serverSocket, HandlerFactory handlerFactory) {
+  public WayHttpServerLoop(ServerSocket serverSocket, HandlerFactory handlerFactory) {
     this.serverSocket = serverSocket;
 
     this.handlerFactory = handlerFactory;
@@ -67,7 +65,7 @@ final class WebServerLoop implements Runnable {
     factory = Thread.ofVirtual().name("http-", 1).factory();
 
     try (ExecutorService executor = Executors.newThreadPerTaskExecutor(factory)) {
-      noteSink.send(WebServer.LISTENING, serverSocket);
+      noteSink.send(HttpServer.LISTENING, serverSocket);
 
       // listen indefinitely
       while (!Thread.currentThread().isInterrupted()) {
@@ -110,6 +108,8 @@ final class WebServerLoop implements Runnable {
       loop.clock(clock);
 
       loop.noteSink(noteSink);
+
+      loop.sessionStore(sessionStore);
 
       try (loop) {
         ServerExchange http;

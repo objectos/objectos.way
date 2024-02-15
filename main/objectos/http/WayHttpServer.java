@@ -13,19 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.web;
+package objectos.http;
 
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.time.Clock;
-import objectos.http.HandlerFactory;
 import objectos.lang.object.Check;
 import objectos.notes.NoOpNoteSink;
 import objectos.notes.NoteSink;
 
-public class WayWebServer implements WebServer {
+/**
+ * The Objectos Way {@link HttpServer} implementation.
+ */
+public class WayHttpServer implements HttpServer {
 
   private int bufferSizeInitial = 1024;
 
@@ -39,11 +41,13 @@ public class WayWebServer implements WebServer {
 
   private int port = 0;
 
+  private SessionStore sessionStore = NoOpSessionStore.INSTANCE;
+
   private ServerSocket serverSocket;
 
   private Thread thread;
 
-  public WayWebServer(HandlerFactory factory) {
+  public WayHttpServer(HandlerFactory factory) {
     this.factory = Check.notNull(factory, "factory == null");
   }
 
@@ -81,6 +85,18 @@ public class WayWebServer implements WebServer {
     this.port = port;
   }
 
+  /**
+   * Use the specified {@link SessionStore} for session handling.
+   *
+   * @param sessionStore
+   *        the session store to use
+   */
+  public final void sessionStore(SessionStore sessionStore) {
+    checkConfig();
+
+    this.sessionStore = Check.notNull(sessionStore, "sessionStore == null");
+  }
+
   private void checkConfig() {
     if (thread != null) {
       throw new IllegalStateException(
@@ -107,8 +123,8 @@ public class WayWebServer implements WebServer {
 
     serverSocket.bind(socketAddress);
 
-    WebServerLoop loop;
-    loop = new WebServerLoop(serverSocket, factory);
+    WayHttpServerLoop loop;
+    loop = new WayHttpServerLoop(serverSocket, factory);
 
     loop.bufferSizeInitial = bufferSizeInitial;
 
@@ -117,6 +133,8 @@ public class WayWebServer implements WebServer {
     loop.clock = clock;
 
     loop.noteSink = noteSink;
+
+    loop.sessionStore = sessionStore;
 
     thread = Thread.ofPlatform().name("HTTP").start(loop);
   }

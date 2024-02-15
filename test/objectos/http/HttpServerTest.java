@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.web;
+package objectos.http;
 
 import static org.testng.Assert.assertEquals;
 
@@ -26,14 +26,6 @@ import java.net.Socket;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import objectos.html.HtmlTemplate;
-import objectos.http.Handler;
-import objectos.http.HandlerFactory;
-import objectos.http.HeaderName;
-import objectos.http.ServerExchange;
-import objectos.http.ServerRequestHeaders;
-import objectos.http.Status;
-import objectos.http.TestingClock;
-import objectos.http.UriPath;
 import objectos.http.UriPath.Segment;
 import objectos.notes.Note;
 import objectos.way.TestingNoteSink;
@@ -41,16 +33,16 @@ import objectos.way.TestingShutdownHook;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-public class WayWebServerTest implements Handler {
+public class HttpServerTest implements Handler {
 
-  private WayWebServer server;
+  private WayHttpServer server;
 
   @BeforeClass
   public void startServer() throws Exception {
     HandlerFactory factory;
     factory = () -> this;
 
-    server = new WayWebServer(factory);
+    server = new WayHttpServer(factory);
 
     TestingShutdownHook.register(server);
 
@@ -59,6 +51,8 @@ public class WayWebServerTest implements Handler {
     server.clock(TestingClock.FIXED);
 
     server.noteSink(new ThisNoteSink(server));
+
+    server.sessionStore(NoOpSessionStore.INSTANCE);
 
     server.start();
 
@@ -113,7 +107,7 @@ public class WayWebServerTest implements Handler {
     methodName = second.value();
 
     try {
-      Class<? extends WayWebServerTest> testClass;
+      Class<? extends HttpServerTest> testClass;
       testClass = getClass();
 
       Method handlingMethod;
@@ -366,7 +360,7 @@ public class WayWebServerTest implements Handler {
 
     @Override
     protected void visitNote(Note note) {
-      if (note == WebServer.LISTENING) {
+      if (note == HttpServer.LISTENING) {
         synchronized (lock) {
           lock.notify();
         }
