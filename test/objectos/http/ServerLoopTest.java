@@ -16,6 +16,7 @@
 package objectos.http;
 
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertSame;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -712,6 +713,60 @@ public class ServerLoopTest {
       assertEquals(socket.outputAsString(), resp01);
 
       assertEquals(http.keepAlive(), false);
+    } catch (IOException e) {
+      throw new AssertionError("Failed with IOException", e);
+    }
+  }
+
+  @Test(description = """
+  SessionStore integration
+  """)
+  public void testCase011() {
+    TestableSocket socket;
+    socket = TestableSocket.of("""
+    GET /login HTTP/1.1\r
+    Host: www.example.com\r
+    Cookie: OBJECTOSWAY=298zf09hf012fh2\r
+    \r
+    """);
+
+    String resp01 = """
+    HTTP/1.1 302 FOUND\r
+    Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+    Location: /\r
+    \r
+    """;
+
+    WaySessionStore sessionStore;
+    sessionStore = new WaySessionStore();
+
+    String id;
+    id = "298zf09hf012fh2";
+
+    WaySession session;
+    session = new WaySession(id);
+
+    sessionStore.put(id, session);
+
+    try (WayServerLoop http = new WayServerLoop(socket)) {
+      http.bufferSize(128, 256);
+      http.clock(TestingClock.FIXED);
+      http.noteSink(TestingNoteSink.INSTANCE);
+      http.sessionStore(sessionStore);
+
+      http.parse();
+
+      assertEquals(http.badRequest(), false);
+
+      assertSame(http.session(), session);
+
+      http.found("/");
+
+      http.commit();
+
+      assertEquals(socket.outputAsString(), resp01);
+
+      assertEquals(http.keepAlive(), true);
     } catch (IOException e) {
       throw new AssertionError("Failed with IOException", e);
     }

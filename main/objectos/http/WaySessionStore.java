@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Objectos Software LTDA.
+ * Copyright (C) 2023-2024 Objectos Software LTDA.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,18 +20,62 @@ import java.util.HexFormat;
 import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
+import objectos.lang.object.Check;
 
+/**
+ * The Objectos Way {@link SessionStore} implementation.
+ */
 public final class WaySessionStore implements SessionStore {
 
   private static final int ID_LENGTH_IN_BYTES = 16;
 
+  private String cookieName = "OBJECTOSWAY";
+
   private final HexFormat hexFormat = HexFormat.of();
 
-  private final Random random = new SecureRandom();
+  private Random random = new SecureRandom();
 
   private final ConcurrentMap<String, WaySession> sessions = new ConcurrentHashMap<>();
 
+  /**
+   * Sole constructor.
+   */
   public WaySessionStore() {}
+
+  /**
+   * Use the specified {@code name} when setting the client session cookie.
+   *
+   * @param name
+   *        the cookie name to use
+   *
+   * @return this instance
+   */
+  public final WaySessionStore cookieName(String name) {
+    this.cookieName = Check.notNull(name, "name == null");
+
+    return this;
+  }
+
+  /**
+   * Use the specified {@link Random} instance for generating session IDs.
+   *
+   * @param random
+   *        the {@link Random} instance to use
+   *
+   * @return this instance
+   */
+  public final WaySessionStore random(Random random) {
+    this.random = Check.notNull(random, "random == null");
+
+    return this;
+  }
+
+  final WaySession put(String id, WaySession session) {
+    Check.notNull(id, "id == null");
+    Check.notNull(session, "session == null");
+
+    return sessions.put(id, session);
+  }
 
   @Override
   public final Session nextSession() {
@@ -47,6 +91,14 @@ public final class WaySessionStore implements SessionStore {
     } while (maybeExisting != null);
 
     return session;
+  }
+
+  @Override
+  public final Session get(Cookies cookies) {
+    String maybe;
+    maybe = cookies.get(cookieName); // implicit cookies null check
+
+    return get(maybe);
   }
 
   @Override

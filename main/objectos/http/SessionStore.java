@@ -17,11 +17,9 @@ package objectos.http;
 
 public sealed interface SessionStore permits WaySessionStore {
 
-  static SessionStore create() {
-    return new WaySessionStore();
-  }
-
   Session nextSession();
+
+  Session get(Cookies cookies);
 
   Session get(String id);
 

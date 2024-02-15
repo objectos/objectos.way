@@ -28,7 +28,7 @@ public class SessionStoreTest {
   """)
   public void testCase01() {
     SessionStore store;
-    store = SessionStore.create();
+    store = new WaySessionStore();
 
     Session session;
     session = store.nextSession();
@@ -51,7 +51,7 @@ public class SessionStoreTest {
   """)
   public void testCase02() {
     SessionStore store;
-    store = SessionStore.create();
+    store = new WaySessionStore();
 
     Session session;
     session = store.nextSession();
@@ -76,7 +76,7 @@ public class SessionStoreTest {
   """)
   public void testCase03() {
     SessionStore store;
-    store = SessionStore.create();
+    store = new WaySessionStore();
 
     Session session;
     session = store.nextSession();

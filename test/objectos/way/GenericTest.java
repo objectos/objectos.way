@@ -24,6 +24,59 @@ import org.testng.annotations.Test;
 
 public class GenericTest {
 
+  @FunctionalInterface
+  public interface Subscriber<T> {
+    void subscribe(T topic);
+
+    default void foo() {}
+  }
+
+  private static class StringSubscriber implements Subscriber<String> {
+    @Override
+    public void subscribe(String topic) {}
+  }
+
+  @Test
+  public void subscriber() {
+    Subscriber<String> s = new StringSubscriber();
+
+    @SuppressWarnings("rawtypes")
+    Class<? extends Subscriber> clazz = s.getClass();
+
+    Type[] ifaces = clazz.getGenericInterfaces();
+
+    for (Type iface : ifaces) {
+      if (iface instanceof ParameterizedType param) {
+        Type[] typeArgs = param.getActualTypeArguments();
+        for (Type typeArg : typeArgs) {
+          System.out.println(typeArg.getTypeName());
+        }
+      }
+    }
+  }
+
+  @Test
+  public void subscriber_lambda_capturing() {
+    String msg = getMsg();
+
+    Subscriber<String> s = evt -> { System.out.println(msg); };
+
+    @SuppressWarnings("rawtypes")
+    Class<? extends Subscriber> clazz = s.getClass();
+
+    Type[] ifaces = clazz.getGenericInterfaces();
+    for (Type iface : ifaces) {
+      if (iface instanceof ParameterizedType param) {
+        Type[] typeArgs = param.getActualTypeArguments();
+        for (Type typeArg : typeArgs) {
+          System.out.println(iface.getTypeName() + " : " + typeArg.getTypeName());
+        }
+      }
+    }
+  }
+
+  private String getMsg() { return null; }
+
   @Test
   public void runtime() {
     List<String> list = listOfStrings();

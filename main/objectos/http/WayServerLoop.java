@@ -52,6 +52,10 @@ public final class WayServerLoop extends WayServerRequestBody implements ServerL
 
   private Object responseBody;
 
+  private Session session;
+
+  private SessionStore sessionStore;
+
   private Socket socket;
 
   private byte state;
@@ -90,6 +94,18 @@ public final class WayServerLoop extends WayServerRequestBody implements ServerL
     checkConfig();
 
     this.noteSink = Check.notNull(noteSink, "noteSink == null");
+  }
+
+  /**
+   * Use the specified {@link SessionStore} for session handling.
+   *
+   * @param sessionStore
+   *        the session store to use
+   */
+  public final void sessionStore(SessionStore sessionStore) {
+    checkConfig();
+
+    this.sessionStore = Check.notNull(sessionStore, "sessionStore == null");
   }
 
   private void checkConfig() {
@@ -172,6 +188,26 @@ public final class WayServerLoop extends WayServerRequestBody implements ServerL
       }
     }
 
+    // handle session
+    session = null;
+
+    if (sessionStore != null) {
+
+      WayHeader cookie;
+      cookie = headerUnchecked(HeaderName.COOKIE);
+
+      if (cookie != null) {
+        String cookieHeader;
+        cookieHeader = cookie.get();
+
+        Cookies cookies;
+        cookies = Cookies.parse(cookieHeader);
+
+        session = sessionStore.get(cookies);
+      }
+
+    }
+
     state = _REQUEST;
   }
 
@@ -217,6 +253,13 @@ public final class WayServerLoop extends WayServerRequestBody implements ServerL
     checkRequest();
 
     return this;
+  }
+
+  @Override
+  public final Session session() {
+    checkRequest();
+
+    return session;
   }
 
   private void checkRequest() {

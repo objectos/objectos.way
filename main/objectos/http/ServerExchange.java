@@ -49,6 +49,14 @@ public interface ServerExchange {
    */
   Body body();
 
+  /**
+   * Returns the session associated with this request or {@code null} if no
+   * session was found.
+   *
+   * @return the session associated with this request or {@code null}
+   */
+  Session session();
+
   // response
 
   default void accept(Handler handler) {
@@ -157,6 +165,19 @@ public interface ServerExchange {
     header(HeaderName.CONTENT_LENGTH, bytes.length);
 
     send(bytes);
+  }
+
+  // 302
+  default void found(String location) {
+    Check.notNull(location, "location == null");
+
+    status(Status.FOUND);
+
+    dateNow();
+
+    header(HeaderName.LOCATION, location);
+
+    send();
   }
 
   // 404
