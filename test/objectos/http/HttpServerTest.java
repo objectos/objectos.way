@@ -52,8 +52,6 @@ public class HttpServerTest implements Handler {
 
     server.noteSink(new ThisNoteSink(server));
 
-    server.sessionStore(NoOpSessionStore.INSTANCE);
-
     server.start();
 
     synchronized (server) {

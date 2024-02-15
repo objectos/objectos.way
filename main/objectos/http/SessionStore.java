@@ -23,4 +23,14 @@ public interface SessionStore {
 
   Session get(String id);
 
+  /**
+   * Returns a Set-Cookie header value for the specified session ID.
+   *
+   * @param id
+   *        the id of the session
+   *
+   * @return the value of a Set-Cookie header for the specified session ID
+   */
+  String setCookie(String id);
+
 }

@@ -41,7 +41,7 @@ public class WayHttpServer implements HttpServer {
 
   private int port = 0;
 
-  private SessionStore sessionStore = NoOpSessionStore.INSTANCE;
+  private SessionStore sessionStore;
 
   private ServerSocket serverSocket;
 

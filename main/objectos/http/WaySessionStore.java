@@ -16,7 +16,9 @@
 package objectos.http;
 
 import java.security.SecureRandom;
+import java.time.Duration;
 import java.util.HexFormat;
+import java.util.Objects;
 import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
@@ -29,7 +31,11 @@ public final class WaySessionStore implements SessionStore {
 
   private static final int ID_LENGTH_IN_BYTES = 16;
 
+  private Duration cookieMaxAge;
+
   private String cookieName = "OBJECTOSWAY";
+
+  private String cookiePath = "/";
 
   private final HexFormat hexFormat = HexFormat.of();
 
@@ -47,13 +53,39 @@ public final class WaySessionStore implements SessionStore {
    *
    * @param name
    *        the cookie name to use
-   *
-   * @return this instance
    */
-  public final WaySessionStore cookieName(String name) {
+  public final void cookieName(String name) {
     this.cookieName = Check.notNull(name, "name == null");
+  }
 
-    return this;
+  /**
+   * Sets the session cookie Path attribute to the specified value.
+   *
+   * @param path
+   *        the value of the Path attribute
+   */
+  public final void cookiePath(String path) {
+    this.cookiePath = Check.notNull(path, "path == null");
+  }
+
+  /**
+   * Sets the session cookie Max-Age attribute to the specified value.
+   *
+   * @param duration
+   *        the value of the Max-Age attribute
+   */
+  public final void cookieMaxAge(Duration duration) {
+    Objects.requireNonNull(duration, "duration == null");
+
+    if (duration.isZero()) {
+      throw new IllegalArgumentException("maxAge must not be zero");
+    }
+
+    if (duration.isNegative()) {
+      throw new IllegalArgumentException("maxAge must not be negative");
+    }
+
+    cookieMaxAge = duration;
   }
 
   /**
@@ -111,6 +143,34 @@ public final class WaySessionStore implements SessionStore {
     }
 
     return session;
+  }
+
+  @Override
+  public final String setCookie(String id) {
+    Check.notNull(id, "id == null");
+
+    StringBuilder s;
+    s = new StringBuilder();
+
+    s.append(cookieName);
+
+    s.append('=');
+
+    s.append(id);
+
+    if (cookieMaxAge != null) {
+      s.append("; Max-Age=");
+
+      s.append(cookieMaxAge.getSeconds());
+    }
+
+    if (cookiePath != null) {
+      s.append("; Path=");
+
+      s.append(cookiePath);
+    }
+
+    return s.toString();
   }
 
   private String nextId() {

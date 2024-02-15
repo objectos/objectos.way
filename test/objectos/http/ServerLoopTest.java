@@ -22,6 +22,8 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Random;
+import objectos.html.HtmlTemplate;
 import objectos.util.array.ByteArrays;
 import org.testng.annotations.Test;
 
@@ -769,6 +771,72 @@ public class ServerLoopTest {
       assertEquals(http.keepAlive(), true);
     } catch (IOException e) {
       throw new AssertionError("Failed with IOException", e);
+    }
+  }
+
+  @Test(description = """
+  SessionStore integration: set-cookie
+  """)
+  public void testCase012() {
+    TestableSocket socket;
+    socket = TestableSocket.of("""
+    GET /login HTTP/1.1\r
+    Host: www.example.com\r
+    \r
+    """);
+
+    String resp01 = """
+    HTTP/1.1 200 OK\r
+    Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+    Content-Type: text/html; charset=utf-8\r
+    Content-Length: 28\r
+    Set-Cookie: OBJECTOSWAY=a86886a5d2978142da2d8cf378ebc83c; Path=/\r
+    \r
+    <html>
+    <p>LOGIN</p>
+    </html>
+    """;
+
+    WaySessionStore sessionStore;
+    sessionStore = new WaySessionStore();
+
+    Random random;
+    random = new Random(1234L);
+
+    sessionStore.random(random);
+
+    try (WayServerLoop http = new WayServerLoop(socket)) {
+      http.bufferSize(128, 256);
+      http.clock(TestingClock.FIXED);
+      http.noteSink(TestingNoteSink.INSTANCE);
+      http.sessionStore(sessionStore);
+
+      http.parse();
+
+      assertEquals(http.badRequest(), false);
+
+      http.ok(new SingleParagraph("LOGIN"));
+
+      http.commit();
+
+      assertEquals(socket.outputAsString(), resp01);
+
+      assertEquals(http.keepAlive(), true);
+    } catch (IOException e) {
+      throw new AssertionError("Failed with IOException", e);
+    }
+  }
+
+  private static class SingleParagraph extends HtmlTemplate {
+    private final String text;
+
+    public SingleParagraph(String text) { this.text = text; }
+
+    @Override
+    protected final void definition() {
+      html(
+          p(text)
+      );
     }
   }
 

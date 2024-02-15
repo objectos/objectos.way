@@ -41,8 +41,6 @@ public final class WayServerLoop extends WayServerRequestBody implements ServerL
   private static final byte _RESPONSE = 3;
   private static final byte _COMMITED = 4;
 
-  // new fields / constructors
-
   private Clock clock;
 
   private boolean keepAlive;
@@ -54,9 +52,11 @@ public final class WayServerLoop extends WayServerRequestBody implements ServerL
 
   private Session session;
 
+  private boolean sessionNew;
+
   private SessionStore sessionStore;
 
-  private Socket socket;
+  private final Socket socket;
 
   private byte state;
 
@@ -65,13 +65,6 @@ public final class WayServerLoop extends WayServerRequestBody implements ServerL
 
     state = _CONFIG;
   }
-
-  /**
-   * For testing purposes only.
-   */
-  WayServerLoop() {}
-
-  // config
 
   @Override
   public final void bufferSize(int initial, int max) {
@@ -99,13 +92,17 @@ public final class WayServerLoop extends WayServerRequestBody implements ServerL
   /**
    * Use the specified {@link SessionStore} for session handling.
    *
+   * <p>
+   * If the specified value is {@code null} then session handling is disabled.
+   *
    * @param sessionStore
-   *        the session store to use
+   *        the session store to use or {@code null} to disable session
+   *        handling
    */
   public final void sessionStore(SessionStore sessionStore) {
     checkConfig();
 
-    this.sessionStore = Check.notNull(sessionStore, "sessionStore == null");
+    this.sessionStore = sessionStore;
   }
 
   private void checkConfig() {
@@ -191,6 +188,8 @@ public final class WayServerLoop extends WayServerRequestBody implements ServerL
     // handle session
     session = null;
 
+    sessionNew = false;
+
     if (sessionStore != null) {
 
       WayHeader cookie;
@@ -204,6 +203,12 @@ public final class WayServerLoop extends WayServerRequestBody implements ServerL
         cookies = Cookies.parse(cookieHeader);
 
         session = sessionStore.get(cookies);
+      }
+
+      if (session == null) {
+        session = sessionStore.nextSession();
+
+        sessionNew = true;
       }
 
     }
@@ -434,8 +439,6 @@ public final class WayServerLoop extends WayServerRequestBody implements ServerL
   }
 
   private void send0(Object body) {
-    writeBytes(Bytes.CRLF);
-
     responseBody = body;
   }
 
@@ -551,10 +554,22 @@ public final class WayServerLoop extends WayServerRequestBody implements ServerL
     Check.state(state == _RESPONSE, "Cannot commit as we are not in the response phase");
     Check.state(responseBody != null, "Cannot commit: missing ServerExchange::send method invocation");
 
+    if (sessionNew) {
+      String id;
+      id = session.id();
+
+      String setCookie;
+      setCookie = sessionStore.setCookie(id);
+
+      header0(HeaderName.SET_COOKIE, setCookie);
+    }
+
     OutputStream outputStream;
     outputStream = socket.getOutputStream();
 
     // send headers
+    writeBytes(Bytes.CRLF);
+
     outputStream.write(buffer, 0, bufferIndex);
 
     if (method != Method.HEAD) {
