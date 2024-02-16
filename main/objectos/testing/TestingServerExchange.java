@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Objectos Software LTDA.
+ * Copyright (C) 2023-2024 Objectos Software LTDA.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,22 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.http;
+package objectos.testing;
 
-public interface Session {
+import java.util.function.Consumer;
+import objectos.http.ServerExchange;
 
-  String id();
+public interface TestingServerExchange {
 
-  <T> T get(Class<T> type);
-
-  Object get(String name);
-
-  <T> Object put(Class<T> type, T value);
-
-  Object put(String name, Object value);
-
-  Object remove(String name);
-
-  void invalidate();
+  String handle(String request, Consumer<ServerExchange> consumer);
 
 }

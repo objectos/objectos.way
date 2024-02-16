@@ -134,6 +134,11 @@ final class WayFormUrlEncoded implements FormUrlEncoded {
   }
 
   @Override
+  public final String getOrDefault(String key, String defaultValue) {
+    return map.getOrDefault(key, defaultValue);
+  }
+
+  @Override
   public final int size() {
     return map.size();
   }

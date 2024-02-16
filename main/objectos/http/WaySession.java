@@ -36,6 +36,31 @@ public final class WaySession implements Session {
   }
 
   @Override
+  public final <T> T get(Class<T> type) {
+    String name;
+    name = type.getName(); // implicit null-check
+
+    Object value;
+    value = null;
+
+    synchronized (values) {
+      value = values.get(name);
+    }
+
+    return type.cast(value);
+  }
+
+  @Override
+  public final <T> Object put(Class<T> type, T value) {
+    String name;
+    name = type.getName(); // implicit null-check
+
+    synchronized (values) {
+      return values.put(name, value);
+    }
+  }
+
+  @Override
   public final Object get(String name) {
     synchronized (values) {
       return values.get(name);

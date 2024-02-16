@@ -44,9 +44,22 @@ public interface FormUrlEncoded {
    * @param key
    *        the key to search for
    *
-   * @return the decoded value or {@code null}
+   * @return the first decoded value or {@code null}
    */
   String get(String key);
+
+  /**
+   * Returns the first decoded value associated to the specified key or
+   * the specified {@code defaultValue} if the key is not present.
+   *
+   * @param key
+   *        the key to search for
+   * @param defaultValue
+   *        the value to return if the key is not present
+   *
+   * @return the first decoded value or the {@code defaultValue}
+   */
+  String getOrDefault(String key, String defaultValue);
 
   /**
    * Returns the number of distinct keys
