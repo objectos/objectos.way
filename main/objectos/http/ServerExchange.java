@@ -149,6 +149,14 @@ public interface ServerExchange {
   // pre-made responses
 
   // 200
+  default void ok() {
+    status(Status.OK);
+
+    dateNow();
+
+    send();
+  }
+
   default void ok(HtmlTemplate html) {
     String s; // early implicit null-check
     s = html.toString();

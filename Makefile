@@ -153,6 +153,44 @@ include make/test-run.mk
 $(eval $(call TEST_RUN_TASK,,))
 
 #
+# way@dev
+#
+
+## dev main class
+DEV_MAIN_CLASS := testing.site.TestingSite
+
+## dev deps
+DEV_DEPS := $(TEST_COMPILE_MARKER)
+
+## dev module-path
+DEV_MODULE_PATH := $(WORK)/dev-module-path
+
+## dev java command
+DEV_JAVAX = $(JAVA)
+DEV_JAVAX += -Xmx64m
+DEV_JAVAX += -XX:+UseSerialGC
+DEV_JAVAX += --module-path @$(DEV_MODULE_PATH)
+ifeq ($(ENABLE_DEBUG), 1)
+DEV_JAVAX += -agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=localhost:7000
+endif
+ifeq ($(ENABLE_PREVIEW), 1)
+DEV_JAVAX += --enable-preview
+endif
+DEV_JAVAX += --patch-module $(MODULE)=$(TEST_CLASS_OUTPUT)
+DEV_JAVAX += --add-exports $(MODULE)/testing.zite=ALL-UNNAMED
+DEV_JAVAX += --module $(MODULE)/$(DEV_MAIN_CLASS)
+## dev app args
+DEV_JAVAX += --stage DEVELOPMENT
+DEV_JAVAX += --class-output $(TEST_CLASS_OUTPUT)
+
+.PHONY: dev
+dev: $(DEV_MODULE_PATH)
+	$(DEV_JAVAX)
+	
+$(DEV_MODULE_PATH): $(DEV_DEPS)
+	cat $^ | sort -u | paste --delimiters='$(MODULE_PATH_SEPARATOR)' --serial > $@
+
+#
 # way@jar
 #
 
@@ -167,7 +205,7 @@ $(eval $(call JAR_TASK,,))
 COPYRIGHT_YEARS := 2022-2024
 
 ## pom.xml description
-DESCRIPTION := Objectos Code is a Java library for generating Java source code. 
+DESCRIPTION := Objectos Way allows you to build web applications using only Java. 
 
 include pom.mk
 include make/pom.mk
