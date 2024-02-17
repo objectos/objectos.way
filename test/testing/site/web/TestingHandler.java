@@ -23,11 +23,11 @@ import objectos.http.UriPath.Segment;
 import objectos.web.WebResources;
 import testing.zite.TestingSiteInjector;
 
-public class UiHandler implements Handler {
+public class TestingHandler implements Handler {
 
   private final TestingSiteInjector injector;
 
-  public UiHandler(TestingSiteInjector injector) {
+  public TestingHandler(TestingSiteInjector injector) {
     this.injector = injector;
   }
 

@@ -13,24 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package testing.site;
+package objectos.ui;
 
-import objectos.http.Handler;
-import objectos.http.HandlerFactory;
-import testing.site.web.TestingHandler;
-import testing.zite.TestingSiteInjector;
+import objectos.css.select.IdSelector;
+import objectos.html.HtmlTemplate;
 
-final class ProdHandlerFactory implements HandlerFactory {
+public class UiCommand {
 
-  private final TestingHandler handler;
+  public UiCommand() {}
 
-  public ProdHandlerFactory(TestingSiteInjector injector) {
-    handler = new TestingHandler(injector);
+  public final UiCommand html(HtmlTemplate html) {
+    return this;
   }
 
-  @Override
-  public final Handler create() throws Exception {
-    return handler;
+  public final UiCommand locationHref(String location) {
+    return this;
+  }
+
+  public final UiCommand replace(IdSelector id) {
+    return this;
   }
 
 }

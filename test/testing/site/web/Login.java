@@ -28,6 +28,7 @@ import objectos.http.ServerExchange;
 import objectos.http.ServerRequestHeaders;
 import objectos.http.Session;
 import objectos.ui.Ui;
+import objectos.ui.UiCommand;
 import objectos.ui.UiPage;
 import testing.site.auth.User;
 import testing.zite.TestingSiteInjector;
@@ -63,23 +64,12 @@ final class Login extends HtmlTemplate {
     }
   }
 
-  @Override
-  protected final void definition() {
-    switch (step) {
-      case "zero" -> renderStep0();
+  private enum FormState {
 
-      case "one" -> renderStep1();
-    }
-  }
+    LOGIN,
 
-  private void renderStep0() {
-    Ui ui;
-    ui = injector.ui(this);
+    PASSWORD;
 
-    UiPage page;
-    page = ui.page();
-
-    page.title("Login Page").render(this::renderForm0);
   }
 
   private static final IdSelector FORM = IdSelector.of("login-form");
@@ -90,11 +80,33 @@ final class Login extends HtmlTemplate {
 
   private static final String PASSWORD = "password";
 
-  private String step = "zero";
+  private FormState state = FormState.LOGIN;
 
   private String login;
 
-  private void renderForm0() {
+  @SuppressWarnings("unused")
+  private String loginError;
+
+  @Override
+  protected final void definition() {
+    switch (state) {
+      case LOGIN -> renderStep1();
+
+      case PASSWORD -> renderStep2();
+    }
+  }
+
+  private void renderStep1() {
+    Ui ui;
+    ui = injector.ui(this);
+
+    UiPage page;
+    page = ui.page();
+
+    page.title("Login Page").render(this::renderForm1);
+  }
+
+  private void renderForm1() {
     WayJs way;
     way = new WayJs(this);
 
@@ -150,7 +162,7 @@ final class Login extends HtmlTemplate {
     );
   }
 
-  private void renderStep1() {
+  private void renderStep2() {
     form(className("my-auto w-full bg-white sm:w-auto"), action("/login"), method("post"),
         input(name(STEP), type("hidden"), value("two")),
 
@@ -237,34 +249,64 @@ final class Login extends HtmlTemplate {
       return;
     }
 
-    step = form.getOrDefault(STEP, "zero");
-
-    login = form.getOrDefault(LOGIN, "");
+    String step;
+    step = form.getOrDefault(STEP, "");
 
     switch (step) {
-      case "one" -> {
-        if (login.isBlank()) {
-          step = "zero";
-        }
-      }
+      case "one" -> postStep1(http, form);
 
-      case "two" -> {
-        String password;
-        password = form.getOrDefault(PASSWORD, "");
+      case "two" -> postStep2(http, form);
 
-        User user;
-        user = authenticate(login, password);
+      default -> http.unprocessableContent();
+    }
+  }
 
-        if (user != null) {
-          Session session;
-          session = http.session();
+  private void postStep1(ServerExchange http, FormUrlEncoded form) {
+    login = form.getOrDefault(LOGIN, "");
 
-          session.put(User.class, user);
-        }
-      }
+    if (login.isBlank()) {
+      loginError = "Login is required";
     }
 
-    http.ok(this);
+    state = FormState.PASSWORD;
+
+    UiCommand command;
+    command = new UiCommand();
+
+    command.html(this);
+
+    command.replace(FORM);
+
+    http.ok(command);
+  }
+
+  private void postStep2(ServerExchange http, FormUrlEncoded form) {
+    String login;
+    login = form.getOrDefault(LOGIN, "");
+
+    String password;
+    password = form.getOrDefault(PASSWORD, "");
+
+    User user;
+    user = authenticate(login, password);
+
+    UiCommand command;
+    command = new UiCommand();
+
+    if (user != null) {
+      Session session;
+      session = http.session();
+
+      session.put(User.class, user);
+
+      command.locationHref("/");
+    } else {
+      command.html(this);
+
+      command.replace(FORM);
+    }
+
+    http.ok(command);
   }
 
   private User authenticate(String login, String password) {

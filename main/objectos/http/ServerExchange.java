@@ -19,6 +19,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import objectos.html.HtmlTemplate;
 import objectos.lang.object.Check;
+import objectos.ui.UiCommand;
 
 public interface ServerExchange {
 
@@ -175,6 +176,24 @@ public interface ServerExchange {
     send(bytes);
   }
 
+  default void ok(UiCommand command) {
+    String s; // early implicit null-check
+    s = command.toString();
+
+    status(Status.OK);
+
+    dateNow();
+
+    header(HeaderName.CONTENT_TYPE, "application/json");
+
+    byte[] bytes;
+    bytes = s.getBytes(StandardCharsets.UTF_8);
+
+    header(HeaderName.CONTENT_LENGTH, bytes.length);
+
+    send(bytes);
+  }
+
   // 302
   default void found(String location) {
     Check.notNull(location, "location == null");
@@ -210,6 +229,30 @@ public interface ServerExchange {
   // 415
   default void unsupportedMediaType() {
     status(Status.UNSUPPORTED_MEDIA_TYPE);
+
+    dateNow();
+
+    header(HeaderName.CONNECTION, "close");
+
+    send();
+  }
+
+  /**
+   * Sends a pre-made 422 Unprocessable Content response.
+   *
+   * <p>
+   * The response is equivalent to:
+   *
+   * <pre>
+   * ServerExchange http = ...
+   * http.status(Status.UNPROCESSABLE_CONTENT);
+   * http.dateNow();
+   * http.header(HeaderName.CONNECTION, "close");
+   * http.send();</pre>
+   */
+  // 422
+  default void unprocessableContent() {
+    status(Status.UNPROCESSABLE_CONTENT);
 
     dateNow();
 
