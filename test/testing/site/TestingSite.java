@@ -222,8 +222,6 @@ public class TestingSite {
     WaySessionStore sessionStore;
     sessionStore = new WaySessionStore();
 
-    sessionStore.cookieName("ObjectosUI");
-
     // Clock
 
     Clock clock;

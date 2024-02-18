@@ -748,7 +748,7 @@ public class ServerLoopTest {
     WaySession session;
     session = new WaySession(id);
 
-    sessionStore.put(id, session);
+    sessionStore.add(session);
 
     try (WayServerLoop http = new WayServerLoop(socket)) {
       http.bufferSize(128, 256);

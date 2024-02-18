@@ -102,6 +102,23 @@ public final class WaySessionStore implements SessionStore {
     return this;
   }
 
+  /**
+   * Adds the specified {@code session} to this session store.
+   *
+   * @param session
+   *        the session instance to add
+   *
+   * @return this instance
+   */
+  public final WaySessionStore add(WaySession session) {
+    String id;
+    id = session.id();
+
+    sessions.put(id, session);
+
+    return this;
+  }
+
   final WaySession put(String id, WaySession session) {
     Check.notNull(id, "id == null");
     Check.notNull(session, "session == null");

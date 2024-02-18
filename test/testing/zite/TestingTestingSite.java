@@ -103,6 +103,12 @@ public final class TestingTestingSite {
   private TestingTestingSite() {}
 
   public static String serverExchange(String request, Consumer<ServerExchange> handler) {
+    return serverExchange(request, handler, store -> {});
+  }
+
+  public static String serverExchange(String request,
+                                      Consumer<ServerExchange> handler,
+                                      Consumer<WaySessionStore> sessionStoreHandler) {
     WayTestingServerExchange serverExchange;
     serverExchange = new WayTestingServerExchange();
 
@@ -113,11 +119,11 @@ public final class TestingTestingSite {
     WaySessionStore sessionStore;
     sessionStore = new WaySessionStore();
 
-    sessionStore.cookieName("OBJECTOSUI");
-
     Random random = new Random(1234L);
 
     sessionStore.random(random);
+
+    sessionStoreHandler.accept(sessionStore);
 
     serverExchange.sessionStore(sessionStore);
 
