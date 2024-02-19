@@ -33,17 +33,22 @@ import objectos.notes.NoteSink;
 
 public final class WayServerLoop extends WayServerRequestBody implements ServerLoop {
 
-  // new states
+  private static final int _CONFIG = 0;
+  private static final int _PARSE = 1;
+  private static final int _REQUEST = 2;
+  private static final int _RESPONSE = 3;
+  private static final int _COMMITED = 4;
 
-  private static final byte _CONFIG = 0;
-  private static final byte _PARSE = 1;
-  private static final byte _REQUEST = 2;
-  private static final byte _RESPONSE = 3;
-  private static final byte _COMMITED = 4;
+  private static final int STATE_MASK = 0xF;
+  private static final int BITS_MASK = ~STATE_MASK;
+
+  private static final int KEEP_ALIVE = 1 << 4;
+
+  private static final int SESSION_NEW = 1 << 5;
+
+  private int bitset;
 
   private Clock clock;
-
-  private boolean keepAlive;
 
   @SuppressWarnings("unused")
   private NoteSink noteSink = NoOpNoteSink.of();
@@ -52,18 +57,14 @@ public final class WayServerLoop extends WayServerRequestBody implements ServerL
 
   private Session session;
 
-  private boolean sessionNew;
-
   private SessionStore sessionStore;
 
   private final Socket socket;
 
-  private byte state;
-
   public WayServerLoop(Socket socket) {
     this.socket = socket;
 
-    state = _CONFIG;
+    setState(_CONFIG);
   }
 
   @Override
@@ -106,7 +107,7 @@ public final class WayServerLoop extends WayServerRequestBody implements ServerL
   }
 
   private void checkConfig() {
-    Check.state(state == _CONFIG, "This configuration method cannot be called at this moment");
+    Check.state(testState(_CONFIG), "This configuration method cannot be called at this moment");
   }
 
   @Override
@@ -116,7 +117,7 @@ public final class WayServerLoop extends WayServerRequestBody implements ServerL
 
   @Override
   public final void parse() throws IOException, IllegalStateException {
-    if (state == _CONFIG) {
+    if (testState(_CONFIG)) {
       // init socket input
       InputStream inputStream;
       inputStream = socket.getInputStream();
@@ -124,7 +125,7 @@ public final class WayServerLoop extends WayServerRequestBody implements ServerL
       initSocketInput(inputStream);
     }
 
-    else if (state == _COMMITED) {
+    else if (testState(_COMMITED)) {
       resetSocketInput();
 
       resetRequestLine();
@@ -142,7 +143,7 @@ public final class WayServerLoop extends WayServerRequestBody implements ServerL
       """);
     }
 
-    state = _PARSE;
+    setState(_PARSE);
 
     // request line
 
@@ -166,10 +167,10 @@ public final class WayServerLoop extends WayServerRequestBody implements ServerL
 
     // handle keep alive
 
-    keepAlive = false;
+    clearBit(KEEP_ALIVE);
 
     if (versionMajor == 1 && versionMinor == 1) {
-      keepAlive = true;
+      setBit(KEEP_ALIVE);
     }
 
     WayHeader connection;
@@ -177,18 +178,18 @@ public final class WayServerLoop extends WayServerRequestBody implements ServerL
 
     if (connection != null) {
       if (connection.contentEquals(Bytes.KEEP_ALIVE)) {
-        keepAlive = true;
+        setBit(KEEP_ALIVE);
       }
 
       else if (connection.contentEquals(Bytes.CLOSE)) {
-        keepAlive = false;
+        clearBit(KEEP_ALIVE);
       }
     }
 
     // handle session
     session = null;
 
-    sessionNew = false;
+    clearBit(SESSION_NEW);
 
     if (sessionStore != null) {
 
@@ -208,17 +209,17 @@ public final class WayServerLoop extends WayServerRequestBody implements ServerL
       if (session == null) {
         session = sessionStore.nextSession();
 
-        sessionNew = true;
+        setBit(SESSION_NEW);
       }
 
     }
 
-    state = _REQUEST;
+    setState(_REQUEST);
   }
 
   @Override
   public final boolean badRequest() {
-    Check.state(state == _REQUEST, "Method can only be invoked after a parse() operation");
+    Check.state(testState(_REQUEST), "Method can only be invoked after a parse() operation");
 
     return badRequest != null;
   }
@@ -411,7 +412,7 @@ public final class WayServerLoop extends WayServerRequestBody implements ServerL
 
     // handle connection: close if necessary
     if (name == HeaderName.CONNECTION && value.equalsIgnoreCase("close")) {
-      keepAlive = false;
+      clearBit(KEEP_ALIVE);
     }
   }
 
@@ -500,17 +501,17 @@ public final class WayServerLoop extends WayServerRequestBody implements ServerL
   }
 
   private void checkResponse() {
-    if (state == _REQUEST) {
+    if (testState(_REQUEST)) {
       bufferIndex = 0;
 
       responseBody = null;
 
-      state = _RESPONSE;
+      setState(_RESPONSE);
 
       return;
     }
 
-    if (state == _RESPONSE) {
+    if (testState(_RESPONSE)) {
       return;
     }
 
@@ -551,10 +552,10 @@ public final class WayServerLoop extends WayServerRequestBody implements ServerL
 
   @Override
   public final void commit() throws IOException, IllegalStateException {
-    Check.state(state == _RESPONSE, "Cannot commit as we are not in the response phase");
+    Check.state(testState(_RESPONSE), "Cannot commit as we are not in the response phase");
     Check.state(responseBody != null, "Cannot commit: missing ServerExchange::send method invocation");
 
-    if (sessionNew) {
+    if (testBit(SESSION_NEW)) {
       String id;
       id = session.id();
 
@@ -588,12 +589,38 @@ public final class WayServerLoop extends WayServerRequestBody implements ServerL
       }
     }
 
-    state = _COMMITED;
+    setState(_COMMITED);
   }
 
   @Override
   public final boolean keepAlive() {
-    return keepAlive;
+    return testBit(KEEP_ALIVE);
+  }
+
+  private void clearBit(int mask) {
+    bitset &= ~mask;
+  }
+
+  private void setBit(int mask) {
+    bitset |= mask;
+  }
+
+  private void setState(int value) {
+    int bits;
+    bits = bitset & BITS_MASK;
+
+    bitset = bits | value;
+  }
+
+  private boolean testBit(int mask) {
+    return (bitset & mask) != 0;
+  }
+
+  private boolean testState(int value) {
+    int result;
+    result = bitset & STATE_MASK;
+
+    return result == value;
   }
 
 }
