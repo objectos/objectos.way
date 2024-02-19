@@ -696,10 +696,49 @@ public final class WayServerLoop extends WayServerRequestBody implements ServerL
     }
 
     private void buffer(byte[] bytes) throws IOException {
-      if (canBuffer(bytes.length)) {
-        writeBytes(bytes);
-      } else {
-        throw new UnsupportedOperationException("Implement me");
+      int bytesIndex;
+      bytesIndex = 0;
+
+      int remaining;
+      remaining = bytes.length - bytesIndex;
+
+      while (remaining > 0) {
+        int maxAvailable;
+        maxAvailable = maxBufferSize - bufferIndex;
+
+        if (maxAvailable == 0) {
+          flush();
+
+          maxAvailable = maxBufferSize - bufferIndex;
+        }
+
+        int bytesToCopy;
+        bytesToCopy = Math.min(remaining, maxAvailable);
+
+        int requiredIndex;
+        requiredIndex = bufferIndex + bytesToCopy - 1;
+
+        if (requiredIndex >= buffer.length) {
+          int minSize;
+          minSize = requiredIndex + 1;
+
+          int newSize;
+          newSize = powerOfTwo(minSize);
+
+          if (newSize > maxBufferSize) {
+            throw new UnsupportedOperationException("Implement me");
+          }
+
+          buffer = Arrays.copyOf(buffer, newSize);
+        }
+
+        System.arraycopy(bytes, bytesIndex, buffer, bufferIndex, bytesToCopy);
+
+        bufferIndex += bytesToCopy;
+
+        bytesIndex += bytesToCopy;
+
+        remaining -= bytesToCopy;
       }
     }
 

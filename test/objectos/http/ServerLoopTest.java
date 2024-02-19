@@ -25,6 +25,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Random;
 import objectos.html.HtmlTemplate;
+import objectos.lang.CharWritable;
 import objectos.lang.TestingCharWritable;
 import objectos.util.array.ByteArrays;
 import org.testng.Assert;
@@ -945,6 +946,180 @@ public class ServerLoopTest {
     .................................................
     .................................................
     1234567890123456789012345678\r
+    0\r
+    \r
+    """;
+
+    try (WayServerLoop http = new WayServerLoop(socket)) {
+      http.bufferSize(128, 128);
+      http.clock(TestingClock.FIXED);
+      http.noteSink(TestingNoteSink.INSTANCE);
+
+      http.parse();
+
+      assertEquals(http.badRequest(), false);
+
+      http.dateNow();
+      http.header(HeaderName.CONTENT_TYPE, "text/plain");
+      http.header(HeaderName.TRANSFER_ENCODING, "chunked");
+      http.send(writable, StandardCharsets.UTF_8);
+
+      http.commit();
+
+      assertEquals(socket.outputAsString(), resp01);
+
+      assertEquals(http.keepAlive(), true);
+    } catch (IOException e) {
+      throw new AssertionError("Failed with IOException", e);
+    }
+  }
+
+  @Test(description = """
+  CharWritable: multiple chunks
+  """)
+  public void testCase016() {
+    TestableSocket socket;
+    socket = TestableSocket.of("""
+    GET / HTTP/1.1\r
+    Host: www.example.com\r
+    \r
+    """);
+
+    TestingCharWritable writable;
+    writable = TestingCharWritable.ofLength(256);
+
+    String resp01 = """
+    Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+    Content-Type: text/plain\r
+    Transfer-Encoding: chunked\r
+    \r
+    80\r
+    .................................................
+    .................................................
+    ............................\r
+    80\r
+    .....................
+    .................................................
+    .................................................
+    123456\r
+    0\r
+    \r
+    """;
+
+    try (WayServerLoop http = new WayServerLoop(socket)) {
+      http.bufferSize(128, 128);
+      http.clock(TestingClock.FIXED);
+      http.noteSink(TestingNoteSink.INSTANCE);
+
+      http.parse();
+
+      assertEquals(http.badRequest(), false);
+
+      http.dateNow();
+      http.header(HeaderName.CONTENT_TYPE, "text/plain");
+      http.header(HeaderName.TRANSFER_ENCODING, "chunked");
+      http.send(writable, StandardCharsets.UTF_8);
+
+      http.commit();
+
+      assertEquals(socket.outputAsString(), resp01);
+
+      assertEquals(http.keepAlive(), true);
+    } catch (IOException e) {
+      throw new AssertionError("Failed with IOException", e);
+    }
+  }
+
+  @Test(description = """
+  CharWritable: single chunk with buffer resize
+  """)
+  public void testCase017() {
+    TestableSocket socket;
+    socket = TestableSocket.of("""
+    GET / HTTP/1.1\r
+    Host: www.example.com\r
+    \r
+    """);
+
+    TestingCharWritable writable;
+    writable = TestingCharWritable.ofLength(256);
+
+    String resp01 = """
+    Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+    Content-Type: text/plain\r
+    Transfer-Encoding: chunked\r
+    \r
+    100\r
+    .................................................
+    .................................................
+    .................................................
+    .................................................
+    .................................................
+    123456\r
+    0\r
+    \r
+    """;
+
+    try (WayServerLoop http = new WayServerLoop(socket)) {
+      http.bufferSize(128, 256);
+      http.clock(TestingClock.FIXED);
+      http.noteSink(TestingNoteSink.INSTANCE);
+
+      http.parse();
+
+      assertEquals(http.badRequest(), false);
+
+      http.dateNow();
+      http.header(HeaderName.CONTENT_TYPE, "text/plain");
+      http.header(HeaderName.TRANSFER_ENCODING, "chunked");
+      http.send(writable, StandardCharsets.UTF_8);
+
+      http.commit();
+
+      assertEquals(socket.outputAsString(), resp01);
+
+      assertEquals(http.keepAlive(), true);
+    } catch (IOException e) {
+      throw new AssertionError("Failed with IOException", e);
+    }
+  }
+
+  @Test(description = """
+  CharWritable: chunk is larger than buffer
+  """)
+  public void testCase018() {
+    TestableSocket socket;
+    socket = TestableSocket.of("""
+    GET / HTTP/1.1\r
+    Host: www.example.com\r
+    \r
+    """);
+
+    String chunk256 = """
+    .................................................
+    .................................................
+    .................................................
+    .................................................
+    .................................................
+    123456""";
+
+    CharWritable writable;
+    writable = out -> out.append(chunk256);
+
+    String resp01 = """
+    Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+    Content-Type: text/plain\r
+    Transfer-Encoding: chunked\r
+    \r
+    80\r
+    .................................................
+    .................................................
+    ............................\r
+    80\r
+    .....................
+    .................................................
+    .................................................
+    123456\r
     0\r
     \r
     """;

@@ -20,6 +20,7 @@ import java.io.IOException;
 /**
  * An object that can write out its string representation.
  */
+@FunctionalInterface
 public interface CharWritable {
 
   /**
@@ -29,8 +30,6 @@ public interface CharWritable {
    *
    * @throws IOException if an I/O error occurs
    */
-  default void writeTo(Appendable dest) throws IOException {
-    dest.append(toString());
-  }
+  void writeTo(Appendable dest) throws IOException;
 
 }
