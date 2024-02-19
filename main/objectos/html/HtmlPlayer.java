@@ -15,7 +15,7 @@
  */
 package objectos.html;
 
-public class HtmlPlayer {
+final class HtmlPlayer {
 
   private StringBuilder stringBuilder;
 

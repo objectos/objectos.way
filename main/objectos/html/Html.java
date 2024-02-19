@@ -63,6 +63,9 @@ public final class Html extends BaseElements {
 
   private static final int OFFSET_MAX = OFFSET_RAW;
 
+  /**
+   * Sole constructor.
+   */
   public Html() {}
 
   /**

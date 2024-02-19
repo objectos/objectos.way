@@ -17,52 +17,12 @@ package objectos.html;
 
 import static org.testng.Assert.assertEquals;
 
-import objectos.html.pseudom.HtmlDocument;
+import java.io.IOException;
 import org.testng.annotations.Test;
 
-public class WriterTest {
-
-  private final Writer writer = new Writer() {
-    @Override
-    public void process(HtmlDocument document) {
-      // noop
-    }
-  };
+public class HtmlFormatterStandardTest {
 
   private final StringBuilder out = new StringBuilder();
-
-  @Test
-  public void writeAttributeValue() {
-    // normal text
-    writeAttributeValue("abc", "abc");
-
-    // html tokens
-    writeAttributeValue("if (a < b && c > d) {}", "if (a &lt; b &amp;&amp; c &gt; d) {}");
-
-    // named entities
-    writeAttributeValue("foo&nbsp;bar", "foo&nbsp;bar");
-    writeAttributeValue("foo&nb#;bar", "foo&amp;nb#;bar");
-    writeAttributeValue("foo&nbsp bar", "foo&amp;nbsp bar");
-
-    // decimal entities
-    writeAttributeValue("foo&#39;bar", "foo&#39;bar");
-    writeAttributeValue("foo &# 39;", "foo &amp;# 39;");
-
-    // hex entities
-    writeAttributeValue("foo&#xa9;bar&Xa9;baz", "foo&#xa9;bar&Xa9;baz");
-    writeAttributeValue("foo &#xxa9;", "foo &amp;#xxa9;");
-
-    // ampersand edge cases
-    writeAttributeValue("&", "&amp;");
-    writeAttributeValue("int a = value & MASK;", "int a = value &amp; MASK;");
-
-    // quotes
-    writeAttributeValue("\"", "&quot;");
-    writeAttributeValue("'", "&#39;");
-
-    // new lines should be left alone
-    writeAttributeValue("foo\nbar", "foo\nbar");
-  }
 
   @Test
   public void writeText() {
@@ -97,24 +57,18 @@ public class WriterTest {
     writeText("foo\nbar", "foo\nbar");
   }
 
-  private void writeAttributeValue(String source, String expected) {
-    writer.out = out;
-
-    out.setLength(0);
-
-    writer.writeAttributeValue(source);
-
-    assertEquals(out.toString(), expected);
-  }
-
   private void writeText(String source, String expected) {
-    writer.out = out;
+    try {
+      out.setLength(0);
 
-    out.setLength(0);
+      var writer = new HtmlFormatterStandard();
 
-    writer.writeText(source);
+      writer.writeText(out, source);
 
-    assertEquals(out.toString(), expected);
+      assertEquals(out.toString(), expected);
+    } catch (IOException e) {
+      throw new AssertionError("StringBuilder does not throw", e);
+    }
   }
 
 }

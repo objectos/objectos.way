@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015-2023 Objectos Software LTDA.
+ * Copyright (C) 2023-2024 Objectos Software LTDA.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,102 +16,62 @@
 package objectos.html;
 
 import java.io.IOException;
-import objectos.html.pseudom.DocumentProcessor;
+import objectos.html.pseudom.HtmlDocument;
+import objectos.lang.object.Check;
 
-/**
- * Base {@link DocumentProcessor} implementation suitable for writing HTML
- * files.
- */
-abstract class Writer implements DocumentProcessor {
+public abstract class HtmlFormatter {
 
-  public Appendable out;
+  public static final HtmlFormatter STANDARD = new HtmlFormatterStandard();
 
-  protected final void write(char c) {
-    try {
-      out.append(c);
-    } catch (IOException e) {
-      throw new WriterException(e);
-    }
+  protected HtmlFormatter() {}
+
+  public final void formatTo(Html html, Appendable appendable) throws IOException {
+    Check.notNull(html, "html == null");
+    Check.notNull(appendable, "appendable == null");
+
+    HtmlDocument document;
+    document = html.compile();
+
+    format(document, appendable);
   }
 
-  protected final void write(String s) {
-    try {
-      out.append(s);
-    } catch (IOException e) {
-      throw new WriterException(e);
-    }
+  public final void formatTo(HtmlTemplate template, Appendable appendable) throws IOException {
+    Check.notNull(template, "template == null");
+    Check.notNull(appendable, "appendable == null");
+
+    Html html;
+    html = new Html();
+
+    HtmlDocument document;
+    document = template.compile(html);
+
+    format(document, appendable);
   }
 
-  protected final void writeAttributeValue(String value) {
-    try {
-      for (int idx = 0, len = value.length(); idx < len;) {
-        char c;
-        c = value.charAt(idx++);
+  protected abstract void format(HtmlDocument document, Appendable out) throws IOException;
 
-        switch (c) {
-          case '&' -> idx = writeAmpersandAttribute(value, idx, len);
+  protected final void writeAttributeValue(Appendable out, String value) throws IOException {
+    for (int idx = 0, len = value.length(); idx < len;) {
+      char c;
+      c = value.charAt(idx++);
 
-          case '<' -> writeLesserThan();
+      switch (c) {
+        case '&' -> idx = writeAmpersandAttribute(out, value, idx, len);
 
-          case '>' -> writeGreaterThan();
+        case '<' -> out.append("&lt;");
 
-          case '"' -> out.append("&quot;");
+        case '>' -> out.append("&gt;");
 
-          case '\'' -> out.append("&#39;");
+        case '"' -> out.append("&quot;");
 
-          default -> out.append(c);
-        }
+        case '\'' -> out.append("&#39;");
+
+        default -> out.append(c);
       }
-    } catch (IOException e) {
-      throw new WriterException(e);
     }
   }
 
-  protected final void writeText(String value) {
-    try {
-      for (int idx = 0, len = value.length(); idx < len;) {
-        char c;
-        c = value.charAt(idx++);
-
-        switch (c) {
-          case '&' -> writeAmpersand();
-
-          case '<' -> writeLesserThan();
-
-          case '>' -> writeGreaterThan();
-
-          default -> out.append(c);
-        }
-      }
-    } catch (IOException e) {
-      throw new WriterException(e);
-    }
-  }
-
-  private boolean isAsciiAlpha(char c) {
-    return 'A' <= c && c <= 'Z'
-        || 'a' <= c && c <= 'z';
-  }
-
-  private boolean isAsciiAlphanumeric(char c) {
-    return isAsciiDigit(c) || isAsciiAlpha(c);
-  }
-
-  private boolean isAsciiDigit(char c) {
-    return '0' <= c && c <= '9';
-  }
-
-  private boolean isAsciiHexDigit(char c) {
-    return isAsciiDigit(c)
-        || 'a' <= c && c <= 'f'
-        || 'A' <= c && c <= 'F';
-  }
-
-  private void writeAmpersand() throws IOException {
-    out.append("&amp;");
-  }
-
-  private int writeAmpersandAttribute(String value, int idx, int len) throws IOException {
+  private int writeAmpersandAttribute(Appendable out, String value, int idx, int len) throws IOException {
     enum State {
       START,
       MAYBE_NAMED,
@@ -229,12 +189,23 @@ abstract class Writer implements DocumentProcessor {
     return idx;
   }
 
-  private void writeGreaterThan() throws IOException {
-    out.append("&gt;");
+  private boolean isAsciiAlpha(char c) {
+    return 'A' <= c && c <= 'Z'
+        || 'a' <= c && c <= 'z';
   }
 
-  private void writeLesserThan() throws IOException {
-    out.append("&lt;");
+  private boolean isAsciiAlphanumeric(char c) {
+    return isAsciiDigit(c) || isAsciiAlpha(c);
+  }
+
+  private boolean isAsciiDigit(char c) {
+    return '0' <= c && c <= '9';
+  }
+
+  private boolean isAsciiHexDigit(char c) {
+    return isAsciiDigit(c)
+        || 'a' <= c && c <= 'f'
+        || 'A' <= c && c <= 'F';
   }
 
 }

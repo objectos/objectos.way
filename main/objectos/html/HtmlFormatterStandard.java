@@ -15,6 +15,7 @@
  */
 package objectos.html;
 
+import java.io.IOException;
 import java.util.Iterator;
 import java.util.Set;
 import objectos.html.pseudom.HtmlAttribute;
@@ -26,7 +27,7 @@ import objectos.html.pseudom.HtmlRawText;
 import objectos.html.pseudom.HtmlText;
 import objectos.lang.IterableOnce;
 
-final class PrettyPrintWriter extends Writer {
+final class HtmlFormatterStandard extends HtmlFormatter {
 
   private static final Set<String> PHRASING = Set.of(
       StandardElementName.A.getName(),
@@ -66,28 +67,28 @@ final class PrettyPrintWriter extends Writer {
   private static final byte SCRIPT = 5;
 
   @Override
-  public final void process(HtmlDocument document) {
+  protected final void format(HtmlDocument document, Appendable out) throws IOException {
     byte state;
     state = START;
 
     for (HtmlNode node : document.nodes()) {
-      state = node(state, node);
+      state = node(out, state, node);
     }
 
     if (state != START) {
-      write(NL);
+      out.append(NL);
     }
   }
 
-  private byte node(byte state, HtmlNode node) {
+  private byte node(Appendable out, byte state, HtmlNode node) throws IOException {
     return switch (node) {
-      case HtmlDocumentType doctype -> doctype(state, doctype);
+      case HtmlDocumentType doctype -> doctype(out, state, doctype);
 
-      case HtmlElement element -> element(state, element);
+      case HtmlElement element -> element(out, state, element);
 
-      case HtmlText text -> text(state, text);
+      case HtmlText text -> text(out, state, text);
 
-      case HtmlRawText raw -> raw(state, raw);
+      case HtmlRawText raw -> raw(out, state, raw);
 
       default -> throw new UnsupportedOperationException(
           "Implement me :: type=" + node.getClass()
@@ -95,13 +96,13 @@ final class PrettyPrintWriter extends Writer {
     };
   }
 
-  private byte doctype(byte state, HtmlDocumentType doctype) {
-    write("<!DOCTYPE html>");
+  private byte doctype(Appendable out, byte state, HtmlDocumentType doctype) throws IOException {
+    out.append("<!DOCTYPE html>");
 
     return BLOCK_END;
   }
 
-  private byte element(byte state, HtmlElement element) {
+  private byte element(Appendable out, byte state, HtmlElement element) throws IOException {
     // start tag
     String elementName;
     elementName = element.name();
@@ -114,7 +115,7 @@ final class PrettyPrintWriter extends Writer {
       nextState = childState = PHRASE;
 
       if (state == BLOCK_END) {
-        write(NL);
+        out.append(NL);
       }
     }
 
@@ -132,25 +133,25 @@ final class PrettyPrintWriter extends Writer {
       if (state != START) {
         // we should start this element in the next line
         // except if we are at the start of the document
-        write(NL);
+        out.append(NL);
       }
     }
 
-    write('<');
-    write(elementName);
+    out.append('<');
+    out.append(elementName);
 
     for (HtmlAttribute attribute : element.attributes()) {
-      elementAttribute(attribute);
+      elementAttribute(out, attribute);
     }
 
-    write('>');
+    out.append('>');
 
     if (!element.isVoid()) {
       int childCount;
       childCount = 0;
 
       for (HtmlNode node : element.nodes()) {
-        childState = node(childState, node);
+        childState = node(out, childState, node);
 
         childCount++;
       }
@@ -158,30 +159,30 @@ final class PrettyPrintWriter extends Writer {
       // do we need a NL before the end tag?
       if (childCount > 0) {
         if (nextState == PHRASE && childState == BLOCK_END) {
-          write(NL);
+          out.append(NL);
         }
 
         else if (nextState != PHRASE && childState != PHRASE) {
-          write(NL);
+          out.append(NL);
         }
       }
 
       // end tag
-      write('<');
-      write('/');
-      write(elementName);
-      write('>');
+      out.append('<');
+      out.append('/');
+      out.append(elementName);
+      out.append('>');
     }
 
     return nextState;
   }
 
-  private void elementAttribute(HtmlAttribute attribute) {
+  private void elementAttribute(Appendable out, HtmlAttribute attribute) throws IOException {
     String name;
     name = attribute.name();
 
-    write(' ');
-    write(name);
+    out.append(' ');
+    out.append(name);
 
     if (attribute.isBoolean()) {
       return;
@@ -194,55 +195,73 @@ final class PrettyPrintWriter extends Writer {
     valuesIter = values.iterator();
 
     if (valuesIter.hasNext()) {
-      write('=');
-      write('\"');
-      writeAttributeValue(valuesIter.next());
+      out.append('=');
+      out.append('\"');
+      writeAttributeValue(out, valuesIter.next());
 
       while (valuesIter.hasNext()) {
-        write(' ');
-        writeAttributeValue(valuesIter.next());
+        out.append(' ');
+        writeAttributeValue(out, valuesIter.next());
       }
 
-      write('\"');
+      out.append('\"');
     }
   }
 
-  private byte text(byte state, HtmlText text) {
+  private byte text(Appendable out, byte state, HtmlText text) throws IOException {
     String value;
     value = text.value();
 
     switch (state) {
       case BLOCK_END -> {
         if (!startsWithNewLine(value)) {
-          write(NL);
+          out.append(NL);
         }
 
-        writeText(value);
+        writeText(out, value);
       }
 
       case SCRIPT -> {
         if (!startsWithNewLine(value)) {
-          write(NL);
+          out.append(NL);
         }
 
-        write(value);
+        out.append(value);
 
         if (!endsWithNewLine(value)) {
-          write(NL);
+          out.append(NL);
         }
       }
 
-      default -> writeText(value);
+      default -> writeText(out, value);
     }
 
     return PHRASE;
   }
 
-  private byte raw(byte state, HtmlRawText raw) {
+  // visible for testing
+  final void writeText(Appendable out, String value) throws IOException {
+    for (int idx = 0, len = value.length(); idx < len;) {
+      char c;
+      c = value.charAt(idx++);
+
+      switch (c) {
+        case '&' -> out.append("&amp;");
+
+        case '<' -> out.append("&lt;");
+
+        case '>' -> out.append("&gt;");
+
+        default -> out.append(c);
+      }
+    }
+  }
+
+  private byte raw(Appendable out, byte state, HtmlRawText raw) throws IOException {
     String value;
     value = raw.value();
 
-    write(value);
+    out.append(value);
 
     return PHRASE;
   }
