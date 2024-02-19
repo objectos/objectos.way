@@ -21,12 +21,14 @@ import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.net.Socket;
+import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.Clock;
 import java.time.ZonedDateTime;
 import java.util.Arrays;
+import objectos.lang.CharWritable;
 import objectos.lang.object.Check;
 import objectos.notes.NoOpNoteSink;
 import objectos.notes.NoteSink;
@@ -46,7 +48,13 @@ public final class WayServerLoop extends WayServerRequestBody implements ServerL
 
   private static final int SESSION_NEW = 1 << 5;
 
+  private static final int CONTENT_LENGTH = 1 << 6;
+
+  private static final int CHUNKED = 1 << 7;
+
   private int bitset;
+
+  private Charset charset;
 
   private Clock clock;
 
@@ -414,33 +422,43 @@ public final class WayServerLoop extends WayServerRequestBody implements ServerL
     if (name == HeaderName.CONNECTION && value.equalsIgnoreCase("close")) {
       clearBit(KEEP_ALIVE);
     }
+
+    else if (name == HeaderName.CONTENT_LENGTH) {
+      setBit(CONTENT_LENGTH);
+    }
+
+    else if (name == HeaderName.TRANSFER_ENCODING && value.toLowerCase().contains("chunked")) {
+      setBit(CHUNKED);
+    }
   }
 
   @Override
   public final void send() {
     checkResponse();
 
-    send0(NoResponseBody.INSTANCE);
+    responseBody = NoResponseBody.INSTANCE;
   }
 
   @Override
   public final void send(byte[] body) {
     checkResponse();
-    Check.notNull(body, "body == null");
 
-    send0(body);
+    responseBody = Check.notNull(body, "body == null");
+  }
+
+  @Override
+  public final void send(CharWritable body, Charset charset) {
+    checkResponse();
+
+    responseBody = Check.notNull(body, "body == null");
+    this.charset = Check.notNull(charset, "charset == null");
   }
 
   @Override
   public final void send(Path file) {
     checkResponse();
-    Check.notNull(file, "file == null");
 
-    send0(file);
-  }
-
-  private void send0(Object body) {
-    responseBody = body;
+    responseBody = Check.notNull(file, "file == null");
   }
 
   // 404 NOT FOUND
@@ -529,7 +547,7 @@ public final class WayServerLoop extends WayServerRequestBody implements ServerL
     length = bytes.length;
 
     int requiredIndex;
-    requiredIndex = bufferIndex + length;
+    requiredIndex = bufferIndex + length - 1;
 
     if (requiredIndex >= buffer.length) {
       int minSize;
@@ -550,6 +568,8 @@ public final class WayServerLoop extends WayServerRequestBody implements ServerL
     bufferIndex += length;
   }
 
+  private static final byte[] CHUNKED_TRAILER = "0\r\n\r\n".getBytes(StandardCharsets.UTF_8);
+
   @Override
   public final void commit() throws IOException, IllegalStateException {
     Check.state(testState(_RESPONSE), "Cannot commit as we are not in the response phase");
@@ -565,11 +585,10 @@ public final class WayServerLoop extends WayServerRequestBody implements ServerL
       header0(HeaderName.SET_COOKIE, setCookie);
     }
 
+    writeBytes(Bytes.CRLF);
+
     OutputStream outputStream;
     outputStream = socket.getOutputStream();
-
-    // send headers
-    writeBytes(Bytes.CRLF);
 
     outputStream.write(buffer, 0, bufferIndex);
 
@@ -578,6 +597,31 @@ public final class WayServerLoop extends WayServerRequestBody implements ServerL
         case NoResponseBody no -> {}
 
         case byte[] bytes -> outputStream.write(bytes, 0, bytes.length);
+
+        case CharWritable writable -> {
+          if (testBit(CONTENT_LENGTH)) {
+            throw new IllegalStateException(
+                "Content-Length must not be set with a CharWritable body"
+            );
+          }
+
+          if (!testBit(CHUNKED)) {
+            throw new IllegalStateException(
+                "Transfer-Encoding: chunked must be set with a CharWritable body"
+            );
+          }
+
+          bufferIndex = 0;
+
+          ThisAppendable out;
+          out = new ThisAppendable();
+
+          writable.writeTo(out);
+
+          out.flush();
+
+          outputStream.write(CHUNKED_TRAILER);
+        }
 
         case Path file -> {
           try (InputStream in = Files.newInputStream(file)) {
@@ -621,6 +665,75 @@ public final class WayServerLoop extends WayServerRequestBody implements ServerL
     result = bitset & STATE_MASK;
 
     return result == value;
+  }
+
+  private class ThisAppendable implements Appendable {
+    public ThisAppendable() {
+      bufferIndex = 0;
+    }
+
+    @Override
+    public Appendable append(char c) throws IOException {
+      throw new UnsupportedOperationException("Implement me");
+    }
+
+    @Override
+    public Appendable append(CharSequence csq) throws IOException {
+      String s;
+      s = csq.toString();
+
+      byte[] bytes;
+      bytes = s.getBytes(charset);
+
+      buffer(bytes);
+
+      return this;
+    }
+
+    @Override
+    public Appendable append(CharSequence csq, int start, int end) throws IOException {
+      throw new UnsupportedOperationException("Implement me");
+    }
+
+    private void buffer(byte[] bytes) throws IOException {
+      if (canBuffer(bytes.length)) {
+        writeBytes(bytes);
+      } else {
+        throw new UnsupportedOperationException("Implement me");
+      }
+    }
+
+    final void flush() throws IOException {
+      OutputStream outputStream;
+      outputStream = socket.getOutputStream();
+
+      int chunkLength;
+      chunkLength = bufferIndex;
+
+      String lengthDigits;
+      lengthDigits = Integer.toHexString(chunkLength);
+
+      byte[] lengthBytes;
+      lengthBytes = (lengthDigits + "\r\n").getBytes(StandardCharsets.UTF_8);
+
+      outputStream.write(lengthBytes, 0, lengthBytes.length);
+
+      int bufferRemaining;
+      bufferRemaining = buffer.length - bufferIndex;
+
+      if (bufferRemaining >= 2) {
+        buffer[bufferIndex++] = Bytes.CR;
+        buffer[bufferIndex++] = Bytes.LF;
+
+        outputStream.write(buffer, 0, bufferIndex);
+      } else {
+        outputStream.write(buffer, 0, bufferIndex);
+
+        outputStream.write(Bytes.CRLF);
+      }
+
+      bufferIndex = 0;
+    }
   }
 
 }

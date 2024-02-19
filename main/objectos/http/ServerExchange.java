@@ -15,9 +15,11 @@
  */
 package objectos.http;
 
+import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import objectos.html.HtmlTemplate;
+import objectos.lang.CharWritable;
 import objectos.lang.object.Check;
 import objectos.ui.UiCommand;
 
@@ -144,6 +146,8 @@ public interface ServerExchange {
   void send();
 
   void send(byte[] body);
+
+  void send(CharWritable body, Charset charset);
 
   void send(Path file);
 

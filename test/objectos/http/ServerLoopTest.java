@@ -17,6 +17,7 @@ package objectos.http;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertSame;
+import static org.testng.Assert.assertTrue;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -24,7 +25,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Random;
 import objectos.html.HtmlTemplate;
+import objectos.lang.TestingCharWritable;
 import objectos.util.array.ByteArrays;
+import org.testng.Assert;
 import org.testng.annotations.Test;
 
 public class ServerLoopTest {
@@ -816,6 +819,149 @@ public class ServerLoopTest {
       assertEquals(http.badRequest(), false);
 
       http.ok(new SingleParagraph("LOGIN"));
+
+      http.commit();
+
+      assertEquals(socket.outputAsString(), resp01);
+
+      assertEquals(http.keepAlive(), true);
+    } catch (IOException e) {
+      throw new AssertionError("Failed with IOException", e);
+    }
+  }
+
+  @Test(description = """
+  Fail if:
+  - content-length is set
+  - body instanceof CharWritable
+  """)
+  public void testCase013() {
+    TestableSocket socket;
+    socket = TestableSocket.of("""
+    GET /login HTTP/1.1\r
+    Host: www.example.com\r
+    \r
+    """);
+
+    TestingCharWritable writable;
+    writable = TestingCharWritable.ofLength(64);
+
+    try (WayServerLoop http = new WayServerLoop(socket)) {
+      http.bufferSize(128, 256);
+      http.clock(TestingClock.FIXED);
+      http.noteSink(TestingNoteSink.INSTANCE);
+
+      http.parse();
+
+      assertEquals(http.badRequest(), false);
+
+      http.dateNow();
+      http.header(HeaderName.CONTENT_TYPE, "text/plain");
+      http.header(HeaderName.CONTENT_LENGTH, 64);
+      http.send(writable, StandardCharsets.UTF_8);
+
+      http.commit();
+
+      Assert.fail("http.commit should have thrown");
+    } catch (IllegalStateException expected) {
+      String message;
+      message = expected.getMessage();
+
+      assertTrue(message.contains("Content-Length"));
+      assertTrue(message.contains("CharWritable"));
+    } catch (IOException e) {
+      throw new AssertionError("Failed with IOException", e);
+    }
+  }
+
+  @Test(description = """
+  Fail if:
+  - Transfer-Encoding: chunked is not set
+  - body instanceof CharWritable
+  """)
+  public void testCase014() {
+    TestableSocket socket;
+    socket = TestableSocket.of("""
+    GET /login HTTP/1.1\r
+    Host: www.example.com\r
+    \r
+    """);
+
+    TestingCharWritable writable;
+    writable = TestingCharWritable.ofLength(64);
+
+    try (WayServerLoop http = new WayServerLoop(socket)) {
+      http.bufferSize(128, 256);
+      http.clock(TestingClock.FIXED);
+      http.noteSink(TestingNoteSink.INSTANCE);
+
+      http.parse();
+
+      assertEquals(http.badRequest(), false);
+
+      http.dateNow();
+      http.header(HeaderName.CONTENT_TYPE, "text/plain");
+      http.send(writable, StandardCharsets.UTF_8);
+
+      http.commit();
+
+      Assert.fail("http.commit should have thrown");
+    } catch (IllegalStateException expected) {
+      String message;
+      message = expected.getMessage();
+
+      assertTrue(message.contains("chunked"));
+      assertTrue(message.contains("CharWritable"));
+    } catch (IOException e) {
+      throw new AssertionError("Failed with IOException", e);
+    }
+  }
+
+  @Test(description = """
+  CharWritable: single chunk
+  """)
+  public void testCase015() {
+    TestableSocket socket;
+    socket = TestableSocket.of("""
+    GET / HTTP/1.1\r
+    Host: www.example.com\r
+    \r
+    """);
+
+    // 80\r\n
+    // [contents]\r\n
+    // 0\r\n
+    // \r\n
+
+    TestingCharWritable writable;
+    writable = TestingCharWritable.ofLength(128);
+
+    String resp01 = """
+    Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+    Content-Type: text/plain\r
+    Transfer-Encoding: chunked\r
+    \r
+    80\r
+    .................................................
+    .................................................
+    1234567890123456789012345678\r
+    0\r
+    \r
+    """;
+
+    try (WayServerLoop http = new WayServerLoop(socket)) {
+      http.bufferSize(128, 128);
+      http.clock(TestingClock.FIXED);
+      http.noteSink(TestingNoteSink.INSTANCE);
+
+      http.parse();
+
+      assertEquals(http.badRequest(), false);
+
+      http.dateNow();
+      http.header(HeaderName.CONTENT_TYPE, "text/plain");
+      http.header(HeaderName.TRANSFER_ENCODING, "chunked");
+      http.send(writable, StandardCharsets.UTF_8);
 
       http.commit();
 
