@@ -30,6 +30,7 @@ RESOLUTION_DIR := work/resolution
 ## Deps versions
 SELFGEN_VERSION := 0.3
 NOTES_VERSION := 0.1
+JACKSON_VERSION := 2.16.1
 SLF4J_VERSION := 1.7.36
 TESTNG_VERSION := 7.9.0
 
@@ -117,6 +118,7 @@ $(eval $(call COMPILE_TASK,,))
 
 ## test compile deps
 TEST_COMPILE_DEPS := $(COMPILE_MARKER)
+TEST_COMPILE_DEPS += $(RESOLUTION_DIR)/com.fasterxml.jackson.core/jackson-core/$(JACKSON_VERSION)
 TEST_COMPILE_DEPS += $(RESOLUTION_DIR)/org.testng/testng/$(TESTNG_VERSION)
 
 include make/test-compile.mk
@@ -146,8 +148,13 @@ TEST_JAVAX_EXPORTS += objectox.css
 TEST_JAVAX_EXPORTS += objectox.html.style
 TEST_JAVAX_EXPORTS += objectox.lang
 
+## test runtime modules
+TEST_JAVAX_MODULES := com.fasterxml.jackson.core
+TEST_JAVAX_MODULES += org.testng
+
 ## test runtime reads
 TEST_JAVAX_READS := java.compiler
+TEST_JAVAX_READS += com.fasterxml.jackson.core
 
 include make/test-run.mk
 $(eval $(call TEST_RUN_TASK,,))

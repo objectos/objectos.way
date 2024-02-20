@@ -20,6 +20,7 @@
 	<classpathentry kind="var" path="M2_REPO/org/slf4j/slf4j-api/1.7.36/slf4j-api-1.7.36.jar"/>
 	<classpathentry kind="var" path="M2_REPO/org/slf4j/slf4j-nop/1.7.36/slf4j-nop-1.7.36.jar"/>
 	<classpathentry kind="var" path="M2_REPO/com/beust/jcommander/1.82/jcommander-1.82.jar"/>
+	<classpathentry kind="var" path="M2_REPO/com/fasterxml/jackson/core/jackson-core/2.16.1/jackson-core-2.16.1.jar" sourcepath="/M2_REPO/com/fasterxml/jackson/core/jackson-core/2.16.1/jackson-core-2.16.1-sources.jar"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/objectos.notes">
 		<attributes>
 			<attribute name="module" value="true"/>

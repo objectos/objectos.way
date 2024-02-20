@@ -55,7 +55,7 @@ public non-sealed abstract class HtmlTemplate extends TemplateBase implements Ch
       StringBuilder out;
       out = new StringBuilder();
 
-      HtmlFormatter.STANDARD.formatTo(html, out);
+      WayHtmlFormatter.INSTANCE.formatTo(html, out);
 
       return out.toString();
     } catch (IOException e) {
@@ -65,7 +65,7 @@ public non-sealed abstract class HtmlTemplate extends TemplateBase implements Ch
 
   @Override
   public final void writeTo(Appendable dest) throws IOException {
-    HtmlFormatter.STANDARD.formatTo(this, dest);
+    WayHtmlFormatter.INSTANCE.formatTo(this, dest);
   }
 
   /**

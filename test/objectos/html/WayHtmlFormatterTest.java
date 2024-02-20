@@ -17,9 +17,12 @@ package objectos.html;
 
 import static org.testng.Assert.assertEquals;
 
+import java.io.IOException;
 import org.testng.annotations.Test;
 
-public class PrettyPrintWriterTest {
+public class WayHtmlFormatterTest {
+
+  private final StringBuilder out = new StringBuilder();
 
   @Test(description = """
   PrettyPrintWriter TC01
@@ -336,10 +339,63 @@ public class PrettyPrintWriterTest {
   }
 
   private void test(HtmlTemplate template, String expected) {
-    String result;
-    result = template.toString();
+    try {
+      StringBuilder out;
+      out = new StringBuilder();
 
-    assertEquals(result, expected);
+      WayHtmlFormatter.INSTANCE.formatTo(template, out);
+
+      assertEquals(out.toString(), expected);
+    } catch (IOException e) {
+      throw new AssertionError("StringBuilder does not throw IOException", e);
+    }
+  }
+
+  @Test
+  public void writeText() {
+    // normal text
+    writeText("abc", "abc");
+
+    // html tokens
+    writeText("if (a < b && c > d) {}", "if (a &lt; b &amp;&amp; c &gt; d) {}");
+
+    // named entities
+    writeText("foo&nbsp;bar", "foo&amp;nbsp;bar");
+    writeText("foo&nb#;bar", "foo&amp;nb#;bar");
+    writeText("foo&nbsp bar", "foo&amp;nbsp bar");
+
+    // decimal entities
+    writeText("foo&#39;bar", "foo&amp;#39;bar");
+    writeText("foo &# 39;", "foo &amp;# 39;");
+
+    // hex entities
+    writeText("foo&#xa9;bar&Xa9;baz", "foo&amp;#xa9;bar&amp;Xa9;baz");
+    writeText("foo &#xxa9;", "foo &amp;#xxa9;");
+
+    // ampersand edge cases
+    writeText("&", "&amp;");
+    writeText("int a = value & MASK;", "int a = value &amp; MASK;");
+
+    // quotes should be left alone
+    writeText("\"", "\"");
+    writeText("'", "'");
+
+    // new lines should be left alone
+    writeText("foo\nbar", "foo\nbar");
+  }
+
+  private void writeText(String source, String expected) {
+    try {
+      out.setLength(0);
+
+      var writer = WayHtmlFormatter.INSTANCE;
+
+      writer.writeText(out, source);
+
+      assertEquals(out.toString(), expected);
+    } catch (IOException e) {
+      throw new AssertionError("StringBuilder does not throw", e);
+    }
   }
 
 }

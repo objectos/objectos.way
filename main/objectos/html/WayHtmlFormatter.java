@@ -27,7 +27,15 @@ import objectos.html.pseudom.HtmlRawText;
 import objectos.html.pseudom.HtmlText;
 import objectos.lang.IterableOnce;
 
-final class HtmlFormatterStandard extends HtmlFormatter {
+/**
+ * The Objectos Way standard {@link HtmlFormatter} implementation.
+ */
+public final class WayHtmlFormatter extends HtmlFormatter {
+
+  /**
+   * The only instance.
+   */
+  public static final WayHtmlFormatter INSTANCE = new WayHtmlFormatter();
 
   private static final Set<String> PHRASING = Set.of(
       StandardElementName.A.getName(),
@@ -65,6 +73,8 @@ final class HtmlFormatterStandard extends HtmlFormatter {
   private static final byte BLOCK_END = 3;
   private static final byte PHRASE = 4;
   private static final byte SCRIPT = 5;
+
+  private WayHtmlFormatter() {}
 
   @Override
   protected final void format(HtmlDocument document, Appendable out) throws IOException {
@@ -141,7 +151,7 @@ final class HtmlFormatterStandard extends HtmlFormatter {
     out.append(elementName);
 
     for (HtmlAttribute attribute : element.attributes()) {
-      elementAttribute(out, attribute);
+      attribute(out, attribute);
     }
 
     out.append('>');
@@ -177,7 +187,7 @@ final class HtmlFormatterStandard extends HtmlFormatter {
     return nextState;
   }
 
-  private void elementAttribute(Appendable out, HtmlAttribute attribute) throws IOException {
+  private void attribute(Appendable out, HtmlAttribute attribute) throws IOException {
     String name;
     name = attribute.name();
 
@@ -197,14 +207,35 @@ final class HtmlFormatterStandard extends HtmlFormatter {
     if (valuesIter.hasNext()) {
       out.append('=');
       out.append('\"');
-      writeAttributeValue(out, valuesIter.next());
+      attributeValue(out, valuesIter.next());
 
       while (valuesIter.hasNext()) {
         out.append(' ');
-        writeAttributeValue(out, valuesIter.next());
+        attributeValue(out, valuesIter.next());
       }
 
       out.append('\"');
+    }
+  }
+
+  private void attributeValue(Appendable out, String value) throws IOException {
+    for (int idx = 0, len = value.length(); idx < len;) {
+      char c;
+      c = value.charAt(idx++);
+
+      switch (c) {
+        case '&' -> idx = ampersand(out, value, idx, len);
+
+        case '<' -> out.append("&lt;");
+
+        case '>' -> out.append("&gt;");
+
+        case '"' -> out.append("&#34;");
+
+        case '\'' -> out.append("&#39;");
+
+        default -> out.append(c);
+      }
     }
   }
 

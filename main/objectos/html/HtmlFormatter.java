@@ -21,8 +21,6 @@ import objectos.lang.object.Check;
 
 public abstract class HtmlFormatter {
 
-  public static final HtmlFormatter STANDARD = new HtmlFormatterStandard();
-
   protected HtmlFormatter() {}
 
   public final void formatTo(Html html, Appendable appendable) throws IOException {
@@ -50,28 +48,7 @@ public abstract class HtmlFormatter {
 
   protected abstract void format(HtmlDocument document, Appendable out) throws IOException;
 
-  protected final void writeAttributeValue(Appendable out, String value) throws IOException {
-    for (int idx = 0, len = value.length(); idx < len;) {
-      char c;
-      c = value.charAt(idx++);
-
-      switch (c) {
-        case '&' -> idx = writeAmpersandAttribute(out, value, idx, len);
-
-        case '<' -> out.append("&lt;");
-
-        case '>' -> out.append("&gt;");
-
-        case '"' -> out.append("&quot;");
-
-        case '\'' -> out.append("&#39;");
-
-        default -> out.append(c);
-      }
-    }
-  }
-
-  private int writeAmpersandAttribute(Appendable out, String value, int idx, int len) throws IOException {
+  protected final int ampersand(Appendable out, String value, int idx, int len) throws IOException {
     enum State {
       START,
       MAYBE_NAMED,
@@ -82,12 +59,15 @@ public abstract class HtmlFormatter {
       TEXT;
     }
 
-    int start = idx;
+    int start;
+    start = idx;
 
-    var state = State.START;
+    State state;
+    state = State.START;
 
     loop: while (idx < len) {
-      char c = value.charAt(idx++);
+      char c;
+      c = value.charAt(idx++);
 
       switch (state) {
         case START -> {

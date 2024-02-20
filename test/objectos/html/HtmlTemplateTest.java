@@ -954,7 +954,7 @@ public class HtmlTemplateTest {
         },
 
         """
-      <div onclick="echo(&quot;a &gt; b&quot;);"></div>
+      <div onclick="echo(&#34;a &gt; b&#34;);"></div>
       """
     );
   }

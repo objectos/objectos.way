@@ -31,7 +31,7 @@ public class HtmlFormatterTest {
     writeAttributeValue("abc", "abc");
 
     // html tokens
-    writeAttributeValue("if (a < b && c > d) {}", "if (a &lt; b &amp;&amp; c &gt; d) {}");
+    writeAttributeValue("if (a < b && c > d) {}", "if (a < b &amp;&amp; c > d) {}");
 
     // named entities
     writeAttributeValue("foo&nbsp;bar", "foo&nbsp;bar");
@@ -50,10 +50,6 @@ public class HtmlFormatterTest {
     writeAttributeValue("&", "&amp;");
     writeAttributeValue("int a = value & MASK;", "int a = value &amp; MASK;");
 
-    // quotes
-    writeAttributeValue("\"", "&quot;");
-    writeAttributeValue("'", "&#39;");
-
     // new lines should be left alone
     writeAttributeValue("foo\nbar", "foo\nbar");
   }
@@ -63,13 +59,26 @@ public class HtmlFormatterTest {
       out.setLength(0);
 
       var writer = new HtmlFormatter() {
+        public final void test(StringBuilder out, String text) throws IOException {
+          for (int idx = 0, len = text.length(); idx < len;) {
+            char c;
+            c = text.charAt(idx++);
+
+            switch (c) {
+              case '&' -> idx = ampersand(out, text, idx, len);
+
+              default -> out.append(c);
+            }
+          }
+        }
+
         @Override
         protected void format(HtmlDocument document, Appendable out) throws IOException {
           // noop
         }
       };
 
-      writer.writeAttributeValue(out, source);
+      writer.test(out, source);
 
       assertEquals(out.toString(), expected);
     } catch (IOException e) {
