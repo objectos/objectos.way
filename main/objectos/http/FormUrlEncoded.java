@@ -38,6 +38,20 @@ public interface FormUrlEncoded {
   }
 
   /**
+   * Parse the specified body as if it is the body of a
+   * {@code application/x-www-form-urlencoded} HTTP message.
+   *
+   * @param body
+   *        the body of the HTTP message to parse
+   *
+   * @throws IOException
+   *         if an I/O error occurs while reading the body
+   */
+  static FormUrlEncoded parse(ServerExchange http) throws IOException, UnsupportedMediaTypeException {
+    return WayFormUrlEncoded.parse(http);
+  }
+
+  /**
    * Returns the first decoded value associated to the specified key or
    * {@code null} if the key is not present.
    *

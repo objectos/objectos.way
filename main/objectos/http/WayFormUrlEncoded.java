@@ -36,6 +36,23 @@ final class WayFormUrlEncoded implements FormUrlEncoded {
     }
   }
 
+  static WayFormUrlEncoded parse(ServerExchange http) throws UnsupportedMediaTypeException, IOException {
+    ServerRequestHeaders headers;
+    headers = http.headers();
+
+    String contentType;
+    contentType = headers.first(HeaderName.CONTENT_TYPE);
+
+    if (!contentType.equals("application/x-www-form-urlencoded")) {
+      throw new UnsupportedMediaTypeException(contentType);
+    }
+
+    Body body;
+    body = http.body();
+
+    return parse(body);
+  }
+
   private static WayFormUrlEncoded parse0(InputStream in) throws IOException {
     GrowableMap<String, String> map;
     map = new GrowableMap<>();

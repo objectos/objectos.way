@@ -21,6 +21,8 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
+import objectos.way.TestingNoteSink;
+import org.testng.Assert;
 import org.testng.annotations.Test;
 
 public class FormUrlEncodedTest {
@@ -50,8 +52,63 @@ public class FormUrlEncodedTest {
     assertEquals(form.get("password"), "bar");
   }
 
+  @Test
+  public void testCase03() throws UnsupportedMediaTypeException, IOException {
+    FormUrlEncoded form;
+    form = parse("""
+    POST /login HTTP/1.1\r
+    Host: www.example.com\r
+    Content-Length: 24\r
+    Content-Type: application/x-www-form-urlencoded\r
+    \r
+    email=user%40example.com""");
+
+    assertEquals(form.size(), 1);
+    assertEquals(form.get("email"), "user@example.com");
+  }
+
+  @Test
+  public void testCase04() throws IOException {
+    try {
+      parse("""
+      POST /login HTTP/1.1\r
+      Host: www.example.com\r
+      Content-Length: 24\r
+      Content-Type: multipart/form-data\r
+      \r
+      email=user%40example.com""");
+
+      Assert.fail("Should have thrown");
+    } catch (UnsupportedMediaTypeException expected) {
+      String message;
+      message = expected.getMessage();
+
+      assertEquals(message, "multipart/form-data");
+    }
+  }
+
   private Body body(String s) {
     return new ThisBody(s);
+  }
+
+  private FormUrlEncoded parse(String request) throws UnsupportedMediaTypeException, IOException {
+    TestableSocket socket;
+    socket = TestableSocket.of(request);
+
+    try (WayServerLoop http = new WayServerLoop(socket)) {
+      http.bufferSize(512, 1024);
+      http.clock(TestingClock.FIXED);
+      http.noteSink(TestingNoteSink.INSTANCE);
+
+      http.parse();
+
+      assertEquals(http.badRequest(), false);
+
+      ServerExchange exchange;
+      exchange = http;
+
+      return FormUrlEncoded.parse(exchange);
+    }
   }
 
   private static class ThisBody implements Body {

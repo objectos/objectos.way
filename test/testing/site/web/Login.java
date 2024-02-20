@@ -18,13 +18,11 @@ package testing.site.web;
 import java.io.IOException;
 import objectos.css.select.IdSelector;
 import objectos.html.HtmlTemplate;
-import objectos.http.Body;
 import objectos.http.FormUrlEncoded;
-import objectos.http.HeaderName;
 import objectos.http.Method;
 import objectos.http.ServerExchange;
-import objectos.http.ServerRequestHeaders;
 import objectos.http.Session;
+import objectos.http.UnsupportedMediaTypeException;
 import objectos.ui.Ui;
 import objectos.ui.UiCommand;
 import objectos.ui.UiPage;
@@ -217,40 +215,24 @@ final class Login extends HtmlTemplate {
   }
 
   private void post0(ServerExchange http) {
-    ServerRequestHeaders headers;
-    headers = http.headers();
-
-    String contentType;
-    contentType = headers.first(HeaderName.CONTENT_TYPE);
-
-    if (!contentType.equals("application/x-www-form-urlencoded")) {
-      http.unsupportedMediaType();
-
-      return;
-    }
-
-    FormUrlEncoded form;
-
     try {
-      Body body;
-      body = http.body();
+      FormUrlEncoded form;
+      form = FormUrlEncoded.parse(http);
 
-      form = FormUrlEncoded.parse(body);
+      String step;
+      step = form.getOrDefault(STEP, "");
+
+      switch (step) {
+        case "one" -> postStep1(http, form);
+
+        case "two" -> postStep2(http, form);
+
+        default -> http.unprocessableContent();
+      }
     } catch (IOException e) {
       http.internalServerError(e);
-
-      return;
-    }
-
-    String step;
-    step = form.getOrDefault(STEP, "");
-
-    switch (step) {
-      case "one" -> postStep1(http, form);
-
-      case "two" -> postStep2(http, form);
-
-      default -> http.unprocessableContent();
+    } catch (UnsupportedMediaTypeException e) {
+      http.unsupportedMediaType();
     }
   }
 
