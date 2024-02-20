@@ -674,7 +674,10 @@ public final class WayServerLoop extends WayServerRequestBody implements ServerL
 
     @Override
     public Appendable append(char c) throws IOException {
-      throw new UnsupportedOperationException("Implement me");
+      String s;
+      s = Character.toString(c);
+
+      return append(s);
     }
 
     @Override

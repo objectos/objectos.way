@@ -181,8 +181,7 @@ public interface ServerExchange {
   }
 
   default void ok(UiCommand command) {
-    String s; // early implicit null-check
-    s = command.toString();
+    Check.notNull(command, "command == null");
 
     status(Status.OK);
 
@@ -190,12 +189,9 @@ public interface ServerExchange {
 
     header(HeaderName.CONTENT_TYPE, "application/json");
 
-    byte[] bytes;
-    bytes = s.getBytes(StandardCharsets.UTF_8);
+    header(HeaderName.TRANSFER_ENCODING, "chunked");
 
-    header(HeaderName.CONTENT_LENGTH, bytes.length);
-
-    send(bytes);
+    send(command, StandardCharsets.UTF_8);
   }
 
   // 302

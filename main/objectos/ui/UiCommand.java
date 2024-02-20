@@ -15,23 +15,69 @@
  */
 package objectos.ui;
 
+import java.io.IOException;
 import objectos.css.select.IdSelector;
 import objectos.html.HtmlTemplate;
+import objectos.lang.CharWritable;
+import objectos.lang.object.Check;
+import objectos.util.collection.UnmodifiableIterator;
+import objectos.util.list.GrowableList;
 
-public class UiCommand {
+public class UiCommand implements CharWritable {
+
+  private final GrowableList<JsonCommand> commands = new GrowableList<>();
 
   public UiCommand() {}
 
   public final UiCommand html(HtmlTemplate html) {
+    Check.notNull(html, "html == null");
+
+    commands.add(JsonCommand.html(html));
+
     return this;
   }
 
   public final UiCommand locationHref(String location) {
+    Check.notNull(location, "location == null");
+
+    commands.add(JsonCommand.locationHref(location));
+
     return this;
   }
 
   public final UiCommand replace(IdSelector id) {
+    Check.notNull(id, "id == null");
+
+    commands.add(JsonCommand.replace(id));
+
     return this;
+  }
+
+  @Override
+  public final void writeTo(Appendable out) throws IOException {
+    out.append('[');
+
+    UnmodifiableIterator<JsonCommand> iter;
+    iter = commands.iterator();
+
+    if (iter.hasNext()) {
+      JsonCommand command;
+      command = iter.next();
+
+      command.writeTo(out);
+
+      while (iter.hasNext()) {
+        out.append(',');
+
+        command = iter.next();
+
+        command.writeTo(out);
+      }
+    }
+
+    out.append(']');
+
+    out.append('\n');
   }
 
 }
