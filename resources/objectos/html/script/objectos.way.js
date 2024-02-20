@@ -40,20 +40,6 @@
 	function submitListener(event) {
 		const target = event.target;
 
-		const dataset = target.dataset;
-
-		const data = dataset.waySubmit;
-
-		if (!data) {
-			return;
-		}
-
-		const way = JSON.parse(data);
-
-		if (!Array.isArray(way)) {
-			return;
-		}
-
 		// verify we have all of the required properties
 		const tagName = target.tagName;
 
@@ -73,7 +59,7 @@
 			return;
 		}
 
-		// this is a way form, we shouldn't submit it
+		// this is possibly a way form, we shouldn't submit it
 		event.preventDefault();
 
 		const xhr = new XMLHttpRequest();
@@ -81,7 +67,19 @@
 		xhr.open(method.toUpperCase(), action, true);
 
 		xhr.onload = (_) => {
-			executeActions(way, xhr.response);
+			const contentType = xhr.getResponseHeader('content-type');
+
+			if (!contentType || !contentType.startsWith("application/json")) {
+				return;
+			}
+
+			const data = JSON.parse(xhr.response);
+
+			if (!Array.isArray(data)) {
+				return;
+			}
+
+			executeActions(data);
 		}
 
 		const formData = new FormData(target);
@@ -94,25 +92,69 @@
 			const params = new URLSearchParams(formData);
 
 			xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-			
+
 			xhr.send(params.toString());
 		}
 	}
 
-	function executeActions(way, resp) {
+	function executeActions(way) {
+		var html;
+
 		for (const obj of way) {
 			const cmd = obj.cmd;
 
-			const args = obj.args;
-
-			if (!cmd || !args) {
+			if (!cmd) {
 				continue;
 			}
 
 			switch (cmd) {
+				case "html": {
+					const value = obj.value;
+
+					if (!value) {
+						break;
+					}
+
+					const parser = new DOMParser();
+
+					html = parser.parseFromString(value, "text/html");
+				}
+
+				case "replace": {
+					const id = obj.id;
+
+					if (!id) {
+						break;
+					}
+
+					if (!html) {
+						break;
+					}
+					
+					const old = document.getElementById(id);
+					
+					if (!old) {
+						break;
+					}
+					
+					const replacement = html.getElementById(id);
+					
+					if (!replacement) {
+						break;
+					}
+					
+					old.replaceWith(replacement);
+				}
+
 				case "replace-class": {
+					const args = obj.args;
+
+					if (!args) {
+						break;
+					}
+
 					if (args.length !== 3) {
-						return;
+						break;
 					}
 
 					const id = args[0];
@@ -120,7 +162,7 @@
 					const el = document.getElementById(id);
 
 					if (!el) {
-						return;
+						break;
 					}
 
 					const classList = el.classList;
@@ -135,8 +177,14 @@
 				}
 
 				case "swap": {
+					const args = obj.args;
+
+					if (!args) {
+						break;
+					}
+
 					if (args.length !== 2) {
-						return;
+						break;
 					}
 
 					const id = args[0];
@@ -144,7 +192,7 @@
 					const el = document.getElementById(id);
 
 					if (!el) {
-						return;
+						break;
 					}
 
 					const mode = args[1];

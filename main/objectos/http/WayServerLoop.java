@@ -151,7 +151,8 @@ public final class WayServerLoop extends WayServerRequestBody implements ServerL
       """);
     }
 
-    setState(_PARSE);
+    // force bits reset
+    bitset = _PARSE;
 
     // request line
 

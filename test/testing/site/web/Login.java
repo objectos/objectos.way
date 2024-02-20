@@ -18,8 +18,6 @@ package testing.site.web;
 import java.io.IOException;
 import objectos.css.select.IdSelector;
 import objectos.html.HtmlTemplate;
-import objectos.html.script.SwapMode;
-import objectos.html.script.WayJs;
 import objectos.http.Body;
 import objectos.http.FormUrlEncoded;
 import objectos.http.HeaderName;
@@ -89,119 +87,114 @@ final class Login extends HtmlTemplate {
 
   @Override
   protected final void definition() {
-    switch (state) {
-      case LOGIN -> renderStep1();
-
-      case PASSWORD -> renderStep2();
-    }
-  }
-
-  private void renderStep1() {
     Ui ui;
     ui = injector.ui(this);
 
     UiPage page;
     page = ui.page();
 
-    page.title("Login Page").render(this::renderForm1);
+    page.title("Login Page").render(this::renderBody);
   }
 
-  private void renderForm1() {
-    WayJs way;
-    way = new WayJs(this);
-
+  private void renderBody() {
     className("bg-gray-100");
 
     div(className("mx-4 flex h-screen flex-col items-center sm:mx-auto"),
         form(className("my-auto w-full bg-white sm:w-auto"), FORM, action("/login"), method("post"),
-            way.submit(
-                way.swap(FORM, SwapMode.OUTER_HTML)
-            ),
+            include(this::renderForm)
+        )
+    );
+  }
 
-            input(name(STEP), type("hidden"), value("one")),
+  private void renderForm() {
+    switch (state) {
+      case LOGIN -> renderForm1();
 
-            div(className("mb-1 p-4 pb-0 text-2xl leading-none tracking-tighter"),
-                t("Log in")
-            ),
+      case PASSWORD -> renderForm2();
+    }
+  }
 
-            div(className("mb-12 px-4 text-gray-700 text-sm leading-none tracking-tighter"),
-                t("Don't have an account? "),
-                a(className("text-blue-700"), href("#"), t("Create a new one"))
-            ),
+  private void renderForm1() {
+    input(name(STEP), type("hidden"), value("one"));
 
-            div(className("relative mb-6"),
-                label(className("absolute top-4 left-4 text-xs text-gray-700"),
-                    forAttr(LOGIN), t("Email address")),
+    div(className("mb-1 p-4 pb-0 text-2xl leading-none tracking-tighter"),
+        t("Log in")
+    );
 
-                input(className("w-full border-y border-t-gray-300 border-b-gray-400 px-4 pt-8 pb-3.5 text-sm"),
-                    name(LOGIN), type("text"), placeholder("user@example.com"), required()
-                )
-            ),
+    div(className("mb-12 px-4 text-gray-700 text-sm leading-none tracking-tighter"),
+        t("Don't have an account? "),
+        a(className("text-blue-700"), href("#"), t("Create a new one"))
+    );
 
-            div(className("flex mb-10 pl-4"),
-                input(name("remember"), type("checkbox")),
+    div(className("relative mb-6"),
+        label(className("absolute top-4 left-4 text-xs text-gray-700"),
+            forAttr(LOGIN), t("Email address")),
 
-                label(className("ml-3 text-sm text-gray-700"), forAttr("remember"), t("Remember me"))
-            ),
+        input(className("w-full border-y border-t-gray-300 border-b-gray-400 px-4 pt-8 pb-3.5 text-sm"),
+            id(LOGIN), name(LOGIN), type("text"), placeholder("user@example.com"), required()
+        )
+    );
 
-            div(className("flex"),
-                div(className("hidden sm:block sm:w-60"), raw("&nbsp;")),
+    div(className("flex mb-10 pl-4"),
+        input(id("remember"), name("remember"), type("checkbox")),
 
-                button(className("flex justify-between h-16 w-full bg-blue-600 px-4 pt-4 text-left text-sm text-white sm:w-60"),
-                    type("submit"),
+        label(className("ml-3 text-sm text-gray-700"), forAttr("remember"), t("Remember me"))
+    );
 
-                    span("Continue"),
+    div(className("flex"),
+        div(className("hidden sm:block sm:w-60"), raw("&nbsp;")),
 
-                    svg(xmlns("http://www.w3.org/2000/svg"), width("24"), height("24"), viewBox("0 0 32 32"),
-                        className("fill-current"),
-                        path(d("M28 16 21 9 19.586 10.414 24.172 15 4 15 4 17 24.172 17 19.586 21.586 21 23 28 16z"))
-                    )
-                )
+        button(className("flex justify-between h-16 w-full bg-blue-600 px-4 pt-4 text-left text-sm text-white sm:w-60"),
+            type("submit"),
+
+            span("Continue"),
+
+            svg(xmlns("http://www.w3.org/2000/svg"), width("24"), height("24"), viewBox("0 0 32 32"),
+                className("fill-current"),
+                path(d("M28 16 21 9 19.586 10.414 24.172 15 4 15 4 17 24.172 17 19.586 21.586 21 23 28 16z"))
             )
         )
     );
   }
 
-  private void renderStep2() {
-    form(className("my-auto w-full bg-white sm:w-auto"), action("/login"), method("post"),
-        input(name(STEP), type("hidden"), value("two")),
+  private void renderForm2() {
+    input(name(STEP), type("hidden"), value("two"));
 
-        input(name(LOGIN), type("hidden"), value(login)),
+    input(name(LOGIN), type("hidden"), value(login));
 
-        div(className("mb-1 p-4 pb-0 text-2xl leading-none tracking-tighter"),
-            t("Log In")
-        ),
+    div(className("mb-1 p-4 pb-0 text-2xl leading-none tracking-tighter"),
+        t("Log In")
+    );
 
-        div(className("mb-12 px-4 text-gray-700 text-sm leading-none tracking-tighter"),
-            t("Logging in as "), t(login), raw("&nbsp;"),
-            a(className("text-blue-700"), href("#"), t("Not you?"))
-        ),
+    div(className("mb-12 px-4 text-gray-700 text-sm leading-none tracking-tighter"),
+        t("Logging in as "), t(login), raw("&nbsp;"),
+        a(className("text-blue-700"), href("#"), t("Not you?"))
+    );
 
-        div(className("relative mb-6"),
-            label(className("absolute top-4 left-4 text-xs text-gray-700"),
-                forAttr(PASSWORD), t("Password")),
+    div(className("relative mb-6"),
+        label(className("absolute top-4 left-4 text-xs text-gray-700"),
+            forAttr(PASSWORD), t("Password")),
 
-            input(className("w-full border-y border-t-gray-300 border-b-gray-400 pt-8 px-4 pb-3.5 text-sm tracking-widest"),
-                id(PASSWORD), type("password")
-            )
-        ),
+        input(className("w-full border-y border-t-gray-300 border-b-gray-400 pt-8 px-4 pb-3.5 text-sm tracking-widest"),
+            id(PASSWORD), name(PASSWORD), type("password")
+        )
+    );
 
-        div(className("flex mb-10 pl-4"),
-            raw("&nbsp;")
-        ),
+    div(className("flex mb-10 pl-4"),
+        raw("&nbsp;")
+    );
 
-        div(className("flex"),
-            div(className("hidden sm:block sm:w-60"), raw("&nbsp;")),
+    div(className("flex"),
+        div(className("hidden sm:block sm:w-60"), raw("&nbsp;")),
 
-            button(className("flex justify-between h-16 w-full bg-blue-600 px-4 pt-4 text-left text-sm text-white sm:w-60"),
-                type("submit"),
+        button(className("flex justify-between h-16 w-full bg-blue-600 px-4 pt-4 text-left text-sm text-white sm:w-60"),
+            type("submit"),
 
-                span("Log in"),
+            span("Log in"),
 
-                svg(xmlns("http://www.w3.org/2000/svg"), width("24"), height("24"), viewBox("0 0 32 32"),
-                    className("fill-current"),
-                    path(d("M28 16 21 9 19.586 10.414 24.172 15 4 15 4 17 24.172 17 19.586 21.586 21 23 28 16z"))
-                )
+            svg(xmlns("http://www.w3.org/2000/svg"), width("24"), height("24"), viewBox("0 0 32 32"),
+                className("fill-current"),
+                path(d("M28 16 21 9 19.586 10.414 24.172 15 4 15 4 17 24.172 17 19.586 21.586 21 23 28 16z"))
             )
         )
     );

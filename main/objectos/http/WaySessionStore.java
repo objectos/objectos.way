@@ -147,7 +147,11 @@ public final class WaySessionStore implements SessionStore {
     String maybe;
     maybe = cookies.get(cookieName); // implicit cookies null check
 
-    return get(maybe);
+    if (maybe == null) {
+      return null;
+    } else {
+      return get(maybe);
+    }
   }
 
   @Override

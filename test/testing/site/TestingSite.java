@@ -203,7 +203,7 @@ public class TestingSite {
         ClassReloader classReloader;
 
         try {
-          classReloader = classReloaderBuilder.of("testing.site.web.UiHandler");
+          classReloader = classReloaderBuilder.of("testing.site.web.TestingHandler");
 
           shutdownHook.addAutoCloseable(classReloader);
         } catch (IOException e) {
