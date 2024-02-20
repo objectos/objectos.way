@@ -303,7 +303,15 @@ final class Login extends HtmlTemplate {
   }
 
   private User authenticate(String login, String password) {
-    return null;
+    if (!"admin".equals(login)) {
+      return null;
+    }
+
+    if (!"admin".equals(password)) {
+      return null;
+    }
+
+    return new User(login);
   }
 
 }

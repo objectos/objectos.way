@@ -15,6 +15,4 @@
  */
 package testing.site.auth;
 
-public class User {
-
-}
+public record User(String login) {}

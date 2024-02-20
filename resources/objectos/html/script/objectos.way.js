@@ -118,6 +118,20 @@
 					const parser = new DOMParser();
 
 					html = parser.parseFromString(value, "text/html");
+					
+					break;
+				}
+
+				case "location-href": {
+					const value = obj.value;
+
+					if (!value) {
+						break;
+					}
+
+					window.location.href = value;
+					
+					break;
 				}
 
 				case "replace": {
@@ -130,20 +144,22 @@
 					if (!html) {
 						break;
 					}
-					
+
 					const old = document.getElementById(id);
-					
+
 					if (!old) {
 						break;
 					}
-					
+
 					const replacement = html.getElementById(id);
-					
+
 					if (!replacement) {
 						break;
 					}
-					
+
 					old.replaceWith(replacement);
+					
+					break;
 				}
 
 				case "replace-class": {
