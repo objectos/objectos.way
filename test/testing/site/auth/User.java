@@ -15,4 +15,4 @@
  */
 package testing.site.auth;
 
-public record User(String login) {}
+public record User(long staffId, String firstName) {}

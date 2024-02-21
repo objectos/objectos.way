@@ -39,7 +39,7 @@ final class Styles {
     styleGen.noteSink(noteSink);
 
     Set<Class<?>> classes;
-    classes = Set.of(Home.class, Login.class);
+    classes = Set.of(Login.class, ShellHeader.class);
 
     String s;
     s = styleGen.generate(classes);

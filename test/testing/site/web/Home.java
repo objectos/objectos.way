@@ -26,15 +26,19 @@ import testing.zite.TestingSiteInjector;
 
 final class Home extends HtmlTemplate {
 
-  private final Ui ui;
+  private final TestingSiteInjector injector;
+
+  private ShellHeader header;
 
   Home(TestingSiteInjector injector) {
-    ui = injector.ui(this);
+    this.injector = injector;
   }
 
   public final void handle(ServerExchange http) {
     http.methodMatrix(Method.GET, this::get);
   }
+
+  // GET
 
   private void get(ServerExchange http) {
     Session session;
@@ -45,13 +49,22 @@ final class Home extends HtmlTemplate {
 
     if (user == null) {
       http.found("/login");
-    } else {
-      http.ok(this);
+
+      return;
     }
+
+    header = new ShellHeader(this);
+
+    header.home();
+
+    http.ok(this);
   }
 
   @Override
   protected final void definition() {
+    Ui ui;
+    ui = injector.ui(this);
+
     UiPage page;
     page = ui.page();
 
@@ -61,7 +74,7 @@ final class Home extends HtmlTemplate {
   }
 
   private void bodyImpl() {
-    h1("Home");
+    header.render();
   }
 
 }

@@ -293,7 +293,7 @@ final class Login extends HtmlTemplate {
       return null;
     }
 
-    return new User(login);
+    return new User(123L, "Someone");
   }
 
 }
