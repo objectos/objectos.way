@@ -212,11 +212,11 @@ abstract class WayStyleGenScanner {
         // u4 bytes;
         case CONSTANT_Float -> bytesIndex += 4;
 
-        // u4 high_bytes; u4 low_bytes;
-        case CONSTANT_Long -> bytesIndex += 8;
+        // u4 high_bytes; u4 low_bytes; takes 2 entries
+        case CONSTANT_Long -> { bytesIndex += 8; index++; }
 
-        // u4 high_bytes; u4 low_bytes;
-        case CONSTANT_Double -> bytesIndex += 8;
+        // u4 high_bytes; u4 low_bytes; takes 2 entries
+        case CONSTANT_Double -> { bytesIndex += 8; index++; }
 
         // u2 name_index;
         case CONSTANT_Class -> bytesIndex += 2;

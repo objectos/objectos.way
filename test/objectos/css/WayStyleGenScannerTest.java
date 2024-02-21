@@ -52,6 +52,25 @@ public class WayStyleGenScannerTest {
     test(Subject.class, "m-0", "block", "leading-3");
   }
 
+  @Test(description = "long literal")
+  public void testCase03() {
+    class Subject extends HtmlTemplate {
+      @Override
+      protected final void definition() {
+        div(
+            className("m-0"),
+            className("block"),
+            className("leading-3")
+        );
+        foo(123L);
+      }
+
+      private void foo(long l) {}
+    }
+
+    test(Subject.class, "m-0", "block", "leading-3");
+  }
+
   private void test(Class<?> type, String... expected) {
     List<String> result;
     result = new ArrayList<>();
