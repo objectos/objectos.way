@@ -1,3 +1,4 @@
+/node_modules/
 test-output/
 /release.props
 /eclipse-bin/

@@ -1,0 +1,8 @@
+{
+  "name": "objectos-way",
+  "devDependencies": {
+    "chai": "4.4.1",
+    "mocha": "10.3.0",
+    "sinon": "17.0.1"
+  }
+}

@@ -199,6 +199,14 @@ $(DEV_MODULE_PATH): $(DEV_DEPS)
 	cat $^ | sort -u | paste --delimiters='$(MODULE_PATH_SEPARATOR)' --serial > $@
 
 #
+# way@npm-install
+#
+
+.PHONY: npm-install
+npm-install:
+	npm install
+
+#
 # way@jar
 #
 

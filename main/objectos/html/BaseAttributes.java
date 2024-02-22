@@ -355,6 +355,32 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
   }
 
   /**
+   * Generates the {@code data-frame} attribute with the specified value.
+   *
+   * @param value
+   *        the value of the attribute
+   *
+   * @return an instruction representing this attribute.
+   */
+  public final Api.GlobalAttribute dataFrame(String value) {
+    attribute(AttributeName.DATA_FRAME, value);
+    return Api.ATTRIBUTE;
+  }
+
+  /**
+   * Generates the {@code data-frame-value} attribute with the specified value.
+   *
+   * @param value
+   *        the value of the attribute
+   *
+   * @return an instruction representing this attribute.
+   */
+  public final Api.GlobalAttribute dataFrameValue(String value) {
+    attribute(AttributeName.DATA_FRAME_VALUE, value);
+    return Api.ATTRIBUTE;
+  }
+
+  /**
    * Generates the {@code defer} boolean attribute.
    *
    * @return an instruction representing this attribute.

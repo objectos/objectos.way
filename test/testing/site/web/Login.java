@@ -97,6 +97,9 @@ final class Login extends HtmlTemplate {
   private void renderBody() {
     className("bg-gray-100");
 
+    dataFrame("root");
+    dataFrameValue("login");
+
     div(className("mx-4 flex h-screen flex-col items-center sm:mx-auto"),
         form(className("my-auto w-full bg-white sm:w-auto"), FORM, action("/login"), method("post"),
             include(this::renderForm)
@@ -250,8 +253,6 @@ final class Login extends HtmlTemplate {
 
     command.html(this);
 
-    command.replace(FORM);
-
     http.ok(command);
   }
 
@@ -277,8 +278,6 @@ final class Login extends HtmlTemplate {
       command.locationHref("/");
     } else {
       command.html(this);
-
-      command.replace(FORM);
     }
 
     http.ok(command);
