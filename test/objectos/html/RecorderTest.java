@@ -62,7 +62,7 @@ public class RecorderTest {
         html,
 
         ByteProto.MARKED5,
-        (byte) StandardAttributeName.LANG.ordinal(),
+        (byte) AttributeName.LANG.index(),
         Bytes.encodeInt0(0),
         Bytes.encodeInt1(0),
         ByteProto.INTERNAL5,
@@ -98,13 +98,13 @@ public class RecorderTest {
         html,
 
         ByteProto.MARKED5,
-        (byte) StandardAttributeName.CLASS.ordinal(),
+        (byte) AttributeName.CLASS.index(),
         Bytes.encodeInt0(0),
         Bytes.encodeInt1(0),
         ByteProto.INTERNAL5,
 
         ByteProto.MARKED5,
-        (byte) StandardAttributeName.LANG.ordinal(),
+        (byte) AttributeName.LANG.index(),
         Bytes.encodeInt0(1),
         Bytes.encodeInt1(1),
         ByteProto.INTERNAL5,
@@ -220,7 +220,7 @@ public class RecorderTest {
         Bytes.encodeInt2(18),
 
         ByteProto.MARKED5,
-        (byte) StandardAttributeName.CHARSET.ordinal(),
+        (byte) AttributeName.CHARSET.index(),
         Bytes.encodeInt0(0),
         Bytes.encodeInt1(0),
         ByteProto.INTERNAL5,
@@ -462,11 +462,11 @@ public class RecorderTest {
     html.elementBegin(StandardElementName.NAV);
     html.elementEnd();
     // template end
-    
+
     html.elementBegin(StandardElementName.BODY);
     html.elementValue(BaseApi.FRAGMENT);
     html.elementEnd();
-    
+
     html.compilationEnd();
     */
 
@@ -549,13 +549,13 @@ public class RecorderTest {
         html,
 
         ByteProto.MARKED5,
-        (byte) StandardAttributeName.TYPE.ordinal(),
+        (byte) AttributeName.TYPE.index(),
         Bytes.encodeInt0(0),
         Bytes.encodeInt0(0),
         ByteProto.INTERNAL5,
 
         ByteProto.MARKED3,
-        (byte) StandardAttributeName.REQUIRED.ordinal(),
+        (byte) AttributeName.REQUIRED.index(),
         ByteProto.INTERNAL3,
 
         ByteProto.ELEMENT,

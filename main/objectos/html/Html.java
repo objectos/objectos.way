@@ -694,7 +694,7 @@ public final class Html extends BaseElements {
 
       case ByteProto.ATTRIBUTE_CLASS -> {
         int ordinal;
-        ordinal = StandardAttributeName.CLASS.ordinal();
+        ordinal = AttributeName.CLASS.index();
 
         attr = Bytes.encodeInt0(ordinal);
 
@@ -705,7 +705,7 @@ public final class Html extends BaseElements {
 
       case ByteProto.ATTRIBUTE_ID -> {
         int ordinal;
-        ordinal = StandardAttributeName.ID.ordinal();
+        ordinal = AttributeName.ID.index();
 
         attr = Bytes.encodeInt0(ordinal);
 
@@ -729,7 +729,7 @@ public final class Html extends BaseElements {
     int ordinal;
     ordinal = Bytes.decodeInt(attr);
 
-    attribute.name = AttributeName.getByCode(ordinal);
+    attribute.name = WayAttributeName.get(ordinal);
 
     // attribute value
     String value;
@@ -798,7 +798,7 @@ public final class Html extends BaseElements {
     attributeName = attribute.name;
 
     int attributeCode;
-    attributeCode = attributeName.getCode();
+    attributeCode = attributeName.index();
 
     byte currentAttr;
     currentAttr = Bytes.encodeInt0(attributeCode);
@@ -878,7 +878,7 @@ public final class Html extends BaseElements {
 
         case ByteProto.ATTRIBUTE_CLASS -> {
           int ordinal;
-          ordinal = StandardAttributeName.CLASS.ordinal();
+          ordinal = AttributeName.CLASS.index();
 
           byte attr;
           attr = Bytes.encodeInt0(ordinal);
@@ -894,7 +894,7 @@ public final class Html extends BaseElements {
 
         case ByteProto.ATTRIBUTE_ID -> {
           int ordinal;
-          ordinal = StandardAttributeName.ID.ordinal();
+          ordinal = AttributeName.ID.index();
 
           byte attr;
           attr = Bytes.encodeInt0(ordinal);

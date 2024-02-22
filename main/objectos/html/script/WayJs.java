@@ -76,34 +76,6 @@ public final class WayJs extends HtmlComponent {
     return dataWayClick(json.toString());
   }
 
-  public final Element submit(Command... commands) {
-    Check.notNull(commands, "commands == null");
-
-    StringBuilder json;
-    json = new StringBuilder();
-
-    json.append('[');
-
-    if (commands.length > 0) {
-      Command c;
-      c = commands[0];
-
-      c.acceptJsonBuilder(json);
-
-      for (int i = 1; i < commands.length; i++) {
-        json.append(',');
-
-        c = commands[i];
-
-        c.acceptJsonBuilder(json);
-      }
-    }
-
-    json.append(']');
-
-    return dataWaySubmit(json.toString());
-  }
-
   public final Command replaceClass(ExternalAttribute.Id id,
                                     ExternalAttribute.StyleClass from,
                                     ExternalAttribute.StyleClass to) {

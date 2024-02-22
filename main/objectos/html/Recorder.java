@@ -80,22 +80,30 @@ class Recorder {
   }
 
   final void attribute(AttributeName name) {
-    int ordinal;
-    ordinal = name.getCode();
+    int index;
+    index = name.index();
+
+    if (index < 0) {
+      throw new UnsupportedOperationException("Custom attribute name");
+    }
 
     mainAdd(
         ByteProto.ATTRIBUTE0,
 
         // name
-        Bytes.encodeInt0(ordinal),
+        Bytes.encodeInt0(index),
 
         ByteProto.INTERNAL3
     );
   }
 
   final void attribute(AttributeName name, String value) {
-    int ordinal;
-    ordinal = name.getCode();
+    int index;
+    index = name.index();
+
+    if (index < 0) {
+      throw new UnsupportedOperationException("Custom attribute name");
+    }
 
     int object;
     object = objectAdd(value);
@@ -104,7 +112,7 @@ class Recorder {
         ByteProto.ATTRIBUTE1,
 
         // name
-        Bytes.encodeInt0(ordinal),
+        Bytes.encodeInt0(index),
 
         // value
         Bytes.encodeInt0(object),

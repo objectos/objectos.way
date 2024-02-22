@@ -24,7 +24,7 @@ public class StandardAttributeNameTest {
   @Test
   public void canBeEncoded_WithSingleByte() {
     int size;
-    size = StandardAttributeName.size();
+    size = WayAttributeName.size();
 
     int max;
     max = 1 << 8;

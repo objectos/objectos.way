@@ -20,7 +20,7 @@ import java.util.Set;
 
 enum Ambiguous {
 
-  FORM(StandardAttributeName.FORM, StandardElementName.FORM) {
+  FORM(AttributeName.FORM, StandardElementName.FORM) {
     static final Set<StandardElementName> ELEMENTS = EnumSet.of(
         StandardElementName.SELECT, StandardElementName.TEXTAREA
     );
@@ -31,14 +31,14 @@ enum Ambiguous {
     }
   },
 
-  LABEL(StandardAttributeName.LABEL, StandardElementName.LABEL) {
+  LABEL(AttributeName.LABEL, StandardElementName.LABEL) {
     @Override
     public final boolean isAttributeOf(ElementName element) {
       return element == StandardElementName.OPTION;
     }
   },
 
-  TITLE(StandardAttributeName.TITLE, StandardElementName.TITLE) {
+  TITLE(AttributeName.TITLE, StandardElementName.TITLE) {
     @Override
     public final boolean isAttributeOf(ElementName element) {
       return element != StandardElementName.HEAD;
@@ -53,8 +53,8 @@ enum Ambiguous {
 
   private final int elementByteCode;
 
-  private Ambiguous(StandardAttributeName attribute, StandardElementName element) {
-    this.attributeByteCode = attribute.getCode();
+  private Ambiguous(AttributeName attribute, StandardElementName element) {
+    this.attributeByteCode = attribute.index();
 
     this.element = element;
 

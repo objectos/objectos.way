@@ -36,15 +36,7 @@ public sealed abstract class TemplateBase
   protected final Api.Element dataWayClick(String text) {
     Check.notNull(text, "text == null");
 
-    $html().attribute(CustomAttributeName.DATA_WAY_CLICK, text);
-
-    return Api.ELEMENT;
-  }
-
-  protected final Api.Element dataWaySubmit(String text) {
-    Check.notNull(text, "text == null");
-
-    $html().attribute(CustomAttributeName.DATA_WAY_SUBMIT, text);
+    $html().attribute(AttributeName.DATA_WAY_CLICK, text);
 
     return Api.ELEMENT;
   }

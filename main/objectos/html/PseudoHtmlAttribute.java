@@ -34,12 +34,12 @@ final class PseudoHtmlAttribute
 
   @Override
   public final String name() {
-    return name.getName();
+    return name.name();
   }
 
   @Override
   public final boolean isBoolean() {
-    return name.getKind() == AttributeKind.BOOLEAN;
+    return name.booleanAttribute();
   }
 
   @Override

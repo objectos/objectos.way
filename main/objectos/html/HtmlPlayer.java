@@ -129,25 +129,6 @@ final class HtmlPlayer {
     };
   }
 
-  @SuppressWarnings("unused")
-  private String processAttributeValue(AttributeName name, String attributeValue) {
-    var result = attributeValue;
-
-    if (name == CustomAttributeName.PATH_TO) {
-      var pathName = $pathName();
-
-      if (pathName != null) {
-        result = processHref(pathName, attributeValue);
-      }
-    }
-
-    return result;
-  }
-
-  private String $pathName() {
-    throw new UnsupportedOperationException("Implement me");
-  }
-
   private StringBuilder stringBuilder() {
     if (stringBuilder == null) {
       stringBuilder = new StringBuilder();
