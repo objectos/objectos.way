@@ -9,8 +9,9 @@ suite("Frame test", function() {
 		this.server.restore();
 	});
 
-	test("frame contents should be replaced", function() {
-		make("<form id='form' data-frame='form' data-frame-value='one' method='post' action='/test'><button id='btn' type='submit'>Before</button></form>");
+	test("single data-frame: same name different value", function() {
+		make("<form data-frame='x' data-frame-value='1' method='post' action='/test'><button id='b' type='submit'>Before</button></form>");
+		const frame2 = makeElement("<form data-frame='x' data-frame-value='2' method='post' action='/test'><button type='submit'>After</button></form>");
 
 		this.server.respondWith(
 			"POST",
@@ -20,23 +21,18 @@ suite("Frame test", function() {
 			JSON.stringify([
 				{
 					cmd: "html",
-					value: "<form id='form' data-frame='form' data-frame-value='two' method='post' action='/test'><button id='btn' type='submit'>After</button></form>"
-				},
-				{ cmd: "replace", id: "form" }
+					value: frame2.outerHTML
+				}
 			])
 		]);
 
-		let btn = document.getElementById("btn");
-
-		assert.equal(btn.innerHTML, "Before");
+		const btn = byId("b");
 
 		btn.click();
 
 		this.server.respond();
 
-		btn = document.getElementById("btn");
-
-		assert.equal(btn.innerHTML, "After");
+		assert.equal(workArea().innerHTML, frame2.outerHTML);
 	});
 
 });

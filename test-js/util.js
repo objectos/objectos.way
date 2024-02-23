@@ -1,19 +1,33 @@
 // based on https://github.com/bigskysoftware/idiomorph/blob/8e40c42cc573609eb6863e72fa3403574974dd7d/test/test-utilities.js
 
-function make(htmlStr) {
-	const range = document.createRange();
+function byId(id) {
+	return document.getElementById(id);
+}
 
-	const fragment = range.createContextualFragment(htmlStr);
+function innerHTML(id) {
+	const element = document.getElementById(id);
 
-	const children = fragment.children;
+	return element.innerHTML;
+}
 
-	const element = children[0];
-	
-	const wa = getWorkArea();
-	
+function make(html) {
+	const element = makeElement(html);
+
+	const wa = workArea();
+
 	wa.appendChild(element);
 
 	return element;
+}
+
+function makeElement(html) {
+	const range = document.createRange();
+
+	const fragment = range.createContextualFragment(html);
+
+	const children = fragment.children;
+
+	return children[0];
 }
 
 function makeServer() {
@@ -24,16 +38,16 @@ function makeServer() {
 	return server;
 }
 
-function getWorkArea() {
+function workArea() {
 	return document.getElementById("work-area");
 }
 
 function clearWorkArea() {
-	getWorkArea().innerHTML = "";
+	workArea().innerHTML = "";
 }
 
 function print(elt) {
 	let text = document.createTextNode(elt.outerHTML + "\n\n");
-	getWorkArea().appendChild(text);
+	workArea().appendChild(text);
 	return elt;
 }

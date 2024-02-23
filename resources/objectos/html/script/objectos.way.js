@@ -109,16 +109,8 @@
 
 			switch (cmd) {
 				case "html": {
-					const value = obj.value;
+					executeHtml(obj.value);
 
-					if (!value) {
-						break;
-					}
-
-					const parser = new DOMParser();
-
-					html = parser.parseFromString(value, "text/html");
-					
 					break;
 				}
 
@@ -130,7 +122,7 @@
 					}
 
 					window.location.href = value;
-					
+
 					break;
 				}
 
@@ -158,7 +150,7 @@
 					}
 
 					old.replaceWith(replacement);
-					
+
 					break;
 				}
 
@@ -224,6 +216,83 @@
 			}
 
 		}
+	}
+
+	function executeHtml(value) {
+		if (!value) {
+			return;
+		}
+
+		const parser = new DOMParser();
+
+		const newContent = parser.parseFromString(value, "text/html");
+
+		const newFrames = newContent.querySelectorAll("[data-frame]");
+
+		const newNameMap = new Map();
+
+		for (const frame of newFrames) {
+			const name = frameName(frame);
+
+			if (name) {
+				newNameMap.set(name, frame);
+			}
+		}
+
+		const frames = document.querySelectorAll("[data-frame]");
+
+		const replaced = new Set();
+
+		for (const frame of frames) {
+			const name = frameName(frame);
+
+			if (!name) {
+				continue;
+			}
+
+			const maybe = newNameMap.get(name);
+
+			if (!maybe) {
+				// this frame does not exist in the new data
+				frame.remove();
+			}
+
+			const newFrame = maybe;
+
+			const oldValue = frameValue(frame);
+
+			const newValue = frameValue(newFrame);
+
+			if (!oldValue || !newValue) {
+				continue;
+			}
+
+			if (oldValue !== newValue) {
+				replaced.add(frame);
+
+				frame.replaceWith(newFrame);
+			}
+		}
+	}
+
+	function frameName(frame) {
+		const dataset = frame.dataset;
+
+		if (!dataset) {
+			return null;
+		}
+
+		return dataset.frame;
+	}
+
+	function frameValue(frame) {
+		const dataset = frame.dataset;
+
+		if (!dataset) {
+			return null;
+		}
+
+		return dataset.frameValue;
 	}
 
 	function domLoaded() {
