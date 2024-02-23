@@ -24,7 +24,6 @@ import objectos.http.ServerExchange;
 import objectos.http.Session;
 import objectos.http.UnsupportedMediaTypeException;
 import objectos.ui.Ui;
-import objectos.ui.UiCommand;
 import objectos.ui.UiPage;
 import testing.site.auth.User;
 import testing.zite.TestingSiteInjector;
@@ -116,6 +115,9 @@ final class Login extends HtmlTemplate {
   }
 
   private void renderForm1() {
+    dataFrame("form");
+    dataFrameValue("1");
+
     input(name(STEP), type("hidden"), value("one"));
 
     div(className("mb-1 p-4 pb-0 text-2xl leading-none tracking-tighter"),
@@ -159,6 +161,9 @@ final class Login extends HtmlTemplate {
   }
 
   private void renderForm2() {
+    dataFrame("form");
+    dataFrameValue("2");
+
     input(name(STEP), type("hidden"), value("two"));
 
     input(name(LOGIN), type("hidden"), value(login));
@@ -248,12 +253,7 @@ final class Login extends HtmlTemplate {
 
     state = FormState.PASSWORD;
 
-    UiCommand command;
-    command = new UiCommand();
-
-    command.html(this);
-
-    http.ok(command);
+    http.ok(this);
   }
 
   private void postStep2(ServerExchange http, FormUrlEncoded form) {
@@ -266,21 +266,16 @@ final class Login extends HtmlTemplate {
     User user;
     user = authenticate(login, password);
 
-    UiCommand command;
-    command = new UiCommand();
-
     if (user != null) {
       Session session;
       session = http.session();
 
       session.put(User.class, user);
 
-      command.locationHref("/");
+      http.found("/");
     } else {
-      command.html(this);
+      http.ok(this);
     }
-
-    http.ok(command);
   }
 
   private User authenticate(String login, String password) {

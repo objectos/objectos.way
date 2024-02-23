@@ -134,6 +134,15 @@ public class TestingSite {
     WayUi uiBinder;
     uiBinder = new WayUi();
 
+    uiBinder.onHeadStart(html -> {
+      html.meta(html.charset("utf-8"));
+      html.meta(html.httpEquiv("x-ua-compatible"), html.content("ie=edge"));
+      html.meta(html.name("viewport"), html.content("width=device-width, initial-scale=1"));
+      html.script(html.src("/way.js"));
+      html.link(html.rel("stylesheet"), html.type("text/css"), html.href("/preflight.css"));
+      html.link(html.rel("stylesheet"), html.type("text/css"), html.href("/styles.css"));
+    });
+
     // WebResources
 
     WayWebResources webResources;

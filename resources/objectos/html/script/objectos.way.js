@@ -146,9 +146,8 @@
 	}
 
 	function executeActions(way) {
-		var html;
-
 		for (const obj of way) {
+			
 			const cmd = obj.cmd;
 
 			if (!cmd) {
@@ -158,46 +157,6 @@
 			switch (cmd) {
 				case "html": {
 					executeHtml(obj.value);
-
-					break;
-				}
-
-				case "location-href": {
-					const value = obj.value;
-
-					if (!value) {
-						break;
-					}
-
-					window.location.href = value;
-
-					break;
-				}
-
-				case "replace": {
-					const id = obj.id;
-
-					if (!id) {
-						break;
-					}
-
-					if (!html) {
-						break;
-					}
-
-					const old = document.getElementById(id);
-
-					if (!old) {
-						break;
-					}
-
-					const replacement = html.getElementById(id);
-
-					if (!replacement) {
-						break;
-					}
-
-					old.replaceWith(replacement);
 
 					break;
 				}
@@ -228,36 +187,6 @@
 					const classB = args[2];
 
 					classList.replace(classA, classB);
-
-					break;
-				}
-
-				case "swap": {
-					const args = obj.args;
-
-					if (!args) {
-						break;
-					}
-
-					if (args.length !== 2) {
-						break;
-					}
-
-					const id = args[0];
-
-					const el = document.getElementById(id);
-
-					if (!el) {
-						break;
-					}
-
-					const mode = args[1];
-
-					switch (mode) {
-						case "innerHTML": { el.innerHTML = resp; }
-
-						case "outerHTML": { el.outerHTML = resp; }
-					}
 
 					break;
 				}

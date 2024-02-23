@@ -27,7 +27,7 @@ public class UiCommandTest {
   private final IdSelector FOO = IdSelector.of("foo");
 
   @Test(description = """
-  Replace
+  Html
   """)
   public void testCase01() {
     test(
@@ -38,24 +38,10 @@ public class UiCommandTest {
                 doctype();
                 body(FOO);
               }
-            })
-            .replace(FOO),
+            }),
 
         """
-        [{"cmd":"html","value":"<!DOCTYPE html><body id='foo'></body>"},{"cmd":"replace","id":"foo"}]
-        """
-    );
-  }
-
-  @Test(description = """
-  location-href
-  """)
-  public void testCase02() {
-    test(
-        new UiCommand().locationHref("/"),
-
-        """
-        [{"cmd":"location-href","value":"/"}]
+        [{"cmd":"html","value":"<!DOCTYPE html><body id='foo'></body>"}]
         """
     );
   }

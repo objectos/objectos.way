@@ -16,7 +16,6 @@
 package objectos.ui;
 
 import java.io.IOException;
-import objectos.css.select.IdSelector;
 import objectos.html.HtmlTemplate;
 import objectos.lang.CharWritable;
 import objectos.lang.object.Check;
@@ -33,22 +32,6 @@ public class UiCommand implements CharWritable {
     Check.notNull(html, "html == null");
 
     commands.add(JsonCommand.html(html));
-
-    return this;
-  }
-
-  public final UiCommand locationHref(String location) {
-    Check.notNull(location, "location == null");
-
-    commands.add(JsonCommand.locationHref(location));
-
-    return this;
-  }
-
-  public final UiCommand replace(IdSelector id) {
-    Check.notNull(id, "id == null");
-
-    commands.add(JsonCommand.replace(id));
 
     return this;
   }

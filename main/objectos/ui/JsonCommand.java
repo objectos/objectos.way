@@ -16,7 +16,6 @@
 package objectos.ui;
 
 import java.io.IOException;
-import objectos.css.select.IdSelector;
 import objectos.html.HtmlTemplate;
 
 abstract class JsonCommand {
@@ -33,36 +32,6 @@ abstract class JsonCommand {
         out.append('"');
         JsonHtmlFormatter.INSTANCE.formatTo(html, out);
         out.append('"');
-        out.append('}');
-      }
-    };
-  }
-
-  public static JsonCommand locationHref(String location) {
-    return new JsonCommand() {
-      @Override
-      final void writeTo(Appendable out) throws IOException {
-        out.append('{');
-        writeCommandName(out, "location-href");
-        out.append(',');
-        writeStringLiteral(out, "value");
-        out.append(':');
-        writeStringLiteral(out, location);
-        out.append('}');
-      }
-    };
-  }
-
-  public static JsonCommand replace(IdSelector id) {
-    return new JsonCommand() {
-      @Override
-      final void writeTo(Appendable out) throws IOException {
-        out.append('{');
-        writeCommandName(out, "replace");
-        out.append(',');
-        writeStringLiteral(out, "id");
-        out.append(':');
-        writeStringLiteral(out, id.id());
         out.append('}');
       }
     };
