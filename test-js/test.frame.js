@@ -241,4 +241,25 @@ suite("Frame test", function() {
 		assert.equal(workArea().innerHTML, page2.outerHTML);
 	});
 
+	test("accept text/html response", function() {
+		make("<form data-frame='x' data-frame-value='1' method='post' action='/test'><button id='b' type='submit'>Before</button></form>");
+		const frame2 = makeElement("<form data-frame='x' data-frame-value='2' method='post' action='/test'><button type='submit'>After</button></form>");
+
+		this.server.respondWith(
+			"POST",
+			"/test", [
+			200,
+			{ "Content-Type": "text/html" },
+			frame2.outerHTML
+		]);
+
+		const btn = byId("b");
+
+		btn.click();
+
+		this.server.respond();
+
+		assert.equal(workArea().innerHTML, frame2.outerHTML);
+	});
+
 });

@@ -67,19 +67,29 @@
 		xhr.open(method.toUpperCase(), action, true);
 
 		xhr.onload = (_) => {
+			if (xhr.status !== 200) {
+				return;
+			}
+
 			const contentType = xhr.getResponseHeader('content-type');
 
-			if (!contentType || !contentType.startsWith("application/json")) {
+			if (!contentType) {
 				return;
 			}
 
-			const data = JSON.parse(xhr.response);
+			if (contentType.startsWith("application/json")) {
+				const data = JSON.parse(xhr.response);
 
-			if (!Array.isArray(data)) {
-				return;
+				if (!Array.isArray(data)) {
+					return;
+				}
+
+				executeActions(data);
 			}
 
-			executeActions(data);
+			else if (contentType.startsWith("text/html")) {
+				executeHtml(xhr.response);
+			}
 		}
 
 		const formData = new FormData(target);
