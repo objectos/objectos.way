@@ -20,21 +20,41 @@
 	function clickListener(event) {
 		const target = event.target;
 
-		const dataset = target.dataset;
+		if (target instanceof HTMLAnchorElement) {
 
-		const data = dataset.wayClick;
+			if (target.origin !== window.location.origin) {
+				return;
+			}
 
-		if (!data) {
-			return;
+			if (target.pathname === window.location.pathname) {
+				return;
+			}
+
+			event.preventDefault();
+
+			executeLocation(target.href);
+
 		}
 
-		const way = JSON.parse(data);
+		else {
 
-		if (!Array.isArray(way)) {
-			return;
+			const dataset = target.dataset;
+
+			const data = dataset.wayClick;
+
+			if (!data) {
+				return;
+			}
+
+			const way = JSON.parse(data);
+
+			if (!Array.isArray(way)) {
+				return;
+			}
+
+			executeActions(way);
+
 		}
-
-		executeActions(way);
 	}
 
 	function submitListener(event) {
@@ -62,35 +82,7 @@
 		// this is possibly a way form, we shouldn't submit it
 		event.preventDefault();
 
-		const xhr = new XMLHttpRequest();
-
-		xhr.open(method.toUpperCase(), action, true);
-
-		xhr.onload = (_) => {
-			if (xhr.status !== 200) {
-				return;
-			}
-
-			const contentType = xhr.getResponseHeader('content-type');
-
-			if (!contentType) {
-				return;
-			}
-
-			if (contentType.startsWith("application/json")) {
-				const data = JSON.parse(xhr.response);
-
-				if (!Array.isArray(data)) {
-					return;
-				}
-
-				executeActions(data);
-			}
-
-			else if (contentType.startsWith("text/html")) {
-				executeHtml(xhr.response);
-			}
-		}
+		const xhr = createXhr(method, action);
 
 		const formData = new FormData(target);
 
@@ -105,6 +97,52 @@
 
 			xhr.send(params.toString());
 		}
+	}
+
+	function createXhr(method, url) {
+		const xhr = new XMLHttpRequest();
+
+		xhr.open(method.toUpperCase(), url, true);
+
+		xhr.onload = (_) => {
+			if (xhr.status === 200) {
+
+				const contentType = xhr.getResponseHeader("content-type");
+
+				if (!contentType) {
+					return;
+				}
+
+				if (contentType.startsWith("application/json")) {
+					const data = JSON.parse(xhr.response);
+
+					if (!Array.isArray(data)) {
+						return;
+					}
+
+					executeActions(data);
+				}
+
+				else if (contentType.startsWith("text/html")) {
+					executeHtml(xhr.response);
+				}
+
+			}
+
+			else if (xhr.status === 302) {
+
+				const location = xhr.getResponseHeader("location")
+
+				if (!location) {
+					return;
+				}
+
+				executeLocation(location);
+
+			}
+		}
+
+		return xhr;
 	}
 
 	function executeActions(way) {
@@ -260,15 +298,10 @@
 				continue;
 			}
 
-			// not sure if we should iterate over replaced instead
-			let parent = frame.parentElement;
-
-			while (parent) {
-				if (replaced.has(parent)) {
+			for (const parent of replaced) {
+				if (parent.contains(frame)) {
 					continue outer;
 				}
-
-				parent = parent.parentElement;
 			}
 
 			const maybe = newNameMap.get(name);
@@ -294,6 +327,12 @@
 				frame.replaceWith(newFrame);
 			}
 		}
+	}
+
+	function executeLocation(location) {
+		const xhr = createXhr("GET", location);
+
+		xhr.send();
 	}
 
 	function frameName(frame) {
