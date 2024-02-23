@@ -243,11 +243,22 @@
 
 		const replaced = new Set();
 
-		for (const frame of frames) {
+		outer: for (const frame of frames) {
 			const name = frameName(frame);
 
 			if (!name) {
 				continue;
+			}
+
+			// not sure if we should iterate over replaced instead
+			let parent = frame.parentElement;
+
+			while (parent) {
+				if (replaced.has(parent)) {
+					continue outer;
+				}
+
+				parent = parent.parentElement;
 			}
 
 			const maybe = newNameMap.get(name);
