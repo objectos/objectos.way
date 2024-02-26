@@ -147,7 +147,7 @@
 
 	function executeActions(way) {
 		for (const obj of way) {
-			
+
 			const cmd = obj.cmd;
 
 			if (!cmd) {
@@ -204,6 +204,15 @@
 
 		const newContent = parser.parseFromString(value, "text/html");
 
+		// handle title
+
+		const newTitle = newContent.querySelector("title");
+
+		if (newTitle) {
+			document.title = newTitle.innerText;
+		}
+
+		// handle frames
 		const newFrames = newContent.querySelectorAll("[data-frame]");
 
 		const newNameMap = new Map();
@@ -238,6 +247,8 @@
 			if (!maybe) {
 				// this frame does not exist in the new data
 				frame.remove();
+
+				continue;
 			}
 
 			const newFrame = maybe;

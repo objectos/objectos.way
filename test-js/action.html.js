@@ -283,4 +283,22 @@ suite("Action::html test", function() {
 		assert.equal(workArea().innerHTML, frame2.outerHTML);
 	});
 
+
+	test("head/title update", function() {
+		make("<div data-frame='x' data-frame-value='x'><a id='a' href='/foo'>Foo</a></div>");
+		const page2 = makeElement("<html><head><title>Updated page title</title></head></html>");
+
+		assert.notEqual(document.title, "Updated page title");
+
+		this.server.respondWith("GET", "/foo", [200, { "Content-Type": "text/html" }, page2.outerHTML]);
+
+		const a = byId("a");
+
+		a.click();
+
+		this.server.respond();
+
+		assert.equal(document.title, "Updated page title");
+	});
+
 });
