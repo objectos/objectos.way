@@ -28,7 +28,7 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
-import java.util.concurrent.TimeUnit;
+import objectos.notes.Note;
 import objectos.way.TestingNoteSink;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -45,7 +45,7 @@ public class MarketingSiteTest implements HandlerFactory {
 
     wayServer.clock(clock());
 
-    wayServer.noteSink(TestingNoteSink.INSTANCE);
+    wayServer.noteSink(new ThisNoteSink(wayServer));
 
     wayServer.port(0);
 
@@ -53,8 +53,8 @@ public class MarketingSiteTest implements HandlerFactory {
 
     server.start();
 
-    synchronized (this) {
-      TimeUnit.SECONDS.timedWait(this, 2);
+    synchronized (wayServer) {
+      wayServer.wait();
     }
   }
 
@@ -81,7 +81,7 @@ public class MarketingSiteTest implements HandlerFactory {
 
   @Override
   public final Handler create() throws Exception {
-    return new MarketingSite();
+    return new MarketingSite2().compile();
   }
 
   @Test(description = """
@@ -227,6 +227,23 @@ public class MarketingSiteTest implements HandlerFactory {
     res = new String(bytes, StandardCharsets.UTF_8);
 
     assertEquals(res, expected);
+  }
+
+  private static class ThisNoteSink extends TestingNoteSink {
+
+    private final Object lock;
+
+    public ThisNoteSink(Object lock) { this.lock = lock; }
+
+    @Override
+    protected void visitNote(Note note) {
+      if (note == HttpServer.LISTENING) {
+        synchronized (lock) {
+          lock.notify();
+        }
+      }
+    }
+
   }
 
 }

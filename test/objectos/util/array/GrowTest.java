@@ -23,113 +23,113 @@ import org.testng.annotations.Test;
 
 public class GrowTest {
 
-	@Test
-	public void arrayLength() {
-		int delta = 1;
+  @Test
+  public void arrayLength() {
+    int delta = 1;
 
-		int iterations = 1;
+    int iterations = 1;
 
-		int length = 4;
+    int length = 4;
 
-		int oldLength;
+    int oldLength;
 
-		int requiredLength;
+    int requiredLength;
 
-		while (true) {
-			oldLength = length;
+    while (true) {
+      oldLength = length;
 
-			requiredLength = length + delta;
+      requiredLength = length + delta;
 
-			length = Grow.arrayLength(oldLength, requiredLength);
+      length = Grow.arrayLength(oldLength, requiredLength);
 
-			assertTrue(length > oldLength);
+      assertTrue(length > oldLength);
 
-			if (length == Integer.MAX_VALUE) {
-				break;
-			}
+      if (length == Integer.MAX_VALUE) {
+        break;
+      }
 
-			if (iterations > 60) {
-				Assert.fail(iterations + " > 60");
-			}
+      if (iterations > 60) {
+        Assert.fail(iterations + " > 60");
+      }
 
-			iterations++;
-		}
+      iterations++;
+    }
 
-		assertEquals(iterations, 51);
+    assertEquals(iterations, 51);
 
-		assertEquals(length, Integer.MAX_VALUE);
-	}
+    assertEquals(length, Integer.MAX_VALUE);
+  }
 
-	@Test(description = //
-	"""
+  @Test(description = //
+  """
   growBy (test case 0)
   ------------------------------
 
   - start with default capacity
   - simulate add(Collection.size = 1)
   """)
-	public void growBy() {
-		var length = Grow.DEFAULT_CAPACITY;
+  public void growBy() {
+    var length = Grow.DEFAULT_CAPACITY;
 
-		length = Grow.growBy(length, 1);
+    length = Grow.growBy(length, 1);
 
-		assertEquals(length, 15);
+    assertEquals(length, 15);
 
-		length = Grow.growBy(length, 1);
+    length = Grow.growBy(length, 1);
 
-		assertEquals(length, 22);
+    assertEquals(length, 22);
 
-		length = Grow.growBy(1_197_571_635, 1);
+    length = Grow.growBy(1_197_571_635, 1);
 
-		assertEquals(length, 1_796_357_452);
+    assertEquals(length, 1_796_357_452);
 
-		length = Grow.growBy(length, 1);
+    length = Grow.growBy(length, 1);
 
-		assertEquals(length, Grow.JVM_SOFT_LIMIT);
+    assertEquals(length, Grow.JVM_SOFT_LIMIT);
 
-		try {
-			Grow.growByOne(Grow.JVM_SOFT_LIMIT);
+    try {
+      Grow.growByOne(Grow.JVM_SOFT_LIMIT);
 
-			Assert.fail();
-		} catch (OutOfMemoryError expected) {
+      Assert.fail();
+    } catch (OutOfMemoryError expected) {
 
-		}
-	}
+    }
+  }
 
-	@Test(description = //
-	"""
+  @Test(description = //
+  """
   growByOne (test case 0)
   ------------------------------
 
   - start with default capacity
   - simulate add(E e)
   """)
-	public void growByOne() {
-		var length = Grow.DEFAULT_CAPACITY;
+  public void growByOne() {
+    var length = Grow.DEFAULT_CAPACITY;
 
-		length = Grow.growByOne(length);
+    length = Grow.growByOne(length);
 
-		assertEquals(length, 15);
+    assertEquals(length, 15);
 
-		length = Grow.growByOne(length);
+    length = Grow.growByOne(length);
 
-		assertEquals(length, 22);
+    assertEquals(length, 22);
 
-		length = Grow.growByOne(1_197_571_635);
+    length = Grow.growByOne(1_197_571_635);
 
-		assertEquals(length, 1_796_357_452);
+    assertEquals(length, 1_796_357_452);
 
-		length = Grow.growByOne(length);
+    length = Grow.growByOne(length);
 
-		assertEquals(length, Grow.JVM_SOFT_LIMIT);
+    assertEquals(length, Grow.JVM_SOFT_LIMIT);
 
-		try {
-			Grow.growByOne(Grow.JVM_SOFT_LIMIT);
+    try {
+      Grow.growByOne(Grow.JVM_SOFT_LIMIT);
 
-			Assert.fail();
-		} catch (OutOfMemoryError expected) {
+      Assert.fail();
+    } catch (OutOfMemoryError expected) {
 
-		}
-	}
+    }
+  }
 
 }

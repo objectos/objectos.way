@@ -39,7 +39,8 @@ public final class WayServerLoop extends WayServerRequestBody implements ServerL
   private static final int _PARSE = 1;
   private static final int _REQUEST = 2;
   private static final int _RESPONSE = 3;
-  private static final int _COMMITED = 4;
+  private static final int _PROCESSED = 4;
+  private static final int _COMMITED = 5;
 
   private static final int STATE_MASK = 0xF;
   private static final int BITS_MASK = ~STATE_MASK;
@@ -438,6 +439,8 @@ public final class WayServerLoop extends WayServerRequestBody implements ServerL
     checkResponse();
 
     responseBody = NoResponseBody.INSTANCE;
+
+    setState(_PROCESSED);
   }
 
   @Override
@@ -445,6 +448,8 @@ public final class WayServerLoop extends WayServerRequestBody implements ServerL
     checkResponse();
 
     responseBody = Check.notNull(body, "body == null");
+
+    setState(_PROCESSED);
   }
 
   @Override
@@ -453,6 +458,8 @@ public final class WayServerLoop extends WayServerRequestBody implements ServerL
 
     responseBody = Check.notNull(body, "body == null");
     this.charset = Check.notNull(charset, "charset == null");
+
+    setState(_PROCESSED);
   }
 
   @Override
@@ -460,6 +467,8 @@ public final class WayServerLoop extends WayServerRequestBody implements ServerL
     checkResponse();
 
     responseBody = Check.notNull(file, "file == null");
+
+    setState(_PROCESSED);
   }
 
   // 404 NOT FOUND
@@ -573,8 +582,7 @@ public final class WayServerLoop extends WayServerRequestBody implements ServerL
 
   @Override
   public final void commit() throws IOException, IllegalStateException {
-    Check.state(testState(_RESPONSE), "Cannot commit as we are not in the response phase");
-    Check.state(responseBody != null, "Cannot commit: missing ServerExchange::send method invocation");
+    Check.state(testState(_PROCESSED), "Cannot commit as we are not in the processed phase");
 
     if (testBit(SESSION_NEW)) {
       String id;
@@ -640,6 +648,11 @@ public final class WayServerLoop extends WayServerRequestBody implements ServerL
   @Override
   public final boolean keepAlive() {
     return testBit(KEEP_ALIVE);
+  }
+
+  @Override
+  public final boolean processed() {
+    return testState(_PROCESSED);
   }
 
   private void clearBit(int mask) {

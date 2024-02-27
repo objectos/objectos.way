@@ -277,4 +277,6 @@ public interface ServerExchange {
   // 500
   void internalServerError(Throwable t);
 
+  boolean processed();
+
 }

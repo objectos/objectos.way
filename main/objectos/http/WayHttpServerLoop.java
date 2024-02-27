@@ -128,6 +128,8 @@ final class WayHttpServerLoop implements Runnable {
 
             handler.handle(http);
           } catch (Throwable t) {
+            noteSink.send(INTERNAL_SERVER_ERROR, t);
+
             http.internalServerError(t);
           }
 
