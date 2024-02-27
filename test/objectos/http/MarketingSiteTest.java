@@ -21,7 +21,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.InetAddress;
-import java.net.ServerSocket;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
 import java.time.Clock;
@@ -30,34 +29,27 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.concurrent.TimeUnit;
-import objectos.notes.NoteSink;
+import objectos.way.TestingNoteSink;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-public class MarketingSiteTest implements SocketTaskFactory {
+public class MarketingSiteTest implements HandlerFactory {
 
-  private Thread server;
-
-  private ServerSocket serverSocket;
+  private HttpServer server;
 
   @BeforeClass
   public void beforeClass() throws IOException, InterruptedException {
-    NoteSink noteSink;
-    noteSink = TestingNoteSink.INSTANCE;
+    WayHttpServer wayServer;
+    wayServer = new WayHttpServer(this);
 
-    int randomPort;
-    randomPort = 0;
+    wayServer.clock(clock());
 
-    int backlogDefaultValue;
-    backlogDefaultValue = 50;
+    wayServer.noteSink(TestingNoteSink.INSTANCE);
 
-    InetAddress address;
-    address = InetAddress.getLoopbackAddress();
+    wayServer.port(0);
 
-    serverSocket = new ServerSocket(randomPort, backlogDefaultValue, address);
-
-    server = new TestingServer(noteSink, serverSocket, this);
+    server = wayServer;
 
     server.start();
 
@@ -66,13 +58,7 @@ public class MarketingSiteTest implements SocketTaskFactory {
     }
   }
 
-  @AfterClass(alwaysRun = true)
-  public void afterClass() {
-    server.interrupt();
-  }
-
-  @Override
-  public final Runnable createTask(Socket socket) {
+  private Clock clock() {
     LocalDateTime dateTime;
     dateTime = LocalDateTime.of(2023, 11, 10, 10, 43);
 
@@ -85,13 +71,17 @@ public class MarketingSiteTest implements SocketTaskFactory {
     Instant fixedInstant;
     fixedInstant = zoned.toInstant();
 
-    Clock clock;
-    clock = Clock.fixed(fixedInstant, zone);
+    return Clock.fixed(fixedInstant, zone);
+  }
 
-    NoteSink noteSink;
-    noteSink = TestingNoteSink.INSTANCE;
+  @AfterClass(alwaysRun = true)
+  public void afterClass() throws IOException {
+    server.close();
+  }
 
-    return new MarketingSite(clock, noteSink, socket);
+  @Override
+  public final Handler create() throws Exception {
+    return new MarketingSite();
   }
 
   @Test(description = """
@@ -108,8 +98,8 @@ public class MarketingSiteTest implements SocketTaskFactory {
 
       resp(socket, """
           HTTP/1.1 301 MOVED PERMANENTLY
-          Location: /index.html
           Date: Fri, 10 Nov 2023 10:43:00 GMT
+          Location: /index.html
 
           """.replace("\n", "\r\n"));
     }
@@ -121,21 +111,21 @@ public class MarketingSiteTest implements SocketTaskFactory {
   public void testCase02() throws IOException {
     try (Socket socket = newSocket()) {
       req(socket, """
-          GET /index.html HTTP/1.1
-          Host: www.example.com
-          Connection: close
-
-          """.replace("\n", "\r\n"));
+          GET /index.html HTTP/1.1\r
+          Host: www.example.com\r
+          Connection: close\r
+          \r
+          """);
 
       resp(socket, """
-          HTTP/1.1 200 OK<CRLF>
-          Content-Length: 30<CRLF>
-          Content-Type: text/html; charset=utf-8<CRLF>
-          Date: Fri, 10 Nov 2023 10:43:00 GMT<CRLF>
-          <CRLF>
+          HTTP/1.1 200 OK\r
+          Date: Fri, 10 Nov 2023 10:43:00 GMT\r
+          Content-Type: text/html; charset=utf-8\r
+          Content-Length: 30\r
+          \r
           <!DOCTYPE html>
           <h1>home</h1>
-          """.replace("<CRLF>\n", "\r\n"));
+          """);
     }
   }
 
@@ -145,18 +135,19 @@ public class MarketingSiteTest implements SocketTaskFactory {
   public void testCase03() throws IOException {
     try (Socket socket = newSocket()) {
       req(socket, """
-          HEAD /index.html HTTP/1.1
-          Host: www.example.com
-          Connection: close
-
-          """.replace("\n", "\r\n"));
+          HEAD /index.html HTTP/1.1\r
+          Host: www.example.com\r
+          Connection: close\r
+          \r
+          """);
 
       resp(socket, """
-          HTTP/1.1 200 OK<CRLF>
-          Content-Type: text/html; charset=utf-8<CRLF>
-          Date: Fri, 10 Nov 2023 10:43:00 GMT<CRLF>
-          <CRLF>
-          """.replace("<CRLF>\n", "\r\n"));
+          HTTP/1.1 200 OK\r
+          Date: Fri, 10 Nov 2023 10:43:00 GMT\r
+          Content-Type: text/html; charset=utf-8\r
+          Content-Length: 30\r
+          \r
+          """);
     }
   }
 
@@ -174,8 +165,8 @@ public class MarketingSiteTest implements SocketTaskFactory {
 
       resp(socket, """
           HTTP/1.1 405 METHOD NOT ALLOWED<CRLF>
-          Connection: close<CRLF>
           Date: Fri, 10 Nov 2023 10:43:00 GMT<CRLF>
+          Connection: close<CRLF>
           <CRLF>
           """.replace("<CRLF>\n", "\r\n"));
     }
@@ -195,15 +186,21 @@ public class MarketingSiteTest implements SocketTaskFactory {
 
       resp(socket, """
           HTTP/1.1 404 NOT FOUND<CRLF>
-          Connection: close<CRLF>
           Date: Fri, 10 Nov 2023 10:43:00 GMT<CRLF>
+          Connection: close<CRLF>
           <CRLF>
           """.replace("<CRLF>\n", "\r\n"));
     }
   }
 
   private Socket newSocket() throws IOException {
-    return new Socket(serverSocket.getInetAddress(), serverSocket.getLocalPort());
+    InetAddress address;
+    address = server.address();
+
+    int port;
+    port = server.port();
+
+    return new Socket(address, port);
   }
 
   private void req(Socket socket, String string) throws IOException {

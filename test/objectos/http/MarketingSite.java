@@ -15,104 +15,44 @@
  */
 package objectos.http;
 
-import java.io.IOException;
-import java.net.Socket;
-import java.time.Clock;
 import java.util.List;
 import objectos.html.HtmlTemplate;
 import objectos.http.UriPath.Segment;
-import objectos.notes.Note1;
-import objectos.notes.NoteSink;
 
-final class MarketingSite extends AbstractHttpModule implements Runnable {
-
-  static final Note1<IOException> IO_ERROR;
-
-  static {
-    Class<?> source;
-    source = MarketingSite.class;
-
-    IO_ERROR = Note1.error(source, "I/O error");
-  }
-
-  private final NoteSink noteSink;
-
-  private final Socket socket;
-
-  public MarketingSite(Clock clock, NoteSink noteSink, Socket socket) {
-    super(clock);
-
-    this.noteSink = noteSink;
-
-    this.socket = socket;
-  }
+final class MarketingSite implements Handler {
 
   @Override
-  public final void run() {
-    WayServerLoop loop;
-    loop = new WayServerLoop(socket);
+  public final void handle(ServerExchange http) {
+    UriPath path;
+    path = http.path();
 
-    loop.noteSink(noteSink);
-
-    try (loop) {
-      while (!Thread.currentThread().isInterrupted()) {
-        loop.parse();
-
-        if (loop.badRequest()) {
-          throw new UnsupportedOperationException("Implement me");
-        }
-
-        handle(loop);
-
-        loop.commit();
-
-        if (!loop.keepAlive()) {
-          break;
-        }
-      }
-    } catch (IOException e) {
-      noteSink.send(IO_ERROR, e);
-    }
-  }
-
-  @Override
-  protected final void definition() {
     List<Segment> segments;
-    segments = segments();
+    segments = path.segments();
 
     if (segments.size() == 1) {
-      MarketingSiteRoot root;
-      root = new MarketingSiteRoot(clock);
-
-      root.handle(http);
+      root(http, segments.get(0));
     } else {
-      notFound();
+      http.notFound();
     }
   }
 
-}
-
-final class MarketingSiteRoot extends AbstractHttpModule {
-  MarketingSiteRoot(Clock clock) {
-    super(clock);
-  }
-
-  @Override
-  protected final void definition() {
-    Segment first;
-    first = segment(0);
-
+  private void root(ServerExchange http, Segment first) {
     String fileName;
     fileName = first.value();
 
     switch (fileName) {
-      case "" -> movedPermanently("/index.html");
+      case "" -> http.movedPermanently("/index.html");
 
-      case "index.html" -> okTextHtml(MarketingSiteHome::new);
+      case "index.html" -> http.methodMatrix(Method.GET, this::indexHtml);
 
-      default -> notFound();
+      default -> http.notFound();
     }
   }
+
+  private void indexHtml(ServerExchange http) {
+    http.ok(new MarketingSiteHome());
+  }
+
 }
 
 final class MarketingSiteHome extends HtmlTemplate {

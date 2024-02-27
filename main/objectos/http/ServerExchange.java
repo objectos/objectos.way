@@ -194,6 +194,19 @@ public interface ServerExchange {
     send(command, StandardCharsets.UTF_8);
   }
 
+  // 301
+  default void movedPermanently(String location) {
+    Check.notNull(location, "location == null");
+
+    status(Status.MOVED_PERMANENTLY);
+
+    dateNow();
+
+    header(HeaderName.LOCATION, location);
+
+    send();
+  }
+
   // 302
   default void found(String location) {
     Check.notNull(location, "location == null");

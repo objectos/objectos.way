@@ -28,6 +28,7 @@ import objectos.html.HtmlTemplate;
 import objectos.lang.CharWritable;
 import objectos.lang.TestingCharWritable;
 import objectos.util.array.ByteArrays;
+import objectos.way.TestingNoteSink;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
