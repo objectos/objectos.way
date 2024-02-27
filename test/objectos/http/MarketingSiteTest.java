@@ -20,69 +20,11 @@ import static org.testng.Assert.assertEquals;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.net.InetAddress;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
-import java.time.Clock;
-import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
-import objectos.notes.Note;
-import objectos.way.TestingNoteSink;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-public class MarketingSiteTest implements HandlerFactory {
-
-  private HttpServer server;
-
-  @BeforeClass
-  public void beforeClass() throws IOException, InterruptedException {
-    WayHttpServer wayServer;
-    wayServer = new WayHttpServer(this);
-
-    wayServer.clock(clock());
-
-    wayServer.noteSink(new ThisNoteSink(wayServer));
-
-    wayServer.port(0);
-
-    server = wayServer;
-
-    server.start();
-
-    synchronized (wayServer) {
-      wayServer.wait();
-    }
-  }
-
-  private Clock clock() {
-    LocalDateTime dateTime;
-    dateTime = LocalDateTime.of(2023, 11, 10, 10, 43);
-
-    ZoneId zone;
-    zone = ZoneId.of("GMT");
-
-    ZonedDateTime zoned;
-    zoned = dateTime.atZone(zone);
-
-    Instant fixedInstant;
-    fixedInstant = zoned.toInstant();
-
-    return Clock.fixed(fixedInstant, zone);
-  }
-
-  @AfterClass(alwaysRun = true)
-  public void afterClass() throws IOException {
-    server.close();
-  }
-
-  @Override
-  public final Handler create() throws Exception {
-    return new MarketingSite2().compile();
-  }
+public class MarketingSiteTest {
 
   @Test(description = """
   it should redirect '/' to '/index.html'
@@ -90,18 +32,18 @@ public class MarketingSiteTest implements HandlerFactory {
   public void testCase01() throws IOException {
     try (Socket socket = newSocket()) {
       req(socket, """
-          GET / HTTP/1.1
-          Host: www.example.com
-          Connection: close
-
-          """.replace("\n", "\r\n"));
+          GET / HTTP/1.1\r
+          Host: marketing\r
+          Connection: close\r
+          \r
+          """);
 
       resp(socket, """
-          HTTP/1.1 301 MOVED PERMANENTLY
-          Date: Fri, 10 Nov 2023 10:43:00 GMT
-          Location: /index.html
-
-          """.replace("\n", "\r\n"));
+          HTTP/1.1 301 MOVED PERMANENTLY\r
+          Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+          Location: /index.html\r
+          \r
+          """);
     }
   }
 
@@ -112,14 +54,14 @@ public class MarketingSiteTest implements HandlerFactory {
     try (Socket socket = newSocket()) {
       req(socket, """
           GET /index.html HTTP/1.1\r
-          Host: www.example.com\r
+          Host: marketing\r
           Connection: close\r
           \r
           """);
 
       resp(socket, """
           HTTP/1.1 200 OK\r
-          Date: Fri, 10 Nov 2023 10:43:00 GMT\r
+          Date: Wed, 28 Jun 2023 12:08:43 GMT\r
           Content-Type: text/html; charset=utf-8\r
           Content-Length: 30\r
           \r
@@ -136,14 +78,14 @@ public class MarketingSiteTest implements HandlerFactory {
     try (Socket socket = newSocket()) {
       req(socket, """
           HEAD /index.html HTTP/1.1\r
-          Host: www.example.com\r
+          Host: marketing\r
           Connection: close\r
           \r
           """);
 
       resp(socket, """
           HTTP/1.1 200 OK\r
-          Date: Fri, 10 Nov 2023 10:43:00 GMT\r
+          Date: Wed, 28 Jun 2023 12:08:43 GMT\r
           Content-Type: text/html; charset=utf-8\r
           Content-Length: 30\r
           \r
@@ -157,18 +99,18 @@ public class MarketingSiteTest implements HandlerFactory {
   public void testCase04() throws IOException {
     try (Socket socket = newSocket()) {
       req(socket, """
-          TRACE /index.html HTTP/1.1
-          Host: www.example.com
-          Connection: close
-
-          """.replace("\n", "\r\n"));
+          TRACE /index.html HTTP/1.1\r
+          Host: marketing\r
+          Connection: close\r
+          \r
+          """);
 
       resp(socket, """
-          HTTP/1.1 405 METHOD NOT ALLOWED<CRLF>
-          Date: Fri, 10 Nov 2023 10:43:00 GMT<CRLF>
-          Connection: close<CRLF>
-          <CRLF>
-          """.replace("<CRLF>\n", "\r\n"));
+          HTTP/1.1 405 METHOD NOT ALLOWED\r
+          Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+          Connection: close\r
+          \r
+          """);
     }
   }
 
@@ -178,29 +120,23 @@ public class MarketingSiteTest implements HandlerFactory {
   public void testCase05() throws IOException {
     try (Socket socket = newSocket()) {
       req(socket, """
-          GET /i-do-not-exist HTTP/1.1
-          Host: www.example.com
-          Connection: close
-
-          """.replace("\n", "\r\n"));
+          GET /i-do-not-exist HTTP/1.1\r
+          Host: marketing\r
+          Connection: close\r
+          \r
+          """);
 
       resp(socket, """
-          HTTP/1.1 404 NOT FOUND<CRLF>
-          Date: Fri, 10 Nov 2023 10:43:00 GMT<CRLF>
-          Connection: close<CRLF>
-          <CRLF>
-          """.replace("<CRLF>\n", "\r\n"));
+          HTTP/1.1 404 NOT FOUND\r
+          Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+          Connection: close\r
+          \r
+          """);
     }
   }
 
   private Socket newSocket() throws IOException {
-    InetAddress address;
-    address = server.address();
-
-    int port;
-    port = server.port();
-
-    return new Socket(address, port);
+    return TestingHttpServer.newSocket();
   }
 
   private void req(Socket socket, String string) throws IOException {
@@ -227,23 +163,6 @@ public class MarketingSiteTest implements HandlerFactory {
     res = new String(bytes, StandardCharsets.UTF_8);
 
     assertEquals(res, expected);
-  }
-
-  private static class ThisNoteSink extends TestingNoteSink {
-
-    private final Object lock;
-
-    public ThisNoteSink(Object lock) { this.lock = lock; }
-
-    @Override
-    protected void visitNote(Note note) {
-      if (note == HttpServer.LISTENING) {
-        synchronized (lock) {
-          lock.notify();
-        }
-      }
-    }
-
   }
 
 }

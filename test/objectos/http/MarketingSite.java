@@ -15,50 +15,27 @@
  */
 package objectos.http;
 
-import java.util.List;
 import objectos.html.HtmlTemplate;
-import objectos.http.UriPath.Segment;
 
-final class MarketingSite implements Handler {
+final class MarketingSite extends HttpModule {
 
   @Override
-  public final void handle(ServerExchange http) {
-    UriPath path;
-    path = http.path();
+  protected final void configure() {
+    route(path("/"), matrix(Method.GET, movedPermanently("/index.html")));
 
-    List<Segment> segments;
-    segments = path.segments();
-
-    if (segments.size() == 1) {
-      root(http, segments.get(0));
-    } else {
-      http.notFound();
-    }
-  }
-
-  private void root(ServerExchange http, Segment first) {
-    String fileName;
-    fileName = first.value();
-
-    switch (fileName) {
-      case "" -> http.movedPermanently("/index.html");
-
-      case "index.html" -> http.methodMatrix(Method.GET, this::indexHtml);
-
-      default -> http.notFound();
-    }
+    route(path("/index.html"), matrix(Method.GET, this::indexHtml));
   }
 
   private void indexHtml(ServerExchange http) {
     http.ok(new MarketingSiteHome());
   }
 
-}
-
-final class MarketingSiteHome extends HtmlTemplate {
-  @Override
-  protected void definition() {
-    doctype();
-    h1("home");
+  private static class MarketingSiteHome extends HtmlTemplate {
+    @Override
+    protected void definition() {
+      doctype();
+      h1("home");
+    }
   }
+
 }
