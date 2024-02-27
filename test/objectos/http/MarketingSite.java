@@ -21,9 +21,11 @@ final class MarketingSite extends HttpModule {
 
   @Override
   protected final void configure() {
-    route(path("/"), matrix(Method.GET, movedPermanently("/index.html")));
+    route(path("/"),
+        matrix(Method.GET, movedPermanently("/index.html")));
 
-    route(path("/index.html"), matrix(Method.GET, this::indexHtml));
+    route(path("/index.html"),
+        matrix(Method.GET, this::indexHtml));
   }
 
   private void indexHtml(ServerExchange http) {

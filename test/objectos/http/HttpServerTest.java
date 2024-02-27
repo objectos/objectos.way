@@ -21,60 +21,23 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.reflect.Method;
-import java.net.InetAddress;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import objectos.html.HtmlTemplate;
 import objectos.http.UriPath.Segment;
-import objectos.notes.Note;
-import objectos.way.TestingNoteSink;
-import objectos.way.TestingShutdownHook;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 public class HttpServerTest implements Handler {
 
-  private WayHttpServer server;
-
   @BeforeClass
-  public void startServer() throws Exception {
-    HandlerFactory factory;
-    factory = () -> this;
-
-    server = new WayHttpServer(factory);
-
-    TestingShutdownHook.register(server);
-
-    server.bufferSize(128, 256);
-
-    server.clock(TestingClock.FIXED);
-
-    server.noteSink(new ThisNoteSink(server));
-
-    server.start();
-
-    synchronized (server) {
-      server.wait();
-    }
+  public void beforeClass() throws Exception {
+    TestingHttpServer.bindHttpServerTest(this);
   }
 
   @Override
   public final void handle(ServerExchange http) {
-    ServerRequestHeaders headers;
-    headers = http.headers();
-
-    String host;
-    host = headers.first(HeaderName.HOST);
-
-    switch (host) {
-      case "www.example.com" -> handle0(http);
-
-      default -> throw new UnsupportedOperationException("Implement me");
-    }
-  }
-
-  private void handle0(ServerExchange http) {
     UriPath path;
     path = http.path();
 
@@ -140,7 +103,7 @@ public class HttpServerTest implements Handler {
       test(socket,
           """
           GET /test/testCase01 HTTP/1.1\r
-          Host: www.example.com\r
+          Host: http.server.test\r
           \r
           """,
 
@@ -157,7 +120,7 @@ public class HttpServerTest implements Handler {
       test(socket,
           """
           POST /test/testCase01 HTTP/1.1\r
-          Host: www.example.com\r
+          Host: http.server.test\r
           Connection: close\r
           \r
           """,
@@ -193,7 +156,7 @@ public class HttpServerTest implements Handler {
       test(socket,
           """
           HEAD /test/testCase02 HTTP/1.1\r
-          Host: www.example.com\r
+          Host: http.server.test\r
           \r
           """,
 
@@ -209,7 +172,7 @@ public class HttpServerTest implements Handler {
       test(socket,
           """
           GET /test/testCase02 HTTP/1.1\r
-          Host: www.example.com\r
+          Host: http.server.test\r
           \r
           """,
 
@@ -249,7 +212,7 @@ public class HttpServerTest implements Handler {
       test(socket,
           """
           HEAD /test/testCase03 HTTP/1.1\r
-          Host: www.example.com\r
+          Host: http.server.test\r
           \r
           """,
 
@@ -265,7 +228,7 @@ public class HttpServerTest implements Handler {
       test(socket,
           """
           GET /test/testCase03 HTTP/1.1\r
-          Host: www.example.com\r
+          Host: http.server.test\r
           \r
           """,
 
@@ -284,7 +247,7 @@ public class HttpServerTest implements Handler {
       test(socket,
           """
           POST /test/testCase03 HTTP/1.1\r
-          Host: www.example.com\r
+          Host: http.server.test\r
           \r
           """,
 
@@ -303,13 +266,7 @@ public class HttpServerTest implements Handler {
   }
 
   private Socket newSocket() throws IOException {
-    InetAddress address;
-    address = server.address();
-
-    int port;
-    port = server.port();
-
-    return new Socket(address, port);
+    return TestingHttpServer.newSocket();
   }
 
   private void test(Socket socket, String request, String expectedResponse) throws IOException {
@@ -348,23 +305,6 @@ public class HttpServerTest implements Handler {
           p(text)
       );
     }
-  }
-
-  private static class ThisNoteSink extends TestingNoteSink {
-
-    private final Object lock;
-
-    public ThisNoteSink(Object lock) { this.lock = lock; }
-
-    @Override
-    protected void visitNote(Note note) {
-      if (note == HttpServer.LISTENING) {
-        synchronized (lock) {
-          lock.notify();
-        }
-      }
-    }
-
   }
 
 }

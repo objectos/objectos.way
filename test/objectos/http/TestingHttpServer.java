@@ -27,6 +27,10 @@ final class TestingHttpServer {
 
   private TestingHttpServer() {}
 
+  public static void bindHttpServerTest(HttpServerTest test) {
+    ServerHolder.bindHttpServerTest(test);
+  }
+
   public static Socket newSocket() throws IOException {
     HttpServer server;
     server = ServerHolder.SERVER;
@@ -44,6 +48,8 @@ final class TestingHttpServer {
 
     static HttpServer SERVER = create();
 
+    static ThisHandlerFactory HANDLER;
+
     private static HttpServer create() {
       try {
         return create0();
@@ -56,12 +62,15 @@ final class TestingHttpServer {
       }
     }
 
+    public static void bindHttpServerTest(HttpServerTest test) {
+      HANDLER.httpServerTest = test;
+    }
+
     private static HttpServer create0() throws IOException, InterruptedException {
-      HandlerFactory handlerFactory;
-      handlerFactory = new ThisHandlerFactory();
+      HANDLER = new ThisHandlerFactory();
 
       WayHttpServer wayServer;
-      wayServer = new WayHttpServer(handlerFactory);
+      wayServer = new WayHttpServer(HANDLER);
 
       TestingShutdownHook.register(wayServer);
 
@@ -86,6 +95,8 @@ final class TestingHttpServer {
 
     private final Handler marketing = new MarketingSite().compile();
 
+    private Handler httpServerTest;
+
     @Override
     public final Handler create() throws Exception {
       return this;
@@ -100,6 +111,8 @@ final class TestingHttpServer {
       host = headers.first(HeaderName.HOST);
 
       switch (host) {
+        case "http.server.test" -> httpServerTest.handle(http);
+
         case "marketing" -> marketing.handle(http);
 
         default -> http.notFound();
