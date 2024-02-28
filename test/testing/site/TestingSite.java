@@ -130,6 +130,10 @@ public class TestingSite {
       shutdownHook.addAutoCloseable(closeable);
     }
 
+    // SessionStore
+    WaySessionStore sessionStore;
+    sessionStore = new WaySessionStore();
+
     // UiBinder
     WayUi uiBinder;
     uiBinder = new WayUi();
@@ -138,8 +142,8 @@ public class TestingSite {
       html.meta(html.charset("utf-8"));
       html.meta(html.httpEquiv("x-ua-compatible"), html.content("ie=edge"));
       html.meta(html.name("viewport"), html.content("width=device-width, initial-scale=1"));
-      html.script(html.src("/way.js"));
-      html.link(html.rel("stylesheet"), html.type("text/css"), html.href("/preflight.css"));
+      html.script(html.src("/common/way.js"));
+      html.link(html.rel("stylesheet"), html.type("text/css"), html.href("/common/preflight.css"));
       html.link(html.rel("stylesheet"), html.type("text/css"), html.href("/styles.css"));
     });
 
@@ -156,19 +160,22 @@ public class TestingSite {
 
       webResources.contentType(".js", "text/javascript; charset=utf-8");
 
+      Path common;
+      common = Path.of("common");
+
       Preflight preflight;
       preflight = new Preflight();
 
-      webResources.createNew(Path.of("preflight.css"), preflight.toString().getBytes(StandardCharsets.UTF_8));
+      webResources.createNew(common.resolve("preflight.css"), preflight.toString().getBytes(StandardCharsets.UTF_8));
 
-      webResources.createNew(Path.of("way.js"), WayJs.getBytes());
+      webResources.createNew(common.resolve("way.js"), WayJs.getBytes());
     } catch (IOException e) {
       throw new BootstrapException("WebResources", e);
     }
 
     // WaySiteInjector
     TestingSiteInjector injector;
-    injector = new TestingSiteInjector(noteSink, mode, uiBinder, webResources);
+    injector = new TestingSiteInjector(noteSink, sessionStore, mode, uiBinder, webResources);
 
     // HandlerFactory
     HandlerFactory handlerFactory;
@@ -203,7 +210,7 @@ public class TestingSite {
         ClassReloader classReloader;
 
         try {
-          classReloader = classReloaderBuilder.of("testing.site.web.TestingHandler");
+          classReloader = classReloaderBuilder.of("testing.site.web.TestingHttpModule");
 
           shutdownHook.addAutoCloseable(classReloader);
         } catch (IOException e) {
@@ -217,10 +224,6 @@ public class TestingSite {
 
       default -> throw new UnsupportedOperationException("Implement me");
     }
-
-    // SessionStore
-    WaySessionStore sessionStore;
-    sessionStore = new WaySessionStore();
 
     // Clock
 

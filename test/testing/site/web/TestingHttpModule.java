@@ -17,7 +17,9 @@ package testing.site.web;
 
 import objectos.http.HttpModule;
 import objectos.http.ServerExchange;
+import objectos.http.Session;
 import objectos.web.WebResources;
+import testing.site.auth.User;
 import testing.zite.TestingSiteInjector;
 
 public class TestingHttpModule extends HttpModule {
@@ -30,11 +32,17 @@ public class TestingHttpModule extends HttpModule {
 
   @Override
   protected final void configure() {
+    sessionStore(injector.sessionStore());
+
     route(path("/login"), Login::new, injector);
 
     route(segments(eq("common"), nonEmpty()), this::common);
 
     route(path("/styles.css"), new Styles(injector));
+
+    filter(this::requireLogin);
+
+    route(path("/"), Home::new, injector);
   }
 
   private void common(ServerExchange http) {
@@ -42,6 +50,18 @@ public class TestingHttpModule extends HttpModule {
     webResources = injector.webResources();
 
     webResources.handle(http);
+  }
+
+  private void requireLogin(ServerExchange http) {
+    Session session;
+    session = http.session();
+
+    User user;
+    user = session.get(User.class);
+
+    if (user == null) {
+      http.found("/login");
+    }
   }
 
 }

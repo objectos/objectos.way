@@ -16,15 +16,14 @@
 package testing.site.web;
 
 import objectos.html.HtmlTemplate;
+import objectos.http.Handler;
 import objectos.http.Method;
 import objectos.http.ServerExchange;
-import objectos.http.Session;
 import objectos.ui.Ui;
 import objectos.ui.UiPage;
-import testing.site.auth.User;
 import testing.zite.TestingSiteInjector;
 
-final class Home extends HtmlTemplate {
+final class Home extends HtmlTemplate implements Handler {
 
   private final TestingSiteInjector injector;
 
@@ -34,6 +33,7 @@ final class Home extends HtmlTemplate {
     this.injector = injector;
   }
 
+  @Override
   public final void handle(ServerExchange http) {
     http.methodMatrix(Method.GET, this::get);
   }
@@ -41,18 +41,6 @@ final class Home extends HtmlTemplate {
   // GET
 
   private void get(ServerExchange http) {
-    Session session;
-    session = http.session();
-
-    User user;
-    user = session.get(User.class);
-
-    if (user == null) {
-      http.found("/login");
-
-      return;
-    }
-
     header = new ShellHeader(this);
 
     header.home();

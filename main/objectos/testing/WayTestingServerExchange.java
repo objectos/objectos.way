@@ -89,13 +89,13 @@ public final class WayTestingServerExchange implements TestingServerExchange {
 
       loop.noteSink(noteSink);
 
-      loop.sessionStore(sessionStore);
-
       loop.parse();
 
       if (loop.badRequest()) {
         throw new UnsupportedOperationException("Bad request");
       }
+
+      loop.acceptSessionStore(sessionStore);
 
       try {
         handler.accept(loop);

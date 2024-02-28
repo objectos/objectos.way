@@ -28,6 +28,7 @@ import java.time.ZonedDateTime;
 import java.util.Random;
 import java.util.function.Consumer;
 import objectos.http.ServerExchange;
+import objectos.http.SessionStore;
 import objectos.http.WaySessionStore;
 import objectos.lang.WayShutdownHook;
 import objectos.notes.Level;
@@ -76,6 +77,14 @@ public final class TestingTestingSite {
 
     shutdownHook.noteSink(noteSink);
 
+    // SessionStore
+    WaySessionStore sessionStore;
+    sessionStore = new WaySessionStore();
+
+    Random random = new Random(1234L);
+
+    sessionStore.random(random);
+
     // Stage
     Stage stage;
     stage = Stage.TESTING;
@@ -97,7 +106,7 @@ public final class TestingTestingSite {
       throw new UncheckedIOException(e);
     }
 
-    INJECTOR = new TestingSiteInjector(noteSink, stage, uiBinder, webResources);
+    INJECTOR = new TestingSiteInjector(noteSink, sessionStore, stage, uiBinder, webResources);
   }
 
   private TestingTestingSite() {}
@@ -116,16 +125,12 @@ public final class TestingTestingSite {
 
     serverExchange.noteSink(NOTE_SINK);
 
-    WaySessionStore sessionStore;
-    sessionStore = new WaySessionStore();
-
-    Random random = new Random(1234L);
-
-    sessionStore.random(random);
-
-    sessionStoreHandler.accept(sessionStore);
+    SessionStore sessionStore;
+    sessionStore = INJECTOR.sessionStore();
 
     serverExchange.sessionStore(sessionStore);
+
+    sessionStoreHandler.accept((WaySessionStore) sessionStore);
 
     return serverExchange.handle(request, handler);
   }

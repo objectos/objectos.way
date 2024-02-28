@@ -17,15 +17,18 @@ package testing.site;
 
 import objectos.http.Handler;
 import objectos.http.HandlerFactory;
-import testing.site.web.TestingHandler;
+import testing.site.web.TestingHttpModule;
 import testing.zite.TestingSiteInjector;
 
 final class ProdHandlerFactory implements HandlerFactory {
 
-  private final TestingHandler handler;
+  private final Handler handler;
 
   public ProdHandlerFactory(TestingSiteInjector injector) {
-    handler = new TestingHandler(injector);
+    TestingHttpModule module;
+    module = new TestingHttpModule(injector);
+
+    handler = module.compile();
   }
 
   @Override
