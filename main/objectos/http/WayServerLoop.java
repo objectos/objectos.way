@@ -197,6 +197,20 @@ public final class WayServerLoop extends WayServerRequestBody implements ServerL
     }
 
     // handle session
+    acceptSessionStore0();
+
+    setState(_REQUEST);
+  }
+
+  @Override
+  public final void acceptSessionStore(SessionStore sessionStore) {
+    checkRequest();
+    this.sessionStore = Check.notNull(sessionStore, "sessionStore == null");
+
+    acceptSessionStore0();
+  }
+
+  private void acceptSessionStore0() {
     session = null;
 
     clearBit(SESSION_NEW);
@@ -223,8 +237,6 @@ public final class WayServerLoop extends WayServerRequestBody implements ServerL
       }
 
     }
-
-    setState(_REQUEST);
   }
 
   @Override

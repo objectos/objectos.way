@@ -119,6 +119,10 @@ public final class WaySessionStore implements SessionStore {
     return this;
   }
 
+  final void clear() {
+    sessions.clear();
+  }
+
   final WaySession put(String id, WaySession session) {
     Check.notNull(id, "id == null");
     Check.notNull(session, "session == null");

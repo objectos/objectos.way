@@ -42,23 +42,29 @@ public abstract class HttpModule {
 
   private static final class Compiler implements Handler {
 
-    private Route[] routes;
+    private Action[] actions;
 
-    private int routesIndex;
+    private int actionsIndex;
+
+    private SessionStore sessionStore;
 
     public final Handler compile() {
-      routes = Arrays.copyOf(routes, routesIndex);
+      actions = Arrays.copyOf(actions, actionsIndex);
 
       return this;
     }
 
     @Override
     public final void handle(ServerExchange http) {
-      for (int index = 0, length = routes.length; index < length; index++) {
-        Route route;
-        route = routes[index];
+      if (sessionStore != null) {
+        http.acceptSessionStore(sessionStore);
+      }
 
-        if (route.execute(http)) {
+      for (int index = 0, length = actions.length; index < length; index++) {
+        Action action;
+        action = actions[index];
+
+        if (action.execute(http)) {
           return;
         }
       }
@@ -66,28 +72,41 @@ public abstract class HttpModule {
       http.notFound();
     }
 
+    final void filter(Handler handler) {
+      int index;
+      index = nextSlot();
+
+      actions[index] = new Filter(handler);
+    }
+
     final void route(Matcher matcher, Handler handler) {
       int index;
       index = nextSlot();
 
-      routes[index] = new RouteHandler(matcher, handler);
+      actions[index] = new RouteHandler(matcher, handler);
     }
 
     final <T> void route(Matcher matcher, Function<T, Handler> factory, T value) {
       int index;
       index = nextSlot();
 
-      routes[index] = new RouteFactory1<T>(matcher, factory, value);
+      actions[index] = new RouteFactory1<T>(matcher, factory, value);
+    }
+
+    final void sessionStore(SessionStore sessionStore) {
+      Check.state(this.sessionStore == null, "A session store has already been configured");
+
+      this.sessionStore = sessionStore;
     }
 
     private int nextSlot() {
       int requiredIndex;
-      requiredIndex = routesIndex++;
+      requiredIndex = actionsIndex++;
 
-      if (routes == null) {
-        routes = new Route[10];
+      if (actions == null) {
+        actions = new Action[10];
       } else {
-        routes = ObjectArrays.growIfNecessary(routes, requiredIndex);
+        actions = ObjectArrays.growIfNecessary(actions, requiredIndex);
       }
 
       return requiredIndex;
@@ -95,7 +114,23 @@ public abstract class HttpModule {
 
   }
 
-  private sealed static abstract class Route {
+  private sealed interface Action {
+    boolean execute(ServerExchange http);
+  }
+
+  private record Filter(Handler handler) implements Action {
+    @Override
+    public final boolean execute(ServerExchange http) {
+      Handler handler;
+      handler = handler();
+
+      handler.handle(http);
+
+      return http.processed();
+    }
+  }
+
+  private sealed static abstract class Route implements Action {
 
     private final Matcher matcher;
 
@@ -103,7 +138,8 @@ public abstract class HttpModule {
       this.matcher = matcher;
     }
 
-    final boolean execute(ServerExchange http) {
+    @Override
+    public final boolean execute(ServerExchange http) {
       boolean result;
       result = false;
 
@@ -174,6 +210,27 @@ public abstract class HttpModule {
   }
 
   protected abstract void configure();
+
+  /**
+   * Uses the specified session store for HTTP session handling.
+   *
+   * @param sessionStore
+   *        the session store instance to use
+   *
+   * @throws IllegalStateException
+   *         if a session store has already been configured
+   */
+  protected final void sessionStore(SessionStore sessionStore) {
+    Check.notNull(sessionStore, "sessionStore == null");
+
+    compiler.sessionStore(sessionStore);
+  }
+
+  protected final void filter(Handler handler) {
+    Check.notNull(handler, "handler == null");
+
+    compiler.filter(handler);
+  }
 
   protected final void route(Matcher matcher, Handler handler) {
     Check.notNull(matcher, "matcher == null");

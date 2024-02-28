@@ -19,21 +19,59 @@ import java.io.IOException;
 import java.net.Socket;
 import java.util.List;
 import objectos.http.UriPath.Segment;
+import objectos.way.TestingRandom.SequentialRandom;
 import org.testng.annotations.BeforeClass;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 public class HttpModuleTest extends HttpModule {
 
+  private record User(String login) {}
+
+  private WaySessionStore sessionStore;
+
+  private SequentialRandom random;
+
   @BeforeClass
   public void beforeClass() {
+    WaySessionStore sessionStore;
+    sessionStore = new WaySessionStore();
+
+    sessionStore.cookieName("HTTPMODULETEST");
+
+    random = new SequentialRandom();
+
+    sessionStore.random(random);
+
+    this.sessionStore = sessionStore;
+
     TestingHttpServer.bindHttpModuleTest(this);
+  }
+
+  @BeforeMethod
+  public void beforeMethod() {
+    sessionStore.clear();
+
+    WaySession session;
+    session = new WaySession("TEST_COOKIE");
+
+    session.put(User.class, new User("test"));
+
+    sessionStore.add(session);
+
+    random.reset();
   }
 
   @Override
   protected final void configure() {
+    sessionStore(sessionStore);
+
     // matches: /testCase01/foo
     // but not: /testCase01, /testCase01/, /testCase01/foo/bar
     route(segments(eq("testCase01"), nonEmpty()), this::testCase01);
+
+    // redirect non-authenticated requests
+    filter(this::testCase02);
   }
 
   private void testCase01(ServerExchange http) {
@@ -70,10 +108,113 @@ public class HttpModuleTest extends HttpModule {
           Date: Wed, 28 Jun 2023 12:08:43 GMT\r
           Content-Type: text/html; charset=utf-8\r
           Content-Length: 26\r
+          Set-Cookie: HTTPMODULETEST=00000000000000000000000000000001; Path=/\r
           \r
           <html>
           <p>foo</p>
           </html>
+          """
+      );
+
+      test(socket,
+          """
+          GET /testCase01 HTTP/1.1\r
+          Host: http.module.test\r
+          Cookie:
+          \r
+          """,
+
+          """
+          HTTP/1.1 302 FOUND\r
+          Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+          Location: /login\r
+          Set-Cookie: HTTPMODULETEST=00000000000000000000000000000003; Path=/\r
+          \r
+          """
+      );
+    }
+
+    try (Socket socket = newSocket()) {
+      test(socket,
+          """
+          GET /testCase01/ HTTP/1.1\r
+          Host: http.module.test\r
+          \r
+          """,
+
+          """
+          HTTP/1.1 302 FOUND\r
+          Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+          Location: /login\r
+          Set-Cookie: HTTPMODULETEST=00000000000000000000000000000004; Path=/\r
+          \r
+          """
+      );
+    }
+
+    try (Socket socket = newSocket()) {
+      test(socket,
+          """
+          GET /testCase01/foo/bar HTTP/1.1\r
+          Host: http.module.test\r
+          \r
+          """,
+
+          """
+          HTTP/1.1 302 FOUND\r
+          Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+          Location: /login\r
+          Set-Cookie: HTTPMODULETEST=00000000000000000000000000000005; Path=/\r
+          \r
+          """
+      );
+    }
+  }
+
+  private void testCase02(ServerExchange http) {
+    Session session;
+    session = http.session();
+
+    User user;
+    user = session.get(User.class);
+
+    if (user == null) {
+      http.found("/login");
+    }
+  }
+
+  @Test
+  public void testCase02() throws IOException {
+    try (Socket socket = newSocket()) {
+      test(socket,
+          """
+          GET /testCase02/foo HTTP/1.1\r
+          Host: http.module.test\r
+          \r
+          """,
+
+          """
+          HTTP/1.1 302 FOUND\r
+          Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+          Location: /login\r
+          Set-Cookie: HTTPMODULETEST=00000000000000000000000000000001; Path=/\r
+          \r
+          """
+      );
+
+      test(socket,
+          """
+          GET /testCase02/foo HTTP/1.1\r
+          Host: http.module.test\r
+          Cookie: HTTPMODULETEST=TEST_COOKIE\r
+          \r
+          """,
+
+          """
+          HTTP/1.1 404 NOT FOUND\r
+          Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+          Connection: close\r
+          \r
           """
       );
     }

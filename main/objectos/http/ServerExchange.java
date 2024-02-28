@@ -66,6 +66,8 @@ public interface ServerExchange {
     handler.handle(this);
   }
 
+  void acceptSessionStore(SessionStore sessionStore);
+
   default void methodMatrix(Method method, Handler handler) {
     Check.notNull(method, "method == null");
     Check.notNull(handler, "handler == null");

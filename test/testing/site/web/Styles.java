@@ -18,13 +18,14 @@ package testing.site.web;
 import java.nio.charset.StandardCharsets;
 import java.util.Set;
 import objectos.css.WayStyleGen;
+import objectos.http.Handler;
 import objectos.http.HeaderName;
 import objectos.http.ServerExchange;
 import objectos.http.Status;
 import objectos.notes.NoteSink;
 import testing.zite.TestingSiteInjector;
 
-final class Styles {
+final class Styles implements Handler {
 
   private final NoteSink noteSink;
 
@@ -32,6 +33,7 @@ final class Styles {
     noteSink = injector.noteSink();
   }
 
+  @Override
   public final void handle(ServerExchange http) {
     WayStyleGen styleGen;
     styleGen = new WayStyleGen();

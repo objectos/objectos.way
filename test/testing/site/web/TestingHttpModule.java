@@ -16,6 +16,8 @@
 package testing.site.web;
 
 import objectos.http.HttpModule;
+import objectos.http.ServerExchange;
+import objectos.web.WebResources;
 import testing.zite.TestingSiteInjector;
 
 public class TestingHttpModule extends HttpModule {
@@ -29,6 +31,17 @@ public class TestingHttpModule extends HttpModule {
   @Override
   protected final void configure() {
     route(path("/login"), Login::new, injector);
+
+    route(segments(eq("common"), nonEmpty()), this::common);
+
+    route(path("/styles.css"), new Styles(injector));
+  }
+
+  private void common(ServerExchange http) {
+    WebResources webResources;
+    webResources = injector.webResources();
+
+    webResources.handle(http);
   }
 
 }
