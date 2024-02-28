@@ -16,16 +16,27 @@
 package objectos.http;
 
 import java.util.Arrays;
+import java.util.List;
+import java.util.function.Function;
+import objectos.http.UriPath.Segment;
 import objectos.lang.object.Check;
 import objectos.util.array.ObjectArrays;
 
 public abstract class HttpModule {
 
-  sealed static abstract class Matcher {
+  protected sealed static abstract class Matcher {
 
     Matcher() {}
 
     abstract boolean test(ServerExchange http);
+
+  }
+
+  protected sealed static abstract class Condition {
+
+    Condition() {}
+
+    abstract boolean test(Segment segment);
 
   }
 
@@ -56,6 +67,20 @@ public abstract class HttpModule {
     }
 
     final void route(Matcher matcher, Handler handler) {
+      int index;
+      index = nextSlot();
+
+      routes[index] = new RouteHandler(matcher, handler);
+    }
+
+    final <T> void route(Matcher matcher, Function<T, Handler> factory, T value) {
+      int index;
+      index = nextSlot();
+
+      routes[index] = new RouteFactory1<T>(matcher, factory, value);
+    }
+
+    private int nextSlot() {
       int requiredIndex;
       requiredIndex = routesIndex++;
 
@@ -65,24 +90,67 @@ public abstract class HttpModule {
         routes = ObjectArrays.growIfNecessary(routes, requiredIndex);
       }
 
-      routes[requiredIndex] = new Route(matcher, handler);
+      return requiredIndex;
     }
 
   }
 
-  private record Route(Matcher matcher, Handler handler) {
+  private sealed static abstract class Route {
+
+    private final Matcher matcher;
+
+    public Route(Matcher matcher) {
+      this.matcher = matcher;
+    }
 
     final boolean execute(ServerExchange http) {
       boolean result;
       result = false;
 
       if (matcher.test(http)) {
+        Handler handler;
+        handler = handler();
+
         handler.handle(http);
 
         result = http.processed();
       }
 
       return result;
+    }
+
+    abstract Handler handler();
+
+  }
+
+  private static final class RouteHandler extends Route {
+
+    private final Handler handler;
+
+    public RouteHandler(Matcher matcher, Handler handler) {
+      super(matcher);
+      this.handler = handler;
+    }
+
+    @Override
+    final Handler handler() { return handler; }
+
+  }
+
+  private static final class RouteFactory1<T> extends Route {
+
+    private final Function<T, Handler> factory;
+    private final T value;
+
+    public RouteFactory1(Matcher matcher, Function<T, Handler> factory, T value) {
+      super(matcher);
+      this.factory = factory;
+      this.value = value;
+    }
+
+    @Override
+    final Handler handler() {
+      return factory.apply(value);
     }
 
   }
@@ -114,6 +182,14 @@ public abstract class HttpModule {
     compiler.route(matcher, handler);
   }
 
+  protected final <T> void route(Matcher matcher, Function<T, Handler> factory, T value) {
+    Check.notNull(matcher, "matcher == null");
+    Check.notNull(factory, "factory == null");
+    Check.notNull(value, "value == null");
+
+    compiler.route(matcher, factory, value);
+  }
+
   // matchers
 
   private static final class PathIs extends Matcher {
@@ -138,6 +214,91 @@ public abstract class HttpModule {
     Check.notNull(value, "value == null");
 
     return new PathIs(value);
+  }
+
+  private static final class Segments2 extends Matcher {
+
+    private final Condition condition0;
+    private final Condition condition1;
+
+    public Segments2(Condition condition0, Condition condition1) {
+      this.condition0 = condition0;
+      this.condition1 = condition1;
+    }
+
+    @Override
+    final boolean test(ServerExchange http) {
+      UriPath path;
+      path = http.path();
+
+      List<Segment> segments;
+      segments = path.segments();
+
+      if (segments.size() != 2) {
+        return false;
+      }
+
+      Segment segment0;
+      segment0 = segments.get(0);
+
+      if (!condition0.test(segment0)) {
+        return false;
+      }
+
+      Segment segment1;
+      segment1 = segments.get(1);
+
+      return condition1.test(segment1);
+    }
+
+  }
+
+  protected final Matcher segments(Condition c0, Condition c1) {
+    Check.notNull(c0, "c0 == null");
+    Check.notNull(c1, "c1 == null");
+
+    return new Segments2(c0, c1);
+  }
+
+  // conditions
+
+  private static final class EqualTo extends Condition {
+
+    private final String value;
+
+    EqualTo(String value) {
+      this.value = value;
+    }
+
+    @Override
+    final boolean test(Segment segment) {
+      return segment.is(value);
+    }
+
+  }
+
+  protected final Condition eq(String value) {
+    Check.notNull(value, "value == null");
+
+    return new EqualTo(value);
+  }
+
+  private static final class NonEmpty extends Condition {
+
+    public static final NonEmpty INSTANCE = new NonEmpty();
+
+    @Override
+    final boolean test(Segment segment) {
+      String value;
+      value = segment.value();
+
+      return !value.isEmpty();
+    }
+
+  }
+
+  protected final Condition nonEmpty() {
+    return NonEmpty.INSTANCE;
   }
 
   // actions

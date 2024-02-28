@@ -19,6 +19,7 @@ import java.io.IOException;
 import objectos.css.select.IdSelector;
 import objectos.html.HtmlTemplate;
 import objectos.http.FormUrlEncoded;
+import objectos.http.Handler;
 import objectos.http.Method;
 import objectos.http.ServerExchange;
 import objectos.http.Session;
@@ -28,7 +29,7 @@ import objectos.ui.UiPage;
 import testing.site.auth.User;
 import testing.zite.TestingSiteInjector;
 
-final class Login extends HtmlTemplate {
+final class Login extends HtmlTemplate implements Handler {
 
   private final TestingSiteInjector injector;
 
@@ -36,6 +37,7 @@ final class Login extends HtmlTemplate {
     this.injector = injector;
   }
 
+  @Override
   public final void handle(ServerExchange http) {
     http.methodMatrix(
         Method.GET, this::get,

@@ -15,16 +15,11 @@
  */
 package objectos.http;
 
-import static org.testng.Assert.assertEquals;
-
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.lang.reflect.Method;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
-import objectos.html.HtmlTemplate;
 import objectos.http.UriPath.Segment;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -270,41 +265,7 @@ public class HttpServerTest implements Handler {
   }
 
   private void test(Socket socket, String request, String expectedResponse) throws IOException {
-    OutputStream out;
-    out = socket.getOutputStream();
-
-    byte[] requestBytes;
-    requestBytes = request.getBytes(StandardCharsets.UTF_8);
-
-    out.write(requestBytes);
-
-    byte[] expectedBytes;
-    expectedBytes = expectedResponse.getBytes(StandardCharsets.UTF_8);
-
-    InputStream in;
-    in = socket.getInputStream();
-
-    byte[] responseBytes;
-    responseBytes = in.readNBytes(expectedBytes.length);
-
-    String res;
-    res = new String(responseBytes, StandardCharsets.UTF_8);
-
-    assertEquals(res, expectedResponse);
-  }
-
-  @SuppressWarnings("unused")
-  private static class SingleParagraph extends HtmlTemplate {
-    private final String text;
-
-    public SingleParagraph(String text) { this.text = text; }
-
-    @Override
-    protected final void definition() {
-      html(
-          p(text)
-      );
-    }
+    TestingHttpServer.test(socket, request, expectedResponse);
   }
 
 }

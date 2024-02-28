@@ -15,10 +15,15 @@
  */
 package objectos.http;
 
+import static org.testng.Assert.assertEquals;
+
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.UncheckedIOException;
 import java.net.InetAddress;
 import java.net.Socket;
+import java.nio.charset.StandardCharsets;
 import objectos.notes.Note;
 import objectos.way.TestingNoteSink;
 import objectos.way.TestingShutdownHook;
@@ -26,6 +31,10 @@ import objectos.way.TestingShutdownHook;
 final class TestingHttpServer {
 
   private TestingHttpServer() {}
+
+  public static void bindHttpModuleTest(HttpModuleTest test) {
+    ServerHolder.bindHttpModuleTest(test);
+  }
 
   public static void bindHttpServerTest(HttpServerTest test) {
     ServerHolder.bindHttpServerTest(test);
@@ -44,11 +53,43 @@ final class TestingHttpServer {
     return new Socket(address, port);
   }
 
+  public static void test(Socket socket, String request, String expectedResponse) throws IOException {
+    OutputStream out;
+    out = socket.getOutputStream();
+
+    byte[] requestBytes;
+    requestBytes = request.getBytes(StandardCharsets.UTF_8);
+
+    out.write(requestBytes);
+
+    byte[] expectedBytes;
+    expectedBytes = expectedResponse.getBytes(StandardCharsets.UTF_8);
+
+    InputStream in;
+    in = socket.getInputStream();
+
+    byte[] responseBytes;
+    responseBytes = in.readNBytes(expectedBytes.length);
+
+    String res;
+    res = new String(responseBytes, StandardCharsets.UTF_8);
+
+    assertEquals(res, expectedResponse);
+  }
+
   private static class ServerHolder {
 
     static HttpServer SERVER = create();
 
     static ThisHandlerFactory HANDLER;
+
+    public static void bindHttpModuleTest(HttpModuleTest test) {
+      HANDLER.httpModuleTest = test.compile();
+    }
+
+    public static void bindHttpServerTest(HttpServerTest test) {
+      HANDLER.httpServerTest = test;
+    }
 
     private static HttpServer create() {
       try {
@@ -60,10 +101,6 @@ final class TestingHttpServer {
 
         throw new RuntimeException("Failed to init HttpServer", e);
       }
-    }
-
-    public static void bindHttpServerTest(HttpServerTest test) {
-      HANDLER.httpServerTest = test;
     }
 
     private static HttpServer create0() throws IOException, InterruptedException {
@@ -93,9 +130,11 @@ final class TestingHttpServer {
 
   private static class ThisHandlerFactory implements Handler, HandlerFactory {
 
-    private final Handler marketing = new MarketingSite().compile();
+    private Handler httpModuleTest;
 
     private Handler httpServerTest;
+
+    private final Handler marketing = new MarketingSite().compile();
 
     @Override
     public final Handler create() throws Exception {
@@ -111,6 +150,8 @@ final class TestingHttpServer {
       host = headers.first(HeaderName.HOST);
 
       switch (host) {
+        case "http.module.test" -> httpModuleTest.handle(http);
+
         case "http.server.test" -> httpServerTest.handle(http);
 
         case "marketing" -> marketing.handle(http);
