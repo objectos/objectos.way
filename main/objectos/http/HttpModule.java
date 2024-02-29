@@ -30,13 +30,29 @@ public abstract class HttpModule {
 
     abstract boolean test(ServerExchange http);
 
+    final boolean testSize(List<Segment> segments, int count, Condition last) {
+      if (last.mustBeLast()) {
+        return true;
+      } else {
+        return segments.size() == count;
+      }
+    }
+
   }
 
   protected sealed static abstract class Condition {
 
     Condition() {}
 
-    abstract boolean test(Segment segment);
+    abstract boolean test(List<Segment> segments, int index);
+
+    final boolean hasIndex(List<Segment> segments, int index) {
+      return index < segments.size();
+    }
+
+    boolean mustBeLast() {
+      return false;
+    }
 
   }
 
@@ -276,6 +292,7 @@ public abstract class HttpModule {
   private static final class Segments2 extends Matcher {
 
     private final Condition condition0;
+
     private final Condition condition1;
 
     public Segments2(Condition condition0, Condition condition1) {
@@ -291,30 +308,36 @@ public abstract class HttpModule {
       List<Segment> segments;
       segments = path.segments();
 
-      if (segments.size() != 2) {
+      if (!testSize(segments, 2, condition1)) {
         return false;
       }
 
-      Segment segment0;
-      segment0 = segments.get(0);
-
-      if (!condition0.test(segment0)) {
+      if (!condition0.test(segments, 0)) {
         return false;
       }
 
-      Segment segment1;
-      segment1 = segments.get(1);
-
-      return condition1.test(segment1);
+      return condition1.test(segments, 1);
     }
 
   }
 
   protected final Matcher segments(Condition c0, Condition c1) {
-    Check.notNull(c0, "c0 == null");
+    checkMustBeLast(c0);
     Check.notNull(c1, "c1 == null");
 
     return new Segments2(c0, c1);
+  }
+
+  private void checkMustBeLast(Condition condition) {
+    if (condition.mustBeLast()) {
+      Class<? extends Condition> type;
+      type = condition.getClass();
+
+      String name;
+      name = type.getSimpleName();
+
+      throw new IllegalArgumentException(name + " must only me used as the last condition");
+    }
   }
 
   // conditions
@@ -328,7 +351,14 @@ public abstract class HttpModule {
     }
 
     @Override
-    final boolean test(Segment segment) {
+    final boolean test(List<Segment> segments, int index) {
+      if (!hasIndex(segments, index)) {
+        return false;
+      }
+
+      Segment segment;
+      segment = segments.get(index);
+
       return segment.is(value);
     }
 
@@ -342,10 +372,17 @@ public abstract class HttpModule {
 
   private static final class NonEmpty extends Condition {
 
-    public static final NonEmpty INSTANCE = new NonEmpty();
+    static final NonEmpty INSTANCE = new NonEmpty();
 
     @Override
-    final boolean test(Segment segment) {
+    final boolean test(List<Segment> segments, int index) {
+      if (!hasIndex(segments, index)) {
+        return false;
+      }
+
+      Segment segment;
+      segment = segments.get(index);
+
       String value;
       value = segment.value();
 
@@ -356,6 +393,24 @@ public abstract class HttpModule {
 
   protected final Condition nonEmpty() {
     return NonEmpty.INSTANCE;
+  }
+
+  private static final class ZeroOrMore extends Condition {
+
+    static final ZeroOrMore INSTANCE = new ZeroOrMore();
+
+    @Override
+    final boolean test(List<Segment> segments, int index) {
+      return segments.size() >= index;
+    }
+
+    @Override
+    final boolean mustBeLast() { return true; }
+
+  }
+
+  protected final Condition zeroOrMore() {
+    return ZeroOrMore.INSTANCE;
   }
 
   // actions

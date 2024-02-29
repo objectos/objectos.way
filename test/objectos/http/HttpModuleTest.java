@@ -17,7 +17,9 @@ package objectos.http;
 
 import java.io.IOException;
 import java.net.Socket;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
+import java.util.stream.Collectors;
 import objectos.http.UriPath.Segment;
 import objectos.way.TestingRandom.SequentialRandom;
 import org.testng.annotations.BeforeClass;
@@ -72,6 +74,9 @@ public class HttpModuleTest extends HttpModule {
 
     // redirect non-authenticated requests
     filter(this::testCase02);
+
+    // matches: /testCase03, /testCase03/foo, /testCase03/foo/bar
+    route(segments(eq("testCase03"), zeroOrMore()), this::testCase03);
   }
 
   private void testCase01(ServerExchange http) {
@@ -215,6 +220,96 @@ public class HttpModuleTest extends HttpModule {
           Date: Wed, 28 Jun 2023 12:08:43 GMT\r
           Connection: close\r
           \r
+          """
+      );
+    }
+  }
+
+  private void testCase03(ServerExchange http) {
+    UriPath path;
+    path = http.path();
+
+    List<Segment> segments;
+    segments = path.segments();
+
+    String text = segments.stream()
+        .skip(1)
+        .map(Segment::value)
+        .collect(Collectors.joining("/", "", "\n"));
+
+    http.okText(text, StandardCharsets.UTF_8);
+  }
+
+  @Test
+  public void testCase03() throws IOException {
+    try (Socket socket = newSocket()) {
+      test(socket,
+          """
+          GET /testCase03 HTTP/1.1\r
+          Host: http.module.test\r
+          Cookie: HTTPMODULETEST=TEST_COOKIE\r
+          \r
+          """,
+
+          """
+          HTTP/1.1 200 OK\r
+          Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+          Content-Type: text/plain; charset=utf-8\r
+          Content-Length: 1\r
+          \r
+          \n"""
+      );
+
+      test(socket,
+          """
+          GET /testCase03/ HTTP/1.1\r
+          Host: http.module.test\r
+          Cookie: HTTPMODULETEST=TEST_COOKIE\r
+          \r
+          """,
+
+          """
+          HTTP/1.1 200 OK\r
+          Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+          Content-Type: text/plain; charset=utf-8\r
+          Content-Length: 1\r
+          \r
+          \n"""
+      );
+
+      test(socket,
+          """
+          GET /testCase03/foo HTTP/1.1\r
+          Host: http.module.test\r
+          Cookie: HTTPMODULETEST=TEST_COOKIE\r
+          \r
+          """,
+
+          """
+          HTTP/1.1 200 OK\r
+          Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+          Content-Type: text/plain; charset=utf-8\r
+          Content-Length: 4\r
+          \r
+          foo
+          """
+      );
+
+      test(socket,
+          """
+          GET /testCase03/foo/bar HTTP/1.1\r
+          Host: http.module.test\r
+          Cookie: HTTPMODULETEST=TEST_COOKIE\r
+          \r
+          """,
+
+          """
+          HTTP/1.1 200 OK\r
+          Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+          Content-Type: text/plain; charset=utf-8\r
+          Content-Length: 8\r
+          \r
+          foo/bar
           """
       );
     }

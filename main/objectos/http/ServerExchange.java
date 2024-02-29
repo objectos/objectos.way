@@ -18,6 +18,7 @@ package objectos.http;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
+import java.util.Locale;
 import objectos.html.HtmlTemplate;
 import objectos.lang.CharWritable;
 import objectos.lang.object.Check;
@@ -194,6 +195,21 @@ public interface ServerExchange {
     header(HeaderName.TRANSFER_ENCODING, "chunked");
 
     send(command, StandardCharsets.UTF_8);
+  }
+
+  default void okText(String text, Charset charset) {
+    byte[] bytes;
+    bytes = text.getBytes(charset); // early implicit null-check
+
+    status(Status.OK);
+
+    dateNow();
+
+    header(HeaderName.CONTENT_TYPE, "text/plain; charset=" + charset.name().toLowerCase(Locale.US));
+
+    header(HeaderName.CONTENT_LENGTH, bytes.length);
+
+    send(bytes);
   }
 
   // 301
