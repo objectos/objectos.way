@@ -30,13 +30,34 @@ public abstract class HttpModule {
 
     abstract boolean test(ServerExchange http);
 
-    final boolean testSize(List<Segment> segments, int count, Condition last) {
-      if (last.mustBeLast()) {
-        return true;
-      } else {
-        return segments.size() == count;
-      }
+  }
+
+  private sealed static abstract class AbstractSegments extends Matcher {
+
+    final Condition last;
+
+    AbstractSegments(Condition last) {
+      this.last = last;
     }
+
+    @Override
+    final boolean test(ServerExchange http) {
+      UriPath path;
+      path = http.path();
+
+      List<Segment> segments;
+      segments = path.segments();
+
+      if (!last.mustBeLast() && segments.size() != count()) {
+        return false;
+      }
+
+      return test(segments);
+    }
+
+    abstract int count();
+
+    abstract boolean test(List<Segment> segments);
 
   }
 
@@ -255,6 +276,15 @@ public abstract class HttpModule {
     compiler.route(matcher, handler);
   }
 
+  protected final void route(Matcher matcher, HttpModule module) {
+    Check.notNull(matcher, "matcher == null");
+
+    Handler handler;
+    handler = module.compile(); // implicit null-check
+
+    compiler.route(matcher, handler);
+  }
+
   protected final <T> void route(Matcher matcher, Function<T, Handler> factory, T value) {
     Check.notNull(matcher, "matcher == null");
     Check.notNull(factory, "factory == null");
@@ -289,36 +319,50 @@ public abstract class HttpModule {
     return new PathIs(value);
   }
 
-  private static final class Segments2 extends Matcher {
+  private static final class Segments1 extends AbstractSegments {
 
-    private final Condition condition0;
-
-    private final Condition condition1;
-
-    public Segments2(Condition condition0, Condition condition1) {
-      this.condition0 = condition0;
-      this.condition1 = condition1;
+    Segments1(Condition condition) {
+      super(condition);
     }
 
     @Override
-    final boolean test(ServerExchange http) {
-      UriPath path;
-      path = http.path();
+    final int count() { return 1; }
 
-      List<Segment> segments;
-      segments = path.segments();
+    @Override
+    final boolean test(List<Segment> segments) {
+      return last.test(segments, 0);
+    }
 
-      if (!testSize(segments, 2, condition1)) {
-        return false;
-      }
+  }
 
+  private static final class Segments2 extends AbstractSegments {
+
+    private final Condition condition0;
+
+    Segments2(Condition condition0, Condition condition1) {
+      super(condition1);
+
+      this.condition0 = condition0;
+    }
+
+    @Override
+    final int count() { return 2; }
+
+    @Override
+    final boolean test(List<Segment> segments) {
       if (!condition0.test(segments, 0)) {
         return false;
       }
 
-      return condition1.test(segments, 1);
+      return last.test(segments, 1);
     }
 
+  }
+
+  protected final Matcher segments(Condition condition) {
+    Check.notNull(condition, "condition == null");
+
+    return new Segments1(condition);
   }
 
   protected final Matcher segments(Condition c0, Condition c1) {
@@ -411,6 +455,21 @@ public abstract class HttpModule {
 
   protected final Condition zeroOrMore() {
     return ZeroOrMore.INSTANCE;
+  }
+
+  private static final class Present extends Condition {
+
+    static final Present INSTANCE = new Present();
+
+    @Override
+    final boolean test(List<Segment> segments, int index) {
+      return hasIndex(segments, index);
+    }
+
+  }
+
+  protected final Condition present() {
+    return Present.INSTANCE;
   }
 
   // actions

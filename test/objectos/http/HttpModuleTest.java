@@ -77,6 +77,9 @@ public class HttpModuleTest extends HttpModule {
 
     // matches: /testCase03, /testCase03/foo, /testCase03/foo/bar
     route(segments(eq("testCase03"), zeroOrMore()), this::testCase03);
+
+    // matches: /testCase04, /testCase04/foo, /testCase04/foo/bar
+    route(segments(eq("testCase04"), zeroOrMore()), new TestCase04());
   }
 
   private void testCase01(ServerExchange http) {
@@ -310,6 +313,88 @@ public class HttpModuleTest extends HttpModule {
           Content-Length: 8\r
           \r
           foo/bar
+          """
+      );
+    }
+  }
+
+  private static class TestCase04 extends HttpModule {
+    @Override
+    protected final void configure() {
+      route(segments(present()), http -> http.okText("ROOT", StandardCharsets.UTF_8));
+
+      route(segments(present(), eq("")), http -> http.movedPermanently("/testCase04"));
+
+      route(segments(present(), eq("foo")), http -> http.okText("foo", StandardCharsets.UTF_8));
+    }
+  }
+
+  @Test
+  public void testCase04() throws IOException {
+    try (Socket socket = newSocket()) {
+      test(socket,
+          """
+          GET /testCase04 HTTP/1.1\r
+          Host: http.module.test\r
+          Cookie: HTTPMODULETEST=TEST_COOKIE\r
+          \r
+          """,
+
+          """
+          HTTP/1.1 200 OK\r
+          Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+          Content-Type: text/plain; charset=utf-8\r
+          Content-Length: 4\r
+          \r
+          ROOT"""
+      );
+
+      test(socket,
+          """
+          GET /testCase04/ HTTP/1.1\r
+          Host: http.module.test\r
+          Cookie: HTTPMODULETEST=TEST_COOKIE\r
+          \r
+          """,
+
+          """
+          HTTP/1.1 301 MOVED PERMANENTLY\r
+          Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+          Location: /testCase04\r
+          \r
+          """
+      );
+
+      test(socket,
+          """
+          GET /testCase04/foo HTTP/1.1\r
+          Host: http.module.test\r
+          Cookie: HTTPMODULETEST=TEST_COOKIE\r
+          \r
+          """,
+
+          """
+          HTTP/1.1 200 OK\r
+          Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+          Content-Type: text/plain; charset=utf-8\r
+          Content-Length: 3\r
+          \r
+          foo"""
+      );
+
+      test(socket,
+          """
+          GET /testCase04/bar HTTP/1.1\r
+          Host: http.module.test\r
+          Cookie: HTTPMODULETEST=TEST_COOKIE\r
+          \r
+          """,
+
+          """
+          HTTP/1.1 404 NOT FOUND\r
+          Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+          Connection: close\r
+          \r
           """
       );
     }
