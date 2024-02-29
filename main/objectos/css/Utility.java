@@ -17,7 +17,7 @@ package objectos.css;
 
 import java.util.List;
 
-sealed abstract class Utility {
+abstract class Utility {
 
   // order is important.
 
@@ -87,6 +87,30 @@ sealed abstract class Utility {
   static final Utility LETTER_SPACING = new Single("letter-spacing");
 
   static final Utility TEXT_COLOR = new Single("color");
+
+  static final Utility CUSTOM = new Utility() {
+    @Override
+    final Rule get(String className, List<Variant> variants, String value) {
+      return new Rule(index, className, variants) {
+        @Override
+        final void writeBlock(StringBuilder out, int level) {
+          out.append(" {");
+
+          out.append(System.lineSeparator());
+
+          out.append(value.indent(level * 2));
+
+          level--;
+
+          for (int i = 0, max = level * 2; i < max; i++) {
+            out.append(' ');
+          }
+
+          out.append('}');
+        }
+      };
+    }
+  };
 
   // all instances are created in this class
   private static int COUNTER;

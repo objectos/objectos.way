@@ -77,6 +77,16 @@ abstract class WayStyleGenParser extends WayStyleGenVariants {
 
     this.variants = variants;
 
+    Map<String, String> utilities;
+    utilities = config.utilities();
+
+    String customRule;
+    customRule = utilities.get(value);
+
+    if (customRule != null) {
+      return Utility.CUSTOM.get(className, variants, customRule);
+    }
+
     // static hash map... (sort of)
     return switch (value) {
       // AlignItems

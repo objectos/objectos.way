@@ -52,6 +52,8 @@ public final class WayStyleGen extends WayStyleGenConfig implements StyleGen {
 
   private final Map<String, String> padding;
 
+  private Map<String, String> utilities;
+
   private Map<String, String> width;
 
   public WayStyleGen() {
@@ -181,6 +183,19 @@ public final class WayStyleGen extends WayStyleGenConfig implements StyleGen {
     // P
     padding = new GrowableMap<>();
     padding.putAll(spacing);
+  }
+
+  public final WayStyleGen addUtility(String className, String rule) {
+    Check.notNull(className, "className == null");
+    Check.notNull(rule, "rule == null");
+
+    if (utilities == null) {
+      utilities = new GrowableMap<>();
+    }
+
+    utilities.put(className, rule);
+
+    return this;
   }
 
   @SafeVarargs
@@ -532,6 +547,15 @@ public final class WayStyleGen extends WayStyleGenConfig implements StyleGen {
 
   @Override
   final Map<String, String> padding() { return padding; }
+
+  @Override
+  final Map<String, String> utilities() {
+    if (utilities == null) {
+      utilities = Map.of();
+    }
+
+    return utilities;
+  }
 
   @Override
   final Map<String, String> width() {

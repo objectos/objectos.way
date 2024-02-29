@@ -4433,6 +4433,55 @@ public class StyleGenTest {
     );
   }
 
+  @Test
+  public void customUtilities() {
+    WayStyleGen gen;
+    gen = new WayStyleGen();
+
+    gen.addUtility(
+        "theme-white",
+
+        """
+        --ui-border-subtle-00: #e0e0e0;
+        --ui-border-subtle-01: #c6c6c6;
+        --ui-border-subtle-02: #e0e0e0;
+        --ui-border-subtle-03: #c6c6c6;
+        --ui-border-subtle: var(--ui-border-subtle-00, #e0e0e0);
+        """
+    );
+
+    class Subject extends AbstractSubject {
+      @Override
+      final void classes() {
+        className("theme-white md:theme-white");
+      }
+    }
+
+    test(
+        gen, Subject.class,
+
+        """
+        .theme-white {
+          --ui-border-subtle-00: #e0e0e0;
+          --ui-border-subtle-01: #c6c6c6;
+          --ui-border-subtle-02: #e0e0e0;
+          --ui-border-subtle-03: #c6c6c6;
+          --ui-border-subtle: var(--ui-border-subtle-00, #e0e0e0);
+        }
+
+        @media (min-width: 768px) {
+          .md\\:theme-white {
+            --ui-border-subtle-00: #e0e0e0;
+            --ui-border-subtle-01: #c6c6c6;
+            --ui-border-subtle-02: #e0e0e0;
+            --ui-border-subtle-03: #c6c6c6;
+            --ui-border-subtle: var(--ui-border-subtle-00, #e0e0e0);
+          }
+        }
+        """
+    );
+  }
+
   private void test(Class<?> type, String expected) {
     WayStyleGen gen;
     gen = new WayStyleGen();

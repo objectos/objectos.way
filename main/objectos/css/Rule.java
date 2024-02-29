@@ -44,7 +44,7 @@ class Rule implements Comparable<Rule> {
         StringBuilder out;
         out = gen.topLevel();
 
-        writeTo(out);
+        writeTo(out, 1);
       }
 
       case 1 -> {
@@ -60,7 +60,7 @@ class Rule implements Comparable<Rule> {
 
           out.append("  ");
 
-          writeTo(out);
+          writeTo(out, 2);
         }
 
         else {
@@ -82,16 +82,20 @@ class Rule implements Comparable<Rule> {
     return className;
   }
 
-  final void writeTo(StringBuilder out) {
+  final void writeTo(StringBuilder out, int level) {
     writeClassName(out, className);
 
+    writeBlock(out, level);
+
+    out.append(System.lineSeparator());
+  }
+
+  void writeBlock(StringBuilder out, int level) {
     out.append(" { ");
 
     writeProperties(out);
 
     out.append(" }");
-
-    out.append(System.lineSeparator());
   }
 
   private void writeClassName(StringBuilder out, String className) {

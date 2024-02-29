@@ -36,7 +36,7 @@ public class RuleTest {
     Rule rule;
     rule = new Rule(0, className, List.of());
 
-    rule.writeTo(out);
+    rule.writeTo(out, 1);
 
     assertEquals(out.toString(), expected);
   }
