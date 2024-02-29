@@ -17,6 +17,7 @@ package objectos.css;
 
 import static org.testng.Assert.assertEquals;
 
+import java.util.Map;
 import java.util.Set;
 import objectos.html.HtmlTemplate;
 import objectos.way.TestingNoteSink;
@@ -4364,6 +4365,8 @@ public class StyleGenTest {
     );
   }
 
+  // prefixes
+
   @Test
   public void responsive() {
     class Subject extends AbstractSubject {
@@ -4403,10 +4406,41 @@ public class StyleGenTest {
     );
   }
 
+  // customization
+
+  @Test
+  public void customColors() {
+    WayStyleGen gen;
+    gen = new WayStyleGen();
+
+    gen.colors(
+        Map.entry("border-subtle", "var(--ui-border-subtle)")
+    );
+
+    class Subject extends AbstractSubject {
+      @Override
+      final void classes() {
+        className("border-border-subtle border-black");
+      }
+    }
+
+    test(
+        gen, Subject.class,
+
+        """
+        .border-border-subtle { border-color: var(--ui-border-subtle) }
+        """
+    );
+  }
+
   private void test(Class<?> type, String expected) {
     WayStyleGen gen;
     gen = new WayStyleGen();
 
+    test(gen, type, expected);
+  }
+
+  private void test(WayStyleGen gen, Class<?> type, String expected) {
     gen.noteSink(TestingNoteSink.INSTANCE);
 
     String result;

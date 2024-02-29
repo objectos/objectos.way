@@ -20,6 +20,7 @@ import objectos.http.ServerExchange;
 import objectos.http.Session;
 import objectos.web.WebResources;
 import testing.site.auth.User;
+import testing.site.ui.UiHttpModule;
 import testing.zite.TestingSiteInjector;
 
 public class TestingHttpModule extends HttpModule {
@@ -33,6 +34,8 @@ public class TestingHttpModule extends HttpModule {
   @Override
   protected final void configure() {
     sessionStore(injector.sessionStore());
+
+    route(segments(eq("ui"), zeroOrMore()), new UiHttpModule(injector));
 
     route(path("/login"), Login::new, injector);
 
