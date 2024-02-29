@@ -34,7 +34,7 @@ abstract class UiTemplate extends HtmlTemplate implements Handler {
   @Override
   protected final void definition() {
     doctype();
-    html(
+    html(className("theme-white"),
         head(include(this::headImpl)),
         body(include(this::bodyImpl))
     );

@@ -17,9 +17,11 @@ package objectos.css;
 
 import java.util.List;
 
-abstract class Utility {
+sealed abstract class Utility {
 
   // order is important.
+
+  static final Utility ACCESSIBILITY = new MultiLine();
 
   static final Utility POSITION = new Single("position");
 
@@ -88,29 +90,7 @@ abstract class Utility {
 
   static final Utility TEXT_COLOR = new Single("color");
 
-  static final Utility CUSTOM = new Utility() {
-    @Override
-    final Rule get(String className, List<Variant> variants, String value) {
-      return new Rule(index, className, variants) {
-        @Override
-        final void writeBlock(StringBuilder out, int level) {
-          out.append(" {");
-
-          out.append(System.lineSeparator());
-
-          out.append(value.indent(level * 2));
-
-          level--;
-
-          for (int i = 0, max = level * 2; i < max; i++) {
-            out.append(' ');
-          }
-
-          out.append('}');
-        }
-      };
-    }
-  };
+  static final Utility CUSTOM = new MultiLine();
 
   // all instances are created in this class
   private static int COUNTER;
@@ -201,6 +181,30 @@ abstract class Utility {
       };
     }
 
+  }
+
+  private static final class MultiLine extends Utility {
+    @Override
+    final Rule get(String className, List<Variant> variants, String value) {
+      return new Rule(index, className, variants) {
+        @Override
+        final void writeBlock(StringBuilder out, int level) {
+          out.append(" {");
+
+          out.append(System.lineSeparator());
+
+          out.append(value.indent(level * 2));
+
+          level--;
+
+          for (int i = 0, max = level * 2; i < max; i++) {
+            out.append(' ');
+          }
+
+          out.append('}');
+        }
+      };
+    }
   }
 
 }

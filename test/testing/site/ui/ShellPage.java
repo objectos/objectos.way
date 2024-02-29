@@ -26,8 +26,14 @@ final class ShellPage extends UiTemplate {
 
   @Override
   final void bodyImpl() {
-    header(className("h-12"),
+    header(className("h-12 border-b border-border-subtle"),
         a(className("sr-only focus:not-sr-only"), href("#content"), tabindex("0"), t("Skip to content")),
+
+        a(className(""), href("/ui"),
+            span(className(""),
+                t("Objectos")
+            ), t(" UI")
+        ),
 
         nav(
             ul(

@@ -89,6 +89,29 @@ abstract class WayStyleGenParser extends WayStyleGenVariants {
 
     // static hash map... (sort of)
     return switch (value) {
+      // Accessibility
+      case "sr-only" -> Utility.ACCESSIBILITY.get(className, variants, """
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border-width: 0;
+      """);
+      case "not-sr-only" -> Utility.ACCESSIBILITY.get(className, variants, """
+      position: static;
+      width: auto;
+      height: auto;
+      padding: 0;
+      margin: 0;
+      overflow: visible;
+      clip: auto;
+      white-space: normal;
+      """);
+
       // AlignItems
       case "items-start" -> nameValue(ALIGN_ITEMS, "flex-start");
       case "items-end" -> nameValue(ALIGN_ITEMS, "flex-end");

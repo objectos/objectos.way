@@ -16,6 +16,7 @@
 package testing.site.ui;
 
 import java.nio.charset.StandardCharsets;
+import java.util.Map;
 import java.util.Set;
 import objectos.css.WayStyleGen;
 import objectos.http.Handler;
@@ -38,10 +39,22 @@ final class UiStyles implements Handler {
     WayStyleGen styleGen;
     styleGen = new WayStyleGen();
 
+    styleGen.colors(
+        Map.entry("border-subtle", "var(--ui-border-subtle)")
+    );
+
+    styleGen.addUtility("theme-white", """
+    --ui-border-subtle-00: #e0e0e0;
+    --ui-border-subtle-01: #c6c6c6;
+    --ui-border-subtle-02: #e0e0e0;
+    --ui-border-subtle-03: #c6c6c6;
+    --ui-border-subtle: var(--ui-border-subtle-00, #e0e0e0);
+    """);
+
     styleGen.noteSink(noteSink);
 
     Set<Class<?>> classes;
-    classes = Set.of(ShellPage.class);
+    classes = Set.of(UiTemplate.class, ShellPage.class);
 
     String s;
     s = styleGen.generate(classes);
