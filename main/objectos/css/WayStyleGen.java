@@ -52,6 +52,9 @@ public final class WayStyleGen extends WayStyleGenConfig implements StyleGen {
 
   private final Map<String, String> margin;
 
+  private Map<String, String> outlineOffset;
+  private Map<String, String> outlineWidth;
+
   private final Map<String, String> padding;
 
   private Map<String, String> utilities;
@@ -557,6 +560,36 @@ public final class WayStyleGen extends WayStyleGenConfig implements StyleGen {
 
   @Override
   final Map<String, String> margin() { return margin; }
+
+  @Override
+  final Map<String, String> outlineOffset() {
+    if (outlineOffset == null) {
+      outlineOffset = new GrowableMap<>();
+
+      outlineOffset.put("0", "0px");
+      outlineOffset.put("1", "1px");
+      outlineOffset.put("2", "2px");
+      outlineOffset.put("4", "4px");
+      outlineOffset.put("8", "8px");
+    }
+
+    return outlineWidth;
+  }
+
+  @Override
+  final Map<String, String> outlineWidth() {
+    if (outlineWidth == null) {
+      outlineWidth = new GrowableMap<>();
+
+      outlineWidth.put("0", "0px");
+      outlineWidth.put("1", "1px");
+      outlineWidth.put("2", "2px");
+      outlineWidth.put("4", "4px");
+      outlineWidth.put("8", "8px");
+    }
+
+    return outlineWidth;
+  }
 
   @Override
   final Map<String, String> padding() { return padding; }

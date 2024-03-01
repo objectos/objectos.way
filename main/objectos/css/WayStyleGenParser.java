@@ -36,6 +36,10 @@ import static objectos.css.Utility.MARGIN_RIGHT;
 import static objectos.css.Utility.MARGIN_TOP;
 import static objectos.css.Utility.MARGIN_X;
 import static objectos.css.Utility.MARGIN_Y;
+import static objectos.css.Utility.OUTLINE_COLOR;
+import static objectos.css.Utility.OUTLINE_OFFSET;
+import static objectos.css.Utility.OUTLINE_STYLE;
+import static objectos.css.Utility.OUTLINE_WIDTH;
 import static objectos.css.Utility.PADDING;
 import static objectos.css.Utility.PADDING_BOTTOM;
 import static objectos.css.Utility.PADDING_LEFT;
@@ -246,6 +250,9 @@ abstract class WayStyleGenParser extends WayStyleGenVariants {
       case "mb" -> config(MARGIN_BOTTOM, config.margin(), suffix);
       case "ml" -> config(MARGIN_LEFT, config.margin(), suffix);
 
+      // O
+      case "outline" -> outline(suffix);
+
       // P
       case "p" -> config(PADDING, config.padding(), suffix);
       case "px" -> config(PADDING_X, config.padding(), suffix);
@@ -417,6 +424,55 @@ abstract class WayStyleGenParser extends WayStyleGenVariants {
 
         default -> Rule.NOOP;
       };
+    }
+
+    return Rule.NOOP;
+  }
+
+  private Rule outline(String suffix) {
+    switch (suffix) {
+      case "none":
+        return Utility.OUTLINE_STYLE_NONE.get(className, variants, "outline: 2px solid transparent; outline-offset: 2px");
+      case "":
+        return nameValue(OUTLINE_STYLE, "solid");
+      case "dashed":
+      case "dotted":
+      case "double":
+        return nameValue(OUTLINE_STYLE, suffix);
+    }
+
+    Map<String, String> outlineWidth;
+    outlineWidth = config.outlineWidth();
+
+    String width;
+    width = outlineWidth.get(suffix);
+
+    if (width != null) {
+      return nameValue(OUTLINE_WIDTH, width);
+    }
+
+    Map<String, String> colors;
+    colors = config.colors();
+
+    String color;
+    color = colors.get(suffix);
+
+    if (color != null) {
+      return nameValue(OUTLINE_COLOR, color);
+    }
+
+    if (suffix.startsWith("offset-")) {
+      suffix = suffix.substring("offset-".length());
+
+      Map<String, String> outlineOffset;
+      outlineOffset = config.outlineOffset();
+
+      String offset;
+      offset = outlineOffset.get(suffix);
+
+      if (offset != null) {
+        return nameValue(OUTLINE_OFFSET, offset);
+      }
     }
 
     return Rule.NOOP;

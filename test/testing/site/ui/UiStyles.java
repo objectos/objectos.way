@@ -40,7 +40,8 @@ final class UiStyles implements Handler {
     styleGen = new WayStyleGen();
 
     styleGen.colors(
-        Map.entry("border-subtle", "var(--ui-border-subtle)")
+        Map.entry("border-subtle", "var(--ui-border-subtle)"),
+        Map.entry("focus", "var(--ui-focus)")
     );
 
     styleGen.addUtility("theme-white", """
@@ -49,6 +50,7 @@ final class UiStyles implements Handler {
     --ui-border-subtle-02: #e0e0e0;
     --ui-border-subtle-03: #c6c6c6;
     --ui-border-subtle: var(--ui-border-subtle-00, #e0e0e0);
+    --ui-focus: #0f62fe;
     """);
 
     styleGen.noteSink(noteSink);

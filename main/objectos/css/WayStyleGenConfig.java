@@ -37,6 +37,10 @@ sealed abstract class WayStyleGenConfig permits WayStyleGen {
 
   abstract Map<String, String> margin();
 
+  abstract Map<String, String> outlineOffset();
+
+  abstract Map<String, String> outlineWidth();
+
   abstract Map<String, String> padding();
 
   abstract Map<String, String> utilities();

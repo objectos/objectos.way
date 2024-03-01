@@ -26,8 +26,10 @@ final class ShellPage extends UiTemplate {
 
   @Override
   final void bodyImpl() {
-    header(className("h-12 border-b border-border-subtle"),
-        a(className("sr-only focus:not-sr-only"), href("#content"), tabindex("0"), t("Skip to content")),
+    header(className("flex h-12 border-b border-border-subtle"),
+        a(className("sr-only focus:not-sr-only focus:flex focus:h-full focus:align-center focus:border-4 focus:border-focus"), href("#content"), tabindex("0"),
+            t("Skip to content")
+        ),
 
         a(className(""), href("/ui"),
             span(className(""),
@@ -42,6 +44,12 @@ final class ShellPage extends UiTemplate {
                 menuItem("Link 3")
             )
         )
+    );
+
+    main(id("content"),
+        p("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed in rhoncus nunc. Quisque ligula magna, hendrerit id dignissim non, rutrum id lacus. Sed facilisis tempor tellus vel interdum. Duis malesuada vel enim non ultricies. Duis mattis, ante eu vehicula imperdiet, nibh nunc efficitur nulla, sit amet imperdiet orci tortor eget tortor. Maecenas egestas ut ex ac fringilla. Quisque neque orci, pretium et efficitur nec, vehicula non nisi. Aliquam et ullamcorper sem. Praesent non quam id massa porta feugiat."),
+
+        p("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam quis sagittis felis. Aliquam ex nisi, molestie et commodo sit amet, auctor id sem. Mauris suscipit ligula ac consequat aliquam. Ut ornare quam quis placerat pharetra. In tempor mi vel molestie volutpat. Ut a dignissim odio. Phasellus ullamcorper, mauris quis venenatis ullamcorper, dui felis lobortis mi, et pretium ante ipsum eu diam. Quisque congue velit a molestie lacinia. Pellentesque vulputate ut nisl tempor lacinia. Morbi consequat felis vitae feugiat finibus. Praesent lectus purus, pharetra in semper eget, pulvinar vitae sapien.")
     );
   }
 

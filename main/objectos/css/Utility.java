@@ -90,14 +90,26 @@ sealed abstract class Utility {
 
   static final Utility TEXT_COLOR = new Single("color");
 
+  static final Utility OUTLINE_STYLE = new Single("outline-style");
+  static final Utility OUTLINE_STYLE_NONE = new SingleLine(OUTLINE_STYLE.index);
+  static final Utility OUTLINE_WIDTH = new Single("outline-width");
+  static final Utility OUTLINE_OFFSET = new Single("outline-offset");
+  static final Utility OUTLINE_COLOR = new Single("outline-color");
+
   static final Utility CUSTOM = new MultiLine();
 
   // all instances are created in this class
   private static int COUNTER;
 
-  final int index = COUNTER++;
+  final int index;
 
-  Utility() {}
+  Utility() {
+    index = COUNTER++;
+  }
+
+  Utility(int index) {
+    this.index = index;
+  }
 
   Rule get(String className, List<Variant> variants, String value) {
     throw new UnsupportedOperationException();
@@ -201,6 +213,26 @@ sealed abstract class Utility {
           indentation.writeTo(out);
 
           out.append('}');
+        }
+      };
+    }
+  }
+
+  private static final class SingleLine extends Utility {
+    public SingleLine(int index) {
+      super(index);
+    }
+
+    @Override
+    final Rule get(String className, List<Variant> variants, String value) {
+      return new Rule(index, className, variants) {
+        @Override
+        final void writeBlock(StringBuilder out, Indentation indentation) {
+          out.append(" { ");
+
+          out.append(value);
+
+          out.append(" }");
         }
       };
     }
