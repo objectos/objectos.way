@@ -89,6 +89,7 @@ sealed abstract class Utility {
   static final Utility LETTER_SPACING = new Single("letter-spacing");
 
   static final Utility TEXT_COLOR = new Single("color");
+  static final Utility TEXT_DECORATION = new Single("text-decoration-line");
 
   static final Utility OUTLINE_STYLE = new Single("outline-style");
   static final Utility OUTLINE_STYLE_NONE = new SingleLine(OUTLINE_STYLE.index);

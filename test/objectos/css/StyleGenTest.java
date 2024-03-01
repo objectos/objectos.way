@@ -1742,9 +1742,7 @@ public class StyleGenTest {
     class Subject extends AbstractSubject {
       @Override
       final void classes() {
-        // @formatter:off
         className("text-inherit text-current text-transparent text-black text-white");
-        // @formatter:on
       }
     }
 
@@ -1757,6 +1755,27 @@ public class StyleGenTest {
         .text-transparent { color: transparent }
         .text-black { color: #000000 }
         .text-white { color: #ffffff }
+        """
+    );
+  }
+
+  @Test
+  public void textDecoration() {
+    class Subject extends AbstractSubject {
+      @Override
+      final void classes() {
+        className("underline overline line-through no-underline");
+      }
+    }
+
+    test(
+        Subject.class,
+
+        """
+        .underline { text-decoration-line: underline }
+        .overline { text-decoration-line: overline }
+        .line-through { text-decoration-line: line-through }
+        .no-underline { text-decoration-line: none }
         """
     );
   }

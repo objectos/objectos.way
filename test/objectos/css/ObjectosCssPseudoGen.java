@@ -27,9 +27,9 @@ public class ObjectosCssPseudoGen {
     ObjectosCssPseudoGen gen;
     gen = new ObjectosCssPseudoGen();
 
-    gen.classNameSingleLine(TEXT_ALIGN, "text");
+    gen.classNameSingleLine(TEXT_DECORATION, "");
 
-    gen.cases(TEXT_ALIGN, "TEXT_ALIGN", "text");
+    gen.cases(TEXT_DECORATION, "TEXT_DECORATION", "");
   }
 
   private static final Map<String, String> SPACING = seqmap(
@@ -230,6 +230,13 @@ public class ObjectosCssPseudoGen {
       kv("end", "end")
   );
 
+  static final Map<String, String> TEXT_DECORATION = seqmap(
+      kv("underline", "underline"),
+      kv("overline", "overline"),
+      kv("line-through", "line-through"),
+      kv("no-underline", "none")
+  );
+
   static final Map<String, String> WIDTH = seqmap(
       kv("auto", "auto"),
       kv("1/2", "50%"),
@@ -275,7 +282,7 @@ public class ObjectosCssPseudoGen {
       var value = entry.getValue();
 
       System.out.println("""
-      case "%s-%s" -> nameValue(%s, "%s");""".formatted(prefix, key, kind, value));
+      case "%s%s" -> nameValue(%s, "%s");""".formatted(prefix, key, kind, value));
     }
   }
 
@@ -334,7 +341,7 @@ public class ObjectosCssPseudoGen {
           if (s.isEmpty()) {
             return prefix;
           } else {
-            return prefix + '-' + s;
+            return prefix + s;
           }
         })
         .collect(Collectors.joining(" "));

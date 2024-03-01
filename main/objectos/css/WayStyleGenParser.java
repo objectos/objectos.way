@@ -52,6 +52,7 @@ import static objectos.css.Utility.RIGHT;
 import static objectos.css.Utility.START;
 import static objectos.css.Utility.TEXT_ALIGN;
 import static objectos.css.Utility.TEXT_COLOR;
+import static objectos.css.Utility.TEXT_DECORATION;
 import static objectos.css.Utility.TOP;
 import static objectos.css.Utility.WIDTH;
 
@@ -176,6 +177,12 @@ abstract class WayStyleGenParser extends WayStyleGenVariants {
       case "text-justify" -> nameValue(TEXT_ALIGN, "justify");
       case "text-start" -> nameValue(TEXT_ALIGN, "start");
       case "text-end" -> nameValue(TEXT_ALIGN, "end");
+
+      // Text Decoration
+      case "underline" -> nameValue(TEXT_DECORATION, "underline");
+      case "overline" -> nameValue(TEXT_DECORATION, "overline");
+      case "line-through" -> nameValue(TEXT_DECORATION, "line-through");
+      case "no-underline" -> nameValue(TEXT_DECORATION, "none");
 
       // Others
       default -> prefixWord1(value);
