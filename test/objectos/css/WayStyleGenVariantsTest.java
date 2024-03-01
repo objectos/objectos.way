@@ -19,6 +19,7 @@ import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertSame;
 
 import java.util.List;
+import objectos.css.Variant.Breakpoint;
 import org.testng.annotations.Test;
 
 public class WayStyleGenVariantsTest {

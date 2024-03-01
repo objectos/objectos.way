@@ -15,11 +15,45 @@
  */
 package objectos.css;
 
-interface Variant extends Comparable<Variant> {
+@SuppressWarnings("exports")
+sealed interface Variant extends Comparable<Variant> {
 
-  VariantKind kind();
+  record AppendTo(String selector) implements Variant {
+    @Override
+    public final int compareTo(Variant o) {
+      if (o instanceof MediaQuery) {
+        return 1;
+      }
 
-  default void writeMediaQueryStart(StringBuilder sb) {
+      return 0;
+    }
+  }
+
+  record Breakpoint(int index, String value) implements MediaQuery {
+    @Override
+    public final int compareTo(Variant o) {
+      if (o instanceof Breakpoint that) {
+        return Integer.compare(index, that.index);
+      }
+
+      return -1;
+    }
+
+    @Override
+    public final void writeMediaQueryStart(StringBuilder out, Indentation indentation) {
+      indentation.writeTo(out);
+
+      out.append("@media (min-width: ");
+      out.append(value);
+      out.append(") {");
+      out.append(System.lineSeparator());
+    }
+  }
+
+  sealed interface MediaQuery extends Variant {
+
+    void writeMediaQueryStart(StringBuilder out, Indentation indentation);
+
   }
 
 }

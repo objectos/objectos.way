@@ -16,6 +16,9 @@
 package objectos.css;
 
 import java.util.List;
+import objectos.css.Variant.AppendTo;
+import objectos.css.Variant.MediaQuery;
+import objectos.css.WayStyleGenRound.Context;
 
 class Rule implements Comparable<Rule> {
 
@@ -36,39 +39,28 @@ class Rule implements Comparable<Rule> {
   }
 
   public final void accept(WayStyleGenRound gen) {
-    int size;
-    size = variants.size();
+    Context context;
+    context = null;
 
-    switch (size) {
-      case 0 -> {
-        StringBuilder out;
-        out = gen.topLevel();
+    for (int i = 0, size = variants.size(); i < size; i++) {
+      Variant variant;
+      variant = variants.get(i);
 
-        writeTo(out, 1);
+      if (!(variant instanceof MediaQuery query)) {
+        break;
       }
 
-      case 1 -> {
-        Variant variant;
-        variant = variants.getFirst();
-
-        VariantKind kind;
-        kind = variant.kind();
-
-        if (kind.isMediaQuery()) {
-          StringBuilder out;
-          out = gen.mediaQuery(variant);
-
-          out.append("  ");
-
-          writeTo(out, 2);
-        }
-
-        else {
-          throw new UnsupportedOperationException("Implement me");
-        }
+      if (context == null) {
+        context = gen.contextOf(query);
+      } else {
+        context = context.contextOf(query);
       }
+    }
 
-      default -> throw new UnsupportedOperationException("Implement me");
+    if (context != null) {
+      context.add(this);
+    } else {
+      gen.topLevel(this);
     }
   }
 
@@ -82,15 +74,23 @@ class Rule implements Comparable<Rule> {
     return className;
   }
 
-  final void writeTo(StringBuilder out, int level) {
-    writeClassName(out, className);
+  public final void writeTo(StringBuilder out, Indentation indentation) {
+    indentation.writeTo(out);
 
-    writeBlock(out, level);
+    writeClassName(out);
+
+    for (Variant variant : variants) {
+      if (variant instanceof AppendTo to) {
+        out.append(to.selector());
+      }
+    }
+
+    writeBlock(out, indentation);
 
     out.append(System.lineSeparator());
   }
 
-  void writeBlock(StringBuilder out, int level) {
+  void writeBlock(StringBuilder out, Indentation indentation) {
     out.append(" { ");
 
     writeProperties(out);
@@ -98,7 +98,7 @@ class Rule implements Comparable<Rule> {
     out.append(" }");
   }
 
-  private void writeClassName(StringBuilder out, String className) {
+  private void writeClassName(StringBuilder out) {
     int length;
     length = className.length();
 

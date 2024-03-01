@@ -15,65 +15,123 @@
  */
 package objectos.css;
 
+import java.util.Comparator;
 import java.util.Map;
 import java.util.TreeMap;
+import objectos.css.Variant.MediaQuery;
+import objectos.util.list.GrowableList;
 
 final class WayStyleGenRound extends WayStyleGenParser {
 
-  private StringBuilder out;
+  static class Context {
 
-  private Map<Variant, StringBuilder> mediaQueries;
+    private final MediaQuery query;
+
+    private final GrowableList<Rule> rules = new GrowableList<>();
+
+    private Map<MediaQuery, Context> mediaQueries;
+
+    private Context(MediaQuery query) {
+      this.query = query;
+    }
+
+    final void add(Rule rule) {
+      rules.add(rule);
+    }
+
+    final Context contextOf(MediaQuery child) {
+      if (mediaQueries == null) {
+        mediaQueries = new TreeMap<>();
+      }
+
+      return mediaQueries.computeIfAbsent(child, Context::new);
+    }
+
+    final void writeTo(StringBuilder out, Indentation indentation) {
+      query.writeMediaQueryStart(out, indentation);
+
+      rules.sort(Comparator.naturalOrder());
+
+      Indentation blockIndentation;
+      blockIndentation = indentation.increase();
+
+      for (Rule rule : rules) {
+        rule.writeTo(out, blockIndentation);
+      }
+
+      if (mediaQueries != null) {
+        for (Context child : mediaQueries.values()) {
+          if (!out.isEmpty()) {
+            out.append(System.lineSeparator());
+          }
+
+          child.writeTo(out, blockIndentation);
+        }
+      }
+
+      indentation.writeTo(out);
+
+      out.append('}');
+
+      out.append(System.lineSeparator());
+    }
+
+  }
+
+  private GrowableList<Rule> topLevel;
+
+  private Map<MediaQuery, Context> mediaQueries;
 
   WayStyleGenRound(WayStyleGenConfig config) {
     super(config);
   }
 
   public final String generate() {
+    topLevel = new GrowableList<>();
+
+    for (Rule rule : rules.values()) {
+      if (rule == Rule.NOOP) {
+        continue;
+      }
+
+      rule.accept(this);
+    }
+
+    StringBuilder out;
     out = new StringBuilder();
 
-    rules.values().stream()
-        .filter(o -> o != Rule.NOOP)
-        .sorted()
-        .forEach(rule -> rule.accept(this));
+    topLevel.sort(Comparator.naturalOrder());
+
+    Indentation indentation;
+    indentation = Indentation.ROOT;
+
+    for (Rule rule : topLevel) {
+      rule.writeTo(out, indentation);
+    }
 
     if (mediaQueries != null) {
-
-      for (StringBuilder query : mediaQueries.values()) {
+      for (Context ctx : mediaQueries.values()) {
         if (!out.isEmpty()) {
           out.append(System.lineSeparator());
         }
 
-        out.append(query);
-        out.append("}");
-        out.append(System.lineSeparator());
+        ctx.writeTo(out, indentation);
       }
-
     }
 
     return out.toString();
   }
 
-  final StringBuilder mediaQuery(Variant variant) {
+  final Context contextOf(MediaQuery query) {
     if (mediaQueries == null) {
       mediaQueries = new TreeMap<>();
     }
 
-    StringBuilder out;
-    out = mediaQueries.get(variant);
-
-    if (out == null) {
-      out = new StringBuilder();
-
-      variant.writeMediaQueryStart(out);
-
-      mediaQueries.put(variant, out);
-    }
-
-    return out;
+    return mediaQueries.computeIfAbsent(query, Context::new);
   }
 
-  final StringBuilder topLevel() {
-    return out;
+  final void topLevel(Rule rule) {
+    topLevel.add(rule);
   }
 
 }

@@ -16,6 +16,8 @@
 package objectos.css;
 
 import java.util.Map;
+import objectos.css.Variant.AppendTo;
+import objectos.css.Variant.Breakpoint;
 import objectos.lang.object.Check;
 import objectos.notes.NoOpNoteSink;
 import objectos.notes.NoteSink;
@@ -53,6 +55,8 @@ public final class WayStyleGen extends WayStyleGenConfig implements StyleGen {
   private final Map<String, String> padding;
 
   private Map<String, String> utilities;
+
+  private Map<String, Variant> variants;
 
   private Map<String, String> width;
 
@@ -230,7 +234,16 @@ public final class WayStyleGen extends WayStyleGenConfig implements StyleGen {
 
   @Override
   final Variant getVariant(String variantName) {
-    return breakpoints.get(variantName);
+    if (variants == null) {
+      variants = new GrowableMap<>();
+
+      variants.putAll(breakpoints);
+
+      variants.put("focus", new AppendTo(":focus"));
+      variants.put("hover", new AppendTo(":hover"));
+    }
+
+    return variants.get(variantName);
   }
 
   @Override

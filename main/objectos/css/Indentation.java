@@ -15,14 +15,28 @@
  */
 package objectos.css;
 
-enum VariantKind {
+final class Indentation {
 
-  // media query
+  static final Indentation ROOT = new Indentation(0);
 
-  BREAKPOINT;
+  private final int level;
 
-  final boolean isMediaQuery() {
-    return true;
+  private Indentation(int level) {
+    this.level = level;
+  }
+
+  public final String indent(String value) {
+    return value.indent(level * 2);
+  }
+
+  public final Indentation increase() {
+    return new Indentation(level + 1);
+  }
+
+  public final void writeTo(StringBuilder out) {
+    for (int i = 0, count = level * 2; i < count; i++) {
+      out.append(' ');
+    }
   }
 
 }

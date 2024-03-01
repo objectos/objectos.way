@@ -4406,6 +4406,33 @@ public class StyleGenTest {
   // prefixes
 
   @Test
+  public void pseudoClasses() {
+    class Subject extends AbstractSubject {
+      @Override
+      final void classes() {
+        className("focus:not-sr-only");
+      }
+    }
+
+    test(
+        Subject.class,
+
+        """
+        .focus\\:not-sr-only:focus {
+          position: static;
+          width: auto;
+          height: auto;
+          padding: 0;
+          margin: 0;
+          overflow: visible;
+          clip: auto;
+          white-space: normal;
+        }
+        """
+    );
+  }
+
+  @Test
   public void responsive() {
     class Subject extends AbstractSubject {
       @Override

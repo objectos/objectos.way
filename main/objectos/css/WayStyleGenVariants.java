@@ -15,6 +15,7 @@
  */
 package objectos.css;
 
+import java.util.Comparator;
 import java.util.List;
 import objectos.util.list.GrowableList;
 
@@ -49,7 +50,7 @@ abstract class WayStyleGenVariants extends WayStyleGenCache {
     }
 
     List<Variant> variants;
-    variants = variantsBuilder.toUnmodifiableList();
+    variants = variantsBuilder.toUnmodifiableList(Comparator.naturalOrder());
 
     variantsBuilder.clear();
 

@@ -188,18 +188,17 @@ sealed abstract class Utility {
     final Rule get(String className, List<Variant> variants, String value) {
       return new Rule(index, className, variants) {
         @Override
-        final void writeBlock(StringBuilder out, int level) {
+        final void writeBlock(StringBuilder out, Indentation indentation) {
           out.append(" {");
 
           out.append(System.lineSeparator());
 
-          out.append(value.indent(level * 2));
+          Indentation next;
+          next = indentation.increase();
 
-          level--;
+          out.append(next.indent(value));
 
-          for (int i = 0, max = level * 2; i < max; i++) {
-            out.append(' ');
-          }
+          indentation.writeTo(out);
 
           out.append('}');
         }
