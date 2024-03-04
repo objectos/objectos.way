@@ -30,6 +30,61 @@ public final class ClassName implements Api.ExternalAttribute.StyleClass {
     return new ClassName(value);
   }
 
+  public static ClassName of(String v0, String v1) {
+    Check.notNull(v0, "v0 == null");
+    Check.notNull(v1, "v1 == null");
+
+    return new ClassName(v0 + " " + v1);
+  }
+
+  public static ClassName of(String v0, String v1, String v2) {
+    Check.notNull(v0, "v0 == null");
+    Check.notNull(v1, "v1 == null");
+    Check.notNull(v2, "v2 == null");
+
+    return new ClassName(v0 + " " + v1 + " " + v2);
+  }
+
+  public static ClassName of(String v0, String v1, String v2, String v3) {
+    Check.notNull(v0, "v0 == null");
+    Check.notNull(v1, "v1 == null");
+    Check.notNull(v2, "v2 == null");
+    Check.notNull(v3, "v3 == null");
+
+    return new ClassName(v0 + " " + v1 + " " + v2 + " " + v3);
+  }
+
+  public static ClassName of(String v0, String v1, String v2, String v3, String v4) {
+    Check.notNull(v0, "v0 == null");
+    Check.notNull(v1, "v1 == null");
+    Check.notNull(v2, "v2 == null");
+    Check.notNull(v3, "v3 == null");
+    Check.notNull(v4, "v4 == null");
+
+    return new ClassName(v0 + " " + v1 + " " + v2 + " " + v3 + " " + v4);
+  }
+
+  public static ClassName of(String... values) {
+    StringBuilder sb;
+    sb = new StringBuilder();
+
+    for (int i = 0; i < values.length; i++) {
+      if (i > 0) {
+        sb.append(' ');
+      }
+
+      String value;
+      value = Check.notNull(values[i], "values[", i, "] == null");
+
+      sb.append(value);
+    }
+
+    String value;
+    value = sb.toString();
+
+    return new ClassName(value);
+  }
+
   @Override
   public final String className() {
     return value;

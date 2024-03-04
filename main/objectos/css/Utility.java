@@ -106,6 +106,8 @@ sealed abstract class Utility {
   static final Utility OUTLINE_OFFSET = new Single("outline-offset");
   static final Utility OUTLINE_COLOR = new Single("outline-color");
 
+  static final Utility TRANSITION_PROPERTY = new MultiLine();
+
   static final Utility CONTENT = new Single("content");
 
   // all instances are created in this class

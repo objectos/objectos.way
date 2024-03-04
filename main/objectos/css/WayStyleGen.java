@@ -61,6 +61,8 @@ public final class WayStyleGen extends WayStyleGenConfig implements StyleGen {
 
   private Map<String, String> spacing;
 
+  private Map<String, String> transitionProperty;
+
   private Map<String, String> utilities;
 
   private Map<String, Variant> variants;
@@ -185,6 +187,7 @@ public final class WayStyleGen extends WayStyleGenConfig implements StyleGen {
   final Map<String, String> borderWidth() {
     if (borderWidth == null) {
       borderWidth = new GrowableMap<>();
+
       borderWidth.put("", "1px");
       borderWidth.put("0", "0px");
       borderWidth.put("2", "2px");
@@ -637,6 +640,55 @@ public final class WayStyleGen extends WayStyleGenConfig implements StyleGen {
     }
 
     return padding;
+  }
+
+  @Override
+  final Map<String, String> transitionProperty() {
+    if (transitionProperty == null) {
+      transitionProperty = Map.of(
+          "none", """
+          transition-property: none;
+          """,
+
+          "all", """
+          transition-property: all;
+          transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+          transition-duration: 150ms;
+          """,
+
+          "", """
+          transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter;
+          transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+          transition-duration: 150ms;
+          """,
+
+          "colors", """
+          transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
+          transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+          transition-duration: 150ms;
+          """,
+
+          "opacity", """
+          transition-property: opacity;
+          transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+          transition-duration: 150ms;
+          """,
+
+          "shadow", """
+          transition-property: box-shadow;
+          transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+          transition-duration: 150ms;
+          """,
+
+          "transform", """
+          transition-property: transform;
+          transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+          transition-duration: 150ms;
+          """
+      );
+    }
+
+    return transitionProperty;
   }
 
   @Override

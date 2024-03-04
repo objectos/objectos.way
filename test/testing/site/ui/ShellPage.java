@@ -26,11 +26,18 @@ final class ShellPage extends UiTemplate {
   }
 
   private static final ClassName HEADER = ClassName.of(
-      "fixed inset-0px flex h-48px border-b border-border-subtle bg-background"
+      "fixed inset-0px flex h-48px",
+      "border-b border-border-subtle",
+      "bg-background"
   );
 
   private static final ClassName HEADER_NAME = ClassName.of(
-      "flex h-full select-none items-center border-2 border-transparent pr-32px pl-16px text-body-compact-01 font-semibold outline-none focus:border-focus"
+      "flex h-full select-none items-center",
+      "border-2 border-transparent",
+      "pr-32px pl-16px",
+      "text-body-compact-01 font-semibold",
+      "outline-none",
+      "focus:border-focus"
   );
 
   private static final ClassName HEADER_NAME_PREFIX = ClassName.of(
@@ -38,7 +45,13 @@ final class ShellPage extends UiTemplate {
   );
 
   private static final ClassName HEADER_NAV = ClassName.of(
-      "relative hidden pl-16px before:absolute before:block before:top-12px before:left-0px before:h-24px before:w-1px before:bg-border-subtle before:content-empty lg:block"
+      "relative hidden",
+      "pl-16px",
+      "before:absolute before:block before:top-12px before:left-0px",
+      "before:h-24px before:w-1px",
+      "before:bg-border-subtle",
+      "before:content-empty",
+      "lg:block"
   );
 
   private static final ClassName HEADER_MENU_BAR = ClassName.of(
@@ -46,11 +59,26 @@ final class ShellPage extends UiTemplate {
   );
 
   private static final ClassName HEADER_MENU_ITEM = ClassName.of(
-      "flex h-full select-none items-center border-2 border-transparent bg-background px-16px text-body-compact-01 tracking-normal text-text-secondary focus:border-focus focus:outline-none hover:bg-background-hover active:bg-background-active"
+      "flex h-full select-none items-center",
+      "border-2 border-transparent",
+      "bg-background",
+      "px-16px",
+      "text-body-compact-01 tracking-normal text-text-secondary",
+      "transition-colors",
+      "active:bg-background-active",
+      "focus:border-focus focus:outline-none",
+      "hover:bg-background-hover"
   );
 
   private static final ClassName SKIP_TO_CONTENT = ClassName.of(
-      "sr-only z-50 text-text-secondary underline focus:not-sr-only focus:absolute focus:flex focus:h-full focus:items-center focus:border-4 focus:border-focus focus:bg-background focus:px-16px focus:outline-none"
+      "sr-only z-50",
+      "text-text-secondary underline",
+      "focus:not-sr-only",
+      "focus:absolute focus:flex focus:h-full focus:items-center",
+      "focus:border-4 focus:border-focus",
+      "focus:bg-background",
+      "focus:px-16px",
+      "focus:outline-none"
   );
 
   @Override

@@ -57,6 +57,7 @@ import static objectos.css.Utility.TEXT_ALIGN;
 import static objectos.css.Utility.TEXT_COLOR;
 import static objectos.css.Utility.TEXT_DECORATION;
 import static objectos.css.Utility.TOP;
+import static objectos.css.Utility.TRANSITION_PROPERTY;
 import static objectos.css.Utility.USER_SELECT;
 import static objectos.css.Utility.WIDTH;
 import static objectos.css.Utility.Z_INDEX;
@@ -308,6 +309,7 @@ abstract class WayStyleGenParser extends WayStyleGenVariants {
       case "text" -> text(suffix);
       case "top" -> config(TOP, config.inset(), suffix);
       case "tracking" -> config(LETTER_SPACING, config.letterSpacing(), suffix);
+      case "transition" -> config(TRANSITION_PROPERTY, config.transitionProperty(), suffix);
 
       // W
       case "w" -> config(WIDTH, config.width(), suffix);
