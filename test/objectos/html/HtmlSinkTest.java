@@ -29,9 +29,9 @@ public class HtmlSinkTest {
     final DistinctClassNames classNames = new DistinctClassNames();
 
     var tmpl = new HtmlTemplate() {
-      private final TestClassSelector abc = new TestClassSelector("abc");
-      private final TestClassSelector def = new TestClassSelector("def");
-      private final TestClassSelector ghi = new TestClassSelector("ghi");
+      private final ClassName abc = new ClassName("abc");
+      private final ClassName def = new ClassName("def");
+      private final ClassName ghi = new ClassName("ghi");
 
       @Override
       protected final void definition() {

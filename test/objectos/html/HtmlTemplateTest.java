@@ -481,9 +481,9 @@ public class HtmlTemplateTest {
   public void testCase21() {
     test(
         new HtmlTemplate() {
-          private final TestClassSelector first = new TestClassSelector("first");
+          private final ClassName first = new ClassName("first");
 
-          private final TestClassSelector second = new TestClassSelector("second");
+          private final ClassName second = new ClassName("second");
 
           @Override
           protected final void definition() {
@@ -820,8 +820,8 @@ public class HtmlTemplateTest {
   public void testCase35() {
     test(
         new HtmlTemplate() {
-          private final TestClassSelector A = new TestClassSelector("ca");
-          private final TestClassSelector B = new TestClassSelector("cb");
+          private final ClassName A = new ClassName("ca");
+          private final ClassName B = new ClassName("cb");
 
           @Override
           protected final void definition() {

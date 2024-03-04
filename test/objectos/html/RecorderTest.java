@@ -462,11 +462,11 @@ public class RecorderTest {
     html.elementBegin(StandardElementName.NAV);
     html.elementEnd();
     // template end
-
+    
     html.elementBegin(StandardElementName.BODY);
     html.elementValue(BaseApi.FRAGMENT);
     html.elementEnd();
-
+    
     html.compilationEnd();
     */
 
@@ -644,11 +644,11 @@ public class RecorderTest {
   - grid component
   """)
   public void testCase47() {
-    TestClassSelector grd;
-    grd = new TestClassSelector("grd");
+    ClassName grd;
+    grd = new ClassName("grd");
 
-    TestClassSelector col;
-    col = new TestClassSelector("col");
+    ClassName col;
+    col = new ClassName("col");
 
     Html html;
     html = new Html();
