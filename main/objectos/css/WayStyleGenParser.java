@@ -57,7 +57,9 @@ import static objectos.css.Utility.TEXT_ALIGN;
 import static objectos.css.Utility.TEXT_COLOR;
 import static objectos.css.Utility.TEXT_DECORATION;
 import static objectos.css.Utility.TOP;
+import static objectos.css.Utility.USER_SELECT;
 import static objectos.css.Utility.WIDTH;
+import static objectos.css.Utility.Z_INDEX;
 
 import java.util.List;
 import java.util.Map;
@@ -189,6 +191,12 @@ abstract class WayStyleGenParser extends WayStyleGenVariants {
       case "line-through" -> nameValue(TEXT_DECORATION, "line-through");
       case "no-underline" -> nameValue(TEXT_DECORATION, "none");
 
+      // User Select
+      case "select-none" -> nameValue(USER_SELECT, "none");
+      case "select-text" -> nameValue(USER_SELECT, "text");
+      case "select-all" -> nameValue(USER_SELECT, "all");
+      case "select-auto" -> nameValue(USER_SELECT, "auto");
+
       // Others
       default -> prefixWord1(value);
     };
@@ -303,6 +311,9 @@ abstract class WayStyleGenParser extends WayStyleGenVariants {
 
       // W
       case "w" -> config(WIDTH, config.width(), suffix);
+
+      // Z
+      case "z" -> config(Z_INDEX, config.zIndex(), suffix);
 
       default -> Rule.NOOP;
     };

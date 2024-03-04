@@ -51,4 +51,6 @@ sealed abstract class WayStyleGenConfig permits WayStyleGen {
 
   abstract Map<String, String> width();
 
+  abstract Map<String, String> zIndex();
+
 }

@@ -42,6 +42,8 @@ final class UiStyles implements Handler {
 
     styleGen.addUtility("theme-white", """
     --ui-background: #ffffff;
+    --ui-background-active: rgba(141, 141, 141, 0.5);
+    --ui-background-hover: rgba(141, 141, 141, 0.12);
     --ui-border-subtle-00: #e0e0e0;
     --ui-border-subtle-01: #c6c6c6;
     --ui-border-subtle-02: #e0e0e0;
@@ -57,6 +59,8 @@ final class UiStyles implements Handler {
     styleGen.overrideColors(
         Map.entry("transparent", "transparent"),
         Map.entry("background", "var(--ui-background)"),
+        Map.entry("background-active", "var(--ui-background-active)"),
+        Map.entry("background-hover", "var(--ui-background-hover)"),
         Map.entry("border-subtle", "var(--ui-border-subtle)"),
         Map.entry("focus", "var(--ui-focus)"),
         Map.entry("text-primary", "var(--ui-text-primary)"),

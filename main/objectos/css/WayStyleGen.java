@@ -67,6 +67,8 @@ public final class WayStyleGen extends WayStyleGenConfig implements StyleGen {
 
   private Map<String, String> width;
 
+  private Map<String, String> zIndex;
+
   public WayStyleGen() {
     // L
     letterSpacing = new GrowableMap<>();
@@ -168,6 +170,7 @@ public final class WayStyleGen extends WayStyleGenConfig implements StyleGen {
 
       variants.putAll(breakpoints);
 
+      variants.put("active", new AppendTo(":active"));
       variants.put("focus", new AppendTo(":focus"));
       variants.put("hover", new AppendTo(":hover"));
 
@@ -690,6 +693,23 @@ public final class WayStyleGen extends WayStyleGenConfig implements StyleGen {
     }
 
     return width;
+  }
+
+  @Override
+  final Map<String, String> zIndex() {
+    if (zIndex == null) {
+      zIndex = new GrowableMap<>();
+
+      zIndex.put("0", "0");
+      zIndex.put("10", "10");
+      zIndex.put("20", "20");
+      zIndex.put("30", "30");
+      zIndex.put("40", "40");
+      zIndex.put("50", "50");
+      zIndex.put("auto", "auto");
+    }
+
+    return zIndex;
   }
 
   private Map<String, String> spacing() {

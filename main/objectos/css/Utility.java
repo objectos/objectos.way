@@ -37,6 +37,8 @@ sealed abstract class Utility {
   static final Utility BOTTOM = new Single("bottom");
   static final Utility LEFT = new Single("left");
 
+  static final Utility Z_INDEX = new Single("z-index");
+
   static final Utility MARGIN = new Single("margin");
   static final Utility MARGIN_X = new Axis("margin-left", "margin-right");
   static final Utility MARGIN_Y = new Axis("margin-top", "margin-bottom");
@@ -49,6 +51,8 @@ sealed abstract class Utility {
 
   static final Utility HEIGHT = new Single("height");
   static final Utility WIDTH = new Single("width");
+
+  static final Utility USER_SELECT = new Single("user-select");
 
   static final Utility FLEX_DIRECTION = new Single("flex-direction");
   static final Utility ALIGN_ITEMS = new Single("align-items");

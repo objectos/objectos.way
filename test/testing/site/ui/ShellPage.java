@@ -30,7 +30,7 @@ final class ShellPage extends UiTemplate {
   );
 
   private static final ClassName HEADER_NAME = ClassName.of(
-      "flex h-full items-center border-2 border-transparent pr-32px pl-16px text-body-compact-01 font-semibold outline-none focus:border-focus"
+      "flex h-full select-none items-center border-2 border-transparent pr-32px pl-16px text-body-compact-01 font-semibold outline-none focus:border-focus"
   );
 
   private static final ClassName HEADER_NAME_PREFIX = ClassName.of(
@@ -38,7 +38,15 @@ final class ShellPage extends UiTemplate {
   );
 
   private static final ClassName HEADER_NAV = ClassName.of(
-      "relative hidden pl-16px before:absolute before:block before:top-12px before:-left-16px before:h-24px before:w-1px before:bg-border-subtle before:content-empty lg:block"
+      "relative hidden pl-16px before:absolute before:block before:top-12px before:left-0px before:h-24px before:w-1px before:bg-border-subtle before:content-empty lg:block"
+  );
+
+  private static final ClassName HEADER_MENU_BAR = ClassName.of(
+      "flex h-full"
+  );
+
+  private static final ClassName HEADER_MENU_ITEM = ClassName.of(
+      "flex h-full select-none items-center border-2 border-transparent bg-background px-16px text-body-compact-01 tracking-normal text-text-secondary active:bg-background-active focus:border-focus hover:bg-background-hover"
   );
 
   private static final ClassName SKIP_TO_CONTENT = ClassName.of(
@@ -48,11 +56,7 @@ final class ShellPage extends UiTemplate {
   @Override
   final void bodyImpl() {
     header(HEADER,
-        a(SKIP_TO_CONTENT,
-            href("#main-content"),
-            tabindex("0"),
-            t("Skip to main content")
-        ),
+        a(SKIP_TO_CONTENT, href("#main-content"), tabindex("0"), t("Skip to main content")),
 
         a(HEADER_NAME, href("/ui"),
             span(HEADER_NAME_PREFIX, t("o7")),
@@ -60,7 +64,7 @@ final class ShellPage extends UiTemplate {
         ),
 
         nav(HEADER_NAV,
-            ul(
+            ul(HEADER_MENU_BAR,
                 menuItem("Link 1"),
                 menuItem("Link 2"),
                 menuItem("Link 3")
@@ -76,7 +80,7 @@ final class ShellPage extends UiTemplate {
   }
 
   private Element menuItem(String text) {
-    return li(a(href("#"), tabindex("0"),
+    return li(a(HEADER_MENU_ITEM, href("#"), tabindex("0"),
         span(
             t(text)
         )

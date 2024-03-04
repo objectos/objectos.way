@@ -1831,6 +1831,27 @@ public class StyleGenTest {
   }
 
   @Test
+  public void userSelect() {
+    class Subject extends AbstractSubject {
+      @Override
+      final void classes() {
+        className("select-none select-text select-all select-auto");
+      }
+    }
+
+    test(
+        Subject.class,
+
+        """
+        .select-none { user-select: none }
+        .select-text { user-select: text }
+        .select-all { user-select: all }
+        .select-auto { user-select: auto }
+        """
+    );
+  }
+
+  @Test
   public void width() {
     class Subject extends AbstractSubject {
       @Override
@@ -1916,6 +1937,30 @@ public class StyleGenTest {
         .w-72 { width: 18rem }
         .w-80 { width: 20rem }
         .w-96 { width: 24rem }
+        """
+    );
+  }
+
+  @Test
+  public void zIndex() {
+    class Subject extends AbstractSubject {
+      @Override
+      final void classes() {
+        className("z-0 z-10 z-20 z-30 z-40 z-50 z-auto");
+      }
+    }
+
+    test(
+        Subject.class,
+
+        """
+        .z-0 { z-index: 0 }
+        .z-10 { z-index: 10 }
+        .z-20 { z-index: 20 }
+        .z-30 { z-index: 30 }
+        .z-40 { z-index: 40 }
+        .z-50 { z-index: 50 }
+        .z-auto { z-index: auto }
         """
     );
   }

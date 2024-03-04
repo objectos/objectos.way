@@ -27,9 +27,9 @@ public class ObjectosCssPseudoGen {
     ObjectosCssPseudoGen gen;
     gen = new ObjectosCssPseudoGen();
 
-    gen.classNameSingleLine(FONT_WEIGHT, "font-");
+    gen.classNameSingleLine(Z_INDEX, "z-");
 
-    gen.initVariable(FONT_WEIGHT, "fontWeight");
+    gen.initVariable(Z_INDEX, "zIndex");
   }
 
   private static final Map<String, String> SPACING = seqmap(
@@ -249,6 +249,13 @@ public class ObjectosCssPseudoGen {
       kv("no-underline", "none")
   );
 
+  static final Map<String, String> USER_SELECT = seqmap(
+      kv("none", "none"),
+      kv("text", "text"),
+      kv("all", "all"),
+      kv("auto", "auto")
+  );
+
   static final Map<String, String> WIDTH = seqmap(
       kv("auto", "auto"),
       kv("1/2", "50%"),
@@ -285,6 +292,16 @@ public class ObjectosCssPseudoGen {
       kv("min", "min-content"),
       kv("max", "max-content"),
       kv("fit", "fit-content")
+  );
+
+  static final Map<String, String> Z_INDEX = seqmap(
+      kv("0", "0"),
+      kv("10", "10"),
+      kv("20", "20"),
+      kv("30", "30"),
+      kv("40", "40"),
+      kv("50", "50"),
+      kv("auto", "auto")
   );
 
   final void cases(Map<String, String> map, String kind, String prefix) {
