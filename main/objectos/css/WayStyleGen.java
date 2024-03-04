@@ -39,6 +39,8 @@ public final class WayStyleGen extends WayStyleGenConfig implements StyleGen {
 
   private Map<String, String> colors;
 
+  private Map<String, String> content;
+
   private Map<String, String> fontSize;
 
   private Map<String, String> fontWeight;
@@ -115,6 +117,14 @@ public final class WayStyleGen extends WayStyleGenConfig implements StyleGen {
   @SuppressWarnings("varargs")
   public final WayStyleGen overrideColors(Map.Entry<String, String>... entries) {
     colors = Map.ofEntries(entries);
+
+    return this;
+  }
+
+  @SafeVarargs
+  @SuppressWarnings("varargs")
+  public final WayStyleGen overrideContent(Map.Entry<String, String>... entries) {
+    content = Map.ofEntries(entries);
 
     return this;
   }
@@ -460,6 +470,15 @@ public final class WayStyleGen extends WayStyleGenConfig implements StyleGen {
     }
 
     return colors;
+  }
+
+  @Override
+  final Map<String, String> content() {
+    if (content == null) {
+      content = Map.of("none", "none");
+    }
+
+    return content;
   }
 
   @Override

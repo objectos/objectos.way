@@ -240,6 +240,24 @@ public class StyleGenTest {
   }
 
   @Test
+  public void content() {
+    class Subject extends AbstractSubject {
+      @Override
+      final void classes() {
+        className("content-none");
+      }
+    }
+
+    test(
+        Subject.class,
+
+        """
+        .content-none { content: none }
+        """
+    );
+  }
+
+  @Test
   public void display() {
     class Subject extends AbstractSubject {
       @Override
@@ -2056,6 +2074,33 @@ public class StyleGenTest {
 
         """
         .border-border-subtle { border-color: var(--ui-border-subtle) }
+        """
+    );
+  }
+
+  @Test
+  public void overrideContent() {
+    WayStyleGen gen;
+    gen = new WayStyleGen();
+
+    gen.overrideContent(
+        Map.entry("empty", "\"\""),
+        Map.entry("foo", "url(foo.png)")
+    );
+
+    class Subject extends AbstractSubject {
+      @Override
+      final void classes() {
+        className("before:content-empty content-foo");
+      }
+    }
+
+    test(
+        gen, Subject.class,
+
+        """
+        .before\\:content-empty::before { content: "" }
+        .content-foo { content: url(foo.png) }
         """
     );
   }

@@ -18,6 +18,7 @@ package objectos.css;
 import static objectos.css.Utility.ALIGN_ITEMS;
 import static objectos.css.Utility.BACKGROUND_COLOR;
 import static objectos.css.Utility.BOTTOM;
+import static objectos.css.Utility.CONTENT;
 import static objectos.css.Utility.DISPLAY;
 import static objectos.css.Utility.END;
 import static objectos.css.Utility.FILL;
@@ -227,6 +228,9 @@ abstract class WayStyleGenParser extends WayStyleGenVariants {
       case "bg" -> config(BACKGROUND_COLOR, config.colors(), suffix);
       case "border" -> border(suffix);
       case "bottom" -> config(BOTTOM, config.inset(), suffix);
+
+      // C
+      case "content" -> config(CONTENT, config.content(), suffix);
 
       // E
       case "end" -> config(END, config.inset(), suffix);
