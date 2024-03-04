@@ -160,6 +160,9 @@ public final class WayStyleGen extends WayStyleGenConfig implements StyleGen {
 
       variants.put("focus", new AppendTo(":focus"));
       variants.put("hover", new AppendTo(":hover"));
+
+      variants.put("after", new AppendTo("::after"));
+      variants.put("before", new AppendTo("::before"));
     }
 
     return variants.get(variantName);

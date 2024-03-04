@@ -1901,7 +1901,6 @@ public class StyleGenTest {
 
   @Test
   public void pseudoClasses() {
-
     class Subject extends AbstractSubject {
       @Override
       final void classes() {
@@ -1923,6 +1922,25 @@ public class StyleGenTest {
           clip: auto;
           white-space: normal;
         }
+        """
+    );
+  }
+
+  @Test
+  public void pseudoElements() {
+    class Subject extends AbstractSubject {
+      @Override
+      final void classes() {
+        className("before:block after:text-black");
+      }
+    }
+
+    test(
+        Subject.class,
+
+        """
+        .before\\:block::before { display: block }
+        .after\\:text-black::after { color: #000000 }
         """
     );
   }
