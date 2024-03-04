@@ -22,7 +22,9 @@ import static objectos.css.Utility.DISPLAY;
 import static objectos.css.Utility.END;
 import static objectos.css.Utility.FILL;
 import static objectos.css.Utility.FLEX_DIRECTION;
-import static objectos.css.Utility.FONT_SIZE;
+import static objectos.css.Utility.FONT_SIZE1;
+import static objectos.css.Utility.FONT_SIZE2;
+import static objectos.css.Utility.FONT_SIZEX;
 import static objectos.css.Utility.HEIGHT;
 import static objectos.css.Utility.INSET;
 import static objectos.css.Utility.JUSTIFY_CONTENT;
@@ -237,6 +239,7 @@ abstract class WayStyleGenParser extends WayStyleGenVariants {
           yield config(FILL, config.colors(), suffix);
         }
       }
+      case "font" -> font(suffix);
 
       // H
       case "h" -> config(HEIGHT, config.height(), suffix);
@@ -412,6 +415,20 @@ abstract class WayStyleGenParser extends WayStyleGenVariants {
     return Rule.NOOP;
   }
 
+  private Rule font(String suffix) {
+    Map<String, String> fontWeight;
+    fontWeight = config.fontWeight();
+
+    String weight;
+    weight = fontWeight.get(suffix);
+
+    if (weight != null) {
+      return nameValue(Utility.FONT_WEIGHT, weight);
+    }
+
+    return Rule.NOOP;
+  }
+
   private Rule inset(String suffix) {
     int dash;
     dash = suffix.indexOf('-');
@@ -513,13 +530,24 @@ abstract class WayStyleGenParser extends WayStyleGenVariants {
     int slash;
     slash = value.indexOf('/');
 
-    String fontSize;
-    fontSize = value.substring(0, slash);
+    if (slash >= 0) {
+      String fontSize;
+      fontSize = value.substring(0, slash);
 
-    String lineHeight;
-    lineHeight = value.substring(slash + 1);
+      String lineHeight;
+      lineHeight = value.substring(slash + 1);
 
-    return FONT_SIZE.get(className, variants, fontSize, lineHeight);
+      return FONT_SIZE2.get(className, variants, fontSize, lineHeight);
+    }
+
+    int semicolon;
+    semicolon = value.indexOf(';');
+
+    if (semicolon >= 0) {
+      return FONT_SIZEX.get(className, variants, value);
+    }
+
+    return FONT_SIZE1.get(className, variants, value);
   }
 
 }

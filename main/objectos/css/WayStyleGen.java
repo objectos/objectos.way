@@ -39,23 +39,25 @@ public final class WayStyleGen extends WayStyleGenConfig implements StyleGen {
 
   private Map<String, String> colors;
 
-  private final Map<String, String> spacing;
+  private Map<String, String> fontSize;
 
-  private final Map<String, String> fontSize;
+  private Map<String, String> fontWeight;
 
-  private final Map<String, String> height;
+  private Map<String, String> height;
 
-  private final Map<String, String> inset;
+  private Map<String, String> inset;
 
   private final Map<String, String> letterSpacing;
   private final Map<String, String> lineHeight;
 
-  private final Map<String, String> margin;
+  private Map<String, String> margin;
 
   private Map<String, String> outlineOffset;
   private Map<String, String> outlineWidth;
 
-  private final Map<String, String> padding;
+  private Map<String, String> padding;
+
+  private Map<String, String> spacing;
 
   private Map<String, String> utilities;
 
@@ -64,99 +66,6 @@ public final class WayStyleGen extends WayStyleGenConfig implements StyleGen {
   private Map<String, String> width;
 
   public WayStyleGen() {
-    spacing = new GrowableMap<>();
-    spacing.put("px", "1px");
-    spacing.put("0", "0px");
-    spacing.put("0.5", "0.125rem");
-    spacing.put("1", "0.25rem");
-    spacing.put("1.5", "0.375rem");
-    spacing.put("2", "0.5rem");
-    spacing.put("2.5", "0.625rem");
-    spacing.put("3", "0.75rem");
-    spacing.put("3.5", "0.875rem");
-    spacing.put("4", "1rem");
-    spacing.put("5", "1.25rem");
-    spacing.put("6", "1.5rem");
-    spacing.put("7", "1.75rem");
-    spacing.put("8", "2rem");
-    spacing.put("9", "2.25rem");
-    spacing.put("10", "2.5rem");
-    spacing.put("11", "2.75rem");
-    spacing.put("12", "3rem");
-    spacing.put("14", "3.5rem");
-    spacing.put("16", "4rem");
-    spacing.put("20", "5rem");
-    spacing.put("24", "6rem");
-    spacing.put("28", "7rem");
-    spacing.put("32", "8rem");
-    spacing.put("36", "9rem");
-    spacing.put("40", "10rem");
-    spacing.put("44", "11rem");
-    spacing.put("48", "12rem");
-    spacing.put("52", "13rem");
-    spacing.put("56", "14rem");
-    spacing.put("60", "15rem");
-    spacing.put("64", "16rem");
-    spacing.put("72", "18rem");
-    spacing.put("80", "20rem");
-    spacing.put("96", "24rem");
-
-    // F
-    fontSize = new GrowableMap<>();
-    fontSize.put("xs", "0.75rem/1rem");
-    fontSize.put("sm", "0.875rem/1.25rem");
-    fontSize.put("base", "1rem/1.5rem");
-    fontSize.put("lg", "1.125rem/1.75rem");
-    fontSize.put("xl", "1.25rem/1.75rem");
-    fontSize.put("2xl", "1.5rem/2rem");
-    fontSize.put("3xl", "1.875rem/2.25rem");
-    fontSize.put("4xl", "2.25rem/2.5rem");
-    fontSize.put("5xl", "3rem/1");
-    fontSize.put("6xl", "3.75rem/1");
-    fontSize.put("7xl", "4.5rem/1");
-    fontSize.put("8xl", "6rem/1");
-    fontSize.put("9xl", "8rem/1");
-
-    // H
-    height = new GrowableMap<>();
-    height.putAll(spacing);
-    height.put("auto", "auto");
-    height.put("1/2", "50%");
-    height.put("1/3", "33.333333%");
-    height.put("2/3", "66.666667%");
-    height.put("1/4", "25%");
-    height.put("2/4", "50%");
-    height.put("3/4", "75%");
-    height.put("1/5", "20%");
-    height.put("2/5", "40%");
-    height.put("3/5", "60%");
-    height.put("4/5", "80%");
-    height.put("1/6", "16.666667%");
-    height.put("2/6", "33.333333%");
-    height.put("3/6", "50%");
-    height.put("4/6", "66.666667%");
-    height.put("5/6", "83.333333%");
-    height.put("full", "100%");
-    height.put("screen", "100vh");
-    height.put("svh", "100svh");
-    height.put("lvh", "100lvh");
-    height.put("dvh", "100dvh");
-    height.put("min", "min-content");
-    height.put("max", "max-content");
-    height.put("fit", "fit-content");
-
-    // I
-    inset = new GrowableMap<>();
-    inset.putAll(spacing);
-    inset.put("auto", "auto");
-    inset.put("1/2", "50%");
-    inset.put("1/3", "33.333333%");
-    inset.put("2/3", "66.666667%");
-    inset.put("1/4", "25%");
-    inset.put("2/4", "50%");
-    inset.put("3/4", "75%");
-    inset.put("full", "100%");
-
     // L
     letterSpacing = new GrowableMap<>();
     letterSpacing.put("tighter", "-0.05em");
@@ -181,15 +90,6 @@ public final class WayStyleGen extends WayStyleGenConfig implements StyleGen {
     lineHeight.put("normal", "1.5");
     lineHeight.put("relaxed", "1.625");
     lineHeight.put("loose", "2");
-
-    // M
-    margin = new GrowableMap<>();
-    margin.putAll(spacing);
-    margin.put("auto", "auto");
-
-    // P
-    padding = new GrowableMap<>();
-    padding.putAll(spacing);
   }
 
   public final WayStyleGen addUtility(String className, String rule) {
@@ -205,16 +105,32 @@ public final class WayStyleGen extends WayStyleGenConfig implements StyleGen {
     return this;
   }
 
-  @SafeVarargs
-  @SuppressWarnings("varargs")
-  public final WayStyleGen colors(Map.Entry<String, String>... entries) {
-    this.colors = Map.ofEntries(entries);
+  public final WayStyleGen noteSink(NoteSink noteSink) {
+    this.noteSink = Check.notNull(noteSink, "noteSink == null");
 
     return this;
   }
 
-  public final WayStyleGen noteSink(NoteSink noteSink) {
-    this.noteSink = Check.notNull(noteSink, "noteSink == null");
+  @SafeVarargs
+  @SuppressWarnings("varargs")
+  public final WayStyleGen overrideColors(Map.Entry<String, String>... entries) {
+    colors = Map.ofEntries(entries);
+
+    return this;
+  }
+
+  @SafeVarargs
+  @SuppressWarnings("varargs")
+  public final WayStyleGen overrideFontSize(Map.Entry<String, String>... entries) {
+    fontSize = Map.ofEntries(entries);
+
+    return this;
+  }
+
+  @SafeVarargs
+  @SuppressWarnings("varargs")
+  public final WayStyleGen overrideSpacing(Map.Entry<String, String>... entries) {
+    spacing = Map.ofEntries(entries);
 
     return this;
   }
@@ -544,13 +460,100 @@ public final class WayStyleGen extends WayStyleGenConfig implements StyleGen {
   }
 
   @Override
-  final Map<String, String> fontSize() { return fontSize; }
+  final Map<String, String> fontSize() {
+    if (fontSize == null) {
+      fontSize = new GrowableMap<>();
+
+      fontSize.put("xs", "0.75rem/1rem");
+      fontSize.put("sm", "0.875rem/1.25rem");
+      fontSize.put("base", "1rem/1.5rem");
+      fontSize.put("lg", "1.125rem/1.75rem");
+      fontSize.put("xl", "1.25rem/1.75rem");
+      fontSize.put("2xl", "1.5rem/2rem");
+      fontSize.put("3xl", "1.875rem/2.25rem");
+      fontSize.put("4xl", "2.25rem/2.5rem");
+      fontSize.put("5xl", "3rem/1");
+      fontSize.put("6xl", "3.75rem/1");
+      fontSize.put("7xl", "4.5rem/1");
+      fontSize.put("8xl", "6rem/1");
+      fontSize.put("9xl", "8rem/1");
+    }
+
+    return fontSize;
+  }
 
   @Override
-  final Map<String, String> height() { return height; }
+  final Map<String, String> fontWeight() {
+    if (fontWeight == null) {
+      fontWeight = new GrowableMap<>();
+
+      fontWeight.put("thin", "100");
+      fontWeight.put("extralight", "200");
+      fontWeight.put("light", "300");
+      fontWeight.put("normal", "400");
+      fontWeight.put("medium", "500");
+      fontWeight.put("semibold", "600");
+      fontWeight.put("bold", "700");
+      fontWeight.put("extrabold", "800");
+      fontWeight.put("black", "900");
+    }
+
+    return fontWeight;
+  }
 
   @Override
-  final Map<String, String> inset() { return inset; }
+  final Map<String, String> height() {
+    if (height == null) {
+      height = new GrowableMap<>();
+
+      height.putAll(spacing());
+      height.put("auto", "auto");
+      height.put("1/2", "50%");
+      height.put("1/3", "33.333333%");
+      height.put("2/3", "66.666667%");
+      height.put("1/4", "25%");
+      height.put("2/4", "50%");
+      height.put("3/4", "75%");
+      height.put("1/5", "20%");
+      height.put("2/5", "40%");
+      height.put("3/5", "60%");
+      height.put("4/5", "80%");
+      height.put("1/6", "16.666667%");
+      height.put("2/6", "33.333333%");
+      height.put("3/6", "50%");
+      height.put("4/6", "66.666667%");
+      height.put("5/6", "83.333333%");
+      height.put("full", "100%");
+      height.put("screen", "100vh");
+      height.put("svh", "100svh");
+      height.put("lvh", "100lvh");
+      height.put("dvh", "100dvh");
+      height.put("min", "min-content");
+      height.put("max", "max-content");
+      height.put("fit", "fit-content");
+    }
+
+    return height;
+  }
+
+  @Override
+  final Map<String, String> inset() {
+    if (inset == null) {
+      inset = new GrowableMap<>();
+
+      inset.putAll(spacing());
+      inset.put("auto", "auto");
+      inset.put("1/2", "50%");
+      inset.put("1/3", "33.333333%");
+      inset.put("2/3", "66.666667%");
+      inset.put("1/4", "25%");
+      inset.put("2/4", "50%");
+      inset.put("3/4", "75%");
+      inset.put("full", "100%");
+    }
+
+    return inset;
+  }
 
   @Override
   final Map<String, String> letterSpacing() { return letterSpacing; }
@@ -559,7 +562,16 @@ public final class WayStyleGen extends WayStyleGenConfig implements StyleGen {
   final Map<String, String> lineHeight() { return lineHeight; }
 
   @Override
-  final Map<String, String> margin() { return margin; }
+  final Map<String, String> margin() {
+    if (margin == null) {
+      margin = new GrowableMap<>();
+
+      margin.putAll(spacing());
+      margin.put("auto", "auto");
+    }
+
+    return margin;
+  }
 
   @Override
   final Map<String, String> outlineOffset() {
@@ -592,7 +604,15 @@ public final class WayStyleGen extends WayStyleGenConfig implements StyleGen {
   }
 
   @Override
-  final Map<String, String> padding() { return padding; }
+  final Map<String, String> padding() {
+    if (padding == null) {
+      padding = new GrowableMap<>();
+
+      padding.putAll(spacing());
+    }
+
+    return padding;
+  }
 
   @Override
   final Map<String, String> utilities() {
@@ -651,6 +671,46 @@ public final class WayStyleGen extends WayStyleGenConfig implements StyleGen {
   }
 
   private Map<String, String> spacing() {
+    if (spacing == null) {
+      spacing = new GrowableMap<>();
+
+      spacing.put("px", "1px");
+      spacing.put("0", "0px");
+      spacing.put("0.5", "0.125rem");
+      spacing.put("1", "0.25rem");
+      spacing.put("1.5", "0.375rem");
+      spacing.put("2", "0.5rem");
+      spacing.put("2.5", "0.625rem");
+      spacing.put("3", "0.75rem");
+      spacing.put("3.5", "0.875rem");
+      spacing.put("4", "1rem");
+      spacing.put("5", "1.25rem");
+      spacing.put("6", "1.5rem");
+      spacing.put("7", "1.75rem");
+      spacing.put("8", "2rem");
+      spacing.put("9", "2.25rem");
+      spacing.put("10", "2.5rem");
+      spacing.put("11", "2.75rem");
+      spacing.put("12", "3rem");
+      spacing.put("14", "3.5rem");
+      spacing.put("16", "4rem");
+      spacing.put("20", "5rem");
+      spacing.put("24", "6rem");
+      spacing.put("28", "7rem");
+      spacing.put("32", "8rem");
+      spacing.put("36", "9rem");
+      spacing.put("40", "10rem");
+      spacing.put("44", "11rem");
+      spacing.put("48", "12rem");
+      spacing.put("52", "13rem");
+      spacing.put("56", "14rem");
+      spacing.put("60", "15rem");
+      spacing.put("64", "16rem");
+      spacing.put("72", "18rem");
+      spacing.put("80", "20rem");
+      spacing.put("96", "24rem");
+    }
+
     return spacing;
   }
 

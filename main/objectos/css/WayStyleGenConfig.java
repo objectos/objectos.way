@@ -27,6 +27,8 @@ sealed abstract class WayStyleGenConfig permits WayStyleGen {
 
   abstract Map<String, String> fontSize();
 
+  abstract Map<String, String> fontWeight();
+
   abstract Map<String, String> height();
 
   abstract Map<String, String> inset();

@@ -92,6 +92,20 @@ public class WayStyleGenSplitterTest {
     test(Subject.class, "block");
   }
 
+  @Test
+  public void testCase06() {
+    class Subject extends HtmlTemplate {
+      @Override
+      protected final void definition() {
+        div(
+            className("sr-only underline focus:not-sr-only focus:flex focus:h-full focus:items-center focus:border-4 focus:border-focus focus:py-16px focus:outline-none")
+        );
+      }
+    }
+
+    test(Subject.class, "sr-only", "underline", "focus:not-sr-only", "focus:flex", "focus:h-full", "focus:items-center", "focus:border-4", "focus:border-focus", "focus:py-16px", "focus:outline-none");
+  }
+
   private void test(Class<?> type, String... expected) {
     List<String> result;
     result = new ArrayList<>();

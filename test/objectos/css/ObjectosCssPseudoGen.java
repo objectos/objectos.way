@@ -27,9 +27,9 @@ public class ObjectosCssPseudoGen {
     ObjectosCssPseudoGen gen;
     gen = new ObjectosCssPseudoGen();
 
-    gen.classNameSingleLine(TEXT_DECORATION, "");
+    gen.classNameSingleLine(FONT_WEIGHT, "font-");
 
-    gen.cases(TEXT_DECORATION, "TEXT_DECORATION", "");
+    gen.initVariable(FONT_WEIGHT, "fontWeight");
   }
 
   private static final Map<String, String> SPACING = seqmap(
@@ -131,6 +131,18 @@ public class ObjectosCssPseudoGen {
       kv("7xl", "4.5rem/1"),
       kv("8xl", "6rem/1"),
       kv("9xl", "8rem/1")
+  );
+
+  static final Map<String, String> FONT_WEIGHT = seqmap(
+      kv("thin", "100"),
+      kv("extralight", "200"),
+      kv("light", "300"),
+      kv("normal", "400"),
+      kv("medium", "500"),
+      kv("semibold", "600"),
+      kv("bold", "700"),
+      kv("extrabold", "800"),
+      kv("black", "900")
   );
 
   static final Map<String, String> HEIGHT = seqmap(

@@ -24,20 +24,33 @@ final class ShellPage extends UiTemplate {
 
   }
 
+  // @formatter:off
+  private static final String HEADER = "fixed inset-0px flex h-48px border-b border-border-subtle bg-background";
+
+  private static final String HEADER_NAME = "flex h-full items-center border-2 border-transparent pr-32px pl-16px text-body-compact-01 font-semibold outline-none focus:border-focus";
+
+  private static final String HEADER_NAME_PREFIX = "font-normal";
+
+  private static final String HEADER_NAV = "relative hidden lg:block";
+
+  private static final String SKIP_TO_CONTENT = "sr-only text-text-secondary underline focus:not-sr-only focus:absolute focus:flex focus:h-full focus:items-center focus:border-4 focus:border-focus focus:bg-background focus:px-16px focus:outline-none";
+  // @formatter:on
+
   @Override
   final void bodyImpl() {
-    header(className("flex h-12 border-b border-border-subtle"),
-        a(className("sr-only underline focus:not-sr-only focus:flex focus:h-full focus:items-center focus:border-4 focus:border-focus focus:outline-none"), href("#content"), tabindex("0"),
-            t("Skip to content")
+    header(className(HEADER),
+        a(className(SKIP_TO_CONTENT),
+            href("#main-content"),
+            tabindex("0"),
+            t("Skip to main content")
         ),
 
-        a(className(""), href("/ui"),
-            span(className(""),
-                t("Objectos")
-            ), t(" UI")
+        a(className(HEADER_NAME), href("/ui"),
+            span(className(HEADER_NAME_PREFIX), t("o7")),
+            raw("&nbsp;"), t("[UI]")
         ),
 
-        nav(
+        nav(className(HEADER_NAV),
             ul(
                 menuItem("Link 1"),
                 menuItem("Link 2"),
@@ -46,7 +59,7 @@ final class ShellPage extends UiTemplate {
         )
     );
 
-    main(id("content"),
+    main(id("main-content"),
         p("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed in rhoncus nunc. Quisque ligula magna, hendrerit id dignissim non, rutrum id lacus. Sed facilisis tempor tellus vel interdum. Duis malesuada vel enim non ultricies. Duis mattis, ante eu vehicula imperdiet, nibh nunc efficitur nulla, sit amet imperdiet orci tortor eget tortor. Maecenas egestas ut ex ac fringilla. Quisque neque orci, pretium et efficitur nec, vehicula non nisi. Aliquam et ullamcorper sem. Praesent non quam id massa porta feugiat."),
 
         p("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam quis sagittis felis. Aliquam ex nisi, molestie et commodo sit amet, auctor id sem. Mauris suscipit ligula ac consequat aliquam. Ut ornare quam quis placerat pharetra. In tempor mi vel molestie volutpat. Ut a dignissim odio. Phasellus ullamcorper, mauris quis venenatis ullamcorper, dui felis lobortis mi, et pretium ante ipsum eu diam. Quisque congue velit a molestie lacinia. Pellentesque vulputate ut nisl tempor lacinia. Morbi consequat felis vitae feugiat finibus. Praesent lectus purus, pharetra in semper eget, pulvinar vitae sapien.")

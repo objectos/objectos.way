@@ -18,6 +18,7 @@ package objectos.css;
 import static org.testng.Assert.assertEquals;
 
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import objectos.html.HtmlTemplate;
 import objectos.way.TestingNoteSink;
@@ -372,6 +373,32 @@ public class StyleGenTest {
         .text-7xl { font-size: 4.5rem; line-height: 1 }
         .text-8xl { font-size: 6rem; line-height: 1 }
         .text-9xl { font-size: 8rem; line-height: 1 }
+        """
+    );
+  }
+
+  @Test
+  public void fontWeight() {
+    class Subject extends AbstractSubject {
+      @Override
+      final void classes() {
+        className("font-thin font-extralight font-light font-normal font-medium font-semibold font-bold font-extrabold font-black");
+      }
+    }
+
+    test(
+        Subject.class,
+
+        """
+        .font-thin { font-weight: 100 }
+        .font-extralight { font-weight: 200 }
+        .font-light { font-weight: 300 }
+        .font-normal { font-weight: 400 }
+        .font-medium { font-weight: 500 }
+        .font-semibold { font-weight: 600 }
+        .font-bold { font-weight: 700 }
+        .font-extrabold { font-weight: 800 }
+        .font-black { font-weight: 900 }
         """
     );
   }
@@ -1874,6 +1901,7 @@ public class StyleGenTest {
 
   @Test
   public void pseudoClasses() {
+
     class Subject extends AbstractSubject {
       @Override
       final void classes() {
@@ -1941,32 +1969,7 @@ public class StyleGenTest {
   // customization
 
   @Test
-  public void customColors() {
-    WayStyleGen gen;
-    gen = new WayStyleGen();
-
-    gen.colors(
-        Map.entry("border-subtle", "var(--ui-border-subtle)")
-    );
-
-    class Subject extends AbstractSubject {
-      @Override
-      final void classes() {
-        className("border-border-subtle border-black");
-      }
-    }
-
-    test(
-        gen, Subject.class,
-
-        """
-        .border-border-subtle { border-color: var(--ui-border-subtle) }
-        """
-    );
-  }
-
-  @Test
-  public void customUtilities() {
+  public void addUtility() {
     WayStyleGen gen;
     gen = new WayStyleGen();
 
@@ -2014,11 +2017,124 @@ public class StyleGenTest {
     );
   }
 
+  @Test
+  public void overrideColors() {
+    WayStyleGen gen;
+    gen = new WayStyleGen();
+
+    gen.overrideColors(
+        Map.entry("border-subtle", "var(--ui-border-subtle)")
+    );
+
+    class Subject extends AbstractSubject {
+      @Override
+      final void classes() {
+        className("border-border-subtle border-black");
+      }
+    }
+
+    test(
+        gen, Subject.class,
+
+        """
+        .border-border-subtle { border-color: var(--ui-border-subtle) }
+        """
+    );
+  }
+
+  @Test
+  public void overrideFontSize() {
+    WayStyleGen gen;
+    gen = new WayStyleGen();
+
+    gen.overrideFontSize(
+        Map.entry("sm", "0.8rem"),
+        Map.entry("base", "16px/24px"),
+        Map.entry("body-compact-01", """
+        font-size: var(--ui-body-compact-01-font-size, 0.875rem);
+        font-weight: var(--ui-body-compact-01-font-weight, 400);
+        line-height: var(--ui-body-compact-01-line-height, 1.28572);
+        letter-spacing: var(--ui-body-compact-01-letter-spacing, 0.16px);
+        """)
+    );
+
+    class Subject extends AbstractSubject {
+      @Override
+      final void classes() {
+        className("text-sm text-base text-body-compact-01");
+      }
+    }
+
+    test(
+        gen, Subject.class,
+
+        """
+        .text-sm { font-size: 0.8rem }
+        .text-base { font-size: 16px; line-height: 24px }
+        .text-body-compact-01 {
+          font-size: var(--ui-body-compact-01-font-size, 0.875rem);
+          font-weight: var(--ui-body-compact-01-font-weight, 400);
+          line-height: var(--ui-body-compact-01-line-height, 1.28572);
+          letter-spacing: var(--ui-body-compact-01-letter-spacing, 0.16px);
+        }
+        """
+    );
+  }
+
+  @Test
+  public void overrideSpacing() {
+    WayStyleGen gen;
+    gen = new WayStyleGen();
+
+    gen.overrideSpacing(
+        Map.entry("0px", "0px"),
+        px(1), px(2), px(4),
+        px(16)
+    );
+
+    class Subject extends AbstractSubject {
+      @Override
+      final void classes() {
+        className("m-0px h-1px w-2px p-4px focus:py-16px");
+      }
+    }
+
+    test(
+        gen, Subject.class,
+
+        """
+        .m-0px { margin: 0px }
+        .h-1px { height: 0.0625rem }
+        .w-2px { width: 0.125rem }
+        .p-4px { padding: 0.25rem }
+        .focus\\:py-16px:focus { padding-top: 1rem; padding-bottom: 1rem }
+        """
+    );
+  }
+
+  private Entry<String, String> px(int value) {
+    String px;
+    px = Integer.toString(value) + "px";
+
+    double remValue;
+    remValue = ((double) value) / 16;
+
+    String rem;
+
+    if (remValue == Math.rint(remValue)) {
+      rem = Integer.toString((int) remValue) + "rem";
+    } else {
+      rem = Double.toString(remValue) + "rem";
+    }
+
+    return Map.entry(px, rem);
+  }
+
   private void test(Class<?> type, String expected) {
     WayStyleGen gen;
     gen = new WayStyleGen();
 
-    gen.colors(
+    gen.overrideColors(
         Map.entry("inherit", "inherit"),
         Map.entry("current", "currentColor"),
         Map.entry("transparent", "transparent"),

@@ -21,6 +21,8 @@ sealed abstract class Utility {
 
   // order is important.
 
+  static final Utility CUSTOM = new MultiLine();
+
   static final Utility ACCESSIBILITY = new MultiLine();
 
   static final Utility POSITION = new Single("position");
@@ -82,7 +84,10 @@ sealed abstract class Utility {
 
   static final Utility TEXT_ALIGN = new Single("text-align");
 
-  static final Utility FONT_SIZE = new Duo("font-size", "line-height");
+  static final Utility FONT_SIZE1 = new Single("font-size");
+  static final Utility FONT_SIZE2 = new Duo("font-size", "line-height");
+  static final Utility FONT_SIZEX = new MultiLine();
+  static final Utility FONT_WEIGHT = new Single("font-weight");
 
   static final Utility LINE_HEIGHT = new Single("line-height");
 
@@ -96,8 +101,6 @@ sealed abstract class Utility {
   static final Utility OUTLINE_WIDTH = new Single("outline-width");
   static final Utility OUTLINE_OFFSET = new Single("outline-offset");
   static final Utility OUTLINE_COLOR = new Single("outline-color");
-
-  static final Utility CUSTOM = new MultiLine();
 
   // all instances are created in this class
   private static int COUNTER;
