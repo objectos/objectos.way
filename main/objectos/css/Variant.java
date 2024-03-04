@@ -18,11 +18,15 @@ package objectos.css;
 @SuppressWarnings("exports")
 sealed interface Variant extends Comparable<Variant> {
 
-  record AppendTo(String selector) implements Variant {
+  record AppendTo(int index, String selector) implements Variant {
     @Override
     public final int compareTo(Variant o) {
       if (o instanceof MediaQuery) {
         return 1;
+      }
+
+      if (o instanceof AppendTo that) {
+        return Integer.compare(index, that.index);
       }
 
       return 0;

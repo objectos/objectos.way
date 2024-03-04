@@ -46,11 +46,11 @@ final class ShellPage extends UiTemplate {
   );
 
   private static final ClassName HEADER_MENU_ITEM = ClassName.of(
-      "flex h-full select-none items-center border-2 border-transparent bg-background px-16px text-body-compact-01 tracking-normal text-text-secondary active:bg-background-active focus:border-focus hover:bg-background-hover"
+      "flex h-full select-none items-center border-2 border-transparent bg-background px-16px text-body-compact-01 tracking-normal text-text-secondary focus:border-focus focus:outline-none hover:bg-background-hover active:bg-background-active"
   );
 
   private static final ClassName SKIP_TO_CONTENT = ClassName.of(
-      "sr-only text-text-secondary underline focus:not-sr-only focus:absolute focus:flex focus:h-full focus:items-center focus:border-4 focus:border-focus focus:bg-background focus:px-16px focus:outline-none"
+      "sr-only z-50 text-text-secondary underline focus:not-sr-only focus:absolute focus:flex focus:h-full focus:items-center focus:border-4 focus:border-focus focus:bg-background focus:px-16px focus:outline-none"
   );
 
   @Override

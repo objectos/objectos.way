@@ -15,6 +15,7 @@
  */
 package objectos.css;
 
+import java.util.Collections;
 import java.util.List;
 import objectos.css.Variant.AppendTo;
 import objectos.css.Variant.MediaQuery;
@@ -66,7 +67,42 @@ class Rule implements Comparable<Rule> {
 
   @Override
   public final int compareTo(Rule o) {
-    return Integer.compare(index, o.index);
+    int result;
+    result = Integer.compare(index, o.index);
+
+    if (result != 0) {
+      return result;
+    }
+
+    Variant thisMax;
+    thisMax = max();
+
+    Variant thatMax;
+    thatMax = o.max();
+
+    if (thisMax == null && thatMax == null) {
+      return result;
+    }
+
+    if (thisMax == null) {
+      return -1;
+    }
+
+    if (thatMax == null) {
+      return 1;
+    }
+
+    return thisMax.compareTo(thatMax);
+  }
+
+  final Variant max() {
+    return switch (variants.size()) {
+      case 0 -> null;
+
+      case 1 -> variants.get(0);
+
+      default -> Collections.max(variants);
+    };
   }
 
   @Override

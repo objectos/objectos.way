@@ -170,12 +170,12 @@ public final class WayStyleGen extends WayStyleGenConfig implements StyleGen {
 
       variants.putAll(breakpoints);
 
-      variants.put("active", new AppendTo(":active"));
-      variants.put("focus", new AppendTo(":focus"));
-      variants.put("hover", new AppendTo(":hover"));
+      variants.put("focus", new AppendTo(1, ":focus"));
+      variants.put("hover", new AppendTo(2, ":hover"));
+      variants.put("active", new AppendTo(3, ":active"));
 
-      variants.put("after", new AppendTo("::after"));
-      variants.put("before", new AppendTo("::before"));
+      variants.put("after", new AppendTo(4, "::after"));
+      variants.put("before", new AppendTo(5, "::before"));
     }
 
     return variants.get(variantName);

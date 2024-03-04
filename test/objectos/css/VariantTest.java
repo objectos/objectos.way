@@ -31,8 +31,8 @@ public class VariantTest {
     GrowableList<Variant> list;
     list = new GrowableList<>();
 
-    AppendTo hover = new AppendTo(":hover");
-    AppendTo focus = new AppendTo(":focus");
+    AppendTo hover = new AppendTo(2, ":hover");
+    AppendTo focus = new AppendTo(1, ":focus");
     Breakpoint sm = new Breakpoint(1, "640px");
 
     list.add(hover);
@@ -42,8 +42,8 @@ public class VariantTest {
     List<Variant> res = list.toUnmodifiableList(Comparator.naturalOrder());
 
     assertEquals(res.get(0), sm);
-    assertEquals(res.get(1), hover);
-    assertEquals(res.get(2), focus);
+    assertEquals(res.get(1), focus);
+    assertEquals(res.get(2), hover);
   }
 
   @Test(description = "breakpoints by index")

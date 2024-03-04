@@ -16,11 +16,51 @@
 package objectos.css;
 
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertSame;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import objectos.css.Variant.AppendTo;
 import org.testng.annotations.Test;
 
 public class RuleTest {
+
+  @Test(description = "order by utility first")
+  public void ordering01() {
+    List<Variant> empty = List.of();
+    List<Variant> hover = List.of(new AppendTo(1, ":hover"));
+    List<Variant> active = List.of(new AppendTo(2, ":active"));
+
+    List<Rule> rules = new ArrayList<>();
+
+    Rule a1 = new Rule(0, "a-1", empty);
+    rules.add(a1);
+
+    Rule a2 = new Rule(0, "a-2", empty);
+    rules.add(a2);
+
+    Rule a1Active = new Rule(0, "a-2:active", active);
+    rules.add(a1Active);
+
+    Rule a1Hover = new Rule(0, "a-1:hover", hover);
+    rules.add(a1Hover);
+
+    Rule b1 = new Rule(1, "b-1", empty);
+    rules.add(b1);
+
+    Rule b2 = new Rule(1, "b-2", empty);
+    rules.add(b2);
+
+    Collections.sort(rules);
+
+    assertSame(rules.get(0), a1);
+    assertSame(rules.get(1), a2);
+    assertSame(rules.get(2), a1Hover);
+    assertSame(rules.get(3), a1Active);
+    assertSame(rules.get(4), b1);
+    assertSame(rules.get(5), b2);
+  }
 
   @Test
   public void writeClassName() {

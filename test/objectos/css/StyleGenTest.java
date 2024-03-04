@@ -1972,7 +1972,7 @@ public class StyleGenTest {
     class Subject extends AbstractSubject {
       @Override
       final void classes() {
-        className("focus:not-sr-only");
+        className("focus:not-sr-only active:bg-white hover:bg-black");
       }
     }
 
@@ -1990,6 +1990,8 @@ public class StyleGenTest {
           clip: auto;
           white-space: normal;
         }
+        .hover\\:bg-black:hover { background-color: #000000 }
+        .active\\:bg-white:active { background-color: #ffffff }
         """
     );
   }
@@ -2149,8 +2151,8 @@ public class StyleGenTest {
         gen, Subject.class,
 
         """
-        .before\\:content-empty::before { content: "" }
         .content-foo { content: url(foo.png) }
+        .before\\:content-empty::before { content: "" }
         """
     );
   }
