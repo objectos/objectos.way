@@ -38,7 +38,7 @@ final class ShellPage extends UiTemplate {
   );
 
   private static final ClassName HEADER_NAV = ClassName.of(
-      "relative hidden lg:block"
+      "relative hidden pl-16px before:absolute before:block before:top-12px before:-left-16px before:h-24px before:w-1px before:bg-border-subtle before:content-empty lg:block"
   );
 
   private static final ClassName SKIP_TO_CONTENT = ClassName.of(

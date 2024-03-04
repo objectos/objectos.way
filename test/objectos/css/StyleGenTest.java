@@ -582,6 +582,7 @@ public class StyleGenTest {
         className("left-auto left-1/2 left-1/3 left-2/3 left-1/4 left-2/4 left-3/4 left-full");
         className("left-px left-0 left-0.5 left-1 left-1.5 left-2 left-2.5 left-3 left-3.5 left-4 left-5 left-6 left-7 left-8 left-9 left-10 left-11 left-12 left-14 left-16 left-20 left-24 left-28 left-32 left-36 left-40 left-44 left-48 left-52 left-56 left-60 left-64 left-72 left-80 left-96");
         // @formatter:on
+        className("-top-1 -right-2 -bottom-3 -left-4");
       }
     }
 
@@ -847,6 +848,7 @@ public class StyleGenTest {
         .top-72 { top: 18rem }
         .top-80 { top: 20rem }
         .top-96 { top: 24rem }
+        .-top-1 { top: -0.25rem }
         .right-auto { right: auto }
         .right-1\\/2 { right: 50% }
         .right-1\\/3 { right: 33.333333% }
@@ -890,6 +892,7 @@ public class StyleGenTest {
         .right-72 { right: 18rem }
         .right-80 { right: 20rem }
         .right-96 { right: 24rem }
+        .-right-2 { right: -0.5rem }
         .bottom-auto { bottom: auto }
         .bottom-1\\/2 { bottom: 50% }
         .bottom-1\\/3 { bottom: 33.333333% }
@@ -933,6 +936,7 @@ public class StyleGenTest {
         .bottom-72 { bottom: 18rem }
         .bottom-80 { bottom: 20rem }
         .bottom-96 { bottom: 24rem }
+        .-bottom-3 { bottom: -0.75rem }
         .left-auto { left: auto }
         .left-1\\/2 { left: 50% }
         .left-1\\/3 { left: 33.333333% }
@@ -976,6 +980,7 @@ public class StyleGenTest {
         .left-72 { left: 18rem }
         .left-80 { left: 20rem }
         .left-96 { left: 24rem }
+        .-left-4 { left: -1rem }
         """
     );
   }

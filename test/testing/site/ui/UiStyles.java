@@ -63,6 +63,11 @@ final class UiStyles implements Handler {
         Map.entry("text-secondary", "var(--ui-text-secondary)")
     );
 
+    styleGen.overrideContent(
+        Map.entry("none", "none"),
+        Map.entry("empty", "\"\"")
+    );
+
     styleGen.overrideFontSize(
         Map.entry("body-compact-01", """
         font-size: var(--ui-body-compact-01-font-size, 0.875rem);

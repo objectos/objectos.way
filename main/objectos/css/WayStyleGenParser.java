@@ -68,6 +68,8 @@ abstract class WayStyleGenParser extends WayStyleGenVariants {
 
   private String className;
 
+  private boolean negative;
+
   private List<Variant> variants;
 
   WayStyleGenParser(WayStyleGenConfig config) {
@@ -200,10 +202,22 @@ abstract class WayStyleGenParser extends WayStyleGenVariants {
    * Prefixes that are 1 word
    */
   private Rule prefixWord1(String value) {
+    negative = false;
+
+    int prefixStart = 0;
+
     String prefix, suffix;
 
     int dashIndex;
     dashIndex = value.indexOf('-');
+
+    if (dashIndex == 0) {
+      negative = true;
+
+      prefixStart = 1;
+
+      dashIndex = value.indexOf('-', 1);
+    }
 
     switch (dashIndex) {
       case 0 -> {
@@ -217,7 +231,7 @@ abstract class WayStyleGenParser extends WayStyleGenVariants {
       }
 
       default -> {
-        prefix = value.substring(0, dashIndex);
+        prefix = value.substring(prefixStart, dashIndex);
 
         suffix = value.substring(dashIndex + 1);
       }
@@ -299,10 +313,24 @@ abstract class WayStyleGenParser extends WayStyleGenVariants {
     value = map.get(suffix);
 
     if (value != null) {
-      return utility.get(className, variants, value);
+      String formatted;
+      formatted = format(value);
+
+      return utility.get(className, variants, formatted);
     }
 
     return Rule.NOOP;
+  }
+
+  private String format(String value) {
+    String result;
+    result = value;
+
+    if (negative) {
+      result = "-" + value;
+    }
+
+    return result;
   }
 
   private enum Side {
