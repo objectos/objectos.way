@@ -37,6 +37,7 @@ final class ShellPage extends UiTemplate {
       "pr-32px pl-16px",
       "text-body-compact-01 font-semibold",
       "outline-none",
+      "transition-colors duration-100",
       "focus:border-focus"
   );
 
@@ -64,7 +65,7 @@ final class ShellPage extends UiTemplate {
       "bg-background",
       "px-16px",
       "text-body-compact-01 tracking-normal text-text-secondary",
-      "transition-colors",
+      "transition-colors duration-100",
       "active:bg-background-active",
       "focus:border-focus focus:outline-none",
       "hover:bg-background-hover"
@@ -73,6 +74,7 @@ final class ShellPage extends UiTemplate {
   private static final ClassName SKIP_TO_CONTENT = ClassName.of(
       "sr-only z-50",
       "text-text-secondary underline",
+      "transition-colors duration-100",
       "focus:not-sr-only",
       "focus:absolute focus:flex focus:h-full focus:items-center",
       "focus:border-4 focus:border-focus",

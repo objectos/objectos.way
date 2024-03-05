@@ -107,6 +107,7 @@ sealed abstract class Utility {
   static final Utility OUTLINE_COLOR = new Single("outline-color");
 
   static final Utility TRANSITION_PROPERTY = new MultiLine();
+  static final Utility TRANSITION_DURATION = new Single("transition-duration");
 
   static final Utility CONTENT = new Single("content");
 

@@ -57,6 +57,7 @@ import static objectos.css.Utility.TEXT_ALIGN;
 import static objectos.css.Utility.TEXT_COLOR;
 import static objectos.css.Utility.TEXT_DECORATION;
 import static objectos.css.Utility.TOP;
+import static objectos.css.Utility.TRANSITION_DURATION;
 import static objectos.css.Utility.TRANSITION_PROPERTY;
 import static objectos.css.Utility.USER_SELECT;
 import static objectos.css.Utility.WIDTH;
@@ -254,6 +255,9 @@ abstract class WayStyleGenParser extends WayStyleGenVariants {
 
       // C
       case "content" -> config(CONTENT, config.content(), suffix);
+
+      // D
+      case "duration" -> config(TRANSITION_DURATION, config.transitionDuration(), suffix);
 
       // E
       case "end" -> config(END, config.inset(), suffix);

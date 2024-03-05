@@ -61,6 +61,7 @@ public final class WayStyleGen extends WayStyleGenConfig implements StyleGen {
 
   private Map<String, String> spacing;
 
+  private Map<String, String> transitionDuration;
   private Map<String, String> transitionProperty;
 
   private Map<String, String> utilities;
@@ -640,6 +641,25 @@ public final class WayStyleGen extends WayStyleGenConfig implements StyleGen {
     }
 
     return padding;
+  }
+
+  @Override
+  final Map<String, String> transitionDuration() {
+    if (transitionDuration == null) {
+      transitionDuration = Map.ofEntries(
+          Map.entry("0", "0s"),
+          Map.entry("75", "75ms"),
+          Map.entry("100", "100ms"),
+          Map.entry("150", "150ms"),
+          Map.entry("200", "200ms"),
+          Map.entry("300", "300ms"),
+          Map.entry("500", "500ms"),
+          Map.entry("700", "700ms"),
+          Map.entry("1000", "1000ms")
+      );
+    }
+
+    return transitionDuration;
   }
 
   @Override

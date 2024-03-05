@@ -20,6 +20,8 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 public class ObjectosCssPseudoGen {
@@ -27,9 +29,9 @@ public class ObjectosCssPseudoGen {
     ObjectosCssPseudoGen gen;
     gen = new ObjectosCssPseudoGen();
 
-    gen.classNameSingleLine(Z_INDEX, "z-");
+    gen.classNameSingleLine(TRANSITION_DURATION, "duration-");
 
-    gen.initVariable(Z_INDEX, "zIndex");
+    gen.mapOf(TRANSITION_DURATION, "transitionDuration");
   }
 
   private static final Map<String, String> SPACING = seqmap(
@@ -249,6 +251,18 @@ public class ObjectosCssPseudoGen {
       kv("no-underline", "none")
   );
 
+  static final Map<String, String> TRANSITION_DURATION = seqmap(
+      kv("0", "0s"),
+      kv("75", "75ms"),
+      kv("100", "100ms"),
+      kv("150", "150ms"),
+      kv("200", "200ms"),
+      kv("300", "300ms"),
+      kv("500", "500ms"),
+      kv("700", "700ms"),
+      kv("1000", "1000ms")
+  );
+
   static final Map<String, String> USER_SELECT = seqmap(
       kv("none", "none"),
       kv("text", "text"),
@@ -400,6 +414,31 @@ public class ObjectosCssPseudoGen {
       System.out.println("""
       %s.put("%s", "%s");""".formatted(variable, key, value));
     }
+  }
+
+  final void mapOf(Map<String, String> map, String variable) {
+    System.out.println(variable + " = Map.ofEntries(");
+
+    Set<Entry<String, String>> set;
+    set = map.entrySet();
+
+    Iterator<Entry<String, String>> iterator;
+    iterator = set.iterator();
+
+    if (iterator.hasNext()) {
+      Entry<String, String> e;
+      e = iterator.next();
+
+      System.out.print("    Map.entry(\"%s\", \"%s\")".formatted(e.getKey(), e.getValue()));
+
+      while (iterator.hasNext()) {
+        e = iterator.next();
+
+        System.out.print(",\n    Map.entry(\"%s\", \"%s\")".formatted(e.getKey(), e.getValue()));
+      }
+    }
+
+    System.out.println("\n);");
   }
 
   private static Map.Entry<String, String> kv(String key, String value) {

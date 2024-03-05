@@ -47,6 +47,8 @@ sealed abstract class WayStyleGenConfig permits WayStyleGen {
 
   abstract Map<String, String> padding();
 
+  abstract Map<String, String> transitionDuration();
+
   abstract Map<String, String> transitionProperty();
 
   abstract Map<String, String> utilities();
