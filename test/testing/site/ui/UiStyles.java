@@ -50,6 +50,8 @@ final class UiStyles implements Handler {
     --ui-border-subtle-03: #c6c6c6;
     --ui-border-subtle: var(--ui-border-subtle-00);
     --ui-focus: #0f62fe;
+    --ui-icon-primary: #161616;
+    --ui-icon-secondary: #525252;
     --ui-text-primary: #161616;
     --ui-text-secondary: #525252;
     """);
@@ -63,6 +65,8 @@ final class UiStyles implements Handler {
         Map.entry("background-hover", "var(--ui-background-hover)"),
         Map.entry("border-subtle", "var(--ui-border-subtle)"),
         Map.entry("focus", "var(--ui-focus)"),
+        Map.entry("icon-primary", "var(--ui-icon-primary)"),
+        Map.entry("icon-secondary", "var(--ui-icon-secondary)"),
         Map.entry("text-primary", "var(--ui-text-primary)"),
         Map.entry("text-secondary", "var(--ui-text-secondary)")
     );

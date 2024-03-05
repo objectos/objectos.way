@@ -31,6 +31,14 @@ final class ShellPage extends UiTemplate {
       "bg-background"
   );
 
+  private static final ClassName HEADER_ACTION = ClassName.of(
+      "h-48px w-48px",
+      "border border-transparent",
+      "active:bg-background-active",
+      "focus:border-focus focus:outline-none",
+      "hover:bg-background-hover"
+  );
+
   private static final ClassName HEADER_NAME = ClassName.of(
       "flex h-full select-none items-center",
       "border-2 border-transparent",
@@ -59,16 +67,13 @@ final class ShellPage extends UiTemplate {
       "flex h-full"
   );
 
-  private static final ClassName HEADER_MENU_ITEM = ClassName.of(
-      "flex h-full select-none items-center",
-      "border-2 border-transparent",
-      "bg-background",
-      "px-16px",
-      "text-body-compact-01 tracking-normal text-text-secondary",
-      "transition-colors duration-100",
-      "active:bg-background-active",
-      "focus:border-focus focus:outline-none",
-      "hover:bg-background-hover"
+  private static final ClassName HEADER_MENU_TOGGLE = ClassName.of(
+      "flex items-center justify-center",
+      "lg:hidden"
+  );
+
+  private static final ClassName HEADER_MENU_TRIGGER_SVG = ClassName.of(
+      "fill-icon-primary"
   );
 
   private static final ClassName SKIP_TO_CONTENT = ClassName.of(
@@ -87,6 +92,12 @@ final class ShellPage extends UiTemplate {
   final void bodyImpl() {
     header(HEADER,
         a(SKIP_TO_CONTENT, href("#main-content"), tabindex("0"), t("Skip to main content")),
+
+        button(HEADER_ACTION, HEADER_MENU_TOGGLE, title("Open Menu"), type("button"),
+            svg(HEADER_MENU_TRIGGER_SVG, xmlns("http://www.w3.org/2000/svg"), width("20px"), height("20px"), viewBox("0 0 20 20"),
+                path(d("M2 14.8H18V16H2zM2 11.2H18V12.399999999999999H2zM2 7.6H18V8.799999999999999H2zM2 4H18V5.2H2z"))
+            )
+        ),
 
         a(HEADER_NAME, href("/ui"),
             span(HEADER_NAME_PREFIX, t("o7")),
@@ -108,6 +119,18 @@ final class ShellPage extends UiTemplate {
         p("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam quis sagittis felis. Aliquam ex nisi, molestie et commodo sit amet, auctor id sem. Mauris suscipit ligula ac consequat aliquam. Ut ornare quam quis placerat pharetra. In tempor mi vel molestie volutpat. Ut a dignissim odio. Phasellus ullamcorper, mauris quis venenatis ullamcorper, dui felis lobortis mi, et pretium ante ipsum eu diam. Quisque congue velit a molestie lacinia. Pellentesque vulputate ut nisl tempor lacinia. Morbi consequat felis vitae feugiat finibus. Praesent lectus purus, pharetra in semper eget, pulvinar vitae sapien.")
     );
   }
+
+  private static final ClassName HEADER_MENU_ITEM = ClassName.of(
+      "flex h-full select-none items-center",
+      "border-2 border-transparent",
+      "bg-background",
+      "px-16px",
+      "text-body-compact-01 tracking-normal text-text-secondary",
+      "transition-colors duration-100",
+      "active:bg-background-active",
+      "focus:border-focus focus:outline-none",
+      "hover:bg-background-hover"
+  );
 
   private Element menuItem(String text) {
     return li(a(HEADER_MENU_ITEM, href("#"), tabindex("0"),
