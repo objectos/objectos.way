@@ -341,42 +341,6 @@ public sealed abstract class TemplateAttributes permits TemplateElements {
   }
 
   /**
-   * Generates the {@code data-click} attribute with the specified value.
-   *
-   * @param value
-   *        the value of the attribute
-   *
-   * @return an instruction representing this attribute.
-   */
-  protected final Api.GlobalAttribute dataClick(String value) {
-    return $html().dataClick(value);
-  }
-
-  /**
-   * Generates the {@code data-frame} attribute with the specified value.
-   *
-   * @param value
-   *        the value of the attribute
-   *
-   * @return an instruction representing this attribute.
-   */
-  protected final Api.GlobalAttribute dataFrame(String value) {
-    return $html().dataFrame(value);
-  }
-
-  /**
-   * Generates the {@code data-frame-value} attribute with the specified value.
-   *
-   * @param value
-   *        the value of the attribute
-   *
-   * @return an instruction representing this attribute.
-   */
-  protected final Api.GlobalAttribute dataFrameValue(String value) {
-    return $html().dataFrameValue(value);
-  }
-
-  /**
    * Generates the {@code defer} boolean attribute.
    *
    * @return an instruction representing this attribute.

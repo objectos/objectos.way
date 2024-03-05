@@ -79,7 +79,7 @@ class Recorder {
     );
   }
 
-  final void attribute(AttributeName name) {
+  final Api.Attribute attribute0(AttributeName name) {
     int index;
     index = name.index();
 
@@ -95,9 +95,11 @@ class Recorder {
 
         ByteProto.INTERNAL3
     );
+
+    return Api.ATTRIBUTE;
   }
 
-  final void attribute(AttributeName name, String value) {
+  final Api.Attribute attribute0(AttributeName name, String value) {
     int index;
     index = name.index();
 
@@ -120,6 +122,8 @@ class Recorder {
 
         ByteProto.INTERNAL5
     );
+
+    return Api.ATTRIBUTE;
   }
 
   final void element(StandardElementName name, Api.Instruction[] contents) {

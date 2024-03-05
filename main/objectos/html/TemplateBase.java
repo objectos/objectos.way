@@ -33,12 +33,22 @@ public sealed abstract class TemplateBase
     plugin.accept(html);
   }
 
-  protected final Api.Element dataWayClick(String text) {
+  protected final Api.GlobalAttribute dataFrame(String value) {
+    Check.notNull(value, "value == null");
+
+    return $html().attribute0(AttributeName.DATA_FRAME, value);
+  }
+
+  protected final Api.GlobalAttribute dataFrameValue(String value) {
+    Check.notNull(value, "value == null");
+
+    return $html().attribute0(AttributeName.DATA_FRAME_VALUE, value);
+  }
+
+  protected final Api.GlobalAttribute dataWayClick(String text) {
     Check.notNull(text, "text == null");
 
-    $html().attribute(AttributeName.DATA_WAY_CLICK, text);
-
-    return Api.ELEMENT;
+    return $html().attribute0(AttributeName.DATA_WAY_CLICK, text);
   }
 
   /**

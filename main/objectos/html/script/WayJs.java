@@ -20,7 +20,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
-import objectos.html.Api.Element;
+import objectos.html.Api;
 import objectos.html.Api.ExternalAttribute;
 import objectos.html.HtmlComponent;
 import objectos.html.TemplateBase;
@@ -48,7 +48,7 @@ public final class WayJs extends HtmlComponent {
     }
   }
 
-  public final Element click(Command... commands) {
+  public final Api.GlobalAttribute click(Command... commands) {
     Check.notNull(commands, "commands == null");
 
     StringBuilder json;

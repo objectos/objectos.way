@@ -80,6 +80,10 @@ SELFGEN_JAVAX += $(MAIN)
 .PHONY: selfgen
 selfgen: $(SELFGEN_MARKER)
 
+.PHONY: selfgen@clean
+selfgen@clean:
+	rm -f $(SELFGEN_MARKER)
+
 $(SELFGEN_MODULE_PATH): $(SELFGEN_DEPS)
 	cat $^ | sort -u | paste --delimiter='$(MODULE_PATH_SEPARATOR)' --serial > $@
 

@@ -218,7 +218,7 @@ public class HtmlTestInternal {
 
     compiler.compilationBegin();
 
-    compiler.attribute(AttributeName.LANG, "pt-BR");
+    compiler.attribute0(AttributeName.LANG, "pt-BR");
 
     compiler.elementBegin(StandardElementName.HTML);
     compiler.elementValue(Api.ATTRIBUTE);
@@ -670,8 +670,8 @@ public class HtmlTestInternal {
 
     compiler.compilationBegin();
 
-    compiler.attribute(AttributeName.TYPE, "email");
-    compiler.attribute(AttributeName.REQUIRED);
+    compiler.attribute0(AttributeName.TYPE, "email");
+    compiler.attribute0(AttributeName.REQUIRED);
 
     compiler.elementBegin(StandardElementName.INPUT);
     compiler.elementValue(Api.ATTRIBUTE);

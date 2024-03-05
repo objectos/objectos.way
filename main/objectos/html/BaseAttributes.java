@@ -15,6 +15,8 @@
  */
 package objectos.html;
 
+import objectos.lang.object.Check;
+
 /**
  * Provides methods for rendering HTML attributes.
  */
@@ -31,8 +33,8 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    * @return an instruction representing this attribute.
    */
   public final Api.GlobalAttribute accesskey(String value) {
-    attribute(AttributeName.ACCESSKEY, value);
-    return Api.ATTRIBUTE;
+    Check.notNull(value, "value == null");
+    return attribute0(AttributeName.ACCESSKEY, value);
   }
 
   /**
@@ -44,8 +46,8 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    * @return an instruction representing this attribute.
    */
   public final Api.FormValue action(String value) {
-    attribute(AttributeName.ACTION, value);
-    return Api.ATTRIBUTE;
+    Check.notNull(value, "value == null");
+    return attribute0(AttributeName.ACTION, value);
   }
 
   /**
@@ -57,8 +59,8 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    * @return an instruction representing this attribute.
    */
   public final Api.TableValue align(String value) {
-    attribute(AttributeName.ALIGN, value);
-    return Api.ATTRIBUTE;
+    Check.notNull(value, "value == null");
+    return attribute0(AttributeName.ALIGN, value);
   }
 
   /**
@@ -70,8 +72,8 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    * @return an instruction representing this attribute.
    */
   public final Api.AlignmentBaselineAttribute alignmentBaseline(String value) {
-    attribute(AttributeName.ALIGNMENT_BASELINE, value);
-    return Api.ATTRIBUTE;
+    Check.notNull(value, "value == null");
+    return attribute0(AttributeName.ALIGNMENT_BASELINE, value);
   }
 
   /**
@@ -83,8 +85,8 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    * @return an instruction representing this attribute.
    */
   public final Api.ImageValue alt(String value) {
-    attribute(AttributeName.ALT, value);
-    return Api.ATTRIBUTE;
+    Check.notNull(value, "value == null");
+    return attribute0(AttributeName.ALT, value);
   }
 
   /**
@@ -96,8 +98,8 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    * @return an instruction representing this attribute.
    */
   public final Api.GlobalAttribute ariaHidden(String value) {
-    attribute(AttributeName.ARIA_HIDDEN, value);
-    return Api.ATTRIBUTE;
+    Check.notNull(value, "value == null");
+    return attribute0(AttributeName.ARIA_HIDDEN, value);
   }
 
   /**
@@ -109,8 +111,8 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    * @return an instruction representing this attribute.
    */
   public final Api.GlobalAttribute ariaLabel(String value) {
-    attribute(AttributeName.ARIA_LABEL, value);
-    return Api.ATTRIBUTE;
+    Check.notNull(value, "value == null");
+    return attribute0(AttributeName.ARIA_LABEL, value);
   }
 
   /**
@@ -119,8 +121,7 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    * @return an instruction representing this attribute.
    */
   public final Api.ScriptValue async() {
-    attribute(AttributeName.ASYNC);
-    return Api.ATTRIBUTE;
+    return attribute0(AttributeName.ASYNC);
   }
 
   /**
@@ -132,8 +133,8 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    * @return an instruction representing this attribute.
    */
   public final Api.AutocompleteAttribute autocomplete(String value) {
-    attribute(AttributeName.AUTOCOMPLETE, value);
-    return Api.ATTRIBUTE;
+    Check.notNull(value, "value == null");
+    return attribute0(AttributeName.AUTOCOMPLETE, value);
   }
 
   /**
@@ -142,8 +143,7 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    * @return an instruction representing this attribute.
    */
   public final Api.InputValue autofocus() {
-    attribute(AttributeName.AUTOFOCUS);
-    return Api.ATTRIBUTE;
+    return attribute0(AttributeName.AUTOFOCUS);
   }
 
   /**
@@ -155,8 +155,8 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    * @return an instruction representing this attribute.
    */
   public final Api.BaselineShiftAttribute baselineShift(String value) {
-    attribute(AttributeName.BASELINE_SHIFT, value);
-    return Api.ATTRIBUTE;
+    Check.notNull(value, "value == null");
+    return attribute0(AttributeName.BASELINE_SHIFT, value);
   }
 
   /**
@@ -168,8 +168,8 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    * @return an instruction representing this attribute.
    */
   public final Api.TableValue border(String value) {
-    attribute(AttributeName.BORDER, value);
-    return Api.ATTRIBUTE;
+    Check.notNull(value, "value == null");
+    return attribute0(AttributeName.BORDER, value);
   }
 
   /**
@@ -181,8 +181,8 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    * @return an instruction representing this attribute.
    */
   public final Api.TableValue cellpadding(String value) {
-    attribute(AttributeName.CELLPADDING, value);
-    return Api.ATTRIBUTE;
+    Check.notNull(value, "value == null");
+    return attribute0(AttributeName.CELLPADDING, value);
   }
 
   /**
@@ -194,8 +194,8 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    * @return an instruction representing this attribute.
    */
   public final Api.TableValue cellspacing(String value) {
-    attribute(AttributeName.CELLSPACING, value);
-    return Api.ATTRIBUTE;
+    Check.notNull(value, "value == null");
+    return attribute0(AttributeName.CELLSPACING, value);
   }
 
   /**
@@ -207,8 +207,8 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    * @return an instruction representing this attribute.
    */
   public final Api.MetaValue charset(String value) {
-    attribute(AttributeName.CHARSET, value);
-    return Api.ATTRIBUTE;
+    Check.notNull(value, "value == null");
+    return attribute0(AttributeName.CHARSET, value);
   }
 
   /**
@@ -220,8 +220,8 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    * @return an instruction representing this attribute.
    */
   public final Api.BlockquoteValue cite(String value) {
-    attribute(AttributeName.CITE, value);
-    return Api.ATTRIBUTE;
+    Check.notNull(value, "value == null");
+    return attribute0(AttributeName.CITE, value);
   }
 
   /**
@@ -233,8 +233,8 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    * @return an instruction representing this attribute.
    */
   public final Api.GlobalAttribute className(String value) {
-    attribute(AttributeName.CLASS, value);
-    return Api.ATTRIBUTE;
+    Check.notNull(value, "value == null");
+    return attribute0(AttributeName.CLASS, value);
   }
 
   /**
@@ -246,8 +246,8 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    * @return an instruction representing this attribute.
    */
   public final Api.ClipRuleAttribute clipRule(String value) {
-    attribute(AttributeName.CLIP_RULE, value);
-    return Api.ATTRIBUTE;
+    Check.notNull(value, "value == null");
+    return attribute0(AttributeName.CLIP_RULE, value);
   }
 
   /**
@@ -259,8 +259,8 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    * @return an instruction representing this attribute.
    */
   public final Api.ColorAttribute color(String value) {
-    attribute(AttributeName.COLOR, value);
-    return Api.ATTRIBUTE;
+    Check.notNull(value, "value == null");
+    return attribute0(AttributeName.COLOR, value);
   }
 
   /**
@@ -272,8 +272,8 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    * @return an instruction representing this attribute.
    */
   public final Api.ColorInterpolationAttribute colorInterpolation(String value) {
-    attribute(AttributeName.COLOR_INTERPOLATION, value);
-    return Api.ATTRIBUTE;
+    Check.notNull(value, "value == null");
+    return attribute0(AttributeName.COLOR_INTERPOLATION, value);
   }
 
   /**
@@ -285,8 +285,8 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    * @return an instruction representing this attribute.
    */
   public final Api.ColorInterpolationFiltersAttribute colorInterpolationFilters(String value) {
-    attribute(AttributeName.COLOR_INTERPOLATION_FILTERS, value);
-    return Api.ATTRIBUTE;
+    Check.notNull(value, "value == null");
+    return attribute0(AttributeName.COLOR_INTERPOLATION_FILTERS, value);
   }
 
   /**
@@ -298,8 +298,8 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    * @return an instruction representing this attribute.
    */
   public final Api.TextAreaValue cols(String value) {
-    attribute(AttributeName.COLS, value);
-    return Api.ATTRIBUTE;
+    Check.notNull(value, "value == null");
+    return attribute0(AttributeName.COLS, value);
   }
 
   /**
@@ -311,8 +311,8 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    * @return an instruction representing this attribute.
    */
   public final Api.MetaValue content(String value) {
-    attribute(AttributeName.CONTENT, value);
-    return Api.ATTRIBUTE;
+    Check.notNull(value, "value == null");
+    return attribute0(AttributeName.CONTENT, value);
   }
 
   /**
@@ -324,8 +324,8 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    * @return an instruction representing this attribute.
    */
   public final Api.GlobalAttribute contenteditable(String value) {
-    attribute(AttributeName.CONTENTEDITABLE, value);
-    return Api.ATTRIBUTE;
+    Check.notNull(value, "value == null");
+    return attribute0(AttributeName.CONTENTEDITABLE, value);
   }
 
   /**
@@ -337,8 +337,8 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    * @return an instruction representing this attribute.
    */
   public final Api.CrossoriginAttribute crossorigin(String value) {
-    attribute(AttributeName.CROSSORIGIN, value);
-    return Api.ATTRIBUTE;
+    Check.notNull(value, "value == null");
+    return attribute0(AttributeName.CROSSORIGIN, value);
   }
 
   /**
@@ -350,8 +350,8 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    * @return an instruction representing this attribute.
    */
   public final Api.CursorAttribute cursor(String value) {
-    attribute(AttributeName.CURSOR, value);
-    return Api.ATTRIBUTE;
+    Check.notNull(value, "value == null");
+    return attribute0(AttributeName.CURSOR, value);
   }
 
   /**
@@ -363,47 +363,8 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    * @return an instruction representing this attribute.
    */
   public final Api.DAttribute d(String value) {
-    attribute(AttributeName.D, value);
-    return Api.ATTRIBUTE;
-  }
-
-  /**
-   * Generates the {@code data-click} attribute with the specified value.
-   *
-   * @param value
-   *        the value of the attribute
-   *
-   * @return an instruction representing this attribute.
-   */
-  public final Api.GlobalAttribute dataClick(String value) {
-    attribute(AttributeName.DATA_CLICK, value);
-    return Api.ATTRIBUTE;
-  }
-
-  /**
-   * Generates the {@code data-frame} attribute with the specified value.
-   *
-   * @param value
-   *        the value of the attribute
-   *
-   * @return an instruction representing this attribute.
-   */
-  public final Api.GlobalAttribute dataFrame(String value) {
-    attribute(AttributeName.DATA_FRAME, value);
-    return Api.ATTRIBUTE;
-  }
-
-  /**
-   * Generates the {@code data-frame-value} attribute with the specified value.
-   *
-   * @param value
-   *        the value of the attribute
-   *
-   * @return an instruction representing this attribute.
-   */
-  public final Api.GlobalAttribute dataFrameValue(String value) {
-    attribute(AttributeName.DATA_FRAME_VALUE, value);
-    return Api.ATTRIBUTE;
+    Check.notNull(value, "value == null");
+    return attribute0(AttributeName.D, value);
   }
 
   /**
@@ -412,8 +373,7 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    * @return an instruction representing this attribute.
    */
   public final Api.ScriptValue defer() {
-    attribute(AttributeName.DEFER);
-    return Api.ATTRIBUTE;
+    return attribute0(AttributeName.DEFER);
   }
 
   /**
@@ -425,8 +385,8 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    * @return an instruction representing this attribute.
    */
   public final Api.GlobalAttribute dir(String value) {
-    attribute(AttributeName.DIR, value);
-    return Api.ATTRIBUTE;
+    Check.notNull(value, "value == null");
+    return attribute0(AttributeName.DIR, value);
   }
 
   /**
@@ -438,8 +398,8 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    * @return an instruction representing this attribute.
    */
   public final Api.DirectionAttribute direction(String value) {
-    attribute(AttributeName.DIRECTION, value);
-    return Api.ATTRIBUTE;
+    Check.notNull(value, "value == null");
+    return attribute0(AttributeName.DIRECTION, value);
   }
 
   /**
@@ -451,8 +411,8 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    * @return an instruction representing this attribute.
    */
   public final Api.TextAreaValue dirname(String value) {
-    attribute(AttributeName.DIRNAME, value);
-    return Api.ATTRIBUTE;
+    Check.notNull(value, "value == null");
+    return attribute0(AttributeName.DIRNAME, value);
   }
 
   /**
@@ -461,8 +421,7 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    * @return an instruction representing this attribute.
    */
   public final Api.DisabledAttribute disabled() {
-    attribute(AttributeName.DISABLED);
-    return Api.ATTRIBUTE;
+    return attribute0(AttributeName.DISABLED);
   }
 
   /**
@@ -474,8 +433,8 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    * @return an instruction representing this attribute.
    */
   public final Api.DisplayAttribute display(String value) {
-    attribute(AttributeName.DISPLAY, value);
-    return Api.ATTRIBUTE;
+    Check.notNull(value, "value == null");
+    return attribute0(AttributeName.DISPLAY, value);
   }
 
   /**
@@ -487,8 +446,8 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    * @return an instruction representing this attribute.
    */
   public final Api.DominantBaselineAttribute dominantBaseline(String value) {
-    attribute(AttributeName.DOMINANT_BASELINE, value);
-    return Api.ATTRIBUTE;
+    Check.notNull(value, "value == null");
+    return attribute0(AttributeName.DOMINANT_BASELINE, value);
   }
 
   /**
@@ -500,8 +459,8 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    * @return an instruction representing this attribute.
    */
   public final Api.GlobalAttribute draggable(String value) {
-    attribute(AttributeName.DRAGGABLE, value);
-    return Api.ATTRIBUTE;
+    Check.notNull(value, "value == null");
+    return attribute0(AttributeName.DRAGGABLE, value);
   }
 
   /**
@@ -513,8 +472,8 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    * @return an instruction representing this attribute.
    */
   public final Api.FormValue enctype(String value) {
-    attribute(AttributeName.ENCTYPE, value);
-    return Api.ATTRIBUTE;
+    Check.notNull(value, "value == null");
+    return attribute0(AttributeName.ENCTYPE, value);
   }
 
   /**
@@ -526,8 +485,8 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    * @return an instruction representing this attribute.
    */
   public final Api.FillAttribute fill(String value) {
-    attribute(AttributeName.FILL, value);
-    return Api.ATTRIBUTE;
+    Check.notNull(value, "value == null");
+    return attribute0(AttributeName.FILL, value);
   }
 
   /**
@@ -539,8 +498,8 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    * @return an instruction representing this attribute.
    */
   public final Api.FillOpacityAttribute fillOpacity(String value) {
-    attribute(AttributeName.FILL_OPACITY, value);
-    return Api.ATTRIBUTE;
+    Check.notNull(value, "value == null");
+    return attribute0(AttributeName.FILL_OPACITY, value);
   }
 
   /**
@@ -552,8 +511,8 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    * @return an instruction representing this attribute.
    */
   public final Api.FillRuleAttribute fillRule(String value) {
-    attribute(AttributeName.FILL_RULE, value);
-    return Api.ATTRIBUTE;
+    Check.notNull(value, "value == null");
+    return attribute0(AttributeName.FILL_RULE, value);
   }
 
   /**
@@ -565,8 +524,8 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    * @return an instruction representing this attribute.
    */
   public final Api.FilterAttribute filter(String value) {
-    attribute(AttributeName.FILTER, value);
-    return Api.ATTRIBUTE;
+    Check.notNull(value, "value == null");
+    return attribute0(AttributeName.FILTER, value);
   }
 
   /**
@@ -578,8 +537,8 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    * @return an instruction representing this attribute.
    */
   public final Api.FloodColorAttribute floodColor(String value) {
-    attribute(AttributeName.FLOOD_COLOR, value);
-    return Api.ATTRIBUTE;
+    Check.notNull(value, "value == null");
+    return attribute0(AttributeName.FLOOD_COLOR, value);
   }
 
   /**
@@ -591,8 +550,8 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    * @return an instruction representing this attribute.
    */
   public final Api.FloodOpacityAttribute floodOpacity(String value) {
-    attribute(AttributeName.FLOOD_OPACITY, value);
-    return Api.ATTRIBUTE;
+    Check.notNull(value, "value == null");
+    return attribute0(AttributeName.FLOOD_OPACITY, value);
   }
 
   /**
@@ -604,8 +563,8 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    * @return an instruction representing this attribute.
    */
   public final Api.FontFamilyAttribute fontFamily(String value) {
-    attribute(AttributeName.FONT_FAMILY, value);
-    return Api.ATTRIBUTE;
+    Check.notNull(value, "value == null");
+    return attribute0(AttributeName.FONT_FAMILY, value);
   }
 
   /**
@@ -617,8 +576,8 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    * @return an instruction representing this attribute.
    */
   public final Api.FontSizeAttribute fontSize(String value) {
-    attribute(AttributeName.FONT_SIZE, value);
-    return Api.ATTRIBUTE;
+    Check.notNull(value, "value == null");
+    return attribute0(AttributeName.FONT_SIZE, value);
   }
 
   /**
@@ -630,8 +589,8 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    * @return an instruction representing this attribute.
    */
   public final Api.FontSizeAdjustAttribute fontSizeAdjust(String value) {
-    attribute(AttributeName.FONT_SIZE_ADJUST, value);
-    return Api.ATTRIBUTE;
+    Check.notNull(value, "value == null");
+    return attribute0(AttributeName.FONT_SIZE_ADJUST, value);
   }
 
   /**
@@ -643,8 +602,8 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    * @return an instruction representing this attribute.
    */
   public final Api.FontStretchAttribute fontStretch(String value) {
-    attribute(AttributeName.FONT_STRETCH, value);
-    return Api.ATTRIBUTE;
+    Check.notNull(value, "value == null");
+    return attribute0(AttributeName.FONT_STRETCH, value);
   }
 
   /**
@@ -656,8 +615,8 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    * @return an instruction representing this attribute.
    */
   public final Api.FontStyleAttribute fontStyle(String value) {
-    attribute(AttributeName.FONT_STYLE, value);
-    return Api.ATTRIBUTE;
+    Check.notNull(value, "value == null");
+    return attribute0(AttributeName.FONT_STYLE, value);
   }
 
   /**
@@ -669,8 +628,8 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    * @return an instruction representing this attribute.
    */
   public final Api.FontVariantAttribute fontVariant(String value) {
-    attribute(AttributeName.FONT_VARIANT, value);
-    return Api.ATTRIBUTE;
+    Check.notNull(value, "value == null");
+    return attribute0(AttributeName.FONT_VARIANT, value);
   }
 
   /**
@@ -682,8 +641,8 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    * @return an instruction representing this attribute.
    */
   public final Api.FontWeightAttribute fontWeight(String value) {
-    attribute(AttributeName.FONT_WEIGHT, value);
-    return Api.ATTRIBUTE;
+    Check.notNull(value, "value == null");
+    return attribute0(AttributeName.FONT_WEIGHT, value);
   }
 
   /**
@@ -695,8 +654,8 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    * @return an instruction representing this attribute.
    */
   public final Api.LabelValue forAttr(String value) {
-    attribute(AttributeName.FOR, value);
-    return Api.ATTRIBUTE;
+    Check.notNull(value, "value == null");
+    return attribute0(AttributeName.FOR, value);
   }
 
   /**
@@ -708,8 +667,8 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    * @return an instruction representing this attribute.
    */
   public final Api.LabelValue forElement(String value) {
-    attribute(AttributeName.FOR, value);
-    return Api.ATTRIBUTE;
+    Check.notNull(value, "value == null");
+    return attribute0(AttributeName.FOR, value);
   }
 
   /**
@@ -721,8 +680,8 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    * @return an instruction representing this attribute.
    */
   public final Api.GlyphOrientationHorizontalAttribute glyphOrientationHorizontal(String value) {
-    attribute(AttributeName.GLYPH_ORIENTATION_HORIZONTAL, value);
-    return Api.ATTRIBUTE;
+    Check.notNull(value, "value == null");
+    return attribute0(AttributeName.GLYPH_ORIENTATION_HORIZONTAL, value);
   }
 
   /**
@@ -734,8 +693,8 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    * @return an instruction representing this attribute.
    */
   public final Api.GlyphOrientationVerticalAttribute glyphOrientationVertical(String value) {
-    attribute(AttributeName.GLYPH_ORIENTATION_VERTICAL, value);
-    return Api.ATTRIBUTE;
+    Check.notNull(value, "value == null");
+    return attribute0(AttributeName.GLYPH_ORIENTATION_VERTICAL, value);
   }
 
   /**
@@ -747,8 +706,8 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    * @return an instruction representing this attribute.
    */
   public final Api.HeightAttribute height(String value) {
-    attribute(AttributeName.HEIGHT, value);
-    return Api.ATTRIBUTE;
+    Check.notNull(value, "value == null");
+    return attribute0(AttributeName.HEIGHT, value);
   }
 
   /**
@@ -757,8 +716,7 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    * @return an instruction representing this attribute.
    */
   public final Api.GlobalAttribute hidden() {
-    attribute(AttributeName.HIDDEN);
-    return Api.ATTRIBUTE;
+    return attribute0(AttributeName.HIDDEN);
   }
 
   /**
@@ -770,8 +728,8 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    * @return an instruction representing this attribute.
    */
   public final Api.HrefAttribute href(String value) {
-    attribute(AttributeName.HREF, value);
-    return Api.ATTRIBUTE;
+    Check.notNull(value, "value == null");
+    return attribute0(AttributeName.HREF, value);
   }
 
   /**
@@ -783,8 +741,8 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    * @return an instruction representing this attribute.
    */
   public final Api.MetaValue httpEquiv(String value) {
-    attribute(AttributeName.HTTP_EQUIV, value);
-    return Api.ATTRIBUTE;
+    Check.notNull(value, "value == null");
+    return attribute0(AttributeName.HTTP_EQUIV, value);
   }
 
   /**
@@ -796,8 +754,8 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    * @return an instruction representing this attribute.
    */
   public final Api.GlobalAttribute id(String value) {
-    attribute(AttributeName.ID, value);
-    return Api.ATTRIBUTE;
+    Check.notNull(value, "value == null");
+    return attribute0(AttributeName.ID, value);
   }
 
   /**
@@ -809,8 +767,8 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    * @return an instruction representing this attribute.
    */
   public final Api.ImageRenderingAttribute imageRendering(String value) {
-    attribute(AttributeName.IMAGE_RENDERING, value);
-    return Api.ATTRIBUTE;
+    Check.notNull(value, "value == null");
+    return attribute0(AttributeName.IMAGE_RENDERING, value);
   }
 
   /**
@@ -822,8 +780,8 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    * @return an instruction representing this attribute.
    */
   public final Api.ScriptValue integrity(String value) {
-    attribute(AttributeName.INTEGRITY, value);
-    return Api.ATTRIBUTE;
+    Check.notNull(value, "value == null");
+    return attribute0(AttributeName.INTEGRITY, value);
   }
 
   /**
@@ -835,8 +793,8 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    * @return an instruction representing this attribute.
    */
   public final Api.GlobalAttribute lang(String value) {
-    attribute(AttributeName.LANG, value);
-    return Api.ATTRIBUTE;
+    Check.notNull(value, "value == null");
+    return attribute0(AttributeName.LANG, value);
   }
 
   /**
@@ -848,8 +806,8 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    * @return an instruction representing this attribute.
    */
   public final Api.LetterSpacingAttribute letterSpacing(String value) {
-    attribute(AttributeName.LETTER_SPACING, value);
-    return Api.ATTRIBUTE;
+    Check.notNull(value, "value == null");
+    return attribute0(AttributeName.LETTER_SPACING, value);
   }
 
   /**
@@ -861,8 +819,8 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    * @return an instruction representing this attribute.
    */
   public final Api.LightingColorAttribute lightingColor(String value) {
-    attribute(AttributeName.LIGHTING_COLOR, value);
-    return Api.ATTRIBUTE;
+    Check.notNull(value, "value == null");
+    return attribute0(AttributeName.LIGHTING_COLOR, value);
   }
 
   /**
@@ -874,8 +832,8 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    * @return an instruction representing this attribute.
    */
   public final Api.MarkerEndAttribute markerEnd(String value) {
-    attribute(AttributeName.MARKER_END, value);
-    return Api.ATTRIBUTE;
+    Check.notNull(value, "value == null");
+    return attribute0(AttributeName.MARKER_END, value);
   }
 
   /**
@@ -887,8 +845,8 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    * @return an instruction representing this attribute.
    */
   public final Api.MarkerMidAttribute markerMid(String value) {
-    attribute(AttributeName.MARKER_MID, value);
-    return Api.ATTRIBUTE;
+    Check.notNull(value, "value == null");
+    return attribute0(AttributeName.MARKER_MID, value);
   }
 
   /**
@@ -900,8 +858,8 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    * @return an instruction representing this attribute.
    */
   public final Api.MarkerStartAttribute markerStart(String value) {
-    attribute(AttributeName.MARKER_START, value);
-    return Api.ATTRIBUTE;
+    Check.notNull(value, "value == null");
+    return attribute0(AttributeName.MARKER_START, value);
   }
 
   /**
@@ -913,8 +871,8 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    * @return an instruction representing this attribute.
    */
   public final Api.MaskAttribute mask(String value) {
-    attribute(AttributeName.MASK, value);
-    return Api.ATTRIBUTE;
+    Check.notNull(value, "value == null");
+    return attribute0(AttributeName.MASK, value);
   }
 
   /**
@@ -926,8 +884,8 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    * @return an instruction representing this attribute.
    */
   public final Api.MaskTypeAttribute maskType(String value) {
-    attribute(AttributeName.MASK_TYPE, value);
-    return Api.ATTRIBUTE;
+    Check.notNull(value, "value == null");
+    return attribute0(AttributeName.MASK_TYPE, value);
   }
 
   /**
@@ -939,8 +897,8 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    * @return an instruction representing this attribute.
    */
   public final Api.TextAreaValue maxlength(String value) {
-    attribute(AttributeName.MAXLENGTH, value);
-    return Api.ATTRIBUTE;
+    Check.notNull(value, "value == null");
+    return attribute0(AttributeName.MAXLENGTH, value);
   }
 
   /**
@@ -952,8 +910,8 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    * @return an instruction representing this attribute.
    */
   public final Api.LinkValue media(String value) {
-    attribute(AttributeName.MEDIA, value);
-    return Api.ATTRIBUTE;
+    Check.notNull(value, "value == null");
+    return attribute0(AttributeName.MEDIA, value);
   }
 
   /**
@@ -965,8 +923,8 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    * @return an instruction representing this attribute.
    */
   public final Api.FormValue method(String value) {
-    attribute(AttributeName.METHOD, value);
-    return Api.ATTRIBUTE;
+    Check.notNull(value, "value == null");
+    return attribute0(AttributeName.METHOD, value);
   }
 
   /**
@@ -978,8 +936,8 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    * @return an instruction representing this attribute.
    */
   public final Api.TextAreaValue minlength(String value) {
-    attribute(AttributeName.MINLENGTH, value);
-    return Api.ATTRIBUTE;
+    Check.notNull(value, "value == null");
+    return attribute0(AttributeName.MINLENGTH, value);
   }
 
   /**
@@ -988,8 +946,7 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    * @return an instruction representing this attribute.
    */
   public final Api.SelectValue multiple() {
-    attribute(AttributeName.MULTIPLE);
-    return Api.ATTRIBUTE;
+    return attribute0(AttributeName.MULTIPLE);
   }
 
   /**
@@ -1001,8 +958,8 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    * @return an instruction representing this attribute.
    */
   public final Api.NameAttribute name(String value) {
-    attribute(AttributeName.NAME, value);
-    return Api.ATTRIBUTE;
+    Check.notNull(value, "value == null");
+    return attribute0(AttributeName.NAME, value);
   }
 
   /**
@@ -1011,8 +968,7 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    * @return an instruction representing this attribute.
    */
   public final Api.ScriptValue nomodule() {
-    attribute(AttributeName.NOMODULE);
-    return Api.ATTRIBUTE;
+    return attribute0(AttributeName.NOMODULE);
   }
 
   /**
@@ -1024,8 +980,8 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    * @return an instruction representing this attribute.
    */
   public final Api.BodyValue onafterprint(String value) {
-    attribute(AttributeName.ONAFTERPRINT, value);
-    return Api.ATTRIBUTE;
+    Check.notNull(value, "value == null");
+    return attribute0(AttributeName.ONAFTERPRINT, value);
   }
 
   /**
@@ -1037,8 +993,8 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    * @return an instruction representing this attribute.
    */
   public final Api.BodyValue onbeforeprint(String value) {
-    attribute(AttributeName.ONBEFOREPRINT, value);
-    return Api.ATTRIBUTE;
+    Check.notNull(value, "value == null");
+    return attribute0(AttributeName.ONBEFOREPRINT, value);
   }
 
   /**
@@ -1050,8 +1006,8 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    * @return an instruction representing this attribute.
    */
   public final Api.BodyValue onbeforeunload(String value) {
-    attribute(AttributeName.ONBEFOREUNLOAD, value);
-    return Api.ATTRIBUTE;
+    Check.notNull(value, "value == null");
+    return attribute0(AttributeName.ONBEFOREUNLOAD, value);
   }
 
   /**
@@ -1063,8 +1019,8 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    * @return an instruction representing this attribute.
    */
   public final Api.GlobalAttribute onclick(String value) {
-    attribute(AttributeName.ONCLICK, value);
-    return Api.ATTRIBUTE;
+    Check.notNull(value, "value == null");
+    return attribute0(AttributeName.ONCLICK, value);
   }
 
   /**
@@ -1076,8 +1032,8 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    * @return an instruction representing this attribute.
    */
   public final Api.BodyValue onhashchange(String value) {
-    attribute(AttributeName.ONHASHCHANGE, value);
-    return Api.ATTRIBUTE;
+    Check.notNull(value, "value == null");
+    return attribute0(AttributeName.ONHASHCHANGE, value);
   }
 
   /**
@@ -1089,8 +1045,8 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    * @return an instruction representing this attribute.
    */
   public final Api.BodyValue onlanguagechange(String value) {
-    attribute(AttributeName.ONLANGUAGECHANGE, value);
-    return Api.ATTRIBUTE;
+    Check.notNull(value, "value == null");
+    return attribute0(AttributeName.ONLANGUAGECHANGE, value);
   }
 
   /**
@@ -1102,8 +1058,8 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    * @return an instruction representing this attribute.
    */
   public final Api.BodyValue onmessage(String value) {
-    attribute(AttributeName.ONMESSAGE, value);
-    return Api.ATTRIBUTE;
+    Check.notNull(value, "value == null");
+    return attribute0(AttributeName.ONMESSAGE, value);
   }
 
   /**
@@ -1115,8 +1071,8 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    * @return an instruction representing this attribute.
    */
   public final Api.BodyValue onoffline(String value) {
-    attribute(AttributeName.ONOFFLINE, value);
-    return Api.ATTRIBUTE;
+    Check.notNull(value, "value == null");
+    return attribute0(AttributeName.ONOFFLINE, value);
   }
 
   /**
@@ -1128,8 +1084,8 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    * @return an instruction representing this attribute.
    */
   public final Api.BodyValue ononline(String value) {
-    attribute(AttributeName.ONONLINE, value);
-    return Api.ATTRIBUTE;
+    Check.notNull(value, "value == null");
+    return attribute0(AttributeName.ONONLINE, value);
   }
 
   /**
@@ -1141,8 +1097,8 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    * @return an instruction representing this attribute.
    */
   public final Api.BodyValue onpagehide(String value) {
-    attribute(AttributeName.ONPAGEHIDE, value);
-    return Api.ATTRIBUTE;
+    Check.notNull(value, "value == null");
+    return attribute0(AttributeName.ONPAGEHIDE, value);
   }
 
   /**
@@ -1154,8 +1110,8 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    * @return an instruction representing this attribute.
    */
   public final Api.BodyValue onpageshow(String value) {
-    attribute(AttributeName.ONPAGESHOW, value);
-    return Api.ATTRIBUTE;
+    Check.notNull(value, "value == null");
+    return attribute0(AttributeName.ONPAGESHOW, value);
   }
 
   /**
@@ -1167,8 +1123,8 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    * @return an instruction representing this attribute.
    */
   public final Api.BodyValue onpopstate(String value) {
-    attribute(AttributeName.ONPOPSTATE, value);
-    return Api.ATTRIBUTE;
+    Check.notNull(value, "value == null");
+    return attribute0(AttributeName.ONPOPSTATE, value);
   }
 
   /**
@@ -1180,8 +1136,8 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    * @return an instruction representing this attribute.
    */
   public final Api.BodyValue onrejectionhandled(String value) {
-    attribute(AttributeName.ONREJECTIONHANDLED, value);
-    return Api.ATTRIBUTE;
+    Check.notNull(value, "value == null");
+    return attribute0(AttributeName.ONREJECTIONHANDLED, value);
   }
 
   /**
@@ -1193,8 +1149,8 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    * @return an instruction representing this attribute.
    */
   public final Api.BodyValue onstorage(String value) {
-    attribute(AttributeName.ONSTORAGE, value);
-    return Api.ATTRIBUTE;
+    Check.notNull(value, "value == null");
+    return attribute0(AttributeName.ONSTORAGE, value);
   }
 
   /**
@@ -1206,8 +1162,8 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    * @return an instruction representing this attribute.
    */
   public final Api.GlobalAttribute onsubmit(String value) {
-    attribute(AttributeName.ONSUBMIT, value);
-    return Api.ATTRIBUTE;
+    Check.notNull(value, "value == null");
+    return attribute0(AttributeName.ONSUBMIT, value);
   }
 
   /**
@@ -1219,8 +1175,8 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    * @return an instruction representing this attribute.
    */
   public final Api.BodyValue onunhandledrejection(String value) {
-    attribute(AttributeName.ONUNHANDLEDREJECTION, value);
-    return Api.ATTRIBUTE;
+    Check.notNull(value, "value == null");
+    return attribute0(AttributeName.ONUNHANDLEDREJECTION, value);
   }
 
   /**
@@ -1232,8 +1188,8 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    * @return an instruction representing this attribute.
    */
   public final Api.BodyValue onunload(String value) {
-    attribute(AttributeName.ONUNLOAD, value);
-    return Api.ATTRIBUTE;
+    Check.notNull(value, "value == null");
+    return attribute0(AttributeName.ONUNLOAD, value);
   }
 
   /**
@@ -1245,8 +1201,8 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    * @return an instruction representing this attribute.
    */
   public final Api.OpacityAttribute opacity(String value) {
-    attribute(AttributeName.OPACITY, value);
-    return Api.ATTRIBUTE;
+    Check.notNull(value, "value == null");
+    return attribute0(AttributeName.OPACITY, value);
   }
 
   /**
@@ -1255,8 +1211,7 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    * @return an instruction representing this attribute.
    */
   public final Api.DetailsValue open() {
-    attribute(AttributeName.OPEN);
-    return Api.ATTRIBUTE;
+    return attribute0(AttributeName.OPEN);
   }
 
   /**
@@ -1268,8 +1223,8 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    * @return an instruction representing this attribute.
    */
   public final Api.OverflowAttribute overflow(String value) {
-    attribute(AttributeName.OVERFLOW, value);
-    return Api.ATTRIBUTE;
+    Check.notNull(value, "value == null");
+    return attribute0(AttributeName.OVERFLOW, value);
   }
 
   /**
@@ -1281,8 +1236,8 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    * @return an instruction representing this attribute.
    */
   public final Api.PaintOrderAttribute paintOrder(String value) {
-    attribute(AttributeName.PAINT_ORDER, value);
-    return Api.ATTRIBUTE;
+    Check.notNull(value, "value == null");
+    return attribute0(AttributeName.PAINT_ORDER, value);
   }
 
   /**
@@ -1294,8 +1249,8 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    * @return an instruction representing this attribute.
    */
   public final Api.PlaceholderAttribute placeholder(String value) {
-    attribute(AttributeName.PLACEHOLDER, value);
-    return Api.ATTRIBUTE;
+    Check.notNull(value, "value == null");
+    return attribute0(AttributeName.PLACEHOLDER, value);
   }
 
   /**
@@ -1307,8 +1262,8 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    * @return an instruction representing this attribute.
    */
   public final Api.PointerEventsAttribute pointerEvents(String value) {
-    attribute(AttributeName.POINTER_EVENTS, value);
-    return Api.ATTRIBUTE;
+    Check.notNull(value, "value == null");
+    return attribute0(AttributeName.POINTER_EVENTS, value);
   }
 
   /**
@@ -1320,8 +1275,8 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    * @return an instruction representing this attribute.
    */
   public final Api.MetaValue property(String value) {
-    attribute(AttributeName.PROPERTY, value);
-    return Api.ATTRIBUTE;
+    Check.notNull(value, "value == null");
+    return attribute0(AttributeName.PROPERTY, value);
   }
 
   /**
@@ -1330,8 +1285,7 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    * @return an instruction representing this attribute.
    */
   public final Api.ReadonlyAttribute readonly() {
-    attribute(AttributeName.READONLY);
-    return Api.ATTRIBUTE;
+    return attribute0(AttributeName.READONLY);
   }
 
   /**
@@ -1343,8 +1297,8 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    * @return an instruction representing this attribute.
    */
   public final Api.ReferrerpolicyAttribute referrerpolicy(String value) {
-    attribute(AttributeName.REFERRERPOLICY, value);
-    return Api.ATTRIBUTE;
+    Check.notNull(value, "value == null");
+    return attribute0(AttributeName.REFERRERPOLICY, value);
   }
 
   /**
@@ -1356,8 +1310,8 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    * @return an instruction representing this attribute.
    */
   public final Api.LinkValue rel(String value) {
-    attribute(AttributeName.REL, value);
-    return Api.ATTRIBUTE;
+    Check.notNull(value, "value == null");
+    return attribute0(AttributeName.REL, value);
   }
 
   /**
@@ -1366,8 +1320,7 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    * @return an instruction representing this attribute.
    */
   public final Api.RequiredAttribute required() {
-    attribute(AttributeName.REQUIRED);
-    return Api.ATTRIBUTE;
+    return attribute0(AttributeName.REQUIRED);
   }
 
   /**
@@ -1379,8 +1332,8 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    * @return an instruction representing this attribute.
    */
   public final Api.LinkValue rev(String value) {
-    attribute(AttributeName.REV, value);
-    return Api.ATTRIBUTE;
+    Check.notNull(value, "value == null");
+    return attribute0(AttributeName.REV, value);
   }
 
   /**
@@ -1389,8 +1342,7 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    * @return an instruction representing this attribute.
    */
   public final Api.OrderedListValue reversed() {
-    attribute(AttributeName.REVERSED);
-    return Api.ATTRIBUTE;
+    return attribute0(AttributeName.REVERSED);
   }
 
   /**
@@ -1402,8 +1354,8 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    * @return an instruction representing this attribute.
    */
   public final Api.GlobalAttribute role(String value) {
-    attribute(AttributeName.ROLE, value);
-    return Api.ATTRIBUTE;
+    Check.notNull(value, "value == null");
+    return attribute0(AttributeName.ROLE, value);
   }
 
   /**
@@ -1415,8 +1367,8 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    * @return an instruction representing this attribute.
    */
   public final Api.TextAreaValue rows(String value) {
-    attribute(AttributeName.ROWS, value);
-    return Api.ATTRIBUTE;
+    Check.notNull(value, "value == null");
+    return attribute0(AttributeName.ROWS, value);
   }
 
   /**
@@ -1425,8 +1377,7 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    * @return an instruction representing this attribute.
    */
   public final Api.OptionValue selected() {
-    attribute(AttributeName.SELECTED);
-    return Api.ATTRIBUTE;
+    return attribute0(AttributeName.SELECTED);
   }
 
   /**
@@ -1438,8 +1389,8 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    * @return an instruction representing this attribute.
    */
   public final Api.ShapeRenderingAttribute shapeRendering(String value) {
-    attribute(AttributeName.SHAPE_RENDERING, value);
-    return Api.ATTRIBUTE;
+    Check.notNull(value, "value == null");
+    return attribute0(AttributeName.SHAPE_RENDERING, value);
   }
 
   /**
@@ -1451,8 +1402,8 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    * @return an instruction representing this attribute.
    */
   public final Api.SelectValue size(String value) {
-    attribute(AttributeName.SIZE, value);
-    return Api.ATTRIBUTE;
+    Check.notNull(value, "value == null");
+    return attribute0(AttributeName.SIZE, value);
   }
 
   /**
@@ -1464,8 +1415,8 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    * @return an instruction representing this attribute.
    */
   public final Api.LinkValue sizes(String value) {
-    attribute(AttributeName.SIZES, value);
-    return Api.ATTRIBUTE;
+    Check.notNull(value, "value == null");
+    return attribute0(AttributeName.SIZES, value);
   }
 
   /**
@@ -1477,8 +1428,8 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    * @return an instruction representing this attribute.
    */
   public final Api.GlobalAttribute spellcheck(String value) {
-    attribute(AttributeName.SPELLCHECK, value);
-    return Api.ATTRIBUTE;
+    Check.notNull(value, "value == null");
+    return attribute0(AttributeName.SPELLCHECK, value);
   }
 
   /**
@@ -1490,8 +1441,8 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    * @return an instruction representing this attribute.
    */
   public final Api.SrcAttribute src(String value) {
-    attribute(AttributeName.SRC, value);
-    return Api.ATTRIBUTE;
+    Check.notNull(value, "value == null");
+    return attribute0(AttributeName.SRC, value);
   }
 
   /**
@@ -1503,8 +1454,8 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    * @return an instruction representing this attribute.
    */
   public final Api.ImageValue srcset(String value) {
-    attribute(AttributeName.SRCSET, value);
-    return Api.ATTRIBUTE;
+    Check.notNull(value, "value == null");
+    return attribute0(AttributeName.SRCSET, value);
   }
 
   /**
@@ -1516,8 +1467,8 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    * @return an instruction representing this attribute.
    */
   public final Api.OrderedListValue start(String value) {
-    attribute(AttributeName.START, value);
-    return Api.ATTRIBUTE;
+    Check.notNull(value, "value == null");
+    return attribute0(AttributeName.START, value);
   }
 
   /**
@@ -1529,8 +1480,8 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    * @return an instruction representing this attribute.
    */
   public final Api.StopColorAttribute stopColor(String value) {
-    attribute(AttributeName.STOP_COLOR, value);
-    return Api.ATTRIBUTE;
+    Check.notNull(value, "value == null");
+    return attribute0(AttributeName.STOP_COLOR, value);
   }
 
   /**
@@ -1542,8 +1493,8 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    * @return an instruction representing this attribute.
    */
   public final Api.StopOpacityAttribute stopOpacity(String value) {
-    attribute(AttributeName.STOP_OPACITY, value);
-    return Api.ATTRIBUTE;
+    Check.notNull(value, "value == null");
+    return attribute0(AttributeName.STOP_OPACITY, value);
   }
 
   /**
@@ -1555,8 +1506,8 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    * @return an instruction representing this attribute.
    */
   public final Api.StrokeAttribute stroke(String value) {
-    attribute(AttributeName.STROKE, value);
-    return Api.ATTRIBUTE;
+    Check.notNull(value, "value == null");
+    return attribute0(AttributeName.STROKE, value);
   }
 
   /**
@@ -1568,8 +1519,8 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    * @return an instruction representing this attribute.
    */
   public final Api.StrokeDasharrayAttribute strokeDasharray(String value) {
-    attribute(AttributeName.STROKE_DASHARRAY, value);
-    return Api.ATTRIBUTE;
+    Check.notNull(value, "value == null");
+    return attribute0(AttributeName.STROKE_DASHARRAY, value);
   }
 
   /**
@@ -1581,8 +1532,8 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    * @return an instruction representing this attribute.
    */
   public final Api.StrokeDashoffsetAttribute strokeDashoffset(String value) {
-    attribute(AttributeName.STROKE_DASHOFFSET, value);
-    return Api.ATTRIBUTE;
+    Check.notNull(value, "value == null");
+    return attribute0(AttributeName.STROKE_DASHOFFSET, value);
   }
 
   /**
@@ -1594,8 +1545,8 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    * @return an instruction representing this attribute.
    */
   public final Api.StrokeLinecapAttribute strokeLinecap(String value) {
-    attribute(AttributeName.STROKE_LINECAP, value);
-    return Api.ATTRIBUTE;
+    Check.notNull(value, "value == null");
+    return attribute0(AttributeName.STROKE_LINECAP, value);
   }
 
   /**
@@ -1607,8 +1558,8 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    * @return an instruction representing this attribute.
    */
   public final Api.StrokeLinejoinAttribute strokeLinejoin(String value) {
-    attribute(AttributeName.STROKE_LINEJOIN, value);
-    return Api.ATTRIBUTE;
+    Check.notNull(value, "value == null");
+    return attribute0(AttributeName.STROKE_LINEJOIN, value);
   }
 
   /**
@@ -1620,8 +1571,8 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    * @return an instruction representing this attribute.
    */
   public final Api.StrokeMiterlimitAttribute strokeMiterlimit(String value) {
-    attribute(AttributeName.STROKE_MITERLIMIT, value);
-    return Api.ATTRIBUTE;
+    Check.notNull(value, "value == null");
+    return attribute0(AttributeName.STROKE_MITERLIMIT, value);
   }
 
   /**
@@ -1633,8 +1584,8 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    * @return an instruction representing this attribute.
    */
   public final Api.StrokeOpacityAttribute strokeOpacity(String value) {
-    attribute(AttributeName.STROKE_OPACITY, value);
-    return Api.ATTRIBUTE;
+    Check.notNull(value, "value == null");
+    return attribute0(AttributeName.STROKE_OPACITY, value);
   }
 
   /**
@@ -1646,8 +1597,8 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    * @return an instruction representing this attribute.
    */
   public final Api.StrokeWidthAttribute strokeWidth(String value) {
-    attribute(AttributeName.STROKE_WIDTH, value);
-    return Api.ATTRIBUTE;
+    Check.notNull(value, "value == null");
+    return attribute0(AttributeName.STROKE_WIDTH, value);
   }
 
   /**
@@ -1659,8 +1610,8 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    * @return an instruction representing this attribute.
    */
   public final Api.GlobalAttribute inlineStyle(String value) {
-    attribute(AttributeName.STYLE, value);
-    return Api.ATTRIBUTE;
+    Check.notNull(value, "value == null");
+    return attribute0(AttributeName.STYLE, value);
   }
 
   /**
@@ -1672,8 +1623,8 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    * @return an instruction representing this attribute.
    */
   public final Api.GlobalAttribute tabindex(String value) {
-    attribute(AttributeName.TABINDEX, value);
-    return Api.ATTRIBUTE;
+    Check.notNull(value, "value == null");
+    return attribute0(AttributeName.TABINDEX, value);
   }
 
   /**
@@ -1685,8 +1636,8 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    * @return an instruction representing this attribute.
    */
   public final Api.TargetAttribute target(String value) {
-    attribute(AttributeName.TARGET, value);
-    return Api.ATTRIBUTE;
+    Check.notNull(value, "value == null");
+    return attribute0(AttributeName.TARGET, value);
   }
 
   /**
@@ -1698,8 +1649,8 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    * @return an instruction representing this attribute.
    */
   public final Api.TextAnchorAttribute textAnchor(String value) {
-    attribute(AttributeName.TEXT_ANCHOR, value);
-    return Api.ATTRIBUTE;
+    Check.notNull(value, "value == null");
+    return attribute0(AttributeName.TEXT_ANCHOR, value);
   }
 
   /**
@@ -1711,8 +1662,8 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    * @return an instruction representing this attribute.
    */
   public final Api.TextDecorationAttribute textDecoration(String value) {
-    attribute(AttributeName.TEXT_DECORATION, value);
-    return Api.ATTRIBUTE;
+    Check.notNull(value, "value == null");
+    return attribute0(AttributeName.TEXT_DECORATION, value);
   }
 
   /**
@@ -1724,8 +1675,8 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    * @return an instruction representing this attribute.
    */
   public final Api.TextOverflowAttribute textOverflow(String value) {
-    attribute(AttributeName.TEXT_OVERFLOW, value);
-    return Api.ATTRIBUTE;
+    Check.notNull(value, "value == null");
+    return attribute0(AttributeName.TEXT_OVERFLOW, value);
   }
 
   /**
@@ -1737,8 +1688,8 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    * @return an instruction representing this attribute.
    */
   public final Api.TextRenderingAttribute textRendering(String value) {
-    attribute(AttributeName.TEXT_RENDERING, value);
-    return Api.ATTRIBUTE;
+    Check.notNull(value, "value == null");
+    return attribute0(AttributeName.TEXT_RENDERING, value);
   }
 
   /**
@@ -1750,8 +1701,8 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    * @return an instruction representing this attribute.
    */
   public final Api.TransformAttribute transform(String value) {
-    attribute(AttributeName.TRANSFORM, value);
-    return Api.ATTRIBUTE;
+    Check.notNull(value, "value == null");
+    return attribute0(AttributeName.TRANSFORM, value);
   }
 
   /**
@@ -1763,8 +1714,8 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    * @return an instruction representing this attribute.
    */
   public final Api.TransformOriginAttribute transformOrigin(String value) {
-    attribute(AttributeName.TRANSFORM_ORIGIN, value);
-    return Api.ATTRIBUTE;
+    Check.notNull(value, "value == null");
+    return attribute0(AttributeName.TRANSFORM_ORIGIN, value);
   }
 
   /**
@@ -1776,8 +1727,8 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    * @return an instruction representing this attribute.
    */
   public final Api.GlobalAttribute translate(String value) {
-    attribute(AttributeName.TRANSLATE, value);
-    return Api.ATTRIBUTE;
+    Check.notNull(value, "value == null");
+    return attribute0(AttributeName.TRANSLATE, value);
   }
 
   /**
@@ -1789,8 +1740,8 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    * @return an instruction representing this attribute.
    */
   public final Api.TypeAttribute type(String value) {
-    attribute(AttributeName.TYPE, value);
-    return Api.ATTRIBUTE;
+    Check.notNull(value, "value == null");
+    return attribute0(AttributeName.TYPE, value);
   }
 
   /**
@@ -1802,8 +1753,8 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    * @return an instruction representing this attribute.
    */
   public final Api.UnicodeBidiAttribute unicodeBidi(String value) {
-    attribute(AttributeName.UNICODE_BIDI, value);
-    return Api.ATTRIBUTE;
+    Check.notNull(value, "value == null");
+    return attribute0(AttributeName.UNICODE_BIDI, value);
   }
 
   /**
@@ -1815,8 +1766,8 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    * @return an instruction representing this attribute.
    */
   public final Api.ValueAttribute value(String value) {
-    attribute(AttributeName.VALUE, value);
-    return Api.ATTRIBUTE;
+    Check.notNull(value, "value == null");
+    return attribute0(AttributeName.VALUE, value);
   }
 
   /**
@@ -1828,8 +1779,8 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    * @return an instruction representing this attribute.
    */
   public final Api.VectorEffectAttribute vectorEffect(String value) {
-    attribute(AttributeName.VECTOR_EFFECT, value);
-    return Api.ATTRIBUTE;
+    Check.notNull(value, "value == null");
+    return attribute0(AttributeName.VECTOR_EFFECT, value);
   }
 
   /**
@@ -1841,8 +1792,8 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    * @return an instruction representing this attribute.
    */
   public final Api.SvgValue viewBox(String value) {
-    attribute(AttributeName.VIEWBOX, value);
-    return Api.ATTRIBUTE;
+    Check.notNull(value, "value == null");
+    return attribute0(AttributeName.VIEWBOX, value);
   }
 
   /**
@@ -1854,8 +1805,8 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    * @return an instruction representing this attribute.
    */
   public final Api.VisibilityAttribute visibility(String value) {
-    attribute(AttributeName.VISIBILITY, value);
-    return Api.ATTRIBUTE;
+    Check.notNull(value, "value == null");
+    return attribute0(AttributeName.VISIBILITY, value);
   }
 
   /**
@@ -1867,8 +1818,8 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    * @return an instruction representing this attribute.
    */
   public final Api.WhiteSpaceAttribute whiteSpace(String value) {
-    attribute(AttributeName.WHITE_SPACE, value);
-    return Api.ATTRIBUTE;
+    Check.notNull(value, "value == null");
+    return attribute0(AttributeName.WHITE_SPACE, value);
   }
 
   /**
@@ -1880,8 +1831,8 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    * @return an instruction representing this attribute.
    */
   public final Api.WidthAttribute width(String value) {
-    attribute(AttributeName.WIDTH, value);
-    return Api.ATTRIBUTE;
+    Check.notNull(value, "value == null");
+    return attribute0(AttributeName.WIDTH, value);
   }
 
   /**
@@ -1893,8 +1844,8 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    * @return an instruction representing this attribute.
    */
   public final Api.WordSpacingAttribute wordSpacing(String value) {
-    attribute(AttributeName.WORD_SPACING, value);
-    return Api.ATTRIBUTE;
+    Check.notNull(value, "value == null");
+    return attribute0(AttributeName.WORD_SPACING, value);
   }
 
   /**
@@ -1906,8 +1857,8 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    * @return an instruction representing this attribute.
    */
   public final Api.TextAreaValue wrap(String value) {
-    attribute(AttributeName.WRAP, value);
-    return Api.ATTRIBUTE;
+    Check.notNull(value, "value == null");
+    return attribute0(AttributeName.WRAP, value);
   }
 
   /**
@@ -1919,8 +1870,8 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    * @return an instruction representing this attribute.
    */
   public final Api.WritingModeAttribute writingMode(String value) {
-    attribute(AttributeName.WRITING_MODE, value);
-    return Api.ATTRIBUTE;
+    Check.notNull(value, "value == null");
+    return attribute0(AttributeName.WRITING_MODE, value);
   }
 
   /**
@@ -1932,8 +1883,8 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    * @return an instruction representing this attribute.
    */
   public final Api.SvgValue xmlns(String value) {
-    attribute(AttributeName.XMLNS, value);
-    return Api.ATTRIBUTE;
+    Check.notNull(value, "value == null");
+    return attribute0(AttributeName.XMLNS, value);
   }
 
   /**
@@ -1945,7 +1896,7 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    * @return an instruction representing this attribute.
    */
   public final Api.ClipPathAttribute clipPath(String value) {
-    attribute(AttributeName.CLIP_PATH, value);
-    return Api.ATTRIBUTE;
+    Check.notNull(value, "value == null");
+    return attribute0(AttributeName.CLIP_PATH, value);
   }
 }

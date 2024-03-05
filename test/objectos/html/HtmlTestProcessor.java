@@ -60,7 +60,7 @@ public class HtmlTestProcessor {
 
     compiler.compilationBegin();
 
-    compiler.attribute(AttributeName.LANG, "pt-BR");
+    compiler.attribute0(AttributeName.LANG, "pt-BR");
 
     compiler.elementBegin(StandardElementName.HTML);
     compiler.elementValue(Api.ATTRIBUTE);

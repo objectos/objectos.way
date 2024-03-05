@@ -15,25 +15,22 @@
  */
 package objectos.html;
 
-final class WayAttributeName extends AttributeName {
+final class InitImpl extends Init {
 
   private final int index;
 
-  private final String name;
+  private final String value;
 
-  private final boolean booleanAttribute;
-
-  public WayAttributeName(int index, String name, boolean booleanAttribute) {
+  public InitImpl(int index, String value) {
     this.index = index;
-    this.name = name;
-    this.booleanAttribute = booleanAttribute;
+    this.value = value;
   }
 
   static int size() {
     return Values.size();
   }
 
-  public static WayAttributeName get(int index) {
+  public static InitImpl get(int index) {
     return Values.get(index);
   }
 
@@ -41,22 +38,25 @@ final class WayAttributeName extends AttributeName {
   public final int index() { return index; }
 
   @Override
-  public final String name() { return name; }
-
-  @Override
-  public final boolean booleanAttribute() { return booleanAttribute; }
+  public final String value() { return value; }
 
   private static class Values {
 
-    static WayAttributeName[] INSTANCE;
+    static InitImpl[] INSTANCE;
 
     static {
-      INSTANCE = WayAttributeNameBuilder.build();
+      INSTANCE = InitBuilder.BUILDER.buildValues();
+
+      InitBuilder.BUILDER = null;
     }
 
-    public static int size() { return INSTANCE.length; }
+    public static int size() {
+      return INSTANCE.length;
+    }
 
-    public static WayAttributeName get(int index) { return INSTANCE[index]; }
+    public static InitImpl get(int index) {
+      return INSTANCE[index];
+    }
 
   }
 
