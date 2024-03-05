@@ -22,7 +22,6 @@ import java.util.Locale;
 import objectos.html.HtmlTemplate;
 import objectos.lang.CharWritable;
 import objectos.lang.object.Check;
-import objectos.ui.UiCommand;
 
 public interface ServerExchange {
 
@@ -181,20 +180,6 @@ public interface ServerExchange {
     header(HeaderName.CONTENT_LENGTH, bytes.length);
 
     send(bytes);
-  }
-
-  default void ok(UiCommand command) {
-    Check.notNull(command, "command == null");
-
-    status(Status.OK);
-
-    dateNow();
-
-    header(HeaderName.CONTENT_TYPE, "application/json");
-
-    header(HeaderName.TRANSFER_ENCODING, "chunked");
-
-    send(command, StandardCharsets.UTF_8);
   }
 
   default void okText(String text, Charset charset) {

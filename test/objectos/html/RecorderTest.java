@@ -269,11 +269,11 @@ public class RecorderTest {
   External id attributes
   """)
   public void testCase13() {
-    TestIdSelector foo;
-    foo = new TestIdSelector("foo");
+    ElementId foo;
+    foo = new ElementId("foo");
 
-    TestIdSelector bar;
-    bar = new TestIdSelector("bar");
+    ElementId bar;
+    bar = new ElementId("bar");
 
     Html html;
     html = new Html();
@@ -462,11 +462,11 @@ public class RecorderTest {
     html.elementBegin(StandardElementName.NAV);
     html.elementEnd();
     // template end
-    
+
     html.elementBegin(StandardElementName.BODY);
     html.elementValue(BaseApi.FRAGMENT);
     html.elementEnd();
-    
+
     html.compilationEnd();
     */
 
@@ -644,11 +644,11 @@ public class RecorderTest {
   - grid component
   """)
   public void testCase47() {
-    ClassName grd;
-    grd = new ClassName("grd");
+    ElementClass grd;
+    grd = new ElementClass("grd");
 
-    ClassName col;
-    col = new ClassName("col");
+    ElementClass col;
+    col = new ElementClass("col");
 
     Html html;
     html = new Html();

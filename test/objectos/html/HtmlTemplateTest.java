@@ -275,8 +275,8 @@ public class HtmlTemplateTest {
   public void testCase13() {
     test(
         new HtmlTemplate() {
-          final TestIdSelector FOO = new TestIdSelector("foo");
-          final TestIdSelector BAR = new TestIdSelector("bar");
+          final ElementId FOO = new ElementId("foo");
+          final ElementId BAR = new ElementId("bar");
 
           @Override
           protected final void definition() {
@@ -481,9 +481,9 @@ public class HtmlTemplateTest {
   public void testCase21() {
     test(
         new HtmlTemplate() {
-          private final ClassName first = new ClassName("first");
+          private final ElementClass first = new ElementClass("first");
 
-          private final ClassName second = new ClassName("second");
+          private final ElementClass second = new ElementClass("second");
 
           @Override
           protected final void definition() {
@@ -820,8 +820,8 @@ public class HtmlTemplateTest {
   public void testCase35() {
     test(
         new HtmlTemplate() {
-          private final ClassName A = new ClassName("ca");
-          private final ClassName B = new ClassName("cb");
+          private final ElementClass A = new ElementClass("ca");
+          private final ElementClass B = new ElementClass("cb");
 
           @Override
           protected final void definition() {
@@ -1052,7 +1052,7 @@ public class HtmlTemplateTest {
   public void testCase49() {
     test(
         new HtmlTemplate() {
-          final TestIdSelector FOO = new TestIdSelector("foo");
+          final ElementId FOO = new ElementId("foo");
 
           @Override
           protected final void definition() {

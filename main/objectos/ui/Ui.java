@@ -18,8 +18,15 @@
  */
 package objectos.ui;
 
+import objectos.html.Api;
+import objectos.html.ElementId;
+
 public interface Ui {
 
   UiPage page();
+
+  Api.Element click(UiCommand... commands);
+
+  UiCommand replaceClass(ElementId id, String from, String to);
 
 }

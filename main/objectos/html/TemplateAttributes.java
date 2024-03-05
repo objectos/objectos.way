@@ -95,6 +95,18 @@ public sealed abstract class TemplateAttributes permits TemplateElements {
   }
 
   /**
+   * Generates the {@code aria-label} attribute with the specified value.
+   *
+   * @param value
+   *        the value of the attribute
+   *
+   * @return an instruction representing this attribute.
+   */
+  protected final Api.GlobalAttribute ariaLabel(String value) {
+    return $html().ariaLabel(value);
+  }
+
+  /**
    * Generates the {@code async} boolean attribute.
    *
    * @return an instruction representing this attribute.
@@ -326,6 +338,18 @@ public sealed abstract class TemplateAttributes permits TemplateElements {
    */
   protected final Api.DAttribute d(String value) {
     return $html().d(value);
+  }
+
+  /**
+   * Generates the {@code data-click} attribute with the specified value.
+   *
+   * @param value
+   *        the value of the attribute
+   *
+   * @return an instruction representing this attribute.
+   */
+  protected final Api.GlobalAttribute dataClick(String value) {
+    return $html().dataClick(value);
   }
 
   /**

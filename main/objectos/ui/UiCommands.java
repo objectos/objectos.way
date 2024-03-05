@@ -16,14 +16,17 @@
 package objectos.ui;
 
 import java.io.IOException;
+import objectos.html.ElementId;
 import objectos.html.HtmlTemplate;
 
-abstract class JsonCommand {
+final class UiCommands {
 
-  public static JsonCommand html(HtmlTemplate html) {
-    return new JsonCommand() {
+  private UiCommands() {}
+
+  public static UiCommand html(HtmlTemplate html) {
+    return new UiCommand() {
       @Override
-      final void writeTo(Appendable out) throws IOException {
+      public final void writeTo(Appendable out) throws IOException {
         out.append('{');
         writeCommandName(out, "html");
         out.append(',');
@@ -37,15 +40,42 @@ abstract class JsonCommand {
     };
   }
 
-  abstract void writeTo(Appendable out) throws IOException;
+  public static UiCommand replaceClass(ElementId id, String from, String to) {
+    return new UiCommand() {
+      @Override
+      public final void writeTo(Appendable out) throws IOException {
+        out.append('{');
 
-  final void writeCommandName(Appendable json, String value) throws IOException {
+        writeCommandName(out, "replace-class");
+
+        out.append(',');
+
+        writeArgs(out, id.id(), from, to);
+
+        out.append('}');
+      }
+    };
+  }
+
+  static void writeArgs(Appendable json, String s0, String s1, String s2) throws IOException {
+    writeStringLiteral(json, "args");
+    json.append(':');
+    json.append('[');
+    writeStringLiteral(json, s0);
+    json.append(',');
+    writeStringLiteral(json, s1);
+    json.append(',');
+    writeStringLiteral(json, s2);
+    json.append(']');
+  }
+
+  static void writeCommandName(Appendable json, String value) throws IOException {
     writeStringLiteral(json, "cmd");
     json.append(':');
     writeStringLiteral(json, value);
   }
 
-  final void writeStringLiteral(Appendable json, String value) throws IOException {
+  static void writeStringLiteral(Appendable json, String value) throws IOException {
     json.append('"');
     json.append(value);
     json.append('"');

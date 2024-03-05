@@ -31,7 +31,7 @@ public class UiCommandTest {
   """)
   public void testCase01() {
     test(
-        new UiCommand()
+        new UiCommandResponse()
             .html(new HtmlTemplate() {
               @Override
               protected final void definition() {
@@ -46,7 +46,7 @@ public class UiCommandTest {
     );
   }
 
-  private void test(UiCommand command, String expected) {
+  private void test(UiCommandResponse command, String expected) {
     try {
       StringBuilder out;
       out = new StringBuilder();

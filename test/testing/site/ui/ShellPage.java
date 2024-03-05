@@ -16,22 +16,26 @@
 package testing.site.ui;
 
 import objectos.html.Api.Element;
-import objectos.html.ClassName;
+import objectos.html.ElementClass;
+import objectos.html.ElementId;
+import objectos.ui.Ui;
 import testing.zite.TestingSiteInjector;
 
 final class ShellPage extends UiTemplate {
 
-  ShellPage(TestingSiteInjector injector) {
+  private final Ui ui;
 
+  ShellPage(TestingSiteInjector injector) {
+    ui = injector.ui(this);
   }
 
-  private static final ClassName HEADER = ClassName.of(
+  private static final ElementClass HEADER = ElementClass.of(
       "fixed inset-0px flex h-48px",
       "border-b border-border-subtle",
       "bg-background"
   );
 
-  private static final ClassName HEADER_ACTION = ClassName.of(
+  private static final ElementClass HEADER_ACTION = ElementClass.of(
       "h-48px w-48px",
       "border border-transparent",
       "active:bg-background-active",
@@ -39,7 +43,7 @@ final class ShellPage extends UiTemplate {
       "hover:bg-background-hover"
   );
 
-  private static final ClassName HEADER_NAME = ClassName.of(
+  private static final ElementClass HEADER_NAME = ElementClass.of(
       "flex h-full select-none items-center",
       "border-2 border-transparent",
       "pr-32px pl-16px",
@@ -49,11 +53,11 @@ final class ShellPage extends UiTemplate {
       "focus:border-focus"
   );
 
-  private static final ClassName HEADER_NAME_PREFIX = ClassName.of(
+  private static final ElementClass HEADER_NAME_PREFIX = ElementClass.of(
       "font-normal"
   );
 
-  private static final ClassName HEADER_NAV = ClassName.of(
+  private static final ElementClass HEADER_NAV = ElementClass.of(
       "relative hidden",
       "pl-16px",
       "before:absolute before:block before:top-12px before:left-0px",
@@ -63,20 +67,20 @@ final class ShellPage extends UiTemplate {
       "lg:block"
   );
 
-  private static final ClassName HEADER_MENU_BAR = ClassName.of(
+  private static final ElementClass HEADER_MENU_BAR = ElementClass.of(
       "flex h-full"
   );
 
-  private static final ClassName HEADER_MENU_TOGGLE = ClassName.of(
+  private static final ElementClass HEADER_MENU_TOGGLE = ElementClass.of(
       "flex items-center justify-center",
       "lg:hidden"
   );
 
-  private static final ClassName HEADER_MENU_TRIGGER_SVG = ClassName.of(
+  private static final ElementClass HEADER_MENU_TRIGGER_SVG = ElementClass.of(
       "fill-icon-primary"
   );
 
-  private static final ClassName SKIP_TO_CONTENT = ClassName.of(
+  private static final ElementClass SKIP_TO_CONTENT = ElementClass.of(
       "sr-only z-50",
       "text-text-secondary underline",
       "transition-colors duration-100",
@@ -88,14 +92,30 @@ final class ShellPage extends UiTemplate {
       "focus:outline-none"
   );
 
+  private static final ElementId OPEN = ElementId.of("open-menu");
+  private static final ElementId CLOSE = ElementId.of("close-menu");
+
   @Override
   final void bodyImpl() {
     header(HEADER,
         a(SKIP_TO_CONTENT, href("#main-content"), tabindex("0"), t("Skip to main content")),
 
-        button(HEADER_ACTION, HEADER_MENU_TOGGLE, title("Open Menu"), type("button"),
+        button(OPEN,
+            HEADER_ACTION, HEADER_MENU_TOGGLE,
+            title("Open Menu"), type("button"),
+            ui.click(
+                ui.replaceClass(OPEN, "flex", "hidden"),
+                ui.replaceClass(CLOSE, "hidden", "flex")
+            ),
             svg(HEADER_MENU_TRIGGER_SVG, xmlns("http://www.w3.org/2000/svg"), width("20px"), height("20px"), viewBox("0 0 20 20"),
                 path(d("M2 14.8H18V16H2zM2 11.2H18V12.399999999999999H2zM2 7.6H18V8.799999999999999H2zM2 4H18V5.2H2z"))
+            )
+        ),
+        button(CLOSE,
+            HEADER_ACTION, HEADER_MENU_TOGGLE,
+            title("Close Menu"), type("button"),
+            svg(HEADER_MENU_TRIGGER_SVG, xmlns("http://www.w3.org/2000/svg"), width("20"), height("20"), viewBox("0 0 32 32"),
+                path(d("M17.4141 16L24 9.4141 22.5859 8 16 14.5859 9.4143 8 8 9.4141 14.5859 16 8 22.5859 9.4143 24 16 17.4141 22.5859 24 24 22.5859 17.4141 16z"))
             )
         ),
 
@@ -120,7 +140,7 @@ final class ShellPage extends UiTemplate {
     );
   }
 
-  private static final ClassName HEADER_MENU_ITEM = ClassName.of(
+  private static final ElementClass HEADER_MENU_ITEM = ElementClass.of(
       "flex h-full select-none items-center",
       "border-2 border-transparent",
       "bg-background",

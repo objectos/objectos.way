@@ -15,52 +15,8 @@
  */
 package objectos.ui;
 
-import java.io.IOException;
-import objectos.html.HtmlTemplate;
 import objectos.lang.CharWritable;
-import objectos.lang.object.Check;
-import objectos.util.collection.UnmodifiableIterator;
-import objectos.util.list.GrowableList;
 
-public class UiCommand implements CharWritable {
-
-  private final GrowableList<JsonCommand> commands = new GrowableList<>();
-
-  public UiCommand() {}
-
-  public final UiCommand html(HtmlTemplate html) {
-    Check.notNull(html, "html == null");
-
-    commands.add(JsonCommand.html(html));
-
-    return this;
-  }
-
-  @Override
-  public final void writeTo(Appendable out) throws IOException {
-    out.append('[');
-
-    UnmodifiableIterator<JsonCommand> iter;
-    iter = commands.iterator();
-
-    if (iter.hasNext()) {
-      JsonCommand command;
-      command = iter.next();
-
-      command.writeTo(out);
-
-      while (iter.hasNext()) {
-        out.append(',');
-
-        command = iter.next();
-
-        command.writeTo(out);
-      }
-    }
-
-    out.append(']');
-
-    out.append('\n');
-  }
+public interface UiCommand extends CharWritable {
 
 }

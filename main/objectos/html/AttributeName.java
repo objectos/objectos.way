@@ -54,6 +54,11 @@ public sealed abstract class AttributeName permits WayAttributeName {
   public static final AttributeName ARIA_HIDDEN = BUILDER.create("aria-hidden", false);
 
   /**
+   * The {@code aria-label} attribute.
+   */
+  public static final AttributeName ARIA_LABEL = BUILDER.create("aria-label", false);
+
+  /**
    * The {@code async} attribute.
    */
   public static final AttributeName ASYNC = BUILDER.create("async", true);
@@ -157,6 +162,11 @@ public sealed abstract class AttributeName permits WayAttributeName {
    * The {@code d} attribute.
    */
   public static final AttributeName D = BUILDER.create("d", false);
+
+  /**
+   * The {@code data-click} attribute.
+   */
+  public static final AttributeName DATA_CLICK = BUILDER.create("data-click", false);
 
   /**
    * The {@code data-frame} attribute.

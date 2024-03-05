@@ -101,6 +101,19 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
   }
 
   /**
+   * Generates the {@code aria-label} attribute with the specified value.
+   *
+   * @param value
+   *        the value of the attribute
+   *
+   * @return an instruction representing this attribute.
+   */
+  public final Api.GlobalAttribute ariaLabel(String value) {
+    attribute(AttributeName.ARIA_LABEL, value);
+    return Api.ATTRIBUTE;
+  }
+
+  /**
    * Generates the {@code async} boolean attribute.
    *
    * @return an instruction representing this attribute.
@@ -351,6 +364,19 @@ public sealed abstract class BaseAttributes extends Recorder permits BaseElement
    */
   public final Api.DAttribute d(String value) {
     attribute(AttributeName.D, value);
+    return Api.ATTRIBUTE;
+  }
+
+  /**
+   * Generates the {@code data-click} attribute with the specified value.
+   *
+   * @param value
+   *        the value of the attribute
+   *
+   * @return an instruction representing this attribute.
+   */
+  public final Api.GlobalAttribute dataClick(String value) {
+    attribute(AttributeName.DATA_CLICK, value);
     return Api.ATTRIBUTE;
   }
 

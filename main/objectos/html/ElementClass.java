@@ -17,54 +17,54 @@ package objectos.html;
 
 import objectos.lang.object.Check;
 
-public final class ClassName implements Api.ExternalAttribute.StyleClass {
+public final class ElementClass implements Api.ExternalAttribute.StyleClass {
 
   private final String value;
 
-  ClassName(String value) {
+  ElementClass(String value) {
     this.value = value;
   }
 
-  public static ClassName of(String value) {
+  public static ElementClass of(String value) {
     Check.notNull(value, "value == null");
-    return new ClassName(value);
+    return new ElementClass(value);
   }
 
-  public static ClassName of(String v0, String v1) {
+  public static ElementClass of(String v0, String v1) {
     Check.notNull(v0, "v0 == null");
     Check.notNull(v1, "v1 == null");
 
-    return new ClassName(v0 + " " + v1);
+    return new ElementClass(v0 + " " + v1);
   }
 
-  public static ClassName of(String v0, String v1, String v2) {
+  public static ElementClass of(String v0, String v1, String v2) {
     Check.notNull(v0, "v0 == null");
     Check.notNull(v1, "v1 == null");
     Check.notNull(v2, "v2 == null");
 
-    return new ClassName(v0 + " " + v1 + " " + v2);
+    return new ElementClass(v0 + " " + v1 + " " + v2);
   }
 
-  public static ClassName of(String v0, String v1, String v2, String v3) {
+  public static ElementClass of(String v0, String v1, String v2, String v3) {
     Check.notNull(v0, "v0 == null");
     Check.notNull(v1, "v1 == null");
     Check.notNull(v2, "v2 == null");
     Check.notNull(v3, "v3 == null");
 
-    return new ClassName(v0 + " " + v1 + " " + v2 + " " + v3);
+    return new ElementClass(v0 + " " + v1 + " " + v2 + " " + v3);
   }
 
-  public static ClassName of(String v0, String v1, String v2, String v3, String v4) {
+  public static ElementClass of(String v0, String v1, String v2, String v3, String v4) {
     Check.notNull(v0, "v0 == null");
     Check.notNull(v1, "v1 == null");
     Check.notNull(v2, "v2 == null");
     Check.notNull(v3, "v3 == null");
     Check.notNull(v4, "v4 == null");
 
-    return new ClassName(v0 + " " + v1 + " " + v2 + " " + v3 + " " + v4);
+    return new ElementClass(v0 + " " + v1 + " " + v2 + " " + v3 + " " + v4);
   }
 
-  public static ClassName of(String... values) {
+  public static ElementClass of(String... values) {
     StringBuilder sb;
     sb = new StringBuilder();
 
@@ -82,7 +82,7 @@ public final class ClassName implements Api.ExternalAttribute.StyleClass {
     String value;
     value = sb.toString();
 
-    return new ClassName(value);
+    return new ElementClass(value);
   }
 
   @Override

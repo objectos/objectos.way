@@ -16,6 +16,8 @@
 package objectos.ui;
 
 import java.util.function.Consumer;
+import objectos.html.Api.Element;
+import objectos.html.ElementId;
 import objectos.html.Html;
 import objectos.html.TemplateBase;
 import objectos.lang.object.Check;
@@ -56,6 +58,22 @@ public class WayUi implements UiBinder {
       }
 
       return page;
+    }
+
+    @Override
+    public final Element click(UiCommand... commands) {
+      Check.notNull(commands, "commands == null");
+
+      throw new UnsupportedOperationException("Implement me");
+    }
+
+    @Override
+    public final UiCommand replaceClass(ElementId id, String from, String to) {
+      Check.notNull(id, "id == null");
+      Check.notNull(from, "from == null");
+      Check.notNull(to, "to == null");
+
+      return UiCommands.replaceClass(id, from, to);
     }
 
   }
