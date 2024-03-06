@@ -1347,6 +1347,46 @@ public class StyleGenTest {
   }
 
   @Test
+  public void opacity() {
+    class Subject extends AbstractSubject {
+      @Override
+      final void classes() {
+        // @formatter:off
+        className("opacity-0 opacity-5 opacity-10 opacity-15 opacity-20 opacity-25 opacity-30 opacity-35 opacity-40 opacity-45 opacity-50 opacity-55 opacity-60 opacity-65 opacity-70 opacity-75 opacity-80 opacity-85 opacity-90 opacity-95 opacity-100");
+        // @formatter:on
+      }
+    }
+
+    test(
+        Subject.class,
+
+        """
+        .opacity-0 { opacity: 0 }
+        .opacity-5 { opacity: 0.05 }
+        .opacity-10 { opacity: 0.1 }
+        .opacity-15 { opacity: 0.15 }
+        .opacity-20 { opacity: 0.2 }
+        .opacity-25 { opacity: 0.25 }
+        .opacity-30 { opacity: 0.3 }
+        .opacity-35 { opacity: 0.35 }
+        .opacity-40 { opacity: 0.4 }
+        .opacity-45 { opacity: 0.45 }
+        .opacity-50 { opacity: 0.5 }
+        .opacity-55 { opacity: 0.55 }
+        .opacity-60 { opacity: 0.6 }
+        .opacity-65 { opacity: 0.65 }
+        .opacity-70 { opacity: 0.7 }
+        .opacity-75 { opacity: 0.75 }
+        .opacity-80 { opacity: 0.8 }
+        .opacity-85 { opacity: 0.85 }
+        .opacity-90 { opacity: 0.9 }
+        .opacity-95 { opacity: 0.95 }
+        .opacity-100 { opacity: 1 }
+        """
+    );
+  }
+
+  @Test
   public void outlineColor() {
     class Subject extends AbstractSubject {
       @Override

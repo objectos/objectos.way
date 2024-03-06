@@ -15,6 +15,7 @@
  */
 package testing.site.ui;
 
+import objectos.html.Api;
 import objectos.html.Api.Element;
 import objectos.html.ElementClass;
 import objectos.html.ElementId;
@@ -98,9 +99,18 @@ final class ShellPage extends UiTemplate {
       "focus:outline-none"
   );
 
+  private static final ElementClass SIDE_NAV_OVERLAY = ElementClass.of(
+      "fixed hidden",
+      "h-screen w-screen top-48px",
+      "bg-overlay",
+      "z-30"
+  );
+
   private static final ElementId OPEN = ElementId.of("open-menu");
 
   private static final ElementId CLOSE = ElementId.of("close-menu");
+
+  private static final ElementId OVERLAY = ElementId.of("overlay-menu");
 
   @Override
   final void bodyImpl() {
@@ -110,22 +120,20 @@ final class ShellPage extends UiTemplate {
         button(OPEN,
             HEADER_ACTION, HEADER_MENU_TOGGLE,
             title("Open Menu"), type("button"),
-            ui.click(
-                ui.replaceClass(OPEN, "flex", "hidden"),
-                ui.replaceClass(CLOSE, "hidden", "flex")
-            ),
-            svg(HEADER_MENU_TRIGGER_SVG, xmlns("http://www.w3.org/2000/svg"), width("20px"), height("20px"), viewBox("0 0 20 20"),
+            openMenu(),
+            svg(HEADER_MENU_TRIGGER_SVG,
+                openMenu(),
+                xmlns("http://www.w3.org/2000/svg"), width("20px"), height("20px"), viewBox("0 0 20 20"),
                 path(d("M2 14.8H18V16H2zM2 11.2H18V12.399999999999999H2zM2 7.6H18V8.799999999999999H2zM2 4H18V5.2H2z"))
             )
         ),
         button(CLOSE,
             HEADER_ACTION, HEADER_MENU_CLOSE, HEADER_MENU_TOGGLE,
             title("Close Menu"), type("button"),
-            ui.click(
-                ui.replaceClass(CLOSE, "flex", "hidden"),
-                ui.replaceClass(OPEN, "hidden", "flex")
-            ),
-            svg(HEADER_MENU_TRIGGER_SVG, xmlns("http://www.w3.org/2000/svg"), width("20"), height("20"), viewBox("0 0 32 32"),
+            closeMenu(),
+            svg(HEADER_MENU_TRIGGER_SVG,
+                closeMenu(),
+                xmlns("http://www.w3.org/2000/svg"), width("20"), height("20"), viewBox("0 0 32 32"),
                 path(d("M17.4141 16L24 9.4141 22.5859 8 16 14.5859 9.4143 8 8 9.4141 14.5859 16 8 22.5859 9.4143 24 16 17.4141 22.5859 24 24 22.5859 17.4141 16z"))
             )
         ),
@@ -141,13 +149,31 @@ final class ShellPage extends UiTemplate {
                 menuItem("Link 2"),
                 menuItem("Link 3")
             )
-        )
+        ),
+
+        div(OVERLAY, SIDE_NAV_OVERLAY)
     );
 
     main(id("main-content"),
         p("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed in rhoncus nunc. Quisque ligula magna, hendrerit id dignissim non, rutrum id lacus. Sed facilisis tempor tellus vel interdum. Duis malesuada vel enim non ultricies. Duis mattis, ante eu vehicula imperdiet, nibh nunc efficitur nulla, sit amet imperdiet orci tortor eget tortor. Maecenas egestas ut ex ac fringilla. Quisque neque orci, pretium et efficitur nec, vehicula non nisi. Aliquam et ullamcorper sem. Praesent non quam id massa porta feugiat."),
 
         p("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam quis sagittis felis. Aliquam ex nisi, molestie et commodo sit amet, auctor id sem. Mauris suscipit ligula ac consequat aliquam. Ut ornare quam quis placerat pharetra. In tempor mi vel molestie volutpat. Ut a dignissim odio. Phasellus ullamcorper, mauris quis venenatis ullamcorper, dui felis lobortis mi, et pretium ante ipsum eu diam. Quisque congue velit a molestie lacinia. Pellentesque vulputate ut nisl tempor lacinia. Morbi consequat felis vitae feugiat finibus. Praesent lectus purus, pharetra in semper eget, pulvinar vitae sapien.")
+    );
+  }
+
+  private Api.GlobalAttribute openMenu() {
+    return ui.click(
+        ui.replaceClass(OPEN, "flex", "hidden"),
+        ui.replaceClass(CLOSE, "hidden", "flex"),
+        ui.replaceClass(OVERLAY, "hidden", "block")
+    );
+  }
+
+  private Api.GlobalAttribute closeMenu() {
+    return ui.click(
+        ui.replaceClass(CLOSE, "flex", "hidden"),
+        ui.replaceClass(OPEN, "hidden", "flex"),
+        ui.replaceClass(OVERLAY, "block", "hidden")
     );
   }
 

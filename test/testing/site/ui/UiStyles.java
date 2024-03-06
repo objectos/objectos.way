@@ -57,6 +57,7 @@ final class UiStyles implements Handler {
     --cds-layer-01: #f4f4f4;
     --cds-layer-02: #ffffff;
     --cds-layer-03: #f4f4f4;
+    --cds-overlay: rgba(22, 22, 22, 0.5);
     --cds-text-primary: #161616;
     --cds-text-secondary: #525252;
     """);
@@ -82,6 +83,7 @@ final class UiStyles implements Handler {
         Map.entry("icon-primary", "var(--cds-icon-primary)"),
         Map.entry("icon-secondary", "var(--cds-icon-secondary)"),
         Map.entry("layer", "var(--cds-layer)"),
+        Map.entry("overlay", "var(--cds-overlay)"),
         Map.entry("text-primary", "var(--cds-text-primary)"),
         Map.entry("text-secondary", "var(--cds-text-secondary)")
     );

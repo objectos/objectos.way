@@ -29,9 +29,9 @@ public class ObjectosCssPseudoGen {
     ObjectosCssPseudoGen gen;
     gen = new ObjectosCssPseudoGen();
 
-    gen.classNameSingleLine(TRANSITION_DURATION, "duration-");
+    gen.classNameSingleLine(OPACITY, "opacity-");
 
-    gen.mapOf(TRANSITION_DURATION, "transitionDuration");
+    gen.mapOf(OPACITY, "opacity");
   }
 
   private static final Map<String, String> SPACING = seqmap(
@@ -225,6 +225,30 @@ public class ObjectosCssPseudoGen {
   static final Map<String, String> MARGIN = seqmap(
       kv("auto", "auto"),
       SPACING
+  );
+
+  static final Map<String, String> OPACITY = seqmap(
+      kv("0", "0"),
+      kv("5", "0.05"),
+      kv("10", "0.1"),
+      kv("15", "0.15"),
+      kv("20", "0.2"),
+      kv("25", "0.25"),
+      kv("30", "0.3"),
+      kv("35", "0.35"),
+      kv("40", "0.4"),
+      kv("45", "0.45"),
+      kv("50", "0.5"),
+      kv("55", "0.55"),
+      kv("60", "0.6"),
+      kv("65", "0.65"),
+      kv("70", "0.7"),
+      kv("75", "0.75"),
+      kv("80", "0.8"),
+      kv("85", "0.85"),
+      kv("90", "0.9"),
+      kv("95", "0.95"),
+      kv("100", "1")
   );
 
   static final Map<String, String> POSITION = seqmap(

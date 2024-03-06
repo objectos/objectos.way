@@ -56,6 +56,8 @@ public final class WayStyleGen extends WayStyleGenConfig implements StyleGen {
 
   private Map<String, String> margin;
 
+  private Map<String, String> opacity;
+
   private Map<String, String> outlineOffset;
   private Map<String, String> outlineWidth;
 
@@ -611,6 +613,37 @@ public final class WayStyleGen extends WayStyleGenConfig implements StyleGen {
     }
 
     return margin;
+  }
+
+  @Override
+  final Map<String, String> opacity() {
+    if (opacity == null) {
+      opacity = Map.ofEntries(
+          Map.entry("0", "0"),
+          Map.entry("5", "0.05"),
+          Map.entry("10", "0.1"),
+          Map.entry("15", "0.15"),
+          Map.entry("20", "0.2"),
+          Map.entry("25", "0.25"),
+          Map.entry("30", "0.3"),
+          Map.entry("35", "0.35"),
+          Map.entry("40", "0.4"),
+          Map.entry("45", "0.45"),
+          Map.entry("50", "0.5"),
+          Map.entry("55", "0.55"),
+          Map.entry("60", "0.6"),
+          Map.entry("65", "0.65"),
+          Map.entry("70", "0.7"),
+          Map.entry("75", "0.75"),
+          Map.entry("80", "0.8"),
+          Map.entry("85", "0.85"),
+          Map.entry("90", "0.9"),
+          Map.entry("95", "0.95"),
+          Map.entry("100", "1")
+      );
+    }
+
+    return opacity;
   }
 
   @Override

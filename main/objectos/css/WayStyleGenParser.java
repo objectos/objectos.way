@@ -39,6 +39,7 @@ import static objectos.css.Utility.MARGIN_RIGHT;
 import static objectos.css.Utility.MARGIN_TOP;
 import static objectos.css.Utility.MARGIN_X;
 import static objectos.css.Utility.MARGIN_Y;
+import static objectos.css.Utility.OPACITY;
 import static objectos.css.Utility.OUTLINE_COLOR;
 import static objectos.css.Utility.OUTLINE_OFFSET;
 import static objectos.css.Utility.OUTLINE_STYLE;
@@ -292,6 +293,7 @@ abstract class WayStyleGenParser extends WayStyleGenVariants {
       case "ml" -> config(MARGIN_LEFT, config.margin(), suffix);
 
       // O
+      case "opacity" -> config(OPACITY, config.opacity(), suffix);
       case "outline" -> outline(suffix);
 
       // P
