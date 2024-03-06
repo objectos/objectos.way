@@ -99,6 +99,13 @@ final class UiStyles implements Handler {
         font-weight: var(--cds-body-compact-01-font-weight, 400);
         line-height: var(--cds-body-compact-01-line-height, 1.28572);
         letter-spacing: var(--cds-body-compact-01-letter-spacing, 0.16px);
+        """),
+
+        Map.entry("heading-compact-01", """
+        font-size: var(--cds-heading-compact-01-font-size, 0.875rem);
+        font-weight: var(--cds-heading-compact-01-font-weight, 600);
+        line-height: var(--cds-heading-compact-01-line-height, 1.28572);
+        letter-spacing: var(--cds-heading-compact-01-letter-spacing, 0.16px);
         """)
     );
 
@@ -108,7 +115,8 @@ final class UiStyles implements Handler {
         px(10), px(12), px(14), px(16),
         px(20), px(24), px(28),
         px(32), px(36),
-        px(40), px(44), px(48)
+        px(40), px(44), px(48),
+        px(208), px(224), px(240), px(256), px(288)
     );
 
     Set<Class<?>> classes;

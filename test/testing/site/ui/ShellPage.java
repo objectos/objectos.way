@@ -59,17 +59,26 @@ final class ShellPage extends UiTemplate {
   );
 
   private static final ElementClass HEADER_NAV = ElementClass.of(
-      "relative hidden",
-      "pl-16px",
-      "before:absolute before:block before:top-12px before:left-0px",
-      "before:h-24px before:w-1px",
-      "before:bg-border-subtle",
-      "before:content-empty",
-      "lg:block"
+      "fixed hidden",
+      "w-256px top-48px bottom-0px",
+      "flex-col",
+      "bg-background",
+      "z-40",
+      "lg:relative lg:block",
+      "lg:top-0px",
+      "lg:bg-transparent",
+      "lg:pl-16px",
+      "lg:before:absolute lg:before:block lg:before:top-12px lg:before:left-0px",
+      "lg:before:h-24px lg:before:w-1px",
+      "lg:before:bg-border-subtle",
+      "lg:before:content-empty"
   );
 
   private static final ElementClass HEADER_MENU_BAR = ElementClass.of(
-      "flex h-full"
+      "flex flex-col h-full",
+      "pt-16px",
+      "lg:flex-row",
+      "lg:pt-0px"
   );
 
   private static final ElementClass HEADER_MENU_CLOSE = ElementClass.of(
@@ -103,7 +112,8 @@ final class ShellPage extends UiTemplate {
       "fixed hidden",
       "h-screen w-screen top-48px",
       "bg-overlay",
-      "z-30"
+      "transition-opacity duration-300",
+      "opacity-0 z-30"
   );
 
   private static final ElementId OPEN = ElementId.of("open-menu");
@@ -111,6 +121,8 @@ final class ShellPage extends UiTemplate {
   private static final ElementId CLOSE = ElementId.of("close-menu");
 
   private static final ElementId OVERLAY = ElementId.of("overlay-menu");
+
+  private static final ElementId NAV = ElementId.of("nav-menu");
 
   @Override
   final void bodyImpl() {
@@ -127,6 +139,7 @@ final class ShellPage extends UiTemplate {
                 path(d("M2 14.8H18V16H2zM2 11.2H18V12.399999999999999H2zM2 7.6H18V8.799999999999999H2zM2 4H18V5.2H2z"))
             )
         ),
+
         button(CLOSE,
             HEADER_ACTION, HEADER_MENU_CLOSE, HEADER_MENU_TOGGLE,
             title("Close Menu"), type("button"),
@@ -138,20 +151,20 @@ final class ShellPage extends UiTemplate {
             )
         ),
 
+        div(OVERLAY, SIDE_NAV_OVERLAY, closeMenu()),
+
         a(HEADER_NAME, href("/ui"),
             span(HEADER_NAME_PREFIX, t("o7")),
             raw("&nbsp;"), t("[UI]")
         ),
 
-        nav(HEADER_NAV,
+        nav(NAV, HEADER_NAV,
             ul(HEADER_MENU_BAR,
                 menuItem("Link 1"),
                 menuItem("Link 2"),
                 menuItem("Link 3")
             )
-        ),
-
-        div(OVERLAY, SIDE_NAV_OVERLAY)
+        )
     );
 
     main(id("main-content"),
@@ -165,7 +178,9 @@ final class ShellPage extends UiTemplate {
     return ui.click(
         ui.replaceClass(OPEN, "flex", "hidden"),
         ui.replaceClass(CLOSE, "hidden", "flex"),
-        ui.replaceClass(OVERLAY, "hidden", "block")
+        ui.replaceClass(NAV, "hidden", "flex"),
+        ui.replaceClass(OVERLAY, "hidden", "block"),
+        ui.replaceClass(OVERLAY, "opacity-0", "opacity-100")
     );
   }
 
@@ -173,20 +188,24 @@ final class ShellPage extends UiTemplate {
     return ui.click(
         ui.replaceClass(CLOSE, "flex", "hidden"),
         ui.replaceClass(OPEN, "hidden", "flex"),
-        ui.replaceClass(OVERLAY, "block", "hidden")
+        ui.replaceClass(NAV, "flex", "hidden"),
+        ui.replaceClass(OVERLAY, "block", "hidden"),
+        ui.replaceClass(OVERLAY, "opacity-100", "opacity-0")
     );
   }
 
   private static final ElementClass HEADER_MENU_ITEM = ElementClass.of(
-      "flex h-full select-none items-center",
+      "flex h-32px select-none items-center",
       "border-2 border-transparent",
       "bg-background",
       "px-16px",
-      "text-body-compact-01 tracking-normal text-text-secondary",
+      "text-heading-compact-01 text-text-secondary",
       "transition-colors duration-100",
       "active:bg-background-active",
       "focus:border-focus focus:outline-none",
-      "hover:bg-background-hover"
+      "hover:bg-background-hover",
+      "lg:h-full",
+      "lg:text-body-compact-01 lg:tracking-normal"
   );
 
   private Element menuItem(String text) {

@@ -2170,6 +2170,28 @@ public class StyleGenTest {
     );
   }
 
+  @Test
+  public void multiplePrefixes() {
+    class Subject extends AbstractSubject {
+      @Override
+      final void classes() {
+        className("m-0 lg:before:m-1");
+      }
+    }
+
+    test(
+        Subject.class,
+
+        """
+        .m-0 { margin: 0px }
+
+        @media (min-width: 1024px) {
+          .lg\\:before\\:m-1::before { margin: 0.25rem }
+        }
+        """
+    );
+  }
+
   // customization
 
   @Test
