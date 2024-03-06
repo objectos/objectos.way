@@ -25,7 +25,7 @@ public interface Ui {
 
   UiPage page();
 
-  Api.Element click(UiCommand... commands);
+  Api.GlobalAttribute click(UiCommand... commands);
 
   UiCommand replaceClass(ElementId id, String from, String to);
 

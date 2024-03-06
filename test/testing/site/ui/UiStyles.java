@@ -40,35 +40,50 @@ final class UiStyles implements Handler {
     WayStyleGen styleGen;
     styleGen = new WayStyleGen();
 
+    styleGen.noteSink(noteSink);
+
     styleGen.addUtility("theme-white", """
-    --ui-background: #ffffff;
-    --ui-background-active: rgba(141, 141, 141, 0.5);
-    --ui-background-hover: rgba(141, 141, 141, 0.12);
-    --ui-border-subtle-00: #e0e0e0;
-    --ui-border-subtle-01: #c6c6c6;
-    --ui-border-subtle-02: #e0e0e0;
-    --ui-border-subtle-03: #c6c6c6;
-    --ui-border-subtle: var(--ui-border-subtle-00);
-    --ui-focus: #0f62fe;
-    --ui-icon-primary: #161616;
-    --ui-icon-secondary: #525252;
-    --ui-text-primary: #161616;
-    --ui-text-secondary: #525252;
+    --cds-background: #ffffff;
+    --cds-background-active: rgba(141, 141, 141, 0.5);
+    --cds-background-hover: rgba(141, 141, 141, 0.12);
+    --cds-border-subtle-00: #e0e0e0;
+    --cds-border-subtle-01: #c6c6c6;
+    --cds-border-subtle-02: #e0e0e0;
+    --cds-border-subtle-03: #c6c6c6;
+    --cds-border-subtle: var(--cds-border-subtle-00);
+    --cds-focus: #0f62fe;
+    --cds-icon-primary: #161616;
+    --cds-icon-secondary: #525252;
+    --cds-layer-01: #f4f4f4;
+    --cds-layer-02: #ffffff;
+    --cds-layer-03: #f4f4f4;
+    --cds-text-primary: #161616;
+    --cds-text-secondary: #525252;
     """);
 
-    styleGen.noteSink(noteSink);
+    styleGen.root("""
+    --cds-layer: var(--cds-layer-01, #f4f4f4);
+    --cds-layer-active: var(--cds-layer-active-01, #c6c6c6);
+    --cds-layer-hover: var(--cds-layer-hover-01, #e8e8e8);
+    --cds-layer-selected: var(--cds-layer-selected-01, #e0e0e0);
+    --cds-layer-selected-hover: var(--cds-layer-selected-hover-01, #d1d1d1);
+    --cds-layer-accent: var(--cds-layer-accent-01, #e0e0e0);
+    --cds-layer-accent-hover: var(--cds-layer-accent-hover-01, #d1d1d1);
+    --cds-layer-accent-active: var(--cds-layer-accent-active-01, #a8a8a8);
+    """);
 
     styleGen.overrideColors(
         Map.entry("transparent", "transparent"),
-        Map.entry("background", "var(--ui-background)"),
-        Map.entry("background-active", "var(--ui-background-active)"),
-        Map.entry("background-hover", "var(--ui-background-hover)"),
-        Map.entry("border-subtle", "var(--ui-border-subtle)"),
-        Map.entry("focus", "var(--ui-focus)"),
-        Map.entry("icon-primary", "var(--ui-icon-primary)"),
-        Map.entry("icon-secondary", "var(--ui-icon-secondary)"),
-        Map.entry("text-primary", "var(--ui-text-primary)"),
-        Map.entry("text-secondary", "var(--ui-text-secondary)")
+        Map.entry("background", "var(--cds-background)"),
+        Map.entry("background-active", "var(--cds-background-active)"),
+        Map.entry("background-hover", "var(--cds-background-hover)"),
+        Map.entry("border-subtle", "var(--cds-border-subtle)"),
+        Map.entry("focus", "var(--cds-focus)"),
+        Map.entry("icon-primary", "var(--cds-icon-primary)"),
+        Map.entry("icon-secondary", "var(--cds-icon-secondary)"),
+        Map.entry("layer", "var(--cds-layer)"),
+        Map.entry("text-primary", "var(--cds-text-primary)"),
+        Map.entry("text-secondary", "var(--cds-text-secondary)")
     );
 
     styleGen.overrideContent(
@@ -78,10 +93,10 @@ final class UiStyles implements Handler {
 
     styleGen.overrideFontSize(
         Map.entry("body-compact-01", """
-        font-size: var(--ui-body-compact-01-font-size, 0.875rem);
-        font-weight: var(--ui-body-compact-01-font-weight, 400);
-        line-height: var(--ui-body-compact-01-line-height, 1.28572);
-        letter-spacing: var(--ui-body-compact-01-letter-spacing, 0.16px);
+        font-size: var(--cds-body-compact-01-font-size, 0.875rem);
+        font-weight: var(--cds-body-compact-01-font-weight, 400);
+        line-height: var(--cds-body-compact-01-line-height, 1.28572);
+        letter-spacing: var(--cds-body-compact-01-letter-spacing, 0.16px);
         """)
     );
 

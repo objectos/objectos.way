@@ -68,7 +68,7 @@ import java.util.Map;
 
 abstract class WayStyleGenParser extends WayStyleGenVariants {
 
-  private final WayStyleGenConfig config;
+  final WayStyleGenConfig config;
 
   private String className;
 

@@ -19,6 +19,8 @@ import java.util.Map;
 
 sealed abstract class WayStyleGenConfig permits WayStyleGen {
 
+  abstract String root();
+
   abstract Variant getVariant(String variantName);
 
   abstract Map<String, String> borderWidth();

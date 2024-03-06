@@ -18,10 +18,57 @@ package objectos.ui;
 import java.io.IOException;
 import objectos.html.ElementId;
 import objectos.html.HtmlTemplate;
+import objectos.html.SingleQuotedValue;
 
 final class UiCommands {
 
   private UiCommands() {}
+
+  public static SingleQuotedValue attributeValue(UiCommand[] commands) {
+    try {
+      return attributeValue0(commands);
+    } catch (IOException e) {
+      throw new AssertionError("StringBuilder does not throw IOException", e);
+    }
+  }
+
+  private static SingleQuotedValue attributeValue0(UiCommand[] commands) throws IOException {
+    record AttributeValue(String value) implements SingleQuotedValue {
+      @Override
+      public final String toString() {
+        return value;
+      }
+    }
+
+    StringBuilder out;
+    out = new StringBuilder();
+
+    out.append('[');
+
+    if (commands.length > 0) {
+      UiCommand command;
+      command = commands[0];
+
+      command.writeTo(out);
+
+      for (int idx = 1; idx < commands.length; idx++) {
+        out.append(',');
+
+        command = commands[idx];
+
+        command.writeTo(out);
+      }
+    }
+
+    out.append(']');
+
+    out.append('\n');
+
+    String value;
+    value = out.toString();
+
+    return new AttributeValue(value);
+  }
 
   public static UiCommand html(HtmlTemplate html) {
     return new UiCommand() {

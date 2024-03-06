@@ -16,6 +16,7 @@
 package objectos.html;
 
 import java.util.function.Consumer;
+import java.util.function.Function;
 import objectos.html.pseudom.HtmlAttribute;
 import objectos.html.pseudom.HtmlDocument;
 import objectos.html.pseudom.HtmlNode;
@@ -26,6 +27,8 @@ import objectos.util.array.ObjectArrays;
 public final class Html extends BaseElements {
 
   public interface Extensible {
+
+    Api.GlobalAttribute renderAttribute(Function<Html, Api.GlobalAttribute> attribute);
 
     void renderFragment(Consumer<Html> fragment);
 
@@ -890,7 +893,8 @@ public final class Html extends BaseElements {
           break loop;
         }
 
-        case ByteProto.ATTRIBUTE1 -> {
+        case ByteProto.ATTRIBUTE1,
+             ByteProto.ATTRIBUTE1_SINGLE -> {
           index = jmp2(index);
 
           byte attr;

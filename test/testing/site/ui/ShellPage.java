@@ -71,6 +71,12 @@ final class ShellPage extends UiTemplate {
       "flex h-full"
   );
 
+  private static final ElementClass HEADER_MENU_CLOSE = ElementClass.of(
+      "hidden",
+      "bg-layer",
+      "border-x-border-subtle"
+  );
+
   private static final ElementClass HEADER_MENU_TOGGLE = ElementClass.of(
       "flex items-center justify-center",
       "lg:hidden"
@@ -93,6 +99,7 @@ final class ShellPage extends UiTemplate {
   );
 
   private static final ElementId OPEN = ElementId.of("open-menu");
+
   private static final ElementId CLOSE = ElementId.of("close-menu");
 
   @Override
@@ -112,8 +119,12 @@ final class ShellPage extends UiTemplate {
             )
         ),
         button(CLOSE,
-            HEADER_ACTION, HEADER_MENU_TOGGLE,
+            HEADER_ACTION, HEADER_MENU_CLOSE, HEADER_MENU_TOGGLE,
             title("Close Menu"), type("button"),
+            ui.click(
+                ui.replaceClass(CLOSE, "flex", "hidden"),
+                ui.replaceClass(OPEN, "hidden", "flex")
+            ),
             svg(HEADER_MENU_TRIGGER_SVG, xmlns("http://www.w3.org/2000/svg"), width("20"), height("20"), viewBox("0 0 32 32"),
                 path(d("M17.4141 16L24 9.4141 22.5859 8 16 14.5859 9.4143 8 8 9.4141 14.5859 16 8 22.5859 9.4143 24 16 17.4141 22.5859 24 24 22.5859 17.4141 16z"))
             )

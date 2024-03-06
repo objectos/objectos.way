@@ -2303,6 +2303,37 @@ public class StyleGenTest {
     );
   }
 
+  @Test
+  public void root() {
+    WayStyleGen gen;
+    gen = new WayStyleGen();
+
+    gen.root("""
+    --ui-zero: 0px;
+    --ui-one: 1px;
+    """);
+
+    class Subject extends AbstractSubject {
+      @Override
+      final void classes() {
+        className("border");
+      }
+    }
+
+    test(
+        gen, Subject.class,
+
+        """
+        :root {
+          --ui-zero: 0px;
+          --ui-one: 1px;
+        }
+
+        .border { border-width: 1px }
+        """
+    );
+  }
+
   private Entry<String, String> px(int value) {
     String px;
     px = Integer.toString(value) + "px";

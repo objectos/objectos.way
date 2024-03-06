@@ -16,9 +16,11 @@
 package objectos.ui;
 
 import java.util.function.Consumer;
-import objectos.html.Api.Element;
+import objectos.html.Api;
+import objectos.html.AttributeName;
 import objectos.html.ElementId;
 import objectos.html.Html;
+import objectos.html.SingleQuotedValue;
 import objectos.html.TemplateBase;
 import objectos.lang.object.Check;
 
@@ -61,10 +63,11 @@ public class WayUi implements UiBinder {
     }
 
     @Override
-    public final Element click(UiCommand... commands) {
-      Check.notNull(commands, "commands == null");
+    public final Api.GlobalAttribute click(UiCommand... commands) {
+      SingleQuotedValue value;
+      value = UiCommands.attributeValue(commands);
 
-      throw new UnsupportedOperationException("Implement me");
+      return parent.renderAttribute(html -> html.attribute(AttributeName.DATA_CLICK, value));
     }
 
     @Override

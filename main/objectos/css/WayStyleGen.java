@@ -27,6 +27,8 @@ public final class WayStyleGen extends WayStyleGenConfig implements StyleGen {
 
   private NoteSink noteSink = NoOpNoteSink.of();
 
+  private String root;
+
   private final Map<String, Variant> breakpoints = Map.of(
       "sm", new Breakpoint(0, "640px"),
       "md", new Breakpoint(1, "768px"),
@@ -150,6 +152,12 @@ public final class WayStyleGen extends WayStyleGenConfig implements StyleGen {
     return this;
   }
 
+  public final WayStyleGen root(String value) {
+    root = Check.notNull(value, "value == null");
+
+    return this;
+  }
+
   @Override
   public final String generate(Iterable<Class<?>> classes) {
     Check.notNull(classes, "classes == null");
@@ -165,6 +173,9 @@ public final class WayStyleGen extends WayStyleGenConfig implements StyleGen {
 
     return round.generate();
   }
+
+  @Override
+  final String root() { return root; }
 
   @Override
   final Variant getVariant(String variantName) {

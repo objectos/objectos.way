@@ -40,7 +40,7 @@
 
 			const dataset = target.dataset;
 
-			const data = dataset.wayClick;
+			const data = dataset.click;
 
 			if (!data) {
 				return;

@@ -100,10 +100,33 @@ final class WayStyleGenRound extends WayStyleGenParser {
     StringBuilder out;
     out = new StringBuilder();
 
-    topLevel.sort(Comparator.naturalOrder());
-
     Indentation indentation;
     indentation = Indentation.ROOT;
+
+    String root;
+    root = config.root();
+
+    if (root != null) {
+      out.append(":root {");
+      out.append(System.lineSeparator());
+
+      Indentation one;
+      one = indentation.increase();
+
+      String indented;
+      indented = one.indent(root);
+
+      out.append(indented);
+
+      out.append("}");
+      out.append(System.lineSeparator());
+
+      if (!topLevel.isEmpty()) {
+        out.append(System.lineSeparator());
+      }
+    }
+
+    topLevel.sort(Comparator.naturalOrder());
 
     for (Rule rule : topLevel) {
       rule.writeTo(out, indentation);

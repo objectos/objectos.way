@@ -16,6 +16,8 @@
 package objectos.html;
 
 import java.util.function.Consumer;
+import java.util.function.Function;
+import objectos.html.Api.GlobalAttribute;
 import objectos.lang.object.Check;
 
 public sealed abstract class TemplateBase
@@ -24,6 +26,14 @@ public sealed abstract class TemplateBase
     permits HtmlComponent, HtmlTemplate {
 
   TemplateBase() {}
+
+  @Override
+  public final GlobalAttribute renderAttribute(Function<Html, GlobalAttribute> attribute) {
+    Html html;
+    html = $html();
+
+    return attribute.apply(html);
+  }
 
   @Override
   public final void renderFragment(Consumer<Html> plugin) {
