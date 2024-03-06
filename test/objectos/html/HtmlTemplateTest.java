@@ -954,7 +954,7 @@ public class HtmlTemplateTest {
         },
 
         """
-      <div onclick="echo(&#34;a &gt; b&#34;);"></div>
+      <div onclick="echo(&#34;a > b&#34;);"></div>
       """
     );
   }
@@ -1128,6 +1128,36 @@ public class HtmlTemplateTest {
         <html>
         <body><input required></body>
         </html>
+        """
+    );
+  }
+
+  @Test(description = """
+  HtmlTemplate TC52
+
+  - SingleQuotedValue
+  """)
+  public void testCase52() {
+    record Json(String value) implements SingleQuotedValue {
+      @Override
+      public final String toString() { return value; }
+    }
+
+    test(
+        new HtmlTemplate() {
+          @Override
+          protected final void definition() {
+            renderFragment(html -> {
+              html.div(
+                  html.attribute(AttributeName.DATA_CLICK, new Json("""
+                  {"foo": 123, "bar": "abc"}"""))
+              );
+            });
+          }
+        },
+
+        """
+        <div data-click='{"foo": 123, "bar": "abc"}'></div>
         """
     );
   }

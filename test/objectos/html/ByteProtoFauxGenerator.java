@@ -16,44 +16,45 @@
 package objectos.html;
 
 public class ByteProtoFauxGenerator extends FauxGenerator {
-	public static void main(String[] args) {
-		var gen = new ByteProtoFauxGenerator();
+  public static void main(String[] args) {
+    var gen = new ByteProtoFauxGenerator();
 
-		gen.execute();
-	}
+    gen.execute();
+  }
 
-	@Override
-	public final void execute() {
-		comment("internal instructions");
+  @Override
+  public final void execute() {
+    comment("internal instructions");
 
-		value("END");
-		value("INTERNAL");
-		value("INTERNAL3");
-		value("INTERNAL4");
-		value("INTERNAL5");
-		value("LENGTH2");
-		value("LENGTH3");
-		value("MARKED3");
-		value("MARKED4");
-		value("MARKED5");
-		value("NULL");
-		value("STANDARD_NAME");
+    value("END");
+    value("INTERNAL");
+    value("INTERNAL3");
+    value("INTERNAL4");
+    value("INTERNAL5");
+    value("LENGTH2");
+    value("LENGTH3");
+    value("MARKED3");
+    value("MARKED4");
+    value("MARKED5");
+    value("NULL");
+    value("STANDARD_NAME");
 
-		comment("elements");
+    comment("elements");
 
-		value("AMBIGUOUS1");
-		value("DOCTYPE");
-		value("ELEMENT");
-		value("FLATTEN");
-		value("FRAGMENT");
-		value("RAW");
-		value("TEXT");
+    value("AMBIGUOUS1");
+    value("DOCTYPE");
+    value("ELEMENT");
+    value("FLATTEN");
+    value("FRAGMENT");
+    value("RAW");
+    value("TEXT");
 
-		comment("attributes");
+    comment("attributes");
 
-		value("ATTRIBUTE0");
-		value("ATTRIBUTE1");
-		value("ATTRIBUTE_CLASS");
-		value("ATTRIBUTE_ID");
-	}
+    value("ATTRIBUTE0");
+    value("ATTRIBUTE1");
+    value("ATTRIBUTE1_SINGLE");
+    value("ATTRIBUTE_CLASS");
+    value("ATTRIBUTE_ID");
+  }
 }

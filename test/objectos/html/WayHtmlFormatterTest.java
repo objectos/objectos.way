@@ -18,6 +18,7 @@ package objectos.html;
 import static org.testng.Assert.assertEquals;
 
 import java.io.IOException;
+import objectos.html.WayHtmlFormatter.Quotes;
 import org.testng.annotations.Test;
 
 public class WayHtmlFormatterTest {
@@ -348,6 +349,30 @@ public class WayHtmlFormatterTest {
       assertEquals(out.toString(), expected);
     } catch (IOException e) {
       throw new AssertionError("StringBuilder does not throw IOException", e);
+    }
+  }
+
+  @Test
+  public void attributeValue01() {
+    attributeValue(Quotes.DOUBLE, "abc", "abc");
+    attributeValue(Quotes.DOUBLE, "123 foo", "123 foo");
+    attributeValue(Quotes.DOUBLE, "if (a < b && c > d) {}", "if (a < b &amp;&amp; c > d) {}");
+    attributeValue(Quotes.DOUBLE, "\"abc'", "&#34;abc'");
+    attributeValue(Quotes.SINGLE, "\"abc'", "\"abc&#39;");
+  }
+
+  private void attributeValue(Quotes quotes, String source, String expected) {
+    try {
+      out.setLength(0);
+
+      WayHtmlFormatter fmt;
+      fmt = WayHtmlFormatter.INSTANCE;
+
+      fmt.attributeValue(out, quotes, source);
+
+      assertEquals(out.toString(), expected);
+    } catch (IOException e) {
+      throw new AssertionError("StringBuilder does not throw", e);
     }
   }
 

@@ -179,7 +179,7 @@ public class HtmlTestProcessor {
     out.append(' ');
     out.append(name);
 
-    if (attribute.isBoolean()) {
+    if (attribute.booleanAttribute()) {
       return;
     }
 

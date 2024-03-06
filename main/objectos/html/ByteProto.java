@@ -46,8 +46,9 @@ final class ByteProto {
 
   public static final byte ATTRIBUTE0 = -20;
   public static final byte ATTRIBUTE1 = -21;
-  public static final byte ATTRIBUTE_CLASS = -22;
-  public static final byte ATTRIBUTE_ID = -23;
+  public static final byte ATTRIBUTE1_SINGLE = -22;
+  public static final byte ATTRIBUTE_CLASS = -23;
+  public static final byte ATTRIBUTE_ID = -24;
 
   private ByteProto() {}
 

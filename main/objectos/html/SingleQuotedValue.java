@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015-2023 Objectos Software LTDA.
+ * Copyright (C) 2023-2024 Objectos Software LTDA.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,22 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.html.pseudom;
+package objectos.html;
 
-import objectos.lang.IterableOnce;
+/**
+ * Represents an attribute value that must be formatted inside single quotes.
+ *
+ * <p>
+ * {@link HtmlFormatter} instances must use the {@link String#valueOf(Object)}
+ * to obtain the string representation of this value.
+ */
+public interface SingleQuotedValue {
 
-public interface HtmlAttribute {
-
-  String name();
-
-  boolean booleanAttribute();
-
-  boolean singleQuoted();
-
-  IterableOnce<String> values();
-
-  default boolean hasName(String name) {
-    return name().equals(name);
-  }
+  /**
+   * Returns the string representation to be used by a {@link HtmlFormatter}
+   * instance.
+   *
+   * @return the string representation of this value
+   */
+  @Override
+  String toString();
 
 }

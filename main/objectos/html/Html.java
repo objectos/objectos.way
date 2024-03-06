@@ -68,6 +68,20 @@ public final class Html extends BaseElements {
    */
   public Html() {}
 
+  public final Api.GlobalAttribute attribute(AttributeName name, String value) {
+    Check.notNull(name, "name == null");
+    Check.notNull(value, "value == null");
+
+    return attribute0(name, value);
+  }
+
+  public final Api.GlobalAttribute attribute(AttributeName name, SingleQuotedValue value) {
+    Check.notNull(name, "name == null");
+    Check.notNull(value, "value == null");
+
+    return attribute0(name, value);
+  }
+
   /**
    * Flattens the specified instructions so that each of the specified
    * instructions is individually added, in order, to a receiving element.
@@ -601,6 +615,7 @@ public final class Html extends BaseElements {
 
         case ByteProto.ATTRIBUTE0,
              ByteProto.ATTRIBUTE1,
+             ByteProto.ATTRIBUTE1_SINGLE,
              ByteProto.ATTRIBUTE_CLASS,
              ByteProto.ATTRIBUTE_ID -> {
           index = rollbackIndex;
@@ -653,6 +668,12 @@ public final class Html extends BaseElements {
     int index;
     index = elementCtxAttrsIndexLoad();
 
+    // our return value
+    final PseudoHtmlAttribute attribute;
+    attribute = htmlAttribute();
+
+    attribute.singleQuoted = false;
+
     // values to set
     byte attr, v0 = -1, v1 = -1;
 
@@ -692,6 +713,18 @@ public final class Html extends BaseElements {
         v1 = main[auxStart++];
       }
 
+      case ByteProto.ATTRIBUTE1_SINGLE -> {
+        index = jmp2(index);
+
+        attr = main[auxStart++];
+
+        v0 = main[auxStart++];
+
+        v1 = main[auxStart++];
+
+        attribute.singleQuoted = true;
+      }
+
       case ByteProto.ATTRIBUTE_CLASS -> {
         int ordinal;
         ordinal = AttributeName.CLASS.index();
@@ -721,10 +754,6 @@ public final class Html extends BaseElements {
       }
     }
 
-    // our return value
-    final PseudoHtmlAttribute attribute;
-    attribute = htmlAttribute();
-
     // attribute name
     int ordinal;
     ordinal = Bytes.decodeInt(attr);
@@ -742,7 +771,7 @@ public final class Html extends BaseElements {
       Object o;
       o = objectArray[objectIndex];
 
-      value = o.toString();
+      value = String.valueOf(o);
     }
 
     attribute.value = value;
@@ -1114,7 +1143,8 @@ public final class Html extends BaseElements {
           break loop;
         }
 
-        case ByteProto.ATTRIBUTE1 -> index = skipVarInt(index);
+        case ByteProto.ATTRIBUTE1,
+             ByteProto.ATTRIBUTE1_SINGLE -> index = skipVarInt(index);
 
         case ByteProto.ATTRIBUTE_CLASS,
              ByteProto.ATTRIBUTE_ID -> index += 2;

@@ -26,6 +26,8 @@ final class PseudoHtmlAttribute
 
   private final Html player;
 
+  boolean singleQuoted;
+
   String value;
 
   public PseudoHtmlAttribute(Html player) {
@@ -38,8 +40,13 @@ final class PseudoHtmlAttribute
   }
 
   @Override
-  public final boolean isBoolean() {
+  public final boolean booleanAttribute() {
     return name.booleanAttribute();
+  }
+
+  @Override
+  public final boolean singleQuoted() {
+    return singleQuoted;
   }
 
   @Override

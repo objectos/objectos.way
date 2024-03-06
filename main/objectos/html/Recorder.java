@@ -100,6 +100,14 @@ class Recorder {
   }
 
   final Api.Attribute attribute0(AttributeName name, String value) {
+    return attribute1(name, value, ByteProto.ATTRIBUTE1);
+  }
+
+  final Api.Attribute attribute0(AttributeName name, SingleQuotedValue value) {
+    return attribute1(name, value, ByteProto.ATTRIBUTE1_SINGLE);
+  }
+
+  private Api.Attribute attribute1(AttributeName name, Object value, byte proto) {
     int index;
     index = name.index();
 
@@ -111,7 +119,7 @@ class Recorder {
     object = objectAdd(value);
 
     mainAdd(
-        ByteProto.ATTRIBUTE1,
+        proto,
 
         // name
         Bytes.encodeInt0(index),
@@ -274,7 +282,8 @@ class Recorder {
               }
 
               case ByteProto.AMBIGUOUS1,
-                   ByteProto.ATTRIBUTE1 -> {
+                   ByteProto.ATTRIBUTE1,
+                   ByteProto.ATTRIBUTE1_SINGLE -> {
                 contents = encodeInternal5(contents, proto);
 
                 continue loop;
@@ -635,7 +644,8 @@ class Recorder {
 
         case ByteProto.ATTRIBUTE0 -> index = encodeInternal3(index, proto);
 
-        case ByteProto.ATTRIBUTE1 -> index = encodeInternal5(index, proto);
+        case ByteProto.ATTRIBUTE1,
+             ByteProto.ATTRIBUTE1_SINGLE -> index = encodeInternal5(index, proto);
 
         case ByteProto.ELEMENT -> index = encodeElement(index, proto);
 

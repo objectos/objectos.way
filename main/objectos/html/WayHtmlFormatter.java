@@ -187,16 +187,36 @@ public final class WayHtmlFormatter extends HtmlFormatter {
     return nextState;
   }
 
+  enum Quotes {
+    SINGLE('\'', "&#39;"),
+
+    DOUBLE('\"', "&#34;");
+
+    final char symbol;
+
+    final String escape;
+
+    private Quotes(char symbol, String escape) {
+      this.symbol = symbol;
+
+      this.escape = escape;
+    }
+  }
+
   private void attribute(Appendable out, HtmlAttribute attribute) throws IOException {
     String name;
     name = attribute.name();
 
     out.append(' ');
+
     out.append(name);
 
-    if (attribute.isBoolean()) {
+    if (attribute.booleanAttribute()) {
       return;
     }
+
+    Quotes quotes;
+    quotes = attribute.singleQuoted() ? Quotes.SINGLE : Quotes.DOUBLE;
 
     IterableOnce<String> values;
     values = attribute.values();
@@ -206,35 +226,64 @@ public final class WayHtmlFormatter extends HtmlFormatter {
 
     if (valuesIter.hasNext()) {
       out.append('=');
-      out.append('\"');
-      attributeValue(out, valuesIter.next());
+
+      out.append(quotes.symbol);
+
+      attributeValue(out, quotes, valuesIter.next());
 
       while (valuesIter.hasNext()) {
         out.append(' ');
-        attributeValue(out, valuesIter.next());
+
+        attributeValue(out, quotes, valuesIter.next());
       }
 
-      out.append('\"');
+      out.append(quotes.symbol);
     }
   }
 
-  private void attributeValue(Appendable out, String value) throws IOException {
-    for (int idx = 0, len = value.length(); idx < len;) {
+  // visible for testing
+  final void attributeValue(Appendable out, Quotes quotes, String value) throws IOException {
+    int idx;
+    idx = 0;
+
+    int len;
+    len = value.length();
+
+    for (; idx < len; idx++) {
+      char c;
+      c = value.charAt(idx);
+
+      if (c == quotes.symbol) {
+        break;
+      }
+
+      if (c == '&') {
+        break;
+      }
+    }
+
+    if (idx == len) {
+      out.append(value);
+
+      return;
+    }
+
+    out.append(value, 0, idx);
+
+    while (idx < len) {
       char c;
       c = value.charAt(idx++);
 
-      switch (c) {
-        case '&' -> idx = ampersand(out, value, idx, len);
+      if (c == quotes.symbol) {
+        out.append(quotes.escape);
+      }
 
-        case '<' -> out.append("&lt;");
+      else if (c == '&') {
+        ampersand(out, value, idx, len);
+      }
 
-        case '>' -> out.append("&gt;");
-
-        case '"' -> out.append("&#34;");
-
-        case '\'' -> out.append("&#39;");
-
-        default -> out.append(c);
+      else {
+        out.append(c);
       }
     }
   }
