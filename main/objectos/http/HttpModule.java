@@ -359,6 +359,37 @@ public abstract class HttpModule {
 
   }
 
+  private static final class Segments3 extends AbstractSegments {
+
+    private final Condition condition0;
+    
+    private final Condition condition1;
+
+    Segments3(Condition condition0, Condition condition1, Condition condition2) {
+      super(condition2);
+
+      this.condition0 = condition0;
+      this.condition1 = condition1;
+    }
+
+    @Override
+    final int count() { return 3; }
+
+    @Override
+    final boolean test(List<Segment> segments) {
+      if (!condition0.test(segments, 0)) {
+        return false;
+      }
+
+      if (!condition1.test(segments, 1)) {
+        return false;
+      }
+
+      return last.test(segments, 2);
+    }
+
+  }
+
   protected final Matcher segments(Condition condition) {
     Check.notNull(condition, "condition == null");
 
@@ -370,6 +401,14 @@ public abstract class HttpModule {
     Check.notNull(c1, "c1 == null");
 
     return new Segments2(c0, c1);
+  }
+
+  protected final Matcher segments(Condition c0, Condition c1, Condition c2) {
+    checkMustBeLast(c0);
+    checkMustBeLast(c1);
+    Check.notNull(c2, "c2 == null");
+
+    return new Segments3(c0, c1, c2);
   }
 
   private void checkMustBeLast(Condition condition) {

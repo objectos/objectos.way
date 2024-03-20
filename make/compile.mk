@@ -43,7 +43,7 @@ $(1)COMPILE_MODULE_PATH = $$($(1)WORK)/compile-module-path
 $(1)JAVACX = $$(JAVAC)
 $(1)JAVACX += -d $$($(1)CLASS_OUTPUT)
 $(1)JAVACX += -g
-$(1)JAVACX += -Xlint:all
+$(1)JAVACX += -Xlint:none
 $(1)JAVACX += -Xpkginfo:always
 ifeq ($$($(1)ENABLE_PREVIEW),1)
 $(1)JAVACX += --enable-preview

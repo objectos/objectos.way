@@ -59,7 +59,8 @@ RESOLVER_DEPS += org.slf4j/slf4j-nop/1.7.36
 ## dep-to-jar
 word-solidus = $(word $(2), $(subst $(solidus),$(space),$(1)))
 mk-resolved-jar = $(call mk-dependency,$(call word-solidus,$(1),1),$(call word-solidus,$(1),2),$(call word-solidus,$(1),3),jar)
-dep-to-jar = $(foreach dep,$(1),$(LOCAL_REPO_PATH)/$(call mk-resolved-jar,$(dep)))
+gav-to-local = $(LOCAL_REPO_PATH)/$(call mk-resolved-jar,$(1))
+dep-to-jar = $(foreach dep,$(1),$(call gav-to-local,$(dep)))
 
 ## Resolver.java jars
 RESOLVER_DEPS_JARS = $(call dep-to-jar,$(RESOLVER_DEPS))
