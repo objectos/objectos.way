@@ -83,6 +83,10 @@ public class HttpModuleTest extends HttpModule {
     
     // matches: /testCase05/img, /testCase05/img/, /testCase05/img/a, /testCase05/img/b
     route(segments(eq("testCase05"), eq("img"), zeroOrMore()), this::testCase05);
+    
+    // matches: /testCase06/, /testCase06/foo, /testCase06/foo/bar
+    // but not: /testCase06
+    route(segments(eq("testCase06"), oneOrMore()), this::testCase06);
   }
 
   private void testCase01(ServerExchange http) {
@@ -512,6 +516,95 @@ public class HttpModuleTest extends HttpModule {
       test(socket,
           """
           GET /testCase05/imx/a/b/c HTTP/1.1\r
+          Host: http.module.test\r
+          Cookie: HTTPMODULETEST=TEST_COOKIE\r
+          \r
+          """,
+
+          """
+          HTTP/1.1 404 NOT FOUND\r
+          Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+          Connection: close\r
+          \r
+          """
+      );
+    }
+  }
+  
+  private void testCase06(ServerExchange http) {
+    UriPath path;
+    path = http.path();
+
+    List<Segment> segments;
+    segments = path.segments();
+
+    String text = segments.stream()
+        .skip(1)
+        .map(Segment::value)
+        .collect(Collectors.joining("/", "", "\n"));
+
+    http.okText(text, StandardCharsets.UTF_8);
+  }
+
+  @Test
+  public void testCase06() throws IOException {
+    try (Socket socket = newSocket()) {
+      test(socket,
+          """
+          GET /testCase06/ HTTP/1.1\r
+          Host: http.module.test\r
+          Cookie: HTTPMODULETEST=TEST_COOKIE\r
+          \r
+          """,
+
+          """
+          HTTP/1.1 200 OK\r
+          Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+          Content-Type: text/plain; charset=utf-8\r
+          Content-Length: 1\r
+          \r
+          \n"""
+      );
+      
+      test(socket,
+          """
+          GET /testCase06/foo HTTP/1.1\r
+          Host: http.module.test\r
+          Cookie: HTTPMODULETEST=TEST_COOKIE\r
+          \r
+          """,
+
+          """
+          HTTP/1.1 200 OK\r
+          Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+          Content-Type: text/plain; charset=utf-8\r
+          Content-Length: 4\r
+          \r
+          foo
+          """
+      );
+      
+      test(socket,
+          """
+          GET /testCase06/foo/bar HTTP/1.1\r
+          Host: http.module.test\r
+          Cookie: HTTPMODULETEST=TEST_COOKIE\r
+          \r
+          """,
+
+          """
+          HTTP/1.1 200 OK\r
+          Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+          Content-Type: text/plain; charset=utf-8\r
+          Content-Length: 8\r
+          \r
+          foo/bar
+          """
+      );
+      
+      test(socket,
+          """
+          GET /testCase06 HTTP/1.1\r
           Host: http.module.test\r
           Cookie: HTTPMODULETEST=TEST_COOKIE\r
           \r

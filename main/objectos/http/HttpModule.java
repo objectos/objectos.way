@@ -510,6 +510,25 @@ public abstract class HttpModule {
   protected final Condition present() {
     return Present.INSTANCE;
   }
+  
+  private static final class OneOrMore extends Condition {
+    
+    static final OneOrMore INSTANCE = new OneOrMore();
+
+    @Override
+    final boolean test(List<Segment> segments, int index) {
+      return segments.size() > index;
+    }
+
+
+    @Override
+    final boolean mustBeLast() { return true; }
+
+  }
+  
+  protected final Condition oneOrMore() {
+    return OneOrMore.INSTANCE;
+  }
 
   // actions
 
