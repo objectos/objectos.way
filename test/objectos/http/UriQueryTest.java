@@ -17,6 +17,7 @@ package objectos.http;
 
 import static org.testng.Assert.assertEquals;
 
+import java.util.Set;
 import org.testng.annotations.Test;
 
 public class UriQueryTest {
@@ -80,6 +81,25 @@ public class UriQueryTest {
     assertEquals(q.get("foo"), "");
     assertEquals(q.get("x"), null);
     assertEquals(q.isEmpty(), false);
+  }
+
+
+  @Test(description = """
+  UriQuery: names()
+  """)
+  public void testCase06() {
+    assertEquals(
+        queryOf("").names(),
+        Set.of()
+    );
+    assertEquals(
+        queryOf("a&foo=").names(),
+        Set.of("a", "foo")
+    );
+    assertEquals(
+        queryOf("a=b&c=d").names(),
+        Set.of("a", "c")
+    );
   }
 
   private WayUriQuery queryOf(String q) {

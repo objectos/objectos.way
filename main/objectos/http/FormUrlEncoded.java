@@ -16,6 +16,7 @@
 package objectos.http;
 
 import java.io.IOException;
+import java.util.Set;
 
 /**
  * The parsed and decoded body of a {@code application/x-www-form-urlencoded}
@@ -50,6 +51,11 @@ public interface FormUrlEncoded {
   static FormUrlEncoded parse(ServerExchange http) throws IOException, UnsupportedMediaTypeException {
     return WayFormUrlEncoded.parse(http);
   }
+  
+  /**
+   * Returns the keys.
+   */
+  Set<String> names();
 
   /**
    * Returns the first decoded value associated to the specified key or

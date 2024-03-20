@@ -15,8 +15,12 @@
  */
 package objectos.http;
 
+import java.util.Set;
+
 public interface UriQuery {
 
+  Set<String> names();
+  
   String get(String name);
 
   String value();

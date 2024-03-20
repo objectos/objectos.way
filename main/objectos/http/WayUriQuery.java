@@ -18,6 +18,7 @@ package objectos.http;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
+import java.util.Set;
 import objectos.lang.object.Check;
 import objectos.util.map.GrowableMap;
 
@@ -34,6 +35,11 @@ final class WayUriQuery implements UriQuery {
     value = URLDecoder.decode(rawValue, StandardCharsets.UTF_8);
 
     params = null;
+  }
+
+  @Override
+  public final Set<String> names() {
+    return params().keySet();
   }
 
   @Override

@@ -21,6 +21,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
+import java.util.Set;
 import objectos.way.TestingNoteSink;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -36,6 +37,7 @@ public class FormUrlEncodedTest {
     form = FormUrlEncoded.parse(body);
 
     assertEquals(form.size(), 1);
+    assertEquals(form.names(), Set.of("email"));
     assertEquals(form.get("email"), "user@example.com");
   }
 
@@ -48,6 +50,7 @@ public class FormUrlEncodedTest {
     form = FormUrlEncoded.parse(body);
 
     assertEquals(form.size(), 2);
+    assertEquals(form.names(), Set.of("login", "password"));
     assertEquals(form.get("login"), "foo");
     assertEquals(form.get("password"), "bar");
   }
@@ -64,6 +67,7 @@ public class FormUrlEncodedTest {
     email=user%40example.com""");
 
     assertEquals(form.size(), 1);
+    assertEquals(form.names(), Set.of("email"));
     assertEquals(form.get("email"), "user@example.com");
   }
 

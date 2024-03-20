@@ -15,9 +15,16 @@
  */
 package objectos.http;
 
+import java.util.Set;
+
 enum EmptyUriQuery implements UriQuery {
 
   INSTANCE;
+
+  @Override
+  public final Set<String> names() {
+    return Set.of();
+  }
 
   @Override
   public final String get(String name) {
