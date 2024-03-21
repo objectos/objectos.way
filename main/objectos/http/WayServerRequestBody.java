@@ -18,30 +18,52 @@ package objectos.http;
 import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 class WayServerRequestBody extends WayServerRequestHeaders implements Body {
 
   private enum Kind {
     EMPTY,
 
-    IN_BUFFER;
+    IN_BUFFER,
+    
+    FILE;
   }
 
   private Kind kind = Kind.EMPTY;
+  
+  private Path requestBodyDirectory;
+  
+  private Path requestBodyFile;
 
   WayServerRequestBody() {}
+  
+  public void requestBodyDirectory(Path directory) {
+    requestBodyDirectory = directory;
+  }
+  
+  public void close() throws IOException {
+    if (requestBodyFile != null) {
+      Files.delete(requestBodyFile);
+    }
+  }
 
   @Override
-  public final InputStream openStream() {
+  public final InputStream openStream() throws IOException {
     return switch (kind) {
       case EMPTY -> InputStream.nullInputStream();
 
       case IN_BUFFER -> openStreamImpl();
+
+      case FILE -> Files.newInputStream(requestBodyFile);
     };
   }
 
   final void resetRequestBody() {
     kind = Kind.EMPTY;
+    
+    requestBodyFile = null;
   }
 
   final void parseRequestBody() throws IOException {
@@ -54,24 +76,35 @@ class WayServerRequestBody extends WayServerRequestHeaders implements Body {
 
       if (value < 0) {
         badRequest = BadRequestReason.INVALID_HEADER;
-
-        return;
       }
 
-      if (!canBuffer(value)) {
-        throw new UnsupportedOperationException(
-            "Implement me :: persist request body to file"
-        );
+      else if (canBuffer(value)) {
+        int read;
+        read = read(value);
+
+        if (read < 0) {
+          throw new EOFException();
+        }
+
+        kind = Kind.IN_BUFFER;
       }
 
-      int read;
-      read = read(value);
-
-      if (read < 0) {
-        throw new EOFException();
+      else {
+        if (requestBodyDirectory == null) {
+          requestBodyFile = Files.createTempFile("objectos-way-request-body-", ".tmp");
+        } else {
+          requestBodyFile = Files.createTempFile(requestBodyDirectory, "objectos-way-request-body-", ".tmp");
+        }
+        
+        long read;
+        read = read(requestBodyFile, value);
+        
+        if (read < 0) {
+          throw new EOFException();
+        }
+        
+        kind = Kind.FILE;
       }
-
-      kind = Kind.IN_BUFFER;
 
       return;
     }

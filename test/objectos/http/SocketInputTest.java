@@ -18,6 +18,9 @@ package objectos.http;
 import static org.testng.Assert.assertEquals;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import org.testng.annotations.Test;
 
 public class SocketInputTest {
@@ -86,6 +89,44 @@ public class SocketInputTest {
 
     assertEquals(read, 24);
     assertEquals(input.bufferToString(0, 24), body);
+  }
+
+  @Test(description = """
+  Request body is larger than buffer
+  """)
+  public void testCase019() throws IOException {
+    String chunk256 = """
+    .................................................
+    .................................................
+    .................................................
+    .................................................
+    .................................................
+    123456""";
+
+    SocketInput input;
+    input = regularInput(chunk256);
+
+    long contentLength;
+    contentLength = 256;
+
+    assertEquals(input.canBuffer(contentLength), false);
+
+    Path file;
+    file = Files.createTempFile("objectos-way-socket-input-tc19-", ".tmp");
+
+    try {
+      long read;
+      read = input.read(file, contentLength);
+
+      assertEquals(read, contentLength);
+
+      String s;
+      s = Files.readString(file, StandardCharsets.UTF_8);
+
+      assertEquals(s, chunk256);
+    } finally {
+      Files.delete(file);
+    }
   }
 
   @Test(description = "Line is larger than initial buffer size")

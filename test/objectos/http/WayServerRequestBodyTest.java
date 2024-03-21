@@ -63,6 +63,37 @@ public class WayServerRequestBodyTest {
     assertEquals(asString(body), "email=user%40example.com");
   }
 
+  @Test(description = """
+  Request body is larger than buffer
+  """)
+  public void testCase019() throws IOException {
+    String chunk256 = """
+    .................................................
+    .................................................
+    .................................................
+    .................................................
+    .................................................
+    123456""";
+
+    WayServerRequestBody body;
+    body = regularInput("""
+    Host: www.example.com\r
+    Content-Length: 256\r
+    Content-Type: text/plain\r
+    \r
+    %s""".formatted(chunk256));
+
+    try {
+      body.parseHeaders();
+      body.parseRequestBody();
+
+      assertNull(body.badRequest);
+      assertEquals(asString(body), chunk256);
+    } finally {
+      body.close();
+    }
+  }
+
   private String asString(Body body) throws IOException {
     return ObjectosHttp.readString(body);
   }

@@ -116,8 +116,8 @@ public class ServerLoopTest {
   }
 
   @Test(description = """
-  1. GET httpuest with implied keep-alive
-  2. GET httpuest with explicit close
+  1. GET request with implied keep-alive
+  2. GET request with explicit close
   """)
   public void testCase002() {
     TestableSocket socket;
@@ -262,7 +262,7 @@ public class ServerLoopTest {
   }
 
   @Test(description = """
-  It should handle unkonwn httpuest headers
+  It should handle unkonwn request headers
   """)
   public void testCase003() {
     TestableSocket socket;
@@ -1144,6 +1144,45 @@ public class ServerLoopTest {
       assertEquals(socket.outputAsString(), resp01);
 
       assertEquals(http.keepAlive(), true);
+    } catch (IOException e) {
+      throw new AssertionError("Failed with IOException", e);
+    }
+  }
+
+  @Test(description = """
+  Request body is larger than buffer
+  """)
+  public void testCase019() {
+    String chunk256 = """
+    .................................................
+    .................................................
+    .................................................
+    .................................................
+    .................................................
+    123456""";
+
+    TestableSocket socket;
+    socket = TestableSocket.of("""
+    POST /upload HTTP/1.1\r
+    Host: www.example.com\r
+    Content-Length: 256\r
+    Content-Type: text/plain\r
+    \r
+    %s""".formatted(chunk256));
+
+    try (WayServerLoop http = new WayServerLoop(socket)) {
+      http.bufferSize(128, 128);
+      http.clock(TestingClock.FIXED);
+      http.noteSink(TestingNoteSink.INSTANCE);
+
+      http.parse();
+
+      assertEquals(http.badRequest(), false);
+
+      Body requestBody;
+      requestBody = http.body();
+
+      assertEquals(ObjectosHttp.readString(requestBody), chunk256);
     } catch (IOException e) {
       throw new AssertionError("Failed with IOException", e);
     }

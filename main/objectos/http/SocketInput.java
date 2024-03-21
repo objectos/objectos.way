@@ -19,7 +19,10 @@ import java.io.ByteArrayInputStream;
 import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Arrays;
 import objectos.lang.object.Check;
 
@@ -292,7 +295,6 @@ class SocketInput {
     }
 
     // how many bytes must we read
-
     int mustReadCount;
     mustReadCount = length - unread;
 
@@ -310,6 +312,50 @@ class SocketInput {
     }
 
     return length;
+  }
+  
+  final long read(Path file, long contentLength) throws IOException {
+    // max out buffer if necessary
+    if (buffer.length < maxBufferSize) {
+      buffer = Arrays.copyOf(buffer, maxBufferSize);
+    }
+
+    // unread bytes in buffer
+    int unread;
+    unread = bufferLimit - bufferIndex;
+
+    // how many bytes must we read
+    long mustReadCount;
+    mustReadCount = contentLength - unread;
+
+    try (OutputStream out = Files.newOutputStream(file)) {
+      while (mustReadCount > 0) {
+        // this is guaranteed to be an int value
+        long available;
+        available = buffer.length - bufferLimit;
+
+        // this is guaranteed to be an int value
+        long iteration;
+        iteration = Math.min(available, mustReadCount);
+
+        int read;
+        read = inputStream.read(buffer, bufferLimit, (int) iteration);
+
+        if (read < 0) {
+          return -1;
+        }
+
+        bufferLimit += read;
+
+        out.write(buffer, bufferIndex, bufferLimit - bufferIndex);
+
+        bufferLimit = bufferIndex;
+
+        mustReadCount -= read;
+      }
+    }
+
+    return contentLength;
   }
 
   final InputStream openStreamImpl() {

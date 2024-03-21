@@ -121,7 +121,11 @@ public final class WayServerLoop extends WayServerRequestBody implements ServerL
 
   @Override
   public final void close() throws IOException {
-    socket.close();
+    try {
+      super.close();
+    } finally {
+      socket.close();
+    }
   }
 
   @Override
