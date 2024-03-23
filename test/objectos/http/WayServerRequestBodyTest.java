@@ -16,7 +16,6 @@
 package objectos.http;
 
 import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertNull;
 
 import java.io.IOException;
 import org.testng.annotations.Test;
@@ -39,7 +38,7 @@ public class WayServerRequestBodyTest {
     body.parseHeaders();
     body.parseRequestBody();
 
-    assertNull(body.badRequest);
+    assertEquals(body.parseStatus.isError(), false);
     assertEquals(asString(body), "");
   }
 
@@ -59,7 +58,7 @@ public class WayServerRequestBodyTest {
     body.parseHeaders();
     body.parseRequestBody();
 
-    assertNull(body.badRequest);
+    assertEquals(body.parseStatus.isError(), false);
     assertEquals(asString(body), "email=user%40example.com");
   }
 
@@ -87,7 +86,7 @@ public class WayServerRequestBodyTest {
       body.parseHeaders();
       body.parseRequestBody();
 
-      assertNull(body.badRequest);
+      assertEquals(body.parseStatus.isError(), false);
       assertEquals(asString(body), chunk256);
     } finally {
       body.close();

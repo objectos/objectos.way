@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import objectos.http.WayServerLoop.ParseStatus;
 import org.testng.annotations.Test;
 
 public class SocketInputTest {
@@ -44,6 +45,7 @@ public class SocketInputTest {
     // first line
     input.parseLine();
 
+    assertEquals(input.parseStatus, ParseStatus.NORMAL);
     assertEquals(hasNext(input), true);
     assertEquals(peek(input), 'G');
     assertEquals(input.matches(WayRequestLine.STD_METHOD_BYTES[Method.GET.index()]), true);
@@ -62,6 +64,7 @@ public class SocketInputTest {
     // second line
     input.parseLine();
 
+    assertEquals(input.parseStatus, ParseStatus.NORMAL);
     assertEquals(input.bufferIndex, 16);
     assertEquals(input.consumeIfEmptyLine(), false);
     byte[] host;
@@ -127,6 +130,39 @@ public class SocketInputTest {
     } finally {
       Files.delete(file);
     }
+  }
+  
+  @Test(description = """
+  It should properly handle EOF on subsequent request line
+  """)
+  public void testCase020() throws IOException {
+    SocketInput input;
+    input = regularInput("""
+    GET / HTTP/1.1\r
+    """);
+
+    input.parseLine();
+
+    assertEquals(input.parseStatus, ParseStatus.NORMAL);
+    assertEquals(hasNext(input), true);
+    assertEquals(peek(input), 'G');
+    assertEquals(input.matches(WayRequestLine.STD_METHOD_BYTES[Method.GET.index()]), true);
+    assertEquals(peek(input), '/');
+    assertEquals(input.bufferIndex, 4);
+    assertEquals(input.indexOf(Bytes.QUESTION_MARK, Bytes.SP), 5);
+    input.bufferIndex = 5;
+    assertEquals(next(input), Bytes.SP);
+    assertEquals(input.matches(WayRequestLine.HTTP_VERSION_PREFIX), true);
+    assertEquals(hasNext(input, 3), true);
+    assertEquals(next(input), '1');
+    assertEquals(next(input), '.');
+    assertEquals(next(input), '1');
+    assertEquals(input.consumeIfEndOfLine(), true);
+
+    // second line
+    input.parseLine();
+
+    assertEquals(input.parseStatus, ParseStatus.UNEXPECTED_EOF);
   }
 
   @Test(description = "Line is larger than initial buffer size")

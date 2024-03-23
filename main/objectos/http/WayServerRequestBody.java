@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import objectos.http.WayServerLoop.ParseStatus;
 
 class WayServerRequestBody extends WayServerRequestHeaders implements Body {
 
@@ -75,7 +76,7 @@ class WayServerRequestBody extends WayServerRequestHeaders implements Body {
       value = contentLength.unsignedLongValue();
 
       if (value < 0) {
-        badRequest = BadRequestReason.INVALID_HEADER;
+        parseStatus = ParseStatus.INVALID_HEADER;
       }
 
       else if (canBuffer(value)) {
@@ -100,10 +101,10 @@ class WayServerRequestBody extends WayServerRequestHeaders implements Body {
         read = read(requestBodyFile, value);
         
         if (read < 0) {
-          throw new EOFException();
+          parseStatus = ParseStatus.EOF;
+        } else {
+          kind = Kind.FILE;
         }
-        
-        kind = Kind.FILE;
       }
 
       return;

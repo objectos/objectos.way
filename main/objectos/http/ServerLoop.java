@@ -17,6 +17,7 @@ package objectos.http;
 
 import java.io.Closeable;
 import java.io.IOException;
+import objectos.http.WayServerLoop.ParseStatus;
 
 public interface ServerLoop extends Closeable, ServerExchange {
 
@@ -29,9 +30,7 @@ public interface ServerLoop extends Closeable, ServerExchange {
   @Override
   void close() throws IOException;
 
-  void parse() throws IOException, IllegalStateException;
-
-  boolean badRequest() throws IllegalStateException;
+  ParseStatus parse() throws IOException, IllegalStateException;
 
   void commit() throws IOException, IllegalStateException;
 

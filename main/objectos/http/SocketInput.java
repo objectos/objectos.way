@@ -16,7 +16,6 @@
 package objectos.http;
 
 import java.io.ByteArrayInputStream;
-import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -24,6 +23,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
+import objectos.http.WayServerLoop.ParseStatus;
 import objectos.lang.object.Check;
 
 class SocketInput {
@@ -42,6 +42,8 @@ class SocketInput {
   int lineLimit;
 
   int maxBufferSize = 4096;
+  
+  ParseStatus parseStatus;
 
   public SocketInput() {
   }
@@ -91,6 +93,8 @@ class SocketInput {
     bufferIndex = 0;
 
     lineLimit = 0;
+    
+    parseStatus = ParseStatus.NORMAL;
   }
 
   final void parseLine() throws IOException {
@@ -124,7 +128,9 @@ class SocketInput {
 
         if (buffer.length == maxBufferSize) {
           // cannot increase...
-          throw new OverflowException();
+          parseStatus = ParseStatus.OVERFLOW;
+          
+          return;
         }
 
         int newLength;
@@ -140,7 +146,9 @@ class SocketInput {
 
       if (bytesRead < 0) {
         // EOF
-        throw new EOFException();
+        parseStatus = ParseStatus.UNEXPECTED_EOF;
+        
+        return;
       }
 
       bufferLimit += bytesRead;

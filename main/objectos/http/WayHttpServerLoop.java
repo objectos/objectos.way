@@ -16,6 +16,7 @@ import java.time.Clock;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
+import objectos.http.WayServerLoop.ParseStatus;
 import objectos.notes.Note0;
 import objectos.notes.Note1;
 import objectos.notes.NoteSink;
@@ -116,9 +117,14 @@ final class WayHttpServerLoop implements Runnable {
         http = loop;
 
         while (!Thread.currentThread().isInterrupted()) {
-          loop.parse();
+          ParseStatus parse;
+          parse = loop.parse();
 
-          if (loop.badRequest()) {
+          if (parse == ParseStatus.EOF) {
+            break;
+          }
+
+          if (parse.isError()) {
             throw new UnsupportedOperationException("Implement me");
           }
 

@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Set;
+import objectos.http.WayServerLoop.ParseStatus;
 import objectos.way.TestingNoteSink;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -104,9 +105,10 @@ public class FormUrlEncodedTest {
       http.clock(TestingClock.FIXED);
       http.noteSink(TestingNoteSink.INSTANCE);
 
-      http.parse();
+      ParseStatus status;
+      status = http.parse();
 
-      assertEquals(http.badRequest(), false);
+      assertEquals(status.isError(), false);
 
       ServerExchange exchange;
       exchange = http;

@@ -25,6 +25,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Random;
 import objectos.html.HtmlTemplate;
+import objectos.http.WayServerLoop.ParseStatus;
 import objectos.lang.CharWritable;
 import objectos.lang.TestingCharWritable;
 import objectos.util.array.ByteArrays;
@@ -64,9 +65,10 @@ public class ServerLoopTest {
       http.noteSink(TestingNoteSink.INSTANCE);
 
       // request phase
-      http.parse();
+      ParseStatus parse;
+      parse = http.parse();
 
-      assertEquals(http.badRequest(), false);
+      assertEquals(parse.isError(), false);
 
       // request line
       UriPath path;
@@ -172,9 +174,10 @@ public class ServerLoopTest {
       http.noteSink(TestingNoteSink.INSTANCE);
 
       // request 01
-      http.parse();
+      ParseStatus parse;
+      parse = http.parse();
 
-      assertEquals(http.badRequest(), false);
+      assertEquals(parse.isError(), false);
 
       // request line
       UriPath path;
@@ -219,9 +222,9 @@ public class ServerLoopTest {
       assertEquals(http.keepAlive(), true);
 
       // request 02
-      http.parse();
+      parse = http.parse();
 
-      assertEquals(http.badRequest(), false);
+      assertEquals(parse.isError(), false);
 
       // request line
       path = http.path();
@@ -291,9 +294,10 @@ public class ServerLoopTest {
       http.noteSink(TestingNoteSink.INSTANCE);
 
       // request phase
-      http.parse();
+      ParseStatus parse;
+      parse = http.parse();
 
-      assertEquals(http.badRequest(), false);
+      assertEquals(parse.isError(), false);
 
       // headers
       ServerRequestHeaders headers;
@@ -357,9 +361,10 @@ public class ServerLoopTest {
       http.noteSink(TestingNoteSink.INSTANCE);
 
       // request phase
-      http.parse();
+      ParseStatus parse;
+      parse = http.parse();
 
-      assertEquals(http.badRequest(), false);
+      assertEquals(parse.isError(), false);
 
       // request line
       UriPath path;
@@ -434,9 +439,10 @@ public class ServerLoopTest {
       http.noteSink(TestingNoteSink.INSTANCE);
 
       // request phase
-      http.parse();
+      ParseStatus parse;
+      parse = http.parse();
 
-      assertEquals(http.badRequest(), false);
+      assertEquals(parse.isError(), false);
 
       // request line
       UriPath path;
@@ -501,9 +507,10 @@ public class ServerLoopTest {
       http.noteSink(TestingNoteSink.INSTANCE);
 
       // request phase
-      http.parse();
+      ParseStatus parse;
+      parse = http.parse();
 
-      assertEquals(http.badRequest(), false);
+      assertEquals(parse.isError(), false);
 
       // response phase
 
@@ -546,9 +553,10 @@ public class ServerLoopTest {
       http.noteSink(TestingNoteSink.INSTANCE);
 
       // request phase
-      http.parse();
+      ParseStatus parse;
+      parse = http.parse();
 
-      assertEquals(http.badRequest(), false);
+      assertEquals(parse.isError(), false);
 
       UriQuery query;
       query = http.query();
@@ -605,9 +613,10 @@ public class ServerLoopTest {
       http.noteSink(TestingNoteSink.INSTANCE);
 
       // request phase
-      http.parse();
+      ParseStatus parse;
+      parse = http.parse();
 
-      assertEquals(http.badRequest(), false);
+      assertEquals(parse.isError(), false);
 
       Body requestBody;
       requestBody = http.body();
@@ -663,9 +672,10 @@ public class ServerLoopTest {
       http.clock(TestingClock.FIXED);
       http.noteSink(TestingNoteSink.INSTANCE);
 
-      http.parse();
+      ParseStatus parse;
+      parse = http.parse();
 
-      assertEquals(http.badRequest(), false);
+      assertEquals(parse.isError(), false);
 
       http.status(Status.OK);
       http.header(HeaderName.CONTENT_TYPE, "text/plain; charset=utf-8");
@@ -709,9 +719,10 @@ public class ServerLoopTest {
       http.clock(TestingClock.FIXED);
       http.noteSink(TestingNoteSink.INSTANCE);
 
-      http.parse();
+      ParseStatus parse;
+      parse = http.parse();
 
-      assertEquals(http.badRequest(), false);
+      assertEquals(parse.isError(), false);
 
       http.unsupportedMediaType();
 
@@ -761,9 +772,10 @@ public class ServerLoopTest {
       http.noteSink(TestingNoteSink.INSTANCE);
       http.sessionStore(sessionStore);
 
-      http.parse();
+      ParseStatus parse;
+      parse = http.parse();
 
-      assertEquals(http.badRequest(), false);
+      assertEquals(parse.isError(), false);
 
       assertSame(http.session(), session);
 
@@ -816,9 +828,10 @@ public class ServerLoopTest {
       http.noteSink(TestingNoteSink.INSTANCE);
       http.sessionStore(sessionStore);
 
-      http.parse();
+      ParseStatus parse;
+      parse = http.parse();
 
-      assertEquals(http.badRequest(), false);
+      assertEquals(parse.isError(), false);
 
       http.ok(new SingleParagraph("LOGIN"));
 
@@ -853,9 +866,10 @@ public class ServerLoopTest {
       http.clock(TestingClock.FIXED);
       http.noteSink(TestingNoteSink.INSTANCE);
 
-      http.parse();
+      ParseStatus parse;
+      parse = http.parse();
 
-      assertEquals(http.badRequest(), false);
+      assertEquals(parse.isError(), false);
 
       http.dateNow();
       http.header(HeaderName.CONTENT_TYPE, "text/plain");
@@ -897,9 +911,10 @@ public class ServerLoopTest {
       http.clock(TestingClock.FIXED);
       http.noteSink(TestingNoteSink.INSTANCE);
 
-      http.parse();
+      ParseStatus parse;
+      parse = http.parse();
 
-      assertEquals(http.badRequest(), false);
+      assertEquals(parse.isError(), false);
 
       http.dateNow();
       http.header(HeaderName.CONTENT_TYPE, "text/plain");
@@ -956,9 +971,10 @@ public class ServerLoopTest {
       http.clock(TestingClock.FIXED);
       http.noteSink(TestingNoteSink.INSTANCE);
 
-      http.parse();
+      ParseStatus parse;
+      parse = http.parse();
 
-      assertEquals(http.badRequest(), false);
+      assertEquals(parse.isError(), false);
 
       http.dateNow();
       http.header(HeaderName.CONTENT_TYPE, "text/plain");
@@ -1012,9 +1028,10 @@ public class ServerLoopTest {
       http.clock(TestingClock.FIXED);
       http.noteSink(TestingNoteSink.INSTANCE);
 
-      http.parse();
+      ParseStatus parse;
+      parse = http.parse();
 
-      assertEquals(http.badRequest(), false);
+      assertEquals(parse.isError(), false);
 
       http.dateNow();
       http.header(HeaderName.CONTENT_TYPE, "text/plain");
@@ -1066,9 +1083,10 @@ public class ServerLoopTest {
       http.clock(TestingClock.FIXED);
       http.noteSink(TestingNoteSink.INSTANCE);
 
-      http.parse();
+      ParseStatus parse;
+      parse = http.parse();
 
-      assertEquals(http.badRequest(), false);
+      assertEquals(parse.isError(), false);
 
       http.dateNow();
       http.header(HeaderName.CONTENT_TYPE, "text/plain");
@@ -1130,9 +1148,10 @@ public class ServerLoopTest {
       http.clock(TestingClock.FIXED);
       http.noteSink(TestingNoteSink.INSTANCE);
 
-      http.parse();
+      ParseStatus parse;
+      parse = http.parse();
 
-      assertEquals(http.badRequest(), false);
+      assertEquals(parse.isError(), false);
 
       http.dateNow();
       http.header(HeaderName.CONTENT_TYPE, "text/plain");
@@ -1175,9 +1194,10 @@ public class ServerLoopTest {
       http.clock(TestingClock.FIXED);
       http.noteSink(TestingNoteSink.INSTANCE);
 
-      http.parse();
+      ParseStatus parse;
+      parse = http.parse();
 
-      assertEquals(http.badRequest(), false);
+      assertEquals(parse.isError(), false);
 
       Body requestBody;
       requestBody = http.body();

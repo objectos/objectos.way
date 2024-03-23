@@ -16,7 +16,6 @@
 package objectos.http;
 
 import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertNull;
 
 import java.io.IOException;
 import org.testng.annotations.Test;
@@ -62,7 +61,7 @@ public class WayRequestLineTest {
     assertEquals(line.versionMinor, 1);
 
     // not bad request
-    assertNull(line.badRequest);
+    assertEquals(line.parseStatus.isError(), false);
   }
 
   @Test(description = """
@@ -105,7 +104,20 @@ public class WayRequestLineTest {
     assertEquals(line.versionMinor, 1);
 
     // not bad request
-    assertNull(line.badRequest);
+    assertEquals(line.parseStatus.isError(), false);
+  }
+
+  @Test(description = """
+  It should properly handle EOF on subsequent request line
+  """)
+  public void testCase020() throws IOException {
+    WayRequestLine line;
+    line = regularInput("");
+
+    line.parseRequestLine();
+
+    assertEquals(line.method, null);
+    assertEquals(line.parseStatus.isError(), true);
   }
 
   private WayRequestLine regularInput(Object... data) throws IOException {

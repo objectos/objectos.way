@@ -28,6 +28,7 @@ import java.time.Instant;
 import objectos.http.TestableSocket;
 import objectos.http.TestingClock;
 import objectos.http.WayServerLoop;
+import objectos.http.WayServerLoop.ParseStatus;
 import objectos.way.TestingDir;
 import objectos.way.TestingNoteSink;
 import org.testng.annotations.Test;
@@ -217,9 +218,10 @@ public class WayWebResourcesTest {
       http.clock(TestingClock.FIXED);
       http.noteSink(TestingNoteSink.INSTANCE);
 
-      http.parse();
+      ParseStatus parse;
+      parse = http.parse();
 
-      assertEquals(http.badRequest(), false);
+      assertEquals(parse.isError(), false);
 
       resources.handle(http);
 

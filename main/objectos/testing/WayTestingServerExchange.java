@@ -24,6 +24,7 @@ import java.util.function.Consumer;
 import objectos.http.ServerExchange;
 import objectos.http.SessionStore;
 import objectos.http.WayServerLoop;
+import objectos.http.WayServerLoop.ParseStatus;
 import objectos.lang.object.Check;
 import objectos.notes.NoOpNoteSink;
 import objectos.notes.NoteSink;
@@ -89,9 +90,10 @@ public final class WayTestingServerExchange implements TestingServerExchange {
 
       loop.noteSink(noteSink);
 
-      loop.parse();
+      ParseStatus parse;
+      parse = loop.parse();
 
-      if (loop.badRequest()) {
+      if (parse.isError()) {
         throw new UnsupportedOperationException("Bad request");
       }
 

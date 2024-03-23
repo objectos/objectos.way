@@ -34,6 +34,46 @@ import objectos.notes.NoOpNoteSink;
 import objectos.notes.NoteSink;
 
 public final class WayServerLoop extends WayServerRequestBody implements ServerLoop {
+  
+  public enum ParseStatus {
+    // keep going
+    NORMAL,
+
+    // SocketInput statuses
+    EOF,
+    
+    UNEXPECTED_EOF,
+
+    OVERFLOW,
+
+    // 400 bad request
+    INVALID_METHOD,
+
+    INVALID_TARGET,
+
+    INVALID_PROTOCOL,
+
+    INVALID_REQUEST_LINE_TERMINATOR,
+
+    INVALID_HEADER,
+
+    INVALID_CONTENT_LENGTH,
+
+    // 414 actually
+    URI_TOO_LONG;
+
+    public final boolean isError() {
+      return this != NORMAL;
+    }
+
+    final boolean isNormal() {
+      return this == NORMAL;
+    }
+
+    final boolean isBadRequest() {
+      return compareTo(INVALID_METHOD) >= 0;
+    }
+  }
 
   private static final int _CONFIG = 0;
   private static final int _PARSE = 1;
@@ -129,7 +169,7 @@ public final class WayServerLoop extends WayServerRequestBody implements ServerL
   }
 
   @Override
-  public final void parse() throws IOException, IllegalStateException {
+  public final ParseStatus parse() throws IOException, IllegalStateException {
     if (testState(_CONFIG)) {
       // init socket input
       InputStream inputStream;
@@ -163,21 +203,25 @@ public final class WayServerLoop extends WayServerRequestBody implements ServerL
 
     parseRequestLine();
 
-    if (badRequest != null) {
-      return;
+    if (parseStatus.isError()) {
+      return parseStatus;
     }
 
     // request headers
 
     parseHeaders();
 
-    if (badRequest != null) {
-      return;
+    if (parseStatus.isError()) {
+      return parseStatus;
     }
 
     // request body
 
     parseRequestBody();
+
+    if (parseStatus.isError()) {
+      return parseStatus;
+    }
 
     // handle keep alive
 
@@ -204,6 +248,8 @@ public final class WayServerLoop extends WayServerRequestBody implements ServerL
     acceptSessionStore0();
 
     setState(_REQUEST);
+    
+    return parseStatus;
   }
 
   @Override
@@ -243,11 +289,10 @@ public final class WayServerLoop extends WayServerRequestBody implements ServerL
     }
   }
 
-  @Override
-  public final boolean badRequest() {
+  private boolean badRequest() {
     Check.state(testState(_REQUEST), "Method can only be invoked after a parse() operation");
 
-    return badRequest != null;
+    return parseStatus.isBadRequest();
   }
 
   // request

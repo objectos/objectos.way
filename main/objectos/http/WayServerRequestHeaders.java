@@ -20,6 +20,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import objectos.http.WayServerLoop.ParseStatus;
 import objectos.lang.object.Check;
 
 class WayServerRequestHeaders extends WayRequestLine implements ServerRequestHeaders {
@@ -123,17 +124,17 @@ class WayServerRequestHeaders extends WayRequestLine implements ServerRequestHea
   final void parseHeaders() throws IOException {
     parseLine();
 
-    while (!consumeIfEmptyLine()) {
+    while (parseStatus.isNormal() && !consumeIfEmptyLine()) {
       parseStandardHeaderName();
 
-      if (badRequest != null) {
+      if (parseStatus.isError()) {
         break;
       }
 
       if (headerName == null) {
         parseUnknownHeaderName();
 
-        if (badRequest != null) {
+        if (parseStatus.isError()) {
           break;
         }
       }
@@ -154,7 +155,7 @@ class WayServerRequestHeaders extends WayRequestLine implements ServerRequestHea
 
     // we will use the first char as hash code
     if (bufferIndex >= lineLimit) {
-      badRequest = BadRequestReason.INVALID_HEADER;
+      parseStatus = ParseStatus.INVALID_HEADER;
 
       return;
     }
@@ -232,7 +233,7 @@ class WayServerRequestHeaders extends WayRequestLine implements ServerRequestHea
     if (bufferIndex >= lineLimit) {
       // matches but reached end of line -> bad request
 
-      badRequest = BadRequestReason.INVALID_HEADER;
+      parseStatus = ParseStatus.INVALID_HEADER;
 
       return;
     }
@@ -243,7 +244,7 @@ class WayServerRequestHeaders extends WayRequestLine implements ServerRequestHea
     if (maybeColon != Bytes.COLON) {
       // matches but is not followed by a colon character
 
-      badRequest = BadRequestReason.INVALID_HEADER;
+      parseStatus = ParseStatus.INVALID_HEADER;
 
       return;
     }
@@ -283,14 +284,14 @@ class WayServerRequestHeaders extends WayRequestLine implements ServerRequestHea
 
     if (colonIndex < 0) {
       // no colon found
-      badRequest = BadRequestReason.INVALID_HEADER;
+      parseStatus = ParseStatus.INVALID_HEADER;
 
       return;
     }
 
     if (startIndex == colonIndex) {
       // empty header name
-      badRequest = BadRequestReason.INVALID_HEADER;
+      parseStatus = ParseStatus.INVALID_HEADER;
 
       return;
     }
