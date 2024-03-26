@@ -24,45 +24,43 @@ ARTIFACT_ID := objectos.way
 VERSION := 0.14-SNAPSHOT
 MODULE := $(ARTIFACT_ID)
 
-## Resolution dir (required)
-RESOLUTION_DIR := work/resolution
+## Dependencies
+SELFGEN := br.com.objectos/objectos.selfgen/0.4-SNAPSHOT
+NOTES := br.com.objectos/objectos.notes/0.1
 
-## Deps versions
-SELFGEN_VERSION := 0.4-SNAPSHOT
-NOTES_VERSION := 0.1
-JACKSON_VERSION := 2.16.1
-SLF4J_VERSION := 1.7.36
-TESTNG_VERSION := 7.9.0
+JACKSON_CORE := com.fasterxml.jackson.core/jackson-core/2.16.1
+TESTNG := org.testng/testng/7.9.0
+
+SLF4J_NOP := org.slf4j/slf4j-nop/1.7.36
+
 
 # Delete the default suffixes
 .SUFFIXES:
 
 #
-# Default target
+# way
 #
 
 .PHONY: all
 all: test
 
+include make/java-core.mk
+
 #
 # way@clean
 #
 
-## basedir
-BASEDIR := .
-
-include make/tools.mk
-include make/deps.mk
-include make/resolver.mk
-include make/clean.mk
-$(eval $(call CLEAN_TASK,,))
+include make/common-clean.mk
 
 #
 # way@selfgen
 #
 
+## selfgen target directory
+MAIN := main
+
 ## selfgen deps
-SELFGEN_DEPS := $(RESOLUTION_DIR)/br.com.objectos/objectos.selfgen/$(SELFGEN_VERSION)
+SELFGEN_DEPS := $(SELFGEN)
 
 ## selfgen module path
 SELFGEN_MODULE_PATH := $(WORK)/selfgen-module-path
@@ -71,7 +69,7 @@ SELFGEN_MODULE_PATH := $(WORK)/selfgen-module-path
 SELFGEN_MARKER := $(WORK)/selfgen-marker
 
 ## selfgen java command
-SELFGEN_JAVAX  = $(JAVA)
+SELFGEN_JAVAX := $(JAVA)
 SELFGEN_JAVAX += --module-path @$(SELFGEN_MODULE_PATH)
 SELFGEN_JAVAX += --enable-preview
 SELFGEN_JAVAX += --module objectos.selfgen/objectos.selfgen.Main
@@ -83,9 +81,13 @@ selfgen: $(SELFGEN_MARKER)
 .PHONY: selfgen@clean
 selfgen@clean:
 	rm -f $(SELFGEN_MARKER)
+	
+.PHONY: re-selfgen
+re-selfgen: selfgen@clean selfgen 
 
-$(SELFGEN_MODULE_PATH): $(SELFGEN_DEPS)
-	cat $^ | sort -u | paste --delimiter='$(MODULE_PATH_SEPARATOR)' --serial > $@
+$(SELFGEN_MODULE_PATH): $(call to-resolution-files,$(SELFGEN_DEPS))
+	$(call uniq-resolution-files,$^) > $@.tmp
+	cat $@.tmp | paste --delimiter='$(MODULE_PATH_SEPARATOR)' --serial > $@
 
 $(SELFGEN_MARKER): $(SELFGEN_MODULE_PATH)
 	$(SELFGEN_JAVAX)
@@ -96,45 +98,42 @@ $(SELFGEN_MARKER): $(SELFGEN_MODULE_PATH)
 #
 
 ## javac --release option
-JAVA_RELEASE = 21
-
-## --enable-preview ?
-ENABLE_PREVIEW = 0
+JAVA_RELEASE := 21
 
 ## compile deps
-COMPILE_DEPS := $(RESOLUTION_DIR)/br.com.objectos/objectos.notes/$(NOTES_VERSION)
+COMPILE_DEPS := $(NOTES)
 
 ## compilation depends on selfgen
-COMPILE_REQS_MORE := $(SELFGEN_MARKER)
+COMPILE_REQS := $(SELFGEN_MARKER)
 
 ## resources
 RESOURCES := resources
 
-## resolution trigger
-RESOLUTION_REQS := Makefile
-
-include make/compile.mk
-$(eval $(call COMPILE_TASK,,))
+include make/java-compile.mk
 
 #
 # way@test-compile
 #
 
 ## test compile deps
-TEST_COMPILE_DEPS := $(COMPILE_MARKER)
-TEST_COMPILE_DEPS += $(RESOLUTION_DIR)/com.fasterxml.jackson.core/jackson-core/$(JACKSON_VERSION)
-TEST_COMPILE_DEPS += $(RESOLUTION_DIR)/org.testng/testng/$(TESTNG_VERSION)
+TEST_COMPILE_DEPS := $(JACKSON_CORE)
+TEST_COMPILE_DEPS += $(TESTNG)
 
-include make/test-compile.mk
-$(eval $(call TEST_COMPILE_TASK,,))
+include make/java-test-compile.mk
 
 #
 # way@test
 #
 
+## test main class
+TEST_MAIN := objectos.way.RunTests
+
 ## www test runtime dependencies
-TEST_RUNTIME_DEPS := $(TEST_COMPILE_DEPS)
-TEST_RUNTIME_DEPS += $(RESOLUTION_DIR)/org.slf4j/slf4j-nop/$(SLF4J_VERSION)
+TEST_RUNTIME_DEPS := $(SLF4J_NOP)
+
+## test modules
+TEST_ADD_MODULES := org.testng
+TEST_ADD_MODULES += com.fasterxml.jackson.core
 
 ## test runtime exports
 TEST_JAVAX_EXPORTS := objectos.lang.object
@@ -153,16 +152,14 @@ TEST_JAVAX_EXPORTS += objectox.html.style
 TEST_JAVAX_EXPORTS += objectox.lang
 TEST_JAVAX_EXPORTS += testing.site.web
 
-## test runtime modules
-TEST_JAVAX_MODULES := com.fasterxml.jackson.core
-TEST_JAVAX_MODULES += org.testng
+TEST_ADD_EXPORTS := $(foreach pkg,$(TEST_JAVAX_EXPORTS),objectos.way/$(pkg)=org.testng)
 
-## test runtime reads
-TEST_JAVAX_READS := java.compiler
-TEST_JAVAX_READS += com.fasterxml.jackson.core
+## test --add-reads
+TEST_ADD_READS := objectos.way=org.testng
+TEST_ADD_READS += objectos.way=com.fasterxml.jackson.core
+TEST_ADD_READS += objectos.way=java.compiler
 
-include make/test-run.mk
-$(eval $(call TEST_RUN_TASK,,))
+include make/java-test.mk
 
 #
 # way@dev
@@ -214,8 +211,7 @@ npm-install:
 # way@jar
 #
 
-include make/jar.mk
-$(eval $(call JAR_TASK,,))
+include make/java-jar.mk
 
 #
 # way@pom
@@ -227,13 +223,8 @@ COPYRIGHT_YEARS := 2022-2024
 ## pom.xml description
 DESCRIPTION := Objectos Way allows you to build web applications using only Java. 
 
-include pom.mk
-include make/pom.mk
-$(eval $(call POM_TASK,,))
-
 #
 # way@install
 #
 
-include make/install.mk
-$(eval $(call INSTALL_TASK,,))
+include make/java-install.mk

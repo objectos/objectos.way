@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2023 Objectos Software LTDA.
+# Copyright (C) 2023-2024 Objectos Software LTDA.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -15,27 +15,17 @@
 #
 
 #
-# install task
+# clean task
 #
 
-define INSTALL_POM_TASK
+## working directory
+WORK = work
 
-## pom install location
-$(1)INSTALL_POM = $$(basename $$($(1)INSTALL)).pom
+## targets
 
-#
-# install target
-#
+.PHONY: clean
+clean:
+	rm -rf $(WORK)/*
 
-.PHONY: $(2)install-pom
-$(2)install-pom: $$($(1)INSTALL_POM)
-
-.PHONY: $(2)clean-install-pom
-$(2)clean-install-pom:
-	rm -f $$($(1)INSTALL_POM)
-
-$$($(1)INSTALL_POM): $$($(1)POM_FILE)
-	mkdir --parents $$(@D)
-	cp $$< $$@
-	
-endef
+$(WORK):
+	mkdir --parents $@

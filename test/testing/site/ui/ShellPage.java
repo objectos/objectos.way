@@ -129,8 +129,7 @@ final class ShellPage extends UiTemplate {
     header(HEADER,
         a(SKIP_TO_CONTENT, href("#main-content"), tabindex("0"), t("Skip to main content")),
 
-        button(OPEN,
-            HEADER_ACTION, HEADER_MENU_TOGGLE,
+        button(OPEN, HEADER_ACTION, HEADER_MENU_TOGGLE,
             title("Open Menu"), type("button"),
             openMenu(),
             svg(HEADER_MENU_TRIGGER_SVG,
@@ -140,8 +139,7 @@ final class ShellPage extends UiTemplate {
             )
         ),
 
-        button(CLOSE,
-            HEADER_ACTION, HEADER_MENU_CLOSE, HEADER_MENU_TOGGLE,
+        button(CLOSE, HEADER_ACTION, HEADER_MENU_CLOSE, HEADER_MENU_TOGGLE,
             title("Close Menu"), type("button"),
             closeMenu(),
             svg(HEADER_MENU_TRIGGER_SVG,
