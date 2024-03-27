@@ -42,6 +42,17 @@ final class UiStyles implements Handler {
 
     styleGen.noteSink(noteSink);
 
+    styleGen.addRule(":root", """
+    --cds-layer: var(--cds-layer-01, #f4f4f4);
+    --cds-layer-active: var(--cds-layer-active-01, #c6c6c6);
+    --cds-layer-hover: var(--cds-layer-hover-01, #e8e8e8);
+    --cds-layer-selected: var(--cds-layer-selected-01, #e0e0e0);
+    --cds-layer-selected-hover: var(--cds-layer-selected-hover-01, #d1d1d1);
+    --cds-layer-accent: var(--cds-layer-accent-01, #e0e0e0);
+    --cds-layer-accent-hover: var(--cds-layer-accent-hover-01, #d1d1d1);
+    --cds-layer-accent-active: var(--cds-layer-accent-active-01, #a8a8a8);
+    """);
+
     styleGen.addUtility("theme-white", """
     --cds-background: #ffffff;
     --cds-background-active: rgba(141, 141, 141, 0.5);
@@ -60,17 +71,6 @@ final class UiStyles implements Handler {
     --cds-overlay: rgba(22, 22, 22, 0.5);
     --cds-text-primary: #161616;
     --cds-text-secondary: #525252;
-    """);
-
-    styleGen.root("""
-    --cds-layer: var(--cds-layer-01, #f4f4f4);
-    --cds-layer-active: var(--cds-layer-active-01, #c6c6c6);
-    --cds-layer-hover: var(--cds-layer-hover-01, #e8e8e8);
-    --cds-layer-selected: var(--cds-layer-selected-01, #e0e0e0);
-    --cds-layer-selected-hover: var(--cds-layer-selected-hover-01, #d1d1d1);
-    --cds-layer-accent: var(--cds-layer-accent-01, #e0e0e0);
-    --cds-layer-accent-hover: var(--cds-layer-accent-hover-01, #d1d1d1);
-    --cds-layer-accent-active: var(--cds-layer-accent-active-01, #a8a8a8);
     """);
 
     styleGen.overrideColors(

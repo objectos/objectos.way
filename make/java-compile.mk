@@ -104,16 +104,13 @@ JAVACX += --module-version $(VERSION)
 
 endif
 
-## javac --release option
-ifndef JAVA_RELEASE
-JAVA_RELEASE := 21
-endif
-
 ## common javac trailing options
 ifeq ($(ENABLE_PREVIEW),1)
 JAVACX += --enable-preview
 endif
+ifdef JAVA_RELEASE
 JAVACX += --release $(JAVA_RELEASE)
+endif
 JAVACX += --source-path $(MAIN)
 JAVACX += @$(COMPILE_SOURCES)
 

@@ -2195,6 +2195,36 @@ public class StyleGenTest {
   // customization
 
   @Test
+  public void addRule() {
+    WayStyleGen gen;
+    gen = new WayStyleGen();
+
+    gen.addRule(":root", """
+    --ui-zero: 0px;
+    --ui-one: 1px;
+    """);
+
+    class Subject extends AbstractSubject {
+      @Override
+      final void classes() {
+        className("border");
+      }
+    }
+
+    test(
+        gen, Subject.class,
+
+        """
+        :root {
+          --ui-zero: 0px;
+          --ui-one: 1px;
+        }
+
+        .border { border-width: 1px }
+        """
+    );
+  }
+  @Test
   public void addUtility() {
     WayStyleGen gen;
     gen = new WayStyleGen();
@@ -2361,37 +2391,6 @@ public class StyleGenTest {
         .w-2px { width: 0.125rem }
         .p-4px { padding: 0.25rem }
         .focus\\:py-16px:focus { padding-top: 1rem; padding-bottom: 1rem }
-        """
-    );
-  }
-
-  @Test
-  public void root() {
-    WayStyleGen gen;
-    gen = new WayStyleGen();
-
-    gen.root("""
-    --ui-zero: 0px;
-    --ui-one: 1px;
-    """);
-
-    class Subject extends AbstractSubject {
-      @Override
-      final void classes() {
-        className("border");
-      }
-    }
-
-    test(
-        gen, Subject.class,
-
-        """
-        :root {
-          --ui-zero: 0px;
-          --ui-one: 1px;
-        }
-
-        .border { border-width: 1px }
         """
     );
   }

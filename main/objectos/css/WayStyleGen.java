@@ -27,8 +27,6 @@ public final class WayStyleGen extends WayStyleGenConfig implements StyleGen {
 
   private NoteSink noteSink = NoOpNoteSink.of();
 
-  private String root;
-
   private final Map<String, Variant> breakpoints = Map.of(
       "sm", new Breakpoint(0, "640px"),
       "md", new Breakpoint(1, "768px"),
@@ -62,6 +60,8 @@ public final class WayStyleGen extends WayStyleGenConfig implements StyleGen {
   private Map<String, String> outlineWidth;
 
   private Map<String, String> padding;
+
+  private Map<String, String> rules;
 
   private Map<String, String> spacing;
 
@@ -101,6 +101,19 @@ public final class WayStyleGen extends WayStyleGenConfig implements StyleGen {
     lineHeight.put("normal", "1.5");
     lineHeight.put("relaxed", "1.625");
     lineHeight.put("loose", "2");
+  }
+  
+  public final WayStyleGen addRule(String selector, String contents) {
+    Check.notNull(selector, "selector == null");
+    Check.notNull(contents, "contents == null");
+
+    if (rules == null) {
+      rules = new GrowableMap<>();
+    }
+
+    rules.put(selector, contents);
+
+    return this;
   }
 
   public final WayStyleGen addUtility(String className, String rule) {
@@ -154,12 +167,6 @@ public final class WayStyleGen extends WayStyleGenConfig implements StyleGen {
     return this;
   }
 
-  public final WayStyleGen root(String value) {
-    root = Check.notNull(value, "value == null");
-
-    return this;
-  }
-
   @Override
   public final String generate(Iterable<Class<?>> classes) {
     Check.notNull(classes, "classes == null");
@@ -175,9 +182,6 @@ public final class WayStyleGen extends WayStyleGenConfig implements StyleGen {
 
     return round.generate();
   }
-
-  @Override
-  final String root() { return root; }
 
   @Override
   final Variant getVariant(String variantName) {
@@ -685,6 +689,17 @@ public final class WayStyleGen extends WayStyleGenConfig implements StyleGen {
     }
 
     return padding;
+  }
+  
+  
+
+  @Override
+  final Map<String, String> rules() {
+    if (rules == null) {
+      rules = Map.of();
+    }
+    
+    return rules;
   }
 
   @Override
