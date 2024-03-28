@@ -24,8 +24,17 @@ TEST := test
 ## test source files 
 TEST_SOURCES := $(shell find ${TEST} -type f -name '*.java' -print)
 
+## source files modified since last compilation (dynamically evaluated)
+TEST_DIRTY :=
+
+## holds the list of files to be compiled 
+TEST_COMPILE_SOURCES := $(WORK)/test-compile-sources
+
 ## test class output path
 TEST_CLASS_OUTPUT := $(WORK)/test
+
+## test compiled classes
+TEST_CLASSES := $(TEST_SOURCES:$(TEST)/%.java=$(TEST_CLASS_OUTPUT)/%.class)
 
 ## test compile-time dependencies
 # TEST_COMPILE_DEPS :=
@@ -47,7 +56,7 @@ TEST_JAVACX += --enable-preview
 endif
 TEST_JAVACX += --release $(JAVA_RELEASE)
 TEST_JAVACX += --source-path $(TEST)
-TEST_JAVACX += $(TEST_SOURCES)
+TEST_JAVACX += @$(TEST_COMPILE_SOURCES)
 
 ## test resources directory
 # TEST_RESOURCES = $(BASEDIR)/test-resources
@@ -73,7 +82,7 @@ TEST_COMPILE_MARKER = $(WORK)/test-compile-marker
 ## test compilation requirements
 TEST_COMPILE_REQS := $(COMPILE_MARKER)
 TEST_COMPILE_REQS += $(TEST_COMPILE_CLASS_PATH)
-TEST_COMPILE_REQS += $(TEST_SOURCES)
+TEST_COMPILE_REQS += $(TEST_CLASSES)
 TEST_COMPILE_REQS += $(TEST_RESOURCES_OUT)
 
 #
@@ -100,6 +109,12 @@ ifdef TEST_COMPILE_RESOLUTION_FILES
 endif
 	$(call uniq-resolution-files,$@.tmp) | paste --delimiter='$(CLASS_PATH_SEPARATOR)' --serial > $@
 
+$(TEST_CLASSES): $(TEST_CLASS_OUTPUT)/%.class: $(TEST)/%.java
+	$(eval TEST_DIRTY += $$<)
+
 $(TEST_COMPILE_MARKER): $(TEST_COMPILE_REQS) 
-	$(TEST_JAVACX)
+	@echo -n "$(strip $(TEST_DIRTY))" > $(TEST_COMPILE_SOURCES)
+	if [ -s $(TEST_COMPILE_SOURCES) ]; then \
+		$(TEST_JAVACX); \
+	fi
 	touch $@

@@ -84,7 +84,7 @@ public class StyleGenTest {
         """
     );
   }
-  
+
   @Test
   public void borderCollapse() {
     class Subject extends AbstractSubject {
