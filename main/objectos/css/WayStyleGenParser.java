@@ -17,6 +17,7 @@ package objectos.css;
 
 import static objectos.css.Utility.ALIGN_ITEMS;
 import static objectos.css.Utility.BACKGROUND_COLOR;
+import static objectos.css.Utility.BORDER_COLLAPSE;
 import static objectos.css.Utility.BOTTOM;
 import static objectos.css.Utility.CONTENT;
 import static objectos.css.Utility.DISPLAY;
@@ -133,6 +134,10 @@ abstract class WayStyleGenParser extends WayStyleGenVariants {
       case "items-center" -> nameValue(ALIGN_ITEMS, "center");
       case "items-baseline" -> nameValue(ALIGN_ITEMS, "baseline");
       case "items-stretch" -> nameValue(ALIGN_ITEMS, "stretch");
+      
+      // BorderCollapse
+      case "border-collapse" -> nameValue(BORDER_COLLAPSE, "collapse");
+      case "border-separate" -> nameValue(BORDER_COLLAPSE, "separate");
 
       // Display
       case "block",

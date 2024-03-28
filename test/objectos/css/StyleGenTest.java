@@ -84,6 +84,25 @@ public class StyleGenTest {
         """
     );
   }
+  
+  @Test
+  public void borderCollapse() {
+    class Subject extends AbstractSubject {
+      @Override
+      final void classes() {
+        className("border-collapse border-separate");
+      }
+    }
+
+    test(
+        Subject.class,
+
+        """
+        .border-collapse { border-collapse: collapse }
+        .border-separate { border-collapse: separate }
+        """
+    );
+  }
 
   @Test
   public void borderColor() {
