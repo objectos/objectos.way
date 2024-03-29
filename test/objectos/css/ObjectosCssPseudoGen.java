@@ -29,9 +29,9 @@ public class ObjectosCssPseudoGen {
     ObjectosCssPseudoGen gen;
     gen = new ObjectosCssPseudoGen();
 
-    gen.classNameSingleLine(SPACING, "border-spacing-");
-    gen.classNameSingleLine(SPACING, "border-spacing-x-");
-    gen.classNameSingleLine(SPACING, "border-spacing-y-");
+    gen.classNameSingleLine(VERTICAL_ALIGN, "align-");
+    
+    gen.cases(VERTICAL_ALIGN, "VERTICAL_ALIGN", "align-");
   }
 
   private static final Map<String, String> SPACING = seqmap(
@@ -292,6 +292,17 @@ public class ObjectosCssPseudoGen {
       kv("text", "text"),
       kv("all", "all"),
       kv("auto", "auto")
+  );
+
+  static final Map<String, String> VERTICAL_ALIGN = seqmap(
+      kv("baseline", "baseline"),
+      kv("top", "top"),
+      kv("middle", "middle"),
+      kv("bottom", "bottom"),
+      kv("text-top", "text-top"),
+      kv("text-bottom", "text-bottom"),
+      kv("sub", "sub"),
+      kv("super", "super")
   );
 
   static final Map<String, String> WIDTH = seqmap(

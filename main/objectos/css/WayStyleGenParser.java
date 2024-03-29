@@ -62,6 +62,7 @@ import static objectos.css.Utility.TOP;
 import static objectos.css.Utility.TRANSITION_DURATION;
 import static objectos.css.Utility.TRANSITION_PROPERTY;
 import static objectos.css.Utility.USER_SELECT;
+import static objectos.css.Utility.VERTICAL_ALIGN;
 import static objectos.css.Utility.WIDTH;
 import static objectos.css.Utility.Z_INDEX;
 
@@ -205,6 +206,16 @@ abstract class WayStyleGenParser extends WayStyleGenVariants {
       case "select-all" -> nameValue(USER_SELECT, "all");
       case "select-auto" -> nameValue(USER_SELECT, "auto");
 
+      // VerticalAlign
+      case "align-baseline" -> nameValue(VERTICAL_ALIGN, "baseline");
+      case "align-top" -> nameValue(VERTICAL_ALIGN, "top");
+      case "align-middle" -> nameValue(VERTICAL_ALIGN, "middle");
+      case "align-bottom" -> nameValue(VERTICAL_ALIGN, "bottom");
+      case "align-text-top" -> nameValue(VERTICAL_ALIGN, "text-top");
+      case "align-text-bottom" -> nameValue(VERTICAL_ALIGN, "text-bottom");
+      case "align-sub" -> nameValue(VERTICAL_ALIGN, "sub");
+      case "align-super" -> nameValue(VERTICAL_ALIGN, "super");
+      
       // Others
       default -> prefixWord1(value);
     };

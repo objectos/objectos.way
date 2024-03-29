@@ -90,6 +90,7 @@ sealed abstract class Utility {
   static final Utility PADDING_LEFT = new Single("padding-left");
 
   static final Utility TEXT_ALIGN = new Single("text-align");
+  static final Utility VERTICAL_ALIGN = new Single("vertical-align");
 
   static final Utility FONT_SIZE1 = new Single("font-size");
   static final Utility FONT_SIZE2 = new Duo("font-size", "line-height");
