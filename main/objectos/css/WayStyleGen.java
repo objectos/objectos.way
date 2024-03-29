@@ -35,6 +35,8 @@ public final class WayStyleGen extends WayStyleGenConfig implements StyleGen {
       "2xl", new Breakpoint(4, "1536px")
   );
 
+  private Map<String, String> borderSpacing;
+  
   private Map<String, String> borderWidth;
 
   private Map<String, String> colors;
@@ -102,7 +104,7 @@ public final class WayStyleGen extends WayStyleGenConfig implements StyleGen {
     lineHeight.put("relaxed", "1.625");
     lineHeight.put("loose", "2");
   }
-  
+
   public final WayStyleGen addRule(String selector, String contents) {
     Check.notNull(selector, "selector == null");
     Check.notNull(contents, "contents == null");
@@ -199,6 +201,17 @@ public final class WayStyleGen extends WayStyleGenConfig implements StyleGen {
     }
 
     return variants.get(variantName);
+  }
+  
+  
+
+  @Override
+  final Map<String, String> borderSpacing() {
+    if (borderSpacing == null) {
+      borderSpacing = spacing();
+    }
+
+    return borderSpacing;
   }
 
   @Override
@@ -662,7 +675,7 @@ public final class WayStyleGen extends WayStyleGenConfig implements StyleGen {
       outlineOffset.put("8", "8px");
     }
 
-    return outlineWidth;
+    return outlineOffset;
   }
 
   @Override
@@ -690,15 +703,13 @@ public final class WayStyleGen extends WayStyleGenConfig implements StyleGen {
 
     return padding;
   }
-  
-  
 
   @Override
   final Map<String, String> rules() {
     if (rules == null) {
       rules = Map.of();
     }
-    
+
     return rules;
   }
 

@@ -256,7 +256,15 @@ abstract class WayStyleGenParser extends WayStyleGenVariants {
     return switch (prefix) {
       // B
       case "bg" -> config(BACKGROUND_COLOR, config.colors(), suffix);
-      case "border" -> border(suffix);
+      case "border" -> {
+        if (suffix.startsWith("spacing-")) {
+          suffix = suffix.substring("spacing-".length());
+          
+          yield borderSpacing(suffix);
+        } else {
+          yield border(suffix);
+        }
+      }
       case "bottom" -> config(BOTTOM, config.inset(), suffix);
 
       // C
@@ -469,6 +477,47 @@ abstract class WayStyleGenParser extends WayStyleGenVariants {
     }
 
     return Rule.NOOP;
+  }
+
+  private Rule borderSpacing(String suffix) {
+    if (suffix.length() == 0) {
+      return Rule.NOOP;
+    }
+
+    String prefix, value;
+
+    int dashIndex;
+    dashIndex = suffix.indexOf('-');
+
+    if (dashIndex < 0) {
+      prefix = "";
+
+      value = suffix;
+    } else {
+      prefix = suffix.substring(0, dashIndex);
+
+      value = suffix.substring(dashIndex + 1);
+    }
+
+    Map<String, String> borderSpacing;
+    borderSpacing = config.borderSpacing();
+
+    String spacing;
+    spacing = borderSpacing.get(value);
+
+    if (spacing == null) {
+      return Rule.NOOP;
+    }
+
+    return switch (prefix) {
+      case "" -> Utility.BORDER_SPACING.get(className, variants, spacing + " " + spacing);
+
+      case "x" -> Utility.BORDER_SPACING.get(className, variants, spacing + " 0");
+
+      case "y" -> Utility.BORDER_SPACING.get(className, variants, "0 " + spacing);
+
+      default -> Rule.NOOP;
+    };
   }
 
   private Rule font(String suffix) {

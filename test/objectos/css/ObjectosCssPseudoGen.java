@@ -29,9 +29,9 @@ public class ObjectosCssPseudoGen {
     ObjectosCssPseudoGen gen;
     gen = new ObjectosCssPseudoGen();
 
-    gen.classNameSingleLine(OPACITY, "opacity-");
-
-    gen.mapOf(OPACITY, "opacity");
+    gen.classNameSingleLine(SPACING, "border-spacing-");
+    gen.classNameSingleLine(SPACING, "border-spacing-x-");
+    gen.classNameSingleLine(SPACING, "border-spacing-y-");
   }
 
   private static final Map<String, String> SPACING = seqmap(

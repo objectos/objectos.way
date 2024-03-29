@@ -53,6 +53,7 @@ sealed abstract class Utility {
   static final Utility WIDTH = new Single("width");
   
   static final Utility BORDER_COLLAPSE = new Single("border-collapse");
+  static final Utility BORDER_SPACING = new Single("border-spacing");
 
   static final Utility USER_SELECT = new Single("user-select");
 
