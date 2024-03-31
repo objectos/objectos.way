@@ -18,38 +18,17 @@
 	"use strict";
 
 	globals.Way = {
-		disableHistory : false
+		disableHistory: false
 	}
 
 	function clickListener(event) {
 		const target = event.target;
 
-		if (target instanceof HTMLAnchorElement) {
+		const dataset = target.dataset;
 
-			if (target.origin !== window.location.origin) {
-				return;
-			}
+		const data = dataset.click;
 
-			if (target.pathname === window.location.pathname) {
-				return;
-			}
-
-			event.preventDefault();
-
-			executeLocation(target.href);
-
-		}
-
-		else {
-
-			const dataset = target.dataset;
-
-			const data = dataset.click;
-
-			if (!data) {
-				return;
-			}
-
+		if (data) {
 			const way = JSON.parse(data);
 
 			if (!Array.isArray(way)) {
@@ -58,7 +37,30 @@
 
 			executeActions(way);
 
+			return;
 		}
+
+		let maybeAnchor = target;
+
+		while (maybeAnchor instanceof Node) {
+			if (maybeAnchor instanceof HTMLAnchorElement) {
+				const anchor = maybeAnchor;
+
+				if (anchor.origin !== window.location.origin) {
+					return;
+				}
+
+				event.preventDefault();
+
+				executeLocation(anchor.href);
+
+				return;
+
+			} else {
+				maybeAnchor = maybeAnchor.parentNode;
+			}
+		}
+
 	}
 
 	function submitListener(event) {
