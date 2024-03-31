@@ -13,9 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-(function() {
+(function(globals) {
 
 	"use strict";
+
+	globals.Way = {
+		disableHistory : false
+	}
 
 	function clickListener(event) {
 		const target = event.target;
@@ -124,6 +128,10 @@
 				}
 
 				else if (contentType.startsWith("text/html")) {
+					if (!globals.Way.disableHistory) {
+						history.pushState({ way: true }, "", url);
+					}
+
 					executeHtml(xhr.response);
 				}
 
@@ -304,4 +312,4 @@
 
 	window.addEventListener("DOMContentLoaded", domLoaded);
 
-})();
+})(this);

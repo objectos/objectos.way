@@ -28,6 +28,8 @@
 	<script src="action.location.js"></script>
 
 	<script class="mocha-exec">
+		Way.disableHistory = true;
+		
 		document.addEventListener("DOMContentLoaded", function () {
 			mocha.run();
 		})
