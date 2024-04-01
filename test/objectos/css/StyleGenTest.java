@@ -1618,6 +1618,40 @@ public class StyleGenTest {
         """
     );
   }
+  
+  @Test
+  public void overflow() {
+    class Subject extends AbstractSubject {
+      @Override
+      final void classes() {
+        className("overflow-auto overflow-hidden overflow-clip overflow-visible overflow-scroll");
+        className("overflow-x-auto overflow-x-hidden overflow-x-clip overflow-x-visible overflow-x-scroll");
+        className("overflow-y-auto overflow-y-hidden overflow-y-clip overflow-y-visible overflow-y-scroll");
+      }
+    }
+
+    test(
+        Subject.class,
+
+        """
+        .overflow-auto { overflow: auto }
+        .overflow-hidden { overflow: hidden }
+        .overflow-clip { overflow: clip }
+        .overflow-visible { overflow: visible }
+        .overflow-scroll { overflow: scroll }
+        .overflow-x-auto { overflow-x: auto }
+        .overflow-x-hidden { overflow-x: hidden }
+        .overflow-x-clip { overflow-x: clip }
+        .overflow-x-visible { overflow-x: visible }
+        .overflow-x-scroll { overflow-x: scroll }
+        .overflow-y-auto { overflow-y: auto }
+        .overflow-y-hidden { overflow-y: hidden }
+        .overflow-y-clip { overflow-y: clip }
+        .overflow-y-visible { overflow-y: visible }
+        .overflow-y-scroll { overflow-y: scroll }
+        """
+    );
+  }
 
   @Test
   public void padding() {

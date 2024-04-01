@@ -61,6 +61,12 @@ sealed abstract class Utility {
   static final Utility ALIGN_ITEMS = new Single("align-items");
   static final Utility JUSTIFY_CONTENT = new Single("justify-content");
 
+  // 1495
+  static final Utility OVERFLOW = new Single("overflow");
+  static final Utility OVERFLOW_X = new Single("overflow-x");
+  static final Utility OVERFLOW_Y = new Single("overflow-y");
+  
+  // 1604
   static final Utility BORDER_WIDTH = new Single("border-width");
   static final Utility BORDER_WIDTH_X = new Axis("border-left-width", "border-right-width");
   static final Utility BORDER_WIDTH_Y = new Axis("border-top-width", "border-bottom-width");
@@ -69,6 +75,7 @@ sealed abstract class Utility {
   static final Utility BORDER_WIDTH_BOTTOM = new Single("border-bottom-width");
   static final Utility BORDER_WIDTH_LEFT = new Single("border-left-width");
 
+  // 1635
   static final Utility BORDER_COLOR = new Single("border-color");
   static final Utility BORDER_COLOR_X = new Axis("border-left-color", "border-right-color");
   static final Utility BORDER_COLOR_Y = new Axis("border-top-color", "border-bottom-color");

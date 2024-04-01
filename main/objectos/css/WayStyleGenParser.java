@@ -45,6 +45,9 @@ import static objectos.css.Utility.OUTLINE_COLOR;
 import static objectos.css.Utility.OUTLINE_OFFSET;
 import static objectos.css.Utility.OUTLINE_STYLE;
 import static objectos.css.Utility.OUTLINE_WIDTH;
+import static objectos.css.Utility.OVERFLOW;
+import static objectos.css.Utility.OVERFLOW_X;
+import static objectos.css.Utility.OVERFLOW_Y;
 import static objectos.css.Utility.PADDING;
 import static objectos.css.Utility.PADDING_BOTTOM;
 import static objectos.css.Utility.PADDING_LEFT;
@@ -179,6 +182,23 @@ abstract class WayStyleGenParser extends WayStyleGenVariants {
       case "justify-evenly" -> nameValue(JUSTIFY_CONTENT, "space-evenly");
       case "justify-stretch" -> nameValue(JUSTIFY_CONTENT, "stretch");
 
+      // Overflow
+      case "overflow-auto" -> nameValue(OVERFLOW, "auto");
+      case "overflow-hidden" -> nameValue(OVERFLOW, "hidden");
+      case "overflow-clip" -> nameValue(OVERFLOW, "clip");
+      case "overflow-visible" -> nameValue(OVERFLOW, "visible");
+      case "overflow-scroll" -> nameValue(OVERFLOW, "scroll");
+      case "overflow-x-auto" -> nameValue(OVERFLOW_X, "auto");
+      case "overflow-x-hidden" -> nameValue(OVERFLOW_X, "hidden");
+      case "overflow-x-clip" -> nameValue(OVERFLOW_X, "clip");
+      case "overflow-x-visible" -> nameValue(OVERFLOW_X, "visible");
+      case "overflow-x-scroll" -> nameValue(OVERFLOW_X, "scroll");
+      case "overflow-y-auto" -> nameValue(OVERFLOW_Y, "auto");
+      case "overflow-y-hidden" -> nameValue(OVERFLOW_Y, "hidden");
+      case "overflow-y-clip" -> nameValue(OVERFLOW_Y, "clip");
+      case "overflow-y-visible" -> nameValue(OVERFLOW_Y, "visible");
+      case "overflow-y-scroll" -> nameValue(OVERFLOW_Y, "scroll");
+      
       // Position
       case "static" -> nameValue(POSITION, "static");
       case "fixed" -> nameValue(POSITION, "fixed");

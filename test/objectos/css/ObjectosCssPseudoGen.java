@@ -29,9 +29,13 @@ public class ObjectosCssPseudoGen {
     ObjectosCssPseudoGen gen;
     gen = new ObjectosCssPseudoGen();
 
-    gen.classNameSingleLine(VERTICAL_ALIGN, "align-");
+    gen.classNameSingleLine(OVERFLOW, "overflow-");
+    gen.classNameSingleLine(OVERFLOW, "overflow-x-");
+    gen.classNameSingleLine(OVERFLOW, "overflow-y-");
     
-    gen.cases(VERTICAL_ALIGN, "VERTICAL_ALIGN", "align-");
+    gen.cases(OVERFLOW, "OVERFLOW", "overflow-");
+    gen.cases(OVERFLOW, "OVERFLOW_X", "overflow-x-");
+    gen.cases(OVERFLOW, "OVERFLOW_Y", "overflow-y-");
   }
 
   private static final Map<String, String> SPACING = seqmap(
@@ -249,6 +253,14 @@ public class ObjectosCssPseudoGen {
       kv("90", "0.9"),
       kv("95", "0.95"),
       kv("100", "1")
+  );
+
+  static final Map<String, String> OVERFLOW = seqmap(
+      kv("auto", "auto"),
+      kv("hidden", "hidden"),
+      kv("clip", "clip"),
+      kv("visible", "visible"),
+      kv("scroll", "scroll")
   );
 
   static final Map<String, String> POSITION = seqmap(
