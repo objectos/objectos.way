@@ -31,10 +31,6 @@
 		if (data) {
 			const way = JSON.parse(data);
 
-			if (!Array.isArray(way)) {
-				return;
-			}
-
 			executeActions(way);
 
 			return;
@@ -63,6 +59,22 @@
 
 	}
 
+	function onInput(event) {
+		const target = event.target;
+
+		const dataset = target.dataset;
+
+		const data = dataset.onInput;
+
+		if (!data) {
+			return;
+		}
+
+		const way = JSON.parse(data);
+
+		executeActions(way);
+	}
+
 	function submitListener(event) {
 		const target = event.target;
 
@@ -73,42 +85,56 @@
 			return;
 		}
 
-		const action = target.getAttribute("action");
+		let action = target.getAttribute("action");
 
 		if (!action) {
 			return;
 		}
 
-		const method = target.getAttribute("method");
+		let method = target.getAttribute("method");
 
 		if (!method) {
 			return;
 		}
 
+		method = method.toUpperCase();
+
 		// this is possibly a way form, we shouldn't submit it
 		event.preventDefault();
 
-		const xhr = createXhr(method, action);
-
 		const formData = new FormData(target);
 
-		const enctype = target.getAttribute("enctype");
-
-		if (enctype && enctype === "multipart/form-data") {
-			xhr.send(formData);
-		} else {
+		if (method === "GET") {
 			const params = new URLSearchParams(formData);
 
-			xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+			action = action + "?" + params;
 
-			xhr.send(params.toString());
+			const xhr = createXhr(method, action);
+
+			xhr.send();
+		}
+
+		else {
+			const xhr = createXhr(method, action);
+
+			const enctype = target.getAttribute("enctype");
+
+			if (enctype && enctype === "multipart/form-data") {
+				xhr.send(formData);
+			} else {
+				const params = new URLSearchParams(formData);
+
+				xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+
+				xhr.send(params.toString());
+			}
 		}
 	}
 
 	function createXhr(method, url) {
 		const xhr = new XMLHttpRequest();
 
-		xhr.open(method.toUpperCase(), url, true);
+		xhr.open(method, url, true);
 
 		xhr.onload = (_) => {
 			if (xhr.status === 200) {
@@ -156,6 +182,10 @@
 	}
 
 	function executeActions(way) {
+		if (!Array.isArray(way)) {
+			return;
+		}
+
 		for (const obj of way) {
 
 			const cmd = obj.cmd;
@@ -197,6 +227,12 @@
 					const classB = args[2];
 
 					classList.replace(classA, classB);
+
+					break;
+				}
+
+				case "submit": {
+					executeSubmit(obj);
 
 					break;
 				}
@@ -285,6 +321,26 @@
 		xhr.send();
 	}
 
+	function executeSubmit(obj) {
+		const id = obj.value;
+
+		if (!id) {
+			return;
+		}
+
+		const el = document.getElementById(id);
+
+		if (!el) {
+			return;
+		}
+
+		if (!(el instanceof HTMLFormElement)) {
+			return;
+		}
+
+		el.dispatchEvent(new Event("submit", { bubbles: true }));
+	}
+
 	function frameName(frame) {
 		const dataset = frame.dataset;
 
@@ -309,6 +365,7 @@
 		const body = document.body;
 
 		body.addEventListener("click", clickListener);
+		body.addEventListener("input", onInput);
 		body.addEventListener("submit", submitListener);
 	}
 
