@@ -31,7 +31,7 @@
 		if (data) {
 			const way = JSON.parse(data);
 
-			executeActions(way);
+			executeActions(way, target);
 
 			return;
 		}
@@ -70,9 +70,9 @@
 			return;
 		}
 
-		const way = JSON.parse(data);
+		const actions = JSON.parse(data);
 
-		executeActions(way);
+		executeActions(actions, target);
 	}
 
 	function submitListener(event) {
@@ -181,28 +181,34 @@
 		return xhr;
 	}
 
-	function executeActions(way) {
-		if (!Array.isArray(way)) {
+	function executeActions(actions, element) {
+		if (!Array.isArray(actions)) {
 			return;
 		}
 
-		for (const obj of way) {
+		for (const action of actions) {
 
-			const cmd = obj.cmd;
+			const cmd = action.cmd;
 
 			if (!cmd) {
 				continue;
 			}
 
 			switch (cmd) {
+				case "delay": {
+					executeDelay(action, element);
+
+					break;
+				}
+
 				case "html": {
-					executeHtml(obj.value);
+					executeHtml(action.value);
 
 					break;
 				}
 
 				case "replace-class": {
-					const args = obj.args;
+					const args = action.args;
 
 					if (!args) {
 						break;
@@ -232,13 +238,61 @@
 				}
 
 				case "submit": {
-					executeSubmit(obj);
+					executeSubmit(action);
 
 					break;
 				}
 			}
 
 		}
+	}
+
+	function executeDelay(obj, el) {
+		const ms = obj.ms;
+
+		if (!ms) {
+			console.error("delay: missing 'ms' property");
+
+			return;
+		}
+
+		if (!Number.isInteger(ms)) {
+			console.error("delay: invalid 'ms' property. Expected integer but found %s", ms);
+
+			return;
+		}
+
+		const actions = obj.actions;
+
+		if (!actions) {
+			console.error("delay: missing 'actions' property");
+
+			return;
+		}
+
+		if (!Array.isArray(actions)) {
+			console.error("delay: invalid 'actions' property. Expected Array but found %s", actions);
+
+			return;
+		}
+
+		const dataset = el.dataset;
+
+		let timer = dataset.timer;
+
+		if (!timer) {
+			timer = 0;
+		}
+
+		const delay = function() {
+			clearTimeout(timer);
+
+			timer = setTimeout(() => executeActions(actions, el), ms);
+
+			dataset.timer = timer;
+		}
+
+		delay();
 	}
 
 	function executeHtml(value) {
