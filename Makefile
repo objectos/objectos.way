@@ -197,7 +197,14 @@ dev: $(DEV_MODULE_PATH)
 	$(DEV_JAVAX)
 	
 $(DEV_MODULE_PATH): $(DEV_DEPS)
-	cat $^ | sort -u | paste --delimiters='$(MODULE_PATH_SEPARATOR)' --serial > $@
+	echo $(CLASS_OUTPUT) > $@.tmp
+ifdef COMPILE_RESOLUTION_FILES
+	cat $(COMPILE_RESOLUTION_FILES) >> $@.tmp
+endif
+ifdef TEST_COMPILE_RESOLUTION_FILES
+	cat $(TEST_COMPILE_RESOLUTION_FILES) >> $@.tmp
+endif
+	$(call uniq-resolution-files,$@.tmp) | paste --delimiter='$(MODULE_PATH_SEPARATOR)' --serial > $@
 
 #
 # way@npm-install

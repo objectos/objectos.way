@@ -104,6 +104,27 @@ final class UiCommands {
     };
   }
 
+  public static UiCommand submit(ElementId id) {
+    return new UiCommand() {
+      @Override
+      public final void writeTo(Appendable out) throws IOException {
+        out.append('{');
+
+        writeCommandName(out, "submit");
+
+        out.append(',');
+
+        writeStringLiteral(out, "id");
+
+        out.append(':');
+
+        writeStringLiteral(out, id.id());
+
+        out.append('}');
+      }
+    };
+  }
+
   static void writeArgs(Appendable json, String s0, String s1, String s2) throws IOException {
     writeStringLiteral(json, "args");
     json.append(':');

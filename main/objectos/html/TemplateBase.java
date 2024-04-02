@@ -56,6 +56,15 @@ public sealed abstract class TemplateBase
     return $html().attribute0(AttributeName.DATA_FRAME, name + ":" + value);
   }
 
+  protected final Api.GlobalAttribute dataOnInput(Action... actions) {
+    Check.notNull(actions, "actions == null");
+
+    SingleQuotedValue value;
+    value = Action.join(actions);
+
+    return $html().attribute0(AttributeName.DATA_ON_INPUT, value);
+  }
+
   protected final Api.GlobalAttribute dataWayClick(String text) {
     Check.notNull(text, "text == null");
 

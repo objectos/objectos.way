@@ -62,7 +62,7 @@ final class Home extends HtmlTemplate implements Handler {
   }
 
   private void bodyImpl() {
-    dataFrame("root:shell");
+    dataFrame("root", "shell");
 
     header.render();
   }

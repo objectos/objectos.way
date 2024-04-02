@@ -21,9 +21,13 @@ import objectos.html.TemplateBase;
 public class ShellHeader extends HtmlComponent {
 
   private enum Section {
-    HOME,
+    HOME("/"),
 
-    FILMS;
+    FILMS("/film");
+
+    private final String href;
+
+    private Section(String href) { this.href = href; }
   }
 
   private static final Section[] SECTIONS = Section.values();
@@ -53,7 +57,9 @@ public class ShellHeader extends HtmlComponent {
       if (section == active) {
         li(section.name());
       } else {
-        li(a(href("#"), t(section.name())));
+        li(
+            a(href(section.href), t(section.name()))
+        );
       }
     }
   }

@@ -67,7 +67,9 @@ public class WayUi implements UiBinder {
       SingleQuotedValue value;
       value = UiCommands.attributeValue(commands);
 
-      return parent.renderAttribute(html -> html.attribute(AttributeName.DATA_CLICK, value));
+      return parent.renderAttribute(
+          html -> html.attribute(AttributeName.DATA_CLICK, value)
+      );
     }
 
     @Override
