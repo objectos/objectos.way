@@ -307,7 +307,7 @@
 
 			const newValue = newData.value;
 
-			if (oldValue !== newValue) {
+			if (oldValue !== newValue || oldValue === null && newValue === null) {
 				replaced.add(elem);
 
 				elem.replaceWith(newElem);

@@ -241,6 +241,59 @@ suite("Action::html test", function() {
 		assert.equal(workArea().innerHTML, page2.outerHTML);
 	});
 
+	test("name-only data-frame: always update if same name", function() {
+		make(`
+		<div data-frame='main:first'>
+    	<h1>Do not change</h1>
+    	<div data-frame='name-only'>
+    	<a id='a' href='/test'>Click me</a>
+    	</div>
+    	</div>`);
+		const page2 = makeElement(`
+		<div data-frame='main:first'>
+    	<h1>It is different but shouldn't change</h1>
+    	<div data-frame='name-only'>
+    	Success
+    	</div>
+    	</div>`);
+		const expect = makeElement(`
+		<div data-frame='main:first'>
+    	<h1>Do not change</h1>
+    	<div data-frame='name-only'>
+    	Success
+    	</div>
+    	</div>`);
+
+		this.server.respondWith("GET", "/test", [200, { "Content-Type": "text/html" }, page2.outerHTML]);
+
+		const a = byId("a");
+
+		a.click();
+
+		this.server.respond();
+
+		assert.equal(workArea().innerHTML, expect.outerHTML);
+	});
+
+	test("name-only data-frame: do not update if names are different", function() {
+		make(`
+		<div data-frame='main:first'><h1>Do not change</h1><div data-frame='name-only-1'>
+    	<a id='a' href='/test'>Click me</a>
+    	</div><div data-frame='name-only-2'>will remove...</div></div>`);
+		const page2 = makeElement("<div data-frame='main:first'><h1>It is different but shouldn't change</h1><div data-frame='name-only-1'>Success</div><div data-frame='name-only-x'>Different name</div></div>");
+		const expect = makeElement("<div data-frame='main:first'><h1>Do not change</h1><div data-frame='name-only-1'>Success</div></div>");
+
+		this.server.respondWith("GET", "/test", [200, { "Content-Type": "text/html" }, page2.outerHTML]);
+
+		const a = byId("a");
+
+		a.click();
+
+		this.server.respond();
+
+		assert.equal(workArea().innerHTML, expect.outerHTML);
+	});
+
 	test("accept text/html response", function() {
 		make("<form data-frame='x:1' method='post' action='/test'><button id='b' type='submit'>Before</button></form>");
 		const frame2 = makeElement("<form data-frame='x:2' method='post' action='/test'><button type='submit'>After</button></form>");
