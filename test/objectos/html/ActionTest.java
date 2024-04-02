@@ -22,6 +22,26 @@ import org.testng.annotations.Test;
 public class ActionTest {
 
   @Test
+  public void delay() {
+    test(
+        new HtmlTemplate() {
+          static final ElementId FORM = ElementId.of("foo");
+
+          @Override
+          protected final void definition() {
+            form(FORM,
+                input(dataOnInput(Action.delay(500, Action.submit(FORM))))
+            );
+          }
+        },
+
+        """
+        <form id="foo"><input data-on-input='[{"cmd":"delay","ms":500,"actions":[{"cmd":"submit","id":"foo"}]}]'></form>
+        """
+    );
+  }
+  
+  @Test
   public void submit() {
     test(
         new HtmlTemplate() {

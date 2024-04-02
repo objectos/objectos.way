@@ -22,6 +22,28 @@ public abstract class Action {
 
   Action() {}
 
+  public static Action delay(int ms, Action... actions) {
+    Check.argument(ms >= 0, "ms must not be negative");
+    Check.notNull(actions, "actions == null");
+
+    return new Action() {
+      @Override
+      final void writeTo(StringBuilder json) {
+        json.append('{');
+        writeCommandName(json, "delay");
+        json.append(',');
+        writeStringLiteral(json, "ms");
+        json.append(':');
+        json.append(ms);
+        json.append(',');
+        writeStringLiteral(json, "actions");
+        json.append(':');
+        writeActions(json, actions);
+        json.append('}');
+      }
+    };
+  }
+
   public static Action submit(ElementId id) {
     Check.notNull(id, "id == null");
 
@@ -50,6 +72,15 @@ public abstract class Action {
     StringBuilder json;
     json = new StringBuilder();
 
+    writeActions(json, actions);
+
+    String value;
+    value = json.toString();
+
+    return new AttributeValue(value);
+  }
+
+  private static void writeActions(StringBuilder json, Action[] actions) {
     json.append('[');
 
     if (actions.length > 0) {
@@ -68,11 +99,6 @@ public abstract class Action {
     }
 
     json.append(']');
-
-    String value;
-    value = json.toString();
-
-    return new AttributeValue(value);
   }
 
   abstract void writeTo(StringBuilder json);
@@ -139,5 +165,6 @@ public abstract class Action {
     }
 
   }
+
 
   }

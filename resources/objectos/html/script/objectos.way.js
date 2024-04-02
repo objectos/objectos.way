@@ -22,19 +22,11 @@
 	}
 
 	function onClick(event) {
-		const target = event.target;
-
-		const dataset = target.dataset;
-
-		const data = dataset.click;
-
-		if (data) {
-			const way = JSON.parse(data);
-
-			executeActions(way, target);
-
+		if (executeEvent(event, "click")) {
 			return;
 		}
+
+		const target = event.target;
 
 		let maybeAnchor = target;
 
@@ -56,23 +48,10 @@
 				maybeAnchor = maybeAnchor.parentNode;
 			}
 		}
-
 	}
 
 	function onInput(event) {
-		const target = event.target;
-
-		const dataset = target.dataset;
-
-		const data = dataset.onInput;
-
-		if (!data) {
-			return;
-		}
-
-		const actions = JSON.parse(data);
-
-		executeActions(actions, target);
+		executeEvent(event, "onInput");
 	}
 
 	function submitListener(event) {
@@ -179,6 +158,24 @@
 		}
 
 		return xhr;
+	}
+
+	function executeEvent(event, name) {
+		const target = event.target;
+
+		const dataset = target.dataset;
+
+		const data = dataset[name];
+
+		if (data) {
+			const way = JSON.parse(data);
+
+			executeActions(way, target);
+
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 	function executeActions(actions, element) {
