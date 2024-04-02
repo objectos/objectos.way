@@ -98,8 +98,7 @@ final class Login extends HtmlTemplate implements Handler {
   private void renderBody() {
     className("bg-gray-100");
 
-    dataFrame("root");
-    dataFrameValue("login");
+    dataFrame("root:login");
 
     div(className("mx-4 flex h-screen flex-col items-center sm:mx-auto"),
         form(className("my-auto w-full bg-white sm:w-auto"), FORM, action("/login"), method("post"),
@@ -117,8 +116,7 @@ final class Login extends HtmlTemplate implements Handler {
   }
 
   private void renderForm1() {
-    dataFrame("form");
-    dataFrameValue("1");
+    dataFrame("form:1");
 
     input(name(STEP), type("hidden"), value("one"));
 
@@ -163,8 +161,7 @@ final class Login extends HtmlTemplate implements Handler {
   }
 
   private void renderForm2() {
-    dataFrame("form");
-    dataFrameValue("2");
+    dataFrame("form:2");
 
     input(name(STEP), type("hidden"), value("two"));
 

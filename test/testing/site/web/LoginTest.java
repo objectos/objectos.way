@@ -46,7 +46,7 @@ public class LoginTest {
         HTTP/1.1 200 OK\r
         Date: Wed, 28 Jun 2023 12:08:43 GMT\r
         Content-Type: text/html; charset=utf-8\r
-        Content-Length: 1548\r
+        Content-Length: 1510\r
         Set-Cookie: OBJECTOSWAY=a86886a5d2978142da2d8cf378ebc83c; Path=/\r
         \r
         <!DOCTYPE html>
@@ -54,9 +54,9 @@ public class LoginTest {
         <head>
         <title>Login Page</title>
         </head>
-        <body class="bg-gray-100" data-frame="root" data-frame-value="login">
+        <body class="bg-gray-100" data-frame="root:login">
         <div class="mx-4 flex h-screen flex-col items-center sm:mx-auto">
-        <form class="my-auto w-full bg-white sm:w-auto" id="login-form" action="/login" method="post" data-frame="form" data-frame-value="1"><input name="step" type="hidden" value="one">
+        <form class="my-auto w-full bg-white sm:w-auto" id="login-form" action="/login" method="post" data-frame="form:1"><input name="step" type="hidden" value="one">
         <div class="mb-1 p-4 pb-0 text-2xl leading-none tracking-tighter">Log in</div>
         <div class="mb-12 px-4 text-gray-700 text-sm leading-none tracking-tighter">Don't have an account? <a class="text-blue-700" href="#">Create a new one</a></div>
         <div class="relative mb-6"><label class="absolute top-4 left-4 text-xs text-gray-700" for="login">Email address</label><input class="w-full border-y border-t-gray-300 border-b-gray-400 px-4 pt-8 pb-3.5 text-sm" id="login" name="login" type="text" placeholder="user@example.com" required></div>
@@ -98,16 +98,16 @@ public class LoginTest {
         HTTP/1.1 200 OK\r
         Date: Wed, 28 Jun 2023 12:08:43 GMT\r
         Content-Type: text/html; charset=utf-8\r
-        Content-Length: 1449\r
+        Content-Length: 1411\r
         \r
         <!DOCTYPE html>
         <html>
         <head>
         <title>Login Page</title>
         </head>
-        <body class="bg-gray-100" data-frame="root" data-frame-value="login">
+        <body class="bg-gray-100" data-frame="root:login">
         <div class="mx-4 flex h-screen flex-col items-center sm:mx-auto">
-        <form class="my-auto w-full bg-white sm:w-auto" id="login-form" action="/login" method="post" data-frame="form" data-frame-value="2"><input name="step" type="hidden" value="two"><input name="login" type="hidden" value="admin">
+        <form class="my-auto w-full bg-white sm:w-auto" id="login-form" action="/login" method="post" data-frame="form:2"><input name="step" type="hidden" value="two"><input name="login" type="hidden" value="admin">
         <div class="mb-1 p-4 pb-0 text-2xl leading-none tracking-tighter">Log In</div>
         <div class="mb-12 px-4 text-gray-700 text-sm leading-none tracking-tighter">Logging in as admin&nbsp;<a class="text-blue-700" href="#">Not you?</a></div>
         <div class="relative mb-6"><label class="absolute top-4 left-4 text-xs text-gray-700" for="password">Password</label><input class="w-full border-y border-t-gray-300 border-b-gray-400 pt-8 px-4 pb-3.5 text-sm tracking-widest" id="password" name="password" type="password"></div>

@@ -43,16 +43,17 @@ public sealed abstract class TemplateBase
     plugin.accept(html);
   }
 
-  protected final Api.GlobalAttribute dataFrame(String value) {
-    Check.notNull(value, "value == null");
+  protected final Api.GlobalAttribute dataFrame(String name) {
+    Check.notNull(name, "name == null");
 
-    return $html().attribute0(AttributeName.DATA_FRAME, value);
+    return $html().attribute0(AttributeName.DATA_FRAME, name);
   }
 
-  protected final Api.GlobalAttribute dataFrameValue(String value) {
+  protected final Api.GlobalAttribute dataFrame(String name, String value) {
+    Check.notNull(name, "name == null");
     Check.notNull(value, "value == null");
 
-    return $html().attribute0(AttributeName.DATA_FRAME_VALUE, value);
+    return $html().attribute0(AttributeName.DATA_FRAME, name + ":" + value);
   }
 
   protected final Api.GlobalAttribute dataWayClick(String text) {
