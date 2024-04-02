@@ -10,8 +10,8 @@ suite("Action::html test", function() {
 	});
 
 	test("single data-frame: same name different value", function() {
-		make("<form data-frame='x' data-frame-value='1' method='post' action='/test'><button id='b' type='submit'>Before</button></form>");
-		const frame2 = makeElement("<form data-frame='x' data-frame-value='2' method='post' action='/test'><button type='submit'>After</button></form>");
+		make("<form data-frame='x:1' method='post' action='/test'><button id='b' type='submit'>Before</button></form>");
+		const frame2 = makeElement("<form data-frame='x:2' method='post' action='/test'><button type='submit'>After</button></form>");
 
 		this.server.respondWith(
 			"POST",
@@ -36,8 +36,8 @@ suite("Action::html test", function() {
 	});
 
 	test("single data-frame: same name same value", function() {
-		const frame1 = make("<form data-frame='x' data-frame-value='1' method='post' action='/test'><button id='b' type='submit'>Before</button></form>");
-		const frame2 = makeElement("<form data-frame='x' data-frame-value='1' method='post' action='/test'><button type='submit'>Ignored</button></form>");
+		const frame1 = make("<form data-frame='x:1' method='post' action='/test'><button id='b' type='submit'>Before</button></form>");
+		const frame2 = makeElement("<form data-frame='x:1' method='post' action='/test'><button type='submit'>Ignored</button></form>");
 
 		this.server.respondWith(
 			"POST",
@@ -62,9 +62,9 @@ suite("Action::html test", function() {
 	});
 
 	test("nested data-frames (1 child): morph inner only", function() {
-		make("<div data-frame='root' data-frame-value='x'>A<form data-frame='x' data-frame-value='1' method='post' action='/test'><button id='b' type='submit'>Before</button></form></div>");
-		const frame2 = makeElement("<div data-frame='root' data-frame-value='x'>B<form data-frame='x' data-frame-value='2' method='post' action='/test'><button type='submit'>After</button></form></div>");
-		const expect = makeElement("<div data-frame='root' data-frame-value='x'>A<form data-frame='x' data-frame-value='2' method='post' action='/test'><button type='submit'>After</button></form></div>");
+		make("<div data-frame='root:x'>A<form data-frame='x:1' method='post' action='/test'><button id='b' type='submit'>Before</button></form></div>");
+		const frame2 = makeElement("<div data-frame='root:x'>B<form data-frame='x:2' method='post' action='/test'><button type='submit'>After</button></form></div>");
+		const expect = makeElement("<div data-frame='root:x'>A<form data-frame='x:2' method='post' action='/test'><button type='submit'>After</button></form></div>");
 
 		this.server.respondWith(
 			"POST",
@@ -89,8 +89,8 @@ suite("Action::html test", function() {
 	});
 
 	test("nested data-frames (1 child): morph outer only", function() {
-		make("<div data-frame='root' data-frame-value='x'>A<form data-frame='x' data-frame-value='1' method='post' action='/test'><button id='b' type='submit'>Before</button></form></div>");
-		const frame2 = makeElement("<div data-frame='root' data-frame-value='y'>B</div>");
+		make("<div data-frame='root:x'>A<form data-frame='x:1' method='post' action='/test'><button id='b' type='submit'>Before</button></form></div>");
+		const frame2 = makeElement("<div data-frame='root:y'>B</div>");
 
 		this.server.respondWith(
 			"POST",
@@ -116,25 +116,25 @@ suite("Action::html test", function() {
 
 	test("nested data-frames (2 children): morph one child only", function() {
 		make(`
-		<div data-frame='root' data-frame-value='x'>
-    	<div data-frame='hd' data-frame-value='foo'>Foo</div>
+		<div data-frame='root:x'>
+    	<div data-frame='hd:foo'>Foo</div>
 		<span>should remain</span>
-    	<form data-frame='x' data-frame-value='1' method='post' action='/test'>
+    	<form data-frame='x:1' method='post' action='/test'>
     	<button id='b' type='submit'>Before</button>
     	</form>
     	</div>`);
 		const page2 = makeElement(`
-		<div data-frame='root' data-frame-value='x'>
-    	<div data-frame='hd' data-frame-value='bar'>Bar</div>
-    	<form data-frame='x' data-frame-value='1' method='post' action='/test'>
+		<div data-frame='root:x'>
+    	<div data-frame='hd:bar'>Bar</div>
+    	<form data-frame='x:1' method='post' action='/test'>
     	<button id='b' type='submit'>After</button>
     	</form>
     	</div>`);
 		const expect = makeElement(`
-		<div data-frame='root' data-frame-value='x'>
-    	<div data-frame='hd' data-frame-value='bar'>Bar</div>
+		<div data-frame='root:x'>
+    	<div data-frame='hd:bar'>Bar</div>
 		<span>should remain</span>
-    	<form data-frame='x' data-frame-value='1' method='post' action='/test'>
+    	<form data-frame='x:1' method='post' action='/test'>
     	<button id='b' type='submit'>Before</button>
     	</form>
     	</div>`);
@@ -163,23 +163,23 @@ suite("Action::html test", function() {
 
 	test("nested data-frames (2 children): morph both children", function() {
 		make(`
-		<div data-frame='root' data-frame-value='x'>
-    	<div data-frame='hd' data-frame-value='foo'>Foo</div>
+		<div data-frame='root:x'>
+    	<div data-frame='hd:foo'>Foo</div>
 		<span>should remain</span>
-    	<form data-frame='x' data-frame-value='1' method='post' action='/test'>
+    	<form data-frame='x:1' method='post' action='/test'>
     	<button id='b' type='submit'>Before</button>
     	</form>
     	</div>`);
 		const page2 = makeElement(`
-		<div data-frame='root' data-frame-value='x'>
-    	<div data-frame='hd' data-frame-value='bar'>Bar</div>
-    	<div data-frame='x' data-frame-value='2'>From form to div</div>
+		<div data-frame='root:x'>
+    	<div data-frame='hd:bar'>Bar</div>
+    	<div data-frame='x:2'>From form to div</div>
     	</div>`);
 		const expect = makeElement(`
-		<div data-frame='root' data-frame-value='x'>
-    	<div data-frame='hd' data-frame-value='bar'>Bar</div>
+		<div data-frame='root:x'>
+    	<div data-frame='hd:bar'>Bar</div>
 		<span>should remain</span>
-    	<div data-frame='x' data-frame-value='2'>From form to div</div>
+    	<div data-frame='x:2'>From form to div</div>
     	</div>`);
 
 		this.server.respondWith(
@@ -206,17 +206,17 @@ suite("Action::html test", function() {
 
 	test("nested data-frames (2 children): morph parent only", function() {
 		make(`
-		<div data-frame='root' data-frame-value='x'>
-    	<div data-frame='hd' data-frame-value='foo'>Foo</div>
+		<div data-frame='root:x'>
+    	<div data-frame='hd:foo'>Foo</div>
 		<span>should not remain</span>
-    	<form data-frame='x' data-frame-value='1' method='post' action='/test'>
+    	<form data-frame='x:1' method='post' action='/test'>
     	<button id='b' type='submit'>Before</button>
     	</form>
     	</div>`);
 		const page2 = makeElement(`
-		<div data-frame='root' data-frame-value='y'>
-    	<div data-frame='hd' data-frame-value='foo'>Bar</div>
-    	<div data-frame='x' data-frame-value='1'>From form to div</div>
+		<div data-frame='root:y'>
+    	<div data-frame='hd:foo'>Bar</div>
+    	<div data-frame='x:1'>From form to div</div>
     	</div>`);
 
 		this.server.respondWith(
@@ -242,8 +242,8 @@ suite("Action::html test", function() {
 	});
 
 	test("accept text/html response", function() {
-		make("<form data-frame='x' data-frame-value='1' method='post' action='/test'><button id='b' type='submit'>Before</button></form>");
-		const frame2 = makeElement("<form data-frame='x' data-frame-value='2' method='post' action='/test'><button type='submit'>After</button></form>");
+		make("<form data-frame='x:1' method='post' action='/test'><button id='b' type='submit'>Before</button></form>");
+		const frame2 = makeElement("<form data-frame='x:2' method='post' action='/test'><button type='submit'>After</button></form>");
 
 		this.server.respondWith(
 			"POST",
@@ -263,8 +263,8 @@ suite("Action::html test", function() {
 	});
 
 	test("accept text/html charset response", function() {
-		make("<form data-frame='x' data-frame-value='1' method='post' action='/test'><button id='b' type='submit'>Before</button></form>");
-		const frame2 = makeElement("<form data-frame='x' data-frame-value='2' method='post' action='/test'><button type='submit'>After</button></form>");
+		make("<form data-frame='x:1' method='post' action='/test'><button id='b' type='submit'>Before</button></form>");
+		const frame2 = makeElement("<form data-frame='x:2' method='post' action='/test'><button type='submit'>After</button></form>");
 
 		this.server.respondWith(
 			"POST",
@@ -284,7 +284,7 @@ suite("Action::html test", function() {
 	});
 
 	test("head/title update", function() {
-		make("<div data-frame='x' data-frame-value='x'><a id='a' href='/foo'>Foo</a></div>");
+		make("<div data-frame='x:x'><a id='a' href='/foo'>Foo</a></div>");
 		const page2 = makeElement("<html><head><title>Updated page title</title></head></html>");
 
 		assert.notEqual(document.title, "Updated page title");
@@ -301,8 +301,8 @@ suite("Action::html test", function() {
 	});
 
 	test("anchor click", function() {
-		make("<div data-frame='x' data-frame-value='foo'><a id='a' href='/foo'>Foo</a></div>");
-		const page2 = makeElement("<html><div data-frame='x' data-frame-value='bar'>Bar</div></html>");
+		make("<div data-frame='x:foo'><a id='a' href='/foo'>Foo</a></div>");
+		const page2 = makeElement("<html><div data-frame='x:bar'>Bar</div></html>");
 
 		this.server.respondWith("GET", "/foo", [200, { "Content-Type": "text/html" }, page2.outerHTML]);
 
@@ -316,8 +316,8 @@ suite("Action::html test", function() {
 	});
 
 	test("anchor click child", function() {
-		make("<div data-frame='x' data-frame-value='foo'><a href='/foo'><span id='a'>Foo</span></a></div>");
-		const page2 = makeElement("<html><div data-frame='x' data-frame-value='bar'>Bar</div></html>");
+		make("<div data-frame='x:foo'><a href='/foo'><span id='a'>Foo</span></a></div>");
+		const page2 = makeElement("<html><div data-frame='x:bar'>Bar</div></html>");
 
 		this.server.respondWith("GET", "/foo", [200, { "Content-Type": "text/html" }, page2.outerHTML]);
 

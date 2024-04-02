@@ -21,7 +21,7 @@
 		disableHistory: false
 	}
 
-	function clickListener(event) {
+	function onClick(event) {
 		const target = event.target;
 
 		const dataset = target.dataset;
@@ -263,11 +263,11 @@
 
 		const newNameMap = new Map();
 
-		for (const frame of newFrames) {
-			const name = frameName(frame);
+		for (const el of newFrames) {
+			const data = frame(el);
 
-			if (name) {
-				newNameMap.set(name, frame);
+			if (data) {
+				newNameMap.set(data.name, el);
 			}
 		}
 
@@ -275,42 +275,42 @@
 
 		const replaced = new Set();
 
-		outer: for (const frame of frames) {
-			const name = frameName(frame);
+		outer: for (const elem of frames) {
+			const data = frame(elem);
 
-			if (!name) {
+			if (!data) {
 				continue;
 			}
 
 			for (const parent of replaced) {
-				if (parent.contains(frame)) {
+				if (parent.contains(elem)) {
 					continue outer;
 				}
 			}
+
+			const name = data.name;
 
 			const maybe = newNameMap.get(name);
 
 			if (!maybe) {
 				// this frame does not exist in the new data
-				frame.remove();
+				elem.remove();
 
 				continue;
 			}
 
-			const newFrame = maybe;
+			const newElem = maybe;
 
-			const oldValue = frameValue(frame);
+			const oldValue = data.value;
 
-			const newValue = frameValue(newFrame);
+			const newData = frame(newElem);
 
-			if (!oldValue || !newValue) {
-				continue;
-			}
+			const newValue = newData.value;
 
 			if (oldValue !== newValue) {
-				replaced.add(frame);
+				replaced.add(elem);
 
-				frame.replaceWith(newFrame);
+				elem.replaceWith(newElem);
 			}
 		}
 	}
@@ -322,7 +322,7 @@
 	}
 
 	function executeSubmit(obj) {
-		const id = obj.value;
+		const id = obj.id;
 
 		if (!id) {
 			return;
@@ -341,30 +341,32 @@
 		el.dispatchEvent(new Event("submit", { bubbles: true }));
 	}
 
-	function frameName(frame) {
-		const dataset = frame.dataset;
+	function frame(el) {
+		const dataset = el.dataset;
 
 		if (!dataset) {
 			return null;
 		}
 
-		return dataset.frame;
-	}
+		const frame = dataset.frame;
 
-	function frameValue(frame) {
-		const dataset = frame.dataset;
+		const colon = frame.indexOf(":");
 
-		if (!dataset) {
-			return null;
+		if (colon === -1) {
+			return { name: frame, value: null };
 		}
 
-		return dataset.frameValue;
+		const name = frame.substring(0, colon);
+
+		const value = frame.substring(colon + 1);
+
+		return { name: name, value: value };
 	}
 
 	function domLoaded() {
 		const body = document.body;
 
-		body.addEventListener("click", clickListener);
+		body.addEventListener("click", onClick);
 		body.addEventListener("input", onInput);
 		body.addEventListener("submit", submitListener);
 	}

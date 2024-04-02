@@ -12,16 +12,16 @@ suite("data-on-input test", function() {
 	test("submit", function() {
 		const formId = "f";
 		const onInput = JSON.stringify([{
-			cmd: "submit", value: formId
+			cmd: "submit", id: formId
 		}]);
 		make(`
-		<div data-frame='x' data-frame-value='foo'>
+		<div data-frame='x:foo'>
 		<form id='${formId}' action='/list' method='get'>
 		<input id='q' type='text' name='q' data-on-input='${onInput}'>
 		</form>
 		</div>
 		`);
-		const page2 = makeElement("<div data-frame='x' data-frame-value='bar'><p>the results</p></div>");
+		const page2 = makeElement("<div data-frame='x:bar'><p>the results</p></div>");
 
 		this.server.respondWith("GET", "/list?q=abc", function(xhr) {
 			const q = queryString(xhr.url);

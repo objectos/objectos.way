@@ -8,20 +8,20 @@ suite("Action::location test", function() {
 	teardown(function() {
 		this.server.restore();
 	});
-
+	
 	test("should respond to 302 FOUND", function() {
 		make(`
-		<div data-frame='root' data-frame-value='x'>
-    	<div data-frame='hd' data-frame-value='foo'>Foo</div>
+		<div data-frame='root:x'>
+    	<div data-frame='hd:foo'>Foo</div>
 		<span>should not remain</span>
-    	<form data-frame='x' data-frame-value='1' method='post' action='/test'>
+    	<form data-frame='x:1' method='post' action='/test'>
     	<button id='b' type='submit'>Before</button>
     	</form>
     	</div>`);
 		const page2 = makeElement(`
-		<div data-frame='root' data-frame-value='y'>
-    	<div data-frame='hd' data-frame-value='foo'>Bar</div>
-    	<div data-frame='x' data-frame-value='1'>From form to div</div>
+		<div data-frame='root:y'>
+    	<div data-frame='hd:foo'>Bar</div>
+    	<div data-frame='x:1'>From form to div</div>
     	</div>`);
 
 		this.server.respondWith("POST", "/test", [302, { "Location": "/home" }, ""]);
