@@ -25,6 +25,10 @@ sealed abstract class Utility {
 
   static final Utility ACCESSIBILITY = new MultiLine();
 
+  // 672
+  static final Utility POINTER_EVENTS = new Single("pointer-events");
+  
+  // 687
   static final Utility POSITION = new Single("position");
 
   static final Utility INSET = new Single("inset");

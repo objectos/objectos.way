@@ -56,6 +56,7 @@ import static objectos.css.Utility.PADDING_RIGHT;
 import static objectos.css.Utility.PADDING_TOP;
 import static objectos.css.Utility.PADDING_X;
 import static objectos.css.Utility.PADDING_Y;
+import static objectos.css.Utility.POINTER_EVENTS;
 import static objectos.css.Utility.POSITION;
 import static objectos.css.Utility.RIGHT;
 import static objectos.css.Utility.START;
@@ -139,7 +140,7 @@ abstract class WayStyleGenParser extends WayStyleGenVariants {
       case "items-center" -> nameValue(ALIGN_ITEMS, "center");
       case "items-baseline" -> nameValue(ALIGN_ITEMS, "baseline");
       case "items-stretch" -> nameValue(ALIGN_ITEMS, "stretch");
-      
+
       // BorderCollapse
       case "border-collapse" -> nameValue(BORDER_COLLAPSE, "collapse");
       case "border-separate" -> nameValue(BORDER_COLLAPSE, "separate");
@@ -199,7 +200,11 @@ abstract class WayStyleGenParser extends WayStyleGenVariants {
       case "overflow-y-clip" -> nameValue(OVERFLOW_Y, "clip");
       case "overflow-y-visible" -> nameValue(OVERFLOW_Y, "visible");
       case "overflow-y-scroll" -> nameValue(OVERFLOW_Y, "scroll");
-      
+
+      // Pointer Events
+      case "pointer-events-auto" -> nameValue(POINTER_EVENTS, "auto");
+      case "pointer-events-none" -> nameValue(POINTER_EVENTS, "none");
+
       // Position
       case "static" -> nameValue(POSITION, "static");
       case "fixed" -> nameValue(POSITION, "fixed");
@@ -236,7 +241,7 @@ abstract class WayStyleGenParser extends WayStyleGenVariants {
       case "align-text-bottom" -> nameValue(VERTICAL_ALIGN, "text-bottom");
       case "align-sub" -> nameValue(VERTICAL_ALIGN, "sub");
       case "align-super" -> nameValue(VERTICAL_ALIGN, "super");
-      
+
       // Others
       default -> prefixWord1(value);
     };

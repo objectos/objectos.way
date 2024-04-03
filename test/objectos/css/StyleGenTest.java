@@ -1975,6 +1975,25 @@ public class StyleGenTest {
         """
     );
   }
+  
+  @Test
+  public void pointerEvents() {
+    class Subject extends AbstractSubject {
+      @Override
+      final void classes() {
+        className("pointer-events-none pointer-events-auto");
+      }
+    }
+
+    test(
+        Subject.class,
+
+        """
+        .pointer-events-none { pointer-events: none }
+        .pointer-events-auto { pointer-events: auto }
+        """
+    );
+  }
 
   @Test
   public void position() {
