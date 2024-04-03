@@ -29,13 +29,9 @@ public class ObjectosCssPseudoGen {
     ObjectosCssPseudoGen gen;
     gen = new ObjectosCssPseudoGen();
 
-    gen.classNameSingleLine(OVERFLOW, "overflow-");
-    gen.classNameSingleLine(OVERFLOW, "overflow-x-");
-    gen.classNameSingleLine(OVERFLOW, "overflow-y-");
-    
-    gen.cases(OVERFLOW, "OVERFLOW", "overflow-");
-    gen.cases(OVERFLOW, "OVERFLOW_X", "overflow-x-");
-    gen.cases(OVERFLOW, "OVERFLOW_Y", "overflow-y-");
+    gen.classNameSingleLine(CURSOR, "cursor-");
+
+    gen.mapOf(CURSOR, "cursor");
   }
 
   private static final Map<String, String> SPACING = seqmap(
@@ -90,6 +86,45 @@ public class ObjectosCssPseudoGen {
       kv("2", "2px"),
       kv("4", "4px"),
       kv("8", "8px")
+  );
+
+  static final Map<String, String> CURSOR = seqmap(
+      kv("auto", "auto"),
+      kv("default", "default"),
+      kv("pointer", "pointer"),
+      kv("wait", "wait"),
+      kv("text", "text"),
+      kv("move", "move"),
+      kv("help", "help"),
+      kv("not-allowed'", "not-allowed"),
+      kv("none", "none"),
+      kv("context-menu'", "context-menu"),
+      kv("progress", "progress"),
+      kv("cell", "cell"),
+      kv("crosshair", "crosshair"),
+      kv("vertical-text'", "vertical-text"),
+      kv("alias", "alias"),
+      kv("copy", "copy"),
+      kv("no-drop'", "no-drop"),
+      kv("grab", "grab"),
+      kv("grabbing", "grabbing"),
+      kv("all-scroll'", "all-scroll"),
+      kv("col-resize'", "col-resize"),
+      kv("row-resize'", "row-resize"),
+      kv("n-resize'", "n-resize"),
+      kv("e-resize'", "e-resize"),
+      kv("s-resize'", "s-resize"),
+      kv("w-resize'", "w-resize"),
+      kv("ne-resize'", "ne-resize"),
+      kv("nw-resize'", "nw-resize"),
+      kv("se-resize'", "se-resize"),
+      kv("sw-resize'", "sw-resize"),
+      kv("ew-resize'", "ew-resize"),
+      kv("ns-resize'", "ns-resize"),
+      kv("nesw-resize'", "nesw-resize"),
+      kv("nwse-resize'", "nwse-resize"),
+      kv("zoom-in'", "zoom-in"),
+      kv("zoom-out'", "zoom-out")
   );
 
   static final Map<String, String> DISPLAY = seqmap(

@@ -55,6 +55,10 @@ sealed abstract class Utility {
   static final Utility BORDER_COLLAPSE = new Single("border-collapse");
   static final Utility BORDER_SPACING = new Single("border-spacing");
 
+  // 1025
+  static final Utility CURSOR = new Single("cursor");
+  
+  // 1078
   static final Utility USER_SELECT = new Single("user-select");
 
   static final Utility FLEX_DIRECTION = new Single("flex-direction");

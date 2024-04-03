@@ -28,6 +28,8 @@ sealed abstract class WayStyleGenConfig permits WayStyleGen {
   abstract Map<String, String> colors();
 
   abstract Map<String, String> content();
+  
+  abstract Map<String, String> cursor();
 
   abstract Map<String, String> fontSize();
 

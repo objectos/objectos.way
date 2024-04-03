@@ -42,6 +42,8 @@ public final class WayStyleGen extends WayStyleGenConfig implements StyleGen {
   private Map<String, String> colors;
 
   private Map<String, String> content;
+  
+  private Map<String, String> cursor;
 
   private Map<String, String> fontSize;
 
@@ -516,6 +518,52 @@ public final class WayStyleGen extends WayStyleGenConfig implements StyleGen {
     }
 
     return content;
+  }
+  
+  @Override
+  final Map<String, String> cursor() {
+    if (cursor == null) {
+      cursor = Map.ofEntries(
+          Map.entry("auto", "auto"),
+          Map.entry("default", "default"),
+          Map.entry("pointer", "pointer"),
+          Map.entry("wait", "wait"),
+          Map.entry("text", "text"),
+          Map.entry("move", "move"),
+          Map.entry("help", "help"),
+          Map.entry("not-allowed'", "not-allowed"),
+          Map.entry("none", "none"),
+          Map.entry("context-menu'", "context-menu"),
+          Map.entry("progress", "progress"),
+          Map.entry("cell", "cell"),
+          Map.entry("crosshair", "crosshair"),
+          Map.entry("vertical-text'", "vertical-text"),
+          Map.entry("alias", "alias"),
+          Map.entry("copy", "copy"),
+          Map.entry("no-drop'", "no-drop"),
+          Map.entry("grab", "grab"),
+          Map.entry("grabbing", "grabbing"),
+          Map.entry("all-scroll'", "all-scroll"),
+          Map.entry("col-resize'", "col-resize"),
+          Map.entry("row-resize'", "row-resize"),
+          Map.entry("n-resize'", "n-resize"),
+          Map.entry("e-resize'", "e-resize"),
+          Map.entry("s-resize'", "s-resize"),
+          Map.entry("w-resize'", "w-resize"),
+          Map.entry("ne-resize'", "ne-resize"),
+          Map.entry("nw-resize'", "nw-resize"),
+          Map.entry("se-resize'", "se-resize"),
+          Map.entry("sw-resize'", "sw-resize"),
+          Map.entry("ew-resize'", "ew-resize"),
+          Map.entry("ns-resize'", "ns-resize"),
+          Map.entry("nesw-resize'", "nesw-resize"),
+          Map.entry("nwse-resize'", "nwse-resize"),
+          Map.entry("zoom-in'", "zoom-in"),
+          Map.entry("zoom-out'", "zoom-out")
+      );
+    }
+
+    return cursor;
   }
 
   @Override

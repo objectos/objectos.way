@@ -20,6 +20,7 @@ import static objectos.css.Utility.BACKGROUND_COLOR;
 import static objectos.css.Utility.BORDER_COLLAPSE;
 import static objectos.css.Utility.BOTTOM;
 import static objectos.css.Utility.CONTENT;
+import static objectos.css.Utility.CURSOR;
 import static objectos.css.Utility.DISPLAY;
 import static objectos.css.Utility.END;
 import static objectos.css.Utility.FILL;
@@ -300,6 +301,7 @@ abstract class WayStyleGenParser extends WayStyleGenVariants {
 
       // C
       case "content" -> config(CONTENT, config.content(), suffix);
+      case "cursor" -> config(CURSOR, config.cursor(), suffix);
 
       // D
       case "duration" -> config(TRANSITION_DURATION, config.transitionDuration(), suffix);
