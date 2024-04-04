@@ -20,7 +20,7 @@ import static org.testng.Assert.assertEquals;
 import java.util.Set;
 import org.testng.annotations.Test;
 
-public class UriQueryTest {
+public class WayUriQueryTest {
 
   @Test(description = """
   UriQuery: empty
@@ -83,7 +83,6 @@ public class UriQueryTest {
     assertEquals(q.isEmpty(), false);
   }
 
-
   @Test(description = """
   UriQuery: names()
   """)
@@ -100,6 +99,21 @@ public class UriQueryTest {
         queryOf("a=b&c=d").names(),
         Set.of("a", "c")
     );
+  }
+
+  @Test(description = """
+  UriQuery: getAsInt()
+  """)
+  public void testCase07() {
+    WayUriQuery q;
+    q = queryOf("a=123&b=-456&c=foo&d=&e&f=123.45");
+
+    assertEquals(q.getAsInt("a", -1), 123);
+    assertEquals(q.getAsInt("b", -1), -456);
+    assertEquals(q.getAsInt("c", -1), -1);
+    assertEquals(q.getAsInt("d", -1), -1);
+    assertEquals(q.getAsInt("e", -1), -1);
+    assertEquals(q.getAsInt("f", -1), -1);
   }
 
   private WayUriQuery queryOf(String q) {

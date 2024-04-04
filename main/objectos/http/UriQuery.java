@@ -22,6 +22,21 @@ public interface UriQuery {
   Set<String> names();
   
   String get(String name);
+  
+  default int getAsInt(String name, int defaultValue) {
+    String maybe;
+    maybe = get(name);
+
+    if (maybe == null) {
+      return defaultValue;
+    }
+
+    try {
+      return Integer.parseInt(maybe);
+    } catch (NumberFormatException expected) {
+      return defaultValue;
+    }
+  }
 
   String value();
 
