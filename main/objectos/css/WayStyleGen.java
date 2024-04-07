@@ -133,6 +133,29 @@ public final class WayStyleGen extends WayStyleGenConfig implements StyleGen {
     return this;
   }
 
+  public final WayStyleGen addVariant(String variantName, String formatString) {
+    Check.notNull(variantName, "variantName == null");
+    Check.notNull(formatString, "formatString == null");
+
+    Variant variant;
+    variant = Variant.parse(formatString);
+
+    if (variant instanceof Variant.Invalid invalid) {
+      throw new IllegalArgumentException("Invalid formatString: " + invalid.reason());
+    }
+
+    Map<String, Variant> map;
+    map = variants();
+
+    if (map.containsKey(variantName)) {
+      throw new IllegalArgumentException("Variant already defined: " + variantName);
+    }
+
+    map.put(variantName, variant);
+
+    return this;
+  }
+
   public final WayStyleGen noteSink(NoteSink noteSink) {
     this.noteSink = Check.notNull(noteSink, "noteSink == null");
 
@@ -189,23 +212,8 @@ public final class WayStyleGen extends WayStyleGenConfig implements StyleGen {
 
   @Override
   final Variant getVariant(String variantName) {
-    if (variants == null) {
-      variants = new GrowableMap<>();
-
-      variants.putAll(breakpoints);
-
-      variants.put("focus", new AppendTo(1, ":focus"));
-      variants.put("hover", new AppendTo(2, ":hover"));
-      variants.put("active", new AppendTo(3, ":active"));
-
-      variants.put("after", new AppendTo(4, "::after"));
-      variants.put("before", new AppendTo(5, "::before"));
-    }
-
-    return variants.get(variantName);
+    return variants().get(variantName);
   }
-  
-  
 
   @Override
   final Map<String, String> borderSpacing() {
@@ -836,6 +844,23 @@ public final class WayStyleGen extends WayStyleGenConfig implements StyleGen {
     }
 
     return utilities;
+  }
+  
+  private Map<String, Variant> variants() {
+    if (variants == null) {
+      variants = new GrowableMap<>();
+
+      variants.putAll(breakpoints);
+
+      variants.put("focus", new AppendTo(1, ":focus"));
+      variants.put("hover", new AppendTo(2, ":hover"));
+      variants.put("active", new AppendTo(3, ":active"));
+
+      variants.put("after", new AppendTo(4, "::after"));
+      variants.put("before", new AppendTo(5, "::before"));
+    }
+
+    return variants;
   }
 
   @Override

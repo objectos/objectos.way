@@ -2500,6 +2500,7 @@ public class StyleGenTest {
         """
     );
   }
+  
   @Test
   public void addUtility() {
     WayStyleGen gen;
@@ -2545,6 +2546,33 @@ public class StyleGenTest {
             --ui-border-subtle: var(--ui-border-subtle-00, #e0e0e0);
           }
         }
+        """
+    );
+  }
+  
+  @Test
+  public void addVariant() {
+    WayStyleGen gen;
+    gen = new WayStyleGen();
+
+    gen.addVariant("thead", "& thead");
+    gen.addVariant("tr", "& tr");
+
+    class Subject extends AbstractSubject {
+      @Override
+      final void classes() {
+        className("thead:bg-black thead:hover:bg-white");
+        className("thead:tr:border");
+      }
+    }
+
+    test(
+        gen, Subject.class,
+
+        """
+        .thead\\:tr\\:border thead tr { border-width: 1px }
+        .thead\\:bg-black thead { background-color: #000000 }
+        .thead\\:hover\\:bg-white thead:hover { background-color: #ffffff }
         """
     );
   }

@@ -18,7 +18,31 @@ package objectos.css;
 @SuppressWarnings("exports")
 sealed interface Variant extends Comparable<Variant> {
 
-  record AppendTo(int index, String selector) implements Variant {
+  static Variant parse(String formatString) {
+    int amper;
+    amper = formatString.indexOf('&');
+
+    if (amper < 0) {
+      return new Invalid(formatString, "Format string must contain exactly one '&' character");
+    }
+
+    String before;
+    before = formatString.substring(0, amper);
+
+    String after;
+    after = formatString.substring(amper + 1);
+
+    int anotherAmper;
+    anotherAmper = after.indexOf('&');
+
+    if (anotherAmper > 0) {
+      return new Invalid(formatString, "Format string must contain exactly one '&' character");
+    }
+
+    return new ClassNameFormat(before, after);
+  }
+
+  record AppendTo(int index, String selector) implements ClassNameVariant {
     @Override
     public final int compareTo(Variant o) {
       if (o instanceof MediaQuery) {
@@ -29,7 +53,12 @@ sealed interface Variant extends Comparable<Variant> {
         return Integer.compare(index, that.index);
       }
 
-      return 0;
+      return 1;
+    }
+
+    @Override
+    public final void writeClassName(StringBuilder out, int startIndex) {
+      out.append(selector);
     }
   }
 
@@ -52,6 +81,50 @@ sealed interface Variant extends Comparable<Variant> {
       out.append(") {");
       out.append(System.lineSeparator());
     }
+  }
+  
+  record ClassNameFormat(String before, String after) implements ClassNameVariant {
+    @Override
+    public final int compareTo(Variant o) {
+      if (o instanceof ClassNameFormat) {
+        return 0;
+      }
+
+      if (o instanceof AppendTo) {
+        return -1;
+      }
+
+      return 1;
+    }
+
+    @Override
+    public final void writeClassName(StringBuilder out, int startIndex) {
+      String original;
+      original = out.substring(startIndex, out.length());
+
+      out.setLength(startIndex);
+
+      out.append(before);
+      out.append(original);
+      out.append(after);
+    }
+  }
+  
+  record Invalid(String formatString, String reason) implements Variant {
+    @Override
+    public final int compareTo(Variant o) {
+      if (o instanceof Invalid) {
+        return 0;
+      }
+
+      return -1;
+    }
+  }
+  
+  sealed interface ClassNameVariant extends Variant {
+    
+    void writeClassName(StringBuilder out, int startIndex);
+    
   }
 
   sealed interface MediaQuery extends Variant {

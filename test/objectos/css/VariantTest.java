@@ -21,6 +21,7 @@ import java.util.Comparator;
 import java.util.List;
 import objectos.css.Variant.AppendTo;
 import objectos.css.Variant.Breakpoint;
+import objectos.css.Variant.ClassNameFormat;
 import objectos.util.list.GrowableList;
 import org.testng.annotations.Test;
 
@@ -64,6 +65,31 @@ public class VariantTest {
     assertEquals(res.get(0), sm);
     assertEquals(res.get(1), md);
     assertEquals(res.get(2), lg);
+  }
+
+  @Test(description = "ClassNameFormat first, AppendTo last")
+  public void ordering03() {
+    GrowableList<Variant> list;
+    list = new GrowableList<>();
+
+    AppendTo hover = new AppendTo(2, ":hover");
+    AppendTo focus = new AppendTo(1, ":focus");
+    ClassNameFormat thead = new ClassNameFormat("", " thead");
+
+    list.add(hover);
+    list.add(focus);
+    list.add(thead);
+
+    List<Variant> res = list.toUnmodifiableList(Comparator.naturalOrder());
+
+    assertEquals(res.get(0), thead);
+    assertEquals(res.get(1), focus);
+    assertEquals(res.get(2), hover);
+  }
+
+  @Test
+  public void parse() {
+    assertEquals(Variant.parse("& thead"), new Variant.ClassNameFormat("", " thead"));
   }
 
 }

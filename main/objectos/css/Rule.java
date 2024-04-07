@@ -17,7 +17,6 @@ package objectos.css;
 
 import java.util.Collections;
 import java.util.List;
-import objectos.css.Variant.AppendTo;
 import objectos.css.Variant.MediaQuery;
 import objectos.css.WayStyleGenRound.Context;
 
@@ -113,11 +112,14 @@ class Rule implements Comparable<Rule> {
   public final void writeTo(StringBuilder out, Indentation indentation) {
     indentation.writeTo(out);
 
+    int startIndex;
+    startIndex = out.length();
+
     writeClassName(out);
 
     for (Variant variant : variants) {
-      if (variant instanceof AppendTo to) {
-        out.append(to.selector());
+      if (variant instanceof Variant.ClassNameVariant cnv) {
+        cnv.writeClassName(out, startIndex);
       }
     }
 
