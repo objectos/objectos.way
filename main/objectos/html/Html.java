@@ -15,16 +15,18 @@
  */
 package objectos.html;
 
+import java.io.IOException;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import objectos.html.pseudom.HtmlAttribute;
 import objectos.html.pseudom.HtmlDocument;
 import objectos.html.pseudom.HtmlNode;
+import objectos.lang.CharWritable;
 import objectos.lang.object.Check;
 import objectos.util.array.ByteArrays;
 import objectos.util.array.ObjectArrays;
 
-public final class Html extends BaseElements {
+public final class Html extends BaseElements implements CharWritable {
 
   public interface Extensible {
 
@@ -271,6 +273,11 @@ public final class Html extends BaseElements {
     fragmentEnd(index);
 
     return Api.FRAGMENT;
+  }
+
+  @Override
+  public final void writeTo(Appendable dest) throws IOException {
+    WayHtmlFormatter.INSTANCE.formatTo(this, dest);
   }
 
   //

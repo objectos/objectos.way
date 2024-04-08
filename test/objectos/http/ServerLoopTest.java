@@ -806,12 +806,16 @@ public class ServerLoopTest {
     HTTP/1.1 200 OK\r
     Date: Wed, 28 Jun 2023 12:08:43 GMT\r
     Content-Type: text/html; charset=utf-8\r
-    Content-Length: 28\r
+    Transfer-Encoding: chunked\r
     Set-Cookie: OBJECTOSWAY=a86886a5d2978142da2d8cf378ebc83c; Path=/\r
     \r
+    1c\r
     <html>
     <p>LOGIN</p>
     </html>
+    \r
+    0\r
+    \r
     """;
 
     WaySessionStore sessionStore;

@@ -19,6 +19,7 @@ import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.util.Locale;
+import objectos.html.Html;
 import objectos.html.HtmlTemplate;
 import objectos.lang.CharWritable;
 import objectos.lang.object.Check;
@@ -164,9 +165,11 @@ public interface ServerExchange {
     send();
   }
 
-  default void ok(HtmlTemplate html) {
-    String s; // early implicit null-check
-    s = html.toString();
+  default void ok(HtmlTemplate template) {
+    Html html;
+    html = new Html();
+
+    template.accept(html);
 
     status(Status.OK);
 
@@ -174,12 +177,9 @@ public interface ServerExchange {
 
     header(HeaderName.CONTENT_TYPE, "text/html; charset=utf-8");
 
-    byte[] bytes;
-    bytes = s.getBytes(StandardCharsets.UTF_8);
-
-    header(HeaderName.CONTENT_LENGTH, bytes.length);
-
-    send(bytes);
+    header(HeaderName.TRANSFER_ENCODING, "chunked");
+    
+    send(html, StandardCharsets.UTF_8);
   }
 
   default void okText(String text, Charset charset) {

@@ -63,10 +63,14 @@ public class MarketingSiteTest {
           HTTP/1.1 200 OK\r
           Date: Wed, 28 Jun 2023 12:08:43 GMT\r
           Content-Type: text/html; charset=utf-8\r
-          Content-Length: 30\r
+          Transfer-Encoding: chunked\r
           \r
+          1e\r
           <!DOCTYPE html>
           <h1>home</h1>
+          \r
+          0\r
+          \r
           """);
     }
   }
@@ -87,7 +91,7 @@ public class MarketingSiteTest {
           HTTP/1.1 200 OK\r
           Date: Wed, 28 Jun 2023 12:08:43 GMT\r
           Content-Type: text/html; charset=utf-8\r
-          Content-Length: 30\r
+          Transfer-Encoding: chunked\r
           \r
           """);
     }

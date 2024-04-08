@@ -215,7 +215,7 @@ public class HttpServerTest implements Handler {
           HTTP/1.1 200 OK\r
           Date: Wed, 28 Jun 2023 12:08:43 GMT\r
           Content-Type: text/html; charset=utf-8\r
-          Content-Length: 31\r
+          Transfer-Encoding: chunked\r
           \r
           """
       );
@@ -231,11 +231,15 @@ public class HttpServerTest implements Handler {
           HTTP/1.1 200 OK\r
           Date: Wed, 28 Jun 2023 12:08:43 GMT\r
           Content-Type: text/html; charset=utf-8\r
-          Content-Length: 31\r
+          Transfer-Encoding: chunked\r
           \r
+          1f\r
           <html>
           <p>TC03 GET</p>
           </html>
+          \r
+          0\r
+          \r
           """
       );
 
@@ -250,11 +254,15 @@ public class HttpServerTest implements Handler {
           HTTP/1.1 200 OK\r
           Date: Wed, 28 Jun 2023 12:08:43 GMT\r
           Content-Type: text/html; charset=utf-8\r
-          Content-Length: 32\r
+          Transfer-Encoding: chunked\r
           \r
+          20\r
           <html>
           <p>TC03 POST</p>
           </html>
+          \r
+          0\r
+          \r
           """
       );
     }
