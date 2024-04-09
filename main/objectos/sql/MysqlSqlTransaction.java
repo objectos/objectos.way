@@ -54,6 +54,9 @@ final class MysqlSqlTransaction implements SqlTransaction {
     int valuesIndex;
     valuesIndex = 0;
 
+    int argsIndex;
+    argsIndex = 0;
+
     String[] fragments;
     fragments = TWO_DASHES.split(sql);
 
@@ -66,11 +69,36 @@ final class MysqlSqlTransaction implements SqlTransaction {
     placeholders = placeholders(fragment);
 
     while (valuesIndex < placeholders) {
-      values[valuesIndex] = args[valuesIndex++];
+      values[valuesIndex++] = args[argsIndex++];
     }
 
     for (int i = 1; i < fragments.length; i++) {
-      throw new UnsupportedOperationException("Implement me");
+      fragment = fragments[i];
+      
+      placeholders = placeholders(fragment);
+
+      switch (placeholders) {
+        case 0 -> sqlBuilder.append(fragment.trim());
+
+        case 1 -> {
+          if (argsIndex < args.length) {
+            Object arg;
+            arg = args[argsIndex++];
+
+            if (arg == null) {
+              continue;
+            }
+
+            sqlBuilder.append(fragment);
+
+            values[valuesIndex++] = arg;
+          } else {
+            throw new UnsupportedOperationException("Implement me");
+          }
+        }
+
+        default -> throw new UnsupportedOperationException("Implement me");
+      }
     }
 
     if (shouldAppendNewLine(sqlBuilder)) {
@@ -132,6 +160,8 @@ final class MysqlSqlTransaction implements SqlTransaction {
   private void set(PreparedStatement stmt, int index, Object value) throws SQLException {
     switch (value) {
       case Integer i -> stmt.setInt(index, i.intValue());
+
+      case String s -> stmt.setString(index, s);
 
       default -> throw new IllegalArgumentException("Unexpected type: " + value.getClass());
     }

@@ -227,7 +227,9 @@ final class TestingPreparedStatement extends AbstractTestable implements Prepare
   public void setBigDecimal(int parameterIndex, BigDecimal x) throws SQLException { throw new UnsupportedOperationException("Implement me"); }
 
   @Override
-  public void setString(int parameterIndex, String x) throws SQLException { throw new UnsupportedOperationException("Implement me"); }
+  public void setString(int parameterIndex, String x) throws SQLException {
+    logMethod("setString", parameterIndex, x);
+  }
 
   @Override
   public void setBytes(int parameterIndex, byte[] x) throws SQLException { throw new UnsupportedOperationException("Implement me"); }

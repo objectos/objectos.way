@@ -40,7 +40,7 @@ abstract class AbstractTestable {
     String s;
     s = String.valueOf(o);
 
-    s = s.replaceAll("\\R", " ");
+    s = s.replaceAll("\\R+", " ");
     
     return s.trim();
   }

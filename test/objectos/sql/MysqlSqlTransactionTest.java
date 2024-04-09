@@ -24,7 +24,9 @@ import org.testng.annotations.Test;
 
 public class MysqlSqlTransactionTest {
 
-  @Test
+  @Test(description = """
+  SQL template without optional fragments
+  """)
   public void testCase01() throws SQLException {
     TestingConnection conn;
     conn = new TestingConnection();
@@ -78,7 +80,131 @@ public class MysqlSqlTransactionTest {
         """
     );
   }
-  
+
+  @Test(description = """
+  SQL template with 1 optional fragment
+  => fragment removed
+  """)
+  public void testCase02() throws SQLException {
+    TestingConnection conn;
+    conn = new TestingConnection();
+
+    TestingPreparedStatement stmt;
+    stmt = new TestingPreparedStatement();
+
+    TestingResultSet query;
+    query = new TestingResultSet(
+        Map.of("A", "Hello", "B", "World!")
+    );
+
+    stmt.queries(query);
+
+    conn.statements(stmt);
+
+    try (SqlTransaction trx = new MysqlSqlTransaction(conn)) {
+      trx.queryPage("""
+      select A, B
+      from FOO
+      where C = ?
+      --
+      and D = ?
+      --
+      """, this::row, page(15), 123, null);
+    }
+
+    assertEquals(
+        conn.toString(),
+
+        """
+        prepareStatement(select A, B from FOO where C = ? limit 15)
+        close()        
+        """
+    );
+
+    assertEquals(
+        stmt.toString(),
+
+        """
+        setInt(1, 123)
+        executeQuery()
+        close()
+        """
+    );
+
+    assertEquals(
+        query.toString(),
+
+        """
+        next()
+        next()
+        close()
+        """
+    );
+  }
+
+
+  @Test(description = """
+  SQL template with 1 optional fragment
+  => fragment included
+  """)
+  public void testCase03() throws SQLException {
+    TestingConnection conn;
+    conn = new TestingConnection();
+
+    TestingPreparedStatement stmt;
+    stmt = new TestingPreparedStatement();
+
+    TestingResultSet query;
+    query = new TestingResultSet(
+        Map.of("A", "Hello", "B", "World!")
+    );
+
+    stmt.queries(query);
+
+    conn.statements(stmt);
+
+    try (SqlTransaction trx = new MysqlSqlTransaction(conn)) {
+      trx.queryPage("""
+      select A, B
+      from FOO
+      where C = ?
+      --
+      and D = ?
+      --
+      """, this::row, page(15), 123, "abc");
+    }
+
+    assertEquals(
+        conn.toString(),
+
+        """
+        prepareStatement(select A, B from FOO where C = ? and D = ? limit 15)
+        close()        
+        """
+    );
+
+    assertEquals(
+        stmt.toString(),
+
+        """
+        setInt(1, 123)
+        setString(2, abc)
+        executeQuery()
+        close()
+        """
+    );
+
+    assertEquals(
+        query.toString(),
+
+        """
+        next()
+        next()
+        close()
+        """
+    );
+  }
+
   private void row(ResultSet rs) throws SQLException {
     // noop
   }
