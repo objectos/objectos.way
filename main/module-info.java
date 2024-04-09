@@ -35,9 +35,11 @@ module objectos.way {
   exports objectos.lang.classloader;
   exports objectos.notes.console;
   exports objectos.notes.file;
+  exports objectos.sql;
   exports objectos.testing;
   exports objectos.ui;
   exports objectos.web;
 
   requires transitive objectos.notes;
+  requires transitive java.sql;
 }
