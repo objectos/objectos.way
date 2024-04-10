@@ -15,25 +15,23 @@
  */
 package objectos.sql;
 
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
-public interface SqlTransaction extends AutoCloseable {
+final class WaySql {
 
-  void commit() throws SQLException;
+  private WaySql() {}
 
-  void rollback() throws SQLException;
+  public static void set(PreparedStatement stmt, int index, Object value) throws SQLException {
+    switch (value) {
+      case Boolean b -> stmt.setBoolean(index, b.booleanValue());
 
-  @Override
-  void close() throws SQLException;
+      case Integer i -> stmt.setInt(index, i.intValue());
 
-  int[] batchUpdate(String sql, Object[]... batches) throws SQLException;
+      case String s -> stmt.setString(index, s);
 
-  int count(String sql, Object... args) throws SQLException;
-
-  void queryPage(String sql, ResultSetHandler handler, Page page, Object... args) throws SQLException;
-
-  default Object[] values(Object... values) {
-    return values;
+      default -> throw new IllegalArgumentException("Unexpected type: " + value.getClass());
+    }
   }
 
 }

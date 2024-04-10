@@ -16,6 +16,7 @@
 package objectos.sql;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import objectos.lang.object.Check;
 
@@ -44,6 +45,28 @@ final class WaySqlTransaction implements SqlTransaction {
   @Override
   public final void close() throws SQLException {
     connection.close();
+  }
+
+  @Override
+  public final int[] batchUpdate(String sql, Object[]... batches) throws SQLException {
+    Check.notNull(sql, "sql == null");
+    Check.notNull(batches, "batches == null");
+
+    try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+
+      for (Object[] batch : batches) {
+        for (int index = 0; index < batch.length;) {
+          Object value;
+          value = batch[index++];
+
+          WaySql.set(stmt, index, value);
+        }
+        
+        stmt.addBatch();
+      }
+
+      return stmt.executeBatch();
+    }
   }
 
   @Override

@@ -26,6 +26,56 @@ import org.testng.annotations.Test;
 public class WaySqlTransactionTest {
   
   @Test
+  public void batchUpdate01() throws SQLException {
+    TestingConnection conn;
+    conn = new TestingConnection();
+
+    TestingPreparedStatement stmt;
+    stmt = new TestingPreparedStatement();
+
+    stmt.batches(new int[] {1, 1});
+
+    conn.statements(stmt);
+
+    try (SqlTransaction trx = trx(conn)) {
+      int[] result;
+      result = trx.batchUpdate(
+          "insert into FOO (FOO_ID, FOO_NAME, BAR) VALUES (?, ?, ?)",
+          trx.values(1, "A", true),
+          trx.values(2, "B", false)
+      );
+
+      assertEquals(result, new int[] {1, 1});
+    }
+
+    assertEquals(
+        conn.toString(),
+
+        """
+        prepareStatement(insert into FOO (FOO_ID, FOO_NAME, BAR) VALUES (?, ?, ?))
+        close()        
+        """
+    );
+
+    assertEquals(
+        stmt.toString(),
+
+        """
+        setInt(1, 1)
+        setString(2, A)
+        setBoolean(3, true)
+        addBatch()
+        setInt(1, 2)
+        setString(2, B)
+        setBoolean(3, false)
+        addBatch()
+        executeBatch()
+        close()
+        """
+    );
+  }
+  
+  @Test
   public void count01() throws SQLException {
     TestingConnection conn;
     conn = new TestingConnection();

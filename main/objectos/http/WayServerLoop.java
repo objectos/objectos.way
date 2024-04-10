@@ -770,7 +770,10 @@ public final class WayServerLoop extends WayServerRequestBody implements ServerL
 
     @Override
     public Appendable append(CharSequence csq, int start, int end) throws IOException {
-      throw new UnsupportedOperationException("Implement me");
+      CharSequence sub;
+      sub = csq.subSequence(start, end);
+
+      return append(sub);
     }
 
     private void buffer(byte[] bytes) throws IOException {

@@ -42,8 +42,14 @@ import java.util.Iterator;
 import java.util.stream.Stream;
 
 final class TestingPreparedStatement extends AbstractTestable implements PreparedStatement {
+
+  private Iterator<int[]> batches = Collections.emptyIterator();
   
   private Iterator<ResultSet> queries = Collections.emptyIterator();
+
+  public final void batches(int[]... values) {
+    batches = Stream.of(values).iterator();
+  }
 
   public final void queries(ResultSet... values) {
     queries = Stream.of(values).iterator();
@@ -130,7 +136,15 @@ final class TestingPreparedStatement extends AbstractTestable implements Prepare
   public void clearBatch() throws SQLException { throw new UnsupportedOperationException("Implement me"); }
 
   @Override
-  public int[] executeBatch() throws SQLException { throw new UnsupportedOperationException("Implement me"); }
+  public int[] executeBatch() throws SQLException {
+    logMethod("executeBatch");
+
+    if (!batches.hasNext()) {
+      throw new IllegalStateException("No more batches");
+    }
+
+    return batches.next();
+  }
 
   @Override
   public Connection getConnection() throws SQLException { throw new UnsupportedOperationException("Implement me"); }
@@ -201,7 +215,9 @@ final class TestingPreparedStatement extends AbstractTestable implements Prepare
   public void setNull(int parameterIndex, int sqlType) throws SQLException { throw new UnsupportedOperationException("Implement me"); }
 
   @Override
-  public void setBoolean(int parameterIndex, boolean x) throws SQLException { throw new UnsupportedOperationException("Implement me"); }
+  public void setBoolean(int parameterIndex, boolean x) throws SQLException {
+    logMethod("setBoolean", parameterIndex, x);
+  }
 
   @Override
   public void setByte(int parameterIndex, byte x) throws SQLException { throw new UnsupportedOperationException("Implement me"); }
@@ -265,7 +281,9 @@ final class TestingPreparedStatement extends AbstractTestable implements Prepare
   public boolean execute() throws SQLException { throw new UnsupportedOperationException("Implement me"); }
 
   @Override
-  public void addBatch() throws SQLException { throw new UnsupportedOperationException("Implement me"); }
+  public void addBatch() throws SQLException {
+    logMethod("addBatch");
+  }
 
   @Override
   public void setCharacterStream(int parameterIndex, Reader reader, int length) throws SQLException { throw new UnsupportedOperationException("Implement me"); }

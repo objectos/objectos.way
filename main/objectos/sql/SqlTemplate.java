@@ -135,7 +135,7 @@ final class SqlTemplate {
         Object value;
         value = values[idx++];
 
-        set(stmt, idx, value);
+        WaySql.set(stmt, idx, value);
       }
 
       try (ResultSet rs = stmt.executeQuery()) {
@@ -157,7 +157,7 @@ final class SqlTemplate {
         Object value;
         value = values[idx++];
 
-        set(stmt, idx, value);
+        WaySql.set(stmt, idx, value);
       }
 
       try (ResultSet rs = stmt.executeQuery()) {
@@ -172,14 +172,5 @@ final class SqlTemplate {
     dialect.paginate(sqlBuilder, page);
   }
 
-  private void set(PreparedStatement stmt, int index, Object value) throws SQLException {
-    switch (value) {
-      case Integer i -> stmt.setInt(index, i.intValue());
-
-      case String s -> stmt.setString(index, s);
-
-      default -> throw new IllegalArgumentException("Unexpected type: " + value.getClass());
-    }
-  }
 
 }
