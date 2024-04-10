@@ -15,15 +15,10 @@
  */
 package objectos.sql;
 
-import java.sql.SQLException;
+final class TestingDialect {
 
-public interface SqlTransaction extends AutoCloseable {
+  public static final Dialect MYSQL_5_7 = Dialect.of(TestingDatabaseMetaData.MYSQL_5_7);
 
-  @Override
-  void close() throws SQLException;
-
-  int count(String sql, Object... args) throws SQLException;
-
-  void queryPage(String sql, ResultSetHandler handler, Page page, Object... args) throws SQLException;
+  private TestingDialect() {}
 
 }

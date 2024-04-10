@@ -20,44 +20,26 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.regex.Pattern;
-import objectos.lang.object.Check;
 
-final class WaySqlTransaction implements SqlTransaction {
+final class SqlTemplate {
 
   private static final Pattern TWO_DASHES = Pattern.compile("^--.*$", Pattern.MULTILINE);
 
-  private final Dialect dialect;
+  private final StringBuilder sqlBuilder;
 
-  private final Connection connection;
+  private final Object[] values;
 
-  WaySqlTransaction(Dialect dialect, Connection connection) {
-    this.dialect = dialect;
+  private final int valuesIndex;
 
-    this.connection = connection;
+  public SqlTemplate(StringBuilder sqlBuilder, Object[] values, int valuesIndex) {
+    this.sqlBuilder = sqlBuilder;
+
+    this.values = values;
+
+    this.valuesIndex = valuesIndex;
   }
 
-  @Override
-  public final void close() throws SQLException {
-    connection.close();
-  }
-
-  @Override
-  public final int count(String sql, Object... args) throws SQLException {
-    Check.notNull(sql, "sql == null");
-    Check.notNull(args, "args == null");
-    
-    SqlTemplate template = SqlTemplate.parse(sql, args);
-    
-    return template.count(dialect, connection);
-  }
-
-  @Override
-  public final void queryPage(String sql, ResultSetHandler handler, Page page, Object... args) throws SQLException {
-    Check.notNull(sql, "sql == null");
-    Check.notNull(handler, "handler == null");
-    Check.notNull(page, "page == null");
-    Check.notNull(args, "args == null");
-
+  public static SqlTemplate parse(String sql, Object... args) {
     StringBuilder sqlBuilder;
     sqlBuilder = new StringBuilder(sql.length());
 
@@ -117,28 +99,10 @@ final class WaySqlTransaction implements SqlTransaction {
       }
     }
 
-    dialect.paginate(sqlBuilder, page);
-
-    String sqlToPrepare;
-    sqlToPrepare = sqlBuilder.toString();
-
-    try (PreparedStatement stmt = connection.prepareStatement(sqlToPrepare)) {
-      for (int idx = 0; idx < valuesIndex;) {
-        Object value;
-        value = values[idx++];
-
-        set(stmt, idx, value);
-      }
-
-      try (ResultSet rs = stmt.executeQuery()) {
-        while (rs.next()) {
-          handler.handle(rs);
-        }
-      }
-    }
+    return new SqlTemplate(sqlBuilder, values, valuesIndex);
   }
 
-  private int placeholders(String fragment) {
+  private static int placeholders(String fragment) {
     int count;
     count = 0;
 
@@ -159,6 +123,31 @@ final class WaySqlTransaction implements SqlTransaction {
 
     return count;
   }
+
+  final int count(Dialect dialect, Connection connection) throws SQLException {
+    dialect.count(sqlBuilder);
+
+    String sqlToPrepare;
+    sqlToPrepare = sqlBuilder.toString();
+
+    try (PreparedStatement stmt = connection.prepareStatement(sqlToPrepare)) {
+      for (int idx = 0; idx < valuesIndex;) {
+        Object value;
+        value = values[idx++];
+
+        set(stmt, idx, value);
+      }
+
+      try (ResultSet rs = stmt.executeQuery()) {
+        if (rs.next()) {
+          return rs.getInt(1);
+        } else {
+          return 0;
+        }
+      }
+    }
+  }
+
 
   private void set(PreparedStatement stmt, int index, Object value) throws SQLException {
     switch (value) {

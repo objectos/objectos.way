@@ -23,6 +23,25 @@ import java.sql.SQLException;
 
 final class TestingDatabaseMetaData implements DatabaseMetaData {
 
+  public static final DatabaseMetaData MYSQL_5_7 = new TestingDatabaseMetaData(
+      "MySQL", 5, 7, "5.7.44-log"
+  );
+
+  private final String databaseProductName;
+
+  private final int databaseMajorVersion;
+
+  private final int databaseMinorVersion;
+
+  private final String databaseProductVersion;
+
+  public TestingDatabaseMetaData(String databaseProductName, int databaseMajorVersion, int databaseMinorVersion, String databaseProductVersion) {
+    this.databaseProductName = databaseProductName;
+    this.databaseMajorVersion = databaseMajorVersion;
+    this.databaseMinorVersion = databaseMinorVersion;
+    this.databaseProductVersion = databaseProductVersion;
+  }
+
   @Override
   public <T> T unwrap(Class<T> iface) throws SQLException { throw new UnsupportedOperationException("Implement me"); }
 
@@ -57,10 +76,14 @@ final class TestingDatabaseMetaData implements DatabaseMetaData {
   public boolean nullsAreSortedAtEnd() throws SQLException { throw new UnsupportedOperationException("Implement me"); }
 
   @Override
-  public String getDatabaseProductName() throws SQLException { throw new UnsupportedOperationException("Implement me"); }
+  public String getDatabaseProductName() throws SQLException {
+    return databaseProductName;
+  }
 
   @Override
-  public String getDatabaseProductVersion() throws SQLException { throw new UnsupportedOperationException("Implement me"); }
+  public String getDatabaseProductVersion() throws SQLException {
+    return databaseProductVersion;
+  }
 
   @Override
   public String getDriverName() throws SQLException { throw new UnsupportedOperationException("Implement me"); }
@@ -387,7 +410,9 @@ final class TestingDatabaseMetaData implements DatabaseMetaData {
   public ResultSet getProcedures(String catalog, String schemaPattern, String procedureNamePattern) throws SQLException { throw new UnsupportedOperationException("Implement me"); }
 
   @Override
-  public ResultSet getProcedureColumns(String catalog, String schemaPattern, String procedureNamePattern, String columnNamePattern) throws SQLException { throw new UnsupportedOperationException("Implement me"); }
+  public ResultSet getProcedureColumns(String catalog, String schemaPattern, String procedureNamePattern, String columnNamePattern) throws SQLException {
+    throw new UnsupportedOperationException("Implement me");
+  }
 
   @Override
   public ResultSet getTables(String catalog, String schemaPattern, String tableNamePattern, String[] types) throws SQLException { throw new UnsupportedOperationException("Implement me"); }
@@ -426,7 +451,9 @@ final class TestingDatabaseMetaData implements DatabaseMetaData {
   public ResultSet getExportedKeys(String catalog, String schema, String table) throws SQLException { throw new UnsupportedOperationException("Implement me"); }
 
   @Override
-  public ResultSet getCrossReference(String parentCatalog, String parentSchema, String parentTable, String foreignCatalog, String foreignSchema, String foreignTable) throws SQLException { throw new UnsupportedOperationException("Implement me"); }
+  public ResultSet getCrossReference(String parentCatalog, String parentSchema, String parentTable, String foreignCatalog, String foreignSchema, String foreignTable) throws SQLException {
+    throw new UnsupportedOperationException("Implement me");
+  }
 
   @Override
   public ResultSet getTypeInfo() throws SQLException { throw new UnsupportedOperationException("Implement me"); }
@@ -495,7 +522,9 @@ final class TestingDatabaseMetaData implements DatabaseMetaData {
   public ResultSet getSuperTables(String catalog, String schemaPattern, String tableNamePattern) throws SQLException { throw new UnsupportedOperationException("Implement me"); }
 
   @Override
-  public ResultSet getAttributes(String catalog, String schemaPattern, String typeNamePattern, String attributeNamePattern) throws SQLException { throw new UnsupportedOperationException("Implement me"); }
+  public ResultSet getAttributes(String catalog, String schemaPattern, String typeNamePattern, String attributeNamePattern) throws SQLException {
+    throw new UnsupportedOperationException("Implement me");
+  }
 
   @Override
   public boolean supportsResultSetHoldability(int holdability) throws SQLException { throw new UnsupportedOperationException("Implement me"); }
@@ -504,10 +533,14 @@ final class TestingDatabaseMetaData implements DatabaseMetaData {
   public int getResultSetHoldability() throws SQLException { throw new UnsupportedOperationException("Implement me"); }
 
   @Override
-  public int getDatabaseMajorVersion() throws SQLException { throw new UnsupportedOperationException("Implement me"); }
+  public int getDatabaseMajorVersion() throws SQLException {
+    return databaseMajorVersion;
+  }
 
   @Override
-  public int getDatabaseMinorVersion() throws SQLException { throw new UnsupportedOperationException("Implement me"); }
+  public int getDatabaseMinorVersion() throws SQLException {
+    return databaseMinorVersion;
+  }
 
   @Override
   public int getJDBCMajorVersion() throws SQLException { throw new UnsupportedOperationException("Implement me"); }
@@ -543,10 +576,14 @@ final class TestingDatabaseMetaData implements DatabaseMetaData {
   public ResultSet getFunctions(String catalog, String schemaPattern, String functionNamePattern) throws SQLException { throw new UnsupportedOperationException("Implement me"); }
 
   @Override
-  public ResultSet getFunctionColumns(String catalog, String schemaPattern, String functionNamePattern, String columnNamePattern) throws SQLException { throw new UnsupportedOperationException("Implement me"); }
+  public ResultSet getFunctionColumns(String catalog, String schemaPattern, String functionNamePattern, String columnNamePattern) throws SQLException {
+    throw new UnsupportedOperationException("Implement me");
+  }
 
   @Override
-  public ResultSet getPseudoColumns(String catalog, String schemaPattern, String tableNamePattern, String columnNamePattern) throws SQLException { throw new UnsupportedOperationException("Implement me"); }
+  public ResultSet getPseudoColumns(String catalog, String schemaPattern, String tableNamePattern, String columnNamePattern) throws SQLException {
+    throw new UnsupportedOperationException("Implement me");
+  }
 
   @Override
   public boolean generatedKeyAlwaysReturned() throws SQLException { throw new UnsupportedOperationException("Implement me"); }

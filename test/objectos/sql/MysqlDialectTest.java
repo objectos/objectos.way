@@ -15,13 +15,72 @@
  */
 package objectos.sql;
 
+import static org.testng.Assert.assertEquals;
+
+import java.sql.DatabaseMetaData;
 import org.testng.annotations.Test;
 
 public class MysqlDialectTest {
 
   @Test
   public void of() {
-    
+    DatabaseMetaData data;
+    data = TestingDatabaseMetaData.MYSQL_5_7;
+
+    Dialect dialect;
+    dialect = Dialect.of(data);
+
+    assertEquals(dialect.getClass(), Dialect.class);
   }
   
+  @Test
+  public void count() {
+    Dialect dialect;
+    dialect = TestingDialect.MYSQL_5_7;
+
+    StringBuilder sqlBuilder;
+    sqlBuilder = new StringBuilder("select * from FOO");
+
+    dialect.count(sqlBuilder);
+
+    assertEquals(sqlBuilder.toString(), """
+    select count(*) from (
+    select * from FOO
+    ) x
+    """);
+  }
+  
+  @Test
+  public void paginate01() {
+    Dialect dialect;
+    dialect = TestingDialect.MYSQL_5_7;
+
+    StringBuilder sqlBuilder;
+    sqlBuilder = new StringBuilder("select * from FOO");
+
+    dialect.paginate(sqlBuilder, new TestingPage(1, 15));
+
+    assertEquals(sqlBuilder.toString(), """
+    select * from FOO
+    limit 15
+    """);
+  }
+
+  @Test
+  public void paginate02() {
+    Dialect dialect;
+    dialect = TestingDialect.MYSQL_5_7;
+
+    StringBuilder sqlBuilder;
+    sqlBuilder = new StringBuilder("select * from FOO");
+
+    dialect.paginate(sqlBuilder, new TestingPage(3, 15));
+
+    assertEquals(sqlBuilder.toString(), """
+    select * from FOO
+    limit 15
+    offset 30
+    """);
+  }
+
 }

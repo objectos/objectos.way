@@ -24,11 +24,68 @@ import java.util.Map;
 import org.testng.annotations.Test;
 
 public class WaySqlTransactionTest {
+  
+  @Test
+  public void count01() throws SQLException {
+    TestingConnection conn;
+    conn = new TestingConnection();
+
+    TestingPreparedStatement stmt;
+    stmt = new TestingPreparedStatement();
+
+    TestingResultSet query;
+    query = new TestingResultSet(
+        Map.of("1", "567")
+    );
+
+    stmt.queries(query);
+
+    conn.statements(stmt);
+
+    try (SqlTransaction trx = trx(conn)) {
+      int count;
+      count = trx.count("""
+      select A, B
+      from FOO
+      where C = ?
+      """, 123);
+      
+      assertEquals(count, 567);
+    }
+
+    assertEquals(
+        conn.toString(),
+
+        """
+        prepareStatement(select count(*) from ( select A, B from FOO where C = ? ) x)
+        close()        
+        """
+    );
+
+    assertEquals(
+        stmt.toString(),
+
+        """
+        setInt(1, 123)
+        executeQuery()
+        close()
+        """
+    );
+
+    assertEquals(
+        query.toString(),
+
+        """
+        next()
+        close()
+        """
+    );
+  }
 
   @Test(description = """
   SQL template without optional fragments
   """)
-  public void testCase01() throws SQLException {
+  public void queryPage01() throws SQLException {
     TestingConnection conn;
     conn = new TestingConnection();
 
@@ -86,7 +143,7 @@ public class WaySqlTransactionTest {
   SQL template with 1 optional fragment
   => fragment removed
   """)
-  public void testCase02() throws SQLException {
+  public void queryPage02() throws SQLException {
     TestingConnection conn;
     conn = new TestingConnection();
 
@@ -147,7 +204,7 @@ public class WaySqlTransactionTest {
   SQL template with 1 optional fragment
   => fragment included
   """)
-  public void testCase03() throws SQLException {
+  public void queryPage03() throws SQLException {
     TestingConnection conn;
     conn = new TestingConnection();
 
@@ -208,7 +265,7 @@ public class WaySqlTransactionTest {
   @Test(description = """
   SQL template pagination
   """)
-  public void testCase04() throws SQLException {
+  public void queryPage04() throws SQLException {
     TestingConnection conn;
     conn = new TestingConnection();
 
@@ -265,7 +322,7 @@ public class WaySqlTransactionTest {
   @Test(description = """
   SQL template with two fragments
   """)
-  public void testCase05() throws SQLException {
+  public void queryPage05() throws SQLException {
     TestingConnection conn;
     conn = new TestingConnection();
 

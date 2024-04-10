@@ -86,7 +86,18 @@ final class TestingResultSet extends AbstractTestable implements ResultSet {
   public short getShort(int columnIndex) throws SQLException { throw new UnsupportedOperationException("Implement me"); }
 
   @Override
-  public int getInt(int columnIndex) throws SQLException { throw new UnsupportedOperationException("Implement me"); }
+  public int getInt(int columnIndex) throws SQLException {
+    String key;
+    key = Integer.toString(columnIndex);
+    
+    Map<String, String> row;
+    row = rows.get(index);
+    
+    String value;
+    value = row.get(key);
+    
+    return Integer.parseInt(value);
+  }
 
   @Override
   public long getLong(int columnIndex) throws SQLException { throw new UnsupportedOperationException("Implement me"); }

@@ -25,7 +25,30 @@ class Dialect {
     return new Dialect();
   }
 
+  public void count(StringBuilder sqlBuilder) {
+    boolean newLine;
+    newLine = shouldAppendNewLine(sqlBuilder);
+
+    String original;
+    original = sqlBuilder.toString();
+
+    sqlBuilder.setLength(0);
+
+    sqlBuilder.append("select count(*) from (");
+    sqlBuilder.append(System.lineSeparator());
+    sqlBuilder.append(original);
+    if (newLine) {
+      sqlBuilder.append(System.lineSeparator());
+    }
+    sqlBuilder.append(") x");
+    sqlBuilder.append(System.lineSeparator());
+  }
+
   public void paginate(StringBuilder sqlBuilder, Page page) {
+    if (shouldAppendNewLine(sqlBuilder)) {
+      sqlBuilder.append(System.lineSeparator());
+    }
+
     sqlBuilder.append("limit ");
     sqlBuilder.append(page.size());
     sqlBuilder.append(System.lineSeparator());
@@ -41,6 +64,23 @@ class Dialect {
       sqlBuilder.append(offset);
       sqlBuilder.append(System.lineSeparator());
     }
+  }
+
+  private boolean shouldAppendNewLine(StringBuilder sqlBuilder) {
+    int length;
+    length = sqlBuilder.length();
+
+    if (length == 0) {
+      return false;
+    }
+
+    int lastIndex;
+    lastIndex = length - 1;
+
+    char last;
+    last = sqlBuilder.charAt(lastIndex);
+
+    return !Character.isWhitespace(last);
   }
 
 }
