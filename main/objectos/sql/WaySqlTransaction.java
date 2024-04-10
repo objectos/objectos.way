@@ -22,13 +22,17 @@ import java.sql.SQLException;
 import java.util.regex.Pattern;
 import objectos.lang.object.Check;
 
-final class MysqlSqlTransaction implements SqlTransaction {
+final class WaySqlTransaction implements SqlTransaction {
 
   private static final Pattern TWO_DASHES = Pattern.compile("^--.*$", Pattern.MULTILINE);
 
-  private Connection connection;
+  private final Dialect dialect;
 
-  MysqlSqlTransaction(Connection connection) {
+  private final Connection connection;
+
+  WaySqlTransaction(Dialect dialect, Connection connection) {
+    this.dialect = dialect;
+
     this.connection = connection;
   }
 
@@ -37,7 +41,6 @@ final class MysqlSqlTransaction implements SqlTransaction {
     connection.close();
   }
 
-  @SuppressWarnings("unused")
   @Override
   public final void queryPage(String sql, ResultSetHandler handler, Page page, Object... args) throws SQLException {
     Check.notNull(sql, "sql == null");
@@ -74,7 +77,7 @@ final class MysqlSqlTransaction implements SqlTransaction {
 
     for (int i = 1; i < fragments.length; i++) {
       fragment = fragments[i];
-      
+
       placeholders = placeholders(fragment);
 
       switch (placeholders) {
@@ -97,7 +100,10 @@ final class MysqlSqlTransaction implements SqlTransaction {
           }
         }
 
-        default -> throw new UnsupportedOperationException("Implement me");
+        default -> throw new IllegalArgumentException("""
+        A fragment must not contain more than one placeholder:
+        \t%s
+        """.formatted(fragment));
       }
     }
 
@@ -105,16 +111,7 @@ final class MysqlSqlTransaction implements SqlTransaction {
       sqlBuilder.append(System.lineSeparator());
     }
 
-    sqlBuilder.append("limit ");
-    sqlBuilder.append(page.size());
-    sqlBuilder.append(System.lineSeparator());
-
-    int pageNumber;
-    pageNumber = page.number();
-
-    if (pageNumber > 1) {
-      throw new UnsupportedOperationException("Implement me");
-    }
+    dialect.paginate(sqlBuilder, page);
 
     String sqlToPrepare;
     sqlToPrepare = sqlBuilder.toString();
@@ -150,7 +147,7 @@ final class MysqlSqlTransaction implements SqlTransaction {
       }
 
       count++;
-      
+
       question++;
     }
 

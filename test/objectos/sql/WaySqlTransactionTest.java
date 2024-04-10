@@ -17,12 +17,13 @@ package objectos.sql;
 
 import static org.testng.Assert.assertEquals;
 
+import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Map;
 import org.testng.annotations.Test;
 
-public class MysqlSqlTransactionTest {
+public class WaySqlTransactionTest {
 
   @Test(description = """
   SQL template without optional fragments
@@ -43,7 +44,7 @@ public class MysqlSqlTransactionTest {
 
     conn.statements(stmt);
 
-    try (SqlTransaction trx = new MysqlSqlTransaction(conn)) {
+    try (SqlTransaction trx = trx(conn)) {
       trx.queryPage("""
       select A, B
       from FOO
@@ -101,7 +102,7 @@ public class MysqlSqlTransactionTest {
 
     conn.statements(stmt);
 
-    try (SqlTransaction trx = new MysqlSqlTransaction(conn)) {
+    try (SqlTransaction trx = trx(conn)) {
       trx.queryPage("""
       select A, B
       from FOO
@@ -142,7 +143,6 @@ public class MysqlSqlTransactionTest {
     );
   }
 
-
   @Test(description = """
   SQL template with 1 optional fragment
   => fragment included
@@ -163,7 +163,7 @@ public class MysqlSqlTransactionTest {
 
     conn.statements(stmt);
 
-    try (SqlTransaction trx = new MysqlSqlTransaction(conn)) {
+    try (SqlTransaction trx = trx(conn)) {
       trx.queryPage("""
       select A, B
       from FOO
@@ -203,6 +203,131 @@ public class MysqlSqlTransactionTest {
         close()
         """
     );
+  }
+  
+  @Test(description = """
+  SQL template pagination
+  """)
+  public void testCase04() throws SQLException {
+    TestingConnection conn;
+    conn = new TestingConnection();
+
+    TestingPreparedStatement stmt;
+    stmt = new TestingPreparedStatement();
+
+    TestingResultSet query;
+    query = new TestingResultSet(
+        Map.of("A", "Hello", "B", "World!")
+    );
+
+    stmt.queries(query);
+
+    conn.statements(stmt);
+
+    try (SqlTransaction trx = trx(conn)) {
+      trx.queryPage("""
+      select A, B
+      from FOO
+      where C = ?
+      """, this::row, new TestingPage(2, 15), 123);
+    }
+
+    assertEquals(
+        conn.toString(),
+
+        """
+        prepareStatement(select A, B from FOO where C = ? limit 15 offset 15)
+        close()        
+        """
+    );
+
+    assertEquals(
+        stmt.toString(),
+
+        """
+        setInt(1, 123)
+        executeQuery()
+        close()
+        """
+    );
+
+    assertEquals(
+        query.toString(),
+
+        """
+        next()
+        next()
+        close()
+        """
+    );
+  }
+
+  @Test(description = """
+  SQL template with two fragments
+  """)
+  public void testCase05() throws SQLException {
+    TestingConnection conn;
+    conn = new TestingConnection();
+
+    TestingPreparedStatement stmt;
+    stmt = new TestingPreparedStatement();
+
+    TestingResultSet query;
+    query = new TestingResultSet(
+        Map.of("A", "Hello", "B", "World!")
+    );
+
+    stmt.queries(query);
+
+    conn.statements(stmt);
+
+    try (SqlTransaction trx = trx(conn)) {
+      trx.queryPage("""
+      select A, B
+      from FOO
+      where C = ?
+      --
+      and D is not null
+      --
+      and E = ?
+      """, this::row, page(15), 123, null);
+    }
+
+    assertEquals(
+        conn.toString(),
+
+        """
+        prepareStatement(select A, B from FOO where C = ? and D is not null limit 15)
+        close()        
+        """
+    );
+
+    assertEquals(
+        stmt.toString(),
+
+        """
+        setInt(1, 123)
+        executeQuery()
+        close()
+        """
+    );
+
+    assertEquals(
+        query.toString(),
+
+        """
+        next()
+        next()
+        close()
+        """
+    );
+  }
+  
+  private SqlTransaction trx(Connection connection) {
+    Dialect dialect;
+    dialect = new Dialect();
+    
+    return new WaySqlTransaction(dialect, connection);
   }
 
   private void row(ResultSet rs) throws SQLException {
