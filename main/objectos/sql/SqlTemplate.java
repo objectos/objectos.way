@@ -148,6 +148,29 @@ final class SqlTemplate {
     }
   }
 
+  final void query(Connection connection, ResultSetHandler handler) throws SQLException {
+    String sqlToPrepare;
+    sqlToPrepare = sqlBuilder.toString();
+
+    try (PreparedStatement stmt = connection.prepareStatement(sqlToPrepare)) {
+      for (int idx = 0; idx < valuesIndex;) {
+        Object value;
+        value = values[idx++];
+
+        set(stmt, idx, value);
+      }
+
+      try (ResultSet rs = stmt.executeQuery()) {
+        while (rs.next()) {
+          handler.handle(rs);
+        }
+      }
+    }
+  }
+
+  final void paginate(Dialect dialect, Page page) {
+    dialect.paginate(sqlBuilder, page);
+  }
 
   private void set(PreparedStatement stmt, int index, Object value) throws SQLException {
     switch (value) {

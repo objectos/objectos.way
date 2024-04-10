@@ -16,15 +16,10 @@
 package objectos.sql;
 
 import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.regex.Pattern;
 import objectos.lang.object.Check;
 
 final class WaySqlTransaction implements SqlTransaction {
-
-  private static final Pattern TWO_DASHES = Pattern.compile("^--.*$", Pattern.MULTILINE);
 
   private final Dialect dialect;
 
@@ -45,9 +40,10 @@ final class WaySqlTransaction implements SqlTransaction {
   public final int count(String sql, Object... args) throws SQLException {
     Check.notNull(sql, "sql == null");
     Check.notNull(args, "args == null");
-    
-    SqlTemplate template = SqlTemplate.parse(sql, args);
-    
+
+    SqlTemplate template;
+    template = SqlTemplate.parse(sql, args);
+
     return template.count(dialect, connection);
   }
 
@@ -58,116 +54,12 @@ final class WaySqlTransaction implements SqlTransaction {
     Check.notNull(page, "page == null");
     Check.notNull(args, "args == null");
 
-    StringBuilder sqlBuilder;
-    sqlBuilder = new StringBuilder(sql.length());
+    SqlTemplate template;
+    template = SqlTemplate.parse(sql, args);
 
-    Object[] values;
-    values = new Object[args.length];
+    template.paginate(dialect, page);
 
-    int valuesIndex;
-    valuesIndex = 0;
-
-    int argsIndex;
-    argsIndex = 0;
-
-    String[] fragments;
-    fragments = TWO_DASHES.split(sql);
-
-    String fragment;
-    fragment = fragments[0];
-
-    sqlBuilder.append(fragment);
-
-    int placeholders;
-    placeholders = placeholders(fragment);
-
-    while (valuesIndex < placeholders) {
-      values[valuesIndex++] = args[argsIndex++];
-    }
-
-    for (int i = 1; i < fragments.length; i++) {
-      fragment = fragments[i];
-
-      placeholders = placeholders(fragment);
-
-      switch (placeholders) {
-        case 0 -> sqlBuilder.append(fragment.trim());
-
-        case 1 -> {
-          if (argsIndex < args.length) {
-            Object arg;
-            arg = args[argsIndex++];
-
-            if (arg == null) {
-              continue;
-            }
-
-            sqlBuilder.append(fragment);
-
-            values[valuesIndex++] = arg;
-          } else {
-            throw new UnsupportedOperationException("Implement me");
-          }
-        }
-
-        default -> throw new IllegalArgumentException("""
-        A fragment must not contain more than one placeholder:
-        \t%s
-        """.formatted(fragment));
-      }
-    }
-
-    dialect.paginate(sqlBuilder, page);
-
-    String sqlToPrepare;
-    sqlToPrepare = sqlBuilder.toString();
-
-    try (PreparedStatement stmt = connection.prepareStatement(sqlToPrepare)) {
-      for (int idx = 0; idx < valuesIndex;) {
-        Object value;
-        value = values[idx++];
-
-        set(stmt, idx, value);
-      }
-
-      try (ResultSet rs = stmt.executeQuery()) {
-        while (rs.next()) {
-          handler.handle(rs);
-        }
-      }
-    }
-  }
-
-  private int placeholders(String fragment) {
-    int count;
-    count = 0;
-
-    int question;
-    question = 0;
-
-    while (true) {
-      question = fragment.indexOf('?', question);
-
-      if (question < 0) {
-        break;
-      }
-
-      count++;
-
-      question++;
-    }
-
-    return count;
-  }
-
-  private void set(PreparedStatement stmt, int index, Object value) throws SQLException {
-    switch (value) {
-      case Integer i -> stmt.setInt(index, i.intValue());
-
-      case String s -> stmt.setString(index, s);
-
-      default -> throw new IllegalArgumentException("Unexpected type: " + value.getClass());
-    }
+    template.query(connection, handler);
   }
 
 }
