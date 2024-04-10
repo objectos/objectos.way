@@ -32,6 +32,16 @@ final class WaySqlTransaction implements SqlTransaction {
   }
 
   @Override
+  public final void commit() throws SQLException {
+    connection.commit();
+  }
+
+  @Override
+  public final void rollback() throws SQLException {
+    connection.rollback();
+  }
+
+  @Override
   public final void close() throws SQLException {
     connection.close();
   }

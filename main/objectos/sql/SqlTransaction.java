@@ -18,6 +18,10 @@ package objectos.sql;
 import java.sql.SQLException;
 
 public interface SqlTransaction extends AutoCloseable {
+  
+  void commit() throws SQLException;
+  
+  void rollback() throws SQLException;
 
   @Override
   void close() throws SQLException;
