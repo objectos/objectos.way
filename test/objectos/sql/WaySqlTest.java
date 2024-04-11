@@ -15,25 +15,33 @@
  */
 package objectos.sql;
 
-import java.sql.PreparedStatement;
+import static org.testng.Assert.assertEquals;
+
 import java.sql.SQLException;
+import org.testng.annotations.Test;
 
-final class WaySql {
+public class WaySqlTest {
 
-  private WaySql() {}
+  @Test
+  public void set() throws SQLException {
+    TestingPreparedStatement stmt;
+    stmt = new TestingPreparedStatement();
 
-  public static void set(PreparedStatement stmt, int index, Object value) throws SQLException {
-    switch (value) {
-      case Boolean b -> stmt.setBoolean(index, b.booleanValue());
+    WaySql.set(stmt, 1, "ABC");
+    WaySql.set(stmt, 2, Boolean.TRUE);
+    WaySql.set(stmt, 3, Integer.valueOf(123));
+    WaySql.set(stmt, 4, Long.valueOf(567L));
 
-      case Integer i -> stmt.setInt(index, i.intValue());
-      
-      case Long i -> stmt.setLong(index, i.longValue());
+    assertEquals(
+        stmt.toString(),
 
-      case String s -> stmt.setString(index, s);
-
-      default -> throw new IllegalArgumentException("Unexpected type: " + value.getClass());
-    }
+        """
+        setString(1, ABC)
+        setBoolean(2, true)
+        setInt(3, 123)
+        setLong(4, 567)
+        """
+    );
   }
-
+  
 }

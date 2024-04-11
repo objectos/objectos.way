@@ -15,7 +15,15 @@
  */
 package objectos.http;
 
+import objectos.lang.object.Check;
+
 public interface Session {
+  
+  static Session of(String id) {
+    Check.notNull(id, "id == null");
+
+    return new WaySession(id);
+  }
 
   String id();
 

@@ -231,7 +231,9 @@ final class TestingPreparedStatement extends AbstractTestable implements Prepare
   }
 
   @Override
-  public void setLong(int parameterIndex, long x) throws SQLException { throw new UnsupportedOperationException("Implement me"); }
+  public void setLong(int parameterIndex, long x) throws SQLException {
+    logMethod("setLong", parameterIndex, x);
+  }
 
   @Override
   public void setFloat(int parameterIndex, float x) throws SQLException { throw new UnsupportedOperationException("Implement me"); }
