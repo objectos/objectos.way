@@ -25,7 +25,7 @@
  *
  * This Java implementation:
  *
- * Copyright (C) 2023 Objectos Software LTDA.
+ * Copyright (C) 2023-2024 Objectos Software LTDA.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -97,6 +97,141 @@ public class TablerIcons extends HtmlComponent {
     strokeWidth = Double.toString(value);
 
     return this;
+  }
+
+  /**
+   * Renders the <a href="https://tabler.io/icons/icon/box">box</a>
+   * icon.
+   *
+   * @return the {@code svg} element
+   */
+  public final Element box(SvgValue... contents) {
+    return icon(
+        flatten(contents),
+        path(stroke("none"), d("M0 0h24v24H0z"), fill("none")),
+        path(d("M12 3l8 4.5l0 9l-8 4.5l-8 -4.5l0 -9l8 -4.5")),
+        path(d("M12 12l8 -4.5")),
+        path(d("M12 12l0 9")),
+        path(d("M12 12l-8 -4.5"))        
+    );
+  }
+
+  /**
+   * Renders the <a href="https://tabler.io/icons/icon/briefcase">briefcase</a>
+   * icon.
+   *
+   * @return the {@code svg} element
+   */
+  public final Element briefcase(SvgValue... contents) {
+    return icon(
+        flatten(contents),
+        path(stroke("none"), d("M0 0h24v24H0z"), fill("none")),
+        path(d("M3 7m0 2a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v9a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2z")),
+        path(d("M8 7v-2a2 2 0 0 1 2 -2h4a2 2 0 0 1 2 2v2")),
+        path(d("M12 12l0 .01")),
+        path(d("M3 13a20 20 0 0 0 18 0"))
+    );
+  }
+
+  /**
+   * Renders the
+   * <a href="https://tabler.io/icons/icon/calendar-repeat">calendar-repeat</a>
+   * icon.
+   *
+   * @return the {@code svg} element
+   */
+  public final Element calendarRepeat(SvgValue... contents) {
+    return icon(
+        flatten(contents),
+        path(stroke("none"), d("M0 0h24v24H0z"), fill("none")),
+        path(d("M12.5 21h-6.5a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v3")),
+        path(d("M16 3v4")),
+        path(d("M8 3v4")),
+        path(d("M4 11h12")),
+        path(d("M20 14l2 2h-3")),
+        path(d("M20 18l2 -2")),
+        path(d("M19 16a3 3 0 1 0 2 5.236"))
+    );
+  }
+
+  /**
+   * Renders the <a href="https://tabler.io/icons/icon/credit-card-pay">credit-card-pay</a>
+   * icon.
+   *
+   * @return the {@code svg} element
+   */
+  public final Element creditCardPay(SvgValue... contents) {
+    return icon(
+        flatten(contents),
+        path(stroke("none"), d("M0 0h24v24H0z"), fill("none")),
+        path(d("M12 19h-6a3 3 0 0 1 -3 -3v-8a3 3 0 0 1 3 -3h12a3 3 0 0 1 3 3v4.5")),
+        path(d("M3 10h18")),
+        path(d("M16 19h6")),
+        path(d("M19 16l3 3l-3 3")),
+        path(d("M7.005 15h.005")),
+        path(d("M11 15h2"))  
+    );
+  }
+
+  /**
+   * Renders the <a href="https://tabler.io/icons/icon/file-text">file-text</a>
+   * icon.
+   *
+   * @return the {@code svg} element
+   */
+  public final Element fileText(SvgValue... contents) {
+    return icon(
+        flatten(contents),
+        path(stroke("none"), d("M0 0h24v24H0z"), fill("none")),
+        path(d("M14 3v4a1 1 0 0 0 1 1h4")),
+        path(d("M17 21h-10a2 2 0 0 1 -2 -2v-14a2 2 0 0 1 2 -2h7l5 5v11a2 2 0 0 1 -2 2z")),
+        path(d("M9 9l1 0")),
+        path(d("M9 13l6 0")),
+        path(d("M9 17l6 0"))
+    );
+  }
+
+  /**
+   * Renders the <a href="https://tabler.io/icons/icon/home">home</a> icon.
+   *
+   * @return the {@code svg} element
+   */
+  public final Element home(SvgValue... contents) {
+    return icon(
+        flatten(contents),
+        path(stroke("none"), d("M0 0h24v24H0z"), fill("none")),
+        path(d("M5 12l-2 0l9 -9l9 9l-2 0")),
+        path(d("M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7")),
+        path(d("M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6"))
+    );
+  }
+
+  /**
+   * Renders the <a href="https://tabler.io/icons/icon/home-2">home-2</a> icon.
+   *
+   * @return the {@code svg} element
+   */
+  public final Element home2(SvgValue... contents) {
+    return icon(
+        flatten(contents),
+        path(stroke("none"), d("M0 0h24v24H0z"), fill("none")),
+        path(d("M5 12l-2 0l9 -9l9 9l-2 0")),
+        path(d("M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7")),
+        path(d("M10 12h4v4h-4z"))
+    );
+  }
+
+  /**
+   * Renders the <a href="https://tabler.io/icons/icon/menu">menu</a> icon.
+   *
+   * @return the {@code svg} element
+   */
+  public final Element menu() {
+    return icon(
+        path(stroke("none"), d("M0 0h24v24H0z"), fill("none")),
+        path(d("M4 8l16 0")),
+        path(d("M4 16l16 0"))
+    );
   }
 
   /**
