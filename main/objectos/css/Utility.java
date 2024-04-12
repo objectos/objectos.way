@@ -68,6 +68,9 @@ sealed abstract class Utility {
   static final Utility FLEX_DIRECTION = new Single("flex-direction");
   static final Utility ALIGN_ITEMS = new Single("align-items");
   static final Utility JUSTIFY_CONTENT = new Single("justify-content");
+  static final Utility GAP = new Single("gap");
+  static final Utility GAP_X = new Single("column-gap");
+  static final Utility GAP_Y = new Single("row-gap");
 
   // 1495
   static final Utility OVERFLOW = new Single("overflow");

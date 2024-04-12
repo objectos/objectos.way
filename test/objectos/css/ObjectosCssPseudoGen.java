@@ -29,9 +29,9 @@ public class ObjectosCssPseudoGen {
     ObjectosCssPseudoGen gen;
     gen = new ObjectosCssPseudoGen();
 
-    gen.classNameSingleLine(CURSOR, "cursor-");
-
-    gen.mapOf(CURSOR, "cursor");
+    gen.classNameSingleLine(SPACING, "gap-");
+    gen.classNameSingleLine(SPACING, "gap-x-");
+    gen.classNameSingleLine(SPACING, "gap-y-");
   }
 
   private static final Map<String, String> SPACING = seqmap(

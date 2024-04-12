@@ -49,6 +49,8 @@ public final class WayStyleGen extends WayStyleGenConfig implements StyleGen {
 
   private Map<String, String> fontWeight;
 
+  private Map<String, String> gap;
+  
   private Map<String, String> height;
 
   private Map<String, String> inset;
@@ -614,6 +616,17 @@ public final class WayStyleGen extends WayStyleGenConfig implements StyleGen {
     }
 
     return fontWeight;
+  }
+  
+  
+
+  @Override
+  final Map<String, String> gap() {
+    if (gap == null) {
+      gap = spacing();
+    }
+
+    return gap;
   }
 
   @Override

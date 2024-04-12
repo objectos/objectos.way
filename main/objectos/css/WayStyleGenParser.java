@@ -29,7 +29,6 @@ import static objectos.css.Utility.FONT_SIZE1;
 import static objectos.css.Utility.FONT_SIZE2;
 import static objectos.css.Utility.FONT_SIZEX;
 import static objectos.css.Utility.HEIGHT;
-import static objectos.css.Utility.INSET;
 import static objectos.css.Utility.JUSTIFY_CONTENT;
 import static objectos.css.Utility.LEFT;
 import static objectos.css.Utility.LETTER_SPACING;
@@ -296,7 +295,7 @@ abstract class WayStyleGenParser extends WayStyleGenVariants {
       case "border" -> {
         if (suffix.startsWith("spacing-")) {
           suffix = suffix.substring("spacing-".length());
-          
+
           yield borderSpacing(suffix);
         } else {
           yield border(suffix);
@@ -324,11 +323,14 @@ abstract class WayStyleGenParser extends WayStyleGenVariants {
       }
       case "font" -> font(suffix);
 
+      // G
+      case "gap" -> xy(Utility.GAP, Utility.GAP_X, Utility.GAP_Y, config.gap(), suffix);
+
       // H
       case "h" -> config(HEIGHT, config.height(), suffix);
 
       // I
-      case "inset" -> inset(suffix);
+      case "inset" -> xy(Utility.INSET, Utility.INSET_X, Utility.INSET_Y, config.inset(), suffix);
 
       // L
       case "leading" -> config(LINE_HEIGHT, config.lineHeight(), suffix);
@@ -572,30 +574,6 @@ abstract class WayStyleGenParser extends WayStyleGenVariants {
     return Rule.NOOP;
   }
 
-  private Rule inset(String suffix) {
-    int dash;
-    dash = suffix.indexOf('-');
-
-    if (dash < 0) {
-      return config(INSET, config.inset(), suffix);
-    }
-
-    if (dash == 1) {
-      char first;
-      first = suffix.charAt(0);
-
-      return switch (first) {
-        case 'x' -> config(Utility.INSET_X, config.inset(), suffix.substring(dash + 1));
-
-        case 'y' -> config(Utility.INSET_Y, config.inset(), suffix.substring(dash + 1));
-
-        default -> Rule.NOOP;
-      };
-    }
-
-    return Rule.NOOP;
-  }
-
   private Rule outline(String suffix) {
     switch (suffix) {
       case "none":
@@ -691,6 +669,30 @@ abstract class WayStyleGenParser extends WayStyleGenVariants {
     }
 
     return FONT_SIZE1.get(className, variants, value);
+  }
+  
+  private Rule xy(Utility util, Utility utilX, Utility utilY, Map<String, String> values, String suffix) {
+    int dash;
+    dash = suffix.indexOf('-');
+
+    if (dash < 0) {
+      return config(util, values, suffix);
+    }
+
+    if (dash == 1) {
+      char first;
+      first = suffix.charAt(0);
+
+      return switch (first) {
+        case 'x' -> config(utilX, values, suffix.substring(dash + 1));
+
+        case 'y' -> config(utilY, values, suffix.substring(dash + 1));
+
+        default -> Rule.NOOP;
+      };
+    }
+
+    return Rule.NOOP;
   }
 
 }
