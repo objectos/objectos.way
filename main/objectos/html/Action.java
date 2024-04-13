@@ -30,21 +30,54 @@ public abstract class Action {
       @Override
       final void writeTo(StringBuilder json) {
         json.append('{');
+        
         writeCommandName(json, "delay");
+        
         json.append(',');
+        
         writeStringLiteral(json, "ms");
         json.append(':');
         json.append(ms);
+        
         json.append(',');
+        
         writeStringLiteral(json, "actions");
         json.append(':');
         writeActions(json, actions);
+        
+        json.append('}');
+      }
+    };
+  }
+  
+  public static Action replaceClass(ExternalAttribute.Id id,
+                                    ExternalAttribute.StyleClass from,
+                                    ExternalAttribute.StyleClass to) {
+    Check.notNull(id, "id == null");
+    Check.notNull(from, "from == null");
+    Check.notNull(to, "to == null");
+
+    return new Action() {
+      @Override
+      final void writeTo(StringBuilder json) {
+        json.append('{');
+        writeCommandName(json, "replace-class");
+        json.append(',');
+        writeStringLiteral(json, "args");
+        json.append(':');
+        json.append('[');
+        writeStringLiteral(json, id.id());
+        json.append(',');
+        writeStringLiteral(json, from.className());
+        json.append(',');
+        writeStringLiteral(json, to.className());
+        json.append(']');
         json.append('}');
       }
     };
   }
 
-  public static Action submit(ElementId id) {
+  public static Action submit(ExternalAttribute.Id id) {
     Check.notNull(id, "id == null");
 
     return new Action() {

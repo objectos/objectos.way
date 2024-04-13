@@ -56,19 +56,74 @@ public sealed abstract class TemplateBase
     return $html().attribute0(AttributeName.DATA_FRAME, name + ":" + value);
   }
 
+  protected final Api.GlobalAttribute dataOnClick(Action... actions) {
+    return dataOn(AttributeName.DATA_ON_CLICK, actions);
+  }
+
   protected final Api.GlobalAttribute dataOnInput(Action... actions) {
+    return dataOn(AttributeName.DATA_ON_INPUT, actions);
+  }
+  
+  private final Api.GlobalAttribute dataOn(AttributeName name, Action... actions) {
     Check.notNull(actions, "actions == null");
 
     SingleQuotedValue value;
     value = Action.join(actions);
 
-    return $html().attribute0(AttributeName.DATA_ON_INPUT, value);
+    return $html().attribute0(name, value);
   }
 
   protected final Api.GlobalAttribute dataWayClick(String text) {
     Check.notNull(text, "text == null");
 
     return $html().attribute0(AttributeName.DATA_WAY_CLICK, text);
+  }
+
+  /**
+   * Includes a fragment into this template represented by the specified lambda.
+   *
+   * <p>
+   * The included fragment MUST only invoke methods this template instance. It
+   * is common (but not required) for a fragment to be a method reference to
+   * a private method of the template instance.
+   *
+   * <p>
+   * The following Objectos HTML template:
+   *
+   * {@snippet file = "objectos/html/BaseTemplateDslTest.java" region =
+   * "IncludeExample"}
+   *
+   * <p>
+   * Generates the following HTML:
+   *
+   * <pre>{@code
+   *     <!DOCTYPE html>
+   *     <html>
+   *     <head>
+   *     <title>Include fragment example</title>
+   *     </head>
+   *     <body>
+   *     <h1>Objectos HTML</h1>
+   *     <p>Using the include instruction</p>
+   *     </body>
+   *     </html>
+   * }</pre>
+   *
+   * <p>
+   * Note that the methods of included method references all return
+   * {@code void}.
+   *
+   * @param fragment
+   *        the fragment to include
+   *
+   * @return an instruction representing this fragment
+   */
+  protected final Api.Fragment f(FragmentLambda fragment) {
+    return $html().include(fragment);
+  }
+
+  protected final <E> Api.Fragment f(final Consumer<E> consumer, final E argument) {
+    return f(() -> consumer.accept(argument));
   }
 
   /**

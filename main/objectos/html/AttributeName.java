@@ -31,6 +31,11 @@ public sealed abstract class AttributeName extends GeneratedAttributeName permit
   public static final AttributeName DATA_FRAME = WayAttributeNameBuilder.create("data-frame", false);
 
   /**
+   * The {@code data-on-click} attribute.
+   */
+  public static final AttributeName DATA_ON_CLICK = WayAttributeNameBuilder.create("data-on-click", false);
+
+  /**
    * The {@code data-on-input} attribute.
    */
   public static final AttributeName DATA_ON_INPUT = WayAttributeNameBuilder.create("data-on-input", false);

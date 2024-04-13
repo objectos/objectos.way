@@ -22,7 +22,7 @@
 	}
 
 	function onClick(event) {
-		if (executeEvent(event, "click")) {
+		if (executeEvent(event, "onClick")) {
 			return;
 		}
 
@@ -205,31 +205,7 @@
 				}
 
 				case "replace-class": {
-					const args = action.args;
-
-					if (!args) {
-						break;
-					}
-
-					if (args.length !== 3) {
-						break;
-					}
-
-					const id = args[0];
-
-					const el = document.getElementById(id);
-
-					if (!el) {
-						break;
-					}
-
-					const classList = el.classList;
-
-					const classA = args[1];
-
-					const classB = args[2];
-
-					classList.replace(classA, classB);
+					executeReplaceClass(action);
 
 					break;
 				}
@@ -370,6 +346,34 @@
 		const xhr = createXhr("GET", location);
 
 		xhr.send();
+	}
+
+	function executeReplaceClass(action) {
+		const args = action.args;
+
+		if (!args) {
+			return;
+		}
+
+		if (args.length !== 3) {
+			return;
+		}
+
+		const id = args[0];
+
+		const el = document.getElementById(id);
+
+		if (!el) {
+			return;
+		}
+
+		const classList = el.classList;
+
+		const classA = args[1];
+
+		const classB = args[2];
+
+		classList.replace(classA, classB);
 	}
 
 	function executeSubmit(obj) {
