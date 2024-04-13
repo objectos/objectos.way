@@ -161,21 +161,25 @@
 	}
 
 	function executeEvent(event, name) {
-		const target = event.target;
+		let target = event.target;
 
-		const dataset = target.dataset;
+		while (target instanceof HTMLElement) {
+			const dataset = target.dataset;
 
-		const data = dataset[name];
+			const data = dataset[name];
 
-		if (data) {
-			const way = JSON.parse(data);
+			if (data) {
+				const way = JSON.parse(data);
 
-			executeActions(way, target);
+				executeActions(way, target);
 
-			return true;
-		} else {
-			return false;
+				return true;
+			} else {
+				target = target.parentNode;
+			}
 		}
+
+		return false;
 	}
 
 	function executeActions(actions, element) {

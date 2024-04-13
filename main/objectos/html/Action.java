@@ -30,26 +30,26 @@ public abstract class Action {
       @Override
       final void writeTo(StringBuilder json) {
         json.append('{');
-        
+
         writeCommandName(json, "delay");
-        
+
         json.append(',');
-        
+
         writeStringLiteral(json, "ms");
         json.append(':');
         json.append(ms);
-        
+
         json.append(',');
-        
+
         writeStringLiteral(json, "actions");
         json.append(':');
         writeActions(json, actions);
-        
+
         json.append('}');
       }
     };
   }
-  
+
   public static Action replaceClass(ExternalAttribute.Id id,
                                     ExternalAttribute.StyleClass from,
                                     ExternalAttribute.StyleClass to) {
@@ -57,6 +57,20 @@ public abstract class Action {
     Check.notNull(from, "from == null");
     Check.notNull(to, "to == null");
 
+    return replaceClass0(id, from.className(), to.className());
+  }
+
+  public static Action replaceClass(ExternalAttribute.Id id,
+                                    String from,
+                                    String to) {
+    Check.notNull(id, "id == null");
+    Check.notNull(from, "from == null");
+    Check.notNull(to, "to == null");
+
+    return replaceClass0(id, from, to);
+  }
+
+  private static Action replaceClass0(ExternalAttribute.Id id, String from, String to) {
     return new Action() {
       @Override
       final void writeTo(StringBuilder json) {
@@ -68,9 +82,9 @@ public abstract class Action {
         json.append('[');
         writeStringLiteral(json, id.id());
         json.append(',');
-        writeStringLiteral(json, from.className());
+        writeStringLiteral(json, from);
         json.append(',');
-        writeStringLiteral(json, to.className());
+        writeStringLiteral(json, to);
         json.append(']');
         json.append('}');
       }
@@ -199,5 +213,4 @@ public abstract class Action {
 
   }
 
-
-  }
+}
