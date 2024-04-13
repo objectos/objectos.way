@@ -163,20 +163,22 @@
 	function executeEvent(event, name) {
 		let target = event.target;
 
-		while (target instanceof HTMLElement) {
+		while (target instanceof Node) {
 			const dataset = target.dataset;
 
-			const data = dataset[name];
+			if (dataset) {
+				const data = dataset[name];
 
-			if (data) {
-				const way = JSON.parse(data);
+				if (data) {
+					const way = JSON.parse(data);
 
-				executeActions(way, target);
+					executeActions(way, target);
 
-				return true;
-			} else {
-				target = target.parentNode;
+					return true;
+				}
 			}
+
+			target = target.parentNode;
 		}
 
 		return false;
