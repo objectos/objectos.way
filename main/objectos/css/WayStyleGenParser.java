@@ -40,6 +40,7 @@ import static objectos.css.Utility.MARGIN_RIGHT;
 import static objectos.css.Utility.MARGIN_TOP;
 import static objectos.css.Utility.MARGIN_X;
 import static objectos.css.Utility.MARGIN_Y;
+import static objectos.css.Utility.MAX_WIDTH;
 import static objectos.css.Utility.OPACITY;
 import static objectos.css.Utility.OUTLINE_COLOR;
 import static objectos.css.Utility.OUTLINE_OFFSET;
@@ -344,6 +345,16 @@ abstract class WayStyleGenParser extends WayStyleGenVariants {
       case "mr" -> config(MARGIN_RIGHT, config.margin(), suffix);
       case "mb" -> config(MARGIN_BOTTOM, config.margin(), suffix);
       case "ml" -> config(MARGIN_LEFT, config.margin(), suffix);
+      
+      case "max" -> {
+        if (suffix.startsWith("w-")) {
+          suffix = suffix.substring("w-".length());
+
+          yield config(MAX_WIDTH, config.maxWidth(), suffix);
+        } else {
+          yield Rule.NOOP;
+        }
+      }
 
       // O
       case "opacity" -> config(OPACITY, config.opacity(), suffix);

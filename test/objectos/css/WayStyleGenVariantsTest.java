@@ -24,7 +24,7 @@ import org.testng.annotations.Test;
 
 public class WayStyleGenVariantsTest {
 
-  private final Variant sm = new Breakpoint(0, "640px");
+  private final Variant sm = new Breakpoint(0, "0", "640px");
 
   @Test(description = "single responsive variant")
   public void testCase01() {

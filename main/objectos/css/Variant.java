@@ -62,7 +62,7 @@ sealed interface Variant extends Comparable<Variant> {
     }
   }
 
-  record Breakpoint(int index, String value) implements MediaQuery {
+  record Breakpoint(int index, String name, String value) implements MediaQuery {
     @Override
     public final int compareTo(Variant o) {
       if (o instanceof Breakpoint that) {

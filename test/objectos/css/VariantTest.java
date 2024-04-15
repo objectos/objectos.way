@@ -34,7 +34,7 @@ public class VariantTest {
 
     AppendTo hover = new AppendTo(2, ":hover");
     AppendTo focus = new AppendTo(1, ":focus");
-    Breakpoint sm = new Breakpoint(1, "640px");
+    Breakpoint sm = new Breakpoint(1, "1", "640px");
 
     list.add(hover);
     list.add(focus);
@@ -52,9 +52,9 @@ public class VariantTest {
     GrowableList<Variant> list;
     list = new GrowableList<>();
 
-    Breakpoint sm = new Breakpoint(1, "640px");
-    Breakpoint md = new Breakpoint(2, "768px");
-    Breakpoint lg = new Breakpoint(3, "1024px");
+    Breakpoint sm = new Breakpoint(1, "1", "640px");
+    Breakpoint md = new Breakpoint(2, "2", "768px");
+    Breakpoint lg = new Breakpoint(3, "3", "1024px");
 
     list.add(lg);
     list.add(sm);

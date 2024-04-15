@@ -99,6 +99,71 @@ public class TablerIcons extends HtmlComponent {
     return this;
   }
 
+
+  /**
+   * Renders the <a href="https://tabler.io/icons/icon/arrow-left">arrow-left</a>
+   * icon.
+   *
+   * @return the {@code svg} element
+   */
+  public final Element arrowLeft(SvgValue... contents) {
+    return icon(
+        flatten(contents),
+        path(stroke("none"), d("M0 0h24v24H0z"), fill("none")),
+        path(d("M5 12l14 0")),
+        path(d("M5 12l6 6")),
+        path(d("M5 12l6 -6"))
+    );
+  }
+
+  /**
+   * Renders the <a href="https://tabler.io/icons/icon/arrow-narrow-left">arrow-narrow-left</a>
+   * icon.
+   *
+   * @return the {@code svg} element
+   */
+  public final Element arrowNarrowLeft(SvgValue... contents) {
+    return icon(
+        flatten(contents),
+        path(stroke("none"), d("M0 0h24v24H0z"), fill("none")),
+        path(d("M5 12l14 0")),
+        path(d("M5 12l4 4")),
+        path(d("M5 12l4 -4"))        
+    );
+  }
+
+  /**
+   * Renders the <a href="https://tabler.io/icons/icon/arrow-narrow-right">arrow-narrow-right</a>
+   * icon.
+   *
+   * @return the {@code svg} element
+   */
+  public final Element arrowNarrowRight(SvgValue... contents) {
+    return icon(
+        flatten(contents),
+        path(stroke("none"), d("M0 0h24v24H0z"), fill("none")),
+        path(d("M5 12l14 0")),
+        path(d("M15 16l4 -4")),
+        path(d("M15 8l4 4"))        
+    );
+  }
+
+  /**
+   * Renders the <a href="https://tabler.io/icons/icon/arrow-right">arrow-right</a>
+   * icon.
+   *
+   * @return the {@code svg} element
+   */
+  public final Element arrowRight(SvgValue... contents) {
+    return icon(
+        flatten(contents),
+        path(stroke("none"), d("M0 0h24v24H0z"), fill("none")),
+        path(d("M5 12l14 0")),
+        path(d("M13 18l6 -6")),
+        path(d("M13 6l6 6"))        
+    );
+  }
+  
   /**
    * Renders the <a href="https://tabler.io/icons/icon/box">box</a>
    * icon.

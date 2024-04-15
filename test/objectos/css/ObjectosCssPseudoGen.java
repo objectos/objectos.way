@@ -16,7 +16,6 @@
 package objectos.css;
 
 import java.io.PrintStream;
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -29,10 +28,16 @@ public class ObjectosCssPseudoGen {
     ObjectosCssPseudoGen gen;
     gen = new ObjectosCssPseudoGen();
 
-    gen.classNameSingleLine(SPACING, "gap-");
-    gen.classNameSingleLine(SPACING, "gap-x-");
-    gen.classNameSingleLine(SPACING, "gap-y-");
+    gen.initVariable(MAX_WIDTH, "maxWidth");
   }
+
+  private static final Map<String, String> SCREENS = seqmap(
+      kv("screen-sm", "640px"),
+      kv("screen-md", "768px"),
+      kv("screen-lg", "1024px"),
+      kv("screen-xl", "1280px"),
+      kv("screen-2xl", "1536px")
+  );
 
   private static final Map<String, String> SPACING = seqmap(
       kv("px", "1px"),
@@ -264,6 +269,28 @@ public class ObjectosCssPseudoGen {
   static final Map<String, String> MARGIN = seqmap(
       kv("auto", "auto"),
       SPACING
+  );
+
+  static final Map<String, String> MAX_WIDTH = seqmap(
+      SPACING,
+      kv("none", "none"),
+      kv("xs", "20rem"),
+      kv("sm", "24rem"),
+      kv("md", "28rem"),
+      kv("lg", "32rem"),
+      kv("xl", "36rem"),
+      kv("2xl", "42rem"),
+      kv("3xl", "48rem"),
+      kv("4xl", "56rem"),
+      kv("5xl", "64rem"),
+      kv("6xl", "72rem"),
+      kv("7xl", "80rem"),
+      kv("full", "100%"),
+      kv("min", "min-content"),
+      kv("max", "max-content"),
+      kv("fit", "fit-content"),
+      kv("prose", "65ch"),
+      SCREENS
   );
 
   static final Map<String, String> OPACITY = seqmap(
@@ -552,7 +579,7 @@ public class ObjectosCssPseudoGen {
       }
     }
 
-    return Collections.unmodifiableMap(map);
+    return map;
   }
 
 }

@@ -15,6 +15,7 @@
  */
 package objectos.css;
 
+import java.util.List;
 import java.util.Map;
 import objectos.css.Variant.AppendTo;
 import objectos.css.Variant.Breakpoint;
@@ -27,22 +28,22 @@ public final class WayStyleGen extends WayStyleGenConfig implements StyleGen {
 
   private NoteSink noteSink = NoOpNoteSink.of();
 
-  private final Map<String, Variant> breakpoints = Map.of(
-      "sm", new Breakpoint(0, "640px"),
-      "md", new Breakpoint(1, "768px"),
-      "lg", new Breakpoint(2, "1024px"),
-      "xl", new Breakpoint(3, "1280px"),
-      "2xl", new Breakpoint(4, "1536px")
+  private final List<Breakpoint> breakpoints = List.of(
+      new Breakpoint(0, "sm", "640px"),
+      new Breakpoint(1, "md", "768px"),
+      new Breakpoint(2, "lg", "1024px"),
+      new Breakpoint(3, "xl", "1280px"),
+      new Breakpoint(4, "2xl", "1536px")
   );
 
   private Map<String, String> borderSpacing;
-  
+
   private Map<String, String> borderWidth;
 
   private Map<String, String> colors;
 
   private Map<String, String> content;
-  
+
   private Map<String, String> cursor;
 
   private Map<String, String> fontSize;
@@ -50,7 +51,7 @@ public final class WayStyleGen extends WayStyleGenConfig implements StyleGen {
   private Map<String, String> fontWeight;
 
   private Map<String, String> gap;
-  
+
   private Map<String, String> height;
 
   private Map<String, String> inset;
@@ -59,6 +60,8 @@ public final class WayStyleGen extends WayStyleGenConfig implements StyleGen {
   private final Map<String, String> lineHeight;
 
   private Map<String, String> margin;
+
+  private Map<String, String> maxWidth;
 
   private Map<String, String> opacity;
 
@@ -529,7 +532,7 @@ public final class WayStyleGen extends WayStyleGenConfig implements StyleGen {
 
     return content;
   }
-  
+
   @Override
   final Map<String, String> cursor() {
     if (cursor == null) {
@@ -617,8 +620,6 @@ public final class WayStyleGen extends WayStyleGenConfig implements StyleGen {
 
     return fontWeight;
   }
-  
-  
 
   @Override
   final Map<String, String> gap() {
@@ -699,6 +700,42 @@ public final class WayStyleGen extends WayStyleGenConfig implements StyleGen {
     }
 
     return margin;
+  }
+
+  @Override
+  final Map<String, String> maxWidth() {
+    if (maxWidth == null) {
+      maxWidth = new GrowableMap<>();
+
+      maxWidth.putAll(spacing());
+
+      maxWidth.put("none", "none");
+      maxWidth.put("xs", "20rem");
+      maxWidth.put("sm", "24rem");
+      maxWidth.put("md", "28rem");
+      maxWidth.put("lg", "32rem");
+      maxWidth.put("xl", "36rem");
+      maxWidth.put("2xl", "42rem");
+      maxWidth.put("3xl", "48rem");
+      maxWidth.put("4xl", "56rem");
+      maxWidth.put("5xl", "64rem");
+      maxWidth.put("6xl", "72rem");
+      maxWidth.put("7xl", "80rem");
+      maxWidth.put("full", "100%");
+      maxWidth.put("min", "min-content");
+      maxWidth.put("max", "max-content");
+      maxWidth.put("fit", "fit-content");
+      maxWidth.put("prose", "65ch");
+
+      for (var breakpoint : breakpoints) {
+        String screen;
+        screen = "screen-" + breakpoint.name();
+
+        maxWidth.put(screen, breakpoint.value());
+      }
+    }
+
+    return maxWidth;
   }
 
   @Override
@@ -858,12 +895,14 @@ public final class WayStyleGen extends WayStyleGenConfig implements StyleGen {
 
     return utilities;
   }
-  
+
   private Map<String, Variant> variants() {
     if (variants == null) {
       variants = new GrowableMap<>();
 
-      variants.putAll(breakpoints);
+      for (var breakpoint : breakpoints) {
+        variants.put(breakpoint.name(), breakpoint);
+      }
 
       variants.put("focus", new AppendTo(1, ":focus"));
       variants.put("hover", new AppendTo(2, ":hover"));
