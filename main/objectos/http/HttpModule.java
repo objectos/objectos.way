@@ -86,7 +86,11 @@ public abstract class HttpModule {
     private SessionStore sessionStore;
 
     public final Handler compile() {
-      actions = Arrays.copyOf(actions, actionsIndex);
+      if (actions != null) {
+        actions = Arrays.copyOf(actions, actionsIndex);
+      } else {
+        actions = new Action[0];
+      }
 
       return this;
     }

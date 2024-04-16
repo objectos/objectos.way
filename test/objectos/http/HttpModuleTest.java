@@ -15,6 +15,8 @@
  */
 package objectos.http;
 
+import static org.testng.Assert.assertNotNull;
+
 import java.io.IOException;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
@@ -622,6 +624,18 @@ public class HttpModuleTest extends HttpModule {
           """
       );
     }
+  }
+  
+  @Test
+  public void edge01() {
+    HttpModule empty = new HttpModule() {
+      @Override
+      protected void configure() {}
+    };
+
+    Handler handler = empty.compile();
+    
+    assertNotNull(handler);
   }
 
   private Socket newSocket() throws IOException {
