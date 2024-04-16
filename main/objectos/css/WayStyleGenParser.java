@@ -25,6 +25,7 @@ import static objectos.css.Utility.DISPLAY;
 import static objectos.css.Utility.END;
 import static objectos.css.Utility.FILL;
 import static objectos.css.Utility.FLEX_DIRECTION;
+import static objectos.css.Utility.FLEX_GROW;
 import static objectos.css.Utility.FONT_SIZE1;
 import static objectos.css.Utility.FONT_SIZE2;
 import static objectos.css.Utility.FONT_SIZEX;
@@ -326,6 +327,7 @@ abstract class WayStyleGenParser extends WayStyleGenVariants {
 
       // G
       case "gap" -> xy(Utility.GAP, Utility.GAP_X, Utility.GAP_Y, config.gap(), suffix);
+      case "grow" -> config(FLEX_GROW, config.flexGrow(), suffix);
 
       // H
       case "h" -> config(HEIGHT, config.height(), suffix);

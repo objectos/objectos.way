@@ -53,9 +53,12 @@ sealed abstract class Utility {
 
   static final Utility DISPLAY = new Single("display");
 
+  // 834
   static final Utility HEIGHT = new Single("height");
   static final Utility WIDTH = new Single("width");
   static final Utility MAX_WIDTH = new Single("max-width");
+
+  static final Utility FLEX_GROW = new Single("flex-grow");
   
   static final Utility BORDER_COLLAPSE = new Single("border-collapse");
   static final Utility BORDER_SPACING = new Single("border-spacing");

@@ -564,6 +564,25 @@ public class StyleGenTest {
   }
 
   @Test
+  public void flexGrow() {
+    class Subject extends AbstractSubject {
+      @Override
+      final void classes() {
+        className("grow grow-0");
+      }
+    }
+
+    test(
+        Subject.class,
+
+        """
+        .grow { flex-grow: 1 }
+        .grow-0 { flex-grow: 0 }
+        """
+    );
+  }
+
+  @Test
   public void fontSize() {
     class Subject extends AbstractSubject {
       @Override

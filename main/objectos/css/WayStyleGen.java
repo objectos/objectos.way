@@ -46,6 +46,8 @@ public final class WayStyleGen extends WayStyleGenConfig implements StyleGen {
 
   private Map<String, String> cursor;
 
+  private Map<String, String> flexGrow;
+
   private Map<String, String> fontSize;
 
   private Map<String, String> fontWeight;
@@ -577,6 +579,18 @@ public final class WayStyleGen extends WayStyleGenConfig implements StyleGen {
     }
 
     return cursor;
+  }
+
+  @Override
+  final Map<String, String> flexGrow() {
+    if (flexGrow == null) {
+      flexGrow = Map.of(
+          "", "1",
+          "0", "0"
+      );
+    }
+
+    return flexGrow;
   }
 
   @Override

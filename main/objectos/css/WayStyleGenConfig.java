@@ -31,6 +31,8 @@ sealed abstract class WayStyleGenConfig permits WayStyleGen {
   
   abstract Map<String, String> cursor();
 
+  abstract Map<String, String> flexGrow();
+  
   abstract Map<String, String> fontSize();
 
   abstract Map<String, String> fontWeight();
