@@ -113,7 +113,8 @@ $(TEST_CLASSES): $(TEST_CLASS_OUTPUT)/%.class: $(TEST)/%.java
 	$(eval TEST_DIRTY += $$<)
 
 $(TEST_COMPILE_MARKER): $(TEST_COMPILE_REQS) 
-	@echo -n "$(strip $(TEST_DIRTY))" > $(TEST_COMPILE_SOURCES)
+	$(file > $(TEST_COMPILE_SOURCES).tmp,$(strip $(TEST_DIRTY)))
+	cat $(TEST_COMPILE_SOURCES).tmp | tr -d '\n' > $(TEST_COMPILE_SOURCES)
 	if [ -s $(TEST_COMPILE_SOURCES) ]; then \
 		$(TEST_JAVACX); \
 	fi

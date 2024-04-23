@@ -177,7 +177,8 @@ $(CLASSES): $(CLASS_OUTPUT)/%.class: $(MAIN)/%.java
 	$(eval DIRTY += $$<)
 
 $(COMPILE_MARKER): $(COMPILE_REQS)
-	@echo -n "$(strip $(DIRTY))" > $(COMPILE_SOURCES)
+	$(file > $(COMPILE_SOURCES).tmp,$(strip $(DIRTY)))
+	cat $(COMPILE_SOURCES).tmp | tr -d '\n' > $(COMPILE_SOURCES)
 	if [ -s $(COMPILE_SOURCES) ]; then \
 		$(JAVACX); \
 	fi

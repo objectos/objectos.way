@@ -422,6 +422,7 @@ public final class Api {
    */
   public sealed interface AutocompleteAttribute
       extends
+      InputValue,
       SelectValue,
       TextAreaValue {}
 
