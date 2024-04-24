@@ -17,29 +17,31 @@ package objectos.http;
 
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import objectos.lang.object.Check;
-import objectos.util.map.GrowableMap;
 
 final class WayUriQuery implements UriQuery {
 
-  private String value;
+  private final Map<String, Object> decoded = new HashMap<>();
 
-  private Map<String, Object> params;
+  private String value = "";
 
   public WayUriQuery() {
   }
 
-  public final void set(String rawValue) {
+  final void set(String rawValue) {
     value = URLDecoder.decode(rawValue, StandardCharsets.UTF_8);
 
-    params = null;
+    decoded.clear();
+    
+    makeDecoded();
   }
 
   @Override
   public final Set<String> names() {
-    return params().keySet();
+    return decoded.keySet();
   }
 
   @Override
@@ -47,7 +49,7 @@ final class WayUriQuery implements UriQuery {
     Check.notNull(name, "name == null");
 
     Map<String, Object> params;
-    params = params();
+    params = decoded;
 
     Object maybe;
     maybe = params.get(name);
@@ -63,6 +65,15 @@ final class WayUriQuery implements UriQuery {
     throw new UnsupportedOperationException("Implement me");
   }
 
+  public final UriQuery set(String name, String value) {
+    Map<String, Object> params;
+    params = decoded;
+
+    params.merge(name, value, (oldValue, newValue) -> newValue);
+
+    return this;
+  }
+
   @Override
   public final String value() {
     return value;
@@ -70,27 +81,19 @@ final class WayUriQuery implements UriQuery {
 
   @Override
   public final boolean isEmpty() {
-    return params().isEmpty();
+    return decoded.isEmpty();
   }
 
-  private Map<String, Object> params() {
-    if (params == null) {
-      params = makeParams();
-    }
-
-    return params;
-  }
-
-  private Map<String, Object> makeParams() {
+  private void makeDecoded() {
     String source;
     source = value();
 
     if (source.isBlank()) {
-      return Map.of();
+      return;
     }
 
-    GrowableMap<String, Object> map;
-    map = new GrowableMap<>();
+    Map<String, Object> map;
+    map = decoded;
 
     StringBuilder sb;
     sb = new StringBuilder();
@@ -150,8 +153,6 @@ final class WayUriQuery implements UriQuery {
     } else {
       map.put(value, "");
     }
-
-    return map;
   }
 
 }

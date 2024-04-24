@@ -32,6 +32,14 @@ enum EmptyUriQuery implements UriQuery {
   }
 
   @Override
+  public final UriQuery set(String name, String value) {
+    WayUriQuery q;
+    q = new WayUriQuery();
+
+    return q.set(name, value);
+  }
+
+  @Override
   public final String value() {
     return "";
   }

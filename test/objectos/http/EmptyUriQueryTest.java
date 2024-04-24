@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Objectos Software LTDA.
+ * Copyright (C) 2023-2024 Objectos Software LTDA.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,36 +15,25 @@
  */
 package objectos.http;
 
-import java.util.Set;
+import static org.testng.Assert.assertEquals;
 
-/**
- * Represents the query component of the request target.
- */
-public interface UriQuery {
+import org.testng.annotations.Test;
 
-  Set<String> names();
+public class EmptyUriQueryTest {
 
-  String get(String name);
+  @Test(description = """
+  UriQuery: set
+  """)
+  public void testCase08() {
+    UriQuery q;
+    q = EmptyUriQuery.INSTANCE;
 
-  default int getAsInt(String name, int defaultValue) {
-    String maybe;
-    maybe = get(name);
+    assertEquals(q.get("a"), null);
 
-    if (maybe == null) {
-      return defaultValue;
-    }
+    UriQuery res;
+    res = q.set("a", "x");
 
-    try {
-      return Integer.parseInt(maybe);
-    } catch (NumberFormatException expected) {
-      return defaultValue;
-    }
+    assertEquals(res.get("a"), "x");
   }
   
-  UriQuery set(String name, String value);
-
-  String value();
-
-  boolean isEmpty();
-
 }

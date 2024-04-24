@@ -115,6 +115,22 @@ public class WayUriQueryTest {
     assertEquals(q.getAsInt("e", -1), -1);
     assertEquals(q.getAsInt("f", -1), -1);
   }
+  
+  @Test(description = """
+  UriQuery: set
+  """)
+  public void testCase08() {
+    WayUriQuery q;
+    q = queryOf("a=1&b=2&c=3&d");
+
+    UriQuery res;
+    res = q.set("a", "x");
+
+    assertEquals(res.get("a"), "x");
+    assertEquals(res.get("b"), "2");
+    assertEquals(res.get("c"), "3");
+    assertEquals(res.get("d"), "");
+  }
 
   private WayUriQuery queryOf(String q) {
     WayUriQuery query;
