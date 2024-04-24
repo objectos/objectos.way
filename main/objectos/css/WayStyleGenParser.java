@@ -249,7 +249,10 @@ abstract class WayStyleGenParser extends WayStyleGenVariants {
   }
 
   private Rule nameValue(Utility utility, String value) {
-    return utility.get(className, variants, value);
+    String formatted;
+    formatted = format(value);
+
+    return utility.get(className, variants, formatted);
   }
 
   /**
