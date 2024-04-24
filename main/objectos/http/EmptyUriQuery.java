@@ -49,4 +49,9 @@ enum EmptyUriQuery implements UriQuery {
     return true;
   }
 
+  @Override
+  public final String encodedValue() {
+    return "";
+  }
+
 }

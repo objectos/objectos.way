@@ -21,6 +21,15 @@ import java.util.Set;
 import org.testng.annotations.Test;
 
 public class WayUriQueryTest {
+  
+  @Test
+  public void encodedValue() {
+    assertEquals(queryOf("").encodedValue(), "");
+    assertEquals(queryOf("foo=bar").encodedValue(), "foo=bar");
+    assertEquals(queryOf("a=1&b=2").encodedValue(), "a=1&b=2");
+    assertEquals(queryOf("email=user@example.com").encodedValue(), "email=user%40example.com");
+    assertEquals(queryOf("").set("a", "1 2 3").encodedValue(), "a=1+2+3");
+  }
 
   @Test(description = """
   UriQuery: empty
@@ -131,7 +140,7 @@ public class WayUriQueryTest {
     assertEquals(res.get("c"), "3");
     assertEquals(res.get("d"), "");
   }
-
+  
   private WayUriQuery queryOf(String q) {
     WayUriQuery query;
     query = new WayUriQuery();

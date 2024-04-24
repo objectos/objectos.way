@@ -22,8 +22,8 @@ import java.util.Set;
  */
 public interface UriQuery {
 
-  Set<String> names();
-
+  String encodedValue();
+  
   String get(String name);
 
   default int getAsInt(String name, int defaultValue) {
@@ -40,11 +40,13 @@ public interface UriQuery {
       return defaultValue;
     }
   }
-  
-  UriQuery set(String name, String value);
-
-  String value();
 
   boolean isEmpty();
+
+  Set<String> names();
+
+  UriQuery set(String name, String value);
+  
+  String value();
 
 }

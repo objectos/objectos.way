@@ -16,6 +16,7 @@
 package objectos.http;
 
 import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
@@ -35,7 +36,7 @@ final class WayUriQuery implements UriQuery {
     value = URLDecoder.decode(rawValue, StandardCharsets.UTF_8);
 
     decoded.clear();
-    
+
     makeDecoded();
   }
 
@@ -66,6 +67,9 @@ final class WayUriQuery implements UriQuery {
   }
 
   public final UriQuery set(String name, String value) {
+    Check.notNull(name, "name == null");
+    Check.notNull(value, "value == null");
+
     Map<String, Object> params;
     params = decoded;
 
@@ -153,6 +157,42 @@ final class WayUriQuery implements UriQuery {
     } else {
       map.put(value, "");
     }
+  }
+
+  @Override
+  public final String encodedValue() {
+    int count;
+    count = 0;
+
+    StringBuilder builder;
+    builder = new StringBuilder();
+
+    for (String key : decoded.keySet()) {
+      if (count++ > 0) {
+        builder.append('&');
+      }
+
+      builder.append(encode(key));
+
+      builder.append('=');
+
+      Object value;
+      value = decoded.get(key);
+
+      if (value instanceof String s) {
+        builder.append(encode(s));
+      }
+
+      else {
+        throw new UnsupportedOperationException("Implement me");
+      }
+    }
+
+    return builder.toString();
+  }
+
+  private String encode(String key) {
+    return URLEncoder.encode(key, StandardCharsets.UTF_8);
   }
 
 }
