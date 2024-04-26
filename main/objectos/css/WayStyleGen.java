@@ -53,6 +53,8 @@ public final class WayStyleGen extends WayStyleGenConfig implements StyleGen {
   private Map<String, String> fontWeight;
 
   private Map<String, String> gap;
+  
+  private Map<String, String> gridTemplateColumns;
 
   private Map<String, String> height;
 
@@ -642,6 +644,30 @@ public final class WayStyleGen extends WayStyleGenConfig implements StyleGen {
     }
 
     return gap;
+  }
+  
+  @Override
+  final Map<String, String> gridTemplateColumns() {
+    if (gridTemplateColumns == null) {
+      gridTemplateColumns = new GrowableMap<>();
+
+      gridTemplateColumns.put("none", "none");
+      gridTemplateColumns.put("subgrid", "subgrid");
+      gridTemplateColumns.put("1", "repeat(1, minmax(0, 1fr))");
+      gridTemplateColumns.put("2", "repeat(2, minmax(0, 1fr))");
+      gridTemplateColumns.put("3", "repeat(3, minmax(0, 1fr))");
+      gridTemplateColumns.put("4", "repeat(4, minmax(0, 1fr))");
+      gridTemplateColumns.put("5", "repeat(5, minmax(0, 1fr))");
+      gridTemplateColumns.put("6", "repeat(6, minmax(0, 1fr))");
+      gridTemplateColumns.put("7", "repeat(7, minmax(0, 1fr))");
+      gridTemplateColumns.put("8", "repeat(8, minmax(0, 1fr))");
+      gridTemplateColumns.put("9", "repeat(9, minmax(0, 1fr))");
+      gridTemplateColumns.put("10", "repeat(10, minmax(0, 1fr))");
+      gridTemplateColumns.put("11", "repeat(11, minmax(0, 1fr))");
+      gridTemplateColumns.put("12", "repeat(12, minmax(0, 1fr))");
+    }
+
+    return gridTemplateColumns;
   }
 
   @Override

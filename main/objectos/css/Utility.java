@@ -68,7 +68,10 @@ sealed abstract class Utility {
   
   // 1078
   static final Utility USER_SELECT = new Single("user-select");
+  
+  static final Utility GRID_TEMPLATE_COLUMNS = new Single("grid-template-columns");
 
+  // 1243
   static final Utility FLEX_DIRECTION = new Single("flex-direction");
   static final Utility ALIGN_ITEMS = new Single("align-items");
   static final Utility JUSTIFY_CONTENT = new Single("justify-content");

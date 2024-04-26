@@ -761,6 +761,37 @@ public class StyleGenTest {
         """
     );
   }
+  
+  @Test
+  public void gridTemplateColumns() {
+    class Subject extends AbstractSubject {
+      @Override
+      final void classes() {
+        className("grid-cols-none grid-cols-subgrid grid-cols-1 grid-cols-2 grid-cols-3 grid-cols-4 grid-cols-5 grid-cols-6 grid-cols-7 grid-cols-8 grid-cols-9 grid-cols-10 grid-cols-11 grid-cols-12");
+      }
+    }
+
+    test(
+        Subject.class,
+
+        """
+        .grid-cols-none { grid-template-columns: none }
+        .grid-cols-subgrid { grid-template-columns: subgrid }
+        .grid-cols-1 { grid-template-columns: repeat(1, minmax(0, 1fr)) }
+        .grid-cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)) }
+        .grid-cols-3 { grid-template-columns: repeat(3, minmax(0, 1fr)) }
+        .grid-cols-4 { grid-template-columns: repeat(4, minmax(0, 1fr)) }
+        .grid-cols-5 { grid-template-columns: repeat(5, minmax(0, 1fr)) }
+        .grid-cols-6 { grid-template-columns: repeat(6, minmax(0, 1fr)) }
+        .grid-cols-7 { grid-template-columns: repeat(7, minmax(0, 1fr)) }
+        .grid-cols-8 { grid-template-columns: repeat(8, minmax(0, 1fr)) }
+        .grid-cols-9 { grid-template-columns: repeat(9, minmax(0, 1fr)) }
+        .grid-cols-10 { grid-template-columns: repeat(10, minmax(0, 1fr)) }
+        .grid-cols-11 { grid-template-columns: repeat(11, minmax(0, 1fr)) }
+        .grid-cols-12 { grid-template-columns: repeat(12, minmax(0, 1fr)) }
+        """
+    );
+  }
 
   @Test
   public void height() {

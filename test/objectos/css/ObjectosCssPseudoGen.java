@@ -28,7 +28,8 @@ public class ObjectosCssPseudoGen {
     ObjectosCssPseudoGen gen;
     gen = new ObjectosCssPseudoGen();
 
-    gen.initVariable(MAX_WIDTH, "maxWidth");
+    gen.classNameSingleLine(GRID_TEMPLATE_COLUMNS, "grid-cols-");
+    gen.initVariable(GRID_TEMPLATE_COLUMNS, "gridTemplateColumns");
   }
 
   private static final Map<String, String> SCREENS = seqmap(
@@ -189,6 +190,23 @@ public class ObjectosCssPseudoGen {
       kv("bold", "700"),
       kv("extrabold", "800"),
       kv("black", "900")
+  );
+
+  static final Map<String, String> GRID_TEMPLATE_COLUMNS = seqmap(
+      kv("none", "none"),
+      kv("subgrid", "subgrid"),
+      kv("1", "repeat(1, minmax(0, 1fr))"),
+      kv("2", "repeat(2, minmax(0, 1fr))"),
+      kv("3", "repeat(3, minmax(0, 1fr))"),
+      kv("4", "repeat(4, minmax(0, 1fr))"),
+      kv("5", "repeat(5, minmax(0, 1fr))"),
+      kv("6", "repeat(6, minmax(0, 1fr))"),
+      kv("7", "repeat(7, minmax(0, 1fr))"),
+      kv("8", "repeat(8, minmax(0, 1fr))"),
+      kv("9", "repeat(9, minmax(0, 1fr))"),
+      kv("10", "repeat(10, minmax(0, 1fr))"),
+      kv("11", "repeat(11, minmax(0, 1fr))"),
+      kv("12", "repeat(12, minmax(0, 1fr))")
   );
 
   static final Map<String, String> HEIGHT = seqmap(

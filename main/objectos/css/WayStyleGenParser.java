@@ -29,6 +29,7 @@ import static objectos.css.Utility.FLEX_GROW;
 import static objectos.css.Utility.FONT_SIZE1;
 import static objectos.css.Utility.FONT_SIZE2;
 import static objectos.css.Utility.FONT_SIZEX;
+import static objectos.css.Utility.GRID_TEMPLATE_COLUMNS;
 import static objectos.css.Utility.HEIGHT;
 import static objectos.css.Utility.JUSTIFY_CONTENT;
 import static objectos.css.Utility.LEFT;
@@ -330,6 +331,7 @@ abstract class WayStyleGenParser extends WayStyleGenVariants {
 
       // G
       case "gap" -> xy(Utility.GAP, Utility.GAP_X, Utility.GAP_Y, config.gap(), suffix);
+      case "grid" -> grid(suffix);
       case "grow" -> config(FLEX_GROW, config.flexGrow(), suffix);
 
       // H
@@ -588,6 +590,26 @@ abstract class WayStyleGenParser extends WayStyleGenVariants {
     }
 
     return Rule.NOOP;
+  }
+
+  private Rule grid(String suffix) {
+    int dashIndex;
+    dashIndex = suffix.indexOf('-');
+    
+    if (dashIndex <= 0) {
+      return Rule.NOOP;
+    }
+    
+    String prefix;
+    prefix = suffix.substring(0, dashIndex);
+    
+    suffix = suffix.substring(dashIndex + 1);
+    
+    return switch(prefix) {
+      case "cols" -> config(GRID_TEMPLATE_COLUMNS, config.gridTemplateColumns(), suffix); 
+      
+      default -> Rule.NOOP;
+    };
   }
 
   private Rule outline(String suffix) {
