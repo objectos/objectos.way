@@ -54,6 +54,10 @@ public final class WayStyleGen extends WayStyleGenConfig implements StyleGen {
 
   private Map<String, String> gap;
   
+  private Map<String, String> gridColumn;
+  private Map<String, String> gridColumnEnd;
+  private Map<String, String> gridColumnStart;
+  
   private Map<String, String> gridTemplateColumns;
 
   private Map<String, String> height;
@@ -646,6 +650,78 @@ public final class WayStyleGen extends WayStyleGenConfig implements StyleGen {
     return gap;
   }
   
+  @Override
+  final Map<String, String> gridColumn() {
+    if (gridColumn == null) {
+      gridColumn = Map.ofEntries(
+          Map.entry("auto", "auto"),
+          Map.entry("span-1", "span 1 / span 1"),
+          Map.entry("span-2", "span 2 / span 2"),
+          Map.entry("span-3", "span 3 / span 3"),
+          Map.entry("span-4", "span 4 / span 4"),
+          Map.entry("span-5", "span 5 / span 5"),
+          Map.entry("span-6", "span 6 / span 6"),
+          Map.entry("span-7", "span 7 / span 7"),
+          Map.entry("span-8", "span 8 / span 8"),
+          Map.entry("span-9", "span 9 / span 9"),
+          Map.entry("span-10", "span 10 / span 10"),
+          Map.entry("span-11", "span 11 / span 11"),
+          Map.entry("span-12", "span 12 / span 12"),
+          Map.entry("span-full", "1 / -1")
+      );
+    }
+
+    return gridColumn;
+  }
+
+  @Override
+  final Map<String, String> gridColumnEnd() {
+    if (gridColumnEnd == null) {
+      gridColumnEnd = Map.ofEntries(
+          Map.entry("auto", "auto"),
+          Map.entry("1", "1"),
+          Map.entry("2", "2"),
+          Map.entry("3", "3"),
+          Map.entry("4", "4"),
+          Map.entry("5", "5"),
+          Map.entry("6", "6"),
+          Map.entry("7", "7"),
+          Map.entry("8", "8"),
+          Map.entry("9", "9"),
+          Map.entry("10", "10"),
+          Map.entry("11", "11"),
+          Map.entry("12", "12"),
+          Map.entry("13", "13")
+      );
+    }
+
+    return gridColumnEnd;
+  }
+
+  @Override
+  final Map<String, String> gridColumnStart() {
+    if (gridColumnStart == null) {
+      gridColumnStart = Map.ofEntries(
+          Map.entry("auto", "auto"),
+          Map.entry("1", "1"),
+          Map.entry("2", "2"),
+          Map.entry("3", "3"),
+          Map.entry("4", "4"),
+          Map.entry("5", "5"),
+          Map.entry("6", "6"),
+          Map.entry("7", "7"),
+          Map.entry("8", "8"),
+          Map.entry("9", "9"),
+          Map.entry("10", "10"),
+          Map.entry("11", "11"),
+          Map.entry("12", "12"),
+          Map.entry("13", "13")
+      );
+    }
+
+    return gridColumnStart;
+  }
+
   @Override
   final Map<String, String> gridTemplateColumns() {
     if (gridTemplateColumns == null) {

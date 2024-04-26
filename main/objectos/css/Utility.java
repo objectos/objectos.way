@@ -42,6 +42,10 @@ sealed abstract class Utility {
   static final Utility LEFT = new Single("left");
 
   static final Utility Z_INDEX = new Single("z-index");
+  
+  static final Utility GRID_COLUMN = new Single("grid-column");
+  static final Utility GRID_COLUMN_START = new Single("grid-column-start");
+  static final Utility GRID_COLUMN_END = new Single("grid-column-end");
 
   static final Utility MARGIN = new Single("margin");
   static final Utility MARGIN_X = new Axis("margin-left", "margin-right");

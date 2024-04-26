@@ -29,6 +29,9 @@ import static objectos.css.Utility.FLEX_GROW;
 import static objectos.css.Utility.FONT_SIZE1;
 import static objectos.css.Utility.FONT_SIZE2;
 import static objectos.css.Utility.FONT_SIZEX;
+import static objectos.css.Utility.GRID_COLUMN;
+import static objectos.css.Utility.GRID_COLUMN_END;
+import static objectos.css.Utility.GRID_COLUMN_START;
 import static objectos.css.Utility.GRID_TEMPLATE_COLUMNS;
 import static objectos.css.Utility.HEIGHT;
 import static objectos.css.Utility.JUSTIFY_CONTENT;
@@ -310,6 +313,7 @@ abstract class WayStyleGenParser extends WayStyleGenVariants {
       case "bottom" -> config(BOTTOM, config.inset(), suffix);
 
       // C
+      case "col" -> gridColumn(suffix);
       case "content" -> config(CONTENT, config.content(), suffix);
       case "cursor" -> config(CURSOR, config.cursor(), suffix);
 
@@ -607,6 +611,38 @@ abstract class WayStyleGenParser extends WayStyleGenVariants {
     
     return switch(prefix) {
       case "cols" -> config(GRID_TEMPLATE_COLUMNS, config.gridTemplateColumns(), suffix); 
+      
+      default -> Rule.NOOP;
+    };
+  }
+
+  private Rule gridColumn(String suffix) {
+    Map<String, String> gridColumn;
+    gridColumn = config.gridColumn();
+    
+    String col;
+    col = gridColumn.get(suffix);
+    
+    if (col != null) {
+      return nameValue(GRID_COLUMN, col);
+    }
+    
+    int dashIndex;
+    dashIndex = suffix.indexOf('-');
+    
+    if (dashIndex <= 0) {
+      return Rule.NOOP;
+    }
+
+    String prefix;
+    prefix = suffix.substring(0, dashIndex);
+    
+    suffix = suffix.substring(dashIndex + 1);
+    
+    return switch (prefix) {
+      case "end" -> config(GRID_COLUMN_END, config.gridColumnEnd(), suffix);
+      
+      case "start" -> config(GRID_COLUMN_START, config.gridColumnStart(), suffix);
       
       default -> Rule.NOOP;
     };

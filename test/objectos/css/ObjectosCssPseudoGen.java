@@ -28,8 +28,9 @@ public class ObjectosCssPseudoGen {
     ObjectosCssPseudoGen gen;
     gen = new ObjectosCssPseudoGen();
 
-    gen.classNameSingleLine(GRID_TEMPLATE_COLUMNS, "grid-cols-");
-    gen.initVariable(GRID_TEMPLATE_COLUMNS, "gridTemplateColumns");
+    gen.mapOf(GRID_COLUMN, "gridColumn");
+    gen.mapOf(GRID_COLUMN_END, "gridColumnEnd");
+    gen.mapOf(GRID_COLUMN_START, "gridColumnStart");
   }
 
   private static final Map<String, String> SCREENS = seqmap(
@@ -190,6 +191,57 @@ public class ObjectosCssPseudoGen {
       kv("bold", "700"),
       kv("extrabold", "800"),
       kv("black", "900")
+  );
+
+  static final Map<String, String> GRID_COLUMN = seqmap(
+      kv("auto", "auto"),
+      kv("span-1", "span 1 / span 1"),
+      kv("span-2", "span 2 / span 2"),
+      kv("span-3", "span 3 / span 3"),
+      kv("span-4", "span 4 / span 4"),
+      kv("span-5", "span 5 / span 5"),
+      kv("span-6", "span 6 / span 6"),
+      kv("span-7", "span 7 / span 7"),
+      kv("span-8", "span 8 / span 8"),
+      kv("span-9", "span 9 / span 9"),
+      kv("span-10", "span 10 / span 10"),
+      kv("span-11", "span 11 / span 11"),
+      kv("span-12", "span 12 / span 12"),
+      kv("span-full", "1 / -1")
+  );
+
+  static final Map<String, String> GRID_COLUMN_END = seqmap(
+      kv("auto", "auto"),
+      kv("1", "1"),
+      kv("2", "2"),
+      kv("3", "3"),
+      kv("4", "4"),
+      kv("5", "5"),
+      kv("6", "6"),
+      kv("7", "7"),
+      kv("8", "8"),
+      kv("9", "9"),
+      kv("10", "10"),
+      kv("11", "11"),
+      kv("12", "12"),
+      kv("13", "13")      
+  );
+
+  static final Map<String, String> GRID_COLUMN_START = seqmap(
+      kv("auto", "auto"),
+      kv("1", "1"),
+      kv("2", "2"),
+      kv("3", "3"),
+      kv("4", "4"),
+      kv("5", "5"),
+      kv("6", "6"),
+      kv("7", "7"),
+      kv("8", "8"),
+      kv("9", "9"),
+      kv("10", "10"),
+      kv("11", "11"),
+      kv("12", "12"),
+      kv("13", "13")      
   );
 
   static final Map<String, String> GRID_TEMPLATE_COLUMNS = seqmap(
