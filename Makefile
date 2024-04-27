@@ -21,11 +21,11 @@
 ## Coordinates
 GROUP_ID := br.com.objectos
 ARTIFACT_ID := objectos.way
-VERSION := 0.14-SNAPSHOT
+VERSION := 0.14
 MODULE := $(ARTIFACT_ID)
 
 ## Dependencies
-SELFGEN := br.com.objectos/objectos.selfgen/0.4-SNAPSHOT
+SELFGEN := br.com.objectos/objectos.selfgen/0.4
 NOTES := br.com.objectos/objectos.notes/0.1
 
 JACKSON_CORE := com.fasterxml.jackson.core/jackson-core/2.16.1
