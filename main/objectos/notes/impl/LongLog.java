@@ -13,8 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-/**
- * Provides a {@link objectos.notes.NoteSink} implementation that writes out
- * notes to a regular file.
- */
-package objectos.notes.file;
+package objectos.notes.impl;
+
+import java.time.Clock;
+import objectos.notes.LongNote;
+
+public final class LongLog extends Log {
+
+  final long value;
+
+  LongLog(Clock clock, LongNote note, long value) {
+    super(clock, note);
+
+    this.value = value;
+  }
+
+}

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.notes.console;
+package objectos.notes.impl;
 
 import static org.testng.Assert.assertEquals;
 
@@ -26,7 +26,6 @@ import objectos.notes.Level;
 import objectos.notes.Note1;
 import objectos.notes.Note2;
 import objectos.notes.Note3;
-import objectos.notes.NoteSink;
 import org.testng.annotations.Test;
 
 public class ConsoleNoteSinkTest {
@@ -53,15 +52,12 @@ public class ConsoleNoteSinkTest {
     ThisStream stream;
     stream = new ThisStream();
 
-    NoteSink noteSink = ConsoleNoteSink.of(
-        Level.TRACE,
+    ConsoleNoteSink noteSink;
+    noteSink = new ConsoleNoteSink(Level.TRACE);
 
-        ConsoleNoteSink.Option.clock(
-            new TestingClock(2023, 10, 31)
-        ),
+    noteSink.clock(new TestingClock(2023, 10, 31));
 
-        ConsoleNoteSink.Option.target(stream)
-    );
+    noteSink.target(stream);
 
     TestingNotes.sendAll0(noteSink);
 
@@ -72,12 +68,12 @@ public class ConsoleNoteSinkTest {
         string,
 
         """
-				2023-10-31 10:00:00.000 TRACE --- [main           ] objectos.notes.console.TestingNotes      : TRACE0
-				2023-10-31 10:01:00.000 DEBUG --- [main           ] objectos.notes.console.TestingNotes      : DEBUG0
-				2023-10-31 10:02:00.000 INFO  --- [main           ] objectos.notes.console.TestingNotes      : INFO0
-				2023-10-31 10:03:00.000 WARN  --- [main           ] objectos.notes.console.TestingNotes      : WARN0
-				2023-10-31 10:04:00.000 ERROR --- [main           ] objectos.notes.console.TestingNotes      : ERROR0
-				"""
+        2023-10-31 10:00:00.000 TRACE --- [main           ] objectos.notes.impl.TestingNotes         : TRACE0
+        2023-10-31 10:01:00.000 DEBUG --- [main           ] objectos.notes.impl.TestingNotes         : DEBUG0
+        2023-10-31 10:02:00.000 INFO  --- [main           ] objectos.notes.impl.TestingNotes         : INFO0
+        2023-10-31 10:03:00.000 WARN  --- [main           ] objectos.notes.impl.TestingNotes         : WARN0
+        2023-10-31 10:04:00.000 ERROR --- [main           ] objectos.notes.impl.TestingNotes         : ERROR0
+        """
     );
   }
 
@@ -86,17 +82,16 @@ public class ConsoleNoteSinkTest {
     ThisStream stream;
     stream = new ThisStream();
 
-    NoteSink noteSink = ConsoleNoteSink.of(
-        Level.TRACE,
+    ConsoleNoteSink noteSink;
+    noteSink = new ConsoleNoteSink(Level.TRACE);
 
-        ConsoleNoteSink.Option.clock(
-            new TestingClock(
-                LocalDateTime.of(2023, 10, 31, 11, 12, 13).atZone(ZoneId.systemDefault())
-            )
-        ),
-
-        ConsoleNoteSink.Option.target(stream)
+    noteSink.clock(
+        new TestingClock(
+            LocalDateTime.of(2023, 10, 31, 11, 12, 13).atZone(ZoneId.systemDefault())
+        )
     );
+
+    noteSink.target(stream);
 
     Throwable ignore = TestingStackTraces.ignore();
 
@@ -129,21 +124,21 @@ public class ConsoleNoteSinkTest {
         string,
 
         """
-				2023-10-31 11:12:13.000 ERROR --- [main           ] jectos.notes.console.ConsoleNoteSinkTest : THROW1
-				java.lang.Throwable
-					at objectos.way/objectos.notes.console.TestingStackTraces.throwable1(TestingStackTraces.java:27)
-					at objectos.way/objectos.notes.console.ConsoleNoteSinkTest.throwable(ConsoleNoteSinkTest.java:103)
-
-				2023-10-31 11:13:13.000 ERROR --- [main           ] jectos.notes.console.ConsoleNoteSinkTest : THROW2 java.lang.Throwable
-				java.lang.Throwable
-					at objectos.way/objectos.notes.console.TestingStackTraces.throwable2(TestingStackTraces.java:31)
-					at objectos.way/objectos.notes.console.ConsoleNoteSinkTest.throwable(ConsoleNoteSinkTest.java:104)
-
-				2023-10-31 11:14:13.000 ERROR --- [main           ] jectos.notes.console.ConsoleNoteSinkTest : THROW3 java.lang.Throwable java.lang.Throwable
-				java.lang.Throwable
-					at objectos.way/objectos.notes.console.TestingStackTraces.throwable3(TestingStackTraces.java:35)
-					at objectos.way/objectos.notes.console.ConsoleNoteSinkTest.throwable(ConsoleNoteSinkTest.java:105)
-				"""
+        2023-10-31 11:12:13.000 ERROR --- [main           ] objectos.notes.impl.ConsoleNoteSinkTest  : THROW1
+        java.lang.Throwable
+        \tat objectos.way/objectos.notes.impl.TestingStackTraces.throwable1(TestingStackTraces.java:27)
+        \tat objectos.way/objectos.notes.impl.ConsoleNoteSinkTest.throwable(ConsoleNoteSinkTest.java:98)
+        
+        2023-10-31 11:13:13.000 ERROR --- [main           ] objectos.notes.impl.ConsoleNoteSinkTest  : THROW2 java.lang.Throwable
+        java.lang.Throwable
+        \tat objectos.way/objectos.notes.impl.TestingStackTraces.throwable2(TestingStackTraces.java:31)
+        \tat objectos.way/objectos.notes.impl.ConsoleNoteSinkTest.throwable(ConsoleNoteSinkTest.java:99)
+        
+        2023-10-31 11:14:13.000 ERROR --- [main           ] objectos.notes.impl.ConsoleNoteSinkTest  : THROW3 java.lang.Throwable java.lang.Throwable
+        java.lang.Throwable
+        \tat objectos.way/objectos.notes.impl.TestingStackTraces.throwable3(TestingStackTraces.java:35)
+        \tat objectos.way/objectos.notes.impl.ConsoleNoteSinkTest.throwable(ConsoleNoteSinkTest.java:100)
+        """
     );
   }
 

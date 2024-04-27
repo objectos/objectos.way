@@ -13,23 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.notes.base;
+package objectos.notes.impl;
 
-import java.time.Clock;
-import objectos.notes.Note2;
+final class TestingStackTraces {
 
-public final class Log2 extends Log {
+	private TestingStackTraces() {}
 
-	final Object value1;
+	public static Throwable ignore() {
+		return new Throwable();
+	}
 
-	final Object value2;
+	public static Throwable throwable1() {
+		return new Throwable();
+	}
 
-	Log2(Clock clock, Note2<?, ?> note, Object value1, Object value2) {
-		super(clock, note);
+	public static Throwable throwable2() {
+		return new Throwable();
+	}
 
-		this.value1 = value1;
-
-		this.value2 = value2;
+	public static Throwable throwable3() {
+		return new Throwable();
 	}
 
 }

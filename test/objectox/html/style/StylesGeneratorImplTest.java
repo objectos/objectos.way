@@ -26,7 +26,7 @@ import objectos.html.style.Hover;
 import objectos.html.style.Large;
 import objectos.notes.Level;
 import objectos.notes.NoteSink;
-import objectos.notes.console.ConsoleNoteSink;
+import objectos.notes.impl.ConsoleNoteSink;
 import objectox.html.style.StylesGeneratorImpl.State;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -38,7 +38,7 @@ public class StylesGeneratorImplTest {
   @BeforeClass
   public void beforeClass() {
     NoteSink noteSink;
-    noteSink = ConsoleNoteSink.of(Level.TRACE);
+    noteSink = new ConsoleNoteSink(Level.TRACE);
 
     impl = new StylesGeneratorImpl(noteSink);
   }

@@ -13,18 +13,41 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.lang.classloader;
+package objectos.notes.impl;
 
+import java.time.Clock;
+import java.time.ZonedDateTime;
 import objectos.notes.Level;
-import objectos.notes.NoteSink;
-import objectos.notes.console.ConsoleNoteSink;
+import objectos.notes.Note;
 
-final class TestingNoteSink {
+public abstract class Log {
 
-	public static final NoteSink INSTANCE;
+  final ZonedDateTime timestamp;
 
-	static {
-		INSTANCE = ConsoleNoteSink.of(Level.TRACE);
-	}
+  final String thread;
+
+  final Level level;
+
+  final String source;
+
+  final String key;
+
+  Log(Clock clock, Note note) {
+    timestamp = ZonedDateTime.now(clock);
+
+    Thread currentThread;
+    currentThread = Thread.currentThread();
+
+    thread = currentThread.getName();
+
+    level = note.level();
+
+    source = note.source();
+
+    Object key;
+    key = note.key();
+
+    this.key = String.valueOf(key);
+  }
 
 }

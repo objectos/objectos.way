@@ -33,7 +33,7 @@ import objectos.http.WaySessionStore;
 import objectos.lang.WayShutdownHook;
 import objectos.notes.Level;
 import objectos.notes.NoteSink;
-import objectos.notes.console.ConsoleNoteSink;
+import objectos.notes.impl.ConsoleNoteSink;
 import objectos.testing.WayTestingServerExchange;
 import objectos.ui.WayUi;
 import objectos.web.Stage;
@@ -67,7 +67,7 @@ public final class TestingTestingSite {
     // NoteSink
 
     ConsoleNoteSink noteSink;
-    noteSink = ConsoleNoteSink.of(Level.TRACE);
+    noteSink = new ConsoleNoteSink(Level.TRACE);
 
     NOTE_SINK = noteSink;
 

@@ -13,10 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.notes.console;
+package objectos.notes.impl;
 
-non-sealed abstract class OptionValue implements ConsoleNoteSink.Option {
+import java.time.Clock;
+import objectos.notes.Note0;
 
-	public abstract void accept(StandardConsoleNoteSink builder);
+public final class Log0 extends Log {
+
+  Log0(Clock clock, Note0 note) {
+    super(clock, note);
+  }
 
 }

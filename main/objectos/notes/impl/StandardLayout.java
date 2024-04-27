@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.notes.base;
+package objectos.notes.impl;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -22,10 +22,9 @@ import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import objectos.notes.Level;
 
-public class StandardLayout implements Layout {
+final class StandardLayout implements Layout {
 
-  private final DateTimeFormatter dateFormat
-      = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS");
+  private final DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS");
 
   public StandardLayout() {}
 

@@ -13,8 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-/**
- * Provides a {@link objectos.notes.NoteSink} implementation that writes out
- * notes to the system console.
- */
-package objectos.notes.console;
+package objectos.notes.impl;
+
+interface Layout {
+
+  String formatLog0(Log0 log0);
+
+  String formatLog1(Log1 log);
+
+  String formatLog2(Log2 log);
+
+  String formatLog3(Log3 log);
+
+  String formatLongLog(LongLog log);
+
+}

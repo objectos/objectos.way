@@ -13,10 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.notes.file;
+package objectos.notes.impl;
 
-non-sealed abstract class OptionValue implements FileNoteSink.Option {
+import java.time.Clock;
+import objectos.notes.Note2;
 
-	public abstract void accept(StandardFileNoteSink builder);
+public final class Log2 extends Log {
+
+  final Object value1;
+
+  final Object value2;
+
+  Log2(Clock clock, Note2<?, ?> note, Object value1, Object value2) {
+    super(clock, note);
+
+    this.value1 = value1;
+
+    this.value2 = value2;
+  }
 
 }

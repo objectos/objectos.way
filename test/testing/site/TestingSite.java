@@ -38,7 +38,7 @@ import objectos.lang.classloader.ClassReloader;
 import objectos.notes.Level;
 import objectos.notes.Note2;
 import objectos.notes.NoteSink;
-import objectos.notes.console.ConsoleNoteSink;
+import objectos.notes.impl.ConsoleNoteSink;
 import objectos.ui.WayUi;
 import objectos.web.BootstrapException;
 import objectos.web.Stage;
@@ -115,7 +115,7 @@ public class TestingSite {
     NoteSink noteSink;
 
     switch (mode) {
-      case DEVELOPMENT, TESTING -> noteSink = ConsoleNoteSink.of(Level.TRACE);
+      case DEVELOPMENT, TESTING -> noteSink = new ConsoleNoteSink(Level.TRACE);
 
       default -> throw new UnsupportedOperationException("Implement me");
     }
@@ -263,7 +263,7 @@ public class TestingSite {
 
   private void fail(BootstrapException e) {
     NoteSink noteSink;
-    noteSink = ConsoleNoteSink.of(Level.ERROR);
+    noteSink = new ConsoleNoteSink(Level.ERROR);
 
     Note2<String, Throwable> note;
     note = Note2.error(TestingSite.class, "Bootstrap failed [service]");

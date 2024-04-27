@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.notes.base;
+package objectos.notes.impl;
 
 import java.time.LocalDate;
 import objectos.notes.Note0;
@@ -96,16 +96,16 @@ final class TestingNotes {
 
 	private TestingNotes() {}
 
-	public static void sendAll0(NoteSink noteSink) {
-		noteSink.send(TRACE0);
+    public static void sendAll0(NoteSink noteSink) {
+      noteSink.send(TRACE0);
 
-		noteSink.send(DEBUG0);
+      noteSink.send(DEBUG0);
 
-		noteSink.send(INFO0);
+      noteSink.send(INFO0);
 
-		noteSink.send(WARN0);
+      noteSink.send(WARN0);
 
-		noteSink.send(ERROR0);
-	}
+      noteSink.send(ERROR0);
+    }
 
 }

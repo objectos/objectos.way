@@ -25,21 +25,22 @@ import java.nio.file.Path;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
 import objectos.lang.classloader.ClassReloader.Builder;
+import objectos.way.TestingNoteSink;
 import org.testng.annotations.Test;
 
 public class ClassReloaderTest {
 
-	@Test
-	public void test() throws Exception {
-		try (ClassReloaderHelper helper = ClassReloaderHelper.of()) {
-			// first subject version
-			Path subjectSrc;
-			subjectSrc = Path.of("test", "Subject.java");
+  @Test
+  public void test() throws Exception {
+    try (ClassReloaderHelper helper = ClassReloaderHelper.of()) {
+      // first subject version
+      Path subjectSrc;
+      subjectSrc = Path.of("test", "Subject.java");
 
-			helper.writeJavaFile(
-					subjectSrc,
+      helper.writeJavaFile(
+          subjectSrc,
 
-					"""
+          """
         package test;
 
         public class Subject implements java.util.function.Supplier<String> {
@@ -48,28 +49,28 @@ public class ClassReloaderTest {
           }
         }
         """
-			);
+      );
 
-			assertTrue(helper.compile());
+      assertTrue(helper.compile());
 
-			Builder builder;
-			builder = ClassReloader.builder();
+      Builder builder;
+      builder = ClassReloader.builder();
 
-			builder.noteSink(TestingNoteSink.INSTANCE);
+      builder.noteSink(TestingNoteSink.INSTANCE);
 
-			builder.watch(helper.classOutput(), "test");
+      builder.watch(helper.classOutput(), "test");
 
-			try (ClassReloader reloader = builder.of("test.Subject")) {
-				String firstGet;
-				firstGet = newInstanceAndGet(reloader);
+      try (ClassReloader reloader = builder.of("test.Subject")) {
+        String firstGet;
+        firstGet = newInstanceAndGet(reloader);
 
-				assertEquals(firstGet, "A");
+        assertEquals(firstGet, "A");
 
-				// second subject version
-				helper.writeJavaFile(
-						subjectSrc,
+        // second subject version
+        helper.writeJavaFile(
+            subjectSrc,
 
-						"""
+            """
           package test;
 
           public class Subject implements java.util.function.Supplier<String> {
@@ -78,19 +79,19 @@ public class ClassReloaderTest {
             }
           }
           """
-				);
+        );
 
-				assertTrue(helper.compile());
+        assertTrue(helper.compile());
 
-				TimeUnit.MILLISECONDS.sleep(5);
+        TimeUnit.MILLISECONDS.sleep(5);
 
-				String secondGet;
-				secondGet = newInstanceAndGet(reloader);
+        String secondGet;
+        secondGet = newInstanceAndGet(reloader);
 
-				assertEquals(secondGet, "B");
-			}
-		}
-	}
+        assertEquals(secondGet, "B");
+      }
+    }
+  }
 
 	@Test
 	public void watchService() throws Exception {

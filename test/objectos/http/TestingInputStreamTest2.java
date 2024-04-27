@@ -30,7 +30,7 @@ import objectos.notes.Level;
 import objectos.notes.Note1;
 import objectos.notes.Note2;
 import objectos.notes.NoteSink;
-import objectos.notes.console.ConsoleNoteSink;
+import objectos.notes.impl.ConsoleNoteSink;
 
 public class TestingInputStreamTest2 {
   private static final Note1<String> MSG = Note1.info(TestingInputStreamTest2.class, "Message");
@@ -38,7 +38,7 @@ public class TestingInputStreamTest2 {
   private static final Note2<String, IOException> IO_ERROR = Note2.error(TestingInputStreamTest2.class, "I/O error");
 
   public static void main(String[] args) {
-    ConsoleNoteSink noteSink = ConsoleNoteSink.of(Level.TRACE);
+    ConsoleNoteSink noteSink = new ConsoleNoteSink(Level.TRACE);
 
     WayShutdownHook shutdownHook;
     shutdownHook = new WayShutdownHook();

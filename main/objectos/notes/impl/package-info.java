@@ -13,19 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.notes.base;
-
-import java.time.Clock;
-import objectos.notes.LongNote;
-
-public final class LongLog extends Log {
-
-	final long value;
-
-	LongLog(Clock clock, LongNote note, long value) {
-		super(clock, note);
-
-		this.value = value;
-	}
-
-}
+/**
+ * Base classes for writing {@link objectos.notes.NoteSink} implementations.
+ */
+package objectos.notes.impl;

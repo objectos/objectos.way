@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.notes.base;
+package objectos.notes.impl;
 
 import java.time.Clock;
 import java.time.Instant;
@@ -23,37 +23,37 @@ import java.time.ZonedDateTime;
 
 final class TestingClock extends Clock {
 
-	private final ZonedDateTime startTime;
+  private final ZonedDateTime startTime;
 
-	private int minutes;
+  private int minutes;
 
-	public TestingClock(int year, int month, int day) {
-		LocalDateTime dateTime;
-		dateTime = LocalDateTime.of(year, month, day, 10, 0);
+  public TestingClock(int year, int month, int day) {
+    LocalDateTime dateTime;
+    dateTime = LocalDateTime.of(year, month, day, 10, 0);
 
-		this.startTime = dateTime.atZone(ZoneId.systemDefault());
-	}
+    this.startTime = dateTime.atZone(ZoneId.systemDefault());
+  }
 
-	public TestingClock(ZonedDateTime startTime) {
-		this.startTime = startTime;
-	}
+  public TestingClock(ZonedDateTime startTime) {
+    this.startTime = startTime;
+  }
 
-	@Override
-	public final Instant instant() {
-		ZonedDateTime instant;
-		instant = startTime.plusMinutes(minutes++);
+  @Override
+  public final Instant instant() {
+    ZonedDateTime instant;
+    instant = startTime.plusMinutes(minutes++);
 
-		return Instant.from(instant);
-	}
+    return Instant.from(instant);
+  }
 
-	@Override
-	public final ZoneId getZone() {
-		return startTime.getZone();
-	}
+  @Override
+  public final ZoneId getZone() {
+    return startTime.getZone();
+  }
 
-	@Override
-	public Clock withZone(ZoneId zone) {
-		throw new UnsupportedOperationException();
-	}
+  @Override
+  public Clock withZone(ZoneId zone) {
+    throw new UnsupportedOperationException();
+  }
 
 }

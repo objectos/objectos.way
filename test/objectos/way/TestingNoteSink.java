@@ -23,14 +23,14 @@ import objectos.notes.Note1;
 import objectos.notes.Note2;
 import objectos.notes.Note3;
 import objectos.notes.NoteSink;
-import objectos.notes.console.ConsoleNoteSink;
+import objectos.notes.impl.ConsoleNoteSink;
 
 public class TestingNoteSink implements NoteSink {
 
   public static final NoteSink INSTANCE;
 
   static {
-    INSTANCE = ConsoleNoteSink.of(Level.TRACE);
+    INSTANCE = new ConsoleNoteSink(Level.TRACE);
   }
 
   @Override

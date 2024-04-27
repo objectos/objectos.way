@@ -13,31 +13,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.notes.base;
+package objectos.notes.impl;
 
-import java.time.Clock;
-import objectos.notes.Note3;
+import static org.testng.Assert.assertEquals;
 
-public final class Log3 extends Log {
+import org.testng.annotations.Test;
 
-	final Object value1;
+public class StandardLayoutTest {
 
-	final Object value2;
+	private final Layout layout = new StandardLayout();
 
-	final Object value3;
+    @Test
+    public void test() {
+      TestingClock clock;
+      clock = new TestingClock(2023, 10, 31);
 
-	Log3(	Clock clock,
-				Note3<?, ?, ?> note,
-				Object value1,
-				Object value2,
-				Object value3) {
-		super(clock, note);
+      Log0 log0;
+      log0 = new Log0(clock, TestingNotes.TRACE0);
 
-		this.value1 = value1;
-
-		this.value2 = value2;
-
-		this.value3 = value3;
-	}
+      assertEquals(
+          layout.formatLog0(log0),
+          "2023-10-31 10:00:00.000 TRACE --- [main           ] objectos.notes.impl.TestingNotes         : TRACE0\n"
+      );
+    }
 
 }
