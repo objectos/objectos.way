@@ -36,9 +36,17 @@ public abstract class AbstractNoteSink implements NoteSink {
   public AbstractNoteSink(Level level) {
     this.level = level;
   }
+  
+  public final Level level() {
+    return level;
+  }
 
   public final void clock(Clock clock) {
     this.clock = clock;
+  }
+
+  public final boolean isEnabled(Level level) {
+    return this.level.compareTo(level) <= 0;
   }
 
   @Override
@@ -131,6 +139,21 @@ public abstract class AbstractNoteSink implements NoteSink {
 
     Log3 log;
     log = new Log3(clock, note, v1, v2, v3);
+
+    addLog(log);
+  }
+
+
+  public final void slf4j(String name, Level level, String message) {
+    Log0 log;
+    log = new Log0(clock, name, level, message);
+    
+    addLog(log);
+  }
+
+  public final void slf4j(String name, Level level, String message, Throwable t) {
+    Log1 log;
+    log = new Log1(clock, name, level, message, t);
 
     addLog(log);
   }

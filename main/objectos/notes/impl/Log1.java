@@ -16,6 +16,7 @@
 package objectos.notes.impl;
 
 import java.time.Clock;
+import objectos.notes.Level;
 import objectos.notes.Note1;
 
 public final class Log1 extends Log {
@@ -26,6 +27,12 @@ public final class Log1 extends Log {
     super(clock, note);
 
     this.value = value;
+  }
+
+  Log1(Clock clock, String name, Level level, String message, Throwable t) {
+    super(clock, level, name, message);
+
+    value = t;
   }
 
 }

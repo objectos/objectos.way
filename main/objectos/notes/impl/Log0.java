@@ -16,12 +16,17 @@
 package objectos.notes.impl;
 
 import java.time.Clock;
+import objectos.notes.Level;
 import objectos.notes.Note0;
 
 public final class Log0 extends Log {
 
   Log0(Clock clock, Note0 note) {
     super(clock, note);
+  }
+
+  Log0(Clock clock, String name, Level level, String message) {
+    super(clock, level, name, message);
   }
 
 }

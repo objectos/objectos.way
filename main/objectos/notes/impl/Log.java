@@ -50,4 +50,21 @@ public abstract class Log {
     this.key = String.valueOf(key);
   }
 
+  /**
+   * Slf4j bridge
+   */
+  Log(Clock clock, Level level, String source, String key) {
+    timestamp = ZonedDateTime.now(clock);
+    Thread currentThread;
+    currentThread = Thread.currentThread();
+
+    thread = currentThread.getName();
+
+    this.level = level;
+
+    this.source = source;
+
+    this.key = key;
+  }
+
 }
