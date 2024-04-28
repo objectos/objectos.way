@@ -31,6 +31,7 @@ import java.util.Map;
 import objectos.http.HeaderName;
 import objectos.http.Method;
 import objectos.http.ServerExchange;
+import objectos.http.ServerRequestHeaders;
 import objectos.http.Status;
 import objectos.http.UriPath;
 import objectos.io.FileVisitors;
@@ -219,6 +220,27 @@ public final class WayWebResources implements AutoCloseable, WebResources {
       return;
     }
 
+    String etag;
+    etag = etag(attributes);
+
+    ServerRequestHeaders headers;
+    headers = http.headers();
+
+    String ifNoneMatch;
+    ifNoneMatch = headers.first(HeaderName.IF_NONE_MATCH);
+
+    if (etag.equals(ifNoneMatch)) {
+      http.status(Status.NOT_MODIFIED);
+
+      http.dateNow();
+
+      http.header(HeaderName.ETAG, etag);
+
+      http.send();
+
+      return;
+    }
+
     http.status(Status.OK);
 
     String contentType;
@@ -242,9 +264,6 @@ public final class WayWebResources implements AutoCloseable, WebResources {
     http.header(HeaderName.CONTENT_LENGTH, attributes.size());
 
     http.dateNow();
-
-    String etag;
-    etag = etag(attributes);
 
     http.header(HeaderName.ETAG, etag);
 

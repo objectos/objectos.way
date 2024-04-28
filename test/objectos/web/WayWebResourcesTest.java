@@ -208,6 +208,48 @@ public class WayWebResourcesTest {
       );
     }
   }
+  
+  @Test(description = """
+  It should return 304 when if-none-match
+  """)
+  public void testCase05() throws IOException {
+    Path root;
+    root = TestingDir.next();
+
+    try (WayWebResources resources = new WayWebResources(root)) {
+      resources.contentType(".txt", "text/plain; charset=utf-8");
+      resources.noteSink(TestingNoteSink.INSTANCE);
+
+      Path src;
+      src = TestingDir.next();
+
+      Path a;
+      a = Path.of("a.txt");
+
+      write(src, a, "AAAA\n");
+
+      resources.copyDirectory(src);
+
+      test(
+          resources,
+
+          """
+          GET /a.txt HTTP/1.1\r
+          Host: www.example.com\r
+          If-None-Match: 18901e7e8f8-5\r
+          Connection: close\r
+          \r
+          """,
+
+          """
+          HTTP/1.1 304 NOT MODIFIED\r
+          Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+          ETag: 18901e7e8f8-5\r
+          \r
+          """
+      );
+    }
+  }
 
   private void test(WayWebResources resources, String request, String response) {
     TestableSocket socket;
