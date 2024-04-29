@@ -15,13 +15,16 @@
  */
 package objectos.http;
 
+import static org.testng.Assert.assertNotEquals;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertNull;
 import static org.testng.Assert.assertSame;
 
+import java.time.Instant;
+import objectos.way.IncrementingClock;
 import org.testng.annotations.Test;
 
-public class SessionStoreTest {
+public class WaySessionStoreTest {
 
   @Test(description = """
   Create a new session and confirm it can be found in the store
@@ -91,6 +94,37 @@ public class SessionStoreTest {
     session.invalidate();
 
     assertNull(store.get(id));
+  }
+  
+  @Test(description = """
+  It should update last access time on each get
+  """)
+  public void testCase04() {
+    IncrementingClock clock;
+    clock = new IncrementingClock(2024, 4, 29);
+
+    WaySessionStore store;
+    store = new WaySessionStore(clock);
+    
+    String id;
+    id = "foo";
+
+    WaySession session;
+    session = new WaySession(id);
+
+    Instant start;
+    start = clock.instant();
+
+    session.accessTime = start;
+
+    store.add(session);
+    
+    Session res;
+    res = store.get(id);
+    
+    assertSame(res, session);
+    
+    assertNotEquals(session.accessTime, start);
   }
 
 }

@@ -17,6 +17,7 @@ package objectos.notes.impl;
 
 import static org.testng.Assert.assertEquals;
 
+import objectos.way.IncrementingClock;
 import org.testng.annotations.Test;
 
 public class StandardLayoutTest {
@@ -25,8 +26,8 @@ public class StandardLayoutTest {
 
     @Test
     public void test() {
-      TestingClock clock;
-      clock = new TestingClock(2023, 10, 31);
+      IncrementingClock clock;
+      clock = new IncrementingClock(2023, 10, 31);
 
       Log0 log0;
       log0 = new Log0(clock, TestingNotes.TRACE0);

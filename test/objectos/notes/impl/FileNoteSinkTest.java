@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import objectos.notes.Level;
+import objectos.way.IncrementingClock;
 import objectos.way.Rmdir;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -43,7 +44,7 @@ public class FileNoteSinkTest {
     FileNoteSink noteSink;
     noteSink = new FileNoteSink(file, Level.TRACE);
 
-    noteSink.clock(new TestingClock(2023, 11, 1));
+    noteSink.clock(new IncrementingClock(2023, 11, 1));
     
     noteSink.start();
 

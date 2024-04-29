@@ -25,6 +25,7 @@ import java.net.InetAddress;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
 import objectos.notes.Note;
+import objectos.way.TestingClock;
 import objectos.way.TestingNoteSink;
 import objectos.way.TestingShutdownHook;
 

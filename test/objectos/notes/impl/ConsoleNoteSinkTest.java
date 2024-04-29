@@ -26,6 +26,7 @@ import objectos.notes.Level;
 import objectos.notes.Note1;
 import objectos.notes.Note2;
 import objectos.notes.Note3;
+import objectos.way.IncrementingClock;
 import org.testng.annotations.Test;
 
 public class ConsoleNoteSinkTest {
@@ -55,7 +56,7 @@ public class ConsoleNoteSinkTest {
     ConsoleNoteSink noteSink;
     noteSink = new ConsoleNoteSink(Level.TRACE);
 
-    noteSink.clock(new TestingClock(2023, 10, 31));
+    noteSink.clock(new IncrementingClock(2023, 10, 31));
 
     noteSink.target(stream);
 
@@ -86,7 +87,7 @@ public class ConsoleNoteSinkTest {
     noteSink = new ConsoleNoteSink(Level.TRACE);
 
     noteSink.clock(
-        new TestingClock(
+        new IncrementingClock(
             LocalDateTime.of(2023, 10, 31, 11, 12, 13).atZone(ZoneId.systemDefault())
         )
     );
@@ -127,17 +128,17 @@ public class ConsoleNoteSinkTest {
         2023-10-31 11:12:13.000 ERROR --- [main           ] objectos.notes.impl.ConsoleNoteSinkTest  : THROW1
         java.lang.Throwable
         \tat objectos.way/objectos.notes.impl.TestingStackTraces.throwable1(TestingStackTraces.java:27)
-        \tat objectos.way/objectos.notes.impl.ConsoleNoteSinkTest.throwable(ConsoleNoteSinkTest.java:98)
+        \tat objectos.way/objectos.notes.impl.ConsoleNoteSinkTest.throwable(ConsoleNoteSinkTest.java:99)
         
         2023-10-31 11:13:13.000 ERROR --- [main           ] objectos.notes.impl.ConsoleNoteSinkTest  : THROW2 java.lang.Throwable
         java.lang.Throwable
         \tat objectos.way/objectos.notes.impl.TestingStackTraces.throwable2(TestingStackTraces.java:31)
-        \tat objectos.way/objectos.notes.impl.ConsoleNoteSinkTest.throwable(ConsoleNoteSinkTest.java:99)
+        \tat objectos.way/objectos.notes.impl.ConsoleNoteSinkTest.throwable(ConsoleNoteSinkTest.java:100)
         
         2023-10-31 11:14:13.000 ERROR --- [main           ] objectos.notes.impl.ConsoleNoteSinkTest  : THROW3 java.lang.Throwable java.lang.Throwable
         java.lang.Throwable
         \tat objectos.way/objectos.notes.impl.TestingStackTraces.throwable3(TestingStackTraces.java:35)
-        \tat objectos.way/objectos.notes.impl.ConsoleNoteSinkTest.throwable(ConsoleNoteSinkTest.java:100)
+        \tat objectos.way/objectos.notes.impl.ConsoleNoteSinkTest.throwable(ConsoleNoteSinkTest.java:101)
         """
     );
   }

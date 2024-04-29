@@ -15,8 +15,11 @@
  */
 package objectos.http;
 
+import java.time.Clock;
+import java.time.Instant;
 import java.util.HashMap;
 import java.util.Map;
+import objectos.lang.object.Check;
 
 public final class WaySession implements Session {
 
@@ -24,10 +27,12 @@ public final class WaySession implements Session {
 
   private final Map<String, Object> values = new HashMap<>();
 
+  volatile Instant accessTime;
+  
   volatile boolean valid = true;
 
   public WaySession(String id) {
-    this.id = id;
+    this.id = Check.notNull(id, "id == null");
   }
 
   @Override
@@ -84,6 +89,10 @@ public final class WaySession implements Session {
   @Override
   public final void invalidate() {
     valid = false;
+  }
+
+  final void touch(Clock clock) {
+    accessTime = Instant.now(clock);
   }
 
 }

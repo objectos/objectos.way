@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.notes.impl;
+package objectos.way;
 
 import java.time.Clock;
 import java.time.Instant;
@@ -21,39 +21,26 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 
-final class TestingClock extends Clock {
+public final class TestingClock {
 
-  private final ZonedDateTime startTime;
+  public static final Clock FIXED;
 
-  private int minutes;
-
-  public TestingClock(int year, int month, int day) {
+  static {
     LocalDateTime dateTime;
-    dateTime = LocalDateTime.of(year, month, day, 10, 0);
+    dateTime = LocalDateTime.of(2023, 6, 28, 12, 8, 43);
 
-    this.startTime = dateTime.atZone(ZoneId.systemDefault());
+    ZoneId zone;
+    zone = ZoneId.of("GMT");
+
+    ZonedDateTime zoned;
+    zoned = dateTime.atZone(zone);
+
+    Instant fixedInstant;
+    fixedInstant = zoned.toInstant();
+
+    FIXED = Clock.fixed(fixedInstant, zone);
   }
 
-  public TestingClock(ZonedDateTime startTime) {
-    this.startTime = startTime;
-  }
-
-  @Override
-  public final Instant instant() {
-    ZonedDateTime instant;
-    instant = startTime.plusMinutes(minutes++);
-
-    return Instant.from(instant);
-  }
-
-  @Override
-  public final ZoneId getZone() {
-    return startTime.getZone();
-  }
-
-  @Override
-  public Clock withZone(ZoneId zone) {
-    throw new UnsupportedOperationException();
-  }
+  private TestingClock() {}
 
 }

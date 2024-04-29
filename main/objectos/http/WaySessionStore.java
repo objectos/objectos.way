@@ -16,6 +16,7 @@
 package objectos.http;
 
 import java.security.SecureRandom;
+import java.time.Clock;
 import java.time.Duration;
 import java.util.HexFormat;
 import java.util.Objects;
@@ -31,6 +32,8 @@ public final class WaySessionStore implements SessionStore {
 
   private static final int ID_LENGTH_IN_BYTES = 16;
 
+  private final Clock clock;
+
   private Duration cookieMaxAge;
 
   private String cookieName = "OBJECTOSWAY";
@@ -40,13 +43,20 @@ public final class WaySessionStore implements SessionStore {
   private final HexFormat hexFormat = HexFormat.of();
 
   private Random random = new SecureRandom();
-
+  
   private final ConcurrentMap<String, WaySession> sessions = new ConcurrentHashMap<>();
 
   /**
    * Sole constructor.
    */
-  public WaySessionStore() {}
+  public WaySessionStore() {
+    this(Clock.systemDefaultZone());
+  }
+
+  // @VisibleForTesting
+  WaySessionStore(Clock clock) {
+    this.clock = clock;
+  }
 
   /**
    * Use the specified {@code name} when setting the client session cookie.
@@ -163,9 +173,15 @@ public final class WaySessionStore implements SessionStore {
     WaySession session;
     session = sessions.get(id);
 
-    if (session != null && !session.valid) {
-      session = null;
+    if (session == null) {
+      return null;
     }
+
+    if (!session.valid) {
+      return null;
+    }
+
+    session.touch(clock);
 
     return session;
   }
