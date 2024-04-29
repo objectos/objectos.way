@@ -18,6 +18,8 @@ package objectos.http;
 import java.security.SecureRandom;
 import java.time.Clock;
 import java.time.Duration;
+import java.time.Instant;
+import java.util.Collection;
 import java.util.HexFormat;
 import java.util.Objects;
 import java.util.Random;
@@ -40,10 +42,12 @@ public final class WaySessionStore implements SessionStore {
 
   private String cookiePath = "/";
 
+  private Duration emptyMaxAge = Duration.ofMinutes(5);
+
   private final HexFormat hexFormat = HexFormat.of();
 
   private Random random = new SecureRandom();
-  
+
   private final ConcurrentMap<String, WaySession> sessions = new ConcurrentHashMap<>();
 
   /**
@@ -99,6 +103,27 @@ public final class WaySessionStore implements SessionStore {
   }
 
   /**
+   * Discards empty sessions, during a {@link #cleanUp()} operation, whose last
+   * access time is greater than the specified duration.
+   * 
+   * @param duration
+   *        the duration value
+   */
+  public final void emptyMaxAge(Duration duration) {
+    Objects.requireNonNull(duration, "duration == null");
+
+    if (duration.isZero()) {
+      throw new IllegalArgumentException("emptyMaxAge must not be zero");
+    }
+
+    if (duration.isNegative()) {
+      throw new IllegalArgumentException("emptyMaxAge must not be negative");
+    }
+    
+    emptyMaxAge = duration;
+  }
+
+  /**
    * Use the specified {@link Random} instance for generating session IDs.
    *
    * @param random
@@ -127,6 +152,23 @@ public final class WaySessionStore implements SessionStore {
     sessions.put(id, session);
 
     return this;
+  }
+
+  public final void cleanUp() {
+    Instant now;
+    now = Instant.now(clock);
+
+    Instant min;
+    min = now.minus(emptyMaxAge);
+
+    Collection<WaySession> values;
+    values = sessions.values();
+
+    for (WaySession session : values) {
+      if (session.shouldCleanUp(min)) {
+        sessions.remove(session.id());
+      }
+    }
   }
 
   final void clear() {

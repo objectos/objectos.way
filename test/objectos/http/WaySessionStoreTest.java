@@ -15,13 +15,16 @@
  */
 package objectos.http;
 
-import static org.testng.Assert.assertNotEquals;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertNull;
 import static org.testng.Assert.assertSame;
+import static org.testng.Assert.assertTrue;
 
+import java.time.Clock;
+import java.time.Duration;
 import java.time.Instant;
 import objectos.way.IncrementingClock;
+import objectos.way.TestingClock;
 import org.testng.annotations.Test;
 
 public class WaySessionStoreTest {
@@ -124,7 +127,73 @@ public class WaySessionStoreTest {
     
     assertSame(res, session);
     
-    assertNotEquals(session.accessTime, start);
+    assertTrue(session.accessTime.isAfter(start));
+  }
+  
+  @Test(description = """
+  It should remove all invalid sessions
+  """)
+  public void testCase05() {
+    IncrementingClock clock;
+    clock = new IncrementingClock(2024, 4, 29);
+
+    WaySessionStore store;
+    store = new WaySessionStore(clock);
+
+    WaySession a = new WaySession("a");
+    WaySession b = new WaySession("b");
+    WaySession c = new WaySession("c");
+
+    store.add(a);
+    store.add(b);
+    store.add(c);
+
+    assertSame(store.get("a"), a);
+    assertSame(store.get("b"), b);
+    assertSame(store.get("c"), c);
+
+    b.invalidate();
+
+    store.cleanUp();
+
+    assertSame(store.get("a"), a);
+    assertNull(store.get("b"));
+    assertSame(store.get("c"), c);
+  }
+
+  @Test(description = """
+  It should remove all empty sessions older than max age
+  """)
+  public void testCase06() {
+    Clock clock;
+    clock = TestingClock.FIXED;
+
+    WaySessionStore store;
+    store = new WaySessionStore(clock);
+
+    store.emptyMaxAge(Duration.ofMinutes(1));
+
+    WaySession a = new WaySession("a");
+    WaySession b = new WaySession("b");
+    WaySession c = new WaySession("c");
+
+    store.add(a);
+    store.add(b);
+    store.add(c);
+
+    assertSame(store.get("a"), a);
+    assertSame(store.get("b"), b);
+    assertSame(store.get("c"), c);
+
+    a.accessTime = clock.instant().minusSeconds(59);
+    b.accessTime = clock.instant().minusSeconds(60);
+    c.accessTime = clock.instant().minusSeconds(61);
+
+    store.cleanUp();
+
+    assertSame(store.get("a"), a);
+    assertSame(store.get("b"), b);
+    assertNull(store.get("c"));
   }
 
 }

@@ -95,4 +95,20 @@ public final class WaySession implements Session {
     accessTime = Instant.now(clock);
   }
 
+  final boolean shouldCleanUp(Instant min) {
+    if (!valid) {
+      return true;
+    }
+    
+    if (!values.isEmpty()) {
+      return false;
+    }
+    
+    if (accessTime == null) {
+      return false;
+    }
+    
+    return accessTime.isBefore(min);
+  }
+
 }
