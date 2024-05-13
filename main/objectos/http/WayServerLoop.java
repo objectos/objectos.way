@@ -30,7 +30,6 @@ import java.time.ZonedDateTime;
 import java.util.Arrays;
 import objectos.lang.CharWritable;
 import objectos.lang.object.Check;
-import objectos.notes.NoOpNoteSink;
 import objectos.notes.NoteSink;
 
 public final class WayServerLoop extends WayServerRequestBody implements ServerLoop {
@@ -99,9 +98,6 @@ public final class WayServerLoop extends WayServerRequestBody implements ServerL
 
   private Clock clock;
 
-  @SuppressWarnings("unused")
-  private NoteSink noteSink = NoOpNoteSink.of();
-
   private Object responseBody;
 
   private Session session;
@@ -136,7 +132,7 @@ public final class WayServerLoop extends WayServerRequestBody implements ServerL
   public final void noteSink(NoteSink noteSink) {
     checkConfig();
 
-    this.noteSink = Check.notNull(noteSink, "noteSink == null");
+    super.noteSink(noteSink);
   }
 
   /**

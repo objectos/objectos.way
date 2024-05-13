@@ -23,12 +23,25 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
+import java.util.HexFormat;
 import objectos.http.WayServerLoop.ParseStatus;
 import objectos.lang.object.Check;
+import objectos.notes.NoOpNoteSink;
+import objectos.notes.Note2;
+import objectos.notes.NoteSink;
 
 class SocketInput {
 
   private static final int HARD_MAX_BUFFER_SIZE = 1 << 14;
+  
+  static final Note2<String,String> HEXDUMP;
+  
+  static {
+    Class<?> s;
+    s = SocketInput.class;
+
+    HEXDUMP = Note2.error(s, "Hexdump");
+  }
 
   byte[] buffer;
 
@@ -42,7 +55,9 @@ class SocketInput {
   int lineLimit;
 
   int maxBufferSize = 4096;
-  
+
+  NoteSink noteSink = NoOpNoteSink.of();
+
   ParseStatus parseStatus;
 
   public SocketInput() {
@@ -75,6 +90,23 @@ class SocketInput {
     bufferLimit = powerOfTwo(initial);
 
     this.maxBufferSize = powerOfTwo(max);
+  }
+  
+  public void noteSink(NoteSink noteSink) {
+    this.noteSink = Check.notNull(noteSink, "noteSink == null");
+  }
+  
+  final void hexDump() {
+    HexFormat format;
+    format = HexFormat.of();
+
+    String bufferDump;
+    bufferDump = format.formatHex(buffer, 0, bufferLimit);
+
+    String args;
+    args = "bufferIndex=" + bufferIndex + ";lineLimit=" + lineLimit;
+
+    noteSink.send(HEXDUMP, bufferDump, args);
   }
 
   final void initSocketInput(InputStream inputStream) {

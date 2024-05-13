@@ -22,6 +22,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import objectos.http.WayServerLoop.ParseStatus;
+import objectos.way.TestingNoteSink;
 import org.testng.annotations.Test;
 
 public class SocketInputTest {
@@ -194,6 +195,23 @@ public class SocketInputTest {
     String res = sb.toString();
 
     assertEquals(res, "GET /abcdefghijklmnopqrstuvwxyz HTTP/1.1\r");
+  }
+  
+  @Test(description = "It should be possible to serialize contents for debugging purposes")
+  public void hexDump() throws IOException {
+    SocketInput input;
+    input = regularInput("""
+    GET / HTTP/1.1\r
+    Host: www.example.com\r
+    Connection: close\r
+    \r
+    """);
+    
+    input.noteSink(TestingNoteSink.INSTANCE);
+
+    input.parseLine();
+
+    input.hexDump();
   }
 
   @Test

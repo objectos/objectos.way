@@ -314,6 +314,8 @@ class WayServerRequestHeaders extends WayRequestLine implements ServerRequestHea
 
     if (startIndex > endIndex) {
       // value has negative length... is it possible?
+      hexDump();
+      
       throw new UnsupportedOperationException("Implement me");
     }
 
