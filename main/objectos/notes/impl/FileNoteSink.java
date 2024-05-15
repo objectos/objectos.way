@@ -56,9 +56,16 @@ public final class FileNoteSink extends AbstractNoteSink implements Closeable {
     this.file = Check.notNull(file, "file == null");
   }
 
-  public final void start() throws IOException {
+  public final FileNoteSink start() throws IOException {
     lock.lock();
     try {
+      Path parent;
+      parent = file.getParent();
+
+      if (!Files.exists(parent)) {
+        Files.createDirectories(parent);
+      }
+
       channel = Files.newByteChannel(file, StandardOpenOption.WRITE, StandardOpenOption.CREATE, StandardOpenOption.APPEND);
 
       buffer = ByteBuffer.allocateDirect(4096);
@@ -66,6 +73,8 @@ public final class FileNoteSink extends AbstractNoteSink implements Closeable {
       active = true;
 
       send(FileNoteSink.STARTED, file, level);
+
+      return this;
     } finally {
       lock.unlock();
     }

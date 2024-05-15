@@ -22,8 +22,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import objectos.notes.Level;
 import objectos.way.IncrementingClock;
-import objectos.way.Rmdir;
-import org.testng.annotations.AfterClass;
+import objectos.way.TestingDir;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
@@ -33,7 +32,26 @@ public class FileNoteSinkTest {
 
   @BeforeClass
   public void beforeClass() throws IOException {
-    directory = Files.createTempDirectory("file-note-sink-test-");
+    directory = TestingDir.next();
+  }
+
+  @Test(description = """
+  It should create the parent directory.
+  """)
+  public void testCase01() throws IOException {
+    Path parent;
+    parent = directory.resolve("i-do-not-exist");
+
+    Path log;
+    log = parent.resolve("test-case-01.log");
+
+    try (FileNoteSink noteSink = new FileNoteSink(log, Level.TRACE)) {
+      assertEquals(Files.exists(parent), false);
+
+      noteSink.start();
+
+      assertEquals(Files.exists(parent), true);
+    }
   }
 
   @Test(description = "when configured level is TRACE it should accept all note levels")
@@ -45,7 +63,7 @@ public class FileNoteSinkTest {
     noteSink = new FileNoteSink(file, Level.TRACE);
 
     noteSink.clock(new IncrementingClock(2023, 11, 1));
-    
+
     noteSink.start();
 
     try (noteSink) {
@@ -69,11 +87,6 @@ public class FileNoteSinkTest {
     } finally {
       Files.deleteIfExists(file);
     }
-  }
-
-  @AfterClass(alwaysRun = true)
-  public void afterClass() throws IOException {
-    Rmdir.rmdir(directory);
   }
 
 }
