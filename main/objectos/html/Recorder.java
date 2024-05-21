@@ -569,6 +569,7 @@ class Recorder {
         }
 
         case ByteProto.ATTRIBUTE1,
+             ByteProto.ATTRIBUTE1_SINGLE,
              ByteProto.ELEMENT,
              ByteProto.TEXT -> {
           int elementIndex;

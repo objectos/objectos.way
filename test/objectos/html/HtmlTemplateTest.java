@@ -17,6 +17,7 @@ package objectos.html;
 
 import static org.testng.Assert.assertEquals;
 
+import objectos.html.icon.BootstrapIcons;
 import org.testng.annotations.Test;
 
 public class HtmlTemplateTest {
@@ -1158,6 +1159,37 @@ public class HtmlTemplateTest {
 
         """
         <div data-click='{"foo": 123, "bar": "abc"}'></div>
+        """
+    );
+  }
+
+  @Test(description = """
+  HtmlTemplate TC53
+
+  HtmlComponent + dataOnClick
+  """)
+  public void testCase53() {
+    test(
+        new HtmlTemplate() {
+          final ElementId NAV = ElementId.of("nav");
+          final BootstrapIcons icons = new BootstrapIcons(this);
+          
+          @Override
+          protected final void definition() {
+            div(
+                icons.threeDots(
+                    dataOnClick(
+                        Action.replaceClass(NAV, "hidden", "block")
+                    )
+                )
+            );
+          }
+        },
+
+        """
+        <div><svg data-on-click='[{"cmd":"replace-class","args":["nav","hidden","block"]}]' xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+        <path d="M3 9.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z"></path>
+        </svg></div>
         """
     );
   }
