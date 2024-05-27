@@ -27,7 +27,7 @@ public class StringOptionTest extends AbstractArgsTest {
   """)
   public void testCase01() throws CommandLineException {
     StringOption option;
-    option = new StringOption("--name");
+    option = cli.newStringOption("--name");
 
     parse(option, args("--name", "foo"));
 
@@ -39,7 +39,7 @@ public class StringOptionTest extends AbstractArgsTest {
   """)
   public void testCase02() throws CommandLineException {
     StringOption option;
-    option = new StringOption("--name");
+    option = cli.newStringOption("--name");
     option.required();
 
     parse(option, args("--name", "foo"));
@@ -62,7 +62,7 @@ public class StringOptionTest extends AbstractArgsTest {
   """)
   public void testCase03() throws CommandLineException {
     StringOption option;
-    option = new StringOption("--name");
+    option = cli.newStringOption("--name");
     option.required();
     option.set("foo");
 
@@ -76,7 +76,7 @@ public class StringOptionTest extends AbstractArgsTest {
   """)
   public void testCase04() throws CommandLineException {
     StringOption option;
-    option = new StringOption("--name");
+    option = cli.newStringOption("--name");
     option.required();
     option.set("foo");
     option.validator(this::validateName, "name must be at least 10 characters long");

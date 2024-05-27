@@ -27,7 +27,7 @@ public class IntegerOptionTest extends AbstractArgsTest {
   """)
   public void testCase01() throws CommandLineException {
     IntegerOption option;
-    option = new IntegerOption("--port");
+    option = cli.newIntegerOption("--port");
 
     parse(option, args("--port", "1234"));
 
@@ -39,7 +39,7 @@ public class IntegerOptionTest extends AbstractArgsTest {
   """)
   public void testCase02() throws CommandLineException {
     IntegerOption option;
-    option = new IntegerOption("--port");
+    option = cli.newIntegerOption("--port");
     option.required();
 
     parse(option, args("--port", "1234"));
@@ -62,7 +62,7 @@ public class IntegerOptionTest extends AbstractArgsTest {
   """)
   public void testCase03() throws CommandLineException {
     IntegerOption option;
-    option = new IntegerOption("--port");
+    option = cli.newIntegerOption("--port");
     option.required();
     option.set(1234);
 
@@ -76,7 +76,7 @@ public class IntegerOptionTest extends AbstractArgsTest {
   """)
   public void testCase04() throws CommandLineException {
     IntegerOption option;
-    option = new IntegerOption("--port");
+    option = cli.newIntegerOption("--port");
     option.required();
     option.set(1234);
     option.validator(this::validatePort, "valid range is 1024 < port < 65555");

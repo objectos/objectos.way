@@ -28,7 +28,7 @@ public class SetOptionTest extends AbstractArgsTest {
   """)
   public void testCase01() throws CommandLineException {
     SetOption<String> option;
-    option = new SetOption<>("--foo", Function.identity());
+    option = cli.newSetOption("--foo", Function.identity());
 
     parse(option, args("--foo", "abc", "--bar", "xyz", "--foo", "123"));
 

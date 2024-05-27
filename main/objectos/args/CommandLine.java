@@ -15,33 +15,66 @@
  */
 package objectos.args;
 
-import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.function.Function;
+import objectos.util.list.GrowableList;
 
 public class CommandLine {
 
   @SuppressWarnings("unused")
-  private final String name;
+  private String name;
 
-  private final Option<?>[] options;
+  private List<Option<?>> options;
 
-  private final Map<String, Option<?>> optionsByName;
+  public CommandLine() {}
 
   public CommandLine(String name, Option<?>... options) {
     this.name = Objects.requireNonNull(name, "name == null");
 
-    this.options = Arrays.copyOf(options, options.length);
+    GrowableList<Option<?>> list;
+    list = new GrowableList<>();
 
-    Map<String, Option<?>> byName;
-    byName = new HashMap<>();
+    for (int i = 0; i < options.length; i++) {
+      Option<?> option;
+      option = options[i];
 
-    for (Option<?> o : options) { // implicit options null check
-      o.acceptByName(byName);
+      list.addWithNullMessage(option, "options[", i, "] == null");
     }
 
-    this.optionsByName = Map.copyOf(byName);
+    this.options = list;
+  }
+
+  public final <E extends Enum<E>> EnumOption<E> newEnumOption(Class<E> type, String name) {
+    return register(new EnumOption<>(type, name));
+  }
+
+  public final IntegerOption newIntegerOption(String name) {
+    return register(new IntegerOption(name));
+  }
+
+  public final PathOption newPathOption(String name) {
+    return register(new PathOption(name));
+  }
+
+  public final <T> SetOption<T> newSetOption(String string, Function<String, ? extends T> converter) {
+    return register(new SetOption<>(string, converter));
+  }
+
+  public final StringOption newStringOption(String name) {
+    return register(new StringOption(name));
+  }
+
+  private <T extends Option<?>> T register(T option) {
+    if (options == null) {
+      options = new GrowableList<>();
+    }
+
+    options.add(option);
+
+    return option;
   }
 
   public final void parse(String[] args) throws CommandLineException {
@@ -50,6 +83,9 @@ public class CommandLine {
 
     int length;
     length = args.length;
+
+    Map<String, Option<?>> optionsByName;
+    optionsByName = byName();
 
     while (index < length) {
       String arg;
@@ -71,6 +107,17 @@ public class CommandLine {
     }
 
     collector.throwIfNecessary();
+  }
+
+  private Map<String, Option<?>> byName() {
+    Map<String, Option<?>> byName;
+    byName = new HashMap<>();
+
+    for (Option<?> o : options) { // implicit options null check
+      o.acceptByName(byName);
+    }
+
+    return byName;
   }
 
 }

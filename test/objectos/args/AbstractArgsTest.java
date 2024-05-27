@@ -20,8 +20,16 @@ import static org.testng.Assert.assertEquals;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.util.Arrays;
+import org.testng.annotations.BeforeMethod;
 
 public abstract class AbstractArgsTest {
+  
+  CommandLine cli;
+  
+  @BeforeMethod
+  public final void beforeMethod() {
+    cli = new CommandLine();
+  }
 
   final String[] args(String... values) {
     return Arrays.copyOf(values, values.length);
@@ -36,9 +44,6 @@ public abstract class AbstractArgsTest {
   }
 
   final void parse(Option<?> option, String[] args) throws CommandLineException {
-    CommandLine cli;
-    cli = new CommandLine("Test", option);
-
     cli.parse(args);
   }
 

@@ -27,7 +27,7 @@ public class EnumOptionTest extends AbstractArgsTest {
   """)
   public void testCase01() throws CommandLineException {
     EnumOption<Mode> option;
-    option = new EnumOption<>(Mode.class, "--mode");
+    option = cli.newEnumOption(Mode.class, "--mode");
 
     parse(option, args("--mode", "DEV"));
 
@@ -39,7 +39,7 @@ public class EnumOptionTest extends AbstractArgsTest {
   """)
   public void testCase02() throws CommandLineException {
     EnumOption<Mode> option;
-    option = new EnumOption<>(Mode.class, "--mode");
+    option = cli.newEnumOption(Mode.class, "--mode");
     option.required();
 
     parse(option, args("--mode", "PROD"));

@@ -45,7 +45,7 @@ public class PathOptionTest extends AbstractArgsTest {
   """)
   public void testCase01() throws CommandLineException {
     PathOption option;
-    option = new PathOption("--class-output");
+    option = cli.newPathOption("--class-output");
 
     parse(option, args("--class-output", directory.toString()));
 
@@ -57,7 +57,7 @@ public class PathOptionTest extends AbstractArgsTest {
   """)
   public void testCase02() throws CommandLineException {
     PathOption option;
-    option = new PathOption("--class-output");
+    option = cli.newPathOption("--class-output");
     option.required();
 
     parse(option, args("--class-output", directory.toString()));
@@ -80,7 +80,7 @@ public class PathOptionTest extends AbstractArgsTest {
   """)
   public void testCase04() throws CommandLineException {
     PathOption option;
-    option = new PathOption("--class-output");
+    option = cli.newPathOption("--class-output");
     option.required();
     option.validator(Files::isDirectory, "must be an existing directory");
 
@@ -103,7 +103,7 @@ public class PathOptionTest extends AbstractArgsTest {
     modeOption = new EnumOption<>(Mode.class, "--mode");
 
     PathOption option;
-    option = new PathOption("--class-output");
+    option = cli.newPathOption("--class-output");
     option.activator(() -> modeOption.is(Mode.DEV));
     option.required();
     option.validator(Files::isDirectory, "must be an existing directory");
