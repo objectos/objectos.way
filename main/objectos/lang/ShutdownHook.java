@@ -27,7 +27,12 @@ public interface ShutdownHook {
   /**
    * A note that informs of a object registration in this shutdown hook.
    */
-  Note1<Object> REGISTRATION = Note1.info(ShutdownHook.class, "Registration [hook]");
+  Note1<Object> REGISTRATION = Note1.info(ShutdownHook.class, "Registration");
+  
+  /**
+   * A note that informs that a specified resource was not registered.
+   */
+  Note1<Object> IGNORED = Note1.info(ShutdownHook.class, "Ignored");
 
   /**
    * Closes the specified {@link AutoCloseable} instance when this shutdown
@@ -55,4 +60,13 @@ public interface ShutdownHook {
    */
   void addThread(Thread thread);
 
+  /**
+   * Registers the specified resource with this shutdown hook if it is possible
+   * to do so.
+   * 
+   * @param resource
+   *        the resource to be registered (if possible)
+   */
+  void registerIfPossible(Object resource);
+  
 }

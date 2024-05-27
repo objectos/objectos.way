@@ -95,6 +95,11 @@ public class WayShutdownHookTest {
     assertSame(hooks.get(1), dirtyCloseable);
     assertSame(hooks.get(2), someThread);
 
+    List<Object> ignored;
+    ignored = noteSink.ignored;
+    
+    assertEquals(ignored.size(), 0);
+    
     try {
       Thread thread;
       thread = hook.startAndJoinThread();
@@ -120,6 +125,50 @@ public class WayShutdownHookTest {
       Assert.fail("InterruptedException", e);
     }
   }
+  
+  @Test
+  public void registerIfPossible() {
+    WayShutdownHook hook;
+    hook = new WayShutdownHook();
+
+    ThisNoteSink noteSink;
+    noteSink = new ThisNoteSink();
+
+    hook.noteSink(noteSink);
+
+    CloseableImpl closable;
+    closable = new CloseableImpl();
+
+    hook.registerIfPossible(closable);
+    
+    Thread thread;
+    thread = new Thread();
+    
+    hook.registerIfPossible(thread);
+
+    NotCloseable notCloseable;
+    notCloseable = new NotCloseable();
+
+    hook.registerIfPossible(notCloseable);
+
+    List<Object> hooks;
+    hooks = noteSink.hooks;
+
+    assertEquals(hooks.size(), 2);
+    assertSame(hooks.get(0), closable);
+    assertSame(hooks.get(1), thread);
+
+    List<Object> ignored;
+    ignored = noteSink.ignored;
+
+    assertEquals(ignored.size(), 1);
+    assertSame(ignored.get(0), notCloseable);
+  }
+  
+  private static class NotCloseable {
+    @SuppressWarnings("unused")
+    public final void close() throws IOException {}
+  }
 
   private static class ThisNoteSink extends TestingNoteSink {
 
@@ -127,12 +176,16 @@ public class WayShutdownHookTest {
 
     final List<Object> hooks = new ArrayList<>();
 
+    final List<Object> ignored = new ArrayList<>();
+    
     @Override
     public <T1> void send(Note1<T1> note, T1 v1) {
       super.send(note, v1);
 
-      if (note == WayShutdownHook.REGISTRATION) {
+      if (note == ShutdownHook.REGISTRATION) {
         hooks.add(v1);
+      } else if (note == ShutdownHook.IGNORED) {
+        ignored.add(v1);
       }
     }
 

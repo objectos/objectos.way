@@ -68,6 +68,19 @@ public final class WayShutdownHook implements ShutdownHook {
     addHook(thread);
   }
 
+  @Override
+  public final void registerIfPossible(Object resource) {
+    Check.notNull(resource, "resource == null");
+
+    if (resource instanceof AutoCloseable) {
+      addHook(resource);
+    } else if (resource instanceof Thread) {
+      addHook(resource);
+    } else {
+      noteSink.send(IGNORED, resource);
+    }
+  }
+
   private void addHook(Object hook) {
     noteSink.send(REGISTRATION, hook);
 
