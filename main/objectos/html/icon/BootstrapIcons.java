@@ -127,6 +127,22 @@ public class BootstrapIcons extends HtmlComponent {
     );
     // @formatter:on
   }
+  
+  /**
+   * Renders the
+   * <a href="https://icons.getbootstrap.com/icons/list/">List</a>
+   * icon.
+   *
+   * @return the {@code svg} element
+   */
+  public final Element list(SvgValue... contents) {
+    // @formatter:off
+    return icon(
+      flatten(contents),
+      path(d("M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5"))
+    );
+    // @formatter:on
+  }
 
   /**
    * Renders the
