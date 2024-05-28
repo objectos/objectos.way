@@ -99,6 +99,12 @@ final class WayStyleGenRound extends WayStyleGenParser {
 
     StringBuilder out;
     out = new StringBuilder();
+    
+    if (!config.skipReset) {
+      out.append(Reset.preflight());
+      
+      out.append(System.lineSeparator());
+    }
 
     Indentation indentation;
     indentation = Indentation.ROOT;

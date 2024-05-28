@@ -16,6 +16,7 @@
 package objectos.css;
 
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertTrue;
 
 import java.util.Map;
 import java.util.Map.Entry;
@@ -3012,6 +3013,28 @@ public class StyleGenTest {
         """
     );
   }
+  
+  @Test
+  public void resetTest() {
+    WayStyleGen gen;
+    gen = new WayStyleGen();
+
+    class Subject extends AbstractSubject {
+      @Override
+      final void classes() {
+        className("hidden");
+      }
+    }
+
+    gen.noteSink(TestingNoteSink.INSTANCE);
+
+    String result;
+    result = gen.generate(Set.of(Subject.class));
+
+    assertTrue(result.contains("sans"));
+    assertTrue(result.contains("mono"));
+    assertTrue(result.endsWith(".hidden { display: none }\n"));
+  }
 
   private Entry<String, String> px(int value) {
     String px;
@@ -3043,12 +3066,14 @@ public class StyleGenTest {
         Map.entry("black", "#000000"),
         Map.entry("white", "#ffffff")
     );
-
+    
     test(gen, type, expected);
   }
 
   private void test(WayStyleGen gen, Class<?> type, String expected) {
     gen.noteSink(TestingNoteSink.INSTANCE);
+
+    gen.skipReset();
 
     String result;
     result = gen.generate(Set.of(type));

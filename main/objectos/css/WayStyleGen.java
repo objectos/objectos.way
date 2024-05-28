@@ -206,6 +206,10 @@ public final class WayStyleGen extends WayStyleGenConfig implements StyleGen {
 
     return this;
   }
+  
+  public final void skipReset() {
+    skipReset = true;
+  }
 
   @Override
   public final String generate(Iterable<Class<?>> classes) {

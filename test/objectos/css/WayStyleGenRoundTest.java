@@ -54,6 +54,8 @@ public class WayStyleGenRoundTest {
         Map.entry("black", "#000000"),
         Map.entry("white", "#ffffff")
     );
+    
+    gen.skipReset();
 
     return gen;
   }
