@@ -58,6 +58,7 @@ sealed abstract class Utility {
   static final Utility DISPLAY = new Single("display");
 
   // 834
+  static final Utility SIZE = new Axis("height", "width");
   static final Utility HEIGHT = new Single("height");
   static final Utility WIDTH = new Single("width");
   static final Utility MAX_WIDTH = new Single("max-width");

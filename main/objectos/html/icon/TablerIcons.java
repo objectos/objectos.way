@@ -239,6 +239,23 @@ public class TablerIcons extends HtmlComponent {
   }
 
   /**
+   * Renders the <a href=
+   * "https://tabler.io/icons/icon/exclamation-circle">exclamation-circle</a>
+   * icon.
+   *
+   * @return the {@code svg} element
+   */
+  public final Element exclamationCircle(SvgValue... contents) {
+    return icon(
+        flatten(contents),
+        path(stroke("none"), d("M0 0h24v24H0z"), fill("none")),
+        path(d("M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0")),
+        path(d("M12 9v4")),
+        path(d("M12 16v.01"))
+    );
+  }
+
+  /**
    * Renders the <a href="https://tabler.io/icons/icon/file-text">file-text</a>
    * icon.
    *
@@ -253,6 +270,25 @@ public class TablerIcons extends HtmlComponent {
         path(d("M9 9l1 0")),
         path(d("M9 13l6 0")),
         path(d("M9 17l6 0"))
+    );
+  }
+
+  /**
+   * Renders the <a href=
+   * "https://tabler.io/icons/icon/health-recognition">health-recognition</a>
+   * icon.
+   *
+   * @return the {@code svg} element
+   */
+  public final Element healthRecognition(SvgValue... contents) {
+    return icon(
+        flatten(contents),
+        path(stroke("none"), d("M0 0h24v24H0z"), fill("none")),
+        path(d("M4 8v-2a2 2 0 0 1 2 -2h2")),
+        path(d("M4 16v2a2 2 0 0 0 2 2h2")),
+        path(d("M16 4h2a2 2 0 0 1 2 2v2")),
+        path(d("M16 20h2a2 2 0 0 0 2 -2v-2")),
+        path(d("M8.603 9.61a2.04 2.04 0 0 1 2.912 0l.485 .39l.5 -.396a2.035 2.035 0 0 1 2.897 .007a2.104 2.104 0 0 1 0 2.949l-3.397 3.44l-3.397 -3.44a2.104 2.104 0 0 1 0 -2.95z"))
     );
   }
 
@@ -291,8 +327,9 @@ public class TablerIcons extends HtmlComponent {
    *
    * @return the {@code svg} element
    */
-  public final Element menu() {
+  public final Element menu(SvgValue... contents) {
     return icon(
+        flatten(contents),
         path(stroke("none"), d("M0 0h24v24H0z"), fill("none")),
         path(d("M4 8l16 0")),
         path(d("M4 16l16 0"))
@@ -304,8 +341,9 @@ public class TablerIcons extends HtmlComponent {
    *
    * @return the {@code svg} element
    */
-  public final Element menu2() {
+  public final Element menu2(SvgValue... contents) {
     return icon(
+        flatten(contents),
         path(stroke("none"), d("M0 0h24v24H0z"), fill("none")),
         path(d("M4 6l16 0")),
         path(d("M4 12l16 0")),
@@ -318,15 +356,34 @@ public class TablerIcons extends HtmlComponent {
    *
    * @return the {@code svg} element
    */
-  public final Element paw() {
+  public final Element paw(SvgValue... contents) {
     // @formatter:off
     return icon(
-      path(stroke("none"), d("M0 0h24v24H0z"), fill("none")),
-      path(d("M14.7 13.5c-1.1 -2 -1.441 -2.5 -2.7 -2.5c-1.259 0 -1.736 .755 -2.836 2.747c-.942 1.703 -2.846 1.845 -3.321 3.291c-.097 .265 -.145 .677 -.143 .962c0 1.176 .787 2 1.8 2c1.259 0 3 -1 4.5 -1s3.241 1 4.5 1c1.013 0 1.8 -.823 1.8 -2c0 -.285 -.049 -.697 -.146 -.962c-.475 -1.451 -2.512 -1.835 -3.454 -3.538z")),
-      path(d("M20.188 8.082a1.039 1.039 0 0 0 -.406 -.082h-.015c-.735 .012 -1.56 .75 -1.993 1.866c-.519 1.335 -.28 2.7 .538 3.052c.129 .055 .267 .082 .406 .082c.739 0 1.575 -.742 2.011 -1.866c.516 -1.335 .273 -2.7 -.54 -3.052z")),
-      path(d("M9.474 9c.055 0 .109 0 .163 -.011c.944 -.128 1.533 -1.346 1.32 -2.722c-.203 -1.297 -1.047 -2.267 -1.932 -2.267c-.055 0 -.109 0 -.163 .011c-.944 .128 -1.533 1.346 -1.32 2.722c.204 1.293 1.048 2.267 1.933 2.267z")),
-      path(d("M16.456 6.733c.214 -1.376 -.375 -2.594 -1.32 -2.722a1.164 1.164 0 0 0 -.162 -.011c-.885 0 -1.728 .97 -1.93 2.267c-.214 1.376 .375 2.594 1.32 2.722c.054 .007 .108 .011 .162 .011c.885 0 1.73 -.974 1.93 -2.267z")),
-      path(d("M5.69 12.918c.816 -.352 1.054 -1.719 .536 -3.052c-.436 -1.124 -1.271 -1.866 -2.009 -1.866c-.14 0 -.277 .027 -.407 .082c-.816 .352 -1.054 1.719 -.536 3.052c.436 1.124 1.271 1.866 2.009 1.866c.14 0 .277 -.027 .407 -.082z"))
+        flatten(contents),
+        path(stroke("none"), d("M0 0h24v24H0z"), fill("none")),
+        path(d("M14.7 13.5c-1.1 -2 -1.441 -2.5 -2.7 -2.5c-1.259 0 -1.736 .755 -2.836 2.747c-.942 1.703 -2.846 1.845 -3.321 3.291c-.097 .265 -.145 .677 -.143 .962c0 1.176 .787 2 1.8 2c1.259 0 3 -1 4.5 -1s3.241 1 4.5 1c1.013 0 1.8 -.823 1.8 -2c0 -.285 -.049 -.697 -.146 -.962c-.475 -1.451 -2.512 -1.835 -3.454 -3.538z")),
+        path(d("M20.188 8.082a1.039 1.039 0 0 0 -.406 -.082h-.015c-.735 .012 -1.56 .75 -1.993 1.866c-.519 1.335 -.28 2.7 .538 3.052c.129 .055 .267 .082 .406 .082c.739 0 1.575 -.742 2.011 -1.866c.516 -1.335 .273 -2.7 -.54 -3.052z")),
+        path(d("M9.474 9c.055 0 .109 0 .163 -.011c.944 -.128 1.533 -1.346 1.32 -2.722c-.203 -1.297 -1.047 -2.267 -1.932 -2.267c-.055 0 -.109 0 -.163 .011c-.944 .128 -1.533 1.346 -1.32 2.722c.204 1.293 1.048 2.267 1.933 2.267z")),
+        path(d("M16.456 6.733c.214 -1.376 -.375 -2.594 -1.32 -2.722a1.164 1.164 0 0 0 -.162 -.011c-.885 0 -1.728 .97 -1.93 2.267c-.214 1.376 .375 2.594 1.32 2.722c.054 .007 .108 .011 .162 .011c.885 0 1.73 -.974 1.93 -2.267z")),
+        path(d("M5.69 12.918c.816 -.352 1.054 -1.719 .536 -3.052c-.436 -1.124 -1.271 -1.866 -2.009 -1.866c-.14 0 -.277 .027 -.407 .082c-.816 .352 -1.054 1.719 -.536 3.052c.436 1.124 1.271 1.866 2.009 1.866c.14 0 .277 -.027 .407 -.082z"))
+    );
+    // @formatter:on
+  }
+
+  /**
+   * Renders the <a href="https://tabler.io/icons/icon/users">users</a> icon.
+   *
+   * @return the {@code svg} element
+   */
+  public final Element users(SvgValue... contents) {
+    // @formatter:off
+    return icon(
+        flatten(contents),
+        path(stroke("none"), d("M0 0h24v24H0z"), fill("none")),
+        path(d("M9 7m-4 0a4 4 0 1 0 8 0a4 4 0 1 0 -8 0")),
+        path(d("M3 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2")),
+        path(d("M16 3.13a4 4 0 0 1 0 7.75")),
+        path(d("M21 21v-2a4 4 0 0 0 -3 -3.85"))
     );
     // @formatter:on
   }

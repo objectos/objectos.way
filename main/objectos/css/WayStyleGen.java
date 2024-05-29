@@ -53,11 +53,11 @@ public final class WayStyleGen extends WayStyleGenConfig implements StyleGen {
   private Map<String, String> fontWeight;
 
   private Map<String, String> gap;
-  
+
   private Map<String, String> gridColumn;
   private Map<String, String> gridColumnEnd;
   private Map<String, String> gridColumnStart;
-  
+
   private Map<String, String> gridTemplateColumns;
 
   private Map<String, String> height;
@@ -79,6 +79,8 @@ public final class WayStyleGen extends WayStyleGenConfig implements StyleGen {
   private Map<String, String> padding;
 
   private Map<String, String> rules;
+
+  private Map<String, String> size;
 
   private Map<String, String> spacing;
 
@@ -206,7 +208,7 @@ public final class WayStyleGen extends WayStyleGenConfig implements StyleGen {
 
     return this;
   }
-  
+
   public final void skipReset() {
     skipReset = true;
   }
@@ -653,7 +655,7 @@ public final class WayStyleGen extends WayStyleGenConfig implements StyleGen {
 
     return gap;
   }
-  
+
   @Override
   final Map<String, String> gridColumn() {
     if (gridColumn == null) {
@@ -937,6 +939,49 @@ public final class WayStyleGen extends WayStyleGenConfig implements StyleGen {
     }
 
     return rules;
+  }
+
+  @Override
+  final Map<String, String> size() {
+    if (size == null) {
+      size = new GrowableMap<>();
+      
+      size.putAll(spacing());
+      
+      size.put("auto", "auto");
+      size.put("1/2", "50%");
+      size.put("1/3", "33.333333%");
+      size.put("2/3", "66.666667%");
+      size.put("1/4", "25%");
+      size.put("2/4", "50%");
+      size.put("3/4", "75%");
+      size.put("1/5", "20%");
+      size.put("2/5", "40%");
+      size.put("3/5", "60%");
+      size.put("4/5", "80%");
+      size.put("1/6", "16.666667%");
+      size.put("2/6", "33.333333%");
+      size.put("3/6", "50%");
+      size.put("4/6", "66.666667%");
+      size.put("5/6", "83.333333%");
+      size.put("1/12", "8.333333%");
+      size.put("2/12", "16.666667%");
+      size.put("3/12", "25%");
+      size.put("4/12", "33.333333%");
+      size.put("5/12", "41.666667%");
+      size.put("6/12", "50%");
+      size.put("7/12", "58.333333%");
+      size.put("8/12", "66.666667%");
+      size.put("9/12", "75%");
+      size.put("10/12", "83.333333%");
+      size.put("11/12", "91.666667%");
+      size.put("full", "100%");
+      size.put("min", "min-content");
+      size.put("max", "max-content");
+      size.put("fit", "fit-content");
+    }
+
+    return size;
   }
 
   @Override

@@ -384,6 +384,7 @@ abstract class WayStyleGenParser extends WayStyleGenVariants {
       case "right" -> config(RIGHT, config.inset(), suffix);
 
       // S
+      case "size" -> config(Utility.SIZE, config.size(), suffix);
       case "start" -> config(START, config.inset(), suffix);
 
       // T

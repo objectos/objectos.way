@@ -28,9 +28,7 @@ public class ObjectosCssPseudoGen {
     ObjectosCssPseudoGen gen;
     gen = new ObjectosCssPseudoGen();
 
-    gen.mapOf(GRID_COLUMN, "gridColumn");
-    gen.mapOf(GRID_COLUMN_END, "gridColumnEnd");
-    gen.mapOf(GRID_COLUMN_START, "gridColumnStart");
+    gen.initVariable(SIZE, "size");
   }
 
   private static final Map<String, String> SCREENS = seqmap(
@@ -224,7 +222,7 @@ public class ObjectosCssPseudoGen {
       kv("10", "10"),
       kv("11", "11"),
       kv("12", "12"),
-      kv("13", "13")      
+      kv("13", "13")
   );
 
   static final Map<String, String> GRID_COLUMN_START = seqmap(
@@ -241,7 +239,7 @@ public class ObjectosCssPseudoGen {
       kv("10", "10"),
       kv("11", "11"),
       kv("12", "12"),
-      kv("13", "13")      
+      kv("13", "13")
   );
 
   static final Map<String, String> GRID_TEMPLATE_COLUMNS = seqmap(
@@ -401,6 +399,40 @@ public class ObjectosCssPseudoGen {
       kv("absolute", "absolute"),
       kv("relative", "relative"),
       kv("sticky", "sticky")
+  );
+
+  static final Map<String, String> SIZE = seqmap(
+      kv("auto", "auto"),
+      kv("1/2", "50%"),
+      kv("1/3", "33.333333%"),
+      kv("2/3", "66.666667%"),
+      kv("1/4", "25%"),
+      kv("2/4", "50%"),
+      kv("3/4", "75%"),
+      kv("1/5", "20%"),
+      kv("2/5", "40%"),
+      kv("3/5", "60%"),
+      kv("4/5", "80%"),
+      kv("1/6", "16.666667%"),
+      kv("2/6", "33.333333%"),
+      kv("3/6", "50%"),
+      kv("4/6", "66.666667%"),
+      kv("5/6", "83.333333%"),
+      kv("1/12", "8.333333%"),
+      kv("2/12", "16.666667%"),
+      kv("3/12", "25%"),
+      kv("4/12", "33.333333%"),
+      kv("5/12", "41.666667%"),
+      kv("6/12", "50%"),
+      kv("7/12", "58.333333%"),
+      kv("8/12", "66.666667%"),
+      kv("9/12", "75%"),
+      kv("10/12", "83.333333%"),
+      kv("11/12", "91.666667%"),
+      kv("full", "100%"),
+      kv("min", "min-content"),
+      kv("max", "max-content"),
+      kv("fit", "fit-content")
   );
 
   static final Map<String, String> TEXT_ALIGN = seqmap(

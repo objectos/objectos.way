@@ -2369,6 +2369,91 @@ public class StyleGenTest {
         """
     );
   }
+  
+  @Test
+  public void size() {
+    class Subject extends AbstractSubject {
+      @Override
+      final void classes() {
+        // @formatter:off
+        className("size-auto size-px size-0 size-0.5 size-1 size-1.5 size-2 size-2.5 size-3 size-3.5 size-4 size-5 size-6 size-7 size-8 size-9 size-10 size-11 size-12 size-14 size-16 size-20 size-24 size-28 size-32 size-36 size-40 size-44 size-48 size-52 size-56 size-60 size-64 size-72 size-80 size-96 size-1/2 size-1/3 size-2/3 size-1/4 size-2/4 size-3/4 size-1/5 size-2/5 size-3/5 size-4/5 size-1/6 size-2/6 size-3/6 size-4/6 size-5/6 size-1/12 size-2/12 size-3/12 size-4/12 size-5/12 size-6/12 size-7/12 size-8/12 size-9/12 size-10/12 size-11/12 size-full size-min size-max size-fit");
+        // @formatter:on
+      }
+    }
+
+    test(
+        Subject.class,
+
+        """
+        .size-auto { height: auto; width: auto }
+        .size-px { height: 1px; width: 1px }
+        .size-0 { height: 0px; width: 0px }
+        .size-0\\.5 { height: 0.125rem; width: 0.125rem }
+        .size-1 { height: 0.25rem; width: 0.25rem }
+        .size-1\\.5 { height: 0.375rem; width: 0.375rem }
+        .size-2 { height: 0.5rem; width: 0.5rem }
+        .size-2\\.5 { height: 0.625rem; width: 0.625rem }
+        .size-3 { height: 0.75rem; width: 0.75rem }
+        .size-3\\.5 { height: 0.875rem; width: 0.875rem }
+        .size-4 { height: 1rem; width: 1rem }
+        .size-5 { height: 1.25rem; width: 1.25rem }
+        .size-6 { height: 1.5rem; width: 1.5rem }
+        .size-7 { height: 1.75rem; width: 1.75rem }
+        .size-8 { height: 2rem; width: 2rem }
+        .size-9 { height: 2.25rem; width: 2.25rem }
+        .size-10 { height: 2.5rem; width: 2.5rem }
+        .size-11 { height: 2.75rem; width: 2.75rem }
+        .size-12 { height: 3rem; width: 3rem }
+        .size-14 { height: 3.5rem; width: 3.5rem }
+        .size-16 { height: 4rem; width: 4rem }
+        .size-20 { height: 5rem; width: 5rem }
+        .size-24 { height: 6rem; width: 6rem }
+        .size-28 { height: 7rem; width: 7rem }
+        .size-32 { height: 8rem; width: 8rem }
+        .size-36 { height: 9rem; width: 9rem }
+        .size-40 { height: 10rem; width: 10rem }
+        .size-44 { height: 11rem; width: 11rem }
+        .size-48 { height: 12rem; width: 12rem }
+        .size-52 { height: 13rem; width: 13rem }
+        .size-56 { height: 14rem; width: 14rem }
+        .size-60 { height: 15rem; width: 15rem }
+        .size-64 { height: 16rem; width: 16rem }
+        .size-72 { height: 18rem; width: 18rem }
+        .size-80 { height: 20rem; width: 20rem }
+        .size-96 { height: 24rem; width: 24rem }
+        .size-1\\/2 { height: 50%; width: 50% }
+        .size-1\\/3 { height: 33.333333%; width: 33.333333% }
+        .size-2\\/3 { height: 66.666667%; width: 66.666667% }
+        .size-1\\/4 { height: 25%; width: 25% }
+        .size-2\\/4 { height: 50%; width: 50% }
+        .size-3\\/4 { height: 75%; width: 75% }
+        .size-1\\/5 { height: 20%; width: 20% }
+        .size-2\\/5 { height: 40%; width: 40% }
+        .size-3\\/5 { height: 60%; width: 60% }
+        .size-4\\/5 { height: 80%; width: 80% }
+        .size-1\\/6 { height: 16.666667%; width: 16.666667% }
+        .size-2\\/6 { height: 33.333333%; width: 33.333333% }
+        .size-3\\/6 { height: 50%; width: 50% }
+        .size-4\\/6 { height: 66.666667%; width: 66.666667% }
+        .size-5\\/6 { height: 83.333333%; width: 83.333333% }
+        .size-1\\/12 { height: 8.333333%; width: 8.333333% }
+        .size-2\\/12 { height: 16.666667%; width: 16.666667% }
+        .size-3\\/12 { height: 25%; width: 25% }
+        .size-4\\/12 { height: 33.333333%; width: 33.333333% }
+        .size-5\\/12 { height: 41.666667%; width: 41.666667% }
+        .size-6\\/12 { height: 50%; width: 50% }
+        .size-7\\/12 { height: 58.333333%; width: 58.333333% }
+        .size-8\\/12 { height: 66.666667%; width: 66.666667% }
+        .size-9\\/12 { height: 75%; width: 75% }
+        .size-10\\/12 { height: 83.333333%; width: 83.333333% }
+        .size-11\\/12 { height: 91.666667%; width: 91.666667% }
+        .size-full { height: 100%; width: 100% }
+        .size-min { height: min-content; width: min-content }
+        .size-max { height: max-content; width: max-content }
+        .size-fit { height: fit-content; width: fit-content }
+        """
+    );
+  }
 
   @Test
   public void textAlign() {
