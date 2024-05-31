@@ -48,6 +48,8 @@ sealed abstract class WayStyleGenConfig permits WayStyleGen {
   abstract Map<String, String> gridColumnStart();
   
   abstract Map<String, String> gridTemplateColumns();
+  
+  abstract Map<String, String> gridTemplateRows();
 
   abstract Map<String, String> height();
 

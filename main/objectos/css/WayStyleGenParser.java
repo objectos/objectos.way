@@ -33,6 +33,7 @@ import static objectos.css.Utility.GRID_COLUMN;
 import static objectos.css.Utility.GRID_COLUMN_END;
 import static objectos.css.Utility.GRID_COLUMN_START;
 import static objectos.css.Utility.GRID_TEMPLATE_COLUMNS;
+import static objectos.css.Utility.GRID_TEMPLATE_ROWS;
 import static objectos.css.Utility.HEIGHT;
 import static objectos.css.Utility.JUSTIFY_CONTENT;
 import static objectos.css.Utility.LEFT;
@@ -612,6 +613,8 @@ abstract class WayStyleGenParser extends WayStyleGenVariants {
     
     return switch(prefix) {
       case "cols" -> config(GRID_TEMPLATE_COLUMNS, config.gridTemplateColumns(), suffix); 
+      
+      case "rows" -> config(GRID_TEMPLATE_ROWS, config.gridTemplateRows(), suffix);
       
       default -> Rule.NOOP;
     };
