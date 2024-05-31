@@ -3098,6 +3098,31 @@ public class StyleGenTest {
         """
     );
   }
+  
+  @Test
+  public void overrideGridTemplateRows() {
+    WayStyleGen gen;
+    gen = new WayStyleGen();
+
+    gen.overrideGridTemplateRows(
+        Map.entry("foo", "48px auto")
+    );
+
+    class Subject extends AbstractSubject {
+      @Override
+      final void classes() {
+        className("grid-rows-5 grid-rows-foo");
+      }
+    }
+
+    test(
+        gen, Subject.class,
+
+        """
+        .grid-rows-foo { grid-template-rows: 48px auto }
+        """
+    );
+  }
 
   @Test
   public void overrideSpacing() {

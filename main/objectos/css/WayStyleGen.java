@@ -204,6 +204,14 @@ public final class WayStyleGen extends WayStyleGenConfig implements StyleGen {
 
   @SafeVarargs
   @SuppressWarnings("varargs")
+  public final WayStyleGen overrideGridTemplateRows(Map.Entry<String, String>... entries) {
+    gridTemplateRows = Map.ofEntries(entries);
+
+    return this;
+  }
+
+  @SafeVarargs
+  @SuppressWarnings("varargs")
   public final WayStyleGen overrideSpacing(Map.Entry<String, String>... entries) {
     spacing = Map.ofEntries(entries);
 
