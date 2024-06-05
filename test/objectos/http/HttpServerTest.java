@@ -268,6 +268,73 @@ public class HttpServerTest implements Handler {
     }
   }
 
+  @SuppressWarnings("unused")
+  private void testCase04(ServerExchange http) {
+    http.methodMatrix(
+        objectos.http.Method.GET, this::testCase04Get,
+        objectos.http.Method.POST, this::testCase04Post
+    );
+  }
+
+  private void testCase04Get(ServerExchange http) {
+    http.set(String.class, "TC04 GET");
+    
+    http.ok(new AttributeTester(http, String.class));
+  }
+
+  private void testCase04Post(ServerExchange http) {
+    http.ok(new AttributeTester(http, String.class));
+  }
+
+  @Test(description = """
+  Request attributes should be reset between requests
+  """)
+  public void testCase04() throws IOException {
+    try (Socket socket = newSocket()) {
+      test(socket,
+          """
+          GET /test/testCase04 HTTP/1.1\r
+          Host: http.server.test\r
+          \r
+          """,
+
+          """
+          HTTP/1.1 200 OK\r
+          Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+          Content-Type: text/html; charset=utf-8\r
+          Transfer-Encoding: chunked\r
+          \r
+          10\r
+          <p>TC04 GET</p>
+          \r
+          0\r
+          \r
+          """
+      );
+
+      test(socket,
+          """
+          POST /test/testCase04 HTTP/1.1\r
+          Host: http.server.test\r
+          \r
+          """,
+
+          """
+          HTTP/1.1 200 OK\r
+          Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+          Content-Type: text/html; charset=utf-8\r
+          Transfer-Encoding: chunked\r
+          \r
+          c\r
+          <p>null</p>
+          \r
+          0\r
+          \r
+          """
+      );
+    }
+  }
+
   private Socket newSocket() throws IOException {
     return TestingHttpServer.newSocket();
   }

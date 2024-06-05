@@ -28,19 +28,21 @@ import java.nio.file.Path;
 import java.time.Clock;
 import java.time.ZonedDateTime;
 import java.util.Arrays;
+import java.util.Map;
 import objectos.lang.CharWritable;
 import objectos.lang.object.Check;
 import objectos.notes.NoteSink;
+import objectos.util.map.GrowableMap;
 
 public final class WayServerLoop extends WayServerRequestBody implements ServerLoop {
-  
+
   public enum ParseStatus {
     // keep going
     NORMAL,
 
     // SocketInput statuses
     EOF,
-    
+
     UNEXPECTED_EOF,
 
     OVERFLOW,
@@ -91,6 +93,8 @@ public final class WayServerLoop extends WayServerRequestBody implements ServerL
   private static final int CONTENT_LENGTH = 1 << 6;
 
   private static final int CHUNKED = 1 << 7;
+
+  private Map<String, Object> attributes;
 
   private int bitset;
 
@@ -182,6 +186,8 @@ public final class WayServerLoop extends WayServerRequestBody implements ServerL
       resetHeaders();
 
       resetRequestBody();
+
+      resetServerLoop();
     }
 
     else {
@@ -244,8 +250,47 @@ public final class WayServerLoop extends WayServerRequestBody implements ServerL
     acceptSessionStore0();
 
     setState(_REQUEST);
-    
+
     return parseStatus;
+  }
+
+  private void resetServerLoop() {
+    if (attributes != null) {
+      attributes.clear();
+    }
+  }
+
+  @Override
+  public final <T> void set(Class<T> key, T value) {
+    String name;
+    name = key.getName(); // implicit null check
+
+    Check.notNull(value, "value == null");
+
+    Map<String, Object> map;
+    map = attributes();
+
+    map.put(name, value);
+  }
+
+  @SuppressWarnings("unchecked")
+  @Override
+  public final <T> T get(Class<T> key) {
+    String name;
+    name = key.getName(); // implicit null check
+
+    Map<String, Object> map;
+    map = attributes();
+
+    return (T) map.get(name);
+  }
+
+  private Map<String, Object> attributes() {
+    if (attributes == null) {
+      attributes = new GrowableMap<>();
+    }
+
+    return attributes;
   }
 
   @Override

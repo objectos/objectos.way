@@ -26,6 +26,37 @@ import objectos.lang.object.Check;
 
 public interface ServerExchange {
 
+  /**
+   * Stores an object in this request. The object will be associated to the name
+   * of the specified {@code Class} instance.
+   * Stored objects are reset between requests.
+   * 
+   * <p>
+   * If an object is already associated to the specified key it will be replaced
+   * with the specified value.
+   * 
+   * <p>
+   * Objects to be stored must not be {@code null}.
+   * 
+   * @param key
+   *        the object will be associated to the name of this key
+   * @param value
+   *        the object to be stored in this request
+   */
+  <T> void set(Class<T> key, T value);
+  
+  /**
+   * Retrieves the object stored in this request associated to the specified
+   * key. Returns {@code null} if no object is found.
+   * 
+   * @param key
+   *        the key to look for
+   * 
+   * @return the object associated to the specified key or {@code null} if no
+   *         object is found
+   */
+  <T> T get(Class<T> key);
+  
   // request
 
   /**
