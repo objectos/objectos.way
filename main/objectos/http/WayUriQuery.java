@@ -19,9 +19,11 @@ import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import objectos.lang.object.Check;
+import objectos.util.list.GrowableList;
 
 final class WayUriQuery implements UriQuery {
 
@@ -115,12 +117,7 @@ final class WayUriQuery implements UriQuery {
 
           sb.setLength(0);
 
-          Object oldValue;
-          oldValue = map.put(key, "");
-
-          if (oldValue != null) {
-            throw new UnsupportedOperationException("Implement me");
-          }
+          put0(map, key, "");
         }
 
         case '&' -> {
@@ -135,12 +132,7 @@ final class WayUriQuery implements UriQuery {
             continue;
           }
 
-          Object oldValue;
-          oldValue = map.put(key, value);
-
-          if (oldValue != "") {
-            throw new UnsupportedOperationException("Implement me");
-          }
+          put0(map, key, value);
 
           key = null;
         }
@@ -153,9 +145,49 @@ final class WayUriQuery implements UriQuery {
     value = sb.toString();
 
     if (key != null) {
-      map.put(key, value);
+      put0(map, key, value);
     } else {
-      map.put(value, "");
+      put0(map, value, "");
+    }
+  }
+
+  @SuppressWarnings("unchecked")
+  private void put0(Map<String, Object> map, String key, String value) {
+    Object oldValue;
+    oldValue = map.put(key, value);
+
+    if (oldValue == null) {
+      return;
+    }
+
+    if (oldValue.equals("")) {
+      return;
+    }
+
+    if (oldValue instanceof String s) {
+
+      if (value.equals("")) {
+        map.put(key, s);
+      } else {
+        List<String> list;
+        list = new GrowableList<>();
+
+        list.add(s);
+
+        list.add(value);
+
+        map.put(key, list);
+      }
+      
+    }
+
+    else {
+      List<String> list;
+      list = (List<String>) oldValue;
+
+      list.add(value);
+
+      map.put(key, list);
     }
   }
 

@@ -140,7 +140,19 @@ public class WayUriQueryTest {
     assertEquals(res.get("c"), "3");
     assertEquals(res.get("d"), "");
   }
-  
+
+  @Test(description = """
+  UriQuery: duplicate name should return first value
+  """)
+  public void testCase09() {
+    WayUriQuery q;
+    q = queryOf("a=123&b=xpto&c&b=");
+
+    assertEquals(q.get("a"), "123");
+    assertEquals(q.get("b"), "xpto");
+    assertEquals(q.get("c"), "");
+  }
+
   private WayUriQuery queryOf(String q) {
     WayUriQuery query;
     query = new WayUriQuery();
