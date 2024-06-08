@@ -104,7 +104,7 @@ final class WayHttpServerLoop implements Runnable {
       WayServerLoop loop;
       loop = new WayServerLoop(socket);
 
-      loop.bufferSize(1024, 4096);
+      loop.bufferSize(bufferSizeInitial, bufferSizeMax);
 
       loop.clock(clock);
 
