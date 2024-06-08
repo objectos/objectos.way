@@ -32,8 +32,16 @@ public interface SqlTransaction extends AutoCloseable {
 
   void queryPage(String sql, ResultSetHandler handler, Page page, Object... args) throws SQLException;
 
+  default void queryPageUnchecked(String sql, ResultSetHandler handler, Page page, Object... args) {
+    try {
+      queryPage(sql, handler, page, args);
+    } catch (SQLException e) {
+      throw new RuntimeException(e);
+    }
+  }
+
   default Object[] values(Object... values) {
     return values;
   }
-
+  
 }
