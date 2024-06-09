@@ -181,6 +181,10 @@ class WayServerRequestHeaders extends WayRequestLine implements ServerRequestHea
           HeaderName.DATE
       );
 
+      case 'F' -> parseHeaderName0(
+          HeaderName.FROM
+      );
+
       case 'H' -> parseHeaderName0(
           HeaderName.HOST
       );
@@ -310,7 +314,7 @@ class WayServerRequestHeaders extends WayRequestLine implements ServerRequestHea
     startIndex = parseHeaderValueStart();
 
     int endIndex;
-    endIndex = parseHeaderValueEnd();
+    endIndex = parseHeaderValueEnd(startIndex);
 
     if (startIndex > endIndex) {
       // value has negative length... is it possible?
@@ -376,7 +380,7 @@ class WayServerRequestHeaders extends WayRequestLine implements ServerRequestHea
     return bufferIndex;
   }
 
-  private int parseHeaderValueEnd() {
+  private int parseHeaderValueEnd(int startIndex) {
     int end;
     end = lineLimit;
 
@@ -387,13 +391,17 @@ class WayServerRequestHeaders extends WayRequestLine implements ServerRequestHea
       // value ends at the CR of the line end CRLF
       end = end - 1;
     }
+    
+    if (end != startIndex) {
 
-    byte maybeOWS;
-    maybeOWS = buffer[end - 1];
+      byte maybeOWS;
+      maybeOWS = buffer[end - 1];
 
-    if (Bytes.isOptionalWhitespace(maybeOWS)) {
-      // value ends at the trailing OWS
-      end = end - 1;
+      if (Bytes.isOptionalWhitespace(maybeOWS)) {
+        // value ends at the trailing OWS
+        end = end - 1;
+      }
+
     }
 
     // resume immediately after lineLimite

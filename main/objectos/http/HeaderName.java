@@ -37,6 +37,8 @@ public sealed abstract class HeaderName permits WayHeaderName {
   public static final HeaderName DATE = BUILDER.create("Date", HeaderType.BOTH);
 
   public static final HeaderName ETAG = BUILDER.create("ETag", HeaderType.RESPONSE);
+  
+  public static final HeaderName FROM = BUILDER.create("From", HeaderType.REQUEST);
 
   public static final HeaderName HOST = BUILDER.create("Host", HeaderType.REQUEST);
 

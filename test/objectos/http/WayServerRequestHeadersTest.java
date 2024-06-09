@@ -81,6 +81,26 @@ public class WayServerRequestHeadersTest {
     assertEquals(headers.first(HeaderName.CONTENT_TYPE), "application/x-www-form-urlencoded");
   }
 
+  @Test(description = """
+  Properly handle empty From: header
+  """)
+  public void testCase020() throws IOException {
+    WayServerRequestHeaders headers;
+    headers = regularInput("""
+    Host: www.example.com\r
+    From: \r
+    Accept-Encoding: gzip, deflate, br\r
+    \r
+    """);
+
+    headers.parseHeaders();
+
+    assertEquals(headers.size(), 3);
+    assertEquals(headers.first(HeaderName.HOST), "www.example.com");
+    assertEquals(headers.first(HeaderName.FROM), "");
+    assertEquals(headers.first(HeaderName.ACCEPT_ENCODING), "gzip, deflate, br");
+  }
+
   @Test
   public void edge001() throws IOException {
     WayServerRequestHeaders headers;

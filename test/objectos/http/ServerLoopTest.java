@@ -1212,6 +1212,60 @@ public class ServerLoopTest {
       throw new AssertionError("Failed with IOException", e);
     }
   }
+  
+  @Test(description = """
+  Properly handle empty From: header
+  """)
+  public void testCase020() {
+    TestableSocket socket;
+    socket = TestableSocket.of("""
+    GET / HTTP/1.0\r
+    Host: www.example.com\r
+    From: \r
+    Accept-Encoding: gzip, deflate, br\r
+    \r
+    """);
+    
+    try (WayServerLoop http = new WayServerLoop(socket)) {
+      http.clock(TestingClock.FIXED);
+      http.noteSink(TestingNoteSink.INSTANCE);
+
+      ParseStatus parse;
+      parse = http.parse();
+
+      assertEquals(parse.isError(), false);
+      
+      // request line
+      UriPath path;
+      path = http.path();
+
+      assertEquals(http.method(), Method.GET);
+      assertEquals(path.is("/"), true);
+
+      UriQuery query;
+      query = http.query();
+
+      assertEquals(query.isEmpty(), true);
+      assertEquals(query.value(), "");
+
+      // headers
+      ServerRequestHeaders headers;
+      headers = http.headers();
+
+      assertEquals(headers.size(), 3);
+      assertEquals(headers.first(HeaderName.HOST), "www.example.com");
+      assertEquals(headers.first(HeaderName.FROM), "");
+      assertEquals(headers.first(HeaderName.ACCEPT_ENCODING), "gzip, deflate, br");
+
+      // body
+      Body body;
+      body = http.body();
+
+      assertEquals(ObjectosHttp.readAllBytes(body), ByteArrays.empty());
+    } catch (IOException e) {
+      throw new AssertionError("Failed with IOException", e);
+    }
+  }
 
   private static class SingleParagraph extends HtmlTemplate {
     private final String text;
