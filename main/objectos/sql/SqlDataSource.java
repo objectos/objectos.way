@@ -34,6 +34,6 @@ public interface SqlDataSource {
     }
   }
 
-  SqlTransaction beginTransaction(IsolationLevel level) throws SQLException;
+  SqlTransaction beginTransaction(IsolationLevel level) throws UncheckedSqlException;
 
 }

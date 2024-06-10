@@ -32,18 +32,33 @@ final class WaySqlDataSource implements SqlDataSource {
   }
 
   @Override
-  public final SqlTransaction beginTransaction(IsolationLevel level) throws SQLException {
+  public final SqlTransaction beginTransaction(IsolationLevel level) throws UncheckedSqlException {
     int transactionIsolation;
     transactionIsolation = level.jdbcValue;
 
     Connection connection;
-    connection = dataSource.getConnection();
 
-    connection.setAutoCommit(false);
+    try {
+      connection = dataSource.getConnection();
+    } catch (SQLException e) {
+      throw new UncheckedSqlException(e);
+    }
 
-    connection.setTransactionIsolation(transactionIsolation);
+    try {
+      connection.setAutoCommit(false);
 
-    return new WaySqlTransaction(dialect, connection);
+      connection.setTransactionIsolation(transactionIsolation);
+
+      return new WaySqlTransaction(dialect, connection);
+    } catch (SQLException e) {
+      try {
+        connection.close();
+      } catch (SQLException suppressed) {
+        e.addSuppressed(suppressed);
+      }
+
+      throw new UncheckedSqlException(e);
+    }
   }
 
 }
