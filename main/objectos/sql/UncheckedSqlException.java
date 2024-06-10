@@ -24,5 +24,9 @@ public class UncheckedSqlException extends RuntimeException {
   public UncheckedSqlException(SQLException cause) {
     super(cause);
   }
+  
+  public final SQLException getCause() {
+    return (SQLException) super.getCause();
+  }
 
 }

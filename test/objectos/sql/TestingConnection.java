@@ -38,7 +38,13 @@ import java.util.Properties;
 import java.util.concurrent.Executor;
 
 final class TestingConnection extends AbstractTestable implements Connection {
+
+  private SQLException rollbackException;
   
+  public final void rollbackException(SQLException error) {
+    rollbackException = error;
+  }
+
   private Iterator<PreparedStatement> statements = Collections.emptyIterator();
 
   public final void statements(PreparedStatement... stmts) {
@@ -79,9 +85,15 @@ final class TestingConnection extends AbstractTestable implements Connection {
 
   @Override
   public void commit() throws SQLException { throw new UnsupportedOperationException("Implement me"); }
-
+  
   @Override
-  public void rollback() throws SQLException { throw new UnsupportedOperationException("Implement me"); }
+  public void rollback() throws SQLException {
+    logMethod("rollback");
+    
+    if (rollbackException != null) {
+      throw rollbackException;
+    }
+  }
 
   @Override
   public void close() throws SQLException {

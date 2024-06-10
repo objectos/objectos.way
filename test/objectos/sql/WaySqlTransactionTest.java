@@ -16,10 +16,13 @@
 package objectos.sql;
 
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertSame;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.Map;
+import org.testng.Assert;
 import org.testng.annotations.Test;
 
 public class WaySqlTransactionTest {
@@ -429,6 +432,145 @@ public class WaySqlTransactionTest {
     );
   }
   
+  @Test
+  public void rollback01() {
+    TestingConnection conn;
+    conn = new TestingConnection();
+
+    try (SqlTransaction trx = trx(conn)) {
+      trx.rollback();
+    }
+    
+    assertEquals(
+        conn.toString(),
+
+        """
+        rollback()
+        close()        
+        """
+    );
+  }
+  
+  @Test(description = """
+  rollback throws
+  """)
+  public void rollback02() {
+    TestingConnection conn;
+    conn = new TestingConnection();
+    
+    SQLException exception;
+    exception = new SQLException();
+    
+    conn.rollbackException(exception);
+
+    try (SqlTransaction trx = trx(conn)) {
+      trx.rollback();
+      
+      Assert.fail();
+    } catch (UncheckedSqlException e) {
+      SQLException cause;
+      cause = e.getCause();
+      
+      assertSame(cause, exception);
+    }
+    
+    assertEquals(
+        conn.toString(),
+
+        """
+        rollback()
+        close()        
+        """
+    );
+  }
+  
+  @Test(description = """
+  rethrow is java.lang.Error
+  """)
+  public void rollbackAndRethrow01() {
+    TestingConnection conn;
+    conn = new TestingConnection();
+    
+    Throwable rethrow;
+    rethrow = new Error();
+    
+    try (SqlTransaction trx = trx(conn)) {
+      trx.rollbackAndRethrow(rethrow);
+    } catch (Error expected) {
+      assertSame(expected, rethrow);
+    } catch (Throwable e) {
+      Assert.fail("Not an Error", e);
+    }
+    
+    assertEquals(
+        conn.toString(),
+
+        """
+        rollback()
+        close()        
+        """
+    );
+  }
+  
+  @Test(description = """
+  rethrow is java.lang.RuntimeException
+  """)
+  public void rollbackAndRethrow02() {
+    TestingConnection conn;
+    conn = new TestingConnection();
+    
+    Throwable rethrow;
+    rethrow = new IllegalArgumentException();
+    
+    try (SqlTransaction trx = trx(conn)) {
+      trx.rollbackAndRethrow(rethrow);
+    } catch (RuntimeException expected) {
+      assertSame(expected, rethrow);
+    } catch (Throwable e) {
+      Assert.fail("Not an RuntimeException", e);
+    }
+    
+    assertEquals(
+        conn.toString(),
+
+        """
+        rollback()
+        close()        
+        """
+    );
+  }
+
+  @Test(description = """
+  rethrow is checked
+  """)
+  public void rollbackAndRethrow03() {
+    TestingConnection conn;
+    conn = new TestingConnection();
+    
+    Throwable rethrow;
+    rethrow = new SQLException();
+    
+    try (SqlTransaction trx = trx(conn)) {
+      trx.rollbackAndRethrow(rethrow);
+    } catch (RuntimeException expected) {
+      Throwable cause;
+      cause = expected.getCause();
+      
+      assertSame(cause, rethrow);
+    } catch (Throwable e) {
+      Assert.fail("Not an RuntimeException", e);
+    }
+    
+    assertEquals(
+        conn.toString(),
+
+        """
+        rollback()
+        close()        
+        """
+    );
+  }
+
   private SqlTransaction trx(Connection connection) {
     Dialect dialect;
     dialect = new Dialect();

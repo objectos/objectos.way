@@ -15,11 +15,37 @@
  */
 package objectos.sql;
 
+import java.sql.SQLException;
+import objectos.lang.object.Check;
+
 public interface SqlTransaction extends AutoCloseable {
 
   void commit() throws UncheckedSqlException;
 
   void rollback() throws UncheckedSqlException;
+  
+  default void rollbackAndRethrow(Throwable rethrow) {
+    Check.notNull(rethrow, "rethrow == null");
+    
+    try {
+      rollback();
+    } catch (UncheckedSqlException e) {
+      SQLException sqlException;
+      sqlException = e.getCause();
+
+      rethrow.addSuppressed(sqlException);
+    }
+
+    if (rethrow instanceof Error error) {
+      throw error;
+    }
+
+    if (rethrow instanceof RuntimeException re) {
+      throw re;
+    }
+
+    throw new RuntimeException(rethrow);
+  }
 
   @Override
   void close() throws UncheckedSqlException;
