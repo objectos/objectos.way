@@ -19,14 +19,13 @@ import static org.testng.Assert.assertEquals;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.Map;
 import org.testng.annotations.Test;
 
 public class WaySqlTransactionTest {
   
   @Test
-  public void batchUpdate01() throws SQLException {
+  public void batchUpdate01() {
     TestingConnection conn;
     conn = new TestingConnection();
 
@@ -76,7 +75,7 @@ public class WaySqlTransactionTest {
   }
   
   @Test
-  public void count01() throws SQLException {
+  public void count01() {
     TestingConnection conn;
     conn = new TestingConnection();
 
@@ -99,7 +98,7 @@ public class WaySqlTransactionTest {
       from FOO
       where C = ?
       """, 123);
-      
+
       assertEquals(count, 567);
     }
 
@@ -135,7 +134,7 @@ public class WaySqlTransactionTest {
   @Test(description = """
   SQL template without optional fragments
   """)
-  public void queryPage01() throws SQLException {
+  public void queryPage01() {
     TestingConnection conn;
     conn = new TestingConnection();
 
@@ -193,7 +192,7 @@ public class WaySqlTransactionTest {
   SQL template with 1 optional fragment
   => fragment removed
   """)
-  public void queryPage02() throws SQLException {
+  public void queryPage02() {
     TestingConnection conn;
     conn = new TestingConnection();
 
@@ -254,7 +253,7 @@ public class WaySqlTransactionTest {
   SQL template with 1 optional fragment
   => fragment included
   """)
-  public void queryPage03() throws SQLException {
+  public void queryPage03() {
     TestingConnection conn;
     conn = new TestingConnection();
 
@@ -315,7 +314,7 @@ public class WaySqlTransactionTest {
   @Test(description = """
   SQL template pagination
   """)
-  public void queryPage04() throws SQLException {
+  public void queryPage04() {
     TestingConnection conn;
     conn = new TestingConnection();
 
@@ -372,7 +371,7 @@ public class WaySqlTransactionTest {
   @Test(description = """
   SQL template with two fragments
   """)
-  public void queryPage05() throws SQLException {
+  public void queryPage05() {
     TestingConnection conn;
     conn = new TestingConnection();
 
@@ -437,7 +436,7 @@ public class WaySqlTransactionTest {
     return new WaySqlTransaction(dialect, connection);
   }
 
-  private void row(ResultSet rs) throws SQLException {
+  private void row(ResultSet rs) {
     // noop
   }
   

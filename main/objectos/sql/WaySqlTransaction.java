@@ -33,22 +33,34 @@ final class WaySqlTransaction implements SqlTransaction {
   }
 
   @Override
-  public final void commit() throws SQLException {
-    connection.commit();
+  public final void commit() throws UncheckedSqlException {
+    try {
+      connection.commit();
+    } catch (SQLException e) {
+      throw new UncheckedSqlException(e);
+    }
   }
 
   @Override
-  public final void rollback() throws SQLException {
-    connection.rollback();
+  public final void rollback() throws UncheckedSqlException {
+    try {
+      connection.rollback();
+    } catch (SQLException e) {
+      throw new UncheckedSqlException(e);
+    }
   }
 
   @Override
-  public final void close() throws SQLException {
-    connection.close();
+  public final void close() throws UncheckedSqlException {
+    try {
+      connection.close();
+    } catch (SQLException e) {
+      throw new UncheckedSqlException(e);
+    }
   }
 
   @Override
-  public final int[] batchUpdate(String sql, Object[]... batches) throws SQLException {
+  public final int[] batchUpdate(String sql, Object[]... batches) throws UncheckedSqlException {
     Check.notNull(sql, "sql == null");
     Check.notNull(batches, "batches == null");
 
@@ -66,11 +78,14 @@ final class WaySqlTransaction implements SqlTransaction {
       }
 
       return stmt.executeBatch();
+      
+    } catch (SQLException e) {
+      throw new UncheckedSqlException(e);
     }
   }
 
   @Override
-  public final int count(String sql, Object... args) throws SQLException {
+  public final int count(String sql, Object... args) throws UncheckedSqlException {
     Check.notNull(sql, "sql == null");
     Check.notNull(args, "args == null");
 
@@ -81,7 +96,7 @@ final class WaySqlTransaction implements SqlTransaction {
   }
 
   @Override
-  public final void queryPage(String sql, ResultSetHandler handler, Page page, Object... args) throws SQLException {
+  public final void queryPage(String sql, ResultSetHandler handler, Page page, Object... args) throws UncheckedSqlException {
     Check.notNull(sql, "sql == null");
     Check.notNull(handler, "handler == null");
     Check.notNull(page, "page == null");

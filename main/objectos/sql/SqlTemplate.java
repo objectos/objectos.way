@@ -124,7 +124,7 @@ final class SqlTemplate {
     return count;
   }
 
-  final int count(Dialect dialect, Connection connection) throws SQLException {
+  final int count(Dialect dialect, Connection connection) throws UncheckedSqlException {
     dialect.count(sqlBuilder);
 
     String sqlToPrepare;
@@ -145,10 +145,12 @@ final class SqlTemplate {
           return 0;
         }
       }
+    } catch (SQLException e) {
+      throw new UncheckedSqlException(e);
     }
   }
 
-  final void query(Connection connection, ResultSetHandler handler) throws SQLException {
+  final void query(Connection connection, ResultSetHandler handler) throws UncheckedSqlException {
     String sqlToPrepare;
     sqlToPrepare = sqlBuilder.toString();
 
@@ -165,6 +167,8 @@ final class SqlTemplate {
           handler.handle(rs);
         }
       }
+    } catch (SQLException e) {
+      throw new UncheckedSqlException(e);
     }
   }
 

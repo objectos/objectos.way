@@ -15,23 +15,14 @@
  */
 package objectos.sql;
 
-public interface SqlTransaction extends AutoCloseable {
+import java.sql.SQLException;
 
-  void commit() throws UncheckedSqlException;
+public class UncheckedSqlException extends RuntimeException {
 
-  void rollback() throws UncheckedSqlException;
+  private static final long serialVersionUID = 9207295421842688968L;
 
-  @Override
-  void close() throws UncheckedSqlException;
-
-  int[] batchUpdate(String sql, Object[]... batches) throws UncheckedSqlException;
-
-  int count(String sql, Object... args) throws UncheckedSqlException;
-  
-  void queryPage(String sql, ResultSetHandler handler, Page page, Object... args) throws UncheckedSqlException;
-
-  default Object[] values(Object... values) {
-    return values;
+  public UncheckedSqlException(SQLException cause) {
+    super(cause);
   }
-  
+
 }
