@@ -19,7 +19,6 @@
 module objectos.way {
   exports objectos.args;
   exports objectos.css;
-  exports objectos.css.random;
   exports objectos.css.reset;
   exports objectos.css.select;
   exports objectos.css.tmpl;
