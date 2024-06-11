@@ -2609,6 +2609,27 @@ public class StyleGenTest {
         """
     );
   }
+  
+  @Test
+  public void textWrap() {
+    class Subject extends AbstractSubject {
+      @Override
+      final void classes() {
+        className("text-wrap text-nowrap text-balance text-pretty");
+      }
+    }
+
+    test(
+        Subject.class,
+
+        """
+        .text-wrap { text-wrap: wrap }
+        .text-nowrap { text-wrap: nowrap }
+        .text-balance { text-wrap: balance }
+        .text-pretty { text-wrap: pretty }
+        """
+    );
+  }
 
   @Test
   public void transitionProperty() {

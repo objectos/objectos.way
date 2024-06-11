@@ -70,6 +70,7 @@ import static objectos.css.Utility.START;
 import static objectos.css.Utility.TEXT_ALIGN;
 import static objectos.css.Utility.TEXT_COLOR;
 import static objectos.css.Utility.TEXT_DECORATION;
+import static objectos.css.Utility.TEXT_WRAP;
 import static objectos.css.Utility.TOP;
 import static objectos.css.Utility.TRANSITION_DURATION;
 import static objectos.css.Utility.TRANSITION_PROPERTY;
@@ -232,6 +233,12 @@ abstract class WayStyleGenParser extends WayStyleGenVariants {
       case "overline" -> nameValue(TEXT_DECORATION, "overline");
       case "line-through" -> nameValue(TEXT_DECORATION, "line-through");
       case "no-underline" -> nameValue(TEXT_DECORATION, "none");
+
+      // Text Wrap
+      case "text-wrap" -> nameValue(TEXT_WRAP, "wrap");
+      case "text-nowrap" -> nameValue(TEXT_WRAP, "nowrap");
+      case "text-balance" -> nameValue(TEXT_WRAP, "balance");
+      case "text-pretty" -> nameValue(TEXT_WRAP, "pretty");
 
       // User Select
       case "select-none" -> nameValue(USER_SELECT, "none");

@@ -91,6 +91,8 @@ sealed abstract class Utility {
   static final Utility OVERFLOW_X = new Single("overflow-x");
   static final Utility OVERFLOW_Y = new Single("overflow-y");
   
+  static final Utility TEXT_WRAP = new Single("text-wrap");
+  
   // 1604
   static final Utility BORDER_WIDTH = new Single("border-width");
   static final Utility BORDER_WIDTH_X = new Axis("border-left-width", "border-right-width");

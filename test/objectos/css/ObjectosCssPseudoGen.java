@@ -28,8 +28,8 @@ public class ObjectosCssPseudoGen {
     ObjectosCssPseudoGen gen;
     gen = new ObjectosCssPseudoGen();
 
-    gen.classNameSingleLine(MIN_WIDTH, "min-w-");
-    gen.initVariable(MIN_WIDTH, "minWidth");
+    gen.classNameSingleLine(TEXT_WRAP, "text-");
+    gen.cases(TEXT_WRAP, "TEXT_WRAP", "text-");
   }
 
   private static final Map<String, String> SCREENS = seqmap(
@@ -475,6 +475,13 @@ public class ObjectosCssPseudoGen {
       kv("overline", "overline"),
       kv("line-through", "line-through"),
       kv("no-underline", "none")
+  );
+
+  static final Map<String, String> TEXT_WRAP = seqmap(
+      kv("wrap", "wrap"),
+      kv("nowrap", "nowrap"),
+      kv("balance", "balance"),
+      kv("pretty", "pretty")
   );
 
   static final Map<String, String> TRANSITION_DURATION = seqmap(
