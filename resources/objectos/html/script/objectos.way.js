@@ -24,7 +24,7 @@
 	function onClick(event) {
 		if (executeEvent(event, "onClick")) {
 			event.preventDefault();
-			
+
 			return;
 		}
 
@@ -34,6 +34,7 @@
 
 		while (maybeAnchor instanceof Node) {
 			if (maybeAnchor instanceof HTMLAnchorElement) {
+				
 				const anchor = maybeAnchor;
 
 				if (anchor.origin !== window.location.origin) {
@@ -209,6 +210,12 @@
 				case "html": {
 					executeHtml(action.value);
 
+					break;
+				}
+
+				case "location": {
+					executeLocation(action.value);
+					
 					break;
 				}
 
