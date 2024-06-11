@@ -50,6 +50,27 @@ public abstract class Action {
     };
   }
 
+  public static Action location(String url) {
+    Check.notNull(url, "url == null");
+    
+    return new Action() {
+      @Override
+      final void writeTo(StringBuilder json) {
+        json.append('{');
+
+        writeCommandName(json, "location");
+
+        json.append(',');
+
+        writeStringLiteral(json, "value");
+        json.append(':');
+        writeStringLiteral(json, url);
+
+        json.append('}');
+      }
+    };
+  }
+
   public static Action replaceClass(ExternalAttribute.Id id,
                                     ExternalAttribute.StyleClass from,
                                     ExternalAttribute.StyleClass to) {

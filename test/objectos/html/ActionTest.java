@@ -42,6 +42,22 @@ public class ActionTest {
   }
   
   @Test
+  public void location() {
+    test(
+        new HtmlTemplate() {
+          @Override
+          protected final void definition() {
+            a(dataOnClick(Action.location("/foo")), t("Foo"));
+          }
+        },
+
+        """
+        <a data-on-click='[{"cmd":"location","value":"/foo"}]'>Foo</a>
+        """
+    );
+  }
+  
+  @Test
   public void submit() {
     test(
         new HtmlTemplate() {
