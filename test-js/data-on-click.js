@@ -12,7 +12,7 @@ suite("data-on-click test", function() {
 	test("submit", function() {
 		const clickId = "f";
 		const onClick = JSON.stringify([{
-			cmd: "replace-class", 
+			cmd: "replace-class",
 			args: ["subject", "a", "b"]
 		}]);
 		make(`
@@ -22,6 +22,38 @@ suite("data-on-click test", function() {
 		`);
 
 		byId(clickId).click();
+
+		const subject = byId("subject");
+
+		const l = subject.classList;
+
+		assert.equal(l.length, 2);
+		assert.isFalse(l.contains("a"));
+		assert.isTrue(l.contains("b"));
+		assert.isTrue(l.contains("x"));
+	});
+
+	test("it should prevent anchor default", function() {
+		const clickId = "f";
+		const onClick = JSON.stringify([{
+			cmd: "replace-class",
+			args: ["subject", "a", "b"]
+		}]);
+		make(`
+		<div data-frame='x:foo'>
+		<a id='${clickId}' data-on-click='${onClick}' href='/foo'>Foo</a>
+		<div id='subject' class='a x'></div>
+		</div>
+		`);
+		const page2 = makeElement("<html><div data-frame='x:bar'>Bar</div></html>");
+
+		this.server.respondWith("GET", "/foo", [200, { "Content-Type": "text/html" }, page2.outerHTML]);
+
+		byId(clickId).click();
+
+		this.server.respond();
+
+		assert.notEqual(workArea().innerHTML, page2.outerHTML);
 		
 		const subject = byId("subject");
 
@@ -32,5 +64,5 @@ suite("data-on-click test", function() {
 		assert.isTrue(l.contains("b"));
 		assert.isTrue(l.contains("x"));
 	});
-	
+
 });

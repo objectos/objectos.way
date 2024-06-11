@@ -23,6 +23,8 @@
 
 	function onClick(event) {
 		if (executeEvent(event, "onClick")) {
+			event.preventDefault();
+			
 			return;
 		}
 
