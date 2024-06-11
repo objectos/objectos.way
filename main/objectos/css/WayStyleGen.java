@@ -71,6 +71,7 @@ public final class WayStyleGen extends WayStyleGenConfig implements StyleGen {
   private Map<String, String> margin;
 
   private Map<String, String> maxWidth;
+  private Map<String, String> minWidth;
 
   private Map<String, String> opacity;
 
@@ -891,6 +892,22 @@ public final class WayStyleGen extends WayStyleGenConfig implements StyleGen {
     }
 
     return maxWidth;
+  }
+
+  @Override
+  final Map<String, String> minWidth() {
+    if (minWidth == null) {
+      minWidth = new GrowableMap<>();
+
+      minWidth.putAll(spacing());
+
+      minWidth.put("full", "100%");
+      minWidth.put("min", "min-content");
+      minWidth.put("max", "max-content");
+      minWidth.put("fit", "fit-content");
+    }
+
+    return minWidth;
   }
 
   @Override

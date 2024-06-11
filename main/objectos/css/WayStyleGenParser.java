@@ -47,6 +47,7 @@ import static objectos.css.Utility.MARGIN_TOP;
 import static objectos.css.Utility.MARGIN_X;
 import static objectos.css.Utility.MARGIN_Y;
 import static objectos.css.Utility.MAX_WIDTH;
+import static objectos.css.Utility.MIN_WIDTH;
 import static objectos.css.Utility.OPACITY;
 import static objectos.css.Utility.OUTLINE_COLOR;
 import static objectos.css.Utility.OUTLINE_OFFSET;
@@ -363,6 +364,15 @@ abstract class WayStyleGenParser extends WayStyleGenVariants {
           suffix = suffix.substring("w-".length());
 
           yield config(MAX_WIDTH, config.maxWidth(), suffix);
+        } else {
+          yield Rule.NOOP;
+        }
+      }
+      case "min" -> {
+        if (suffix.startsWith("w-")) {
+          suffix = suffix.substring("w-".length());
+
+          yield config(MIN_WIDTH, config.minWidth(), suffix);
         } else {
           yield Rule.NOOP;
         }

@@ -28,8 +28,8 @@ public class ObjectosCssPseudoGen {
     ObjectosCssPseudoGen gen;
     gen = new ObjectosCssPseudoGen();
 
-    gen.classNameSingleLine(GRID_TEMPLATE_ROWS, "grid-rows-");
-    gen.initVariable(GRID_TEMPLATE_ROWS, "gridTemplateRows");
+    gen.classNameSingleLine(MIN_WIDTH, "min-w-");
+    gen.initVariable(MIN_WIDTH, "minWidth");
   }
 
   private static final Map<String, String> SCREENS = seqmap(
@@ -377,6 +377,14 @@ public class ObjectosCssPseudoGen {
       kv("fit", "fit-content"),
       kv("prose", "65ch"),
       SCREENS
+  );
+
+  static final Map<String, String> MIN_WIDTH = seqmap(
+      SPACING,
+      kv("full", "100%"),
+      kv("min", "min-content"),
+      kv("max", "max-content"),
+      kv("fit", "fit-content")
   );
 
   static final Map<String, String> OPACITY = seqmap(

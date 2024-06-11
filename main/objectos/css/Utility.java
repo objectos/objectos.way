@@ -61,6 +61,7 @@ sealed abstract class Utility {
   static final Utility SIZE = new Axis("height", "width");
   static final Utility HEIGHT = new Single("height");
   static final Utility WIDTH = new Single("width");
+  static final Utility MIN_WIDTH = new Single("min-width");
   static final Utility MAX_WIDTH = new Single("max-width");
 
   static final Utility FLEX_GROW = new Single("flex-grow");
