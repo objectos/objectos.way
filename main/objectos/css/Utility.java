@@ -66,6 +66,9 @@ sealed abstract class Utility {
 
   static final Utility FLEX_GROW = new Single("flex-grow");
   
+  // 878
+  static final Utility TABLE_LAYOUT = new Single("table-layout");
+  
   static final Utility BORDER_COLLAPSE = new Single("border-collapse");
   static final Utility BORDER_SPACING = new Single("border-spacing");
 

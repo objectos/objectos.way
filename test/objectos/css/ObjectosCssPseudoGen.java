@@ -28,8 +28,8 @@ public class ObjectosCssPseudoGen {
     ObjectosCssPseudoGen gen;
     gen = new ObjectosCssPseudoGen();
 
-    gen.classNameSingleLine(TEXT_WRAP, "text-");
-    gen.cases(TEXT_WRAP, "TEXT_WRAP", "text-");
+    gen.classNameSingleLine(TABLE_LAYOUT, "table-");
+    gen.cases(TABLE_LAYOUT, "TABLE_LAYOUT", "table-");
   }
 
   private static final Map<String, String> SCREENS = seqmap(
@@ -459,6 +459,11 @@ public class ObjectosCssPseudoGen {
       kv("min", "min-content"),
       kv("max", "max-content"),
       kv("fit", "fit-content")
+  );
+
+  static final Map<String, String> TABLE_LAYOUT = seqmap(
+      kv("auto", "auto"),
+      kv("fixed", "fixed")
   );
 
   static final Map<String, String> TEXT_ALIGN = seqmap(

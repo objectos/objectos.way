@@ -67,6 +67,7 @@ import static objectos.css.Utility.POINTER_EVENTS;
 import static objectos.css.Utility.POSITION;
 import static objectos.css.Utility.RIGHT;
 import static objectos.css.Utility.START;
+import static objectos.css.Utility.TABLE_LAYOUT;
 import static objectos.css.Utility.TEXT_ALIGN;
 import static objectos.css.Utility.TEXT_COLOR;
 import static objectos.css.Utility.TEXT_DECORATION;
@@ -219,6 +220,10 @@ abstract class WayStyleGenParser extends WayStyleGenVariants {
       case "absolute" -> nameValue(POSITION, "absolute");
       case "relative" -> nameValue(POSITION, "relative");
       case "sticky" -> nameValue(POSITION, "sticky");
+      
+      // Table Layout
+      case "table-auto" -> nameValue(TABLE_LAYOUT, "auto");
+      case "table-fixed" -> nameValue(TABLE_LAYOUT, "fixed");
 
       // Text Align
       case "text-left" -> nameValue(TEXT_ALIGN, "left");

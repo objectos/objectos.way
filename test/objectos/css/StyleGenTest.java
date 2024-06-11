@@ -2543,6 +2543,25 @@ public class StyleGenTest {
         """
     );
   }
+  
+  @Test
+  public void tableLayout() {
+    class Subject extends AbstractSubject {
+      @Override
+      final void classes() {
+        className("table-auto table-fixed");
+      }
+    }
+
+    test(
+        Subject.class,
+
+        """
+        .table-auto { table-layout: auto }
+        .table-fixed { table-layout: fixed }
+        """
+    );
+  }
 
   @Test
   public void textAlign() {
