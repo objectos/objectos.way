@@ -23,7 +23,7 @@ public sealed abstract class AttributeName extends GeneratedAttributeName permit
   /**
    * The {@code data-click} attribute.
    */
-  public static final AttributeName DATA_CLICK = WayAttributeNameBuilder.create("data-click", false);
+  public static final AttributeName DATA_CLICK = WayAttributeNameBuilder.singleQuoted("data-click");
 
   /**
    * The {@code data-frame} attribute.
@@ -33,17 +33,17 @@ public sealed abstract class AttributeName extends GeneratedAttributeName permit
   /**
    * The {@code data-on-click} attribute.
    */
-  public static final AttributeName DATA_ON_CLICK = WayAttributeNameBuilder.create("data-on-click", false);
+  public static final AttributeName DATA_ON_CLICK = WayAttributeNameBuilder.singleQuoted("data-on-click");
 
   /**
    * The {@code data-on-input} attribute.
    */
-  public static final AttributeName DATA_ON_INPUT = WayAttributeNameBuilder.create("data-on-input", false);
+  public static final AttributeName DATA_ON_INPUT = WayAttributeNameBuilder.singleQuoted("data-on-input");
 
   /**
    * The {@code data-way-click} attribute.
    */
-  public static final AttributeName DATA_WAY_CLICK = WayAttributeNameBuilder.create("data-way-click", false);
+  public static final AttributeName DATA_WAY_CLICK = WayAttributeNameBuilder.singleQuoted("data-way-click");
 
   AttributeName() {}
 
@@ -69,5 +69,14 @@ public sealed abstract class AttributeName extends GeneratedAttributeName permit
    *         {@code false} otherwise
    */
   public abstract boolean booleanAttribute();
+
+  /**
+   * Returns {@code true} if the value of this attribute must be formatted
+   * inside single quotes.
+   *
+   * @return {@code true} if the value of this attribute must be formatted
+   *         inside single quotes.
+   */
+  public abstract boolean singleQuoted();
 
 }

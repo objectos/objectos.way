@@ -35,7 +35,6 @@ module objectos.way {
   exports objectos.notes.impl;
   exports objectos.sql;
   exports objectos.testing;
-  exports objectos.ui;
   exports objectos.way;
   exports objectos.web;
 

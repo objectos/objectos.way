@@ -17,24 +17,19 @@ package testing.site.web;
 
 import java.io.IOException;
 import objectos.css.select.IdSelector;
-import objectos.html.HtmlTemplate;
 import objectos.http.FormUrlEncoded;
 import objectos.http.Handler;
 import objectos.http.Method;
 import objectos.http.ServerExchange;
 import objectos.http.Session;
 import objectos.http.UnsupportedMediaTypeException;
-import objectos.ui.Ui;
-import objectos.ui.UiPage;
 import testing.site.auth.User;
 import testing.zite.TestingSiteInjector;
 
-final class Login extends HtmlTemplate implements Handler {
-
-  private final TestingSiteInjector injector;
+final class Login extends WebTemplate implements Handler {
 
   public Login(TestingSiteInjector injector) {
-    this.injector = injector;
+    title = "Login Page";
   }
 
   @Override
@@ -84,18 +79,7 @@ final class Login extends HtmlTemplate implements Handler {
   @SuppressWarnings("unused")
   private String loginError;
 
-  @Override
-  protected final void definition() {
-    Ui ui;
-    ui = injector.ui(this);
-
-    UiPage page;
-    page = ui.page();
-
-    page.title("Login Page").render(this::renderBody);
-  }
-
-  private void renderBody() {
+  final void bodyImpl() {
     className("bg-gray-100");
 
     dataFrame("root", "login");

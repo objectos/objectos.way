@@ -54,7 +54,7 @@ suite("data-on-click test", function() {
 		this.server.respond();
 
 		assert.notEqual(workArea().innerHTML, page2.outerHTML);
-		
+
 		const subject = byId("subject");
 
 		const l = subject.classList;

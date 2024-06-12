@@ -35,7 +35,6 @@ import objectos.notes.Level;
 import objectos.notes.NoteSink;
 import objectos.notes.impl.ConsoleNoteSink;
 import objectos.testing.WayTestingServerExchange;
-import objectos.ui.WayUi;
 import objectos.web.Stage;
 import objectos.web.WayWebResources;
 
@@ -89,12 +88,6 @@ public final class TestingTestingSite {
     Stage stage;
     stage = Stage.TESTING;
 
-    // UiBinder
-    WayUi uiBinder;
-    uiBinder = new WayUi();
-
-    uiBinder.onHeadStart(html -> {});
-
     // WebResources
     WayWebResources webResources;
 
@@ -106,7 +99,7 @@ public final class TestingTestingSite {
       throw new UncheckedIOException(e);
     }
 
-    INJECTOR = new TestingSiteInjector(noteSink, sessionStore, stage, uiBinder, webResources);
+    INJECTOR = new TestingSiteInjector(noteSink, sessionStore, stage, webResources);
   }
 
   private TestingTestingSite() {}

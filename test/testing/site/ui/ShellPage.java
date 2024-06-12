@@ -15,19 +15,16 @@
  */
 package testing.site.ui;
 
+import objectos.html.Action;
 import objectos.html.Api;
 import objectos.html.Api.Element;
 import objectos.html.ElementClass;
 import objectos.html.ElementId;
-import objectos.ui.Ui;
 import testing.zite.TestingSiteInjector;
 
 final class ShellPage extends UiTemplate {
 
-  private final Ui ui;
-
   ShellPage(TestingSiteInjector injector) {
-    ui = injector.ui(this);
   }
 
   private static final ElementClass HEADER = ElementClass.of(
@@ -173,22 +170,22 @@ final class ShellPage extends UiTemplate {
   }
 
   private Api.GlobalAttribute openMenu() {
-    return ui.click(
-        ui.replaceClass(OPEN, "flex", "hidden"),
-        ui.replaceClass(CLOSE, "hidden", "flex"),
-        ui.replaceClass(NAV, "hidden", "flex"),
-        ui.replaceClass(OVERLAY, "hidden", "block"),
-        ui.replaceClass(OVERLAY, "opacity-0", "opacity-100")
+    return dataOnClick(
+        Action.replaceClass(OPEN, "flex", "hidden"),
+        Action.replaceClass(CLOSE, "hidden", "flex"),
+        Action.replaceClass(NAV, "hidden", "flex"),
+        Action.replaceClass(OVERLAY, "hidden", "block"),
+        Action.replaceClass(OVERLAY, "opacity-0", "opacity-100")
     );
   }
 
   private Api.GlobalAttribute closeMenu() {
-    return ui.click(
-        ui.replaceClass(CLOSE, "flex", "hidden"),
-        ui.replaceClass(OPEN, "hidden", "flex"),
-        ui.replaceClass(NAV, "flex", "hidden"),
-        ui.replaceClass(OVERLAY, "block", "hidden"),
-        ui.replaceClass(OVERLAY, "opacity-100", "opacity-0")
+    return dataOnClick(
+        Action.replaceClass(CLOSE, "flex", "hidden"),
+        Action.replaceClass(OPEN, "hidden", "flex"),
+        Action.replaceClass(NAV, "flex", "hidden"),
+        Action.replaceClass(OVERLAY, "block", "hidden"),
+        Action.replaceClass(OVERLAY, "opacity-100", "opacity-0")
     );
   }
 

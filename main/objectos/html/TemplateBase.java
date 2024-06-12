@@ -67,7 +67,7 @@ public sealed abstract class TemplateBase
   private final Api.GlobalAttribute dataOn(AttributeName name, Action... actions) {
     Check.notNull(actions, "actions == null");
 
-    SingleQuotedValue value;
+    Action value;
     value = Action.join(actions);
 
     return $html().attribute0(name, value);

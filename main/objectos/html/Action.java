@@ -128,24 +128,51 @@ public abstract class Action {
       }
     };
   }
+  
+  private static class ActionArray extends Action {
 
-  static SingleQuotedValue join(Action[] actions) {
-    record AttributeValue(String value) implements SingleQuotedValue {
-      @Override
-      public final String toString() {
-        return value;
-      }
+    private final Action[] actions;
+
+    public ActionArray(Action[] actions) {
+      this.actions = actions.clone();
     }
 
-    StringBuilder json;
-    json = new StringBuilder();
+    @Override
+    final void writeTo(StringBuilder json) {
+      json.append('[');
 
-    writeActions(json, actions);
+      if (actions.length > 0) {
+        Action action;
+        action = actions[0];
 
-    String value;
-    value = json.toString();
+        action.writeTo(json);
 
-    return new AttributeValue(value);
+        for (int idx = 1; idx < actions.length; idx++) {
+          json.append(',');
+
+          action = actions[idx];
+
+          action.writeTo(json);
+        }
+      }
+
+      json.append(']');
+    }
+
+    @Override
+    public final String toString() {
+      StringBuilder json;
+      json = new StringBuilder();
+
+      writeTo(json);
+
+      return json.toString();
+    }
+
+  }
+
+  static Action join(Action[] actions) {
+    return new ActionArray(actions);
   }
 
   private static void writeActions(StringBuilder json, Action[] actions) {

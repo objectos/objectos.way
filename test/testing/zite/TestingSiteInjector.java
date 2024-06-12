@@ -15,11 +15,8 @@
  */
 package testing.zite;
 
-import objectos.html.TemplateBase;
 import objectos.http.SessionStore;
 import objectos.notes.NoteSink;
-import objectos.ui.Ui;
-import objectos.ui.UiBinder;
 import objectos.web.Stage;
 import objectos.web.WebResources;
 
@@ -31,19 +28,15 @@ public final class TestingSiteInjector {
 
   private final Stage stage;
 
-  private final UiBinder uiBinder;
-
   private final WebResources webResources;
 
   public TestingSiteInjector(NoteSink noteSink,
                              SessionStore sessionStore,
                              Stage stage,
-                             UiBinder uiBinder,
                              WebResources webResources) {
     this.noteSink = noteSink;
     this.sessionStore = sessionStore;
     this.stage = stage;
-    this.uiBinder = uiBinder;
     this.webResources = webResources;
   }
 
@@ -54,9 +47,5 @@ public final class TestingSiteInjector {
   public final Stage stage() { return stage; }
 
   public final WebResources webResources() { return webResources; }
-
-  public final Ui ui(TemplateBase parent) {
-    return uiBinder.bindTo(parent);
-  }
 
 }

@@ -53,7 +53,6 @@ public class ByteProtoFauxGenerator extends FauxGenerator {
 
     value("ATTRIBUTE0");
     value("ATTRIBUTE1");
-    value("ATTRIBUTE1_SINGLE");
     value("ATTRIBUTE_CLASS");
     value("ATTRIBUTE_ID");
   }

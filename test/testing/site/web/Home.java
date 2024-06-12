@@ -15,22 +15,17 @@
  */
 package testing.site.web;
 
-import objectos.html.HtmlTemplate;
 import objectos.http.Handler;
 import objectos.http.Method;
 import objectos.http.ServerExchange;
-import objectos.ui.Ui;
-import objectos.ui.UiPage;
 import testing.zite.TestingSiteInjector;
 
-final class Home extends HtmlTemplate implements Handler {
-
-  private final TestingSiteInjector injector;
+final class Home extends WebTemplate implements Handler {
 
   private ShellHeader header;
 
   Home(TestingSiteInjector injector) {
-    this.injector = injector;
+    title = "Home";
   }
 
   @Override
@@ -48,20 +43,7 @@ final class Home extends HtmlTemplate implements Handler {
     http.ok(this);
   }
 
-  @Override
-  protected final void definition() {
-    Ui ui;
-    ui = injector.ui(this);
-
-    UiPage page;
-    page = ui.page();
-
-    page.title("Home");
-
-    page.render(this::bodyImpl);
-  }
-
-  private void bodyImpl() {
+  final void bodyImpl() {
     dataFrame("root", "shell");
 
     header.render();

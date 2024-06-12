@@ -80,7 +80,7 @@ public final class Html extends BaseElements implements CharWritable {
     return attribute0(name, value);
   }
 
-  public final Api.GlobalAttribute attribute(AttributeName name, SingleQuotedValue value) {
+  public final Api.GlobalAttribute attribute(AttributeName name, Action value) {
     Check.notNull(name, "name == null");
     Check.notNull(value, "value == null");
 
@@ -625,7 +625,6 @@ public final class Html extends BaseElements implements CharWritable {
 
         case ByteProto.ATTRIBUTE0,
              ByteProto.ATTRIBUTE1,
-             ByteProto.ATTRIBUTE1_SINGLE,
              ByteProto.ATTRIBUTE_CLASS,
              ByteProto.ATTRIBUTE_ID -> {
           index = rollbackIndex;
@@ -682,8 +681,6 @@ public final class Html extends BaseElements implements CharWritable {
     final PseudoHtmlAttribute attribute;
     attribute = htmlAttribute();
 
-    attribute.singleQuoted = false;
-
     // values to set
     byte attr, v0 = -1, v1 = -1;
 
@@ -721,18 +718,6 @@ public final class Html extends BaseElements implements CharWritable {
         v0 = main[auxStart++];
 
         v1 = main[auxStart++];
-      }
-
-      case ByteProto.ATTRIBUTE1_SINGLE -> {
-        index = jmp2(index);
-
-        attr = main[auxStart++];
-
-        v0 = main[auxStart++];
-
-        v1 = main[auxStart++];
-
-        attribute.singleQuoted = true;
       }
 
       case ByteProto.ATTRIBUTE_CLASS -> {
@@ -900,8 +885,7 @@ public final class Html extends BaseElements implements CharWritable {
           break loop;
         }
 
-        case ByteProto.ATTRIBUTE1,
-             ByteProto.ATTRIBUTE1_SINGLE -> {
+        case ByteProto.ATTRIBUTE1 -> {
           index = jmp2(index);
 
           byte attr;
@@ -1154,8 +1138,7 @@ public final class Html extends BaseElements implements CharWritable {
           break loop;
         }
 
-        case ByteProto.ATTRIBUTE1,
-             ByteProto.ATTRIBUTE1_SINGLE -> index = skipVarInt(index);
+        case ByteProto.ATTRIBUTE1 -> index = skipVarInt(index);
 
         case ByteProto.ATTRIBUTE_CLASS,
              ByteProto.ATTRIBUTE_ID -> index += 2;
