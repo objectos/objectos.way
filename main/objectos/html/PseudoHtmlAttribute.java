@@ -23,7 +23,7 @@ final class PseudoHtmlAttribute implements HtmlAttribute {
 
   private final Html player;
 
-  String value;
+  Object value;
 
   public PseudoHtmlAttribute(Html player) {
     this.player = player;
@@ -53,36 +53,60 @@ final class PseudoHtmlAttribute implements HtmlAttribute {
     if (!hasNext()) {
       return "";
     }
-
-    String result;
+    
+    Object result;
     result = next();
     
     if (!hasNext()) {
-      return result;
+      return String.valueOf(result);
     }
     
-    StringBuilder value;
-    value = new StringBuilder(result);
+    Class<?> type;
+    type = name.type();
     
-    value.append(' ');
-    
-    value.append(next());
-    
-    while (hasNext()) {
-      value.append(' ');
+    if (type == Action.class) {
       
+      ActionJoiner joiner;
+      joiner = new ActionJoiner();
+      
+      joiner.add(result);
+      
+      joiner.add(next());
+      
+      while (hasNext()) {
+        joiner.add(next());
+      }
+      
+      return joiner.join();
+      
+    } else {
+      
+      StringBuilder value;
+      value = new StringBuilder();
+
+      value.append(result);
+
+      value.append(' ');
+
       value.append(next());
-    }
-    
-    return value.toString();
+
+      while (hasNext()) {
+        value.append(' ');
+
+        value.append(next());
+      }
+
+      return value.toString();
+      
+    }    
   }
 
   private boolean hasNext() {
     return player.attributeValuesHasNext();
   }
 
-  private String next() {
-    String result;
+  private Object next() {
+    Object result;
     result = player.attributeValuesNext(value);
 
     value = null;

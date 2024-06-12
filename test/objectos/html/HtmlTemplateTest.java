@@ -1164,6 +1164,58 @@ public class HtmlTemplateTest {
     );
   }
 
+
+  @Test(description = """
+  HtmlTemplate TC54
+
+  Multiple dataOnClick should merge actions together
+  """)
+  public void testCase54() {
+    test(
+        new HtmlTemplate() {
+          final ElementId FOO = ElementId.of("foo");
+          
+          @Override
+          protected final void definition() {
+            div(
+                dataOnClick(
+                    Action.replaceClass(FOO, "a", "x")
+                ),
+                dataOnClick(
+                    Action.replaceClass(FOO, "b", "y")
+                )
+            );
+
+            div(
+                dataOnClick(
+                    Action.replaceClass(FOO, "a", "x")
+                ),
+                dataOnClick(
+                    Action.replaceClass(FOO, "b", "y"),
+                    Action.replaceClass(FOO, "c", "z")
+                )
+            );
+
+            div(
+                dataOnClick(
+                    Action.replaceClass(FOO, "a", "x"),
+                    Action.replaceClass(FOO, "b", "y")
+                ),
+                dataOnClick(
+                    Action.replaceClass(FOO, "c", "z")
+                )
+            );
+          }
+        },
+
+        """
+        <div data-on-click='[{"cmd":"replace-class","args":["foo","a","x"]},{"cmd":"replace-class","args":["foo","b","y"]}]'></div>
+        <div data-on-click='[{"cmd":"replace-class","args":["foo","a","x"]},{"cmd":"replace-class","args":["foo","b","y"]},{"cmd":"replace-class","args":["foo","c","z"]}]'></div>
+        <div data-on-click='[{"cmd":"replace-class","args":["foo","a","x"]},{"cmd":"replace-class","args":["foo","b","y"]},{"cmd":"replace-class","args":["foo","c","z"]}]'></div>
+        """
+    );
+  }
+
   private void test(HtmlTemplate template, String expected) {
     String result;
     result = template.toString();

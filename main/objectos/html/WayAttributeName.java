@@ -25,11 +25,14 @@ final class WayAttributeName extends AttributeName {
 
   private final boolean singleQuoted;
 
-  public WayAttributeName(int index, String name, boolean booleanAttribute, boolean singleQuoted) {
+  private final Class<?> type;
+
+  public WayAttributeName(int index, String name, boolean booleanAttribute, boolean singleQuoted, Class<?> type) {
     this.index = index;
     this.name = name;
     this.booleanAttribute = booleanAttribute;
     this.singleQuoted = singleQuoted;
+    this.type = type;
   }
 
   static int size() {
@@ -41,17 +44,28 @@ final class WayAttributeName extends AttributeName {
   }
 
   @Override
-  public final int index() { return index; }
+  public final int index() {
+    return index;
+  }
 
   @Override
-  public final String name() { return name; }
+  public final String name() {
+    return name;
+  }
 
   @Override
-  public final boolean booleanAttribute() { return booleanAttribute; }
+  public final boolean booleanAttribute() {
+    return booleanAttribute;
+  }
 
   @Override
   public final boolean singleQuoted() {
     return singleQuoted;
+  }
+
+  @Override
+  final Class<?> type() {
+    return type;
   }
 
   private static class Values {

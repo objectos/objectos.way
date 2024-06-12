@@ -756,17 +756,11 @@ public final class Html extends BaseElements implements CharWritable {
     attribute.name = WayAttributeName.get(ordinal);
 
     // attribute value
-    String value;
+    Object value;
     value = null;
 
     if (v0 != -1 || v1 != -1) {
-      int objectIndex;
-      objectIndex = Bytes.decodeInt(v0, v1);
-
-      Object o;
-      o = objectArray[objectIndex];
-
-      value = String.valueOf(o);
+      value = toObject(v0, v1);
     }
 
     attribute.value = value;
@@ -955,7 +949,7 @@ public final class Html extends BaseElements implements CharWritable {
     return nextState == _ATTRIBUTE_VALUES_HAS_NEXT;
   }
 
-  final String attributeValuesNext(String maybeNext) {
+  final Object attributeValuesNext(Object maybeNext) {
     stateCAS(_ATTRIBUTE_VALUES_HAS_NEXT, _ATTRIBUTE_VALUES_NEXT);
 
     if (maybeNext != null) {
@@ -984,7 +978,7 @@ public final class Html extends BaseElements implements CharWritable {
         byte v1;
         v1 = main[auxStart++];
 
-        yield toObjectString(v0, v1);
+        yield toObject(v0, v1);
       }
 
       case ByteProto.ATTRIBUTE1 -> {
@@ -1001,7 +995,7 @@ public final class Html extends BaseElements implements CharWritable {
         byte v1;
         v1 = main[auxStart++];
 
-        yield toObjectString(v0, v1);
+        yield toObject(v0, v1);
       }
 
       case ByteProto.ATTRIBUTE_CLASS -> {
@@ -1013,7 +1007,7 @@ public final class Html extends BaseElements implements CharWritable {
 
         elementCtxAttrsIndexStore(index);
 
-        yield toObjectString(v0, v1);
+        yield toObject(v0, v1);
       }
 
       default -> throw new UnsupportedOperationException(
@@ -1021,13 +1015,17 @@ public final class Html extends BaseElements implements CharWritable {
       );
     };
   }
-
-  private String toObjectString(byte v0, byte v1) {
+  
+  private Object toObject(byte v0, byte v1) {
     int objectIndex;
     objectIndex = Bytes.decodeInt(v0, v1);
 
+    return objectArray[objectIndex];
+  }
+
+  private String toObjectString(byte v0, byte v1) {
     Object o;
-    o = objectArray[objectIndex];
+    o = toObject(v0, v1);
 
     return o.toString();
   }

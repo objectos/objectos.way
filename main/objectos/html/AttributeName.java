@@ -23,7 +23,7 @@ public sealed abstract class AttributeName extends GeneratedAttributeName permit
   /**
    * The {@code data-click} attribute.
    */
-  public static final AttributeName DATA_CLICK = WayAttributeNameBuilder.singleQuoted("data-click");
+  public static final AttributeName DATA_CLICK = WayAttributeNameBuilder.action("data-click");
 
   /**
    * The {@code data-frame} attribute.
@@ -33,37 +33,36 @@ public sealed abstract class AttributeName extends GeneratedAttributeName permit
   /**
    * The {@code data-on-click} attribute.
    */
-  public static final AttributeName DATA_ON_CLICK = WayAttributeNameBuilder.singleQuoted("data-on-click");
+  public static final AttributeName DATA_ON_CLICK = WayAttributeNameBuilder.action("data-on-click");
 
   /**
    * The {@code data-on-input} attribute.
    */
-  public static final AttributeName DATA_ON_INPUT = WayAttributeNameBuilder.singleQuoted("data-on-input");
+  public static final AttributeName DATA_ON_INPUT = WayAttributeNameBuilder.action("data-on-input");
 
   /**
    * The {@code data-way-click} attribute.
    */
-  public static final AttributeName DATA_WAY_CLICK = WayAttributeNameBuilder.singleQuoted("data-way-click");
+  public static final AttributeName DATA_WAY_CLICK = WayAttributeNameBuilder.action("data-way-click");
 
   AttributeName() {}
 
   /**
-   * Returns the index of this attribute.
+   * Index of this attribute.
    *
-   * @return the index of this attribute.
+   * @return index of this attribute.
    */
   public abstract int index();
 
   /**
-   * Returns the name of the attribute.
+   * Name of the attribute.
    *
-   * @return the name of the attribute
+   * @return name of the attribute
    */
   public abstract String name();
 
   /**
-   * Returns {@code true} if this is the name of a boolean atttribute and
-   * {@code false} otherwise.
+   * Indicates if this is the name of a boolean atttribute.
    *
    * @return {@code true} if this is the name of a boolean atttribute and
    *         {@code false} otherwise
@@ -71,12 +70,20 @@ public sealed abstract class AttributeName extends GeneratedAttributeName permit
   public abstract boolean booleanAttribute();
 
   /**
-   * Returns {@code true} if the value of this attribute must be formatted
-   * inside single quotes.
+   * Indicates if the value of this attribute must be formatted inside single
+   * quotes.
    *
    * @return {@code true} if the value of this attribute must be formatted
    *         inside single quotes.
    */
   public abstract boolean singleQuoted();
+  
+  /**
+   * Indicates the type of the value associated to an attribute with this name.
+   * 
+   * @return the type of the value associated to an attribute with this name.
+   *         {@code null} if this is the name of a boolean attribute.
+   */
+  abstract Class<?> type();
 
 }

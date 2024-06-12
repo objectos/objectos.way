@@ -19,7 +19,7 @@ import objectos.html.Api.ExternalAttribute;
 import objectos.lang.object.Check;
 
 public abstract class Action {
-
+  
   Action() {}
 
   public static Action delay(int ms, Action... actions) {
@@ -128,51 +128,15 @@ public abstract class Action {
       }
     };
   }
-  
-  private static class ActionArray extends Action {
-
-    private final Action[] actions;
-
-    public ActionArray(Action[] actions) {
-      this.actions = actions.clone();
-    }
-
-    @Override
-    final void writeTo(StringBuilder json) {
-      json.append('[');
-
-      if (actions.length > 0) {
-        Action action;
-        action = actions[0];
-
-        action.writeTo(json);
-
-        for (int idx = 1; idx < actions.length; idx++) {
-          json.append(',');
-
-          action = actions[idx];
-
-          action.writeTo(json);
-        }
-      }
-
-      json.append(']');
-    }
-
-    @Override
-    public final String toString() {
-      StringBuilder json;
-      json = new StringBuilder();
-
-      writeTo(json);
-
-      return json.toString();
-    }
-
-  }
 
   static Action join(Action[] actions) {
-    return new ActionArray(actions);
+    return switch (actions.length) {
+      case 0 -> ActionEmpty.INSTANCE;
+
+      case 1 -> actions[0];
+
+      default -> new ActionArray(actions);
+    };
   }
 
   private static void writeActions(StringBuilder json, Action[] actions) {
@@ -194,6 +158,20 @@ public abstract class Action {
     }
 
     json.append(']');
+  }
+
+  @Override
+  public final String toString() {
+    StringBuilder json;
+    json = new StringBuilder();
+    
+    json.append('[');
+
+    writeTo(json);
+    
+    json.append(']');
+
+    return json.toString();
   }
 
   abstract void writeTo(StringBuilder json);
@@ -231,7 +209,7 @@ public abstract class Action {
     json.append(value);
     json.append('"');
   }
-
+  
   static final class ReplaceClass extends Action {
 
     final ExternalAttribute.Id id;

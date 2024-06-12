@@ -32,8 +32,8 @@ final class WayAttributeNameBuilder {
     return BUILDER.createImpl(name, booleanAttribute);
   }
 
-  public static AttributeName singleQuoted(String name) {
-    return BUILDER.createImpl(name, false, true);
+  public static AttributeName action(String name) {
+    return BUILDER.createImpl(name, false, true, Action.class);
   }
 
   public static WayAttributeName[] build() {
@@ -46,12 +46,12 @@ final class WayAttributeNameBuilder {
   }
 
   private WayAttributeName createImpl(String name, boolean booleanAttribute) {
-    return createImpl(name, booleanAttribute, false);
+    return createImpl(name, booleanAttribute, false, String.class);
   }
 
-  private WayAttributeName createImpl(String name, boolean booleanAttribute, boolean singleQuoted) {
+  private WayAttributeName createImpl(String name, boolean booleanAttribute, boolean singleQuoted, Class<?> type) {
     WayAttributeName result;
-    result = new WayAttributeName(index++, name, booleanAttribute, singleQuoted);
+    result = new WayAttributeName(index++, name, booleanAttribute, singleQuoted, type);
 
     standardValues.add(result);
 
