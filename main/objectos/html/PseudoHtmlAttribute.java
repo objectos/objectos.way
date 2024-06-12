@@ -15,12 +15,9 @@
  */
 package objectos.html;
 
-import java.util.Iterator;
 import objectos.html.pseudom.HtmlAttribute;
-import objectos.lang.IterableOnce;
 
-final class PseudoHtmlAttribute
-    implements HtmlAttribute, IterableOnce<String>, Iterator<String> {
+final class PseudoHtmlAttribute implements HtmlAttribute {
 
   AttributeName name;
 
@@ -48,32 +45,49 @@ final class PseudoHtmlAttribute
   }
 
   @Override
-  public final IterableOnce<String> values() {
+  public final String value() {
     player.attributeValues();
 
-    return this;
+    player.attributeValuesIterator();
+    
+    if (!hasNext()) {
+      return "";
+    }
+
+    String result;
+    result = next();
+    
+    if (!hasNext()) {
+      return result;
+    }
+    
+    StringBuilder value;
+    value = new StringBuilder(result);
+    
+    value.append(' ');
+    
+    value.append(next());
+    
+    while (hasNext()) {
+      value.append(' ');
+      
+      value.append(next());
+    }
+    
+    return value.toString();
   }
 
-  @Override
-  public final boolean hasNext() {
+  private boolean hasNext() {
     return player.attributeValuesHasNext();
   }
 
-  @Override
-  public final String next() {
+  private String next() {
     String result;
     result = player.attributeValuesNext(value);
 
     value = null;
 
     return result;
-  }
-
-  @Override
-  public final Iterator<String> iterator() {
-    player.attributeValuesIterator();
-
-    return this;
   }
 
 }

@@ -16,7 +16,6 @@
 package objectos.html;
 
 import java.io.IOException;
-import java.util.Iterator;
 import java.util.Set;
 import objectos.html.pseudom.HtmlAttribute;
 import objectos.html.pseudom.HtmlDocument;
@@ -25,7 +24,6 @@ import objectos.html.pseudom.HtmlElement;
 import objectos.html.pseudom.HtmlNode;
 import objectos.html.pseudom.HtmlRawText;
 import objectos.html.pseudom.HtmlText;
-import objectos.lang.IterableOnce;
 
 /**
  * The Objectos Way standard {@link HtmlFormatter} implementation.
@@ -218,27 +216,13 @@ public final class WayHtmlFormatter extends HtmlFormatter {
     Quotes quotes;
     quotes = attribute.singleQuoted() ? Quotes.SINGLE : Quotes.DOUBLE;
 
-    IterableOnce<String> values;
-    values = attribute.values();
+    out.append('=');
 
-    Iterator<String> valuesIter;
-    valuesIter = values.iterator();
+    out.append(quotes.symbol);
 
-    if (valuesIter.hasNext()) {
-      out.append('=');
+    attributeValue(out, quotes, attribute.value());
 
-      out.append(quotes.symbol);
-
-      attributeValue(out, quotes, valuesIter.next());
-
-      while (valuesIter.hasNext()) {
-        out.append(' ');
-
-        attributeValue(out, quotes, valuesIter.next());
-      }
-
-      out.append(quotes.symbol);
-    }
+    out.append(quotes.symbol);
   }
 
   // visible for testing

@@ -54,8 +54,14 @@ final class DistinctClassNames implements DocumentProcessor {
   }
 
   private void processClassAttribute(HtmlAttribute attribute) {
-    for (var value : attribute.values()) {
-      names.add(value);
+    String value;
+    value = attribute.value();
+    
+    String[] parts;
+    parts = value.split("\s");
+    
+    for (var part : parts) {
+      names.add(part);
     }
   }
 

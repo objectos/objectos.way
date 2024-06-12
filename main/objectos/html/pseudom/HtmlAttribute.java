@@ -15,8 +15,6 @@
  */
 package objectos.html.pseudom;
 
-import objectos.lang.IterableOnce;
-
 public interface HtmlAttribute {
 
   String name();
@@ -25,7 +23,7 @@ public interface HtmlAttribute {
 
   boolean singleQuoted();
 
-  IterableOnce<String> values();
+  String value();
 
   default boolean hasName(String name) {
     return name().equals(name);

@@ -183,24 +183,13 @@ public class HtmlTestProcessor {
       return;
     }
 
-    IterableOnce<String> values;
-    values = attribute.values();
+    out.append('=');
+    
+    out.append('\"');
+    
+    out.append(attribute.value());
 
-    Iterator<String> valuesIter;
-    valuesIter = values.iterator();
-
-    if (valuesIter.hasNext()) {
-      out.append('=');
-      out.append('\"');
-      out.append(valuesIter.next());
-
-      while (valuesIter.hasNext()) {
-        out.append(' ');
-        out.append(valuesIter.next());
-      }
-
-      out.append('\"');
-    }
+    out.append('\"');
   }
 
 }

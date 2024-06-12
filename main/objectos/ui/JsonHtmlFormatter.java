@@ -16,7 +16,6 @@
 package objectos.ui;
 
 import java.io.IOException;
-import java.util.Iterator;
 import objectos.html.HtmlFormatter;
 import objectos.html.HtmlTemplate;
 import objectos.html.pseudom.HtmlAttribute;
@@ -26,7 +25,6 @@ import objectos.html.pseudom.HtmlElement;
 import objectos.html.pseudom.HtmlNode;
 import objectos.html.pseudom.HtmlRawText;
 import objectos.html.pseudom.HtmlText;
-import objectos.lang.IterableOnce;
 
 /**
  * Formats a {@link HtmlTemplate} so it can be used as the value of a JSON
@@ -91,30 +89,20 @@ public final class JsonHtmlFormatter extends HtmlFormatter {
     name = attribute.name();
 
     out.append(' ');
+    
     out.append(name);
 
     if (attribute.booleanAttribute()) {
       return;
     }
 
-    IterableOnce<String> values;
-    values = attribute.values();
+    out.append('=');
+    
+    out.append('\'');
 
-    Iterator<String> valuesIter;
-    valuesIter = values.iterator();
+    attributeValue(out, attribute.value());
 
-    if (valuesIter.hasNext()) {
-      out.append('=');
-      out.append('\'');
-      attributeValue(out, valuesIter.next());
-
-      while (valuesIter.hasNext()) {
-        out.append(' ');
-        attributeValue(out, valuesIter.next());
-      }
-
-      out.append('\'');
-    }
+    out.append('\'');
   }
 
   private void attributeValue(Appendable out, String value) throws IOException {
