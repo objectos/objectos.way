@@ -18,7 +18,6 @@ package testing.site.web;
 import java.nio.charset.StandardCharsets;
 import java.util.Set;
 import objectos.css.WayStyleGen;
-import objectos.http.Status;
 import objectos.notes.NoteSink;
 import objectos.way.Http;
 import testing.zite.TestingSiteInjector;
@@ -47,7 +46,7 @@ final class Styles implements Http.Handler {
     byte[] bytes;
     bytes = s.getBytes(StandardCharsets.UTF_8);
 
-    http.status(Status.OK);
+    http.status(Http.OK);
 
     http.dateNow();
 

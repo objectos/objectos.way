@@ -34,6 +34,7 @@ import objectos.lang.object.Check;
 import objectos.notes.NoteSink;
 import objectos.util.map.GrowableMap;
 import objectos.way.Http;
+import objectos.way.HttpResponseStatus;
 
 public final class WayServerLoop extends WayServerRequestBody implements ServerLoop {
 
@@ -399,14 +400,14 @@ public final class WayServerLoop extends WayServerRequestBody implements ServerL
 
   static {
     int size;
-    size = WayStatus.size();
+    size = HttpResponseStatus.size();
 
     byte[][] map;
     map = new byte[size][];
 
     for (int index = 0; index < size; index++) {
-      WayStatus status;
-      status = WayStatus.get(index);
+      HttpResponseStatus status;
+      status = HttpResponseStatus.get(index);
 
       String response;
       response = Integer.toString(status.code()) + " " + status.reasonPhrase() + "\r\n";
@@ -441,7 +442,7 @@ public final class WayServerLoop extends WayServerRequestBody implements ServerL
   }
 
   @Override
-  public final void status(Status status) {
+  public final void status(Http.Response.Status status) {
     checkResponse();
 
     Version version;
@@ -449,8 +450,8 @@ public final class WayServerLoop extends WayServerRequestBody implements ServerL
 
     writeBytes(version.responseBytes);
 
-    WayStatus internal;
-    internal = (WayStatus) status;
+    HttpResponseStatus internal;
+    internal = (HttpResponseStatus) status;
 
     byte[] statusBytes;
     statusBytes = STATUS_LINES[internal.index];
@@ -578,7 +579,7 @@ public final class WayServerLoop extends WayServerRequestBody implements ServerL
 
   @Override
   public final void notFound() {
-    status(Status.NOT_FOUND);
+    status(Http.NOT_FOUND);
 
     dateNow();
 
@@ -591,7 +592,7 @@ public final class WayServerLoop extends WayServerRequestBody implements ServerL
 
   @Override
   public final void methodNotAllowed() {
-    status(Status.METHOD_NOT_ALLOWED);
+    status(Http.METHOD_NOT_ALLOWED);
 
     dateNow();
 
@@ -618,7 +619,7 @@ public final class WayServerLoop extends WayServerRequestBody implements ServerL
     byte[] bytes;
     bytes = msg.getBytes();
 
-    status(Status.INTERNAL_SERVER_ERROR);
+    status(Http.INTERNAL_SERVER_ERROR);
 
     dateNow();
 

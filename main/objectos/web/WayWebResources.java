@@ -28,7 +28,6 @@ import java.nio.file.StandardOpenOption;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.nio.file.attribute.FileTime;
 import java.util.Map;
-import objectos.http.Status;
 import objectos.http.UriPath;
 import objectos.io.FileVisitors;
 import objectos.lang.object.Check;
@@ -227,7 +226,7 @@ public final class WayWebResources implements AutoCloseable, WebResources {
     ifNoneMatch = headers.first(Http.IF_NONE_MATCH);
 
     if (etag.equals(ifNoneMatch)) {
-      http.status(Status.NOT_MODIFIED);
+      http.status(Http.NOT_MODIFIED);
 
       http.dateNow();
 
@@ -238,7 +237,7 @@ public final class WayWebResources implements AutoCloseable, WebResources {
       return;
     }
 
-    http.status(Status.OK);
+    http.status(Http.OK);
 
     String contentType;
     contentType = defaultContentType;

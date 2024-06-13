@@ -13,30 +13,32 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.http;
+package objectos.way;
 
 import java.util.ArrayList;
 import java.util.List;
 
-final class WayStatus extends Status {
+public final class HttpResponseStatus implements Http.Response.Status {
 
-  static class Builder {
+  private static class Builder {
+    
+    static Builder INSTANCE = new Builder();
 
-    private final List<WayStatus> standardValues = new ArrayList<>();
+    private final List<HttpResponseStatus> standardValues = new ArrayList<>();
 
     private int index;
 
-    public final WayStatus create(int code, String reasonPhrase) {
-      WayStatus result;
-      result = new WayStatus(index++, code, reasonPhrase);
+    public final HttpResponseStatus create(int code, String reasonPhrase) {
+      HttpResponseStatus result;
+      result = new HttpResponseStatus(index++, code, reasonPhrase);
 
       standardValues.add(result);
 
       return result;
     }
 
-    public final WayStatus[] buildValues() {
-      return standardValues.toArray(WayStatus[]::new);
+    public final HttpResponseStatus[] buildValues() {
+      return standardValues.toArray(HttpResponseStatus[]::new);
     }
 
   }
@@ -47,21 +49,35 @@ final class WayStatus extends Status {
 
   public final String reasonPhrase;
 
-  public WayStatus(int index, int code, String reasonPhrase) {
+  public HttpResponseStatus(int index, int code, String reasonPhrase) {
     this.index = index;
 
     this.code = code;
 
     this.reasonPhrase = reasonPhrase;
   }
-
-  private static WayStatus[] VALUES;
-
-  public static void set(Builder builder) {
-    VALUES = builder.buildValues();
+  
+  static Http.Response.Status create(int code, String reasonPhrase) {
+    return Builder.INSTANCE.create(code, reasonPhrase);
   }
+  
+  static Http.Response.Status createLast(int code, String reasonPhrase) {
+    Builder builder;
+    builder = Builder.INSTANCE;
+    
+    HttpResponseStatus result;
+    result = builder.create(code, reasonPhrase);
+    
+    VALUES = builder.buildValues();
+    
+    Builder.INSTANCE = null;
+    
+    return result;
+  }
+  
+  private static HttpResponseStatus[] VALUES;
 
-  public static WayStatus get(int index) {
+  public static HttpResponseStatus get(int index) {
     return VALUES[index];
   }
 
@@ -90,7 +106,7 @@ final class WayStatus extends Status {
 
   @Override
   public final boolean equals(Object obj) {
-    return obj == this || obj instanceof WayStatus that
+    return obj == this || obj instanceof HttpResponseStatus that
         && code == that.code;
   }
 

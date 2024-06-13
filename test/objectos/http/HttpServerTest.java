@@ -82,7 +82,7 @@ public class HttpServerTest implements Http.Handler {
   }
 
   private void testCase01Get(Http.Exchange http) {
-    http.status(Status.OK);
+    http.status(Http.OK);
     http.dateNow();
     http.header(Http.CONTENT_TYPE, "text/plain");
     http.header(Http.CONTENT_LENGTH, 5);
@@ -137,7 +137,7 @@ public class HttpServerTest implements Http.Handler {
   }
 
   private void testCase02Get(Http.Exchange http) {
-    http.status(Status.OK);
+    http.status(Http.OK);
     http.dateNow();
     http.header(Http.CONTENT_TYPE, "text/plain");
     http.header(Http.CONTENT_LENGTH, 5);

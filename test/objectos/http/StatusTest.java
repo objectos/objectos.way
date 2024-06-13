@@ -17,13 +17,14 @@ package objectos.http;
 
 import static org.testng.Assert.assertEquals;
 
+import objectos.way.Http;
 import org.testng.annotations.Test;
 
 public class StatusTest {
 
   @Test
   public void reasonPhrase() {
-    assertEquals(Status.INTERNAL_SERVER_ERROR.reasonPhrase(), "INTERNAL SERVER ERROR");
+    assertEquals(Http.INTERNAL_SERVER_ERROR.reasonPhrase(), "INTERNAL SERVER ERROR");
   }
 
 }
