@@ -15,11 +15,13 @@
  */
 package objectos.http;
 
+import objectos.way.Http;
+
 public interface SessionStore {
 
   Session nextSession();
 
-  Session get(Cookies cookies);
+  Session get(Http.Request.Cookies cookies);
 
   Session get(String id);
 

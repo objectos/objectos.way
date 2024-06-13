@@ -13,22 +13,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.http;
+package objectos.way;
 
-import static org.testng.Assert.assertEquals;
+import java.util.Map;
 
-import org.testng.annotations.Test;
+final class HttpRequestCookies implements Http.Request.Cookies {
 
-public class CookiesTest {
+  private final Map<String, HttpRequestCookiesValue> cookies;
 
-  @Test(description = """
-  It should parse a single name-value pair
-  """)
-  public void testCase01() {
-    Cookies c;
-    c = Cookies.parse("foo=bar");
+  HttpRequestCookies(Map<String, HttpRequestCookiesValue> cookies) {
+    this.cookies = cookies;
+  }
 
-    assertEquals(c.get("foo"), "bar");
+  @Override
+  public final String get(String name) {
+    String res = null;
+
+    HttpRequestCookiesValue value;
+    value = cookies.get(name);
+
+    if (value != null) {
+      res = value.get();
+    }
+
+    return res;
   }
 
 }

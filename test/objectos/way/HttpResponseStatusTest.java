@@ -13,30 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.http;
+package objectos.way;
 
-import java.util.Map;
+import static org.testng.Assert.assertEquals;
 
-final class WayCookies implements Cookies {
+import org.testng.annotations.Test;
 
-  private final Map<String, CookieValue> cookies;
+public class HttpResponseStatusTest {
 
-  WayCookies(Map<String, CookieValue> cookies) {
-    this.cookies = cookies;
-  }
-
-  @Override
-  public final String get(String name) {
-    String res = null;
-
-    CookieValue value;
-    value = cookies.get(name);
-
-    if (value != null) {
-      res = value.get();
-    }
-
-    return res;
+  @Test
+  public void reasonPhrase() {
+    assertEquals(Http.INTERNAL_SERVER_ERROR.reasonPhrase(), "INTERNAL SERVER ERROR");
   }
 
 }

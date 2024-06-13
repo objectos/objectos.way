@@ -13,14 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.http;
+package objectos.way;
 
 import static org.testng.Assert.assertEquals;
 
-import objectos.way.HttpHeaderName;
 import org.testng.annotations.Test;
 
-public class WayHeaderNameTest {
+public class HttpHeaderNameTest {
 
   @SuppressWarnings("unlikely-arg-type")
   @Test(description = "equals() should work fine")

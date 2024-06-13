@@ -13,27 +13,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.http;
+package objectos.way;
 
-sealed abstract class CookieValue {
+sealed abstract class HttpRequestCookiesValue {
 
   final String source;
 
-  public CookieValue(String source) {
+  public HttpRequestCookiesValue(String source) {
     this.source = source;
   }
 
-  public static CookieValue of(String source, int index) {
+  public static HttpRequestCookiesValue of(String source, int index) {
     return new CookieValue1(source, index);
   }
 
-  abstract CookieValue beginNew(int index);
+  abstract HttpRequestCookiesValue beginNew(int index);
 
   abstract void endIndex(int index);
 
   abstract String get();
 
-  private static final class CookieValue1 extends CookieValue {
+  private static final class CookieValue1 extends HttpRequestCookiesValue {
 
     private final int beginIndex;
 
@@ -46,7 +46,7 @@ sealed abstract class CookieValue {
     }
 
     @Override
-    final CookieValue beginNew(int index) {
+    final HttpRequestCookiesValue beginNew(int index) {
       throw new UnsupportedOperationException("Implement me");
     }
 

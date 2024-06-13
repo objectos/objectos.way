@@ -29,7 +29,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Set;
 import objectos.html.Html;
 import objectos.html.HtmlTemplate;
@@ -402,6 +401,24 @@ public final class Http {
 
     }
 
+    /**
+     * The cookies of an HTTP request message.
+     */
+    public sealed interface Cookies permits HttpRequestCookies, HttpRequestCookiesEmpty {
+
+      /**
+       * Returns the value of the cookie with the specified name; {@code null} if a
+       * cookie with the specified name is not present.
+       * 
+       * @param name
+       *        the cookie name
+       * 
+       * @return the value or {@code null} if the cookie is not present
+       */
+      String get(String name);
+
+    }
+    
     /**
      * The header section of an HTTP request message.
      */
@@ -820,7 +837,7 @@ public final class Http {
   private Http() {}
 
   public static HeaderName createHeaderName(String name) {
-    Objects.requireNonNull(name, "name == null");
+    Check.notNull(name, "name == null");
 
     HeaderName headerName;
     headerName = HttpHeaderName.findByName(name);
@@ -846,6 +863,19 @@ public final class Http {
     normalized = date.withZoneSameInstant(ZoneOffset.UTC);
 
     return IMF_FIXDATE.format(normalized);
+  }
+
+  public static Request.Cookies parseCookies(String s) {
+    Check.notNull(s, "s == null");
+
+    if (s.isBlank()) {
+      return HttpRequestCookiesEmpty.INSTANCE;
+    }
+
+    HttpRequestCookiesParser parser;
+    parser = new HttpRequestCookiesParser(s);
+
+    return parser.parse();
   }
 
   // utils

@@ -13,25 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.http;
+package objectos.way;
 
-import java.util.Objects;
+enum HttpRequestCookiesEmpty implements Http.Request.Cookies {
 
-public sealed interface Cookies permits EmptyCookies, WayCookies {
+  INSTANCE;
 
-  static Cookies parse(String s) {
-    Objects.requireNonNull(s, "s == null");
-
-    if (s.isBlank()) {
-      return EmptyCookies.INSTANCE;
-    }
-
-    WayCookiesParser parser;
-    parser = new WayCookiesParser(s);
-
-    return parser.parse();
+  @Override
+  public final String get(String name) {
+    return null;
   }
-
-  String get(String name);
 
 }

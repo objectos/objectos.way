@@ -317,8 +317,8 @@ public final class WayServerLoop extends WayServerRequestBody implements ServerL
         String cookieHeader;
         cookieHeader = cookie.get();
 
-        Cookies cookies;
-        cookies = Cookies.parse(cookieHeader);
+        Http.Request.Cookies cookies;
+        cookies = Http.parseCookies(cookieHeader);
 
         session = sessionStore.get(cookies);
       }

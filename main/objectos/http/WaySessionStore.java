@@ -26,6 +26,7 @@ import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import objectos.lang.object.Check;
+import objectos.way.Http;
 
 /**
  * The Objectos Way {@link SessionStore} implementation.
@@ -199,7 +200,7 @@ public final class WaySessionStore implements SessionStore {
   }
 
   @Override
-  public final Session get(Cookies cookies) {
+  public final Session get(Http.Request.Cookies cookies) {
     String maybe;
     maybe = cookies.get(cookieName); // implicit cookies null check
 

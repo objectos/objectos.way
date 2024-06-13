@@ -13,16 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.http;
+package objectos.way;
 
 import java.util.HashMap;
 import java.util.Map;
 
-final class WayCookiesParser {
+final class HttpRequestCookiesParser {
 
-  private final Map<String, CookieValue> cookies = new HashMap<>();
+  private final Map<String, HttpRequestCookiesValue> cookies = new HashMap<>();
 
-  private CookieValue currentValue;
+  private HttpRequestCookiesValue currentValue;
 
   private int index;
 
@@ -32,11 +32,11 @@ final class WayCookiesParser {
 
   private State state;
 
-  public WayCookiesParser(String s) {
+  public HttpRequestCookiesParser(String s) {
     this.source = s;
   }
 
-  public final Cookies parse() {
+  public final Http.Request.Cookies parse() {
     state = State.START;
 
     while (state != State.STOP) {
@@ -44,9 +44,9 @@ final class WayCookiesParser {
     }
 
     if (cookies.isEmpty()) {
-      return EmptyCookies.INSTANCE;
+      return HttpRequestCookiesEmpty.INSTANCE;
     } else {
-      return new WayCookies(cookies);
+      return new HttpRequestCookies(cookies);
     }
   }
 
@@ -79,11 +79,11 @@ final class WayCookiesParser {
 
       sb.setLength(0);
 
-      CookieValue value;
+      HttpRequestCookiesValue value;
       value = cookies.get(name);
 
       if (value == null) {
-        value = CookieValue.of(source, index);
+        value = HttpRequestCookiesValue.of(source, index);
       } else {
         value = value.beginNew(index);
       }
