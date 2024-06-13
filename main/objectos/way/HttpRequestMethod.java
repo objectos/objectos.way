@@ -13,30 +13,32 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.http;
+package objectos.way;
 
 import java.util.ArrayList;
 import java.util.List;
+import objectos.way.Http.Request.Method;
 
-final class WayMethod extends Method {
+// TODO: make package-private after refactoring
+public final class HttpRequestMethod implements Http.Request.Method {
 
   static class Builder {
 
-    private final List<WayMethod> standardValues = new ArrayList<>();
+    private final List<HttpRequestMethod> standardValues = new ArrayList<>();
 
     private int index;
 
-    public final WayMethod create(String text) {
-      WayMethod result;
-      result = new WayMethod(index++, text);
+    public final HttpRequestMethod create(String text) {
+      HttpRequestMethod result;
+      result = new HttpRequestMethod(index++, text);
 
       standardValues.add(result);
 
       return result;
     }
 
-    public final WayMethod[] buildValues() {
-      return standardValues.toArray(WayMethod[]::new);
+    public final HttpRequestMethod[] buildValues() {
+      return standardValues.toArray(HttpRequestMethod[]::new);
     }
 
   }
@@ -45,24 +47,40 @@ final class WayMethod extends Method {
 
   private final String text;
 
-  WayMethod(int index, String text) {
+  HttpRequestMethod(int index, String text) {
     this.index = index;
 
     this.text = text;
   }
 
-  private static WayMethod[] VALUES;
+  private static HttpRequestMethod[] VALUES;
 
+  @SuppressWarnings("exports")
   public static void set(Builder builder) {
     VALUES = builder.buildValues();
   }
 
-  public static WayMethod get(int index) {
+  public static HttpRequestMethod get(int index) {
     return VALUES[index];
   }
 
   public static int size() {
     return VALUES.length;
+  }
+
+  public final boolean is(Method method) {
+    int index;
+    index = index();
+
+    if (index >= 0) {
+      return index == method.index();
+    } else {
+      return equals(method);
+    }
+  }
+
+  public final boolean is(Method method1, Method method2) {
+    return is(method1) || is(method2);
   }
 
   @Override
@@ -87,7 +105,7 @@ final class WayMethod extends Method {
 
   @Override
   public final boolean equals(Object obj) {
-    return obj == this || obj instanceof WayMethod that
+    return obj == this || obj instanceof HttpRequestMethod that
         && text.equals(that.text);
   }
 

@@ -15,7 +15,6 @@
  */
 package testing.site.web;
 
-import objectos.http.Method;
 import objectos.way.Http;
 import testing.zite.TestingSiteInjector;
 
@@ -29,7 +28,7 @@ final class Home extends WebTemplate implements Http.Handler {
 
   @Override
   public final void handle(Http.Exchange http) {
-    http.methodMatrix(Method.GET, this::get);
+    http.methodMatrix(Http.GET, this::get);
   }
 
   // GET

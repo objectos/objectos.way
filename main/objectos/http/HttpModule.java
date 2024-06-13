@@ -22,7 +22,6 @@ import objectos.http.UriPath.Segment;
 import objectos.lang.object.Check;
 import objectos.util.array.ObjectArrays;
 import objectos.way.Http;
-import objectos.way.Http.Exchange;
 
 public abstract class HttpModule {
 
@@ -30,7 +29,7 @@ public abstract class HttpModule {
 
     Matcher() {}
 
-    abstract boolean test(Exchange http);
+    abstract boolean test(Http.Exchange http);
 
   }
 
@@ -43,7 +42,7 @@ public abstract class HttpModule {
     }
 
     @Override
-    final boolean test(Exchange http) {
+    final boolean test(Http.Exchange http) {
       UriPath path;
       path = http.path();
 
@@ -98,7 +97,7 @@ public abstract class HttpModule {
     }
 
     @Override
-    public final void handle(Exchange http) {
+    public final void handle(Http.Exchange http) {
       if (sessionStore != null) {
         http.acceptSessionStore(sessionStore);
       }
@@ -158,12 +157,12 @@ public abstract class HttpModule {
   }
 
   private sealed interface Action {
-    boolean execute(Exchange http);
+    boolean execute(Http.Exchange http);
   }
 
   private record Filter(Http.Handler handler) implements Action {
     @Override
-    public final boolean execute(Exchange http) {
+    public final boolean execute(Http.Exchange http) {
       Http.Handler handler;
       handler = handler();
 
@@ -182,7 +181,7 @@ public abstract class HttpModule {
     }
 
     @Override
-    public final boolean execute(Exchange http) {
+    public final boolean execute(Http.Exchange http) {
       boolean result;
       result = false;
 
@@ -310,7 +309,7 @@ public abstract class HttpModule {
     }
 
     @Override
-    final boolean test(Exchange http) {
+    final boolean test(Http.Exchange http) {
       UriPath path;
       path = http.path();
 
@@ -538,7 +537,7 @@ public abstract class HttpModule {
 
   // actions
 
-  protected final Http.Handler matrix(Method method, Http.Handler handler) {
+  protected final Http.Handler matrix(Http.Request.Method method, Http.Handler handler) {
     Check.notNull(method, "method == null");
     Check.notNull(handler, "handler == null");
 

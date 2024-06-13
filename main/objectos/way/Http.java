@@ -32,7 +32,6 @@ import objectos.html.Html;
 import objectos.html.HtmlTemplate;
 import objectos.http.Body;
 import objectos.http.HeaderName;
-import objectos.http.Method;
 import objectos.http.ServerRequestHeaders;
 import objectos.http.Session;
 import objectos.http.SessionStore;
@@ -46,6 +45,59 @@ import objectos.lang.object.Check;
  * 
  */
 public final class Http {
+
+  private static HttpRequestMethod.Builder REQUEST_METHOD_BUILDER = new HttpRequestMethod.Builder();
+
+  /**
+   * The CONNECT method.
+   */
+  public static final Request.Method CONNECT = REQUEST_METHOD_BUILDER.create("CONNECT");
+
+  /**
+   * The DELETE method.
+   */
+  public static final Request.Method DELETE = REQUEST_METHOD_BUILDER.create("DELETE");
+
+  /**
+   * The GET method.
+   */
+  public static final Request.Method GET = REQUEST_METHOD_BUILDER.create("GET");
+
+  /**
+   * The HEAD method.
+   */
+  public static final Request.Method HEAD = REQUEST_METHOD_BUILDER.create("HEAD");
+
+  /**
+   * The OPTIONS method.
+   */
+  public static final Request.Method OPTIONS = REQUEST_METHOD_BUILDER.create("OPTIONS");
+
+  /**
+   * The PATCH method.
+   */
+  public static final Request.Method PATCH = REQUEST_METHOD_BUILDER.create("PATCH");
+
+  /**
+   * The POST method.
+   */
+  public static final Request.Method POST = REQUEST_METHOD_BUILDER.create("POST");
+
+  /**
+   * The PUT method.
+   */
+  public static final Request.Method PUT = REQUEST_METHOD_BUILDER.create("PUT");
+
+  /**
+   * The TRACE method.
+   */
+  public static final Request.Method TRACE = REQUEST_METHOD_BUILDER.create("TRACE");
+
+  static {
+    HttpRequestMethod.set(REQUEST_METHOD_BUILDER);
+
+    REQUEST_METHOD_BUILDER = null;
+  }
 
   private static final DateTimeFormatter IMF_FIXDATE;
 
@@ -175,7 +227,7 @@ public final class Http {
      *
      * @return the request method
      */
-    Method method();
+    Request.Method method();
 
     /**
      * Returns the path component of the request target.
@@ -211,11 +263,11 @@ public final class Http {
 
     void acceptSessionStore(SessionStore sessionStore);
 
-    default void methodMatrix(Method method, Handler handler) {
+    default void methodMatrix(Request.Method method, Handler handler) {
       Check.notNull(method, "method == null");
       Check.notNull(handler, "handler == null");
 
-      Method actual;
+      Request.Method actual;
       actual = method();
 
       if (handles(method, actual)) {
@@ -225,14 +277,14 @@ public final class Http {
       }
     }
 
-    default void methodMatrix(Method method1, Handler handler1,
-                              Method method2, Handler handler2) {
+    default void methodMatrix(Request.Method method1, Handler handler1,
+                              Request.Method method2, Handler handler2) {
       Check.notNull(method1, "method1 == null");
       Check.notNull(handler1, "handler1 == null");
       Check.notNull(method2, "method2 == null");
       Check.notNull(handler2, "handler2 == null");
 
-      Method actual;
+      Request.Method actual;
       actual = method();
 
       if (handles(method1, actual)) {
@@ -244,9 +296,9 @@ public final class Http {
       }
     }
 
-    default void methodMatrix(Method method1, Handler handler1,
-                              Method method2, Handler handler2,
-                              Method method3, Handler handler3) {
+    default void methodMatrix(Request.Method method1, Handler handler1,
+                              Request.Method method2, Handler handler2,
+                              Request.Method method3, Handler handler3) {
       Check.notNull(method1, "method1 == null");
       Check.notNull(handler1, "handler1 == null");
       Check.notNull(method2, "method2 == null");
@@ -254,7 +306,7 @@ public final class Http {
       Check.notNull(method3, "method3 == null");
       Check.notNull(handler3, "handler3 == null");
 
-      Method actual;
+      Request.Method actual;
       actual = method();
 
       if (handles(method1, actual)) {
@@ -268,9 +320,9 @@ public final class Http {
       }
     }
 
-    private boolean handles(Method method, Method actual) {
-      if (method.is(Method.GET)) {
-        return actual.is(Method.GET, Method.HEAD);
+    private boolean handles(Request.Method method, Request.Method actual) {
+      if (method.is(Http.GET)) {
+        return actual.is(Http.GET, Http.HEAD);
       } else {
         return actual.is(method);
       }
@@ -442,11 +494,64 @@ public final class Http {
     void handle(Http.Exchange http);
 
   }
+  
 
   /**
    * An HTTP request message.
    */
   public interface Request {
+    
+    /**
+     * The method of an HTTP request message.
+     */
+    public sealed interface Method permits HttpRequestMethod {
+
+      /**
+       * Tests if this method is the same as the specified method.
+       * 
+       * @param method
+       *        the method to test against this method
+       * 
+       * @return {@code true} if this method is the same as the specified
+       *         method, {@code false} otherwise
+       */
+      boolean is(Method method);
+
+      /**
+       * Tests if this method is the same as one of the two specified methods.
+       * 
+       * @param method1
+       *        the first method to test against this method
+       * @param method2
+       *        the second method to test against this method
+       * 
+       * @return {@code true} if this method is the same as first or the second
+       *         specified methods, {@code false} otherwise
+       */
+      boolean is(Method method1, Method method2);
+
+      /**
+       * The index of this method.
+       * 
+       * @return the index of this method.
+       */
+      int index();
+
+      /**
+       * The name of this method.
+       * 
+       * @return the name of this method.
+       */
+      String text();
+
+    }
+
+    /**
+     * The method of this request message.
+     * 
+     * @return the method of this request message.
+     */
+    Method method();
     
     /**
      * The request-target of an HTTP request message.

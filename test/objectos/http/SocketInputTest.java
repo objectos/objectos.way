@@ -22,6 +22,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import objectos.http.WayServerLoop.ParseStatus;
+import objectos.way.Http;
 import objectos.way.TestingNoteSink;
 import org.testng.annotations.Test;
 
@@ -49,7 +50,7 @@ public class SocketInputTest {
     assertEquals(input.parseStatus, ParseStatus.NORMAL);
     assertEquals(hasNext(input), true);
     assertEquals(peek(input), 'G');
-    assertEquals(input.matches(WayRequestLine.STD_METHOD_BYTES[Method.GET.index()]), true);
+    assertEquals(input.matches(WayRequestLine.STD_METHOD_BYTES[Http.GET.index()]), true);
     assertEquals(peek(input), '/');
     assertEquals(input.bufferIndex, 4);
     assertEquals(input.indexOf(Bytes.QUESTION_MARK, Bytes.SP), 5);
@@ -147,7 +148,7 @@ public class SocketInputTest {
     assertEquals(input.parseStatus, ParseStatus.NORMAL);
     assertEquals(hasNext(input), true);
     assertEquals(peek(input), 'G');
-    assertEquals(input.matches(WayRequestLine.STD_METHOD_BYTES[Method.GET.index()]), true);
+    assertEquals(input.matches(WayRequestLine.STD_METHOD_BYTES[Http.GET.index()]), true);
     assertEquals(peek(input), '/');
     assertEquals(input.bufferIndex, 4);
     assertEquals(input.indexOf(Bytes.QUESTION_MARK, Bytes.SP), 5);

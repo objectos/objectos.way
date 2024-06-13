@@ -16,20 +16,20 @@
 package objectos.http;
 
 import objectos.html.HtmlTemplate;
-import objectos.way.Http.Exchange;
+import objectos.way.Http;
 
 final class MarketingSite extends HttpModule {
 
   @Override
   protected final void configure() {
     route(path("/"),
-        matrix(Method.GET, movedPermanently("/index.html")));
+        matrix(Http.GET, movedPermanently("/index.html")));
 
     route(path("/index.html"),
-        matrix(Method.GET, this::indexHtml));
+        matrix(Http.GET, this::indexHtml));
   }
 
-  private void indexHtml(Exchange http) {
+  private void indexHtml(Http.Exchange http) {
     http.ok(new MarketingSiteHome());
   }
 

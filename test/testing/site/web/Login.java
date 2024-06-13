@@ -18,7 +18,6 @@ package testing.site.web;
 import java.io.IOException;
 import objectos.css.select.IdSelector;
 import objectos.http.FormUrlEncoded;
-import objectos.http.Method;
 import objectos.http.Session;
 import objectos.http.UnsupportedMediaTypeException;
 import objectos.way.Http;
@@ -34,8 +33,8 @@ final class Login extends WebTemplate implements Http.Handler {
   @Override
   public final void handle(Http.Exchange http) {
     http.methodMatrix(
-        Method.GET, this::get,
-        Method.POST, this::post
+        Http.GET, this::get,
+        Http.POST, this::post
     );
   }
 

@@ -332,7 +332,7 @@ public final class WayServerLoop extends WayServerRequestBody implements ServerL
   }
 
   private boolean badRequest() {
-    Check.state(testState(_REQUEST), "Method can only be invoked after a parse() operation");
+    Check.state(testState(_REQUEST), "Http.Request.Method can only be invoked after a parse() operation");
 
     return parseStatus.isBadRequest();
   }
@@ -340,7 +340,7 @@ public final class WayServerLoop extends WayServerRequestBody implements ServerL
   // request
 
   @Override
-  public final Method method() {
+  public final Http.Request.Method method() {
     checkRequest();
 
     return method;
@@ -418,11 +418,11 @@ public final class WayServerLoop extends WayServerRequestBody implements ServerL
   }
 
   @Override
-  public final void methodMatrix(Method method, Http.Handler handler) {
+  public final void methodMatrix(Http.Request.Method method, Http.Handler handler) {
     Check.notNull(method, "method == null");
     Check.notNull(handler, "handler == null");
 
-    Method actual;
+    Http.Request.Method actual;
     actual = method();
 
     if (handles(method, actual)) {
@@ -432,9 +432,9 @@ public final class WayServerLoop extends WayServerRequestBody implements ServerL
     }
   }
 
-  private boolean handles(Method method, Method actual) {
-    if (method.is(Method.GET)) {
-      return actual.is(Method.GET, Method.HEAD);
+  private boolean handles(Http.Request.Method method, Http.Request.Method actual) {
+    if (method.is(Http.GET)) {
+      return actual.is(Http.GET, Http.HEAD);
     } else {
       return actual.is(method);
     }
@@ -704,7 +704,7 @@ public final class WayServerLoop extends WayServerRequestBody implements ServerL
 
     outputStream.write(buffer, 0, bufferIndex);
 
-    if (method != Method.HEAD) {
+    if (method != Http.HEAD) {
       switch (responseBody) {
         case NoResponseBody no -> {}
 

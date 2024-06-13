@@ -29,6 +29,7 @@ import objectos.http.WayServerLoop.ParseStatus;
 import objectos.lang.CharWritable;
 import objectos.lang.TestingCharWritable;
 import objectos.util.array.ByteArrays;
+import objectos.way.Http;
 import objectos.way.TestingClock;
 import objectos.way.TestingNoteSink;
 import org.testng.Assert;
@@ -75,7 +76,7 @@ public class ServerLoopTest {
       UriPath path;
       path = http.path();
 
-      assertEquals(http.method(), Method.GET);
+      assertEquals(http.method(), Http.GET);
       assertEquals(path.is("/"), true);
 
       UriQuery query;
@@ -184,7 +185,7 @@ public class ServerLoopTest {
       UriPath path;
       path = http.path();
 
-      assertEquals(http.method(), Method.GET);
+      assertEquals(http.method(), Http.GET);
       assertEquals(path.is("/login"), true);
 
       UriQuery query;
@@ -230,7 +231,7 @@ public class ServerLoopTest {
       // request line
       path = http.path();
 
-      assertEquals(http.method(), Method.GET);
+      assertEquals(http.method(), Http.GET);
       assertEquals(path.is("/login.css"), true);
 
       // headers
@@ -371,7 +372,7 @@ public class ServerLoopTest {
       UriPath path;
       path = http.path();
 
-      assertEquals(http.method(), Method.GET);
+      assertEquals(http.method(), Http.GET);
       assertEquals(path.is("/index.html"), true);
 
       UriQuery query;
@@ -449,7 +450,7 @@ public class ServerLoopTest {
       UriPath path;
       path = http.path();
 
-      assertEquals(http.method(), Method.GET);
+      assertEquals(http.method(), Http.GET);
       assertEquals(path.is("/atom.xml"), true);
 
       UriQuery query;
@@ -1239,7 +1240,7 @@ public class ServerLoopTest {
       UriPath path;
       path = http.path();
 
-      assertEquals(http.method(), Method.GET);
+      assertEquals(http.method(), Http.GET);
       assertEquals(path.is("/"), true);
 
       UriQuery query;

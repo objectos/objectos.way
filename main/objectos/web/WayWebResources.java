@@ -29,7 +29,6 @@ import java.nio.file.attribute.BasicFileAttributes;
 import java.nio.file.attribute.FileTime;
 import java.util.Map;
 import objectos.http.HeaderName;
-import objectos.http.Method;
 import objectos.http.ServerRequestHeaders;
 import objectos.http.Status;
 import objectos.http.UriPath;
@@ -38,7 +37,7 @@ import objectos.lang.object.Check;
 import objectos.notes.NoOpNoteSink;
 import objectos.notes.NoteSink;
 import objectos.util.map.GrowableMap;
-import objectos.way.Http.Exchange;
+import objectos.way.Http;
 
 public final class WayWebResources implements AutoCloseable, WebResources {
 
@@ -165,7 +164,7 @@ public final class WayWebResources implements AutoCloseable, WebResources {
   }
 
   @Override
-  public final void handle(Exchange http) {
+  public final void handle(Http.Exchange http) {
     UriPath path;
     path = http.path();
 
@@ -211,10 +210,10 @@ public final class WayWebResources implements AutoCloseable, WebResources {
       return;
     }
 
-    Method method;
+    Http.Request.Method method;
     method = http.method();
 
-    if (method != Method.GET && method != Method.HEAD) {
+    if (method != Http.GET && method != Http.HEAD) {
       http.methodNotAllowed();
 
       return;
@@ -267,7 +266,7 @@ public final class WayWebResources implements AutoCloseable, WebResources {
 
     http.header(HeaderName.ETAG, etag);
 
-    if (method == Method.GET) {
+    if (method == Http.GET) {
       http.send(file);
     } else {
       http.send();

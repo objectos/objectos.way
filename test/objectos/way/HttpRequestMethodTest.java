@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.http;
+package objectos.way;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
@@ -21,26 +21,26 @@ import static org.testng.Assert.assertTrue;
 
 import org.testng.annotations.Test;
 
-public class MethodTest {
+public class HttpRequestMethodTest {
 
   @Test
   public void is() {
-    assertTrue(Method.GET.is(Method.GET));
-    assertTrue(Method.GET.is(Method.GET, Method.POST));
-    assertTrue(Method.GET.is(Method.POST, Method.GET));
+    assertTrue(Http.GET.is(Http.GET));
+    assertTrue(Http.GET.is(Http.GET, Http.POST));
+    assertTrue(Http.GET.is(Http.POST, Http.GET));
 
-    assertFalse(Method.GET.is(Method.POST));
-    assertFalse(Method.GET.is(Method.DELETE, Method.POST));
-    assertFalse(Method.GET.is(Method.POST, Method.DELETE));
+    assertFalse(Http.GET.is(Http.POST));
+    assertFalse(Http.GET.is(Http.DELETE, Http.POST));
+    assertFalse(Http.GET.is(Http.POST, Http.DELETE));
   }
 
   @Test
   public void text() {
-    assertEquals(Method.GET.text(), "GET");
-    assertEquals(Method.HEAD.text(), "HEAD");
-    assertEquals(Method.POST.text(), "POST");
-    assertEquals(Method.PUT.text(), "PUT");
-    assertEquals(Method.DELETE.text(), "DELETE");
+    assertEquals(Http.GET.text(), "GET");
+    assertEquals(Http.HEAD.text(), "HEAD");
+    assertEquals(Http.POST.text(), "POST");
+    assertEquals(Http.PUT.text(), "PUT");
+    assertEquals(Http.DELETE.text(), "DELETE");
   }
 
 }

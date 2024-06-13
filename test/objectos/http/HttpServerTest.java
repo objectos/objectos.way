@@ -78,7 +78,7 @@ public class HttpServerTest implements Http.Handler {
 
   @SuppressWarnings("unused")
   private void testCase01(Http.Exchange http) {
-    http.methodMatrix(objectos.http.Method.GET, this::testCase01Get);
+    http.methodMatrix(Http.GET, this::testCase01Get);
   }
 
   private void testCase01Get(Http.Exchange http) {
@@ -133,7 +133,7 @@ public class HttpServerTest implements Http.Handler {
 
   @SuppressWarnings("unused")
   private void testCase02(Http.Exchange http) {
-    http.methodMatrix(objectos.http.Method.GET, this::testCase02Get);
+    http.methodMatrix(Http.GET, this::testCase02Get);
   }
 
   private void testCase02Get(Http.Exchange http) {
@@ -187,8 +187,8 @@ public class HttpServerTest implements Http.Handler {
   @SuppressWarnings("unused")
   private void testCase03(Http.Exchange http) {
     http.methodMatrix(
-        objectos.http.Method.GET, this::testCase03Get,
-        objectos.http.Method.POST, this::testCase03Post
+        Http.GET, this::testCase03Get,
+        Http.POST, this::testCase03Post
     );
   }
 
@@ -272,8 +272,8 @@ public class HttpServerTest implements Http.Handler {
   @SuppressWarnings("unused")
   private void testCase04(Http.Exchange http) {
     http.methodMatrix(
-        objectos.http.Method.GET, this::testCase04Get,
-        objectos.http.Method.POST, this::testCase04Post
+        Http.GET, this::testCase04Get,
+        Http.POST, this::testCase04Post
     );
   }
 

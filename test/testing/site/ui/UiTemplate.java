@@ -16,14 +16,13 @@
 package testing.site.ui;
 
 import objectos.html.HtmlTemplate;
-import objectos.http.Method;
 import objectos.way.Http;
 
 abstract class UiTemplate extends HtmlTemplate implements Http.Handler {
 
   @Override
   public void handle(Http.Exchange http) {
-    http.methodMatrix(Method.GET, this::get);
+    http.methodMatrix(Http.GET, this::get);
   }
 
   void get(Http.Exchange http) {

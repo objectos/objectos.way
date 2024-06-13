@@ -18,10 +18,12 @@ package objectos.http;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import objectos.http.WayServerLoop.ParseStatus;
+import objectos.way.Http;
+import objectos.way.HttpRequestMethod;
 
 class WayRequestLine extends SocketInput {
 
-  Method method;
+  Http.Request.Method method;
 
   WayUriPath path;
 
@@ -105,34 +107,37 @@ class WayRequestLine extends SocketInput {
     // based on the first char, we select out method candidate
 
     switch (first) {
-      case 'C' -> parseMethod0(Method.CONNECT);
+      case 'C' -> parseMethod0(Http.CONNECT);
 
-      case 'D' -> parseMethod0(Method.DELETE);
+      case 'D' -> parseMethod0(Http.DELETE);
 
-      case 'G' -> parseMethod0(Method.GET);
+      case 'G' -> parseMethod0(GET);
 
-      case 'H' -> parseMethod0(Method.HEAD);
+      case 'H' -> parseMethod0(Http.HEAD);
 
-      case 'O' -> parseMethod0(Method.OPTIONS);
+      case 'O' -> parseMethod0(Http.OPTIONS);
 
       case 'P' -> parseMethodP();
 
-      case 'T' -> parseMethod0(Method.TRACE);
+      case 'T' -> parseMethod0(Http.TRACE);
     }
   }
+  
+  // force Http init
+  static final Http.Request.Method GET = Http.GET;
 
   static final byte[][] STD_METHOD_BYTES;
 
   static {
     int size;
-    size = WayMethod.size();
+    size = HttpRequestMethod.size();
 
     byte[][] map;
     map = new byte[size][];
 
     for (int index = 0; index < size; index++) {
-      WayMethod method;
-      method = WayMethod.get(index);
+      HttpRequestMethod method;
+      method = HttpRequestMethod.get(index);
 
       String nameAndSpace;
       nameAndSpace = method.text() + " ";
@@ -143,7 +148,7 @@ class WayRequestLine extends SocketInput {
     STD_METHOD_BYTES = map;
   }
 
-  private void parseMethod0(Method candidate) throws IOException {
+  private void parseMethod0(Http.Request.Method candidate) throws IOException {
     int index;
     index = candidate.index();
 
@@ -163,19 +168,19 @@ class WayRequestLine extends SocketInput {
 
     // we'll try them in sequence
 
-    parseMethod0(Method.POST);
+    parseMethod0(Http.POST);
 
     if (method != null) {
       return;
     }
 
-    parseMethod0(Method.PUT);
+    parseMethod0(Http.PUT);
 
     if (method != null) {
       return;
     }
 
-    parseMethod0(Method.PATCH);
+    parseMethod0(Http.PATCH);
 
     if (method != null) {
       return;

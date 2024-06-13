@@ -18,6 +18,7 @@ package objectos.http;
 import static org.testng.Assert.assertEquals;
 
 import java.io.IOException;
+import objectos.way.Http;
 import org.testng.annotations.Test;
 
 public class WayRequestLineTest {
@@ -39,10 +40,10 @@ public class WayRequestLineTest {
     line.parseRequestLine();
 
     // method
-    Method method;
+    Http.Request.Method method;
     method = line.method;
 
-    assertEquals(method, Method.GET);
+    assertEquals(method, Http.GET);
 
     // path
     WayUriPath path;
@@ -79,10 +80,10 @@ public class WayRequestLineTest {
     line.parseRequestLine();
 
     // method
-    Method method;
+    Http.Request.Method method;
     method = line.method;
 
-    assertEquals(method, Method.GET);
+    assertEquals(method, Http.GET);
 
     // path
     WayUriPath path;
