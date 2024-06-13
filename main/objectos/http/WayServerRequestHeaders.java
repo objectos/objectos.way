@@ -22,23 +22,25 @@ import java.util.HashMap;
 import java.util.Map;
 import objectos.http.WayServerLoop.ParseStatus;
 import objectos.lang.object.Check;
+import objectos.way.Http;
+import objectos.way.HttpHeaderName;
 
 class WayServerRequestHeaders extends WayRequestLine implements ServerRequestHeaders {
 
-  HeaderName headerName;
+  Http.HeaderName headerName;
 
   WayHeader[] standardHeaders;
 
   int standardHeadersCount;
 
-  Map<HeaderName, WayHeader> unknownHeaders;
+  Map<Http.HeaderName, WayHeader> unknownHeaders;
 
   WayServerRequestHeaders() {}
 
   // public API
 
   @Override
-  public final String first(HeaderName name) {
+  public final String first(Http.HeaderName name) {
     Check.notNull(name, "name == null");
 
     int index;
@@ -94,7 +96,7 @@ class WayServerRequestHeaders extends WayRequestLine implements ServerRequestHea
 
   // unchecked API
 
-  final WayHeader headerUnchecked(HeaderName name) {
+  final WayHeader headerUnchecked(Http.HeaderName name) {
     if (standardHeaders == null) {
       return null;
     } else {
@@ -167,34 +169,34 @@ class WayServerRequestHeaders extends WayRequestLine implements ServerRequestHea
 
     switch (first) {
       case 'A' -> parseHeaderName0(
-          HeaderName.ACCEPT_ENCODING
+          Http.ACCEPT_ENCODING
       );
 
       case 'C' -> parseHeaderName0(
-          HeaderName.CONNECTION,
-          HeaderName.CONTENT_LENGTH,
-          HeaderName.CONTENT_TYPE,
-          HeaderName.COOKIE
+          Http.CONNECTION,
+          Http.CONTENT_LENGTH,
+          Http.CONTENT_TYPE,
+          Http.COOKIE
       );
 
       case 'D' -> parseHeaderName0(
-          HeaderName.DATE
+          Http.DATE
       );
 
       case 'F' -> parseHeaderName0(
-          HeaderName.FROM
+          Http.FROM
       );
 
       case 'H' -> parseHeaderName0(
-          HeaderName.HOST
+          Http.HOST
       );
 
       case 'T' -> parseHeaderName0(
-          HeaderName.TRANSFER_ENCODING
+          Http.TRANSFER_ENCODING
       );
 
       case 'U' -> parseHeaderName0(
-          HeaderName.USER_AGENT
+          Http.USER_AGENT
       );
     }
   }
@@ -203,14 +205,14 @@ class WayServerRequestHeaders extends WayRequestLine implements ServerRequestHea
 
   static {
     int size;
-    size = WayHeaderName.standardNamesSize();
+    size = HttpHeaderName.standardNamesSize();
 
     byte[][] map;
     map = new byte[size][];
 
     for (int i = 0; i < size; i++) {
-      WayHeaderName headerName;
-      headerName = WayHeaderName.standardName(i);
+      HttpHeaderName headerName;
+      headerName = HttpHeaderName.standardName(i);
 
       String name;
       name = headerName.capitalized();
@@ -221,7 +223,7 @@ class WayServerRequestHeaders extends WayRequestLine implements ServerRequestHea
     STD_HEADER_NAME_BYTES = map;
   }
 
-  private void parseHeaderName0(HeaderName candidate) {
+  private void parseHeaderName0(Http.HeaderName candidate) {
     int index;
     index = candidate.index();
 
@@ -256,8 +258,8 @@ class WayServerRequestHeaders extends WayRequestLine implements ServerRequestHea
     headerName = candidate;
   }
 
-  private void parseHeaderName0(HeaderName c0, HeaderName c1, HeaderName c2,
-                                HeaderName c3) {
+  private void parseHeaderName0(Http.HeaderName c0, Http.HeaderName c1, Http.HeaderName c2,
+                                Http.HeaderName c3) {
     parseHeaderName0(c0);
 
     if (headerName != null) {
@@ -303,7 +305,7 @@ class WayServerRequestHeaders extends WayRequestLine implements ServerRequestHea
     String name;
     name = bufferToString(startIndex, colonIndex);
 
-    headerName = HeaderName.create(name);
+    headerName = Http.createHeaderName(name);
 
     // resume immediately after the colon
     bufferIndex = colonIndex + 1;
@@ -329,7 +331,7 @@ class WayServerRequestHeaders extends WayRequestLine implements ServerRequestHea
     if (index >= 0) {
       if (standardHeaders == null) {
         int size;
-        size = WayHeaderName.standardNamesSize();
+        size = HttpHeaderName.standardNamesSize();
 
         standardHeaders = new WayHeader[size];
       }
@@ -351,7 +353,7 @@ class WayServerRequestHeaders extends WayRequestLine implements ServerRequestHea
         unknownHeaders = new HashMap<>();
       }
 
-      HeaderName name;
+      Http.HeaderName name;
       name = headerName;
 
       WayHeader header;

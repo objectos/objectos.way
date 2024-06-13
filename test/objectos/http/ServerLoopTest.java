@@ -90,8 +90,8 @@ public class ServerLoopTest {
       headers = http.headers();
 
       assertEquals(headers.size(), 2);
-      assertEquals(headers.first(HeaderName.HOST), "www.example.com");
-      assertEquals(headers.first(HeaderName.CONNECTION), "close");
+      assertEquals(headers.first(Http.HOST), "www.example.com");
+      assertEquals(headers.first(Http.CONNECTION), "close");
 
       // body
       Body body;
@@ -104,9 +104,9 @@ public class ServerLoopTest {
       msg = body01.getBytes(StandardCharsets.UTF_8);
 
       http.status(Status.OK);
-      http.header(HeaderName.CONTENT_TYPE, "text/plain; charset=utf-8");
-      http.header(HeaderName.CONTENT_LENGTH, msg.length);
-      http.header(HeaderName.DATE, "Wed, 28 Jun 2023 12:08:43 GMT");
+      http.header(Http.CONTENT_TYPE, "text/plain; charset=utf-8");
+      http.header(Http.CONTENT_LENGTH, msg.length);
+      http.header(Http.DATE, "Wed, 28 Jun 2023 12:08:43 GMT");
       http.send(msg);
 
       http.commit();
@@ -199,7 +199,7 @@ public class ServerLoopTest {
       headers = http.headers();
 
       assertEquals(headers.size(), 1);
-      assertEquals(headers.first(HeaderName.HOST), "www.example.com");
+      assertEquals(headers.first(Http.HOST), "www.example.com");
 
       // body
       Body body;
@@ -212,9 +212,9 @@ public class ServerLoopTest {
       msg = body01.getBytes(StandardCharsets.UTF_8);
 
       http.status(Status.OK);
-      http.header(HeaderName.CONTENT_TYPE, "text/html; charset=utf-8");
-      http.header(HeaderName.CONTENT_LENGTH, msg.length);
-      http.header(HeaderName.DATE, "Wed, 28 Jun 2023 12:08:43 GMT");
+      http.header(Http.CONTENT_TYPE, "text/html; charset=utf-8");
+      http.header(Http.CONTENT_LENGTH, msg.length);
+      http.header(Http.DATE, "Wed, 28 Jun 2023 12:08:43 GMT");
       http.send(msg);
 
       http.commit();
@@ -238,8 +238,8 @@ public class ServerLoopTest {
       headers = http.headers();
 
       assertEquals(headers.size(), 2);
-      assertEquals(headers.first(HeaderName.HOST), "www.example.com");
-      assertEquals(headers.first(HeaderName.CONNECTION), "close");
+      assertEquals(headers.first(Http.HOST), "www.example.com");
+      assertEquals(headers.first(Http.CONNECTION), "close");
 
       // body
       body = http.body();
@@ -250,9 +250,9 @@ public class ServerLoopTest {
       msg = body02.getBytes(StandardCharsets.UTF_8);
 
       http.status(Status.OK);
-      http.header(HeaderName.CONTENT_TYPE, "text/css; charset=utf-8");
-      http.header(HeaderName.CONTENT_LENGTH, msg.length);
-      http.header(HeaderName.DATE, "Wed, 28 Jun 2023 12:08:43 GMT");
+      http.header(Http.CONTENT_TYPE, "text/css; charset=utf-8");
+      http.header(Http.CONTENT_LENGTH, msg.length);
+      http.header(Http.DATE, "Wed, 28 Jun 2023 12:08:43 GMT");
       http.send(msg);
 
       socket.outputReset();
@@ -306,18 +306,18 @@ public class ServerLoopTest {
       headers = http.headers();
 
       assertEquals(headers.size(), 3);
-      assertEquals(headers.first(HeaderName.HOST), "www.example.com");
-      assertEquals(headers.first(HeaderName.CONNECTION), "close");
-      assertEquals(headers.first(HeaderName.create("Foo")), "bar");
+      assertEquals(headers.first(Http.HOST), "www.example.com");
+      assertEquals(headers.first(Http.CONNECTION), "close");
+      assertEquals(headers.first(Http.createHeaderName("Foo")), "bar");
 
       // response phase
       byte[] msg;
       msg = body01.getBytes(StandardCharsets.UTF_8);
 
       http.status(Status.OK);
-      http.header(HeaderName.CONTENT_TYPE, "text/plain; charset=utf-8");
-      http.header(HeaderName.CONTENT_LENGTH, msg.length);
-      http.header(HeaderName.DATE, "Wed, 28 Jun 2023 12:08:43 GMT");
+      http.header(Http.CONTENT_TYPE, "text/plain; charset=utf-8");
+      http.header(Http.CONTENT_LENGTH, msg.length);
+      http.header(Http.DATE, "Wed, 28 Jun 2023 12:08:43 GMT");
       http.send(msg);
 
       http.commit();
@@ -386,9 +386,9 @@ public class ServerLoopTest {
       headers = http.headers();
 
       assertEquals(headers.size(), 3);
-      assertEquals(headers.first(HeaderName.HOST), "www.example.com");
-      assertEquals(headers.first(HeaderName.CONNECTION), "close");
-      assertEquals(headers.first(HeaderName.create("Foo")), "bar");
+      assertEquals(headers.first(Http.HOST), "www.example.com");
+      assertEquals(headers.first(Http.CONNECTION), "close");
+      assertEquals(headers.first(Http.createHeaderName("Foo")), "bar");
 
       // response phase
       dir = ObjectosHttp.createTempDir();
@@ -399,9 +399,9 @@ public class ServerLoopTest {
       Files.writeString(index, body01, StandardCharsets.UTF_8);
 
       http.status(Status.OK);
-      http.header(HeaderName.CONTENT_TYPE, "text/html; charset=utf-8");
-      http.header(HeaderName.CONTENT_LENGTH, Files.size(index));
-      http.header(HeaderName.DATE, "Wed, 28 Jun 2023 12:08:43 GMT");
+      http.header(Http.CONTENT_TYPE, "text/html; charset=utf-8");
+      http.header(Http.CONTENT_LENGTH, Files.size(index));
+      http.header(Http.DATE, "Wed, 28 Jun 2023 12:08:43 GMT");
       http.send(index);
 
       http.commit();
@@ -464,15 +464,15 @@ public class ServerLoopTest {
       headers = http.headers();
 
       assertEquals(headers.size(), 3);
-      assertEquals(headers.first(HeaderName.HOST), "www.example.com");
-      assertEquals(headers.first(HeaderName.IF_NONE_MATCH), "some%hash");
-      assertEquals(headers.first(HeaderName.CONNECTION), "close");
+      assertEquals(headers.first(Http.HOST), "www.example.com");
+      assertEquals(headers.first(Http.IF_NONE_MATCH), "some%hash");
+      assertEquals(headers.first(Http.CONNECTION), "close");
 
       // response phase
 
       http.status(Status.NOT_MODIFIED);
-      http.header(HeaderName.DATE, "Wed, 28 Jun 2023 12:08:43 GMT");
-      http.header(HeaderName.ETAG, "some%hash");
+      http.header(Http.DATE, "Wed, 28 Jun 2023 12:08:43 GMT");
+      http.header(Http.ETAG, "some%hash");
       http.send();
 
       http.commit();
@@ -517,8 +517,8 @@ public class ServerLoopTest {
       // response phase
 
       http.status(Status.NOT_FOUND);
-      http.header(HeaderName.CONNECTION, "close");
-      http.header(HeaderName.DATE, "Wed, 28 Jun 2023 12:08:43 GMT");
+      http.header(Http.CONNECTION, "close");
+      http.header(Http.DATE, "Wed, 28 Jun 2023 12:08:43 GMT");
       http.send();
 
       http.commit();
@@ -569,8 +569,8 @@ public class ServerLoopTest {
       // response phase
 
       http.status(Status.NOT_FOUND);
-      http.header(HeaderName.CONNECTION, "close");
-      http.header(HeaderName.DATE, "Wed, 28 Jun 2023 12:08:43 GMT");
+      http.header(Http.CONNECTION, "close");
+      http.header(Http.DATE, "Wed, 28 Jun 2023 12:08:43 GMT");
       http.send();
 
       http.commit();
@@ -628,10 +628,10 @@ public class ServerLoopTest {
       // response phase
 
       http.status(Status.SEE_OTHER);
-      http.header(HeaderName.LOCATION, "/app");
-      http.header(HeaderName.CONTENT_TYPE, "text/plain; charset=utf-8");
-      http.header(HeaderName.CONTENT_LENGTH, "52");
-      http.header(HeaderName.DATE, "Wed, 28 Jun 2023 12:08:43 GMT");
+      http.header(Http.LOCATION, "/app");
+      http.header(Http.CONTENT_TYPE, "text/plain; charset=utf-8");
+      http.header(Http.CONTENT_LENGTH, "52");
+      http.header(Http.DATE, "Wed, 28 Jun 2023 12:08:43 GMT");
       http.send(body01.getBytes(StandardCharsets.UTF_8));
 
       http.commit();
@@ -680,10 +680,10 @@ public class ServerLoopTest {
       assertEquals(parse.isError(), false);
 
       http.status(Status.OK);
-      http.header(HeaderName.CONTENT_TYPE, "text/plain; charset=utf-8");
-      http.header(HeaderName.CONTENT_LENGTH, 5);
-      http.header(HeaderName.DATE, "Wed, 28 Jun 2023 12:08:43 GMT");
-      http.header(HeaderName.ETAG, etag);
+      http.header(Http.CONTENT_TYPE, "text/plain; charset=utf-8");
+      http.header(Http.CONTENT_LENGTH, 5);
+      http.header(Http.DATE, "Wed, 28 Jun 2023 12:08:43 GMT");
+      http.header(Http.ETAG, etag);
       http.send("AAAA\n".getBytes(StandardCharsets.UTF_8));
 
       http.commit();
@@ -878,8 +878,8 @@ public class ServerLoopTest {
       assertEquals(parse.isError(), false);
 
       http.dateNow();
-      http.header(HeaderName.CONTENT_TYPE, "text/plain");
-      http.header(HeaderName.CONTENT_LENGTH, 64);
+      http.header(Http.CONTENT_TYPE, "text/plain");
+      http.header(Http.CONTENT_LENGTH, 64);
       http.send(writable, StandardCharsets.UTF_8);
 
       http.commit();
@@ -923,7 +923,7 @@ public class ServerLoopTest {
       assertEquals(parse.isError(), false);
 
       http.dateNow();
-      http.header(HeaderName.CONTENT_TYPE, "text/plain");
+      http.header(Http.CONTENT_TYPE, "text/plain");
       http.send(writable, StandardCharsets.UTF_8);
 
       http.commit();
@@ -983,8 +983,8 @@ public class ServerLoopTest {
       assertEquals(parse.isError(), false);
 
       http.dateNow();
-      http.header(HeaderName.CONTENT_TYPE, "text/plain");
-      http.header(HeaderName.TRANSFER_ENCODING, "chunked");
+      http.header(Http.CONTENT_TYPE, "text/plain");
+      http.header(Http.TRANSFER_ENCODING, "chunked");
       http.send(writable, StandardCharsets.UTF_8);
 
       http.commit();
@@ -1040,8 +1040,8 @@ public class ServerLoopTest {
       assertEquals(parse.isError(), false);
 
       http.dateNow();
-      http.header(HeaderName.CONTENT_TYPE, "text/plain");
-      http.header(HeaderName.TRANSFER_ENCODING, "chunked");
+      http.header(Http.CONTENT_TYPE, "text/plain");
+      http.header(Http.TRANSFER_ENCODING, "chunked");
       http.send(writable, StandardCharsets.UTF_8);
 
       http.commit();
@@ -1095,8 +1095,8 @@ public class ServerLoopTest {
       assertEquals(parse.isError(), false);
 
       http.dateNow();
-      http.header(HeaderName.CONTENT_TYPE, "text/plain");
-      http.header(HeaderName.TRANSFER_ENCODING, "chunked");
+      http.header(Http.CONTENT_TYPE, "text/plain");
+      http.header(Http.TRANSFER_ENCODING, "chunked");
       http.send(writable, StandardCharsets.UTF_8);
 
       http.commit();
@@ -1160,8 +1160,8 @@ public class ServerLoopTest {
       assertEquals(parse.isError(), false);
 
       http.dateNow();
-      http.header(HeaderName.CONTENT_TYPE, "text/plain");
-      http.header(HeaderName.TRANSFER_ENCODING, "chunked");
+      http.header(Http.CONTENT_TYPE, "text/plain");
+      http.header(Http.TRANSFER_ENCODING, "chunked");
       http.send(writable, StandardCharsets.UTF_8);
 
       http.commit();
@@ -1254,9 +1254,9 @@ public class ServerLoopTest {
       headers = http.headers();
 
       assertEquals(headers.size(), 3);
-      assertEquals(headers.first(HeaderName.HOST), "www.example.com");
-      assertEquals(headers.first(HeaderName.FROM), "");
-      assertEquals(headers.first(HeaderName.ACCEPT_ENCODING), "gzip, deflate, br");
+      assertEquals(headers.first(Http.HOST), "www.example.com");
+      assertEquals(headers.first(Http.FROM), "");
+      assertEquals(headers.first(Http.ACCEPT_ENCODING), "gzip, deflate, br");
 
       // body
       Body body;

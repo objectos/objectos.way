@@ -18,6 +18,7 @@ package objectos.http;
 import static org.testng.Assert.assertEquals;
 
 import java.io.IOException;
+import objectos.way.Http;
 import org.testng.annotations.Test;
 
 public class WayServerRequestHeadersTest {
@@ -38,8 +39,8 @@ public class WayServerRequestHeadersTest {
     headers.parseHeaders();
 
     assertEquals(headers.size(), 2);
-    assertEquals(headers.first(HeaderName.HOST), "www.example.com");
-    assertEquals(headers.first(HeaderName.CONNECTION), "close");
+    assertEquals(headers.first(Http.HOST), "www.example.com");
+    assertEquals(headers.first(Http.CONNECTION), "close");
   }
 
   @Test
@@ -55,9 +56,9 @@ public class WayServerRequestHeadersTest {
     headers.parseHeaders();
 
     assertEquals(headers.size(), 3);
-    assertEquals(headers.first(HeaderName.HOST), "www.example.com");
-    assertEquals(headers.first(HeaderName.CONNECTION), "close");
-    assertEquals(headers.first(HeaderName.create("Foo")), "bar");
+    assertEquals(headers.first(Http.HOST), "www.example.com");
+    assertEquals(headers.first(Http.CONNECTION), "close");
+    assertEquals(headers.first(Http.createHeaderName("Foo")), "bar");
   }
 
   @Test(description = """
@@ -76,9 +77,9 @@ public class WayServerRequestHeadersTest {
     headers.parseHeaders();
 
     assertEquals(headers.size(), 3);
-    assertEquals(headers.first(HeaderName.HOST), "www.example.com");
-    assertEquals(headers.first(HeaderName.CONTENT_LENGTH), "24");
-    assertEquals(headers.first(HeaderName.CONTENT_TYPE), "application/x-www-form-urlencoded");
+    assertEquals(headers.first(Http.HOST), "www.example.com");
+    assertEquals(headers.first(Http.CONTENT_LENGTH), "24");
+    assertEquals(headers.first(Http.CONTENT_TYPE), "application/x-www-form-urlencoded");
   }
 
   @Test(description = """
@@ -96,9 +97,9 @@ public class WayServerRequestHeadersTest {
     headers.parseHeaders();
 
     assertEquals(headers.size(), 3);
-    assertEquals(headers.first(HeaderName.HOST), "www.example.com");
-    assertEquals(headers.first(HeaderName.FROM), "");
-    assertEquals(headers.first(HeaderName.ACCEPT_ENCODING), "gzip, deflate, br");
+    assertEquals(headers.first(Http.HOST), "www.example.com");
+    assertEquals(headers.first(Http.FROM), "");
+    assertEquals(headers.first(Http.ACCEPT_ENCODING), "gzip, deflate, br");
   }
 
   @Test
@@ -115,10 +116,10 @@ public class WayServerRequestHeadersTest {
     headers.parseHeaders();
 
     assertEquals(headers.size(), 4);
-    assertEquals(headers.first(HeaderName.create("no-leading-ows")), "foo");
-    assertEquals(headers.first(HeaderName.create("empty-value")), "");
-    assertEquals(headers.first(HeaderName.create("trailing-ows1")), "foo");
-    assertEquals(headers.first(HeaderName.create("trailing-ows2")), "foo");
+    assertEquals(headers.first(Http.createHeaderName("no-leading-ows")), "foo");
+    assertEquals(headers.first(Http.createHeaderName("empty-value")), "");
+    assertEquals(headers.first(Http.createHeaderName("trailing-ows1")), "foo");
+    assertEquals(headers.first(Http.createHeaderName("trailing-ows2")), "foo");
   }
 
   private WayServerRequestHeaders regularInput(Object... data) {

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.http;
+package objectos.way;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,30 +21,33 @@ import java.util.Locale;
 import java.util.Map;
 import objectos.util.map.GrowableMap;
 
-final class WayHeaderName extends HeaderName {
+//TODO: make package-private after refactoring
+public final class HttpHeaderName implements Http.HeaderName {
 
-  static class Builder {
+  private static class Builder {
 
-    private final List<WayHeaderName> standardNames = new ArrayList<>();
+    static Builder INSTANCE = new Builder();
+
+    private final List<HttpHeaderName> standardNames = new ArrayList<>();
 
     private int index;
 
-    public final HeaderName create(String name, HeaderType type) {
-      WayHeaderName result;
-      result = new WayHeaderName(index++, name);
+    public final Http.HeaderName create(String name, HttpHeaderType type) {
+      HttpHeaderName result;
+      result = new HttpHeaderName(index++, name);
 
       standardNames.add(result);
 
       return result;
     }
 
-    public final WayHeaderName[] buildNames() {
-      return standardNames.toArray(WayHeaderName[]::new);
+    public final HttpHeaderName[] buildNames() {
+      return standardNames.toArray(HttpHeaderName[]::new);
     }
 
   }
 
-  record HeaderNameType(WayHeaderName name, HeaderType type) {}
+  record HeaderNameType(HttpHeaderName name, HttpHeaderType type) {}
 
   private final int index;
 
@@ -53,7 +56,7 @@ final class WayHeaderName extends HeaderName {
   @SuppressWarnings("unused")
   private final String lowerCase;
 
-  public WayHeaderName(int index, String capitalized) {
+  public HttpHeaderName(int index, String capitalized) {
     this.index = index;
 
     this.capitalized = capitalized;
@@ -61,32 +64,46 @@ final class WayHeaderName extends HeaderName {
     this.lowerCase = capitalized.toLowerCase(Locale.US);
   }
 
-  public WayHeaderName(String name) {
+  public HttpHeaderName(String name) {
     this(-1, name);
   }
 
-  private static WayHeaderName[] STANDARD_NAMES;
+  static Http.HeaderName create(String name, HttpHeaderType type) {
+    return Builder.INSTANCE.create(name, type);
+  }
 
-  private static Map<String, WayHeaderName> FIND_BY_NAME;
+  static Http.HeaderName createLast(String name, HttpHeaderType type) {
+    Builder builder;
+    builder = Builder.INSTANCE;
 
-  public static void set(Builder builder) {
+    Http.HeaderName result;
+    result = builder.create(name, type);
+
     STANDARD_NAMES = builder.buildNames();
 
-    GrowableMap<String, WayHeaderName> findByName;
+    GrowableMap<String, HttpHeaderName> findByName;
     findByName = new GrowableMap<>();
 
-    for (WayHeaderName value : STANDARD_NAMES) {
+    for (HttpHeaderName value : STANDARD_NAMES) {
       findByName.put(value.capitalized, value);
     }
 
     FIND_BY_NAME = findByName.toUnmodifiableMap();
+
+    Builder.INSTANCE = null;
+
+    return result;
   }
 
-  public static WayHeaderName findByName(String name) {
+  private static HttpHeaderName[] STANDARD_NAMES;
+
+  private static Map<String, HttpHeaderName> FIND_BY_NAME;
+
+  public static HttpHeaderName findByName(String name) {
     return FIND_BY_NAME.get(name);
   }
 
-  public static WayHeaderName standardName(int index) {
+  public static HttpHeaderName standardName(int index) {
     return STANDARD_NAMES[index];
   }
 
@@ -101,7 +118,7 @@ final class WayHeaderName extends HeaderName {
 
   @Override
   public final boolean equals(Object obj) {
-    return obj == this || obj instanceof WayHeaderName that
+    return obj == this || obj instanceof HttpHeaderName that
         && capitalized.equals(that.capitalized);
   }
 

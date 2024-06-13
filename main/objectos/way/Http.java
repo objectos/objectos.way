@@ -27,11 +27,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import objectos.html.Html;
 import objectos.html.HtmlTemplate;
 import objectos.http.Body;
-import objectos.http.HeaderName;
 import objectos.http.ServerRequestHeaders;
 import objectos.http.Session;
 import objectos.http.SessionStore;
@@ -46,142 +46,7 @@ import objectos.lang.object.Check;
  */
 public final class Http {
 
-  private static HttpRequestMethod.Builder REQUEST_METHOD_BUILDER = new HttpRequestMethod.Builder();
-
-  /**
-   * The CONNECT method.
-   */
-  public static final Request.Method CONNECT = REQUEST_METHOD_BUILDER.create("CONNECT");
-
-  /**
-   * The DELETE method.
-   */
-  public static final Request.Method DELETE = REQUEST_METHOD_BUILDER.create("DELETE");
-
-  /**
-   * The GET method.
-   */
-  public static final Request.Method GET = REQUEST_METHOD_BUILDER.create("GET");
-
-  /**
-   * The HEAD method.
-   */
-  public static final Request.Method HEAD = REQUEST_METHOD_BUILDER.create("HEAD");
-
-  /**
-   * The OPTIONS method.
-   */
-  public static final Request.Method OPTIONS = REQUEST_METHOD_BUILDER.create("OPTIONS");
-
-  /**
-   * The PATCH method.
-   */
-  public static final Request.Method PATCH = REQUEST_METHOD_BUILDER.create("PATCH");
-
-  /**
-   * The POST method.
-   */
-  public static final Request.Method POST = REQUEST_METHOD_BUILDER.create("POST");
-
-  /**
-   * The PUT method.
-   */
-  public static final Request.Method PUT = REQUEST_METHOD_BUILDER.create("PUT");
-
-  /**
-   * The TRACE method.
-   */
-  public static final Request.Method TRACE = REQUEST_METHOD_BUILDER.create("TRACE");
-
-  static {
-    HttpRequestMethod.set(REQUEST_METHOD_BUILDER);
-
-    REQUEST_METHOD_BUILDER = null;
-  }
-
-  private static final DateTimeFormatter IMF_FIXDATE;
-
-  static {
-    DateTimeFormatterBuilder b;
-    b = new DateTimeFormatterBuilder();
-
-    Map<Long, String> dow;
-    dow = new HashMap<>();
-
-    dow.put(1L, "Mon");
-    dow.put(2L, "Tue");
-    dow.put(3L, "Wed");
-    dow.put(4L, "Thu");
-    dow.put(5L, "Fri");
-    dow.put(6L, "Sat");
-    dow.put(7L, "Sun");
-
-    b.appendText(ChronoField.DAY_OF_WEEK, dow);
-
-    b.appendLiteral(", ");
-
-    b.appendValue(ChronoField.DAY_OF_MONTH, 2);
-
-    b.appendLiteral(' ');
-
-    Map<Long, String> moy;
-    moy = new HashMap<>();
-
-    moy.put(1L, "Jan");
-    moy.put(2L, "Feb");
-    moy.put(3L, "Mar");
-    moy.put(4L, "Apr");
-    moy.put(5L, "May");
-    moy.put(6L, "Jun");
-    moy.put(7L, "Jul");
-    moy.put(8L, "Aug");
-    moy.put(9L, "Sep");
-    moy.put(10L, "Oct");
-    moy.put(11L, "Nov");
-    moy.put(12L, "Dec");
-
-    b.appendText(ChronoField.MONTH_OF_YEAR, moy);
-
-    b.appendLiteral(' ');
-
-    b.appendValue(ChronoField.YEAR, 4);
-
-    b.appendLiteral(' ');
-
-    b.appendValue(ChronoField.HOUR_OF_DAY, 2);
-
-    b.appendLiteral(':');
-
-    b.appendValue(ChronoField.MINUTE_OF_HOUR, 2);
-
-    b.appendLiteral(':');
-
-    b.appendValue(ChronoField.SECOND_OF_MINUTE, 2);
-
-    b.appendLiteral(' ');
-
-    b.appendOffset("+HHMM", "GMT");
-
-    IMF_FIXDATE = b.toFormatter(Locale.US);
-  }
-
-  private Http() {}
-
-  /**
-   * Formats a date so it can be used as the value of a {@code Date} HTTP
-   * header.
-   * 
-   * @param date
-   *        the date to be formatted
-   * 
-   * @return the formatted date
-   */
-  public static String formatDate(ZonedDateTime date) {
-    ZonedDateTime normalized;
-    normalized = date.withZoneSameInstant(ZoneOffset.UTC);
-
-    return IMF_FIXDATE.format(normalized);
-  }
+  // types
   
   /**
    * An HTTP request received by the server and its subsequent response to the
@@ -369,9 +234,9 @@ public final class Http {
 
       dateNow();
 
-      header(HeaderName.CONTENT_TYPE, "text/html; charset=utf-8");
+      header(Http.CONTENT_TYPE, "text/html; charset=utf-8");
 
-      header(HeaderName.TRANSFER_ENCODING, "chunked");
+      header(Http.TRANSFER_ENCODING, "chunked");
       
       send(html, StandardCharsets.UTF_8);
     }
@@ -384,9 +249,9 @@ public final class Http {
 
       dateNow();
 
-      header(HeaderName.CONTENT_TYPE, "text/plain; charset=" + charset.name().toLowerCase(Locale.US));
+      header(Http.CONTENT_TYPE, "text/plain; charset=" + charset.name().toLowerCase(Locale.US));
 
-      header(HeaderName.CONTENT_LENGTH, bytes.length);
+      header(Http.CONTENT_LENGTH, bytes.length);
 
       send(bytes);
     }
@@ -399,7 +264,7 @@ public final class Http {
 
       dateNow();
 
-      header(HeaderName.LOCATION, location);
+      header(Http.LOCATION, location);
 
       send();
     }
@@ -412,7 +277,7 @@ public final class Http {
 
       dateNow();
 
-      header(HeaderName.LOCATION, location);
+      header(Http.LOCATION, location);
 
       send();
     }
@@ -442,7 +307,7 @@ public final class Http {
 
       dateNow();
 
-      header(HeaderName.CONNECTION, "close");
+      header(Http.CONNECTION, "close");
 
       send();
     }
@@ -466,7 +331,7 @@ public final class Http {
 
       dateNow();
 
-      header(HeaderName.CONNECTION, "close");
+      header(Http.CONNECTION, "close");
 
       send();
     }
@@ -494,8 +359,28 @@ public final class Http {
     void handle(Http.Exchange http);
 
   }
-  
 
+  /**
+   * An HTTP header name.
+   */
+  public sealed interface HeaderName permits HttpHeaderName {
+
+    /**
+     * The index of this header name.
+     * 
+     * @return the index of this header name
+     */
+    int index();
+
+    /**
+     * Returns this name with the first letter of each word capitalized.
+     * 
+     * @return this name with the first letter of each word capitalized.
+     */
+    String capitalized();
+
+  }
+  
   /**
    * An HTTP request message.
    */
@@ -639,6 +524,224 @@ public final class Http {
      */
     Target target();
 
+  }
+  
+  // HeaderName constants
+  
+  /**
+   * The {@code Accept-Encoding} header name.
+   */
+  public static final HeaderName ACCEPT_ENCODING = HttpHeaderName.create("Accept-Encoding", HttpHeaderType.REQUEST);
+
+  /**
+   * The {@code Connection} header name.
+   */
+  public static final HeaderName CONNECTION = HttpHeaderName.create("Connection", HttpHeaderType.BOTH);
+
+  /**
+   * The {@code Content-Length} header name.
+   */
+  public static final HeaderName CONTENT_LENGTH = HttpHeaderName.create("Content-Length", HttpHeaderType.BOTH);
+
+  /**
+   * The {@code Content-Type} header name.
+   */
+  public static final HeaderName CONTENT_TYPE = HttpHeaderName.create("Content-Type", HttpHeaderType.BOTH);
+
+  /**
+   * The {@code Cookie} header name.
+   */
+  public static final HeaderName COOKIE = HttpHeaderName.create("Cookie", HttpHeaderType.REQUEST);
+
+  /**
+   * The {@code Date} header name.
+   */
+  public static final HeaderName DATE = HttpHeaderName.create("Date", HttpHeaderType.BOTH);
+
+  /**
+   * The {@code ETag} header name.
+   */
+  public static final HeaderName ETAG = HttpHeaderName.create("ETag", HttpHeaderType.RESPONSE);
+  
+  /**
+   * The {@code From} header name.
+   */
+  public static final HeaderName FROM = HttpHeaderName.create("From", HttpHeaderType.REQUEST);
+
+  /**
+   * The {@code Host} header name.
+   */
+  public static final HeaderName HOST = HttpHeaderName.create("Host", HttpHeaderType.REQUEST);
+
+  /**
+   * The {@code If-None-Match} header name.
+   */
+  public static final HeaderName IF_NONE_MATCH = HttpHeaderName.create("If-None-Match", HttpHeaderType.REQUEST);
+
+  /**
+   * The {@code Location} header name.
+   */
+  public static final HeaderName LOCATION = HttpHeaderName.create("Location", HttpHeaderType.RESPONSE);
+
+  /**
+   * The {@code Set-Cookie} header name.
+   */
+  public static final HeaderName SET_COOKIE = HttpHeaderName.create("Set-Cookie", HttpHeaderType.RESPONSE);
+
+  /**
+   * The {@code Transfer-Encoding} header name.
+   */
+  public static final HeaderName TRANSFER_ENCODING = HttpHeaderName.create("Transfer-Encoding", HttpHeaderType.BOTH);
+
+  /**
+   * The {@code User-Agent} header name.
+   */
+  public static final HeaderName USER_AGENT = HttpHeaderName.createLast("User-Agent", HttpHeaderType.REQUEST);
+  
+  // Request constants
+  
+  /**
+   * The CONNECT method.
+   */
+  public static final Request.Method CONNECT = HttpRequestMethod.create("CONNECT");
+
+  /**
+   * The DELETE method.
+   */
+  public static final Request.Method DELETE = HttpRequestMethod.create("DELETE");
+
+  /**
+   * The GET method.
+   */
+  public static final Request.Method GET = HttpRequestMethod.create("GET");
+
+  /**
+   * The HEAD method.
+   */
+  public static final Request.Method HEAD = HttpRequestMethod.create("HEAD");
+
+  /**
+   * The OPTIONS method.
+   */
+  public static final Request.Method OPTIONS = HttpRequestMethod.create("OPTIONS");
+
+  /**
+   * The PATCH method.
+   */
+  public static final Request.Method PATCH = HttpRequestMethod.create("PATCH");
+
+  /**
+   * The POST method.
+   */
+  public static final Request.Method POST = HttpRequestMethod.create("POST");
+
+  /**
+   * The PUT method.
+   */
+  public static final Request.Method PUT = HttpRequestMethod.create("PUT");
+
+  /**
+   * The TRACE method.
+   */
+  public static final Request.Method TRACE = HttpRequestMethod.createLast("TRACE");
+
+  private Http() {}
+
+  public static HeaderName createHeaderName(String name) {
+    Objects.requireNonNull(name, "name == null");
+
+    HeaderName headerName;
+    headerName = HttpHeaderName.findByName(name);
+
+    if (headerName == null) {
+      headerName = new HttpHeaderName(name);
+    }
+
+    return headerName;
+  }
+
+  /**
+   * Formats a date so it can be used as the value of a {@code Date} HTTP
+   * header.
+   * 
+   * @param date
+   *        the date to be formatted
+   * 
+   * @return the formatted date
+   */
+  public static String formatDate(ZonedDateTime date) {
+    ZonedDateTime normalized;
+    normalized = date.withZoneSameInstant(ZoneOffset.UTC);
+
+    return IMF_FIXDATE.format(normalized);
+  }
+
+  // utils
+  
+  private static final DateTimeFormatter IMF_FIXDATE;
+
+  static {
+    DateTimeFormatterBuilder b;
+    b = new DateTimeFormatterBuilder();
+
+    Map<Long, String> dow;
+    dow = new HashMap<>();
+
+    dow.put(1L, "Mon");
+    dow.put(2L, "Tue");
+    dow.put(3L, "Wed");
+    dow.put(4L, "Thu");
+    dow.put(5L, "Fri");
+    dow.put(6L, "Sat");
+    dow.put(7L, "Sun");
+
+    b.appendText(ChronoField.DAY_OF_WEEK, dow);
+
+    b.appendLiteral(", ");
+
+    b.appendValue(ChronoField.DAY_OF_MONTH, 2);
+
+    b.appendLiteral(' ');
+
+    Map<Long, String> moy;
+    moy = new HashMap<>();
+
+    moy.put(1L, "Jan");
+    moy.put(2L, "Feb");
+    moy.put(3L, "Mar");
+    moy.put(4L, "Apr");
+    moy.put(5L, "May");
+    moy.put(6L, "Jun");
+    moy.put(7L, "Jul");
+    moy.put(8L, "Aug");
+    moy.put(9L, "Sep");
+    moy.put(10L, "Oct");
+    moy.put(11L, "Nov");
+    moy.put(12L, "Dec");
+
+    b.appendText(ChronoField.MONTH_OF_YEAR, moy);
+
+    b.appendLiteral(' ');
+
+    b.appendValue(ChronoField.YEAR, 4);
+
+    b.appendLiteral(' ');
+
+    b.appendValue(ChronoField.HOUR_OF_DAY, 2);
+
+    b.appendLiteral(':');
+
+    b.appendValue(ChronoField.MINUTE_OF_HOUR, 2);
+
+    b.appendLiteral(':');
+
+    b.appendValue(ChronoField.SECOND_OF_MINUTE, 2);
+
+    b.appendLiteral(' ');
+
+    b.appendOffset("+HHMM", "GMT");
+
+    IMF_FIXDATE = b.toFormatter(Locale.US);
   }
 
 }

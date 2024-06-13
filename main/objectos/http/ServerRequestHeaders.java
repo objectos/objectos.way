@@ -15,9 +15,11 @@
  */
 package objectos.http;
 
+import objectos.way.Http;
+
 public interface ServerRequestHeaders {
 
-  String first(HeaderName name);
+  String first(Http.HeaderName name);
 
   int size();
 

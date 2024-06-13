@@ -149,7 +149,7 @@ final class TestingHttpServer {
       headers = http.headers();
 
       String host;
-      host = headers.first(HeaderName.HOST);
+      host = headers.first(Http.HOST);
 
       switch (host) {
         case "http.module.test" -> httpModuleTest.handle(http);

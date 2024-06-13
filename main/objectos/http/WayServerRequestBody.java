@@ -21,6 +21,7 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import objectos.http.WayServerLoop.ParseStatus;
+import objectos.way.Http;
 
 class WayServerRequestBody extends WayServerRequestHeaders implements Body {
 
@@ -69,7 +70,7 @@ class WayServerRequestBody extends WayServerRequestHeaders implements Body {
 
   final void parseRequestBody() throws IOException {
     WayHeader contentLength;
-    contentLength = headerUnchecked(HeaderName.CONTENT_LENGTH);
+    contentLength = headerUnchecked(Http.CONTENT_LENGTH);
 
     if (contentLength != null) {
       long value;
@@ -111,7 +112,7 @@ class WayServerRequestBody extends WayServerRequestHeaders implements Body {
     }
 
     WayHeader transferEncoding;
-    transferEncoding = headerUnchecked(HeaderName.TRANSFER_ENCODING);
+    transferEncoding = headerUnchecked(Http.TRANSFER_ENCODING);
 
     if (transferEncoding != null) {
       throw new UnsupportedOperationException("Implement me");

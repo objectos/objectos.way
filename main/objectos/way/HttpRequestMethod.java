@@ -22,8 +22,10 @@ import objectos.way.Http.Request.Method;
 // TODO: make package-private after refactoring
 public final class HttpRequestMethod implements Http.Request.Method {
 
-  static class Builder {
+  private static class Builder {
 
+    static Builder INSTANCE = new Builder();
+    
     private final List<HttpRequestMethod> standardValues = new ArrayList<>();
 
     private int index;
@@ -51,6 +53,21 @@ public final class HttpRequestMethod implements Http.Request.Method {
     this.index = index;
 
     this.text = text;
+  }
+  
+  static HttpRequestMethod create(String text) {
+    return Builder.INSTANCE.create(text);
+  }
+
+  static HttpRequestMethod createLast(String text) {
+    HttpRequestMethod method;
+    method = Builder.INSTANCE.create(text);
+    
+    VALUES = Builder.INSTANCE.buildValues();
+    
+    Builder.INSTANCE = null;
+    
+    return method;
   }
 
   private static HttpRequestMethod[] VALUES;

@@ -70,7 +70,7 @@ public class SocketInputTest {
     assertEquals(input.bufferIndex, 16);
     assertEquals(input.consumeIfEmptyLine(), false);
     byte[] host;
-    host = WayServerRequestHeaders.STD_HEADER_NAME_BYTES[HeaderName.HOST.index()];
+    host = WayServerRequestHeaders.STD_HEADER_NAME_BYTES[Http.HOST.index()];
     assertEquals(input.matches(host), true);
     assertEquals(hasNext(input), true);
     assertEquals(next(input), ':');

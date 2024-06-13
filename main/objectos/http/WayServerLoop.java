@@ -235,7 +235,7 @@ public final class WayServerLoop extends WayServerRequestBody implements ServerL
     }
 
     WayHeader connection;
-    connection = headerUnchecked(HeaderName.CONNECTION);
+    connection = headerUnchecked(Http.CONNECTION);
 
     if (connection != null) {
       if (connection.contentEquals(Bytes.KEEP_ALIVE)) {
@@ -310,7 +310,7 @@ public final class WayServerLoop extends WayServerRequestBody implements ServerL
     if (sessionStore != null) {
 
       WayHeader cookie;
-      cookie = headerUnchecked(HeaderName.COOKIE);
+      cookie = headerUnchecked(Http.COOKIE);
 
       if (cookie != null) {
         String cookieHeader;
@@ -459,7 +459,7 @@ public final class WayServerLoop extends WayServerRequestBody implements ServerL
   }
 
   @Override
-  public final void header(HeaderName name, long value) {
+  public final void header(Http.HeaderName name, long value) {
     checkResponse();
     Check.notNull(name, "name == null");
 
@@ -467,7 +467,7 @@ public final class WayServerLoop extends WayServerRequestBody implements ServerL
   }
 
   @Override
-  public final void header(HeaderName name, String value) {
+  public final void header(Http.HeaderName name, String value) {
     checkResponse();
     Check.notNull(name, "name == null");
     Check.notNull(value, "value == null");
@@ -492,10 +492,10 @@ public final class WayServerLoop extends WayServerRequestBody implements ServerL
     String value;
     value = Http.formatDate(now);
 
-    header0(HeaderName.DATE, value);
+    header0(Http.DATE, value);
   }
 
-  private void header0(HeaderName name, String value) { // write our the name
+  private void header0(Http.HeaderName name, String value) { // write our the name
     int index;
     index = name.index();
 
@@ -524,15 +524,15 @@ public final class WayServerLoop extends WayServerRequestBody implements ServerL
     writeBytes(Bytes.CRLF);
 
     // handle connection: close if necessary
-    if (name == HeaderName.CONNECTION && value.equalsIgnoreCase("close")) {
+    if (name == Http.CONNECTION && value.equalsIgnoreCase("close")) {
       clearBit(KEEP_ALIVE);
     }
 
-    else if (name == HeaderName.CONTENT_LENGTH) {
+    else if (name == Http.CONTENT_LENGTH) {
       setBit(CONTENT_LENGTH);
     }
 
-    else if (name == HeaderName.TRANSFER_ENCODING && value.toLowerCase().contains("chunked")) {
+    else if (name == Http.TRANSFER_ENCODING && value.toLowerCase().contains("chunked")) {
       setBit(CHUNKED);
     }
   }
@@ -582,7 +582,7 @@ public final class WayServerLoop extends WayServerRequestBody implements ServerL
 
     dateNow();
 
-    header0(HeaderName.CONNECTION, "close");
+    header0(Http.CONNECTION, "close");
 
     send();
   }
@@ -595,7 +595,7 @@ public final class WayServerLoop extends WayServerRequestBody implements ServerL
 
     dateNow();
 
-    header0(HeaderName.CONNECTION, "close");
+    header0(Http.CONNECTION, "close");
 
     send();
   }
@@ -622,11 +622,11 @@ public final class WayServerLoop extends WayServerRequestBody implements ServerL
 
     dateNow();
 
-    header(HeaderName.CONTENT_LENGTH, bytes.length);
+    header(Http.CONTENT_LENGTH, bytes.length);
 
-    header(HeaderName.CONTENT_TYPE, "text/plain");
+    header(Http.CONTENT_TYPE, "text/plain");
 
-    header(HeaderName.CONNECTION, "close");
+    header(Http.CONNECTION, "close");
 
     send(bytes);
   }
@@ -694,7 +694,7 @@ public final class WayServerLoop extends WayServerRequestBody implements ServerL
       String setCookie;
       setCookie = sessionStore.setCookie(id);
 
-      header0(HeaderName.SET_COOKIE, setCookie);
+      header0(Http.SET_COOKIE, setCookie);
     }
 
     writeBytes(Bytes.CRLF);

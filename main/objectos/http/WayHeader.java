@@ -15,9 +15,11 @@
  */
 package objectos.http;
 
+import objectos.way.Http;
+
 class WayHeader {
 
-  final HeaderName name;
+  final Http.HeaderName name;
 
   final SocketInput input;
 
@@ -27,7 +29,7 @@ class WayHeader {
 
   String value;
 
-  public WayHeader(HeaderName name, SocketInput input, int start, int end) {
+  public WayHeader(Http.HeaderName name, SocketInput input, int start, int end) {
     this.name = name;
 
     this.input = input;

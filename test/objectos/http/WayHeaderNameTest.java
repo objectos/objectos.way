@@ -17,6 +17,7 @@ package objectos.http;
 
 import static org.testng.Assert.assertEquals;
 
+import objectos.way.HttpHeaderName;
 import org.testng.annotations.Test;
 
 public class WayHeaderNameTest {
@@ -24,9 +25,9 @@ public class WayHeaderNameTest {
   @SuppressWarnings("unlikely-arg-type")
   @Test(description = "equals() should work fine")
   public void testCase01() {
-    WayHeaderName foo1 = new WayHeaderName("Foo");
-    WayHeaderName foo2 = new WayHeaderName("Foo");
-    WayHeaderName bar = new WayHeaderName("Bar");
+    HttpHeaderName foo1 = new HttpHeaderName("Foo");
+    HttpHeaderName foo2 = new HttpHeaderName("Foo");
+    HttpHeaderName bar = new HttpHeaderName("Bar");
 
     assertEquals(foo1.equals(foo2), true);
     assertEquals(foo2.equals(foo1), true);

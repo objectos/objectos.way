@@ -17,6 +17,7 @@ package objectos.http;
 
 import static org.testng.Assert.assertEquals;
 
+import objectos.way.Http;
 import org.testng.annotations.Test;
 
 public class HeaderNameTest {
@@ -25,8 +26,8 @@ public class HeaderNameTest {
   It should be possible to create a custom/unknown header name
   """)
   public void testCase01() {
-    HeaderName res;
-    res = HeaderName.create("Foo");
+    Http.HeaderName res;
+    res = Http.createHeaderName("Foo");
 
     assertEquals(res.capitalized(), "Foo");
     assertEquals(res.index(), -1);
@@ -36,8 +37,8 @@ public class HeaderNameTest {
   It should return StandardHeaderName for known header names
   """)
   public void testCase02() {
-    HeaderName res;
-    res = HeaderName.create("Connection");
+    Http.HeaderName res;
+    res = Http.createHeaderName("Connection");
 
     assertEquals(res.capitalized(), "Connection");
     assertEquals(res.index() >= 0, true);

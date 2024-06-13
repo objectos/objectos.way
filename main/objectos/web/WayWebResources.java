@@ -28,7 +28,6 @@ import java.nio.file.StandardOpenOption;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.nio.file.attribute.FileTime;
 import java.util.Map;
-import objectos.http.HeaderName;
 import objectos.http.ServerRequestHeaders;
 import objectos.http.Status;
 import objectos.http.UriPath;
@@ -226,14 +225,14 @@ public final class WayWebResources implements AutoCloseable, WebResources {
     headers = http.headers();
 
     String ifNoneMatch;
-    ifNoneMatch = headers.first(HeaderName.IF_NONE_MATCH);
+    ifNoneMatch = headers.first(Http.IF_NONE_MATCH);
 
     if (etag.equals(ifNoneMatch)) {
       http.status(Status.NOT_MODIFIED);
 
       http.dateNow();
 
-      http.header(HeaderName.ETAG, etag);
+      http.header(Http.ETAG, etag);
 
       http.send();
 
@@ -258,13 +257,13 @@ public final class WayWebResources implements AutoCloseable, WebResources {
       contentType = contentTypes.getOrDefault(extension, contentType);
     }
 
-    http.header(HeaderName.CONTENT_TYPE, contentType);
+    http.header(Http.CONTENT_TYPE, contentType);
 
-    http.header(HeaderName.CONTENT_LENGTH, attributes.size());
+    http.header(Http.CONTENT_LENGTH, attributes.size());
 
     http.dateNow();
 
-    http.header(HeaderName.ETAG, etag);
+    http.header(Http.ETAG, etag);
 
     if (method == Http.GET) {
       http.send(file);
