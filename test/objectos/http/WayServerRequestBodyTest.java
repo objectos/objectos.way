@@ -18,6 +18,7 @@ package objectos.http;
 import static org.testng.Assert.assertEquals;
 
 import java.io.IOException;
+import objectos.way.Http;
 import org.testng.annotations.Test;
 
 public class WayServerRequestBodyTest {
@@ -93,7 +94,7 @@ public class WayServerRequestBodyTest {
     }
   }
 
-  private String asString(Body body) throws IOException {
+  private String asString(Http.Request.Body body) throws IOException {
     return ObjectosHttp.readString(body);
   }
 

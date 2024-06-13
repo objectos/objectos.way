@@ -23,7 +23,7 @@ import java.nio.file.Path;
 import objectos.http.WayServerLoop.ParseStatus;
 import objectos.way.Http;
 
-class WayServerRequestBody extends WayServerRequestHeaders implements Body {
+class WayServerRequestBody extends WayServerRequestHeaders implements Http.Request.Body {
 
   private enum Kind {
     EMPTY,

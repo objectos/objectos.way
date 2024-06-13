@@ -368,7 +368,7 @@ public final class WayServerLoop extends WayServerRequestBody implements ServerL
   }
 
   @Override
-  public final Body body() {
+  public final Http.Request.Body body() {
     checkRequest();
 
     return this;

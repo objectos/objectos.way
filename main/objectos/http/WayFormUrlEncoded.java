@@ -32,7 +32,7 @@ final class WayFormUrlEncoded implements FormUrlEncoded {
     this.map = map;
   }
 
-  static WayFormUrlEncoded parse(Body body) throws IOException {
+  static WayFormUrlEncoded parse(Http.Request.Body body) throws IOException {
     try (InputStream in = body.openStream()) {
       return parse0(in);
     }
@@ -49,7 +49,7 @@ final class WayFormUrlEncoded implements FormUrlEncoded {
       throw new UnsupportedMediaTypeException(contentType);
     }
 
-    Body body;
+    Http.Request.Body body;
     body = http.body();
 
     return parse(body);

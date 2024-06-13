@@ -94,7 +94,7 @@ public class ServerLoopTest {
       assertEquals(headers.first(Http.CONNECTION), "close");
 
       // body
-      Body body;
+      Http.Request.Body body;
       body = http.body();
 
       assertEquals(ObjectosHttp.readAllBytes(body), ByteArrays.empty());
@@ -202,7 +202,7 @@ public class ServerLoopTest {
       assertEquals(headers.first(Http.HOST), "www.example.com");
 
       // body
-      Body body;
+      Http.Request.Body body;
       body = http.body();
 
       assertEquals(ObjectosHttp.readAllBytes(body), ByteArrays.empty());
@@ -620,7 +620,7 @@ public class ServerLoopTest {
 
       assertEquals(parse.isError(), false);
 
-      Body requestBody;
+      Http.Request.Body requestBody;
       requestBody = http.body();
 
       assertEquals(ObjectosHttp.readString(requestBody), "email=user%40example.com");
@@ -1205,7 +1205,7 @@ public class ServerLoopTest {
 
       assertEquals(parse.isError(), false);
 
-      Body requestBody;
+      Http.Request.Body requestBody;
       requestBody = http.body();
 
       assertEquals(ObjectosHttp.readString(requestBody), chunk256);
@@ -1259,7 +1259,7 @@ public class ServerLoopTest {
       assertEquals(headers.first(Http.ACCEPT_ENCODING), "gzip, deflate, br");
 
       // body
-      Body body;
+      Http.Request.Body body;
       body = http.body();
 
       assertEquals(ObjectosHttp.readAllBytes(body), ByteArrays.empty());

@@ -24,6 +24,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Set;
 import objectos.http.WayServerLoop.ParseStatus;
 import objectos.way.Http.Exchange;
+import objectos.way.Http;
 import objectos.way.TestingClock;
 import objectos.way.TestingNoteSink;
 import org.testng.Assert;
@@ -33,7 +34,7 @@ public class FormUrlEncodedTest {
 
   @Test
   public void testCase01() throws IOException {
-    Body body;
+    Http.Request.Body body;
     body = body("email=user%40example.com");
 
     FormUrlEncoded form;
@@ -46,7 +47,7 @@ public class FormUrlEncodedTest {
 
   @Test
   public void testCase02() throws IOException {
-    Body body;
+    Http.Request.Body body;
     body = body("login=foo&password=bar");
 
     FormUrlEncoded form;
@@ -94,7 +95,7 @@ public class FormUrlEncodedTest {
     }
   }
 
-  private Body body(String s) {
+  private Http.Request.Body body(String s) {
     return new ThisBody(s);
   }
 
@@ -119,7 +120,7 @@ public class FormUrlEncodedTest {
     }
   }
 
-  private static class ThisBody implements Body {
+  private static class ThisBody implements Http.Request.Body {
 
     private final String value;
 

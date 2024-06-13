@@ -15,6 +15,8 @@
  */
 package objectos.way;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
@@ -31,7 +33,6 @@ import java.util.Objects;
 import java.util.Set;
 import objectos.html.Html;
 import objectos.html.HtmlTemplate;
-import objectos.http.Body;
 import objectos.http.Session;
 import objectos.http.SessionStore;
 import objectos.http.Status;
@@ -109,7 +110,7 @@ public final class Http {
      *
      * @return the request message body.
      */
-    Body body();
+    Request.Body body();
 
     /**
      * Returns the session associated with this request or {@code null} if no
@@ -386,6 +387,23 @@ public final class Http {
   public interface Request {
     
     /**
+     * The body of an HTTP request message.
+     */
+    public interface Body {
+
+      /**
+       * An input stream that reads the bytes of this request body.
+       * 
+       * @return an input stream that reads the bytes of this request body.
+       * 
+       * @throws IOException
+       *         if an I/O error occurs
+       */
+      InputStream openStream() throws IOException;
+
+    }
+
+    /**
      * The header section of an HTTP request message.
      */
     public interface Headers {
@@ -534,6 +552,13 @@ public final class Http {
       Query query();
       
     }
+    
+    /**
+     * The body of this request message.
+     * 
+     * @return the body of this request message.
+     */
+    Body body();
     
     /**
      * The header section of this request message.

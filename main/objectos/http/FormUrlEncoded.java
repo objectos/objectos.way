@@ -17,7 +17,7 @@ package objectos.http;
 
 import java.io.IOException;
 import java.util.Set;
-import objectos.way.Http.Exchange;
+import objectos.way.Http;
 
 /**
  * The parsed and decoded body of a {@code application/x-www-form-urlencoded}
@@ -35,7 +35,7 @@ public interface FormUrlEncoded {
    * @throws IOException
    *         if an I/O error occurs while reading the body
    */
-  static FormUrlEncoded parse(Body body) throws IOException {
+  static FormUrlEncoded parse(Http.Request.Body body) throws IOException {
     return WayFormUrlEncoded.parse(body);
   }
 
@@ -49,7 +49,7 @@ public interface FormUrlEncoded {
    * @throws IOException
    *         if an I/O error occurs while reading the body
    */
-  static FormUrlEncoded parse(Exchange http) throws IOException, UnsupportedMediaTypeException {
+  static FormUrlEncoded parse(Http.Exchange http) throws IOException, UnsupportedMediaTypeException {
     return WayFormUrlEncoded.parse(http);
   }
   
