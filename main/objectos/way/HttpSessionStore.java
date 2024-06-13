@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.http;
+package objectos.way;
 
 import java.security.SecureRandom;
 import java.time.Clock;
@@ -26,12 +26,11 @@ import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import objectos.lang.object.Check;
-import objectos.way.Http;
 
 /**
  * The Objectos Way {@link SessionStore} implementation.
  */
-public final class WaySessionStore implements SessionStore {
+public final class HttpSessionStore implements SessionStore {
 
   private static final int ID_LENGTH_IN_BYTES = 16;
 
@@ -49,17 +48,17 @@ public final class WaySessionStore implements SessionStore {
 
   private Random random = new SecureRandom();
 
-  private final ConcurrentMap<String, WaySession> sessions = new ConcurrentHashMap<>();
+  private final ConcurrentMap<String, WebSession> sessions = new ConcurrentHashMap<>();
 
   /**
    * Sole constructor.
    */
-  public WaySessionStore() {
+  public HttpSessionStore() {
     this(Clock.systemDefaultZone());
   }
 
   // @VisibleForTesting
-  WaySessionStore(Clock clock) {
+  HttpSessionStore(Clock clock) {
     this.clock = clock;
   }
 
@@ -132,7 +131,7 @@ public final class WaySessionStore implements SessionStore {
    *
    * @return this instance
    */
-  public final WaySessionStore random(Random random) {
+  public final HttpSessionStore random(Random random) {
     this.random = Check.notNull(random, "random == null");
 
     return this;
@@ -146,7 +145,7 @@ public final class WaySessionStore implements SessionStore {
    *
    * @return this instance
    */
-  public final WaySessionStore add(WaySession session) {
+  public final HttpSessionStore add(WebSession session) {
     String id;
     id = session.id();
 
@@ -162,21 +161,21 @@ public final class WaySessionStore implements SessionStore {
     Instant min;
     min = now.minus(emptyMaxAge);
 
-    Collection<WaySession> values;
+    Collection<WebSession> values;
     values = sessions.values();
 
-    for (WaySession session : values) {
+    for (WebSession session : values) {
       if (session.shouldCleanUp(min)) {
         sessions.remove(session.id());
       }
     }
   }
 
-  final void clear() {
+  public final void clear() {
     sessions.clear();
   }
 
-  final WaySession put(String id, WaySession session) {
+  final WebSession put(String id, WebSession session) {
     Check.notNull(id, "id == null");
     Check.notNull(session, "session == null");
 
@@ -184,14 +183,14 @@ public final class WaySessionStore implements SessionStore {
   }
 
   @Override
-  public final Session nextSession() {
-    WaySession session, maybeExisting;
+  public final Web.Session nextSession() {
+    WebSession session, maybeExisting;
 
     do {
       String id;
       id = nextId();
 
-      session = new WaySession(id);
+      session = new WebSession(id);
 
       maybeExisting = sessions.putIfAbsent(id, session);
     } while (maybeExisting != null);
@@ -200,7 +199,7 @@ public final class WaySessionStore implements SessionStore {
   }
 
   @Override
-  public final Session get(Http.Request.Cookies cookies) {
+  public final Web.Session get(Http.Request.Cookies cookies) {
     String maybe;
     maybe = cookies.get(cookieName); // implicit cookies null check
 
@@ -212,8 +211,8 @@ public final class WaySessionStore implements SessionStore {
   }
 
   @Override
-  public final Session get(String id) {
-    WaySession session;
+  public final Web.Session get(String id) {
+    WebSession session;
     session = sessions.get(id);
 
     if (session == null) {

@@ -21,12 +21,12 @@ import java.io.UncheckedIOException;
 import java.nio.charset.StandardCharsets;
 import java.time.Clock;
 import java.util.function.Consumer;
-import objectos.http.SessionStore;
 import objectos.http.WayServerLoop;
 import objectos.http.WayServerLoop.ParseStatus;
 import objectos.lang.object.Check;
 import objectos.notes.NoOpNoteSink;
 import objectos.notes.NoteSink;
+import objectos.way.SessionStore;
 import objectos.way.Http.Exchange;
 
 public final class WayTestingServerExchange implements TestingServerExchange {

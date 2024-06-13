@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.http;
+package objectos.way;
 
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertNull;
@@ -23,20 +23,18 @@ import static org.testng.Assert.assertTrue;
 import java.time.Clock;
 import java.time.Duration;
 import java.time.Instant;
-import objectos.way.IncrementingClock;
-import objectos.way.TestingClock;
 import org.testng.annotations.Test;
 
-public class WaySessionStoreTest {
+public class HttpSessionStoreTest {
 
   @Test(description = """
   Create a new session and confirm it can be found in the store
   """)
   public void testCase01() {
     SessionStore store;
-    store = new WaySessionStore();
+    store = new HttpSessionStore();
 
-    Session session;
+    Web.Session session;
     session = store.nextSession();
 
     assertNotNull(session);
@@ -46,7 +44,7 @@ public class WaySessionStoreTest {
 
     assertNotNull(id);
 
-    Session maybe;
+    Web.Session maybe;
     maybe = store.get(id);
 
     assertSame(maybe, session);
@@ -57,9 +55,9 @@ public class WaySessionStoreTest {
   """)
   public void testCase02() {
     SessionStore store;
-    store = new WaySessionStore();
+    store = new HttpSessionStore();
 
-    Session session;
+    Web.Session session;
     session = store.nextSession();
 
     Object user;
@@ -82,9 +80,9 @@ public class WaySessionStoreTest {
   """)
   public void testCase03() {
     SessionStore store;
-    store = new WaySessionStore();
+    store = new HttpSessionStore();
 
-    Session session;
+    Web.Session session;
     session = store.nextSession();
 
     assertNotNull(session);
@@ -106,14 +104,14 @@ public class WaySessionStoreTest {
     IncrementingClock clock;
     clock = new IncrementingClock(2024, 4, 29);
 
-    WaySessionStore store;
-    store = new WaySessionStore(clock);
+    HttpSessionStore store;
+    store = new HttpSessionStore(clock);
     
     String id;
     id = "foo";
 
-    WaySession session;
-    session = new WaySession(id);
+    WebSession session;
+    session = new WebSession(id);
 
     Instant start;
     start = clock.instant();
@@ -122,7 +120,7 @@ public class WaySessionStoreTest {
 
     store.add(session);
     
-    Session res;
+    Web.Session res;
     res = store.get(id);
     
     assertSame(res, session);
@@ -137,12 +135,12 @@ public class WaySessionStoreTest {
     IncrementingClock clock;
     clock = new IncrementingClock(2024, 4, 29);
 
-    WaySessionStore store;
-    store = new WaySessionStore(clock);
+    HttpSessionStore store;
+    store = new HttpSessionStore(clock);
 
-    WaySession a = new WaySession("a");
-    WaySession b = new WaySession("b");
-    WaySession c = new WaySession("c");
+    WebSession a = new WebSession("a");
+    WebSession b = new WebSession("b");
+    WebSession c = new WebSession("c");
 
     store.add(a);
     store.add(b);
@@ -168,14 +166,14 @@ public class WaySessionStoreTest {
     Clock clock;
     clock = TestingClock.FIXED;
 
-    WaySessionStore store;
-    store = new WaySessionStore(clock);
+    HttpSessionStore store;
+    store = new HttpSessionStore(clock);
 
     store.emptyMaxAge(Duration.ofMinutes(1));
 
-    WaySession a = new WaySession("a");
-    WaySession b = new WaySession("b");
-    WaySession c = new WaySession("c");
+    WebSession a = new WebSession("a");
+    WebSession b = new WebSession("b");
+    WebSession c = new WebSession("c");
 
     store.add(a);
     store.add(b);

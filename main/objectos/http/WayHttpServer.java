@@ -23,6 +23,7 @@ import java.time.Clock;
 import objectos.lang.object.Check;
 import objectos.notes.NoOpNoteSink;
 import objectos.notes.NoteSink;
+import objectos.way.SessionStore;
 
 /**
  * The Objectos Way {@link HttpServer} implementation.

@@ -15,8 +15,8 @@
  */
 package testing.zite;
 
-import objectos.http.SessionStore;
 import objectos.notes.NoteSink;
+import objectos.way.SessionStore;
 import objectos.web.Stage;
 import objectos.web.WebResources;
 

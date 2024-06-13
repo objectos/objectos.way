@@ -32,13 +32,13 @@ import objectos.css.reset.Preflight;
 import objectos.html.script.WayJs;
 import objectos.http.HandlerFactory;
 import objectos.http.WayHttpServer;
-import objectos.http.WaySessionStore;
 import objectos.lang.WayShutdownHook;
 import objectos.lang.classloader.ClassReloader;
 import objectos.notes.Level;
 import objectos.notes.Note2;
 import objectos.notes.NoteSink;
 import objectos.notes.impl.ConsoleNoteSink;
+import objectos.way.HttpSessionStore;
 import objectos.web.BootstrapException;
 import objectos.web.Stage;
 import objectos.web.WayWebResources;
@@ -130,8 +130,8 @@ public class TestingSite {
     }
 
     // SessionStore
-    WaySessionStore sessionStore;
-    sessionStore = new WaySessionStore();
+    HttpSessionStore sessionStore;
+    sessionStore = new HttpSessionStore();
 
     // WebResources
 

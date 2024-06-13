@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.http;
+package objectos.way;
 
 import java.time.Clock;
 import java.time.Instant;
@@ -21,17 +21,17 @@ import java.util.HashMap;
 import java.util.Map;
 import objectos.lang.object.Check;
 
-public final class WaySession implements Session {
+public final class WebSession implements Web.Session {
 
   private final String id;
 
-  private final Map<String, Object> values = new HashMap<>();
+  private final Map<Object, Object> values = new HashMap<>();
 
   volatile Instant accessTime;
   
   volatile boolean valid = true;
 
-  public WaySession(String id) {
+  public WebSession(String id) {
     this.id = Check.notNull(id, "id == null");
   }
 
@@ -42,14 +42,13 @@ public final class WaySession implements Session {
 
   @Override
   public final <T> T get(Class<T> type) {
-    String name;
-    name = type.getName(); // implicit null-check
+    Check.notNull(type, "type == null");
 
     Object value;
     value = null;
 
     synchronized (values) {
-      value = values.get(name);
+      value = values.get(type);
     }
 
     return type.cast(value);
@@ -57,11 +56,10 @@ public final class WaySession implements Session {
 
   @Override
   public final <T> Object put(Class<T> type, T value) {
-    String name;
-    name = type.getName(); // implicit null-check
+    Check.notNull(type, "type == null");
 
     synchronized (values) {
-      return values.put(name, value);
+      return values.put(type, value);
     }
   }
 

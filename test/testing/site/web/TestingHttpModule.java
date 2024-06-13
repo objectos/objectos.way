@@ -16,7 +16,7 @@
 package testing.site.web;
 
 import objectos.http.HttpModule;
-import objectos.http.Session;
+import objectos.way.Web;
 import objectos.way.Http.Exchange;
 import objectos.web.WebResources;
 import testing.site.auth.User;
@@ -56,7 +56,7 @@ public class TestingHttpModule extends HttpModule {
   }
 
   private void requireLogin(Exchange http) {
-    Session session;
+    Web.Session session;
     session = http.session();
 
     User user;

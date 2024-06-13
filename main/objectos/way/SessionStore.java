@@ -13,17 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.http;
-
-import objectos.way.Http;
+package objectos.way;
 
 public interface SessionStore {
 
-  Session nextSession();
+  Web.Session nextSession();
 
-  Session get(Http.Request.Cookies cookies);
+  Web.Session get(Http.Request.Cookies cookies);
 
-  Session get(String id);
+  Web.Session get(String id);
 
   /**
    * Returns a Set-Cookie header value for the specified session ID.

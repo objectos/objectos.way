@@ -18,9 +18,9 @@ package testing.site.web;
 import java.io.IOException;
 import objectos.css.select.IdSelector;
 import objectos.http.FormUrlEncoded;
-import objectos.http.Session;
 import objectos.http.UnsupportedMediaTypeException;
 import objectos.way.Http;
+import objectos.way.Web;
 import testing.site.auth.User;
 import testing.zite.TestingSiteInjector;
 
@@ -41,7 +41,7 @@ final class Login extends WebTemplate implements Http.Handler {
   // GET
 
   private void get(Http.Exchange http) {
-    Session session;
+    Web.Session session;
     session = http.session();
 
     User user;
@@ -190,7 +190,7 @@ final class Login extends WebTemplate implements Http.Handler {
   // POST
 
   private void post(Http.Exchange http) {
-    Session session;
+    Web.Session session;
     session = http.session();
 
     User user;
@@ -248,7 +248,7 @@ final class Login extends WebTemplate implements Http.Handler {
     user = authenticate(login, password);
 
     if (user != null) {
-      Session session;
+      Web.Session session;
       session = http.session();
 
       session.put(User.class, user);

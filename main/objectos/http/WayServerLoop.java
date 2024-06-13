@@ -35,6 +35,8 @@ import objectos.notes.NoteSink;
 import objectos.util.map.GrowableMap;
 import objectos.way.Http;
 import objectos.way.HttpResponseStatus;
+import objectos.way.SessionStore;
+import objectos.way.Web;
 
 public final class WayServerLoop extends WayServerRequestBody implements ServerLoop {
 
@@ -106,7 +108,7 @@ public final class WayServerLoop extends WayServerRequestBody implements ServerL
 
   private Object responseBody;
 
-  private Session session;
+  private Web.Session session;
 
   private SessionStore sessionStore;
 
@@ -376,7 +378,7 @@ public final class WayServerLoop extends WayServerRequestBody implements ServerL
   }
 
   @Override
-  public final Session session() {
+  public final Web.Session session() {
     checkRequest();
 
     return session;

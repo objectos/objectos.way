@@ -27,13 +27,13 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.Random;
 import java.util.function.Consumer;
-import objectos.http.SessionStore;
-import objectos.http.WaySessionStore;
 import objectos.lang.WayShutdownHook;
 import objectos.notes.Level;
 import objectos.notes.NoteSink;
 import objectos.notes.impl.ConsoleNoteSink;
 import objectos.testing.WayTestingServerExchange;
+import objectos.way.HttpSessionStore;
+import objectos.way.SessionStore;
 import objectos.way.Http.Exchange;
 import objectos.web.Stage;
 import objectos.web.WayWebResources;
@@ -77,8 +77,8 @@ public final class TestingTestingSite {
     shutdownHook.noteSink(noteSink);
 
     // SessionStore
-    WaySessionStore sessionStore;
-    sessionStore = new WaySessionStore();
+    HttpSessionStore sessionStore;
+    sessionStore = new HttpSessionStore();
 
     Random random = new Random(1234L);
 
@@ -110,7 +110,7 @@ public final class TestingTestingSite {
 
   public static String serverExchange(String request,
                                       Consumer<Exchange> handler,
-                                      Consumer<WaySessionStore> sessionStoreHandler) {
+                                      Consumer<HttpSessionStore> sessionStoreHandler) {
     WayTestingServerExchange serverExchange;
     serverExchange = new WayTestingServerExchange();
 
@@ -123,7 +123,7 @@ public final class TestingTestingSite {
 
     serverExchange.sessionStore(sessionStore);
 
-    sessionStoreHandler.accept((WaySessionStore) sessionStore);
+    sessionStoreHandler.accept((HttpSessionStore) sessionStore);
 
     return serverExchange.handle(request, handler);
   }

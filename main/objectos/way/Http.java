@@ -32,8 +32,6 @@ import java.util.Map;
 import java.util.Set;
 import objectos.html.Html;
 import objectos.html.HtmlTemplate;
-import objectos.http.Session;
-import objectos.http.SessionStore;
 import objectos.http.UriPath;
 import objectos.http.UriQuery;
 import objectos.lang.CharWritable;
@@ -116,7 +114,7 @@ public final class Http {
      *
      * @return the session associated with this request or {@code null}
      */
-    Session session();
+    Web.Session session();
 
     // response
 

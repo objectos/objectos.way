@@ -24,6 +24,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 import objectos.http.UriPath.Segment;
 import objectos.way.Http;
+import objectos.way.WebSession;
+import objectos.way.HttpSessionStore;
+import objectos.way.Web;
 import objectos.way.TestingRandom.SequentialRandom;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
@@ -33,14 +36,14 @@ public class HttpModuleTest extends HttpModule {
 
   private record User(String login) {}
 
-  private WaySessionStore sessionStore;
+  private HttpSessionStore sessionStore;
 
   private SequentialRandom random;
 
   @BeforeClass
   public void beforeClass() {
-    WaySessionStore sessionStore;
-    sessionStore = new WaySessionStore();
+    HttpSessionStore sessionStore;
+    sessionStore = new HttpSessionStore();
 
     sessionStore.cookieName("HTTPMODULETEST");
 
@@ -57,8 +60,8 @@ public class HttpModuleTest extends HttpModule {
   public void beforeMethod() {
     sessionStore.clear();
 
-    WaySession session;
-    session = new WaySession("TEST_COOKIE");
+    WebSession session;
+    session = new WebSession("TEST_COOKIE");
 
     session.put(User.class, new User("test"));
 
@@ -194,7 +197,7 @@ public class HttpModuleTest extends HttpModule {
   }
 
   private void testCase02(Http.Exchange http) {
-    Session session;
+    Web.Session session;
     session = http.session();
 
     User user;
