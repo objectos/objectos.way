@@ -86,7 +86,7 @@ public class ServerLoopTest {
       assertEquals(query.value(), "");
 
       // headers
-      ServerRequestHeaders headers;
+      Http.Request.Headers headers;
       headers = http.headers();
 
       assertEquals(headers.size(), 2);
@@ -195,7 +195,7 @@ public class ServerLoopTest {
       assertEquals(query.value(), "");
 
       // headers
-      ServerRequestHeaders headers;
+      Http.Request.Headers headers;
       headers = http.headers();
 
       assertEquals(headers.size(), 1);
@@ -302,7 +302,7 @@ public class ServerLoopTest {
       assertEquals(parse.isError(), false);
 
       // headers
-      ServerRequestHeaders headers;
+      Http.Request.Headers headers;
       headers = http.headers();
 
       assertEquals(headers.size(), 3);
@@ -382,7 +382,7 @@ public class ServerLoopTest {
       assertEquals(query.value(), "");
 
       // headers
-      ServerRequestHeaders headers;
+      Http.Request.Headers headers;
       headers = http.headers();
 
       assertEquals(headers.size(), 3);
@@ -460,7 +460,7 @@ public class ServerLoopTest {
       assertEquals(query.value(), "");
 
       // headers
-      ServerRequestHeaders headers;
+      Http.Request.Headers headers;
       headers = http.headers();
 
       assertEquals(headers.size(), 3);
@@ -1250,7 +1250,7 @@ public class ServerLoopTest {
       assertEquals(query.value(), "");
 
       // headers
-      ServerRequestHeaders headers;
+      Http.Request.Headers headers;
       headers = http.headers();
 
       assertEquals(headers.size(), 3);

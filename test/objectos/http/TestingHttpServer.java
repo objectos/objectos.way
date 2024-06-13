@@ -145,7 +145,7 @@ final class TestingHttpServer {
 
     @Override
     public final void handle(Http.Exchange http) {
-      ServerRequestHeaders headers;
+      Http.Request.Headers headers;
       headers = http.headers();
 
       String host;

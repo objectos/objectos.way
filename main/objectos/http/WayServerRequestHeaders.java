@@ -25,7 +25,7 @@ import objectos.lang.object.Check;
 import objectos.way.Http;
 import objectos.way.HttpHeaderName;
 
-class WayServerRequestHeaders extends WayRequestLine implements ServerRequestHeaders {
+class WayServerRequestHeaders extends WayRequestLine implements Http.Request.Headers {
 
   Http.HeaderName headerName;
 

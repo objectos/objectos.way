@@ -28,7 +28,6 @@ import java.nio.file.StandardOpenOption;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.nio.file.attribute.FileTime;
 import java.util.Map;
-import objectos.http.ServerRequestHeaders;
 import objectos.http.Status;
 import objectos.http.UriPath;
 import objectos.io.FileVisitors;
@@ -221,7 +220,7 @@ public final class WayWebResources implements AutoCloseable, WebResources {
     String etag;
     etag = etag(attributes);
 
-    ServerRequestHeaders headers;
+    Http.Request.Headers headers;
     headers = http.headers();
 
     String ifNoneMatch;

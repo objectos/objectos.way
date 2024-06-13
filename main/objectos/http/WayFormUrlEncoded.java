@@ -39,7 +39,7 @@ final class WayFormUrlEncoded implements FormUrlEncoded {
   }
 
   static WayFormUrlEncoded parse(Http.Exchange http) throws UnsupportedMediaTypeException, IOException {
-    ServerRequestHeaders headers;
+    Http.Request.Headers headers;
     headers = http.headers();
 
     String contentType;

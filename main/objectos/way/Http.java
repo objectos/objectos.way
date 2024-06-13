@@ -32,7 +32,6 @@ import java.util.Set;
 import objectos.html.Html;
 import objectos.html.HtmlTemplate;
 import objectos.http.Body;
-import objectos.http.ServerRequestHeaders;
 import objectos.http.Session;
 import objectos.http.SessionStore;
 import objectos.http.Status;
@@ -42,7 +41,7 @@ import objectos.lang.CharWritable;
 import objectos.lang.object.Check;
 
 /**
- * 
+ * The Objectos HTTP main class.
  */
 public final class Http {
 
@@ -103,7 +102,7 @@ public final class Http {
 
     UriQuery query();
 
-    ServerRequestHeaders headers();
+    Request.Headers headers();
 
     /**
      * Returns the request message body.
@@ -387,6 +386,32 @@ public final class Http {
   public interface Request {
     
     /**
+     * The header section of an HTTP request message.
+     */
+    public interface Headers {
+
+      /**
+       * Returns the value of the first field line having the specified name;
+       * returns {@code null} if the field line is not present.
+       * 
+       * @param name
+       *        the name of the header field line
+       * 
+       * @return the value of first field line or {@code null} if a field line
+       *         with the specified name is not present.
+       */
+      String first(Http.HeaderName name);
+
+      /**
+       * The number of field lines in this header section.
+       * 
+       * @return the number of field lines in this header section.
+       */
+      int size();
+
+    }
+    
+    /**
      * The method of an HTTP request message.
      */
     public sealed interface Method permits HttpRequestMethod {
@@ -430,14 +455,7 @@ public final class Http {
       String text();
 
     }
-
-    /**
-     * The method of this request message.
-     * 
-     * @return the method of this request message.
-     */
-    Method method();
-    
+ 
     /**
      * The request-target of an HTTP request message.
      */
@@ -517,6 +535,20 @@ public final class Http {
       
     }
     
+    /**
+     * The header section of this request message.
+     * 
+     * @return the header section of this request message.
+     */
+    Headers headers();
+
+    /**
+     * The method of this request message.
+     * 
+     * @return the method of this request message.
+     */
+    Method method();
+
     /**
      * The request-target of this HTTP request message.
      * 
