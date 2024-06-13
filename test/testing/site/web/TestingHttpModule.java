@@ -17,7 +17,7 @@ package testing.site.web;
 
 import objectos.http.HttpModule;
 import objectos.http.Session;
-import objectos.way.Http.ServerExchange;
+import objectos.way.Http.Exchange;
 import objectos.web.WebResources;
 import testing.site.auth.User;
 import testing.site.ui.UiHttpModule;
@@ -48,14 +48,14 @@ public class TestingHttpModule extends HttpModule {
     route(path("/"), Home::new, injector);
   }
 
-  private void common(ServerExchange http) {
+  private void common(Exchange http) {
     WebResources webResources;
     webResources = injector.webResources();
 
     webResources.handle(http);
   }
 
-  private void requireLogin(ServerExchange http) {
+  private void requireLogin(Exchange http) {
     Session session;
     session = http.session();
 

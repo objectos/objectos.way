@@ -18,22 +18,21 @@ package testing.site.web;
 import java.io.IOException;
 import objectos.css.select.IdSelector;
 import objectos.http.FormUrlEncoded;
-import objectos.http.Handler;
 import objectos.http.Method;
 import objectos.http.Session;
 import objectos.http.UnsupportedMediaTypeException;
-import objectos.way.Http.ServerExchange;
+import objectos.way.Http;
 import testing.site.auth.User;
 import testing.zite.TestingSiteInjector;
 
-final class Login extends WebTemplate implements Handler {
+final class Login extends WebTemplate implements Http.Handler {
 
   public Login(TestingSiteInjector injector) {
     title = "Login Page";
   }
 
   @Override
-  public final void handle(ServerExchange http) {
+  public final void handle(Http.Exchange http) {
     http.methodMatrix(
         Method.GET, this::get,
         Method.POST, this::post
@@ -42,7 +41,7 @@ final class Login extends WebTemplate implements Handler {
 
   // GET
 
-  private void get(ServerExchange http) {
+  private void get(Http.Exchange http) {
     Session session;
     session = http.session();
 
@@ -191,7 +190,7 @@ final class Login extends WebTemplate implements Handler {
 
   // POST
 
-  private void post(ServerExchange http) {
+  private void post(Http.Exchange http) {
     Session session;
     session = http.session();
 
@@ -205,7 +204,7 @@ final class Login extends WebTemplate implements Handler {
     }
   }
 
-  private void post0(ServerExchange http) {
+  private void post0(Http.Exchange http) {
     try {
       FormUrlEncoded form;
       form = FormUrlEncoded.parse(http);
@@ -227,7 +226,7 @@ final class Login extends WebTemplate implements Handler {
     }
   }
 
-  private void postStep1(ServerExchange http, FormUrlEncoded form) {
+  private void postStep1(Http.Exchange http, FormUrlEncoded form) {
     login = form.getOrDefault(LOGIN, "");
 
     if (login.isBlank()) {
@@ -239,7 +238,7 @@ final class Login extends WebTemplate implements Handler {
     http.ok(this);
   }
 
-  private void postStep2(ServerExchange http, FormUrlEncoded form) {
+  private void postStep2(Http.Exchange http, FormUrlEncoded form) {
     String login;
     login = form.getOrDefault(LOGIN, "");
 

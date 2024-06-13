@@ -15,14 +15,14 @@
  */
 package testing.site;
 
-import objectos.http.Handler;
 import objectos.http.HandlerFactory;
+import objectos.way.Http;
 import testing.site.web.TestingHttpModule;
 import testing.zite.TestingSiteInjector;
 
 final class ProdHandlerFactory implements HandlerFactory {
 
-  private final Handler handler;
+  private final Http.Handler handler;
 
   public ProdHandlerFactory(TestingSiteInjector injector) {
     TestingHttpModule module;
@@ -32,7 +32,7 @@ final class ProdHandlerFactory implements HandlerFactory {
   }
 
   @Override
-  public final Handler create() throws Exception {
+  public final Http.Handler create() throws Exception {
     return handler;
   }
 

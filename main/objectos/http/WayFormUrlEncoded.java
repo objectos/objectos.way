@@ -20,7 +20,7 @@ import java.io.InputStream;
 import java.util.Set;
 import objectos.util.map.GrowableMap;
 import objectos.util.map.UnmodifiableMap;
-import objectos.way.Http.ServerExchange;
+import objectos.way.Http.Exchange;
 
 final class WayFormUrlEncoded implements FormUrlEncoded {
 
@@ -38,7 +38,7 @@ final class WayFormUrlEncoded implements FormUrlEncoded {
     }
   }
 
-  static WayFormUrlEncoded parse(ServerExchange http) throws UnsupportedMediaTypeException, IOException {
+  static WayFormUrlEncoded parse(Exchange http) throws UnsupportedMediaTypeException, IOException {
     ServerRequestHeaders headers;
     headers = http.headers();
 

@@ -34,7 +34,7 @@ import objectos.notes.Level;
 import objectos.notes.NoteSink;
 import objectos.notes.impl.ConsoleNoteSink;
 import objectos.testing.WayTestingServerExchange;
-import objectos.way.Http.ServerExchange;
+import objectos.way.Http.Exchange;
 import objectos.web.Stage;
 import objectos.web.WayWebResources;
 
@@ -104,12 +104,12 @@ public final class TestingTestingSite {
 
   private TestingTestingSite() {}
 
-  public static String serverExchange(String request, Consumer<ServerExchange> handler) {
+  public static String serverExchange(String request, Consumer<Exchange> handler) {
     return serverExchange(request, handler, store -> {});
   }
 
   public static String serverExchange(String request,
-                                      Consumer<ServerExchange> handler,
+                                      Consumer<Exchange> handler,
                                       Consumer<WaySessionStore> sessionStoreHandler) {
     WayTestingServerExchange serverExchange;
     serverExchange = new WayTestingServerExchange();

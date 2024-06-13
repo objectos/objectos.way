@@ -17,7 +17,7 @@ package objectos.web;
 
 import java.nio.file.Path;
 import objectos.notes.Note1;
-import objectos.way.Http.ServerExchange;
+import objectos.way.Http.Exchange;
 
 public interface WebResources {
 
@@ -25,6 +25,6 @@ public interface WebResources {
 
   Note1<Path> TRAVERSAL = Note1.error(WebResources.class, "Traversal detected");
 
-  void handle(ServerExchange http);
+  void handle(Exchange http);
 
 }

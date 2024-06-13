@@ -16,18 +16,17 @@
 package testing.site.ui;
 
 import objectos.html.HtmlTemplate;
-import objectos.http.Handler;
 import objectos.http.Method;
-import objectos.way.Http.ServerExchange;
+import objectos.way.Http;
 
-abstract class UiTemplate extends HtmlTemplate implements Handler {
+abstract class UiTemplate extends HtmlTemplate implements Http.Handler {
 
   @Override
-  public void handle(ServerExchange http) {
+  public void handle(Http.Exchange http) {
     http.methodMatrix(Method.GET, this::get);
   }
 
-  void get(ServerExchange http) {
+  void get(Http.Exchange http) {
     http.ok(this);
   }
 

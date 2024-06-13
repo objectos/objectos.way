@@ -418,7 +418,7 @@ public final class WayServerLoop extends WayServerRequestBody implements ServerL
   }
 
   @Override
-  public final void methodMatrix(Method method, Handler handler) {
+  public final void methodMatrix(Method method, Http.Handler handler) {
     Check.notNull(method, "method == null");
     Check.notNull(handler, "handler == null");
 

@@ -31,7 +31,6 @@ import java.util.Set;
 import objectos.html.Html;
 import objectos.html.HtmlTemplate;
 import objectos.http.Body;
-import objectos.http.Handler;
 import objectos.http.HeaderName;
 import objectos.http.Method;
 import objectos.http.ServerRequestHeaders;
@@ -120,7 +119,8 @@ public final class Http {
    * Formats a date so it can be used as the value of a {@code Date} HTTP
    * header.
    * 
-   * @param date the date to be formatted
+   * @param date
+   *        the date to be formatted
    * 
    * @return the formatted date
    */
@@ -135,7 +135,7 @@ public final class Http {
    * An HTTP request received by the server and its subsequent response to the
    * client.
    */
-  public interface ServerExchange {
+  public interface Exchange {
     
     /**
      * Stores an object in this request. The object will be associated to the name
@@ -424,6 +424,23 @@ public final class Http {
 
     boolean processed();
     
+  }
+
+  /**
+   * Responsible for processing an HTTP {@linkplain Exchange exchange}.
+   */
+  @FunctionalInterface
+  public interface Handler {
+
+    /**
+     * Process the specified exchange i.e. consume the request and generate a
+     * response.
+     * 
+     * @param http
+     *        the exchange to be processed
+     */
+    void handle(Http.Exchange http);
+
   }
 
   /**

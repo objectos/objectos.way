@@ -20,14 +20,13 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import objectos.css.WayStyleGen;
-import objectos.http.Handler;
 import objectos.http.HeaderName;
 import objectos.http.Status;
 import objectos.notes.NoteSink;
-import objectos.way.Http.ServerExchange;
+import objectos.way.Http;
 import testing.zite.TestingSiteInjector;
 
-final class UiStyles implements Handler {
+final class UiStyles implements Http.Handler {
 
   private final NoteSink noteSink;
 
@@ -36,7 +35,7 @@ final class UiStyles implements Handler {
   }
 
   @Override
-  public final void handle(ServerExchange http) {
+  public final void handle(Http.Exchange http) {
     WayStyleGen styleGen;
     styleGen = new WayStyleGen();
 

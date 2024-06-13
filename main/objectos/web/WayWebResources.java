@@ -38,7 +38,7 @@ import objectos.lang.object.Check;
 import objectos.notes.NoOpNoteSink;
 import objectos.notes.NoteSink;
 import objectos.util.map.GrowableMap;
-import objectos.way.Http.ServerExchange;
+import objectos.way.Http.Exchange;
 
 public final class WayWebResources implements AutoCloseable, WebResources {
 
@@ -165,7 +165,7 @@ public final class WayWebResources implements AutoCloseable, WebResources {
   }
 
   @Override
-  public final void handle(ServerExchange http) {
+  public final void handle(Exchange http) {
     UriPath path;
     path = http.path();
 

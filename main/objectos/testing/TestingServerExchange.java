@@ -16,10 +16,10 @@
 package objectos.testing;
 
 import java.util.function.Consumer;
-import objectos.way.Http.ServerExchange;
+import objectos.way.Http.Exchange;
 
 public interface TestingServerExchange {
 
-  String handle(String request, Consumer<ServerExchange> consumer);
+  String handle(String request, Consumer<Exchange> consumer);
 
 }

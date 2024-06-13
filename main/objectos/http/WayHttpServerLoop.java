@@ -20,7 +20,8 @@ import objectos.http.WayServerLoop.ParseStatus;
 import objectos.notes.Note0;
 import objectos.notes.Note1;
 import objectos.notes.NoteSink;
-import objectos.way.Http.ServerExchange;
+import objectos.way.Http;
+import objectos.way.Http.Exchange;
 
 final class WayHttpServerLoop implements Runnable {
 
@@ -114,7 +115,7 @@ final class WayHttpServerLoop implements Runnable {
       loop.sessionStore(sessionStore);
 
       try (loop) {
-        ServerExchange http;
+        Exchange http;
         http = loop;
 
         while (!Thread.currentThread().isInterrupted()) {
@@ -130,7 +131,7 @@ final class WayHttpServerLoop implements Runnable {
           }
 
           try {
-            Handler handler;
+            Http.Handler handler;
             handler = handlerFactory.create();
 
             handler.handle(http);

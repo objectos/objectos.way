@@ -16,13 +16,13 @@
 package objectos.http;
 
 import objectos.html.HtmlTemplate;
-import objectos.way.Http.ServerExchange;
+import objectos.way.Http.Exchange;
 
 final class AttributeTester extends HtmlTemplate {
-  private final ServerExchange http;
+  private final Exchange http;
   private final Class<?> key;
 
-  public AttributeTester(ServerExchange http, Class<?> key) {
+  public AttributeTester(Exchange http, Class<?> key) {
     this.http = http;
     this.key = key;
   }

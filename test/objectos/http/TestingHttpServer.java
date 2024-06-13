@@ -25,7 +25,7 @@ import java.net.InetAddress;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
 import objectos.notes.Note;
-import objectos.way.Http.ServerExchange;
+import objectos.way.Http;
 import objectos.way.TestingClock;
 import objectos.way.TestingNoteSink;
 import objectos.way.TestingShutdownHook;
@@ -130,21 +130,21 @@ final class TestingHttpServer {
 
   }
 
-  private static class ThisHandlerFactory implements Handler, HandlerFactory {
+  private static class ThisHandlerFactory implements Http.Handler, HandlerFactory {
 
-    private Handler httpModuleTest;
+    private Http.Handler httpModuleTest;
 
-    private Handler httpServerTest;
+    private Http.Handler httpServerTest;
 
-    private final Handler marketing = new MarketingSite().compile();
+    private final Http.Handler marketing = new MarketingSite().compile();
 
     @Override
-    public final Handler create() throws Exception {
+    public final Http.Handler create() throws Exception {
       return this;
     }
 
     @Override
-    public final void handle(ServerExchange http) {
+    public final void handle(Http.Exchange http) {
       ServerRequestHeaders headers;
       headers = http.headers();
 

@@ -18,9 +18,9 @@ package objectos.http;
 import java.io.Closeable;
 import java.io.IOException;
 import objectos.http.WayServerLoop.ParseStatus;
-import objectos.way.Http.ServerExchange;
+import objectos.way.Http.Exchange;
 
-public interface ServerLoop extends Closeable, ServerExchange {
+public interface ServerLoop extends Closeable, Exchange {
 
   /**
    * Closes and ends this exchange by closing its underlying socket.

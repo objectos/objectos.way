@@ -18,9 +18,11 @@
  */
 package objectos.http;
 
+import objectos.way.Http;
+
 @FunctionalInterface
 public interface HandlerFactory {
 
-  Handler create() throws Exception;
+  Http.Handler create() throws Exception;
 
 }

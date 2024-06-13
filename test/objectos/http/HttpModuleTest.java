@@ -23,7 +23,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.stream.Collectors;
 import objectos.http.UriPath.Segment;
-import objectos.way.Http.ServerExchange;
+import objectos.way.Http;
 import objectos.way.TestingRandom.SequentialRandom;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
@@ -92,7 +92,7 @@ public class HttpModuleTest extends HttpModule {
     route(segments(eq("testCase06"), oneOrMore()), this::testCase06);
   }
 
-  private void testCase01(ServerExchange http) {
+  private void testCase01(Http.Exchange http) {
     UriPath path;
     path = http.path();
 
@@ -193,7 +193,7 @@ public class HttpModuleTest extends HttpModule {
     }
   }
 
-  private void testCase02(ServerExchange http) {
+  private void testCase02(Http.Exchange http) {
     Session session;
     session = http.session();
 
@@ -242,7 +242,7 @@ public class HttpModuleTest extends HttpModule {
     }
   }
 
-  private void testCase03(ServerExchange http) {
+  private void testCase03(Http.Exchange http) {
     UriPath path;
     path = http.path();
 
@@ -414,7 +414,7 @@ public class HttpModuleTest extends HttpModule {
     }
   }
 
-  private void testCase05(ServerExchange http) {
+  private void testCase05(Http.Exchange http) {
     UriPath path;
     path = http.path();
 
@@ -538,7 +538,7 @@ public class HttpModuleTest extends HttpModule {
     }
   }
   
-  private void testCase06(ServerExchange http) {
+  private void testCase06(Http.Exchange http) {
     UriPath path;
     path = http.path();
 
@@ -634,7 +634,7 @@ public class HttpModuleTest extends HttpModule {
       protected void configure() {}
     };
 
-    Handler handler = empty.compile();
+    Http.Handler handler = empty.compile();
     
     assertNotNull(handler);
   }

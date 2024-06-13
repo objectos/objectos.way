@@ -16,7 +16,7 @@
 package objectos.http;
 
 import objectos.html.HtmlTemplate;
-import objectos.way.Http.ServerExchange;
+import objectos.way.Http.Exchange;
 
 final class MarketingSite extends HttpModule {
 
@@ -29,7 +29,7 @@ final class MarketingSite extends HttpModule {
         matrix(Method.GET, this::indexHtml));
   }
 
-  private void indexHtml(ServerExchange http) {
+  private void indexHtml(Exchange http) {
     http.ok(new MarketingSiteHome());
   }
 

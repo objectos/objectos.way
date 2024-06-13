@@ -21,11 +21,11 @@ import java.net.Socket;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import objectos.http.UriPath.Segment;
-import objectos.way.Http.ServerExchange;
+import objectos.way.Http;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-public class HttpServerTest implements Handler {
+public class HttpServerTest implements Http.Handler {
 
   @BeforeClass
   public void beforeClass() throws Exception {
@@ -33,7 +33,7 @@ public class HttpServerTest implements Handler {
   }
 
   @Override
-  public final void handle(ServerExchange http) {
+  public final void handle(Http.Exchange http) {
     UriPath path;
     path = http.path();
 
@@ -47,7 +47,7 @@ public class HttpServerTest implements Handler {
     }
   }
 
-  private void handle1(ServerExchange http, List<Segment> segments) {
+  private void handle1(Http.Exchange http, List<Segment> segments) {
     Segment first;
     first = segments.getFirst();
 
@@ -68,7 +68,7 @@ public class HttpServerTest implements Handler {
       testClass = getClass();
 
       Method handlingMethod;
-      handlingMethod = testClass.getDeclaredMethod(methodName, ServerExchange.class);
+      handlingMethod = testClass.getDeclaredMethod(methodName, Http.Exchange.class);
 
       handlingMethod.invoke(this, http);
     } catch (Exception e) {
@@ -77,11 +77,11 @@ public class HttpServerTest implements Handler {
   }
 
   @SuppressWarnings("unused")
-  private void testCase01(ServerExchange http) {
+  private void testCase01(Http.Exchange http) {
     http.methodMatrix(objectos.http.Method.GET, this::testCase01Get);
   }
 
-  private void testCase01Get(ServerExchange http) {
+  private void testCase01Get(Http.Exchange http) {
     http.status(Status.OK);
     http.dateNow();
     http.header(HeaderName.CONTENT_TYPE, "text/plain");
@@ -132,11 +132,11 @@ public class HttpServerTest implements Handler {
   }
 
   @SuppressWarnings("unused")
-  private void testCase02(ServerExchange http) {
+  private void testCase02(Http.Exchange http) {
     http.methodMatrix(objectos.http.Method.GET, this::testCase02Get);
   }
 
-  private void testCase02Get(ServerExchange http) {
+  private void testCase02Get(Http.Exchange http) {
     http.status(Status.OK);
     http.dateNow();
     http.header(HeaderName.CONTENT_TYPE, "text/plain");
@@ -185,18 +185,18 @@ public class HttpServerTest implements Handler {
   }
 
   @SuppressWarnings("unused")
-  private void testCase03(ServerExchange http) {
+  private void testCase03(Http.Exchange http) {
     http.methodMatrix(
         objectos.http.Method.GET, this::testCase03Get,
         objectos.http.Method.POST, this::testCase03Post
     );
   }
 
-  private void testCase03Get(ServerExchange http) {
+  private void testCase03Get(Http.Exchange http) {
     http.ok(new SingleParagraph("TC03 GET"));
   }
 
-  private void testCase03Post(ServerExchange http) {
+  private void testCase03Post(Http.Exchange http) {
     http.ok(new SingleParagraph("TC03 POST"));
   }
 
@@ -270,20 +270,20 @@ public class HttpServerTest implements Handler {
   }
 
   @SuppressWarnings("unused")
-  private void testCase04(ServerExchange http) {
+  private void testCase04(Http.Exchange http) {
     http.methodMatrix(
         objectos.http.Method.GET, this::testCase04Get,
         objectos.http.Method.POST, this::testCase04Post
     );
   }
 
-  private void testCase04Get(ServerExchange http) {
+  private void testCase04Get(Http.Exchange http) {
     http.set(String.class, "TC04 GET");
     
     http.ok(new AttributeTester(http, String.class));
   }
 
-  private void testCase04Post(ServerExchange http) {
+  private void testCase04Post(Http.Exchange http) {
     http.ok(new AttributeTester(http, String.class));
   }
 

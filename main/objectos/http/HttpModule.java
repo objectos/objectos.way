@@ -21,7 +21,8 @@ import java.util.function.Function;
 import objectos.http.UriPath.Segment;
 import objectos.lang.object.Check;
 import objectos.util.array.ObjectArrays;
-import objectos.way.Http.ServerExchange;
+import objectos.way.Http;
+import objectos.way.Http.Exchange;
 
 public abstract class HttpModule {
 
@@ -29,7 +30,7 @@ public abstract class HttpModule {
 
     Matcher() {}
 
-    abstract boolean test(ServerExchange http);
+    abstract boolean test(Exchange http);
 
   }
 
@@ -42,7 +43,7 @@ public abstract class HttpModule {
     }
 
     @Override
-    final boolean test(ServerExchange http) {
+    final boolean test(Exchange http) {
       UriPath path;
       path = http.path();
 
@@ -78,7 +79,7 @@ public abstract class HttpModule {
 
   }
 
-  private static final class Compiler implements Handler {
+  private static final class Compiler implements Http.Handler {
 
     private Action[] actions;
 
@@ -86,7 +87,7 @@ public abstract class HttpModule {
 
     private SessionStore sessionStore;
 
-    public final Handler compile() {
+    public final Http.Handler compile() {
       if (actions != null) {
         actions = Arrays.copyOf(actions, actionsIndex);
       } else {
@@ -97,7 +98,7 @@ public abstract class HttpModule {
     }
 
     @Override
-    public final void handle(ServerExchange http) {
+    public final void handle(Exchange http) {
       if (sessionStore != null) {
         http.acceptSessionStore(sessionStore);
       }
@@ -114,21 +115,21 @@ public abstract class HttpModule {
       http.notFound();
     }
 
-    final void filter(Handler handler) {
+    final void filter(Http.Handler handler) {
       int index;
       index = nextSlot();
 
       actions[index] = new Filter(handler);
     }
 
-    final void route(Matcher matcher, Handler handler) {
+    final void route(Matcher matcher, Http.Handler handler) {
       int index;
       index = nextSlot();
 
       actions[index] = new RouteHandler(matcher, handler);
     }
 
-    final <T> void route(Matcher matcher, Function<T, Handler> factory, T value) {
+    final <T> void route(Matcher matcher, Function<T, Http.Handler> factory, T value) {
       int index;
       index = nextSlot();
 
@@ -157,13 +158,13 @@ public abstract class HttpModule {
   }
 
   private sealed interface Action {
-    boolean execute(ServerExchange http);
+    boolean execute(Exchange http);
   }
 
-  private record Filter(Handler handler) implements Action {
+  private record Filter(Http.Handler handler) implements Action {
     @Override
-    public final boolean execute(ServerExchange http) {
-      Handler handler;
+    public final boolean execute(Exchange http) {
+      Http.Handler handler;
       handler = handler();
 
       handler.handle(http);
@@ -181,12 +182,12 @@ public abstract class HttpModule {
     }
 
     @Override
-    public final boolean execute(ServerExchange http) {
+    public final boolean execute(Exchange http) {
       boolean result;
       result = false;
 
       if (matcher.test(http)) {
-        Handler handler;
+        Http.Handler handler;
         handler = handler();
 
         handler.handle(http);
@@ -197,37 +198,37 @@ public abstract class HttpModule {
       return result;
     }
 
-    abstract Handler handler();
+    abstract Http.Handler handler();
 
   }
 
   private static final class RouteHandler extends Route {
 
-    private final Handler handler;
+    private final Http.Handler handler;
 
-    public RouteHandler(Matcher matcher, Handler handler) {
+    public RouteHandler(Matcher matcher, Http.Handler handler) {
       super(matcher);
       this.handler = handler;
     }
 
     @Override
-    final Handler handler() { return handler; }
+    final Http.Handler handler() { return handler; }
 
   }
 
   private static final class RouteFactory1<T> extends Route {
 
-    private final Function<T, Handler> factory;
+    private final Function<T, Http.Handler> factory;
     private final T value;
 
-    public RouteFactory1(Matcher matcher, Function<T, Handler> factory, T value) {
+    public RouteFactory1(Matcher matcher, Function<T, Http.Handler> factory, T value) {
       super(matcher);
       this.factory = factory;
       this.value = value;
     }
 
     @Override
-    final Handler handler() {
+    final Http.Handler handler() {
       return factory.apply(value);
     }
 
@@ -237,7 +238,7 @@ public abstract class HttpModule {
 
   protected HttpModule() {}
 
-  public final Handler compile() {
+  public final Http.Handler compile() {
     Check.state(compiler == null, "Another compilation is already in progress");
 
     try {
@@ -268,13 +269,13 @@ public abstract class HttpModule {
     compiler.sessionStore(sessionStore);
   }
 
-  protected final void filter(Handler handler) {
+  protected final void filter(Http.Handler handler) {
     Check.notNull(handler, "handler == null");
 
     compiler.filter(handler);
   }
 
-  protected final void route(Matcher matcher, Handler handler) {
+  protected final void route(Matcher matcher, Http.Handler handler) {
     Check.notNull(matcher, "matcher == null");
     Check.notNull(handler, "handler == null");
 
@@ -284,13 +285,13 @@ public abstract class HttpModule {
   protected final void route(Matcher matcher, HttpModule module) {
     Check.notNull(matcher, "matcher == null");
 
-    Handler handler;
+    Http.Handler handler;
     handler = module.compile(); // implicit null-check
 
     compiler.route(matcher, handler);
   }
 
-  protected final <T> void route(Matcher matcher, Function<T, Handler> factory, T value) {
+  protected final <T> void route(Matcher matcher, Function<T, Http.Handler> factory, T value) {
     Check.notNull(matcher, "matcher == null");
     Check.notNull(factory, "factory == null");
     Check.notNull(value, "value == null");
@@ -309,7 +310,7 @@ public abstract class HttpModule {
     }
 
     @Override
-    final boolean test(ServerExchange http) {
+    final boolean test(Exchange http) {
       UriPath path;
       path = http.path();
 
@@ -537,7 +538,7 @@ public abstract class HttpModule {
 
   // actions
 
-  protected final Handler matrix(Method method, Handler handler) {
+  protected final Http.Handler matrix(Method method, Http.Handler handler) {
     Check.notNull(method, "method == null");
     Check.notNull(handler, "handler == null");
 
@@ -546,7 +547,7 @@ public abstract class HttpModule {
 
   // pre-made actions
 
-  protected final Handler movedPermanently(String location) {
+  protected final Http.Handler movedPermanently(String location) {
     Check.notNull(location, "location == null");
 
     return http -> http.movedPermanently(location);

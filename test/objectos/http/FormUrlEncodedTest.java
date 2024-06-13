@@ -23,7 +23,7 @@ import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Set;
 import objectos.http.WayServerLoop.ParseStatus;
-import objectos.way.Http.ServerExchange;
+import objectos.way.Http.Exchange;
 import objectos.way.TestingClock;
 import objectos.way.TestingNoteSink;
 import org.testng.Assert;
@@ -112,7 +112,7 @@ public class FormUrlEncodedTest {
 
       assertEquals(status.isError(), false);
 
-      ServerExchange exchange;
+      Exchange exchange;
       exchange = http;
 
       return FormUrlEncoded.parse(exchange);

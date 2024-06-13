@@ -16,10 +16,10 @@
 package testing.site;
 
 import java.lang.reflect.Constructor;
-import objectos.http.Handler;
 import objectos.http.HandlerFactory;
 import objectos.http.HttpModule;
 import objectos.lang.classloader.ClassReloader;
+import objectos.way.Http;
 import testing.zite.TestingSiteInjector;
 
 final class DevHandlerFactory implements HandlerFactory {
@@ -35,7 +35,7 @@ final class DevHandlerFactory implements HandlerFactory {
   }
 
   @Override
-  public final Handler create() throws Exception {
+  public final Http.Handler create() throws Exception {
     Class<?> type;
     type = classReloader.get();
 

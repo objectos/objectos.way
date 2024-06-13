@@ -27,7 +27,7 @@ import objectos.http.WayServerLoop.ParseStatus;
 import objectos.lang.object.Check;
 import objectos.notes.NoOpNoteSink;
 import objectos.notes.NoteSink;
-import objectos.way.Http.ServerExchange;
+import objectos.way.Http.Exchange;
 
 public final class WayTestingServerExchange implements TestingServerExchange {
 
@@ -75,7 +75,7 @@ public final class WayTestingServerExchange implements TestingServerExchange {
   }
 
   @Override
-  public final String handle(String request, Consumer<ServerExchange> handler) {
+  public final String handle(String request, Consumer<Exchange> handler) {
     byte[] bytes;
     bytes = request.getBytes(StandardCharsets.UTF_8);
 
