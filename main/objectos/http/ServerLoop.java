@@ -18,6 +18,7 @@ package objectos.http;
 import java.io.Closeable;
 import java.io.IOException;
 import objectos.http.WayServerLoop.ParseStatus;
+import objectos.way.Http.ServerExchange;
 
 public interface ServerLoop extends Closeable, ServerExchange {
 

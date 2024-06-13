@@ -23,6 +23,7 @@ import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Set;
 import objectos.http.WayServerLoop.ParseStatus;
+import objectos.way.Http.ServerExchange;
 import objectos.way.TestingClock;
 import objectos.way.TestingNoteSink;
 import org.testng.Assert;

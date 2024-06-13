@@ -21,6 +21,7 @@ import java.net.Socket;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import objectos.http.UriPath.Segment;
+import objectos.way.Http.ServerExchange;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 

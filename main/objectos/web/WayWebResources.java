@@ -30,7 +30,6 @@ import java.nio.file.attribute.FileTime;
 import java.util.Map;
 import objectos.http.HeaderName;
 import objectos.http.Method;
-import objectos.http.ServerExchange;
 import objectos.http.ServerRequestHeaders;
 import objectos.http.Status;
 import objectos.http.UriPath;
@@ -39,6 +38,7 @@ import objectos.lang.object.Check;
 import objectos.notes.NoOpNoteSink;
 import objectos.notes.NoteSink;
 import objectos.util.map.GrowableMap;
+import objectos.way.Http.ServerExchange;
 
 public final class WayWebResources implements AutoCloseable, WebResources {
 

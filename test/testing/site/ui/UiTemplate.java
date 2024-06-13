@@ -18,7 +18,7 @@ package testing.site.ui;
 import objectos.html.HtmlTemplate;
 import objectos.http.Handler;
 import objectos.http.Method;
-import objectos.http.ServerExchange;
+import objectos.way.Http.ServerExchange;
 
 abstract class UiTemplate extends HtmlTemplate implements Handler {
 

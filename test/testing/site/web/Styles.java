@@ -20,9 +20,9 @@ import java.util.Set;
 import objectos.css.WayStyleGen;
 import objectos.http.Handler;
 import objectos.http.HeaderName;
-import objectos.http.ServerExchange;
 import objectos.http.Status;
 import objectos.notes.NoteSink;
+import objectos.way.Http.ServerExchange;
 import testing.zite.TestingSiteInjector;
 
 final class Styles implements Handler {

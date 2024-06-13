@@ -27,7 +27,6 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.Random;
 import java.util.function.Consumer;
-import objectos.http.ServerExchange;
 import objectos.http.SessionStore;
 import objectos.http.WaySessionStore;
 import objectos.lang.WayShutdownHook;
@@ -35,6 +34,7 @@ import objectos.notes.Level;
 import objectos.notes.NoteSink;
 import objectos.notes.impl.ConsoleNoteSink;
 import objectos.testing.WayTestingServerExchange;
+import objectos.way.Http.ServerExchange;
 import objectos.web.Stage;
 import objectos.web.WayWebResources;
 

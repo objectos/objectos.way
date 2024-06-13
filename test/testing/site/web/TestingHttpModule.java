@@ -16,8 +16,8 @@
 package testing.site.web;
 
 import objectos.http.HttpModule;
-import objectos.http.ServerExchange;
 import objectos.http.Session;
+import objectos.way.Http.ServerExchange;
 import objectos.web.WebResources;
 import testing.site.auth.User;
 import testing.site.ui.UiHttpModule;

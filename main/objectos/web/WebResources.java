@@ -16,8 +16,8 @@
 package objectos.web;
 
 import java.nio.file.Path;
-import objectos.http.ServerExchange;
 import objectos.notes.Note1;
+import objectos.way.Http.ServerExchange;
 
 public interface WebResources {
 

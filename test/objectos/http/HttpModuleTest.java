@@ -23,6 +23,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.stream.Collectors;
 import objectos.http.UriPath.Segment;
+import objectos.way.Http.ServerExchange;
 import objectos.way.TestingRandom.SequentialRandom;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;

@@ -16,7 +16,7 @@
 package objectos.testing;
 
 import java.util.function.Consumer;
-import objectos.http.ServerExchange;
+import objectos.way.Http.ServerExchange;
 
 public interface TestingServerExchange {
 

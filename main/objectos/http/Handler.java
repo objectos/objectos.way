@@ -18,6 +18,8 @@
  */
 package objectos.http;
 
+import objectos.way.Http.ServerExchange;
+
 @FunctionalInterface
 public interface Handler {
 

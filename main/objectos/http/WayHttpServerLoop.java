@@ -20,6 +20,7 @@ import objectos.http.WayServerLoop.ParseStatus;
 import objectos.notes.Note0;
 import objectos.notes.Note1;
 import objectos.notes.NoteSink;
+import objectos.way.Http.ServerExchange;
 
 final class WayHttpServerLoop implements Runnable {
 

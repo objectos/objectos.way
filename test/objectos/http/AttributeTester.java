@@ -16,6 +16,7 @@
 package objectos.http;
 
 import objectos.html.HtmlTemplate;
+import objectos.way.Http.ServerExchange;
 
 final class AttributeTester extends HtmlTemplate {
   private final ServerExchange http;

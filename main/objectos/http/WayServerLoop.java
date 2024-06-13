@@ -33,6 +33,7 @@ import objectos.lang.CharWritable;
 import objectos.lang.object.Check;
 import objectos.notes.NoteSink;
 import objectos.util.map.GrowableMap;
+import objectos.way.Http;
 
 public final class WayServerLoop extends WayServerRequestBody implements ServerLoop {
 
