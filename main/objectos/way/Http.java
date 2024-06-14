@@ -53,7 +53,7 @@ public final class Http {
    * An HTTP request received by the server and its subsequent response to the
    * client.
    */
-  public interface Exchange {
+  public interface Exchange extends Request {
 
     /**
      * Stores an object in this request. The object will be associated to the
@@ -91,29 +91,22 @@ public final class Http {
     // request
 
     /**
-     * Returns the request method.
+     * Returns the path component of the request-target.
      *
-     * @return the request method
+     * @return the path component of the request-target.
      */
-    Request.Method method();
+    default Request.Target.Path path() {
+      return target().path();
+    }
 
     /**
-     * Returns the path component of the request target.
+     * Returns the query component of the request-target.
      *
-     * @return the path component of the request target.
+     * @return the query component of the request-target.
      */
-    Request.Target.Path path();
-
-    Request.Target.Query query();
-
-    Request.Headers headers();
-
-    /**
-     * Returns the request message body.
-     *
-     * @return the request message body.
-     */
-    Request.Body body();
+    default Request.Target.Query query() {
+      return target().query();
+    }
 
     /**
      * Returns the session associated with this request or {@code null} if no
@@ -583,13 +576,6 @@ public final class Http {
       }
 
       /**
-       * The path component of this request-target.
-       * 
-       * @return the path component of this request-target.
-       */
-      Path path();
-
-      /**
        * The query component of a request-target.
        */
       public interface Query {
@@ -622,6 +608,13 @@ public final class Http {
         String value();
 
       }
+
+      /**
+       * The path component of this request-target.
+       * 
+       * @return the path component of this request-target.
+       */
+      Path path();
 
       /**
        * The query component of this request-target.

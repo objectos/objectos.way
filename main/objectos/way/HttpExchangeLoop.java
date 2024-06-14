@@ -25,7 +25,6 @@ import java.net.Socket;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.time.Clock;
 import java.time.ZonedDateTime;
 import java.util.Arrays;
@@ -35,7 +34,7 @@ import objectos.lang.object.Check;
 import objectos.notes.NoteSink;
 import objectos.util.map.GrowableMap;
 
-final class HttpExchangeLoop extends HttpRequestBody implements Http.Exchange, Closeable {
+final class HttpExchangeLoop extends HttpRequestBody implements Http.Exchange, Http.Request.Target, Closeable {
 
   public enum ParseStatus {
     // keep going
@@ -354,6 +353,13 @@ final class HttpExchangeLoop extends HttpRequestBody implements Http.Exchange, C
 
     return method;
   }
+  
+  @Override
+  public final Http.Request.Target target() {
+    checkRequest();
+    
+    return this; 
+  }
 
   @Override
   public final Http.Request.Target.Path path() {
@@ -575,7 +581,7 @@ final class HttpExchangeLoop extends HttpRequestBody implements Http.Exchange, C
   }
 
   @Override
-  public final void send(Path file) {
+  public final void send(java.nio.file.Path file) {
     checkResponse();
 
     responseBody = Check.notNull(file, "file == null");
@@ -743,7 +749,7 @@ final class HttpExchangeLoop extends HttpRequestBody implements Http.Exchange, C
           outputStream.write(CHUNKED_TRAILER);
         }
 
-        case Path file -> {
+        case java.nio.file.Path file -> {
           try (InputStream in = Files.newInputStream(file)) {
             in.transferTo(outputStream);
           }
