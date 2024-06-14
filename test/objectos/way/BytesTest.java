@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023-2024 Objectos Software LTDA.
+ * Copyright (C) 2016-2023 Objectos Software LTDA.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,23 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package testing.site.ui;
+package objectos.way;
 
-import testing.zite.TestingSiteInjector;
-import objectos.way.Http;
+import static org.testng.Assert.assertEquals;
 
-public final class UiHttpModule extends Http.Module {
+import org.testng.annotations.Test;
 
-  private final TestingSiteInjector injector;
+public class BytesTest {
 
-  public UiHttpModule(TestingSiteInjector injector) {
-    this.injector = injector;
-  }
+  @Test
+  public void toLowerCase() {
+    byte[] in = {'A', 'B', 'C', 'a', 'b', 'c'};
+    byte[] ou = {'a', 'b', 'c', 'a', 'b', 'c'};
 
-  @Override
-  protected final void configure() {
-    route(path("/ui/styles.css"), UiStyles::new, injector);
-    route(path("/ui/shell"), ShellPage::new, injector);
+    for (int i = 0; i < in.length; i++) {
+      byte input = in[i];
+
+      byte res = Bytes.toLowerCase(input);
+
+      assertEquals(res, ou[i]);
+    }
   }
 
 }

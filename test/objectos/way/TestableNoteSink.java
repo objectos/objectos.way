@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023-2024 Objectos Software LTDA.
+ * Copyright (C) 2016-2023 Objectos Software LTDA.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,27 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package testing.site;
+package objectos.way;
 
-import objectos.way.HandlerFactory;
-import objectos.way.Http;
-import testing.site.web.TestingHttpModule;
-import testing.zite.TestingSiteInjector;
+import objectos.notes.NoOpNoteSink;
+import objectos.notes.Note;
 
-final class ProdHandlerFactory implements HandlerFactory {
-
-  private final Http.Handler handler;
-
-  public ProdHandlerFactory(TestingSiteInjector injector) {
-    TestingHttpModule module;
-    module = new TestingHttpModule(injector);
-
-    handler = module.compile();
-  }
+class TestableNoteSink extends NoOpNoteSink {
 
   @Override
-  public final Http.Handler create() throws Exception {
-    return handler;
+  public boolean isEnabled(Note note) {
+    return true;
   }
 
 }

@@ -27,8 +27,6 @@ module objectos.way {
   exports objectos.html.pseudom;
   exports objectos.html.script;
   exports objectos.html.style;
-  exports objectos.http;
-  exports objectos.http.media;
   exports objectos.io;
   exports objectos.lang;
   exports objectos.lang.classloader;

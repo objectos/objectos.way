@@ -13,27 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package testing.site;
+package objectos.way;
 
-import objectos.way.HandlerFactory;
-import objectos.way.Http;
-import testing.site.web.TestingHttpModule;
-import testing.zite.TestingSiteInjector;
+import objectos.html.HtmlTemplate;
 
-final class ProdHandlerFactory implements HandlerFactory {
+class TestingSingleParagraph extends HtmlTemplate {
+  private final String text;
 
-  private final Http.Handler handler;
-
-  public ProdHandlerFactory(TestingSiteInjector injector) {
-    TestingHttpModule module;
-    module = new TestingHttpModule(injector);
-
-    handler = module.compile();
-  }
+  public TestingSingleParagraph(String text) { this.text = text; }
 
   @Override
-  public final Http.Handler create() throws Exception {
-    return handler;
+  protected final void definition() {
+    html(
+        p(text)
+    );
   }
-
 }

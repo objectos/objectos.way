@@ -16,9 +16,8 @@
 package testing.site;
 
 import java.lang.reflect.Constructor;
-import objectos.http.HandlerFactory;
-import objectos.http.HttpModule;
 import objectos.lang.classloader.ClassReloader;
+import objectos.way.HandlerFactory;
 import objectos.way.Http;
 import testing.zite.TestingSiteInjector;
 
@@ -42,8 +41,8 @@ final class DevHandlerFactory implements HandlerFactory {
     Constructor<?> constructor;
     constructor = type.getConstructor(TestingSiteInjector.class);
 
-    HttpModule module;
-    module = (HttpModule) constructor.newInstance(injector);
+    Http.Module module;
+    module = (Http.Module) constructor.newInstance(injector);
 
     return module.compile();
   }

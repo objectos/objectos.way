@@ -35,7 +35,7 @@ public class HttpRequestTargetQueryTest {
   UriQuery: empty
   """)
   public void testCase01() {
-    HttpUriQuery q;
+    HttpRequestTargetQuery q;
     q = queryOf("");
 
     assertEquals(q.get("foo"), null);
@@ -47,7 +47,7 @@ public class HttpRequestTargetQueryTest {
   UriQuery: single value
   """)
   public void testCase02() {
-    HttpUriQuery q;
+    HttpRequestTargetQuery q;
     q = queryOf("foo=bar");
 
     assertEquals(q.get("foo"), "bar");
@@ -59,7 +59,7 @@ public class HttpRequestTargetQueryTest {
   UriQuery: name only
   """)
   public void testCase03() {
-    HttpUriQuery q;
+    HttpRequestTargetQuery q;
     q = queryOf("foo");
 
     assertEquals(q.get("foo"), "");
@@ -71,7 +71,7 @@ public class HttpRequestTargetQueryTest {
   UriQuery: empty value
   """)
   public void testCase04() {
-    HttpUriQuery q;
+    HttpRequestTargetQuery q;
     q = queryOf("foo=");
 
     assertEquals(q.get("foo"), "");
@@ -83,7 +83,7 @@ public class HttpRequestTargetQueryTest {
   UriQuery: corner cases
   """)
   public void testCase05() {
-    HttpUriQuery q;
+    HttpRequestTargetQuery q;
     q = queryOf("a&foo=");
 
     assertEquals(q.get("a"), "");
@@ -114,7 +114,7 @@ public class HttpRequestTargetQueryTest {
   UriQuery: getAsInt()
   """)
   public void testCase07() {
-    HttpUriQuery q;
+    HttpRequestTargetQuery q;
     q = queryOf("a=123&b=-456&c=foo&d=&e&f=123.45");
 
     assertEquals(q.getAsInt("a", -1), 123);
@@ -129,7 +129,7 @@ public class HttpRequestTargetQueryTest {
   UriQuery: set
   """)
   public void testCase08() {
-    HttpUriQuery q;
+    HttpRequestTargetQuery q;
     q = queryOf("a=1&b=2&c=3&d");
 
     Http.Request.Target.Query res;
@@ -145,7 +145,7 @@ public class HttpRequestTargetQueryTest {
   UriQuery: duplicate name should return first value
   """)
   public void testCase09() {
-    HttpUriQuery q;
+    HttpRequestTargetQuery q;
     q = queryOf("a=123&b=xpto&c&b=");
 
     assertEquals(q.get("a"), "123");
@@ -153,9 +153,9 @@ public class HttpRequestTargetQueryTest {
     assertEquals(q.get("c"), "");
   }
 
-  private HttpUriQuery queryOf(String q) {
-    HttpUriQuery query;
-    query = new HttpUriQuery();
+  private HttpRequestTargetQuery queryOf(String q) {
+    HttpRequestTargetQuery query;
+    query = new HttpRequestTargetQuery();
 
     query.set(q);
 

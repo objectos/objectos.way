@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023-2024 Objectos Software LTDA.
+ * Copyright (C) 2023 Objectos Software LTDA.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,25 +15,29 @@
  */
 package objectos.way;
 
-import static org.testng.Assert.assertEquals;
+import objectos.html.HtmlTemplate;
 
-import org.testng.annotations.Test;
+final class MarketingSite extends Http.Module {
 
-public class HttpRequestTargetQueryEmptyTest {
+  @Override
+  protected final void configure() {
+    route(path("/"),
+        matrix(Http.GET, movedPermanently("/index.html")));
 
-  @Test(description = """
-  UriQuery: set
-  """)
-  public void testCase08() {
-    Http.Request.Target.Query q;
-    q = HttpRequestTargetQueryEmpty.INSTANCE;
-
-    assertEquals(q.get("a"), null);
-
-    Http.Request.Target.Query res;
-    res = q.set("a", "x");
-
-    assertEquals(res.get("a"), "x");
+    route(path("/index.html"),
+        matrix(Http.GET, this::indexHtml));
   }
-  
+
+  private void indexHtml(Http.Exchange http) {
+    http.ok(new MarketingSiteHome());
+  }
+
+  private static class MarketingSiteHome extends HtmlTemplate {
+    @Override
+    protected void definition() {
+      doctype();
+      h1("home");
+    }
+  }
+
 }

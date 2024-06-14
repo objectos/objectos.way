@@ -21,8 +21,7 @@ import java.util.Locale;
 import java.util.Map;
 import objectos.util.map.GrowableMap;
 
-//TODO: make package-private after refactoring
-public final class HttpHeaderName implements Http.HeaderName {
+final class HttpHeaderName implements Http.HeaderName {
 
   private static class Builder {
 

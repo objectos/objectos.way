@@ -15,8 +15,11 @@
  */
 package objectos.way;
 
+import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.InetAddress;
+import java.net.ServerSocket;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
@@ -34,6 +37,8 @@ import objectos.html.Html;
 import objectos.html.HtmlTemplate;
 import objectos.lang.CharWritable;
 import objectos.lang.object.Check;
+import objectos.notes.Note1;
+import objectos.way.HttpExchangeLoop.ParseStatus;
 
 /**
  * The Objectos HTTP main class.
@@ -47,6 +52,26 @@ public final class Http {
    * client.
    */
   public interface Exchange {
+
+    // TODO make this private
+    public interface Loop extends Closeable, Exchange {
+
+      /**
+       * Closes and ends this exchange by closing its underlying socket.
+       *
+       * @throws IOException
+       *         if an I/O error occurs
+       */
+      @Override
+      void close() throws IOException;
+
+      ParseStatus parse() throws IOException, IllegalStateException;
+
+      void commit() throws IOException, IllegalStateException;
+
+      boolean keepAlive();
+
+    }
 
     /**
      * Stores an object in this request. The object will be associated to the
@@ -422,6 +447,19 @@ public final class Http {
   }
 
   /**
+   * A module configures the handlers a server instance will use to process its
+   * requests.
+   */
+  public static abstract class Module extends HttpModule {
+
+    /**
+     * Sole constructor.
+     */
+    protected Module() {}
+
+  }
+
+  /**
    * An HTTP request message.
    */
   public interface Request {
@@ -643,6 +681,45 @@ public final class Http {
   }
 
   /**
+   * An HTTP server.
+   */
+  public interface Server extends Closeable {
+
+    /**
+     * Configures the creation of an HTTP server.
+     */
+    public sealed interface Option permits HttpServerOption {}
+
+    /**
+     * Indicates that this server is ready to accept requests.
+     */
+    Note1<ServerSocket> LISTENING = Note1.info(Http.Server.class, "Listening");
+
+    /**
+     * Starts this HTTP server.
+     * 
+     * @throws IOException
+     *         if an I/O error occurs
+     */
+    void start() throws IOException;
+
+    /**
+     * Returns the IP address this server is listening to.
+     * 
+     * @return the IP address this server is listening to.
+     */
+    InetAddress address();
+
+    /**
+     * Returns the port number this server is listening to.
+     * 
+     * @return the port number this server is listening to.
+     */
+    int port();
+
+  }
+
+  /**
    * An HTTP response message.
    */
   public interface Response {
@@ -695,6 +772,25 @@ public final class Http {
      */
     public UnsupportedMediaTypeException(String contentType) {
       super(contentType);
+    }
+
+  }
+
+  // non-public types
+
+  enum Version {
+
+    HTTP_1_0("HTTP/1.0"),
+
+    HTTP_1_1("HTTP/1.1");
+
+    final byte[] responseBytes;
+
+    private Version(String signature) {
+      String response;
+      response = signature + " ";
+
+      responseBytes = Http.utf8(response);
     }
 
   }
@@ -1038,6 +1134,14 @@ public final class Http {
     IMF_FIXDATE = b.toFormatter(Locale.US);
   }
 
+  private static final byte DIGIT_0 = '0';
+
+  private static final byte DIGIT_9 = '9';
+
+  static boolean isDigit(byte value) {
+    return DIGIT_0 <= value && value <= DIGIT_9;
+  }
+
   static int parseHexDigit(byte value) {
     return parseHexDigit(value);
   }
@@ -1065,6 +1169,10 @@ public final class Http {
           "Illegal hex char= " + (char) value
       );
     };
+  }
+
+  static byte[] utf8(String value) {
+    return value.getBytes(StandardCharsets.UTF_8);
   }
 
 }

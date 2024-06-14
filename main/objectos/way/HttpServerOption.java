@@ -13,27 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package testing.site;
+package objectos.way;
 
-import objectos.way.HandlerFactory;
-import objectos.way.Http;
-import testing.site.web.TestingHttpModule;
-import testing.zite.TestingSiteInjector;
+sealed abstract class HttpServerOption implements Http.Server.Option {
 
-final class ProdHandlerFactory implements HandlerFactory {
+  abstract void acceptHttpServerBuilder();
 
-  private final Http.Handler handler;
+  static final class BufferSize extends HttpServerOption {
 
-  public ProdHandlerFactory(TestingSiteInjector injector) {
-    TestingHttpModule module;
-    module = new TestingHttpModule(injector);
+    @Override
+    final void acceptHttpServerBuilder() {}
 
-    handler = module.compile();
-  }
-
-  @Override
-  public final Http.Handler create() throws Exception {
-    return handler;
   }
 
 }

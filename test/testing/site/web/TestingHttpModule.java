@@ -15,7 +15,7 @@
  */
 package testing.site.web;
 
-import objectos.http.HttpModule;
+import objectos.way.Http;
 import objectos.way.Web;
 import objectos.way.Http.Exchange;
 import objectos.web.WebResources;
@@ -23,7 +23,7 @@ import testing.site.auth.User;
 import testing.site.ui.UiHttpModule;
 import testing.zite.TestingSiteInjector;
 
-public class TestingHttpModule extends HttpModule {
+public class TestingHttpModule extends Http.Module {
 
   private final TestingSiteInjector injector;
 

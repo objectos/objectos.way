@@ -21,13 +21,13 @@ import java.io.UncheckedIOException;
 import java.nio.charset.StandardCharsets;
 import java.time.Clock;
 import java.util.function.Consumer;
-import objectos.http.WayServerLoop;
-import objectos.http.WayServerLoop.ParseStatus;
 import objectos.lang.object.Check;
 import objectos.notes.NoOpNoteSink;
 import objectos.notes.NoteSink;
 import objectos.way.SessionStore;
+import objectos.way.HttpExchangeLoop;
 import objectos.way.Http.Exchange;
+import objectos.way.HttpExchangeLoop.ParseStatus;
 
 public final class WayTestingServerExchange implements TestingServerExchange {
 
@@ -82,7 +82,7 @@ public final class WayTestingServerExchange implements TestingServerExchange {
     try (
         ByteArrayInputStream inputStream = new ByteArrayInputStream(bytes);
         TestingSocket socket = new TestingSocket(inputStream);
-        WayServerLoop loop = new WayServerLoop(socket)
+        HttpExchangeLoop loop = new HttpExchangeLoop(socket)
     ) {
       loop.bufferSize(bufferSizeInitial, bufferSizeMax);
 

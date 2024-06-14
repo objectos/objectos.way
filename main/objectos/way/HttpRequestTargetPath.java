@@ -20,7 +20,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.List;
 import objectos.util.list.GrowableList;
 
-public final class HttpRequestTargetPath implements Http.Request.Target.Path {
+final class HttpRequestTargetPath implements Http.Request.Target.Path {
 
   private String value;
 

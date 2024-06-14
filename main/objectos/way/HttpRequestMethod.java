@@ -19,8 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 import objectos.way.Http.Request.Method;
 
-// TODO: make package-private after refactoring
-public final class HttpRequestMethod implements Http.Request.Method {
+final class HttpRequestMethod implements Http.Request.Method {
 
   private static class Builder {
 
