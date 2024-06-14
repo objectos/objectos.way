@@ -13,14 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.http;
+package objectos.way;
 
 import static org.testng.Assert.assertEquals;
 
 import java.util.Set;
 import org.testng.annotations.Test;
 
-public class WayUriQueryTest {
+public class HttpRequestTargetQueryTest {
   
   @Test
   public void encodedValue() {
@@ -35,7 +35,7 @@ public class WayUriQueryTest {
   UriQuery: empty
   """)
   public void testCase01() {
-    WayUriQuery q;
+    HttpUriQuery q;
     q = queryOf("");
 
     assertEquals(q.get("foo"), null);
@@ -47,7 +47,7 @@ public class WayUriQueryTest {
   UriQuery: single value
   """)
   public void testCase02() {
-    WayUriQuery q;
+    HttpUriQuery q;
     q = queryOf("foo=bar");
 
     assertEquals(q.get("foo"), "bar");
@@ -59,7 +59,7 @@ public class WayUriQueryTest {
   UriQuery: name only
   """)
   public void testCase03() {
-    WayUriQuery q;
+    HttpUriQuery q;
     q = queryOf("foo");
 
     assertEquals(q.get("foo"), "");
@@ -71,7 +71,7 @@ public class WayUriQueryTest {
   UriQuery: empty value
   """)
   public void testCase04() {
-    WayUriQuery q;
+    HttpUriQuery q;
     q = queryOf("foo=");
 
     assertEquals(q.get("foo"), "");
@@ -83,7 +83,7 @@ public class WayUriQueryTest {
   UriQuery: corner cases
   """)
   public void testCase05() {
-    WayUriQuery q;
+    HttpUriQuery q;
     q = queryOf("a&foo=");
 
     assertEquals(q.get("a"), "");
@@ -114,7 +114,7 @@ public class WayUriQueryTest {
   UriQuery: getAsInt()
   """)
   public void testCase07() {
-    WayUriQuery q;
+    HttpUriQuery q;
     q = queryOf("a=123&b=-456&c=foo&d=&e&f=123.45");
 
     assertEquals(q.getAsInt("a", -1), 123);
@@ -129,10 +129,10 @@ public class WayUriQueryTest {
   UriQuery: set
   """)
   public void testCase08() {
-    WayUriQuery q;
+    HttpUriQuery q;
     q = queryOf("a=1&b=2&c=3&d");
 
-    UriQuery res;
+    Http.Request.Target.Query res;
     res = q.set("a", "x");
 
     assertEquals(res.get("a"), "x");
@@ -145,7 +145,7 @@ public class WayUriQueryTest {
   UriQuery: duplicate name should return first value
   """)
   public void testCase09() {
-    WayUriQuery q;
+    HttpUriQuery q;
     q = queryOf("a=123&b=xpto&c&b=");
 
     assertEquals(q.get("a"), "123");
@@ -153,9 +153,9 @@ public class WayUriQueryTest {
     assertEquals(q.get("c"), "");
   }
 
-  private WayUriQuery queryOf(String q) {
-    WayUriQuery query;
-    query = new WayUriQuery();
+  private HttpUriQuery queryOf(String q) {
+    HttpUriQuery query;
+    query = new HttpUriQuery();
 
     query.set(q);
 

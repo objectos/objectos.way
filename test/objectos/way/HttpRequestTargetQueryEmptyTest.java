@@ -13,24 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.http;
+package objectos.way;
 
 import static org.testng.Assert.assertEquals;
 
 import org.testng.annotations.Test;
 
-public class EmptyUriQueryTest {
+public class HttpRequestTargetQueryEmptyTest {
 
   @Test(description = """
   UriQuery: set
   """)
   public void testCase08() {
-    UriQuery q;
-    q = EmptyUriQuery.INSTANCE;
+    Http.Request.Target.Query q;
+    q = HttpUriQueryEmpty.INSTANCE;
 
     assertEquals(q.get("a"), null);
 
-    UriQuery res;
+    Http.Request.Target.Query res;
     res = q.set("a", "x");
 
     assertEquals(res.get("a"), "x");

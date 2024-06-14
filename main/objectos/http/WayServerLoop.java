@@ -357,7 +357,7 @@ public final class WayServerLoop extends WayServerRequestBody implements ServerL
   }
 
   @Override
-  public final UriQuery query() {
+  public final Http.Request.Target.Query query() {
     checkRequest();
 
     return query;

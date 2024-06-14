@@ -21,6 +21,8 @@ import objectos.http.WayServerLoop.ParseStatus;
 import objectos.way.Http;
 import objectos.way.HttpRequestMethod;
 import objectos.way.HttpRequestTargetPath;
+import objectos.way.HttpUriQuery;
+import objectos.way.HttpUriQueryEmpty;
 
 class WayRequestLine extends SocketInput {
 
@@ -28,7 +30,7 @@ class WayRequestLine extends SocketInput {
 
   HttpRequestTargetPath path;
 
-  UriQuery query = EmptyUriQuery.INSTANCE;
+  Http.Request.Target.Query query = HttpUriQueryEmpty.INSTANCE;
 
   byte versionMajor;
 
@@ -41,7 +43,7 @@ class WayRequestLine extends SocketInput {
 
     path.reset();
 
-    query = EmptyUriQuery.INSTANCE;
+    query = HttpUriQueryEmpty.INSTANCE;
 
     versionMajor = versionMinor = 0;
   }
@@ -267,12 +269,12 @@ class WayRequestLine extends SocketInput {
     String rawValue;
     rawValue = bufferToString(startIndex, end);
 
-    WayUriQuery q;
+    HttpUriQuery q;
 
-    if (query == EmptyUriQuery.INSTANCE) {
-      query = q = new WayUriQuery();
+    if (query == HttpUriQueryEmpty.INSTANCE) {
+      query = q = new HttpUriQuery();
     } else {
-      q = (WayUriQuery) query;
+      q = (HttpUriQuery) query;
     }
 
     q.set(rawValue);

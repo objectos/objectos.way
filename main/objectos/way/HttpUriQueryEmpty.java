@@ -13,40 +13,45 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.http;
+package objectos.way;
 
 import java.util.Set;
 
-/**
- * Represents the query component of the request target.
- */
-public interface UriQuery {
+public enum HttpUriQueryEmpty implements Http.Request.Target.Query {
 
-  String encodedValue();
-  
-  String get(String name);
+  INSTANCE;
 
-  default int getAsInt(String name, int defaultValue) {
-    String maybe;
-    maybe = get(name);
-
-    if (maybe == null) {
-      return defaultValue;
-    }
-
-    try {
-      return Integer.parseInt(maybe);
-    } catch (NumberFormatException expected) {
-      return defaultValue;
-    }
+  @Override
+  public final Set<String> names() {
+    return Set.of();
   }
 
-  boolean isEmpty();
+  @Override
+  public final String get(String name) {
+    return null;
+  }
 
-  Set<String> names();
+  @Override
+  public final Http.Request.Target.Query set(String name, String value) {
+    HttpUriQuery q;
+    q = new HttpUriQuery();
 
-  UriQuery set(String name, String value);
-  
-  String value();
+    return q.set(name, value);
+  }
+
+  @Override
+  public final String value() {
+    return "";
+  }
+
+  @Override
+  public final boolean isEmpty() {
+    return true;
+  }
+
+  @Override
+  public final String encodedValue() {
+    return "";
+  }
 
 }

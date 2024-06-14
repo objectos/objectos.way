@@ -81,7 +81,7 @@ public class ServerLoopTest {
       assertEquals(http.method(), Http.GET);
       assertEquals(path.is("/"), true);
 
-      UriQuery query;
+      Http.Request.Target.Query query;
       query = http.query();
 
       assertEquals(query.isEmpty(), true);
@@ -190,7 +190,7 @@ public class ServerLoopTest {
       assertEquals(http.method(), Http.GET);
       assertEquals(path.is("/login"), true);
 
-      UriQuery query;
+      Http.Request.Target.Query query;
       query = http.query();
 
       assertEquals(query.isEmpty(), true);
@@ -377,7 +377,7 @@ public class ServerLoopTest {
       assertEquals(http.method(), Http.GET);
       assertEquals(path.is("/index.html"), true);
 
-      UriQuery query;
+      Http.Request.Target.Query query;
       query = http.query();
 
       assertEquals(query.isEmpty(), true);
@@ -455,7 +455,7 @@ public class ServerLoopTest {
       assertEquals(http.method(), Http.GET);
       assertEquals(path.is("/atom.xml"), true);
 
-      UriQuery query;
+      Http.Request.Target.Query query;
       query = http.query();
 
       assertEquals(query.isEmpty(), true);
@@ -562,7 +562,7 @@ public class ServerLoopTest {
 
       assertEquals(parse.isError(), false);
 
-      UriQuery query;
+      Http.Request.Target.Query query;
       query = http.query();
 
       assertEquals(query.value(), "foo=bar");
@@ -1245,7 +1245,7 @@ public class ServerLoopTest {
       assertEquals(http.method(), Http.GET);
       assertEquals(path.is("/"), true);
 
-      UriQuery query;
+      Http.Request.Target.Query query;
       query = http.query();
 
       assertEquals(query.isEmpty(), true);

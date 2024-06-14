@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.http;
+package objectos.way;
 
 import java.net.URLDecoder;
 import java.net.URLEncoder;
@@ -25,16 +25,17 @@ import java.util.Set;
 import objectos.lang.object.Check;
 import objectos.util.list.GrowableList;
 
-final class WayUriQuery implements UriQuery {
+public final class HttpUriQuery implements Http.Request.Target.Query {
 
   private final Map<String, Object> decoded = new HashMap<>();
 
   private String value = "";
 
-  public WayUriQuery() {
+  public HttpUriQuery() {
   }
 
-  final void set(String rawValue) {
+  // TODO make package-private after refactoring
+  public final void set(String rawValue) {
     value = URLDecoder.decode(rawValue, StandardCharsets.UTF_8);
 
     decoded.clear();
@@ -68,7 +69,7 @@ final class WayUriQuery implements UriQuery {
     throw new UnsupportedOperationException("Implement me");
   }
 
-  public final UriQuery set(String name, String value) {
+  public final Http.Request.Target.Query set(String name, String value) {
     Check.notNull(name, "name == null");
     Check.notNull(value, "value == null");
 

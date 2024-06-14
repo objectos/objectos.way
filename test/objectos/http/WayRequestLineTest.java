@@ -53,7 +53,7 @@ public class WayRequestLineTest {
     assertEquals(path.toString(), "/");
 
     // query
-    UriQuery query;
+    Http.Request.Target.Query query;
     query = line.query;
 
     assertEquals(query.isEmpty(), true);
@@ -93,7 +93,7 @@ public class WayRequestLineTest {
     assertEquals(path.toString(), "/endpoint");
 
     // query
-    UriQuery query;
+    Http.Request.Target.Query query;
     query = line.query;
 
     assertEquals(query.isEmpty(), false);

@@ -32,7 +32,6 @@ import java.util.Map;
 import java.util.Set;
 import objectos.html.Html;
 import objectos.html.HtmlTemplate;
-import objectos.http.UriQuery;
 import objectos.lang.CharWritable;
 import objectos.lang.object.Check;
 
@@ -98,7 +97,7 @@ public final class Http {
      */
     Request.Target.Path path();
 
-    UriQuery query();
+    Request.Target.Query query();
 
     Request.Headers headers();
 
@@ -598,7 +597,7 @@ public final class Http {
 
         Set<String> names();
 
-        UriQuery set(String name, String value);
+        Query set(String name, String value);
 
         String value();
 
