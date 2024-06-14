@@ -22,12 +22,11 @@ import java.net.Socket;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.stream.Collectors;
-import objectos.http.UriPath.Segment;
-import objectos.way.Http;
-import objectos.way.WebSession;
 import objectos.way.AppSessionStore;
-import objectos.way.Web;
+import objectos.way.Http;
 import objectos.way.TestingRandom.SequentialRandom;
+import objectos.way.Web;
+import objectos.way.WebSession;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -96,13 +95,13 @@ public class HttpModuleTest extends HttpModule {
   }
 
   private void testCase01(Http.Exchange http) {
-    UriPath path;
+    Http.Request.Target.Path path;
     path = http.path();
 
-    List<Segment> segments;
+    List<Http.Request.Target.Path.Segment> segments;
     segments = path.segments();
 
-    Segment second;
+    Http.Request.Target.Path.Segment second;
     second = segments.get(1);
 
     String text;
@@ -246,15 +245,15 @@ public class HttpModuleTest extends HttpModule {
   }
 
   private void testCase03(Http.Exchange http) {
-    UriPath path;
+    Http.Request.Target.Path path;
     path = http.path();
 
-    List<Segment> segments;
+    List<Http.Request.Target.Path.Segment> segments;
     segments = path.segments();
 
     String text = segments.stream()
         .skip(1)
-        .map(Segment::value)
+        .map(Http.Request.Target.Path.Segment::value)
         .collect(Collectors.joining("/", "", "\n"));
 
     http.okText(text, StandardCharsets.UTF_8);
@@ -418,15 +417,15 @@ public class HttpModuleTest extends HttpModule {
   }
 
   private void testCase05(Http.Exchange http) {
-    UriPath path;
+    Http.Request.Target.Path path;
     path = http.path();
 
-    List<Segment> segments;
+    List<Http.Request.Target.Path.Segment> segments;
     segments = path.segments();
 
     String text = segments.stream()
         .skip(2)
-        .map(Segment::value)
+        .map(Http.Request.Target.Path.Segment::value)
         .collect(Collectors.joining("/", "", "\n"));
 
     http.okText(text, StandardCharsets.UTF_8);
@@ -542,15 +541,15 @@ public class HttpModuleTest extends HttpModule {
   }
   
   private void testCase06(Http.Exchange http) {
-    UriPath path;
+    Http.Request.Target.Path path;
     path = http.path();
 
-    List<Segment> segments;
+    List<Http.Request.Target.Path.Segment> segments;
     segments = path.segments();
 
     String text = segments.stream()
         .skip(1)
-        .map(Segment::value)
+        .map(Http.Request.Target.Path.Segment::value)
         .collect(Collectors.joining("/", "", "\n"));
 
     http.okText(text, StandardCharsets.UTF_8);

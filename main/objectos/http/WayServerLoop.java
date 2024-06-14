@@ -350,7 +350,7 @@ public final class WayServerLoop extends WayServerRequestBody implements ServerL
   }
 
   @Override
-  public final UriPath path() {
+  public final Http.Request.Target.Path path() {
     checkRequest();
 
     return path;

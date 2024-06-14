@@ -32,7 +32,6 @@ import java.util.Map;
 import java.util.Set;
 import objectos.html.Html;
 import objectos.html.HtmlTemplate;
-import objectos.http.UriPath;
 import objectos.http.UriQuery;
 import objectos.lang.CharWritable;
 import objectos.lang.object.Check;
@@ -97,7 +96,7 @@ public final class Http {
      *
      * @return the path component of the request target.
      */
-    UriPath path();
+    Request.Target.Path path();
 
     UriQuery query();
 

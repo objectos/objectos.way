@@ -18,7 +18,6 @@ package objectos.http;
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.Function;
-import objectos.http.UriPath.Segment;
 import objectos.lang.object.Check;
 import objectos.util.array.ObjectArrays;
 import objectos.way.Http;
@@ -44,10 +43,10 @@ public abstract class HttpModule {
 
     @Override
     final boolean test(Http.Exchange http) {
-      UriPath path;
+      Http.Request.Target.Path path;
       path = http.path();
 
-      List<Segment> segments;
+      List<Http.Request.Target.Path.Segment> segments;
       segments = path.segments();
 
       if (!last.mustBeLast() && segments.size() != count()) {
@@ -59,7 +58,7 @@ public abstract class HttpModule {
 
     abstract int count();
 
-    abstract boolean test(List<Segment> segments);
+    abstract boolean test(List<Http.Request.Target.Path.Segment> segments);
 
   }
 
@@ -67,9 +66,9 @@ public abstract class HttpModule {
 
     Condition() {}
 
-    abstract boolean test(List<Segment> segments, int index);
+    abstract boolean test(List<Http.Request.Target.Path.Segment> segments, int index);
 
-    final boolean hasIndex(List<Segment> segments, int index) {
+    final boolean hasIndex(List<Http.Request.Target.Path.Segment> segments, int index) {
       return index < segments.size();
     }
 
@@ -311,7 +310,7 @@ public abstract class HttpModule {
 
     @Override
     final boolean test(Http.Exchange http) {
-      UriPath path;
+      Http.Request.Target.Path path;
       path = http.path();
 
       return path.is(value);
@@ -335,7 +334,7 @@ public abstract class HttpModule {
     final int count() { return 1; }
 
     @Override
-    final boolean test(List<Segment> segments) {
+    final boolean test(List<Http.Request.Target.Path.Segment> segments) {
       return last.test(segments, 0);
     }
 
@@ -355,7 +354,7 @@ public abstract class HttpModule {
     final int count() { return 2; }
 
     @Override
-    final boolean test(List<Segment> segments) {
+    final boolean test(List<Http.Request.Target.Path.Segment> segments) {
       if (!condition0.test(segments, 0)) {
         return false;
       }
@@ -382,7 +381,7 @@ public abstract class HttpModule {
     final int count() { return 3; }
 
     @Override
-    final boolean test(List<Segment> segments) {
+    final boolean test(List<Http.Request.Target.Path.Segment> segments) {
       if (!condition0.test(segments, 0)) {
         return false;
       }
@@ -440,12 +439,12 @@ public abstract class HttpModule {
     }
 
     @Override
-    final boolean test(List<Segment> segments, int index) {
+    final boolean test(List<Http.Request.Target.Path.Segment> segments, int index) {
       if (!hasIndex(segments, index)) {
         return false;
       }
 
-      Segment segment;
+      Http.Request.Target.Path.Segment segment;
       segment = segments.get(index);
 
       return segment.is(value);
@@ -464,12 +463,12 @@ public abstract class HttpModule {
     static final NonEmpty INSTANCE = new NonEmpty();
 
     @Override
-    final boolean test(List<Segment> segments, int index) {
+    final boolean test(List<Http.Request.Target.Path.Segment> segments, int index) {
       if (!hasIndex(segments, index)) {
         return false;
       }
 
-      Segment segment;
+      Http.Request.Target.Path.Segment segment;
       segment = segments.get(index);
 
       String value;
@@ -489,7 +488,7 @@ public abstract class HttpModule {
     static final ZeroOrMore INSTANCE = new ZeroOrMore();
 
     @Override
-    final boolean test(List<Segment> segments, int index) {
+    final boolean test(List<Http.Request.Target.Path.Segment> segments, int index) {
       return segments.size() >= index;
     }
 
@@ -507,7 +506,7 @@ public abstract class HttpModule {
     static final Present INSTANCE = new Present();
 
     @Override
-    final boolean test(List<Segment> segments, int index) {
+    final boolean test(List<Http.Request.Target.Path.Segment> segments, int index) {
       return hasIndex(segments, index);
     }
 
@@ -522,7 +521,7 @@ public abstract class HttpModule {
     static final OneOrMore INSTANCE = new OneOrMore();
 
     @Override
-    final boolean test(List<Segment> segments, int index) {
+    final boolean test(List<Http.Request.Target.Path.Segment> segments, int index) {
       return segments.size() > index;
     }
 

@@ -19,6 +19,7 @@ import static org.testng.Assert.assertEquals;
 
 import java.io.IOException;
 import objectos.way.Http;
+import objectos.way.HttpRequestTargetPath;
 import org.testng.annotations.Test;
 
 public class WayRequestLineTest {
@@ -46,7 +47,7 @@ public class WayRequestLineTest {
     assertEquals(method, Http.GET);
 
     // path
-    WayUriPath path;
+    HttpRequestTargetPath path;
     path = line.path;
 
     assertEquals(path.toString(), "/");
@@ -86,7 +87,7 @@ public class WayRequestLineTest {
     assertEquals(method, Http.GET);
 
     // path
-    WayUriPath path;
+    HttpRequestTargetPath path;
     path = line.path;
 
     assertEquals(path.toString(), "/endpoint");

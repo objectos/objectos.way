@@ -28,7 +28,6 @@ import java.nio.file.StandardOpenOption;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.nio.file.attribute.FileTime;
 import java.util.Map;
-import objectos.http.UriPath;
 import objectos.io.FileVisitors;
 import objectos.lang.object.Check;
 import objectos.notes.NoOpNoteSink;
@@ -162,7 +161,7 @@ public final class WayWebResources implements AutoCloseable, WebResources {
 
   @Override
   public final void handle(Http.Exchange http) {
-    UriPath path;
+    Http.Request.Target.Path path;
     path = http.path();
 
     String pathName;

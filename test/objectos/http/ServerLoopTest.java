@@ -75,7 +75,7 @@ public class ServerLoopTest {
       assertEquals(parse.isError(), false);
 
       // request line
-      UriPath path;
+      Http.Request.Target.Path path;
       path = http.path();
 
       assertEquals(http.method(), Http.GET);
@@ -184,7 +184,7 @@ public class ServerLoopTest {
       assertEquals(parse.isError(), false);
 
       // request line
-      UriPath path;
+      Http.Request.Target.Path path;
       path = http.path();
 
       assertEquals(http.method(), Http.GET);
@@ -371,7 +371,7 @@ public class ServerLoopTest {
       assertEquals(parse.isError(), false);
 
       // request line
-      UriPath path;
+      Http.Request.Target.Path path;
       path = http.path();
 
       assertEquals(http.method(), Http.GET);
@@ -449,7 +449,7 @@ public class ServerLoopTest {
       assertEquals(parse.isError(), false);
 
       // request line
-      UriPath path;
+      Http.Request.Target.Path path;
       path = http.path();
 
       assertEquals(http.method(), Http.GET);
@@ -1239,7 +1239,7 @@ public class ServerLoopTest {
       assertEquals(parse.isError(), false);
       
       // request line
-      UriPath path;
+      Http.Request.Target.Path path;
       path = http.path();
 
       assertEquals(http.method(), Http.GET);

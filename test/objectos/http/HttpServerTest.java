@@ -20,7 +20,6 @@ import java.lang.reflect.Method;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
-import objectos.http.UriPath.Segment;
 import objectos.way.Http;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -34,10 +33,10 @@ public class HttpServerTest implements Http.Handler {
 
   @Override
   public final void handle(Http.Exchange http) {
-    UriPath path;
+    Http.Request.Target.Path path;
     path = http.path();
 
-    List<Segment> segments;
+    List<Http.Request.Target.Path.Segment> segments;
     segments = path.segments();
 
     switch (segments.size()) {
@@ -47,8 +46,8 @@ public class HttpServerTest implements Http.Handler {
     }
   }
 
-  private void handle1(Http.Exchange http, List<Segment> segments) {
-    Segment first;
+  private void handle1(Http.Exchange http, List<Http.Request.Target.Path.Segment> segments) {
+    Http.Request.Target.Path.Segment first;
     first = segments.getFirst();
 
     if (!first.is("test")) {
@@ -57,7 +56,7 @@ public class HttpServerTest implements Http.Handler {
       return;
     }
 
-    Segment second;
+    Http.Request.Target.Path.Segment second;
     second = segments.get(1);
 
     String methodName;

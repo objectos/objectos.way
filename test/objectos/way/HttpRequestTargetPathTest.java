@@ -13,20 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.http;
+package objectos.way;
 
 import static org.testng.Assert.assertEquals;
 
 import java.util.List;
-import objectos.http.UriPath.Segment;
 import org.testng.annotations.Test;
 
-public class UriPathTest {
+public class HttpRequestTargetPathTest {
 
   @Test
   public void is() {
-    WayUriPath path;
-    path = new WayUriPath();
+    HttpRequestTargetPath path;
+    path = new HttpRequestTargetPath();
 
     path.set("/");
 
@@ -36,8 +35,8 @@ public class UriPathTest {
 
   @Test
   public void startsWith() {
-    WayUriPath path;
-    path = new WayUriPath();
+    HttpRequestTargetPath path;
+    path = new HttpRequestTargetPath();
 
     path.set("/foo/bar.html");
 
@@ -50,12 +49,12 @@ public class UriPathTest {
 
   @Test
   public void segments() {
-    WayUriPath path;
-    path = new WayUriPath();
+    HttpRequestTargetPath path;
+    path = new HttpRequestTargetPath();
 
     path.set("/");
 
-    List<Segment> segments;
+    List<Http.Request.Target.Path.Segment> segments;
     segments = path.segments();
 
     assertEquals(segments.size(), 1);

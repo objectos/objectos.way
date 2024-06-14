@@ -13,14 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.http;
+package objectos.way;
 
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import objectos.util.list.GrowableList;
 
-final class WayUriPath implements UriPath {
+public final class HttpRequestTargetPath implements Http.Request.Target.Path {
 
   private String value;
 
@@ -123,7 +123,7 @@ final class WayUriPath implements UriPath {
     @Override
     public final String value() {
       if (value == null) {
-        value = WayUriPath.this.value.substring(start, end);
+        value = HttpRequestTargetPath.this.value.substring(start, end);
       }
 
       return value;

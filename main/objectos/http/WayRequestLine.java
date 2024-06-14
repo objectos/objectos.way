@@ -20,12 +20,13 @@ import java.nio.charset.StandardCharsets;
 import objectos.http.WayServerLoop.ParseStatus;
 import objectos.way.Http;
 import objectos.way.HttpRequestMethod;
+import objectos.way.HttpRequestTargetPath;
 
 class WayRequestLine extends SocketInput {
 
   Http.Request.Method method;
 
-  WayUriPath path;
+  HttpRequestTargetPath path;
 
   UriQuery query = EmptyUriQuery.INSTANCE;
 
@@ -230,7 +231,7 @@ class WayRequestLine extends SocketInput {
     }
 
     if (path == null) {
-      path = new WayUriPath();
+      path = new HttpRequestTargetPath();
     }
 
     String rawValue;
