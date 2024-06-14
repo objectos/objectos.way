@@ -23,22 +23,21 @@ import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Set;
 import objectos.http.WayServerLoop.ParseStatus;
-import objectos.way.Http.Exchange;
-import objectos.way.Http;
 import objectos.way.TestingClock;
 import objectos.way.TestingNoteSink;
+import objectos.way.Http;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-public class FormUrlEncodedTest {
+public class HttpFormUrlEncodedTest {
 
   @Test
   public void testCase01() throws IOException {
     Http.Request.Body body;
     body = body("email=user%40example.com");
 
-    FormUrlEncoded form;
-    form = FormUrlEncoded.parse(body);
+    Http.FormUrlEncoded form;
+    form = Http.parseFormUrlEncoded(body);
 
     assertEquals(form.size(), 1);
     assertEquals(form.names(), Set.of("email"));
@@ -50,8 +49,8 @@ public class FormUrlEncodedTest {
     Http.Request.Body body;
     body = body("login=foo&password=bar");
 
-    FormUrlEncoded form;
-    form = FormUrlEncoded.parse(body);
+    Http.FormUrlEncoded form;
+    form = Http.parseFormUrlEncoded(body);
 
     assertEquals(form.size(), 2);
     assertEquals(form.names(), Set.of("login", "password"));
@@ -60,8 +59,8 @@ public class FormUrlEncodedTest {
   }
 
   @Test
-  public void testCase03() throws UnsupportedMediaTypeException, IOException {
-    FormUrlEncoded form;
+  public void testCase03() throws Http.UnsupportedMediaTypeException, IOException {
+    Http.FormUrlEncoded form;
     form = parse("""
     POST /login HTTP/1.1\r
     Host: www.example.com\r
@@ -87,7 +86,7 @@ public class FormUrlEncodedTest {
       email=user%40example.com""");
 
       Assert.fail("Should have thrown");
-    } catch (UnsupportedMediaTypeException expected) {
+    } catch (Http.UnsupportedMediaTypeException expected) {
       String message;
       message = expected.getMessage();
 
@@ -99,7 +98,7 @@ public class FormUrlEncodedTest {
     return new ThisBody(s);
   }
 
-  private FormUrlEncoded parse(String request) throws UnsupportedMediaTypeException, IOException {
+  private Http.FormUrlEncoded parse(String request) throws Http.UnsupportedMediaTypeException, IOException {
     TestableSocket socket;
     socket = TestableSocket.of(request);
 
@@ -113,10 +112,10 @@ public class FormUrlEncodedTest {
 
       assertEquals(status.isError(), false);
 
-      Exchange exchange;
+      Http.Exchange exchange;
       exchange = http;
 
-      return FormUrlEncoded.parse(exchange);
+      return Http.parseFormUrlEncoded(exchange);
     }
   }
 

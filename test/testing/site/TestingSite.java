@@ -38,7 +38,7 @@ import objectos.notes.Level;
 import objectos.notes.Note2;
 import objectos.notes.NoteSink;
 import objectos.notes.impl.ConsoleNoteSink;
-import objectos.way.HttpSessionStore;
+import objectos.way.AppSessionStore;
 import objectos.web.BootstrapException;
 import objectos.web.Stage;
 import objectos.web.WayWebResources;
@@ -130,8 +130,8 @@ public class TestingSite {
     }
 
     // SessionStore
-    HttpSessionStore sessionStore;
-    sessionStore = new HttpSessionStore();
+    AppSessionStore sessionStore;
+    sessionStore = new AppSessionStore();
 
     // WebResources
 

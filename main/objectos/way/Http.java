@@ -43,20 +43,22 @@ import objectos.lang.object.Check;
 public final class Http {
 
   // types
-  
+
   /**
    * An HTTP request received by the server and its subsequent response to the
    * client.
    */
   public interface Exchange {
-    
+
     /**
-     * Stores an object in this request. The object will be associated to the name
+     * Stores an object in this request. The object will be associated to the
+     * name
      * of the specified {@code Class} instance.
      * Stored objects are reset between requests.
      * 
      * <p>
-     * If an object is already associated to the specified key it will be replaced
+     * If an object is already associated to the specified key it will be
+     * replaced
      * with the specified value.
      * 
      * <p>
@@ -68,7 +70,7 @@ public final class Http {
      *        the object to be stored in this request
      */
     <T> void set(Class<T> key, T value);
-    
+
     /**
      * Retrieves the object stored in this request associated to the specified
      * key. Returns {@code null} if no object is found.
@@ -80,7 +82,7 @@ public final class Http {
      *         object is found
      */
     <T> T get(Class<T> key);
-    
+
     // request
 
     /**
@@ -233,7 +235,7 @@ public final class Http {
       header(Http.CONTENT_TYPE, "text/html; charset=utf-8");
 
       header(Http.TRANSFER_ENCODING, "chunked");
-      
+
       send(html, StandardCharsets.UTF_8);
     }
 
@@ -336,7 +338,51 @@ public final class Http {
     void internalServerError(Throwable t);
 
     boolean processed();
-    
+
+  }
+
+  /**
+   * The parsed and decoded body of a {@code application/x-www-form-urlencoded}
+   * HTTP message.
+   */
+  public interface FormUrlEncoded {
+
+    /**
+     * Returns the keys.
+     */
+    Set<String> names();
+
+    /**
+     * Returns the first decoded value associated to the specified key or
+     * {@code null} if the key is not present.
+     *
+     * @param key
+     *        the key to search for
+     *
+     * @return the first decoded value or {@code null}
+     */
+    String get(String key);
+
+    /**
+     * Returns the first decoded value associated to the specified key or
+     * the specified {@code defaultValue} if the key is not present.
+     *
+     * @param key
+     *        the key to search for
+     * @param defaultValue
+     *        the value to return if the key is not present
+     *
+     * @return the first decoded value or the {@code defaultValue}
+     */
+    String getOrDefault(String key, String defaultValue);
+
+    /**
+     * Returns the number of distinct keys
+     *
+     * @return the number of distinct keys
+     */
+    int size();
+
   }
 
   /**
@@ -376,12 +422,12 @@ public final class Http {
     String capitalized();
 
   }
-  
+
   /**
    * An HTTP request message.
    */
   public interface Request {
-    
+
     /**
      * The body of an HTTP request message.
      */
@@ -405,7 +451,8 @@ public final class Http {
     public sealed interface Cookies permits HttpRequestCookies, HttpRequestCookiesEmpty {
 
       /**
-       * Returns the value of the cookie with the specified name; {@code null} if a
+       * Returns the value of the cookie with the specified name; {@code null}
+       * if a
        * cookie with the specified name is not present.
        * 
        * @param name
@@ -416,7 +463,7 @@ public final class Http {
       String get(String name);
 
     }
-    
+
     /**
      * The header section of an HTTP request message.
      */
@@ -442,7 +489,7 @@ public final class Http {
       int size();
 
     }
-    
+
     /**
      * The method of an HTTP request message.
      */
@@ -487,7 +534,7 @@ public final class Http {
       String text();
 
     }
- 
+
     /**
      * The request-target of an HTTP request message.
      */
@@ -530,7 +577,7 @@ public final class Http {
       public interface Query {
 
         String encodedValue();
-        
+
         String get(String name);
 
         default int getAsInt(String name, int defaultValue) {
@@ -553,7 +600,7 @@ public final class Http {
         Set<String> names();
 
         UriQuery set(String name, String value);
-        
+
         String value();
 
       }
@@ -564,16 +611,16 @@ public final class Http {
        * @return the query component of this request-target.
        */
       Query query();
-      
+
     }
-    
+
     /**
      * The body of this request message.
      * 
      * @return the body of this request message.
      */
     Body body();
-    
+
     /**
      * The header section of this request message.
      * 
@@ -596,17 +643,17 @@ public final class Http {
     Target target();
 
   }
-  
+
   /**
    * An HTTP response message.
    */
   public interface Response {
-    
+
     /**
      * The status of an HTTP response message.
      */
     public sealed interface Status permits HttpResponseStatus {
-    
+
       /**
        * The code of this status.
        * 
@@ -622,7 +669,7 @@ public final class Http {
       String reasonPhrase();
 
     }
-    
+
     /**
      * Sets the status of this response message.
      * 
@@ -630,11 +677,32 @@ public final class Http {
      *        the status to set
      */
     void status(Status status);
-    
+
   }
-  
+
+  /**
+   * Thrown to indicate that a content type is not supported.
+   */
+  public static class UnsupportedMediaTypeException extends Exception {
+
+    private static final long serialVersionUID = -6412173093510319276L;
+
+    /**
+     * Creates a new {@code UnsupportedMediaTypeException} with the specified
+     * content type name.
+     * 
+     * @param contentType
+     *        the name of the content type such as {@code application/pdf} or
+     *        {@code image/gif}.
+     */
+    public UnsupportedMediaTypeException(String contentType) {
+      super(contentType);
+    }
+
+  }
+
   // HeaderName constants
-  
+
   /**
    * The {@code Accept-Encoding} header name.
    */
@@ -669,7 +737,7 @@ public final class Http {
    * The {@code ETag} header name.
    */
   public static final HeaderName ETAG = HttpHeaderName.create("ETag", HttpHeaderType.RESPONSE);
-  
+
   /**
    * The {@code From} header name.
    */
@@ -704,9 +772,9 @@ public final class Http {
    * The {@code User-Agent} header name.
    */
   public static final HeaderName USER_AGENT = HttpHeaderName.createLast("User-Agent", HttpHeaderType.REQUEST);
-  
+
   // Request constants
-  
+
   /**
    * The CONNECT method.
    */
@@ -751,82 +819,82 @@ public final class Http {
    * The TRACE method.
    */
   public static final Request.Method TRACE = HttpRequestMethod.createLast("TRACE");
-  
+
   // Response constants
-  
+
   // 2.x.x
-  
+
   /**
    * The {@code 200 OK} status.
    */
   public static final Response.Status OK = HttpResponseStatus.create(200, "OK");
 
   // 3.x.x
-  
+
   /**
    * The {@code 301 MOVED PERMANENTLY} status.
    */
   public static final Response.Status MOVED_PERMANENTLY = HttpResponseStatus.create(301, "MOVED PERMANENTLY");
-  
+
   /**
    * The {@code 302 FOUND} status.
    */
   public static final Response.Status FOUND = HttpResponseStatus.create(302, "FOUND");
-  
+
   /**
    * The {@code 303 SEE OTHER} status.
    */
   public static final Response.Status SEE_OTHER = HttpResponseStatus.create(303, "SEE OTHER");
-  
+
   /**
    * The {@code 304 NOT MODIFIED} status.
    */
   public static final Response.Status NOT_MODIFIED = HttpResponseStatus.create(304, "NOT MODIFIED");
 
   // 4.x.x
-  
+
   /**
    * The {@code 400 BAD REQUEST} status.
    */
   public static final Response.Status BAD_REQUEST = HttpResponseStatus.create(400, "BAD REQUEST");
-  
+
   /**
    * The {@code 404 NOT FOUND} status.
    */
   public static final Response.Status NOT_FOUND = HttpResponseStatus.create(404, "NOT FOUND");
-  
+
   /**
    * The {@code 405 METHOD NOT ALLOWED} status.
    */
   public static final Response.Status METHOD_NOT_ALLOWED = HttpResponseStatus.create(405, "METHOD NOT ALLOWED");
-  
+
   /**
    * The {@code 414 URI TOO LONG} status.
    */
   public static final Response.Status URI_TOO_LONG = HttpResponseStatus.create(414, "URI TOO LONG");
-  
+
   /**
    * The {@code 415 UNSUPPORTED MEDIA TYPE} status.
    */
   public static final Response.Status UNSUPPORTED_MEDIA_TYPE = HttpResponseStatus.create(415, "UNSUPPORTED MEDIA TYPE");
-  
+
   /**
    * The {@code 422 UNPROCESSABLE CONTENT} status.
    */
   public static final Response.Status UNPROCESSABLE_CONTENT = HttpResponseStatus.create(422, "UNPROCESSABLE CONTENT");
 
   // 5.x.x
-  
+
   /**
    * The {@code 500 INTERNAL SERVER ERROR} status.
    */
   public static final Response.Status INTERNAL_SERVER_ERROR = HttpResponseStatus.create(500, "INTERNAL SERVER ERROR");
-  
+
   /**
    * The {@code 501 NOT IMPLEMENTED} status.
    */
   public static final Response.Status NOT_IMPLEMENTED = HttpResponseStatus.create(501, "NOT IMPLEMENTED");
-  
+
   /**
    * The {@code 505 HTTP VERSION NOT SUPPORTED} status.
    */
@@ -876,8 +944,36 @@ public final class Http {
     return parser.parse();
   }
 
+  /**
+   * Parse the specified body as if it is the body of a
+   * {@code application/x-www-form-urlencoded} HTTP message.
+   *
+   * @param body
+   *        the body of the HTTP message to parse
+   *
+   * @throws IOException
+   *         if an I/O error occurs while reading the body
+   */
+  public static FormUrlEncoded parseFormUrlEncoded(Http.Request.Body body) throws IOException {
+    return HttpFormUrlEncoded.parse(body);
+  }
+
+  /**
+   * Parse the specified body as if it is the body of a
+   * {@code application/x-www-form-urlencoded} HTTP message.
+   *
+   * @param body
+   *        the body of the HTTP message to parse
+   *
+   * @throws IOException
+   *         if an I/O error occurs while reading the body
+   */
+  public static FormUrlEncoded parseFormUrlEncoded(Http.Exchange http) throws IOException, UnsupportedMediaTypeException {
+    return HttpFormUrlEncoded.parse(http);
+  }
+
   // utils
-  
+
   private static final DateTimeFormatter IMF_FIXDATE;
 
   static {
@@ -942,6 +1038,35 @@ public final class Http {
     b.appendOffset("+HHMM", "GMT");
 
     IMF_FIXDATE = b.toFormatter(Locale.US);
+  }
+
+  static int parseHexDigit(byte value) {
+    return parseHexDigit(value);
+  }
+
+  static int parseHexDigit(int value) {
+    return switch (value) {
+      case '0' -> 0;
+      case '1' -> 1;
+      case '2' -> 2;
+      case '3' -> 3;
+      case '4' -> 4;
+      case '5' -> 5;
+      case '6' -> 6;
+      case '7' -> 7;
+      case '8' -> 8;
+      case '9' -> 9;
+      case 'a', 'A' -> 10;
+      case 'b', 'B' -> 11;
+      case 'c', 'C' -> 12;
+      case 'd', 'D' -> 13;
+      case 'e', 'E' -> 14;
+      case 'f', 'F' -> 15;
+
+      default -> throw new IllegalArgumentException(
+          "Illegal hex char= " + (char) value
+      );
+    };
   }
 
 }

@@ -17,8 +17,6 @@ package testing.site.web;
 
 import java.io.IOException;
 import objectos.css.select.IdSelector;
-import objectos.http.FormUrlEncoded;
-import objectos.http.UnsupportedMediaTypeException;
 import objectos.way.Http;
 import objectos.way.Web;
 import testing.site.auth.User;
@@ -205,8 +203,8 @@ final class Login extends WebTemplate implements Http.Handler {
 
   private void post0(Http.Exchange http) {
     try {
-      FormUrlEncoded form;
-      form = FormUrlEncoded.parse(http);
+      Http.FormUrlEncoded form;
+      form = Http.parseFormUrlEncoded(http);
 
       String step;
       step = form.getOrDefault(STEP, "");
@@ -220,12 +218,12 @@ final class Login extends WebTemplate implements Http.Handler {
       }
     } catch (IOException e) {
       http.internalServerError(e);
-    } catch (UnsupportedMediaTypeException e) {
+    } catch (Http.UnsupportedMediaTypeException e) {
       http.unsupportedMediaType();
     }
   }
 
-  private void postStep1(Http.Exchange http, FormUrlEncoded form) {
+  private void postStep1(Http.Exchange http, Http.FormUrlEncoded form) {
     login = form.getOrDefault(LOGIN, "");
 
     if (login.isBlank()) {
@@ -237,7 +235,7 @@ final class Login extends WebTemplate implements Http.Handler {
     http.ok(this);
   }
 
-  private void postStep2(Http.Exchange http, FormUrlEncoded form) {
+  private void postStep2(Http.Exchange http, Http.FormUrlEncoded form) {
     String login;
     login = form.getOrDefault(LOGIN, "");
 

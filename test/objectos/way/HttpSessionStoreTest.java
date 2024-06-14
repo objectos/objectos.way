@@ -32,7 +32,7 @@ public class HttpSessionStoreTest {
   """)
   public void testCase01() {
     SessionStore store;
-    store = new HttpSessionStore();
+    store = new AppSessionStore();
 
     Web.Session session;
     session = store.nextSession();
@@ -55,7 +55,7 @@ public class HttpSessionStoreTest {
   """)
   public void testCase02() {
     SessionStore store;
-    store = new HttpSessionStore();
+    store = new AppSessionStore();
 
     Web.Session session;
     session = store.nextSession();
@@ -80,7 +80,7 @@ public class HttpSessionStoreTest {
   """)
   public void testCase03() {
     SessionStore store;
-    store = new HttpSessionStore();
+    store = new AppSessionStore();
 
     Web.Session session;
     session = store.nextSession();
@@ -104,8 +104,8 @@ public class HttpSessionStoreTest {
     IncrementingClock clock;
     clock = new IncrementingClock(2024, 4, 29);
 
-    HttpSessionStore store;
-    store = new HttpSessionStore(clock);
+    AppSessionStore store;
+    store = new AppSessionStore(clock);
     
     String id;
     id = "foo";
@@ -135,8 +135,8 @@ public class HttpSessionStoreTest {
     IncrementingClock clock;
     clock = new IncrementingClock(2024, 4, 29);
 
-    HttpSessionStore store;
-    store = new HttpSessionStore(clock);
+    AppSessionStore store;
+    store = new AppSessionStore(clock);
 
     WebSession a = new WebSession("a");
     WebSession b = new WebSession("b");
@@ -166,8 +166,8 @@ public class HttpSessionStoreTest {
     Clock clock;
     clock = TestingClock.FIXED;
 
-    HttpSessionStore store;
-    store = new HttpSessionStore(clock);
+    AppSessionStore store;
+    store = new AppSessionStore(clock);
 
     store.emptyMaxAge(Duration.ofMinutes(1));
 

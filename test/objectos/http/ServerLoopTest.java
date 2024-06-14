@@ -31,7 +31,7 @@ import objectos.lang.TestingCharWritable;
 import objectos.util.array.ByteArrays;
 import objectos.way.Http;
 import objectos.way.WebSession;
-import objectos.way.HttpSessionStore;
+import objectos.way.AppSessionStore;
 import objectos.way.TestingClock;
 import objectos.way.TestingNoteSink;
 import org.testng.Assert;
@@ -759,8 +759,8 @@ public class ServerLoopTest {
     \r
     """;
 
-    HttpSessionStore sessionStore;
-    sessionStore = new HttpSessionStore();
+    AppSessionStore sessionStore;
+    sessionStore = new AppSessionStore();
 
     String id;
     id = "298zf09hf012fh2";
@@ -822,8 +822,8 @@ public class ServerLoopTest {
     \r
     """;
 
-    HttpSessionStore sessionStore;
-    sessionStore = new HttpSessionStore();
+    AppSessionStore sessionStore;
+    sessionStore = new AppSessionStore();
 
     Random random;
     random = new Random(1234L);

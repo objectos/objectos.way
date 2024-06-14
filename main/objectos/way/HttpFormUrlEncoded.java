@@ -13,32 +13,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.http;
+package objectos.way;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Set;
 import objectos.util.map.GrowableMap;
 import objectos.util.map.UnmodifiableMap;
-import objectos.way.Http;
 
-final class WayFormUrlEncoded implements FormUrlEncoded {
+final class HttpFormUrlEncoded implements Http.FormUrlEncoded {
 
   private static final String EMPTY = "";
 
   private final UnmodifiableMap<String, String> map;
 
-  private WayFormUrlEncoded(UnmodifiableMap<String, String> map) {
+  private HttpFormUrlEncoded(UnmodifiableMap<String, String> map) {
     this.map = map;
   }
 
-  static WayFormUrlEncoded parse(Http.Request.Body body) throws IOException {
+  static HttpFormUrlEncoded parse(Http.Request.Body body) throws IOException {
     try (InputStream in = body.openStream()) {
       return parse0(in);
     }
   }
 
-  static WayFormUrlEncoded parse(Http.Exchange http) throws UnsupportedMediaTypeException, IOException {
+  static HttpFormUrlEncoded parse(Http.Exchange http) throws Http.UnsupportedMediaTypeException, IOException {
     Http.Request.Headers headers;
     headers = http.headers();
 
@@ -46,7 +45,7 @@ final class WayFormUrlEncoded implements FormUrlEncoded {
     contentType = headers.first(Http.CONTENT_TYPE);
 
     if (!contentType.equals("application/x-www-form-urlencoded")) {
-      throw new UnsupportedMediaTypeException(contentType);
+      throw new Http.UnsupportedMediaTypeException(contentType);
     }
 
     Http.Request.Body body;
@@ -55,7 +54,7 @@ final class WayFormUrlEncoded implements FormUrlEncoded {
     return parse(body);
   }
 
-  private static WayFormUrlEncoded parse0(InputStream in) throws IOException {
+  private static HttpFormUrlEncoded parse0(InputStream in) throws IOException {
     GrowableMap<String, String> map;
     map = new GrowableMap<>();
 
@@ -112,7 +111,7 @@ final class WayFormUrlEncoded implements FormUrlEncoded {
           }
 
           int high;
-          high = Bytes.parseHexDigit(c);
+          high = Http.parseHexDigit(c);
 
           c = in.read();
 
@@ -123,7 +122,7 @@ final class WayFormUrlEncoded implements FormUrlEncoded {
           }
 
           int low;
-          low = Bytes.parseHexDigit(c);
+          low = Http.parseHexDigit(c);
 
           int value;
           value = high << 4 | low;
@@ -142,7 +141,7 @@ final class WayFormUrlEncoded implements FormUrlEncoded {
       map.put(key, value);
     }
 
-    return new WayFormUrlEncoded(
+    return new HttpFormUrlEncoded(
         map.toUnmodifiableMap()
     );
   }

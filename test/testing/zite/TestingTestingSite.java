@@ -32,7 +32,7 @@ import objectos.notes.Level;
 import objectos.notes.NoteSink;
 import objectos.notes.impl.ConsoleNoteSink;
 import objectos.testing.WayTestingServerExchange;
-import objectos.way.HttpSessionStore;
+import objectos.way.AppSessionStore;
 import objectos.way.SessionStore;
 import objectos.way.Http.Exchange;
 import objectos.web.Stage;
@@ -77,8 +77,8 @@ public final class TestingTestingSite {
     shutdownHook.noteSink(noteSink);
 
     // SessionStore
-    HttpSessionStore sessionStore;
-    sessionStore = new HttpSessionStore();
+    AppSessionStore sessionStore;
+    sessionStore = new AppSessionStore();
 
     Random random = new Random(1234L);
 
@@ -110,7 +110,7 @@ public final class TestingTestingSite {
 
   public static String serverExchange(String request,
                                       Consumer<Exchange> handler,
-                                      Consumer<HttpSessionStore> sessionStoreHandler) {
+                                      Consumer<AppSessionStore> sessionStoreHandler) {
     WayTestingServerExchange serverExchange;
     serverExchange = new WayTestingServerExchange();
 
@@ -123,7 +123,7 @@ public final class TestingTestingSite {
 
     serverExchange.sessionStore(sessionStore);
 
-    sessionStoreHandler.accept((HttpSessionStore) sessionStore);
+    sessionStoreHandler.accept((AppSessionStore) sessionStore);
 
     return serverExchange.handle(request, handler);
   }

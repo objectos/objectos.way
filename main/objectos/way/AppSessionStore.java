@@ -30,7 +30,7 @@ import objectos.lang.object.Check;
 /**
  * The Objectos Way {@link SessionStore} implementation.
  */
-public final class HttpSessionStore implements SessionStore {
+public final class AppSessionStore implements SessionStore {
 
   private static final int ID_LENGTH_IN_BYTES = 16;
 
@@ -53,12 +53,12 @@ public final class HttpSessionStore implements SessionStore {
   /**
    * Sole constructor.
    */
-  public HttpSessionStore() {
+  public AppSessionStore() {
     this(Clock.systemDefaultZone());
   }
 
   // @VisibleForTesting
-  HttpSessionStore(Clock clock) {
+  AppSessionStore(Clock clock) {
     this.clock = clock;
   }
 
@@ -131,7 +131,7 @@ public final class HttpSessionStore implements SessionStore {
    *
    * @return this instance
    */
-  public final HttpSessionStore random(Random random) {
+  public final AppSessionStore random(Random random) {
     this.random = Check.notNull(random, "random == null");
 
     return this;
@@ -145,7 +145,7 @@ public final class HttpSessionStore implements SessionStore {
    *
    * @return this instance
    */
-  public final HttpSessionStore add(WebSession session) {
+  public final AppSessionStore add(WebSession session) {
     String id;
     id = session.id();
 
