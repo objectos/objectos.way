@@ -15,53 +15,67 @@
  */
 package objectos.web;
 
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertFalse;
-
 import java.io.IOException;
+import java.net.Socket;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.attribute.FileTime;
 import java.time.Clock;
 import java.time.Instant;
-import objectos.way.TestableSocket;
+import objectos.way.Http;
+import objectos.way.Http.Exchange;
 import objectos.way.TestingClock;
 import objectos.way.TestingDir;
+import objectos.way.TestingHttpServer;
 import objectos.way.TestingNoteSink;
-import objectos.way.HttpExchangeLoop;
-import objectos.way.HttpExchangeLoop.ParseStatus;
+import objectos.way.TestingShutdownHook;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-public class WayWebResourcesTest {
+public class WayWebResourcesTest implements Http.Handler {
+  
+  private WayWebResources resources;
+
+  @BeforeClass
+  public void beforeClass() throws IOException {
+    resources = new WayWebResources();
+
+    TestingShutdownHook.register(resources);
+
+    resources.contentType(".txt", "text/plain; charset=utf-8");
+    
+    resources.noteSink(TestingNoteSink.INSTANCE);
+    
+    TestingHttpServer.bindWebResourcesTest(this);
+  }
+
+  @Override
+  public final void handle(Exchange http) {
+    resources.handle(http);
+  }
 
   @Test(description = """
   It should copy directory recursively
   """)
   public void testCase01() throws IOException {
-    Path root;
-    root = TestingDir.next();
-
-    try (WayWebResources resources = new WayWebResources(root)) {
-      resources.contentType(".txt", "text/plain; charset=utf-8");
-      resources.noteSink(TestingNoteSink.INSTANCE);
-
+    try (Socket socket = newSocket()) {
       Path src;
       src = TestingDir.next();
 
       Path a;
-      a = Path.of("a.txt");
+      a = Path.of("tc01.txt");
 
       write(src, a, "AAAA\n");
 
       resources.copyDirectory(src);
 
       test(
-          resources,
+          socket,
 
           """
-          GET /a.txt HTTP/1.1\r
-          Host: www.example.com\r
+          GET /tc01.txt HTTP/1.1\r
+          Host: web.resources.test\r
           Connection: close\r
           \r
           """,
@@ -77,33 +91,27 @@ public class WayWebResourcesTest {
           """
       );
     }
-
-    // it should have been deleted by close()
-    assertFalse(Files.exists(root));
   }
 
   @Test(description = """
   It should 404 if the file does not exist
   """)
   public void testCase02() throws IOException {
-    try (WayWebResources resources = new WayWebResources()) {
-      resources.contentType(".txt", "text/plain; charset=utf-8");
-      resources.noteSink(TestingNoteSink.INSTANCE);
-
+    try (Socket socket = newSocket()) {
       Path src;
       src = TestingDir.next();
 
       Path a;
-      a = Path.of("a.txt");
+      a = Path.of("tc02.txt");
 
       write(src, a, "AAAA\n");
 
       test(
-          resources,
+          socket,
 
           """
           GET /b.txt HTTP/1.1\r
-          Host: www.example.com\r
+          Host: web.resources.test\r
           Connection: close\r
           \r
           """,
@@ -122,29 +130,23 @@ public class WayWebResourcesTest {
   It should 405 if the method is not GET or HEAD
   """)
   public void testCase03() throws IOException {
-    Path root;
-    root = TestingDir.next();
-
-    try (WayWebResources resources = new WayWebResources(root)) {
-      resources.contentType(".txt", "text/plain; charset=utf-8");
-      resources.noteSink(TestingNoteSink.INSTANCE);
-
+    try (Socket socket = newSocket()) {
       Path src;
       src = TestingDir.next();
 
       Path a;
-      a = Path.of("a.txt");
+      a = Path.of("tc03.txt");
 
       write(src, a, "AAAA\n");
 
       resources.copyDirectory(src);
 
       test(
-          resources,
+          socket,
 
           """
-          POST /a.txt HTTP/1.1\r
-          Host: www.example.com\r
+          POST /tc03.txt HTTP/1.1\r
+          Host: web.resources.test\r
           Connection: close\r
           \r
           """,
@@ -163,15 +165,9 @@ public class WayWebResourcesTest {
   It should be able to add custom files
   """)
   public void testCase04() throws IOException {
-    Path root;
-    root = TestingDir.next();
-
-    try (WayWebResources resources = new WayWebResources(root)) {
-      resources.contentType(".txt", "text/plain; charset=utf-8");
-      resources.noteSink(TestingNoteSink.INSTANCE);
-
+    try (Socket socket = newSocket()) {
       Path a;
-      a = Path.of("assets", "a.txt");
+      a = Path.of("tc04.txt");
 
       resources.createNew(a, "AAAA\n".getBytes(StandardCharsets.UTF_8));
 
@@ -187,11 +183,11 @@ public class WayWebResourcesTest {
       resources.setLastModifiedTime(a, fileTime);
 
       test(
-          resources,
+          socket,
 
           """
-          GET /assets/a.txt HTTP/1.1\r
-          Host: www.example.com\r
+          GET /tc04.txt HTTP/1.1\r
+          Host: web.resources.test\r
           Connection: close\r
           \r
           """,
@@ -208,34 +204,28 @@ public class WayWebResourcesTest {
       );
     }
   }
-  
+
   @Test(description = """
   It should return 304 when if-none-match
   """)
   public void testCase05() throws IOException {
-    Path root;
-    root = TestingDir.next();
-
-    try (WayWebResources resources = new WayWebResources(root)) {
-      resources.contentType(".txt", "text/plain; charset=utf-8");
-      resources.noteSink(TestingNoteSink.INSTANCE);
-
+    try (Socket socket = newSocket()) {
       Path src;
       src = TestingDir.next();
 
       Path a;
-      a = Path.of("a.txt");
+      a = Path.of("tc05.txt");
 
       write(src, a, "AAAA\n");
 
       resources.copyDirectory(src);
 
       test(
-          resources,
+          socket,
 
           """
-          GET /a.txt HTTP/1.1\r
-          Host: www.example.com\r
+          GET /tc05.txt HTTP/1.1\r
+          Host: web.resources.test\r
           If-None-Match: 18901e7e8f8-5\r
           Connection: close\r
           \r
@@ -248,32 +238,6 @@ public class WayWebResourcesTest {
           \r
           """
       );
-    }
-  }
-
-  private void test(WayWebResources resources, String request, String response) {
-    TestableSocket socket;
-    socket = TestableSocket.of(request);
-
-    try (HttpExchangeLoop http = new HttpExchangeLoop(socket)) {
-      http.bufferSize(512, 1024);
-      http.clock(TestingClock.FIXED);
-      http.noteSink(TestingNoteSink.INSTANCE);
-
-      ParseStatus parse;
-      parse = http.parse();
-
-      assertEquals(parse.isError(), false);
-
-      resources.handle(http);
-
-      http.commit();
-
-      assertEquals(socket.outputAsString(), response);
-
-      assertEquals(http.keepAlive(), false);
-    } catch (IOException e) {
-      throw new AssertionError("Failed with IOException", e);
     }
   }
 
@@ -299,6 +263,14 @@ public class WayWebResourcesTest {
     fileTime = FileTime.from(instant);
 
     Files.setLastModifiedTime(target, fileTime);
+  }
+
+  private Socket newSocket() throws IOException {
+    return TestingHttpServer.newSocket();
+  }
+
+  private void test(Socket socket, String request, String expectedResponse) throws IOException {
+    TestingHttpServer.test(socket, request, expectedResponse);
   }
 
 }

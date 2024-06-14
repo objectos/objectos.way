@@ -25,8 +25,9 @@ import java.net.InetAddress;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
 import objectos.notes.Note;
+import objectos.web.WayWebResourcesTest;
 
-final class TestingHttpServer {
+public final class TestingHttpServer {
 
   private TestingHttpServer() {}
 
@@ -36,6 +37,10 @@ final class TestingHttpServer {
 
   public static void bindHttpServerTest(HttpServerTest test) {
     ServerHolder.bindHttpServerTest(test);
+  }
+
+  public static void bindWebResourcesTest(WayWebResourcesTest test) {
+    ServerHolder.bindWebResourcesTest(test);
   }
 
   public static Socket newSocket() throws IOException {
@@ -89,6 +94,10 @@ final class TestingHttpServer {
       HANDLER.httpServerTest = test;
     }
 
+    public static void bindWebResourcesTest(WayWebResourcesTest test) {
+      HANDLER.webResourcesTest = test;
+    }
+
     private static Http.Server create() {
       try {
         return create0();
@@ -135,6 +144,8 @@ final class TestingHttpServer {
     private Http.Handler httpServerTest;
 
     private final Http.Handler marketing = new MarketingSite().compile();
+    
+    private Http.Handler webResourcesTest;
 
     @Override
     public final Http.Handler create() throws Exception {
@@ -155,6 +166,8 @@ final class TestingHttpServer {
         case "http.server.test" -> httpServerTest.handle(http);
 
         case "marketing" -> marketing.handle(http);
+        
+        case "web.resources.test" -> webResourcesTest.handle(http);
 
         default -> http.notFound();
       }
@@ -178,5 +191,6 @@ final class TestingHttpServer {
     }
 
   }
+
 
 }

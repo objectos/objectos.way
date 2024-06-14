@@ -13,10 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.testing;
+package objectos.way;
 
 import java.util.function.Consumer;
-import objectos.way.Http;
 
 public interface TestingServerExchange {
 

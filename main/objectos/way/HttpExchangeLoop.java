@@ -15,6 +15,7 @@
  */
 package objectos.way;
 
+import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -34,8 +35,7 @@ import objectos.lang.object.Check;
 import objectos.notes.NoteSink;
 import objectos.util.map.GrowableMap;
 
-// TODO make this private
-public final class HttpExchangeLoop extends HttpRequestBody implements Http.Exchange.Loop {
+final class HttpExchangeLoop extends HttpRequestBody implements Http.Exchange, Closeable {
 
   public enum ParseStatus {
     // keep going
@@ -76,11 +76,11 @@ public final class HttpExchangeLoop extends HttpRequestBody implements Http.Exch
       return compareTo(INVALID_METHOD) >= 0;
     }
   }
-  
+
   enum NoResponseBody {
-    
+
     INSTANCE;
-    
+
   }
 
   private static final int _CONFIG = 0;
@@ -179,7 +179,6 @@ public final class HttpExchangeLoop extends HttpRequestBody implements Http.Exch
 
   private static final byte[] KEEP_ALIVE_BYTES = Http.utf8("keep-alive");
 
-  @Override
   public final ParseStatus parse() throws IOException, IllegalStateException {
     if (testState(_CONFIG)) {
       // init socket input
@@ -693,7 +692,6 @@ public final class HttpExchangeLoop extends HttpRequestBody implements Http.Exch
 
   private static final byte[] CHUNKED_TRAILER = "0\r\n\r\n".getBytes(StandardCharsets.UTF_8);
 
-  @Override
   public final void commit() throws IOException, IllegalStateException {
     Check.state(testState(_PROCESSED), "Cannot commit as we are not in the processed phase");
 
@@ -758,7 +756,6 @@ public final class HttpExchangeLoop extends HttpRequestBody implements Http.Exch
     setState(_COMMITED);
   }
 
-  @Override
   public final boolean keepAlive() {
     return testBit(KEEP_ALIVE);
   }

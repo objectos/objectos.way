@@ -13,19 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.testing;
+package objectos.way;
 
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.UncheckedIOException;
+import java.net.Socket;
 import java.nio.charset.StandardCharsets;
 import java.time.Clock;
 import java.util.function.Consumer;
 import objectos.lang.object.Check;
 import objectos.notes.NoOpNoteSink;
 import objectos.notes.NoteSink;
-import objectos.way.SessionStore;
-import objectos.way.HttpExchangeLoop;
 import objectos.way.Http.Exchange;
 import objectos.way.HttpExchangeLoop.ParseStatus;
 
@@ -111,6 +113,40 @@ public final class WayTestingServerExchange implements TestingServerExchange {
     } catch (IOException e) {
       throw new UncheckedIOException("Unexpected IOException: testing server exchange executed in-memory", e);
     }
+  }
+  
+  private static class TestingSocket extends Socket {
+
+    private final InputStream inputStream;
+
+    private ByteArrayOutputStream outputStream;
+
+    public TestingSocket(InputStream inputStream) {
+      this.inputStream = inputStream;
+    }
+
+    @Override
+    public final InputStream getInputStream() throws IOException {
+      return inputStream;
+    }
+
+    @Override
+    public final OutputStream getOutputStream() throws IOException {
+      if (outputStream == null) {
+        outputStream = new ByteArrayOutputStream();
+      }
+
+      return outputStream;
+    }
+
+    @Override
+    public final String toString() {
+      byte[] bytes;
+      bytes = outputStream.toByteArray();
+
+      return new String(bytes, StandardCharsets.UTF_8);
+    }
+
   }
 
 }

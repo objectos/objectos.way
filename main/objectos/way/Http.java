@@ -40,7 +40,6 @@ import objectos.lang.CharWritable;
 import objectos.lang.object.Check;
 import objectos.notes.Note1;
 import objectos.notes.NoteSink;
-import objectos.way.HttpExchangeLoop.ParseStatus;
 import objectos.way.HttpServer.Builder;
 
 /**
@@ -55,26 +54,6 @@ public final class Http {
    * client.
    */
   public interface Exchange {
-
-    // TODO make this private
-    public interface Loop extends Closeable, Exchange {
-
-      /**
-       * Closes and ends this exchange by closing its underlying socket.
-       *
-       * @throws IOException
-       *         if an I/O error occurs
-       */
-      @Override
-      void close() throws IOException;
-
-      ParseStatus parse() throws IOException, IllegalStateException;
-
-      void commit() throws IOException, IllegalStateException;
-
-      boolean keepAlive();
-
-    }
 
     /**
      * Stores an object in this request. The object will be associated to the
