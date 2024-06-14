@@ -15,15 +15,8 @@
  */
 package objectos.way;
 
-sealed abstract class HttpServerOption implements Http.Server.Option {
+non-sealed abstract class HttpServerOption implements Http.Server.Option {
 
-  abstract void acceptHttpServerBuilder();
-
-  static final class BufferSize extends HttpServerOption {
-
-    @Override
-    final void acceptHttpServerBuilder() {}
-
-  }
+  abstract void acceptHttpServerBuilder(HttpServer.Builder builder);
 
 }

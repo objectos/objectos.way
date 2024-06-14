@@ -23,6 +23,7 @@ import java.net.ServerSocket;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
+import java.time.Clock;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
@@ -38,7 +39,9 @@ import objectos.html.HtmlTemplate;
 import objectos.lang.CharWritable;
 import objectos.lang.object.Check;
 import objectos.notes.Note1;
+import objectos.notes.NoteSink;
 import objectos.way.HttpExchangeLoop.ParseStatus;
+import objectos.way.HttpServer.Builder;
 
 /**
  * The Objectos HTTP main class.
@@ -1007,6 +1010,90 @@ public final class Http {
     }
 
     return headerName;
+  }
+  
+  /**
+   * Creates a new HTTP server instance.
+   */
+  public static Server createServer(HandlerFactory handlerFactory, Server.Option... options) {
+    Check.notNull(handlerFactory, "handlerFactory == null");
+    Check.notNull(options, "options == null");
+    
+    HttpServer.Builder builder = new HttpServer.Builder(handlerFactory);
+    
+    for (int i = 0; i < options.length; i++) {
+      Server.Option option;
+      option = Check.notNull(options[i], "options[", i, "] == null");
+      
+      // the cast is safe as Server.Option is sealed
+      HttpServerOption actual;
+      actual = (HttpServerOption) option;
+      
+      actual.acceptHttpServerBuilder(builder);
+    }
+    
+    return builder.build();
+  }
+
+  public static Server.Option bufferSize(int initial, int max) {
+    Check.argument(initial >= 128, "initial size must be >= 128");
+    Check.argument(max >= 128, "max size must be >= 128");
+    Check.argument(max >= initial, "max size must be >= initial size");
+
+    return new HttpServerOption() {
+      @Override
+      final void acceptHttpServerBuilder(Builder builder) {
+        builder.bufferSizeInitial = initial;
+        
+        builder.bufferSizeMax = max;
+      }
+    };
+  }
+
+  public static Server.Option clock(Clock clock) {
+    Check.notNull(clock, "clock == null");
+    
+    return new HttpServerOption() {
+      @Override
+      final void acceptHttpServerBuilder(Builder builder) {
+        builder.clock = clock;
+      }
+    };
+  }
+  
+  public static Server.Option noteSink(NoteSink noteSink) {
+    Check.notNull(noteSink, "noteSink == null");
+    
+    return new HttpServerOption() {
+      @Override
+      final void acceptHttpServerBuilder(Builder builder) {
+        builder.noteSink = noteSink;
+      }
+    };
+  }
+
+  public static Server.Option port(int port) {
+    if (port < 0 || port > 0xFFFF) {
+      throw new IllegalArgumentException("port out of range:" + port);
+    }
+    
+    return new HttpServerOption() {
+      @Override
+      final void acceptHttpServerBuilder(Builder builder) {
+        builder.port = port;
+      }
+    };
+  }
+
+  public static Server.Option sessionStore(SessionStore sessionStore) {
+    Check.notNull(sessionStore, "sessionStore == null");
+    
+    return new HttpServerOption() {
+      @Override
+      final void acceptHttpServerBuilder(Builder builder) {
+        builder.sessionStore = sessionStore;
+      }
+    };
   }
 
   /**

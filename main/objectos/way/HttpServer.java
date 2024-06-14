@@ -20,89 +20,66 @@ import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.time.Clock;
-import objectos.lang.object.Check;
 import objectos.notes.NoOpNoteSink;
 import objectos.notes.NoteSink;
 
 /**
  * The Objectos Way {@link HttpServer} implementation.
  */
-public class WayHttpServer implements Http.Server {
+final class HttpServer implements Http.Server {
+  
+  static final class Builder {
 
-  private int bufferSizeInitial = 1024;
+    int bufferSizeInitial = 1024;
 
-  private int bufferSizeMax = 4096;
+    int bufferSizeMax = 4096;
+    
+    Clock clock = Clock.systemUTC();
+    
+    final HandlerFactory factory;
+    
+    NoteSink noteSink = NoOpNoteSink.of();
 
-  private Clock clock = Clock.systemUTC();
+    int port = 0;
+    
+    SessionStore sessionStore;
+    
+    public Builder(HandlerFactory factory) {
+      this.factory = factory;
+    }
+
+    public final Http.Server build() {
+      return new HttpServer(this);
+    }
+
+  }
+
+  private final int bufferSizeInitial;
+
+  private final int bufferSizeMax;
+
+  private final Clock clock;
 
   private final HandlerFactory factory;
 
-  private NoteSink noteSink = NoOpNoteSink.of();
+  private final NoteSink noteSink;
 
-  private int port = 0;
+  private final int port;
 
-  private SessionStore sessionStore;
+  private final SessionStore sessionStore;
 
   private ServerSocket serverSocket;
 
   private Thread thread;
 
-  public WayHttpServer(HandlerFactory factory) {
-    this.factory = Check.notNull(factory, "factory == null");
-  }
-
-  public final void bufferSize(int initial, int max) {
-    checkConfig();
-
-    Check.argument(initial >= 128, "initial size must be >= 128");
-    Check.argument(max >= 128, "max size must be >= 128");
-    Check.argument(max >= initial, "max size must be >= initial size");
-
-    bufferSizeInitial = initial;
-
-    bufferSizeMax = max;
-  }
-
-  public final void clock(Clock clock) {
-    checkConfig();
-
-    this.clock = Check.notNull(clock, "clock == null");
-  }
-
-  public final void noteSink(NoteSink noteSink) {
-    checkConfig();
-
-    this.noteSink = Check.notNull(noteSink, "noteSink == null");
-  }
-
-  public final void port(int port) {
-    checkConfig();
-
-    if (port < 0 || port > 0xFFFF) {
-      throw new IllegalArgumentException("port out of range:" + port);
-    }
-
-    this.port = port;
-  }
-
-  /**
-   * Use the specified {@link SessionStore} for session handling.
-   *
-   * @param sessionStore
-   *        the session store to use
-   */
-  public final void sessionStore(SessionStore sessionStore) {
-    checkConfig();
-
-    this.sessionStore = Check.notNull(sessionStore, "sessionStore == null");
-  }
-
-  private void checkConfig() {
-    if (thread != null) {
-      throw new IllegalStateException(
-          "Configuration method can only be called before starting this service."
-      );
-    }
+  public HttpServer(Builder builder) {
+    bufferSizeInitial = builder.bufferSizeInitial;
+    bufferSizeMax = builder.bufferSizeMax;
+    clock = builder.clock;
+    factory = builder.factory;
+    noteSink = builder.noteSink;
+    port = builder.port;
+    sessionStore = builder.sessionStore;
   }
 
   @Override
@@ -123,8 +100,8 @@ public class WayHttpServer implements Http.Server {
 
     serverSocket.bind(socketAddress);
 
-    WayHttpServerLoop loop;
-    loop = new WayHttpServerLoop(serverSocket, factory);
+    HttpServerLoop loop;
+    loop = new HttpServerLoop(serverSocket, factory);
 
     loop.bufferSizeInitial = bufferSizeInitial;
 

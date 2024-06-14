@@ -1,11 +1,17 @@
 /*
- * Copyright (C) 2023 Objectos Software LTDA.
+ * Copyright (C) 2023-2024 Objectos Software LTDA.
  *
- * This file is part of the objectos.www project.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- * objectos.www is NOT free software and is the intellectual property of Objectos Software LTDA.
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
- * Source is available for educational purposes only.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package objectos.way;
 
@@ -22,7 +28,7 @@ import objectos.notes.NoteSink;
 import objectos.way.Http.Exchange;
 import objectos.way.HttpExchangeLoop.ParseStatus;
 
-final class WayHttpServerLoop implements Runnable {
+final class HttpServerLoop implements Runnable {
 
   public static final Note1<IOException> IO_ERROR;
 
@@ -32,7 +38,7 @@ final class WayHttpServerLoop implements Runnable {
 
   static {
     Class<?> source;
-    source = WayHttpServerLoop.class;
+    source = HttpServerLoop.class;
 
     IO_ERROR = Note1.error(source, "I/O Error");
 
@@ -55,7 +61,7 @@ final class WayHttpServerLoop implements Runnable {
 
   final HandlerFactory handlerFactory;
 
-  public WayHttpServerLoop(ServerSocket serverSocket, HandlerFactory handlerFactory) {
+  public HttpServerLoop(ServerSocket serverSocket, HandlerFactory handlerFactory) {
     this.serverSocket = serverSocket;
 
     this.handlerFactory = handlerFactory;

@@ -38,7 +38,7 @@ import objectos.notes.NoteSink;
 import objectos.notes.impl.ConsoleNoteSink;
 import objectos.way.AppSessionStore;
 import objectos.way.HandlerFactory;
-import objectos.way.WayHttpServer;
+import objectos.way.Http;
 import objectos.web.BootstrapException;
 import objectos.web.Stage;
 import objectos.web.WayWebResources;
@@ -221,23 +221,25 @@ public class TestingSite {
     };
 
     // WebServer
-    WayHttpServer webServer;
-    webServer = new WayHttpServer(handlerFactory);
-
-    shutdownHook.addAutoCloseable(webServer);
-
-    webServer.bufferSize(1024, 4096);
-
-    webServer.clock(clock);
-
-    webServer.noteSink(noteSink);
-
-    webServer.port(portOption.get());
-
-    webServer.sessionStore(sessionStore);
-
     try {
-      webServer.start();
+      Http.Server httpServer;
+      httpServer = Http.createServer(
+          handlerFactory,
+
+          Http.bufferSize(1024, 4096),
+
+          Http.clock(clock),
+
+          Http.noteSink(noteSink),
+
+          Http.port(portOption.get()),
+
+          Http.sessionStore(sessionStore)
+      );
+
+      shutdownHook.addAutoCloseable(httpServer);
+
+      httpServer.start();
     } catch (IOException e) {
       throw new BootstrapException("WebServer", e);
     }

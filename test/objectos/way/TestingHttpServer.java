@@ -104,21 +104,23 @@ final class TestingHttpServer {
     private static Http.Server create0() throws IOException, InterruptedException {
       HANDLER = new ThisHandlerFactory();
 
-      WayHttpServer wayServer;
-      wayServer = new WayHttpServer(HANDLER);
+      Http.Server wayServer;
+      wayServer = Http.createServer(
+          HANDLER,
+
+          Http.clock(TestingClock.FIXED),
+
+          Http.noteSink(new ThisNoteSink(HANDLER)),
+
+          Http.port(0)
+      );
 
       TestingShutdownHook.register(wayServer);
 
-      wayServer.clock(TestingClock.FIXED);
-
-      wayServer.noteSink(new ThisNoteSink(wayServer));
-
-      wayServer.port(0);
-
       wayServer.start();
 
-      synchronized (wayServer) {
-        wayServer.wait();
+      synchronized (HANDLER) {
+        HANDLER.wait();
       }
 
       return wayServer;
