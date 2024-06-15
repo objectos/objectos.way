@@ -17,6 +17,8 @@ package objectos.way;
 
 import static org.testng.Assert.assertEquals;
 
+import java.util.Set;
+import objectos.way.Http.Request.Target.Query;
 import org.testng.annotations.Test;
 
 public class HttpTest {
@@ -42,7 +44,7 @@ public class HttpTest {
     assertEquals(res.capitalized(), "Connection");
     assertEquals(res.index() >= 0, true);
   }
-
+  
   @Test(description = """
   It should parse a single name-value pair
   """)
@@ -51,6 +53,40 @@ public class HttpTest {
     c = Http.parseCookies("foo=bar");
 
     assertEquals(c.get("foo"), "bar");
+  }
+  
+  @Test
+  public void parseRequestTarget01() {
+    Http.Request.Target target;
+    target = Http.parseRequestTarget("/");
+    
+    Http.Request.Target.Path path;
+    path = target.path();
+    
+    assertEquals(path.is("/"), true);
+    
+    Query query;
+    query = target.query();
+    
+    assertEquals(query.isEmpty(), true);
+  }
+  
+  @Test
+  public void parseRequestTarget02() {
+    Http.Request.Target target;
+    target = Http.parseRequestTarget("/foo/bar?page=1&sort=asc");
+    
+    Http.Request.Target.Path path;
+    path = target.path();
+    
+    assertEquals(path.is("/foo/bar"), true);
+    
+    Query query;
+    query = target.query();
+    
+    assertEquals(query.names(), Set.of("page", "sort"));
+    assertEquals(query.get("page"), "1");
+    assertEquals(query.get("sort"), "asc");
   }
 
 }

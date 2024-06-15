@@ -83,5 +83,15 @@ public class HttpRequestTargetPathTest {
     assertEquals(segments.get(0).toString(), "foo");
     assertEquals(segments.get(1).toString(), "index.html");
   }
+  
+  @Test
+  public void value() {
+    HttpRequestTargetPath path;
+    path = new HttpRequestTargetPath();
+
+    path.set("/foo%40bar");
+    
+    assertEquals(path.value(), "/foo@bar");
+  }
 
 }

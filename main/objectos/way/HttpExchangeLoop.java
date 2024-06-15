@@ -34,7 +34,7 @@ import objectos.lang.object.Check;
 import objectos.notes.NoteSink;
 import objectos.util.map.GrowableMap;
 
-final class HttpExchangeLoop extends HttpRequestBody implements Http.Exchange, Http.Request.Target, Closeable {
+final class HttpExchangeLoop extends HttpRequestBody implements Http.Exchange, Closeable {
 
   public enum ParseStatus {
     // keep going

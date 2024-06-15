@@ -19,7 +19,6 @@ import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import objectos.way.HttpExchangeLoop.ParseStatus;
 
 class HttpRequestBody extends HttpRequestHeaders implements Http.Request.Body {
@@ -34,13 +33,13 @@ class HttpRequestBody extends HttpRequestHeaders implements Http.Request.Body {
 
   private Kind kind = Kind.EMPTY;
   
-  private Path requestBodyDirectory;
+  private java.nio.file.Path requestBodyDirectory;
   
-  private Path requestBodyFile;
+  private java.nio.file.Path requestBodyFile;
 
   HttpRequestBody() {}
   
-  public void requestBodyDirectory(Path directory) {
+  public void requestBodyDirectory(java.nio.file.Path directory) {
     requestBodyDirectory = directory;
   }
   

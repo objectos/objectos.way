@@ -15,12 +15,34 @@
  */
 package objectos.way;
 
+import objectos.sql.Page;
+
 /**
  * The Objectos Web main class.
  */
 public final class Web {
 
   // types
+
+  /**
+   * Allows for pagination of data tables in an web application.
+   */
+  public interface Paginator {
+    
+    /**
+     * Returns the 
+     */
+    Page current();
+    
+    boolean hasNext();
+    
+    boolean hasPrevious();
+    
+    String nextHref();
+    
+    String previousHref();
+
+  }
   
   /**
    * An web session.

@@ -97,6 +97,11 @@ final class HttpRequestTargetPath implements Http.Request.Target.Path {
     return value;
   }
 
+  @Override
+  public final String value() {
+    return value;
+  }
+
   private class ThisSegment implements Segment {
 
     private final int start;

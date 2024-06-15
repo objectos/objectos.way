@@ -15,6 +15,7 @@
  */
 package objectos.way;
 
+import java.io.ByteArrayInputStream;
 import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
@@ -40,6 +41,7 @@ import objectos.lang.CharWritable;
 import objectos.lang.object.Check;
 import objectos.notes.Note1;
 import objectos.notes.NoteSink;
+import objectos.way.HttpExchangeLoop.ParseStatus;
 import objectos.way.HttpServer.Builder;
 
 /**
@@ -572,6 +574,13 @@ public final class Http {
         boolean startsWith(String prefix);
 
         List<Segment> segments();
+        
+        /**
+         * The decoded value of this path.
+         * 
+         * @return the decoded value of this path.
+         */
+        String value();
 
       }
 
@@ -1123,6 +1132,53 @@ public final class Http {
    */
   public static FormUrlEncoded parseFormUrlEncoded(Http.Exchange http) throws IOException, UnsupportedMediaTypeException {
     return HttpFormUrlEncoded.parse(http);
+  }
+
+  /**
+   * Parses the specified string into a new request-target instance.
+   * 
+   * @param target
+   *        the raw (undecoded) request-target value
+   * 
+   * @return a new request target instance
+   * 
+   * @throws IllegalArgumentException
+   *         if the string represents an invalid request-target value
+   */
+  public static Request.Target parseRequestTarget(String target) throws IllegalArgumentException {
+    Check.notNull(target, "target == null");
+    
+    HttpRequestLine requestLine;
+    requestLine = new HttpRequestLine();
+    
+    // append a line terminator
+    target = target + " \r\n";
+    
+    byte[] bytes;
+    bytes = target.getBytes(StandardCharsets.UTF_8);
+    
+    // in-memory stream... no closing needed...
+    InputStream inputStream;
+    inputStream = new ByteArrayInputStream(bytes);
+    
+    requestLine.initSocketInput(inputStream);
+    
+    try {
+      requestLine.parseLine();
+      
+      requestLine.parseRequestTarget();
+    } catch (IOException e) {
+      throw new AssertionError("In-memory stream does not throw IOException", e);
+    }
+    
+    ParseStatus parseStatus;
+    parseStatus = requestLine.parseStatus;
+    
+    if (parseStatus.isError()) {
+      throw new IllegalArgumentException(parseStatus.name());
+    }
+    
+    return requestLine;
   }
 
   // utils

@@ -17,9 +17,10 @@ package objectos.way;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import objectos.way.Http.Request;
 import objectos.way.HttpExchangeLoop.ParseStatus;
 
-class HttpRequestLine extends HttpSocketInput {
+class HttpRequestLine extends HttpSocketInput implements Http.Request.Target {
 
   Http.Request.Method method;
 
@@ -32,6 +33,16 @@ class HttpRequestLine extends HttpSocketInput {
   byte versionMinor;
 
   HttpRequestLine() {}
+
+  @Override
+  public Request.Target.Path path() {
+    return path;
+  }
+
+  @Override
+  public Request.Target.Query query() {
+    return query;
+  }
 
   final void resetRequestLine() {
     method = null;
@@ -64,6 +75,23 @@ class HttpRequestLine extends HttpSocketInput {
       return;
     }
 
+    parseRequestTarget();
+
+    parseVersion();
+
+    if (parseStatus.isError()) {
+      // bad request -> fail
+      return;
+    }
+
+    if (!consumeIfEndOfLine()) {
+      parseStatus = ParseStatus.INVALID_REQUEST_LINE_TERMINATOR;
+
+      return;
+    }
+  }
+  
+  final void parseRequestTarget() throws IOException {
     int startIndex;
     startIndex = parsePathStart();
 
@@ -76,19 +104,6 @@ class HttpRequestLine extends HttpSocketInput {
 
     if (parseStatus.isError()) {
       // bad request -> fail
-      return;
-    }
-
-    parseVersion();
-
-    if (parseStatus.isError()) {
-      // bad request -> fail
-      return;
-    }
-
-    if (!consumeIfEndOfLine()) {
-      parseStatus = ParseStatus.INVALID_REQUEST_LINE_TERMINATOR;
-
       return;
     }
   }
@@ -120,7 +135,7 @@ class HttpRequestLine extends HttpSocketInput {
       case 'T' -> parseMethod0(Http.TRACE);
     }
   }
-  
+
   // force Http init
   static final Http.Request.Method GET = Http.GET;
 
