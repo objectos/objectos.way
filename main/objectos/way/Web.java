@@ -29,10 +29,11 @@ public final class Web {
    */
   public interface Paginator {
     
-    /**
-     * Returns the 
-     */
     Page current();
+    
+    int firstItem();
+    
+    int lastItem();
     
     boolean hasNext();
     
@@ -94,4 +95,8 @@ public final class Web {
   
   private Web() {}
 
+  public static Paginator createPaginator(int pageNumber, int pageSize, int totalCount) {
+    return null;
+  }
+  
 }
