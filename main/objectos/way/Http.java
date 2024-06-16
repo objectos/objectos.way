@@ -392,6 +392,16 @@ public final class Http {
   public interface Handler {
 
     /**
+     * Allows for executing code before and after a handler. 
+     */
+    @FunctionalInterface
+    public interface Interceptor {
+      
+      Http.Handler intercept(Http.Handler handler);
+      
+    }
+
+    /**
      * Process the specified exchange i.e. consume the request and generate a
      * response.
      * 
@@ -423,6 +433,7 @@ public final class Http {
 
   }
 
+  
   /**
    * A module configures the handlers a server instance will use to process its
    * requests.

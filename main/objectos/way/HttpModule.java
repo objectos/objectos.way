@@ -75,12 +75,14 @@ abstract class HttpModule {
     }
 
   }
-
+  
   private static final class Compiler implements Http.Handler {
 
     private Action[] actions;
 
     private int actionsIndex;
+
+    private Http.Handler.Interceptor interceptor;
 
     private SessionStore sessionStore;
 
@@ -113,13 +115,25 @@ abstract class HttpModule {
     }
 
     final void filter(Http.Handler handler) {
+      handler = decorate(handler);
+      
       int index;
       index = nextSlot();
 
       actions[index] = new Filter(handler);
     }
 
+    final void interceptor(Http.Handler.Interceptor next) {
+      if (interceptor == null) {
+        interceptor = next;
+      } else {
+        interceptor = handler -> interceptor.intercept(next.intercept(handler));
+      }
+    }
+
     final void route(Matcher matcher, Http.Handler handler) {
+      handler = decorate(handler);
+      
       int index;
       index = nextSlot();
 
@@ -127,16 +141,27 @@ abstract class HttpModule {
     }
 
     final <T> void route(Matcher matcher, Function<T, Http.Handler> factory, T value) {
+      Function<T, Http.Handler> function;
+      function = interceptor == null ? factory : (T t) -> interceptor.intercept(factory.apply(t));
+
       int index;
       index = nextSlot();
 
-      actions[index] = new RouteFactory1<T>(matcher, factory, value);
+      actions[index] = new RouteFactory1<T>(matcher, function, value);
     }
 
     final void sessionStore(SessionStore sessionStore) {
       Check.state(this.sessionStore == null, "A session store has already been configured");
 
       this.sessionStore = sessionStore;
+    }
+    
+    private Http.Handler decorate(Http.Handler handler) {
+      if (interceptor == null) {
+        return handler;
+      } else {
+        return interceptor.intercept(handler);
+      }
     }
 
     private int nextSlot() {
@@ -275,6 +300,12 @@ abstract class HttpModule {
     Check.notNull(handler, "handler == null");
 
     compiler.filter(handler);
+  }
+  
+  protected final void interceptor(Http.Handler.Interceptor interceptor) {
+    Check.notNull(interceptor, "interceptor == null");
+    
+    compiler.interceptor(interceptor);
   }
 
   protected final void route(Matcher matcher, Http.Handler handler) {

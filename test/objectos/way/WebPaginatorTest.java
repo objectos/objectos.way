@@ -17,7 +17,6 @@ package objectos.way;
 
 import static org.testng.Assert.assertEquals;
 
-import objectos.sql.Page;
 import org.testng.annotations.Test;
 
 public class WebPaginatorTest {
@@ -30,12 +29,8 @@ public class WebPaginatorTest {
     WebPaginator paginator;
     paginator = WebPaginator.of(target, "page", pageSize, totalCount);
 
-    Page page;
-    page = paginator.current();
-
-    assertEquals(page.number(), 1);
-    assertEquals(page.size(), 15);
-
+    assertEquals(paginator.current().number(), 1);
+    assertEquals(paginator.current().size(), 15);
     assertEquals(paginator.firstItem(), 1);
     assertEquals(paginator.lastItem(), 8);
     assertEquals(paginator.hasPrevious(), false);
@@ -43,5 +38,95 @@ public class WebPaginatorTest {
     assertEquals(paginator.previousHref(), "#");
     assertEquals(paginator.nextHref(), "#");
   }
-  
+
+  @Test(description = "First page, multiple pages")
+  public void testCase02() {
+    Http.Request.Target target = Http.parseRequestTarget("/foo");
+    int pageSize = 15, totalCount = 16;
+
+    WebPaginator paginator;
+    paginator = WebPaginator.of(target, "page", pageSize, totalCount);
+
+    assertEquals(paginator.current().number(), 1);
+    assertEquals(paginator.current().size(), 15);
+    assertEquals(paginator.firstItem(), 1);
+    assertEquals(paginator.lastItem(), 15);
+    assertEquals(paginator.hasPrevious(), false);
+    assertEquals(paginator.hasNext(), true);
+    assertEquals(paginator.previousHref(), "#");
+    assertEquals(paginator.nextHref(), "/foo?page=2");
+  }
+
+  @Test(description = "First page, multiple pages, explicit query param")
+  public void testCase03() {
+    Http.Request.Target target = Http.parseRequestTarget("/foo?page=1");
+    int pageSize = 15, totalCount = 16;
+
+    WebPaginator paginator;
+    paginator = WebPaginator.of(target, "page", pageSize, totalCount);
+
+    assertEquals(paginator.current().number(), 1);
+    assertEquals(paginator.current().size(), 15);
+    assertEquals(paginator.firstItem(), 1);
+    assertEquals(paginator.lastItem(), 15);
+    assertEquals(paginator.hasPrevious(), false);
+    assertEquals(paginator.hasNext(), true);
+    assertEquals(paginator.previousHref(), "#");
+    assertEquals(paginator.nextHref(), "/foo?page=2");
+  }
+
+  @Test(description = "Last page")
+  public void testCase04() {
+    Http.Request.Target target = Http.parseRequestTarget("/foo?page=2");
+    int pageSize = 15, totalCount = 16;
+
+    WebPaginator paginator;
+    paginator = WebPaginator.of(target, "page", pageSize, totalCount);
+
+    assertEquals(paginator.current().number(), 2);
+    assertEquals(paginator.current().size(), 15);
+    assertEquals(paginator.firstItem(), 16);
+    assertEquals(paginator.lastItem(), 16);
+    assertEquals(paginator.hasPrevious(), true);
+    assertEquals(paginator.hasNext(), false);
+    assertEquals(paginator.previousHref(), "/foo?page=1");
+    assertEquals(paginator.nextHref(), "#");
+  }
+
+  @Test(description = "Middle page")
+  public void testCase05() {
+    Http.Request.Target target = Http.parseRequestTarget("/foo?page=3");
+    int pageSize = 10, totalCount = 50;
+
+    WebPaginator paginator;
+    paginator = WebPaginator.of(target, "page", pageSize, totalCount);
+
+    assertEquals(paginator.current().number(), 3);
+    assertEquals(paginator.current().size(), 10);
+    assertEquals(paginator.firstItem(), 21);
+    assertEquals(paginator.lastItem(), 30);
+    assertEquals(paginator.hasPrevious(), true);
+    assertEquals(paginator.hasNext(), true);
+    assertEquals(paginator.previousHref(), "/foo?page=2");
+    assertEquals(paginator.nextHref(), "/foo?page=4");
+  }
+
+  @Test(description = "keep existing query parameters")
+  public void testCase06() {
+    Http.Request.Target target = Http.parseRequestTarget("/foo?q=abc&page=3");
+    int pageSize = 10, totalCount = 50;
+
+    WebPaginator paginator;
+    paginator = WebPaginator.of(target, "page", pageSize, totalCount);
+
+    assertEquals(paginator.current().number(), 3);
+    assertEquals(paginator.current().size(), 10);
+    assertEquals(paginator.firstItem(), 21);
+    assertEquals(paginator.lastItem(), 30);
+    assertEquals(paginator.hasPrevious(), true);
+    assertEquals(paginator.hasNext(), true);
+    assertEquals(paginator.previousHref(), "/foo?q=abc&page=2");
+    assertEquals(paginator.nextHref(), "/foo?q=abc&page=4");
+  }
+
 }
