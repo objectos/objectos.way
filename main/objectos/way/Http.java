@@ -392,7 +392,7 @@ public final class Http {
   public interface Handler {
 
     /**
-     * Allows for executing code before and after a handler. 
+     * Augments a handler.  
      */
     @FunctionalInterface
     public interface Interceptor {

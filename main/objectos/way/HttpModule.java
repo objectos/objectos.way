@@ -302,7 +302,7 @@ abstract class HttpModule {
     compiler.filter(handler);
   }
   
-  protected final void interceptor(Http.Handler.Interceptor interceptor) {
+  protected final void intercept(Http.Handler.Interceptor interceptor) {
     Check.notNull(interceptor, "interceptor == null");
     
     compiler.interceptor(interceptor);

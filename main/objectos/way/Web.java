@@ -15,6 +15,7 @@
  */
 package objectos.way;
 
+import objectos.lang.object.Check;
 import objectos.sql.Page;
 
 /**
@@ -34,6 +35,8 @@ public final class Web {
     int firstItem();
     
     int lastItem();
+    
+    int totalCount();
     
     boolean hasNext();
     
@@ -95,8 +98,23 @@ public final class Web {
   
   private Web() {}
 
-  public static Paginator createPaginator(int pageNumber, int pageSize, int totalCount) {
-    return null;
+  /**
+   * Creates a new paginator instance.
+   * 
+   * @param target the request target
+   * @param pageAttrName the name of the page query parameter
+   * @param pageSize the maximum number of elements in each page
+   * @param totalCount the number of elements in all of the pages
+   * 
+   * @return a new paginator instance
+   */
+  public static Paginator createPaginator(Http.Request.Target target, String pageAttrName, int pageSize, int totalCount) {
+    Check.notNull(target, "target == null");
+    Check.notNull(pageAttrName, "pageAttrName == null");
+    Check.argument(pageSize > 0, "pageSize must be positive");
+    Check.argument(totalCount >= 0, "totalCount must be equal or greater than zero");
+
+    return WebPaginator.of(target, pageAttrName, pageSize, totalCount);
   }
   
 }

@@ -97,7 +97,7 @@ public class HttpModuleTest extends Http.Module {
     
     route(path("/testCase07/before"), this::testCase07);
     
-    interceptor(this::testCase07);
+    intercept(this::testCase07);
     
     route(path("/testCase07/after"), this::testCase07);
   }
