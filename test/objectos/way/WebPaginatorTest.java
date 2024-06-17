@@ -129,4 +129,40 @@ public class WebPaginatorTest {
     assertEquals(paginator.nextHref(), "/foo?q=abc&page=4");
   }
 
+  @Test(description = "Last page, full size")
+  public void testCase07() {
+    Http.Request.Target target = Http.parseRequestTarget("/foo?page=2");
+    int pageSize = 15, totalCount = 30;
+
+    WebPaginator paginator;
+    paginator = WebPaginator.of(target, "page", pageSize, totalCount);
+
+    assertEquals(paginator.current().number(), 2);
+    assertEquals(paginator.current().size(), 15);
+    assertEquals(paginator.firstItem(), 16);
+    assertEquals(paginator.lastItem(), 30);
+    assertEquals(paginator.hasPrevious(), true);
+    assertEquals(paginator.hasNext(), false);
+    assertEquals(paginator.previousHref(), "/foo?page=1");
+    assertEquals(paginator.nextHref(), "#");
+  }
+
+  @Test(description = "First page, full size")
+  public void testCase08() {
+    Http.Request.Target target = Http.parseRequestTarget("/foo?page=1");
+    int pageSize = 15, totalCount = 15;
+
+    WebPaginator paginator;
+    paginator = WebPaginator.of(target, "page", pageSize, totalCount);
+
+    assertEquals(paginator.current().number(), 1);
+    assertEquals(paginator.current().size(), 15);
+    assertEquals(paginator.firstItem(), 1);
+    assertEquals(paginator.lastItem(), 15);
+    assertEquals(paginator.hasPrevious(), false);
+    assertEquals(paginator.hasNext(), false);
+    assertEquals(paginator.previousHref(), "#");
+    assertEquals(paginator.nextHref(), "#");
+  }
+
 }

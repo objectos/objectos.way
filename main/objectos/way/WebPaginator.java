@@ -47,7 +47,7 @@ final record WebPaginator(Http.Request.Target target, Sql.Page current, int firs
       lastItem = firstItem + pageSize - 1;
     }
 
-    if (lastItem > totalCount) {
+    if (lastItem >= totalCount) {
       lastItem = totalCount;
 
       nextPage = 0;
