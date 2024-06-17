@@ -16,7 +16,6 @@
 package objectos.way;
 
 import objectos.lang.object.Check;
-import objectos.sql.Page;
 
 /**
  * The Objectos Web main class.
@@ -30,7 +29,7 @@ public final class Web {
    */
   public interface Paginator {
     
-    Page current();
+    Sql.Page current();
     
     int firstItem();
     

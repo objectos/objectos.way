@@ -15,12 +15,9 @@
  */
 package objectos.way;
 
-import objectos.sql.Page;
 import objectos.way.Http.Request.Target.Query;
 
-final record WebPaginator(Http.Request.Target target, Page current, int firstItem, int lastItem, int totalCount, int previousPage, int nextPage) implements Web.Paginator {
-
-  private record ThisPage(int number, int size) implements Page {}
+final record WebPaginator(Http.Request.Target target, Sql.Page current, int firstItem, int lastItem, int totalCount, int previousPage, int nextPage) implements Web.Paginator {
 
   public static WebPaginator of(Http.Request.Target target, String pageAttrName, int pageSize, int totalCount) {
     Query query;
@@ -56,8 +53,8 @@ final record WebPaginator(Http.Request.Target target, Page current, int firstIte
       nextPage = 0;
     }
 
-    ThisPage current;
-    current = new ThisPage(pageNumber, pageSize);
+    Sql.Page current;
+    current = Sql.createPage(pageNumber, pageSize);
 
     return new WebPaginator(target, current, firstItem, lastItem, totalCount, previousPage, nextPage);
   }

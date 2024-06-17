@@ -13,26 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.sql;
+package objectos.way;
 
 import java.sql.Connection;
 import java.sql.SQLException;
 import javax.sql.DataSource;
 
-final class WaySqlDataSource implements SqlDataSource {
+final class SqlDatabase implements Sql.Source {
 
   private final DataSource dataSource;
 
-  private final Dialect dialect;
+  private final SqlDialect dialect;
 
-  public WaySqlDataSource(DataSource dataSource, Dialect dialect) {
+  public SqlDatabase(DataSource dataSource, SqlDialect dialect) {
     this.dataSource = dataSource;
 
     this.dialect = dialect;
   }
 
   @Override
-  public final SqlTransaction beginTransaction(IsolationLevel level) throws UncheckedSqlException {
+  public final Sql.Transaction beginTransaction(Sql.Transaction.IsolationLevel level) throws Sql.UncheckedSqlException {
     int transactionIsolation;
     transactionIsolation = level.jdbcValue;
 
@@ -41,7 +41,7 @@ final class WaySqlDataSource implements SqlDataSource {
     try {
       connection = dataSource.getConnection();
     } catch (SQLException e) {
-      throw new UncheckedSqlException(e);
+      throw new Sql.UncheckedSqlException(e);
     }
 
     try {
@@ -49,7 +49,7 @@ final class WaySqlDataSource implements SqlDataSource {
 
       connection.setTransactionIsolation(transactionIsolation);
 
-      return new WaySqlTransaction(dialect, connection);
+      return new SqlTransaction(dialect, connection);
     } catch (SQLException e) {
       try {
         connection.close();
@@ -57,7 +57,7 @@ final class WaySqlDataSource implements SqlDataSource {
         e.addSuppressed(suppressed);
       }
 
-      throw new UncheckedSqlException(e);
+      throw new Sql.UncheckedSqlException(e);
     }
   }
 

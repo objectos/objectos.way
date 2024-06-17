@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.sql;
+package objectos.way;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -124,7 +124,7 @@ final class SqlTemplate {
     return count;
   }
 
-  final int count(Dialect dialect, Connection connection) throws UncheckedSqlException {
+  final int count(SqlDialect dialect, Connection connection) throws Sql.UncheckedSqlException {
     dialect.count(sqlBuilder);
 
     String sqlToPrepare;
@@ -135,7 +135,7 @@ final class SqlTemplate {
         Object value;
         value = values[idx++];
 
-        WaySql.set(stmt, idx, value);
+        Sql.set(stmt, idx, value);
       }
 
       try (ResultSet rs = stmt.executeQuery()) {
@@ -146,11 +146,11 @@ final class SqlTemplate {
         }
       }
     } catch (SQLException e) {
-      throw new UncheckedSqlException(e);
+      throw new Sql.UncheckedSqlException(e);
     }
   }
 
-  final void query(Connection connection, ResultSetHandler handler) throws UncheckedSqlException {
+  final void query(Connection connection, Sql.ResultSetHandler handler) throws Sql.UncheckedSqlException {
     String sqlToPrepare;
     sqlToPrepare = sqlBuilder.toString();
 
@@ -159,7 +159,7 @@ final class SqlTemplate {
         Object value;
         value = values[idx++];
 
-        WaySql.set(stmt, idx, value);
+        Sql.set(stmt, idx, value);
       }
 
       try (ResultSet rs = stmt.executeQuery()) {
@@ -168,11 +168,11 @@ final class SqlTemplate {
         }
       }
     } catch (SQLException e) {
-      throw new UncheckedSqlException(e);
+      throw new Sql.UncheckedSqlException(e);
     }
   }
 
-  final void paginate(Dialect dialect, Page page) {
+  final void paginate(SqlDialect dialect, Sql.Page page) {
     dialect.paginate(sqlBuilder, page);
   }
 

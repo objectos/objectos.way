@@ -13,30 +13,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.sql;
+package objectos.way;
 
 import static org.testng.Assert.assertEquals;
 
 import java.sql.DatabaseMetaData;
 import org.testng.annotations.Test;
 
-public class MysqlDialectTest {
+public class SqlDialectMysqlTest {
 
   @Test
   public void of() {
     DatabaseMetaData data;
     data = TestingDatabaseMetaData.MYSQL_5_7;
 
-    Dialect dialect;
-    dialect = Dialect.of(data);
+    SqlDialect dialect;
+    dialect = SqlDialect.of(data);
 
-    assertEquals(dialect.getClass(), Dialect.class);
+    assertEquals(dialect.getClass(), SqlDialect.class);
   }
   
   @Test
   public void count() {
-    Dialect dialect;
-    dialect = TestingDialect.MYSQL_5_7;
+    SqlDialect dialect;
+    dialect = TestingSqlDialect.MYSQL_5_7;
 
     StringBuilder sqlBuilder;
     sqlBuilder = new StringBuilder("select * from FOO");
@@ -52,13 +52,13 @@ public class MysqlDialectTest {
   
   @Test
   public void paginate01() {
-    Dialect dialect;
-    dialect = TestingDialect.MYSQL_5_7;
+    SqlDialect dialect;
+    dialect = TestingSqlDialect.MYSQL_5_7;
 
     StringBuilder sqlBuilder;
     sqlBuilder = new StringBuilder("select * from FOO");
 
-    dialect.paginate(sqlBuilder, new TestingPage(1, 15));
+    dialect.paginate(sqlBuilder, Sql.createPage(1, 15));
 
     assertEquals(sqlBuilder.toString(), """
     select * from FOO
@@ -68,13 +68,13 @@ public class MysqlDialectTest {
 
   @Test
   public void paginate02() {
-    Dialect dialect;
-    dialect = TestingDialect.MYSQL_5_7;
+    SqlDialect dialect;
+    dialect = TestingSqlDialect.MYSQL_5_7;
 
     StringBuilder sqlBuilder;
     sqlBuilder = new StringBuilder("select * from FOO");
 
-    dialect.paginate(sqlBuilder, new TestingPage(3, 15));
+    dialect.paginate(sqlBuilder, Sql.createPage(3, 15));
 
     assertEquals(sqlBuilder.toString(), """
     select * from FOO

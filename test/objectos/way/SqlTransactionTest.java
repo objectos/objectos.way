@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.sql;
+package objectos.way;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertSame;
@@ -25,7 +25,7 @@ import java.util.Map;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-public class WaySqlTransactionTest {
+public class SqlTransactionTest {
   
   @Test
   public void batchUpdate01() {
@@ -338,7 +338,7 @@ public class WaySqlTransactionTest {
       select A, B
       from FOO
       where C = ?
-      """, this::row, new TestingPage(2, 15), 123);
+      """, this::row, Sql.createPage(2, 15), 123);
     }
 
     assertEquals(
@@ -457,23 +457,23 @@ public class WaySqlTransactionTest {
   public void rollback02() {
     TestingConnection conn;
     conn = new TestingConnection();
-    
+
     SQLException exception;
     exception = new SQLException();
-    
+
     conn.rollbackException(exception);
 
     try (SqlTransaction trx = trx(conn)) {
       trx.rollback();
-      
+
       Assert.fail();
-    } catch (UncheckedSqlException e) {
+    } catch (Sql.UncheckedSqlException e) {
       SQLException cause;
       cause = e.getCause();
-      
+
       assertSame(cause, exception);
     }
-    
+
     assertEquals(
         conn.toString(),
 
@@ -572,18 +572,18 @@ public class WaySqlTransactionTest {
   }
 
   private SqlTransaction trx(Connection connection) {
-    Dialect dialect;
-    dialect = new Dialect();
+    SqlDialect dialect;
+    dialect = new SqlDialect();
     
-    return new WaySqlTransaction(dialect, connection);
+    return new SqlTransaction(dialect, connection);
   }
 
   private void row(ResultSet rs) {
     // noop
   }
   
-  private Page page(int pageSize) {
-    return new TestingPage(1, pageSize);
+  private Sql.Page page(int pageSize) {
+    return Sql.createPage(1, pageSize);
   }
   
 }

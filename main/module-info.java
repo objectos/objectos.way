@@ -31,7 +31,6 @@ module objectos.way {
   exports objectos.lang;
   exports objectos.lang.classloader;
   exports objectos.notes.impl;
-  exports objectos.sql;
   exports objectos.way;
   exports objectos.web;
 

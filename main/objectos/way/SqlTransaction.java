@@ -13,54 +13,54 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.sql;
+package objectos.way;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import objectos.lang.object.Check;
 
-final class WaySqlTransaction implements SqlTransaction {
+final class SqlTransaction implements Sql.Transaction {
 
-  private final Dialect dialect;
+  private final SqlDialect dialect;
 
   private final Connection connection;
 
-  WaySqlTransaction(Dialect dialect, Connection connection) {
+  SqlTransaction(SqlDialect dialect, Connection connection) {
     this.dialect = dialect;
 
     this.connection = connection;
   }
 
   @Override
-  public final void commit() throws UncheckedSqlException {
+  public final void commit() throws Sql.UncheckedSqlException {
     try {
       connection.commit();
     } catch (SQLException e) {
-      throw new UncheckedSqlException(e);
+      throw new Sql.UncheckedSqlException(e);
     }
   }
 
   @Override
-  public final void rollback() throws UncheckedSqlException {
+  public final void rollback() throws Sql.UncheckedSqlException {
     try {
       connection.rollback();
     } catch (SQLException e) {
-      throw new UncheckedSqlException(e);
+      throw new Sql.UncheckedSqlException(e);
     }
   }
 
   @Override
-  public final void close() throws UncheckedSqlException {
+  public final void close() throws Sql.UncheckedSqlException {
     try {
       connection.close();
     } catch (SQLException e) {
-      throw new UncheckedSqlException(e);
+      throw new Sql.UncheckedSqlException(e);
     }
   }
 
   @Override
-  public final int[] batchUpdate(String sql, Object[]... batches) throws UncheckedSqlException {
+  public final int[] batchUpdate(String sql, Object[]... batches) throws Sql.UncheckedSqlException {
     Check.notNull(sql, "sql == null");
     Check.notNull(batches, "batches == null");
 
@@ -71,21 +71,21 @@ final class WaySqlTransaction implements SqlTransaction {
           Object value;
           value = batch[index++];
 
-          WaySql.set(stmt, index, value);
+          Sql.set(stmt, index, value);
         }
-        
+
         stmt.addBatch();
       }
 
       return stmt.executeBatch();
-      
+
     } catch (SQLException e) {
-      throw new UncheckedSqlException(e);
+      throw new Sql.UncheckedSqlException(e);
     }
   }
 
   @Override
-  public final int count(String sql, Object... args) throws UncheckedSqlException {
+  public final int count(String sql, Object... args) throws Sql.UncheckedSqlException {
     Check.notNull(sql, "sql == null");
     Check.notNull(args, "args == null");
 
@@ -96,7 +96,7 @@ final class WaySqlTransaction implements SqlTransaction {
   }
 
   @Override
-  public final void queryPage(String sql, ResultSetHandler handler, Page page, Object... args) throws UncheckedSqlException {
+  public final void queryPage(String sql, Sql.ResultSetHandler handler, Sql.Page page, Object... args) throws Sql.UncheckedSqlException {
     Check.notNull(sql, "sql == null");
     Check.notNull(handler, "handler == null");
     Check.notNull(page, "page == null");

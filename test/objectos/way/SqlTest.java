@@ -13,24 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.sql;
+package objectos.way;
 
 import static org.testng.Assert.assertEquals;
 
 import java.sql.SQLException;
 import org.testng.annotations.Test;
 
-public class WaySqlTest {
+public class SqlTest {
 
   @Test
   public void set() throws SQLException {
     TestingPreparedStatement stmt;
     stmt = new TestingPreparedStatement();
 
-    WaySql.set(stmt, 1, "ABC");
-    WaySql.set(stmt, 2, Boolean.TRUE);
-    WaySql.set(stmt, 3, Integer.valueOf(123));
-    WaySql.set(stmt, 4, Long.valueOf(567L));
+    Sql.set(stmt, 1, "ABC");
+    Sql.set(stmt, 2, Boolean.TRUE);
+    Sql.set(stmt, 3, Integer.valueOf(123));
+    Sql.set(stmt, 4, Long.valueOf(567L));
 
     assertEquals(
         stmt.toString(),
@@ -43,5 +43,5 @@ public class WaySqlTest {
         """
     );
   }
-  
+
 }

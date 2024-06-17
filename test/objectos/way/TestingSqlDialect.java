@@ -13,27 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.sql;
+package objectos.way;
 
-import java.sql.Connection;
-import java.sql.DatabaseMetaData;
-import java.sql.SQLException;
-import javax.sql.DataSource;
+final class TestingSqlDialect {
 
-public interface SqlDataSource {
-  
-  static SqlDataSource of(DataSource dataSource) throws SQLException {
-    try (Connection connection = dataSource.getConnection()) {
-      DatabaseMetaData data;
-      data = connection.getMetaData();
+  public static final SqlDialect MYSQL_5_7 = SqlDialect.of(TestingDatabaseMetaData.MYSQL_5_7);
 
-      Dialect dialect;
-      dialect = Dialect.of(data);
-
-      return new WaySqlDataSource(dataSource, dialect);
-    }
-  }
-
-  SqlTransaction beginTransaction(IsolationLevel level) throws UncheckedSqlException;
+  private TestingSqlDialect() {}
 
 }

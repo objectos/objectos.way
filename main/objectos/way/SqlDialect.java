@@ -13,16 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.sql;
+package objectos.way;
 
 import java.sql.DatabaseMetaData;
 
-class Dialect {
+class SqlDialect {
 
-  Dialect() {}
+  SqlDialect() {}
 
-  static Dialect of(DatabaseMetaData data) {
-    return new Dialect();
+  static SqlDialect of(DatabaseMetaData data) {
+    return new SqlDialect();
   }
 
   public void count(StringBuilder sqlBuilder) {
@@ -44,7 +44,7 @@ class Dialect {
     sqlBuilder.append(System.lineSeparator());
   }
 
-  public void paginate(StringBuilder sqlBuilder, Page page) {
+  public void paginate(StringBuilder sqlBuilder, Sql.Page page) {
     if (shouldAppendNewLine(sqlBuilder)) {
       sqlBuilder.append(System.lineSeparator());
     }
