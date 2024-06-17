@@ -25,7 +25,7 @@ final class SqlTransaction implements Sql.Transaction {
   private final SqlDialect dialect;
 
   private final Connection connection;
-
+  
   SqlTransaction(SqlDialect dialect, Connection connection) {
     this.dialect = dialect;
 

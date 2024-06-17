@@ -20,10 +20,15 @@ import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.sql.RowIdLifetime;
 import java.sql.SQLException;
+import objectos.way.Sql.UncheckedSqlException;
 
 final class TestingDatabaseMetaData implements DatabaseMetaData {
 
-  public static final DatabaseMetaData MYSQL_5_7 = new TestingDatabaseMetaData(
+  public static final TestingDatabaseMetaData H2 = new TestingDatabaseMetaData(
+      "H2", 2, 2, "2.2.224 (2023-09-17)"
+  );
+
+  public static final TestingDatabaseMetaData MYSQL_5_7 = new TestingDatabaseMetaData(
       "MySQL", 5, 7, "5.7.44-log"
   );
 
@@ -40,6 +45,14 @@ final class TestingDatabaseMetaData implements DatabaseMetaData {
     this.databaseMajorVersion = databaseMajorVersion;
     this.databaseMinorVersion = databaseMinorVersion;
     this.databaseProductVersion = databaseProductVersion;
+  }
+  
+  public final SqlDialect toSqlDialect() {
+    try {
+      return SqlDialect.of(this);
+    } catch (SQLException e) {
+      throw new UncheckedSqlException(e);
+    }
   }
 
   @Override

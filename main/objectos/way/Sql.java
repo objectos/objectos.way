@@ -22,11 +22,26 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import javax.sql.DataSource;
 import objectos.lang.object.Check;
+import objectos.notes.Note3;
+import objectos.notes.NoteSink;
+import objectos.way.Sql.Source.Option;
+import objectos.way.SqlSource.Builder;
 
 /**
  * The Objectos SQL main class.
  */
 public final class Sql {
+  
+  // notes
+  
+  public static final Note3<DatabaseMetaData, String, String> METADATA;
+  
+  static {
+    Class<?> s;
+    s = Sql.class;
+
+    METADATA = Note3.debug(s, "Database metadata");
+  }
   
   // types
 
@@ -62,6 +77,8 @@ public final class Sql {
    * instance.
    */
   public interface Source {
+    
+    public sealed interface Option permits SqlOption {}
 
     /**
      * Begins a transaction with the specified isolation level.
@@ -174,16 +191,26 @@ public final class Sql {
    * @throws SQLException
    *         if a database access error occurs
    */
-  public static Source createSource(DataSource dataSource) throws SQLException {
-    try (Connection connection = dataSource.getConnection()) {
-      DatabaseMetaData data;
-      data = connection.getMetaData();
-
-      SqlDialect dialect;
-      dialect = SqlDialect.of(data);
-
-      return new SqlDatabase(dataSource, dialect);
+  public static Source createSource(DataSource dataSource, Source.Option... options) throws SQLException {
+    Check.notNull(dataSource, "dataSource == null");
+    Check.notNull(options, "options == null");
+    
+    SqlSource.Builder builder;
+    builder = new SqlSource.Builder(dataSource);
+    
+    for (int idx = 0; idx < options.length; idx++) {
+      Option o;
+      o = options[idx];
+      
+      Check.notNull(o, "options[", idx, "] == null");
+      
+      SqlOption option;
+      option = (SqlOption) o;
+      
+      option.acceptSqlSourceBuilder(builder);
     }
+    
+    return builder.build();
   }
   
   public static Page createPage(int number, int size) {
@@ -193,6 +220,17 @@ public final class Sql {
     record SqlPage(int number, int size) implements Sql.Page {}
 
     return new SqlPage(number, size);
+  }
+  
+  public static Sql.Source.Option noteSink(NoteSink noteSink) {
+    Check.notNull(noteSink, "noteSink == null");
+    
+    return new SqlOption() {
+      @Override
+      final void acceptSqlSourceBuilder(Builder builder) {
+        builder.noteSink = noteSink;
+      }
+    };
   }
   
   // utils

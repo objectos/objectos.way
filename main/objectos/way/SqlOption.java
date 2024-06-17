@@ -15,12 +15,8 @@
  */
 package objectos.way;
 
-final class TestingSqlDialect {
-
-  public static final SqlDialect H2 = TestingDatabaseMetaData.H2.toSqlDialect();
-
-  public static final SqlDialect MYSQL_5_7 = TestingDatabaseMetaData.MYSQL_5_7.toSqlDialect();
-
-  private TestingSqlDialect() {}
+non-sealed abstract class SqlOption implements Sql.Source.Option {
+  
+  void acceptSqlSourceBuilder(SqlSource.Builder builder) {}
 
 }

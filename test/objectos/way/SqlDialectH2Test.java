@@ -21,12 +21,12 @@ import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
 import org.testng.annotations.Test;
 
-public class SqlDialectMysqlTest {
+public class SqlDialectH2Test {
 
   @Test
   public void of() throws SQLException {
     DatabaseMetaData data;
-    data = TestingDatabaseMetaData.MYSQL_5_7;
+    data = TestingDatabaseMetaData.H2;
 
     SqlDialect dialect;
     dialect = SqlDialect.of(data);
@@ -37,7 +37,7 @@ public class SqlDialectMysqlTest {
   @Test
   public void count() {
     SqlDialect dialect;
-    dialect = TestingSqlDialect.MYSQL_5_7;
+    dialect = TestingSqlDialect.H2;
 
     StringBuilder sqlBuilder;
     sqlBuilder = new StringBuilder("select * from FOO");
@@ -54,7 +54,7 @@ public class SqlDialectMysqlTest {
   @Test
   public void paginate01() {
     SqlDialect dialect;
-    dialect = TestingSqlDialect.MYSQL_5_7;
+    dialect = TestingSqlDialect.H2;
 
     StringBuilder sqlBuilder;
     sqlBuilder = new StringBuilder("select * from FOO");
@@ -63,14 +63,14 @@ public class SqlDialectMysqlTest {
 
     assertEquals(sqlBuilder.toString(), """
     select * from FOO
-    limit 15
+    fetch first 15 rows only
     """);
   }
 
   @Test
   public void paginate02() {
     SqlDialect dialect;
-    dialect = TestingSqlDialect.MYSQL_5_7;
+    dialect = TestingSqlDialect.H2;
 
     StringBuilder sqlBuilder;
     sqlBuilder = new StringBuilder("select * from FOO");
@@ -79,8 +79,8 @@ public class SqlDialectMysqlTest {
 
     assertEquals(sqlBuilder.toString(), """
     select * from FOO
-    limit 15
-    offset 30
+    offset 30 rows
+    fetch first 15 rows only
     """);
   }
 

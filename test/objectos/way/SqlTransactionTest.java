@@ -573,7 +573,7 @@ public class SqlTransactionTest {
 
   private SqlTransaction trx(Connection connection) {
     SqlDialect dialect;
-    dialect = new SqlDialect();
+    dialect = TestingDatabaseMetaData.MYSQL_5_7.toSqlDialect();
     
     return new SqlTransaction(dialect, connection);
   }

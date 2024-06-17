@@ -16,13 +16,40 @@
 package objectos.way;
 
 import java.sql.DatabaseMetaData;
+import java.sql.SQLException;
 
-class SqlDialect {
+final class SqlDialect {
 
-  SqlDialect() {}
+  private enum Dialect {
 
-  static SqlDialect of(DatabaseMetaData data) {
-    return new SqlDialect();
+    H2,
+
+    MYSQL;
+
+  }
+
+  private final Dialect dialect;
+
+  private SqlDialect(Dialect dialect) {
+    this.dialect = dialect;
+  }
+
+  static SqlDialect of(DatabaseMetaData data) throws SQLException {
+    String productName;
+    productName = data.getDatabaseProductName();
+
+    Dialect dialect;
+    dialect = switch (productName) {
+      case "H2" -> Dialect.H2;
+
+      case "MySQL" -> Dialect.MYSQL;
+
+      default -> throw new UnsupportedOperationException(
+          "Unsupported dialect with databaseProductName=" + productName
+      );
+    };
+
+    return new SqlDialect(dialect);
   }
 
   public void count(StringBuilder sqlBuilder) {
@@ -44,25 +71,49 @@ class SqlDialect {
     sqlBuilder.append(System.lineSeparator());
   }
 
-  public void paginate(StringBuilder sqlBuilder, Sql.Page page) {
-    if (shouldAppendNewLine(sqlBuilder)) {
-      sqlBuilder.append(System.lineSeparator());
+  public void paginate(StringBuilder sql, Sql.Page page) {
+    if (shouldAppendNewLine(sql)) {
+      sql.append(System.lineSeparator());
     }
-
-    sqlBuilder.append("limit ");
-    sqlBuilder.append(page.size());
-    sqlBuilder.append(System.lineSeparator());
 
     int pageNumber;
     pageNumber = page.number();
 
-    if (pageNumber > 1) {
-      int offset;
-      offset = (pageNumber - 1) * page.size();
+    switch (dialect) {
+      case H2:
+        if (pageNumber > 1) {
+          int offset;
+          offset = (pageNumber - 1) * page.size();
 
-      sqlBuilder.append("offset ");
-      sqlBuilder.append(offset);
-      sqlBuilder.append(System.lineSeparator());
+          sql.append("offset ");
+          sql.append(offset);
+          sql.append(" rows");
+          sql.append(System.lineSeparator());
+        }
+
+        sql.append("fetch first ");
+        sql.append(page.size());
+        sql.append(" rows only");
+        sql.append(System.lineSeparator());
+        
+        break;
+
+      case MYSQL:
+      default:
+        sql.append("limit ");
+        sql.append(page.size());
+        sql.append(System.lineSeparator());
+
+        if (pageNumber > 1) {
+          int offset;
+          offset = (pageNumber - 1) * page.size();
+
+          sql.append("offset ");
+          sql.append(offset);
+          sql.append(System.lineSeparator());
+        }
+        
+        break;
     }
   }
 
