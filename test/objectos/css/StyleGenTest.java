@@ -3307,6 +3307,30 @@ public class StyleGenTest {
     assertTrue(result.contains("mono"));
     assertTrue(result.endsWith(".hidden { display: none }\n"));
   }
+  
+  // edge cases
+  
+  @Test
+  public void negativeMargin() {
+    class Subject extends AbstractSubject {
+      @Override
+      final void classes() {
+        className("-ml-2 md:hidden");
+      }
+    }
+
+    test(
+        Subject.class,
+
+        """
+        .-ml-2 { margin-left: -0.5rem }
+        
+        @media (min-width: 768px) {
+          .md\\:hidden { display: none }
+        }
+        """
+    );
+  }
 
   private Entry<String, String> px(int value) {
     String px;

@@ -118,6 +118,8 @@ abstract class WayStyleGenParser extends WayStyleGenVariants {
     
     this.className = className;
 
+    negative = false;
+
     this.variants = variants;
 
     // static hash map... (sort of)
@@ -316,8 +318,6 @@ abstract class WayStyleGenParser extends WayStyleGenVariants {
    * Prefixes that are 1 word
    */
   private Rule prefixWord1(String value) {
-    negative = false;
-
     int prefixStart = 0;
 
     String prefix, suffix;
