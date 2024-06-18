@@ -15,6 +15,7 @@
  */
 package objectos.css;
 
+import static objectos.css.Utility.ACCESSIBILITY;
 import static objectos.css.Utility.ALIGN_ITEMS;
 import static objectos.css.Utility.BACKGROUND_COLOR;
 import static objectos.css.Utility.BORDER_COLLAPSE;
@@ -82,6 +83,7 @@ import static objectos.css.Utility.Z_INDEX;
 
 import java.util.List;
 import java.util.Map;
+import objectos.css.Variant.Breakpoint;
 
 abstract class WayStyleGenParser extends WayStyleGenVariants {
 
@@ -104,10 +106,6 @@ abstract class WayStyleGenParser extends WayStyleGenVariants {
 
   @Override
   final Rule onVariants(String className, List<Variant> variants, String value) {
-    this.className = className;
-
-    this.variants = variants;
-
     Map<String, String> utilities;
     utilities = config.utilities();
 
@@ -117,11 +115,15 @@ abstract class WayStyleGenParser extends WayStyleGenVariants {
     if (customRule != null) {
       return Utility.CUSTOM.get(className, variants, customRule);
     }
+    
+    this.className = className;
+
+    this.variants = variants;
 
     // static hash map... (sort of)
     return switch (value) {
       // Accessibility
-      case "sr-only" -> Utility.ACCESSIBILITY.get(className, variants, """
+      case "sr-only" -> ACCESSIBILITY.get(className, variants, """
       position: absolute;
       width: 1px;
       height: 1px;
@@ -132,7 +134,7 @@ abstract class WayStyleGenParser extends WayStyleGenVariants {
       white-space: nowrap;
       border-width: 0;
       """);
-      case "not-sr-only" -> Utility.ACCESSIBILITY.get(className, variants, """
+      case "not-sr-only" -> ACCESSIBILITY.get(className, variants, """
       position: static;
       width: auto;
       height: auto;
@@ -153,7 +155,44 @@ abstract class WayStyleGenParser extends WayStyleGenVariants {
       // BorderCollapse
       case "border-collapse" -> nameValue(BORDER_COLLAPSE, "collapse");
       case "border-separate" -> nameValue(BORDER_COLLAPSE, "separate");
+      
+      // Container
+      case "container" -> new Rule(0, className, variants) {
+        
+        final List<Breakpoint> breakpoints = config.breakpoints();
 
+        @Override
+        final void writeBlock(StringBuilder out, Indentation indentation) {
+          out.append(" { width: 100% }");
+
+          Indentation next;
+          next = indentation.increase();
+
+          for (Breakpoint breakpoint : breakpoints) {
+            out.append(System.lineSeparator());
+            
+            breakpoint.writeMediaQueryStart(out, indentation);
+            
+            next.writeTo(out);
+
+            writeClassName(out);
+            
+            out.append(" { max-width: ");
+            
+            out.append(breakpoint.value());
+            
+            out.append(" }");
+
+            out.append(System.lineSeparator());
+
+            indentation.writeTo(out);
+            
+            out.append("}");
+          }
+        }
+        
+      };
+      
       // Display
       case "block",
            "inline-block",

@@ -136,7 +136,7 @@ class Rule implements Comparable<Rule> {
     out.append(" }");
   }
 
-  private void writeClassName(StringBuilder out) {
+  final void writeClassName(StringBuilder out) {
     int length;
     length = className.length();
 

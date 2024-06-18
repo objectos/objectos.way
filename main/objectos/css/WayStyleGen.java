@@ -240,6 +240,11 @@ public final class WayStyleGen extends WayStyleGenConfig implements StyleGen {
   }
 
   @Override
+  final List<Breakpoint> breakpoints() {
+    return breakpoints;
+  }
+
+  @Override
   final Variant getVariant(String variantName) {
     return variants().get(variantName);
   }
@@ -766,7 +771,7 @@ public final class WayStyleGen extends WayStyleGenConfig implements StyleGen {
   final Map<String, String> gridTemplateRows() {
     if (gridTemplateRows == null) {
       gridTemplateRows = new GrowableMap<>();
-      
+
       gridTemplateRows.put("none", "none");
       gridTemplateRows.put("subgrid", "subgrid");
       gridTemplateRows.put("1", "repeat(1, minmax(0, 1fr))");
@@ -782,7 +787,7 @@ public final class WayStyleGen extends WayStyleGenConfig implements StyleGen {
       gridTemplateRows.put("11", "repeat(11, minmax(0, 1fr))");
       gridTemplateRows.put("12", "repeat(12, minmax(0, 1fr))");
     }
-    
+
     return gridTemplateRows;
   }
 
@@ -995,9 +1000,9 @@ public final class WayStyleGen extends WayStyleGenConfig implements StyleGen {
   final Map<String, String> size() {
     if (size == null) {
       size = new GrowableMap<>();
-      
+
       size.putAll(spacing());
-      
+
       size.put("auto", "auto");
       size.put("1/2", "50%");
       size.put("1/3", "33.333333%");

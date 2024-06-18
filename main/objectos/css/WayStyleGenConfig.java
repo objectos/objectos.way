@@ -15,11 +15,15 @@
  */
 package objectos.css;
 
+import java.util.List;
 import java.util.Map;
+import objectos.css.Variant.Breakpoint;
 
 sealed abstract class WayStyleGenConfig permits WayStyleGen {
 
   boolean skipReset;
+  
+  abstract List<Breakpoint> breakpoints();
   
   abstract Variant getVariant(String variantName);
 
