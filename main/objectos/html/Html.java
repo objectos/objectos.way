@@ -1136,7 +1136,8 @@ public final class Html extends BaseElements implements CharWritable {
           break loop;
         }
 
-        case ByteProto.ATTRIBUTE1 -> index = skipVarInt(index);
+        case ByteProto.ATTRIBUTE0,
+             ByteProto.ATTRIBUTE1 -> index = skipVarInt(index);
 
         case ByteProto.ATTRIBUTE_CLASS,
              ByteProto.ATTRIBUTE_ID -> index += 2;

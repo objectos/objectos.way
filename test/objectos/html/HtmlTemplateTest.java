@@ -1215,6 +1215,28 @@ public class HtmlTemplateTest {
         """
     );
   }
+  
+  @Test(description = """
+  Allow boolean attribute in a fragment
+  """)
+  public void testCase56() {
+    test(
+        new HtmlTemplate() {
+          @Override
+          protected final void definition() {
+            div(f(this::test));
+          }
+          
+          private void test() {
+            button(disabled(), t("Foo"));
+          }
+        },
+
+        """
+        <div><button disabled>Foo</button></div>
+        """
+    );
+  }
 
   private void test(HtmlTemplate template, String expected) {
     String result;
