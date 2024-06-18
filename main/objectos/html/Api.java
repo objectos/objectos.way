@@ -535,6 +535,9 @@ public final class Api {
    */
   public sealed interface DisabledAttribute
       extends
+      ButtonValue,
+      FieldsetValue,
+      InputValue,
       OptionValue,
       SelectValue,
       TextAreaValue {}

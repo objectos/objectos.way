@@ -15,6 +15,7 @@
  */
 package objectos.html;
 
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import objectos.html.Api.GlobalAttribute;
@@ -124,6 +125,10 @@ public sealed abstract class TemplateBase
 
   protected final <E> Api.Fragment f(final Consumer<E> consumer, final E argument) {
     return f(() -> consumer.accept(argument));
+  }
+
+  protected final <E1, E2> Api.Fragment f(final BiConsumer<E1, E2> consumer, final E1 arg1, final E2 arg2) {
+    return f(() -> consumer.accept(arg1, arg2));
   }
 
   /**

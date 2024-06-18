@@ -25,7 +25,7 @@ VERSION := 0.19-SNAPSHOT
 MODULE := $(ARTIFACT_ID)
 
 ## Dependencies
-SELFGEN := br.com.objectos/objectos.selfgen/0.4
+SELFGEN := br.com.objectos/objectos.selfgen/0.5-SNAPSHOT
 NOTES := br.com.objectos/objectos.notes/0.1
 
 JACKSON_CORE := com.fasterxml.jackson.core/jackson-core/2.16.1
