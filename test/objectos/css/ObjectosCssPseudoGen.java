@@ -28,8 +28,21 @@ public class ObjectosCssPseudoGen {
     ObjectosCssPseudoGen gen;
     gen = new ObjectosCssPseudoGen();
 
-    gen.classNameSingleLine(TABLE_LAYOUT, "table-");
-    gen.cases(TABLE_LAYOUT, "TABLE_LAYOUT", "table-");
+    gen.classNameSingleLine(BORDER_RADIUS, "rounded-");
+    gen.classNameSingleLine(BORDER_RADIUS, "rounded-s-");
+    gen.classNameSingleLine(BORDER_RADIUS, "rounded-e-");
+    gen.classNameSingleLine(BORDER_RADIUS, "rounded-t-");
+    gen.classNameSingleLine(BORDER_RADIUS, "rounded-r-");
+    gen.classNameSingleLine(BORDER_RADIUS, "rounded-b-");
+    gen.classNameSingleLine(BORDER_RADIUS, "rounded-l-");
+    gen.classNameSingleLine(BORDER_RADIUS, "rounded-ss-");
+    gen.classNameSingleLine(BORDER_RADIUS, "rounded-se-");
+    gen.classNameSingleLine(BORDER_RADIUS, "rounded-ee-");
+    gen.classNameSingleLine(BORDER_RADIUS, "rounded-es-");
+    gen.classNameSingleLine(BORDER_RADIUS, "rounded-tl-");
+    gen.classNameSingleLine(BORDER_RADIUS, "rounded-tr-");
+    gen.classNameSingleLine(BORDER_RADIUS, "rounded-br-");
+    gen.classNameSingleLine(BORDER_RADIUS, "rounded-bl-");
   }
 
   private static final Map<String, String> SCREENS = seqmap(
@@ -84,6 +97,18 @@ public class ObjectosCssPseudoGen {
       kv("items-center", "center"),
       kv("items-baseline", "baseline"),
       kv("items-stretch", "stretch")
+  );
+
+  static final Map<String, String> BORDER_RADIUS = seqmap(
+      kv("none", "0px"),
+      kv("sm", "0.125rem"),
+      kv("", "0.25rem"),
+      kv("md", "0.375rem"),
+      kv("lg", "0.5rem"),
+      kv("xl", "0.75rem"),
+      kv("2xl", "1rem"),
+      kv("3xl", "1.5rem"),
+      kv("full", "9999px")
   );
 
   static final Map<String, String> BORDER_WIDTH = seqmap(
@@ -631,7 +656,11 @@ public class ObjectosCssPseudoGen {
     String names = map.keySet().stream()
         .map(s -> {
           if (s.isEmpty()) {
-            return prefix;
+            if (prefix.endsWith("-")) {
+              return prefix.substring(0, prefix.length() - 1);
+            } else {
+              return prefix;
+            }
           } else {
             return prefix + s;
           }

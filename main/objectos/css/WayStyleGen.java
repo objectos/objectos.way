@@ -38,6 +38,8 @@ public final class WayStyleGen extends WayStyleGenConfig implements StyleGen {
 
   private Map<String, String> borderSpacing;
 
+  private Map<String, String> borderRadius;
+  
   private Map<String, String> borderWidth;
 
   private Map<String, String> colors;
@@ -256,6 +258,25 @@ public final class WayStyleGen extends WayStyleGenConfig implements StyleGen {
     }
 
     return borderSpacing;
+  }
+
+  @Override
+  final Map<String, String> borderRadius() {
+    if (borderRadius == null) {
+      borderRadius = new GrowableMap<>();
+
+      borderRadius.put("none", "0px");
+      borderRadius.put("sm", "0.125rem");
+      borderRadius.put("", "0.25rem");
+      borderRadius.put("md", "0.375rem");
+      borderRadius.put("lg", "0.5rem");
+      borderRadius.put("xl", "0.75rem");
+      borderRadius.put("2xl", "1rem");
+      borderRadius.put("3xl", "1.5rem");
+      borderRadius.put("full", "9999px");
+    }
+
+    return borderRadius;
   }
 
   @Override

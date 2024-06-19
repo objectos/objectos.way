@@ -29,6 +29,8 @@ sealed abstract class WayStyleGenConfig permits WayStyleGen {
 
   abstract Map<String, String> borderSpacing();
   
+  abstract Map<String, String> borderRadius();
+  
   abstract Map<String, String> borderWidth();
 
   abstract Map<String, String> colors();

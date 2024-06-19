@@ -115,7 +115,7 @@ abstract class WayStyleGenParser extends WayStyleGenVariants {
     if (customRule != null) {
       return Utility.CUSTOM.get(className, variants, customRule);
     }
-    
+
     this.className = className;
 
     negative = false;
@@ -157,10 +157,10 @@ abstract class WayStyleGenParser extends WayStyleGenVariants {
       // BorderCollapse
       case "border-collapse" -> nameValue(BORDER_COLLAPSE, "collapse");
       case "border-separate" -> nameValue(BORDER_COLLAPSE, "separate");
-      
+
       // Container
       case "container" -> new Rule(0, className, variants) {
-        
+
         final List<Breakpoint> breakpoints = config.breakpoints();
 
         @Override
@@ -172,29 +172,29 @@ abstract class WayStyleGenParser extends WayStyleGenVariants {
 
           for (Breakpoint breakpoint : breakpoints) {
             out.append(System.lineSeparator());
-            
+
             breakpoint.writeMediaQueryStart(out, indentation);
-            
+
             next.writeTo(out);
 
             writeClassName(out);
-            
+
             out.append(" { max-width: ");
-            
+
             out.append(breakpoint.value());
-            
+
             out.append(" }");
 
             out.append(System.lineSeparator());
 
             indentation.writeTo(out);
-            
+
             out.append("}");
           }
         }
-        
+
       };
-      
+
       // Display
       case "block",
            "inline-block",
@@ -261,7 +261,7 @@ abstract class WayStyleGenParser extends WayStyleGenVariants {
       case "absolute" -> nameValue(POSITION, "absolute");
       case "relative" -> nameValue(POSITION, "relative");
       case "sticky" -> nameValue(POSITION, "sticky");
-      
+
       // Table Layout
       case "table-auto" -> nameValue(TABLE_LAYOUT, "auto");
       case "table-fixed" -> nameValue(TABLE_LAYOUT, "fixed");
@@ -314,9 +314,6 @@ abstract class WayStyleGenParser extends WayStyleGenVariants {
     return utility.get(className, variants, formatted);
   }
 
-  /**
-   * Prefixes that are 1 word
-   */
   private Rule prefixWord1(String value) {
     int prefixStart = 0;
 
@@ -409,7 +406,7 @@ abstract class WayStyleGenParser extends WayStyleGenVariants {
       case "mr" -> config(MARGIN_RIGHT, config.margin(), suffix);
       case "mb" -> config(MARGIN_BOTTOM, config.margin(), suffix);
       case "ml" -> config(MARGIN_LEFT, config.margin(), suffix);
-      
+
       case "max" -> {
         if (suffix.startsWith("w-")) {
           suffix = suffix.substring("w-".length());
@@ -444,6 +441,7 @@ abstract class WayStyleGenParser extends WayStyleGenVariants {
 
       // R
       case "right" -> config(RIGHT, config.inset(), suffix);
+      case "rounded" -> borderRadius(suffix);
 
       // S
       case "size" -> config(Utility.SIZE, config.size(), suffix);
@@ -604,6 +602,65 @@ abstract class WayStyleGenParser extends WayStyleGenVariants {
     return Rule.NOOP;
   }
 
+  private static final Map<String, Utility> BORDER_RADIUS_PREFIXES = Map.ofEntries(
+      Map.entry("s", Utility.BORDER_RADIUS_S),
+      Map.entry("e", Utility.BORDER_RADIUS_E),
+      Map.entry("t", Utility.BORDER_RADIUS_T),
+      Map.entry("r", Utility.BORDER_RADIUS_R),
+      Map.entry("b", Utility.BORDER_RADIUS_B),
+      Map.entry("l", Utility.BORDER_RADIUS_L),
+      Map.entry("se", Utility.BORDER_RADIUS_SE),
+      Map.entry("ee", Utility.BORDER_RADIUS_EE),
+      Map.entry("es", Utility.BORDER_RADIUS_ES),
+      Map.entry("tl", Utility.BORDER_RADIUS_TL),
+      Map.entry("tr", Utility.BORDER_RADIUS_TR),
+      Map.entry("br", Utility.BORDER_RADIUS_BR),
+      Map.entry("bl", Utility.BORDER_RADIUS_BL)
+  );
+
+  private Rule borderRadius(String suffix) {
+    String prefix, value;
+
+    int dashIndex;
+    dashIndex = suffix.indexOf('-');
+
+    if (dashIndex < 0) {
+      if (BORDER_RADIUS_PREFIXES.containsKey(suffix)) {
+        prefix = suffix;
+
+        value = "";
+      } else {
+        prefix = "";
+
+        value = suffix;
+      }
+    } else {
+      prefix = suffix.substring(0, dashIndex);
+
+      value = suffix.substring(dashIndex + 1);
+    }
+
+    Map<String, String> borderRadius;
+    borderRadius = config.borderRadius();
+
+    String radius;
+    radius = borderRadius.get(value);
+
+    if (radius == null) {
+      return Rule.NOOP;
+    }
+
+    Utility utility = switch (prefix) {
+      case "" -> Utility.BORDER_RADIUS;
+
+      default -> BORDER_RADIUS_PREFIXES.get(prefix);
+    };
+
+    return utility != null
+        ? utility.get(className, variants, radius)
+        : Rule.NOOP;
+  }
+
   private Rule borderSpacing(String suffix) {
     if (suffix.length() == 0) {
       return Rule.NOOP;
@@ -662,21 +719,21 @@ abstract class WayStyleGenParser extends WayStyleGenVariants {
   private Rule grid(String suffix) {
     int dashIndex;
     dashIndex = suffix.indexOf('-');
-    
+
     if (dashIndex <= 0) {
       return Rule.NOOP;
     }
-    
+
     String prefix;
     prefix = suffix.substring(0, dashIndex);
-    
+
     suffix = suffix.substring(dashIndex + 1);
-    
-    return switch(prefix) {
-      case "cols" -> config(GRID_TEMPLATE_COLUMNS, config.gridTemplateColumns(), suffix); 
-      
+
+    return switch (prefix) {
+      case "cols" -> config(GRID_TEMPLATE_COLUMNS, config.gridTemplateColumns(), suffix);
+
       case "rows" -> config(GRID_TEMPLATE_ROWS, config.gridTemplateRows(), suffix);
-      
+
       default -> Rule.NOOP;
     };
   }
@@ -684,31 +741,31 @@ abstract class WayStyleGenParser extends WayStyleGenVariants {
   private Rule gridColumn(String suffix) {
     Map<String, String> gridColumn;
     gridColumn = config.gridColumn();
-    
+
     String col;
     col = gridColumn.get(suffix);
-    
+
     if (col != null) {
       return nameValue(GRID_COLUMN, col);
     }
-    
+
     int dashIndex;
     dashIndex = suffix.indexOf('-');
-    
+
     if (dashIndex <= 0) {
       return Rule.NOOP;
     }
 
     String prefix;
     prefix = suffix.substring(0, dashIndex);
-    
+
     suffix = suffix.substring(dashIndex + 1);
-    
+
     return switch (prefix) {
       case "end" -> config(GRID_COLUMN_END, config.gridColumnEnd(), suffix);
-      
+
       case "start" -> config(GRID_COLUMN_START, config.gridColumnStart(), suffix);
-      
+
       default -> Rule.NOOP;
     };
   }
@@ -809,7 +866,7 @@ abstract class WayStyleGenParser extends WayStyleGenVariants {
 
     return FONT_SIZE1.get(className, variants, value);
   }
-  
+
   private Rule xy(Utility util, Utility utilX, Utility utilY, Map<String, String> values, String suffix) {
     int dash;
     dash = suffix.indexOf('-');

@@ -96,7 +96,24 @@ sealed abstract class Utility {
   
   static final Utility TEXT_WRAP = new Single("text-wrap");
   
-  // 1604
+  // 1607
+  static final Utility BORDER_RADIUS = new Single("border-radius");
+  static final Utility BORDER_RADIUS_S = new Axis("border-start-start-radius", "border-end-start-radius");
+  static final Utility BORDER_RADIUS_E = new Axis("border-start-end-radius", "border-end-end-radius");
+  static final Utility BORDER_RADIUS_T = new Axis("border-top-left-radius", "border-top-right-radius");
+  static final Utility BORDER_RADIUS_R = new Axis("border-top-right-radius", "border-bottom-right-radius");
+  static final Utility BORDER_RADIUS_B = new Axis("border-bottom-right-radius", "border-bottom-left-radius");
+  static final Utility BORDER_RADIUS_L = new Axis("border-top-left-radius", "border-bottom-left-radius");
+  static final Utility BORDER_RADIUS_SS = new Single("border-start-start-radius");
+  static final Utility BORDER_RADIUS_SE = new Single("border-start-end-radius");
+  static final Utility BORDER_RADIUS_EE = new Single("border-end-end-radius");
+  static final Utility BORDER_RADIUS_ES = new Single("border-end-start-radius");
+  static final Utility BORDER_RADIUS_TL = new Single("border-top-left-radius");
+  static final Utility BORDER_RADIUS_TR = new Single("border-top-right-radius");
+  static final Utility BORDER_RADIUS_BR = new Single("border-bottom-right-radius");
+  static final Utility BORDER_RADIUS_BL = new Single("border-bottom-left-radius");
+  
+  // 1629
   static final Utility BORDER_WIDTH = new Single("border-width");
   static final Utility BORDER_WIDTH_X = new Axis("border-left-width", "border-right-width");
   static final Utility BORDER_WIDTH_Y = new Axis("border-top-width", "border-bottom-width");
@@ -105,7 +122,7 @@ sealed abstract class Utility {
   static final Utility BORDER_WIDTH_BOTTOM = new Single("border-bottom-width");
   static final Utility BORDER_WIDTH_LEFT = new Single("border-left-width");
 
-  // 1635
+  // 1660
   static final Utility BORDER_COLOR = new Single("border-color");
   static final Utility BORDER_COLOR_X = new Axis("border-left-color", "border-right-color");
   static final Utility BORDER_COLOR_Y = new Axis("border-top-color", "border-bottom-color");
