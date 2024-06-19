@@ -2737,6 +2737,30 @@ public class StyleGenTest {
   }
   
   @Test
+  public void stroke() {
+    class Subject extends AbstractSubject {
+      @Override
+      final void classes() {
+        className("stroke-none");
+        className("stroke-inherit stroke-current stroke-transparent stroke-black stroke-white");
+      }
+    }
+
+    test(
+        Subject.class,
+
+        """
+        .stroke-none { stroke: none }
+        .stroke-inherit { stroke: inherit }
+        .stroke-current { stroke: currentColor }
+        .stroke-transparent { stroke: transparent }
+        .stroke-black { stroke: #000000 }
+        .stroke-white { stroke: #ffffff }
+        """
+    );
+  }
+  
+  @Test
   public void tableLayout() {
     class Subject extends AbstractSubject {
       @Override

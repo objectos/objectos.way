@@ -82,6 +82,8 @@ sealed abstract class WayStyleGenConfig permits WayStyleGen {
   abstract Map<String, String> rules();
 
   abstract Map<String, String> size();
+  
+  abstract Map<String, String> stroke();
 
   abstract Map<String, String> transitionDuration();
 

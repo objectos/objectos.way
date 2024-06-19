@@ -88,6 +88,8 @@ public final class WayStyleGen extends WayStyleGenConfig implements StyleGen {
 
   private Map<String, String> spacing;
 
+  private Map<String, String> stroke;
+
   private Map<String, String> transitionDuration;
   private Map<String, String> transitionProperty;
 
@@ -1262,6 +1264,18 @@ public final class WayStyleGen extends WayStyleGenConfig implements StyleGen {
     }
 
     return spacing;
+  }
+
+  @Override
+  final Map<String, String> stroke() {
+    if (stroke == null) {
+      stroke = new GrowableMap<>();
+
+      stroke.put("none", "none");
+      stroke.putAll(colors());
+    }
+    
+    return stroke;
   }
 
 }

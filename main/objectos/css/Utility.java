@@ -134,6 +134,7 @@ sealed abstract class Utility {
   static final Utility BACKGROUND_COLOR = new Single("background-color");
 
   static final Utility FILL = new Single("fill");
+  static final Utility STROKE = new Single("stroke");
 
   static final Utility PADDING = new Single("padding");
   static final Utility PADDING_X = new Axis("padding-left", "padding-right");

@@ -28,21 +28,7 @@ public class ObjectosCssPseudoGen {
     ObjectosCssPseudoGen gen;
     gen = new ObjectosCssPseudoGen();
 
-    gen.classNameSingleLine(BORDER_RADIUS, "rounded-");
-    gen.classNameSingleLine(BORDER_RADIUS, "rounded-s-");
-    gen.classNameSingleLine(BORDER_RADIUS, "rounded-e-");
-    gen.classNameSingleLine(BORDER_RADIUS, "rounded-t-");
-    gen.classNameSingleLine(BORDER_RADIUS, "rounded-r-");
-    gen.classNameSingleLine(BORDER_RADIUS, "rounded-b-");
-    gen.classNameSingleLine(BORDER_RADIUS, "rounded-l-");
-    gen.classNameSingleLine(BORDER_RADIUS, "rounded-ss-");
-    gen.classNameSingleLine(BORDER_RADIUS, "rounded-se-");
-    gen.classNameSingleLine(BORDER_RADIUS, "rounded-ee-");
-    gen.classNameSingleLine(BORDER_RADIUS, "rounded-es-");
-    gen.classNameSingleLine(BORDER_RADIUS, "rounded-tl-");
-    gen.classNameSingleLine(BORDER_RADIUS, "rounded-tr-");
-    gen.classNameSingleLine(BORDER_RADIUS, "rounded-br-");
-    gen.classNameSingleLine(BORDER_RADIUS, "rounded-bl-");
+    gen.classNamesColors("stroke");
   }
 
   private static final Map<String, String> SCREENS = seqmap(

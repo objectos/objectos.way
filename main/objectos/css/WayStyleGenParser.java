@@ -68,6 +68,7 @@ import static objectos.css.Utility.POINTER_EVENTS;
 import static objectos.css.Utility.POSITION;
 import static objectos.css.Utility.RIGHT;
 import static objectos.css.Utility.START;
+import static objectos.css.Utility.STROKE;
 import static objectos.css.Utility.TABLE_LAYOUT;
 import static objectos.css.Utility.TEXT_ALIGN;
 import static objectos.css.Utility.TEXT_COLOR;
@@ -446,6 +447,7 @@ abstract class WayStyleGenParser extends WayStyleGenVariants {
       // S
       case "size" -> config(Utility.SIZE, config.size(), suffix);
       case "start" -> config(START, config.inset(), suffix);
+      case "stroke" -> stroke(suffix);
 
       // T
       case "text" -> text(suffix);
@@ -814,6 +816,20 @@ abstract class WayStyleGenParser extends WayStyleGenVariants {
       if (offset != null) {
         return nameValue(OUTLINE_OFFSET, offset);
       }
+    }
+
+    return Rule.NOOP;
+  }
+
+  private Rule stroke(String suffix) {
+    Map<String, String> stroke;
+    stroke = config.stroke();
+
+    String color;
+    color = stroke.get(suffix);
+
+    if (color != null) {
+      return nameValue(STROKE, color);
     }
 
     return Rule.NOOP;
