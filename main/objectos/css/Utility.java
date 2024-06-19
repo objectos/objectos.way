@@ -135,6 +135,7 @@ sealed abstract class Utility {
 
   static final Utility FILL = new Single("fill");
   static final Utility STROKE = new Single("stroke");
+  static final Utility STROKE_WIDTH = new Single("stroke-width");
 
   static final Utility PADDING = new Single("padding");
   static final Utility PADDING_X = new Axis("padding-left", "padding-right");

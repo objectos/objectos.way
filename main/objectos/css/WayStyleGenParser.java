@@ -831,6 +831,16 @@ abstract class WayStyleGenParser extends WayStyleGenVariants {
     if (color != null) {
       return nameValue(STROKE, color);
     }
+    
+    Map<String, String> strokeWidth;
+    strokeWidth = config.strokeWidth();
+    
+    String width;
+    width = strokeWidth.get(suffix);
+    
+    if (width != null) {
+      return nameValue(Utility.STROKE_WIDTH, width);
+    }
 
     return Rule.NOOP;
   }
