@@ -252,6 +252,32 @@ public class TablerIcons extends HtmlComponent {
   }
 
   /**
+   * Renders the <a href="https://tabler.io/icons/icon/chevron-left">chevron-left</a> icon.
+   *
+   * @return the {@code svg} element
+   */
+  public final Element chevronLeft(SvgValue... contents) {
+    return icon(
+        flatten(contents),
+        path(stroke("none"), d("M0 0h24v24H0z"), fill("none")),
+        path(d("M15 6l-6 6l6 6"))
+    );
+  }
+
+  /**
+   * Renders the <a href="https://tabler.io/icons/icon/chevron-right">chevron-right</a> icon.
+   *
+   * @return the {@code svg} element
+   */
+  public final Element chevronRight(SvgValue... contents) {
+    return icon(
+        flatten(contents),
+        path(stroke("none"), d("M0 0h24v24H0z"), fill("none")),
+        path(d("M9 6l6 6l-6 6"))
+    );
+  }
+
+  /**
    * Renders the <a href="https://tabler.io/icons/icon/credit-card-pay">credit-card-pay</a>
    * icon.
    *
