@@ -1238,6 +1238,30 @@ public class HtmlTemplateTest {
     );
   }
 
+  
+  @Test(description = """
+  test the className overloads
+  """)
+  public void testCase57() {
+    test(
+        new HtmlTemplate() {
+          @Override
+          protected final void definition() {
+            div(
+                className("a", "b"),
+                className("c", "d", "e"),
+                className("f", "g", "h", "i"),
+                className("j", "k", "l", "m", "n")
+            );
+          }
+        },
+
+        """
+        <div class="a b c d e f g h i j k l m n"></div>
+        """
+    );
+  }
+
   private void test(HtmlTemplate template, String expected) {
     String result;
     result = template.toString();

@@ -18,6 +18,8 @@ package objectos.html;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import objectos.html.Api.GlobalAttribute;
 import objectos.lang.object.Check;
 
@@ -42,6 +44,77 @@ public sealed abstract class TemplateBase
     html = $html();
 
     plugin.accept(html);
+  }
+
+  /**
+   * Generates the {@code class} attribute by joining the specified values with
+   * a space character.
+   *
+   * @param v0 the first value
+   * @param v1 the second value
+   *
+   * @return an instruction representing this attribute.
+   */
+  protected final Api.GlobalAttribute className(String v0, String v1) {
+    Check.notNull(v0, "v0 == null");
+    Check.notNull(v1, "v1 == null");
+    
+    return $html().className(v0 + " " + v1);
+  }
+
+  /**
+   * Generates the {@code class} attribute by joining the specified values with
+   * space characters.
+   *
+   * @param v0 the first value
+   * @param v1 the second value
+   * @param v2 the third value
+   *
+   * @return an instruction representing this attribute.
+   */
+  protected final Api.GlobalAttribute className(String v0, String v1, String v2) {
+    Check.notNull(v0, "v0 == null");
+    Check.notNull(v1, "v1 == null");
+    Check.notNull(v2, "v2 == null");
+
+    return $html().className(v0 + " " + v1 + " " + v2);
+  }
+
+  /**
+   * Generates the {@code class} attribute by joining the specified values with
+   * space characters.
+   *
+   * @param v0 the first value
+   * @param v1 the second value
+   * @param v2 the third value
+   * @param v3 the fourth value
+   *
+   * @return an instruction representing this attribute.
+   */
+  protected final Api.GlobalAttribute className(String v0, String v1, String v2, String v3) {
+    Check.notNull(v0, "v0 == null");
+    Check.notNull(v1, "v1 == null");
+    Check.notNull(v2, "v2 == null");
+    Check.notNull(v3, "v3 == null");
+
+    return $html().className(v0 + " " + v1 + " " + v2 + " " + v3);
+  }
+
+  /**
+   * Generates the {@code class} attribute by joining the specified values with
+   * space characters.
+   *
+   * @param values the values to be joined
+   *
+   * @return an instruction representing this attribute.
+   */
+  protected final Api.GlobalAttribute className(String... values) {
+    Check.notNull(values, "values == null");
+
+    String value;
+    value = Stream.of(values).collect(Collectors.joining(" "));
+
+    return $html().className(value);
   }
 
   protected final Api.GlobalAttribute dataFrame(String name) {
