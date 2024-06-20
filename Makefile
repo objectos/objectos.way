@@ -28,6 +28,7 @@ MODULE := $(ARTIFACT_ID)
 SELFGEN := br.com.objectos/objectos.selfgen/0.5-SNAPSHOT
 NOTES := br.com.objectos/objectos.notes/0.1
 
+H2 := com.h2database/h2/2.2.224
 JACKSON_CORE := com.fasterxml.jackson.core/jackson-core/2.16.1
 TESTNG := org.testng/testng/7.9.0
 
@@ -116,7 +117,8 @@ include make/java-compile.mk
 #
 
 ## test compile deps
-TEST_COMPILE_DEPS := $(JACKSON_CORE)
+TEST_COMPILE_DEPS := $(H2)
+TEST_COMPILE_DEPS += $(JACKSON_CORE)
 TEST_COMPILE_DEPS += $(TESTNG)
 
 include make/java-test-compile.mk
@@ -134,6 +136,7 @@ TEST_RUNTIME_DEPS := $(SLF4J_NOP)
 ## test modules
 TEST_ADD_MODULES := org.testng
 TEST_ADD_MODULES += com.fasterxml.jackson.core
+TEST_ADD_MODULES += com.h2database
 
 ## test runtime exports
 TEST_JAVAX_EXPORTS := objectos.lang.object
@@ -154,6 +157,7 @@ TEST_ADD_EXPORTS := $(foreach pkg,$(TEST_JAVAX_EXPORTS),objectos.way/$(pkg)=org.
 ## test --add-reads
 TEST_ADD_READS := objectos.way=org.testng
 TEST_ADD_READS += objectos.way=com.fasterxml.jackson.core
+TEST_ADD_READS += objectos.way=com.h2database
 TEST_ADD_READS += objectos.way=java.compiler
 
 include make/java-test.mk

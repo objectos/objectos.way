@@ -39,6 +39,10 @@ public final class TestingHttpServer {
     ServerHolder.bindHttpServerTest(test);
   }
 
+  public static void bindWebModuleTest(WebModuleTest test) {
+    ServerHolder.bindWebModuleTest(test);
+  }
+
   public static void bindWebResourcesTest(WayWebResourcesTest test) {
     ServerHolder.bindWebResourcesTest(test);
   }
@@ -94,6 +98,10 @@ public final class TestingHttpServer {
       HANDLER.httpServerTest = test;
     }
 
+    public static void bindWebModuleTest(WebModuleTest test) {
+      HANDLER.webModuleTest = test.compile();
+    }
+
     public static void bindWebResourcesTest(WayWebResourcesTest test) {
       HANDLER.webResourcesTest = test;
     }
@@ -145,6 +153,8 @@ public final class TestingHttpServer {
 
     private final Http.Handler marketing = new MarketingSite().compile();
     
+    private Http.Handler webModuleTest;
+    
     private Http.Handler webResourcesTest;
 
     @Override
@@ -166,6 +176,8 @@ public final class TestingHttpServer {
         case "http.server.test" -> httpServerTest.handle(http);
 
         case "marketing" -> marketing.handle(http);
+        
+        case "web.module.test" -> webModuleTest.handle(http);
         
         case "web.resources.test" -> webResourcesTest.handle(http);
 
@@ -191,6 +203,5 @@ public final class TestingHttpServer {
     }
 
   }
-
 
 }

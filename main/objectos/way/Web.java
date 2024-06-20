@@ -25,33 +25,45 @@ public final class Web {
   // types
 
   /**
+   * An abstract HTTP module suited for web applications.
+   */
+  public static abstract class Module extends WebModule {
+
+    /**
+     * Sole constructor.
+     */
+    protected Module() {}
+
+  }
+
+  /**
    * Allows for pagination of data tables in an web application.
    */
   public interface Paginator {
-    
+
     Sql.Page current();
-    
+
     int firstItem();
-    
+
     int lastItem();
-    
+
     int totalCount();
-    
+
     boolean hasNext();
-    
+
     boolean hasPrevious();
-    
+
     String nextHref();
-    
+
     String previousHref();
 
   }
-  
+
   /**
    * An web session.
    */
   public interface Session {
-    
+
     /**
      * The identifier of this session.
      * 
@@ -94,7 +106,7 @@ public final class Web {
     void invalidate();
 
   }
-  
+
   private Web() {}
 
   /**
@@ -115,5 +127,5 @@ public final class Web {
 
     return WebPaginator.of(target, pageAttrName, pageSize, totalCount);
   }
-  
+
 }
