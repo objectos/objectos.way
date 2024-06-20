@@ -19,7 +19,7 @@ import static org.testng.Assert.assertEquals;
 
 import org.testng.annotations.Test;
 
-public class HttpExchangeTest {
+public class HttpTestingExchangeTest {
 
   @Test(description = """
   Sets:
@@ -27,7 +27,7 @@ public class HttpExchangeTest {
   - request attribute
   """)
   public void testCase01() {
-    Http.Exchange http = Http.createExchange(
+    Http.TestingExchange http = Http.testingExchange(
         Http.requestTarget("/foo?page=1"),
 
         Http.set(String.class, "Hello")

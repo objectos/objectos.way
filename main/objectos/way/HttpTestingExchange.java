@@ -25,7 +25,7 @@ import objectos.way.Http.HeaderName;
 import objectos.way.Http.Response.Status;
 import objectos.way.Web.Session;
 
-final class HttpExchange implements Http.Exchange {
+final class HttpTestingExchange implements Http.TestingExchange {
 
   Map<Object, Object> attributes;
 

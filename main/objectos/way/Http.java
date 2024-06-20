@@ -58,11 +58,6 @@ public final class Http {
   public interface Exchange extends Request {
 
     /**
-     * Configures the creation of a exchange instance.
-     */
-    public sealed interface Option permits HttpExchangeOption {}
-
-    /**
      * Stores an object in this request. The object will be associated to the
      * name of the specified {@code Class} instance.
      * Stored objects are reset between requests.
@@ -753,6 +748,18 @@ public final class Http {
   }
 
   /**
+   * A test-only HTTP exchange.
+   */
+  public sealed interface TestingExchange extends Exchange permits HttpTestingExchange {
+
+    /**
+     * Configures the creation of a exchange instance.
+     */
+    public sealed interface Option {}
+
+  }
+
+  /**
    * Thrown to indicate that a content type is not supported.
    */
   public static class UnsupportedMediaTypeException extends Exception {
@@ -774,6 +781,12 @@ public final class Http {
   }
 
   // non-public types
+
+  non-sealed static abstract class HttpTestingExchangeOption implements Http.TestingExchange.Option {
+
+    abstract void acceptHttpTestingExchange(HttpTestingExchange http);
+
+  }
 
   enum Version {
 
@@ -993,67 +1006,6 @@ public final class Http {
 
   private Http() {}
 
-  /**
-   * Creates an exchange instance suitable for test cases.
-   *
-   * @param options
-   *        configures the created exchange instance
-   *
-   * @return a newly created exchange instance with the provided options
-   */
-  public static Exchange createExchange(Exchange.Option... options) {
-    Check.notNull(options, "options == null");
-
-    HttpExchange result;
-    result = new HttpExchange();
-
-    for (int idx = 0; idx < options.length; idx++) {
-      Exchange.Option o;
-      o = Check.notNull(options[idx], "options[", idx, "] == null");
-
-      HttpExchangeOption option;
-      option = (HttpExchangeOption) o;
-
-      option.acceptHttpExchange(result);
-    }
-
-    return result;
-  }
-
-  /**
-   * Create exchange option: sets the request-target to the result of parsing
-   * the specified string.
-   *
-   * @param target
-   *        the raw (undecoded) request-target value
-   *
-   * @return a create exchange option
-   */
-  public static Exchange.Option requestTarget(String target) {
-    Request.Target requestTarget;
-    requestTarget = parseRequestTarget(target);
-
-    return new HttpExchangeOption() {
-      @Override
-      final void acceptHttpExchange(HttpExchange http) {
-        http.requestTarget = requestTarget;
-      }
-    };
-  }
-
-  /**
-   * Create exchange option:
-   */
-  public static <T> Exchange.Option set(Class<T> key, T value) {
-
-    return new HttpExchangeOption() {
-      @Override
-      final void acceptHttpExchange(HttpExchange http) {
-        http.set(key, value);
-      }
-    };
-  }
-
   public static HeaderName createHeaderName(String name) {
     Check.notNull(name, "name == null");
 
@@ -1253,6 +1205,74 @@ public final class Http {
     }
 
     return requestLine;
+  }
+
+  /**
+   * Creates an exchange instance suitable for test cases.
+   *
+   * @param options
+   *        configures the created exchange instance
+   *
+   * @return a newly created exchange instance with the provided options
+   */
+  public static TestingExchange testingExchange(TestingExchange.Option... options) {
+    Check.notNull(options, "options == null");
+
+    HttpTestingExchange result;
+    result = new HttpTestingExchange();
+
+    for (int idx = 0; idx < options.length; idx++) {
+      TestingExchange.Option o;
+      o = Check.notNull(options[idx], "options[", idx, "] == null");
+
+      HttpTestingExchangeOption option;
+      option = (HttpTestingExchangeOption) o;
+
+      option.acceptHttpTestingExchange(result);
+    }
+
+    return result;
+  }
+
+  /**
+   * Testing exchange option: sets the request-target to the result of parsing
+   * the specified string.
+   *
+   * @param target
+   *        the raw (undecoded) request-target value
+   *
+   * @return a new testing exchange option
+   */
+  public static TestingExchange.Option requestTarget(String target) {
+    Request.Target requestTarget;
+    requestTarget = parseRequestTarget(target);
+
+    return new HttpTestingExchangeOption() {
+      @Override
+      final void acceptHttpTestingExchange(HttpTestingExchange http) {
+        http.requestTarget = requestTarget;
+      }
+    };
+  }
+
+  /**
+   * Testing exchange option: stores the provided key-value pair in the testing
+   * exchange.
+   *
+   * @param key
+   *        the key to be stored
+   * @param value
+   *        the value to be stored
+   *
+   * @return a new testing exchange option
+   */
+  public static <T> TestingExchange.Option set(Class<T> key, T value) {
+    return new HttpTestingExchangeOption() {
+      @Override
+      final void acceptHttpTestingExchange(HttpTestingExchange http) {
+        http.set(key, value);
+      }
+    };
   }
 
   // utils
