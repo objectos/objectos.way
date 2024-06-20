@@ -34,7 +34,7 @@ public class WebModuleTest extends Web.Module {
     source(TestingH2.SOURCE);
 
     route(path("/testCase01/trx"),
-        matrix(Http.GET, trx(this::testCase01)));
+        matrix(Http.GET, transactional(this::testCase01)));
     route(path("/testCase01/xrt"),
         matrix(Http.GET, this::testCase01));
   }

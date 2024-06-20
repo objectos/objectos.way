@@ -15,14 +15,14 @@
  */
 package objectos.way;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.function.Function;
 import objectos.lang.object.Check;
-import objectos.util.array.ObjectArrays;
 
 abstract class HttpModule {
 
+  // Matcher
+  
   protected sealed static abstract class Matcher {
 
     Matcher() {}
@@ -31,6 +31,8 @@ abstract class HttpModule {
 
   }
 
+  // Segments < Matcher
+  
   private sealed static abstract class AbstractSegments extends Matcher {
 
     final Condition last;
@@ -58,304 +60,6 @@ abstract class HttpModule {
 
     abstract boolean test(List<Http.Request.Target.Path.Segment> segments);
 
-  }
-
-  protected sealed static abstract class Condition {
-
-    Condition() {}
-
-    abstract boolean test(List<Http.Request.Target.Path.Segment> segments, int index);
-
-    final boolean hasIndex(List<Http.Request.Target.Path.Segment> segments, int index) {
-      return index < segments.size();
-    }
-
-    boolean mustBeLast() {
-      return false;
-    }
-
-  }
-  
-  private static final class Compiler implements Http.Handler {
-
-    private Action[] actions;
-
-    private int actionsIndex;
-
-    private Http.Handler.Interceptor interceptor;
-
-    private SessionStore sessionStore;
-
-    public final Http.Handler compile() {
-      if (actions != null) {
-        actions = Arrays.copyOf(actions, actionsIndex);
-      } else {
-        actions = new Action[0];
-      }
-
-      return this;
-    }
-
-    @Override
-    public final void handle(Http.Exchange http) {
-      if (sessionStore != null) {
-        http.acceptSessionStore(sessionStore);
-      }
-
-      for (int index = 0, length = actions.length; index < length; index++) {
-        Action action;
-        action = actions[index];
-
-        if (action.execute(http)) {
-          return;
-        }
-      }
-
-      http.notFound();
-    }
-
-    final void filter(Http.Handler handler) {
-      handler = decorate(handler);
-      
-      int index;
-      index = nextSlot();
-
-      actions[index] = new Filter(handler);
-    }
-
-    final void interceptor(Http.Handler.Interceptor next) {
-      if (interceptor == null) {
-        interceptor = next;
-      } else {
-        interceptor = handler -> interceptor.intercept(next.intercept(handler));
-      }
-    }
-
-    final void route(Matcher matcher, Http.Handler handler) {
-      handler = decorate(handler);
-      
-      int index;
-      index = nextSlot();
-
-      actions[index] = new RouteHandler(matcher, handler);
-    }
-
-    final <T> void route(Matcher matcher, Function<T, Http.Handler> factory, T value) {
-      Function<T, Http.Handler> function;
-      function = interceptor == null ? factory : (T t) -> interceptor.intercept(factory.apply(t));
-
-      int index;
-      index = nextSlot();
-
-      actions[index] = new RouteFactory1<T>(matcher, function, value);
-    }
-
-    final void sessionStore(SessionStore sessionStore) {
-      Check.state(this.sessionStore == null, "A session store has already been configured");
-
-      this.sessionStore = sessionStore;
-    }
-    
-    private Http.Handler decorate(Http.Handler handler) {
-      if (interceptor == null) {
-        return handler;
-      } else {
-        return interceptor.intercept(handler);
-      }
-    }
-
-    private int nextSlot() {
-      int requiredIndex;
-      requiredIndex = actionsIndex++;
-
-      if (actions == null) {
-        actions = new Action[10];
-      } else {
-        actions = ObjectArrays.growIfNecessary(actions, requiredIndex);
-      }
-
-      return requiredIndex;
-    }
-
-  }
-
-  private sealed interface Action {
-    boolean execute(Http.Exchange http);
-  }
-
-  private record Filter(Http.Handler handler) implements Action {
-    @Override
-    public final boolean execute(Http.Exchange http) {
-      Http.Handler handler;
-      handler = handler();
-
-      handler.handle(http);
-
-      return http.processed();
-    }
-  }
-
-  private sealed static abstract class Route implements Action {
-
-    private final Matcher matcher;
-
-    public Route(Matcher matcher) {
-      this.matcher = matcher;
-    }
-
-    @Override
-    public final boolean execute(Http.Exchange http) {
-      boolean result;
-      result = false;
-
-      if (matcher.test(http)) {
-        Http.Handler handler;
-        handler = handler();
-
-        handler.handle(http);
-
-        result = http.processed();
-      }
-
-      return result;
-    }
-
-    abstract Http.Handler handler();
-
-  }
-
-  private static final class RouteHandler extends Route {
-
-    private final Http.Handler handler;
-
-    public RouteHandler(Matcher matcher, Http.Handler handler) {
-      super(matcher);
-      this.handler = handler;
-    }
-
-    @Override
-    final Http.Handler handler() { return handler; }
-
-  }
-
-  private static final class RouteFactory1<T> extends Route {
-
-    private final Function<T, Http.Handler> factory;
-    private final T value;
-
-    public RouteFactory1(Matcher matcher, Function<T, Http.Handler> factory, T value) {
-      super(matcher);
-      this.factory = factory;
-      this.value = value;
-    }
-
-    @Override
-    final Http.Handler handler() {
-      return factory.apply(value);
-    }
-
-  }
-
-  private Compiler compiler;
-
-  protected HttpModule() {}
-
-  /**
-   * Generates a handler instance based on the configuration of this module.
-   * 
-   * @return a configured handler instance
-   */
-  public final Http.Handler compile() {
-    Check.state(compiler == null, "Another compilation is already in progress");
-
-    try {
-      compiler = new Compiler();
-
-      configure();
-
-      return compiler.compile();
-    } finally {
-      compiler = null;
-    }
-  }
-
-  protected abstract void configure();
-
-  /**
-   * Uses the specified session store for HTTP session handling.
-   *
-   * @param sessionStore
-   *        the session store instance to use
-   *
-   * @throws IllegalStateException
-   *         if a session store has already been configured
-   */
-  protected final void sessionStore(SessionStore sessionStore) {
-    Check.notNull(sessionStore, "sessionStore == null");
-
-    compiler.sessionStore(sessionStore);
-  }
-
-  protected final void filter(Http.Handler handler) {
-    Check.notNull(handler, "handler == null");
-
-    compiler.filter(handler);
-  }
-  
-  protected final void intercept(Http.Handler.Interceptor interceptor) {
-    Check.notNull(interceptor, "interceptor == null");
-    
-    compiler.interceptor(interceptor);
-  }
-
-  protected final void route(Matcher matcher, Http.Handler handler) {
-    Check.notNull(matcher, "matcher == null");
-    Check.notNull(handler, "handler == null");
-
-    compiler.route(matcher, handler);
-  }
-
-  protected final void route(Matcher matcher, Http.Module module) {
-    Check.notNull(matcher, "matcher == null");
-
-    Http.Handler handler;
-    handler = module.compile(); // implicit null-check
-
-    compiler.route(matcher, handler);
-  }
-
-  protected final <T> void route(Matcher matcher, Function<T, Http.Handler> factory, T value) {
-    Check.notNull(matcher, "matcher == null");
-    Check.notNull(factory, "factory == null");
-    Check.notNull(value, "value == null");
-
-    compiler.route(matcher, factory, value);
-  }
-
-  // matchers
-
-  private static final class PathIs extends Matcher {
-
-    private final String value;
-
-    PathIs(String value) {
-      this.value = value;
-    }
-
-    @Override
-    final boolean test(Http.Exchange http) {
-      Http.Request.Target.Path path;
-      path = http.path();
-
-      return path.is(value);
-    }
-
-  }
-
-  protected final Matcher path(String value) {
-    Check.notNull(value, "value == null");
-
-    return new PathIs(value);
   }
 
   private static final class Segments1 extends AbstractSegments {
@@ -428,6 +132,215 @@ abstract class HttpModule {
     }
 
   }
+  
+  // Path < Matcher
+
+  private static final class PathIs extends Matcher {
+
+    private final String value;
+
+    PathIs(String value) {
+      this.value = value;
+    }
+
+    @Override
+    final boolean test(Http.Exchange http) {
+      Http.Request.Target.Path path;
+      path = http.path();
+
+      return path.is(value);
+    }
+
+  }
+
+  // Condition
+  
+  protected sealed static abstract class Condition {
+
+    Condition() {}
+
+    abstract boolean test(List<Http.Request.Target.Path.Segment> segments, int index);
+
+    final boolean hasIndex(List<Http.Request.Target.Path.Segment> segments, int index) {
+      return index < segments.size();
+    }
+
+    boolean mustBeLast() {
+      return false;
+    }
+
+  }
+
+  private static final class EqualTo extends Condition {
+
+    private final String value;
+
+    EqualTo(String value) {
+      this.value = value;
+    }
+
+    @Override
+    final boolean test(List<Http.Request.Target.Path.Segment> segments, int index) {
+      if (!hasIndex(segments, index)) {
+        return false;
+      }
+
+      Http.Request.Target.Path.Segment segment;
+      segment = segments.get(index);
+
+      return segment.is(value);
+    }
+
+  }
+
+  private static final class NonEmpty extends Condition {
+
+    static final NonEmpty INSTANCE = new NonEmpty();
+
+    @Override
+    final boolean test(List<Http.Request.Target.Path.Segment> segments, int index) {
+      if (!hasIndex(segments, index)) {
+        return false;
+      }
+
+      Http.Request.Target.Path.Segment segment;
+      segment = segments.get(index);
+
+      String value;
+      value = segment.value();
+
+      return !value.isEmpty();
+    }
+
+  }
+
+  private static final class ZeroOrMore extends Condition {
+
+    static final ZeroOrMore INSTANCE = new ZeroOrMore();
+
+    @Override
+    final boolean test(List<Http.Request.Target.Path.Segment> segments, int index) {
+      return segments.size() >= index;
+    }
+
+    @Override
+    final boolean mustBeLast() { return true; }
+
+  }
+
+  private static final class Present extends Condition {
+
+    static final Present INSTANCE = new Present();
+
+    @Override
+    final boolean test(List<Http.Request.Target.Path.Segment> segments, int index) {
+      return hasIndex(segments, index);
+    }
+
+  }
+  
+  private static final class OneOrMore extends Condition {
+    
+    static final OneOrMore INSTANCE = new OneOrMore();
+
+    @Override
+    final boolean test(List<Http.Request.Target.Path.Segment> segments, int index) {
+      return segments.size() > index;
+    }
+
+
+    @Override
+    final boolean mustBeLast() { return true; }
+
+  }
+
+  private HttpModuleCompiler compiler;
+
+  protected HttpModule() {}
+
+  /**
+   * Generates a handler instance based on the configuration of this module.
+   * 
+   * @return a configured handler instance
+   */
+  public final Http.Handler compile() {
+    Check.state(compiler == null, "Another compilation is already in progress");
+
+    try {
+      compiler = new HttpModuleCompiler();
+
+      configure();
+
+      return compiler.compile();
+    } finally {
+      compiler = null;
+    }
+  }
+
+  protected abstract void configure();
+
+  /**
+   * Uses the specified session store for HTTP session handling.
+   *
+   * @param sessionStore
+   *        the session store instance to use
+   *
+   * @throws IllegalStateException
+   *         if a session store has already been configured
+   */
+  protected final void sessionStore(SessionStore sessionStore) {
+    Check.notNull(sessionStore, "sessionStore == null");
+
+    compiler.sessionStore(sessionStore);
+  }
+
+  protected final void filter(Http.Handler handler) {
+    Check.notNull(handler, "handler == null");
+
+    compiler.filter(handler);
+  }
+  
+  /**
+   * Intercepts all matched routes with the specified interceptor.
+   * 
+   * @param interceptor
+   *        the interceptor to use
+   */
+  protected final void interceptMatched(Http.Handler.Interceptor interceptor) {
+    Check.notNull(interceptor, "interceptor == null");
+
+    compiler.interceptor(interceptor);
+  }
+
+  protected final void route(Matcher matcher, Http.Handler handler) {
+    Check.notNull(matcher, "matcher == null");
+    Check.notNull(handler, "handler == null");
+
+    compiler.route(matcher, handler);
+  }
+
+  protected final void route(Matcher matcher, Http.Module module) {
+    Check.notNull(matcher, "matcher == null");
+
+    Http.Handler handler;
+    handler = module.compile(); // implicit null-check
+
+    compiler.route(matcher, handler);
+  }
+
+  protected final <T> void route(Matcher matcher, Function<T, Http.Handler> factory, T value) {
+    Check.notNull(matcher, "matcher == null");
+    Check.notNull(factory, "factory == null");
+    Check.notNull(value, "value == null");
+
+    compiler.route(matcher, factory, value);
+  }
+
+  protected final Matcher path(String value) {
+    Check.notNull(value, "value == null");
+
+    return new PathIs(value);
+  }
 
   protected final Matcher segments(Condition condition) {
     Check.notNull(condition, "condition == null");
@@ -462,109 +375,24 @@ abstract class HttpModule {
     }
   }
 
-  // conditions
-
-  private static final class EqualTo extends Condition {
-
-    private final String value;
-
-    EqualTo(String value) {
-      this.value = value;
-    }
-
-    @Override
-    final boolean test(List<Http.Request.Target.Path.Segment> segments, int index) {
-      if (!hasIndex(segments, index)) {
-        return false;
-      }
-
-      Http.Request.Target.Path.Segment segment;
-      segment = segments.get(index);
-
-      return segment.is(value);
-    }
-
-  }
-
   protected final Condition eq(String value) {
     Check.notNull(value, "value == null");
 
     return new EqualTo(value);
   }
 
-  private static final class NonEmpty extends Condition {
-
-    static final NonEmpty INSTANCE = new NonEmpty();
-
-    @Override
-    final boolean test(List<Http.Request.Target.Path.Segment> segments, int index) {
-      if (!hasIndex(segments, index)) {
-        return false;
-      }
-
-      Http.Request.Target.Path.Segment segment;
-      segment = segments.get(index);
-
-      String value;
-      value = segment.value();
-
-      return !value.isEmpty();
-    }
-
-  }
-
   protected final Condition nonEmpty() {
     return NonEmpty.INSTANCE;
-  }
-
-  private static final class ZeroOrMore extends Condition {
-
-    static final ZeroOrMore INSTANCE = new ZeroOrMore();
-
-    @Override
-    final boolean test(List<Http.Request.Target.Path.Segment> segments, int index) {
-      return segments.size() >= index;
-    }
-
-    @Override
-    final boolean mustBeLast() { return true; }
-
   }
 
   protected final Condition zeroOrMore() {
     return ZeroOrMore.INSTANCE;
   }
 
-  private static final class Present extends Condition {
-
-    static final Present INSTANCE = new Present();
-
-    @Override
-    final boolean test(List<Http.Request.Target.Path.Segment> segments, int index) {
-      return hasIndex(segments, index);
-    }
-
-  }
-
   protected final Condition present() {
     return Present.INSTANCE;
   }
-  
-  private static final class OneOrMore extends Condition {
-    
-    static final OneOrMore INSTANCE = new OneOrMore();
-
-    @Override
-    final boolean test(List<Http.Request.Target.Path.Segment> segments, int index) {
-      return segments.size() > index;
-    }
-
-
-    @Override
-    final boolean mustBeLast() { return true; }
-
-  }
-  
+ 
   protected final Condition oneOrMore() {
     return OneOrMore.INSTANCE;
   }

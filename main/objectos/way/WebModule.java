@@ -49,7 +49,7 @@ abstract class WebModule extends Http.Module {
    * @return a new HTTP handler that decorates the specified handler around a
    *         SQL transaction
    */
-  protected final Http.Handler trx(Http.Handler handler) {
+  protected final Http.Handler transactional(Http.Handler handler) {
     Check.state(source != null, "A data source must be defined via the source(Sql.Source) method");
 
     return http -> {
