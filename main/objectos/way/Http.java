@@ -58,19 +58,22 @@ public final class Http {
   public interface Exchange extends Request {
 
     /**
+     * Configures the creation of a exchange instance.
+     */
+    public sealed interface Option permits HttpExchangeOption {}
+
+    /**
      * Stores an object in this request. The object will be associated to the
-     * name
-     * of the specified {@code Class} instance.
+     * name of the specified {@code Class} instance.
      * Stored objects are reset between requests.
-     * 
+     *
      * <p>
      * If an object is already associated to the specified key it will be
-     * replaced
-     * with the specified value.
-     * 
+     * replaced with the specified value.
+     *
      * <p>
      * Objects to be stored must not be {@code null}.
-     * 
+     *
      * @param key
      *        the object will be associated to the name of this key
      * @param value
@@ -81,10 +84,10 @@ public final class Http {
     /**
      * Retrieves the object stored in this request associated to the specified
      * key. Returns {@code null} if no object is found.
-     * 
+     *
      * @param key
      *        the key to look for
-     * 
+     *
      * @return the object associated to the specified key or {@code null} if no
      *         object is found
      */
@@ -392,19 +395,19 @@ public final class Http {
   public interface Handler {
 
     /**
-     * Augments a handler.  
+     * Augments a handler.
      */
     @FunctionalInterface
     public interface Interceptor {
-      
+
       Http.Handler intercept(Http.Handler handler);
-      
+
     }
 
     /**
      * Process the specified exchange i.e. consume the request and generate a
      * response.
-     * 
+     *
      * @param http
      *        the exchange to be processed
      */
@@ -419,21 +422,20 @@ public final class Http {
 
     /**
      * The index of this header name.
-     * 
+     *
      * @return the index of this header name
      */
     int index();
 
     /**
      * Returns this name with the first letter of each word capitalized.
-     * 
+     *
      * @return this name with the first letter of each word capitalized.
      */
     String capitalized();
 
   }
 
-  
   /**
    * A module configures the handlers a server instance will use to process its
    * requests.
@@ -459,9 +461,9 @@ public final class Http {
 
       /**
        * An input stream that reads the bytes of this request body.
-       * 
+       *
        * @return an input stream that reads the bytes of this request body.
-       * 
+       *
        * @throws IOException
        *         if an I/O error occurs
        */
@@ -478,10 +480,10 @@ public final class Http {
        * Returns the value of the cookie with the specified name; {@code null}
        * if a
        * cookie with the specified name is not present.
-       * 
+       *
        * @param name
        *        the cookie name
-       * 
+       *
        * @return the value or {@code null} if the cookie is not present
        */
       String get(String name);
@@ -496,10 +498,10 @@ public final class Http {
       /**
        * Returns the value of the first field line having the specified name;
        * returns {@code null} if the field line is not present.
-       * 
+       *
        * @param name
        *        the name of the header field line
-       * 
+       *
        * @return the value of first field line or {@code null} if a field line
        *         with the specified name is not present.
        */
@@ -507,7 +509,7 @@ public final class Http {
 
       /**
        * The number of field lines in this header section.
-       * 
+       *
        * @return the number of field lines in this header section.
        */
       int size();
@@ -521,10 +523,10 @@ public final class Http {
 
       /**
        * Tests if this method is the same as the specified method.
-       * 
+       *
        * @param method
        *        the method to test against this method
-       * 
+       *
        * @return {@code true} if this method is the same as the specified
        *         method, {@code false} otherwise
        */
@@ -532,12 +534,12 @@ public final class Http {
 
       /**
        * Tests if this method is the same as one of the two specified methods.
-       * 
+       *
        * @param method1
        *        the first method to test against this method
        * @param method2
        *        the second method to test against this method
-       * 
+       *
        * @return {@code true} if this method is the same as first or the second
        *         specified methods, {@code false} otherwise
        */
@@ -545,14 +547,14 @@ public final class Http {
 
       /**
        * The index of this method.
-       * 
+       *
        * @return the index of this method.
        */
       int index();
 
       /**
        * The name of this method.
-       * 
+       *
        * @return the name of this method.
        */
       String text();
@@ -585,10 +587,10 @@ public final class Http {
         boolean startsWith(String prefix);
 
         List<Segment> segments();
-        
+
         /**
          * The decoded value of this path.
-         * 
+         *
          * @return the decoded value of this path.
          */
         String value();
@@ -631,14 +633,14 @@ public final class Http {
 
       /**
        * The path component of this request-target.
-       * 
+       *
        * @return the path component of this request-target.
        */
       Path path();
 
       /**
        * The query component of this request-target.
-       * 
+       *
        * @return the query component of this request-target.
        */
       Query query();
@@ -647,28 +649,28 @@ public final class Http {
 
     /**
      * The body of this request message.
-     * 
+     *
      * @return the body of this request message.
      */
     Body body();
 
     /**
      * The header section of this request message.
-     * 
+     *
      * @return the header section of this request message.
      */
     Headers headers();
 
     /**
      * The method of this request message.
-     * 
+     *
      * @return the method of this request message.
      */
     Method method();
 
     /**
      * The request-target of this HTTP request message.
-     * 
+     *
      * @return the request-target of this HTTP request message.
      */
     Target target();
@@ -692,7 +694,7 @@ public final class Http {
 
     /**
      * Starts this HTTP server.
-     * 
+     *
      * @throws IOException
      *         if an I/O error occurs
      */
@@ -700,14 +702,14 @@ public final class Http {
 
     /**
      * Returns the IP address this server is listening to.
-     * 
+     *
      * @return the IP address this server is listening to.
      */
     InetAddress address();
 
     /**
      * Returns the port number this server is listening to.
-     * 
+     *
      * @return the port number this server is listening to.
      */
     int port();
@@ -726,14 +728,14 @@ public final class Http {
 
       /**
        * The code of this status.
-       * 
+       *
        * @return the code of this status.
        */
       int code();
 
       /**
        * The reason-phrase of this status.
-       * 
+       *
        * @return the reason-phrase of this status.
        */
       String reasonPhrase();
@@ -742,7 +744,7 @@ public final class Http {
 
     /**
      * Sets the status of this response message.
-     * 
+     *
      * @param status
      *        the status to set
      */
@@ -760,7 +762,7 @@ public final class Http {
     /**
      * Creates a new {@code UnsupportedMediaTypeException} with the specified
      * content type name.
-     * 
+     *
      * @param contentType
      *        the name of the content type such as {@code application/pdf} or
      *        {@code image/gif}.
@@ -991,6 +993,67 @@ public final class Http {
 
   private Http() {}
 
+  /**
+   * Creates an exchange instance suitable for test cases.
+   *
+   * @param options
+   *        configures the created exchange instance
+   *
+   * @return a newly created exchange instance with the provided options
+   */
+  public static Exchange createExchange(Exchange.Option... options) {
+    Check.notNull(options, "options == null");
+
+    HttpExchange result;
+    result = new HttpExchange();
+
+    for (int idx = 0; idx < options.length; idx++) {
+      Exchange.Option o;
+      o = Check.notNull(options[idx], "options[", idx, "] == null");
+
+      HttpExchangeOption option;
+      option = (HttpExchangeOption) o;
+
+      option.acceptHttpExchange(result);
+    }
+
+    return result;
+  }
+
+  /**
+   * Create exchange option: sets the request-target to the result of parsing
+   * the specified string.
+   *
+   * @param target
+   *        the raw (undecoded) request-target value
+   *
+   * @return a create exchange option
+   */
+  public static Exchange.Option requestTarget(String target) {
+    Request.Target requestTarget;
+    requestTarget = parseRequestTarget(target);
+
+    return new HttpExchangeOption() {
+      @Override
+      final void acceptHttpExchange(HttpExchange http) {
+        http.requestTarget = requestTarget;
+      }
+    };
+  }
+
+  /**
+   * Create exchange option:
+   */
+  public static <T> Exchange.Option set(Class<T> key, T value) {
+
+    return new HttpExchangeOption() {
+      @Override
+      final void acceptHttpExchange(HttpExchange http) {
+        http.set(key, value);
+      }
+    };
+  }
+
   public static HeaderName createHeaderName(String name) {
     Check.notNull(name, "name == null");
 
@@ -1003,27 +1066,27 @@ public final class Http {
 
     return headerName;
   }
-  
+
   /**
    * Creates a new HTTP server instance.
    */
   public static Server createServer(HandlerFactory handlerFactory, Server.Option... options) {
     Check.notNull(handlerFactory, "handlerFactory == null");
     Check.notNull(options, "options == null");
-    
+
     HttpServer.Builder builder = new HttpServer.Builder(handlerFactory);
-    
+
     for (int i = 0; i < options.length; i++) {
       Server.Option option;
       option = Check.notNull(options[i], "options[", i, "] == null");
-      
+
       // the cast is safe as Server.Option is sealed
       HttpServerOption actual;
       actual = (HttpServerOption) option;
-      
+
       actual.acceptHttpServerBuilder(builder);
     }
-    
+
     return builder.build();
   }
 
@@ -1036,7 +1099,7 @@ public final class Http {
       @Override
       final void acceptHttpServerBuilder(Builder builder) {
         builder.bufferSizeInitial = initial;
-        
+
         builder.bufferSizeMax = max;
       }
     };
@@ -1044,7 +1107,7 @@ public final class Http {
 
   public static Server.Option clock(Clock clock) {
     Check.notNull(clock, "clock == null");
-    
+
     return new HttpServerOption() {
       @Override
       final void acceptHttpServerBuilder(Builder builder) {
@@ -1052,10 +1115,10 @@ public final class Http {
       }
     };
   }
-  
+
   public static Server.Option noteSink(NoteSink noteSink) {
     Check.notNull(noteSink, "noteSink == null");
-    
+
     return new HttpServerOption() {
       @Override
       final void acceptHttpServerBuilder(Builder builder) {
@@ -1068,7 +1131,7 @@ public final class Http {
     if (port < 0 || port > 0xFFFF) {
       throw new IllegalArgumentException("port out of range:" + port);
     }
-    
+
     return new HttpServerOption() {
       @Override
       final void acceptHttpServerBuilder(Builder builder) {
@@ -1079,7 +1142,7 @@ public final class Http {
 
   public static Server.Option sessionStore(SessionStore sessionStore) {
     Check.notNull(sessionStore, "sessionStore == null");
-    
+
     return new HttpServerOption() {
       @Override
       final void acceptHttpServerBuilder(Builder builder) {
@@ -1091,10 +1154,10 @@ public final class Http {
   /**
    * Formats a date so it can be used as the value of a {@code Date} HTTP
    * header.
-   * 
+   *
    * @param date
    *        the date to be formatted
-   * 
+   *
    * @return the formatted date
    */
   public static String formatDate(ZonedDateTime date) {
@@ -1147,48 +1210,48 @@ public final class Http {
 
   /**
    * Parses the specified string into a new request-target instance.
-   * 
+   *
    * @param target
    *        the raw (undecoded) request-target value
-   * 
+   *
    * @return a new request target instance
-   * 
+   *
    * @throws IllegalArgumentException
    *         if the string represents an invalid request-target value
    */
   public static Request.Target parseRequestTarget(String target) throws IllegalArgumentException {
     Check.notNull(target, "target == null");
-    
+
     HttpRequestLine requestLine;
     requestLine = new HttpRequestLine();
-    
+
     // append a line terminator
     target = target + " \r\n";
-    
+
     byte[] bytes;
     bytes = target.getBytes(StandardCharsets.UTF_8);
-    
+
     // in-memory stream... no closing needed...
     InputStream inputStream;
     inputStream = new ByteArrayInputStream(bytes);
-    
+
     requestLine.initSocketInput(inputStream);
-    
+
     try {
       requestLine.parseLine();
-      
+
       requestLine.parseRequestTarget();
     } catch (IOException e) {
       throw new AssertionError("In-memory stream does not throw IOException", e);
     }
-    
+
     ParseStatus parseStatus;
     parseStatus = requestLine.parseStatus;
-    
+
     if (parseStatus.isError()) {
       throw new IllegalArgumentException(parseStatus.name());
     }
-    
+
     return requestLine;
   }
 
