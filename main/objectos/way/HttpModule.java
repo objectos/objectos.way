@@ -18,12 +18,11 @@ package objectos.way;
 import java.util.List;
 import java.util.function.Function;
 import objectos.lang.object.Check;
+import objectos.way.Http.Handler;
 
 abstract class HttpModule {
 
-  // Matcher
-  
-  protected sealed static abstract class Matcher {
+  protected sealed static abstract class Matcher permits HttpModulePathMatcher, HttpModuleSegments {
 
     Matcher() {}
 
@@ -31,131 +30,7 @@ abstract class HttpModule {
 
   }
 
-  // Segments < Matcher
-  
-  private sealed static abstract class AbstractSegments extends Matcher {
-
-    final Condition last;
-
-    AbstractSegments(Condition last) {
-      this.last = last;
-    }
-
-    @Override
-    final boolean test(Http.Exchange http) {
-      Http.Request.Target.Path path;
-      path = http.path();
-
-      List<Http.Request.Target.Path.Segment> segments;
-      segments = path.segments();
-
-      if (!last.mustBeLast() && segments.size() != count()) {
-        return false;
-      }
-
-      return test(segments);
-    }
-
-    abstract int count();
-
-    abstract boolean test(List<Http.Request.Target.Path.Segment> segments);
-
-  }
-
-  private static final class Segments1 extends AbstractSegments {
-
-    Segments1(Condition condition) {
-      super(condition);
-    }
-
-    @Override
-    final int count() { return 1; }
-
-    @Override
-    final boolean test(List<Http.Request.Target.Path.Segment> segments) {
-      return last.test(segments, 0);
-    }
-
-  }
-
-  private static final class Segments2 extends AbstractSegments {
-
-    private final Condition condition0;
-
-    Segments2(Condition condition0, Condition condition1) {
-      super(condition1);
-
-      this.condition0 = condition0;
-    }
-
-    @Override
-    final int count() { return 2; }
-
-    @Override
-    final boolean test(List<Http.Request.Target.Path.Segment> segments) {
-      if (!condition0.test(segments, 0)) {
-        return false;
-      }
-
-      return last.test(segments, 1);
-    }
-
-  }
-
-  private static final class Segments3 extends AbstractSegments {
-
-    private final Condition condition0;
-    
-    private final Condition condition1;
-
-    Segments3(Condition condition0, Condition condition1, Condition condition2) {
-      super(condition2);
-
-      this.condition0 = condition0;
-      this.condition1 = condition1;
-    }
-
-    @Override
-    final int count() { return 3; }
-
-    @Override
-    final boolean test(List<Http.Request.Target.Path.Segment> segments) {
-      if (!condition0.test(segments, 0)) {
-        return false;
-      }
-
-      if (!condition1.test(segments, 1)) {
-        return false;
-      }
-
-      return last.test(segments, 2);
-    }
-
-  }
-  
-  // Path < Matcher
-
-  private static final class PathIs extends Matcher {
-
-    private final String value;
-
-    PathIs(String value) {
-      this.value = value;
-    }
-
-    @Override
-    final boolean test(Http.Exchange http) {
-      Http.Request.Target.Path path;
-      path = http.path();
-
-      return path.is(value);
-    }
-
-  }
-
-  // Condition
-  
-  protected sealed static abstract class Condition {
+  protected sealed static abstract class Condition permits HttpModuleCondition {
 
     Condition() {}
 
@@ -170,87 +45,12 @@ abstract class HttpModule {
     }
 
   }
-
-  private static final class EqualTo extends Condition {
-
-    private final String value;
-
-    EqualTo(String value) {
-      this.value = value;
-    }
-
-    @Override
-    final boolean test(List<Http.Request.Target.Path.Segment> segments, int index) {
-      if (!hasIndex(segments, index)) {
-        return false;
-      }
-
-      Http.Request.Target.Path.Segment segment;
-      segment = segments.get(index);
-
-      return segment.is(value);
-    }
-
-  }
-
-  private static final class NonEmpty extends Condition {
-
-    static final NonEmpty INSTANCE = new NonEmpty();
-
-    @Override
-    final boolean test(List<Http.Request.Target.Path.Segment> segments, int index) {
-      if (!hasIndex(segments, index)) {
-        return false;
-      }
-
-      Http.Request.Target.Path.Segment segment;
-      segment = segments.get(index);
-
-      String value;
-      value = segment.value();
-
-      return !value.isEmpty();
-    }
-
-  }
-
-  private static final class ZeroOrMore extends Condition {
-
-    static final ZeroOrMore INSTANCE = new ZeroOrMore();
-
-    @Override
-    final boolean test(List<Http.Request.Target.Path.Segment> segments, int index) {
-      return segments.size() >= index;
-    }
-
-    @Override
-    final boolean mustBeLast() { return true; }
-
-  }
-
-  private static final class Present extends Condition {
-
-    static final Present INSTANCE = new Present();
-
-    @Override
-    final boolean test(List<Http.Request.Target.Path.Segment> segments, int index) {
-      return hasIndex(segments, index);
-    }
-
-  }
   
-  private static final class OneOrMore extends Condition {
-    
-    static final OneOrMore INSTANCE = new OneOrMore();
+  protected sealed static abstract class MethodHandler permits HttpModuleMethodHandler {
 
-    @Override
-    final boolean test(List<Http.Request.Target.Path.Segment> segments, int index) {
-      return segments.size() > index;
-    }
+    MethodHandler() {}
 
-
-    @Override
-    final boolean mustBeLast() { return true; }
+    abstract Handler compile();
 
   }
 
@@ -311,12 +111,21 @@ abstract class HttpModule {
 
     compiler.interceptor(interceptor);
   }
+  
+  // routes
 
   protected final void route(Matcher matcher, Http.Handler handler) {
     Check.notNull(matcher, "matcher == null");
     Check.notNull(handler, "handler == null");
 
     compiler.route(matcher, handler);
+  }
+
+  protected final void route(Matcher matcher, MethodHandler handler) {
+    Check.notNull(matcher, "matcher == null");
+    Check.notNull(handler, "handler == null");
+
+    compiler.route(matcher, handler.compile());
   }
 
   protected final void route(Matcher matcher, Http.Module module) {
@@ -336,23 +145,25 @@ abstract class HttpModule {
     compiler.route(matcher, factory, value);
   }
 
+  // matchers
+  
   protected final Matcher path(String value) {
     Check.notNull(value, "value == null");
 
-    return new PathIs(value);
+    return new HttpModulePathMatcher(value);
   }
 
   protected final Matcher segments(Condition condition) {
     Check.notNull(condition, "condition == null");
 
-    return new Segments1(condition);
+    return HttpModuleSegments.of(condition);
   }
 
   protected final Matcher segments(Condition c0, Condition c1) {
     checkMustBeLast(c0);
     Check.notNull(c1, "c1 == null");
 
-    return new Segments2(c0, c1);
+    return HttpModuleSegments.of(c0, c1);
   }
 
   protected final Matcher segments(Condition c0, Condition c1, Condition c2) {
@@ -360,7 +171,7 @@ abstract class HttpModule {
     checkMustBeLast(c1);
     Check.notNull(c2, "c2 == null");
 
-    return new Segments3(c0, c1, c2);
+    return HttpModuleSegments.of(c0, c1, c2);
   }
 
   private void checkMustBeLast(Condition condition) {
@@ -375,35 +186,43 @@ abstract class HttpModule {
     }
   }
 
+  // conditions
+  
   protected final Condition eq(String value) {
     Check.notNull(value, "value == null");
 
-    return new EqualTo(value);
+    return HttpModuleCondition.equalTo(value);
   }
 
   protected final Condition nonEmpty() {
-    return NonEmpty.INSTANCE;
+    return HttpModuleCondition.nonEmpty();
   }
 
   protected final Condition zeroOrMore() {
-    return ZeroOrMore.INSTANCE;
+    return HttpModuleCondition.zeroOrMore();
   }
 
   protected final Condition present() {
-    return Present.INSTANCE;
+    return HttpModuleCondition.present();
   }
  
   protected final Condition oneOrMore() {
-    return OneOrMore.INSTANCE;
+    return HttpModuleCondition.oneOrMore();
   }
 
   // actions
 
-  protected final Http.Handler matrix(Http.Request.Method method, Http.Handler handler) {
+  protected final MethodHandler GET(Http.Handler handler) {
+    Check.notNull(handler, "handler == null");
+
+    return HttpModuleMethodHandler.ofHandler(Http.GET, handler);
+  }
+
+  protected final MethodHandler method(Http.Request.Method method, Http.Handler handler) {
     Check.notNull(method, "method == null");
     Check.notNull(handler, "handler == null");
 
-    return http -> http.methodMatrix(method, handler);
+    return HttpModuleMethodHandler.ofHandler(method, handler);
   }
 
   // pre-made actions
