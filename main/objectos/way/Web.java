@@ -25,6 +25,18 @@ public final class Web {
   // types
 
   /**
+   * An action to be executed as a response to an web request.
+   */
+  public interface Action {
+
+    /**
+     * Executes this action.
+     */
+    void execute();
+
+  }
+
+  /**
    * An abstract HTTP module suited for web applications.
    */
   public static abstract class Module extends WebModule {
@@ -66,7 +78,7 @@ public final class Web {
 
     /**
      * The identifier of this session.
-     * 
+     *
      * @return the identifier of this session.
      */
     String id();
@@ -74,12 +86,12 @@ public final class Web {
     /**
      * Returns the object associated to the specified class instance, or
      * {@code null} if there's no object associated.
-     * 
+     *
      * @param <T> the type of the object
-     * 
+     *
      * @param type
      *        the class instance to search for
-     * 
+     *
      * @return the object associated or {@code null} if there's no object
      *         associated
      */
@@ -88,10 +100,10 @@ public final class Web {
     /**
      * Returns the object associated to the specified name, or {@code null} if
      * there's no object associated.
-     * 
+     *
      * @param name
      *        the name to search for
-     * 
+     *
      * @return the object associated or {@code null} if there's no object
      *         associated
      */
@@ -111,12 +123,12 @@ public final class Web {
 
   /**
    * Creates a new paginator instance.
-   * 
+   *
    * @param target the request target
    * @param pageAttrName the name of the page query parameter
    * @param pageSize the maximum number of elements in each page
    * @param totalCount the number of elements in all of the pages
-   * 
+   *
    * @return a new paginator instance
    */
   public static Paginator createPaginator(Http.Request.Target target, String pageAttrName, int pageSize, int totalCount) {

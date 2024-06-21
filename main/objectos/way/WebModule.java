@@ -15,11 +15,30 @@
  */
 package objectos.way;
 
+import java.util.function.Function;
 import objectos.lang.object.Check;
+import objectos.way.Http.Exchange;
+import objectos.way.Web.Action;
 
 abstract class WebModule extends Http.Module {
 
-  private Sql.Transaction.IsolationLevel isolationLevel = Sql.Transaction.IsolationLevel.SERIALIZABLE;
+  private static final class WebActionHandler implements Http.Handler {
+    private final Function<Http.Exchange, Web.Action> constructor;
+
+    public WebActionHandler(Function<Exchange, Action> constructor) {
+      this.constructor = constructor;
+    }
+
+    @Override
+    public final void handle(Http.Exchange http) {
+      Web.Action action;
+      action = constructor.apply(http);
+
+      action.execute();
+    }
+  }
+
+  private final Sql.Transaction.IsolationLevel isolationLevel = Sql.Transaction.IsolationLevel.SERIALIZABLE;
 
   private Sql.Source source;
 
@@ -27,10 +46,10 @@ abstract class WebModule extends Http.Module {
 
   /**
    * Use the specified data source for obtaining database connections.
-   * 
+   *
    * @param source
    *        the data source to use
-   * 
+   *
    * @throws IllegalStateException
    *         if a source has already been defined
    */
@@ -40,12 +59,18 @@ abstract class WebModule extends Http.Module {
     this.source = Check.notNull(source, "source == null");
   }
 
+  protected final Http.Handler action(Function<Http.Exchange, Web.Action> actionConstructor) {
+    Check.notNull(actionConstructor, "actionConstructor == null");
+
+    return new WebActionHandler(actionConstructor);
+  }
+
   /**
    * Decorates the specified handler around a SQL transaction.
-   * 
+   *
    * @param handler
    *        the HTTP handler to be decorated
-   * 
+   *
    * @return a new HTTP handler that decorates the specified handler around a
    *         SQL transaction
    */
