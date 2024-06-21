@@ -21,11 +21,11 @@
 ## Coordinates
 GROUP_ID := br.com.objectos
 ARTIFACT_ID := objectos.way
-VERSION := 0.19-SNAPSHOT
+VERSION := 0.19
 MODULE := $(ARTIFACT_ID)
 
 ## Dependencies
-SELFGEN := br.com.objectos/objectos.selfgen/0.5-SNAPSHOT
+SELFGEN := br.com.objectos/objectos.selfgen/0.5
 NOTES := br.com.objectos/objectos.notes/0.1
 
 H2 := com.h2database/h2/2.2.224

@@ -45,6 +45,9 @@ TEST_RUN_MARKER = $(TEST_RUNTIME_OUTPUT)/index.html
 
 ## test java command
 TEST_JAVAX := $(JAVA)
+ifdef TEST_JVM_OPTS
+TEST_JAVAX += $(TEST_JVM_OPTS)
+endif
 ifdef TEST_ARGFILES
 TEST_JAVAX += $(foreach argfile,$(TEST_ARGFILES),@$(argfile))
 endif
