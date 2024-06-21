@@ -189,7 +189,60 @@ public final class Html extends BaseElements implements CharWritable {
     int index;
     index = fragmentBegin();
 
-    fragment.execute();
+    fragment.invoke();
+
+    fragmentEnd(index);
+
+    return Api.FRAGMENT;
+  }
+
+  public final <T1> Api.Fragment include(FragmentLambda1<T1> fragment, T1 arg1) {
+    Check.notNull(fragment, "fragment == null");
+
+    int index;
+    index = fragmentBegin();
+
+    fragment.invoke(arg1);
+
+    fragmentEnd(index);
+
+    return Api.FRAGMENT;
+  }
+
+  public final <T1, T2> Api.Fragment include(FragmentLambda2<T1, T2> fragment, T1 arg1, T2 arg2) {
+    Check.notNull(fragment, "fragment == null");
+
+    int index;
+    index = fragmentBegin();
+
+    fragment.invoke(arg1, arg2);
+
+    fragmentEnd(index);
+
+    return Api.FRAGMENT;
+  }
+
+  public final <T1, T2, T3> Api.Fragment include(FragmentLambda3<T1, T2, T3> fragment, T1 arg1, T2 arg2, T3 arg3) {
+    Check.notNull(fragment, "fragment == null");
+
+    int index;
+    index = fragmentBegin();
+
+    fragment.invoke(arg1, arg2, arg3);
+
+    fragmentEnd(index);
+
+    return Api.FRAGMENT;
+  }
+
+  public final <T1, T2, T3, T4> Api.Fragment include(FragmentLambda4<T1, T2, T3, T4> fragment,
+                                                     T1 arg1, T2 arg2, T3 arg3, T4 arg4) {
+    Check.notNull(fragment, "fragment == null");
+
+    int index;
+    index = fragmentBegin();
+
+    fragment.invoke(arg1, arg2, arg3, arg4);
 
     fragmentEnd(index);
 
@@ -1015,7 +1068,7 @@ public final class Html extends BaseElements implements CharWritable {
       );
     };
   }
-  
+
   private Object toObject(byte v0, byte v1) {
     int objectIndex;
     objectIndex = Bytes.decodeInt(v0, v1);

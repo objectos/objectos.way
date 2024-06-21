@@ -22,14 +22,14 @@ package objectos.html;
  * The set of instructions MUST be of the same template instance where this
  * fragment will be included.
  *
- * @see Html#include(FragmentLambda)
+ * @see BaseTemplateDsl#include(FragmentAction)
  */
 @FunctionalInterface
-public interface FragmentLambda {
+public interface FragmentLambda3<T1, T2, T3> {
 
   /**
    * Invokes this set of instructions.
    */
-  void invoke();
+  void invoke(T1 arg1, T2 arg2, T3 arg3);
 
 }

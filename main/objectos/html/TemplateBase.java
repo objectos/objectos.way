@@ -15,7 +15,6 @@
  */
 package objectos.html;
 
-import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -58,7 +57,7 @@ public sealed abstract class TemplateBase
   protected final Api.GlobalAttribute className(String v0, String v1) {
     Check.notNull(v0, "v0 == null");
     Check.notNull(v1, "v1 == null");
-    
+
     return $html().className(v0 + " " + v1);
   }
 
@@ -137,7 +136,7 @@ public sealed abstract class TemplateBase
   protected final Api.GlobalAttribute dataOnInput(Action... actions) {
     return dataOn(AttributeName.DATA_ON_INPUT, actions);
   }
-  
+
   private final Api.GlobalAttribute dataOn(AttributeName name, Action... actions) {
     Check.notNull(actions, "actions == null");
 
@@ -196,12 +195,20 @@ public sealed abstract class TemplateBase
     return $html().include(fragment);
   }
 
-  protected final <E> Api.Fragment f(final Consumer<E> consumer, final E argument) {
-    return f(() -> consumer.accept(argument));
+  protected final <T1> Api.Fragment f(FragmentLambda1<T1> fragment, T1 arg1) {
+    return $html().include(fragment, arg1);
   }
 
-  protected final <E1, E2> Api.Fragment f(final BiConsumer<E1, E2> consumer, final E1 arg1, final E2 arg2) {
-    return f(() -> consumer.accept(arg1, arg2));
+  protected final <T1, T2> Api.Fragment f(FragmentLambda2<T1, T2> fragment, T1 arg1, T2 arg2) {
+    return $html().include(fragment, arg1, arg2);
+  }
+
+  protected final <T1, T2, T3> Api.Fragment f(FragmentLambda3<T1, T2, T3> fragment, T1 arg1, T2 arg2, T3 arg3) {
+    return $html().include(fragment, arg1, arg2, arg3);
+  }
+
+  protected final <T1, T2, T3, T4> Api.Fragment f(FragmentLambda4<T1, T2, T3, T4> fragment, T1 arg1, T2 arg2, T3 arg3, T4 arg4) {
+    return $html().include(fragment, arg1, arg2, arg3, arg4);
   }
 
   /**

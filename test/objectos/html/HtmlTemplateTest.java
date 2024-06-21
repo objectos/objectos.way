@@ -1143,7 +1143,7 @@ public class HtmlTemplateTest {
         new HtmlTemplate() {
           final ElementId NAV = ElementId.of("nav");
           final BootstrapIcons icons = new BootstrapIcons(this);
-          
+
           @Override
           protected final void definition() {
             div(
@@ -1164,7 +1164,6 @@ public class HtmlTemplateTest {
     );
   }
 
-
   @Test(description = """
   HtmlTemplate TC54
 
@@ -1174,7 +1173,7 @@ public class HtmlTemplateTest {
     test(
         new HtmlTemplate() {
           final ElementId FOO = ElementId.of("foo");
-          
+
           @Override
           protected final void definition() {
             div(
@@ -1215,7 +1214,7 @@ public class HtmlTemplateTest {
         """
     );
   }
-  
+
   @Test(description = """
   Allow boolean attribute in a fragment
   """)
@@ -1226,7 +1225,7 @@ public class HtmlTemplateTest {
           protected final void definition() {
             div(f(this::test));
           }
-          
+
           private void test() {
             button(disabled(), t("Foo"));
           }
@@ -1238,7 +1237,6 @@ public class HtmlTemplateTest {
     );
   }
 
-  
   @Test(description = """
   test the className overloads
   """)
@@ -1258,6 +1256,50 @@ public class HtmlTemplateTest {
 
         """
         <div class="a b c d e f g h i j k l m n"></div>
+        """
+    );
+  }
+
+  @Test(description = """
+  test the fragment include overloads
+  """)
+  public void testCase58() {
+    test(
+        new HtmlTemplate() {
+          @Override
+          protected final void definition() {
+            div(
+                f(this::frag1, "a"),
+                f(this::frag2, "a", "b"),
+                f(this::frag3, "a", "b", "c"),
+                f(this::frag4, "a", "b", "c", "d")
+            );
+          }
+
+          private void frag1(String s1) {
+            div(s1);
+          }
+
+          private void frag2(String s1, String s2) {
+            div(s1 + s2);
+          }
+
+          private void frag3(String s1, String s2, String s3) {
+            div(s1 + s2 + s3);
+          }
+
+          private void frag4(String s1, String s2, String s3, String s4) {
+            div(s1 + s2 + s3 + s4);
+          }
+        },
+
+        """
+        <div>
+        <div>a</div>
+        <div>ab</div>
+        <div>abc</div>
+        <div>abcd</div>
+        </div>
         """
     );
   }
