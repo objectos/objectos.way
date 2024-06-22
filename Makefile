@@ -215,6 +215,12 @@ npm-install:
 	npm install
 
 #
+# way@javadoc
+#
+
+include make/java-javadoc.mk
+
+#
 # way@jar
 #
 

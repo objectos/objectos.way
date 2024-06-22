@@ -19,7 +19,7 @@
 #
 
 ## working directory
-WORK = work
+WORK := work
 
 ## targets
 

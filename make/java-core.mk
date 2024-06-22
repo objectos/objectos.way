@@ -22,7 +22,7 @@
 ifdef JAVA_HOME
 JAVA_HOME_BIN := $(JAVA_HOME)/bin
 else
-JAVA_HOME_BIN :=
+$(error Required JAVA_HOME variable was not set)
 endif
 
 ## java command
@@ -34,9 +34,6 @@ JAVAC += -g
 
 ## jar command
 JAR := $(JAVA_HOME_BIN)/jar
-
-## javadoc command
-JAVADOC := $(JAVA_HOME_BIN)/javadoc
 
 ## jdeps command
 JDEPS := $(JAVA_HOME_BIN)/jdeps

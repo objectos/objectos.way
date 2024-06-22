@@ -15,8 +15,6 @@
  */
 package objectos.html;
 
-import java.util.Iterator;
-
 /**
  * Defines the types of the {@link Html} domain-specific language.
  */
@@ -33,7 +31,8 @@ public final class Api {
   private Api() {}
 
   /**
-   * Represents an instruction that generates part of the output of an HTML template.
+   * Represents an instruction that generates part of the output of an HTML
+   * template.
    *
    * <p>
    * Unless noted references to a particular instruction MUST NOT be reused.
@@ -404,7 +403,6 @@ public final class Api {
    * Allowed as an argument to the {@code ul} element method.
    */
   public sealed interface UnorderedListValue extends Instruction {}
-
 
   /**
    * The {@code alignment-baseline} attribute.
@@ -1226,9 +1224,9 @@ public final class Api {
       PathValue,
       SvgValue {}
 
-
   /**
-   * Represents an HTML global attribute such as the {@code id} attribute for example.
+   * Represents an HTML global attribute such as the {@code id} attribute for
+   * example.
    */
   public sealed interface GlobalAttribute
       extends
@@ -1335,17 +1333,6 @@ public final class Api {
       String className();
     }
 
-    /**
-     * Represents a set of {@code class} attributes.
-     */
-    non-sealed interface StyleClassSet extends ExternalAttribute {
-      /**
-       * Iterator over the {@code class} attribute values of this set.
-       *
-       * @return an iterator over the values of this set
-       */
-      Iterator<String> classNames();
-    }
   }
 
   /**

@@ -18,6 +18,14 @@
 # java compilation options
 #
 
+ifndef JAVAC
+$(error Required java-core.mk was not included)
+endif
+
+ifndef WORK
+$(error Required common-clean.mk was not included)
+endif
+
 ## source directory
 ifndef MAIN
 MAIN := main
@@ -115,7 +123,7 @@ JAVACX += --source-path $(MAIN)
 JAVACX += @$(COMPILE_SOURCES)
 
 ## compilation marker
-COMPILE_MARKER = $(WORK)/compile-marker
+COMPILE_MARKER := $(WORK)/compile-marker
 
 ## compilation requirements
 ifndef COMPILE_REQS

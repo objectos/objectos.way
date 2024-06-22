@@ -20,17 +20,10 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
-import objectos.html.Api;
-import objectos.html.Api.ExternalAttribute;
-import objectos.html.HtmlComponent;
-import objectos.html.TemplateBase;
-import objectos.lang.object.Check;
 
-public final class WayJs extends HtmlComponent {
+public final class WayJs {
 
-  public WayJs(TemplateBase parent) {
-    super(parent);
-  }
+  private WayJs() {}
 
   public static byte[] getBytes() throws IOException {
     URL resource;
@@ -46,52 +39,6 @@ public final class WayJs extends HtmlComponent {
 
       return out.toByteArray();
     }
-  }
-
-  public final Api.GlobalAttribute click(Command... commands) {
-    Check.notNull(commands, "commands == null");
-
-    StringBuilder json;
-    json = new StringBuilder();
-
-    json.append('[');
-
-    if (commands.length > 0) {
-      Command c;
-      c = commands[0];
-
-      c.acceptJsonBuilder(json);
-
-      for (int i = 1; i < commands.length; i++) {
-        json.append(',');
-
-        c = commands[i];
-
-        c.acceptJsonBuilder(json);
-      }
-    }
-
-    json.append(']');
-
-    return dataWayClick(json.toString());
-  }
-
-  public final Command replaceClass(ExternalAttribute.Id id,
-                                    ExternalAttribute.StyleClass from,
-                                    ExternalAttribute.StyleClass to) {
-    Check.notNull(id, "id == null");
-    Check.notNull(from, "from == null");
-    Check.notNull(to, "to == null");
-
-    return new Command.ReplaceClass(id, from, to);
-  }
-
-  public final Command swap(ExternalAttribute.Id id,
-                            SwapMode mode) {
-    Check.notNull(id, "id == null");
-    Check.notNull(mode, "mode == null");
-
-    return new Command.Swap(id, mode);
   }
 
 }
