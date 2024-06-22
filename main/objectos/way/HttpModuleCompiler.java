@@ -61,7 +61,7 @@ final class HttpModuleCompiler implements Http.Handler {
 
   final void filter(Http.Handler handler) {
     handler = decorate(handler);
-    
+
     int index;
     index = nextSlot();
 
@@ -78,7 +78,7 @@ final class HttpModuleCompiler implements Http.Handler {
 
   final void route(Matcher matcher, Http.Handler handler) {
     handler = decorate(handler);
-    
+
     int index;
     index = nextSlot();
 
@@ -100,7 +100,7 @@ final class HttpModuleCompiler implements Http.Handler {
 
     this.sessionStore = sessionStore;
   }
-  
+
   private Http.Handler decorate(Http.Handler handler) {
     if (interceptor == null) {
       return handler;

@@ -33,7 +33,7 @@ public class HttpModuleTest extends Http.Module {
   private record Box(String value) {}
 
   private record User(String login) {}
-  
+
   @SuppressWarnings("serial")
   private static class TestException extends RuntimeException {}
 
@@ -87,19 +87,21 @@ public class HttpModuleTest extends Http.Module {
 
     // matches: /testCase04, /testCase04/foo, /testCase04/foo/bar
     route(segments(eq("testCase04"), zeroOrMore()), new TestCase04());
-    
+
     // matches: /testCase05/img, /testCase05/img/, /testCase05/img/a, /testCase05/img/b
     route(segments(eq("testCase05"), eq("img"), zeroOrMore()), this::testCase05);
-    
+
     // matches: /testCase06/, /testCase06/foo, /testCase06/foo/bar
     // but not: /testCase06
     route(segments(eq("testCase06"), oneOrMore()), this::testCase06);
-    
+
     route(path("/testCase07/before"), this::testCase07);
-    
+
     interceptMatched(this::testCase07);
-    
+
     route(path("/testCase07/after"), this::testCase07);
+
+    install(new TestCase08());
   }
 
   private void testCase01(Http.Exchange http) {
@@ -459,7 +461,7 @@ public class HttpModuleTest extends Http.Module {
           a
           """
       );
-      
+
       test(socket,
           """
           GET /testCase05/img HTTP/1.1\r
@@ -476,7 +478,7 @@ public class HttpModuleTest extends Http.Module {
           \r
           \n"""
       );
-      
+
       test(socket,
           """
           GET /testCase05/img/ HTTP/1.1\r
@@ -493,7 +495,7 @@ public class HttpModuleTest extends Http.Module {
           \r
           \n"""
       );
-      
+
       test(socket,
           """
           GET /testCase05/img/a/b HTTP/1.1\r
@@ -511,7 +513,7 @@ public class HttpModuleTest extends Http.Module {
           a/b
           """
       );
-      
+
       test(socket,
           """
           GET /testCase05/img/a/b/c HTTP/1.1\r
@@ -529,7 +531,7 @@ public class HttpModuleTest extends Http.Module {
           a/b/c
           """
       );
-      
+
       test(socket,
           """
           GET /testCase05/imx/a/b/c HTTP/1.1\r
@@ -547,7 +549,7 @@ public class HttpModuleTest extends Http.Module {
       );
     }
   }
-  
+
   private void testCase06(Http.Exchange http) {
     Http.Request.Target.Path path;
     path = http.path();
@@ -582,7 +584,7 @@ public class HttpModuleTest extends Http.Module {
           \r
           \n"""
       );
-      
+
       test(socket,
           """
           GET /testCase06/foo HTTP/1.1\r
@@ -600,7 +602,7 @@ public class HttpModuleTest extends Http.Module {
           foo
           """
       );
-      
+
       test(socket,
           """
           GET /testCase06/foo/bar HTTP/1.1\r
@@ -618,7 +620,7 @@ public class HttpModuleTest extends Http.Module {
           foo/bar
           """
       );
-      
+
       test(socket,
           """
           GET /testCase06 HTTP/1.1\r
@@ -636,21 +638,21 @@ public class HttpModuleTest extends Http.Module {
       );
     }
   }
-  
+
   private void testCase07(Http.Exchange http) {
     Box box;
     box = http.get(Box.class);
 
     String value;
     value = box != null ? box.value : "null";
-    
+
     if ("throw".equals(value)) {
       throw new TestException();
     }
 
     http.okText("VALUE=" + value, StandardCharsets.UTF_8);
   }
-  
+
   private Http.Handler testCase07(Http.Handler handler) {
     return http -> {
       Query query = http.query();
@@ -674,7 +676,7 @@ public class HttpModuleTest extends Http.Module {
       }
     };
   }
-  
+
   @Test
   public void testCase07() throws IOException {
     try (Socket socket = newSocket()) {
@@ -694,7 +696,7 @@ public class HttpModuleTest extends Http.Module {
           \r
           VALUE=null"""
       );
-      
+
       test(socket,
           """
           GET /testCase07/after?value=foo HTTP/1.1\r
@@ -711,7 +713,7 @@ public class HttpModuleTest extends Http.Module {
           \r
           VALUE=foo"""
       );
-      
+
       test(socket,
           """
           GET /testCase07/after?value=throw HTTP/1.1\r
@@ -730,7 +732,37 @@ public class HttpModuleTest extends Http.Module {
       );
     }
   }
-  
+
+  private static class TestCase08 extends Http.Module {
+    @Override
+    protected final void configure() {
+      route(path("/testCase08"), http -> http.okText("TC08", StandardCharsets.UTF_8));
+    }
+  }
+
+  @Test
+  public void testCase08() throws IOException {
+    try (Socket socket = newSocket()) {
+      test(socket,
+          """
+          GET /testCase08 HTTP/1.1\r
+          Host: http.module.test\r
+          Cookie: HTTPMODULETEST=TEST_COOKIE\r
+          Connection: close\r
+          \r
+          """,
+
+          """
+          HTTP/1.1 200 OK\r
+          Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+          Content-Type: text/plain; charset=utf-8\r
+          Content-Length: 4\r
+          \r
+          TC08"""
+      );
+    }
+  }
+
   @Test
   public void edge01() {
     Http.Module empty = new Http.Module() {
@@ -739,7 +771,7 @@ public class HttpModuleTest extends Http.Module {
     };
 
     Http.Handler handler = empty.compile();
-    
+
     assertNotNull(handler);
   }
 

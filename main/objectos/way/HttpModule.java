@@ -45,7 +45,7 @@ abstract class HttpModule {
     }
 
   }
-  
+
   protected sealed static abstract class MethodHandler permits HttpModuleMethodHandler {
 
     MethodHandler() {}
@@ -60,7 +60,7 @@ abstract class HttpModule {
 
   /**
    * Generates a handler instance based on the configuration of this module.
-   * 
+   *
    * @return a configured handler instance
    */
   public final Http.Handler compile() {
@@ -94,15 +94,33 @@ abstract class HttpModule {
     compiler.sessionStore(sessionStore);
   }
 
+  protected final void install(Http.Module module) {
+    Check.notNull(module, "module == null");
+
+    module.acceptHttpModuleCompiler(compiler);
+  }
+
+  final void acceptHttpModuleCompiler(HttpModuleCompiler _compiler) {
+    Check.state(compiler == null, "Another compilation is already in progress");
+
+    try {
+      compiler = _compiler;
+
+      configure();
+    } finally {
+      compiler = null;
+    }
+  }
+
   protected final void filter(Http.Handler handler) {
     Check.notNull(handler, "handler == null");
 
     compiler.filter(handler);
   }
-  
+
   /**
    * Intercepts all matched routes with the specified interceptor.
-   * 
+   *
    * @param interceptor
    *        the interceptor to use
    */
@@ -111,7 +129,7 @@ abstract class HttpModule {
 
     compiler.interceptor(interceptor);
   }
-  
+
   // routes
 
   protected final void route(Matcher matcher, Http.Handler handler) {
@@ -146,7 +164,7 @@ abstract class HttpModule {
   }
 
   // matchers
-  
+
   protected final Matcher path(String value) {
     Check.notNull(value, "value == null");
 
@@ -187,7 +205,7 @@ abstract class HttpModule {
   }
 
   // conditions
-  
+
   protected final Condition eq(String value) {
     Check.notNull(value, "value == null");
 
@@ -205,7 +223,7 @@ abstract class HttpModule {
   protected final Condition present() {
     return HttpModuleCondition.present();
   }
- 
+
   protected final Condition oneOrMore() {
     return HttpModuleCondition.oneOrMore();
   }
