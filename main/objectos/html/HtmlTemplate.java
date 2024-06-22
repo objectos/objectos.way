@@ -16,7 +16,6 @@
 package objectos.html;
 
 import java.io.IOException;
-import objectos.html.pseudom.DocumentProcessor;
 import objectos.html.pseudom.HtmlDocument;
 import objectos.lang.object.Check;
 
@@ -94,25 +93,6 @@ public non-sealed abstract class HtmlTemplate extends TemplateBase {
     Check.state(html != null, "html not set");
 
     return html;
-  }
-
-  final void process(Html templateApi, DocumentProcessor processor) {
-    try {
-      html = templateApi;
-
-      html.compilationBegin();
-
-      definition();
-
-      html.compilationEnd();
-
-      HtmlDocument document;
-      document = html.compile();
-
-      processor.process(document);
-    } finally {
-      html = null;
-    }
   }
 
 }

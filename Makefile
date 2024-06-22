@@ -148,7 +148,6 @@ TEST_JAVAX_EXPORTS += objectos.util.map
 TEST_JAVAX_EXPORTS += objectos.util.set
 TEST_JAVAX_EXPORTS += objectos.way
 TEST_JAVAX_EXPORTS += objectox.css
-TEST_JAVAX_EXPORTS += objectox.html.style
 TEST_JAVAX_EXPORTS += objectox.lang
 TEST_JAVAX_EXPORTS += testing.site.web
 
