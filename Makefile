@@ -25,7 +25,7 @@ VERSION := 0.20-SNAPSHOT
 MODULE := $(ARTIFACT_ID)
 
 ## Dependencies
-SELFGEN := br.com.objectos/objectos.selfgen/0.5
+SELFGEN := br.com.objectos/objectos.selfgen/0.6-SNAPSHOT
 NOTES := br.com.objectos/objectos.notes/0.1
 
 H2 := com.h2database/h2/2.2.224

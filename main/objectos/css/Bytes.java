@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectox.html.style;
+package objectos.css;
 
-public final class Bytes {
+final class Bytes {
 
   private static final int UNSIGNED = 0xFF;
 

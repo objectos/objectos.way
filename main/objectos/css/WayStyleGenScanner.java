@@ -23,7 +23,6 @@ import objectos.notes.NoOpNoteSink;
 import objectos.notes.Note1;
 import objectos.notes.Note2;
 import objectos.notes.NoteSink;
-import objectox.html.style.Bytes;
 
 abstract class WayStyleGenScanner {
 
