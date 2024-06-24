@@ -63,7 +63,7 @@ public final class Html {
   /**
    * Compiles an HTML template into a materialized HTML document.
    */
-  public non-sealed interface Compiler extends CompilerAttributes {
+  public non-sealed interface Compiler extends CompilerAttributes, CompilerElements {
 
   }
 
@@ -92,7 +92,7 @@ public final class Html {
   /**
    * Provides methods the HTML attributes template methods.
    */
-  public static abstract class TemplateAttributes {
+  public sealed static abstract class TemplateAttributes {
 
     TemplateAttributes() {}
 
@@ -105,7 +105,7 @@ public final class Html {
      * @return an instruction representing this attribute.
      */
     protected final AttributeInstruction accesskey(String value) {
-      return $compiler().accesskey(value);
+      return $attributes().accesskey(value);
     }
 
     /**
@@ -117,7 +117,7 @@ public final class Html {
      * @return an instruction representing this attribute.
      */
     protected final AttributeInstruction action(String value) {
-      return $compiler().action(value);
+      return $attributes().action(value);
     }
 
     /**
@@ -129,7 +129,7 @@ public final class Html {
      * @return an instruction representing this attribute.
      */
     protected final AttributeInstruction align(String value) {
-      return $compiler().align(value);
+      return $attributes().align(value);
     }
 
     /**
@@ -141,7 +141,7 @@ public final class Html {
      * @return an instruction representing this attribute.
      */
     protected final AttributeInstruction alignmentBaseline(String value) {
-      return $compiler().alignmentBaseline(value);
+      return $attributes().alignmentBaseline(value);
     }
 
     /**
@@ -153,7 +153,7 @@ public final class Html {
      * @return an instruction representing this attribute.
      */
     protected final AttributeInstruction alt(String value) {
-      return $compiler().alt(value);
+      return $attributes().alt(value);
     }
 
     /**
@@ -165,7 +165,7 @@ public final class Html {
      * @return an instruction representing this attribute.
      */
     protected final AttributeInstruction ariaHidden(String value) {
-      return $compiler().ariaHidden(value);
+      return $attributes().ariaHidden(value);
     }
 
     /**
@@ -177,7 +177,7 @@ public final class Html {
      * @return an instruction representing this attribute.
      */
     protected final AttributeInstruction ariaLabel(String value) {
-      return $compiler().ariaLabel(value);
+      return $attributes().ariaLabel(value);
     }
 
     /**
@@ -186,7 +186,7 @@ public final class Html {
      * @return an instruction representing this attribute.
      */
     protected final AttributeInstruction async() {
-      return $compiler().async();
+      return $attributes().async();
     }
 
     /**
@@ -198,7 +198,7 @@ public final class Html {
      * @return an instruction representing this attribute.
      */
     protected final AttributeInstruction autocomplete(String value) {
-      return $compiler().autocomplete(value);
+      return $attributes().autocomplete(value);
     }
 
     /**
@@ -207,7 +207,7 @@ public final class Html {
      * @return an instruction representing this attribute.
      */
     protected final AttributeInstruction autofocus() {
-      return $compiler().autofocus();
+      return $attributes().autofocus();
     }
 
     /**
@@ -219,7 +219,7 @@ public final class Html {
      * @return an instruction representing this attribute.
      */
     protected final AttributeInstruction baselineShift(String value) {
-      return $compiler().baselineShift(value);
+      return $attributes().baselineShift(value);
     }
 
     /**
@@ -231,7 +231,7 @@ public final class Html {
      * @return an instruction representing this attribute.
      */
     protected final AttributeInstruction border(String value) {
-      return $compiler().border(value);
+      return $attributes().border(value);
     }
 
     /**
@@ -243,7 +243,7 @@ public final class Html {
      * @return an instruction representing this attribute.
      */
     protected final AttributeInstruction cellpadding(String value) {
-      return $compiler().cellpadding(value);
+      return $attributes().cellpadding(value);
     }
 
     /**
@@ -255,7 +255,7 @@ public final class Html {
      * @return an instruction representing this attribute.
      */
     protected final AttributeInstruction cellspacing(String value) {
-      return $compiler().cellspacing(value);
+      return $attributes().cellspacing(value);
     }
 
     /**
@@ -267,7 +267,7 @@ public final class Html {
      * @return an instruction representing this attribute.
      */
     protected final AttributeInstruction charset(String value) {
-      return $compiler().charset(value);
+      return $attributes().charset(value);
     }
 
     /**
@@ -279,7 +279,7 @@ public final class Html {
      * @return an instruction representing this attribute.
      */
     protected final AttributeInstruction cite(String value) {
-      return $compiler().cite(value);
+      return $attributes().cite(value);
     }
 
     /**
@@ -291,7 +291,7 @@ public final class Html {
      * @return an instruction representing this attribute.
      */
     protected final AttributeInstruction className(String value) {
-      return $compiler().className(value);
+      return $attributes().className(value);
     }
 
     /**
@@ -303,7 +303,7 @@ public final class Html {
      * @return an instruction representing this attribute.
      */
     protected final AttributeInstruction clipRule(String value) {
-      return $compiler().clipRule(value);
+      return $attributes().clipRule(value);
     }
 
     /**
@@ -315,7 +315,7 @@ public final class Html {
      * @return an instruction representing this attribute.
      */
     protected final AttributeInstruction color(String value) {
-      return $compiler().color(value);
+      return $attributes().color(value);
     }
 
     /**
@@ -327,7 +327,7 @@ public final class Html {
      * @return an instruction representing this attribute.
      */
     protected final AttributeInstruction colorInterpolation(String value) {
-      return $compiler().colorInterpolation(value);
+      return $attributes().colorInterpolation(value);
     }
 
     /**
@@ -339,7 +339,7 @@ public final class Html {
      * @return an instruction representing this attribute.
      */
     protected final AttributeInstruction colorInterpolationFilters(String value) {
-      return $compiler().colorInterpolationFilters(value);
+      return $attributes().colorInterpolationFilters(value);
     }
 
     /**
@@ -351,7 +351,7 @@ public final class Html {
      * @return an instruction representing this attribute.
      */
     protected final AttributeInstruction cols(String value) {
-      return $compiler().cols(value);
+      return $attributes().cols(value);
     }
 
     /**
@@ -363,7 +363,7 @@ public final class Html {
      * @return an instruction representing this attribute.
      */
     protected final AttributeInstruction content(String value) {
-      return $compiler().content(value);
+      return $attributes().content(value);
     }
 
     /**
@@ -375,7 +375,7 @@ public final class Html {
      * @return an instruction representing this attribute.
      */
     protected final AttributeInstruction contenteditable(String value) {
-      return $compiler().contenteditable(value);
+      return $attributes().contenteditable(value);
     }
 
     /**
@@ -387,7 +387,7 @@ public final class Html {
      * @return an instruction representing this attribute.
      */
     protected final AttributeInstruction crossorigin(String value) {
-      return $compiler().crossorigin(value);
+      return $attributes().crossorigin(value);
     }
 
     /**
@@ -399,7 +399,7 @@ public final class Html {
      * @return an instruction representing this attribute.
      */
     protected final AttributeInstruction cursor(String value) {
-      return $compiler().cursor(value);
+      return $attributes().cursor(value);
     }
 
     /**
@@ -411,7 +411,7 @@ public final class Html {
      * @return an instruction representing this attribute.
      */
     protected final AttributeInstruction d(String value) {
-      return $compiler().d(value);
+      return $attributes().d(value);
     }
 
     /**
@@ -420,7 +420,7 @@ public final class Html {
      * @return an instruction representing this attribute.
      */
     protected final AttributeInstruction defer() {
-      return $compiler().defer();
+      return $attributes().defer();
     }
 
     /**
@@ -432,7 +432,7 @@ public final class Html {
      * @return an instruction representing this attribute.
      */
     protected final AttributeInstruction dir(String value) {
-      return $compiler().dir(value);
+      return $attributes().dir(value);
     }
 
     /**
@@ -444,7 +444,7 @@ public final class Html {
      * @return an instruction representing this attribute.
      */
     protected final AttributeInstruction direction(String value) {
-      return $compiler().direction(value);
+      return $attributes().direction(value);
     }
 
     /**
@@ -456,7 +456,7 @@ public final class Html {
      * @return an instruction representing this attribute.
      */
     protected final AttributeInstruction dirname(String value) {
-      return $compiler().dirname(value);
+      return $attributes().dirname(value);
     }
 
     /**
@@ -465,7 +465,7 @@ public final class Html {
      * @return an instruction representing this attribute.
      */
     protected final AttributeInstruction disabled() {
-      return $compiler().disabled();
+      return $attributes().disabled();
     }
 
     /**
@@ -477,7 +477,7 @@ public final class Html {
      * @return an instruction representing this attribute.
      */
     protected final AttributeInstruction display(String value) {
-      return $compiler().display(value);
+      return $attributes().display(value);
     }
 
     /**
@@ -489,7 +489,7 @@ public final class Html {
      * @return an instruction representing this attribute.
      */
     protected final AttributeInstruction dominantBaseline(String value) {
-      return $compiler().dominantBaseline(value);
+      return $attributes().dominantBaseline(value);
     }
 
     /**
@@ -501,7 +501,7 @@ public final class Html {
      * @return an instruction representing this attribute.
      */
     protected final AttributeInstruction draggable(String value) {
-      return $compiler().draggable(value);
+      return $attributes().draggable(value);
     }
 
     /**
@@ -513,7 +513,7 @@ public final class Html {
      * @return an instruction representing this attribute.
      */
     protected final AttributeInstruction enctype(String value) {
-      return $compiler().enctype(value);
+      return $attributes().enctype(value);
     }
 
     /**
@@ -525,7 +525,7 @@ public final class Html {
      * @return an instruction representing this attribute.
      */
     protected final AttributeInstruction fill(String value) {
-      return $compiler().fill(value);
+      return $attributes().fill(value);
     }
 
     /**
@@ -537,7 +537,7 @@ public final class Html {
      * @return an instruction representing this attribute.
      */
     protected final AttributeInstruction fillOpacity(String value) {
-      return $compiler().fillOpacity(value);
+      return $attributes().fillOpacity(value);
     }
 
     /**
@@ -549,7 +549,7 @@ public final class Html {
      * @return an instruction representing this attribute.
      */
     protected final AttributeInstruction fillRule(String value) {
-      return $compiler().fillRule(value);
+      return $attributes().fillRule(value);
     }
 
     /**
@@ -561,7 +561,7 @@ public final class Html {
      * @return an instruction representing this attribute.
      */
     protected final AttributeInstruction filter(String value) {
-      return $compiler().filter(value);
+      return $attributes().filter(value);
     }
 
     /**
@@ -573,7 +573,7 @@ public final class Html {
      * @return an instruction representing this attribute.
      */
     protected final AttributeInstruction floodColor(String value) {
-      return $compiler().floodColor(value);
+      return $attributes().floodColor(value);
     }
 
     /**
@@ -585,7 +585,7 @@ public final class Html {
      * @return an instruction representing this attribute.
      */
     protected final AttributeInstruction floodOpacity(String value) {
-      return $compiler().floodOpacity(value);
+      return $attributes().floodOpacity(value);
     }
 
     /**
@@ -597,7 +597,7 @@ public final class Html {
      * @return an instruction representing this attribute.
      */
     protected final AttributeInstruction fontFamily(String value) {
-      return $compiler().fontFamily(value);
+      return $attributes().fontFamily(value);
     }
 
     /**
@@ -609,7 +609,7 @@ public final class Html {
      * @return an instruction representing this attribute.
      */
     protected final AttributeInstruction fontSize(String value) {
-      return $compiler().fontSize(value);
+      return $attributes().fontSize(value);
     }
 
     /**
@@ -621,7 +621,7 @@ public final class Html {
      * @return an instruction representing this attribute.
      */
     protected final AttributeInstruction fontSizeAdjust(String value) {
-      return $compiler().fontSizeAdjust(value);
+      return $attributes().fontSizeAdjust(value);
     }
 
     /**
@@ -633,7 +633,7 @@ public final class Html {
      * @return an instruction representing this attribute.
      */
     protected final AttributeInstruction fontStretch(String value) {
-      return $compiler().fontStretch(value);
+      return $attributes().fontStretch(value);
     }
 
     /**
@@ -645,7 +645,7 @@ public final class Html {
      * @return an instruction representing this attribute.
      */
     protected final AttributeInstruction fontStyle(String value) {
-      return $compiler().fontStyle(value);
+      return $attributes().fontStyle(value);
     }
 
     /**
@@ -657,7 +657,7 @@ public final class Html {
      * @return an instruction representing this attribute.
      */
     protected final AttributeInstruction fontVariant(String value) {
-      return $compiler().fontVariant(value);
+      return $attributes().fontVariant(value);
     }
 
     /**
@@ -669,7 +669,7 @@ public final class Html {
      * @return an instruction representing this attribute.
      */
     protected final AttributeInstruction fontWeight(String value) {
-      return $compiler().fontWeight(value);
+      return $attributes().fontWeight(value);
     }
 
     /**
@@ -681,7 +681,7 @@ public final class Html {
      * @return an instruction representing this attribute.
      */
     protected final AttributeInstruction forAttr(String value) {
-      return $compiler().forAttr(value);
+      return $attributes().forAttr(value);
     }
 
     /**
@@ -693,7 +693,7 @@ public final class Html {
      * @return an instruction representing this attribute.
      */
     protected final AttributeInstruction forElement(String value) {
-      return $compiler().forElement(value);
+      return $attributes().forElement(value);
     }
 
     /**
@@ -705,7 +705,7 @@ public final class Html {
      * @return an instruction representing this attribute.
      */
     protected final AttributeInstruction glyphOrientationHorizontal(String value) {
-      return $compiler().glyphOrientationHorizontal(value);
+      return $attributes().glyphOrientationHorizontal(value);
     }
 
     /**
@@ -717,7 +717,7 @@ public final class Html {
      * @return an instruction representing this attribute.
      */
     protected final AttributeInstruction glyphOrientationVertical(String value) {
-      return $compiler().glyphOrientationVertical(value);
+      return $attributes().glyphOrientationVertical(value);
     }
 
     /**
@@ -729,7 +729,7 @@ public final class Html {
      * @return an instruction representing this attribute.
      */
     protected final AttributeInstruction height(String value) {
-      return $compiler().height(value);
+      return $attributes().height(value);
     }
 
     /**
@@ -738,7 +738,7 @@ public final class Html {
      * @return an instruction representing this attribute.
      */
     protected final AttributeInstruction hidden() {
-      return $compiler().hidden();
+      return $attributes().hidden();
     }
 
     /**
@@ -750,7 +750,7 @@ public final class Html {
      * @return an instruction representing this attribute.
      */
     protected final AttributeInstruction href(String value) {
-      return $compiler().href(value);
+      return $attributes().href(value);
     }
 
     /**
@@ -762,7 +762,7 @@ public final class Html {
      * @return an instruction representing this attribute.
      */
     protected final AttributeInstruction httpEquiv(String value) {
-      return $compiler().httpEquiv(value);
+      return $attributes().httpEquiv(value);
     }
 
     /**
@@ -774,7 +774,7 @@ public final class Html {
      * @return an instruction representing this attribute.
      */
     protected final AttributeInstruction id(String value) {
-      return $compiler().id(value);
+      return $attributes().id(value);
     }
 
     /**
@@ -786,7 +786,7 @@ public final class Html {
      * @return an instruction representing this attribute.
      */
     protected final AttributeInstruction imageRendering(String value) {
-      return $compiler().imageRendering(value);
+      return $attributes().imageRendering(value);
     }
 
     /**
@@ -798,7 +798,7 @@ public final class Html {
      * @return an instruction representing this attribute.
      */
     protected final AttributeInstruction integrity(String value) {
-      return $compiler().integrity(value);
+      return $attributes().integrity(value);
     }
 
     /**
@@ -810,7 +810,7 @@ public final class Html {
      * @return an instruction representing this attribute.
      */
     protected final AttributeInstruction lang(String value) {
-      return $compiler().lang(value);
+      return $attributes().lang(value);
     }
 
     /**
@@ -822,7 +822,7 @@ public final class Html {
      * @return an instruction representing this attribute.
      */
     protected final AttributeInstruction letterSpacing(String value) {
-      return $compiler().letterSpacing(value);
+      return $attributes().letterSpacing(value);
     }
 
     /**
@@ -834,7 +834,7 @@ public final class Html {
      * @return an instruction representing this attribute.
      */
     protected final AttributeInstruction lightingColor(String value) {
-      return $compiler().lightingColor(value);
+      return $attributes().lightingColor(value);
     }
 
     /**
@@ -846,7 +846,7 @@ public final class Html {
      * @return an instruction representing this attribute.
      */
     protected final AttributeInstruction markerEnd(String value) {
-      return $compiler().markerEnd(value);
+      return $attributes().markerEnd(value);
     }
 
     /**
@@ -858,7 +858,7 @@ public final class Html {
      * @return an instruction representing this attribute.
      */
     protected final AttributeInstruction markerMid(String value) {
-      return $compiler().markerMid(value);
+      return $attributes().markerMid(value);
     }
 
     /**
@@ -870,7 +870,7 @@ public final class Html {
      * @return an instruction representing this attribute.
      */
     protected final AttributeInstruction markerStart(String value) {
-      return $compiler().markerStart(value);
+      return $attributes().markerStart(value);
     }
 
     /**
@@ -882,7 +882,7 @@ public final class Html {
      * @return an instruction representing this attribute.
      */
     protected final AttributeInstruction mask(String value) {
-      return $compiler().mask(value);
+      return $attributes().mask(value);
     }
 
     /**
@@ -894,7 +894,7 @@ public final class Html {
      * @return an instruction representing this attribute.
      */
     protected final AttributeInstruction maskType(String value) {
-      return $compiler().maskType(value);
+      return $attributes().maskType(value);
     }
 
     /**
@@ -906,7 +906,7 @@ public final class Html {
      * @return an instruction representing this attribute.
      */
     protected final AttributeInstruction maxlength(String value) {
-      return $compiler().maxlength(value);
+      return $attributes().maxlength(value);
     }
 
     /**
@@ -918,7 +918,7 @@ public final class Html {
      * @return an instruction representing this attribute.
      */
     protected final AttributeInstruction media(String value) {
-      return $compiler().media(value);
+      return $attributes().media(value);
     }
 
     /**
@@ -930,7 +930,7 @@ public final class Html {
      * @return an instruction representing this attribute.
      */
     protected final AttributeInstruction method(String value) {
-      return $compiler().method(value);
+      return $attributes().method(value);
     }
 
     /**
@@ -942,7 +942,7 @@ public final class Html {
      * @return an instruction representing this attribute.
      */
     protected final AttributeInstruction minlength(String value) {
-      return $compiler().minlength(value);
+      return $attributes().minlength(value);
     }
 
     /**
@@ -951,7 +951,7 @@ public final class Html {
      * @return an instruction representing this attribute.
      */
     protected final AttributeInstruction multiple() {
-      return $compiler().multiple();
+      return $attributes().multiple();
     }
 
     /**
@@ -963,7 +963,7 @@ public final class Html {
      * @return an instruction representing this attribute.
      */
     protected final AttributeInstruction name(String value) {
-      return $compiler().name(value);
+      return $attributes().name(value);
     }
 
     /**
@@ -972,7 +972,7 @@ public final class Html {
      * @return an instruction representing this attribute.
      */
     protected final AttributeInstruction nomodule() {
-      return $compiler().nomodule();
+      return $attributes().nomodule();
     }
 
     /**
@@ -984,7 +984,7 @@ public final class Html {
      * @return an instruction representing this attribute.
      */
     protected final AttributeInstruction onafterprint(String value) {
-      return $compiler().onafterprint(value);
+      return $attributes().onafterprint(value);
     }
 
     /**
@@ -996,7 +996,7 @@ public final class Html {
      * @return an instruction representing this attribute.
      */
     protected final AttributeInstruction onbeforeprint(String value) {
-      return $compiler().onbeforeprint(value);
+      return $attributes().onbeforeprint(value);
     }
 
     /**
@@ -1008,7 +1008,7 @@ public final class Html {
      * @return an instruction representing this attribute.
      */
     protected final AttributeInstruction onbeforeunload(String value) {
-      return $compiler().onbeforeunload(value);
+      return $attributes().onbeforeunload(value);
     }
 
     /**
@@ -1020,7 +1020,7 @@ public final class Html {
      * @return an instruction representing this attribute.
      */
     protected final AttributeInstruction onclick(String value) {
-      return $compiler().onclick(value);
+      return $attributes().onclick(value);
     }
 
     /**
@@ -1032,7 +1032,7 @@ public final class Html {
      * @return an instruction representing this attribute.
      */
     protected final AttributeInstruction onhashchange(String value) {
-      return $compiler().onhashchange(value);
+      return $attributes().onhashchange(value);
     }
 
     /**
@@ -1044,7 +1044,7 @@ public final class Html {
      * @return an instruction representing this attribute.
      */
     protected final AttributeInstruction onlanguagechange(String value) {
-      return $compiler().onlanguagechange(value);
+      return $attributes().onlanguagechange(value);
     }
 
     /**
@@ -1056,7 +1056,7 @@ public final class Html {
      * @return an instruction representing this attribute.
      */
     protected final AttributeInstruction onmessage(String value) {
-      return $compiler().onmessage(value);
+      return $attributes().onmessage(value);
     }
 
     /**
@@ -1068,7 +1068,7 @@ public final class Html {
      * @return an instruction representing this attribute.
      */
     protected final AttributeInstruction onoffline(String value) {
-      return $compiler().onoffline(value);
+      return $attributes().onoffline(value);
     }
 
     /**
@@ -1080,7 +1080,7 @@ public final class Html {
      * @return an instruction representing this attribute.
      */
     protected final AttributeInstruction ononline(String value) {
-      return $compiler().ononline(value);
+      return $attributes().ononline(value);
     }
 
     /**
@@ -1092,7 +1092,7 @@ public final class Html {
      * @return an instruction representing this attribute.
      */
     protected final AttributeInstruction onpagehide(String value) {
-      return $compiler().onpagehide(value);
+      return $attributes().onpagehide(value);
     }
 
     /**
@@ -1104,7 +1104,7 @@ public final class Html {
      * @return an instruction representing this attribute.
      */
     protected final AttributeInstruction onpageshow(String value) {
-      return $compiler().onpageshow(value);
+      return $attributes().onpageshow(value);
     }
 
     /**
@@ -1116,7 +1116,7 @@ public final class Html {
      * @return an instruction representing this attribute.
      */
     protected final AttributeInstruction onpopstate(String value) {
-      return $compiler().onpopstate(value);
+      return $attributes().onpopstate(value);
     }
 
     /**
@@ -1128,7 +1128,7 @@ public final class Html {
      * @return an instruction representing this attribute.
      */
     protected final AttributeInstruction onrejectionhandled(String value) {
-      return $compiler().onrejectionhandled(value);
+      return $attributes().onrejectionhandled(value);
     }
 
     /**
@@ -1140,7 +1140,7 @@ public final class Html {
      * @return an instruction representing this attribute.
      */
     protected final AttributeInstruction onstorage(String value) {
-      return $compiler().onstorage(value);
+      return $attributes().onstorage(value);
     }
 
     /**
@@ -1152,7 +1152,7 @@ public final class Html {
      * @return an instruction representing this attribute.
      */
     protected final AttributeInstruction onsubmit(String value) {
-      return $compiler().onsubmit(value);
+      return $attributes().onsubmit(value);
     }
 
     /**
@@ -1164,7 +1164,7 @@ public final class Html {
      * @return an instruction representing this attribute.
      */
     protected final AttributeInstruction onunhandledrejection(String value) {
-      return $compiler().onunhandledrejection(value);
+      return $attributes().onunhandledrejection(value);
     }
 
     /**
@@ -1176,7 +1176,7 @@ public final class Html {
      * @return an instruction representing this attribute.
      */
     protected final AttributeInstruction onunload(String value) {
-      return $compiler().onunload(value);
+      return $attributes().onunload(value);
     }
 
     /**
@@ -1188,7 +1188,7 @@ public final class Html {
      * @return an instruction representing this attribute.
      */
     protected final AttributeInstruction opacity(String value) {
-      return $compiler().opacity(value);
+      return $attributes().opacity(value);
     }
 
     /**
@@ -1197,7 +1197,7 @@ public final class Html {
      * @return an instruction representing this attribute.
      */
     protected final AttributeInstruction open() {
-      return $compiler().open();
+      return $attributes().open();
     }
 
     /**
@@ -1209,7 +1209,7 @@ public final class Html {
      * @return an instruction representing this attribute.
      */
     protected final AttributeInstruction overflow(String value) {
-      return $compiler().overflow(value);
+      return $attributes().overflow(value);
     }
 
     /**
@@ -1221,7 +1221,7 @@ public final class Html {
      * @return an instruction representing this attribute.
      */
     protected final AttributeInstruction paintOrder(String value) {
-      return $compiler().paintOrder(value);
+      return $attributes().paintOrder(value);
     }
 
     /**
@@ -1233,7 +1233,7 @@ public final class Html {
      * @return an instruction representing this attribute.
      */
     protected final AttributeInstruction placeholder(String value) {
-      return $compiler().placeholder(value);
+      return $attributes().placeholder(value);
     }
 
     /**
@@ -1245,7 +1245,7 @@ public final class Html {
      * @return an instruction representing this attribute.
      */
     protected final AttributeInstruction pointerEvents(String value) {
-      return $compiler().pointerEvents(value);
+      return $attributes().pointerEvents(value);
     }
 
     /**
@@ -1257,7 +1257,7 @@ public final class Html {
      * @return an instruction representing this attribute.
      */
     protected final AttributeInstruction property(String value) {
-      return $compiler().property(value);
+      return $attributes().property(value);
     }
 
     /**
@@ -1266,7 +1266,7 @@ public final class Html {
      * @return an instruction representing this attribute.
      */
     protected final AttributeInstruction readonly() {
-      return $compiler().readonly();
+      return $attributes().readonly();
     }
 
     /**
@@ -1278,7 +1278,7 @@ public final class Html {
      * @return an instruction representing this attribute.
      */
     protected final AttributeInstruction referrerpolicy(String value) {
-      return $compiler().referrerpolicy(value);
+      return $attributes().referrerpolicy(value);
     }
 
     /**
@@ -1290,7 +1290,7 @@ public final class Html {
      * @return an instruction representing this attribute.
      */
     protected final AttributeInstruction rel(String value) {
-      return $compiler().rel(value);
+      return $attributes().rel(value);
     }
 
     /**
@@ -1299,7 +1299,7 @@ public final class Html {
      * @return an instruction representing this attribute.
      */
     protected final AttributeInstruction required() {
-      return $compiler().required();
+      return $attributes().required();
     }
 
     /**
@@ -1311,7 +1311,7 @@ public final class Html {
      * @return an instruction representing this attribute.
      */
     protected final AttributeInstruction rev(String value) {
-      return $compiler().rev(value);
+      return $attributes().rev(value);
     }
 
     /**
@@ -1320,7 +1320,7 @@ public final class Html {
      * @return an instruction representing this attribute.
      */
     protected final AttributeInstruction reversed() {
-      return $compiler().reversed();
+      return $attributes().reversed();
     }
 
     /**
@@ -1332,7 +1332,7 @@ public final class Html {
      * @return an instruction representing this attribute.
      */
     protected final AttributeInstruction role(String value) {
-      return $compiler().role(value);
+      return $attributes().role(value);
     }
 
     /**
@@ -1344,7 +1344,7 @@ public final class Html {
      * @return an instruction representing this attribute.
      */
     protected final AttributeInstruction rows(String value) {
-      return $compiler().rows(value);
+      return $attributes().rows(value);
     }
 
     /**
@@ -1353,7 +1353,7 @@ public final class Html {
      * @return an instruction representing this attribute.
      */
     protected final AttributeInstruction selected() {
-      return $compiler().selected();
+      return $attributes().selected();
     }
 
     /**
@@ -1365,7 +1365,7 @@ public final class Html {
      * @return an instruction representing this attribute.
      */
     protected final AttributeInstruction shapeRendering(String value) {
-      return $compiler().shapeRendering(value);
+      return $attributes().shapeRendering(value);
     }
 
     /**
@@ -1377,7 +1377,7 @@ public final class Html {
      * @return an instruction representing this attribute.
      */
     protected final AttributeInstruction size(String value) {
-      return $compiler().size(value);
+      return $attributes().size(value);
     }
 
     /**
@@ -1389,7 +1389,7 @@ public final class Html {
      * @return an instruction representing this attribute.
      */
     protected final AttributeInstruction sizes(String value) {
-      return $compiler().sizes(value);
+      return $attributes().sizes(value);
     }
 
     /**
@@ -1401,7 +1401,7 @@ public final class Html {
      * @return an instruction representing this attribute.
      */
     protected final AttributeInstruction spellcheck(String value) {
-      return $compiler().spellcheck(value);
+      return $attributes().spellcheck(value);
     }
 
     /**
@@ -1413,7 +1413,7 @@ public final class Html {
      * @return an instruction representing this attribute.
      */
     protected final AttributeInstruction src(String value) {
-      return $compiler().src(value);
+      return $attributes().src(value);
     }
 
     /**
@@ -1425,7 +1425,7 @@ public final class Html {
      * @return an instruction representing this attribute.
      */
     protected final AttributeInstruction srcset(String value) {
-      return $compiler().srcset(value);
+      return $attributes().srcset(value);
     }
 
     /**
@@ -1437,7 +1437,7 @@ public final class Html {
      * @return an instruction representing this attribute.
      */
     protected final AttributeInstruction start(String value) {
-      return $compiler().start(value);
+      return $attributes().start(value);
     }
 
     /**
@@ -1449,7 +1449,7 @@ public final class Html {
      * @return an instruction representing this attribute.
      */
     protected final AttributeInstruction stopColor(String value) {
-      return $compiler().stopColor(value);
+      return $attributes().stopColor(value);
     }
 
     /**
@@ -1461,7 +1461,7 @@ public final class Html {
      * @return an instruction representing this attribute.
      */
     protected final AttributeInstruction stopOpacity(String value) {
-      return $compiler().stopOpacity(value);
+      return $attributes().stopOpacity(value);
     }
 
     /**
@@ -1473,7 +1473,7 @@ public final class Html {
      * @return an instruction representing this attribute.
      */
     protected final AttributeInstruction stroke(String value) {
-      return $compiler().stroke(value);
+      return $attributes().stroke(value);
     }
 
     /**
@@ -1485,7 +1485,7 @@ public final class Html {
      * @return an instruction representing this attribute.
      */
     protected final AttributeInstruction strokeDasharray(String value) {
-      return $compiler().strokeDasharray(value);
+      return $attributes().strokeDasharray(value);
     }
 
     /**
@@ -1497,7 +1497,7 @@ public final class Html {
      * @return an instruction representing this attribute.
      */
     protected final AttributeInstruction strokeDashoffset(String value) {
-      return $compiler().strokeDashoffset(value);
+      return $attributes().strokeDashoffset(value);
     }
 
     /**
@@ -1509,7 +1509,7 @@ public final class Html {
      * @return an instruction representing this attribute.
      */
     protected final AttributeInstruction strokeLinecap(String value) {
-      return $compiler().strokeLinecap(value);
+      return $attributes().strokeLinecap(value);
     }
 
     /**
@@ -1521,7 +1521,7 @@ public final class Html {
      * @return an instruction representing this attribute.
      */
     protected final AttributeInstruction strokeLinejoin(String value) {
-      return $compiler().strokeLinejoin(value);
+      return $attributes().strokeLinejoin(value);
     }
 
     /**
@@ -1533,7 +1533,7 @@ public final class Html {
      * @return an instruction representing this attribute.
      */
     protected final AttributeInstruction strokeMiterlimit(String value) {
-      return $compiler().strokeMiterlimit(value);
+      return $attributes().strokeMiterlimit(value);
     }
 
     /**
@@ -1545,7 +1545,7 @@ public final class Html {
      * @return an instruction representing this attribute.
      */
     protected final AttributeInstruction strokeOpacity(String value) {
-      return $compiler().strokeOpacity(value);
+      return $attributes().strokeOpacity(value);
     }
 
     /**
@@ -1557,7 +1557,7 @@ public final class Html {
      * @return an instruction representing this attribute.
      */
     protected final AttributeInstruction strokeWidth(String value) {
-      return $compiler().strokeWidth(value);
+      return $attributes().strokeWidth(value);
     }
 
     /**
@@ -1569,7 +1569,7 @@ public final class Html {
      * @return an instruction representing this attribute.
      */
     protected final AttributeInstruction inlineStyle(String value) {
-      return $compiler().inlineStyle(value);
+      return $attributes().inlineStyle(value);
     }
 
     /**
@@ -1581,7 +1581,7 @@ public final class Html {
      * @return an instruction representing this attribute.
      */
     protected final AttributeInstruction tabindex(String value) {
-      return $compiler().tabindex(value);
+      return $attributes().tabindex(value);
     }
 
     /**
@@ -1593,7 +1593,7 @@ public final class Html {
      * @return an instruction representing this attribute.
      */
     protected final AttributeInstruction target(String value) {
-      return $compiler().target(value);
+      return $attributes().target(value);
     }
 
     /**
@@ -1605,7 +1605,7 @@ public final class Html {
      * @return an instruction representing this attribute.
      */
     protected final AttributeInstruction textAnchor(String value) {
-      return $compiler().textAnchor(value);
+      return $attributes().textAnchor(value);
     }
 
     /**
@@ -1617,7 +1617,7 @@ public final class Html {
      * @return an instruction representing this attribute.
      */
     protected final AttributeInstruction textDecoration(String value) {
-      return $compiler().textDecoration(value);
+      return $attributes().textDecoration(value);
     }
 
     /**
@@ -1629,7 +1629,7 @@ public final class Html {
      * @return an instruction representing this attribute.
      */
     protected final AttributeInstruction textOverflow(String value) {
-      return $compiler().textOverflow(value);
+      return $attributes().textOverflow(value);
     }
 
     /**
@@ -1641,7 +1641,7 @@ public final class Html {
      * @return an instruction representing this attribute.
      */
     protected final AttributeInstruction textRendering(String value) {
-      return $compiler().textRendering(value);
+      return $attributes().textRendering(value);
     }
 
     /**
@@ -1653,7 +1653,7 @@ public final class Html {
      * @return an instruction representing this attribute.
      */
     protected final AttributeInstruction transform(String value) {
-      return $compiler().transform(value);
+      return $attributes().transform(value);
     }
 
     /**
@@ -1665,7 +1665,7 @@ public final class Html {
      * @return an instruction representing this attribute.
      */
     protected final AttributeInstruction transformOrigin(String value) {
-      return $compiler().transformOrigin(value);
+      return $attributes().transformOrigin(value);
     }
 
     /**
@@ -1677,7 +1677,7 @@ public final class Html {
      * @return an instruction representing this attribute.
      */
     protected final AttributeInstruction translate(String value) {
-      return $compiler().translate(value);
+      return $attributes().translate(value);
     }
 
     /**
@@ -1689,7 +1689,7 @@ public final class Html {
      * @return an instruction representing this attribute.
      */
     protected final AttributeInstruction type(String value) {
-      return $compiler().type(value);
+      return $attributes().type(value);
     }
 
     /**
@@ -1701,7 +1701,7 @@ public final class Html {
      * @return an instruction representing this attribute.
      */
     protected final AttributeInstruction unicodeBidi(String value) {
-      return $compiler().unicodeBidi(value);
+      return $attributes().unicodeBidi(value);
     }
 
     /**
@@ -1713,7 +1713,7 @@ public final class Html {
      * @return an instruction representing this attribute.
      */
     protected final AttributeInstruction value(String value) {
-      return $compiler().value(value);
+      return $attributes().value(value);
     }
 
     /**
@@ -1725,7 +1725,7 @@ public final class Html {
      * @return an instruction representing this attribute.
      */
     protected final AttributeInstruction vectorEffect(String value) {
-      return $compiler().vectorEffect(value);
+      return $attributes().vectorEffect(value);
     }
 
     /**
@@ -1737,7 +1737,7 @@ public final class Html {
      * @return an instruction representing this attribute.
      */
     protected final AttributeInstruction viewBox(String value) {
-      return $compiler().viewBox(value);
+      return $attributes().viewBox(value);
     }
 
     /**
@@ -1749,7 +1749,7 @@ public final class Html {
      * @return an instruction representing this attribute.
      */
     protected final AttributeInstruction visibility(String value) {
-      return $compiler().visibility(value);
+      return $attributes().visibility(value);
     }
 
     /**
@@ -1761,7 +1761,7 @@ public final class Html {
      * @return an instruction representing this attribute.
      */
     protected final AttributeInstruction whiteSpace(String value) {
-      return $compiler().whiteSpace(value);
+      return $attributes().whiteSpace(value);
     }
 
     /**
@@ -1773,7 +1773,7 @@ public final class Html {
      * @return an instruction representing this attribute.
      */
     protected final AttributeInstruction width(String value) {
-      return $compiler().width(value);
+      return $attributes().width(value);
     }
 
     /**
@@ -1785,7 +1785,7 @@ public final class Html {
      * @return an instruction representing this attribute.
      */
     protected final AttributeInstruction wordSpacing(String value) {
-      return $compiler().wordSpacing(value);
+      return $attributes().wordSpacing(value);
     }
 
     /**
@@ -1797,7 +1797,7 @@ public final class Html {
      * @return an instruction representing this attribute.
      */
     protected final AttributeInstruction wrap(String value) {
-      return $compiler().wrap(value);
+      return $attributes().wrap(value);
     }
 
     /**
@@ -1809,7 +1809,7 @@ public final class Html {
      * @return an instruction representing this attribute.
      */
     protected final AttributeInstruction writingMode(String value) {
-      return $compiler().writingMode(value);
+      return $attributes().writingMode(value);
     }
 
     /**
@@ -1821,10 +1821,10 @@ public final class Html {
      * @return an instruction representing this attribute.
      */
     protected final AttributeInstruction xmlns(String value) {
-      return $compiler().xmlns(value);
+      return $attributes().xmlns(value);
     }
 
-    abstract CompilerAttributes $compiler();
+    abstract CompilerAttributes $attributes();
 
   }
 
@@ -1834,7 +1834,7 @@ public final class Html {
   public sealed interface CompilerAttributes permits Compiler {
 
     /**
-     * Compiles the {@code accesskey} attribute with the specified value.
+     * Generates the {@code accesskey} attribute with the specified value.
      *
      * @param value
      *        the value of the attribute
@@ -1844,7 +1844,7 @@ public final class Html {
     AttributeInstruction accesskey(String value);
 
     /**
-     * Compiles the {@code action} attribute with the specified value.
+     * Generates the {@code action} attribute with the specified value.
      *
      * @param value
      *        the value of the attribute
@@ -1854,7 +1854,7 @@ public final class Html {
     AttributeInstruction action(String value);
 
     /**
-     * Compiles the {@code align} attribute with the specified value.
+     * Generates the {@code align} attribute with the specified value.
      *
      * @param value
      *        the value of the attribute
@@ -1864,7 +1864,7 @@ public final class Html {
     AttributeInstruction align(String value);
 
     /**
-     * Compiles the {@code alignment-baseline} attribute with the specified value.
+     * Generates the {@code alignment-baseline} attribute with the specified value.
      *
      * @param value
      *        the value of the attribute
@@ -1874,7 +1874,7 @@ public final class Html {
     AttributeInstruction alignmentBaseline(String value);
 
     /**
-     * Compiles the {@code alt} attribute with the specified value.
+     * Generates the {@code alt} attribute with the specified value.
      *
      * @param value
      *        the value of the attribute
@@ -1884,7 +1884,7 @@ public final class Html {
     AttributeInstruction alt(String value);
 
     /**
-     * Compiles the {@code aria-hidden} attribute with the specified value.
+     * Generates the {@code aria-hidden} attribute with the specified value.
      *
      * @param value
      *        the value of the attribute
@@ -1894,7 +1894,7 @@ public final class Html {
     AttributeInstruction ariaHidden(String value);
 
     /**
-     * Compiles the {@code aria-label} attribute with the specified value.
+     * Generates the {@code aria-label} attribute with the specified value.
      *
      * @param value
      *        the value of the attribute
@@ -1904,14 +1904,14 @@ public final class Html {
     AttributeInstruction ariaLabel(String value);
 
     /**
-     * Compiles the {@code async} boolean attribute.
+     * Generates the {@code async} boolean attribute.
      *
      * @return an instruction representing this attribute.
      */
     AttributeInstruction async();
 
     /**
-     * Compiles the {@code autocomplete} attribute with the specified value.
+     * Generates the {@code autocomplete} attribute with the specified value.
      *
      * @param value
      *        the value of the attribute
@@ -1921,14 +1921,14 @@ public final class Html {
     AttributeInstruction autocomplete(String value);
 
     /**
-     * Compiles the {@code autofocus} boolean attribute.
+     * Generates the {@code autofocus} boolean attribute.
      *
      * @return an instruction representing this attribute.
      */
     AttributeInstruction autofocus();
 
     /**
-     * Compiles the {@code baseline-shift} attribute with the specified value.
+     * Generates the {@code baseline-shift} attribute with the specified value.
      *
      * @param value
      *        the value of the attribute
@@ -1938,7 +1938,7 @@ public final class Html {
     AttributeInstruction baselineShift(String value);
 
     /**
-     * Compiles the {@code border} attribute with the specified value.
+     * Generates the {@code border} attribute with the specified value.
      *
      * @param value
      *        the value of the attribute
@@ -1948,7 +1948,7 @@ public final class Html {
     AttributeInstruction border(String value);
 
     /**
-     * Compiles the {@code cellpadding} attribute with the specified value.
+     * Generates the {@code cellpadding} attribute with the specified value.
      *
      * @param value
      *        the value of the attribute
@@ -1958,7 +1958,7 @@ public final class Html {
     AttributeInstruction cellpadding(String value);
 
     /**
-     * Compiles the {@code cellspacing} attribute with the specified value.
+     * Generates the {@code cellspacing} attribute with the specified value.
      *
      * @param value
      *        the value of the attribute
@@ -1968,7 +1968,7 @@ public final class Html {
     AttributeInstruction cellspacing(String value);
 
     /**
-     * Compiles the {@code charset} attribute with the specified value.
+     * Generates the {@code charset} attribute with the specified value.
      *
      * @param value
      *        the value of the attribute
@@ -1978,7 +1978,7 @@ public final class Html {
     AttributeInstruction charset(String value);
 
     /**
-     * Compiles the {@code cite} attribute with the specified value.
+     * Generates the {@code cite} attribute with the specified value.
      *
      * @param value
      *        the value of the attribute
@@ -1988,7 +1988,7 @@ public final class Html {
     AttributeInstruction cite(String value);
 
     /**
-     * Compiles the {@code class} attribute with the specified value.
+     * Generates the {@code class} attribute with the specified value.
      *
      * @param value
      *        the value of the attribute
@@ -1998,7 +1998,7 @@ public final class Html {
     AttributeInstruction className(String value);
 
     /**
-     * Compiles the {@code clip-rule} attribute with the specified value.
+     * Generates the {@code clip-rule} attribute with the specified value.
      *
      * @param value
      *        the value of the attribute
@@ -2008,7 +2008,7 @@ public final class Html {
     AttributeInstruction clipRule(String value);
 
     /**
-     * Compiles the {@code color} attribute with the specified value.
+     * Generates the {@code color} attribute with the specified value.
      *
      * @param value
      *        the value of the attribute
@@ -2018,7 +2018,7 @@ public final class Html {
     AttributeInstruction color(String value);
 
     /**
-     * Compiles the {@code color-interpolation} attribute with the specified value.
+     * Generates the {@code color-interpolation} attribute with the specified value.
      *
      * @param value
      *        the value of the attribute
@@ -2028,7 +2028,7 @@ public final class Html {
     AttributeInstruction colorInterpolation(String value);
 
     /**
-     * Compiles the {@code color-interpolation-filters} attribute with the specified value.
+     * Generates the {@code color-interpolation-filters} attribute with the specified value.
      *
      * @param value
      *        the value of the attribute
@@ -2038,7 +2038,7 @@ public final class Html {
     AttributeInstruction colorInterpolationFilters(String value);
 
     /**
-     * Compiles the {@code cols} attribute with the specified value.
+     * Generates the {@code cols} attribute with the specified value.
      *
      * @param value
      *        the value of the attribute
@@ -2048,7 +2048,7 @@ public final class Html {
     AttributeInstruction cols(String value);
 
     /**
-     * Compiles the {@code content} attribute with the specified value.
+     * Generates the {@code content} attribute with the specified value.
      *
      * @param value
      *        the value of the attribute
@@ -2058,7 +2058,7 @@ public final class Html {
     AttributeInstruction content(String value);
 
     /**
-     * Compiles the {@code contenteditable} attribute with the specified value.
+     * Generates the {@code contenteditable} attribute with the specified value.
      *
      * @param value
      *        the value of the attribute
@@ -2068,7 +2068,7 @@ public final class Html {
     AttributeInstruction contenteditable(String value);
 
     /**
-     * Compiles the {@code crossorigin} attribute with the specified value.
+     * Generates the {@code crossorigin} attribute with the specified value.
      *
      * @param value
      *        the value of the attribute
@@ -2078,7 +2078,7 @@ public final class Html {
     AttributeInstruction crossorigin(String value);
 
     /**
-     * Compiles the {@code cursor} attribute with the specified value.
+     * Generates the {@code cursor} attribute with the specified value.
      *
      * @param value
      *        the value of the attribute
@@ -2088,7 +2088,7 @@ public final class Html {
     AttributeInstruction cursor(String value);
 
     /**
-     * Compiles the {@code d} attribute with the specified value.
+     * Generates the {@code d} attribute with the specified value.
      *
      * @param value
      *        the value of the attribute
@@ -2098,14 +2098,14 @@ public final class Html {
     AttributeInstruction d(String value);
 
     /**
-     * Compiles the {@code defer} boolean attribute.
+     * Generates the {@code defer} boolean attribute.
      *
      * @return an instruction representing this attribute.
      */
     AttributeInstruction defer();
 
     /**
-     * Compiles the {@code dir} attribute with the specified value.
+     * Generates the {@code dir} attribute with the specified value.
      *
      * @param value
      *        the value of the attribute
@@ -2115,7 +2115,7 @@ public final class Html {
     AttributeInstruction dir(String value);
 
     /**
-     * Compiles the {@code direction} attribute with the specified value.
+     * Generates the {@code direction} attribute with the specified value.
      *
      * @param value
      *        the value of the attribute
@@ -2125,7 +2125,7 @@ public final class Html {
     AttributeInstruction direction(String value);
 
     /**
-     * Compiles the {@code dirname} attribute with the specified value.
+     * Generates the {@code dirname} attribute with the specified value.
      *
      * @param value
      *        the value of the attribute
@@ -2135,14 +2135,14 @@ public final class Html {
     AttributeInstruction dirname(String value);
 
     /**
-     * Compiles the {@code disabled} boolean attribute.
+     * Generates the {@code disabled} boolean attribute.
      *
      * @return an instruction representing this attribute.
      */
     AttributeInstruction disabled();
 
     /**
-     * Compiles the {@code display} attribute with the specified value.
+     * Generates the {@code display} attribute with the specified value.
      *
      * @param value
      *        the value of the attribute
@@ -2152,7 +2152,7 @@ public final class Html {
     AttributeInstruction display(String value);
 
     /**
-     * Compiles the {@code dominant-baseline} attribute with the specified value.
+     * Generates the {@code dominant-baseline} attribute with the specified value.
      *
      * @param value
      *        the value of the attribute
@@ -2162,7 +2162,7 @@ public final class Html {
     AttributeInstruction dominantBaseline(String value);
 
     /**
-     * Compiles the {@code draggable} attribute with the specified value.
+     * Generates the {@code draggable} attribute with the specified value.
      *
      * @param value
      *        the value of the attribute
@@ -2172,7 +2172,7 @@ public final class Html {
     AttributeInstruction draggable(String value);
 
     /**
-     * Compiles the {@code enctype} attribute with the specified value.
+     * Generates the {@code enctype} attribute with the specified value.
      *
      * @param value
      *        the value of the attribute
@@ -2182,7 +2182,7 @@ public final class Html {
     AttributeInstruction enctype(String value);
 
     /**
-     * Compiles the {@code fill} attribute with the specified value.
+     * Generates the {@code fill} attribute with the specified value.
      *
      * @param value
      *        the value of the attribute
@@ -2192,7 +2192,7 @@ public final class Html {
     AttributeInstruction fill(String value);
 
     /**
-     * Compiles the {@code fill-opacity} attribute with the specified value.
+     * Generates the {@code fill-opacity} attribute with the specified value.
      *
      * @param value
      *        the value of the attribute
@@ -2202,7 +2202,7 @@ public final class Html {
     AttributeInstruction fillOpacity(String value);
 
     /**
-     * Compiles the {@code fill-rule} attribute with the specified value.
+     * Generates the {@code fill-rule} attribute with the specified value.
      *
      * @param value
      *        the value of the attribute
@@ -2212,7 +2212,7 @@ public final class Html {
     AttributeInstruction fillRule(String value);
 
     /**
-     * Compiles the {@code filter} attribute with the specified value.
+     * Generates the {@code filter} attribute with the specified value.
      *
      * @param value
      *        the value of the attribute
@@ -2222,7 +2222,7 @@ public final class Html {
     AttributeInstruction filter(String value);
 
     /**
-     * Compiles the {@code flood-color} attribute with the specified value.
+     * Generates the {@code flood-color} attribute with the specified value.
      *
      * @param value
      *        the value of the attribute
@@ -2232,7 +2232,7 @@ public final class Html {
     AttributeInstruction floodColor(String value);
 
     /**
-     * Compiles the {@code flood-opacity} attribute with the specified value.
+     * Generates the {@code flood-opacity} attribute with the specified value.
      *
      * @param value
      *        the value of the attribute
@@ -2242,7 +2242,7 @@ public final class Html {
     AttributeInstruction floodOpacity(String value);
 
     /**
-     * Compiles the {@code font-family} attribute with the specified value.
+     * Generates the {@code font-family} attribute with the specified value.
      *
      * @param value
      *        the value of the attribute
@@ -2252,7 +2252,7 @@ public final class Html {
     AttributeInstruction fontFamily(String value);
 
     /**
-     * Compiles the {@code font-size} attribute with the specified value.
+     * Generates the {@code font-size} attribute with the specified value.
      *
      * @param value
      *        the value of the attribute
@@ -2262,7 +2262,7 @@ public final class Html {
     AttributeInstruction fontSize(String value);
 
     /**
-     * Compiles the {@code font-size-adjust} attribute with the specified value.
+     * Generates the {@code font-size-adjust} attribute with the specified value.
      *
      * @param value
      *        the value of the attribute
@@ -2272,7 +2272,7 @@ public final class Html {
     AttributeInstruction fontSizeAdjust(String value);
 
     /**
-     * Compiles the {@code font-stretch} attribute with the specified value.
+     * Generates the {@code font-stretch} attribute with the specified value.
      *
      * @param value
      *        the value of the attribute
@@ -2282,7 +2282,7 @@ public final class Html {
     AttributeInstruction fontStretch(String value);
 
     /**
-     * Compiles the {@code font-style} attribute with the specified value.
+     * Generates the {@code font-style} attribute with the specified value.
      *
      * @param value
      *        the value of the attribute
@@ -2292,7 +2292,7 @@ public final class Html {
     AttributeInstruction fontStyle(String value);
 
     /**
-     * Compiles the {@code font-variant} attribute with the specified value.
+     * Generates the {@code font-variant} attribute with the specified value.
      *
      * @param value
      *        the value of the attribute
@@ -2302,7 +2302,7 @@ public final class Html {
     AttributeInstruction fontVariant(String value);
 
     /**
-     * Compiles the {@code font-weight} attribute with the specified value.
+     * Generates the {@code font-weight} attribute with the specified value.
      *
      * @param value
      *        the value of the attribute
@@ -2312,7 +2312,7 @@ public final class Html {
     AttributeInstruction fontWeight(String value);
 
     /**
-     * Compiles the {@code for} attribute with the specified value.
+     * Generates the {@code for} attribute with the specified value.
      *
      * @param value
      *        the value of the attribute
@@ -2322,7 +2322,7 @@ public final class Html {
     AttributeInstruction forAttr(String value);
 
     /**
-     * Compiles the {@code for} attribute with the specified value.
+     * Generates the {@code for} attribute with the specified value.
      *
      * @param value
      *        the value of the attribute
@@ -2332,7 +2332,7 @@ public final class Html {
     AttributeInstruction forElement(String value);
 
     /**
-     * Compiles the {@code glyph-orientation-horizontal} attribute with the specified value.
+     * Generates the {@code glyph-orientation-horizontal} attribute with the specified value.
      *
      * @param value
      *        the value of the attribute
@@ -2342,7 +2342,7 @@ public final class Html {
     AttributeInstruction glyphOrientationHorizontal(String value);
 
     /**
-     * Compiles the {@code glyph-orientation-vertical} attribute with the specified value.
+     * Generates the {@code glyph-orientation-vertical} attribute with the specified value.
      *
      * @param value
      *        the value of the attribute
@@ -2352,7 +2352,7 @@ public final class Html {
     AttributeInstruction glyphOrientationVertical(String value);
 
     /**
-     * Compiles the {@code height} attribute with the specified value.
+     * Generates the {@code height} attribute with the specified value.
      *
      * @param value
      *        the value of the attribute
@@ -2362,14 +2362,14 @@ public final class Html {
     AttributeInstruction height(String value);
 
     /**
-     * Compiles the {@code hidden} boolean attribute.
+     * Generates the {@code hidden} boolean attribute.
      *
      * @return an instruction representing this attribute.
      */
     AttributeInstruction hidden();
 
     /**
-     * Compiles the {@code href} attribute with the specified value.
+     * Generates the {@code href} attribute with the specified value.
      *
      * @param value
      *        the value of the attribute
@@ -2379,7 +2379,7 @@ public final class Html {
     AttributeInstruction href(String value);
 
     /**
-     * Compiles the {@code http-equiv} attribute with the specified value.
+     * Generates the {@code http-equiv} attribute with the specified value.
      *
      * @param value
      *        the value of the attribute
@@ -2389,7 +2389,7 @@ public final class Html {
     AttributeInstruction httpEquiv(String value);
 
     /**
-     * Compiles the {@code id} attribute with the specified value.
+     * Generates the {@code id} attribute with the specified value.
      *
      * @param value
      *        the value of the attribute
@@ -2399,7 +2399,7 @@ public final class Html {
     AttributeInstruction id(String value);
 
     /**
-     * Compiles the {@code image-rendering} attribute with the specified value.
+     * Generates the {@code image-rendering} attribute with the specified value.
      *
      * @param value
      *        the value of the attribute
@@ -2409,7 +2409,7 @@ public final class Html {
     AttributeInstruction imageRendering(String value);
 
     /**
-     * Compiles the {@code integrity} attribute with the specified value.
+     * Generates the {@code integrity} attribute with the specified value.
      *
      * @param value
      *        the value of the attribute
@@ -2419,7 +2419,7 @@ public final class Html {
     AttributeInstruction integrity(String value);
 
     /**
-     * Compiles the {@code lang} attribute with the specified value.
+     * Generates the {@code lang} attribute with the specified value.
      *
      * @param value
      *        the value of the attribute
@@ -2429,7 +2429,7 @@ public final class Html {
     AttributeInstruction lang(String value);
 
     /**
-     * Compiles the {@code letter-spacing} attribute with the specified value.
+     * Generates the {@code letter-spacing} attribute with the specified value.
      *
      * @param value
      *        the value of the attribute
@@ -2439,7 +2439,7 @@ public final class Html {
     AttributeInstruction letterSpacing(String value);
 
     /**
-     * Compiles the {@code lighting-color} attribute with the specified value.
+     * Generates the {@code lighting-color} attribute with the specified value.
      *
      * @param value
      *        the value of the attribute
@@ -2449,7 +2449,7 @@ public final class Html {
     AttributeInstruction lightingColor(String value);
 
     /**
-     * Compiles the {@code marker-end} attribute with the specified value.
+     * Generates the {@code marker-end} attribute with the specified value.
      *
      * @param value
      *        the value of the attribute
@@ -2459,7 +2459,7 @@ public final class Html {
     AttributeInstruction markerEnd(String value);
 
     /**
-     * Compiles the {@code marker-mid} attribute with the specified value.
+     * Generates the {@code marker-mid} attribute with the specified value.
      *
      * @param value
      *        the value of the attribute
@@ -2469,7 +2469,7 @@ public final class Html {
     AttributeInstruction markerMid(String value);
 
     /**
-     * Compiles the {@code marker-start} attribute with the specified value.
+     * Generates the {@code marker-start} attribute with the specified value.
      *
      * @param value
      *        the value of the attribute
@@ -2479,7 +2479,7 @@ public final class Html {
     AttributeInstruction markerStart(String value);
 
     /**
-     * Compiles the {@code mask} attribute with the specified value.
+     * Generates the {@code mask} attribute with the specified value.
      *
      * @param value
      *        the value of the attribute
@@ -2489,7 +2489,7 @@ public final class Html {
     AttributeInstruction mask(String value);
 
     /**
-     * Compiles the {@code mask-type} attribute with the specified value.
+     * Generates the {@code mask-type} attribute with the specified value.
      *
      * @param value
      *        the value of the attribute
@@ -2499,7 +2499,7 @@ public final class Html {
     AttributeInstruction maskType(String value);
 
     /**
-     * Compiles the {@code maxlength} attribute with the specified value.
+     * Generates the {@code maxlength} attribute with the specified value.
      *
      * @param value
      *        the value of the attribute
@@ -2509,7 +2509,7 @@ public final class Html {
     AttributeInstruction maxlength(String value);
 
     /**
-     * Compiles the {@code media} attribute with the specified value.
+     * Generates the {@code media} attribute with the specified value.
      *
      * @param value
      *        the value of the attribute
@@ -2519,7 +2519,7 @@ public final class Html {
     AttributeInstruction media(String value);
 
     /**
-     * Compiles the {@code method} attribute with the specified value.
+     * Generates the {@code method} attribute with the specified value.
      *
      * @param value
      *        the value of the attribute
@@ -2529,7 +2529,7 @@ public final class Html {
     AttributeInstruction method(String value);
 
     /**
-     * Compiles the {@code minlength} attribute with the specified value.
+     * Generates the {@code minlength} attribute with the specified value.
      *
      * @param value
      *        the value of the attribute
@@ -2539,14 +2539,14 @@ public final class Html {
     AttributeInstruction minlength(String value);
 
     /**
-     * Compiles the {@code multiple} boolean attribute.
+     * Generates the {@code multiple} boolean attribute.
      *
      * @return an instruction representing this attribute.
      */
     AttributeInstruction multiple();
 
     /**
-     * Compiles the {@code name} attribute with the specified value.
+     * Generates the {@code name} attribute with the specified value.
      *
      * @param value
      *        the value of the attribute
@@ -2556,14 +2556,14 @@ public final class Html {
     AttributeInstruction name(String value);
 
     /**
-     * Compiles the {@code nomodule} boolean attribute.
+     * Generates the {@code nomodule} boolean attribute.
      *
      * @return an instruction representing this attribute.
      */
     AttributeInstruction nomodule();
 
     /**
-     * Compiles the {@code onafterprint} attribute with the specified value.
+     * Generates the {@code onafterprint} attribute with the specified value.
      *
      * @param value
      *        the value of the attribute
@@ -2573,7 +2573,7 @@ public final class Html {
     AttributeInstruction onafterprint(String value);
 
     /**
-     * Compiles the {@code onbeforeprint} attribute with the specified value.
+     * Generates the {@code onbeforeprint} attribute with the specified value.
      *
      * @param value
      *        the value of the attribute
@@ -2583,7 +2583,7 @@ public final class Html {
     AttributeInstruction onbeforeprint(String value);
 
     /**
-     * Compiles the {@code onbeforeunload} attribute with the specified value.
+     * Generates the {@code onbeforeunload} attribute with the specified value.
      *
      * @param value
      *        the value of the attribute
@@ -2593,7 +2593,7 @@ public final class Html {
     AttributeInstruction onbeforeunload(String value);
 
     /**
-     * Compiles the {@code onclick} attribute with the specified value.
+     * Generates the {@code onclick} attribute with the specified value.
      *
      * @param value
      *        the value of the attribute
@@ -2603,7 +2603,7 @@ public final class Html {
     AttributeInstruction onclick(String value);
 
     /**
-     * Compiles the {@code onhashchange} attribute with the specified value.
+     * Generates the {@code onhashchange} attribute with the specified value.
      *
      * @param value
      *        the value of the attribute
@@ -2613,7 +2613,7 @@ public final class Html {
     AttributeInstruction onhashchange(String value);
 
     /**
-     * Compiles the {@code onlanguagechange} attribute with the specified value.
+     * Generates the {@code onlanguagechange} attribute with the specified value.
      *
      * @param value
      *        the value of the attribute
@@ -2623,7 +2623,7 @@ public final class Html {
     AttributeInstruction onlanguagechange(String value);
 
     /**
-     * Compiles the {@code onmessage} attribute with the specified value.
+     * Generates the {@code onmessage} attribute with the specified value.
      *
      * @param value
      *        the value of the attribute
@@ -2633,7 +2633,7 @@ public final class Html {
     AttributeInstruction onmessage(String value);
 
     /**
-     * Compiles the {@code onoffline} attribute with the specified value.
+     * Generates the {@code onoffline} attribute with the specified value.
      *
      * @param value
      *        the value of the attribute
@@ -2643,7 +2643,7 @@ public final class Html {
     AttributeInstruction onoffline(String value);
 
     /**
-     * Compiles the {@code ononline} attribute with the specified value.
+     * Generates the {@code ononline} attribute with the specified value.
      *
      * @param value
      *        the value of the attribute
@@ -2653,7 +2653,7 @@ public final class Html {
     AttributeInstruction ononline(String value);
 
     /**
-     * Compiles the {@code onpagehide} attribute with the specified value.
+     * Generates the {@code onpagehide} attribute with the specified value.
      *
      * @param value
      *        the value of the attribute
@@ -2663,7 +2663,7 @@ public final class Html {
     AttributeInstruction onpagehide(String value);
 
     /**
-     * Compiles the {@code onpageshow} attribute with the specified value.
+     * Generates the {@code onpageshow} attribute with the specified value.
      *
      * @param value
      *        the value of the attribute
@@ -2673,7 +2673,7 @@ public final class Html {
     AttributeInstruction onpageshow(String value);
 
     /**
-     * Compiles the {@code onpopstate} attribute with the specified value.
+     * Generates the {@code onpopstate} attribute with the specified value.
      *
      * @param value
      *        the value of the attribute
@@ -2683,7 +2683,7 @@ public final class Html {
     AttributeInstruction onpopstate(String value);
 
     /**
-     * Compiles the {@code onrejectionhandled} attribute with the specified value.
+     * Generates the {@code onrejectionhandled} attribute with the specified value.
      *
      * @param value
      *        the value of the attribute
@@ -2693,7 +2693,7 @@ public final class Html {
     AttributeInstruction onrejectionhandled(String value);
 
     /**
-     * Compiles the {@code onstorage} attribute with the specified value.
+     * Generates the {@code onstorage} attribute with the specified value.
      *
      * @param value
      *        the value of the attribute
@@ -2703,7 +2703,7 @@ public final class Html {
     AttributeInstruction onstorage(String value);
 
     /**
-     * Compiles the {@code onsubmit} attribute with the specified value.
+     * Generates the {@code onsubmit} attribute with the specified value.
      *
      * @param value
      *        the value of the attribute
@@ -2713,7 +2713,7 @@ public final class Html {
     AttributeInstruction onsubmit(String value);
 
     /**
-     * Compiles the {@code onunhandledrejection} attribute with the specified value.
+     * Generates the {@code onunhandledrejection} attribute with the specified value.
      *
      * @param value
      *        the value of the attribute
@@ -2723,7 +2723,7 @@ public final class Html {
     AttributeInstruction onunhandledrejection(String value);
 
     /**
-     * Compiles the {@code onunload} attribute with the specified value.
+     * Generates the {@code onunload} attribute with the specified value.
      *
      * @param value
      *        the value of the attribute
@@ -2733,7 +2733,7 @@ public final class Html {
     AttributeInstruction onunload(String value);
 
     /**
-     * Compiles the {@code opacity} attribute with the specified value.
+     * Generates the {@code opacity} attribute with the specified value.
      *
      * @param value
      *        the value of the attribute
@@ -2743,14 +2743,14 @@ public final class Html {
     AttributeInstruction opacity(String value);
 
     /**
-     * Compiles the {@code open} boolean attribute.
+     * Generates the {@code open} boolean attribute.
      *
      * @return an instruction representing this attribute.
      */
     AttributeInstruction open();
 
     /**
-     * Compiles the {@code overflow} attribute with the specified value.
+     * Generates the {@code overflow} attribute with the specified value.
      *
      * @param value
      *        the value of the attribute
@@ -2760,7 +2760,7 @@ public final class Html {
     AttributeInstruction overflow(String value);
 
     /**
-     * Compiles the {@code paint-order} attribute with the specified value.
+     * Generates the {@code paint-order} attribute with the specified value.
      *
      * @param value
      *        the value of the attribute
@@ -2770,7 +2770,7 @@ public final class Html {
     AttributeInstruction paintOrder(String value);
 
     /**
-     * Compiles the {@code placeholder} attribute with the specified value.
+     * Generates the {@code placeholder} attribute with the specified value.
      *
      * @param value
      *        the value of the attribute
@@ -2780,7 +2780,7 @@ public final class Html {
     AttributeInstruction placeholder(String value);
 
     /**
-     * Compiles the {@code pointer-events} attribute with the specified value.
+     * Generates the {@code pointer-events} attribute with the specified value.
      *
      * @param value
      *        the value of the attribute
@@ -2790,7 +2790,7 @@ public final class Html {
     AttributeInstruction pointerEvents(String value);
 
     /**
-     * Compiles the {@code property} attribute with the specified value.
+     * Generates the {@code property} attribute with the specified value.
      *
      * @param value
      *        the value of the attribute
@@ -2800,14 +2800,14 @@ public final class Html {
     AttributeInstruction property(String value);
 
     /**
-     * Compiles the {@code readonly} boolean attribute.
+     * Generates the {@code readonly} boolean attribute.
      *
      * @return an instruction representing this attribute.
      */
     AttributeInstruction readonly();
 
     /**
-     * Compiles the {@code referrerpolicy} attribute with the specified value.
+     * Generates the {@code referrerpolicy} attribute with the specified value.
      *
      * @param value
      *        the value of the attribute
@@ -2817,7 +2817,7 @@ public final class Html {
     AttributeInstruction referrerpolicy(String value);
 
     /**
-     * Compiles the {@code rel} attribute with the specified value.
+     * Generates the {@code rel} attribute with the specified value.
      *
      * @param value
      *        the value of the attribute
@@ -2827,14 +2827,14 @@ public final class Html {
     AttributeInstruction rel(String value);
 
     /**
-     * Compiles the {@code required} boolean attribute.
+     * Generates the {@code required} boolean attribute.
      *
      * @return an instruction representing this attribute.
      */
     AttributeInstruction required();
 
     /**
-     * Compiles the {@code rev} attribute with the specified value.
+     * Generates the {@code rev} attribute with the specified value.
      *
      * @param value
      *        the value of the attribute
@@ -2844,14 +2844,14 @@ public final class Html {
     AttributeInstruction rev(String value);
 
     /**
-     * Compiles the {@code reversed} boolean attribute.
+     * Generates the {@code reversed} boolean attribute.
      *
      * @return an instruction representing this attribute.
      */
     AttributeInstruction reversed();
 
     /**
-     * Compiles the {@code role} attribute with the specified value.
+     * Generates the {@code role} attribute with the specified value.
      *
      * @param value
      *        the value of the attribute
@@ -2861,7 +2861,7 @@ public final class Html {
     AttributeInstruction role(String value);
 
     /**
-     * Compiles the {@code rows} attribute with the specified value.
+     * Generates the {@code rows} attribute with the specified value.
      *
      * @param value
      *        the value of the attribute
@@ -2871,14 +2871,14 @@ public final class Html {
     AttributeInstruction rows(String value);
 
     /**
-     * Compiles the {@code selected} boolean attribute.
+     * Generates the {@code selected} boolean attribute.
      *
      * @return an instruction representing this attribute.
      */
     AttributeInstruction selected();
 
     /**
-     * Compiles the {@code shape-rendering} attribute with the specified value.
+     * Generates the {@code shape-rendering} attribute with the specified value.
      *
      * @param value
      *        the value of the attribute
@@ -2888,7 +2888,7 @@ public final class Html {
     AttributeInstruction shapeRendering(String value);
 
     /**
-     * Compiles the {@code size} attribute with the specified value.
+     * Generates the {@code size} attribute with the specified value.
      *
      * @param value
      *        the value of the attribute
@@ -2898,7 +2898,7 @@ public final class Html {
     AttributeInstruction size(String value);
 
     /**
-     * Compiles the {@code sizes} attribute with the specified value.
+     * Generates the {@code sizes} attribute with the specified value.
      *
      * @param value
      *        the value of the attribute
@@ -2908,7 +2908,7 @@ public final class Html {
     AttributeInstruction sizes(String value);
 
     /**
-     * Compiles the {@code spellcheck} attribute with the specified value.
+     * Generates the {@code spellcheck} attribute with the specified value.
      *
      * @param value
      *        the value of the attribute
@@ -2918,7 +2918,7 @@ public final class Html {
     AttributeInstruction spellcheck(String value);
 
     /**
-     * Compiles the {@code src} attribute with the specified value.
+     * Generates the {@code src} attribute with the specified value.
      *
      * @param value
      *        the value of the attribute
@@ -2928,7 +2928,7 @@ public final class Html {
     AttributeInstruction src(String value);
 
     /**
-     * Compiles the {@code srcset} attribute with the specified value.
+     * Generates the {@code srcset} attribute with the specified value.
      *
      * @param value
      *        the value of the attribute
@@ -2938,7 +2938,7 @@ public final class Html {
     AttributeInstruction srcset(String value);
 
     /**
-     * Compiles the {@code start} attribute with the specified value.
+     * Generates the {@code start} attribute with the specified value.
      *
      * @param value
      *        the value of the attribute
@@ -2948,7 +2948,7 @@ public final class Html {
     AttributeInstruction start(String value);
 
     /**
-     * Compiles the {@code stop-color} attribute with the specified value.
+     * Generates the {@code stop-color} attribute with the specified value.
      *
      * @param value
      *        the value of the attribute
@@ -2958,7 +2958,7 @@ public final class Html {
     AttributeInstruction stopColor(String value);
 
     /**
-     * Compiles the {@code stop-opacity} attribute with the specified value.
+     * Generates the {@code stop-opacity} attribute with the specified value.
      *
      * @param value
      *        the value of the attribute
@@ -2968,7 +2968,7 @@ public final class Html {
     AttributeInstruction stopOpacity(String value);
 
     /**
-     * Compiles the {@code stroke} attribute with the specified value.
+     * Generates the {@code stroke} attribute with the specified value.
      *
      * @param value
      *        the value of the attribute
@@ -2978,7 +2978,7 @@ public final class Html {
     AttributeInstruction stroke(String value);
 
     /**
-     * Compiles the {@code stroke-dasharray} attribute with the specified value.
+     * Generates the {@code stroke-dasharray} attribute with the specified value.
      *
      * @param value
      *        the value of the attribute
@@ -2988,7 +2988,7 @@ public final class Html {
     AttributeInstruction strokeDasharray(String value);
 
     /**
-     * Compiles the {@code stroke-dashoffset} attribute with the specified value.
+     * Generates the {@code stroke-dashoffset} attribute with the specified value.
      *
      * @param value
      *        the value of the attribute
@@ -2998,7 +2998,7 @@ public final class Html {
     AttributeInstruction strokeDashoffset(String value);
 
     /**
-     * Compiles the {@code stroke-linecap} attribute with the specified value.
+     * Generates the {@code stroke-linecap} attribute with the specified value.
      *
      * @param value
      *        the value of the attribute
@@ -3008,7 +3008,7 @@ public final class Html {
     AttributeInstruction strokeLinecap(String value);
 
     /**
-     * Compiles the {@code stroke-linejoin} attribute with the specified value.
+     * Generates the {@code stroke-linejoin} attribute with the specified value.
      *
      * @param value
      *        the value of the attribute
@@ -3018,7 +3018,7 @@ public final class Html {
     AttributeInstruction strokeLinejoin(String value);
 
     /**
-     * Compiles the {@code stroke-miterlimit} attribute with the specified value.
+     * Generates the {@code stroke-miterlimit} attribute with the specified value.
      *
      * @param value
      *        the value of the attribute
@@ -3028,7 +3028,7 @@ public final class Html {
     AttributeInstruction strokeMiterlimit(String value);
 
     /**
-     * Compiles the {@code stroke-opacity} attribute with the specified value.
+     * Generates the {@code stroke-opacity} attribute with the specified value.
      *
      * @param value
      *        the value of the attribute
@@ -3038,7 +3038,7 @@ public final class Html {
     AttributeInstruction strokeOpacity(String value);
 
     /**
-     * Compiles the {@code stroke-width} attribute with the specified value.
+     * Generates the {@code stroke-width} attribute with the specified value.
      *
      * @param value
      *        the value of the attribute
@@ -3048,7 +3048,7 @@ public final class Html {
     AttributeInstruction strokeWidth(String value);
 
     /**
-     * Compiles the {@code style} attribute with the specified value.
+     * Generates the {@code style} attribute with the specified value.
      *
      * @param value
      *        the value of the attribute
@@ -3058,7 +3058,7 @@ public final class Html {
     AttributeInstruction inlineStyle(String value);
 
     /**
-     * Compiles the {@code tabindex} attribute with the specified value.
+     * Generates the {@code tabindex} attribute with the specified value.
      *
      * @param value
      *        the value of the attribute
@@ -3068,7 +3068,7 @@ public final class Html {
     AttributeInstruction tabindex(String value);
 
     /**
-     * Compiles the {@code target} attribute with the specified value.
+     * Generates the {@code target} attribute with the specified value.
      *
      * @param value
      *        the value of the attribute
@@ -3078,7 +3078,7 @@ public final class Html {
     AttributeInstruction target(String value);
 
     /**
-     * Compiles the {@code text-anchor} attribute with the specified value.
+     * Generates the {@code text-anchor} attribute with the specified value.
      *
      * @param value
      *        the value of the attribute
@@ -3088,7 +3088,7 @@ public final class Html {
     AttributeInstruction textAnchor(String value);
 
     /**
-     * Compiles the {@code text-decoration} attribute with the specified value.
+     * Generates the {@code text-decoration} attribute with the specified value.
      *
      * @param value
      *        the value of the attribute
@@ -3098,7 +3098,7 @@ public final class Html {
     AttributeInstruction textDecoration(String value);
 
     /**
-     * Compiles the {@code text-overflow} attribute with the specified value.
+     * Generates the {@code text-overflow} attribute with the specified value.
      *
      * @param value
      *        the value of the attribute
@@ -3108,7 +3108,7 @@ public final class Html {
     AttributeInstruction textOverflow(String value);
 
     /**
-     * Compiles the {@code text-rendering} attribute with the specified value.
+     * Generates the {@code text-rendering} attribute with the specified value.
      *
      * @param value
      *        the value of the attribute
@@ -3118,7 +3118,7 @@ public final class Html {
     AttributeInstruction textRendering(String value);
 
     /**
-     * Compiles the {@code transform} attribute with the specified value.
+     * Generates the {@code transform} attribute with the specified value.
      *
      * @param value
      *        the value of the attribute
@@ -3128,7 +3128,7 @@ public final class Html {
     AttributeInstruction transform(String value);
 
     /**
-     * Compiles the {@code transform-origin} attribute with the specified value.
+     * Generates the {@code transform-origin} attribute with the specified value.
      *
      * @param value
      *        the value of the attribute
@@ -3138,7 +3138,7 @@ public final class Html {
     AttributeInstruction transformOrigin(String value);
 
     /**
-     * Compiles the {@code translate} attribute with the specified value.
+     * Generates the {@code translate} attribute with the specified value.
      *
      * @param value
      *        the value of the attribute
@@ -3148,7 +3148,7 @@ public final class Html {
     AttributeInstruction translate(String value);
 
     /**
-     * Compiles the {@code type} attribute with the specified value.
+     * Generates the {@code type} attribute with the specified value.
      *
      * @param value
      *        the value of the attribute
@@ -3158,7 +3158,7 @@ public final class Html {
     AttributeInstruction type(String value);
 
     /**
-     * Compiles the {@code unicode-bidi} attribute with the specified value.
+     * Generates the {@code unicode-bidi} attribute with the specified value.
      *
      * @param value
      *        the value of the attribute
@@ -3168,7 +3168,7 @@ public final class Html {
     AttributeInstruction unicodeBidi(String value);
 
     /**
-     * Compiles the {@code value} attribute with the specified value.
+     * Generates the {@code value} attribute with the specified value.
      *
      * @param value
      *        the value of the attribute
@@ -3178,7 +3178,7 @@ public final class Html {
     AttributeInstruction value(String value);
 
     /**
-     * Compiles the {@code vector-effect} attribute with the specified value.
+     * Generates the {@code vector-effect} attribute with the specified value.
      *
      * @param value
      *        the value of the attribute
@@ -3188,7 +3188,7 @@ public final class Html {
     AttributeInstruction vectorEffect(String value);
 
     /**
-     * Compiles the {@code viewBox} attribute with the specified value.
+     * Generates the {@code viewBox} attribute with the specified value.
      *
      * @param value
      *        the value of the attribute
@@ -3198,7 +3198,7 @@ public final class Html {
     AttributeInstruction viewBox(String value);
 
     /**
-     * Compiles the {@code visibility} attribute with the specified value.
+     * Generates the {@code visibility} attribute with the specified value.
      *
      * @param value
      *        the value of the attribute
@@ -3208,7 +3208,7 @@ public final class Html {
     AttributeInstruction visibility(String value);
 
     /**
-     * Compiles the {@code white-space} attribute with the specified value.
+     * Generates the {@code white-space} attribute with the specified value.
      *
      * @param value
      *        the value of the attribute
@@ -3218,7 +3218,7 @@ public final class Html {
     AttributeInstruction whiteSpace(String value);
 
     /**
-     * Compiles the {@code width} attribute with the specified value.
+     * Generates the {@code width} attribute with the specified value.
      *
      * @param value
      *        the value of the attribute
@@ -3228,7 +3228,7 @@ public final class Html {
     AttributeInstruction width(String value);
 
     /**
-     * Compiles the {@code word-spacing} attribute with the specified value.
+     * Generates the {@code word-spacing} attribute with the specified value.
      *
      * @param value
      *        the value of the attribute
@@ -3238,7 +3238,7 @@ public final class Html {
     AttributeInstruction wordSpacing(String value);
 
     /**
-     * Compiles the {@code wrap} attribute with the specified value.
+     * Generates the {@code wrap} attribute with the specified value.
      *
      * @param value
      *        the value of the attribute
@@ -3248,7 +3248,7 @@ public final class Html {
     AttributeInstruction wrap(String value);
 
     /**
-     * Compiles the {@code writing-mode} attribute with the specified value.
+     * Generates the {@code writing-mode} attribute with the specified value.
      *
      * @param value
      *        the value of the attribute
@@ -3258,7 +3258,7 @@ public final class Html {
     AttributeInstruction writingMode(String value);
 
     /**
-     * Compiles the {@code xmlns} attribute with the specified value.
+     * Generates the {@code xmlns} attribute with the specified value.
      *
      * @param value
      *        the value of the attribute
@@ -3266,6 +3266,3100 @@ public final class Html {
      * @return an instruction representing this attribute.
      */
     AttributeInstruction xmlns(String value);
+
+  }
+
+  /**
+   * An element instruction in an HTML template.
+   */
+  public sealed interface ElementInstruction extends Instruction {}
+
+  private static final class HtmlElementInstruction implements ElementInstruction {}
+
+  static final ElementInstruction ELEMENT = new HtmlElementInstruction();
+
+  public non-sealed abstract class TemplateElements extends TemplateAttributes {
+
+    TemplateElements() {}
+
+    /**
+     * Generates the {@code <!DOCTYPE html>} doctype.
+     */
+    protected final void doctype() {
+      $elements().doctype();
+    }
+
+    /**
+     * Generates the {@code a} element with the specified content.
+     *
+     * @param contents
+     *        the attributes and children of this element
+     *
+     * @return an instruction representing this element.
+     */
+    protected final ElementInstruction a(Instruction... contents) {
+      return $elements().a(contents);
+    }
+
+    /**
+     * Generates the {@code a} element with the specified text.
+     *
+     * @param text
+     *        the text value of this element
+     *
+     * @return an instruction representing this element.
+     */
+    protected final ElementInstruction a(String text) {
+      return $elements().a(text);
+    }
+
+    /**
+     * Generates the {@code abbr} element with the specified content.
+     *
+     * @param contents
+     *        the attributes and children of this element
+     *
+     * @return an instruction representing this element.
+     */
+    protected final ElementInstruction abbr(Instruction... contents) {
+      return $elements().abbr(contents);
+    }
+
+    /**
+     * Generates the {@code abbr} element with the specified text.
+     *
+     * @param text
+     *        the text value of this element
+     *
+     * @return an instruction representing this element.
+     */
+    protected final ElementInstruction abbr(String text) {
+      return $elements().abbr(text);
+    }
+
+    /**
+     * Generates the {@code article} element with the specified content.
+     *
+     * @param contents
+     *        the attributes and children of this element
+     *
+     * @return an instruction representing this element.
+     */
+    protected final ElementInstruction article(Instruction... contents) {
+      return $elements().article(contents);
+    }
+
+    /**
+     * Generates the {@code article} element with the specified text.
+     *
+     * @param text
+     *        the text value of this element
+     *
+     * @return an instruction representing this element.
+     */
+    protected final ElementInstruction article(String text) {
+      return $elements().article(text);
+    }
+
+    /**
+     * Generates the {@code b} element with the specified content.
+     *
+     * @param contents
+     *        the attributes and children of this element
+     *
+     * @return an instruction representing this element.
+     */
+    protected final ElementInstruction b(Instruction... contents) {
+      return $elements().b(contents);
+    }
+
+    /**
+     * Generates the {@code b} element with the specified text.
+     *
+     * @param text
+     *        the text value of this element
+     *
+     * @return an instruction representing this element.
+     */
+    protected final ElementInstruction b(String text) {
+      return $elements().b(text);
+    }
+
+    /**
+     * Generates the {@code blockquote} element with the specified content.
+     *
+     * @param contents
+     *        the attributes and children of this element
+     *
+     * @return an instruction representing this element.
+     */
+    protected final ElementInstruction blockquote(Instruction... contents) {
+      return $elements().blockquote(contents);
+    }
+
+    /**
+     * Generates the {@code blockquote} element with the specified text.
+     *
+     * @param text
+     *        the text value of this element
+     *
+     * @return an instruction representing this element.
+     */
+    protected final ElementInstruction blockquote(String text) {
+      return $elements().blockquote(text);
+    }
+
+    /**
+     * Generates the {@code body} element with the specified content.
+     *
+     * @param contents
+     *        the attributes and children of this element
+     *
+     * @return an instruction representing this element.
+     */
+    protected final ElementInstruction body(Instruction... contents) {
+      return $elements().body(contents);
+    }
+
+    /**
+     * Generates the {@code body} element with the specified text.
+     *
+     * @param text
+     *        the text value of this element
+     *
+     * @return an instruction representing this element.
+     */
+    protected final ElementInstruction body(String text) {
+      return $elements().body(text);
+    }
+
+    /**
+     * Generates the {@code br} element with the specified content.
+     *
+     * @param contents
+     *        the attributes and children of this element
+     *
+     * @return an instruction representing this element.
+     */
+    protected final ElementInstruction br(AttributeInstruction... contents) {
+      return $elements().br(contents);
+    }
+
+    /**
+     * Generates the {@code button} element with the specified content.
+     *
+     * @param contents
+     *        the attributes and children of this element
+     *
+     * @return an instruction representing this element.
+     */
+    protected final ElementInstruction button(Instruction... contents) {
+      return $elements().button(contents);
+    }
+
+    /**
+     * Generates the {@code button} element with the specified text.
+     *
+     * @param text
+     *        the text value of this element
+     *
+     * @return an instruction representing this element.
+     */
+    protected final ElementInstruction button(String text) {
+      return $elements().button(text);
+    }
+
+    /**
+     * Generates the {@code clipPath} element with the specified content.
+     *
+     * @param contents
+     *        the attributes and children of this element
+     *
+     * @return an instruction representing this element.
+     */
+    protected final ElementInstruction clipPath(Instruction... contents) {
+      return $elements().clipPath(contents);
+    }
+
+    /**
+     * Generates the {@code code} element with the specified content.
+     *
+     * @param contents
+     *        the attributes and children of this element
+     *
+     * @return an instruction representing this element.
+     */
+    protected final ElementInstruction code(Instruction... contents) {
+      return $elements().code(contents);
+    }
+
+    /**
+     * Generates the {@code code} element with the specified text.
+     *
+     * @param text
+     *        the text value of this element
+     *
+     * @return an instruction representing this element.
+     */
+    protected final ElementInstruction code(String text) {
+      return $elements().code(text);
+    }
+
+    /**
+     * Generates the {@code dd} element with the specified content.
+     *
+     * @param contents
+     *        the attributes and children of this element
+     *
+     * @return an instruction representing this element.
+     */
+    protected final ElementInstruction dd(Instruction... contents) {
+      return $elements().dd(contents);
+    }
+
+    /**
+     * Generates the {@code dd} element with the specified text.
+     *
+     * @param text
+     *        the text value of this element
+     *
+     * @return an instruction representing this element.
+     */
+    protected final ElementInstruction dd(String text) {
+      return $elements().dd(text);
+    }
+
+    /**
+     * Generates the {@code defs} element with the specified content.
+     *
+     * @param contents
+     *        the attributes and children of this element
+     *
+     * @return an instruction representing this element.
+     */
+    protected final ElementInstruction defs(Instruction... contents) {
+      return $elements().defs(contents);
+    }
+
+    /**
+     * Generates the {@code defs} element with the specified text.
+     *
+     * @param text
+     *        the text value of this element
+     *
+     * @return an instruction representing this element.
+     */
+    protected final ElementInstruction defs(String text) {
+      return $elements().defs(text);
+    }
+
+    /**
+     * Generates the {@code details} element with the specified content.
+     *
+     * @param contents
+     *        the attributes and children of this element
+     *
+     * @return an instruction representing this element.
+     */
+    protected final ElementInstruction details(Instruction... contents) {
+      return $elements().details(contents);
+    }
+
+    /**
+     * Generates the {@code details} element with the specified text.
+     *
+     * @param text
+     *        the text value of this element
+     *
+     * @return an instruction representing this element.
+     */
+    protected final ElementInstruction details(String text) {
+      return $elements().details(text);
+    }
+
+    /**
+     * Generates the {@code div} element with the specified content.
+     *
+     * @param contents
+     *        the attributes and children of this element
+     *
+     * @return an instruction representing this element.
+     */
+    protected final ElementInstruction div(Instruction... contents) {
+      return $elements().div(contents);
+    }
+
+    /**
+     * Generates the {@code div} element with the specified text.
+     *
+     * @param text
+     *        the text value of this element
+     *
+     * @return an instruction representing this element.
+     */
+    protected final ElementInstruction div(String text) {
+      return $elements().div(text);
+    }
+
+    /**
+     * Generates the {@code dl} element with the specified content.
+     *
+     * @param contents
+     *        the attributes and children of this element
+     *
+     * @return an instruction representing this element.
+     */
+    protected final ElementInstruction dl(Instruction... contents) {
+      return $elements().dl(contents);
+    }
+
+    /**
+     * Generates the {@code dl} element with the specified text.
+     *
+     * @param text
+     *        the text value of this element
+     *
+     * @return an instruction representing this element.
+     */
+    protected final ElementInstruction dl(String text) {
+      return $elements().dl(text);
+    }
+
+    /**
+     * Generates the {@code dt} element with the specified content.
+     *
+     * @param contents
+     *        the attributes and children of this element
+     *
+     * @return an instruction representing this element.
+     */
+    protected final ElementInstruction dt(Instruction... contents) {
+      return $elements().dt(contents);
+    }
+
+    /**
+     * Generates the {@code dt} element with the specified text.
+     *
+     * @param text
+     *        the text value of this element
+     *
+     * @return an instruction representing this element.
+     */
+    protected final ElementInstruction dt(String text) {
+      return $elements().dt(text);
+    }
+
+    /**
+     * Generates the {@code em} element with the specified content.
+     *
+     * @param contents
+     *        the attributes and children of this element
+     *
+     * @return an instruction representing this element.
+     */
+    protected final ElementInstruction em(Instruction... contents) {
+      return $elements().em(contents);
+    }
+
+    /**
+     * Generates the {@code em} element with the specified text.
+     *
+     * @param text
+     *        the text value of this element
+     *
+     * @return an instruction representing this element.
+     */
+    protected final ElementInstruction em(String text) {
+      return $elements().em(text);
+    }
+
+    /**
+     * Generates the {@code fieldset} element with the specified content.
+     *
+     * @param contents
+     *        the attributes and children of this element
+     *
+     * @return an instruction representing this element.
+     */
+    protected final ElementInstruction fieldset(Instruction... contents) {
+      return $elements().fieldset(contents);
+    }
+
+    /**
+     * Generates the {@code fieldset} element with the specified text.
+     *
+     * @param text
+     *        the text value of this element
+     *
+     * @return an instruction representing this element.
+     */
+    protected final ElementInstruction fieldset(String text) {
+      return $elements().fieldset(text);
+    }
+
+    /**
+     * Generates the {@code figure} element with the specified content.
+     *
+     * @param contents
+     *        the attributes and children of this element
+     *
+     * @return an instruction representing this element.
+     */
+    protected final ElementInstruction figure(Instruction... contents) {
+      return $elements().figure(contents);
+    }
+
+    /**
+     * Generates the {@code figure} element with the specified text.
+     *
+     * @param text
+     *        the text value of this element
+     *
+     * @return an instruction representing this element.
+     */
+    protected final ElementInstruction figure(String text) {
+      return $elements().figure(text);
+    }
+
+    /**
+     * Generates the {@code footer} element with the specified content.
+     *
+     * @param contents
+     *        the attributes and children of this element
+     *
+     * @return an instruction representing this element.
+     */
+    protected final ElementInstruction footer(Instruction... contents) {
+      return $elements().footer(contents);
+    }
+
+    /**
+     * Generates the {@code footer} element with the specified text.
+     *
+     * @param text
+     *        the text value of this element
+     *
+     * @return an instruction representing this element.
+     */
+    protected final ElementInstruction footer(String text) {
+      return $elements().footer(text);
+    }
+
+    /**
+     * Generates the {@code form} element with the specified content.
+     *
+     * @param contents
+     *        the attributes and children of this element
+     *
+     * @return an instruction representing this element.
+     */
+    protected final ElementInstruction form(Instruction... contents) {
+      return $elements().form(contents);
+    }
+
+    /**
+     * Generates the {@code form} attribute or element with the specified text.
+     *
+     * @param text
+     *        the text value of this attribute or element
+     *
+     * @return an instruction representing this attribute or element.
+     */
+    protected final ElementInstruction form(String text) {
+      return $elements().form(text);
+    }
+
+    /**
+     * Generates the {@code g} element with the specified content.
+     *
+     * @param contents
+     *        the attributes and children of this element
+     *
+     * @return an instruction representing this element.
+     */
+    protected final ElementInstruction g(Instruction... contents) {
+      return $elements().g(contents);
+    }
+
+    /**
+     * Generates the {@code g} element with the specified text.
+     *
+     * @param text
+     *        the text value of this element
+     *
+     * @return an instruction representing this element.
+     */
+    protected final ElementInstruction g(String text) {
+      return $elements().g(text);
+    }
+
+    /**
+     * Generates the {@code h1} element with the specified content.
+     *
+     * @param contents
+     *        the attributes and children of this element
+     *
+     * @return an instruction representing this element.
+     */
+    protected final ElementInstruction h1(Instruction... contents) {
+      return $elements().h1(contents);
+    }
+
+    /**
+     * Generates the {@code h1} element with the specified text.
+     *
+     * @param text
+     *        the text value of this element
+     *
+     * @return an instruction representing this element.
+     */
+    protected final ElementInstruction h1(String text) {
+      return $elements().h1(text);
+    }
+
+    /**
+     * Generates the {@code h2} element with the specified content.
+     *
+     * @param contents
+     *        the attributes and children of this element
+     *
+     * @return an instruction representing this element.
+     */
+    protected final ElementInstruction h2(Instruction... contents) {
+      return $elements().h2(contents);
+    }
+
+    /**
+     * Generates the {@code h2} element with the specified text.
+     *
+     * @param text
+     *        the text value of this element
+     *
+     * @return an instruction representing this element.
+     */
+    protected final ElementInstruction h2(String text) {
+      return $elements().h2(text);
+    }
+
+    /**
+     * Generates the {@code h3} element with the specified content.
+     *
+     * @param contents
+     *        the attributes and children of this element
+     *
+     * @return an instruction representing this element.
+     */
+    protected final ElementInstruction h3(Instruction... contents) {
+      return $elements().h3(contents);
+    }
+
+    /**
+     * Generates the {@code h3} element with the specified text.
+     *
+     * @param text
+     *        the text value of this element
+     *
+     * @return an instruction representing this element.
+     */
+    protected final ElementInstruction h3(String text) {
+      return $elements().h3(text);
+    }
+
+    /**
+     * Generates the {@code h4} element with the specified content.
+     *
+     * @param contents
+     *        the attributes and children of this element
+     *
+     * @return an instruction representing this element.
+     */
+    protected final ElementInstruction h4(Instruction... contents) {
+      return $elements().h4(contents);
+    }
+
+    /**
+     * Generates the {@code h4} element with the specified text.
+     *
+     * @param text
+     *        the text value of this element
+     *
+     * @return an instruction representing this element.
+     */
+    protected final ElementInstruction h4(String text) {
+      return $elements().h4(text);
+    }
+
+    /**
+     * Generates the {@code h5} element with the specified content.
+     *
+     * @param contents
+     *        the attributes and children of this element
+     *
+     * @return an instruction representing this element.
+     */
+    protected final ElementInstruction h5(Instruction... contents) {
+      return $elements().h5(contents);
+    }
+
+    /**
+     * Generates the {@code h5} element with the specified text.
+     *
+     * @param text
+     *        the text value of this element
+     *
+     * @return an instruction representing this element.
+     */
+    protected final ElementInstruction h5(String text) {
+      return $elements().h5(text);
+    }
+
+    /**
+     * Generates the {@code h6} element with the specified content.
+     *
+     * @param contents
+     *        the attributes and children of this element
+     *
+     * @return an instruction representing this element.
+     */
+    protected final ElementInstruction h6(Instruction... contents) {
+      return $elements().h6(contents);
+    }
+
+    /**
+     * Generates the {@code h6} element with the specified text.
+     *
+     * @param text
+     *        the text value of this element
+     *
+     * @return an instruction representing this element.
+     */
+    protected final ElementInstruction h6(String text) {
+      return $elements().h6(text);
+    }
+
+    /**
+     * Generates the {@code head} element with the specified content.
+     *
+     * @param contents
+     *        the attributes and children of this element
+     *
+     * @return an instruction representing this element.
+     */
+    protected final ElementInstruction head(Instruction... contents) {
+      return $elements().head(contents);
+    }
+
+    /**
+     * Generates the {@code head} element with the specified text.
+     *
+     * @param text
+     *        the text value of this element
+     *
+     * @return an instruction representing this element.
+     */
+    protected final ElementInstruction head(String text) {
+      return $elements().head(text);
+    }
+
+    /**
+     * Generates the {@code header} element with the specified content.
+     *
+     * @param contents
+     *        the attributes and children of this element
+     *
+     * @return an instruction representing this element.
+     */
+    protected final ElementInstruction header(Instruction... contents) {
+      return $elements().header(contents);
+    }
+
+    /**
+     * Generates the {@code header} element with the specified text.
+     *
+     * @param text
+     *        the text value of this element
+     *
+     * @return an instruction representing this element.
+     */
+    protected final ElementInstruction header(String text) {
+      return $elements().header(text);
+    }
+
+    /**
+     * Generates the {@code hgroup} element with the specified content.
+     *
+     * @param contents
+     *        the attributes and children of this element
+     *
+     * @return an instruction representing this element.
+     */
+    protected final ElementInstruction hgroup(Instruction... contents) {
+      return $elements().hgroup(contents);
+    }
+
+    /**
+     * Generates the {@code hgroup} element with the specified text.
+     *
+     * @param text
+     *        the text value of this element
+     *
+     * @return an instruction representing this element.
+     */
+    protected final ElementInstruction hgroup(String text) {
+      return $elements().hgroup(text);
+    }
+
+    /**
+     * Generates the {@code hr} element with the specified content.
+     *
+     * @param contents
+     *        the attributes and children of this element
+     *
+     * @return an instruction representing this element.
+     */
+    protected final ElementInstruction hr(AttributeInstruction... contents) {
+      return $elements().hr(contents);
+    }
+
+    /**
+     * Generates the {@code html} element with the specified content.
+     *
+     * @param contents
+     *        the attributes and children of this element
+     *
+     * @return an instruction representing this element.
+     */
+    protected final ElementInstruction html(Instruction... contents) {
+      return $elements().html(contents);
+    }
+
+    /**
+     * Generates the {@code html} element with the specified text.
+     *
+     * @param text
+     *        the text value of this element
+     *
+     * @return an instruction representing this element.
+     */
+    protected final ElementInstruction html(String text) {
+      return $elements().html(text);
+    }
+
+    /**
+     * Generates the {@code img} element with the specified content.
+     *
+     * @param contents
+     *        the attributes and children of this element
+     *
+     * @return an instruction representing this element.
+     */
+    protected final ElementInstruction img(AttributeInstruction... contents) {
+      return $elements().img(contents);
+    }
+
+    /**
+     * Generates the {@code input} element with the specified content.
+     *
+     * @param contents
+     *        the attributes and children of this element
+     *
+     * @return an instruction representing this element.
+     */
+    protected final ElementInstruction input(AttributeInstruction... contents) {
+      return $elements().input(contents);
+    }
+
+    /**
+     * Generates the {@code kbd} element with the specified content.
+     *
+     * @param contents
+     *        the attributes and children of this element
+     *
+     * @return an instruction representing this element.
+     */
+    protected final ElementInstruction kbd(Instruction... contents) {
+      return $elements().kbd(contents);
+    }
+
+    /**
+     * Generates the {@code kbd} element with the specified text.
+     *
+     * @param text
+     *        the text value of this element
+     *
+     * @return an instruction representing this element.
+     */
+    protected final ElementInstruction kbd(String text) {
+      return $elements().kbd(text);
+    }
+
+    /**
+     * Generates the {@code label} element with the specified content.
+     *
+     * @param contents
+     *        the attributes and children of this element
+     *
+     * @return an instruction representing this element.
+     */
+    protected final ElementInstruction label(Instruction... contents) {
+      return $elements().label(contents);
+    }
+
+    /**
+     * Generates the {@code label} attribute or element with the specified text.
+     *
+     * @param text
+     *        the text value of this attribute or element
+     *
+     * @return an instruction representing this attribute or element.
+     */
+    protected final ElementInstruction label(String text) {
+      return $elements().label(text);
+    }
+
+    /**
+     * Generates the {@code legend} element with the specified content.
+     *
+     * @param contents
+     *        the attributes and children of this element
+     *
+     * @return an instruction representing this element.
+     */
+    protected final ElementInstruction legend(Instruction... contents) {
+      return $elements().legend(contents);
+    }
+
+    /**
+     * Generates the {@code legend} element with the specified text.
+     *
+     * @param text
+     *        the text value of this element
+     *
+     * @return an instruction representing this element.
+     */
+    protected final ElementInstruction legend(String text) {
+      return $elements().legend(text);
+    }
+
+    /**
+     * Generates the {@code li} element with the specified content.
+     *
+     * @param contents
+     *        the attributes and children of this element
+     *
+     * @return an instruction representing this element.
+     */
+    protected final ElementInstruction li(Instruction... contents) {
+      return $elements().li(contents);
+    }
+
+    /**
+     * Generates the {@code li} element with the specified text.
+     *
+     * @param text
+     *        the text value of this element
+     *
+     * @return an instruction representing this element.
+     */
+    protected final ElementInstruction li(String text) {
+      return $elements().li(text);
+    }
+
+    /**
+     * Generates the {@code link} element with the specified content.
+     *
+     * @param contents
+     *        the attributes and children of this element
+     *
+     * @return an instruction representing this element.
+     */
+    protected final ElementInstruction link(AttributeInstruction... contents) {
+      return $elements().link(contents);
+    }
+
+    /**
+     * Generates the {@code main} element with the specified content.
+     *
+     * @param contents
+     *        the attributes and children of this element
+     *
+     * @return an instruction representing this element.
+     */
+    protected final ElementInstruction main(Instruction... contents) {
+      return $elements().main(contents);
+    }
+
+    /**
+     * Generates the {@code main} element with the specified text.
+     *
+     * @param text
+     *        the text value of this element
+     *
+     * @return an instruction representing this element.
+     */
+    protected final ElementInstruction main(String text) {
+      return $elements().main(text);
+    }
+
+    /**
+     * Generates the {@code menu} element with the specified content.
+     *
+     * @param contents
+     *        the attributes and children of this element
+     *
+     * @return an instruction representing this element.
+     */
+    protected final ElementInstruction menu(Instruction... contents) {
+      return $elements().menu(contents);
+    }
+
+    /**
+     * Generates the {@code menu} element with the specified text.
+     *
+     * @param text
+     *        the text value of this element
+     *
+     * @return an instruction representing this element.
+     */
+    protected final ElementInstruction menu(String text) {
+      return $elements().menu(text);
+    }
+
+    /**
+     * Generates the {@code meta} element with the specified content.
+     *
+     * @param contents
+     *        the attributes and children of this element
+     *
+     * @return an instruction representing this element.
+     */
+    protected final ElementInstruction meta(AttributeInstruction... contents) {
+      return $elements().meta(contents);
+    }
+
+    /**
+     * Generates the {@code nav} element with the specified content.
+     *
+     * @param contents
+     *        the attributes and children of this element
+     *
+     * @return an instruction representing this element.
+     */
+    protected final ElementInstruction nav(Instruction... contents) {
+      return $elements().nav(contents);
+    }
+
+    /**
+     * Generates the {@code nav} element with the specified text.
+     *
+     * @param text
+     *        the text value of this element
+     *
+     * @return an instruction representing this element.
+     */
+    protected final ElementInstruction nav(String text) {
+      return $elements().nav(text);
+    }
+
+    /**
+     * Generates the {@code ol} element with the specified content.
+     *
+     * @param contents
+     *        the attributes and children of this element
+     *
+     * @return an instruction representing this element.
+     */
+    protected final ElementInstruction ol(Instruction... contents) {
+      return $elements().ol(contents);
+    }
+
+    /**
+     * Generates the {@code ol} element with the specified text.
+     *
+     * @param text
+     *        the text value of this element
+     *
+     * @return an instruction representing this element.
+     */
+    protected final ElementInstruction ol(String text) {
+      return $elements().ol(text);
+    }
+
+    /**
+     * Generates the {@code optgroup} element with the specified content.
+     *
+     * @param contents
+     *        the attributes and children of this element
+     *
+     * @return an instruction representing this element.
+     */
+    protected final ElementInstruction optgroup(Instruction... contents) {
+      return $elements().optgroup(contents);
+    }
+
+    /**
+     * Generates the {@code optgroup} element with the specified text.
+     *
+     * @param text
+     *        the text value of this element
+     *
+     * @return an instruction representing this element.
+     */
+    protected final ElementInstruction optgroup(String text) {
+      return $elements().optgroup(text);
+    }
+
+    /**
+     * Generates the {@code option} element with the specified content.
+     *
+     * @param contents
+     *        the attributes and children of this element
+     *
+     * @return an instruction representing this element.
+     */
+    protected final ElementInstruction option(Instruction... contents) {
+      return $elements().option(contents);
+    }
+
+    /**
+     * Generates the {@code option} element with the specified text.
+     *
+     * @param text
+     *        the text value of this element
+     *
+     * @return an instruction representing this element.
+     */
+    protected final ElementInstruction option(String text) {
+      return $elements().option(text);
+    }
+
+    /**
+     * Generates the {@code p} element with the specified content.
+     *
+     * @param contents
+     *        the attributes and children of this element
+     *
+     * @return an instruction representing this element.
+     */
+    protected final ElementInstruction p(Instruction... contents) {
+      return $elements().p(contents);
+    }
+
+    /**
+     * Generates the {@code p} element with the specified text.
+     *
+     * @param text
+     *        the text value of this element
+     *
+     * @return an instruction representing this element.
+     */
+    protected final ElementInstruction p(String text) {
+      return $elements().p(text);
+    }
+
+    /**
+     * Generates the {@code path} element with the specified content.
+     *
+     * @param contents
+     *        the attributes and children of this element
+     *
+     * @return an instruction representing this element.
+     */
+    protected final ElementInstruction path(Instruction... contents) {
+      return $elements().path(contents);
+    }
+
+    /**
+     * Generates the {@code path} element with the specified text.
+     *
+     * @param text
+     *        the text value of this element
+     *
+     * @return an instruction representing this element.
+     */
+    protected final ElementInstruction path(String text) {
+      return $elements().path(text);
+    }
+
+    /**
+     * Generates the {@code pre} element with the specified content.
+     *
+     * @param contents
+     *        the attributes and children of this element
+     *
+     * @return an instruction representing this element.
+     */
+    protected final ElementInstruction pre(Instruction... contents) {
+      return $elements().pre(contents);
+    }
+
+    /**
+     * Generates the {@code pre} element with the specified text.
+     *
+     * @param text
+     *        the text value of this element
+     *
+     * @return an instruction representing this element.
+     */
+    protected final ElementInstruction pre(String text) {
+      return $elements().pre(text);
+    }
+
+    /**
+     * Generates the {@code progress} element with the specified content.
+     *
+     * @param contents
+     *        the attributes and children of this element
+     *
+     * @return an instruction representing this element.
+     */
+    protected final ElementInstruction progress(Instruction... contents) {
+      return $elements().progress(contents);
+    }
+
+    /**
+     * Generates the {@code progress} element with the specified text.
+     *
+     * @param text
+     *        the text value of this element
+     *
+     * @return an instruction representing this element.
+     */
+    protected final ElementInstruction progress(String text) {
+      return $elements().progress(text);
+    }
+
+    /**
+     * Generates the {@code samp} element with the specified content.
+     *
+     * @param contents
+     *        the attributes and children of this element
+     *
+     * @return an instruction representing this element.
+     */
+    protected final ElementInstruction samp(Instruction... contents) {
+      return $elements().samp(contents);
+    }
+
+    /**
+     * Generates the {@code samp} element with the specified text.
+     *
+     * @param text
+     *        the text value of this element
+     *
+     * @return an instruction representing this element.
+     */
+    protected final ElementInstruction samp(String text) {
+      return $elements().samp(text);
+    }
+
+    /**
+     * Generates the {@code script} element with the specified content.
+     *
+     * @param contents
+     *        the attributes and children of this element
+     *
+     * @return an instruction representing this element.
+     */
+    protected final ElementInstruction script(Instruction... contents) {
+      return $elements().script(contents);
+    }
+
+    /**
+     * Generates the {@code script} element with the specified text.
+     *
+     * @param text
+     *        the text value of this element
+     *
+     * @return an instruction representing this element.
+     */
+    protected final ElementInstruction script(String text) {
+      return $elements().script(text);
+    }
+
+    /**
+     * Generates the {@code section} element with the specified content.
+     *
+     * @param contents
+     *        the attributes and children of this element
+     *
+     * @return an instruction representing this element.
+     */
+    protected final ElementInstruction section(Instruction... contents) {
+      return $elements().section(contents);
+    }
+
+    /**
+     * Generates the {@code section} element with the specified text.
+     *
+     * @param text
+     *        the text value of this element
+     *
+     * @return an instruction representing this element.
+     */
+    protected final ElementInstruction section(String text) {
+      return $elements().section(text);
+    }
+
+    /**
+     * Generates the {@code select} element with the specified content.
+     *
+     * @param contents
+     *        the attributes and children of this element
+     *
+     * @return an instruction representing this element.
+     */
+    protected final ElementInstruction select(Instruction... contents) {
+      return $elements().select(contents);
+    }
+
+    /**
+     * Generates the {@code select} element with the specified text.
+     *
+     * @param text
+     *        the text value of this element
+     *
+     * @return an instruction representing this element.
+     */
+    protected final ElementInstruction select(String text) {
+      return $elements().select(text);
+    }
+
+    /**
+     * Generates the {@code small} element with the specified content.
+     *
+     * @param contents
+     *        the attributes and children of this element
+     *
+     * @return an instruction representing this element.
+     */
+    protected final ElementInstruction small(Instruction... contents) {
+      return $elements().small(contents);
+    }
+
+    /**
+     * Generates the {@code small} element with the specified text.
+     *
+     * @param text
+     *        the text value of this element
+     *
+     * @return an instruction representing this element.
+     */
+    protected final ElementInstruction small(String text) {
+      return $elements().small(text);
+    }
+
+    /**
+     * Generates the {@code span} element with the specified content.
+     *
+     * @param contents
+     *        the attributes and children of this element
+     *
+     * @return an instruction representing this element.
+     */
+    protected final ElementInstruction span(Instruction... contents) {
+      return $elements().span(contents);
+    }
+
+    /**
+     * Generates the {@code span} element with the specified text.
+     *
+     * @param text
+     *        the text value of this element
+     *
+     * @return an instruction representing this element.
+     */
+    protected final ElementInstruction span(String text) {
+      return $elements().span(text);
+    }
+
+    /**
+     * Generates the {@code strong} element with the specified content.
+     *
+     * @param contents
+     *        the attributes and children of this element
+     *
+     * @return an instruction representing this element.
+     */
+    protected final ElementInstruction strong(Instruction... contents) {
+      return $elements().strong(contents);
+    }
+
+    /**
+     * Generates the {@code strong} element with the specified text.
+     *
+     * @param text
+     *        the text value of this element
+     *
+     * @return an instruction representing this element.
+     */
+    protected final ElementInstruction strong(String text) {
+      return $elements().strong(text);
+    }
+
+    /**
+     * Generates the {@code style} element with the specified content.
+     *
+     * @param contents
+     *        the attributes and children of this element
+     *
+     * @return an instruction representing this element.
+     */
+    protected final ElementInstruction style(Instruction... contents) {
+      return $elements().style(contents);
+    }
+
+    /**
+     * Generates the {@code style} element with the specified text.
+     *
+     * @param text
+     *        the text value of this element
+     *
+     * @return an instruction representing this element.
+     */
+    protected final ElementInstruction style(String text) {
+      return $elements().style(text);
+    }
+
+    /**
+     * Generates the {@code sub} element with the specified content.
+     *
+     * @param contents
+     *        the attributes and children of this element
+     *
+     * @return an instruction representing this element.
+     */
+    protected final ElementInstruction sub(Instruction... contents) {
+      return $elements().sub(contents);
+    }
+
+    /**
+     * Generates the {@code sub} element with the specified text.
+     *
+     * @param text
+     *        the text value of this element
+     *
+     * @return an instruction representing this element.
+     */
+    protected final ElementInstruction sub(String text) {
+      return $elements().sub(text);
+    }
+
+    /**
+     * Generates the {@code summary} element with the specified content.
+     *
+     * @param contents
+     *        the attributes and children of this element
+     *
+     * @return an instruction representing this element.
+     */
+    protected final ElementInstruction summary(Instruction... contents) {
+      return $elements().summary(contents);
+    }
+
+    /**
+     * Generates the {@code summary} element with the specified text.
+     *
+     * @param text
+     *        the text value of this element
+     *
+     * @return an instruction representing this element.
+     */
+    protected final ElementInstruction summary(String text) {
+      return $elements().summary(text);
+    }
+
+    /**
+     * Generates the {@code sup} element with the specified content.
+     *
+     * @param contents
+     *        the attributes and children of this element
+     *
+     * @return an instruction representing this element.
+     */
+    protected final ElementInstruction sup(Instruction... contents) {
+      return $elements().sup(contents);
+    }
+
+    /**
+     * Generates the {@code sup} element with the specified text.
+     *
+     * @param text
+     *        the text value of this element
+     *
+     * @return an instruction representing this element.
+     */
+    protected final ElementInstruction sup(String text) {
+      return $elements().sup(text);
+    }
+
+    /**
+     * Generates the {@code svg} element with the specified content.
+     *
+     * @param contents
+     *        the attributes and children of this element
+     *
+     * @return an instruction representing this element.
+     */
+    protected final ElementInstruction svg(Instruction... contents) {
+      return $elements().svg(contents);
+    }
+
+    /**
+     * Generates the {@code svg} element with the specified text.
+     *
+     * @param text
+     *        the text value of this element
+     *
+     * @return an instruction representing this element.
+     */
+    protected final ElementInstruction svg(String text) {
+      return $elements().svg(text);
+    }
+
+    /**
+     * Generates the {@code table} element with the specified content.
+     *
+     * @param contents
+     *        the attributes and children of this element
+     *
+     * @return an instruction representing this element.
+     */
+    protected final ElementInstruction table(Instruction... contents) {
+      return $elements().table(contents);
+    }
+
+    /**
+     * Generates the {@code table} element with the specified text.
+     *
+     * @param text
+     *        the text value of this element
+     *
+     * @return an instruction representing this element.
+     */
+    protected final ElementInstruction table(String text) {
+      return $elements().table(text);
+    }
+
+    /**
+     * Generates the {@code tbody} element with the specified content.
+     *
+     * @param contents
+     *        the attributes and children of this element
+     *
+     * @return an instruction representing this element.
+     */
+    protected final ElementInstruction tbody(Instruction... contents) {
+      return $elements().tbody(contents);
+    }
+
+    /**
+     * Generates the {@code tbody} element with the specified text.
+     *
+     * @param text
+     *        the text value of this element
+     *
+     * @return an instruction representing this element.
+     */
+    protected final ElementInstruction tbody(String text) {
+      return $elements().tbody(text);
+    }
+
+    /**
+     * Generates the {@code td} element with the specified content.
+     *
+     * @param contents
+     *        the attributes and children of this element
+     *
+     * @return an instruction representing this element.
+     */
+    protected final ElementInstruction td(Instruction... contents) {
+      return $elements().td(contents);
+    }
+
+    /**
+     * Generates the {@code td} element with the specified text.
+     *
+     * @param text
+     *        the text value of this element
+     *
+     * @return an instruction representing this element.
+     */
+    protected final ElementInstruction td(String text) {
+      return $elements().td(text);
+    }
+
+    /**
+     * Generates the {@code template} element with the specified content.
+     *
+     * @param contents
+     *        the attributes and children of this element
+     *
+     * @return an instruction representing this element.
+     */
+    protected final ElementInstruction template(Instruction... contents) {
+      return $elements().template(contents);
+    }
+
+    /**
+     * Generates the {@code template} element with the specified text.
+     *
+     * @param text
+     *        the text value of this element
+     *
+     * @return an instruction representing this element.
+     */
+    protected final ElementInstruction template(String text) {
+      return $elements().template(text);
+    }
+
+    /**
+     * Generates the {@code textarea} element with the specified content.
+     *
+     * @param contents
+     *        the attributes and children of this element
+     *
+     * @return an instruction representing this element.
+     */
+    protected final ElementInstruction textarea(Instruction... contents) {
+      return $elements().textarea(contents);
+    }
+
+    /**
+     * Generates the {@code textarea} element with the specified text.
+     *
+     * @param text
+     *        the text value of this element
+     *
+     * @return an instruction representing this element.
+     */
+    protected final ElementInstruction textarea(String text) {
+      return $elements().textarea(text);
+    }
+
+    /**
+     * Generates the {@code th} element with the specified content.
+     *
+     * @param contents
+     *        the attributes and children of this element
+     *
+     * @return an instruction representing this element.
+     */
+    protected final ElementInstruction th(Instruction... contents) {
+      return $elements().th(contents);
+    }
+
+    /**
+     * Generates the {@code th} element with the specified text.
+     *
+     * @param text
+     *        the text value of this element
+     *
+     * @return an instruction representing this element.
+     */
+    protected final ElementInstruction th(String text) {
+      return $elements().th(text);
+    }
+
+    /**
+     * Generates the {@code thead} element with the specified content.
+     *
+     * @param contents
+     *        the attributes and children of this element
+     *
+     * @return an instruction representing this element.
+     */
+    protected final ElementInstruction thead(Instruction... contents) {
+      return $elements().thead(contents);
+    }
+
+    /**
+     * Generates the {@code thead} element with the specified text.
+     *
+     * @param text
+     *        the text value of this element
+     *
+     * @return an instruction representing this element.
+     */
+    protected final ElementInstruction thead(String text) {
+      return $elements().thead(text);
+    }
+
+    /**
+     * Generates the {@code title} element with the specified content.
+     *
+     * @param contents
+     *        the attributes and children of this element
+     *
+     * @return an instruction representing this element.
+     */
+    protected final ElementInstruction title(Instruction... contents) {
+      return $elements().title(contents);
+    }
+
+    /**
+     * Generates the {@code title} attribute or element with the specified text.
+     *
+     * @param text
+     *        the text value of this attribute or element
+     *
+     * @return an instruction representing this attribute or element.
+     */
+    protected final ElementInstruction title(String text) {
+      return $elements().title(text);
+    }
+
+    /**
+     * Generates the {@code tr} element with the specified content.
+     *
+     * @param contents
+     *        the attributes and children of this element
+     *
+     * @return an instruction representing this element.
+     */
+    protected final ElementInstruction tr(Instruction... contents) {
+      return $elements().tr(contents);
+    }
+
+    /**
+     * Generates the {@code tr} element with the specified text.
+     *
+     * @param text
+     *        the text value of this element
+     *
+     * @return an instruction representing this element.
+     */
+    protected final ElementInstruction tr(String text) {
+      return $elements().tr(text);
+    }
+
+    /**
+     * Generates the {@code ul} element with the specified content.
+     *
+     * @param contents
+     *        the attributes and children of this element
+     *
+     * @return an instruction representing this element.
+     */
+    protected final ElementInstruction ul(Instruction... contents) {
+      return $elements().ul(contents);
+    }
+
+    /**
+     * Generates the {@code ul} element with the specified text.
+     *
+     * @param text
+     *        the text value of this element
+     *
+     * @return an instruction representing this element.
+     */
+    protected final ElementInstruction ul(String text) {
+      return $elements().ul(text);
+    }
+
+    abstract CompilerElements $elements();
+
+  }
+
+  /**
+   * Provides the HTML elements compiler methods.
+   */
+  public sealed interface CompilerElements permits Compiler {
+
+    /**
+     * Generates the {@code <!DOCTYPE html>} doctype.
+     */
+    void doctype();
+
+    /**
+     * Generates the {@code a} element with the specified content.
+     *
+     * @param contents
+     *        the attributes and children of this element
+     *
+     * @return an instruction representing this element.
+     */
+    ElementInstruction a(Instruction... contents);
+
+    /**
+     * Generates the {@code a} element with the specified text.
+     *
+     * @param text
+     *        the text value of this element
+     *
+     * @return an instruction representing this element.
+     */
+    ElementInstruction a(String text);
+
+    /**
+     * Generates the {@code abbr} element with the specified content.
+     *
+     * @param contents
+     *        the attributes and children of this element
+     *
+     * @return an instruction representing this element.
+     */
+    ElementInstruction abbr(Instruction... contents);
+
+    /**
+     * Generates the {@code abbr} element with the specified text.
+     *
+     * @param text
+     *        the text value of this element
+     *
+     * @return an instruction representing this element.
+     */
+    ElementInstruction abbr(String text);
+
+    /**
+     * Generates the {@code article} element with the specified content.
+     *
+     * @param contents
+     *        the attributes and children of this element
+     *
+     * @return an instruction representing this element.
+     */
+    ElementInstruction article(Instruction... contents);
+
+    /**
+     * Generates the {@code article} element with the specified text.
+     *
+     * @param text
+     *        the text value of this element
+     *
+     * @return an instruction representing this element.
+     */
+    ElementInstruction article(String text);
+
+    /**
+     * Generates the {@code b} element with the specified content.
+     *
+     * @param contents
+     *        the attributes and children of this element
+     *
+     * @return an instruction representing this element.
+     */
+    ElementInstruction b(Instruction... contents);
+
+    /**
+     * Generates the {@code b} element with the specified text.
+     *
+     * @param text
+     *        the text value of this element
+     *
+     * @return an instruction representing this element.
+     */
+    ElementInstruction b(String text);
+
+    /**
+     * Generates the {@code blockquote} element with the specified content.
+     *
+     * @param contents
+     *        the attributes and children of this element
+     *
+     * @return an instruction representing this element.
+     */
+    ElementInstruction blockquote(Instruction... contents);
+
+    /**
+     * Generates the {@code blockquote} element with the specified text.
+     *
+     * @param text
+     *        the text value of this element
+     *
+     * @return an instruction representing this element.
+     */
+    ElementInstruction blockquote(String text);
+
+    /**
+     * Generates the {@code body} element with the specified content.
+     *
+     * @param contents
+     *        the attributes and children of this element
+     *
+     * @return an instruction representing this element.
+     */
+    ElementInstruction body(Instruction... contents);
+
+    /**
+     * Generates the {@code body} element with the specified text.
+     *
+     * @param text
+     *        the text value of this element
+     *
+     * @return an instruction representing this element.
+     */
+    ElementInstruction body(String text);
+
+    /**
+     * Generates the {@code br} element with the specified content.
+     *
+     * @param contents
+     *        the attributes and children of this element
+     *
+     * @return an instruction representing this element.
+     */
+    ElementInstruction br(AttributeInstruction... contents);
+
+    /**
+     * Generates the {@code button} element with the specified content.
+     *
+     * @param contents
+     *        the attributes and children of this element
+     *
+     * @return an instruction representing this element.
+     */
+    ElementInstruction button(Instruction... contents);
+
+    /**
+     * Generates the {@code button} element with the specified text.
+     *
+     * @param text
+     *        the text value of this element
+     *
+     * @return an instruction representing this element.
+     */
+    ElementInstruction button(String text);
+
+    /**
+     * Generates the {@code clipPath} element with the specified content.
+     *
+     * @param contents
+     *        the attributes and children of this element
+     *
+     * @return an instruction representing this element.
+     */
+    ElementInstruction clipPath(Instruction... contents);
+
+    /**
+     * Generates the {@code code} element with the specified content.
+     *
+     * @param contents
+     *        the attributes and children of this element
+     *
+     * @return an instruction representing this element.
+     */
+    ElementInstruction code(Instruction... contents);
+
+    /**
+     * Generates the {@code code} element with the specified text.
+     *
+     * @param text
+     *        the text value of this element
+     *
+     * @return an instruction representing this element.
+     */
+    ElementInstruction code(String text);
+
+    /**
+     * Generates the {@code dd} element with the specified content.
+     *
+     * @param contents
+     *        the attributes and children of this element
+     *
+     * @return an instruction representing this element.
+     */
+    ElementInstruction dd(Instruction... contents);
+
+    /**
+     * Generates the {@code dd} element with the specified text.
+     *
+     * @param text
+     *        the text value of this element
+     *
+     * @return an instruction representing this element.
+     */
+    ElementInstruction dd(String text);
+
+    /**
+     * Generates the {@code defs} element with the specified content.
+     *
+     * @param contents
+     *        the attributes and children of this element
+     *
+     * @return an instruction representing this element.
+     */
+    ElementInstruction defs(Instruction... contents);
+
+    /**
+     * Generates the {@code defs} element with the specified text.
+     *
+     * @param text
+     *        the text value of this element
+     *
+     * @return an instruction representing this element.
+     */
+    ElementInstruction defs(String text);
+
+    /**
+     * Generates the {@code details} element with the specified content.
+     *
+     * @param contents
+     *        the attributes and children of this element
+     *
+     * @return an instruction representing this element.
+     */
+    ElementInstruction details(Instruction... contents);
+
+    /**
+     * Generates the {@code details} element with the specified text.
+     *
+     * @param text
+     *        the text value of this element
+     *
+     * @return an instruction representing this element.
+     */
+    ElementInstruction details(String text);
+
+    /**
+     * Generates the {@code div} element with the specified content.
+     *
+     * @param contents
+     *        the attributes and children of this element
+     *
+     * @return an instruction representing this element.
+     */
+    ElementInstruction div(Instruction... contents);
+
+    /**
+     * Generates the {@code div} element with the specified text.
+     *
+     * @param text
+     *        the text value of this element
+     *
+     * @return an instruction representing this element.
+     */
+    ElementInstruction div(String text);
+
+    /**
+     * Generates the {@code dl} element with the specified content.
+     *
+     * @param contents
+     *        the attributes and children of this element
+     *
+     * @return an instruction representing this element.
+     */
+    ElementInstruction dl(Instruction... contents);
+
+    /**
+     * Generates the {@code dl} element with the specified text.
+     *
+     * @param text
+     *        the text value of this element
+     *
+     * @return an instruction representing this element.
+     */
+    ElementInstruction dl(String text);
+
+    /**
+     * Generates the {@code dt} element with the specified content.
+     *
+     * @param contents
+     *        the attributes and children of this element
+     *
+     * @return an instruction representing this element.
+     */
+    ElementInstruction dt(Instruction... contents);
+
+    /**
+     * Generates the {@code dt} element with the specified text.
+     *
+     * @param text
+     *        the text value of this element
+     *
+     * @return an instruction representing this element.
+     */
+    ElementInstruction dt(String text);
+
+    /**
+     * Generates the {@code em} element with the specified content.
+     *
+     * @param contents
+     *        the attributes and children of this element
+     *
+     * @return an instruction representing this element.
+     */
+    ElementInstruction em(Instruction... contents);
+
+    /**
+     * Generates the {@code em} element with the specified text.
+     *
+     * @param text
+     *        the text value of this element
+     *
+     * @return an instruction representing this element.
+     */
+    ElementInstruction em(String text);
+
+    /**
+     * Generates the {@code fieldset} element with the specified content.
+     *
+     * @param contents
+     *        the attributes and children of this element
+     *
+     * @return an instruction representing this element.
+     */
+    ElementInstruction fieldset(Instruction... contents);
+
+    /**
+     * Generates the {@code fieldset} element with the specified text.
+     *
+     * @param text
+     *        the text value of this element
+     *
+     * @return an instruction representing this element.
+     */
+    ElementInstruction fieldset(String text);
+
+    /**
+     * Generates the {@code figure} element with the specified content.
+     *
+     * @param contents
+     *        the attributes and children of this element
+     *
+     * @return an instruction representing this element.
+     */
+    ElementInstruction figure(Instruction... contents);
+
+    /**
+     * Generates the {@code figure} element with the specified text.
+     *
+     * @param text
+     *        the text value of this element
+     *
+     * @return an instruction representing this element.
+     */
+    ElementInstruction figure(String text);
+
+    /**
+     * Generates the {@code footer} element with the specified content.
+     *
+     * @param contents
+     *        the attributes and children of this element
+     *
+     * @return an instruction representing this element.
+     */
+    ElementInstruction footer(Instruction... contents);
+
+    /**
+     * Generates the {@code footer} element with the specified text.
+     *
+     * @param text
+     *        the text value of this element
+     *
+     * @return an instruction representing this element.
+     */
+    ElementInstruction footer(String text);
+
+    /**
+     * Generates the {@code form} element with the specified content.
+     *
+     * @param contents
+     *        the attributes and children of this element
+     *
+     * @return an instruction representing this element.
+     */
+    ElementInstruction form(Instruction... contents);
+
+    /**
+     * Generates the {@code form} attribute or element with the specified text.
+     *
+     * @param text
+     *        the text value of this attribute or element
+     *
+     * @return an instruction representing this attribute or element.
+     */
+    ElementInstruction form(String text);
+
+    /**
+     * Generates the {@code g} element with the specified content.
+     *
+     * @param contents
+     *        the attributes and children of this element
+     *
+     * @return an instruction representing this element.
+     */
+    ElementInstruction g(Instruction... contents);
+
+    /**
+     * Generates the {@code g} element with the specified text.
+     *
+     * @param text
+     *        the text value of this element
+     *
+     * @return an instruction representing this element.
+     */
+    ElementInstruction g(String text);
+
+    /**
+     * Generates the {@code h1} element with the specified content.
+     *
+     * @param contents
+     *        the attributes and children of this element
+     *
+     * @return an instruction representing this element.
+     */
+    ElementInstruction h1(Instruction... contents);
+
+    /**
+     * Generates the {@code h1} element with the specified text.
+     *
+     * @param text
+     *        the text value of this element
+     *
+     * @return an instruction representing this element.
+     */
+    ElementInstruction h1(String text);
+
+    /**
+     * Generates the {@code h2} element with the specified content.
+     *
+     * @param contents
+     *        the attributes and children of this element
+     *
+     * @return an instruction representing this element.
+     */
+    ElementInstruction h2(Instruction... contents);
+
+    /**
+     * Generates the {@code h2} element with the specified text.
+     *
+     * @param text
+     *        the text value of this element
+     *
+     * @return an instruction representing this element.
+     */
+    ElementInstruction h2(String text);
+
+    /**
+     * Generates the {@code h3} element with the specified content.
+     *
+     * @param contents
+     *        the attributes and children of this element
+     *
+     * @return an instruction representing this element.
+     */
+    ElementInstruction h3(Instruction... contents);
+
+    /**
+     * Generates the {@code h3} element with the specified text.
+     *
+     * @param text
+     *        the text value of this element
+     *
+     * @return an instruction representing this element.
+     */
+    ElementInstruction h3(String text);
+
+    /**
+     * Generates the {@code h4} element with the specified content.
+     *
+     * @param contents
+     *        the attributes and children of this element
+     *
+     * @return an instruction representing this element.
+     */
+    ElementInstruction h4(Instruction... contents);
+
+    /**
+     * Generates the {@code h4} element with the specified text.
+     *
+     * @param text
+     *        the text value of this element
+     *
+     * @return an instruction representing this element.
+     */
+    ElementInstruction h4(String text);
+
+    /**
+     * Generates the {@code h5} element with the specified content.
+     *
+     * @param contents
+     *        the attributes and children of this element
+     *
+     * @return an instruction representing this element.
+     */
+    ElementInstruction h5(Instruction... contents);
+
+    /**
+     * Generates the {@code h5} element with the specified text.
+     *
+     * @param text
+     *        the text value of this element
+     *
+     * @return an instruction representing this element.
+     */
+    ElementInstruction h5(String text);
+
+    /**
+     * Generates the {@code h6} element with the specified content.
+     *
+     * @param contents
+     *        the attributes and children of this element
+     *
+     * @return an instruction representing this element.
+     */
+    ElementInstruction h6(Instruction... contents);
+
+    /**
+     * Generates the {@code h6} element with the specified text.
+     *
+     * @param text
+     *        the text value of this element
+     *
+     * @return an instruction representing this element.
+     */
+    ElementInstruction h6(String text);
+
+    /**
+     * Generates the {@code head} element with the specified content.
+     *
+     * @param contents
+     *        the attributes and children of this element
+     *
+     * @return an instruction representing this element.
+     */
+    ElementInstruction head(Instruction... contents);
+
+    /**
+     * Generates the {@code head} element with the specified text.
+     *
+     * @param text
+     *        the text value of this element
+     *
+     * @return an instruction representing this element.
+     */
+    ElementInstruction head(String text);
+
+    /**
+     * Generates the {@code header} element with the specified content.
+     *
+     * @param contents
+     *        the attributes and children of this element
+     *
+     * @return an instruction representing this element.
+     */
+    ElementInstruction header(Instruction... contents);
+
+    /**
+     * Generates the {@code header} element with the specified text.
+     *
+     * @param text
+     *        the text value of this element
+     *
+     * @return an instruction representing this element.
+     */
+    ElementInstruction header(String text);
+
+    /**
+     * Generates the {@code hgroup} element with the specified content.
+     *
+     * @param contents
+     *        the attributes and children of this element
+     *
+     * @return an instruction representing this element.
+     */
+    ElementInstruction hgroup(Instruction... contents);
+
+    /**
+     * Generates the {@code hgroup} element with the specified text.
+     *
+     * @param text
+     *        the text value of this element
+     *
+     * @return an instruction representing this element.
+     */
+    ElementInstruction hgroup(String text);
+
+    /**
+     * Generates the {@code hr} element with the specified content.
+     *
+     * @param contents
+     *        the attributes and children of this element
+     *
+     * @return an instruction representing this element.
+     */
+    ElementInstruction hr(AttributeInstruction... contents);
+
+    /**
+     * Generates the {@code html} element with the specified content.
+     *
+     * @param contents
+     *        the attributes and children of this element
+     *
+     * @return an instruction representing this element.
+     */
+    ElementInstruction html(Instruction... contents);
+
+    /**
+     * Generates the {@code html} element with the specified text.
+     *
+     * @param text
+     *        the text value of this element
+     *
+     * @return an instruction representing this element.
+     */
+    ElementInstruction html(String text);
+
+    /**
+     * Generates the {@code img} element with the specified content.
+     *
+     * @param contents
+     *        the attributes and children of this element
+     *
+     * @return an instruction representing this element.
+     */
+    ElementInstruction img(AttributeInstruction... contents);
+
+    /**
+     * Generates the {@code input} element with the specified content.
+     *
+     * @param contents
+     *        the attributes and children of this element
+     *
+     * @return an instruction representing this element.
+     */
+    ElementInstruction input(AttributeInstruction... contents);
+
+    /**
+     * Generates the {@code kbd} element with the specified content.
+     *
+     * @param contents
+     *        the attributes and children of this element
+     *
+     * @return an instruction representing this element.
+     */
+    ElementInstruction kbd(Instruction... contents);
+
+    /**
+     * Generates the {@code kbd} element with the specified text.
+     *
+     * @param text
+     *        the text value of this element
+     *
+     * @return an instruction representing this element.
+     */
+    ElementInstruction kbd(String text);
+
+    /**
+     * Generates the {@code label} element with the specified content.
+     *
+     * @param contents
+     *        the attributes and children of this element
+     *
+     * @return an instruction representing this element.
+     */
+    ElementInstruction label(Instruction... contents);
+
+    /**
+     * Generates the {@code label} attribute or element with the specified text.
+     *
+     * @param text
+     *        the text value of this attribute or element
+     *
+     * @return an instruction representing this attribute or element.
+     */
+    ElementInstruction label(String text);
+
+    /**
+     * Generates the {@code legend} element with the specified content.
+     *
+     * @param contents
+     *        the attributes and children of this element
+     *
+     * @return an instruction representing this element.
+     */
+    ElementInstruction legend(Instruction... contents);
+
+    /**
+     * Generates the {@code legend} element with the specified text.
+     *
+     * @param text
+     *        the text value of this element
+     *
+     * @return an instruction representing this element.
+     */
+    ElementInstruction legend(String text);
+
+    /**
+     * Generates the {@code li} element with the specified content.
+     *
+     * @param contents
+     *        the attributes and children of this element
+     *
+     * @return an instruction representing this element.
+     */
+    ElementInstruction li(Instruction... contents);
+
+    /**
+     * Generates the {@code li} element with the specified text.
+     *
+     * @param text
+     *        the text value of this element
+     *
+     * @return an instruction representing this element.
+     */
+    ElementInstruction li(String text);
+
+    /**
+     * Generates the {@code link} element with the specified content.
+     *
+     * @param contents
+     *        the attributes and children of this element
+     *
+     * @return an instruction representing this element.
+     */
+    ElementInstruction link(AttributeInstruction... contents);
+
+    /**
+     * Generates the {@code main} element with the specified content.
+     *
+     * @param contents
+     *        the attributes and children of this element
+     *
+     * @return an instruction representing this element.
+     */
+    ElementInstruction main(Instruction... contents);
+
+    /**
+     * Generates the {@code main} element with the specified text.
+     *
+     * @param text
+     *        the text value of this element
+     *
+     * @return an instruction representing this element.
+     */
+    ElementInstruction main(String text);
+
+    /**
+     * Generates the {@code menu} element with the specified content.
+     *
+     * @param contents
+     *        the attributes and children of this element
+     *
+     * @return an instruction representing this element.
+     */
+    ElementInstruction menu(Instruction... contents);
+
+    /**
+     * Generates the {@code menu} element with the specified text.
+     *
+     * @param text
+     *        the text value of this element
+     *
+     * @return an instruction representing this element.
+     */
+    ElementInstruction menu(String text);
+
+    /**
+     * Generates the {@code meta} element with the specified content.
+     *
+     * @param contents
+     *        the attributes and children of this element
+     *
+     * @return an instruction representing this element.
+     */
+    ElementInstruction meta(AttributeInstruction... contents);
+
+    /**
+     * Generates the {@code nav} element with the specified content.
+     *
+     * @param contents
+     *        the attributes and children of this element
+     *
+     * @return an instruction representing this element.
+     */
+    ElementInstruction nav(Instruction... contents);
+
+    /**
+     * Generates the {@code nav} element with the specified text.
+     *
+     * @param text
+     *        the text value of this element
+     *
+     * @return an instruction representing this element.
+     */
+    ElementInstruction nav(String text);
+
+    /**
+     * Generates the {@code ol} element with the specified content.
+     *
+     * @param contents
+     *        the attributes and children of this element
+     *
+     * @return an instruction representing this element.
+     */
+    ElementInstruction ol(Instruction... contents);
+
+    /**
+     * Generates the {@code ol} element with the specified text.
+     *
+     * @param text
+     *        the text value of this element
+     *
+     * @return an instruction representing this element.
+     */
+    ElementInstruction ol(String text);
+
+    /**
+     * Generates the {@code optgroup} element with the specified content.
+     *
+     * @param contents
+     *        the attributes and children of this element
+     *
+     * @return an instruction representing this element.
+     */
+    ElementInstruction optgroup(Instruction... contents);
+
+    /**
+     * Generates the {@code optgroup} element with the specified text.
+     *
+     * @param text
+     *        the text value of this element
+     *
+     * @return an instruction representing this element.
+     */
+    ElementInstruction optgroup(String text);
+
+    /**
+     * Generates the {@code option} element with the specified content.
+     *
+     * @param contents
+     *        the attributes and children of this element
+     *
+     * @return an instruction representing this element.
+     */
+    ElementInstruction option(Instruction... contents);
+
+    /**
+     * Generates the {@code option} element with the specified text.
+     *
+     * @param text
+     *        the text value of this element
+     *
+     * @return an instruction representing this element.
+     */
+    ElementInstruction option(String text);
+
+    /**
+     * Generates the {@code p} element with the specified content.
+     *
+     * @param contents
+     *        the attributes and children of this element
+     *
+     * @return an instruction representing this element.
+     */
+    ElementInstruction p(Instruction... contents);
+
+    /**
+     * Generates the {@code p} element with the specified text.
+     *
+     * @param text
+     *        the text value of this element
+     *
+     * @return an instruction representing this element.
+     */
+    ElementInstruction p(String text);
+
+    /**
+     * Generates the {@code path} element with the specified content.
+     *
+     * @param contents
+     *        the attributes and children of this element
+     *
+     * @return an instruction representing this element.
+     */
+    ElementInstruction path(Instruction... contents);
+
+    /**
+     * Generates the {@code path} element with the specified text.
+     *
+     * @param text
+     *        the text value of this element
+     *
+     * @return an instruction representing this element.
+     */
+    ElementInstruction path(String text);
+
+    /**
+     * Generates the {@code pre} element with the specified content.
+     *
+     * @param contents
+     *        the attributes and children of this element
+     *
+     * @return an instruction representing this element.
+     */
+    ElementInstruction pre(Instruction... contents);
+
+    /**
+     * Generates the {@code pre} element with the specified text.
+     *
+     * @param text
+     *        the text value of this element
+     *
+     * @return an instruction representing this element.
+     */
+    ElementInstruction pre(String text);
+
+    /**
+     * Generates the {@code progress} element with the specified content.
+     *
+     * @param contents
+     *        the attributes and children of this element
+     *
+     * @return an instruction representing this element.
+     */
+    ElementInstruction progress(Instruction... contents);
+
+    /**
+     * Generates the {@code progress} element with the specified text.
+     *
+     * @param text
+     *        the text value of this element
+     *
+     * @return an instruction representing this element.
+     */
+    ElementInstruction progress(String text);
+
+    /**
+     * Generates the {@code samp} element with the specified content.
+     *
+     * @param contents
+     *        the attributes and children of this element
+     *
+     * @return an instruction representing this element.
+     */
+    ElementInstruction samp(Instruction... contents);
+
+    /**
+     * Generates the {@code samp} element with the specified text.
+     *
+     * @param text
+     *        the text value of this element
+     *
+     * @return an instruction representing this element.
+     */
+    ElementInstruction samp(String text);
+
+    /**
+     * Generates the {@code script} element with the specified content.
+     *
+     * @param contents
+     *        the attributes and children of this element
+     *
+     * @return an instruction representing this element.
+     */
+    ElementInstruction script(Instruction... contents);
+
+    /**
+     * Generates the {@code script} element with the specified text.
+     *
+     * @param text
+     *        the text value of this element
+     *
+     * @return an instruction representing this element.
+     */
+    ElementInstruction script(String text);
+
+    /**
+     * Generates the {@code section} element with the specified content.
+     *
+     * @param contents
+     *        the attributes and children of this element
+     *
+     * @return an instruction representing this element.
+     */
+    ElementInstruction section(Instruction... contents);
+
+    /**
+     * Generates the {@code section} element with the specified text.
+     *
+     * @param text
+     *        the text value of this element
+     *
+     * @return an instruction representing this element.
+     */
+    ElementInstruction section(String text);
+
+    /**
+     * Generates the {@code select} element with the specified content.
+     *
+     * @param contents
+     *        the attributes and children of this element
+     *
+     * @return an instruction representing this element.
+     */
+    ElementInstruction select(Instruction... contents);
+
+    /**
+     * Generates the {@code select} element with the specified text.
+     *
+     * @param text
+     *        the text value of this element
+     *
+     * @return an instruction representing this element.
+     */
+    ElementInstruction select(String text);
+
+    /**
+     * Generates the {@code small} element with the specified content.
+     *
+     * @param contents
+     *        the attributes and children of this element
+     *
+     * @return an instruction representing this element.
+     */
+    ElementInstruction small(Instruction... contents);
+
+    /**
+     * Generates the {@code small} element with the specified text.
+     *
+     * @param text
+     *        the text value of this element
+     *
+     * @return an instruction representing this element.
+     */
+    ElementInstruction small(String text);
+
+    /**
+     * Generates the {@code span} element with the specified content.
+     *
+     * @param contents
+     *        the attributes and children of this element
+     *
+     * @return an instruction representing this element.
+     */
+    ElementInstruction span(Instruction... contents);
+
+    /**
+     * Generates the {@code span} element with the specified text.
+     *
+     * @param text
+     *        the text value of this element
+     *
+     * @return an instruction representing this element.
+     */
+    ElementInstruction span(String text);
+
+    /**
+     * Generates the {@code strong} element with the specified content.
+     *
+     * @param contents
+     *        the attributes and children of this element
+     *
+     * @return an instruction representing this element.
+     */
+    ElementInstruction strong(Instruction... contents);
+
+    /**
+     * Generates the {@code strong} element with the specified text.
+     *
+     * @param text
+     *        the text value of this element
+     *
+     * @return an instruction representing this element.
+     */
+    ElementInstruction strong(String text);
+
+    /**
+     * Generates the {@code style} element with the specified content.
+     *
+     * @param contents
+     *        the attributes and children of this element
+     *
+     * @return an instruction representing this element.
+     */
+    ElementInstruction style(Instruction... contents);
+
+    /**
+     * Generates the {@code style} element with the specified text.
+     *
+     * @param text
+     *        the text value of this element
+     *
+     * @return an instruction representing this element.
+     */
+    ElementInstruction style(String text);
+
+    /**
+     * Generates the {@code sub} element with the specified content.
+     *
+     * @param contents
+     *        the attributes and children of this element
+     *
+     * @return an instruction representing this element.
+     */
+    ElementInstruction sub(Instruction... contents);
+
+    /**
+     * Generates the {@code sub} element with the specified text.
+     *
+     * @param text
+     *        the text value of this element
+     *
+     * @return an instruction representing this element.
+     */
+    ElementInstruction sub(String text);
+
+    /**
+     * Generates the {@code summary} element with the specified content.
+     *
+     * @param contents
+     *        the attributes and children of this element
+     *
+     * @return an instruction representing this element.
+     */
+    ElementInstruction summary(Instruction... contents);
+
+    /**
+     * Generates the {@code summary} element with the specified text.
+     *
+     * @param text
+     *        the text value of this element
+     *
+     * @return an instruction representing this element.
+     */
+    ElementInstruction summary(String text);
+
+    /**
+     * Generates the {@code sup} element with the specified content.
+     *
+     * @param contents
+     *        the attributes and children of this element
+     *
+     * @return an instruction representing this element.
+     */
+    ElementInstruction sup(Instruction... contents);
+
+    /**
+     * Generates the {@code sup} element with the specified text.
+     *
+     * @param text
+     *        the text value of this element
+     *
+     * @return an instruction representing this element.
+     */
+    ElementInstruction sup(String text);
+
+    /**
+     * Generates the {@code svg} element with the specified content.
+     *
+     * @param contents
+     *        the attributes and children of this element
+     *
+     * @return an instruction representing this element.
+     */
+    ElementInstruction svg(Instruction... contents);
+
+    /**
+     * Generates the {@code svg} element with the specified text.
+     *
+     * @param text
+     *        the text value of this element
+     *
+     * @return an instruction representing this element.
+     */
+    ElementInstruction svg(String text);
+
+    /**
+     * Generates the {@code table} element with the specified content.
+     *
+     * @param contents
+     *        the attributes and children of this element
+     *
+     * @return an instruction representing this element.
+     */
+    ElementInstruction table(Instruction... contents);
+
+    /**
+     * Generates the {@code table} element with the specified text.
+     *
+     * @param text
+     *        the text value of this element
+     *
+     * @return an instruction representing this element.
+     */
+    ElementInstruction table(String text);
+
+    /**
+     * Generates the {@code tbody} element with the specified content.
+     *
+     * @param contents
+     *        the attributes and children of this element
+     *
+     * @return an instruction representing this element.
+     */
+    ElementInstruction tbody(Instruction... contents);
+
+    /**
+     * Generates the {@code tbody} element with the specified text.
+     *
+     * @param text
+     *        the text value of this element
+     *
+     * @return an instruction representing this element.
+     */
+    ElementInstruction tbody(String text);
+
+    /**
+     * Generates the {@code td} element with the specified content.
+     *
+     * @param contents
+     *        the attributes and children of this element
+     *
+     * @return an instruction representing this element.
+     */
+    ElementInstruction td(Instruction... contents);
+
+    /**
+     * Generates the {@code td} element with the specified text.
+     *
+     * @param text
+     *        the text value of this element
+     *
+     * @return an instruction representing this element.
+     */
+    ElementInstruction td(String text);
+
+    /**
+     * Generates the {@code template} element with the specified content.
+     *
+     * @param contents
+     *        the attributes and children of this element
+     *
+     * @return an instruction representing this element.
+     */
+    ElementInstruction template(Instruction... contents);
+
+    /**
+     * Generates the {@code template} element with the specified text.
+     *
+     * @param text
+     *        the text value of this element
+     *
+     * @return an instruction representing this element.
+     */
+    ElementInstruction template(String text);
+
+    /**
+     * Generates the {@code textarea} element with the specified content.
+     *
+     * @param contents
+     *        the attributes and children of this element
+     *
+     * @return an instruction representing this element.
+     */
+    ElementInstruction textarea(Instruction... contents);
+
+    /**
+     * Generates the {@code textarea} element with the specified text.
+     *
+     * @param text
+     *        the text value of this element
+     *
+     * @return an instruction representing this element.
+     */
+    ElementInstruction textarea(String text);
+
+    /**
+     * Generates the {@code th} element with the specified content.
+     *
+     * @param contents
+     *        the attributes and children of this element
+     *
+     * @return an instruction representing this element.
+     */
+    ElementInstruction th(Instruction... contents);
+
+    /**
+     * Generates the {@code th} element with the specified text.
+     *
+     * @param text
+     *        the text value of this element
+     *
+     * @return an instruction representing this element.
+     */
+    ElementInstruction th(String text);
+
+    /**
+     * Generates the {@code thead} element with the specified content.
+     *
+     * @param contents
+     *        the attributes and children of this element
+     *
+     * @return an instruction representing this element.
+     */
+    ElementInstruction thead(Instruction... contents);
+
+    /**
+     * Generates the {@code thead} element with the specified text.
+     *
+     * @param text
+     *        the text value of this element
+     *
+     * @return an instruction representing this element.
+     */
+    ElementInstruction thead(String text);
+
+    /**
+     * Generates the {@code title} element with the specified content.
+     *
+     * @param contents
+     *        the attributes and children of this element
+     *
+     * @return an instruction representing this element.
+     */
+    ElementInstruction title(Instruction... contents);
+
+    /**
+     * Generates the {@code title} attribute or element with the specified text.
+     *
+     * @param text
+     *        the text value of this attribute or element
+     *
+     * @return an instruction representing this attribute or element.
+     */
+    ElementInstruction title(String text);
+
+    /**
+     * Generates the {@code tr} element with the specified content.
+     *
+     * @param contents
+     *        the attributes and children of this element
+     *
+     * @return an instruction representing this element.
+     */
+    ElementInstruction tr(Instruction... contents);
+
+    /**
+     * Generates the {@code tr} element with the specified text.
+     *
+     * @param text
+     *        the text value of this element
+     *
+     * @return an instruction representing this element.
+     */
+    ElementInstruction tr(String text);
+
+    /**
+     * Generates the {@code ul} element with the specified content.
+     *
+     * @param contents
+     *        the attributes and children of this element
+     *
+     * @return an instruction representing this element.
+     */
+    ElementInstruction ul(Instruction... contents);
+
+    /**
+     * Generates the {@code ul} element with the specified text.
+     *
+     * @param text
+     *        the text value of this element
+     *
+     * @return an instruction representing this element.
+     */
+    ElementInstruction ul(String text);
 
   }
 
