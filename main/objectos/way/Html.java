@@ -90,7 +90,7 @@ public final class Html {
   static final AttributeInstruction ATTRIBUTE = new HtmlAttributeInstruction();
 
   /**
-   * Provides methods for rendering HTML attributes in templates.
+   * Provides methods the HTML attributes template methods.
    */
   public static abstract class TemplateAttributes {
 
