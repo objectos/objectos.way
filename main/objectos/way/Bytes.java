@@ -39,7 +39,17 @@ final class Bytes {
 
   public static final byte[] COLONSP = {COLON, SP};
 
+  private static final int BYTE_MASK = 0xFF;
+
   private Bytes() {}
+
+  public static int decodeInt(byte b0) {
+    return toInt(b0, 0);
+  }
+
+  public static byte encodeInt0(int value) {
+    return (byte) value;
+  }
 
   public static boolean isOptionalWhitespace(byte value) {
     return switch (value) {
@@ -47,6 +57,10 @@ final class Bytes {
 
       default -> false;
     };
+  }
+
+  public static int toInt(byte b, int shift) {
+    return (b & BYTE_MASK) << shift;
   }
 
   public static byte toLowerCase(byte ch) {

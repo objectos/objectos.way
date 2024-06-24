@@ -119,7 +119,7 @@ public final class Html {
   static final AttributeInstruction ATTRIBUTE = new HtmlAttributeInstruction();
 
   /**
-   * Provides methods the HTML attributes template methods.
+   * Provides the HTML attributes template methods.
    */
   public sealed static abstract class TemplateAttributes {
 
@@ -3307,8 +3307,14 @@ public final class Html {
 
   static final ElementInstruction ELEMENT = new HtmlElementInstruction();
 
-  public non-sealed abstract class TemplateElements extends TemplateAttributes {
+  /**
+   * Provides the HTML elements template methods.
+   */
+  public non-sealed static abstract class TemplateElements extends TemplateAttributes {
 
+    /**
+     * Sole constructor.
+     */
     TemplateElements() {}
 
     /**

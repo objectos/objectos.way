@@ -17,11 +17,23 @@ package objectos.way;
 
 class HtmlRecorder {
 
+  final void ambiguous(HtmlAmbiguous ambiguous, String text) {
+    throw new UnsupportedOperationException("Implement me");
+  }
+  
   final Html.AttributeInstruction attribute0(HtmlAttributeName name) {
     throw new UnsupportedOperationException("Implement me");
   }
 
   final Html.AttributeInstruction attribute0(HtmlAttributeName name, Object value) {
+    throw new UnsupportedOperationException("Implement me");
+  }
+
+  final void element(HtmlElementName name, Html.Instruction[] contents) {
+    throw new UnsupportedOperationException("Implement me");
+  }
+
+  final void element(HtmlElementName name, String text) {
     throw new UnsupportedOperationException("Implement me");
   }
 
