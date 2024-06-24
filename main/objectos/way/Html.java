@@ -23,6 +23,44 @@ public final class Html {
   // types
 
   /**
+   * The name of an HTML attribute.
+   */
+  public sealed interface AttributeName permits HtmlAttributeName {
+
+    /**
+     * Index of this attribute.
+     *
+     * @return index of this attribute.
+     */
+    int index();
+
+    /**
+     * Name of the attribute.
+     *
+     * @return name of the attribute
+     */
+    String name();
+
+    /**
+     * Indicates if this is the name of a boolean atttribute.
+     *
+     * @return {@code true} if this is the name of a boolean atttribute and
+     *         {@code false} otherwise
+     */
+    boolean booleanAttribute();
+
+    /**
+     * Indicates if the value of this attribute must be formatted inside single
+     * quotes.
+     *
+     * @return {@code true} if the value of this attribute must be formatted
+     *         inside single quotes.
+     */
+    boolean singleQuoted();
+
+  }
+
+  /**
    * Compiles an HTML template into a materialized HTML document.
    */
   public non-sealed interface Compiler extends CompilerAttributes {

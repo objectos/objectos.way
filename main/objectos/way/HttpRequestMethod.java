@@ -71,7 +71,6 @@ final class HttpRequestMethod implements Http.Request.Method {
 
   private static HttpRequestMethod[] VALUES;
 
-  @SuppressWarnings("exports")
   public static void set(Builder builder) {
     VALUES = builder.buildValues();
   }
