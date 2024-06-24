@@ -18,10 +18,10 @@ package objectos.way;
 import java.util.ArrayList;
 import java.util.List;
 
-public final class HttpResponseStatus implements Http.Response.Status {
+final class HttpResponseStatus implements Http.Response.Status {
 
   private static class Builder {
-    
+
     static Builder INSTANCE = new Builder();
 
     private final List<HttpResponseStatus> standardValues = new ArrayList<>();
@@ -56,25 +56,25 @@ public final class HttpResponseStatus implements Http.Response.Status {
 
     this.reasonPhrase = reasonPhrase;
   }
-  
+
   static Http.Response.Status create(int code, String reasonPhrase) {
     return Builder.INSTANCE.create(code, reasonPhrase);
   }
-  
+
   static Http.Response.Status createLast(int code, String reasonPhrase) {
     Builder builder;
     builder = Builder.INSTANCE;
-    
+
     HttpResponseStatus result;
     result = builder.create(code, reasonPhrase);
-    
+
     VALUES = builder.buildValues();
-    
+
     Builder.INSTANCE = null;
-    
+
     return result;
   }
-  
+
   private static HttpResponseStatus[] VALUES;
 
   public static HttpResponseStatus get(int index) {

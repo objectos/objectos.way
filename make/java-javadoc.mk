@@ -70,7 +70,7 @@ JAVADOCX += -windowtitle '$(GROUP_ID):$(ARTIFACT_ID) $(VERSION) API'
 JAVADOC_JAR_FILE = $(WORK)/$(ARTIFACT_ID)-$(VERSION)-javadoc.jar
 
 ## javadoc jar command
-JAVADOC_JARX = $(JAR)
+JAVADOC_JARX := $(JAR)
 JAVADOC_JARX += --create
 JAVADOC_JARX += --file $(JAVADOC_JAR_FILE)
 JAVADOC_JARX += -C $(JAVADOC_OUTPUT)
@@ -92,3 +92,7 @@ re-javadoc: javadoc@clean javadoc
 
 $(JAVADOC_MARKER): $(SOURCES)
 	$(JAVADOCX)
+
+$(JAVADOC_JAR_FILE): $(JAVADOC_MARKER)
+	$(JAVADOC_JARX)
+	

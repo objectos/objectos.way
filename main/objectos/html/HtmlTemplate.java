@@ -25,8 +25,6 @@ import objectos.lang.object.Check;
  * <p>
  * This class provides methods for representing HTML code in a Java class. An
  * instance of the class can then be used to generate the represented HTML code.
- *
- * @see objectos.html
  */
 public non-sealed abstract class HtmlTemplate extends TemplateBase {
 
