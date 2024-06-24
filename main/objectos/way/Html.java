@@ -23,9 +23,16 @@ public final class Html {
   // types
 
   /**
+   * Compiles an HTML template into a materialized HTML document.
+   */
+  public non-sealed interface Compiler extends CompilerAttributes, CompilerElements {}
+  
+  // non public types
+
+  /**
    * The name of an HTML attribute.
    */
-  public sealed interface AttributeName permits HtmlAttributeName {
+  sealed interface AttributeName permits HtmlAttributeName {
 
     /**
      * Index of this attribute.
@@ -59,11 +66,33 @@ public final class Html {
     boolean singleQuoted();
 
   }
-
+  
   /**
-   * Compiles an HTML template into a materialized HTML document.
+   * The name of an HTML element.
    */
-  public non-sealed interface Compiler extends CompilerAttributes, CompilerElements {
+  sealed interface ElementName permits HtmlElementName {
+    
+    /**
+     * Index of this element name.
+     *
+     * @return index of this element name.
+     */
+    int index();
+
+    /**
+     * Name of the element.
+     *
+     * @return name of the element
+     */
+    String name();
+    
+    /**
+     * Indicates if this is the name of an element that has an end tag.
+     * 
+     * @return {@code true} if this is the name of an element that has an end
+     *         tag and {@code false} otherwise
+     */
+    boolean endTag();
 
   }
 
