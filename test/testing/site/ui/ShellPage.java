@@ -15,11 +15,9 @@
  */
 package testing.site.ui;
 
-import objectos.html.Action;
-import objectos.html.Api;
-import objectos.html.Api.Element;
-import objectos.html.ElementClass;
-import objectos.html.ElementId;
+import objectos.way.Html;
+import objectos.way.Html.Id;
+import objectos.way.Script;
 import testing.zite.TestingSiteInjector;
 
 final class ShellPage extends UiTemplate {
@@ -27,13 +25,13 @@ final class ShellPage extends UiTemplate {
   ShellPage(TestingSiteInjector injector) {
   }
 
-  private static final ClassName HEADER = ClassName.of(
+  private static final Html.ClassName HEADER = Html.className(
       "fixed inset-0px flex h-48px",
       "border-b border-border-subtle",
       "bg-background"
   );
 
-  private static final ClassName HEADER_ACTION = ClassName.of(
+  private static final Html.ClassName HEADER_ACTION = Html.className(
       "h-48px w-48px",
       "border border-transparent",
       "active:bg-background-active",
@@ -41,7 +39,7 @@ final class ShellPage extends UiTemplate {
       "hover:bg-background-hover"
   );
 
-  private static final ClassName HEADER_NAME = ClassName.of(
+  private static final Html.ClassName HEADER_NAME = Html.className(
       "flex h-full select-none items-center",
       "border-2 border-transparent",
       "pr-32px pl-16px",
@@ -51,11 +49,11 @@ final class ShellPage extends UiTemplate {
       "focus:border-focus"
   );
 
-  private static final ClassName HEADER_NAME_PREFIX = ClassName.of(
+  private static final Html.ClassName HEADER_NAME_PREFIX = Html.className(
       "font-normal"
   );
 
-  private static final ClassName HEADER_NAV = ClassName.of(
+  private static final Html.ClassName HEADER_NAV = Html.className(
       "fixed hidden",
       "w-256px top-48px bottom-0px",
       "flex-col",
@@ -71,29 +69,29 @@ final class ShellPage extends UiTemplate {
       "lg:before:content-empty"
   );
 
-  private static final ClassName HEADER_MENU_BAR = ClassName.of(
+  private static final Html.ClassName HEADER_MENU_BAR = Html.className(
       "flex flex-col h-full",
       "pt-16px",
       "lg:flex-row",
       "lg:pt-0px"
   );
 
-  private static final ClassName HEADER_MENU_CLOSE = ClassName.of(
+  private static final Html.ClassName HEADER_MENU_CLOSE = Html.className(
       "hidden",
       "bg-layer",
       "border-x-border-subtle"
   );
 
-  private static final ClassName HEADER_MENU_TOGGLE = ClassName.of(
+  private static final Html.ClassName HEADER_MENU_TOGGLE = Html.className(
       "flex items-center justify-center",
       "lg:hidden"
   );
 
-  private static final ClassName HEADER_MENU_TRIGGER_SVG = ClassName.of(
+  private static final Html.ClassName HEADER_MENU_TRIGGER_SVG = Html.className(
       "fill-icon-primary"
   );
 
-  private static final ClassName SKIP_TO_CONTENT = ClassName.of(
+  private static final Html.ClassName SKIP_TO_CONTENT = Html.className(
       "sr-only z-50",
       "text-text-secondary underline",
       "transition-colors duration-100",
@@ -105,7 +103,7 @@ final class ShellPage extends UiTemplate {
       "focus:outline-none"
   );
 
-  private static final ClassName SIDE_NAV_OVERLAY = ClassName.of(
+  private static final Html.ClassName SIDE_NAV_OVERLAY = Html.className(
       "fixed hidden",
       "h-screen w-screen top-48px",
       "bg-overlay",
@@ -113,13 +111,13 @@ final class ShellPage extends UiTemplate {
       "opacity-0 z-30"
   );
 
-  private static final Id OPEN = Id.of("open-menu");
+  private static final Id OPEN = Html.id("open-menu");
 
-  private static final Id CLOSE = Id.of("close-menu");
+  private static final Id CLOSE = Html.id("close-menu");
 
-  private static final Id OVERLAY = Id.of("overlay-menu");
+  private static final Id OVERLAY = Html.id("overlay-menu");
 
-  private static final Id NAV = Id.of("nav-menu");
+  private static final Id NAV = Html.id("nav-menu");
 
   @Override
   final void bodyImpl() {
@@ -169,27 +167,27 @@ final class ShellPage extends UiTemplate {
     );
   }
 
-  private Api.GlobalAttribute openMenu() {
+  private Html.AttributeInstruction openMenu() {
     return dataOnClick(
-        Action.replaceClass(OPEN, "flex", "hidden"),
-        Action.replaceClass(CLOSE, "hidden", "flex"),
-        Action.replaceClass(NAV, "hidden", "flex"),
-        Action.replaceClass(OVERLAY, "hidden", "block"),
-        Action.replaceClass(OVERLAY, "opacity-0", "opacity-100")
+        Script.replaceClass(OPEN, "flex", "hidden"),
+        Script.replaceClass(CLOSE, "hidden", "flex"),
+        Script.replaceClass(NAV, "hidden", "flex"),
+        Script.replaceClass(OVERLAY, "hidden", "block"),
+        Script.replaceClass(OVERLAY, "opacity-0", "opacity-100")
     );
   }
 
-  private Api.GlobalAttribute closeMenu() {
+  private Html.AttributeInstruction closeMenu() {
     return dataOnClick(
-        Action.replaceClass(CLOSE, "flex", "hidden"),
-        Action.replaceClass(OPEN, "hidden", "flex"),
-        Action.replaceClass(NAV, "flex", "hidden"),
-        Action.replaceClass(OVERLAY, "block", "hidden"),
-        Action.replaceClass(OVERLAY, "opacity-100", "opacity-0")
+        Script.replaceClass(CLOSE, "flex", "hidden"),
+        Script.replaceClass(OPEN, "hidden", "flex"),
+        Script.replaceClass(NAV, "flex", "hidden"),
+        Script.replaceClass(OVERLAY, "block", "hidden"),
+        Script.replaceClass(OVERLAY, "opacity-100", "opacity-0")
     );
   }
 
-  private static final ClassName HEADER_MENU_ITEM = ClassName.of(
+  private static final Html.ClassName HEADER_MENU_ITEM = Html.className(
       "flex h-32px select-none items-center",
       "border-2 border-transparent",
       "bg-background",
@@ -203,7 +201,7 @@ final class ShellPage extends UiTemplate {
       "lg:text-body-compact-01 lg:tracking-normal"
   );
 
-  private Element menuItem(String text) {
+  private Html.ElementInstruction menuItem(String text) {
     return li(a(HEADER_MENU_ITEM, href("#"), tabindex("0"),
         span(
             t(text)

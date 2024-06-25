@@ -16,7 +16,7 @@
 package testing.site.web;
 
 import java.io.IOException;
-import objectos.css.select.IdSelector;
+import objectos.way.Html;
 import objectos.way.Http;
 import objectos.way.Web;
 import testing.site.auth.User;
@@ -60,7 +60,7 @@ final class Login extends WebTemplate implements Http.Handler {
 
   }
 
-  private static final IdSelector FORM = IdSelector.of("login-form");
+  private static final Html.Id FORM = Html.id("login-form");
 
   private static final String STEP = "step";
 
@@ -75,6 +75,7 @@ final class Login extends WebTemplate implements Http.Handler {
   @SuppressWarnings("unused")
   private String loginError;
 
+  @Override
   final void bodyImpl() {
     className("bg-gray-100");
 

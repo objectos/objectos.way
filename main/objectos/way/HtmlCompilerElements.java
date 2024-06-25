@@ -232,6 +232,19 @@ abstract class HtmlCompilerElements extends HtmlCompilerAttributes {
   }
 
   /**
+   * Generates the {@code clipPath} attribute or element with the specified text.
+   *
+   * @param text
+   *        the text value of this attribute or element
+   *
+   * @return an instruction representing this attribute or element.
+   */
+  public final Html.ElementInstruction clipPath(String text) {
+    ambiguous(HtmlAmbiguous.CLIPPATH, text);
+    return Html.ELEMENT;
+  }
+
+  /**
    * Generates the {@code code} element with the specified content.
    *
    * @param contents

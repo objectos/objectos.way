@@ -15,10 +15,10 @@
  */
 package testing.site.ui;
 
-import objectos.html.HtmlTemplate;
+import objectos.way.Html;
 import objectos.way.Http;
 
-abstract class UiTemplate extends HtmlTemplate implements Http.Handler {
+abstract class UiTemplate extends Html.Template implements Http.Handler {
 
   @Override
   public void handle(Http.Exchange http) {

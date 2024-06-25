@@ -15,7 +15,16 @@
  */
 package objectos.way;
 
+import objectos.way.Html.ElementName;
+
 enum HtmlAmbiguous {
+
+  CLIPPATH(HtmlAttributeName.CLIP_PATH, HtmlElementName.CLIPPATH) {
+    @Override
+    public final boolean isAttributeOf(ElementName arg0) {
+      return element != HtmlElementName.SVG;
+    }
+  },
 
   FORM(HtmlAttributeName.FORM, HtmlElementName.FORM) {
     @Override

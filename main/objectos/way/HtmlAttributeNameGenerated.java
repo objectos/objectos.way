@@ -23,751 +23,751 @@ abstract class HtmlAttributeNameGenerated {
   /**
    * The {@code accesskey} attribute.
    */
-  public static final Html.AttributeName ACCESSKEY = HtmlAttributeNameBuilder.create("accesskey", false);
+  public static final HtmlAttributeName ACCESSKEY = HtmlAttributeName.create("accesskey", false);
 
   /**
    * The {@code action} attribute.
    */
-  public static final Html.AttributeName ACTION = HtmlAttributeNameBuilder.create("action", false);
+  public static final HtmlAttributeName ACTION = HtmlAttributeName.create("action", false);
 
   /**
    * The {@code align} attribute.
    */
-  public static final Html.AttributeName ALIGN = HtmlAttributeNameBuilder.create("align", false);
+  public static final HtmlAttributeName ALIGN = HtmlAttributeName.create("align", false);
 
   /**
    * The {@code alignment-baseline} attribute.
    */
-  public static final Html.AttributeName ALIGNMENT_BASELINE = HtmlAttributeNameBuilder.create("alignment-baseline", false);
+  public static final HtmlAttributeName ALIGNMENT_BASELINE = HtmlAttributeName.create("alignment-baseline", false);
 
   /**
    * The {@code alt} attribute.
    */
-  public static final Html.AttributeName ALT = HtmlAttributeNameBuilder.create("alt", false);
+  public static final HtmlAttributeName ALT = HtmlAttributeName.create("alt", false);
 
   /**
    * The {@code aria-hidden} attribute.
    */
-  public static final Html.AttributeName ARIA_HIDDEN = HtmlAttributeNameBuilder.create("aria-hidden", false);
+  public static final HtmlAttributeName ARIA_HIDDEN = HtmlAttributeName.create("aria-hidden", false);
 
   /**
    * The {@code aria-label} attribute.
    */
-  public static final Html.AttributeName ARIA_LABEL = HtmlAttributeNameBuilder.create("aria-label", false);
+  public static final HtmlAttributeName ARIA_LABEL = HtmlAttributeName.create("aria-label", false);
 
   /**
    * The {@code async} attribute.
    */
-  public static final Html.AttributeName ASYNC = HtmlAttributeNameBuilder.create("async", true);
+  public static final HtmlAttributeName ASYNC = HtmlAttributeName.create("async", true);
 
   /**
    * The {@code autocomplete} attribute.
    */
-  public static final Html.AttributeName AUTOCOMPLETE = HtmlAttributeNameBuilder.create("autocomplete", false);
+  public static final HtmlAttributeName AUTOCOMPLETE = HtmlAttributeName.create("autocomplete", false);
 
   /**
    * The {@code autofocus} attribute.
    */
-  public static final Html.AttributeName AUTOFOCUS = HtmlAttributeNameBuilder.create("autofocus", true);
+  public static final HtmlAttributeName AUTOFOCUS = HtmlAttributeName.create("autofocus", true);
 
   /**
    * The {@code baseline-shift} attribute.
    */
-  public static final Html.AttributeName BASELINE_SHIFT = HtmlAttributeNameBuilder.create("baseline-shift", false);
+  public static final HtmlAttributeName BASELINE_SHIFT = HtmlAttributeName.create("baseline-shift", false);
 
   /**
    * The {@code border} attribute.
    */
-  public static final Html.AttributeName BORDER = HtmlAttributeNameBuilder.create("border", false);
+  public static final HtmlAttributeName BORDER = HtmlAttributeName.create("border", false);
 
   /**
    * The {@code cellpadding} attribute.
    */
-  public static final Html.AttributeName CELLPADDING = HtmlAttributeNameBuilder.create("cellpadding", false);
+  public static final HtmlAttributeName CELLPADDING = HtmlAttributeName.create("cellpadding", false);
 
   /**
    * The {@code cellspacing} attribute.
    */
-  public static final Html.AttributeName CELLSPACING = HtmlAttributeNameBuilder.create("cellspacing", false);
+  public static final HtmlAttributeName CELLSPACING = HtmlAttributeName.create("cellspacing", false);
 
   /**
    * The {@code charset} attribute.
    */
-  public static final Html.AttributeName CHARSET = HtmlAttributeNameBuilder.create("charset", false);
+  public static final HtmlAttributeName CHARSET = HtmlAttributeName.create("charset", false);
 
   /**
    * The {@code cite} attribute.
    */
-  public static final Html.AttributeName CITE = HtmlAttributeNameBuilder.create("cite", false);
+  public static final HtmlAttributeName CITE = HtmlAttributeName.create("cite", false);
 
   /**
    * The {@code class} attribute.
    */
-  public static final Html.AttributeName CLASS = HtmlAttributeNameBuilder.create("class", false);
+  public static final HtmlAttributeName CLASS = HtmlAttributeName.create("class", false);
 
   /**
    * The {@code clip-path} attribute.
    */
-  public static final Html.AttributeName CLIP_PATH = HtmlAttributeNameBuilder.create("clip-path", false);
+  public static final HtmlAttributeName CLIP_PATH = HtmlAttributeName.create("clip-path", false);
 
   /**
    * The {@code clip-rule} attribute.
    */
-  public static final Html.AttributeName CLIP_RULE = HtmlAttributeNameBuilder.create("clip-rule", false);
+  public static final HtmlAttributeName CLIP_RULE = HtmlAttributeName.create("clip-rule", false);
 
   /**
    * The {@code color} attribute.
    */
-  public static final Html.AttributeName COLOR = HtmlAttributeNameBuilder.create("color", false);
+  public static final HtmlAttributeName COLOR = HtmlAttributeName.create("color", false);
 
   /**
    * The {@code color-interpolation} attribute.
    */
-  public static final Html.AttributeName COLOR_INTERPOLATION = HtmlAttributeNameBuilder.create("color-interpolation", false);
+  public static final HtmlAttributeName COLOR_INTERPOLATION = HtmlAttributeName.create("color-interpolation", false);
 
   /**
    * The {@code color-interpolation-filters} attribute.
    */
-  public static final Html.AttributeName COLOR_INTERPOLATION_FILTERS = HtmlAttributeNameBuilder.create("color-interpolation-filters", false);
+  public static final HtmlAttributeName COLOR_INTERPOLATION_FILTERS = HtmlAttributeName.create("color-interpolation-filters", false);
 
   /**
    * The {@code cols} attribute.
    */
-  public static final Html.AttributeName COLS = HtmlAttributeNameBuilder.create("cols", false);
+  public static final HtmlAttributeName COLS = HtmlAttributeName.create("cols", false);
 
   /**
    * The {@code content} attribute.
    */
-  public static final Html.AttributeName CONTENT = HtmlAttributeNameBuilder.create("content", false);
+  public static final HtmlAttributeName CONTENT = HtmlAttributeName.create("content", false);
 
   /**
    * The {@code contenteditable} attribute.
    */
-  public static final Html.AttributeName CONTENTEDITABLE = HtmlAttributeNameBuilder.create("contenteditable", false);
+  public static final HtmlAttributeName CONTENTEDITABLE = HtmlAttributeName.create("contenteditable", false);
 
   /**
    * The {@code crossorigin} attribute.
    */
-  public static final Html.AttributeName CROSSORIGIN = HtmlAttributeNameBuilder.create("crossorigin", false);
+  public static final HtmlAttributeName CROSSORIGIN = HtmlAttributeName.create("crossorigin", false);
 
   /**
    * The {@code cursor} attribute.
    */
-  public static final Html.AttributeName CURSOR = HtmlAttributeNameBuilder.create("cursor", false);
+  public static final HtmlAttributeName CURSOR = HtmlAttributeName.create("cursor", false);
 
   /**
    * The {@code d} attribute.
    */
-  public static final Html.AttributeName D = HtmlAttributeNameBuilder.create("d", false);
+  public static final HtmlAttributeName D = HtmlAttributeName.create("d", false);
 
   /**
    * The {@code defer} attribute.
    */
-  public static final Html.AttributeName DEFER = HtmlAttributeNameBuilder.create("defer", true);
+  public static final HtmlAttributeName DEFER = HtmlAttributeName.create("defer", true);
 
   /**
    * The {@code dir} attribute.
    */
-  public static final Html.AttributeName DIR = HtmlAttributeNameBuilder.create("dir", false);
+  public static final HtmlAttributeName DIR = HtmlAttributeName.create("dir", false);
 
   /**
    * The {@code direction} attribute.
    */
-  public static final Html.AttributeName DIRECTION = HtmlAttributeNameBuilder.create("direction", false);
+  public static final HtmlAttributeName DIRECTION = HtmlAttributeName.create("direction", false);
 
   /**
    * The {@code dirname} attribute.
    */
-  public static final Html.AttributeName DIRNAME = HtmlAttributeNameBuilder.create("dirname", false);
+  public static final HtmlAttributeName DIRNAME = HtmlAttributeName.create("dirname", false);
 
   /**
    * The {@code disabled} attribute.
    */
-  public static final Html.AttributeName DISABLED = HtmlAttributeNameBuilder.create("disabled", true);
+  public static final HtmlAttributeName DISABLED = HtmlAttributeName.create("disabled", true);
 
   /**
    * The {@code display} attribute.
    */
-  public static final Html.AttributeName DISPLAY = HtmlAttributeNameBuilder.create("display", false);
+  public static final HtmlAttributeName DISPLAY = HtmlAttributeName.create("display", false);
 
   /**
    * The {@code dominant-baseline} attribute.
    */
-  public static final Html.AttributeName DOMINANT_BASELINE = HtmlAttributeNameBuilder.create("dominant-baseline", false);
+  public static final HtmlAttributeName DOMINANT_BASELINE = HtmlAttributeName.create("dominant-baseline", false);
 
   /**
    * The {@code draggable} attribute.
    */
-  public static final Html.AttributeName DRAGGABLE = HtmlAttributeNameBuilder.create("draggable", false);
+  public static final HtmlAttributeName DRAGGABLE = HtmlAttributeName.create("draggable", false);
 
   /**
    * The {@code enctype} attribute.
    */
-  public static final Html.AttributeName ENCTYPE = HtmlAttributeNameBuilder.create("enctype", false);
+  public static final HtmlAttributeName ENCTYPE = HtmlAttributeName.create("enctype", false);
 
   /**
    * The {@code fill} attribute.
    */
-  public static final Html.AttributeName FILL = HtmlAttributeNameBuilder.create("fill", false);
+  public static final HtmlAttributeName FILL = HtmlAttributeName.create("fill", false);
 
   /**
    * The {@code fill-opacity} attribute.
    */
-  public static final Html.AttributeName FILL_OPACITY = HtmlAttributeNameBuilder.create("fill-opacity", false);
+  public static final HtmlAttributeName FILL_OPACITY = HtmlAttributeName.create("fill-opacity", false);
 
   /**
    * The {@code fill-rule} attribute.
    */
-  public static final Html.AttributeName FILL_RULE = HtmlAttributeNameBuilder.create("fill-rule", false);
+  public static final HtmlAttributeName FILL_RULE = HtmlAttributeName.create("fill-rule", false);
 
   /**
    * The {@code filter} attribute.
    */
-  public static final Html.AttributeName FILTER = HtmlAttributeNameBuilder.create("filter", false);
+  public static final HtmlAttributeName FILTER = HtmlAttributeName.create("filter", false);
 
   /**
    * The {@code flood-color} attribute.
    */
-  public static final Html.AttributeName FLOOD_COLOR = HtmlAttributeNameBuilder.create("flood-color", false);
+  public static final HtmlAttributeName FLOOD_COLOR = HtmlAttributeName.create("flood-color", false);
 
   /**
    * The {@code flood-opacity} attribute.
    */
-  public static final Html.AttributeName FLOOD_OPACITY = HtmlAttributeNameBuilder.create("flood-opacity", false);
+  public static final HtmlAttributeName FLOOD_OPACITY = HtmlAttributeName.create("flood-opacity", false);
 
   /**
    * The {@code font-family} attribute.
    */
-  public static final Html.AttributeName FONT_FAMILY = HtmlAttributeNameBuilder.create("font-family", false);
+  public static final HtmlAttributeName FONT_FAMILY = HtmlAttributeName.create("font-family", false);
 
   /**
    * The {@code font-size} attribute.
    */
-  public static final Html.AttributeName FONT_SIZE = HtmlAttributeNameBuilder.create("font-size", false);
+  public static final HtmlAttributeName FONT_SIZE = HtmlAttributeName.create("font-size", false);
 
   /**
    * The {@code font-size-adjust} attribute.
    */
-  public static final Html.AttributeName FONT_SIZE_ADJUST = HtmlAttributeNameBuilder.create("font-size-adjust", false);
+  public static final HtmlAttributeName FONT_SIZE_ADJUST = HtmlAttributeName.create("font-size-adjust", false);
 
   /**
    * The {@code font-stretch} attribute.
    */
-  public static final Html.AttributeName FONT_STRETCH = HtmlAttributeNameBuilder.create("font-stretch", false);
+  public static final HtmlAttributeName FONT_STRETCH = HtmlAttributeName.create("font-stretch", false);
 
   /**
    * The {@code font-style} attribute.
    */
-  public static final Html.AttributeName FONT_STYLE = HtmlAttributeNameBuilder.create("font-style", false);
+  public static final HtmlAttributeName FONT_STYLE = HtmlAttributeName.create("font-style", false);
 
   /**
    * The {@code font-variant} attribute.
    */
-  public static final Html.AttributeName FONT_VARIANT = HtmlAttributeNameBuilder.create("font-variant", false);
+  public static final HtmlAttributeName FONT_VARIANT = HtmlAttributeName.create("font-variant", false);
 
   /**
    * The {@code font-weight} attribute.
    */
-  public static final Html.AttributeName FONT_WEIGHT = HtmlAttributeNameBuilder.create("font-weight", false);
+  public static final HtmlAttributeName FONT_WEIGHT = HtmlAttributeName.create("font-weight", false);
 
   /**
    * The {@code for} attribute.
    */
-  public static final Html.AttributeName FOR = HtmlAttributeNameBuilder.create("for", false);
+  public static final HtmlAttributeName FOR = HtmlAttributeName.create("for", false);
 
   /**
    * The {@code form} attribute.
    */
-  public static final Html.AttributeName FORM = HtmlAttributeNameBuilder.create("form", false);
+  public static final HtmlAttributeName FORM = HtmlAttributeName.create("form", false);
 
   /**
    * The {@code glyph-orientation-horizontal} attribute.
    */
-  public static final Html.AttributeName GLYPH_ORIENTATION_HORIZONTAL = HtmlAttributeNameBuilder.create("glyph-orientation-horizontal", false);
+  public static final HtmlAttributeName GLYPH_ORIENTATION_HORIZONTAL = HtmlAttributeName.create("glyph-orientation-horizontal", false);
 
   /**
    * The {@code glyph-orientation-vertical} attribute.
    */
-  public static final Html.AttributeName GLYPH_ORIENTATION_VERTICAL = HtmlAttributeNameBuilder.create("glyph-orientation-vertical", false);
+  public static final HtmlAttributeName GLYPH_ORIENTATION_VERTICAL = HtmlAttributeName.create("glyph-orientation-vertical", false);
 
   /**
    * The {@code height} attribute.
    */
-  public static final Html.AttributeName HEIGHT = HtmlAttributeNameBuilder.create("height", false);
+  public static final HtmlAttributeName HEIGHT = HtmlAttributeName.create("height", false);
 
   /**
    * The {@code hidden} attribute.
    */
-  public static final Html.AttributeName HIDDEN = HtmlAttributeNameBuilder.create("hidden", true);
+  public static final HtmlAttributeName HIDDEN = HtmlAttributeName.create("hidden", true);
 
   /**
    * The {@code href} attribute.
    */
-  public static final Html.AttributeName HREF = HtmlAttributeNameBuilder.create("href", false);
+  public static final HtmlAttributeName HREF = HtmlAttributeName.create("href", false);
 
   /**
    * The {@code http-equiv} attribute.
    */
-  public static final Html.AttributeName HTTP_EQUIV = HtmlAttributeNameBuilder.create("http-equiv", false);
+  public static final HtmlAttributeName HTTP_EQUIV = HtmlAttributeName.create("http-equiv", false);
 
   /**
    * The {@code id} attribute.
    */
-  public static final Html.AttributeName ID = HtmlAttributeNameBuilder.create("id", false);
+  public static final HtmlAttributeName ID = HtmlAttributeName.create("id", false);
 
   /**
    * The {@code image-rendering} attribute.
    */
-  public static final Html.AttributeName IMAGE_RENDERING = HtmlAttributeNameBuilder.create("image-rendering", false);
+  public static final HtmlAttributeName IMAGE_RENDERING = HtmlAttributeName.create("image-rendering", false);
 
   /**
    * The {@code integrity} attribute.
    */
-  public static final Html.AttributeName INTEGRITY = HtmlAttributeNameBuilder.create("integrity", false);
+  public static final HtmlAttributeName INTEGRITY = HtmlAttributeName.create("integrity", false);
 
   /**
    * The {@code label} attribute.
    */
-  public static final Html.AttributeName LABEL = HtmlAttributeNameBuilder.create("label", false);
+  public static final HtmlAttributeName LABEL = HtmlAttributeName.create("label", false);
 
   /**
    * The {@code lang} attribute.
    */
-  public static final Html.AttributeName LANG = HtmlAttributeNameBuilder.create("lang", false);
+  public static final HtmlAttributeName LANG = HtmlAttributeName.create("lang", false);
 
   /**
    * The {@code letter-spacing} attribute.
    */
-  public static final Html.AttributeName LETTER_SPACING = HtmlAttributeNameBuilder.create("letter-spacing", false);
+  public static final HtmlAttributeName LETTER_SPACING = HtmlAttributeName.create("letter-spacing", false);
 
   /**
    * The {@code lighting-color} attribute.
    */
-  public static final Html.AttributeName LIGHTING_COLOR = HtmlAttributeNameBuilder.create("lighting-color", false);
+  public static final HtmlAttributeName LIGHTING_COLOR = HtmlAttributeName.create("lighting-color", false);
 
   /**
    * The {@code marker-end} attribute.
    */
-  public static final Html.AttributeName MARKER_END = HtmlAttributeNameBuilder.create("marker-end", false);
+  public static final HtmlAttributeName MARKER_END = HtmlAttributeName.create("marker-end", false);
 
   /**
    * The {@code marker-mid} attribute.
    */
-  public static final Html.AttributeName MARKER_MID = HtmlAttributeNameBuilder.create("marker-mid", false);
+  public static final HtmlAttributeName MARKER_MID = HtmlAttributeName.create("marker-mid", false);
 
   /**
    * The {@code marker-start} attribute.
    */
-  public static final Html.AttributeName MARKER_START = HtmlAttributeNameBuilder.create("marker-start", false);
+  public static final HtmlAttributeName MARKER_START = HtmlAttributeName.create("marker-start", false);
 
   /**
    * The {@code mask} attribute.
    */
-  public static final Html.AttributeName MASK = HtmlAttributeNameBuilder.create("mask", false);
+  public static final HtmlAttributeName MASK = HtmlAttributeName.create("mask", false);
 
   /**
    * The {@code mask-type} attribute.
    */
-  public static final Html.AttributeName MASK_TYPE = HtmlAttributeNameBuilder.create("mask-type", false);
+  public static final HtmlAttributeName MASK_TYPE = HtmlAttributeName.create("mask-type", false);
 
   /**
    * The {@code maxlength} attribute.
    */
-  public static final Html.AttributeName MAXLENGTH = HtmlAttributeNameBuilder.create("maxlength", false);
+  public static final HtmlAttributeName MAXLENGTH = HtmlAttributeName.create("maxlength", false);
 
   /**
    * The {@code media} attribute.
    */
-  public static final Html.AttributeName MEDIA = HtmlAttributeNameBuilder.create("media", false);
+  public static final HtmlAttributeName MEDIA = HtmlAttributeName.create("media", false);
 
   /**
    * The {@code method} attribute.
    */
-  public static final Html.AttributeName METHOD = HtmlAttributeNameBuilder.create("method", false);
+  public static final HtmlAttributeName METHOD = HtmlAttributeName.create("method", false);
 
   /**
    * The {@code minlength} attribute.
    */
-  public static final Html.AttributeName MINLENGTH = HtmlAttributeNameBuilder.create("minlength", false);
+  public static final HtmlAttributeName MINLENGTH = HtmlAttributeName.create("minlength", false);
 
   /**
    * The {@code multiple} attribute.
    */
-  public static final Html.AttributeName MULTIPLE = HtmlAttributeNameBuilder.create("multiple", true);
+  public static final HtmlAttributeName MULTIPLE = HtmlAttributeName.create("multiple", true);
 
   /**
    * The {@code name} attribute.
    */
-  public static final Html.AttributeName NAME = HtmlAttributeNameBuilder.create("name", false);
+  public static final HtmlAttributeName NAME = HtmlAttributeName.create("name", false);
 
   /**
    * The {@code nomodule} attribute.
    */
-  public static final Html.AttributeName NOMODULE = HtmlAttributeNameBuilder.create("nomodule", true);
+  public static final HtmlAttributeName NOMODULE = HtmlAttributeName.create("nomodule", true);
 
   /**
    * The {@code onafterprint} attribute.
    */
-  public static final Html.AttributeName ONAFTERPRINT = HtmlAttributeNameBuilder.create("onafterprint", false);
+  public static final HtmlAttributeName ONAFTERPRINT = HtmlAttributeName.create("onafterprint", false);
 
   /**
    * The {@code onbeforeprint} attribute.
    */
-  public static final Html.AttributeName ONBEFOREPRINT = HtmlAttributeNameBuilder.create("onbeforeprint", false);
+  public static final HtmlAttributeName ONBEFOREPRINT = HtmlAttributeName.create("onbeforeprint", false);
 
   /**
    * The {@code onbeforeunload} attribute.
    */
-  public static final Html.AttributeName ONBEFOREUNLOAD = HtmlAttributeNameBuilder.create("onbeforeunload", false);
+  public static final HtmlAttributeName ONBEFOREUNLOAD = HtmlAttributeName.create("onbeforeunload", false);
 
   /**
    * The {@code onclick} attribute.
    */
-  public static final Html.AttributeName ONCLICK = HtmlAttributeNameBuilder.create("onclick", false);
+  public static final HtmlAttributeName ONCLICK = HtmlAttributeName.create("onclick", false);
 
   /**
    * The {@code onhashchange} attribute.
    */
-  public static final Html.AttributeName ONHASHCHANGE = HtmlAttributeNameBuilder.create("onhashchange", false);
+  public static final HtmlAttributeName ONHASHCHANGE = HtmlAttributeName.create("onhashchange", false);
 
   /**
    * The {@code onlanguagechange} attribute.
    */
-  public static final Html.AttributeName ONLANGUAGECHANGE = HtmlAttributeNameBuilder.create("onlanguagechange", false);
+  public static final HtmlAttributeName ONLANGUAGECHANGE = HtmlAttributeName.create("onlanguagechange", false);
 
   /**
    * The {@code onmessage} attribute.
    */
-  public static final Html.AttributeName ONMESSAGE = HtmlAttributeNameBuilder.create("onmessage", false);
+  public static final HtmlAttributeName ONMESSAGE = HtmlAttributeName.create("onmessage", false);
 
   /**
    * The {@code onoffline} attribute.
    */
-  public static final Html.AttributeName ONOFFLINE = HtmlAttributeNameBuilder.create("onoffline", false);
+  public static final HtmlAttributeName ONOFFLINE = HtmlAttributeName.create("onoffline", false);
 
   /**
    * The {@code ononline} attribute.
    */
-  public static final Html.AttributeName ONONLINE = HtmlAttributeNameBuilder.create("ononline", false);
+  public static final HtmlAttributeName ONONLINE = HtmlAttributeName.create("ononline", false);
 
   /**
    * The {@code onpagehide} attribute.
    */
-  public static final Html.AttributeName ONPAGEHIDE = HtmlAttributeNameBuilder.create("onpagehide", false);
+  public static final HtmlAttributeName ONPAGEHIDE = HtmlAttributeName.create("onpagehide", false);
 
   /**
    * The {@code onpageshow} attribute.
    */
-  public static final Html.AttributeName ONPAGESHOW = HtmlAttributeNameBuilder.create("onpageshow", false);
+  public static final HtmlAttributeName ONPAGESHOW = HtmlAttributeName.create("onpageshow", false);
 
   /**
    * The {@code onpopstate} attribute.
    */
-  public static final Html.AttributeName ONPOPSTATE = HtmlAttributeNameBuilder.create("onpopstate", false);
+  public static final HtmlAttributeName ONPOPSTATE = HtmlAttributeName.create("onpopstate", false);
 
   /**
    * The {@code onrejectionhandled} attribute.
    */
-  public static final Html.AttributeName ONREJECTIONHANDLED = HtmlAttributeNameBuilder.create("onrejectionhandled", false);
+  public static final HtmlAttributeName ONREJECTIONHANDLED = HtmlAttributeName.create("onrejectionhandled", false);
 
   /**
    * The {@code onstorage} attribute.
    */
-  public static final Html.AttributeName ONSTORAGE = HtmlAttributeNameBuilder.create("onstorage", false);
+  public static final HtmlAttributeName ONSTORAGE = HtmlAttributeName.create("onstorage", false);
 
   /**
    * The {@code onsubmit} attribute.
    */
-  public static final Html.AttributeName ONSUBMIT = HtmlAttributeNameBuilder.create("onsubmit", false);
+  public static final HtmlAttributeName ONSUBMIT = HtmlAttributeName.create("onsubmit", false);
 
   /**
    * The {@code onunhandledrejection} attribute.
    */
-  public static final Html.AttributeName ONUNHANDLEDREJECTION = HtmlAttributeNameBuilder.create("onunhandledrejection", false);
+  public static final HtmlAttributeName ONUNHANDLEDREJECTION = HtmlAttributeName.create("onunhandledrejection", false);
 
   /**
    * The {@code onunload} attribute.
    */
-  public static final Html.AttributeName ONUNLOAD = HtmlAttributeNameBuilder.create("onunload", false);
+  public static final HtmlAttributeName ONUNLOAD = HtmlAttributeName.create("onunload", false);
 
   /**
    * The {@code opacity} attribute.
    */
-  public static final Html.AttributeName OPACITY = HtmlAttributeNameBuilder.create("opacity", false);
+  public static final HtmlAttributeName OPACITY = HtmlAttributeName.create("opacity", false);
 
   /**
    * The {@code open} attribute.
    */
-  public static final Html.AttributeName OPEN = HtmlAttributeNameBuilder.create("open", true);
+  public static final HtmlAttributeName OPEN = HtmlAttributeName.create("open", true);
 
   /**
    * The {@code overflow} attribute.
    */
-  public static final Html.AttributeName OVERFLOW = HtmlAttributeNameBuilder.create("overflow", false);
+  public static final HtmlAttributeName OVERFLOW = HtmlAttributeName.create("overflow", false);
 
   /**
    * The {@code paint-order} attribute.
    */
-  public static final Html.AttributeName PAINT_ORDER = HtmlAttributeNameBuilder.create("paint-order", false);
+  public static final HtmlAttributeName PAINT_ORDER = HtmlAttributeName.create("paint-order", false);
 
   /**
    * The {@code placeholder} attribute.
    */
-  public static final Html.AttributeName PLACEHOLDER = HtmlAttributeNameBuilder.create("placeholder", false);
+  public static final HtmlAttributeName PLACEHOLDER = HtmlAttributeName.create("placeholder", false);
 
   /**
    * The {@code pointer-events} attribute.
    */
-  public static final Html.AttributeName POINTER_EVENTS = HtmlAttributeNameBuilder.create("pointer-events", false);
+  public static final HtmlAttributeName POINTER_EVENTS = HtmlAttributeName.create("pointer-events", false);
 
   /**
    * The {@code property} attribute.
    */
-  public static final Html.AttributeName PROPERTY = HtmlAttributeNameBuilder.create("property", false);
+  public static final HtmlAttributeName PROPERTY = HtmlAttributeName.create("property", false);
 
   /**
    * The {@code readonly} attribute.
    */
-  public static final Html.AttributeName READONLY = HtmlAttributeNameBuilder.create("readonly", true);
+  public static final HtmlAttributeName READONLY = HtmlAttributeName.create("readonly", true);
 
   /**
    * The {@code referrerpolicy} attribute.
    */
-  public static final Html.AttributeName REFERRERPOLICY = HtmlAttributeNameBuilder.create("referrerpolicy", false);
+  public static final HtmlAttributeName REFERRERPOLICY = HtmlAttributeName.create("referrerpolicy", false);
 
   /**
    * The {@code rel} attribute.
    */
-  public static final Html.AttributeName REL = HtmlAttributeNameBuilder.create("rel", false);
+  public static final HtmlAttributeName REL = HtmlAttributeName.create("rel", false);
 
   /**
    * The {@code required} attribute.
    */
-  public static final Html.AttributeName REQUIRED = HtmlAttributeNameBuilder.create("required", true);
+  public static final HtmlAttributeName REQUIRED = HtmlAttributeName.create("required", true);
 
   /**
    * The {@code rev} attribute.
    */
-  public static final Html.AttributeName REV = HtmlAttributeNameBuilder.create("rev", false);
+  public static final HtmlAttributeName REV = HtmlAttributeName.create("rev", false);
 
   /**
    * The {@code reversed} attribute.
    */
-  public static final Html.AttributeName REVERSED = HtmlAttributeNameBuilder.create("reversed", true);
+  public static final HtmlAttributeName REVERSED = HtmlAttributeName.create("reversed", true);
 
   /**
    * The {@code role} attribute.
    */
-  public static final Html.AttributeName ROLE = HtmlAttributeNameBuilder.create("role", false);
+  public static final HtmlAttributeName ROLE = HtmlAttributeName.create("role", false);
 
   /**
    * The {@code rows} attribute.
    */
-  public static final Html.AttributeName ROWS = HtmlAttributeNameBuilder.create("rows", false);
+  public static final HtmlAttributeName ROWS = HtmlAttributeName.create("rows", false);
 
   /**
    * The {@code selected} attribute.
    */
-  public static final Html.AttributeName SELECTED = HtmlAttributeNameBuilder.create("selected", true);
+  public static final HtmlAttributeName SELECTED = HtmlAttributeName.create("selected", true);
 
   /**
    * The {@code shape-rendering} attribute.
    */
-  public static final Html.AttributeName SHAPE_RENDERING = HtmlAttributeNameBuilder.create("shape-rendering", false);
+  public static final HtmlAttributeName SHAPE_RENDERING = HtmlAttributeName.create("shape-rendering", false);
 
   /**
    * The {@code size} attribute.
    */
-  public static final Html.AttributeName SIZE = HtmlAttributeNameBuilder.create("size", false);
+  public static final HtmlAttributeName SIZE = HtmlAttributeName.create("size", false);
 
   /**
    * The {@code sizes} attribute.
    */
-  public static final Html.AttributeName SIZES = HtmlAttributeNameBuilder.create("sizes", false);
+  public static final HtmlAttributeName SIZES = HtmlAttributeName.create("sizes", false);
 
   /**
    * The {@code spellcheck} attribute.
    */
-  public static final Html.AttributeName SPELLCHECK = HtmlAttributeNameBuilder.create("spellcheck", false);
+  public static final HtmlAttributeName SPELLCHECK = HtmlAttributeName.create("spellcheck", false);
 
   /**
    * The {@code src} attribute.
    */
-  public static final Html.AttributeName SRC = HtmlAttributeNameBuilder.create("src", false);
+  public static final HtmlAttributeName SRC = HtmlAttributeName.create("src", false);
 
   /**
    * The {@code srcset} attribute.
    */
-  public static final Html.AttributeName SRCSET = HtmlAttributeNameBuilder.create("srcset", false);
+  public static final HtmlAttributeName SRCSET = HtmlAttributeName.create("srcset", false);
 
   /**
    * The {@code start} attribute.
    */
-  public static final Html.AttributeName START = HtmlAttributeNameBuilder.create("start", false);
+  public static final HtmlAttributeName START = HtmlAttributeName.create("start", false);
 
   /**
    * The {@code stop-color} attribute.
    */
-  public static final Html.AttributeName STOP_COLOR = HtmlAttributeNameBuilder.create("stop-color", false);
+  public static final HtmlAttributeName STOP_COLOR = HtmlAttributeName.create("stop-color", false);
 
   /**
    * The {@code stop-opacity} attribute.
    */
-  public static final Html.AttributeName STOP_OPACITY = HtmlAttributeNameBuilder.create("stop-opacity", false);
+  public static final HtmlAttributeName STOP_OPACITY = HtmlAttributeName.create("stop-opacity", false);
 
   /**
    * The {@code stroke} attribute.
    */
-  public static final Html.AttributeName STROKE = HtmlAttributeNameBuilder.create("stroke", false);
+  public static final HtmlAttributeName STROKE = HtmlAttributeName.create("stroke", false);
 
   /**
    * The {@code stroke-dasharray} attribute.
    */
-  public static final Html.AttributeName STROKE_DASHARRAY = HtmlAttributeNameBuilder.create("stroke-dasharray", false);
+  public static final HtmlAttributeName STROKE_DASHARRAY = HtmlAttributeName.create("stroke-dasharray", false);
 
   /**
    * The {@code stroke-dashoffset} attribute.
    */
-  public static final Html.AttributeName STROKE_DASHOFFSET = HtmlAttributeNameBuilder.create("stroke-dashoffset", false);
+  public static final HtmlAttributeName STROKE_DASHOFFSET = HtmlAttributeName.create("stroke-dashoffset", false);
 
   /**
    * The {@code stroke-linecap} attribute.
    */
-  public static final Html.AttributeName STROKE_LINECAP = HtmlAttributeNameBuilder.create("stroke-linecap", false);
+  public static final HtmlAttributeName STROKE_LINECAP = HtmlAttributeName.create("stroke-linecap", false);
 
   /**
    * The {@code stroke-linejoin} attribute.
    */
-  public static final Html.AttributeName STROKE_LINEJOIN = HtmlAttributeNameBuilder.create("stroke-linejoin", false);
+  public static final HtmlAttributeName STROKE_LINEJOIN = HtmlAttributeName.create("stroke-linejoin", false);
 
   /**
    * The {@code stroke-miterlimit} attribute.
    */
-  public static final Html.AttributeName STROKE_MITERLIMIT = HtmlAttributeNameBuilder.create("stroke-miterlimit", false);
+  public static final HtmlAttributeName STROKE_MITERLIMIT = HtmlAttributeName.create("stroke-miterlimit", false);
 
   /**
    * The {@code stroke-opacity} attribute.
    */
-  public static final Html.AttributeName STROKE_OPACITY = HtmlAttributeNameBuilder.create("stroke-opacity", false);
+  public static final HtmlAttributeName STROKE_OPACITY = HtmlAttributeName.create("stroke-opacity", false);
 
   /**
    * The {@code stroke-width} attribute.
    */
-  public static final Html.AttributeName STROKE_WIDTH = HtmlAttributeNameBuilder.create("stroke-width", false);
+  public static final HtmlAttributeName STROKE_WIDTH = HtmlAttributeName.create("stroke-width", false);
 
   /**
    * The {@code style} attribute.
    */
-  public static final Html.AttributeName STYLE = HtmlAttributeNameBuilder.create("style", false);
+  public static final HtmlAttributeName STYLE = HtmlAttributeName.create("style", false);
 
   /**
    * The {@code tabindex} attribute.
    */
-  public static final Html.AttributeName TABINDEX = HtmlAttributeNameBuilder.create("tabindex", false);
+  public static final HtmlAttributeName TABINDEX = HtmlAttributeName.create("tabindex", false);
 
   /**
    * The {@code target} attribute.
    */
-  public static final Html.AttributeName TARGET = HtmlAttributeNameBuilder.create("target", false);
+  public static final HtmlAttributeName TARGET = HtmlAttributeName.create("target", false);
 
   /**
    * The {@code text-anchor} attribute.
    */
-  public static final Html.AttributeName TEXT_ANCHOR = HtmlAttributeNameBuilder.create("text-anchor", false);
+  public static final HtmlAttributeName TEXT_ANCHOR = HtmlAttributeName.create("text-anchor", false);
 
   /**
    * The {@code text-decoration} attribute.
    */
-  public static final Html.AttributeName TEXT_DECORATION = HtmlAttributeNameBuilder.create("text-decoration", false);
+  public static final HtmlAttributeName TEXT_DECORATION = HtmlAttributeName.create("text-decoration", false);
 
   /**
    * The {@code text-overflow} attribute.
    */
-  public static final Html.AttributeName TEXT_OVERFLOW = HtmlAttributeNameBuilder.create("text-overflow", false);
+  public static final HtmlAttributeName TEXT_OVERFLOW = HtmlAttributeName.create("text-overflow", false);
 
   /**
    * The {@code text-rendering} attribute.
    */
-  public static final Html.AttributeName TEXT_RENDERING = HtmlAttributeNameBuilder.create("text-rendering", false);
+  public static final HtmlAttributeName TEXT_RENDERING = HtmlAttributeName.create("text-rendering", false);
 
   /**
    * The {@code title} attribute.
    */
-  public static final Html.AttributeName TITLE = HtmlAttributeNameBuilder.create("title", false);
+  public static final HtmlAttributeName TITLE = HtmlAttributeName.create("title", false);
 
   /**
    * The {@code transform} attribute.
    */
-  public static final Html.AttributeName TRANSFORM = HtmlAttributeNameBuilder.create("transform", false);
+  public static final HtmlAttributeName TRANSFORM = HtmlAttributeName.create("transform", false);
 
   /**
    * The {@code transform-origin} attribute.
    */
-  public static final Html.AttributeName TRANSFORM_ORIGIN = HtmlAttributeNameBuilder.create("transform-origin", false);
+  public static final HtmlAttributeName TRANSFORM_ORIGIN = HtmlAttributeName.create("transform-origin", false);
 
   /**
    * The {@code translate} attribute.
    */
-  public static final Html.AttributeName TRANSLATE = HtmlAttributeNameBuilder.create("translate", false);
+  public static final HtmlAttributeName TRANSLATE = HtmlAttributeName.create("translate", false);
 
   /**
    * The {@code type} attribute.
    */
-  public static final Html.AttributeName TYPE = HtmlAttributeNameBuilder.create("type", false);
+  public static final HtmlAttributeName TYPE = HtmlAttributeName.create("type", false);
 
   /**
    * The {@code unicode-bidi} attribute.
    */
-  public static final Html.AttributeName UNICODE_BIDI = HtmlAttributeNameBuilder.create("unicode-bidi", false);
+  public static final HtmlAttributeName UNICODE_BIDI = HtmlAttributeName.create("unicode-bidi", false);
 
   /**
    * The {@code value} attribute.
    */
-  public static final Html.AttributeName VALUE = HtmlAttributeNameBuilder.create("value", false);
+  public static final HtmlAttributeName VALUE = HtmlAttributeName.create("value", false);
 
   /**
    * The {@code vector-effect} attribute.
    */
-  public static final Html.AttributeName VECTOR_EFFECT = HtmlAttributeNameBuilder.create("vector-effect", false);
+  public static final HtmlAttributeName VECTOR_EFFECT = HtmlAttributeName.create("vector-effect", false);
 
   /**
    * The {@code viewBox} attribute.
    */
-  public static final Html.AttributeName VIEWBOX = HtmlAttributeNameBuilder.create("viewBox", false);
+  public static final HtmlAttributeName VIEWBOX = HtmlAttributeName.create("viewBox", false);
 
   /**
    * The {@code visibility} attribute.
    */
-  public static final Html.AttributeName VISIBILITY = HtmlAttributeNameBuilder.create("visibility", false);
+  public static final HtmlAttributeName VISIBILITY = HtmlAttributeName.create("visibility", false);
 
   /**
    * The {@code white-space} attribute.
    */
-  public static final Html.AttributeName WHITE_SPACE = HtmlAttributeNameBuilder.create("white-space", false);
+  public static final HtmlAttributeName WHITE_SPACE = HtmlAttributeName.create("white-space", false);
 
   /**
    * The {@code width} attribute.
    */
-  public static final Html.AttributeName WIDTH = HtmlAttributeNameBuilder.create("width", false);
+  public static final HtmlAttributeName WIDTH = HtmlAttributeName.create("width", false);
 
   /**
    * The {@code word-spacing} attribute.
    */
-  public static final Html.AttributeName WORD_SPACING = HtmlAttributeNameBuilder.create("word-spacing", false);
+  public static final HtmlAttributeName WORD_SPACING = HtmlAttributeName.create("word-spacing", false);
 
   /**
    * The {@code wrap} attribute.
    */
-  public static final Html.AttributeName WRAP = HtmlAttributeNameBuilder.create("wrap", false);
+  public static final HtmlAttributeName WRAP = HtmlAttributeName.create("wrap", false);
 
   /**
    * The {@code writing-mode} attribute.
    */
-  public static final Html.AttributeName WRITING_MODE = HtmlAttributeNameBuilder.create("writing-mode", false);
+  public static final HtmlAttributeName WRITING_MODE = HtmlAttributeName.create("writing-mode", false);
 
   /**
    * The {@code xmlns} attribute.
    */
-  public static final Html.AttributeName XMLNS = HtmlAttributeNameBuilder.create("xmlns", false);
+  public static final HtmlAttributeName XMLNS = HtmlAttributeName.create("xmlns", false);
 
 }

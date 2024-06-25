@@ -15,32 +15,64 @@
  */
 package objectos.way;
 
+import java.util.ArrayList;
+import java.util.List;
+
 final class HtmlAttributeName extends HtmlAttributeNameGenerated implements Html.AttributeName {
 
   /**
    * The {@code data-click} attribute.
    */
-  public static final Html.AttributeName DATA_CLICK = HtmlAttributeNameBuilder.action("data-click");
+  public static final Html.AttributeName DATA_CLICK = action("data-click");
 
   /**
    * The {@code data-frame} attribute.
    */
-  public static final Html.AttributeName DATA_FRAME = HtmlAttributeNameBuilder.create("data-frame", false);
+  public static final Html.AttributeName DATA_FRAME = create("data-frame", false);
 
   /**
    * The {@code data-on-click} attribute.
    */
-  public static final Html.AttributeName DATA_ON_CLICK = HtmlAttributeNameBuilder.action("data-on-click");
+  public static final Html.AttributeName DATA_ON_CLICK = action("data-on-click");
 
   /**
    * The {@code data-on-input} attribute.
    */
-  public static final Html.AttributeName DATA_ON_INPUT = HtmlAttributeNameBuilder.action("data-on-input");
+  public static final Html.AttributeName DATA_ON_INPUT = action("data-on-input");
 
   /**
    * The {@code data-way-click} attribute.
    */
-  public static final Html.AttributeName DATA_WAY_CLICK = HtmlAttributeNameBuilder.action("data-way-click");
+  public static final Html.AttributeName DATA_WAY_CLICK = action("data-way-click");
+
+  static final class Builder {
+
+    static Builder INSTANCE = new Builder();
+
+    private final List<HtmlAttributeName> standardValues = new ArrayList<>();
+
+    private int index;
+
+    private Builder() {}
+
+    public final HtmlAttributeName createImpl(String name, boolean booleanAttribute) {
+      return createImpl(name, booleanAttribute, false, String.class);
+    }
+
+    public final HtmlAttributeName createImpl(String name, boolean booleanAttribute, boolean singleQuoted, Class<?> type) {
+      HtmlAttributeName result;
+      result = new HtmlAttributeName(index++, name, booleanAttribute, singleQuoted, type);
+
+      standardValues.add(result);
+
+      return result;
+    }
+
+    public HtmlAttributeName[] buildValuesImpl() {
+      return standardValues.toArray(HtmlAttributeName[]::new);
+    }
+
+  }
 
   private final int index;
 
@@ -60,14 +92,20 @@ final class HtmlAttributeName extends HtmlAttributeNameGenerated implements Html
     this.type = type;
   }
 
-  static HtmlAttributeName[] VALUES;
+  public static HtmlAttributeName action(String name) {
+    return Builder.INSTANCE.createImpl(name, false, true, Script.Action.class);
+  }
+
+  public static HtmlAttributeName create(String name, boolean booleanAttribute) {
+    return Builder.INSTANCE.createImpl(name, booleanAttribute);
+  }
 
   static int size() {
-    return VALUES.length;
+    return LazyValues.VALUES.length;
   }
 
   public static HtmlAttributeName get(int index) {
-    return VALUES[index];
+    return LazyValues.VALUES[index];
   }
 
   @Override
@@ -92,6 +130,21 @@ final class HtmlAttributeName extends HtmlAttributeNameGenerated implements Html
 
   public final Class<?> type() {
     return type;
+  }
+
+  private static class LazyValues {
+
+    static HtmlAttributeName[] VALUES = create();
+
+    private static HtmlAttributeName[] create() {
+      HtmlAttributeName[] result;
+      result = Builder.INSTANCE.buildValuesImpl();
+
+      Builder.INSTANCE = null;
+
+      return result;
+    }
+
   }
 
 }
