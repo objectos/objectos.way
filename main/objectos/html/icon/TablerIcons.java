@@ -41,20 +41,16 @@
  */
 package objectos.html.icon;
 
-import objectos.html.Api;
-import objectos.html.Api.Element;
-import objectos.html.Api.SvgValue;
-import objectos.html.HtmlComponent;
-import objectos.html.TemplateBase;
+import objectos.way.Html;
 import objectos.lang.object.Check;
 
 /**
  * Provides SVG icons from the <a href="https://tabler-icons.io/">tabler
  * icons</a> project.
  */
-public class TablerIcons extends HtmlComponent {
+public class TablerIcons extends Html.Component {
 
-  private Api.ExternalAttribute.Id id;
+  private Html.Id id;
 
   private String strokeWidth;
 
@@ -64,7 +60,7 @@ public class TablerIcons extends HtmlComponent {
    * @param parent
    *        the template in which icons will be drawn
    */
-  public TablerIcons(TemplateBase parent) {
+  public TablerIcons(Html.TemplateBase parent) {
     super(parent);
 
     reset();
@@ -78,7 +74,7 @@ public class TablerIcons extends HtmlComponent {
    *
    * @return this instance
    */
-  public final TablerIcons id(Api.ExternalAttribute.Id id) {
+  public final TablerIcons id(Html.Id id) {
     this.id = Check.notNull(id, "id == null");
 
     return this;
@@ -106,7 +102,7 @@ public class TablerIcons extends HtmlComponent {
    *
    * @return the {@code svg} element
    */
-  public final Element arrowLeft(SvgValue... contents) {
+  public final Html.ElementInstruction arrowLeft(Html.Instruction... contents) {
     return icon(
         flatten(contents),
         path(stroke("none"), d("M0 0h24v24H0z"), fill("none")),
@@ -122,7 +118,7 @@ public class TablerIcons extends HtmlComponent {
    *
    * @return the {@code svg} element
    */
-  public final Element arrowNarrowLeft(SvgValue... contents) {
+  public final Html.ElementInstruction arrowNarrowLeft(Html.Instruction... contents) {
     return icon(
         flatten(contents),
         path(stroke("none"), d("M0 0h24v24H0z"), fill("none")),
@@ -138,7 +134,7 @@ public class TablerIcons extends HtmlComponent {
    *
    * @return the {@code svg} element
    */
-  public final Element arrowNarrowRight(SvgValue... contents) {
+  public final Html.ElementInstruction arrowNarrowRight(Html.Instruction... contents) {
     return icon(
         flatten(contents),
         path(stroke("none"), d("M0 0h24v24H0z"), fill("none")),
@@ -154,7 +150,7 @@ public class TablerIcons extends HtmlComponent {
    *
    * @return the {@code svg} element
    */
-  public final Element arrowRight(SvgValue... contents) {
+  public final Html.ElementInstruction arrowRight(Html.Instruction... contents) {
     return icon(
         flatten(contents),
         path(stroke("none"), d("M0 0h24v24H0z"), fill("none")),
@@ -170,7 +166,7 @@ public class TablerIcons extends HtmlComponent {
    *
    * @return the {@code svg} element
    */
-  public final Element box(SvgValue... contents) {
+  public final Html.ElementInstruction box(Html.Instruction... contents) {
     return icon(
         flatten(contents),
         path(stroke("none"), d("M0 0h24v24H0z"), fill("none")),
@@ -187,7 +183,7 @@ public class TablerIcons extends HtmlComponent {
    *
    * @return the {@code svg} element
    */
-  public final Element briefcase(SvgValue... contents) {
+  public final Html.ElementInstruction briefcase(Html.Instruction... contents) {
     return icon(
         flatten(contents),
         path(stroke("none"), d("M0 0h24v24H0z"), fill("none")),
@@ -205,7 +201,7 @@ public class TablerIcons extends HtmlComponent {
    *
    * @return the {@code svg} element
    */
-  public final Element calendarRepeat(SvgValue... contents) {
+  public final Html.ElementInstruction calendarRepeat(Html.Instruction... contents) {
     return icon(
         flatten(contents),
         path(stroke("none"), d("M0 0h24v24H0z"), fill("none")),
@@ -225,7 +221,7 @@ public class TablerIcons extends HtmlComponent {
    *
    * @return the {@code svg} element
    */
-  public final Element caretLeftFilled(SvgValue... contents) {
+  public final Html.ElementInstruction caretLeftFilled(Html.Instruction... contents) {
     // @formatter:off
     return filled(
         flatten(contents),
@@ -241,7 +237,7 @@ public class TablerIcons extends HtmlComponent {
    *
    * @return the {@code svg} element
    */
-  public final Element caretRightFilled(SvgValue... contents) {
+  public final Html.ElementInstruction caretRightFilled(Html.Instruction... contents) {
     // @formatter:off
     return filled(
         flatten(contents),
@@ -256,7 +252,7 @@ public class TablerIcons extends HtmlComponent {
    *
    * @return the {@code svg} element
    */
-  public final Element chevronLeft(SvgValue... contents) {
+  public final Html.ElementInstruction chevronLeft(Html.Instruction... contents) {
     return icon(
         flatten(contents),
         path(stroke("none"), d("M0 0h24v24H0z"), fill("none")),
@@ -269,7 +265,7 @@ public class TablerIcons extends HtmlComponent {
    *
    * @return the {@code svg} element
    */
-  public final Element chevronRight(SvgValue... contents) {
+  public final Html.ElementInstruction chevronRight(Html.Instruction... contents) {
     return icon(
         flatten(contents),
         path(stroke("none"), d("M0 0h24v24H0z"), fill("none")),
@@ -283,7 +279,7 @@ public class TablerIcons extends HtmlComponent {
    *
    * @return the {@code svg} element
    */
-  public final Element creditCardPay(SvgValue... contents) {
+  public final Html.ElementInstruction creditCardPay(Html.Instruction... contents) {
     return icon(
         flatten(contents),
         path(stroke("none"), d("M0 0h24v24H0z"), fill("none")),
@@ -303,7 +299,7 @@ public class TablerIcons extends HtmlComponent {
    *
    * @return the {@code svg} element
    */
-  public final Element exclamationCircle(SvgValue... contents) {
+  public final Html.ElementInstruction exclamationCircle(Html.Instruction... contents) {
     return icon(
         flatten(contents),
         path(stroke("none"), d("M0 0h24v24H0z"), fill("none")),
@@ -319,7 +315,7 @@ public class TablerIcons extends HtmlComponent {
    *
    * @return the {@code svg} element
    */
-  public final Element fileText(SvgValue... contents) {
+  public final Html.ElementInstruction fileText(Html.Instruction... contents) {
     return icon(
         flatten(contents),
         path(stroke("none"), d("M0 0h24v24H0z"), fill("none")),
@@ -338,7 +334,7 @@ public class TablerIcons extends HtmlComponent {
    *
    * @return the {@code svg} element
    */
-  public final Element healthRecognition(SvgValue... contents) {
+  public final Html.ElementInstruction healthRecognition(Html.Instruction... contents) {
     return icon(
         flatten(contents),
         path(stroke("none"), d("M0 0h24v24H0z"), fill("none")),
@@ -355,7 +351,7 @@ public class TablerIcons extends HtmlComponent {
    *
    * @return the {@code svg} element
    */
-  public final Element home(SvgValue... contents) {
+  public final Html.ElementInstruction home(Html.Instruction... contents) {
     return icon(
         flatten(contents),
         path(stroke("none"), d("M0 0h24v24H0z"), fill("none")),
@@ -370,7 +366,7 @@ public class TablerIcons extends HtmlComponent {
    *
    * @return the {@code svg} element
    */
-  public final Element home2(SvgValue... contents) {
+  public final Html.ElementInstruction home2(Html.Instruction... contents) {
     return icon(
         flatten(contents),
         path(stroke("none"), d("M0 0h24v24H0z"), fill("none")),
@@ -385,7 +381,7 @@ public class TablerIcons extends HtmlComponent {
    *
    * @return the {@code svg} element
    */
-  public final Element menu(SvgValue... contents) {
+  public final Html.ElementInstruction menu1(Html.Instruction... contents) {
     return icon(
         flatten(contents),
         path(stroke("none"), d("M0 0h24v24H0z"), fill("none")),
@@ -399,7 +395,7 @@ public class TablerIcons extends HtmlComponent {
    *
    * @return the {@code svg} element
    */
-  public final Element menu2(SvgValue... contents) {
+  public final Html.ElementInstruction menu2(Html.Instruction... contents) {
     return icon(
         flatten(contents),
         path(stroke("none"), d("M0 0h24v24H0z"), fill("none")),
@@ -414,7 +410,7 @@ public class TablerIcons extends HtmlComponent {
    *
    * @return the {@code svg} element
    */
-  public final Element paw(SvgValue... contents) {
+  public final Html.ElementInstruction paw(Html.Instruction... contents) {
     // @formatter:off
     return icon(
         flatten(contents),
@@ -433,7 +429,7 @@ public class TablerIcons extends HtmlComponent {
    *
    * @return the {@code svg} element
    */
-  public final Element users(SvgValue... contents) {
+  public final Html.ElementInstruction users(Html.Instruction... contents) {
     // @formatter:off
     return icon(
         flatten(contents),
@@ -451,7 +447,7 @@ public class TablerIcons extends HtmlComponent {
    *
    * @return the {@code svg} element
    */
-  public final Element x(SvgValue... contents) {
+  public final Html.ElementInstruction x(Html.Instruction... contents) {
     return icon(
         flatten(contents),
         path(stroke("none"), d("M0 0h24v24H0z"), fill("none")),
@@ -460,8 +456,8 @@ public class TablerIcons extends HtmlComponent {
     );
   }
 
-  private Element icon(SvgValue... contents) {
-    Element svg;
+  private Html.ElementInstruction icon(Html.Instruction... contents) {
+    Html.ElementInstruction svg;
     svg = svg(
         id != null ? id : noop(),
 
@@ -483,8 +479,8 @@ public class TablerIcons extends HtmlComponent {
     return svg;
   }
 
-  private Element filled(SvgValue... contents) {
-    Element svg;
+  private Html.ElementInstruction filled(Html.Instruction... contents) {
+    Html.ElementInstruction svg;
     svg = svg(
         id != null ? id : noop(),
 

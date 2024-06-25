@@ -19,14 +19,14 @@ import static org.testng.Assert.assertEquals;
 
 import java.util.ArrayList;
 import java.util.List;
-import objectos.html.HtmlTemplate;
+import objectos.way.Html;
 import org.testng.annotations.Test;
 
 public class WayStyleGenSplitterTest {
 
   @Test(description = "single class name")
   public void testCase01() {
-    class Subject extends HtmlTemplate {
+    class Subject extends Html.Template {
       @Override
       protected final void definition() {
         div(className("m-0"));
@@ -38,7 +38,7 @@ public class WayStyleGenSplitterTest {
 
   @Test(description = "many class names")
   public void testCase02() {
-    class Subject extends HtmlTemplate {
+    class Subject extends Html.Template {
       @Override
       protected final void definition() {
         div(
@@ -52,7 +52,7 @@ public class WayStyleGenSplitterTest {
 
   @Test(description = "many class names w/ additional whitespace")
   public void testCase03() {
-    class Subject extends HtmlTemplate {
+    class Subject extends Html.Template {
       @Override
       protected final void definition() {
         div(
@@ -66,7 +66,7 @@ public class WayStyleGenSplitterTest {
 
   @Test(description = "leading whitespace")
   public void testCase04() {
-    class Subject extends HtmlTemplate {
+    class Subject extends Html.Template {
       @Override
       protected final void definition() {
         div(
@@ -80,7 +80,7 @@ public class WayStyleGenSplitterTest {
 
   @Test(description = "trailing whitespace")
   public void testCase05() {
-    class Subject extends HtmlTemplate {
+    class Subject extends Html.Template {
       @Override
       protected final void definition() {
         div(
@@ -94,7 +94,7 @@ public class WayStyleGenSplitterTest {
 
   @Test
   public void testCase06() {
-    class Subject extends HtmlTemplate {
+    class Subject extends Html.Template {
       @Override
       protected final void definition() {
         div(

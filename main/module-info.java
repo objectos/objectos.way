@@ -20,11 +20,9 @@ module objectos.way {
   exports objectos.args;
   exports objectos.css;
   exports objectos.css.reset;
-  exports objectos.css.select;
   exports objectos.css.tmpl;
   exports objectos.html;
   exports objectos.html.icon;
-  exports objectos.html.pseudom;
   exports objectos.html.script;
   exports objectos.io;
   exports objectos.lang;

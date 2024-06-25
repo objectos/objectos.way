@@ -17,4 +17,90 @@ package objectos.way;
 
 non-sealed abstract class ScriptAction implements Script.Action {
 
+  static final String CMD = "cmd";
+
+  @Override
+  public final String toString() {
+    StringBuilder json;
+    json = new StringBuilder();
+
+    json.append('[');
+
+    writeTo(json);
+
+    json.append(']');
+
+    return json.toString();
+  }
+
+  abstract void writeTo(StringBuilder json);
+
+  final void actions(StringBuilder json, Script.Action[] actions) {
+    if (actions.length > 0) {
+      ScriptAction action;
+      action = Script.cast(actions[0]);
+
+      action.writeTo(json);
+
+      for (int idx = 1; idx < actions.length; idx++) {
+        json.append(',');
+
+        action = Script.cast(actions[idx]);
+
+        action.writeTo(json);
+      }
+    }
+  }
+
+  final void arrayEnd(StringBuilder json) {
+    json.append(']');
+  }
+
+  final void arrayStart(StringBuilder json) {
+    json.append('[');
+  }
+
+  final void comma(StringBuilder json) {
+    json.append(',');
+  }
+
+  final void objectEnd(StringBuilder json) {
+    json.append('}');
+  }
+
+  final void objectStart(StringBuilder json) {
+    json.append('{');
+  }
+
+  final void property(StringBuilder json, String name, int value) {
+    propertyStart(json, name);
+    json.append(value);
+  }
+
+  final void property(StringBuilder json, String name, Script.Action[] actions) {
+    propertyStart(json, name);
+    json.append('[');
+    actions(json, actions);
+    json.append(']');
+  }
+
+  final void property(StringBuilder json, String name, String value) {
+    propertyStart(json, name);
+    stringLiteral(json, value);
+  }
+
+  final void propertyStart(StringBuilder json, String name) {
+    json.append('"');
+    json.append(name);
+    json.append('"');
+    json.append(':');
+  }
+
+  final void stringLiteral(StringBuilder json, String s) {
+    json.append('"');
+    // TODO escape json string literal
+    json.append(s);
+    json.append('"');
+  }
+
 }

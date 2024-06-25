@@ -15,9 +15,9 @@
  */
 package testing.site.web;
 
-import objectos.html.HtmlTemplate;
+import objectos.way.Html;
 
-abstract class WebTemplate extends HtmlTemplate {
+abstract class WebTemplate extends Html.Template {
   
   protected String title = "";
 

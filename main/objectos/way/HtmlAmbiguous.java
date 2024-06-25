@@ -43,11 +43,11 @@ enum HtmlAmbiguous {
 
   private final int attributeByteCode;
 
-  public final HtmlElementName element;
+  public final Html.ElementName element;
 
   private final int elementByteCode;
 
-  private HtmlAmbiguous(HtmlAttributeName attribute, HtmlElementName element) {
+  private HtmlAmbiguous(Html.AttributeName attribute, Html.ElementName element) {
     this.attributeByteCode = attribute.index();
 
     this.element = element;
@@ -57,7 +57,7 @@ enum HtmlAmbiguous {
 
   public static HtmlAmbiguous decode(byte b0) {
     int ordinal;
-    ordinal = Bytes.decodeInt(b0);
+    ordinal = HtmlBytes.decodeInt(b0);
 
     return ALL[ordinal];
   }
@@ -79,7 +79,7 @@ enum HtmlAmbiguous {
   }
 
   public final byte encodeAttribute() {
-    return Bytes.encodeInt0(attributeByteCode);
+    return HtmlBytes.encodeInt0(attributeByteCode);
   }
 
   public abstract boolean isAttributeOf(Html.ElementName element);

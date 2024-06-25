@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Objectos Software LTDA.
+ * Copyright (C) 2023-2024 Objectos Software LTDA.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,29 +15,14 @@
  */
 package objectos.way;
 
-final class MarketingSite extends Http.Module {
+sealed abstract class Init extends Init0 permits InitImpl {
 
-  @Override
-  protected final void configure() {
-    route(path("/"),
-        method(Http.GET, movedPermanently("/index.html"))
-    );
+  public static final Init FOO = InitBuilder.BUILDER.create("foo");
 
-    route(path("/index.html"),
-        method(Http.GET, this::indexHtml)
-    );
-  }
+  Init() {}
 
-  private void indexHtml(Http.Exchange http) {
-    http.ok(new MarketingSiteHome());
-  }
+  public abstract int index();
 
-  private static class MarketingSiteHome extends Html.Template {
-    @Override
-    protected void definition() {
-      doctype();
-      h1("home");
-    }
-  }
+  public abstract String value();
 
 }

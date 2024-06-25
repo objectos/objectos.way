@@ -24,7 +24,6 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Random;
-import objectos.html.HtmlTemplate;
 import objectos.lang.CharWritable;
 import objectos.lang.TestingCharWritable;
 import objectos.util.array.ByteArrays;
@@ -1210,7 +1209,7 @@ public class HttpExchangeLoopTest {
       throw new AssertionError("Failed with IOException", e);
     }
   }
-  
+
   @Test(description = """
   Properly handle empty From: header
   """)
@@ -1223,7 +1222,7 @@ public class HttpExchangeLoopTest {
     Accept-Encoding: gzip, deflate, br\r
     \r
     """);
-    
+
     try (HttpExchangeLoop http = new HttpExchangeLoop(socket)) {
       http.clock(TestingClock.FIXED);
       http.noteSink(TestingNoteSink.INSTANCE);
@@ -1232,7 +1231,7 @@ public class HttpExchangeLoopTest {
       parse = http.parse();
 
       assertEquals(parse.isError(), false);
-      
+
       // request line
       Http.Request.Target.Path path;
       path = http.path();
@@ -1265,7 +1264,7 @@ public class HttpExchangeLoopTest {
     }
   }
 
-  private static class SingleParagraph extends HtmlTemplate {
+  private static class SingleParagraph extends Html.Template {
     private final String text;
 
     public SingleParagraph(String text) { this.text = text; }

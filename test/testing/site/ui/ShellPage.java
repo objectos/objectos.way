@@ -27,13 +27,13 @@ final class ShellPage extends UiTemplate {
   ShellPage(TestingSiteInjector injector) {
   }
 
-  private static final ElementClass HEADER = ElementClass.of(
+  private static final ClassName HEADER = ClassName.of(
       "fixed inset-0px flex h-48px",
       "border-b border-border-subtle",
       "bg-background"
   );
 
-  private static final ElementClass HEADER_ACTION = ElementClass.of(
+  private static final ClassName HEADER_ACTION = ClassName.of(
       "h-48px w-48px",
       "border border-transparent",
       "active:bg-background-active",
@@ -41,7 +41,7 @@ final class ShellPage extends UiTemplate {
       "hover:bg-background-hover"
   );
 
-  private static final ElementClass HEADER_NAME = ElementClass.of(
+  private static final ClassName HEADER_NAME = ClassName.of(
       "flex h-full select-none items-center",
       "border-2 border-transparent",
       "pr-32px pl-16px",
@@ -51,11 +51,11 @@ final class ShellPage extends UiTemplate {
       "focus:border-focus"
   );
 
-  private static final ElementClass HEADER_NAME_PREFIX = ElementClass.of(
+  private static final ClassName HEADER_NAME_PREFIX = ClassName.of(
       "font-normal"
   );
 
-  private static final ElementClass HEADER_NAV = ElementClass.of(
+  private static final ClassName HEADER_NAV = ClassName.of(
       "fixed hidden",
       "w-256px top-48px bottom-0px",
       "flex-col",
@@ -71,29 +71,29 @@ final class ShellPage extends UiTemplate {
       "lg:before:content-empty"
   );
 
-  private static final ElementClass HEADER_MENU_BAR = ElementClass.of(
+  private static final ClassName HEADER_MENU_BAR = ClassName.of(
       "flex flex-col h-full",
       "pt-16px",
       "lg:flex-row",
       "lg:pt-0px"
   );
 
-  private static final ElementClass HEADER_MENU_CLOSE = ElementClass.of(
+  private static final ClassName HEADER_MENU_CLOSE = ClassName.of(
       "hidden",
       "bg-layer",
       "border-x-border-subtle"
   );
 
-  private static final ElementClass HEADER_MENU_TOGGLE = ElementClass.of(
+  private static final ClassName HEADER_MENU_TOGGLE = ClassName.of(
       "flex items-center justify-center",
       "lg:hidden"
   );
 
-  private static final ElementClass HEADER_MENU_TRIGGER_SVG = ElementClass.of(
+  private static final ClassName HEADER_MENU_TRIGGER_SVG = ClassName.of(
       "fill-icon-primary"
   );
 
-  private static final ElementClass SKIP_TO_CONTENT = ElementClass.of(
+  private static final ClassName SKIP_TO_CONTENT = ClassName.of(
       "sr-only z-50",
       "text-text-secondary underline",
       "transition-colors duration-100",
@@ -105,7 +105,7 @@ final class ShellPage extends UiTemplate {
       "focus:outline-none"
   );
 
-  private static final ElementClass SIDE_NAV_OVERLAY = ElementClass.of(
+  private static final ClassName SIDE_NAV_OVERLAY = ClassName.of(
       "fixed hidden",
       "h-screen w-screen top-48px",
       "bg-overlay",
@@ -113,13 +113,13 @@ final class ShellPage extends UiTemplate {
       "opacity-0 z-30"
   );
 
-  private static final ElementId OPEN = ElementId.of("open-menu");
+  private static final Id OPEN = Id.of("open-menu");
 
-  private static final ElementId CLOSE = ElementId.of("close-menu");
+  private static final Id CLOSE = Id.of("close-menu");
 
-  private static final ElementId OVERLAY = ElementId.of("overlay-menu");
+  private static final Id OVERLAY = Id.of("overlay-menu");
 
-  private static final ElementId NAV = ElementId.of("nav-menu");
+  private static final Id NAV = Id.of("nav-menu");
 
   @Override
   final void bodyImpl() {
@@ -189,7 +189,7 @@ final class ShellPage extends UiTemplate {
     );
   }
 
-  private static final ElementClass HEADER_MENU_ITEM = ElementClass.of(
+  private static final ClassName HEADER_MENU_ITEM = ClassName.of(
       "flex h-32px select-none items-center",
       "border-2 border-transparent",
       "bg-background",

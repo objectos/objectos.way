@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Objectos Software LTDA.
+ * Copyright (C) 2015-2023 Objectos Software LTDA.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,29 +15,21 @@
  */
 package objectos.way;
 
-final class MarketingSite extends Http.Module {
+import static org.testng.Assert.assertTrue;
 
-  @Override
-  protected final void configure() {
-    route(path("/"),
-        method(Http.GET, movedPermanently("/index.html"))
-    );
+import org.testng.annotations.Test;
 
-    route(path("/index.html"),
-        method(Http.GET, this::indexHtml)
-    );
-  }
+public class HtmlElementNameTest {
 
-  private void indexHtml(Http.Exchange http) {
-    http.ok(new MarketingSiteHome());
-  }
+  @Test
+  public void canBeEncoded_WithSingleByte() {
+    int size;
+    size = HtmlElementName.size();
 
-  private static class MarketingSiteHome extends Html.Template {
-    @Override
-    protected void definition() {
-      doctype();
-      h1("home");
-    }
+    int max;
+    max = 1 << 8;
+
+    assertTrue(size < max);
   }
 
 }

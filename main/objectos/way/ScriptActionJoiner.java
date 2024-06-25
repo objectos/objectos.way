@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Objectos Software LTDA.
+ * Copyright (C) 2023-2024 Objectos Software LTDA.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,29 +15,35 @@
  */
 package objectos.way;
 
-final class MarketingSite extends Http.Module {
+final class ScriptActionJoiner {
 
-  @Override
-  protected final void configure() {
-    route(path("/"),
-        method(Http.GET, movedPermanently("/index.html"))
-    );
+  private final StringBuilder json;
 
-    route(path("/index.html"),
-        method(Http.GET, this::indexHtml)
-    );
+  private int count;
+
+  public ScriptActionJoiner() {
+    json = new StringBuilder();
+
+    json.append('[');
   }
 
-  private void indexHtml(Http.Exchange http) {
-    http.ok(new MarketingSiteHome());
-  }
-
-  private static class MarketingSiteHome extends Html.Template {
-    @Override
-    protected void definition() {
-      doctype();
-      h1("home");
+  public final void add(Object o) {
+    if (count > 0) {
+      json.append(',');
     }
+
+    ScriptAction a;
+    a = (ScriptAction) o;
+
+    a.writeTo(json);
+
+    count++;
+  }
+
+  public final String join() {
+    json.append(']');
+
+    return json.toString();
   }
 
 }

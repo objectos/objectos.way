@@ -15,10 +15,9 @@
  */
 package testing.site.web;
 
-import objectos.html.HtmlComponent;
-import objectos.html.TemplateBase;
+import objectos.way.Html;
 
-public class ShellHeader extends HtmlComponent {
+public class ShellHeader extends Html.Component {
 
   private enum Section {
     HOME("/"),
@@ -34,7 +33,7 @@ public class ShellHeader extends HtmlComponent {
 
   private Section active = Section.HOME;
 
-  public ShellHeader(TemplateBase parent) {
+  public ShellHeader(Html.TemplateBase parent) {
     super(parent);
   }
 

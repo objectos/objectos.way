@@ -65,6 +65,10 @@ final class HtmlElementName extends HtmlElementNameGenerated implements Html.Ele
     return Builder.INSTANCE.create(name, false);
   }
 
+  static HtmlElementName get(int index) {
+    return LazyValues.VALUES[index];
+  }
+
   @Override
   public final int index() {
     return index;
@@ -78,6 +82,25 @@ final class HtmlElementName extends HtmlElementNameGenerated implements Html.Ele
   @Override
   public final boolean endTag() {
     return endTag;
+  }
+
+  private static class LazyValues {
+
+    private static HtmlElementName[] VALUES = create();
+
+    private static HtmlElementName[] create() {
+      HtmlElementName[] result;
+      result = Builder.INSTANCE.buildValuesImpl();
+
+      Builder.INSTANCE = null;
+
+      return result;
+    }
+
+  }
+
+  static int size() {
+    return LazyValues.VALUES.length;
   }
 
 }

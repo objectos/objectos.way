@@ -19,14 +19,14 @@ import static org.testng.Assert.assertEquals;
 
 import java.util.ArrayList;
 import java.util.List;
-import objectos.html.HtmlTemplate;
+import objectos.way.Html;
 import org.testng.annotations.Test;
 
 public class WayStyleGenScannerTest {
 
   @Test(description = "single class name")
   public void testCase01() {
-    class Subject extends HtmlTemplate {
+    class Subject extends Html.Template {
       @Override
       protected final void definition() {
         div(className("m-0"));
@@ -38,7 +38,7 @@ public class WayStyleGenScannerTest {
 
   @Test(description = "many class names")
   public void testCase02() {
-    class Subject extends HtmlTemplate {
+    class Subject extends Html.Template {
       @Override
       protected final void definition() {
         div(
@@ -54,7 +54,7 @@ public class WayStyleGenScannerTest {
 
   @Test(description = "long literal")
   public void testCase03() {
-    class Subject extends HtmlTemplate {
+    class Subject extends Html.Template {
       @Override
       protected final void definition() {
         div(

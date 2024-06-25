@@ -35,8 +35,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
-import objectos.html.Html;
-import objectos.html.HtmlTemplate;
 import objectos.lang.CharWritable;
 import objectos.lang.object.Check;
 import objectos.notes.Note1;
@@ -220,9 +218,9 @@ public final class Http {
       send();
     }
 
-    default void ok(HtmlTemplate template) {
-      Html html;
-      html = new Html();
+    default void ok(Html.Template template) {
+      Html.Compiler html;
+      html = Html.createCompiler();
 
       template.accept(html);
 

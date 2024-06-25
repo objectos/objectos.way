@@ -15,6 +15,8 @@
  */
 package objectos.way;
 
+import objectos.lang.object.Check;
+
 /**
  * The Objectos Script main class.
  */
@@ -24,8 +26,173 @@ public final class Script {
    * Represents an action to be executed by the browser in the context of an web
    * application.
    */
-  public sealed interface Action permits ScriptAction {}
+  public sealed interface Action permits ScriptAction {
+  }
 
   private Script() {}
+  
+  public static Action delay(int ms, Action... actions) {
+    Check.argument(ms >= 0, "ms must not be negative");
+
+    Action[] copy;
+    copy = actions.clone(); // implicit null check
+
+    return new ScriptAction() {
+      @Override
+      final void writeTo(StringBuilder json) {
+        objectStart(json);
+        
+        property(json, CMD, "delay");
+        
+        comma(json);
+        
+        property(json, "ms", ms);
+        
+        comma(json);
+
+        property(json, "actions", copy);
+
+        objectEnd(json);
+      }
+    };
+  }
+
+  public static Action location(String url) {
+    Check.notNull(url, "url == null");
+
+    return new ScriptAction() {
+      @Override
+      final void writeTo(StringBuilder json) {
+        objectStart(json);
+
+        property(json, CMD, "location");
+
+        comma(json);
+
+        property(json, "value", url);
+
+        objectEnd(json);
+      }
+    };
+  }
+
+  public static Action replaceClass(Html.Id id,
+                                    Html.ClassName from,
+                                    Html.ClassName to) {
+    Check.notNull(id, "id == null");
+    Check.notNull(from, "from == null");
+    Check.notNull(to, "to == null");
+
+    return replaceClass0(id, from.className(), to.className());
+  }
+
+  public static Action replaceClass(Html.Id id,
+                                    String from,
+                                    String to) {
+    Check.notNull(id, "id == null");
+    Check.notNull(from, "from == null");
+    Check.notNull(to, "to == null");
+
+    return replaceClass0(id, from, to);
+  }
+
+  private static Action replaceClass0(Html.Id id, String from, String to) {
+    return new ScriptAction() {
+      @Override
+      final void writeTo(StringBuilder json) {
+        objectStart(json);
+
+        property(json, CMD, "replace-class");
+
+        comma(json);
+
+        propertyStart(json, "args");
+        
+        arrayStart(json);
+        
+        stringLiteral(json, id.id());
+        
+        comma(json);
+
+        stringLiteral(json, from);
+        
+        comma(json);
+
+        stringLiteral(json, to);
+
+        arrayEnd(json);
+
+        objectEnd(json);
+      }
+    };
+  }
+
+  public static Action submit(Html.Id id) {
+    Check.notNull(id, "id == null");
+
+    final String value;
+    value = id.id();
+
+    return new ScriptAction() {
+      @Override
+      final void writeTo(StringBuilder json) {
+        objectStart(json);
+
+        property(json, CMD, "submit");
+
+        comma(json);
+
+        property(json, "id", value);
+
+        objectEnd(json);
+      }
+    };
+  }
+  
+  /**
+   * Casts the specified action interface into its implementation class.
+   * 
+   * <p>
+   * The cast is safe as the {@code Action} interface is sealed.
+   */
+  static ScriptAction cast(Action action) {
+    return (ScriptAction) action;
+  }
+  
+  static Action join(Action... actions) {
+    return switch (actions.length) {
+      case 0 -> Empty.INSTANCE;
+
+      case 1 -> actions[0];
+
+      default -> new Joined(actions);
+    };
+  }
+  
+  private static final class Empty extends ScriptAction {
+
+    static final Script.Action INSTANCE = new Empty();
+
+    private Empty() {}
+
+    @Override
+    final void writeTo(StringBuilder json) {}
+
+  }
+  
+  private static final class Joined extends ScriptAction {
+
+    private final Script.Action[] actions;
+
+    public Joined(Script.Action[] actions) {
+      this.actions = actions.clone();
+    }
+
+    @Override
+    final void writeTo(StringBuilder json) {
+      actions(json, actions);
+    }
+
+  }
 
 }

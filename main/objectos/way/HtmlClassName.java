@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Objectos Software LTDA.
+ * Copyright (C) 2023-2024 Objectos Software LTDA.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,29 +15,33 @@
  */
 package objectos.way;
 
-final class MarketingSite extends Http.Module {
+final class HtmlClassName implements Html.ClassName {
+
+  private final String value;
+
+  HtmlClassName(String value) {
+    this.value = value;
+  }
 
   @Override
-  protected final void configure() {
-    route(path("/"),
-        method(Http.GET, movedPermanently("/index.html"))
-    );
-
-    route(path("/index.html"),
-        method(Http.GET, this::indexHtml)
-    );
+  public final String className() {
+    return value;
   }
 
-  private void indexHtml(Http.Exchange http) {
-    http.ok(new MarketingSiteHome());
+  @Override
+  public final boolean equals(Object obj) {
+    return obj == this || obj instanceof Html.ClassName that
+        && value.equals(that.className());
   }
 
-  private static class MarketingSiteHome extends Html.Template {
-    @Override
-    protected void definition() {
-      doctype();
-      h1("home");
-    }
+  @Override
+  public final int hashCode() {
+    return value.hashCode();
+  }
+
+  @Override
+  public final String toString() {
+    return value;
   }
 
 }

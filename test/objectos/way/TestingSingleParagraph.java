@@ -15,9 +15,7 @@
  */
 package objectos.way;
 
-import objectos.html.HtmlTemplate;
-
-class TestingSingleParagraph extends HtmlTemplate {
+class TestingSingleParagraph extends Html.Template {
   private final String text;
 
   public TestingSingleParagraph(String text) { this.text = text; }

@@ -15,24 +15,91 @@
  */
 package objectos.way;
 
+import java.io.IOException;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+import objectos.lang.CharWritable;
+import objectos.lang.IterableOnce;
+import objectos.lang.object.Check;
+
 /**
  * The Objectos HTML main class.
+ *
+ * <p>
+ * Provides the classes for generating HTML using the Java programming language.
+ *
+ * <h2>{@code HtmlTemplate}</h2>
+ *
+ * <p>
+ * The following Objectos HTML template:
+ *
+ * {@snippet file = "objectos/html/HtmlTemplateJavadoc.java" region = "main"}
+ *
+ * <p>
+ * Generates the following HTML:
+ *
+ * <pre>{@code
+ *     <!DOCTYPE html>
+ *     <html>
+ *     <head>
+ *     <title>Objectos HTML</title>
+ *     </head>
+ *     <body>
+ *     <p>Hello world!</p>
+ *     </body>
+ *     </html>
+ * }</pre>
+ *
+ * <h2>Iteration</h2>
+ *
+ * <p>
+ * Use the {@link BaseTemplateDsl#include(objectos.html.tmpl.FragmentAction)
+ * include} instruction when you need to generate HTML by iterating over a
+ * collection of objects.
+ *
+ * <p>
+ * For example, the following Objectos HTML template:
+ *
+ * {@snippet file = "objectos/html/HtmlTemplateJavadoc.java" region =
+ * "main-iteration"}
+ *
+ * <p>
+ * Generates the following HTML:
+ *
+ * <pre>{@code
+ *     <ul>
+ *     <li>Java</li>
+ *     <li>Scala</li>
+ *     <li>Clojure</li>
+ *     <li>Kotlin</li>
+ *     </ul>
+ * }</pre>
+ *
+ * <h2>Executing instructions conditionally</h2>
+ *
+ * <p>
+ * You can also use
+ * {@link BaseTemplateDsl#include(objectos.html.tmpl.FragmentAction) include}
+ * instruction when you need to render or not parts of your template based on a
+ * condition.
+ *
+ * <p>
+ * The following template renders an HTML button based on the evaluation of a
+ * method which returns a boolean:
+ *
+ * {@snippet file = "objectos/html/HtmlTemplateJavadoc.java" region =
+ * "main-condition01"}
  */
 public final class Html {
 
-  // types
-
-  /**
-   * Compiles an HTML template into a materialized HTML document.
+  /*
+   * name types
    */
-  public non-sealed interface Compiler extends CompilerAttributes, CompilerElements {}
-  
-  // non public types
 
   /**
    * The name of an HTML attribute.
    */
-  sealed interface AttributeName permits HtmlAttributeName {
+  public sealed interface AttributeName permits HtmlAttributeName {
 
     /**
      * Index of this attribute.
@@ -66,12 +133,12 @@ public final class Html {
     boolean singleQuoted();
 
   }
-  
+
   /**
    * The name of an HTML element.
    */
-  sealed interface ElementName permits HtmlElementName {
-    
+  public sealed interface ElementName permits HtmlElementName {
+
     /**
      * Index of this element name.
      *
@@ -85,10 +152,10 @@ public final class Html {
      * @return name of the element
      */
     String name();
-    
+
     /**
      * Indicates if this is the name of an element that has an end tag.
-     * 
+     *
      * @return {@code true} if this is the name of an element that has an end
      *         tag and {@code false} otherwise
      */
@@ -96,7 +163,936 @@ public final class Html {
 
   }
 
+  /*
+   * pseudom types
+   */
+
+  public interface Attribute {
+
+    String name();
+
+    boolean booleanAttribute();
+
+    boolean singleQuoted();
+
+    String value();
+
+    default boolean hasName(String name) {
+      return name().equals(name);
+    }
+
+  }
+
+  /**
+   * A compiled {@link HtmlTemplate}.
+   */
+  public interface Document {
+
+    IterableOnce<Node> nodes();
+
+  }
+
+  public sealed interface Node permits DocumentType, Element, RawText, Text {}
+
+  public non-sealed interface DocumentType extends Node {}
+
+  public non-sealed interface Element extends Node {
+
+    IterableOnce<Attribute> attributes();
+
+    boolean isVoid();
+
+    String name();
+
+    IterableOnce<Node> nodes();
+
+    default boolean hasName(String name) {
+      return name().equals(name);
+    }
+
+  }
+
+  public non-sealed interface RawText extends Node {
+
+    String value();
+
+  }
+
+  public non-sealed interface Text extends Node {
+
+    String value();
+
+  }
+
+  /**
+   * Compiles an HTML template into a materialized HTML document.
+   */
+  public sealed interface Compiler extends CompilerAttributes, CompilerElements, CharWritable permits HtmlCompiler {
+
+    Html.Document compile();
+
+    AttributeInstruction attribute(AttributeName name, String value);
+
+    AttributeInstruction attribute(AttributeName name, Script.Action value);
+
+    /**
+     * Flattens the specified instructions so that each of the specified
+     * instructions is individually added, in order, to a receiving element.
+     *
+     * <p>
+     * This is useful, for example, when creating {@link HtmlComponent}
+     * instances.
+     * The following Objectos HTML code:
+     *
+     * {@snippet file = "objectos/html/BaseTemplateDslTest.java" region =
+     * "flatten"}
+     *
+     * <p>
+     * Generates the following HTML:
+     *
+     * <pre>{@code
+     *    <body>
+     *    <div class="my-component">
+     *    <h1>Flatten example</h1>
+     *    <p>First paragraph</p>
+     *    <p>Second paragraph</p>
+     *    </div>
+     *    </body>
+     * }</pre>
+     *
+     * <p>
+     * The {@code div} instruction is rendered as if it was invoked with four
+     * distinct instructions:
+     *
+     * <ul>
+     * <li>the {@code class} attribute;
+     * <li>the {@code h1} element;
+     * <li>the first {@code p} element; and
+     * <li>the second {@code p} element.
+     * </ul>
+     *
+     * @param contents
+     *        the instructions to be flattened
+     *
+     * @return an instruction representing this flatten operation
+     */
+    ElementInstruction flatten(Instruction... contents);
+
+    /**
+     * Includes a fragment into this template represented by the specified
+     * lambda.
+     *
+     * <p>
+     * The included fragment MUST only invoke methods this template instance. It
+     * is common (but not required) for a fragment to be a method reference to
+     * a private method of the template instance.
+     *
+     * <p>
+     * The following Objectos HTML template:
+     *
+     * {@snippet file = "objectos/html/BaseTemplateDslTest.java" region =
+     * "IncludeExample"}
+     *
+     * <p>
+     * Generates the following HTML:
+     *
+     * <pre>{@code
+     *     <!DOCTYPE html>
+     *     <html>
+     *     <head>
+     *     <title>Include fragment example</title>
+     *     </head>
+     *     <body>
+     *     <h1>Objectos HTML</h1>
+     *     <p>Using the include instruction</p>
+     *     </body>
+     *     </html>
+     * }</pre>
+     *
+     * <p>
+     * Note that the methods of included method references all return
+     * {@code void}.
+     *
+     * @param fragment
+     *        the fragment to include
+     *
+     * @return an instruction representing this fragment
+     */
+    FragmentInstruction include(FragmentLambda fragment);
+
+    <T1> FragmentInstruction include(FragmentLambda1<T1> fragment, T1 arg1);
+
+    <T1, T2> FragmentInstruction include(FragmentLambda2<T1, T2> fragment, T1 arg1, T2 arg2);
+
+    <T1, T2, T3> FragmentInstruction include(FragmentLambda3<T1, T2, T3> fragment, T1 arg1, T2 arg2, T3 arg3);
+
+    <T1, T2, T3, T4> FragmentInstruction include(FragmentLambda4<T1, T2, T3, T4> fragment, T1 arg1, T2 arg2, T3 arg3, T4 arg4);
+
+    /**
+     * The no-op instruction.
+     *
+     * <p>
+     * It can be used to conditionally add an attribute or element. For example,
+     * the following Objectos HTML template:
+     *
+     * {@snippet file = "objectos/html/BaseTemplateDslTest.java" region =
+     * "noop"}
+     *
+     * <p>
+     * Generates the following when {@code error == false}:
+     *
+     * <pre>{@code
+     *     <div class="alert">This is an alert!</div>
+     * }</pre>
+     *
+     * <p>
+     * And generates the following when {@code error == true}:
+     *
+     * <pre>{@code
+     *     <div class="alert alert-error">This is an alert!</div>
+     * }</pre>
+     *
+     * @return the no-op instruction.
+     */
+    NoOpInstruction noop();
+
+    ElementInstruction raw(String text);
+
+    /**
+     * Generates a text node with the specified {@code text} value. The text
+     * value
+     * is escaped before being emitted to the output.
+     *
+     * <p>
+     * The following Objectos HTML template:
+     *
+     * {@snippet file = "objectos/html/BaseTemplateDslTest.java" region =
+     * "text"}
+     *
+     * <p>
+     * Generates the following HTML:
+     *
+     * <pre>{@code
+     *     <p><strong>This is in bold</strong> &amp; this is not</p>
+     * }</pre>
+     *
+     * @param text
+     *        the text value to be added
+     *
+     * @return an instruction representing the text node
+     */
+    ElementInstruction text(String text);
+
+  }
+
+  /*/////////////////////
+   *
+   * Template instructions
+   *
+   */////////////////////
+
+  /**
+   * The value of an HTML {@code id} attribute.
+   */
+  public non-sealed interface Id extends Instruction {
+
+    /**
+     * The {@code id} value.
+     *
+     * @return the {@code id} value
+     */
+    String id();
+
+  }
+
+  /**
+   * The value of an HTML {@code class} attribute.
+   */
+  public non-sealed interface ClassName extends Instruction {
+
+    /**
+     * The {@code class} value.
+     *
+     * @return the {@code class} value
+     */
+    String className();
+
+  }
+
+  public sealed interface FragmentInstruction extends Instruction {}
+
+  private static final class HtmlFragmentInstruction implements FragmentInstruction {}
+
+  static final FragmentInstruction FRAGMENT = new HtmlFragmentInstruction();
+
+  /**
+   * A delayed set of template instructions.
+   *
+   * <p>
+   * The set of instructions MUST be of the same template instance where this
+   * fragment will be included.
+   *
+   * @see Html#include(Html.FragmentLambda)
+   */
+  @FunctionalInterface
+  public interface FragmentLambda {
+
+    /**
+     * Invokes this set of instructions.
+     */
+    void invoke();
+
+  }
+
+  /**
+   * A delayed set of template instructions.
+   *
+   * <p>
+   * The set of instructions MUST be of the same template instance where this
+   * fragment will be included.
+   *
+   * @see BaseTemplateDsl#include(FragmentAction)
+   */
+  @FunctionalInterface
+  public interface FragmentLambda1<T1> {
+
+    /**
+     * Invokes this set of instructions.
+     */
+    void invoke(T1 arg1);
+
+  }
+
+  /**
+   * A delayed set of template instructions.
+   *
+   * <p>
+   * The set of instructions MUST be of the same template instance where this
+   * fragment will be included.
+   *
+   * @see BaseTemplateDsl#include(FragmentAction)
+   */
+  @FunctionalInterface
+  public interface FragmentLambda2<T1, T2> {
+
+    /**
+     * Invokes this set of instructions.
+     */
+    void invoke(T1 arg1, T2 arg2);
+
+  }
+
+  /**
+   * A delayed set of template instructions.
+   *
+   * <p>
+   * The set of instructions MUST be of the same template instance where this
+   * fragment will be included.
+   *
+   * @see BaseTemplateDsl#include(FragmentAction)
+   */
+  @FunctionalInterface
+  public interface FragmentLambda3<T1, T2, T3> {
+
+    /**
+     * Invokes this set of instructions.
+     */
+    void invoke(T1 arg1, T2 arg2, T3 arg3);
+
+  }
+
+  /**
+   * A delayed set of template instructions.
+   *
+   * <p>
+   * The set of instructions MUST be of the same template instance where this
+   * fragment will be included.
+   *
+   * @see BaseTemplateDsl#include(FragmentAction)
+   */
+  @FunctionalInterface
+  public interface FragmentLambda4<T1, T2, T3, T4> {
+
+    /**
+     * Invokes this set of instructions.
+     */
+    void invoke(T1 arg1, T2 arg2, T3 arg3, T4 arg4);
+
+  }
+
+  /**
+   * A no-op instruction.
+   */
+  public sealed interface NoOpInstruction extends Instruction {}
+
+  private static final class HtmlNoOpInstruction implements NoOpInstruction {}
+
+  static final NoOpInstruction NOOP = new HtmlNoOpInstruction();
+
+  /*
+   * Template related classes
+   */
+
+  /**
+   * Formatter for printing an HTML template.
+   */
+  public sealed interface Formatter permits HtmlFormatter {
+
+    void formatTo(Html.Document document, Appendable appendable) throws IOException;
+
+    void formatTo(Html.Template template, Appendable appendable) throws IOException;
+
+  }
+
+  /**
+   * Allow for creating <em>components</em>, objects that can render parts of a
+   * larger HTML template.
+   *
+   * <p>
+   * A component instance must be bound to a distinct template instance. This
+   * template instance is called the <em>parent</em> of the component. Once
+   * bound, a component can only be used to render parts for its parent.
+   *
+   * <p>
+   * A component instance may be used to render instructions issued from its
+   * parent template.
+   */
+  public non-sealed static abstract class Component extends TemplateBase {
+
+    private final TemplateBase parent;
+
+    /**
+     * Creates a new component bound to the specified {@code parent} template.
+     *
+     * @param parent
+     *        the template instance for which this component will be bound to.
+     */
+    public Component(TemplateBase parent) {
+      this.parent = Check.notNull(parent, "parent == null");
+    }
+
+    @Override
+    final HtmlCompiler $compiler() {
+      return parent.$compiler();
+    }
+
+  }
+
+  /**
+   * A template in pure Java for generating HTML.
+   *
+   * <p>
+   * This class provides methods for representing HTML code in a Java class. An
+   * instance of the class can then be used to generate the represented HTML
+   * code.
+   */
+  public non-sealed static abstract class Template extends TemplateBase {
+
+    HtmlCompiler compiler;
+
+    /**
+     * Sole constructor.
+     */
+    protected Template() {}
+
+    /**
+     * Returns the HTML generated by this template.
+     *
+     * @return the HTML generated by this template
+     */
+    @Override
+    public final String toString() {
+      try {
+        HtmlCompiler compiler;
+        compiler = new HtmlCompiler();
+
+        accept(compiler);
+
+        HtmlDocument document;
+        document = compiler.compile();
+
+        StringBuilder out;
+        out = new StringBuilder();
+
+        HtmlFormatter.STANDARD.formatTo(document, out);
+
+        return out.toString();
+      } catch (IOException e) {
+        throw new AssertionError("StringBuilder does not throw IOException", e);
+      }
+    }
+
+    /**
+     * Defines the HTML code to be generated by this template.
+     */
+    protected abstract void definition();
+
+    final HtmlDocument compile(HtmlCompiler html) {
+      accept(html);
+
+      return html.compile();
+    }
+
+    public final void accept(Html.Compiler instance) {
+      Check.state(compiler == null, "Concurrent evalution of a HtmlTemplate is not supported");
+
+      try {
+        compiler = (HtmlCompiler) instance;
+
+        compiler.compilationBegin();
+
+        definition();
+
+        compiler.compilationEnd();
+      } finally {
+        compiler = null;
+      }
+    }
+
+    @Override
+    final HtmlCompiler $compiler() {
+      Check.state(compiler != null, "html not set");
+
+      return compiler;
+    }
+
+  }
+
+  public sealed static abstract class TemplateBase extends Html.TemplateElements permits Component, Template {
+
+    TemplateBase() {}
+
+    /**
+     * Generates the {@code class} attribute by joining the specified values
+     * with
+     * a space character.
+     *
+     * @param v0 the first value
+     * @param v1 the second value
+     *
+     * @return an instruction representing this attribute.
+     */
+    protected final AttributeInstruction className(String v0, String v1) {
+      Check.notNull(v0, "v0 == null");
+      Check.notNull(v1, "v1 == null");
+
+      return $attributes().className(v0 + " " + v1);
+    }
+
+    /**
+     * Generates the {@code class} attribute by joining the specified values
+     * with
+     * space characters.
+     *
+     * @param v0 the first value
+     * @param v1 the second value
+     * @param v2 the third value
+     *
+     * @return an instruction representing this attribute.
+     */
+    protected final AttributeInstruction className(String v0, String v1, String v2) {
+      Check.notNull(v0, "v0 == null");
+      Check.notNull(v1, "v1 == null");
+      Check.notNull(v2, "v2 == null");
+
+      return $attributes().className(v0 + " " + v1 + " " + v2);
+    }
+
+    /**
+     * Generates the {@code class} attribute by joining the specified values
+     * with
+     * space characters.
+     *
+     * @param v0 the first value
+     * @param v1 the second value
+     * @param v2 the third value
+     * @param v3 the fourth value
+     *
+     * @return an instruction representing this attribute.
+     */
+    protected final AttributeInstruction className(String v0, String v1, String v2, String v3) {
+      Check.notNull(v0, "v0 == null");
+      Check.notNull(v1, "v1 == null");
+      Check.notNull(v2, "v2 == null");
+      Check.notNull(v3, "v3 == null");
+
+      return $attributes().className(v0 + " " + v1 + " " + v2 + " " + v3);
+    }
+
+    /**
+     * Generates the {@code class} attribute by joining the specified values
+     * with
+     * space characters.
+     *
+     * @param values the values to be joined
+     *
+     * @return an instruction representing this attribute.
+     */
+    protected final AttributeInstruction className(String... values) {
+      Check.notNull(values, "values == null");
+
+      String value;
+      value = Stream.of(values).collect(Collectors.joining(" "));
+
+      return $attributes().className(value);
+    }
+
+    protected final AttributeInstruction dataFrame(String name) {
+      Check.notNull(name, "name == null");
+
+      return $compiler().attribute(HtmlAttributeName.DATA_FRAME, name);
+    }
+
+    protected final AttributeInstruction dataFrame(String name, String value) {
+      Check.notNull(name, "name == null");
+      Check.notNull(value, "value == null");
+
+      return $compiler().attribute(HtmlAttributeName.DATA_FRAME, name + ":" + value);
+    }
+
+    protected final AttributeInstruction dataOnClick(Script.Action... actions) {
+      return dataOn(HtmlAttributeName.DATA_ON_CLICK, actions);
+    }
+
+    protected final AttributeInstruction dataOnInput(Script.Action... actions) {
+      return dataOn(HtmlAttributeName.DATA_ON_INPUT, actions);
+    }
+
+    private final AttributeInstruction dataOn(AttributeName name, Script.Action... actions) {
+      Check.notNull(actions, "actions == null");
+
+      Script.Action value;
+      value = Script.join(actions);
+
+      return $compiler().attribute(name, value);
+    }
+
+    /**
+     * Includes a fragment into this template represented by the specified
+     * lambda.
+     *
+     * <p>
+     * The included fragment MUST only invoke methods this template instance. It
+     * is common (but not required) for a fragment to be a method reference to
+     * a private method of the template instance.
+     *
+     * <p>
+     * The following Objectos HTML template:
+     *
+     * {@snippet file = "objectos/html/BaseTemplateDslTest.java" region =
+     * "IncludeExample"}
+     *
+     * <p>
+     * Generates the following HTML:
+     *
+     * <pre>{@code
+     *     <!DOCTYPE html>
+     *     <html>
+     *     <head>
+     *     <title>Include fragment example</title>
+     *     </head>
+     *     <body>
+     *     <h1>Objectos HTML</h1>
+     *     <p>Using the include instruction</p>
+     *     </body>
+     *     </html>
+     * }</pre>
+     *
+     * <p>
+     * Note that the methods of included method references all return
+     * {@code void}.
+     *
+     * @param fragment
+     *        the fragment to include
+     *
+     * @return an instruction representing this fragment
+     */
+    protected final FragmentInstruction f(FragmentLambda fragment) {
+      return $compiler().include(fragment);
+    }
+
+    protected final <T1> FragmentInstruction f(FragmentLambda1<T1> fragment, T1 arg1) {
+      return $compiler().include(fragment, arg1);
+    }
+
+    protected final <T1, T2> FragmentInstruction f(FragmentLambda2<T1, T2> fragment, T1 arg1, T2 arg2) {
+      return $compiler().include(fragment, arg1, arg2);
+    }
+
+    protected final <T1, T2, T3> FragmentInstruction f(FragmentLambda3<T1, T2, T3> fragment, T1 arg1, T2 arg2, T3 arg3) {
+      return $compiler().include(fragment, arg1, arg2, arg3);
+    }
+
+    protected final <T1, T2, T3, T4> FragmentInstruction f(FragmentLambda4<T1, T2, T3, T4> fragment, T1 arg1, T2 arg2, T3 arg3, T4 arg4) {
+      return $compiler().include(fragment, arg1, arg2, arg3, arg4);
+    }
+
+    /**
+     * Flattens the specified instructions so that each of the specified
+     * instructions is individually added, in order, to a receiving element.
+     *
+     * <p>
+     * This is useful, for example, when creating {@link HtmlComponent}
+     * instances.
+     * The following Objectos HTML code:
+     *
+     * {@snippet file = "objectos/html/BaseTemplateDslTest.java" region =
+     * "flatten"}
+     *
+     * <p>
+     * Generates the following HTML:
+     *
+     * <pre>{@code
+     *    <body>
+     *    <div class="my-component">
+     *    <h1>Flatten example</h1>
+     *    <p>First paragraph</p>
+     *    <p>Second paragraph</p>
+     *    </div>
+     *    </body>
+     * }</pre>
+     *
+     * <p>
+     * The {@code div} instruction is rendered as if it was invoked with four
+     * distinct instructions:
+     *
+     * <ul>
+     * <li>the {@code class} attribute;
+     * <li>the {@code h1} element;
+     * <li>the first {@code p} element; and
+     * <li>the second {@code p} element.
+     * </ul>
+     *
+     * @param contents
+     *        the instructions to be flattened
+     *
+     * @return an instruction representing this flatten operation
+     */
+    protected final ElementInstruction flatten(Instruction... contents) {
+      return $compiler().flatten(contents);
+    }
+
+    /**
+     * Includes a fragment into this template represented by the specified
+     * lambda.
+     *
+     * <p>
+     * The included fragment MUST only invoke methods this template instance. It
+     * is common (but not required) for a fragment to be a method reference to
+     * a private method of the template instance.
+     *
+     * <p>
+     * The following Objectos HTML template:
+     *
+     * {@snippet file = "objectos/html/BaseTemplateDslTest.java" region =
+     * "IncludeExample"}
+     *
+     * <p>
+     * Generates the following HTML:
+     *
+     * <pre>{@code
+     *     <!DOCTYPE html>
+     *     <html>
+     *     <head>
+     *     <title>Include fragment example</title>
+     *     </head>
+     *     <body>
+     *     <h1>Objectos HTML</h1>
+     *     <p>Using the include instruction</p>
+     *     </body>
+     *     </html>
+     * }</pre>
+     *
+     * <p>
+     * Note that the methods of included method references all return
+     * {@code void}.
+     *
+     * @param fragment
+     *        the fragment to include
+     *
+     * @return an instruction representing this fragment
+     */
+    protected final FragmentInstruction include(FragmentLambda fragment) {
+      return $compiler().include(fragment);
+    }
+
+    /**
+     * Includes the specified template into this template.
+     *
+     * @param template
+     *        the template to be included
+     *
+     * @return an instruction representing the inclusion of the template.
+     */
+    protected final FragmentInstruction include(Html.Template template) {
+      Check.notNull(template, "template == null");
+
+      try {
+        HtmlCompiler api;
+        api = $compiler();
+
+        int index;
+        index = api.fragmentBegin();
+
+        template.compiler = api;
+
+        template.definition();
+
+        api.fragmentEnd(index);
+      } finally {
+        template.compiler = null;
+      }
+
+      return Html.FRAGMENT;
+    }
+
+    /**
+     * The no-op instruction.
+     *
+     * <p>
+     * It can be used to conditionally add an attribute or element. For example,
+     * the following Objectos HTML template:
+     *
+     * {@snippet file = "objectos/html/BaseTemplateDslTest.java" region =
+     * "noop"}
+     *
+     * <p>
+     * Generates the following when {@code error == false}:
+     *
+     * <pre>{@code
+     *     <div class="alert">This is an alert!</div>
+     * }</pre>
+     *
+     * <p>
+     * And generates the following when {@code error == true}:
+     *
+     * <pre>{@code
+     *     <div class="alert alert-error">This is an alert!</div>
+     * }</pre>
+     *
+     * @return the no-op instruction.
+     */
+    protected final NoOpInstruction noop() {
+      return Html.NOOP;
+    }
+
+    protected final ElementInstruction raw(String text) {
+      return $compiler().raw(text);
+    }
+
+    /**
+     * Generates a text node with the specified {@code text} value. The text
+     * value
+     * is escaped before being emitted to the output.
+     *
+     * <p>
+     * The following Objectos HTML template:
+     *
+     * {@snippet file = "objectos/html/BaseTemplateDslTest.java" region =
+     * "text"}
+     *
+     * <p>
+     * Generates the following HTML:
+     *
+     * <pre>{@code
+     *     <p><strong>This is in bold</strong> &amp; this is not</p>
+     * }</pre>
+     *
+     * @param text
+     *        the text value to be added
+     *
+     * @return an instruction representing the text node
+     */
+    protected final ElementInstruction t(String text) {
+      return $compiler().text(text);
+    }
+
+    @Override
+    final CompilerAttributes $attributes() {
+      return $compiler();
+    }
+
+    @Override
+    final CompilerElements $elements() {
+      return $compiler();
+    }
+
+    abstract HtmlCompiler $compiler();
+
+  }
+
   private Html() {}
+
+  public static Compiler createCompiler() {
+    return new HtmlCompiler();
+  }
+
+  public static ClassName className(String value) {
+    Check.notNull(value, "value == null");
+
+    return new HtmlClassName(value);
+  }
+
+  public static ClassName className(String v0, String v1) {
+    Check.notNull(v0, "v0 == null");
+    Check.notNull(v1, "v1 == null");
+
+    return new HtmlClassName(v0 + " " + v1);
+  }
+
+  public static ClassName className(String v0, String v1, String v2) {
+    Check.notNull(v0, "v0 == null");
+    Check.notNull(v1, "v1 == null");
+    Check.notNull(v2, "v2 == null");
+
+    return new HtmlClassName(v0 + " " + v1 + " " + v2);
+  }
+
+  public static ClassName className(String v0, String v1, String v2, String v3) {
+    Check.notNull(v0, "v0 == null");
+    Check.notNull(v1, "v1 == null");
+    Check.notNull(v2, "v2 == null");
+    Check.notNull(v3, "v3 == null");
+
+    return new HtmlClassName(v0 + " " + v1 + " " + v2 + " " + v3);
+  }
+
+  public static ClassName className(String v0, String v1, String v2, String v3, String v4) {
+    Check.notNull(v0, "v0 == null");
+    Check.notNull(v1, "v1 == null");
+    Check.notNull(v2, "v2 == null");
+    Check.notNull(v3, "v3 == null");
+    Check.notNull(v4, "v4 == null");
+
+    return new HtmlClassName(v0 + " " + v1 + " " + v2 + " " + v3 + " " + v4);
+  }
+
+  public static ClassName className(String... values) {
+    StringBuilder sb;
+    sb = new StringBuilder();
+
+    for (int i = 0; i < values.length; i++) {
+      if (i > 0) {
+        sb.append(' ');
+      }
+
+      String value;
+      value = Check.notNull(values[i], "values[", i, "] == null");
+
+      sb.append(value);
+    }
+
+    String value;
+    value = sb.toString();
+
+    return new HtmlClassName(value);
+  }
+
+  public static Id id(String value) {
+    Check.notNull(value, "value == null");
+
+    return new HtmlId(value);
+  }
 
   // The code below was generated by objectos.selfgen.HtmlSpec. Do not edit!
 
@@ -162,7 +1158,8 @@ public final class Html {
     }
 
     /**
-     * Generates the {@code alignment-baseline} attribute with the specified value.
+     * Generates the {@code alignment-baseline} attribute with the specified
+     * value.
      *
      * @param value
      *        the value of the attribute
@@ -348,7 +1345,8 @@ public final class Html {
     }
 
     /**
-     * Generates the {@code color-interpolation} attribute with the specified value.
+     * Generates the {@code color-interpolation} attribute with the specified
+     * value.
      *
      * @param value
      *        the value of the attribute
@@ -360,7 +1358,8 @@ public final class Html {
     }
 
     /**
-     * Generates the {@code color-interpolation-filters} attribute with the specified value.
+     * Generates the {@code color-interpolation-filters} attribute with the
+     * specified value.
      *
      * @param value
      *        the value of the attribute
@@ -510,7 +1509,8 @@ public final class Html {
     }
 
     /**
-     * Generates the {@code dominant-baseline} attribute with the specified value.
+     * Generates the {@code dominant-baseline} attribute with the specified
+     * value.
      *
      * @param value
      *        the value of the attribute
@@ -642,7 +1642,8 @@ public final class Html {
     }
 
     /**
-     * Generates the {@code font-size-adjust} attribute with the specified value.
+     * Generates the {@code font-size-adjust} attribute with the specified
+     * value.
      *
      * @param value
      *        the value of the attribute
@@ -726,7 +1727,8 @@ public final class Html {
     }
 
     /**
-     * Generates the {@code glyph-orientation-horizontal} attribute with the specified value.
+     * Generates the {@code glyph-orientation-horizontal} attribute with the
+     * specified value.
      *
      * @param value
      *        the value of the attribute
@@ -738,7 +1740,8 @@ public final class Html {
     }
 
     /**
-     * Generates the {@code glyph-orientation-vertical} attribute with the specified value.
+     * Generates the {@code glyph-orientation-vertical} attribute with the
+     * specified value.
      *
      * @param value
      *        the value of the attribute
@@ -1065,7 +2068,8 @@ public final class Html {
     }
 
     /**
-     * Generates the {@code onlanguagechange} attribute with the specified value.
+     * Generates the {@code onlanguagechange} attribute with the specified
+     * value.
      *
      * @param value
      *        the value of the attribute
@@ -1149,7 +2153,8 @@ public final class Html {
     }
 
     /**
-     * Generates the {@code onrejectionhandled} attribute with the specified value.
+     * Generates the {@code onrejectionhandled} attribute with the specified
+     * value.
      *
      * @param value
      *        the value of the attribute
@@ -1185,7 +2190,8 @@ public final class Html {
     }
 
     /**
-     * Generates the {@code onunhandledrejection} attribute with the specified value.
+     * Generates the {@code onunhandledrejection} attribute with the specified
+     * value.
      *
      * @param value
      *        the value of the attribute
@@ -1506,7 +2512,8 @@ public final class Html {
     }
 
     /**
-     * Generates the {@code stroke-dasharray} attribute with the specified value.
+     * Generates the {@code stroke-dasharray} attribute with the specified
+     * value.
      *
      * @param value
      *        the value of the attribute
@@ -1518,7 +2525,8 @@ public final class Html {
     }
 
     /**
-     * Generates the {@code stroke-dashoffset} attribute with the specified value.
+     * Generates the {@code stroke-dashoffset} attribute with the specified
+     * value.
      *
      * @param value
      *        the value of the attribute
@@ -1554,7 +2562,8 @@ public final class Html {
     }
 
     /**
-     * Generates the {@code stroke-miterlimit} attribute with the specified value.
+     * Generates the {@code stroke-miterlimit} attribute with the specified
+     * value.
      *
      * @param value
      *        the value of the attribute
@@ -1686,7 +2695,8 @@ public final class Html {
     }
 
     /**
-     * Generates the {@code transform-origin} attribute with the specified value.
+     * Generates the {@code transform-origin} attribute with the specified
+     * value.
      *
      * @param value
      *        the value of the attribute
@@ -1893,7 +2903,8 @@ public final class Html {
     AttributeInstruction align(String value);
 
     /**
-     * Generates the {@code alignment-baseline} attribute with the specified value.
+     * Generates the {@code alignment-baseline} attribute with the specified
+     * value.
      *
      * @param value
      *        the value of the attribute
@@ -2047,7 +3058,8 @@ public final class Html {
     AttributeInstruction color(String value);
 
     /**
-     * Generates the {@code color-interpolation} attribute with the specified value.
+     * Generates the {@code color-interpolation} attribute with the specified
+     * value.
      *
      * @param value
      *        the value of the attribute
@@ -2057,7 +3069,8 @@ public final class Html {
     AttributeInstruction colorInterpolation(String value);
 
     /**
-     * Generates the {@code color-interpolation-filters} attribute with the specified value.
+     * Generates the {@code color-interpolation-filters} attribute with the
+     * specified value.
      *
      * @param value
      *        the value of the attribute
@@ -2181,7 +3194,8 @@ public final class Html {
     AttributeInstruction display(String value);
 
     /**
-     * Generates the {@code dominant-baseline} attribute with the specified value.
+     * Generates the {@code dominant-baseline} attribute with the specified
+     * value.
      *
      * @param value
      *        the value of the attribute
@@ -2291,7 +3305,8 @@ public final class Html {
     AttributeInstruction fontSize(String value);
 
     /**
-     * Generates the {@code font-size-adjust} attribute with the specified value.
+     * Generates the {@code font-size-adjust} attribute with the specified
+     * value.
      *
      * @param value
      *        the value of the attribute
@@ -2361,7 +3376,8 @@ public final class Html {
     AttributeInstruction forElement(String value);
 
     /**
-     * Generates the {@code glyph-orientation-horizontal} attribute with the specified value.
+     * Generates the {@code glyph-orientation-horizontal} attribute with the
+     * specified value.
      *
      * @param value
      *        the value of the attribute
@@ -2371,7 +3387,8 @@ public final class Html {
     AttributeInstruction glyphOrientationHorizontal(String value);
 
     /**
-     * Generates the {@code glyph-orientation-vertical} attribute with the specified value.
+     * Generates the {@code glyph-orientation-vertical} attribute with the
+     * specified value.
      *
      * @param value
      *        the value of the attribute
@@ -2642,7 +3659,8 @@ public final class Html {
     AttributeInstruction onhashchange(String value);
 
     /**
-     * Generates the {@code onlanguagechange} attribute with the specified value.
+     * Generates the {@code onlanguagechange} attribute with the specified
+     * value.
      *
      * @param value
      *        the value of the attribute
@@ -2712,7 +3730,8 @@ public final class Html {
     AttributeInstruction onpopstate(String value);
 
     /**
-     * Generates the {@code onrejectionhandled} attribute with the specified value.
+     * Generates the {@code onrejectionhandled} attribute with the specified
+     * value.
      *
      * @param value
      *        the value of the attribute
@@ -2742,7 +3761,8 @@ public final class Html {
     AttributeInstruction onsubmit(String value);
 
     /**
-     * Generates the {@code onunhandledrejection} attribute with the specified value.
+     * Generates the {@code onunhandledrejection} attribute with the specified
+     * value.
      *
      * @param value
      *        the value of the attribute
@@ -3007,7 +4027,8 @@ public final class Html {
     AttributeInstruction stroke(String value);
 
     /**
-     * Generates the {@code stroke-dasharray} attribute with the specified value.
+     * Generates the {@code stroke-dasharray} attribute with the specified
+     * value.
      *
      * @param value
      *        the value of the attribute
@@ -3017,7 +4038,8 @@ public final class Html {
     AttributeInstruction strokeDasharray(String value);
 
     /**
-     * Generates the {@code stroke-dashoffset} attribute with the specified value.
+     * Generates the {@code stroke-dashoffset} attribute with the specified
+     * value.
      *
      * @param value
      *        the value of the attribute
@@ -3047,7 +4069,8 @@ public final class Html {
     AttributeInstruction strokeLinejoin(String value);
 
     /**
-     * Generates the {@code stroke-miterlimit} attribute with the specified value.
+     * Generates the {@code stroke-miterlimit} attribute with the specified
+     * value.
      *
      * @param value
      *        the value of the attribute
@@ -3157,7 +4180,8 @@ public final class Html {
     AttributeInstruction transform(String value);
 
     /**
-     * Generates the {@code transform-origin} attribute with the specified value.
+     * Generates the {@code transform-origin} attribute with the specified
+     * value.
      *
      * @param value
      *        the value of the attribute

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Objectos Software LTDA.
+ * Copyright (C) 2023-2024 Objectos Software LTDA.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,29 +15,28 @@
  */
 package objectos.way;
 
-final class MarketingSite extends Http.Module {
+import java.util.ArrayList;
+import java.util.List;
 
-  @Override
-  protected final void configure() {
-    route(path("/"),
-        method(Http.GET, movedPermanently("/index.html"))
-    );
+final class InitBuilder {
 
-    route(path("/index.html"),
-        method(Http.GET, this::indexHtml)
-    );
+  static InitBuilder BUILDER = new InitBuilder();
+
+  private final List<InitImpl> standardValues = new ArrayList<>();
+
+  private int index;
+
+  public final InitImpl create(String name) {
+    InitImpl result;
+    result = new InitImpl(index++, name);
+
+    standardValues.add(result);
+
+    return result;
   }
 
-  private void indexHtml(Http.Exchange http) {
-    http.ok(new MarketingSiteHome());
-  }
-
-  private static class MarketingSiteHome extends Html.Template {
-    @Override
-    protected void definition() {
-      doctype();
-      h1("home");
-    }
+  public final InitImpl[] buildValues() {
+    return standardValues.toArray(InitImpl[]::new);
   }
 
 }

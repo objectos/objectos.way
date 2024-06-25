@@ -20,7 +20,6 @@ import java.lang.reflect.Method;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
-import objectos.html.HtmlTemplate;
 import objectos.way.Http.Exchange;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -269,7 +268,7 @@ public class HttpServerTest implements Http.Handler {
     }
   }
 
-  private static final class AttributeTester extends HtmlTemplate {
+  private static final class AttributeTester extends Html.Template {
     private final Exchange http;
     private final Class<?> key;
 

@@ -21,13 +21,13 @@ import static org.testng.Assert.assertTrue;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
-import objectos.html.HtmlTemplate;
+import objectos.way.Html;
 import objectos.way.TestingNoteSink;
 import org.testng.annotations.Test;
 
 public class StyleGenTest {
 
-  private static abstract class AbstractSubject extends HtmlTemplate {
+  private static abstract class AbstractSubject extends Html.Template {
     @Override
     protected final void definition() {
       div(
@@ -200,7 +200,7 @@ public class StyleGenTest {
         """
     );
   }
-  
+
   @Test
   public void borderRadius() {
     class Subject extends AbstractSubject {
@@ -223,7 +223,7 @@ public class StyleGenTest {
         className("rounded-br-none rounded-br-sm rounded-br rounded-br-md rounded-br-lg rounded-br-xl rounded-br-2xl rounded-br-3xl rounded-br-full");
         className("rounded-bl-none rounded-bl-sm rounded-bl rounded-bl-md rounded-bl-lg rounded-bl-xl rounded-bl-2xl rounded-bl-3xl rounded-bl-full");
         // @formatter:on
-        }
+      }
     }
 
     test(
@@ -543,7 +543,7 @@ public class StyleGenTest {
         """
     );
   }
-  
+
   @Test
   public void container() {
     class Subject extends AbstractSubject {
@@ -594,13 +594,14 @@ public class StyleGenTest {
         """
     );
   }
-  
+
   @Test
   public void cursor() {
     class Subject extends AbstractSubject {
       @Override
       final void classes() {
-        className("cursor-auto cursor-default cursor-pointer cursor-wait cursor-text cursor-move cursor-help cursor-not-allowed cursor-none cursor-context-menu cursor-progress cursor-cell cursor-crosshair cursor-vertical-text cursor-alias cursor-copy cursor-no-drop cursor-grab cursor-grabbing cursor-all-scroll cursor-col-resize cursor-row-resize cursor-n-resize cursor-e-resize cursor-s-resize cursor-w-resize cursor-ne-resize cursor-nw-resize cursor-se-resize cursor-sw-resize cursor-ew-resize cursor-ns-resize cursor-nesw-resize cursor-nwse-resize cursor-zoom-in cursor-zoom-out");
+        className(
+            "cursor-auto cursor-default cursor-pointer cursor-wait cursor-text cursor-move cursor-help cursor-not-allowed cursor-none cursor-context-menu cursor-progress cursor-cell cursor-crosshair cursor-vertical-text cursor-alias cursor-copy cursor-no-drop cursor-grab cursor-grabbing cursor-all-scroll cursor-col-resize cursor-row-resize cursor-n-resize cursor-e-resize cursor-s-resize cursor-w-resize cursor-ne-resize cursor-nw-resize cursor-se-resize cursor-sw-resize cursor-ew-resize cursor-ns-resize cursor-nesw-resize cursor-nwse-resize cursor-zoom-in cursor-zoom-out");
       }
     }
 
@@ -836,9 +837,12 @@ public class StyleGenTest {
     class Subject extends AbstractSubject {
       @Override
       final void classes() {
-        className("gap-px gap-0 gap-0.5 gap-1 gap-1.5 gap-2 gap-2.5 gap-3 gap-3.5 gap-4 gap-5 gap-6 gap-7 gap-8 gap-9 gap-10 gap-11 gap-12 gap-14 gap-16 gap-20 gap-24 gap-28 gap-32 gap-36 gap-40 gap-44 gap-48 gap-52 gap-56 gap-60 gap-64 gap-72 gap-80 gap-96");
-        className("gap-x-px gap-x-0 gap-x-0.5 gap-x-1 gap-x-1.5 gap-x-2 gap-x-2.5 gap-x-3 gap-x-3.5 gap-x-4 gap-x-5 gap-x-6 gap-x-7 gap-x-8 gap-x-9 gap-x-10 gap-x-11 gap-x-12 gap-x-14 gap-x-16 gap-x-20 gap-x-24 gap-x-28 gap-x-32 gap-x-36 gap-x-40 gap-x-44 gap-x-48 gap-x-52 gap-x-56 gap-x-60 gap-x-64 gap-x-72 gap-x-80 gap-x-96");
-        className("gap-y-px gap-y-0 gap-y-0.5 gap-y-1 gap-y-1.5 gap-y-2 gap-y-2.5 gap-y-3 gap-y-3.5 gap-y-4 gap-y-5 gap-y-6 gap-y-7 gap-y-8 gap-y-9 gap-y-10 gap-y-11 gap-y-12 gap-y-14 gap-y-16 gap-y-20 gap-y-24 gap-y-28 gap-y-32 gap-y-36 gap-y-40 gap-y-44 gap-y-48 gap-y-52 gap-y-56 gap-y-60 gap-y-64 gap-y-72 gap-y-80 gap-y-96");
+        className(
+            "gap-px gap-0 gap-0.5 gap-1 gap-1.5 gap-2 gap-2.5 gap-3 gap-3.5 gap-4 gap-5 gap-6 gap-7 gap-8 gap-9 gap-10 gap-11 gap-12 gap-14 gap-16 gap-20 gap-24 gap-28 gap-32 gap-36 gap-40 gap-44 gap-48 gap-52 gap-56 gap-60 gap-64 gap-72 gap-80 gap-96");
+        className(
+            "gap-x-px gap-x-0 gap-x-0.5 gap-x-1 gap-x-1.5 gap-x-2 gap-x-2.5 gap-x-3 gap-x-3.5 gap-x-4 gap-x-5 gap-x-6 gap-x-7 gap-x-8 gap-x-9 gap-x-10 gap-x-11 gap-x-12 gap-x-14 gap-x-16 gap-x-20 gap-x-24 gap-x-28 gap-x-32 gap-x-36 gap-x-40 gap-x-44 gap-x-48 gap-x-52 gap-x-56 gap-x-60 gap-x-64 gap-x-72 gap-x-80 gap-x-96");
+        className(
+            "gap-y-px gap-y-0 gap-y-0.5 gap-y-1 gap-y-1.5 gap-y-2 gap-y-2.5 gap-y-3 gap-y-3.5 gap-y-4 gap-y-5 gap-y-6 gap-y-7 gap-y-8 gap-y-9 gap-y-10 gap-y-11 gap-y-12 gap-y-14 gap-y-16 gap-y-20 gap-y-24 gap-y-28 gap-y-32 gap-y-36 gap-y-40 gap-y-44 gap-y-48 gap-y-52 gap-y-56 gap-y-60 gap-y-64 gap-y-72 gap-y-80 gap-y-96");
       }
     }
 
@@ -1015,13 +1019,14 @@ public class StyleGenTest {
         """
     );
   }
-  
+
   @Test
   public void gridTemplateColumns() {
     class Subject extends AbstractSubject {
       @Override
       final void classes() {
-        className("grid-cols-none grid-cols-subgrid grid-cols-1 grid-cols-2 grid-cols-3 grid-cols-4 grid-cols-5 grid-cols-6 grid-cols-7 grid-cols-8 grid-cols-9 grid-cols-10 grid-cols-11 grid-cols-12");
+        className(
+            "grid-cols-none grid-cols-subgrid grid-cols-1 grid-cols-2 grid-cols-3 grid-cols-4 grid-cols-5 grid-cols-6 grid-cols-7 grid-cols-8 grid-cols-9 grid-cols-10 grid-cols-11 grid-cols-12");
       }
     }
 
@@ -1052,7 +1057,8 @@ public class StyleGenTest {
     class Subject extends AbstractSubject {
       @Override
       final void classes() {
-        className("grid-rows-none grid-rows-subgrid grid-rows-1 grid-rows-2 grid-rows-3 grid-rows-4 grid-rows-5 grid-rows-6 grid-rows-7 grid-rows-8 grid-rows-9 grid-rows-10 grid-rows-11 grid-rows-12");
+        className(
+            "grid-rows-none grid-rows-subgrid grid-rows-1 grid-rows-2 grid-rows-3 grid-rows-4 grid-rows-5 grid-rows-6 grid-rows-7 grid-rows-8 grid-rows-9 grid-rows-10 grid-rows-11 grid-rows-12");
       }
     }
 
@@ -1077,7 +1083,7 @@ public class StyleGenTest {
         """
     );
   }
-  
+
   @Test
   public void height() {
     class Subject extends AbstractSubject {
@@ -2002,7 +2008,7 @@ public class StyleGenTest {
         """
     );
   }
-  
+
   @Test
   public void maxWidth() {
     class Subject extends AbstractSubject {
@@ -2078,7 +2084,7 @@ public class StyleGenTest {
         """
     );
   }
-  
+
   @Test
   public void minWidth() {
     class Subject extends AbstractSubject {
@@ -2267,7 +2273,7 @@ public class StyleGenTest {
         """
     );
   }
-  
+
   @Test
   public void overflow() {
     class Subject extends AbstractSubject {
@@ -2571,7 +2577,7 @@ public class StyleGenTest {
         """
     );
   }
-  
+
   @Test
   public void pointerEvents() {
     class Subject extends AbstractSubject {
@@ -2650,7 +2656,7 @@ public class StyleGenTest {
         """
     );
   }
-  
+
   @Test
   public void size() {
     class Subject extends AbstractSubject {
@@ -2735,7 +2741,7 @@ public class StyleGenTest {
         """
     );
   }
-  
+
   @Test
   public void stroke() {
     class Subject extends AbstractSubject {
@@ -2864,7 +2870,7 @@ public class StyleGenTest {
         """
     );
   }
-  
+
   @Test
   public void textWrap() {
     class Subject extends AbstractSubject {
@@ -2982,7 +2988,7 @@ public class StyleGenTest {
         """
     );
   }
-  
+
   @Test
   public void verticalAlign() {
     class Subject extends AbstractSubject {
@@ -3265,7 +3271,7 @@ public class StyleGenTest {
         """
     );
   }
-  
+
   @Test
   public void addUtility() {
     WayStyleGen gen;
@@ -3314,7 +3320,7 @@ public class StyleGenTest {
         """
     );
   }
-  
+
   @Test
   public void addVariant() {
     WayStyleGen gen;
@@ -3432,7 +3438,7 @@ public class StyleGenTest {
         """
     );
   }
-  
+
   @Test
   public void overrideGridTemplateRows() {
     WayStyleGen gen;
@@ -3488,7 +3494,7 @@ public class StyleGenTest {
         """
     );
   }
-  
+
   @Test
   public void resetTest() {
     WayStyleGen gen;
@@ -3510,9 +3516,9 @@ public class StyleGenTest {
     assertTrue(result.contains("mono"));
     assertTrue(result.endsWith(".hidden { display: none }\n"));
   }
-  
+
   // edge cases
-  
+
   @Test
   public void negativeMargin() {
     class Subject extends AbstractSubject {
@@ -3527,7 +3533,7 @@ public class StyleGenTest {
 
         """
         .-ml-2 { margin-left: -0.5rem }
-        
+
         @media (min-width: 768px) {
           .md\\:hidden { display: none }
         }
@@ -3565,7 +3571,7 @@ public class StyleGenTest {
         Map.entry("black", "#000000"),
         Map.entry("white", "#ffffff")
     );
-    
+
     test(gen, type, expected);
   }
 
