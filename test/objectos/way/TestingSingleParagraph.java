@@ -21,7 +21,7 @@ class TestingSingleParagraph extends Html.Template {
   public TestingSingleParagraph(String text) { this.text = text; }
 
   @Override
-  protected final void definition() {
+  protected final void render() {
     html(
         p(text)
     );

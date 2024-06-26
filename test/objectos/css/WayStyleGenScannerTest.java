@@ -28,7 +28,7 @@ public class WayStyleGenScannerTest {
   public void testCase01() {
     class Subject extends Html.Template {
       @Override
-      protected final void definition() {
+      protected final void render() {
         div(className("m-0"));
       }
     }
@@ -40,7 +40,7 @@ public class WayStyleGenScannerTest {
   public void testCase02() {
     class Subject extends Html.Template {
       @Override
-      protected final void definition() {
+      protected final void render() {
         div(
             className("m-0"),
             className("block"),
@@ -56,7 +56,7 @@ public class WayStyleGenScannerTest {
   public void testCase03() {
     class Subject extends Html.Template {
       @Override
-      protected final void definition() {
+      protected final void render() {
         div(
             className("m-0"),
             className("block"),

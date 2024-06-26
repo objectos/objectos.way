@@ -34,7 +34,7 @@ public class HtmlFormatterTest {
     test(
         new Html.Template() {
           @Override
-          protected final void definition() {
+          protected final void render() {
             html();
           }
         },
@@ -54,7 +54,7 @@ public class HtmlFormatterTest {
     test(
         new Html.Template() {
           @Override
-          protected final void definition() {
+          protected final void render() {
             doctype();
             html();
           }
@@ -76,7 +76,7 @@ public class HtmlFormatterTest {
     test(
         new Html.Template() {
           @Override
-          protected final void definition() {
+          protected final void render() {
             doctype();
             html(
                 head(),
@@ -104,7 +104,7 @@ public class HtmlFormatterTest {
     test(
         new Html.Template() {
           @Override
-          protected final void definition() {
+          protected final void render() {
             doctype();
             html(
                 head(
@@ -137,7 +137,7 @@ public class HtmlFormatterTest {
     test(
         new Html.Template() {
           @Override
-          protected final void definition() {
+          protected final void render() {
             doctype();
             html(
                 id("a"),
@@ -173,7 +173,7 @@ public class HtmlFormatterTest {
     test(
         new Html.Template() {
           @Override
-          protected final void definition() {
+          protected final void render() {
             doctype();
             html(
                 body(
@@ -204,7 +204,7 @@ public class HtmlFormatterTest {
     test(
         new Html.Template() {
           @Override
-          protected final void definition() {
+          protected final void render() {
             doctype();
             html(
                 body(
@@ -234,7 +234,7 @@ public class HtmlFormatterTest {
     test(
         new Html.Template() {
           @Override
-          protected final void definition() {
+          protected final void render() {
             doctype();
             html(
                 body(
@@ -274,7 +274,7 @@ public class HtmlFormatterTest {
     test(
         new Html.Template() {
           @Override
-          protected final void definition() {
+          protected final void render() {
             doctype();
             html(
                 head(
@@ -326,7 +326,7 @@ public class HtmlFormatterTest {
     test(
         new Html.Template() {
           @Override
-          protected final void definition() {
+          protected final void render() {
             doctype();
             a(href("index.html"), t("a"));
           }

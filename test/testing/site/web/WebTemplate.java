@@ -18,11 +18,11 @@ package testing.site.web;
 import objectos.way.Html;
 
 abstract class WebTemplate extends Html.Template {
-  
+
   protected String title = "";
 
   @Override
-  protected void definition() {
+  protected void render() {
     doctype();
     html(
         head(f(this::$head)),
@@ -39,12 +39,12 @@ abstract class WebTemplate extends Html.Template {
     link(rel("stylesheet"), type("text/css"), href("/common/preflight.css"));
     link(rel("stylesheet"), type("text/css"), href("/styles.css"));
     */
-    
+
     if (title != null) {
       title(title);
     }
   }
-  
+
   abstract void bodyImpl();
 
 }

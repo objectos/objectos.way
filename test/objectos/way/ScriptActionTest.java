@@ -29,7 +29,7 @@ public class ScriptActionTest {
           static final Id FORM = Html.id("foo");
 
           @Override
-          protected final void definition() {
+          protected final void render() {
             form(FORM,
                 input(dataOnInput(Script.delay(500, Script.submit(FORM))))
             );
@@ -41,13 +41,13 @@ public class ScriptActionTest {
         """
     );
   }
-  
+
   @Test
   public void location() {
     test(
         new Html.Template() {
           @Override
-          protected final void definition() {
+          protected final void render() {
             a(dataOnClick(Script.location("/foo")), t("Foo"));
           }
         },
@@ -57,7 +57,7 @@ public class ScriptActionTest {
         """
     );
   }
-  
+
   @Test
   public void submit() {
     test(
@@ -65,7 +65,7 @@ public class ScriptActionTest {
           static final Id FORM = Html.id("foo");
 
           @Override
-          protected final void definition() {
+          protected final void render() {
             form(FORM,
                 input(dataOnInput(Script.submit(FORM)))
             );

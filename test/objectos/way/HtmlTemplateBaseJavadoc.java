@@ -26,7 +26,7 @@ public class HtmlTemplateBaseJavadoc {
     // @start region="IncludeExample"
     class IncludeExample extends Html.Template {
       @Override
-      protected void definition() {
+      protected void render() {
         doctype();
         html(
             head(
@@ -85,7 +85,7 @@ public class HtmlTemplateBaseJavadoc {
 
     class MyTemplate extends Html.Template {
       @Override
-      protected void definition() {
+      protected void render() {
         MyComponent comp = new MyComponent(this);
 
         body(
@@ -122,7 +122,7 @@ public class HtmlTemplateBaseJavadoc {
       boolean error_;
 
       @Override
-      protected void definition() {
+      protected void render() {
         // @start region="noop"
         boolean error = isError();
 
@@ -165,7 +165,7 @@ public class HtmlTemplateBaseJavadoc {
   public void javadoc_text() {
     class Example extends Html.Template {
       @Override
-      protected void definition() {
+      protected void render() {
         // @start region="text"
         p(
             strong("This is in bold"),

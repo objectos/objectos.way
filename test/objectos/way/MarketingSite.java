@@ -34,7 +34,7 @@ final class MarketingSite extends Http.Module {
 
   private static class MarketingSiteHome extends Html.Template {
     @Override
-    protected void definition() {
+    protected void render() {
       doctype();
       h1("home");
     }

@@ -1270,7 +1270,7 @@ public class HttpExchangeLoopTest {
     public SingleParagraph(String text) { this.text = text; }
 
     @Override
-    protected final void definition() {
+    protected final void render() {
       html(
           p(text)
       );

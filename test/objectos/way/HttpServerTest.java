@@ -278,7 +278,7 @@ public class HttpServerTest implements Http.Handler {
     }
 
     @Override
-    protected final void definition() {
+    protected final void render() {
       Object o;
       o = http.get(key);
 
@@ -288,7 +288,7 @@ public class HttpServerTest implements Http.Handler {
       p(text);
     }
   }
-  
+
   @SuppressWarnings("unused")
   private void testCase04(Http.Exchange http) {
     http.methodMatrix(
@@ -299,7 +299,7 @@ public class HttpServerTest implements Http.Handler {
 
   private void testCase04Get(Http.Exchange http) {
     http.set(String.class, "TC04 GET");
-    
+
     http.ok(new AttributeTester(http, String.class));
   }
 

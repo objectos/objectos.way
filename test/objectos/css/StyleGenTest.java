@@ -29,7 +29,7 @@ public class StyleGenTest {
 
   private static abstract class AbstractSubject extends Html.Template {
     @Override
-    protected final void definition() {
+    protected final void render() {
       div(
           include(this::classes)
       );

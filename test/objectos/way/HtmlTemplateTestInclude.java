@@ -30,7 +30,7 @@ public class HtmlTemplateTestInclude {
     test(
         new Html.Template() {
           @Override
-          protected final void definition() {
+          protected final void render() {
             html(
                 head(
                     include(this::head0)
@@ -62,7 +62,7 @@ public class HtmlTemplateTestInclude {
     test(
         new Html.Template() {
           @Override
-          protected final void definition() {
+          protected final void render() {
             html(
                 body(
                     include(this::body0)
@@ -102,7 +102,7 @@ public class HtmlTemplateTestInclude {
     test(
         new Html.Template() {
           @Override
-          protected final void definition() {
+          protected final void render() {
             html(
                 include(this::head0),
                 include(this::body0)
@@ -145,7 +145,7 @@ public class HtmlTemplateTestInclude {
         new Html.Template() {
           private final Html.Template nav = new Html.Template() {
             @Override
-            protected final void definition() {
+            protected final void render() {
               nav(
                   a("o7html")
               );
@@ -154,7 +154,7 @@ public class HtmlTemplateTestInclude {
 
           private final Html.Template hero = new Html.Template() {
             @Override
-            protected final void definition() {
+            protected final void render() {
               section(
                   p("is cool")
               );
@@ -162,7 +162,7 @@ public class HtmlTemplateTestInclude {
           };
 
           @Override
-          protected final void definition() {
+          protected final void render() {
             body(
                 include(nav),
                 include(hero)
@@ -190,7 +190,7 @@ public class HtmlTemplateTestInclude {
     test(
         new Html.Template() {
           @Override
-          protected final void definition() {
+          protected final void render() {
             div(
                 include(this::f0),
 
@@ -240,7 +240,7 @@ public class HtmlTemplateTestInclude {
     test(
         new Html.Template() {
           @Override
-          protected final void definition() {
+          protected final void render() {
             head(
                 include(this::head0)
             );
@@ -270,7 +270,7 @@ public class HtmlTemplateTestInclude {
     test(
         new Html.Template() {
           @Override
-          protected final void definition() {
+          protected final void render() {
             h1(include(this::heading1));
           }
 
@@ -294,7 +294,7 @@ public class HtmlTemplateTestInclude {
     test(
         new Html.Template() {
           @Override
-          protected final void definition() {
+          protected final void render() {
             h1(include(this::heading1));
           }
 
@@ -314,7 +314,7 @@ public class HtmlTemplateTestInclude {
     Html.Template component;
     component = new Html.Template() {
       @Override
-      protected final void definition() {
+      protected final void render() {
         div(
             className("component"),
 
@@ -330,7 +330,7 @@ public class HtmlTemplateTestInclude {
     test(
         new Html.Template() {
           @Override
-          protected final void definition() {
+          protected final void render() {
             body(
                 include(component)
             );
@@ -352,7 +352,7 @@ public class HtmlTemplateTestInclude {
     Html.Template component;
     component = new Html.Template() {
       @Override
-      protected final void definition() {
+      protected final void render() {
         div(
             className("component")
         );
@@ -362,7 +362,7 @@ public class HtmlTemplateTestInclude {
     test(
         new Html.Template() {
           @Override
-          protected final void definition() {
+          protected final void render() {
             body(include(this::body));
           }
 
@@ -401,7 +401,7 @@ public class HtmlTemplateTestInclude {
     test(
         new Html.Template() {
           @Override
-          protected final void definition() {
+          protected final void render() {
             body(include(this::body));
           }
 
@@ -457,7 +457,7 @@ public class HtmlTemplateTestInclude {
     test(
         new Html.Template() {
           @Override
-          protected final void definition() {
+          protected final void render() {
             body(include(this::body));
           }
 
@@ -514,7 +514,7 @@ public class HtmlTemplateTestInclude {
     test(
         new Html.Template() {
           @Override
-          protected final void definition() {
+          protected final void render() {
             Navigation navigation = new Navigation(this);
 
             Link link = new Link(this);
@@ -546,7 +546,7 @@ public class HtmlTemplateTestInclude {
   public void testCase14() {
     class Contents extends Html.Template {
       @Override
-      protected void definition() {
+      protected final void render() {
         head("hd");
 
         body("bd");
@@ -556,7 +556,7 @@ public class HtmlTemplateTestInclude {
     test(
         new Html.Template() {
           @Override
-          protected final void definition() {
+          protected final void render() {
             html(
                 include(new Contents())
             );
@@ -577,7 +577,7 @@ public class HtmlTemplateTestInclude {
     test(
         new Html.Template() {
           @Override
-          protected final void definition() {
+          protected final void render() {
             html(
                 include(this::contents)
             );
@@ -617,7 +617,7 @@ public class HtmlTemplateTestInclude {
     test(
         new Html.Template() {
           @Override
-          protected final void definition() {
+          protected final void render() {
             html(
                 include(this::contents)
             );
@@ -639,7 +639,7 @@ public class HtmlTemplateTestInclude {
     test(
         new Html.Template() {
           @Override
-          protected final void definition() {
+          protected final void render() {
             input(include(this::attributes));
           }
 

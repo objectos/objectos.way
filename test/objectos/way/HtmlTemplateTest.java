@@ -16,6 +16,8 @@
 package objectos.way;
 
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertFalse;
+import static org.testng.Assert.assertTrue;
 
 import objectos.way.Html.ClassName;
 import objectos.way.Html.Id;
@@ -32,7 +34,7 @@ public class HtmlTemplateTest {
     test(
         new Html.Template() {
           @Override
-          protected final void definition() {
+          protected final void render() {
             html();
           }
         },
@@ -52,7 +54,7 @@ public class HtmlTemplateTest {
     test(
         new Html.Template() {
           @Override
-          protected final void definition() {
+          protected final void render() {
             html(lang("pt-BR"));
           }
         },
@@ -72,7 +74,7 @@ public class HtmlTemplateTest {
     test(
         new Html.Template() {
           @Override
-          protected final void definition() {
+          protected final void render() {
             html(className("no-js"), lang("pt-BR"));
           }
         },
@@ -92,7 +94,7 @@ public class HtmlTemplateTest {
     test(
         new Html.Template() {
           @Override
-          protected final void definition() {
+          protected final void render() {
             html(
                 head()
             );
@@ -117,7 +119,7 @@ public class HtmlTemplateTest {
     test(
         new Html.Template() {
           @Override
-          protected final void definition() {
+          protected final void render() {
             html(
                 head(),
                 lang("pt-BR")
@@ -143,7 +145,7 @@ public class HtmlTemplateTest {
     test(
         new Html.Template() {
           @Override
-          protected final void definition() {
+          protected final void render() {
             html(
                 head(
                     meta()
@@ -173,7 +175,7 @@ public class HtmlTemplateTest {
     test(
         new Html.Template() {
           @Override
-          protected final void definition() {
+          protected final void render() {
             html(
                 lang("pt-BR"),
                 head(
@@ -202,7 +204,7 @@ public class HtmlTemplateTest {
     test(
         new Html.Template() {
           @Override
-          protected final void definition() {
+          protected final void render() {
             html(
                 head(),
                 body()
@@ -228,7 +230,7 @@ public class HtmlTemplateTest {
     test(
         new Html.Template() {
           @Override
-          protected final void definition() {
+          protected final void render() {
             html(
                 lang("pt-BR"),
                 head(),
@@ -256,7 +258,7 @@ public class HtmlTemplateTest {
     test(
         new Html.Template() {
           @Override
-          protected final void definition() {
+          protected final void render() {
             doctype();
             html();
           }
@@ -281,7 +283,7 @@ public class HtmlTemplateTest {
           final Id BAR = Html.id("bar");
 
           @Override
-          protected final void definition() {
+          protected final void render() {
             html(
                 FOO,
                 body(BAR)
@@ -306,7 +308,7 @@ public class HtmlTemplateTest {
     test(
         new Html.Template() {
           @Override
-          protected final void definition() {
+          protected final void render() {
             html(
                 body(
                     p("o7html")
@@ -334,7 +336,7 @@ public class HtmlTemplateTest {
     test(
         new Html.Template() {
           @Override
-          protected final void definition() {
+          protected final void render() {
             div(
                 t("a"),
                 p("b"),
@@ -360,7 +362,7 @@ public class HtmlTemplateTest {
     test(
         new Html.Template() {
           @Override
-          protected final void definition() {
+          protected final void render() {
             html(
                 head(
                     title("element")
@@ -392,7 +394,7 @@ public class HtmlTemplateTest {
     test(
         new Html.Template() {
           @Override
-          protected final void definition() {
+          protected final void render() {
             html(
                 head(
                     meta(charset("utf8")),
@@ -431,7 +433,7 @@ public class HtmlTemplateTest {
     test(
         new Html.Template() {
           @Override
-          protected final void definition() {
+          protected final void render() {
             body(
                 id("id"),
                 title("t1"),
@@ -458,7 +460,7 @@ public class HtmlTemplateTest {
     test(
         new Html.Template() {
           @Override
-          protected final void definition() {
+          protected final void render() {
             body(
                 option(label("attribute")),
                 fieldset(label("element"))
@@ -488,7 +490,7 @@ public class HtmlTemplateTest {
           private final ClassName second = Html.className("second");
 
           @Override
-          protected final void definition() {
+          protected final void render() {
             div(first, second);
           }
         },
@@ -508,7 +510,7 @@ public class HtmlTemplateTest {
     test(
         new Html.Template() {
           @Override
-          protected final void definition() {
+          protected final void render() {
             div(
                 // count < capacity
                 className("c1"), className("c2"), className("c3"), className("c4"), className("c5"),
@@ -552,7 +554,7 @@ public class HtmlTemplateTest {
     test(
         new Html.Template() {
           @Override
-          protected final void definition() {
+          protected final void render() {
             Html.ElementInstruction[] children = new Html.ElementInstruction[count];
             for (int i = 0; i < count; i++) {
               children[i] = li(Integer.toString(i));
@@ -574,7 +576,7 @@ public class HtmlTemplateTest {
     test(
         new Html.Template() {
           @Override
-          protected final void definition() {
+          protected final void render() {
             pre(
                 code(t("<xml></xml>&copy;"))
             );
@@ -596,7 +598,7 @@ public class HtmlTemplateTest {
     test(
         new Html.Template() {
           @Override
-          protected final void definition() {
+          protected final void render() {
             head(
                 style(
                     "@font-face {font-family: 'Foo';}"
@@ -624,7 +626,7 @@ public class HtmlTemplateTest {
     test(
         new Html.Template() {
           @Override
-          protected final void definition() {
+          protected final void render() {
             head(
                 style(
                     "ul > li { margin: 0; }"
@@ -652,7 +654,7 @@ public class HtmlTemplateTest {
     test(
         new Html.Template() {
           @Override
-          protected final void definition() {
+          protected final void render() {
             div(
                 svg(
                     xmlns("http://www.w3.org/2000/svg"),
@@ -693,7 +695,7 @@ public class HtmlTemplateTest {
     test(
         new Html.Template() {
           @Override
-          protected final void definition() {
+          protected final void render() {
             div(
                 svg(
                     width("301.6"),
@@ -763,7 +765,7 @@ public class HtmlTemplateTest {
     test(
         new Html.Template() {
           @Override
-          protected final void definition() {
+          protected final void render() {
             head(
                 script(
                     "alert(\"hello world!\");"
@@ -791,7 +793,7 @@ public class HtmlTemplateTest {
     test(
         new Html.Template() {
           @Override
-          protected final void definition() {
+          protected final void render() {
             input(
                 type("email"),
                 required()
@@ -826,7 +828,7 @@ public class HtmlTemplateTest {
           private final ClassName B = Html.className("cb");
 
           @Override
-          protected final void definition() {
+          protected final void render() {
             ul(
                 li(a(A, B, noop(), href("a"), raw("a"))),
 
@@ -866,7 +868,7 @@ public class HtmlTemplateTest {
     test(
         new Html.Template() {
           @Override
-          protected final void definition() {
+          protected final void render() {
             div(
                 className("a"),
                 className("b"),
@@ -892,7 +894,7 @@ public class HtmlTemplateTest {
     test(
         new Html.Template() {
           @Override
-          protected final void definition() {
+          protected final void render() {
             div(
                 input(type("email"), name("a")),
                 input(type("submit"), name("b"), value("Submit"))
@@ -915,7 +917,7 @@ public class HtmlTemplateTest {
     test(
         new Html.Template() {
           @Override
-          protected final void definition() {
+          protected final void render() {
             div(
                 className("c01"),
                 className("c02"),
@@ -948,7 +950,7 @@ public class HtmlTemplateTest {
     test(
         new Html.Template() {
           @Override
-          protected final void definition() {
+          protected final void render() {
             div(
                 onclick("echo(\"a > b\");")
             );
@@ -970,7 +972,7 @@ public class HtmlTemplateTest {
     test(
         new Html.Template() {
           @Override
-          protected final void definition() {
+          protected final void render() {
             form(
                 flatten(
                     label(),
@@ -995,7 +997,7 @@ public class HtmlTemplateTest {
     test(
         new Html.Template() {
           @Override
-          protected final void definition() {
+          protected final void render() {
             span("foo");
             t("bar");
             span("zaz");
@@ -1030,7 +1032,7 @@ public class HtmlTemplateTest {
     test(
         new Html.Template() {
           @Override
-          protected final void definition() {
+          protected final void render() {
             Html.Instruction[] children;
             children = new Html.Instruction[COUNT];
 
@@ -1057,7 +1059,7 @@ public class HtmlTemplateTest {
           final Id FOO = Html.id("foo");
 
           @Override
-          protected final void definition() {
+          protected final void render() {
             html(
                 lang("en"),
                 FOO,
@@ -1081,7 +1083,7 @@ public class HtmlTemplateTest {
     test(
         new Html.Template() {
           @Override
-          protected final void definition() {
+          protected final void render() {
             html(
                 head(
                     meta(charset("utf-8")),
@@ -1113,7 +1115,7 @@ public class HtmlTemplateTest {
     test(
         new Html.Template() {
           @Override
-          protected final void definition() {
+          protected final void render() {
             html(
                 body(
                     include(this::body0)
@@ -1146,7 +1148,7 @@ public class HtmlTemplateTest {
           final IconsBootstrap icons = new IconsBootstrap(this);
 
           @Override
-          protected final void definition() {
+          protected final void render() {
             div(
                 icons.threeDots(
                     dataOnClick(
@@ -1176,7 +1178,7 @@ public class HtmlTemplateTest {
           final Id FOO = Html.id("foo");
 
           @Override
-          protected final void definition() {
+          protected final void render() {
             div(
                 dataOnClick(
                     Script.replaceClass(FOO, "a", "x")
@@ -1223,7 +1225,7 @@ public class HtmlTemplateTest {
     test(
         new Html.Template() {
           @Override
-          protected final void definition() {
+          protected final void render() {
             div(f(this::test));
           }
 
@@ -1245,7 +1247,7 @@ public class HtmlTemplateTest {
     test(
         new Html.Template() {
           @Override
-          protected final void definition() {
+          protected final void render() {
             div(
                 className("a", "b"),
                 className("c", "d", "e"),
@@ -1268,7 +1270,7 @@ public class HtmlTemplateTest {
     test(
         new Html.Template() {
           @Override
-          protected final void definition() {
+          protected final void render() {
             div(
                 f(this::frag1, "a"),
                 f(this::frag2, "a", "b"),
@@ -1303,6 +1305,34 @@ public class HtmlTemplateTest {
         </div>
         """
     );
+  }
+
+  @Test(description = """
+  test that preRender is invoked
+  """)
+  public void testCase59() {
+    class Subject extends Html.Template {
+      private boolean invoked;
+
+      @Override
+      protected void preRender() {
+        invoked = true;
+      }
+
+      @Override
+      protected void render() {
+        div("render");
+      }
+    }
+
+    Subject subject;
+    subject = new Subject();
+
+    assertFalse(subject.invoked);
+
+    test(subject, "<div>render</div>\n");
+
+    assertTrue(subject.invoked);
   }
 
   private void test(Html.Template template, String expected) {

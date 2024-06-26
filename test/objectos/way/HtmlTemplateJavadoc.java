@@ -27,7 +27,7 @@ public class HtmlTemplateJavadoc {
     // @start region="main"
     class HelloWorld extends Html.Template {
       @Override
-      protected void definition() {
+      protected void render() {
         doctype();
         html(
             head(
@@ -64,7 +64,7 @@ public class HtmlTemplateJavadoc {
     // @start region="main-iteration"
     class HelloWorld extends Html.Template {
       @Override
-      protected void definition() {
+      protected void render() {
         ul(
             include(this::languages)
         );
@@ -100,7 +100,7 @@ public class HtmlTemplateJavadoc {
     // @start region="main-condition01"
     class HelloWorld extends Html.Template {
       @Override
-      protected void definition() {
+      protected void render() {
         div(
             h1("Actions"),
             include(this::actions)
@@ -137,7 +137,7 @@ public class HtmlTemplateJavadoc {
     // @start region="main-condition02"
     class HelloWorld extends Html.Template {
       @Override
-      protected void definition() {
+      protected void render() {
         div(
             h1("Actions"),
             div(button("Read")),

@@ -30,7 +30,7 @@ abstract class UiTemplate extends Html.Template implements Http.Handler {
   }
 
   @Override
-  protected final void definition() {
+  protected final void render() {
     doctype();
     html(className("theme-white"),
         head(include(this::headImpl)),

@@ -28,7 +28,7 @@ public class WayStyleGenSplitterTest {
   public void testCase01() {
     class Subject extends Html.Template {
       @Override
-      protected final void definition() {
+      protected final void render() {
         div(className("m-0"));
       }
     }
@@ -40,7 +40,7 @@ public class WayStyleGenSplitterTest {
   public void testCase02() {
     class Subject extends Html.Template {
       @Override
-      protected final void definition() {
+      protected final void render() {
         div(
             className("m-0 block leading-3")
         );
@@ -54,7 +54,7 @@ public class WayStyleGenSplitterTest {
   public void testCase03() {
     class Subject extends Html.Template {
       @Override
-      protected final void definition() {
+      protected final void render() {
         div(
             className("m-0   block  leading-3")
         );
@@ -68,7 +68,7 @@ public class WayStyleGenSplitterTest {
   public void testCase04() {
     class Subject extends Html.Template {
       @Override
-      protected final void definition() {
+      protected final void render() {
         div(
             className(" block")
         );
@@ -82,7 +82,7 @@ public class WayStyleGenSplitterTest {
   public void testCase05() {
     class Subject extends Html.Template {
       @Override
-      protected final void definition() {
+      protected final void render() {
         div(
             className("block ")
         );
@@ -96,7 +96,7 @@ public class WayStyleGenSplitterTest {
   public void testCase06() {
     class Subject extends Html.Template {
       @Override
-      protected final void definition() {
+      protected final void render() {
         div(
             className("sr-only underline focus:not-sr-only focus:flex focus:h-full focus:items-center focus:border-4 focus:border-focus focus:py-16px focus:outline-none")
         );
