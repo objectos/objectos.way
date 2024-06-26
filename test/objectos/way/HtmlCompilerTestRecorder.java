@@ -18,6 +18,8 @@ package objectos.way;
 import java.util.Arrays;
 import objectos.way.Html.ClassName;
 import objectos.way.Html.FragmentLambda;
+import objectos.way.Html.HtmlClassName;
+import objectos.way.Html.HtmlId;
 import org.testng.annotations.Test;
 
 public class HtmlCompilerTestRecorder {

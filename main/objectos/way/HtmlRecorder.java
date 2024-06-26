@@ -210,7 +210,7 @@ class HtmlRecorder {
 
     else if (value instanceof Html.Id ext) {
       int index;
-      index = externalValue(ext.id());
+      index = externalValue(ext.value());
 
       auxAdd(
           HtmlByteProto.ATTRIBUTE_ID,
@@ -222,7 +222,7 @@ class HtmlRecorder {
 
     else if (value instanceof Html.ClassName ext) {
       int index;
-      index = externalValue(ext.className());
+      index = externalValue(ext.value());
 
       auxAdd(
           HtmlByteProto.ATTRIBUTE_CLASS,

@@ -187,7 +187,7 @@ abstract class HtmlCompilerElements extends HtmlCompilerAttributes {
    *
    * @return an instruction representing this element.
    */
-  public final Html.ElementInstruction br(Html.AttributeInstruction... contents) {
+  public final Html.ElementInstruction br(Html.VoidInstruction... contents) {
     element(HtmlElementName.BR, contents);
     return Html.ELEMENT;
   }
@@ -824,7 +824,7 @@ abstract class HtmlCompilerElements extends HtmlCompilerAttributes {
    *
    * @return an instruction representing this element.
    */
-  public final Html.ElementInstruction hr(Html.AttributeInstruction... contents) {
+  public final Html.ElementInstruction hr(Html.VoidInstruction... contents) {
     element(HtmlElementName.HR, contents);
     return Html.ELEMENT;
   }
@@ -863,7 +863,7 @@ abstract class HtmlCompilerElements extends HtmlCompilerAttributes {
    *
    * @return an instruction representing this element.
    */
-  public final Html.ElementInstruction img(Html.AttributeInstruction... contents) {
+  public final Html.ElementInstruction img(Html.VoidInstruction... contents) {
     element(HtmlElementName.IMG, contents);
     return Html.ELEMENT;
   }
@@ -876,7 +876,7 @@ abstract class HtmlCompilerElements extends HtmlCompilerAttributes {
    *
    * @return an instruction representing this element.
    */
-  public final Html.ElementInstruction input(Html.AttributeInstruction... contents) {
+  public final Html.ElementInstruction input(Html.VoidInstruction... contents) {
     element(HtmlElementName.INPUT, contents);
     return Html.ELEMENT;
   }
@@ -993,7 +993,7 @@ abstract class HtmlCompilerElements extends HtmlCompilerAttributes {
    *
    * @return an instruction representing this element.
    */
-  public final Html.ElementInstruction link(Html.AttributeInstruction... contents) {
+  public final Html.ElementInstruction link(Html.VoidInstruction... contents) {
     element(HtmlElementName.LINK, contents);
     return Html.ELEMENT;
   }
@@ -1058,7 +1058,7 @@ abstract class HtmlCompilerElements extends HtmlCompilerAttributes {
    *
    * @return an instruction representing this element.
    */
-  public final Html.ElementInstruction meta(Html.AttributeInstruction... contents) {
+  public final Html.ElementInstruction meta(Html.VoidInstruction... contents) {
     element(HtmlElementName.META, contents);
     return Html.ELEMENT;
   }

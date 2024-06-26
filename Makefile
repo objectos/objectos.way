@@ -137,7 +137,6 @@ TEST_ADD_MODULES += com.h2database
 
 ## test runtime exports
 TEST_JAVAX_EXPORTS := objectos.lang.object
-TEST_JAVAX_EXPORTS += objectos.ui
 TEST_JAVAX_EXPORTS += objectos.util.array
 TEST_JAVAX_EXPORTS += objectos.util.collection
 TEST_JAVAX_EXPORTS += objectos.util.list

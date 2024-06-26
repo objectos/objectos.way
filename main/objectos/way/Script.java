@@ -21,7 +21,7 @@ import objectos.lang.object.Check;
  * The Objectos Script main class.
  */
 public final class Script {
-  
+
   /**
    * Represents an action to be executed by the browser in the context of an web
    * application.
@@ -30,7 +30,7 @@ public final class Script {
   }
 
   private Script() {}
-  
+
   public static Action delay(int ms, Action... actions) {
     Check.argument(ms >= 0, "ms must not be negative");
 
@@ -41,13 +41,13 @@ public final class Script {
       @Override
       final void writeTo(StringBuilder json) {
         objectStart(json);
-        
+
         property(json, CMD, "delay");
-        
+
         comma(json);
-        
+
         property(json, "ms", ms);
-        
+
         comma(json);
 
         property(json, "actions", copy);
@@ -83,7 +83,7 @@ public final class Script {
     Check.notNull(from, "from == null");
     Check.notNull(to, "to == null");
 
-    return replaceClass0(id, from.className(), to.className());
+    return replaceClass0(id, from.value(), to.value());
   }
 
   public static Action replaceClass(Html.Id id,
@@ -107,15 +107,15 @@ public final class Script {
         comma(json);
 
         propertyStart(json, "args");
-        
+
         arrayStart(json);
-        
-        stringLiteral(json, id.id());
-        
+
+        stringLiteral(json, id.value());
+
         comma(json);
 
         stringLiteral(json, from);
-        
+
         comma(json);
 
         stringLiteral(json, to);
@@ -131,7 +131,7 @@ public final class Script {
     Check.notNull(id, "id == null");
 
     final String value;
-    value = id.id();
+    value = id.value();
 
     return new ScriptAction() {
       @Override
@@ -148,17 +148,17 @@ public final class Script {
       }
     };
   }
-  
+
   /**
    * Casts the specified action interface into its implementation class.
-   * 
+   *
    * <p>
    * The cast is safe as the {@code Action} interface is sealed.
    */
   static ScriptAction cast(Action action) {
     return (ScriptAction) action;
   }
-  
+
   static Action join(Action... actions) {
     return switch (actions.length) {
       case 0 -> Empty.INSTANCE;
@@ -168,7 +168,7 @@ public final class Script {
       default -> new Joined(actions);
     };
   }
-  
+
   private static final class Empty extends ScriptAction {
 
     static final Script.Action INSTANCE = new Empty();
@@ -179,7 +179,7 @@ public final class Script {
     final void writeTo(StringBuilder json) {}
 
   }
-  
+
   private static final class Joined extends ScriptAction {
 
     private final Script.Action[] actions;
