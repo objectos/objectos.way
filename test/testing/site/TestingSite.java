@@ -29,7 +29,6 @@ import objectos.args.EnumOption;
 import objectos.args.IntegerOption;
 import objectos.args.PathOption;
 import objectos.css.reset.Preflight;
-import objectos.html.script.WayJs;
 import objectos.lang.WayShutdownHook;
 import objectos.lang.classloader.ClassReloader;
 import objectos.notes.Level;
@@ -39,6 +38,7 @@ import objectos.notes.impl.ConsoleNoteSink;
 import objectos.way.AppSessionStore;
 import objectos.way.HandlerFactory;
 import objectos.way.Http;
+import objectos.way.Script;
 import objectos.web.BootstrapException;
 import objectos.web.Stage;
 import objectos.web.WayWebResources;
@@ -154,7 +154,7 @@ public class TestingSite {
 
       webResources.createNew(common.resolve("preflight.css"), preflight.toString().getBytes(StandardCharsets.UTF_8));
 
-      webResources.createNew(common.resolve("way.js"), WayJs.getBytes());
+      webResources.createNew(common.resolve("way.js"), Script.getBytes());
     } catch (IOException e) {
       throw new BootstrapException("WebResources", e);
     }

@@ -15,6 +15,11 @@
  */
 package objectos.way;
 
+import java.io.ByteArrayOutputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
 import objectos.lang.object.Check;
 
 /**
@@ -30,6 +35,22 @@ public final class Script {
   }
 
   private Script() {}
+
+  public static byte[] getBytes() throws IOException {
+    URL resource;
+    resource = Script.class.getResource("script.js");
+
+    if (resource == null) {
+      throw new FileNotFoundException();
+    }
+
+    try (InputStream in = resource.openStream();
+        ByteArrayOutputStream out = new ByteArrayOutputStream()) {
+      in.transferTo(out);
+
+      return out.toByteArray();
+    }
+  }
 
   public static Action delay(int ms, Action... actions) {
     Check.argument(ms >= 0, "ms must not be negative");
