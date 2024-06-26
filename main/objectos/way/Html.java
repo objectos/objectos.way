@@ -1054,8 +1054,7 @@ public final class Html {
   public sealed interface Instruction {}
 
   /**
-   * Class of instructions that are represented by methods of the template
-   * class.
+   * Class of instructions that are represented by methods of the template class.
    *
    * <p>
    * Instances of this interface MUST NOT be reused in a template.
@@ -1066,12 +1065,12 @@ public final class Html {
    * Class of instructions that are allowed as arguments to template
    * methods that represent void elements.
    */
-  public sealed interface VoidInstruction extends MethodInstruction {}
+  public sealed interface VoidInstruction extends Instruction {}
 
   /**
    * An instruction to generate an HTML attribute in template.
    */
-  public sealed interface AttributeInstruction extends VoidInstruction {}
+  public sealed interface AttributeInstruction extends MethodInstruction, VoidInstruction {}
 
   /**
    * An instruction to generate an HTML element in a template.
@@ -1081,19 +1080,19 @@ public final class Html {
   /**
    * An instruction to include an HTML fragment to a template.
    */
-  public sealed interface FragmentInstruction extends VoidInstruction {}
+  public sealed interface FragmentInstruction extends MethodInstruction, VoidInstruction {}
 
   /**
    * The no-op instruction.
    */
-  public sealed interface NoOpInstruction extends VoidInstruction {}
+  public sealed interface NoOpInstruction extends MethodInstruction, VoidInstruction {}
 
   private static final class InstructionImpl
-      implements
-      AttributeInstruction,
-      ElementInstruction,
-      FragmentInstruction,
-      NoOpInstruction {}
+       implements
+       AttributeInstruction,
+       ElementInstruction,
+       FragmentInstruction,
+       NoOpInstruction {}
 
   static final AttributeInstruction ATTRIBUTE = new InstructionImpl();
   static final ElementInstruction ELEMENT = new InstructionImpl();
@@ -1111,7 +1110,7 @@ public final class Html {
   /**
    * The value of an HTML {@code class} attribute.
    */
-  public sealed interface ClassName extends ObjectInstruction {
+  public sealed interface ClassName extends ObjectInstruction, VoidInstruction {
 
     /**
      * The {@code class} value.
@@ -1127,7 +1126,7 @@ public final class Html {
   /**
    * The value of an HTML {@code id} attribute.
    */
-  public sealed interface Id extends ObjectInstruction {
+  public sealed interface Id extends ObjectInstruction, VoidInstruction {
 
     /**
      * The {@code id} value.
@@ -1184,8 +1183,7 @@ public final class Html {
     }
 
     /**
-     * Generates the {@code alignment-baseline} attribute with the specified
-     * value.
+     * Generates the {@code alignment-baseline} attribute with the specified value.
      *
      * @param value
      *        the value of the attribute
@@ -1371,8 +1369,7 @@ public final class Html {
     }
 
     /**
-     * Generates the {@code color-interpolation} attribute with the specified
-     * value.
+     * Generates the {@code color-interpolation} attribute with the specified value.
      *
      * @param value
      *        the value of the attribute
@@ -1384,8 +1381,7 @@ public final class Html {
     }
 
     /**
-     * Generates the {@code color-interpolation-filters} attribute with the
-     * specified value.
+     * Generates the {@code color-interpolation-filters} attribute with the specified value.
      *
      * @param value
      *        the value of the attribute
@@ -1535,8 +1531,7 @@ public final class Html {
     }
 
     /**
-     * Generates the {@code dominant-baseline} attribute with the specified
-     * value.
+     * Generates the {@code dominant-baseline} attribute with the specified value.
      *
      * @param value
      *        the value of the attribute
@@ -1668,8 +1663,7 @@ public final class Html {
     }
 
     /**
-     * Generates the {@code font-size-adjust} attribute with the specified
-     * value.
+     * Generates the {@code font-size-adjust} attribute with the specified value.
      *
      * @param value
      *        the value of the attribute
@@ -1753,8 +1747,7 @@ public final class Html {
     }
 
     /**
-     * Generates the {@code glyph-orientation-horizontal} attribute with the
-     * specified value.
+     * Generates the {@code glyph-orientation-horizontal} attribute with the specified value.
      *
      * @param value
      *        the value of the attribute
@@ -1766,8 +1759,7 @@ public final class Html {
     }
 
     /**
-     * Generates the {@code glyph-orientation-vertical} attribute with the
-     * specified value.
+     * Generates the {@code glyph-orientation-vertical} attribute with the specified value.
      *
      * @param value
      *        the value of the attribute
@@ -2094,8 +2086,7 @@ public final class Html {
     }
 
     /**
-     * Generates the {@code onlanguagechange} attribute with the specified
-     * value.
+     * Generates the {@code onlanguagechange} attribute with the specified value.
      *
      * @param value
      *        the value of the attribute
@@ -2179,8 +2170,7 @@ public final class Html {
     }
 
     /**
-     * Generates the {@code onrejectionhandled} attribute with the specified
-     * value.
+     * Generates the {@code onrejectionhandled} attribute with the specified value.
      *
      * @param value
      *        the value of the attribute
@@ -2216,8 +2206,7 @@ public final class Html {
     }
 
     /**
-     * Generates the {@code onunhandledrejection} attribute with the specified
-     * value.
+     * Generates the {@code onunhandledrejection} attribute with the specified value.
      *
      * @param value
      *        the value of the attribute
@@ -2538,8 +2527,7 @@ public final class Html {
     }
 
     /**
-     * Generates the {@code stroke-dasharray} attribute with the specified
-     * value.
+     * Generates the {@code stroke-dasharray} attribute with the specified value.
      *
      * @param value
      *        the value of the attribute
@@ -2551,8 +2539,7 @@ public final class Html {
     }
 
     /**
-     * Generates the {@code stroke-dashoffset} attribute with the specified
-     * value.
+     * Generates the {@code stroke-dashoffset} attribute with the specified value.
      *
      * @param value
      *        the value of the attribute
@@ -2588,8 +2575,7 @@ public final class Html {
     }
 
     /**
-     * Generates the {@code stroke-miterlimit} attribute with the specified
-     * value.
+     * Generates the {@code stroke-miterlimit} attribute with the specified value.
      *
      * @param value
      *        the value of the attribute
@@ -2721,8 +2707,7 @@ public final class Html {
     }
 
     /**
-     * Generates the {@code transform-origin} attribute with the specified
-     * value.
+     * Generates the {@code transform-origin} attribute with the specified value.
      *
      * @param value
      *        the value of the attribute
@@ -2929,8 +2914,7 @@ public final class Html {
     AttributeInstruction align(String value);
 
     /**
-     * Generates the {@code alignment-baseline} attribute with the specified
-     * value.
+     * Generates the {@code alignment-baseline} attribute with the specified value.
      *
      * @param value
      *        the value of the attribute
@@ -3084,8 +3068,7 @@ public final class Html {
     AttributeInstruction color(String value);
 
     /**
-     * Generates the {@code color-interpolation} attribute with the specified
-     * value.
+     * Generates the {@code color-interpolation} attribute with the specified value.
      *
      * @param value
      *        the value of the attribute
@@ -3095,8 +3078,7 @@ public final class Html {
     AttributeInstruction colorInterpolation(String value);
 
     /**
-     * Generates the {@code color-interpolation-filters} attribute with the
-     * specified value.
+     * Generates the {@code color-interpolation-filters} attribute with the specified value.
      *
      * @param value
      *        the value of the attribute
@@ -3220,8 +3202,7 @@ public final class Html {
     AttributeInstruction display(String value);
 
     /**
-     * Generates the {@code dominant-baseline} attribute with the specified
-     * value.
+     * Generates the {@code dominant-baseline} attribute with the specified value.
      *
      * @param value
      *        the value of the attribute
@@ -3331,8 +3312,7 @@ public final class Html {
     AttributeInstruction fontSize(String value);
 
     /**
-     * Generates the {@code font-size-adjust} attribute with the specified
-     * value.
+     * Generates the {@code font-size-adjust} attribute with the specified value.
      *
      * @param value
      *        the value of the attribute
@@ -3402,8 +3382,7 @@ public final class Html {
     AttributeInstruction forElement(String value);
 
     /**
-     * Generates the {@code glyph-orientation-horizontal} attribute with the
-     * specified value.
+     * Generates the {@code glyph-orientation-horizontal} attribute with the specified value.
      *
      * @param value
      *        the value of the attribute
@@ -3413,8 +3392,7 @@ public final class Html {
     AttributeInstruction glyphOrientationHorizontal(String value);
 
     /**
-     * Generates the {@code glyph-orientation-vertical} attribute with the
-     * specified value.
+     * Generates the {@code glyph-orientation-vertical} attribute with the specified value.
      *
      * @param value
      *        the value of the attribute
@@ -3685,8 +3663,7 @@ public final class Html {
     AttributeInstruction onhashchange(String value);
 
     /**
-     * Generates the {@code onlanguagechange} attribute with the specified
-     * value.
+     * Generates the {@code onlanguagechange} attribute with the specified value.
      *
      * @param value
      *        the value of the attribute
@@ -3756,8 +3733,7 @@ public final class Html {
     AttributeInstruction onpopstate(String value);
 
     /**
-     * Generates the {@code onrejectionhandled} attribute with the specified
-     * value.
+     * Generates the {@code onrejectionhandled} attribute with the specified value.
      *
      * @param value
      *        the value of the attribute
@@ -3787,8 +3763,7 @@ public final class Html {
     AttributeInstruction onsubmit(String value);
 
     /**
-     * Generates the {@code onunhandledrejection} attribute with the specified
-     * value.
+     * Generates the {@code onunhandledrejection} attribute with the specified value.
      *
      * @param value
      *        the value of the attribute
@@ -4053,8 +4028,7 @@ public final class Html {
     AttributeInstruction stroke(String value);
 
     /**
-     * Generates the {@code stroke-dasharray} attribute with the specified
-     * value.
+     * Generates the {@code stroke-dasharray} attribute with the specified value.
      *
      * @param value
      *        the value of the attribute
@@ -4064,8 +4038,7 @@ public final class Html {
     AttributeInstruction strokeDasharray(String value);
 
     /**
-     * Generates the {@code stroke-dashoffset} attribute with the specified
-     * value.
+     * Generates the {@code stroke-dashoffset} attribute with the specified value.
      *
      * @param value
      *        the value of the attribute
@@ -4095,8 +4068,7 @@ public final class Html {
     AttributeInstruction strokeLinejoin(String value);
 
     /**
-     * Generates the {@code stroke-miterlimit} attribute with the specified
-     * value.
+     * Generates the {@code stroke-miterlimit} attribute with the specified value.
      *
      * @param value
      *        the value of the attribute
@@ -4206,8 +4178,7 @@ public final class Html {
     AttributeInstruction transform(String value);
 
     /**
-     * Generates the {@code transform-origin} attribute with the specified
-     * value.
+     * Generates the {@code transform-origin} attribute with the specified value.
      *
      * @param value
      *        the value of the attribute
@@ -4558,8 +4529,7 @@ public final class Html {
     }
 
     /**
-     * Generates the {@code clipPath} attribute or element with the specified
-     * text.
+     * Generates the {@code clipPath} attribute or element with the specified text.
      *
      * @param text
      *        the text value of this attribute or element
@@ -6221,8 +6191,7 @@ public final class Html {
     ElementInstruction clipPath(Instruction... contents);
 
     /**
-     * Generates the {@code clipPath} attribute or element with the specified
-     * text.
+     * Generates the {@code clipPath} attribute or element with the specified text.
      *
      * @param text
      *        the text value of this attribute or element
