@@ -23,7 +23,6 @@ module objectos.way {
   exports objectos.css.tmpl;
   exports objectos.html;
   exports objectos.html.icon;
-  exports objectos.html.script;
   exports objectos.io;
   exports objectos.lang;
   exports objectos.lang.classloader;

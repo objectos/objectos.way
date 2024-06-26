@@ -17,7 +17,6 @@ package objectos.way;
 
 import static org.testng.Assert.assertEquals;
 
-import objectos.html.icon.BootstrapIcons;
 import objectos.way.Html.ClassName;
 import objectos.way.Html.Id;
 import org.testng.annotations.Test;
@@ -1144,7 +1143,7 @@ public class HtmlTemplateTest {
     test(
         new Html.Template() {
           final Id NAV = Html.id("nav");
-          final BootstrapIcons icons = new BootstrapIcons(this);
+          final IconsBootstrap icons = new IconsBootstrap(this);
 
           @Override
           protected final void definition() {

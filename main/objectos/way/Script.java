@@ -23,7 +23,7 @@ import java.net.URL;
 import objectos.lang.object.Check;
 
 /**
- * The Objectos Script main class.
+ * The Objectos Script main class. Part of Objectos HTML.
  */
 public final class Script {
 

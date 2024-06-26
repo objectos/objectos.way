@@ -41,15 +41,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.html.icon;
-
-import objectos.way.Html;
+package objectos.way;
 
 /**
  * Provides SVG icons from the
  * <a href="https://github.com/twbs/icons">Bootstrap</a> project.
  */
-public class BootstrapIcons extends Html.Component {
+final class IconsBootstrap extends Html.Component implements Icons.Bootstrap {
 
   /**
    * Creates a new instance of this class bound to the specified template.
@@ -57,7 +55,7 @@ public class BootstrapIcons extends Html.Component {
    * @param parent
    *        the template in which icons will be drawn
    */
-  public BootstrapIcons(Html.TemplateBase parent) {
+  public IconsBootstrap(Html.TemplateBase parent) {
     super(parent);
   }
 
@@ -67,6 +65,7 @@ public class BootstrapIcons extends Html.Component {
    *
    * @return the {@code svg} element
    */
+  @Override
   public final Html.ElementInstruction envelope(Html.Instruction... contents) {
     // @formatter:off
     return icon(
@@ -84,6 +83,7 @@ public class BootstrapIcons extends Html.Component {
    *
    * @return the {@code svg} element
    */
+  @Override
   public final Html.ElementInstruction envelopeFill(Html.Instruction... contents) {
     // @formatter:off
     return icon(
@@ -100,6 +100,7 @@ public class BootstrapIcons extends Html.Component {
    *
    * @return the {@code svg} element
    */
+  @Override
   public final Html.ElementInstruction github(Html.Instruction... contents) {
     // @formatter:off
     return icon(
@@ -116,6 +117,7 @@ public class BootstrapIcons extends Html.Component {
    *
    * @return the {@code svg} element
    */
+  @Override
   public final Html.ElementInstruction linkedin(Html.Instruction... contents) {
     // @formatter:off
     return icon(
@@ -124,7 +126,7 @@ public class BootstrapIcons extends Html.Component {
     );
     // @formatter:on
   }
-  
+
   /**
    * Renders the
    * <a href="https://icons.getbootstrap.com/icons/list/">List</a>
@@ -132,6 +134,7 @@ public class BootstrapIcons extends Html.Component {
    *
    * @return the {@code svg} element
    */
+  @Override
   public final Html.ElementInstruction list(Html.Instruction... contents) {
     // @formatter:off
     return icon(
@@ -148,6 +151,7 @@ public class BootstrapIcons extends Html.Component {
    *
    * @return the {@code svg} element
    */
+  @Override
   public final Html.ElementInstruction threeDots(Html.Instruction... contents) {
     // @formatter:off
     return icon(
@@ -164,6 +168,7 @@ public class BootstrapIcons extends Html.Component {
    *
    * @return the {@code svg} element
    */
+  @Override
   public final Html.ElementInstruction twitter(Html.Instruction... contents) {
     // @formatter:off
     return icon(
@@ -180,6 +185,7 @@ public class BootstrapIcons extends Html.Component {
    *
    * @return the {@code svg} element
    */
+  @Override
   public final Html.ElementInstruction twitterX(Html.Instruction... contents) {
     // @formatter:off
     return icon(
@@ -194,6 +200,7 @@ public class BootstrapIcons extends Html.Component {
    *
    * @return the {@code svg} element
    */
+  @Override
   public final Html.ElementInstruction x(Html.Instruction... contents) {
     // @formatter:off
     return icon(
