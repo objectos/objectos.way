@@ -21,8 +21,6 @@ module objectos.way {
   exports objectos.css;
   exports objectos.css.reset;
   exports objectos.css.tmpl;
-  exports objectos.html;
-  exports objectos.html.icon;
   exports objectos.io;
   exports objectos.lang;
   exports objectos.lang.classloader;

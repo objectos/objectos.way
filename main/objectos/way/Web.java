@@ -18,7 +18,7 @@ package objectos.way;
 import objectos.lang.object.Check;
 
 /**
- * The Objectos Web main class.
+ * The <strong>Objectos Web</strong> main class.
  */
 public final class Web {
 

@@ -23,7 +23,7 @@ import objectos.lang.IterableOnce;
 import objectos.lang.object.Check;
 
 /**
- * The Objectos HTML main class.
+ * The <strong>Objectos HTML</strong> main class.
  *
  * <p>
  * Provides the classes for generating HTML using the Java programming language.

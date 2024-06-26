@@ -43,7 +43,7 @@ import objectos.way.HttpExchangeLoop.ParseStatus;
 import objectos.way.HttpServer.Builder;
 
 /**
- * The Objectos HTTP main class.
+ * The <strong>Objectos HTTP</strong> main class.
  */
 public final class Http {
 

@@ -28,43 +28,43 @@ import objectos.way.Sql.Source.Option;
 import objectos.way.SqlSource.Builder;
 
 /**
- * The Objectos SQL main class.
+ * The <strong>Objectos SQL</strong> main class.
  */
 public final class Sql {
-  
+
   // notes
-  
+
   public static final Note3<DatabaseMetaData, String, String> METADATA;
-  
+
   static {
     Class<?> s;
     s = Sql.class;
 
     METADATA = Note3.debug(s, "Database metadata");
   }
-  
+
   // types
 
   public interface Page {
-    
+
     /**
      * The page number. Page numbers are always greater than zero.
      * In other words, the first page is page number 1.
      * The second page is page number 2 and so on.
-     * 
+     *
      * @return the page number
      */
     int number();
 
     /**
      * The number of items to be displayed on each page.
-     * 
+     *
      * @return the number of items to be displayed on each page
      */
     int size();
-    
+
   }
-  
+
   @FunctionalInterface
   public interface ResultSetHandler {
 
@@ -77,25 +77,25 @@ public final class Sql {
    * instance.
    */
   public interface Source {
-    
+
     public sealed interface Option permits SqlOption {}
 
     /**
      * Begins a transaction with the specified isolation level.
-     * 
+     *
      * @param level
      *        the transaction isolation level
-     * 
+     *
      * @return a connection to the underlying database with a transaction
      *         started with the specified isolation level
-     * 
+     *
      * @throws UncheckedSqlException
      *         if a database access error occurs
      */
     Transaction beginTransaction(Transaction.IsolationLevel level) throws UncheckedSqlException;
 
   }
-  
+
   /**
    * A connection to a running transaction in a database.
    */
@@ -125,10 +125,10 @@ public final class Sql {
     void commit() throws UncheckedSqlException;
 
     void rollback() throws UncheckedSqlException;
-    
+
     default void rollbackAndRethrow(Throwable rethrow) {
       Check.notNull(rethrow, "rethrow == null");
-      
+
       try {
         rollback();
       } catch (UncheckedSqlException e) {
@@ -155,13 +155,13 @@ public final class Sql {
     int[] batchUpdate(String sql, Object[]... batches) throws UncheckedSqlException;
 
     int count(String sql, Object... args) throws UncheckedSqlException;
-    
+
     void queryPage(String sql, ResultSetHandler handler, Page page, Object... args) throws UncheckedSqlException;
 
     default Object[] values(Object... values) {
       return values;
     }
-    
+
   }
 
   public static class UncheckedSqlException extends RuntimeException {
@@ -171,7 +171,8 @@ public final class Sql {
     public UncheckedSqlException(SQLException cause) {
       super(cause);
     }
-    
+
+    @Override
     public final SQLException getCause() {
       return (SQLException) super.getCause();
     }
@@ -182,37 +183,37 @@ public final class Sql {
 
   /**
    * Creates a new {@code Source} instance from the specified data source.
-   * 
+   *
    * @param dataSource
    *        the data source
-   * 
+   *
    * @return a new {@code Source} instance
-   * 
+   *
    * @throws SQLException
    *         if a database access error occurs
    */
   public static Source createSource(DataSource dataSource, Source.Option... options) throws SQLException {
     Check.notNull(dataSource, "dataSource == null");
     Check.notNull(options, "options == null");
-    
+
     SqlSource.Builder builder;
     builder = new SqlSource.Builder(dataSource);
-    
+
     for (int idx = 0; idx < options.length; idx++) {
       Option o;
       o = options[idx];
-      
+
       Check.notNull(o, "options[", idx, "] == null");
-      
+
       SqlOption option;
       option = (SqlOption) o;
-      
+
       option.acceptSqlSourceBuilder(builder);
     }
-    
+
     return builder.build();
   }
-  
+
   public static Page createPage(int number, int size) {
     Check.argument(number > 0, "number must be positive");
     Check.argument(size > 0, "size must be positive");
@@ -221,10 +222,10 @@ public final class Sql {
 
     return new SqlPage(number, size);
   }
-  
+
   public static Sql.Source.Option noteSink(NoteSink noteSink) {
     Check.notNull(noteSink, "noteSink == null");
-    
+
     return new SqlOption() {
       @Override
       final void acceptSqlSourceBuilder(Builder builder) {
@@ -232,7 +233,7 @@ public final class Sql {
       }
     };
   }
-  
+
   // utils
 
   static void set(PreparedStatement stmt, int index, Object value) throws SQLException {
@@ -248,5 +249,5 @@ public final class Sql {
       default -> throw new IllegalArgumentException("Unexpected type: " + value.getClass());
     }
   }
-  
+
 }

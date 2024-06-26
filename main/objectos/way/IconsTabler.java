@@ -39,16 +39,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.html.icon;
+package objectos.way;
 
-import objectos.way.Html;
 import objectos.lang.object.Check;
 
 /**
  * Provides SVG icons from the <a href="https://tabler-icons.io/">tabler
  * icons</a> project.
  */
-public class TablerIcons extends Html.Component {
+final class IconsTabler extends Html.Component implements Icons.Tabler {
 
   private Html.Id id;
 
@@ -60,7 +59,7 @@ public class TablerIcons extends Html.Component {
    * @param parent
    *        the template in which icons will be drawn
    */
-  public TablerIcons(Html.TemplateBase parent) {
+  public IconsTabler(Html.TemplateBase parent) {
     super(parent);
 
     reset();
@@ -74,7 +73,8 @@ public class TablerIcons extends Html.Component {
    *
    * @return this instance
    */
-  public final TablerIcons id(Html.Id id) {
+  @Override
+  public final IconsTabler id(Html.Id id) {
     this.id = Check.notNull(id, "id == null");
 
     return this;
@@ -89,19 +89,21 @@ public class TablerIcons extends Html.Component {
    *
    * @return this instance
    */
-  public final TablerIcons strokeWidth(double value) {
+  @Override
+  public final IconsTabler strokeWidth(double value) {
     strokeWidth = Double.toString(value);
 
     return this;
   }
 
-
   /**
-   * Renders the <a href="https://tabler.io/icons/icon/arrow-left">arrow-left</a>
+   * Renders the
+   * <a href="https://tabler.io/icons/icon/arrow-left">arrow-left</a>
    * icon.
    *
    * @return the {@code svg} element
    */
+  @Override
   public final Html.ElementInstruction arrowLeft(Html.Instruction... contents) {
     return icon(
         flatten(contents),
@@ -113,59 +115,66 @@ public class TablerIcons extends Html.Component {
   }
 
   /**
-   * Renders the <a href="https://tabler.io/icons/icon/arrow-narrow-left">arrow-narrow-left</a>
+   * Renders the <a href=
+   * "https://tabler.io/icons/icon/arrow-narrow-left">arrow-narrow-left</a>
    * icon.
    *
    * @return the {@code svg} element
    */
+  @Override
   public final Html.ElementInstruction arrowNarrowLeft(Html.Instruction... contents) {
     return icon(
         flatten(contents),
         path(stroke("none"), d("M0 0h24v24H0z"), fill("none")),
         path(d("M5 12l14 0")),
         path(d("M5 12l4 4")),
-        path(d("M5 12l4 -4"))        
+        path(d("M5 12l4 -4"))
     );
   }
 
   /**
-   * Renders the <a href="https://tabler.io/icons/icon/arrow-narrow-right">arrow-narrow-right</a>
+   * Renders the <a href=
+   * "https://tabler.io/icons/icon/arrow-narrow-right">arrow-narrow-right</a>
    * icon.
    *
    * @return the {@code svg} element
    */
+  @Override
   public final Html.ElementInstruction arrowNarrowRight(Html.Instruction... contents) {
     return icon(
         flatten(contents),
         path(stroke("none"), d("M0 0h24v24H0z"), fill("none")),
         path(d("M5 12l14 0")),
         path(d("M15 16l4 -4")),
-        path(d("M15 8l4 4"))        
+        path(d("M15 8l4 4"))
     );
   }
 
   /**
-   * Renders the <a href="https://tabler.io/icons/icon/arrow-right">arrow-right</a>
+   * Renders the
+   * <a href="https://tabler.io/icons/icon/arrow-right">arrow-right</a>
    * icon.
    *
    * @return the {@code svg} element
    */
+  @Override
   public final Html.ElementInstruction arrowRight(Html.Instruction... contents) {
     return icon(
         flatten(contents),
         path(stroke("none"), d("M0 0h24v24H0z"), fill("none")),
         path(d("M5 12l14 0")),
         path(d("M13 18l6 -6")),
-        path(d("M13 6l6 6"))        
+        path(d("M13 6l6 6"))
     );
   }
-  
+
   /**
    * Renders the <a href="https://tabler.io/icons/icon/box">box</a>
    * icon.
    *
    * @return the {@code svg} element
    */
+  @Override
   public final Html.ElementInstruction box(Html.Instruction... contents) {
     return icon(
         flatten(contents),
@@ -173,7 +182,7 @@ public class TablerIcons extends Html.Component {
         path(d("M12 3l8 4.5l0 9l-8 4.5l-8 -4.5l0 -9l8 -4.5")),
         path(d("M12 12l8 -4.5")),
         path(d("M12 12l0 9")),
-        path(d("M12 12l-8 -4.5"))        
+        path(d("M12 12l-8 -4.5"))
     );
   }
 
@@ -183,6 +192,7 @@ public class TablerIcons extends Html.Component {
    *
    * @return the {@code svg} element
    */
+  @Override
   public final Html.ElementInstruction briefcase(Html.Instruction... contents) {
     return icon(
         flatten(contents),
@@ -201,6 +211,7 @@ public class TablerIcons extends Html.Component {
    *
    * @return the {@code svg} element
    */
+  @Override
   public final Html.ElementInstruction calendarRepeat(Html.Instruction... contents) {
     return icon(
         flatten(contents),
@@ -214,44 +225,48 @@ public class TablerIcons extends Html.Component {
         path(d("M19 16a3 3 0 1 0 2 5.236"))
     );
   }
-  
+
   /**
    * Renders the <a href="https://tabler.io/icons/icon/caret-left">caret-left
    * (filled)</a> icon.
    *
    * @return the {@code svg} element
    */
+  @Override
   public final Html.ElementInstruction caretLeftFilled(Html.Instruction... contents) {
     // @formatter:off
     return filled(
         flatten(contents),
         path(stroke("none"), d("M0 0h24v24H0z"), fill("none")),
-        path(d("M13.883 5.007l.058 -.005h.118l.058 .005l.06 .009l.052 .01l.108 .032l.067 .027l.132 .07l.09 .065l.081 .073l.083 .094l.054 .077l.054 .096l.017 .036l.027 .067l.032 .108l.01 .053l.01 .06l.004 .057l.002 .059v12c0 .852 -.986 1.297 -1.623 .783l-.084 -.076l-6 -6a1 1 0 0 1 -.083 -1.32l.083 -.094l6 -6l.094 -.083l.077 -.054l.096 -.054l.036 -.017l.067 -.027l.108 -.032l.053 -.01l.06 -.01z"))        
+        path(d("M13.883 5.007l.058 -.005h.118l.058 .005l.06 .009l.052 .01l.108 .032l.067 .027l.132 .07l.09 .065l.081 .073l.083 .094l.054 .077l.054 .096l.017 .036l.027 .067l.032 .108l.01 .053l.01 .06l.004 .057l.002 .059v12c0 .852 -.986 1.297 -1.623 .783l-.084 -.076l-6 -6a1 1 0 0 1 -.083 -1.32l.083 -.094l6 -6l.094 -.083l.077 -.054l.096 -.054l.036 -.017l.067 -.027l.108 -.032l.053 -.01l.06 -.01z"))
     );
     // @formatter:on
   }
-  
+
   /**
    * Renders the <a href="https://tabler.io/icons/icon/caret-right">caret-right
    * (filled)</a> icon.
    *
    * @return the {@code svg} element
    */
+  @Override
   public final Html.ElementInstruction caretRightFilled(Html.Instruction... contents) {
     // @formatter:off
     return filled(
         flatten(contents),
         path(stroke("none"), d("M0 0h24v24H0z"), fill("none")),
-        path(d("M9 6c0 -.852 .986 -1.297 1.623 -.783l.084 .076l6 6a1 1 0 0 1 .083 1.32l-.083 .094l-6 6l-.094 .083l-.077 .054l-.096 .054l-.036 .017l-.067 .027l-.108 .032l-.053 .01l-.06 .01l-.057 .004l-.059 .002l-.059 -.002l-.058 -.005l-.06 -.009l-.052 -.01l-.108 -.032l-.067 -.027l-.132 -.07l-.09 -.065l-.081 -.073l-.083 -.094l-.054 -.077l-.054 -.096l-.017 -.036l-.027 -.067l-.032 -.108l-.01 -.053l-.01 -.06l-.004 -.057l-.002 -12.059z"))        
+        path(d("M9 6c0 -.852 .986 -1.297 1.623 -.783l.084 .076l6 6a1 1 0 0 1 .083 1.32l-.083 .094l-6 6l-.094 .083l-.077 .054l-.096 .054l-.036 .017l-.067 .027l-.108 .032l-.053 .01l-.06 .01l-.057 .004l-.059 .002l-.059 -.002l-.058 -.005l-.06 -.009l-.052 -.01l-.108 -.032l-.067 -.027l-.132 -.07l-.09 -.065l-.081 -.073l-.083 -.094l-.054 -.077l-.054 -.096l-.017 -.036l-.027 -.067l-.032 -.108l-.01 -.053l-.01 -.06l-.004 -.057l-.002 -12.059z"))
     );
     // @formatter:on
   }
 
   /**
-   * Renders the <a href="https://tabler.io/icons/icon/chevron-left">chevron-left</a> icon.
+   * Renders the
+   * <a href="https://tabler.io/icons/icon/chevron-left">chevron-left</a> icon.
    *
    * @return the {@code svg} element
    */
+  @Override
   public final Html.ElementInstruction chevronLeft(Html.Instruction... contents) {
     return icon(
         flatten(contents),
@@ -261,10 +276,13 @@ public class TablerIcons extends Html.Component {
   }
 
   /**
-   * Renders the <a href="https://tabler.io/icons/icon/chevron-right">chevron-right</a> icon.
+   * Renders the
+   * <a href="https://tabler.io/icons/icon/chevron-right">chevron-right</a>
+   * icon.
    *
    * @return the {@code svg} element
    */
+  @Override
   public final Html.ElementInstruction chevronRight(Html.Instruction... contents) {
     return icon(
         flatten(contents),
@@ -274,11 +292,13 @@ public class TablerIcons extends Html.Component {
   }
 
   /**
-   * Renders the <a href="https://tabler.io/icons/icon/credit-card-pay">credit-card-pay</a>
+   * Renders the
+   * <a href="https://tabler.io/icons/icon/credit-card-pay">credit-card-pay</a>
    * icon.
    *
    * @return the {@code svg} element
    */
+  @Override
   public final Html.ElementInstruction creditCardPay(Html.Instruction... contents) {
     return icon(
         flatten(contents),
@@ -288,7 +308,7 @@ public class TablerIcons extends Html.Component {
         path(d("M16 19h6")),
         path(d("M19 16l3 3l-3 3")),
         path(d("M7.005 15h.005")),
-        path(d("M11 15h2"))  
+        path(d("M11 15h2"))
     );
   }
 
@@ -299,6 +319,7 @@ public class TablerIcons extends Html.Component {
    *
    * @return the {@code svg} element
    */
+  @Override
   public final Html.ElementInstruction exclamationCircle(Html.Instruction... contents) {
     return icon(
         flatten(contents),
@@ -315,6 +336,7 @@ public class TablerIcons extends Html.Component {
    *
    * @return the {@code svg} element
    */
+  @Override
   public final Html.ElementInstruction fileText(Html.Instruction... contents) {
     return icon(
         flatten(contents),
@@ -334,6 +356,7 @@ public class TablerIcons extends Html.Component {
    *
    * @return the {@code svg} element
    */
+  @Override
   public final Html.ElementInstruction healthRecognition(Html.Instruction... contents) {
     return icon(
         flatten(contents),
@@ -351,6 +374,7 @@ public class TablerIcons extends Html.Component {
    *
    * @return the {@code svg} element
    */
+  @Override
   public final Html.ElementInstruction home(Html.Instruction... contents) {
     return icon(
         flatten(contents),
@@ -366,6 +390,7 @@ public class TablerIcons extends Html.Component {
    *
    * @return the {@code svg} element
    */
+  @Override
   public final Html.ElementInstruction home2(Html.Instruction... contents) {
     return icon(
         flatten(contents),
@@ -381,6 +406,7 @@ public class TablerIcons extends Html.Component {
    *
    * @return the {@code svg} element
    */
+  @Override
   public final Html.ElementInstruction menu1(Html.Instruction... contents) {
     return icon(
         flatten(contents),
@@ -395,6 +421,7 @@ public class TablerIcons extends Html.Component {
    *
    * @return the {@code svg} element
    */
+  @Override
   public final Html.ElementInstruction menu2(Html.Instruction... contents) {
     return icon(
         flatten(contents),
@@ -410,6 +437,7 @@ public class TablerIcons extends Html.Component {
    *
    * @return the {@code svg} element
    */
+  @Override
   public final Html.ElementInstruction paw(Html.Instruction... contents) {
     // @formatter:off
     return icon(
@@ -429,6 +457,7 @@ public class TablerIcons extends Html.Component {
    *
    * @return the {@code svg} element
    */
+  @Override
   public final Html.ElementInstruction users(Html.Instruction... contents) {
     // @formatter:off
     return icon(
@@ -447,6 +476,7 @@ public class TablerIcons extends Html.Component {
    *
    * @return the {@code svg} element
    */
+  @Override
   public final Html.ElementInstruction x(Html.Instruction... contents) {
     return icon(
         flatten(contents),
