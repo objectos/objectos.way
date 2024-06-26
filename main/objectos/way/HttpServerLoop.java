@@ -140,6 +140,8 @@ final class HttpServerLoop implements Runnable {
             handler = handlerFactory.create();
 
             handler.handle(http);
+          } catch (Http.AbstractHandlerException ex) {
+            ex.handle(http);
           } catch (Throwable t) {
             noteSink.send(INTERNAL_SERVER_ERROR, t);
 

@@ -757,6 +757,14 @@ public final class Http {
 
   }
 
+  // exception types
+
+  public static abstract class AbstractHandlerException extends RuntimeException implements Handler {
+
+    private static final long serialVersionUID = -8277337261280606415L;
+
+  }
+
   /**
    * Thrown to indicate that a content type is not supported.
    */

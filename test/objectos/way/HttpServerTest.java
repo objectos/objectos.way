@@ -16,6 +16,7 @@
 package objectos.way;
 
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
@@ -70,6 +71,15 @@ public class HttpServerTest implements Http.Handler {
       handlingMethod = testClass.getDeclaredMethod(methodName, Http.Exchange.class);
 
       handlingMethod.invoke(this, http);
+    } catch (InvocationTargetException e) {
+      Throwable cause;
+      cause = e.getCause();
+
+      if (cause instanceof RuntimeException re) {
+        throw re;
+      }
+
+      http.internalServerError(e);
     } catch (Exception e) {
       http.internalServerError(e);
     }
@@ -350,6 +360,41 @@ public class HttpServerTest implements Http.Handler {
           <p>null</p>
           \r
           0\r
+          \r
+          """
+      );
+    }
+  }
+
+  @SuppressWarnings("unused")
+  private void testCase05(Http.Exchange http) {
+    @SuppressWarnings("serial")
+    class NotFoundException extends Http.AbstractHandlerException {
+      @Override
+      public void handle(Http.Exchange http) {
+        http.notFound();
+      }
+    }
+
+    throw new NotFoundException();
+  }
+
+  @Test(description = """
+  An Http.AbstractHandlerException caught by the loop should call its handle method
+  """)
+  public void testCase05() throws IOException {
+    try (Socket socket = newSocket()) {
+      test(socket,
+          """
+          GET /test/testCase05 HTTP/1.1\r
+          Host: http.server.test\r
+          \r
+          """,
+
+          """
+          HTTP/1.1 404 NOT FOUND\r
+          Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+          Connection: close\r
           \r
           """
       );
