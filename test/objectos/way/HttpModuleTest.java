@@ -95,11 +95,11 @@ public class HttpModuleTest extends Http.Module {
     // but not: /testCase06
     route(segments(eq("testCase06"), oneOrMore()), this::testCase06);
 
-    route(path("/testCase07/before"), this::testCase07);
+    route("/testCase07/before", this::testCase07);
 
     interceptMatched(this::testCase07);
 
-    route(path("/testCase07/after"), this::testCase07);
+    route("/testCase07/after", this::testCase07);
 
     install(new TestCase08());
   }
@@ -736,7 +736,7 @@ public class HttpModuleTest extends Http.Module {
   private static class TestCase08 extends Http.Module {
     @Override
     protected final void configure() {
-      route(path("/testCase08"), http -> http.okText("TC08", StandardCharsets.UTF_8));
+      route("/testCase08", http -> http.okText("TC08", StandardCharsets.UTF_8));
     }
   }
 

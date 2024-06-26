@@ -16,8 +16,8 @@
 package testing.site.web;
 
 import objectos.way.Http;
-import objectos.way.Web;
 import objectos.way.Http.Exchange;
+import objectos.way.Web;
 import objectos.web.WebResources;
 import testing.site.auth.User;
 import testing.site.ui.UiHttpModule;
@@ -37,15 +37,15 @@ public class TestingHttpModule extends Http.Module {
 
     route(segments(eq("ui"), zeroOrMore()), new UiHttpModule(injector));
 
-    route(path("/login"), Login::new, injector);
+    route("/login", Login::new, injector);
 
     route(segments(eq("common"), nonEmpty()), this::common);
 
-    route(path("/styles.css"), new Styles(injector));
+    route("/styles.css", new Styles(injector));
 
     filter(this::requireLogin);
 
-    route(path("/"), Home::new, injector);
+    route("/", Home::new, injector);
   }
 
   private void common(Exchange http) {

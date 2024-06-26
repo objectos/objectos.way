@@ -15,8 +15,8 @@
  */
 package testing.site.ui;
 
-import testing.zite.TestingSiteInjector;
 import objectos.way.Http;
+import testing.zite.TestingSiteInjector;
 
 public final class UiHttpModule extends Http.Module {
 
@@ -28,8 +28,8 @@ public final class UiHttpModule extends Http.Module {
 
   @Override
   protected final void configure() {
-    route(path("/ui/styles.css"), UiStyles::new, injector);
-    route(path("/ui/shell"), ShellPage::new, injector);
+    route("/ui/styles.css", UiStyles::new, injector);
+    route("/ui/shell", ShellPage::new, injector);
   }
 
 }

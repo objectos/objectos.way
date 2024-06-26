@@ -34,14 +34,14 @@ public class WebModuleTest extends Web.Module {
   protected final void configure() {
     source(TestingH2.SOURCE);
 
-    route(path("/testCase01/trx"),
+    route("/testCase01/trx",
         GET(transactional(this::testCase01))
     );
-    route(path("/testCase01/xrt"),
+    route("/testCase01/xrt",
         GET(this::testCase01)
     );
 
-    route(path("/testCase02"),
+    route("/testCase02",
         GET(action(TestCase02::new))
     );
   }

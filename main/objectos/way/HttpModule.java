@@ -132,6 +132,51 @@ abstract class HttpModule {
 
   // routes
 
+  protected final void route(String path, Http.Handler handler) {
+    Check.notNull(path, "path == null");
+    Check.notNull(handler, "handler == null");
+
+    Matcher matcher;
+    matcher = path(path);
+
+    compiler.route(matcher, handler);
+  }
+
+  protected final void route(String path, Http.Module module) {
+    Check.notNull(path, "path == null");
+
+    Http.Handler handler;
+    handler = module.compile(); // implicit null-check
+
+    Matcher matcher;
+    matcher = path(path);
+
+    compiler.route(matcher, handler);
+  }
+
+  protected final void route(String path, MethodHandler handler) {
+    Check.notNull(path, "path == null");
+    Check.notNull(handler, "handler == null");
+
+    Matcher matcher;
+    matcher = path(path);
+
+    compiler.route(matcher, handler.compile());
+  }
+
+  protected final <T> void route(String path, Function<T, Http.Handler> factory, T value) {
+    Check.notNull(path, "path == null");
+    Check.notNull(factory, "factory == null");
+    Check.notNull(value, "value == null");
+
+    Matcher matcher;
+    matcher = path(path);
+
+    compiler.route(matcher, factory, value);
+  }
+
+  //
+
   protected final void route(Matcher matcher, Http.Handler handler) {
     Check.notNull(matcher, "matcher == null");
     Check.notNull(handler, "handler == null");
@@ -165,9 +210,7 @@ abstract class HttpModule {
 
   // matchers
 
-  protected final Matcher path(String value) {
-    Check.notNull(value, "value == null");
-
+  private Matcher path(String value) {
     return new HttpModulePathMatcher(value);
   }
 
