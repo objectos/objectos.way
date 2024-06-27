@@ -17,176 +17,91 @@ package objectos.way;
 
 class HttpModuleMatcherParser {
 
+  private static final char ASTERISK = '*';
+
+  private static final char COLON = ':';
+
+  private static final char SOLIDUS = '/';
+
   private static final String PATH_DOES_START_WITH_SOLIDUS = "Path does not start with a '/' character";
 
   private static final String WILDCARD_CHAR = "The '*' wildcard character can only be used once at the end of the path expression";
 
-  private enum State {
-
-    START,
-
-    ASTERISK,
-
-    SOLIDUS,
-
-    SEGMENT,
-
-    WILDCARD,
-
-    EOF;
-
-  }
-
-  private int index;
-
-  private int startIndex;
-
-  private HttpModuleMatcher result;
-
-  private String source;
-
-  private State state;
-
   final HttpModuleMatcher matcher(String path) {
-    set(path);
+    int length;
+    length = path.length();
 
-    while (state != State.EOF) {
-      state = execute();
+    if (length == 0) {
+      throw illegal(PATH_DOES_START_WITH_SOLIDUS, path);
     }
 
-    return result;
-  }
+    int index;
+    index = 0;
 
-  private void createExact() {
-    String value;
-    value = source.substring(startIndex, index);
+    char c;
+    c = path.charAt(index++);
 
-    HttpModuleMatcher matcher;
-    matcher = new HttpModuleMatcher.Exact(value);
-
-    setResult(matcher);
-  }
-
-  private void createStartsWith() {
-    String value;
-    value = source.substring(startIndex, index - 1);
+    if (c != '/') {
+      throw illegal(PATH_DOES_START_WITH_SOLIDUS, path);
+    }
 
     HttpModuleMatcher matcher;
-    matcher = new HttpModuleMatcher.StartsWith(value);
+    matcher = null;
 
-    setResult(matcher);
-  }
+    int colon;
+    colon = path.indexOf(COLON, index);
 
-  private void setResult(HttpModuleMatcher matcher) {
-    if (result != null) {
+    while (colon > 0) {
+      if (matcher == null) {
+        String value;
+        value = path.substring(0, colon);
+
+        matcher = new HttpModuleMatcher.StartsWith(value);
+      } else {
+        throw new UnsupportedOperationException("Implement me");
+      }
+
+      index = colon + 1;
+
+      if (index == length) {
+        throw new UnsupportedOperationException("Implement me");
+      }
+
+      int solidus;
+      solidus = path.indexOf(SOLIDUS, index);
+
+      if (solidus < 0) {
+        String name;
+        name = path.substring(index);
+
+        return matcher.append(new HttpModuleMatcher.NamedVariable(name));
+      }
+
       throw new UnsupportedOperationException("Implement me");
+    }
+
+    int asterisk;
+    asterisk = path.indexOf(ASTERISK, index);
+
+    if (asterisk > 0) {
+      int lastIndex;
+      lastIndex = length - 1;
+
+      if (asterisk != lastIndex) {
+        throw illegal(WILDCARD_CHAR, path);
+      }
+
+      String value;
+      value = path.substring(0, lastIndex);
+
+      return new HttpModuleMatcher.StartsWith(value);
     } else {
-      result = matcher;
+      return new HttpModuleMatcher.Exact(path);
     }
   }
 
-  private State execute() {
-    if (!hasNext()) {
-      return executeEOF();
-    }
-
-    char next;
-    next = next();
-
-    return switch (next) {
-      case '*' -> executeAsterisk();
-
-      case '/' -> executeSolidus();
-
-      default -> executeDefault();
-    };
-  }
-
-  private State executeAsterisk() {
-    return switch (state) {
-      case START -> throw illegal(PATH_DOES_START_WITH_SOLIDUS);
-
-      case ASTERISK -> throw illegal(WILDCARD_CHAR);
-
-      case SOLIDUS, SEGMENT -> State.WILDCARD;
-
-      case WILDCARD -> throw illegal(WILDCARD_CHAR);
-
-      case EOF -> throw new IllegalStateException();
-    };
-  }
-
-  private State executeDefault() {
-    return switch (state) {
-      case START -> throw illegal(PATH_DOES_START_WITH_SOLIDUS);
-
-      case ASTERISK -> State.WILDCARD;
-
-      case SOLIDUS -> State.SEGMENT;
-
-      case SEGMENT -> state;
-
-      case WILDCARD -> throw illegal(WILDCARD_CHAR);
-
-      case EOF -> throw new IllegalStateException();
-    };
-  }
-
-  private State executeEOF() {
-    return switch (state) {
-      // empty string
-      case START -> throw illegal(PATH_DOES_START_WITH_SOLIDUS);
-
-      case WILDCARD -> {
-        createStartsWith();
-
-        yield State.EOF;
-      }
-
-      default -> {
-        createExact();
-
-        yield State.EOF;
-      }
-    };
-  }
-
-  private State executeSolidus() {
-    return switch (state) {
-      case START -> State.SOLIDUS;
-
-      case ASTERISK -> State.WILDCARD;
-
-      case SOLIDUS -> state;
-
-      case SEGMENT -> State.SOLIDUS;
-
-      case WILDCARD -> throw illegal(WILDCARD_CHAR);
-
-      case EOF -> throw new AssertionError();
-    };
-  }
-
-  private IllegalArgumentException illegal(String prefix) {
-    return new IllegalArgumentException(prefix + ": " + source);
-  }
-
-  private boolean hasNext() {
-    return index < source.length();
-  }
-
-  private char next() {
-    return source.charAt(index++);
-  }
-
-  private void set(String path) {
-    index = startIndex = 0;
-
-    result = null;
-
-    source = path;
-
-    state = State.START;
+  private IllegalArgumentException illegal(String prefix, String path) {
+    return new IllegalArgumentException(prefix + ": " + path);
   }
 
 }

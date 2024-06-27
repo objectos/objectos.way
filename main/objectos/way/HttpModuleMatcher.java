@@ -16,62 +16,45 @@
 package objectos.way;
 
 // TODO make package-private when done with the refactoring
-public sealed abstract class HttpModuleMatcher permits HttpModuleMatcher.Exact, HttpModuleMatcher.StartsWith, HttpModuleSegments {
+public interface HttpModuleMatcher {
 
-  static final class Exact extends HttpModuleMatcher {
-
-    private final String value;
-
-    Exact(String value) {
-      this.value = value;
-    }
-
+  record Exact(String value) implements HttpModuleMatcher {
     @Override
-    public final boolean equals(Object obj) {
-      return obj == this || obj instanceof Exact that
-          && value.equals(that.value);
-    }
-
-    @Override
-    public final int hashCode() {
-      return value.hashCode();
-    }
-
-    @Override
-    final boolean test(Http.Request.Target.Path path) {
+    public final boolean test(Http.Request.Target.Path path) {
       return path.is(value);
     }
-
   }
 
-  static final class StartsWith extends HttpModuleMatcher {
-
-    private final String value;
-
-    StartsWith(String value) {
-      this.value = value;
+  record Matcher2(HttpModuleMatcher matcher1, HttpModuleMatcher matcher2) implements HttpModuleMatcher {
+    @Override
+    public final HttpModuleMatcher append(HttpModuleMatcher other) {
+      throw new UnsupportedOperationException("Implement me");
     }
 
     @Override
-    public final boolean equals(Object obj) {
-      return obj == this || obj instanceof StartsWith that
-          && value.equals(that.value);
+    public final boolean test(Http.Request.Target.Path path) {
+      return matcher1.test(path) && matcher2.test(path);
     }
+  }
 
+  record NamedVariable(String name) implements HttpModuleMatcher {
     @Override
-    public final int hashCode() {
-      return value.hashCode();
+    public final boolean test(Http.Request.Target.Path path) {
+      throw new UnsupportedOperationException("Implement me");
     }
+  }
 
+  record StartsWith(String value) implements HttpModuleMatcher {
     @Override
-    final boolean test(Http.Request.Target.Path path) {
+    public final boolean test(Http.Request.Target.Path path) {
       return path.startsWith(value);
     }
-
   }
 
-  HttpModuleMatcher() {}
+  default HttpModuleMatcher append(HttpModuleMatcher other) {
+    return new Matcher2(this, other);
+  }
 
-  abstract boolean test(Http.Request.Target.Path path);
+  boolean test(Http.Request.Target.Path path);
 
 }

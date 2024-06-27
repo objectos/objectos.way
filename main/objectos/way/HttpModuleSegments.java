@@ -18,7 +18,7 @@ package objectos.way;
 import java.util.List;
 import objectos.way.HttpModule.Condition;
 
-sealed abstract class HttpModuleSegments extends HttpModuleMatcher {
+sealed abstract class HttpModuleSegments implements HttpModuleMatcher {
 
   private static final class Segments1 extends HttpModuleSegments {
 
@@ -110,7 +110,7 @@ sealed abstract class HttpModuleSegments extends HttpModuleMatcher {
   }
 
   @Override
-  final boolean test(Http.Request.Target.Path path) {
+  public final boolean test(Http.Request.Target.Path path) {
     List<Http.Request.Target.Path.Segment> segments;
     segments = path.segments();
 

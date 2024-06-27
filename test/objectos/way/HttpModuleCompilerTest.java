@@ -47,17 +47,28 @@ public class HttpModuleCompilerTest {
   }
 
   @Test
-  public void wildcard01() {
+  public void matcherVariable01() {
+    matcher(
+        "/foo/:foo",
+        new HttpModuleMatcher.Matcher2(
+            new HttpModuleMatcher.StartsWith("/foo/"),
+            new HttpModuleMatcher.NamedVariable("foo")
+        )
+    );
+  }
+
+  @Test
+  public void matcherWildcard01() {
     matcher("/*", new HttpModuleMatcher.StartsWith("/"));
   }
 
   @Test
-  public void wildcard02() {
+  public void matcherWildcard02() {
     matcher("/foo*", new HttpModuleMatcher.StartsWith("/foo"));
   }
 
   @Test
-  public void wildcard03() {
+  public void matcherWildcard03() {
     matcher("/foo/*", new HttpModuleMatcher.StartsWith("/foo/"));
   }
 
@@ -65,7 +76,7 @@ public class HttpModuleCompilerTest {
       expectedExceptions = IllegalArgumentException.class,
       expectedExceptionsMessageRegExp = "The '\\*' wildcard character can only be used once at the end of the path expression: /foo/\\*/"
   )
-  public void wildcard04() {
+  public void matcherWildcard04() {
     matcher("/foo/*/", null);
   }
 
@@ -73,7 +84,7 @@ public class HttpModuleCompilerTest {
       expectedExceptions = IllegalArgumentException.class,
       expectedExceptionsMessageRegExp = "The '\\*' wildcard character can only be used once at the end of the path expression: /foo\\*\\*"
   )
-  public void wildcard05() {
+  public void matcherWildcard05() {
     matcher("/foo**", new HttpModuleMatcher.Exact("/foo*bar"));
   }
 
