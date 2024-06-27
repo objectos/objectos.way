@@ -58,7 +58,10 @@ class HttpModuleMatcherParser {
 
         matcher = new HttpModuleMatcher.StartsWith(value);
       } else {
-        throw new UnsupportedOperationException("Implement me");
+        String value;
+        value = path.substring(index, colon);
+
+        matcher = matcher.append(new HttpModuleMatcher.Region(value));
       }
 
       index = colon + 1;
@@ -70,14 +73,30 @@ class HttpModuleMatcherParser {
       int solidus;
       solidus = path.indexOf(SOLIDUS, index);
 
-      if (solidus < 0) {
-        String name;
-        name = path.substring(index);
+      String name;
 
-        return matcher.append(new HttpModuleMatcher.NamedVariable(name));
+      if (solidus < 0) {
+        name = path.substring(index);
+      } else {
+        name = path.substring(index, solidus);
       }
 
-      throw new UnsupportedOperationException("Implement me");
+      matcher = matcher.append(new HttpModuleMatcher.NamedVariable(name));
+
+      if (solidus < 0) {
+        return matcher;
+      }
+
+      index = solidus;
+
+      colon = path.indexOf(COLON, index);
+    }
+
+    if (matcher != null) {
+      String value;
+      value = path.substring(index);
+
+      return matcher.append(new HttpModuleMatcher.Region(value));
     }
 
     int asterisk;

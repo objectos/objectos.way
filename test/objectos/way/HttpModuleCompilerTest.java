@@ -17,6 +17,7 @@ package objectos.way;
 
 import static org.testng.Assert.assertEquals;
 
+import org.testng.Assert;
 import org.testng.annotations.Test;
 
 public class HttpModuleCompilerTest {
@@ -24,30 +25,26 @@ public class HttpModuleCompilerTest {
   private final HttpModuleCompiler compiler = new HttpModuleCompiler();
 
   @Test
-  public void matcherExact01() {
+  public void matcherExact() {
     matcher("/foo", new HttpModuleMatcher.Exact("/foo"));
-  }
-
-  @Test
-  public void matcherExact02() {
     matcher("/foo/bar", new HttpModuleMatcher.Exact("/foo/bar"));
-  }
-
-  @Test
-  public void matcherExact03() {
     matcher("/", new HttpModuleMatcher.Exact("/"));
   }
 
-  @Test(
-      expectedExceptions = IllegalArgumentException.class,
-      expectedExceptionsMessageRegExp = "Path does not start with a '/' character: .*"
-  )
-  public void matcherExact04() {
-    matcher("foo ", null);
+  @Test
+  public void matcherExactErrors() {
+    matcherError("foo", "Path does not start with a '/' character: foo");
   }
 
   @Test
-  public void matcherVariable01() {
+  public void matcherVariable() {
+    matcher(
+        "/foo/:a",
+        new HttpModuleMatcher.Matcher2(
+            new HttpModuleMatcher.StartsWith("/foo/"),
+            new HttpModuleMatcher.NamedVariable("a")
+        )
+    );
     matcher(
         "/foo/:foo",
         new HttpModuleMatcher.Matcher2(
@@ -55,37 +52,42 @@ public class HttpModuleCompilerTest {
             new HttpModuleMatcher.NamedVariable("foo")
         )
     );
+    matcher(
+        "/foo/:foo/bar/:bar",
+        new HttpModuleMatcher.Matcher2(
+            new HttpModuleMatcher.Matcher2(
+                new HttpModuleMatcher.Matcher2(
+                    new HttpModuleMatcher.StartsWith("/foo/"),
+                    new HttpModuleMatcher.NamedVariable("foo")
+                ),
+                new HttpModuleMatcher.Region("/bar/")
+            ),
+            new HttpModuleMatcher.NamedVariable("bar")
+        )
+    );
+    matcher(
+        "/foo/:foo/bar",
+        new HttpModuleMatcher.Matcher2(
+            new HttpModuleMatcher.Matcher2(
+                new HttpModuleMatcher.StartsWith("/foo/"),
+                new HttpModuleMatcher.NamedVariable("foo")
+            ),
+            new HttpModuleMatcher.Region("/bar")
+        )
+    );
   }
 
   @Test
-  public void matcherWildcard01() {
+  public void matcherWildcard() {
     matcher("/*", new HttpModuleMatcher.StartsWith("/"));
-  }
-
-  @Test
-  public void matcherWildcard02() {
     matcher("/foo*", new HttpModuleMatcher.StartsWith("/foo"));
-  }
-
-  @Test
-  public void matcherWildcard03() {
     matcher("/foo/*", new HttpModuleMatcher.StartsWith("/foo/"));
   }
 
-  @Test(
-      expectedExceptions = IllegalArgumentException.class,
-      expectedExceptionsMessageRegExp = "The '\\*' wildcard character can only be used once at the end of the path expression: /foo/\\*/"
-  )
-  public void matcherWildcard04() {
-    matcher("/foo/*/", null);
-  }
-
-  @Test(
-      expectedExceptions = IllegalArgumentException.class,
-      expectedExceptionsMessageRegExp = "The '\\*' wildcard character can only be used once at the end of the path expression: /foo\\*\\*"
-  )
-  public void matcherWildcard05() {
-    matcher("/foo**", new HttpModuleMatcher.Exact("/foo*bar"));
+  @Test
+  public void matcherWildcardErrors() {
+    matcherError("/foo/*/", "The '*' wildcard character can only be used once at the end of the path expression: /foo/*/");
+    matcherError("/foo**", "The '*' wildcard character can only be used once at the end of the path expression: /foo**");
   }
 
   private void matcher(String path, HttpModuleMatcher expected) {
@@ -93,6 +95,15 @@ public class HttpModuleCompilerTest {
     matcher = compiler.matcher(path);
 
     assertEquals(matcher, expected);
+  }
+
+  private void matcherError(String path, String expectedMessage) {
+    try {
+      compiler.matcher(path);
+      Assert.fail();
+    } catch (IllegalArgumentException expected) {
+      assertEquals(expected.getMessage(), expectedMessage);
+    }
   }
 
 }

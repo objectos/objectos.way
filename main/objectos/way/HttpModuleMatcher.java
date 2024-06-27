@@ -27,17 +27,20 @@ public interface HttpModuleMatcher {
 
   record Matcher2(HttpModuleMatcher matcher1, HttpModuleMatcher matcher2) implements HttpModuleMatcher {
     @Override
-    public final HttpModuleMatcher append(HttpModuleMatcher other) {
-      throw new UnsupportedOperationException("Implement me");
-    }
-
-    @Override
     public final boolean test(Http.Request.Target.Path path) {
-      return matcher1.test(path) && matcher2.test(path);
+      return matcher1.test(path)
+          && matcher2.test(path);
     }
   }
 
   record NamedVariable(String name) implements HttpModuleMatcher {
+    @Override
+    public final boolean test(Http.Request.Target.Path path) {
+      throw new UnsupportedOperationException("Implement me");
+    }
+  }
+
+  record Region(String value) implements HttpModuleMatcher {
     @Override
     public final boolean test(Http.Request.Target.Path path) {
       throw new UnsupportedOperationException("Implement me");
