@@ -20,7 +20,7 @@ import java.util.function.Function;
 import objectos.lang.object.Check;
 import objectos.util.array.ObjectArrays;
 
-final class HttpModuleCompiler implements Http.Handler {
+final class HttpModuleCompiler extends HttpModuleMatcherParser implements Http.Handler {
 
   private HttpModuleAction[] actions;
 
@@ -73,10 +73,6 @@ final class HttpModuleCompiler implements Http.Handler {
     } else {
       interceptor = handler -> interceptor.intercept(next.intercept(handler));
     }
-  }
-
-  final HttpModuleMatcher matcher(String path) {
-    return new HttpModuleMatcher.Exact(path);
   }
 
   final void route(HttpModuleMatcher matcher, Http.Handler handler) {

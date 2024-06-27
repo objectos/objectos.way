@@ -38,6 +38,15 @@ public class HttpModuleCompilerTest {
     matcher("/", new HttpModuleMatcher.Exact("/"));
   }
 
+  @Test(
+      description = "error: 'foo'",
+      expectedExceptions = IllegalArgumentException.class,
+      expectedExceptionsMessageRegExp = "Path does not start with a '/' character: .*"
+  )
+  public void matcherExact04() {
+    matcher("foo ", null);
+  }
+
   private void matcher(String path, HttpModuleMatcher expected) {
     HttpModuleMatcher matcher;
     matcher = compiler.matcher(path);
