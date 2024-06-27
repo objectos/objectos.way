@@ -17,10 +17,9 @@ package objectos.way;
 
 import java.util.List;
 import objectos.way.HttpModule.Condition;
-import objectos.way.HttpModule.Matcher;
 
-sealed abstract class HttpModuleSegments extends Matcher {
-  
+sealed abstract class HttpModuleSegments extends HttpModuleMatcher {
+
   private static final class Segments1 extends HttpModuleSegments {
 
     Segments1(Condition condition) {
@@ -64,7 +63,7 @@ sealed abstract class HttpModuleSegments extends Matcher {
   private static final class Segments3 extends HttpModuleSegments {
 
     private final Condition condition0;
-    
+
     private final Condition condition1;
 
     Segments3(Condition condition0, Condition condition1, Condition condition2) {
@@ -98,23 +97,20 @@ sealed abstract class HttpModuleSegments extends Matcher {
     this.last = last;
   }
 
-  public static Matcher of(Condition condition) {
+  public static HttpModuleMatcher of(Condition condition) {
     return new Segments1(condition);
   }
 
-  public static Matcher of(Condition c0, Condition c1) {
+  public static HttpModuleMatcher of(Condition c0, Condition c1) {
     return new Segments2(c0, c1);
   }
 
-  public static Matcher of(Condition c0, Condition c1, Condition c2) {
+  public static HttpModuleMatcher of(Condition c0, Condition c1, Condition c2) {
     return new Segments3(c0, c1, c2);
   }
 
   @Override
-  final boolean test(Http.Exchange http) {
-    Http.Request.Target.Path path;
-    path = http.path();
-
+  final boolean test(Http.Request.Target.Path path) {
     List<Http.Request.Target.Path.Segment> segments;
     segments = path.segments();
 
@@ -128,6 +124,5 @@ sealed abstract class HttpModuleSegments extends Matcher {
   abstract int count();
 
   abstract boolean test(List<Http.Request.Target.Path.Segment> segments);
-
 
 }

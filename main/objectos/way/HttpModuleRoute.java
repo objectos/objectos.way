@@ -16,7 +16,6 @@
 package objectos.way;
 
 import java.util.function.Function;
-import objectos.way.HttpModule.Matcher;
 
 sealed abstract class HttpModuleRoute implements HttpModuleAction {
 
@@ -24,7 +23,7 @@ sealed abstract class HttpModuleRoute implements HttpModuleAction {
 
     private final Http.Handler handler;
 
-    public RouteHandler(Matcher matcher, Http.Handler handler) {
+    public RouteHandler(HttpModuleMatcher matcher, Http.Handler handler) {
       super(matcher);
       this.handler = handler;
     }
@@ -39,7 +38,7 @@ sealed abstract class HttpModuleRoute implements HttpModuleAction {
     private final Function<T, Http.Handler> factory;
     private final T value;
 
-    public RouteFactory1(Matcher matcher, Function<T, Http.Handler> factory, T value) {
+    public RouteFactory1(HttpModuleMatcher matcher, Function<T, Http.Handler> factory, T value) {
       super(matcher);
       this.factory = factory;
       this.value = value;
@@ -52,9 +51,9 @@ sealed abstract class HttpModuleRoute implements HttpModuleAction {
 
   }
 
-  private final Matcher matcher;
+  private final HttpModuleMatcher matcher;
 
-  public HttpModuleRoute(Matcher matcher) {
+  public HttpModuleRoute(HttpModuleMatcher matcher) {
     this.matcher = matcher;
   }
 
@@ -63,7 +62,10 @@ sealed abstract class HttpModuleRoute implements HttpModuleAction {
     boolean result;
     result = false;
 
-    if (matcher.test(http)) {
+    Http.Request.Target.Path path;
+    path = http.path();
+
+    if (matcher.test(path)) {
       Http.Handler handler;
       handler = handler();
 
@@ -76,5 +78,5 @@ sealed abstract class HttpModuleRoute implements HttpModuleAction {
   }
 
   abstract Http.Handler handler();
-  
+
 }

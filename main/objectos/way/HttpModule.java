@@ -22,14 +22,6 @@ import objectos.way.Http.Handler;
 
 abstract class HttpModule {
 
-  protected sealed static abstract class Matcher permits HttpModulePathMatcher, HttpModuleSegments {
-
-    Matcher() {}
-
-    abstract boolean test(Http.Exchange http);
-
-  }
-
   protected sealed static abstract class Condition permits HttpModuleCondition {
 
     Condition() {}
@@ -136,7 +128,7 @@ abstract class HttpModule {
     Check.notNull(path, "path == null");
     Check.notNull(handler, "handler == null");
 
-    Matcher matcher;
+    HttpModuleMatcher matcher;
     matcher = path(path);
 
     compiler.route(matcher, handler);
@@ -148,7 +140,7 @@ abstract class HttpModule {
     Http.Handler handler;
     handler = module.compile(); // implicit null-check
 
-    Matcher matcher;
+    HttpModuleMatcher matcher;
     matcher = path(path);
 
     compiler.route(matcher, handler);
@@ -158,7 +150,7 @@ abstract class HttpModule {
     Check.notNull(path, "path == null");
     Check.notNull(handler, "handler == null");
 
-    Matcher matcher;
+    HttpModuleMatcher matcher;
     matcher = path(path);
 
     compiler.route(matcher, handler.compile());
@@ -169,7 +161,7 @@ abstract class HttpModule {
     Check.notNull(factory, "factory == null");
     Check.notNull(value, "value == null");
 
-    Matcher matcher;
+    HttpModuleMatcher matcher;
     matcher = path(path);
 
     compiler.route(matcher, factory, value);
@@ -177,21 +169,21 @@ abstract class HttpModule {
 
   //
 
-  protected final void route(Matcher matcher, Http.Handler handler) {
+  protected final void route(HttpModuleMatcher matcher, Http.Handler handler) {
     Check.notNull(matcher, "matcher == null");
     Check.notNull(handler, "handler == null");
 
     compiler.route(matcher, handler);
   }
 
-  protected final void route(Matcher matcher, MethodHandler handler) {
+  protected final void route(HttpModuleMatcher matcher, MethodHandler handler) {
     Check.notNull(matcher, "matcher == null");
     Check.notNull(handler, "handler == null");
 
     compiler.route(matcher, handler.compile());
   }
 
-  protected final void route(Matcher matcher, Http.Module module) {
+  protected final void route(HttpModuleMatcher matcher, Http.Module module) {
     Check.notNull(matcher, "matcher == null");
 
     Http.Handler handler;
@@ -200,7 +192,7 @@ abstract class HttpModule {
     compiler.route(matcher, handler);
   }
 
-  protected final <T> void route(Matcher matcher, Function<T, Http.Handler> factory, T value) {
+  protected final <T> void route(HttpModuleMatcher matcher, Function<T, Http.Handler> factory, T value) {
     Check.notNull(matcher, "matcher == null");
     Check.notNull(factory, "factory == null");
     Check.notNull(value, "value == null");
@@ -210,24 +202,24 @@ abstract class HttpModule {
 
   // matchers
 
-  private Matcher path(String value) {
-    return new HttpModulePathMatcher(value);
+  private HttpModuleMatcher path(String value) {
+    return new HttpModuleMatcher.Exact(value);
   }
 
-  protected final Matcher segments(Condition condition) {
+  protected final HttpModuleMatcher segments(Condition condition) {
     Check.notNull(condition, "condition == null");
 
     return HttpModuleSegments.of(condition);
   }
 
-  protected final Matcher segments(Condition c0, Condition c1) {
+  protected final HttpModuleMatcher segments(Condition c0, Condition c1) {
     checkMustBeLast(c0);
     Check.notNull(c1, "c1 == null");
 
     return HttpModuleSegments.of(c0, c1);
   }
 
-  protected final Matcher segments(Condition c0, Condition c1, Condition c2) {
+  protected final HttpModuleMatcher segments(Condition c0, Condition c1, Condition c2) {
     checkMustBeLast(c0);
     checkMustBeLast(c1);
     Check.notNull(c2, "c2 == null");

@@ -19,7 +19,6 @@ import java.util.Arrays;
 import java.util.function.Function;
 import objectos.lang.object.Check;
 import objectos.util.array.ObjectArrays;
-import objectos.way.HttpModule.Matcher;
 
 final class HttpModuleCompiler implements Http.Handler {
 
@@ -76,7 +75,11 @@ final class HttpModuleCompiler implements Http.Handler {
     }
   }
 
-  final void route(Matcher matcher, Http.Handler handler) {
+  final HttpModuleMatcher matcher(String path) {
+    return new HttpModuleMatcher.Exact(path);
+  }
+
+  final void route(HttpModuleMatcher matcher, Http.Handler handler) {
     handler = decorate(handler);
 
     int index;
@@ -85,7 +88,7 @@ final class HttpModuleCompiler implements Http.Handler {
     actions[index] = new HttpModuleRoute.RouteHandler(matcher, handler);
   }
 
-  final <T> void route(Matcher matcher, Function<T, Http.Handler> factory, T value) {
+  final <T> void route(HttpModuleMatcher matcher, Function<T, Http.Handler> factory, T value) {
     Function<T, Http.Handler> function;
     function = interceptor == null ? factory : (T t) -> interceptor.intercept(factory.apply(t));
 
