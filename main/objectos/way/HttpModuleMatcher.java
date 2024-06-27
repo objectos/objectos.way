@@ -16,7 +16,7 @@
 package objectos.way;
 
 // TODO make package-private when done with the refactoring
-public sealed abstract class HttpModuleMatcher permits HttpModuleMatcher.Exact, HttpModuleSegments {
+public sealed abstract class HttpModuleMatcher permits HttpModuleMatcher.Exact, HttpModuleMatcher.StartsWith, HttpModuleSegments {
 
   static final class Exact extends HttpModuleMatcher {
 
@@ -40,6 +40,32 @@ public sealed abstract class HttpModuleMatcher permits HttpModuleMatcher.Exact, 
     @Override
     final boolean test(Http.Request.Target.Path path) {
       return path.is(value);
+    }
+
+  }
+
+  static final class StartsWith extends HttpModuleMatcher {
+
+    private final String value;
+
+    StartsWith(String value) {
+      this.value = value;
+    }
+
+    @Override
+    public final boolean equals(Object obj) {
+      return obj == this || obj instanceof StartsWith that
+          && value.equals(that.value);
+    }
+
+    @Override
+    public final int hashCode() {
+      return value.hashCode();
+    }
+
+    @Override
+    final boolean test(Http.Request.Target.Path path) {
+      return path.startsWith(value);
     }
 
   }

@@ -23,28 +23,58 @@ public class HttpModuleCompilerTest {
 
   private final HttpModuleCompiler compiler = new HttpModuleCompiler();
 
-  @Test(description = "exact: /foo")
+  @Test
   public void matcherExact01() {
     matcher("/foo", new HttpModuleMatcher.Exact("/foo"));
   }
 
-  @Test(description = "exact: /foo/bar")
+  @Test
   public void matcherExact02() {
     matcher("/foo/bar", new HttpModuleMatcher.Exact("/foo/bar"));
   }
 
-  @Test(description = "exact: /")
+  @Test
   public void matcherExact03() {
     matcher("/", new HttpModuleMatcher.Exact("/"));
   }
 
   @Test(
-      description = "error: 'foo'",
       expectedExceptions = IllegalArgumentException.class,
       expectedExceptionsMessageRegExp = "Path does not start with a '/' character: .*"
   )
   public void matcherExact04() {
     matcher("foo ", null);
+  }
+
+  @Test
+  public void wildcard01() {
+    matcher("/*", new HttpModuleMatcher.StartsWith("/"));
+  }
+
+  @Test
+  public void wildcard02() {
+    matcher("/foo*", new HttpModuleMatcher.StartsWith("/foo"));
+  }
+
+  @Test
+  public void wildcard03() {
+    matcher("/foo/*", new HttpModuleMatcher.StartsWith("/foo/"));
+  }
+
+  @Test(
+      expectedExceptions = IllegalArgumentException.class,
+      expectedExceptionsMessageRegExp = "The '\\*' wildcard character can only be used once at the end of the path expression: /foo/\\*/"
+  )
+  public void wildcard04() {
+    matcher("/foo/*/", null);
+  }
+
+  @Test(
+      expectedExceptions = IllegalArgumentException.class,
+      expectedExceptionsMessageRegExp = "The '\\*' wildcard character can only be used once at the end of the path expression: /foo\\*\\*"
+  )
+  public void wildcard05() {
+    matcher("/foo**", new HttpModuleMatcher.Exact("/foo*bar"));
   }
 
   private void matcher(String path, HttpModuleMatcher expected) {

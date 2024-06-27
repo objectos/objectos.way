@@ -17,17 +17,21 @@ package objectos.way;
 
 class HttpModuleMatcherParser {
 
-  private static final char SOLIDUS = '/';
-
   private static final String PATH_DOES_START_WITH_SOLIDUS = "Path does not start with a '/' character";
+
+  private static final String WILDCARD_CHAR = "The '*' wildcard character can only be used once at the end of the path expression";
 
   private enum State {
 
     START,
 
+    ASTERISK,
+
     SOLIDUS,
 
     SEGMENT,
+
+    WILDCARD,
 
     EOF;
 
@@ -63,6 +67,16 @@ class HttpModuleMatcherParser {
     setResult(matcher);
   }
 
+  private void createStartsWith() {
+    String value;
+    value = source.substring(startIndex, index - 1);
+
+    HttpModuleMatcher matcher;
+    matcher = new HttpModuleMatcher.StartsWith(value);
+
+    setResult(matcher);
+  }
+
   private void setResult(HttpModuleMatcher matcher) {
     if (result != null) {
       throw new UnsupportedOperationException("Implement me");
@@ -80,9 +94,25 @@ class HttpModuleMatcherParser {
     next = next();
 
     return switch (next) {
-      case SOLIDUS -> executeSolidus();
+      case '*' -> executeAsterisk();
+
+      case '/' -> executeSolidus();
 
       default -> executeDefault();
+    };
+  }
+
+  private State executeAsterisk() {
+    return switch (state) {
+      case START -> throw illegal(PATH_DOES_START_WITH_SOLIDUS);
+
+      case ASTERISK -> throw illegal(WILDCARD_CHAR);
+
+      case SOLIDUS, SEGMENT -> State.WILDCARD;
+
+      case WILDCARD -> throw illegal(WILDCARD_CHAR);
+
+      case EOF -> throw new IllegalStateException();
     };
   }
 
@@ -90,11 +120,15 @@ class HttpModuleMatcherParser {
     return switch (state) {
       case START -> throw illegal(PATH_DOES_START_WITH_SOLIDUS);
 
+      case ASTERISK -> State.WILDCARD;
+
       case SOLIDUS -> State.SEGMENT;
 
       case SEGMENT -> state;
 
-      case EOF -> throw new AssertionError();
+      case WILDCARD -> throw illegal(WILDCARD_CHAR);
+
+      case EOF -> throw new IllegalStateException();
     };
   }
 
@@ -102,6 +136,12 @@ class HttpModuleMatcherParser {
     return switch (state) {
       // empty string
       case START -> throw illegal(PATH_DOES_START_WITH_SOLIDUS);
+
+      case WILDCARD -> {
+        createStartsWith();
+
+        yield State.EOF;
+      }
 
       default -> {
         createExact();
@@ -115,9 +155,13 @@ class HttpModuleMatcherParser {
     return switch (state) {
       case START -> State.SOLIDUS;
 
+      case ASTERISK -> State.WILDCARD;
+
       case SOLIDUS -> state;
 
       case SEGMENT -> State.SOLIDUS;
+
+      case WILDCARD -> throw illegal(WILDCARD_CHAR);
 
       case EOF -> throw new AssertionError();
     };
