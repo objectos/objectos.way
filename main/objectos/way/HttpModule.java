@@ -203,6 +203,12 @@ abstract class HttpModule {
     return new HttpModuleRouteParameters(copy);
   }
 
+  protected final Condition digits(String name) {
+    Check.notNull(name, "name == null");
+
+    return new HttpModuleCondition.Digits(name);
+  }
+
   protected final Condition notEmpty(String name) {
     Check.notNull(name, "name == null");
 

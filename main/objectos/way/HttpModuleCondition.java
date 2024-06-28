@@ -17,6 +17,35 @@ package objectos.way;
 
 sealed abstract class HttpModuleCondition extends HttpModule.Condition {
 
+  static final class Digits extends HttpModuleCondition {
+
+    public Digits(String name) {
+      super(name);
+    }
+
+    @Override
+    final boolean test(String value) {
+      int len;
+      len = value.length();
+
+      if (len == 0) {
+        return false;
+      }
+
+      for (int i = 0; i < len; i++) {
+        char c;
+        c = value.charAt(i);
+
+        if (!Character.isDigit(c)) {
+          return false;
+        }
+      }
+
+      return true;
+    }
+
+  }
+
   static final class NotEmpty extends HttpModuleCondition {
 
     public NotEmpty(String name) {

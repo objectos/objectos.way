@@ -77,7 +77,9 @@ public class HttpModuleTest extends Http.Module {
 
     // matches: /testCase01/foo
     // but not: /testCase01, /testCase01/, /testCase01/foo/bar
-    route("/testCase01/:text", this::$testCase01, params(notEmpty("text")));
+    route("/testCase01/:text", this::$testCase01,
+        params(notEmpty("text"))
+    );
 
     // redirect non-authenticated requests
     filter(this::testCase02);
@@ -100,13 +102,18 @@ public class HttpModuleTest extends Http.Module {
     // but not: /testCase06
     route("/testCase06/*", this::$testCase06);
 
+    // tc07: interceptMatched
     route("/testCase07/before", this::$testCase07);
 
     interceptMatched(this::testCase07);
 
     route("/testCase07/after", this::$testCase07);
 
+    // tc08: install
     install(new TestCase08());
+
+    // tc09: notEmpty, digits
+    route("/testCase09/:notEmpty/:digits", this::$testCase09, params(notEmpty("notEmpty"), digits("digits")));
   }
 
   private void $testCase01(Http.Exchange http) {
@@ -758,6 +765,76 @@ public class HttpModuleTest extends Http.Module {
           Content-Length: 4\r
           \r
           TC08"""
+      );
+    }
+  }
+
+  private void $testCase09(Http.Exchange http) {
+    Http.Request.Target.Path path;
+    path = http.path();
+
+    String notEmpty;
+    notEmpty = path.get("notEmpty");
+
+    String digits;
+    digits = path.get("digits");
+
+    http.okText(notEmpty + ":" + digits, StandardCharsets.UTF_8);
+  }
+
+  @Test
+  public void testCase09() throws IOException {
+    try (Socket socket = newSocket()) {
+      test(socket,
+          """
+          GET /testCase09/abc/123 HTTP/1.1\r
+          Host: http.module.test\r
+          Cookie: HTTPMODULETEST=TEST_COOKIE\r
+          \r
+          """,
+
+          """
+          HTTP/1.1 200 OK\r
+          Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+          Content-Type: text/plain; charset=utf-8\r
+          Content-Length: 7\r
+          \r
+          abc:123"""
+      );
+
+      test(socket,
+          """
+          GET /testCase09//123 HTTP/1.1\r
+          Host: http.module.test\r
+          Cookie: HTTPMODULETEST=TEST_COOKIE\r
+          \r
+          """,
+
+          """
+          HTTP/1.1 404 NOT FOUND\r
+          Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+          Connection: close\r
+          \r
+          """
+      );
+    }
+
+    try (Socket socket = newSocket()) {
+      test(socket,
+          """
+          GET /testCase09/abc/x HTTP/1.1\r
+          Host: http.module.test\r
+          Cookie: HTTPMODULETEST=TEST_COOKIE\r
+          Connection: close\r
+          \r
+          """,
+
+          """
+          HTTP/1.1 404 NOT FOUND\r
+          Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+          Connection: close\r
+          \r
+          """
       );
     }
   }
