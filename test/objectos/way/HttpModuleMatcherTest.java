@@ -38,7 +38,7 @@ public class HttpModuleMatcherTest {
   }
 
   @Test
-  public void namedVariable01() {
+  public void namedVariable02() {
     HttpModuleMatcher matcher;
     matcher = new HttpModuleMatcher.Matcher2(
         new HttpModuleMatcher.StartsWith("/foo/"),
@@ -56,7 +56,29 @@ public class HttpModuleMatcherTest {
   }
 
   @Test
-  public void namedVariable02() {
+  public void namedVariable03() {
+    HttpModuleMatcher matcher;
+    matcher = new HttpModuleMatcher.Matcher3(
+        new HttpModuleMatcher.StartsWith("/foo/"),
+        new HttpModuleMatcher.NamedVariable("foo"),
+        new HttpModuleMatcher.Region("/pdf")
+    );
+
+    test(matcher, "/foo/bar/pdf", Map.of("foo", "bar"));
+    test(matcher, "/foo//pdf", Map.of("foo", ""));
+
+    test(matcher, "/foo", false);
+    test(matcher, "/fooo", false);
+    test(matcher, "/foo?q=foo", false);
+    test(matcher, "/foo/", false);
+    test(matcher, "/foo/bar/pdf/more", false);
+    test(matcher, "/foo/bar/x", false);
+    test(matcher, "/bar", false);
+    test(matcher, "/", false);
+  }
+
+  @Test
+  public void namedVariable04() {
     HttpModuleMatcher matcher;
     matcher = new HttpModuleMatcher.Matcher4(
         new HttpModuleMatcher.StartsWith("/foo/"),
@@ -73,6 +95,40 @@ public class HttpModuleMatcherTest {
     test(matcher, "/foo//", false);
     test(matcher, "/foo/foo/bar", false);
     test(matcher, "/foo/foo/bar/bar/x", false);
+  }
+
+  @Test
+  public void namedVariable05() {
+    HttpModuleMatcher matcher;
+    matcher = new HttpModuleMatcher.Matcher5(
+        new HttpModuleMatcher.StartsWith("/foo/"),
+        new HttpModuleMatcher.NamedVariable("foo"),
+        new HttpModuleMatcher.Region("/bar/"),
+        new HttpModuleMatcher.NamedVariable("bar"),
+        new HttpModuleMatcher.Region("/pdf")
+    );
+
+    test(matcher, "/foo/x/bar/123/pdf", Map.of("foo", "x", "bar", "123"));
+    test(matcher, "/foo//bar//pdf", Map.of("foo", "", "bar", ""));
+
+    test(matcher, "/foo/x/bar/y/pdf/more", false);
+  }
+
+  @Test
+  public void namedVariableN() {
+    HttpModuleMatcher matcher;
+    matcher = new HttpModuleMatcher.MatcherN(
+        new HttpModuleMatcher.StartsWith("/foo/"),
+        new HttpModuleMatcher.NamedVariable("foo"),
+        new HttpModuleMatcher.Region("/bar/"),
+        new HttpModuleMatcher.NamedVariable("bar"),
+        new HttpModuleMatcher.Region("/pdf")
+    );
+
+    test(matcher, "/foo/x/bar/123/pdf", Map.of("foo", "x", "bar", "123"));
+    test(matcher, "/foo//bar//pdf", Map.of("foo", "", "bar", ""));
+
+    test(matcher, "/foo/x/bar/y/pdf/more", false);
   }
 
   @Test

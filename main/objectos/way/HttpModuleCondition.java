@@ -15,6 +15,9 @@
  */
 package objectos.way;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 sealed abstract class HttpModuleCondition extends HttpModule.Condition {
 
   static final class Digits extends HttpModuleCondition {
@@ -55,6 +58,26 @@ sealed abstract class HttpModuleCondition extends HttpModule.Condition {
     @Override
     final boolean test(String value) {
       return !value.isEmpty();
+    }
+
+  }
+
+  static final class Regex extends HttpModuleCondition {
+
+    private final Pattern pattern;
+
+    public Regex(String name, Pattern pattern) {
+      super(name);
+
+      this.pattern = pattern;
+    }
+
+    @Override
+    final boolean test(String value) {
+      Matcher matcher;
+      matcher = pattern.matcher(value);
+
+      return matcher.matches();
     }
 
   }

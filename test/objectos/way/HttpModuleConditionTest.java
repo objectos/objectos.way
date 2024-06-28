@@ -17,29 +17,41 @@ package objectos.way;
 
 import static org.testng.Assert.assertEquals;
 
+import java.util.regex.Pattern;
 import org.testng.annotations.Test;
 
 public class HttpModuleConditionTest {
 
   @Test
   public void digits() {
-    HttpModuleCondition digits;
-    digits = new HttpModuleCondition.Digits("x");
+    HttpModuleCondition condition;
+    condition = new HttpModuleCondition.Digits("x");
 
-    test(digits, "/test/1", true);
-    test(digits, "/test/012345678", true);
-    test(digits, "/test/1x", false);
-    test(digits, "/test/", false);
+    test(condition, "/test/1", true);
+    test(condition, "/test/0123456789", true);
+    test(condition, "/test/1x", false);
+    test(condition, "/test/", false);
   }
 
   @Test
   public void notEmpty() {
-    HttpModuleCondition notEmpty;
-    notEmpty = new HttpModuleCondition.NotEmpty("x");
+    HttpModuleCondition condition;
+    condition = new HttpModuleCondition.NotEmpty("x");
 
-    test(notEmpty, "/test/a", true);
-    test(notEmpty, "/test/abc", true);
-    test(notEmpty, "/test/", false);
+    test(condition, "/test/a", true);
+    test(condition, "/test/abc", true);
+    test(condition, "/test/", false);
+  }
+
+  @Test
+  public void regex() {
+    HttpModuleCondition condition;
+    condition = new HttpModuleCondition.Regex("x", Pattern.compile("[0-9a-z]+"));
+
+    test(condition, "/test/1", true);
+    test(condition, "/test/0123456789", true);
+    test(condition, "/test/1x", true);
+    test(condition, "/test/", false);
   }
 
   private void test(HttpModule.Condition condition, String target, boolean expected) {

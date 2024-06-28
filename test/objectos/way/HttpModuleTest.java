@@ -114,6 +114,9 @@ public class HttpModuleTest extends Http.Module {
 
     // tc09: notEmpty, digits
     route("/testCase09/:notEmpty/:digits", this::$testCase09, params(notEmpty("notEmpty"), digits("digits")));
+
+    // tc10: regex
+    route("/testCase10/:regex", this::$testCase10, params(regex("regex", "[0-9a-z]+")));
   }
 
   private void $testCase01(Http.Exchange http) {
@@ -826,6 +829,54 @@ public class HttpModuleTest extends Http.Module {
           Host: http.module.test\r
           Cookie: HTTPMODULETEST=TEST_COOKIE\r
           Connection: close\r
+          \r
+          """,
+
+          """
+          HTTP/1.1 404 NOT FOUND\r
+          Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+          Connection: close\r
+          \r
+          """
+      );
+    }
+  }
+
+  private void $testCase10(Http.Exchange http) {
+    Http.Request.Target.Path path;
+    path = http.path();
+
+    String regex;
+    regex = path.get("regex");
+
+    http.okText(regex, StandardCharsets.UTF_8);
+  }
+
+  @Test
+  public void testCase10() throws IOException {
+    try (Socket socket = newSocket()) {
+      test(socket,
+          """
+          GET /testCase10/abc123 HTTP/1.1\r
+          Host: http.module.test\r
+          Cookie: HTTPMODULETEST=TEST_COOKIE\r
+          \r
+          """,
+
+          """
+          HTTP/1.1 200 OK\r
+          Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+          Content-Type: text/plain; charset=utf-8\r
+          Content-Length: 6\r
+          \r
+          abc123"""
+      );
+
+      test(socket,
+          """
+          GET /testCase09/abc_123 HTTP/1.1\r
+          Host: http.module.test\r
+          Cookie: HTTPMODULETEST=TEST_COOKIE\r
           \r
           """,
 

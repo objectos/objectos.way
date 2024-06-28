@@ -17,6 +17,7 @@ package objectos.way;
 
 import java.util.function.Function;
 import java.util.function.Supplier;
+import java.util.regex.Pattern;
 import objectos.lang.object.Check;
 
 abstract class HttpModule {
@@ -213,6 +214,16 @@ abstract class HttpModule {
     Check.notNull(name, "name == null");
 
     return new HttpModuleCondition.NotEmpty(name);
+  }
+
+  protected final Condition regex(String name, String regex) {
+    Check.notNull(name, "name == null");
+    Check.notNull(regex, "regex == null");
+
+    Pattern pattern;
+    pattern = Pattern.compile(regex);
+
+    return new HttpModuleCondition.Regex(name, pattern);
   }
 
   // actions
