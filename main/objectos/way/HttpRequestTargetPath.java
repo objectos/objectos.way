@@ -18,7 +18,9 @@ package objectos.way;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
+import java.util.Map;
 import objectos.util.list.GrowableList;
+import objectos.util.map.GrowableMap;
 
 final class HttpRequestTargetPath implements Http.Request.Target.Path {
 
@@ -26,11 +28,19 @@ final class HttpRequestTargetPath implements Http.Request.Target.Path {
 
   private List<Segment> segments;
 
+  Map<String, String> variables;
+
+  private int matcherIndex;
+
   public final void reset() {
     value = null;
 
     if (segments != null) {
       segments.clear();
+    }
+
+    if (variables != null) {
+      variables.clear();
     }
   }
 
@@ -100,6 +110,70 @@ final class HttpRequestTargetPath implements Http.Request.Target.Path {
   @Override
   public final String value() {
     return value;
+  }
+
+  final void matcherReset() {
+    matcherIndex = 0;
+
+    if (variables != null) {
+      variables.clear();
+    }
+  }
+
+  final boolean atEnd() {
+    return matcherIndex == value.length();
+  }
+
+  final boolean exact(String other) {
+    boolean result;
+    result = value.equals(other);
+
+    matcherIndex += value.length();
+
+    return result;
+  }
+
+  final boolean namedVariable(String name) {
+    int remaining;
+    remaining = value.length() - matcherIndex;
+
+    if (remaining == 0) {
+      return false;
+    }
+
+    int solidus;
+    solidus = value.indexOf('/', matcherIndex);
+
+    String varValue;
+
+    if (solidus < 0) {
+      varValue = value.substring(matcherIndex);
+    } else {
+      varValue = value.substring(matcherIndex, solidus);
+    }
+
+    matcherIndex += varValue.length();
+
+    variable(name, varValue);
+
+    return true;
+  }
+
+  final boolean startsWithMatcher(String prefix) {
+    boolean result;
+    result = value.startsWith(prefix);
+
+    matcherIndex += prefix.length();
+
+    return result;
+  }
+
+  private void variable(String name, String value) {
+    if (variables == null) {
+      variables = new GrowableMap<>();
+    }
+
+    variables.put(name, value);
   }
 
   private class ThisSegment implements Segment {

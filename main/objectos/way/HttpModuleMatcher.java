@@ -16,41 +16,43 @@
 package objectos.way;
 
 // TODO make package-private when done with the refactoring
+@SuppressWarnings("exports")
 public interface HttpModuleMatcher {
 
   record Exact(String value) implements HttpModuleMatcher {
     @Override
-    public final boolean test(Http.Request.Target.Path path) {
-      return path.is(value);
+    public final boolean test(HttpRequestTargetPath path) {
+      return path.exact(value);
     }
   }
 
   record Matcher2(HttpModuleMatcher matcher1, HttpModuleMatcher matcher2) implements HttpModuleMatcher {
     @Override
-    public final boolean test(Http.Request.Target.Path path) {
+    public final boolean test(HttpRequestTargetPath path) {
       return matcher1.test(path)
-          && matcher2.test(path);
+          && matcher2.test(path)
+          && path.atEnd();
     }
   }
 
   record NamedVariable(String name) implements HttpModuleMatcher {
     @Override
-    public final boolean test(Http.Request.Target.Path path) {
-      throw new UnsupportedOperationException("Implement me");
+    public final boolean test(HttpRequestTargetPath path) {
+      return path.namedVariable(name);
     }
   }
 
   record Region(String value) implements HttpModuleMatcher {
     @Override
-    public final boolean test(Http.Request.Target.Path path) {
+    public final boolean test(HttpRequestTargetPath path) {
       throw new UnsupportedOperationException("Implement me");
     }
   }
 
   record StartsWith(String value) implements HttpModuleMatcher {
     @Override
-    public final boolean test(Http.Request.Target.Path path) {
-      return path.startsWith(value);
+    public final boolean test(HttpRequestTargetPath path) {
+      return path.startsWithMatcher(value);
     }
   }
 
@@ -58,6 +60,6 @@ public interface HttpModuleMatcher {
     return new Matcher2(this, other);
   }
 
-  boolean test(Http.Request.Target.Path path);
+  boolean test(HttpRequestTargetPath path);
 
 }

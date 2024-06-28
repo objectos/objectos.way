@@ -65,7 +65,12 @@ sealed abstract class HttpModuleRoute implements HttpModuleAction {
     Http.Request.Target.Path path;
     path = http.path();
 
-    if (matcher.test(path)) {
+    HttpRequestTargetPath p;
+    p = (HttpRequestTargetPath) path;
+
+    p.matcherReset();
+
+    if (matcher.test(p)) {
       Http.Handler handler;
       handler = handler();
 

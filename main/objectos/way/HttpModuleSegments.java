@@ -110,7 +110,7 @@ sealed abstract class HttpModuleSegments implements HttpModuleMatcher {
   }
 
   @Override
-  public final boolean test(Http.Request.Target.Path path) {
+  public final boolean test(HttpRequestTargetPath path) {
     List<Http.Request.Target.Path.Segment> segments;
     segments = path.segments();
 

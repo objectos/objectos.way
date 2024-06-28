@@ -16,7 +16,9 @@
 package objectos.way;
 
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertTrue;
 
+import java.util.Map;
 import org.testng.annotations.Test;
 
 public class HttpModuleMatcherTest {
@@ -26,13 +28,31 @@ public class HttpModuleMatcherTest {
     HttpModuleMatcher matcher;
     matcher = new HttpModuleMatcher.Exact("/foo");
 
-    assertEquals(matcher.test(path("/foo")), true);
-    assertEquals(matcher.test(path("/fooo")), false);
-    assertEquals(matcher.test(path("/foo?q=foo")), true);
-    assertEquals(matcher.test(path("/foo/")), false);
-    assertEquals(matcher.test(path("/foo/bar")), false);
-    assertEquals(matcher.test(path("/bar")), false);
-    assertEquals(matcher.test(path("/")), false);
+    test(matcher, "/foo", true);
+    test(matcher, "/fooo", false);
+    test(matcher, "/foo?q=foo", true);
+    test(matcher, "/foo/", false);
+    test(matcher, "/foo/bar", false);
+    test(matcher, "/bar", false);
+    test(matcher, "/", false);
+  }
+
+  @Test
+  public void namedVariable01() {
+    HttpModuleMatcher matcher;
+    matcher = new HttpModuleMatcher.Matcher2(
+        new HttpModuleMatcher.StartsWith("/foo/"),
+        new HttpModuleMatcher.NamedVariable("foo")
+    );
+
+    test(matcher, "/foo", false);
+    test(matcher, "/fooo", false);
+    test(matcher, "/foo?q=foo", false);
+    test(matcher, "/foo/", false);
+    test(matcher, "/foo/bar", Map.of("foo", "bar"));
+    test(matcher, "/foo/bar/x", false);
+    test(matcher, "/bar", false);
+    test(matcher, "/", false);
   }
 
   @Test
@@ -40,20 +60,41 @@ public class HttpModuleMatcherTest {
     HttpModuleMatcher matcher;
     matcher = new HttpModuleMatcher.StartsWith("/foo");
 
-    assertEquals(matcher.test(path("/foo")), true);
-    assertEquals(matcher.test(path("/fooo")), true);
-    assertEquals(matcher.test(path("/foo?q=foo")), true);
-    assertEquals(matcher.test(path("/foo/")), true);
-    assertEquals(matcher.test(path("/foo/bar")), true);
-    assertEquals(matcher.test(path("/bar")), false);
-    assertEquals(matcher.test(path("/")), false);
+    test(matcher, "/foo", true);
+    test(matcher, "/fooo", true);
+    test(matcher, "/foo?q=foo", true);
+    test(matcher, "/foo/", true);
+    test(matcher, "/foo/bar", true);
+    test(matcher, "/bar", false);
+    test(matcher, "/", false);
   }
 
-  private Http.Request.Target.Path path(String target) {
+  private void test(HttpModuleMatcher matcher, String target, boolean expected) {
     Http.Request.Target requestTarget;
     requestTarget = Http.parseRequestTarget(target);
 
-    return requestTarget.path();
+    Http.Request.Target.Path p;
+    p = requestTarget.path();
+
+    HttpRequestTargetPath path;
+    path = (HttpRequestTargetPath) p;
+
+    assertEquals(matcher.test(path), expected);
+  }
+
+  private void test(HttpModuleMatcher matcher, String target, Map<String, String> expected) {
+    Http.Request.Target requestTarget;
+    requestTarget = Http.parseRequestTarget(target);
+
+    Http.Request.Target.Path p;
+    p = requestTarget.path();
+
+    HttpRequestTargetPath path;
+    path = (HttpRequestTargetPath) p;
+
+    assertTrue(matcher.test(path));
+
+    assertEquals(path.variables, expected);
   }
 
 }

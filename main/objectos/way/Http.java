@@ -562,7 +562,7 @@ public final class Http {
       /**
        * The path component of a request-target.
        */
-      public interface Path {
+      public sealed interface Path permits HttpRequestTargetPath {
 
         /**
          * A segment of a path.
