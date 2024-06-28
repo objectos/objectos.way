@@ -63,6 +63,18 @@ final class HttpRequestTargetPath implements Http.Request.Target.Path {
   }
 
   @Override
+  public final String get(String name) {
+    String result;
+    result = null;
+
+    if (variables != null) {
+      result = variables.get(name);
+    }
+
+    return result;
+  }
+
+  @Override
   public final List<Segment> segments() {
     if (segments == null) {
       segments = new GrowableList<>();

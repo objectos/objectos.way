@@ -77,23 +77,28 @@ public class HttpModuleTest extends Http.Module {
 
     // matches: /testCase01/foo
     // but not: /testCase01, /testCase01/, /testCase01/foo/bar
-    route(segments(eq("testCase01"), nonEmpty()), this::testCase01);
+    route("/testCase01/:text", this::testCase01);
 
     // redirect non-authenticated requests
     filter(this::testCase02);
 
     // matches: /testCase03, /testCase03/foo, /testCase03/foo/bar
-    route(segments(eq("testCase03"), zeroOrMore()), this::testCase03);
+    Http.Handler testCase03 = this::testCase03;
+    route("/testCase03", testCase03);
+    route("/testCase03/*", testCase03);
 
     // matches: /testCase04, /testCase04/foo, /testCase04/foo/bar
-    route(segments(eq("testCase04"), zeroOrMore()), new TestCase04());
+    TestCase04 testCase04 = new TestCase04();
+    route("/testCase04*", testCase04);
 
     // matches: /testCase05/img, /testCase05/img/, /testCase05/img/a, /testCase05/img/b
-    route(segments(eq("testCase05"), eq("img"), zeroOrMore()), this::testCase05);
+    Http.Handler testCase05 = this::testCase05;
+    route("/testCase05/img", testCase05);
+    route("/testCase05/img/*", testCase05);
 
     // matches: /testCase06/, /testCase06/foo, /testCase06/foo/bar
     // but not: /testCase06
-    route(segments(eq("testCase06"), oneOrMore()), this::testCase06);
+    route("/testCase06/*", this::testCase06);
 
     route("/testCase07/before", this::testCase07);
 
@@ -108,14 +113,8 @@ public class HttpModuleTest extends Http.Module {
     Http.Request.Target.Path path;
     path = http.path();
 
-    List<Http.Request.Target.Path.Segment> segments;
-    segments = path.segments();
-
-    Http.Request.Target.Path.Segment second;
-    second = segments.get(1);
-
     String text;
-    text = second.value();
+    text = path.get("text");
 
     TestingSingleParagraph html;
     html = new TestingSingleParagraph(text);
@@ -347,11 +346,11 @@ public class HttpModuleTest extends Http.Module {
   private static class TestCase04 extends Http.Module {
     @Override
     protected final void configure() {
-      route(segments(present()), http -> http.okText("ROOT", StandardCharsets.UTF_8));
+      route("/testCase04", http -> http.okText("ROOT", StandardCharsets.UTF_8));
 
-      route(segments(present(), eq("")), http -> http.movedPermanently("/testCase04"));
+      route("/testCase04/", http -> http.movedPermanently("/testCase04"));
 
-      route(segments(present(), eq("foo")), http -> http.okText("foo", StandardCharsets.UTF_8));
+      route("/testCase04/foo", http -> http.okText("foo", StandardCharsets.UTF_8));
     }
   }
 

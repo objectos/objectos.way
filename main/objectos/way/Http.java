@@ -579,6 +579,8 @@ public final class Http {
 
         boolean startsWith(String prefix);
 
+        String get(String name);
+
         List<Segment> segments();
 
         /**

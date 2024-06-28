@@ -35,11 +35,11 @@ public class TestingHttpModule extends Http.Module {
   protected final void configure() {
     sessionStore(injector.sessionStore());
 
-    route(segments(eq("ui"), zeroOrMore()), new UiHttpModule(injector));
+    route("/ui/*", new UiHttpModule(injector));
 
     route("/login", Login::new, injector);
 
-    route(segments(eq("common"), nonEmpty()), this::common);
+    route("/common/*", this::common);
 
     route("/styles.css", new Styles(injector));
 

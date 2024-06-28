@@ -75,7 +75,10 @@ final class HttpModuleCompiler extends HttpModuleMatcherParser implements Http.H
     }
   }
 
-  final void route(HttpModuleMatcher matcher, Http.Handler handler) {
+  final void route(String pathExpression, Http.Handler handler) {
+    HttpModuleMatcher matcher;
+    matcher = matcher(pathExpression);
+
     handler = decorate(handler);
 
     int index;
@@ -84,7 +87,10 @@ final class HttpModuleCompiler extends HttpModuleMatcherParser implements Http.H
     actions[index] = new HttpModuleRoute.RouteHandler(matcher, handler);
   }
 
-  final <T> void route(HttpModuleMatcher matcher, Function<T, Http.Handler> factory, T value) {
+  final <T> void route(String pathExpression, Function<T, Http.Handler> factory, T value) {
+    HttpModuleMatcher matcher;
+    matcher = matcher(pathExpression);
+
     Function<T, Http.Handler> function;
     function = interceptor == null ? factory : (T t) -> interceptor.intercept(factory.apply(t));
 

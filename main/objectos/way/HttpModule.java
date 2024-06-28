@@ -15,34 +15,16 @@
  */
 package objectos.way;
 
-import java.util.List;
 import java.util.function.Function;
 import objectos.lang.object.Check;
-import objectos.way.Http.Handler;
 
 abstract class HttpModule {
-
-  protected sealed static abstract class Condition permits HttpModuleCondition {
-
-    Condition() {}
-
-    abstract boolean test(List<Http.Request.Target.Path.Segment> segments, int index);
-
-    final boolean hasIndex(List<Http.Request.Target.Path.Segment> segments, int index) {
-      return index < segments.size();
-    }
-
-    boolean mustBeLast() {
-      return false;
-    }
-
-  }
 
   protected sealed static abstract class MethodHandler permits HttpModuleMethodHandler {
 
     MethodHandler() {}
 
-    abstract Handler compile();
+    abstract Http.Handler compile();
 
   }
 
@@ -124,143 +106,36 @@ abstract class HttpModule {
 
   // routes
 
-  protected final void route(String path, Http.Handler handler) {
-    Check.notNull(path, "path == null");
+  protected final void route(String pathExpression, Http.Handler handler) {
+    Check.notNull(pathExpression, "pathExpression == null");
     Check.notNull(handler, "handler == null");
 
-    HttpModuleMatcher matcher;
-    matcher = path(path);
-
-    compiler.route(matcher, handler);
+    compiler.route(pathExpression, handler);
   }
 
-  protected final void route(String path, Http.Module module) {
-    Check.notNull(path, "path == null");
+  protected final void route(String pathExpression, Http.Module module) {
+    Check.notNull(pathExpression, "pathExpression == null");
 
     Http.Handler handler;
     handler = module.compile(); // implicit null-check
 
-    HttpModuleMatcher matcher;
-    matcher = path(path);
-
-    compiler.route(matcher, handler);
+    compiler.route(pathExpression, handler);
   }
 
-  protected final void route(String path, MethodHandler handler) {
-    Check.notNull(path, "path == null");
-    Check.notNull(handler, "handler == null");
+  protected final void route(String pathExpression, MethodHandler handler) {
+    Check.notNull(pathExpression, "pathExpression == null");
 
-    HttpModuleMatcher matcher;
-    matcher = path(path);
+    Http.Handler httpHandler; // implicit null-check
+    httpHandler = handler.compile();
 
-    compiler.route(matcher, handler.compile());
+    compiler.route(pathExpression, httpHandler);
   }
 
-  protected final <T> void route(String path, Function<T, Http.Handler> factory, T value) {
-    Check.notNull(path, "path == null");
+  protected final <T> void route(String pathExpression, Function<T, Http.Handler> factory, T value) {
+    Check.notNull(pathExpression, "pathExpression == null");
     Check.notNull(factory, "factory == null");
-    Check.notNull(value, "value == null");
 
-    HttpModuleMatcher matcher;
-    matcher = path(path);
-
-    compiler.route(matcher, factory, value);
-  }
-
-  //
-
-  protected final void route(HttpModuleMatcher matcher, Http.Handler handler) {
-    Check.notNull(matcher, "matcher == null");
-    Check.notNull(handler, "handler == null");
-
-    compiler.route(matcher, handler);
-  }
-
-  protected final void route(HttpModuleMatcher matcher, MethodHandler handler) {
-    Check.notNull(matcher, "matcher == null");
-    Check.notNull(handler, "handler == null");
-
-    compiler.route(matcher, handler.compile());
-  }
-
-  protected final void route(HttpModuleMatcher matcher, Http.Module module) {
-    Check.notNull(matcher, "matcher == null");
-
-    Http.Handler handler;
-    handler = module.compile(); // implicit null-check
-
-    compiler.route(matcher, handler);
-  }
-
-  protected final <T> void route(HttpModuleMatcher matcher, Function<T, Http.Handler> factory, T value) {
-    Check.notNull(matcher, "matcher == null");
-    Check.notNull(factory, "factory == null");
-    Check.notNull(value, "value == null");
-
-    compiler.route(matcher, factory, value);
-  }
-
-  // matchers
-
-  private HttpModuleMatcher path(String value) {
-    return new HttpModuleMatcher.Exact(value);
-  }
-
-  protected final HttpModuleMatcher segments(Condition condition) {
-    Check.notNull(condition, "condition == null");
-
-    return HttpModuleSegments.of(condition);
-  }
-
-  protected final HttpModuleMatcher segments(Condition c0, Condition c1) {
-    checkMustBeLast(c0);
-    Check.notNull(c1, "c1 == null");
-
-    return HttpModuleSegments.of(c0, c1);
-  }
-
-  protected final HttpModuleMatcher segments(Condition c0, Condition c1, Condition c2) {
-    checkMustBeLast(c0);
-    checkMustBeLast(c1);
-    Check.notNull(c2, "c2 == null");
-
-    return HttpModuleSegments.of(c0, c1, c2);
-  }
-
-  private void checkMustBeLast(Condition condition) {
-    if (condition.mustBeLast()) {
-      Class<? extends Condition> type;
-      type = condition.getClass();
-
-      String name;
-      name = type.getSimpleName();
-
-      throw new IllegalArgumentException(name + " must only me used as the last condition");
-    }
-  }
-
-  // conditions
-
-  protected final Condition eq(String value) {
-    Check.notNull(value, "value == null");
-
-    return HttpModuleCondition.equalTo(value);
-  }
-
-  protected final Condition nonEmpty() {
-    return HttpModuleCondition.nonEmpty();
-  }
-
-  protected final Condition zeroOrMore() {
-    return HttpModuleCondition.zeroOrMore();
-  }
-
-  protected final Condition present() {
-    return HttpModuleCondition.present();
-  }
-
-  protected final Condition oneOrMore() {
-    return HttpModuleCondition.oneOrMore();
+    compiler.route(pathExpression, factory, value);
   }
 
   // actions
