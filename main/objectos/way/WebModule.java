@@ -44,6 +44,31 @@ abstract class WebModule extends Http.Module {
 
   protected WebModule() {}
 
+  protected final MethodHandler DELETE(Function<Http.Exchange, Web.Action> actionConstructor) {
+    return METHOD(Http.DELETE, actionConstructor);
+  }
+
+  protected final MethodHandler GET(Function<Http.Exchange, Web.Action> actionConstructor) {
+    return METHOD(Http.GET, actionConstructor);
+  }
+
+  protected final MethodHandler POST(Function<Http.Exchange, Web.Action> actionConstructor) {
+    return METHOD(Http.POST, actionConstructor);
+  }
+
+  protected final MethodHandler PUT(Function<Http.Exchange, Web.Action> actionConstructor) {
+    return METHOD(Http.PUT, actionConstructor);
+  }
+
+  private MethodHandler METHOD(Http.Request.Method method, Function<Http.Exchange, Web.Action> actionConstructor) {
+    Check.notNull(actionConstructor, "actionConstructor == null");
+
+    WebActionHandler handler;
+    handler = new WebActionHandler(actionConstructor);
+
+    return HttpModuleMethodHandler.ofHandler(method, handler);
+  }
+
   /**
    * Use the specified data source for obtaining database connections.
    *
@@ -57,12 +82,6 @@ abstract class WebModule extends Http.Module {
     Check.state(this.source == null, "this module's data source has already been defined");
 
     this.source = Check.notNull(source, "source == null");
-  }
-
-  protected final Http.Handler action(Function<Http.Exchange, Web.Action> actionConstructor) {
-    Check.notNull(actionConstructor, "actionConstructor == null");
-
-    return new WebActionHandler(actionConstructor);
   }
 
   /**

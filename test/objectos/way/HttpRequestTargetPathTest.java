@@ -23,31 +23,6 @@ import org.testng.annotations.Test;
 public class HttpRequestTargetPathTest {
 
   @Test
-  public void is() {
-    HttpRequestTargetPath path;
-    path = new HttpRequestTargetPath();
-
-    path.set("/");
-
-    assertEquals(path.is("/"), true);
-    assertEquals(path.is("/index.html"), false);
-  }
-
-  @Test
-  public void startsWith() {
-    HttpRequestTargetPath path;
-    path = new HttpRequestTargetPath();
-
-    path.set("/foo/bar.html");
-
-    assertEquals(path.startsWith("/foo"), true);
-    assertEquals(path.startsWith("/foo/"), true);
-    assertEquals(path.startsWith("/foo/bar.html"), true);
-    assertEquals(path.startsWith("/foo/bar.html/"), false);
-    assertEquals(path.startsWith("/goo"), false);
-  }
-
-  @Test
   public void segments() {
     HttpRequestTargetPath path;
     path = new HttpRequestTargetPath();
@@ -83,14 +58,14 @@ public class HttpRequestTargetPathTest {
     assertEquals(segments.get(0).toString(), "foo");
     assertEquals(segments.get(1).toString(), "index.html");
   }
-  
+
   @Test
   public void value() {
     HttpRequestTargetPath path;
     path = new HttpRequestTargetPath();
 
     path.set("/foo%40bar");
-    
+
     assertEquals(path.value(), "/foo@bar");
   }
 

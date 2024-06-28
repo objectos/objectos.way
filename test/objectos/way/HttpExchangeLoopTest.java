@@ -73,7 +73,7 @@ public class HttpExchangeLoopTest {
       path = http.path();
 
       assertEquals(http.method(), Http.GET);
-      assertEquals(path.is("/"), true);
+      assertEquals(path.value(), "/");
 
       Http.Request.Target.Query query;
       query = http.query();
@@ -182,7 +182,7 @@ public class HttpExchangeLoopTest {
       path = http.path();
 
       assertEquals(http.method(), Http.GET);
-      assertEquals(path.is("/login"), true);
+      assertEquals(path.value(), "/login");
 
       Http.Request.Target.Query query;
       query = http.query();
@@ -228,7 +228,7 @@ public class HttpExchangeLoopTest {
       path = http.path();
 
       assertEquals(http.method(), Http.GET);
-      assertEquals(path.is("/login.css"), true);
+      assertEquals(path.value(), "/login.css");
 
       // headers
       headers = http.headers();
@@ -369,7 +369,7 @@ public class HttpExchangeLoopTest {
       path = http.path();
 
       assertEquals(http.method(), Http.GET);
-      assertEquals(path.is("/index.html"), true);
+      assertEquals(path.value(), "/index.html");
 
       Http.Request.Target.Query query;
       query = http.query();
@@ -447,7 +447,7 @@ public class HttpExchangeLoopTest {
       path = http.path();
 
       assertEquals(http.method(), Http.GET);
-      assertEquals(path.is("/atom.xml"), true);
+      assertEquals(path.value(), "/atom.xml");
 
       Http.Request.Target.Query query;
       query = http.query();
@@ -1237,7 +1237,7 @@ public class HttpExchangeLoopTest {
       path = http.path();
 
       assertEquals(http.method(), Http.GET);
-      assertEquals(path.is("/"), true);
+      assertEquals(path.value(), "/");
 
       Http.Request.Target.Query query;
       query = http.query();

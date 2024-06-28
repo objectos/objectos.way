@@ -35,18 +35,18 @@ public class WebModuleTest extends Web.Module {
     source(TestingH2.SOURCE);
 
     route("/testCase01/trx",
-        GET(transactional(this::testCase01))
+        GET(transactional(this::$testCase01))
     );
     route("/testCase01/xrt",
-        GET(this::testCase01)
+        GET(this::$testCase01)
     );
 
     route("/testCase02",
-        GET(action(TestCase02::new))
+        GET(TestCase02::new)
     );
   }
 
-  private void testCase01(Http.Exchange http) {
+  private void $testCase01(Http.Exchange http) {
     Sql.Transaction trx;
     trx = http.get(Sql.Transaction.class);
 

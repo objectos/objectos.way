@@ -53,16 +53,6 @@ final class HttpRequestTargetPath implements Http.Request.Target.Path {
   }
 
   @Override
-  public final boolean is(String path) {
-    return value.equals(path);
-  }
-
-  @Override
-  public final boolean startsWith(String prefix) {
-    return value.startsWith(prefix);
-  }
-
-  @Override
   public final String get(String name) {
     String result;
     result = null;

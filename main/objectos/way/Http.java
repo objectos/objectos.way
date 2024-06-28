@@ -575,10 +575,6 @@ public final class Http {
 
         }
 
-        boolean is(String path);
-
-        boolean startsWith(String prefix);
-
         String get(String name);
 
         List<Segment> segments();

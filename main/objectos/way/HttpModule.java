@@ -228,10 +228,26 @@ abstract class HttpModule {
 
   // actions
 
+  protected final MethodHandler DELETE(Http.Handler handler) {
+    return METHOD(Http.DELETE, handler);
+  }
+
   protected final MethodHandler GET(Http.Handler handler) {
+    return METHOD(Http.GET, handler);
+  }
+
+  protected final MethodHandler POST(Http.Handler handler) {
+    return METHOD(Http.POST, handler);
+  }
+
+  protected final MethodHandler PUT(Http.Handler handler) {
+    return METHOD(Http.PUT, handler);
+  }
+
+  private MethodHandler METHOD(Http.Request.Method method, Http.Handler handler) {
     Check.notNull(handler, "handler == null");
 
-    return HttpModuleMethodHandler.ofHandler(Http.GET, handler);
+    return HttpModuleMethodHandler.ofHandler(method, handler);
   }
 
   protected final MethodHandler method(Http.Request.Method method, Http.Handler handler) {
