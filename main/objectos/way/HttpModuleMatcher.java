@@ -15,6 +15,8 @@
  */
 package objectos.way;
 
+import java.util.Arrays;
+
 // TODO make package-private when done with the refactoring
 @SuppressWarnings("exports")
 public interface HttpModuleMatcher {
@@ -28,10 +30,96 @@ public interface HttpModuleMatcher {
 
   record Matcher2(HttpModuleMatcher matcher1, HttpModuleMatcher matcher2) implements HttpModuleMatcher {
     @Override
+    public final HttpModuleMatcher append(HttpModuleMatcher other) {
+      return new Matcher3(matcher1, matcher2, other);
+    }
+
+    @Override
     public final boolean test(HttpRequestTargetPath path) {
       return matcher1.test(path)
           && matcher2.test(path)
           && path.atEnd();
+    }
+  }
+
+  record Matcher3(HttpModuleMatcher matcher1, HttpModuleMatcher matcher2, HttpModuleMatcher matcher3) implements HttpModuleMatcher {
+    @Override
+    public final HttpModuleMatcher append(HttpModuleMatcher other) {
+      return new Matcher4(matcher1, matcher2, matcher3, other);
+    }
+
+    @Override
+    public final boolean test(HttpRequestTargetPath path) {
+      return matcher1.test(path)
+          && matcher2.test(path)
+          && matcher3.test(path)
+          && path.atEnd();
+    }
+  }
+
+  record Matcher4(HttpModuleMatcher matcher1,
+                  HttpModuleMatcher matcher2,
+                  HttpModuleMatcher matcher3,
+                  HttpModuleMatcher matcher4)
+      implements HttpModuleMatcher {
+    @Override
+    public final HttpModuleMatcher append(HttpModuleMatcher other) {
+      return new Matcher5(matcher1, matcher2, matcher3, matcher4, other);
+    }
+
+    @Override
+    public final boolean test(HttpRequestTargetPath path) {
+      return matcher1.test(path)
+          && matcher2.test(path)
+          && matcher3.test(path)
+          && matcher4.test(path)
+          && path.atEnd();
+    }
+  }
+
+  record Matcher5(HttpModuleMatcher matcher1,
+                  HttpModuleMatcher matcher2,
+                  HttpModuleMatcher matcher3,
+                  HttpModuleMatcher matcher4,
+                  HttpModuleMatcher matcher5)
+      implements HttpModuleMatcher {
+    @Override
+    public final HttpModuleMatcher append(HttpModuleMatcher other) {
+      return new MatcherN(matcher1, matcher2, matcher3, matcher4, matcher5, other);
+    }
+
+    @Override
+    public final boolean test(HttpRequestTargetPath path) {
+      return matcher1.test(path)
+          && matcher2.test(path)
+          && matcher3.test(path)
+          && matcher4.test(path)
+          && matcher5.test(path)
+          && path.atEnd();
+    }
+  }
+
+  record MatcherN(HttpModuleMatcher... matchers)
+      implements HttpModuleMatcher {
+    @Override
+    public final HttpModuleMatcher append(HttpModuleMatcher other) {
+      HttpModuleMatcher[] copy;
+      copy = Arrays.copyOf(matchers, matchers.length + 1);
+
+      copy[matchers.length] = other;
+
+      return new MatcherN(copy);
+    }
+
+    @Override
+    public final boolean test(HttpRequestTargetPath path) {
+      for (HttpModuleMatcher matcher : matchers) {
+        if (!matcher.test(path)) {
+          return false;
+        }
+      }
+
+      return path.atEnd();
     }
   }
 
@@ -45,7 +133,7 @@ public interface HttpModuleMatcher {
   record Region(String value) implements HttpModuleMatcher {
     @Override
     public final boolean test(HttpRequestTargetPath path) {
-      throw new UnsupportedOperationException("Implement me");
+      return path.region(value);
     }
   }
 

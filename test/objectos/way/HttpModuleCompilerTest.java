@@ -54,24 +54,18 @@ public class HttpModuleCompilerTest {
     );
     matcher(
         "/foo/:foo/bar/:bar",
-        new HttpModuleMatcher.Matcher2(
-            new HttpModuleMatcher.Matcher2(
-                new HttpModuleMatcher.Matcher2(
-                    new HttpModuleMatcher.StartsWith("/foo/"),
-                    new HttpModuleMatcher.NamedVariable("foo")
-                ),
-                new HttpModuleMatcher.Region("/bar/")
-            ),
+        new HttpModuleMatcher.Matcher4(
+            new HttpModuleMatcher.StartsWith("/foo/"),
+            new HttpModuleMatcher.NamedVariable("foo"),
+            new HttpModuleMatcher.Region("/bar/"),
             new HttpModuleMatcher.NamedVariable("bar")
         )
     );
     matcher(
         "/foo/:foo/bar",
-        new HttpModuleMatcher.Matcher2(
-            new HttpModuleMatcher.Matcher2(
-                new HttpModuleMatcher.StartsWith("/foo/"),
-                new HttpModuleMatcher.NamedVariable("foo")
-            ),
+        new HttpModuleMatcher.Matcher3(
+            new HttpModuleMatcher.StartsWith("/foo/"),
+            new HttpModuleMatcher.NamedVariable("foo"),
             new HttpModuleMatcher.Region("/bar")
         )
     );

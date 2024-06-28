@@ -159,6 +159,15 @@ final class HttpRequestTargetPath implements Http.Request.Target.Path {
     return true;
   }
 
+  final boolean region(String region) {
+    boolean result;
+    result = value.regionMatches(matcherIndex, region, 0, region.length());
+
+    matcherIndex += region.length();
+
+    return result;
+  }
+
   final boolean startsWithMatcher(String prefix) {
     boolean result;
     result = value.startsWith(prefix);

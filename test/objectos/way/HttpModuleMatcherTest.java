@@ -56,6 +56,26 @@ public class HttpModuleMatcherTest {
   }
 
   @Test
+  public void namedVariable02() {
+    HttpModuleMatcher matcher;
+    matcher = new HttpModuleMatcher.Matcher4(
+        new HttpModuleMatcher.StartsWith("/foo/"),
+        new HttpModuleMatcher.NamedVariable("foo"),
+        new HttpModuleMatcher.Region("/bar/"),
+        new HttpModuleMatcher.NamedVariable("bar")
+    );
+
+    test(matcher, "/foo/bar/bar/bar", Map.of("foo", "bar", "bar", "bar"));
+    test(matcher, "/foo/x/bar/y", Map.of("foo", "x", "bar", "y"));
+
+    test(matcher, "/foo", false);
+    test(matcher, "/foo/", false);
+    test(matcher, "/foo//", false);
+    test(matcher, "/foo/foo/bar", false);
+    test(matcher, "/foo/foo/bar/bar/x", false);
+  }
+
+  @Test
   public void startsWith01() {
     HttpModuleMatcher matcher;
     matcher = new HttpModuleMatcher.StartsWith("/foo");
