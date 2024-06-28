@@ -15,7 +15,8 @@
  */
 package objectos.way;
 
-import java.util.function.Function;
+import java.util.function.Supplier;
+import objectos.way.Http.Handler;
 
 sealed abstract class HttpModuleRoute implements HttpModuleAction {
 
@@ -33,20 +34,18 @@ sealed abstract class HttpModuleRoute implements HttpModuleAction {
 
   }
 
-  static final class RouteFactory1<T> extends HttpModuleRoute {
+  static final class RouteSupplier extends HttpModuleRoute {
 
-    private final Function<T, Http.Handler> factory;
-    private final T value;
+    private final Supplier<Http.Handler> supplier;
 
-    public RouteFactory1(HttpModuleMatcher matcher, Function<T, Http.Handler> factory, T value) {
+    public RouteSupplier(HttpModuleMatcher matcher, Supplier<Handler> supplier) {
       super(matcher);
-      this.factory = factory;
-      this.value = value;
+      this.supplier = supplier;
     }
 
     @Override
     final Http.Handler handler() {
-      return factory.apply(value);
+      return supplier.get();
     }
 
   }

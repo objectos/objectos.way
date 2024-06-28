@@ -146,13 +146,6 @@ final class HttpRequestTargetPath implements Http.Request.Target.Path {
   }
 
   final boolean namedVariable(String name) {
-    int remaining;
-    remaining = value.length() - matcherIndex;
-
-    if (remaining == 0) {
-      return false;
-    }
-
     int solidus;
     solidus = value.indexOf('/', matcherIndex);
 

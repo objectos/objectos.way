@@ -48,7 +48,7 @@ public class HttpModuleMatcherTest {
     test(matcher, "/foo", false);
     test(matcher, "/fooo", false);
     test(matcher, "/foo?q=foo", false);
-    test(matcher, "/foo/", false);
+    test(matcher, "/foo/", Map.of("foo", ""));
     test(matcher, "/foo/bar", Map.of("foo", "bar"));
     test(matcher, "/foo/bar/x", false);
     test(matcher, "/bar", false);

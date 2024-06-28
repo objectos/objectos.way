@@ -37,7 +37,7 @@ public class TestingHttpModule extends Http.Module {
 
     route("/ui/*", new UiHttpModule(injector));
 
-    route("/login", Login::new, injector);
+    route("/login", factory(Login::new, injector));
 
     route("/common/*", this::common);
 
@@ -45,7 +45,7 @@ public class TestingHttpModule extends Http.Module {
 
     filter(this::requireLogin);
 
-    route("/", Home::new, injector);
+    route("/", factory(Home::new, injector));
   }
 
   private void common(Exchange http) {

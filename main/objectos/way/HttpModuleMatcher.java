@@ -17,9 +17,8 @@ package objectos.way;
 
 import java.util.Arrays;
 
-// TODO make package-private when done with the refactoring
 @SuppressWarnings("exports")
-public interface HttpModuleMatcher {
+interface HttpModuleMatcher {
 
   record Exact(String value) implements HttpModuleMatcher {
     @Override

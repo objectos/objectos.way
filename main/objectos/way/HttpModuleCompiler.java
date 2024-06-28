@@ -16,7 +16,7 @@
 package objectos.way;
 
 import java.util.Arrays;
-import java.util.function.Function;
+import java.util.function.Supplier;
 import objectos.lang.object.Check;
 import objectos.util.array.ObjectArrays;
 
@@ -75,35 +75,43 @@ final class HttpModuleCompiler extends HttpModuleMatcherParser implements Http.H
     }
   }
 
-  final void route(String pathExpression, Http.Handler handler) {
+  final void route(String pathExpression, Http.Handler handler, HttpModuleRouteOptions options) {
     HttpModuleMatcher matcher;
-    matcher = matcher(pathExpression);
+    matcher = parseAndDecorate(pathExpression, options);
 
-    handler = decorate(handler);
+    Http.Handler actualHandler;
+    actualHandler = decorate(handler);
 
     int index;
     index = nextSlot();
 
-    actions[index] = new HttpModuleRoute.RouteHandler(matcher, handler);
+    actions[index] = new HttpModuleRoute.RouteHandler(matcher, actualHandler);
   }
 
-  final <T> void route(String pathExpression, Function<T, Http.Handler> factory, T value) {
+  final void route(String pathExpression, Supplier<Http.Handler> supplier, HttpModuleRouteOptions options) {
     HttpModuleMatcher matcher;
-    matcher = matcher(pathExpression);
+    matcher = parseAndDecorate(pathExpression, options);
 
-    Function<T, Http.Handler> function;
-    function = interceptor == null ? factory : (T t) -> interceptor.intercept(factory.apply(t));
+    Supplier<Http.Handler> actualSupplier;
+    actualSupplier = interceptor == null ? supplier : () -> interceptor.intercept(supplier.get());
 
     int index;
     index = nextSlot();
 
-    actions[index] = new HttpModuleRoute.RouteFactory1<>(matcher, function, value);
+    actions[index] = new HttpModuleRoute.RouteSupplier(matcher, actualSupplier);
   }
 
   final void sessionStore(SessionStore sessionStore) {
     Check.state(this.sessionStore == null, "A session store has already been configured");
 
     this.sessionStore = sessionStore;
+  }
+
+  private HttpModuleMatcher parseAndDecorate(String pathExpression, HttpModuleRouteOptions options) {
+    HttpModuleMatcher matcher;
+    matcher = matcher(pathExpression);
+
+    return options.decorate(matcher);
   }
 
   private Http.Handler decorate(Http.Handler handler) {

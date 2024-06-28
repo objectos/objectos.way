@@ -13,23 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package testing.site.ui;
+package objectos.way;
 
-import objectos.way.Http;
-import testing.zite.TestingSiteInjector;
+sealed abstract class HttpModuleCondition extends HttpModule.Condition {
 
-public final class UiHttpModule extends Http.Module {
+  static final class NotEmpty extends HttpModuleCondition {
 
-  private final TestingSiteInjector injector;
+    public NotEmpty(String name) {
+      super(name);
+    }
 
-  public UiHttpModule(TestingSiteInjector injector) {
-    this.injector = injector;
+    @Override
+    final boolean test(String value) {
+      return !value.isEmpty();
+    }
+
   }
 
-  @Override
-  protected final void configure() {
-    route("/ui/styles.css", factory(UiStyles::new, injector));
-    route("/ui/shell", factory(ShellPage::new, injector));
+  HttpModuleCondition(String name) {
+    super(name);
   }
 
 }

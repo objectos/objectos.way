@@ -77,7 +77,7 @@ public class HttpModuleTest extends Http.Module {
 
     // matches: /testCase01/foo
     // but not: /testCase01, /testCase01/, /testCase01/foo/bar
-    route("/testCase01/:text", this::testCase01);
+    route("/testCase01/:text", this::$testCase01, params(notEmpty("text")));
 
     // redirect non-authenticated requests
     filter(this::testCase02);
@@ -98,18 +98,18 @@ public class HttpModuleTest extends Http.Module {
 
     // matches: /testCase06/, /testCase06/foo, /testCase06/foo/bar
     // but not: /testCase06
-    route("/testCase06/*", this::testCase06);
+    route("/testCase06/*", this::$testCase06);
 
-    route("/testCase07/before", this::testCase07);
+    route("/testCase07/before", this::$testCase07);
 
     interceptMatched(this::testCase07);
 
-    route("/testCase07/after", this::testCase07);
+    route("/testCase07/after", this::$testCase07);
 
     install(new TestCase08());
   }
 
-  private void testCase01(Http.Exchange http) {
+  private void $testCase01(Http.Exchange http) {
     Http.Request.Target.Path path;
     path = http.path();
 
@@ -549,7 +549,7 @@ public class HttpModuleTest extends Http.Module {
     }
   }
 
-  private void testCase06(Http.Exchange http) {
+  private void $testCase06(Http.Exchange http) {
     Http.Request.Target.Path path;
     path = http.path();
 
@@ -638,7 +638,7 @@ public class HttpModuleTest extends Http.Module {
     }
   }
 
-  private void testCase07(Http.Exchange http) {
+  private void $testCase07(Http.Exchange http) {
     Box box;
     box = http.get(Box.class);
 
