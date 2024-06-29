@@ -20,12 +20,11 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
-import java.util.List;
 import objectos.way.Http.Exchange;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-public class HttpServerTest implements Http.Handler {
+public class HttpServerTest extends Http.Module {
 
   @BeforeClass
   public void beforeClass() throws Exception {
@@ -33,35 +32,16 @@ public class HttpServerTest implements Http.Handler {
   }
 
   @Override
-  public final void handle(Http.Exchange http) {
+  protected final void configure() {
+    route("/test/:name", this::handle1);
+  }
+
+  private void handle1(Http.Exchange http) {
     Http.Request.Target.Path path;
     path = http.path();
 
-    List<Http.Request.Target.Path.Segment> segments;
-    segments = path.segments();
-
-    switch (segments.size()) {
-      case 2 -> handle1(http, segments);
-
-      default -> http.notFound();
-    }
-  }
-
-  private void handle1(Http.Exchange http, List<Http.Request.Target.Path.Segment> segments) {
-    Http.Request.Target.Path.Segment first;
-    first = segments.getFirst();
-
-    if (!first.is("test")) {
-      http.notFound();
-
-      return;
-    }
-
-    Http.Request.Target.Path.Segment second;
-    second = segments.get(1);
-
     String methodName;
-    methodName = second.value();
+    methodName = path.get("name");
 
     try {
       Class<? extends HttpServerTest> testClass;

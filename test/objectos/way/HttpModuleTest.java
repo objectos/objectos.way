@@ -20,8 +20,6 @@ import static org.testng.Assert.assertNotNull;
 import java.io.IOException;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
-import java.util.List;
-import java.util.stream.Collectors;
 import objectos.way.Http.Request.Target.Query;
 import objectos.way.TestingRandom.SequentialRandom;
 import org.testng.annotations.BeforeClass;
@@ -267,13 +265,11 @@ public class HttpModuleTest extends Http.Module {
     Http.Request.Target.Path path;
     path = http.path();
 
-    List<Http.Request.Target.Path.Segment> segments;
-    segments = path.segments();
+    String value;
+    value = path.value();
 
-    String text = segments.stream()
-        .skip(1)
-        .map(Http.Request.Target.Path.Segment::value)
-        .collect(Collectors.joining("/", "", "\n"));
+    String text;
+    text = value.substring("/testCase03".length());
 
     http.okText(text, StandardCharsets.UTF_8);
   }
@@ -293,9 +289,9 @@ public class HttpModuleTest extends Http.Module {
           HTTP/1.1 200 OK\r
           Date: Wed, 28 Jun 2023 12:08:43 GMT\r
           Content-Type: text/plain; charset=utf-8\r
-          Content-Length: 1\r
+          Content-Length: 0\r
           \r
-          \n"""
+          """
       );
 
       test(socket,
@@ -312,7 +308,7 @@ public class HttpModuleTest extends Http.Module {
           Content-Type: text/plain; charset=utf-8\r
           Content-Length: 1\r
           \r
-          \n"""
+          /"""
       );
 
       test(socket,
@@ -329,8 +325,7 @@ public class HttpModuleTest extends Http.Module {
           Content-Type: text/plain; charset=utf-8\r
           Content-Length: 4\r
           \r
-          foo
-          """
+          /foo"""
       );
 
       test(socket,
@@ -347,8 +342,7 @@ public class HttpModuleTest extends Http.Module {
           Content-Type: text/plain; charset=utf-8\r
           Content-Length: 8\r
           \r
-          foo/bar
-          """
+          /foo/bar"""
       );
     }
   }
@@ -439,13 +433,11 @@ public class HttpModuleTest extends Http.Module {
     Http.Request.Target.Path path;
     path = http.path();
 
-    List<Http.Request.Target.Path.Segment> segments;
-    segments = path.segments();
+    String value;
+    value = path.value();
 
-    String text = segments.stream()
-        .skip(2)
-        .map(Http.Request.Target.Path.Segment::value)
-        .collect(Collectors.joining("/", "", "\n"));
+    String text;
+    text = value.substring("/testCase05/img".length());
 
     http.okText(text, StandardCharsets.UTF_8);
   }
@@ -467,8 +459,7 @@ public class HttpModuleTest extends Http.Module {
           Content-Type: text/plain; charset=utf-8\r
           Content-Length: 2\r
           \r
-          a
-          """
+          /a"""
       );
 
       test(socket,
@@ -483,9 +474,9 @@ public class HttpModuleTest extends Http.Module {
           HTTP/1.1 200 OK\r
           Date: Wed, 28 Jun 2023 12:08:43 GMT\r
           Content-Type: text/plain; charset=utf-8\r
-          Content-Length: 1\r
+          Content-Length: 0\r
           \r
-          \n"""
+          """
       );
 
       test(socket,
@@ -502,7 +493,7 @@ public class HttpModuleTest extends Http.Module {
           Content-Type: text/plain; charset=utf-8\r
           Content-Length: 1\r
           \r
-          \n"""
+          /"""
       );
 
       test(socket,
@@ -519,8 +510,7 @@ public class HttpModuleTest extends Http.Module {
           Content-Type: text/plain; charset=utf-8\r
           Content-Length: 4\r
           \r
-          a/b
-          """
+          /a/b"""
       );
 
       test(socket,
@@ -537,8 +527,7 @@ public class HttpModuleTest extends Http.Module {
           Content-Type: text/plain; charset=utf-8\r
           Content-Length: 6\r
           \r
-          a/b/c
-          """
+          /a/b/c"""
       );
 
       test(socket,
@@ -563,13 +552,11 @@ public class HttpModuleTest extends Http.Module {
     Http.Request.Target.Path path;
     path = http.path();
 
-    List<Http.Request.Target.Path.Segment> segments;
-    segments = path.segments();
+    String value;
+    value = path.value();
 
-    String text = segments.stream()
-        .skip(1)
-        .map(Http.Request.Target.Path.Segment::value)
-        .collect(Collectors.joining("/", "", "\n"));
+    String text;
+    text = value.substring("/testCase06".length());
 
     http.okText(text, StandardCharsets.UTF_8);
   }
@@ -591,7 +578,7 @@ public class HttpModuleTest extends Http.Module {
           Content-Type: text/plain; charset=utf-8\r
           Content-Length: 1\r
           \r
-          \n"""
+          /"""
       );
 
       test(socket,
@@ -608,8 +595,7 @@ public class HttpModuleTest extends Http.Module {
           Content-Type: text/plain; charset=utf-8\r
           Content-Length: 4\r
           \r
-          foo
-          """
+          /foo"""
       );
 
       test(socket,
@@ -626,8 +612,7 @@ public class HttpModuleTest extends Http.Module {
           Content-Type: text/plain; charset=utf-8\r
           Content-Length: 8\r
           \r
-          foo/bar
-          """
+          /foo/bar"""
       );
 
       test(socket,

@@ -17,27 +17,19 @@ package objectos.way;
 
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
-import java.util.List;
 import java.util.Map;
-import objectos.util.list.GrowableList;
 import objectos.util.map.GrowableMap;
 
 final class HttpRequestTargetPath implements Http.Request.Target.Path {
 
-  private String value;
+  private int matcherIndex;
 
-  private List<Segment> segments;
+  private String value;
 
   Map<String, String> variables;
 
-  private int matcherIndex;
-
   public final void reset() {
     value = null;
-
-    if (segments != null) {
-      segments.clear();
-    }
 
     if (variables != null) {
       variables.clear();
@@ -46,10 +38,6 @@ final class HttpRequestTargetPath implements Http.Request.Target.Path {
 
   public final void set(String rawValue) {
     value = URLDecoder.decode(rawValue, StandardCharsets.UTF_8);
-
-    if (segments != null) {
-      segments.clear();
-    }
   }
 
   @Override
@@ -62,46 +50,6 @@ final class HttpRequestTargetPath implements Http.Request.Target.Path {
     }
 
     return result;
-  }
-
-  @Override
-  public final List<Segment> segments() {
-    if (segments == null) {
-      segments = new GrowableList<>();
-    }
-
-    if (segments.isEmpty()) {
-      createSegments();
-    }
-
-    return segments;
-  }
-
-  private void createSegments() {
-    // path is guaranteed to be, at a minimum, the '/' path
-    int startIndex;
-    startIndex = 1;
-
-    while (true) {
-      int endIndex;
-      endIndex = value.indexOf('/', startIndex);
-
-      if (endIndex < 0) {
-        ThisSegment segment;
-        segment = new ThisSegment(startIndex, value.length());
-
-        segments.add(segment);
-
-        break;
-      }
-
-      ThisSegment segment;
-      segment = new ThisSegment(startIndex, endIndex);
-
-      segments.add(segment);
-
-      startIndex = endIndex + 1;
-    }
   }
 
   @Override
@@ -178,40 +126,6 @@ final class HttpRequestTargetPath implements Http.Request.Target.Path {
     }
 
     variables.put(name, value);
-  }
-
-  private class ThisSegment implements Segment {
-
-    private final int start;
-
-    private final int end;
-
-    private String value;
-
-    public ThisSegment(int start, int end) {
-      this.start = start;
-      this.end = end;
-    }
-
-    @Override
-    public final boolean is(String other) {
-      return value().equals(other);
-    }
-
-    @Override
-    public final String toString() {
-      return value();
-    }
-
-    @Override
-    public final String value() {
-      if (value == null) {
-        value = HttpRequestTargetPath.this.value.substring(start, end);
-      }
-
-      return value;
-    }
-
   }
 
 }

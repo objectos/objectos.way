@@ -31,7 +31,6 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeFormatterBuilder;
 import java.time.temporal.ChronoField;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
@@ -564,20 +563,7 @@ public final class Http {
        */
       public sealed interface Path permits HttpRequestTargetPath {
 
-        /**
-         * A segment of a path.
-         */
-        public interface Segment {
-
-          boolean is(String other);
-
-          String value();
-
-        }
-
         String get(String name);
-
-        List<Segment> segments();
 
         /**
          * The decoded value of this path.

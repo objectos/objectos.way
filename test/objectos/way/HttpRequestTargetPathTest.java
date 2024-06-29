@@ -17,47 +17,9 @@ package objectos.way;
 
 import static org.testng.Assert.assertEquals;
 
-import java.util.List;
 import org.testng.annotations.Test;
 
 public class HttpRequestTargetPathTest {
-
-  @Test
-  public void segments() {
-    HttpRequestTargetPath path;
-    path = new HttpRequestTargetPath();
-
-    path.set("/");
-
-    List<Http.Request.Target.Path.Segment> segments;
-    segments = path.segments();
-
-    assertEquals(segments.size(), 1);
-    assertEquals(segments.get(0).toString(), "");
-
-    path.set("/index.html");
-
-    segments = path.segments();
-
-    assertEquals(segments.size(), 1);
-    assertEquals(segments.get(0).toString(), "index.html");
-
-    path.set("/foo/");
-
-    segments = path.segments();
-
-    assertEquals(segments.size(), 2);
-    assertEquals(segments.get(0).toString(), "foo");
-    assertEquals(segments.get(1).toString(), "");
-
-    path.set("/foo/index.html");
-
-    segments = path.segments();
-
-    assertEquals(segments.size(), 2);
-    assertEquals(segments.get(0).toString(), "foo");
-    assertEquals(segments.get(1).toString(), "index.html");
-  }
 
   @Test
   public void value() {

@@ -95,7 +95,7 @@ public final class TestingHttpServer {
     }
 
     public static void bindHttpServerTest(HttpServerTest test) {
-      HANDLER.httpServerTest = test;
+      HANDLER.httpServerTest = test.compile();
     }
 
     public static void bindWebModuleTest(WebModuleTest test) {
@@ -152,9 +152,9 @@ public final class TestingHttpServer {
     private Http.Handler httpServerTest;
 
     private final Http.Handler marketing = new MarketingSite().compile();
-    
+
     private Http.Handler webModuleTest;
-    
+
     private Http.Handler webResourcesTest;
 
     @Override
@@ -176,9 +176,9 @@ public final class TestingHttpServer {
         case "http.server.test" -> httpServerTest.handle(http);
 
         case "marketing" -> marketing.handle(http);
-        
+
         case "web.module.test" -> webModuleTest.handle(http);
-        
+
         case "web.resources.test" -> webResourcesTest.handle(http);
 
         default -> http.notFound();
