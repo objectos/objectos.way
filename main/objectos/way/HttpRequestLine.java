@@ -16,17 +16,31 @@
 package objectos.way;
 
 import java.io.IOException;
+import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
+import java.util.Map;
+import objectos.lang.object.Check;
+import objectos.util.map.GrowableMap;
 import objectos.way.Http.Request;
 import objectos.way.HttpExchangeLoop.ParseStatus;
 
-class HttpRequestLine extends HttpSocketInput implements Http.Request.Target {
+non-sealed class HttpRequestLine extends HttpSocketInput implements Http.Request.Target {
 
   Http.Request.Method method;
 
-  HttpRequestTargetPath path;
+  private String path;
 
-  Http.Request.Target.Query query = HttpRequestTargetQueryEmpty.INSTANCE;
+  private int pathLimit;
+
+  Map<String, String> pathParams;
+
+  private int queryStart;
+
+  private String rawPath;
+
+  private String rawTarget;
+
+  Http.Request.Target.Query query;
 
   byte versionMajor;
 
@@ -35,21 +49,75 @@ class HttpRequestLine extends HttpSocketInput implements Http.Request.Target {
   HttpRequestLine() {}
 
   @Override
-  public Request.Target.Path path() {
+  public final String path() {
+    if (path == null) {
+      String raw;
+      raw = rawPath();
+
+      path = URLDecoder.decode(raw, StandardCharsets.UTF_8);
+    }
+
     return path;
   }
 
   @Override
+  public final String pathParam(String name) {
+    Check.notNull(name, "name == null");
+
+    String result;
+    result = null;
+
+    if (pathParams != null) {
+      result = pathParams.get(name);
+    }
+
+    return result;
+  }
+
+  @Override
   public Request.Target.Query query() {
+    if (query == null) {
+      if (queryStart == pathLimit) {
+        query = HttpRequestTargetQueryEmpty.INSTANCE;
+      } else {
+        HttpRequestTargetQuery impl;
+        impl = new HttpRequestTargetQuery();
+
+        String raw;
+        raw = rawTarget.substring(queryStart);
+
+        impl.set(raw);
+
+        query = impl;
+      }
+    }
+
     return query;
+  }
+
+  @Override
+  public final String rawPath() {
+    if (rawPath == null) {
+      rawPath = rawTarget.substring(0, pathLimit);
+    }
+
+    return rawPath;
   }
 
   final void resetRequestLine() {
     method = null;
 
-    path.reset();
+    pathLimit = 0;
 
-    query = HttpRequestTargetQueryEmpty.INSTANCE;
+    if (pathParams != null) {
+      pathParams.clear();
+    }
+
+    path = rawPath = rawTarget = null;
+
+    query = null;
+
+    queryStart = 0;
 
     versionMajor = versionMinor = 0;
   }
@@ -90,7 +158,7 @@ class HttpRequestLine extends HttpSocketInput implements Http.Request.Target {
       return;
     }
   }
-  
+
   final void parseRequestTarget() throws IOException {
     int startIndex;
     startIndex = parsePathStart();
@@ -242,14 +310,17 @@ class HttpRequestLine extends HttpSocketInput implements Http.Request.Target {
       return;
     }
 
-    if (path == null) {
-      path = new HttpRequestTargetPath();
-    }
+    // index where path ends
+    int pathEndIndex;
+    pathEndIndex = index;
 
-    String rawValue;
-    rawValue = bufferToString(startIndex, index);
+    // as of now target ends at the path
+    int targetEndIndex;
+    targetEndIndex = pathEndIndex;
 
-    path.set(rawValue);
+    // as of now query starts and ends at path i.e. len = 0
+    int queryStartIndex;
+    queryStartIndex = pathEndIndex;
 
     // we'll continue at the '?' or SP char
     bufferIndex = index;
@@ -258,39 +329,26 @@ class HttpRequestLine extends HttpSocketInput implements Http.Request.Target {
     b = buffer[bufferIndex++];
 
     if (b == Bytes.QUESTION_MARK) {
-      parseQuery();
-    }
-  }
+      queryStartIndex = bufferIndex;
 
-  private void parseQuery() {
-    int startIndex;
-    startIndex = bufferIndex;
+      targetEndIndex = indexOf(Bytes.SP);
 
-    int end;
-    end = indexOf(Bytes.SP);
+      if (targetEndIndex < 0) {
+        // trailing char was not found
+        parseStatus = ParseStatus.URI_TOO_LONG;
 
-    if (end < 0) {
-      // trailing char was not found
-      parseStatus = ParseStatus.URI_TOO_LONG;
+        return;
+      }
 
-      return;
+      // we'll continue immediately after the SP
+      bufferIndex = targetEndIndex + 1;
     }
 
-    String rawValue;
-    rawValue = bufferToString(startIndex, end);
+    rawTarget = bufferToString(startIndex, targetEndIndex);
 
-    HttpRequestTargetQuery q;
+    pathLimit = pathEndIndex - startIndex;
 
-    if (query == HttpRequestTargetQueryEmpty.INSTANCE) {
-      query = q = new HttpRequestTargetQuery();
-    } else {
-      q = (HttpRequestTargetQuery) query;
-    }
-
-    q.set(rawValue);
-
-    // we'll continue immediately after the SP
-    bufferIndex = end + 1;
+    queryStart = queryStartIndex - startIndex;
   }
 
   static final byte[] HTTP_VERSION_PREFIX = {'H', 'T', 'T', 'P', '/'};
@@ -349,6 +407,88 @@ class HttpRequestLine extends HttpSocketInput implements Http.Request.Target {
     versionMajor = (byte) (maybeMajor - 0x30);
 
     versionMinor = (byte) (maybeMinor - 0x30);
+  }
+
+  // matcher methods
+
+  private int matcherIndex;
+
+  final void matcherReset() {
+    matcherIndex = 0;
+
+    if (pathParams != null) {
+      pathParams.clear();
+    }
+  }
+
+  final boolean atEnd() {
+    return matcherIndex == pathLimit;
+  }
+
+  final boolean exact(String other) {
+    String value;
+    value = path();
+
+    boolean result;
+    result = value.equals(other);
+
+    matcherIndex += value.length();
+
+    return result;
+  }
+
+  final boolean namedVariable(String name) {
+    String value;
+    value = path();
+
+    int solidus;
+    solidus = value.indexOf('/', matcherIndex);
+
+    String varValue;
+
+    if (solidus < 0) {
+      varValue = value.substring(matcherIndex);
+    } else {
+      varValue = value.substring(matcherIndex, solidus);
+    }
+
+    matcherIndex += varValue.length();
+
+    variable(name, varValue);
+
+    return true;
+  }
+
+  final boolean region(String region) {
+    String value;
+    value = path();
+
+    boolean result;
+    result = value.regionMatches(matcherIndex, region, 0, region.length());
+
+    matcherIndex += region.length();
+
+    return result;
+  }
+
+  final boolean startsWithMatcher(String prefix) {
+    String value;
+    value = path();
+
+    boolean result;
+    result = value.startsWith(prefix);
+
+    matcherIndex += prefix.length();
+
+    return result;
+  }
+
+  private void variable(String name, String value) {
+    if (pathParams == null) {
+      pathParams = new GrowableMap<>();
+    }
+
+    pathParams.put(name, value);
   }
 
 }

@@ -149,11 +149,8 @@ public class HttpModuleMatcherTest {
     Http.Request.Target requestTarget;
     requestTarget = Http.parseRequestTarget(target);
 
-    Http.Request.Target.Path p;
-    p = requestTarget.path();
-
-    HttpRequestTargetPath path;
-    path = (HttpRequestTargetPath) p;
+    HttpRequestLine path;
+    path = (HttpRequestLine) requestTarget;
 
     assertEquals(matcher.test(path), expected);
   }
@@ -162,15 +159,12 @@ public class HttpModuleMatcherTest {
     Http.Request.Target requestTarget;
     requestTarget = Http.parseRequestTarget(target);
 
-    Http.Request.Target.Path p;
-    p = requestTarget.path();
-
-    HttpRequestTargetPath path;
-    path = (HttpRequestTargetPath) p;
+    HttpRequestLine path;
+    path = (HttpRequestLine) requestTarget;
 
     assertTrue(matcher.test(path));
 
-    assertEquals(path.variables, expected);
+    assertEquals(path.pathParams, expected);
   }
 
 }

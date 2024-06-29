@@ -33,7 +33,7 @@ public class HttpTestingExchangeTest {
         Http.set(String.class, "Hello")
     );
 
-    assertEquals(http.path().value(), "/foo");
+    assertEquals(http.path(), "/foo");
     assertEquals(http.query().get("page"), "1");
     assertEquals(http.get(String.class), "Hello");
   }

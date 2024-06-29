@@ -45,14 +45,11 @@ public class HttpRequestLineTest {
     assertEquals(method, Http.GET);
 
     // path
-    HttpRequestTargetPath path;
-    path = line.path;
-
-    assertEquals(path.toString(), "/");
+    assertEquals(line.path(), "/");
 
     // query
     Http.Request.Target.Query query;
-    query = line.query;
+    query = line.query();
 
     assertEquals(query.isEmpty(), true);
 
@@ -85,14 +82,11 @@ public class HttpRequestLineTest {
     assertEquals(method, Http.GET);
 
     // path
-    HttpRequestTargetPath path;
-    path = line.path;
-
-    assertEquals(path.toString(), "/endpoint");
+    assertEquals(line.path(), "/endpoint");
 
     // query
     Http.Request.Target.Query query;
-    query = line.query;
+    query = line.query();
 
     assertEquals(query.isEmpty(), false);
     assertEquals(query.get("foo"), "bar");

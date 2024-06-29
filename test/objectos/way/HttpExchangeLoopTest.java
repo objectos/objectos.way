@@ -34,7 +34,7 @@ import org.testng.annotations.Test;
 public class HttpExchangeLoopTest {
 
   @Test(description = """
-  Minimum GET httpuest with explicity close
+  Minimum GET request with explicity close
   text/plain response
   """)
   public void testCase001() {
@@ -69,11 +69,8 @@ public class HttpExchangeLoopTest {
       assertEquals(parse.isError(), false);
 
       // request line
-      Http.Request.Target.Path path;
-      path = http.path();
-
       assertEquals(http.method(), Http.GET);
-      assertEquals(path.value(), "/");
+      assertEquals(http.path(), "/");
 
       Http.Request.Target.Query query;
       query = http.query();
@@ -178,11 +175,8 @@ public class HttpExchangeLoopTest {
       assertEquals(parse.isError(), false);
 
       // request line
-      Http.Request.Target.Path path;
-      path = http.path();
-
       assertEquals(http.method(), Http.GET);
-      assertEquals(path.value(), "/login");
+      assertEquals(http.path(), "/login");
 
       Http.Request.Target.Query query;
       query = http.query();
@@ -225,10 +219,8 @@ public class HttpExchangeLoopTest {
       assertEquals(parse.isError(), false);
 
       // request line
-      path = http.path();
-
       assertEquals(http.method(), Http.GET);
-      assertEquals(path.value(), "/login.css");
+      assertEquals(http.path(), "/login.css");
 
       // headers
       headers = http.headers();
@@ -365,11 +357,8 @@ public class HttpExchangeLoopTest {
       assertEquals(parse.isError(), false);
 
       // request line
-      Http.Request.Target.Path path;
-      path = http.path();
-
       assertEquals(http.method(), Http.GET);
-      assertEquals(path.value(), "/index.html");
+      assertEquals(http.path(), "/index.html");
 
       Http.Request.Target.Query query;
       query = http.query();
@@ -443,11 +432,8 @@ public class HttpExchangeLoopTest {
       assertEquals(parse.isError(), false);
 
       // request line
-      Http.Request.Target.Path path;
-      path = http.path();
-
       assertEquals(http.method(), Http.GET);
-      assertEquals(path.value(), "/atom.xml");
+      assertEquals(http.path(), "/atom.xml");
 
       Http.Request.Target.Query query;
       query = http.query();
@@ -1233,11 +1219,8 @@ public class HttpExchangeLoopTest {
       assertEquals(parse.isError(), false);
 
       // request line
-      Http.Request.Target.Path path;
-      path = http.path();
-
       assertEquals(http.method(), Http.GET);
-      assertEquals(path.value(), "/");
+      assertEquals(http.path(), "/");
 
       Http.Request.Target.Query query;
       query = http.query();
@@ -1253,6 +1236,53 @@ public class HttpExchangeLoopTest {
       assertEquals(headers.first(Http.HOST), "www.example.com");
       assertEquals(headers.first(Http.FROM), "");
       assertEquals(headers.first(Http.ACCEPT_ENCODING), "gzip, deflate, br");
+
+      // body
+      Http.Request.Body body;
+      body = http.body();
+
+      assertEquals(ObjectosHttp.readAllBytes(body), ByteArrays.empty());
+    } catch (IOException e) {
+      throw new AssertionError("Failed with IOException", e);
+    }
+  }
+
+  @Test(description = """
+  request-target path decoding
+  """)
+  public void testCase021() {
+    TestableSocket socket;
+    socket = TestableSocket.of("""
+      GET /wiki/%E6%9D%B1%E4%BA%AC HTTP/1.0\r
+      Host: www.example.com\r
+      \r
+      """);
+
+    try (HttpExchangeLoop http = new HttpExchangeLoop(socket)) {
+      http.clock(TestingClock.FIXED);
+      http.noteSink(TestingNoteSink.INSTANCE);
+
+      ParseStatus parse;
+      parse = http.parse();
+
+      assertEquals(parse.isError(), false);
+
+      // request line
+      assertEquals(http.method(), Http.GET);
+      assertEquals(http.path(), "/wiki/東京");
+
+      Http.Request.Target.Query query;
+      query = http.query();
+
+      assertEquals(query.isEmpty(), true);
+      assertEquals(query.value(), "");
+
+      // headers
+      Http.Request.Headers headers;
+      headers = http.headers();
+
+      assertEquals(headers.size(), 1);
+      assertEquals(headers.first(Http.HOST), "www.example.com");
 
       // body
       Http.Request.Body body;

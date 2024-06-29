@@ -161,11 +161,8 @@ public final class WayWebResources implements AutoCloseable, WebResources {
 
   @Override
   public final void handle(Http.Exchange http) {
-    Http.Request.Target.Path path;
-    path = http.path();
-
     String pathName;
-    pathName = path.toString();
+    pathName = http.path();
 
     String relative;
     relative = pathName.substring(1);

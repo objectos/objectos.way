@@ -37,11 +37,8 @@ public class HttpServerTest extends Http.Module {
   }
 
   private void handle1(Http.Exchange http) {
-    Http.Request.Target.Path path;
-    path = http.path();
-
     String methodName;
-    methodName = path.get("name");
+    methodName = http.pathParam("name");
 
     try {
       Class<? extends HttpServerTest> testClass;

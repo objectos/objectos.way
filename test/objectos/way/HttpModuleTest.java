@@ -118,11 +118,8 @@ public class HttpModuleTest extends Http.Module {
   }
 
   private void $testCase01(Http.Exchange http) {
-    Http.Request.Target.Path path;
-    path = http.path();
-
     String text;
-    text = path.get("text");
+    text = http.pathParam("text");
 
     TestingSingleParagraph html;
     html = new TestingSingleParagraph(text);
@@ -262,11 +259,8 @@ public class HttpModuleTest extends Http.Module {
   }
 
   private void testCase03(Http.Exchange http) {
-    Http.Request.Target.Path path;
-    path = http.path();
-
     String value;
-    value = path.value();
+    value = http.path();
 
     String text;
     text = value.substring("/testCase03".length());
@@ -430,11 +424,8 @@ public class HttpModuleTest extends Http.Module {
   }
 
   private void testCase05(Http.Exchange http) {
-    Http.Request.Target.Path path;
-    path = http.path();
-
     String value;
-    value = path.value();
+    value = http.path();
 
     String text;
     text = value.substring("/testCase05/img".length());
@@ -549,11 +540,8 @@ public class HttpModuleTest extends Http.Module {
   }
 
   private void $testCase06(Http.Exchange http) {
-    Http.Request.Target.Path path;
-    path = http.path();
-
     String value;
-    value = path.value();
+    value = http.path();
 
     String text;
     text = value.substring("/testCase06".length());
@@ -758,14 +746,11 @@ public class HttpModuleTest extends Http.Module {
   }
 
   private void $testCase09(Http.Exchange http) {
-    Http.Request.Target.Path path;
-    path = http.path();
-
     String notEmpty;
-    notEmpty = path.get("notEmpty");
+    notEmpty = http.pathParam("notEmpty");
 
     String digits;
-    digits = path.get("digits");
+    digits = http.pathParam("digits");
 
     http.okText(notEmpty + ":" + digits, StandardCharsets.UTF_8);
   }
@@ -828,11 +813,8 @@ public class HttpModuleTest extends Http.Module {
   }
 
   private void $testCase10(Http.Exchange http) {
-    Http.Request.Target.Path path;
-    path = http.path();
-
     String regex;
-    regex = path.get("regex");
+    regex = http.pathParam("regex");
 
     http.okText(regex, StandardCharsets.UTF_8);
   }

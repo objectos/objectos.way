@@ -58,11 +58,8 @@ public class HttpModuleConditionTest {
     Http.Request.Target requestTarget;
     requestTarget = Http.parseRequestTarget(target);
 
-    Http.Request.Target.Path p;
-    p = requestTarget.path();
-
-    HttpRequestTargetPath path;
-    path = (HttpRequestTargetPath) p;
+    HttpRequestLine path;
+    path = (HttpRequestLine) requestTarget;
 
     HttpModuleMatcher matcher;
     matcher = new HttpModuleMatcher.Matcher2(

@@ -42,11 +42,11 @@ final class HttpModuleRouteParameters extends HttpModule.RouteOption {
     }
 
     @Override
-    public final boolean test(HttpRequestTargetPath path) {
+    public final boolean test(HttpRequestLine path) {
       return matcher.test(path) && testConditions(path);
     }
 
-    private boolean testConditions(HttpRequestTargetPath path) {
+    private boolean testConditions(HttpRequestLine path) {
       for (HttpModule.Condition condition : conditions) {
         if (!condition.test(path)) {
           return false;

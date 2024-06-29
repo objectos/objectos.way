@@ -22,8 +22,8 @@ interface HttpModuleMatcher {
 
   record Exact(String value) implements HttpModuleMatcher {
     @Override
-    public final boolean test(HttpRequestTargetPath path) {
-      return path.exact(value);
+    public final boolean test(HttpRequestLine target) {
+      return target.exact(value);
     }
   }
 
@@ -34,10 +34,10 @@ interface HttpModuleMatcher {
     }
 
     @Override
-    public final boolean test(HttpRequestTargetPath path) {
-      return matcher1.test(path)
-          && matcher2.test(path)
-          && path.atEnd();
+    public final boolean test(HttpRequestLine target) {
+      return matcher1.test(target)
+          && matcher2.test(target)
+          && target.atEnd();
     }
   }
 
@@ -48,11 +48,11 @@ interface HttpModuleMatcher {
     }
 
     @Override
-    public final boolean test(HttpRequestTargetPath path) {
-      return matcher1.test(path)
-          && matcher2.test(path)
-          && matcher3.test(path)
-          && path.atEnd();
+    public final boolean test(HttpRequestLine target) {
+      return matcher1.test(target)
+          && matcher2.test(target)
+          && matcher3.test(target)
+          && target.atEnd();
     }
   }
 
@@ -67,12 +67,12 @@ interface HttpModuleMatcher {
     }
 
     @Override
-    public final boolean test(HttpRequestTargetPath path) {
-      return matcher1.test(path)
-          && matcher2.test(path)
-          && matcher3.test(path)
-          && matcher4.test(path)
-          && path.atEnd();
+    public final boolean test(HttpRequestLine target) {
+      return matcher1.test(target)
+          && matcher2.test(target)
+          && matcher3.test(target)
+          && matcher4.test(target)
+          && target.atEnd();
     }
   }
 
@@ -88,13 +88,13 @@ interface HttpModuleMatcher {
     }
 
     @Override
-    public final boolean test(HttpRequestTargetPath path) {
-      return matcher1.test(path)
-          && matcher2.test(path)
-          && matcher3.test(path)
-          && matcher4.test(path)
-          && matcher5.test(path)
-          && path.atEnd();
+    public final boolean test(HttpRequestLine target) {
+      return matcher1.test(target)
+          && matcher2.test(target)
+          && matcher3.test(target)
+          && matcher4.test(target)
+          && matcher5.test(target)
+          && target.atEnd();
     }
   }
 
@@ -111,35 +111,35 @@ interface HttpModuleMatcher {
     }
 
     @Override
-    public final boolean test(HttpRequestTargetPath path) {
+    public final boolean test(HttpRequestLine target) {
       for (HttpModuleMatcher matcher : matchers) {
-        if (!matcher.test(path)) {
+        if (!matcher.test(target)) {
           return false;
         }
       }
 
-      return path.atEnd();
+      return target.atEnd();
     }
   }
 
   record NamedVariable(String name) implements HttpModuleMatcher {
     @Override
-    public final boolean test(HttpRequestTargetPath path) {
-      return path.namedVariable(name);
+    public final boolean test(HttpRequestLine target) {
+      return target.namedVariable(name);
     }
   }
 
   record Region(String value) implements HttpModuleMatcher {
     @Override
-    public final boolean test(HttpRequestTargetPath path) {
-      return path.region(value);
+    public final boolean test(HttpRequestLine target) {
+      return target.region(value);
     }
   }
 
   record StartsWith(String value) implements HttpModuleMatcher {
     @Override
-    public final boolean test(HttpRequestTargetPath path) {
-      return path.startsWithMatcher(value);
+    public final boolean test(HttpRequestLine target) {
+      return target.startsWithMatcher(value);
     }
   }
 
@@ -147,6 +147,6 @@ interface HttpModuleMatcher {
     return new Matcher2(this, other);
   }
 
-  boolean test(HttpRequestTargetPath path);
+  boolean test(HttpRequestLine target);
 
 }

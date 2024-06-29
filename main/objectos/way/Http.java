@@ -88,12 +88,29 @@ public final class Http {
     // request
 
     /**
-     * Returns the path component of the request-target.
+     * The decoded value of the path component of the request-target.
      *
-     * @return the path component of the request-target.
+     * @return decoded value of the path component of the request-target
+     *
+     * @see Http.Request.Target#path()
      */
-    default Request.Target.Path path() {
+    default String path() {
       return target().path();
+    }
+
+    /**
+     * Returns the value of the path parameter with the specified name if it
+     * exists or returns {@code null} otherwise.
+     *
+     * @param name
+     *        the name of the path parameter
+     *
+     * @return the value if it exists or {@code null} if it does not
+     *
+     * @see Http.Request.Target#pathParam(String)
+     */
+    default String pathParam(String name) {
+      return target().pathParam(name);
     }
 
     /**
@@ -556,23 +573,7 @@ public final class Http {
     /**
      * The request-target of an HTTP request message.
      */
-    public interface Target {
-
-      /**
-       * The path component of a request-target.
-       */
-      public sealed interface Path permits HttpRequestTargetPath {
-
-        String get(String name);
-
-        /**
-         * The decoded value of this path.
-         *
-         * @return the decoded value of this path.
-         */
-        String value();
-
-      }
+    public sealed interface Target permits HttpRequestLine {
 
       /**
        * The query component of a request-target.
@@ -609,11 +610,22 @@ public final class Http {
       }
 
       /**
-       * The path component of this request-target.
+       * The decoded value of the path component.
        *
-       * @return the path component of this request-target.
+       * @return the decoded value of the path component.
        */
-      Path path();
+      String path();
+
+      /**
+       * Returns the value of the path parameter with the specified name if it
+       * exists or returns {@code null} otherwise.
+       *
+       * @param name
+       *        the name of the path parameter
+       *
+       * @return the value if it exists or {@code null} if it does not
+       */
+      String pathParam(String name);
 
       /**
        * The query component of this request-target.
@@ -621,6 +633,13 @@ public final class Http {
        * @return the query component of this request-target.
        */
       Query query();
+
+      /**
+       * The raw (encoded) value of the path component.
+       *
+       * @return the raw (encoded) value of the path component.
+       */
+      String rawPath();
 
     }
 

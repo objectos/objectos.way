@@ -30,9 +30,9 @@ abstract class HttpModule {
       this.name = name;
     }
 
-    final boolean test(HttpRequestTargetPath path) {
+    final boolean test(HttpRequestLine path) {
       String value;
-      value = path.get(name);
+      value = path.pathParam(name);
 
       if (value == null) {
         return true;

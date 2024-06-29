@@ -60,10 +60,7 @@ public class HttpTest {
     Http.Request.Target target;
     target = Http.parseRequestTarget("/");
 
-    Http.Request.Target.Path path;
-    path = target.path();
-
-    assertEquals(path.value(), "/");
+    assertEquals(target.path(), "/");
 
     Query query;
     query = target.query();
@@ -76,10 +73,7 @@ public class HttpTest {
     Http.Request.Target target;
     target = Http.parseRequestTarget("/foo/bar?page=1&sort=asc");
 
-    Http.Request.Target.Path path;
-    path = target.path();
-
-    assertEquals(path.value(), "/foo/bar");
+    assertEquals(target.path(), "/foo/bar");
 
     Query query;
     query = target.query();

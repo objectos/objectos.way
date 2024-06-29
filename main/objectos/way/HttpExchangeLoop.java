@@ -139,6 +139,7 @@ final class HttpExchangeLoop extends HttpRequestBody implements Http.Exchange, C
     this.clock = Check.notNull(clock, "clock == null");
   }
 
+  @Override
   public final void noteSink(NoteSink noteSink) {
     checkConfig();
 
@@ -353,26 +354,19 @@ final class HttpExchangeLoop extends HttpRequestBody implements Http.Exchange, C
 
     return method;
   }
-  
+
   @Override
   public final Http.Request.Target target() {
     checkRequest();
-    
-    return this; 
-  }
 
-  @Override
-  public final Http.Request.Target.Path path() {
-    checkRequest();
-
-    return path;
+    return this;
   }
 
   @Override
   public final Http.Request.Target.Query query() {
     checkRequest();
 
-    return query;
+    return super.query();
   }
 
   @Override

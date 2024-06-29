@@ -80,11 +80,8 @@ final record WebPaginator(Http.Request.Target target, Sql.Page current, int firs
   }
 
   private String pageHref(int page) {
-    Http.Request.Target.Path path;
-    path = target.path();
-
     String originalPath;
-    originalPath = path.toString();
+    originalPath = target.path();
 
     StringBuilder href;
     href = new StringBuilder(originalPath);
