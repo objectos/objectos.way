@@ -20,7 +20,6 @@ import static org.testng.Assert.assertNotNull;
 import java.io.IOException;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
-import objectos.way.Http.Request.Target.Query;
 import objectos.way.TestingRandom.SequentialRandom;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
@@ -637,10 +636,8 @@ public class HttpModuleTest extends Http.Module {
 
   private Http.Handler testCase07(Http.Handler handler) {
     return http -> {
-      Query query = http.query();
-
       String value;
-      value = query.get("value");
+      value = http.queryParam("value");
 
       if (value == null) {
         value = "";

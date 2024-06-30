@@ -34,7 +34,7 @@ public class HttpTestingExchangeTest {
     );
 
     assertEquals(http.path(), "/foo");
-    assertEquals(http.query().get("page"), "1");
+    assertEquals(http.queryParam("page"), "1");
     assertEquals(http.get(String.class), "Hello");
   }
 

@@ -48,10 +48,7 @@ public class HttpRequestLineTest {
     assertEquals(line.path(), "/");
 
     // query
-    Http.Request.Target.Query query;
-    query = line.query();
-
-    assertEquals(query.isEmpty(), true);
+    assertEquals(line.rawQuery(), "");
 
     // version
     assertEquals(line.versionMajor, 1);
@@ -85,13 +82,9 @@ public class HttpRequestLineTest {
     assertEquals(line.path(), "/endpoint");
 
     // query
-    Http.Request.Target.Query query;
-    query = line.query();
-
-    assertEquals(query.isEmpty(), false);
-    assertEquals(query.get("foo"), "bar");
-    assertEquals(query.get("x"), null);
-    assertEquals(query.value(), "foo=bar");
+    assertEquals(line.rawQuery(), "foo=bar");
+    assertEquals(line.queryParam("foo"), "bar");
+    assertEquals(line.queryParam("x"), null);
 
     // version
     assertEquals(line.versionMajor, 1);

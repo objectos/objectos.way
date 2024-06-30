@@ -51,6 +51,10 @@ public final class Http {
   /**
    * An HTTP request received by the server and its subsequent response to the
    * client.
+   *
+   * <p>
+   * Unless otherwise specified, request-target related methods of this
+   * interface return decoded values.
    */
   public interface Exchange extends Request {
 
@@ -88,9 +92,9 @@ public final class Http {
     // request
 
     /**
-     * The decoded value of the path component of the request-target.
+     * The value of the path component of the request-target.
      *
-     * @return decoded value of the path component of the request-target
+     * @return value of the path component of the request-target
      *
      * @see Http.Request.Target#path()
      */
@@ -114,12 +118,18 @@ public final class Http {
     }
 
     /**
-     * Returns the query component of the request-target.
+     * Returns the first value of the query parameter with the specified name
+     * or {@code null} if there are no values.
      *
-     * @return the query component of the request-target.
+     * @param name
+     *        the name of the query parameter
+     *
+     * @return the first value if it exists or {@code null} if it does not
+     *
+     * @see Http.Request.Target#queryParam(String)
      */
-    default Request.Target.Query query() {
-      return target().query();
+    default String queryParam(String name) {
+      return target().queryParam(name);
     }
 
     /**
@@ -572,53 +582,23 @@ public final class Http {
 
     /**
      * The request-target of an HTTP request message.
+     *
+     * <p>
+     * Unless otherwise specified the values returned by the methods of this
+     * interface are decoded.
      */
     public sealed interface Target permits HttpRequestLine {
 
       /**
-       * The query component of a request-target.
-       */
-      public interface Query {
-
-        String encodedValue();
-
-        String get(String name);
-
-        default int getAsInt(String name, int defaultValue) {
-          String maybe;
-          maybe = get(name);
-
-          if (maybe == null) {
-            return defaultValue;
-          }
-
-          try {
-            return Integer.parseInt(maybe);
-          } catch (NumberFormatException expected) {
-            return defaultValue;
-          }
-        }
-
-        boolean isEmpty();
-
-        Set<String> names();
-
-        Query set(String name, String value);
-
-        String value();
-
-      }
-
-      /**
-       * The decoded value of the path component.
+       * The value of the path component.
        *
-       * @return the decoded value of the path component.
+       * @return the value of the path component
        */
       String path();
 
       /**
-       * Returns the value of the path parameter with the specified name if it
-       * exists or returns {@code null} otherwise.
+       * Returns the value of the path parameter with the specified name
+       * if it exists or returns {@code null} otherwise.
        *
        * @param name
        *        the name of the path parameter
@@ -628,46 +608,77 @@ public final class Http {
       String pathParam(String name);
 
       /**
-       * The query component of this request-target.
+       * Returns the first value of the query parameter with the specified name
+       * or {@code null} if there are no values.
        *
-       * @return the query component of this request-target.
+       * @param name
+       *        the name of the query parameter
+       *
+       * @return the first value if it exists or {@code null} if it does not
        */
-      Query query();
+      String queryParam(String name);
+
+      /**
+       * Returns, as an {@code int}, the first value of the query parameter with
+       * the specified name or returns the specified default value.
+       *
+       * <p>
+       * The specified default value will be returned if the query component
+       * does not contain a parameter with the specified name or if the first
+       * value of such parameter does not represent an {@code int} value.
+       *
+       * @param name
+       *        the name of the query parameter
+       * @param defaultValue
+       *        the value to be returned if the parameter does not exist or if
+       *        its first value cannot be converted to an {@code int} value
+       *
+       * @return the first value converted to {@code int} if it exists or the
+       *         specified default value otherwise
+       */
+      int queryParamAsInt(String name, int defaultValue);
 
       /**
        * The raw (encoded) value of the path component.
        *
-       * @return the raw (encoded) value of the path component.
+       * @return the raw (encoded) value of the path component
        */
       String rawPath();
+
+      /**
+       * The raw (encoded) value of the query component.
+       *
+       * @return the raw (encoded) value of the query component
+       */
+      String rawQuery();
 
     }
 
     /**
      * The body of this request message.
      *
-     * @return the body of this request message.
+     * @return the body of this request message
      */
     Body body();
 
     /**
      * The header section of this request message.
      *
-     * @return the header section of this request message.
+     * @return the header section of this request message
      */
     Headers headers();
 
     /**
      * The method of this request message.
      *
-     * @return the method of this request message.
+     * @return the method of this request message
      */
     Method method();
 
     /**
      * The request-target of this HTTP request message.
      *
-     * @return the request-target of this HTTP request message.
+     * @return the request-target of this HTTP request message
      */
     Target target();
 

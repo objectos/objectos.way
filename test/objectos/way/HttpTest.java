@@ -17,8 +17,6 @@ package objectos.way;
 
 import static org.testng.Assert.assertEquals;
 
-import java.util.Set;
-import objectos.way.Http.Request.Target.Query;
 import org.testng.annotations.Test;
 
 public class HttpTest {
@@ -61,11 +59,7 @@ public class HttpTest {
     target = Http.parseRequestTarget("/");
 
     assertEquals(target.path(), "/");
-
-    Query query;
-    query = target.query();
-
-    assertEquals(query.isEmpty(), true);
+    assertEquals(target.rawQuery(), "");
   }
 
   @Test
@@ -74,13 +68,10 @@ public class HttpTest {
     target = Http.parseRequestTarget("/foo/bar?page=1&sort=asc");
 
     assertEquals(target.path(), "/foo/bar");
-
-    Query query;
-    query = target.query();
-
-    assertEquals(query.names(), Set.of("page", "sort"));
-    assertEquals(query.get("page"), "1");
-    assertEquals(query.get("sort"), "asc");
+    assertEquals(target.queryParam("page"), "1");
+    assertEquals(target.queryParamAsInt("page", 0), 1);
+    assertEquals(target.queryParam("sort"), "asc");
+    assertEquals(target.rawQuery(), "page=1&sort=asc");
   }
 
 }

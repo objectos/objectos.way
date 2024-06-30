@@ -17,149 +17,136 @@ package objectos.way;
 
 import static org.testng.Assert.assertEquals;
 
-import java.util.Set;
 import org.testng.annotations.Test;
 
 public class HttpRequestTargetQueryTest {
-  
-  @Test
-  public void encodedValue() {
-    assertEquals(queryOf("").encodedValue(), "");
-    assertEquals(queryOf("foo=bar").encodedValue(), "foo=bar");
-    assertEquals(queryOf("a=1&b=2").encodedValue(), "a=1&b=2");
-    assertEquals(queryOf("email=user@example.com").encodedValue(), "email=user%40example.com");
-    assertEquals(queryOf("").set("a", "1 2 3").encodedValue(), "a=1+2+3");
-  }
 
   @Test(description = """
   UriQuery: empty
   """)
   public void testCase01() {
-    HttpRequestTargetQuery q;
+    Http.Request.Target q;
     q = queryOf("");
 
-    assertEquals(q.get("foo"), null);
-    assertEquals(q.get(""), null);
-    assertEquals(q.isEmpty(), true);
+    assertEquals(q.queryParam("foo"), null);
+    assertEquals(q.queryParam(""), null);
+    assertEquals(q.rawQuery(), "");
   }
 
   @Test(description = """
   UriQuery: single value
   """)
   public void testCase02() {
-    HttpRequestTargetQuery q;
+    Http.Request.Target q;
     q = queryOf("foo=bar");
 
-    assertEquals(q.get("foo"), "bar");
-    assertEquals(q.get("x"), null);
-    assertEquals(q.isEmpty(), false);
+    assertEquals(q.queryParam("foo"), "bar");
+    assertEquals(q.queryParam("x"), null);
+    assertEquals(q.rawQuery(), "foo=bar");
   }
 
   @Test(description = """
   UriQuery: name only
   """)
   public void testCase03() {
-    HttpRequestTargetQuery q;
+    Http.Request.Target q;
     q = queryOf("foo");
 
-    assertEquals(q.get("foo"), "");
-    assertEquals(q.get("x"), null);
-    assertEquals(q.isEmpty(), false);
+    assertEquals(q.queryParam("foo"), "");
+    assertEquals(q.queryParam("x"), null);
+    assertEquals(q.rawQuery(), "foo");
   }
 
   @Test(description = """
   UriQuery: empty value
   """)
   public void testCase04() {
-    HttpRequestTargetQuery q;
+    Http.Request.Target q;
     q = queryOf("foo=");
 
-    assertEquals(q.get("foo"), "");
-    assertEquals(q.get("x"), null);
-    assertEquals(q.isEmpty(), false);
+    assertEquals(q.queryParam("foo"), "");
+    assertEquals(q.queryParam("x"), null);
+    assertEquals(q.rawQuery(), "foo=");
   }
 
   @Test(description = """
   UriQuery: corner cases
   """)
   public void testCase05() {
-    HttpRequestTargetQuery q;
+    Http.Request.Target q;
     q = queryOf("a&foo=");
 
-    assertEquals(q.get("a"), "");
-    assertEquals(q.get("foo"), "");
-    assertEquals(q.get("x"), null);
-    assertEquals(q.isEmpty(), false);
+    assertEquals(q.queryParam("a"), "");
+    assertEquals(q.queryParam("foo"), "");
+    assertEquals(q.queryParam("x"), null);
+    assertEquals(q.rawQuery(), "a&foo=");
   }
 
   @Test(description = """
-  UriQuery: names()
+  UriQuery: corner cases
   """)
   public void testCase06() {
-    assertEquals(
-        queryOf("").names(),
-        Set.of()
-    );
-    assertEquals(
-        queryOf("a&foo=").names(),
-        Set.of("a", "foo")
-    );
-    assertEquals(
-        queryOf("a=b&c=d").names(),
-        Set.of("a", "c")
-    );
+    Http.Request.Target q;
+    q = queryOf("a=1+2+3&b=foo");
+
+    assertEquals(q.queryParam("a"), "1 2 3");
+    assertEquals(q.queryParam("b"), "foo");
+    assertEquals(q.queryParam("x"), null);
+    assertEquals(q.rawQuery(), "a=1+2+3&b=foo");
   }
 
   @Test(description = """
   UriQuery: getAsInt()
   """)
   public void testCase07() {
-    HttpRequestTargetQuery q;
+    Http.Request.Target q;
     q = queryOf("a=123&b=-456&c=foo&d=&e&f=123.45");
 
-    assertEquals(q.getAsInt("a", -1), 123);
-    assertEquals(q.getAsInt("b", -1), -456);
-    assertEquals(q.getAsInt("c", -1), -1);
-    assertEquals(q.getAsInt("d", -1), -1);
-    assertEquals(q.getAsInt("e", -1), -1);
-    assertEquals(q.getAsInt("f", -1), -1);
+    assertEquals(q.queryParamAsInt("a", -1), 123);
+    assertEquals(q.queryParamAsInt("b", -1), -456);
+    assertEquals(q.queryParamAsInt("c", -1), -1);
+    assertEquals(q.queryParamAsInt("d", -1), -1);
+    assertEquals(q.queryParamAsInt("e", -1), -1);
+    assertEquals(q.queryParamAsInt("f", -1), -1);
   }
-  
+
   @Test(description = """
   UriQuery: set
   """)
   public void testCase08() {
-    HttpRequestTargetQuery q;
+    Http.Request.Target q;
     q = queryOf("a=1&b=2&c=3&d");
 
-    Http.Request.Target.Query res;
-    res = q.set("a", "x");
-
-    assertEquals(res.get("a"), "x");
-    assertEquals(res.get("b"), "2");
-    assertEquals(res.get("c"), "3");
-    assertEquals(res.get("d"), "");
+    assertEquals(q.queryParam("a"), "1");
+    assertEquals(q.queryParam("b"), "2");
+    assertEquals(q.queryParam("c"), "3");
+    assertEquals(q.queryParam("d"), "");
   }
 
   @Test(description = """
   UriQuery: duplicate name should return first value
   """)
   public void testCase09() {
-    HttpRequestTargetQuery q;
+    Http.Request.Target q;
     q = queryOf("a=123&b=xpto&c&b=");
 
-    assertEquals(q.get("a"), "123");
-    assertEquals(q.get("b"), "xpto");
-    assertEquals(q.get("c"), "");
+    assertEquals(q.queryParam("a"), "123");
+    assertEquals(q.queryParam("b"), "xpto");
+    assertEquals(q.queryParam("c"), "");
   }
 
-  private HttpRequestTargetQuery queryOf(String q) {
-    HttpRequestTargetQuery query;
-    query = new HttpRequestTargetQuery();
+  @Test
+  public void testCase10() {
+    Http.Request.Target q;
+    q = queryOf("%26=the%20%26%20char&foo=bar");
 
-    query.set(q);
+    assertEquals(q.queryParam("&"), "the & char");
+    assertEquals(q.queryParam("foo"), "bar");
+    assertEquals(q.queryParam("%26"), null);
+  }
 
-    return query;
+  private Http.Request.Target queryOf(String q) {
+    return Http.parseRequestTarget("/test?" + q);
   }
 
 }

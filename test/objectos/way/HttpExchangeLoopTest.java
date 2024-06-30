@@ -71,12 +71,8 @@ public class HttpExchangeLoopTest {
       // request line
       assertEquals(http.method(), Http.GET);
       assertEquals(http.path(), "/");
-
-      Http.Request.Target.Query query;
-      query = http.query();
-
-      assertEquals(query.isEmpty(), true);
-      assertEquals(query.value(), "");
+      assertEquals(http.rawQuery(), "");
+      assertEquals(http.queryParam("x"), null);
 
       // headers
       Http.Request.Headers headers;
@@ -177,12 +173,7 @@ public class HttpExchangeLoopTest {
       // request line
       assertEquals(http.method(), Http.GET);
       assertEquals(http.path(), "/login");
-
-      Http.Request.Target.Query query;
-      query = http.query();
-
-      assertEquals(query.isEmpty(), true);
-      assertEquals(query.value(), "");
+      assertEquals(http.rawQuery(), "");
 
       // headers
       Http.Request.Headers headers;
@@ -359,12 +350,7 @@ public class HttpExchangeLoopTest {
       // request line
       assertEquals(http.method(), Http.GET);
       assertEquals(http.path(), "/index.html");
-
-      Http.Request.Target.Query query;
-      query = http.query();
-
-      assertEquals(query.isEmpty(), true);
-      assertEquals(query.value(), "");
+      assertEquals(http.rawQuery(), "");
 
       // headers
       Http.Request.Headers headers;
@@ -434,12 +420,7 @@ public class HttpExchangeLoopTest {
       // request line
       assertEquals(http.method(), Http.GET);
       assertEquals(http.path(), "/atom.xml");
-
-      Http.Request.Target.Query query;
-      query = http.query();
-
-      assertEquals(query.isEmpty(), true);
-      assertEquals(query.value(), "");
+      assertEquals(http.rawQuery(), "");
 
       // headers
       Http.Request.Headers headers;
@@ -542,11 +523,8 @@ public class HttpExchangeLoopTest {
 
       assertEquals(parse.isError(), false);
 
-      Http.Request.Target.Query query;
-      query = http.query();
-
-      assertEquals(query.value(), "foo=bar");
-      assertEquals(query.get("foo"), "bar");
+      assertEquals(http.rawQuery(), "foo=bar");
+      assertEquals(http.queryParam("foo"), "bar");
 
       // response phase
 
@@ -1221,12 +1199,8 @@ public class HttpExchangeLoopTest {
       // request line
       assertEquals(http.method(), Http.GET);
       assertEquals(http.path(), "/");
-
-      Http.Request.Target.Query query;
-      query = http.query();
-
-      assertEquals(query.isEmpty(), true);
-      assertEquals(query.value(), "");
+      assertEquals(http.rawQuery(), "");
+      assertEquals(http.queryParam(""), null);
 
       // headers
       Http.Request.Headers headers;
@@ -1270,12 +1244,8 @@ public class HttpExchangeLoopTest {
       // request line
       assertEquals(http.method(), Http.GET);
       assertEquals(http.path(), "/wiki/東京");
-
-      Http.Request.Target.Query query;
-      query = http.query();
-
-      assertEquals(query.isEmpty(), true);
-      assertEquals(query.value(), "");
+      assertEquals(http.rawQuery(), "");
+      assertEquals(http.queryParam("null"), null);
 
       // headers
       Http.Request.Headers headers;

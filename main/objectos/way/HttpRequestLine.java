@@ -17,11 +17,14 @@ package objectos.way;
 
 import java.io.IOException;
 import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 import objectos.lang.object.Check;
+import objectos.util.list.GrowableList;
 import objectos.util.map.GrowableMap;
-import objectos.way.Http.Request;
 import objectos.way.HttpExchangeLoop.ParseStatus;
 
 non-sealed class HttpRequestLine extends HttpSocketInput implements Http.Request.Target {
@@ -34,13 +37,13 @@ non-sealed class HttpRequestLine extends HttpSocketInput implements Http.Request
 
   Map<String, String> pathParams;
 
+  private Map<String, Object> queryParams;
+
+  private boolean queryParamsReady;
+
   private int queryStart;
 
-  private String rawPath;
-
-  private String rawTarget;
-
-  Http.Request.Target.Query query;
+  private String rawValue;
 
   byte versionMajor;
 
@@ -54,10 +57,14 @@ non-sealed class HttpRequestLine extends HttpSocketInput implements Http.Request
       String raw;
       raw = rawPath();
 
-      path = URLDecoder.decode(raw, StandardCharsets.UTF_8);
+      path = decode(raw);
     }
 
     return path;
+  }
+
+  private String decode(String raw) {
+    return URLDecoder.decode(raw, StandardCharsets.UTF_8);
   }
 
   @Override
@@ -75,33 +82,130 @@ non-sealed class HttpRequestLine extends HttpSocketInput implements Http.Request
   }
 
   @Override
-  public Request.Target.Query query() {
-    if (query == null) {
-      if (queryStart == pathLimit) {
-        query = HttpRequestTargetQueryEmpty.INSTANCE;
-      } else {
-        HttpRequestTargetQuery impl;
-        impl = new HttpRequestTargetQuery();
+  public final String queryParam(String name) {
+    Check.notNull(name, "name == null");
 
-        String raw;
-        raw = rawTarget.substring(queryStart);
+    Map<String, Object> params;
+    params = $queryParams();
 
-        impl.set(raw);
+    Object maybe;
+    maybe = params.get(name);
 
-        query = impl;
+    return switch (maybe) {
+      case null -> null;
+
+      case String s -> s;
+
+      case List<?> l -> (String) l.get(0);
+
+      default -> throw new AssertionError(
+          "Type should not have been put into the map: " + maybe.getClass()
+      );
+    };
+  }
+
+  private Map<String, Object> $queryParams() {
+    if (!queryParamsReady) {
+      if (queryParams == null) {
+        queryParams = new GrowableMap<>();
       }
+
+      makeQueryParams(queryParams, this::decode);
+
+      queryParamsReady = true;
     }
 
-    return query;
+    return queryParams;
+  }
+
+  @Override
+  public final int queryParamAsInt(String name, int defaultValue) {
+    String maybe;
+    maybe = queryParam(name);
+
+    if (maybe == null) {
+      return defaultValue;
+    }
+
+    try {
+      return Integer.parseInt(maybe);
+    } catch (NumberFormatException expected) {
+      return defaultValue;
+    }
   }
 
   @Override
   public final String rawPath() {
-    if (rawPath == null) {
-      rawPath = rawTarget.substring(0, pathLimit);
+    return rawValue.substring(0, pathLimit);
+  }
+
+  @Override
+  public final String rawQuery() {
+    return rawValue.substring(queryStart);
+  }
+
+  private Map<String, Object> $rawQueryParams() {
+    Map<String, Object> map;
+    map = new GrowableMap<>();
+
+    makeQueryParams(map, Function.identity());
+
+    return map;
+  }
+
+  public final String rawValue() {
+    return rawValue;
+  }
+
+  public final String rawValue(String queryParamName, String queryParamValue) {
+    Check.notNull(queryParamName, "queryParamName == null");
+    Check.notNull(queryParamValue, "queryParamValue == null");
+
+    StringBuilder builder;
+    builder = new StringBuilder(rawPath());
+
+    builder.append('?');
+
+    Map<String, Object> params;
+    params = $rawQueryParams();
+
+    String rawName;
+    rawName = encode(queryParamName);
+
+    String rawValue;
+    rawValue = encode(queryParamValue);
+
+    params.put(rawName, rawValue);
+
+    int count;
+    count = 0;
+
+    for (String key : params.keySet()) {
+      if (count++ > 0) {
+        builder.append('&');
+      }
+
+      builder.append(key);
+
+      builder.append('=');
+
+      Object value;
+      value = params.get(key);
+
+      if (value instanceof String s) {
+        builder.append(s);
+      }
+
+      else {
+        throw new UnsupportedOperationException("Implement me");
+      }
     }
 
-    return rawPath;
+    return builder.toString();
+  }
+
+  private String encode(String value) {
+    return URLEncoder.encode(value, StandardCharsets.UTF_8);
   }
 
   final void resetRequestLine() {
@@ -113,11 +217,17 @@ non-sealed class HttpRequestLine extends HttpSocketInput implements Http.Request
       pathParams.clear();
     }
 
-    path = rawPath = rawTarget = null;
+    path = null;
 
-    query = null;
+    if (queryParams != null) {
+      queryParams.clear();
+    }
+
+    queryParamsReady = false;
 
     queryStart = 0;
+
+    rawValue = null;
 
     versionMajor = versionMinor = 0;
   }
@@ -344,7 +454,7 @@ non-sealed class HttpRequestLine extends HttpSocketInput implements Http.Request
       bufferIndex = targetEndIndex + 1;
     }
 
-    rawTarget = bufferToString(startIndex, targetEndIndex);
+    rawValue = bufferToString(startIndex, targetEndIndex);
 
     pathLimit = pathEndIndex - startIndex;
 
@@ -489,6 +599,112 @@ non-sealed class HttpRequestLine extends HttpSocketInput implements Http.Request
     }
 
     pathParams.put(name, value);
+  }
+
+  // query param stuff
+
+  private void makeQueryParams(Map<String, Object> map, Function<String, String> decoder) {
+    String source;
+    source = rawQuery();
+
+    if (!source.isBlank()) {
+
+      StringBuilder sb;
+      sb = new StringBuilder();
+
+      String key;
+      key = null;
+
+      for (int i = 0, len = source.length(); i < len; i++) {
+        char c;
+        c = source.charAt(i);
+
+        switch (c) {
+          case '=' -> {
+            key = sb.toString();
+
+            sb.setLength(0);
+
+            putQueryParams(map, decoder, key, "");
+          }
+
+          case '&' -> {
+            String value;
+            value = sb.toString();
+
+            sb.setLength(0);
+
+            if (key == null) {
+              putQueryParams(map, decoder, value, "");
+
+              continue;
+            }
+
+            putQueryParams(map, decoder, key, value);
+
+            key = null;
+          }
+
+          default -> sb.append(c);
+        }
+      }
+
+      String value;
+      value = sb.toString();
+
+      if (key != null) {
+        putQueryParams(map, decoder, key, value);
+      } else {
+        putQueryParams(map, decoder, value, "");
+      }
+
+    }
+  }
+
+  @SuppressWarnings("unchecked")
+  private void putQueryParams(Map<String, Object> map, Function<String, String> decoder, String rawKey, String rawValue) {
+    String key;
+    key = decoder.apply(rawKey);
+
+    String value;
+    value = decoder.apply(rawValue);
+
+    Object oldValue;
+    oldValue = map.put(key, value);
+
+    if (oldValue == null) {
+      return;
+    }
+
+    if (oldValue.equals("")) {
+      return;
+    }
+
+    if (oldValue instanceof String s) {
+
+      if (value.equals("")) {
+        map.put(key, s);
+      } else {
+        List<String> list;
+        list = new GrowableList<>();
+
+        list.add(s);
+
+        list.add(value);
+
+        map.put(key, list);
+      }
+
+    }
+
+    else {
+      List<String> list;
+      list = (List<String>) oldValue;
+
+      list.add(value);
+
+      map.put(key, list);
+    }
   }
 
 }

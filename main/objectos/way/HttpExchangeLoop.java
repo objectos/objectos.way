@@ -363,13 +363,6 @@ final class HttpExchangeLoop extends HttpRequestBody implements Http.Exchange, C
   }
 
   @Override
-  public final Http.Request.Target.Query query() {
-    checkRequest();
-
-    return super.query();
-  }
-
-  @Override
   public final Http.Request.Headers headers() {
     checkRequest();
 

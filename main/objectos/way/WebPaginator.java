@@ -15,16 +15,11 @@
  */
 package objectos.way;
 
-import objectos.way.Http.Request.Target.Query;
-
 final record WebPaginator(Http.Request.Target target, Sql.Page current, int firstItem, int lastItem, int totalCount, int previousPage, int nextPage) implements Web.Paginator {
 
   public static WebPaginator of(Http.Request.Target target, String pageAttrName, int pageSize, int totalCount) {
-    Query query;
-    query = target.query();
-
     int pageNumber;
-    pageNumber = query.getAsInt(pageAttrName, 1);
+    pageNumber = target.queryParamAsInt(pageAttrName, 1);
 
     int previousPage;
     previousPage = pageNumber - 1;
@@ -80,22 +75,11 @@ final record WebPaginator(Http.Request.Target target, Sql.Page current, int firs
   }
 
   private String pageHref(int page) {
-    String originalPath;
-    originalPath = target.path();
+    HttpRequestLine impl = (HttpRequestLine) target;
 
-    StringBuilder href;
-    href = new StringBuilder(originalPath);
+    String value = Integer.toString(page);
 
-    href.append('?');
-
-    Http.Request.Target.Query query;
-    query = target.query();
-
-    query = query.set("page", Integer.toString(page));
-
-    href.append(query.encodedValue());
-
-    return href.toString();
+    return impl.rawValue("page", value);
   }
 
 }
