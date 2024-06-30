@@ -17,6 +17,7 @@ package objectos.way;
 
 import static org.testng.Assert.assertEquals;
 
+import java.util.Set;
 import org.testng.annotations.Test;
 
 public class HttpRequestTargetQueryTest {
@@ -30,6 +31,7 @@ public class HttpRequestTargetQueryTest {
 
     assertEquals(q.queryParam("foo"), null);
     assertEquals(q.queryParam(""), null);
+    assertEquals(q.queryParamNames(), Set.of());
   }
 
   @Test(description = """
@@ -41,6 +43,7 @@ public class HttpRequestTargetQueryTest {
 
     assertEquals(q.queryParam("foo"), "bar");
     assertEquals(q.queryParam("x"), null);
+    assertEquals(q.queryParamNames(), Set.of("foo"));
   }
 
   @Test(description = """
@@ -52,6 +55,7 @@ public class HttpRequestTargetQueryTest {
 
     assertEquals(q.queryParam("foo"), "");
     assertEquals(q.queryParam("x"), null);
+    assertEquals(q.queryParamNames(), Set.of("foo"));
   }
 
   @Test(description = """
@@ -63,6 +67,7 @@ public class HttpRequestTargetQueryTest {
 
     assertEquals(q.queryParam("foo"), "");
     assertEquals(q.queryParam("x"), null);
+    assertEquals(q.queryParamNames(), Set.of("foo"));
   }
 
   @Test(description = """
@@ -75,6 +80,7 @@ public class HttpRequestTargetQueryTest {
     assertEquals(q.queryParam("a"), "");
     assertEquals(q.queryParam("foo"), "");
     assertEquals(q.queryParam("x"), null);
+    assertEquals(q.queryParamNames(), Set.of("a", "foo"));
   }
 
   @Test(description = """
@@ -87,6 +93,7 @@ public class HttpRequestTargetQueryTest {
     assertEquals(q.queryParam("a"), "1 2 3");
     assertEquals(q.queryParam("b"), "foo");
     assertEquals(q.queryParam("x"), null);
+    assertEquals(q.queryParamNames(), Set.of("a", "b"));
   }
 
   @Test(description = """
@@ -102,6 +109,7 @@ public class HttpRequestTargetQueryTest {
     assertEquals(q.queryParamAsInt("d", -1), -1);
     assertEquals(q.queryParamAsInt("e", -1), -1);
     assertEquals(q.queryParamAsInt("f", -1), -1);
+    assertEquals(q.queryParamNames(), Set.of("a", "b", "c", "d", "e", "f"));
   }
 
   @Test(description = """
@@ -115,6 +123,7 @@ public class HttpRequestTargetQueryTest {
     assertEquals(q.queryParam("b"), "2");
     assertEquals(q.queryParam("c"), "3");
     assertEquals(q.queryParam("d"), "");
+    assertEquals(q.queryParamNames(), Set.of("a", "b", "c", "d"));
   }
 
   @Test(description = """
@@ -127,6 +136,7 @@ public class HttpRequestTargetQueryTest {
     assertEquals(q.queryParam("a"), "123");
     assertEquals(q.queryParam("b"), "xpto");
     assertEquals(q.queryParam("c"), "");
+    assertEquals(q.queryParamNames(), Set.of("a", "b", "c"));
   }
 
   @Test
@@ -137,6 +147,7 @@ public class HttpRequestTargetQueryTest {
     assertEquals(q.queryParam("&"), "the & char");
     assertEquals(q.queryParam("foo"), "bar");
     assertEquals(q.queryParam("%26"), null);
+    assertEquals(q.queryParamNames(), Set.of("&", "foo"));
   }
 
   private Http.Request.Target queryOf(String q) {

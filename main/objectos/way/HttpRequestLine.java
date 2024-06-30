@@ -21,6 +21,7 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.function.Function;
 import objectos.lang.object.Check;
 import objectos.util.list.GrowableList;
@@ -37,7 +38,7 @@ non-sealed class HttpRequestLine extends HttpSocketInput implements Http.Request
 
   Map<String, String> pathParams;
 
-  private Map<String, Object> queryParams;
+  private GrowableMap<String, Object> queryParams;
 
   private boolean queryParamsReady;
 
@@ -104,7 +105,15 @@ non-sealed class HttpRequestLine extends HttpSocketInput implements Http.Request
     };
   }
 
-  private Map<String, Object> $queryParams() {
+  @Override
+  public final Set<String> queryParamNames() {
+    GrowableMap<String, Object> params;
+    params = $queryParams();
+
+    return params.keySet();
+  }
+
+  private GrowableMap<String, Object> $queryParams() {
     if (!queryParamsReady) {
       if (queryParams == null) {
         queryParams = new GrowableMap<>();

@@ -619,6 +619,13 @@ public final class Http {
       String queryParam(String name);
 
       /**
+       * The names of all of the query parameters in this request-target.
+       *
+       * @return the names of all of the query parameters
+       */
+      Set<String> queryParamNames();
+
+      /**
        * Returns, as an {@code int}, the first value of the query parameter with
        * the specified name or returns the specified default value.
        *

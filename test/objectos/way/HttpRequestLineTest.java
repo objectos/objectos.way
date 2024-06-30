@@ -18,6 +18,7 @@ package objectos.way;
 import static org.testng.Assert.assertEquals;
 
 import java.io.IOException;
+import java.util.Set;
 import org.testng.annotations.Test;
 
 public class HttpRequestLineTest {
@@ -49,6 +50,7 @@ public class HttpRequestLineTest {
 
     // query
     assertEquals(line.rawQuery(), null);
+    assertEquals(line.queryParamNames(), Set.of());
 
     // version
     assertEquals(line.versionMajor, 1);
@@ -85,6 +87,7 @@ public class HttpRequestLineTest {
     assertEquals(line.rawQuery(), "foo=bar");
     assertEquals(line.queryParam("foo"), "bar");
     assertEquals(line.queryParam("x"), null);
+    assertEquals(line.queryParamNames(), Set.of("foo"));
 
     // version
     assertEquals(line.versionMajor, 1);

@@ -24,6 +24,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Random;
+import java.util.Set;
 import objectos.lang.CharWritable;
 import objectos.lang.TestingCharWritable;
 import objectos.util.array.ByteArrays;
@@ -73,6 +74,7 @@ public class HttpExchangeLoopTest {
       assertEquals(http.path(), "/");
       assertEquals(http.rawQuery(), null);
       assertEquals(http.queryParam("x"), null);
+      assertEquals(http.queryParamNames(), Set.of());
 
       // headers
       Http.Request.Headers headers;
@@ -174,6 +176,7 @@ public class HttpExchangeLoopTest {
       assertEquals(http.method(), Http.GET);
       assertEquals(http.path(), "/login");
       assertEquals(http.rawQuery(), null);
+      assertEquals(http.queryParamNames(), Set.of());
 
       // headers
       Http.Request.Headers headers;
@@ -351,6 +354,7 @@ public class HttpExchangeLoopTest {
       assertEquals(http.method(), Http.GET);
       assertEquals(http.path(), "/index.html");
       assertEquals(http.rawQuery(), null);
+      assertEquals(http.queryParamNames(), Set.of());
 
       // headers
       Http.Request.Headers headers;
@@ -421,6 +425,7 @@ public class HttpExchangeLoopTest {
       assertEquals(http.method(), Http.GET);
       assertEquals(http.path(), "/atom.xml");
       assertEquals(http.rawQuery(), null);
+      assertEquals(http.queryParamNames(), Set.of());
 
       // headers
       Http.Request.Headers headers;
@@ -525,6 +530,7 @@ public class HttpExchangeLoopTest {
 
       assertEquals(http.rawQuery(), "foo=bar");
       assertEquals(http.queryParam("foo"), "bar");
+      assertEquals(http.queryParamNames(), Set.of("foo"));
 
       // response phase
 
@@ -1201,6 +1207,7 @@ public class HttpExchangeLoopTest {
       assertEquals(http.path(), "/");
       assertEquals(http.rawQuery(), null);
       assertEquals(http.queryParam(""), null);
+      assertEquals(http.queryParamNames(), Set.of());
 
       // headers
       Http.Request.Headers headers;
@@ -1246,6 +1253,7 @@ public class HttpExchangeLoopTest {
       assertEquals(http.path(), "/wiki/東京");
       assertEquals(http.rawQuery(), null);
       assertEquals(http.queryParam("null"), null);
+      assertEquals(http.queryParamNames(), Set.of());
 
       // headers
       Http.Request.Headers headers;
@@ -1289,6 +1297,7 @@ public class HttpExchangeLoopTest {
       assertEquals(http.path(), "/empty");
       assertEquals(http.rawQuery(), "");
       assertEquals(http.queryParam("null"), null);
+      assertEquals(http.queryParamNames(), Set.of());
 
       // headers
       Http.Request.Headers headers;
