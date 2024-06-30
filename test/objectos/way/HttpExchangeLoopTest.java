@@ -71,7 +71,7 @@ public class HttpExchangeLoopTest {
       // request line
       assertEquals(http.method(), Http.GET);
       assertEquals(http.path(), "/");
-      assertEquals(http.rawQuery(), "");
+      assertEquals(http.rawQuery(), null);
       assertEquals(http.queryParam("x"), null);
 
       // headers
@@ -173,7 +173,7 @@ public class HttpExchangeLoopTest {
       // request line
       assertEquals(http.method(), Http.GET);
       assertEquals(http.path(), "/login");
-      assertEquals(http.rawQuery(), "");
+      assertEquals(http.rawQuery(), null);
 
       // headers
       Http.Request.Headers headers;
@@ -350,7 +350,7 @@ public class HttpExchangeLoopTest {
       // request line
       assertEquals(http.method(), Http.GET);
       assertEquals(http.path(), "/index.html");
-      assertEquals(http.rawQuery(), "");
+      assertEquals(http.rawQuery(), null);
 
       // headers
       Http.Request.Headers headers;
@@ -420,7 +420,7 @@ public class HttpExchangeLoopTest {
       // request line
       assertEquals(http.method(), Http.GET);
       assertEquals(http.path(), "/atom.xml");
-      assertEquals(http.rawQuery(), "");
+      assertEquals(http.rawQuery(), null);
 
       // headers
       Http.Request.Headers headers;
@@ -1199,7 +1199,7 @@ public class HttpExchangeLoopTest {
       // request line
       assertEquals(http.method(), Http.GET);
       assertEquals(http.path(), "/");
-      assertEquals(http.rawQuery(), "");
+      assertEquals(http.rawQuery(), null);
       assertEquals(http.queryParam(""), null);
 
       // headers
@@ -1244,6 +1244,49 @@ public class HttpExchangeLoopTest {
       // request line
       assertEquals(http.method(), Http.GET);
       assertEquals(http.path(), "/wiki/東京");
+      assertEquals(http.rawQuery(), null);
+      assertEquals(http.queryParam("null"), null);
+
+      // headers
+      Http.Request.Headers headers;
+      headers = http.headers();
+
+      assertEquals(headers.size(), 1);
+      assertEquals(headers.first(Http.HOST), "www.example.com");
+
+      // body
+      Http.Request.Body body;
+      body = http.body();
+
+      assertEquals(ObjectosHttp.readAllBytes(body), ByteArrays.empty());
+    } catch (IOException e) {
+      throw new AssertionError("Failed with IOException", e);
+    }
+  }
+
+  @Test(description = """
+  Empty query string
+  """)
+  public void testCase022() {
+    TestableSocket socket;
+    socket = TestableSocket.of("""
+      GET /empty? HTTP/1.1\r
+      Host: www.example.com\r
+      \r
+      """);
+
+    try (HttpExchangeLoop http = new HttpExchangeLoop(socket)) {
+      http.clock(TestingClock.FIXED);
+      http.noteSink(TestingNoteSink.INSTANCE);
+
+      ParseStatus parse;
+      parse = http.parse();
+
+      assertEquals(parse.isError(), false);
+
+      // request line
+      assertEquals(http.method(), Http.GET);
+      assertEquals(http.path(), "/empty");
       assertEquals(http.rawQuery(), "");
       assertEquals(http.queryParam("null"), null);
 

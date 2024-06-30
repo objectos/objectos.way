@@ -639,16 +639,10 @@ public final class Http {
       int queryParamAsInt(String name, int defaultValue);
 
       /**
-       * The raw (encoded) value of the path component.
+       * The raw (encoded) value of the query component. This method returns
+       * {@code null} if this request-target does not have a query component.
        *
-       * @return the raw (encoded) value of the path component
-       */
-      String rawPath();
-
-      /**
-       * The raw (encoded) value of the query component.
-       *
-       * @return the raw (encoded) value of the query component
+       * @return the raw (encoded) value of the query component or {@code null}
        */
       String rawQuery();
 

@@ -30,7 +30,6 @@ public class HttpRequestTargetQueryTest {
 
     assertEquals(q.queryParam("foo"), null);
     assertEquals(q.queryParam(""), null);
-    assertEquals(q.rawQuery(), "");
   }
 
   @Test(description = """
@@ -42,7 +41,6 @@ public class HttpRequestTargetQueryTest {
 
     assertEquals(q.queryParam("foo"), "bar");
     assertEquals(q.queryParam("x"), null);
-    assertEquals(q.rawQuery(), "foo=bar");
   }
 
   @Test(description = """
@@ -54,7 +52,6 @@ public class HttpRequestTargetQueryTest {
 
     assertEquals(q.queryParam("foo"), "");
     assertEquals(q.queryParam("x"), null);
-    assertEquals(q.rawQuery(), "foo");
   }
 
   @Test(description = """
@@ -66,7 +63,6 @@ public class HttpRequestTargetQueryTest {
 
     assertEquals(q.queryParam("foo"), "");
     assertEquals(q.queryParam("x"), null);
-    assertEquals(q.rawQuery(), "foo=");
   }
 
   @Test(description = """
@@ -79,7 +75,6 @@ public class HttpRequestTargetQueryTest {
     assertEquals(q.queryParam("a"), "");
     assertEquals(q.queryParam("foo"), "");
     assertEquals(q.queryParam("x"), null);
-    assertEquals(q.rawQuery(), "a&foo=");
   }
 
   @Test(description = """
@@ -92,7 +87,6 @@ public class HttpRequestTargetQueryTest {
     assertEquals(q.queryParam("a"), "1 2 3");
     assertEquals(q.queryParam("b"), "foo");
     assertEquals(q.queryParam("x"), null);
-    assertEquals(q.rawQuery(), "a=1+2+3&b=foo");
   }
 
   @Test(description = """

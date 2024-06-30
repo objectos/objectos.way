@@ -48,7 +48,7 @@ public class HttpRequestLineTest {
     assertEquals(line.path(), "/");
 
     // query
-    assertEquals(line.rawQuery(), "");
+    assertEquals(line.rawQuery(), null);
 
     // version
     assertEquals(line.versionMajor, 1);

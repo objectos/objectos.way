@@ -134,14 +134,13 @@ non-sealed class HttpRequestLine extends HttpSocketInput implements Http.Request
     }
   }
 
-  @Override
   public final String rawPath() {
     return rawValue.substring(0, pathLimit);
   }
 
   @Override
   public final String rawQuery() {
-    return rawValue.substring(queryStart);
+    return queryStart == pathLimit ? null : rawValue.substring(queryStart);
   }
 
   private Map<String, Object> $rawQueryParams() {
@@ -604,60 +603,64 @@ non-sealed class HttpRequestLine extends HttpSocketInput implements Http.Request
   // query param stuff
 
   private void makeQueryParams(Map<String, Object> map, Function<String, String> decoder) {
+    int queryLength;
+    queryLength = rawValue.length() - queryStart;
+
+    if (queryLength < 2) {
+      // query is empty: either "" or "?"
+      return;
+    }
+
     String source;
     source = rawQuery();
 
-    if (!source.isBlank()) {
+    StringBuilder sb;
+    sb = new StringBuilder();
 
-      StringBuilder sb;
-      sb = new StringBuilder();
+    String key;
+    key = null;
 
-      String key;
-      key = null;
+    for (int i = 0, len = source.length(); i < len; i++) {
+      char c;
+      c = source.charAt(i);
 
-      for (int i = 0, len = source.length(); i < len; i++) {
-        char c;
-        c = source.charAt(i);
+      switch (c) {
+        case '=' -> {
+          key = sb.toString();
 
-        switch (c) {
-          case '=' -> {
-            key = sb.toString();
+          sb.setLength(0);
 
-            sb.setLength(0);
-
-            putQueryParams(map, decoder, key, "");
-          }
-
-          case '&' -> {
-            String value;
-            value = sb.toString();
-
-            sb.setLength(0);
-
-            if (key == null) {
-              putQueryParams(map, decoder, value, "");
-
-              continue;
-            }
-
-            putQueryParams(map, decoder, key, value);
-
-            key = null;
-          }
-
-          default -> sb.append(c);
+          putQueryParams(map, decoder, key, "");
         }
+
+        case '&' -> {
+          String value;
+          value = sb.toString();
+
+          sb.setLength(0);
+
+          if (key == null) {
+            putQueryParams(map, decoder, value, "");
+
+            continue;
+          }
+
+          putQueryParams(map, decoder, key, value);
+
+          key = null;
+        }
+
+        default -> sb.append(c);
       }
+    }
 
-      String value;
-      value = sb.toString();
+    String value;
+    value = sb.toString();
 
-      if (key != null) {
-        putQueryParams(map, decoder, key, value);
-      } else {
-        putQueryParams(map, decoder, value, "");
-      }
-
+    if (key != null) {
+      putQueryParams(map, decoder, key, value);
+    } else {
+      putQueryParams(map, decoder, value, "");
     }
   }
 

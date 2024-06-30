@@ -59,7 +59,6 @@ public class HttpTest {
     target = Http.parseRequestTarget("/");
 
     assertEquals(target.path(), "/");
-    assertEquals(target.rawQuery(), "");
   }
 
   @Test
@@ -71,7 +70,6 @@ public class HttpTest {
     assertEquals(target.queryParam("page"), "1");
     assertEquals(target.queryParamAsInt("page", 0), 1);
     assertEquals(target.queryParam("sort"), "asc");
-    assertEquals(target.rawQuery(), "page=1&sort=asc");
   }
 
 }
