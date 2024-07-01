@@ -150,7 +150,7 @@ final class SqlTemplate {
     }
   }
 
-  final void query(Connection connection, Sql.ResultSetHandler handler) throws Sql.UncheckedSqlException {
+  final void process(Connection connection, Sql.QueryProcessor processor) throws Sql.UncheckedSqlException {
     String sqlToPrepare;
     sqlToPrepare = sqlBuilder.toString();
 
@@ -163,9 +163,7 @@ final class SqlTemplate {
       }
 
       try (ResultSet rs = stmt.executeQuery()) {
-        while (rs.next()) {
-          handler.handle(rs);
-        }
+        processor.process(rs);
       }
     } catch (SQLException e) {
       throw new Sql.UncheckedSqlException(e);
@@ -175,6 +173,5 @@ final class SqlTemplate {
   final void paginate(SqlDialect dialect, Sql.Page page) {
     dialect.paginate(sqlBuilder, page);
   }
-
 
 }

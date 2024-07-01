@@ -51,9 +51,15 @@ public final class Web {
   /**
    * Allows for pagination of data tables in an web application.
    */
-  public interface Paginator {
+  public interface Paginator extends Sql.PageProvider {
 
-    Sql.Page current();
+    /**
+     * The current page.
+     *
+     * @return the current page
+     */
+    @Override
+    Sql.Page page();
 
     int firstItem();
 

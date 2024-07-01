@@ -26,7 +26,7 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 
 public class SqlTransactionTest {
-  
+
   @Test
   public void batchUpdate01() {
     TestingConnection conn;
@@ -55,7 +55,7 @@ public class SqlTransactionTest {
 
         """
         prepareStatement(insert into FOO (FOO_ID, FOO_NAME, BAR) VALUES (?, ?, ?))
-        close()        
+        close()
         """
     );
 
@@ -76,7 +76,7 @@ public class SqlTransactionTest {
         """
     );
   }
-  
+
   @Test
   public void count01() {
     TestingConnection conn;
@@ -110,7 +110,61 @@ public class SqlTransactionTest {
 
         """
         prepareStatement(select count(*) from ( select A, B from FOO where C = ? ) x)
-        close()        
+        close()
+        """
+    );
+
+    assertEquals(
+        stmt.toString(),
+
+        """
+        setInt(1, 123)
+        executeQuery()
+        close()
+        """
+    );
+
+    assertEquals(
+        query.toString(),
+
+        """
+        next()
+        close()
+        """
+    );
+  }
+
+  @Test(description = """
+  No optional fragments
+  """)
+  public void processAll01() {
+    TestingConnection conn;
+    conn = new TestingConnection();
+
+    TestingPreparedStatement stmt;
+    stmt = new TestingPreparedStatement();
+
+    TestingResultSet query;
+    query = new TestingResultSet();
+
+    stmt.queries(query);
+
+    conn.statements(stmt);
+
+    try (SqlTransaction trx = trx(conn)) {
+      trx.processQuery(this::row, """
+      select A, B
+      from FOO
+      where ID = ?
+      """, 123);
+    }
+
+    assertEquals(
+        conn.toString(),
+
+        """
+        prepareStatement(select A, B from FOO where ID = ?)
+        close()
         """
     );
 
@@ -137,7 +191,7 @@ public class SqlTransactionTest {
   @Test(description = """
   SQL template without optional fragments
   """)
-  public void queryPage01() {
+  public void processSinglePage01() {
     TestingConnection conn;
     conn = new TestingConnection();
 
@@ -154,11 +208,11 @@ public class SqlTransactionTest {
     conn.statements(stmt);
 
     try (SqlTransaction trx = trx(conn)) {
-      trx.queryPage("""
+      trx.processQuery(this::row, page(15), """
       select A, B
       from FOO
       where C = ?
-      """, this::row, page(15), 123);
+      """, 123);
     }
 
     assertEquals(
@@ -166,7 +220,7 @@ public class SqlTransactionTest {
 
         """
         prepareStatement(select A, B from FOO where C = ? limit 15)
-        close()        
+        close()
         """
     );
 
@@ -195,7 +249,7 @@ public class SqlTransactionTest {
   SQL template with 1 optional fragment
   => fragment removed
   """)
-  public void queryPage02() {
+  public void processSinglePage02() {
     TestingConnection conn;
     conn = new TestingConnection();
 
@@ -212,14 +266,14 @@ public class SqlTransactionTest {
     conn.statements(stmt);
 
     try (SqlTransaction trx = trx(conn)) {
-      trx.queryPage("""
+      trx.processQuery(this::row, page(15), """
       select A, B
       from FOO
       where C = ?
       --
       and D = ?
       --
-      """, this::row, page(15), 123, null);
+      """, 123, null);
     }
 
     assertEquals(
@@ -227,7 +281,7 @@ public class SqlTransactionTest {
 
         """
         prepareStatement(select A, B from FOO where C = ? limit 15)
-        close()        
+        close()
         """
     );
 
@@ -256,7 +310,7 @@ public class SqlTransactionTest {
   SQL template with 1 optional fragment
   => fragment included
   """)
-  public void queryPage03() {
+  public void processSinglePage03() {
     TestingConnection conn;
     conn = new TestingConnection();
 
@@ -273,14 +327,14 @@ public class SqlTransactionTest {
     conn.statements(stmt);
 
     try (SqlTransaction trx = trx(conn)) {
-      trx.queryPage("""
+      trx.processQuery(this::row, page(15), """
       select A, B
       from FOO
       where C = ?
       --
       and D = ?
       --
-      """, this::row, page(15), 123, "abc");
+      """, 123, "abc");
     }
 
     assertEquals(
@@ -288,7 +342,7 @@ public class SqlTransactionTest {
 
         """
         prepareStatement(select A, B from FOO where C = ? and D = ? limit 15)
-        close()        
+        close()
         """
     );
 
@@ -313,11 +367,11 @@ public class SqlTransactionTest {
         """
     );
   }
-  
+
   @Test(description = """
   SQL template pagination
   """)
-  public void queryPage04() {
+  public void processSinglePage04() {
     TestingConnection conn;
     conn = new TestingConnection();
 
@@ -334,11 +388,11 @@ public class SqlTransactionTest {
     conn.statements(stmt);
 
     try (SqlTransaction trx = trx(conn)) {
-      trx.queryPage("""
+      trx.processQuery(this::row, Sql.createPage(2, 15), """
       select A, B
       from FOO
       where C = ?
-      """, this::row, Sql.createPage(2, 15), 123);
+      """, 123);
     }
 
     assertEquals(
@@ -346,7 +400,7 @@ public class SqlTransactionTest {
 
         """
         prepareStatement(select A, B from FOO where C = ? limit 15 offset 15)
-        close()        
+        close()
         """
     );
 
@@ -374,7 +428,7 @@ public class SqlTransactionTest {
   @Test(description = """
   SQL template with two fragments
   """)
-  public void queryPage05() {
+  public void processSinglePage05() {
     TestingConnection conn;
     conn = new TestingConnection();
 
@@ -391,7 +445,7 @@ public class SqlTransactionTest {
     conn.statements(stmt);
 
     try (SqlTransaction trx = trx(conn)) {
-      trx.queryPage("""
+      trx.processQuery(this::row, page(15), """
       select A, B
       from FOO
       where C = ?
@@ -399,7 +453,7 @@ public class SqlTransactionTest {
       and D is not null
       --
       and E = ?
-      """, this::row, page(15), 123, null);
+      """, 123, null);
     }
 
     assertEquals(
@@ -407,7 +461,7 @@ public class SqlTransactionTest {
 
         """
         prepareStatement(select A, B from FOO where C = ? and D is not null limit 15)
-        close()        
+        close()
         """
     );
 
@@ -431,7 +485,7 @@ public class SqlTransactionTest {
         """
     );
   }
-  
+
   @Test
   public void rollback01() {
     TestingConnection conn;
@@ -440,17 +494,17 @@ public class SqlTransactionTest {
     try (SqlTransaction trx = trx(conn)) {
       trx.rollback();
     }
-    
+
     assertEquals(
         conn.toString(),
 
         """
         rollback()
-        close()        
+        close()
         """
     );
   }
-  
+
   @Test(description = """
   rollback throws
   """)
@@ -479,21 +533,21 @@ public class SqlTransactionTest {
 
         """
         rollback()
-        close()        
+        close()
         """
     );
   }
-  
+
   @Test(description = """
   rethrow is java.lang.Error
   """)
   public void rollbackAndRethrow01() {
     TestingConnection conn;
     conn = new TestingConnection();
-    
+
     Throwable rethrow;
     rethrow = new Error();
-    
+
     try (SqlTransaction trx = trx(conn)) {
       trx.rollbackAndRethrow(rethrow);
     } catch (Error expected) {
@@ -501,27 +555,27 @@ public class SqlTransactionTest {
     } catch (Throwable e) {
       Assert.fail("Not an Error", e);
     }
-    
+
     assertEquals(
         conn.toString(),
 
         """
         rollback()
-        close()        
+        close()
         """
     );
   }
-  
+
   @Test(description = """
   rethrow is java.lang.RuntimeException
   """)
   public void rollbackAndRethrow02() {
     TestingConnection conn;
     conn = new TestingConnection();
-    
+
     Throwable rethrow;
     rethrow = new IllegalArgumentException();
-    
+
     try (SqlTransaction trx = trx(conn)) {
       trx.rollbackAndRethrow(rethrow);
     } catch (RuntimeException expected) {
@@ -529,13 +583,13 @@ public class SqlTransactionTest {
     } catch (Throwable e) {
       Assert.fail("Not an RuntimeException", e);
     }
-    
+
     assertEquals(
         conn.toString(),
 
         """
         rollback()
-        close()        
+        close()
         """
     );
   }
@@ -546,27 +600,27 @@ public class SqlTransactionTest {
   public void rollbackAndRethrow03() {
     TestingConnection conn;
     conn = new TestingConnection();
-    
+
     Throwable rethrow;
     rethrow = new SQLException();
-    
+
     try (SqlTransaction trx = trx(conn)) {
       trx.rollbackAndRethrow(rethrow);
     } catch (RuntimeException expected) {
       Throwable cause;
       cause = expected.getCause();
-      
+
       assertSame(cause, rethrow);
     } catch (Throwable e) {
       Assert.fail("Not an RuntimeException", e);
     }
-    
+
     assertEquals(
         conn.toString(),
 
         """
         rollback()
-        close()        
+        close()
         """
     );
   }
@@ -574,16 +628,20 @@ public class SqlTransactionTest {
   private SqlTransaction trx(Connection connection) {
     SqlDialect dialect;
     dialect = TestingDatabaseMetaData.MYSQL_5_7.toSqlDialect();
-    
+
     return new SqlTransaction(dialect, connection);
   }
 
-  private void row(ResultSet rs) {
-    // noop
+  private void row(ResultSet rs) throws SQLException {
+    while (rs.next()) {
+      noop();
+    }
   }
-  
+
+  private void noop() {}
+
   private Sql.Page page(int pageSize) {
     return Sql.createPage(1, pageSize);
   }
-  
+
 }

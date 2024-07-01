@@ -29,8 +29,8 @@ public class WebPaginatorTest {
     WebPaginator paginator;
     paginator = WebPaginator.of(target, "page", pageSize, totalCount);
 
-    assertEquals(paginator.current().number(), 1);
-    assertEquals(paginator.current().size(), 15);
+    assertEquals(paginator.page().number(), 1);
+    assertEquals(paginator.page().size(), 15);
     assertEquals(paginator.firstItem(), 1);
     assertEquals(paginator.lastItem(), 8);
     assertEquals(paginator.hasPrevious(), false);
@@ -47,8 +47,8 @@ public class WebPaginatorTest {
     WebPaginator paginator;
     paginator = WebPaginator.of(target, "page", pageSize, totalCount);
 
-    assertEquals(paginator.current().number(), 1);
-    assertEquals(paginator.current().size(), 15);
+    assertEquals(paginator.page().number(), 1);
+    assertEquals(paginator.page().size(), 15);
     assertEquals(paginator.firstItem(), 1);
     assertEquals(paginator.lastItem(), 15);
     assertEquals(paginator.hasPrevious(), false);
@@ -65,8 +65,8 @@ public class WebPaginatorTest {
     WebPaginator paginator;
     paginator = WebPaginator.of(target, "page", pageSize, totalCount);
 
-    assertEquals(paginator.current().number(), 1);
-    assertEquals(paginator.current().size(), 15);
+    assertEquals(paginator.page().number(), 1);
+    assertEquals(paginator.page().size(), 15);
     assertEquals(paginator.firstItem(), 1);
     assertEquals(paginator.lastItem(), 15);
     assertEquals(paginator.hasPrevious(), false);
@@ -83,8 +83,8 @@ public class WebPaginatorTest {
     WebPaginator paginator;
     paginator = WebPaginator.of(target, "page", pageSize, totalCount);
 
-    assertEquals(paginator.current().number(), 2);
-    assertEquals(paginator.current().size(), 15);
+    assertEquals(paginator.page().number(), 2);
+    assertEquals(paginator.page().size(), 15);
     assertEquals(paginator.firstItem(), 16);
     assertEquals(paginator.lastItem(), 16);
     assertEquals(paginator.hasPrevious(), true);
@@ -101,8 +101,8 @@ public class WebPaginatorTest {
     WebPaginator paginator;
     paginator = WebPaginator.of(target, "page", pageSize, totalCount);
 
-    assertEquals(paginator.current().number(), 3);
-    assertEquals(paginator.current().size(), 10);
+    assertEquals(paginator.page().number(), 3);
+    assertEquals(paginator.page().size(), 10);
     assertEquals(paginator.firstItem(), 21);
     assertEquals(paginator.lastItem(), 30);
     assertEquals(paginator.hasPrevious(), true);
@@ -119,8 +119,8 @@ public class WebPaginatorTest {
     WebPaginator paginator;
     paginator = WebPaginator.of(target, "page", pageSize, totalCount);
 
-    assertEquals(paginator.current().number(), 3);
-    assertEquals(paginator.current().size(), 10);
+    assertEquals(paginator.page().number(), 3);
+    assertEquals(paginator.page().size(), 10);
     assertEquals(paginator.firstItem(), 21);
     assertEquals(paginator.lastItem(), 30);
     assertEquals(paginator.hasPrevious(), true);
@@ -137,8 +137,8 @@ public class WebPaginatorTest {
     WebPaginator paginator;
     paginator = WebPaginator.of(target, "page", pageSize, totalCount);
 
-    assertEquals(paginator.current().number(), 2);
-    assertEquals(paginator.current().size(), 15);
+    assertEquals(paginator.page().number(), 2);
+    assertEquals(paginator.page().size(), 15);
     assertEquals(paginator.firstItem(), 16);
     assertEquals(paginator.lastItem(), 30);
     assertEquals(paginator.hasPrevious(), true);
@@ -155,8 +155,8 @@ public class WebPaginatorTest {
     WebPaginator paginator;
     paginator = WebPaginator.of(target, "page", pageSize, totalCount);
 
-    assertEquals(paginator.current().number(), 1);
-    assertEquals(paginator.current().size(), 15);
+    assertEquals(paginator.page().number(), 1);
+    assertEquals(paginator.page().size(), 15);
     assertEquals(paginator.firstItem(), 1);
     assertEquals(paginator.lastItem(), 15);
     assertEquals(paginator.hasPrevious(), false);

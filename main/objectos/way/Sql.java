@@ -65,10 +65,37 @@ public final class Sql {
 
   }
 
+  /**
+   * A provider of {@link Sql.Page} instances.
+   */
   @FunctionalInterface
-  public interface ResultSetHandler {
+  public interface PageProvider {
 
-    void handle(ResultSet rs) throws SQLException;
+    /**
+     * The current page.
+     *
+     * @return the current page
+     */
+    Page page();
+
+  }
+
+  /**
+   * Responsible for processing the results of a query operation.
+   */
+  @FunctionalInterface
+  public interface QueryProcessor {
+
+    /**
+     * Process the entire result set.
+     *
+     * @param rs
+     *        the result set to be processed
+     *
+     * @throws SQLException
+     *         if the result set throws
+     */
+    void process(ResultSet rs) throws SQLException;
 
   }
 
@@ -122,8 +149,20 @@ public final class Sql {
 
     }
 
+    /**
+     * Commits this transaction.
+     *
+     * @throws UncheckedSqlException
+     *         if the underlying {@link Connection#commit()} method throws
+     */
     void commit() throws UncheckedSqlException;
 
+    /**
+     * Undoes all changes made in this transaction.
+     *
+     * @throws UncheckedSqlException
+     *         if the underlying {@link Connection#rollback()} method throws
+     */
     void rollback() throws UncheckedSqlException;
 
     default void rollbackAndRethrow(Throwable rethrow) {
@@ -156,7 +195,51 @@ public final class Sql {
 
     int count(String sql, Object... args) throws UncheckedSqlException;
 
-    void queryPage(String sql, ResultSetHandler handler, Page page, Object... args) throws UncheckedSqlException;
+    /**
+     * Use the specified processor to process the results of the execution of
+     * the specified row-retriving SQL statement. The specified arguments
+     * are applied, in order, to the resulting prepared statement prior to
+     * sending the query to the database.
+     *
+     * @param processor
+     *        the processor to process the results
+     * @param sql
+     *        the row-retriving SQL statement to be executed
+     * @param args
+     *        the arguments of the SQL statement
+     *
+     * @throws UncheckedSqlException
+     *         if a database access error occurs
+     */
+    void processQuery(QueryProcessor processor, String sql, Object... args) throws UncheckedSqlException;
+
+    /**
+     * Use the specified processor to process the results of the execution of
+     * a row-retriving SQL statement that is obtained by applying the specified
+     * page to the specified SQL statement. The specified arguments
+     * are applied, in order, to the resulting prepared statement prior to
+     * sending the query to the database.
+     *
+     * @param processor
+     *        the processor to process the results
+     * @param page
+     *        limit the processing to this page
+     * @param sql
+     *        the row-retriving SQL statement to which the page will be applied
+     * @param args
+     *        the arguments of the SQL statement
+     *
+     * @throws UncheckedSqlException
+     *         if a database access error occurs
+     */
+    void processQuery(QueryProcessor processor, Page page, String sql, Object... args) throws UncheckedSqlException;
+
+    default void processQuery(QueryProcessor processor, PageProvider pageProvider, String sql, Object... args) throws UncheckedSqlException {
+      Page page;
+      page = pageProvider.page(); // implicit null-check
+
+      processQuery(processor, page, sql, args);
+    }
 
     default Object[] values(Object... values) {
       return values;

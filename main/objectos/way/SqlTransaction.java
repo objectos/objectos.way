@@ -19,13 +19,14 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import objectos.lang.object.Check;
+import objectos.way.Sql.UncheckedSqlException;
 
 final class SqlTransaction implements Sql.Transaction {
 
   private final SqlDialect dialect;
 
   private final Connection connection;
-  
+
   SqlTransaction(SqlDialect dialect, Connection connection) {
     this.dialect = dialect;
 
@@ -96,10 +97,22 @@ final class SqlTransaction implements Sql.Transaction {
   }
 
   @Override
-  public final void queryPage(String sql, Sql.ResultSetHandler handler, Sql.Page page, Object... args) throws Sql.UncheckedSqlException {
+  public final void processQuery(Sql.QueryProcessor processor, String sql, Object... args) throws UncheckedSqlException {
+    Check.notNull(processor, "processor == null");
     Check.notNull(sql, "sql == null");
-    Check.notNull(handler, "handler == null");
+    Check.notNull(args, "args == null");
+
+    SqlTemplate template;
+    template = SqlTemplate.parse(sql, args);
+
+    template.process(connection, processor);
+  }
+
+  @Override
+  public final void processQuery(Sql.QueryProcessor processor, Sql.Page page, String sql, Object... args) throws Sql.UncheckedSqlException {
+    Check.notNull(processor, "processor == null");
     Check.notNull(page, "page == null");
+    Check.notNull(sql, "sql == null");
     Check.notNull(args, "args == null");
 
     SqlTemplate template;
@@ -107,7 +120,7 @@ final class SqlTransaction implements Sql.Transaction {
 
     template.paginate(dialect, page);
 
-    template.query(connection, handler);
+    template.process(connection, processor);
   }
 
 }
