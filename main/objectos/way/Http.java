@@ -56,7 +56,7 @@ public final class Http {
    * Unless otherwise specified, request-target related methods of this
    * interface return decoded values.
    */
-  public interface Exchange extends Request {
+  public sealed interface Exchange extends Request permits HttpExchangeLoop, TestingExchange {
 
     /**
      * Stores an object in this request. The object will be associated to the
@@ -90,47 +90,6 @@ public final class Http {
     <T> T get(Class<T> key);
 
     // request
-
-    /**
-     * The value of the path component of the request-target.
-     *
-     * @return value of the path component of the request-target
-     *
-     * @see Http.Request.Target#path()
-     */
-    default String path() {
-      return target().path();
-    }
-
-    /**
-     * Returns the value of the path parameter with the specified name if it
-     * exists or returns {@code null} otherwise.
-     *
-     * @param name
-     *        the name of the path parameter
-     *
-     * @return the value if it exists or {@code null} if it does not
-     *
-     * @see Http.Request.Target#pathParam(String)
-     */
-    default String pathParam(String name) {
-      return target().pathParam(name);
-    }
-
-    /**
-     * Returns the first value of the query parameter with the specified name
-     * or {@code null} if there are no values.
-     *
-     * @param name
-     *        the name of the query parameter
-     *
-     * @return the first value if it exists or {@code null} if it does not
-     *
-     * @see Http.Request.Target#queryParam(String)
-     */
-    default String queryParam(String name) {
-      return target().queryParam(name);
-    }
 
     /**
      * Returns the session associated with this request or {@code null} if no
@@ -471,7 +430,7 @@ public final class Http {
   /**
    * An HTTP request message.
    */
-  public interface Request {
+  public sealed interface Request {
 
     /**
      * The body of an HTTP request message.
@@ -682,6 +641,49 @@ public final class Http {
      * @return the request-target of this HTTP request message
      */
     Target target();
+
+    // convenience methods
+
+    /**
+     * The value of the path component of the request-target.
+     *
+     * @return value of the path component of the request-target
+     *
+     * @see Http.Request.Target#path()
+     */
+    default String path() {
+      return target().path();
+    }
+
+    /**
+     * Returns the value of the path parameter with the specified name if it
+     * exists or returns {@code null} otherwise.
+     *
+     * @param name
+     *        the name of the path parameter
+     *
+     * @return the value if it exists or {@code null} if it does not
+     *
+     * @see Http.Request.Target#pathParam(String)
+     */
+    default String pathParam(String name) {
+      return target().pathParam(name);
+    }
+
+    /**
+     * Returns the first value of the query parameter with the specified name
+     * or {@code null} if there are no values.
+     *
+     * @param name
+     *        the name of the query parameter
+     *
+     * @return the first value if it exists or {@code null} if it does not
+     *
+     * @see Http.Request.Target#queryParam(String)
+     */
+    default String queryParam(String name) {
+      return target().queryParam(name);
+    }
 
   }
 
