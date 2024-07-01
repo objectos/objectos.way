@@ -109,7 +109,11 @@ final class HtmlCompiler extends HtmlCompilerElements implements Html.Compiler {
     int index;
     index = fragmentBegin();
 
-    fragment.invoke();
+    try {
+      fragment.invoke();
+    } catch (Exception e) {
+      throw new Html.FragmentException(e);
+    }
 
     fragmentEnd(index);
 
@@ -123,7 +127,11 @@ final class HtmlCompiler extends HtmlCompilerElements implements Html.Compiler {
     int index;
     index = fragmentBegin();
 
-    fragment.invoke(arg1);
+    try {
+      fragment.invoke(arg1);
+    } catch (Exception e) {
+      throw new Html.FragmentException(e);
+    }
 
     fragmentEnd(index);
 
@@ -137,7 +145,11 @@ final class HtmlCompiler extends HtmlCompilerElements implements Html.Compiler {
     int index;
     index = fragmentBegin();
 
-    fragment.invoke(arg1, arg2);
+    try {
+      fragment.invoke(arg1, arg2);
+    } catch (Exception e) {
+      throw new Html.FragmentException(e);
+    }
 
     fragmentEnd(index);
 
@@ -151,7 +163,11 @@ final class HtmlCompiler extends HtmlCompilerElements implements Html.Compiler {
     int index;
     index = fragmentBegin();
 
-    fragment.invoke(arg1, arg2, arg3);
+    try {
+      fragment.invoke(arg1, arg2, arg3);
+    } catch (Exception e) {
+      throw new Html.FragmentException(e);
+    }
 
     fragmentEnd(index);
 
@@ -166,7 +182,11 @@ final class HtmlCompiler extends HtmlCompilerElements implements Html.Compiler {
     int index;
     index = fragmentBegin();
 
-    fragment.invoke(arg1, arg2, arg3, arg4);
+    try {
+      fragment.invoke(arg1, arg2, arg3, arg4);
+    } catch (Exception e) {
+      throw new Html.FragmentException(e);
+    }
 
     fragmentEnd(index);
 

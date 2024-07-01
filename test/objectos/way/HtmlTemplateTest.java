@@ -19,8 +19,11 @@ import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertTrue;
 
+import java.io.IOException;
 import objectos.way.Html.ClassName;
+import objectos.way.Html.FragmentException;
 import objectos.way.Html.Id;
+import org.testng.Assert;
 import org.testng.annotations.Test;
 
 public class HtmlTemplateTest {
@@ -1333,6 +1336,69 @@ public class HtmlTemplateTest {
     test(subject, "<div>render</div>\n");
 
     assertTrue(subject.invoked);
+  }
+
+  @Test(description = """
+  Throwing fragment invocation
+  """)
+  public void testCase60() {
+    class Subject extends Html.Template {
+      private final int frag;
+
+      public Subject(int frag) { this.frag = frag; }
+
+      @Override
+      protected final void render() {
+        switch (frag) {
+          case 0 -> div(f(this::fragment0));
+          case 1 -> div(f(this::fragment1, "A"));
+          case 2 -> div(f(this::fragment2, "A", "B"));
+          case 3 -> div(f(this::fragment3, "A", "B", "C"));
+          case 4 -> div(f(this::fragment4, "A", "B", "C", "D"));
+        }
+      }
+
+      private void fragment0() throws IOException {
+        throw new IOException("Fragment0");
+      }
+
+      private void fragment1(String a) throws IOException {
+        throw new IOException(a);
+      }
+
+      private void fragment2(String a, String b) throws IOException {
+        throw new IOException(a + b);
+      }
+
+      private void fragment3(String a, String b, String c) throws IOException {
+        throw new IOException(a + b + c);
+      }
+
+      private void fragment4(String a, String b, String c, String d) throws IOException {
+        throw new IOException(a + b + c + d);
+      }
+    }
+
+    testCase60(new Subject(0), "Fragment0");
+    testCase60(new Subject(1), "A");
+    testCase60(new Subject(2), "AB");
+    testCase60(new Subject(3), "ABC");
+    testCase60(new Subject(4), "ABCD");
+  }
+
+  private void testCase60(Html.Template template, String expectedMessage) {
+    try {
+      template.toString();
+
+      Assert.fail("Should have thrown FragmentException");
+    } catch (FragmentException expected) {
+      Exception cause;
+      cause = expected.getCause();
+
+      assertTrue(cause instanceof IOException);
+
+      assertEquals(cause.getMessage(), expectedMessage);
+    }
   }
 
   private void test(Html.Template template, String expected) {
