@@ -74,6 +74,15 @@ public final class Icons {
 
     /**
      * Renders the
+     * <a href="https://icons.getbootstrap.com/icons/person-vcard/">Person
+     * vcard</a> icon.
+     *
+     * @return the {@code svg} element
+     */
+    Html.ElementInstruction personVcard(Html.Instruction... contents);
+
+    /**
+     * Renders the
      * <a href="https://icons.getbootstrap.com/icons/three-dots/">three-dots</a>
      * icon.
      *
@@ -286,6 +295,14 @@ public final class Icons {
     Html.ElementInstruction home2(Html.Instruction... contents);
 
     /**
+     * Renders the <a href="https://tabler.io/icons/icon/map-pin">map-pin</a>
+     * icon.
+     *
+     * @return the {@code svg} element
+     */
+    Html.ElementInstruction mapPin(Html.Instruction... contents);
+
+    /**
      * Renders the <a href="https://tabler.io/icons/icon/menu">menu</a> icon.
      *
      * @return the {@code svg} element
@@ -305,6 +322,20 @@ public final class Icons {
      * @return the {@code svg} element
      */
     Html.ElementInstruction paw(Html.Instruction... contents);
+
+    /**
+     * Renders the <a href="https://tabler.io/icons/icon/user">phone</a> icon.
+     *
+     * @return the {@code svg} element
+     */
+    Html.ElementInstruction phone(Html.Instruction... contents);
+
+    /**
+     * Renders the <a href="https://tabler.io/icons/icon/user">user</a> icon.
+     *
+     * @return the {@code svg} element
+     */
+    Html.ElementInstruction user(Html.Instruction... contents);
 
     /**
      * Renders the <a href="https://tabler.io/icons/icon/users">users</a> icon.

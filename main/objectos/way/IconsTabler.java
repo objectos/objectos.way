@@ -401,11 +401,16 @@ final class IconsTabler extends Html.Component implements Icons.Tabler {
     );
   }
 
-  /**
-   * Renders the <a href="https://tabler.io/icons/icon/menu">menu</a> icon.
-   *
-   * @return the {@code svg} element
-   */
+  @Override
+  public final Html.ElementInstruction mapPin(Html.Instruction... contents) {
+    return icon(
+        flatten(contents),
+        path(stroke("none"), d("M0 0h24v24H0z"), fill("none")),
+        path(d("M9 11a3 3 0 1 0 6 0a3 3 0 0 0 -6 0")),
+        path(d("M17.657 16.657l-4.243 4.243a2 2 0 0 1 -2.827 0l-4.244 -4.243a8 8 0 1 1 11.314 0z"))
+    );
+  }
+
   @Override
   public final Html.ElementInstruction menu1(Html.Instruction... contents) {
     return icon(
@@ -416,11 +421,6 @@ final class IconsTabler extends Html.Component implements Icons.Tabler {
     );
   }
 
-  /**
-   * Renders the <a href="https://tabler-icons.io/i/menu-2">menu-2</a> icon.
-   *
-   * @return the {@code svg} element
-   */
   @Override
   public final Html.ElementInstruction menu2(Html.Instruction... contents) {
     return icon(
@@ -432,11 +432,6 @@ final class IconsTabler extends Html.Component implements Icons.Tabler {
     );
   }
 
-  /**
-   * Renders the <a href="https://tabler-icons.io/i/paw">paw</a> icon.
-   *
-   * @return the {@code svg} element
-   */
   @Override
   public final Html.ElementInstruction paw(Html.Instruction... contents) {
     // @formatter:off
@@ -452,11 +447,29 @@ final class IconsTabler extends Html.Component implements Icons.Tabler {
     // @formatter:on
   }
 
-  /**
-   * Renders the <a href="https://tabler.io/icons/icon/users">users</a> icon.
-   *
-   * @return the {@code svg} element
-   */
+  @Override
+  public final Html.ElementInstruction phone(Html.Instruction... contents) {
+    // @formatter:off
+    return icon(
+        flatten(contents),
+        path(stroke("none"), d("M0 0h24v24H0z"), fill("none")),
+        path(d("M5 4h4l2 5l-2.5 1.5a11 11 0 0 0 5 5l1.5 -2.5l5 2v4a2 2 0 0 1 -2 2a16 16 0 0 1 -15 -15a2 2 0 0 1 2 -2"))
+    );
+    // @formatter:on
+  }
+
+  @Override
+  public final Html.ElementInstruction user(Html.Instruction... contents) {
+    // @formatter:off
+    return icon(
+        flatten(contents),
+        path(stroke("none"), d("M0 0h24v24H0z"), fill("none")),
+        path(d("M8 7a4 4 0 1 0 8 0a4 4 0 0 0 -8 0")),
+        path(d("M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2"))
+    );
+    // @formatter:on
+  }
+
   @Override
   public final Html.ElementInstruction users(Html.Instruction... contents) {
     // @formatter:off
