@@ -21,7 +21,6 @@ import static org.testng.Assert.assertTrue;
 
 import java.io.IOException;
 import objectos.way.Html.ClassName;
-import objectos.way.Html.FragmentException;
 import objectos.way.Html.Id;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -1390,14 +1389,44 @@ public class HtmlTemplateTest {
     try {
       template.toString();
 
-      Assert.fail("Should have thrown FragmentException");
-    } catch (FragmentException expected) {
+      Assert.fail("Should have thrown RenderingException");
+    } catch (Html.RenderingException expected) {
       Exception cause;
       cause = expected.getCause();
 
       assertTrue(cause instanceof IOException);
 
       assertEquals(cause.getMessage(), expectedMessage);
+    }
+  }
+
+  @Test(description = """
+  Throwing render invocation
+  """)
+  public void testCase61() {
+    final String msg = "thrown by render()";
+
+    class Subject extends Html.Template {
+      @Override
+      protected final void render() throws IOException {
+        throw new IOException(msg);
+      }
+    }
+
+    Subject template;
+    template = new Subject();
+
+    try {
+      template.toString();
+
+      Assert.fail("Should have thrown RenderingException");
+    } catch (Html.RenderingException expected) {
+      Exception cause;
+      cause = expected.getCause();
+
+      assertTrue(cause instanceof IOException);
+
+      assertEquals(cause.getMessage(), msg);
     }
   }
 

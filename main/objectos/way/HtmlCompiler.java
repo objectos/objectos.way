@@ -112,7 +112,7 @@ final class HtmlCompiler extends HtmlCompilerElements implements Html.Compiler {
     try {
       fragment.invoke();
     } catch (Exception e) {
-      throw new Html.FragmentException(e);
+      throw new Html.RenderingException(e);
     }
 
     fragmentEnd(index);
@@ -130,7 +130,7 @@ final class HtmlCompiler extends HtmlCompilerElements implements Html.Compiler {
     try {
       fragment.invoke(arg1);
     } catch (Exception e) {
-      throw new Html.FragmentException(e);
+      throw new Html.RenderingException(e);
     }
 
     fragmentEnd(index);
@@ -148,7 +148,7 @@ final class HtmlCompiler extends HtmlCompilerElements implements Html.Compiler {
     try {
       fragment.invoke(arg1, arg2);
     } catch (Exception e) {
-      throw new Html.FragmentException(e);
+      throw new Html.RenderingException(e);
     }
 
     fragmentEnd(index);
@@ -166,7 +166,7 @@ final class HtmlCompiler extends HtmlCompilerElements implements Html.Compiler {
     try {
       fragment.invoke(arg1, arg2, arg3);
     } catch (Exception e) {
-      throw new Html.FragmentException(e);
+      throw new Html.RenderingException(e);
     }
 
     fragmentEnd(index);
@@ -185,7 +185,7 @@ final class HtmlCompiler extends HtmlCompilerElements implements Html.Compiler {
     try {
       fragment.invoke(arg1, arg2, arg3, arg4);
     } catch (Exception e) {
-      throw new Html.FragmentException(e);
+      throw new Html.RenderingException(e);
     }
 
     fragmentEnd(index);
