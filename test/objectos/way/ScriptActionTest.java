@@ -18,9 +18,39 @@ package objectos.way;
 import static org.testng.Assert.assertEquals;
 
 import objectos.way.Html.Id;
+import objectos.way.Script.Action;
 import org.testng.annotations.Test;
 
 public class ScriptActionTest {
+
+  @Test
+  public void action() {
+    test(
+        new Html.Template() {
+          @Override
+          protected final void render() {
+            Action x = Script.replaceClass(Html.id("x"), "on", "off");
+            Action y = Script.replaceClass(Html.id("y"), "foo", "bar");
+
+            div(
+                dataOnClick(Script.actions())
+            );
+            div(
+                dataOnClick(Script.actions(x))
+            );
+            div(
+                dataOnClick(Script.actions(x, y))
+            );
+          }
+        },
+
+        """
+        <div data-on-click='[]'></div>
+        <div data-on-click='[{"cmd":"replace-class","args":["x","on","off"]}]'></div>
+        <div data-on-click='[{"cmd":"replace-class","args":["x","on","off"]},{"cmd":"replace-class","args":["y","foo","bar"]}]'></div>
+        """
+    );
+  }
 
   @Test
   public void delay() {

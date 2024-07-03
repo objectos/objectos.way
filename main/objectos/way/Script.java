@@ -36,6 +36,35 @@ public final class Script {
 
   private Script() {}
 
+  /**
+   * Returns a new action that executes all of the specified actions in order.
+   *
+   * @param actions
+   *        the actions to be joined into a single action instance
+   *
+   * @return a new action that executes all of the specified actions in order.
+   */
+  public static Action actions(Action... actions) {
+    int len = actions.length; // implicit null check
+
+    if (len == 0) {
+      return Empty.INSTANCE;
+    }
+
+    if (len == 1) {
+      return Check.notNull(actions[0], "actions[0] == null");
+    }
+
+    Action[] copy;
+    copy = new Action[len];
+
+    for (int i = 0; i < len; i++) {
+      copy[i] = Check.notNull(actions[i], "actions[", i, "] == null");
+    }
+
+    return new Joined(copy);
+  }
+
   public static byte[] getBytes() throws IOException {
     URL resource;
     resource = Script.class.getResource("script.js");
@@ -98,8 +127,8 @@ public final class Script {
   }
 
   public static Action replaceClass(Html.Id id,
-                                    Html.ClassName from,
-                                    Html.ClassName to) {
+      Html.ClassName from,
+      Html.ClassName to) {
     Check.notNull(id, "id == null");
     Check.notNull(from, "from == null");
     Check.notNull(to, "to == null");
@@ -108,8 +137,8 @@ public final class Script {
   }
 
   public static Action replaceClass(Html.Id id,
-                                    String from,
-                                    String to) {
+      String from,
+      String to) {
     Check.notNull(id, "id == null");
     Check.notNull(from, "from == null");
     Check.notNull(to, "to == null");

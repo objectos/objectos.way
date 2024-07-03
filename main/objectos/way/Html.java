@@ -719,12 +719,26 @@ public final class Html {
       return $compiler().attribute(HtmlAttributeName.DATA_FRAME, name + ":" + value);
     }
 
+    protected final AttributeInstruction dataOnClick(Script.Action action) {
+      return dataOn(HtmlAttributeName.DATA_ON_CLICK, action);
+    }
+
     protected final AttributeInstruction dataOnClick(Script.Action... actions) {
       return dataOn(HtmlAttributeName.DATA_ON_CLICK, actions);
     }
 
+    protected final AttributeInstruction dataOnInput(Script.Action action) {
+      return dataOn(HtmlAttributeName.DATA_ON_INPUT, action);
+    }
+
     protected final AttributeInstruction dataOnInput(Script.Action... actions) {
       return dataOn(HtmlAttributeName.DATA_ON_INPUT, actions);
+    }
+
+    private final AttributeInstruction dataOn(AttributeName name, Script.Action action) {
+      Check.notNull(action, "action == null");
+
+      return $compiler().attribute(name, action);
     }
 
     private final AttributeInstruction dataOn(AttributeName name, Script.Action... actions) {
