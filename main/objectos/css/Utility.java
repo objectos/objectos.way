@@ -27,7 +27,8 @@ sealed abstract class Utility {
 
   // 672
   static final Utility POINTER_EVENTS = new Single("pointer-events");
-  
+  static final Utility VISIBILITY = new Single("visibility");
+
   // 687
   static final Utility POSITION = new Single("position");
 
@@ -42,7 +43,7 @@ sealed abstract class Utility {
   static final Utility LEFT = new Single("left");
 
   static final Utility Z_INDEX = new Single("z-index");
-  
+
   static final Utility GRID_COLUMN = new Single("grid-column");
   static final Utility GRID_COLUMN_START = new Single("grid-column-start");
   static final Utility GRID_COLUMN_END = new Single("grid-column-end");
@@ -65,19 +66,19 @@ sealed abstract class Utility {
   static final Utility MAX_WIDTH = new Single("max-width");
 
   static final Utility FLEX_GROW = new Single("flex-grow");
-  
+
   // 878
   static final Utility TABLE_LAYOUT = new Single("table-layout");
-  
+
   static final Utility BORDER_COLLAPSE = new Single("border-collapse");
   static final Utility BORDER_SPACING = new Single("border-spacing");
 
   // 1025
   static final Utility CURSOR = new Single("cursor");
-  
+
   // 1078
   static final Utility USER_SELECT = new Single("user-select");
-  
+
   static final Utility GRID_TEMPLATE_COLUMNS = new Single("grid-template-columns");
   static final Utility GRID_TEMPLATE_ROWS = new Single("grid-template-rows");
 
@@ -93,9 +94,9 @@ sealed abstract class Utility {
   static final Utility OVERFLOW = new Single("overflow");
   static final Utility OVERFLOW_X = new Single("overflow-x");
   static final Utility OVERFLOW_Y = new Single("overflow-y");
-  
+
   static final Utility TEXT_WRAP = new Single("text-wrap");
-  
+
   // 1607
   static final Utility BORDER_RADIUS = new Single("border-radius");
   static final Utility BORDER_RADIUS_S = new Axis("border-start-start-radius", "border-end-start-radius");
@@ -112,7 +113,7 @@ sealed abstract class Utility {
   static final Utility BORDER_RADIUS_TR = new Single("border-top-right-radius");
   static final Utility BORDER_RADIUS_BR = new Single("border-bottom-right-radius");
   static final Utility BORDER_RADIUS_BL = new Single("border-bottom-left-radius");
-  
+
   // 1629
   static final Utility BORDER_WIDTH = new Single("border-width");
   static final Utility BORDER_WIDTH_X = new Axis("border-left-width", "border-right-width");

@@ -3015,6 +3015,26 @@ public class StyleGenTest {
   }
 
   @Test
+  public void visibility() {
+    class Subject extends AbstractSubject {
+      @Override
+      final void classes() {
+        className("visible invisible collapse");
+      }
+    }
+
+    test(
+        Subject.class,
+
+        """
+        .visible { visibility: visible }
+        .invisible { visibility: hidden }
+        .collapse { visibility: collapse }
+        """
+    );
+  }
+
+  @Test
   public void width() {
     class Subject extends AbstractSubject {
       @Override

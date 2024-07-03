@@ -79,6 +79,7 @@ import static objectos.css.Utility.TRANSITION_DURATION;
 import static objectos.css.Utility.TRANSITION_PROPERTY;
 import static objectos.css.Utility.USER_SELECT;
 import static objectos.css.Utility.VERTICAL_ALIGN;
+import static objectos.css.Utility.VISIBILITY;
 import static objectos.css.Utility.WIDTH;
 import static objectos.css.Utility.Z_INDEX;
 
@@ -302,6 +303,11 @@ abstract class WayStyleGenParser extends WayStyleGenVariants {
       case "align-text-bottom" -> nameValue(VERTICAL_ALIGN, "text-bottom");
       case "align-sub" -> nameValue(VERTICAL_ALIGN, "sub");
       case "align-super" -> nameValue(VERTICAL_ALIGN, "super");
+
+      // Visibility
+      case "visible" -> nameValue(VISIBILITY, "visible");
+      case "invisible" -> nameValue(VISIBILITY, "hidden");
+      case "collapse" -> nameValue(VISIBILITY, "collapse");
 
       // Others
       default -> prefixWord1(value);
@@ -831,13 +837,13 @@ abstract class WayStyleGenParser extends WayStyleGenVariants {
     if (color != null) {
       return nameValue(STROKE, color);
     }
-    
+
     Map<String, String> strokeWidth;
     strokeWidth = config.strokeWidth();
-    
+
     String width;
     width = strokeWidth.get(suffix);
-    
+
     if (width != null) {
       return nameValue(Utility.STROKE_WIDTH, width);
     }
