@@ -19,7 +19,6 @@
 module objectos.way {
   exports objectos.args;
   exports objectos.css;
-  exports objectos.css.reset;
   exports objectos.css.tmpl;
   exports objectos.io;
   exports objectos.lang;

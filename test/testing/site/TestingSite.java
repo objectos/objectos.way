@@ -16,7 +16,6 @@
 package testing.site;
 
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.FileSystem;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
@@ -28,7 +27,6 @@ import objectos.args.CommandLineException;
 import objectos.args.EnumOption;
 import objectos.args.IntegerOption;
 import objectos.args.PathOption;
-import objectos.css.reset.Preflight;
 import objectos.lang.WayShutdownHook;
 import objectos.lang.classloader.ClassReloader;
 import objectos.notes.Level;
@@ -148,11 +146,6 @@ public class TestingSite {
 
       Path common;
       common = Path.of("common");
-
-      Preflight preflight;
-      preflight = new Preflight();
-
-      webResources.createNew(common.resolve("preflight.css"), preflight.toString().getBytes(StandardCharsets.UTF_8));
 
       webResources.createNew(common.resolve("way.js"), Script.getBytes());
     } catch (IOException e) {
