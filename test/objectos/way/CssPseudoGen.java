@@ -28,7 +28,7 @@ public class CssPseudoGen {
     CssPseudoGen gen;
     gen = new CssPseudoGen();
 
-    gen.classNamesColors("stroke");
+    gen.executeMethod("Visibility", "visibility", VISIBILITY);
   }
 
   private static final Map<String, String> SCREENS = seqmap(
@@ -327,14 +327,14 @@ public class CssPseudoGen {
   );
 
   static final Map<String, String> JUSTIFY_CONTENT = seqmap(
-      kv("normal", "normal"),
-      kv("start", "flex-start"),
-      kv("end", "flex-end"),
-      kv("center", "center"),
-      kv("between", "space-between"),
-      kv("around", "space-around"),
-      kv("evenly", "space-evenly"),
-      kv("stretch", "stretch")
+      kv("justify-normal", "normal"),
+      kv("justify-start", "flex-start"),
+      kv("justify-end", "flex-end"),
+      kv("justify-center", "center"),
+      kv("justify-between", "space-between"),
+      kv("justify-around", "space-around"),
+      kv("justify-evenly", "space-evenly"),
+      kv("justify-stretch", "stretch")
   );
 
   static final Map<String, String> LETTER_SPACING = seqmap(
@@ -473,17 +473,17 @@ public class CssPseudoGen {
   );
 
   static final Map<String, String> TABLE_LAYOUT = seqmap(
-      kv("auto", "auto"),
-      kv("fixed", "fixed")
+      kv("table-auto", "auto"),
+      kv("table-fixed", "fixed")
   );
 
   static final Map<String, String> TEXT_ALIGN = seqmap(
-      kv("left", "left"),
-      kv("center", "center"),
-      kv("right", "right"),
-      kv("justify", "justify"),
-      kv("start", "start"),
-      kv("end", "end")
+      kv("text-left", "left"),
+      kv("text-center", "center"),
+      kv("text-right", "right"),
+      kv("text-justify", "justify"),
+      kv("text-start", "start"),
+      kv("text-end", "end")
   );
 
   static final Map<String, String> TEXT_DECORATION = seqmap(
@@ -494,10 +494,10 @@ public class CssPseudoGen {
   );
 
   static final Map<String, String> TEXT_WRAP = seqmap(
-      kv("wrap", "wrap"),
-      kv("nowrap", "nowrap"),
-      kv("balance", "balance"),
-      kv("pretty", "pretty")
+      kv("text-wrap", "wrap"),
+      kv("text-nowrap", "nowrap"),
+      kv("text-balance", "balance"),
+      kv("text-pretty", "pretty")
   );
 
   static final Map<String, String> TRANSITION_DURATION = seqmap(
@@ -513,21 +513,27 @@ public class CssPseudoGen {
   );
 
   static final Map<String, String> USER_SELECT = seqmap(
-      kv("none", "none"),
-      kv("text", "text"),
-      kv("all", "all"),
-      kv("auto", "auto")
+      kv("select-none", "none"),
+      kv("select-text", "text"),
+      kv("select-all", "all"),
+      kv("select-auto", "auto")
   );
 
   static final Map<String, String> VERTICAL_ALIGN = seqmap(
-      kv("baseline", "baseline"),
-      kv("top", "top"),
-      kv("middle", "middle"),
-      kv("bottom", "bottom"),
-      kv("text-top", "text-top"),
-      kv("text-bottom", "text-bottom"),
-      kv("sub", "sub"),
-      kv("super", "super")
+      kv("align-baseline", "baseline"),
+      kv("align-top", "top"),
+      kv("align-middle", "middle"),
+      kv("align-bottom", "bottom"),
+      kv("align-text-top", "text-top"),
+      kv("align-text-bottom", "text-bottom"),
+      kv("align-sub", "sub"),
+      kv("align-super", "super")
+  );
+
+  static final Map<String, String> VISIBILITY = seqmap(
+      kv("visible", "visible"),
+      kv("invisible", "hidden"),
+      kv("collapse", "collapse")
   );
 
   static final Map<String, String> WIDTH = seqmap(
@@ -577,6 +583,71 @@ public class CssPseudoGen {
       kv("50", "50"),
       kv("auto", "auto")
   );
+
+  final void executeMethod(String methodNameSuffix, String propertyName, Map<String, String> properties) {
+    System.out.println("""
+    private Object execute%s(CssKey key, CssAction action, Object arg) {
+      return switch (action) {
+        case CONFIG_STATIC_TABLE -> staticTable()%s
+
+        default -> error(key, action, arg);
+      };
+    }
+    """.formatted(methodNameSuffix, executeMethodRules(propertyName, properties)));
+  }
+
+  private String executeMethodRules(String propertyName, Map<String, String> properties) {
+    StringBuilder sb;
+    sb = new StringBuilder();
+
+    for (Map.Entry<String, String> entry : properties.entrySet()) {
+      sb.append("\n");
+      sb.append("        .rule(key, \"");
+      sb.append(entry.getKey());
+      sb.append("\", \"");
+      sb.append(propertyName);
+      sb.append(": ");
+      sb.append(entry.getValue());
+      sb.append("\")");
+    }
+
+    sb.append(";");
+
+    return sb.toString();
+  }
+
+  final void executeMethod(String methodNameSuffix, String propertyName, Map<String, String> properties, String prefix) {
+    System.out.println("""
+    private Object execute%s(CssKey key, CssAction action, Object arg) {
+      return switch (action) {
+        case CONFIG_STATIC_TABLE -> staticTable()%s
+
+        default -> error(key, action, arg);
+      };
+    }
+    """.formatted(methodNameSuffix, executeMethodRules(propertyName, properties, prefix)));
+  }
+
+  private String executeMethodRules(String propertyName, Map<String, String> properties, String prefix) {
+    StringBuilder sb;
+    sb = new StringBuilder();
+
+    for (Map.Entry<String, String> entry : properties.entrySet()) {
+      sb.append("\n");
+      sb.append("        .rule(key, \"");
+      sb.append(prefix);
+      sb.append(entry.getKey());
+      sb.append("\", \"");
+      sb.append(propertyName);
+      sb.append(": ");
+      sb.append(entry.getValue());
+      sb.append("\")");
+    }
+
+    sb.append(";");
+
+    return sb.toString();
+  }
 
   final void cases(Map<String, String> map, String kind, String prefix) {
     for (var entry : map.entrySet()) {
