@@ -190,34 +190,26 @@ final class CssGenerator extends CssGeneratorConfig {
     return this;
   }
 
-  @SafeVarargs
-  @SuppressWarnings("varargs")
-  public final CssGenerator overrideContent(Map.Entry<String, String>... entries) {
-    content = Map.ofEntries(entries);
+  public final CssGenerator overrideContent(Map<String, String> map) {
+    content = map;
 
     return this;
   }
 
-  @SafeVarargs
-  @SuppressWarnings("varargs")
-  public final CssGenerator overrideFontSize(Map.Entry<String, String>... entries) {
-    fontSize = Map.ofEntries(entries);
+  public final CssGenerator overrideFontSize(Map<String, String> map) {
+    fontSize = map;
 
     return this;
   }
 
-  @SafeVarargs
-  @SuppressWarnings("varargs")
-  public final CssGenerator overrideGridTemplateRows(Map.Entry<String, String>... entries) {
-    gridTemplateRows = Map.ofEntries(entries);
+  public final CssGenerator overrideGridTemplateRows(Map<String, String> map) {
+    gridTemplateRows = map;
 
     return this;
   }
 
-  @SafeVarargs
-  @SuppressWarnings("varargs")
-  public final CssGenerator overrideSpacing(Map.Entry<String, String>... entries) {
-    spacing = Map.ofEntries(entries);
+  public final CssGenerator overrideSpacing(Map<String, String> map) {
+    spacing = map;
 
     return this;
   }

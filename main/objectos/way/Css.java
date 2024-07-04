@@ -26,7 +26,8 @@ import objectos.notes.NoteSink;
 public final class Css {
 
   /**
-   * Generates a style sheet by scanning Java class files for CSS utilities.
+   * Generates a style sheet by scanning Java class files for predefined CSS
+   * utility class names.
    */
   public sealed interface Generator permits CssGeneratorRound {
 
@@ -34,6 +35,11 @@ public final class Css {
      * The set of classes to scan.
      */
     public sealed interface Classes permits CssGeneratorOption {}
+
+    /**
+     * A key-value pair used to configure a generator.
+     */
+    public sealed interface KeyValue extends Map.Entry<String, String> permits CssGeneratorKeyValue {}
 
     /**
      * A style sheet generation option.
@@ -56,8 +62,6 @@ public final class Css {
     byte[] toByteArray();
 
   }
-
-  // private types
 
   private Css() {}
 
@@ -95,6 +99,23 @@ public final class Css {
 
   // options
 
+  /**
+   * Creates a new key-value pair.
+   *
+   * @param key
+   *        the key of the new key-value pair
+   * @param value
+   *        the value of the new key-value pair
+   *
+   * @return a new key-value pair
+   */
+  public static Generator.KeyValue kv(String key, String value) {
+    Check.notNull(key, "key == null");
+    Check.notNull(value, "value == null");
+
+    return new CssGeneratorKeyValue(key, value);
+  }
+
   public static Generator.Classes classes(Class<?>... values) {
     Set<Class<?>> set;
     set = Set.of(values);
@@ -118,9 +139,7 @@ public final class Css {
     };
   }
 
-  @SafeVarargs
-  @SuppressWarnings("unchecked")
-  public static Generator.Option overrideColors(Map.Entry<String, String>... entries) {
+  public static Generator.Option overrideColors(Generator.KeyValue... entries) {
     Map<String, String> map;
     map = Map.ofEntries(entries);
 
@@ -132,54 +151,50 @@ public final class Css {
     };
   }
 
-  @SafeVarargs
-  @SuppressWarnings("unchecked")
-  public static Generator.Option overrideContent(Map.Entry<String, String>... entries) {
-    Check.notNull(entries, "entries == null");
+  public static Generator.Option overrideContent(Generator.KeyValue... entries) {
+    Map<String, String> map;
+    map = Map.ofEntries(entries);
 
     return new CssGeneratorOption() {
       @Override
       final void acceptCssGenerator(CssGenerator config) {
-        config.overrideContent(entries);
+        config.overrideContent(map);
       }
     };
   }
 
-  @SafeVarargs
-  @SuppressWarnings("unchecked")
-  public static Generator.Option overrideFontSize(Map.Entry<String, String>... entries) {
-    Check.notNull(entries, "entries == null");
+  public static Generator.Option overrideFontSize(Generator.KeyValue... entries) {
+    Map<String, String> map;
+    map = Map.ofEntries(entries);
 
     return new CssGeneratorOption() {
       @Override
       final void acceptCssGenerator(CssGenerator config) {
-        config.overrideFontSize(entries);
+        config.overrideFontSize(map);
       }
     };
   }
 
-  @SafeVarargs
-  @SuppressWarnings("unchecked")
-  public static Generator.Option overrideGridTemplateRows(Map.Entry<String, String>... entries) {
-    Check.notNull(entries, "entries == null");
+  public static Generator.Option overrideGridTemplateRows(Generator.KeyValue... entries) {
+    Map<String, String> map;
+    map = Map.ofEntries(entries);
 
     return new CssGeneratorOption() {
       @Override
       final void acceptCssGenerator(CssGenerator config) {
-        config.overrideGridTemplateRows(entries);
+        config.overrideGridTemplateRows(map);
       }
     };
   }
 
-  @SafeVarargs
-  @SuppressWarnings("unchecked")
-  public static Generator.Option overrideSpacing(Map.Entry<String, String>... entries) {
-    Check.notNull(entries, "entries == null");
+  public static Generator.Option overrideSpacing(Generator.KeyValue... entries) {
+    Map<String, String> map;
+    map = Map.ofEntries(entries);
 
     return new CssGeneratorOption() {
       @Override
       final void acceptCssGenerator(CssGenerator config) {
-        config.overrideSpacing(entries);
+        config.overrideSpacing(map);
       }
     };
   }
@@ -217,9 +232,7 @@ public final class Css {
     };
   }
 
-  @SafeVarargs
-  @SuppressWarnings("unchecked")
-  public static Generator.Option variants(Map.Entry<String, String>... entries) {
+  public static Generator.Option variants(Generator.KeyValue... entries) {
     Map<String, String> map;
     map = Map.ofEntries(entries);
 

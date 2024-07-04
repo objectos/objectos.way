@@ -18,8 +18,6 @@ package objectos.way;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
 
-import java.util.Map;
-import java.util.Map.Entry;
 import org.testng.annotations.Test;
 
 public class CssGeneratorTest {
@@ -3344,8 +3342,8 @@ public class CssGeneratorTest {
 
     test(
         Css.variants(
-            Map.entry("thead", "& thead"),
-            Map.entry("tr", "& tr")
+            Css.kv("thead", "& thead"),
+            Css.kv("tr", "& tr")
         ),
 
         Subject.class,
@@ -3369,7 +3367,7 @@ public class CssGeneratorTest {
 
     test(
         Css.overrideColors(
-            Map.entry("border-subtle", "var(--ui-border-subtle)")
+            Css.kv("border-subtle", "var(--ui-border-subtle)")
         ),
 
         Subject.class,
@@ -3391,8 +3389,8 @@ public class CssGeneratorTest {
 
     test(
         Css.overrideContent(
-            Map.entry("empty", "\"\""),
-            Map.entry("foo", "url(foo.png)")
+            Css.kv("empty", "\"\""),
+            Css.kv("foo", "url(foo.png)")
         ),
 
         Subject.class,
@@ -3415,9 +3413,9 @@ public class CssGeneratorTest {
 
     test(
         Css.overrideFontSize(
-            Map.entry("sm", "0.8rem"),
-            Map.entry("base", "16px/24px"),
-            Map.entry("body-compact-01", """
+            Css.kv("sm", "0.8rem"),
+            Css.kv("base", "16px/24px"),
+            Css.kv("body-compact-01", """
             font-size: var(--ui-body-compact-01-font-size, 0.875rem);
             font-weight: var(--ui-body-compact-01-font-weight, 400);
             line-height: var(--ui-body-compact-01-line-height, 1.28572);
@@ -3451,7 +3449,7 @@ public class CssGeneratorTest {
 
     test(
         Css.overrideGridTemplateRows(
-            Map.entry("foo", "48px auto")
+            Css.kv("foo", "48px auto")
         ),
 
         Subject.class,
@@ -3473,7 +3471,7 @@ public class CssGeneratorTest {
 
     test(
         Css.overrideSpacing(
-            Map.entry("0px", "0px"),
+            Css.kv("0px", "0px"),
             px(1), px(2), px(4),
             px(16)
         ),
@@ -3535,7 +3533,7 @@ public class CssGeneratorTest {
     );
   }
 
-  private Entry<String, String> px(int value) {
+  private Css.Generator.KeyValue px(int value) {
     String px;
     px = Integer.toString(value) + "px";
 
@@ -3550,16 +3548,16 @@ public class CssGeneratorTest {
       rem = Double.toString(remValue) + "rem";
     }
 
-    return Map.entry(px, rem);
+    return Css.kv(px, rem);
   }
 
   private static final Css.Generator.Option COLORS = Css.overrideColors(
-      Map.entry("inherit", "inherit"),
-      Map.entry("current", "currentColor"),
-      Map.entry("transparent", "transparent"),
+      Css.kv("inherit", "inherit"),
+      Css.kv("current", "currentColor"),
+      Css.kv("transparent", "transparent"),
 
-      Map.entry("black", "#000000"),
-      Map.entry("white", "#ffffff")
+      Css.kv("black", "#000000"),
+      Css.kv("white", "#ffffff")
   );
 
   private void test(Class<?> type, String expected) {

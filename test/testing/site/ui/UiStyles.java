@@ -15,8 +15,6 @@
  */
 package testing.site.ui;
 
-import java.util.Map;
-import java.util.Map.Entry;
 import objectos.notes.NoteSink;
 import objectos.way.Css;
 import objectos.way.Css.StyleSheet;
@@ -69,34 +67,34 @@ final class UiStyles implements Http.Handler {
         """),
 
         Css.overrideColors(
-            Map.entry("transparent", "transparent"),
-            Map.entry("background", "var(--cds-background)"),
-            Map.entry("background-active", "var(--cds-background-active)"),
-            Map.entry("background-hover", "var(--cds-background-hover)"),
-            Map.entry("border-subtle", "var(--cds-border-subtle)"),
-            Map.entry("focus", "var(--cds-focus)"),
-            Map.entry("icon-primary", "var(--cds-icon-primary)"),
-            Map.entry("icon-secondary", "var(--cds-icon-secondary)"),
-            Map.entry("layer", "var(--cds-layer)"),
-            Map.entry("overlay", "var(--cds-overlay)"),
-            Map.entry("text-primary", "var(--cds-text-primary)"),
-            Map.entry("text-secondary", "var(--cds-text-secondary)")
+            Css.kv("transparent", "transparent"),
+            Css.kv("background", "var(--cds-background)"),
+            Css.kv("background-active", "var(--cds-background-active)"),
+            Css.kv("background-hover", "var(--cds-background-hover)"),
+            Css.kv("border-subtle", "var(--cds-border-subtle)"),
+            Css.kv("focus", "var(--cds-focus)"),
+            Css.kv("icon-primary", "var(--cds-icon-primary)"),
+            Css.kv("icon-secondary", "var(--cds-icon-secondary)"),
+            Css.kv("layer", "var(--cds-layer)"),
+            Css.kv("overlay", "var(--cds-overlay)"),
+            Css.kv("text-primary", "var(--cds-text-primary)"),
+            Css.kv("text-secondary", "var(--cds-text-secondary)")
         ),
 
         Css.overrideContent(
-            Map.entry("none", "none"),
-            Map.entry("empty", "\"\"")
+            Css.kv("none", "none"),
+            Css.kv("empty", "\"\"")
         ),
 
         Css.overrideFontSize(
-            Map.entry("body-compact-01", """
+            Css.kv("body-compact-01", """
                 font-size: var(--cds-body-compact-01-font-size, 0.875rem);
                 font-weight: var(--cds-body-compact-01-font-weight, 400);
                 line-height: var(--cds-body-compact-01-line-height, 1.28572);
                 letter-spacing: var(--cds-body-compact-01-letter-spacing, 0.16px);
                 """),
 
-            Map.entry("heading-compact-01", """
+            Css.kv("heading-compact-01", """
                 font-size: var(--cds-heading-compact-01-font-size, 0.875rem);
                 font-weight: var(--cds-heading-compact-01-font-weight, 600);
                 line-height: var(--cds-heading-compact-01-line-height, 1.28572);
@@ -105,7 +103,7 @@ final class UiStyles implements Http.Handler {
         ),
 
         Css.overrideSpacing(
-            Map.entry("0px", "0px"),
+            Css.kv("0px", "0px"),
             px(1), px(2), px(4), px(6), px(8),
             px(10), px(12), px(14), px(16),
             px(20), px(24), px(28),
@@ -135,7 +133,7 @@ final class UiStyles implements Http.Handler {
     http.send(bytes);
   }
 
-  private Entry<String, String> px(int value) {
+  private Css.Generator.KeyValue px(int value) {
     String px;
     px = Integer.toString(value) + "px";
 
@@ -150,7 +148,7 @@ final class UiStyles implements Http.Handler {
       rem = Double.toString(remValue);
     }
 
-    return Map.entry(px, rem + "rem");
+    return Css.kv(px, rem + "rem");
   }
 
 }
