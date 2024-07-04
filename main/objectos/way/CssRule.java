@@ -13,24 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.css;
+package objectos.way;
 
 import java.util.Collections;
 import java.util.List;
-import objectos.css.Variant.MediaQuery;
-import objectos.css.WayStyleGenRound.Context;
+import objectos.way.CssVariant.MediaQuery;
+import objectos.way.CssGeneratorRound.Context;
 
-class Rule implements Comparable<Rule> {
+class CssRule implements Comparable<CssRule> {
 
-  public static final Rule NOOP = new Rule(-1, "", List.of());
+  public static final CssRule NOOP = new CssRule(-1, "", List.of());
 
   final int index;
 
   final String className;
 
-  final List<Variant> variants;
+  final List<CssVariant> variants;
 
-  Rule(int index, String className, List<Variant> variants) {
+  CssRule(int index, String className, List<CssVariant> variants) {
     this.index = index;
 
     this.className = className;
@@ -38,12 +38,12 @@ class Rule implements Comparable<Rule> {
     this.variants = variants;
   }
 
-  public final void accept(WayStyleGenRound gen) {
+  public final void accept(CssGeneratorRound gen) {
     Context context;
     context = null;
 
     for (int i = 0, size = variants.size(); i < size; i++) {
-      Variant variant;
+      CssVariant variant;
       variant = variants.get(i);
 
       if (!(variant instanceof MediaQuery query)) {
@@ -65,7 +65,7 @@ class Rule implements Comparable<Rule> {
   }
 
   @Override
-  public final int compareTo(Rule o) {
+  public final int compareTo(CssRule o) {
     int result;
     result = Integer.compare(index, o.index);
 
@@ -73,10 +73,10 @@ class Rule implements Comparable<Rule> {
       return result;
     }
 
-    Variant thisMax;
+    CssVariant thisMax;
     thisMax = max();
 
-    Variant thatMax;
+    CssVariant thatMax;
     thatMax = o.max();
 
     if (thisMax == null && thatMax == null) {
@@ -94,7 +94,7 @@ class Rule implements Comparable<Rule> {
     return thisMax.compareTo(thatMax);
   }
 
-  final Variant max() {
+  final CssVariant max() {
     return switch (variants.size()) {
       case 0 -> null;
 
@@ -109,7 +109,7 @@ class Rule implements Comparable<Rule> {
     return className;
   }
 
-  public final void writeTo(StringBuilder out, Indentation indentation) {
+  public final void writeTo(StringBuilder out, CssIndentation indentation) {
     indentation.writeTo(out);
 
     int startIndex;
@@ -117,8 +117,8 @@ class Rule implements Comparable<Rule> {
 
     writeClassName(out);
 
-    for (Variant variant : variants) {
-      if (variant instanceof Variant.ClassNameVariant cnv) {
+    for (CssVariant variant : variants) {
+      if (variant instanceof CssVariant.ClassNameVariant cnv) {
         cnv.writeClassName(out, startIndex);
       }
     }
@@ -128,7 +128,7 @@ class Rule implements Comparable<Rule> {
     out.append(System.lineSeparator());
   }
 
-  void writeBlock(StringBuilder out, Indentation indentation) {
+  void writeBlock(StringBuilder out, CssIndentation indentation) {
     out.append(" { ");
 
     writeProperties(out);

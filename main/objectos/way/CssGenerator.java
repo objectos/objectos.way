@@ -13,20 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.css;
+package objectos.way;
 
 import java.util.List;
 import java.util.Map;
-import objectos.css.Variant.AppendTo;
-import objectos.css.Variant.Breakpoint;
+import java.util.Set;
 import objectos.lang.object.Check;
 import objectos.notes.NoOpNoteSink;
 import objectos.notes.NoteSink;
 import objectos.util.map.GrowableMap;
+import objectos.way.CssVariant.AppendTo;
+import objectos.way.CssVariant.Breakpoint;
 
-public final class WayStyleGen extends WayStyleGenConfig implements StyleGen {
+final class CssGenerator extends CssGeneratorConfig {
 
-  private NoteSink noteSink = NoOpNoteSink.of();
+  Set<Class<?>> classes;
+
+  NoteSink noteSink = NoOpNoteSink.of();
 
   private final List<Breakpoint> breakpoints = List.of(
       new Breakpoint(0, "sm", "640px"),
@@ -39,7 +42,7 @@ public final class WayStyleGen extends WayStyleGenConfig implements StyleGen {
   private Map<String, String> borderSpacing;
 
   private Map<String, String> borderRadius;
-  
+
   private Map<String, String> borderWidth;
 
   private Map<String, String> colors;
@@ -96,13 +99,13 @@ public final class WayStyleGen extends WayStyleGenConfig implements StyleGen {
 
   private Map<String, String> utilities;
 
-  private Map<String, Variant> variants;
+  private Map<String, CssVariant> variants;
 
   private Map<String, String> width;
 
   private Map<String, String> zIndex;
 
-  public WayStyleGen() {
+  public CssGenerator() {
     // L
     letterSpacing = new GrowableMap<>();
     letterSpacing.put("tighter", "-0.05em");
@@ -129,20 +132,19 @@ public final class WayStyleGen extends WayStyleGenConfig implements StyleGen {
     lineHeight.put("loose", "2");
   }
 
-  public final WayStyleGen addRule(String selector, String contents) {
-    Check.notNull(selector, "selector == null");
-    Check.notNull(contents, "contents == null");
+  public final void classes(Set<Class<?>> set) {
+    classes = set;
+  }
 
+  public final void addRule(String selector, String contents) {
     if (rules == null) {
       rules = new GrowableMap<>();
     }
 
     rules.put(selector, contents);
-
-    return this;
   }
 
-  public final WayStyleGen addUtility(String className, String rule) {
+  public final CssGenerator addUtility(String className, String rule) {
     Check.notNull(className, "className == null");
     Check.notNull(rule, "rule == null");
 
@@ -155,18 +157,18 @@ public final class WayStyleGen extends WayStyleGenConfig implements StyleGen {
     return this;
   }
 
-  public final WayStyleGen addVariant(String variantName, String formatString) {
+  public final CssGenerator addVariant(String variantName, String formatString) {
     Check.notNull(variantName, "variantName == null");
     Check.notNull(formatString, "formatString == null");
 
-    Variant variant;
-    variant = Variant.parse(formatString);
+    CssVariant variant;
+    variant = CssVariant.parse(formatString);
 
-    if (variant instanceof Variant.Invalid invalid) {
+    if (variant instanceof CssVariant.Invalid invalid) {
       throw new IllegalArgumentException("Invalid formatString: " + invalid.reason());
     }
 
-    Map<String, Variant> map;
+    Map<String, CssVariant> map;
     map = variants();
 
     if (map.containsKey(variantName)) {
@@ -178,23 +180,19 @@ public final class WayStyleGen extends WayStyleGenConfig implements StyleGen {
     return this;
   }
 
-  public final WayStyleGen noteSink(NoteSink noteSink) {
-    this.noteSink = Check.notNull(noteSink, "noteSink == null");
+  public final void noteSink(NoteSink noteSink) {
+    this.noteSink = noteSink;
+  }
+
+  public final CssGenerator overrideColors(Map<String, String> map) {
+    colors = map;
 
     return this;
   }
 
   @SafeVarargs
   @SuppressWarnings("varargs")
-  public final WayStyleGen overrideColors(Map.Entry<String, String>... entries) {
-    colors = Map.ofEntries(entries);
-
-    return this;
-  }
-
-  @SafeVarargs
-  @SuppressWarnings("varargs")
-  public final WayStyleGen overrideContent(Map.Entry<String, String>... entries) {
+  public final CssGenerator overrideContent(Map.Entry<String, String>... entries) {
     content = Map.ofEntries(entries);
 
     return this;
@@ -202,7 +200,7 @@ public final class WayStyleGen extends WayStyleGenConfig implements StyleGen {
 
   @SafeVarargs
   @SuppressWarnings("varargs")
-  public final WayStyleGen overrideFontSize(Map.Entry<String, String>... entries) {
+  public final CssGenerator overrideFontSize(Map.Entry<String, String>... entries) {
     fontSize = Map.ofEntries(entries);
 
     return this;
@@ -210,7 +208,7 @@ public final class WayStyleGen extends WayStyleGenConfig implements StyleGen {
 
   @SafeVarargs
   @SuppressWarnings("varargs")
-  public final WayStyleGen overrideGridTemplateRows(Map.Entry<String, String>... entries) {
+  public final CssGenerator overrideGridTemplateRows(Map.Entry<String, String>... entries) {
     gridTemplateRows = Map.ofEntries(entries);
 
     return this;
@@ -218,7 +216,7 @@ public final class WayStyleGen extends WayStyleGenConfig implements StyleGen {
 
   @SafeVarargs
   @SuppressWarnings("varargs")
-  public final WayStyleGen overrideSpacing(Map.Entry<String, String>... entries) {
+  public final CssGenerator overrideSpacing(Map.Entry<String, String>... entries) {
     spacing = Map.ofEntries(entries);
 
     return this;
@@ -228,12 +226,11 @@ public final class WayStyleGen extends WayStyleGenConfig implements StyleGen {
     skipReset = true;
   }
 
-  @Override
-  public final String generate(Iterable<Class<?>> classes) {
+  public final String generate() {
     Check.notNull(classes, "classes == null");
 
-    WayStyleGenRound round;
-    round = new WayStyleGenRound(this);
+    CssGeneratorRound round;
+    round = new CssGeneratorRound(this);
 
     round.noteSink = noteSink;
 
@@ -250,7 +247,7 @@ public final class WayStyleGen extends WayStyleGenConfig implements StyleGen {
   }
 
   @Override
-  final Variant getVariant(String variantName) {
+  final CssVariant getVariant(String variantName) {
     return variants().get(variantName);
   }
 
@@ -1071,7 +1068,7 @@ public final class WayStyleGen extends WayStyleGenConfig implements StyleGen {
       stroke.put("none", "none");
       stroke.putAll(colors());
     }
-    
+
     return stroke;
   }
 
@@ -1165,7 +1162,7 @@ public final class WayStyleGen extends WayStyleGenConfig implements StyleGen {
     return utilities;
   }
 
-  private Map<String, Variant> variants() {
+  private Map<String, CssVariant> variants() {
     if (variants == null) {
       variants = new GrowableMap<>();
 

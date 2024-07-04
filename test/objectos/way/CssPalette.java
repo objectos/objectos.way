@@ -13,12 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.css;
+package objectos.way;
 
 import java.util.Map;
 import objectos.util.map.GrowableSequencedMap;
 
-public class Palette {
+public class CssPalette {
 
   static final Map<String, String> DEFAULT;
 
@@ -302,12 +302,12 @@ public class Palette {
 
   private final Map<String, String> colors;
 
-  private Palette(Map<String, String> colors) {
+  private CssPalette(Map<String, String> colors) {
     this.colors = colors;
   }
 
-  public static Palette defaultPalette() {
-    return new Palette(DEFAULT);
+  public static CssPalette defaultPalette() {
+    return new CssPalette(DEFAULT);
   }
 
   final String get(String className) {

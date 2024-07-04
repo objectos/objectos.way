@@ -13,25 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.css;
+package objectos.way;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertSame;
 
 import java.util.List;
-import objectos.css.Variant.Breakpoint;
+import objectos.way.CssVariant.Breakpoint;
 import org.testng.annotations.Test;
 
-public class WayStyleGenVariantsTest {
+public class CssGeneratorVariantsTest {
 
-  private final Variant sm = new Breakpoint(0, "0", "640px");
+  private final CssVariant sm = new Breakpoint(0, "0", "640px");
 
   @Test(description = "single responsive variant")
   public void testCase01() {
     Impl impl;
     impl = new Impl();
 
-    Rule rule;
+    CssRule rule;
     rule = impl.onCacheMiss("sm:block");
 
     ThisRule result;
@@ -39,7 +39,7 @@ public class WayStyleGenVariantsTest {
 
     assertEquals(result.className, "sm:block");
 
-    List<Variant> variants;
+    List<CssVariant> variants;
     variants = result.variants;
 
     assertEquals(variants, List.of(sm));
@@ -52,16 +52,16 @@ public class WayStyleGenVariantsTest {
     Impl impl;
     impl = new Impl();
 
-    Rule rule;
+    CssRule rule;
     rule = impl.onCacheMiss("xyz:block");
 
-    assertSame(rule, Rule.NOOP);
+    assertSame(rule, CssRule.NOOP);
   }
 
-  private class Impl extends WayStyleGenVariants {
+  private class Impl extends CssGeneratorVariants {
 
     @Override
-    final Variant getVariant(String variantName) {
+    final CssVariant getVariant(String variantName) {
       return switch (variantName) {
         case "sm" -> sm;
 
@@ -70,17 +70,17 @@ public class WayStyleGenVariantsTest {
     }
 
     @Override
-    final Rule onVariants(String className, List<Variant> variants, String value) {
+    final CssRule onVariants(String className, List<CssVariant> variants, String value) {
       return new ThisRule(className, variants, value);
     }
 
   }
 
-  private static class ThisRule extends Rule {
+  private static class ThisRule extends CssRule {
 
     final String value;
 
-    ThisRule(String className, List<Variant> variants, String value) {
+    ThisRule(String className, List<CssVariant> variants, String value) {
       super(0, className, variants);
 
       this.value = value;

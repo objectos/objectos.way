@@ -13,22 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.css;
+package objectos.way;
 
 import java.util.Map;
 import objectos.util.map.GrowableSequencedMap;
 
-abstract class WayStyleGenCache extends WayStyleGenSplitter {
+abstract class CssGeneratorCache extends CssGeneratorSplitter {
 
-  final Map<String, Rule> rules = new GrowableSequencedMap<>();
+  final Map<String, CssRule> rules = new GrowableSequencedMap<>();
 
   @Override
   final void onSplit(String s) {
-    Rule existing;
+    CssRule existing;
     existing = rules.get(s);
 
     if (existing == null) {
-      Rule newRule;
+      CssRule newRule;
       newRule = onCacheMiss(s);
 
       rules.put(s, newRule);
@@ -39,10 +39,10 @@ abstract class WayStyleGenCache extends WayStyleGenSplitter {
     }
   }
 
-  void onCacheHit(Rule existing) {
+  void onCacheHit(CssRule existing) {
     // for testing
   }
 
-  abstract Rule onCacheMiss(String className);
+  abstract CssRule onCacheMiss(String className);
 
 }

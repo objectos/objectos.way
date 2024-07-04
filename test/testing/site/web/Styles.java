@@ -15,10 +15,8 @@
  */
 package testing.site.web;
 
-import java.nio.charset.StandardCharsets;
-import java.util.Set;
-import objectos.css.WayStyleGen;
 import objectos.notes.NoteSink;
+import objectos.way.Css;
 import objectos.way.Http;
 import testing.zite.TestingSiteInjector;
 
@@ -32,25 +30,22 @@ final class Styles implements Http.Handler {
 
   @Override
   public final void handle(Http.Exchange http) {
-    WayStyleGen styleGen;
-    styleGen = new WayStyleGen();
+    Css.StyleSheet s = Css.generateStyleSheet(
+        Css.classes(
+            Login.class, ShellHeader.class
+        ),
 
-    styleGen.noteSink(noteSink);
-
-    Set<Class<?>> classes;
-    classes = Set.of(Login.class, ShellHeader.class);
-
-    String s;
-    s = styleGen.generate(classes);
+        Css.noteSink(noteSink)
+    );
 
     byte[] bytes;
-    bytes = s.getBytes(StandardCharsets.UTF_8);
+    bytes = s.toByteArray();
 
     http.status(Http.OK);
 
     http.dateNow();
 
-    http.header(Http.CONTENT_TYPE, "text/css; charset=utf-8");
+    http.header(Http.CONTENT_TYPE, s.contentType());
 
     http.header(Http.CONTENT_LENGTH, bytes.length);
 

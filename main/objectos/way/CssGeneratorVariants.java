@@ -13,18 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.css;
+package objectos.way;
 
 import java.util.Comparator;
 import java.util.List;
 import objectos.util.list.GrowableList;
 
-abstract class WayStyleGenVariants extends WayStyleGenCache {
+abstract class CssGeneratorVariants extends CssGeneratorCache {
 
-  private final GrowableList<Variant> variantsBuilder = new GrowableList<>();
+  private final GrowableList<CssVariant> variantsBuilder = new GrowableList<>();
 
   @Override
-  final Rule onCacheMiss(String className) {
+  final CssRule onCacheMiss(String className) {
     int beginIndex;
     beginIndex = 0;
 
@@ -35,11 +35,11 @@ abstract class WayStyleGenVariants extends WayStyleGenCache {
       String variantName;
       variantName = className.substring(beginIndex, colon);
 
-      Variant variant;
+      CssVariant variant;
       variant = getVariant(variantName);
 
       if (variant == null) {
-        return Rule.NOOP;
+        return CssRule.NOOP;
       }
 
       variantsBuilder.add(variant);
@@ -49,7 +49,7 @@ abstract class WayStyleGenVariants extends WayStyleGenCache {
       colon = className.indexOf(':', beginIndex);
     }
 
-    List<Variant> variants;
+    List<CssVariant> variants;
     variants = variantsBuilder.toUnmodifiableList(Comparator.naturalOrder());
 
     variantsBuilder.clear();
@@ -64,8 +64,8 @@ abstract class WayStyleGenVariants extends WayStyleGenCache {
     return onVariants(className, variants, value);
   }
 
-  abstract Variant getVariant(String variantName);
+  abstract CssVariant getVariant(String variantName);
 
-  abstract Rule onVariants(String className, List<Variant> variants, String value);
+  abstract CssRule onVariants(String className, List<CssVariant> variants, String value);
 
 }

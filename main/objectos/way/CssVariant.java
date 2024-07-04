@@ -13,12 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.css;
+package objectos.way;
 
 @SuppressWarnings("exports")
-sealed interface Variant extends Comparable<Variant> {
+sealed interface CssVariant extends Comparable<CssVariant> {
 
-  static Variant parse(String formatString) {
+  static CssVariant parse(String formatString) {
     int amper;
     amper = formatString.indexOf('&');
 
@@ -44,7 +44,7 @@ sealed interface Variant extends Comparable<Variant> {
 
   record AppendTo(int index, String selector) implements ClassNameVariant {
     @Override
-    public final int compareTo(Variant o) {
+    public final int compareTo(CssVariant o) {
       if (o instanceof MediaQuery) {
         return 1;
       }
@@ -64,7 +64,7 @@ sealed interface Variant extends Comparable<Variant> {
 
   record Breakpoint(int index, String name, String value) implements MediaQuery {
     @Override
-    public final int compareTo(Variant o) {
+    public final int compareTo(CssVariant o) {
       if (o instanceof Breakpoint that) {
         return Integer.compare(index, that.index);
       }
@@ -73,7 +73,7 @@ sealed interface Variant extends Comparable<Variant> {
     }
 
     @Override
-    public final void writeMediaQueryStart(StringBuilder out, Indentation indentation) {
+    public final void writeMediaQueryStart(StringBuilder out, CssIndentation indentation) {
       indentation.writeTo(out);
 
       out.append("@media (min-width: ");
@@ -85,7 +85,7 @@ sealed interface Variant extends Comparable<Variant> {
   
   record ClassNameFormat(String before, String after) implements ClassNameVariant {
     @Override
-    public final int compareTo(Variant o) {
+    public final int compareTo(CssVariant o) {
       if (o instanceof ClassNameFormat) {
         return 0;
       }
@@ -110,9 +110,9 @@ sealed interface Variant extends Comparable<Variant> {
     }
   }
   
-  record Invalid(String formatString, String reason) implements Variant {
+  record Invalid(String formatString, String reason) implements CssVariant {
     @Override
-    public final int compareTo(Variant o) {
+    public final int compareTo(CssVariant o) {
       if (o instanceof Invalid) {
         return 0;
       }
@@ -121,15 +121,15 @@ sealed interface Variant extends Comparable<Variant> {
     }
   }
   
-  sealed interface ClassNameVariant extends Variant {
+  sealed interface ClassNameVariant extends CssVariant {
     
     void writeClassName(StringBuilder out, int startIndex);
     
   }
 
-  sealed interface MediaQuery extends Variant {
+  sealed interface MediaQuery extends CssVariant {
 
-    void writeMediaQueryStart(StringBuilder out, Indentation indentation);
+    void writeMediaQueryStart(StringBuilder out, CssIndentation indentation);
 
   }
 

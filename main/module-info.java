@@ -18,7 +18,6 @@
  */
 module objectos.way {
   exports objectos.args;
-  exports objectos.css;
   exports objectos.io;
   exports objectos.lang;
   exports objectos.lang.classloader;

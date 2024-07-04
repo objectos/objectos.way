@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.css;
+package objectos.way;
 
 import static org.testng.Assert.assertSame;
 
@@ -21,27 +21,27 @@ import java.util.List;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-public class WayStyleGenCacheTest {
+public class CssGeneratorCacheTest {
 
   @Test(description = "cache hit")
   public void testCase01() {
-    Rule foo;
-    foo = new Rule(0, "foo", List.of());
+    CssRule foo;
+    foo = new CssRule(0, "foo", List.of());
 
-    class Impl extends WayStyleGenCache {
-      private Rule hit;
+    class Impl extends CssGeneratorCache {
+      private CssRule hit;
 
       public Impl() {
         rules.put("foo", foo);
       }
 
       @Override
-      final void onCacheHit(Rule existing) {
+      final void onCacheHit(CssRule existing) {
         hit = existing;
       }
 
       @Override
-      final Rule onCacheMiss(String className) {
+      final CssRule onCacheMiss(String className) {
         Assert.fail("It should have returned from the cache");
 
         return null;
@@ -58,12 +58,12 @@ public class WayStyleGenCacheTest {
 
   @Test(description = "cache miss")
   public void testCase02() {
-    Rule foo;
-    foo = new Rule(0, "foo", List.of());
+    CssRule foo;
+    foo = new CssRule(0, "foo", List.of());
 
-    class Impl extends WayStyleGenCache {
+    class Impl extends CssGeneratorCache {
       @Override
-      final Rule onCacheMiss(String className) {
+      final CssRule onCacheMiss(String className) {
         return foo;
       }
     }

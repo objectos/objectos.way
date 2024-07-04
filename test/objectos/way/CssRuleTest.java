@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.css;
+package objectos.way;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertSame;
@@ -21,35 +21,35 @@ import static org.testng.Assert.assertSame;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import objectos.css.Variant.AppendTo;
+import objectos.way.CssVariant.AppendTo;
 import org.testng.annotations.Test;
 
-public class RuleTest {
+public class CssRuleTest {
 
   @Test(description = "order by utility first")
   public void ordering01() {
-    List<Variant> empty = List.of();
-    List<Variant> hover = List.of(new AppendTo(1, ":hover"));
-    List<Variant> active = List.of(new AppendTo(2, ":active"));
+    List<CssVariant> empty = List.of();
+    List<CssVariant> hover = List.of(new AppendTo(1, ":hover"));
+    List<CssVariant> active = List.of(new AppendTo(2, ":active"));
 
-    List<Rule> rules = new ArrayList<>();
+    List<CssRule> rules = new ArrayList<>();
 
-    Rule a1 = new Rule(0, "a-1", empty);
+    CssRule a1 = new CssRule(0, "a-1", empty);
     rules.add(a1);
 
-    Rule a2 = new Rule(0, "a-2", empty);
+    CssRule a2 = new CssRule(0, "a-2", empty);
     rules.add(a2);
 
-    Rule a1Active = new Rule(0, "a-2:active", active);
+    CssRule a1Active = new CssRule(0, "a-2:active", active);
     rules.add(a1Active);
 
-    Rule a1Hover = new Rule(0, "a-1:hover", hover);
+    CssRule a1Hover = new CssRule(0, "a-1:hover", hover);
     rules.add(a1Hover);
 
-    Rule b1 = new Rule(1, "b-1", empty);
+    CssRule b1 = new CssRule(1, "b-1", empty);
     rules.add(b1);
 
-    Rule b2 = new Rule(1, "b-2", empty);
+    CssRule b2 = new CssRule(1, "b-2", empty);
     rules.add(b2);
 
     Collections.sort(rules);
@@ -73,10 +73,10 @@ public class RuleTest {
     StringBuilder out;
     out = new StringBuilder();
 
-    Rule rule;
-    rule = new Rule(0, className, List.of());
+    CssRule rule;
+    rule = new CssRule(0, className, List.of());
 
-    rule.writeTo(out, Indentation.ROOT);
+    rule.writeTo(out, CssIndentation.ROOT);
 
     assertEquals(out.toString(), expected);
   }

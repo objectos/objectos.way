@@ -13,23 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.css;
+package objectos.way;
 
 import static org.testng.Assert.assertEquals;
 
 import java.util.Comparator;
 import java.util.List;
-import objectos.css.Variant.AppendTo;
-import objectos.css.Variant.Breakpoint;
-import objectos.css.Variant.ClassNameFormat;
 import objectos.util.list.GrowableList;
+import objectos.way.CssVariant.AppendTo;
+import objectos.way.CssVariant.Breakpoint;
+import objectos.way.CssVariant.ClassNameFormat;
 import org.testng.annotations.Test;
 
-public class VariantTest {
+public class CssVariantTest {
 
   @Test(description = "breakpoints first, AppendTo last")
   public void ordering01() {
-    GrowableList<Variant> list;
+    GrowableList<CssVariant> list;
     list = new GrowableList<>();
 
     AppendTo hover = new AppendTo(2, ":hover");
@@ -40,7 +40,7 @@ public class VariantTest {
     list.add(focus);
     list.add(sm);
 
-    List<Variant> res = list.toUnmodifiableList(Comparator.naturalOrder());
+    List<CssVariant> res = list.toUnmodifiableList(Comparator.naturalOrder());
 
     assertEquals(res.get(0), sm);
     assertEquals(res.get(1), focus);
@@ -49,7 +49,7 @@ public class VariantTest {
 
   @Test(description = "breakpoints by index")
   public void ordering02() {
-    GrowableList<Variant> list;
+    GrowableList<CssVariant> list;
     list = new GrowableList<>();
 
     Breakpoint sm = new Breakpoint(1, "1", "640px");
@@ -60,7 +60,7 @@ public class VariantTest {
     list.add(sm);
     list.add(md);
 
-    List<Variant> res = list.toUnmodifiableList(Comparator.naturalOrder());
+    List<CssVariant> res = list.toUnmodifiableList(Comparator.naturalOrder());
 
     assertEquals(res.get(0), sm);
     assertEquals(res.get(1), md);
@@ -69,7 +69,7 @@ public class VariantTest {
 
   @Test(description = "ClassNameFormat first, AppendTo last")
   public void ordering03() {
-    GrowableList<Variant> list;
+    GrowableList<CssVariant> list;
     list = new GrowableList<>();
 
     AppendTo hover = new AppendTo(2, ":hover");
@@ -80,7 +80,7 @@ public class VariantTest {
     list.add(focus);
     list.add(thead);
 
-    List<Variant> res = list.toUnmodifiableList(Comparator.naturalOrder());
+    List<CssVariant> res = list.toUnmodifiableList(Comparator.naturalOrder());
 
     assertEquals(res.get(0), thead);
     assertEquals(res.get(1), focus);
@@ -89,7 +89,7 @@ public class VariantTest {
 
   @Test
   public void parse() {
-    assertEquals(Variant.parse("& thead"), new Variant.ClassNameFormat("", " thead"));
+    assertEquals(CssVariant.parse("& thead"), new CssVariant.ClassNameFormat("", " thead"));
   }
 
 }

@@ -13,21 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.css;
+package objectos.way;
 
 import java.util.Comparator;
 import java.util.Map;
 import java.util.TreeMap;
-import objectos.css.Variant.MediaQuery;
 import objectos.util.list.GrowableList;
+import objectos.way.CssVariant.MediaQuery;
 
-final class WayStyleGenRound extends WayStyleGenParser {
+final class CssGeneratorRound extends CssGeneratorParser implements Css.Generator {
 
   static class Context {
 
     private final MediaQuery query;
 
-    private final GrowableList<Rule> rules = new GrowableList<>();
+    private final GrowableList<CssRule> rules = new GrowableList<>();
 
     private Map<MediaQuery, Context> mediaQueries;
 
@@ -35,7 +35,7 @@ final class WayStyleGenRound extends WayStyleGenParser {
       this.query = query;
     }
 
-    final void add(Rule rule) {
+    final void add(CssRule rule) {
       rules.add(rule);
     }
 
@@ -47,15 +47,15 @@ final class WayStyleGenRound extends WayStyleGenParser {
       return mediaQueries.computeIfAbsent(child, Context::new);
     }
 
-    final void writeTo(StringBuilder out, Indentation indentation) {
+    final void writeTo(StringBuilder out, CssIndentation indentation) {
       query.writeMediaQueryStart(out, indentation);
 
       rules.sort(Comparator.naturalOrder());
 
-      Indentation blockIndentation;
+      CssIndentation blockIndentation;
       blockIndentation = indentation.increase();
 
-      for (Rule rule : rules) {
+      for (CssRule rule : rules) {
         rule.writeTo(out, blockIndentation);
       }
 
@@ -78,19 +78,19 @@ final class WayStyleGenRound extends WayStyleGenParser {
 
   }
 
-  private GrowableList<Rule> topLevel;
+  private GrowableList<CssRule> topLevel;
 
   private Map<MediaQuery, Context> mediaQueries;
 
-  WayStyleGenRound(WayStyleGenConfig config) {
+  CssGeneratorRound(CssGeneratorConfig config) {
     super(config);
   }
 
   public final String generate() {
     topLevel = new GrowableList<>();
 
-    for (Rule rule : rules.values()) {
-      if (rule == Rule.NOOP) {
+    for (CssRule rule : rules.values()) {
+      if (rule == CssRule.NOOP) {
         continue;
       }
 
@@ -99,15 +99,15 @@ final class WayStyleGenRound extends WayStyleGenParser {
 
     StringBuilder out;
     out = new StringBuilder();
-    
+
     if (!config.skipReset) {
-      out.append(Reset.preflight());
-      
+      out.append(CssReset.preflight());
+
       out.append(System.lineSeparator());
     }
 
-    Indentation indentation;
-    indentation = Indentation.ROOT;
+    CssIndentation indentation;
+    indentation = CssIndentation.ROOT;
 
     Map<String, String> rules;
     rules = config.rules();
@@ -121,7 +121,7 @@ final class WayStyleGenRound extends WayStyleGenParser {
       out.append(" {");
       out.append(System.lineSeparator());
 
-      Indentation one;
+      CssIndentation one;
       one = indentation.increase();
 
       String body;
@@ -142,7 +142,7 @@ final class WayStyleGenRound extends WayStyleGenParser {
 
     topLevel.sort(Comparator.naturalOrder());
 
-    for (Rule rule : topLevel) {
+    for (CssRule rule : topLevel) {
       rule.writeTo(out, indentation);
     }
 
@@ -167,7 +167,7 @@ final class WayStyleGenRound extends WayStyleGenParser {
     return mediaQueries.computeIfAbsent(query, Context::new);
   }
 
-  final void topLevel(Rule rule) {
+  final void topLevel(CssRule rule) {
     topLevel.add(rule);
   }
 

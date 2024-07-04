@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.css;
+package objectos.way;
 
 import java.io.PrintStream;
 import java.util.Iterator;
@@ -23,10 +23,10 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public class ObjectosCssPseudoGen {
+public class CssPseudoGen {
   public static void main(String[] args) {
-    ObjectosCssPseudoGen gen;
-    gen = new ObjectosCssPseudoGen();
+    CssPseudoGen gen;
+    gen = new CssPseudoGen();
 
     gen.classNamesColors("stroke");
   }
@@ -603,7 +603,7 @@ public class ObjectosCssPseudoGen {
 
   final void classNamesColors(String prefix) {
     Iterator<String> colors;
-    colors = Palette.DEFAULT.keySet().iterator();
+    colors = CssPalette.DEFAULT.keySet().iterator();
 
     classNamesColors(prefix, colors, 5);
 

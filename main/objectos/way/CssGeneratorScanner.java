@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.css;
+package objectos.way;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -24,7 +24,7 @@ import objectos.notes.Note1;
 import objectos.notes.Note2;
 import objectos.notes.NoteSink;
 
-abstract class WayStyleGenScanner {
+abstract class CssGeneratorScanner {
 
   private static final Note1<String> CLASS_NOT_FOUND;
 
@@ -38,7 +38,7 @@ abstract class WayStyleGenScanner {
 
   static {
     Class<?> s;
-    s = StyleGen.class;
+    s = Css.Generator.class;
 
     CLASS_NOT_FOUND = Note1.error(s, "Class file not found");
 
@@ -73,9 +73,9 @@ abstract class WayStyleGenScanner {
 
   int intValue;
 
-  public WayStyleGenScanner() {}
+  public CssGeneratorScanner() {}
 
-  public WayStyleGenScanner(NoteSink noteSink) {
+  public CssGeneratorScanner(NoteSink noteSink) {
     this.noteSink = noteSink;
   }
 
@@ -333,7 +333,7 @@ abstract class WayStyleGenScanner {
     byte b1;
     b1 = bytes[bytesIndex++];
 
-    intValue = Bytes.toBigEndianInt(b0, b1);
+    intValue = Css.toBigEndianInt(b0, b1);
 
     return bytesIndex;
   }
@@ -351,7 +351,7 @@ abstract class WayStyleGenScanner {
     byte b3;
     b3 = bytes[bytesIndex++];
 
-    intValue = Bytes.toBigEndianInt(b0, b1, b2, b3);
+    intValue = Css.toBigEndianInt(b0, b1, b2, b3);
 
     return bytesIndex;
   }
@@ -367,7 +367,7 @@ abstract class WayStyleGenScanner {
       b = bytes[bytesIndex + offset];
 
       int i;
-      i = Bytes.toUnsignedInt(b);
+      i = Css.toUnsignedInt(b);
 
       if (i > 0x7F) {
         asciiOnly = false;

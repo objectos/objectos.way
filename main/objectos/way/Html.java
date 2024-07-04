@@ -23,7 +23,7 @@ import objectos.lang.IterableOnce;
 import objectos.lang.object.Check;
 
 /**
- * The Objectos HTML main class.
+ * The <strong>Objectos HTML</strong> main class.
  */
 public final class Html {
 
@@ -1053,7 +1053,8 @@ public final class Html {
   public sealed interface Instruction {}
 
   /**
-   * Class of instructions that are represented by methods of the template class.
+   * Class of instructions that are represented by methods of the template
+   * class.
    *
    * <p>
    * Instances of this interface MUST NOT be reused in a template.
@@ -1087,11 +1088,11 @@ public final class Html {
   public sealed interface NoOpInstruction extends MethodInstruction, VoidInstruction {}
 
   private static final class InstructionImpl
-       implements
-       AttributeInstruction,
-       ElementInstruction,
-       FragmentInstruction,
-       NoOpInstruction {}
+      implements
+      AttributeInstruction,
+      ElementInstruction,
+      FragmentInstruction,
+      NoOpInstruction {}
 
   static final AttributeInstruction ATTRIBUTE = new InstructionImpl();
   static final ElementInstruction ELEMENT = new InstructionImpl();
@@ -1182,7 +1183,8 @@ public final class Html {
     }
 
     /**
-     * Generates the {@code alignment-baseline} attribute with the specified value.
+     * Generates the {@code alignment-baseline} attribute with the specified
+     * value.
      *
      * @param value
      *        the value of the attribute
@@ -1368,7 +1370,8 @@ public final class Html {
     }
 
     /**
-     * Generates the {@code color-interpolation} attribute with the specified value.
+     * Generates the {@code color-interpolation} attribute with the specified
+     * value.
      *
      * @param value
      *        the value of the attribute
@@ -1380,7 +1383,8 @@ public final class Html {
     }
 
     /**
-     * Generates the {@code color-interpolation-filters} attribute with the specified value.
+     * Generates the {@code color-interpolation-filters} attribute with the
+     * specified value.
      *
      * @param value
      *        the value of the attribute
@@ -1530,7 +1534,8 @@ public final class Html {
     }
 
     /**
-     * Generates the {@code dominant-baseline} attribute with the specified value.
+     * Generates the {@code dominant-baseline} attribute with the specified
+     * value.
      *
      * @param value
      *        the value of the attribute
@@ -1662,7 +1667,8 @@ public final class Html {
     }
 
     /**
-     * Generates the {@code font-size-adjust} attribute with the specified value.
+     * Generates the {@code font-size-adjust} attribute with the specified
+     * value.
      *
      * @param value
      *        the value of the attribute
@@ -1746,7 +1752,8 @@ public final class Html {
     }
 
     /**
-     * Generates the {@code glyph-orientation-horizontal} attribute with the specified value.
+     * Generates the {@code glyph-orientation-horizontal} attribute with the
+     * specified value.
      *
      * @param value
      *        the value of the attribute
@@ -1758,7 +1765,8 @@ public final class Html {
     }
 
     /**
-     * Generates the {@code glyph-orientation-vertical} attribute with the specified value.
+     * Generates the {@code glyph-orientation-vertical} attribute with the
+     * specified value.
      *
      * @param value
      *        the value of the attribute
@@ -2085,7 +2093,8 @@ public final class Html {
     }
 
     /**
-     * Generates the {@code onlanguagechange} attribute with the specified value.
+     * Generates the {@code onlanguagechange} attribute with the specified
+     * value.
      *
      * @param value
      *        the value of the attribute
@@ -2169,7 +2178,8 @@ public final class Html {
     }
 
     /**
-     * Generates the {@code onrejectionhandled} attribute with the specified value.
+     * Generates the {@code onrejectionhandled} attribute with the specified
+     * value.
      *
      * @param value
      *        the value of the attribute
@@ -2205,7 +2215,8 @@ public final class Html {
     }
 
     /**
-     * Generates the {@code onunhandledrejection} attribute with the specified value.
+     * Generates the {@code onunhandledrejection} attribute with the specified
+     * value.
      *
      * @param value
      *        the value of the attribute
@@ -2526,7 +2537,8 @@ public final class Html {
     }
 
     /**
-     * Generates the {@code stroke-dasharray} attribute with the specified value.
+     * Generates the {@code stroke-dasharray} attribute with the specified
+     * value.
      *
      * @param value
      *        the value of the attribute
@@ -2538,7 +2550,8 @@ public final class Html {
     }
 
     /**
-     * Generates the {@code stroke-dashoffset} attribute with the specified value.
+     * Generates the {@code stroke-dashoffset} attribute with the specified
+     * value.
      *
      * @param value
      *        the value of the attribute
@@ -2574,7 +2587,8 @@ public final class Html {
     }
 
     /**
-     * Generates the {@code stroke-miterlimit} attribute with the specified value.
+     * Generates the {@code stroke-miterlimit} attribute with the specified
+     * value.
      *
      * @param value
      *        the value of the attribute
@@ -2706,7 +2720,8 @@ public final class Html {
     }
 
     /**
-     * Generates the {@code transform-origin} attribute with the specified value.
+     * Generates the {@code transform-origin} attribute with the specified
+     * value.
      *
      * @param value
      *        the value of the attribute
@@ -2913,7 +2928,8 @@ public final class Html {
     AttributeInstruction align(String value);
 
     /**
-     * Generates the {@code alignment-baseline} attribute with the specified value.
+     * Generates the {@code alignment-baseline} attribute with the specified
+     * value.
      *
      * @param value
      *        the value of the attribute
@@ -3067,7 +3083,8 @@ public final class Html {
     AttributeInstruction color(String value);
 
     /**
-     * Generates the {@code color-interpolation} attribute with the specified value.
+     * Generates the {@code color-interpolation} attribute with the specified
+     * value.
      *
      * @param value
      *        the value of the attribute
@@ -3077,7 +3094,8 @@ public final class Html {
     AttributeInstruction colorInterpolation(String value);
 
     /**
-     * Generates the {@code color-interpolation-filters} attribute with the specified value.
+     * Generates the {@code color-interpolation-filters} attribute with the
+     * specified value.
      *
      * @param value
      *        the value of the attribute
@@ -3201,7 +3219,8 @@ public final class Html {
     AttributeInstruction display(String value);
 
     /**
-     * Generates the {@code dominant-baseline} attribute with the specified value.
+     * Generates the {@code dominant-baseline} attribute with the specified
+     * value.
      *
      * @param value
      *        the value of the attribute
@@ -3311,7 +3330,8 @@ public final class Html {
     AttributeInstruction fontSize(String value);
 
     /**
-     * Generates the {@code font-size-adjust} attribute with the specified value.
+     * Generates the {@code font-size-adjust} attribute with the specified
+     * value.
      *
      * @param value
      *        the value of the attribute
@@ -3381,7 +3401,8 @@ public final class Html {
     AttributeInstruction forElement(String value);
 
     /**
-     * Generates the {@code glyph-orientation-horizontal} attribute with the specified value.
+     * Generates the {@code glyph-orientation-horizontal} attribute with the
+     * specified value.
      *
      * @param value
      *        the value of the attribute
@@ -3391,7 +3412,8 @@ public final class Html {
     AttributeInstruction glyphOrientationHorizontal(String value);
 
     /**
-     * Generates the {@code glyph-orientation-vertical} attribute with the specified value.
+     * Generates the {@code glyph-orientation-vertical} attribute with the
+     * specified value.
      *
      * @param value
      *        the value of the attribute
@@ -3662,7 +3684,8 @@ public final class Html {
     AttributeInstruction onhashchange(String value);
 
     /**
-     * Generates the {@code onlanguagechange} attribute with the specified value.
+     * Generates the {@code onlanguagechange} attribute with the specified
+     * value.
      *
      * @param value
      *        the value of the attribute
@@ -3732,7 +3755,8 @@ public final class Html {
     AttributeInstruction onpopstate(String value);
 
     /**
-     * Generates the {@code onrejectionhandled} attribute with the specified value.
+     * Generates the {@code onrejectionhandled} attribute with the specified
+     * value.
      *
      * @param value
      *        the value of the attribute
@@ -3762,7 +3786,8 @@ public final class Html {
     AttributeInstruction onsubmit(String value);
 
     /**
-     * Generates the {@code onunhandledrejection} attribute with the specified value.
+     * Generates the {@code onunhandledrejection} attribute with the specified
+     * value.
      *
      * @param value
      *        the value of the attribute
@@ -4027,7 +4052,8 @@ public final class Html {
     AttributeInstruction stroke(String value);
 
     /**
-     * Generates the {@code stroke-dasharray} attribute with the specified value.
+     * Generates the {@code stroke-dasharray} attribute with the specified
+     * value.
      *
      * @param value
      *        the value of the attribute
@@ -4037,7 +4063,8 @@ public final class Html {
     AttributeInstruction strokeDasharray(String value);
 
     /**
-     * Generates the {@code stroke-dashoffset} attribute with the specified value.
+     * Generates the {@code stroke-dashoffset} attribute with the specified
+     * value.
      *
      * @param value
      *        the value of the attribute
@@ -4067,7 +4094,8 @@ public final class Html {
     AttributeInstruction strokeLinejoin(String value);
 
     /**
-     * Generates the {@code stroke-miterlimit} attribute with the specified value.
+     * Generates the {@code stroke-miterlimit} attribute with the specified
+     * value.
      *
      * @param value
      *        the value of the attribute
@@ -4177,7 +4205,8 @@ public final class Html {
     AttributeInstruction transform(String value);
 
     /**
-     * Generates the {@code transform-origin} attribute with the specified value.
+     * Generates the {@code transform-origin} attribute with the specified
+     * value.
      *
      * @param value
      *        the value of the attribute
@@ -4528,7 +4557,8 @@ public final class Html {
     }
 
     /**
-     * Generates the {@code clipPath} attribute or element with the specified text.
+     * Generates the {@code clipPath} attribute or element with the specified
+     * text.
      *
      * @param text
      *        the text value of this attribute or element
@@ -6190,7 +6220,8 @@ public final class Html {
     ElementInstruction clipPath(Instruction... contents);
 
     /**
-     * Generates the {@code clipPath} attribute or element with the specified text.
+     * Generates the {@code clipPath} attribute or element with the specified
+     * text.
      *
      * @param text
      *        the text value of this attribute or element

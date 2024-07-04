@@ -13,56 +13,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.css;
+package objectos.way;
 
-enum Side {
+final class CssIndentation {
 
-  ALL,
+  static final CssIndentation ROOT = new CssIndentation(0);
 
-  X,
+  private final int level;
 
-  Y,
+  private CssIndentation(int level) {
+    this.level = level;
+  }
 
-  TOP,
+  public final String indent(String value) {
+    return value.indent(level * 2);
+  }
 
-  RIGHT,
+  public final CssIndentation increase() {
+    return new CssIndentation(level + 1);
+  }
 
-  BOTTOM,
-
-  LEFT,
-
-  INVALID;
-
-  static Side parse(String suffix) {
-    int dash;
-    dash = suffix.indexOf('-');
-
-    if (dash < 0) {
-      return ALL;
+  public final void writeTo(StringBuilder out) {
+    for (int i = 0, count = level * 2; i < count; i++) {
+      out.append(' ');
     }
-
-    if (dash != 1) {
-      return ALL;
-    }
-
-    char first;
-    first = suffix.charAt(0);
-
-    return switch (first) {
-      case 'x' -> X;
-
-      case 'y' -> Y;
-
-      case 't' -> TOP;
-
-      case 'r' -> RIGHT;
-
-      case 'b' -> BOTTOM;
-
-      case 'l' -> LEFT;
-
-      default -> INVALID;
-    };
   }
 
 }

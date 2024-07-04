@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.css;
+package objectos.way;
 
-abstract class WayStyleGenSplitter extends WayStyleGenScanner {
+abstract class CssGeneratorSplitter extends CssGeneratorScanner {
 
   @Override
   final void onScan(String s) {

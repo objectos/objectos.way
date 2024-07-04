@@ -13,30 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.css;
+package objectos.way;
 
-final class Indentation {
+non-sealed abstract class CssGeneratorOption implements Css.Generator.Classes, Css.Generator.Option {
 
-  static final Indentation ROOT = new Indentation(0);
-
-  private final int level;
-
-  private Indentation(int level) {
-    this.level = level;
+  public static CssGeneratorOption cast(Css.Generator.Classes o) {
+    // this cast is safe as Css.Generator.Classes is sealed
+    return (CssGeneratorOption) o;
   }
 
-  public final String indent(String value) {
-    return value.indent(level * 2);
+  public static CssGeneratorOption cast(Css.Generator.Option o) {
+    // this cast is safe as Css.Generator.Option is sealed
+    return (CssGeneratorOption) o;
   }
 
-  public final Indentation increase() {
-    return new Indentation(level + 1);
-  }
-
-  public final void writeTo(StringBuilder out) {
-    for (int i = 0, count = level * 2; i < count; i++) {
-      out.append(' ');
-    }
-  }
+  abstract void acceptCssGenerator(CssGenerator config);
 
 }

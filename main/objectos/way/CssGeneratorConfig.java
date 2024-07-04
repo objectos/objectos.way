@@ -13,19 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.css;
+package objectos.way;
 
 import java.util.List;
 import java.util.Map;
-import objectos.css.Variant.Breakpoint;
+import objectos.way.CssVariant.Breakpoint;
 
-sealed abstract class WayStyleGenConfig permits WayStyleGen {
+sealed abstract class CssGeneratorConfig permits CssGenerator {
 
   boolean skipReset;
   
   abstract List<Breakpoint> breakpoints();
   
-  abstract Variant getVariant(String variantName);
+  abstract CssVariant getVariant(String variantName);
 
   abstract Map<String, String> borderSpacing();
   

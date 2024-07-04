@@ -13,101 +13,101 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.css;
+package objectos.way;
 
-import static objectos.css.Utility.ACCESSIBILITY;
-import static objectos.css.Utility.ALIGN_ITEMS;
-import static objectos.css.Utility.BACKGROUND_COLOR;
-import static objectos.css.Utility.BORDER_COLLAPSE;
-import static objectos.css.Utility.BOTTOM;
-import static objectos.css.Utility.CONTENT;
-import static objectos.css.Utility.CURSOR;
-import static objectos.css.Utility.DISPLAY;
-import static objectos.css.Utility.END;
-import static objectos.css.Utility.FILL;
-import static objectos.css.Utility.FLEX_DIRECTION;
-import static objectos.css.Utility.FLEX_GROW;
-import static objectos.css.Utility.FONT_SIZE1;
-import static objectos.css.Utility.FONT_SIZE2;
-import static objectos.css.Utility.FONT_SIZEX;
-import static objectos.css.Utility.GRID_COLUMN;
-import static objectos.css.Utility.GRID_COLUMN_END;
-import static objectos.css.Utility.GRID_COLUMN_START;
-import static objectos.css.Utility.GRID_TEMPLATE_COLUMNS;
-import static objectos.css.Utility.GRID_TEMPLATE_ROWS;
-import static objectos.css.Utility.HEIGHT;
-import static objectos.css.Utility.JUSTIFY_CONTENT;
-import static objectos.css.Utility.LEFT;
-import static objectos.css.Utility.LETTER_SPACING;
-import static objectos.css.Utility.LINE_HEIGHT;
-import static objectos.css.Utility.MARGIN;
-import static objectos.css.Utility.MARGIN_BOTTOM;
-import static objectos.css.Utility.MARGIN_LEFT;
-import static objectos.css.Utility.MARGIN_RIGHT;
-import static objectos.css.Utility.MARGIN_TOP;
-import static objectos.css.Utility.MARGIN_X;
-import static objectos.css.Utility.MARGIN_Y;
-import static objectos.css.Utility.MAX_WIDTH;
-import static objectos.css.Utility.MIN_WIDTH;
-import static objectos.css.Utility.OPACITY;
-import static objectos.css.Utility.OUTLINE_COLOR;
-import static objectos.css.Utility.OUTLINE_OFFSET;
-import static objectos.css.Utility.OUTLINE_STYLE;
-import static objectos.css.Utility.OUTLINE_WIDTH;
-import static objectos.css.Utility.OVERFLOW;
-import static objectos.css.Utility.OVERFLOW_X;
-import static objectos.css.Utility.OVERFLOW_Y;
-import static objectos.css.Utility.PADDING;
-import static objectos.css.Utility.PADDING_BOTTOM;
-import static objectos.css.Utility.PADDING_LEFT;
-import static objectos.css.Utility.PADDING_RIGHT;
-import static objectos.css.Utility.PADDING_TOP;
-import static objectos.css.Utility.PADDING_X;
-import static objectos.css.Utility.PADDING_Y;
-import static objectos.css.Utility.POINTER_EVENTS;
-import static objectos.css.Utility.POSITION;
-import static objectos.css.Utility.RIGHT;
-import static objectos.css.Utility.START;
-import static objectos.css.Utility.STROKE;
-import static objectos.css.Utility.TABLE_LAYOUT;
-import static objectos.css.Utility.TEXT_ALIGN;
-import static objectos.css.Utility.TEXT_COLOR;
-import static objectos.css.Utility.TEXT_DECORATION;
-import static objectos.css.Utility.TEXT_WRAP;
-import static objectos.css.Utility.TOP;
-import static objectos.css.Utility.TRANSITION_DURATION;
-import static objectos.css.Utility.TRANSITION_PROPERTY;
-import static objectos.css.Utility.USER_SELECT;
-import static objectos.css.Utility.VERTICAL_ALIGN;
-import static objectos.css.Utility.VISIBILITY;
-import static objectos.css.Utility.WIDTH;
-import static objectos.css.Utility.Z_INDEX;
+import static objectos.way.CssUtility.ACCESSIBILITY;
+import static objectos.way.CssUtility.ALIGN_ITEMS;
+import static objectos.way.CssUtility.BACKGROUND_COLOR;
+import static objectos.way.CssUtility.BORDER_COLLAPSE;
+import static objectos.way.CssUtility.BOTTOM;
+import static objectos.way.CssUtility.CONTENT;
+import static objectos.way.CssUtility.CURSOR;
+import static objectos.way.CssUtility.DISPLAY;
+import static objectos.way.CssUtility.END;
+import static objectos.way.CssUtility.FILL;
+import static objectos.way.CssUtility.FLEX_DIRECTION;
+import static objectos.way.CssUtility.FLEX_GROW;
+import static objectos.way.CssUtility.FONT_SIZE1;
+import static objectos.way.CssUtility.FONT_SIZE2;
+import static objectos.way.CssUtility.FONT_SIZEX;
+import static objectos.way.CssUtility.GRID_COLUMN;
+import static objectos.way.CssUtility.GRID_COLUMN_END;
+import static objectos.way.CssUtility.GRID_COLUMN_START;
+import static objectos.way.CssUtility.GRID_TEMPLATE_COLUMNS;
+import static objectos.way.CssUtility.GRID_TEMPLATE_ROWS;
+import static objectos.way.CssUtility.HEIGHT;
+import static objectos.way.CssUtility.JUSTIFY_CONTENT;
+import static objectos.way.CssUtility.LEFT;
+import static objectos.way.CssUtility.LETTER_SPACING;
+import static objectos.way.CssUtility.LINE_HEIGHT;
+import static objectos.way.CssUtility.MARGIN;
+import static objectos.way.CssUtility.MARGIN_BOTTOM;
+import static objectos.way.CssUtility.MARGIN_LEFT;
+import static objectos.way.CssUtility.MARGIN_RIGHT;
+import static objectos.way.CssUtility.MARGIN_TOP;
+import static objectos.way.CssUtility.MARGIN_X;
+import static objectos.way.CssUtility.MARGIN_Y;
+import static objectos.way.CssUtility.MAX_WIDTH;
+import static objectos.way.CssUtility.MIN_WIDTH;
+import static objectos.way.CssUtility.OPACITY;
+import static objectos.way.CssUtility.OUTLINE_COLOR;
+import static objectos.way.CssUtility.OUTLINE_OFFSET;
+import static objectos.way.CssUtility.OUTLINE_STYLE;
+import static objectos.way.CssUtility.OUTLINE_WIDTH;
+import static objectos.way.CssUtility.OVERFLOW;
+import static objectos.way.CssUtility.OVERFLOW_X;
+import static objectos.way.CssUtility.OVERFLOW_Y;
+import static objectos.way.CssUtility.PADDING;
+import static objectos.way.CssUtility.PADDING_BOTTOM;
+import static objectos.way.CssUtility.PADDING_LEFT;
+import static objectos.way.CssUtility.PADDING_RIGHT;
+import static objectos.way.CssUtility.PADDING_TOP;
+import static objectos.way.CssUtility.PADDING_X;
+import static objectos.way.CssUtility.PADDING_Y;
+import static objectos.way.CssUtility.POINTER_EVENTS;
+import static objectos.way.CssUtility.POSITION;
+import static objectos.way.CssUtility.RIGHT;
+import static objectos.way.CssUtility.START;
+import static objectos.way.CssUtility.STROKE;
+import static objectos.way.CssUtility.TABLE_LAYOUT;
+import static objectos.way.CssUtility.TEXT_ALIGN;
+import static objectos.way.CssUtility.TEXT_COLOR;
+import static objectos.way.CssUtility.TEXT_DECORATION;
+import static objectos.way.CssUtility.TEXT_WRAP;
+import static objectos.way.CssUtility.TOP;
+import static objectos.way.CssUtility.TRANSITION_DURATION;
+import static objectos.way.CssUtility.TRANSITION_PROPERTY;
+import static objectos.way.CssUtility.USER_SELECT;
+import static objectos.way.CssUtility.VERTICAL_ALIGN;
+import static objectos.way.CssUtility.VISIBILITY;
+import static objectos.way.CssUtility.WIDTH;
+import static objectos.way.CssUtility.Z_INDEX;
 
 import java.util.List;
 import java.util.Map;
-import objectos.css.Variant.Breakpoint;
+import objectos.way.CssVariant.Breakpoint;
 
-abstract class WayStyleGenParser extends WayStyleGenVariants {
+abstract class CssGeneratorParser extends CssGeneratorVariants {
 
-  final WayStyleGenConfig config;
+  final CssGeneratorConfig config;
 
   private String className;
 
   private boolean negative;
 
-  private List<Variant> variants;
+  private List<CssVariant> variants;
 
-  WayStyleGenParser(WayStyleGenConfig config) {
+  CssGeneratorParser(CssGeneratorConfig config) {
     this.config = config;
   }
 
   @Override
-  final Variant getVariant(String variantName) {
+  final CssVariant getVariant(String variantName) {
     return config.getVariant(variantName);
   }
 
   @Override
-  final Rule onVariants(String className, List<Variant> variants, String value) {
+  final CssRule onVariants(String className, List<CssVariant> variants, String value) {
     Map<String, String> utilities;
     utilities = config.utilities();
 
@@ -115,7 +115,7 @@ abstract class WayStyleGenParser extends WayStyleGenVariants {
     customRule = utilities.get(value);
 
     if (customRule != null) {
-      return Utility.CUSTOM.get(className, variants, customRule);
+      return CssUtility.CUSTOM.get(className, variants, customRule);
     }
 
     this.className = className;
@@ -161,15 +161,15 @@ abstract class WayStyleGenParser extends WayStyleGenVariants {
       case "border-separate" -> nameValue(BORDER_COLLAPSE, "separate");
 
       // Container
-      case "container" -> new Rule(0, className, variants) {
+      case "container" -> new CssRule(0, className, variants) {
 
         final List<Breakpoint> breakpoints = config.breakpoints();
 
         @Override
-        final void writeBlock(StringBuilder out, Indentation indentation) {
+        final void writeBlock(StringBuilder out, CssIndentation indentation) {
           out.append(" { width: 100% }");
 
-          Indentation next;
+          CssIndentation next;
           next = indentation.increase();
 
           for (Breakpoint breakpoint : breakpoints) {
@@ -314,14 +314,14 @@ abstract class WayStyleGenParser extends WayStyleGenVariants {
     };
   }
 
-  private Rule nameValue(Utility utility, String value) {
+  private CssRule nameValue(CssUtility utility, String value) {
     String formatted;
     formatted = format(value);
 
     return utility.get(className, variants, formatted);
   }
 
-  private Rule prefixWord1(String value) {
+  private CssRule prefixWord1(String value) {
     int prefixStart = 0;
 
     String prefix, suffix;
@@ -339,7 +339,7 @@ abstract class WayStyleGenParser extends WayStyleGenVariants {
 
     switch (dashIndex) {
       case 0 -> {
-        return Rule.NOOP;
+        return CssRule.NOOP;
       }
 
       case -1 -> {
@@ -391,7 +391,7 @@ abstract class WayStyleGenParser extends WayStyleGenVariants {
       case "font" -> font(suffix);
 
       // G
-      case "gap" -> xy(Utility.GAP, Utility.GAP_X, Utility.GAP_Y, config.gap(), suffix);
+      case "gap" -> xy(CssUtility.GAP, CssUtility.GAP_X, CssUtility.GAP_Y, config.gap(), suffix);
       case "grid" -> grid(suffix);
       case "grow" -> config(FLEX_GROW, config.flexGrow(), suffix);
 
@@ -399,7 +399,7 @@ abstract class WayStyleGenParser extends WayStyleGenVariants {
       case "h" -> config(HEIGHT, config.height(), suffix);
 
       // I
-      case "inset" -> xy(Utility.INSET, Utility.INSET_X, Utility.INSET_Y, config.inset(), suffix);
+      case "inset" -> xy(CssUtility.INSET, CssUtility.INSET_X, CssUtility.INSET_Y, config.inset(), suffix);
 
       // L
       case "leading" -> config(LINE_HEIGHT, config.lineHeight(), suffix);
@@ -420,7 +420,7 @@ abstract class WayStyleGenParser extends WayStyleGenVariants {
 
           yield config(MAX_WIDTH, config.maxWidth(), suffix);
         } else {
-          yield Rule.NOOP;
+          yield CssRule.NOOP;
         }
       }
       case "min" -> {
@@ -429,7 +429,7 @@ abstract class WayStyleGenParser extends WayStyleGenVariants {
 
           yield config(MIN_WIDTH, config.minWidth(), suffix);
         } else {
-          yield Rule.NOOP;
+          yield CssRule.NOOP;
         }
       }
 
@@ -451,7 +451,7 @@ abstract class WayStyleGenParser extends WayStyleGenVariants {
       case "rounded" -> borderRadius(suffix);
 
       // S
-      case "size" -> config(Utility.SIZE, config.size(), suffix);
+      case "size" -> config(CssUtility.SIZE, config.size(), suffix);
       case "start" -> config(START, config.inset(), suffix);
       case "stroke" -> stroke(suffix);
 
@@ -467,11 +467,11 @@ abstract class WayStyleGenParser extends WayStyleGenVariants {
       // Z
       case "z" -> config(Z_INDEX, config.zIndex(), suffix);
 
-      default -> Rule.NOOP;
+      default -> CssRule.NOOP;
     };
   }
 
-  private Rule config(Utility utility, Map<String, String> map, String suffix) {
+  private CssRule config(CssUtility utility, Map<String, String> map, String suffix) {
     String value;
     value = map.get(suffix);
 
@@ -482,7 +482,7 @@ abstract class WayStyleGenParser extends WayStyleGenVariants {
       return utility.get(className, variants, formatted);
     }
 
-    return Rule.NOOP;
+    return CssRule.NOOP;
   }
 
   private String format(String value) {
@@ -558,7 +558,7 @@ abstract class WayStyleGenParser extends WayStyleGenVariants {
     };
   }
 
-  private Rule border(String suffix) {
+  private CssRule border(String suffix) {
     Side side;
     side = parseSide(suffix);
 
@@ -572,15 +572,15 @@ abstract class WayStyleGenParser extends WayStyleGenVariants {
     color = colors.get(sideSuffix);
 
     if (color != null) {
-      Utility utility;
+      CssUtility utility;
       utility = switch (side) {
-        case ALL -> Utility.BORDER_COLOR;
-        case X -> Utility.BORDER_COLOR_X;
-        case Y -> Utility.BORDER_COLOR_Y;
-        case TOP -> Utility.BORDER_COLOR_TOP;
-        case RIGHT -> Utility.BORDER_COLOR_RIGHT;
-        case BOTTOM -> Utility.BORDER_COLOR_BOTTOM;
-        case LEFT -> Utility.BORDER_COLOR_LEFT;
+        case ALL -> CssUtility.BORDER_COLOR;
+        case X -> CssUtility.BORDER_COLOR_X;
+        case Y -> CssUtility.BORDER_COLOR_Y;
+        case TOP -> CssUtility.BORDER_COLOR_TOP;
+        case RIGHT -> CssUtility.BORDER_COLOR_RIGHT;
+        case BOTTOM -> CssUtility.BORDER_COLOR_BOTTOM;
+        case LEFT -> CssUtility.BORDER_COLOR_LEFT;
       };
 
       return utility.get(className, variants, color);
@@ -593,40 +593,40 @@ abstract class WayStyleGenParser extends WayStyleGenVariants {
     borderWidthValue = borderWidth.get(sideSuffix);
 
     if (borderWidthValue != null) {
-      Utility utility;
+      CssUtility utility;
       utility = switch (side) {
-        case ALL -> Utility.BORDER_WIDTH;
-        case X -> Utility.BORDER_WIDTH_X;
-        case Y -> Utility.BORDER_WIDTH_Y;
-        case TOP -> Utility.BORDER_WIDTH_TOP;
-        case RIGHT -> Utility.BORDER_WIDTH_RIGHT;
-        case BOTTOM -> Utility.BORDER_WIDTH_BOTTOM;
-        case LEFT -> Utility.BORDER_WIDTH_LEFT;
+        case ALL -> CssUtility.BORDER_WIDTH;
+        case X -> CssUtility.BORDER_WIDTH_X;
+        case Y -> CssUtility.BORDER_WIDTH_Y;
+        case TOP -> CssUtility.BORDER_WIDTH_TOP;
+        case RIGHT -> CssUtility.BORDER_WIDTH_RIGHT;
+        case BOTTOM -> CssUtility.BORDER_WIDTH_BOTTOM;
+        case LEFT -> CssUtility.BORDER_WIDTH_LEFT;
       };
 
       return utility.get(className, variants, borderWidthValue);
     }
 
-    return Rule.NOOP;
+    return CssRule.NOOP;
   }
 
-  private static final Map<String, Utility> BORDER_RADIUS_PREFIXES = Map.ofEntries(
-      Map.entry("s", Utility.BORDER_RADIUS_S),
-      Map.entry("e", Utility.BORDER_RADIUS_E),
-      Map.entry("t", Utility.BORDER_RADIUS_T),
-      Map.entry("r", Utility.BORDER_RADIUS_R),
-      Map.entry("b", Utility.BORDER_RADIUS_B),
-      Map.entry("l", Utility.BORDER_RADIUS_L),
-      Map.entry("se", Utility.BORDER_RADIUS_SE),
-      Map.entry("ee", Utility.BORDER_RADIUS_EE),
-      Map.entry("es", Utility.BORDER_RADIUS_ES),
-      Map.entry("tl", Utility.BORDER_RADIUS_TL),
-      Map.entry("tr", Utility.BORDER_RADIUS_TR),
-      Map.entry("br", Utility.BORDER_RADIUS_BR),
-      Map.entry("bl", Utility.BORDER_RADIUS_BL)
+  private static final Map<String, CssUtility> BORDER_RADIUS_PREFIXES = Map.ofEntries(
+      Map.entry("s", CssUtility.BORDER_RADIUS_S),
+      Map.entry("e", CssUtility.BORDER_RADIUS_E),
+      Map.entry("t", CssUtility.BORDER_RADIUS_T),
+      Map.entry("r", CssUtility.BORDER_RADIUS_R),
+      Map.entry("b", CssUtility.BORDER_RADIUS_B),
+      Map.entry("l", CssUtility.BORDER_RADIUS_L),
+      Map.entry("se", CssUtility.BORDER_RADIUS_SE),
+      Map.entry("ee", CssUtility.BORDER_RADIUS_EE),
+      Map.entry("es", CssUtility.BORDER_RADIUS_ES),
+      Map.entry("tl", CssUtility.BORDER_RADIUS_TL),
+      Map.entry("tr", CssUtility.BORDER_RADIUS_TR),
+      Map.entry("br", CssUtility.BORDER_RADIUS_BR),
+      Map.entry("bl", CssUtility.BORDER_RADIUS_BL)
   );
 
-  private Rule borderRadius(String suffix) {
+  private CssRule borderRadius(String suffix) {
     String prefix, value;
 
     int dashIndex;
@@ -655,23 +655,23 @@ abstract class WayStyleGenParser extends WayStyleGenVariants {
     radius = borderRadius.get(value);
 
     if (radius == null) {
-      return Rule.NOOP;
+      return CssRule.NOOP;
     }
 
-    Utility utility = switch (prefix) {
-      case "" -> Utility.BORDER_RADIUS;
+    CssUtility utility = switch (prefix) {
+      case "" -> CssUtility.BORDER_RADIUS;
 
       default -> BORDER_RADIUS_PREFIXES.get(prefix);
     };
 
     return utility != null
         ? utility.get(className, variants, radius)
-        : Rule.NOOP;
+        : CssRule.NOOP;
   }
 
-  private Rule borderSpacing(String suffix) {
+  private CssRule borderSpacing(String suffix) {
     if (suffix.length() == 0) {
-      return Rule.NOOP;
+      return CssRule.NOOP;
     }
 
     String prefix, value;
@@ -696,21 +696,21 @@ abstract class WayStyleGenParser extends WayStyleGenVariants {
     spacing = borderSpacing.get(value);
 
     if (spacing == null) {
-      return Rule.NOOP;
+      return CssRule.NOOP;
     }
 
     return switch (prefix) {
-      case "" -> Utility.BORDER_SPACING.get(className, variants, spacing + " " + spacing);
+      case "" -> CssUtility.BORDER_SPACING.get(className, variants, spacing + " " + spacing);
 
-      case "x" -> Utility.BORDER_SPACING.get(className, variants, spacing + " 0");
+      case "x" -> CssUtility.BORDER_SPACING.get(className, variants, spacing + " 0");
 
-      case "y" -> Utility.BORDER_SPACING.get(className, variants, "0 " + spacing);
+      case "y" -> CssUtility.BORDER_SPACING.get(className, variants, "0 " + spacing);
 
-      default -> Rule.NOOP;
+      default -> CssRule.NOOP;
     };
   }
 
-  private Rule font(String suffix) {
+  private CssRule font(String suffix) {
     Map<String, String> fontWeight;
     fontWeight = config.fontWeight();
 
@@ -718,18 +718,18 @@ abstract class WayStyleGenParser extends WayStyleGenVariants {
     weight = fontWeight.get(suffix);
 
     if (weight != null) {
-      return nameValue(Utility.FONT_WEIGHT, weight);
+      return nameValue(CssUtility.FONT_WEIGHT, weight);
     }
 
-    return Rule.NOOP;
+    return CssRule.NOOP;
   }
 
-  private Rule grid(String suffix) {
+  private CssRule grid(String suffix) {
     int dashIndex;
     dashIndex = suffix.indexOf('-');
 
     if (dashIndex <= 0) {
-      return Rule.NOOP;
+      return CssRule.NOOP;
     }
 
     String prefix;
@@ -742,11 +742,11 @@ abstract class WayStyleGenParser extends WayStyleGenVariants {
 
       case "rows" -> config(GRID_TEMPLATE_ROWS, config.gridTemplateRows(), suffix);
 
-      default -> Rule.NOOP;
+      default -> CssRule.NOOP;
     };
   }
 
-  private Rule gridColumn(String suffix) {
+  private CssRule gridColumn(String suffix) {
     Map<String, String> gridColumn;
     gridColumn = config.gridColumn();
 
@@ -761,7 +761,7 @@ abstract class WayStyleGenParser extends WayStyleGenVariants {
     dashIndex = suffix.indexOf('-');
 
     if (dashIndex <= 0) {
-      return Rule.NOOP;
+      return CssRule.NOOP;
     }
 
     String prefix;
@@ -774,14 +774,14 @@ abstract class WayStyleGenParser extends WayStyleGenVariants {
 
       case "start" -> config(GRID_COLUMN_START, config.gridColumnStart(), suffix);
 
-      default -> Rule.NOOP;
+      default -> CssRule.NOOP;
     };
   }
 
-  private Rule outline(String suffix) {
+  private CssRule outline(String suffix) {
     switch (suffix) {
       case "none":
-        return Utility.OUTLINE_STYLE_NONE.get(className, variants, "outline: 2px solid transparent; outline-offset: 2px");
+        return CssUtility.OUTLINE_STYLE_NONE.get(className, variants, "outline: 2px solid transparent; outline-offset: 2px");
       case "":
         return nameValue(OUTLINE_STYLE, "solid");
       case "dashed":
@@ -824,10 +824,10 @@ abstract class WayStyleGenParser extends WayStyleGenVariants {
       }
     }
 
-    return Rule.NOOP;
+    return CssRule.NOOP;
   }
 
-  private Rule stroke(String suffix) {
+  private CssRule stroke(String suffix) {
     Map<String, String> stroke;
     stroke = config.stroke();
 
@@ -845,13 +845,13 @@ abstract class WayStyleGenParser extends WayStyleGenVariants {
     width = strokeWidth.get(suffix);
 
     if (width != null) {
-      return nameValue(Utility.STROKE_WIDTH, width);
+      return nameValue(CssUtility.STROKE_WIDTH, width);
     }
 
-    return Rule.NOOP;
+    return CssRule.NOOP;
   }
 
-  private Rule text(String suffix) {
+  private CssRule text(String suffix) {
     Map<String, String> fontSize;
     fontSize = config.fontSize();
 
@@ -872,10 +872,10 @@ abstract class WayStyleGenParser extends WayStyleGenVariants {
       return TEXT_COLOR.get(className, variants, colorValue);
     }
 
-    return Rule.NOOP;
+    return CssRule.NOOP;
   }
 
-  private Rule fontSize(String value) {
+  private CssRule fontSize(String value) {
     int slash;
     slash = value.indexOf('/');
 
@@ -899,7 +899,7 @@ abstract class WayStyleGenParser extends WayStyleGenVariants {
     return FONT_SIZE1.get(className, variants, value);
   }
 
-  private Rule xy(Utility util, Utility utilX, Utility utilY, Map<String, String> values, String suffix) {
+  private CssRule xy(CssUtility util, CssUtility utilX, CssUtility utilY, Map<String, String> values, String suffix) {
     int dash;
     dash = suffix.indexOf('-');
 
@@ -916,11 +916,11 @@ abstract class WayStyleGenParser extends WayStyleGenVariants {
 
         case 'y' -> config(utilY, values, suffix.substring(dash + 1));
 
-        default -> Rule.NOOP;
+        default -> CssRule.NOOP;
       };
     }
 
-    return Rule.NOOP;
+    return CssRule.NOOP;
   }
 
 }

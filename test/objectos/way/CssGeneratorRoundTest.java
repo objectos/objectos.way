@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.css;
+package objectos.way;
 
 import static org.testng.Assert.assertEquals;
 
@@ -21,17 +21,17 @@ import java.util.List;
 import java.util.Map;
 import org.testng.annotations.Test;
 
-public class WayStyleGenRoundTest {
+public class CssGeneratorRoundTest {
 
   @Test
   public void testCase01() {
-    WayStyleGenConfig config;
+    CssGeneratorConfig config;
     config = config();
 
-    WayStyleGenRound round;
-    round = new WayStyleGenRound(config);
+    CssGeneratorRound round;
+    round = new CssGeneratorRound(config);
 
-    round.rules.put("bg-black", Utility.BACKGROUND_COLOR.get("bg-black", List.of(), "black"));
+    round.rules.put("bg-black", CssUtility.BACKGROUND_COLOR.get("bg-black", List.of(), "black"));
 
     assertEquals(
         round.generate(),
@@ -42,19 +42,21 @@ public class WayStyleGenRoundTest {
     );
   }
 
-  private WayStyleGenConfig config() {
-    WayStyleGen gen;
-    gen = new WayStyleGen();
+  private CssGeneratorConfig config() {
+    CssGenerator gen;
+    gen = new CssGenerator();
 
     gen.overrideColors(
-        Map.entry("inherit", "inherit"),
-        Map.entry("current", "currentColor"),
-        Map.entry("transparent", "transparent"),
+        Map.ofEntries(
+            Map.entry("inherit", "inherit"),
+            Map.entry("current", "currentColor"),
+            Map.entry("transparent", "transparent"),
 
-        Map.entry("black", "#000000"),
-        Map.entry("white", "#ffffff")
+            Map.entry("black", "#000000"),
+            Map.entry("white", "#ffffff")
+        )
     );
-    
+
     gen.skipReset();
 
     return gen;

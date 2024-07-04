@@ -13,19 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.css;
+package objectos.way;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
 
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Set;
-import objectos.way.Html;
-import objectos.way.TestingNoteSink;
 import org.testng.annotations.Test;
 
-public class StyleGenTest {
+public class CssGeneratorTest {
 
   private static abstract class AbstractSubject extends Html.Template {
     @Override
@@ -3263,14 +3260,6 @@ public class StyleGenTest {
 
   @Test
   public void addRule() {
-    WayStyleGen gen;
-    gen = new WayStyleGen();
-
-    gen.addRule(":root", """
-    --ui-zero: 0px;
-    --ui-one: 1px;
-    """);
-
     class Subject extends AbstractSubject {
       @Override
       final void classes() {
@@ -3279,7 +3268,12 @@ public class StyleGenTest {
     }
 
     test(
-        gen, Subject.class,
+        Css.rule(":root", """
+        --ui-zero: 0px;
+        --ui-one: 1px;
+        """),
+
+        Subject.class,
 
         """
         :root {
@@ -3294,21 +3288,6 @@ public class StyleGenTest {
 
   @Test
   public void addUtility() {
-    WayStyleGen gen;
-    gen = new WayStyleGen();
-
-    gen.addUtility(
-        "theme-white",
-
-        """
-        --ui-border-subtle-00: #e0e0e0;
-        --ui-border-subtle-01: #c6c6c6;
-        --ui-border-subtle-02: #e0e0e0;
-        --ui-border-subtle-03: #c6c6c6;
-        --ui-border-subtle: var(--ui-border-subtle-00, #e0e0e0);
-        """
-    );
-
     class Subject extends AbstractSubject {
       @Override
       final void classes() {
@@ -3317,7 +3296,19 @@ public class StyleGenTest {
     }
 
     test(
-        gen, Subject.class,
+        Css.utility(
+            "theme-white",
+
+            """
+            --ui-border-subtle-00: #e0e0e0;
+            --ui-border-subtle-01: #c6c6c6;
+            --ui-border-subtle-02: #e0e0e0;
+            --ui-border-subtle-03: #c6c6c6;
+            --ui-border-subtle: var(--ui-border-subtle-00, #e0e0e0);
+            """
+        ),
+
+        Subject.class,
 
         """
         .theme-white {
@@ -3343,12 +3334,6 @@ public class StyleGenTest {
 
   @Test
   public void addVariant() {
-    WayStyleGen gen;
-    gen = new WayStyleGen();
-
-    gen.addVariant("thead", "& thead");
-    gen.addVariant("tr", "& tr");
-
     class Subject extends AbstractSubject {
       @Override
       final void classes() {
@@ -3358,7 +3343,12 @@ public class StyleGenTest {
     }
 
     test(
-        gen, Subject.class,
+        Css.variants(
+            Map.entry("thead", "& thead"),
+            Map.entry("tr", "& tr")
+        ),
+
+        Subject.class,
 
         """
         .thead\\:tr\\:border thead tr { border-width: 1px }
@@ -3370,13 +3360,6 @@ public class StyleGenTest {
 
   @Test
   public void overrideColors() {
-    WayStyleGen gen;
-    gen = new WayStyleGen();
-
-    gen.overrideColors(
-        Map.entry("border-subtle", "var(--ui-border-subtle)")
-    );
-
     class Subject extends AbstractSubject {
       @Override
       final void classes() {
@@ -3385,7 +3368,11 @@ public class StyleGenTest {
     }
 
     test(
-        gen, Subject.class,
+        Css.overrideColors(
+            Map.entry("border-subtle", "var(--ui-border-subtle)")
+        ),
+
+        Subject.class,
 
         """
         .border-border-subtle { border-color: var(--ui-border-subtle) }
@@ -3395,14 +3382,6 @@ public class StyleGenTest {
 
   @Test
   public void overrideContent() {
-    WayStyleGen gen;
-    gen = new WayStyleGen();
-
-    gen.overrideContent(
-        Map.entry("empty", "\"\""),
-        Map.entry("foo", "url(foo.png)")
-    );
-
     class Subject extends AbstractSubject {
       @Override
       final void classes() {
@@ -3411,7 +3390,12 @@ public class StyleGenTest {
     }
 
     test(
-        gen, Subject.class,
+        Css.overrideContent(
+            Map.entry("empty", "\"\""),
+            Map.entry("foo", "url(foo.png)")
+        ),
+
+        Subject.class,
 
         """
         .content-foo { content: url(foo.png) }
@@ -3422,20 +3406,6 @@ public class StyleGenTest {
 
   @Test
   public void overrideFontSize() {
-    WayStyleGen gen;
-    gen = new WayStyleGen();
-
-    gen.overrideFontSize(
-        Map.entry("sm", "0.8rem"),
-        Map.entry("base", "16px/24px"),
-        Map.entry("body-compact-01", """
-        font-size: var(--ui-body-compact-01-font-size, 0.875rem);
-        font-weight: var(--ui-body-compact-01-font-weight, 400);
-        line-height: var(--ui-body-compact-01-line-height, 1.28572);
-        letter-spacing: var(--ui-body-compact-01-letter-spacing, 0.16px);
-        """)
-    );
-
     class Subject extends AbstractSubject {
       @Override
       final void classes() {
@@ -3444,7 +3414,18 @@ public class StyleGenTest {
     }
 
     test(
-        gen, Subject.class,
+        Css.overrideFontSize(
+            Map.entry("sm", "0.8rem"),
+            Map.entry("base", "16px/24px"),
+            Map.entry("body-compact-01", """
+            font-size: var(--ui-body-compact-01-font-size, 0.875rem);
+            font-weight: var(--ui-body-compact-01-font-weight, 400);
+            line-height: var(--ui-body-compact-01-line-height, 1.28572);
+            letter-spacing: var(--ui-body-compact-01-letter-spacing, 0.16px);
+            """)
+        ),
+
+        Subject.class,
 
         """
         .text-sm { font-size: 0.8rem }
@@ -3461,13 +3442,6 @@ public class StyleGenTest {
 
   @Test
   public void overrideGridTemplateRows() {
-    WayStyleGen gen;
-    gen = new WayStyleGen();
-
-    gen.overrideGridTemplateRows(
-        Map.entry("foo", "48px auto")
-    );
-
     class Subject extends AbstractSubject {
       @Override
       final void classes() {
@@ -3476,7 +3450,11 @@ public class StyleGenTest {
     }
 
     test(
-        gen, Subject.class,
+        Css.overrideGridTemplateRows(
+            Map.entry("foo", "48px auto")
+        ),
+
+        Subject.class,
 
         """
         .grid-rows-foo { grid-template-rows: 48px auto }
@@ -3486,15 +3464,6 @@ public class StyleGenTest {
 
   @Test
   public void overrideSpacing() {
-    WayStyleGen gen;
-    gen = new WayStyleGen();
-
-    gen.overrideSpacing(
-        Map.entry("0px", "0px"),
-        px(1), px(2), px(4),
-        px(16)
-    );
-
     class Subject extends AbstractSubject {
       @Override
       final void classes() {
@@ -3503,7 +3472,13 @@ public class StyleGenTest {
     }
 
     test(
-        gen, Subject.class,
+        Css.overrideSpacing(
+            Map.entry("0px", "0px"),
+            px(1), px(2), px(4),
+            px(16)
+        ),
+
+        Subject.class,
 
         """
         .m-0px { margin: 0px }
@@ -3517,9 +3492,6 @@ public class StyleGenTest {
 
   @Test
   public void resetTest() {
-    WayStyleGen gen;
-    gen = new WayStyleGen();
-
     class Subject extends AbstractSubject {
       @Override
       final void classes() {
@@ -3527,10 +3499,12 @@ public class StyleGenTest {
       }
     }
 
-    gen.noteSink(TestingNoteSink.INSTANCE);
-
     String result;
-    result = gen.generate(Set.of(Subject.class));
+    result = Css.generateCss(
+        Css.classes(Subject.class),
+
+        Css.noteSink(TestingNoteSink.INSTANCE)
+    );
 
     assertTrue(result.contains("sans"));
     assertTrue(result.contains("mono"));
@@ -3579,29 +3553,43 @@ public class StyleGenTest {
     return Map.entry(px, rem);
   }
 
+  private static final Css.Generator.Option COLORS = Css.overrideColors(
+      Map.entry("inherit", "inherit"),
+      Map.entry("current", "currentColor"),
+      Map.entry("transparent", "transparent"),
+
+      Map.entry("black", "#000000"),
+      Map.entry("white", "#ffffff")
+  );
+
   private void test(Class<?> type, String expected) {
-    WayStyleGen gen;
-    gen = new WayStyleGen();
+    String result;
+    result = Css.generateCss(
+        Css.classes(type),
 
-    gen.overrideColors(
-        Map.entry("inherit", "inherit"),
-        Map.entry("current", "currentColor"),
-        Map.entry("transparent", "transparent"),
+        Css.noteSink(TestingNoteSink.INSTANCE),
 
-        Map.entry("black", "#000000"),
-        Map.entry("white", "#ffffff")
+        COLORS,
+
+        Css.skipReset()
     );
 
-    test(gen, type, expected);
+    assertEquals(result, expected);
   }
 
-  private void test(WayStyleGen gen, Class<?> type, String expected) {
-    gen.noteSink(TestingNoteSink.INSTANCE);
-
-    gen.skipReset();
-
+  private void test(Css.Generator.Option extraOption, Class<?> type, String expected) {
     String result;
-    result = gen.generate(Set.of(type));
+    result = Css.generateCss(
+        Css.classes(type),
+
+        Css.noteSink(TestingNoteSink.INSTANCE),
+
+        COLORS,
+
+        Css.skipReset(),
+
+        extraOption
+    );
 
     assertEquals(result, expected);
   }

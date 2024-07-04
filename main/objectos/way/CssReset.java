@@ -13,11 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.css;
+package objectos.way;
 
-final class Reset {
+final class CssReset {
 
-  private Reset() {}
+  private CssReset() {}
   
   /*
    * current version: https://github.com/tailwindlabs/tailwindcss/commit/4aefd26f44cbb5ede9bc02c00085e97550d0953e 
