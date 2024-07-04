@@ -15,46 +15,81 @@
  */
 package objectos.way;
 
+import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
+import java.util.NoSuchElementException;
+import objectos.notes.NoteSink;
 import objectos.way.CssVariant.Breakpoint;
 
 sealed abstract class CssGeneratorConfig permits CssGenerator {
 
+  private final Map<CssKey, Object> store = new EnumMap<>(CssKey.class);
+
+  final Object get(CssKey key) {
+    Object existing;
+    existing = store.get(key);
+
+    if (existing == null) {
+      throw new NoSuchElementException(
+          "Key " + key + " is not mapped to any value"
+      );
+    }
+
+    return existing;
+  }
+
+  final void put(CssKey key, Object value) {
+    Object maybeExisting;
+    maybeExisting = store.put(key, value);
+
+    if (maybeExisting != null) {
+      throw new IllegalStateException(
+          "Key " + key + " already mapped to " + maybeExisting
+      );
+    }
+  }
+
+  //
+
   boolean skipReset;
-  
+
+  abstract NoteSink noteSink();
+
+  abstract Iterable<Class<?>> classes();
+
   abstract List<Breakpoint> breakpoints();
-  
+
   abstract CssVariant getVariant(String variantName);
 
   abstract Map<String, String> borderSpacing();
-  
+
   abstract Map<String, String> borderRadius();
-  
+
   abstract Map<String, String> borderWidth();
 
   abstract Map<String, String> colors();
 
   abstract Map<String, String> content();
-  
+
   abstract Map<String, String> cursor();
 
   abstract Map<String, String> flexGrow();
-  
+
   abstract Map<String, String> fontSize();
 
   abstract Map<String, String> fontWeight();
-  
+
   abstract Map<String, String> gap();
-  
+
   abstract Map<String, String> gridColumn();
-  
+
   abstract Map<String, String> gridColumnEnd();
-  
+
   abstract Map<String, String> gridColumnStart();
-  
+
   abstract Map<String, String> gridTemplateColumns();
-  
+
   abstract Map<String, String> gridTemplateRows();
 
   abstract Map<String, String> height();
@@ -66,9 +101,9 @@ sealed abstract class CssGeneratorConfig permits CssGenerator {
   abstract Map<String, String> lineHeight();
 
   abstract Map<String, String> margin();
-  
+
   abstract Map<String, String> maxWidth();
-  
+
   abstract Map<String, String> minWidth();
 
   abstract Map<String, String> opacity();
@@ -82,9 +117,9 @@ sealed abstract class CssGeneratorConfig permits CssGenerator {
   abstract Map<String, String> rules();
 
   abstract Map<String, String> size();
-  
+
   abstract Map<String, String> stroke();
-  
+
   abstract Map<String, String> strokeWidth();
 
   abstract Map<String, String> transitionDuration();

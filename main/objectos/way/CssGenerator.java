@@ -27,9 +27,9 @@ import objectos.way.CssVariant.Breakpoint;
 
 final class CssGenerator extends CssGeneratorConfig {
 
-  Set<Class<?>> classes;
+  private Set<Class<?>> classes;
 
-  NoteSink noteSink = NoOpNoteSink.of();
+  private NoteSink noteSink = NoOpNoteSink.of();
 
   private final List<Breakpoint> breakpoints = List.of(
       new Breakpoint(0, "sm", "640px"),
@@ -218,19 +218,14 @@ final class CssGenerator extends CssGeneratorConfig {
     skipReset = true;
   }
 
-  public final String generate() {
-    Check.notNull(classes, "classes == null");
+  @Override
+  final NoteSink noteSink() {
+    return noteSink;
+  }
 
-    CssGeneratorRound round;
-    round = new CssGeneratorRound(this);
-
-    round.noteSink = noteSink;
-
-    for (var clazz : classes) {
-      round.scan(clazz);
-    }
-
-    return round.generate();
+  @Override
+  final Iterable<Class<?>> classes() {
+    return classes;
   }
 
   @Override

@@ -102,6 +102,8 @@ abstract class CssGeneratorParser extends CssGeneratorVariants {
     this.config = config;
   }
 
+  abstract Object execute(CssKey key, CssAction action, Object arg);
+
   @Override
   final CssVariant getVariant(String variantName) {
     return config.getVariant(variantName);
@@ -109,6 +111,40 @@ abstract class CssGeneratorParser extends CssGeneratorVariants {
 
   @Override
   final CssRule onVariants(String className, List<CssVariant> variants, String value) {
+    return onVariantsOld(className, variants, value);
+  }
+
+  @SuppressWarnings("unchecked")
+  final CssRule onVariantsNew(String className, List<CssVariant> variants, String value) {
+    CssRule maybeStatic;
+    maybeStatic = staticValue(className, variants, value);
+
+    if (maybeStatic != null) {
+      return maybeStatic;
+    }
+
+    throw new UnsupportedOperationException("Implement me");
+  }
+
+  @SuppressWarnings("unchecked")
+  private CssRule staticValue(String className, List<CssVariant> variants, String value) {
+    Object o;
+    o = config.get(CssKey._STATIC_TABLE);
+
+    CssStaticTable table;
+    table = (CssStaticTable) o;
+
+    CssRuleFactory factory;
+    factory = table.get(value);
+
+    if (factory == null) {
+      return null;
+    }
+
+    return factory.create(className, variants);
+  }
+
+  final CssRule onVariantsOld(String className, List<CssVariant> variants, String value) {
     Map<String, String> utilities;
     utilities = config.utilities();
 

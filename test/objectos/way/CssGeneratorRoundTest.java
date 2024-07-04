@@ -19,6 +19,7 @@ import static org.testng.Assert.assertEquals;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import org.testng.annotations.Test;
 
 public class CssGeneratorRoundTest {
@@ -29,7 +30,7 @@ public class CssGeneratorRoundTest {
     config = config();
 
     CssGeneratorRound round;
-    round = new CssGeneratorRound(config);
+    round = new CssGeneratorSpec(config);
 
     round.rules.put("bg-black", CssUtility.BACKGROUND_COLOR.get("bg-black", List.of(), "black"));
 
@@ -45,6 +46,8 @@ public class CssGeneratorRoundTest {
   private CssGeneratorConfig config() {
     CssGenerator gen;
     gen = new CssGenerator();
+
+    gen.classes(Set.of());
 
     gen.overrideColors(
         Map.ofEntries(
