@@ -29,7 +29,8 @@ import static objectos.way.CssUtility.FLEX_DIRECTION;
 import static objectos.way.CssUtility.FLEX_GROW;
 import static objectos.way.CssUtility.FONT_SIZE1;
 import static objectos.way.CssUtility.FONT_SIZE2;
-import static objectos.way.CssUtility.FONT_SIZEX;
+import static objectos.way.CssUtility.FONT_SIZE3;
+import static objectos.way.CssUtility.FONT_SIZE4;
 import static objectos.way.CssUtility.GRID_COLUMN;
 import static objectos.way.CssUtility.GRID_COLUMN_END;
 import static objectos.way.CssUtility.GRID_COLUMN_START;
@@ -879,24 +880,43 @@ abstract class CssGeneratorParser extends CssGeneratorVariants {
     int slash;
     slash = value.indexOf('/');
 
-    if (slash >= 0) {
-      String fontSize;
-      fontSize = value.substring(0, slash);
+    if (slash < 0) {
+      return FONT_SIZE1.get(className, variants, value);
+    }
 
-      String lineHeight;
-      lineHeight = value.substring(slash + 1);
+    String fontSize;
+    fontSize = value.substring(0, slash);
 
+    String lineHeight;
+    lineHeight = value.substring(slash + 1);
+
+    slash = lineHeight.indexOf('/');
+
+    if (slash < 0) {
       return FONT_SIZE2.get(className, variants, fontSize, lineHeight);
     }
 
-    int semicolon;
-    semicolon = value.indexOf(';');
+    value = lineHeight;
 
-    if (semicolon >= 0) {
-      return FONT_SIZEX.get(className, variants, value);
+    lineHeight = value.substring(0, slash);
+
+    String letterSpacing;
+    letterSpacing = value.substring(slash + 1);
+
+    slash = letterSpacing.indexOf('/');
+
+    if (slash < 0) {
+      return FONT_SIZE3.get(className, variants, fontSize, lineHeight, letterSpacing);
     }
 
-    return FONT_SIZE1.get(className, variants, value);
+    value = letterSpacing;
+
+    letterSpacing = value.substring(0, slash);
+
+    String fontWeight;
+    fontWeight = value.substring(slash + 1);
+
+    return FONT_SIZE4.get(className, variants, fontSize, lineHeight, letterSpacing, fontWeight);
   }
 
   private CssRule xy(CssUtility util, CssUtility utilX, CssUtility utilY, Map<String, String> values, String suffix) {

@@ -66,51 +66,57 @@ final class UiStyles implements Http.Handler {
         --cds-text-secondary: #525252;
         """),
 
-        Css.overrideColors(
-            Css.kv("transparent", "transparent"),
-            Css.kv("background", "var(--cds-background)"),
-            Css.kv("background-active", "var(--cds-background-active)"),
-            Css.kv("background-hover", "var(--cds-background-hover)"),
-            Css.kv("border-subtle", "var(--cds-border-subtle)"),
-            Css.kv("focus", "var(--cds-focus)"),
-            Css.kv("icon-primary", "var(--cds-icon-primary)"),
-            Css.kv("icon-secondary", "var(--cds-icon-secondary)"),
-            Css.kv("layer", "var(--cds-layer)"),
-            Css.kv("overlay", "var(--cds-overlay)"),
-            Css.kv("text-primary", "var(--cds-text-primary)"),
-            Css.kv("text-secondary", "var(--cds-text-secondary)")
-        ),
+        Css.overrideColors("""
+        transparent: transparent
+        background: var(--cds-background)
+        background-active: var(--cds-background-active)
+        background-hover: var(--cds-background-hover)
+        border-subtle: var(--cds-border-subtle)
+        focus: var(--cds-focus)
+        icon-primary: var(--cds-icon-primary)
+        icon-secondary: var(--cds-icon-secondary)
+        layer: var(--cds-layer)
+        overlay: var(--cds-overlay)
+        text-primary: var(--cds-text-primary)
+        text-secondary: var(--cds-text-secondary)
+        """),
 
-        Css.overrideContent(
-            Css.kv("none", "none"),
-            Css.kv("empty", "\"\"")
-        ),
+        Css.overrideContent("""
+        none: none
+        empty: ""
+        """),
 
-        Css.overrideFontSize(
-            Css.kv("body-compact-01", """
-                font-size: var(--cds-body-compact-01-font-size, 0.875rem);
-                font-weight: var(--cds-body-compact-01-font-weight, 400);
-                line-height: var(--cds-body-compact-01-line-height, 1.28572);
-                letter-spacing: var(--cds-body-compact-01-letter-spacing, 0.16px);
-                """),
+        Css.overrideFontSize("""
+        body-compact-01: var(--cds-body-compact-01-font-size, 0.875rem)/var(--cds-body-compact-01-line-height, 1.28572)/var(--cds-body-compact-01-letter-spacing, 0.16px)/var(--cds-body-compact-01-font-weight, 400)
 
-            Css.kv("heading-compact-01", """
-                font-size: var(--cds-heading-compact-01-font-size, 0.875rem);
-                font-weight: var(--cds-heading-compact-01-font-weight, 600);
-                line-height: var(--cds-heading-compact-01-line-height, 1.28572);
-                letter-spacing: var(--cds-heading-compact-01-letter-spacing, 0.16px);
-                """)
-        ),
+        heading-compact-01: var(--cds-heading-compact-01-font-size, 0.875rem)/var(--cds-heading-compact-01-line-height, 1.28572)/var(--cds-heading-compact-01-letter-spacing, 0.16px)/var(--cds-heading-compact-01-font-weight, 600)
+        """),
 
-        Css.overrideSpacing(
-            Css.kv("0px", "0px"),
-            px(1), px(2), px(4), px(6), px(8),
-            px(10), px(12), px(14), px(16),
-            px(20), px(24), px(28),
-            px(32), px(36),
-            px(40), px(44), px(48),
-            px(208), px(224), px(240), px(256), px(288)
-        )
+        Css.overrideSpacing("""
+        0px: 0px
+        1px: 0.0625rem
+        2px: 0.125rem
+        4px: 0.25rem
+        6px: 0.375rem
+        8px: 0.5rem
+        10px: 0.625rem
+        12px: 0.75rem
+        14px: 0.875rem
+        16px: 1rem
+        20px: 1.25rem
+        24px: 1.5rem
+        28px: 1.75rem
+        32px: 2rem
+        36px: 2.25rem
+        40px: 2.5rem
+        44px: 2.75rem
+        48px: 3rem
+        208px: 13rem
+        224px: 14rem
+        240px: 15rem
+        256px: 16rem
+        288px: 18rem
+        """)
     );
   }
 
@@ -131,24 +137,6 @@ final class UiStyles implements Http.Handler {
     http.header(Http.CONTENT_LENGTH, bytes.length);
 
     http.send(bytes);
-  }
-
-  private Css.Generator.KeyValue px(int value) {
-    String px;
-    px = Integer.toString(value) + "px";
-
-    double remValue;
-    remValue = ((double) value) / 16;
-
-    String rem;
-
-    if (remValue == Math.rint(remValue)) {
-      rem = Integer.toString((int) remValue);
-    } else {
-      rem = Double.toString(remValue);
-    }
-
-    return Css.kv(px, rem + "rem");
   }
 
 }

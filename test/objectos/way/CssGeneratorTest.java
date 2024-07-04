@@ -3341,10 +3341,10 @@ public class CssGeneratorTest {
     }
 
     test(
-        Css.variants(
-            Css.kv("thead", "& thead"),
-            Css.kv("tr", "& tr")
-        ),
+        Css.variants("""
+        thead: & thead
+        tr: & tr
+        """),
 
         Subject.class,
 
@@ -3366,9 +3366,9 @@ public class CssGeneratorTest {
     }
 
     test(
-        Css.overrideColors(
-            Css.kv("border-subtle", "var(--ui-border-subtle)")
-        ),
+        Css.overrideColors("""
+        border-subtle: var(--ui-border-subtle)
+        """),
 
         Subject.class,
 
@@ -3388,10 +3388,10 @@ public class CssGeneratorTest {
     }
 
     test(
-        Css.overrideContent(
-            Css.kv("empty", "\"\""),
-            Css.kv("foo", "url(foo.png)")
-        ),
+        Css.overrideContent("""
+        empty: ""
+        foo: url(foo.png)
+        """),
 
         Subject.class,
 
@@ -3412,16 +3412,11 @@ public class CssGeneratorTest {
     }
 
     test(
-        Css.overrideFontSize(
-            Css.kv("sm", "0.8rem"),
-            Css.kv("base", "16px/24px"),
-            Css.kv("body-compact-01", """
-            font-size: var(--ui-body-compact-01-font-size, 0.875rem);
-            font-weight: var(--ui-body-compact-01-font-weight, 400);
-            line-height: var(--ui-body-compact-01-line-height, 1.28572);
-            letter-spacing: var(--ui-body-compact-01-letter-spacing, 0.16px);
-            """)
-        ),
+        Css.overrideFontSize("""
+        sm: 0.8rem
+        base: 16px/24px
+        body-compact-01: var(--ui-body-compact-01-font-size, 0.875rem)/var(--ui-body-compact-01-line-height, 1.28572)/var(--ui-body-compact-01-letter-spacing, 0.16px)/var(--ui-body-compact-01-font-weight, 400)
+        """),
 
         Subject.class,
 
@@ -3430,9 +3425,9 @@ public class CssGeneratorTest {
         .text-base { font-size: 16px; line-height: 24px }
         .text-body-compact-01 {
           font-size: var(--ui-body-compact-01-font-size, 0.875rem);
-          font-weight: var(--ui-body-compact-01-font-weight, 400);
           line-height: var(--ui-body-compact-01-line-height, 1.28572);
           letter-spacing: var(--ui-body-compact-01-letter-spacing, 0.16px);
+          font-weight: var(--ui-body-compact-01-font-weight, 400);
         }
         """
     );
@@ -3448,9 +3443,9 @@ public class CssGeneratorTest {
     }
 
     test(
-        Css.overrideGridTemplateRows(
-            Css.kv("foo", "48px auto")
-        ),
+        Css.overrideGridTemplateRows("""
+        foo: 48px auto
+        """),
 
         Subject.class,
 
@@ -3470,11 +3465,13 @@ public class CssGeneratorTest {
     }
 
     test(
-        Css.overrideSpacing(
-            Css.kv("0px", "0px"),
-            px(1), px(2), px(4),
-            px(16)
-        ),
+        Css.overrideSpacing("""
+        0px: 0px
+        1px: 0.0625rem
+        2px: 0.125rem
+        4px: 0.25rem
+        16px: 1rem
+        """),
 
         Subject.class,
 
@@ -3533,32 +3530,14 @@ public class CssGeneratorTest {
     );
   }
 
-  private Css.Generator.KeyValue px(int value) {
-    String px;
-    px = Integer.toString(value) + "px";
+  private static final Css.Generator.Option COLORS = Css.overrideColors("""
+  inherit: inherit
+  current: currentColor
+  transparent: transparent
 
-    double remValue;
-    remValue = ((double) value) / 16;
-
-    String rem;
-
-    if (remValue == Math.rint(remValue)) {
-      rem = Integer.toString((int) remValue) + "rem";
-    } else {
-      rem = Double.toString(remValue) + "rem";
-    }
-
-    return Css.kv(px, rem);
-  }
-
-  private static final Css.Generator.Option COLORS = Css.overrideColors(
-      Css.kv("inherit", "inherit"),
-      Css.kv("current", "currentColor"),
-      Css.kv("transparent", "transparent"),
-
-      Css.kv("black", "#000000"),
-      Css.kv("white", "#ffffff")
-  );
+  black: #000000
+  white: #ffffff
+  """);
 
   private void test(Class<?> type, String expected) {
     String result;

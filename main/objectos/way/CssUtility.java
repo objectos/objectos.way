@@ -150,8 +150,9 @@ sealed abstract class CssUtility {
   static final CssUtility VERTICAL_ALIGN = new Single("vertical-align");
 
   static final CssUtility FONT_SIZE1 = new Single("font-size");
-  static final CssUtility FONT_SIZE2 = new Duo("font-size", "line-height");
-  static final CssUtility FONT_SIZEX = new MultiLine();
+  static final CssUtility.Duo FONT_SIZE2 = new Duo("font-size", "line-height");
+  static final CssUtility.Three FONT_SIZE3 = new Three("font-size", "line-height", "letter-spacing");
+  static final CssUtility.Four FONT_SIZE4 = new Four("font-size", "line-height", "letter-spacing", "font-weight");
   static final CssUtility FONT_WEIGHT = new Single("font-weight");
 
   static final CssUtility LINE_HEIGHT = new Single("line-height");
@@ -188,10 +189,6 @@ sealed abstract class CssUtility {
   }
 
   CssRule get(String className, List<CssVariant> variants, String value) {
-    throw new UnsupportedOperationException();
-  }
-
-  CssRule get(String className, List<CssVariant> variants, String value1, String value2) {
     throw new UnsupportedOperationException();
   }
 
@@ -243,7 +240,7 @@ sealed abstract class CssUtility {
 
   }
 
-  private static final class Duo extends CssUtility {
+  static final class Duo extends CssUtility {
 
     private final String property1;
 
@@ -255,7 +252,6 @@ sealed abstract class CssUtility {
       this.property2 = property2;
     }
 
-    @Override
     final CssRule get(String className, List<CssVariant> variants, String value1, String value2) {
       return new CssRule(index, className, variants) {
         @Override
@@ -265,6 +261,119 @@ sealed abstract class CssUtility {
           out.append("; ");
 
           writePropertyValue(out, property2, value2);
+        }
+      };
+    }
+
+  }
+
+  static final class Three extends CssUtility {
+
+    private final String property1;
+
+    private final String property2;
+
+    private final String property3;
+
+    public Three(String property1, String property2, String property3) {
+      this.property1 = property1;
+      this.property2 = property2;
+      this.property3 = property3;
+    }
+
+    final CssRule get(String className, List<CssVariant> variants, String value1, String value2, String value3) {
+      return new CssRule(index, className, variants) {
+        @Override
+        final void writeBlock(StringBuilder out, CssIndentation indentation) {
+          CssIndentation next;
+          next = indentation.increase();
+
+          out.append(" {");
+
+          out.append(System.lineSeparator());
+
+          next.writeTo(out);
+          writePropertyValue(out, property1, value1);
+
+          out.append(";");
+          out.append(System.lineSeparator());
+
+          next.writeTo(out);
+          writePropertyValue(out, property2, value2);
+
+          out.append(";");
+          out.append(System.lineSeparator());
+
+          next.writeTo(out);
+          writePropertyValue(out, property3, value3);
+
+          out.append(";");
+          out.append(System.lineSeparator());
+
+          indentation.writeTo(out);
+
+          out.append('}');
+        }
+      };
+    }
+
+  }
+
+  static final class Four extends CssUtility {
+
+    private final String property1;
+
+    private final String property2;
+
+    private final String property3;
+
+    private final String property4;
+
+    public Four(String property1, String property2, String property3, String property4) {
+      this.property1 = property1;
+      this.property2 = property2;
+      this.property3 = property3;
+      this.property4 = property4;
+    }
+
+    final CssRule get(String className, List<CssVariant> variants, String value1, String value2, String value3, String value4) {
+      return new CssRule(index, className, variants) {
+        @Override
+        final void writeBlock(StringBuilder out, CssIndentation indentation) {
+          CssIndentation next;
+          next = indentation.increase();
+
+          out.append(" {");
+
+          out.append(System.lineSeparator());
+
+          next.writeTo(out);
+          writePropertyValue(out, property1, value1);
+
+          out.append(";");
+          out.append(System.lineSeparator());
+
+          next.writeTo(out);
+          writePropertyValue(out, property2, value2);
+
+          out.append(";");
+          out.append(System.lineSeparator());
+
+          next.writeTo(out);
+          writePropertyValue(out, property3, value3);
+
+          out.append(";");
+          out.append(System.lineSeparator());
+
+          next.writeTo(out);
+          writePropertyValue(out, property4, value4);
+
+          out.append(";");
+          out.append(System.lineSeparator());
+
+          indentation.writeTo(out);
+
+          out.append('}');
         }
       };
     }

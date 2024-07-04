@@ -19,6 +19,7 @@ import java.util.Map;
 import java.util.Set;
 import objectos.lang.object.Check;
 import objectos.notes.NoteSink;
+import objectos.util.map.GrowableSequencedMap;
 
 /**
  * The <strong>Objectos CSS</strong> main class.
@@ -35,11 +36,6 @@ public final class Css {
      * The set of classes to scan.
      */
     public sealed interface Classes permits CssGeneratorOption {}
-
-    /**
-     * A key-value pair used to configure a generator.
-     */
-    public sealed interface KeyValue extends Map.Entry<String, String> permits CssGeneratorKeyValue {}
 
     /**
      * A style sheet generation option.
@@ -99,23 +95,6 @@ public final class Css {
 
   // options
 
-  /**
-   * Creates a new key-value pair.
-   *
-   * @param key
-   *        the key of the new key-value pair
-   * @param value
-   *        the value of the new key-value pair
-   *
-   * @return a new key-value pair
-   */
-  public static Generator.KeyValue kv(String key, String value) {
-    Check.notNull(key, "key == null");
-    Check.notNull(value, "value == null");
-
-    return new CssGeneratorKeyValue(key, value);
-  }
-
   public static Generator.Classes classes(Class<?>... values) {
     Set<Class<?>> set;
     set = Set.of(values);
@@ -139,9 +118,9 @@ public final class Css {
     };
   }
 
-  public static Generator.Option overrideColors(Generator.KeyValue... entries) {
+  public static Generator.Option overrideColors(String text) {
     Map<String, String> map;
-    map = Map.ofEntries(entries);
+    map = parseProperties(text);
 
     return new CssGeneratorOption() {
       @Override
@@ -151,9 +130,9 @@ public final class Css {
     };
   }
 
-  public static Generator.Option overrideContent(Generator.KeyValue... entries) {
+  public static Generator.Option overrideContent(String text) {
     Map<String, String> map;
-    map = Map.ofEntries(entries);
+    map = parseProperties(text);
 
     return new CssGeneratorOption() {
       @Override
@@ -163,9 +142,9 @@ public final class Css {
     };
   }
 
-  public static Generator.Option overrideFontSize(Generator.KeyValue... entries) {
+  public static Generator.Option overrideFontSize(String text) {
     Map<String, String> map;
-    map = Map.ofEntries(entries);
+    map = parseProperties(text);
 
     return new CssGeneratorOption() {
       @Override
@@ -175,9 +154,9 @@ public final class Css {
     };
   }
 
-  public static Generator.Option overrideGridTemplateRows(Generator.KeyValue... entries) {
+  public static Generator.Option overrideGridTemplateRows(String text) {
     Map<String, String> map;
-    map = Map.ofEntries(entries);
+    map = parseProperties(text);
 
     return new CssGeneratorOption() {
       @Override
@@ -187,9 +166,9 @@ public final class Css {
     };
   }
 
-  public static Generator.Option overrideSpacing(Generator.KeyValue... entries) {
+  public static Generator.Option overrideSpacing(String text) {
     Map<String, String> map;
-    map = Map.ofEntries(entries);
+    map = parseProperties(text);
 
     return new CssGeneratorOption() {
       @Override
@@ -232,9 +211,9 @@ public final class Css {
     };
   }
 
-  public static Generator.Option variants(Generator.KeyValue... entries) {
+  public static Generator.Option variants(String text) {
     Map<String, String> map;
-    map = Map.ofEntries(entries);
+    map = parseProperties(text);
 
     return new CssGeneratorOption() {
       @Override
@@ -253,6 +232,39 @@ public final class Css {
   }
 
   // private stuff
+
+  static Map<String, String> parseProperties(String text) {
+    GrowableSequencedMap<String, String> map;
+    map = new GrowableSequencedMap<>();
+
+    String[] lines;
+    lines = text.split("\n");
+
+    for (String line : lines) {
+      if (line.isBlank()) {
+        continue;
+      }
+
+      int colon;
+      colon = line.indexOf(':');
+
+      if (colon < 0) {
+        throw new IllegalArgumentException(
+            "The colon character ':' was not found in the line listed below:\n\n" + line + "\n"
+        );
+      }
+
+      String key;
+      key = line.substring(0, colon);
+
+      String value;
+      value = line.substring(colon + 1);
+
+      map.put(key.trim(), value.trim());
+    }
+
+    return map.toUnmodifiableMap();
+  }
 
   private static final int UNSIGNED = 0xFF;
 
