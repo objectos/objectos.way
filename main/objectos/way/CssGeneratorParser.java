@@ -112,7 +112,7 @@ abstract class CssGeneratorParser extends CssGeneratorVariants {
 
   @Override
   final CssRule onVariants(String className, List<CssVariant> variants, String value) {
-    return onVariantsOld(className, variants, value);
+    return onVariantsNew(className, variants, value);
   }
 
   final CssRule onVariantsNew(String className, List<CssVariant> variants, String value) {

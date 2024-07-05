@@ -20,12 +20,46 @@ import java.util.function.Function;
 
 final class CssGeneratorSpec extends CssGeneratorRound implements Css.Generator {
 
+  private static final String DEFAULT_SPACING = """
+      px: 1px
+      0: 0px
+      0.5: 0.125rem
+      1: 0.25rem
+      1.5: 0.375rem
+      2: 0.5rem
+      2.5: 0.625rem
+      3: 0.75rem
+      3.5: 0.875rem
+      4: 1rem
+      5: 1.25rem
+      6: 1.5rem
+      7: 1.75rem
+      8: 2rem
+      9: 2.25rem
+      10: 2.5rem
+      11: 2.75rem
+      12: 3rem
+      14: 3.5rem
+      16: 4rem
+      20: 5rem
+      24: 6rem
+      28: 7rem
+      32: 8rem
+      36: 9rem
+      40: 10rem
+      44: 11rem
+      48: 12rem
+      52: 13rem
+      56: 14rem
+      60: 15rem
+      64: 16rem
+      72: 18rem
+      80: 20rem
+      96: 24rem
+      """;
+
   CssGeneratorSpec(CssGeneratorConfig config) {
     super(config);
-  }
-
-  private String[] names(String... names) {
-    return names;
   }
 
   @Override
@@ -41,13 +75,13 @@ final class CssGeneratorSpec extends CssGeneratorRound implements Css.Generator 
 
       case BORDER_COLLAPSE -> executeBorderCollapse(key, action, arg);
 
-      case BORDER_COLOR -> executeBorderColor(key, action, arg, "border", names("border-color"));
-      case BORDER_COLOR_BOTTOM -> executeBorderColor(key, action, arg, "border-b", names("border-bottom-color"));
-      case BORDER_COLOR_LEFT -> executeBorderColor(key, action, arg, "border-l", names("border-left-color"));
-      case BORDER_COLOR_RIGHT -> executeBorderColor(key, action, arg, "border-r", names("border-right-color"));
-      case BORDER_COLOR_TOP -> executeBorderColor(key, action, arg, "border-t", names("border-top-color"));
-      case BORDER_COLOR_X -> executeBorderColor(key, action, arg, "border-x", names("border-left-color", "border-right-color"));
-      case BORDER_COLOR_Y -> executeBorderColor(key, action, arg, "border-y", names("border-top-color", "border-bottom-color"));
+      case BORDER_COLOR -> executeBorderColor(key, action, "border", "border-color");
+      case BORDER_COLOR_BOTTOM -> executeBorderColor(key, action, "border-b", "border-bottom-color");
+      case BORDER_COLOR_LEFT -> executeBorderColor(key, action, "border-l", "border-left-color");
+      case BORDER_COLOR_RIGHT -> executeBorderColor(key, action, "border-r", "border-right-color");
+      case BORDER_COLOR_TOP -> executeBorderColor(key, action, "border-t", "border-top-color");
+      case BORDER_COLOR_X -> executeBorderColor(key, action, "border-x", "border-left-color", "border-right-color");
+      case BORDER_COLOR_Y -> executeBorderColor(key, action, "border-y", "border-top-color", "border-bottom-color");
 
       case BORDER_RADIUS -> null;
       case BORDER_RADIUS_B -> null;
@@ -65,26 +99,28 @@ final class CssGeneratorSpec extends CssGeneratorRound implements Css.Generator 
       case BORDER_RADIUS_TL -> null;
       case BORDER_RADIUS_TR -> null;
 
-      case BORDER_SPACING -> executeBorderSpacing(key, action, arg, "border-spacing", s -> s + " " + s);
-      case BORDER_SPACING_X -> executeBorderSpacing(key, action, arg, "border-spacing-x", s -> s + " 0");
-      case BORDER_SPACING_Y -> executeBorderSpacing(key, action, arg, "border-spacing-y", s -> "0 " + s);
+      case BORDER_SPACING -> executeBorderSpacing(key, action, "border-spacing", s -> s + " " + s);
+      case BORDER_SPACING_X -> executeBorderSpacing(key, action, "border-spacing-x", s -> s + " 0");
+      case BORDER_SPACING_Y -> executeBorderSpacing(key, action, "border-spacing-y", s -> "0 " + s);
 
-      case BORDER_WIDTH -> executeBorderWidth(key, action, arg, "border", names("border-width"));
-      case BORDER_WIDTH_BOTTOM -> executeBorderWidth(key, action, arg, "border-b", names("border-bottom-width"));
-      case BORDER_WIDTH_LEFT -> executeBorderWidth(key, action, arg, "border-l", names("border-left-width"));
-      case BORDER_WIDTH_RIGHT -> executeBorderWidth(key, action, arg, "border-r", names("border-right-width"));
-      case BORDER_WIDTH_TOP -> executeBorderWidth(key, action, arg, "border-t", names("border-top-width"));
-      case BORDER_WIDTH_X -> executeBorderWidth(key, action, arg, "border-x", names("border-left-width", "border-right-width"));
-      case BORDER_WIDTH_Y -> executeBorderWidth(key, action, arg, "border-y", names("border-top-width", "border-bottom-width"));
+      case BORDER_WIDTH -> executeBorderWidth(key, action, "border", "border-width");
+      case BORDER_WIDTH_BOTTOM -> executeBorderWidth(key, action, "border-b", "border-bottom-width");
+      case BORDER_WIDTH_LEFT -> executeBorderWidth(key, action, "border-l", "border-left-width");
+      case BORDER_WIDTH_RIGHT -> executeBorderWidth(key, action, "border-r", "border-right-width");
+      case BORDER_WIDTH_TOP -> executeBorderWidth(key, action, "border-t", "border-top-width");
+      case BORDER_WIDTH_X -> executeBorderWidth(key, action, "border-x", "border-left-width", "border-right-width");
+      case BORDER_WIDTH_Y -> executeBorderWidth(key, action, "border-y", "border-top-width", "border-bottom-width");
 
-      case BOTTOM -> null;
+      case BOTTOM -> executeInset(key, action, "bottom", "bottom");
+
       case CONTENT -> null;
       case CURSOR -> null;
       case CUSTOM -> null;
 
       case DISPLAY -> executeDisplay(key, action, arg);
 
-      case END -> null;
+      case END -> executeInset(key, action, "end", "inset-inline-end");
+
       case FILL -> null;
 
       case FLEX_DIRECTION -> executeFlexDirection(key, action, arg);
@@ -104,13 +140,15 @@ final class CssGeneratorSpec extends CssGeneratorRound implements Css.Generator 
       case GRID_TEMPLATE_COLUMNS -> null;
       case GRID_TEMPLATE_ROWS -> null;
       case HEIGHT -> null;
-      case INSET -> null;
-      case INSET_X -> null;
-      case INSET_Y -> null;
+
+      case INSET -> executeInset(key, action, "inset", "inset");
+      case INSET_X -> executeInset(key, action, "inset-x", "left", "right");
+      case INSET_Y -> executeInset(key, action, "inset-y", "top", "bottom");
 
       case JUSTIFY_CONTENT -> executeJustifyContent(key, action, arg);
 
-      case LEFT -> null;
+      case LEFT -> executeInset(key, action, "left", "left");
+
       case LETTER_SPACING -> null;
       case LINE_HEIGHT -> null;
       case MARGIN -> null;
@@ -145,9 +183,12 @@ final class CssGeneratorSpec extends CssGeneratorRound implements Css.Generator 
 
       case POSITION -> executePosition(key, action, arg);
 
-      case RIGHT -> null;
+      case RIGHT -> executeInset(key, action, "right", "right");
+
       case SIZE -> null;
-      case START -> null;
+
+      case START -> executeInset(key, action, "start", "inset-inline-start");
+
       case STROKE -> null;
       case STROKE_WIDTH -> null;
 
@@ -161,7 +202,8 @@ final class CssGeneratorSpec extends CssGeneratorRound implements Css.Generator 
 
       case TEXT_WRAP -> executeTextWrap(key, action, arg);
 
-      case TOP -> null;
+      case TOP -> executeInset(key, action, "top", "top");
+
       case TRANSITION_DURATION -> null;
       case TRANSITION_PROPERTY -> null;
 
@@ -239,7 +281,7 @@ final class CssGeneratorSpec extends CssGeneratorRound implements Css.Generator 
         variableName = "--tw-bg-opacity";
 
         Map<String, String> colors;
-        colors = config.colorsAlpha(key, variableName);
+        colors = config.colorsAlpha(CssKey.BACKGROUND_COLOR, variableName);
 
         String propertyName;
         propertyName = "background-color";
@@ -261,7 +303,11 @@ final class CssGeneratorSpec extends CssGeneratorRound implements Css.Generator 
     };
   }
 
-  private Object executeBorderColor(CssKey key, CssAction action, Object arg, String prefix, String[] propertyNames) {
+  private Object executeBorderColor(CssKey key, CssAction action, String prefix, String propertyName1) {
+    return executeBorderColor(key, action, prefix, propertyName1, null);
+  }
+
+  private Object executeBorderColor(CssKey key, CssAction action, String prefix, String propertyName1, String propertyName2) {
     return switch (action) {
       case CONFIG_STATIC_TABLE -> config.prefix(key, prefix);
 
@@ -270,31 +316,38 @@ final class CssGeneratorSpec extends CssGeneratorRound implements Css.Generator 
         variableName = "--tw-border-opacity";
 
         Map<String, String> colors;
-        colors = config.colorsAlpha(key, variableName);
+        colors = config.colorsAlpha(CssKey.BORDER_COLOR, variableName);
 
-        yield new CssRuleResolver.OfColorAlpha(key, variableName, colors, propertyNames);
+        yield new CssRuleResolver.OfColorAlpha(key, variableName, colors, propertyName1, propertyName2);
       }
 
-      default -> error(key, action, arg);
+      default -> error(key, action, null);
     };
   }
 
-  private Object executeBorderSpacing(CssKey key, CssAction action, Object arg, String prefix, Function<String, String> valueConverter) {
+  private Object executeBorderSpacing(CssKey key, CssAction action, String prefix, Function<String, String> valueConverter) {
     return switch (action) {
       case CONFIG_STATIC_TABLE -> config.prefix(key, prefix);
 
       case RESOLVER -> {
         Map<String, String> borderSpacing;
-        borderSpacing = config.values(key, config::spacing);
+        borderSpacing = config.values(CssKey.BORDER_SPACING, config::spacing);
 
-        yield new CssRuleResolver.OfProperties(key, borderSpacing, new String[] {"border-spacing"}, valueConverter);
+        CssValueFormatter formatter;
+        formatter = new CssValueFormatter.OfFunction(valueConverter);
+
+        yield new CssRuleResolver.OfProperties(key, borderSpacing, formatter, "border-spacing");
       }
 
-      default -> error(key, action, arg);
+      default -> error(key, action, null);
     };
   }
 
-  private Object executeBorderWidth(CssKey key, CssAction action, Object arg, String prefix, String[] propertyNames) {
+  private Object executeBorderWidth(CssKey key, CssAction action, String prefix, String propertyName1) {
+    return executeBorderWidth(key, action, prefix, propertyName1, null);
+  }
+
+  private Object executeBorderWidth(CssKey key, CssAction action, String prefix, String propertyName1, String propertyName2) {
     return switch (action) {
       case CONFIG_STATIC_TABLE -> config.prefix(key, prefix);
 
@@ -308,12 +361,12 @@ final class CssGeneratorSpec extends CssGeneratorRound implements Css.Generator 
         """;
 
         Map<String, String> borderWidth;
-        borderWidth = config.values(key, defaults);
+        borderWidth = config.values(CssKey.BORDER_WIDTH, defaults);
 
-        yield new CssRuleResolver.OfProperties(key, borderWidth, propertyNames);
+        yield new CssRuleResolver.OfProperties(key, borderWidth, CssValueFormatter.Identity.INSTANCE, propertyName1, propertyName2);
       }
 
-      default -> error(key, action, arg);
+      default -> error(key, action, null);
     };
   }
 
@@ -355,6 +408,38 @@ final class CssGeneratorSpec extends CssGeneratorRound implements Css.Generator 
           .rule(key, "flex-col-reverse", "flex-direction: column-reverse");
 
       default -> error(key, action, arg);
+    };
+  }
+
+  private static final String DEFAULT_INSET = DEFAULT_SPACING + """
+      auto: auto
+      1/2: 50%
+      1/3: 33.333333%
+      2/3: 66.666667%
+      1/4: 25%
+      2/4: 50%
+      3/4: 75%
+      full: 100%
+      """;
+
+  private Object executeInset(CssKey key, CssAction action, String prefix, String propertyName1) {
+    return executeInset(key, action, prefix, propertyName1, null);
+  }
+
+  private Object executeInset(CssKey key, CssAction action, String prefix, String propertyName1, String propertyName2) {
+    return switch (action) {
+      case CONFIG_STATIC_TABLE -> config.prefix(key, prefix);
+
+      case RESOLVER -> {
+        Map<String, String> borderWidth;
+        borderWidth = config.values(CssKey.INSET, DEFAULT_INSET);
+
+        yield new CssRuleResolver.OfProperties(
+            key, borderWidth, CssValueFormatter.NegativeValues.INSTANCE, propertyName1, propertyName2
+        );
+      }
+
+      default -> error(key, action, null);
     };
   }
 
