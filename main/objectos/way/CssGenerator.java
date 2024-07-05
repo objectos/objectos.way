@@ -1232,7 +1232,7 @@ final class CssGenerator extends CssGeneratorConfig {
     return zIndex;
   }
 
-  private Map<String, String> spacing() {
+  final Map<String, String> spacing() {
     if (spacing == null) {
       spacing = new GrowableMap<>();
 

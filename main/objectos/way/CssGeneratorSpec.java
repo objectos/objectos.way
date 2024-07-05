@@ -15,10 +15,17 @@
  */
 package objectos.way;
 
+import java.util.Map;
+import java.util.function.Function;
+
 final class CssGeneratorSpec extends CssGeneratorRound implements Css.Generator {
 
   CssGeneratorSpec(CssGeneratorConfig config) {
     super(config);
+  }
+
+  private String[] names(String... names) {
+    return names;
   }
 
   @Override
@@ -34,13 +41,14 @@ final class CssGeneratorSpec extends CssGeneratorRound implements Css.Generator 
 
       case BORDER_COLLAPSE -> executeBorderCollapse(key, action, arg);
 
-      case BORDER_COLOR -> null;
-      case BORDER_COLOR_BOTTOM -> null;
-      case BORDER_COLOR_LEFT -> null;
-      case BORDER_COLOR_RIGHT -> null;
-      case BORDER_COLOR_TOP -> null;
-      case BORDER_COLOR_X -> null;
-      case BORDER_COLOR_Y -> null;
+      case BORDER_COLOR -> executeBorderColor(key, action, arg, "border", names("border-color"));
+      case BORDER_COLOR_BOTTOM -> executeBorderColor(key, action, arg, "border-b", names("border-bottom-color"));
+      case BORDER_COLOR_LEFT -> executeBorderColor(key, action, arg, "border-l", names("border-left-color"));
+      case BORDER_COLOR_RIGHT -> executeBorderColor(key, action, arg, "border-r", names("border-right-color"));
+      case BORDER_COLOR_TOP -> executeBorderColor(key, action, arg, "border-t", names("border-top-color"));
+      case BORDER_COLOR_X -> executeBorderColor(key, action, arg, "border-x", names("border-left-color", "border-right-color"));
+      case BORDER_COLOR_Y -> executeBorderColor(key, action, arg, "border-y", names("border-top-color", "border-bottom-color"));
+
       case BORDER_RADIUS -> null;
       case BORDER_RADIUS_B -> null;
       case BORDER_RADIUS_BL -> null;
@@ -56,14 +64,19 @@ final class CssGeneratorSpec extends CssGeneratorRound implements Css.Generator 
       case BORDER_RADIUS_T -> null;
       case BORDER_RADIUS_TL -> null;
       case BORDER_RADIUS_TR -> null;
-      case BORDER_SPACING -> null;
-      case BORDER_WIDTH -> null;
-      case BORDER_WIDTH_BOTTOM -> null;
-      case BORDER_WIDTH_LEFT -> null;
-      case BORDER_WIDTH_RIGHT -> null;
-      case BORDER_WIDTH_TOP -> null;
-      case BORDER_WIDTH_X -> null;
-      case BORDER_WIDTH_Y -> null;
+
+      case BORDER_SPACING -> executeBorderSpacing(key, action, arg, "border-spacing", s -> s + " " + s);
+      case BORDER_SPACING_X -> executeBorderSpacing(key, action, arg, "border-spacing-x", s -> s + " 0");
+      case BORDER_SPACING_Y -> executeBorderSpacing(key, action, arg, "border-spacing-y", s -> "0 " + s);
+
+      case BORDER_WIDTH -> executeBorderWidth(key, action, arg, "border", names("border-width"));
+      case BORDER_WIDTH_BOTTOM -> executeBorderWidth(key, action, arg, "border-b", names("border-bottom-width"));
+      case BORDER_WIDTH_LEFT -> executeBorderWidth(key, action, arg, "border-l", names("border-left-width"));
+      case BORDER_WIDTH_RIGHT -> executeBorderWidth(key, action, arg, "border-r", names("border-right-width"));
+      case BORDER_WIDTH_TOP -> executeBorderWidth(key, action, arg, "border-t", names("border-top-width"));
+      case BORDER_WIDTH_X -> executeBorderWidth(key, action, arg, "border-x", names("border-left-width", "border-right-width"));
+      case BORDER_WIDTH_Y -> executeBorderWidth(key, action, arg, "border-y", names("border-top-width", "border-bottom-width"));
+
       case BOTTOM -> null;
       case CONTENT -> null;
       case CURSOR -> null;
@@ -221,9 +234,18 @@ final class CssGeneratorSpec extends CssGeneratorRound implements Css.Generator 
     return switch (action) {
       case CONFIG_STATIC_TABLE -> config.prefix(key, "bg");
 
-      case RESOLVER -> new CssRuleResolver.OfColorAlpha(
-          key, config.colorsAlpha(key, "--tw-bg-opacity"), "background-color", "--tw-bg-opacity"
-      );
+      case RESOLVER -> {
+        String variableName;
+        variableName = "--tw-bg-opacity";
+
+        Map<String, String> colors;
+        colors = config.colorsAlpha(key, variableName);
+
+        String propertyName;
+        propertyName = "background-color";
+
+        yield new CssRuleResolver.OfColorAlpha(key, variableName, colors, propertyName);
+      }
 
       default -> error(key, action, arg);
     };
@@ -234,6 +256,62 @@ final class CssGeneratorSpec extends CssGeneratorRound implements Css.Generator 
       case CONFIG_STATIC_TABLE -> staticTable()
           .rule(key, "border-collapse", "border-collapse: collapse")
           .rule(key, "border-separate", "border-collapse: separate");
+
+      default -> error(key, action, arg);
+    };
+  }
+
+  private Object executeBorderColor(CssKey key, CssAction action, Object arg, String prefix, String[] propertyNames) {
+    return switch (action) {
+      case CONFIG_STATIC_TABLE -> config.prefix(key, prefix);
+
+      case RESOLVER -> {
+        String variableName;
+        variableName = "--tw-border-opacity";
+
+        Map<String, String> colors;
+        colors = config.colorsAlpha(key, variableName);
+
+        yield new CssRuleResolver.OfColorAlpha(key, variableName, colors, propertyNames);
+      }
+
+      default -> error(key, action, arg);
+    };
+  }
+
+  private Object executeBorderSpacing(CssKey key, CssAction action, Object arg, String prefix, Function<String, String> valueConverter) {
+    return switch (action) {
+      case CONFIG_STATIC_TABLE -> config.prefix(key, prefix);
+
+      case RESOLVER -> {
+        Map<String, String> borderSpacing;
+        borderSpacing = config.values(key, config::spacing);
+
+        yield new CssRuleResolver.OfProperties(key, borderSpacing, new String[] {"border-spacing"}, valueConverter);
+      }
+
+      default -> error(key, action, arg);
+    };
+  }
+
+  private Object executeBorderWidth(CssKey key, CssAction action, Object arg, String prefix, String[] propertyNames) {
+    return switch (action) {
+      case CONFIG_STATIC_TABLE -> config.prefix(key, prefix);
+
+      case RESOLVER -> {
+        String defaults = """
+        : 1px
+        0: 0px
+        2: 2px
+        4: 4px
+        8: 8px
+        """;
+
+        Map<String, String> borderWidth;
+        borderWidth = config.values(key, defaults);
+
+        yield new CssRuleResolver.OfProperties(key, borderWidth, propertyNames);
+      }
 
       default -> error(key, action, arg);
     };

@@ -25,7 +25,7 @@ public class CssTest {
   @Test
   public void parseProperties01() {
     Map<String, String> map;
-    map = Css.parseProperties("");
+    map = Css.parseProperties("").toMap();
 
     assertEquals(map, Map.of());
   }
@@ -33,7 +33,7 @@ public class CssTest {
   @Test
   public void parseProperties02() {
     Map<String, String> map;
-    map = Css.parseProperties("background: var(--color-background, #FFF)");
+    map = Css.parseProperties("background: var(--color-background, #FFF)").toMap();
 
     assertEquals(map, Map.of("background", "var(--color-background, #FFF)"));
   }
@@ -46,7 +46,7 @@ public class CssTest {
     1px: 1px
     2px: 0.125rem
     4px: 0.25rem
-    """);
+    """).toMap();
 
     assertEquals(
         map,
@@ -69,7 +69,7 @@ public class CssTest {
 
     black: #000000
     white: #ffffff
-    """);
+    """).toMap();
 
     assertEquals(
         map,

@@ -16,11 +16,9 @@
 package objectos.way;
 
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Set;
 import objectos.way.CssGeneratorRound.Context;
 import objectos.way.CssVariant.MediaQuery;
 
@@ -28,9 +26,9 @@ class CssRule implements Comparable<CssRule> {
 
   static final class Of extends CssRule {
 
-    private final Map<String, String> properties;
+    private final CssProperties properties;
 
-    public Of(CssKey key, String className, List<CssVariant> variants, Map<String, String> properties) {
+    public Of(CssKey key, String className, List<CssVariant> variants, CssProperties properties) {
       super(key, className, variants);
 
       this.properties = properties;
@@ -38,34 +36,28 @@ class CssRule implements Comparable<CssRule> {
 
     @Override
     final void writeBlock(StringBuilder out, CssIndentation indentation) {
-      Set<Entry<String, String>> entries;
-      entries = properties.entrySet();
-
-      Iterator<Entry<String, String>> iterator;
-      iterator = entries.iterator();
-
       switch (properties.size()) {
         case 0 -> out.append(" {}");
 
         case 1 -> {
           Entry<String, String> prop;
-          prop = iterator.next();
+          prop = properties.get(0);
 
           writeBlockOne(out, prop);
         }
 
         case 2 -> {
           Entry<String, String> first;
-          first = iterator.next();
+          first = properties.get(0);
 
           Entry<String, String> second;
-          second = iterator.next();
+          second = properties.get(1);
 
           writeBlockTwo(out, first, second);
         }
 
         default -> {
-          writeBlockMany(out, indentation, iterator);
+          writeBlockMany(out, indentation, properties);
         }
       }
     }
@@ -273,14 +265,14 @@ class CssRule implements Comparable<CssRule> {
   }
 
   final void writeBlockMany(
-      StringBuilder out, CssIndentation indentation, Iterator<Entry<String, String>> properties) {
+      StringBuilder out, CssIndentation indentation, CssProperties properties) {
     blockStartMany(out);
 
     CssIndentation next;
     next = indentation.increase();
 
-    while (properties.hasNext()) {
-      propertyMany(out, next, properties.next());
+    for (Map.Entry<String, String> property : properties) {
+      propertyMany(out, next, property);
     }
 
     blockEndMany(out, indentation);

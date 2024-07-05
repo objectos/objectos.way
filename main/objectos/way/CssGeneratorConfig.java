@@ -23,17 +23,31 @@ import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.function.Function;
+import java.util.function.Supplier;
 import objectos.notes.NoteSink;
 import objectos.way.CssVariant.Breakpoint;
 
 sealed abstract class CssGeneratorConfig permits CssGenerator {
+
+  private final Map<CssKey, CssProperties> overrides = new EnumMap<>(CssKey.class);
 
   private final Map<CssKey, Object> store = new EnumMap<>(CssKey.class);
 
   private final Map<String, Set<CssKey>> prefixes = new HashMap<>();
 
   final Map<String, String> colorsAlpha(CssKey key, String variableName) {
+    CssProperties properties;
+    properties = overrides.get(key);
+
+    if (properties != null) {
+      return colorsAlpha(properties, variableName);
+    }
+
     return colors();
+  }
+
+  private Map<String, String> colorsAlpha(CssProperties properties, String variableName) {
+    return properties.toMap();
   }
 
   final Object get(CssKey key) {
@@ -57,6 +71,10 @@ sealed abstract class CssGeneratorConfig permits CssGenerator {
     return prefixes.get(prefix);
   }
 
+  final void override(CssKey key, CssProperties properties) {
+    overrides.put(key, properties);
+  }
+
   final Object prefix(CssKey key, String prefix) {
     Set<CssKey> set;
     set = prefixes.computeIfAbsent(prefix, s -> EnumSet.noneOf(CssKey.class));
@@ -75,6 +93,31 @@ sealed abstract class CssGeneratorConfig permits CssGenerator {
           "Key " + key + " already mapped to " + maybeExisting
       );
     }
+  }
+
+  final Map<String, String> values(CssKey key, String defaults) {
+    CssProperties properties;
+    properties = overrides.get(key);
+
+    if (properties != null) {
+      return properties.toMap();
+    }
+
+    CssProperties defaultProperties;
+    defaultProperties = Css.parseProperties(defaults);
+
+    return defaultProperties.toMap();
+  }
+
+  final Map<String, String> values(CssKey key, Supplier<Map<String, String>> defaultSupplier) {
+    CssProperties properties;
+    properties = overrides.get(key);
+
+    if (properties != null) {
+      return properties.toMap();
+    }
+
+    return defaultSupplier.get();
   }
 
   //
@@ -159,4 +202,5 @@ sealed abstract class CssGeneratorConfig permits CssGenerator {
 
   abstract Map<String, String> zIndex();
 
+  abstract Map<String, String> spacing();
 }

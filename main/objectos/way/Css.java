@@ -59,6 +59,8 @@ public final class Css {
 
   }
 
+  // private types
+
   private Css() {}
 
   public static String generateCss(Generator.Classes classes, Generator.Option... options) {
@@ -121,9 +123,16 @@ public final class Css {
     };
   }
 
+  public static Generator.Option overrideBackgroundColor(String text) {
+    CssProperties properties;
+    properties = parseProperties(text);
+
+    return new CssGeneratorOption.OverrideKey(CssKey.BACKGROUND_COLOR, properties);
+  }
+
   public static Generator.Option overrideColors(String text) {
     Map<String, String> map;
-    map = parseProperties(text);
+    map = parseProperties(text).toMap();
 
     return new CssGeneratorOption() {
       @Override
@@ -135,7 +144,7 @@ public final class Css {
 
   public static Generator.Option overrideContent(String text) {
     Map<String, String> map;
-    map = parseProperties(text);
+    map = parseProperties(text).toMap();
 
     return new CssGeneratorOption() {
       @Override
@@ -147,7 +156,7 @@ public final class Css {
 
   public static Generator.Option overrideFontSize(String text) {
     Map<String, String> map;
-    map = parseProperties(text);
+    map = parseProperties(text).toMap();
 
     return new CssGeneratorOption() {
       @Override
@@ -159,7 +168,7 @@ public final class Css {
 
   public static Generator.Option overrideGridTemplateRows(String text) {
     Map<String, String> map;
-    map = parseProperties(text);
+    map = parseProperties(text).toMap();
 
     return new CssGeneratorOption() {
       @Override
@@ -171,7 +180,7 @@ public final class Css {
 
   public static Generator.Option overrideSpacing(String text) {
     Map<String, String> map;
-    map = parseProperties(text);
+    map = parseProperties(text).toMap();
 
     return new CssGeneratorOption() {
       @Override
@@ -215,13 +224,13 @@ public final class Css {
   }
 
   public static Generator.Option variants(String text) {
-    Map<String, String> map;
-    map = parseProperties(text);
+    CssProperties props;
+    props = parseProperties(text);
 
     return new CssGeneratorOption() {
       @Override
       final void acceptCssGenerator(CssGenerator config) {
-        for (var entry : map.entrySet()) {
+        for (Map.Entry<String, String> entry : props.entries()) {
           String variantName;
           variantName = entry.getKey();
 
@@ -236,9 +245,9 @@ public final class Css {
 
   // private stuff
 
-  static Map<String, String> parseProperties(String text) {
-    GrowableSequencedMap<String, String> map;
-    map = new GrowableSequencedMap<>();
+  static CssProperties parseProperties(String text) {
+    CssProperties props;
+    props = new CssProperties();
 
     String[] lines;
     lines = text.split("\n");
@@ -263,10 +272,10 @@ public final class Css {
       String value;
       value = line.substring(colon + 1);
 
-      map.put(key.trim(), value.trim());
+      props.add(key.trim(), value.trim());
     }
 
-    return map.toUnmodifiableMap();
+    return props;
   }
 
   private static final int UNSIGNED = 0xFF;

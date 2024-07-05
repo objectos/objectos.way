@@ -17,6 +17,26 @@ package objectos.way;
 
 non-sealed abstract class CssGeneratorOption implements Css.Generator.Classes, Css.Generator.Option {
 
+  static final class OverrideKey extends CssGeneratorOption {
+
+    private final CssKey key;
+
+    private final CssProperties properties;
+
+    public OverrideKey(CssKey key, CssProperties properties) {
+      this.key = key;
+      this.properties = properties;
+    }
+
+    @Override
+    final void acceptCssGenerator(CssGenerator config) {
+      config.override(key, properties);
+    }
+
+  }
+
+  CssGeneratorOption() {}
+
   public static CssGeneratorOption cast(Css.Generator.Classes o) {
     // this cast is safe as Css.Generator.Classes is sealed
     return (CssGeneratorOption) o;

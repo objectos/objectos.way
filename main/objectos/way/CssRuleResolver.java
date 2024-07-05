@@ -17,24 +17,26 @@ package objectos.way;
 
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 
-sealed abstract class CssRuleResolver {
+@SuppressWarnings("exports")
+abstract class CssRuleResolver {
 
   static final class OfColorAlpha extends CssRuleResolver {
 
     private final CssKey key;
 
-    private final Map<String, String> colors;
-
-    private final String propertyName;
-
     private final String variableName;
 
-    public OfColorAlpha(CssKey key, Map<String, String> colors, String propertyName, String variableName) {
+    private final Map<String, String> colors;
+
+    private final String[] propertyNames;
+
+    public OfColorAlpha(CssKey key, String variableName, Map<String, String> colors, String... propertyNames) {
       this.key = key;
       this.colors = colors;
-      this.propertyName = propertyName;
       this.variableName = variableName;
+      this.propertyNames = propertyNames;
     }
 
     @Override
@@ -58,8 +60,63 @@ sealed abstract class CssRuleResolver {
         return null;
       }
 
-      Map<String, String> properties;
-      properties = Css.properties(variableName, Integer.toString(opacity), propertyName, color);
+      CssProperties properties;
+      properties = new CssProperties();
+
+      if (color.contains(variableName)) {
+        properties.add(variableName, Integer.toString(opacity));
+      }
+
+      for (String propertyName : propertyNames) {
+        properties.add(propertyName, color);
+      }
+
+      return new CssRule.Of(key, className, variants, properties);
+    }
+
+  }
+
+  static final class OfProperties extends CssRuleResolver {
+
+    private final CssKey key;
+
+    private final Map<String, String> properties;
+
+    private final String[] propertyNames;
+
+    private final Function<String, String> valueConverter;
+
+    public OfProperties(CssKey key, Map<String, String> properties, String[] propertyNames) {
+      this.key = key;
+      this.properties = properties;
+      this.propertyNames = propertyNames;
+      this.valueConverter = Function.identity();
+    }
+
+    public OfProperties(CssKey key, Map<String, String> properties, String[] propertyNames, Function<String, String> valueConverter) {
+      this.key = key;
+      this.properties = properties;
+      this.propertyNames = propertyNames;
+      this.valueConverter = valueConverter;
+    }
+
+    @Override
+    public final CssRule resolve(String className, List<CssVariant> variants, boolean negative, String value) {
+      String resolved;
+      resolved = properties.get(value);
+
+      if (resolved == null) {
+        return null;
+      }
+
+      resolved = valueConverter.apply(resolved);
+
+      CssProperties properties;
+      properties = new CssProperties();
+
+      for (String propertyName : propertyNames) {
+        properties.add(propertyName, resolved);
+      }
 
       return new CssRule.Of(key, className, variants, properties);
     }

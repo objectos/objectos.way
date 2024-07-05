@@ -115,7 +115,6 @@ abstract class CssGeneratorParser extends CssGeneratorVariants {
     return onVariantsOld(className, variants, value);
   }
 
-  @SuppressWarnings("unchecked")
   final CssRule onVariantsNew(String className, List<CssVariant> variants, String value) {
     // 1) static values search
     Object staticTableObject;
@@ -146,39 +145,46 @@ abstract class CssGeneratorParser extends CssGeneratorVariants {
       value = value.substring(1);
     }
 
-    Set<CssKey> candidates;
-    candidates = null;
+    // maybe it is the prefix with an empty value
+    // e.g. border-x
 
-    int fromIndex;
-    fromIndex = value.length();
+    Set<CssKey> candidates;
+    candidates = config.getCandidates(value);
 
     String suffix;
     suffix = "";
 
-    while (candidates == null) {
-      int lastDash;
-      lastDash = value.lastIndexOf('-', fromIndex);
+    if (candidates == null) {
 
-      if (lastDash == 0) {
-        // value starts with a dash and has no other dash
-        // => invalid value
-        break;
-      }
+      int fromIndex;
+      fromIndex = value.length();
 
-      String prefix;
-      prefix = value;
+      while (candidates == null && fromIndex > 0) {
+        int lastDash;
+        lastDash = value.lastIndexOf('-', fromIndex);
 
-      suffix = "";
+        if (lastDash == 0) {
+          // value starts with a dash and has no other dash
+          // => invalid value
+          break;
+        }
 
-      if (lastDash > 0) {
         fromIndex = lastDash - 1;
 
-        prefix = value.substring(0, lastDash);
+        String prefix;
+        prefix = value;
 
-        suffix = value.substring(lastDash + 1);
+        suffix = "";
+
+        if (lastDash > 0) {
+          prefix = value.substring(0, lastDash);
+
+          suffix = value.substring(lastDash + 1);
+        }
+
+        candidates = config.getCandidates(prefix);
       }
 
-      candidates = config.getCandidates(prefix);
     }
 
     if (candidates == null) {

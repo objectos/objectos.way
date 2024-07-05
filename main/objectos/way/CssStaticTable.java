@@ -23,7 +23,7 @@ final class CssStaticTable {
   private final Map<String, CssRuleFactory> table = new GrowableMap<>();
 
   public final CssStaticTable rule(CssKey key, String className, String text) {
-    Map<String, String> properties;
+    CssProperties properties;
     properties = Css.parseProperties(text);
 
     CssRuleFactory factory;

@@ -16,12 +16,11 @@
 package objectos.way;
 
 import java.util.List;
-import java.util.Map;
 
 @SuppressWarnings("exports")
 sealed interface CssRuleFactory {
 
-  record OfProperties(CssKey key, Map<String, String> properties) implements CssRuleFactory {
+  record OfProperties(CssKey key, CssProperties properties) implements CssRuleFactory {
     @Override
     public final CssRule create(String className, List<CssVariant> variants) {
       return new CssRule.Of(key, className, variants, properties);
