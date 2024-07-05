@@ -26,11 +26,11 @@ import objectos.way.CssVariant.MediaQuery;
 
 class CssRule implements Comparable<CssRule> {
 
-  static final class OfProperties extends CssRule {
+  static final class Of extends CssRule {
 
     private final Map<String, String> properties;
 
-    public OfProperties(CssKey key, String className, List<CssVariant> variants, Map<String, String> properties) {
+    public Of(CssKey key, String className, List<CssVariant> variants, Map<String, String> properties) {
       super(key, className, variants);
 
       this.properties = properties;
@@ -41,7 +41,8 @@ class CssRule implements Comparable<CssRule> {
       Set<Entry<String, String>> entries;
       entries = properties.entrySet();
 
-      Iterator<Entry<String, String>> iterator = entries.iterator();
+      Iterator<Entry<String, String>> iterator;
+      iterator = entries.iterator();
 
       switch (properties.size()) {
         case 0 -> out.append(" {}");

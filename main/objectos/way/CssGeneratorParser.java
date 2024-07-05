@@ -86,6 +86,7 @@ import static objectos.way.CssUtility.Z_INDEX;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import objectos.way.CssVariant.Breakpoint;
 
 abstract class CssGeneratorParser extends CssGeneratorVariants {
@@ -116,32 +117,94 @@ abstract class CssGeneratorParser extends CssGeneratorVariants {
 
   @SuppressWarnings("unchecked")
   final CssRule onVariantsNew(String className, List<CssVariant> variants, String value) {
-    CssRule maybeStatic;
-    maybeStatic = staticValue(className, variants, value);
+    // 1) static values search
+    Object staticTableObject;
+    staticTableObject = config.get(CssKey._STATIC_TABLE);
 
-    if (maybeStatic != null) {
-      return maybeStatic;
+    CssStaticTable staticTable;
+    staticTable = (CssStaticTable) staticTableObject;
+
+    CssRuleFactory staticFactory;
+    staticFactory = staticTable.get(value);
+
+    if (staticFactory != null) {
+      return staticFactory.create(className, variants);
     }
 
-    throw new UnsupportedOperationException("Implement me");
+    // 2) by prefix search
+
+    char firstChar;
+    firstChar = value.charAt(0);
+
+    // are we dealing with a negative value
+    boolean negative;
+    negative = false;
+
+    if (firstChar == '-') {
+      negative = true;
+
+      value = value.substring(1);
+    }
+
+    Set<CssKey> candidates;
+    candidates = null;
+
+    int fromIndex;
+    fromIndex = value.length();
+
+    String suffix;
+    suffix = "";
+
+    while (candidates == null) {
+      int lastDash;
+      lastDash = value.lastIndexOf('-', fromIndex);
+
+      if (lastDash == 0) {
+        // value starts with a dash and has no other dash
+        // => invalid value
+        break;
+      }
+
+      String prefix;
+      prefix = value;
+
+      suffix = "";
+
+      if (lastDash > 0) {
+        fromIndex = lastDash - 1;
+
+        prefix = value.substring(0, lastDash);
+
+        suffix = value.substring(lastDash + 1);
+      }
+
+      candidates = config.getCandidates(prefix);
+    }
+
+    if (candidates == null) {
+      return CssRule.NOOP;
+    }
+
+    for (CssKey candidate : candidates) {
+      Object resolverObject;
+      resolverObject = config.getOrCompute(candidate, this::createResolver);
+
+      CssRuleResolver resolver;
+      resolver = (CssRuleResolver) resolverObject;
+
+      CssRule rule;
+      rule = resolver.resolve(className, variants, negative, suffix);
+
+      if (rule != null) {
+        return rule;
+      }
+    }
+
+    return CssRule.NOOP;
   }
 
-  @SuppressWarnings("unchecked")
-  private CssRule staticValue(String className, List<CssVariant> variants, String value) {
-    Object o;
-    o = config.get(CssKey._STATIC_TABLE);
-
-    CssStaticTable table;
-    table = (CssStaticTable) o;
-
-    CssRuleFactory factory;
-    factory = table.get(value);
-
-    if (factory == null) {
-      return null;
-    }
-
-    return factory.create(className, variants);
+  private CssRuleResolver createResolver(CssKey key) {
+    return (CssRuleResolver) execute(key, CssAction.RESOLVER, null);
   }
 
   final CssRule onVariantsOld(String className, List<CssVariant> variants, String value) {

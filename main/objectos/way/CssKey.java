@@ -25,8 +25,6 @@ enum CssKey {
   // utilities
   // order is important!
 
-  $MARKER_UTILITIES_START,
-
   CUSTOM,
 
   ACCESSIBILITY,
@@ -179,9 +177,7 @@ enum CssKey {
   TRANSITION_PROPERTY,
   TRANSITION_DURATION,
 
-  CONTENT,
-
-  $MARKER_UTILITIES_END;
+  CONTENT;
 
   static final Set<CssKey> UNIVERSE = EnumSet.allOf(CssKey.class);
 

@@ -24,17 +24,13 @@ final class CssGeneratorSpec extends CssGeneratorRound implements Css.Generator 
   @Override
   final Object execute(CssKey key, CssAction action, Object arg) {
     return switch (key) {
-      case $MARKER_UTILITIES_END -> marker();
-
-      case $MARKER_UTILITIES_START -> marker();
-
       case _STATIC_TABLE -> _executeStaticTable(key, action, arg);
 
       case ACCESSIBILITY -> executeAccessibility(key, action, arg);
 
       case ALIGN_ITEMS -> executeAlignItems(key, action, arg);
 
-      case BACKGROUND_COLOR -> null;
+      case BACKGROUND_COLOR -> executeBackgroundColor(key, action, arg);
 
       case BORDER_COLLAPSE -> executeBorderCollapse(key, action, arg);
 
@@ -216,6 +212,18 @@ final class CssGeneratorSpec extends CssGeneratorRound implements Css.Generator 
           .rule(key, "items-center", "align-items: center")
           .rule(key, "items-baseline", "align-items: baseline")
           .rule(key, "items-stretch", "align-items: stretch");
+
+      default -> error(key, action, arg);
+    };
+  }
+
+  private Object executeBackgroundColor(CssKey key, CssAction action, Object arg) {
+    return switch (action) {
+      case CONFIG_STATIC_TABLE -> config.prefix(key, "bg");
+
+      case RESOLVER -> new CssRuleResolver.OfColorAlpha(
+          key, config.colorsAlpha(key, "--tw-bg-opacity"), "background-color", "--tw-bg-opacity"
+      );
 
       default -> error(key, action, arg);
     };
@@ -443,10 +451,6 @@ final class CssGeneratorSpec extends CssGeneratorRound implements Css.Generator 
     throw new AssertionError(
         "Unexpected action " + action + " for key " + key + ". Arg=" + arg
     );
-  }
-
-  private Object marker() {
-    return null;
   }
 
   private CssStaticTable staticTable() {

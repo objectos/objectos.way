@@ -29,7 +29,14 @@ final class CssStaticTable {
     CssRuleFactory factory;
     factory = new CssRuleFactory.OfProperties(key, properties);
 
-    table.put(className, factory);
+    CssRuleFactory maybePrevious;
+    maybePrevious = table.put(className, factory);
+
+    if (maybePrevious != null) {
+      throw new IllegalArgumentException(
+          "Key " + key + " already mapped to " + maybePrevious
+      );
+    }
 
     return this;
   }

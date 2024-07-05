@@ -16,15 +16,25 @@
 package objectos.way;
 
 import java.util.EnumMap;
+import java.util.EnumSet;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
+import java.util.Set;
+import java.util.function.Function;
 import objectos.notes.NoteSink;
 import objectos.way.CssVariant.Breakpoint;
 
 sealed abstract class CssGeneratorConfig permits CssGenerator {
 
   private final Map<CssKey, Object> store = new EnumMap<>(CssKey.class);
+
+  private final Map<String, Set<CssKey>> prefixes = new HashMap<>();
+
+  final Map<String, String> colorsAlpha(CssKey key, String variableName) {
+    return colors();
+  }
 
   final Object get(CssKey key) {
     Object existing;
@@ -37,6 +47,23 @@ sealed abstract class CssGeneratorConfig permits CssGenerator {
     }
 
     return existing;
+  }
+
+  final Object getOrCompute(CssKey key, Function<CssKey, Object> function) {
+    return store.computeIfAbsent(key, function);
+  }
+
+  final Set<CssKey> getCandidates(String prefix) {
+    return prefixes.get(prefix);
+  }
+
+  final Object prefix(CssKey key, String prefix) {
+    Set<CssKey> set;
+    set = prefixes.computeIfAbsent(prefix, s -> EnumSet.noneOf(CssKey.class));
+
+    set.add(key);
+
+    return null;
   }
 
   final void put(CssKey key, Object value) {

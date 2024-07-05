@@ -24,7 +24,7 @@ sealed interface CssRuleFactory {
   record OfProperties(CssKey key, Map<String, String> properties) implements CssRuleFactory {
     @Override
     public final CssRule create(String className, List<CssVariant> variants) {
-      return new CssRule.OfProperties(key, className, variants, properties);
+      return new CssRule.Of(key, className, variants, properties);
     }
   }
 

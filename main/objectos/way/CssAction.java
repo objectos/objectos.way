@@ -17,6 +17,8 @@ package objectos.way;
 
 enum CssAction {
 
-  CONFIG_STATIC_TABLE;
+  CONFIG_STATIC_TABLE,
+
+  RESOLVER;
 
 }
