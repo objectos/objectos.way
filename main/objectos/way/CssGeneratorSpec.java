@@ -17,46 +17,13 @@ package objectos.way;
 
 import java.util.Map;
 import java.util.function.Function;
+import objectos.util.map.GrowableMap;
 
 final class CssGeneratorSpec extends CssGeneratorRound implements Css.Generator {
 
-  private static final String DEFAULT_SPACING = """
-      px: 1px
-      0: 0px
-      0.5: 0.125rem
-      1: 0.25rem
-      1.5: 0.375rem
-      2: 0.5rem
-      2.5: 0.625rem
-      3: 0.75rem
-      3.5: 0.875rem
-      4: 1rem
-      5: 1.25rem
-      6: 1.5rem
-      7: 1.75rem
-      8: 2rem
-      9: 2.25rem
-      10: 2.5rem
-      11: 2.75rem
-      12: 3rem
-      14: 3.5rem
-      16: 4rem
-      20: 5rem
-      24: 6rem
-      28: 7rem
-      32: 8rem
-      36: 9rem
-      40: 10rem
-      44: 11rem
-      48: 12rem
-      52: 13rem
-      56: 14rem
-      60: 15rem
-      64: 16rem
-      72: 18rem
-      80: 20rem
-      96: 24rem
-      """;
+  private static final CssValueFormatter IDENTITY = CssValueFormatter.Identity.INSTANCE;
+
+  private static final CssValueFormatter NEGATIVE = CssValueFormatter.NegativeValues.INSTANCE;
 
   CssGeneratorSpec(CssGeneratorConfig config) {
     super(config);
@@ -67,9 +34,13 @@ final class CssGeneratorSpec extends CssGeneratorRound implements Css.Generator 
     return switch (key) {
       case _STATIC_TABLE -> _executeStaticTable(key, action, arg);
 
+      // A
+
       case ACCESSIBILITY -> executeAccessibility(key, action, arg);
 
       case ALIGN_ITEMS -> executeAlignItems(key, action, arg);
+
+      // B
 
       case BACKGROUND_COLOR -> executeBackgroundColor(key, action, arg);
 
@@ -83,21 +54,21 @@ final class CssGeneratorSpec extends CssGeneratorRound implements Css.Generator 
       case BORDER_COLOR_X -> executeBorderColor(key, action, "border-x", "border-left-color", "border-right-color");
       case BORDER_COLOR_Y -> executeBorderColor(key, action, "border-y", "border-top-color", "border-bottom-color");
 
-      case BORDER_RADIUS -> null;
-      case BORDER_RADIUS_B -> null;
-      case BORDER_RADIUS_BL -> null;
-      case BORDER_RADIUS_BR -> null;
-      case BORDER_RADIUS_E -> null;
-      case BORDER_RADIUS_EE -> null;
-      case BORDER_RADIUS_ES -> null;
-      case BORDER_RADIUS_L -> null;
-      case BORDER_RADIUS_R -> null;
-      case BORDER_RADIUS_S -> null;
-      case BORDER_RADIUS_SE -> null;
-      case BORDER_RADIUS_SS -> null;
-      case BORDER_RADIUS_T -> null;
-      case BORDER_RADIUS_TL -> null;
-      case BORDER_RADIUS_TR -> null;
+      case BORDER_RADIUS -> executeBorderRadius(key, action, "rounded", "border-radius");
+      case BORDER_RADIUS_B -> executeBorderRadius(key, action, "rounded-b", "border-bottom-right-radius", "border-bottom-left-radius");
+      case BORDER_RADIUS_BL -> executeBorderRadius(key, action, "rounded-bl", "border-bottom-left-radius");
+      case BORDER_RADIUS_BR -> executeBorderRadius(key, action, "rounded-br", "border-bottom-right-radius");
+      case BORDER_RADIUS_E -> executeBorderRadius(key, action, "rounded-e", "border-start-end-radius", "border-end-end-radius");
+      case BORDER_RADIUS_EE -> executeBorderRadius(key, action, "rounded-ee", "border-end-end-radius");
+      case BORDER_RADIUS_ES -> executeBorderRadius(key, action, "rounded-es", "border-end-start-radius");
+      case BORDER_RADIUS_L -> executeBorderRadius(key, action, "rounded-l", "border-top-left-radius", "border-bottom-left-radius");
+      case BORDER_RADIUS_R -> executeBorderRadius(key, action, "rounded-r", "border-top-right-radius", "border-bottom-right-radius");
+      case BORDER_RADIUS_S -> executeBorderRadius(key, action, "rounded-s", "border-start-start-radius", "border-end-start-radius");
+      case BORDER_RADIUS_SE -> executeBorderRadius(key, action, "rounded-se", "border-start-end-radius");
+      case BORDER_RADIUS_SS -> executeBorderRadius(key, action, "rounded-ss", "border-start-start-radius");
+      case BORDER_RADIUS_T -> executeBorderRadius(key, action, "rounded-t", "border-top-left-radius", "border-top-right-radius");
+      case BORDER_RADIUS_TL -> executeBorderRadius(key, action, "rounded-tl", "border-top-left-radius");
+      case BORDER_RADIUS_TR -> executeBorderRadius(key, action, "rounded-tr", "border-top-right-radius");
 
       case BORDER_SPACING -> executeBorderSpacing(key, action, "border-spacing", s -> s + " " + s);
       case BORDER_SPACING_X -> executeBorderSpacing(key, action, "border-spacing-x", s -> s + " 0");
@@ -113,33 +84,45 @@ final class CssGeneratorSpec extends CssGeneratorRound implements Css.Generator 
 
       case BOTTOM -> executeInset(key, action, "bottom", "bottom");
 
-      case CONTENT -> null;
-      case CURSOR -> null;
+      // C
+
+      case CONTENT -> executeContent(key, action);
+
+      case CURSOR -> executeCursor(key, action);
+
       case CUSTOM -> null;
+
+      // D
 
       case DISPLAY -> executeDisplay(key, action, arg);
 
       case END -> executeInset(key, action, "end", "inset-inline-end");
 
-      case FILL -> null;
+      case FILL -> executeFill(key, action);
 
-      case FLEX_DIRECTION -> executeFlexDirection(key, action, arg);
+      case FLEX_DIRECTION -> executeFlexDirection(key, action);
 
-      case FLEX_GROW -> null;
-      case FONT_SIZE1 -> null;
-      case FONT_SIZE2 -> null;
-      case FONT_SIZE3 -> null;
-      case FONT_SIZE4 -> null;
-      case FONT_WEIGHT -> null;
-      case GAP -> null;
-      case GAP_X -> null;
-      case GAP_Y -> null;
-      case GRID_COLUMN -> null;
-      case GRID_COLUMN_END -> null;
-      case GRID_COLUMN_START -> null;
-      case GRID_TEMPLATE_COLUMNS -> null;
-      case GRID_TEMPLATE_ROWS -> null;
-      case HEIGHT -> null;
+      case FLEX_GROW -> executeFlexGrow(key, action);
+
+      case FONT_SIZE -> executeFontSize(key, action);
+
+      case FONT_WEIGHT -> executeFontWeight(key, action);
+
+      case GAP -> executeGap(key, action, "gap", "gap");
+      case GAP_X -> executeGap(key, action, "gap-x", "column-gap");
+      case GAP_Y -> executeGap(key, action, "gap-y", "row-gap");
+
+      case GRID_COLUMN -> executeGridColumn(key, action);
+
+      case GRID_COLUMN_END -> executeGridColumnEnd(key, action);
+
+      case GRID_COLUMN_START -> executeGridColumnStart(key, action);
+
+      case GRID_TEMPLATE_COLUMNS -> executeGridTemplateColumns(key, action);
+
+      case GRID_TEMPLATE_ROWS -> executeGridTemplateRows(key, action);
+
+      case HEIGHT -> executeHeight(key, action);
 
       case INSET -> executeInset(key, action, "inset", "inset");
       case INSET_X -> executeInset(key, action, "inset-x", "left", "right");
@@ -149,48 +132,70 @@ final class CssGeneratorSpec extends CssGeneratorRound implements Css.Generator 
 
       case LEFT -> executeInset(key, action, "left", "left");
 
-      case LETTER_SPACING -> null;
-      case LINE_HEIGHT -> null;
-      case MARGIN -> null;
-      case MARGIN_BOTTOM -> null;
-      case MARGIN_LEFT -> null;
-      case MARGIN_RIGHT -> null;
-      case MARGIN_TOP -> null;
-      case MARGIN_X -> null;
-      case MARGIN_Y -> null;
-      case MAX_WIDTH -> null;
-      case MIN_WIDTH -> null;
-      case OPACITY -> null;
-      case OUTLINE_COLOR -> null;
-      case OUTLINE_OFFSET -> null;
-      case OUTLINE_STYLE -> null;
-      case OUTLINE_STYLE_NONE -> null;
-      case OUTLINE_WIDTH -> null;
+      case LETTER_SPACING -> executeLetterSpacing(key, action);
+
+      case LINE_HEIGHT -> executeLineHeight(key, action);
+
+      // M
+
+      case MARGIN -> executeMargin(key, action, "m", "margin");
+      case MARGIN_BOTTOM -> executeMargin(key, action, "mb", "margin-bottom");
+      case MARGIN_LEFT -> executeMargin(key, action, "ml", "margin-left");
+      case MARGIN_RIGHT -> executeMargin(key, action, "mr", "margin-right");
+      case MARGIN_TOP -> executeMargin(key, action, "mt", "margin-top");
+      case MARGIN_X -> executeMargin(key, action, "mx", "margin-left", "margin-right");
+      case MARGIN_Y -> executeMargin(key, action, "my", "margin-top", "margin-bottom");
+
+      case MAX_WIDTH -> executeMaxWidth(key, action);
+      case MIN_WIDTH -> executeMinWidth(key, action);
+
+      // N
+
+      // O
+
+      case OPACITY -> executeOpacity(key, action);
+
+      case OUTLINE_COLOR -> executeOutlineColor(key, action);
+
+      case OUTLINE_OFFSET -> executeOutlineOffset(key, action);
+
+      case OUTLINE_STYLE -> executeOutlineStyle(key, action);
+
+      case OUTLINE_WIDTH -> executeOutlineWidth(key, action);
 
       case OVERFLOW -> executeOverflow(key, action, arg);
       case OVERFLOW_X -> executeOverflowX(key, action, arg);
       case OVERFLOW_Y -> executeOverflowY(key, action, arg);
 
-      case PADDING -> null;
-      case PADDING_BOTTOM -> null;
-      case PADDING_LEFT -> null;
-      case PADDING_RIGHT -> null;
-      case PADDING_TOP -> null;
-      case PADDING_X -> null;
-      case PADDING_Y -> null;
+      // P
+
+      case PADDING -> executePadding(key, action, "p", "padding");
+      case PADDING_BOTTOM -> executePadding(key, action, "pb", "padding-bottom");
+      case PADDING_LEFT -> executePadding(key, action, "pl", "padding-left");
+      case PADDING_RIGHT -> executePadding(key, action, "pr", "padding-right");
+      case PADDING_TOP -> executePadding(key, action, "pt", "padding-top");
+      case PADDING_X -> executePadding(key, action, "px", "padding-left", "padding-right");
+      case PADDING_Y -> executePadding(key, action, "py", "padding-top", "padding-bottom");
 
       case POINTER_EVENTS -> executePointerEvents(key, action, arg);
 
       case POSITION -> executePosition(key, action, arg);
 
+      // R
+
       case RIGHT -> executeInset(key, action, "right", "right");
 
-      case SIZE -> null;
+      // S
+
+      case SIZE -> executeSize(key, action);
 
       case START -> executeInset(key, action, "start", "inset-inline-start");
 
-      case STROKE -> null;
-      case STROKE_WIDTH -> null;
+      case STROKE -> executeStroke(key, action);
+
+      case STROKE_WIDTH -> executeStrokeWidth(key, action);
+
+      // T
 
       case TABLE_LAYOUT -> executeTableLayout(key, action, arg);
 
@@ -207,13 +212,22 @@ final class CssGeneratorSpec extends CssGeneratorRound implements Css.Generator 
       case TRANSITION_DURATION -> null;
       case TRANSITION_PROPERTY -> null;
 
+      // U
+
       case USER_SELECT -> executeUserSelect(key, action, arg);
+
+      // V
 
       case VERTICAL_ALIGN -> executeVerticalAlign(key, action, arg);
 
       case VISIBILITY -> executeVisibility(key, action, arg);
 
+      // W
+
       case WIDTH -> null;
+
+      // Z
+
       case Z_INDEX -> null;
     };
   }
@@ -311,15 +325,57 @@ final class CssGeneratorSpec extends CssGeneratorRound implements Css.Generator 
     return switch (action) {
       case CONFIG_STATIC_TABLE -> config.prefix(key, prefix);
 
-      case RESOLVER -> {
-        String variableName;
-        variableName = "--tw-border-opacity";
+      case RESOLVER -> new CssRuleResolver.OfColorAlpha(
+          key,
 
-        Map<String, String> colors;
-        colors = config.colorsAlpha(CssKey.BORDER_COLOR, variableName);
+          "--tw-border-opacity",
 
-        yield new CssRuleResolver.OfColorAlpha(key, variableName, colors, propertyName1, propertyName2);
-      }
+          config.colorsAlpha(
+              CssKey.BORDER_COLOR,
+
+              "--tw-border-opacity"
+          ),
+
+          propertyName1,
+          propertyName2
+      );
+
+      default -> error(key, action, null);
+    };
+  }
+
+  private Object executeBorderRadius(CssKey key, CssAction action, String prefix, String propertyName1) {
+    return executeBorderRadius(key, action, prefix, propertyName1, null);
+  }
+
+  private Object executeBorderRadius(CssKey key, CssAction action, String prefix, String propertyName1, String propertyName2) {
+    return switch (action) {
+      case CONFIG_STATIC_TABLE -> config.prefix(key, prefix);
+
+      case RESOLVER -> new CssRuleResolver.OfProperties(
+          key,
+
+          config.values(
+              CssKey.BORDER_RADIUS,
+
+              """
+              none: 0px
+              sm: 0.125rem
+              : 0.25rem
+              md: 0.375rem
+              lg: 0.5rem
+              xl: 0.75rem
+              2xl: 1rem
+              3xl: 1.5rem
+              full: 9999px
+              """
+          ),
+
+          IDENTITY,
+
+          propertyName1,
+          propertyName2
+      );
 
       default -> error(key, action, null);
     };
@@ -329,15 +385,19 @@ final class CssGeneratorSpec extends CssGeneratorRound implements Css.Generator 
     return switch (action) {
       case CONFIG_STATIC_TABLE -> config.prefix(key, prefix);
 
-      case RESOLVER -> {
-        Map<String, String> borderSpacing;
-        borderSpacing = config.values(CssKey.BORDER_SPACING, config::spacing);
+      case RESOLVER -> new CssRuleResolver.OfProperties(
+          key,
 
-        CssValueFormatter formatter;
-        formatter = new CssValueFormatter.OfFunction(valueConverter);
+          config.values(
+              CssKey.BORDER_SPACING,
 
-        yield new CssRuleResolver.OfProperties(key, borderSpacing, formatter, "border-spacing");
-      }
+              CssGeneratorConfig::spacing
+          ),
+
+          new CssValueFormatter.OfFunction(valueConverter),
+
+          "border-spacing"
+      );
 
       default -> error(key, action, null);
     };
@@ -351,20 +411,109 @@ final class CssGeneratorSpec extends CssGeneratorRound implements Css.Generator 
     return switch (action) {
       case CONFIG_STATIC_TABLE -> config.prefix(key, prefix);
 
-      case RESOLVER -> {
-        String defaults = """
-        : 1px
-        0: 0px
-        2: 2px
-        4: 4px
-        8: 8px
-        """;
+      case RESOLVER -> new CssRuleResolver.OfProperties(
+          key,
 
-        Map<String, String> borderWidth;
-        borderWidth = config.values(CssKey.BORDER_WIDTH, defaults);
+          config.values(
+              CssKey.BORDER_WIDTH,
 
-        yield new CssRuleResolver.OfProperties(key, borderWidth, CssValueFormatter.Identity.INSTANCE, propertyName1, propertyName2);
-      }
+              """
+              : 1px
+              0: 0px
+              2: 2px
+              4: 4px
+              8: 8px
+              """
+          ),
+
+          IDENTITY,
+
+          propertyName1,
+          propertyName2
+      );
+
+      default -> error(key, action, null);
+    };
+  }
+
+  private Object executeContent(CssKey key, CssAction action) {
+    return switch (action) {
+      case CONFIG_STATIC_TABLE -> config.prefix(key, "content");
+
+      case RESOLVER -> new CssRuleResolver.OfProperties(
+          key,
+
+          config.values(
+              key,
+
+              """
+              none: none
+              """
+          ),
+
+          IDENTITY,
+
+          "content"
+      );
+
+      default -> error(key, action, null);
+    };
+  }
+
+  private Object executeCursor(CssKey key, CssAction action) {
+    return switch (action) {
+      case CONFIG_STATIC_TABLE -> config.prefix(key, "cursor");
+
+      case RESOLVER -> new CssRuleResolver.OfProperties(
+          key,
+
+          config.values(
+              key,
+
+              """
+              auto: auto
+              default: default
+              pointer: pointer
+              wait: wait
+              text: text
+              move: move
+              help: help
+              not-allowed: not-allowed
+              none: none
+              context-menu: context-menu
+              progress: progress
+              cell: cell
+              crosshair: crosshair
+              vertical-text: vertical-text
+              alias: alias
+              copy: copy
+              no-drop: no-drop
+              grab: grab
+              grabbing: grabbing
+              all-scroll: all-scroll
+              col-resize: col-resize
+              row-resize: row-resize
+              n-resize: n-resize
+              e-resize: e-resize
+              s-resize: s-resize
+              w-resize: w-resize
+              ne-resize: ne-resize
+              nw-resize: nw-resize
+              se-resize: se-resize
+              sw-resize: sw-resize
+              ew-resize: ew-resize
+              ns-resize: ns-resize
+              nesw-resize: nesw-resize
+              nwse-resize: nwse-resize
+              zoom-in: zoom-in
+              zoom-out: zoom-out
+              """
+          ),
+
+          IDENTITY,
+
+          "cursor"
+      );
 
       default -> error(key, action, null);
     };
@@ -399,7 +548,35 @@ final class CssGeneratorSpec extends CssGeneratorRound implements Css.Generator 
     };
   }
 
-  private Object executeFlexDirection(CssKey key, CssAction action, Object arg) {
+  private Object executeFill(CssKey key, CssAction action) {
+    return switch (action) {
+      case CONFIG_STATIC_TABLE -> config.prefix(key, "fill");
+
+      case RESOLVER -> new CssRuleResolver.OfProperties(
+          key,
+
+          config.values(
+              key,
+
+              c -> Css.merge(
+                  """
+                  none: none
+                  """,
+
+                  c.colors()
+              )
+          ),
+
+          IDENTITY,
+
+          "fill"
+      );
+
+      default -> error(key, action, null);
+    };
+  }
+
+  private Object executeFlexDirection(CssKey key, CssAction action) {
     return switch (action) {
       case CONFIG_STATIC_TABLE -> staticTable()
           .rule(key, "flex-row", "flex-direction: row")
@@ -407,20 +584,354 @@ final class CssGeneratorSpec extends CssGeneratorRound implements Css.Generator 
           .rule(key, "flex-col", "flex-direction: column")
           .rule(key, "flex-col-reverse", "flex-direction: column-reverse");
 
-      default -> error(key, action, arg);
+      default -> error(key, action, null);
     };
   }
 
-  private static final String DEFAULT_INSET = DEFAULT_SPACING + """
-      auto: auto
-      1/2: 50%
-      1/3: 33.333333%
-      2/3: 66.666667%
-      1/4: 25%
-      2/4: 50%
-      3/4: 75%
-      full: 100%
-      """;
+  private Object executeFlexGrow(CssKey key, CssAction action) {
+    return switch (action) {
+      case CONFIG_STATIC_TABLE -> config.prefix(key, "grow");
+
+      case RESOLVER -> new CssRuleResolver.OfProperties(
+          key,
+
+          config.values(
+              key,
+
+              """
+              : 1
+              0: 0
+              """
+          ),
+
+          IDENTITY,
+
+          "flex-grow"
+      );
+
+      default -> error(key, action, null);
+    };
+  }
+
+  private Object executeFontSize(CssKey key, CssAction action) {
+    return switch (action) {
+      case CONFIG_STATIC_TABLE -> config.prefix(key, "text");
+
+      case RESOLVER -> new CssRuleResolver.OfFontSize(
+          key,
+
+          config.values(
+              key,
+
+              """
+              xs: 0.75rem/1rem
+              sm: 0.875rem/1.25rem
+              base: 1rem/1.5rem
+              lg: 1.125rem/1.75rem
+              xl: 1.25rem/1.75rem
+              2xl: 1.5rem/2rem
+              3xl: 1.875rem/2.25rem
+              4xl: 2.25rem/2.5rem
+              5xl: 3rem/1
+              6xl: 3.75rem/1
+              7xl: 4.5rem/1
+              8xl: 6rem/1
+              9xl: 8rem/1
+              """
+          ),
+
+          config.lineHeight()
+      );
+
+      default -> error(key, action, null);
+    };
+  }
+
+  private Object executeFontWeight(CssKey key, CssAction action) {
+    return switch (action) {
+      case CONFIG_STATIC_TABLE -> config.prefix(key, "font");
+
+      case RESOLVER -> new CssRuleResolver.OfProperties(
+          key,
+
+          config.values(
+              key,
+
+              """
+              thin: 100
+              extralight: 200
+              light: 300
+              normal: 400
+              medium: 500
+              semibold: 600
+              bold: 700
+              extrabold: 800
+              black: 900
+              """
+          ),
+
+          IDENTITY,
+
+          "font-weight"
+      );
+
+      default -> error(key, action, null);
+    };
+  }
+
+  private Object executeGap(CssKey key, CssAction action, String prefix, String propertyName) {
+    return switch (action) {
+      case CONFIG_STATIC_TABLE -> config.prefix(key, prefix);
+
+      case RESOLVER -> new CssRuleResolver.OfProperties(
+          key,
+
+          config.spacing(),
+
+          IDENTITY,
+
+          propertyName
+      );
+
+      default -> error(key, action, null);
+    };
+  }
+
+  private Object executeGridColumn(CssKey key, CssAction action) {
+    return switch (action) {
+      case CONFIG_STATIC_TABLE -> config.prefix(key, "col");
+
+      case RESOLVER -> new CssRuleResolver.OfProperties(
+          key,
+
+          config.values(
+              key,
+
+              """
+              auto: auto
+              span-1: span 1 / span 1
+              span-2: span 2 / span 2
+              span-3: span 3 / span 3
+              span-4: span 4 / span 4
+              span-5: span 5 / span 5
+              span-6: span 6 / span 6
+              span-7: span 7 / span 7
+              span-8: span 8 / span 8
+              span-9: span 9 / span 9
+              span-10: span 10 / span 10
+              span-11: span 11 / span 11
+              span-12: span 12 / span 12
+              span-full: 1 / -1
+              """
+          ),
+
+          IDENTITY,
+
+          "grid-column"
+      );
+
+      default -> error(key, action, null);
+    };
+  }
+
+  private Object executeGridColumnEnd(CssKey key, CssAction action) {
+    return switch (action) {
+      case CONFIG_STATIC_TABLE -> config.prefix(key, "col-end");
+
+      case RESOLVER -> new CssRuleResolver.OfProperties(
+          key,
+
+          config.values(
+              key,
+
+              """
+              auto: auto
+              1: 1
+              2: 2
+              3: 3
+              4: 4
+              5: 5
+              6: 6
+              7: 7
+              8: 8
+              9: 9
+              10: 10
+              11: 11
+              12: 12
+              13: 13
+              """
+          ),
+
+          IDENTITY,
+
+          "grid-column-end"
+      );
+
+      default -> error(key, action, null);
+    };
+  }
+
+  private Object executeGridColumnStart(CssKey key, CssAction action) {
+    return switch (action) {
+      case CONFIG_STATIC_TABLE -> config.prefix(key, "col-start");
+
+      case RESOLVER -> new CssRuleResolver.OfProperties(
+          key,
+
+          config.values(
+              key,
+
+              """
+              auto: auto
+              1: 1
+              2: 2
+              3: 3
+              4: 4
+              5: 5
+              6: 6
+              7: 7
+              8: 8
+              9: 9
+              10: 10
+              11: 11
+              12: 12
+              13: 13
+              """
+          ),
+
+          IDENTITY,
+
+          "grid-column-start"
+      );
+
+      default -> error(key, action, null);
+    };
+  }
+
+  private Object executeGridTemplateColumns(CssKey key, CssAction action) {
+    return switch (action) {
+      case CONFIG_STATIC_TABLE -> config.prefix(key, "grid-cols");
+
+      case RESOLVER -> new CssRuleResolver.OfProperties(
+          key,
+
+          config.values(
+              key,
+
+              """
+              none: none
+              subgrid: subgrid
+              1: repeat(1, minmax(0, 1fr))
+              2: repeat(2, minmax(0, 1fr))
+              3: repeat(3, minmax(0, 1fr))
+              4: repeat(4, minmax(0, 1fr))
+              5: repeat(5, minmax(0, 1fr))
+              6: repeat(6, minmax(0, 1fr))
+              7: repeat(7, minmax(0, 1fr))
+              8: repeat(8, minmax(0, 1fr))
+              9: repeat(9, minmax(0, 1fr))
+              10: repeat(10, minmax(0, 1fr))
+              11: repeat(11, minmax(0, 1fr))
+              12: repeat(12, minmax(0, 1fr))
+              """
+          ),
+
+          IDENTITY,
+
+          "grid-template-columns"
+      );
+
+      default -> error(key, action, null);
+    };
+  }
+
+  private Object executeGridTemplateRows(CssKey key, CssAction action) {
+    return switch (action) {
+      case CONFIG_STATIC_TABLE -> config.prefix(key, "grid-rows");
+
+      case RESOLVER -> new CssRuleResolver.OfProperties(
+          key,
+
+          config.values(
+              key,
+
+              """
+              none: none
+              subgrid: subgrid
+              1: repeat(1, minmax(0, 1fr))
+              2: repeat(2, minmax(0, 1fr))
+              3: repeat(3, minmax(0, 1fr))
+              4: repeat(4, minmax(0, 1fr))
+              5: repeat(5, minmax(0, 1fr))
+              6: repeat(6, minmax(0, 1fr))
+              7: repeat(7, minmax(0, 1fr))
+              8: repeat(8, minmax(0, 1fr))
+              9: repeat(9, minmax(0, 1fr))
+              10: repeat(10, minmax(0, 1fr))
+              11: repeat(11, minmax(0, 1fr))
+              12: repeat(12, minmax(0, 1fr))
+              """
+          ),
+
+          IDENTITY,
+
+          "grid-template-rows"
+      );
+
+      default -> error(key, action, null);
+    };
+  }
+
+  private Object executeHeight(CssKey key, CssAction action) {
+    return switch (action) {
+      case CONFIG_STATIC_TABLE -> config.prefix(key, "h");
+
+      case RESOLVER -> new CssRuleResolver.OfProperties(
+          key,
+
+          config.values(
+              key,
+
+              c -> Css.merge(
+                  """
+                  auto: auto
+                  1/2: 50%
+                  1/3: 33.333333%
+                  2/3: 66.666667%
+                  1/4: 25%
+                  2/4: 50%
+                  3/4: 75%
+                  1/5: 20%
+                  2/5: 40%
+                  3/5: 60%
+                  4/5: 80%
+                  1/6: 16.666667%
+                  2/6: 33.333333%
+                  3/6: 50%
+                  4/6: 66.666667%
+                  5/6: 83.333333%
+                  full: 100%
+                  screen: 100vh
+                  svh: 100svh
+                  lvh: 100lvh
+                  dvh: 100dvh
+                  min: min-content
+                  max: max-content
+                  fit: fit-content
+                  """,
+
+                  c.spacing()
+              )
+          ),
+
+          IDENTITY,
+
+          "height"
+      );
+
+      default -> error(key, action, null);
+    };
+  }
 
   private Object executeInset(CssKey key, CssAction action, String prefix, String propertyName1) {
     return executeInset(key, action, prefix, propertyName1, null);
@@ -430,14 +941,217 @@ final class CssGeneratorSpec extends CssGeneratorRound implements Css.Generator 
     return switch (action) {
       case CONFIG_STATIC_TABLE -> config.prefix(key, prefix);
 
-      case RESOLVER -> {
-        Map<String, String> borderWidth;
-        borderWidth = config.values(CssKey.INSET, DEFAULT_INSET);
+      case RESOLVER -> new CssRuleResolver.OfProperties(
+          key,
 
-        yield new CssRuleResolver.OfProperties(
-            key, borderWidth, CssValueFormatter.NegativeValues.INSTANCE, propertyName1, propertyName2
-        );
-      }
+          config.values(
+              CssKey.INSET,
+
+              c -> Css.merge(
+                  """
+                    auto: auto
+                    1/2: 50%
+                    1/3: 33.333333%
+                    2/3: 66.666667%
+                    1/4: 25%
+                    2/4: 50%
+                    3/4: 75%
+                    full: 100%
+                    """,
+
+                  config.spacing()
+              )
+          ),
+
+          NEGATIVE,
+
+          propertyName1,
+          propertyName2
+      );
+
+      default -> error(key, action, null);
+    };
+  }
+
+  private Object executeLetterSpacing(CssKey key, CssAction action) {
+    return switch (action) {
+      case CONFIG_STATIC_TABLE -> config.prefix(key, "tracking");
+
+      case RESOLVER -> new CssRuleResolver.OfProperties(
+          key,
+
+          config.values(
+              key,
+
+              """
+              tighter: -0.05em
+              tight: -0.025em
+              normal: 0em
+              wide: 0.025em
+              wider: 0.05em
+              widest: 0.1em
+              """
+          ),
+
+          IDENTITY,
+
+          "letter-spacing"
+      );
+
+      default -> error(key, action, null);
+    };
+  }
+
+  private Object executeLineHeight(CssKey key, CssAction action) {
+    return switch (action) {
+      case CONFIG_STATIC_TABLE -> config.prefix(key, "leading");
+
+      case RESOLVER -> new CssRuleResolver.OfProperties(
+          key,
+
+          config.values(
+              key,
+
+              """
+              3: 0.75rem
+              4: 1rem
+              5: 1.25rem
+              6: 1.5rem
+              7: 1.75rem
+              8: 2rem
+              9: 2.25rem
+              10: 2.5rem
+              none: 1
+              tight: 1.25
+              snug: 1.375
+              normal: 1.5
+              relaxed: 1.625
+              loose: 2
+              """
+          ),
+
+          IDENTITY,
+
+          "line-height"
+      );
+
+      default -> error(key, action, null);
+    };
+  }
+
+  private Object executeMargin(CssKey key, CssAction action, String prefix, String propertyName1) {
+    return executeMargin(key, action, prefix, propertyName1, null);
+  }
+
+  private Object executeMargin(CssKey key, CssAction action, String prefix, String propertyName1, String propertyName2) {
+    return switch (action) {
+      case CONFIG_STATIC_TABLE -> config.prefix(key, prefix);
+
+      case RESOLVER -> new CssRuleResolver.OfProperties(
+          key,
+
+          config.values(
+              key,
+
+              c -> Css.merge(
+                  """
+                  auto: auto
+                  """,
+
+                  c.spacing()
+              )
+          ),
+
+          NEGATIVE,
+
+          propertyName1,
+          propertyName2
+      );
+
+      default -> error(key, action, null);
+    };
+  }
+
+  private Object executeMaxWidth(CssKey key, CssAction action) {
+    return switch (action) {
+      case CONFIG_STATIC_TABLE -> config.prefix(key, "max-w");
+
+      case RESOLVER -> new CssRuleResolver.OfProperties(
+          key,
+
+          config.values(
+              key,
+
+              c -> {
+                GrowableMap<String, String> maxWidth;
+                maxWidth = new GrowableMap<>();
+
+                maxWidth.putAll(c.spacing());
+
+                maxWidth.put("none", "none");
+                maxWidth.put("xs", "20rem");
+                maxWidth.put("sm", "24rem");
+                maxWidth.put("md", "28rem");
+                maxWidth.put("lg", "32rem");
+                maxWidth.put("xl", "36rem");
+                maxWidth.put("2xl", "42rem");
+                maxWidth.put("3xl", "48rem");
+                maxWidth.put("4xl", "56rem");
+                maxWidth.put("5xl", "64rem");
+                maxWidth.put("6xl", "72rem");
+                maxWidth.put("7xl", "80rem");
+                maxWidth.put("full", "100%");
+                maxWidth.put("min", "min-content");
+                maxWidth.put("max", "max-content");
+                maxWidth.put("fit", "fit-content");
+                maxWidth.put("prose", "65ch");
+
+                for (var breakpoint : c.breakpoints()) {
+                  String screen;
+                  screen = "screen-" + breakpoint.name();
+
+                  maxWidth.put(screen, breakpoint.value());
+                }
+
+                return maxWidth;
+              }
+          ),
+
+          IDENTITY,
+
+          "max-width"
+      );
+
+      default -> error(key, action, null);
+    };
+  }
+
+  private Object executeMinWidth(CssKey key, CssAction action) {
+    return switch (action) {
+      case CONFIG_STATIC_TABLE -> config.prefix(key, "min-w");
+
+      case RESOLVER -> new CssRuleResolver.OfProperties(
+          key,
+
+          config.values(
+              key,
+
+              c -> Css.merge(
+                  """
+                  full: 100%
+                  min: min-content
+                  max: max-content
+                  fit: fit-content
+                  """,
+
+                  c.spacing()
+              )
+          ),
+
+          IDENTITY,
+
+          "min-width"
+      );
 
       default -> error(key, action, null);
     };
@@ -456,6 +1170,141 @@ final class CssGeneratorSpec extends CssGeneratorRound implements Css.Generator 
           .rule(key, "justify-stretch", "justify-content: stretch");
 
       default -> error(key, action, arg);
+    };
+  }
+
+  private Object executeOpacity(CssKey key, CssAction action) {
+    return switch (action) {
+      case CONFIG_STATIC_TABLE -> config.prefix(key, "opacity");
+
+      case RESOLVER -> new CssRuleResolver.OfProperties(
+          key,
+
+          config.values(
+              key,
+
+              """
+              0: 0
+              5: 0.05
+              10: 0.1
+              15: 0.15
+              20: 0.2
+              25: 0.25
+              30: 0.3
+              35: 0.35
+              40: 0.4
+              45: 0.45
+              50: 0.5
+              55: 0.55
+              60: 0.6
+              65: 0.65
+              70: 0.7
+              75: 0.75
+              80: 0.8
+              85: 0.85
+              90: 0.9
+              95: 0.95
+              100: 1
+              """
+          ),
+
+          IDENTITY,
+
+          "opacity"
+      );
+
+      default -> error(key, action, null);
+    };
+  }
+
+  private Object executeOutlineColor(CssKey key, CssAction action) {
+    return switch (action) {
+      case CONFIG_STATIC_TABLE -> config.prefix(key, "outline");
+
+      case RESOLVER -> new CssRuleResolver.OfColorAlpha(
+          key,
+
+          "--tw-outline-opacity",
+
+          config.colorsAlpha(
+              CssKey.OUTLINE_COLOR,
+
+              "--tw-outline-opacity"
+          ),
+
+          "outline-color"
+      );
+
+      default -> error(key, action, null);
+    };
+  }
+
+  private Object executeOutlineOffset(CssKey key, CssAction action) {
+    return switch (action) {
+      case CONFIG_STATIC_TABLE -> config.prefix(key, "outline-offset");
+
+      case RESOLVER -> new CssRuleResolver.OfProperties(
+          key,
+
+          config.values(
+              key,
+
+              """
+              0: 0px
+              1: 1px
+              2: 2px
+              4: 4px
+              8: 8px
+              """
+          ),
+
+          NEGATIVE,
+
+          "outline-offset"
+      );
+
+      default -> error(key, action, null);
+    };
+  }
+
+  private Object executeOutlineStyle(CssKey key, CssAction action) {
+    return switch (action) {
+      case CONFIG_STATIC_TABLE -> staticTable()
+          .rule(key, "outline-none", "outline: 2px solid transparent\noutline-offset: 2px")
+          .rule(key, "outline", "outline-style: solid")
+          .rule(key, "outline-dashed", "outline-style: dashed")
+          .rule(key, "outline-dotted", "outline-style: dotted")
+          .rule(key, "outline-double", "outline-style: double");
+
+      default -> error(key, action, null);
+    };
+  }
+
+  private Object executeOutlineWidth(CssKey key, CssAction action) {
+    return switch (action) {
+      case CONFIG_STATIC_TABLE -> config.prefix(key, "outline");
+
+      case RESOLVER -> new CssRuleResolver.OfProperties(
+          key,
+
+          config.values(
+              key,
+
+              """
+              0: 0px
+              1: 1px
+              2: 2px
+              4: 4px
+              8: 8px
+              """
+          ),
+
+          NEGATIVE,
+
+          "outline-width"
+      );
+
+      default -> error(key, action, null);
     };
   }
 
@@ -498,6 +1347,33 @@ final class CssGeneratorSpec extends CssGeneratorRound implements Css.Generator 
     };
   }
 
+  private Object executePadding(CssKey key, CssAction action, String prefix, String propertyName1) {
+    return executePadding(key, action, prefix, propertyName1, null);
+  }
+
+  private Object executePadding(CssKey key, CssAction action, String prefix, String propertyName1, String propertyName2) {
+    return switch (action) {
+      case CONFIG_STATIC_TABLE -> config.prefix(key, prefix);
+
+      case RESOLVER -> new CssRuleResolver.OfProperties(
+          key,
+
+          config.values(
+              key,
+
+              CssGeneratorConfig::spacing
+          ),
+
+          IDENTITY,
+
+          propertyName1,
+          propertyName2
+      );
+
+      default -> error(key, action, null);
+    };
+  }
+
   private Object executePointerEvents(CssKey key, CssAction action, Object arg) {
     return switch (action) {
       case CONFIG_STATIC_TABLE -> staticTable()
@@ -518,6 +1394,118 @@ final class CssGeneratorSpec extends CssGeneratorRound implements Css.Generator 
           .rule(key, "sticky", "position: sticky");
 
       default -> error(key, action, arg);
+    };
+  }
+
+  private Object executeSize(CssKey key, CssAction action) {
+    return switch (action) {
+      case CONFIG_STATIC_TABLE -> config.prefix(key, "size");
+
+      case RESOLVER -> new CssRuleResolver.OfProperties(
+          key,
+
+          config.values(
+              key,
+
+              c -> Css.merge(
+                  """
+                  auto: auto
+                  1/2: 50%
+                  1/3: 33.333333%
+                  2/3: 66.666667%
+                  1/4: 25%
+                  2/4: 50%
+                  3/4: 75%
+                  1/5: 20%
+                  2/5: 40%
+                  3/5: 60%
+                  4/5: 80%
+                  1/6: 16.666667%
+                  2/6: 33.333333%
+                  3/6: 50%
+                  4/6: 66.666667%
+                  5/6: 83.333333%
+                  1/12: 8.333333%
+                  2/12: 16.666667%
+                  3/12: 25%
+                  4/12: 33.333333%
+                  5/12: 41.666667%
+                  6/12: 50%
+                  7/12: 58.333333%
+                  8/12: 66.666667%
+                  9/12: 75%
+                  10/12: 83.333333%
+                  11/12: 91.666667%
+                  full: 100%
+                  min: min-content
+                  max: max-content
+                  fit: fit-content
+                  """,
+
+                  c.spacing()
+              )
+          ),
+
+          IDENTITY,
+
+          "height", "width"
+      );
+
+      default -> error(key, action, null);
+    };
+  }
+
+  private Object executeStroke(CssKey key, CssAction action) {
+    return switch (action) {
+      case CONFIG_STATIC_TABLE -> config.prefix(key, "stroke");
+
+      case RESOLVER -> new CssRuleResolver.OfProperties(
+          key,
+
+          config.values(
+              key,
+
+              c -> Css.merge(
+                  """
+                  none: none
+                  """,
+
+                  c.colors()
+              )
+          ),
+
+          IDENTITY,
+
+          "stroke"
+      );
+
+      default -> error(key, action, null);
+    };
+  }
+
+  private Object executeStrokeWidth(CssKey key, CssAction action) {
+    return switch (action) {
+      case CONFIG_STATIC_TABLE -> config.prefix(key, "stroke");
+
+      case RESOLVER -> new CssRuleResolver.OfProperties(
+          key,
+
+          config.values(
+              key,
+
+              """
+              0: 0
+              1: 1
+              2: 2
+              """
+          ),
+
+          IDENTITY,
+
+          "stroke-width"
+      );
+
+      default -> error(key, action, null);
     };
   }
 

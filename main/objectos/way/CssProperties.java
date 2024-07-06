@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import objectos.util.list.GrowableList;
+import objectos.util.map.GrowableMap;
 
 final class CssProperties implements Iterable<Map.Entry<String, String>> {
 
@@ -51,6 +52,23 @@ final class CssProperties implements Iterable<Map.Entry<String, String>> {
     entries = values.toArray(Map.Entry[]::new);
 
     return Map.ofEntries(entries);
+  }
+
+  public final Map<String, String> toMap(Map<String, String> more) {
+    GrowableMap<String, String> map;
+    map = new GrowableMap<>();
+
+    for (Map.Entry<String, String> entry : values) {
+      map.put(
+          entry.getKey(),
+
+          entry.getValue()
+      );
+    }
+
+    map.putAll(more);
+
+    return map.toUnmodifiableMap();
   }
 
   public final int size() {

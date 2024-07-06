@@ -723,6 +723,7 @@ abstract class CssGeneratorParser extends CssGeneratorVariants {
       Map.entry("r", CssUtility.BORDER_RADIUS_R),
       Map.entry("b", CssUtility.BORDER_RADIUS_B),
       Map.entry("l", CssUtility.BORDER_RADIUS_L),
+      Map.entry("ss", CssUtility.BORDER_RADIUS_SS),
       Map.entry("se", CssUtility.BORDER_RADIUS_SE),
       Map.entry("ee", CssUtility.BORDER_RADIUS_EE),
       Map.entry("es", CssUtility.BORDER_RADIUS_ES),

@@ -50,7 +50,8 @@ sealed abstract class CssRuleResolver {
       String colorKey;
       colorKey = value;
 
-      int opacity = 1;
+      int opacity;
+      opacity = 1;
 
       int slash;
       slash = value.indexOf('/');
@@ -78,6 +79,152 @@ sealed abstract class CssRuleResolver {
       if (propertyName2 != null) {
         properties.add(propertyName2, color);
       }
+
+      return new CssRule.Of(key, className, variants, properties);
+    }
+
+  }
+
+  static final class OfFontSize extends CssRuleResolver {
+
+    private final CssKey key;
+
+    private final Map<String, String> fontSize;
+
+    private final Map<String, String> lineHeight;
+
+    public OfFontSize(CssKey key, Map<String, String> fontSize, Map<String, String> lineHeight) {
+      this.key = key;
+      this.fontSize = fontSize;
+      this.lineHeight = lineHeight;
+    }
+
+    @Override
+    public final CssRule resolve(String className, List<CssVariant> variants, boolean negative, String value) {
+      int slash;
+      slash = value.indexOf('/');
+
+      if (slash == 0) {
+        // empty size -> invalid
+        return null;
+      }
+
+      if (slash < 0) {
+        return size(className, variants, value);
+      }
+
+      String sizeKey;
+      sizeKey = value.substring(0, slash);
+
+      String size;
+      size = fontSize.get(sizeKey);
+
+      if (size == null) {
+        return null;
+      }
+
+      String heightKey;
+      heightKey = value.substring(slash + 1);
+
+      String height;
+      height = lineHeight.get(heightKey);
+
+      if (height == null) {
+        return null;
+      }
+
+      size = extractSize(size);
+
+      CssProperties properties;
+      properties = new CssProperties();
+
+      properties.add("font-size", size);
+
+      properties.add("line-height", height);
+
+      return new CssRule.Of(key, className, variants, properties);
+    }
+
+    private String extractSize(String size) {
+      String result = size;
+
+      int slash;
+      slash = size.indexOf('/');
+
+      if (slash > 0) {
+        result = size.substring(0, slash);
+      }
+
+      return result;
+    }
+
+    private CssRule size(String className, List<CssVariant> variants, String value) {
+      String size;
+      size = fontSize.get(value);
+
+      if (size == null) {
+        return null;
+      } else {
+        return rule(className, variants, size);
+      }
+    }
+
+    private CssRule rule(String className, List<CssVariant> variants, String value) {
+      CssProperties properties;
+      properties = new CssProperties();
+
+      int slash;
+      slash = value.indexOf('/');
+
+      if (slash < 0) {
+        properties.add("font-size", value);
+
+        return new CssRule.Of(key, className, variants, properties);
+      }
+
+      String fontSize;
+      fontSize = value.substring(0, slash);
+
+      properties.add("font-size", fontSize);
+
+      String lineHeight;
+      lineHeight = value.substring(slash + 1);
+
+      slash = lineHeight.indexOf('/');
+
+      if (slash < 0) {
+        properties.add("line-height", lineHeight);
+
+        return new CssRule.Of(key, className, variants, properties);
+      }
+
+      value = lineHeight;
+
+      lineHeight = value.substring(0, slash);
+
+      properties.add("line-height", lineHeight);
+
+      String letterSpacing;
+      letterSpacing = value.substring(slash + 1);
+
+      slash = letterSpacing.indexOf('/');
+
+      if (slash < 0) {
+        properties.add("letter-spacing", letterSpacing);
+
+        return new CssRule.Of(key, className, variants, properties);
+      }
+
+      value = letterSpacing;
+
+      letterSpacing = value.substring(0, slash);
+
+      properties.add("letter-spacing", letterSpacing);
+
+      String fontWeight;
+      fontWeight = value.substring(slash + 1);
+
+      properties.add("font-weight", fontWeight);
 
       return new CssRule.Of(key, className, variants, properties);
     }

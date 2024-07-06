@@ -288,6 +288,15 @@ public class CssGeneratorTest {
         .rounded-l-2xl { border-top-left-radius: 1rem; border-bottom-left-radius: 1rem }
         .rounded-l-3xl { border-top-left-radius: 1.5rem; border-bottom-left-radius: 1.5rem }
         .rounded-l-full { border-top-left-radius: 9999px; border-bottom-left-radius: 9999px }
+        .rounded-ss-none { border-start-start-radius: 0px }
+        .rounded-ss-sm { border-start-start-radius: 0.125rem }
+        .rounded-ss { border-start-start-radius: 0.25rem }
+        .rounded-ss-md { border-start-start-radius: 0.375rem }
+        .rounded-ss-lg { border-start-start-radius: 0.5rem }
+        .rounded-ss-xl { border-start-start-radius: 0.75rem }
+        .rounded-ss-2xl { border-start-start-radius: 1rem }
+        .rounded-ss-3xl { border-start-start-radius: 1.5rem }
+        .rounded-ss-full { border-start-start-radius: 9999px }
         .rounded-se-none { border-start-end-radius: 0px }
         .rounded-se-sm { border-start-end-radius: 0.125rem }
         .rounded-se { border-start-end-radius: 0.25rem }

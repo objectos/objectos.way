@@ -23,7 +23,6 @@ import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.function.Function;
-import java.util.function.Supplier;
 import objectos.notes.NoteSink;
 import objectos.way.CssVariant.Breakpoint;
 
@@ -109,7 +108,7 @@ sealed abstract class CssGeneratorConfig permits CssGenerator {
     return defaultProperties.toMap();
   }
 
-  final Map<String, String> values(CssKey key, Supplier<Map<String, String>> defaultSupplier) {
+  final Map<String, String> values(CssKey key, Function<CssGeneratorConfig, Map<String, String>> defaultSupplier) {
     CssProperties properties;
     properties = overrides.get(key);
 
@@ -117,7 +116,7 @@ sealed abstract class CssGeneratorConfig permits CssGenerator {
       return properties.toMap();
     }
 
-    return defaultSupplier.get();
+    return defaultSupplier.apply(this);
   }
 
   //
