@@ -26,7 +26,7 @@ public class CssGeneratorRoundTest {
 
   @Test
   public void testCase01() {
-    CssGeneratorConfig config;
+    CssConfig config;
     config = config();
 
     CssGeneratorRound round;
@@ -43,7 +43,7 @@ public class CssGeneratorRoundTest {
     );
   }
 
-  private CssGeneratorConfig config() {
+  private CssConfig config() {
     CssGenerator gen;
     gen = new CssGenerator();
 

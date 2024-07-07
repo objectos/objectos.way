@@ -25,21 +25,18 @@ sealed abstract class CssRuleResolver {
 
     private final CssKey key;
 
-    private final String variableName;
-
     private final Map<String, String> colors;
 
     private final String propertyName1;
 
     private final String propertyName2;
 
-    public OfColorAlpha(CssKey key, String variableName, Map<String, String> colors, String propertyName1) {
-      this(key, variableName, colors, propertyName1, null);
+    public OfColorAlpha(CssKey key, Map<String, String> colors, String propertyName1) {
+      this(key, colors, propertyName1, null);
     }
 
-    public OfColorAlpha(CssKey key, String variableName, Map<String, String> colors, String propertyName1, String propertyName2) {
+    public OfColorAlpha(CssKey key, Map<String, String> colors, String propertyName1, String propertyName2) {
       this.key = key;
-      this.variableName = variableName;
       this.colors = colors;
       this.propertyName1 = propertyName1;
       this.propertyName2 = propertyName2;
@@ -49,9 +46,6 @@ sealed abstract class CssRuleResolver {
     public final CssRule resolve(String className, List<CssVariant> variants, boolean negative, String value) {
       String colorKey;
       colorKey = value;
-
-      int opacity;
-      opacity = 1;
 
       int slash;
       slash = value.indexOf('/');
@@ -67,12 +61,8 @@ sealed abstract class CssRuleResolver {
         return null;
       }
 
-      CssProperties properties;
-      properties = new CssProperties();
-
-      if (color.contains(variableName)) {
-        properties.add(variableName, Integer.toString(opacity));
-      }
+      CssProperties.Builder properties;
+      properties = new CssProperties.Builder();
 
       properties.add(propertyName1, color);
 
@@ -135,8 +125,8 @@ sealed abstract class CssRuleResolver {
 
       size = extractSize(size);
 
-      CssProperties properties;
-      properties = new CssProperties();
+      CssProperties.Builder properties;
+      properties = new CssProperties.Builder();
 
       properties.add("font-size", size);
 
@@ -170,8 +160,8 @@ sealed abstract class CssRuleResolver {
     }
 
     private CssRule rule(String className, List<CssVariant> variants, String value) {
-      CssProperties properties;
-      properties = new CssProperties();
+      CssProperties.Builder properties;
+      properties = new CssProperties.Builder();
 
       int slash;
       slash = value.indexOf('/');
@@ -266,8 +256,8 @@ sealed abstract class CssRuleResolver {
 
       resolved = valueFormatter.format(resolved, negative);
 
-      CssProperties properties;
-      properties = new CssProperties();
+      CssProperties.Builder properties;
+      properties = new CssProperties.Builder();
 
       properties.add(propertyName1, resolved);
 

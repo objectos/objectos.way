@@ -34,6 +34,12 @@ class CssRule implements Comparable<CssRule> {
       this.properties = properties;
     }
 
+    public Of(CssKey key, String className, List<CssVariant> variants, CssProperties.Builder properties) {
+      super(key, className, variants);
+
+      this.properties = properties.build();
+    }
+
     @Override
     final void writeBlock(StringBuilder out, CssIndentation indentation) {
       switch (properties.size()) {

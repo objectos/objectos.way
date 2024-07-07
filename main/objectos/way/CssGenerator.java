@@ -25,7 +25,7 @@ import objectos.util.map.GrowableMap;
 import objectos.way.CssVariant.AppendTo;
 import objectos.way.CssVariant.Breakpoint;
 
-final class CssGenerator extends CssGeneratorConfig {
+final class CssGenerator extends CssConfig {
 
   private Set<Class<?>> classes;
 

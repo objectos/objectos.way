@@ -20,50 +20,76 @@ import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.function.Function;
 import objectos.notes.NoteSink;
+import objectos.util.map.GrowableMap;
 import objectos.way.CssVariant.Breakpoint;
 
-sealed abstract class CssGeneratorConfig permits CssGenerator {
+sealed abstract class CssConfig permits CssGenerator {
 
   private final Map<CssKey, CssProperties> overrides = new EnumMap<>(CssKey.class);
 
-  private final Map<CssKey, Object> store = new EnumMap<>(CssKey.class);
-
   private final Map<String, Set<CssKey>> prefixes = new HashMap<>();
 
-  final Map<String, String> colorsAlpha(CssKey key, String variableName) {
-    CssProperties properties;
-    properties = overrides.get(key);
+  private final Map<CssKey, CssRuleResolver> resolvers = new EnumMap<>(CssKey.class);
 
-    if (properties != null) {
-      return colorsAlpha(properties, variableName);
-    }
+  private final Map<String, CssStaticUtility> staticUtilities = new GrowableMap<>();
 
-    return colors();
+  public final CssRuleResolver getResolver(CssKey candidate) {
+    throw new UnsupportedOperationException("Implement me");
   }
 
-  private Map<String, String> colorsAlpha(CssProperties properties, String variableName) {
-    return properties.toMap();
+  public final CssStaticUtility getStatic(String value) {
+    return staticUtilities.get(value);
   }
 
-  final Object get(CssKey key) {
-    Object existing;
-    existing = store.get(key);
+  public final void colorUtility(
+      CssKey key,
+      Map<String, String> values,
+      String prefix, String propertyName1, String propertyName2) {
+    CssRuleResolver resolver;
+    resolver = new CssRuleResolver.OfColorAlpha(key, values, propertyName1, propertyName2);
 
-    if (existing == null) {
-      throw new NoSuchElementException(
-          "Key " + key + " is not mapped to any value"
+    customUtility(key, prefix, resolver);
+  }
+
+  public final void customUtility(CssKey key, String prefix, CssRuleResolver resolver) {
+    prefix(key, prefix);
+
+    CssRuleResolver maybeExisting;
+    maybeExisting = resolvers.put(key, resolver);
+
+    if (maybeExisting != null) {
+      throw new IllegalArgumentException(
+          "Key " + key + " already mapped to " + maybeExisting
       );
     }
-
-    return existing;
   }
 
-  final Object getOrCompute(CssKey key, Function<CssKey, Object> function) {
-    return store.computeIfAbsent(key, function);
+  public final void staticUtility(CssKey key, String text) {
+    Map<String, CssProperties> table;
+    table = Css.parseTable(text);
+
+    for (Map.Entry<String, CssProperties> entry : table.entrySet()) {
+      String className;
+      className = entry.getKey();
+
+      CssProperties properties;
+      properties = entry.getValue();
+
+      CssStaticUtility utility;
+      utility = new CssStaticUtility(key, properties);
+
+      CssStaticUtility maybeExisting;
+      maybeExisting = staticUtilities.put(className, utility);
+
+      if (maybeExisting != null) {
+        throw new IllegalArgumentException(
+            "Class name " + className + " already mapped to " + maybeExisting
+        );
+      }
+    }
   }
 
   final Set<CssKey> getCandidates(String prefix) {
@@ -74,24 +100,11 @@ sealed abstract class CssGeneratorConfig permits CssGenerator {
     overrides.put(key, properties);
   }
 
-  final Object prefix(CssKey key, String prefix) {
+  private void prefix(CssKey key, String prefix) {
     Set<CssKey> set;
     set = prefixes.computeIfAbsent(prefix, s -> EnumSet.noneOf(CssKey.class));
 
     set.add(key);
-
-    return null;
-  }
-
-  final void put(CssKey key, Object value) {
-    Object maybeExisting;
-    maybeExisting = store.put(key, value);
-
-    if (maybeExisting != null) {
-      throw new IllegalStateException(
-          "Key " + key + " already mapped to " + maybeExisting
-      );
-    }
   }
 
   final Map<String, String> values(CssKey key, String defaults) {
@@ -108,7 +121,7 @@ sealed abstract class CssGeneratorConfig permits CssGenerator {
     return defaultProperties.toMap();
   }
 
-  final Map<String, String> values(CssKey key, Function<CssGeneratorConfig, Map<String, String>> defaultSupplier) {
+  final Map<String, String> values(CssKey key, Function<CssConfig, Map<String, String>> defaultSupplier) {
     CssProperties properties;
     properties = overrides.get(key);
 
@@ -202,4 +215,5 @@ sealed abstract class CssGeneratorConfig permits CssGenerator {
   abstract Map<String, String> zIndex();
 
   abstract Map<String, String> spacing();
+
 }

@@ -19,6 +19,7 @@ import java.util.Map;
 import java.util.Set;
 import objectos.lang.object.Check;
 import objectos.notes.NoteSink;
+import objectos.util.map.GrowableMap;
 
 /**
  * The <strong>Objectos CSS</strong> main class.
@@ -245,8 +246,8 @@ public final class Css {
   // private stuff
 
   static CssProperties parseProperties(String text) {
-    CssProperties props;
-    props = new CssProperties();
+    CssProperties.Builder builder;
+    builder = new CssProperties.Builder();
 
     String[] lines;
     lines = text.split("\n");
@@ -271,10 +272,77 @@ public final class Css {
       String value;
       value = line.substring(colon + 1);
 
+      builder.add(key.trim(), value.trim());
+    }
+
+    return builder.build();
+  }
+
+  static Map<String, CssProperties> parseTable(String text) {
+    GrowableMap<String, CssProperties> map;
+    map = new GrowableMap<>();
+
+    String[] lines;
+    lines = text.split("\n");
+
+    String className;
+    className = null;
+
+    CssProperties.Builder props;
+    props = null;
+
+    for (String line : lines) {
+      if (line.isBlank()) {
+        continue;
+      }
+
+      int pipe;
+      pipe = line.indexOf('|');
+
+      if (pipe < 0) {
+        throw new IllegalArgumentException(
+            "The vertical bar character '|' was not found in the line listed below:\n\n" + line + "\n"
+        );
+      }
+
+      String maybeClass;
+      maybeClass = line.substring(0, pipe);
+
+      maybeClass = maybeClass.trim();
+
+      if (!maybeClass.isEmpty()) {
+        if (className != null) {
+          map.put(className, props.build());
+        }
+
+        className = maybeClass;
+
+        props = new CssProperties.Builder();
+      }
+
+      int colon;
+      colon = line.indexOf(':', pipe);
+
+      if (colon < 0) {
+        throw new IllegalArgumentException(
+            "The colon character ':' was not found in the line listed below:\n\n" + line + "\n"
+        );
+      }
+
+      String key;
+      key = line.substring(pipe + 1, colon);
+
+      String value;
+      value = line.substring(colon + 1);
+
       props.add(key.trim(), value.trim());
     }
 
-    return props;
+    if (className != null) {
+      map.put(className, props.build());
+    }
+
+    return map.toUnmodifiableMap();
   }
 
   private static final int UNSIGNED = 0xFF;

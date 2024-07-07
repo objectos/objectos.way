@@ -18,19 +18,10 @@ package objectos.way;
 import java.util.List;
 
 @SuppressWarnings("exports")
-sealed interface CssRuleFactory {
+record CssStaticUtility(CssKey key, CssProperties properties) {
 
-  record OfProperties(CssKey key, CssProperties properties) implements CssRuleFactory {
-    @Override
-    public final CssRule create(String className, List<CssVariant> variants) {
-      return new CssRule.Of(key, className, variants, properties);
-    }
-  }
-
-  default CssRule create(String className, List<CssVariant> variants) {
-    throw new UnsupportedOperationException(
-        "Not supported for " + getClass().getSimpleName()
-    );
+  public final CssRule create(String className, List<CssVariant> variants) {
+    return new CssRule.Of(key, className, variants, properties);
   }
 
 }

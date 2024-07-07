@@ -20,8 +20,6 @@ import java.util.Set;
 
 enum CssKey {
 
-  _STATIC_TABLE,
-
   // utilities
   // order is important!
 

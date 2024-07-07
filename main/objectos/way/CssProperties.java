@@ -24,13 +24,33 @@ import objectos.util.map.GrowableMap;
 
 final class CssProperties implements Iterable<Map.Entry<String, String>> {
 
-  private final List<Map.Entry<String, String>> values = new GrowableList<>();
+  static final class Builder {
 
-  public final void add(String key, String value) {
-    Entry<String, String> entry;
-    entry = Map.entry(key, value);
+    private final GrowableList<Map.Entry<String, String>> values = new GrowableList<>();
 
-    values.add(entry);
+    public final void add(String key, String value) {
+      Entry<String, String> entry;
+      entry = Map.entry(key, value);
+
+      values.add(entry);
+    }
+
+    public final CssProperties build() {
+      if (values.isEmpty()) {
+        throw new IllegalStateException("Empty values");
+      }
+
+      return new CssProperties(
+          values.toUnmodifiableList()
+      );
+    }
+
+  }
+
+  private final List<Map.Entry<String, String>> values;
+
+  private CssProperties(List<Entry<String, String>> values) {
+    this.values = values;
   }
 
   public final Iterable<Map.Entry<String, String>> entries() {

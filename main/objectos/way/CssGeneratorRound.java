@@ -82,16 +82,16 @@ abstract class CssGeneratorRound extends CssGeneratorParser {
 
   private Map<MediaQuery, Context> mediaQueries;
 
-  CssGeneratorRound(CssGeneratorConfig config) {
+  CssGeneratorRound(CssConfig config) {
     super(config);
   }
+
+  abstract void spec();
 
   public final String generate() {
     noteSink = config.noteSink();
 
-    for (CssKey key : CssKey.UNIVERSE) {
-      execute(key, CssAction.CONFIG_STATIC_TABLE, config);
-    }
+    spec();
 
     for (var clazz : config.classes()) {
       scan(clazz);

@@ -91,7 +91,7 @@ import objectos.way.CssVariant.Breakpoint;
 
 abstract class CssGeneratorParser extends CssGeneratorVariants {
 
-  final CssGeneratorConfig config;
+  final CssConfig config;
 
   private String className;
 
@@ -99,11 +99,9 @@ abstract class CssGeneratorParser extends CssGeneratorVariants {
 
   private List<CssVariant> variants;
 
-  CssGeneratorParser(CssGeneratorConfig config) {
+  CssGeneratorParser(CssConfig config) {
     this.config = config;
   }
-
-  abstract Object execute(CssKey key, CssAction action, Object arg);
 
   @Override
   final CssVariant getVariant(String variantName) {
@@ -117,14 +115,8 @@ abstract class CssGeneratorParser extends CssGeneratorVariants {
 
   final CssRule onVariantsNew(String className, List<CssVariant> variants, String value) {
     // 1) static values search
-    Object staticTableObject;
-    staticTableObject = config.get(CssKey._STATIC_TABLE);
-
-    CssStaticTable staticTable;
-    staticTable = (CssStaticTable) staticTableObject;
-
-    CssRuleFactory staticFactory;
-    staticFactory = staticTable.get(value);
+    CssStaticUtility staticFactory;
+    staticFactory = config.getStatic(value);
 
     if (staticFactory != null) {
       return staticFactory.create(className, variants);
@@ -192,11 +184,8 @@ abstract class CssGeneratorParser extends CssGeneratorVariants {
     }
 
     for (CssKey candidate : candidates) {
-      Object resolverObject;
-      resolverObject = config.getOrCompute(candidate, this::createResolver);
-
       CssRuleResolver resolver;
-      resolver = (CssRuleResolver) resolverObject;
+      resolver = config.getResolver(candidate);
 
       CssRule rule;
       rule = resolver.resolve(className, variants, negative, suffix);
@@ -207,10 +196,6 @@ abstract class CssGeneratorParser extends CssGeneratorVariants {
     }
 
     return CssRule.NOOP;
-  }
-
-  private CssRuleResolver createResolver(CssKey key) {
-    return (CssRuleResolver) execute(key, CssAction.RESOLVER, null);
   }
 
   final CssRule onVariantsOld(String className, List<CssVariant> variants, String value) {
