@@ -70,7 +70,7 @@ sealed abstract class CssResolver {
         properties.add(propertyName2, color);
       }
 
-      return new CssRule.Of(key, className, variants, properties);
+      return new CssRule(key, className, variants, properties);
     }
 
   }
@@ -129,7 +129,7 @@ sealed abstract class CssResolver {
 
       properties.add("line-height", height);
 
-      return new CssRule.Of(CssKey.FONT_SIZE, className, variants, properties);
+      return new CssRule(CssKey.FONT_SIZE, className, variants, properties);
     }
 
     private String extractSize(String size) {
@@ -166,7 +166,7 @@ sealed abstract class CssResolver {
       if (slash < 0) {
         properties.add("font-size", value);
 
-        return new CssRule.Of(CssKey.FONT_SIZE, className, variants, properties);
+        return new CssRule(CssKey.FONT_SIZE, className, variants, properties);
       }
 
       String fontSize;
@@ -182,7 +182,7 @@ sealed abstract class CssResolver {
       if (slash < 0) {
         properties.add("line-height", lineHeight);
 
-        return new CssRule.Of(CssKey.FONT_SIZE, className, variants, properties);
+        return new CssRule(CssKey.FONT_SIZE, className, variants, properties);
       }
 
       value = lineHeight;
@@ -199,7 +199,7 @@ sealed abstract class CssResolver {
       if (slash < 0) {
         properties.add("letter-spacing", letterSpacing);
 
-        return new CssRule.Of(CssKey.FONT_SIZE, className, variants, properties);
+        return new CssRule(CssKey.FONT_SIZE, className, variants, properties);
       }
 
       value = letterSpacing;
@@ -213,7 +213,7 @@ sealed abstract class CssResolver {
 
       properties.add("font-weight", fontWeight);
 
-      return new CssRule.Of(CssKey.FONT_SIZE, className, variants, properties);
+      return new CssRule(CssKey.FONT_SIZE, className, variants, properties);
     }
 
   }
@@ -286,7 +286,7 @@ sealed abstract class CssResolver {
         properties.add(propertyName2, resolved);
       }
 
-      return new CssRule.Of(key, className, variants, properties);
+      return new CssRule(key, className, variants, properties);
     }
 
   }
@@ -315,7 +315,7 @@ sealed abstract class CssResolver {
       if (slash < 0) {
         properties.add(propertyName, value);
 
-        return new CssRule.Of(key, className, variants, properties);
+        return new CssRule(key, className, variants, properties);
       }
 
       String thisValue;
@@ -333,7 +333,7 @@ sealed abstract class CssResolver {
       properties.add(previousName, value);
     }
 
-    return new CssRule.Of(key, className, variants, properties);
+    return new CssRule(key, className, variants, properties);
 
   }
 

@@ -21,7 +21,7 @@ import java.util.List;
 record CssStaticUtility(CssKey key, CssProperties properties) {
 
   public final CssRule create(String className, List<CssVariant> variants) {
-    return new CssRule.Of(key, className, variants, properties);
+    return new CssRule(key, className, variants, properties);
   }
 
 }

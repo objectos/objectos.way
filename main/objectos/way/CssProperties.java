@@ -47,10 +47,22 @@ final class CssProperties implements Iterable<Map.Entry<String, String>> {
 
   }
 
+  public static final CssProperties NOOP = new CssProperties(List.of());
+
   private final List<Map.Entry<String, String>> values;
 
   private CssProperties(List<Entry<String, String>> values) {
     this.values = values;
+  }
+
+  public static CssProperties of(String key, String value) {
+    Map.Entry<String, String> property;
+    property = Map.entry(key, value);
+
+    List<Entry<String, String>> values;
+    values = List.of(property);
+
+    return new CssProperties(values);
   }
 
   public final Iterable<Map.Entry<String, String>> entries() {

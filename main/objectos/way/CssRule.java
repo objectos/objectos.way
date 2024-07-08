@@ -22,76 +22,30 @@ import java.util.Map.Entry;
 import objectos.way.CssGeneratorRound.Context;
 import objectos.way.CssVariant.MediaQuery;
 
-class CssRule implements Comparable<CssRule> {
+final class CssRule implements Comparable<CssRule> {
 
-  static final class Of extends CssRule {
+  public static final CssRule NOOP = new CssRule(CssKey.$NOOP, "", List.of(), CssProperties.NOOP);
 
-    private final CssProperties properties;
+  private final CssKey key;
 
-    public Of(CssKey key, String className, List<CssVariant> variants, CssProperties properties) {
-      super(key, className, variants);
+  private final String className;
 
-      this.properties = properties;
-    }
+  private final List<CssVariant> variants;
 
-    public Of(CssKey key, String className, List<CssVariant> variants, CssProperties.Builder properties) {
-      super(key, className, variants);
+  private final CssProperties properties;
 
-      this.properties = properties.build();
-    }
-
-    @Override
-    final void writeBlock(StringBuilder out, CssIndentation indentation) {
-      switch (properties.size()) {
-        case 0 -> out.append(" {}");
-
-        case 1 -> {
-          Entry<String, String> prop;
-          prop = properties.get(0);
-
-          writeBlockOne(out, prop);
-        }
-
-        case 2 -> {
-          Entry<String, String> first;
-          first = properties.get(0);
-
-          Entry<String, String> second;
-          second = properties.get(1);
-
-          writeBlockTwo(out, first, second);
-        }
-
-        default -> {
-          writeBlockMany(out, indentation, properties);
-        }
-      }
-    }
-
+  public CssRule(CssKey key, String className, List<CssVariant> variants, CssProperties.Builder properties) {
+    this(key, className, variants, properties.build());
   }
 
-  public static final CssRule NOOP = new CssRule(-1, "", List.of());
-
-  final int index;
-
-  final String className;
-
-  final List<CssVariant> variants;
-
-  CssRule(CssKey key, String className, List<CssVariant> variants) {
-    this.index = key.ordinal();
+  public CssRule(CssKey key, String className, List<CssVariant> variants, CssProperties properties) {
+    this.key = key;
 
     this.className = className;
 
     this.variants = variants;
-  }
 
-  CssRule(int index, String className, List<CssVariant> variants) {
-    this.index = index;
-
-    this.className = className;
-
-    this.variants = variants;
+    this.properties = properties;
   }
 
   public final void accept(CssGeneratorRound gen) {
@@ -123,7 +77,7 @@ class CssRule implements Comparable<CssRule> {
   @Override
   public final int compareTo(CssRule o) {
     int result;
-    result = Integer.compare(index, o.index);
+    result = key.compareTo(o.key);
 
     if (result != 0) {
       return result;
@@ -150,7 +104,7 @@ class CssRule implements Comparable<CssRule> {
     return thisMax.compareTo(thatMax);
   }
 
-  final CssVariant max() {
+  private CssVariant max() {
     return switch (variants.size()) {
       case 0 -> null;
 
@@ -184,20 +138,35 @@ class CssRule implements Comparable<CssRule> {
       }
     }
 
-    writeBlock(out, indentation);
+    switch (properties.size()) {
+      case 0 -> out.append(" {}");
+
+      case 1 -> {
+        Entry<String, String> prop;
+        prop = properties.get(0);
+
+        writeBlockOne(out, prop);
+      }
+
+      case 2 -> {
+        Entry<String, String> first;
+        first = properties.get(0);
+
+        Entry<String, String> second;
+        second = properties.get(1);
+
+        writeBlockTwo(out, first, second);
+      }
+
+      default -> {
+        writeBlockMany(out, indentation, properties);
+      }
+    }
 
     out.append(System.lineSeparator());
   }
 
-  void writeBlock(StringBuilder out, CssIndentation indentation) {
-    out.append(" { ");
-
-    writeProperties(out);
-
-    out.append(" }");
-  }
-
-  final void writeClassName(StringBuilder out) {
+  private void writeClassName(StringBuilder out) {
     int length;
     length = className.length();
 
@@ -255,7 +224,7 @@ class CssRule implements Comparable<CssRule> {
     }
   }
 
-  final void writeBlockOne(StringBuilder out, Entry<String, String> property) {
+  private void writeBlockOne(StringBuilder out, Entry<String, String> property) {
     blockStart(out);
 
     property(out, property);
@@ -263,7 +232,7 @@ class CssRule implements Comparable<CssRule> {
     blockEnd(out);
   }
 
-  final void writeBlockTwo(StringBuilder out, Entry<String, String> prop1, Entry<String, String> prop2) {
+  private void writeBlockTwo(StringBuilder out, Entry<String, String> prop1, Entry<String, String> prop2) {
     blockStart(out);
 
     property(out, prop1);
@@ -275,7 +244,7 @@ class CssRule implements Comparable<CssRule> {
     blockEnd(out);
   }
 
-  final void writeBlockMany(
+  private void writeBlockMany(
       StringBuilder out, CssIndentation indentation, CssProperties properties) {
     blockStartMany(out);
 
@@ -333,16 +302,6 @@ class CssRule implements Comparable<CssRule> {
 
     out.append(';');
     out.append(System.lineSeparator());
-  }
-
-  void writeProperties(StringBuilder out) {}
-
-  final void writePropertyValue(StringBuilder out, String property, String value) {
-    out.append(property);
-
-    out.append(": ");
-
-    out.append(value);
   }
 
 }

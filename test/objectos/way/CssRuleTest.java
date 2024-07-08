@@ -34,22 +34,22 @@ public class CssRuleTest {
 
     List<CssRule> rules = new ArrayList<>();
 
-    CssRule a1 = new CssRule(0, "a-1", empty);
+    CssRule a1 = rule(CssKey.ACCESSIBILITY, "a-1", empty);
     rules.add(a1);
 
-    CssRule a2 = new CssRule(0, "a-2", empty);
+    CssRule a2 = rule(CssKey.ACCESSIBILITY, "a-2", empty);
     rules.add(a2);
 
-    CssRule a1Active = new CssRule(0, "a-2:active", active);
+    CssRule a1Active = rule(CssKey.ACCESSIBILITY, "a-2:active", active);
     rules.add(a1Active);
 
-    CssRule a1Hover = new CssRule(0, "a-1:hover", hover);
+    CssRule a1Hover = rule(CssKey.ACCESSIBILITY, "a-1:hover", hover);
     rules.add(a1Hover);
 
-    CssRule b1 = new CssRule(1, "b-1", empty);
+    CssRule b1 = rule(CssKey.CONTENT, "b-1", empty);
     rules.add(b1);
 
-    CssRule b2 = new CssRule(1, "b-2", empty);
+    CssRule b2 = rule(CssKey.CONTENT, "b-2", empty);
     rules.add(b2);
 
     Collections.sort(rules);
@@ -64,9 +64,13 @@ public class CssRuleTest {
 
   @Test
   public void writeClassName() {
-    testClassName("m-0", ".m-0 {  }\n");
-    testClassName("sm:m-1", ".sm\\:m-1 {  }\n");
-    testClassName("2xl:m-2", ".\\32xl\\:m-2 {  }\n");
+    testClassName("m-0", ".m-0 {}\n");
+    testClassName("sm:m-1", ".sm\\:m-1 {}\n");
+    testClassName("2xl:m-2", ".\\32xl\\:m-2 {}\n");
+  }
+
+  private CssRule rule(CssKey key, String className, List<CssVariant> variants) {
+    return new CssRule(key, className, variants, CssProperties.NOOP);
   }
 
   private void testClassName(String className, String expected) {
@@ -74,7 +78,7 @@ public class CssRuleTest {
     out = new StringBuilder();
 
     CssRule rule;
-    rule = new CssRule(0, className, List.of());
+    rule = rule(CssKey.$NOOP, className, List.of());
 
     rule.writeTo(out, CssIndentation.ROOT);
 

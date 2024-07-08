@@ -26,7 +26,7 @@ public class CssGeneratorCacheTest {
   @Test(description = "cache hit")
   public void testCase01() {
     CssRule foo;
-    foo = new CssRule(0, "foo", List.of());
+    foo = new CssRule(CssKey.$NOOP, "foo", List.of(), CssProperties.NOOP);
 
     class Impl extends CssGeneratorCache {
       private CssRule hit;
@@ -59,7 +59,7 @@ public class CssGeneratorCacheTest {
   @Test(description = "cache miss")
   public void testCase02() {
     CssRule foo;
-    foo = new CssRule(0, "foo", List.of());
+    foo = new CssRule(CssKey.$NOOP, "foo", List.of(), CssProperties.NOOP);
 
     class Impl extends CssGeneratorCache {
       @Override

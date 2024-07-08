@@ -19,32 +19,27 @@ import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertSame;
 
 import java.util.List;
-import objectos.way.CssVariant.Breakpoint;
 import org.testng.annotations.Test;
 
 public class CssGeneratorVariantsTest {
 
-  private final CssVariant sm = new Breakpoint(0, "0", "640px");
+  private final CssVariant hover = new CssVariant.ClassNameFormat("", ":hover");
 
-  @Test(description = "single responsive variant")
+  @Test(description = "single variant")
   public void testCase01() {
     Impl impl;
     impl = new Impl();
 
     CssRule rule;
-    rule = impl.onCacheMiss("sm:block");
+    rule = impl.onCacheMiss("hover:block");
 
-    ThisRule result;
-    result = (ThisRule) rule;
+    assertEquals(
+        rule.toString(),
 
-    assertEquals(result.className, "sm:block");
-
-    List<CssVariant> variants;
-    variants = result.variants;
-
-    assertEquals(variants, List.of(sm));
-
-    assertEquals(result.value, "block");
+        """
+        .hover\\:block:hover { display: block }
+        """
+    );
   }
 
   @Test(description = "it should not process class name with unknown prefix")
@@ -63,7 +58,7 @@ public class CssGeneratorVariantsTest {
     @Override
     final CssVariant getVariant(String variantName) {
       return switch (variantName) {
-        case "sm" -> sm;
+        case "hover" -> hover;
 
         default -> null;
       };
@@ -71,19 +66,11 @@ public class CssGeneratorVariantsTest {
 
     @Override
     final CssRule onVariants(String className, List<CssVariant> variants, String value) {
-      return new ThisRule(className, variants, value);
-    }
-
-  }
-
-  private static class ThisRule extends CssRule {
-
-    final String value;
-
-    ThisRule(String className, List<CssVariant> variants, String value) {
-      super(0, className, variants);
-
-      this.value = value;
+      return new CssRule(
+          CssKey.DISPLAY,
+          className, variants,
+          CssProperties.of("display", value)
+      );
     }
 
   }

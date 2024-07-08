@@ -20,6 +20,8 @@ import java.util.Set;
 
 enum CssKey {
 
+  $NOOP,
+
   _COLORS,
 
   _SPACING,
