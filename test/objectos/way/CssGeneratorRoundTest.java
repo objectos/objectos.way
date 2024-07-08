@@ -31,7 +31,7 @@ public class CssGeneratorRoundTest {
     CssGeneratorRound round;
     round = new CssGeneratorSpec(config);
 
-    round.rules.put("bg-black", CssUtility.BACKGROUND_COLOR.get("bg-black", List.of(), "black"));
+    round.rules.put("bg-black", new CssRule.Of(CssKey.BACKGROUND_COLOR, "bg-black", List.of(), Css.parseProperties("background-color: black")));
 
     assertEquals(
         round.generate(),
