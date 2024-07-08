@@ -1108,6 +1108,14 @@ final class CssGeneratorSpec extends CssGeneratorRound implements Css.Generator 
 
     funcUtility(CssKey.TOP, inset, NEGATIVE, "top");
 
+    staticUtility(
+        CssKey.TRANSFORM,
+
+        """
+        transform-none | transform: none
+        """
+    );
+
     funcUtility(
         CssKey.TRANSITION_DURATION,
 

@@ -2864,6 +2864,24 @@ public class CssGeneratorTest {
   }
 
   @Test
+  public void transform() {
+    class Subject extends AbstractSubject {
+      @Override
+      final void classes() {
+        className("transform-none");
+      }
+    }
+
+    test(
+        Subject.class,
+
+        """
+        .transform-none { transform: none }
+        """
+    );
+  }
+
+  @Test
   public void transitionProperty() {
     class Subject extends AbstractSubject {
       @Override

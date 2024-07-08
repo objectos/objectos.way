@@ -82,6 +82,7 @@ enum CssKey {
   TRANSLATE,
   TRANSLATE_X,
   TRANSLATE_Y,
+  TRANSFORM,
 
   CURSOR,
 
