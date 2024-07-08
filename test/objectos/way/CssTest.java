@@ -22,12 +22,9 @@ import org.testng.annotations.Test;
 
 public class CssTest {
 
-  @Test
+  @Test(expectedExceptions = IllegalArgumentException.class, expectedExceptionsMessageRegExp = "Empty")
   public void parseProperties01() {
-    Map<String, String> map;
-    map = Css.parseProperties("").toMap();
-
-    assertEquals(map, Map.of());
+    Css.parseProperties("");
   }
 
   @Test

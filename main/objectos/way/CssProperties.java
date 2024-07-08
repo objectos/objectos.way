@@ -37,7 +37,7 @@ final class CssProperties implements Iterable<Map.Entry<String, String>> {
 
     public final CssProperties build() {
       if (values.isEmpty()) {
-        throw new IllegalStateException("Empty values");
+        throw new IllegalArgumentException("Empty");
       }
 
       return new CssProperties(

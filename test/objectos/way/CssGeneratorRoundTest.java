@@ -63,7 +63,7 @@ public class CssGeneratorRoundTest {
         )
     );
 
-    gen.skipReset();
+    gen.skipReset(true);
 
     return gen;
   }

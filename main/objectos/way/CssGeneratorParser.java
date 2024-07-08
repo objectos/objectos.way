@@ -33,10 +33,6 @@ abstract class CssGeneratorParser extends CssGeneratorVariants {
 
   @Override
   final CssRule onVariants(String className, List<CssVariant> variants, String value) {
-    return onVariantsNew(className, variants, value);
-  }
-
-  final CssRule onVariantsNew(String className, List<CssVariant> variants, String value) {
     // 1) static values search
     CssStaticUtility staticFactory;
     staticFactory = config.getStatic(value);
