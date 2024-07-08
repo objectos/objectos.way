@@ -2938,6 +2938,53 @@ public class CssGeneratorTest {
   }
 
   @Test
+  public void translate() {
+    class Subject extends AbstractSubject {
+      @Override
+      final void classes() {
+        // @formatter:off
+        className("translate-x-1/2 translate-x-1/3 translate-x-2/3 translate-x-1/4 translate-x-2/4 translate-x-3/4 translate-x-full");
+        className("translate-x-px translate-x-0 translate-x-0.5 translate-x-1");
+        className("translate-y-1/2 translate-y-1/3 translate-y-2/3 translate-y-1/4 translate-y-2/4 translate-y-3/4 translate-y-full");
+        className("translate-y-px translate-y-0 translate-y-0.5 translate-y-1");
+        className("-translate-x-6 -translate-y-8");
+        // @formatter:on
+      }
+    }
+
+    test(
+        Subject.class,
+
+        """
+        .translate-x-1\\/2 { transform: translateX(50%) }
+        .translate-x-1\\/3 { transform: translateX(33.333333%) }
+        .translate-x-2\\/3 { transform: translateX(66.666667%) }
+        .translate-x-1\\/4 { transform: translateX(25%) }
+        .translate-x-2\\/4 { transform: translateX(50%) }
+        .translate-x-3\\/4 { transform: translateX(75%) }
+        .translate-x-full { transform: translateX(100%) }
+        .translate-x-px { transform: translateX(1px) }
+        .translate-x-0 { transform: translateX(0px) }
+        .translate-x-0\\.5 { transform: translateX(0.125rem) }
+        .translate-x-1 { transform: translateX(0.25rem) }
+        .-translate-x-6 { transform: translateX(-1.5rem) }
+        .translate-y-1\\/2 { transform: translateY(50%) }
+        .translate-y-1\\/3 { transform: translateY(33.333333%) }
+        .translate-y-2\\/3 { transform: translateY(66.666667%) }
+        .translate-y-1\\/4 { transform: translateY(25%) }
+        .translate-y-2\\/4 { transform: translateY(50%) }
+        .translate-y-3\\/4 { transform: translateY(75%) }
+        .translate-y-full { transform: translateY(100%) }
+        .translate-y-px { transform: translateY(1px) }
+        .translate-y-0 { transform: translateY(0px) }
+        .translate-y-0\\.5 { transform: translateY(0.125rem) }
+        .translate-y-1 { transform: translateY(0.25rem) }
+        .-translate-y-8 { transform: translateY(-2rem) }
+        """
+    );
+  }
+
+  @Test
   public void userSelect() {
     class Subject extends AbstractSubject {
       @Override

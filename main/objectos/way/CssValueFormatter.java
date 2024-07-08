@@ -19,11 +19,28 @@ import java.util.function.Function;
 
 sealed interface CssValueFormatter {
 
-  static final class OfFunction implements CssValueFormatter {
+  static final class OfFunctionNeg implements CssValueFormatter {
+
+    private final String functionName;
+
+    public OfFunctionNeg(String functionName) {
+      this.functionName = functionName;
+    }
+
+    @Override
+    public final String format(String value, boolean negative) {
+      return negative
+          ? functionName + "(-" + value + ")"
+          : functionName + "(" + value + ")";
+    }
+
+  }
+
+  static final class OfLambda implements CssValueFormatter {
 
     private final Function<String, String> function;
 
-    public OfFunction(Function<String, String> function) {
+    public OfLambda(Function<String, String> function) {
       this.function = function;
     }
 

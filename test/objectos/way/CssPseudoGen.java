@@ -28,7 +28,10 @@ public class CssPseudoGen {
     CssPseudoGen gen;
     gen = new CssPseudoGen();
 
-    gen.executeMethod("Visibility", "visibility", VISIBILITY);
+    gen.classNameSingleLine(TRANSLATE, "translate-x-");
+    gen.classNameSingleLine(SPACING, "translate-x-");
+    gen.classNameSingleLine(TRANSLATE, "translate-y-");
+    gen.classNameSingleLine(SPACING, "translate-y-");
   }
 
   private static final Map<String, String> SCREENS = seqmap(
@@ -510,6 +513,16 @@ public class CssPseudoGen {
       kv("500", "500ms"),
       kv("700", "700ms"),
       kv("1000", "1000ms")
+  );
+
+  static final Map<String, String> TRANSLATE = seqmap(
+      kv("1/2", "50%"),
+      kv("1/3", "33.333333%"),
+      kv("2/3", "66.666667%"),
+      kv("1/4", "25%"),
+      kv("2/4", "50%"),
+      kv("3/4", "75%"),
+      kv("full", "100%")
   );
 
   static final Map<String, String> USER_SELECT = seqmap(
