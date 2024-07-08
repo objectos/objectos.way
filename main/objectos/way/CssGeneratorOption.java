@@ -29,7 +29,7 @@ non-sealed abstract class CssGeneratorOption implements Css.Generator.Classes, C
     }
 
     @Override
-    final void acceptCssGenerator(CssGenerator config) {
+    final void acceptCssGenerator(CssConfig config) {
       config.override(key, properties);
     }
 
@@ -47,6 +47,6 @@ non-sealed abstract class CssGeneratorOption implements Css.Generator.Classes, C
     return (CssGeneratorOption) o;
   }
 
-  abstract void acceptCssGenerator(CssGenerator config);
+  abstract void acceptCssGenerator(CssConfig config);
 
 }

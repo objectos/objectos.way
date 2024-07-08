@@ -26,7 +26,7 @@ public class CssConfigTest {
   @Test
   public void staticUtility01() {
     CssConfig config;
-    config = new CssGenerator();
+    config = new CssConfig();
 
     config.staticUtility(
         CssKey.ACCESSIBILITY,

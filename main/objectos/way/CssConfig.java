@@ -22,22 +22,108 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Function;
+import objectos.notes.NoOpNoteSink;
 import objectos.notes.NoteSink;
 import objectos.util.map.GrowableMap;
+import objectos.way.CssVariant.AppendTo;
 import objectos.way.CssVariant.Breakpoint;
 
-sealed abstract class CssConfig permits CssGenerator {
+final class CssConfig {
+
+  private NoteSink noteSink = NoOpNoteSink.of();
+
+  private final List<Breakpoint> breakpoints = List.of(
+      new Breakpoint(0, "sm", "640px"),
+      new Breakpoint(1, "md", "768px"),
+      new Breakpoint(2, "lg", "1024px"),
+      new Breakpoint(3, "xl", "1280px"),
+      new Breakpoint(4, "2xl", "1536px")
+  );
+
+  private Set<Class<?>> classes;
 
   private final Map<CssKey, CssProperties> overrides = new EnumMap<>(CssKey.class);
 
   private final Map<String, Set<CssKey>> prefixes = new HashMap<>();
 
-  private final Map<CssKey, CssRuleResolver> resolvers = new EnumMap<>(CssKey.class);
+  private final Map<CssKey, CssResolver> resolvers = new EnumMap<>(CssKey.class);
+
+  private Map<String, String> rules;
+
+  private boolean skipReset;
 
   private final Map<String, CssStaticUtility> staticUtilities = new GrowableMap<>();
 
-  public final CssRuleResolver getResolver(CssKey candidate) {
-    throw new UnsupportedOperationException("Implement me");
+  private Map<String, CssVariant> variants;
+
+  public final void addRule(String selector, String contents) {
+    if (rules == null) {
+      rules = new GrowableMap<>();
+    }
+
+    rules.put(selector, contents);
+  }
+
+  public final void addUtility(String className, CssProperties properties) {
+
+    CssStaticUtility utility;
+    utility = new CssStaticUtility(CssKey.CUSTOM, properties);
+
+    CssStaticUtility maybeExisting;
+    maybeExisting = staticUtilities.put(className, utility);
+
+    if (maybeExisting != null) {
+      throw new IllegalArgumentException(
+          "The class name " + className + " is mapped to an existing utility."
+      );
+    }
+
+  }
+
+  public final void addVariants(CssProperties props) {
+    for (Map.Entry<String, String> entry : props) {
+      String variantName;
+      variantName = entry.getKey();
+
+      String formatString;
+      formatString = entry.getValue();
+
+      CssVariant variant;
+      variant = CssVariant.parse(formatString);
+
+      if (variant instanceof CssVariant.Invalid invalid) {
+        throw new IllegalArgumentException("Invalid formatString: " + invalid.reason());
+      }
+
+      Map<String, CssVariant> map;
+      map = variants();
+
+      if (map.containsKey(variantName)) {
+        throw new IllegalArgumentException("Variant already defined: " + variantName);
+      }
+
+      map.put(variantName, variant);
+    }
+  }
+
+  public final void classes(Set<Class<?>> set) {
+    classes = set;
+  }
+
+  public final void noteSink(NoteSink noteSink) {
+    this.noteSink = noteSink;
+  }
+
+  public final boolean skipReset() {
+    return skipReset;
+  }
+
+  public final void skipReset(boolean value) {
+    skipReset = value;
+  }
+
+  public final CssResolver getResolver(CssKey key) {
+    return resolvers.get(key);
   }
 
   public final CssStaticUtility getStatic(String value) {
@@ -48,16 +134,16 @@ sealed abstract class CssConfig permits CssGenerator {
       CssKey key,
       Map<String, String> values,
       String prefix, String propertyName1, String propertyName2) {
-    CssRuleResolver resolver;
-    resolver = new CssRuleResolver.OfColorAlpha(key, values, propertyName1, propertyName2);
+    CssResolver resolver;
+    resolver = new CssResolver.OfColorAlpha(key, values, propertyName1, propertyName2);
 
     customUtility(key, prefix, resolver);
   }
 
-  public final void customUtility(CssKey key, String prefix, CssRuleResolver resolver) {
+  public final void customUtility(CssKey key, String prefix, CssResolver resolver) {
     prefix(key, prefix);
 
-    CssRuleResolver maybeExisting;
+    CssResolver maybeExisting;
     maybeExisting = resolvers.put(key, resolver);
 
     if (maybeExisting != null) {
@@ -65,6 +151,18 @@ sealed abstract class CssConfig permits CssGenerator {
           "Key " + key + " already mapped to " + maybeExisting
       );
     }
+  }
+
+  public final void funcUtility(
+      CssKey key,
+      Map<String, String> values, CssValueFormatter formatter,
+      String prefix, String propertyName1, String propertyName2) {
+
+    CssResolver resolver;
+    resolver = new CssResolver.OfProperties(key, values, formatter, propertyName1, propertyName2);
+
+    customUtility(key, prefix, resolver);
+
   }
 
   public final void staticUtility(CssKey key, String text) {
@@ -132,88 +230,60 @@ sealed abstract class CssConfig permits CssGenerator {
     return defaultSupplier.apply(this);
   }
 
+  final Map<String, String> values(CssKey key, Map<String, String> defaults) {
+    CssProperties properties;
+    properties = overrides.get(key);
+
+    if (properties != null) {
+      return properties.toMap();
+    }
+
+    return defaults;
+  }
+
   //
 
-  boolean skipReset;
+  final NoteSink noteSink() {
+    return noteSink;
+  }
 
-  abstract NoteSink noteSink();
+  final Iterable<Class<?>> classes() {
+    return classes;
+  }
 
-  abstract Iterable<Class<?>> classes();
+  final List<Breakpoint> breakpoints() {
+    return breakpoints;
+  }
 
-  abstract List<Breakpoint> breakpoints();
+  final CssVariant getVariant(String variantName) {
+    return variants().get(variantName);
+  }
 
-  abstract CssVariant getVariant(String variantName);
+  final Map<String, String> rules() {
+    if (rules == null) {
+      rules = Map.of();
+    }
 
-  abstract Map<String, String> borderSpacing();
+    return rules;
+  }
 
-  abstract Map<String, String> borderRadius();
+  private Map<String, CssVariant> variants() {
+    if (variants == null) {
+      variants = new GrowableMap<>();
 
-  abstract Map<String, String> borderWidth();
+      for (var breakpoint : breakpoints) {
+        variants.put(breakpoint.name(), breakpoint);
+      }
 
-  abstract Map<String, String> colors();
+      variants.put("focus", new AppendTo(1, ":focus"));
+      variants.put("hover", new AppendTo(2, ":hover"));
+      variants.put("active", new AppendTo(3, ":active"));
 
-  abstract Map<String, String> content();
+      variants.put("after", new AppendTo(4, "::after"));
+      variants.put("before", new AppendTo(5, "::before"));
+    }
 
-  abstract Map<String, String> cursor();
-
-  abstract Map<String, String> flexGrow();
-
-  abstract Map<String, String> fontSize();
-
-  abstract Map<String, String> fontWeight();
-
-  abstract Map<String, String> gap();
-
-  abstract Map<String, String> gridColumn();
-
-  abstract Map<String, String> gridColumnEnd();
-
-  abstract Map<String, String> gridColumnStart();
-
-  abstract Map<String, String> gridTemplateColumns();
-
-  abstract Map<String, String> gridTemplateRows();
-
-  abstract Map<String, String> height();
-
-  abstract Map<String, String> inset();
-
-  abstract Map<String, String> letterSpacing();
-
-  abstract Map<String, String> lineHeight();
-
-  abstract Map<String, String> margin();
-
-  abstract Map<String, String> maxWidth();
-
-  abstract Map<String, String> minWidth();
-
-  abstract Map<String, String> opacity();
-
-  abstract Map<String, String> outlineOffset();
-
-  abstract Map<String, String> outlineWidth();
-
-  abstract Map<String, String> padding();
-
-  abstract Map<String, String> rules();
-
-  abstract Map<String, String> size();
-
-  abstract Map<String, String> stroke();
-
-  abstract Map<String, String> strokeWidth();
-
-  abstract Map<String, String> transitionDuration();
-
-  abstract Map<String, String> transitionProperty();
-
-  abstract Map<String, String> utilities();
-
-  abstract Map<String, String> width();
-
-  abstract Map<String, String> zIndex();
-
-  abstract Map<String, String> spacing();
+    return variants;
+  }
 
 }

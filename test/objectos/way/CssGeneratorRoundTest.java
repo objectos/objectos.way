@@ -18,7 +18,6 @@ package objectos.way;
 import static org.testng.Assert.assertEquals;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import org.testng.annotations.Test;
 
@@ -44,19 +43,23 @@ public class CssGeneratorRoundTest {
   }
 
   private CssConfig config() {
-    CssGenerator gen;
-    gen = new CssGenerator();
+    CssConfig gen;
+    gen = new CssConfig();
 
     gen.classes(Set.of());
 
-    gen.overrideColors(
-        Map.ofEntries(
-            Map.entry("inherit", "inherit"),
-            Map.entry("current", "currentColor"),
-            Map.entry("transparent", "transparent"),
+    gen.override(
+        CssKey._COLORS,
 
-            Map.entry("black", "#000000"),
-            Map.entry("white", "#ffffff")
+        Css.parseProperties(
+            """
+            inherit: inherit
+            current: currentColor
+            transparent: transparent
+
+            black: #000000
+            white: #ffffff"
+            """
         )
     );
 

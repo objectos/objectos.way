@@ -20,6 +20,10 @@ import java.util.Set;
 
 enum CssKey {
 
+  _COLORS,
+
+  _SPACING,
+
   // utilities
   // order is important!
 

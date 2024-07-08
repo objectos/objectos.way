@@ -110,7 +110,7 @@ abstract class CssGeneratorRound extends CssGeneratorParser {
     StringBuilder out;
     out = new StringBuilder();
 
-    if (!config.skipReset) {
+    if (!config.skipReset()) {
       out.append(CssReset.preflight());
 
       out.append(System.lineSeparator());

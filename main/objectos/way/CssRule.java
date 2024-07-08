@@ -162,7 +162,12 @@ class CssRule implements Comparable<CssRule> {
 
   @Override
   public String toString() {
-    return className;
+    StringBuilder out;
+    out = new StringBuilder();
+
+    writeTo(out, CssIndentation.ROOT);
+
+    return out.toString();
   }
 
   public final void writeTo(StringBuilder out, CssIndentation indentation) {

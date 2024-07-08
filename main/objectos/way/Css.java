@@ -67,8 +67,8 @@ public final class Css {
     int len;
     len = options.length; // implicit null-check
 
-    CssGenerator config;
-    config = new CssGenerator();
+    CssConfig config;
+    config = new CssConfig();
 
     CssGeneratorOption classesOption;
     classesOption = CssGeneratorOption.cast(classes);
@@ -106,7 +106,7 @@ public final class Css {
 
     return new CssGeneratorOption() {
       @Override
-      final void acceptCssGenerator(CssGenerator config) {
+      final void acceptCssGenerator(CssConfig config) {
         config.classes(set);
       }
     };
@@ -117,7 +117,7 @@ public final class Css {
 
     return new CssGeneratorOption() {
       @Override
-      final void acceptCssGenerator(CssGenerator config) {
+      final void acceptCssGenerator(CssConfig config) {
         config.noteSink(noteSink);
       }
     };
@@ -131,61 +131,61 @@ public final class Css {
   }
 
   public static Generator.Option overrideColors(String text) {
-    Map<String, String> map;
-    map = parseProperties(text).toMap();
+    CssProperties properties;
+    properties = parseProperties(text);
 
     return new CssGeneratorOption() {
       @Override
-      final void acceptCssGenerator(CssGenerator config) {
-        config.overrideColors(map);
+      final void acceptCssGenerator(CssConfig config) {
+        config.override(CssKey._COLORS, properties);
       }
     };
   }
 
   public static Generator.Option overrideContent(String text) {
-    Map<String, String> map;
-    map = parseProperties(text).toMap();
+    CssProperties properties;
+    properties = parseProperties(text);
 
     return new CssGeneratorOption() {
       @Override
-      final void acceptCssGenerator(CssGenerator config) {
-        config.overrideContent(map);
+      final void acceptCssGenerator(CssConfig config) {
+        config.override(CssKey.CONTENT, properties);
       }
     };
   }
 
   public static Generator.Option overrideFontSize(String text) {
-    Map<String, String> map;
-    map = parseProperties(text).toMap();
+    CssProperties properties;
+    properties = parseProperties(text);
 
     return new CssGeneratorOption() {
       @Override
-      final void acceptCssGenerator(CssGenerator config) {
-        config.overrideFontSize(map);
+      final void acceptCssGenerator(CssConfig config) {
+        config.override(CssKey.FONT_SIZE, properties);
       }
     };
   }
 
   public static Generator.Option overrideGridTemplateRows(String text) {
-    Map<String, String> map;
-    map = parseProperties(text).toMap();
+    CssProperties properties;
+    properties = parseProperties(text);
 
     return new CssGeneratorOption() {
       @Override
-      final void acceptCssGenerator(CssGenerator config) {
-        config.overrideGridTemplateRows(map);
+      final void acceptCssGenerator(CssConfig config) {
+        config.override(CssKey.GRID_TEMPLATE_ROWS, properties);
       }
     };
   }
 
   public static Generator.Option overrideSpacing(String text) {
-    Map<String, String> map;
-    map = parseProperties(text).toMap();
+    CssProperties properties;
+    properties = parseProperties(text);
 
     return new CssGeneratorOption() {
       @Override
-      final void acceptCssGenerator(CssGenerator config) {
-        config.overrideSpacing(map);
+      final void acceptCssGenerator(CssConfig config) {
+        config.override(CssKey._SPACING, properties);
       }
     };
   }
@@ -196,7 +196,7 @@ public final class Css {
 
     return new CssGeneratorOption() {
       @Override
-      final void acceptCssGenerator(CssGenerator config) {
+      final void acceptCssGenerator(CssConfig config) {
         config.addRule(selector, contents);
       }
     };
@@ -205,20 +205,22 @@ public final class Css {
   public static Generator.Option skipReset() {
     return new CssGeneratorOption() {
       @Override
-      final void acceptCssGenerator(CssGenerator config) {
-        config.skipReset();
+      final void acceptCssGenerator(CssConfig config) {
+        config.skipReset(true);
       }
     };
   }
 
-  public static Generator.Option utility(String className, String rule) {
+  public static Generator.Option utility(String className, String text) {
     Check.notNull(className, "className == null");
-    Check.notNull(rule, "rule == null");
+
+    CssProperties properties;
+    properties = parseProperties(text);
 
     return new CssGeneratorOption() {
       @Override
-      final void acceptCssGenerator(CssGenerator config) {
-        config.addUtility(className, rule);
+      final void acceptCssGenerator(CssConfig config) {
+        config.addUtility(className, properties);
       }
     };
   }
@@ -229,16 +231,8 @@ public final class Css {
 
     return new CssGeneratorOption() {
       @Override
-      final void acceptCssGenerator(CssGenerator config) {
-        for (Map.Entry<String, String> entry : props.entries()) {
-          String variantName;
-          variantName = entry.getKey();
-
-          String formatString;
-          formatString = entry.getValue();
-
-          config.addVariant(variantName, formatString);
-        }
+      final void acceptCssGenerator(CssConfig config) {
+        config.addVariants(props);
       }
     };
   }

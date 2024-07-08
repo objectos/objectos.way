@@ -2909,9 +2909,7 @@ public class CssGeneratorTest {
         Subject.class,
 
         """
-        .transition-none {
-          transition-property: none;
-        }
+        .transition-none { transition-property: none }
         .transition-all {
           transition-property: all;
           transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
@@ -3307,11 +3305,11 @@ public class CssGeneratorTest {
             "theme-white",
 
             """
-            --ui-border-subtle-00: #e0e0e0;
-            --ui-border-subtle-01: #c6c6c6;
-            --ui-border-subtle-02: #e0e0e0;
-            --ui-border-subtle-03: #c6c6c6;
-            --ui-border-subtle: var(--ui-border-subtle-00, #e0e0e0);
+            --ui-border-subtle-00: #e0e0e0
+            --ui-border-subtle-01: #c6c6c6
+            --ui-border-subtle-02: #e0e0e0
+            --ui-border-subtle-03: #c6c6c6
+            --ui-border-subtle: var(--ui-border-subtle-00, #e0e0e0)
             """
         ),
 

@@ -19,9 +19,9 @@ import java.util.List;
 import java.util.Map;
 
 @SuppressWarnings("exports")
-sealed abstract class CssRuleResolver {
+sealed abstract class CssResolver {
 
-  static final class OfColorAlpha extends CssRuleResolver {
+  static final class OfColorAlpha extends CssResolver {
 
     private final CssKey key;
 
@@ -75,16 +75,13 @@ sealed abstract class CssRuleResolver {
 
   }
 
-  static final class OfFontSize extends CssRuleResolver {
-
-    private final CssKey key;
+  static final class OfFontSize extends CssResolver {
 
     private final Map<String, String> fontSize;
 
     private final Map<String, String> lineHeight;
 
-    public OfFontSize(CssKey key, Map<String, String> fontSize, Map<String, String> lineHeight) {
-      this.key = key;
+    public OfFontSize(Map<String, String> fontSize, Map<String, String> lineHeight) {
       this.fontSize = fontSize;
       this.lineHeight = lineHeight;
     }
@@ -132,7 +129,7 @@ sealed abstract class CssRuleResolver {
 
       properties.add("line-height", height);
 
-      return new CssRule.Of(key, className, variants, properties);
+      return new CssRule.Of(CssKey.FONT_SIZE, className, variants, properties);
     }
 
     private String extractSize(String size) {
@@ -169,7 +166,7 @@ sealed abstract class CssRuleResolver {
       if (slash < 0) {
         properties.add("font-size", value);
 
-        return new CssRule.Of(key, className, variants, properties);
+        return new CssRule.Of(CssKey.FONT_SIZE, className, variants, properties);
       }
 
       String fontSize;
@@ -185,7 +182,7 @@ sealed abstract class CssRuleResolver {
       if (slash < 0) {
         properties.add("line-height", lineHeight);
 
-        return new CssRule.Of(key, className, variants, properties);
+        return new CssRule.Of(CssKey.FONT_SIZE, className, variants, properties);
       }
 
       value = lineHeight;
@@ -202,7 +199,7 @@ sealed abstract class CssRuleResolver {
       if (slash < 0) {
         properties.add("letter-spacing", letterSpacing);
 
-        return new CssRule.Of(key, className, variants, properties);
+        return new CssRule.Of(CssKey.FONT_SIZE, className, variants, properties);
       }
 
       value = letterSpacing;
@@ -216,12 +213,36 @@ sealed abstract class CssRuleResolver {
 
       properties.add("font-weight", fontWeight);
 
-      return new CssRule.Of(key, className, variants, properties);
+      return new CssRule.Of(CssKey.FONT_SIZE, className, variants, properties);
     }
 
   }
 
-  static final class OfProperties extends CssRuleResolver {
+  static final class OfTransitionProperty extends CssResolver {
+
+    private static final String[] PROPERTY_NAMES = {"transition-property", "transition-timing-function", "transition-duration"};
+
+    private final Map<String, String> properties;
+
+    public OfTransitionProperty(Map<String, String> properties) {
+      this.properties = properties;
+    }
+
+    @Override
+    public final CssRule resolve(String className, List<CssVariant> variants, boolean negative, String value) {
+      String resolved;
+      resolved = properties.get(value);
+
+      if (resolved == null) {
+        return null;
+      }
+
+      return resolveSlashes(CssKey.TRANSITION_PROPERTY, className, variants, PROPERTY_NAMES, resolved);
+    }
+
+  }
+
+  static final class OfProperties extends CssResolver {
 
     private final CssKey key;
 
@@ -271,5 +292,49 @@ sealed abstract class CssRuleResolver {
   }
 
   public abstract CssRule resolve(String className, List<CssVariant> variants, boolean negative, String value);
+
+  final CssRule resolveSlashes(
+      CssKey key,
+      String className, List<CssVariant> variants,
+      String[] propertyNames, String value) {
+
+    CssProperties.Builder properties;
+    properties = new CssProperties.Builder();
+
+    String previousName;
+    previousName = null;
+
+    for (int idx = 0; idx < propertyNames.length; idx++) {
+
+      String propertyName;
+      propertyName = propertyNames[idx];
+
+      int slash;
+      slash = value.indexOf('/');
+
+      if (slash < 0) {
+        properties.add(propertyName, value);
+
+        return new CssRule.Of(key, className, variants, properties);
+      }
+
+      String thisValue;
+      thisValue = value.substring(0, slash);
+
+      properties.add(propertyName, thisValue);
+
+      previousName = propertyName;
+
+      value = value.substring(slash + 1);
+
+    }
+
+    if (previousName != null) {
+      properties.add(previousName, value);
+    }
+
+    return new CssRule.Of(key, className, variants, properties);
+
+  }
 
 }

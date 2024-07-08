@@ -33,7 +33,7 @@ final class CssGeneratorSpec extends CssGeneratorRound implements Css.Generator 
     return new CssValueFormatter.OfFunction(function);
   }
 
-  private void config(CssKey key, String prefix, CssRuleResolver resolver) {
+  private void config(CssKey key, String prefix, CssResolver resolver) {
     config.customUtility(key, prefix, resolver);
   }
 
@@ -87,7 +87,7 @@ final class CssGeneratorSpec extends CssGeneratorRound implements Css.Generator 
       CssKey key,
       Map<String, String> values, CssValueFormatter formatter,
       String prefix, String propertyName1, String propertyName2) {
-
+    config.funcUtility(key, values, formatter, prefix, propertyName1, propertyName2);
   }
 
   private void staticUtility(CssKey key, String text) {
@@ -97,6 +97,10 @@ final class CssGeneratorSpec extends CssGeneratorRound implements Css.Generator 
   @Override
   final void spec() {
     // be mindful of method size
+
+    var colors = config.values(CssKey._COLORS, Css.DEFAULT_COLORS);
+
+    var spacing = config.values(CssKey._SPACING, Css.DEFAULT_SPACING);
 
     // A
 
@@ -142,7 +146,7 @@ final class CssGeneratorSpec extends CssGeneratorRound implements Css.Generator 
     colorUtility(
         CssKey.BACKGROUND_COLOR,
 
-        config.values(CssKey.BACKGROUND_COLOR, CssConfig::colors),
+        config.values(CssKey.BACKGROUND_COLOR, colors),
 
         "bg", "background-color"
     );
@@ -156,7 +160,7 @@ final class CssGeneratorSpec extends CssGeneratorRound implements Css.Generator 
         """
     );
 
-    var borderColor = config.values(CssKey.BORDER_COLOR, CssConfig::colors);
+    var borderColor = config.values(CssKey.BORDER_COLOR, colors);
 
     colorUtility(CssKey.BORDER_COLOR, borderColor, "border", "border-color");
     colorUtility(CssKey.BORDER_COLOR_BOTTOM, borderColor, "border-b", "border-bottom-color");
@@ -198,7 +202,7 @@ final class CssGeneratorSpec extends CssGeneratorRound implements Css.Generator 
     funcUtility(CssKey.BORDER_RADIUS_TL, rounded, "rounded-tl", "border-top-left-radius");
     funcUtility(CssKey.BORDER_RADIUS_TR, rounded, "rounded-tr", "border-top-right-radius");
 
-    var borderSpacing = config.values(CssKey.BORDER_SPACING, CssConfig::spacing);
+    var borderSpacing = config.values(CssKey.BORDER_SPACING, spacing);
 
     funcUtility(CssKey.BORDER_SPACING, borderSpacing, ofFunc(s -> s + " " + s), "border-spacing", "border-spacing");
     funcUtility(CssKey.BORDER_SPACING_X, borderSpacing, ofFunc(s -> s + " 0"), "border-spacing-x", "border-spacing");
@@ -239,7 +243,7 @@ final class CssGeneratorSpec extends CssGeneratorRound implements Css.Generator 
               full: 100%
               """,
 
-            config.spacing()
+            spacing
         )
     );
 
@@ -357,7 +361,7 @@ final class CssGeneratorSpec extends CssGeneratorRound implements Css.Generator 
                 none: none
                 """,
 
-                c.colors()
+                colors
             )
         ),
 
@@ -387,7 +391,7 @@ final class CssGeneratorSpec extends CssGeneratorRound implements Css.Generator 
             """
         ),
 
-        "flex", "flex-grow"
+        "grow", "flex-grow"
     );
 
     var lineHeight = config.values(
@@ -416,9 +420,7 @@ final class CssGeneratorSpec extends CssGeneratorRound implements Css.Generator 
 
         "text",
 
-        new CssRuleResolver.OfFontSize(
-            CssKey.FONT_SIZE,
-
+        new CssResolver.OfFontSize(
             config.values(
                 CssKey.FONT_SIZE,
 
@@ -467,7 +469,7 @@ final class CssGeneratorSpec extends CssGeneratorRound implements Css.Generator 
 
     // G
 
-    var gap = config.values(CssKey.GAP, CssConfig::spacing);
+    var gap = config.values(CssKey.GAP, spacing);
 
     funcUtility(CssKey.GAP, gap, "gap", "gap");
     funcUtility(CssKey.GAP_X, gap, "gap-x", "column-gap");
@@ -644,7 +646,7 @@ final class CssGeneratorSpec extends CssGeneratorRound implements Css.Generator 
                 fit: fit-content
                 """,
 
-                c.spacing()
+                spacing
             )
         ),
 
@@ -709,7 +711,7 @@ final class CssGeneratorSpec extends CssGeneratorRound implements Css.Generator 
             auto: auto
             """,
 
-            c.spacing()
+            spacing
         )
     );
 
@@ -731,7 +733,7 @@ final class CssGeneratorSpec extends CssGeneratorRound implements Css.Generator 
               GrowableMap<String, String> maxWidth;
               maxWidth = new GrowableMap<>();
 
-              maxWidth.putAll(c.spacing());
+              maxWidth.putAll(spacing);
 
               maxWidth.put("none", "none");
               maxWidth.put("xs", "20rem");
@@ -779,7 +781,7 @@ final class CssGeneratorSpec extends CssGeneratorRound implements Css.Generator 
                 fit: fit-content
                 """,
 
-                c.spacing()
+                spacing
             )
         ),
 
@@ -828,7 +830,7 @@ final class CssGeneratorSpec extends CssGeneratorRound implements Css.Generator 
         config.values(
             CssKey.OUTLINE_COLOR,
 
-            CssConfig::colors
+            colors
         ),
 
         "outline", "outline-color"
@@ -859,7 +861,7 @@ final class CssGeneratorSpec extends CssGeneratorRound implements Css.Generator 
 
         """
         outline-none   | outline: 2px solid transparent
-                       | noutline-offset: 2px
+                       | outline-offset: 2px
         outline        | outline-style: solid
         outline-dashed | outline-style: dashed
         outline-dotted | outline-style: dotted
@@ -925,7 +927,7 @@ final class CssGeneratorSpec extends CssGeneratorRound implements Css.Generator 
 
     // P
 
-    var padding = config.values(CssKey.PADDING, CssConfig::spacing);
+    var padding = config.values(CssKey.PADDING, spacing);
 
     funcUtility(CssKey.PADDING, padding, "p", "padding");
     funcUtility(CssKey.PADDING_BOTTOM, padding, "pb", "padding-bottom");
@@ -1003,7 +1005,7 @@ final class CssGeneratorSpec extends CssGeneratorRound implements Css.Generator 
                 fit: fit-content
                 """,
 
-                c.spacing()
+                spacing
             )
         ),
 
@@ -1023,7 +1025,7 @@ final class CssGeneratorSpec extends CssGeneratorRound implements Css.Generator 
                 none: none
                 """,
 
-                c.colors()
+                colors
             )
         ),
 
@@ -1076,7 +1078,7 @@ final class CssGeneratorSpec extends CssGeneratorRound implements Css.Generator 
         config.values(
             CssKey.TEXT_COLOR,
 
-            CssConfig::colors
+            colors
         ),
 
         "text", "color"
@@ -1128,42 +1130,32 @@ final class CssGeneratorSpec extends CssGeneratorRound implements Css.Generator 
         "duration", "transition-duration"
     );
 
-    funcUtility(
+    config(
         CssKey.TRANSITION_PROPERTY,
 
-        config.values(
-            CssKey.TRANSITION_PROPERTY,
+        "transition",
 
-            """
-            none      | transition-property: none
+        new CssResolver.OfTransitionProperty(
+            config.values(
+                CssKey.TRANSITION_PROPERTY,
 
-            all       | transition-property: all
-                      | transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1)
-                      | transition-duration: 150ms
+                """
+                none: none
 
-            DEFAULT   | transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter
-                      | transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1)
-                      | transition-duration: 150ms
+                all: all/cubic-bezier(0.4, 0, 0.2, 1)/150ms
 
-            colors    | transition-property: color, background-color, border-color, text-decoration-color, fill, stroke
-                      | transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1)
-                      | transition-duration: 150ms
+                : color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter/cubic-bezier(0.4, 0, 0.2, 1)/150ms
 
-            opacity   | transition-property: opacity
-                      | transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1)
-                      | transition-duration: 150ms
+                colors: color, background-color, border-color, text-decoration-color, fill, stroke/cubic-bezier(0.4, 0, 0.2, 1)/150ms
 
-            shadow    | transition-property: box-shadow
-                      | transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1)
-                      | transition-duration: 150ms
+                opacity: opacity/cubic-bezier(0.4, 0, 0.2, 1)/150ms
 
-            transform | transition-property: transform
-                      | transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1)
-                      | transition-duration: 150ms
-            """
-        ),
+                shadow: box-shadow/cubic-bezier(0.4, 0, 0.2, 1)/150ms
 
-        "transition", "transition-property"
+                transform: transform/cubic-bezier(0.4, 0, 0.2, 1)/150ms
+                """
+            )
+        )
     );
 
     // U
@@ -1216,46 +1208,44 @@ final class CssGeneratorSpec extends CssGeneratorRound implements Css.Generator 
 
             c -> Css.merge(
                 """
-                width.putAll(spacing());
-
-                width.put("auto", "auto");
-                width.put("1/2", "50%");
-                width.put("1/3", "33.333333%");
-                width.put("2/3", "66.666667%");
-                width.put("1/4", "25%");
-                width.put("2/4", "50%");
-                width.put("3/4", "75%");
-                width.put("1/5", "20%");
-                width.put("2/5", "40%");
-                width.put("3/5", "60%");
-                width.put("4/5", "80%");
-                width.put("1/6", "16.666667%");
-                width.put("2/6", "33.333333%");
-                width.put("3/6", "50%");
-                width.put("4/6", "66.666667%");
-                width.put("5/6", "83.333333%");
-                width.put("1/12", "8.333333%");
-                width.put("2/12", "16.666667%");
-                width.put("3/12", "25%");
-                width.put("4/12", "33.333333%");
-                width.put("5/12", "41.666667%");
-                width.put("6/12", "50%");
-                width.put("7/12", "58.333333%");
-                width.put("8/12", "66.666667%");
-                width.put("9/12", "75%");
-                width.put("10/12", "83.333333%");
-                width.put("11/12", "91.666667%");
-                width.put("full", "100%");
-                width.put("screen", "100vw");
-                width.put("svw", "100svw");
-                width.put("lvw", "100lvw");
-                width.put("dvw", "100dvw");
-                width.put("min", "min-content");
-                width.put("max", "max-content");
-                width.put("fit", "fit-content");
+                auto: auto
+                1/2: 50%
+                1/3: 33.333333%
+                2/3: 66.666667%
+                1/4: 25%
+                2/4: 50%
+                3/4: 75%
+                1/5: 20%
+                2/5: 40%
+                3/5: 60%
+                4/5: 80%
+                1/6: 16.666667%
+                2/6: 33.333333%
+                3/6: 50%
+                4/6: 66.666667%
+                5/6: 83.333333%
+                1/12: 8.333333%
+                2/12: 16.666667%
+                3/12: 25%
+                4/12: 33.333333%
+                5/12: 41.666667%
+                6/12: 50%
+                7/12: 58.333333%
+                8/12: 66.666667%
+                9/12: 75%
+                10/12: 83.333333%
+                11/12: 91.666667%
+                full: 100%
+                screen: 100vw
+                svw: 100svw
+                lvw: 100lvw
+                dvw: 100dvw
+                min: min-content
+                max: max-content
+                fit: fit-content
                 """,
 
-                config.spacing()
+                spacing
             )
         ),
 
