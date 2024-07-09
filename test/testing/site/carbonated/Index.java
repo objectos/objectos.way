@@ -13,16 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package testing.zite;
+package testing.site.carbonated;
 
-import objectos.notes.NoteSink;
-import objectos.way.Carbonated;
-import objectos.way.SessionStore;
-import objectos.web.Stage;
-import objectos.web.WebResources;
+import objectos.way.Http;
 
-public record TestingSiteInjector(NoteSink noteSink,
-                                  SessionStore sessionStore,
-                                  Stage stage,
-                                  WebResources webResources,
-                                  Carbonated carbonated) {}
+final class Index extends CarbonatedPage {
+
+  public Index(Http.Exchange http) {
+    super(http);
+  }
+
+  @Override
+  protected final void bodyContents() {
+    p("Hello world!");
+  }
+
+}

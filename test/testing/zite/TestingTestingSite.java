@@ -32,9 +32,10 @@ import objectos.notes.Level;
 import objectos.notes.NoteSink;
 import objectos.notes.impl.ConsoleNoteSink;
 import objectos.way.AppSessionStore;
+import objectos.way.Carbonated;
+import objectos.way.Http.Exchange;
 import objectos.way.SessionStore;
 import objectos.way.WayTestingServerExchange;
-import objectos.way.Http.Exchange;
 import objectos.web.Stage;
 import objectos.web.WayWebResources;
 
@@ -99,7 +100,12 @@ public final class TestingTestingSite {
       throw new UncheckedIOException(e);
     }
 
-    INJECTOR = new TestingSiteInjector(noteSink, sessionStore, stage, webResources);
+    // Carbonated UI
+
+    Carbonated carbonated;
+    carbonated = Carbonated.create();
+
+    INJECTOR = new TestingSiteInjector(noteSink, sessionStore, stage, webResources, carbonated);
   }
 
   private TestingTestingSite() {}
@@ -109,8 +115,8 @@ public final class TestingTestingSite {
   }
 
   public static String serverExchange(String request,
-                                      Consumer<Exchange> handler,
-                                      Consumer<AppSessionStore> sessionStoreHandler) {
+      Consumer<Exchange> handler,
+      Consumer<AppSessionStore> sessionStoreHandler) {
     WayTestingServerExchange serverExchange;
     serverExchange = new WayTestingServerExchange();
 

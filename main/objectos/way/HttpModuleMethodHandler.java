@@ -21,7 +21,7 @@ import objectos.way.HttpModule.MethodHandler;
 
 sealed abstract class HttpModuleMethodHandler extends HttpModule.MethodHandler {
 
-  private static final class OfHandler extends HttpModuleMethodHandler {
+  private static final class OfHandler extends HttpModuleMethodHandler implements Http.Handler {
 
     private final Http.Handler handler;
 
@@ -31,14 +31,17 @@ sealed abstract class HttpModuleMethodHandler extends HttpModule.MethodHandler {
     }
 
     @Override
+    public final void handle(Http.Exchange http) {
+      if (handles(http)) {
+        handler.handle(http);
+      } else {
+        http.methodNotAllowed();
+      }
+    }
+
+    @Override
     final Http.Handler compile() {
-      return http -> {
-        if (handles(http)) {
-          handler.handle(http);
-        } else {
-          http.methodNotAllowed();
-        }
-      };
+      return this;
     }
 
   }

@@ -20,6 +20,7 @@ import objectos.way.Http.Exchange;
 import objectos.way.Web;
 import objectos.web.WebResources;
 import testing.site.auth.User;
+import testing.site.carbonated.CarbonatedWeb;
 import testing.site.ui.UiHttpModule;
 import testing.zite.TestingSiteInjector;
 
@@ -33,6 +34,8 @@ public class TestingHttpModule extends Http.Module {
 
   @Override
   protected final void configure() {
+    install(new CarbonatedWeb(injector));
+
     sessionStore(injector.sessionStore());
 
     route("/ui/*", new UiHttpModule(injector));

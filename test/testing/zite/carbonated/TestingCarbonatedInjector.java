@@ -13,16 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package testing.zite;
+package testing.zite.carbonated;
 
-import objectos.notes.NoteSink;
 import objectos.way.Carbonated;
-import objectos.way.SessionStore;
-import objectos.web.Stage;
-import objectos.web.WebResources;
 
-public record TestingSiteInjector(NoteSink noteSink,
-                                  SessionStore sessionStore,
-                                  Stage stage,
-                                  WebResources webResources,
-                                  Carbonated carbonated) {}
+public record TestingCarbonatedInjector(Carbonated carbonated) {}

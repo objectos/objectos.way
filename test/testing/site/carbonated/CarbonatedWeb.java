@@ -13,16 +13,33 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package testing.zite;
+package testing.site.carbonated;
 
-import objectos.notes.NoteSink;
 import objectos.way.Carbonated;
-import objectos.way.SessionStore;
-import objectos.web.Stage;
-import objectos.web.WebResources;
+import objectos.way.Http;
+import objectos.way.Ui;
+import objectos.way.Web;
+import testing.zite.TestingSiteInjector;
 
-public record TestingSiteInjector(NoteSink noteSink,
-                                  SessionStore sessionStore,
-                                  Stage stage,
-                                  WebResources webResources,
-                                  Carbonated carbonated) {}
+public final class CarbonatedWeb extends Web.Module {
+
+  private final Carbonated carbonated;
+
+  public CarbonatedWeb(TestingSiteInjector injector) {
+    carbonated = injector.carbonated();
+  }
+
+  @Override
+  protected final void configure() {
+    install(carbonated.createHttpModule());
+
+    filter(this::carbonated);
+
+    route("/carbonated", GET(Index::new));
+  }
+
+  private void carbonated(Http.Exchange http) {
+    http.set(Ui.Binder.class, carbonated);
+  }
+
+}

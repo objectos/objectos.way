@@ -34,6 +34,7 @@ import objectos.notes.Note2;
 import objectos.notes.NoteSink;
 import objectos.notes.impl.ConsoleNoteSink;
 import objectos.way.AppSessionStore;
+import objectos.way.Carbonated;
 import objectos.way.HandlerFactory;
 import objectos.way.Http;
 import objectos.way.Script;
@@ -105,13 +106,13 @@ public class TestingSite {
   }
 
   private void bootstrap() throws BootstrapException {
-    Stage mode;
-    mode = stageOption.get();
+    Stage stage;
+    stage = stageOption.get();
 
     // NoteSink
     NoteSink noteSink;
 
-    switch (mode) {
+    switch (stage) {
       case DEVELOPMENT, TESTING -> noteSink = new ConsoleNoteSink(Level.TRACE);
 
       default -> throw new UnsupportedOperationException("Implement me");
@@ -152,14 +153,18 @@ public class TestingSite {
       throw new BootstrapException("WebResources", e);
     }
 
-    // WaySiteInjector
+    // Carbonated UI
+    Carbonated carbonated;
+    carbonated = Carbonated.create();
+
+    // Injector
     TestingSiteInjector injector;
-    injector = new TestingSiteInjector(noteSink, sessionStore, mode, webResources);
+    injector = new TestingSiteInjector(noteSink, sessionStore, stage, webResources, carbonated);
 
     // HandlerFactory
     HandlerFactory handlerFactory;
 
-    switch (mode) {
+    switch (stage) {
       case DEVELOPMENT -> {
         FileSystem fileSystem;
         fileSystem = FileSystems.getDefault();
@@ -207,7 +212,7 @@ public class TestingSite {
     // Clock
 
     Clock clock;
-    clock = switch (mode) {
+    clock = switch (stage) {
       default -> Clock.systemUTC();
 
       case TESTING -> testingClock();

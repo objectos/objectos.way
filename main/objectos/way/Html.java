@@ -16,6 +16,7 @@
 package objectos.way;
 
 import java.io.IOException;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import objectos.lang.CharWritable;
@@ -565,6 +566,13 @@ public final class Html {
   public sealed static abstract class TemplateBase extends Html.TemplateElements permits Component, Template {
 
     TemplateBase() {}
+
+    public final void plugin(Consumer<Html.Compiler> plugin) {
+      HtmlCompiler compiler;
+      compiler = $compiler();
+
+      plugin.accept(compiler);
+    }
 
     /**
      * Generates the {@code class} attribute by joining the specified values

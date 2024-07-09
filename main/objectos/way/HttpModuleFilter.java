@@ -18,9 +18,6 @@ package objectos.way;
 record HttpModuleFilter(Http.Handler handler) implements HttpModuleAction {
   @Override
   public final boolean execute(Http.Exchange http) {
-    Http.Handler handler;
-    handler = handler();
-
     handler.handle(http);
 
     return http.processed();

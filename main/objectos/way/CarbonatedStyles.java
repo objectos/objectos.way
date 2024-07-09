@@ -13,16 +13,33 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package testing.zite;
+package objectos.way;
 
-import objectos.notes.NoteSink;
-import objectos.way.Carbonated;
-import objectos.way.SessionStore;
-import objectos.web.Stage;
-import objectos.web.WebResources;
+final class CarbonatedStyles implements Http.Handler {
 
-public record TestingSiteInjector(NoteSink noteSink,
-                                  SessionStore sessionStore,
-                                  Stage stage,
-                                  WebResources webResources,
-                                  Carbonated carbonated) {}
+  private Css.StyleSheet generateStyleSheet() {
+    return Css.generateStyleSheet(
+        Css.classes(Carbonated.class)
+    );
+  }
+
+  @Override
+  public final void handle(Http.Exchange http) {
+    Css.StyleSheet s;
+    s = generateStyleSheet();
+
+    byte[] bytes;
+    bytes = s.toByteArray();
+
+    http.status(Http.OK);
+
+    http.dateNow();
+
+    http.header(Http.CONTENT_TYPE, s.contentType());
+
+    http.header(Http.CONTENT_LENGTH, bytes.length);
+
+    http.send(bytes);
+  }
+
+}
