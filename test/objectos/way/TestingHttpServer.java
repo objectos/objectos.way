@@ -25,7 +25,6 @@ import java.net.InetAddress;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
 import objectos.notes.Note;
-import objectos.web.WayWebResourcesTest;
 
 public final class TestingHttpServer {
 
@@ -43,7 +42,7 @@ public final class TestingHttpServer {
     ServerHolder.bindWebModuleTest(test);
   }
 
-  public static void bindWebResourcesTest(WayWebResourcesTest test) {
+  public static void bindWebResourcesTest(WebResourcesTest test) {
     ServerHolder.bindWebResourcesTest(test);
   }
 
@@ -102,7 +101,7 @@ public final class TestingHttpServer {
       HANDLER.webModuleTest.delegate = test.compile();
     }
 
-    public static void bindWebResourcesTest(WayWebResourcesTest test) {
+    public static void bindWebResourcesTest(WebResourcesTest test) {
       HANDLER.webResourcesTest.delegate = test;
     }
 

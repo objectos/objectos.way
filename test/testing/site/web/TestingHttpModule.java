@@ -18,7 +18,6 @@ package testing.site.web;
 import objectos.way.Http;
 import objectos.way.Http.Exchange;
 import objectos.way.Web;
-import objectos.web.WebResources;
 import testing.site.auth.User;
 import testing.site.carbonated.CarbonatedWeb;
 import testing.site.ui.UiHttpModule;
@@ -42,20 +41,13 @@ public class TestingHttpModule extends Http.Module {
 
     route("/login", factory(Login::new, injector));
 
-    route("/common/*", this::common);
+    route("/common/*", injector.webResources());
 
     route("/styles.css", new Styles(injector));
 
     filter(this::requireLogin);
 
     route("/", factory(Home::new, injector));
-  }
-
-  private void common(Exchange http) {
-    WebResources webResources;
-    webResources = injector.webResources();
-
-    webResources.handle(http);
   }
 
   private void requireLogin(Exchange http) {

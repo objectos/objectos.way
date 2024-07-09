@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.web;
+package objectos.way;
 
 import java.io.IOException;
 import java.nio.file.FileAlreadyExistsException;
@@ -27,99 +27,136 @@ import java.nio.file.StandardCopyOption;
 import java.nio.file.StandardOpenOption;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.nio.file.attribute.FileTime;
+import java.util.List;
 import java.util.Map;
 import objectos.io.FileVisitors;
 import objectos.lang.object.Check;
 import objectos.notes.NoOpNoteSink;
 import objectos.notes.NoteSink;
-import objectos.util.map.GrowableMap;
-import objectos.way.Http;
+import objectos.util.list.GrowableList;
 
-public final class WayWebResources implements AutoCloseable, WebResources {
+final class WebResources implements AutoCloseable, Web.Resources {
 
-  private final Map<String, String> contentTypes = new GrowableMap<>();
+  private record FileBytes(String pathName, byte[] contents) {}
 
-  private final String defaultContentType = "application/octet-stream";
+  static final class Builder {
 
-  private NoteSink noteSink = NoOpNoteSink.of();
+    Map<String, String> contentTypes = Map.of();
+
+    final String defaultContentType = "application/octet-stream";
+
+    final List<Path> directories = new GrowableList<>();
+
+    final List<FileBytes> files = new GrowableList<>();
+
+    NoteSink noteSink = NoOpNoteSink.of();
+
+    Path rootDirectory;
+
+    public Web.Resources build() throws IOException {
+      if (rootDirectory == null) {
+        rootDirectory = Files.createTempDirectory("way-web-resources-");
+      }
+
+      for (Path directory : directories) {
+        CopyRecursively copyRecursively;
+        copyRecursively = new CopyRecursively(directory);
+
+        Files.walkFileTree(directory, copyRecursively);
+      }
+
+      for (FileBytes f : files) {
+        String path;
+        path = f.pathName();
+
+        path = path.substring(1); // remove '/'
+
+        Path file;
+        file = rootDirectory.resolve(path);
+
+        file = file.normalize();
+
+        if (!file.startsWith(rootDirectory)) {
+          throw new IllegalArgumentException("Traversal detected: " + path);
+        }
+
+        Path parent;
+        parent = file.getParent();
+
+        Files.createDirectories(parent);
+
+        Files.write(file, f.contents, StandardOpenOption.CREATE_NEW);
+      }
+
+      return new WebResources(this);
+    }
+
+    public final void serveFile(String pathName, byte[] contents) {
+      files.add(new FileBytes(pathName, contents));
+    }
+
+    private class CopyRecursively extends SimpleFileVisitor<Path> {
+
+      private final Path source;
+
+      public CopyRecursively(Path source) {
+        this.source = source;
+      }
+
+      @Override
+      public final FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
+        Path path;
+        path = source.relativize(dir);
+
+        Path dest;
+        dest = rootDirectory.resolve(path);
+
+        try {
+          Files.copy(dir, dest);
+        } catch (FileAlreadyExistsException e) {
+          if (!Files.isDirectory(dest)) {
+            throw e;
+          }
+        }
+
+        return FileVisitResult.CONTINUE;
+      }
+
+      @Override
+      public final FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+        Path path;
+        path = source.relativize(file);
+
+        Path dest;
+        dest = rootDirectory.resolve(path);
+
+        Files.copy(file, dest, StandardCopyOption.COPY_ATTRIBUTES);
+
+        noteSink.send(CREATED, dest);
+
+        return FileVisitResult.CONTINUE;
+      }
+
+    }
+
+  }
+
+  private final Map<String, String> contentTypes;
+
+  private final String defaultContentType;
+
+  private final NoteSink noteSink;
 
   private final Path rootDirectory;
 
-  public WayWebResources() throws IOException {
-    rootDirectory = Files.createTempDirectory("way-web-resources-");
-  }
+  private WebResources(Builder builder) {
+    this.contentTypes = builder.contentTypes;
 
-  // visible for testing
-  WayWebResources(Path root) {
-    this.rootDirectory = root;
-  }
+    this.defaultContentType = builder.defaultContentType;
 
-  public final WayWebResources contentType(String extension, String contentType) {
-    Check.notNull(extension, "extension == null");
-    Check.notNull(contentType, "contentType == null");
+    this.noteSink = builder.noteSink;
 
-    contentTypes.put(extension, contentType);
-
-    return this;
-  }
-
-  public final WayWebResources noteSink(NoteSink noteSink) {
-    this.noteSink = Check.notNull(noteSink, "noteSink == null");
-
-    return this;
-  }
-
-  public final void copyDirectory(Path directory) throws IOException {
-    Check.notNull(directory, "directory == null");
-
-    CopyRecursively copyRecursively;
-    copyRecursively = new CopyRecursively(directory);
-
-    Files.walkFileTree(directory, copyRecursively);
-  }
-
-  private class CopyRecursively extends SimpleFileVisitor<Path> {
-
-    private final Path source;
-
-    public CopyRecursively(Path source) {
-      this.source = source;
-    }
-
-    @Override
-    public final FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
-      Path path;
-      path = source.relativize(dir);
-
-      Path dest;
-      dest = rootDirectory.resolve(path);
-
-      try {
-        Files.copy(dir, dest);
-      } catch (FileAlreadyExistsException e) {
-        if (!Files.isDirectory(dest)) {
-          throw e;
-        }
-      }
-
-      return FileVisitResult.CONTINUE;
-    }
-
-    @Override
-    public final FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
-      Path path;
-      path = source.relativize(file);
-
-      Path dest;
-      dest = rootDirectory.resolve(path);
-
-      Files.copy(file, dest, StandardCopyOption.COPY_ATTRIBUTES);
-
-      noteSink.send(CREATED, dest);
-
-      return FileVisitResult.CONTINUE;
-    }
-
+    this.rootDirectory = builder.rootDirectory;
   }
 
   public final void createNew(Path path, byte[] bytes) throws IOException {
@@ -141,22 +178,6 @@ public final class WayWebResources implements AutoCloseable, WebResources {
     Files.createDirectories(parent);
 
     Files.write(file, bytes, StandardOpenOption.CREATE_NEW);
-  }
-
-  final void setLastModifiedTime(Path path, FileTime fileTime) throws IOException {
-    Check.argument(!path.isAbsolute(), "Path must not be absolute");
-    Check.notNull(fileTime, "fileTime == null");
-
-    Path file;
-    file = rootDirectory.resolve(path);
-
-    file = file.normalize();
-
-    if (!file.startsWith(rootDirectory)) {
-      throw new IllegalArgumentException("Traversal detected: " + path);
-    }
-
-    Files.setLastModifiedTime(file, fileTime);
   }
 
   @Override

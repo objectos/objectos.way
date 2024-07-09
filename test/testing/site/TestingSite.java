@@ -38,9 +38,9 @@ import objectos.way.Carbonated;
 import objectos.way.HandlerFactory;
 import objectos.way.Http;
 import objectos.way.Script;
+import objectos.way.Web;
 import objectos.web.BootstrapException;
 import objectos.web.Stage;
-import objectos.web.WayWebResources;
 import testing.zite.TestingSiteInjector;
 
 public class TestingSite {
@@ -132,26 +132,24 @@ public class TestingSite {
     AppSessionStore sessionStore;
     sessionStore = new AppSessionStore();
 
-    // WebResources
+    // Web.Resources
 
-    WayWebResources webResources;
+    Web.Resources webResources;
 
     try {
-      webResources = new WayWebResources();
+      webResources = Web.createResources(
+          Web.contentTypes("""
+          .css: text/css; charset=utf-8
+          .js: text/javascript; charset=utf-8
+          """),
 
-      shutdownHook.addAutoCloseable(webResources);
-
-      webResources.contentType(".css", "text/css; charset=utf-8");
-
-      webResources.contentType(".js", "text/javascript; charset=utf-8");
-
-      Path common;
-      common = Path.of("common");
-
-      webResources.createNew(common.resolve("way.js"), Script.getBytes());
+          Web.serveFile("/common/way.js", Script.getBytes())
+      );
     } catch (IOException e) {
       throw new BootstrapException("WebResources", e);
     }
+
+    shutdownHook.addAutoCloseable(webResources);
 
     // Carbonated UI
     Carbonated carbonated;

@@ -122,7 +122,7 @@ public final class Http {
     }
 
     default void methodMatrix(Request.Method method1, Handler handler1,
-                              Request.Method method2, Handler handler2) {
+        Request.Method method2, Handler handler2) {
       Check.notNull(method1, "method1 == null");
       Check.notNull(handler1, "handler1 == null");
       Check.notNull(method2, "method2 == null");
@@ -141,8 +141,8 @@ public final class Http {
     }
 
     default void methodMatrix(Request.Method method1, Handler handler1,
-                              Request.Method method2, Handler handler2,
-                              Request.Method method3, Handler handler3) {
+        Request.Method method2, Handler handler2,
+        Request.Method method3, Handler handler3) {
       Check.notNull(method1, "method1 == null");
       Check.notNull(handler1, "handler1 == null");
       Check.notNull(method2, "method2 == null");
@@ -1043,13 +1043,22 @@ public final class Http {
   }
 
   /**
-   * Creates a new HTTP server instance.
+   * Creates a new HTTP server instance with the specified handler provider and
+   * the specified options.
+   *
+   * @param handlerFactory
+   *        the handler provider of this new server instance
+   * @param options
+   *        configuration options of this new server instance
+   *
+   * @return a newly created HTTP server instance
    */
   public static Server createServer(HandlerFactory handlerFactory, Server.Option... options) {
     Check.notNull(handlerFactory, "handlerFactory == null");
     Check.notNull(options, "options == null");
 
-    HttpServer.Builder builder = new HttpServer.Builder(handlerFactory);
+    HttpServer.Builder builder;
+    builder = new HttpServer.Builder(handlerFactory);
 
     for (int i = 0; i < options.length; i++) {
       Server.Option option;

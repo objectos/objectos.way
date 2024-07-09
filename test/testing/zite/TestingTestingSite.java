@@ -36,8 +36,8 @@ import objectos.way.Carbonated;
 import objectos.way.Http.Exchange;
 import objectos.way.SessionStore;
 import objectos.way.WayTestingServerExchange;
+import objectos.way.Web;
 import objectos.web.Stage;
-import objectos.web.WayWebResources;
 
 public final class TestingTestingSite {
 
@@ -90,15 +90,15 @@ public final class TestingTestingSite {
     stage = Stage.TESTING;
 
     // WebResources
-    WayWebResources webResources;
+    Web.Resources webResources;
 
     try {
-      webResources = new WayWebResources();
-
-      shutdownHook.addAutoCloseable(webResources);
+      webResources = Web.createResources();
     } catch (IOException e) {
       throw new UncheckedIOException(e);
     }
+
+    shutdownHook.addAutoCloseable(webResources);
 
     // Carbonated UI
 
