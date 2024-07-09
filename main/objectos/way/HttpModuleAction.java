@@ -15,7 +15,7 @@
  */
 package objectos.way;
 
-sealed interface HttpModuleAction permits HttpModuleFilter, HttpModuleRoute {
+interface HttpModuleAction {
 
   boolean execute(Http.Exchange http);
 

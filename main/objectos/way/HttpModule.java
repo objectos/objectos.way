@@ -124,6 +124,43 @@ abstract class HttpModule {
   }
 
   /**
+   * If the {@code Host} request header value is equal to the specified name
+   * then dispatches to the specified module.
+   *
+   * @param name
+   *        the host name
+   * @param module
+   *        the module to dispatch to
+   */
+  protected final void host(String name, Http.Module module) {
+    Check.notNull(name, "name == null");
+
+    Http.Handler handler;
+    handler = module.compile();
+
+    compiler.host(name, handler);
+  }
+
+  /**
+   * If the {@code Host} request header value is equal to the specified name
+   * then dispatches to the specified handler.
+   *
+   * <p>
+   * Please note that if the specified handler is not exhaustive then this
+   * module might dispatch the request to any existing subsequent handler.
+   *
+   * @param name
+   *        the host name
+   * @param handler
+   *        the handler to dispatch to
+   */
+  protected final void host(String name, Http.Handler handler) {
+    Check.notNull(name, "name == null");
+
+    compiler.host(name, handler);
+  }
+
+  /**
    * Intercepts all matched routes with the specified interceptor.
    *
    * @param interceptor

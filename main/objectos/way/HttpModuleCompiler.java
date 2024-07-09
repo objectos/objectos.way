@@ -58,7 +58,16 @@ final class HttpModuleCompiler extends HttpModuleMatcherParser implements Http.H
     http.notFound();
   }
 
-  final void filter(Http.Handler handler) {
+  private record HttpModuleFilter(Http.Handler handler) implements HttpModuleAction {
+    @Override
+    public final boolean execute(Http.Exchange http) {
+      handler.handle(http);
+
+      return http.processed();
+    }
+  }
+
+  public final void filter(Http.Handler handler) {
     handler = decorate(handler);
 
     int index;
@@ -67,7 +76,33 @@ final class HttpModuleCompiler extends HttpModuleMatcherParser implements Http.H
     actions[index] = new HttpModuleFilter(handler);
   }
 
-  final void interceptor(Http.Handler.Interceptor next) {
+  private record HttpModuleHost(String name, Http.Handler handler) implements HttpModuleAction {
+    @Override
+    public final boolean execute(Http.Exchange http) {
+      Http.Request.Headers headers;
+      headers = http.headers();
+
+      String hostName;
+      hostName = headers.first(Http.HOST);
+
+      if (name.equals(hostName)) {
+        handler.handle(http);
+      }
+
+      return http.processed();
+    }
+  }
+
+  public final void host(String name, Http.Handler handler) {
+    handler = decorate(handler);
+
+    int index;
+    index = nextSlot();
+
+    actions[index] = new HttpModuleHost(name, handler);
+  }
+
+  public final void interceptor(Http.Handler.Interceptor next) {
     if (interceptor == null) {
       interceptor = next;
     } else {

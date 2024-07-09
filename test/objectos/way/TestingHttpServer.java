@@ -91,19 +91,19 @@ public final class TestingHttpServer {
     static ThisHandlerFactory HANDLER;
 
     public static void bindHttpModuleTest(HttpModuleTest test) {
-      HANDLER.httpModuleTest = test.compile();
+      HANDLER.httpModuleTest.delegate = test.compile();
     }
 
     public static void bindHttpServerTest(HttpServerTest test) {
-      HANDLER.httpServerTest = test.compile();
+      HANDLER.httpServerTest.delegate = test.compile();
     }
 
     public static void bindWebModuleTest(WebModuleTest test) {
-      HANDLER.webModuleTest = test.compile();
+      HANDLER.webModuleTest.delegate = test.compile();
     }
 
     public static void bindWebResourcesTest(WayWebResourcesTest test) {
-      HANDLER.webResourcesTest = test;
+      HANDLER.webResourcesTest.delegate = test;
     }
 
     private static Http.Server create() {
@@ -145,44 +145,45 @@ public final class TestingHttpServer {
 
   }
 
-  private static class ThisHandlerFactory implements Http.Handler, HandlerFactory {
+  private static class ThisHandlerFactory extends Http.Module implements HandlerFactory {
 
-    private Http.Handler httpModuleTest;
+    private final DelegatingHandler httpModuleTest = new DelegatingHandler();
 
-    private Http.Handler httpServerTest;
+    private final DelegatingHandler httpServerTest = new DelegatingHandler();
 
-    private final Http.Handler marketing = new MarketingSite().compile();
+    private final Http.Module marketing = new MarketingSite();
 
-    private Http.Handler webModuleTest;
+    private final DelegatingHandler webModuleTest = new DelegatingHandler();
 
-    private Http.Handler webResourcesTest;
+    private final DelegatingHandler webResourcesTest = new DelegatingHandler();
 
     @Override
     public final Http.Handler create() throws Exception {
-      return this;
+      return compile();
     }
 
     @Override
-    public final void handle(Http.Exchange http) {
-      Http.Request.Headers headers;
-      headers = http.headers();
+    protected final void configure() {
+      host("http.module.test", httpModuleTest);
 
-      String host;
-      host = headers.first(Http.HOST);
+      host("http.server.test", httpServerTest);
 
-      switch (host) {
-        case "http.module.test" -> httpModuleTest.handle(http);
+      host("marketing", marketing);
 
-        case "http.server.test" -> httpServerTest.handle(http);
+      host("web.module.test", webModuleTest);
 
-        case "marketing" -> marketing.handle(http);
+      host("web.resources.test", webResourcesTest);
+    }
 
-        case "web.module.test" -> webModuleTest.handle(http);
+    private static final class DelegatingHandler implements Http.Handler {
 
-        case "web.resources.test" -> webResourcesTest.handle(http);
+      Http.Handler delegate;
 
-        default -> http.notFound();
+      @Override
+      public final void handle(Http.Exchange http) {
+        delegate.handle(http);
       }
+
     }
 
   }
