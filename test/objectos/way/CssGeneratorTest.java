@@ -3396,6 +3396,28 @@ public class CssGeneratorTest {
   }
 
   @Test
+  public void overrideBorderColor() {
+    class Subject extends AbstractSubject {
+      @Override
+      final void classes() {
+        className("border-subtle border-black");
+      }
+    }
+
+    test(
+        Css.overrideColors("""
+        subtle: var(--ui-border-subtle)
+        """),
+
+        Subject.class,
+
+        """
+        .border-subtle { border-color: var(--ui-border-subtle) }
+        """
+    );
+  }
+
+  @Test
   public void overrideColors() {
     class Subject extends AbstractSubject {
       @Override

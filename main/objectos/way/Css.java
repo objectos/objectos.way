@@ -124,68 +124,41 @@ public final class Css {
   }
 
   public static Generator.Option overrideBackgroundColor(String text) {
-    CssProperties properties;
-    properties = parseProperties(text);
+    return override(CssKey.BACKGROUND_COLOR, text);
+  }
 
-    return new CssGeneratorOption.OverrideKey(CssKey.BACKGROUND_COLOR, properties);
+  public static Generator.Option overrideBorderColor(String text) {
+    return override(CssKey.BORDER_COLOR, text);
   }
 
   public static Generator.Option overrideColors(String text) {
-    CssProperties properties;
-    properties = parseProperties(text);
-
-    return new CssGeneratorOption() {
-      @Override
-      final void acceptCssGenerator(CssConfig config) {
-        config.override(CssKey._COLORS, properties);
-      }
-    };
+    return override(CssKey._COLORS, text);
   }
 
   public static Generator.Option overrideContent(String text) {
-    CssProperties properties;
-    properties = parseProperties(text);
-
-    return new CssGeneratorOption() {
-      @Override
-      final void acceptCssGenerator(CssConfig config) {
-        config.override(CssKey.CONTENT, properties);
-      }
-    };
+    return override(CssKey.CONTENT, text);
   }
 
   public static Generator.Option overrideFontSize(String text) {
-    CssProperties properties;
-    properties = parseProperties(text);
-
-    return new CssGeneratorOption() {
-      @Override
-      final void acceptCssGenerator(CssConfig config) {
-        config.override(CssKey.FONT_SIZE, properties);
-      }
-    };
+    return override(CssKey.FONT_SIZE, text);
   }
 
   public static Generator.Option overrideGridTemplateRows(String text) {
-    CssProperties properties;
-    properties = parseProperties(text);
-
-    return new CssGeneratorOption() {
-      @Override
-      final void acceptCssGenerator(CssConfig config) {
-        config.override(CssKey.GRID_TEMPLATE_ROWS, properties);
-      }
-    };
+    return override(CssKey.GRID_TEMPLATE_ROWS, text);
   }
 
   public static Generator.Option overrideSpacing(String text) {
+    return override(CssKey._SPACING, text);
+  }
+
+  private static Generator.Option override(CssKey key, String text) {
     CssProperties properties;
     properties = parseProperties(text);
 
     return new CssGeneratorOption() {
       @Override
       final void acceptCssGenerator(CssConfig config) {
-        config.override(CssKey._SPACING, properties);
+        config.override(key, properties);
       }
     };
   }
