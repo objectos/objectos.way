@@ -13,8 +13,32 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package testing.zite.carbonated;
+package testing.site.carbon;
 
-import objectos.way.Carbonated;
+import objectos.way.Http;
+import objectos.way.Ui;
+import objectos.way.Web;
+import testing.zite.TestingSiteInjector;
 
-public record TestingCarbonatedInjector(Carbonated carbonated) {}
+public final class CarbonWeb extends Web.Module {
+
+  private final Ui.Binder carbon;
+
+  public CarbonWeb(TestingSiteInjector injector) {
+    carbon = injector.carbon();
+  }
+
+  @Override
+  protected final void configure() {
+    install(carbon.createHttpModule());
+
+    filter(this::carbon);
+
+    route("/carbon", GET(Index::new));
+  }
+
+  private void carbon(Http.Exchange http) {
+    http.set(Ui.Binder.class, carbon);
+  }
+
+}

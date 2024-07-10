@@ -15,9 +15,8 @@
  */
 package objectos.way;
 
-import java.util.EnumMap;
-import java.util.Map;
-import objectos.lang.object.Check;
+import objectos.way.Html.FragmentLambda;
+import objectos.way.Html.Instruction;
 
 /**
  * The <strong>Objectos UI</strong> main class.
@@ -29,6 +28,8 @@ public abstract class Ui {
    * HTML template.
    */
   public interface Binder {
+
+    Http.Module createHttpModule();
 
     /**
      * Creates a new UI component factory bound to the specified template.
@@ -43,146 +44,97 @@ public abstract class Ui {
   }
 
   /**
-   * An attribute of an UI component.
+   * The UI shell is the top level UI component of an web application.
    */
-  public sealed interface Attribute {
+  public static abstract class Shell extends Html.Template implements Web.Action {
 
-    /**
-     * The key of this attribute.
-     *
-     * @return the key of this attribute
-     */
-    AttributeKey key();
+    private final Http.Exchange http;
 
-    /**
-     * The value of this attribute.
-     *
-     * @return the value of this attribute
-     */
-    Object value();
+    protected final Ui ui;
+
+    protected Shell(Http.Exchange http) {
+      this.http = http;
+
+      Binder binder;
+      binder = http.get(Binder.class);
+
+      ui = binder.ui(this);
+    }
+
+    @Override
+    public final void execute() {
+      http.ok(this);
+    }
+
+    @Override
+    protected final void render() {
+      doctype();
+      html(
+          head(
+              meta(charset("utf-8")),
+              meta(httpEquiv("content-type"), content("text/html; charset=utf-8")),
+              meta(name("viewport"), content("width=device-width, initial-scale=1")),
+              script(src("/ui/script.js")),
+              link(rel("shortcut icon"), type("image/x-icon"), href("/favicon.png")),
+              link(rel("stylesheet"), type("text/css"), href("/ui/carbon.css")),
+              title("Objectos Carbon")
+          ),
+
+          body(
+              f(this::renderUi)
+          )
+      );
+    }
+
+    protected abstract void renderUi();
 
   }
 
-  /**
-   * The keys representing all of the attribute kinds.
-   */
-  public enum AttributeKey {
+  public sealed interface ShellHeader {
+  }
 
-    /**
-     * The title attribute.
-     */
+  // components
+
+  interface Component {
+    ComponentKey key();
+
+    Object value();
+
+    default Html.Instruction elementValue() {
+      return (Instruction) value();
+    }
+
+    default Html.FragmentLambda fragmentValue() {
+      return (FragmentLambda) value();
+    }
+
+    default String stringValue() {
+      return (String) value();
+    }
+  }
+
+  enum ComponentKey {
+    ELEMENT,
+
+    FRAGMENT,
+
     TITLE;
-
   }
-
-  /**
-   * An element of an UI component.
-   */
-  public sealed interface Element {
-
-    /**
-     * The key of this element.
-     *
-     * @return the key of this element
-     */
-    ElementKey key();
-
-    /**
-     * The value of this element.
-     */
-    Object value();
-
-  }
-
-  /**
-   * The keys representing all of the element kinds.
-   */
-  public enum ElementKey {
-
-    /**
-     * The body element.
-     */
-    BODY;
-
-  }
-
-  /**
-   * The body of an UI component.
-   */
-  public sealed interface Body extends PageComponent, Element {}
 
   /**
    * An UI component.
    */
-  public sealed interface Component {
-
-    void index(Map<AttributeKey, Object> attributes, Map<ElementKey, Object> elements);
-
-  }
-
-  /**
-   * Component of a page.
-   */
-  public sealed interface PageComponent extends Component {}
-
-  /**
-   * The title of an UI component.
-   */
-  public sealed interface Title extends PageComponent, Attribute {}
-
-  private record UiAttribute(AttributeKey key, Object value) implements Title {
-
-    @Override
-    public final void index(Map<AttributeKey, Object> attributes, Map<ElementKey, Object> elements) {
-      attributes.put(key, value);
-    }
-
-  }
-
-  private record UiElement(ElementKey key, Object value) implements Body {
-
-    @Override
-    public final void index(Map<AttributeKey, Object> attributes, Map<ElementKey, Object> elements) {
-      elements.put(key, value);
-    }
-
-  }
-
-  private final Map<AttributeKey, Object> attributes = new EnumMap<>(AttributeKey.class);
-
-  private final Map<ElementKey, Object> elements = new EnumMap<>(ElementKey.class);
+  record UiComponent(ComponentKey key, Object value) implements ShellHeader {}
 
   /**
    * Sole constructor.
    */
   protected Ui() {}
 
-  public final Body body(Html.FragmentLambda fragment) {
-    Check.notNull(fragment, "fragment == null");
-
-    return new UiElement(ElementKey.BODY, fragment);
+  public static Binder createCarbon() {
+    return new UiBinderCarbon();
   }
 
-  public abstract void page(PageComponent... contents);
-
-  public final PageComponent title(String title) {
-    Check.notNull(title, "title == null");
-
-    return new UiAttribute(AttributeKey.TITLE, title);
-  }
-
-  protected final Object $attr(AttributeKey key) {
-    return attributes.get(key);
-  }
-
-  protected final Object $elem(ElementKey key) {
-    return elements.get(key);
-  }
-
-  protected final void $index(Component... components) {
-    for (Component c : components) {
-      c.index(attributes, elements);
-    }
-  }
+  public abstract ShellHeader shellHeader();
 
 }

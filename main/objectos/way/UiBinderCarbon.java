@@ -19,24 +19,13 @@ import java.io.IOException;
 import java.io.UncheckedIOException;
 
 /**
- * The <strong>Objectos Carbonated UI</strong> main class.
+ * The <strong>Objectos Carbon UI</strong> main class.
  */
-public final class Carbonated implements Ui.Binder {
+final class UiBinderCarbon implements Ui.Binder {
 
-  public sealed interface Option {
+  UiBinderCarbon() {}
 
-  }
-
-  // non-public types
-
-  static non-sealed abstract class CarbonatedOption implements Option {}
-
-  private Carbonated() {}
-
-  public static Carbonated create(Option... options) {
-    return new Carbonated();
-  }
-
+  @Override
   public final Http.Module createHttpModule() {
     final byte[] script;
 
@@ -49,8 +38,8 @@ public final class Carbonated implements Ui.Binder {
     return new Web.Module() {
       @Override
       protected final void configure() {
-        route("/carbonated/script.js", GET(this::script));
-        route("/carbonated/styles.css", GET(new CarbonatedStyles()));
+        route("/ui/script.js", GET(this::script));
+        route("/ui/carbon.css", GET(new UiCarbonStyles()));
       }
 
       private void script(Http.Exchange http) {
@@ -69,7 +58,7 @@ public final class Carbonated implements Ui.Binder {
 
   @Override
   public final Ui ui(Html.Template parent) {
-    return new CarbonatedUi(parent);
+    return new UiCarbon(parent);
   }
 
 }

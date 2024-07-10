@@ -13,19 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package testing.site.carbonated;
+package testing.site.carbon;
 
 import objectos.way.Http;
+import objectos.way.Ui;
 
-final class Index extends CarbonatedPage {
+abstract class CarbonPage extends Ui.Shell {
 
-  public Index(Http.Exchange http) {
+  CarbonPage(Http.Exchange http) {
     super(http);
   }
 
   @Override
-  protected final void bodyContents() {
-    p("Hello world!");
+  protected final void renderUi() {
+    ui.shellHeader();
+
+    renderContents();
   }
+
+  protected abstract void renderContents();
 
 }

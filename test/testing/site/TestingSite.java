@@ -34,10 +34,10 @@ import objectos.notes.Note2;
 import objectos.notes.NoteSink;
 import objectos.notes.impl.ConsoleNoteSink;
 import objectos.way.AppSessionStore;
-import objectos.way.Carbonated;
 import objectos.way.HandlerFactory;
 import objectos.way.Http;
 import objectos.way.Script;
+import objectos.way.Ui;
 import objectos.way.Web;
 import objectos.web.BootstrapException;
 import objectos.web.Stage;
@@ -152,12 +152,12 @@ public class TestingSite {
     shutdownHook.addAutoCloseable(webResources);
 
     // Carbonated UI
-    Carbonated carbonated;
-    carbonated = Carbonated.create();
+    Ui.Binder carbon;
+    carbon = Ui.createCarbon();
 
     // Injector
     TestingSiteInjector injector;
-    injector = new TestingSiteInjector(noteSink, sessionStore, stage, webResources, carbonated);
+    injector = new TestingSiteInjector(noteSink, sessionStore, stage, webResources, carbon);
 
     // HandlerFactory
     HandlerFactory handlerFactory;

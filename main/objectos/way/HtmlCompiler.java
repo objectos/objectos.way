@@ -103,6 +103,26 @@ final class HtmlCompiler extends HtmlCompilerElements implements Html.Compiler {
   }
 
   @Override
+  public final Html.ElementInstruction flattenNonNull(Html.Instruction... contents) {
+    Check.notNull(contents, "contents == null");
+
+    flattenBegin();
+
+    for (int i = 0; i < contents.length; i++) {
+      Html.Instruction inst;
+      inst = contents[i];
+
+      if (inst != null) {
+        elementValue(inst);
+      }
+    }
+
+    elementEnd();
+
+    return Html.ELEMENT;
+  }
+
+  @Override
   public final Html.FragmentInstruction include(Html.FragmentLambda fragment) {
     Check.notNull(fragment, "fragment == null");
 
@@ -176,7 +196,7 @@ final class HtmlCompiler extends HtmlCompilerElements implements Html.Compiler {
 
   @Override
   public final <T1, T2, T3, T4> Html.FragmentInstruction include(Html.FragmentLambda4<T1, T2, T3, T4> fragment,
-                                                                 T1 arg1, T2 arg2, T3 arg3, T4 arg4) {
+      T1 arg1, T2 arg2, T3 arg3, T4 arg4) {
     Check.notNull(fragment, "fragment == null");
 
     int index;

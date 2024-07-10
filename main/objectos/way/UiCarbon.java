@@ -13,33 +13,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package testing.site.carbonated;
+package objectos.way;
 
-import objectos.way.Carbonated;
-import objectos.way.Http;
-import objectos.way.Ui;
-import objectos.way.Web;
-import testing.zite.TestingSiteInjector;
+final class UiCarbon extends Ui {
 
-public final class CarbonatedWeb extends Web.Module {
+  private final Html.Template tmpl;
 
-  private final Carbonated carbonated;
-
-  public CarbonatedWeb(TestingSiteInjector injector) {
-    carbonated = injector.carbonated();
+  public UiCarbon(Html.Template parent) {
+    this.tmpl = parent;
   }
 
   @Override
-  protected final void configure() {
-    install(carbonated.createHttpModule());
+  public final ShellHeader shellHeader() {
+    return new UiComponent(
+        ComponentKey.ELEMENT,
 
-    filter(this::carbonated);
-
-    route("/carbonated", GET(Index::new));
-  }
-
-  private void carbonated(Http.Exchange http) {
-    http.set(Ui.Binder.class, carbonated);
+        tmpl.header(
+            tmpl.className("fixed inset-0px flex h-48px"),
+            tmpl.className("border-b border-border-subtle"),
+            tmpl.className("bg-background")
+        )
+    );
   }
 
 }

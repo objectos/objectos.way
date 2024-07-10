@@ -19,7 +19,7 @@ import objectos.way.Http;
 import objectos.way.Http.Exchange;
 import objectos.way.Web;
 import testing.site.auth.User;
-import testing.site.carbonated.CarbonatedWeb;
+import testing.site.carbon.CarbonWeb;
 import testing.site.ui.UiHttpModule;
 import testing.zite.TestingSiteInjector;
 
@@ -33,7 +33,7 @@ public class TestingHttpModule extends Http.Module {
 
   @Override
   protected final void configure() {
-    install(new CarbonatedWeb(injector));
+    host("dev.carbon:8003", new CarbonWeb(injector));
 
     sessionStore(injector.sessionStore());
 

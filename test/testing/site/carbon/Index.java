@@ -13,33 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.way;
+package testing.site.carbon;
 
-final class CarbonatedStyles implements Http.Handler {
+import objectos.way.Http;
 
-  private Css.StyleSheet generateStyleSheet() {
-    return Css.generateStyleSheet(
-        Css.classes(Carbonated.class)
-    );
+final class Index extends CarbonPage {
+
+  public Index(Http.Exchange http) {
+    super(http);
   }
 
   @Override
-  public final void handle(Http.Exchange http) {
-    Css.StyleSheet s;
-    s = generateStyleSheet();
-
-    byte[] bytes;
-    bytes = s.toByteArray();
-
-    http.status(Http.OK);
-
-    http.dateNow();
-
-    http.header(Http.CONTENT_TYPE, s.contentType());
-
-    http.header(Http.CONTENT_LENGTH, bytes.length);
-
-    http.send(bytes);
+  protected final void renderContents() {
+    p("Hello world!");
   }
 
 }

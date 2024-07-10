@@ -214,6 +214,8 @@ public final class Html {
      */
     ElementInstruction flatten(Instruction... contents);
 
+    ElementInstruction flattenNonNull(Instruction... contents);
+
     /**
      * Includes a fragment into this template represented by the specified
      * lambda.
@@ -796,6 +798,10 @@ public final class Html {
      */
     protected final ElementInstruction flatten(Instruction... contents) {
       return $compiler().flatten(contents);
+    }
+
+    protected final ElementInstruction flattenNonNull(Instruction... contents) {
+      return $compiler().flattenNonNull(contents);
     }
 
     /**
