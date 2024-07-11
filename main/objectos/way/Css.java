@@ -151,6 +151,10 @@ public final class Css {
     return override(CssKey._SPACING, text);
   }
 
+  public static Generator.Option overrideTextColor(String text) {
+    return override(CssKey.TEXT_COLOR, text);
+  }
+
   private static Generator.Option override(CssKey key, String text) {
     CssProperties properties;
     properties = parseProperties(text);

@@ -28,6 +28,14 @@ import objectos.lang.object.Check;
  */
 public final class Carbon {
 
+  public static final Theme WHITE = CarbonTheme.WHITE;
+
+  public static final Theme G10 = CarbonTheme.G10;
+
+  public static final Theme G90 = CarbonTheme.G90;
+
+  public static final Theme G100 = CarbonTheme.G100;
+
   // attributes
 
   sealed static abstract class Attribute {
@@ -47,6 +55,11 @@ public final class Carbon {
    */
   public static final class Href extends Attribute implements HeaderName.Component { Href(String value) { super(value); } }
 
+  /**
+   * A Carbon UI theme.
+   */
+  public sealed interface Theme extends Header.Component permits CarbonTheme {}
+
   // elements
 
   /**
@@ -60,10 +73,14 @@ public final class Carbon {
 
     HeaderName headerName;
 
+    CarbonTheme theme;
+
     Header(Component[] components) {
       for (Component c : components) { // implicit null check
         switch (c) {
           case HeaderName o -> headerName = o;
+
+          case CarbonTheme o -> theme = o;
         }
       }
     }
@@ -143,6 +160,8 @@ public final class Carbon {
           tmpl.className("border-b border-subtle"),
           tmpl.className("bg-background"),
 
+          pojo.theme != null ? tmpl.className(pojo.theme.className) : tmpl.noop(),
+
           pojo.headerName != null ? headerName(pojo.headerName) : tmpl.noop()
       );
     }
@@ -188,55 +207,16 @@ public final class Carbon {
   /**
    * The UI shell is the top level UI component of an web application.
    */
-  public static abstract class Shell extends Html.Template implements Web.Action {
+  public static abstract class Shell extends CarbonShell {
 
-    private final Http.Exchange http;
-
-    protected final Ui ui;
-
-    protected String title;
-
+    /**
+     * Sole constructor.
+     *
+     * @param http
+     *        the HTTP exchange
+     */
     protected Shell(Http.Exchange http) {
-      this.http = http;
-
-      Carbon carbon;
-      carbon = http.get(Carbon.class);
-
-      ui = carbon.ui(this);
-    }
-
-    @Override
-    public void execute() {
-      http.ok(this);
-    }
-
-    @Override
-    protected final void render() throws Exception {
-      doctype();
-
-      html(
-          className("cds--white"),
-
-          head(
-              meta(charset("utf-8")),
-              meta(httpEquiv("content-type"), content("text/html; charset=utf-8")),
-              meta(name("viewport"), content("width=device-width, initial-scale=1")),
-              script(src("/ui/script.js")),
-              link(rel("shortcut icon"), type("image/x-icon"), href("/favicon.png")),
-              link(rel("stylesheet"), type("text/css"), href("/ui/carbon.css")),
-              title != null ? title(title) : noop()
-          ),
-
-          body(
-              f(this::renderUi)
-          )
-      );
-    }
-
-    protected abstract void renderUi() throws Exception;
-
-    protected final void shellTitle(String title) {
-      this.title = Check.notNull(title, "title == null");
+      super(http);
     }
 
   }
@@ -287,6 +267,10 @@ public final class Carbon {
     Check.notNull(shell, "shell == null");
 
     return new Ui(shell);
+  }
+
+  final Ui ui(Html.Template tmpl) {
+    return new Ui(tmpl);
   }
 
 }

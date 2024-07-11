@@ -22,6 +22,7 @@ final class CarbonStyles implements Http.Handler {
         Css.classes(Carbon.Ui.class),
 
         Css.rule(".cds--white", """
+        color: var(--cds-text-primary);
         --cds-background: #ffffff;
         --cds-border-subtle-00: #e0e0e0;
         --cds-border-subtle-01: #c6c6c6;
@@ -30,9 +31,12 @@ final class CarbonStyles implements Http.Handler {
         --cds-focus: #0f62fe;
         --cds-focus-inset: #ffffff;
         --cds-focus-inverse: #ffffff;
+        --cds-text-primary: #161616;
+        --cds-text-secondary: #525252;
         """),
 
         Css.rule(".cds--g10", """
+        color: var(--cds-text-primary);
         --cds-background: #f4f4f4;
         --cds-border-subtle-00: #c6c6c6;
         --cds-border-subtle-01: #e0e0e0;
@@ -41,9 +45,12 @@ final class CarbonStyles implements Http.Handler {
         --cds-focus: #0f62fe;
         --cds-focus-inset: #ffffff;
         --cds-focus-inverse: #ffffff;
+        --cds-text-primary: #161616;
+        --cds-text-secondary: #525252;
         """),
 
         Css.rule(".cds--g90", """
+        color: var(--cds-text-primary);
         --cds-background: #262626;
         --cds-border-subtle-00: #525252;
         --cds-border-subtle-01: #6f6f6f;
@@ -52,9 +59,12 @@ final class CarbonStyles implements Http.Handler {
         --cds-focus: #ffffff;
         --cds-focus-inset: #161616;
         --cds-focus-inverse: #0f62fe;
+        --cds-text-primary: #f4f4f4;
+        --cds-text-secondary: #c6c6c6;
         """),
 
         Css.rule(".cds--g100", """
+        color: var(--cds-text-primary);
         --cds-background: #161616;
         --cds-border-subtle-00: #393939;
         --cds-border-subtle-01: #525252;
@@ -63,6 +73,8 @@ final class CarbonStyles implements Http.Handler {
         --cds-focus: #ffffff;
         --cds-focus-inset: #161616;
         --cds-focus-inverse: #0f62fe;
+        --cds-text-primary: #f4f4f4;
+        --cds-text-secondary: #c6c6c6;
         """),
 
         Css.rule(":root", """
@@ -89,6 +101,10 @@ final class CarbonStyles implements Http.Handler {
         body-compact-01: var(--cds-body-compact-01-font-size, 0.875rem)/var(--cds-body-compact-01-line-height, 1.28572)/var(--cds-body-compact-01-letter-spacing, 0.16px)/var(--cds-body-compact-01-font-weight, 400)
 
         heading-compact-01: var(--cds-heading-compact-01-font-size, 0.875rem)/var(--cds-heading-compact-01-line-height, 1.28572)/var(--cds-heading-compact-01-letter-spacing, 0.16px)/var(--cds-heading-compact-01-font-weight, 600)
+        """),
+
+        Css.overrideTextColor("""
+        primary: var(--cds-text-primary)
         """),
 
         Css.overrideSpacing("""

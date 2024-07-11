@@ -13,31 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package testing.site.carbon;
+package objectos.way;
 
-import objectos.way.Carbon;
-import objectos.way.Http;
+enum CarbonTheme implements Carbon.Theme {
 
-abstract class CarbonPage extends Carbon.Shell {
+  WHITE("cds--white"),
 
-  CarbonPage(Http.Exchange http) {
-    super(http);
+  G10("cds--g10"),
+
+  G90("cds--g90"),
+
+  G100("cds--g100");
+
+  final String className;
+
+  private CarbonTheme(String className) {
+    this.className = className;
   }
-
-  @Override
-  protected final void renderUi() throws Exception {
-    ui.header(
-        Carbon.G100,
-
-        ui.headerName(
-            ui.href("/"),
-            ui.headerNameText("Objectos", "Carbon")
-        )
-    );
-
-    renderContents();
-  }
-
-  protected abstract void renderContents();
 
 }
