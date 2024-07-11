@@ -20,6 +20,8 @@ import objectos.way.Http;
 
 abstract class CarbonPage extends Carbon.Shell {
 
+  private TopSection topSection;
+
   CarbonPage(Http.Exchange http) {
     super(http);
   }
@@ -30,8 +32,19 @@ abstract class CarbonPage extends Carbon.Shell {
         Carbon.G100,
 
         ui.headerName(
-            ui.href("/"),
-            ui.headerNameText("Objectos", "Carbon")
+            ui.headerNameText("Objectos", "Carbon"),
+
+            ui.href("/")
+        ),
+
+        ui.headerNavigation(
+            ui.headerMenuItem(
+                ui.name("Components"),
+
+                ui.href("/components"),
+
+                ui.isActive(topSection == TopSection.COMPONENTS)
+            )
         )
     );
 

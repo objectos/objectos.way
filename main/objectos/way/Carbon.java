@@ -28,20 +28,44 @@ import objectos.lang.object.Check;
  */
 public final class Carbon {
 
+  /**
+   * The White theme.
+   */
   public static final Theme WHITE = CarbonTheme.WHITE;
 
+  /**
+   * The Gray 10 theme.
+   */
   public static final Theme G10 = CarbonTheme.G10;
 
+  /**
+   * The Gray 90 theme.
+   */
   public static final Theme G90 = CarbonTheme.G90;
 
+  /**
+   * The Gray 100 theme.
+   */
   public static final Theme G100 = CarbonTheme.G100;
 
   // attributes
 
-  sealed static abstract class Attribute {
+  sealed static abstract class BooleanAttribute {
+    private final boolean value;
+
+    BooleanAttribute(boolean value) {
+      this.value = value;
+    }
+
+    public final boolean value() {
+      return value;
+    }
+  }
+
+  sealed static abstract class StringAttribute {
     private final String value;
 
-    Attribute(String value) {
+    StringAttribute(String value) {
       this.value = Check.notNull(value, "value == null");
     }
 
@@ -51,43 +75,52 @@ public final class Carbon {
   }
 
   /**
-   * The {@code href} attribute.
+   * Carbon {@code href} attribute.
    */
-  public static final class Href extends Attribute implements HeaderName.Component { Href(String value) { super(value); } }
+  public static final class Href extends StringAttribute implements HeaderMenuItem.Component, HeaderName.Component {
+    Href(String value) { super(value); }
+  }
+
+  public static final class IsActive extends BooleanAttribute implements HeaderMenuItem.Component {
+    IsActive(boolean value) { super(value); }
+  }
 
   /**
-   * A Carbon UI theme.
+   * Carbon {@code name} attribute.
+   */
+  public static final class Name extends StringAttribute implements HeaderMenuItem.Component {
+    Name(String value) { super(value); }
+  }
+
+  /**
+   * Carbon UI theme.
    */
   public sealed interface Theme extends Header.Component permits CarbonTheme {}
 
   // elements
 
   /**
-   * The UI shell header.
+   * Carbon UI shell header.
    */
-  public static final class Header {
+  public sealed interface Header permits CarbonUi.CarbonHeader {
     /**
      * An UI shell header component.
      */
     public sealed interface Component {}
-
-    HeaderName headerName;
-
-    CarbonTheme theme;
-
-    Header(Component[] components) {
-      for (Component c : components) { // implicit null check
-        switch (c) {
-          case HeaderName o -> headerName = o;
-
-          case CarbonTheme o -> theme = o;
-        }
-      }
-    }
   }
 
   /**
-   * The UI shell header name.
+   * An UI shell header menu item.
+   */
+  public sealed interface HeaderMenuItem extends HeaderNavigation.Component permits CarbonUi.CarbonHeaderMenuItem {
+    /**
+     * An UI shell header menu item component.
+     */
+    public sealed interface Component {}
+  }
+
+  /**
+   * An UI shell header name.
    */
   public static final class HeaderName implements Header.Component {
     /**
@@ -123,20 +156,23 @@ public final class Carbon {
 
   }
 
+  /**
+   * A navigation section of a UI shell header.
+   */
+  public sealed interface HeaderNavigation extends Header.Component permits CarbonUi.CarbonHeaderNavigation {
+    /**
+     * Attributes and elements that can be nested in a header navigation
+     * component.
+     */
+    public sealed interface Component {}
+  }
+
   // ui builder
 
   /**
    * The UI builder.
    */
-  public static final class Ui {
-
-    private final Html.Template tmpl;
-
-    Ui(Html.Template tmpl) {
-      this.tmpl = tmpl;
-    }
-
-    // attributes
+  public sealed interface Ui permits CarbonUi {
 
     /**
      * Creates a new {@code href} attribute with the specified value.
@@ -145,62 +181,47 @@ public final class Carbon {
      *
      * @return a new attribute
      */
-    public final Href href(String value) {
-      return new Href(value);
-    }
+    Href href(String value);
+
+    IsActive isActive(boolean value);
+
+    Name name(String value);
 
     // elements
 
-    public final Html.ElementInstruction header(Header.Component... components) {
-      Header pojo;
-      pojo = new Header(components);
+    /**
+     * Renders the UI Shell Header component.
+     *
+     * @param components
+     *        the components to be nested in this header
+     *
+     * @return an HTML instruction
+     */
+    Html.ElementInstruction header(Header.Component... components);
 
-      return tmpl.header(
-          tmpl.className("fixed inset-0px flex h-48px"),
-          tmpl.className("border-b border-subtle"),
-          tmpl.className("bg-background"),
+    /**
+     * Declares an UI shell header menu item.
+     *
+     * @param components
+     *        the components to be nested in this menu item
+     *
+     * @return instructions to render a header menu item
+     */
+    HeaderMenuItem headerMenuItem(HeaderMenuItem.Component... components);
 
-          pojo.theme != null ? tmpl.className(pojo.theme.className) : tmpl.noop(),
+    HeaderName headerName(HeaderName.Component... components);
 
-          pojo.headerName != null ? headerName(pojo.headerName) : tmpl.noop()
-      );
-    }
+    HeaderNameText headerNameText(String prefix, String text);
 
-    public final HeaderName headerName(HeaderName.Component... components) {
-      return new HeaderName(components);
-    }
-
-    private Html.ElementInstruction headerName(HeaderName pojo) {
-      return tmpl.a(
-          tmpl.className("flex h-full select-none items-center"),
-          tmpl.className("border-2 border-transparent"),
-          tmpl.className("pr-32px pl-16px"),
-          tmpl.className("text-body-compact-01 font-semibold"),
-          tmpl.className("outline-none"),
-          tmpl.className("transition-colors duration-100"),
-          tmpl.className("focus:border-focus"),
-
-          pojo.href != null ? tmpl.href(pojo.href) : tmpl.noop(),
-          pojo.text != null
-              ? tmpl.flatten(
-                  tmpl.span(
-                      tmpl.className("font-normal"),
-
-                      tmpl.t(pojo.text.prefix)
-                  ),
-                  tmpl.raw("&nbsp;"),
-                  tmpl.t(pojo.text.text)
-              )
-              : tmpl.noop()
-      );
-    }
-
-    public final HeaderNameText headerNameText(String prefix, String text) {
-      Check.notNull(prefix, "prefix == null");
-      Check.notNull(text, "text == null");
-
-      return new HeaderNameText(prefix, text);
-    }
+    /**
+     * Declares an UI shell header navigation section.
+     *
+     * @param components
+     *        the components to be nested in this navigation section
+     *
+     * @return instructions to render a header navigation section
+     */
+    HeaderNavigation headerNavigation(HeaderNavigation.Component... components);
 
   }
 
@@ -266,11 +287,11 @@ public final class Carbon {
   public final Ui ui(Shell shell) {
     Check.notNull(shell, "shell == null");
 
-    return new Ui(shell);
+    return new CarbonUi(shell);
   }
 
   final Ui ui(Html.Template tmpl) {
-    return new Ui(tmpl);
+    return new CarbonUi(tmpl);
   }
 
 }

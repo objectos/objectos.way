@@ -467,22 +467,6 @@ public final class Html {
 
   }
 
-  public static abstract class Component2 {
-
-    protected final TemplateBase tmpl;
-
-    /**
-     * Creates a new component bound to the specified {@code parent} template.
-     *
-     * @param parent
-     *        the template instance for which this component will be bound to.
-     */
-    protected Component2(TemplateBase parent) {
-      tmpl = Check.notNull(parent, "parent == null");
-    }
-
-  }
-
   /**
    * A template in pure Java for generating HTML.
    *
