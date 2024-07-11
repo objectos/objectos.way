@@ -15,14 +15,13 @@
  */
 package testing.site.carbon;
 
-import objectos.way.Http;
-import objectos.way.Ui;
+import objectos.way.Carbon;
 import objectos.way.Web;
 import testing.zite.TestingSiteInjector;
 
 public final class CarbonWeb extends Web.Module {
 
-  private final Ui.Binder carbon;
+  private final Carbon carbon;
 
   public CarbonWeb(TestingSiteInjector injector) {
     carbon = injector.carbon();
@@ -32,13 +31,7 @@ public final class CarbonWeb extends Web.Module {
   protected final void configure() {
     install(carbon.createHttpModule());
 
-    filter(this::carbon);
-
-    route("/carbon", GET(Index::new));
-  }
-
-  private void carbon(Http.Exchange http) {
-    http.set(Ui.Binder.class, carbon);
+    route("/", GET(Index::new));
   }
 
 }

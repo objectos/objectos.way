@@ -15,18 +15,25 @@
  */
 package testing.site.carbon;
 
+import objectos.way.Carbon;
 import objectos.way.Http;
-import objectos.way.Ui;
 
-abstract class CarbonPage extends Ui.Shell {
+abstract class CarbonPage extends Carbon.Shell {
 
   CarbonPage(Http.Exchange http) {
     super(http);
   }
 
   @Override
-  protected final void renderUi() {
-    ui.shellHeader();
+  protected final void renderUi() throws Exception {
+    include(
+        ui.header(
+            ui.headerName(
+                ui.href("/"),
+                ui.prefix("Objectos")
+            )
+        )
+    );
 
     renderContents();
   }

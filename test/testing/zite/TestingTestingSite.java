@@ -32,9 +32,9 @@ import objectos.notes.Level;
 import objectos.notes.NoteSink;
 import objectos.notes.impl.ConsoleNoteSink;
 import objectos.way.AppSessionStore;
+import objectos.way.Carbon;
 import objectos.way.Http.Exchange;
 import objectos.way.SessionStore;
-import objectos.way.Ui;
 import objectos.way.WayTestingServerExchange;
 import objectos.way.Web;
 import objectos.web.Stage;
@@ -102,8 +102,8 @@ public final class TestingTestingSite {
 
     // Carbonated UI
 
-    Ui.Binder carbon;
-    carbon = Ui.createCarbon();
+    Carbon carbon;
+    carbon = Carbon.create();
 
     INJECTOR = new TestingSiteInjector(noteSink, sessionStore, stage, webResources, carbon);
   }

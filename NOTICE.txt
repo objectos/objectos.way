@@ -4,7 +4,7 @@ Objectos Way uses third-party code.
 
 ## Bootstrap Icons
 
-The objectos.icon package is partially based on the Bootstrap Icons project.
+The Icons class hierarchy contains code from the Bootstrap Icons project.
 Bootstrap Icons is licensed under the MIT license:
 
 	The MIT License (MIT)
@@ -29,9 +29,19 @@ Bootstrap Icons is licensed under the MIT license:
 	OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 	THE SOFTWARE.
 
+## Carbon Design System
+
+The Carbon class hierarchy is based on the Carbon Design System.
+The latter is licensed under the Apache 2.0 license:
+
+	Copyright IBM Corp. 2016, 2023
+ 
+ 	This source code is licensed under the Apache-2.0 license found in the
+ 	LICENSE file in the root directory of this source tree.
+
 ## Tabler Icons
 
-The objectos.icon package is partially based on the Tabler Icons project.
+The Icons class hierarchy contains code from the Tabler Icons project.
 Table Icons is licensed under the MIT license:
 
 	MIT License

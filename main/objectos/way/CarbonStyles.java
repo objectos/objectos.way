@@ -15,11 +15,11 @@
  */
 package objectos.way;
 
-final class UiCarbonStyles implements Http.Handler {
+final class CarbonStyles implements Http.Handler {
 
   private Css.StyleSheet generateStyleSheet() {
     return Css.generateStyleSheet(
-        Css.classes(UiCarbon.class),
+        Css.classes(Carbon.Ui.class),
 
         Css.rule(".cds--white", """
         --cds-background: #ffffff;
@@ -27,6 +27,9 @@ final class UiCarbonStyles implements Http.Handler {
         --cds-border-subtle-01: #c6c6c6;
         --cds-border-subtle-02: #e0e0e0;
         --cds-border-subtle-03: #c6c6c6;
+        --cds-focus: #0f62fe;
+        --cds-focus-inset: #ffffff;
+        --cds-focus-inverse: #ffffff;
         """),
 
         Css.rule(".cds--g10", """
@@ -35,6 +38,9 @@ final class UiCarbonStyles implements Http.Handler {
         --cds-border-subtle-01: #e0e0e0;
         --cds-border-subtle-02: #c6c6c6;
         --cds-border-subtle-03: #e0e0e0;
+        --cds-focus: #0f62fe;
+        --cds-focus-inset: #ffffff;
+        --cds-focus-inverse: #ffffff;
         """),
 
         Css.rule(".cds--g90", """
@@ -43,6 +49,9 @@ final class UiCarbonStyles implements Http.Handler {
         --cds-border-subtle-01: #6f6f6f;
         --cds-border-subtle-02: #8d8d8d;
         --cds-border-subtle-03: #8d8d8d;
+        --cds-focus: #ffffff;
+        --cds-focus-inset: #161616;
+        --cds-focus-inverse: #0f62fe;
         """),
 
         Css.rule(".cds--g100", """
@@ -51,10 +60,18 @@ final class UiCarbonStyles implements Http.Handler {
         --cds-border-subtle-01: #525252;
         --cds-border-subtle-02: #6f6f6f;
         --cds-border-subtle-03: #6f6f6f;
+        --cds-focus: #ffffff;
+        --cds-focus-inset: #161616;
+        --cds-focus-inverse: #0f62fe;
         """),
 
         Css.rule(":root", """
         --cds-border-subtle: var(--cds-border-subtle-00, #e0e0e0);
+
+        --cds-body-compact-01-font-size: 0.875rem;
+        --cds-body-compact-01-font-weight: 400;
+        --cds-body-compact-01-line-height: 1.28572;
+        --cds-body-compact-01-letter-spacing: 0.16px;
         """),
 
         Css.overrideBackgroundColor("""
@@ -62,7 +79,16 @@ final class UiCarbonStyles implements Http.Handler {
         """),
 
         Css.overrideBorderColor("""
+        focus: var(--cds-focus)
         subtle: var(--cds-border-subtle)
+
+        transparent: transparent
+        """),
+
+        Css.overrideFontSize("""
+        body-compact-01: var(--cds-body-compact-01-font-size, 0.875rem)/var(--cds-body-compact-01-line-height, 1.28572)/var(--cds-body-compact-01-letter-spacing, 0.16px)/var(--cds-body-compact-01-font-weight, 400)
+
+        heading-compact-01: var(--cds-heading-compact-01-font-size, 0.875rem)/var(--cds-heading-compact-01-line-height, 1.28572)/var(--cds-heading-compact-01-letter-spacing, 0.16px)/var(--cds-heading-compact-01-font-weight, 600)
         """),
 
         Css.overrideSpacing("""
