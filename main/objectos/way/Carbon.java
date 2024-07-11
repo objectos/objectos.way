@@ -18,9 +18,6 @@ package objectos.way;
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import objectos.lang.object.Check;
-import objectos.way.Carbon.Ui.HeaderData;
-import objectos.way.Carbon.Ui.HeaderNameData;
-import objectos.way.Html.FragmentLambda1;
 
 /**
  * The <strong>Objectos Carbon UI</strong> main class.
@@ -30,6 +27,149 @@ import objectos.way.Html.FragmentLambda1;
  * Java.
  */
 public final class Carbon {
+
+  // attributes
+
+  sealed static abstract class Attribute {
+    private final String value;
+
+    Attribute(String value) {
+      this.value = Check.notNull(value, "value == null");
+    }
+
+    public final String value() {
+      return value;
+    }
+  }
+
+  /**
+   * The {@code href} attribute.
+   */
+  public static final class Href extends Attribute implements HeaderName.Component { Href(String value) { super(value); } }
+
+  /**
+   * The {@code prefix} attribute.
+   */
+  public static final class Prefix extends Attribute implements HeaderName.Component { Prefix(String value) { super(value); } }
+
+  // elements
+
+  /**
+   * The UI shell header.
+   */
+  public static final class Header {
+    /**
+     * An UI shell header component.
+     */
+    public sealed interface Component {}
+
+    HeaderName headerName;
+
+    Header(Component[] components) {
+      for (Component c : components) { // implicit null check
+        switch (c) {
+          case HeaderName o -> headerName = o;
+        }
+      }
+    }
+  }
+
+  /**
+   * The UI shell header name.
+   */
+  public static final class HeaderName implements Header.Component {
+    /**
+     * An UI shell header name component.
+     */
+    public sealed interface Component {}
+
+    String href;
+
+    String prefix;
+
+    HeaderName(Component[] components) {
+      for (Component c : components) { // implicit null check
+        switch (c) {
+          case Href o -> href = o.value();
+
+          case Prefix o -> prefix = o.value();
+        }
+      }
+    }
+  }
+
+  // ui builder
+
+  /**
+   * The UI builder.
+   */
+  public static final class Ui {
+
+    private final Html.Template tmpl;
+
+    Ui(Html.Template tmpl) {
+      this.tmpl = tmpl;
+    }
+
+    // attributes
+
+    /**
+     * Creates a new {@code href} attribute with the specified value.
+     *
+     * @param value the string value of the attribute
+     *
+     * @return a new attribute
+     */
+    public final Href href(String value) {
+      return new Href(value);
+    }
+
+    /**
+     * Creates a new {@code prefix} attribute with the specified value.
+     *
+     * @param value the string value of the attribute
+     *
+     * @return a new attribute
+     */
+    public final Prefix prefix(String value) {
+      return new Prefix(value);
+    }
+
+    // elements
+
+    public final Html.ElementInstruction header(Header.Component... components) {
+      Header pojo;
+      pojo = new Header(components);
+
+      return tmpl.header(
+          tmpl.className("fixed inset-0px flex h-48px"),
+          tmpl.className("border-b border-subtle"),
+          tmpl.className("bg-background"),
+
+          pojo.headerName != null ? headerName(pojo.headerName) : tmpl.noop()
+      );
+    }
+
+    public final HeaderName headerName(HeaderName.Component... components) {
+      return new HeaderName(components);
+    }
+
+    private Html.ElementInstruction headerName(HeaderName pojo) {
+      return tmpl.a(
+          tmpl.className("flex h-full select-none items-center"),
+          tmpl.className("border-2 border-transparent"),
+          tmpl.className("pr-32px pl-16px"),
+          tmpl.className("text-body-compact-01 font-semibold"),
+          tmpl.className("outline-none"),
+          tmpl.className("transition-colors duration-100"),
+          tmpl.className("focus:border-focus"),
+
+          pojo.href != null ? tmpl.href(pojo.href) : tmpl.noop(),
+          pojo.prefix != null ? tmpl.span(pojo.prefix) : tmpl.noop()
+      );
+    }
+
+  }
 
   /**
    * The UI shell is the top level UI component of an web application.
@@ -83,158 +223,6 @@ public final class Carbon {
 
   }
 
-  // attributes
-
-  sealed static abstract class Attribute {
-    private final String value;
-
-    Attribute(String value) {
-      this.value = Check.notNull(value, "value == null");
-    }
-
-    public final String value() {
-      return value;
-    }
-  }
-
-  /**
-   * The {@code href} attribute.
-   */
-  public static final class Href extends Attribute implements HeaderName.Component { Href(String value) { super(value); } }
-
-  public static final class Prefix extends Attribute implements HeaderName.Component { Prefix(String value) { super(value); } }
-
-  // elements
-
-  sealed static abstract class Element1<T1> implements Html.FragmentLambda {
-    final Html.FragmentLambda1<T1> fragment;
-    final T1 data;
-
-    Element1(FragmentLambda1<T1> fragment, T1 data) {
-      this.fragment = fragment;
-      this.data = data;
-    }
-
-    @Override
-    public final void invoke() throws Exception {
-      fragment.invoke(data);
-    }
-  }
-
-  /**
-   * The UI shell header.
-   */
-  public static final class Header extends Element1<Ui.HeaderData> {
-    Header(FragmentLambda1<HeaderData> fragment, HeaderData data) { super(fragment, data); }
-
-    /**
-     * An UI shell header component.
-     */
-    public sealed interface Component extends Carbon.Component {}
-  }
-
-  /**
-   * The UI shell header name.
-   */
-  public static final class HeaderName extends Element1<HeaderNameData> implements Header.Component {
-    HeaderName(FragmentLambda1<HeaderNameData> fragment, HeaderNameData data) { super(fragment, data); }
-
-    /**
-     * An UI shell header name component.
-     */
-    public sealed interface Component extends Carbon.Component {}
-  }
-
-  sealed interface Component {}
-
-  // ui builder
-
-  public static final class Ui {
-
-    private final Html.Template tmpl;
-
-    private Ui(Html.Template tmpl) {
-      this.tmpl = tmpl;
-    }
-
-    // attributes
-
-    public final Href href(String value) {
-      return new Href(value);
-    }
-
-    public final Prefix prefix(String value) {
-      return new Prefix(value);
-    }
-
-    // elements
-
-    // Header
-
-    public final Header header(Header.Component... components) {
-      HeaderData data;
-      data = new HeaderData();
-
-      for (Header.Component c : components) {
-        switch (c) {
-          case HeaderName headerName -> data.headerName = headerName;
-        }
-      }
-
-      return new Header(this::header, data);
-    }
-
-    static final class HeaderData {
-      HeaderName headerName;
-    }
-
-    private void header(HeaderData data) {
-      tmpl.header(
-          tmpl.className("fixed inset-0px flex h-48px"),
-          tmpl.className("border-b border-subtle"),
-          tmpl.className("bg-background"),
-
-          data.headerName != null ? tmpl.include(data.headerName) : tmpl.noop()
-      );
-    }
-
-    // HeaderName
-
-    public final HeaderName headerName(HeaderName.Component... components) {
-      HeaderNameData data;
-      data = new HeaderNameData();
-
-      for (HeaderName.Component c : components) {
-        switch (c) {
-          case Href href -> data.href = href.value();
-          case Prefix prefix -> data.prefix = prefix.value();
-        }
-      }
-
-      return new HeaderName(this::headerName, data);
-    }
-
-    static final class HeaderNameData {
-      String href;
-      String prefix;
-    }
-
-    private void headerName(HeaderNameData data) {
-      tmpl.a(
-          tmpl.className("flex h-full select-none items-center"),
-          tmpl.className("border-2 border-transparent"),
-          tmpl.className("pr-32px pl-16px"),
-          tmpl.className("text-body-compact-01 font-semibold"),
-          tmpl.className("outline-none"),
-          tmpl.className("transition-colors duration-100"),
-          tmpl.className("focus:border-focus"),
-
-          data.href != null ? tmpl.href(data.href) : tmpl.noop(),
-          data.prefix != null ? tmpl.span(data.prefix) : tmpl.noop()
-      );
-    }
-  }
-
   private Carbon() {}
 
   public static Carbon create() {
@@ -277,8 +265,10 @@ public final class Carbon {
     };
   }
 
-  public final Ui ui(Html.Template parent) {
-    return new Ui(parent);
+  public final Ui ui(Shell shell) {
+    Check.notNull(shell, "shell == null");
+
+    return new Ui(shell);
   }
 
 }

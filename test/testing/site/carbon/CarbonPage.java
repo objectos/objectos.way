@@ -26,12 +26,10 @@ abstract class CarbonPage extends Carbon.Shell {
 
   @Override
   protected final void renderUi() throws Exception {
-    include(
-        ui.header(
-            ui.headerName(
-                ui.href("/"),
-                ui.prefix("Objectos")
-            )
+    ui.header(
+        ui.headerName(
+            ui.href("/"),
+            ui.prefix("Objectos")
         )
     );
 
