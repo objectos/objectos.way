@@ -565,7 +565,8 @@ class HtmlRecorder {
 
         case HtmlByteProto.ATTRIBUTE1,
              HtmlByteProto.ELEMENT,
-             HtmlByteProto.TEXT -> {
+             HtmlByteProto.TEXT,
+             HtmlByteProto.RAW -> {
           int elementIndex;
           elementIndex = index;
 

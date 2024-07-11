@@ -25,6 +25,7 @@ import java.util.function.Function;
 import objectos.notes.NoOpNoteSink;
 import objectos.notes.NoteSink;
 import objectos.util.map.GrowableMap;
+import objectos.util.map.GrowableSequencedMap;
 import objectos.way.CssVariant.AppendTo;
 import objectos.way.CssVariant.Breakpoint;
 
@@ -58,7 +59,7 @@ final class CssConfig {
 
   public final void addRule(String selector, String contents) {
     if (rules == null) {
-      rules = new GrowableMap<>();
+      rules = new GrowableSequencedMap<>();
     }
 
     rules.put(selector, contents);

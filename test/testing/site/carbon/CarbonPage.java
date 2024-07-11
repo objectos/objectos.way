@@ -29,7 +29,7 @@ abstract class CarbonPage extends Carbon.Shell {
     ui.header(
         ui.headerName(
             ui.href("/"),
-            ui.prefix("Objectos")
+            ui.headerNameText("Objectos", "Carbon")
         )
     );
 

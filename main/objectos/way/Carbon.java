@@ -47,11 +47,6 @@ public final class Carbon {
    */
   public static final class Href extends Attribute implements HeaderName.Component { Href(String value) { super(value); } }
 
-  /**
-   * The {@code prefix} attribute.
-   */
-  public static final class Prefix extends Attribute implements HeaderName.Component { Prefix(String value) { super(value); } }
-
   // elements
 
   /**
@@ -85,17 +80,30 @@ public final class Carbon {
 
     String href;
 
-    String prefix;
+    HeaderNameText text;
 
     HeaderName(Component[] components) {
       for (Component c : components) { // implicit null check
         switch (c) {
           case Href o -> href = o.value();
 
-          case Prefix o -> prefix = o.value();
+          case HeaderNameText o -> text = o;
         }
       }
     }
+  }
+
+  public static final class HeaderNameText implements HeaderName.Component {
+
+    final String prefix;
+
+    final String text;
+
+    HeaderNameText(String prefix, String text) {
+      this.prefix = prefix;
+      this.text = text;
+    }
+
   }
 
   // ui builder
@@ -122,17 +130,6 @@ public final class Carbon {
      */
     public final Href href(String value) {
       return new Href(value);
-    }
-
-    /**
-     * Creates a new {@code prefix} attribute with the specified value.
-     *
-     * @param value the string value of the attribute
-     *
-     * @return a new attribute
-     */
-    public final Prefix prefix(String value) {
-      return new Prefix(value);
     }
 
     // elements
@@ -165,8 +162,25 @@ public final class Carbon {
           tmpl.className("focus:border-focus"),
 
           pojo.href != null ? tmpl.href(pojo.href) : tmpl.noop(),
-          pojo.prefix != null ? tmpl.span(pojo.prefix) : tmpl.noop()
+          pojo.text != null
+              ? tmpl.flatten(
+                  tmpl.span(
+                      tmpl.className("font-normal"),
+
+                      tmpl.t(pojo.text.prefix)
+                  ),
+                  tmpl.raw("&nbsp;"),
+                  tmpl.t(pojo.text.text)
+              )
+              : tmpl.noop()
       );
+    }
+
+    public final HeaderNameText headerNameText(String prefix, String text) {
+      Check.notNull(prefix, "prefix == null");
+      Check.notNull(text, "text == null");
+
+      return new HeaderNameText(prefix, text);
     }
 
   }
@@ -200,18 +214,22 @@ public final class Carbon {
     protected final void render() throws Exception {
       doctype();
 
-      head(
-          meta(charset("utf-8")),
-          meta(httpEquiv("content-type"), content("text/html; charset=utf-8")),
-          meta(name("viewport"), content("width=device-width, initial-scale=1")),
-          script(src("/ui/script.js")),
-          link(rel("shortcut icon"), type("image/x-icon"), href("/favicon.png")),
-          link(rel("stylesheet"), type("text/css"), href("/ui/carbon.css")),
-          title != null ? title(title) : noop()
-      );
+      html(
+          className("cds--white"),
 
-      body(
-          f(this::renderUi)
+          head(
+              meta(charset("utf-8")),
+              meta(httpEquiv("content-type"), content("text/html; charset=utf-8")),
+              meta(name("viewport"), content("width=device-width, initial-scale=1")),
+              script(src("/ui/script.js")),
+              link(rel("shortcut icon"), type("image/x-icon"), href("/favicon.png")),
+              link(rel("stylesheet"), type("text/css"), href("/ui/carbon.css")),
+              title != null ? title(title) : noop()
+          ),
+
+          body(
+              f(this::renderUi)
+          )
       );
     }
 
