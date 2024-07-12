@@ -60,6 +60,25 @@ public class CssGeneratorTest {
   }
 
   @Test
+  public void appearance() {
+    class Subject extends AbstractSubject {
+      @Override
+      final void classes() {
+        className("appearance-auto appearance-none");
+      }
+    }
+
+    test(
+        Subject.class,
+
+        """
+        .appearance-auto { appearance: auto }
+        .appearance-none { appearance: none }
+        """
+    );
+  }
+
+  @Test
   public void backgroundColor() {
     class Subject extends AbstractSubject {
       @Override

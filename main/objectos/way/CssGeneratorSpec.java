@@ -141,6 +141,15 @@ final class CssGeneratorSpec extends CssGeneratorRound implements Css.Generator 
         """
     );
 
+    staticUtility(
+        CssKey.APPEARANCE,
+
+        """
+        appearance-none | appearance: none
+        appearance-auto | appearance: auto
+        """
+    );
+
     // B
 
     colorUtility(
