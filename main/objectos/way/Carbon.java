@@ -18,6 +18,10 @@ package objectos.way;
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import objectos.lang.object.Check;
+import objectos.way.CarbonUi.HeaderMenuItemPojo;
+import objectos.way.CarbonUi.HeaderNamePojo;
+import objectos.way.CarbonUi.HeaderNameTextPojo;
+import objectos.way.CarbonUi.HeaderNavigationPojo;
 
 /**
  * The <strong>Objectos Carbon UI</strong> main class.
@@ -50,124 +54,70 @@ public final class Carbon {
 
   // attributes
 
-  sealed static abstract class BooleanAttribute {
-    private final boolean value;
-
-    BooleanAttribute(boolean value) {
-      this.value = value;
-    }
-
-    public final boolean value() {
-      return value;
-    }
-  }
-
-  sealed static abstract class StringAttribute {
-    private final String value;
-
-    StringAttribute(String value) {
-      this.value = Check.notNull(value, "value == null");
-    }
-
-    public final String value() {
-      return value;
-    }
-  }
-
   /**
-   * Carbon {@code href} attribute.
+   * The nested types of this interface represent the Carbon UI attributes.
    */
-  public static final class Href extends StringAttribute implements HeaderMenuItem.Component, HeaderName.Component {
-    Href(String value) { super(value); }
-  }
+  public sealed interface Attribute {
 
-  public static final class IsActive extends BooleanAttribute implements HeaderMenuItem.Component {
-    IsActive(boolean value) { super(value); }
-  }
-
-  /**
-   * Carbon {@code name} attribute.
-   */
-  public static final class Name extends StringAttribute implements HeaderMenuItem.Component {
-    Name(String value) { super(value); }
-  }
-
-  /**
-   * Carbon UI theme.
-   */
-  public sealed interface Theme extends Header.Component permits CarbonTheme {}
-
-  // elements
-
-  /**
-   * Carbon UI shell header.
-   */
-  public sealed interface Header permits CarbonUi.CarbonHeader {
     /**
-     * An UI shell header component.
+     * Carbon {@code href} attribute.
      */
-    public sealed interface Component {}
-  }
+    public sealed interface Href
+        extends
+        ChildOf.HeaderMenuItem,
+        ChildOf.HeaderName
+        permits CarbonUi.HrefAttribute {}
 
-  /**
-   * An UI shell header menu item.
-   */
-  public sealed interface HeaderMenuItem extends HeaderNavigation.Component permits CarbonUi.CarbonHeaderMenuItem {
     /**
-     * An UI shell header menu item component.
+     * Carbon {@code isActive} attribute.
      */
-    public sealed interface Component {}
-  }
+    public sealed interface IsActive
+        extends
+        ChildOf.HeaderMenuItem
+        permits CarbonUi.IsActiveAttribute {}
 
-  /**
-   * An UI shell header name.
-   */
-  public static final class HeaderName implements Header.Component {
     /**
-     * An UI shell header name component.
+     * Carbon {@code name} attribute.
      */
-    public sealed interface Component {}
-
-    String href;
-
-    HeaderNameText text;
-
-    HeaderName(Component[] components) {
-      for (Component c : components) { // implicit null check
-        switch (c) {
-          case Href o -> href = o.value();
-
-          case HeaderNameText o -> text = o;
-        }
-      }
-    }
-  }
-
-  public static final class HeaderNameText implements HeaderName.Component {
-
-    final String prefix;
-
-    final String text;
-
-    HeaderNameText(String prefix, String text) {
-      this.prefix = prefix;
-      this.text = text;
-    }
+    public sealed interface Name
+        extends
+        ChildOf.HeaderMenuItem
+        permits CarbonUi.NameAttribute {}
 
   }
 
   /**
-   * A navigation section of a UI shell header.
+   * A nested type of this interface can be used as a child of the corresponding
+   * component.
    */
-  public sealed interface HeaderNavigation extends Header.Component permits CarbonUi.CarbonHeaderNavigation {
+  public sealed interface ChildOf {
+
     /**
-     * Attributes and elements that can be nested in a header navigation
-     * component.
+     * Accepted as a child of the UI shell header component.
      */
-    public sealed interface Component {}
+    public sealed interface Header
+        permits
+        HeaderNamePojo,
+        HeaderNavigationPojo,
+        Theme {}
+
+    public sealed interface HeaderMenuItem {}
+
+    public sealed interface HeaderName
+        permits
+        HeaderNameTextPojo,
+        Attribute.Href {}
+
+    public sealed interface HeaderNavigation
+        permits
+        HeaderMenuItemPojo {}
+
   }
 
-  // ui builder
+  public sealed interface Component {}
+
+  @SuppressWarnings("unused")
+  private static final class NoImpl implements Attribute, ChildOf, Component {}
 
   /**
    * The UI builder.
@@ -181,11 +131,11 @@ public final class Carbon {
      *
      * @return a new attribute
      */
-    Href href(String value);
+    Attribute.Href href(String value);
 
-    IsActive isActive(boolean value);
+    Attribute.IsActive isActive(boolean value);
 
-    Name name(String value);
+    Attribute.Name name(String value);
 
     // elements
 
@@ -197,7 +147,7 @@ public final class Carbon {
      *
      * @return an HTML instruction
      */
-    Html.ElementInstruction header(Header.Component... components);
+    Html.ElementInstruction header(ChildOf.Header... components);
 
     /**
      * Declares an UI shell header menu item.
@@ -207,11 +157,11 @@ public final class Carbon {
      *
      * @return instructions to render a header menu item
      */
-    HeaderMenuItem headerMenuItem(HeaderMenuItem.Component... components);
+    ChildOf.HeaderNavigation headerMenuItem(ChildOf.HeaderMenuItem... components);
 
-    HeaderName headerName(HeaderName.Component... components);
+    ChildOf.Header headerName(ChildOf.HeaderName... components);
 
-    HeaderNameText headerNameText(String prefix, String text);
+    ChildOf.HeaderName headerNameText(String prefix, String text);
 
     /**
      * Declares an UI shell header navigation section.
@@ -221,9 +171,14 @@ public final class Carbon {
      *
      * @return instructions to render a header navigation section
      */
-    HeaderNavigation headerNavigation(HeaderNavigation.Component... components);
+    ChildOf.Header headerNavigation(ChildOf.HeaderNavigation... components);
 
   }
+
+  /**
+   * Carbon UI theme.
+   */
+  public sealed interface Theme extends ChildOf.Header permits CarbonTheme {}
 
   /**
    * The UI shell is the top level UI component of an web application.

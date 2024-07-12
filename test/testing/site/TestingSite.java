@@ -19,7 +19,6 @@ import java.io.IOException;
 import java.nio.file.FileSystem;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.WatchService;
 import java.time.Clock;
 import objectos.args.CommandLine;
@@ -51,6 +50,8 @@ public class TestingSite {
 
   final PathOption classOutputOption;
 
+  final PathOption testClassOutputOption;
+
   TestingSite() {
     stageOption = new EnumOption<>(Stage.class, "--stage");
     stageOption.description("The stage to start this application: DEVELOPMENT, TESTING or PRODUCTION");
@@ -65,6 +66,11 @@ public class TestingSite {
     classOutputOption.description("Where to look for class files in dev mode");
     classOutputOption.activator(() -> stageOption.is(Stage.DEVELOPMENT));
     classOutputOption.validator(Files::isDirectory, "Path must be a directory");
+
+    testClassOutputOption = new PathOption("--test-class-output");
+    testClassOutputOption.description("Where to look for class files in dev mode");
+    testClassOutputOption.activator(() -> stageOption.is(Stage.DEVELOPMENT));
+    testClassOutputOption.validator(Files::isDirectory, "Path must be a directory");
   }
 
   private boolean checkPort(Integer value) {
@@ -85,7 +91,7 @@ public class TestingSite {
 
   private void parseArgs(String[] args) {
     CommandLine cli;
-    cli = new CommandLine("ui", stageOption, portOption, classOutputOption);
+    cli = new CommandLine("ui", stageOption, portOption, classOutputOption, testClassOutputOption);
 
     try {
       cli.parse(args);
@@ -184,10 +190,7 @@ public class TestingSite {
 
         classReloaderBuilder.watchService(watchService);
 
-        Path classOutput;
-        classOutput = classOutputOption.get();
-
-        classReloaderBuilder.watch(classOutput, "testing.site");
+        classReloaderBuilder.watch(testClassOutputOption.get(), "testing.site");
 
         ClassReloader classReloader;
 

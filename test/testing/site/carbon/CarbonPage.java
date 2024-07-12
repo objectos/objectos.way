@@ -20,30 +20,47 @@ import objectos.way.Http;
 
 abstract class CarbonPage extends Carbon.Shell {
 
-  private TopSection topSection;
+  TopSection topSection = TopSection.HOME;
 
   CarbonPage(Http.Exchange http) {
     super(http);
+
+    shellTheme(Carbon.G100);
   }
 
   @Override
+  protected abstract void preRender();
+
+  @Override
   protected final void renderUi() throws Exception {
-    ui.header(
-        Carbon.G100,
+    div(
+        dataFrame("site-header", topSection.name()),
 
-        ui.headerName(
-            ui.headerNameText("Objectos", "Carbon"),
+        ui.header(
+            Carbon.G100,
 
-            ui.href("/")
-        ),
+            ui.headerName(
+                ui.headerNameText("Objectos", "Carbon"),
 
-        ui.headerNavigation(
-            ui.headerMenuItem(
-                ui.name("Components"),
+                ui.href("/")
+            ),
 
-                ui.href("/components"),
+            ui.headerNavigation(
+                ui.headerMenuItem(
+                    ui.name("Components"),
 
-                ui.isActive(topSection == TopSection.COMPONENTS)
+                    ui.href("/components"),
+
+                    ui.isActive(topSection == TopSection.COMPONENTS)
+                ),
+
+                ui.headerMenuItem(
+                    ui.name("Gallery"),
+
+                    ui.href("#"),
+
+                    ui.isActive(false)
+                )
             )
         )
     );

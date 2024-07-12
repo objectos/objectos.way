@@ -15,24 +15,20 @@
  */
 package testing.site.carbon;
 
-import objectos.way.Carbon;
-import objectos.way.Web;
-import testing.zite.TestingSiteInjector;
+import objectos.way.Http;
 
-public final class CarbonWeb extends Web.Module {
+final class Components extends CarbonPage {
 
-  private final Carbon carbon;
-
-  public CarbonWeb(TestingSiteInjector injector) {
-    carbon = injector.carbon();
+  Components(Http.Exchange http) {
+    super(http);
   }
 
   @Override
-  protected final void configure() {
-    install(carbon.createHttpModule());
-
-    route("/", GET(Index::new));
-    route("/components", GET(Components::new));
+  protected final void preRender() {
+    topSection = TopSection.COMPONENTS;
   }
+
+  @Override
+  protected final void renderContents() {}
 
 }

@@ -131,6 +131,10 @@ public final class Css {
     return override(CssKey.BORDER_COLOR, text);
   }
 
+  public static Generator.Option overrideBorderWidth(String text) {
+    return override(CssKey.BORDER_WIDTH, text);
+  }
+
   public static Generator.Option overrideColors(String text) {
     return override(CssKey._COLORS, text);
   }

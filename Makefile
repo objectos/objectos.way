@@ -184,7 +184,8 @@ DEV_JAVAX += --add-exports $(MODULE)/testing.zite=ALL-UNNAMED
 DEV_JAVAX += --module $(MODULE)/$(DEV_MAIN_CLASS)
 ## dev app args
 DEV_JAVAX += --stage DEVELOPMENT
-DEV_JAVAX += --class-output $(TEST_CLASS_OUTPUT)
+DEV_JAVAX += --class-output $(CLASS_OUTPUT)
+DEV_JAVAX += --test-class-output $(TEST_CLASS_OUTPUT)
 
 .PHONY: dev
 dev: $(DEV_MODULE_PATH)
