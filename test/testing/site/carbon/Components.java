@@ -29,6 +29,8 @@ final class Components extends CarbonPage {
   }
 
   @Override
-  protected final void renderContents() {}
+  protected final void renderContent() {
+    p("Here are the components");
+  }
 
 }

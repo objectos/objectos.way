@@ -140,7 +140,17 @@ public final class Carbon {
     // elements
 
     /**
-     * Renders the UI Shell Header component.
+     * Renders the UI shell content container.
+     *
+     * @param fragment
+     *        the fragment to render
+     *
+     * @return an HTML instruction
+     */
+    Html.ElementInstruction content(Html.FragmentLambda fragment);
+
+    /**
+     * Renders the UI shell Header component.
      *
      * @param components
      *        the components to be nested in this header

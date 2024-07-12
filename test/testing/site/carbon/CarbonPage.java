@@ -65,9 +65,11 @@ abstract class CarbonPage extends Carbon.Shell {
         )
     );
 
-    renderContents();
+    ui.content(
+        this::renderContent
+    );
   }
 
-  protected abstract void renderContents();
+  protected abstract void renderContent();
 
 }

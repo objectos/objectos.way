@@ -22,6 +22,7 @@ final class CarbonStyles implements Http.Handler {
         Css.classes(CarbonUi.class),
 
         Css.rule(".cds--white", """
+        background-color: var(--cds-background);
         color: var(--cds-text-primary);
         --cds-background: #ffffff;
         --cds-background-active: rgba(141, 141, 141, 0.5);
@@ -55,6 +56,7 @@ final class CarbonStyles implements Http.Handler {
         """),
 
         Css.rule(".cds--g10", """
+        background-color: var(--cds-background);
         color: var(--cds-text-primary);
         --cds-background: #f4f4f4;
         --cds-background-active: rgba(141, 141, 141, 0.5);
@@ -88,6 +90,7 @@ final class CarbonStyles implements Http.Handler {
         """),
 
         Css.rule(".cds--g90", """
+        background-color: var(--cds-background);
         color: var(--cds-text-primary);
         --cds-background: #262626;
         --cds-background-active: rgba(141, 141, 141, 0.4);
@@ -121,6 +124,7 @@ final class CarbonStyles implements Http.Handler {
         """),
 
         Css.rule(".cds--g100", """
+        background-color: var(--cds-background);
         color: var(--cds-text-primary);
         --cds-background: #161616;
         --cds-background-active: rgba(141, 141, 141, 0.4);
@@ -160,6 +164,8 @@ final class CarbonStyles implements Http.Handler {
         --cds-body-compact-01-font-weight: 400;
         --cds-body-compact-01-line-height: 1.28572;
         --cds-body-compact-01-letter-spacing: 0.16px;
+
+        --spacing-header: 3rem
         """),
 
         Css.overrideBackgroundColor("""
@@ -201,6 +207,8 @@ final class CarbonStyles implements Http.Handler {
         """),
 
         Css.overrideSpacing("""
+        header: var(--spacing-header)
+
         0px: 0px
         1px: 0.0625rem
         2px: 0.125rem

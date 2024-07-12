@@ -25,6 +25,8 @@ final class CarbonUi implements Carbon.Ui {
 
   private final Html.Template tmpl;
 
+  private boolean headerRendered;
+
   CarbonUi(Html.Template tmpl) {
     this.tmpl = tmpl;
   }
@@ -55,6 +57,19 @@ final class CarbonUi implements Carbon.Ui {
   }
 
   //
+  // Content
+  //
+
+  @Override
+  public final Html.ElementInstruction content(Html.FragmentLambda fragment) {
+    return tmpl.main(
+        headerRendered ? tmpl.className("mt-header") : tmpl.noop(),
+
+        tmpl.include(fragment)
+    );
+  }
+
+  //
   // Header
   //
 
@@ -80,11 +95,13 @@ final class CarbonUi implements Carbon.Ui {
 
   @Override
   public final Html.ElementInstruction header(ChildOf.Header... components) {
+    headerRendered = true;
+
     HeaderPojo pojo;
     pojo = new HeaderPojo(components);
 
     return tmpl.header(
-        tmpl.className("fixed inset-0px flex h-48px"),
+        tmpl.className("fixed inset-0px flex h-header"),
         tmpl.className("border-b border-subtle"),
         tmpl.className("bg"),
 
@@ -225,7 +242,7 @@ final class CarbonUi implements Carbon.Ui {
   private Html.ElementInstruction headerNavigation(HeaderNavigationPojo pojo) {
     return tmpl.nav(
         tmpl.className("fixed hidden"),
-        tmpl.className("w-256px top-48px bottom-0px"),
+        tmpl.className("w-256px top-header bottom-0px"),
         tmpl.className("flex-col"),
         tmpl.className("bg"),
         tmpl.className("z-40"),

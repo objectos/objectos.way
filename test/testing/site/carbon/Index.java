@@ -29,7 +29,7 @@ final class Index extends CarbonPage {
   }
 
   @Override
-  protected final void renderContents() {
+  protected final void renderContent() {
   }
 
 }
