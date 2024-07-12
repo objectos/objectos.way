@@ -143,6 +143,10 @@ public final class Css {
     return override(CssKey.CONTENT, text);
   }
 
+  public static Generator.Option overrideFill(String text) {
+    return override(CssKey.FILL, text);
+  }
+
   public static Generator.Option overrideFontSize(String text) {
     return override(CssKey.FONT_SIZE, text);
   }

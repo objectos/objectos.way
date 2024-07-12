@@ -3415,6 +3415,30 @@ public class CssGeneratorTest {
   }
 
   @Test
+  public void overrideBackgroundColor() {
+    class Subject extends AbstractSubject {
+      @Override
+      final void classes() {
+        className("bg bg-hover bg-slate-100");
+      }
+    }
+
+    test(
+        Css.overrideBackgroundColor("""
+        : #ffffff
+        hover: #c0c0c0
+        """),
+
+        Subject.class,
+
+        """
+        .bg { background-color: #ffffff }
+        .bg-hover { background-color: #c0c0c0 }
+        """
+    );
+  }
+
+  @Test
   public void overrideBorderColor() {
     class Subject extends AbstractSubject {
       @Override
@@ -3432,6 +3456,30 @@ public class CssGeneratorTest {
 
         """
         .border-subtle { border-color: var(--ui-border-subtle) }
+        """
+    );
+  }
+
+  @Test
+  public void overrideBorderWidth() {
+    class Subject extends AbstractSubject {
+      @Override
+      final void classes() {
+        className("border-b-4 border-t-2px border-1px");
+      }
+    }
+
+    test(
+        Css.overrideBorderWidth("""
+        2px: 2px
+        1px: 1px
+        """),
+
+        Subject.class,
+
+        """
+        .border-1px { border-width: 1px }
+        .border-t-2px { border-top-width: 2px }
         """
     );
   }
@@ -3509,6 +3557,30 @@ public class CssGeneratorTest {
           letter-spacing: var(--ui-body-compact-01-letter-spacing, 0.16px);
           font-weight: var(--ui-body-compact-01-font-weight, 400);
         }
+        """
+    );
+  }
+
+  @Test
+  public void overrideFill() {
+    class Subject extends AbstractSubject {
+      @Override
+      final void classes() {
+        className("fill-primary fill-secondary fill-slate-100");
+      }
+    }
+
+    test(
+        Css.overrideFill("""
+        primary: #ccddee
+        secondary: #aabbcc
+        """),
+
+        Subject.class,
+
+        """
+        .fill-primary { fill: #ccddee }
+        .fill-secondary { fill: #aabbcc }
         """
     );
   }
