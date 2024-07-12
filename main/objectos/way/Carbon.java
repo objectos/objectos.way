@@ -18,6 +18,7 @@ package objectos.way;
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import objectos.lang.object.Check;
+import objectos.way.CarbonUi.HeaderMenuButtonPojo;
 import objectos.way.CarbonUi.HeaderMenuItemPojo;
 import objectos.way.CarbonUi.HeaderNamePojo;
 import objectos.way.CarbonUi.HeaderNameTextPojo;
@@ -52,12 +53,38 @@ public final class Carbon {
    */
   public static final Theme G100 = CarbonTheme.G100;
 
+  public enum Icon {
+
+    MENU;
+
+  }
+
+  public enum IconSize {
+
+    PX16,
+
+    PX20,
+
+    PX24,
+
+    PX32;
+
+  }
+
   // attributes
 
   /**
    * The nested types of this interface represent the Carbon UI attributes.
    */
   public sealed interface Attribute {
+
+    /**
+     * Carbon {@code aria-label} attribute.
+     */
+    public sealed interface AriaLabel
+        extends
+        ChildOf.HeaderMenuButton
+        permits CarbonUi.AriaLabelAttribute {}
 
     /**
      * Carbon {@code href} attribute.
@@ -97,17 +124,32 @@ public final class Carbon {
      */
     public sealed interface Header
         permits
+        HeaderMenuButtonPojo,
         HeaderNamePojo,
         HeaderNavigationPojo,
         Theme {}
 
+    /**
+     * Accepted as a child of the UI shell header menu button component.
+     */
+    public sealed interface HeaderMenuButton {}
+
+    /**
+     * Accepted as a child of the UI shell header menu item component.
+     */
     public sealed interface HeaderMenuItem {}
 
+    /**
+     * Accepted as a child of the UI shell header name component.
+     */
     public sealed interface HeaderName
         permits
         HeaderNameTextPojo,
         Attribute.Href {}
 
+    /**
+     * Accepted as a child of the UI shell header navigation component.
+     */
     public sealed interface HeaderNavigation
         permits
         HeaderMenuItemPojo {}
@@ -123,6 +165,15 @@ public final class Carbon {
    * The UI builder.
    */
   public sealed interface Ui permits CarbonUi {
+
+    /**
+     * Creates a new {@code aria-label} attribute with the specified value.
+     *
+     * @param value the string value of the attribute
+     *
+     * @return a new attribute
+     */
+    Attribute.AriaLabel ariaLabel(String value);
 
     /**
      * Creates a new {@code href} attribute with the specified value.
@@ -153,17 +204,27 @@ public final class Carbon {
      * Renders the UI shell Header component.
      *
      * @param components
-     *        the components to be nested in this header
+     *        the nested components
      *
      * @return an HTML instruction
      */
     Html.ElementInstruction header(ChildOf.Header... components);
 
     /**
+     * Declares an UI shell header menu button.
+     *
+     * @param components
+     *        the nested components
+     *
+     * @return instructions to render a header menu button
+     */
+    ChildOf.Header headerMenuButton(ChildOf.HeaderMenuButton... components);
+
+    /**
      * Declares an UI shell header menu item.
      *
      * @param components
-     *        the components to be nested in this menu item
+     *        the nested components
      *
      * @return instructions to render a header menu item
      */
@@ -177,7 +238,7 @@ public final class Carbon {
      * Declares an UI shell header navigation section.
      *
      * @param components
-     *        the components to be nested in this navigation section
+     *        the nested components
      *
      * @return instructions to render a header navigation section
      */

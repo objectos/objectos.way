@@ -18,8 +18,6 @@ package objectos.way;
 import java.util.List;
 import objectos.lang.object.Check;
 import objectos.util.list.GrowableList;
-import objectos.way.Carbon.Attribute;
-import objectos.way.Carbon.ChildOf;
 
 final class CarbonUi implements Carbon.Ui {
 
@@ -33,28 +31,40 @@ final class CarbonUi implements Carbon.Ui {
 
   // attributes
 
-  record HrefAttribute(String value) implements Attribute.Href {}
+  record AriaLabelAttribute(String value) implements Carbon.Attribute.AriaLabel {}
 
   @Override
-  public final Attribute.Href href(String value) {
+  public final Carbon.Attribute.AriaLabel ariaLabel(String value) {
+    Check.notNull(value, "value == null");
+    return new AriaLabelAttribute(value);
+  }
+
+  record HrefAttribute(String value) implements Carbon.Attribute.Href {}
+
+  @Override
+  public final Carbon.Attribute.Href href(String value) {
     Check.notNull(value, "value == null");
     return new HrefAttribute(value);
   }
 
-  record IsActiveAttribute(boolean value) implements Attribute.IsActive {}
+  record IsActiveAttribute(boolean value) implements Carbon.Attribute.IsActive {}
 
   @Override
-  public final Attribute.IsActive isActive(boolean value) {
+  public final Carbon.Attribute.IsActive isActive(boolean value) {
     return new IsActiveAttribute(value);
   }
 
-  record NameAttribute(String value) implements Attribute.Name {}
+  record NameAttribute(String value) implements Carbon.Attribute.Name {}
 
   @Override
-  public final Attribute.Name name(String value) {
+  public final Carbon.Attribute.Name name(String value) {
     Check.notNull(value, "value == null");
     return new NameAttribute(value);
   }
+
+  private static final Html.ClassName BUTTON_RESET = Html.className(
+      "cursor-pointer", "appearance-none"
+  );
 
   //
   // Content
@@ -74,15 +84,19 @@ final class CarbonUi implements Carbon.Ui {
   //
 
   static final class HeaderPojo {
+    HeaderMenuButtonPojo headerMenuButton;
+
     HeaderNamePojo headerName;
 
     HeaderNavigationPojo headerNavigation;
 
     CarbonTheme theme;
 
-    HeaderPojo(ChildOf.Header[] components) {
-      for (ChildOf.Header c : components) { // implicit null check
+    HeaderPojo(Carbon.ChildOf.Header[] components) {
+      for (Carbon.ChildOf.Header c : components) { // implicit null check
         switch (c) {
+          case HeaderMenuButtonPojo o -> headerMenuButton = o;
+
           case HeaderNamePojo o -> headerName = o;
 
           case HeaderNavigationPojo o -> headerNavigation = o;
@@ -94,7 +108,7 @@ final class CarbonUi implements Carbon.Ui {
   }
 
   @Override
-  public final Html.ElementInstruction header(ChildOf.Header... components) {
+  public final Html.ElementInstruction header(Carbon.ChildOf.Header... components) {
     headerRendered = true;
 
     HeaderPojo pojo;
@@ -107,6 +121,8 @@ final class CarbonUi implements Carbon.Ui {
 
         pojo.theme != null ? tmpl.className(pojo.theme.className) : tmpl.noop(),
 
+        pojo.headerMenuButton != null ? headerMenuButton(pojo.headerMenuButton) : tmpl.noop(),
+
         pojo.headerName != null ? headerName(pojo.headerName) : tmpl.noop(),
 
         pojo.headerNavigation != null ? headerNavigation(pojo.headerNavigation) : tmpl.noop()
@@ -114,16 +130,64 @@ final class CarbonUi implements Carbon.Ui {
   }
 
   //
-  // Header: HeaderMenuItem
+  // HeaderMenuButton
   //
 
-  static final class HeaderMenuItemPojo implements ChildOf.HeaderNavigation {
+  static final class HeaderMenuButtonPojo implements Carbon.ChildOf.Header {
+    String ariaLabel;
+
+    HeaderMenuButtonPojo(Carbon.ChildOf.HeaderMenuButton[] components) {
+      for (Carbon.ChildOf.HeaderMenuButton c : components) {
+        switch (c) {
+          case AriaLabelAttribute o -> ariaLabel = o.value();
+        }
+      }
+    }
+  }
+
+  @Override
+  public final Carbon.ChildOf.Header headerMenuButton(Carbon.ChildOf.HeaderMenuButton... components) {
+    return new HeaderMenuButtonPojo(components);
+  }
+
+  private Html.ElementInstruction headerMenuButton(HeaderMenuButtonPojo pojo) {
+    return tmpl.button(
+        BUTTON_RESET,
+
+        // header__action
+        tmpl.className("size-header"),
+        tmpl.className("border border-transparent"),
+        tmpl.className("transition-colors duration-100"),
+        tmpl.className("active:bg-active"),
+        tmpl.className("focus:border-focus focus:outline-none"),
+        tmpl.className("hover:bg-hover"),
+        // header__menu-toggle
+        tmpl.className("flex items-center justify-center"),
+        // header__menu-toggle__hidden
+        tmpl.className("lg:hidden"),
+        // header__menu-trigger
+        tmpl.className("svg:fill-primary"),
+
+        pojo.ariaLabel != null ? tmpl.ariaLabel(pojo.ariaLabel) : tmpl.noop(),
+        pojo.ariaLabel != null ? tmpl.title(pojo.ariaLabel) : tmpl.noop(),
+
+        tmpl.type("button"),
+
+        icon(Carbon.Icon.MENU, Carbon.IconSize.PX20)
+    );
+  }
+
+  //
+  // HeaderMenuItem
+  //
+
+  static final class HeaderMenuItemPojo implements Carbon.ChildOf.HeaderNavigation {
     boolean active;
     String href;
     String name;
 
-    HeaderMenuItemPojo(ChildOf.HeaderMenuItem[] components) {
-      for (ChildOf.HeaderMenuItem c : components) {
+    HeaderMenuItemPojo(Carbon.ChildOf.HeaderMenuItem[] components) {
+      for (Carbon.ChildOf.HeaderMenuItem c : components) {
         switch (c) {
           case IsActiveAttribute o -> active = o.value();
           case HrefAttribute o -> href = o.value();
@@ -134,21 +198,21 @@ final class CarbonUi implements Carbon.Ui {
   }
 
   @Override
-  public final ChildOf.HeaderNavigation headerMenuItem(ChildOf.HeaderMenuItem... components) {
+  public final Carbon.ChildOf.HeaderNavigation headerMenuItem(Carbon.ChildOf.HeaderMenuItem... components) {
     return new HeaderMenuItemPojo(components);
   }
 
   //
-  // Header: HeaderName
+  // HeaderName
   //
 
-  static final class HeaderNamePojo implements ChildOf.Header {
+  static final class HeaderNamePojo implements Carbon.ChildOf.Header {
     String href;
 
     HeaderNameTextPojo text;
 
-    HeaderNamePojo(ChildOf.HeaderName[] components) {
-      for (ChildOf.HeaderName c : components) { // implicit null check
+    HeaderNamePojo(Carbon.ChildOf.HeaderName[] components) {
+      for (Carbon.ChildOf.HeaderName c : components) { // implicit null check
         switch (c) {
           case HrefAttribute o -> href = o.value();
 
@@ -159,7 +223,7 @@ final class CarbonUi implements Carbon.Ui {
   }
 
   @Override
-  public final ChildOf.Header headerName(ChildOf.HeaderName... components) {
+  public final Carbon.ChildOf.Header headerName(Carbon.ChildOf.HeaderName... components) {
     return new HeaderNamePojo(components);
   }
 
@@ -189,10 +253,10 @@ final class CarbonUi implements Carbon.Ui {
   }
 
   //
-  // Header: HeaderNameText
+  // HeaderNameText
   //
 
-  static final class HeaderNameTextPojo implements ChildOf.HeaderName {
+  static final class HeaderNameTextPojo implements Carbon.ChildOf.HeaderName {
     final String prefix;
     final String text;
 
@@ -203,7 +267,7 @@ final class CarbonUi implements Carbon.Ui {
   }
 
   @Override
-  public final ChildOf.HeaderName headerNameText(String prefix, String text) {
+  public final Carbon.ChildOf.HeaderName headerNameText(String prefix, String text) {
     Check.notNull(prefix, "prefix == null");
     Check.notNull(text, "text == null");
 
@@ -211,14 +275,14 @@ final class CarbonUi implements Carbon.Ui {
   }
 
   //
-  // Header: HeaderNavigation
+  // HeaderNavigation
   //
 
-  static final class HeaderNavigationPojo implements ChildOf.Header {
+  static final class HeaderNavigationPojo implements Carbon.ChildOf.Header {
     List<HeaderMenuItemPojo> items;
 
-    HeaderNavigationPojo(ChildOf.HeaderNavigation[] components) {
-      for (ChildOf.HeaderNavigation c : components) {
+    HeaderNavigationPojo(Carbon.ChildOf.HeaderNavigation[] components) {
+      for (Carbon.ChildOf.HeaderNavigation c : components) {
         switch (c) {
           case HeaderMenuItemPojo o -> addItem(o);
         }
@@ -235,7 +299,7 @@ final class CarbonUi implements Carbon.Ui {
   }
 
   @Override
-  public final ChildOf.Header headerNavigation(ChildOf.HeaderNavigation... components) {
+  public final Carbon.ChildOf.Header headerNavigation(Carbon.ChildOf.HeaderNavigation... components) {
     return new HeaderNavigationPojo(components);
   }
 
@@ -298,6 +362,61 @@ final class CarbonUi implements Carbon.Ui {
           )
       );
     }
+  }
+
+  //
+  // Icon
+  //
+
+  public final Html.ElementInstruction icon(Carbon.Icon icon, Carbon.IconSize size) {
+    return switch (icon) {
+      case MENU -> switch (size) {
+        case PX16 -> icon16("""
+        <rect x="2" y="12" width="12" height="1"/><rect x="2" y="9" width="12" height="1"/><rect x="2" y="6" width="12" height="1"/><rect x="2" y="3" width="12" height="1"/>""");
+        case PX20 -> icon20("""
+        <rect x="2" y="14.8" width="16" height="1.2"/><rect x="2" y="11.2" width="16" height="1.2"/><rect x="2" y="7.6" width="16" height="1.2"/><rect x="2" y="4" width="16" height="1.2"/>""");
+        case PX24 -> icon24("""
+        <rect x="3" y="18" width="18" height="1.5"/><rect x="3" y="13.5" width="18" height="1.5"/><rect x="3" y="9" width="18" height="1.5"/><rect x="3" y="4.5" width="18" height="1.5"/>""");
+        case PX32 -> icon32("""
+        <rect x="4" y="6" width="24" height="2"/><rect x="4" y="24" width="24" height="2"/><rect x="4" y="12" width="24" height="2"/><rect x="4" y="18" width="24" height="2"/>""");
+      };
+    };
+  }
+
+  private Html.ElementInstruction icon16(String raw) {
+    return tmpl.svg(
+        tmpl.xmlns("http://www.w3.org/2000/svg"),
+        tmpl.fill("currentColor"),
+        tmpl.width("16px"), tmpl.height("16px"), tmpl.viewBox("0 0 16 16"),
+        tmpl.raw(raw)
+    );
+  }
+
+  private Html.ElementInstruction icon20(String raw) {
+    return tmpl.svg(
+        tmpl.xmlns("http://www.w3.org/2000/svg"),
+        tmpl.fill("currentColor"),
+        tmpl.width("20px"), tmpl.height("20px"), tmpl.viewBox("0 0 20 20"),
+        tmpl.raw(raw)
+    );
+  }
+
+  private Html.ElementInstruction icon24(String raw) {
+    return tmpl.svg(
+        tmpl.xmlns("http://www.w3.org/2000/svg"),
+        tmpl.fill("currentColor"),
+        tmpl.width("24px"), tmpl.height("24px"), tmpl.viewBox("0 0 24 24"),
+        tmpl.raw(raw)
+    );
+  }
+
+  private Html.ElementInstruction icon32(String raw) {
+    return tmpl.svg(
+        tmpl.xmlns("http://www.w3.org/2000/svg"),
+        tmpl.fill("currentColor"),
+        tmpl.width("32px"), tmpl.height("32px"), tmpl.viewBox("0 0 32 32"),
+        tmpl.raw(raw)
+    );
   }
 
 }

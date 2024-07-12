@@ -32,7 +32,6 @@ import objectos.notes.Level;
 import objectos.notes.NoteSink;
 import objectos.notes.impl.ConsoleNoteSink;
 import objectos.way.AppSessionStore;
-import objectos.way.Carbon;
 import objectos.way.Http.Exchange;
 import objectos.way.SessionStore;
 import objectos.way.WayTestingServerExchange;
@@ -100,12 +99,7 @@ public final class TestingTestingSite {
 
     shutdownHook.addAutoCloseable(webResources);
 
-    // Carbonated UI
-
-    Carbon carbon;
-    carbon = Carbon.create();
-
-    INJECTOR = new TestingSiteInjector(noteSink, sessionStore, stage, webResources, carbon);
+    INJECTOR = new TestingSiteInjector(noteSink, sessionStore, stage, webResources);
   }
 
   private TestingTestingSite() {}

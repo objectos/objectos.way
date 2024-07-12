@@ -16,7 +16,6 @@
 package testing.zite;
 
 import objectos.notes.NoteSink;
-import objectos.way.Carbon;
 import objectos.way.SessionStore;
 import objectos.way.Web;
 import objectos.web.Stage;
@@ -24,5 +23,4 @@ import objectos.web.Stage;
 public record TestingSiteInjector(NoteSink noteSink,
                                   SessionStore sessionStore,
                                   Stage stage,
-                                  Web.Resources webResources,
-                                  Carbon carbon) {}
+                                  Web.Resources webResources) {}

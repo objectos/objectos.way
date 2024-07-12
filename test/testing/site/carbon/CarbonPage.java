@@ -39,6 +39,10 @@ abstract class CarbonPage extends Carbon.Shell {
         ui.header(
             Carbon.G100,
 
+            ui.headerMenuButton(
+                ui.ariaLabel("Open menu")
+            ),
+
             ui.headerName(
                 ui.headerNameText("Objectos", "Carbon"),
 

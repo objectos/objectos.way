@@ -51,6 +51,13 @@ final class CarbonStyles implements Http.Handler {
         --cds-focus: #0f62fe;
         --cds-focus-inset: #ffffff;
         --cds-focus-inverse: #ffffff;
+        --cds-icon-disabled: rgba(22, 22, 22, 0.25);
+        --cds-icon-interactive: #0f62fe;
+        --cds-icon-inverse: #ffffff;
+        --cds-icon-on-color: #ffffff;
+        --cds-icon-on-color-disabled: #8d8d8d;
+        --cds-icon-primary: #161616;
+        --cds-icon-secondary: #525252;
         --cds-text-primary: #161616;
         --cds-text-secondary: #525252;
         """),
@@ -85,6 +92,13 @@ final class CarbonStyles implements Http.Handler {
         --cds-focus: #0f62fe;
         --cds-focus-inset: #ffffff;
         --cds-focus-inverse: #ffffff;
+        --cds-icon-disabled: rgba(22, 22, 22, 0.25);
+        --cds-icon-interactive: #0f62fe;
+        --cds-icon-inverse: #ffffff;
+        --cds-icon-on-color: #ffffff;
+        --cds-icon-on-color-disabled: #8d8d8d;
+        --cds-icon-primary: #161616;
+        --cds-icon-secondary: #525252;
         --cds-text-primary: #161616;
         --cds-text-secondary: #525252;
         """),
@@ -119,6 +133,13 @@ final class CarbonStyles implements Http.Handler {
         --cds-focus: #ffffff;
         --cds-focus-inset: #161616;
         --cds-focus-inverse: #0f62fe;
+        --cds-icon-disabled: rgba(244, 244, 244, 0.25);
+        --cds-icon-interactive: #ffffff;
+        --cds-icon-inverse: #161616;
+        --cds-icon-on-color: #ffffff;
+        --cds-icon-on-color-disabled: rgba(255, 255, 255, 0.25);
+        --cds-icon-primary: #f4f4f4;
+        --cds-icon-secondary: #c6c6c6;
         --cds-text-primary: #f4f4f4;
         --cds-text-secondary: #c6c6c6;
         """),
@@ -153,6 +174,13 @@ final class CarbonStyles implements Http.Handler {
         --cds-focus: #ffffff;
         --cds-focus-inset: #161616;
         --cds-focus-inverse: #0f62fe;
+        --cds-icon-disabled: rgba(244, 244, 244, 0.25);
+        --cds-icon-interactive: #ffffff;
+        --cds-icon-inverse: #161616;
+        --cds-icon-on-color: #ffffff;
+        --cds-icon-on-color-disabled: rgba(255, 255, 255, 0.25);
+        --cds-icon-primary: #f4f4f4;
+        --cds-icon-secondary: #c6c6c6;
         --cds-text-primary: #f4f4f4;
         --cds-text-secondary: #c6c6c6;
         """),
@@ -193,6 +221,12 @@ final class CarbonStyles implements Http.Handler {
         Css.overrideContent("""
         none: none
         empty: ""
+        """),
+
+        Css.overrideFill("""
+        disabled: var(--cds-icon-disabled)
+        primary: var(--cds-icon-primary)
+        secondary: var(--cds-icon-secondary)
         """),
 
         Css.overrideFontSize("""
@@ -237,6 +271,10 @@ final class CarbonStyles implements Http.Handler {
         240px: 15rem
         256px: 16rem
         288px: 18rem
+        """),
+
+        Css.variants("""
+        svg: & svg
         """)
     );
   }

@@ -21,14 +21,14 @@ import testing.zite.TestingSiteInjector;
 
 public final class CarbonWeb extends Web.Module {
 
-  private final Carbon carbon;
-
   public CarbonWeb(TestingSiteInjector injector) {
-    carbon = injector.carbon();
   }
 
   @Override
   protected final void configure() {
+    Carbon carbon;
+    carbon = Carbon.create();
+
     install(carbon.createHttpModule());
 
     route("/", GET(Index::new));
