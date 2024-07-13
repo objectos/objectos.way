@@ -18,11 +18,6 @@ package objectos.way;
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import objectos.lang.object.Check;
-import objectos.way.CarbonUi.HeaderMenuButtonPojo;
-import objectos.way.CarbonUi.HeaderMenuItemPojo;
-import objectos.way.CarbonUi.HeaderNamePojo;
-import objectos.way.CarbonUi.HeaderNameTextPojo;
-import objectos.way.CarbonUi.HeaderNavigationPojo;
 
 /**
  * The <strong>Objectos Carbon UI</strong> main class.
@@ -84,7 +79,7 @@ public final class Carbon {
     public sealed interface AriaLabel
         extends
         ChildOf.HeaderMenuButton
-        permits CarbonUi.AriaLabelAttribute {}
+        permits CarbonUiBase.AriaLabelAttribute {}
 
     /**
      * Carbon {@code href} attribute.
@@ -93,7 +88,7 @@ public final class Carbon {
         extends
         ChildOf.HeaderMenuItem,
         ChildOf.HeaderName
-        permits CarbonUi.HrefAttribute {}
+        permits CarbonUiBase.HrefAttribute {}
 
     /**
      * Carbon {@code isActive} attribute.
@@ -101,7 +96,7 @@ public final class Carbon {
     public sealed interface IsActive
         extends
         ChildOf.HeaderMenuItem
-        permits CarbonUi.IsActiveAttribute {}
+        permits CarbonUiBase.IsActiveAttribute {}
 
     /**
      * Carbon {@code name} attribute.
@@ -109,7 +104,7 @@ public final class Carbon {
     public sealed interface Name
         extends
         ChildOf.HeaderMenuItem
-        permits CarbonUi.NameAttribute {}
+        permits CarbonUiBase.NameAttribute {}
 
   }
 
@@ -124,9 +119,9 @@ public final class Carbon {
      */
     public sealed interface Header
         permits
-        HeaderMenuButtonPojo,
-        HeaderNamePojo,
-        HeaderNavigationPojo,
+        CarbonUiBase.HeaderMenuButtonPojo,
+        CarbonUiBase.HeaderNamePojo,
+        CarbonUiBase.HeaderNavigationPojo,
         Theme {}
 
     /**
@@ -144,7 +139,7 @@ public final class Carbon {
      */
     public sealed interface HeaderName
         permits
-        HeaderNameTextPojo,
+        CarbonUiBase.HeaderNameTextPojo,
         Attribute.Href {}
 
     /**
@@ -152,7 +147,7 @@ public final class Carbon {
      */
     public sealed interface HeaderNavigation
         permits
-        HeaderMenuItemPojo {}
+        CarbonUiBase.HeaderMenuItemPojo {}
 
   }
 
@@ -164,7 +159,7 @@ public final class Carbon {
   /**
    * The UI builder.
    */
-  public sealed interface Ui permits CarbonUi {
+  public sealed interface Ui permits CarbonUiBase {
 
     /**
      * Creates a new {@code aria-label} attribute with the specified value.
@@ -198,7 +193,7 @@ public final class Carbon {
      *
      * @return an HTML instruction
      */
-    Html.ElementInstruction content(Html.FragmentLambda fragment);
+    Html.FragmentLambda content(Html.FragmentLambda fragment);
 
     /**
      * Renders the UI shell Header component.
@@ -208,7 +203,7 @@ public final class Carbon {
      *
      * @return an HTML instruction
      */
-    Html.ElementInstruction header(ChildOf.Header... components);
+    Html.FragmentLambda header(ChildOf.Header... components);
 
     /**
      * Declares an UI shell header menu button.

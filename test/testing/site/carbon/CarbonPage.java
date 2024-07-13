@@ -36,41 +36,45 @@ abstract class CarbonPage extends Carbon.Shell {
     div(
         dataFrame("site-header", topSection.name()),
 
-        ui.header(
-            Carbon.G100,
+        f(
+            ui.header(
+                Carbon.G100,
 
-            ui.headerMenuButton(
-                ui.ariaLabel("Open menu")
-            ),
-
-            ui.headerName(
-                ui.headerNameText("Objectos", "Carbon"),
-
-                ui.href("/")
-            ),
-
-            ui.headerNavigation(
-                ui.headerMenuItem(
-                    ui.name("Components"),
-
-                    ui.href("/components"),
-
-                    ui.isActive(topSection == TopSection.COMPONENTS)
+                ui.headerMenuButton(
+                    ui.ariaLabel("Open menu")
                 ),
 
-                ui.headerMenuItem(
-                    ui.name("Gallery"),
+                ui.headerName(
+                    ui.headerNameText("Objectos", "Carbon"),
 
-                    ui.href("#"),
+                    ui.href("/")
+                ),
 
-                    ui.isActive(false)
+                ui.headerNavigation(
+                    ui.headerMenuItem(
+                        ui.name("Components"),
+
+                        ui.href("/components"),
+
+                        ui.isActive(topSection == TopSection.COMPONENTS)
+                    ),
+
+                    ui.headerMenuItem(
+                        ui.name("Gallery"),
+
+                        ui.href("#"),
+
+                        ui.isActive(false)
+                    )
                 )
             )
         )
     );
 
-    ui.content(
-        this::renderContent
+    f(
+        ui.content(
+            this::renderContent
+        )
     );
   }
 
