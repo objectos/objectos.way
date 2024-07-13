@@ -17,7 +17,11 @@ package objectos.way;
 
 import java.io.IOException;
 import java.io.UncheckedIOException;
+import java.util.EnumMap;
+import java.util.List;
+import java.util.Map;
 import objectos.lang.object.Check;
+import objectos.util.list.GrowableList;
 
 /**
  * The <strong>Objectos Carbon UI</strong> main class.
@@ -71,40 +75,48 @@ public final class Carbon {
   /**
    * The nested types of this interface represent the Carbon UI attributes.
    */
-  public sealed interface Attribute {
+  public sealed interface Attribute extends Component {}
 
-    /**
-     * Carbon {@code aria-label} attribute.
-     */
-    public sealed interface AriaLabel
-        extends
-        ChildOf.HeaderMenuButton
-        permits CarbonUiBase.AriaLabelAttribute {}
+  enum AttributeKey {
+    ARIA_LABEL,
 
-    /**
-     * Carbon {@code href} attribute.
-     */
-    public sealed interface Href
-        extends
-        ChildOf.HeaderMenuItem,
-        ChildOf.HeaderName
-        permits CarbonUiBase.HrefAttribute {}
+    HREF,
 
-    /**
-     * Carbon {@code isActive} attribute.
-     */
-    public sealed interface IsActive
-        extends
-        ChildOf.HeaderMenuItem
-        permits CarbonUiBase.IsActiveAttribute {}
+    ICON,
 
-    /**
-     * Carbon {@code name} attribute.
-     */
-    public sealed interface Name
-        extends
-        ChildOf.HeaderMenuItem
-        permits CarbonUiBase.NameAttribute {}
+    IS_ACTIVE,
+
+    NAME,
+
+    PREFIX;
+
+    public final CarbonAttribute of(boolean value) {
+      return new CarbonAttribute(this, Boolean.valueOf(value));
+    }
+
+    public final CarbonAttribute of(String value) {
+      Check.notNull(value, "value == null");
+      return new CarbonAttribute(this, value);
+    }
+  }
+
+  record CarbonAttribute(AttributeKey key, Object value) implements Attribute {}
+
+  enum CarbonTheme implements Theme {
+
+    WHITE("cds--white"),
+
+    G10("cds--g10"),
+
+    G90("cds--g90"),
+
+    G100("cds--g100");
+
+    final String className;
+
+    private CarbonTheme(String className) {
+      this.className = className;
+    }
 
   }
 
@@ -112,54 +124,102 @@ public final class Carbon {
    * A nested type of this interface can be used as a child of the corresponding
    * component.
    */
-  public sealed interface ChildOf {
+  public sealed interface Element extends Component {}
 
-    /**
-     * Accepted as a child of the UI shell header component.
-     */
-    public sealed interface Header
-        permits
-        CarbonUiBase.HeaderMenuButtonPojo,
-        CarbonUiBase.HeaderNamePojo,
-        CarbonUiBase.HeaderNavigationPojo,
-        Theme {}
-
-    /**
-     * Accepted as a child of the UI shell header menu button component.
-     */
-    public sealed interface HeaderMenuButton {}
-
-    /**
-     * Accepted as a child of the UI shell header menu item component.
-     */
-    public sealed interface HeaderMenuItem {}
-
-    /**
-     * Accepted as a child of the UI shell header name component.
-     */
-    public sealed interface HeaderName
-        permits
-        CarbonUiBase.HeaderNameTextPojo,
-        Attribute.Href {}
-
-    /**
-     * Accepted as a child of the UI shell header navigation component.
-     */
-    public sealed interface HeaderNavigation
-        permits
-        CarbonUiBase.HeaderMenuItemPojo {}
-
-  }
+  public sealed interface Theme extends Component {}
 
   public sealed interface Component {}
-
-  @SuppressWarnings("unused")
-  private static final class NoImpl implements Attribute, ChildOf, Component {}
 
   /**
    * The UI builder.
    */
-  public sealed interface Ui permits CarbonUiBase {
+  public sealed static abstract class Ui permits CarbonUi {
+
+    non-sealed abstract class Pojo implements Carbon.Element, Html.FragmentLambda {
+
+      private Map<Carbon.AttributeKey, Object> attributes;
+
+      private List<Pojo> children;
+
+      private CarbonTheme theme;
+
+      public Pojo(Carbon.Component... components) {
+        for (Carbon.Component c : components) {
+          switch (c) {
+            case Carbon.CarbonAttribute o -> addAttribute(o);
+
+            case Carbon.CarbonTheme o -> theme = o;
+
+            case Pojo o -> addChild(o);
+          }
+        }
+      }
+
+      @Override
+      public final void invoke() {
+        render();
+      }
+
+      final boolean booleanValue(AttributeKey key) {
+        Object o;
+        o = value(key);
+
+        return Boolean.TRUE.equals(o);
+      }
+
+      abstract void render();
+
+      final Html.Instruction renderChildren() {
+        return children != null ? tmpl.include(this::children) : tmpl.noop();
+      }
+
+      private void children() {
+        for (Pojo child : children) {
+          child.render();
+        }
+      }
+
+      final Html.Instruction renderTheme() {
+        return theme != null ? tmpl.className(theme.className) : tmpl.noop();
+      }
+
+      final String stringValue(AttributeKey key) {
+        return (String) value(key);
+      }
+
+      private void addAttribute(CarbonAttribute attr) {
+        if (attributes == null) {
+          attributes = new EnumMap<>(AttributeKey.class);
+        }
+
+        attributes.put(attr.key(), attr.value());
+      }
+
+      private void addChild(Pojo o) {
+        if (children == null) {
+          children = new GrowableList<>();
+        }
+
+        children.add(o);
+      }
+
+      private Object value(AttributeKey key) {
+        if (attributes != null) {
+          return attributes.remove(key);
+        }
+
+        return null;
+      }
+
+    }
+
+    final Html.Template tmpl;
+
+    Ui(Html.Template tmpl) {
+      this.tmpl = tmpl;
+    }
+
+    // attributes
 
     /**
      * Creates a new {@code aria-label} attribute with the specified value.
@@ -168,7 +228,9 @@ public final class Carbon {
      *
      * @return a new attribute
      */
-    Attribute.AriaLabel ariaLabel(String value);
+    public final Attribute ariaLabel(String value) {
+      return AttributeKey.ARIA_LABEL.of(value);
+    }
 
     /**
      * Creates a new {@code href} attribute with the specified value.
@@ -177,11 +239,21 @@ public final class Carbon {
      *
      * @return a new attribute
      */
-    Attribute.Href href(String value);
+    public final Attribute href(String value) {
+      return AttributeKey.HREF.of(value);
+    }
 
-    Attribute.IsActive isActive(boolean value);
+    public final Attribute isActive(boolean value) {
+      return AttributeKey.IS_ACTIVE.of(value);
+    }
 
-    Attribute.Name name(String value);
+    public final Attribute name(String value) {
+      return AttributeKey.NAME.of(value);
+    }
+
+    public final Attribute prefix(String value) {
+      return AttributeKey.PREFIX.of(value);
+    }
 
     // elements
 
@@ -193,7 +265,20 @@ public final class Carbon {
      *
      * @return an HTML instruction
      */
-    Html.FragmentLambda content(Html.FragmentLambda fragment);
+    public final Element content(Component... components) {
+      return new Pojo(components) {
+        @Override
+        final void render() { renderContent(this); }
+      };
+    }
+
+    public final Element content(Html.FragmentLambda fragment) {
+      return content(
+          htmlFragment(fragment)
+      );
+    }
+
+    abstract void renderContent(Pojo pojo);
 
     /**
      * Renders the UI shell Header component.
@@ -203,7 +288,14 @@ public final class Carbon {
      *
      * @return an HTML instruction
      */
-    Html.FragmentLambda header(ChildOf.Header... components);
+    public final Element header(Component... components) {
+      return new Pojo(components) {
+        @Override
+        final void render() { renderHeader(this); }
+      };
+    }
+
+    abstract void renderHeader(Pojo pojo);
 
     /**
      * Declares an UI shell header menu button.
@@ -213,7 +305,14 @@ public final class Carbon {
      *
      * @return instructions to render a header menu button
      */
-    ChildOf.Header headerMenuButton(ChildOf.HeaderMenuButton... components);
+    public final Element headerMenuButton(Component... components) {
+      return new Pojo(components) {
+        @Override
+        final void render() { renderHeaderMenuButton(this); }
+      };
+    }
+
+    abstract void renderHeaderMenuButton(Pojo pojo);
 
     /**
      * Declares an UI shell header menu item.
@@ -223,11 +322,23 @@ public final class Carbon {
      *
      * @return instructions to render a header menu item
      */
-    ChildOf.HeaderNavigation headerMenuItem(ChildOf.HeaderMenuItem... components);
+    public final Element headerMenuItem(Component... components) {
+      return new Pojo(components) {
+        @Override
+        final void render() { renderHeaderMenuItem(this); }
+      };
+    }
 
-    ChildOf.Header headerName(ChildOf.HeaderName... components);
+    abstract void renderHeaderMenuItem(Pojo pojo);
 
-    ChildOf.HeaderName headerNameText(String prefix, String text);
+    public final Element headerName(Component... components) {
+      return new Pojo(components) {
+        @Override
+        final void render() { renderHeaderName(this); }
+      };
+    }
+
+    abstract void renderHeaderName(Pojo pojo);
 
     /**
      * Declares an UI shell header navigation section.
@@ -237,14 +348,41 @@ public final class Carbon {
      *
      * @return instructions to render a header navigation section
      */
-    ChildOf.Header headerNavigation(ChildOf.HeaderNavigation... components);
+    public final Element headerNavigation(Component... components) {
+      return new Pojo(components) {
+        @Override
+        final void render() { renderHeaderNavigation(this); }
+      };
+    }
+
+    public final Element htmlFragment(Html.FragmentLambda fragment) {
+      final Html.FragmentLambda f = Check.notNull(fragment, "fragment == null");
+
+      return new Pojo() {
+        @Override
+        final void render() {
+          tmpl.include(f);
+        }
+      };
+    }
+
+    abstract void renderHeaderNavigation(Pojo pojo);
+
+    public final Element icon(Icon icon, IconSize size) {
+      final Icon i = Check.notNull(icon, "icon == null");
+      final IconSize s = Check.notNull(size, "size == null");
+
+      return new Pojo() {
+        @Override
+        final void render() {
+          renderIcon(i, s);
+        }
+      };
+    }
+
+    abstract void renderIcon(Icon icon, IconSize size);
 
   }
-
-  /**
-   * Carbon UI theme.
-   */
-  public sealed interface Theme extends ChildOf.Header permits CarbonTheme {}
 
   /**
    * The UI shell is the top level UI component of an web application.
@@ -259,6 +397,13 @@ public final class Carbon {
      */
     protected Shell(Http.Exchange http) {
       super(http);
+    }
+
+    protected final Html.FragmentInstruction ui(Element element) {
+      Ui.Pojo pojo;
+      pojo = (Ui.Pojo) element;
+
+      return include(pojo);
     }
 
   }

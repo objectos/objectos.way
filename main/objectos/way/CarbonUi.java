@@ -15,9 +15,7 @@
  */
 package objectos.way;
 
-import java.util.List;
-
-final class CarbonUi extends CarbonUiBase {
+final class CarbonUi extends Carbon.Ui {
 
   private boolean headerRendered;
 
@@ -30,16 +28,18 @@ final class CarbonUi extends CarbonUiBase {
   );
 
   @Override
-  final void renderContent(CarbonUiBase.ContentPojo pojo) {
+  final void renderContent(Pojo pojo) {
     tmpl.main(
         headerRendered ? tmpl.className("mt-header") : tmpl.noop(),
 
-        tmpl.include(pojo.fragment)
+        pojo.renderTheme(),
+
+        pojo.renderChildren()
     );
   }
 
   @Override
-  final void renderHeader(CarbonUiBase.HeaderPojo pojo) {
+  final void renderHeader(Pojo pojo) {
     headerRendered = true;
 
     tmpl.header(
@@ -47,18 +47,17 @@ final class CarbonUi extends CarbonUiBase {
         tmpl.className("border-b border-subtle"),
         tmpl.className("bg"),
 
-        pojo.theme != null ? tmpl.className(pojo.theme.className) : tmpl.noop(),
+        pojo.renderTheme(),
 
-        pojo.headerMenuButton != null ? tmpl.include(pojo.headerMenuButton) : tmpl.noop(),
-
-        pojo.headerName != null ? tmpl.include(pojo.headerName) : tmpl.noop(),
-
-        pojo.headerNavigation != null ? tmpl.include(pojo.headerNavigation) : tmpl.noop()
+        pojo.renderChildren()
     );
   }
 
   @Override
-  final void renderHeaderMenuButton(CarbonUiBase.HeaderMenuButtonPojo pojo) {
+  final void renderHeaderMenuButton(Pojo pojo) {
+    String ariaLabel;
+    ariaLabel = pojo.stringValue(Carbon.AttributeKey.ARIA_LABEL);
+
     tmpl.button(
         BUTTON_RESET,
 
@@ -76,17 +75,26 @@ final class CarbonUi extends CarbonUiBase {
         // header__menu-trigger
         tmpl.className("svg:fill-primary"),
 
-        pojo.ariaLabel != null ? tmpl.ariaLabel(pojo.ariaLabel) : tmpl.noop(),
-        pojo.ariaLabel != null ? tmpl.title(pojo.ariaLabel) : tmpl.noop(),
+        ariaLabel != null ? tmpl.ariaLabel(ariaLabel) : tmpl.noop(),
+        ariaLabel != null ? tmpl.title(ariaLabel) : tmpl.noop(),
 
         tmpl.type("button"),
 
-        tmpl.include(new IconPojo(Carbon.Icon.MENU, Carbon.IconSize.PX20))
+        tmpl.include(() -> renderIcon(Carbon.Icon.MENU, Carbon.IconSize.PX20))
     );
   }
 
   @Override
-  final void renderHeaderMenuItem(CarbonUiBase.HeaderMenuItemPojo pojo) {
+  final void renderHeaderMenuItem(Pojo pojo) {
+    boolean active;
+    active = pojo.booleanValue(Carbon.AttributeKey.IS_ACTIVE);
+
+    String href;
+    href = pojo.stringValue(Carbon.AttributeKey.HREF);
+
+    String name;
+    name = pojo.stringValue(Carbon.AttributeKey.NAME);
+
     tmpl.li(
         tmpl.a(
             tmpl.className("relative flex h-32px select-none items-center"),
@@ -101,23 +109,32 @@ final class CarbonUi extends CarbonUiBase {
             tmpl.className("lg:h-full"),
             tmpl.className("lg:text-body-compact-01 lg:tracking-normal"),
 
-            pojo.active
+            active
                 ? tmpl.className("text-primary after:absolute after:-bottom-2px after:left-0px after:block after:w-full after:border-b-3 after:border-b-interactive after:content-empty")
                 : tmpl.className("text-secondary"),
 
-            pojo.href != null ? tmpl.href(pojo.href) : tmpl.noop(),
+            href != null ? tmpl.href(href) : tmpl.noop(),
 
             tmpl.tabindex("0"),
 
             tmpl.span(
-                pojo.name != null ? tmpl.t(pojo.name) : tmpl.noop()
+                name != null ? tmpl.t(name) : tmpl.noop()
             )
         )
     );
   }
 
   @Override
-  final void renderHeaderName(CarbonUiBase.HeaderNamePojo pojo) {
+  final void renderHeaderName(Pojo pojo) {
+    String href;
+    href = pojo.stringValue(Carbon.AttributeKey.HREF);
+
+    String name;
+    name = pojo.stringValue(Carbon.AttributeKey.NAME);
+
+    String prefix;
+    prefix = pojo.stringValue(Carbon.AttributeKey.PREFIX);
+
     tmpl.a(
         tmpl.className("flex h-full select-none items-center"),
         tmpl.className("border-2 border-transparent"),
@@ -127,23 +144,24 @@ final class CarbonUi extends CarbonUiBase {
         tmpl.className("transition-colors duration-100"),
         tmpl.className("focus:border-focus"),
 
-        pojo.href != null ? tmpl.href(pojo.href) : tmpl.noop(),
-        pojo.text != null
-            ? tmpl.flatten(
-                tmpl.span(
-                    tmpl.className("font-normal"),
+        pojo.renderTheme(),
 
-                    tmpl.t(pojo.text.prefix)
-                ),
-                tmpl.raw("&nbsp;"),
-                tmpl.t(pojo.text.text)
-            )
-            : tmpl.noop()
+        href != null ? tmpl.href(href) : tmpl.noop(),
+
+        prefix != null ? tmpl.span(
+            tmpl.className("font-normal"),
+
+            tmpl.t(prefix),
+
+            tmpl.raw("&nbsp;")
+        ) : tmpl.noop(),
+
+        name != null ? tmpl.t(name) : tmpl.noop()
     );
   }
 
   @Override
-  final void renderHeaderNavigation(CarbonUiBase.HeaderNavigationPojo pojo) {
+  final void renderHeaderNavigation(Pojo pojo) {
     tmpl.nav(
         tmpl.className("fixed hidden"),
         tmpl.className("w-256px top-header bottom-0px"),
@@ -159,38 +177,32 @@ final class CarbonUi extends CarbonUiBase {
         tmpl.className("lg:before:bg-border-subtle"),
         tmpl.className("lg:before:content-empty"),
 
-        pojo.items != null
-            ? tmpl.ul(
-                tmpl.className("flex flex-col h-full"),
-                tmpl.className("pt-16px"),
-                tmpl.className("lg:flex-row"),
-                tmpl.className("lg:pt-0px"),
+        pojo.renderTheme(),
 
-                tmpl.f(this::headerNavigationItems, pojo.items)
-            )
-            : tmpl.noop()
+        tmpl.ul(
+            tmpl.className("flex flex-col h-full"),
+            tmpl.className("pt-16px"),
+            tmpl.className("lg:flex-row"),
+            tmpl.className("lg:pt-0px"),
+
+            pojo.renderChildren()
+        )
     );
   }
 
-  private void headerNavigationItems(List<HeaderMenuItemPojo> items) {
-    for (HeaderMenuItemPojo item : items) {
-      tmpl.include(item);
-    }
-  }
-
   @Override
-  final void renderIcon(CarbonUiBase.IconPojo pojo) {
-    switch (pojo.icon) {
+  final void renderIcon(Carbon.Icon icon, Carbon.IconSize size) {
+    switch (icon) {
       case MENU -> {
-        switch (pojo.size) {
+        switch (size) {
           case PX16 -> icon16("""
-        <rect x="2" y="12" width="12" height="1"/><rect x="2" y="9" width="12" height="1"/><rect x="2" y="6" width="12" height="1"/><rect x="2" y="3" width="12" height="1"/>""");
+          <rect x="2" y="12" width="12" height="1"/><rect x="2" y="9" width="12" height="1"/><rect x="2" y="6" width="12" height="1"/><rect x="2" y="3" width="12" height="1"/>""");
           case PX20 -> icon20("""
-        <rect x="2" y="14.8" width="16" height="1.2"/><rect x="2" y="11.2" width="16" height="1.2"/><rect x="2" y="7.6" width="16" height="1.2"/><rect x="2" y="4" width="16" height="1.2"/>""");
+          <rect x="2" y="14.8" width="16" height="1.2"/><rect x="2" y="11.2" width="16" height="1.2"/><rect x="2" y="7.6" width="16" height="1.2"/><rect x="2" y="4" width="16" height="1.2"/>""");
           case PX24 -> icon24("""
-        <rect x="3" y="18" width="18" height="1.5"/><rect x="3" y="13.5" width="18" height="1.5"/><rect x="3" y="9" width="18" height="1.5"/><rect x="3" y="4.5" width="18" height="1.5"/>""");
+          <rect x="3" y="18" width="18" height="1.5"/><rect x="3" y="13.5" width="18" height="1.5"/><rect x="3" y="9" width="18" height="1.5"/><rect x="3" y="4.5" width="18" height="1.5"/>""");
           case PX32 -> icon32("""
-        <rect x="4" y="6" width="24" height="2"/><rect x="4" y="24" width="24" height="2"/><rect x="4" y="12" width="24" height="2"/><rect x="4" y="18" width="24" height="2"/>""");
+          <rect x="4" y="6" width="24" height="2"/><rect x="4" y="24" width="24" height="2"/><rect x="4" y="12" width="24" height="2"/><rect x="4" y="18" width="24" height="2"/>""");
         }
       }
     }

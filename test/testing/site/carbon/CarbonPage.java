@@ -36,7 +36,7 @@ abstract class CarbonPage extends Carbon.Shell {
     div(
         dataFrame("site-header", topSection.name()),
 
-        f(
+        ui(
             ui.header(
                 Carbon.G100,
 
@@ -45,7 +45,9 @@ abstract class CarbonPage extends Carbon.Shell {
                 ),
 
                 ui.headerName(
-                    ui.headerNameText("Objectos", "Carbon"),
+                    ui.prefix("Objectos"),
+
+                    ui.name("Carbon"),
 
                     ui.href("/")
                 ),
@@ -71,7 +73,7 @@ abstract class CarbonPage extends Carbon.Shell {
         )
     );
 
-    f(
+    ui(
         ui.content(
             this::renderContent
         )

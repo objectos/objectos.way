@@ -23,7 +23,7 @@ abstract class CarbonShell extends Html.Template implements Web.Action {
 
   protected final Carbon.Ui ui;
 
-  private CarbonTheme theme = CarbonTheme.WHITE;
+  private Carbon.CarbonTheme theme = Carbon.CarbonTheme.WHITE;
 
   private String title;
 
@@ -67,7 +67,7 @@ abstract class CarbonShell extends Html.Template implements Web.Action {
   protected abstract void renderUi() throws Exception;
 
   protected final void shellTheme(Carbon.Theme theme) {
-    this.theme = (CarbonTheme) Check.notNull(theme, "theme == null");
+    this.theme = (Carbon.CarbonTheme) Check.notNull(theme, "theme == null");
   }
 
   protected final void shellTitle(String title) {
