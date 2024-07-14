@@ -41,7 +41,7 @@ abstract class CarbonPage extends Carbon.Shell {
                 Carbon.G100,
 
                 ui.headerMenuButton(
-                    ui.ariaLabel("Open menu")
+                    ui.title("Open menu")
                 ),
 
                 ui.headerName(
@@ -53,21 +53,15 @@ abstract class CarbonPage extends Carbon.Shell {
                 ),
 
                 ui.headerNavigation(
-                    ui.headerMenuItem(
-                        ui.name("Components"),
+                    menuItems(ui::headerMenuItem)
+                )
+            )
+        ),
 
-                        ui.href("/components"),
-
-                        ui.isActive(topSection == TopSection.COMPONENTS)
-                    ),
-
-                    ui.headerMenuItem(
-                        ui.name("Gallery"),
-
-                        ui.href("#"),
-
-                        ui.isActive(false)
-                    )
+        ui(
+            ui.sideNav(
+                ui.sideNavItems(
+                    menuItems(ui::sideNavMenuItem)
                 )
             )
         )
@@ -78,6 +72,26 @@ abstract class CarbonPage extends Carbon.Shell {
             this::renderContent
         )
     );
+  }
+
+  private Carbon.Element[] menuItems(Carbon.Element.Provider provider) {
+    return new Carbon.Element[] {
+        provider.get(
+            ui.name("Components"),
+
+            ui.href("/components"),
+
+            ui.isActive(topSection == TopSection.COMPONENTS)
+        ),
+
+        provider.get(
+            ui.name("Gallery"),
+
+            ui.href("#"),
+
+            ui.isActive(false)
+        )
+    };
   }
 
   protected abstract void renderContent();

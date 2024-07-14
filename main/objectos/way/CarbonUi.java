@@ -55,8 +55,8 @@ final class CarbonUi extends Carbon.Ui {
 
   @Override
   final void renderHeaderMenuButton(Pojo pojo) {
-    String ariaLabel;
-    ariaLabel = pojo.stringValue(Carbon.AttributeKey.ARIA_LABEL);
+    String title;
+    title = pojo.stringValue(Carbon.AttributeKey.TITLE);
 
     tmpl.button(
         BUTTON_RESET,
@@ -75,8 +75,8 @@ final class CarbonUi extends Carbon.Ui {
         // header__menu-trigger
         tmpl.className("svg:fill-primary"),
 
-        ariaLabel != null ? tmpl.ariaLabel(ariaLabel) : tmpl.noop(),
-        ariaLabel != null ? tmpl.title(ariaLabel) : tmpl.noop(),
+        title != null ? tmpl.ariaLabel(title) : tmpl.noop(),
+        title != null ? tmpl.title(title) : tmpl.noop(),
 
         tmpl.type("button"),
 
@@ -163,13 +163,11 @@ final class CarbonUi extends Carbon.Ui {
   @Override
   final void renderHeaderNavigation(Pojo pojo) {
     tmpl.nav(
-        tmpl.className("fixed hidden"),
+        tmpl.className("hidden"),
         tmpl.className("w-256px top-header bottom-0px"),
         tmpl.className("flex-col"),
         tmpl.className("bg"),
-        tmpl.className("z-40"),
-        tmpl.className("lg:relative lg:block"),
-        tmpl.className("lg:top-0px"),
+        tmpl.className("lg:block"),
         tmpl.className("lg:bg-transparent"),
         tmpl.className("lg:pl-16px"),
         tmpl.className("lg:before:absolute lg:before:block lg:before:top-12px lg:before:left-0px"),
@@ -241,6 +239,44 @@ final class CarbonUi extends Carbon.Ui {
         tmpl.fill("currentColor"),
         tmpl.width("32px"), tmpl.height("32px"), tmpl.viewBox("0 0 32 32"),
         tmpl.raw(raw)
+    );
+  }
+
+  @Override
+  final void renderSideNav(Pojo pojo) {
+    tmpl.div(
+        tmpl.className("fixed h-screen w-screen top-header"),
+        tmpl.className("bg-overlay"),
+        tmpl.className("transition-opacity duration-300"),
+        //"opacity-0 z-30"
+
+        headerRendered ? tmpl.className("mt-header") : tmpl.noop()
+    );
+
+    tmpl.nav(
+        tmpl.className("fixed bottom-0px w-256px"),
+        tmpl.className("bg"),
+        tmpl.className("text-secondary"),
+
+        headerRendered ? tmpl.className("mt-header") : tmpl.noop(),
+
+        tmpl.tabindex("-1"),
+
+        pojo.renderTheme(),
+
+        pojo.renderChildren()
+    );
+  }
+
+  @Override
+  final void renderSideNavItems(Pojo pojo) {
+    tmpl.div(
+    );
+  }
+
+  @Override
+  final void renderSideNavMenuItem(Pojo pojo) {
+    tmpl.div(
     );
   }
 

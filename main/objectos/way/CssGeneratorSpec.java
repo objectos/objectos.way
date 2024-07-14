@@ -947,6 +947,8 @@ final class CssGeneratorSpec extends CssGeneratorRound implements Css.Generator 
     funcUtility(CssKey.PADDING_TOP, padding, "pt", "padding-top");
     funcUtility(CssKey.PADDING_X, padding, "px", "padding-left", "padding-right");
     funcUtility(CssKey.PADDING_Y, padding, "py", "padding-top", "padding-bottom");
+    funcUtility(CssKey.PADDING_START, padding, "ps", "padding-inline-start");
+    funcUtility(CssKey.PADDING_END, padding, "pe", "padding-inline-end");
 
     staticUtility(
         CssKey.POINTER_EVENTS,

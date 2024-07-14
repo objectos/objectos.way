@@ -58,6 +58,8 @@ final class CarbonStyles implements Http.Handler {
         --cds-icon-on-color-disabled: #8d8d8d;
         --cds-icon-primary: #161616;
         --cds-icon-secondary: #525252;
+        --cds-overlay: rgba(22, 22, 22, 0.5);
+        --cds-shadow: rgba(0, 0, 0, 0.3);
         --cds-text-primary: #161616;
         --cds-text-secondary: #525252;
         """),
@@ -99,6 +101,8 @@ final class CarbonStyles implements Http.Handler {
         --cds-icon-on-color-disabled: #8d8d8d;
         --cds-icon-primary: #161616;
         --cds-icon-secondary: #525252;
+        --cds-overlay: rgba(22, 22, 22, 0.5);
+        --cds-shadow: rgba(0, 0, 0, 0.3);
         --cds-text-primary: #161616;
         --cds-text-secondary: #525252;
         """),
@@ -140,6 +144,8 @@ final class CarbonStyles implements Http.Handler {
         --cds-icon-on-color-disabled: rgba(255, 255, 255, 0.25);
         --cds-icon-primary: #f4f4f4;
         --cds-icon-secondary: #c6c6c6;
+        --cds-overlay: rgba(0, 0, 0, 0.65);
+        --cds-shadow: rgba(0, 0, 0, 0.8);
         --cds-text-primary: #f4f4f4;
         --cds-text-secondary: #c6c6c6;
         """),
@@ -181,6 +187,8 @@ final class CarbonStyles implements Http.Handler {
         --cds-icon-on-color-disabled: rgba(255, 255, 255, 0.25);
         --cds-icon-primary: #f4f4f4;
         --cds-icon-secondary: #c6c6c6;
+        --cds-overlay: rgba(0, 0, 0, 0.65);
+        --cds-shadow: rgba(0, 0, 0, 0.8);
         --cds-text-primary: #f4f4f4;
         --cds-text-secondary: #c6c6c6;
         """),
@@ -200,6 +208,7 @@ final class CarbonStyles implements Http.Handler {
         : var(--cds-background)
         active: var(--cds-background-active)
         hover: var(--cds-background-hover)
+        overlay: var(--cds-overlay)
         border-subtle: var(--cds-border-subtle)
         """),
 

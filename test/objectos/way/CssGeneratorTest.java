@@ -2333,6 +2333,8 @@ public class CssGeneratorTest {
         className("pr-px pr-0 pr-0.5 pr-1 pr-1.5 pr-2 pr-2.5 pr-3 pr-3.5 pr-4 pr-5 pr-6 pr-7 pr-8 pr-9 pr-10 pr-11 pr-12 pr-14 pr-16 pr-20 pr-24 pr-28 pr-32 pr-36 pr-40 pr-44 pr-48 pr-52 pr-56 pr-60 pr-64 pr-72 pr-80 pr-96");
         className("pb-px pb-0 pb-0.5 pb-1 pb-1.5 pb-2 pb-2.5 pb-3 pb-3.5 pb-4 pb-5 pb-6 pb-7 pb-8 pb-9 pb-10 pb-11 pb-12 pb-14 pb-16 pb-20 pb-24 pb-28 pb-32 pb-36 pb-40 pb-44 pb-48 pb-52 pb-56 pb-60 pb-64 pb-72 pb-80 pb-96");
         className("pl-px pl-0 pl-0.5 pl-1 pl-1.5 pl-2 pl-2.5 pl-3 pl-3.5 pl-4 pl-5 pl-6 pl-7 pl-8 pl-9 pl-10 pl-11 pl-12 pl-14 pl-16 pl-20 pl-24 pl-28 pl-32 pl-36 pl-40 pl-44 pl-48 pl-52 pl-56 pl-60 pl-64 pl-72 pl-80 pl-96");
+        className("ps-px ps-1 ps-2");
+        className("pe-3 pe-3 pe-4");
         // @formatter:on
       }
     }
@@ -2446,6 +2448,11 @@ public class CssGeneratorTest {
         .py-72 { padding-top: 18rem; padding-bottom: 18rem }
         .py-80 { padding-top: 20rem; padding-bottom: 20rem }
         .py-96 { padding-top: 24rem; padding-bottom: 24rem }
+        .ps-px { padding-inline-start: 1px }
+        .ps-1 { padding-inline-start: 0.25rem }
+        .ps-2 { padding-inline-start: 0.5rem }
+        .pe-3 { padding-inline-end: 0.75rem }
+        .pe-4 { padding-inline-end: 1rem }
         .pt-px { padding-top: 1px }
         .pt-0 { padding-top: 0px }
         .pt-0\\.5 { padding-top: 0.125rem }

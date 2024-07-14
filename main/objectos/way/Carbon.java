@@ -78,8 +78,6 @@ public final class Carbon {
   public sealed interface Attribute extends Component {}
 
   enum AttributeKey {
-    ARIA_LABEL,
-
     HREF,
 
     ICON,
@@ -88,7 +86,9 @@ public final class Carbon {
 
     NAME,
 
-    PREFIX;
+    PREFIX,
+
+    TITLE;
 
     public final CarbonAttribute of(boolean value) {
       return new CarbonAttribute(this, Boolean.valueOf(value));
@@ -124,7 +124,16 @@ public final class Carbon {
    * A nested type of this interface can be used as a child of the corresponding
    * component.
    */
-  public sealed interface Element extends Component {}
+  public sealed interface Element extends Component {
+
+    @FunctionalInterface
+    public interface Provider {
+
+      Element get(Component... components);
+
+    }
+
+  }
 
   public sealed interface Theme extends Component {}
 
@@ -222,17 +231,6 @@ public final class Carbon {
     // attributes
 
     /**
-     * Creates a new {@code aria-label} attribute with the specified value.
-     *
-     * @param value the string value of the attribute
-     *
-     * @return a new attribute
-     */
-    public final Attribute ariaLabel(String value) {
-      return AttributeKey.ARIA_LABEL.of(value);
-    }
-
-    /**
      * Creates a new {@code href} attribute with the specified value.
      *
      * @param value the string value of the attribute
@@ -253,6 +251,10 @@ public final class Carbon {
 
     public final Attribute prefix(String value) {
       return AttributeKey.PREFIX.of(value);
+    }
+
+    public final Attribute title(String value) {
+      return AttributeKey.TITLE.of(value);
     }
 
     // elements
@@ -381,6 +383,42 @@ public final class Carbon {
     }
 
     abstract void renderIcon(Icon icon, IconSize size);
+
+    /**
+     * Creates a new side navigation component enclosing the specified nested
+     * components.
+     *
+     * @param components
+     *        the nested components
+     *
+     * @return a newly constructed element
+     */
+    public final Element sideNav(Component... components) {
+      return new Pojo(components) {
+        @Override
+        final void render() { renderSideNav(this); }
+      };
+    }
+
+    abstract void renderSideNav(Pojo pojo);
+
+    public final Element sideNavItems(Component... components) {
+      return new Pojo(components) {
+        @Override
+        final void render() { renderSideNavItems(this); }
+      };
+    }
+
+    abstract void renderSideNavItems(Pojo pojo);
+
+    public final Element sideNavMenuItem(Component... components) {
+      return new Pojo(components) {
+        @Override
+        final void render() { renderSideNavMenuItem(this); }
+      };
+    }
+
+    abstract void renderSideNavMenuItem(Pojo pojo);
 
   }
 
