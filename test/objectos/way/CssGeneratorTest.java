@@ -1735,6 +1735,9 @@ public class CssGeneratorTest {
         className("mr-auto mr-px mr-0 mr-0.5 mr-1 mr-1.5 mr-2 mr-2.5 mr-3 mr-3.5 mr-4 mr-5 mr-6 mr-7 mr-8 mr-9 mr-10 mr-11 mr-12 mr-14 mr-16 mr-20 mr-24 mr-28 mr-32 mr-36 mr-40 mr-44 mr-48 mr-52 mr-56 mr-60 mr-64 mr-72 mr-80 mr-96");
         className("mb-auto mb-px mb-0 mb-0.5 mb-1 mb-1.5 mb-2 mb-2.5 mb-3 mb-3.5 mb-4 mb-5 mb-6 mb-7 mb-8 mb-9 mb-10 mb-11 mb-12 mb-14 mb-16 mb-20 mb-24 mb-28 mb-32 mb-36 mb-40 mb-44 mb-48 mb-52 mb-56 mb-60 mb-64 mb-72 mb-80 mb-96");
         className("ml-auto ml-px ml-0 ml-0.5 ml-1 ml-1.5 ml-2 ml-2.5 ml-3 ml-3.5 ml-4 ml-5 ml-6 ml-7 ml-8 ml-9 ml-10 ml-11 ml-12 ml-14 ml-16 ml-20 ml-24 ml-28 ml-32 ml-36 ml-40 ml-44 ml-48 ml-52 ml-56 ml-60 ml-64 ml-72 ml-80 ml-96");
+        className("ms-auto ms-px ms-0 ms-1 ms-96");
+        className("me-auto me-px me-0 me-1 me-96");
+        className("-m-px -mx-1 -my-2 -mt-3 -mr-4 -mb-5 -ml-6 -ms-7 -me-8");
         // @formatter:on
       }
     }
@@ -1779,6 +1782,7 @@ public class CssGeneratorTest {
         .m-72 { margin: 18rem }
         .m-80 { margin: 20rem }
         .m-96 { margin: 24rem }
+        .-m-px { margin: -1px }
         .mx-auto { margin-left: auto; margin-right: auto }
         .mx-px { margin-left: 1px; margin-right: 1px }
         .mx-0 { margin-left: 0px; margin-right: 0px }
@@ -1815,6 +1819,7 @@ public class CssGeneratorTest {
         .mx-72 { margin-left: 18rem; margin-right: 18rem }
         .mx-80 { margin-left: 20rem; margin-right: 20rem }
         .mx-96 { margin-left: 24rem; margin-right: 24rem }
+        .-mx-1 { margin-left: -0.25rem; margin-right: -0.25rem }
         .my-auto { margin-top: auto; margin-bottom: auto }
         .my-px { margin-top: 1px; margin-bottom: 1px }
         .my-0 { margin-top: 0px; margin-bottom: 0px }
@@ -1851,6 +1856,19 @@ public class CssGeneratorTest {
         .my-72 { margin-top: 18rem; margin-bottom: 18rem }
         .my-80 { margin-top: 20rem; margin-bottom: 20rem }
         .my-96 { margin-top: 24rem; margin-bottom: 24rem }
+        .-my-2 { margin-top: -0.5rem; margin-bottom: -0.5rem }
+        .ms-auto { margin-inline-start: auto }
+        .ms-px { margin-inline-start: 1px }
+        .ms-0 { margin-inline-start: 0px }
+        .ms-1 { margin-inline-start: 0.25rem }
+        .ms-96 { margin-inline-start: 24rem }
+        .-ms-7 { margin-inline-start: -1.75rem }
+        .me-auto { margin-inline-end: auto }
+        .me-px { margin-inline-end: 1px }
+        .me-0 { margin-inline-end: 0px }
+        .me-1 { margin-inline-end: 0.25rem }
+        .me-96 { margin-inline-end: 24rem }
+        .-me-8 { margin-inline-end: -2rem }
         .mt-auto { margin-top: auto }
         .mt-px { margin-top: 1px }
         .mt-0 { margin-top: 0px }
@@ -1887,6 +1905,7 @@ public class CssGeneratorTest {
         .mt-72 { margin-top: 18rem }
         .mt-80 { margin-top: 20rem }
         .mt-96 { margin-top: 24rem }
+        .-mt-3 { margin-top: -0.75rem }
         .mr-auto { margin-right: auto }
         .mr-px { margin-right: 1px }
         .mr-0 { margin-right: 0px }
@@ -1923,6 +1942,7 @@ public class CssGeneratorTest {
         .mr-72 { margin-right: 18rem }
         .mr-80 { margin-right: 20rem }
         .mr-96 { margin-right: 24rem }
+        .-mr-4 { margin-right: -1rem }
         .mb-auto { margin-bottom: auto }
         .mb-px { margin-bottom: 1px }
         .mb-0 { margin-bottom: 0px }
@@ -1959,6 +1979,7 @@ public class CssGeneratorTest {
         .mb-72 { margin-bottom: 18rem }
         .mb-80 { margin-bottom: 20rem }
         .mb-96 { margin-bottom: 24rem }
+        .-mb-5 { margin-bottom: -1.25rem }
         .ml-auto { margin-left: auto }
         .ml-px { margin-left: 1px }
         .ml-0 { margin-left: 0px }
@@ -1995,6 +2016,7 @@ public class CssGeneratorTest {
         .ml-72 { margin-left: 18rem }
         .ml-80 { margin-left: 20rem }
         .ml-96 { margin-left: 24rem }
+        .-ml-6 { margin-left: -1.5rem }
         """
     );
   }

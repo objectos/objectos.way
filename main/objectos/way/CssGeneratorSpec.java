@@ -731,6 +731,8 @@ final class CssGeneratorSpec extends CssGeneratorRound implements Css.Generator 
     funcUtility(CssKey.MARGIN_TOP, margin, NEGATIVE, "mt", "margin-top");
     funcUtility(CssKey.MARGIN_X, margin, NEGATIVE, "mx", "margin-left", "margin-right");
     funcUtility(CssKey.MARGIN_Y, margin, NEGATIVE, "my", "margin-top", "margin-bottom");
+    funcUtility(CssKey.MARGIN_START, margin, NEGATIVE, "ms", "margin-inline-start");
+    funcUtility(CssKey.MARGIN_END, margin, NEGATIVE, "me", "margin-inline-end");
 
     funcUtility(
         CssKey.MAX_WIDTH,
