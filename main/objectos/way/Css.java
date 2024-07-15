@@ -151,8 +151,20 @@ public final class Css {
     return override(CssKey.FONT_SIZE, text);
   }
 
+  public static Generator.Option overrideFontWeight(String text) {
+    return override(CssKey.FONT_WEIGHT, text);
+  }
+
   public static Generator.Option overrideGridTemplateRows(String text) {
     return override(CssKey.GRID_TEMPLATE_ROWS, text);
+  }
+
+  public static Generator.Option overrideLetterSpacing(String text) {
+    return override(CssKey.LETTER_SPACING, text);
+  }
+
+  public static Generator.Option overrideLineHeight(String text) {
+    return override(CssKey.LINE_HEIGHT, text);
   }
 
   public static Generator.Option overrideSpacing(String text) {

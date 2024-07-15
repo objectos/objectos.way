@@ -211,7 +211,6 @@ final class CarbonStyles implements Http.Handler {
         active: var(--cds-background-active)
         hover: var(--cds-background-hover)
         overlay: var(--cds-overlay)
-        border-subtle: var(--cds-border-subtle)
         """),
 
         Css.overrideBorderColor("""
@@ -244,6 +243,23 @@ final class CarbonStyles implements Http.Handler {
         body-compact-01: var(--cds-body-compact-01-font-size, 0.875rem)/var(--cds-body-compact-01-line-height, 1.28572)/var(--cds-body-compact-01-letter-spacing, 0.16px)/var(--cds-body-compact-01-font-weight, 400)
 
         heading-compact-01: var(--cds-heading-compact-01-font-size, 0.875rem)/var(--cds-heading-compact-01-line-height, 1.28572)/var(--cds-heading-compact-01-letter-spacing, 0.16px)/var(--cds-heading-compact-01-font-weight, 600)
+        
+        14px: 0.875rem
+        """),
+
+        Css.overrideFontWeight("""
+        400: 400
+        600: 600
+        """),
+
+        Css.overrideLetterSpacing("""
+        normal: 0em
+        0.1px: 0.1px
+        """),
+
+        Css.overrideLineHeight("""
+        18px: 1.125rem
+        20px: 1.25rem
         """),
 
         Css.overrideTextColor("""

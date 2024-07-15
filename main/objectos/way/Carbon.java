@@ -60,13 +60,22 @@ public final class Carbon {
 
   public enum IconSize {
 
-    PX16,
+    PX16("16px", "0 0 16 16"),
 
-    PX20,
+    PX20("20px", "0 0 20 20"),
 
-    PX24,
+    PX24("24px", "0 0 24 24"),
 
-    PX32;
+    PX32("32px", "0 0 32 32");
+
+    final String size;
+
+    final String viewBox;
+
+    private IconSize(String size, String viewBox) {
+      this.size = size;
+      this.viewBox = viewBox;
+    }
 
   }
 
@@ -78,6 +87,10 @@ public final class Carbon {
   public sealed interface Attribute extends Component {}
 
   enum AttributeKey {
+    ARIA_HIDDEN,
+
+    ARIA_LABEL,
+
     HREF,
 
     ICON,
@@ -231,6 +244,26 @@ public final class Carbon {
     // attributes
 
     /**
+     * Creates a new {@code aria-hidden} attribute with the {@code true} value.
+     *
+     * @return a new attribute
+     */
+    public final Attribute ariaHidden() {
+      return AttributeKey.ARIA_HIDDEN.of(true);
+    }
+
+    /**
+     * Creates a new {@code aria-label} attribute with the specified value.
+     *
+     * @param value the string value of the attribute
+     *
+     * @return a new attribute
+     */
+    public final Attribute ariaLabel(String value) {
+      return AttributeKey.ARIA_LABEL.of(value);
+    }
+
+    /**
      * Creates a new {@code href} attribute with the specified value.
      *
      * @param value the string value of the attribute
@@ -370,19 +403,19 @@ public final class Carbon {
 
     abstract void renderHeaderNavigation(Pojo pojo);
 
-    public final Element icon(Icon icon, IconSize size) {
+    public final Element icon(Icon icon, IconSize size, Attribute... attributes) {
       final Icon i = Check.notNull(icon, "icon == null");
       final IconSize s = Check.notNull(size, "size == null");
 
-      return new Pojo() {
+      return new Pojo(attributes) {
         @Override
         final void render() {
-          renderIcon(i, s);
+          renderIcon(this, i, s);
         }
       };
     }
 
-    abstract void renderIcon(Icon icon, IconSize size);
+    abstract void renderIcon(Pojo pojo, Icon icon, IconSize size);
 
     /**
      * Creates a new side navigation component enclosing the specified nested

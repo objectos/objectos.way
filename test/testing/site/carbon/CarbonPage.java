@@ -25,7 +25,7 @@ abstract class CarbonPage extends Carbon.Shell {
   CarbonPage(Http.Exchange http) {
     super(http);
 
-    shellTheme(Carbon.G100);
+    shellTheme(Carbon.G10);
   }
 
   @Override
@@ -38,10 +38,12 @@ abstract class CarbonPage extends Carbon.Shell {
 
         ui(
             ui.header(
-                Carbon.G100,
+                ui.ariaLabel("Objectos Carbon"),
 
                 ui.headerMenuButton(
-                    ui.title("Open menu")
+                    ui.ariaLabel("Open menu"),
+
+                    ui.title("Open")
                 ),
 
                 ui.headerName(
