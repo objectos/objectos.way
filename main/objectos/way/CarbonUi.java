@@ -43,8 +43,9 @@ final class CarbonUi extends Carbon.Ui {
     headerRendered = true;
 
     tmpl.header(
-        tmpl.className("fixed inset-0px flex h-header"),
-        tmpl.className("border-b border-subtle"),
+        tmpl.className("fixed top-0px right-0px left-0px"),
+        tmpl.className("flex items-center h-header"),
+        tmpl.className("border-b border-b-subtle"),
         tmpl.className("bg"),
 
         pojo.renderTheme(),

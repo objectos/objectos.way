@@ -3496,6 +3496,30 @@ public class CssGeneratorTest {
   }
 
   @Test
+  public void overrideZIndex() {
+    class Subject extends AbstractSubject {
+      @Override
+      final void classes() {
+        className("z-a z-foo z-20");
+      }
+    }
+
+    test(
+        Css.overrideZIndex("""
+        a: 100
+        foo: 9000
+        """),
+
+        Subject.class,
+
+        """
+        .z-a { z-index: 100 }
+        .z-foo { z-index: 9000 }
+        """
+    );
+  }
+
+  @Test
   public void useLogicalProperties() {
     class Subject extends AbstractSubject {
       @Override

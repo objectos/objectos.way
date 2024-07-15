@@ -163,6 +163,10 @@ public final class Css {
     return override(CssKey.TEXT_COLOR, text);
   }
 
+  public static Generator.Option overrideZIndex(String text) {
+    return override(CssKey.Z_INDEX, text);
+  }
+
   private static Generator.Option override(CssKey key, String text) {
     CssProperties properties;
     properties = parseProperties(text);

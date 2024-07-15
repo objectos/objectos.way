@@ -21,6 +21,8 @@ final class CarbonStyles implements Http.Handler {
     return Css.generateStyleSheet(
         Css.classes(CarbonUi.class),
 
+        Css.useLogicalProperties(),
+
         Css.rule(".cds--white", """
         background-color: var(--cds-background);
         color: var(--cds-text-primary);
@@ -280,6 +282,17 @@ final class CarbonStyles implements Http.Handler {
         240px: 15rem
         256px: 16rem
         288px: 18rem
+        """),
+
+        Css.overrideZIndex("""
+        auto: auto
+        dropdown: 9100
+        modal: 9000
+        header: 8000
+        overlay: 6000
+        floating: 6000
+        footer: 5000
+        hidden: - 1
         """),
 
         Css.variants("""
