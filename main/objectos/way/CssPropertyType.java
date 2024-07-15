@@ -30,8 +30,6 @@ record CssPropertyType(String borderColorTop,
                        String borderWidthBottom,
                        String borderWidthLeft,
 
-                       String height,
-
                        String marginTop,
                        String marginRight,
                        String marginBottom,
@@ -42,9 +40,16 @@ record CssPropertyType(String borderColorTop,
                        String paddingBottom,
                        String paddingLeft,
 
+                       String height,
+
                        String width,
                        String maxWidth,
-                       String minWidth) {
+                       String minWidth,
+
+                       String top,
+                       String right,
+                       String bottom,
+                       String left) {
 
   static final CssPropertyType PHYSICAL = new CssPropertyType(
       "border-top-color",
@@ -62,15 +67,26 @@ record CssPropertyType(String borderColorTop,
       "border-bottom-width",
       "border-left-width",
 
+      "margin-top",
+      "margin-right",
+      "margin-bottom",
+      "margin-left",
+
+      "padding-top",
+      "padding-right",
+      "padding-bottom",
+      "padding-left",
+
       "height",
-
-      "margin-top", "margin-right", "margin-bottom", "margin-left",
-
-      "padding-top", "padding-right", "padding-bottom", "padding-left",
 
       "width",
       "max-width",
-      "min-width"
+      "min-width",
+
+      "top",
+      "right",
+      "bottom",
+      "left"
   );
 
   static final CssPropertyType LOGICAL = new CssPropertyType(
@@ -89,15 +105,26 @@ record CssPropertyType(String borderColorTop,
       "border-block-end-width",
       "border-inline-start-width",
 
+      "margin-block-start",
+      "margin-inline-end",
+      "margin-block-end",
+      "margin-inline-start",
+
+      "padding-block-start",
+      "padding-inline-end",
+      "padding-block-end",
+      "padding-inline-start",
+
       "block-size",
-
-      "margin-block-start", "margin-inline-end", "margin-block-end", "margin-inline-start",
-
-      "padding-block-start", "padding-inline-end", "padding-block-end", "padding-inline-start",
 
       "inline-size",
       "max-inline-size",
-      "min-inline-size"
+      "min-inline-size",
+
+      "inset-block-start",
+      "inset-inline-end",
+      "inset-block-end",
+      "inset-inline-start"
   );
 
 }

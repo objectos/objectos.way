@@ -252,7 +252,7 @@ final class CssGeneratorSpec extends CssGeneratorRound implements Css.Generator 
         )
     );
 
-    funcUtility(CssKey.BOTTOM, inset, NEGATIVE, "bottom");
+    funcUtility(CssKey.BOTTOM, inset, NEGATIVE, "bottom", propertyType.bottom());
 
     // C
 
@@ -348,10 +348,6 @@ final class CssGeneratorSpec extends CssGeneratorRound implements Css.Generator 
         hidden             | display: none
         """
     );
-
-    // E
-
-    funcUtility(CssKey.END, inset, NEGATIVE, "end", "inset-inline-end");
 
     // F
 
@@ -663,8 +659,8 @@ final class CssGeneratorSpec extends CssGeneratorRound implements Css.Generator 
     // I
 
     funcUtility(CssKey.INSET, inset, NEGATIVE, "inset", "inset");
-    funcUtility(CssKey.INSET_X, inset, NEGATIVE, "inset-x", "left", "right");
-    funcUtility(CssKey.INSET_Y, inset, NEGATIVE, "inset-y", "top", "bottom");
+    funcUtility(CssKey.INSET_X, inset, NEGATIVE, "inset-x", propertyType.left(), propertyType.right());
+    funcUtility(CssKey.INSET_Y, inset, NEGATIVE, "inset-y", propertyType.top(), propertyType.bottom());
 
     // J
 
@@ -685,7 +681,7 @@ final class CssGeneratorSpec extends CssGeneratorRound implements Css.Generator 
 
     // L
 
-    funcUtility(CssKey.LEFT, inset, NEGATIVE, "left", "left");
+    funcUtility(CssKey.LEFT, inset, NEGATIVE, "left", propertyType.left());
 
     funcUtility(
         CssKey.LETTER_SPACING,
@@ -971,7 +967,7 @@ final class CssGeneratorSpec extends CssGeneratorRound implements Css.Generator 
 
     // R
 
-    funcUtility(CssKey.RIGHT, inset, NEGATIVE, "right");
+    funcUtility(CssKey.RIGHT, inset, NEGATIVE, "right", propertyType.right());
 
     // S
 
@@ -1022,8 +1018,6 @@ final class CssGeneratorSpec extends CssGeneratorRound implements Css.Generator 
 
         "size", "height", "width"
     );
-
-    funcUtility(CssKey.START, inset, NEGATIVE, "start", "inset-inline-start");
 
     colorUtility(
         CssKey.STROKE,
@@ -1117,7 +1111,7 @@ final class CssGeneratorSpec extends CssGeneratorRound implements Css.Generator 
         """
     );
 
-    funcUtility(CssKey.TOP, inset, NEGATIVE, "top");
+    funcUtility(CssKey.TOP, inset, NEGATIVE, "top", propertyType.top());
 
     staticUtility(
         CssKey.TRANSFORM,

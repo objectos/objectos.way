@@ -1162,10 +1162,6 @@ public class CssGeneratorTest {
         className("inset-x-px inset-x-0 inset-x-0.5 inset-x-1 inset-x-1.5 inset-x-2 inset-x-2.5 inset-x-3 inset-x-3.5 inset-x-4 inset-x-5 inset-x-6 inset-x-7 inset-x-8 inset-x-9 inset-x-10 inset-x-11 inset-x-12 inset-x-14 inset-x-16 inset-x-20 inset-x-24 inset-x-28 inset-x-32 inset-x-36 inset-x-40 inset-x-44 inset-x-48 inset-x-52 inset-x-56 inset-x-60 inset-x-64 inset-x-72 inset-x-80 inset-x-96");
         className("inset-y-auto inset-y-1/2 inset-y-1/3 inset-y-2/3 inset-y-1/4 inset-y-2/4 inset-y-3/4 inset-y-full");
         className("inset-y-px inset-y-0 inset-y-0.5 inset-y-1 inset-y-1.5 inset-y-2 inset-y-2.5 inset-y-3 inset-y-3.5 inset-y-4 inset-y-5 inset-y-6 inset-y-7 inset-y-8 inset-y-9 inset-y-10 inset-y-11 inset-y-12 inset-y-14 inset-y-16 inset-y-20 inset-y-24 inset-y-28 inset-y-32 inset-y-36 inset-y-40 inset-y-44 inset-y-48 inset-y-52 inset-y-56 inset-y-60 inset-y-64 inset-y-72 inset-y-80 inset-y-96");
-        className("start-auto start-1/2 start-1/3 start-2/3 start-1/4 start-2/4 start-3/4 start-full");
-        className("start-px start-0 start-0.5 start-1 start-1.5 start-2 start-2.5 start-3 start-3.5 start-4 start-5 start-6 start-7 start-8 start-9 start-10 start-11 start-12 start-14 start-16 start-20 start-24 start-28 start-32 start-36 start-40 start-44 start-48 start-52 start-56 start-60 start-64 start-72 start-80 start-96");
-        className("end-auto end-1/2 end-1/3 end-2/3 end-1/4 end-2/4 end-3/4 end-full");
-        className("end-px end-0 end-0.5 end-1 end-1.5 end-2 end-2.5 end-3 end-3.5 end-4 end-5 end-6 end-7 end-8 end-9 end-10 end-11 end-12 end-14 end-16 end-20 end-24 end-28 end-32 end-36 end-40 end-44 end-48 end-52 end-56 end-60 end-64 end-72 end-80 end-96");
         className("top-auto top-1/2 top-1/3 top-2/3 top-1/4 top-2/4 top-3/4 top-full");
         className("top-px top-0 top-0.5 top-1 top-1.5 top-2 top-2.5 top-3 top-3.5 top-4 top-5 top-6 top-7 top-8 top-9 top-10 top-11 top-12 top-14 top-16 top-20 top-24 top-28 top-32 top-36 top-40 top-44 top-48 top-52 top-56 top-60 top-64 top-72 top-80 top-96");
         className("right-auto right-1/2 right-1/3 right-2/3 right-1/4 right-2/4 right-3/4 right-full");
@@ -1312,92 +1308,6 @@ public class CssGeneratorTest {
         .inset-y-72 { top: 18rem; bottom: 18rem }
         .inset-y-80 { top: 20rem; bottom: 20rem }
         .inset-y-96 { top: 24rem; bottom: 24rem }
-        .start-auto { inset-inline-start: auto }
-        .start-1\\/2 { inset-inline-start: 50% }
-        .start-1\\/3 { inset-inline-start: 33.333333% }
-        .start-2\\/3 { inset-inline-start: 66.666667% }
-        .start-1\\/4 { inset-inline-start: 25% }
-        .start-2\\/4 { inset-inline-start: 50% }
-        .start-3\\/4 { inset-inline-start: 75% }
-        .start-full { inset-inline-start: 100% }
-        .start-px { inset-inline-start: 1px }
-        .start-0 { inset-inline-start: 0px }
-        .start-0\\.5 { inset-inline-start: 0.125rem }
-        .start-1 { inset-inline-start: 0.25rem }
-        .start-1\\.5 { inset-inline-start: 0.375rem }
-        .start-2 { inset-inline-start: 0.5rem }
-        .start-2\\.5 { inset-inline-start: 0.625rem }
-        .start-3 { inset-inline-start: 0.75rem }
-        .start-3\\.5 { inset-inline-start: 0.875rem }
-        .start-4 { inset-inline-start: 1rem }
-        .start-5 { inset-inline-start: 1.25rem }
-        .start-6 { inset-inline-start: 1.5rem }
-        .start-7 { inset-inline-start: 1.75rem }
-        .start-8 { inset-inline-start: 2rem }
-        .start-9 { inset-inline-start: 2.25rem }
-        .start-10 { inset-inline-start: 2.5rem }
-        .start-11 { inset-inline-start: 2.75rem }
-        .start-12 { inset-inline-start: 3rem }
-        .start-14 { inset-inline-start: 3.5rem }
-        .start-16 { inset-inline-start: 4rem }
-        .start-20 { inset-inline-start: 5rem }
-        .start-24 { inset-inline-start: 6rem }
-        .start-28 { inset-inline-start: 7rem }
-        .start-32 { inset-inline-start: 8rem }
-        .start-36 { inset-inline-start: 9rem }
-        .start-40 { inset-inline-start: 10rem }
-        .start-44 { inset-inline-start: 11rem }
-        .start-48 { inset-inline-start: 12rem }
-        .start-52 { inset-inline-start: 13rem }
-        .start-56 { inset-inline-start: 14rem }
-        .start-60 { inset-inline-start: 15rem }
-        .start-64 { inset-inline-start: 16rem }
-        .start-72 { inset-inline-start: 18rem }
-        .start-80 { inset-inline-start: 20rem }
-        .start-96 { inset-inline-start: 24rem }
-        .end-auto { inset-inline-end: auto }
-        .end-1\\/2 { inset-inline-end: 50% }
-        .end-1\\/3 { inset-inline-end: 33.333333% }
-        .end-2\\/3 { inset-inline-end: 66.666667% }
-        .end-1\\/4 { inset-inline-end: 25% }
-        .end-2\\/4 { inset-inline-end: 50% }
-        .end-3\\/4 { inset-inline-end: 75% }
-        .end-full { inset-inline-end: 100% }
-        .end-px { inset-inline-end: 1px }
-        .end-0 { inset-inline-end: 0px }
-        .end-0\\.5 { inset-inline-end: 0.125rem }
-        .end-1 { inset-inline-end: 0.25rem }
-        .end-1\\.5 { inset-inline-end: 0.375rem }
-        .end-2 { inset-inline-end: 0.5rem }
-        .end-2\\.5 { inset-inline-end: 0.625rem }
-        .end-3 { inset-inline-end: 0.75rem }
-        .end-3\\.5 { inset-inline-end: 0.875rem }
-        .end-4 { inset-inline-end: 1rem }
-        .end-5 { inset-inline-end: 1.25rem }
-        .end-6 { inset-inline-end: 1.5rem }
-        .end-7 { inset-inline-end: 1.75rem }
-        .end-8 { inset-inline-end: 2rem }
-        .end-9 { inset-inline-end: 2.25rem }
-        .end-10 { inset-inline-end: 2.5rem }
-        .end-11 { inset-inline-end: 2.75rem }
-        .end-12 { inset-inline-end: 3rem }
-        .end-14 { inset-inline-end: 3.5rem }
-        .end-16 { inset-inline-end: 4rem }
-        .end-20 { inset-inline-end: 5rem }
-        .end-24 { inset-inline-end: 6rem }
-        .end-28 { inset-inline-end: 7rem }
-        .end-32 { inset-inline-end: 8rem }
-        .end-36 { inset-inline-end: 9rem }
-        .end-40 { inset-inline-end: 10rem }
-        .end-44 { inset-inline-end: 11rem }
-        .end-48 { inset-inline-end: 12rem }
-        .end-52 { inset-inline-end: 13rem }
-        .end-56 { inset-inline-end: 14rem }
-        .end-60 { inset-inline-end: 15rem }
-        .end-64 { inset-inline-end: 16rem }
-        .end-72 { inset-inline-end: 18rem }
-        .end-80 { inset-inline-end: 20rem }
-        .end-96 { inset-inline-end: 24rem }
         .top-auto { top: auto }
         .top-1\\/2 { top: 50% }
         .top-1\\/3 { top: 33.333333% }
@@ -3632,6 +3542,14 @@ public class CssGeneratorTest {
         className("w-4");
         className("min-w-8");
         className("max-w-12");
+        // inset
+        className("inset-px");
+        className("inset-x-px");
+        className("inset-y-px");
+        className("top-px");
+        className("right-px");
+        className("bottom-px");
+        className("left-px");
       }
     }
 
@@ -3641,6 +3559,13 @@ public class CssGeneratorTest {
         Subject.class,
 
         """
+        .inset-px { inset: 1px }
+        .inset-x-px { inset-inline-start: 1px; inset-inline-end: 1px }
+        .inset-y-px { inset-block-start: 1px; inset-block-end: 1px }
+        .top-px { inset-block-start: 1px }
+        .right-px { inset-inline-end: 1px }
+        .bottom-px { inset-block-end: 1px }
+        .left-px { inset-inline-start: 1px }        
         .m-auto { margin: auto }
         .mx-auto { margin-inline-start: auto; margin-inline-end: auto }
         .my-auto { margin-block-start: auto; margin-block-end: auto }

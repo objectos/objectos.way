@@ -41,8 +41,6 @@ enum CssKey {
   INSET,
   INSET_X,
   INSET_Y,
-  START,
-  END,
   TOP,
   RIGHT,
   BOTTOM,
