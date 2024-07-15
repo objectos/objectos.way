@@ -212,20 +212,14 @@ final class CssGeneratorSpec extends CssGeneratorRound implements Css.Generator 
     );
 
     funcUtility(CssKey.BORDER_RADIUS, rounded, "rounded", "border-radius");
-    funcUtility(CssKey.BORDER_RADIUS_B, rounded, "rounded-b", "border-bottom-right-radius", "border-bottom-left-radius");
-    funcUtility(CssKey.BORDER_RADIUS_BL, rounded, "rounded-bl", "border-bottom-left-radius");
-    funcUtility(CssKey.BORDER_RADIUS_BR, rounded, "rounded-br", "border-bottom-right-radius");
-    funcUtility(CssKey.BORDER_RADIUS_E, rounded, "rounded-e", "border-start-end-radius", "border-end-end-radius");
-    funcUtility(CssKey.BORDER_RADIUS_EE, rounded, "rounded-ee", "border-end-end-radius");
-    funcUtility(CssKey.BORDER_RADIUS_ES, rounded, "rounded-es", "border-end-start-radius");
-    funcUtility(CssKey.BORDER_RADIUS_L, rounded, "rounded-l", "border-top-left-radius", "border-bottom-left-radius");
-    funcUtility(CssKey.BORDER_RADIUS_R, rounded, "rounded-r", "border-top-right-radius", "border-bottom-right-radius");
-    funcUtility(CssKey.BORDER_RADIUS_S, rounded, "rounded-s", "border-start-start-radius", "border-end-start-radius");
-    funcUtility(CssKey.BORDER_RADIUS_SE, rounded, "rounded-se", "border-start-end-radius");
-    funcUtility(CssKey.BORDER_RADIUS_SS, rounded, "rounded-ss", "border-start-start-radius");
-    funcUtility(CssKey.BORDER_RADIUS_T, rounded, "rounded-t", "border-top-left-radius", "border-top-right-radius");
-    funcUtility(CssKey.BORDER_RADIUS_TL, rounded, "rounded-tl", "border-top-left-radius");
-    funcUtility(CssKey.BORDER_RADIUS_TR, rounded, "rounded-tr", "border-top-right-radius");
+    funcUtility(CssKey.BORDER_RADIUS_TL, rounded, "rounded-tl", propertyType.borderRadiusTopLeft());
+    funcUtility(CssKey.BORDER_RADIUS_TR, rounded, "rounded-tr", propertyType.borderRadiusTopRight());
+    funcUtility(CssKey.BORDER_RADIUS_BR, rounded, "rounded-br", propertyType.borderRadiusBottomRight());
+    funcUtility(CssKey.BORDER_RADIUS_BL, rounded, "rounded-bl", propertyType.borderRadiusBottomLeft());
+    funcUtility(CssKey.BORDER_RADIUS_T, rounded, "rounded-t", propertyType.borderRadiusTop());
+    funcUtility(CssKey.BORDER_RADIUS_R, rounded, "rounded-r", propertyType.borderRadiusRight());
+    funcUtility(CssKey.BORDER_RADIUS_B, rounded, "rounded-b", propertyType.borderRadiusBottom());
+    funcUtility(CssKey.BORDER_RADIUS_L, rounded, "rounded-l", propertyType.borderRadiusLeft());
 
     var borderSpacing = config.values(CssKey.BORDER_SPACING, spacing);
 
