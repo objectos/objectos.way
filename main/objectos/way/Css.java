@@ -196,6 +196,15 @@ public final class Css {
     };
   }
 
+  public static Generator.Option useLogicalProperties() {
+    return new CssGeneratorOption() {
+      @Override
+      final void acceptCssGenerator(CssConfig config) {
+        config.useLogicalProperties();
+      }
+    };
+  }
+
   public static Generator.Option utility(String className, String text) {
     Check.notNull(className, "className == null");
 

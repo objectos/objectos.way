@@ -44,6 +44,13 @@ final class CssGeneratorSpec extends CssGeneratorRound implements Css.Generator 
   private void colorUtility(
       CssKey key,
       Map<String, String> values,
+      String prefix, CssPropertyType.Two two) {
+    config.colorUtility(key, values, prefix, two.first(), two.second());
+  }
+
+  private void colorUtility(
+      CssKey key,
+      Map<String, String> values,
       String prefix, String propertyName1, String propertyName2) {
     config.colorUtility(key, values, prefix, propertyName1, propertyName2);
   }
@@ -60,6 +67,13 @@ final class CssGeneratorSpec extends CssGeneratorRound implements Css.Generator 
       Map<String, String> values,
       String prefix, String propertyName) {
     funcUtility(key, values, IDENTITY, prefix, propertyName, null);
+  }
+
+  private void funcUtility(
+      CssKey key,
+      Map<String, String> values,
+      String prefix, CssPropertyType.Two two) {
+    funcUtility(key, values, IDENTITY, prefix, two.first(), two.second());
   }
 
   private void funcUtility(
@@ -101,6 +115,8 @@ final class CssGeneratorSpec extends CssGeneratorRound implements Css.Generator 
     var colors = config.values(CssKey._COLORS, Css.DEFAULT_COLORS);
 
     var spacing = config.values(CssKey._SPACING, Css.DEFAULT_SPACING);
+
+    var propertyType = config.propertyType();
 
     // A
 
@@ -172,12 +188,12 @@ final class CssGeneratorSpec extends CssGeneratorRound implements Css.Generator 
     var borderColor = config.values(CssKey.BORDER_COLOR, colors);
 
     colorUtility(CssKey.BORDER_COLOR, borderColor, "border", "border-color");
-    colorUtility(CssKey.BORDER_COLOR_BOTTOM, borderColor, "border-b", "border-bottom-color");
-    colorUtility(CssKey.BORDER_COLOR_LEFT, borderColor, "border-l", "border-left-color");
-    colorUtility(CssKey.BORDER_COLOR_RIGHT, borderColor, "border-r", "border-right-color");
-    colorUtility(CssKey.BORDER_COLOR_TOP, borderColor, "border-t", "border-top-color");
-    colorUtility(CssKey.BORDER_COLOR_X, borderColor, "border-x", "border-left-color", "border-right-color");
-    colorUtility(CssKey.BORDER_COLOR_Y, borderColor, "border-y", "border-top-color", "border-bottom-color");
+    colorUtility(CssKey.BORDER_COLOR_TOP, borderColor, "border-t", propertyType.borderColorTop());
+    colorUtility(CssKey.BORDER_COLOR_RIGHT, borderColor, "border-r", propertyType.borderColorRight());
+    colorUtility(CssKey.BORDER_COLOR_BOTTOM, borderColor, "border-b", propertyType.borderColorBottom());
+    colorUtility(CssKey.BORDER_COLOR_LEFT, borderColor, "border-l", propertyType.borderColorLeft());
+    colorUtility(CssKey.BORDER_COLOR_X, borderColor, "border-x", propertyType.borderColorX());
+    colorUtility(CssKey.BORDER_COLOR_Y, borderColor, "border-y", propertyType.borderColorY());
 
     var rounded = config.values(
         CssKey.BORDER_RADIUS,
@@ -230,12 +246,12 @@ final class CssGeneratorSpec extends CssGeneratorRound implements Css.Generator 
     );
 
     funcUtility(CssKey.BORDER_WIDTH, borderWidth, "border", "border-width");
-    funcUtility(CssKey.BORDER_WIDTH_BOTTOM, borderWidth, "border-b", "border-bottom-width");
-    funcUtility(CssKey.BORDER_WIDTH_LEFT, borderWidth, "border-l", "border-left-width");
-    funcUtility(CssKey.BORDER_WIDTH_RIGHT, borderWidth, "border-r", "border-right-width");
-    funcUtility(CssKey.BORDER_WIDTH_TOP, borderWidth, "border-t", "border-top-width");
-    funcUtility(CssKey.BORDER_WIDTH_X, borderWidth, "border-x", "border-left-width", "border-right-width");
-    funcUtility(CssKey.BORDER_WIDTH_Y, borderWidth, "border-y", "border-top-width", "border-bottom-width");
+    funcUtility(CssKey.BORDER_WIDTH_TOP, borderWidth, "border-t", propertyType.borderWidthTop());
+    funcUtility(CssKey.BORDER_WIDTH_RIGHT, borderWidth, "border-r", propertyType.borderWidthRight());
+    funcUtility(CssKey.BORDER_WIDTH_BOTTOM, borderWidth, "border-b", propertyType.borderWidthBottom());
+    funcUtility(CssKey.BORDER_WIDTH_LEFT, borderWidth, "border-l", propertyType.borderWidthLeft());
+    funcUtility(CssKey.BORDER_WIDTH_X, borderWidth, "border-x", propertyType.borderWidthX());
+    funcUtility(CssKey.BORDER_WIDTH_Y, borderWidth, "border-y", propertyType.borderWidthY());
 
     var inset = config.values(
         CssKey.INSET,
@@ -659,7 +675,9 @@ final class CssGeneratorSpec extends CssGeneratorRound implements Css.Generator 
             )
         ),
 
-        "h", "height"
+        "h",
+
+        propertyType.height()
     );
 
     // I
@@ -775,7 +793,9 @@ final class CssGeneratorSpec extends CssGeneratorRound implements Css.Generator 
             }
         ),
 
-        "max-w", "max-width"
+        "max-w",
+
+        propertyType.maxWidth()
     );
 
     funcUtility(
@@ -796,7 +816,9 @@ final class CssGeneratorSpec extends CssGeneratorRound implements Css.Generator 
             )
         ),
 
-        "min-w", "min-width"
+        "min-w",
+
+        propertyType.minWidth()
     );
 
     // O
@@ -1287,7 +1309,9 @@ final class CssGeneratorSpec extends CssGeneratorRound implements Css.Generator 
             )
         ),
 
-        "w", "width"
+        "w",
+
+        propertyType.width()
     );
 
     // Z

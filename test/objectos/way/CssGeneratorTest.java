@@ -3667,6 +3667,58 @@ public class CssGeneratorTest {
   }
 
   @Test
+  public void useLogicalProperties() {
+    class Subject extends AbstractSubject {
+      @Override
+      final void classes() {
+        // border color
+        className("border-white");
+        className("border-x-white border-y-white");
+        className("border-t-white border-r-white border-b-white border-l-white");
+        // border width
+        className("border");
+        className("border-x border-y");
+        className("border-t border-r border-b border-l");
+        // height
+        className("h-4");
+        className("min-h-8");
+        className("max-h-12");
+        // width
+        className("w-4");
+        className("min-w-8");
+        className("max-w-12");
+      }
+    }
+
+    test(
+        Css.useLogicalProperties(),
+
+        Subject.class,
+
+        """
+        .h-4 { block-size: 1rem }
+        .w-4 { inline-size: 1rem }
+        .min-w-8 { min-inline-size: 2rem }
+        .max-w-12 { max-inline-size: 3rem }
+        .border { border-width: 1px }
+        .border-x { border-inline-start-width: 1px; border-inline-end-width: 1px }
+        .border-y { border-block-start-width: 1px; border-block-end-width: 1px }
+        .border-t { border-block-start-width: 1px }
+        .border-r { border-inline-end-width: 1px }
+        .border-b { border-block-end-width: 1px }
+        .border-l { border-inline-start-width: 1px }        
+        .border-white { border-color: #ffffff }
+        .border-x-white { border-inline-start-color: #ffffff; border-inline-end-color: #ffffff }
+        .border-y-white { border-block-start-color: #ffffff; border-block-end-color: #ffffff }
+        .border-t-white { border-block-start-color: #ffffff }
+        .border-r-white { border-inline-end-color: #ffffff }
+        .border-b-white { border-block-end-color: #ffffff }
+        .border-l-white { border-inline-start-color: #ffffff }
+        """
+    );
+  }
+
+  @Test
   public void resetTest() {
     class Subject extends AbstractSubject {
       @Override

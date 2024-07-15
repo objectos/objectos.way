@@ -47,6 +47,8 @@ final class CssConfig {
 
   private final Map<String, Set<CssKey>> prefixes = new HashMap<>();
 
+  private CssPropertyType propertyType = CssPropertyType.PHYSICAL;
+
   private final Map<CssKey, CssResolver> resolvers = new EnumMap<>(CssKey.class);
 
   private Map<String, String> rules;
@@ -191,6 +193,10 @@ final class CssConfig {
     }
   }
 
+  public final void useLogicalProperties() {
+    propertyType = CssPropertyType.LOGICAL;
+  }
+
   final Set<CssKey> getCandidates(String prefix) {
     return prefixes.get(prefix);
   }
@@ -258,6 +264,10 @@ final class CssConfig {
 
   final CssVariant getVariant(String variantName) {
     return variants().get(variantName);
+  }
+
+  final CssPropertyType propertyType() {
+    return propertyType;
   }
 
   final Map<String, String> rules() {
