@@ -3550,6 +3550,8 @@ public class CssGeneratorTest {
         className("right-px");
         className("bottom-px");
         className("left-px");
+        // size
+        className("size-px");
       }
     }
 
@@ -3573,6 +3575,7 @@ public class CssGeneratorTest {
         .mr-auto { margin-inline-end: auto }
         .mb-auto { margin-block-end: auto }
         .ml-auto { margin-inline-start: auto }
+        .size-px { block-size: 1px; inline-size: 1px }
         .h-4 { block-size: 1rem }
         .w-4 { inline-size: 1rem }
         .min-w-8 { min-inline-size: 2rem }

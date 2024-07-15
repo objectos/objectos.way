@@ -1016,7 +1016,10 @@ final class CssGeneratorSpec extends CssGeneratorRound implements Css.Generator 
             )
         ),
 
-        "size", "height", "width"
+        "size",
+
+        propertyType.height(),
+        propertyType.width()
     );
 
     colorUtility(
