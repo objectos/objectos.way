@@ -44,13 +44,6 @@ final class CssGeneratorSpec extends CssGeneratorRound implements Css.Generator 
   private void colorUtility(
       CssKey key,
       Map<String, String> values,
-      String prefix, CssPropertyType.Two two) {
-    config.colorUtility(key, values, prefix, two.first(), two.second());
-  }
-
-  private void colorUtility(
-      CssKey key,
-      Map<String, String> values,
       String prefix, String propertyName1, String propertyName2) {
     config.colorUtility(key, values, prefix, propertyName1, propertyName2);
   }
@@ -67,13 +60,6 @@ final class CssGeneratorSpec extends CssGeneratorRound implements Css.Generator 
       Map<String, String> values,
       String prefix, String propertyName) {
     funcUtility(key, values, IDENTITY, prefix, propertyName, null);
-  }
-
-  private void funcUtility(
-      CssKey key,
-      Map<String, String> values,
-      String prefix, CssPropertyType.Two two) {
-    funcUtility(key, values, IDENTITY, prefix, two.first(), two.second());
   }
 
   private void funcUtility(
@@ -192,8 +178,8 @@ final class CssGeneratorSpec extends CssGeneratorRound implements Css.Generator 
     colorUtility(CssKey.BORDER_COLOR_RIGHT, borderColor, "border-r", propertyType.borderColorRight());
     colorUtility(CssKey.BORDER_COLOR_BOTTOM, borderColor, "border-b", propertyType.borderColorBottom());
     colorUtility(CssKey.BORDER_COLOR_LEFT, borderColor, "border-l", propertyType.borderColorLeft());
-    colorUtility(CssKey.BORDER_COLOR_X, borderColor, "border-x", propertyType.borderColorX());
-    colorUtility(CssKey.BORDER_COLOR_Y, borderColor, "border-y", propertyType.borderColorY());
+    colorUtility(CssKey.BORDER_COLOR_X, borderColor, "border-x", propertyType.borderColorLeft(), propertyType.borderColorRight());
+    colorUtility(CssKey.BORDER_COLOR_Y, borderColor, "border-y", propertyType.borderColorTop(), propertyType.borderColorBottom());
 
     var rounded = config.values(
         CssKey.BORDER_RADIUS,
@@ -216,10 +202,10 @@ final class CssGeneratorSpec extends CssGeneratorRound implements Css.Generator 
     funcUtility(CssKey.BORDER_RADIUS_TR, rounded, "rounded-tr", propertyType.borderRadiusTopRight());
     funcUtility(CssKey.BORDER_RADIUS_BR, rounded, "rounded-br", propertyType.borderRadiusBottomRight());
     funcUtility(CssKey.BORDER_RADIUS_BL, rounded, "rounded-bl", propertyType.borderRadiusBottomLeft());
-    funcUtility(CssKey.BORDER_RADIUS_T, rounded, "rounded-t", propertyType.borderRadiusTop());
-    funcUtility(CssKey.BORDER_RADIUS_R, rounded, "rounded-r", propertyType.borderRadiusRight());
-    funcUtility(CssKey.BORDER_RADIUS_B, rounded, "rounded-b", propertyType.borderRadiusBottom());
-    funcUtility(CssKey.BORDER_RADIUS_L, rounded, "rounded-l", propertyType.borderRadiusLeft());
+    funcUtility(CssKey.BORDER_RADIUS_T, rounded, "rounded-t", propertyType.borderRadiusTopLeft(), propertyType.borderRadiusTopRight());
+    funcUtility(CssKey.BORDER_RADIUS_R, rounded, "rounded-r", propertyType.borderRadiusTopRight(), propertyType.borderRadiusBottomRight());
+    funcUtility(CssKey.BORDER_RADIUS_B, rounded, "rounded-b", propertyType.borderRadiusBottomRight(), propertyType.borderRadiusBottomLeft());
+    funcUtility(CssKey.BORDER_RADIUS_L, rounded, "rounded-l", propertyType.borderRadiusBottomLeft(), propertyType.borderRadiusTopLeft());
 
     var borderSpacing = config.values(CssKey.BORDER_SPACING, spacing);
 
@@ -244,8 +230,8 @@ final class CssGeneratorSpec extends CssGeneratorRound implements Css.Generator 
     funcUtility(CssKey.BORDER_WIDTH_RIGHT, borderWidth, "border-r", propertyType.borderWidthRight());
     funcUtility(CssKey.BORDER_WIDTH_BOTTOM, borderWidth, "border-b", propertyType.borderWidthBottom());
     funcUtility(CssKey.BORDER_WIDTH_LEFT, borderWidth, "border-l", propertyType.borderWidthLeft());
-    funcUtility(CssKey.BORDER_WIDTH_X, borderWidth, "border-x", propertyType.borderWidthX());
-    funcUtility(CssKey.BORDER_WIDTH_Y, borderWidth, "border-y", propertyType.borderWidthY());
+    funcUtility(CssKey.BORDER_WIDTH_X, borderWidth, "border-x", propertyType.borderWidthLeft(), propertyType.borderWidthRight());
+    funcUtility(CssKey.BORDER_WIDTH_Y, borderWidth, "border-y", propertyType.borderWidthTop(), propertyType.borderWidthBottom());
 
     var inset = config.values(
         CssKey.INSET,
@@ -737,14 +723,12 @@ final class CssGeneratorSpec extends CssGeneratorRound implements Css.Generator 
     );
 
     funcUtility(CssKey.MARGIN, margin, NEGATIVE, "m", "margin");
-    funcUtility(CssKey.MARGIN_BOTTOM, margin, NEGATIVE, "mb", "margin-bottom");
-    funcUtility(CssKey.MARGIN_LEFT, margin, NEGATIVE, "ml", "margin-left");
-    funcUtility(CssKey.MARGIN_RIGHT, margin, NEGATIVE, "mr", "margin-right");
-    funcUtility(CssKey.MARGIN_TOP, margin, NEGATIVE, "mt", "margin-top");
-    funcUtility(CssKey.MARGIN_X, margin, NEGATIVE, "mx", "margin-left", "margin-right");
-    funcUtility(CssKey.MARGIN_Y, margin, NEGATIVE, "my", "margin-top", "margin-bottom");
-    funcUtility(CssKey.MARGIN_START, margin, NEGATIVE, "ms", "margin-inline-start");
-    funcUtility(CssKey.MARGIN_END, margin, NEGATIVE, "me", "margin-inline-end");
+    funcUtility(CssKey.MARGIN_TOP, margin, NEGATIVE, "mt", propertyType.marginTop());
+    funcUtility(CssKey.MARGIN_RIGHT, margin, NEGATIVE, "mr", propertyType.marginRight());
+    funcUtility(CssKey.MARGIN_BOTTOM, margin, NEGATIVE, "mb", propertyType.marginBottom());
+    funcUtility(CssKey.MARGIN_LEFT, margin, NEGATIVE, "ml", propertyType.marginLeft());
+    funcUtility(CssKey.MARGIN_X, margin, NEGATIVE, "mx", propertyType.marginLeft(), propertyType.marginRight());
+    funcUtility(CssKey.MARGIN_Y, margin, NEGATIVE, "my", propertyType.marginTop(), propertyType.marginBottom());
 
     funcUtility(
         CssKey.MAX_WIDTH,
@@ -957,14 +941,12 @@ final class CssGeneratorSpec extends CssGeneratorRound implements Css.Generator 
     var padding = config.values(CssKey.PADDING, spacing);
 
     funcUtility(CssKey.PADDING, padding, "p", "padding");
-    funcUtility(CssKey.PADDING_BOTTOM, padding, "pb", "padding-bottom");
-    funcUtility(CssKey.PADDING_LEFT, padding, "pl", "padding-left");
-    funcUtility(CssKey.PADDING_RIGHT, padding, "pr", "padding-right");
-    funcUtility(CssKey.PADDING_TOP, padding, "pt", "padding-top");
-    funcUtility(CssKey.PADDING_X, padding, "px", "padding-left", "padding-right");
-    funcUtility(CssKey.PADDING_Y, padding, "py", "padding-top", "padding-bottom");
-    funcUtility(CssKey.PADDING_START, padding, "ps", "padding-inline-start");
-    funcUtility(CssKey.PADDING_END, padding, "pe", "padding-inline-end");
+    funcUtility(CssKey.PADDING_TOP, padding, "pt", propertyType.paddingTop());
+    funcUtility(CssKey.PADDING_RIGHT, padding, "pr", propertyType.paddingRight());
+    funcUtility(CssKey.PADDING_BOTTOM, padding, "pb", propertyType.paddingBottom());
+    funcUtility(CssKey.PADDING_LEFT, padding, "pl", propertyType.paddingLeft());
+    funcUtility(CssKey.PADDING_X, padding, "px", propertyType.paddingLeft(), propertyType.paddingRight());
+    funcUtility(CssKey.PADDING_Y, padding, "py", propertyType.paddingTop(), propertyType.paddingBottom());
 
     staticUtility(
         CssKey.POINTER_EVENTS,

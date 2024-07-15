@@ -19,58 +19,54 @@ record CssPropertyType(String borderColorTop,
                        String borderColorRight,
                        String borderColorBottom,
                        String borderColorLeft,
-                       Two borderColorX,
-                       Two borderColorY,
 
                        String borderRadiusTopLeft,
                        String borderRadiusTopRight,
                        String borderRadiusBottomRight,
                        String borderRadiusBottomLeft,
-                       Two borderRadiusTop,
-                       Two borderRadiusRight,
-                       Two borderRadiusBottom,
-                       Two borderRadiusLeft,
 
                        String borderWidthTop,
                        String borderWidthRight,
                        String borderWidthBottom,
                        String borderWidthLeft,
-                       Two borderWidthX,
-                       Two borderWidthY,
 
                        String height,
+
+                       String marginTop,
+                       String marginRight,
+                       String marginBottom,
+                       String marginLeft,
+
+                       String paddingTop,
+                       String paddingRight,
+                       String paddingBottom,
+                       String paddingLeft,
 
                        String width,
                        String maxWidth,
                        String minWidth) {
-
-  record Two(String first, String second) {}
 
   static final CssPropertyType PHYSICAL = new CssPropertyType(
       "border-top-color",
       "border-right-color",
       "border-bottom-color",
       "border-left-color",
-      two("border-left-color", "border-right-color"),
-      two("border-top-color", "border-bottom-color"),
 
       "border-top-left-radius",
       "border-top-right-radius",
       "border-bottom-right-radius",
       "border-bottom-left-radius",
-      two("border-top-left-radius", "border-top-right-radius"),
-      two("border-top-right-radius", "border-bottom-right-radius"),
-      two("border-bottom-right-radius", "border-bottom-left-radius"),
-      two("border-bottom-left-radius", "border-top-left-radius"),
 
       "border-top-width",
       "border-right-width",
       "border-bottom-width",
       "border-left-width",
-      two("border-left-width", "border-right-width"),
-      two("border-top-width", "border-bottom-width"),
 
       "height",
+
+      "margin-top", "margin-right", "margin-bottom", "margin-left",
+
+      "padding-top", "padding-right", "padding-bottom", "padding-left",
 
       "width",
       "max-width",
@@ -82,34 +78,26 @@ record CssPropertyType(String borderColorTop,
       "border-inline-end-color",
       "border-block-end-color",
       "border-inline-start-color",
-      two("border-inline-start-color", "border-inline-end-color"),
-      two("border-block-start-color", "border-block-end-color"),
 
       "border-start-start-radius",
       "border-start-end-radius",
       "border-end-end-radius",
       "border-end-start-radius",
-      two("border-start-start-radius", "border-start-end-radius"),
-      two("border-start-end-radius", "border-end-end-radius"),
-      two("border-end-end-radius", "border-end-start-radius"),
-      two("border-end-start-radius", "border-start-start-radius"),
 
       "border-block-start-width",
       "border-inline-end-width",
       "border-block-end-width",
       "border-inline-start-width",
-      two("border-inline-start-width", "border-inline-end-width"),
-      two("border-block-start-width", "border-block-end-width"),
 
       "block-size",
+
+      "margin-block-start", "margin-inline-end", "margin-block-end", "margin-inline-start",
+
+      "padding-block-start", "padding-inline-end", "padding-block-end", "padding-inline-start",
 
       "inline-size",
       "max-inline-size",
       "min-inline-size"
   );
-
-  private static Two two(String first, String second) {
-    return new Two(first, second);
-  }
 
 }
