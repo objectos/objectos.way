@@ -108,6 +108,26 @@ public class ScriptActionTest {
     );
   }
 
+  @Test
+  public void toggleClass() {
+    test(
+        new Html.Template() {
+          static final Id OVERLAY = Html.id("overlay");
+
+          @Override
+          protected final void render() {
+            div(dataOnClick(Script.toggleClass(OVERLAY, "foo")));
+            div(dataOnClick(Script.toggleClass(OVERLAY, "c1", "c2")));
+          }
+        },
+
+        """
+        <div data-on-click='[{"cmd":"replace-class","args":["overlay","foo"]}]'></div>
+        <div data-on-click='[{"cmd":"replace-class","args":["overlay","c1","c2"]}]'></div>
+        """
+    );
+  }
+
   private void test(Html.Template template, String expected) {
     String result;
     result = template.toString();

@@ -146,6 +146,71 @@ public final class Script {
     return replaceClass0(id, from, to);
   }
 
+  public static Action toggleClass(Html.Id id, String className) {
+    Check.notNull(id, "id == null");
+    Check.notNull(className, "className == null");
+
+    return new ScriptAction() {
+      @Override
+      final void writeTo(StringBuilder json) {
+        objectStart(json);
+
+        property(json, CMD, "replace-class");
+
+        comma(json);
+
+        propertyStart(json, "args");
+
+        arrayStart(json);
+
+        stringLiteral(json, id.value());
+
+        comma(json);
+
+        stringLiteral(json, className);
+
+        arrayEnd(json);
+
+        objectEnd(json);
+      }
+    };
+  }
+
+  public static Action toggleClass(Html.Id id, String class1, String class2) {
+    Check.notNull(id, "id == null");
+    Check.notNull(class1, "class1 == null");
+    Check.notNull(class2, "class2 == null");
+
+    return new ScriptAction() {
+      @Override
+      final void writeTo(StringBuilder json) {
+        objectStart(json);
+
+        property(json, CMD, "replace-class");
+
+        comma(json);
+
+        propertyStart(json, "args");
+
+        arrayStart(json);
+
+        stringLiteral(json, id.value());
+
+        comma(json);
+
+        stringLiteral(json, class1);
+
+        comma(json);
+
+        stringLiteral(json, class2);
+
+        arrayEnd(json);
+
+        objectEnd(json);
+      }
+    };
+  }
+
   private static Action replaceClass0(Html.Id id, String from, String to) {
     return new ScriptAction() {
       @Override

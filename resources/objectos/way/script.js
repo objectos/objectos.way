@@ -34,7 +34,7 @@
 
 		while (maybeAnchor instanceof Node) {
 			if (maybeAnchor instanceof HTMLAnchorElement) {
-				
+
 				const anchor = maybeAnchor;
 
 				if (anchor.origin !== window.location.origin) {
@@ -215,7 +215,7 @@
 
 				case "location": {
 					executeLocation(action.value);
-					
+
 					break;
 				}
 
@@ -227,6 +227,12 @@
 
 				case "submit": {
 					executeSubmit(action);
+
+					break;
+				}
+
+				case "toggle-class": {
+					executeToggleClass(action);
 
 					break;
 				}
@@ -409,6 +415,34 @@
 		}
 
 		el.dispatchEvent(new Event("submit", { bubbles: true }));
+	}
+
+	function executeToggleClass(action) {
+		const args = action.args;
+
+		if (!args) {
+			return;
+		}
+
+		if (args.length < 2) {
+			return;
+		}
+
+		const id = args[0];
+
+		const el = document.getElementById(id);
+
+		if (!el) {
+			return;
+		}
+
+		const classList = el.classList;
+
+		for (let idx = 1; idx < args.length; idx++) {
+			const className = args[idx];
+
+			classList.toggle(className);
+		}
 	}
 
 	function frame(el) {
