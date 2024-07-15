@@ -33,7 +33,6 @@ final class CarbonUi extends Carbon.Ui {
         headerRendered ? tmpl.className("mt-header") : tmpl.noop(),
 
         pojo.renderTheme(),
-
         pojo.renderChildren()
     );
   }
@@ -42,31 +41,19 @@ final class CarbonUi extends Carbon.Ui {
   final void renderHeader(Pojo pojo) {
     headerRendered = true;
 
-    String ariaLabel;
-    ariaLabel = pojo.stringValue(Carbon.AttributeKey.ARIA_LABEL);
-
     tmpl.header(
         tmpl.className("fixed top-0px right-0px left-0px z-header"),
         tmpl.className("flex items-center h-header"),
         tmpl.className("border-b border-b-subtle"),
         tmpl.className("bg"),
 
-        ariaLabel != null ? tmpl.ariaLabel(ariaLabel) : tmpl.noop(),
-
         pojo.renderTheme(),
-
         pojo.renderChildren()
     );
   }
 
   @Override
   final void renderHeaderMenuButton(Pojo pojo) {
-    String ariaLabel;
-    ariaLabel = pojo.stringValue(Carbon.AttributeKey.ARIA_LABEL);
-
-    String title;
-    title = pojo.stringValue(Carbon.AttributeKey.TITLE);
-
     tmpl.button(
         BUTTON_RESET,
 
@@ -84,13 +71,12 @@ final class CarbonUi extends Carbon.Ui {
         // header__menu-trigger
         tmpl.className("svg:fill-primary"),
 
-        ariaLabel != null ? tmpl.ariaLabel(ariaLabel) : tmpl.noop(),
-
-        title != null ? tmpl.title(title) : tmpl.noop(),
-
         tmpl.type("button"),
 
-        thisIcon(Carbon.Icon.MENU, Carbon.IconSize.PX20, ariaHidden())
+        thisIcon(Carbon.Icon.MENU, Carbon.IconSize.PX20, ariaHidden()),
+
+        pojo.renderTheme(),
+        pojo.renderChildren()
     );
   }
 
@@ -99,42 +85,39 @@ final class CarbonUi extends Carbon.Ui {
     boolean active;
     active = pojo.booleanValue(Carbon.AttributeKey.IS_ACTIVE);
 
-    String href;
-    href = pojo.stringValue(Carbon.AttributeKey.HREF);
-
     String name;
     name = pojo.stringValue(Carbon.AttributeKey.NAME);
 
-    tmpl.a(
-        tmpl.className("relative flex h-full select-none items-center"),
-        tmpl.className("border-2 border-transparent"),
-        tmpl.className("bg"),
-        tmpl.className("px-16px"),
-        tmpl.className("text-14px/18px/normal/400"),
-        tmpl.className("transition-colors duration-100"),
-        tmpl.className("active:bg-active active:text-primary"),
-        tmpl.className("focus:border-focus focus:outline-none"),
-        tmpl.className("hover:bg-hover hover:text-primary"),
+    tmpl.li(
+        tmpl.a(
+            tmpl.className("relative flex h-full select-none items-center"),
+            tmpl.className("border-2 border-transparent"),
+            tmpl.className("bg"),
+            tmpl.className("px-16px"),
+            tmpl.className("text-14px leading-18px tracking-0 font-400"),
+            tmpl.className("transition-colors duration-100"),
+            tmpl.className("active:bg-active active:text-primary"),
+            tmpl.className("focus:border-focus focus:outline-none"),
+            tmpl.className("hover:bg-hover hover:text-primary"),
 
-        active
-            ? tmpl.className("text-primary after:absolute after:-bottom-2px after:-left-2px after:-right-2px after:block after:border-b-3 after:border-b-interactive after:content-empty")
-            : tmpl.className("text-secondary"),
+            active
+                ? tmpl.className("text-primary after:absolute after:-bottom-2px after:-left-2px after:-right-2px after:block after:border-b-3 after:border-b-interactive after:content-empty")
+                : tmpl.className("text-secondary"),
 
-        href != null ? tmpl.href(href) : tmpl.noop(),
+            tmpl.tabindex("0"),
 
-        tmpl.tabindex("0"),
+            tmpl.span(
+                name != null ? tmpl.t(name) : tmpl.noop()
+            ),
 
-        tmpl.span(
-            name != null ? tmpl.t(name) : tmpl.noop()
+            pojo.renderTheme(),
+            pojo.renderChildren()
         )
     );
   }
 
   @Override
   final void renderHeaderName(Pojo pojo) {
-    String href;
-    href = pojo.stringValue(Carbon.AttributeKey.HREF);
-
     String name;
     name = pojo.stringValue(Carbon.AttributeKey.NAME);
 
@@ -145,15 +128,11 @@ final class CarbonUi extends Carbon.Ui {
         tmpl.className("flex h-full select-none items-center"),
         tmpl.className("border-2 border-transparent"),
         tmpl.className("px-16px"),
-        tmpl.className("text-body-compact-01 text-primary font-600 leading-20px tracing-0.1px"),
+        tmpl.className("text-body-compact-01 text-primary font-600 leading-20px tracking-0.1px"),
         tmpl.className("outline-none"),
         tmpl.className("transition-colors duration-100"),
         tmpl.className("focus:border-focus"),
         tmpl.className("lg:pl-16px lg:pr-32px"),
-
-        pojo.renderTheme(),
-
-        href != null ? tmpl.href(href) : tmpl.noop(),
 
         prefix != null ? tmpl.span(
             tmpl.className("font-400"),
@@ -163,7 +142,10 @@ final class CarbonUi extends Carbon.Ui {
             tmpl.raw("&nbsp;")
         ) : tmpl.noop(),
 
-        name != null ? tmpl.t(name) : tmpl.noop()
+        name != null ? tmpl.t(name) : tmpl.noop(),
+
+        pojo.renderTheme(),
+        pojo.renderChildren()
     );
   }
 
@@ -179,7 +161,11 @@ final class CarbonUi extends Carbon.Ui {
 
         pojo.renderTheme(),
 
-        pojo.renderChildren()
+        tmpl.ul(
+            tmpl.className("h-full flex"),
+
+            pojo.renderChildren()
+        )
     );
   }
 
@@ -189,19 +175,16 @@ final class CarbonUi extends Carbon.Ui {
   }
 
   private Html.ElementInstruction renderIcon0(Pojo pojo, Carbon.Icon icon, Carbon.IconSize size) {
-    boolean ariaHidden;
-    ariaHidden = pojo.booleanValue(Carbon.AttributeKey.ARIA_HIDDEN);
-
     return tmpl.svg(
         tmpl.xmlns("http://www.w3.org/2000/svg"),
         tmpl.fill("currentColor"),
         tmpl.width(size.size), tmpl.height(size.size), tmpl.viewBox(size.viewBox),
 
-        ariaHidden ? tmpl.ariaHidden("true") : tmpl.noop(),
-
         tmpl.raw(
             renderIconRaw(icon, size)
-        )
+        ),
+
+        pojo.renderChildren()
     );
   }
 
@@ -221,18 +204,24 @@ final class CarbonUi extends Carbon.Ui {
   }
 
   @Override
-  final void renderSideNav(Pojo pojo) {
+  final void renderOverlay(Pojo pojo) {
     tmpl.div(
-        tmpl.className("fixed h-screen w-screen top-header"),
-        tmpl.className("bg-overlay"),
+        tmpl.className("fixed inset-0px block hidden z-overlay"),
+        tmpl.className("bg-overlay opacity-0"),
         tmpl.className("transition-opacity duration-300"),
-        //"opacity-0 z-30"
 
-        headerRendered ? tmpl.className("mt-header") : tmpl.noop()
+        headerRendered ? tmpl.className("mt-header") : tmpl.noop(),
+
+        pojo.renderTheme(),
+        pojo.renderChildren()
     );
+  }
 
+  @Override
+  final void renderSideNav(Pojo pojo) {
     tmpl.nav(
-        tmpl.className("fixed bottom-0px w-256px"),
+        tmpl.className("fixed top-0px bottom-0px left-0px z-header hidden"),
+        tmpl.className("w-256px"),
         tmpl.className("bg"),
         tmpl.className("text-secondary"),
 
@@ -241,7 +230,6 @@ final class CarbonUi extends Carbon.Ui {
         tmpl.tabindex("-1"),
 
         pojo.renderTheme(),
-
         pojo.renderChildren()
     );
   }

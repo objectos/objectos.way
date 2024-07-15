@@ -51,7 +51,7 @@ sealed abstract class CssResolver {
       slash = value.indexOf('/');
 
       if (slash > 0) {
-        throw new UnsupportedOperationException("Implement me");
+        throw new UnsupportedOperationException("Implement me :: " + value);
       }
 
       String color;

@@ -253,7 +253,7 @@ final class CarbonStyles implements Http.Handler {
         """),
 
         Css.overrideLetterSpacing("""
-        normal: 0em
+        0: 0
         0.1px: 0.1px
         """),
 

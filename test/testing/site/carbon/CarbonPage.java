@@ -16,6 +16,7 @@
 package testing.site.carbon;
 
 import objectos.way.Carbon;
+import objectos.way.Html;
 import objectos.way.Http;
 
 abstract class CarbonPage extends Carbon.Shell {
@@ -33,51 +34,57 @@ abstract class CarbonPage extends Carbon.Shell {
 
   @Override
   protected final void renderUi() throws Exception {
-    div(
-        dataFrame("site-header", topSection.name()),
+    Html.Id overlay;
+    overlay = Html.id("overlay");
 
-        ui(
-            ui.header(
-                ui.ariaLabel("Objectos Carbon"),
+    Html.Id sideNav;
+    sideNav = Html.id("side-nav");
 
-                ui.headerMenuButton(
-                    ui.ariaLabel("Open menu"),
+    ui(
+        ui.header(
+            ui.ariaLabel("Objectos Carbon"),
 
-                    ui.title("Open")
-                ),
+            ui.headerMenuButton(
+                ui.ariaLabel("Open menu"),
 
-                ui.headerName(
-                    ui.prefix("Objectos"),
+                ui.title("Open")
+            ),
 
-                    ui.name("Carbon"),
+            ui.headerName(
+                ui.prefix("Objectos"),
 
-                    ui.href("/")
-                ),
+                ui.name("Carbon"),
 
-                ui.headerNavigation(
-                    menuItems(ui::headerMenuItem)
-                )
+                ui.href("/")
+            ),
+
+            ui.headerNavigation(
+                menuItems("header-nav", ui::headerMenuItem)
             )
         ),
 
-        ui(
-            ui.sideNav(
-                ui.sideNavItems(
-                    menuItems(ui::sideNavMenuItem)
-                )
-            )
-        )
-    );
+        ui.overlay(
+            ui.id(overlay)
+        ),
 
-    ui(
+        ui.sideNav(
+            ui.id(sideNav),
+
+            ui.sideNavItems(
+                menuItems("side-nav-items", ui::sideNavMenuItem)
+            )
+        ),
+
         ui.content(
             this::renderContent
         )
     );
   }
 
-  private Carbon.Element[] menuItems(Carbon.Element.Provider provider) {
-    return new Carbon.Element[] {
+  private Carbon.Component[] menuItems(String frameName, Carbon.Element.Provider provider) {
+    return new Carbon.Component[] {
+        ui.dataFrame(frameName, topSection.name()),
+
         provider.get(
             ui.name("Components"),
 

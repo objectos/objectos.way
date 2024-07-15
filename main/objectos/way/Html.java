@@ -22,6 +22,7 @@ import java.util.stream.Stream;
 import objectos.lang.CharWritable;
 import objectos.lang.IterableOnce;
 import objectos.lang.object.Check;
+import objectos.way.Script.Action;
 
 /**
  * The <strong>Objectos HTML</strong> main class.
@@ -554,6 +555,14 @@ public final class Html {
       } finally {
         compiler = null;
       }
+    }
+
+    final void attribute(Html.AttributeName name, Action value) {
+      $compiler().attribute(name, value);
+    }
+
+    final void attribute(Html.AttributeName name, String value) {
+      $compiler().attribute(name, value);
     }
 
     @Override

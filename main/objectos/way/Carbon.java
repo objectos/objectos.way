@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Map;
 import objectos.lang.object.Check;
 import objectos.util.list.GrowableList;
+import objectos.way.Html.AttributeName;
 
 /**
  * The <strong>Objectos Carbon UI</strong> main class.
@@ -87,21 +88,13 @@ public final class Carbon {
   public sealed interface Attribute extends Component {}
 
   enum AttributeKey {
-    ARIA_HIDDEN,
-
-    ARIA_LABEL,
-
-    HREF,
-
     ICON,
 
     IS_ACTIVE,
 
     NAME,
 
-    PREFIX,
-
-    TITLE;
+    PREFIX;
 
     public final CarbonAttribute of(boolean value) {
       return new CarbonAttribute(this, Boolean.valueOf(value));
@@ -152,27 +145,46 @@ public final class Carbon {
 
   public sealed interface Component {}
 
+  sealed static abstract class HasRenderMethod {
+    abstract void render();
+  }
+
   /**
    * The UI builder.
    */
   public sealed static abstract class Ui permits CarbonUi {
 
-    non-sealed abstract class Pojo implements Carbon.Element, Html.FragmentLambda {
+    final class CarbonStringAttribute extends HasRenderMethod implements Attribute {
+      final Html.AttributeName name;
+      final String value;
 
-      private Map<Carbon.AttributeKey, Object> attributes;
+      public CarbonStringAttribute(AttributeName name, String value) {
+        this.name = name;
+        this.value = Check.notNull(value, "value == null");
+      }
 
-      private List<Pojo> children;
+      @Override
+      final void render() {
+        tmpl.attribute(name, value);
+      }
+    }
+
+    non-sealed abstract class Pojo extends HasRenderMethod implements Carbon.Element, Html.FragmentLambda {
+
+      private Map<AttributeKey, Object> attributes;
+
+      private List<HasRenderMethod> children;
 
       private CarbonTheme theme;
 
       public Pojo(Carbon.Component... components) {
         for (Carbon.Component c : components) {
           switch (c) {
-            case Carbon.CarbonAttribute o -> addAttribute(o);
+            case CarbonAttribute o -> addAttribute(o);
 
-            case Carbon.CarbonTheme o -> theme = o;
+            case CarbonTheme o -> theme = o;
 
-            case Pojo o -> addChild(o);
+            case HasRenderMethod o -> addChild(o);
           }
         }
       }
@@ -196,7 +208,7 @@ public final class Carbon {
       }
 
       private void children() {
-        for (Pojo child : children) {
+        for (HasRenderMethod child : children) {
           child.render();
         }
       }
@@ -217,7 +229,7 @@ public final class Carbon {
         attributes.put(attr.key(), attr.value());
       }
 
-      private void addChild(Pojo o) {
+      private void addChild(HasRenderMethod o) {
         if (children == null) {
           children = new GrowableList<>();
         }
@@ -249,7 +261,7 @@ public final class Carbon {
      * @return a new attribute
      */
     public final Attribute ariaHidden() {
-      return AttributeKey.ARIA_HIDDEN.of(true);
+      return new CarbonStringAttribute(HtmlAttributeName.ARIA_HIDDEN, "true");
     }
 
     /**
@@ -260,7 +272,22 @@ public final class Carbon {
      * @return a new attribute
      */
     public final Attribute ariaLabel(String value) {
-      return AttributeKey.ARIA_LABEL.of(value);
+      return new CarbonStringAttribute(HtmlAttributeName.ARIA_LABEL, value);
+    }
+
+    /**
+     * Creates a new {@code data-frame} attribute with the specified name and
+     * value.
+     *
+     * @param value the string value of the attribute
+     *
+     * @return a new attribute
+     */
+    public final Attribute dataFrame(String name, String value) {
+      Check.notNull(name, "name == null");
+      Check.notNull(value, "value == null");
+
+      return new CarbonStringAttribute(HtmlAttributeName.DATA_FRAME, name + ":" + value);
     }
 
     /**
@@ -271,7 +298,19 @@ public final class Carbon {
      * @return a new attribute
      */
     public final Attribute href(String value) {
-      return AttributeKey.HREF.of(value);
+      return new CarbonStringAttribute(HtmlAttributeName.HREF, value);
+    }
+
+    /**
+     * Creates a new {@code id} attribute with the specified value.
+     *
+     * @param value
+     *        the id value
+     *
+     * @return a new attribute
+     */
+    public final Attribute id(Html.Id id) {
+      return new CarbonStringAttribute(HtmlAttributeName.ID, id.value());
     }
 
     public final Attribute isActive(boolean value) {
@@ -287,7 +326,7 @@ public final class Carbon {
     }
 
     public final Attribute title(String value) {
-      return AttributeKey.TITLE.of(value);
+      return new CarbonStringAttribute(HtmlAttributeName.TITLE, value);
     }
 
     // elements
@@ -418,6 +457,23 @@ public final class Carbon {
     abstract void renderIcon(Pojo pojo, Icon icon, IconSize size);
 
     /**
+     * Creates a navigation overlay component.
+     *
+     * @param attributes
+     *        the attributes of this element
+     *
+     * @return a newly constructed element
+     */
+    public final Element overlay(Attribute... attributes) {
+      return new Pojo(attributes) {
+        @Override
+        final void render() { renderOverlay(this); }
+      };
+    }
+
+    abstract void renderOverlay(Pojo pojo);
+
+    /**
      * Creates a new side navigation component enclosing the specified nested
      * components.
      *
@@ -475,6 +531,45 @@ public final class Carbon {
       pojo = (Ui.Pojo) element;
 
       return include(pojo);
+    }
+
+    protected final Html.FragmentInstruction ui(Element el1, Element el2) {
+      return include(() -> {
+        renderNow(el1);
+        renderNow(el2);
+      });
+    }
+
+    protected final Html.FragmentInstruction ui(Element el1, Element el2, Element el3) {
+      return include(() -> {
+        renderNow(el1);
+        renderNow(el2);
+        renderNow(el3);
+      });
+    }
+
+    protected final Html.FragmentInstruction ui(Element el1, Element el2, Element el3, Element el4) {
+      return include(() -> {
+        renderNow(el1);
+        renderNow(el2);
+        renderNow(el3);
+        renderNow(el4);
+      });
+    }
+
+    protected final Html.FragmentInstruction ui(Element... elements) {
+      return include(() -> {
+        for (var el : elements) {
+          renderNow(el);
+        }
+      });
+    }
+
+    private void renderNow(Element element) {
+      Ui.Pojo pojo;
+      pojo = (Ui.Pojo) element;
+
+      pojo.render();
     }
 
   }
