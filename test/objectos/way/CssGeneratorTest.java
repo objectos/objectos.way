@@ -3071,6 +3071,34 @@ public class CssGeneratorTest {
   }
 
   @Test
+  public void whitespace() {
+    class Subject extends AbstractSubject {
+      @Override
+      final void classes() {
+        className("whitespace-normal");
+        className("whitespace-nowrap");
+        className("whitespace-pre");
+        className("whitespace-pre-line");
+        className("whitespace-pre-wrap");
+        className("whitespace-break-spaces");
+      }
+    }
+
+    test(
+        Subject.class,
+
+        """
+        .whitespace-normal { white-space: normal }
+        .whitespace-nowrap { white-space: nowrap }
+        .whitespace-pre { white-space: pre }
+        .whitespace-pre-line { white-space: pre-line }
+        .whitespace-pre-wrap { white-space: pre-wrap }
+        .whitespace-break-spaces { white-space: break-spaces }
+        """
+    );
+  }
+
+  @Test
   public void width() {
     class Subject extends AbstractSubject {
       @Override

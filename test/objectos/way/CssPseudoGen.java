@@ -28,10 +28,7 @@ public class CssPseudoGen {
     CssPseudoGen gen;
     gen = new CssPseudoGen();
 
-    gen.classNameSingleLine(TRANSLATE, "translate-x-");
-    gen.classNameSingleLine(SPACING, "translate-x-");
-    gen.classNameSingleLine(TRANSLATE, "translate-y-");
-    gen.classNameSingleLine(SPACING, "translate-y-");
+    gen.classNameSingleLine(MAX_HEIGHT, "max-h-");
   }
 
   private static final Map<String, String> SCREENS = seqmap(
@@ -371,6 +368,19 @@ public class CssPseudoGen {
       SPACING
   );
 
+  static final Map<String, String> MAX_HEIGHT = seqmap(
+      SPACING,
+      kv("none", "none"),
+      kv("full", "100%"),
+      kv("screen", "100vh"),
+      kv("svh", "100svh"),
+      kv("lvh", "100lvh"),
+      kv("dvh", "100dvh"),
+      kv("min", "min-content"),
+      kv("max", "max-content"),
+      kv("fit", "fit-content")
+  );
+
   static final Map<String, String> MAX_WIDTH = seqmap(
       SPACING,
       kv("none", "none"),
@@ -391,6 +401,18 @@ public class CssPseudoGen {
       kv("fit", "fit-content"),
       kv("prose", "65ch"),
       SCREENS
+  );
+
+  static final Map<String, String> MIN_HEIGHT = seqmap(
+      SPACING,
+      kv("full", "100%"),
+      kv("screen", "100vh"),
+      kv("svh", "100svh"),
+      kv("lvh", "100lvh"),
+      kv("dvh", "100dvh"),
+      kv("min", "min-content"),
+      kv("max", "max-content"),
+      kv("fit", "fit-content")
   );
 
   static final Map<String, String> MIN_WIDTH = seqmap(

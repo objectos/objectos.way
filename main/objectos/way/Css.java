@@ -167,6 +167,10 @@ public final class Css {
     return override(CssKey.LINE_HEIGHT, text);
   }
 
+  public static Generator.Option overrideOutlineColor(String text) {
+    return override(CssKey.OUTLINE_COLOR, text);
+  }
+
   public static Generator.Option overrideSpacing(String text) {
     return override(CssKey._SPACING, text);
   }
