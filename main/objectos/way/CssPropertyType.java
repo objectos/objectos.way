@@ -41,6 +41,8 @@ record CssPropertyType(String borderColorTop,
                        String paddingLeft,
 
                        String height,
+                       String maxHeight,
+                       String minHeight,
 
                        String width,
                        String maxWidth,
@@ -78,6 +80,8 @@ record CssPropertyType(String borderColorTop,
       "padding-left",
 
       "height",
+      "max-height",
+      "min-height",
 
       "width",
       "max-width",
@@ -116,6 +120,8 @@ record CssPropertyType(String borderColorTop,
       "padding-inline-start",
 
       "block-size",
+      "max-block-size",
+      "min-block-size",
 
       "inline-size",
       "max-inline-size",

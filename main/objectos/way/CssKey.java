@@ -64,9 +64,11 @@ enum CssKey {
 
   SIZE,
   HEIGHT,
+  MAX_HEIGHT,
+  MIN_HEIGHT,
   WIDTH,
-  MIN_WIDTH,
   MAX_WIDTH,
+  MIN_WIDTH,
 
   FLEX_GROW,
 

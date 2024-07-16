@@ -727,6 +727,34 @@ final class CssGeneratorSpec extends CssGeneratorRound implements Css.Generator 
     funcUtility(CssKey.MARGIN_Y, margin, NEGATIVE, "my", propertyType.marginTop(), propertyType.marginBottom());
 
     funcUtility(
+        CssKey.MAX_HEIGHT,
+
+        config.values(
+            CssKey.MAX_HEIGHT,
+
+            c -> Css.merge(
+                """
+                none: none
+                full: 100%
+                screen: 100vh
+                svh: 100svh
+                lvh: 100lvh
+                dvh: 100dvh
+                min: min-content
+                max: max-content
+                fit: fit-content
+                """,
+
+                spacing
+            )
+        ),
+
+        "max-h",
+
+        propertyType.maxHeight()
+    );
+
+    funcUtility(
         CssKey.MAX_WIDTH,
 
         config.values(
@@ -770,6 +798,33 @@ final class CssGeneratorSpec extends CssGeneratorRound implements Css.Generator 
         "max-w",
 
         propertyType.maxWidth()
+    );
+
+    funcUtility(
+        CssKey.MIN_HEIGHT,
+
+        config.values(
+            CssKey.MIN_HEIGHT,
+
+            c -> Css.merge(
+                """
+                full: 100%
+                screen: 100vh
+                svh: 100svh
+                lvh: 100lvh
+                dvh: 100dvh
+                min: min-content
+                max: max-content
+                fit: fit-content
+                """,
+
+                spacing
+            )
+        ),
+
+        "min-h",
+
+        propertyType.minHeight()
     );
 
     funcUtility(

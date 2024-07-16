@@ -1858,6 +1858,69 @@ public class CssGeneratorTest {
   }
 
   @Test
+  public void maxHeight() {
+    class Subject extends AbstractSubject {
+      @Override
+      final void classes() {
+        // @formatter:off
+        className("max-h-px max-h-0 max-h-0.5 max-h-1 max-h-1.5 max-h-2 max-h-2.5 max-h-3 max-h-3.5 max-h-4 max-h-5 max-h-6 max-h-7 max-h-8 max-h-9 max-h-10 max-h-11 max-h-12 max-h-14 max-h-16 max-h-20 max-h-24 max-h-28 max-h-32 max-h-36 max-h-40 max-h-44 max-h-48 max-h-52 max-h-56 max-h-60 max-h-64 max-h-72 max-h-80 max-h-96 max-h-none max-h-full max-h-screen max-h-svh max-h-lvh max-h-dvh max-h-min max-h-max max-h-fit");
+        // @formatter:on
+      }
+    }
+
+    test(
+        Subject.class,
+
+        """
+        .max-h-px { max-height: 1px }
+        .max-h-0 { max-height: 0px }
+        .max-h-0\\.5 { max-height: 0.125rem }
+        .max-h-1 { max-height: 0.25rem }
+        .max-h-1\\.5 { max-height: 0.375rem }
+        .max-h-2 { max-height: 0.5rem }
+        .max-h-2\\.5 { max-height: 0.625rem }
+        .max-h-3 { max-height: 0.75rem }
+        .max-h-3\\.5 { max-height: 0.875rem }
+        .max-h-4 { max-height: 1rem }
+        .max-h-5 { max-height: 1.25rem }
+        .max-h-6 { max-height: 1.5rem }
+        .max-h-7 { max-height: 1.75rem }
+        .max-h-8 { max-height: 2rem }
+        .max-h-9 { max-height: 2.25rem }
+        .max-h-10 { max-height: 2.5rem }
+        .max-h-11 { max-height: 2.75rem }
+        .max-h-12 { max-height: 3rem }
+        .max-h-14 { max-height: 3.5rem }
+        .max-h-16 { max-height: 4rem }
+        .max-h-20 { max-height: 5rem }
+        .max-h-24 { max-height: 6rem }
+        .max-h-28 { max-height: 7rem }
+        .max-h-32 { max-height: 8rem }
+        .max-h-36 { max-height: 9rem }
+        .max-h-40 { max-height: 10rem }
+        .max-h-44 { max-height: 11rem }
+        .max-h-48 { max-height: 12rem }
+        .max-h-52 { max-height: 13rem }
+        .max-h-56 { max-height: 14rem }
+        .max-h-60 { max-height: 15rem }
+        .max-h-64 { max-height: 16rem }
+        .max-h-72 { max-height: 18rem }
+        .max-h-80 { max-height: 20rem }
+        .max-h-96 { max-height: 24rem }
+        .max-h-none { max-height: none }
+        .max-h-full { max-height: 100% }
+        .max-h-screen { max-height: 100vh }
+        .max-h-svh { max-height: 100svh }
+        .max-h-lvh { max-height: 100lvh }
+        .max-h-dvh { max-height: 100dvh }
+        .max-h-min { max-height: min-content }
+        .max-h-max { max-height: max-content }
+        .max-h-fit { max-height: fit-content }        
+        """
+    );
+  }
+
+  @Test
   public void maxWidth() {
     class Subject extends AbstractSubject {
       @Override
@@ -1929,6 +1992,68 @@ public class CssGeneratorTest {
         .max-w-screen-lg { max-width: 1024px }
         .max-w-screen-xl { max-width: 1280px }
         .max-w-screen-2xl { max-width: 1536px }
+        """
+    );
+  }
+
+  @Test
+  public void minHeight() {
+    class Subject extends AbstractSubject {
+      @Override
+      final void classes() {
+        // @formatter:off
+        className("min-h-px min-h-0 min-h-0.5 min-h-1 min-h-1.5 min-h-2 min-h-2.5 min-h-3 min-h-3.5 min-h-4 min-h-5 min-h-6 min-h-7 min-h-8 min-h-9 min-h-10 min-h-11 min-h-12 min-h-14 min-h-16 min-h-20 min-h-24 min-h-28 min-h-32 min-h-36 min-h-40 min-h-44 min-h-48 min-h-52 min-h-56 min-h-60 min-h-64 min-h-72 min-h-80 min-h-96 min-h-full min-h-screen min-h-svh min-h-lvh min-h-dvh min-h-min min-h-max min-h-fit");
+        // @formatter:on
+      }
+    }
+
+    test(
+        Subject.class,
+
+        """
+        .min-h-px { min-height: 1px }
+        .min-h-0 { min-height: 0px }
+        .min-h-0\\.5 { min-height: 0.125rem }
+        .min-h-1 { min-height: 0.25rem }
+        .min-h-1\\.5 { min-height: 0.375rem }
+        .min-h-2 { min-height: 0.5rem }
+        .min-h-2\\.5 { min-height: 0.625rem }
+        .min-h-3 { min-height: 0.75rem }
+        .min-h-3\\.5 { min-height: 0.875rem }
+        .min-h-4 { min-height: 1rem }
+        .min-h-5 { min-height: 1.25rem }
+        .min-h-6 { min-height: 1.5rem }
+        .min-h-7 { min-height: 1.75rem }
+        .min-h-8 { min-height: 2rem }
+        .min-h-9 { min-height: 2.25rem }
+        .min-h-10 { min-height: 2.5rem }
+        .min-h-11 { min-height: 2.75rem }
+        .min-h-12 { min-height: 3rem }
+        .min-h-14 { min-height: 3.5rem }
+        .min-h-16 { min-height: 4rem }
+        .min-h-20 { min-height: 5rem }
+        .min-h-24 { min-height: 6rem }
+        .min-h-28 { min-height: 7rem }
+        .min-h-32 { min-height: 8rem }
+        .min-h-36 { min-height: 9rem }
+        .min-h-40 { min-height: 10rem }
+        .min-h-44 { min-height: 11rem }
+        .min-h-48 { min-height: 12rem }
+        .min-h-52 { min-height: 13rem }
+        .min-h-56 { min-height: 14rem }
+        .min-h-60 { min-height: 15rem }
+        .min-h-64 { min-height: 16rem }
+        .min-h-72 { min-height: 18rem }
+        .min-h-80 { min-height: 20rem }
+        .min-h-96 { min-height: 24rem }
+        .min-h-full { min-height: 100% }
+        .min-h-screen { min-height: 100vh }
+        .min-h-svh { min-height: 100svh }
+        .min-h-lvh { min-height: 100lvh }
+        .min-h-dvh { min-height: 100dvh }
+        .min-h-min { min-height: min-content }
+        .min-h-max { min-height: max-content }
+        .min-h-fit { min-height: fit-content }        
         """
     );
   }
@@ -3601,9 +3726,11 @@ public class CssGeneratorTest {
         .ml-auto { margin-inline-start: auto }
         .size-px { block-size: 1px; inline-size: 1px }
         .h-4 { block-size: 1rem }
+        .max-h-12 { max-block-size: 3rem }
+        .min-h-8 { min-block-size: 2rem }
         .w-4 { inline-size: 1rem }
-        .min-w-8 { min-inline-size: 2rem }
         .max-w-12 { max-inline-size: 3rem }
+        .min-w-8 { min-inline-size: 2rem }
         .rounded-none { border-radius: 0px }
         .rounded-t-none { border-start-start-radius: 0px; border-start-end-radius: 0px }
         .rounded-r-none { border-start-end-radius: 0px; border-end-end-radius: 0px }
