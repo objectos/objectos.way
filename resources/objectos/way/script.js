@@ -193,7 +193,7 @@
 		}
 
 		for (const action of actions) {
-
+			
 			const cmd = action.cmd;
 
 			if (!cmd) {
@@ -201,6 +201,12 @@
 			}
 
 			switch (cmd) {
+				case "add-class": {
+					executeAddClass(action);
+
+					break;
+				}
+				
 				case "delay": {
 					executeDelay(action, element);
 
@@ -215,6 +221,12 @@
 
 				case "location": {
 					executeLocation(action.value);
+
+					break;
+				}
+
+				case "remove-class": {
+					executeRemoveClass(action);
 
 					break;
 				}
@@ -239,6 +251,10 @@
 			}
 
 		}
+	}
+	
+	function executeAddClass(action) {
+		withElementClassList(action, "add");
 	}
 
 	function executeDelay(obj, el) {
@@ -369,6 +385,10 @@
 		xhr.send();
 	}
 
+	function executeRemoveClass(action) {
+		withElementClassList(action, "remove");
+	}
+
 	function executeReplaceClass(action) {
 		const args = action.args;
 
@@ -418,6 +438,10 @@
 	}
 
 	function executeToggleClass(action) {
+		withElementClassList(action, "toggle");
+	}
+	
+	function withElementClassList(action, methodName) {
 		const args = action.args;
 
 		if (!args) {
@@ -441,7 +465,7 @@
 		for (let idx = 1; idx < args.length; idx++) {
 			const className = args[idx];
 
-			classList.toggle(className);
+			classList[methodName](className);
 		}
 	}
 

@@ -17,11 +17,17 @@ package objectos.way;
 
 import static org.testng.Assert.assertEquals;
 
+import objectos.way.Html.ClassName;
 import objectos.way.Html.Id;
 import objectos.way.Script.Action;
 import org.testng.annotations.Test;
 
 public class ScriptActionTest {
+
+  private static final Id _OVERLAY = Html.id("overlay");
+
+  private static final ClassName HIDDEN = Html.className("hidden");
+  private static final ClassName BLOCK = Html.className("block");
 
   @Test
   public void action() {
@@ -48,6 +54,24 @@ public class ScriptActionTest {
         <div data-on-click='[]'></div>
         <div data-on-click='[{"cmd":"replace-class","args":["x","on","off"]}]'></div>
         <div data-on-click='[{"cmd":"replace-class","args":["x","on","off"]},{"cmd":"replace-class","args":["y","foo","bar"]}]'></div>
+        """
+    );
+  }
+
+  @Test
+  public void addClass() {
+    test(
+        new Html.Template() {
+          @Override
+          protected final void render() {
+            div(dataOnClick(Script.addClass(_OVERLAY, HIDDEN)));
+            div(dataOnClick(Script.addClass(_OVERLAY, HIDDEN, BLOCK)));
+          }
+        },
+
+        """
+        <div data-on-click='[{"cmd":"add-class","args":["overlay","hidden"]}]'></div>
+        <div data-on-click='[{"cmd":"add-class","args":["overlay","hidden","block"]}]'></div>
         """
     );
   }
@@ -89,6 +113,24 @@ public class ScriptActionTest {
   }
 
   @Test
+  public void removeClass() {
+    test(
+        new Html.Template() {
+          @Override
+          protected final void render() {
+            div(dataOnClick(Script.removeClass(_OVERLAY, HIDDEN)));
+            div(dataOnClick(Script.removeClass(_OVERLAY, HIDDEN, BLOCK)));
+          }
+        },
+
+        """
+        <div data-on-click='[{"cmd":"remove-class","args":["overlay","hidden"]}]'></div>
+        <div data-on-click='[{"cmd":"remove-class","args":["overlay","hidden","block"]}]'></div>
+        """
+    );
+  }
+
+  @Test
   public void submit() {
     test(
         new Html.Template() {
@@ -122,8 +164,8 @@ public class ScriptActionTest {
         },
 
         """
-        <div data-on-click='[{"cmd":"replace-class","args":["overlay","foo"]}]'></div>
-        <div data-on-click='[{"cmd":"replace-class","args":["overlay","c1","c2"]}]'></div>
+        <div data-on-click='[{"cmd":"toggle-class","args":["overlay","foo"]}]'></div>
+        <div data-on-click='[{"cmd":"toggle-class","args":["overlay","c1","c2"]}]'></div>
         """
     );
   }

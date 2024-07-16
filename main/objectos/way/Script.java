@@ -81,6 +81,41 @@ public final class Script {
     }
   }
 
+  public static Action addClass(Html.Id id, Html.ClassName... classes) {
+    Check.notNull(id, "id == null");
+
+    for (int idx = 0; idx < classes.length; idx++) {
+      Check.notNull(classes[idx], "classes[", idx, "] == null");
+    }
+
+    return new ScriptAction() {
+      @Override
+      final void writeTo(StringBuilder json) {
+        objectStart(json);
+
+        property(json, CMD, "add-class");
+
+        comma(json);
+
+        propertyStart(json, "args");
+
+        arrayStart(json);
+
+        stringLiteral(json, id.value());
+
+        for (Html.ClassName className : classes) {
+          comma(json);
+
+          stringLiteral(json, className.value());
+        }
+
+        arrayEnd(json);
+
+        objectEnd(json);
+      }
+    };
+  }
+
   public static Action delay(int ms, Action... actions) {
     Check.argument(ms >= 0, "ms must not be negative");
 
@@ -126,6 +161,41 @@ public final class Script {
     };
   }
 
+  public static Action removeClass(Html.Id id, Html.ClassName... classes) {
+    Check.notNull(id, "id == null");
+
+    for (int idx = 0; idx < classes.length; idx++) {
+      Check.notNull(classes[idx], "classes[", idx, "] == null");
+    }
+
+    return new ScriptAction() {
+      @Override
+      final void writeTo(StringBuilder json) {
+        objectStart(json);
+
+        property(json, CMD, "remove-class");
+
+        comma(json);
+
+        propertyStart(json, "args");
+
+        arrayStart(json);
+
+        stringLiteral(json, id.value());
+
+        for (Html.ClassName className : classes) {
+          comma(json);
+
+          stringLiteral(json, className.value());
+        }
+
+        arrayEnd(json);
+
+        objectEnd(json);
+      }
+    };
+  }
+
   public static Action replaceClass(Html.Id id,
       Html.ClassName from,
       Html.ClassName to) {
@@ -155,7 +225,7 @@ public final class Script {
       final void writeTo(StringBuilder json) {
         objectStart(json);
 
-        property(json, CMD, "replace-class");
+        property(json, CMD, "toggle-class");
 
         comma(json);
 
@@ -186,7 +256,7 @@ public final class Script {
       final void writeTo(StringBuilder json) {
         objectStart(json);
 
-        property(json, CMD, "replace-class");
+        property(json, CMD, "toggle-class");
 
         comma(json);
 
