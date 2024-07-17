@@ -148,7 +148,7 @@ final class HtmlCompiler extends HtmlCompilerElements implements Html.Compiler {
     index = fragmentBegin();
 
     try {
-      fragment.invoke(arg1);
+      fragment.headerMenuItems(arg1);
     } catch (Exception e) {
       throw new Html.RenderingException(e);
     }

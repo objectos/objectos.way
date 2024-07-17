@@ -21,11 +21,6 @@ import java.util.List;
 final class HtmlAttributeName extends HtmlAttributeNameGenerated implements Html.AttributeName {
 
   /**
-   * The {@code data-click} attribute.
-   */
-  public static final Html.AttributeName DATA_CLICK = action("data-click");
-
-  /**
    * The {@code data-frame} attribute.
    */
   public static final Html.AttributeName DATA_FRAME = create("data-frame", false);
@@ -39,11 +34,6 @@ final class HtmlAttributeName extends HtmlAttributeNameGenerated implements Html
    * The {@code data-on-input} attribute.
    */
   public static final Html.AttributeName DATA_ON_INPUT = action("data-on-input");
-
-  /**
-   * The {@code data-way-click} attribute.
-   */
-  public static final Html.AttributeName DATA_WAY_CLICK = action("data-way-click");
 
   static final class Builder {
 

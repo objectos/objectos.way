@@ -358,7 +358,7 @@ public final class Html {
     /**
      * Invokes this set of instructions.
      */
-    void invoke(T1 arg1) throws Exception;
+    void headerMenuItems(T1 arg1) throws Exception;
 
   }
 
@@ -887,6 +887,10 @@ public final class Html {
       return Html.FRAGMENT;
     }
 
+    protected final ElementInstruction nbsp() {
+      return raw("&nbsp;");
+    }
+
     /**
      * The no-op instruction.
      *
@@ -993,50 +997,33 @@ public final class Html {
     return new HtmlCompiler();
   }
 
-  public static ClassName className(String value) {
-    Check.notNull(value, "value == null");
+  public static ClassName className(ClassName className, String... values) {
+    StringBuilder sb;
+    sb = new StringBuilder();
+
+    sb.append(className.value());
+
+    classNameValues(sb, values);
+
+    String value;
+    value = sb.toString();
 
     return new HtmlClassName(value);
-  }
-
-  public static ClassName className(String v0, String v1) {
-    Check.notNull(v0, "v0 == null");
-    Check.notNull(v1, "v1 == null");
-
-    return new HtmlClassName(v0 + " " + v1);
-  }
-
-  public static ClassName className(String v0, String v1, String v2) {
-    Check.notNull(v0, "v0 == null");
-    Check.notNull(v1, "v1 == null");
-    Check.notNull(v2, "v2 == null");
-
-    return new HtmlClassName(v0 + " " + v1 + " " + v2);
-  }
-
-  public static ClassName className(String v0, String v1, String v2, String v3) {
-    Check.notNull(v0, "v0 == null");
-    Check.notNull(v1, "v1 == null");
-    Check.notNull(v2, "v2 == null");
-    Check.notNull(v3, "v3 == null");
-
-    return new HtmlClassName(v0 + " " + v1 + " " + v2 + " " + v3);
-  }
-
-  public static ClassName className(String v0, String v1, String v2, String v3, String v4) {
-    Check.notNull(v0, "v0 == null");
-    Check.notNull(v1, "v1 == null");
-    Check.notNull(v2, "v2 == null");
-    Check.notNull(v3, "v3 == null");
-    Check.notNull(v4, "v4 == null");
-
-    return new HtmlClassName(v0 + " " + v1 + " " + v2 + " " + v3 + " " + v4);
   }
 
   public static ClassName className(String... values) {
     StringBuilder sb;
     sb = new StringBuilder();
 
+    classNameValues(sb, values);
+
+    String value;
+    value = sb.toString();
+
+    return new HtmlClassName(value);
+  }
+
+  private static void classNameValues(StringBuilder sb, String... values) {
     for (int i = 0; i < values.length; i++) {
       if (i > 0) {
         sb.append(' ');
@@ -1047,11 +1034,6 @@ public final class Html {
 
       sb.append(value);
     }
-
-    String value;
-    value = sb.toString();
-
-    return new HtmlClassName(value);
   }
 
   public static Id id(String value) {

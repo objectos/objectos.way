@@ -22,7 +22,6 @@ import java.util.List;
 import java.util.Map;
 import objectos.lang.object.Check;
 import objectos.util.list.GrowableList;
-import objectos.way.Html.AttributeName;
 
 /**
  * The <strong>Objectos Carbon UI</strong> main class.
@@ -31,7 +30,7 @@ import objectos.way.Html.AttributeName;
  * Objectos Carbon UI is an implementation of the Carbon Design System in pure
  * Java.
  */
-public final class Carbon {
+public final class Carbon extends CarbonClasses {
 
   /**
    * The White theme.
@@ -54,6 +53,8 @@ public final class Carbon {
   public static final Theme G100 = CarbonTheme.G100;
 
   public enum Icon {
+
+    CLOSE,
 
     MENU;
 
@@ -154,11 +155,26 @@ public final class Carbon {
    */
   public sealed static abstract class Ui permits CarbonUi {
 
+    final class CarbonActionAttribute extends HasRenderMethod implements Attribute {
+      final Html.AttributeName name;
+      final Script.Action value;
+
+      CarbonActionAttribute(Html.AttributeName name, Script.Action value) {
+        this.name = name;
+        this.value = value;
+      }
+
+      @Override
+      final void render() {
+        tmpl.attribute(name, value);
+      }
+    }
+
     final class CarbonStringAttribute extends HasRenderMethod implements Attribute {
       final Html.AttributeName name;
       final String value;
 
-      public CarbonStringAttribute(AttributeName name, String value) {
+      CarbonStringAttribute(Html.AttributeName name, String value) {
         this.name = name;
         this.value = Check.notNull(value, "value == null");
       }
@@ -288,6 +304,21 @@ public final class Carbon {
       Check.notNull(value, "value == null");
 
       return new CarbonStringAttribute(HtmlAttributeName.DATA_FRAME, name + ":" + value);
+    }
+
+    /**
+     * Creates a new {@code data-frame} attribute with the specified name and
+     * value.
+     *
+     * @param value the string value of the attribute
+     *
+     * @return a new attribute
+     */
+    public final Attribute dataOnClick(Script.Action... actions) {
+      Script.Action joined;
+      joined = Script.actions(actions);
+
+      return new CarbonActionAttribute(HtmlAttributeName.DATA_ON_CLICK, joined);
     }
 
     /**

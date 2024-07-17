@@ -19,7 +19,7 @@ final class CarbonStyles implements Http.Handler {
 
   private Css.StyleSheet generateStyleSheet() {
     return Css.generateStyleSheet(
-        Css.classes(CarbonUi.class),
+        Css.classes(CarbonClasses.class),
 
         Css.useLogicalProperties(),
 
@@ -60,6 +60,9 @@ final class CarbonStyles implements Http.Handler {
         --cds-icon-on-color-disabled: #8d8d8d;
         --cds-icon-primary: #161616;
         --cds-icon-secondary: #525252;
+        --cds-layer-01: #f4f4f4;
+        --cds-layer-02: #ffffff;
+        --cds-layer-03: #f4f4f4;
         --cds-overlay: rgba(22, 22, 22, 0.5);
         --cds-shadow: rgba(0, 0, 0, 0.3);
         --cds-text-primary: #161616;
@@ -103,6 +106,9 @@ final class CarbonStyles implements Http.Handler {
         --cds-icon-on-color-disabled: #8d8d8d;
         --cds-icon-primary: #161616;
         --cds-icon-secondary: #525252;
+        --cds-layer-01: #ffffff;
+        --cds-layer-02: #f4f4f4;
+        --cds-layer-03: #ffffff;
         --cds-overlay: rgba(22, 22, 22, 0.5);
         --cds-shadow: rgba(0, 0, 0, 0.3);
         --cds-text-primary: #161616;
@@ -146,6 +152,9 @@ final class CarbonStyles implements Http.Handler {
         --cds-icon-on-color-disabled: rgba(255, 255, 255, 0.25);
         --cds-icon-primary: #f4f4f4;
         --cds-icon-secondary: #c6c6c6;
+        --cds-layer-01: #393939;
+        --cds-layer-02: #525252;
+        --cds-layer-03: #6f6f6f;
         --cds-overlay: rgba(0, 0, 0, 0.65);
         --cds-shadow: rgba(0, 0, 0, 0.8);
         --cds-text-primary: #f4f4f4;
@@ -189,6 +198,9 @@ final class CarbonStyles implements Http.Handler {
         --cds-icon-on-color-disabled: rgba(255, 255, 255, 0.25);
         --cds-icon-primary: #f4f4f4;
         --cds-icon-secondary: #c6c6c6;
+        --cds-layer-01: #262626;
+        --cds-layer-02: #393939;
+        --cds-layer-03: #525252;
         --cds-overlay: rgba(0, 0, 0, 0.65);
         --cds-shadow: rgba(0, 0, 0, 0.8);
         --cds-text-primary: #f4f4f4;
@@ -197,19 +209,22 @@ final class CarbonStyles implements Http.Handler {
 
         Css.rule(":root", """
         --cds-border-subtle: var(--cds-border-subtle-00, #e0e0e0);
+        --cds-layer: var(--cds-layer-01, #f4f4f4);
 
         --cds-body-compact-01-font-size: 0.875rem;
         --cds-body-compact-01-font-weight: 400;
         --cds-body-compact-01-line-height: 1.28572;
         --cds-body-compact-01-letter-spacing: 0.16px;
 
-        --spacing-header: 3rem
+        --spacing-header: 3rem;
+        --spacing-side-nav: 16rem;
         """),
 
         Css.overrideBackgroundColor("""
         : var(--cds-background)
         active: var(--cds-background-active)
         hover: var(--cds-background-hover)
+        layer: var(--cds-layer)
         overlay: var(--cds-overlay)
         """),
 
@@ -262,13 +277,17 @@ final class CarbonStyles implements Http.Handler {
         20px: 1.25rem
         """),
 
-        Css.overrideTextColor("""
-        primary: var(--cds-text-primary)
-        secondary: var(--cds-text-secondary)
+        Css.overrideOutlineColor("""
+        focus: var(--cds-focus)
+        interactive: var(--cds-border-interactive)
+        subtle: var(--cds-border-subtle)
+
+        transparent: transparent
         """),
 
         Css.overrideSpacing("""
         header: var(--spacing-header)
+        side-nav: var(--spacing-side-nav)
 
         0px: 0px
         1px: 0.0625rem
@@ -300,6 +319,11 @@ final class CarbonStyles implements Http.Handler {
         288px: 18rem
         """),
 
+        Css.overrideTextColor("""
+        primary: var(--cds-text-primary)
+        secondary: var(--cds-text-secondary)
+        """),
+
         Css.overrideZIndex("""
         auto: auto
         dropdown: 9100
@@ -312,6 +336,7 @@ final class CarbonStyles implements Http.Handler {
         """),
 
         Css.variants("""
+        span: & span
         svg: & svg
         """)
     );

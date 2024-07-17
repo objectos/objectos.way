@@ -15,9 +15,13 @@
  */
 package testing.site.carbon;
 
+import java.util.List;
 import objectos.way.Carbon;
+import objectos.way.Carbon.Icon;
+import objectos.way.Carbon.IconSize;
 import objectos.way.Html;
 import objectos.way.Http;
+import objectos.way.Script;
 
 abstract class CarbonPage extends Carbon.Shell {
 
@@ -32,75 +36,135 @@ abstract class CarbonPage extends Carbon.Shell {
   @Override
   protected abstract void preRender();
 
+  private static final Html.Id _CLOSE_BUTTON = Html.id("close-button");
+
+  private static final Html.Id _MENU_BUTTON = Html.id("menu-button");
+
+  private static final Html.Id _OVERLAY = Html.id("overlay");
+
+  private static final Html.Id _SIDE_NAV = Html.id("side-nav");
+
+  static final Script.Action HIDE_MENU_ACTION = Script.actions(
+      Script.addClass(_CLOSE_BUTTON, Carbon.HIDDEN),
+      Script.removeClass(_MENU_BUTTON, Carbon.HIDDEN),
+      Script.addClass(_OVERLAY, Carbon.HIDDEN, Carbon.OPACITY_0),
+      Script.removeClass(_OVERLAY, Carbon.OPACITY_100),
+      Script.addClass(_SIDE_NAV, Carbon.HIDDEN),
+      Script.removeClass(_SIDE_NAV, Carbon.SIDE_NAV_WIDTH)
+  );
+
+  static final Script.Action SHOW_MENU_ACTION = Script.actions(
+      Script.removeClass(_CLOSE_BUTTON, Carbon.HIDDEN),
+      Script.addClass(_MENU_BUTTON, Carbon.HIDDEN),
+      Script.removeClass(_OVERLAY, Carbon.HIDDEN, Carbon.OPACITY_0),
+      Script.addClass(_OVERLAY, Carbon.OPACITY_100),
+      Script.removeClass(_SIDE_NAV, Carbon.HIDDEN),
+      Script.addClass(_SIDE_NAV, Carbon.SIDE_NAV_WIDTH)
+  );
+
+  private record HeaderMenuItem(String text, String href, boolean active) {}
+
   @Override
   protected final void renderUi() throws Exception {
-    Html.Id overlay;
-    overlay = Html.id("overlay");
+    var headerItems = List.of(
+        new HeaderMenuItem("Components", "/components", topSection == TopSection.COMPONENTS),
 
-    Html.Id sideNav;
-    sideNav = Html.id("side-nav");
+        new HeaderMenuItem("Gallery", "#", false)
+    );
 
-    ui(
-        ui.header(
-            ui.ariaLabel("Objectos Carbon"),
+    header(
+        Carbon.HEADER,
+        ariaLabel("Objectos Carbon"),
 
-            ui.headerMenuButton(
-                ui.ariaLabel("Open menu"),
+        button(
+            _MENU_BUTTON, Carbon.HEADER_MENU_BUTTON,
+            ariaLabel("Open menu"), title("Open"), type("button"),
+            dataOnClick(SHOW_MENU_ACTION),
 
-                ui.title("Open")
-            ),
+            ui(ui.icon(Icon.MENU, IconSize.PX20))
+        ),
 
-            ui.headerName(
-                ui.prefix("Objectos"),
+        button(
+            _CLOSE_BUTTON, Carbon.HEADER_CLOSE_BUTTON,
+            className("hidden"),
+            ariaLabel("Close menu"), title("Close"), type("button"),
+            dataOnClick(HIDE_MENU_ACTION),
 
-                ui.name("Carbon"),
+            ui(ui.icon(Icon.CLOSE, IconSize.PX20))
+        ),
 
-                ui.href("/")
-            ),
+        a(
+            Carbon.HEADER_NAME,
+            dataOnClick(HIDE_MENU_ACTION),
+            dataOnClick(Script.location("/")),
+            href("/"),
 
-            ui.headerNavigation(
-                menuItems("header-nav", ui::headerMenuItem)
+            span("Objectos"), nbsp(), t("Carbon")
+        ),
+
+        nav(
+            Carbon.HEADER_NAV,
+            ariaLabel("Objectos Carbon navigation"),
+            dataFrame("header-nav", topSection.name()),
+
+            ul(
+                Carbon.HEADER_NAV_LIST,
+
+                f(this::headerMenuItems, headerItems)
             )
-        ),
+        )
+    );
 
-        ui.overlay(
-            ui.id(overlay)
-        ),
+    div(_OVERLAY, Carbon.OVERLAY, Carbon.HEADER_OFFSET);
 
-        ui.sideNav(
-            ui.id(sideNav),
+    nav(
+        _SIDE_NAV, Carbon.SIDE_NAV, Carbon.HEADER_OFFSET,
+        ariaLabel("Side navigation"),
+        dataFrame("side-nav", topSection.name()),
+        tabindex("-1"),
 
-            ui.sideNavItems(
-                menuItems("side-nav-items", ui::sideNavMenuItem)
+        ul(
+            Carbon.SIDE_NAV_ITEMS,
+
+            ul(
+                Carbon.SIDE_NAV_HEADER_LIST,
+
+                f(this::sideNavHeaderItems, headerItems)
             )
-        ),
-
-        ui.content(
-            this::renderContent
         )
     );
   }
 
-  private Carbon.Component[] menuItems(String frameName, Carbon.Element.Provider provider) {
-    return new Carbon.Component[] {
-        ui.dataFrame(frameName, topSection.name()),
+  private void headerMenuItems(List<HeaderMenuItem> items) {
+    for (var item : items) {
+      li(
+          a(
+              Carbon.HEADER_MENU_ITEM,
+              item.active ? Carbon.HEADER_MENU_ITEM_ACTIVE : Carbon.HEADER_MENU_ITEM_INACTIVE,
+              href(item.href),
+              tabindex("0"),
 
-        provider.get(
-            ui.name("Components"),
+              span(item.text)
+          )
+      );
+    }
+  }
 
-            ui.href("/components"),
+  private void sideNavHeaderItems(List<HeaderMenuItem> items) {
+    for (var item : items) {
+      li(
+          a(
+              Carbon.SIDE_NAV_HEADER_ITEM,
+              item.active ? Carbon.SIDE_NAV_HEADER_ITEM_ACTIVE : Carbon.SIDE_NAV_HEADER_ITEM_INACTIVE,
+              dataOnClick(HIDE_MENU_ACTION),
+              dataOnClick(Script.location(item.href)),
+              href(item.href),
+              tabindex("0"),
 
-            ui.isActive(topSection == TopSection.COMPONENTS)
-        ),
-
-        provider.get(
-            ui.name("Gallery"),
-
-            ui.href("#"),
-
-            ui.isActive(false)
-        )
-    };
+              span(item.text)
+          )
+      );
+    }
   }
 
   protected abstract void renderContent();

@@ -27,6 +27,115 @@ final class CarbonUi extends Carbon.Ui {
       "cursor-pointer", "appearance-none"
   );
 
+  private static final String _BUTTON_RESET = "cursor-pointer appearance-none";
+
+  static final Html.ClassName HEADER = Html.className(
+      "fixed top-0px right-0px left-0px z-header",
+      "flex items-center h-header",
+      "border-b border-b-subtle",
+      "bg"
+  );
+
+  static final Html.ClassName HEADER_MENU_BUTTON = Html.className(
+      _BUTTON_RESET,
+
+      // header__action
+      "size-header",
+      "border border-transparent",
+      "transition-colors duration-100",
+      "active:bg-active",
+      "focus:border-focus focus:outline-none",
+      "hover:bg-hover",
+      // header__menu-toggle
+      "flex items-center justify-center",
+      // header__menu-toggle__hidden
+      "lg:hidden",
+      // header__menu-trigger
+      "svg:fill-primary"
+  );
+
+  static final Html.ClassName HEADER_MENU_ITEM = Html.className(
+      "relative flex h-full select-none items-center",
+      "border-2 border-transparent",
+      "bg",
+      "px-16px",
+      "text-14px leading-18px tracking-0 font-400",
+      "transition-colors duration-100",
+      "active:bg-active active:text-primary",
+      "focus:border-focus focus:outline-none",
+      "hover:bg-hover hover:text-primary"
+  );
+
+  static final Html.ClassName HEADER_MENU_ITEM_ACTIVE = Html.className(
+      "text-primary",
+      "after:absolute after:-bottom-2px after:-left-2px after:-right-2px",
+      "after:block after:border-b-3 after:border-b-interactive after:content-empty"
+  );
+
+  static final Html.ClassName HEADER_MENU_ITEM_INACTIVE = Html.className(
+      "text-secondary"
+  );
+
+  static final Html.ClassName HEADER_NAME = Html.className(
+      "flex h-full select-none items-center",
+      "border-2 border-transparent",
+      "px-16px",
+      "text-body-compact-01 text-primary font-600 leading-20px tracking-0.1px",
+      "outline-none",
+      "transition-colors duration-100",
+      "focus:border-focus",
+      "lg:pl-16px lg:pr-32px",
+
+      "span:font-400"
+  );
+
+  static final Html.ClassName HEADER_NAV = Html.className(
+      "relative hidden h-full pl-16px",
+      "lg:flex lg:items-center",
+      "lg:before:relative lg:before:-left-16px lg:before:z-header lg:before:block",
+      "lg:before:h-1/2 lg:before:w-1px",
+      "lg:before:border-l lg:before:border-l-subtle",
+      "lg:before:content-empty"
+  );
+
+  static final Html.ClassName HEADER_NAV_LIST = Html.className(
+      "h-full flex text-secondary"
+  );
+
+  static final Html.ClassName OVERLAY = Html.className(
+      "fixed inset-0px block hidden z-overlay",
+      "bg-overlay opacity-0",
+      "transition-opacity duration-300"
+  );
+
+  static final Html.ClassName SIDE_NAV = Html.className(
+      "fixed top-0px bottom-0px left-0px z-header hidden",
+      "w-256px",
+      "bg",
+      "text-secondary"
+  );
+
+  static final Html.ClassName SIDE_NAV_HEADER_LIST = Html.className(
+  );
+
+  static final Html.ClassName SIDE_NAV_HEADER_ITEM = Html.className(
+      "relative flex h-full select-none items-center",
+      "border-2 border-transparent",
+      "bg",
+      "px-16px",
+      "text-14px leading-18px tracking-0 font-400",
+      "transition-colors duration-100",
+      "active:bg-active active:text-primary",
+      "focus:border-focus focus:outline-none",
+      "hover:bg-hover hover:text-primary"
+  );
+
+  static final Html.ClassName SIDE_NAV_HEADER_ITEM_ACTIVE = Html.className(
+  );
+
+  static final Html.ClassName SIDE_NAV_HEADER_ITEM_INACTIVE = Html.className(
+  );
+
   @Override
   final void renderContent(Pojo pojo) {
     tmpl.main(
@@ -42,10 +151,7 @@ final class CarbonUi extends Carbon.Ui {
     headerRendered = true;
 
     tmpl.header(
-        tmpl.className("fixed top-0px right-0px left-0px z-header"),
-        tmpl.className("flex items-center h-header"),
-        tmpl.className("border-b border-b-subtle"),
-        tmpl.className("bg"),
+        HEADER,
 
         pojo.renderTheme(),
         pojo.renderChildren()
@@ -178,7 +284,7 @@ final class CarbonUi extends Carbon.Ui {
     return tmpl.svg(
         tmpl.xmlns("http://www.w3.org/2000/svg"),
         tmpl.fill("currentColor"),
-        tmpl.width(size.size), tmpl.height(size.size), tmpl.viewBox(size.viewBox),
+        tmpl.width(size.size), tmpl.height(size.size), tmpl.viewBox("0 0 32 32"),
 
         tmpl.raw(
             renderIconRaw(icon, size)
@@ -190,16 +296,11 @@ final class CarbonUi extends Carbon.Ui {
 
   private String renderIconRaw(Carbon.Icon icon, Carbon.IconSize size) {
     return switch (icon) {
-      case MENU -> switch (size) {
-        case PX16 -> """
-          <rect x="2" y="12" width="12" height="1"/><rect x="2" y="9" width="12" height="1"/><rect x="2" y="6" width="12" height="1"/><rect x="2" y="3" width="12" height="1"/>""";
-        case PX20 -> """
-          <rect x="2" y="14.8" width="16" height="1.2"/><rect x="2" y="11.2" width="16" height="1.2"/><rect x="2" y="7.6" width="16" height="1.2"/><rect x="2" y="4" width="16" height="1.2"/>""";
-        case PX24 -> """
-          <rect x="3" y="18" width="18" height="1.5"/><rect x="3" y="13.5" width="18" height="1.5"/><rect x="3" y="9" width="18" height="1.5"/><rect x="3" y="4.5" width="18" height="1.5"/>""";
-        case PX32 -> """
-          <rect x="4" y="6" width="24" height="2"/><rect x="4" y="24" width="24" height="2"/><rect x="4" y="12" width="24" height="2"/><rect x="4" y="18" width="24" height="2"/>""";
-      };
+      case CLOSE -> """
+      <polygon points="17.4141 16 24 9.4141 22.5859 8 16 14.5859 9.4143 8 8 9.4141 14.5859 16 8 22.5859 9.4143 24 16 17.4141 22.5859 24 24 22.5859 17.4141 16"/>""";
+
+      case MENU -> """
+      <rect x="4" y="6" width="24" height="2"/><rect x="4" y="24" width="24" height="2"/><rect x="4" y="12" width="24" height="2"/><rect x="4" y="18" width="24" height="2"/>""";
     };
   }
 
