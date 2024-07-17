@@ -60,6 +60,13 @@ final class HtmlCompiler extends HtmlCompilerElements implements Html.Compiler {
    */
   public HtmlCompiler() {}
 
+  private int id = 0;
+
+  @Override
+  public final Html.Id nextId() {
+    return Html.id("html-" + ++id);
+  }
+
   @Override
   public final void writeTo(Appendable dest) throws IOException {
     HtmlDocument document;
