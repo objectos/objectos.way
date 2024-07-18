@@ -155,7 +155,7 @@ final class HtmlCompiler extends HtmlCompilerElements implements Html.Compiler {
     index = fragmentBegin();
 
     try {
-      fragment.headerMenuItems(arg1);
+      fragment.renderMobileNavHeaderItems(arg1);
     } catch (Exception e) {
       throw new Html.RenderingException(e);
     }

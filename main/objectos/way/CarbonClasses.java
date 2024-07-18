@@ -108,6 +108,18 @@ abstract class CarbonClasses {
       "mt-header"
   );
 
+  private static final Html.ClassName MOBILE_OR_SIDE_NAV = Html.className(
+      "fixed top-0px bottom-0px left-0px z-header",
+      "bg",
+      "text-secondary"
+  );
+
+  public static final Html.ClassName MOBILE_NAV = Html.className(
+      MOBILE_OR_SIDE_NAV,
+
+      "invisible w-0px transition-all duration-100"
+  );
+
   public static final Html.ClassName OVERLAY = Html.className(
       "fixed inset-0px block hidden z-overlay",
       "bg-overlay opacity-0",
@@ -115,11 +127,10 @@ abstract class CarbonClasses {
   );
 
   public static final Html.ClassName SIDE_NAV = Html.className(
-      "fixed top-0px bottom-0px left-0px z-header hidden",
-      "w-0px",
-      "bg",
-      "text-secondary",
-      "transition-all duration-200"
+      MOBILE_OR_SIDE_NAV,
+
+      "hidden w-256px",
+      "lg:block"
   );
 
   public static final Html.ClassName SIDE_NAV_HEADER_LIST = Html.className(
@@ -151,6 +162,19 @@ abstract class CarbonClasses {
       "flex-1 pt-16px"
   );
 
+  public static final Html.ClassName SIDE_NAV_LINK = Html.className(
+      "relative flex min-h-32px",
+      "items-center justify-between whitespace-nowrap",
+      "border-2 border-transparent",
+      "px-16px",
+      "text-heading-compact-01 text-secondary",
+      "outline outline-2 -outline-offset-2 outline-transparent",
+      "transition-colors duration-100",
+      "active:bg-active active:text-primary",
+      "focus:outline-focus",
+      "hover:bg-hover hover:text-primary"
+  );
+
   public static final Html.ClassName SIDE_NAV_WIDTH = Html.className(
       "w-256px"
   );
@@ -162,5 +186,7 @@ abstract class CarbonClasses {
   public static final Html.ClassName OPACITY_0 = Html.className("opacity-0");
 
   public static final Html.ClassName OPACITY_100 = Html.className("opacity-100");
+
+  public static final Html.ClassName VISIBLE = Html.className("visible");
 
 }

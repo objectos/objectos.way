@@ -24,8 +24,6 @@ final class CarbonStyles implements Http.Handler {
         Css.useLogicalProperties(),
 
         Css.rule(".cds--white", """
-        background-color: var(--cds-background);
-        color: var(--cds-text-primary);
         --cds-background: #ffffff;
         --cds-background-active: rgba(141, 141, 141, 0.5);
         --cds-background-brand: #0f62fe;
@@ -67,11 +65,14 @@ final class CarbonStyles implements Http.Handler {
         --cds-shadow: rgba(0, 0, 0, 0.3);
         --cds-text-primary: #161616;
         --cds-text-secondary: #525252;
+
+        background-color: var(--cds-background);
+        color: var(--cds-text-primary);
+        --cds-layer: var(--cds-layer-01, #f4f4f4);
+        --cds-border-subtle: var(--cds-border-subtle-00, #e0e0e0);
         """),
 
         Css.rule(".cds--g10", """
-        background-color: var(--cds-background);
-        color: var(--cds-text-primary);
         --cds-background: #f4f4f4;
         --cds-background-active: rgba(141, 141, 141, 0.5);
         --cds-background-brand: #0f62fe;
@@ -113,11 +114,14 @@ final class CarbonStyles implements Http.Handler {
         --cds-shadow: rgba(0, 0, 0, 0.3);
         --cds-text-primary: #161616;
         --cds-text-secondary: #525252;
+
+        background-color: var(--cds-background);
+        color: var(--cds-text-primary);
+        --cds-layer: var(--cds-layer-01, #f4f4f4);
+        --cds-border-subtle: var(--cds-border-subtle-00, #e0e0e0);
         """),
 
         Css.rule(".cds--g90", """
-        background-color: var(--cds-background);
-        color: var(--cds-text-primary);
         --cds-background: #262626;
         --cds-background-active: rgba(141, 141, 141, 0.4);
         --cds-background-brand: #0f62fe;
@@ -159,11 +163,14 @@ final class CarbonStyles implements Http.Handler {
         --cds-shadow: rgba(0, 0, 0, 0.8);
         --cds-text-primary: #f4f4f4;
         --cds-text-secondary: #c6c6c6;
+
+        background-color: var(--cds-background);
+        color: var(--cds-text-primary);
+        --cds-layer: var(--cds-layer-01, #f4f4f4);
+        --cds-border-subtle: var(--cds-border-subtle-00, #e0e0e0);
         """),
 
         Css.rule(".cds--g100", """
-        background-color: var(--cds-background);
-        color: var(--cds-text-primary);
         --cds-background: #161616;
         --cds-background-active: rgba(141, 141, 141, 0.4);
         --cds-background-brand: #0f62fe;
@@ -205,6 +212,11 @@ final class CarbonStyles implements Http.Handler {
         --cds-shadow: rgba(0, 0, 0, 0.8);
         --cds-text-primary: #f4f4f4;
         --cds-text-secondary: #c6c6c6;
+
+        background-color: var(--cds-background);
+        color: var(--cds-text-primary);
+        --cds-layer: var(--cds-layer-01, #f4f4f4);
+        --cds-border-subtle: var(--cds-border-subtle-00, #e0e0e0);
         """),
 
         Css.rule(":root", """
@@ -258,7 +270,7 @@ final class CarbonStyles implements Http.Handler {
         body-compact-01: var(--cds-body-compact-01-font-size, 0.875rem)/var(--cds-body-compact-01-line-height, 1.28572)/var(--cds-body-compact-01-letter-spacing, 0.16px)/var(--cds-body-compact-01-font-weight, 400)
 
         heading-compact-01: var(--cds-heading-compact-01-font-size, 0.875rem)/var(--cds-heading-compact-01-line-height, 1.28572)/var(--cds-heading-compact-01-letter-spacing, 0.16px)/var(--cds-heading-compact-01-font-weight, 600)
-        
+
         14px: 0.875rem
         """),
 

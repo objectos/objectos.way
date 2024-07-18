@@ -360,7 +360,7 @@ public final class Html {
     /**
      * Invokes this set of instructions.
      */
-    void headerMenuItems(T1 arg1) throws Exception;
+    void renderMobileNavHeaderItems(T1 arg1) throws Exception;
 
   }
 

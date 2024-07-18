@@ -68,6 +68,16 @@ abstract class CarbonShell extends Html.Template implements Web.Action {
     this.title = Check.notNull(title, "title == null");
   }
 
+  protected final boolean currentPage(String href) {
+    Http.Request.Target target;
+    target = http.target();
+
+    String path;
+    path = target.path();
+
+    return path.equals(href);
+  }
+
   protected final Html.ElementInstruction icon16(Icon icon, Html.AttributeInstruction... attributes) {
     return renderIcon(icon, "16px", attributes);
   }
