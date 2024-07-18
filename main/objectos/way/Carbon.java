@@ -17,6 +17,8 @@ package objectos.way;
 
 import java.io.IOException;
 import java.io.UncheckedIOException;
+import objectos.lang.object.Check;
+import objectos.way.Html.ClassName;
 
 /**
  * The <strong>Objectos Carbon UI</strong> main class.
@@ -47,15 +49,77 @@ public final class Carbon extends CarbonClasses {
    */
   public static final Html.ClassName G100 = Html.className("cds--g100");
 
-  public enum Icon {
+  /**
+   * A Carbon UI component.
+   */
+  public sealed interface Component {
 
-    CLOSE,
+    public sealed interface Header extends Component permits CarbonHeader {
 
-    MENU;
+      public sealed interface CloseButton extends Component permits CarbonHeader.HeaderCloseButton {
+
+        CloseButton ariaLabel(String value);
+
+        CloseButton title(String value);
+
+        CloseButton onClick(Script.Action value);
+
+      }
+
+      public sealed interface MenuButton extends Component permits CarbonHeader.HeaderMenuButton {
+
+        MenuButton ariaLabel(String value);
+
+        MenuButton title(String value);
+
+        MenuButton onClick(Script.Action value);
+
+      }
+
+      CloseButton addCloseButton();
+
+      MenuButton addMenuButton();
+
+      Header ariaLabel(String value);
+
+    }
+
+    Html.ElementInstruction render();
 
   }
 
-  public static abstract class Shell extends CarbonShell {
+  public enum Icon {
+
+    CLOSE("""
+    <polygon points="17.4141 16 24 9.4141 22.5859 8 16 14.5859 9.4143 8 8 9.4141 14.5859 16 8 22.5859 9.4143 24 16 17.4141 22.5859 24 24 22.5859 17.4141 16"/>"""),
+
+    MENU("""
+    <rect x="4" y="6" width="24" height="2"/><rect x="4" y="24" width="24" height="2"/><rect x="4" y="12" width="24" height="2"/><rect x="4" y="18" width="24" height="2"/>""");
+
+    final String raw;
+
+    private Icon(String raw) {
+      this.raw = raw;
+    }
+
+  }
+
+  /**
+   * The UI shell is the top-level UI element of an web application.
+   */
+  public sealed interface Shell permits CarbonShell {
+
+    Shell theme(ClassName value);
+
+    Shell title(String value);
+
+    Component.Header addHeader();
+
+    void render();
+
+  }
+
+  public static abstract class Template extends CarbonTemplate {
 
     /**
      * Sole constructor.
@@ -63,7 +127,21 @@ public final class Carbon extends CarbonClasses {
      * @param http
      *        the HTTP exchange
      */
-    protected Shell(Http.Exchange http) {
+    protected Template(Http.Exchange http) {
+      super(http);
+    }
+
+  }
+
+  public static abstract class Template2 extends CarbonTemplate2 {
+
+    /**
+     * Sole constructor.
+     *
+     * @param http
+     *        the HTTP exchange
+     */
+    protected Template2(Http.Exchange http) {
       super(http);
     }
 
@@ -73,6 +151,12 @@ public final class Carbon extends CarbonClasses {
 
   public static Carbon create() {
     return new Carbon();
+  }
+
+  public final Shell createShell(Html.Template template) {
+    Check.notNull(template, "template == null");
+
+    return new CarbonShell(template);
   }
 
   public final Http.Module createHttpModule() {

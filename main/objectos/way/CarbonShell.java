@@ -16,106 +16,57 @@
 package objectos.way;
 
 import objectos.lang.object.Check;
-import objectos.way.Carbon.Icon;
+import objectos.way.Carbon.Component.Header;
+import objectos.way.Carbon.Shell;
 
-abstract class CarbonShell extends Html.Template implements Web.Action {
-
-  private final Http.Exchange http;
+final class CarbonShell extends CarbonContainer implements Carbon.Shell {
 
   private Html.ClassName theme = Carbon.WHITE;
 
   private String title;
 
-  protected CarbonShell(Http.Exchange http) {
-    this.http = http;
+  CarbonShell(Html.Template tmpl) {
+    super(tmpl);
   }
 
   @Override
-  public void execute() {
-    http.ok(this);
+  public final Shell theme(Html.ClassName value) {
+    theme = Check.notNull(value, "value == null");
+    return this;
   }
 
   @Override
-  protected final void render() throws Exception {
-    doctype();
+  public final Shell title(String value) {
+    title = Check.notNull(value, "value == null");
+    return this;
+  }
 
-    html(
+  @Override
+  public final Header addHeader() {
+    return addComponent(new CarbonHeader(tmpl));
+  }
+
+  @Override
+  public final void render() {
+    tmpl.doctype();
+
+    tmpl.html(
         theme,
 
-        head(
-            meta(charset("utf-8")),
-            meta(httpEquiv("content-type"), content("text/html; charset=utf-8")),
-            meta(name("viewport"), content("width=device-width, initial-scale=1")),
-            script(src("/ui/script.js")),
-            link(rel("shortcut icon"), type("image/x-icon"), href("/favicon.png")),
-            link(rel("stylesheet"), type("text/css"), href("/ui/carbon.css")),
-            title != null ? title(title) : noop()
+        tmpl.head(
+            tmpl.meta(tmpl.charset("utf-8")),
+            tmpl.meta(tmpl.httpEquiv("content-type"), tmpl.content("text/html; charset=utf-8")),
+            tmpl.meta(tmpl.name("viewport"), tmpl.content("width=device-width, initial-scale=1")),
+            tmpl.script(tmpl.src("/ui/script.js")),
+            tmpl.link(tmpl.rel("shortcut icon"), tmpl.type("image/x-icon"), tmpl.href("/favicon.png")),
+            tmpl.link(tmpl.rel("stylesheet"), tmpl.type("text/css"), tmpl.href("/ui/carbon.css")),
+            title != null ? tmpl.title(title) : tmpl.noop()
         ),
 
-        body(
-            f(this::renderUi)
+        tmpl.body(
+            renderComponents()
         )
     );
-  }
-
-  protected abstract void renderUi() throws Exception;
-
-  protected final void shellTheme(Html.ClassName theme) {
-    this.theme = Check.notNull(theme, "theme == null");
-  }
-
-  protected final void shellTitle(String title) {
-    this.title = Check.notNull(title, "title == null");
-  }
-
-  protected final boolean currentPage(String href) {
-    Http.Request.Target target;
-    target = http.target();
-
-    String path;
-    path = target.path();
-
-    return path.equals(href);
-  }
-
-  protected final Html.ElementInstruction icon16(Icon icon, Html.AttributeInstruction... attributes) {
-    return renderIcon(icon, "16px", attributes);
-  }
-
-  protected final Html.ElementInstruction icon20(Icon icon, Html.AttributeInstruction... attributes) {
-    return renderIcon(icon, "20px", attributes);
-  }
-
-  protected final Html.ElementInstruction icon24(Icon icon, Html.AttributeInstruction... attributes) {
-    return renderIcon(icon, "24px", attributes);
-  }
-
-  protected final Html.ElementInstruction icon32(Icon icon, Html.AttributeInstruction... attributes) {
-    return renderIcon(icon, "32px", attributes);
-  }
-
-  private Html.ElementInstruction renderIcon(Carbon.Icon icon, String size, Html.AttributeInstruction... attributes) {
-    return svg(
-        xmlns("http://www.w3.org/2000/svg"),
-        fill("currentColor"),
-        width(size), height(size), viewBox("0 0 32 32"),
-
-        flatten(attributes),
-
-        raw(
-            renderIconRaw(icon)
-        )
-    );
-  }
-
-  private String renderIconRaw(Carbon.Icon icon) {
-    return switch (icon) {
-      case CLOSE -> """
-      <polygon points="17.4141 16 24 9.4141 22.5859 8 16 14.5859 9.4143 8 8 9.4141 14.5859 16 8 22.5859 9.4143 24 16 17.4141 22.5859 24 24 22.5859 17.4141 16"/>""";
-
-      case MENU -> """
-      <rect x="4" y="6" width="24" height="2"/><rect x="4" y="24" width="24" height="2"/><rect x="4" y="12" width="24" height="2"/><rect x="4" y="18" width="24" height="2"/>""";
-    };
   }
 
 }

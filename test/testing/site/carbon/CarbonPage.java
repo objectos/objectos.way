@@ -21,7 +21,7 @@ import objectos.way.Html;
 import objectos.way.Http;
 import objectos.way.Script;
 
-abstract class CarbonPage extends Carbon.Shell {
+abstract class CarbonPage extends Carbon.Template {
 
   private record MenuItem(String text, String href) {}
 
@@ -31,6 +31,7 @@ abstract class CarbonPage extends Carbon.Shell {
       new MenuItem("Gallery", "#")
   );
 
+  @SuppressWarnings("unused")
   private static final List<MenuItem> COMPONENTS_MENU = List.of(
       new MenuItem("Button", "/components/button")
   );

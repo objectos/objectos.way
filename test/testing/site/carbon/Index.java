@@ -17,7 +17,7 @@ package testing.site.carbon;
 
 import objectos.way.Http;
 
-final class Index extends CarbonPage {
+final class Index extends CarbonPage2 {
 
   public Index(Http.Exchange http) {
     super(http);
