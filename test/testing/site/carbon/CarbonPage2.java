@@ -19,6 +19,7 @@ import objectos.way.Carbon;
 import objectos.way.Carbon.Component.Header;
 import objectos.way.Carbon.Component.Header.CloseButton;
 import objectos.way.Carbon.Component.Header.MenuButton;
+import objectos.way.Carbon.Component.Header.Name;
 import objectos.way.Http;
 
 abstract class CarbonPage2 extends Carbon.Template2 {
@@ -52,6 +53,15 @@ abstract class CarbonPage2 extends Carbon.Template2 {
     closeButton.ariaLabel("Close menu");
 
     closeButton.title("Close");
+
+    Name headerName;
+    headerName = header.addName();
+
+    headerName.prefix("Objectos");
+
+    headerName.text("Carbon");
+
+    headerName.href("/");
 
     shell.render();
   }

@@ -25,7 +25,7 @@ final class Index extends CarbonPage2 {
 
   @Override
   protected final void preRender() {
-    shellTitle("Objectos Carbon DEV");
+    shellTitle("Objectos Carbon");
   }
 
   @Override

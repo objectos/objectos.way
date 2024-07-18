@@ -76,9 +76,23 @@ public final class Carbon extends CarbonClasses {
 
       }
 
+      public sealed interface Name extends Component permits CarbonHeaderName {
+
+        Name href(String value);
+
+        Name prefix(String value);
+
+        Name text(String value);
+
+        Name onClick(Script.Action value);
+
+      }
+
       CloseButton addCloseButton();
 
       MenuButton addMenuButton();
+
+      Name addName();
 
       Header ariaLabel(String value);
 
@@ -193,6 +207,17 @@ public final class Carbon extends CarbonClasses {
         http.set(Carbon.class, Carbon.this);
       }
     };
+  }
+
+  static Script.Action joinIf(Script.Action existing, Script.Action value) {
+    Script.Action a;
+    a = Check.notNull(value, "value == null");
+
+    if (existing == null) {
+      return a;
+    } else {
+      return Script.join(existing, a);
+    }
   }
 
 }

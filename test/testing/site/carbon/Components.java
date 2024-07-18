@@ -25,6 +25,8 @@ final class Components extends CarbonPage2 {
 
   @Override
   protected final void preRender() {
+    shellTitle("Components - Objectos Carbon");
+
     topSection = TopSection.COMPONENTS;
   }
 

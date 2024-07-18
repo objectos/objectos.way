@@ -37,6 +37,11 @@ final class CarbonHeader extends CarbonContainer implements Carbon.Component.Hea
   }
 
   @Override
+  public final Name addName() {
+    return addComponent(new CarbonHeaderName(tmpl));
+  }
+
+  @Override
   public final Carbon.Component.Header ariaLabel(String value) {
     ariaLabel = Check.notNull(value, "value == null");
 
