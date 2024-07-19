@@ -16,9 +16,9 @@
 package objectos.way;
 
 import objectos.lang.object.Check;
-import objectos.way.Carbon.Component.Header.Name;
+import objectos.way.Carbon.Header.Name;
 
-final class CarbonHeaderName implements Carbon.Component.Header.Name {
+final class CarbonHeaderName implements Name {
 
   private final Html.Template tmpl;
 

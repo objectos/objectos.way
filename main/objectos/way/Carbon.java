@@ -54,73 +54,81 @@ public final class Carbon extends CarbonClasses {
    */
   public sealed interface Component {
 
-    public sealed interface Header extends Component permits CarbonHeader {
+    Html.ElementInstruction render();
 
-      public sealed interface CloseButton extends Component permits CarbonHeader.HeaderCloseButton {
+  }
 
-        CloseButton ariaLabel(String value);
+  public sealed interface Header extends Component permits CarbonHeader {
 
-        CloseButton title(String value);
+    public sealed interface CloseButton extends Component permits CarbonHeader.HeaderCloseButton {
 
-        CloseButton dataOnClick(Script.Action value);
+      CloseButton ariaLabel(String value);
 
-      }
+      CloseButton title(String value);
 
-      public sealed interface MenuButton extends Component permits CarbonHeader.HeaderMenuButton {
+      CloseButton dataOnClick(Script.Action value);
 
-        MenuButton ariaLabel(String value);
+      Script.Action hideAction();
 
-        MenuButton title(String value);
-
-        MenuButton dataOnClick(Script.Action value);
-
-      }
-
-      public sealed interface MenuItem extends Component permits CarbonHeaderMenuItem {
-
-        MenuItem active(boolean value);
-
-        MenuItem href(String value);
-
-        MenuItem text(String value);
-
-      }
-
-      public sealed interface Name extends Component permits CarbonHeaderName {
-
-        Name href(String value);
-
-        Name prefix(String value);
-
-        Name text(String value);
-
-        Name dataOnClick(Script.Action value);
-
-      }
-
-      public sealed interface Navigation extends Component permits CarbonHeaderNavigation {
-
-        Navigation ariaLabel(String value);
-
-        Navigation dataFrame(String name, String value);
-
-        MenuItem addItem();
-
-      }
-
-      CloseButton addCloseButton();
-
-      MenuButton addMenuButton();
-
-      Name addName();
-
-      Navigation addNavigation();
-
-      Header ariaLabel(String value);
+      Script.Action showAction();
 
     }
 
-    Html.ElementInstruction render();
+    public sealed interface MenuButton extends Component permits CarbonHeader.HeaderMenuButton {
+
+      MenuButton ariaLabel(String value);
+
+      MenuButton title(String value);
+
+      MenuButton dataOnClick(Script.Action value);
+
+      Script.Action hideAction();
+
+      Script.Action showAction();
+
+    }
+
+    public sealed interface MenuItem extends Component permits CarbonHeaderMenuItem {
+
+      MenuItem active(boolean value);
+
+      MenuItem href(String value);
+
+      MenuItem text(String value);
+
+    }
+
+    public sealed interface Name extends Component permits CarbonHeaderName {
+
+      Name href(String value);
+
+      Name prefix(String value);
+
+      Name text(String value);
+
+      Name dataOnClick(Script.Action value);
+
+    }
+
+    public sealed interface Navigation extends Component permits CarbonHeaderNavigation {
+
+      Navigation ariaLabel(String value);
+
+      Navigation dataFrame(String name, String value);
+
+      MenuItem addItem();
+
+    }
+
+    CloseButton addCloseButton();
+
+    MenuButton addMenuButton();
+
+    Name addName();
+
+    Navigation addNavigation();
+
+    Header ariaLabel(String value);
 
   }
 
@@ -140,6 +148,16 @@ public final class Carbon extends CarbonClasses {
 
   }
 
+  public sealed interface Overlay extends Component permits CarbonOverlay {
+
+    Overlay offsetHeader();
+
+    Script.Action hideAction();
+
+    Script.Action showAction();
+
+  }
+
   /**
    * The UI shell is the top-level UI element of an web application.
    */
@@ -149,7 +167,9 @@ public final class Carbon extends CarbonClasses {
 
     Shell title(String value);
 
-    Component.Header addHeader();
+    Header addHeader();
+
+    Overlay addOverlay();
 
     void render();
 

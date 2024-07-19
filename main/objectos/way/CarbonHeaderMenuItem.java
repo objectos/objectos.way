@@ -16,9 +16,9 @@
 package objectos.way;
 
 import objectos.lang.object.Check;
-import objectos.way.Carbon.Component.Header.MenuItem;
+import objectos.way.Carbon.Header.MenuItem;
 
-final class CarbonHeaderMenuItem implements Carbon.Component.Header.MenuItem {
+final class CarbonHeaderMenuItem implements Carbon.Header.MenuItem {
 
   private final Html.Template tmpl;
 

@@ -16,12 +16,14 @@
 package testing.site.carbon;
 
 import objectos.way.Carbon;
-import objectos.way.Carbon.Component.Header;
-import objectos.way.Carbon.Component.Header.CloseButton;
-import objectos.way.Carbon.Component.Header.MenuButton;
-import objectos.way.Carbon.Component.Header.Name;
-import objectos.way.Carbon.Component.Header.Navigation;
+import objectos.way.Carbon.Header;
+import objectos.way.Carbon.Header.CloseButton;
+import objectos.way.Carbon.Header.MenuButton;
+import objectos.way.Carbon.Header.Name;
+import objectos.way.Carbon.Header.Navigation;
+import objectos.way.Carbon.Overlay;
 import objectos.way.Http;
+import objectos.way.Script;
 
 abstract class CarbonPage2 extends Carbon.Template2 {
 
@@ -64,7 +66,7 @@ abstract class CarbonPage2 extends Carbon.Template2 {
 
     headerName.href("/");
 
-    final 'Navigation navigation;
+    final Navigation navigation;
     navigation = header.addNavigation();
 
     navigation.ariaLabel("Objectos Carbon navigation");
@@ -80,6 +82,29 @@ abstract class CarbonPage2 extends Carbon.Template2 {
         .text("Examples")
         .href("#")
         .active(false);
+
+    final Overlay overlay;
+    overlay = shell.addOverlay();
+
+    overlay.offsetHeader();
+
+    final Script.Action openMenu = Script.actions(
+        closeButton.showAction(),
+        menuButton.hideAction(),
+        overlay.showAction()
+    );
+
+    final Script.Action closeMenu = Script.actions(
+        closeButton.hideAction(),
+        menuButton.showAction(),
+        overlay.hideAction()
+    );
+
+    menuButton.dataOnClick(openMenu);
+
+    closeButton.dataOnClick(closeMenu);
+
+    headerName.dataOnClick(closeMenu);
 
     shell.render();
   }

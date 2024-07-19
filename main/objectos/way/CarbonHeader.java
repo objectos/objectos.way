@@ -16,9 +16,9 @@
 package objectos.way;
 
 import objectos.lang.object.Check;
-import objectos.way.Html.ElementInstruction;
+import objectos.way.Carbon.Header;
 
-final class CarbonHeader extends CarbonContainer implements Carbon.Component.Header {
+final class CarbonHeader extends CarbonContainer implements Header {
 
   private String ariaLabel;
 
@@ -47,7 +47,7 @@ final class CarbonHeader extends CarbonContainer implements Carbon.Component.Hea
   }
 
   @Override
-  public final Carbon.Component.Header ariaLabel(String value) {
+  public final Header ariaLabel(String value) {
     ariaLabel = Check.notNull(value, "value == null");
     return this;
   }
@@ -63,7 +63,7 @@ final class CarbonHeader extends CarbonContainer implements Carbon.Component.Hea
     );
   }
 
-  final class HeaderCloseButton implements Carbon.Component.Header.CloseButton {
+  final class HeaderCloseButton implements CloseButton {
 
     private final Html.Id id = tmpl.nextId();
 
@@ -100,7 +100,17 @@ final class CarbonHeader extends CarbonContainer implements Carbon.Component.Hea
     }
 
     @Override
-    public final ElementInstruction render() {
+    public final Script.Action hideAction() {
+      return Script.addClass(id, Carbon.HIDDEN);
+    }
+
+    @Override
+    public final Script.Action showAction() {
+      return Script.removeClass(id, Carbon.HIDDEN);
+    }
+
+    @Override
+    public final Html.ElementInstruction render() {
       return tmpl.button(
           id, Carbon.HEADER_CLOSE_BUTTON,
 
@@ -118,7 +128,7 @@ final class CarbonHeader extends CarbonContainer implements Carbon.Component.Hea
 
   }
 
-  final class HeaderMenuButton implements Carbon.Component.Header.MenuButton {
+  final class HeaderMenuButton implements MenuButton {
 
     private final Html.Id id = tmpl.nextId();
 
@@ -155,7 +165,17 @@ final class CarbonHeader extends CarbonContainer implements Carbon.Component.Hea
     }
 
     @Override
-    public final ElementInstruction render() {
+    public final Script.Action hideAction() {
+      return Script.addClass(id, Carbon.HIDDEN);
+    }
+
+    @Override
+    public final Script.Action showAction() {
+      return Script.removeClass(id, Carbon.HIDDEN);
+    }
+
+    @Override
+    public final Html.ElementInstruction render() {
       return tmpl.button(
           id, Carbon.HEADER_MENU_BUTTON,
 

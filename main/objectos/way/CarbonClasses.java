@@ -123,7 +123,8 @@ abstract class CarbonClasses {
   public static final Html.ClassName OVERLAY = Html.className(
       "fixed inset-0px block hidden z-overlay",
       "bg-overlay opacity-0",
-      "transition-opacity duration-300"
+      "transition-opacity duration-300",
+      "lg:hidden"
   );
 
   public static final Html.ClassName SIDE_NAV = Html.className(
