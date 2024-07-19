@@ -42,9 +42,13 @@ final class CarbonHeader extends CarbonContainer implements Carbon.Component.Hea
   }
 
   @Override
+  public final Navigation addNavigation() {
+    return addComponent(new CarbonHeaderNavigation(tmpl));
+  }
+
+  @Override
   public final Carbon.Component.Header ariaLabel(String value) {
     ariaLabel = Check.notNull(value, "value == null");
-
     return this;
   }
 
@@ -76,7 +80,7 @@ final class CarbonHeader extends CarbonContainer implements Carbon.Component.Hea
     }
 
     @Override
-    public final CloseButton onClick(Script.Action value) {
+    public final CloseButton dataOnClick(Script.Action value) {
       Script.Action a;
       a = Check.notNull(value, "value");
 
@@ -131,7 +135,7 @@ final class CarbonHeader extends CarbonContainer implements Carbon.Component.Hea
     }
 
     @Override
-    public final MenuButton onClick(Script.Action value) {
+    public final MenuButton dataOnClick(Script.Action value) {
       Script.Action a;
       a = Check.notNull(value, "value");
 

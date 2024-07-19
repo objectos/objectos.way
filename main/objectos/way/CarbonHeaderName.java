@@ -53,7 +53,7 @@ final class CarbonHeaderName implements Carbon.Component.Header.Name {
   }
 
   @Override
-  public final Name onClick(Script.Action value) {
+  public final Name dataOnClick(Script.Action value) {
     onClick = Carbon.joinIf(onClick, value);
     return this;
   }

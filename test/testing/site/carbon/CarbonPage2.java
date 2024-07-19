@@ -20,6 +20,7 @@ import objectos.way.Carbon.Component.Header;
 import objectos.way.Carbon.Component.Header.CloseButton;
 import objectos.way.Carbon.Component.Header.MenuButton;
 import objectos.way.Carbon.Component.Header.Name;
+import objectos.way.Carbon.Component.Header.Navigation;
 import objectos.way.Http;
 
 abstract class CarbonPage2 extends Carbon.Template2 {
@@ -35,26 +36,26 @@ abstract class CarbonPage2 extends Carbon.Template2 {
 
   @Override
   protected final void renderShell(Carbon.Shell shell) {
-    Header header;
+    final Header header;
     header = shell.addHeader();
 
     header.ariaLabel("Objectos Carbon");
 
-    MenuButton menuButton;
+    final MenuButton menuButton;
     menuButton = header.addMenuButton();
 
     menuButton.ariaLabel("Open menu");
 
     menuButton.title("Open");
 
-    CloseButton closeButton;
+    final CloseButton closeButton;
     closeButton = header.addCloseButton();
 
     closeButton.ariaLabel("Close menu");
 
     closeButton.title("Close");
 
-    Name headerName;
+    final Name headerName;
     headerName = header.addName();
 
     headerName.prefix("Objectos");
@@ -62,6 +63,23 @@ abstract class CarbonPage2 extends Carbon.Template2 {
     headerName.text("Carbon");
 
     headerName.href("/");
+
+    final 'Navigation navigation;
+    navigation = header.addNavigation();
+
+    navigation.ariaLabel("Objectos Carbon navigation");
+
+    navigation.dataFrame("header-nav", topSection.name());
+
+    navigation.addItem()
+        .text("Components")
+        .href("/components")
+        .active(topSection == TopSection.COMPONENTS);
+
+    navigation.addItem()
+        .text("Examples")
+        .href("#")
+        .active(false);
 
     shell.render();
   }

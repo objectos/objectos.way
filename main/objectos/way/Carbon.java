@@ -62,7 +62,7 @@ public final class Carbon extends CarbonClasses {
 
         CloseButton title(String value);
 
-        CloseButton onClick(Script.Action value);
+        CloseButton dataOnClick(Script.Action value);
 
       }
 
@@ -72,7 +72,17 @@ public final class Carbon extends CarbonClasses {
 
         MenuButton title(String value);
 
-        MenuButton onClick(Script.Action value);
+        MenuButton dataOnClick(Script.Action value);
+
+      }
+
+      public sealed interface MenuItem extends Component permits CarbonHeaderMenuItem {
+
+        MenuItem active(boolean value);
+
+        MenuItem href(String value);
+
+        MenuItem text(String value);
 
       }
 
@@ -84,7 +94,17 @@ public final class Carbon extends CarbonClasses {
 
         Name text(String value);
 
-        Name onClick(Script.Action value);
+        Name dataOnClick(Script.Action value);
+
+      }
+
+      public sealed interface Navigation extends Component permits CarbonHeaderNavigation {
+
+        Navigation ariaLabel(String value);
+
+        Navigation dataFrame(String name, String value);
+
+        MenuItem addItem();
 
       }
 
@@ -93,6 +113,8 @@ public final class Carbon extends CarbonClasses {
       MenuButton addMenuButton();
 
       Name addName();
+
+      Navigation addNavigation();
 
       Header ariaLabel(String value);
 
