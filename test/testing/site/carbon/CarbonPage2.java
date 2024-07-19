@@ -16,12 +16,7 @@
 package testing.site.carbon;
 
 import objectos.way.Carbon;
-import objectos.way.Carbon.Header;
-import objectos.way.Carbon.Header.CloseButton;
-import objectos.way.Carbon.Header.MenuButton;
-import objectos.way.Carbon.Header.Name;
-import objectos.way.Carbon.Header.Navigation;
-import objectos.way.Carbon.Overlay;
+import objectos.way.Carbon.HeaderMenuItemContainer;
 import objectos.way.Http;
 import objectos.way.Script;
 
@@ -38,26 +33,26 @@ abstract class CarbonPage2 extends Carbon.Template2 {
 
   @Override
   protected final void renderShell(Carbon.Shell shell) {
-    final Header header;
+    final Carbon.Header header;
     header = shell.addHeader();
 
     header.ariaLabel("Objectos Carbon");
 
-    final MenuButton menuButton;
+    final Carbon.HeaderMenuButton menuButton;
     menuButton = header.addMenuButton();
 
     menuButton.ariaLabel("Open menu");
 
     menuButton.title("Open");
 
-    final CloseButton closeButton;
+    final Carbon.HeaderCloseButton closeButton;
     closeButton = header.addCloseButton();
 
     closeButton.ariaLabel("Close menu");
 
     closeButton.title("Close");
 
-    final Name headerName;
+    final Carbon.HeaderName headerName;
     headerName = header.addName();
 
     headerName.prefix("Objectos");
@@ -66,13 +61,60 @@ abstract class CarbonPage2 extends Carbon.Template2 {
 
     headerName.href("/");
 
-    final Navigation navigation;
+    final Carbon.HeaderNavigation navigation;
     navigation = header.addNavigation();
 
     navigation.ariaLabel("Objectos Carbon navigation");
 
     navigation.dataFrame("header-nav", topSection.name());
 
+    addHeaderMenuItems(navigation);
+
+    final Carbon.Overlay overlay;
+    overlay = shell.addOverlay();
+
+    overlay.offsetHeader();
+
+    final Carbon.SideNav sideNav;
+    sideNav = shell.addSideNav();
+
+    sideNav.ariaLabel("Side navigation");
+
+    sideNav.offsetHeader();
+
+    sideNav.persistent(false);
+
+    final Script.Action openMenu = Script.actions(
+        closeButton.showAction(),
+        menuButton.hideAction(),
+        overlay.showAction(),
+        sideNav.showAction()
+    );
+
+    final Script.Action closeMenu = Script.actions(
+        closeButton.hideAction(),
+        menuButton.showAction(),
+        overlay.hideAction(),
+        sideNav.hideAction()
+    );
+
+    menuButton.dataOnClick(openMenu);
+
+    closeButton.dataOnClick(closeMenu);
+
+    headerName.dataOnClick(closeMenu);
+
+    final Carbon.HeaderSideNavItems headerSideNavItems;
+    headerSideNavItems = sideNav.addHeaderSideNavItems();
+
+    headerSideNavItems.dataOnClick(closeMenu);
+
+    addHeaderMenuItems(headerSideNavItems);
+
+    shell.render();
+  }
+
+  private void addHeaderMenuItems(HeaderMenuItemContainer navigation) {
     navigation.addItem()
         .text("Components")
         .href("/components")
@@ -82,31 +124,6 @@ abstract class CarbonPage2 extends Carbon.Template2 {
         .text("Examples")
         .href("#")
         .active(false);
-
-    final Overlay overlay;
-    overlay = shell.addOverlay();
-
-    overlay.offsetHeader();
-
-    final Script.Action openMenu = Script.actions(
-        closeButton.showAction(),
-        menuButton.hideAction(),
-        overlay.showAction()
-    );
-
-    final Script.Action closeMenu = Script.actions(
-        closeButton.hideAction(),
-        menuButton.showAction(),
-        overlay.hideAction()
-    );
-
-    menuButton.dataOnClick(openMenu);
-
-    closeButton.dataOnClick(closeMenu);
-
-    headerName.dataOnClick(closeMenu);
-
-    shell.render();
   }
 
   protected abstract void renderContent();

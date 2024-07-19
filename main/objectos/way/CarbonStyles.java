@@ -19,7 +19,10 @@ final class CarbonStyles implements Http.Handler {
 
   private Css.StyleSheet generateStyleSheet() {
     return Css.generateStyleSheet(
-        Css.classes(CarbonClasses.class),
+        Css.classes(
+            CarbonClasses.class,
+            CarbonSideNav.class
+        ),
 
         Css.useLogicalProperties(),
 

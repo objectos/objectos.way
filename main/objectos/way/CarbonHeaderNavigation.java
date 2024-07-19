@@ -16,10 +16,10 @@
 package objectos.way;
 
 import objectos.lang.object.Check;
-import objectos.way.Carbon.Header.MenuItem;
-import objectos.way.Carbon.Header.Navigation;
+import objectos.way.Carbon.HeaderMenuItem;
+import objectos.way.Carbon.HeaderNavigation;
 
-final class CarbonHeaderNavigation extends CarbonContainer implements Navigation {
+final class CarbonHeaderNavigation extends CarbonContainer implements HeaderNavigation {
 
   private String ariaLabel;
 
@@ -32,26 +32,26 @@ final class CarbonHeaderNavigation extends CarbonContainer implements Navigation
   }
 
   @Override
-  public final Navigation ariaLabel(String value) {
+  public final HeaderNavigation ariaLabel(String value) {
     ariaLabel = Check.notNull(value, "value == null");
     return this;
   }
 
   @Override
-  public final Navigation dataFrame(String name, String value) {
+  public final HeaderNavigation dataFrame(String name, String value) {
     frameName = Check.notNull(name, "name == null");
     frameValue = Check.notNull(value, "value == null");
     return this;
   }
 
   @Override
-  public final MenuItem addItem() {
+  public final HeaderMenuItem addItem() {
     return addComponent(new CarbonHeaderMenuItem(tmpl));
   }
 
   @Override
-  public Html.ElementInstruction render() {
-    return tmpl.nav(
+  public void render() {
+    tmpl.nav(
         CarbonClasses.HEADER_NAV,
 
         ariaLabel != null ? tmpl.ariaLabel(ariaLabel) : tmpl.noop(),

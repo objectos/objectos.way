@@ -17,19 +17,16 @@ package objectos.way;
 
 import java.util.List;
 import objectos.util.list.GrowableList;
-import objectos.way.Carbon.Icon;
 
-abstract class CarbonContainer {
+abstract class CarbonContainer extends CarbonComponent {
 
-  private List<Carbon.Component> components;
-
-  final Html.Template tmpl;
+  private List<CarbonComponent> components;
 
   CarbonContainer(Html.Template tmpl) {
-    this.tmpl = tmpl;
+    super(tmpl);
   }
 
-  final <T extends Carbon.Component> T addComponent(T component) {
+  final <T extends CarbonComponent> T addComponent(T component) {
     if (components == null) {
       components = new GrowableList<>();
     }
@@ -39,40 +36,12 @@ abstract class CarbonContainer {
     return component;
   }
 
-  final Html.ElementInstruction icon16(Icon icon, Html.AttributeInstruction... attributes) {
-    return renderIcon(icon, "16px", attributes);
-  }
-
-  final Html.ElementInstruction icon20(Icon icon, Html.AttributeInstruction... attributes) {
-    return renderIcon(icon, "20px", attributes);
-  }
-
-  final Html.ElementInstruction icon24(Icon icon, Html.AttributeInstruction... attributes) {
-    return renderIcon(icon, "24px", attributes);
-  }
-
-  final Html.ElementInstruction icon32(Icon icon, Html.AttributeInstruction... attributes) {
-    return renderIcon(icon, "32px", attributes);
-  }
-
-  private Html.ElementInstruction renderIcon(Carbon.Icon icon, String size, Html.AttributeInstruction... attributes) {
-    return tmpl.svg(
-        tmpl.xmlns("http://www.w3.org/2000/svg"),
-        tmpl.fill("currentColor"),
-        tmpl.width(size), tmpl.height(size), tmpl.viewBox("0 0 32 32"),
-
-        tmpl.flatten(attributes),
-
-        tmpl.raw(icon.raw)
-    );
-  }
-
   final Html.FragmentInstruction renderComponents() {
     return tmpl.include(this::renderComponents0);
   }
 
   private void renderComponents0() {
-    for (Carbon.Component c : components) {
+    for (CarbonComponent c : components) {
       c.render();
     }
   }

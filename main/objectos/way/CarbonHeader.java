@@ -17,6 +17,10 @@ package objectos.way;
 
 import objectos.lang.object.Check;
 import objectos.way.Carbon.Header;
+import objectos.way.Carbon.HeaderCloseButton;
+import objectos.way.Carbon.HeaderMenuButton;
+import objectos.way.Carbon.HeaderName;
+import objectos.way.Carbon.HeaderNavigation;
 
 final class CarbonHeader extends CarbonContainer implements Header {
 
@@ -27,22 +31,22 @@ final class CarbonHeader extends CarbonContainer implements Header {
   }
 
   @Override
-  public final CloseButton addCloseButton() {
-    return addComponent(new HeaderCloseButton());
+  public final HeaderCloseButton addCloseButton() {
+    return addComponent(new CarbonHeaderCloseButton(tmpl));
   }
 
   @Override
-  public final MenuButton addMenuButton() {
-    return addComponent(new HeaderMenuButton());
+  public final HeaderMenuButton addMenuButton() {
+    return addComponent(new CarbonHeaderMenuButton(tmpl));
   }
 
   @Override
-  public final Name addName() {
+  public final HeaderName addName() {
     return addComponent(new CarbonHeaderName(tmpl));
   }
 
   @Override
-  public final Navigation addNavigation() {
+  public final HeaderNavigation addNavigation() {
     return addComponent(new CarbonHeaderNavigation(tmpl));
   }
 
@@ -53,144 +57,14 @@ final class CarbonHeader extends CarbonContainer implements Header {
   }
 
   @Override
-  public final Html.ElementInstruction render() {
-    return tmpl.header(
+  public final void render() {
+    tmpl.header(
         CarbonClasses.HEADER,
 
         ariaLabel != null ? tmpl.ariaLabel(ariaLabel) : tmpl.noop(),
 
         renderComponents()
     );
-  }
-
-  final class HeaderCloseButton implements CloseButton {
-
-    private final Html.Id id = tmpl.nextId();
-
-    private String ariaLabel;
-
-    private Script.Action onClick;
-
-    private String title;
-
-    @Override
-    public final CloseButton ariaLabel(String value) {
-      ariaLabel = Check.notNull(value, "value == null");
-      return this;
-    }
-
-    @Override
-    public final CloseButton dataOnClick(Script.Action value) {
-      Script.Action a;
-      a = Check.notNull(value, "value");
-
-      if (onClick == null) {
-        onClick = a;
-      } else {
-        onClick = Script.join(onClick, a);
-      }
-
-      return this;
-    }
-
-    @Override
-    public final CloseButton title(String value) {
-      title = Check.notNull(value, "value == null");
-      return this;
-    }
-
-    @Override
-    public final Script.Action hideAction() {
-      return Script.addClass(id, Carbon.HIDDEN);
-    }
-
-    @Override
-    public final Script.Action showAction() {
-      return Script.removeClass(id, Carbon.HIDDEN);
-    }
-
-    @Override
-    public final Html.ElementInstruction render() {
-      return tmpl.button(
-          id, Carbon.HEADER_CLOSE_BUTTON,
-
-          ariaLabel != null ? tmpl.ariaLabel(ariaLabel) : tmpl.noop(),
-
-          title != null ? tmpl.title(title) : tmpl.noop(),
-
-          tmpl.type("button"),
-
-          onClick != null ? tmpl.dataOnClick(onClick) : tmpl.noop(),
-
-          icon20(Carbon.Icon.CLOSE)
-      );
-    }
-
-  }
-
-  final class HeaderMenuButton implements MenuButton {
-
-    private final Html.Id id = tmpl.nextId();
-
-    private String ariaLabel;
-
-    private Script.Action onClick;
-
-    private String title;
-
-    @Override
-    public final MenuButton ariaLabel(String value) {
-      ariaLabel = Check.notNull(value, "value == null");
-      return this;
-    }
-
-    @Override
-    public final MenuButton dataOnClick(Script.Action value) {
-      Script.Action a;
-      a = Check.notNull(value, "value");
-
-      if (onClick == null) {
-        onClick = a;
-      } else {
-        onClick = Script.join(onClick, a);
-      }
-
-      return this;
-    }
-
-    @Override
-    public final MenuButton title(String value) {
-      title = Check.notNull(value, "value == null");
-      return this;
-    }
-
-    @Override
-    public final Script.Action hideAction() {
-      return Script.addClass(id, Carbon.HIDDEN);
-    }
-
-    @Override
-    public final Script.Action showAction() {
-      return Script.removeClass(id, Carbon.HIDDEN);
-    }
-
-    @Override
-    public final Html.ElementInstruction render() {
-      return tmpl.button(
-          id, Carbon.HEADER_MENU_BUTTON,
-
-          ariaLabel != null ? tmpl.ariaLabel(ariaLabel) : tmpl.noop(),
-
-          title != null ? tmpl.title(title) : tmpl.noop(),
-
-          tmpl.type("button"),
-
-          onClick != null ? tmpl.dataOnClick(onClick) : tmpl.noop(),
-
-          icon20(Carbon.Icon.MENU)
-      );
-    }
-
   }
 
 }

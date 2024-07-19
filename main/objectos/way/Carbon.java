@@ -52,83 +52,83 @@ public final class Carbon extends CarbonClasses {
   /**
    * A Carbon UI component.
    */
-  public sealed interface Component {
-
-    Html.ElementInstruction render();
-
-  }
+  public sealed interface Component {}
 
   public sealed interface Header extends Component permits CarbonHeader {
 
-    public sealed interface CloseButton extends Component permits CarbonHeader.HeaderCloseButton {
+    HeaderCloseButton addCloseButton();
 
-      CloseButton ariaLabel(String value);
+    HeaderMenuButton addMenuButton();
 
-      CloseButton title(String value);
+    HeaderName addName();
 
-      CloseButton dataOnClick(Script.Action value);
-
-      Script.Action hideAction();
-
-      Script.Action showAction();
-
-    }
-
-    public sealed interface MenuButton extends Component permits CarbonHeader.HeaderMenuButton {
-
-      MenuButton ariaLabel(String value);
-
-      MenuButton title(String value);
-
-      MenuButton dataOnClick(Script.Action value);
-
-      Script.Action hideAction();
-
-      Script.Action showAction();
-
-    }
-
-    public sealed interface MenuItem extends Component permits CarbonHeaderMenuItem {
-
-      MenuItem active(boolean value);
-
-      MenuItem href(String value);
-
-      MenuItem text(String value);
-
-    }
-
-    public sealed interface Name extends Component permits CarbonHeaderName {
-
-      Name href(String value);
-
-      Name prefix(String value);
-
-      Name text(String value);
-
-      Name dataOnClick(Script.Action value);
-
-    }
-
-    public sealed interface Navigation extends Component permits CarbonHeaderNavigation {
-
-      Navigation ariaLabel(String value);
-
-      Navigation dataFrame(String name, String value);
-
-      MenuItem addItem();
-
-    }
-
-    CloseButton addCloseButton();
-
-    MenuButton addMenuButton();
-
-    Name addName();
-
-    Navigation addNavigation();
+    HeaderNavigation addNavigation();
 
     Header ariaLabel(String value);
+
+  }
+
+  private sealed interface HeaderButton<SELF extends HeaderButton<SELF>> extends Component {
+
+    SELF ariaLabel(String value);
+
+    SELF title(String value);
+
+    SELF dataOnClick(Script.Action value);
+
+    Script.Action hideAction();
+
+    Script.Action showAction();
+
+  }
+
+  public sealed interface HeaderCloseButton
+      extends HeaderButton<HeaderCloseButton>
+      permits CarbonHeaderCloseButton {}
+
+  public sealed interface HeaderMenuButton
+      extends HeaderButton<HeaderMenuButton>
+      permits CarbonHeaderMenuButton {}
+
+  public sealed interface HeaderMenuItem extends Component permits CarbonHeaderMenuItem {
+
+    HeaderMenuItem active(boolean value);
+
+    HeaderMenuItem href(String value);
+
+    HeaderMenuItem text(String value);
+
+  }
+
+  public sealed interface HeaderMenuItemContainer extends Component {
+
+    HeaderMenuItem addItem();
+
+  }
+
+  public sealed interface HeaderName extends Component permits CarbonHeaderName {
+
+    HeaderName href(String value);
+
+    HeaderName prefix(String value);
+
+    HeaderName text(String value);
+
+    HeaderName dataOnClick(Script.Action value);
+
+  }
+
+  public sealed interface HeaderNavigation extends HeaderMenuItemContainer permits CarbonHeaderNavigation {
+
+    HeaderNavigation ariaLabel(String value);
+
+    HeaderNavigation dataFrame(String name, String value);
+
+  }
+
+  public sealed interface HeaderSideNavItems extends HeaderMenuItemContainer permits CarbonHeaderSideNavItems {
+
+    HeaderSideNavItems dataOnClick(Script.Action value);
 
   }
 
@@ -144,6 +144,34 @@ public final class Carbon extends CarbonClasses {
 
     private Icon(String raw) {
       this.raw = raw;
+    }
+
+    final Html.ElementInstruction size16(Html.Template tmpl, Html.AttributeInstruction... attributes) {
+      return renderIcon(tmpl, "16px", attributes);
+    }
+
+    final Html.ElementInstruction size20(Html.Template tmpl, Html.AttributeInstruction... attributes) {
+      return renderIcon(tmpl, "20px", attributes);
+    }
+
+    final Html.ElementInstruction siz24(Html.Template tmpl, Html.AttributeInstruction... attributes) {
+      return renderIcon(tmpl, "24px", attributes);
+    }
+
+    final Html.ElementInstruction size32(Html.Template tmpl, Html.AttributeInstruction... attributes) {
+      return renderIcon(tmpl, "32px", attributes);
+    }
+
+    private Html.ElementInstruction renderIcon(Html.Template tmpl, String size, Html.AttributeInstruction... attributes) {
+      return tmpl.svg(
+          tmpl.xmlns("http://www.w3.org/2000/svg"),
+          tmpl.fill("currentColor"),
+          tmpl.width(size), tmpl.height(size), tmpl.viewBox("0 0 32 32"),
+
+          tmpl.flatten(attributes),
+
+          tmpl.raw(raw)
+      );
     }
 
   }
@@ -171,7 +199,27 @@ public final class Carbon extends CarbonClasses {
 
     Overlay addOverlay();
 
+    SideNav addSideNav();
+
     void render();
+
+  }
+
+  public sealed interface SideNav extends Component permits CarbonSideNav {
+
+    SideNav ariaLabel(String value);
+
+    SideNav dataFrame(String name, String value);
+
+    SideNav offsetHeader();
+
+    SideNav persistent(boolean value);
+
+    Script.Action hideAction();
+
+    Script.Action showAction();
+
+    HeaderSideNavItems addHeaderSideNavItems();
 
   }
 

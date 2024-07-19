@@ -128,10 +128,10 @@ abstract class CarbonClasses {
   );
 
   public static final Html.ClassName SIDE_NAV = Html.className(
-      MOBILE_OR_SIDE_NAV,
-
-      "hidden w-256px",
-      "lg:block"
+      "invisible fixed top-0px bottom-0px left-0px z-header",
+      "w-0px",
+      "bg",
+      "text-secondary"
   );
 
   public static final Html.ClassName SIDE_NAV_HEADER_LIST = Html.className(

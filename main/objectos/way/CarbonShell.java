@@ -18,6 +18,7 @@ package objectos.way;
 import objectos.lang.object.Check;
 import objectos.way.Carbon.Overlay;
 import objectos.way.Carbon.Shell;
+import objectos.way.Carbon.SideNav;
 
 final class CarbonShell extends CarbonContainer implements Carbon.Shell {
 
@@ -49,6 +50,11 @@ final class CarbonShell extends CarbonContainer implements Carbon.Shell {
   @Override
   public final Overlay addOverlay() {
     return addComponent(new CarbonOverlay(tmpl));
+  }
+
+  @Override
+  public final SideNav addSideNav() {
+    return addComponent(new CarbonSideNav(tmpl));
   }
 
   @Override

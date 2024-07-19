@@ -16,11 +16,8 @@
 package objectos.way;
 
 import objectos.lang.object.Check;
-import objectos.way.Carbon.Header.Name;
 
-final class CarbonHeaderName implements Name {
-
-  private final Html.Template tmpl;
+final class CarbonHeaderName extends CarbonComponent implements Carbon.HeaderName {
 
   private String href;
 
@@ -31,36 +28,36 @@ final class CarbonHeaderName implements Name {
   private Script.Action onClick;
 
   CarbonHeaderName(Html.Template tmpl) {
-    this.tmpl = tmpl;
+    super(tmpl);
   }
 
   @Override
-  public final Name href(String value) {
+  public final Carbon.HeaderName href(String value) {
     href = Check.notNull(value, "value == null");
     return this;
   }
 
   @Override
-  public final Name prefix(String value) {
+  public final Carbon.HeaderName prefix(String value) {
     prefix = Check.notNull(value, "value == null");
     return this;
   }
 
   @Override
-  public final Name text(String value) {
+  public final Carbon.HeaderName text(String value) {
     text = Check.notNull(value, "value == null");
     return this;
   }
 
   @Override
-  public final Name dataOnClick(Script.Action value) {
+  public final Carbon.HeaderName dataOnClick(Script.Action value) {
     onClick = Carbon.joinIf(onClick, value);
     return this;
   }
 
   @Override
-  public final Html.ElementInstruction render() {
-    return tmpl.a(
+  public final void render() {
+    tmpl.a(
         Carbon.HEADER_NAME,
 
         href != null ? tmpl.href(href) : tmpl.noop(),

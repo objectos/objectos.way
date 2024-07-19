@@ -16,47 +16,65 @@
 package objectos.way;
 
 import objectos.lang.object.Check;
-import objectos.way.Carbon.Header.MenuItem;
+import objectos.way.Carbon.HeaderMenuItem;
 
-final class CarbonHeaderMenuItem implements Carbon.Header.MenuItem {
-
-  private final Html.Template tmpl;
+final class CarbonHeaderMenuItem extends CarbonComponent implements Carbon.HeaderMenuItem {
 
   private boolean active;
 
   private String href;
 
+  private boolean sideNav;
+
   private String text;
 
+  private Script.Action onClick;
+
   CarbonHeaderMenuItem(Html.Template tmpl) {
-    this.tmpl = tmpl;
+    super(tmpl);
   }
 
   @Override
-  public final MenuItem active(boolean value) {
+  public final HeaderMenuItem active(boolean value) {
     active = value;
     return this;
   }
 
   @Override
-  public final MenuItem href(String value) {
+  public final HeaderMenuItem href(String value) {
     href = Check.notNull(value, "value == null");
     return this;
   }
 
   @Override
-  public final MenuItem text(String value) {
+  public final HeaderMenuItem text(String value) {
     text = Check.notNull(value, "value == null");
     return this;
   }
 
-  @Override
-  public final Html.ElementInstruction render() {
-    return tmpl.li(
-        tmpl.a(
-            Carbon.HEADER_MENU_ITEM,
+  final CarbonHeaderMenuItem dataOnClick0(Script.Action value) {
+    onClick = value;
+    return this;
+  }
 
-            active ? Carbon.HEADER_MENU_ITEM_ACTIVE : Carbon.HEADER_MENU_ITEM_INACTIVE,
+  final CarbonHeaderMenuItem sideNav() {
+    sideNav = true;
+    return this;
+  }
+
+  @Override
+  public final void render() {
+    tmpl.li(
+        tmpl.a(
+            !sideNav ? Carbon.HEADER_MENU_ITEM : Carbon.SIDE_NAV_HEADER_ITEM,
+
+            !sideNav
+                ? active ? Carbon.HEADER_MENU_ITEM_ACTIVE : Carbon.HEADER_MENU_ITEM_INACTIVE
+                : active ? Carbon.SIDE_NAV_HEADER_ITEM_ACTIVE : Carbon.SIDE_NAV_HEADER_ITEM_INACTIVE,
+
+            onClick != null ? tmpl.dataOnClick(onClick) : tmpl.noop(),
+
+            href != null && onClick != null ? tmpl.dataOnClick(Script.location(href)) : tmpl.noop(),
 
             href != null ? tmpl.href(href) : tmpl.noop(),
 

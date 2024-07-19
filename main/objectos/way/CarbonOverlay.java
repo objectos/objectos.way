@@ -17,16 +17,14 @@ package objectos.way;
 
 import objectos.way.Carbon.Overlay;
 
-final class CarbonOverlay implements Overlay {
-
-  private final Html.Template tmpl;
+final class CarbonOverlay extends CarbonComponent implements Overlay {
 
   private final Html.Id id;
 
   private boolean header;
 
   CarbonOverlay(Html.Template tmpl) {
-    this.tmpl = tmpl;
+    super(tmpl);
 
     id = tmpl.nextId();
   }
@@ -54,8 +52,8 @@ final class CarbonOverlay implements Overlay {
   }
 
   @Override
-  public Html.ElementInstruction render() {
-    return tmpl.div(
+  public void render() {
+    tmpl.div(
         id,
 
         CarbonClasses.OVERLAY,
