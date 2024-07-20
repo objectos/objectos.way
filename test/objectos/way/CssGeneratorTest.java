@@ -1915,7 +1915,7 @@ public class CssGeneratorTest {
         .max-h-dvh { max-height: 100dvh }
         .max-h-min { max-height: min-content }
         .max-h-max { max-height: max-content }
-        .max-h-fit { max-height: fit-content }        
+        .max-h-fit { max-height: fit-content }
         """
     );
   }
@@ -2053,7 +2053,7 @@ public class CssGeneratorTest {
         .min-h-dvh { min-height: 100dvh }
         .min-h-min { min-height: min-content }
         .min-h-max { min-height: max-content }
-        .min-h-fit { min-height: fit-content }        
+        .min-h-fit { min-height: fit-content }
         """
     );
   }
@@ -2840,6 +2840,30 @@ public class CssGeneratorTest {
         .overline { text-decoration-line: overline }
         .line-through { text-decoration-line: line-through }
         .no-underline { text-decoration-line: none }
+        """
+    );
+  }
+
+  @Test
+  public void textOverflow() {
+    class Subject extends AbstractSubject {
+      @Override
+      final void classes() {
+        className("truncate text-ellipsis text-clip");
+      }
+    }
+
+    test(
+        Subject.class,
+
+        """
+        .truncate {
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
+        .text-ellipsis { text-overflow: ellipsis }
+        .text-clip { text-overflow: clip }
         """
     );
   }
@@ -3744,7 +3768,7 @@ public class CssGeneratorTest {
         .top-px { inset-block-start: 1px }
         .right-px { inset-inline-end: 1px }
         .bottom-px { inset-block-end: 1px }
-        .left-px { inset-inline-start: 1px }        
+        .left-px { inset-inline-start: 1px }
         .m-auto { margin: auto }
         .mx-auto { margin-inline-start: auto; margin-inline-end: auto }
         .my-auto { margin-block-start: auto; margin-block-end: auto }

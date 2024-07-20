@@ -1159,6 +1159,18 @@ final class CssGeneratorSpec extends CssGeneratorRound implements Css.Generator 
     );
 
     staticUtility(
+        CssKey.TEXT_OVERFLOW,
+
+        """
+        truncate      | overflow: hidden
+                      | text-overflow: ellipsis
+                      | white-space: nowrap
+        text-ellipsis | text-overflow: ellipsis
+        text-clip     | text-overflow: clip
+        """
+    );
+
+    staticUtility(
         CssKey.TEXT_WRAP,
 
         """
