@@ -21,13 +21,28 @@ import objectos.way.Carbon.HeaderCloseButton;
 import objectos.way.Carbon.HeaderMenuButton;
 import objectos.way.Carbon.HeaderName;
 import objectos.way.Carbon.HeaderNavigation;
+import objectos.way.Html.ClassName;
 
 final class CarbonHeader extends CarbonContainer implements Header {
 
   private String ariaLabel;
 
+  private ClassName theme;
+
   CarbonHeader(Html.Template tmpl) {
     super(tmpl);
+  }
+
+  @Override
+  public final Header ariaLabel(String value) {
+    ariaLabel = Check.notNull(value, "value == null");
+    return this;
+  }
+
+  @Override
+  public final Header theme(ClassName value) {
+    theme = Check.notNull(value, "value == null");
+    return this;
   }
 
   @Override
@@ -51,15 +66,11 @@ final class CarbonHeader extends CarbonContainer implements Header {
   }
 
   @Override
-  public final Header ariaLabel(String value) {
-    ariaLabel = Check.notNull(value, "value == null");
-    return this;
-  }
-
-  @Override
   public final void render() {
     tmpl.header(
         CarbonClasses.HEADER,
+
+        theme != null ? theme : tmpl.noop(),
 
         ariaLabel != null ? tmpl.ariaLabel(ariaLabel) : tmpl.noop(),
 

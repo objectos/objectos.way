@@ -17,6 +17,7 @@ package testing.site.carbon;
 
 import objectos.way.Carbon;
 import objectos.way.Carbon.HeaderMenuItemContainer;
+import objectos.way.Carbon.SideNavItems;
 import objectos.way.Http;
 import objectos.way.Script;
 
@@ -37,6 +38,8 @@ abstract class CarbonPage2 extends Carbon.Template2 {
     header = shell.addHeader();
 
     header.ariaLabel("Objectos Carbon");
+
+    header.theme(Carbon.G100);
 
     final Carbon.HeaderMenuButton menuButton;
     menuButton = header.addMenuButton();
@@ -80,9 +83,30 @@ abstract class CarbonPage2 extends Carbon.Template2 {
 
     sideNav.ariaLabel("Side navigation");
 
+    sideNav.dataFrame("side-nav", getClass().getSimpleName());
+
     sideNav.offsetHeader();
 
-    sideNav.persistent(false);
+    sideNav.persistent(true);
+
+    sideNav.theme(Carbon.G100);
+
+    final SideNavItems sideNavItems;
+    sideNavItems = sideNav.addItems();
+
+    final Carbon.HeaderSideNavItems headerSideNavItems;
+    headerSideNavItems = sideNavItems.addHeaderSideNavItems();
+
+    switch (topSection) {
+      case COMPONENTS -> {
+        sideNavItems.addLink()
+            .text("Button")
+            .href("/components/button")
+            .active(currentPage("/components/button"));
+      }
+
+      default -> {}
+    }
 
     final Script.Action openMenu = Script.actions(
         closeButton.showAction(),
@@ -103,9 +127,6 @@ abstract class CarbonPage2 extends Carbon.Template2 {
     closeButton.dataOnClick(closeMenu);
 
     headerName.dataOnClick(closeMenu);
-
-    final Carbon.HeaderSideNavItems headerSideNavItems;
-    headerSideNavItems = sideNav.addHeaderSideNavItems();
 
     headerSideNavItems.dataOnClick(closeMenu);
 

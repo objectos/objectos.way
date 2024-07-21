@@ -49,6 +49,50 @@ public final class Carbon extends CarbonClasses {
    */
   public static final Html.ClassName G100 = Html.className("cds--g100");
 
+  public enum Icon {
+
+    CLOSE("""
+    <polygon points="17.4141 16 24 9.4141 22.5859 8 16 14.5859 9.4143 8 8 9.4141 14.5859 16 8 22.5859 9.4143 24 16 17.4141 22.5859 24 24 22.5859 17.4141 16"/>"""),
+
+    MENU("""
+    <rect x="4" y="6" width="24" height="2"/><rect x="4" y="24" width="24" height="2"/><rect x="4" y="12" width="24" height="2"/><rect x="4" y="18" width="24" height="2"/>""");
+
+    final String raw;
+
+    private Icon(String raw) {
+      this.raw = raw;
+    }
+
+    final Html.ElementInstruction size16(Html.Template tmpl, Html.AttributeInstruction... attributes) {
+      return renderIcon(tmpl, "16px", attributes);
+    }
+
+    final Html.ElementInstruction size20(Html.Template tmpl, Html.AttributeInstruction... attributes) {
+      return renderIcon(tmpl, "20px", attributes);
+    }
+
+    final Html.ElementInstruction siz24(Html.Template tmpl, Html.AttributeInstruction... attributes) {
+      return renderIcon(tmpl, "24px", attributes);
+    }
+
+    final Html.ElementInstruction size32(Html.Template tmpl, Html.AttributeInstruction... attributes) {
+      return renderIcon(tmpl, "32px", attributes);
+    }
+
+    private Html.ElementInstruction renderIcon(Html.Template tmpl, String size, Html.AttributeInstruction... attributes) {
+      return tmpl.svg(
+          tmpl.xmlns("http://www.w3.org/2000/svg"),
+          tmpl.fill("currentColor"),
+          tmpl.width(size), tmpl.height(size), tmpl.viewBox("0 0 32 32"),
+
+          tmpl.flatten(attributes),
+
+          tmpl.raw(raw)
+      );
+    }
+
+  }
+
   /**
    * A Carbon UI component.
    */
@@ -65,6 +109,8 @@ public final class Carbon extends CarbonClasses {
     HeaderNavigation addNavigation();
 
     Header ariaLabel(String value);
+
+    Header theme(ClassName value);
 
   }
 
@@ -132,50 +178,6 @@ public final class Carbon extends CarbonClasses {
 
   }
 
-  public enum Icon {
-
-    CLOSE("""
-    <polygon points="17.4141 16 24 9.4141 22.5859 8 16 14.5859 9.4143 8 8 9.4141 14.5859 16 8 22.5859 9.4143 24 16 17.4141 22.5859 24 24 22.5859 17.4141 16"/>"""),
-
-    MENU("""
-    <rect x="4" y="6" width="24" height="2"/><rect x="4" y="24" width="24" height="2"/><rect x="4" y="12" width="24" height="2"/><rect x="4" y="18" width="24" height="2"/>""");
-
-    final String raw;
-
-    private Icon(String raw) {
-      this.raw = raw;
-    }
-
-    final Html.ElementInstruction size16(Html.Template tmpl, Html.AttributeInstruction... attributes) {
-      return renderIcon(tmpl, "16px", attributes);
-    }
-
-    final Html.ElementInstruction size20(Html.Template tmpl, Html.AttributeInstruction... attributes) {
-      return renderIcon(tmpl, "20px", attributes);
-    }
-
-    final Html.ElementInstruction siz24(Html.Template tmpl, Html.AttributeInstruction... attributes) {
-      return renderIcon(tmpl, "24px", attributes);
-    }
-
-    final Html.ElementInstruction size32(Html.Template tmpl, Html.AttributeInstruction... attributes) {
-      return renderIcon(tmpl, "32px", attributes);
-    }
-
-    private Html.ElementInstruction renderIcon(Html.Template tmpl, String size, Html.AttributeInstruction... attributes) {
-      return tmpl.svg(
-          tmpl.xmlns("http://www.w3.org/2000/svg"),
-          tmpl.fill("currentColor"),
-          tmpl.width(size), tmpl.height(size), tmpl.viewBox("0 0 32 32"),
-
-          tmpl.flatten(attributes),
-
-          tmpl.raw(raw)
-      );
-    }
-
-  }
-
   public sealed interface Overlay extends Component permits CarbonOverlay {
 
     Overlay offsetHeader();
@@ -215,11 +217,31 @@ public final class Carbon extends CarbonClasses {
 
     SideNav persistent(boolean value);
 
+    SideNav theme(ClassName value);
+
     Script.Action hideAction();
 
     Script.Action showAction();
 
+    SideNavItems addItems();
+
+  }
+
+  public sealed interface SideNavItems extends Component permits CarbonSideNavItems {
+
     HeaderSideNavItems addHeaderSideNavItems();
+
+    SideNavLink addLink();
+
+  }
+
+  public sealed interface SideNavLink extends Component permits CarbonSideNavLink {
+
+    SideNavLink active(boolean value);
+
+    SideNavLink href(String value);
+
+    SideNavLink text(String value);
 
   }
 

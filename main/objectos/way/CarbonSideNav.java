@@ -16,8 +16,9 @@
 package objectos.way;
 
 import objectos.lang.object.Check;
-import objectos.way.Carbon.HeaderSideNavItems;
 import objectos.way.Carbon.SideNav;
+import objectos.way.Carbon.SideNavItems;
+import objectos.way.Html.ClassName;
 
 final class CarbonSideNav extends CarbonContainer implements SideNav {
 
@@ -32,6 +33,8 @@ final class CarbonSideNav extends CarbonContainer implements SideNav {
   private boolean header;
 
   private boolean persistent = true;
+
+  private ClassName theme;
 
   CarbonSideNav(Html.Template tmpl) {
     super(tmpl);
@@ -65,6 +68,12 @@ final class CarbonSideNav extends CarbonContainer implements SideNav {
   }
 
   @Override
+  public final SideNav theme(ClassName value) {
+    theme = Check.notNull(value, "value == null");
+    return this;
+  }
+
+  @Override
   public final Script.Action hideAction() {
     return Script.removeClass(id, Carbon.VISIBLE, Carbon.SIDE_NAV_WIDTH);
   }
@@ -75,8 +84,8 @@ final class CarbonSideNav extends CarbonContainer implements SideNav {
   }
 
   @Override
-  public final HeaderSideNavItems addHeaderSideNavItems() {
-    return addComponent(new CarbonHeaderSideNavItems(tmpl));
+  public final SideNavItems addItems() {
+    return addComponent(new CarbonSideNavItems(tmpl));
   }
 
   @Override
@@ -93,17 +102,15 @@ final class CarbonSideNav extends CarbonContainer implements SideNav {
 
         header ? CarbonClasses.HEADER_OFFSET : tmpl.noop(),
 
+        theme != null ? theme : tmpl.noop(),
+
         ariaLabel != null ? tmpl.ariaLabel(ariaLabel) : tmpl.noop(),
 
         frameName != null ? tmpl.dataFrame(frameName, frameValue) : tmpl.noop(),
 
         tmpl.tabindex("-1"),
 
-        tmpl.ul(
-            Carbon.SIDE_NAV_ITEMS,
-
-            renderComponents()
-        )
+        renderComponents()
     );
   }
 

@@ -135,7 +135,8 @@ abstract class CarbonClasses {
   );
 
   public static final Html.ClassName SIDE_NAV_HEADER_LIST = Html.className(
-      "margin-bottom-32px"
+      "margin-bottom-32px",
+      "lg:hidden"
   );
 
   public static final Html.ClassName SIDE_NAV_HEADER_ITEM = Html.className(

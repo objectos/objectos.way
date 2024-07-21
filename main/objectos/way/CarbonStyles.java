@@ -21,7 +21,9 @@ final class CarbonStyles implements Http.Handler {
     return Css.generateStyleSheet(
         Css.classes(
             CarbonClasses.class,
-            CarbonSideNav.class
+            CarbonSideNav.class,
+            CarbonSideNavItems.class,
+            CarbonSideNavLink.class
         ),
 
         Css.useLogicalProperties(),
@@ -241,6 +243,7 @@ final class CarbonStyles implements Http.Handler {
         hover: var(--cds-background-hover)
         layer: var(--cds-layer)
         overlay: var(--cds-overlay)
+        selected: var(--cds-background-selected)
         """),
 
         Css.overrideBorderColor("""
