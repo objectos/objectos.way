@@ -62,18 +62,21 @@ final class CarbonHeaderCloseButton extends CarbonComponent implements HeaderClo
 
   @Override
   public final Script.Action hideAction() {
-    return Script.addClass(id, Carbon.HIDDEN);
+    return Script.addClass(id, CarbonClasses.HIDDEN);
   }
 
   @Override
   public final Script.Action showAction() {
-    return Script.removeClass(id, Carbon.HIDDEN);
+    return Script.removeClass(id, CarbonClasses.HIDDEN);
   }
 
   @Override
   public final void render() {
     tmpl.button(
-        id, Carbon.HEADER_CLOSE_BUTTON,
+        id, CarbonHeaderMenuButton.STYLE,
+
+        tmpl.className("more:hidden"),
+        tmpl.className("bg-layer border-x-subtle"),
 
         ariaLabel != null ? tmpl.ariaLabel(ariaLabel) : tmpl.noop(),
 
@@ -83,7 +86,12 @@ final class CarbonHeaderCloseButton extends CarbonComponent implements HeaderClo
 
         onClick != null ? tmpl.dataOnClick(onClick) : tmpl.noop(),
 
-        icon20(Carbon.Icon.CLOSE, tmpl.ariaHidden("true"))
+        icon20(
+            Carbon.Icon.CLOSE,
+
+            tmpl.ariaHidden("true"),
+            tmpl.className("fill-primary")
+        )
     );
   }
 

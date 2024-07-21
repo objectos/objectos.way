@@ -38,16 +38,16 @@ final class CarbonOverlay extends CarbonComponent implements Overlay {
   @Override
   public final Script.Action hideAction() {
     return Script.actions(
-        Script.addClass(id, Carbon.HIDDEN, Carbon.OPACITY_0),
-        Script.removeClass(id, Carbon.OPACITY_100)
+        Script.addClass(id, CarbonClasses.HIDDEN, CarbonClasses.OPACITY_0),
+        Script.removeClass(id, CarbonClasses.OPACITY_100)
     );
   }
 
   @Override
   public final Script.Action showAction() {
     return Script.actions(
-        Script.removeClass(id, Carbon.HIDDEN, Carbon.OPACITY_0),
-        Script.addClass(id, Carbon.OPACITY_100)
+        Script.removeClass(id, CarbonClasses.HIDDEN, CarbonClasses.OPACITY_0),
+        Script.addClass(id, CarbonClasses.OPACITY_100)
     );
   }
 
@@ -56,9 +56,12 @@ final class CarbonOverlay extends CarbonComponent implements Overlay {
     tmpl.div(
         id,
 
-        CarbonClasses.OVERLAY,
+        tmpl.className("fixed inset-0px block hidden z-overlay"),
+        tmpl.className("bg-overlay opacity-0"),
+        tmpl.className("transition-opacity duration-300"),
+        tmpl.className("lg:hidden"),
 
-        header ? CarbonClasses.HEADER_OFFSET : tmpl.noop()
+        header ? tmpl.className("mt-header") : tmpl.noop()
     );
   }
 

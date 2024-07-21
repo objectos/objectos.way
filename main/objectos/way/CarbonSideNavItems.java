@@ -38,7 +38,7 @@ final class CarbonSideNavItems extends CarbonContainer implements SideNavItems {
   @Override
   public void render() {
     tmpl.ul(
-        Carbon.SIDE_NAV_ITEMS,
+        tmpl.className("flex-1 pt-16px"),
 
         renderComponents()
     );

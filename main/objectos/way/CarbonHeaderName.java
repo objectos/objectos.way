@@ -58,7 +58,14 @@ final class CarbonHeaderName extends CarbonComponent implements Carbon.HeaderNam
   @Override
   public final void render() {
     tmpl.a(
-        Carbon.HEADER_NAME,
+        tmpl.className("flex h-full select-none items-center"),
+        tmpl.className("border-2 border-transparent"),
+        tmpl.className("px-16px"),
+        tmpl.className("text-body-compact-01 text-primary font-600 leading-20px tracking-0.1px"),
+        tmpl.className("outline-none"),
+        tmpl.className("transition-colors duration-100"),
+        tmpl.className("focus:border-focus"),
+        tmpl.className("lg:pl-16px lg:pr-32px"),
 
         href != null ? tmpl.href(href) : tmpl.noop(),
 
@@ -66,7 +73,13 @@ final class CarbonHeaderName extends CarbonComponent implements Carbon.HeaderNam
 
         href != null && onClick != null ? tmpl.dataOnClick(Script.location(href)) : tmpl.noop(),
 
-        prefix != null ? tmpl.span("Objectos") : tmpl.noop(),
+        prefix != null
+            ? tmpl.span(
+                tmpl.className("font-400"),
+
+                tmpl.t("Objectos")
+            )
+            : tmpl.noop(),
 
         prefix != null && text != null ? tmpl.nbsp() : tmpl.noop(),
 

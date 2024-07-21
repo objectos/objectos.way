@@ -26,6 +26,8 @@ final class CarbonSideNavLink extends CarbonComponent implements SideNavLink {
 
   private String text;
 
+  private Script.Action onClick;
+
   CarbonSideNavLink(Html.Template tmpl) {
     super(tmpl);
   }
@@ -46,6 +48,12 @@ final class CarbonSideNavLink extends CarbonComponent implements SideNavLink {
   public final SideNavLink text(String value) {
     text = Check.notNull(value, "value == null");
     return this;
+  }
+
+  @Override
+  public final SideNavLink dataOnClick(Script.Action value) {
+    onClick = Check.notNull(value, "value == null");
+    return null;
   }
 
   @Override
@@ -71,6 +79,10 @@ final class CarbonSideNavLink extends CarbonComponent implements SideNavLink {
                     tmpl.className("after:block after:border-l-3 after:border-l-interactive after:content-empty")
                 )
                 : tmpl.noop(),
+
+            onClick != null ? tmpl.dataOnClick(onClick) : tmpl.noop(),
+
+            href != null && onClick != null ? tmpl.dataOnClick(Script.location(href)) : tmpl.noop(),
 
             href != null ? tmpl.href(href) : tmpl.noop(),
 

@@ -52,14 +52,19 @@ final class CarbonHeaderNavigation extends CarbonContainer implements HeaderNavi
   @Override
   public void render() {
     tmpl.nav(
-        CarbonClasses.HEADER_NAV,
+        tmpl.className("relative hidden h-full pl-16px"),
+        tmpl.className("lg:flex lg:items-center"),
+        tmpl.className("lg:before:relative lg:before:-left-16px lg:before:z-header lg:before:block"),
+        tmpl.className("lg:before:h-1/2 lg:before:w-1px"),
+        tmpl.className("lg:before:border-l lg:before:border-l-subtle"),
+        tmpl.className("lg:before:content-empty"),
 
         ariaLabel != null ? tmpl.ariaLabel(ariaLabel) : tmpl.noop(),
 
         frameName != null ? tmpl.dataFrame(frameName, frameValue) : tmpl.noop(),
 
         tmpl.ul(
-            CarbonClasses.HEADER_NAV_LIST,
+            tmpl.className("h-full flex text-secondary"),
 
             renderComponents()
         )

@@ -17,7 +17,7 @@ package testing.site.carbon;
 
 import objectos.way.Http;
 
-final class Components extends CarbonPage2 {
+final class Components extends CarbonPage {
 
   Components(Http.Exchange http) {
     super(http);

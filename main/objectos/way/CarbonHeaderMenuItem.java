@@ -66,11 +66,45 @@ final class CarbonHeaderMenuItem extends CarbonComponent implements Carbon.Heade
   public final void render() {
     tmpl.li(
         tmpl.a(
-            !sideNav ? Carbon.HEADER_MENU_ITEM : Carbon.SIDE_NAV_HEADER_ITEM,
+            !sideNav
+                ? tmpl.flatten(
+                    tmpl.className("relative flex h-full select-none items-center"),
+                    tmpl.className("border-2 border-transparent"),
+                    tmpl.className("bg"),
+                    tmpl.className("px-16px"),
+                    tmpl.className("text-14px leading-18px tracking-0 font-400"),
+                    tmpl.className("transition-colors duration-100"),
+                    tmpl.className("active:bg-active active:text-primary"),
+                    tmpl.className("focus:border-focus focus:outline-none"),
+                    tmpl.className("hover:bg-hover hover:text-primary")
+                )
+                : tmpl.flatten(
+                    tmpl.className("relative flex min-h-32px"),
+                    tmpl.className("items-center justify-between whitespace-nowrap"),
+                    tmpl.className("border-2 border-transparent"),
+                    tmpl.className("px-16px"),
+                    tmpl.className("text-heading-compact-01 text-secondary"),
+                    tmpl.className("outline outline-2 -outline-offset-2 outline-transparent"),
+                    tmpl.className("transition-colors duration-100"),
+                    tmpl.className("active:bg-active active:text-primary"),
+                    tmpl.className("focus:outline-focus"),
+                    tmpl.className("hover:bg-hover hover:text-primary")
+                ),
 
             !sideNav
-                ? active ? Carbon.HEADER_MENU_ITEM_ACTIVE : Carbon.HEADER_MENU_ITEM_INACTIVE
-                : active ? Carbon.SIDE_NAV_HEADER_ITEM_ACTIVE : Carbon.SIDE_NAV_HEADER_ITEM_INACTIVE,
+                ? active
+                    ? tmpl.flatten(
+                        tmpl.className("text-primary"),
+                        tmpl.className("after:absolute after:-bottom-2px after:-left-2px after:-right-2px"),
+                        tmpl.className("after:block after:border-b-3 after:border-b-interactive after:content-empty")
+                    )
+                    : tmpl.className("text-secondary")
+                : active
+                    ? tmpl.flatten(
+                        tmpl.className("after:absolute after:-top-2px after:-bottom-2px after:-left-2px"),
+                        tmpl.className("after:block after:border-l-3 after:border-l-interactive after:content-empty")
+                    )
+                    : tmpl.noop(),
 
             onClick != null ? tmpl.dataOnClick(onClick) : tmpl.noop(),
 

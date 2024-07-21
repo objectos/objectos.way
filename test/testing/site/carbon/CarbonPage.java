@@ -15,229 +15,137 @@
  */
 package testing.site.carbon;
 
-import java.util.List;
 import objectos.way.Carbon;
-import objectos.way.Html;
+import objectos.way.Carbon.HeaderMenuItemContainer;
+import objectos.way.Carbon.SideNavItems;
 import objectos.way.Http;
 import objectos.way.Script;
 
 abstract class CarbonPage extends Carbon.Template {
 
-  private record MenuItem(String text, String href) {}
-
-  private static final List<MenuItem> HEADER_MENU = List.of(
-      new MenuItem("Components", "/components"),
-
-      new MenuItem("Gallery", "#")
-  );
-
-  @SuppressWarnings("unused")
-  private static final List<MenuItem> COMPONENTS_MENU = List.of(
-      new MenuItem("Button", "/components/button")
-  );
-
   TopSection topSection = TopSection.HOME;
 
   CarbonPage(Http.Exchange http) {
     super(http);
-
-    shellTheme(Carbon.WHITE);
   }
 
   @Override
   protected abstract void preRender();
 
   @Override
-  protected final void renderUi() throws Exception {
-    final Html.Id closeButton;
-    closeButton = Html.id("close-button");
+  protected final void renderShell(Carbon.Shell shell) {
+    final Carbon.Header header;
+    header = shell.addHeader();
 
-    final Html.Id menuButton;
-    menuButton = Html.id("menu-button");
+    header.ariaLabel("Objectos Carbon");
 
-    final Html.Id overlay;
-    overlay = Html.id("overlay");
+    header.theme(Carbon.G100);
 
-    final Html.Id mobileNav;
-    mobileNav = Html.id("mobile-nav");
+    final Carbon.HeaderMenuButton menuButton;
+    menuButton = header.addMenuButton();
 
-    final Script.Action closeMenuAction = Script.actions(
-        Script.addClass(closeButton, Carbon.HIDDEN),
-        Script.removeClass(menuButton, Carbon.HIDDEN),
-        Script.addClass(overlay, Carbon.HIDDEN, Carbon.OPACITY_0),
-        Script.removeClass(overlay, Carbon.OPACITY_100),
-        Script.removeClass(mobileNav, Carbon.VISIBLE, Carbon.SIDE_NAV_WIDTH)
+    menuButton.ariaLabel("Open menu");
+
+    menuButton.title("Open");
+
+    final Carbon.HeaderCloseButton closeButton;
+    closeButton = header.addCloseButton();
+
+    closeButton.ariaLabel("Close menu");
+
+    closeButton.title("Close");
+
+    final Carbon.HeaderName headerName;
+    headerName = header.addName();
+
+    headerName.prefix("Objectos");
+
+    headerName.text("Carbon");
+
+    headerName.href("/");
+
+    final Carbon.HeaderNavigation navigation;
+    navigation = header.addNavigation();
+
+    navigation.ariaLabel("Objectos Carbon navigation");
+
+    navigation.dataFrame("header-nav", topSection.name());
+
+    addHeaderMenuItems(navigation);
+
+    final Carbon.Overlay overlay;
+    overlay = shell.addOverlay();
+
+    overlay.offsetHeader();
+
+    final Carbon.SideNav sideNav;
+    sideNav = shell.addSideNav();
+
+    sideNav.ariaLabel("Side navigation");
+
+    sideNav.dataFrame("side-nav", getClass().getSimpleName());
+
+    sideNav.offsetHeader();
+
+    sideNav.persistent(true);
+
+    sideNav.theme(Carbon.G100);
+
+    final Script.Action openMenu = Script.actions(
+        closeButton.showAction(),
+        menuButton.hideAction(),
+        overlay.showAction(),
+        sideNav.showAction()
     );
 
-    final Script.Action openMenuAction = Script.actions(
-        Script.removeClass(closeButton, Carbon.HIDDEN),
-        Script.addClass(menuButton, Carbon.HIDDEN),
-        Script.removeClass(overlay, Carbon.HIDDEN, Carbon.OPACITY_0),
-        Script.addClass(overlay, Carbon.OPACITY_100),
-        Script.addClass(mobileNav, Carbon.VISIBLE, Carbon.SIDE_NAV_WIDTH)
+    final Script.Action closeMenu = Script.actions(
+        closeButton.hideAction(),
+        menuButton.showAction(),
+        overlay.hideAction(),
+        sideNav.hideAction()
     );
 
-    header(
-        Carbon.G100, Carbon.HEADER,
+    menuButton.dataOnClick(openMenu);
 
-        ariaLabel("Objectos Carbon"),
+    closeButton.dataOnClick(closeMenu);
 
-        button(
-            menuButton, Carbon.HEADER_MENU_BUTTON,
+    headerName.dataOnClick(closeMenu);
 
-            ariaLabel("Open menu"), title("Open"), type("button"),
+    final SideNavItems sideNavItems;
+    sideNavItems = sideNav.addItems();
 
-            dataOnClick(openMenuAction),
+    final Carbon.HeaderSideNavItems headerSideNavItems;
+    headerSideNavItems = sideNavItems.addHeaderSideNavItems();
 
-            icon20(Carbon.Icon.MENU)
-        ),
-
-        button(
-            closeButton, Carbon.HEADER_CLOSE_BUTTON,
-
-            ariaLabel("Close menu"), title("Close"), type("button"),
-
-            dataOnClick(closeMenuAction),
-
-            icon20(Carbon.Icon.CLOSE)
-        ),
-
-        a(
-            Carbon.HEADER_NAME,
-
-            dataOnClick(closeMenuAction),
-
-            dataOnClick(Script.location("/")),
-
-            href("/"),
-
-            span("Objectos"), nbsp(), t("Carbon")
-        ),
-
-        nav(
-            Carbon.HEADER_NAV,
-
-            ariaLabel("Objectos Carbon navigation"),
-
-            dataFrame("header-nav", topSection.name()),
-
-            ul(
-                Carbon.HEADER_NAV_LIST,
-
-                f(this::renderHeaderNavItems)
-            )
-        )
-    );
-
-    div(overlay, Carbon.OVERLAY, Carbon.HEADER_OFFSET);
-
-    nav(
-        mobileNav, Carbon.G100, Carbon.MOBILE_NAV, Carbon.HEADER_OFFSET,
-
-        ariaLabel("Mobile navigation"),
-
-        tabindex("-1"),
-
-        ul(
-            Carbon.SIDE_NAV_ITEMS,
-
-            dataFrame("mobile-nav", getClass().getSimpleName()),
-
-            ul(
-                Carbon.SIDE_NAV_HEADER_LIST,
-
-                f(this::renderMobileNavHeaderItems, closeMenuAction)
-            ),
-
-            f(this::renderSideNavItems)
-        )
-    );
-
-    nav(
-        Carbon.G100, Carbon.SIDE_NAV, Carbon.HEADER_OFFSET,
-
-        ariaLabel("Side navigation"),
-
-        tabindex("-1"),
-
-        ul(
-            Carbon.SIDE_NAV_ITEMS,
-
-            dataFrame("side-nav", getClass().getSimpleName()),
-
-            f(this::renderSideNavItems)
-        )
-    );
-
-    main(
-        Carbon.HEADER_OFFSET,
-
-        dataFrame("main", getClass().getSimpleName()),
-
-        f(this::renderContent)
-    );
-  }
-
-  private void renderHeaderNavItems() {
-    for (var item : HEADER_MENU) {
-      li(
-          a(
-              Carbon.HEADER_MENU_ITEM,
-
-              currentPage(item.href) ? Carbon.HEADER_MENU_ITEM_ACTIVE : Carbon.HEADER_MENU_ITEM_INACTIVE,
-
-              href(item.href),
-
-              tabindex("0"),
-
-              span(item.text)
-          )
-      );
-    }
-  }
-
-  private void renderMobileNavHeaderItems(Script.Action closeAction) {
-    for (var item : HEADER_MENU) {
-      li(
-          a(
-              Carbon.SIDE_NAV_HEADER_ITEM,
-
-              currentPage(item.href) ? Carbon.SIDE_NAV_HEADER_ITEM_ACTIVE : Carbon.SIDE_NAV_HEADER_ITEM_INACTIVE,
-
-              dataOnClick(closeAction),
-
-              dataOnClick(Script.location(item.href)),
-
-              href(item.href),
-
-              tabindex("0"),
-
-              span(item.text)
-          )
-      );
-    }
-  }
-
-  private void renderSideNavItems() {
     switch (topSection) {
       case COMPONENTS -> {
-        renderSideNavLink("Button", "/compoments/button");
+        sideNavItems.addLink()
+            .text("Button")
+            .href("/components/button")
+            .active(currentPage("/components/button"))
+            .dataOnClick(closeMenu);
       }
 
       default -> {}
     }
+
+    headerSideNavItems.dataOnClick(closeMenu);
+
+    addHeaderMenuItems(headerSideNavItems);
+
+    shell.render();
   }
 
-  private void renderSideNavLink(String title, String href) {
-    li(
-        a(
-            Carbon.SIDE_NAV_LINK,
+  private void addHeaderMenuItems(HeaderMenuItemContainer navigation) {
+    navigation.addItem()
+        .text("Components")
+        .href("/components")
+        .active(topSection == TopSection.COMPONENTS);
 
-            href(href),
-
-            span(title)
-        )
-    );
+    navigation.addItem()
+        .text("Examples")
+        .href("#")
+        .active(false);
   }
 
   protected abstract void renderContent();

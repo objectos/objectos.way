@@ -68,19 +68,23 @@ final class CarbonSideNav extends CarbonContainer implements SideNav {
   }
 
   @Override
-  public final SideNav theme(ClassName value) {
+  public final SideNav theme(Html.ClassName value) {
     theme = Check.notNull(value, "value == null");
     return this;
   }
 
+  private static final Html.ClassName VISIBLE = Html.className("more:visible");
+
+  private static final Html.ClassName WIDTH = Html.className("more:w-256px");
+
   @Override
   public final Script.Action hideAction() {
-    return Script.removeClass(id, Carbon.VISIBLE, Carbon.SIDE_NAV_WIDTH);
+    return Script.removeClass(id, VISIBLE, WIDTH);
   }
 
   @Override
   public final Script.Action showAction() {
-    return Script.addClass(id, Carbon.VISIBLE, Carbon.SIDE_NAV_WIDTH);
+    return Script.addClass(id, VISIBLE, WIDTH);
   }
 
   @Override
@@ -100,7 +104,7 @@ final class CarbonSideNav extends CarbonContainer implements SideNav {
         tmpl.className("transition-all duration-100"),
         persistent ? tmpl.className("lg:visible lg:w-256px") : tmpl.className("lg:hidden"),
 
-        header ? CarbonClasses.HEADER_OFFSET : tmpl.noop(),
+        header ? tmpl.className("mt-header") : tmpl.noop(),
 
         theme != null ? theme : tmpl.noop(),
 

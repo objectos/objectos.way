@@ -27,7 +27,7 @@ import objectos.way.Html.ClassName;
  * Objectos Carbon UI is an implementation of the Carbon Design System in pure
  * Java.
  */
-public final class Carbon extends CarbonClasses {
+public final class Carbon {
 
   /**
    * The White theme.
@@ -243,6 +243,8 @@ public final class Carbon extends CarbonClasses {
 
     SideNavLink text(String value);
 
+    SideNavLink dataOnClick(Script.Action value);
+
   }
 
   public static abstract class Template extends CarbonTemplate {
@@ -254,20 +256,6 @@ public final class Carbon extends CarbonClasses {
      *        the HTTP exchange
      */
     protected Template(Http.Exchange http) {
-      super(http);
-    }
-
-  }
-
-  public static abstract class Template2 extends CarbonTemplate2 {
-
-    /**
-     * Sole constructor.
-     *
-     * @param http
-     *        the HTTP exchange
-     */
-    protected Template2(Http.Exchange http) {
       super(http);
     }
 

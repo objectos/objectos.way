@@ -41,7 +41,8 @@ final class CarbonHeaderSideNavItems extends CarbonContainer implements HeaderSi
   @Override
   public final void render() {
     tmpl.ul(
-        CarbonClasses.SIDE_NAV_HEADER_LIST,
+        tmpl.className("margin-bottom-32px"),
+        tmpl.className("lg:hidden"),
 
         renderComponents()
     );

@@ -68,7 +68,10 @@ final class CarbonHeader extends CarbonContainer implements Header {
   @Override
   public final void render() {
     tmpl.header(
-        CarbonClasses.HEADER,
+        tmpl.className("fixed top-0px right-0px left-0px z-header"),
+        tmpl.className("flex items-center h-header"),
+        tmpl.className("border-b border-b-subtle"),
+        tmpl.className("bg"),
 
         theme != null ? theme : tmpl.noop(),
 

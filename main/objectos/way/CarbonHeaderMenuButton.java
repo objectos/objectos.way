@@ -62,18 +62,36 @@ final class CarbonHeaderMenuButton extends CarbonComponent implements HeaderMenu
 
   @Override
   public final Script.Action hideAction() {
-    return Script.addClass(id, Carbon.HIDDEN);
+    return Script.addClass(id, CarbonClasses.HIDDEN);
   }
 
   @Override
   public final Script.Action showAction() {
-    return Script.removeClass(id, Carbon.HIDDEN);
+    return Script.removeClass(id, CarbonClasses.HIDDEN);
   }
+
+  private static final String _BUTTON_RESET = "cursor-pointer appearance-none";
+
+  static final Html.ClassName STYLE = Html.className(
+      _BUTTON_RESET,
+
+      // header__action
+      "size-header",
+      "border border-transparent",
+      "transition-colors duration-100",
+      "active:bg-active",
+      "focus:border-focus focus:outline-none",
+      "hover:bg-hover",
+      // header__menu-toggle
+      "flex items-center justify-center",
+      // header__menu-toggle__hidden
+      "lg:hidden"
+  );
 
   @Override
   public final void render() {
     tmpl.button(
-        id, Carbon.HEADER_MENU_BUTTON,
+        id, STYLE,
 
         ariaLabel != null ? tmpl.ariaLabel(ariaLabel) : tmpl.noop(),
 
@@ -83,7 +101,12 @@ final class CarbonHeaderMenuButton extends CarbonComponent implements HeaderMenu
 
         onClick != null ? tmpl.dataOnClick(onClick) : tmpl.noop(),
 
-        icon20(Carbon.Icon.MENU)
+        icon20(
+            Carbon.Icon.MENU,
+
+            tmpl.ariaHidden("true"),
+            tmpl.className("fill-primary")
+        )
     );
   }
 
