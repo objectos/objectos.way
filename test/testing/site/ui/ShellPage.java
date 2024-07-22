@@ -167,7 +167,7 @@ final class ShellPage extends UiTemplate {
     );
   }
 
-  private Html.AttributeInstruction openMenu() {
+  private Html.DataOnInstruction openMenu() {
     return dataOnClick(
         Script.replaceClass(OPEN, "flex", "hidden"),
         Script.replaceClass(CLOSE, "hidden", "flex"),
@@ -177,7 +177,7 @@ final class ShellPage extends UiTemplate {
     );
   }
 
-  private Html.AttributeInstruction closeMenu() {
+  private Html.DataOnInstruction closeMenu() {
     return dataOnClick(
         Script.replaceClass(CLOSE, "flex", "hidden"),
         Script.replaceClass(OPEN, "hidden", "flex"),

@@ -99,11 +99,11 @@ class HtmlRecorder {
     return Html.ATTRIBUTE;
   }
 
-  final Html.AttributeInstruction attribute0(Html.AttributeName name, Object value) {
+  final Html.AttributeOrNoOp attribute0(Html.AttributeName name, Object value) {
     return attribute1(name, value, HtmlByteProto.ATTRIBUTE1);
   }
 
-  private Html.AttributeInstruction attribute1(Html.AttributeName name, Object value, byte proto) {
+  private Html.AttributeOrNoOp attribute1(Html.AttributeName name, Object value, byte proto) {
     int index;
     index = name.index();
 

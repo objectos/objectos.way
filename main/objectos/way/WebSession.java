@@ -28,7 +28,7 @@ public final class WebSession implements Web.Session {
   private final Map<Object, Object> values = new HashMap<>();
 
   volatile Instant accessTime;
-  
+
   volatile boolean valid = true;
 
   public WebSession(String id) {
@@ -42,13 +42,14 @@ public final class WebSession implements Web.Session {
 
   @Override
   public final <T> T get(Class<T> type) {
-    Check.notNull(type, "type == null");
+    String key;
+    key = type.getName();
 
     Object value;
     value = null;
 
     synchronized (values) {
-      value = values.get(type);
+      value = values.get(key);
     }
 
     return type.cast(value);
@@ -56,10 +57,11 @@ public final class WebSession implements Web.Session {
 
   @Override
   public final <T> Object put(Class<T> type, T value) {
-    Check.notNull(type, "type == null");
+    String key;
+    key = type.getName();
 
     synchronized (values) {
-      return values.put(type, value);
+      return values.put(key, value);
     }
   }
 
@@ -97,15 +99,15 @@ public final class WebSession implements Web.Session {
     if (!valid) {
       return true;
     }
-    
+
     if (!values.isEmpty()) {
       return false;
     }
-    
+
     if (accessTime == null) {
       return false;
     }
-    
+
     return accessTime.isBefore(min);
   }
 

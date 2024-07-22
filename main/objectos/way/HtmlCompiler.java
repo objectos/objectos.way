@@ -84,11 +84,17 @@ final class HtmlCompiler extends HtmlCompilerElements implements Html.Compiler {
   }
 
   @Override
-  public final Html.AttributeInstruction attribute(Html.AttributeName name, Script.Action value) {
+  public final Html.DataOnInstruction dataOn(Html.AttributeName name, Script.Action value) {
     Check.notNull(name, "name == null");
-    Check.notNull(value, "value == null");
 
-    return attribute0(name, value);
+    Script.Action a;
+    a = Check.notNull(value, "value == null");
+
+    if (a == Script.noop()) {
+      return Html.NOOP;
+    } else {
+      return attribute0(name, a);
+    }
   }
 
   @Override

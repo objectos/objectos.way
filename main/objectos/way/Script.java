@@ -161,6 +161,15 @@ public final class Script {
     };
   }
 
+  /**
+   * The no-op action.
+   *
+   * @return the no-op action
+   */
+  public static Action noop() {
+    return Empty.INSTANCE;
+  }
+
   public static Action removeClass(Html.Id id, Html.ClassName... classes) {
     Check.notNull(id, "id == null");
 
@@ -350,7 +359,25 @@ public final class Script {
 
       case 1 -> actions[0];
 
-      default -> new Joined(actions);
+      default -> {
+        boolean valid = false;
+
+        Action[] copy;
+        copy = new Action[actions.length];
+
+        for (int idx = 0; idx < actions.length; idx++) {
+          Action a;
+          a = Check.notNull(actions[idx], "actions[", idx, "] == null");
+
+          if (!valid && a != Empty.INSTANCE) {
+            valid = true;
+          }
+
+          copy[idx] = a;
+        }
+
+        yield new Joined(copy);
+      }
     };
   }
 

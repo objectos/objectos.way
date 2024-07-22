@@ -22,7 +22,6 @@ import java.util.stream.Stream;
 import objectos.lang.CharWritable;
 import objectos.lang.IterableOnce;
 import objectos.lang.object.Check;
-import objectos.way.Script.Action;
 
 /**
  * The <strong>Objectos HTML</strong> main class.
@@ -172,7 +171,7 @@ public final class Html {
 
     AttributeInstruction attribute(AttributeName name, String value);
 
-    AttributeInstruction attribute(AttributeName name, Script.Action value);
+    DataOnInstruction dataOn(AttributeName name, Script.Action value);
 
     /**
      * Flattens the specified instructions so that each of the specified
@@ -563,10 +562,6 @@ public final class Html {
       }
     }
 
-    final void attribute(Html.AttributeName name, Action value) {
-      $compiler().attribute(name, value);
-    }
-
     final void attribute(Html.AttributeName name, String value) {
       $compiler().attribute(name, value);
     }
@@ -679,35 +674,35 @@ public final class Html {
       return $compiler().attribute(HtmlAttributeName.DATA_FRAME, name + ":" + value);
     }
 
-    protected final AttributeInstruction dataOnClick(Script.Action action) {
+    protected final DataOnInstruction dataOnClick(Script.Action action) {
       return dataOn(HtmlAttributeName.DATA_ON_CLICK, action);
     }
 
-    protected final AttributeInstruction dataOnClick(Script.Action... actions) {
+    protected final DataOnInstruction dataOnClick(Script.Action... actions) {
       return dataOn(HtmlAttributeName.DATA_ON_CLICK, actions);
     }
 
-    protected final AttributeInstruction dataOnInput(Script.Action action) {
+    protected final DataOnInstruction dataOnInput(Script.Action action) {
       return dataOn(HtmlAttributeName.DATA_ON_INPUT, action);
     }
 
-    protected final AttributeInstruction dataOnInput(Script.Action... actions) {
+    protected final DataOnInstruction dataOnInput(Script.Action... actions) {
       return dataOn(HtmlAttributeName.DATA_ON_INPUT, actions);
     }
 
-    private final AttributeInstruction dataOn(AttributeName name, Script.Action action) {
+    private final DataOnInstruction dataOn(AttributeName name, Script.Action action) {
       Check.notNull(action, "action == null");
 
-      return $compiler().attribute(name, action);
+      return $compiler().dataOn(name, action);
     }
 
-    private final AttributeInstruction dataOn(AttributeName name, Script.Action... actions) {
+    private final DataOnInstruction dataOn(AttributeName name, Script.Action... actions) {
       Check.notNull(actions, "actions == null");
 
       Script.Action value;
       value = Script.join(actions);
 
-      return $compiler().attribute(name, value);
+      return $compiler().dataOn(name, value);
     }
 
     /**
@@ -1086,6 +1081,12 @@ public final class Html {
   public sealed interface AttributeInstruction extends MethodInstruction, VoidInstruction {}
 
   /**
+   * An instruction to generate a {@code data-on-*} HTML attribute in a
+   * template.
+   */
+  public sealed interface DataOnInstruction extends MethodInstruction, VoidInstruction {}
+
+  /**
    * An instruction to generate an HTML element in a template.
    */
   public sealed interface ElementInstruction extends MethodInstruction {}
@@ -1100,17 +1101,18 @@ public final class Html {
    */
   public sealed interface NoOpInstruction extends MethodInstruction, VoidInstruction {}
 
+  sealed interface AttributeOrNoOp extends AttributeInstruction, DataOnInstruction, NoOpInstruction {}
+
   private static final class InstructionImpl
       implements
-      AttributeInstruction,
+      AttributeOrNoOp,
       ElementInstruction,
-      FragmentInstruction,
-      NoOpInstruction {}
+      FragmentInstruction {}
 
-  static final AttributeInstruction ATTRIBUTE = new InstructionImpl();
+  static final AttributeOrNoOp ATTRIBUTE = new InstructionImpl();
   static final ElementInstruction ELEMENT = new InstructionImpl();
   static final FragmentInstruction FRAGMENT = new InstructionImpl();
-  static final NoOpInstruction NOOP = new InstructionImpl();
+  static final AttributeOrNoOp NOOP = new InstructionImpl();
 
   /**
    * Class of instructions that are represented by object instances.

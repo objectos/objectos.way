@@ -51,7 +51,7 @@ public class ScriptActionTest {
         },
 
         """
-        <div data-on-click='[]'></div>
+        <div></div>
         <div data-on-click='[{"cmd":"replace-class","args":["x","on","off"]}]'></div>
         <div data-on-click='[{"cmd":"replace-class","args":["x","on","off"]},{"cmd":"replace-class","args":["y","foo","bar"]}]'></div>
         """

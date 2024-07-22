@@ -1430,6 +1430,26 @@ public class HtmlTemplateTest {
     }
   }
 
+  @Test(description = """
+  Adding a Script::noop action should behave as a noop() operation
+  """)
+  public void testCase62() {
+    test(
+        new Html.Template() {
+          @Override
+          protected final void render() throws IOException {
+            div(
+                dataOnClick(Script.noop())
+            );
+          }
+        },
+
+        """
+        <div></div>
+        """
+    );
+  }
+
   private void test(Html.Template template, String expected) {
     String result;
     result = template.toString();

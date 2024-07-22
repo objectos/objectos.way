@@ -77,13 +77,13 @@ final class CarbonHeaderName extends CarbonComponent implements Carbon.HeaderNam
             ? tmpl.span(
                 tmpl.className("font-400"),
 
-                tmpl.t("Objectos")
+                tmpl.t(prefix)
             )
             : tmpl.noop(),
 
         prefix != null && text != null ? tmpl.nbsp() : tmpl.noop(),
 
-        text != null ? tmpl.t("Carbon") : tmpl.noop()
+        text != null ? tmpl.t(text) : tmpl.noop()
     );
   }
 
