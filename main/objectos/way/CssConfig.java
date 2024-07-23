@@ -59,6 +59,8 @@ final class CssConfig {
 
   private Map<String, CssVariant> variants;
 
+  private boolean variantsInitialized;
+
   public final void addUtility(String className, CssProperties properties) {
 
     CssStaticUtility utility;
@@ -76,6 +78,10 @@ final class CssConfig {
   }
 
   public final void addVariants(CssProperties props) {
+    if (variants == null) {
+      variants = new GrowableMap<>();
+    }
+
     for (Map.Entry<String, String> entry : props) {
       String variantName;
       variantName = entry.getKey();
@@ -90,14 +96,7 @@ final class CssConfig {
         throw new IllegalArgumentException("Invalid formatString: " + invalid.reason());
       }
 
-      Map<String, CssVariant> map;
-      map = variants();
-
-      if (map.containsKey(variantName)) {
-        throw new IllegalArgumentException("Variant already defined: " + variantName);
-      }
-
-      map.put(variantName, variant);
+      putVariant(variantName, variant);
     }
   }
 
@@ -299,21 +298,36 @@ final class CssConfig {
   private Map<String, CssVariant> variants() {
     if (variants == null) {
       variants = new GrowableMap<>();
+    }
 
+    if (!variantsInitialized) {
       for (var breakpoint : breakpoints) {
-        variants.put(breakpoint.name(), breakpoint);
+        putVariant(breakpoint.name(), breakpoint);
       }
 
-      variants.put("focus", new AppendTo(1, ":focus"));
-      variants.put("hover", new AppendTo(2, ":hover"));
-      variants.put("active", new AppendTo(3, ":active"));
-      variants.put("*", new AppendTo(4, " > *"));
+      putVariant("focus", new AppendTo(1, ":focus"));
+      putVariant("hover", new AppendTo(2, ":hover"));
+      putVariant("active", new AppendTo(3, ":active"));
+      putVariant("*", new AppendTo(4, " > *"));
 
-      variants.put("after", new AppendTo(5, "::after"));
-      variants.put("before", new AppendTo(6, "::before"));
+      putVariant("after", new AppendTo(5, "::after"));
+      putVariant("before", new AppendTo(6, "::before"));
+
+      putVariant("ltr", new AppendTo(7, ":where([dir=\"ltr\"], [dir=\"ltr\"] *)"));
+      putVariant("rtl", new AppendTo(7, ":where([dir=\"rtl\"], [dir=\"rtl\"] *)"));
+
+      variantsInitialized = true;
     }
 
     return variants;
+  }
+
+  private void putVariant(String name, CssVariant variant) {
+    if (variants.containsKey(name)) {
+      throw new IllegalArgumentException("Variant already defined: " + name);
+    }
+
+    variants.put(name, variant);
   }
 
 }

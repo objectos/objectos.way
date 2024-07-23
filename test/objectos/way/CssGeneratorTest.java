@@ -3239,55 +3239,6 @@ public class CssGeneratorTest {
   // prefixes
 
   @Test
-  public void pseudoClasses() {
-    class Subject extends AbstractSubject {
-      @Override
-      final void classes() {
-        className("focus:not-sr-only active:bg-white hover:bg-black *:rounded-full");
-      }
-    }
-
-    test(
-        Subject.class,
-
-        """
-        .focus\\:not-sr-only:focus {
-          position: static;
-          width: auto;
-          height: auto;
-          padding: 0;
-          margin: 0;
-          overflow: visible;
-          clip: auto;
-          white-space: normal;
-        }
-        .\\*\\:rounded-full > * { border-radius: 9999px }
-        .hover\\:bg-black:hover { background-color: #000000 }
-        .active\\:bg-white:active { background-color: #ffffff }
-        """
-    );
-  }
-
-  @Test
-  public void pseudoElements() {
-    class Subject extends AbstractSubject {
-      @Override
-      final void classes() {
-        className("before:block after:text-black");
-      }
-    }
-
-    test(
-        Subject.class,
-
-        """
-        .before\\:block::before { display: block }
-        .after\\:text-black::after { color: #000000 }
-        """
-    );
-  }
-
-  @Test
   public void responsive() {
     class Subject extends AbstractSubject {
       @Override
@@ -3862,6 +3813,42 @@ public class CssGeneratorTest {
         .thead\\:tr\\:border thead tr { border-width: 1px }
         .thead\\:bg-black thead { background-color: #000000 }
         .thead\\:hover\\:bg-white thead:hover { background-color: #ffffff }
+        """
+    );
+  }
+
+  @Test
+  public void variantsDefault() {
+    class Subject extends AbstractSubject {
+      @Override
+      final void classes() {
+        className("focus:not-sr-only active:bg-white hover:bg-black *:rounded-full");
+        className("before:block after:text-black");
+        className("ltr:ml-1 rtl:mr-1");
+      }
+    }
+
+    test(
+        Subject.class,
+
+        """
+        .focus\\:not-sr-only:focus {
+          position: static;
+          width: auto;
+          height: auto;
+          padding: 0;
+          margin: 0;
+          overflow: visible;
+          clip: auto;
+          white-space: normal;
+        }
+        .rtl\\:mr-1:where([dir="rtl"], [dir="rtl"] *) { margin-right: 0.25rem }
+        .ltr\\:ml-1:where([dir="ltr"], [dir="ltr"] *) { margin-left: 0.25rem }
+        .before\\:block::before { display: block }
+        .\\*\\:rounded-full > * { border-radius: 9999px }
+        .hover\\:bg-black:hover { background-color: #000000 }
+        .active\\:bg-white:active { background-color: #ffffff }
+        .after\\:text-black::after { color: #000000 }
         """
     );
   }
