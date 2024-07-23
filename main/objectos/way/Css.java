@@ -100,6 +100,17 @@ public final class Css {
 
   // options
 
+  public static Generator.Option baseLayer(String contents) {
+    Check.notNull(contents, "contents == null");
+
+    return new CssGeneratorOption() {
+      @Override
+      final void acceptCssGenerator(CssConfig config) {
+        config.baseLayer(contents);
+      }
+    };
+  }
+
   public static Generator.Option breakpoints(String text) {
     CssProperties properties;
     properties = parseProperties(text);
@@ -203,18 +214,6 @@ public final class Css {
       @Override
       final void acceptCssGenerator(CssConfig config) {
         config.override(key, properties);
-      }
-    };
-  }
-
-  public static Generator.Option rule(String selector, String contents) {
-    Check.notNull(selector, "selector == null");
-    Check.notNull(contents, "contents == null");
-
-    return new CssGeneratorOption() {
-      @Override
-      final void acceptCssGenerator(CssConfig config) {
-        config.addRule(selector, contents);
       }
     };
   }

@@ -26,7 +26,6 @@ import objectos.notes.NoOpNoteSink;
 import objectos.notes.NoteSink;
 import objectos.util.list.GrowableList;
 import objectos.util.map.GrowableMap;
-import objectos.util.map.GrowableSequencedMap;
 import objectos.way.CssVariant.AppendTo;
 import objectos.way.CssVariant.Breakpoint;
 
@@ -42,6 +41,8 @@ final class CssConfig {
       new Breakpoint(4, "2xl", "1536px")
   );
 
+  private List<String> baseLayer;
+
   private Set<Class<?>> classes;
 
   private final Map<CssKey, CssProperties> overrides = new EnumMap<>(CssKey.class);
@@ -52,21 +53,11 @@ final class CssConfig {
 
   private final Map<CssKey, CssResolver> resolvers = new EnumMap<>(CssKey.class);
 
-  private Map<String, String> rules;
-
   private boolean skipReset;
 
   private final Map<String, CssStaticUtility> staticUtilities = new GrowableMap<>();
 
   private Map<String, CssVariant> variants;
-
-  public final void addRule(String selector, String contents) {
-    if (rules == null) {
-      rules = new GrowableSequencedMap<>();
-    }
-
-    rules.put(selector, contents);
-  }
 
   public final void addUtility(String className, CssProperties properties) {
 
@@ -108,6 +99,14 @@ final class CssConfig {
 
       map.put(variantName, variant);
     }
+  }
+
+  public final void baseLayer(String contents) {
+    if (baseLayer == null) {
+      baseLayer = new GrowableList<>();
+    }
+
+    baseLayer.add(contents);
   }
 
   public final void breakpoints(CssProperties properties) {
@@ -273,32 +272,28 @@ final class CssConfig {
 
   //
 
-  final NoteSink noteSink() {
-    return noteSink;
+  final List<Breakpoint> breakpoints() {
+    return breakpoints;
+  }
+
+  final Iterable<String> baseLayer() {
+    return baseLayer != null ? baseLayer : List.of();
   }
 
   final Iterable<Class<?>> classes() {
     return classes;
   }
 
-  final List<Breakpoint> breakpoints() {
-    return breakpoints;
-  }
-
   final CssVariant getVariant(String variantName) {
     return variants().get(variantName);
   }
 
-  final CssPropertyType propertyType() {
-    return propertyType;
+  final NoteSink noteSink() {
+    return noteSink;
   }
 
-  final Map<String, String> rules() {
-    if (rules == null) {
-      rules = Map.of();
-    }
-
-    return rules;
+  final CssPropertyType propertyType() {
+    return propertyType;
   }
 
   private Map<String, CssVariant> variants() {

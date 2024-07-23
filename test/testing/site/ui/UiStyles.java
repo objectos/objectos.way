@@ -35,35 +35,39 @@ final class UiStyles implements Http.Handler {
 
         Css.noteSink(noteSink),
 
-        Css.rule(":root", """
-        --cds-layer: var(--cds-layer-01, #f4f4f4);
-        --cds-layer-active: var(--cds-layer-active-01, #c6c6c6);
-        --cds-layer-hover: var(--cds-layer-hover-01, #e8e8e8);
-        --cds-layer-selected: var(--cds-layer-selected-01, #e0e0e0);
-        --cds-layer-selected-hover: var(--cds-layer-selected-hover-01, #d1d1d1);
-        --cds-layer-accent: var(--cds-layer-accent-01, #e0e0e0);
-        --cds-layer-accent-hover: var(--cds-layer-accent-hover-01, #d1d1d1);
-        --cds-layer-accent-active: var(--cds-layer-accent-active-01, #a8a8a8);
+        Css.baseLayer("""
+        :root {
+          --cds-layer: var(--cds-layer-01, #f4f4f4);
+          --cds-layer-active: var(--cds-layer-active-01, #c6c6c6);
+          --cds-layer-hover: var(--cds-layer-hover-01, #e8e8e8);
+          --cds-layer-selected: var(--cds-layer-selected-01, #e0e0e0);
+          --cds-layer-selected-hover: var(--cds-layer-selected-hover-01, #d1d1d1);
+          --cds-layer-accent: var(--cds-layer-accent-01, #e0e0e0);
+          --cds-layer-accent-hover: var(--cds-layer-accent-hover-01, #d1d1d1);
+          --cds-layer-accent-active: var(--cds-layer-accent-active-01, #a8a8a8);
+        }
         """),
 
-        Css.rule(".theme-white", """
-        --cds-background: #ffffff;
-        --cds-background-active: rgba(141, 141, 141, 0.5);
-        --cds-background-hover: rgba(141, 141, 141, 0.12);
-        --cds-border-subtle-00: #e0e0e0;
-        --cds-border-subtle-01: #c6c6c6;
-        --cds-border-subtle-02: #e0e0e0;
-        --cds-border-subtle-03: #c6c6c6;
-        --cds-border-subtle: var(--cds-border-subtle-00);
-        --cds-focus: #0f62fe;
-        --cds-icon-primary: #161616;
-        --cds-icon-secondary: #525252;
-        --cds-layer-01: #f4f4f4;
-        --cds-layer-02: #ffffff;
-        --cds-layer-03: #f4f4f4;
-        --cds-overlay: rgba(22, 22, 22, 0.5);
-        --cds-text-primary: #161616;
-        --cds-text-secondary: #525252;
+        Css.baseLayer("""
+        .theme-white {
+          --cds-background: #ffffff;
+          --cds-background-active: rgba(141, 141, 141, 0.5);
+          --cds-background-hover: rgba(141, 141, 141, 0.12);
+          --cds-border-subtle-00: #e0e0e0;
+          --cds-border-subtle-01: #c6c6c6;
+          --cds-border-subtle-02: #e0e0e0;
+          --cds-border-subtle-03: #c6c6c6;
+          --cds-border-subtle: var(--cds-border-subtle-00);
+          --cds-focus: #0f62fe;
+          --cds-icon-primary: #161616;
+          --cds-icon-secondary: #525252;
+          --cds-layer-01: #f4f4f4;
+          --cds-layer-02: #ffffff;
+          --cds-layer-03: #f4f4f4;
+          --cds-overlay: rgba(22, 22, 22, 0.5);
+          --cds-text-primary: #161616;
+          --cds-text-secondary: #525252;
+        }
         """),
 
         Css.overrideColors("""

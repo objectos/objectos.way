@@ -3350,6 +3350,36 @@ public class CssGeneratorTest {
   // customization
 
   @Test
+  public void baseLayer() {
+    class Subject extends AbstractSubject {
+      @Override
+      final void classes() {
+        className("border");
+      }
+    }
+
+    test(
+        Css.baseLayer("""
+        :root {
+          --ui-zero: 0px;
+          --ui-one: 1px;
+        }
+        """),
+
+        Subject.class,
+
+        """
+        :root {
+          --ui-zero: 0px;
+          --ui-one: 1px;
+        }
+
+        .border { border-width: 1px }
+        """
+    );
+  }
+
+  @Test
   public void breakpoints() {
     class Subject extends AbstractSubject {
       @Override
@@ -3638,34 +3668,6 @@ public class CssGeneratorTest {
         """
         .z-a { z-index: 100 }
         .z-foo { z-index: 9000 }
-        """
-    );
-  }
-
-  @Test
-  public void rule() {
-    class Subject extends AbstractSubject {
-      @Override
-      final void classes() {
-        className("border");
-      }
-    }
-
-    test(
-        Css.rule(":root", """
-        --ui-zero: 0px;
-        --ui-one: 1px;
-        """),
-
-        Subject.class,
-
-        """
-        :root {
-          --ui-zero: 0px;
-          --ui-one: 1px;
-        }
-
-        .border { border-width: 1px }
         """
     );
   }

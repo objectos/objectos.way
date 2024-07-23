@@ -119,31 +119,11 @@ abstract class CssGeneratorRound extends CssGeneratorParser {
     CssIndentation indentation;
     indentation = CssIndentation.ROOT;
 
-    Map<String, String> rules;
-    rules = config.rules();
+    Iterable<String> baseLayer;
+    baseLayer = config.baseLayer();
 
-    for (var entry : rules.entrySet()) {
-      String selector;
-      selector = entry.getKey();
-
-      out.append(selector);
-
-      out.append(" {");
-      out.append(System.lineSeparator());
-
-      CssIndentation one;
-      one = indentation.increase();
-
-      String body;
-      body = entry.getValue();
-
-      String indented;
-      indented = one.indent(body);
-
-      out.append(indented);
-
-      out.append("}");
-      out.append(System.lineSeparator());
+    for (var styles : baseLayer) {
+      out.append(styles);
 
       if (!topLevel.isEmpty()) {
         out.append(System.lineSeparator());
