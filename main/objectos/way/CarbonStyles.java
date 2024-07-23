@@ -19,22 +19,7 @@ final class CarbonStyles implements Http.Handler {
 
   private Css.StyleSheet generateStyleSheet() {
     return Css.generateStyleSheet(
-        Css.classes(
-            CarbonHeader.class,
-            CarbonHeaderCloseButton.class,
-            CarbonHeaderMenuButton.class,
-            CarbonHeaderMenuItem.class,
-            CarbonHeaderName.class,
-            CarbonHeaderNavigation.class,
-            CarbonHeaderSideNavItems.class,
-            CarbonOverlay.class,
-            CarbonShell.class,
-            CarbonSideNav.class,
-            CarbonSideNavItems.class,
-            CarbonSideNavLink.class,
-
-            CarbonClasses.class
-        ),
+        Css.classes(CarbonClasses.class),
 
         Css.useLogicalProperties(),
 
@@ -365,6 +350,8 @@ final class CarbonStyles implements Http.Handler {
 
         Css.variants("""
         more: &:not(:root)
+        span: & span
+        svg: & svg
         """)
     );
   }

@@ -16,68 +16,93 @@
 package objectos.way;
 
 import objectos.lang.object.Check;
-import objectos.way.Carbon.Overlay;
-import objectos.way.Carbon.Shell;
-import objectos.way.Carbon.SideNav;
 
-final class CarbonShell extends CarbonContainer implements Carbon.Shell {
+abstract class CarbonShell extends Html.Template implements Web.Action {
+
+  private final Http.Exchange http;
 
   private Html.ClassName theme = Carbon.WHITE;
 
-  private String title;
+  private String title = "New Objectos Carbon application";
 
-  CarbonShell(Html.Template tmpl) {
-    super(tmpl);
+  protected CarbonShell(Http.Exchange http) {
+    this.http = http;
   }
 
   @Override
-  public final Shell theme(Html.ClassName value) {
-    theme = Check.notNull(value, "value == null");
-    return this;
+  public void execute() {
+    http.ok(this);
   }
 
   @Override
-  public final Shell title(String value) {
-    title = Check.notNull(value, "value == null");
-    return this;
-  }
+  protected final void render() throws Exception {
+    doctype();
 
-  @Override
-  public final Carbon.Header addHeader() {
-    return addComponent(new CarbonHeader(tmpl));
-  }
-
-  @Override
-  public final Overlay addOverlay() {
-    return addComponent(new CarbonOverlay(tmpl));
-  }
-
-  @Override
-  public final SideNav addSideNav() {
-    return addComponent(new CarbonSideNav(tmpl));
-  }
-
-  @Override
-  public final void render() {
-    tmpl.doctype();
-
-    tmpl.html(
+    html(
         theme,
 
-        tmpl.head(
-            tmpl.meta(tmpl.charset("utf-8")),
-            tmpl.meta(tmpl.httpEquiv("content-type"), tmpl.content("text/html; charset=utf-8")),
-            tmpl.meta(tmpl.name("viewport"), tmpl.content("width=device-width, initial-scale=1")),
-            tmpl.script(tmpl.src("/ui/script.js")),
-            tmpl.link(tmpl.rel("shortcut icon"), tmpl.type("image/x-icon"), tmpl.href("/favicon.png")),
-            tmpl.link(tmpl.rel("stylesheet"), tmpl.type("text/css"), tmpl.href("/ui/carbon.css")),
-            title != null ? tmpl.title(title) : tmpl.noop()
+        head(
+            meta(charset("utf-8")),
+            meta(httpEquiv("content-type"), content("text/html; charset=utf-8")),
+            meta(name("viewport"), content("width=device-width, initial-scale=1")),
+            script(src("/ui/script.js")),
+            link(rel("shortcut icon"), type("image/x-icon"), href("/favicon.png")),
+            link(rel("stylesheet"), type("text/css"), href("/ui/carbon.css")),
+            title != null ? title(title) : noop()
         ),
 
-        tmpl.body(
-            renderComponents()
+        body(
+            f(this::renderShell)
         )
     );
+  }
+
+  protected final boolean currentPage(String href) {
+    Http.Request.Target target;
+    target = http.target();
+
+    String path;
+    path = target.path();
+
+    return path.equals(href);
+  }
+
+  protected final Html.ElementInstruction icon16(Carbon.Icon icon, Html.AttributeInstruction... attributes) {
+    return renderIcon(icon, "16px", attributes);
+  }
+
+  protected final Html.ElementInstruction icon20(Carbon.Icon icon, Html.AttributeInstruction... attributes) {
+    return renderIcon(icon, "20px", attributes);
+  }
+
+  protected final Html.ElementInstruction siz24(Carbon.Icon icon, Html.AttributeInstruction... attributes) {
+    return renderIcon(icon, "24px", attributes);
+  }
+
+  protected final Html.ElementInstruction icon32(Carbon.Icon icon, Html.AttributeInstruction... attributes) {
+    return renderIcon(icon, "32px", attributes);
+  }
+
+  private Html.ElementInstruction renderIcon(Carbon.Icon icon, String size, Html.AttributeInstruction... attributes) {
+    return svg(
+        xmlns("http://www.w3.org/2000/svg"),
+        fill("currentColor"),
+        width(size), height(size), viewBox("0 0 32 32"),
+
+        flatten(attributes),
+
+        raw(icon.raw)
+    );
+  }
+
+  protected abstract void renderShell();
+
+  protected final void shellTheme(Html.ClassName theme) {
+    this.theme = Check.notNull(theme, "theme == null");
+  }
+
+  protected final void shellTitle(String title) {
+    this.title = Check.notNull(title, "title == null");
   }
 
 }

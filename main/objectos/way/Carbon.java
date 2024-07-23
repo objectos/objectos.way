@@ -18,7 +18,6 @@ package objectos.way;
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import objectos.lang.object.Check;
-import objectos.way.Html.ClassName;
 
 /**
  * The <strong>Objectos Carbon UI</strong> main class.
@@ -27,7 +26,7 @@ import objectos.way.Html.ClassName;
  * Objectos Carbon UI is an implementation of the Carbon Design System in pure
  * Java.
  */
-public final class Carbon {
+public final class Carbon extends CarbonClasses {
 
   /**
    * The White theme.
@@ -63,191 +62,12 @@ public final class Carbon {
       this.raw = raw;
     }
 
-    final Html.ElementInstruction size16(Html.Template tmpl, Html.AttributeInstruction... attributes) {
-      return renderIcon(tmpl, "16px", attributes);
-    }
-
-    final Html.ElementInstruction size20(Html.Template tmpl, Html.AttributeInstruction... attributes) {
-      return renderIcon(tmpl, "20px", attributes);
-    }
-
-    final Html.ElementInstruction siz24(Html.Template tmpl, Html.AttributeInstruction... attributes) {
-      return renderIcon(tmpl, "24px", attributes);
-    }
-
-    final Html.ElementInstruction size32(Html.Template tmpl, Html.AttributeInstruction... attributes) {
-      return renderIcon(tmpl, "32px", attributes);
-    }
-
-    private Html.ElementInstruction renderIcon(Html.Template tmpl, String size, Html.AttributeInstruction... attributes) {
-      return tmpl.svg(
-          tmpl.xmlns("http://www.w3.org/2000/svg"),
-          tmpl.fill("currentColor"),
-          tmpl.width(size), tmpl.height(size), tmpl.viewBox("0 0 32 32"),
-
-          tmpl.flatten(attributes),
-
-          tmpl.raw(raw)
-      );
-    }
-
   }
 
   /**
-   * A Carbon UI component.
+   * The UI shell is the top-level UI component of an web application.
    */
-  public sealed interface Component {}
-
-  public sealed interface Header extends Component permits CarbonHeader {
-
-    HeaderCloseButton addCloseButton();
-
-    HeaderMenuButton addMenuButton();
-
-    HeaderName addName();
-
-    HeaderNavigation addNavigation();
-
-    Header ariaLabel(String value);
-
-    Header theme(ClassName value);
-
-  }
-
-  private sealed interface HeaderButton<SELF extends HeaderButton<SELF>> extends Component {
-
-    SELF ariaLabel(String value);
-
-    SELF title(String value);
-
-    SELF dataOnClick(Script.Action value);
-
-    Script.Action hideAction();
-
-    Script.Action showAction();
-
-  }
-
-  public sealed interface HeaderCloseButton
-      extends HeaderButton<HeaderCloseButton>
-      permits CarbonHeaderCloseButton {}
-
-  public sealed interface HeaderMenuButton
-      extends HeaderButton<HeaderMenuButton>
-      permits CarbonHeaderMenuButton {}
-
-  public sealed interface HeaderMenuItem extends Component permits CarbonHeaderMenuItem {
-
-    HeaderMenuItem active(boolean value);
-
-    HeaderMenuItem href(String value);
-
-    HeaderMenuItem text(String value);
-
-  }
-
-  public sealed interface HeaderMenuItemContainer extends Component {
-
-    HeaderMenuItem addItem();
-
-  }
-
-  public sealed interface HeaderName extends Component permits CarbonHeaderName {
-
-    HeaderName href(String value);
-
-    HeaderName prefix(String value);
-
-    HeaderName text(String value);
-
-    HeaderName dataOnClick(Script.Action value);
-
-  }
-
-  public sealed interface HeaderNavigation extends HeaderMenuItemContainer permits CarbonHeaderNavigation {
-
-    HeaderNavigation ariaLabel(String value);
-
-    HeaderNavigation dataFrame(String name, String value);
-
-  }
-
-  public sealed interface HeaderSideNavItems extends HeaderMenuItemContainer permits CarbonHeaderSideNavItems {
-
-    HeaderSideNavItems dataOnClick(Script.Action value);
-
-  }
-
-  public sealed interface Overlay extends Component permits CarbonOverlay {
-
-    Overlay offsetHeader();
-
-    Script.Action hideAction();
-
-    Script.Action showAction();
-
-  }
-
-  /**
-   * The UI shell is the top-level UI element of an web application.
-   */
-  public sealed interface Shell permits CarbonShell {
-
-    Shell theme(ClassName value);
-
-    Shell title(String value);
-
-    Header addHeader();
-
-    Overlay addOverlay();
-
-    SideNav addSideNav();
-
-    void render();
-
-  }
-
-  public sealed interface SideNav extends Component permits CarbonSideNav {
-
-    SideNav ariaLabel(String value);
-
-    SideNav dataFrame(String name, String value);
-
-    SideNav offsetHeader();
-
-    SideNav persistent(boolean value);
-
-    SideNav theme(ClassName value);
-
-    Script.Action hideAction();
-
-    Script.Action showAction();
-
-    SideNavItems addItems();
-
-  }
-
-  public sealed interface SideNavItems extends Component permits CarbonSideNavItems {
-
-    HeaderSideNavItems addHeaderSideNavItems();
-
-    SideNavLink addLink();
-
-  }
-
-  public sealed interface SideNavLink extends Component permits CarbonSideNavLink {
-
-    SideNavLink active(boolean value);
-
-    SideNavLink href(String value);
-
-    SideNavLink text(String value);
-
-    SideNavLink dataOnClick(Script.Action value);
-
-  }
-
-  public static abstract class Template extends CarbonTemplate {
+  public static abstract class Shell extends CarbonShell {
 
     /**
      * Sole constructor.
@@ -255,7 +75,7 @@ public final class Carbon {
      * @param http
      *        the HTTP exchange
      */
-    protected Template(Http.Exchange http) {
+    protected Shell(Http.Exchange http) {
       super(http);
     }
 
@@ -265,12 +85,6 @@ public final class Carbon {
 
   public static Carbon create() {
     return new Carbon();
-  }
-
-  public final Shell createShell(Html.Template template) {
-    Check.notNull(template, "template == null");
-
-    return new CarbonShell(template);
   }
 
   public final Http.Module createHttpModule() {
