@@ -3549,6 +3549,106 @@ public class CssGeneratorTest {
   }
 
   @Test
+  public void overrideGridColumn() {
+    class Subject extends AbstractSubject {
+      @Override
+      final void classes() {
+        className("col-span-12 col-span-14 col-span-16");
+      }
+    }
+
+    test(
+        Css.overrideGridColumn("""
+        auto: auto
+        span-12: span 12 / span 12
+        span-16: span 12 / span 12
+        """),
+
+        Subject.class,
+
+        """
+        .col-span-12 { grid-column: span 12 / span 12 }
+        .col-span-16 { grid-column: span 12 / span 12 }
+        """
+    );
+  }
+
+  @Test
+  public void overrideGridColumnEnd() {
+    class Subject extends AbstractSubject {
+      @Override
+      final void classes() {
+        className("col-end-12 col-end-14 col-end-16");
+      }
+    }
+
+    test(
+        Css.overrideGridColumnEnd("""
+        auto: auto
+        12: 12
+        16: 16
+        """),
+
+        Subject.class,
+
+        """
+        .col-end-12 { grid-column-end: 12 }
+        .col-end-16 { grid-column-end: 16 }
+        """
+    );
+  }
+
+  @Test
+  public void overrideGridColumnStart() {
+    class Subject extends AbstractSubject {
+      @Override
+      final void classes() {
+        className("col-start-12 col-start-14 col-start-16");
+      }
+    }
+
+    test(
+        Css.overrideGridColumnStart("""
+        auto: auto
+        12: 12
+        16: 16
+        """),
+
+        Subject.class,
+
+        """
+        .col-start-12 { grid-column-start: 12 }
+        .col-start-16 { grid-column-start: 16 }
+        """
+    );
+  }
+
+  @Test
+  public void overrideGridTemplateColumns() {
+    class Subject extends AbstractSubject {
+      @Override
+      final void classes() {
+        className("grid-cols-12 grid-cols-14 grid-cols-16");
+      }
+    }
+
+    test(
+        Css.overrideGridTemplateColumns("""
+        none: none
+        12: repeat(12, minmax(0, 1fr))
+        16: repeat(16, minmax(0, 1fr))
+        """),
+
+        Subject.class,
+
+        """
+        .grid-cols-12 { grid-template-columns: repeat(12, minmax(0, 1fr)) }
+        .grid-cols-16 { grid-template-columns: repeat(16, minmax(0, 1fr)) }
+        """
+    );
+  }
+
+  @Test
   public void overrideGridTemplateRows() {
     class Subject extends AbstractSubject {
       @Override

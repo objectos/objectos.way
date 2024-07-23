@@ -178,6 +178,22 @@ public final class Css {
     return override(CssKey.FONT_WEIGHT, text);
   }
 
+  public static Generator.Option overrideGridColumn(String text) {
+    return override(CssKey.GRID_COLUMN, text);
+  }
+
+  public static Generator.Option overrideGridColumnEnd(String text) {
+    return override(CssKey.GRID_COLUMN_END, text);
+  }
+
+  public static Generator.Option overrideGridColumnStart(String text) {
+    return override(CssKey.GRID_COLUMN_START, text);
+  }
+
+  public static Generator.Option overrideGridTemplateColumns(String text) {
+    return override(CssKey.GRID_TEMPLATE_COLUMNS, text);
+  }
+
   public static Generator.Option overrideGridTemplateRows(String text) {
     return override(CssKey.GRID_TEMPLATE_ROWS, text);
   }
