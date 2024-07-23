@@ -3243,7 +3243,7 @@ public class CssGeneratorTest {
     class Subject extends AbstractSubject {
       @Override
       final void classes() {
-        className("focus:not-sr-only active:bg-white hover:bg-black");
+        className("focus:not-sr-only active:bg-white hover:bg-black *:rounded-full");
       }
     }
 
@@ -3261,6 +3261,7 @@ public class CssGeneratorTest {
           clip: auto;
           white-space: normal;
         }
+        .\\*\\:rounded-full > * { border-radius: 9999px }
         .hover\\:bg-black:hover { background-color: #000000 }
         .active\\:bg-white:active { background-color: #ffffff }
         """

@@ -307,9 +307,10 @@ final class CssConfig {
       variants.put("focus", new AppendTo(1, ":focus"));
       variants.put("hover", new AppendTo(2, ":hover"));
       variants.put("active", new AppendTo(3, ":active"));
+      variants.put("*", new AppendTo(4, " > *"));
 
-      variants.put("after", new AppendTo(4, "::after"));
-      variants.put("before", new AppendTo(5, "::before"));
+      variants.put("after", new AppendTo(5, "::after"));
+      variants.put("before", new AppendTo(6, "::before"));
     }
 
     return variants;

@@ -199,7 +199,7 @@ final class CssRule implements Comparable<CssRule> {
       c = className.charAt(index);
 
       switch (c) {
-        case ' ', ',', '.', '/', ':', '@', '[', ']' -> {
+        case ' ', ',', '.', '/', ':', '@', '[', ']', '*' -> {
           out.append("\\");
 
           out.append(c);
