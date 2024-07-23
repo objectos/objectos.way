@@ -100,6 +100,18 @@ public final class Css {
 
   // options
 
+  public static Generator.Option breakpoints(String text) {
+    CssProperties properties;
+    properties = parseProperties(text);
+
+    return new CssGeneratorOption() {
+      @Override
+      final void acceptCssGenerator(CssConfig config) {
+        config.breakpoints(properties);
+      }
+    };
+  }
+
   public static Generator.Classes classes(Class<?>... values) {
     Set<Class<?>> set;
     set = Set.of(values);

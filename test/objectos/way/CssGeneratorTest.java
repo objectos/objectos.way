@@ -3350,101 +3350,47 @@ public class CssGeneratorTest {
   // customization
 
   @Test
-  public void addRule() {
+  public void breakpoints() {
     class Subject extends AbstractSubject {
       @Override
       final void classes() {
-        className("border");
+        className("w-0 sm:w-1 md:w-2 lg:w-3 xl:w-4 max:w-5");
       }
     }
 
     test(
-        Css.rule(":root", """
-        --ui-zero: 0px;
-        --ui-one: 1px;
+        Css.breakpoints("""
+        sm: 20rem
+        md: 40rem
+        lg: 66rem
+        xl: 82rem
+        max: 99rem
         """),
 
         Subject.class,
 
         """
-        :root {
-          --ui-zero: 0px;
-          --ui-one: 1px;
+        .w-0 { width: 0px }
+
+        @media (min-width: 20rem) {
+          .sm\\:w-1 { width: 0.25rem }
         }
 
-        .border { border-width: 1px }
-        """
-    );
-  }
-
-  @Test
-  public void addUtility() {
-    class Subject extends AbstractSubject {
-      @Override
-      final void classes() {
-        className("theme-white md:theme-white");
-      }
-    }
-
-    test(
-        Css.utility(
-            "theme-white",
-
-            """
-            --ui-border-subtle-00: #e0e0e0
-            --ui-border-subtle-01: #c6c6c6
-            --ui-border-subtle-02: #e0e0e0
-            --ui-border-subtle-03: #c6c6c6
-            --ui-border-subtle: var(--ui-border-subtle-00, #e0e0e0)
-            """
-        ),
-
-        Subject.class,
-
-        """
-        .theme-white {
-          --ui-border-subtle-00: #e0e0e0;
-          --ui-border-subtle-01: #c6c6c6;
-          --ui-border-subtle-02: #e0e0e0;
-          --ui-border-subtle-03: #c6c6c6;
-          --ui-border-subtle: var(--ui-border-subtle-00, #e0e0e0);
+        @media (min-width: 40rem) {
+          .md\\:w-2 { width: 0.5rem }
         }
 
-        @media (min-width: 768px) {
-          .md\\:theme-white {
-            --ui-border-subtle-00: #e0e0e0;
-            --ui-border-subtle-01: #c6c6c6;
-            --ui-border-subtle-02: #e0e0e0;
-            --ui-border-subtle-03: #c6c6c6;
-            --ui-border-subtle: var(--ui-border-subtle-00, #e0e0e0);
-          }
+        @media (min-width: 66rem) {
+          .lg\\:w-3 { width: 0.75rem }
         }
-        """
-    );
-  }
 
-  @Test
-  public void addVariant() {
-    class Subject extends AbstractSubject {
-      @Override
-      final void classes() {
-        className("thead:bg-black thead:hover:bg-white");
-        className("thead:tr:border");
-      }
-    }
+        @media (min-width: 82rem) {
+          .xl\\:w-4 { width: 1rem }
+        }
 
-    test(
-        Css.variants("""
-        thead: & thead
-        tr: & tr
-        """),
-
-        Subject.class,
-
-        """
-        .thead\\:tr\\:border thead tr { border-width: 1px }
-        .thead\\:bg-black thead { background-color: #000000 }
-        .thead\\:hover\\:bg-white thead:hover { background-color: #ffffff }
+        @media (min-width: 99rem) {
+          .max\\:w-5 { width: 1.25rem }
+        }
         """
     );
   }
@@ -3697,6 +3643,34 @@ public class CssGeneratorTest {
   }
 
   @Test
+  public void rule() {
+    class Subject extends AbstractSubject {
+      @Override
+      final void classes() {
+        className("border");
+      }
+    }
+
+    test(
+        Css.rule(":root", """
+        --ui-zero: 0px;
+        --ui-one: 1px;
+        """),
+
+        Subject.class,
+
+        """
+        :root {
+          --ui-zero: 0px;
+          --ui-one: 1px;
+        }
+
+        .border { border-width: 1px }
+        """
+    );
+  }
+
+  @Test
   public void useLogicalProperties() {
     class Subject extends AbstractSubject {
       @Override
@@ -3813,6 +3787,78 @@ public class CssGeneratorTest {
         .pr-px { padding-inline-end: 1px }
         .pb-px { padding-block-end: 1px }
         .pl-px { padding-inline-start: 1px }
+        """
+    );
+  }
+
+  @Test
+  public void utility() {
+    class Subject extends AbstractSubject {
+      @Override
+      final void classes() {
+        className("theme-white md:theme-white");
+      }
+    }
+
+    test(
+        Css.utility(
+            "theme-white",
+
+            """
+            --ui-border-subtle-00: #e0e0e0
+            --ui-border-subtle-01: #c6c6c6
+            --ui-border-subtle-02: #e0e0e0
+            --ui-border-subtle-03: #c6c6c6
+            --ui-border-subtle: var(--ui-border-subtle-00, #e0e0e0)
+            """
+        ),
+
+        Subject.class,
+
+        """
+        .theme-white {
+          --ui-border-subtle-00: #e0e0e0;
+          --ui-border-subtle-01: #c6c6c6;
+          --ui-border-subtle-02: #e0e0e0;
+          --ui-border-subtle-03: #c6c6c6;
+          --ui-border-subtle: var(--ui-border-subtle-00, #e0e0e0);
+        }
+
+        @media (min-width: 768px) {
+          .md\\:theme-white {
+            --ui-border-subtle-00: #e0e0e0;
+            --ui-border-subtle-01: #c6c6c6;
+            --ui-border-subtle-02: #e0e0e0;
+            --ui-border-subtle-03: #c6c6c6;
+            --ui-border-subtle: var(--ui-border-subtle-00, #e0e0e0);
+          }
+        }
+        """
+    );
+  }
+
+  @Test
+  public void variants() {
+    class Subject extends AbstractSubject {
+      @Override
+      final void classes() {
+        className("thead:bg-black thead:hover:bg-white");
+        className("thead:tr:border");
+      }
+    }
+
+    test(
+        Css.variants("""
+        thead: & thead
+        tr: & tr
+        """),
+
+        Subject.class,
+
+        """
+        .thead\\:tr\\:border thead tr { border-width: 1px }
+        .thead\\:bg-black thead { background-color: #000000 }
+        .thead\\:hover\\:bg-white thead:hover { background-color: #ffffff }
         """
     );
   }

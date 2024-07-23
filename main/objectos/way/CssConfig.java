@@ -24,6 +24,7 @@ import java.util.Set;
 import java.util.function.Function;
 import objectos.notes.NoOpNoteSink;
 import objectos.notes.NoteSink;
+import objectos.util.list.GrowableList;
 import objectos.util.map.GrowableMap;
 import objectos.util.map.GrowableSequencedMap;
 import objectos.way.CssVariant.AppendTo;
@@ -33,7 +34,7 @@ final class CssConfig {
 
   private NoteSink noteSink = NoOpNoteSink.of();
 
-  private final List<Breakpoint> breakpoints = List.of(
+  private List<Breakpoint> breakpoints = List.of(
       new Breakpoint(0, "sm", "640px"),
       new Breakpoint(1, "md", "768px"),
       new Breakpoint(2, "lg", "1024px"),
@@ -107,6 +108,28 @@ final class CssConfig {
 
       map.put(variantName, variant);
     }
+  }
+
+  public final void breakpoints(CssProperties properties) {
+    int index = 0;
+
+    GrowableList<Breakpoint> builder;
+    builder = new GrowableList<>();
+
+    for (var entry : properties) {
+      String name;
+      name = entry.getKey();
+
+      String value;
+      value = entry.getValue();
+
+      Breakpoint breakpoint;
+      breakpoint = new Breakpoint(index++, name, value);
+
+      builder.add(breakpoint);
+    }
+
+    breakpoints = builder.toUnmodifiableList();
   }
 
   public final void classes(Set<Class<?>> set) {
