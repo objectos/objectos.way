@@ -19,9 +19,21 @@ final class CarbonStyles implements Http.Handler {
 
   private Css.StyleSheet generateStyleSheet() {
     return Css.generateStyleSheet(
-        Css.classes(CarbonClasses.class),
+        Css.classes(
+            CarbonClassesGrid.class,
+            CarbonClassesUIShell.class,
+            CarbonClassesUtils.class
+        ),
 
         Css.useLogicalProperties(),
+
+        Css.breakpoints("""
+        sm: 20rem
+        md: 40rem
+        lg: 66rem
+        xl: 82rem
+        max: 99rem
+        """),
 
         Css.baseLayer("""
         .cds--white {

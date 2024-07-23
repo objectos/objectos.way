@@ -13,34 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package testing.site.carbon;
+package objectos.way;
 
-import objectos.way.Carbon;
-import objectos.way.Http;
+class CarbonClassesGrid extends CarbonClassesUtils {
 
-final class Components extends CarbonPage {
+  /**
+   * The CSS grid component.
+   */
+  public static final Html.ClassName GRID = Html.className(
+      "mx-auto grid w-full max-w-screen-max grid-cols-4",
+      "px-0px",
 
-  Components(Http.Exchange http) {
-    super(http);
-  }
+      "md:grid-cols-8 md:px-16px",
 
-  @Override
-  protected final void preRender() {
-    shellTitle("Components - Objectos Carbon");
+      "lg:grid-cols-16",
 
-    topSection = TopSection.COMPONENTS;
-  }
+      "max:px-24px",
 
-  @Override
-  protected final void renderContent() {
-    div(
-        Carbon.GRID,
-
-        p("Here are the components"),
-        p("Here are the components"),
-        p("Here are the components"),
-        p("Here are the components")
-    );
-  }
+      "*:mx-16px"
+  );
 
 }

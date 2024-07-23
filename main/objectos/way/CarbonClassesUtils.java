@@ -13,34 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package testing.site.carbon;
+package objectos.way;
 
-import objectos.way.Carbon;
-import objectos.way.Http;
+class CarbonClassesUtils {
 
-final class Components extends CarbonPage {
+  public static final Html.ClassName HIDDEN = Html.className("more:hidden");
 
-  Components(Http.Exchange http) {
-    super(http);
-  }
+  public static final Html.ClassName OPACITY_0 = Html.className("opacity-0");
 
-  @Override
-  protected final void preRender() {
-    shellTitle("Components - Objectos Carbon");
+  public static final Html.ClassName OPACITY_100 = Html.className("opacity-100");
 
-    topSection = TopSection.COMPONENTS;
-  }
-
-  @Override
-  protected final void renderContent() {
-    div(
-        Carbon.GRID,
-
-        p("Here are the components"),
-        p("Here are the components"),
-        p("Here are the components"),
-        p("Here are the components")
-    );
-  }
+  public static final Html.ClassName VISIBLE = Html.className("more:visible");
 
 }

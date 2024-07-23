@@ -15,7 +15,7 @@
  */
 package objectos.way;
 
-abstract class CarbonClasses {
+abstract class CarbonClassesUIShell extends CarbonClassesGrid {
 
   private static final String _BUTTON_RESET = "cursor-pointer appearance-none";
 
@@ -195,15 +195,5 @@ abstract class CarbonClasses {
   public static final Html.ClassName SIDE_NAV_WIDTH = Html.className(
       "more:w-256px"
   );
-
-  // utilities
-
-  public static final Html.ClassName HIDDEN = Html.className("more:hidden");
-
-  public static final Html.ClassName OPACITY_0 = Html.className("opacity-0");
-
-  public static final Html.ClassName OPACITY_100 = Html.className("opacity-100");
-
-  public static final Html.ClassName VISIBLE = Html.className("more:visible");
 
 }

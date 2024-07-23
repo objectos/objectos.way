@@ -26,7 +26,7 @@ import objectos.lang.object.Check;
  * Objectos Carbon UI is an implementation of the Carbon Design System in pure
  * Java.
  */
-public final class Carbon extends CarbonClasses {
+public final class Carbon extends CarbonClassesUIShell {
 
   /**
    * The White theme.
