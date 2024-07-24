@@ -19,11 +19,7 @@ final class CarbonStyles implements Http.Handler {
 
   private Css.StyleSheet generateStyleSheet() {
     return Css.generateStyleSheet(
-        Css.classes(
-            CarbonClassesGrid.class,
-            CarbonClassesUIShell.class,
-            CarbonClassesUtils.class
-        ),
+        Css.classes(CarbonClasses.class),
 
         Css.useLogicalProperties(),
 
@@ -251,6 +247,73 @@ final class CarbonStyles implements Http.Handler {
 
           --spacing-header: 3rem;
           --spacing-side-nav: 16rem;
+
+          --cds-spacing-01: 0.125rem;
+          --cds-spacing-02: 0.25rem;
+          --cds-spacing-03: 0.5rem;
+          --cds-spacing-04: 0.75rem;
+          --cds-spacing-05: 1rem;
+          --cds-spacing-06: 1.5rem;
+          --cds-spacing-07: 2rem;
+          --cds-spacing-08: 2.5rem;
+          --cds-spacing-09: 3rem;
+          --cds-spacing-10: 4rem;
+          --cds-spacing-11: 5rem;
+          --cds-spacing-12: 6rem;
+          --cds-spacing-13: 10rem;
+        }
+        """),
+
+        Css.baseLayer("""
+        .cds--layer-one {
+          --cds-layer: var(--cds-layer-01, #f4f4f4);
+          --cds-layer-active: var(--cds-layer-active-01, #c6c6c6);
+          --cds-layer-hover: var(--cds-layer-hover-01, #e8e8e8);
+          --cds-layer-selected: var(--cds-layer-selected-01, #e0e0e0);
+          --cds-layer-selected-hover: var(--cds-layer-selected-hover-01, #d1d1d1);
+          --cds-layer-accent: var(--cds-layer-accent-01, #e0e0e0);
+          --cds-layer-accent-hover: var(--cds-layer-accent-hover-01, #d1d1d1);
+          --cds-layer-accent-active: var(--cds-layer-accent-active-01, #a8a8a8);
+          --cds-field: var(--cds-field-01, #f4f4f4);
+          --cds-field-hover: var(--cds-field-hover-01, #e8e8e8);
+          --cds-border-subtle: var(--cds-border-subtle-00, #e0e0e0);
+          --cds-border-subtle-selected: var(--cds-border-subtle-selected-01, #c6c6c6);
+          --cds-border-strong: var(--cds-border-strong-01, #8d8d8d);
+          --cds-border-tile: var(--cds-border-tile-01, #c6c6c6)
+        }
+
+        .cds--layer-two {
+          --cds-layer: var(--cds-layer-02, #ffffff);
+          --cds-layer-active: var(--cds-layer-active-02, #c6c6c6);
+          --cds-layer-hover: var(--cds-layer-hover-02, #e8e8e8);
+          --cds-layer-selected: var(--cds-layer-selected-02, #e0e0e0);
+          --cds-layer-selected-hover: var(--cds-layer-selected-hover-02, #d1d1d1);
+          --cds-layer-accent: var(--cds-layer-accent-02, #e0e0e0);
+          --cds-layer-accent-hover: var(--cds-layer-accent-hover-02, #d1d1d1);
+          --cds-layer-accent-active: var(--cds-layer-accent-active-02, #a8a8a8);
+          --cds-field: var(--cds-field-02, #ffffff);
+          --cds-field-hover: var(--cds-field-hover-02, #e8e8e8);
+          --cds-border-subtle: var(--cds-border-subtle-01, #c6c6c6);
+          --cds-border-subtle-selected: var(--cds-border-subtle-selected-02, #c6c6c6);
+          --cds-border-strong: var(--cds-border-strong-02, #8d8d8d);
+          --cds-border-tile: var(--cds-border-tile-02, #a8a8a8)
+        }
+
+        .cds--layer-three {
+          --cds-layer: var(--cds-layer-03, #f4f4f4);
+          --cds-layer-active: var(--cds-layer-active-03, #c6c6c6);
+          --cds-layer-hover: var(--cds-layer-hover-03, #e8e8e8);
+          --cds-layer-selected: var(--cds-layer-selected-03, #e0e0e0);
+          --cds-layer-selected-hover: var(--cds-layer-selected-hover-03, #d1d1d1);
+          --cds-layer-accent: var(--cds-layer-accent-03, #e0e0e0);
+          --cds-layer-accent-hover: var(--cds-layer-accent-hover-03, #d1d1d1);
+          --cds-layer-accent-active: var(--cds-layer-accent-active-03, #a8a8a8);
+          --cds-field: var(--cds-field-03, #f4f4f4);
+          --cds-field-hover: var(--cds-field-hover-03, #e8e8e8);
+          --cds-border-subtle: var(--cds-border-subtle-02, #e0e0e0);
+          --cds-border-subtle-selected: var(--cds-border-subtle-selected-03, #c6c6c6);
+          --cds-border-strong: var(--cds-border-strong-03, #8d8d8d);
+          --cds-border-tile: var(--cds-border-tile-03, #c6c6c6)
         }
         """),
 
@@ -302,6 +365,65 @@ final class CarbonStyles implements Http.Handler {
         600: 600
         """),
 
+        Css.overrideGridColumn("""
+        auto: auto
+        span-1: span 1 / span 1
+        span-2: span 2 / span 2
+        span-3: span 3 / span 3
+        span-4: span 4 / span 4
+        span-5: span 5 / span 5
+        span-6: span 6 / span 6
+        span-7: span 7 / span 7
+        span-8: span 8 / span 8
+        span-9: span 9 / span 9
+        span-10: span 10 / span 10
+        span-11: span 11 / span 11
+        span-12: span 12 / span 12
+        span-13: span 13 / span 13
+        span-14: span 14 / span 14
+        span-15: span 15 / span 15
+        span-16: span 16 / span 16
+        span-full: 1 / -1
+        """),
+
+        Css.overrideGridColumnStart("""
+        auto: auto
+        1: 1
+        2: 2
+        3: 3
+        4: 4
+        5: 5
+        6: 6
+        7: 7
+        8: 8
+        9: 9
+        10: 10
+        11: 11
+        12: 12
+        13: 13
+        14: 14
+        15: 15
+        16: 16
+        17: 17
+        """),
+
+        Css.overrideGridTemplateColumns("""
+        none: none
+        subgrid: subgrid
+        1: repeat(1, minmax(0, 1fr))
+        2: repeat(2, minmax(0, 1fr))
+        3: repeat(3, minmax(0, 1fr))
+        4: repeat(4, minmax(0, 1fr))
+        5: repeat(5, minmax(0, 1fr))
+        6: repeat(6, minmax(0, 1fr))
+        7: repeat(7, minmax(0, 1fr))
+        8: repeat(8, minmax(0, 1fr))
+        9: repeat(9, minmax(0, 1fr))
+        11: repeat(11, minmax(0, 1fr))
+        12: repeat(12, minmax(0, 1fr))
+        16: repeat(16, minmax(0, 1fr))
+        """),
+
         Css.overrideLetterSpacing("""
         0: 0
         0.1px: 0.1px
@@ -323,6 +445,20 @@ final class CarbonStyles implements Http.Handler {
         Css.overrideSpacing("""
         header: var(--spacing-header)
         side-nav: var(--spacing-side-nav)
+
+        01: var(--cds-spacing-01)
+        02: var(--cds-spacing-02)
+        03: var(--cds-spacing-03)
+        04: var(--cds-spacing-04)
+        05: var(--cds-spacing-05)
+        06: var(--cds-spacing-06)
+        07: var(--cds-spacing-07)
+        08: var(--cds-spacing-08)
+        09: var(--cds-spacing-09)
+        10: var(--cds-spacing-10)
+        11: var(--cds-spacing-11)
+        12: var(--cds-spacing-12)
+        13: var(--cds-spacing-13)
 
         0px: 0px
         1px: 0.0625rem

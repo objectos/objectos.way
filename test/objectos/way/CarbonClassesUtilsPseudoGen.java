@@ -15,14 +15,19 @@
  */
 package objectos.way;
 
-class CarbonClassesUtils {
+public class CarbonClassesUtilsPseudoGen {
+  public static void main(String[] args) {
+    spacing("gap-y-");
+  }
 
-  public static final Html.ClassName HIDDEN = Html.className("more:hidden");
+  private static void spacing(String prefix) {
+    String prop = prefix.replace('-', '_').toUpperCase();
 
-  public static final Html.ClassName OPACITY_0 = Html.className("opacity-0");
+    for (int i = 1; i <= 13; i++) {
+      System.out.print("""
+      public static final Html.ClassName %s%02d = Html.className(\"%s%02d\");
 
-  public static final Html.ClassName OPACITY_100 = Html.className("opacity-100");
-
-  public static final Html.ClassName VISIBLE = Html.className("more:visible");
-
+      """.formatted(prop, i, prefix, i));
+    }
+  }
 }

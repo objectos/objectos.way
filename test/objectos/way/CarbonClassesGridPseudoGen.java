@@ -15,22 +15,27 @@
  */
 package objectos.way;
 
-class CarbonClassesGrid extends CarbonClassesUtils {
+public class CarbonClassesGridPseudoGen {
+  public static void main(String[] args) {
+    colSpan("");
+    colSpan("sm:");
+    colSpan("md:");
+    colSpan("lg:");
+    colSpan("xl:");
+    colSpan("max:");
+  }
 
-  /**
-   * The CSS grid component.
-   */
-  public static final Html.ClassName GRID = Html.className(
-      "mx-auto grid w-full max-w-screen-max grid-cols-4",
-      "px-0px",
+  private static void colSpan(String prefix) {
+    String prop = prefix.replace(':', '_').toUpperCase();
 
-      "md:grid-cols-8 md:px-16px",
+    for (int i = 1; i <= 16; i++) {
+      System.out.print("""
+      /**
+       * Causes an HTML element in a grid to span %d columns.
+       */
+      public static final Html.ClassName %sCOL_SPAN_%d = Html.className(\"%scol-span-%d\");
 
-      "lg:grid-cols-16",
-
-      "max:px-24px",
-
-      "*:mx-16px"
-  );
-
+      """.formatted(i, prop, i, prefix, i));
+    }
+  }
 }

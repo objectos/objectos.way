@@ -143,9 +143,10 @@ abstract class CarbonPage extends Carbon.Shell {
     );
 
     main(
-        Carbon.HEADER_OFFSET,
-
         dataFrame("main", getClass().getSimpleName()),
+
+        Carbon.HEADER_OFFSET,
+        Carbon.SIDE_NAV_OFFSET,
 
         f(this::renderContent)
     );
@@ -199,6 +200,7 @@ abstract class CarbonPage extends Carbon.Shell {
     switch (topSection) {
       case COMPONENTS -> {
         renderSideNavLink("Button", "/components/button", clickAction);
+        renderSideNavLink("Grid", "/components/grid", clickAction);
       }
 
       default -> {}
