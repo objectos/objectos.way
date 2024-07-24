@@ -19,12 +19,13 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
+import java.util.function.Consumer;
 import objectos.notes.NoOpNoteSink;
 import objectos.notes.Note1;
 import objectos.notes.Note2;
 import objectos.notes.NoteSink;
 
-abstract class CssGeneratorScanner {
+final class CssGeneratorScanner {
 
   private static final Note1<String> CLASS_NOT_FOUND;
 
@@ -79,7 +80,7 @@ abstract class CssGeneratorScanner {
     this.noteSink = noteSink;
   }
 
-  public final void scan(Class<?> clazz) {
+  public final void scan(Class<?> clazz, Consumer<String> stringProcessor) {
     String binaryName;
     binaryName = clazz.getName();
 
@@ -312,11 +313,9 @@ abstract class CssGeneratorScanner {
 
       noteSink.send(UTF8, utf8);
 
-      onScan(utf8);
+      stringProcessor.accept(utf8);
     }
   }
-
-  abstract void onScan(String s);
 
   private boolean canRead(byte[] bytes, int bytesIndex) {
     return bytesIndex < bytes.length;

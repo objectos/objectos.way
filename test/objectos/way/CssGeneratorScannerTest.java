@@ -74,12 +74,10 @@ public class CssGeneratorScannerTest {
     List<String> result;
     result = new ArrayList<>();
 
-    new CssGeneratorScanner() {
-      @Override
-      final void onScan(String s) {
-        result.add(s);
-      }
-    }.scan(type);
+    CssGeneratorScanner scanner;
+    scanner = new CssGeneratorScanner();
+
+    scanner.scan(type, result::add);
 
     assertEquals(result, List.of(expected));
   }

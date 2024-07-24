@@ -16,12 +16,15 @@
 package objectos.way;
 
 import java.util.Comparator;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.TreeMap;
 import objectos.util.list.GrowableList;
+import objectos.util.map.GrowableSequencedMap;
 import objectos.way.CssVariant.MediaQuery;
 
-final class CssGeneratorRound extends CssGeneratorParser {
+class CssGeneratorRound {
 
   static class Context {
 
@@ -78,19 +81,29 @@ final class CssGeneratorRound extends CssGeneratorParser {
 
   }
 
+  private final CssConfig config;
+
+  private final Map<String, CssRule> rules = new GrowableSequencedMap<>();
+
   private GrowableList<CssRule> topLevel;
 
   private Map<MediaQuery, Context> mediaQueries;
 
+  // for testing only
+  CssGeneratorRound() {
+    config = null;
+  }
+
   CssGeneratorRound(CssConfig config) {
-    super(config);
+    this.config = config;
   }
 
   public final String generate() {
-    noteSink = config.noteSink();
+    CssGeneratorScanner scanner;
+    scanner = new CssGeneratorScanner(config.noteSink());
 
     for (var clazz : config.classes()) {
-      scan(clazz);
+      scanner.scan(clazz, this::split);
     }
 
     topLevel = new GrowableList<>();
@@ -141,6 +154,183 @@ final class CssGeneratorRound extends CssGeneratorParser {
     return out.toString();
   }
 
+  // visible for testing
+  final void split(String s) {
+    int beginIndex;
+    beginIndex = 0;
+
+    int endIndex;
+    endIndex = s.indexOf(' ', beginIndex);
+
+    while (endIndex >= 0) {
+      if (beginIndex < endIndex) {
+        String candidate;
+        candidate = s.substring(beginIndex, endIndex);
+
+        onSplit(candidate);
+      }
+
+      beginIndex = endIndex + 1;
+
+      endIndex = s.indexOf(' ', beginIndex);
+    }
+
+    if (beginIndex == 0) {
+      onSplit(s);
+    }
+
+    else if (beginIndex < s.length() - 1) {
+      onSplit(s.substring(beginIndex));
+    }
+  }
+
+  void onSplit(String s) {
+    CssRule existing;
+    existing = rules.get(s);
+
+    if (existing == null) {
+      CssRule newRule;
+      newRule = onCacheMiss(s);
+
+      rules.put(s, newRule);
+    }
+
+    else {
+      onCacheHit(existing);
+    }
+  }
+
+  void onCacheHit(CssRule existing) {
+    // for testing
+  }
+
+  private final GrowableList<CssVariant> variantsBuilder = new GrowableList<>();
+
+  CssRule onCacheMiss(String className) {
+    int beginIndex;
+    beginIndex = 0;
+
+    int colon;
+    colon = className.indexOf(':', beginIndex);
+
+    while (colon > 0) {
+      String variantName;
+      variantName = className.substring(beginIndex, colon);
+
+      CssVariant variant;
+      variant = getVariant(variantName);
+
+      if (variant == null) {
+        return CssRule.NOOP;
+      }
+
+      variantsBuilder.add(variant);
+
+      beginIndex = colon + 1;
+
+      colon = className.indexOf(':', beginIndex);
+    }
+
+    List<CssVariant> variants;
+    variants = variantsBuilder.toUnmodifiableList(Comparator.naturalOrder());
+
+    variantsBuilder.clear();
+
+    String value;
+    value = className;
+
+    if (beginIndex > 0) {
+      value = className.substring(beginIndex);
+    }
+
+    return onVariants(className, variants, value);
+  }
+
+  CssRule onVariants(String className, List<CssVariant> variants, String value) {
+    // 1) static values search
+    CssStaticUtility staticFactory;
+    staticFactory = config.getStatic(value);
+
+    if (staticFactory != null) {
+      return staticFactory.create(className, variants);
+    }
+
+    // 2) by prefix search
+
+    char firstChar;
+    firstChar = value.charAt(0);
+
+    // are we dealing with a negative value
+    boolean negative;
+    negative = false;
+
+    if (firstChar == '-') {
+      negative = true;
+
+      value = value.substring(1);
+    }
+
+    // maybe it is the prefix with an empty value
+    // e.g. border-x
+
+    Set<CssKey> candidates;
+    candidates = config.getCandidates(value);
+
+    String suffix;
+    suffix = "";
+
+    if (candidates == null) {
+
+      int fromIndex;
+      fromIndex = value.length();
+
+      while (candidates == null && fromIndex > 0) {
+        int lastDash;
+        lastDash = value.lastIndexOf('-', fromIndex);
+
+        if (lastDash == 0) {
+          // value starts with a dash and has no other dash
+          // => invalid value
+          break;
+        }
+
+        fromIndex = lastDash - 1;
+
+        String prefix;
+        prefix = value;
+
+        suffix = "";
+
+        if (lastDash > 0) {
+          prefix = value.substring(0, lastDash);
+
+          suffix = value.substring(lastDash + 1);
+        }
+
+        candidates = config.getCandidates(prefix);
+      }
+
+    }
+
+    if (candidates == null) {
+      return CssRule.NOOP;
+    }
+
+    for (CssKey candidate : candidates) {
+      CssResolver resolver;
+      resolver = config.getResolver(candidate);
+
+      CssRule rule;
+      rule = resolver.resolve(className, variants, negative, suffix);
+
+      if (rule != null) {
+        return rule;
+      }
+    }
+
+    return CssRule.NOOP;
+  }
+
   final Context contextOf(MediaQuery query) {
     if (mediaQueries == null) {
       mediaQueries = new TreeMap<>();
@@ -151,6 +341,20 @@ final class CssGeneratorRound extends CssGeneratorParser {
 
   final void topLevel(CssRule rule) {
     topLevel.add(rule);
+  }
+
+  // testing
+
+  final CssRule getRule(String className) {
+    return rules.get(className);
+  }
+
+  CssVariant getVariant(String name) {
+    return config.getVariant(name);
+  }
+
+  final void putRule(String className, CssRule rule) {
+    rules.put(className, rule);
   }
 
 }
