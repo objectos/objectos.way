@@ -21,7 +21,7 @@ import java.util.TreeMap;
 import objectos.util.list.GrowableList;
 import objectos.way.CssVariant.MediaQuery;
 
-abstract class CssGeneratorRound extends CssGeneratorParser {
+final class CssGeneratorRound extends CssGeneratorParser {
 
   static class Context {
 
@@ -86,12 +86,8 @@ abstract class CssGeneratorRound extends CssGeneratorParser {
     super(config);
   }
 
-  abstract void spec();
-
   public final String generate() {
     noteSink = config.noteSink();
-
-    spec();
 
     for (var clazz : config.classes()) {
       scan(clazz);
@@ -100,10 +96,6 @@ abstract class CssGeneratorRound extends CssGeneratorParser {
     topLevel = new GrowableList<>();
 
     for (CssRule rule : rules.values()) {
-      if (rule == CssRule.NOOP) {
-        continue;
-      }
-
       rule.accept(this);
     }
 

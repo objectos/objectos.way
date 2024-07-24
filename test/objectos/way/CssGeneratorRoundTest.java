@@ -29,7 +29,7 @@ public class CssGeneratorRoundTest {
     config = config();
 
     CssGeneratorRound round;
-    round = new CssGeneratorSpec(config);
+    round = new CssGeneratorRound(config);
 
     round.rules.put("bg-black", new CssUtility(CssKey.BACKGROUND_COLOR, "bg-black", List.of(), Css.parseProperties("background-color: black")));
 

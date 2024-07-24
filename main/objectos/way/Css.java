@@ -30,7 +30,7 @@ public final class Css {
    * Generates a style sheet by scanning Java class files for predefined CSS
    * utility class names.
    */
-  public sealed interface Generator permits CssGeneratorSpec {
+  public sealed interface Generator {
 
     /**
      * The set of classes to scan.
@@ -43,6 +43,9 @@ public final class Css {
     public sealed interface Option permits CssGeneratorOption {}
 
   }
+
+  // No Generator Impl for now
+  static final class NoImpl implements Generator {}
 
   /**
    * A CSS style sheet.
@@ -85,10 +88,12 @@ public final class Css {
       option.acceptCssGenerator(config);
     }
 
-    CssGeneratorSpec spec;
-    spec = new CssGeneratorSpec(config);
+    config.spec();
 
-    return spec.generate();
+    CssGeneratorRound round;
+    round = new CssGeneratorRound(config);
+
+    return round.generate();
   }
 
   public static StyleSheet generateStyleSheet(Generator.Classes classes, Generator.Option... options) {
