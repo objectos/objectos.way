@@ -3377,6 +3377,33 @@ public class CssGeneratorTest {
     );
   }
 
+  @Test(enabled = false)
+  public void component01() {
+    class Subject extends AbstractSubject {
+      @Override
+      final void classes() {
+        className("carbon-grid");
+      }
+    }
+
+    test(
+        Css.component("carbon-grid", """
+        mx-auto grid w-full max-w-screen-max grid-cols-4
+        px-0px
+        md:grid-cols-8 md:px-16px
+        lg:grid-cols-16
+        max:px-24px
+        *:mx-16px
+        """),
+
+        Subject.class,
+
+        """
+        .carbon-grid { width: 0px }
+        """
+    );
+  }
+
   @Test
   public void overrideBackgroundColor() {
     class Subject extends AbstractSubject {

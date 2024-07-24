@@ -24,7 +24,7 @@ import java.util.List;
 import objectos.way.CssVariant.AppendTo;
 import org.testng.annotations.Test;
 
-public class CssRuleTest {
+public class CssUtilityTest {
 
   @Test(description = "order by utility first")
   public void ordering01() {
@@ -70,7 +70,7 @@ public class CssRuleTest {
   }
 
   private CssRule rule(CssKey key, String className, List<CssVariant> variants) {
-    return new CssRule(key, className, variants, CssProperties.NOOP);
+    return new CssUtility(key, className, variants, CssProperties.NOOP);
   }
 
   private void testClassName(String className, String expected) {

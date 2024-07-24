@@ -66,7 +66,7 @@ public class CssGeneratorVariantsTest {
 
     @Override
     final CssRule onVariants(String className, List<CssVariant> variants, String value) {
-      return new CssRule(
+      return new CssUtility(
           CssKey.DISPLAY,
           className, variants,
           CssProperties.of("display", value)

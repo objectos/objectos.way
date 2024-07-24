@@ -45,6 +45,8 @@ final class CssConfig {
 
   private Set<Class<?>> classes;
 
+  private Map<String, String> components;
+
   private final Map<CssKey, CssProperties> overrides = new EnumMap<>(CssKey.class);
 
   private final Map<String, Set<CssKey>> prefixes = new HashMap<>();
@@ -60,6 +62,21 @@ final class CssConfig {
   private Map<String, CssVariant> variants;
 
   private boolean variantsInitialized;
+
+  public final void addComponent(String name, String definition) {
+    if (components == null) {
+      components = new GrowableMap<>();
+    }
+
+    String existing;
+    existing = components.put(name, definition);
+
+    if (existing != null) {
+      throw new IllegalArgumentException(
+          "The class name " + name + " is mapped to an existing component."
+      );
+    }
+  }
 
   public final void addUtility(String className, CssProperties properties) {
 

@@ -15,13 +15,30 @@
  */
 package objectos.way;
 
-import java.util.List;
+final class CssNoop extends CssRule {
 
-@SuppressWarnings("exports")
-record CssStaticUtility(CssKey key, CssProperties properties) {
+  static final CssNoop INSTANCE = new CssNoop();
 
-  public final CssRule create(String className, List<CssVariant> variants) {
-    return new CssUtility(key, className, variants, properties);
+  private CssNoop() {}
+
+  @Override
+  public final void accept(CssGeneratorRound gen) {
+    // noop
+  }
+
+  @Override
+  public final int kind() {
+    return 0;
+  }
+
+  @Override
+  public final void writeTo(StringBuilder out, CssIndentation indentation) {
+    // noop
+  }
+
+  @Override
+  final int compareSameKind(CssRule o) {
+    return 0;
   }
 
 }

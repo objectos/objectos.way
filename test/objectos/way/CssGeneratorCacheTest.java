@@ -17,7 +17,6 @@ package objectos.way;
 
 import static org.testng.Assert.assertSame;
 
-import java.util.List;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -26,7 +25,7 @@ public class CssGeneratorCacheTest {
   @Test(description = "cache hit")
   public void testCase01() {
     CssRule foo;
-    foo = new CssRule(CssKey.$NOOP, "foo", List.of(), CssProperties.NOOP);
+    foo = CssRule.NOOP;
 
     class Impl extends CssGeneratorCache {
       private CssRule hit;
@@ -59,7 +58,7 @@ public class CssGeneratorCacheTest {
   @Test(description = "cache miss")
   public void testCase02() {
     CssRule foo;
-    foo = new CssRule(CssKey.$NOOP, "foo", List.of(), CssProperties.NOOP);
+    foo = CssRule.NOOP;
 
     class Impl extends CssGeneratorCache {
       @Override

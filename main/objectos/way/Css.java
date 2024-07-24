@@ -135,6 +135,18 @@ public final class Css {
     };
   }
 
+  public static Generator.Option component(String name, String definition) {
+    Check.notNull(name, "name == null");
+    Check.notNull(definition, "definition == null");
+
+    return new CssGeneratorOption() {
+      @Override
+      final void acceptCssGenerator(CssConfig config) {
+        config.addComponent(name, definition);
+      }
+    };
+  }
+
   public static Generator.Option noteSink(NoteSink noteSink) {
     Check.notNull(noteSink, "noteSink == null");
 
