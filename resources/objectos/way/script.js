@@ -237,6 +237,12 @@
 					break;
 				}
 
+				case "set-property": {
+					executeSetProperty(action);
+
+					break;
+				}
+
 				case "submit": {
 					executeSubmit(action);
 
@@ -415,6 +421,32 @@
 		const classB = args[2];
 
 		classList.replace(classA, classB);
+	}
+
+	function executeSetProperty(action) {
+		const args = action.args;
+
+		if (!args) {
+			return;
+		}
+
+		if (args.length !== 3) {
+			return;
+		}
+
+		const id = args[0];
+
+		const el = document.getElementById(id);
+
+		if (!el) {
+			return;
+		}
+
+		const propertyName = args[1];
+
+		const propertyValue = args[2];
+
+		el.style.setProperty(propertyName, propertyValue);
 	}
 
 	function executeSubmit(obj) {

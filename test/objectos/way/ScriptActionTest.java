@@ -17,17 +17,12 @@ package objectos.way;
 
 import static org.testng.Assert.assertEquals;
 
-import objectos.way.Html.ClassName;
-import objectos.way.Html.Id;
 import objectos.way.Script.Action;
 import org.testng.annotations.Test;
 
 public class ScriptActionTest {
 
-  private static final Id _OVERLAY = Html.id("overlay");
-
-  private static final ClassName HIDDEN = Html.className("hidden");
-  private static final ClassName BLOCK = Html.className("block");
+  private static final Html.Id _OVERLAY = Html.id("overlay");
 
   @Test
   public void action() {
@@ -64,8 +59,8 @@ public class ScriptActionTest {
         new Html.Template() {
           @Override
           protected final void render() {
-            div(dataOnClick(Script.addClass(_OVERLAY, HIDDEN)));
-            div(dataOnClick(Script.addClass(_OVERLAY, HIDDEN, BLOCK)));
+            div(dataOnClick(Script.addClass(_OVERLAY, "hidden")));
+            div(dataOnClick(Script.addClass(_OVERLAY, "hidden", "block")));
           }
         },
 
@@ -80,7 +75,7 @@ public class ScriptActionTest {
   public void delay() {
     test(
         new Html.Template() {
-          static final Id FORM = Html.id("foo");
+          static final Html.Id FORM = Html.id("foo");
 
           @Override
           protected final void render() {
@@ -118,8 +113,8 @@ public class ScriptActionTest {
         new Html.Template() {
           @Override
           protected final void render() {
-            div(dataOnClick(Script.removeClass(_OVERLAY, HIDDEN)));
-            div(dataOnClick(Script.removeClass(_OVERLAY, HIDDEN, BLOCK)));
+            div(dataOnClick(Script.removeClass(_OVERLAY, "hidden")));
+            div(dataOnClick(Script.removeClass(_OVERLAY, "hidden", "block")));
           }
         },
 
@@ -131,10 +126,26 @@ public class ScriptActionTest {
   }
 
   @Test
+  public void setProperty() {
+    test(
+        new Html.Template() {
+          @Override
+          protected final void render() {
+            div(dataOnClick(Script.setProperty(_OVERLAY, "display", "hidden")));
+          }
+        },
+
+        """
+        <div data-on-click='[{"cmd":"set-property","args":["overlay","display","hidden"]}]'></div>
+        """
+    );
+  }
+
+  @Test
   public void submit() {
     test(
         new Html.Template() {
-          static final Id FORM = Html.id("foo");
+          static final Html.Id FORM = Html.id("foo");
 
           @Override
           protected final void render() {
@@ -154,7 +165,7 @@ public class ScriptActionTest {
   public void toggleClass() {
     test(
         new Html.Template() {
-          static final Id OVERLAY = Html.id("overlay");
+          static final Html.Id OVERLAY = Html.id("overlay");
 
           @Override
           protected final void render() {

@@ -81,7 +81,7 @@ public final class Script {
     }
   }
 
-  public static Action addClass(Html.Id id, Html.ClassName... classes) {
+  public static Action addClass(Html.Id id, String... classes) {
     Check.notNull(id, "id == null");
 
     for (int idx = 0; idx < classes.length; idx++) {
@@ -103,10 +103,10 @@ public final class Script {
 
         stringLiteral(json, id.value());
 
-        for (Html.ClassName className : classes) {
+        for (String className : classes) {
           comma(json);
 
-          stringLiteral(json, className.value());
+          stringLiteral(json, className);
         }
 
         arrayEnd(json);
@@ -170,7 +170,7 @@ public final class Script {
     return Empty.INSTANCE;
   }
 
-  public static Action removeClass(Html.Id id, Html.ClassName... classes) {
+  public static Action removeClass(Html.Id id, String... classes) {
     Check.notNull(id, "id == null");
 
     for (int idx = 0; idx < classes.length; idx++) {
@@ -192,10 +192,10 @@ public final class Script {
 
         stringLiteral(json, id.value());
 
-        for (Html.ClassName className : classes) {
+        for (String className : classes) {
           comma(json);
 
-          stringLiteral(json, className.value());
+          stringLiteral(json, className);
         }
 
         arrayEnd(json);
@@ -223,6 +223,41 @@ public final class Script {
     Check.notNull(to, "to == null");
 
     return replaceClass0(id, from, to);
+  }
+
+  public static Action setProperty(Html.Id id, String name, String value) {
+    Check.notNull(id, "id == null");
+    Check.notNull(name, "name == null");
+    Check.notNull(value, "value == null");
+
+    return new ScriptAction() {
+      @Override
+      final void writeTo(StringBuilder json) {
+        objectStart(json);
+
+        property(json, CMD, "set-property");
+
+        comma(json);
+
+        propertyStart(json, "args");
+
+        arrayStart(json);
+
+        stringLiteral(json, id.value());
+
+        comma(json);
+
+        stringLiteral(json, name);
+
+        comma(json);
+
+        stringLiteral(json, value);
+
+        arrayEnd(json);
+
+        objectEnd(json);
+      }
+    };
   }
 
   public static Action toggleClass(Html.Id id, String className) {
