@@ -23,7 +23,7 @@ import java.util.Set;
 import java.util.TreeMap;
 import objectos.util.map.GrowableSequencedMap;
 
-final class CssGenerator extends CssGeneratorAdapter implements Css.Generator, CssRepository {
+final class CssGenerator extends CssGeneratorAdapter implements Css.Generator, Css.Repository {
 
   private static abstract class ThisContext extends Css.Context {
 
@@ -42,8 +42,8 @@ final class CssGenerator extends CssGeneratorAdapter implements Css.Generator, C
       }
     }
 
-    final void writeContents(StringBuilder out, CssIndentation indentation) {
-      for (CssRule rule : rules) {
+    final void writeContents(StringBuilder out, Css.Indentation indentation) {
+      for (Css.Rule rule : rules) {
         rule.writeTo(out, indentation);
       }
 
@@ -63,7 +63,7 @@ final class CssGenerator extends CssGeneratorAdapter implements Css.Generator, C
   private static final class TopLevelContext extends ThisContext {
 
     @Override
-    final void write(StringBuilder out, CssIndentation indentation) {
+    final void write(StringBuilder out, Css.Indentation indentation) {
       writeContents(out, indentation);
     }
 
@@ -78,10 +78,10 @@ final class CssGenerator extends CssGeneratorAdapter implements Css.Generator, C
     }
 
     @Override
-    final void write(StringBuilder out, CssIndentation indentation) {
+    final void write(StringBuilder out, Css.Indentation indentation) {
       query.writeMediaQueryStart(out, indentation);
 
-      CssIndentation blockIndentation;
+      Css.Indentation blockIndentation;
       blockIndentation = indentation.increase();
 
       writeContents(out, blockIndentation);
@@ -99,9 +99,9 @@ final class CssGenerator extends CssGeneratorAdapter implements Css.Generator, C
 
   private final CssConfig config;
 
-  private final Deque<CssRepository> repositories = new ArrayDeque<>(4);
+  private final Deque<Css.Repository> repositories = new ArrayDeque<>(4);
 
-  private final Map<String, CssRule> rules = new GrowableSequencedMap<>();
+  private final Map<String, Css.Rule> rules = new GrowableSequencedMap<>();
 
   CssGenerator(CssConfig config) {
     this.adapter = this;
@@ -135,7 +135,7 @@ final class CssGenerator extends CssGeneratorAdapter implements Css.Generator, C
     Css.Context topLevel;
     topLevel = new TopLevelContext();
 
-    for (CssRule rule : rules.values()) {
+    for (Css.Rule rule : rules.values()) {
       rule.accept(topLevel);
     }
 
@@ -157,8 +157,8 @@ final class CssGenerator extends CssGeneratorAdapter implements Css.Generator, C
       out.append(System.lineSeparator());
     }
 
-    CssIndentation indentation;
-    indentation = CssIndentation.ROOT;
+    Css.Indentation indentation;
+    indentation = Css.Indentation.ROOT;
 
     topLevel.writeTo(out, indentation);
 
@@ -166,23 +166,23 @@ final class CssGenerator extends CssGeneratorAdapter implements Css.Generator, C
   }
 
   @Override
-  final void consumeExisting(CssRule existing) {
-    CssRepository repository;
+  final void consumeExisting(Css.Rule existing) {
+    Css.Repository repository;
     repository = repositories.peek();
 
     repository.consumeRule(existing);
   }
 
   @Override
-  final CssRule createComponent(String className, String definition) {
+  final Css.Rule createComponent(String className, String definition) {
     // 0) cycle detection
-    for (CssRepository repo : repositories) {
+    for (Css.Repository repo : repositories) {
       repo.cycleCheck(className);
     }
 
     // 1) create component builder
-    Css.Component component;
-    component = new Css.Component(className);
+    CssComponent component;
+    component = new CssComponent(className);
 
     // 2) push component
     repositories.push(component);
@@ -192,7 +192,7 @@ final class CssGenerator extends CssGeneratorAdapter implements Css.Generator, C
 
     // 4) pop component
 
-    CssRepository pop;
+    Css.Repository pop;
     pop = repositories.pop();
 
     assert component == pop;
@@ -203,9 +203,9 @@ final class CssGenerator extends CssGeneratorAdapter implements Css.Generator, C
   }
 
   @Override
-  final CssRule createUtility(String className, List<Css.Variant> variants, String value) {
+  final Css.Rule createUtility(String className, List<Css.Variant> variants, String value) {
     // 1) static values search
-    CssStaticUtility staticFactory;
+    Css.StaticUtility staticFactory;
     staticFactory = config.getStatic(value);
 
     if (staticFactory != null) {
@@ -230,7 +230,7 @@ final class CssGenerator extends CssGeneratorAdapter implements Css.Generator, C
     // maybe it is the prefix with an empty value
     // e.g. border-x
 
-    Set<CssKey> candidates;
+    Set<Css.Key> candidates;
     candidates = config.getCandidates(value);
 
     String suffix;
@@ -270,14 +270,14 @@ final class CssGenerator extends CssGeneratorAdapter implements Css.Generator, C
     }
 
     if (candidates == null) {
-      return CssRule.NOOP;
+      return Css.Rule.NOOP;
     }
 
-    for (CssKey candidate : candidates) {
+    for (Css.Key candidate : candidates) {
       CssResolver resolver;
       resolver = config.getResolver(candidate);
 
-      CssRule rule;
+      Css.Rule rule;
       rule = resolver.resolve(className, variants, negative, suffix);
 
       if (rule != null) {
@@ -285,7 +285,7 @@ final class CssGenerator extends CssGeneratorAdapter implements Css.Generator, C
       }
     }
 
-    return CssRule.NOOP;
+    return Css.Rule.NOOP;
   }
 
   // testing
@@ -296,7 +296,7 @@ final class CssGenerator extends CssGeneratorAdapter implements Css.Generator, C
   }
 
   @Override
-  final CssRule getFragment(String className) {
+  final Css.Rule getFragment(String className) {
     return rules.get(className);
   }
 
@@ -306,8 +306,8 @@ final class CssGenerator extends CssGeneratorAdapter implements Css.Generator, C
   }
 
   @Override
-  final void store(String className, CssRule rule) {
-    CssRepository repository;
+  final void store(String className, Css.Rule rule) {
+    Css.Repository repository;
     repository = repositories.peek();
 
     repository.putRule(className, rule);
@@ -319,12 +319,12 @@ final class CssGenerator extends CssGeneratorAdapter implements Css.Generator, C
   }
 
   @Override
-  public final void consumeRule(CssRule existing) {
+  public final void consumeRule(Css.Rule existing) {
     // noop
   }
 
   @Override
-  public final void putRule(String className, CssRule rule) {
+  public final void putRule(String className, Css.Rule rule) {
     rules.put(className, rule);
   }
 

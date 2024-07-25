@@ -46,17 +46,17 @@ final class CssConfig {
 
   private Map<String, String> components;
 
-  private final Map<CssKey, CssProperties> overrides = new EnumMap<>(CssKey.class);
+  private final Map<Css.Key, CssProperties> overrides = new EnumMap<>(Css.Key.class);
 
-  private final Map<String, Set<CssKey>> prefixes = new HashMap<>();
+  private final Map<String, Set<Css.Key>> prefixes = new HashMap<>();
 
   private CssPropertyType propertyType = CssPropertyType.PHYSICAL;
 
-  private final Map<CssKey, CssResolver> resolvers = new EnumMap<>(CssKey.class);
+  private final Map<Css.Key, CssResolver> resolvers = new EnumMap<>(Css.Key.class);
 
   private boolean skipReset;
 
-  private final Map<String, CssStaticUtility> staticUtilities = new GrowableMap<>();
+  private final Map<String, Css.StaticUtility> staticUtilities = new GrowableMap<>();
 
   private Map<String, Css.Variant> variants;
 
@@ -86,10 +86,10 @@ final class CssConfig {
 
   public final void addUtility(String className, CssProperties properties) {
 
-    CssStaticUtility utility;
-    utility = new CssStaticUtility(CssKey.CUSTOM, properties);
+    Css.StaticUtility utility;
+    utility = new Css.StaticUtility(Css.Key.CUSTOM, properties);
 
-    CssStaticUtility maybeExisting;
+    Css.StaticUtility maybeExisting;
     maybeExisting = staticUtilities.put(className, utility);
 
     if (maybeExisting != null) {
@@ -169,11 +169,11 @@ final class CssConfig {
     skipReset = value;
   }
 
-  public final CssResolver getResolver(CssKey key) {
+  public final CssResolver getResolver(Css.Key key) {
     return resolvers.get(key);
   }
 
-  public final CssStaticUtility getStatic(String value) {
+  public final Css.StaticUtility getStatic(String value) {
     return staticUtilities.get(value);
   }
 
@@ -181,11 +181,11 @@ final class CssConfig {
     propertyType = CssPropertyType.LOGICAL;
   }
 
-  final Set<CssKey> getCandidates(String prefix) {
+  final Set<Css.Key> getCandidates(String prefix) {
     return prefixes.get(prefix);
   }
 
-  final void override(CssKey key, CssProperties properties) {
+  final void override(Css.Key key, CssProperties properties) {
     overrides.put(key, properties);
   }
 
@@ -261,14 +261,14 @@ final class CssConfig {
   final void spec() {
     // be mindful of method size
 
-    var colors = values(CssKey._COLORS, Css.DEFAULT_COLORS);
+    var colors = values(Css.Key._COLORS, Css.DEFAULT_COLORS);
 
-    var spacing = values(CssKey._SPACING, Css.DEFAULT_SPACING);
+    var spacing = values(Css.Key._SPACING, Css.DEFAULT_SPACING);
 
     // A
 
     staticUtility(
-        CssKey.ACCESSIBILITY,
+        Css.Key.ACCESSIBILITY,
 
         """
         sr-only     | position: absolute
@@ -293,7 +293,7 @@ final class CssConfig {
     );
 
     staticUtility(
-        CssKey.ALIGN_ITEMS,
+        Css.Key.ALIGN_ITEMS,
 
         """
         items-start    | align-items: flex-start
@@ -305,7 +305,7 @@ final class CssConfig {
     );
 
     staticUtility(
-        CssKey.APPEARANCE,
+        Css.Key.APPEARANCE,
 
         """
         appearance-none | appearance: none
@@ -316,15 +316,15 @@ final class CssConfig {
     // B
 
     colorUtility(
-        CssKey.BACKGROUND_COLOR,
+        Css.Key.BACKGROUND_COLOR,
 
-        values(CssKey.BACKGROUND_COLOR, colors),
+        values(Css.Key.BACKGROUND_COLOR, colors),
 
         "bg", "background-color"
     );
 
     staticUtility(
-        CssKey.BORDER_COLLAPSE,
+        Css.Key.BORDER_COLLAPSE,
 
         """
         border-collapse | border-collapse: collapse
@@ -332,18 +332,18 @@ final class CssConfig {
         """
     );
 
-    var borderColor = values(CssKey.BORDER_COLOR, colors);
+    var borderColor = values(Css.Key.BORDER_COLOR, colors);
 
-    colorUtility(CssKey.BORDER_COLOR, borderColor, "border", "border-color");
-    colorUtility(CssKey.BORDER_COLOR_TOP, borderColor, "border-t", propertyType.borderColorTop());
-    colorUtility(CssKey.BORDER_COLOR_RIGHT, borderColor, "border-r", propertyType.borderColorRight());
-    colorUtility(CssKey.BORDER_COLOR_BOTTOM, borderColor, "border-b", propertyType.borderColorBottom());
-    colorUtility(CssKey.BORDER_COLOR_LEFT, borderColor, "border-l", propertyType.borderColorLeft());
-    colorUtility(CssKey.BORDER_COLOR_X, borderColor, "border-x", propertyType.borderColorLeft(), propertyType.borderColorRight());
-    colorUtility(CssKey.BORDER_COLOR_Y, borderColor, "border-y", propertyType.borderColorTop(), propertyType.borderColorBottom());
+    colorUtility(Css.Key.BORDER_COLOR, borderColor, "border", "border-color");
+    colorUtility(Css.Key.BORDER_COLOR_TOP, borderColor, "border-t", propertyType.borderColorTop());
+    colorUtility(Css.Key.BORDER_COLOR_RIGHT, borderColor, "border-r", propertyType.borderColorRight());
+    colorUtility(Css.Key.BORDER_COLOR_BOTTOM, borderColor, "border-b", propertyType.borderColorBottom());
+    colorUtility(Css.Key.BORDER_COLOR_LEFT, borderColor, "border-l", propertyType.borderColorLeft());
+    colorUtility(Css.Key.BORDER_COLOR_X, borderColor, "border-x", propertyType.borderColorLeft(), propertyType.borderColorRight());
+    colorUtility(Css.Key.BORDER_COLOR_Y, borderColor, "border-y", propertyType.borderColorTop(), propertyType.borderColorBottom());
 
     var rounded = values(
-        CssKey.BORDER_RADIUS,
+        Css.Key.BORDER_RADIUS,
 
         """
         none: 0px
@@ -358,24 +358,24 @@ final class CssConfig {
         """
     );
 
-    funcUtility(CssKey.BORDER_RADIUS, rounded, "rounded", "border-radius");
-    funcUtility(CssKey.BORDER_RADIUS_TL, rounded, "rounded-tl", propertyType.borderRadiusTopLeft());
-    funcUtility(CssKey.BORDER_RADIUS_TR, rounded, "rounded-tr", propertyType.borderRadiusTopRight());
-    funcUtility(CssKey.BORDER_RADIUS_BR, rounded, "rounded-br", propertyType.borderRadiusBottomRight());
-    funcUtility(CssKey.BORDER_RADIUS_BL, rounded, "rounded-bl", propertyType.borderRadiusBottomLeft());
-    funcUtility(CssKey.BORDER_RADIUS_T, rounded, "rounded-t", propertyType.borderRadiusTopLeft(), propertyType.borderRadiusTopRight());
-    funcUtility(CssKey.BORDER_RADIUS_R, rounded, "rounded-r", propertyType.borderRadiusTopRight(), propertyType.borderRadiusBottomRight());
-    funcUtility(CssKey.BORDER_RADIUS_B, rounded, "rounded-b", propertyType.borderRadiusBottomRight(), propertyType.borderRadiusBottomLeft());
-    funcUtility(CssKey.BORDER_RADIUS_L, rounded, "rounded-l", propertyType.borderRadiusBottomLeft(), propertyType.borderRadiusTopLeft());
+    funcUtility(Css.Key.BORDER_RADIUS, rounded, "rounded", "border-radius");
+    funcUtility(Css.Key.BORDER_RADIUS_TL, rounded, "rounded-tl", propertyType.borderRadiusTopLeft());
+    funcUtility(Css.Key.BORDER_RADIUS_TR, rounded, "rounded-tr", propertyType.borderRadiusTopRight());
+    funcUtility(Css.Key.BORDER_RADIUS_BR, rounded, "rounded-br", propertyType.borderRadiusBottomRight());
+    funcUtility(Css.Key.BORDER_RADIUS_BL, rounded, "rounded-bl", propertyType.borderRadiusBottomLeft());
+    funcUtility(Css.Key.BORDER_RADIUS_T, rounded, "rounded-t", propertyType.borderRadiusTopLeft(), propertyType.borderRadiusTopRight());
+    funcUtility(Css.Key.BORDER_RADIUS_R, rounded, "rounded-r", propertyType.borderRadiusTopRight(), propertyType.borderRadiusBottomRight());
+    funcUtility(Css.Key.BORDER_RADIUS_B, rounded, "rounded-b", propertyType.borderRadiusBottomRight(), propertyType.borderRadiusBottomLeft());
+    funcUtility(Css.Key.BORDER_RADIUS_L, rounded, "rounded-l", propertyType.borderRadiusBottomLeft(), propertyType.borderRadiusTopLeft());
 
-    var borderSpacing = values(CssKey.BORDER_SPACING, spacing);
+    var borderSpacing = values(Css.Key.BORDER_SPACING, spacing);
 
-    funcUtility(CssKey.BORDER_SPACING, borderSpacing, ofFunc(s -> s + " " + s), "border-spacing", "border-spacing");
-    funcUtility(CssKey.BORDER_SPACING_X, borderSpacing, ofFunc(s -> s + " 0"), "border-spacing-x", "border-spacing");
-    funcUtility(CssKey.BORDER_SPACING_Y, borderSpacing, ofFunc(s -> "0 " + s), "border-spacing-y", "border-spacing");
+    funcUtility(Css.Key.BORDER_SPACING, borderSpacing, ofFunc(s -> s + " " + s), "border-spacing", "border-spacing");
+    funcUtility(Css.Key.BORDER_SPACING_X, borderSpacing, ofFunc(s -> s + " 0"), "border-spacing-x", "border-spacing");
+    funcUtility(Css.Key.BORDER_SPACING_Y, borderSpacing, ofFunc(s -> "0 " + s), "border-spacing-y", "border-spacing");
 
     var borderWidth = values(
-        CssKey.BORDER_WIDTH,
+        Css.Key.BORDER_WIDTH,
 
         """
         : 1px
@@ -386,16 +386,16 @@ final class CssConfig {
         """
     );
 
-    funcUtility(CssKey.BORDER_WIDTH, borderWidth, "border", "border-width");
-    funcUtility(CssKey.BORDER_WIDTH_TOP, borderWidth, "border-t", propertyType.borderWidthTop());
-    funcUtility(CssKey.BORDER_WIDTH_RIGHT, borderWidth, "border-r", propertyType.borderWidthRight());
-    funcUtility(CssKey.BORDER_WIDTH_BOTTOM, borderWidth, "border-b", propertyType.borderWidthBottom());
-    funcUtility(CssKey.BORDER_WIDTH_LEFT, borderWidth, "border-l", propertyType.borderWidthLeft());
-    funcUtility(CssKey.BORDER_WIDTH_X, borderWidth, "border-x", propertyType.borderWidthLeft(), propertyType.borderWidthRight());
-    funcUtility(CssKey.BORDER_WIDTH_Y, borderWidth, "border-y", propertyType.borderWidthTop(), propertyType.borderWidthBottom());
+    funcUtility(Css.Key.BORDER_WIDTH, borderWidth, "border", "border-width");
+    funcUtility(Css.Key.BORDER_WIDTH_TOP, borderWidth, "border-t", propertyType.borderWidthTop());
+    funcUtility(Css.Key.BORDER_WIDTH_RIGHT, borderWidth, "border-r", propertyType.borderWidthRight());
+    funcUtility(Css.Key.BORDER_WIDTH_BOTTOM, borderWidth, "border-b", propertyType.borderWidthBottom());
+    funcUtility(Css.Key.BORDER_WIDTH_LEFT, borderWidth, "border-l", propertyType.borderWidthLeft());
+    funcUtility(Css.Key.BORDER_WIDTH_X, borderWidth, "border-x", propertyType.borderWidthLeft(), propertyType.borderWidthRight());
+    funcUtility(Css.Key.BORDER_WIDTH_Y, borderWidth, "border-y", propertyType.borderWidthTop(), propertyType.borderWidthBottom());
 
     var inset = values(
-        CssKey.INSET,
+        Css.Key.INSET,
 
         () -> Css.merge(
             """
@@ -413,15 +413,15 @@ final class CssConfig {
         )
     );
 
-    funcUtility(CssKey.BOTTOM, inset, NEGATIVE, "bottom", propertyType.bottom());
+    funcUtility(Css.Key.BOTTOM, inset, NEGATIVE, "bottom", propertyType.bottom());
 
     // C
 
     funcUtility(
-        CssKey.CONTENT,
+        Css.Key.CONTENT,
 
         values(
-            CssKey.CONTENT,
+            Css.Key.CONTENT,
 
             """
             none: none
@@ -432,10 +432,10 @@ final class CssConfig {
     );
 
     funcUtility(
-        CssKey.CURSOR,
+        Css.Key.CURSOR,
 
         values(
-            CssKey.CURSOR,
+            Css.Key.CURSOR,
 
             """
             auto: auto
@@ -483,7 +483,7 @@ final class CssConfig {
     // D
 
     staticUtility(
-        CssKey.DISPLAY,
+        Css.Key.DISPLAY,
 
         """
         block              | display: block
@@ -513,10 +513,10 @@ final class CssConfig {
     // F
 
     funcUtility(
-        CssKey.FILL,
+        Css.Key.FILL,
 
         values(
-            CssKey.FILL,
+            Css.Key.FILL,
 
             () -> Css.merge(
                 """
@@ -531,7 +531,7 @@ final class CssConfig {
     );
 
     staticUtility(
-        CssKey.FLEX_DIRECTION,
+        Css.Key.FLEX_DIRECTION,
 
         """
         flex-row         | flex-direction: row
@@ -542,10 +542,10 @@ final class CssConfig {
     );
 
     funcUtility(
-        CssKey.FLEX_GROW,
+        Css.Key.FLEX_GROW,
 
         values(
-            CssKey.FLEX_GROW,
+            Css.Key.FLEX_GROW,
 
             """
             : 1
@@ -557,7 +557,7 @@ final class CssConfig {
     );
 
     var lineHeight = values(
-        CssKey.LINE_HEIGHT,
+        Css.Key.LINE_HEIGHT,
 
         """
         3: 0.75rem
@@ -578,13 +578,13 @@ final class CssConfig {
     );
 
     customUtility(
-        CssKey.FONT_SIZE,
+        Css.Key.FONT_SIZE,
 
         "text",
 
         new CssResolver.OfFontSize(
             values(
-                CssKey.FONT_SIZE,
+                Css.Key.FONT_SIZE,
 
                 """
                 xs: 0.75rem/1rem
@@ -608,10 +608,10 @@ final class CssConfig {
     );
 
     funcUtility(
-        CssKey.FONT_WEIGHT,
+        Css.Key.FONT_WEIGHT,
 
         values(
-            CssKey.FONT_WEIGHT,
+            Css.Key.FONT_WEIGHT,
 
             """
             thin: 100
@@ -631,17 +631,17 @@ final class CssConfig {
 
     // G
 
-    var gap = values(CssKey.GAP, spacing);
+    var gap = values(Css.Key.GAP, spacing);
 
-    funcUtility(CssKey.GAP, gap, "gap", "gap");
-    funcUtility(CssKey.GAP_X, gap, "gap-x", "column-gap");
-    funcUtility(CssKey.GAP_Y, gap, "gap-y", "row-gap");
+    funcUtility(Css.Key.GAP, gap, "gap", "gap");
+    funcUtility(Css.Key.GAP_X, gap, "gap-x", "column-gap");
+    funcUtility(Css.Key.GAP_Y, gap, "gap-y", "row-gap");
 
     funcUtility(
-        CssKey.GRID_COLUMN,
+        Css.Key.GRID_COLUMN,
 
         values(
-            CssKey.GRID_COLUMN,
+            Css.Key.GRID_COLUMN,
 
             """
             auto: auto
@@ -665,10 +665,10 @@ final class CssConfig {
     );
 
     funcUtility(
-        CssKey.GRID_COLUMN_END,
+        Css.Key.GRID_COLUMN_END,
 
         values(
-            CssKey.GRID_COLUMN_END,
+            Css.Key.GRID_COLUMN_END,
 
             """
             auto: auto
@@ -692,10 +692,10 @@ final class CssConfig {
     );
 
     funcUtility(
-        CssKey.GRID_COLUMN_START,
+        Css.Key.GRID_COLUMN_START,
 
         values(
-            CssKey.GRID_COLUMN_START,
+            Css.Key.GRID_COLUMN_START,
 
             """
             auto: auto
@@ -719,10 +719,10 @@ final class CssConfig {
     );
 
     funcUtility(
-        CssKey.GRID_TEMPLATE_COLUMNS,
+        Css.Key.GRID_TEMPLATE_COLUMNS,
 
         values(
-            CssKey.GRID_TEMPLATE_COLUMNS,
+            Css.Key.GRID_TEMPLATE_COLUMNS,
 
             """
             none: none
@@ -746,10 +746,10 @@ final class CssConfig {
     );
 
     funcUtility(
-        CssKey.GRID_TEMPLATE_ROWS,
+        Css.Key.GRID_TEMPLATE_ROWS,
 
         values(
-            CssKey.GRID_TEMPLATE_ROWS,
+            Css.Key.GRID_TEMPLATE_ROWS,
 
             """
             none: none
@@ -775,10 +775,10 @@ final class CssConfig {
     // H
 
     funcUtility(
-        CssKey.HEIGHT,
+        Css.Key.HEIGHT,
 
         values(
-            CssKey.HEIGHT,
+            Css.Key.HEIGHT,
 
             () -> Css.merge(
                 """
@@ -819,14 +819,14 @@ final class CssConfig {
 
     // I
 
-    funcUtility(CssKey.INSET, inset, NEGATIVE, "inset", "inset");
-    funcUtility(CssKey.INSET_X, inset, NEGATIVE, "inset-x", propertyType.left(), propertyType.right());
-    funcUtility(CssKey.INSET_Y, inset, NEGATIVE, "inset-y", propertyType.top(), propertyType.bottom());
+    funcUtility(Css.Key.INSET, inset, NEGATIVE, "inset", "inset");
+    funcUtility(Css.Key.INSET_X, inset, NEGATIVE, "inset-x", propertyType.left(), propertyType.right());
+    funcUtility(Css.Key.INSET_Y, inset, NEGATIVE, "inset-y", propertyType.top(), propertyType.bottom());
 
     // J
 
     staticUtility(
-        CssKey.JUSTIFY_CONTENT,
+        Css.Key.JUSTIFY_CONTENT,
 
         """
         justify-normal  | justify-content: normal
@@ -842,13 +842,13 @@ final class CssConfig {
 
     // L
 
-    funcUtility(CssKey.LEFT, inset, NEGATIVE, "left", propertyType.left());
+    funcUtility(Css.Key.LEFT, inset, NEGATIVE, "left", propertyType.left());
 
     funcUtility(
-        CssKey.LETTER_SPACING,
+        Css.Key.LETTER_SPACING,
 
         values(
-            CssKey.LETTER_SPACING,
+            Css.Key.LETTER_SPACING,
 
             """
             tighter: -0.05em
@@ -863,12 +863,12 @@ final class CssConfig {
         "tracking", "letter-spacing"
     );
 
-    funcUtility(CssKey.LINE_HEIGHT, lineHeight, "leading", "line-height");
+    funcUtility(Css.Key.LINE_HEIGHT, lineHeight, "leading", "line-height");
 
     // M
 
     var margin = values(
-        CssKey.MARGIN,
+        Css.Key.MARGIN,
 
         () -> Css.merge(
             """
@@ -879,19 +879,19 @@ final class CssConfig {
         )
     );
 
-    funcUtility(CssKey.MARGIN, margin, NEGATIVE, "m", "margin");
-    funcUtility(CssKey.MARGIN_TOP, margin, NEGATIVE, "mt", propertyType.marginTop());
-    funcUtility(CssKey.MARGIN_RIGHT, margin, NEGATIVE, "mr", propertyType.marginRight());
-    funcUtility(CssKey.MARGIN_BOTTOM, margin, NEGATIVE, "mb", propertyType.marginBottom());
-    funcUtility(CssKey.MARGIN_LEFT, margin, NEGATIVE, "ml", propertyType.marginLeft());
-    funcUtility(CssKey.MARGIN_X, margin, NEGATIVE, "mx", propertyType.marginLeft(), propertyType.marginRight());
-    funcUtility(CssKey.MARGIN_Y, margin, NEGATIVE, "my", propertyType.marginTop(), propertyType.marginBottom());
+    funcUtility(Css.Key.MARGIN, margin, NEGATIVE, "m", "margin");
+    funcUtility(Css.Key.MARGIN_TOP, margin, NEGATIVE, "mt", propertyType.marginTop());
+    funcUtility(Css.Key.MARGIN_RIGHT, margin, NEGATIVE, "mr", propertyType.marginRight());
+    funcUtility(Css.Key.MARGIN_BOTTOM, margin, NEGATIVE, "mb", propertyType.marginBottom());
+    funcUtility(Css.Key.MARGIN_LEFT, margin, NEGATIVE, "ml", propertyType.marginLeft());
+    funcUtility(Css.Key.MARGIN_X, margin, NEGATIVE, "mx", propertyType.marginLeft(), propertyType.marginRight());
+    funcUtility(Css.Key.MARGIN_Y, margin, NEGATIVE, "my", propertyType.marginTop(), propertyType.marginBottom());
 
     funcUtility(
-        CssKey.MAX_HEIGHT,
+        Css.Key.MAX_HEIGHT,
 
         values(
-            CssKey.MAX_HEIGHT,
+            Css.Key.MAX_HEIGHT,
 
             () -> Css.merge(
                 """
@@ -916,10 +916,10 @@ final class CssConfig {
     );
 
     funcUtility(
-        CssKey.MAX_WIDTH,
+        Css.Key.MAX_WIDTH,
 
         values(
-            CssKey.MAX_WIDTH,
+            Css.Key.MAX_WIDTH,
 
             () -> {
               GrowableMap<String, String> maxWidth;
@@ -962,10 +962,10 @@ final class CssConfig {
     );
 
     funcUtility(
-        CssKey.MIN_HEIGHT,
+        Css.Key.MIN_HEIGHT,
 
         values(
-            CssKey.MIN_HEIGHT,
+            Css.Key.MIN_HEIGHT,
 
             () -> Css.merge(
                 """
@@ -989,10 +989,10 @@ final class CssConfig {
     );
 
     funcUtility(
-        CssKey.MIN_WIDTH,
+        Css.Key.MIN_WIDTH,
 
         values(
-            CssKey.MIN_WIDTH,
+            Css.Key.MIN_WIDTH,
 
             () -> Css.merge(
                 """
@@ -1014,10 +1014,10 @@ final class CssConfig {
     // O
 
     funcUtility(
-        CssKey.OPACITY,
+        Css.Key.OPACITY,
 
         values(
-            CssKey.OPACITY,
+            Css.Key.OPACITY,
 
             """
             0: 0
@@ -1048,10 +1048,10 @@ final class CssConfig {
     );
 
     colorUtility(
-        CssKey.OUTLINE_COLOR,
+        Css.Key.OUTLINE_COLOR,
 
         values(
-            CssKey.OUTLINE_COLOR,
+            Css.Key.OUTLINE_COLOR,
 
             colors
         ),
@@ -1060,10 +1060,10 @@ final class CssConfig {
     );
 
     funcUtility(
-        CssKey.OUTLINE_OFFSET,
+        Css.Key.OUTLINE_OFFSET,
 
         values(
-            CssKey.OUTLINE_OFFSET,
+            Css.Key.OUTLINE_OFFSET,
 
             """
             0: 0px
@@ -1080,7 +1080,7 @@ final class CssConfig {
     );
 
     staticUtility(
-        CssKey.OUTLINE_STYLE,
+        Css.Key.OUTLINE_STYLE,
 
         """
         outline-none   | outline: 2px solid transparent
@@ -1093,10 +1093,10 @@ final class CssConfig {
     );
 
     funcUtility(
-        CssKey.OUTLINE_WIDTH,
+        Css.Key.OUTLINE_WIDTH,
 
         values(
-            CssKey.OUTLINE_WIDTH,
+            Css.Key.OUTLINE_WIDTH,
 
             """
             0: 0px
@@ -1113,7 +1113,7 @@ final class CssConfig {
     );
 
     staticUtility(
-        CssKey.OVERFLOW,
+        Css.Key.OVERFLOW,
 
         """
         overflow-auto    | overflow: auto
@@ -1125,7 +1125,7 @@ final class CssConfig {
     );
 
     staticUtility(
-        CssKey.OVERFLOW_X,
+        Css.Key.OVERFLOW_X,
 
         """
         overflow-x-auto    | overflow-x: auto
@@ -1137,7 +1137,7 @@ final class CssConfig {
     );
 
     staticUtility(
-        CssKey.OVERFLOW_Y,
+        Css.Key.OVERFLOW_Y,
 
         """
         overflow-y-auto    | overflow-y: auto
@@ -1150,18 +1150,18 @@ final class CssConfig {
 
     // P
 
-    var padding = values(CssKey.PADDING, spacing);
+    var padding = values(Css.Key.PADDING, spacing);
 
-    funcUtility(CssKey.PADDING, padding, "p", "padding");
-    funcUtility(CssKey.PADDING_TOP, padding, "pt", propertyType.paddingTop());
-    funcUtility(CssKey.PADDING_RIGHT, padding, "pr", propertyType.paddingRight());
-    funcUtility(CssKey.PADDING_BOTTOM, padding, "pb", propertyType.paddingBottom());
-    funcUtility(CssKey.PADDING_LEFT, padding, "pl", propertyType.paddingLeft());
-    funcUtility(CssKey.PADDING_X, padding, "px", propertyType.paddingLeft(), propertyType.paddingRight());
-    funcUtility(CssKey.PADDING_Y, padding, "py", propertyType.paddingTop(), propertyType.paddingBottom());
+    funcUtility(Css.Key.PADDING, padding, "p", "padding");
+    funcUtility(Css.Key.PADDING_TOP, padding, "pt", propertyType.paddingTop());
+    funcUtility(Css.Key.PADDING_RIGHT, padding, "pr", propertyType.paddingRight());
+    funcUtility(Css.Key.PADDING_BOTTOM, padding, "pb", propertyType.paddingBottom());
+    funcUtility(Css.Key.PADDING_LEFT, padding, "pl", propertyType.paddingLeft());
+    funcUtility(Css.Key.PADDING_X, padding, "px", propertyType.paddingLeft(), propertyType.paddingRight());
+    funcUtility(Css.Key.PADDING_Y, padding, "py", propertyType.paddingTop(), propertyType.paddingBottom());
 
     staticUtility(
-        CssKey.POINTER_EVENTS,
+        Css.Key.POINTER_EVENTS,
 
         """
         pointer-events-auto | pointer-events: auto
@@ -1170,7 +1170,7 @@ final class CssConfig {
     );
 
     staticUtility(
-        CssKey.POSITION,
+        Css.Key.POSITION,
 
         """
         static   | position: static
@@ -1183,15 +1183,15 @@ final class CssConfig {
 
     // R
 
-    funcUtility(CssKey.RIGHT, inset, NEGATIVE, "right", propertyType.right());
+    funcUtility(Css.Key.RIGHT, inset, NEGATIVE, "right", propertyType.right());
 
     // S
 
     funcUtility(
-        CssKey.SIZE,
+        Css.Key.SIZE,
 
         values(
-            CssKey.SIZE,
+            Css.Key.SIZE,
 
             () -> Css.merge(
                 """
@@ -1239,10 +1239,10 @@ final class CssConfig {
     );
 
     colorUtility(
-        CssKey.STROKE,
+        Css.Key.STROKE,
 
         values(
-            CssKey.STROKE,
+            Css.Key.STROKE,
 
             () -> Css.merge(
                 """
@@ -1257,10 +1257,10 @@ final class CssConfig {
     );
 
     funcUtility(
-        CssKey.STROKE_WIDTH,
+        Css.Key.STROKE_WIDTH,
 
         values(
-            CssKey.STROKE_WIDTH,
+            Css.Key.STROKE_WIDTH,
 
             """
             0: 0
@@ -1275,7 +1275,7 @@ final class CssConfig {
     // T
 
     staticUtility(
-        CssKey.TABLE_LAYOUT,
+        Css.Key.TABLE_LAYOUT,
 
         """
         table-auto  | table-layout: auto
@@ -1284,7 +1284,7 @@ final class CssConfig {
     );
 
     staticUtility(
-        CssKey.TEXT_ALIGN,
+        Css.Key.TEXT_ALIGN,
 
         """
         text-left    | text-align: left
@@ -1297,10 +1297,10 @@ final class CssConfig {
     );
 
     colorUtility(
-        CssKey.TEXT_COLOR,
+        Css.Key.TEXT_COLOR,
 
         values(
-            CssKey.TEXT_COLOR,
+            Css.Key.TEXT_COLOR,
 
             colors
         ),
@@ -1309,7 +1309,7 @@ final class CssConfig {
     );
 
     staticUtility(
-        CssKey.TEXT_DECORATION,
+        Css.Key.TEXT_DECORATION,
 
         """
         underline    | text-decoration-line: underline
@@ -1320,7 +1320,7 @@ final class CssConfig {
     );
 
     staticUtility(
-        CssKey.TEXT_OVERFLOW,
+        Css.Key.TEXT_OVERFLOW,
 
         """
         truncate      | overflow: hidden
@@ -1332,7 +1332,7 @@ final class CssConfig {
     );
 
     staticUtility(
-        CssKey.TEXT_WRAP,
+        Css.Key.TEXT_WRAP,
 
         """
         text-wrap    | text-wrap: wrap
@@ -1342,10 +1342,10 @@ final class CssConfig {
         """
     );
 
-    funcUtility(CssKey.TOP, inset, NEGATIVE, "top", propertyType.top());
+    funcUtility(Css.Key.TOP, inset, NEGATIVE, "top", propertyType.top());
 
     staticUtility(
-        CssKey.TRANSFORM,
+        Css.Key.TRANSFORM,
 
         """
         transform-none | transform: none
@@ -1353,10 +1353,10 @@ final class CssConfig {
     );
 
     funcUtility(
-        CssKey.TRANSITION_DURATION,
+        Css.Key.TRANSITION_DURATION,
 
         values(
-            CssKey.TRANSITION_DURATION,
+            Css.Key.TRANSITION_DURATION,
 
             """
             0: 0s
@@ -1375,13 +1375,13 @@ final class CssConfig {
     );
 
     customUtility(
-        CssKey.TRANSITION_PROPERTY,
+        Css.Key.TRANSITION_PROPERTY,
 
         "transition",
 
         new CssResolver.OfTransitionProperty(
             values(
-                CssKey.TRANSITION_PROPERTY,
+                Css.Key.TRANSITION_PROPERTY,
 
                 """
                 none: none
@@ -1402,7 +1402,7 @@ final class CssConfig {
         )
     );
 
-    var translate = values(CssKey.TRANSLATE, () -> Css.merge(
+    var translate = values(Css.Key.TRANSLATE, () -> Css.merge(
         """
         1/2: 50%
         1/3: 33.333333%
@@ -1416,13 +1416,13 @@ final class CssConfig {
         spacing
     ));
 
-    funcUtility(CssKey.TRANSLATE_X, translate, new CssValueFormatter.OfFunctionNeg("translateX"), "translate-x", "transform");
-    funcUtility(CssKey.TRANSLATE_Y, translate, new CssValueFormatter.OfFunctionNeg("translateY"), "translate-y", "transform");
+    funcUtility(Css.Key.TRANSLATE_X, translate, new CssValueFormatter.OfFunctionNeg("translateX"), "translate-x", "transform");
+    funcUtility(Css.Key.TRANSLATE_Y, translate, new CssValueFormatter.OfFunctionNeg("translateY"), "translate-y", "transform");
 
     // U
 
     staticUtility(
-        CssKey.USER_SELECT,
+        Css.Key.USER_SELECT,
 
         """
         select-none | user-select: none
@@ -1435,7 +1435,7 @@ final class CssConfig {
     // V
 
     staticUtility(
-        CssKey.VERTICAL_ALIGN,
+        Css.Key.VERTICAL_ALIGN,
 
         """
         align-baseline    | vertical-align: baseline
@@ -1450,7 +1450,7 @@ final class CssConfig {
     );
 
     staticUtility(
-        CssKey.VISIBILITY,
+        Css.Key.VISIBILITY,
 
         """
         visible   | visibility: visible
@@ -1462,7 +1462,7 @@ final class CssConfig {
     // W
 
     staticUtility(
-        CssKey.WHITESPACE,
+        Css.Key.WHITESPACE,
 
         """
         whitespace-normal       | white-space: normal
@@ -1475,10 +1475,10 @@ final class CssConfig {
     );
 
     funcUtility(
-        CssKey.WIDTH,
+        Css.Key.WIDTH,
 
         values(
-            CssKey.WIDTH,
+            Css.Key.WIDTH,
 
             () -> Css.merge(
                 """
@@ -1531,10 +1531,10 @@ final class CssConfig {
     // Z
 
     funcUtility(
-        CssKey.Z_INDEX,
+        Css.Key.Z_INDEX,
 
         values(
-            CssKey.Z_INDEX,
+            Css.Key.Z_INDEX,
 
             """
             0: 0
@@ -1555,12 +1555,12 @@ final class CssConfig {
     return new CssValueFormatter.OfLambda(function);
   }
 
-  private void colorUtility(CssKey key, Map<String, String> values, String prefix, String propertyName) {
+  private void colorUtility(Css.Key key, Map<String, String> values, String prefix, String propertyName) {
     colorUtility(key, values, prefix, propertyName, null);
   }
 
   private void colorUtility(
-      CssKey key,
+      Css.Key key,
       Map<String, String> values,
       String prefix, String propertyName1, String propertyName2) {
     CssResolver resolver;
@@ -1569,7 +1569,7 @@ final class CssConfig {
     customUtility(key, prefix, resolver);
   }
 
-  private void customUtility(CssKey key, String prefix, CssResolver resolver) {
+  private void customUtility(Css.Key key, String prefix, CssResolver resolver) {
     prefix(key, prefix);
 
     CssResolver maybeExisting;
@@ -1582,50 +1582,50 @@ final class CssConfig {
     }
   }
 
-  private void prefix(CssKey key, String prefix) {
-    Set<CssKey> set;
-    set = prefixes.computeIfAbsent(prefix, s -> EnumSet.noneOf(CssKey.class));
+  private void prefix(Css.Key key, String prefix) {
+    Set<Css.Key> set;
+    set = prefixes.computeIfAbsent(prefix, s -> EnumSet.noneOf(Css.Key.class));
 
     set.add(key);
   }
 
   private void funcUtility(
-      CssKey key,
+      Css.Key key,
       Map<String, String> values,
       String prefix) {
     funcUtility(key, values, IDENTITY, prefix, prefix, null);
   }
 
   private void funcUtility(
-      CssKey key,
+      Css.Key key,
       Map<String, String> values,
       String prefix, String propertyName) {
     funcUtility(key, values, IDENTITY, prefix, propertyName, null);
   }
 
   private void funcUtility(
-      CssKey key,
+      Css.Key key,
       Map<String, String> values,
       String prefix, String propertyName1, String propertyName2) {
     funcUtility(key, values, IDENTITY, prefix, propertyName1, propertyName2);
   }
 
   private void funcUtility(
-      CssKey key,
+      Css.Key key,
       Map<String, String> values, CssValueFormatter formatter,
       String prefix) {
     funcUtility(key, values, formatter, prefix, prefix, null);
   }
 
   private void funcUtility(
-      CssKey key,
+      Css.Key key,
       Map<String, String> values, CssValueFormatter formatter,
       String prefix, String propertyName) {
     funcUtility(key, values, formatter, prefix, propertyName, null);
   }
 
   private void funcUtility(
-      CssKey key,
+      Css.Key key,
       Map<String, String> values, CssValueFormatter formatter,
       String prefix, String propertyName1, String propertyName2) {
 
@@ -1637,7 +1637,7 @@ final class CssConfig {
   }
 
   // visible for testing
-  final void staticUtility(CssKey key, String text) {
+  final void staticUtility(Css.Key key, String text) {
     Map<String, CssProperties> table;
     table = Css.parseTable(text);
 
@@ -1648,10 +1648,10 @@ final class CssConfig {
       CssProperties properties;
       properties = entry.getValue();
 
-      CssStaticUtility utility;
-      utility = new CssStaticUtility(key, properties);
+      Css.StaticUtility utility;
+      utility = new Css.StaticUtility(key, properties);
 
-      CssStaticUtility maybeExisting;
+      Css.StaticUtility maybeExisting;
       maybeExisting = staticUtilities.put(className, utility);
 
       if (maybeExisting != null) {
@@ -1662,7 +1662,7 @@ final class CssConfig {
     }
   }
 
-  private Map<String, String> values(CssKey key, String defaults) {
+  private Map<String, String> values(Css.Key key, String defaults) {
     CssProperties properties;
     properties = overrides.get(key);
 
@@ -1676,7 +1676,7 @@ final class CssConfig {
     return defaultProperties.toMap();
   }
 
-  private Map<String, String> values(CssKey key, Supplier<Map<String, String>> defaultSupplier) {
+  private Map<String, String> values(Css.Key key, Supplier<Map<String, String>> defaultSupplier) {
     CssProperties properties;
     properties = overrides.get(key);
 
@@ -1687,7 +1687,7 @@ final class CssConfig {
     return defaultSupplier.get();
   }
 
-  private Map<String, String> values(CssKey key, Map<String, String> defaults) {
+  private Map<String, String> values(Css.Key key, Map<String, String> defaults) {
     CssProperties properties;
     properties = overrides.get(key);
 

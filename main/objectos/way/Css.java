@@ -15,10 +15,11 @@
  */
 package objectos.way;
 
+import java.nio.charset.StandardCharsets;
 import java.util.Comparator;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.TreeMap;
 import objectos.lang.object.Check;
 import objectos.notes.NoteSink;
 import objectos.util.list.GrowableList;
@@ -42,19 +43,19 @@ public final class Css {
     /**
      * The set of classes to scan.
      */
-    public sealed interface Classes permits CssGeneratorOption {}
+    public sealed interface Classes {}
 
     /**
      * A style sheet generation option.
      */
-    public sealed interface Option permits CssGeneratorOption {}
+    public sealed interface Option {}
 
   }
 
   /**
    * A CSS style sheet.
    */
-  public sealed interface StyleSheet permits CssStyleSheet {
+  public sealed interface StyleSheet {
 
     default String contentType() {
       return "text/css; charset=utf-8";
@@ -81,7 +82,7 @@ public final class Css {
     }
 
     @Override
-    public final void writeMediaQueryStart(StringBuilder out, CssIndentation indentation) {
+    public final void writeMediaQueryStart(StringBuilder out, Indentation indentation) {
       indentation.writeTo(out);
 
       out.append("@media (min-width: ");
@@ -145,262 +146,72 @@ public final class Css {
   }
 
   /**
-   * A CSS component class.
-   */
-  static final class Component implements CssRule, CssRepository {
-
-    private abstract class ThisContext extends Context {
-
-      Map<Css.ClassNameVariant, Css.Context> classNameVariants;
-
-      Map<Css.MediaQuery, Css.Context> mediaQueries;
-
-      @Override
-      public final Context contextOf(Variant variant) {
-        return switch (variant) {
-          case ClassNameVariant cnv -> {
-            if (classNameVariants == null) {
-              classNameVariants = new TreeMap<>();
-            }
-
-            yield classNameVariants.computeIfAbsent(cnv, ClassNameContext::new);
-          }
-
-          case MediaQuery query -> {
-            if (mediaQueries == null) {
-              mediaQueries = new TreeMap<>();
-            }
-
-            yield mediaQueries.computeIfAbsent(query, MediaQueryContext::new);
-          }
-
-          case InvalidVariant invalid -> throw new IllegalArgumentException("InvalidVariant");
-        };
-      }
-
-      final void writeContents(StringBuilder out, CssIndentation indentation) {
-        indentation.writeTo(out);
-
-        Css.writeClassName(out, className);
-        out.append(' ');
-        out.append('{');
-        out.append(System.lineSeparator());
-
-        CssIndentation blockIndentation;
-        blockIndentation = indentation.increase();
-
-        for (CssRule rule : rules) {
-          rule.writeProps(out, blockIndentation);
-        }
-
-        indentation.writeTo(out);
-
-        out.append('}');
-
-        out.append(System.lineSeparator());
-
-        if (classNameVariants != null) {
-          for (Context child : classNameVariants.values()) {
-            if (!out.isEmpty()) {
-              out.append(System.lineSeparator());
-            }
-
-            child.write(out, indentation);
-          }
-        }
-
-        if (mediaQueries != null) {
-          for (Context child : mediaQueries.values()) {
-            if (!out.isEmpty()) {
-              out.append(System.lineSeparator());
-            }
-
-            child.writeTo(out, indentation);
-          }
-        }
-      }
-
-    }
-
-    private final class TopLevel extends ThisContext {
-
-      @Override
-      final void write(StringBuilder out, CssIndentation indentation) {
-        writeContents(out, indentation);
-      }
-
-    }
-
-    private final class ClassNameContext extends ThisContext {
-
-      private final ClassNameVariant variant;
-
-      ClassNameContext(ClassNameVariant variant) {
-        this.variant = variant;
-      }
-
-      @Override
-      final void write(StringBuilder out, CssIndentation indentation) {
-        indentation.writeTo(out);
-
-        int startIndex;
-        startIndex = out.length();
-
-        Css.writeClassName(out, className);
-
-        variant.writeClassName(out, startIndex);
-
-        out.append(' ');
-        out.append('{');
-        out.append(System.lineSeparator());
-
-        CssIndentation blockIndentation;
-        blockIndentation = indentation.increase();
-
-        for (CssRule rule : rules) {
-          rule.writeProps(out, blockIndentation);
-        }
-
-        indentation.writeTo(out);
-
-        out.append('}');
-
-        out.append(System.lineSeparator());
-
-        if (classNameVariants != null) {
-          for (Context child : classNameVariants.values()) {
-            if (!out.isEmpty()) {
-              out.append(System.lineSeparator());
-            }
-
-            child.write(out, blockIndentation);
-          }
-        }
-
-        if (mediaQueries != null) {
-          for (Context child : mediaQueries.values()) {
-            if (!out.isEmpty()) {
-              out.append(System.lineSeparator());
-            }
-
-            child.writeTo(out, indentation);
-          }
-        }
-      }
-
-    }
-
-    private final class MediaQueryContext extends ThisContext {
-
-      private final MediaQuery query;
-
-      MediaQueryContext(MediaQuery query) {
-        this.query = query;
-      }
-
-      @Override
-      final void write(StringBuilder out, CssIndentation indentation) {
-        query.writeMediaQueryStart(out, indentation);
-
-        CssIndentation blockIndentation;
-        blockIndentation = indentation.increase();
-
-        writeContents(out, blockIndentation);
-
-        indentation.writeTo(out);
-
-        out.append('}');
-
-        out.append(System.lineSeparator());
-      }
-
-    }
-
-    private final String className;
-
-    private final Map<String, CssRule> rules = new GrowableMap<>();
-
-    Component(String className) {
-      this.className = className;
-    }
-
-    @Override
-    public final void accept(Css.Context gen) {
-      gen.add(this);
-    }
-
-    @Override
-    public final int compareSameKind(CssRule o) {
-      Component that;
-      that = (Component) o;
-
-      return className.compareTo(that.className);
-    }
-
-    @Override
-    public final int kind() {
-      return 1;
-    }
-
-    @Override
-    public final void writeTo(StringBuilder out, CssIndentation indentation) {
-      Css.Context topLevel;
-      topLevel = new TopLevel();
-
-      for (CssRule rule : rules.values()) {
-        rule.accept(topLevel);
-      }
-
-      topLevel.writeTo(out, indentation);
-    }
-
-    @Override
-    public final void writeProps(StringBuilder out, CssIndentation indentation) {
-      throw new UnsupportedOperationException("Implement me");
-    }
-
-    @Override
-    public final void cycleCheck(String other) {
-      if (className.equals(other)) {
-        throw new IllegalStateException("Cycle detected @ component: " + className);
-      }
-    }
-
-    @Override
-    public final void consumeRule(CssRule existing) {
-      throw new UnsupportedOperationException("Implement me");
-    }
-
-    @Override
-    public final void putRule(String className, CssRule rule) {
-      rules.put(className, rule);
-    }
-
-  }
-
-  /**
    * CSS generation context.
    */
   static abstract class Context {
 
-    final GrowableList<CssRule> rules = new GrowableList<>();
+    final GrowableList<Rule> rules = new GrowableList<>();
 
     Context() {
     }
 
-    public final void add(CssRule rule) {
+    public final void add(Rule rule) {
       rules.add(rule);
     }
 
     public abstract Context contextOf(Css.Variant variant);
 
-    public final void writeTo(StringBuilder out, CssIndentation indentation) {
+    public final void writeTo(StringBuilder out, Indentation indentation) {
       rules.sort(Comparator.naturalOrder());
 
       write(out, indentation);
     }
 
-    abstract void write(StringBuilder out, CssIndentation indentation);
+    abstract void write(StringBuilder out, Indentation indentation);
+
+  }
+
+  private non-sealed static abstract class GeneratorOption implements Generator.Classes, Generator.Option {
+
+    GeneratorOption() {}
+
+    public static GeneratorOption cast(Generator.Classes o) {
+      // this cast is safe as Css.Generator.Classes is sealed
+      return (GeneratorOption) o;
+    }
+
+    public static GeneratorOption cast(Generator.Option o) {
+      // this cast is safe as Css.Generator.Option is sealed
+      return (GeneratorOption) o;
+    }
+
+    abstract void acceptCssConfig(CssConfig config);
+
+  }
+
+  static final class Indentation {
+
+    static final Indentation ROOT = new Indentation(0);
+
+    private final int level;
+
+    private Indentation(int level) {
+      this.level = level;
+    }
+
+    public final String indent(String value) {
+      return value.indent(level * 2);
+    }
+
+    public final Indentation increase() {
+      return new Indentation(level + 1);
+    }
+
+    public final void writeTo(StringBuilder out) {
+      for (int i = 0, count = level * 2; i < count; i++) {
+        out.append(' ');
+      }
+    }
 
   }
 
@@ -415,15 +226,261 @@ public final class Css {
     }
   }
 
+  enum Key {
+
+    _COLORS,
+
+    _SPACING,
+
+    // utilities
+    // order is important!
+
+    CUSTOM,
+
+    ACCESSIBILITY,
+
+    POINTER_EVENTS,
+    VISIBILITY,
+
+    POSITION,
+
+    INSET,
+    INSET_X,
+    INSET_Y,
+    TOP,
+    RIGHT,
+    BOTTOM,
+    LEFT,
+
+    Z_INDEX,
+
+    GRID_COLUMN,
+    GRID_COLUMN_START,
+    GRID_COLUMN_END,
+
+    MARGIN,
+    MARGIN_X,
+    MARGIN_Y,
+    MARGIN_TOP,
+    MARGIN_RIGHT,
+    MARGIN_BOTTOM,
+    MARGIN_LEFT,
+
+    DISPLAY,
+
+    SIZE,
+    HEIGHT,
+    MAX_HEIGHT,
+    MIN_HEIGHT,
+    WIDTH,
+    MAX_WIDTH,
+    MIN_WIDTH,
+
+    FLEX_GROW,
+
+    TABLE_LAYOUT,
+
+    BORDER_COLLAPSE,
+    BORDER_SPACING,
+    BORDER_SPACING_X,
+    BORDER_SPACING_Y,
+
+    TRANSLATE,
+    TRANSLATE_X,
+    TRANSLATE_Y,
+    TRANSFORM,
+
+    CURSOR,
+
+    USER_SELECT,
+
+    APPEARANCE,
+
+    GRID_TEMPLATE_COLUMNS,
+    GRID_TEMPLATE_ROWS,
+
+    FLEX_DIRECTION,
+    ALIGN_ITEMS,
+    JUSTIFY_CONTENT,
+    GAP,
+    GAP_X,
+    GAP_Y,
+
+    OVERFLOW,
+    OVERFLOW_X,
+    OVERFLOW_Y,
+
+    TEXT_OVERFLOW,
+    WHITESPACE,
+    TEXT_WRAP,
+
+    BORDER_RADIUS,
+    BORDER_RADIUS_T,
+    BORDER_RADIUS_R,
+    BORDER_RADIUS_B,
+    BORDER_RADIUS_L,
+    BORDER_RADIUS_TL,
+    BORDER_RADIUS_TR,
+    BORDER_RADIUS_BR,
+    BORDER_RADIUS_BL,
+
+    BORDER_WIDTH,
+    BORDER_WIDTH_X,
+    BORDER_WIDTH_Y,
+    BORDER_WIDTH_TOP,
+    BORDER_WIDTH_RIGHT,
+    BORDER_WIDTH_BOTTOM,
+    BORDER_WIDTH_LEFT,
+
+    BORDER_COLOR,
+    BORDER_COLOR_X,
+    BORDER_COLOR_Y,
+    BORDER_COLOR_TOP,
+    BORDER_COLOR_RIGHT,
+    BORDER_COLOR_BOTTOM,
+    BORDER_COLOR_LEFT,
+
+    BACKGROUND_COLOR,
+
+    FILL,
+    STROKE,
+    STROKE_WIDTH,
+
+    PADDING,
+    PADDING_X,
+    PADDING_Y,
+    PADDING_TOP,
+    PADDING_RIGHT,
+    PADDING_BOTTOM,
+    PADDING_LEFT,
+
+    TEXT_ALIGN,
+    VERTICAL_ALIGN,
+
+    FONT_SIZE,
+    FONT_WEIGHT,
+
+    LINE_HEIGHT,
+
+    LETTER_SPACING,
+
+    TEXT_COLOR,
+    TEXT_DECORATION,
+
+    OPACITY,
+
+    OUTLINE_STYLE,
+    OUTLINE_WIDTH,
+    OUTLINE_OFFSET,
+    OUTLINE_COLOR,
+
+    TRANSITION_PROPERTY,
+    TRANSITION_DURATION,
+
+    CONTENT;
+
+  }
+
   sealed interface MediaQuery extends Variant {
 
-    void writeMediaQueryStart(StringBuilder out, CssIndentation indentation);
+    void writeMediaQueryStart(StringBuilder out, Indentation indentation);
 
   }
 
-  sealed interface Variant extends Comparable<Variant> {
+  private static final class NoOpRule implements Rule {
+
+    static final NoOpRule INSTANCE = new NoOpRule();
+
+    private NoOpRule() {}
+
+    @Override
+    public final void accept(Css.Context ctx) {
+      // noop
+    }
+
+    @Override
+    public final int compareSameKind(Rule o) {
+      return 0;
+    }
+
+    @Override
+    public final int kind() {
+      return 0;
+    }
+
+    @Override
+    public final void writeTo(StringBuilder out, Css.Indentation indentation) {
+      // noop
+    }
+
+    @Override
+    public final void writeProps(StringBuilder out, Css.Indentation indentation) {
+      // noop
+    }
 
   }
+
+  sealed interface Repository permits CssComponent, CssGenerator {
+
+    void cycleCheck(String className);
+
+    void consumeRule(Rule existing);
+
+    void putRule(String className, Rule fragment);
+
+  }
+
+  sealed interface Rule extends Comparable<Rule> permits CssComponent, NoOpRule, CssUtility {
+
+    Rule NOOP = NoOpRule.INSTANCE;
+
+    void accept(Css.Context ctx);
+
+    @Override
+    default int compareTo(Rule o) {
+      int thisKind;
+      thisKind = kind();
+
+      int thatKind;
+      thatKind = o.kind();
+
+      if (thisKind == thatKind) {
+        return compareSameKind(o);
+      } else if (thisKind < thatKind) {
+        return -1;
+      } else {
+        return 1;
+      }
+    }
+
+    int compareSameKind(Rule o);
+
+    int kind();
+
+    void writeTo(StringBuilder out, Css.Indentation indentation);
+
+    void writeProps(StringBuilder out, Css.Indentation indentation);
+
+  }
+
+  record StaticUtility(Css.Key key, CssProperties properties) {
+
+    public final Css.Rule create(String className, List<Css.Variant> variants) {
+      return new CssUtility(key, className, variants, properties);
+    }
+
+  }
+
+  private record ThisStyleSheet(String css) implements StyleSheet {
+
+    @Override
+    public final byte[] toByteArray() {
+      return css.getBytes(StandardCharsets.UTF_8);
+    }
+
+  }
+
+  sealed interface Variant extends Comparable<Variant> {}
 
   private Css() {}
 
@@ -434,19 +491,19 @@ public final class Css {
     CssConfig config;
     config = new CssConfig();
 
-    CssGeneratorOption classesOption;
-    classesOption = CssGeneratorOption.cast(classes);
+    GeneratorOption classesOption;
+    classesOption = GeneratorOption.cast(classes);
 
-    classesOption.acceptCssGenerator(config);
+    classesOption.acceptCssConfig(config);
 
     for (int i = 0; i < len; i++) {
       Generator.Option o;
       o = Check.notNull(options[i], "options[", i, "] == null");
 
-      CssGeneratorOption option;
-      option = CssGeneratorOption.cast(o);
+      GeneratorOption option;
+      option = GeneratorOption.cast(o);
 
-      option.acceptCssGenerator(config);
+      option.acceptCssConfig(config);
     }
 
     config.spec();
@@ -461,7 +518,7 @@ public final class Css {
     String css;
     css = generateCss(classes, options);
 
-    return new CssStyleSheet(css);
+    return new ThisStyleSheet(css);
   }
 
   // options
@@ -469,9 +526,9 @@ public final class Css {
   public static Generator.Option baseLayer(String contents) {
     Check.notNull(contents, "contents == null");
 
-    return new CssGeneratorOption() {
+    return new GeneratorOption() {
       @Override
-      final void acceptCssGenerator(CssConfig config) {
+      final void acceptCssConfig(CssConfig config) {
         config.baseLayer(contents);
       }
     };
@@ -481,9 +538,9 @@ public final class Css {
     CssProperties properties;
     properties = parseProperties(text);
 
-    return new CssGeneratorOption() {
+    return new GeneratorOption() {
       @Override
-      final void acceptCssGenerator(CssConfig config) {
+      final void acceptCssConfig(CssConfig config) {
         config.breakpoints(properties);
       }
     };
@@ -493,9 +550,9 @@ public final class Css {
     Set<Class<?>> set;
     set = Set.of(values);
 
-    return new CssGeneratorOption() {
+    return new GeneratorOption() {
       @Override
-      final void acceptCssGenerator(CssConfig config) {
+      final void acceptCssConfig(CssConfig config) {
         config.classes(set);
       }
     };
@@ -504,9 +561,9 @@ public final class Css {
   public static Generator.Option component(String name, String definition) {
     Check.notNull(name, "name == null");
 
-    return new CssGeneratorOption() {
+    return new GeneratorOption() {
       @Override
-      final void acceptCssGenerator(CssConfig config) {
+      final void acceptCssConfig(CssConfig config) {
         config.addComponent(name, definition);
       }
     };
@@ -515,115 +572,115 @@ public final class Css {
   public static Generator.Option noteSink(NoteSink noteSink) {
     Check.notNull(noteSink, "noteSink == null");
 
-    return new CssGeneratorOption() {
+    return new GeneratorOption() {
       @Override
-      final void acceptCssGenerator(CssConfig config) {
+      final void acceptCssConfig(CssConfig config) {
         config.noteSink(noteSink);
       }
     };
   }
 
   public static Generator.Option overrideBackgroundColor(String text) {
-    return override(CssKey.BACKGROUND_COLOR, text);
+    return override(Key.BACKGROUND_COLOR, text);
   }
 
   public static Generator.Option overrideBorderColor(String text) {
-    return override(CssKey.BORDER_COLOR, text);
+    return override(Key.BORDER_COLOR, text);
   }
 
   public static Generator.Option overrideBorderWidth(String text) {
-    return override(CssKey.BORDER_WIDTH, text);
+    return override(Key.BORDER_WIDTH, text);
   }
 
   public static Generator.Option overrideColors(String text) {
-    return override(CssKey._COLORS, text);
+    return override(Key._COLORS, text);
   }
 
   public static Generator.Option overrideContent(String text) {
-    return override(CssKey.CONTENT, text);
+    return override(Key.CONTENT, text);
   }
 
   public static Generator.Option overrideFill(String text) {
-    return override(CssKey.FILL, text);
+    return override(Key.FILL, text);
   }
 
   public static Generator.Option overrideFontSize(String text) {
-    return override(CssKey.FONT_SIZE, text);
+    return override(Key.FONT_SIZE, text);
   }
 
   public static Generator.Option overrideFontWeight(String text) {
-    return override(CssKey.FONT_WEIGHT, text);
+    return override(Key.FONT_WEIGHT, text);
   }
 
   public static Generator.Option overrideGridColumn(String text) {
-    return override(CssKey.GRID_COLUMN, text);
+    return override(Key.GRID_COLUMN, text);
   }
 
   public static Generator.Option overrideGridColumnEnd(String text) {
-    return override(CssKey.GRID_COLUMN_END, text);
+    return override(Key.GRID_COLUMN_END, text);
   }
 
   public static Generator.Option overrideGridColumnStart(String text) {
-    return override(CssKey.GRID_COLUMN_START, text);
+    return override(Key.GRID_COLUMN_START, text);
   }
 
   public static Generator.Option overrideGridTemplateColumns(String text) {
-    return override(CssKey.GRID_TEMPLATE_COLUMNS, text);
+    return override(Key.GRID_TEMPLATE_COLUMNS, text);
   }
 
   public static Generator.Option overrideGridTemplateRows(String text) {
-    return override(CssKey.GRID_TEMPLATE_ROWS, text);
+    return override(Key.GRID_TEMPLATE_ROWS, text);
   }
 
   public static Generator.Option overrideLetterSpacing(String text) {
-    return override(CssKey.LETTER_SPACING, text);
+    return override(Key.LETTER_SPACING, text);
   }
 
   public static Generator.Option overrideLineHeight(String text) {
-    return override(CssKey.LINE_HEIGHT, text);
+    return override(Key.LINE_HEIGHT, text);
   }
 
   public static Generator.Option overrideOutlineColor(String text) {
-    return override(CssKey.OUTLINE_COLOR, text);
+    return override(Key.OUTLINE_COLOR, text);
   }
 
   public static Generator.Option overrideSpacing(String text) {
-    return override(CssKey._SPACING, text);
+    return override(Key._SPACING, text);
   }
 
   public static Generator.Option overrideTextColor(String text) {
-    return override(CssKey.TEXT_COLOR, text);
+    return override(Key.TEXT_COLOR, text);
   }
 
   public static Generator.Option overrideZIndex(String text) {
-    return override(CssKey.Z_INDEX, text);
+    return override(Key.Z_INDEX, text);
   }
 
-  private static Generator.Option override(CssKey key, String text) {
+  private static Generator.Option override(Key key, String text) {
     CssProperties properties;
     properties = parseProperties(text);
 
-    return new CssGeneratorOption() {
+    return new GeneratorOption() {
       @Override
-      final void acceptCssGenerator(CssConfig config) {
+      final void acceptCssConfig(CssConfig config) {
         config.override(key, properties);
       }
     };
   }
 
   public static Generator.Option skipReset() {
-    return new CssGeneratorOption() {
+    return new GeneratorOption() {
       @Override
-      final void acceptCssGenerator(CssConfig config) {
+      final void acceptCssConfig(CssConfig config) {
         config.skipReset(true);
       }
     };
   }
 
   public static Generator.Option useLogicalProperties() {
-    return new CssGeneratorOption() {
+    return new GeneratorOption() {
       @Override
-      final void acceptCssGenerator(CssConfig config) {
+      final void acceptCssConfig(CssConfig config) {
         config.useLogicalProperties();
       }
     };
@@ -635,9 +692,9 @@ public final class Css {
     CssProperties properties;
     properties = parseProperties(text);
 
-    return new CssGeneratorOption() {
+    return new GeneratorOption() {
       @Override
-      final void acceptCssGenerator(CssConfig config) {
+      final void acceptCssConfig(CssConfig config) {
         config.addUtility(className, properties);
       }
     };
@@ -647,9 +704,9 @@ public final class Css {
     CssProperties props;
     props = parseProperties(text);
 
-    return new CssGeneratorOption() {
+    return new GeneratorOption() {
       @Override
-      final void acceptCssGenerator(CssConfig config) {
+      final void acceptCssConfig(CssConfig config) {
         config.addVariants(props);
       }
     };

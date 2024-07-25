@@ -3438,6 +3438,35 @@ public class CssGeneratorTest {
     );
   }
 
+  @Test(description = "component: pseudo test")
+  public void component02() {
+    class Subject extends AbstractSubject {
+      @Override
+      final void classes() {
+        className("foo");
+      }
+    }
+
+    test(
+        Css.component("foo", """
+        hover:bg-transparent after:block after:border
+        """),
+
+        Subject.class,
+
+        """
+        .foo:hover {
+          background-color: transparent;
+        }
+
+        .foo::after {
+          border-width: 1px;
+          display: block;
+        }
+        """
+    );
+  }
+
   @Test
   public void overrideBackgroundColor() {
     class Subject extends AbstractSubject {

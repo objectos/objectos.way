@@ -20,11 +20,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-final class CssUtility implements CssRule {
+final class CssUtility implements Css.Rule {
 
-  public static final CssUtility NOOP = new CssUtility(CssKey.$NOOP, "", List.of(), CssProperties.NOOP);
-
-  private final CssKey key;
+  private final Css.Key key;
 
   private final String className;
 
@@ -32,11 +30,11 @@ final class CssUtility implements CssRule {
 
   private final CssProperties properties;
 
-  public CssUtility(CssKey key, String className, List<Css.Variant> variants, CssProperties.Builder properties) {
+  public CssUtility(Css.Key key, String className, List<Css.Variant> variants, CssProperties.Builder properties) {
     this(key, className, variants, properties.build());
   }
 
-  public CssUtility(CssKey key, String className, List<Css.Variant> variants, CssProperties properties) {
+  public CssUtility(Css.Key key, String className, List<Css.Variant> variants, CssProperties properties) {
     this.key = key;
 
     this.className = className;
@@ -62,7 +60,7 @@ final class CssUtility implements CssRule {
   }
 
   @Override
-  public final int compareSameKind(CssRule other) {
+  public final int compareSameKind(Css.Rule other) {
     CssUtility o;
     o = (CssUtility) other;
 
@@ -114,13 +112,13 @@ final class CssUtility implements CssRule {
     StringBuilder out;
     out = new StringBuilder();
 
-    writeTo(out, CssIndentation.ROOT);
+    writeTo(out, Css.Indentation.ROOT);
 
     return out.toString();
   }
 
   @Override
-  public final void writeTo(StringBuilder out, CssIndentation indentation) {
+  public final void writeTo(StringBuilder out, Css.Indentation indentation) {
     indentation.writeTo(out);
 
     int startIndex;
@@ -163,7 +161,7 @@ final class CssUtility implements CssRule {
   }
 
   @Override
-  public final void writeProps(StringBuilder out, CssIndentation indentation) {
+  public final void writeProps(StringBuilder out, Css.Indentation indentation) {
     for (Map.Entry<String, String> property : properties) {
       propertyMany(out, indentation, property);
     }
@@ -190,10 +188,10 @@ final class CssUtility implements CssRule {
   }
 
   private void writeBlockMany(
-      StringBuilder out, CssIndentation indentation, CssProperties properties) {
+      StringBuilder out, Css.Indentation indentation, CssProperties properties) {
     blockStartMany(out);
 
-    CssIndentation next;
+    Css.Indentation next;
     next = indentation.increase();
 
     for (Map.Entry<String, String> property : properties) {
@@ -216,7 +214,7 @@ final class CssUtility implements CssRule {
     out.append(" }");
   }
 
-  private void blockEndMany(StringBuilder out, CssIndentation indentation) {
+  private void blockEndMany(StringBuilder out, Css.Indentation indentation) {
     indentation.writeTo(out);
 
     out.append('}');
@@ -240,7 +238,7 @@ final class CssUtility implements CssRule {
     out.append(value);
   }
 
-  private void propertyMany(StringBuilder out, CssIndentation indentation, Entry<String, String> property) {
+  private void propertyMany(StringBuilder out, Css.Indentation indentation, Entry<String, String> property) {
     indentation.writeTo(out);
 
     property(out, property);

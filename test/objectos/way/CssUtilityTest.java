@@ -31,24 +31,24 @@ public class CssUtilityTest {
     List<Css.Variant> hover = List.of(new Css.ClassNameSuffix(1, ":hover"));
     List<Css.Variant> active = List.of(new Css.ClassNameSuffix(2, ":active"));
 
-    List<CssRule> rules = new ArrayList<>();
+    List<Css.Rule> rules = new ArrayList<>();
 
-    CssRule a1 = rule(CssKey.ACCESSIBILITY, "a-1", empty);
+    Css.Rule a1 = rule(Css.Key.ACCESSIBILITY, "a-1", empty);
     rules.add(a1);
 
-    CssRule a2 = rule(CssKey.ACCESSIBILITY, "a-2", empty);
+    Css.Rule a2 = rule(Css.Key.ACCESSIBILITY, "a-2", empty);
     rules.add(a2);
 
-    CssRule a1Active = rule(CssKey.ACCESSIBILITY, "a-2:active", active);
+    Css.Rule a1Active = rule(Css.Key.ACCESSIBILITY, "a-2:active", active);
     rules.add(a1Active);
 
-    CssRule a1Hover = rule(CssKey.ACCESSIBILITY, "a-1:hover", hover);
+    Css.Rule a1Hover = rule(Css.Key.ACCESSIBILITY, "a-1:hover", hover);
     rules.add(a1Hover);
 
-    CssRule b1 = rule(CssKey.CONTENT, "b-1", empty);
+    Css.Rule b1 = rule(Css.Key.CONTENT, "b-1", empty);
     rules.add(b1);
 
-    CssRule b2 = rule(CssKey.CONTENT, "b-2", empty);
+    Css.Rule b2 = rule(Css.Key.CONTENT, "b-2", empty);
     rules.add(b2);
 
     Collections.sort(rules);
@@ -68,7 +68,7 @@ public class CssUtilityTest {
     testClassName("2xl:m-2", ".\\32xl\\:m-2 {}\n");
   }
 
-  private CssRule rule(CssKey key, String className, List<Css.Variant> variants) {
+  private Css.Rule rule(Css.Key key, String className, List<Css.Variant> variants) {
     return new CssUtility(key, className, variants, CssProperties.NOOP);
   }
 
@@ -76,10 +76,10 @@ public class CssUtilityTest {
     StringBuilder out;
     out = new StringBuilder();
 
-    CssRule rule;
-    rule = rule(CssKey.$NOOP, className, List.of());
+    Css.Rule rule;
+    rule = rule(Css.Key._COLORS, className, List.of());
 
-    rule.writeTo(out, CssIndentation.ROOT);
+    rule.writeTo(out, Css.Indentation.ROOT);
 
     assertEquals(out.toString(), expected);
   }

@@ -34,7 +34,7 @@ public class CssGeneratorAdapterTest {
     CssGenerator round;
     round = new CssGenerator(config);
 
-    round.putRule("bg-black", new CssUtility(CssKey.BACKGROUND_COLOR, "bg-black", List.of(), Css.parseProperties("background-color: black")));
+    round.putRule("bg-black", new CssUtility(Css.Key.BACKGROUND_COLOR, "bg-black", List.of(), Css.parseProperties("background-color: black")));
 
     assertEquals(
         round.generate(),
@@ -47,28 +47,28 @@ public class CssGeneratorAdapterTest {
 
   @Test(description = "cache hit")
   public void cache01() {
-    CssRule foo;
-    foo = CssRule.NOOP;
+    Css.Rule foo;
+    foo = Css.Rule.NOOP;
 
     class Impl extends CssGeneratorAdapter {
-      private CssRule hit;
+      private Css.Rule hit;
 
       public Impl() {}
 
       @Override
-      final CssRule createFragment(String className) {
+      final Css.Rule createFragment(String className) {
         Assert.fail("It should have returned from the cache");
 
         return null;
       }
 
       @Override
-      final void consumeExisting(CssRule existing) {
+      final void consumeExisting(Css.Rule existing) {
         hit = existing;
       }
 
       @Override
-      CssRule getFragment(String token) {
+      Css.Rule getFragment(String token) {
         return "foo".equals(token) ? foo : null;
       }
     }
@@ -83,25 +83,25 @@ public class CssGeneratorAdapterTest {
 
   @Test(description = "cache miss")
   public void cache02() {
-    CssRule foo;
-    foo = CssRule.NOOP;
+    Css.Rule foo;
+    foo = Css.Rule.NOOP;
 
     class Impl extends CssGeneratorAdapter {
       String token;
-      CssRule rule;
+      Css.Rule rule;
 
       @Override
-      final CssRule createFragment(String className) {
+      final Css.Rule createFragment(String className) {
         return foo;
       }
 
       @Override
-      CssRule getFragment(String token) {
+      Css.Rule getFragment(String token) {
         return null;
       }
 
       @Override
-      void store(String token, CssRule rule) {
+      void store(String token, Css.Rule rule) {
         this.token = token;
         this.rule = rule;
       }
@@ -217,7 +217,7 @@ public class CssGeneratorAdapterTest {
     VariantsTester impl;
     impl = new VariantsTester();
 
-    CssRule rule;
+    Css.Rule rule;
     rule = impl.createUtility("hover:block");
 
     assertEquals(
@@ -234,10 +234,10 @@ public class CssGeneratorAdapterTest {
     VariantsTester impl;
     impl = new VariantsTester();
 
-    CssRule rule;
+    Css.Rule rule;
     rule = impl.createUtility("xyz:block");
 
-    assertSame(rule, CssRule.NOOP);
+    assertSame(rule, Css.Rule.NOOP);
   }
 
   private class VariantsTester extends CssGeneratorAdapter {
@@ -252,9 +252,9 @@ public class CssGeneratorAdapterTest {
     }
 
     @Override
-    final CssRule createUtility(String className, List<Css.Variant> variants, String value) {
+    final Css.Rule createUtility(String className, List<Css.Variant> variants, String value) {
       return new CssUtility(
-          CssKey.DISPLAY,
+          Css.Key.DISPLAY,
           className, variants,
           CssProperties.of("display", value)
       );
@@ -269,7 +269,7 @@ public class CssGeneratorAdapterTest {
     gen.classes(Set.of());
 
     gen.override(
-        CssKey._COLORS,
+        Css.Key._COLORS,
 
         Css.parseProperties(
             """

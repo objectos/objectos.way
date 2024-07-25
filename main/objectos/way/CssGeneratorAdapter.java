@@ -35,11 +35,11 @@ class CssGeneratorAdapter {
   }
 
   void processToken(String token) {
-    CssRule existing;
+    Css.Rule existing;
     existing = getFragment(token);
 
     if (existing == null) {
-      CssRule newRule;
+      Css.Rule newRule;
       newRule = createFragment(token);
 
       store(token, newRule);
@@ -50,7 +50,7 @@ class CssGeneratorAdapter {
     }
   }
 
-  CssRule createFragment(String className) {
+  Css.Rule createFragment(String className) {
     String component;
     component = getComponent(className);
 
@@ -61,15 +61,15 @@ class CssGeneratorAdapter {
     }
   }
 
-  void consumeExisting(CssRule existing) {
+  void consumeExisting(Css.Rule existing) {
     throw new UnsupportedOperationException("Implement me");
   }
 
-  CssRule createComponent(String className, String definition) {
+  Css.Rule createComponent(String className, String definition) {
     throw new UnsupportedOperationException("Implement me");
   }
 
-  CssRule createUtility(String className) {
+  Css.Rule createUtility(String className) {
     int beginIndex;
     beginIndex = 0;
 
@@ -84,7 +84,7 @@ class CssGeneratorAdapter {
       variant = getVariant(variantName);
 
       if (variant == null) {
-        return CssRule.NOOP;
+        return Css.Rule.NOOP;
       }
 
       variantsBuilder.add(variant);
@@ -109,7 +109,7 @@ class CssGeneratorAdapter {
     return createUtility(className, variants, value);
   }
 
-  CssRule createUtility(String className, List<Css.Variant> variants, String value) {
+  Css.Rule createUtility(String className, List<Css.Variant> variants, String value) {
     throw new UnsupportedOperationException("Implement me");
   }
 
@@ -117,7 +117,7 @@ class CssGeneratorAdapter {
     throw new UnsupportedOperationException("Implement me");
   }
 
-  CssRule getFragment(String token) {
+  Css.Rule getFragment(String token) {
     throw new UnsupportedOperationException("Implement me");
   }
 
@@ -125,7 +125,7 @@ class CssGeneratorAdapter {
     throw new UnsupportedOperationException("Implement me");
   }
 
-  void store(String token, CssRule value) {
+  void store(String token, Css.Rule value) {
     throw new UnsupportedOperationException("Implement me");
   }
 

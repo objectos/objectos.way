@@ -23,7 +23,7 @@ sealed abstract class CssResolver {
 
   static final class OfColorAlpha extends CssResolver {
 
-    private final CssKey key;
+    private final Css.Key key;
 
     private final Map<String, String> colors;
 
@@ -31,11 +31,11 @@ sealed abstract class CssResolver {
 
     private final String propertyName2;
 
-    public OfColorAlpha(CssKey key, Map<String, String> colors, String propertyName1) {
+    public OfColorAlpha(Css.Key key, Map<String, String> colors, String propertyName1) {
       this(key, colors, propertyName1, null);
     }
 
-    public OfColorAlpha(CssKey key, Map<String, String> colors, String propertyName1, String propertyName2) {
+    public OfColorAlpha(Css.Key key, Map<String, String> colors, String propertyName1, String propertyName2) {
       this.key = key;
       this.colors = colors;
       this.propertyName1 = propertyName1;
@@ -43,7 +43,7 @@ sealed abstract class CssResolver {
     }
 
     @Override
-    public final CssRule resolve(String className, List<Css.Variant> variants, boolean negative, String value) {
+    public final Css.Rule resolve(String className, List<Css.Variant> variants, boolean negative, String value) {
       String colorKey;
       colorKey = value;
 
@@ -87,7 +87,7 @@ sealed abstract class CssResolver {
     }
 
     @Override
-    public final CssRule resolve(String className, List<Css.Variant> variants, boolean negative, String value) {
+    public final Css.Rule resolve(String className, List<Css.Variant> variants, boolean negative, String value) {
       int slash;
       slash = value.indexOf('/');
 
@@ -129,7 +129,7 @@ sealed abstract class CssResolver {
 
       properties.add("line-height", height);
 
-      return new CssUtility(CssKey.FONT_SIZE, className, variants, properties);
+      return new CssUtility(Css.Key.FONT_SIZE, className, variants, properties);
     }
 
     private String extractSize(String size) {
@@ -145,7 +145,7 @@ sealed abstract class CssResolver {
       return result;
     }
 
-    private CssRule size(String className, List<Css.Variant> variants, String value) {
+    private Css.Rule size(String className, List<Css.Variant> variants, String value) {
       String size;
       size = fontSize.get(value);
 
@@ -156,7 +156,7 @@ sealed abstract class CssResolver {
       }
     }
 
-    private CssRule rule(String className, List<Css.Variant> variants, String value) {
+    private Css.Rule rule(String className, List<Css.Variant> variants, String value) {
       CssProperties.Builder properties;
       properties = new CssProperties.Builder();
 
@@ -166,7 +166,7 @@ sealed abstract class CssResolver {
       if (slash < 0) {
         properties.add("font-size", value);
 
-        return new CssUtility(CssKey.FONT_SIZE, className, variants, properties);
+        return new CssUtility(Css.Key.FONT_SIZE, className, variants, properties);
       }
 
       String fontSize;
@@ -182,7 +182,7 @@ sealed abstract class CssResolver {
       if (slash < 0) {
         properties.add("line-height", lineHeight);
 
-        return new CssUtility(CssKey.FONT_SIZE, className, variants, properties);
+        return new CssUtility(Css.Key.FONT_SIZE, className, variants, properties);
       }
 
       value = lineHeight;
@@ -199,7 +199,7 @@ sealed abstract class CssResolver {
       if (slash < 0) {
         properties.add("letter-spacing", letterSpacing);
 
-        return new CssUtility(CssKey.FONT_SIZE, className, variants, properties);
+        return new CssUtility(Css.Key.FONT_SIZE, className, variants, properties);
       }
 
       value = letterSpacing;
@@ -213,7 +213,7 @@ sealed abstract class CssResolver {
 
       properties.add("font-weight", fontWeight);
 
-      return new CssUtility(CssKey.FONT_SIZE, className, variants, properties);
+      return new CssUtility(Css.Key.FONT_SIZE, className, variants, properties);
     }
 
   }
@@ -229,7 +229,7 @@ sealed abstract class CssResolver {
     }
 
     @Override
-    public final CssRule resolve(String className, List<Css.Variant> variants, boolean negative, String value) {
+    public final Css.Rule resolve(String className, List<Css.Variant> variants, boolean negative, String value) {
       String resolved;
       resolved = properties.get(value);
 
@@ -237,14 +237,14 @@ sealed abstract class CssResolver {
         return null;
       }
 
-      return resolveSlashes(CssKey.TRANSITION_PROPERTY, className, variants, PROPERTY_NAMES, resolved);
+      return resolveSlashes(Css.Key.TRANSITION_PROPERTY, className, variants, PROPERTY_NAMES, resolved);
     }
 
   }
 
   static final class OfProperties extends CssResolver {
 
-    private final CssKey key;
+    private final Css.Key key;
 
     private final Map<String, String> properties;
 
@@ -254,11 +254,11 @@ sealed abstract class CssResolver {
 
     private final String propertyName2;
 
-    public OfProperties(CssKey key, Map<String, String> properties, CssValueFormatter valueFormatter, String propertyName1) {
+    public OfProperties(Css.Key key, Map<String, String> properties, CssValueFormatter valueFormatter, String propertyName1) {
       this(key, properties, valueFormatter, propertyName1, null);
     }
 
-    public OfProperties(CssKey key, Map<String, String> properties, CssValueFormatter valueFormatter, String propertyName1, String propertyName2) {
+    public OfProperties(Css.Key key, Map<String, String> properties, CssValueFormatter valueFormatter, String propertyName1, String propertyName2) {
       this.key = key;
       this.properties = properties;
       this.valueFormatter = valueFormatter;
@@ -267,7 +267,7 @@ sealed abstract class CssResolver {
     }
 
     @Override
-    public final CssRule resolve(String className, List<Css.Variant> variants, boolean negative, String value) {
+    public final Css.Rule resolve(String className, List<Css.Variant> variants, boolean negative, String value) {
       String resolved;
       resolved = properties.get(value);
 
@@ -291,10 +291,10 @@ sealed abstract class CssResolver {
 
   }
 
-  public abstract CssRule resolve(String className, List<Css.Variant> variants, boolean negative, String value);
+  public abstract Css.Rule resolve(String className, List<Css.Variant> variants, boolean negative, String value);
 
-  final CssRule resolveSlashes(
-      CssKey key,
+  final Css.Rule resolveSlashes(
+      Css.Key key,
       String className, List<Css.Variant> variants,
       String[] propertyNames, String value) {
 

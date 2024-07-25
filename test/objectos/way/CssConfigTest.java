@@ -29,7 +29,7 @@ public class CssConfigTest {
     config = new CssConfig();
 
     config.staticUtility(
-        CssKey.ACCESSIBILITY,
+        Css.Key.ACCESSIBILITY,
 
         """
         sr-only     | position: absolute
@@ -42,7 +42,7 @@ public class CssConfigTest {
         """
     );
 
-    CssStaticUtility util01;
+    Css.StaticUtility util01;
     util01 = config.getStatic("sr-only");
 
     CssProperties props01;
@@ -58,7 +58,7 @@ public class CssConfigTest {
         )
     );
 
-    CssStaticUtility util02;
+    Css.StaticUtility util02;
     util02 = config.getStatic("not-sr-only");
 
     CssProperties props02;
