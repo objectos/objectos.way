@@ -20,27 +20,24 @@ import static org.testng.Assert.assertEquals;
 import java.util.Comparator;
 import java.util.List;
 import objectos.util.list.GrowableList;
-import objectos.way.CssVariant.AppendTo;
-import objectos.way.CssVariant.Breakpoint;
-import objectos.way.CssVariant.ClassNameFormat;
 import org.testng.annotations.Test;
 
 public class CssVariantTest {
 
-  @Test(description = "breakpoints first, AppendTo last")
+  @Test(description = "breakpoints first, Css.ClassNameSuffix last")
   public void ordering01() {
-    GrowableList<CssVariant> list;
+    GrowableList<Css.Variant> list;
     list = new GrowableList<>();
 
-    AppendTo hover = new AppendTo(2, ":hover");
-    AppendTo focus = new AppendTo(1, ":focus");
-    Breakpoint sm = new Breakpoint(1, "1", "640px");
+    Css.ClassNameSuffix hover = new Css.ClassNameSuffix(2, ":hover");
+    Css.ClassNameSuffix focus = new Css.ClassNameSuffix(1, ":focus");
+    Css.Breakpoint sm = new Css.Breakpoint(1, "1", "640px");
 
     list.add(hover);
     list.add(focus);
     list.add(sm);
 
-    List<CssVariant> res = list.toUnmodifiableList(Comparator.naturalOrder());
+    List<Css.Variant> res = list.toUnmodifiableList(Comparator.naturalOrder());
 
     assertEquals(res.get(0), sm);
     assertEquals(res.get(1), focus);
@@ -49,38 +46,38 @@ public class CssVariantTest {
 
   @Test(description = "breakpoints by index")
   public void ordering02() {
-    GrowableList<CssVariant> list;
+    GrowableList<Css.Variant> list;
     list = new GrowableList<>();
 
-    Breakpoint sm = new Breakpoint(1, "1", "640px");
-    Breakpoint md = new Breakpoint(2, "2", "768px");
-    Breakpoint lg = new Breakpoint(3, "3", "1024px");
+    Css.Breakpoint sm = new Css.Breakpoint(1, "1", "640px");
+    Css.Breakpoint md = new Css.Breakpoint(2, "2", "768px");
+    Css.Breakpoint lg = new Css.Breakpoint(3, "3", "1024px");
 
     list.add(lg);
     list.add(sm);
     list.add(md);
 
-    List<CssVariant> res = list.toUnmodifiableList(Comparator.naturalOrder());
+    List<Css.Variant> res = list.toUnmodifiableList(Comparator.naturalOrder());
 
     assertEquals(res.get(0), sm);
     assertEquals(res.get(1), md);
     assertEquals(res.get(2), lg);
   }
 
-  @Test(description = "ClassNameFormat first, AppendTo last")
+  @Test(description = "ClassNameFormat first, Css.ClassNameSuffix last")
   public void ordering03() {
-    GrowableList<CssVariant> list;
+    GrowableList<Css.Variant> list;
     list = new GrowableList<>();
 
-    AppendTo hover = new AppendTo(2, ":hover");
-    AppendTo focus = new AppendTo(1, ":focus");
-    ClassNameFormat thead = new ClassNameFormat("", " thead");
+    Css.ClassNameSuffix hover = new Css.ClassNameSuffix(2, ":hover");
+    Css.ClassNameSuffix focus = new Css.ClassNameSuffix(1, ":focus");
+    Css.ClassNameFormat thead = new Css.ClassNameFormat("", " thead");
 
     list.add(hover);
     list.add(focus);
     list.add(thead);
 
-    List<CssVariant> res = list.toUnmodifiableList(Comparator.naturalOrder());
+    List<Css.Variant> res = list.toUnmodifiableList(Comparator.naturalOrder());
 
     assertEquals(res.get(0), thead);
     assertEquals(res.get(1), focus);
@@ -89,7 +86,7 @@ public class CssVariantTest {
 
   @Test
   public void parse() {
-    assertEquals(CssVariant.parse("& thead"), new CssVariant.ClassNameFormat("", " thead"));
+    assertEquals(Css.parseVariant("& thead"), new Css.ClassNameFormat("", " thead"));
   }
 
 }

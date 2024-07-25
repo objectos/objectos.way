@@ -19,10 +19,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import objectos.way.CssGeneratorRound.Context;
-import objectos.way.CssVariant.MediaQuery;
 
-final class CssUtility extends CssRule {
+final class CssUtility implements CssRule {
 
   public static final CssUtility NOOP = new CssUtility(CssKey.$NOOP, "", List.of(), CssProperties.NOOP);
 
@@ -30,15 +28,15 @@ final class CssUtility extends CssRule {
 
   private final String className;
 
-  private final List<CssVariant> variants;
+  private final List<Css.Variant> variants;
 
   private final CssProperties properties;
 
-  public CssUtility(CssKey key, String className, List<CssVariant> variants, CssProperties.Builder properties) {
+  public CssUtility(CssKey key, String className, List<Css.Variant> variants, CssProperties.Builder properties) {
     this(key, className, variants, properties.build());
   }
 
-  public CssUtility(CssKey key, String className, List<CssVariant> variants, CssProperties properties) {
+  public CssUtility(CssKey key, String className, List<Css.Variant> variants, CssProperties properties) {
     this.key = key;
 
     this.className = className;
@@ -49,39 +47,22 @@ final class CssUtility extends CssRule {
   }
 
   @Override
-  public final void accept(CssGeneratorRound gen) {
-    Context context;
-    context = null;
+  public final void accept(Css.Context ctx) {
+    Css.Context context;
+    context = ctx;
 
     for (int i = 0, size = variants.size(); i < size; i++) {
-      CssVariant variant;
+      Css.Variant variant;
       variant = variants.get(i);
 
-      if (!(variant instanceof MediaQuery query)) {
-        break;
-      }
-
-      if (context == null) {
-        context = gen.contextOf(query);
-      } else {
-        context = context.contextOf(query);
-      }
+      context = context.contextOf(variant);
     }
 
-    if (context != null) {
-      context.add(this);
-    } else {
-      gen.topLevel(this);
-    }
+    context.add(this);
   }
 
   @Override
-  public final int kind() {
-    return 1;
-  }
-
-  @Override
-  final int compareSameKind(CssRule other) {
+  public final int compareSameKind(CssRule other) {
     CssUtility o;
     o = (CssUtility) other;
 
@@ -92,10 +73,10 @@ final class CssUtility extends CssRule {
       return result;
     }
 
-    CssVariant thisMax;
+    Css.Variant thisMax;
     thisMax = max();
 
-    CssVariant thatMax;
+    Css.Variant thatMax;
     thatMax = o.max();
 
     if (thisMax == null && thatMax == null) {
@@ -113,7 +94,12 @@ final class CssUtility extends CssRule {
     return thisMax.compareTo(thatMax);
   }
 
-  private CssVariant max() {
+  @Override
+  public final int kind() {
+    return 2;
+  }
+
+  private Css.Variant max() {
     return switch (variants.size()) {
       case 0 -> null;
 
@@ -140,10 +126,10 @@ final class CssUtility extends CssRule {
     int startIndex;
     startIndex = out.length();
 
-    writeClassName(out);
+    Css.writeClassName(out, className);
 
-    for (CssVariant variant : variants) {
-      if (variant instanceof CssVariant.ClassNameVariant cnv) {
+    for (Css.Variant variant : variants) {
+      if (variant instanceof Css.ClassNameVariant cnv) {
         cnv.writeClassName(out, startIndex);
       }
     }
@@ -176,61 +162,10 @@ final class CssUtility extends CssRule {
     out.append(System.lineSeparator());
   }
 
-  private void writeClassName(StringBuilder out) {
-    int length;
-    length = className.length();
-
-    if (length == 0) {
-      return;
-    }
-
-    out.append('.');
-
-    int index;
-    index = 0;
-
-    boolean escaped;
-    escaped = false;
-
-    char first;
-    first = className.charAt(index);
-
-    if (0x30 <= first && first <= 0x39) {
-      out.append("\\3");
-      out.append(first);
-
-      index++;
-
-      escaped = true;
-    }
-
-    for (; index < length; index++) {
-      char c;
-      c = className.charAt(index);
-
-      switch (c) {
-        case ' ', ',', '.', '/', ':', '@', '[', ']', '*' -> {
-          out.append("\\");
-
-          out.append(c);
-
-          escaped = false;
-        }
-
-        case 'a', 'b', 'c', 'd', 'e', 'f',
-             'A', 'B', 'C', 'D', 'E', 'F',
-             '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' -> {
-          if (escaped) {
-            out.append(' ');
-          }
-
-          out.append(c);
-
-          escaped = false;
-        }
-
-        default -> out.append(c);
-      }
+  @Override
+  public final void writeProps(StringBuilder out, CssIndentation indentation) {
+    for (Map.Entry<String, String> property : properties) {
+      propertyMany(out, indentation, property);
     }
   }
 

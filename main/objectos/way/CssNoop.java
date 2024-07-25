@@ -15,15 +15,20 @@
  */
 package objectos.way;
 
-final class CssNoop extends CssRule {
+final class CssNoop implements CssRule {
 
   static final CssNoop INSTANCE = new CssNoop();
 
   private CssNoop() {}
 
   @Override
-  public final void accept(CssGeneratorRound gen) {
+  public final void accept(Css.Context ctx) {
     // noop
+  }
+
+  @Override
+  public final int compareSameKind(CssRule o) {
+    return 0;
   }
 
   @Override
@@ -37,8 +42,8 @@ final class CssNoop extends CssRule {
   }
 
   @Override
-  final int compareSameKind(CssRule o) {
-    return 0;
+  public final void writeProps(StringBuilder out, CssIndentation indentation) {
+    // noop
   }
 
 }

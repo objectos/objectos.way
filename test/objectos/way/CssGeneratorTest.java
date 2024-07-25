@@ -3377,7 +3377,7 @@ public class CssGeneratorTest {
     );
   }
 
-  @Test(enabled = false)
+  @Test
   public void component01() {
     class Subject extends AbstractSubject {
       @Override
@@ -3389,17 +3389,51 @@ public class CssGeneratorTest {
     test(
         Css.component("carbon-grid", """
         mx-auto grid w-full max-w-screen-max grid-cols-4
-        px-0px
-        md:grid-cols-8 md:px-16px
-        lg:grid-cols-16
-        max:px-24px
-        *:mx-16px
+        px-0
+        md:grid-cols-8 md:px-4
+        lg:grid-cols-12
+        2xl:px-6
+        *:mx-4
         """),
 
         Subject.class,
 
         """
-        .carbon-grid { width: 0px }
+        .carbon-grid {
+          margin-left: auto;
+          margin-right: auto;
+          display: grid;
+          width: 100%;
+          grid-template-columns: repeat(4, minmax(0, 1fr));
+          padding-left: 0px;
+          padding-right: 0px;
+        }
+
+        .carbon-grid > * {
+          margin-left: 1rem;
+          margin-right: 1rem;
+        }
+
+        @media (min-width: 768px) {
+          .carbon-grid {
+            grid-template-columns: repeat(8, minmax(0, 1fr));
+            padding-left: 1rem;
+            padding-right: 1rem;
+          }
+        }
+
+        @media (min-width: 1024px) {
+          .carbon-grid {
+            grid-template-columns: repeat(12, minmax(0, 1fr));
+          }
+        }
+
+        @media (min-width: 1536px) {
+          .carbon-grid {
+            padding-left: 1.5rem;
+            padding-right: 1.5rem;
+          }
+        }
         """
     );
   }

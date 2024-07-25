@@ -15,16 +15,14 @@
  */
 package objectos.way;
 
-sealed abstract class CssRule implements Comparable<CssRule> permits CssNoop, CssUtility {
+sealed interface CssRule extends Comparable<CssRule> permits Css.Component, CssNoop, CssUtility {
 
-  public static final CssRule NOOP = CssNoop.INSTANCE;
+  CssRule NOOP = CssNoop.INSTANCE;
 
-  CssRule() {}
-
-  public abstract void accept(CssGeneratorRound gen);
+  void accept(Css.Context ctx);
 
   @Override
-  public final int compareTo(CssRule o) {
+  default int compareTo(CssRule o) {
     int thisKind;
     thisKind = kind();
 
@@ -40,10 +38,12 @@ sealed abstract class CssRule implements Comparable<CssRule> permits CssNoop, Cs
     }
   }
 
-  abstract int compareSameKind(CssRule o);
+  int compareSameKind(CssRule o);
 
-  public abstract int kind();
+  int kind();
 
-  public abstract void writeTo(StringBuilder out, CssIndentation indentation);
+  void writeTo(StringBuilder out, CssIndentation indentation);
+
+  void writeProps(StringBuilder out, CssIndentation indentation);
 
 }

@@ -43,7 +43,7 @@ sealed abstract class CssResolver {
     }
 
     @Override
-    public final CssRule resolve(String className, List<CssVariant> variants, boolean negative, String value) {
+    public final CssRule resolve(String className, List<Css.Variant> variants, boolean negative, String value) {
       String colorKey;
       colorKey = value;
 
@@ -87,7 +87,7 @@ sealed abstract class CssResolver {
     }
 
     @Override
-    public final CssRule resolve(String className, List<CssVariant> variants, boolean negative, String value) {
+    public final CssRule resolve(String className, List<Css.Variant> variants, boolean negative, String value) {
       int slash;
       slash = value.indexOf('/');
 
@@ -145,7 +145,7 @@ sealed abstract class CssResolver {
       return result;
     }
 
-    private CssRule size(String className, List<CssVariant> variants, String value) {
+    private CssRule size(String className, List<Css.Variant> variants, String value) {
       String size;
       size = fontSize.get(value);
 
@@ -156,7 +156,7 @@ sealed abstract class CssResolver {
       }
     }
 
-    private CssRule rule(String className, List<CssVariant> variants, String value) {
+    private CssRule rule(String className, List<Css.Variant> variants, String value) {
       CssProperties.Builder properties;
       properties = new CssProperties.Builder();
 
@@ -229,7 +229,7 @@ sealed abstract class CssResolver {
     }
 
     @Override
-    public final CssRule resolve(String className, List<CssVariant> variants, boolean negative, String value) {
+    public final CssRule resolve(String className, List<Css.Variant> variants, boolean negative, String value) {
       String resolved;
       resolved = properties.get(value);
 
@@ -267,7 +267,7 @@ sealed abstract class CssResolver {
     }
 
     @Override
-    public final CssRule resolve(String className, List<CssVariant> variants, boolean negative, String value) {
+    public final CssRule resolve(String className, List<Css.Variant> variants, boolean negative, String value) {
       String resolved;
       resolved = properties.get(value);
 
@@ -291,11 +291,11 @@ sealed abstract class CssResolver {
 
   }
 
-  public abstract CssRule resolve(String className, List<CssVariant> variants, boolean negative, String value);
+  public abstract CssRule resolve(String className, List<Css.Variant> variants, boolean negative, String value);
 
   final CssRule resolveSlashes(
       CssKey key,
-      String className, List<CssVariant> variants,
+      String className, List<Css.Variant> variants,
       String[] propertyNames, String value) {
 
     CssProperties.Builder properties;

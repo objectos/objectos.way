@@ -15,12 +15,12 @@
  */
 package objectos.way;
 
-import java.util.List;
+sealed interface CssRepository permits Css.Component, CssGenerator {
 
-record CssStaticUtility(CssKey key, CssProperties properties) {
+  void cycleCheck(String className);
 
-  public final CssRule create(String className, List<Css.Variant> variants) {
-    return new CssUtility(key, className, variants, properties);
-  }
+  void consumeRule(CssRule existing);
+
+  void putRule(String className, CssRule fragment);
 
 }

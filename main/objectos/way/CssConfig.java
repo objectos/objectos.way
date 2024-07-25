@@ -27,19 +27,17 @@ import objectos.notes.NoOpNoteSink;
 import objectos.notes.NoteSink;
 import objectos.util.list.GrowableList;
 import objectos.util.map.GrowableMap;
-import objectos.way.CssVariant.AppendTo;
-import objectos.way.CssVariant.Breakpoint;
 
 final class CssConfig {
 
   private NoteSink noteSink = NoOpNoteSink.of();
 
-  private List<Breakpoint> breakpoints = List.of(
-      new Breakpoint(0, "sm", "640px"),
-      new Breakpoint(1, "md", "768px"),
-      new Breakpoint(2, "lg", "1024px"),
-      new Breakpoint(3, "xl", "1280px"),
-      new Breakpoint(4, "2xl", "1536px")
+  private List<Css.Breakpoint> breakpoints = List.of(
+      new Css.Breakpoint(0, "sm", "640px"),
+      new Css.Breakpoint(1, "md", "768px"),
+      new Css.Breakpoint(2, "lg", "1024px"),
+      new Css.Breakpoint(3, "xl", "1280px"),
+      new Css.Breakpoint(4, "2xl", "1536px")
   );
 
   private List<String> baseLayer;
@@ -60,9 +58,16 @@ final class CssConfig {
 
   private final Map<String, CssStaticUtility> staticUtilities = new GrowableMap<>();
 
-  private Map<String, CssVariant> variants;
+  private Map<String, Css.Variant> variants;
 
   private boolean variantsInitialized;
+
+  public CssConfig() {}
+
+  // testing helper
+  CssConfig(Class<?> type) {
+    classes = Set.of(type);
+  }
 
   public final void addComponent(String name, String definition) {
     if (components == null) {
@@ -107,10 +112,10 @@ final class CssConfig {
       String formatString;
       formatString = entry.getValue();
 
-      CssVariant variant;
-      variant = CssVariant.parse(formatString);
+      Css.Variant variant;
+      variant = Css.parseVariant(formatString);
 
-      if (variant instanceof CssVariant.Invalid invalid) {
+      if (variant instanceof Css.InvalidVariant invalid) {
         throw new IllegalArgumentException("Invalid formatString: " + invalid.reason());
       }
 
@@ -129,7 +134,7 @@ final class CssConfig {
   public final void breakpoints(CssProperties properties) {
     int index = 0;
 
-    GrowableList<Breakpoint> builder;
+    GrowableList<Css.Breakpoint> builder;
     builder = new GrowableList<>();
 
     for (var entry : properties) {
@@ -139,8 +144,8 @@ final class CssConfig {
       String value;
       value = entry.getValue();
 
-      Breakpoint breakpoint;
-      breakpoint = new Breakpoint(index++, name, value);
+      Css.Breakpoint breakpoint;
+      breakpoint = new Css.Breakpoint(index++, name, value);
 
       builder.add(breakpoint);
     }
@@ -186,7 +191,7 @@ final class CssConfig {
 
   //
 
-  final List<Breakpoint> breakpoints() {
+  final List<Css.Breakpoint> breakpoints() {
     return breakpoints;
   }
 
@@ -195,10 +200,14 @@ final class CssConfig {
   }
 
   final Iterable<Class<?>> classes() {
-    return classes;
+    return classes != null ? classes : List.of();
   }
 
-  final CssVariant getVariant(String variantName) {
+  final String getComponent(String value) {
+    return components != null ? components.get(value) : null;
+  }
+
+  final Css.Variant getVariant(String variantName) {
     return variants().get(variantName);
   }
 
@@ -210,7 +219,7 @@ final class CssConfig {
     return propertyType;
   }
 
-  private Map<String, CssVariant> variants() {
+  private Map<String, Css.Variant> variants() {
     if (variants == null) {
       variants = new GrowableMap<>();
     }
@@ -220,16 +229,16 @@ final class CssConfig {
         putVariant(breakpoint.name(), breakpoint);
       }
 
-      putVariant("focus", new AppendTo(1, ":focus"));
-      putVariant("hover", new AppendTo(2, ":hover"));
-      putVariant("active", new AppendTo(3, ":active"));
-      putVariant("*", new AppendTo(4, " > *"));
+      putVariant("focus", new Css.ClassNameSuffix(1, ":focus"));
+      putVariant("hover", new Css.ClassNameSuffix(2, ":hover"));
+      putVariant("active", new Css.ClassNameSuffix(3, ":active"));
+      putVariant("*", new Css.ClassNameSuffix(4, " > *"));
 
-      putVariant("after", new AppendTo(5, "::after"));
-      putVariant("before", new AppendTo(6, "::before"));
+      putVariant("after", new Css.ClassNameSuffix(5, "::after"));
+      putVariant("before", new Css.ClassNameSuffix(6, "::before"));
 
-      putVariant("ltr", new AppendTo(7, ":where([dir=\"ltr\"], [dir=\"ltr\"] *)"));
-      putVariant("rtl", new AppendTo(7, ":where([dir=\"rtl\"], [dir=\"rtl\"] *)"));
+      putVariant("ltr", new Css.ClassNameSuffix(7, ":where([dir=\"ltr\"], [dir=\"ltr\"] *)"));
+      putVariant("rtl", new Css.ClassNameSuffix(7, ":where([dir=\"rtl\"], [dir=\"rtl\"] *)"));
 
       variantsInitialized = true;
     }
@@ -237,7 +246,7 @@ final class CssConfig {
     return variants;
   }
 
-  private void putVariant(String name, CssVariant variant) {
+  private void putVariant(String name, Css.Variant variant) {
     if (variants.containsKey(name)) {
       throw new IllegalArgumentException("Variant already defined: " + name);
     }

@@ -21,16 +21,15 @@ import static org.testng.Assert.assertSame;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import objectos.way.CssVariant.AppendTo;
 import org.testng.annotations.Test;
 
 public class CssUtilityTest {
 
   @Test(description = "order by utility first")
   public void ordering01() {
-    List<CssVariant> empty = List.of();
-    List<CssVariant> hover = List.of(new AppendTo(1, ":hover"));
-    List<CssVariant> active = List.of(new AppendTo(2, ":active"));
+    List<Css.Variant> empty = List.of();
+    List<Css.Variant> hover = List.of(new Css.ClassNameSuffix(1, ":hover"));
+    List<Css.Variant> active = List.of(new Css.ClassNameSuffix(2, ":active"));
 
     List<CssRule> rules = new ArrayList<>();
 
@@ -69,7 +68,7 @@ public class CssUtilityTest {
     testClassName("2xl:m-2", ".\\32xl\\:m-2 {}\n");
   }
 
-  private CssRule rule(CssKey key, String className, List<CssVariant> variants) {
+  private CssRule rule(CssKey key, String className, List<Css.Variant> variants) {
     return new CssUtility(key, className, variants, CssProperties.NOOP);
   }
 

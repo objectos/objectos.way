@@ -24,15 +24,15 @@ import java.util.Set;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-public class CssGeneratorRoundTest {
+public class CssGeneratorAdapterTest {
 
   @Test
   public void testCase01() {
     CssConfig config;
     config = config();
 
-    CssGeneratorRound round;
-    round = new CssGeneratorRound(config);
+    CssGenerator round;
+    round = new CssGenerator(config);
 
     round.putRule("bg-black", new CssUtility(CssKey.BACKGROUND_COLOR, "bg-black", List.of(), Css.parseProperties("background-color: black")));
 
@@ -50,30 +50,33 @@ public class CssGeneratorRoundTest {
     CssRule foo;
     foo = CssRule.NOOP;
 
-    class Impl extends CssGeneratorRound {
+    class Impl extends CssGeneratorAdapter {
       private CssRule hit;
 
-      public Impl() {
-        putRule("foo", foo);
+      public Impl() {}
+
+      @Override
+      final CssRule createFragment(String className) {
+        Assert.fail("It should have returned from the cache");
+
+        return null;
       }
 
       @Override
-      final void onCacheHit(CssRule existing) {
+      final void consumeExisting(CssRule existing) {
         hit = existing;
       }
 
       @Override
-      final CssRule onCacheMiss(String className) {
-        Assert.fail("It should have returned from the cache");
-
-        return null;
+      CssRule getFragment(String token) {
+        return "foo".equals(token) ? foo : null;
       }
     }
 
     Impl impl;
     impl = new Impl();
 
-    impl.onSplit("foo");
+    impl.processToken("foo");
 
     assertSame(impl.hit, foo);
   }
@@ -83,125 +86,131 @@ public class CssGeneratorRoundTest {
     CssRule foo;
     foo = CssRule.NOOP;
 
-    class Impl extends CssGeneratorRound {
+    class Impl extends CssGeneratorAdapter {
+      String token;
+      CssRule rule;
+
       @Override
-      final CssRule onCacheMiss(String className) {
+      final CssRule createFragment(String className) {
         return foo;
+      }
+
+      @Override
+      CssRule getFragment(String token) {
+        return null;
+      }
+
+      @Override
+      void store(String token, CssRule rule) {
+        this.token = token;
+        this.rule = rule;
       }
     }
 
     Impl impl;
     impl = new Impl();
 
-    impl.onSplit("foo");
+    impl.processToken("foo");
 
-    assertSame(impl.getRule("foo"), foo);
+    assertEquals(impl.token, "foo");
+    assertSame(impl.rule, foo);
   }
 
   @Test(description = "single class name")
-  public void split01() {
-    class Subject extends Html.Template {
-      @Override
-      protected final void render() {
-        div(className("m-0"));
-      }
-    }
+  public void processRawString01() {
+    processRawString(
+        "m-0",
 
-    split(Subject.class, "m-0");
+        "m-0"
+    );
   }
 
   @Test(description = "many class names")
-  public void split02() {
-    class Subject extends Html.Template {
-      @Override
-      protected final void render() {
-        div(
-            className("m-0 block leading-3")
-        );
-      }
-    }
+  public void processRawString02() {
+    processRawString(
+        "m-0 block leading-3",
 
-    split(Subject.class, "m-0", "block", "leading-3");
+        "m-0", "block", "leading-3"
+    );
   }
 
   @Test(description = "many class names w/ additional whitespace")
-  public void split03() {
-    class Subject extends Html.Template {
-      @Override
-      protected final void render() {
-        div(
-            className("m-0   block  leading-3")
-        );
-      }
-    }
+  public void processRawString03() {
+    processRawString(
+        "m-0   block  leading-3",
 
-    split(Subject.class, "m-0", "block", "leading-3");
+        "m-0", "block", "leading-3"
+    );
   }
 
   @Test(description = "leading whitespace")
-  public void split04() {
-    class Subject extends Html.Template {
-      @Override
-      protected final void render() {
-        div(
-            className(" block")
-        );
-      }
-    }
+  public void processRawString04() {
+    processRawString(
+        " block",
 
-    split(Subject.class, "block");
+        "block"
+    );
   }
 
   @Test(description = "trailing whitespace")
-  public void split05() {
-    class Subject extends Html.Template {
-      @Override
-      protected final void render() {
-        div(
-            className("block ")
-        );
-      }
-    }
+  public void processRawString05() {
+    processRawString(
+        "block ",
 
-    split(Subject.class, "block");
+        "block"
+    );
   }
 
   @Test
-  public void split06() {
-    class Subject extends Html.Template {
-      @Override
-      protected final void render() {
-        div(
-            className("sr-only underline focus:not-sr-only focus:flex focus:h-full focus:items-center focus:border-4 focus:border-focus focus:py-16px focus:outline-none")
-        );
-      }
-    }
+  public void processRawString06() {
+    processRawString(
+        "sr-only underline focus:not-sr-only focus:flex focus:h-full focus:items-center focus:border-4 focus:border-focus focus:py-16px focus:outline-none",
 
-    split(Subject.class, "sr-only", "underline", "focus:not-sr-only", "focus:flex", "focus:h-full", "focus:items-center", "focus:border-4", "focus:border-focus", "focus:py-16px",
-        "focus:outline-none");
+        "sr-only", "underline", "focus:not-sr-only", "focus:flex", "focus:h-full",
+        "focus:items-center", "focus:border-4", "focus:border-focus", "focus:py-16px",
+        "focus:outline-none"
+    );
   }
 
-  private void split(Class<?> type, String... expected) {
+  @Test(description = "multine string")
+  public void processRawString07() {
+    processRawString(
+        """
+        mx-auto grid w-full max-w-screen-max grid-cols-4
+        px-0px
+        md:grid-cols-8 md:px-16px
+        lg:grid-cols-16
+        max:px-24px
+        *:mx-16px
+        """,
+
+        "mx-auto", "grid", "w-full", "max-w-screen-max", "grid-cols-4",
+        "px-0px",
+        "md:grid-cols-8", "md:px-16px",
+        "lg:grid-cols-16",
+        "max:px-24px",
+        "*:mx-16px"
+    );
+  }
+
+  private void processRawString(String raw, String... expected) {
     List<String> result;
     result = new ArrayList<>();
 
-    CssGeneratorRound round;
-    round = new CssGeneratorRound() {
+    CssGeneratorAdapter adapter;
+    adapter = new CssGeneratorAdapter() {
       @Override
-      final void onSplit(String s) {
+      final void processToken(String s) {
         result.add(s);
       }
     };
 
-    CssGeneratorScanner scanner;
-    scanner = new CssGeneratorScanner();
-
-    scanner.scan(type, round::split);
+    adapter.processRawString(raw);
 
     assertEquals(result, List.of(expected));
   }
 
-  private final CssVariant hover = new CssVariant.ClassNameFormat("", ":hover");
+  private final Css.Variant hover = new Css.ClassNameFormat("", ":hover");
 
   @Test(description = "single variant")
   public void variants01() {
@@ -209,7 +218,7 @@ public class CssGeneratorRoundTest {
     impl = new VariantsTester();
 
     CssRule rule;
-    rule = impl.onCacheMiss("hover:block");
+    rule = impl.createUtility("hover:block");
 
     assertEquals(
         rule.toString(),
@@ -226,15 +235,15 @@ public class CssGeneratorRoundTest {
     impl = new VariantsTester();
 
     CssRule rule;
-    rule = impl.onCacheMiss("xyz:block");
+    rule = impl.createUtility("xyz:block");
 
     assertSame(rule, CssRule.NOOP);
   }
 
-  private class VariantsTester extends CssGeneratorRound {
+  private class VariantsTester extends CssGeneratorAdapter {
 
     @Override
-    final CssVariant getVariant(String variantName) {
+    final Css.Variant getVariant(String variantName) {
       return switch (variantName) {
         case "hover" -> hover;
 
@@ -243,7 +252,7 @@ public class CssGeneratorRoundTest {
     }
 
     @Override
-    final CssRule onVariants(String className, List<CssVariant> variants, String value) {
+    final CssRule createUtility(String className, List<Css.Variant> variants, String value) {
       return new CssUtility(
           CssKey.DISPLAY,
           className, variants,

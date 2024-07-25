@@ -15,10 +15,13 @@
  */
 package objectos.way;
 
+import java.util.Comparator;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
 import objectos.lang.object.Check;
 import objectos.notes.NoteSink;
+import objectos.util.list.GrowableList;
 import objectos.util.map.GrowableMap;
 
 /**
@@ -26,11 +29,15 @@ import objectos.util.map.GrowableMap;
  */
 public final class Css {
 
+  //
+  // public API
+  //
+
   /**
    * Generates a style sheet by scanning Java class files for predefined CSS
    * utility class names.
    */
-  public sealed interface Generator {
+  public sealed interface Generator permits CssGenerator {
 
     /**
      * The set of classes to scan.
@@ -43,9 +50,6 @@ public final class Css {
     public sealed interface Option permits CssGeneratorOption {}
 
   }
-
-  // No Generator Impl for now
-  static final class NoImpl implements Generator {}
 
   /**
    * A CSS style sheet.
@@ -62,7 +66,364 @@ public final class Css {
 
   }
 
-  // private types
+  //
+  // non-public types
+  //
+
+  record Breakpoint(int index, String name, String value) implements MediaQuery {
+    @Override
+    public final int compareTo(Variant o) {
+      if (o instanceof Breakpoint that) {
+        return Integer.compare(index, that.index);
+      }
+
+      return -1;
+    }
+
+    @Override
+    public final void writeMediaQueryStart(StringBuilder out, CssIndentation indentation) {
+      indentation.writeTo(out);
+
+      out.append("@media (min-width: ");
+      out.append(value);
+      out.append(") {");
+      out.append(System.lineSeparator());
+    }
+  }
+
+  record ClassNameFormat(String before, String after) implements ClassNameVariant {
+    @Override
+    public final int compareTo(Variant o) {
+      if (o instanceof ClassNameFormat) {
+        return 0;
+      }
+
+      if (o instanceof ClassNameSuffix) {
+        return -1;
+      }
+
+      return 1;
+    }
+
+    @Override
+    public final void writeClassName(StringBuilder out, int startIndex) {
+      String original;
+      original = out.substring(startIndex, out.length());
+
+      out.setLength(startIndex);
+
+      out.append(before);
+      out.append(original);
+      out.append(after);
+    }
+  }
+
+  record ClassNameSuffix(int index, String selector) implements ClassNameVariant {
+    @Override
+    public final int compareTo(Variant o) {
+      if (o instanceof MediaQuery) {
+        return 1;
+      }
+
+      if (o instanceof ClassNameSuffix that) {
+        return Integer.compare(index, that.index);
+      }
+
+      return 1;
+    }
+
+    @Override
+    public final void writeClassName(StringBuilder out, int startIndex) {
+      out.append(selector);
+    }
+  }
+
+  sealed interface ClassNameVariant extends Variant {
+
+    void writeClassName(StringBuilder out, int startIndex);
+
+  }
+
+  /**
+   * A CSS component class.
+   */
+  static final class Component implements CssRule, CssRepository {
+
+    private abstract class ThisContext extends Context {
+
+      Map<Css.ClassNameVariant, Css.Context> classNameVariants;
+
+      Map<Css.MediaQuery, Css.Context> mediaQueries;
+
+      @Override
+      public final Context contextOf(Variant variant) {
+        return switch (variant) {
+          case ClassNameVariant cnv -> {
+            if (classNameVariants == null) {
+              classNameVariants = new TreeMap<>();
+            }
+
+            yield classNameVariants.computeIfAbsent(cnv, ClassNameContext::new);
+          }
+
+          case MediaQuery query -> {
+            if (mediaQueries == null) {
+              mediaQueries = new TreeMap<>();
+            }
+
+            yield mediaQueries.computeIfAbsent(query, MediaQueryContext::new);
+          }
+
+          case InvalidVariant invalid -> throw new IllegalArgumentException("InvalidVariant");
+        };
+      }
+
+      final void writeContents(StringBuilder out, CssIndentation indentation) {
+        indentation.writeTo(out);
+
+        Css.writeClassName(out, className);
+        out.append(' ');
+        out.append('{');
+        out.append(System.lineSeparator());
+
+        CssIndentation blockIndentation;
+        blockIndentation = indentation.increase();
+
+        for (CssRule rule : rules) {
+          rule.writeProps(out, blockIndentation);
+        }
+
+        indentation.writeTo(out);
+
+        out.append('}');
+
+        out.append(System.lineSeparator());
+
+        if (classNameVariants != null) {
+          for (Context child : classNameVariants.values()) {
+            if (!out.isEmpty()) {
+              out.append(System.lineSeparator());
+            }
+
+            child.write(out, indentation);
+          }
+        }
+
+        if (mediaQueries != null) {
+          for (Context child : mediaQueries.values()) {
+            if (!out.isEmpty()) {
+              out.append(System.lineSeparator());
+            }
+
+            child.writeTo(out, indentation);
+          }
+        }
+      }
+
+    }
+
+    private final class TopLevel extends ThisContext {
+
+      @Override
+      final void write(StringBuilder out, CssIndentation indentation) {
+        writeContents(out, indentation);
+      }
+
+    }
+
+    private final class ClassNameContext extends ThisContext {
+
+      private final ClassNameVariant variant;
+
+      ClassNameContext(ClassNameVariant variant) {
+        this.variant = variant;
+      }
+
+      @Override
+      final void write(StringBuilder out, CssIndentation indentation) {
+        indentation.writeTo(out);
+
+        int startIndex;
+        startIndex = out.length();
+
+        Css.writeClassName(out, className);
+
+        variant.writeClassName(out, startIndex);
+
+        out.append(' ');
+        out.append('{');
+        out.append(System.lineSeparator());
+
+        CssIndentation blockIndentation;
+        blockIndentation = indentation.increase();
+
+        for (CssRule rule : rules) {
+          rule.writeProps(out, blockIndentation);
+        }
+
+        indentation.writeTo(out);
+
+        out.append('}');
+
+        out.append(System.lineSeparator());
+
+        if (classNameVariants != null) {
+          for (Context child : classNameVariants.values()) {
+            if (!out.isEmpty()) {
+              out.append(System.lineSeparator());
+            }
+
+            child.write(out, blockIndentation);
+          }
+        }
+
+        if (mediaQueries != null) {
+          for (Context child : mediaQueries.values()) {
+            if (!out.isEmpty()) {
+              out.append(System.lineSeparator());
+            }
+
+            child.writeTo(out, indentation);
+          }
+        }
+      }
+
+    }
+
+    private final class MediaQueryContext extends ThisContext {
+
+      private final MediaQuery query;
+
+      MediaQueryContext(MediaQuery query) {
+        this.query = query;
+      }
+
+      @Override
+      final void write(StringBuilder out, CssIndentation indentation) {
+        query.writeMediaQueryStart(out, indentation);
+
+        CssIndentation blockIndentation;
+        blockIndentation = indentation.increase();
+
+        writeContents(out, blockIndentation);
+
+        indentation.writeTo(out);
+
+        out.append('}');
+
+        out.append(System.lineSeparator());
+      }
+
+    }
+
+    private final String className;
+
+    private final Map<String, CssRule> rules = new GrowableMap<>();
+
+    Component(String className) {
+      this.className = className;
+    }
+
+    @Override
+    public final void accept(Css.Context gen) {
+      gen.add(this);
+    }
+
+    @Override
+    public final int compareSameKind(CssRule o) {
+      Component that;
+      that = (Component) o;
+
+      return className.compareTo(that.className);
+    }
+
+    @Override
+    public final int kind() {
+      return 1;
+    }
+
+    @Override
+    public final void writeTo(StringBuilder out, CssIndentation indentation) {
+      Css.Context topLevel;
+      topLevel = new TopLevel();
+
+      for (CssRule rule : rules.values()) {
+        rule.accept(topLevel);
+      }
+
+      topLevel.writeTo(out, indentation);
+    }
+
+    @Override
+    public final void writeProps(StringBuilder out, CssIndentation indentation) {
+      throw new UnsupportedOperationException("Implement me");
+    }
+
+    @Override
+    public final void cycleCheck(String other) {
+      if (className.equals(other)) {
+        throw new IllegalStateException("Cycle detected @ component: " + className);
+      }
+    }
+
+    @Override
+    public final void consumeRule(CssRule existing) {
+      throw new UnsupportedOperationException("Implement me");
+    }
+
+    @Override
+    public final void putRule(String className, CssRule rule) {
+      rules.put(className, rule);
+    }
+
+  }
+
+  /**
+   * CSS generation context.
+   */
+  static abstract class Context {
+
+    final GrowableList<CssRule> rules = new GrowableList<>();
+
+    Context() {
+    }
+
+    public final void add(CssRule rule) {
+      rules.add(rule);
+    }
+
+    public abstract Context contextOf(Css.Variant variant);
+
+    public final void writeTo(StringBuilder out, CssIndentation indentation) {
+      rules.sort(Comparator.naturalOrder());
+
+      write(out, indentation);
+    }
+
+    abstract void write(StringBuilder out, CssIndentation indentation);
+
+  }
+
+  record InvalidVariant(String formatString, String reason) implements Variant {
+    @Override
+    public final int compareTo(Variant o) {
+      if (o instanceof InvalidVariant) {
+        return 0;
+      }
+
+      return -1;
+    }
+  }
+
+  sealed interface MediaQuery extends Variant {
+
+    void writeMediaQueryStart(StringBuilder out, CssIndentation indentation);
+
+  }
+
+  sealed interface Variant extends Comparable<Variant> {
+
+  }
 
   private Css() {}
 
@@ -90,8 +451,8 @@ public final class Css {
 
     config.spec();
 
-    CssGeneratorRound round;
-    round = new CssGeneratorRound(config);
+    CssGenerator round;
+    round = new CssGenerator(config);
 
     return round.generate();
   }
@@ -142,7 +503,6 @@ public final class Css {
 
   public static Generator.Option component(String name, String definition) {
     Check.notNull(name, "name == null");
-    Check.notNull(definition, "definition == null");
 
     return new CssGeneratorOption() {
       @Override
@@ -438,6 +798,88 @@ public final class Css {
     properties = parseProperties(text);
 
     return properties.toMap(more);
+  }
+
+  static Variant parseVariant(String formatString) {
+    int amper;
+    amper = formatString.indexOf('&');
+
+    if (amper < 0) {
+      return new InvalidVariant(formatString, "Format string must contain exactly one '&' character");
+    }
+
+    String before;
+    before = formatString.substring(0, amper);
+
+    String after;
+    after = formatString.substring(amper + 1);
+
+    int anotherAmper;
+    anotherAmper = after.indexOf('&');
+
+    if (anotherAmper > 0) {
+      return new InvalidVariant(formatString, "Format string must contain exactly one '&' character");
+    }
+
+    return new ClassNameFormat(before, after);
+  }
+
+  static void writeClassName(StringBuilder out, String className) {
+    int length;
+    length = className.length();
+
+    if (length == 0) {
+      return;
+    }
+
+    out.append('.');
+
+    int index;
+    index = 0;
+
+    boolean escaped;
+    escaped = false;
+
+    char first;
+    first = className.charAt(index);
+
+    if (0x30 <= first && first <= 0x39) {
+      out.append("\\3");
+      out.append(first);
+
+      index++;
+
+      escaped = true;
+    }
+
+    for (; index < length; index++) {
+      char c;
+      c = className.charAt(index);
+
+      switch (c) {
+        case ' ', ',', '.', '/', ':', '@', '[', ']', '*' -> {
+          out.append("\\");
+
+          out.append(c);
+
+          escaped = false;
+        }
+
+        case 'a', 'b', 'c', 'd', 'e', 'f',
+             'A', 'B', 'C', 'D', 'E', 'F',
+             '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' -> {
+          if (escaped) {
+            out.append(' ');
+          }
+
+          out.append(c);
+
+          escaped = false;
+        }
+
+        default -> out.append(c);
+      }
+    }
   }
 
   static final String DEFAULT_COLORS = """
