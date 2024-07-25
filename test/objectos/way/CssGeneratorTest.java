@@ -3488,6 +3488,68 @@ public class CssGeneratorTest {
     );
   }
 
+  @Test(description = "component: do not generate unused component")
+  public void component04() {
+    class Subject extends AbstractSubject {
+      @Override
+      final void classes() {
+        className("used");
+      }
+    }
+
+    test(
+        Css.component("used", """
+        border
+        """),
+
+        Css.component("not-used", """
+        bg-transparent
+        """),
+
+        Subject.class,
+
+        """
+        .used {
+          border-width: 1px;
+        }
+        """
+    );
+  }
+
+  @Test(description = "component: build on top of another component")
+  public void component05() {
+    class Subject extends AbstractSubject {
+      @Override
+      final void classes() {
+        className("foo");
+      }
+    }
+
+    test(
+        Css.component("base", """
+        block
+
+        hover:border
+        """),
+
+        Css.component("foo", """
+        base bg-transparent
+        """),
+
+        Subject.class,
+
+        """
+        .foo {
+          display: block;
+          background-color: transparent;
+        }
+        .foo:hover {
+          border-width: 1px;
+        }
+        """
+    );
+  }
+
   @Test
   public void overrideBackgroundColor() {
     class Subject extends AbstractSubject {
@@ -4145,6 +4207,23 @@ public class CssGeneratorTest {
         Css.skipReset(),
 
         extraOption
+    );
+
+    assertEquals(result, expected);
+  }
+
+  private void test(Css.Generator.Option extra1, Css.Generator.Option extra2, Class<?> type, String expected) {
+    String result;
+    result = Css.generateCss(
+        Css.classes(type),
+
+        Css.noteSink(TestingNoteSink.INSTANCE),
+
+        COLORS,
+
+        Css.skipReset(),
+
+        extra1, extra2
     );
 
     assertEquals(result, expected);

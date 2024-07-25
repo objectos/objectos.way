@@ -30,6 +30,11 @@ final class CssGenerator extends CssGeneratorAdapter implements Css.Generator, C
     Map<Css.MediaQuery, Css.Context> mediaQueries;
 
     @Override
+    public final void addComponent(CssComponent component) {
+      add(component);
+    }
+
+    @Override
     public final Css.Context contextOf(Css.Variant variant) {
       if (variant instanceof Css.MediaQuery query) {
         if (mediaQueries == null) {

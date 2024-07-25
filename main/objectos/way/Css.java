@@ -167,6 +167,8 @@ public final class Css {
       rules.add(rule);
     }
 
+    public abstract void addComponent(CssComponent component);
+
     public abstract Context contextOf(Css.Variant variant);
 
     public final void writeTo(StringBuilder out, Indentation indentation) {

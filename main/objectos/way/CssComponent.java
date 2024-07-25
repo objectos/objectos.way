@@ -39,6 +39,13 @@ final class CssComponent implements Repository, Rule {
     Map<Css.MediaQuery, Css.Context> mediaQueries;
 
     @Override
+    public final void addComponent(CssComponent component) {
+      for (Rule rule : component.rules.values()) {
+        rule.accept(this);
+      }
+    }
+
+    @Override
     public final Context contextOf(Variant variant) {
       return switch (variant) {
         case ClassNameVariant cnv -> {
@@ -177,7 +184,7 @@ final class CssComponent implements Repository, Rule {
 
   @Override
   public final void accept(Css.Context gen) {
-    gen.add(this);
+    gen.addComponent(this);
   }
 
   @Override
@@ -207,7 +214,9 @@ final class CssComponent implements Repository, Rule {
 
   @Override
   public final void writeProps(StringBuilder out, Indentation indentation) {
-    throw new UnsupportedOperationException("Implement me");
+    for (var rule : rules.values()) {
+      rule.writeProps(out, indentation);
+    }
   }
 
   @Override
