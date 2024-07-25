@@ -3550,6 +3550,42 @@ public class CssGeneratorTest {
     );
   }
 
+  @Test(
+      description = "component: detect cycles on components",
+      expectedExceptions = IllegalArgumentException.class,
+      expectedExceptionsMessageRegExp = "Cycle detected @ component: b"
+  )
+  public void component06() {
+    class Subject extends AbstractSubject {
+      @Override
+      final void classes() {
+        className("b");
+      }
+    }
+
+    test(
+        Css.component("a", """
+        block b
+        """),
+
+        Css.component("b", """
+        a bg-transparent
+        """),
+
+        Subject.class,
+
+        """
+        .foo {
+          display: block;
+          background-color: transparent;
+        }
+        .foo:hover {
+          border-width: 1px;
+        }
+        """
+    );
+  }
+
   @Test
   public void overrideBackgroundColor() {
     class Subject extends AbstractSubject {

@@ -222,7 +222,7 @@ final class CssComponent implements Repository, Rule {
   @Override
   public final void cycleCheck(String other) {
     if (className.equals(other)) {
-      throw new IllegalStateException("Cycle detected @ component: " + className);
+      throw new IllegalArgumentException("Cycle detected @ component: " + className);
     }
   }
 
