@@ -24,6 +24,7 @@ import objectos.lang.object.Check;
 import objectos.notes.NoteSink;
 import objectos.util.list.GrowableList;
 import objectos.util.map.GrowableMap;
+import objectos.util.map.GrowableSequencedMap;
 
 /**
  * The <strong>Objectos CSS</strong> main class.
@@ -45,12 +46,12 @@ public final class Css {
      */
     public sealed interface Classes {}
 
-    /**
-     * A style sheet generation option.
-     */
-    public sealed interface Option {}
-
   }
+
+  /**
+   * A style sheet generation option.
+   */
+  public sealed interface Option {}
 
   /**
    * A CSS style sheet.
@@ -181,7 +182,7 @@ public final class Css {
 
   }
 
-  private non-sealed static abstract class GeneratorOption implements Generator.Classes, Generator.Option {
+  private non-sealed static abstract class GeneratorOption implements Generator.Classes, Option {
 
     GeneratorOption() {}
 
@@ -190,8 +191,8 @@ public final class Css {
       return (GeneratorOption) o;
     }
 
-    public static GeneratorOption cast(Generator.Option o) {
-      // this cast is safe as Css.Generator.Option is sealed
+    public static GeneratorOption cast(Option o) {
+      // this cast is safe as Css.Option is sealed
       return (GeneratorOption) o;
     }
 
@@ -635,7 +636,7 @@ public final class Css {
 
   private Css() {}
 
-  public static String generateCss(Generator.Classes classes, Generator.Option... options) {
+  public static String generateCss(Generator.Classes classes, Option... options) {
     int len;
     len = options.length; // implicit null-check
 
@@ -648,7 +649,7 @@ public final class Css {
     classesOption.acceptCssConfig(config);
 
     for (int i = 0; i < len; i++) {
-      Generator.Option o;
+      Option o;
       o = Check.notNull(options[i], "options[", i, "] == null");
 
       GeneratorOption option;
@@ -665,7 +666,7 @@ public final class Css {
     return round.generate();
   }
 
-  public static StyleSheet generateStyleSheet(Generator.Classes classes, Generator.Option... options) {
+  public static StyleSheet generateStyleSheet(Generator.Classes classes, Option... options) {
     String css;
     css = generateCss(classes, options);
 
@@ -674,7 +675,7 @@ public final class Css {
 
   // options
 
-  public static Generator.Option baseLayer(String contents) {
+  public static Option baseLayer(String contents) {
     Check.notNull(contents, "contents == null");
 
     return new GeneratorOption() {
@@ -685,7 +686,7 @@ public final class Css {
     };
   }
 
-  public static Generator.Option breakpoints(String text) {
+  public static Option breakpoints(String text) {
     CssProperties properties;
     properties = parseProperties(text);
 
@@ -709,18 +710,27 @@ public final class Css {
     };
   }
 
-  public static Generator.Option component(String name, String definition) {
-    Check.notNull(name, "name == null");
+  public static Option components(String text) {
+    Map<String, String> components;
+    components = parseComponents(text);
 
     return new GeneratorOption() {
       @Override
       final void acceptCssConfig(CssConfig config) {
-        config.addComponent(name, definition);
+        for (var entry : components.entrySet()) {
+          String name;
+          name = entry.getKey();
+
+          String definition;
+          definition = entry.getValue();
+
+          config.addComponent(name, definition);
+        }
       }
     };
   }
 
-  public static Generator.Option noteSink(NoteSink noteSink) {
+  public static Option noteSink(NoteSink noteSink) {
     Check.notNull(noteSink, "noteSink == null");
 
     return new GeneratorOption() {
@@ -731,83 +741,83 @@ public final class Css {
     };
   }
 
-  public static Generator.Option overrideBackgroundColor(String text) {
+  public static Option overrideBackgroundColor(String text) {
     return override(Key.BACKGROUND_COLOR, text);
   }
 
-  public static Generator.Option overrideBorderColor(String text) {
+  public static Option overrideBorderColor(String text) {
     return override(Key.BORDER_COLOR, text);
   }
 
-  public static Generator.Option overrideBorderWidth(String text) {
+  public static Option overrideBorderWidth(String text) {
     return override(Key.BORDER_WIDTH, text);
   }
 
-  public static Generator.Option overrideColors(String text) {
+  public static Option overrideColors(String text) {
     return override(Key._COLORS, text);
   }
 
-  public static Generator.Option overrideContent(String text) {
+  public static Option overrideContent(String text) {
     return override(Key.CONTENT, text);
   }
 
-  public static Generator.Option overrideFill(String text) {
+  public static Option overrideFill(String text) {
     return override(Key.FILL, text);
   }
 
-  public static Generator.Option overrideFontSize(String text) {
+  public static Option overrideFontSize(String text) {
     return override(Key.FONT_SIZE, text);
   }
 
-  public static Generator.Option overrideFontWeight(String text) {
+  public static Option overrideFontWeight(String text) {
     return override(Key.FONT_WEIGHT, text);
   }
 
-  public static Generator.Option overrideGridColumn(String text) {
+  public static Option overrideGridColumn(String text) {
     return override(Key.GRID_COLUMN, text);
   }
 
-  public static Generator.Option overrideGridColumnEnd(String text) {
+  public static Option overrideGridColumnEnd(String text) {
     return override(Key.GRID_COLUMN_END, text);
   }
 
-  public static Generator.Option overrideGridColumnStart(String text) {
+  public static Option overrideGridColumnStart(String text) {
     return override(Key.GRID_COLUMN_START, text);
   }
 
-  public static Generator.Option overrideGridTemplateColumns(String text) {
+  public static Option overrideGridTemplateColumns(String text) {
     return override(Key.GRID_TEMPLATE_COLUMNS, text);
   }
 
-  public static Generator.Option overrideGridTemplateRows(String text) {
+  public static Option overrideGridTemplateRows(String text) {
     return override(Key.GRID_TEMPLATE_ROWS, text);
   }
 
-  public static Generator.Option overrideLetterSpacing(String text) {
+  public static Option overrideLetterSpacing(String text) {
     return override(Key.LETTER_SPACING, text);
   }
 
-  public static Generator.Option overrideLineHeight(String text) {
+  public static Option overrideLineHeight(String text) {
     return override(Key.LINE_HEIGHT, text);
   }
 
-  public static Generator.Option overrideOutlineColor(String text) {
+  public static Option overrideOutlineColor(String text) {
     return override(Key.OUTLINE_COLOR, text);
   }
 
-  public static Generator.Option overrideSpacing(String text) {
+  public static Option overrideSpacing(String text) {
     return override(Key._SPACING, text);
   }
 
-  public static Generator.Option overrideTextColor(String text) {
+  public static Option overrideTextColor(String text) {
     return override(Key.TEXT_COLOR, text);
   }
 
-  public static Generator.Option overrideZIndex(String text) {
+  public static Option overrideZIndex(String text) {
     return override(Key.Z_INDEX, text);
   }
 
-  private static Generator.Option override(Key key, String text) {
+  private static Option override(Key key, String text) {
     CssProperties properties;
     properties = parseProperties(text);
 
@@ -819,7 +829,7 @@ public final class Css {
     };
   }
 
-  public static Generator.Option skipReset() {
+  public static Option skipReset() {
     return new GeneratorOption() {
       @Override
       final void acceptCssConfig(CssConfig config) {
@@ -828,7 +838,7 @@ public final class Css {
     };
   }
 
-  public static Generator.Option useLogicalProperties() {
+  public static Option useLogicalProperties() {
     return new GeneratorOption() {
       @Override
       final void acceptCssConfig(CssConfig config) {
@@ -837,7 +847,7 @@ public final class Css {
     };
   }
 
-  public static Generator.Option utility(String className, String text) {
+  public static Option utility(String className, String text) {
     Check.notNull(className, "className == null");
 
     CssProperties properties;
@@ -851,7 +861,7 @@ public final class Css {
     };
   }
 
-  public static Generator.Option variants(String text) {
+  public static Option variants(String text) {
     CssProperties props;
     props = parseProperties(text);
 
@@ -864,6 +874,61 @@ public final class Css {
   }
 
   // private stuff
+
+  static Map<String, String> parseComponents(String text) {
+    GrowableSequencedMap<String, String> map;
+    map = new GrowableSequencedMap<>();
+
+    String name;
+    name = "";
+
+    GrowableList<String> definition;
+    definition = new GrowableList<>();
+
+    String[] lines;
+    lines = text.split("\n");
+
+    for (int number = 0; number < lines.length; number++) {
+      String line = lines[number];
+
+      if (line.isBlank()) {
+        continue;
+      }
+
+      char first;
+      first = line.charAt(0);
+
+      if (first != '#') {
+        definition.add(line);
+
+        continue;
+      }
+
+      if (!definition.isEmpty()) {
+        String value;
+        value = definition.join(" ");
+
+        map.put(name, value);
+
+        definition.clear();
+      }
+
+      name = line.substring(1).trim();
+
+      if (name.isBlank()) {
+        throw new IllegalArgumentException("No component name defined @ line " + (number + 1));
+      }
+    }
+
+    if (!definition.isEmpty()) {
+      String value;
+      value = definition.join(" ");
+
+      map.put(name, value);
+    }
+
+    return map.toUnmodifiableMap();
+  }
 
   static CssProperties parseProperties(String text) {
     CssProperties.Builder builder;

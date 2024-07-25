@@ -22,6 +22,47 @@ import org.testng.annotations.Test;
 
 public class CssTest {
 
+  @Test
+  public void parseComponents01() {
+    assertEquals(
+        Css.parseComponents(""),
+
+        Map.of()
+    );
+  }
+
+  @Test
+  public void parseComponents02() {
+    assertEquals(
+        Css.parseComponents("""
+        # header
+        foo bar
+        baz
+        """),
+
+        Map.of("header", "foo bar baz")
+    );
+  }
+
+  @Test
+  public void parseComponents03() {
+    assertEquals(
+        Css.parseComponents("""
+        # header
+        foo bar
+        baz
+
+        # footer
+        more stuff
+        """),
+
+        Map.of(
+            "header", "foo bar baz",
+            "footer", "more stuff"
+        )
+    );
+  }
+
   @Test(expectedExceptions = IllegalArgumentException.class, expectedExceptionsMessageRegExp = "Empty")
   public void parseProperties01() {
     Css.parseProperties("");

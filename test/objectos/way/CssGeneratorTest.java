@@ -3387,7 +3387,8 @@ public class CssGeneratorTest {
     }
 
     test(
-        Css.component("carbon-grid", """
+        Css.components("""
+        # carbon-grid
         mx-auto grid w-full max-w-screen-max grid-cols-4
         px-0
         md:grid-cols-8 md:px-4
@@ -3444,7 +3445,8 @@ public class CssGeneratorTest {
     }
 
     test(
-        Css.component("foo", """
+        Css.components("""
+        # foo
         hover:bg-transparent after:block after:border
         """),
 
@@ -3472,7 +3474,8 @@ public class CssGeneratorTest {
     }
 
     test(
-        Css.component("foo", """
+        Css.components("""
+        # foo
         border
         """),
 
@@ -3498,11 +3501,11 @@ public class CssGeneratorTest {
     }
 
     test(
-        Css.component("used", """
+        Css.components("""
+        # used
         border
-        """),
 
-        Css.component("not-used", """
+        # not-used
         bg-transparent
         """),
 
@@ -3526,13 +3529,12 @@ public class CssGeneratorTest {
     }
 
     test(
-        Css.component("base", """
+        Css.components("""
+        #base
         block
 
         hover:border
-        """),
-
-        Css.component("foo", """
+        #foo
         base bg-transparent
         """),
 
@@ -3564,11 +3566,10 @@ public class CssGeneratorTest {
     }
 
     test(
-        Css.component("a", """
+        Css.components("""
+        # a
         block b
-        """),
-
-        Css.component("b", """
+        #b
         a bg-transparent
         """),
 
@@ -4207,7 +4208,7 @@ public class CssGeneratorTest {
     );
   }
 
-  private static final Css.Generator.Option COLORS = Css.overrideColors("""
+  private static final Css.Option COLORS = Css.overrideColors("""
   inherit: inherit
   current: currentColor
   transparent: transparent
@@ -4231,7 +4232,7 @@ public class CssGeneratorTest {
     assertEquals(result, expected);
   }
 
-  private void test(Css.Generator.Option extraOption, Class<?> type, String expected) {
+  private void test(Css.Option extraOption, Class<?> type, String expected) {
     String result;
     result = Css.generateCss(
         Css.classes(type),
@@ -4243,23 +4244,6 @@ public class CssGeneratorTest {
         Css.skipReset(),
 
         extraOption
-    );
-
-    assertEquals(result, expected);
-  }
-
-  private void test(Css.Generator.Option extra1, Css.Generator.Option extra2, Class<?> type, String expected) {
-    String result;
-    result = Css.generateCss(
-        Css.classes(type),
-
-        Css.noteSink(TestingNoteSink.INSTANCE),
-
-        COLORS,
-
-        Css.skipReset(),
-
-        extra1, extra2
     );
 
     assertEquals(result, expected);
