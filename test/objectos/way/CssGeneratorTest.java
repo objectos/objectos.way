@@ -3408,12 +3408,10 @@ public class CssGeneratorTest {
           padding-left: 0px;
           padding-right: 0px;
         }
-
         .carbon-grid > * {
           margin-left: 1rem;
           margin-right: 1rem;
         }
-
         @media (min-width: 768px) {
           .carbon-grid {
             grid-template-columns: repeat(8, minmax(0, 1fr));
@@ -3421,13 +3419,11 @@ public class CssGeneratorTest {
             padding-right: 1rem;
           }
         }
-
         @media (min-width: 1024px) {
           .carbon-grid {
             grid-template-columns: repeat(12, minmax(0, 1fr));
           }
         }
-
         @media (min-width: 1536px) {
           .carbon-grid {
             padding-left: 1.5rem;
@@ -3438,7 +3434,7 @@ public class CssGeneratorTest {
     );
   }
 
-  @Test(description = "component: pseudo test")
+  @Test(description = "component: pseudo class/elem test")
   public void component02() {
     class Subject extends AbstractSubject {
       @Override
@@ -3458,11 +3454,36 @@ public class CssGeneratorTest {
         .foo:hover {
           background-color: transparent;
         }
-
         .foo::after {
           border-width: 1px;
           display: block;
         }
+        """
+    );
+  }
+
+  @Test(description = "component: use cached utility")
+  public void component03() {
+    class Subject extends AbstractSubject {
+      @Override
+      final void classes() {
+        className("border foo");
+      }
+    }
+
+    test(
+        Css.component("foo", """
+        border
+        """),
+
+        Subject.class,
+
+        """
+        .foo {
+          border-width: 1px;
+        }
+
+        .border { border-width: 1px }
         """
     );
   }

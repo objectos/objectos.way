@@ -248,17 +248,17 @@ sealed abstract class CssResolver {
 
     private final Map<String, String> properties;
 
-    private final CssValueFormatter valueFormatter;
+    private final Css.ValueFormatter valueFormatter;
 
     private final String propertyName1;
 
     private final String propertyName2;
 
-    public OfProperties(Css.Key key, Map<String, String> properties, CssValueFormatter valueFormatter, String propertyName1) {
+    public OfProperties(Css.Key key, Map<String, String> properties, Css.ValueFormatter valueFormatter, String propertyName1) {
       this(key, properties, valueFormatter, propertyName1, null);
     }
 
-    public OfProperties(Css.Key key, Map<String, String> properties, CssValueFormatter valueFormatter, String propertyName1, String propertyName2) {
+    public OfProperties(Css.Key key, Map<String, String> properties, Css.ValueFormatter valueFormatter, String propertyName1, String propertyName2) {
       this.key = key;
       this.properties = properties;
       this.valueFormatter = valueFormatter;

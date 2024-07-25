@@ -61,11 +61,15 @@ final class CssComponent implements Repository, Rule {
       };
     }
 
+    void writeClassName(StringBuilder out) {
+      Css.writeClassName(out, className);
+    }
+
     final void writeContents(StringBuilder out, Indentation indentation) {
       if (!rules.isEmpty()) {
         indentation.writeTo(out);
 
-        Css.writeClassName(out, className);
+        writeClassName(out);
         out.append(' ');
         out.append('{');
         out.append(System.lineSeparator());
@@ -86,20 +90,12 @@ final class CssComponent implements Repository, Rule {
 
       if (classNameVariants != null) {
         for (Context child : classNameVariants.values()) {
-          if (!out.isEmpty()) {
-            out.append(System.lineSeparator());
-          }
-
           child.write(out, indentation);
         }
       }
 
       if (mediaQueries != null) {
         for (Context child : mediaQueries.values()) {
-          if (!out.isEmpty()) {
-            out.append(System.lineSeparator());
-          }
-
           child.writeTo(out, indentation);
         }
       }
@@ -111,6 +107,10 @@ final class CssComponent implements Repository, Rule {
 
     @Override
     final void write(StringBuilder out, Indentation indentation) {
+      if (!out.isEmpty()) {
+        out.append(System.lineSeparator());
+      }
+
       writeContents(out, indentation);
     }
 
@@ -126,51 +126,17 @@ final class CssComponent implements Repository, Rule {
 
     @Override
     final void write(StringBuilder out, Indentation indentation) {
-      indentation.writeTo(out);
+      writeContents(out, indentation);
+    }
 
+    @Override
+    final void writeClassName(StringBuilder out) {
       int startIndex;
       startIndex = out.length();
 
       Css.writeClassName(out, className);
 
       variant.writeClassName(out, startIndex);
-
-      out.append(' ');
-      out.append('{');
-      out.append(System.lineSeparator());
-
-      Indentation blockIndentation;
-      blockIndentation = indentation.increase();
-
-      for (Rule rule : rules) {
-        rule.writeProps(out, blockIndentation);
-      }
-
-      indentation.writeTo(out);
-
-      out.append('}');
-
-      out.append(System.lineSeparator());
-
-      if (classNameVariants != null) {
-        for (Context child : classNameVariants.values()) {
-          if (!out.isEmpty()) {
-            out.append(System.lineSeparator());
-          }
-
-          child.write(out, blockIndentation);
-        }
-      }
-
-      if (mediaQueries != null) {
-        for (Context child : mediaQueries.values()) {
-          if (!out.isEmpty()) {
-            out.append(System.lineSeparator());
-          }
-
-          child.writeTo(out, indentation);
-        }
-      }
     }
 
   }
@@ -252,8 +218,8 @@ final class CssComponent implements Repository, Rule {
   }
 
   @Override
-  public final void consumeRule(Rule existing) {
-    throw new UnsupportedOperationException("Implement me");
+  public final void consumeRule(String className, Rule existing) {
+    rules.put(className, existing);
   }
 
   @Override

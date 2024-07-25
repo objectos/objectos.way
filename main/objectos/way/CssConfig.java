@@ -50,7 +50,7 @@ final class CssConfig {
 
   private final Map<String, Set<Css.Key>> prefixes = new HashMap<>();
 
-  private CssPropertyType propertyType = CssPropertyType.PHYSICAL;
+  private Css.PropertyType propertyType = Css.PHYSICAL;
 
   private final Map<Css.Key, CssResolver> resolvers = new EnumMap<>(Css.Key.class);
 
@@ -178,7 +178,7 @@ final class CssConfig {
   }
 
   public final void useLogicalProperties() {
-    propertyType = CssPropertyType.LOGICAL;
+    propertyType = Css.LOGICAL;
   }
 
   final Set<Css.Key> getCandidates(String prefix) {
@@ -215,7 +215,7 @@ final class CssConfig {
     return noteSink;
   }
 
-  final CssPropertyType propertyType() {
+  final Css.PropertyType propertyType() {
     return propertyType;
   }
 
@@ -254,9 +254,37 @@ final class CssConfig {
     variants.put(name, variant);
   }
 
-  private static final CssValueFormatter IDENTITY = CssValueFormatter.Identity.INSTANCE;
+  //
+  // ValueFormatter implementations
+  //
 
-  private static final CssValueFormatter NEGATIVE = CssValueFormatter.NegativeValues.INSTANCE;
+  private static final Css.ValueFormatter IDENTITY = new Css.ValueFormatter() {
+    @Override
+    public final String format(String value, boolean negative) {
+      return value;
+    }
+  };
+
+  private static final Css.ValueFormatter NEGATIVE = new Css.ValueFormatter() {
+    @Override
+    public final String format(String value, boolean negative) {
+      return negative ? "-" + value : value;
+    }
+  };
+
+  private Css.ValueFormatter ofFunc(Function<String, String> function) {
+    return (value, negative) -> function.apply(value);
+  }
+
+  private Css.ValueFormatter ofFuncNeg(String functionName) {
+    return (value, negative) -> negative
+        ? functionName + "(-" + value + ")"
+        : functionName + "(" + value + ")";
+  }
+
+  //
+  // SPEC
+  //
 
   final void spec() {
     // be mindful of method size
@@ -1416,8 +1444,8 @@ final class CssConfig {
         spacing
     ));
 
-    funcUtility(Css.Key.TRANSLATE_X, translate, new CssValueFormatter.OfFunctionNeg("translateX"), "translate-x", "transform");
-    funcUtility(Css.Key.TRANSLATE_Y, translate, new CssValueFormatter.OfFunctionNeg("translateY"), "translate-y", "transform");
+    funcUtility(Css.Key.TRANSLATE_X, translate, ofFuncNeg("translateX"), "translate-x", "transform");
+    funcUtility(Css.Key.TRANSLATE_Y, translate, ofFuncNeg("translateY"), "translate-y", "transform");
 
     // U
 
@@ -1551,10 +1579,6 @@ final class CssConfig {
     );
   }
 
-  private CssValueFormatter ofFunc(Function<String, String> function) {
-    return new CssValueFormatter.OfLambda(function);
-  }
-
   private void colorUtility(Css.Key key, Map<String, String> values, String prefix, String propertyName) {
     colorUtility(key, values, prefix, propertyName, null);
   }
@@ -1612,21 +1636,21 @@ final class CssConfig {
 
   private void funcUtility(
       Css.Key key,
-      Map<String, String> values, CssValueFormatter formatter,
+      Map<String, String> values, Css.ValueFormatter formatter,
       String prefix) {
     funcUtility(key, values, formatter, prefix, prefix, null);
   }
 
   private void funcUtility(
       Css.Key key,
-      Map<String, String> values, CssValueFormatter formatter,
+      Map<String, String> values, Css.ValueFormatter formatter,
       String prefix, String propertyName) {
     funcUtility(key, values, formatter, prefix, propertyName, null);
   }
 
   private void funcUtility(
       Css.Key key,
-      Map<String, String> values, CssValueFormatter formatter,
+      Map<String, String> values, Css.ValueFormatter formatter,
       String prefix, String propertyName1, String propertyName2) {
 
     CssResolver resolver;

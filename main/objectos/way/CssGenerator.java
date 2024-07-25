@@ -43,7 +43,18 @@ final class CssGenerator extends CssGeneratorAdapter implements Css.Generator, C
     }
 
     final void writeContents(StringBuilder out, Css.Indentation indentation) {
+      int lastKind = 0;
+
       for (Css.Rule rule : rules) {
+        int kind;
+        kind = rule.kind();
+
+        if (lastKind == 1 && kind == 2) {
+          out.append(System.lineSeparator());
+        }
+
+        lastKind = kind;
+
         rule.writeTo(out, indentation);
       }
 
@@ -166,11 +177,11 @@ final class CssGenerator extends CssGeneratorAdapter implements Css.Generator, C
   }
 
   @Override
-  final void consumeExisting(Css.Rule existing) {
+  final void consumeExisting(String token, Css.Rule existing) {
     Css.Repository repository;
     repository = repositories.peek();
 
-    repository.consumeRule(existing);
+    repository.consumeRule(token, existing);
   }
 
   @Override
@@ -319,7 +330,7 @@ final class CssGenerator extends CssGeneratorAdapter implements Css.Generator, C
   }
 
   @Override
-  public final void consumeRule(Css.Rule existing) {
+  public final void consumeRule(String className, Css.Rule existing) {
     // noop
   }
 

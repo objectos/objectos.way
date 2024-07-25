@@ -71,6 +71,10 @@ public final class Css {
   // non-public types
   //
 
+  //
+  // B
+  //
+
   record Breakpoint(int index, String name, String value) implements MediaQuery {
     @Override
     public final int compareTo(Variant o) {
@@ -91,6 +95,10 @@ public final class Css {
       out.append(System.lineSeparator());
     }
   }
+
+  //
+  // C
+  //
 
   record ClassNameFormat(String before, String after) implements ClassNameVariant {
     @Override
@@ -381,11 +389,19 @@ public final class Css {
 
   }
 
+  //
+  // M
+  //
+
   sealed interface MediaQuery extends Variant {
 
     void writeMediaQueryStart(StringBuilder out, Indentation indentation);
 
   }
+
+  //
+  // N
+  //
 
   private static final class NoOpRule implements Rule {
 
@@ -420,13 +436,135 @@ public final class Css {
 
   }
 
+  //
+  // P
+  //
+
+  record PropertyType(String borderColorTop,
+                      String borderColorRight,
+                      String borderColorBottom,
+                      String borderColorLeft,
+
+                      String borderRadiusTopLeft,
+                      String borderRadiusTopRight,
+                      String borderRadiusBottomRight,
+                      String borderRadiusBottomLeft,
+
+                      String borderWidthTop,
+                      String borderWidthRight,
+                      String borderWidthBottom,
+                      String borderWidthLeft,
+
+                      String marginTop,
+                      String marginRight,
+                      String marginBottom,
+                      String marginLeft,
+
+                      String paddingTop,
+                      String paddingRight,
+                      String paddingBottom,
+                      String paddingLeft,
+
+                      String height,
+                      String maxHeight,
+                      String minHeight,
+
+                      String width,
+                      String maxWidth,
+                      String minWidth,
+
+                      String top,
+                      String right,
+                      String bottom,
+                      String left) {}
+
+  static final PropertyType PHYSICAL = new PropertyType(
+      "border-top-color",
+      "border-right-color",
+      "border-bottom-color",
+      "border-left-color",
+
+      "border-top-left-radius",
+      "border-top-right-radius",
+      "border-bottom-right-radius",
+      "border-bottom-left-radius",
+
+      "border-top-width",
+      "border-right-width",
+      "border-bottom-width",
+      "border-left-width",
+
+      "margin-top",
+      "margin-right",
+      "margin-bottom",
+      "margin-left",
+
+      "padding-top",
+      "padding-right",
+      "padding-bottom",
+      "padding-left",
+
+      "height",
+      "max-height",
+      "min-height",
+
+      "width",
+      "max-width",
+      "min-width",
+
+      "top",
+      "right",
+      "bottom",
+      "left"
+  );
+
+  static final PropertyType LOGICAL = new PropertyType(
+      "border-block-start-color",
+      "border-inline-end-color",
+      "border-block-end-color",
+      "border-inline-start-color",
+
+      "border-start-start-radius",
+      "border-start-end-radius",
+      "border-end-end-radius",
+      "border-end-start-radius",
+
+      "border-block-start-width",
+      "border-inline-end-width",
+      "border-block-end-width",
+      "border-inline-start-width",
+
+      "margin-block-start",
+      "margin-inline-end",
+      "margin-block-end",
+      "margin-inline-start",
+
+      "padding-block-start",
+      "padding-inline-end",
+      "padding-block-end",
+      "padding-inline-start",
+
+      "block-size",
+      "max-block-size",
+      "min-block-size",
+
+      "inline-size",
+      "max-inline-size",
+      "min-inline-size",
+
+      "inset-block-start",
+      "inset-inline-end",
+      "inset-block-end",
+      "inset-inline-start"
+  );
+
   sealed interface Repository permits CssComponent, CssGenerator {
 
     void cycleCheck(String className);
 
-    void consumeRule(Rule existing);
+    void consumeRule(String className, Rule existing);
 
-    void putRule(String className, Rule fragment);
+    void putRule(String className, Rule rule);
 
   }
 
@@ -477,6 +615,17 @@ public final class Css {
     public final byte[] toByteArray() {
       return css.getBytes(StandardCharsets.UTF_8);
     }
+
+  }
+
+  //
+  // V
+  //
+
+  @FunctionalInterface
+  interface ValueFormatter {
+
+    String format(String value, boolean negative);
 
   }
 

@@ -46,7 +46,7 @@ class CssGeneratorAdapter {
     }
 
     else {
-      consumeExisting(existing);
+      consumeExisting(token, existing);
     }
   }
 
@@ -61,7 +61,7 @@ class CssGeneratorAdapter {
     }
   }
 
-  void consumeExisting(Css.Rule existing) {
+  void consumeExisting(String className, Css.Rule existing) {
     throw new UnsupportedOperationException("Implement me");
   }
 

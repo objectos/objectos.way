@@ -63,7 +63,7 @@ public class CssGeneratorAdapterTest {
       }
 
       @Override
-      final void consumeExisting(Css.Rule existing) {
+      final void consumeExisting(String token, Css.Rule existing) {
         hit = existing;
       }
 
