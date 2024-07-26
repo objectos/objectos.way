@@ -1450,6 +1450,28 @@ public class HtmlTemplateTest {
     );
   }
 
+  @Test(description = """
+  SVG element can have a title element
+  """)
+  public void testCase63() {
+    test(
+        new Html.Template() {
+          @Override
+          protected final void render() throws IOException {
+            svg(
+                title("svg title")
+            );
+          }
+        },
+
+        """
+        <svg>
+        <title>svg title</title>
+        </svg>
+        """
+    );
+  }
+
   private void test(Html.Template template, String expected) {
     String result;
     result = template.toString();

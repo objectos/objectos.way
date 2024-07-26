@@ -21,7 +21,7 @@ enum HtmlAmbiguous {
 
   CLIPPATH(HtmlAttributeName.CLIP_PATH, HtmlElementName.CLIPPATH) {
     @Override
-    public final boolean isAttributeOf(ElementName arg0) {
+    public final boolean isAttributeOf(ElementName element) {
       return element != HtmlElementName.SVG;
     }
   },
@@ -44,7 +44,8 @@ enum HtmlAmbiguous {
   TITLE(HtmlAttributeName.TITLE, HtmlElementName.TITLE) {
     @Override
     public final boolean isAttributeOf(Html.ElementName element) {
-      return element != HtmlElementName.HEAD;
+      return element != HtmlElementName.HEAD
+          && element != HtmlElementName.SVG;
     }
   };
 
