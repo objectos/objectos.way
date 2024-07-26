@@ -25,7 +25,12 @@ final class Index extends CarbonPage {
 
   @Override
   protected final void preRender() {
-    shellTitle("Objectos Carbon");
+    topSection = TopSection.HOME;
+  }
+
+  @Override
+  protected final void renderHead() {
+    title("Objectos Carbon");
   }
 
   @Override

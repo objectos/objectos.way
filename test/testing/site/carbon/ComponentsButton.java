@@ -25,9 +25,12 @@ final class ComponentsButton extends CarbonPage {
 
   @Override
   protected final void preRender() {
-    shellTitle("Button - Objectos Carbon");
-
     topSection = TopSection.COMPONENTS;
+  }
+
+  @Override
+  protected final void renderHead() {
+    title("Button - Objectos Carbon");
   }
 
   @Override

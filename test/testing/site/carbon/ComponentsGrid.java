@@ -25,9 +25,12 @@ final class ComponentsGrid extends CarbonPage {
 
   @Override
   protected final void preRender() {
-    shellTitle("Grid - Objectos Carbon");
-
     topSection = TopSection.COMPONENTS;
+  }
+
+  @Override
+  protected final void renderHead() {
+    title("Grid - Objectos Carbon");
   }
 
   @Override

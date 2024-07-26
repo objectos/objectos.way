@@ -53,7 +53,7 @@ public final class Carbon {
   /**
    * The UI shell is the top-level UI component of an web application.
    */
-  public static abstract class Shell extends CarbonShell {
+  public static abstract class Shell extends CarbonTemplate {
 
     /**
      * Sole constructor.

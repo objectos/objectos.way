@@ -15,17 +15,11 @@
  */
 package objectos.way;
 
-import objectos.lang.object.Check;
-
-abstract class CarbonShell extends Html.Template implements Web.Action {
+abstract class CarbonTemplate extends Html.Template implements Web.Action {
 
   private final Http.Exchange http;
 
-  private String theme = "theme-white";
-
-  private String title = "New Objectos Carbon application";
-
-  protected CarbonShell(Http.Exchange http) {
+  protected CarbonTemplate(Http.Exchange http) {
     this.http = http;
   }
 
@@ -34,27 +28,16 @@ abstract class CarbonShell extends Html.Template implements Web.Action {
     http.ok(this);
   }
 
-  @Override
-  protected final void render() throws Exception {
-    doctype();
-
-    html(
-        className(theme),
-
-        head(
-            meta(charset("utf-8")),
-            meta(httpEquiv("content-type"), content("text/html; charset=utf-8")),
-            meta(name("viewport"), content("width=device-width, initial-scale=1")),
-            script(src("/ui/script.js")),
-            link(rel("shortcut icon"), type("image/x-icon"), href("/favicon.png")),
-            link(rel("stylesheet"), type("text/css"), href("/ui/carbon.css")),
-            title != null ? title(title) : noop()
-        ),
-
-        body(
-            f(this::renderShell)
-        )
-    );
+  /**
+   * Renders the standard {@code head} contents.
+   */
+  protected final void renderStandardHead() {
+    meta(charset("utf-8"));
+    meta(httpEquiv("content-type"), content("text/html; charset=utf-8"));
+    meta(name("viewport"), content("width=device-width, initial-scale=1"));
+    link(rel("shortcut icon"), type("image/x-icon"), href("/favicon.png"));
+    link(rel("stylesheet"), type("text/css"), href("/ui/carbon.css"));
+    script(src("/ui/script.js"));
   }
 
   protected final boolean currentPage(String href) {
@@ -103,16 +86,6 @@ abstract class CarbonShell extends Html.Template implements Web.Action {
 
         raw(icon.raw)
     );
-  }
-
-  protected abstract void renderShell();
-
-  protected final void shellTheme(String theme) {
-    this.theme = Check.notNull(theme, "theme == null");
-  }
-
-  protected final void shellTitle(String title) {
-    this.title = Check.notNull(title, "title == null");
   }
 
 }

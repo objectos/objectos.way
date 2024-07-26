@@ -38,7 +38,26 @@ abstract class CarbonPage extends Carbon.Shell {
   }
 
   @Override
-  protected final void renderShell() {
+  protected final void render() throws Exception {
+    doctype();
+
+    html(
+        className("theme-white"),
+
+        head(
+            f(this::renderStandardHead),
+            f(this::renderHead)
+        ),
+
+        body(
+            f(this::renderBody)
+        )
+    );
+  }
+
+  protected abstract void renderHead();
+
+  private void renderBody() {
     final Html.Id closeButton;
     closeButton = Html.id("close-button");
 
