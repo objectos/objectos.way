@@ -18,6 +18,7 @@ package objectos.way;
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import objectos.lang.object.Check;
+import objectos.way.Css.Generator.Classes;
 
 /**
  * The <strong>Objectos Carbon UI</strong> main class.
@@ -26,27 +27,7 @@ import objectos.lang.object.Check;
  * Objectos Carbon UI is an implementation of the Carbon Design System in pure
  * Java.
  */
-public final class Carbon extends CarbonClasses {
-
-  /**
-   * The White theme.
-   */
-  public static final Html.ClassName WHITE = Html.className("cds--white");
-
-  /**
-   * The Gray 10 theme.
-   */
-  public static final Html.ClassName G10 = Html.className("cds--g10");
-
-  /**
-   * The Gray 90 theme.
-   */
-  public static final Html.ClassName G90 = Html.className("cds--g90");
-
-  /**
-   * The Gray 100 theme.
-   */
-  public static final Html.ClassName G100 = Html.className("cds--g100");
+public final class Carbon {
 
   public enum Icon {
 
@@ -65,6 +46,11 @@ public final class Carbon extends CarbonClasses {
   }
 
   /**
+   * A Carbon configuration option.
+   */
+  public sealed interface Option {}
+
+  /**
    * The UI shell is the top-level UI component of an web application.
    */
   public static abstract class Shell extends CarbonShell {
@@ -81,10 +67,70 @@ public final class Carbon extends CarbonClasses {
 
   }
 
-  private Carbon() {}
+  //
+  // non-public types
+  //
 
-  public static Carbon create() {
-    return new Carbon();
+  private static final class Builder {
+
+    Css.Generator.Classes classes;
+
+    public final Carbon build() {
+      return new Carbon(
+          classes != null ? classes : Css.classes()
+      );
+    }
+
+    final void classes(Classes value) {
+      Check.state(classes == null, "classes was already set");
+
+      classes = value;
+    }
+
+  }
+
+  private non-sealed static abstract class CarbonOption implements Option {
+
+    abstract void acceptBuilder(Builder builder);
+
+  }
+
+  private final Css.Generator.Classes classes;
+
+  private Carbon(Css.Generator.Classes classes) {
+    this.classes = classes;
+  }
+
+  /**
+   * Creates a new carbon instance with the specified configuration options.
+   */
+  public static Carbon create(Option... options) {
+    Builder builder;
+    builder = new Builder();
+
+    for (int i = 0; i < options.length; i++) {
+      Option o;
+      o = Check.notNull(options[i], "options[", i, "] == null");
+
+      CarbonOption option;
+      option = (CarbonOption) o;
+
+      option.acceptBuilder(builder);
+    }
+
+    return builder.build();
+  }
+
+  public static Option classes(Class<?>... classesToScan) {
+    Classes value;
+    value = Css.classes(classesToScan);
+
+    return new CarbonOption() {
+      @Override
+      final void acceptBuilder(Builder builder) {
+        builder.classes(value);
+      }
+    };
   }
 
   public final Http.Module createHttpModule() {
@@ -100,7 +146,7 @@ public final class Carbon extends CarbonClasses {
       @Override
       protected final void configure() {
         route("/ui/script.js", GET(this::script));
-        route("/ui/carbon.css", GET(new CarbonStyles()));
+        route("/ui/carbon.css", GET(new CarbonStyles(classes)));
 
         filter(this::injectCarbon);
       }

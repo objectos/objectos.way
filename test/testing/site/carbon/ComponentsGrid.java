@@ -15,7 +15,6 @@
  */
 package testing.site.carbon;
 
-import objectos.way.Carbon;
 import objectos.way.Http;
 
 final class ComponentsGrid extends CarbonPage {
@@ -34,32 +33,25 @@ final class ComponentsGrid extends CarbonPage {
   @Override
   protected final void renderContent() {
     div(
-        Carbon.WIDE_GRID,
-        Carbon.GRID_FULL_WIDTH,
-        className("carbon-grid max-w-full mt-05 bg-layer"),
+        className("grid-wide max-w-full mt-05 bg-layer"),
 
         h1(
-            Carbon.COL_SPAN_FULL,
-            Carbon.TILE,
+            className("col-span-full tile"),
 
             t("Span full")
         )
     );
 
     div(
-        Carbon.WIDE_GRID,
-        Carbon.GRID_FULL_WIDTH,
+        className("grid-wide max-w-full"),
 
         p(
-            Carbon.COL_SPAN_4,
-            Carbon.TILE,
+            className("col-span-4 tile"),
 
             t("Span 4")
         ),
         p(
-            Carbon.COL_SPAN_2,
-            Carbon.LG_COL_SPAN_4,
-            Carbon.TILE,
+            className("col-span-2 lg:col-span-4 tile"),
 
             t("Span 2 / Span 4 (lg)")
         )

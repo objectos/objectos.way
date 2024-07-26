@@ -27,7 +27,15 @@ public final class CarbonWeb extends Web.Module {
   @Override
   protected final void configure() {
     Carbon carbon;
-    carbon = Carbon.create();
+    carbon = Carbon.create(
+        Carbon.classes(
+            CarbonPage.class,
+            Components.class,
+            ComponentsButton.class,
+            ComponentsGrid.class,
+            Index.class
+        )
+    );
 
     install(carbon.createHttpModule());
 

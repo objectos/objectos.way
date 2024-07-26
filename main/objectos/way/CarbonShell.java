@@ -21,7 +21,7 @@ abstract class CarbonShell extends Html.Template implements Web.Action {
 
   private final Http.Exchange http;
 
-  private Html.ClassName theme = Carbon.WHITE;
+  private String theme = "theme-white";
 
   private String title = "New Objectos Carbon application";
 
@@ -39,7 +39,7 @@ abstract class CarbonShell extends Html.Template implements Web.Action {
     doctype();
 
     html(
-        theme,
+        className(theme),
 
         head(
             meta(charset("utf-8")),
@@ -67,6 +67,16 @@ abstract class CarbonShell extends Html.Template implements Web.Action {
     return path.equals(href);
   }
 
+  protected final boolean currentPageStartsWith(String href) {
+    Http.Request.Target target;
+    target = http.target();
+
+    String path;
+    path = target.path();
+
+    return path.startsWith(href);
+  }
+
   protected final Html.ElementInstruction icon16(Carbon.Icon icon, Html.AttributeInstruction... attributes) {
     return renderIcon(icon, "16px", attributes);
   }
@@ -75,7 +85,7 @@ abstract class CarbonShell extends Html.Template implements Web.Action {
     return renderIcon(icon, "20px", attributes);
   }
 
-  protected final Html.ElementInstruction siz24(Carbon.Icon icon, Html.AttributeInstruction... attributes) {
+  protected final Html.ElementInstruction icon24(Carbon.Icon icon, Html.AttributeInstruction... attributes) {
     return renderIcon(icon, "24px", attributes);
   }
 
@@ -97,7 +107,7 @@ abstract class CarbonShell extends Html.Template implements Web.Action {
 
   protected abstract void renderShell();
 
-  protected final void shellTheme(Html.ClassName theme) {
+  protected final void shellTheme(String theme) {
     this.theme = Check.notNull(theme, "theme == null");
   }
 

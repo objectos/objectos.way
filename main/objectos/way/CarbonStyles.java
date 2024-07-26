@@ -15,11 +15,17 @@
  */
 package objectos.way;
 
-final class CarbonStyles implements Http.Handler {
+final class CarbonStyles extends CarbonComponents implements Http.Handler {
+
+  private final Css.Generator.Classes classes;
+
+  public CarbonStyles(Css.Generator.Classes classes) {
+    this.classes = classes;
+  }
 
   private Css.StyleSheet generateStyleSheet() {
     return Css.generateStyleSheet(
-        Css.classes(CarbonClasses.class),
+        classes,
 
         Css.useLogicalProperties(),
 
@@ -32,7 +38,7 @@ final class CarbonStyles implements Http.Handler {
         """),
 
         Css.baseLayer("""
-        .cds--white {
+        .theme-white {
           --cds-background: #ffffff;
           --cds-background-active: rgba(141, 141, 141, 0.5);
           --cds-background-brand: #0f62fe;
@@ -83,7 +89,7 @@ final class CarbonStyles implements Http.Handler {
         """),
 
         Css.baseLayer("""
-        .cds--g10 {
+        .theme-g10 {
           --cds-background: #f4f4f4;
           --cds-background-active: rgba(141, 141, 141, 0.5);
           --cds-background-brand: #0f62fe;
@@ -134,7 +140,7 @@ final class CarbonStyles implements Http.Handler {
         """),
 
         Css.baseLayer("""
-        .cds--g90 {
+        .theme-g90 {
           --cds-background: #262626;
           --cds-background-active: rgba(141, 141, 141, 0.4);
           --cds-background-brand: #0f62fe;
@@ -185,7 +191,7 @@ final class CarbonStyles implements Http.Handler {
         """),
 
         Css.baseLayer("""
-        .cds--g100 {
+        .theme-g100 {
           --cds-background: #161616;
           --cds-background-active: rgba(141, 141, 141, 0.4);
           --cds-background-brand: #0f62fe;
@@ -316,6 +322,18 @@ final class CarbonStyles implements Http.Handler {
           --cds-border-tile: var(--cds-border-tile-03, #c6c6c6)
         }
         """),
+
+        button(),
+
+        grid(),
+
+        header(),
+
+        overlay(),
+
+        sideNav(),
+
+        tile(),
 
         Css.overrideBackgroundColor("""
         : var(--cds-background)

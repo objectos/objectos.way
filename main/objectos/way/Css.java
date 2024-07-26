@@ -104,8 +104,15 @@ public final class Css {
   record ClassNameFormat(String before, String after) implements ClassNameVariant {
     @Override
     public final int compareTo(Variant o) {
-      if (o instanceof ClassNameFormat) {
-        return 0;
+      if (o instanceof ClassNameFormat that) {
+        int result;
+        result = before.compareTo(that.before);
+
+        if (result != 0) {
+          return result;
+        }
+
+        return after.compareTo(that.after);
       }
 
       if (o instanceof ClassNameSuffix) {

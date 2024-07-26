@@ -51,29 +51,27 @@ abstract class CarbonPage extends Carbon.Shell {
     final Html.Id sideNav;
     sideNav = Html.id("side-nav");
 
-    final Script.Action closeMenuAction = Script.actions(
-        Script.addClass(closeButton, Carbon.HIDDEN),
-        Script.removeClass(menuButton, Carbon.HIDDEN),
-        Script.addClass(overlay, Carbon.HIDDEN, Carbon.OPACITY_0),
-        Script.removeClass(overlay, Carbon.OPACITY_100),
-        Script.removeClass(sideNav, Carbon.VISIBLE, Carbon.SIDE_NAV_WIDTH)
+    final Script.Action openMenuAction = Script.actions(
+        Script.replaceClass(closeButton, "header-close-button", "header-close-button-toggle"),
+        Script.replaceClass(menuButton, "header-menu-button", "header-menu-button-toggle"),
+        Script.replaceClass(overlay, "overlay", "overlay-toggle"),
+        Script.replaceClass(sideNav, "side-nav", "side-nav-toggle")
     );
 
-    final Script.Action openMenuAction = Script.actions(
-        Script.removeClass(closeButton, Carbon.HIDDEN),
-        Script.addClass(menuButton, Carbon.HIDDEN),
-        Script.removeClass(overlay, Carbon.HIDDEN, Carbon.OPACITY_0),
-        Script.addClass(overlay, Carbon.OPACITY_100),
-        Script.addClass(sideNav, Carbon.VISIBLE, Carbon.SIDE_NAV_WIDTH)
+    final Script.Action closeMenuAction = Script.actions(
+        Script.replaceClass(closeButton, "header-close-button", "header-close-button-toggle", true),
+        Script.replaceClass(menuButton, "header-menu-button", "header-menu-button-toggle", true),
+        Script.replaceClass(overlay, "overlay", "overlay-toggle", true),
+        Script.replaceClass(sideNav, "side-nav", "side-nav-toggle", true)
     );
 
     header(
-        Carbon.G100, Carbon.HEADER,
+        className("theme-g100 header"),
 
         ariaLabel("Objectos Carbon"),
 
         button(
-            menuButton, Carbon.HEADER_MENU_BUTTON,
+            menuButton, className("header-menu-button"),
 
             ariaLabel("Open menu"), title("Open"), type("button"),
 
@@ -83,7 +81,7 @@ abstract class CarbonPage extends Carbon.Shell {
         ),
 
         button(
-            closeButton, Carbon.HEADER_CLOSE_BUTTON,
+            closeButton, className("header-close-button"),
 
             ariaLabel("Close menu"), title("Close"), type("button"),
 
@@ -93,7 +91,7 @@ abstract class CarbonPage extends Carbon.Shell {
         ),
 
         a(
-            Carbon.HEADER_NAME,
+            className("header-name"),
 
             dataOnClick(closeMenuAction),
             dataOnClick(Script.location("/")),
@@ -104,36 +102,36 @@ abstract class CarbonPage extends Carbon.Shell {
         ),
 
         nav(
-            Carbon.HEADER_NAV,
+            className("header-nav"),
 
             ariaLabel("Objectos Carbon navigation"),
 
             dataFrame("header-nav", topSection.name()),
 
             ul(
-                Carbon.HEADER_NAV_LIST,
+                className("header-nav-list"),
 
                 f(this::renderHeaderNavItems)
             )
         )
     );
 
-    div(overlay, Carbon.OVERLAY, Carbon.HEADER_OFFSET);
+    div(overlay, className("overlay header-offset"));
 
     nav(
-        sideNav, Carbon.G100, Carbon.SIDE_NAV, Carbon.SIDE_NAV_PERSISTENT, Carbon.HEADER_OFFSET,
+        sideNav, className("theme-g100 side-nav side-nav-persistent header-offset"),
 
         ariaLabel("Side navigation"),
 
         tabindex("-1"),
 
         ul(
-            Carbon.SIDE_NAV_LIST,
+            className("side-nav-list"),
 
             dataFrame("side-nav", getClass().getSimpleName()),
 
             ul(
-                Carbon.SIDE_NAV_HEADER_LIST,
+                className("side-nav-header-list"),
 
                 f(this::renderSideNavHeaderItems, closeMenuAction)
             ),
@@ -145,8 +143,7 @@ abstract class CarbonPage extends Carbon.Shell {
     main(
         dataFrame("main", getClass().getSimpleName()),
 
-        Carbon.HEADER_OFFSET,
-        Carbon.SIDE_NAV_OFFSET,
+        className("header-offset side-nav-offset"),
 
         f(this::renderContent)
     );
@@ -156,11 +153,9 @@ abstract class CarbonPage extends Carbon.Shell {
     for (MenuItem item : HEADER_MENU) {
       li(
           a(
-              Carbon.HEADER_NAV_LINK,
-
-              currentPage(item.href)
-                  ? Carbon.HEADER_NAV_LINK_ACTIVE
-                  : Carbon.HEADER_NAV_LINK_INACTIVE,
+              currentPageStartsWith(item.href)
+                  ? className("header-nav-link-active")
+                  : className("header-nav-link-inactive"),
 
               href(item.href),
 
@@ -176,11 +171,9 @@ abstract class CarbonPage extends Carbon.Shell {
     for (MenuItem item : HEADER_MENU) {
       li(
           a(
-              Carbon.SIDE_NAV_HEADER_LINK,
-
               currentPage(item.href)
-                  ? Carbon.SIDE_NAV_HEADER_LINK_ACTIVE
-                  : Carbon.SIDE_NAV_HEADER_LINK_INACTIVE,
+                  ? className("side-nav-header-link-active")
+                  : className("side-nav-header-link-inactive"),
 
               dataOnClick(clickAction),
 
@@ -209,14 +202,12 @@ abstract class CarbonPage extends Carbon.Shell {
 
   private void renderSideNavLink(String title, String href, Script.Action clickAction) {
     li(
-        Carbon.SIDE_NAV_ITEM,
+        className("side-nav-item"),
 
         a(
-            Carbon.SIDE_NAV_LINK,
-
             currentPage(href)
-                ? Carbon.SIDE_NAV_LINK_ACTIVE
-                : Carbon.SIDE_NAV_LINK_INACTIVE,
+                ? className("side-nav-link-active")
+                : className("side-nav-link-inactive"),
 
             dataOnClick(clickAction),
 

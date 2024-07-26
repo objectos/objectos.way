@@ -3588,6 +3588,47 @@ public class CssGeneratorTest {
   }
 
   @Test
+  public void component07() {
+    class Subject extends AbstractSubject {
+      @Override
+      final void classes() {
+        className("foo");
+      }
+    }
+
+    test(
+        Css.components("""
+        # bar
+        block
+        svg:bg-transparent
+
+        # foo
+        bar
+        more:hidden
+        """),
+
+        Css.variants("""
+        more: &:not(:root)
+        svg: & svg
+        """),
+
+        Subject.class,
+
+        """
+        .foo {
+          display: block;
+        }
+        .foo svg {
+          background-color: transparent;
+        }
+        .foo:not(:root) {
+          display: none;
+        }
+        """
+    );
+  }
+
+  @Test
   public void overrideBackgroundColor() {
     class Subject extends AbstractSubject {
       @Override
@@ -4244,6 +4285,23 @@ public class CssGeneratorTest {
         Css.skipReset(),
 
         extraOption
+    );
+
+    assertEquals(result, expected);
+  }
+
+  private void test(Css.Option extra01, Css.Option extra02, Class<?> type, String expected) {
+    String result;
+    result = Css.generateCss(
+        Css.classes(type),
+
+        Css.noteSink(TestingNoteSink.INSTANCE),
+
+        COLORS,
+
+        Css.skipReset(),
+
+        extra01, extra02
     );
 
     assertEquals(result, expected);

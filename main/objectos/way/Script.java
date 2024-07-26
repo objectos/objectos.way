@@ -215,14 +215,20 @@ public final class Script {
     return replaceClass0(id, from.value(), to.value());
   }
 
-  public static Action replaceClass(Html.Id id,
-      String from,
-      String to) {
+  public static Action replaceClass(Html.Id id, String from, String to) {
     Check.notNull(id, "id == null");
     Check.notNull(from, "from == null");
     Check.notNull(to, "to == null");
 
     return replaceClass0(id, from, to);
+  }
+
+  public static Action replaceClass(Html.Id id, String from, String to, boolean reverse) {
+    Check.notNull(id, "id == null");
+    Check.notNull(from, "from == null");
+    Check.notNull(to, "to == null");
+
+    return !reverse ? replaceClass0(id, from, to) : replaceClass0(id, to, from);
   }
 
   public static Action setProperty(Html.Id id, String name, String value) {
