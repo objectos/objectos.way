@@ -77,7 +77,7 @@ abstract class CarbonComponents {
     flex h-full select-none items-center
     border-2 border-transparent
     px-16px
-    text-body-compact-01 text-primary font-600 leading-20px tracking-0.1px
+    body-compact-01 text-primary font-600 leading-20px tracking-0.1px
     outline-none
     transition-colors duration-100
     focus:border-focus
@@ -97,7 +97,7 @@ abstract class CarbonComponents {
     border-2 border-transparent
     bg
     px-16px
-    text-14px leading-18px tracking-0 font-400
+    text-14px leading-18px font-400 tracking-0px
     transition-colors duration-100
     active:bg-active active:text-primary
     focus:border-focus focus:outline-none
@@ -157,7 +157,7 @@ abstract class CarbonComponents {
     items-center justify-between whitespace-nowrap
     border-2 border-transparent
     px-16px
-    text-heading-compact-01 text-secondary
+    heading-compact-01 text-secondary
     outline outline-2 -outline-offset-2 outline-transparent
     transition-colors duration-100
     active:bg-active active:text-primary
@@ -187,7 +187,7 @@ abstract class CarbonComponents {
     relative flex min-h-32px
     items-center justify-between whitespace-nowrap
     px-16px
-    text-heading-compact-01
+    heading-compact-01
     outline outline-2 -outline-offset-2 outline-transparent
     transition-colors duration-100
 
@@ -222,6 +222,71 @@ abstract class CarbonComponents {
     bg-layer
     p-16px
     outline outline-2 -outline-offset-2 outline-transparent
+    """);
+  }
+
+  final Css.Option typography() {
+    return Css.components("""
+    # body-compact-01
+    text-14px leading-18px font-400 tracking-0.16px
+
+    # body-compact-02
+    text-16px leading-22px font-400 tracking-0px
+
+    # body-01
+    text-14px leading-20px font-400 tracking-0.16px
+
+    # body-02
+    text-16px leading-24px font-400 tracking-0px
+
+    # heading-compact-01
+    text-14px leading-18px font-600 tracking-0.16px
+
+    # heading-compact-02
+    text-16px leading-22px font-600 tracking-0px
+
+    # heading-01
+    text-14px leading-20px font-600 tracking-0.16px
+
+    # heading-02
+    text-16px leading-24px font-600 tracking-0px
+
+    # heading-03
+    text-20px leading-28px font-400 tracking-0px
+
+    # heading-04
+    text-28px leading-36px font-400 tracking-0px
+
+    # heading-05
+    text-32px leading-40px font-400 tracking-0px
+
+    # heading-06
+    text-42px leading-50px font-300 tracking-0px
+
+    # heading-07
+    text-54px leading-64px font-300 tracking-0px
+
+    # fluid-heading-03
+    text-20px leading-28px font-400 tracking-0px
+    max:text-24px
+
+    # fluid-heading-04
+    text-28px leading-36px font-400 tracking-0px
+    xl:text-32px xl:leading-40px
+
+    # fluid-heading-05
+    text-32px leading-40px font-400 tracking-0px
+    md:text-36px md:leading-44px md:font-300
+    lg:text-42px lg:leading-50px
+    xl:text-48px xl:leading-56px
+    max:text-60px max:leading-70px
+
+    # fluid-heading-06
+    text-32px leading-40px font-600 tracking-0px
+    md:text-36px md:leading-44px md:font-600
+    lg:text-42px lg:leading-50px
+    xl:text-48px xl:leading-56px
+    max:text-60px max:leading-70px
     """);
   }
 

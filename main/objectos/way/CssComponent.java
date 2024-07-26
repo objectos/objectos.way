@@ -17,7 +17,7 @@ package objectos.way;
 
 import java.util.Map;
 import java.util.TreeMap;
-import objectos.util.map.GrowableMap;
+import objectos.util.map.GrowableSequencedMap;
 import objectos.way.Css.ClassNameVariant;
 import objectos.way.Css.Context;
 import objectos.way.Css.Indentation;
@@ -176,7 +176,7 @@ final class CssComponent implements Repository, Rule {
 
   private final String className;
 
-  private final Map<String, Rule> rules = new GrowableMap<>();
+  private final Map<String, Rule> rules = new GrowableSequencedMap<>();
 
   CssComponent(String className) {
     this.className = className;

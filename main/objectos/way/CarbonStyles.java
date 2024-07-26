@@ -246,11 +246,6 @@ final class CarbonStyles extends CarbonComponents implements Http.Handler {
           --cds-border-subtle: var(--cds-border-subtle-00, #e0e0e0);
           --cds-layer: var(--cds-layer-01, #f4f4f4);
 
-          --cds-body-compact-01-font-size: 0.875rem;
-          --cds-body-compact-01-font-weight: 400;
-          --cds-body-compact-01-line-height: 1.28572;
-          --cds-body-compact-01-letter-spacing: 0.16px;
-
           --spacing-header: 3rem;
           --spacing-side-nav: 16rem;
 
@@ -335,6 +330,8 @@ final class CarbonStyles extends CarbonComponents implements Http.Handler {
 
         tile(),
 
+        typography(),
+
         Css.overrideBackgroundColor("""
         : var(--cds-background)
         active: var(--cds-background-active)
@@ -371,16 +368,44 @@ final class CarbonStyles extends CarbonComponents implements Http.Handler {
         """),
 
         Css.overrideFontSize("""
-        body-compact-01: var(--cds-body-compact-01-font-size, 0.875rem)/var(--cds-body-compact-01-line-height, 1.28572)/var(--cds-body-compact-01-letter-spacing, 0.16px)/var(--cds-body-compact-01-font-weight, 400)
-
-        heading-compact-01: var(--cds-heading-compact-01-font-size, 0.875rem)/var(--cds-heading-compact-01-line-height, 1.28572)/var(--cds-heading-compact-01-letter-spacing, 0.16px)/var(--cds-heading-compact-01-font-weight, 600)
-
         14px: 0.875rem
+        16px: 1rem
+        20px: 1.25rem
+        24px: 1.5rem
+        28px: 1.75rem
+        32px: 2rem
+        36px: 2.25rem
+        42px: 2.625rem
+        48px: 3rem
+        54px: 3.375rem
+        60px: 3.75rem
+        """),
+
+        Css.overrideLineHeight("""
+        18px: 1.125rem
+        20px: 1.25rem
+        22px: 1.375rem
+        28px: 1.75rem
+        32px: 2rem
+        36px: 2.25rem
+        40px: 2.5rem
+        44px: 2.75rem
+        50px: 3.125rem
+        56px: 3.5rem
+        64px: 4rem
+        70px: 4.375rem
         """),
 
         Css.overrideFontWeight("""
+        300: 400
         400: 400
         600: 600
+        """),
+
+        Css.overrideLetterSpacing("""
+        0px: 0px
+        0.1px: 0.1px
+        0.16px: 0.16px
         """),
 
         Css.overrideGridColumn("""
@@ -440,16 +465,6 @@ final class CarbonStyles extends CarbonComponents implements Http.Handler {
         11: repeat(11, minmax(0, 1fr))
         12: repeat(12, minmax(0, 1fr))
         16: repeat(16, minmax(0, 1fr))
-        """),
-
-        Css.overrideLetterSpacing("""
-        0: 0
-        0.1px: 0.1px
-        """),
-
-        Css.overrideLineHeight("""
-        18px: 1.125rem
-        20px: 1.25rem
         """),
 
         Css.overrideOutlineColor("""
