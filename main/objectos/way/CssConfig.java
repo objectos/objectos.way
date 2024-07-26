@@ -62,7 +62,8 @@ final class CssConfig {
 
   private boolean variantsInitialized;
 
-  public CssConfig() {}
+  public CssConfig() {
+  }
 
   // testing helper
   CssConfig(Class<?> type) {
@@ -444,6 +445,28 @@ final class CssConfig {
     funcUtility(Css.Key.BOTTOM, inset, NEGATIVE, "bottom", propertyType.bottom());
 
     // C
+
+    StringBuilder containerDef;
+    containerDef = new StringBuilder();
+
+    containerDef.append("w-full");
+
+    for (var breakpoint : breakpoints()) {
+      containerDef.append(" ");
+
+      String name;
+      name = breakpoint.name();
+
+      containerDef.append(name);
+
+      containerDef.append(':');
+
+      containerDef.append("max-w-screen-");
+
+      containerDef.append(breakpoint.name());
+    }
+
+    addComponent("container", containerDef.toString());
 
     funcUtility(
         Css.Key.CONTENT,

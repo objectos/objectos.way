@@ -53,7 +53,7 @@ public final class Carbon {
   /**
    * The UI shell is the top-level UI component of an web application.
    */
-  public static abstract class Shell extends CarbonTemplate {
+  public static abstract class Template extends CarbonTemplate {
 
     /**
      * Sole constructor.
@@ -61,7 +61,7 @@ public final class Carbon {
      * @param http
      *        the HTTP exchange
      */
-    protected Shell(Http.Exchange http) {
+    protected Template(Http.Exchange http) {
       super(http);
     }
 

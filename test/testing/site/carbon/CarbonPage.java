@@ -21,7 +21,7 @@ import objectos.way.Html;
 import objectos.way.Http;
 import objectos.way.Script;
 
-abstract class CarbonPage extends Carbon.Shell {
+abstract class CarbonPage extends Carbon.Template {
 
   private record MenuItem(String text, String href) {}
 
