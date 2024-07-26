@@ -911,6 +911,8 @@ final class CssConfig {
             """
         ),
 
+        NEGATIVE,
+
         "tracking", "letter-spacing"
     );
 

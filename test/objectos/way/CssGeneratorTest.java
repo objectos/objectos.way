@@ -1569,6 +1569,7 @@ public class CssGeneratorTest {
         className("tracking-wide");
         className("tracking-wider");
         className("tracking-widest");
+        className("-tracking-widest");
       }
     }
 
@@ -1582,6 +1583,7 @@ public class CssGeneratorTest {
         .tracking-wide { letter-spacing: 0.025em }
         .tracking-wider { letter-spacing: 0.05em }
         .tracking-widest { letter-spacing: 0.1em }
+        .-tracking-widest { letter-spacing: -0.1em }
         """
     );
   }
@@ -3502,8 +3504,8 @@ public class CssGeneratorTest {
           background-color: transparent;
         }
         .foo::after {
-          border-width: 1px;
           display: block;
+          border-width: 1px;
         }
         """
     );
