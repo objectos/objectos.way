@@ -283,7 +283,7 @@ public class CssGeneratorAdapterTest {
         )
     );
 
-    gen.skipReset(true);
+    gen.skipReset = true;
 
     return gen;
   }

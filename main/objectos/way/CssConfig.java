@@ -54,7 +54,9 @@ final class CssConfig {
 
   private final Map<Css.Key, CssResolver> resolvers = new EnumMap<>(Css.Key.class);
 
-  private boolean skipReset;
+  boolean skipDefaultRootRule;
+
+  boolean skipReset;
 
   private final Map<String, Css.StaticUtility> staticUtilities = new GrowableMap<>();
 
@@ -67,6 +69,8 @@ final class CssConfig {
 
   // testing helper
   CssConfig(Class<?> type) {
+    this();
+
     classes = Set.of(type);
   }
 
@@ -160,14 +164,6 @@ final class CssConfig {
 
   public final void noteSink(NoteSink noteSink) {
     this.noteSink = noteSink;
-  }
-
-  public final boolean skipReset() {
-    return skipReset;
-  }
-
-  public final void skipReset(boolean value) {
-    skipReset = value;
   }
 
   public final CssResolver getResolver(Css.Key key) {

@@ -141,12 +141,15 @@ final class CssGenerator extends CssGeneratorAdapter implements Css.Generator, C
   }
 
   public final String generate() {
+    // 01. scan
     CssGeneratorScanner scanner;
     scanner = new CssGeneratorScanner(config.noteSink());
 
     for (var clazz : config.classes()) {
       scanner.scan(clazz, adapter::processRawString);
     }
+
+    // 02. process
 
     Css.Context topLevel;
     topLevel = new TopLevelContext();
@@ -158,11 +161,15 @@ final class CssGenerator extends CssGeneratorAdapter implements Css.Generator, C
     StringBuilder out;
     out = new StringBuilder();
 
-    if (!config.skipReset()) {
+    // 03. reset
+
+    if (!config.skipReset) {
       out.append(CssReset.preflight());
 
       out.append(System.lineSeparator());
     }
+
+    // 04. base layer
 
     Iterable<String> baseLayer;
     baseLayer = config.baseLayer();
@@ -172,6 +179,8 @@ final class CssGenerator extends CssGeneratorAdapter implements Css.Generator, C
 
       out.append(System.lineSeparator());
     }
+
+    // 05. components + utilities
 
     Css.Indentation indentation;
     indentation = Css.Indentation.ROOT;

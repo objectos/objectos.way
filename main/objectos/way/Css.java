@@ -836,11 +836,16 @@ public final class Css {
     };
   }
 
+  /**
+   * Option: do not emit the CSS reset.
+   *
+   * @return a new CSS generation option
+   */
   public static Option skipReset() {
     return new GeneratorOption() {
       @Override
       final void acceptCssConfig(CssConfig config) {
-        config.skipReset(true);
+        config.skipReset = true;
       }
     };
   }
