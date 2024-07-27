@@ -79,6 +79,155 @@ public class CssGeneratorTest {
   }
 
   @Test
+  public void aspectRatio() {
+    class Subject extends AbstractSubject {
+      @Override
+      final void classes() {
+        className("aspect-auto aspect-16x9 aspect-9x16 aspect-2x1 aspect-1x2 aspect-4x3 aspect-3x4 aspect-3x2 aspect-2x3 aspect-1x1");
+      }
+    }
+
+    test(
+        Subject.class,
+
+        """
+        .aspect-16x9::after {
+          display: table;
+          clear: both;
+          content: '';
+        }
+        .aspect-16x9::before {
+          float: left;
+          margin-left: -1px;
+          width: 1px;
+          height: 0;
+          padding-top: 56.25%;
+          content: '';
+        }
+
+        .aspect-1x1::after {
+          display: table;
+          clear: both;
+          content: '';
+        }
+        .aspect-1x1::before {
+          float: left;
+          margin-left: -1px;
+          width: 1px;
+          height: 0;
+          padding-top: 100%;
+          content: '';
+        }
+
+        .aspect-1x2::after {
+          display: table;
+          clear: both;
+          content: '';
+        }
+        .aspect-1x2::before {
+          float: left;
+          margin-left: -1px;
+          width: 1px;
+          height: 0;
+          padding-top: 200%;
+          content: '';
+        }
+
+        .aspect-2x1::after {
+          display: table;
+          clear: both;
+          content: '';
+        }
+        .aspect-2x1::before {
+          float: left;
+          margin-left: -1px;
+          width: 1px;
+          height: 0;
+          padding-top: 50%;
+          content: '';
+        }
+
+        .aspect-2x3::after {
+          display: table;
+          clear: both;
+          content: '';
+        }
+        .aspect-2x3::before {
+          float: left;
+          margin-left: -1px;
+          width: 1px;
+          height: 0;
+          padding-top: 150%;
+          content: '';
+        }
+
+        .aspect-3x2::after {
+          display: table;
+          clear: both;
+          content: '';
+        }
+        .aspect-3x2::before {
+          float: left;
+          margin-left: -1px;
+          width: 1px;
+          height: 0;
+          padding-top: 66.66667%;
+          content: '';
+        }
+
+        .aspect-3x4::after {
+          display: table;
+          clear: both;
+          content: '';
+        }
+        .aspect-3x4::before {
+          float: left;
+          margin-left: -1px;
+          width: 1px;
+          height: 0;
+          padding-top: 133.33333%;
+          content: '';
+        }
+
+        .aspect-4x3::after {
+          display: table;
+          clear: both;
+          content: '';
+        }
+        .aspect-4x3::before {
+          float: left;
+          margin-left: -1px;
+          width: 1px;
+          height: 0;
+          padding-top: 75%;
+          content: '';
+        }
+
+        .aspect-9x16::after {
+          display: table;
+          clear: both;
+          content: '';
+        }
+        .aspect-9x16::before {
+          float: left;
+          margin-left: -1px;
+          width: 1px;
+          height: 0;
+          padding-top: 177.77778%;
+          content: '';
+        }
+
+        .aspect-auto::after {
+          display: none;
+        }
+        .aspect-auto::before {
+          display: none;
+        }
+        """
+    );
+  }
+
+  @Test
   public void backgroundColor() {
     class Subject extends AbstractSubject {
       @Override
@@ -508,6 +657,27 @@ public class CssGeneratorTest {
   }
 
   @Test
+  public void clear() {
+    class Subject extends AbstractSubject {
+      @Override
+      final void classes() {
+        className("clear-left clear-right clear-both clear-none");
+      }
+    }
+
+    test(
+        Subject.class,
+
+        """
+        .clear-left { clear: left }
+        .clear-right { clear: right }
+        .clear-both { clear: both }
+        .clear-none { clear: none }
+        """
+    );
+  }
+
+  @Test
   public void container() {
     class Subject extends AbstractSubject {
       @Override
@@ -747,6 +917,26 @@ public class CssGeneratorTest {
         """
         .grow { flex-grow: 1 }
         .grow-0 { flex-grow: 0 }
+        """
+    );
+  }
+
+  @Test
+  public void floatTest() {
+    class Subject extends AbstractSubject {
+      @Override
+      final void classes() {
+        className("float-right float-left float-none");
+      }
+    }
+
+    test(
+        Subject.class,
+
+        """
+        .float-right { float: right }
+        .float-left { float: left }
+        .float-none { float: none }
         """
     );
   }
@@ -4049,6 +4239,10 @@ public class CssGeneratorTest {
         className("h-4");
         className("min-h-8");
         className("max-h-12");
+        // float
+        className("float-right float-left");
+        // clear
+        className("clear-right clear-left");
         // margin
         className("m-auto");
         className("mx-auto");
@@ -4095,6 +4289,10 @@ public class CssGeneratorTest {
         .right-px { inset-inline-end: 1px }
         .bottom-px { inset-block-end: 1px }
         .left-px { inset-inline-start: 1px }
+        .float-right { float: inline-end }
+        .float-left { float: inline-start }
+        .clear-right { clear: inline-end }
+        .clear-left { clear: inline-start }
         .m-auto { margin: auto }
         .mx-auto { margin-inline-start: auto; margin-inline-end: auto }
         .my-auto { margin-block-start: auto; margin-block-end: auto }

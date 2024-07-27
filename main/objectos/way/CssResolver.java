@@ -17,6 +17,7 @@ package objectos.way;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 @SuppressWarnings("exports")
 sealed abstract class CssResolver {
@@ -43,7 +44,7 @@ sealed abstract class CssResolver {
     }
 
     @Override
-    public final Css.Rule resolve(String className, List<Css.Variant> variants, boolean negative, String value) {
+    public final Css.Rule resolve(String className, List<Css.Variant> variants, boolean negative, Css.ValueType type, String value) {
       String colorKey;
       colorKey = value;
 
@@ -87,7 +88,7 @@ sealed abstract class CssResolver {
     }
 
     @Override
-    public final Css.Rule resolve(String className, List<Css.Variant> variants, boolean negative, String value) {
+    public final Css.Rule resolve(String className, List<Css.Variant> variants, boolean negative, Css.ValueType type, String value) {
       int slash;
       slash = value.indexOf('/');
 
@@ -229,7 +230,7 @@ sealed abstract class CssResolver {
     }
 
     @Override
-    public final Css.Rule resolve(String className, List<Css.Variant> variants, boolean negative, String value) {
+    public final Css.Rule resolve(String className, List<Css.Variant> variants, boolean negative, Css.ValueType type, String value) {
       String resolved;
       resolved = properties.get(value);
 
@@ -250,6 +251,8 @@ sealed abstract class CssResolver {
 
     private final Css.ValueFormatter valueFormatter;
 
+    private final Set<Css.ValueType> valueTypes;
+
     private final String propertyName1;
 
     private final String propertyName2;
@@ -259,17 +262,29 @@ sealed abstract class CssResolver {
     }
 
     public OfProperties(Css.Key key, Map<String, String> properties, Css.ValueFormatter valueFormatter, String propertyName1, String propertyName2) {
+      this(key, properties, valueFormatter, Set.of(), propertyName1, propertyName2);
+    }
+
+    public OfProperties(Css.Key key, Map<String, String> properties, Css.ValueFormatter valueFormatter, Set<Css.ValueType> valueTypes, String propertyName1, String propertyName2) {
       this.key = key;
       this.properties = properties;
       this.valueFormatter = valueFormatter;
+      this.valueTypes = valueTypes;
       this.propertyName1 = propertyName1;
       this.propertyName2 = propertyName2;
     }
 
     @Override
-    public final Css.Rule resolve(String className, List<Css.Variant> variants, boolean negative, String value) {
+    public final Css.Rule resolve(String className, List<Css.Variant> variants, boolean negative, Css.ValueType type, String value) {
       String resolved;
-      resolved = properties.get(value);
+
+      if (type == Css.ValueType.STANDARD) {
+        resolved = properties.get(value);
+      } else if (valueTypes.contains(type)) {
+        resolved = type.get(value);
+      } else {
+        resolved = null;
+      }
 
       if (resolved == null) {
         return null;
@@ -291,7 +306,7 @@ sealed abstract class CssResolver {
 
   }
 
-  public abstract Css.Rule resolve(String className, List<Css.Variant> variants, boolean negative, String value);
+  public abstract Css.Rule resolve(String className, List<Css.Variant> variants, boolean negative, Css.ValueType type, String value);
 
   final Css.Rule resolveSlashes(
       Css.Key key,

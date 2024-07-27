@@ -244,10 +244,11 @@ final class CarbonStyles implements Http.Handler {
         Css.baseLayer("""
         :root {
           --default-font-family: var(--font-family-sans);
+          --default-mono-font-family: var(--font-family-mono);
 
           --font-family-sans: "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
           --font-family-serif: ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
-          --font-family-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+          --font-family-mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
 
           --cds-border-subtle: var(--cds-border-subtle-00, #e0e0e0);
           --cds-layer: var(--cds-layer-01, #f4f4f4);
@@ -598,12 +599,16 @@ final class CarbonStyles implements Http.Handler {
 
   private Css.Option grid() {
     return Css.components("""
-    # grid-wide
-    mx-auto grid w-full max-w-screen-max
-    grid-cols-4 px-0px
-    md:grid-cols-8 px-16px
-    lg:grid-cols-16
+    # grid-px
+    md:px-16px
     max:px-24px
+
+    # grid-wide
+    grid-px
+    mx-auto grid w-full max-w-screen-max
+    grid-cols-4
+    md:grid-cols-8
+    lg:grid-cols-16
     *:mx-16px
     """);
   }

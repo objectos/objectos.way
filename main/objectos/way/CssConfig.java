@@ -15,10 +15,12 @@
  */
 package objectos.way;
 
+import java.text.NumberFormat;
 import java.util.EnumMap;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Function;
@@ -27,6 +29,7 @@ import objectos.notes.NoOpNoteSink;
 import objectos.notes.NoteSink;
 import objectos.util.list.GrowableList;
 import objectos.util.map.GrowableMap;
+import objectos.way.Css.Key;
 
 final class CssConfig {
 
@@ -283,6 +286,24 @@ final class CssConfig {
   // SPEC
   //
 
+  private static final Set<Css.ValueType> L_OR_P = EnumSet.of(
+      Css.ValueType.ZERO,
+      Css.ValueType.LENGTH,
+      Css.ValueType.PERCENTAGE
+  );
+
+  private static final Set<Css.ValueType> L_OR_P_NEG = EnumSet.of(
+      Css.ValueType.ZERO,
+      Css.ValueType.LENGTH,
+      Css.ValueType.LENGTH_NEGATIVE,
+      Css.ValueType.PERCENTAGE,
+      Css.ValueType.PERCENTAGE_NEGATIVE
+  );
+
+  private static final Set<Css.ValueType> STRING = EnumSet.of(
+      Css.ValueType.STRING
+  );
+
   final void spec() {
     // be mindful of method size
 
@@ -337,6 +358,98 @@ final class CssConfig {
         appearance-auto | appearance: auto
         """
     );
+
+    var aspectRatio = values(
+        Css.Key.ASPECT_RATIO,
+
+        """
+        16x9: 16/9
+        9x16: 9/16
+        2x1: 2/1
+        1x2: 1/2
+        4x3: 4/3
+        3x4: 3/4
+        3x2: 3/2
+        2x3: 2/3
+        1x1: 1/1
+        """
+    );
+
+    addComponent("aspect-auto", "before:hidden after:hidden");
+
+    NumberFormat doubleFormatter;
+    doubleFormatter = NumberFormat.getNumberInstance(Locale.US);
+
+    doubleFormatter.setMaximumFractionDigits(5);
+
+    for (String suffix : aspectRatio.keySet()) {
+      String raw;
+      raw = aspectRatio.get(suffix);
+
+      int slash;
+      slash = raw.indexOf('/');
+
+      if (slash <= 0) {
+        continue;
+      }
+
+      int height;
+
+      try {
+        String s;
+        s = raw.substring(slash + 1);
+
+        height = Integer.parseInt(s);
+      } catch (NumberFormatException e) {
+        continue;
+      }
+
+      if (height <= 0) {
+        continue;
+      }
+
+      int width;
+
+      try {
+        String s;
+        s = raw.substring(0, slash);
+
+        width = Integer.parseInt(s);
+      } catch (NumberFormatException e) {
+        continue;
+      }
+
+      if (width <= 0) {
+        continue;
+      }
+
+      double padding;
+      padding = ((double) height / (double) width) * 100d;
+
+      StringBuilder def;
+      def = new StringBuilder();
+
+      def.append("before:float-left before:ml-[-1px] before:w-[1px] before:h-[0]");
+      def.append(' ');
+      def.append("before:pt-[");
+
+      if (padding == Math.rint(padding)) {
+        def.append((int) padding);
+      } else {
+        def.append(doubleFormatter.format(padding));
+      }
+
+      def.append("%] ");
+      def.append("before:content-['']");
+      def.append(' ');
+      def.append("after:table after:clear-both after:content-['']");
+
+      addComponent(
+          "aspect-" + suffix,
+
+          def.toString()
+      );
+    }
 
     // B
 
@@ -442,6 +555,24 @@ final class CssConfig {
 
     // C
 
+    staticUtility(
+        Css.Key.CLEAR,
+
+        propertyType == Css.PHYSICAL
+            ? """
+              clear-left  | clear: left
+              clear-right | clear: right
+              clear-both  | clear: both
+              clear-none  | clear: none
+              """
+            : """
+              clear-left  | clear: inline-start
+              clear-right | clear: inline-end
+              clear-both  | clear: both
+              clear-none  | clear: none
+              """
+    );
+
     StringBuilder containerDef;
     containerDef = new StringBuilder();
 
@@ -474,6 +605,8 @@ final class CssConfig {
             none: none
             """
         ),
+
+        STRING,
 
         "content"
     );
@@ -601,6 +734,22 @@ final class CssConfig {
         ),
 
         "grow", "flex-grow"
+    );
+
+    staticUtility(
+        Css.Key.FLOAT,
+
+        propertyType == Css.PHYSICAL
+            ? """
+              float-left  | float: left
+              float-right | float: right
+              float-none  | float: none
+              """
+            : """
+              float-left  | float: inline-start
+              float-right | float: inline-end
+              float-none  | float: none
+              """
     );
 
     var lineHeight = values(
@@ -859,6 +1008,8 @@ final class CssConfig {
             )
         ),
 
+        L_OR_P,
+
         "h",
 
         propertyType.height()
@@ -928,13 +1079,13 @@ final class CssConfig {
         )
     );
 
-    funcUtility(Css.Key.MARGIN, margin, NEGATIVE, "m", "margin");
-    funcUtility(Css.Key.MARGIN_TOP, margin, NEGATIVE, "mt", propertyType.marginTop());
-    funcUtility(Css.Key.MARGIN_RIGHT, margin, NEGATIVE, "mr", propertyType.marginRight());
-    funcUtility(Css.Key.MARGIN_BOTTOM, margin, NEGATIVE, "mb", propertyType.marginBottom());
-    funcUtility(Css.Key.MARGIN_LEFT, margin, NEGATIVE, "ml", propertyType.marginLeft());
-    funcUtility(Css.Key.MARGIN_X, margin, NEGATIVE, "mx", propertyType.marginLeft(), propertyType.marginRight());
-    funcUtility(Css.Key.MARGIN_Y, margin, NEGATIVE, "my", propertyType.marginTop(), propertyType.marginBottom());
+    funcUtility(Css.Key.MARGIN, margin, NEGATIVE, L_OR_P_NEG, "m", "margin");
+    funcUtility(Css.Key.MARGIN_TOP, margin, NEGATIVE, L_OR_P_NEG, "mt", propertyType.marginTop());
+    funcUtility(Css.Key.MARGIN_RIGHT, margin, NEGATIVE, L_OR_P_NEG, "mr", propertyType.marginRight());
+    funcUtility(Css.Key.MARGIN_BOTTOM, margin, NEGATIVE, L_OR_P_NEG, "mb", propertyType.marginBottom());
+    funcUtility(Css.Key.MARGIN_LEFT, margin, NEGATIVE, L_OR_P_NEG, "ml", propertyType.marginLeft());
+    funcUtility(Css.Key.MARGIN_X, margin, NEGATIVE, L_OR_P_NEG, "mx", propertyType.marginLeft(), propertyType.marginRight());
+    funcUtility(Css.Key.MARGIN_Y, margin, NEGATIVE, L_OR_P_NEG, "my", propertyType.marginTop(), propertyType.marginBottom());
 
     funcUtility(
         Css.Key.MAX_HEIGHT,
@@ -958,6 +1109,8 @@ final class CssConfig {
                 spacing
             )
         ),
+
+        L_OR_P,
 
         "max-h",
 
@@ -1005,6 +1158,8 @@ final class CssConfig {
             }
         ),
 
+        L_OR_P,
+
         "max-w",
 
         propertyType.maxWidth()
@@ -1032,6 +1187,8 @@ final class CssConfig {
             )
         ),
 
+        L_OR_P,
+
         "min-h",
 
         propertyType.minHeight()
@@ -1054,6 +1211,8 @@ final class CssConfig {
                 spacing
             )
         ),
+
+        L_OR_P,
 
         "min-w",
 
@@ -1201,13 +1360,13 @@ final class CssConfig {
 
     var padding = values(Css.Key.PADDING, spacing);
 
-    funcUtility(Css.Key.PADDING, padding, "p", "padding");
-    funcUtility(Css.Key.PADDING_TOP, padding, "pt", propertyType.paddingTop());
-    funcUtility(Css.Key.PADDING_RIGHT, padding, "pr", propertyType.paddingRight());
-    funcUtility(Css.Key.PADDING_BOTTOM, padding, "pb", propertyType.paddingBottom());
-    funcUtility(Css.Key.PADDING_LEFT, padding, "pl", propertyType.paddingLeft());
-    funcUtility(Css.Key.PADDING_X, padding, "px", propertyType.paddingLeft(), propertyType.paddingRight());
-    funcUtility(Css.Key.PADDING_Y, padding, "py", propertyType.paddingTop(), propertyType.paddingBottom());
+    funcUtility(Css.Key.PADDING, padding, L_OR_P, "p", "padding");
+    funcUtility(Css.Key.PADDING_TOP, padding, L_OR_P, "pt", propertyType.paddingTop());
+    funcUtility(Css.Key.PADDING_RIGHT, padding, L_OR_P, "pr", propertyType.paddingRight());
+    funcUtility(Css.Key.PADDING_BOTTOM, padding, L_OR_P, "pb", propertyType.paddingBottom());
+    funcUtility(Css.Key.PADDING_LEFT, padding, L_OR_P, "pl", propertyType.paddingLeft());
+    funcUtility(Css.Key.PADDING_X, padding, L_OR_P, "px", propertyType.paddingLeft(), propertyType.paddingRight());
+    funcUtility(Css.Key.PADDING_Y, padding, L_OR_P, "py", propertyType.paddingTop(), propertyType.paddingBottom());
 
     staticUtility(
         Css.Key.POINTER_EVENTS,
@@ -1572,6 +1731,8 @@ final class CssConfig {
             )
         ),
 
+        L_OR_P,
+
         "w",
 
         propertyType.width()
@@ -1643,6 +1804,13 @@ final class CssConfig {
 
   private void funcUtility(
       Css.Key key,
+      Map<String, String> values, Set<Css.ValueType> types,
+      String prefix) {
+    funcUtility(key, values, IDENTITY, types, prefix, prefix, null);
+  }
+
+  private void funcUtility(
+      Css.Key key,
       Map<String, String> values,
       String prefix, String propertyName) {
     funcUtility(key, values, IDENTITY, prefix, propertyName, null);
@@ -1653,6 +1821,20 @@ final class CssConfig {
       Map<String, String> values,
       String prefix, String propertyName1, String propertyName2) {
     funcUtility(key, values, IDENTITY, prefix, propertyName1, propertyName2);
+  }
+
+  private void funcUtility(
+      Css.Key key,
+      Map<String, String> values, Set<Css.ValueType> types,
+      String prefix, String propertyName) {
+    funcUtility(key, values, IDENTITY, types, prefix, propertyName, null);
+  }
+
+  private void funcUtility(
+      Css.Key key,
+      Map<String, String> values, Set<Css.ValueType> types,
+      String prefix, String propertyName1, String propertyName2) {
+    funcUtility(key, values, IDENTITY, types, prefix, propertyName1, propertyName2);
   }
 
   private void funcUtility(
@@ -1676,6 +1858,25 @@ final class CssConfig {
 
     CssResolver resolver;
     resolver = new CssResolver.OfProperties(key, values, formatter, propertyName1, propertyName2);
+
+    customUtility(key, prefix, resolver);
+
+  }
+
+  private void funcUtility(
+      Css.Key key,
+      Map<String, String> values, Css.ValueFormatter formatter, Set<Css.ValueType> types,
+      String prefix, String propertyName) {
+    funcUtility(key, values, formatter, types, prefix, propertyName, null);
+  }
+
+  private void funcUtility(
+      Css.Key key,
+      Map<String, String> values, Css.ValueFormatter formatter, Set<Css.ValueType> types,
+      String prefix, String propertyName1, String propertyName2) {
+
+    CssResolver resolver;
+    resolver = new CssResolver.OfProperties(key, values, formatter, types, propertyName1, propertyName2);
 
     customUtility(key, prefix, resolver);
 
@@ -1741,6 +1942,17 @@ final class CssConfig {
     }
 
     return defaults;
+  }
+
+  public void specPrintMultiPrefix() {
+    for (var entry : prefixes.entrySet()) {
+      Set<Key> set;
+      set = entry.getValue();
+
+      if (set.size() > 1) {
+        System.out.println(entry);
+      }
+    }
   }
 
 }

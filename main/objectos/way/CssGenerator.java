@@ -22,6 +22,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 import objectos.util.map.GrowableSequencedMap;
+import objectos.way.Css.ValueType;
 
 final class CssGenerator extends CssGeneratorAdapter implements Css.Generator, Css.Repository {
 
@@ -298,12 +299,15 @@ final class CssGenerator extends CssGeneratorAdapter implements Css.Generator, C
       return Css.Rule.NOOP;
     }
 
+    ValueType type;
+    type = Css.typeOf(suffix);
+
     for (Css.Key candidate : candidates) {
       CssResolver resolver;
       resolver = config.getResolver(candidate);
 
       Css.Rule rule;
-      rule = resolver.resolve(className, variants, negative, suffix);
+      rule = resolver.resolve(className, variants, negative, type, suffix);
 
       if (rule != null) {
         return rule;

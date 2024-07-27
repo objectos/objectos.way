@@ -121,4 +121,20 @@ public class CssTest {
     );
   }
 
+  @Test
+  public void typeOf() {
+    assertEquals(Css.typeOf(""), Css.ValueType.STANDARD);
+    assertEquals(Css.typeOf("[]"), Css.ValueType.STRING);
+    assertEquals(Css.typeOf("block"), Css.ValueType.STANDARD);
+    assertEquals(Css.typeOf("[block]"), Css.ValueType.STRING);
+    assertEquals(Css.typeOf("1px"), Css.ValueType.STANDARD);
+    assertEquals(Css.typeOf("[1px]"), Css.ValueType.LENGTH);
+    assertEquals(Css.typeOf("0"), Css.ValueType.STANDARD);
+    assertEquals(Css.typeOf("[0]"), Css.ValueType.ZERO);
+    assertEquals(Css.typeOf("[1]"), Css.ValueType.INTEGER);
+    assertEquals(Css.typeOf("[10]"), Css.ValueType.INTEGER);
+    assertEquals(Css.typeOf("[-1px]"), Css.ValueType.LENGTH_NEGATIVE);
+    assertEquals(Css.typeOf("[1.23%]"), Css.ValueType.PERCENTAGE);
+  }
+
 }

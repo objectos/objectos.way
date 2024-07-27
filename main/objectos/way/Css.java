@@ -276,6 +276,9 @@ public final class Css {
     GRID_COLUMN_START,
     GRID_COLUMN_END,
 
+    FLOAT,
+    CLEAR,
+
     MARGIN,
     MARGIN_X,
     MARGIN_Y,
@@ -286,6 +289,7 @@ public final class Css {
 
     DISPLAY,
 
+    ASPECT_RATIO,
     SIZE,
     HEIGHT,
     MAX_HEIGHT,
@@ -637,6 +641,32 @@ public final class Css {
 
     String format(String value, boolean negative);
 
+  }
+
+  enum ValueType {
+    // non-arbitrary
+    STANDARD,
+
+    // arbitrary
+    ZERO,
+
+    LENGTH,
+    LENGTH_NEGATIVE,
+
+    PERCENTAGE,
+    PERCENTAGE_NEGATIVE,
+
+    STRING,
+
+    INTEGER,
+    INTEGER_NEGATIVE,
+
+    DECIMAL,
+    DECIMAL_NEGATIVE;
+
+    final String get(String value) {
+      return value.substring(1, value.length() - 1);
+    }
   }
 
   sealed interface Variant extends Comparable<Variant> {}
@@ -1107,6 +1137,181 @@ public final class Css {
     }
 
     return new ClassNameFormat(before, after);
+  }
+
+  private enum Parser {
+
+    START,
+    STOP,
+
+    NEGATIVE_OR_PROPERTY,
+
+    PROPERTY,
+
+    ZERO,
+
+    NUMERIC,
+    NUMERIC_DOT,
+
+    LENGTH,
+
+    PERCENTAGE,
+
+    FLOAT;
+
+  }
+
+  static ValueType typeOf(String s) {
+    int length;
+    length = s.length();
+
+    if (length < 2) {
+      return ValueType.STANDARD;
+    }
+
+    if (s.charAt(0) != '[' || s.charAt(length - 1) != ']') {
+      return ValueType.STANDARD;
+    }
+
+    Parser parser;
+    parser = Parser.START;
+
+    boolean negative;
+    negative = false;
+
+    for (int i = 1, end = length - 1; i < end; i++) {
+      char c;
+      c = s.charAt(i);
+
+      parser = switch (parser) {
+        case START -> {
+          if (c == '0') {
+            yield Parser.ZERO;
+          }
+
+          if (isDigit(c)) {
+            yield Parser.NUMERIC;
+          }
+
+          if (c == '-') {
+            yield Parser.NEGATIVE_OR_PROPERTY;
+          }
+
+          yield Parser.STOP;
+        }
+
+        case ZERO -> {
+          if (c == '.') {
+            throw new UnsupportedOperationException("Implement me");
+          }
+
+          if (isDigit(c)) {
+            yield Parser.NUMERIC;
+          }
+
+          yield Parser.STOP;
+        }
+
+        case NEGATIVE_OR_PROPERTY -> {
+          if (isDigit(c)) {
+            negative = true;
+
+            yield Parser.NUMERIC;
+          }
+
+          if (c == '-') {
+            yield Parser.PROPERTY;
+          }
+
+          yield Parser.STOP;
+        }
+
+        case PROPERTY -> throw new UnsupportedOperationException("Implement me");
+
+        case NUMERIC -> {
+          if (isDigit(c)) {
+            yield Parser.NUMERIC;
+          }
+
+          if (isLetter(c)) {
+            yield Parser.LENGTH;
+          }
+
+          if (c == '.') {
+            yield Parser.NUMERIC_DOT;
+          }
+
+          if (c == '%') {
+            yield Parser.PERCENTAGE;
+          }
+
+          yield Parser.STOP;
+        }
+
+        case NUMERIC_DOT -> {
+          if (isDigit(c)) {
+            yield Parser.FLOAT;
+          }
+
+          yield Parser.STOP;
+        }
+
+        case FLOAT -> {
+          if (isDigit(c)) {
+            yield Parser.FLOAT;
+          }
+
+          if (isLetter(c)) {
+            yield Parser.LENGTH;
+          }
+
+          if (c == '%') {
+            yield Parser.PERCENTAGE;
+          }
+
+          yield Parser.STOP;
+        }
+
+        case LENGTH -> {
+          if (isLetter(c)) {
+            yield parser;
+          }
+
+          yield Parser.STOP;
+        }
+
+        case PERCENTAGE -> Parser.STOP;
+
+        case STOP -> throw new AssertionError();
+      };
+
+      if (parser == Parser.STOP) {
+        break;
+      }
+    }
+
+    return switch (parser) {
+      case ZERO -> ValueType.ZERO;
+
+      case NUMERIC -> negative ? ValueType.INTEGER_NEGATIVE : ValueType.INTEGER;
+
+      case FLOAT -> negative ? ValueType.DECIMAL_NEGATIVE : ValueType.DECIMAL;
+
+      case LENGTH -> negative ? ValueType.LENGTH_NEGATIVE : ValueType.LENGTH;
+
+      case PERCENTAGE -> negative ? ValueType.PERCENTAGE_NEGATIVE : ValueType.PERCENTAGE;
+
+      default -> ValueType.STRING;
+    };
+  }
+
+  private static boolean isDigit(char c) {
+    return '0' <= c && c <= '9';
+  }
+
+  private static boolean isLetter(char c) {
+    return 'A' <= c && c <= 'Z'
+        || 'a' <= c && c <= 'z';
   }
 
   static void writeClassName(StringBuilder out, String className) {
