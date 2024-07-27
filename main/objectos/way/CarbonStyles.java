@@ -15,7 +15,7 @@
  */
 package objectos.way;
 
-final class CarbonStyles extends CarbonComponents implements Http.Handler {
+final class CarbonStyles implements Http.Handler {
 
   private final Css.Generator.Classes classes;
 
@@ -243,6 +243,12 @@ final class CarbonStyles extends CarbonComponents implements Http.Handler {
 
         Css.baseLayer("""
         :root {
+          --default-font-family: var(--font-family-sans);
+
+          --font-family-sans: "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+          --font-family-serif: ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
+          --font-family-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+
           --cds-border-subtle: var(--cds-border-subtle-00, #e0e0e0);
           --cds-layer: var(--cds-layer-01, #f4f4f4);
 
@@ -368,6 +374,7 @@ final class CarbonStyles extends CarbonComponents implements Http.Handler {
         """),
 
         Css.overrideFontSize("""
+        12px: 0.75rem
         14px: 0.875rem
         16px: 1rem
         20px: 1.25rem
@@ -379,9 +386,16 @@ final class CarbonStyles extends CarbonComponents implements Http.Handler {
         48px: 3rem
         54px: 3.375rem
         60px: 3.75rem
+        68px: 4.25rem
+        76px: 4.75rem
+        84px: 5.25rem
+        92px: 5.75rem
+        122px: 7.625rem
+        156px: 9.75rem
         """),
 
         Css.overrideLineHeight("""
+        16px: 1rem
         18px: 1.125rem
         20px: 1.25rem
         22px: 1.375rem
@@ -394,10 +408,16 @@ final class CarbonStyles extends CarbonComponents implements Http.Handler {
         56px: 3.5rem
         64px: 4rem
         70px: 4.375rem
+        78px: 4.875rem
+        86px: 5.375rem
+        94px: 5.875rem
+        102px: 6.375rem
+        130px: 8.125rem
+        164px: 10.25rem
         """),
 
         Css.overrideFontWeight("""
-        300: 400
+        300: 300
         400: 400
         600: 600
         """),
@@ -406,6 +426,9 @@ final class CarbonStyles extends CarbonComponents implements Http.Handler {
         0px: 0px
         0.1px: 0.1px
         0.16px: 0.16px
+        0.32px: 0.32px
+        0.64px: 0.64px
+        0.96px: 0.96px
         """),
 
         Css.overrideGridColumn("""
@@ -564,6 +587,332 @@ final class CarbonStyles extends CarbonComponents implements Http.Handler {
     http.header(Http.CONTENT_LENGTH, bytes.length);
 
     http.send(bytes);
+  }
+
+  private Css.Option button() {
+    return Css.components("""
+    # button-reset
+    cursor-pointer appearance-none
+    """);
+  }
+
+  private Css.Option grid() {
+    return Css.components("""
+    # grid-wide
+    mx-auto grid w-full max-w-screen-max
+    grid-cols-4 px-0px
+    md:grid-cols-8 px-16px
+    lg:grid-cols-16
+    max:px-24px
+    *:mx-16px
+    """);
+  }
+
+  private Css.Option header() {
+    return Css.components("""
+    # header
+    fixed top-0px right-0px left-0px z-header
+    flex items-center h-header
+    border-b border-b-subtle
+    bg
+
+    # __header-button
+    button-reset
+    size-header items-center justify-center
+    border border-transparent
+    transition-colors duration-100
+    active:bg-active
+    focus:border-focus focus:outline-none
+    hover:bg-hover
+    lg:hidden
+    svg:fill-primary
+
+    # header-menu-button
+    __header-button
+    flex
+
+    # header-menu-button-toggle
+    __header-button
+    hidden
+
+    # header-close-button
+    __header-button
+    hidden border-x-subtle bg-layer
+
+    # header-close-button-toggle
+    __header-button
+    flex border-x-subtle bg-layer
+
+    # header-name
+    flex h-full select-none items-center
+    border-2 border-transparent
+    px-16px
+    body-compact-01 text-primary font-600 leading-20px tracking-0.1px
+    outline-none
+    transition-colors duration-100
+    focus:border-focus
+    lg:pl-16px lg:pr-32px
+    span:font-400
+
+    # header-nav
+    relative hidden h-full pl-16px
+    lg:flex lg:items-center
+    lg:before:relative lg:before:-left-16px lg:before:z-header lg:before:block
+    lg:before:h-1/2 lg:before:w-1px
+    lg:before:border-l lg:before:border-l-subtle
+    lg:before:content-empty
+
+    # __header-nav-link
+    relative flex h-full select-none items-center
+    border-2 border-transparent
+    bg
+    px-16px
+    transition-colors duration-100
+    active:bg-active active:text-primary
+    focus:border-focus focus:outline-none
+    hover:bg-hover hover:text-primary
+
+    # __header-nav-link-productive
+    text-14px leading-18px font-400 tracking-0px
+
+    # __header-nav-link-expressive
+    body-compact-02
+
+    # __header-nav-link-active
+    text-primary
+    after:absolute after:-bottom-2px after:-left-2px after:-right-2px
+    after:block after:border-b-3 after:border-b-interactive after:content-empty
+
+    # __header-nav-link-inactive
+    text-secondary
+
+    # header-nav-link-active
+    __header-nav-link
+    __header-nav-link-productive
+    __header-nav-link-active
+
+    # header-nav-link-inactive
+    __header-nav-link
+    __header-nav-link-productive
+    __header-nav-link-inactive
+
+    # header-nav-link-active-expressive
+    __header-nav-link
+    __header-nav-link-expressive
+    __header-nav-link-active
+
+    # header-nav-link-inactive-expressive
+    __header-nav-link
+    __header-nav-link-expressive
+    __header-nav-link-inactive
+
+    # header-nav-list
+    h-full flex text-secondary
+
+    # header-offset
+    mt-header
+    """);
+  }
+
+  private Css.Option overlay() {
+    return Css.components("""
+    # __overlay
+    fixed inset-0px z-overlay
+    bg-overlay
+    transition-opacity duration-300
+    lg:hidden
+
+    # overlay
+    __overlay hidden opacity-0
+
+    # overlay-toggle
+    __overlay block opacity-100
+    """);
+  }
+
+  private Css.Option sideNav() {
+    return Css.components("""
+    # __side-nav
+    fixed top-0px bottom-0px left-0px z-header
+    bg
+    text-secondary
+    transition-all duration-100
+    lg:hidden
+
+    # side-nav
+    __side-nav invisible w-0px
+
+    # side-nav-toggle
+    __side-nav visible w-side-nav
+
+    # __side-nav-header-link
+    relative flex min-h-32px
+    items-center justify-between whitespace-nowrap
+    border-2 border-transparent
+    px-16px
+    heading-compact-01 text-secondary
+    outline outline-2 -outline-offset-2 outline-transparent
+    transition-colors duration-100
+    active:bg-active active:text-primary
+    focus:outline-focus
+    hover:bg-hover hover:text-primary
+
+    # side-nav-header-link-active
+    __side-nav-header-link
+    after:absolute after:-top-2px after:-bottom-2px after:-left-2px
+    after:block after:border-l-3 after:border-l-interactive after:content-empty
+
+    # side-nav-header-link-inactive
+    __side-nav-header-link
+    text-secondary
+
+    # side-nav-header-list
+    margin-bottom-32px
+    lg:hidden
+
+    # side-nav-header-item
+    w-auto h-auto overflow-hidden
+
+    # side-nav-list
+    flex-1 pt-16px
+
+    # side-nav-link
+    relative flex min-h-32px
+    items-center justify-between whitespace-nowrap
+    px-16px
+    heading-compact-01
+    outline outline-2 -outline-offset-2 outline-transparent
+    transition-colors duration-100
+    focus:outline-focus
+    hover:bg-hover hover:text-primary
+    span:select-none span:text-14px span:leading-20px span:tracking-0.1px span:truncate
+
+    # side-nav-link-active
+    side-nav-link
+    bg-selected text-link-primary font-600
+    after:absolute after:top-0px after:bottom-0px after:left-0px
+    after:block after:border-l-3 after:border-l-interactive after:content-empty
+    span:text-primary
+
+    # side-nav-link-inactive
+    side-nav-link
+    span:text-secondary
+
+    # side-nav-offset
+    lg:ml-side-nav
+
+    # side-nav-persistent
+    lg:visible lg:more:block lg:w-side-nav
+    """);
+  }
+
+  private Css.Option tile() {
+    return Css.components("""
+    # tile
+    relative block min-w-128px min-h-64px
+    bg-layer
+    p-16px
+    outline outline-2 -outline-offset-2 outline-transparent
+    """);
+  }
+
+  private Css.Option typography() {
+    return Css.components("""
+    # code-01
+    font-mono
+    text-12px leading-16px font-400 tracking-0.32px
+
+    # code-02
+    font-mono
+    text-14px leading-20px font-400 tracking-0.32px
+
+    # body-compact-01
+    text-14px leading-18px font-400 tracking-0.16px
+
+    # body-compact-02
+    text-16px leading-22px font-400 tracking-0px
+
+    # body-01
+    text-14px leading-20px font-400 tracking-0.16px
+
+    # body-02
+    text-16px leading-24px font-400 tracking-0px
+
+    # heading-compact-01
+    text-14px leading-18px font-600 tracking-0.16px
+
+    # heading-compact-02
+    text-16px leading-22px font-600 tracking-0px
+
+    # heading-01
+    text-14px leading-20px font-600 tracking-0.16px
+
+    # heading-02
+    text-16px leading-24px font-600 tracking-0px
+
+    # heading-03
+    text-20px leading-28px font-400 tracking-0px
+
+    # heading-04
+    text-28px leading-36px font-400 tracking-0px
+
+    # heading-05
+    text-32px leading-40px font-400 tracking-0px
+
+    # heading-06
+    text-42px leading-50px font-300 tracking-0px
+
+    # heading-07
+    text-54px leading-64px font-300 tracking-0px
+
+    # fluid-heading-03
+    text-20px leading-28px font-400 tracking-0px
+    max:text-24px
+
+    # fluid-heading-04
+    text-28px leading-36px font-400 tracking-0px
+    xl:text-32px xl:leading-40px
+
+    # fluid-heading-05
+    text-32px leading-40px font-400 tracking-0px
+    md:text-36px md:leading-44px md:font-300
+    lg:text-42px lg:leading-50px
+    xl:text-48px xl:leading-56px
+    max:text-60px max:leading-70px
+
+    # fluid-heading-06
+    text-32px leading-40px font-600 tracking-0px
+    md:text-36px md:leading-44px md:font-600
+    lg:text-42px lg:leading-50px
+    xl:text-48px xl:leading-56px
+    max:text-60px max:leading-70px
+
+    # fluid-display-01
+    text-42px leading-50px font-300 tracking-0px
+    lg:text-54px lg:leading-64px
+    xl:text-60px xl:leading-70px
+    max:text-76px max:leading-86px
+
+    # fluid-display-02
+    text-42px leading-50px font-600 tracking-0px
+    lg:text-54px lg:leading-64px
+    xl:text-60px xl:leading-70px
+    max:text-76px max:leading-86px
+
+    # fluid-display-03
+    text-42px leading-50px font-300 tracking-0px
+    md:text-54px md:leading-64px
+    lg:text-60px lg:leading-70px lg:-leading-0.64px
+    xl:text-76px xl:leading-86px
+    max:text-84px max:leading-94px max:-leading-0.96px
+
+    # fluid-display-04
+    text-42px leading-50px font-300 tracking-0px
+    md:text-68px md:leading-78px
+    lg:text-92px lg:leading-102px lg:-leading-0.64px
+    xl:text-122px xl:leading-130px
+    max:text-156px max:leading-164px max:-leading-0.96px
+    """);
   }
 
 }
