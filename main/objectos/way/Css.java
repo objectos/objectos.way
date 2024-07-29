@@ -299,6 +299,7 @@ public final class Css {
     MIN_WIDTH,
 
     FLEX_GROW,
+    FLEX_SHRINK,
 
     TABLE_LAYOUT,
 

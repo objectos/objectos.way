@@ -286,6 +286,10 @@ final class CssConfig {
   // SPEC
   //
 
+  private static final Set<Css.ValueType> INTEGER = EnumSet.of(
+      Css.ValueType.INTEGER
+  );
+
   private static final Set<Css.ValueType> L_OR_P = EnumSet.of(
       Css.ValueType.ZERO,
       Css.ValueType.LENGTH,
@@ -733,7 +737,26 @@ final class CssConfig {
             """
         ),
 
+        INTEGER,
+
         "grow", "flex-grow"
+    );
+
+    funcUtility(
+        Css.Key.FLEX_SHRINK,
+
+        values(
+            Css.Key.FLEX_SHRINK,
+
+            """
+            : 1
+            0: 0
+            """
+        ),
+
+        INTEGER,
+
+        "shrink", "flex-shrink"
     );
 
     staticUtility(

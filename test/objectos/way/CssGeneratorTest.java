@@ -907,7 +907,7 @@ public class CssGeneratorTest {
     class Subject extends AbstractSubject {
       @Override
       final void classes() {
-        className("grow grow-0");
+        className("grow grow-0 grow-[2]");
       }
     }
 
@@ -917,6 +917,27 @@ public class CssGeneratorTest {
         """
         .grow { flex-grow: 1 }
         .grow-0 { flex-grow: 0 }
+        .grow-\\[2\\] { flex-grow: 2 }
+        """
+    );
+  }
+
+  @Test
+  public void flexShrink() {
+    class Subject extends AbstractSubject {
+      @Override
+      final void classes() {
+        className("shrink shrink-0 shrink-[2]");
+      }
+    }
+
+    test(
+        Subject.class,
+
+        """
+        .shrink { flex-shrink: 1 }
+        .shrink-0 { flex-shrink: 0 }
+        .shrink-\\[2\\] { flex-shrink: 2 }
         """
     );
   }
