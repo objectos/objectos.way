@@ -63,6 +63,21 @@ final class CarbonStyles implements Http.Handler {
           --cds-border-tile-01: #c6c6c6;
           --cds-border-tile-02: #a8a8a8;
           --cds-border-tile-03: #c6c6c6;
+          --cds-button-separator: #e0e0e0;
+          --cds-button-primary: #0f62fe;
+          --cds-button-secondary: #393939;
+          --cds-button-tertiary: #0f62fe;
+          --cds-button-danger-primary: #da1e28;
+          --cds-button-danger-secondary: #da1e28;
+          --cds-button-danger-active: #750e13;
+          --cds-button-primary-active: #002d9c;
+          --cds-button-secondary-active: #6f6f6f;
+          --cds-button-tertiary-active: #002d9c;
+          --cds-button-danger-hover: #b81921;
+          --cds-button-primary-hover: #0050e6;
+          --cds-button-secondary-hover: #474747;
+          --cds-button-tertiary-hover: #0050e6;
+          --cds-button-disabled: #c6c6c6;
           --cds-focus: #0f62fe;
           --cds-focus-inset: #ffffff;
           --cds-focus-inverse: #ffffff;
@@ -78,6 +93,13 @@ final class CarbonStyles implements Http.Handler {
           --cds-layer-03: #f4f4f4;
           --cds-overlay: rgba(22, 22, 22, 0.5);
           --cds-shadow: rgba(0, 0, 0, 0.3);
+          --cds-text-disabled: rgba(22, 22, 22, 0.25);
+          --cds-text-error: #da1e28;
+          --cds-text-helper: #6f6f6f;
+          --cds-text-inverse: #ffffff;
+          --cds-text-on-color: #ffffff;
+          --cds-text-on-color-disabled: #8d8d8d;
+          --cds-text-placeholder: rgba(22, 22, 22, 0.4);
           --cds-text-primary: #161616;
           --cds-text-secondary: #525252;
 
@@ -114,6 +136,21 @@ final class CarbonStyles implements Http.Handler {
           --cds-border-tile-01: #a8a8a8;
           --cds-border-tile-02: #c6c6c6;
           --cds-border-tile-03: #a8a8a8;
+          --cds-button-separator: #e0e0e0;
+          --cds-button-primary: #0f62fe;
+          --cds-button-secondary: #393939;
+          --cds-button-tertiary: #0f62fe;
+          --cds-button-danger-primary: #da1e28;
+          --cds-button-danger-secondary: #da1e28;
+          --cds-button-danger-active: #750e13;
+          --cds-button-primary-active: #002d9c;
+          --cds-button-secondary-active: #6f6f6f;
+          --cds-button-tertiary-active: #002d9c;
+          --cds-button-danger-hover: #b81921;
+          --cds-button-primary-hover: #0050e6;
+          --cds-button-secondary-hover: #474747;
+          --cds-button-tertiary-hover: #0050e6;
+          --cds-button-disabled: #c6c6c6;
           --cds-focus: #0f62fe;
           --cds-focus-inset: #ffffff;
           --cds-focus-inverse: #ffffff;
@@ -129,6 +166,13 @@ final class CarbonStyles implements Http.Handler {
           --cds-layer-03: #ffffff;
           --cds-overlay: rgba(22, 22, 22, 0.5);
           --cds-shadow: rgba(0, 0, 0, 0.3);
+          --cds-text-disabled: rgba(22, 22, 22, 0.25);
+          --cds-text-error: #da1e28;
+          --cds-text-helper: #6f6f6f;
+          --cds-text-inverse: #ffffff;
+          --cds-text-on-color: #ffffff;
+          --cds-text-on-color-disabled: #8d8d8d;
+          --cds-text-placeholder: rgba(22, 22, 22, 0.4);
           --cds-text-primary: #161616;
           --cds-text-secondary: #525252;
 
@@ -165,6 +209,21 @@ final class CarbonStyles implements Http.Handler {
           --cds-border-tile-01: #6f6f6f;
           --cds-border-tile-02: #8d8d8d;
           --cds-border-tile-03: #a8a8a8;
+          --cds-button-separator: #161616;
+          --cds-button-primary: #0f62fe;
+          --cds-button-secondary: #6f6f6f;
+          --cds-button-tertiary: #ffffff;
+          --cds-button-danger-primary: #da1e28;
+          --cds-button-danger-secondary: #ff8389;
+          --cds-button-danger-active: #750e13;
+          --cds-button-primary-active: #002d9c;
+          --cds-button-secondary-active: #393939;
+          --cds-button-tertiary-active: #c6c6c6;
+          --cds-button-danger-hover: #b81921;
+          --cds-button-primary-hover: #0050e6;
+          --cds-button-secondary-hover: #5e5e5e;
+          --cds-button-tertiary-hover: #f4f4f4;
+          --cds-button-disabled: rgba(141, 141, 141, 0.3);
           --cds-focus: #ffffff;
           --cds-focus-inset: #161616;
           --cds-focus-inverse: #0f62fe;
@@ -180,6 +239,13 @@ final class CarbonStyles implements Http.Handler {
           --cds-layer-03: #6f6f6f;
           --cds-overlay: rgba(0, 0, 0, 0.65);
           --cds-shadow: rgba(0, 0, 0, 0.8);
+          --cds-text-disabled: rgba(244, 244, 244, 0.25);
+          --cds-text-error: #ffb3b8;
+          --cds-text-helper: #c6c6c6;
+          --cds-text-inverse: #161616;
+          --cds-text-on-color: #ffffff;
+          --cds-text-on-color-disabled: rgba(255, 255, 255, 0.25);
+          --cds-text-placeholder: rgba(244, 244, 244, 0.4);
           --cds-text-primary: #f4f4f4;
           --cds-text-secondary: #c6c6c6;
 
@@ -216,6 +282,21 @@ final class CarbonStyles implements Http.Handler {
           --cds-border-tile-01: #525252;
           --cds-border-tile-02: #6f6f6f;
           --cds-border-tile-03: #8d8d8d;
+          --cds-button-separator: #161616;
+          --cds-button-primary: #0f62fe;
+          --cds-button-secondary: #6f6f6f;
+          --cds-button-tertiary: #ffffff;
+          --cds-button-danger-primary: #da1e28;
+          --cds-button-danger-secondary: #fa4d56;
+          --cds-button-danger-active: #750e13;
+          --cds-button-primary-active: #002d9c;
+          --cds-button-secondary-active: #393939;
+          --cds-button-tertiary-active: #c6c6c6;
+          --cds-button-danger-hover: #b81921;
+          --cds-button-primary-hover: #0050e6;
+          --cds-button-secondary-hover: #5e5e5e;
+          --cds-button-tertiary-hover: #f4f4f4;
+          --cds-button-disabled: rgba(141, 141, 141, 0.3);
           --cds-focus: #ffffff;
           --cds-focus-inset: #161616;
           --cds-focus-inverse: #0f62fe;
@@ -231,6 +312,13 @@ final class CarbonStyles implements Http.Handler {
           --cds-layer-03: #525252;
           --cds-overlay: rgba(0, 0, 0, 0.65);
           --cds-shadow: rgba(0, 0, 0, 0.8);
+          --cds-text-disabled: rgba(244, 244, 244, 0.25);
+          --cds-text-error: #ff8389;
+          --cds-text-helper: #a8a8a8;
+          --cds-text-inverse: #161616;
+          --cds-text-on-color: #ffffff;
+          --cds-text-on-color-disabled: rgba(255, 255, 255, 0.25);
+          --cds-text-placeholder: rgba(244, 244, 244, 0.4);
           --cds-text-primary: #f4f4f4;
           --cds-text-secondary: #c6c6c6;
 
@@ -251,7 +339,31 @@ final class CarbonStyles implements Http.Handler {
           --font-family-mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
 
           --cds-border-subtle: var(--cds-border-subtle-00, #e0e0e0);
+          --cds-button-separator: #e0e0e0;
+          --cds-button-primary: #0f62fe;
+          --cds-button-secondary: #393939;
+          --cds-button-tertiary: #0f62fe;
+          --cds-button-danger-primary: #da1e28;
+          --cds-button-danger-secondary: #da1e28;
+          --cds-button-danger-active: #750e13;
+          --cds-button-primary-active: #002d9c;
+          --cds-button-secondary-active: #6f6f6f;
+          --cds-button-tertiary-active: #002d9c;
+          --cds-button-danger-hover: #b81921;
+          --cds-button-primary-hover: #0050e6;
+          --cds-button-secondary-hover: #474747;
+          --cds-button-tertiary-hover: #0050e6;
+          --cds-button-disabled: #c6c6c6;
           --cds-layer: var(--cds-layer-01, #f4f4f4);
+          --cds-text-disabled: rgba(22, 22, 22, 0.25);
+          --cds-text-error: #da1e28;
+          --cds-text-helper: #6f6f6f;
+          --cds-text-inverse: #ffffff;
+          --cds-text-on-color: #ffffff;
+          --cds-text-on-color-disabled: #8d8d8d;
+          --cds-text-placeholder: rgba(22, 22, 22, 0.4);
+          --cds-text-primary: #161616;
+          --cds-text-secondary: #525252;
 
           --spacing-header: 3rem;
           --spacing-side-nav: 16rem;
@@ -343,9 +455,11 @@ final class CarbonStyles implements Http.Handler {
         : var(--cds-background)
         active: var(--cds-background-active)
         hover: var(--cds-background-hover)
+        selected: var(--cds-background-selected)
+        button-primary: var(--cds-button-primary)
+        button-primary-hover: var(--cds-button-primary-hover)
         layer: var(--cds-layer)
         overlay: var(--cds-overlay)
-        selected: var(--cds-background-selected)
         """),
 
         Css.overrideBorderColor("""
@@ -545,9 +659,12 @@ final class CarbonStyles implements Http.Handler {
         240px: 15rem
         256px: 16rem
         288px: 18rem
+        320px: 20rem
         """),
 
         Css.overrideTextColor("""
+        on-color: var(--cds-text-on-color)
+        on-color-disabled: var(--cds-text-on-color-disabled)
         primary: var(--cds-text-primary)
         secondary: var(--cds-text-secondary)
         """),
@@ -594,6 +711,22 @@ final class CarbonStyles implements Http.Handler {
     return Css.components("""
     # button-reset
     cursor-pointer appearance-none
+
+    # __button
+    relative m-0px inline-flex w-max max-w-320px min-h-48px shrink-0
+    cursor-pointer
+    align-start justify-between
+    outline-0
+
+    # button
+    py-14px pr-[63px] pl-[15px]
+
+    # button-primary
+    __button
+    bg-button-primary
+    border border-transparent
+    body-compact-01 text-on-color
+    hover:bg-button-primary-hover
     """);
   }
 

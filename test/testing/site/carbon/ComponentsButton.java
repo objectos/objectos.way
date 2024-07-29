@@ -35,7 +35,47 @@ final class ComponentsButton extends CarbonPage {
 
   @Override
   protected final void renderContent() {
-    p("The Button Component");
+    div(
+        className("grid-wide max-w-full py-05 bg-layer"),
+
+        h1(
+            className("col-span-full heading-04"),
+
+            t("Button")
+        )
+    );
+
+    section(
+        className("grid-wide"),
+
+        h2(
+            className("col-span-full"),
+
+            t("Variants")
+        ),
+
+        div(
+            className("col-span-4 aspect-1x1"),
+
+            button(
+                className("button button-primary"),
+                type("button"),
+
+                t("Primary")
+            )
+        ),
+
+        div(
+            className("col-span-4 aspect-1x1"),
+
+            button(
+                className("button"),
+                type("button"),
+
+                t("Danger")
+            )
+        )
+    );
   }
 
 }

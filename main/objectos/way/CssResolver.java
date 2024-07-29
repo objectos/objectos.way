@@ -20,7 +20,7 @@ import java.util.Map;
 import java.util.Set;
 
 @SuppressWarnings("exports")
-sealed abstract class CssResolver {
+abstract class CssResolver {
 
   static final class OfColorAlpha extends CssResolver {
 

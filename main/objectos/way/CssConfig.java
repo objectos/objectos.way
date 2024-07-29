@@ -29,7 +29,6 @@ import objectos.notes.NoOpNoteSink;
 import objectos.notes.NoteSink;
 import objectos.util.list.GrowableList;
 import objectos.util.map.GrowableMap;
-import objectos.way.Css.Key;
 
 final class CssConfig {
 
@@ -1416,6 +1415,72 @@ final class CssConfig {
 
     funcUtility(Css.Key.RIGHT, inset, NEGATIVE, "right", propertyType.right());
 
+    staticUtility(
+        Css.Key.RING_INSET,
+
+        """
+        ring-inset   | --tw-ring-inset: inset
+        """
+    );
+
+    customUtility(
+        Css.Key.RING_WIDTH,
+
+        "ring",
+
+        new CssResolver() {
+          private final Map<String, String> props = values(
+              Css.Key.RING_WIDTH,
+
+              """
+              0: 0px
+              1: 1px
+              2: 2px
+              : 3px
+              4: 4px
+              8: 8px
+              """
+          );
+
+          @Override
+          public final Css.Rule resolve(String className, List<Css.Variant> variants, boolean negative, Css.ValueType type, String value) {
+            String resolved;
+
+            if (type == Css.ValueType.STANDARD) {
+              resolved = props.get(value);
+            } else if (type == Css.ValueType.LENGTH) {
+              resolved = type.get(value);
+            } else {
+              return Css.Rule.NOOP;
+            }
+
+            if (resolved == null) {
+              return Css.Rule.NOOP;
+            }
+
+            CssProperties.Builder builder;
+            builder = new CssProperties.Builder();
+
+            builder.add(
+                "--tw-ring-offset-shadow",
+                "var(--tw-ring-inset, ) 0 0 0 var(--tw-ring-offset-width, 0px) var(--tw-ring-offset-color, #fff)"
+            );
+
+            builder.add(
+                "--tw-ring-shadow",
+                "var(--tw-ring-inset, ) 0 0 0 calc(" + resolved + " + var(--tw-ring-offset-width, 0px)) var(--tw-ring-color, rgb(59 130 246 / 0.5))"
+            );
+
+            builder.add(
+                "box-shadow",
+                "var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow, 0 0 #0000)"
+            );
+
+            return new CssUtility(Css.Key.RING_WIDTH, className, variants, builder);
+          }
+        }
+    );
+
     // S
 
     funcUtility(
@@ -1969,7 +2034,7 @@ final class CssConfig {
 
   public void specPrintMultiPrefix() {
     for (var entry : prefixes.entrySet()) {
-      Set<Key> set;
+      Set<Css.Key> set;
       set = entry.getValue();
 
       if (set.size() > 1) {
