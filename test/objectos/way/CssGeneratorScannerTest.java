@@ -70,6 +70,38 @@ public class CssGeneratorScannerTest {
     test(Subject.class, "m-0", "block", "leading-3");
   }
 
+  @Test(description = "non-ascii modified utf-8")
+  public void testCase04() {
+    class Subject extends Html.Template {
+      @Override
+      protected final void render() {
+        div(
+            // single byte (last one two bytes to trigger parsing)
+            className("\u0001\u0011\u0021\u0031\u0041\u0051\u0061\u007F\u0000"),
+            // two bytes
+            className("\u0000"),
+            className("\u0080\u0081\u07FE\u07FF"),
+            // three bytes
+            className("\u0800\u0801\uFFFE\uFFFF"),
+            // random
+            className("Olá"),
+            className("こんにちは世界")
+        );
+      }
+    }
+
+    test(
+        Subject.class,
+
+        "\u0001\u0011\u0021\u0031\u0041\u0051\u0061\u007F\u0000",
+        "\u0000",
+        "\u0080\u0081\u07FE\u07FF",
+        "\u0800\u0801\uFFFE\uFFFF",
+        "Olá",
+        "こんにちは世界"
+    );
+  }
+
   private void test(Class<?> type, String... expected) {
     List<String> result;
     result = new ArrayList<>();

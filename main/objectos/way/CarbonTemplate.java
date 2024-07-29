@@ -17,7 +17,7 @@ package objectos.way;
 
 abstract class CarbonTemplate extends Html.Template implements Web.Action {
 
-  private final Http.Exchange http;
+  protected final Http.Exchange http;
 
   protected CarbonTemplate(Http.Exchange http) {
     this.http = http;

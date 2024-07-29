@@ -379,7 +379,82 @@ final class CssGeneratorScanner {
       return new String(bytes, bytesIndex, length, StandardCharsets.UTF_8);
     }
 
-    throw new UnsupportedOperationException("Implement me :: non ascii");
+    // 2. parse modified UTF-8
+
+    char[] chars;
+    chars = new char[length];
+
+    int index;
+    index = bytesIndex;
+
+    int max;
+    max = bytesIndex + length;
+
+    int charIndex;
+    charIndex = 0;
+
+    while (index < max) {
+      int byte0 = Css.toUnsignedInt(
+          bytes[index++]
+      );
+
+      int highBytes;
+      highBytes = byte0 >> 4;
+
+      switch (highBytes) {
+        case 0, 1, 2, 3, 4, 5, 6, 7:
+          chars[charIndex++] = (char) byte0;
+
+          break;
+
+        case 12, 13:
+          if (index >= max) {
+            // invalid
+            return "";
+          }
+
+          int byte1 = bytes[index++];
+
+          if ((byte1 & 0xC0) != 0x80) {
+            // invalid
+            return "";
+          }
+
+          chars[charIndex++] = (char) (((byte0 & 0x1F) << 6) | (byte1 & 0x3F));
+
+          break;
+
+        case 14:
+          if (index >= max) {
+            // invalid
+            return "";
+          }
+
+          byte1 = bytes[index++];
+
+          if (index >= max) {
+            // invalid
+            return "";
+          }
+
+          int byte2 = bytes[index++];
+
+          if (((byte1 & 0xC0) != 0x80) || ((byte2 & 0xC0) != 0x80)) {
+            // invalid
+            return "";
+          }
+
+          chars[charIndex++] = (char) (((byte0 & 0x0F) << 12) | ((byte1 & 0x3F) << 6) | (byte2 & 0x3F));
+
+          break;
+
+        default:
+          // invalid
+          return "";
+      }
+    }
+
+    return new String(chars, 0, charIndex);
   }
 
 }
