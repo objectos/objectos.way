@@ -456,6 +456,9 @@ final class CarbonStyles implements Http.Handler {
         active: var(--cds-background-active)
         hover: var(--cds-background-hover)
         selected: var(--cds-background-selected)
+        button-danger: var(--cds-button-danger-primary)
+        button-danger-active: var(--cds-button-danger-active)
+        button-danger-hover: var(--cds-button-danger-hover)
         button-primary: var(--cds-button-primary)
         button-primary-active: var(--cds-button-primary-active)
         button-primary-hover: var(--cds-button-primary-hover)
@@ -721,16 +724,23 @@ final class CarbonStyles implements Http.Handler {
     transition-all duration-100
 
     # button
+    __button
     py-14px pr-[63px] pl-[15px]
+    border border-transparent
+    focus:shadow-[inset_0_0_0_1px_var(--cds-focus),inset_0_0_0_2px_var(--cds-background)]
 
     # button-primary
-    __button
     bg-button-primary
-    border border-transparent
     body-compact-01 text-on-color
     active:bg-button-primary-active
-    focus:shadow-[inset_0_0_0_1px_var(--cds-focus),inset_0_0_0_2px_var(--cds-background)]
     hover:bg-button-primary-hover
+
+    # button-danger
+    bg-button-danger
+    body-compact-01 text-on-color
+    active:bg-button-danger-active
+    focus:border-focus
+    hover:bg-button-danger-hover
     """);
   }
 

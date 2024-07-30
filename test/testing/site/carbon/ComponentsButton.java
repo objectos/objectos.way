@@ -69,7 +69,7 @@ final class ComponentsButton extends CarbonPage {
             className("col-span-4 aspect-1x1"),
 
             button(
-                className("button"),
+                className("button button-danger"),
                 type("button"),
 
                 t("Danger")
