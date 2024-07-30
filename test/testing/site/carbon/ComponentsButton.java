@@ -49,32 +49,50 @@ final class ComponentsButton extends CarbonPage {
         className("grid-wide"),
 
         h2(
-            className("col-span-full"),
+            className("col-span-full heading-03"),
 
             t("Variants")
         ),
 
         div(
-            className("col-span-4 aspect-1x1"),
+            className("col-span-full"),
 
-            button(
-                className("button button-primary"),
-                type("button"),
+            div(
+                className("flex gap-x-03"),
 
-                t("Primary")
-            )
-        ),
-
-        div(
-            className("col-span-4 aspect-1x1"),
-
-            button(
-                className("button button-danger"),
-                type("button"),
-
-                t("Danger")
+                f(this::variants)
             )
         )
+    );
+  }
+
+  private void variants() {
+    button(
+        className("button button-primary"),
+        type("button"),
+
+        t("Primary")
+    );
+
+    button(
+        className("button button-secondary"),
+        type("button"),
+
+        t("Secondary")
+    );
+
+    button(
+        className("button button-tertiary"),
+        type("button"),
+
+        t("Tertiary")
+    );
+
+    button(
+        className("button button-danger"),
+        type("button"),
+
+        t("Danger")
     );
   }
 

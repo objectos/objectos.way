@@ -462,11 +462,18 @@ final class CarbonStyles implements Http.Handler {
         button-primary: var(--cds-button-primary)
         button-primary-active: var(--cds-button-primary-active)
         button-primary-hover: var(--cds-button-primary-hover)
+        button-secondary: var(--cds-button-secondary)
+        button-secondary-active: var(--cds-button-secondary-active)
+        button-secondary-hover: var(--cds-button-secondary-hover)
+        button-tertiary: var(--cds-button-tertiary)
+        button-tertiary-active: var(--cds-button-tertiary-active)
+        button-tertiary-hover: var(--cds-button-tertiary-hover)
         layer: var(--cds-layer)
         overlay: var(--cds-overlay)
         """),
 
         Css.overrideBorderColor("""
+        button-tertiary: var(--cds-button-tertiary)
         focus: var(--cds-focus)
         interactive: var(--cds-border-interactive)
         subtle: var(--cds-border-subtle)
@@ -667,6 +674,8 @@ final class CarbonStyles implements Http.Handler {
         """),
 
         Css.overrideTextColor("""
+        button-tertiary: var(--cds-button-tertiary)
+        inverse: var(--cds-text-inverse)
         on-color: var(--cds-text-on-color)
         on-color-disabled: var(--cds-text-on-color-disabled)
         primary: var(--cds-text-primary)
@@ -726,20 +735,36 @@ final class CarbonStyles implements Http.Handler {
     # button
     __button
     py-14px pr-[63px] pl-[15px]
-    border border-transparent
+    body-compact-01
+    focus:border-focus
     focus:shadow-[inset_0_0_0_1px_var(--cds-focus),inset_0_0_0_2px_var(--cds-background)]
 
     # button-primary
     bg-button-primary
-    body-compact-01 text-on-color
+    border border-transparent
+    text-on-color
     active:bg-button-primary-active
     hover:bg-button-primary-hover
 
+    # button-secondary
+    bg-button-secondary
+    border border-transparent
+    text-on-color
+    active:bg-button-secondary-active
+    hover:bg-button-secondary-hover
+
+    # button-tertiary
+    bg-transparent
+    border border-button-tertiary
+    text-button-tertiary
+    active:bg-button-tertiary-active
+    hover:bg-button-tertiary-hover hover:text-inverse
+
     # button-danger
     bg-button-danger
-    body-compact-01 text-on-color
+    border border-transparent
+    text-on-color
     active:bg-button-danger-active
-    focus:border-focus
     hover:bg-button-danger-hover
     """);
   }
