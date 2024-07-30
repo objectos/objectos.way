@@ -2850,19 +2850,71 @@ public class CssGeneratorTest {
     );
   }
 
-  @Test(enabled = false)
+  @Test
   public void ringColor() {
-    throw new UnsupportedOperationException("Implement me");
+    class Subject extends AbstractSubject {
+      @Override
+      final void classes() {
+        className("ring-inherit ring-current ring-transparent ring-black ring-white");
+      }
+    }
+
+    test(
+        Subject.class,
+
+        """
+        .ring-inherit { --tw-ring-color: inherit }
+        .ring-current { --tw-ring-color: currentColor }
+        .ring-transparent { --tw-ring-color: transparent }
+        .ring-black { --tw-ring-color: #000000 }
+        .ring-white { --tw-ring-color: #ffffff }
+        """
+    );
   }
 
-  @Test(enabled = false)
+  @Test
   public void ringOffset() {
-    throw new UnsupportedOperationException("Implement me");
+    class Subject extends AbstractSubject {
+      @Override
+      final void classes() {
+        className("ring-offset-0 ring-offset-1 ring-offset-2 ring-offset-4 ring-offset-8 ring-offset-[10px]");
+      }
+    }
+
+    test(
+        Subject.class,
+
+        """
+        .ring-offset-0 { --tw-ring-offset-width: 0px }
+        .ring-offset-1 { --tw-ring-offset-width: 1px }
+        .ring-offset-2 { --tw-ring-offset-width: 2px }
+        .ring-offset-4 { --tw-ring-offset-width: 4px }
+        .ring-offset-8 { --tw-ring-offset-width: 8px }
+        .ring-offset-\\[10px\\] { --tw-ring-offset-width: 10px }
+        """
+    );
   }
 
-  @Test(enabled = false)
+  @Test
   public void ringOffsetColor() {
-    throw new UnsupportedOperationException("Implement me");
+    class Subject extends AbstractSubject {
+      @Override
+      final void classes() {
+        className("ring-offset-inherit ring-offset-current ring-offset-transparent ring-offset-black ring-offset-white");
+      }
+    }
+
+    test(
+        Subject.class,
+
+        """
+        .ring-offset-inherit { --tw-ring-offset-color: inherit }
+        .ring-offset-current { --tw-ring-offset-color: currentColor }
+        .ring-offset-transparent { --tw-ring-offset-color: transparent }
+        .ring-offset-black { --tw-ring-offset-color: #000000 }
+        .ring-offset-white { --tw-ring-offset-color: #ffffff }
+        """
+    );
   }
 
   @Test

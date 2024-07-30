@@ -259,16 +259,12 @@ final class CssConfig {
 
   private static final Css.ValueFormatter IDENTITY = new Css.ValueFormatter() {
     @Override
-    public final String format(String value, boolean negative) {
-      return value;
-    }
+    public final String format(String value, boolean negative) { return value; }
   };
 
   private static final Css.ValueFormatter NEGATIVE = new Css.ValueFormatter() {
     @Override
-    public final String format(String value, boolean negative) {
-      return negative ? "-" + value : value;
-    }
+    public final String format(String value, boolean negative) { return negative ? "-" + value : value; }
   };
 
   private Css.ValueFormatter ofFunc(Function<String, String> function) {
@@ -287,6 +283,10 @@ final class CssConfig {
 
   private static final Set<Css.ValueType> INTEGER = EnumSet.of(
       Css.ValueType.INTEGER
+  );
+
+  private static final Set<Css.ValueType> LENGTH = EnumSet.of(
+      Css.ValueType.LENGTH
   );
 
   private static final Set<Css.ValueType> L_OR_P = EnumSet.of(
@@ -1413,73 +1413,7 @@ final class CssConfig {
 
     // R
 
-    funcUtility(Css.Key.RIGHT, inset, NEGATIVE, "right", propertyType.right());
-
-    staticUtility(
-        Css.Key.RING_INSET,
-
-        """
-        ring-inset   | --tw-ring-inset: inset
-        """
-    );
-
-    customUtility(
-        Css.Key.RING_WIDTH,
-
-        "ring",
-
-        new CssResolver() {
-          private final Map<String, String> props = values(
-              Css.Key.RING_WIDTH,
-
-              """
-              0: 0px
-              1: 1px
-              2: 2px
-              : 3px
-              4: 4px
-              8: 8px
-              """
-          );
-
-          @Override
-          public final Css.Rule resolve(String className, List<Css.Variant> variants, boolean negative, Css.ValueType type, String value) {
-            String resolved;
-
-            if (type == Css.ValueType.STANDARD) {
-              resolved = props.get(value);
-            } else if (type == Css.ValueType.LENGTH) {
-              resolved = type.get(value);
-            } else {
-              return Css.Rule.NOOP;
-            }
-
-            if (resolved == null) {
-              return Css.Rule.NOOP;
-            }
-
-            CssProperties.Builder builder;
-            builder = new CssProperties.Builder();
-
-            builder.add(
-                "--tw-ring-offset-shadow",
-                "var(--tw-ring-inset, ) 0 0 0 var(--tw-ring-offset-width, 0px) var(--tw-ring-offset-color, #fff)"
-            );
-
-            builder.add(
-                "--tw-ring-shadow",
-                "var(--tw-ring-inset, ) 0 0 0 calc(" + resolved + " + var(--tw-ring-offset-width, 0px)) var(--tw-ring-color, rgb(59 130 246 / 0.5))"
-            );
-
-            builder.add(
-                "box-shadow",
-                "var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow, 0 0 #0000)"
-            );
-
-            return new CssUtility(Css.Key.RING_WIDTH, className, variants, builder);
-          }
-        }
-    );
+    specR(colors, inset);
 
     // S
 
@@ -1846,6 +1780,108 @@ final class CssConfig {
         ),
 
         "z", "z-index"
+    );
+  }
+
+  record RingWidth(Map<String, String> props) implements CssResolver {
+    @Override
+    public final Css.Rule resolve(String className, List<Css.Variant> variants, boolean negative, Css.ValueType type, String value) {
+      String resolved;
+
+      if (type == Css.ValueType.STANDARD) {
+        resolved = props.get(value);
+      } else if (type == Css.ValueType.LENGTH) {
+        resolved = type.get(value);
+      } else {
+        return null;
+      }
+
+      if (resolved == null) {
+        return null;
+      }
+
+      CssProperties.Builder builder;
+      builder = new CssProperties.Builder();
+
+      builder.add(
+          "--tw-ring-offset-shadow",
+          "var(--tw-ring-inset, ) 0 0 0 var(--tw-ring-offset-width, 0px) var(--tw-ring-offset-color, #fff)"
+      );
+
+      builder.add(
+          "--tw-ring-shadow",
+          "var(--tw-ring-inset, ) 0 0 0 calc(" + resolved + " + var(--tw-ring-offset-width, 0px)) var(--tw-ring-color, rgb(59 130 246 / 0.5))"
+      );
+
+      builder.add(
+          "box-shadow",
+          "var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow, 0 0 #0000)"
+      );
+
+      return new CssUtility(Css.Key.RING_WIDTH, className, variants, builder);
+    }
+  }
+
+  private void specR(Map<String, String> colors, Map<String, String> inset) {
+    funcUtility(Css.Key.RIGHT, inset, NEGATIVE, "right", propertyType.right());
+
+    colorUtility(Css.Key.RING_COLOR, values(Css.Key.RING_COLOR, colors), "ring", "--tw-ring-color");
+
+    staticUtility(
+        Css.Key.RING_INSET,
+
+        """
+      ring-inset   | --tw-ring-inset: inset
+      """
+    );
+
+    colorUtility(
+        Css.Key.RING_OFFSET_COLOR,
+
+        values(Css.Key.RING_OFFSET_COLOR, colors),
+
+        "ring-offset", "--tw-ring-offset-color"
+    );
+
+    funcUtility(
+        Css.Key.RING_OFFSET_WIDTH,
+
+        values(
+            Css.Key.RING_OFFSET_WIDTH,
+
+            """
+            0: 0px
+            1: 1px
+            2: 2px
+            4: 4px
+            8: 8px
+            """
+        ),
+
+        LENGTH,
+
+        "ring-offset", "--tw-ring-offset-width"
+    );
+
+    customUtility(
+        Css.Key.RING_WIDTH,
+
+        "ring",
+
+        new RingWidth(
+            values(
+                Css.Key.RING_WIDTH,
+
+                """
+                0: 0px
+                1: 1px
+                2: 2px
+                : 3px
+                4: 4px
+                8: 8px
+                """
+            )
+        )
     );
   }
 

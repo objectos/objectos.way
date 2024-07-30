@@ -20,9 +20,9 @@ import java.util.Map;
 import java.util.Set;
 
 @SuppressWarnings("exports")
-abstract class CssResolver {
+interface CssResolver {
 
-  static final class OfColorAlpha extends CssResolver {
+  static final class OfColorAlpha implements CssResolver {
 
     private final Css.Key key;
 
@@ -76,7 +76,7 @@ abstract class CssResolver {
 
   }
 
-  static final class OfFontSize extends CssResolver {
+  static final class OfFontSize implements CssResolver {
 
     private final Map<String, String> fontSize;
 
@@ -219,7 +219,7 @@ abstract class CssResolver {
 
   }
 
-  static final class OfTransitionProperty extends CssResolver {
+  static final class OfTransitionProperty implements CssResolver {
 
     private static final String[] PROPERTY_NAMES = {"transition-property", "transition-timing-function", "transition-duration"};
 
@@ -241,9 +241,53 @@ abstract class CssResolver {
       return resolveSlashes(Css.Key.TRANSITION_PROPERTY, className, variants, PROPERTY_NAMES, resolved);
     }
 
+    final Css.Rule resolveSlashes(
+        Css.Key key,
+        String className, List<Css.Variant> variants,
+        String[] propertyNames, String value) {
+
+      CssProperties.Builder properties;
+      properties = new CssProperties.Builder();
+
+      String previousName;
+      previousName = null;
+
+      for (int idx = 0; idx < propertyNames.length; idx++) {
+
+        String propertyName;
+        propertyName = propertyNames[idx];
+
+        int slash;
+        slash = value.indexOf('/');
+
+        if (slash < 0) {
+          properties.add(propertyName, value);
+
+          return new CssUtility(key, className, variants, properties);
+        }
+
+        String thisValue;
+        thisValue = value.substring(0, slash);
+
+        properties.add(propertyName, thisValue);
+
+        previousName = propertyName;
+
+        value = value.substring(slash + 1);
+
+      }
+
+      if (previousName != null) {
+        properties.add(previousName, value);
+      }
+
+      return new CssUtility(key, className, variants, properties);
+
+    }
+
   }
 
-  static final class OfProperties extends CssResolver {
+  static final class OfProperties implements CssResolver {
 
     private final Css.Key key;
 
@@ -306,50 +350,6 @@ abstract class CssResolver {
 
   }
 
-  public abstract Css.Rule resolve(String className, List<Css.Variant> variants, boolean negative, Css.ValueType type, String value);
-
-  final Css.Rule resolveSlashes(
-      Css.Key key,
-      String className, List<Css.Variant> variants,
-      String[] propertyNames, String value) {
-
-    CssProperties.Builder properties;
-    properties = new CssProperties.Builder();
-
-    String previousName;
-    previousName = null;
-
-    for (int idx = 0; idx < propertyNames.length; idx++) {
-
-      String propertyName;
-      propertyName = propertyNames[idx];
-
-      int slash;
-      slash = value.indexOf('/');
-
-      if (slash < 0) {
-        properties.add(propertyName, value);
-
-        return new CssUtility(key, className, variants, properties);
-      }
-
-      String thisValue;
-      thisValue = value.substring(0, slash);
-
-      properties.add(propertyName, thisValue);
-
-      previousName = propertyName;
-
-      value = value.substring(slash + 1);
-
-    }
-
-    if (previousName != null) {
-      properties.add(previousName, value);
-    }
-
-    return new CssUtility(key, className, variants, properties);
-
-  }
+  Css.Rule resolve(String className, List<Css.Variant> variants, boolean negative, Css.ValueType type, String value);
 
 }
