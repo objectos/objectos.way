@@ -457,6 +457,7 @@ final class CarbonStyles implements Http.Handler {
         hover: var(--cds-background-hover)
         selected: var(--cds-background-selected)
         button-primary: var(--cds-button-primary)
+        button-primary-active: var(--cds-button-primary-active)
         button-primary-hover: var(--cds-button-primary-hover)
         layer: var(--cds-layer)
         overlay: var(--cds-overlay)
@@ -717,6 +718,7 @@ final class CarbonStyles implements Http.Handler {
     cursor-pointer
     align-start justify-between
     outline-0
+    transition-all duration-100
 
     # button
     py-14px pr-[63px] pl-[15px]
@@ -726,6 +728,8 @@ final class CarbonStyles implements Http.Handler {
     bg-button-primary
     border border-transparent
     body-compact-01 text-on-color
+    active:bg-button-primary-active
+    focus:shadow-[inset_0_0_0_1px_var(--cds-focus),inset_0_0_0_2px_var(--cds-background)]
     hover:bg-button-primary-hover
     """);
   }

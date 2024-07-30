@@ -1707,7 +1707,7 @@ final class CssConfig {
   }
 
   private static final Pattern REPLACE_COLOR = Pattern.compile(
-      "(rgb\\([0-9]{1,3} [0-9]{1,3} [0-9]{1,3}(:?\\s*\\/\\s*[0-9\\.]+)?\\)|#[a-fA-F0-9]{3,6})"
+      "(rgb\\([0-9]{1,3} [0-9]{1,3} [0-9]{1,3}(:?\\s*\\/\\s*[0-9\\.]+)?\\)|#[a-fA-F0-9]{3,6}|var\\(.+\\))"
   );
 
   static String replaceColor(String raw, String replacement) {
@@ -1746,7 +1746,7 @@ final class CssConfig {
 
       builder.add(
           "box-shadow",
-          "var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow, 0 0 #0000)"
+          "var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow, 0 0 #0000)"
       );
 
       return new CssUtility(Css.Key.BOX_SHADOW, className, variants, builder);
@@ -1927,7 +1927,7 @@ final class CssConfig {
 
       builder.add(
           "box-shadow",
-          "var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow, 0 0 #0000)"
+          "var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow, 0 0 #0000)"
       );
 
       return new CssUtility(Css.Key.RING_WIDTH, className, variants, builder);
