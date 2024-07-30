@@ -25,6 +25,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.function.Supplier;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import objectos.notes.NoOpNoteSink;
 import objectos.notes.NoteSink;
 import objectos.util.list.GrowableList;
@@ -314,6 +316,25 @@ final class CssConfig {
 
     var spacing = values(Css.Key._SPACING, Css.DEFAULT_SPACING);
 
+    var inset = values(
+        Css.Key.INSET,
+
+        () -> Css.merge(
+            """
+              auto: auto
+              1/2: 50%
+              1/3: 33.333333%
+              2/3: 66.666667%
+              1/4: 25%
+              2/4: 50%
+              3/4: 75%
+              full: 100%
+              """,
+
+            spacing
+        )
+    );
+
     // A
 
     staticUtility(
@@ -456,105 +477,7 @@ final class CssConfig {
 
     // B
 
-    colorUtility(
-        Css.Key.BACKGROUND_COLOR,
-
-        values(Css.Key.BACKGROUND_COLOR, colors),
-
-        "bg", "background-color"
-    );
-
-    staticUtility(
-        Css.Key.BORDER_COLLAPSE,
-
-        """
-        border-collapse | border-collapse: collapse
-        border-separate | border-collapse: separate
-        """
-    );
-
-    var borderColor = values(Css.Key.BORDER_COLOR, colors);
-
-    colorUtility(Css.Key.BORDER_COLOR, borderColor, "border", "border-color");
-    colorUtility(Css.Key.BORDER_COLOR_TOP, borderColor, "border-t", propertyType.borderColorTop());
-    colorUtility(Css.Key.BORDER_COLOR_RIGHT, borderColor, "border-r", propertyType.borderColorRight());
-    colorUtility(Css.Key.BORDER_COLOR_BOTTOM, borderColor, "border-b", propertyType.borderColorBottom());
-    colorUtility(Css.Key.BORDER_COLOR_LEFT, borderColor, "border-l", propertyType.borderColorLeft());
-    colorUtility(Css.Key.BORDER_COLOR_X, borderColor, "border-x", propertyType.borderColorLeft(), propertyType.borderColorRight());
-    colorUtility(Css.Key.BORDER_COLOR_Y, borderColor, "border-y", propertyType.borderColorTop(), propertyType.borderColorBottom());
-
-    var rounded = values(
-        Css.Key.BORDER_RADIUS,
-
-        """
-        none: 0px
-        sm: 0.125rem
-        : 0.25rem
-        md: 0.375rem
-        lg: 0.5rem
-        xl: 0.75rem
-        2xl: 1rem
-        3xl: 1.5rem
-        full: 9999px
-        """
-    );
-
-    funcUtility(Css.Key.BORDER_RADIUS, rounded, "rounded", "border-radius");
-    funcUtility(Css.Key.BORDER_RADIUS_TL, rounded, "rounded-tl", propertyType.borderRadiusTopLeft());
-    funcUtility(Css.Key.BORDER_RADIUS_TR, rounded, "rounded-tr", propertyType.borderRadiusTopRight());
-    funcUtility(Css.Key.BORDER_RADIUS_BR, rounded, "rounded-br", propertyType.borderRadiusBottomRight());
-    funcUtility(Css.Key.BORDER_RADIUS_BL, rounded, "rounded-bl", propertyType.borderRadiusBottomLeft());
-    funcUtility(Css.Key.BORDER_RADIUS_T, rounded, "rounded-t", propertyType.borderRadiusTopLeft(), propertyType.borderRadiusTopRight());
-    funcUtility(Css.Key.BORDER_RADIUS_R, rounded, "rounded-r", propertyType.borderRadiusTopRight(), propertyType.borderRadiusBottomRight());
-    funcUtility(Css.Key.BORDER_RADIUS_B, rounded, "rounded-b", propertyType.borderRadiusBottomRight(), propertyType.borderRadiusBottomLeft());
-    funcUtility(Css.Key.BORDER_RADIUS_L, rounded, "rounded-l", propertyType.borderRadiusBottomLeft(), propertyType.borderRadiusTopLeft());
-
-    var borderSpacing = values(Css.Key.BORDER_SPACING, spacing);
-
-    funcUtility(Css.Key.BORDER_SPACING, borderSpacing, ofFunc(s -> s + " " + s), "border-spacing", "border-spacing");
-    funcUtility(Css.Key.BORDER_SPACING_X, borderSpacing, ofFunc(s -> s + " 0"), "border-spacing-x", "border-spacing");
-    funcUtility(Css.Key.BORDER_SPACING_Y, borderSpacing, ofFunc(s -> "0 " + s), "border-spacing-y", "border-spacing");
-
-    var borderWidth = values(
-        Css.Key.BORDER_WIDTH,
-
-        """
-        : 1px
-        0: 0px
-        2: 2px
-        4: 4px
-        8: 8px
-        """
-    );
-
-    funcUtility(Css.Key.BORDER_WIDTH, borderWidth, "border", "border-width");
-    funcUtility(Css.Key.BORDER_WIDTH_TOP, borderWidth, "border-t", propertyType.borderWidthTop());
-    funcUtility(Css.Key.BORDER_WIDTH_RIGHT, borderWidth, "border-r", propertyType.borderWidthRight());
-    funcUtility(Css.Key.BORDER_WIDTH_BOTTOM, borderWidth, "border-b", propertyType.borderWidthBottom());
-    funcUtility(Css.Key.BORDER_WIDTH_LEFT, borderWidth, "border-l", propertyType.borderWidthLeft());
-    funcUtility(Css.Key.BORDER_WIDTH_X, borderWidth, "border-x", propertyType.borderWidthLeft(), propertyType.borderWidthRight());
-    funcUtility(Css.Key.BORDER_WIDTH_Y, borderWidth, "border-y", propertyType.borderWidthTop(), propertyType.borderWidthBottom());
-
-    var inset = values(
-        Css.Key.INSET,
-
-        () -> Css.merge(
-            """
-              auto: auto
-              1/2: 50%
-              1/3: 33.333333%
-              2/3: 66.666667%
-              1/4: 25%
-              2/4: 50%
-              3/4: 75%
-              full: 100%
-              """,
-
-            spacing
-        )
-    );
-
-    funcUtility(Css.Key.BOTTOM, inset, NEGATIVE, "bottom", propertyType.bottom());
+    specB(colors, spacing, inset);
 
     // C
 
@@ -1780,6 +1703,195 @@ final class CssConfig {
         ),
 
         "z", "z-index"
+    );
+  }
+
+  private static final Pattern REPLACE_COLOR = Pattern.compile(
+      "(rgb\\([0-9]{1,3} [0-9]{1,3} [0-9]{1,3}(:?\\s*\\/\\s*[0-9\\.]+)?\\)|#[a-fA-F0-9]{3,6})"
+  );
+
+  static String replaceColor(String raw, String replacement) {
+    Matcher matcher;
+    matcher = REPLACE_COLOR.matcher(raw);
+
+    return matcher.replaceAll(replacement);
+  }
+
+  record BoxShadow(Map<String, String> props) implements CssResolver {
+    @Override
+    public final Css.Rule resolve(String className, List<Css.Variant> variants, boolean negative, Css.ValueType type, String value) {
+      String resolved;
+
+      if (type == Css.ValueType.STANDARD) {
+        resolved = props.get(value);
+      } else if (type == Css.ValueType.STRING) {
+        resolved = type.get(value);
+      } else {
+        return null;
+      }
+
+      if (resolved == null) {
+        return null;
+      }
+
+      CssProperties.Builder builder;
+      builder = new CssProperties.Builder();
+
+      builder.add("--tw-shadow", resolved);
+
+      String colored;
+      colored = replaceColor(resolved, "var(--tw-shadow-color)");
+
+      builder.add("--tw-shadow-colored", colored);
+
+      builder.add(
+          "box-shadow",
+          "var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow, 0 0 #0000)"
+      );
+
+      return new CssUtility(Css.Key.BOX_SHADOW, className, variants, builder);
+    }
+  }
+
+  record BoxShadowColor(Map<String, String> props) implements CssResolver {
+    @Override
+    public final Css.Rule resolve(String className, List<Css.Variant> variants, boolean negative, Css.ValueType type, String value) {
+      String resolved;
+
+      if (type == Css.ValueType.STANDARD) {
+        resolved = props.get(value);
+      } else {
+        return null;
+      }
+
+      if (resolved == null) {
+        return null;
+      }
+
+      CssProperties.Builder builder;
+      builder = new CssProperties.Builder();
+
+      builder.add("--tw-shadow-colored", resolved);
+
+      builder.add("--tw-shadow", "var(--tw-shadow-colored)");
+
+      return new CssUtility(Css.Key.BOX_SHADOW_COLOR, className, variants, builder);
+    }
+  }
+
+  private void specB(Map<String, String> colors, Map<String, String> spacing, Map<String, String> inset) {
+    colorUtility(
+        Css.Key.BACKGROUND_COLOR,
+
+        values(Css.Key.BACKGROUND_COLOR, colors),
+
+        "bg", "background-color"
+    );
+
+    staticUtility(
+        Css.Key.BORDER_COLLAPSE,
+
+        """
+      border-collapse | border-collapse: collapse
+      border-separate | border-collapse: separate
+      """
+    );
+
+    var borderColor = values(Css.Key.BORDER_COLOR, colors);
+
+    colorUtility(Css.Key.BORDER_COLOR, borderColor, "border", "border-color");
+    colorUtility(Css.Key.BORDER_COLOR_TOP, borderColor, "border-t", propertyType.borderColorTop());
+    colorUtility(Css.Key.BORDER_COLOR_RIGHT, borderColor, "border-r", propertyType.borderColorRight());
+    colorUtility(Css.Key.BORDER_COLOR_BOTTOM, borderColor, "border-b", propertyType.borderColorBottom());
+    colorUtility(Css.Key.BORDER_COLOR_LEFT, borderColor, "border-l", propertyType.borderColorLeft());
+    colorUtility(Css.Key.BORDER_COLOR_X, borderColor, "border-x", propertyType.borderColorLeft(), propertyType.borderColorRight());
+    colorUtility(Css.Key.BORDER_COLOR_Y, borderColor, "border-y", propertyType.borderColorTop(), propertyType.borderColorBottom());
+
+    var rounded = values(
+        Css.Key.BORDER_RADIUS,
+
+        """
+      none: 0px
+      sm: 0.125rem
+      : 0.25rem
+      md: 0.375rem
+      lg: 0.5rem
+      xl: 0.75rem
+      2xl: 1rem
+      3xl: 1.5rem
+      full: 9999px
+      """
+    );
+
+    funcUtility(Css.Key.BORDER_RADIUS, rounded, "rounded", "border-radius");
+    funcUtility(Css.Key.BORDER_RADIUS_TL, rounded, "rounded-tl", propertyType.borderRadiusTopLeft());
+    funcUtility(Css.Key.BORDER_RADIUS_TR, rounded, "rounded-tr", propertyType.borderRadiusTopRight());
+    funcUtility(Css.Key.BORDER_RADIUS_BR, rounded, "rounded-br", propertyType.borderRadiusBottomRight());
+    funcUtility(Css.Key.BORDER_RADIUS_BL, rounded, "rounded-bl", propertyType.borderRadiusBottomLeft());
+    funcUtility(Css.Key.BORDER_RADIUS_T, rounded, "rounded-t", propertyType.borderRadiusTopLeft(), propertyType.borderRadiusTopRight());
+    funcUtility(Css.Key.BORDER_RADIUS_R, rounded, "rounded-r", propertyType.borderRadiusTopRight(), propertyType.borderRadiusBottomRight());
+    funcUtility(Css.Key.BORDER_RADIUS_B, rounded, "rounded-b", propertyType.borderRadiusBottomRight(), propertyType.borderRadiusBottomLeft());
+    funcUtility(Css.Key.BORDER_RADIUS_L, rounded, "rounded-l", propertyType.borderRadiusBottomLeft(), propertyType.borderRadiusTopLeft());
+
+    var borderSpacing = values(Css.Key.BORDER_SPACING, spacing);
+
+    funcUtility(Css.Key.BORDER_SPACING, borderSpacing, ofFunc(s -> s + " " + s), "border-spacing", "border-spacing");
+    funcUtility(Css.Key.BORDER_SPACING_X, borderSpacing, ofFunc(s -> s + " 0"), "border-spacing-x", "border-spacing");
+    funcUtility(Css.Key.BORDER_SPACING_Y, borderSpacing, ofFunc(s -> "0 " + s), "border-spacing-y", "border-spacing");
+
+    var borderWidth = values(
+        Css.Key.BORDER_WIDTH,
+
+        """
+      : 1px
+      0: 0px
+      2: 2px
+      4: 4px
+      8: 8px
+      """
+    );
+
+    funcUtility(Css.Key.BORDER_WIDTH, borderWidth, "border", "border-width");
+    funcUtility(Css.Key.BORDER_WIDTH_TOP, borderWidth, "border-t", propertyType.borderWidthTop());
+    funcUtility(Css.Key.BORDER_WIDTH_RIGHT, borderWidth, "border-r", propertyType.borderWidthRight());
+    funcUtility(Css.Key.BORDER_WIDTH_BOTTOM, borderWidth, "border-b", propertyType.borderWidthBottom());
+    funcUtility(Css.Key.BORDER_WIDTH_LEFT, borderWidth, "border-l", propertyType.borderWidthLeft());
+    funcUtility(Css.Key.BORDER_WIDTH_X, borderWidth, "border-x", propertyType.borderWidthLeft(), propertyType.borderWidthRight());
+    funcUtility(Css.Key.BORDER_WIDTH_Y, borderWidth, "border-y", propertyType.borderWidthTop(), propertyType.borderWidthBottom());
+
+    funcUtility(Css.Key.BOTTOM, inset, NEGATIVE, "bottom", propertyType.bottom());
+
+    customUtility(
+        Css.Key.BOX_SHADOW,
+
+        "shadow",
+
+        new BoxShadow(
+            values(
+                Css.Key.BOX_SHADOW,
+
+                """
+                sm: 0 1px 2px 0 rgb(0 0 0 / 0.05)
+                : 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1)
+                md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)
+                lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1)
+                xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1)
+                2xl: 0 25px 50px -12px rgb(0 0 0 / 0.25)
+                inner: inset 0 2px 4px 0 rgb(0 0 0 / 0.05)
+                none: none
+                """
+            )
+        )
+    );
+
+    customUtility(
+        Css.Key.BOX_SHADOW_COLOR,
+
+        "shadow",
+
+        new BoxShadowColor(
+            values(Css.Key.BOX_SHADOW_COLOR, colors)
+        )
     );
   }
 

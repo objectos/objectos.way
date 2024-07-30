@@ -392,6 +392,9 @@ public final class Css {
 
     OPACITY,
 
+    BOX_SHADOW,
+    BOX_SHADOW_COLOR,
+
     OUTLINE_STYLE,
     OUTLINE_WIDTH,
     OUTLINE_OFFSET,
@@ -663,7 +666,12 @@ public final class Css {
     PERCENTAGE,
     PERCENTAGE_NEGATIVE,
 
-    STRING,
+    STRING {
+      @Override
+      final String get(String value) {
+        return super.get(value).replace('_', ' ');
+      }
+    },
 
     INTEGER,
     INTEGER_NEGATIVE,
@@ -671,7 +679,7 @@ public final class Css {
     DECIMAL,
     DECIMAL_NEGATIVE;
 
-    final String get(String value) {
+    String get(String value) {
       return value.substring(1, value.length() - 1);
     }
   }

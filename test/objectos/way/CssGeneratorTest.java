@@ -657,6 +657,91 @@ public class CssGeneratorTest {
   }
 
   @Test
+  public void boxShadow() {
+    class Subject extends AbstractSubject {
+      @Override
+      final void classes() {
+        className("shadow-sm shadow shadow-md shadow-lg shadow-xl shadow-2xl shadow-inner shadow-none");
+        className("shadow-[0_35px_60px_-15px_rgb(0_0_0_/_0.3)]");
+      }
+    }
+
+    test(
+        Subject.class,
+
+        """
+        .shadow-sm {
+          --tw-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+          --tw-shadow-colored: 0 1px 2px 0 var(--tw-shadow-color);
+          box-shadow: var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow, 0 0 #0000);
+        }
+        .shadow {
+          --tw-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+          --tw-shadow-colored: 0 1px 3px 0 var(--tw-shadow-color), 0 1px 2px -1px var(--tw-shadow-color);
+          box-shadow: var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow, 0 0 #0000);
+        }
+        .shadow-md {
+          --tw-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+          --tw-shadow-colored: 0 4px 6px -1px var(--tw-shadow-color), 0 2px 4px -2px var(--tw-shadow-color);
+          box-shadow: var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow, 0 0 #0000);
+        }
+        .shadow-lg {
+          --tw-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+          --tw-shadow-colored: 0 10px 15px -3px var(--tw-shadow-color), 0 4px 6px -4px var(--tw-shadow-color);
+          box-shadow: var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow, 0 0 #0000);
+        }
+        .shadow-xl {
+          --tw-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+          --tw-shadow-colored: 0 20px 25px -5px var(--tw-shadow-color), 0 8px 10px -6px var(--tw-shadow-color);
+          box-shadow: var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow, 0 0 #0000);
+        }
+        .shadow-2xl {
+          --tw-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.25);
+          --tw-shadow-colored: 0 25px 50px -12px var(--tw-shadow-color);
+          box-shadow: var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow, 0 0 #0000);
+        }
+        .shadow-inner {
+          --tw-shadow: inset 0 2px 4px 0 rgb(0 0 0 / 0.05);
+          --tw-shadow-colored: inset 0 2px 4px 0 var(--tw-shadow-color);
+          box-shadow: var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow, 0 0 #0000);
+        }
+        .shadow-none {
+          --tw-shadow: none;
+          --tw-shadow-colored: none;
+          box-shadow: var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow, 0 0 #0000);
+        }
+        .shadow-\\[0_35px_60px_-15px_rgb(0_0_0_\\/_0\\.3)\\] {
+          --tw-shadow: 0 35px 60px -15px rgb(0 0 0 / 0.3);
+          --tw-shadow-colored: 0 35px 60px -15px var(--tw-shadow-color);
+          box-shadow: var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow, 0 0 #0000);
+        }
+        """
+    );
+  }
+
+  @Test
+  public void boxShadowColor() {
+    class Subject extends AbstractSubject {
+      @Override
+      final void classes() {
+        className("shadow-inherit shadow-current shadow-transparent shadow-white shadow-black");
+      }
+    }
+
+    test(
+        Subject.class,
+
+        """
+        .shadow-inherit { --tw-shadow-colored: inherit; --tw-shadow: var(--tw-shadow-colored) }
+        .shadow-current { --tw-shadow-colored: currentColor; --tw-shadow: var(--tw-shadow-colored) }
+        .shadow-transparent { --tw-shadow-colored: transparent; --tw-shadow: var(--tw-shadow-colored) }
+        .shadow-white { --tw-shadow-colored: #ffffff; --tw-shadow: var(--tw-shadow-colored) }
+        .shadow-black { --tw-shadow-colored: #000000; --tw-shadow: var(--tw-shadow-colored) }
+        """
+    );
+  }
+
+  @Test
   public void clear() {
     class Subject extends AbstractSubject {
       @Override
