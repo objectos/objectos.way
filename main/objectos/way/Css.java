@@ -323,6 +323,7 @@ public final class Css {
     GRID_TEMPLATE_ROWS,
 
     FLEX_DIRECTION,
+    FLEX_WRAP,
     ALIGN_ITEMS,
     JUSTIFY_CONTENT,
     GAP,

@@ -335,6 +335,27 @@ final class CssConfig {
         )
     );
 
+    var lineHeight = values(
+        Css.Key.LINE_HEIGHT,
+
+        """
+        3: 0.75rem
+        4: 1rem
+        5: 1.25rem
+        6: 1.5rem
+        7: 1.75rem
+        8: 2rem
+        9: 2.25rem
+        10: 2.5rem
+        none: 1
+        tight: 1.25
+        snug: 1.375
+        normal: 1.5
+        relaxed: 1.625
+        loose: 2
+        """
+    );
+
     // A
 
     staticUtility(
@@ -618,157 +639,7 @@ final class CssConfig {
 
     // F
 
-    funcUtility(
-        Css.Key.FILL,
-
-        values(
-            Css.Key.FILL,
-
-            () -> Css.merge(
-                """
-                none: none
-                """,
-
-                colors
-            )
-        ),
-
-        "fill"
-    );
-
-    staticUtility(
-        Css.Key.FLEX_DIRECTION,
-
-        """
-        flex-row         | flex-direction: row
-        flex-row-reverse | flex-direction: row-reverse
-        flex-col         | flex-direction: column
-        flex-col-reverse | flex-direction: column-reverse
-        """
-    );
-
-    funcUtility(
-        Css.Key.FLEX_GROW,
-
-        values(
-            Css.Key.FLEX_GROW,
-
-            """
-            : 1
-            0: 0
-            """
-        ),
-
-        INTEGER,
-
-        "grow", "flex-grow"
-    );
-
-    funcUtility(
-        Css.Key.FLEX_SHRINK,
-
-        values(
-            Css.Key.FLEX_SHRINK,
-
-            """
-            : 1
-            0: 0
-            """
-        ),
-
-        INTEGER,
-
-        "shrink", "flex-shrink"
-    );
-
-    staticUtility(
-        Css.Key.FLOAT,
-
-        propertyType == Css.PHYSICAL
-            ? """
-              float-left  | float: left
-              float-right | float: right
-              float-none  | float: none
-              """
-            : """
-              float-left  | float: inline-start
-              float-right | float: inline-end
-              float-none  | float: none
-              """
-    );
-
-    var lineHeight = values(
-        Css.Key.LINE_HEIGHT,
-
-        """
-        3: 0.75rem
-        4: 1rem
-        5: 1.25rem
-        6: 1.5rem
-        7: 1.75rem
-        8: 2rem
-        9: 2.25rem
-        10: 2.5rem
-        none: 1
-        tight: 1.25
-        snug: 1.375
-        normal: 1.5
-        relaxed: 1.625
-        loose: 2
-        """
-    );
-
-    customUtility(
-        Css.Key.FONT_SIZE,
-
-        "text",
-
-        new CssResolver.OfFontSize(
-            values(
-                Css.Key.FONT_SIZE,
-
-                """
-                xs: 0.75rem/1rem
-                sm: 0.875rem/1.25rem
-                base: 1rem/1.5rem
-                lg: 1.125rem/1.75rem
-                xl: 1.25rem/1.75rem
-                2xl: 1.5rem/2rem
-                3xl: 1.875rem/2.25rem
-                4xl: 2.25rem/2.5rem
-                5xl: 3rem/1
-                6xl: 3.75rem/1
-                7xl: 4.5rem/1
-                8xl: 6rem/1
-                9xl: 8rem/1
-                """
-            ),
-
-            lineHeight
-        )
-    );
-
-    funcUtility(
-        Css.Key.FONT_WEIGHT,
-
-        values(
-            Css.Key.FONT_WEIGHT,
-
-            """
-            thin: 100
-            extralight: 200
-            light: 300
-            normal: 400
-            medium: 500
-            semibold: 600
-            bold: 700
-            extrabold: 800
-            black: 900
-            """
-        ),
-
-        "font", "font-weight"
-    );
+    specF(colors, lineHeight);
 
     // G
 
@@ -1932,6 +1803,149 @@ final class CssConfig {
 
       return new CssUtility(Css.Key.RING_WIDTH, className, variants, builder);
     }
+  }
+
+  private void specF(Map<String, String> colors, Map<String, String> lineHeight) {
+    funcUtility(
+        Css.Key.FILL,
+
+        values(
+            Css.Key.FILL,
+
+            () -> Css.merge(
+                """
+              none: none
+              """,
+
+                colors
+            )
+        ),
+
+        "fill"
+    );
+
+    staticUtility(
+        Css.Key.FLEX_DIRECTION,
+
+        """
+        flex-row         | flex-direction: row
+        flex-row-reverse | flex-direction: row-reverse
+        flex-col         | flex-direction: column
+        flex-col-reverse | flex-direction: column-reverse
+        """
+    );
+
+    funcUtility(
+        Css.Key.FLEX_GROW,
+
+        values(
+            Css.Key.FLEX_GROW,
+
+            """
+          : 1
+          0: 0
+          """
+        ),
+
+        INTEGER,
+
+        "grow", "flex-grow"
+    );
+
+    funcUtility(
+        Css.Key.FLEX_SHRINK,
+
+        values(
+            Css.Key.FLEX_SHRINK,
+
+            """
+          : 1
+          0: 0
+          """
+        ),
+
+        INTEGER,
+
+        "shrink", "flex-shrink"
+    );
+
+    staticUtility(
+        Css.Key.FLEX_WRAP,
+
+        """
+        flex-wrap         | flex-wrap: wrap
+        flex-wrap-reverse | flex-wrap: wrap-reverse
+        flex-nowrap       | flex-wrap: nowrap
+        """
+    );
+
+    staticUtility(
+        Css.Key.FLOAT,
+
+        propertyType == Css.PHYSICAL
+            ? """
+            float-left  | float: left
+            float-right | float: right
+            float-none  | float: none
+            """
+            : """
+            float-left  | float: inline-start
+            float-right | float: inline-end
+            float-none  | float: none
+            """
+    );
+
+    customUtility(
+        Css.Key.FONT_SIZE,
+
+        "text",
+
+        new CssResolver.OfFontSize(
+            values(
+                Css.Key.FONT_SIZE,
+
+                """
+                xs: 0.75rem/1rem
+                sm: 0.875rem/1.25rem
+                base: 1rem/1.5rem
+                lg: 1.125rem/1.75rem
+                xl: 1.25rem/1.75rem
+                2xl: 1.5rem/2rem
+                3xl: 1.875rem/2.25rem
+                4xl: 2.25rem/2.5rem
+                5xl: 3rem/1
+                6xl: 3.75rem/1
+                7xl: 4.5rem/1
+                8xl: 6rem/1
+                9xl: 8rem/1
+                """
+            ),
+
+            lineHeight
+        )
+    );
+
+    funcUtility(
+        Css.Key.FONT_WEIGHT,
+
+        values(
+            Css.Key.FONT_WEIGHT,
+
+            """
+            thin: 100
+            extralight: 200
+            light: 300
+            normal: 400
+            medium: 500
+            semibold: 600
+            bold: 700
+            extrabold: 800
+            black: 900
+            """
+        ),
+
+        "font", "font-weight"
+    );
   }
 
   private void specR(Map<String, String> colors, Map<String, String> inset) {

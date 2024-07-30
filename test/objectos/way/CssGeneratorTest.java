@@ -1028,6 +1028,26 @@ public class CssGeneratorTest {
   }
 
   @Test
+  public void flexWrap() {
+    class Subject extends AbstractSubject {
+      @Override
+      final void classes() {
+        className("flex-wrap flex-wrap-reverse flex-nowrap");
+      }
+    }
+
+    test(
+        Subject.class,
+
+        """
+        .flex-wrap { flex-wrap: wrap }
+        .flex-wrap-reverse { flex-wrap: wrap-reverse }
+        .flex-nowrap { flex-wrap: nowrap }
+        """
+    );
+  }
+
+  @Test
   public void floatTest() {
     class Subject extends AbstractSubject {
       @Override
