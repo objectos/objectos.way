@@ -830,6 +830,14 @@ final class CarbonStyles implements Http.Handler {
     active:bg-button-danger-active active:border-button-danger-active active:text-on-color
     focus:bg-button-danger focus:text-on-color
     hover:bg-button-danger-hover hover:text-on-color
+
+    # button-danger-ghost
+    bg-transparent
+    border border-transparent
+    pr-[15px]
+    text-button-danger-secondary
+    active:bg-button-danger-active active:text-on-color
+    hover:bg-button-danger-hover hover:text-on-color
     """);
   }
 
