@@ -110,6 +110,13 @@ final class ComponentsButton extends CarbonPage {
 
         t("Danger")
     );
+
+    button(
+        className("button button-danger-tertiary"),
+        type("button"),
+
+        t("Danger tertiary")
+    );
   }
 
   private void iconButtons() {

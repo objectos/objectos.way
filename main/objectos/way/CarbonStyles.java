@@ -499,6 +499,7 @@ final class CarbonStyles implements Http.Handler {
         button-danger: var(--cds-button-danger-primary)
         button-danger-active: var(--cds-button-danger-active)
         button-danger-hover: var(--cds-button-danger-hover)
+        button-danger-secondary: var(--cds-button-danger-secondary)
         button-primary: var(--cds-button-primary)
         button-primary-active: var(--cds-button-primary-active)
         button-primary-hover: var(--cds-button-primary-hover)
@@ -714,6 +715,7 @@ final class CarbonStyles implements Http.Handler {
         """),
 
         Css.overrideTextColor("""
+        button-danger-secondary: var(--cds-button-danger-secondary)
         button-tertiary: var(--cds-button-tertiary)
         link-primary: var(--cds-link-primary)
         link-primary-hover: var(--cds-link-primary-hover)
@@ -820,6 +822,14 @@ final class CarbonStyles implements Http.Handler {
     text-on-color
     active:bg-button-danger-active
     hover:bg-button-danger-hover
+
+    # button-danger-tertiary
+    bg-transparent
+    border border-button-danger-secondary
+    text-button-danger-secondary
+    active:bg-button-danger-active active:border-button-danger-active active:text-on-color
+    focus:bg-button-danger focus:text-on-color
+    hover:bg-button-danger-hover hover:text-on-color
     """);
   }
 
