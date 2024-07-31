@@ -91,6 +91,14 @@ final class CarbonStyles implements Http.Handler {
           --cds-layer-01: #f4f4f4;
           --cds-layer-02: #ffffff;
           --cds-layer-03: #f4f4f4;
+          --cds-link-inverse: #78a9ff;
+          --cds-link-inverse-active: #f4f4f4;
+          --cds-link-inverse-hover: #a6c8ff;
+          --cds-link-inverse-visited: #be95ff;
+          --cds-link-primary: #0f62fe;
+          --cds-link-primary-hover: #0043ce;
+          --cds-link-secondary: #0043ce;
+          --cds-link-visited: #8a3ffc;
           --cds-overlay: rgba(22, 22, 22, 0.5);
           --cds-shadow: rgba(0, 0, 0, 0.3);
           --cds-text-disabled: rgba(22, 22, 22, 0.25);
@@ -164,6 +172,14 @@ final class CarbonStyles implements Http.Handler {
           --cds-layer-01: #ffffff;
           --cds-layer-02: #f4f4f4;
           --cds-layer-03: #ffffff;
+          --cds-link-inverse: #78a9ff;
+          --cds-link-inverse-active: #f4f4f4;
+          --cds-link-inverse-hover: #a6c8ff;
+          --cds-link-inverse-visited: #be95ff;
+          --cds-link-primary: #0f62fe;
+          --cds-link-primary-hover: #0043ce;
+          --cds-link-secondary: #0043ce;
+          --cds-link-visited: #8a3ffc;
           --cds-overlay: rgba(22, 22, 22, 0.5);
           --cds-shadow: rgba(0, 0, 0, 0.3);
           --cds-text-disabled: rgba(22, 22, 22, 0.25);
@@ -237,6 +253,14 @@ final class CarbonStyles implements Http.Handler {
           --cds-layer-01: #393939;
           --cds-layer-02: #525252;
           --cds-layer-03: #6f6f6f;
+          --cds-link-inverse: #0f62fe;
+          --cds-link-inverse-active: #161616;
+          --cds-link-inverse-hover: #0043ce;
+          --cds-link-inverse-visited: #8a3ffc;
+          --cds-link-primary: #78a9ff;
+          --cds-link-primary-hover: #a6c8ff;
+          --cds-link-secondary: #a6c8ff;
+          --cds-link-visited: #be95ff;
           --cds-overlay: rgba(0, 0, 0, 0.65);
           --cds-shadow: rgba(0, 0, 0, 0.8);
           --cds-text-disabled: rgba(244, 244, 244, 0.25);
@@ -310,6 +334,14 @@ final class CarbonStyles implements Http.Handler {
           --cds-layer-01: #262626;
           --cds-layer-02: #393939;
           --cds-layer-03: #525252;
+          --cds-link-inverse: #0f62fe;
+          --cds-link-inverse-active: #161616;
+          --cds-link-inverse-hover: #0043ce;
+          --cds-link-inverse-visited: #8a3ffc;
+          --cds-link-primary: #78a9ff;
+          --cds-link-primary-hover: #a6c8ff;
+          --cds-link-secondary: #a6c8ff;
+          --cds-link-visited: #be95ff;
           --cds-overlay: rgba(0, 0, 0, 0.65);
           --cds-shadow: rgba(0, 0, 0, 0.8);
           --cds-text-disabled: rgba(244, 244, 244, 0.25);
@@ -355,6 +387,14 @@ final class CarbonStyles implements Http.Handler {
           --cds-button-tertiary-hover: #0050e6;
           --cds-button-disabled: #c6c6c6;
           --cds-layer: var(--cds-layer-01, #f4f4f4);
+          --cds-link-inverse: #78a9ff;
+          --cds-link-inverse-active: #f4f4f4;
+          --cds-link-inverse-hover: #a6c8ff;
+          --cds-link-inverse-visited: #be95ff;
+          --cds-link-primary: #0f62fe;
+          --cds-link-primary-hover: #0043ce;
+          --cds-link-secondary: #0043ce;
+          --cds-link-visited: #8a3ffc;
           --cds-text-disabled: rgba(22, 22, 22, 0.25);
           --cds-text-error: #da1e28;
           --cds-text-helper: #6f6f6f;
@@ -675,6 +715,9 @@ final class CarbonStyles implements Http.Handler {
 
         Css.overrideTextColor("""
         button-tertiary: var(--cds-button-tertiary)
+        link-primary: var(--cds-link-primary)
+        link-primary-hover: var(--cds-link-primary-hover)
+
         inverse: var(--cds-text-inverse)
         on-color: var(--cds-text-on-color)
         on-color-disabled: var(--cds-text-on-color-disabled)
@@ -696,7 +739,7 @@ final class CarbonStyles implements Http.Handler {
         Css.variants("""
         more: &:not(:root)
         span: & span
-        svg: & svg
+        svg: & > svg
         """)
     );
   }
@@ -732,12 +775,15 @@ final class CarbonStyles implements Http.Handler {
     outline-0
     transition-all duration-100
 
+    # __button-padding
+
     # button
     __button
     py-14px pr-[63px] pl-[15px]
     body-compact-01
     focus:border-focus
     focus:shadow-[inset_0_0_0_1px_var(--cds-focus),inset_0_0_0_2px_var(--cds-background)]
+    svg:absolute svg:top-14px svg:right-16px svg:mt-1px svg:w-16px svg:h-16px svg:shrink-0
 
     # button-primary
     bg-button-primary
@@ -759,6 +805,14 @@ final class CarbonStyles implements Http.Handler {
     text-button-tertiary
     active:bg-button-tertiary-active
     hover:bg-button-tertiary-hover hover:text-inverse
+
+    # button-ghost
+    bg-transparent
+    border border-transparent
+    pr-[15px]
+    text-link-primary
+    active:bg-active active:text-link-primary-hover
+    hover:bg-hover hover:text-link-primary-hover
 
     # button-danger
     bg-button-danger

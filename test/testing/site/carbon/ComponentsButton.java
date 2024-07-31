@@ -15,6 +15,7 @@
  */
 package testing.site.carbon;
 
+import objectos.way.Carbon;
 import objectos.way.Http;
 
 final class ComponentsButton extends CarbonPage {
@@ -55,13 +56,21 @@ final class ComponentsButton extends CarbonPage {
         ),
 
         div(
-            className("col-span-full"),
+            className("flex flex-wrap col-span-full gap-03"),
 
-            div(
-                className("flex gap-x-03"),
+            f(this::variants)
+        ),
 
-                f(this::variants)
-            )
+        h2(
+            className("col-span-full heading-03"),
+
+            t("Icon buttons")
+        ),
+
+        div(
+            className("flex flex-wrap col-span-full gap-03"),
+
+            f(this::iconButtons)
         )
     );
   }
@@ -89,10 +98,37 @@ final class ComponentsButton extends CarbonPage {
     );
 
     button(
+        className("button button-ghost"),
+        type("button"),
+
+        t("Ghost")
+    );
+
+    button(
         className("button button-danger"),
         type("button"),
 
         t("Danger")
+    );
+  }
+
+  private void iconButtons() {
+    button(
+        className("button button-primary"),
+        type("button"),
+
+        t("Add"),
+
+        icon16(Carbon.Icon.ADD)
+    );
+
+    button(
+        className("button button-danger"),
+        type("button"),
+
+        t("Remove"),
+
+        icon16(Carbon.Icon.TRASH_CAN)
     );
   }
 
