@@ -485,6 +485,8 @@ final class CarbonStyles implements Http.Handler {
 
         overlay(),
 
+        pageHeader(),
+
         sideNav(),
 
         tile(),
@@ -684,6 +686,7 @@ final class CarbonStyles implements Http.Handler {
         13: var(--cds-spacing-13)
 
         0px: 0px
+        0.5px: 0.5px
         1px: 0.0625rem
         2px: 0.125rem
         4px: 0.25rem
@@ -843,17 +846,22 @@ final class CarbonStyles implements Http.Handler {
 
   private Css.Option grid() {
     return Css.components("""
-    # grid-px
+    # __grid
+    mx-auto grid w-full max-w-screen-max
     md:px-16px
     max:px-24px
 
     # grid-wide
-    grid-px
-    mx-auto grid w-full max-w-screen-max
-    grid-cols-4
-    md:grid-cols-8
-    lg:grid-cols-16
+    __grid
     *:mx-16px
+
+    # grid-narrow
+    __grid
+    *:mr-16px
+
+    # grid-condensed
+    __grid
+    *:mx-0.5px
     """);
   }
 
@@ -976,6 +984,14 @@ final class CarbonStyles implements Http.Handler {
 
     # overlay-toggle
     __overlay block opacity-100
+    """);
+  }
+
+  private Css.Option pageHeader() {
+    return Css.components("""
+    # page-header
+    grid-px
+    sticky bg-layer
     """);
   }
 

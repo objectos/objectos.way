@@ -35,28 +35,125 @@ final class ComponentsGrid extends CarbonPage {
 
   @Override
   protected final void renderContent() {
+    className("pt-07");
+
     div(
-        className("grid-wide max-w-full mt-05 bg-layer"),
+        className("grid-wide grid-cols-1"),
 
         h1(
-            className("col-span-full tile"),
+            className("heading-03"),
 
-            t("Span full")
+            t("Grid")
+        ),
+
+        h2(
+            className("heading-02"),
+
+            t("Wide")
         )
     );
 
     div(
-        className("grid-wide max-w-full"),
+        className("grid-wide grid-cols-1 md:grid-cols-2 lg:grid-cols-4"),
 
-        p(
-            className("col-span-4 tile"),
+        div(
+            className("aspect-2x1 tile"),
 
-            t("Span 4")
+            t("Column 1")
         ),
-        p(
-            className("col-span-2 lg:col-span-4 tile"),
 
-            t("Span 2 / Span 4 (lg)")
+        div(
+            className("aspect-2x1 tile"),
+
+            t("Column 2")
+        ),
+
+        div(
+            className("aspect-2x1 tile"),
+
+            t("Column 3")
+        ),
+
+        div(
+            className("aspect-2x1 tile"),
+
+            t("Column 4")
+        )
+    );
+
+    div(
+        className("grid-wide grid-cols-1"),
+
+        h2(
+            className("heading-02"),
+
+            t("Narrow")
+        )
+    );
+
+    div(
+        className("grid-narrow grid-cols-1 md:grid-cols-2 lg:grid-cols-4"),
+
+        div(
+            className("aspect-2x1 tile"),
+
+            t("Column 1")
+        ),
+
+        div(
+            className("aspect-2x1 tile"),
+
+            t("Column 2")
+        ),
+
+        div(
+            className("aspect-2x1 tile"),
+
+            t("Column 3")
+        ),
+
+        div(
+            className("aspect-2x1 tile"),
+
+            t("Column 4")
+        )
+    );
+
+    div(
+        className("grid-wide grid-cols-1"),
+
+        h2(
+            className("heading-02"),
+
+            t("Condensed")
+        )
+    );
+
+    div(
+        className("grid-condensed grid-cols-1 md:grid-cols-2 lg:grid-cols-4"),
+
+        div(
+            className("aspect-2x1 tile"),
+
+            t("Column 1")
+        ),
+
+        div(
+            className("aspect-2x1 tile"),
+
+            t("Column 2")
+        ),
+
+        div(
+            className("aspect-2x1 tile"),
+
+            t("Column 3")
+        ),
+
+        div(
+            className("aspect-2x1 tile"),
+
+            t("Column 4")
         )
     );
   }
