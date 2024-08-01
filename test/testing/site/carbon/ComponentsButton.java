@@ -71,6 +71,18 @@ final class ComponentsButton extends CarbonPage {
             className("flex flex-wrap col-span-full gap-03"),
 
             f(this::iconButtons)
+        ),
+
+        h2(
+            className("col-span-full heading-03"),
+
+            t("Sizes")
+        ),
+
+        div(
+            className("min-h-80px flex flex-wrap col-span-full gap-03"),
+
+            f(this::sizes)
         )
     );
   }
@@ -143,6 +155,53 @@ final class ComponentsButton extends CarbonPage {
         t("Remove"),
 
         icon16(Carbon.Icon.TRASH_CAN)
+    );
+  }
+
+  private void sizes() {
+    div(
+        button(
+            className("button button-primary"),
+            type("button"),
+
+            t("Submit")
+        )
+    );
+
+    div(
+        button(
+            className("button-sm button-primary"),
+            type("button"),
+
+            t("Submit")
+        )
+    );
+
+    div(
+        button(
+            className("button-md button-primary"),
+            type("button"),
+
+            t("Submit")
+        )
+    );
+
+    div(
+        button(
+            className("button-xl button-primary"),
+            type("button"),
+
+            t("Submit")
+        )
+    );
+
+    div(
+        button(
+            className("button-2xl button-primary"),
+            type("button"),
+
+            t("Submit")
+        )
     );
   }
 

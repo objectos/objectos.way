@@ -709,6 +709,10 @@ final class CarbonStyles implements Http.Handler {
         44px: 2.75rem
         48px: 3rem
 
+        64px: 4rem
+
+        80px: 5rem
+
         208px: 13rem
         224px: 14rem
         240px: 15rem
@@ -774,21 +778,38 @@ final class CarbonStyles implements Http.Handler {
     cursor-pointer appearance-none
 
     # __button
-    relative m-0px inline-flex w-max max-w-320px min-h-48px shrink-0
+    relative m-0px inline-flex w-max max-w-320px shrink-0
     cursor-pointer
     align-start justify-between
+    pr-[63px] pl-[15px]
+    body-compact-01
     outline-0
     transition-all duration-100
+    focus:border-focus
+    focus:shadow-[inset_0_0_0_1px_var(--cds-focus),inset_0_0_0_2px_var(--cds-background)]
+    svg:absolute svg:top-14px svg:right-16px svg:mt-1px svg:w-16px svg:h-16px svg:shrink-0
 
     # __button-padding
 
     # button
     __button
-    py-14px pr-[63px] pl-[15px]
-    body-compact-01
-    focus:border-focus
-    focus:shadow-[inset_0_0_0_1px_var(--cds-focus),inset_0_0_0_2px_var(--cds-background)]
-    svg:absolute svg:top-14px svg:right-16px svg:mt-1px svg:w-16px svg:h-16px svg:shrink-0
+    min-h-48px py-14px
+
+    # button-sm
+    __button
+    min-h-32px py-6px
+
+    # button-md
+    __button
+    min-h-40px py-10px
+
+    # button-xl
+    __button
+    min-h-64px py-14px
+
+    # button-2xl
+    __button
+    min-h-80px py-14px
 
     # button-primary
     bg-button-primary
@@ -990,8 +1011,10 @@ final class CarbonStyles implements Http.Handler {
   private Css.Option pageHeader() {
     return Css.components("""
     # page-header
-    grid-px
     sticky bg-layer
+
+    # page-header-title
+    heading-04
     """);
   }
 
