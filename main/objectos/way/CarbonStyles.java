@@ -91,6 +91,29 @@ final class CarbonStyles implements Http.Handler {
           --cds-layer-01: #f4f4f4;
           --cds-layer-02: #ffffff;
           --cds-layer-03: #f4f4f4;
+          --cds-layer-accent-01: #e0e0e0;
+          --cds-layer-accent-02: #e0e0e0;
+          --cds-layer-accent-03: #e0e0e0;
+          --cds-layer-accent-active-01: #a8a8a8;
+          --cds-layer-accent-active-02: #a8a8a8;
+          --cds-layer-accent-active-03: #a8a8a8;
+          --cds-layer-accent-hover-01: #d1d1d1;
+          --cds-layer-accent-hover-02: #d1d1d1;
+          --cds-layer-accent-hover-03: #d1d1d1;
+          --cds-layer-active-01: #c6c6c6;
+          --cds-layer-active-02: #c6c6c6;
+          --cds-layer-active-03: #c6c6c6;
+          --cds-layer-hover-01: #e8e8e8;
+          --cds-layer-hover-02: #e8e8e8;
+          --cds-layer-hover-03: #e8e8e8;
+          --cds-layer-selected-01: #e0e0e0;
+          --cds-layer-selected-02: #e0e0e0;
+          --cds-layer-selected-03: #e0e0e0;
+          --cds-layer-selected-disabled: #8d8d8d;
+          --cds-layer-selected-hover-01: #d1d1d1;
+          --cds-layer-selected-hover-02: #d1d1d1;
+          --cds-layer-selected-hover-03: #d1d1d1;
+          --cds-layer-selected-inverse: #161616;
           --cds-link-inverse: #78a9ff;
           --cds-link-inverse-active: #f4f4f4;
           --cds-link-inverse-hover: #a6c8ff;
@@ -172,6 +195,29 @@ final class CarbonStyles implements Http.Handler {
           --cds-layer-01: #ffffff;
           --cds-layer-02: #f4f4f4;
           --cds-layer-03: #ffffff;
+          --cds-layer-accent-01: #e0e0e0;
+          --cds-layer-accent-02: #e0e0e0;
+          --cds-layer-accent-03: #e0e0e0;
+          --cds-layer-accent-active-01: #a8a8a8;
+          --cds-layer-accent-active-02: #a8a8a8;
+          --cds-layer-accent-active-03: #a8a8a8;
+          --cds-layer-accent-hover-01: #d1d1d1;
+          --cds-layer-accent-hover-02: #d1d1d1;
+          --cds-layer-accent-hover-03: #d1d1d1;
+          --cds-layer-active-01: #c6c6c6;
+          --cds-layer-active-02: #c6c6c6;
+          --cds-layer-active-03: #c6c6c6;
+          --cds-layer-hover-01: #e8e8e8;
+          --cds-layer-hover-02: #e8e8e8;
+          --cds-layer-hover-03: #e8e8e8;
+          --cds-layer-selected-01: #e0e0e0;
+          --cds-layer-selected-02: #e0e0e0;
+          --cds-layer-selected-03: #e0e0e0;
+          --cds-layer-selected-disabled: #8d8d8d;
+          --cds-layer-selected-hover-01: #d1d1d1;
+          --cds-layer-selected-hover-02: #d1d1d1;
+          --cds-layer-selected-hover-03: #d1d1d1;
+          --cds-layer-selected-inverse: #161616;
           --cds-link-inverse: #78a9ff;
           --cds-link-inverse-active: #f4f4f4;
           --cds-link-inverse-hover: #a6c8ff;
@@ -253,6 +299,29 @@ final class CarbonStyles implements Http.Handler {
           --cds-layer-01: #393939;
           --cds-layer-02: #525252;
           --cds-layer-03: #6f6f6f;
+          --cds-layer-accent-01: #525252;
+          --cds-layer-accent-02: #6f6f6f;
+          --cds-layer-accent-03: #8d8d8d;
+          --cds-layer-accent-active-01: #8d8d8d;
+          --cds-layer-accent-active-02: #393939;
+          --cds-layer-accent-active-03: #525252;
+          --cds-layer-accent-hover-01: #636363;
+          --cds-layer-accent-hover-02: #5e5e5e;
+          --cds-layer-accent-hover-03: #7a7a7a;
+          --cds-layer-active-01: #6f6f6f;
+          --cds-layer-active-02: #8d8d8d;
+          --cds-layer-active-03: #393939;
+          --cds-layer-hover-01: #474747;
+          --cds-layer-hover-02: #636363;
+          --cds-layer-hover-03: #5e5e5e;
+          --cds-layer-selected-01: #525252;
+          --cds-layer-selected-02: #6f6f6f;
+          --cds-layer-selected-03: #525252;
+          --cds-layer-selected-disabled: #a8a8a8;
+          --cds-layer-selected-hover-01: #636363;
+          --cds-layer-selected-hover-02: #5e5e5e;
+          --cds-layer-selected-hover-03: #636363;
+          --cds-layer-selected-inverse: #f4f4f4;
           --cds-link-inverse: #0f62fe;
           --cds-link-inverse-active: #161616;
           --cds-link-inverse-hover: #0043ce;
@@ -334,6 +403,29 @@ final class CarbonStyles implements Http.Handler {
           --cds-layer-01: #262626;
           --cds-layer-02: #393939;
           --cds-layer-03: #525252;
+          --cds-layer-accent-01: #393939;
+          --cds-layer-accent-02: #525252;
+          --cds-layer-accent-03: #6f6f6f;
+          --cds-layer-accent-active-01: #6f6f6f;
+          --cds-layer-accent-active-02: #8d8d8d;
+          --cds-layer-accent-active-03: #393939;
+          --cds-layer-accent-hover-01: #474747;
+          --cds-layer-accent-hover-02: #636363;
+          --cds-layer-accent-hover-03: #5e5e5e;
+          --cds-layer-active-01: #525252;
+          --cds-layer-active-02: #6f6f6f;
+          --cds-layer-active-03: #8d8d8d;
+          --cds-layer-hover-01: #333333;
+          --cds-layer-hover-02: #474747;
+          --cds-layer-hover-03: #636363;
+          --cds-layer-selected-01: #393939;
+          --cds-layer-selected-02: #525252;
+          --cds-layer-selected-03: #6f6f6f;
+          --cds-layer-selected-disabled: #a8a8a8;
+          --cds-layer-selected-hover-01: #474747;
+          --cds-layer-selected-hover-02: #636363;
+          --cds-layer-selected-hover-03: #5e5e5e;
+          --cds-layer-selected-inverse: #f4f4f4;
           --cds-link-inverse: #0f62fe;
           --cds-link-inverse-active: #161616;
           --cds-link-inverse-hover: #0043ce;
@@ -387,6 +479,13 @@ final class CarbonStyles implements Http.Handler {
           --cds-button-tertiary-hover: #0050e6;
           --cds-button-disabled: #c6c6c6;
           --cds-layer: var(--cds-layer-01, #f4f4f4);
+          --cds-layer-active: var(--cds-layer-active-01, #c6c6c6);
+          --cds-layer-hover: var(--cds-layer-hover-01, #e8e8e8);
+          --cds-layer-selected: var(--cds-layer-selected-01, #e0e0e0);
+          --cds-layer-selected-hover: var(--cds-layer-selected-hover-01, #d1d1d1);
+          --cds-layer-accent: var(--cds-layer-accent-01, #e0e0e0);
+          --cds-layer-accent-hover: var(--cds-layer-accent-hover-01, #d1d1d1);
+          --cds-layer-accent-active: var(--cds-layer-accent-active-01, #a8a8a8);
           --cds-link-inverse: #78a9ff;
           --cds-link-inverse-active: #f4f4f4;
           --cds-link-inverse-hover: #a6c8ff;
@@ -1012,9 +1111,22 @@ final class CarbonStyles implements Http.Handler {
     return Css.components("""
     # page-header
     sticky bg-layer
+    shadow-[0_1px_0_var(--cds-layer-accent)]
+
+    # page-header-actions
+    col-span-full
+    md:flex md:col-span-2 md:justify-end
 
     # page-header-title
+    col-span-full
     heading-04
+    md:col-span-3
+
+    # page-header-title-only
+    py-32px
+
+    # page-header-title-row
+    grid-wide grid-cols-5 gap-y-16px
     """);
   }
 

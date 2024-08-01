@@ -180,6 +180,7 @@ ifeq ($(ENABLE_PREVIEW), 1)
 DEV_JAVAX += --enable-preview
 endif
 DEV_JAVAX += --patch-module $(MODULE)=$(TEST_CLASS_OUTPUT)
+DEV_JAVAX += --add-exports $(MODULE)/objectos.lang.object=ALL-UNNAMED
 DEV_JAVAX += --add-exports $(MODULE)/testing.zite=ALL-UNNAMED
 DEV_JAVAX += --module $(MODULE)/$(DEV_MAIN_CLASS)
 ## dev app args
