@@ -76,37 +76,37 @@ final class ComponentsButton extends CarbonPage {
         className("col-span-full *:mr-8px *:mb-8px"),
 
         button(
-            className("button button-primary"),
+            className("button-primary"),
             type("button"), t("Primary")
         ),
 
         button(
-            className("button button-secondary"),
+            className("button-secondary"),
             type("button"), t("Secondary")
         ),
 
         button(
-            className("button button-tertiary"),
+            className("button-tertiary"),
             type("button"), t("Tertiary")
         ),
 
         button(
-            className("button button-ghost"),
+            className("button-ghost"),
             type("button"), t("Ghost")
         ),
 
         button(
-            className("button button-danger"),
+            className("button-danger"),
             type("button"), t("Danger")
         ),
 
         button(
-            className("button button-danger-tertiary"),
+            className("button-danger-tertiary"),
             type("button"), t("Danger tertiary")
         ),
 
         button(
-            className("button button-danger-ghost"),
+            className("button-danger-ghost"),
             type("button"), t("Danger ghost")
         )
     );
@@ -123,12 +123,12 @@ final class ComponentsButton extends CarbonPage {
         className("col-span-full *:mr-8px *:mb-8px"),
 
         button(
-            className("button button-primary"),
+            className("button-primary"),
             type("button"), t("Add"), icon16(Carbon.Icon.ADD)
         ),
 
         button(
-            className("button button-danger"),
+            className("button-danger"),
             type("button"), t("Remove"), icon16(Carbon.Icon.TRASH_CAN)
         )
     );
@@ -145,27 +145,27 @@ final class ComponentsButton extends CarbonPage {
         className("col-span-full *:mr-8px *:mb-8px"),
 
         button(
-            className("button button-primary"),
+            className("button-primary"),
             type("button"), t("Submit")
         ),
 
         button(
-            className("button-sm button-primary"),
+            className("button-primary-sm"),
             type("button"), t("Submit")
         ),
 
         button(
-            className("button-md button-primary"),
+            className("button-primary-md"),
             type("button"), t("Submit")
         ),
 
         button(
-            className("button-xl button-primary"),
+            className("button-primary-xl"),
             type("button"), t("Submit")
         ),
 
         button(
-            className("button-2xl button-primary"),
+            className("button-primary-2xl"),
             type("button"), t("Submit")
         )
     );
@@ -181,30 +181,28 @@ final class ComponentsButton extends CarbonPage {
     div(
         className("col-span-full *:mr-8px *:mb-8px"),
 
-        p("Foo"),
-
         button(
-            className("button button-primary"),
+            className("button-primary"),
             type("button"), t("Submit"), icon16(Carbon.Icon.CLOSE)
         ),
 
         button(
-            className("button-sm button-primary"),
+            className("button-primary-sm"),
             type("button"), t("Submit"), icon16(Carbon.Icon.CLOSE)
         ),
 
         button(
-            className("button-md button-primary"),
+            className("button-primary-md"),
             type("button"), t("Submit"), icon16(Carbon.Icon.CLOSE)
         ),
 
         button(
-            className("button-xl button-primary"),
+            className("button-primary-xl"),
             type("button"), t("Submit"), icon16(Carbon.Icon.CLOSE)
         ),
 
         button(
-            className("button-2xl button-primary"),
+            className("button-primary-2xl"),
             type("button"), t("Submit"), icon16(Carbon.Icon.CLOSE)
         )
     );

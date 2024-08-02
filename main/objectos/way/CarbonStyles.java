@@ -15,6 +15,8 @@
  */
 package objectos.way;
 
+import java.util.List;
+
 final class CarbonStyles implements Http.Handler {
 
   private final Css.Generator.Classes classes;
@@ -888,52 +890,50 @@ final class CarbonStyles implements Http.Handler {
     focus:shadow-[inset_0_0_0_1px_var(--cds-focus),inset_0_0_0_2px_var(--cds-background)]
     svg:absolute svg:top-14px svg:right-16px svg:mt-1px svg:w-16px svg:h-16px svg:shrink-0
 
-    # __button-padding
-
-    # button
+    # __button-lg
     __button
     min-h-48px py-14px
 
-    # button-sm
+    # __button-sm
     __button
     min-h-32px py-6px
     svg:top-6px
 
-    # button-md
+    # __button-md
     __button
     min-h-40px py-10px
     svg:top-10px
 
-    # button-xl
+    # __button-xl
     __button
     min-h-64px py-14px
 
-    # button-2xl
+    # __button-2xl
     __button
     min-h-80px py-14px
 
-    # button-primary
+    # __button-primary
     bg-button-primary
     border border-transparent
     text-on-color
     active:bg-button-primary-active
     hover:bg-button-primary-hover
 
-    # button-secondary
+    # __button-secondary
     bg-button-secondary
     border border-transparent
     text-on-color
     active:bg-button-secondary-active
     hover:bg-button-secondary-hover
 
-    # button-tertiary
+    # __button-tertiary
     bg-transparent
     border border-button-tertiary
     text-button-tertiary
     active:bg-button-tertiary-active
     hover:bg-button-tertiary-hover hover:text-inverse
 
-    # button-ghost
+    # __button-ghost
     bg-transparent
     border border-transparent
     pr-[15px]
@@ -941,14 +941,14 @@ final class CarbonStyles implements Http.Handler {
     active:bg-active active:text-link-primary-hover
     hover:bg-hover hover:text-link-primary-hover
 
-    # button-danger
+    # __button-danger
     bg-button-danger
     border border-transparent
     text-on-color
     active:bg-button-danger-active
     hover:bg-button-danger-hover
 
-    # button-danger-tertiary
+    # __button-danger-tertiary
     bg-transparent
     border border-button-danger-secondary
     text-button-danger-secondary
@@ -956,14 +956,60 @@ final class CarbonStyles implements Http.Handler {
     focus:bg-button-danger focus:text-on-color
     hover:bg-button-danger-hover hover:text-on-color
 
-    # button-danger-ghost
+    # __button-danger-ghost
     bg-transparent
     border border-transparent
     pr-[15px]
     text-button-danger-secondary
     active:bg-button-danger-active active:text-on-color
     hover:bg-button-danger-hover hover:text-on-color
-    """);
+
+    %s
+    """.formatted(buttonVariants()));
+  }
+
+  private String buttonVariants() {
+    StringBuilder out;
+    out = new StringBuilder();
+
+    List<String> variants;
+    variants = List.of("primary", "secondary", "tertiary", "ghost", "danger", "danger-tertiary", "danger-ghost");
+
+    for (var variant : variants) {
+      out.append("# button-");
+      out.append(variant);
+      out.append(System.lineSeparator());
+
+      out.append("__button-lg");
+      out.append(System.lineSeparator());
+
+      out.append("__button-");
+      out.append(variant);
+      out.append(System.lineSeparator());
+    }
+
+    List<String> sizes;
+    sizes = List.of("sm", "md", "xl", "2xl");
+
+    for (var variant : variants) {
+      for (var size : sizes) {
+        out.append("# button-");
+        out.append(variant);
+        out.append('-');
+        out.append(size);
+        out.append(System.lineSeparator());
+
+        out.append("__button-");
+        out.append(size);
+        out.append(System.lineSeparator());
+
+        out.append("__button-");
+        out.append(variant);
+        out.append(System.lineSeparator());
+      }
+    }
+
+    return out.toString();
   }
 
   private Css.Option grid() {
