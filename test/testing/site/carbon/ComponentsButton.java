@@ -56,7 +56,7 @@ final class ComponentsButton extends CarbonPage {
   private void renderSection() {
     renderVariants();
 
-    renderWithIcons();
+    renderVariantsWithIcons();
 
     renderSizes();
 
@@ -112,7 +112,7 @@ final class ComponentsButton extends CarbonPage {
     );
   }
 
-  private void renderWithIcons() {
+  private void renderVariantsWithIcons() {
     h2(
         className("col-span-full heading-03"),
 
@@ -124,12 +124,37 @@ final class ComponentsButton extends CarbonPage {
 
         button(
             className("button-primary"),
-            type("button"), t("Add"), icon16(Carbon.Icon.ADD)
+            type("button"), t("Primary"), icon16(Carbon.Icon.ADD)
+        ),
+
+        button(
+            className("button-secondary"),
+            type("button"), t("Secondary"), icon16(Carbon.Icon.ADD)
+        ),
+
+        button(
+            className("button-tertiary"),
+            type("button"), t("Tertiary"), icon16(Carbon.Icon.ADD)
+        ),
+
+        button(
+            className("button-ghost"),
+            type("button"), t("Ghost"), icon16(Carbon.Icon.ADD)
         ),
 
         button(
             className("button-danger"),
-            type("button"), t("Remove"), icon16(Carbon.Icon.TRASH_CAN)
+            type("button"), t("Danger"), icon16(Carbon.Icon.TRASH_CAN)
+        ),
+
+        button(
+            className("button-danger-tertiary"),
+            type("button"), t("Danger tertiary"), icon16(Carbon.Icon.TRASH_CAN)
+        ),
+
+        button(
+            className("button-danger-ghost"),
+            type("button"), t("Danger ghost"), icon16(Carbon.Icon.TRASH_CAN)
         )
     );
   }

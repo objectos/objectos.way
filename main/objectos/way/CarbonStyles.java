@@ -888,29 +888,37 @@ final class CarbonStyles implements Http.Handler {
     transition-all duration-100
     focus:border-focus
     focus:shadow-[inset_0_0_0_1px_var(--cds-focus),inset_0_0_0_2px_var(--cds-background)]
-    svg:absolute svg:top-14px svg:right-16px svg:mt-1px svg:w-16px svg:h-16px svg:shrink-0
 
-    # __button-lg
-    __button
-    min-h-48px py-14px
+    # __button-icon
+    svg:absolute svg:right-16px svg:mt-1px svg:w-16px svg:h-16px svg:shrink-0
+
+    # __button-icon-ghost
+    svg:static svg:ml-8px
 
     # __button-sm
     __button
     min-h-32px py-6px
-    svg:top-6px
+    __button-icon svg:top-6px
 
     # __button-md
     __button
     min-h-40px py-10px
-    svg:top-10px
+    __button-icon svg:top-10px
+
+    # __button-lg
+    __button
+    min-h-48px py-14px
+    __button-icon svg:top-14px
 
     # __button-xl
     __button
     min-h-64px py-14px
+    __button-icon svg:top-14px
 
     # __button-2xl
     __button
     min-h-80px py-14px
+    __button-icon svg:top-14px
 
     # __button-primary
     bg-button-primary
@@ -940,6 +948,7 @@ final class CarbonStyles implements Http.Handler {
     text-link-primary
     active:bg-active active:text-link-primary-hover
     hover:bg-hover hover:text-link-primary-hover
+    __button-icon-ghost
 
     # __button-danger
     bg-button-danger
@@ -963,6 +972,7 @@ final class CarbonStyles implements Http.Handler {
     text-button-danger-secondary
     active:bg-button-danger-active active:text-on-color
     hover:bg-button-danger-hover hover:text-on-color
+    __button-icon-ghost
 
     %s
     """.formatted(buttonVariants()));
