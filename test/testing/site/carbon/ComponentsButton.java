@@ -49,160 +49,169 @@ final class ComponentsButton extends CarbonPage {
     section(
         className("grid-wide"),
 
-        h2(
-            className("col-span-full heading-03"),
-
-            t("Variants")
-        ),
-
-        div(
-            className("flex flex-wrap col-span-full gap-03"),
-
-            f(this::variants)
-        ),
-
-        h2(
-            className("col-span-full heading-03"),
-
-            t("Icon buttons")
-        ),
-
-        div(
-            className("flex flex-wrap col-span-full gap-03"),
-
-            f(this::iconButtons)
-        ),
-
-        h2(
-            className("col-span-full heading-03"),
-
-            t("Sizes")
-        ),
-
-        div(
-            className("min-h-80px flex flex-wrap col-span-full gap-03"),
-
-            f(this::sizes)
-        )
+        f(this::renderSection)
     );
   }
 
-  private void variants() {
-    button(
-        className("button button-primary"),
-        type("button"),
+  private void renderSection() {
+    renderVariants();
 
-        t("Primary")
-    );
+    renderWithIcons();
 
-    button(
-        className("button button-secondary"),
-        type("button"),
+    renderSizes();
 
-        t("Secondary")
-    );
+    renderSizesWithIcons();
 
-    button(
-        className("button button-tertiary"),
-        type("button"),
-
-        t("Tertiary")
-    );
-
-    button(
-        className("button button-ghost"),
-        type("button"),
-
-        t("Ghost")
-    );
-
-    button(
-        className("button button-danger"),
-        type("button"),
-
-        t("Danger")
-    );
-
-    button(
-        className("button button-danger-tertiary"),
-        type("button"),
-
-        t("Danger tertiary")
-    );
-
-    button(
-        className("button button-danger-ghost"),
-        type("button"),
-
-        t("Danger ghost")
-    );
+    renderIconOnly();
   }
 
-  private void iconButtons() {
-    button(
-        className("button button-primary"),
-        type("button"),
+  private void renderVariants() {
+    h2(
+        className("col-span-full heading-03"),
 
-        t("Add"),
-
-        icon16(Carbon.Icon.ADD)
+        t("Variants")
     );
 
-    button(
-        className("button button-danger"),
-        type("button"),
-
-        t("Remove"),
-
-        icon16(Carbon.Icon.TRASH_CAN)
-    );
-  }
-
-  private void sizes() {
     div(
+        className("col-span-full *:mr-8px *:mb-8px"),
+
         button(
             className("button button-primary"),
-            type("button"),
+            type("button"), t("Primary")
+        ),
 
-            t("Submit")
+        button(
+            className("button button-secondary"),
+            type("button"), t("Secondary")
+        ),
+
+        button(
+            className("button button-tertiary"),
+            type("button"), t("Tertiary")
+        ),
+
+        button(
+            className("button button-ghost"),
+            type("button"), t("Ghost")
+        ),
+
+        button(
+            className("button button-danger"),
+            type("button"), t("Danger")
+        ),
+
+        button(
+            className("button button-danger-tertiary"),
+            type("button"), t("Danger tertiary")
+        ),
+
+        button(
+            className("button button-danger-ghost"),
+            type("button"), t("Danger ghost")
         )
+    );
+  }
+
+  private void renderWithIcons() {
+    h2(
+        className("col-span-full heading-03"),
+
+        t("Buttons + Icons")
     );
 
     div(
+        className("col-span-full *:mr-8px *:mb-8px"),
+
+        button(
+            className("button button-primary"),
+            type("button"), t("Add"), icon16(Carbon.Icon.ADD)
+        ),
+
+        button(
+            className("button button-danger"),
+            type("button"), t("Remove"), icon16(Carbon.Icon.TRASH_CAN)
+        )
+    );
+  }
+
+  private void renderSizes() {
+    h2(
+        className("col-span-full heading-03"),
+
+        t("Sizes")
+    );
+
+    div(
+        className("col-span-full *:mr-8px *:mb-8px"),
+
+        button(
+            className("button button-primary"),
+            type("button"), t("Submit")
+        ),
+
         button(
             className("button-sm button-primary"),
-            type("button"),
+            type("button"), t("Submit")
+        ),
 
-            t("Submit")
-        )
-    );
-
-    div(
         button(
             className("button-md button-primary"),
-            type("button"),
+            type("button"), t("Submit")
+        ),
 
-            t("Submit")
-        )
-    );
-
-    div(
         button(
             className("button-xl button-primary"),
-            type("button"),
+            type("button"), t("Submit")
+        ),
 
-            t("Submit")
+        button(
+            className("button-2xl button-primary"),
+            type("button"), t("Submit")
         )
+    );
+  }
+
+  private void renderSizesWithIcons() {
+    h2(
+        className("col-span-full heading-03"),
+
+        t("Sizes + Icon")
     );
 
     div(
+        className("col-span-full *:mr-8px *:mb-8px"),
+
+        p("Foo"),
+
+        button(
+            className("button button-primary"),
+            type("button"), t("Submit"), icon16(Carbon.Icon.CLOSE)
+        ),
+
+        button(
+            className("button-sm button-primary"),
+            type("button"), t("Submit"), icon16(Carbon.Icon.CLOSE)
+        ),
+
+        button(
+            className("button-md button-primary"),
+            type("button"), t("Submit"), icon16(Carbon.Icon.CLOSE)
+        ),
+
+        button(
+            className("button-xl button-primary"),
+            type("button"), t("Submit"), icon16(Carbon.Icon.CLOSE)
+        ),
+
         button(
             className("button-2xl button-primary"),
-            type("button"),
-
-            t("Submit")
+            type("button"), t("Submit"), icon16(Carbon.Icon.CLOSE)
         )
     );
+  }
+
+  private void renderIconOnly() {
+
   }
 
 }

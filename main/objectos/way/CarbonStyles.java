@@ -879,9 +879,9 @@ final class CarbonStyles implements Http.Handler {
     # __button
     relative m-0px inline-flex w-max max-w-320px shrink-0
     cursor-pointer
-    align-start justify-between
+    justify-between
     pr-[63px] pl-[15px]
-    body-compact-01
+    text-start align-top body-compact-01
     outline-0
     transition-all duration-100
     focus:border-focus
@@ -897,10 +897,12 @@ final class CarbonStyles implements Http.Handler {
     # button-sm
     __button
     min-h-32px py-6px
+    svg:top-6px
 
     # button-md
     __button
     min-h-40px py-10px
+    svg:top-10px
 
     # button-xl
     __button
