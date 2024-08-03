@@ -358,143 +358,7 @@ final class CssConfig {
 
     // A
 
-    staticUtility(
-        Css.Key.ACCESSIBILITY,
-
-        """
-        sr-only     | position: absolute
-                    | width: 1px
-                    | height: 1px
-                    | padding: 0
-                    | margin: -1px
-                    | overflow: hidden
-                    | clip: rect(0, 0, 0, 0)
-                    | white-space: nowrap
-                    | border-width: 0
-
-        not-sr-only | position: static
-                    | width: auto
-                    | height: auto
-                    | padding: 0
-                    | margin: 0
-                    | overflow: visible
-                    | clip: auto
-                    | white-space: normal
-        """
-    );
-
-    staticUtility(
-        Css.Key.ALIGN_ITEMS,
-
-        """
-        items-start    | align-items: flex-start
-        items-end      | align-items: flex-end
-        items-center   | align-items: center
-        items-baseline | align-items: baseline
-        items-stretch  | align-items: stretch
-        """
-    );
-
-    staticUtility(
-        Css.Key.APPEARANCE,
-
-        """
-        appearance-none | appearance: none
-        appearance-auto | appearance: auto
-        """
-    );
-
-    var aspectRatio = values(
-        Css.Key.ASPECT_RATIO,
-
-        """
-        16x9: 16/9
-        9x16: 9/16
-        2x1: 2/1
-        1x2: 1/2
-        4x3: 4/3
-        3x4: 3/4
-        3x2: 3/2
-        2x3: 2/3
-        1x1: 1/1
-        """
-    );
-
-    addComponent("aspect-auto", "before:hidden after:hidden");
-
-    NumberFormat doubleFormatter;
-    doubleFormatter = NumberFormat.getNumberInstance(Locale.US);
-
-    doubleFormatter.setMaximumFractionDigits(5);
-
-    for (String suffix : aspectRatio.keySet()) {
-      String raw;
-      raw = aspectRatio.get(suffix);
-
-      int slash;
-      slash = raw.indexOf('/');
-
-      if (slash <= 0) {
-        continue;
-      }
-
-      int height;
-
-      try {
-        String s;
-        s = raw.substring(slash + 1);
-
-        height = Integer.parseInt(s);
-      } catch (NumberFormatException e) {
-        continue;
-      }
-
-      if (height <= 0) {
-        continue;
-      }
-
-      int width;
-
-      try {
-        String s;
-        s = raw.substring(0, slash);
-
-        width = Integer.parseInt(s);
-      } catch (NumberFormatException e) {
-        continue;
-      }
-
-      if (width <= 0) {
-        continue;
-      }
-
-      double padding;
-      padding = ((double) height / (double) width) * 100d;
-
-      StringBuilder def;
-      def = new StringBuilder();
-
-      def.append("before:float-left before:ml-[-1px] before:w-[1px] before:h-[0]");
-      def.append(' ');
-      def.append("before:pt-[");
-
-      if (padding == Math.rint(padding)) {
-        def.append((int) padding);
-      } else {
-        def.append(doubleFormatter.format(padding));
-      }
-
-      def.append("%] ");
-      def.append("before:content-['']");
-      def.append(' ');
-      def.append("after:table after:clear-both after:content-['']");
-
-      addComponent(
-          "aspect-" + suffix,
-
-          def.toString()
-      );
-    }
+    specA();
 
     // B
 
@@ -1575,6 +1439,159 @@ final class CssConfig {
 
         "z", "z-index"
     );
+  }
+
+  private void specA() {
+    staticUtility(
+        Css.Key.ACCESSIBILITY,
+
+        """
+        sr-only     | position: absolute
+                    | width: 1px
+                    | height: 1px
+                    | padding: 0
+                    | margin: -1px
+                    | overflow: hidden
+                    | clip: rect(0, 0, 0, 0)
+                    | white-space: nowrap
+                    | border-width: 0
+
+        not-sr-only | position: static
+                    | width: auto
+                    | height: auto
+                    | padding: 0
+                    | margin: 0
+                    | overflow: visible
+                    | clip: auto
+                    | white-space: normal
+        """
+    );
+
+    staticUtility(
+        Css.Key.ALIGN_ITEMS,
+
+        """
+        items-start    | align-items: flex-start
+        items-end      | align-items: flex-end
+        items-center   | align-items: center
+        items-baseline | align-items: baseline
+        items-stretch  | align-items: stretch
+        """
+    );
+
+    staticUtility(
+        Css.Key.ALIGN_SELF,
+
+        """
+        self-auto     | align-self: auto
+        self-start    | align-self: flex-start
+        self-end      | align-self: flex-end
+        self-center   | align-self: center
+        self-baseline | align-self: baseline
+        self-stretch  | align-self: stretch
+        """
+    );
+
+    staticUtility(
+        Css.Key.APPEARANCE,
+
+        """
+        appearance-none | appearance: none
+        appearance-auto | appearance: auto
+        """
+    );
+
+    var aspectRatio = values(
+        Css.Key.ASPECT_RATIO,
+
+        """
+        16x9: 16/9
+        9x16: 9/16
+        2x1: 2/1
+        1x2: 1/2
+        4x3: 4/3
+        3x4: 3/4
+        3x2: 3/2
+        2x3: 2/3
+        1x1: 1/1
+        """
+    );
+
+    addComponent("aspect-auto", "before:hidden after:hidden");
+
+    NumberFormat doubleFormatter;
+    doubleFormatter = NumberFormat.getNumberInstance(Locale.US);
+
+    doubleFormatter.setMaximumFractionDigits(5);
+
+    for (String suffix : aspectRatio.keySet()) {
+      String raw;
+      raw = aspectRatio.get(suffix);
+
+      int slash;
+      slash = raw.indexOf('/');
+
+      if (slash <= 0) {
+        continue;
+      }
+
+      int height;
+
+      try {
+        String s;
+        s = raw.substring(slash + 1);
+
+        height = Integer.parseInt(s);
+      } catch (NumberFormatException e) {
+        continue;
+      }
+
+      if (height <= 0) {
+        continue;
+      }
+
+      int width;
+
+      try {
+        String s;
+        s = raw.substring(0, slash);
+
+        width = Integer.parseInt(s);
+      } catch (NumberFormatException e) {
+        continue;
+      }
+
+      if (width <= 0) {
+        continue;
+      }
+
+      double padding;
+      padding = ((double) height / (double) width) * 100d;
+
+      StringBuilder def;
+      def = new StringBuilder();
+
+      def.append("before:float-left before:ml-[-1px] before:w-[1px] before:h-[0]");
+      def.append(' ');
+      def.append("before:pt-[");
+
+      if (padding == Math.rint(padding)) {
+        def.append((int) padding);
+      } else {
+        def.append(doubleFormatter.format(padding));
+      }
+
+      def.append("%] ");
+      def.append("before:content-['']");
+      def.append(' ');
+      def.append("after:table after:clear-both after:content-['']");
+
+      addComponent(
+          "aspect-" + suffix,
+
+          def.toString()
+      );
+    }
   }
 
   private static final Pattern REPLACE_COLOR = Pattern.compile(

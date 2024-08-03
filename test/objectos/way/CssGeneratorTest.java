@@ -60,6 +60,29 @@ public class CssGeneratorTest {
   }
 
   @Test
+  public void alignSelf() {
+    class Subject extends AbstractSubject {
+      @Override
+      final void classes() {
+        className("self-auto self-start self-end self-center self-stretch self-baseline");
+      }
+    }
+
+    test(
+        Subject.class,
+
+        """
+        .self-auto { align-self: auto }
+        .self-start { align-self: flex-start }
+        .self-end { align-self: flex-end }
+        .self-center { align-self: center }
+        .self-stretch { align-self: stretch }
+        .self-baseline { align-self: baseline }
+        """
+    );
+  }
+
+  @Test
   public void appearance() {
     class Subject extends AbstractSubject {
       @Override

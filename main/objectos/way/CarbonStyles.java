@@ -15,8 +15,6 @@
  */
 package objectos.way;
 
-import java.util.List;
-
 final class CarbonStyles implements Http.Handler {
 
   private final Css.Generator.Classes classes;
@@ -878,47 +876,67 @@ final class CarbonStyles implements Http.Handler {
     # button-reset
     cursor-pointer appearance-none
 
-    # __button
-    relative m-0px inline-flex w-max max-w-320px shrink-0
-    cursor-pointer
-    justify-between
-    pr-[63px] pl-[15px]
+    # __button-base
+    relative m-0px inline-flex shrink-0
+    cursor-pointer appearance-none
     text-start align-top body-compact-01
     outline-0
     transition-all duration-100
     focus:border-focus
     focus:shadow-[inset_0_0_0_1px_var(--cds-focus),inset_0_0_0_2px_var(--cds-background)]
 
-    # __button-icon
-    svg:absolute svg:right-16px svg:mt-1px svg:w-16px svg:h-16px svg:shrink-0
+    # __button-justify-standard
+    justify-between
 
-    # __button-icon-ghost
+    # __button-justify-icon-only
+    justify-center
+
+    # __button-padding-standard
+    pr-[63px] pl-[15px]
+
+    # __button-padding-ghost
+    pr-[15px] pl-[15px]
+
+    # __button-size-sm
+    w-max max-w-320px min-h-32px py-6px
+
+    # __button-size-md
+    w-max max-w-320px min-h-40px py-10px
+
+    # __button-size-lg
+    w-max max-w-320px min-h-48px py-14px
+
+    # __button-size-xl
+    w-max max-w-320px min-h-64px py-14px
+
+    # __button-size-2xl
+    w-max max-w-320px min-h-80px py-14px
+
+    # __button-has-icon-base
+    svg:w-16px svg:h-16px svg:shrink-0
+
+    # __button-has-icon-standard
+    __button-has-icon-base
+    svg:absolute svg:right-16px svg:mt-1px
+
+    # __button-has-icon-ghost
+    __button-has-icon-base
     svg:static svg:ml-8px
 
-    # __button-sm
-    __button
-    min-h-32px py-6px
-    __button-icon svg:top-6px
+    # __button-has-icon-position-sm
+    svg:top-6px
 
-    # __button-md
-    __button
-    min-h-40px py-10px
-    __button-icon svg:top-10px
+    # __button-has-icon-position-md
+    svg:top-10px
 
-    # __button-lg
-    __button
-    min-h-48px py-14px
-    __button-icon svg:top-14px
+    # __button-has-icon-position-lg
+    svg:top-14px
 
-    # __button-xl
-    __button
-    min-h-64px py-14px
-    __button-icon svg:top-14px
+    # __button-has-icon-position-xl
+    svg:top-14px
 
-    # __button-2xl
-    __button
-    min-h-80px py-14px
-    __button-icon svg:top-14px
+    # __button-has-icon-position-2xl
+    svg:top-14px
 
     # __button-primary
     bg-button-primary
@@ -944,11 +962,9 @@ final class CarbonStyles implements Http.Handler {
     # __button-ghost
     bg-transparent
     border border-transparent
-    pr-[15px]
     text-link-primary
     active:bg-active active:text-link-primary-hover
     hover:bg-hover hover:text-link-primary-hover
-    __button-icon-ghost
 
     # __button-danger
     bg-button-danger
@@ -968,58 +984,275 @@ final class CarbonStyles implements Http.Handler {
     # __button-danger-ghost
     bg-transparent
     border border-transparent
-    pr-[15px]
     text-button-danger-secondary
     active:bg-button-danger-active active:text-on-color
     hover:bg-button-danger-hover hover:text-on-color
-    __button-icon-ghost
 
-    %s
-    """.formatted(buttonVariants()));
-  }
+    # __button-icon-size-sm
+    size-32px pt-[7px]
 
-  private String buttonVariants() {
-    StringBuilder out;
-    out = new StringBuilder();
+    # __button-icon-size-md
+    size-40px pt-[11px]
 
-    List<String> variants;
-    variants = List.of("primary", "secondary", "tertiary", "ghost", "danger", "danger-tertiary", "danger-ghost");
+    # __button-icon-size-lg
+    size-48px pt-14px
 
-    for (var variant : variants) {
-      out.append("# button-");
-      out.append(variant);
-      out.append(System.lineSeparator());
+    # __button-icon-size-xl
+    size-64px pt-14px
 
-      out.append("__button-lg");
-      out.append(System.lineSeparator());
+    # __button-icon-size-2xl
+    size-80px pt-14px
 
-      out.append("__button-");
-      out.append(variant);
-      out.append(System.lineSeparator());
-    }
+    # __button-standard
+    __button-base
+    __button-justify-standard
+    __button-padding-standard
+    __button-has-icon-standard
 
-    List<String> sizes;
-    sizes = List.of("sm", "md", "xl", "2xl");
+    # __button-primary-base
+    __button-standard __button-primary
 
-    for (var variant : variants) {
-      for (var size : sizes) {
-        out.append("# button-");
-        out.append(variant);
-        out.append('-');
-        out.append(size);
-        out.append(System.lineSeparator());
+    # button-primary
+    __button-primary-base __button-size-lg  __button-has-icon-offset-lg
+    # button-primary-sm
+    __button-primary-base __button-size-sm  __button-has-icon-offset-sm
+    # button-primary-md
+    __button-primary-base __button-size-md  __button-has-icon-offset-md
+    # button-primary-lg
+    __button-primary-base __button-size-lg  __button-has-icon-offset-lg
+    # button-primary-xl
+    __button-primary-base __button-size-xl  __button-has-icon-offset-xl
+    # button-primary-2xl
+    __button-primary-base __button-size-2xl  __button-has-icon-offset-2xl
 
-        out.append("__button-");
-        out.append(size);
-        out.append(System.lineSeparator());
+    # __button-secondary-base
+    __button-standard __button-secondary
 
-        out.append("__button-");
-        out.append(variant);
-        out.append(System.lineSeparator());
-      }
-    }
+    # button-secondary
+    __button-secondary-base __button-size-lg  __button-has-icon-offset-lg
+    # button-secondary-sm
+    __button-secondary-base __button-size-sm  __button-has-icon-offset-sm
+    # button-secondary-md
+    __button-secondary-base __button-size-md  __button-has-icon-offset-md
+    # button-secondary-lg
+    __button-secondary-base __button-size-lg  __button-has-icon-offset-lg
+    # button-secondary-xl
+    __button-secondary-base __button-size-xl  __button-has-icon-offset-xl
+    # button-secondary-2xl
+    __button-secondary-base __button-size-2xl  __button-has-icon-offset-2xl
 
-    return out.toString();
+    # __button-tertiary-base
+    __button-standard __button-tertiary
+
+    # button-tertiary
+    __button-tertiary-base __button-size-lg  __button-has-icon-offset-lg
+    # button-tertiary-sm
+    __button-tertiary-base __button-size-sm  __button-has-icon-offset-sm
+    # button-tertiary-md
+    __button-tertiary-base __button-size-md  __button-has-icon-offset-md
+    # button-tertiary-lg
+    __button-tertiary-base __button-size-lg  __button-has-icon-offset-lg
+    # button-tertiary-xl
+    __button-tertiary-base __button-size-xl  __button-has-icon-offset-xl
+    # button-tertiary-2xl
+    __button-tertiary-base __button-size-2xl  __button-has-icon-offset-2xl
+
+    # __button-ghost-base
+    __button-base
+    __button-justify-standard
+    __button-padding-ghost
+    __button-has-icon-ghost
+    __button-ghost
+
+    # button-ghost
+    __button-ghost-base __button-size-lg  __button-has-icon-offset-lg
+    # button-ghost-sm
+    __button-ghost-base __button-size-sm  __button-has-icon-offset-sm
+    # button-ghost-md
+    __button-ghost-base __button-size-md  __button-has-icon-offset-md
+    # button-ghost-lg
+    __button-ghost-base __button-size-lg  __button-has-icon-offset-lg
+    # button-ghost-xl
+    __button-ghost-base __button-size-xl  __button-has-icon-offset-xl
+    # button-ghost-2xl
+    __button-ghost-base __button-size-2xl  __button-has-icon-offset-2xl
+
+    # __button-danger-base
+    __button-standard __button-danger
+
+    # button-danger
+    __button-danger-base __button-size-lg  __button-has-icon-offset-lg
+    # button-danger-sm
+    __button-danger-base __button-size-sm  __button-has-icon-offset-sm
+    # button-danger-md
+    __button-danger-base __button-size-md  __button-has-icon-offset-md
+    # button-danger-lg
+    __button-danger-base __button-size-lg  __button-has-icon-offset-lg
+    # button-danger-xl
+    __button-danger-base __button-size-xl  __button-has-icon-offset-xl
+    # button-danger-2xl
+    __button-danger-base __button-size-2xl  __button-has-icon-offset-2xl
+
+    # __button-danger-tertiary-base
+    __button-standard __button-danger-tertiary
+
+    # button-danger-tertiary
+    __button-danger-tertiary-base __button-size-lg  __button-has-icon-offset-lg
+    # button-danger-tertiary-sm
+    __button-danger-tertiary-base __button-size-sm  __button-has-icon-offset-sm
+    # button-danger-tertiary-md
+    __button-danger-tertiary-base __button-size-md  __button-has-icon-offset-md
+    # button-danger-tertiary-lg
+    __button-danger-tertiary-base __button-size-lg  __button-has-icon-offset-lg
+    # button-danger-tertiary-xl
+    __button-danger-tertiary-base __button-size-xl  __button-has-icon-offset-xl
+    # button-danger-tertiary-2xl
+    __button-danger-tertiary-base __button-size-2xl  __button-has-icon-offset-2xl
+
+    # __button-danger-ghost-base
+    __button-base
+    __button-justify-standard
+    __button-padding-ghost
+    __button-has-icon-ghost
+    __button-danger-ghost
+
+    # button-danger-ghost
+    __button-danger-ghost-base __button-size-lg  __button-has-icon-offset-lg
+    # button-danger-ghost-sm
+    __button-danger-ghost-base __button-size-sm  __button-has-icon-offset-sm
+    # button-danger-ghost-md
+    __button-danger-ghost-base __button-size-md  __button-has-icon-offset-md
+    # button-danger-ghost-lg
+    __button-danger-ghost-base __button-size-lg  __button-has-icon-offset-lg
+    # button-danger-ghost-xl
+    __button-danger-ghost-base __button-size-xl  __button-has-icon-offset-xl
+    # button-danger-ghost-2xl
+    __button-danger-ghost-base __button-size-2xl  __button-has-icon-offset-2xl
+
+    # __button-icon-base
+    __button-base
+    __button-justify-icon-only
+
+    # __button-icon-primary-base
+    __button-icon-base
+    __button-primary
+
+    # button-icon-primary
+    __button-icon-primary-base __button-icon-size-lg
+    # button-icon-primary-sm
+    __button-icon-primary-base __button-icon-size-sm
+    # button-icon-primary-md
+    __button-icon-primary-base __button-icon-size-md
+    # button-icon-primary-lg
+    __button-icon-primary-base __button-icon-size-lg
+    # button-icon-primary-xl
+    __button-icon-primary-base __button-icon-size-xl
+    # button-icon-primary-2xl
+    __button-icon-primary-base __button-icon-size-2xl
+
+    # __button-icon-secondary-base
+    __button-icon-base
+    __button-secondary
+
+    # button-icon-secondary
+    __button-icon-secondary-base __button-icon-size-lg
+    # button-icon-secondary-sm
+    __button-icon-secondary-base __button-icon-size-sm
+    # button-icon-secondary-md
+    __button-icon-secondary-base __button-icon-size-md
+    # button-icon-secondary-lg
+    __button-icon-secondary-base __button-icon-size-lg
+    # button-icon-secondary-xl
+    __button-icon-secondary-base __button-icon-size-xl
+    # button-icon-secondary-2xl
+    __button-icon-secondary-base __button-icon-size-2xl
+
+    # __button-icon-tertiary-base
+    __button-icon-base
+    __button-tertiary
+
+    # button-icon-tertiary
+    __button-icon-tertiary-base __button-icon-size-lg
+    # button-icon-tertiary-sm
+    __button-icon-tertiary-base __button-icon-size-sm
+    # button-icon-tertiary-md
+    __button-icon-tertiary-base __button-icon-size-md
+    # button-icon-tertiary-lg
+    __button-icon-tertiary-base __button-icon-size-lg
+    # button-icon-tertiary-xl
+    __button-icon-tertiary-base __button-icon-size-xl
+    # button-icon-tertiary-2xl
+    __button-icon-tertiary-base __button-icon-size-2xl
+
+    # __button-icon-ghost-base
+    __button-icon-base
+    __button-ghost
+    svg:fill-primary
+
+    # button-icon-ghost
+    __button-icon-ghost-base __button-icon-size-lg
+    # button-icon-ghost-sm
+    __button-icon-ghost-base __button-icon-size-sm
+    # button-icon-ghost-md
+    __button-icon-ghost-base __button-icon-size-md
+    # button-icon-ghost-lg
+    __button-icon-ghost-base __button-icon-size-lg
+    # button-icon-ghost-xl
+    __button-icon-ghost-base __button-icon-size-xl
+    # button-icon-ghost-2xl
+    __button-icon-ghost-base __button-icon-size-2xl
+
+    # __button-icon-danger-base
+    __button-icon-base
+    __button-danger
+
+    # button-icon-danger
+    __button-icon-danger-base __button-icon-size-lg
+    # button-icon-danger-sm
+    __button-icon-danger-base __button-icon-size-sm
+    # button-icon-danger-md
+    __button-icon-danger-base __button-icon-size-md
+    # button-icon-danger-lg
+    __button-icon-danger-base __button-icon-size-lg
+    # button-icon-danger-xl
+    __button-icon-danger-base __button-icon-size-xl
+    # button-icon-danger-2xl
+    __button-icon-danger-base __button-icon-size-2xl
+
+    # __button-icon-danger-tertiary-base
+    __button-icon-base
+    __button-danger-tertiary
+
+    # button-icon-danger-tertiary
+    __button-icon-danger-tertiary-base __button-icon-size-lg
+    # button-icon-danger-tertiary-sm
+    __button-icon-danger-tertiary-base __button-icon-size-sm
+    # button-icon-danger-tertiary-md
+    __button-icon-danger-tertiary-base __button-icon-size-md
+    # button-icon-danger-tertiary-lg
+    __button-icon-danger-tertiary-base __button-icon-size-lg
+    # button-icon-danger-tertiary-xl
+    __button-icon-danger-tertiary-base __button-icon-size-xl
+    # button-icon-danger-tertiary-2xl
+    __button-icon-danger-tertiary-base __button-icon-size-2xl
+
+    # __button-icon-danger-ghost-base
+    __button-icon-base
+    __button-danger-ghost
+
+    # button-icon-danger-ghost
+    __button-icon-danger-ghost-base __button-icon-size-lg
+    # button-icon-danger-ghost-sm
+    __button-icon-danger-ghost-base __button-icon-size-sm
+    # button-icon-danger-ghost-md
+    __button-icon-danger-ghost-base __button-icon-size-md
+    # button-icon-danger-ghost-lg
+    __button-icon-danger-ghost-base __button-icon-size-lg
+    # button-icon-danger-ghost-xl
+    __button-icon-danger-ghost-base __button-icon-size-xl
+    # button-icon-danger-ghost-2xl
+    __button-icon-danger-ghost-base __button-icon-size-2xl
+    """);
   }
 
   private Css.Option grid() {

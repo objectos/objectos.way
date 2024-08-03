@@ -330,6 +330,8 @@ public final class Css {
     GAP_X,
     GAP_Y,
 
+    ALIGN_SELF,
+
     OVERFLOW,
     OVERFLOW_X,
     OVERFLOW_Y,
