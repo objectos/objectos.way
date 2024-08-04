@@ -34,7 +34,7 @@ public class CssGeneratorAdapterTest {
     CssGenerator round;
     round = new CssGenerator(config);
 
-    round.putRule("bg-black", new CssUtility(Css.Key.BACKGROUND_COLOR, "bg-black", List.of(), Css.parseProperties("background-color: black")));
+    round.putRule("bg-black", new CssUtility(Css.Key.BACKGROUND_COLOR, "bg-black", Css.EMPTY_MODIFIER, Css.parseProperties("background-color: black")));
 
     assertEquals(
         round.generate(),
@@ -56,7 +56,7 @@ public class CssGeneratorAdapterTest {
       public Impl() {}
 
       @Override
-      final Css.Rule createFragment(String className) {
+      final Css.Rule createRule(String className) {
         Assert.fail("It should have returned from the cache");
 
         return null;
@@ -91,7 +91,7 @@ public class CssGeneratorAdapterTest {
       Css.Rule rule;
 
       @Override
-      final Css.Rule createFragment(String className) {
+      final Css.Rule createRule(String className) {
         return foo;
       }
 
@@ -252,10 +252,10 @@ public class CssGeneratorAdapterTest {
     }
 
     @Override
-    final Css.Rule createUtility(String className, List<Css.Variant> variants, String value) {
+    final Css.Rule createUtility(String className, Css.Modifier modifier, String value) {
       return new CssUtility(
           Css.Key.DISPLAY,
-          className, variants,
+          className, modifier,
           CssProperties.of("display", value)
       );
     }

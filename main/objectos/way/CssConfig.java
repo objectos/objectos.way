@@ -230,16 +230,18 @@ final class CssConfig {
         putVariant(breakpoint.name(), breakpoint);
       }
 
-      putVariant("focus", new Css.ClassNameSuffix(1, ":focus"));
-      putVariant("hover", new Css.ClassNameSuffix(2, ":hover"));
-      putVariant("active", new Css.ClassNameSuffix(3, ":active"));
-      putVariant("*", new Css.ClassNameSuffix(4, " > *"));
+      putVariant("focus", new Css.ClassNameFormat("", ":focus"));
+      putVariant("hover", new Css.ClassNameFormat("", ":hover"));
+      putVariant("active", new Css.ClassNameFormat("", ":active"));
+      putVariant("visited", new Css.ClassNameFormat("", ":visited"));
 
-      putVariant("after", new Css.ClassNameSuffix(5, "::after"));
-      putVariant("before", new Css.ClassNameSuffix(6, "::before"));
+      putVariant("ltr", new Css.ClassNameFormat("", ":where([dir=\"ltr\"], [dir=\"ltr\"] *)"));
+      putVariant("rtl", new Css.ClassNameFormat("", ":where([dir=\"rtl\"], [dir=\"rtl\"] *)"));
 
-      putVariant("ltr", new Css.ClassNameSuffix(7, ":where([dir=\"ltr\"], [dir=\"ltr\"] *)"));
-      putVariant("rtl", new Css.ClassNameSuffix(7, ":where([dir=\"rtl\"], [dir=\"rtl\"] *)"));
+      putVariant("after", new Css.ClassNameFormat("", "::after"));
+      putVariant("before", new Css.ClassNameFormat("", "::before"));
+
+      putVariant("*", new Css.ClassNameFormat("", " > *"));
 
       variantsInitialized = true;
     }
@@ -1607,7 +1609,7 @@ final class CssConfig {
 
   record BoxShadow(Map<String, String> props) implements CssResolver {
     @Override
-    public final Css.Rule resolve(String className, List<Css.Variant> variants, boolean negative, Css.ValueType type, String value) {
+    public final Css.Rule resolve(String className, Css.Modifier modifier, boolean negative, Css.ValueType type, String value) {
       String resolved;
 
       if (type == Css.ValueType.STANDARD) {
@@ -1637,13 +1639,13 @@ final class CssConfig {
           "var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow, 0 0 #0000)"
       );
 
-      return new CssUtility(Css.Key.BOX_SHADOW, className, variants, builder);
+      return new CssUtility(Css.Key.BOX_SHADOW, className, modifier, builder);
     }
   }
 
   record BoxShadowColor(Map<String, String> props) implements CssResolver {
     @Override
-    public final Css.Rule resolve(String className, List<Css.Variant> variants, boolean negative, Css.ValueType type, String value) {
+    public final Css.Rule resolve(String className, Css.Modifier modifier, boolean negative, Css.ValueType type, String value) {
       String resolved;
 
       if (type == Css.ValueType.STANDARD) {
@@ -1663,7 +1665,7 @@ final class CssConfig {
 
       builder.add("--tw-shadow", "var(--tw-shadow-colored)");
 
-      return new CssUtility(Css.Key.BOX_SHADOW_COLOR, className, variants, builder);
+      return new CssUtility(Css.Key.BOX_SHADOW_COLOR, className, modifier, builder);
     }
   }
 
@@ -1785,7 +1787,7 @@ final class CssConfig {
 
   record RingWidth(Map<String, String> props) implements CssResolver {
     @Override
-    public final Css.Rule resolve(String className, List<Css.Variant> variants, boolean negative, Css.ValueType type, String value) {
+    public final Css.Rule resolve(String className, Css.Modifier modifier, boolean negative, Css.ValueType type, String value) {
       String resolved;
 
       if (type == Css.ValueType.STANDARD) {
@@ -1818,7 +1820,7 @@ final class CssConfig {
           "var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow, 0 0 #0000)"
       );
 
-      return new CssUtility(Css.Key.RING_WIDTH, className, variants, builder);
+      return new CssUtility(Css.Key.RING_WIDTH, className, modifier, builder);
     }
   }
 

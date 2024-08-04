@@ -576,21 +576,23 @@ final class CarbonStyles implements Http.Handler {
         }
         """),
 
-        button(),
+        componentsButton(),
 
-        grid(),
+        componentsGrid(),
 
-        header(),
+        componentsHeader(),
 
-        overlay(),
+        componentsLink(),
 
-        pageHeader(),
+        componentsOverlay(),
 
-        sideNav(),
+        componentsPageHeader(),
 
-        tile(),
+        componentsSideNav(),
 
-        typography(),
+        compoentsTile(),
+
+        componentsTypography(),
 
         Css.overrideBackgroundColor("""
         : var(--cds-background)
@@ -808,9 +810,20 @@ final class CarbonStyles implements Http.Handler {
         44px: 2.75rem
         48px: 3rem
 
+        56px: 3.5rem
+
         64px: 4rem
 
         80px: 5rem
+
+        96px: 6rem
+
+        112px: 7rem
+        128px: 8rem
+        144px: 9rem
+        160px: 10rem
+        176px: 11rem
+        192px: 12rem
 
         208px: 13rem
         224px: 14rem
@@ -818,20 +831,10 @@ final class CarbonStyles implements Http.Handler {
         256px: 16rem
         288px: 18rem
         320px: 20rem
+        384px: 24rem
         """),
 
-        Css.overrideTextColor("""
-        button-danger-secondary: var(--cds-button-danger-secondary)
-        button-tertiary: var(--cds-button-tertiary)
-        link-primary: var(--cds-link-primary)
-        link-primary-hover: var(--cds-link-primary-hover)
-
-        inverse: var(--cds-text-inverse)
-        on-color: var(--cds-text-on-color)
-        on-color-disabled: var(--cds-text-on-color-disabled)
-        primary: var(--cds-text-primary)
-        secondary: var(--cds-text-secondary)
-        """),
+        overrideTextColor(),
 
         Css.overrideZIndex("""
         auto: auto
@@ -841,7 +844,7 @@ final class CarbonStyles implements Http.Handler {
         overlay: 6000
         floating: 6000
         footer: 5000
-        hidden: - 1
+        hidden: -1
         """),
 
         Css.variants("""
@@ -871,7 +874,7 @@ final class CarbonStyles implements Http.Handler {
     http.send(bytes);
   }
 
-  private Css.Option button() {
+  private Css.Option componentsButton() {
     return Css.components("""
     # button-reset
     cursor-pointer appearance-none
@@ -1255,7 +1258,7 @@ final class CarbonStyles implements Http.Handler {
     """);
   }
 
-  private Css.Option grid() {
+  private Css.Option componentsGrid() {
     return Css.components("""
     # __grid
     mx-auto grid w-full max-w-screen-max
@@ -1276,7 +1279,7 @@ final class CarbonStyles implements Http.Handler {
     """);
   }
 
-  private Css.Option header() {
+  private Css.Option componentsHeader() {
     return Css.components("""
     # header
     fixed top-0px right-0px left-0px z-header
@@ -1382,7 +1385,31 @@ final class CarbonStyles implements Http.Handler {
     """);
   }
 
-  private Css.Option overlay() {
+  private Css.Option componentsLink() {
+    return Css.components("""
+    # __link
+    inline-flex
+    text-link-primary outline-none
+    transition-colors duration-100
+    active:underline active:outline active:outline-1 active:outline-focus active:outline-offset-0
+    focus:outline focus:outline-1 focus:outline-focus focus:outline-offset-0
+    hover:text-link-primary-hover hover:underline
+
+    # link
+    __link
+    no-underline
+
+    # link-inline
+    __link
+    underline
+
+    # link-visited
+    visited:text-link-visited
+    visited:hover:text-link-primary-hover
+    """);
+  }
+
+  private Css.Option componentsOverlay() {
     return Css.components("""
     # __overlay
     fixed inset-0px z-overlay
@@ -1398,7 +1425,7 @@ final class CarbonStyles implements Http.Handler {
     """);
   }
 
-  private Css.Option pageHeader() {
+  private Css.Option componentsPageHeader() {
     return Css.components("""
     # page-header
     sticky bg-layer
@@ -1421,7 +1448,7 @@ final class CarbonStyles implements Http.Handler {
     """);
   }
 
-  private Css.Option sideNav() {
+  private Css.Option componentsSideNav() {
     return Css.components("""
     # __side-nav
     fixed top-0px bottom-0px left-0px z-header
@@ -1497,7 +1524,7 @@ final class CarbonStyles implements Http.Handler {
     """);
   }
 
-  private Css.Option tile() {
+  private Css.Option compoentsTile() {
     return Css.components("""
     # tile
     relative block min-w-128px min-h-64px
@@ -1507,7 +1534,7 @@ final class CarbonStyles implements Http.Handler {
     """);
   }
 
-  private Css.Option typography() {
+  private Css.Option componentsTypography() {
     return Css.components("""
     # code-01
     font-mono
@@ -1578,6 +1605,11 @@ final class CarbonStyles implements Http.Handler {
     xl:text-48px xl:leading-56px
     max:text-60px max:leading-70px
 
+    # fluid-paragraph-01
+    text-24px leading-30px font-300 tracking-0px
+    lg:text-28px lg:leading-36px
+    max:text-32px max:leading-40px
+
     # fluid-display-01
     text-42px leading-50px font-300 tracking-0px
     lg:text-54px lg:leading-64px
@@ -1603,6 +1635,22 @@ final class CarbonStyles implements Http.Handler {
     lg:text-92px lg:leading-102px lg:-leading-0.64px
     xl:text-122px xl:leading-130px
     max:text-156px max:leading-164px max:-leading-0.96px
+    """);
+  }
+
+  private Css.Option overrideTextColor() {
+    return Css.overrideTextColor("""
+    button-danger-secondary: var(--cds-button-danger-secondary)
+    button-tertiary: var(--cds-button-tertiary)
+    link-primary: var(--cds-link-primary)
+    link-primary-hover: var(--cds-link-primary-hover)
+    link-visited: var(--cds-link-visited)
+
+    inverse: var(--cds-text-inverse)
+    on-color: var(--cds-text-on-color)
+    on-color-disabled: var(--cds-text-on-color-disabled)
+    primary: var(--cds-text-primary)
+    secondary: var(--cds-text-secondary)
     """);
   }
 

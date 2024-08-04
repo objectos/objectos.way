@@ -15,8 +15,6 @@
  */
 package objectos.way;
 
-import java.util.Collections;
-import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -26,20 +24,20 @@ final class CssUtility implements Css.Rule {
 
   private final String className;
 
-  private final List<Css.Variant> variants;
+  private final Css.Modifier modifier;
 
   private final CssProperties properties;
 
-  public CssUtility(Css.Key key, String className, List<Css.Variant> variants, CssProperties.Builder properties) {
-    this(key, className, variants, properties.build());
+  public CssUtility(Css.Key key, String className, Css.Modifier modifier, CssProperties.Builder properties) {
+    this(key, className, modifier, properties.build());
   }
 
-  public CssUtility(Css.Key key, String className, List<Css.Variant> variants, CssProperties properties) {
+  public CssUtility(Css.Key key, String className, Css.Modifier modifier, CssProperties properties) {
     this.key = key;
 
     this.className = className;
 
-    this.variants = variants;
+    this.modifier = modifier;
 
     this.properties = properties;
   }
@@ -47,14 +45,7 @@ final class CssUtility implements Css.Rule {
   @Override
   public final void accept(Css.Context ctx) {
     Css.Context context;
-    context = ctx;
-
-    for (int i = 0, size = variants.size(); i < size; i++) {
-      Css.Variant variant;
-      variant = variants.get(i);
-
-      context = context.contextOf(variant);
-    }
+    context = ctx.contextOf(modifier);
 
     context.add(this);
   }
@@ -71,40 +62,12 @@ final class CssUtility implements Css.Rule {
       return result;
     }
 
-    Css.Variant thisMax;
-    thisMax = max();
-
-    Css.Variant thatMax;
-    thatMax = o.max();
-
-    if (thisMax == null && thatMax == null) {
-      return result;
-    }
-
-    if (thisMax == null) {
-      return -1;
-    }
-
-    if (thatMax == null) {
-      return 1;
-    }
-
-    return thisMax.compareTo(thatMax);
+    return modifier.compareTo(o.modifier);
   }
 
   @Override
   public final int kind() {
     return 2;
-  }
-
-  private Css.Variant max() {
-    return switch (variants.size()) {
-      case 0 -> null;
-
-      case 1 -> variants.get(0);
-
-      default -> Collections.max(variants);
-    };
   }
 
   @Override
@@ -121,16 +84,7 @@ final class CssUtility implements Css.Rule {
   public final void writeTo(StringBuilder out, Css.Indentation indentation) {
     indentation.writeTo(out);
 
-    int startIndex;
-    startIndex = out.length();
-
-    Css.writeClassName(out, className);
-
-    for (Css.Variant variant : variants) {
-      if (variant instanceof Css.ClassNameVariant cnv) {
-        cnv.writeClassName(out, startIndex);
-      }
-    }
+    modifier.writeClassName(out, className);
 
     switch (properties.size()) {
       case 0 -> out.append(" {}");

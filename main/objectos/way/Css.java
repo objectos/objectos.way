@@ -78,12 +78,12 @@ public final class Css {
 
   record Breakpoint(int index, String name, String value) implements MediaQuery {
     @Override
-    public final int compareTo(Variant o) {
+    public final int compareTo(MediaQuery o) {
       if (o instanceof Breakpoint that) {
         return Integer.compare(index, that.index);
+      } else {
+        return -1;
       }
-
-      return -1;
     }
 
     @Override
@@ -101,28 +101,7 @@ public final class Css {
   // C
   //
 
-  record ClassNameFormat(String before, String after) implements ClassNameVariant {
-    @Override
-    public final int compareTo(Variant o) {
-      if (o instanceof ClassNameFormat that) {
-        int result;
-        result = before.compareTo(that.before);
-
-        if (result != 0) {
-          return result;
-        }
-
-        return after.compareTo(that.after);
-      }
-
-      if (o instanceof ClassNameSuffix) {
-        return -1;
-      }
-
-      return 1;
-    }
-
-    @Override
+  record ClassNameFormat(String before, String after) implements Variant {
     public final void writeClassName(StringBuilder out, int startIndex) {
       String original;
       original = out.substring(startIndex, out.length());
@@ -133,32 +112,10 @@ public final class Css {
       out.append(original);
       out.append(after);
     }
-  }
 
-  record ClassNameSuffix(int index, String selector) implements ClassNameVariant {
-    @Override
-    public final int compareTo(Variant o) {
-      if (o instanceof MediaQuery) {
-        return 1;
-      }
-
-      if (o instanceof ClassNameSuffix that) {
-        return Integer.compare(index, that.index);
-      }
-
-      return 1;
+    final int length() {
+      return before.length() + after.length();
     }
-
-    @Override
-    public final void writeClassName(StringBuilder out, int startIndex) {
-      out.append(selector);
-    }
-  }
-
-  sealed interface ClassNameVariant extends Variant {
-
-    void writeClassName(StringBuilder out, int startIndex);
-
   }
 
   /**
@@ -177,7 +134,7 @@ public final class Css {
 
     public abstract void addComponent(CssComponent component);
 
-    public abstract Context contextOf(Css.Variant variant);
+    public abstract Context contextOf(Css.Modifier modifier);
 
     public final void writeTo(StringBuilder out, Indentation indentation) {
       rules.sort(Comparator.naturalOrder());
@@ -233,16 +190,7 @@ public final class Css {
 
   }
 
-  record InvalidVariant(String formatString, String reason) implements Variant {
-    @Override
-    public final int compareTo(Variant o) {
-      if (o instanceof InvalidVariant) {
-        return 0;
-      }
-
-      return -1;
-    }
-  }
+  record InvalidVariant(String formatString, String reason) implements Variant {}
 
   enum Key {
 
@@ -420,11 +368,43 @@ public final class Css {
   // M
   //
 
-  sealed interface MediaQuery extends Variant {
+  sealed interface MediaQuery extends Comparable<MediaQuery>, Variant {
 
     void writeMediaQueryStart(StringBuilder out, Indentation indentation);
 
   }
+
+  record Modifier(List<MediaQuery> mediaQueries, List<ClassNameFormat> classNameFormats) implements Comparable<Modifier> {
+
+    @Override
+    public final int compareTo(Modifier o) {
+      return Integer.compare(length(), o.length());
+    }
+
+    public final void writeClassName(StringBuilder out, String className) {
+      int startIndex;
+      startIndex = out.length();
+
+      Css.writeClassName(out, className);
+
+      for (var format : classNameFormats) {
+        format.writeClassName(out, startIndex);
+      }
+    }
+
+    final int length() {
+      int result = 0;
+
+      for (var format : classNameFormats) {
+        result += format.length();
+      }
+
+      return result;
+    }
+
+  }
+
+  static final Modifier EMPTY_MODIFIER = new Modifier(List.of(), List.of());
 
   //
   // N
@@ -630,8 +610,8 @@ public final class Css {
 
   record StaticUtility(Css.Key key, CssProperties properties) {
 
-    public final Css.Rule create(String className, List<Css.Variant> variants) {
-      return new CssUtility(key, className, variants, properties);
+    public final Css.Rule create(String className, Css.Modifier modifier) {
+      return new CssUtility(key, className, modifier, properties);
     }
 
   }
@@ -687,7 +667,7 @@ public final class Css {
     }
   }
 
-  sealed interface Variant extends Comparable<Variant> {}
+  sealed interface Variant {}
 
   private Css() {}
 

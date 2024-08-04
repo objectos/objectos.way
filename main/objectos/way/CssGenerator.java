@@ -17,18 +17,20 @@ package objectos.way;
 
 import java.util.ArrayDeque;
 import java.util.Deque;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 import objectos.util.map.GrowableSequencedMap;
+import objectos.way.Css.MediaQuery;
 import objectos.way.Css.ValueType;
 
 final class CssGenerator extends CssGeneratorAdapter implements Css.Generator, Css.Repository {
 
   private static abstract class ThisContext extends Css.Context {
 
-    Map<Css.MediaQuery, Css.Context> mediaQueries;
+    Map<Css.MediaQuery, MediaQueryContext> mediaQueries;
 
     @Override
     public final void addComponent(CssComponent component) {
@@ -36,16 +38,32 @@ final class CssGenerator extends CssGeneratorAdapter implements Css.Generator, C
     }
 
     @Override
-    public final Css.Context contextOf(Css.Variant variant) {
-      if (variant instanceof Css.MediaQuery query) {
-        if (mediaQueries == null) {
-          mediaQueries = new TreeMap<>();
-        }
+    public final Css.Context contextOf(Css.Modifier modifier) {
+      List<Css.MediaQuery> modifierQueries;
+      modifierQueries = modifier.mediaQueries();
 
-        return mediaQueries.computeIfAbsent(query, MediaQueryContext::new);
-      } else {
+      if (modifierQueries.isEmpty()) {
         return this;
       }
+
+      if (mediaQueries == null) {
+        mediaQueries = new TreeMap<>();
+      }
+
+      Iterator<Css.MediaQuery> iterator;
+      iterator = modifierQueries.iterator();
+
+      Css.MediaQuery first;
+      first = iterator.next(); // safe as list is not empty
+
+      MediaQueryContext result;
+      result = mediaQueries.computeIfAbsent(first, MediaQueryContext::new);
+
+      while (iterator.hasNext()) {
+        result = result.nest(iterator.next());
+      }
+
+      return result;
     }
 
     final void writeContents(StringBuilder out, Css.Indentation indentation) {
@@ -92,6 +110,10 @@ final class CssGenerator extends CssGeneratorAdapter implements Css.Generator, C
 
     MediaQueryContext(Css.MediaQuery query) {
       this.query = query;
+    }
+
+    public final MediaQueryContext nest(MediaQuery next) {
+      return mediaQueries.computeIfAbsent(next, MediaQueryContext::new);
     }
 
     @Override
@@ -229,13 +251,13 @@ final class CssGenerator extends CssGeneratorAdapter implements Css.Generator, C
   }
 
   @Override
-  final Css.Rule createUtility(String className, List<Css.Variant> variants, String value) {
+  final Css.Rule createUtility(String className, Css.Modifier modifier, String value) {
     // 1) static values search
     Css.StaticUtility staticFactory;
     staticFactory = config.getStatic(value);
 
     if (staticFactory != null) {
-      return staticFactory.create(className, variants);
+      return staticFactory.create(className, modifier);
     }
 
     // 2) by prefix search
@@ -307,7 +329,7 @@ final class CssGenerator extends CssGeneratorAdapter implements Css.Generator, C
       resolver = config.getResolver(candidate);
 
       Css.Rule rule;
-      rule = resolver.resolve(className, variants, negative, type, suffix);
+      rule = resolver.resolve(className, modifier, negative, type, suffix);
 
       if (rule != null) {
         return rule;

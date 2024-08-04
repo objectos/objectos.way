@@ -114,136 +114,136 @@ public class CssGeneratorTest {
         Subject.class,
 
         """
-        .aspect-16x9::after {
-          display: table;
-          clear: both;
-          content: '';
-        }
         .aspect-16x9::before {
           float: left;
           margin-left: -1px;
-          width: 1px;
           height: 0;
+          width: 1px;
           padding-top: 56.25%;
           content: '';
         }
-
-        .aspect-1x1::after {
-          display: table;
+        .aspect-16x9::after {
           clear: both;
+          display: table;
           content: '';
         }
+
         .aspect-1x1::before {
           float: left;
           margin-left: -1px;
-          width: 1px;
           height: 0;
+          width: 1px;
           padding-top: 100%;
           content: '';
         }
-
-        .aspect-1x2::after {
-          display: table;
+        .aspect-1x1::after {
           clear: both;
+          display: table;
           content: '';
         }
+
         .aspect-1x2::before {
           float: left;
           margin-left: -1px;
-          width: 1px;
           height: 0;
+          width: 1px;
           padding-top: 200%;
           content: '';
         }
-
-        .aspect-2x1::after {
-          display: table;
+        .aspect-1x2::after {
           clear: both;
+          display: table;
           content: '';
         }
+
         .aspect-2x1::before {
           float: left;
           margin-left: -1px;
-          width: 1px;
           height: 0;
+          width: 1px;
           padding-top: 50%;
           content: '';
         }
-
-        .aspect-2x3::after {
-          display: table;
+        .aspect-2x1::after {
           clear: both;
+          display: table;
           content: '';
         }
+
         .aspect-2x3::before {
           float: left;
           margin-left: -1px;
-          width: 1px;
           height: 0;
+          width: 1px;
           padding-top: 150%;
           content: '';
         }
-
-        .aspect-3x2::after {
-          display: table;
+        .aspect-2x3::after {
           clear: both;
+          display: table;
           content: '';
         }
+
         .aspect-3x2::before {
           float: left;
           margin-left: -1px;
-          width: 1px;
           height: 0;
+          width: 1px;
           padding-top: 66.66667%;
           content: '';
         }
-
-        .aspect-3x4::after {
-          display: table;
+        .aspect-3x2::after {
           clear: both;
+          display: table;
           content: '';
         }
+
         .aspect-3x4::before {
           float: left;
           margin-left: -1px;
-          width: 1px;
           height: 0;
+          width: 1px;
           padding-top: 133.33333%;
           content: '';
         }
-
-        .aspect-4x3::after {
-          display: table;
+        .aspect-3x4::after {
           clear: both;
+          display: table;
           content: '';
         }
+
         .aspect-4x3::before {
           float: left;
           margin-left: -1px;
-          width: 1px;
           height: 0;
+          width: 1px;
           padding-top: 75%;
           content: '';
         }
-
-        .aspect-9x16::after {
-          display: table;
+        .aspect-4x3::after {
           clear: both;
+          display: table;
           content: '';
         }
+
         .aspect-9x16::before {
           float: left;
           margin-left: -1px;
-          width: 1px;
           height: 0;
+          width: 1px;
           padding-top: 177.77778%;
           content: '';
         }
+        .aspect-9x16::after {
+          clear: both;
+          display: table;
+          content: '';
+        }
 
-        .aspect-auto::after {
+        .aspect-auto::before {
           display: none;
         }
-        .aspect-auto::before {
+        .aspect-auto::after {
           display: none;
         }
         """
@@ -4135,6 +4135,47 @@ public class CssGeneratorTest {
   }
 
   @Test
+  public void component08() {
+    class Subject extends AbstractSubject {
+      @Override
+      final void classes() {
+        className("foo");
+      }
+    }
+
+    test(
+        Css.components("""
+        # foo
+        visited:block
+        visited:hover:grid
+        visited:hover:flex-wrap
+        visited:hover:active:inline
+        md:visited:hover:focus:flex
+        """),
+
+        Subject.class,
+
+        """
+        .foo:visited {
+          display: block;
+        }
+        .foo:visited:hover {
+          display: grid;
+          flex-wrap: wrap;
+        }
+        .foo:visited:hover:active {
+          display: inline;
+        }
+        @media (min-width: 768px) {
+          .foo:visited:hover:focus {
+            display: flex;
+          }
+        }
+        """
+    );
+  }
+
+  @Test
   public void overrideBackgroundColor() {
     class Subject extends AbstractSubject {
       @Override
@@ -4688,6 +4729,7 @@ public class CssGeneratorTest {
       @Override
       final void classes() {
         className("focus:not-sr-only active:bg-white hover:bg-black *:rounded-full");
+        className("visited:text-white visited:hover:text-black");
         className("before:block after:text-black");
         className("ltr:ml-1 rtl:mr-1");
       }
@@ -4714,6 +4756,8 @@ public class CssGeneratorTest {
         .hover\\:bg-black:hover { background-color: #000000 }
         .active\\:bg-white:active { background-color: #ffffff }
         .after\\:text-black::after { color: #000000 }
+        .visited\\:text-white:visited { color: #ffffff }
+        .visited\\:hover\\:text-black:visited:hover { color: #000000 }
         """
     );
   }

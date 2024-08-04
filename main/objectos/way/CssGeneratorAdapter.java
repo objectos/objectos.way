@@ -15,13 +15,15 @@
  */
 package objectos.way;
 
-import java.util.Comparator;
-import java.util.List;
 import objectos.util.list.GrowableList;
 
 class CssGeneratorAdapter {
 
-  private final GrowableList<Css.Variant> variantsBuilder = new GrowableList<>();
+  private final GrowableList<Css.ClassNameFormat> classNameFormats = new GrowableList<>();
+
+  private final GrowableList<Css.MediaQuery> mediaQueries = new GrowableList<>();
+
+  private boolean invalid;
 
   void processRawString(String s) {
     String[] parts;
@@ -40,7 +42,7 @@ class CssGeneratorAdapter {
 
     if (existing == null) {
       Css.Rule newRule;
-      newRule = createFragment(token);
+      newRule = createRule(token);
 
       store(token, newRule);
     }
@@ -50,7 +52,7 @@ class CssGeneratorAdapter {
     }
   }
 
-  Css.Rule createFragment(String className) {
+  Css.Rule createRule(String className) {
     String component;
     component = getComponent(className);
 
@@ -70,6 +72,12 @@ class CssGeneratorAdapter {
   }
 
   Css.Rule createUtility(String className) {
+    classNameFormats.clear();
+
+    mediaQueries.clear();
+
+    invalid = false;
+
     int beginIndex;
     beginIndex = 0;
 
@@ -87,17 +95,30 @@ class CssGeneratorAdapter {
         return Css.Rule.NOOP;
       }
 
-      variantsBuilder.add(variant);
+      switch (variant) {
+        case Css.ClassNameFormat format -> classNameFormats.add(format);
+
+        case Css.MediaQuery query -> mediaQueries.add(query);
+
+        case Css.InvalidVariant unused -> invalid = true;
+      }
+
+      if (invalid) {
+        return Css.Rule.NOOP;
+      }
 
       beginIndex = colon + 1;
 
       colon = className.indexOf(':', beginIndex);
     }
 
-    List<Css.Variant> variants;
-    variants = variantsBuilder.toUnmodifiableList(Comparator.naturalOrder());
+    Css.Modifier modifier;
 
-    variantsBuilder.clear();
+    if (mediaQueries.isEmpty() && classNameFormats.isEmpty()) {
+      modifier = Css.EMPTY_MODIFIER;
+    } else {
+      modifier = new Css.Modifier(mediaQueries.toUnmodifiableList(), classNameFormats.toUnmodifiableList());
+    }
 
     String value;
     value = className;
@@ -106,10 +127,10 @@ class CssGeneratorAdapter {
       value = className.substring(beginIndex);
     }
 
-    return createUtility(className, variants, value);
+    return createUtility(className, modifier, value);
   }
 
-  Css.Rule createUtility(String className, List<Css.Variant> variants, String value) {
+  Css.Rule createUtility(String className, Css.Modifier modifier, String value) {
     throw new UnsupportedOperationException("Implement me");
   }
 

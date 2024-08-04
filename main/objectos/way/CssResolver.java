@@ -15,7 +15,6 @@
  */
 package objectos.way;
 
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -44,7 +43,7 @@ interface CssResolver {
     }
 
     @Override
-    public final Css.Rule resolve(String className, List<Css.Variant> variants, boolean negative, Css.ValueType type, String value) {
+    public final Css.Rule resolve(String className, Css.Modifier modifier, boolean negative, Css.ValueType type, String value) {
       String colorKey;
       colorKey = value;
 
@@ -71,7 +70,7 @@ interface CssResolver {
         properties.add(propertyName2, color);
       }
 
-      return new CssUtility(key, className, variants, properties);
+      return new CssUtility(key, className, modifier, properties);
     }
 
   }
@@ -88,7 +87,7 @@ interface CssResolver {
     }
 
     @Override
-    public final Css.Rule resolve(String className, List<Css.Variant> variants, boolean negative, Css.ValueType type, String value) {
+    public final Css.Rule resolve(String className, Css.Modifier modifier, boolean negative, Css.ValueType type, String value) {
       int slash;
       slash = value.indexOf('/');
 
@@ -98,7 +97,7 @@ interface CssResolver {
       }
 
       if (slash < 0) {
-        return size(className, variants, value);
+        return size(className, modifier, value);
       }
 
       String sizeKey;
@@ -130,7 +129,7 @@ interface CssResolver {
 
       properties.add("line-height", height);
 
-      return new CssUtility(Css.Key.FONT_SIZE, className, variants, properties);
+      return new CssUtility(Css.Key.FONT_SIZE, className, modifier, properties);
     }
 
     private String extractSize(String size) {
@@ -146,18 +145,18 @@ interface CssResolver {
       return result;
     }
 
-    private Css.Rule size(String className, List<Css.Variant> variants, String value) {
+    private Css.Rule size(String className, Css.Modifier modifier, String value) {
       String size;
       size = fontSize.get(value);
 
       if (size == null) {
         return null;
       } else {
-        return rule(className, variants, size);
+        return rule(className, modifier, size);
       }
     }
 
-    private Css.Rule rule(String className, List<Css.Variant> variants, String value) {
+    private Css.Rule rule(String className, Css.Modifier modifier, String value) {
       CssProperties.Builder properties;
       properties = new CssProperties.Builder();
 
@@ -167,7 +166,7 @@ interface CssResolver {
       if (slash < 0) {
         properties.add("font-size", value);
 
-        return new CssUtility(Css.Key.FONT_SIZE, className, variants, properties);
+        return new CssUtility(Css.Key.FONT_SIZE, className, modifier, properties);
       }
 
       String fontSize;
@@ -183,7 +182,7 @@ interface CssResolver {
       if (slash < 0) {
         properties.add("line-height", lineHeight);
 
-        return new CssUtility(Css.Key.FONT_SIZE, className, variants, properties);
+        return new CssUtility(Css.Key.FONT_SIZE, className, modifier, properties);
       }
 
       value = lineHeight;
@@ -200,7 +199,7 @@ interface CssResolver {
       if (slash < 0) {
         properties.add("letter-spacing", letterSpacing);
 
-        return new CssUtility(Css.Key.FONT_SIZE, className, variants, properties);
+        return new CssUtility(Css.Key.FONT_SIZE, className, modifier, properties);
       }
 
       value = letterSpacing;
@@ -214,7 +213,7 @@ interface CssResolver {
 
       properties.add("font-weight", fontWeight);
 
-      return new CssUtility(Css.Key.FONT_SIZE, className, variants, properties);
+      return new CssUtility(Css.Key.FONT_SIZE, className, modifier, properties);
     }
 
   }
@@ -230,7 +229,7 @@ interface CssResolver {
     }
 
     @Override
-    public final Css.Rule resolve(String className, List<Css.Variant> variants, boolean negative, Css.ValueType type, String value) {
+    public final Css.Rule resolve(String className, Css.Modifier modifier, boolean negative, Css.ValueType type, String value) {
       String resolved;
       resolved = properties.get(value);
 
@@ -238,12 +237,12 @@ interface CssResolver {
         return null;
       }
 
-      return resolveSlashes(Css.Key.TRANSITION_PROPERTY, className, variants, PROPERTY_NAMES, resolved);
+      return resolveSlashes(Css.Key.TRANSITION_PROPERTY, className, modifier, PROPERTY_NAMES, resolved);
     }
 
     final Css.Rule resolveSlashes(
         Css.Key key,
-        String className, List<Css.Variant> variants,
+        String className, Css.Modifier modifier,
         String[] propertyNames, String value) {
 
       CssProperties.Builder properties;
@@ -263,7 +262,7 @@ interface CssResolver {
         if (slash < 0) {
           properties.add(propertyName, value);
 
-          return new CssUtility(key, className, variants, properties);
+          return new CssUtility(key, className, modifier, properties);
         }
 
         String thisValue;
@@ -281,7 +280,7 @@ interface CssResolver {
         properties.add(previousName, value);
       }
 
-      return new CssUtility(key, className, variants, properties);
+      return new CssUtility(key, className, modifier, properties);
 
     }
 
@@ -319,7 +318,7 @@ interface CssResolver {
     }
 
     @Override
-    public final Css.Rule resolve(String className, List<Css.Variant> variants, boolean negative, Css.ValueType type, String value) {
+    public final Css.Rule resolve(String className, Css.Modifier modifier, boolean negative, Css.ValueType type, String value) {
       String resolved;
 
       if (type == Css.ValueType.STANDARD) {
@@ -345,11 +344,11 @@ interface CssResolver {
         properties.add(propertyName2, resolved);
       }
 
-      return new CssUtility(key, className, variants, properties);
+      return new CssUtility(key, className, modifier, properties);
     }
 
   }
 
-  Css.Rule resolve(String className, List<Css.Variant> variants, boolean negative, Css.ValueType type, String value);
+  Css.Rule resolve(String className, Css.Modifier modifier, boolean negative, Css.ValueType type, String value);
 
 }

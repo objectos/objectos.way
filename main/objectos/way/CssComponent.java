@@ -15,17 +15,18 @@
  */
 package objectos.way;
 
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 import objectos.util.map.GrowableSequencedMap;
-import objectos.way.Css.ClassNameVariant;
+import objectos.way.Css.ClassNameFormat;
 import objectos.way.Css.Context;
 import objectos.way.Css.Indentation;
-import objectos.way.Css.InvalidVariant;
 import objectos.way.Css.MediaQuery;
 import objectos.way.Css.Repository;
 import objectos.way.Css.Rule;
-import objectos.way.Css.Variant;
 
 /**
  * A CSS component class.
@@ -34,9 +35,9 @@ final class CssComponent implements Repository, Rule {
 
   private abstract class ThisContext extends Context {
 
-    Map<Css.ClassNameVariant, Css.Context> classNameVariants;
+    Map<List<Css.ClassNameFormat>, ClassNameContext> classNameFormats;
 
-    Map<Css.MediaQuery, Css.Context> mediaQueries;
+    Map<Css.MediaQuery, MediaQueryContext> mediaQueries;
 
     @Override
     public final void addComponent(CssComponent component) {
@@ -46,26 +47,50 @@ final class CssComponent implements Repository, Rule {
     }
 
     @Override
-    public final Context contextOf(Variant variant) {
-      return switch (variant) {
-        case ClassNameVariant cnv -> {
-          if (classNameVariants == null) {
-            classNameVariants = new TreeMap<>();
-          }
+    public final Css.Context contextOf(Css.Modifier modifier) {
+      ThisContext context;
+      context = this;
 
-          yield classNameVariants.computeIfAbsent(cnv, ClassNameContext::new);
+      List<Css.MediaQuery> modifierQueries;
+      modifierQueries = modifier.mediaQueries();
+
+      if (!modifierQueries.isEmpty()) {
+        if (mediaQueries == null) {
+          mediaQueries = new TreeMap<>();
         }
 
-        case MediaQuery query -> {
-          if (mediaQueries == null) {
-            mediaQueries = new TreeMap<>();
-          }
+        Iterator<Css.MediaQuery> iterator;
+        iterator = modifierQueries.iterator();
 
-          yield mediaQueries.computeIfAbsent(query, MediaQueryContext::new);
+        Css.MediaQuery first;
+        first = iterator.next(); // safe as list is not empty
+
+        MediaQueryContext queryContext;
+        queryContext = mediaQueries.computeIfAbsent(first, MediaQueryContext::new);
+
+        while (iterator.hasNext()) {
+          queryContext = queryContext.nest(iterator.next());
         }
 
-        case InvalidVariant invalid -> throw new IllegalArgumentException("InvalidVariant");
-      };
+        context = queryContext;
+      }
+
+      List<Css.ClassNameFormat> formats;
+      formats = modifier.classNameFormats();
+
+      if (!formats.isEmpty()) {
+        context = context.nest(formats);
+      }
+
+      return context;
+    }
+
+    final ThisContext nest(List<ClassNameFormat> formats) {
+      if (classNameFormats == null) {
+        classNameFormats = new LinkedHashMap<>(); // no sorting
+      }
+
+      return classNameFormats.computeIfAbsent(formats, ClassNameContext::new);
     }
 
     void writeClassName(StringBuilder out) {
@@ -95,9 +120,9 @@ final class CssComponent implements Repository, Rule {
         out.append(System.lineSeparator());
       }
 
-      if (classNameVariants != null) {
-        for (Context child : classNameVariants.values()) {
-          child.write(out, indentation);
+      if (classNameFormats != null) {
+        for (Context child : classNameFormats.values()) {
+          child.writeTo(out, indentation);
         }
       }
 
@@ -125,10 +150,10 @@ final class CssComponent implements Repository, Rule {
 
   private final class ClassNameContext extends ThisContext {
 
-    private final ClassNameVariant variant;
+    private final List<Css.ClassNameFormat> formats;
 
-    ClassNameContext(ClassNameVariant variant) {
-      this.variant = variant;
+    ClassNameContext(List<ClassNameFormat> formats) {
+      this.formats = formats;
     }
 
     @Override
@@ -143,7 +168,9 @@ final class CssComponent implements Repository, Rule {
 
       Css.writeClassName(out, className);
 
-      variant.writeClassName(out, startIndex);
+      for (var format : formats) {
+        format.writeClassName(out, startIndex);
+      }
     }
 
   }
@@ -154,6 +181,10 @@ final class CssComponent implements Repository, Rule {
 
     MediaQueryContext(MediaQuery query) {
       this.query = query;
+    }
+
+    public final MediaQueryContext nest(MediaQuery next) {
+      return mediaQueries.computeIfAbsent(next, MediaQueryContext::new);
     }
 
     @Override

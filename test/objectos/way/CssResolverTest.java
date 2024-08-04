@@ -17,7 +17,6 @@ package objectos.way;
 
 import static org.testng.Assert.assertEquals;
 
-import java.util.List;
 import java.util.Map;
 import objectos.way.CssResolver.OfTransitionProperty;
 import org.testng.annotations.Test;
@@ -33,7 +32,7 @@ public class CssResolverTest {
     resolver = new CssResolver.OfTransitionProperty(props);
 
     Css.Rule rule;
-    rule = resolver.resolve("transition-none", List.of(), false, Css.ValueType.STANDARD, "none");
+    rule = resolver.resolve("transition-none", Css.EMPTY_MODIFIER, false, Css.ValueType.STANDARD, "none");
 
     assertEquals(
         rule.toString(),
@@ -53,7 +52,7 @@ public class CssResolverTest {
     resolver = new CssResolver.OfTransitionProperty(props);
 
     Css.Rule rule;
-    rule = resolver.resolve("transition-all", List.of(), false, Css.ValueType.STANDARD, "all");
+    rule = resolver.resolve("transition-all", Css.EMPTY_MODIFIER, false, Css.ValueType.STANDARD, "all");
 
     assertEquals(
         rule.toString(),
@@ -73,7 +72,7 @@ public class CssResolverTest {
     resolver = new CssResolver.OfTransitionProperty(props);
 
     Css.Rule rule;
-    rule = resolver.resolve("transition-all", List.of(), false, Css.ValueType.STANDARD, "all");
+    rule = resolver.resolve("transition-all", Css.EMPTY_MODIFIER, false, Css.ValueType.STANDARD, "all");
 
     assertEquals(
         rule.toString(),
