@@ -4222,6 +4222,29 @@ public class CssGeneratorTest {
   }
 
   @Test
+  public void extendSpacing() {
+    class Subject extends AbstractSubject {
+      @Override
+      final void classes() {
+        className("w-1 h-spacing-01");
+      }
+    }
+
+    test(
+        Css.extendSpacing("""
+        spacing-01: var(--ui-spacing-01)
+        """),
+
+        Subject.class,
+
+        """
+        .h-spacing-01 { height: var(--ui-spacing-01) }
+        .w-1 { width: 0.25rem }
+        """
+    );
+  }
+
+  @Test
   public void overrideBackgroundColor() {
     class Subject extends AbstractSubject {
       @Override

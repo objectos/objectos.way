@@ -767,8 +767,30 @@ public final class Css {
     };
   }
 
+  /**
+   * Option: extends the built-in or the overridden colors with the values
+   * obtained from parsing the specified key-value configuration text.
+   *
+   * @param text
+   *        the key-value configuration text
+   *
+   * @return a new configuration option
+   */
   public static Option extendColors(String text) {
     return extend(Key._COLORS, text);
+  }
+
+  /**
+   * Option: extends the built-in or the overridden spacing with the values
+   * obtained from parsing the specified key-value configuration text.
+   *
+   * @param text
+   *        the key-value configuration text
+   *
+   * @return a new configuration option
+   */
+  public static Option extendSpacing(String text) {
+    return extend(Key._SPACING, text);
   }
 
   private static Option extend(Key key, String text) {
@@ -806,6 +828,15 @@ public final class Css {
     return override(Key.BORDER_WIDTH, text);
   }
 
+  /**
+   * Option: overrides the built-in colors with the values obtained from parsing
+   * the specified key-value configuration text.
+   *
+   * @param text
+   *        the key-value configuration text
+   *
+   * @return a new configuration option
+   */
   public static Option overrideColors(String text) {
     return override(Key._COLORS, text);
   }
@@ -858,6 +889,15 @@ public final class Css {
     return override(Key.OUTLINE_COLOR, text);
   }
 
+  /**
+   * Option: overrides the built-in spacing with the values obtained from
+   * parsing the specified key-value configuration text.
+   *
+   * @param text
+   *        the key-value configuration text
+   *
+   * @return a new configuration option
+   */
   public static Option overrideSpacing(String text) {
     return override(Key._SPACING, text);
   }
