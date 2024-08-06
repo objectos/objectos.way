@@ -767,6 +767,22 @@ public final class Css {
     };
   }
 
+  public static Option extendColors(String text) {
+    return extend(Key._COLORS, text);
+  }
+
+  private static Option extend(Key key, String text) {
+    CssProperties properties;
+    properties = parseProperties(text);
+
+    return new GeneratorOption() {
+      @Override
+      final void acceptCssConfig(CssConfig config) {
+        config.extend(key, properties);
+      }
+    };
+  }
+
   public static Option noteSink(NoteSink noteSink) {
     Check.notNull(noteSink, "noteSink == null");
 

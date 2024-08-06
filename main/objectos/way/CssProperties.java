@@ -103,6 +103,29 @@ final class CssProperties implements Iterable<Map.Entry<String, String>> {
     return map.toUnmodifiableMap();
   }
 
+  public final Map<String, String> toMap(CssProperties extension) {
+    GrowableMap<String, String> map;
+    map = new GrowableMap<>();
+
+    for (Map.Entry<String, String> entry : values) {
+      map.put(
+          entry.getKey(),
+
+          entry.getValue()
+      );
+    }
+
+    for (Map.Entry<String, String> entry : extension.values) {
+      map.put(
+          entry.getKey(),
+
+          entry.getValue()
+      );
+    }
+
+    return map.toUnmodifiableMap();
+  }
+
   public final int size() {
     return values.size();
   }

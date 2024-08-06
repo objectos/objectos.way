@@ -50,6 +50,8 @@ final class CssConfig {
 
   private Map<String, String> components;
 
+  private final Map<Css.Key, CssProperties> extensions = new EnumMap<>(Css.Key.class);
+
   private final Map<Css.Key, CssProperties> overrides = new EnumMap<>(Css.Key.class);
 
   private final Map<String, Set<Css.Key>> prefixes = new HashMap<>();
@@ -180,6 +182,10 @@ final class CssConfig {
 
   public final void useLogicalProperties() {
     propertyType = Css.LOGICAL;
+  }
+
+  final void extend(Css.Key key, CssProperties properties) {
+    extensions.put(key, properties);
   }
 
   final Set<Css.Key> getCandidates(String prefix) {
@@ -2195,13 +2201,13 @@ final class CssConfig {
     properties = overrides.get(key);
 
     if (properties != null) {
-      return properties.toMap();
+      return mergeExtensionsIfNecessary(key, properties);
     }
 
     CssProperties defaultProperties;
     defaultProperties = Css.parseProperties(defaults);
 
-    return defaultProperties.toMap();
+    return mergeExtensionsIfNecessary(key, defaultProperties);
   }
 
   private Map<String, String> values(Css.Key key, Supplier<Map<String, String>> defaultSupplier) {
@@ -2209,10 +2215,13 @@ final class CssConfig {
     properties = overrides.get(key);
 
     if (properties != null) {
-      return properties.toMap();
+      return mergeExtensionsIfNecessary(key, properties);
     }
 
-    return defaultSupplier.get();
+    Map<String, String> defaults;
+    defaults = defaultSupplier.get();
+
+    return mergeExtensionsIfNecessary(key, defaults);
   }
 
   private Map<String, String> values(Css.Key key, Map<String, String> defaults) {
@@ -2220,10 +2229,41 @@ final class CssConfig {
     properties = overrides.get(key);
 
     if (properties != null) {
+      return mergeExtensionsIfNecessary(key, properties);
+    }
+
+    return mergeExtensionsIfNecessary(key, defaults);
+  }
+
+  private Map<String, String> mergeExtensionsIfNecessary(Css.Key key, CssProperties properties) {
+    CssProperties maybeExtension;
+    maybeExtension = extensions.get(key);
+
+    if (maybeExtension == null) {
       return properties.toMap();
     }
 
-    return defaults;
+    return properties.toMap(maybeExtension);
+  }
+
+  private Map<String, String> mergeExtensionsIfNecessary(Css.Key key, Map<String, String> properties) {
+    CssProperties maybeExtension;
+    maybeExtension = extensions.get(key);
+
+    if (maybeExtension == null) {
+      return properties;
+    }
+
+    GrowableMap<String, String> values;
+    values = new GrowableMap<>();
+
+    values.putAll(properties);
+
+    for (var entry : maybeExtension) {
+      values.put(entry.getKey(), entry.getValue());
+    }
+
+    return values.toUnmodifiableMap();
   }
 
   public void specPrintMultiPrefix() {
