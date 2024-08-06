@@ -496,6 +496,29 @@ public class CssGeneratorTest {
   }
 
   @Test
+  public void borderStyle() {
+    class Subject extends AbstractSubject {
+      @Override
+      final void classes() {
+        className("border-solid border-dashed border-dotted border-double border-hidden border-none");
+      }
+    }
+
+    test(
+        Subject.class,
+
+        """
+        .border-solid { border-style: solid }
+        .border-dashed { border-style: dashed }
+        .border-dotted { border-style: dotted }
+        .border-double { border-style: double }
+        .border-hidden { border-style: hidden }
+        .border-none { border-style: none }
+        """
+    );
+  }
+
+  @Test
   public void borderWidth() {
     class Subject extends AbstractSubject {
       @Override

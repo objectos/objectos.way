@@ -306,6 +306,8 @@ public final class Css {
     BORDER_WIDTH_BOTTOM,
     BORDER_WIDTH_LEFT,
 
+    BORDER_STYLE,
+
     BORDER_COLOR,
     BORDER_COLOR_X,
     BORDER_COLOR_Y,

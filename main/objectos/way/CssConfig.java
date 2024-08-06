@@ -1682,9 +1682,9 @@ final class CssConfig {
         Css.Key.BORDER_COLLAPSE,
 
         """
-      border-collapse | border-collapse: collapse
-      border-separate | border-collapse: separate
-      """
+        border-collapse | border-collapse: collapse
+        border-separate | border-collapse: separate
+        """
     );
 
     var borderColor = values(Css.Key.BORDER_COLOR, colors);
@@ -1701,16 +1701,16 @@ final class CssConfig {
         Css.Key.BORDER_RADIUS,
 
         """
-      none: 0px
-      sm: 0.125rem
-      : 0.25rem
-      md: 0.375rem
-      lg: 0.5rem
-      xl: 0.75rem
-      2xl: 1rem
-      3xl: 1.5rem
-      full: 9999px
-      """
+        none: 0px
+        sm: 0.125rem
+        : 0.25rem
+        md: 0.375rem
+        lg: 0.5rem
+        xl: 0.75rem
+        2xl: 1rem
+        3xl: 1.5rem
+        full: 9999px
+        """
     );
 
     funcUtility(Css.Key.BORDER_RADIUS, rounded, "rounded", "border-radius");
@@ -1733,12 +1733,25 @@ final class CssConfig {
         Css.Key.BORDER_WIDTH,
 
         """
-      : 1px
-      0: 0px
-      2: 2px
-      4: 4px
-      8: 8px
-      """
+        : 1px
+        0: 0px
+        2: 2px
+        4: 4px
+        8: 8px
+        """
+    );
+
+    staticUtility(
+        Css.Key.BORDER_STYLE,
+
+        """
+        border-solid  | border-style: solid
+        border-dashed | border-style: dashed
+        border-dotted | border-style: dotted
+        border-double | border-style: double
+        border-hidden | border-style: hidden
+        border-none   | border-style: none
+        """
     );
 
     funcUtility(Css.Key.BORDER_WIDTH, borderWidth, "border", "border-width");
