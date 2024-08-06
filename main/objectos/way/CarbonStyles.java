@@ -1195,13 +1195,15 @@ final class CarbonStyles implements Http.Handler {
     outline outline-2 -outline-offset-2 outline-transparent
     focus:outline-focus
 
-    # data-table
+    # __data-table-base
     w-full border-collapse border-spacing-0
 
     thead:bg-layer-accent
     thead:text-14px thead:leading-18px thead:font-600 thead:tracking-0.16px
 
-    th:px-16px th:text-start th:align-middle
+    th:bg-layer-accent
+    th:px-16px
+    th:text-start th:align-middle th:text-text-primary
 
     tbody:w-full
     tbody:bg-layer
@@ -1209,9 +1211,46 @@ final class CarbonStyles implements Http.Handler {
 
     tr:w-full tr:h-48px tr:border-none
 
+    tbody:tr:transition-colors tbody:tr:duration-75
     tbody:tr:hover:bg-layer-hover
 
-    td:text-start td:align-middle
+    td:border-solid
+    td:border-t td:border-t-layer
+    td:border-b td:border-b-border-subtle
+    td:px-16px
+    td:text-start td:align-middle td:text-text-secondary
+
+    # data-table
+    __data-table-base
+    tr:h-48px
+
+    # data-table-xs
+    __data-table-base
+    tr:h-24px
+    th:py-2px
+    td:py-2px
+
+    # data-table-sm
+    __data-table-base
+    tr:h-32px
+    th:py-[7px]
+    td:py-[7px]
+
+    # data-table-md
+    __data-table-base
+    tr:h-40px
+    th:pt-[6px] th:pb-[7px]
+    td:pt-[6px] td:pb-[7px]
+
+    # data-table-lg
+    __data-table-base
+    tr:h-48px
+
+    # data-table-xl
+    __data-table-base
+    tr:h-64px
+    th:py-05 th:align-top
+    td:py-05 td:align-top
     """);
   }
 

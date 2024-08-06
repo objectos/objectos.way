@@ -57,6 +57,12 @@ final class ComponentsDataTable extends CarbonPage {
   }
 
   private void renderTables() {
+    h2(
+        className("heading-03 my-05"),
+
+        t("Basic")
+    );
+
     div(
         className("data-table-content"),
         tabindex("0"),
@@ -65,27 +71,103 @@ final class ComponentsDataTable extends CarbonPage {
             className("data-table"),
             ariaLabel("sample table"),
 
-            thead(
-                tr(
-                    th(/*scope("col"), */ t("Name")),
-                    th(/*scope("col"), */ t("Rule")),
-                    th(/*scope("col"), */ t("Status")),
-                    th(/*scope("col"), */ t("Other")),
-                    th(/*scope("col"), */ t("Example"))
-                )
-            ),
-
-            tbody(
-                /*ariaLive("polite"),*/
-                tr(td("Load Balancer 1"), td("Round robin"), td("Starting"), td("Test"), td("22")),
-                tr(td("Load Balancer 2"), td("DNS delegation"), td("Active"), td("Test"), td("22")),
-                tr(td("Load Balancer 3"), td("Round robin"), td("Disabled"), td("Test"), td("22")),
-                tr(td("Load Balancer 4"), td("Round robin"), td("Disabled"), td("Test"), td("22")),
-                tr(td("Load Balancer 5"), td("Round robin"), td("Disabled"), td("Test"), td("22")),
-                tr(td("Load Balancer 6"), td("Round robin"), td("Disabled"), td("Test"), td("22")),
-                tr(td("Load Balancer 7"), td("Round robin"), td("Disabled"), td("Test"), td("22"))
-            )
+            f(this::tableContents)
         )
+    );
+
+    h2(
+        className("heading-03 my-05"),
+
+        t("Basic (xs)")
+    );
+
+    div(
+        className("data-table-content"),
+        tabindex("0"),
+
+        table(
+            className("data-table-xs"),
+            ariaLabel("sample table"),
+
+            f(this::tableContents)
+        )
+    );
+
+    h2(
+        className("heading-03 my-05"),
+
+        t("Basic (sm)")
+    );
+
+    div(
+        className("data-table-content"),
+        tabindex("0"),
+
+        table(
+            className("data-table-sm"),
+            ariaLabel("sample table"),
+
+            f(this::tableContents)
+        )
+    );
+
+    h2(
+        className("heading-03 my-05"),
+
+        t("Basic (md)")
+    );
+
+    div(
+        className("data-table-content"),
+        tabindex("0"),
+
+        table(
+            className("data-table-md"),
+            ariaLabel("sample table"),
+
+            f(this::tableContents)
+        )
+    );
+
+    h2(
+        className("heading-03 my-05"),
+
+        t("Basic (xl)")
+    );
+
+    div(
+        className("data-table-content"),
+        tabindex("0"),
+
+        table(
+            className("data-table-xl"),
+            ariaLabel("sample table"),
+
+            f(this::tableContents)
+        )
+    );
+  }
+
+  private void tableContents() {
+    thead(
+        tr(
+            th(/*scope("col"), */ t("Name")),
+            th(/*scope("col"), */ t("Rule")),
+            th(/*scope("col"), */ t("Status")),
+            th(/*scope("col"), */ t("Other")),
+            th(/*scope("col"), */ t("Example"))
+        )
+    );
+
+    tbody(
+        /*ariaLive("polite"),*/
+        tr(td("Load Balancer 1"), td("Round robin"), td("Starting"), td("Test"), td("22")),
+        tr(td("Load Balancer 2"), td("DNS delegation"), td("Active"), td("Test"), td("22")),
+        tr(td("Load Balancer 3"), td("Round robin"), td("Disabled"), td("Test"), td("22")),
+        tr(td("Load Balancer 4"), td("Round robin"), td("Disabled"), td("Test"), td("22")),
+        tr(td("Load Balancer 5"), td("Round robin"), td("Disabled"), td("Test"), td("22")),
+        tr(td("Load Balancer 6"), td("Round robin"), td("Disabled"), td("Test"), td("22")),
+        tr(td("Load Balancer 7"), td("Round robin"), td("Disabled"), td("Test"), td("22"))
     );
   }
 
