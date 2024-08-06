@@ -596,38 +596,7 @@ final class CarbonStyles implements Http.Handler {
 
         componentsTypography(),
 
-        Css.overrideBackgroundColor("""
-        : var(--cds-background)
-        active: var(--cds-background-active)
-        hover: var(--cds-background-hover)
-        selected: var(--cds-background-selected)
-        button-danger: var(--cds-button-danger-primary)
-        button-danger-active: var(--cds-button-danger-active)
-        button-danger-hover: var(--cds-button-danger-hover)
-        button-danger-secondary: var(--cds-button-danger-secondary)
-        button-primary: var(--cds-button-primary)
-        button-primary-active: var(--cds-button-primary-active)
-        button-primary-hover: var(--cds-button-primary-hover)
-        button-secondary: var(--cds-button-secondary)
-        button-secondary-active: var(--cds-button-secondary-active)
-        button-secondary-hover: var(--cds-button-secondary-hover)
-        button-tertiary: var(--cds-button-tertiary)
-        button-tertiary-active: var(--cds-button-tertiary-active)
-        button-tertiary-hover: var(--cds-button-tertiary-hover)
-        layer: var(--cds-layer)
-        layer-accent: var(--cds-layer-accent)
-        layer-hover: var(--cds-layer-hover)
-        overlay: var(--cds-overlay)
-        """),
-
-        Css.overrideBorderColor("""
-        button-tertiary: var(--cds-button-tertiary)
-        focus: var(--cds-focus)
-        interactive: var(--cds-border-interactive)
-        subtle: var(--cds-border-subtle)
-
-        transparent: transparent
-        """),
+        extendColors(),
 
         Css.overrideBorderWidth("""
         : 1px
@@ -705,73 +674,6 @@ final class CarbonStyles implements Http.Handler {
         0.96px: 0.96px
         """),
 
-        Css.overrideGridColumn("""
-        auto: auto
-        span-1: span 1 / span 1
-        span-2: span 2 / span 2
-        span-3: span 3 / span 3
-        span-4: span 4 / span 4
-        span-5: span 5 / span 5
-        span-6: span 6 / span 6
-        span-7: span 7 / span 7
-        span-8: span 8 / span 8
-        span-9: span 9 / span 9
-        span-10: span 10 / span 10
-        span-11: span 11 / span 11
-        span-12: span 12 / span 12
-        span-13: span 13 / span 13
-        span-14: span 14 / span 14
-        span-15: span 15 / span 15
-        span-16: span 16 / span 16
-        span-full: 1 / -1
-        """),
-
-        Css.overrideGridColumnStart("""
-        auto: auto
-        1: 1
-        2: 2
-        3: 3
-        4: 4
-        5: 5
-        6: 6
-        7: 7
-        8: 8
-        9: 9
-        10: 10
-        11: 11
-        12: 12
-        13: 13
-        14: 14
-        15: 15
-        16: 16
-        17: 17
-        """),
-
-        Css.overrideGridTemplateColumns("""
-        none: none
-        subgrid: subgrid
-        1: repeat(1, minmax(0, 1fr))
-        2: repeat(2, minmax(0, 1fr))
-        3: repeat(3, minmax(0, 1fr))
-        4: repeat(4, minmax(0, 1fr))
-        5: repeat(5, minmax(0, 1fr))
-        6: repeat(6, minmax(0, 1fr))
-        7: repeat(7, minmax(0, 1fr))
-        8: repeat(8, minmax(0, 1fr))
-        9: repeat(9, minmax(0, 1fr))
-        11: repeat(11, minmax(0, 1fr))
-        12: repeat(12, minmax(0, 1fr))
-        16: repeat(16, minmax(0, 1fr))
-        """),
-
-        Css.overrideOutlineColor("""
-        focus: var(--cds-focus)
-        interactive: var(--cds-border-interactive)
-        subtle: var(--cds-border-subtle)
-
-        transparent: transparent
-        """),
-
         Css.overrideSpacing("""
         header: var(--spacing-header)
         side-nav: var(--spacing-side-nav)
@@ -837,8 +739,6 @@ final class CarbonStyles implements Http.Handler {
         320px: 20rem
         384px: 24rem
         """),
-
-        overrideTextColor(),
 
         Css.overrideZIndex("""
         auto: auto
@@ -953,14 +853,14 @@ final class CarbonStyles implements Http.Handler {
     # __button-primary
     bg-button-primary
     border border-transparent
-    text-on-color
+    text-text-on-color
     active:bg-button-primary-active
     hover:bg-button-primary-hover
 
     # __button-secondary
     bg-button-secondary
     border border-transparent
-    text-on-color
+    text-text-on-color
     active:bg-button-secondary-active
     hover:bg-button-secondary-hover
 
@@ -969,19 +869,19 @@ final class CarbonStyles implements Http.Handler {
     border border-button-tertiary
     text-button-tertiary
     active:bg-button-tertiary-active
-    hover:bg-button-tertiary-hover hover:text-inverse
+    hover:bg-button-tertiary-hover hover:text-text-inverse
 
     # __button-ghost
     bg-transparent
     border border-transparent
     text-link-primary
-    active:bg-active active:text-link-primary-hover
-    hover:bg-hover hover:text-link-primary-hover
+    active:bg-background-active active:text-link-primary-hover
+    hover:bg-background-hover hover:text-link-primary-hover
 
     # __button-danger
     bg-button-danger
     border border-transparent
-    text-on-color
+    text-text-on-color
     active:bg-button-danger-active
     hover:bg-button-danger-hover
 
@@ -989,16 +889,16 @@ final class CarbonStyles implements Http.Handler {
     bg-transparent
     border border-button-danger-secondary
     text-button-danger-secondary
-    active:bg-button-danger-active active:border-button-danger-active active:text-on-color
-    focus:bg-button-danger focus:text-on-color
-    hover:bg-button-danger-hover hover:text-on-color
+    active:bg-button-danger-active active:border-button-danger-active active:text-text-on-color
+    focus:bg-button-danger focus:text-text-on-color
+    hover:bg-button-danger-hover hover:text-text-on-color
 
     # __button-danger-ghost
     bg-transparent
     border border-transparent
     text-button-danger-secondary
-    active:bg-button-danger-active active:text-on-color
-    hover:bg-button-danger-hover hover:text-on-color
+    active:bg-button-danger-active active:text-text-on-color
+    hover:bg-button-danger-hover hover:text-text-on-color
 
     # __button-icon-size-sm
     size-32px pt-[7px]
@@ -1321,16 +1221,16 @@ final class CarbonStyles implements Http.Handler {
     fixed top-0px right-0px left-0px z-header
     flex items-center h-header
     border-b border-b-subtle
-    bg
+    bg-background
 
     # __header-button
     button-reset
     size-header items-center justify-center
     border border-transparent
     transition-colors duration-100
-    active:bg-active
+    active:bg-background-active
     focus:border-focus focus:outline-none
-    hover:bg-hover
+    hover:bg-background-hover
     lg:hidden
     svg:fill-primary
 
@@ -1344,17 +1244,17 @@ final class CarbonStyles implements Http.Handler {
 
     # header-close-button
     __header-button
-    hidden border-x-subtle bg-layer
+    hidden border-x-border-subtle bg-layer
 
     # header-close-button-toggle
     __header-button
-    flex border-x-subtle bg-layer
+    flex border-x-border-subtle bg-layer
 
     # header-name
     flex h-full select-none items-center
     border-2 border-transparent
     px-16px
-    body-compact-01 text-primary font-600 leading-20px tracking-0.1px
+    body-compact-01 text-text-primary font-600 leading-20px tracking-0.1px
     outline-none
     transition-colors duration-100
     focus:border-focus
@@ -1366,18 +1266,18 @@ final class CarbonStyles implements Http.Handler {
     lg:flex lg:items-center
     lg:before:relative lg:before:-left-16px lg:before:z-header lg:before:block
     lg:before:h-1/2 lg:before:w-1px
-    lg:before:border-l lg:before:border-l-subtle
+    lg:before:border-l lg:before:border-l-border-subtle
     lg:before:content-empty
 
     # __header-nav-link
     relative flex h-full select-none items-center
     border-2 border-transparent
-    bg
+    bg-background
     px-16px
     transition-colors duration-100
-    active:bg-active active:text-primary
+    active:bg-background-active active:text-text-primary
     focus:border-focus focus:outline-none
-    hover:bg-hover hover:text-primary
+    hover:bg-background-hover hover:text-text-primary
 
     # __header-nav-link-productive
     text-14px leading-18px font-400 tracking-0px
@@ -1386,12 +1286,12 @@ final class CarbonStyles implements Http.Handler {
     body-compact-02
 
     # __header-nav-link-active
-    text-primary
+    text-text-primary
     after:absolute after:-bottom-2px after:-left-2px after:-right-2px
-    after:block after:border-b-3 after:border-b-interactive after:content-empty
+    after:block after:border-b-3 after:border-b-border-interactive after:content-empty
 
     # __header-nav-link-inactive
-    text-secondary
+    text-text-secondary
 
     # header-nav-link-active
     __header-nav-link
@@ -1414,7 +1314,7 @@ final class CarbonStyles implements Http.Handler {
     __header-nav-link-inactive
 
     # header-nav-list
-    h-full flex text-secondary
+    h-full flex text-text-secondary
 
     # header-offset
     mt-header
@@ -1488,8 +1388,8 @@ final class CarbonStyles implements Http.Handler {
     return Css.components("""
     # __side-nav
     fixed top-0px bottom-0px left-0px z-header
-    bg
-    text-secondary
+    bg-background
+    text-text-secondary
     transition-all duration-100
     lg:hidden
 
@@ -1504,21 +1404,21 @@ final class CarbonStyles implements Http.Handler {
     items-center justify-between whitespace-nowrap
     border-2 border-transparent
     px-16px
-    heading-compact-01 text-secondary
+    heading-compact-01 text-text-secondary
     outline outline-2 -outline-offset-2 outline-transparent
     transition-colors duration-100
-    active:bg-active active:text-primary
+    active:bg-background-active active:text-text-primary
     focus:outline-focus
-    hover:bg-hover hover:text-primary
+    hover:bg-background-hover hover:text-text-primary
 
     # side-nav-header-link-active
     __side-nav-header-link
     after:absolute after:-top-2px after:-bottom-2px after:-left-2px
-    after:block after:border-l-3 after:border-l-interactive after:content-empty
+    after:block after:border-l-3 after:border-l-border-interactive after:content-empty
 
     # side-nav-header-link-inactive
     __side-nav-header-link
-    text-secondary
+    text-text-secondary
 
     # side-nav-header-list
     margin-bottom-32px
@@ -1538,19 +1438,19 @@ final class CarbonStyles implements Http.Handler {
     outline outline-2 -outline-offset-2 outline-transparent
     transition-colors duration-100
     focus:outline-focus
-    hover:bg-hover hover:text-primary
+    hover:bg-background-hover hover:text-text-primary
     span:select-none span:text-14px span:leading-20px span:tracking-0.1px span:truncate
 
     # side-nav-link-active
     side-nav-link
     bg-selected text-link-primary font-600
     after:absolute after:top-0px after:bottom-0px after:left-0px
-    after:block after:border-l-3 after:border-l-interactive after:content-empty
-    span:text-primary
+    after:block after:border-l-3 after:border-l-border-interactive after:content-empty
+    span:text-text-primary
 
     # side-nav-link-inactive
     side-nav-link
-    span:text-secondary
+    span:text-text-secondary
 
     # side-nav-offset
     lg:ml-side-nav
@@ -1674,19 +1574,40 @@ final class CarbonStyles implements Http.Handler {
     """);
   }
 
-  private Css.Option overrideTextColor() {
-    return Css.overrideTextColor("""
+  private Css.Option extendColors() {
+    return Css.extendColors("""
+    background: var(--cds-background)
+    background-active: var(--cds-background-active)
+    background-hover: var(--cds-background-hover)
+    background-selected: var(--cds-background-selected)
+    border-interactive: var(--cds-border-interactive)
+    border-subtle: var(--cds-border-subtle)
+    button-danger: var(--cds-button-danger-primary)
+    button-danger-active: var(--cds-button-danger-active)
+    button-danger-hover: var(--cds-button-danger-hover)
     button-danger-secondary: var(--cds-button-danger-secondary)
+    button-primary: var(--cds-button-primary)
+    button-primary-active: var(--cds-button-primary-active)
+    button-primary-hover: var(--cds-button-primary-hover)
+    button-secondary: var(--cds-button-secondary)
+    button-secondary-active: var(--cds-button-secondary-active)
+    button-secondary-hover: var(--cds-button-secondary-hover)
     button-tertiary: var(--cds-button-tertiary)
+    button-tertiary-active: var(--cds-button-tertiary-active)
+    button-tertiary-hover: var(--cds-button-tertiary-hover)
+    focus: var(--cds-focus)
+    layer: var(--cds-layer)
+    layer-accent: var(--cds-layer-accent)
+    layer-hover: var(--cds-layer-hover)
     link-primary: var(--cds-link-primary)
     link-primary-hover: var(--cds-link-primary-hover)
     link-visited: var(--cds-link-visited)
-
-    inverse: var(--cds-text-inverse)
-    on-color: var(--cds-text-on-color)
-    on-color-disabled: var(--cds-text-on-color-disabled)
-    primary: var(--cds-text-primary)
-    secondary: var(--cds-text-secondary)
+    overlay: var(--cds-overlay)
+    text-inverse: var(--cds-text-inverse)
+    text-on-color: var(--cds-text-on-color)
+    text-on-color-disabled: var(--cds-text-on-color-disabled)
+    text-primary: var(--cds-text-primary)
+    text-secondary: var(--cds-text-secondary)
     """);
   }
 
