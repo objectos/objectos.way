@@ -212,6 +212,7 @@ abstract class CarbonPage extends Carbon.Template {
     switch (topSection) {
       case COMPONENTS -> {
         renderSideNavLink("Button", "/components/button", clickAction);
+        renderSideNavLink("Data table", "/components/data-table", clickAction);
         renderSideNavLink("Grid", "/components/grid", clickAction);
         renderSideNavLink("Link", "/components/link", clickAction);
         renderSideNavLink("Page header", "/components/page-header", clickAction);

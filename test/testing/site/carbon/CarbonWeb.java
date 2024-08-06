@@ -32,6 +32,7 @@ public final class CarbonWeb extends Web.Module {
             CarbonPage.class,
             Components.class,
             ComponentsButton.class,
+            ComponentsDataTable.class,
             ComponentsGrid.class,
             ComponentsLink.class,
             ComponentsPageHeader.class,
@@ -44,6 +45,7 @@ public final class CarbonWeb extends Web.Module {
     route("/", GET(Index::new));
     route("/components", GET(Components::new));
     route("/components/button", GET(ComponentsButton::new));
+    route("/components/data-table", GET(ComponentsDataTable::new));
     route("/components/grid", GET(ComponentsGrid::new));
     route("/components/link", GET(ComponentsLink::new));
     route("/components/page-header", GET(ComponentsPageHeader::new));

@@ -578,6 +578,8 @@ final class CarbonStyles implements Http.Handler {
 
         componentsButton(),
 
+        componentsDataTable(),
+
         componentsGrid(),
 
         componentsHeader(),
@@ -613,6 +615,8 @@ final class CarbonStyles implements Http.Handler {
         button-tertiary-active: var(--cds-button-tertiary-active)
         button-tertiary-hover: var(--cds-button-tertiary-hover)
         layer: var(--cds-layer)
+        layer-accent: var(--cds-layer-accent)
+        layer-hover: var(--cds-layer-hover)
         overlay: var(--cds-overlay)
         """),
 
@@ -851,6 +855,11 @@ final class CarbonStyles implements Http.Handler {
         more: &:not(:root)
         span: & span
         svg: & > svg
+        tbody: & tbody
+        td: & td
+        th: & th
+        thead: & thead
+        tr: & tr
         """)
     );
   }
@@ -1276,6 +1285,33 @@ final class CarbonStyles implements Http.Handler {
     # grid-condensed
     __grid
     *:mx-0.5px
+    """);
+  }
+
+  private Css.Option componentsDataTable() {
+    return Css.components("""
+    # data-table-content
+    block overflow-x-auto
+    outline outline-2 -outline-offset-2 outline-transparent
+    focus:outline-focus
+
+    # data-table
+    w-full border-collapse border-spacing-0
+
+    thead:bg-layer-accent
+    thead:text-14px thead:leading-18px thead:font-600 thead:tracking-0.16px
+
+    th:px-16px th:text-start th:align-middle
+
+    tbody:w-full
+    tbody:bg-layer
+    tbody:text-14px tbody:leading-18px tbody:font-400 tbody:tracking-0.16px
+
+    tr:w-full tr:h-48px tr:border-none
+
+    tbody:tr:hover:bg-layer-hover
+
+    td:text-start td:align-middle
     """);
   }
 
