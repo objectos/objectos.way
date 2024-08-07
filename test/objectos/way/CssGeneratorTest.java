@@ -1362,8 +1362,9 @@ public class CssGeneratorTest {
     class Subject extends AbstractSubject {
       @Override
       final void classes() {
-        className(
-            "grid-cols-none grid-cols-subgrid grid-cols-1 grid-cols-2 grid-cols-3 grid-cols-4 grid-cols-5 grid-cols-6 grid-cols-7 grid-cols-8 grid-cols-9 grid-cols-10 grid-cols-11 grid-cols-12");
+        className("grid-cols-none grid-cols-subgrid");
+        className("grid-cols-1 grid-cols-2 grid-cols-3 grid-cols-4 grid-cols-5 grid-cols-6 grid-cols-7 grid-cols-8 grid-cols-9 grid-cols-10 grid-cols-11 grid-cols-12");
+        className("grid-cols-[200px_minmax(900px,_1fr)_100px]");
       }
     }
 
@@ -1385,6 +1386,7 @@ public class CssGeneratorTest {
         .grid-cols-10 { grid-template-columns: repeat(10, minmax(0, 1fr)) }
         .grid-cols-11 { grid-template-columns: repeat(11, minmax(0, 1fr)) }
         .grid-cols-12 { grid-template-columns: repeat(12, minmax(0, 1fr)) }
+        .grid-cols-\\[200px_minmax(900px\\,_1fr)_100px\\] { grid-template-columns: 200px minmax(900px, 1fr) 100px }
         """
     );
   }
@@ -1394,8 +1396,9 @@ public class CssGeneratorTest {
     class Subject extends AbstractSubject {
       @Override
       final void classes() {
-        className(
-            "grid-rows-none grid-rows-subgrid grid-rows-1 grid-rows-2 grid-rows-3 grid-rows-4 grid-rows-5 grid-rows-6 grid-rows-7 grid-rows-8 grid-rows-9 grid-rows-10 grid-rows-11 grid-rows-12");
+        className("grid-rows-none grid-rows-subgrid");
+        className("grid-rows-1 grid-rows-2 grid-rows-3 grid-rows-4 grid-rows-5 grid-rows-6 grid-rows-7 grid-rows-8 grid-rows-9 grid-rows-10 grid-rows-11 grid-rows-12");
+        className("grid-rows-[200px_minmax(900px,_1fr)_100px]");
       }
     }
 
@@ -1417,6 +1420,7 @@ public class CssGeneratorTest {
         .grid-rows-10 { grid-template-rows: repeat(10, minmax(0, 1fr)) }
         .grid-rows-11 { grid-template-rows: repeat(11, minmax(0, 1fr)) }
         .grid-rows-12 { grid-template-rows: repeat(12, minmax(0, 1fr)) }
+        .grid-rows-\\[200px_minmax(900px\\,_1fr)_100px\\] { grid-template-rows: 200px minmax(900px, 1fr) 100px }
         """
     );
   }
