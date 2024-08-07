@@ -592,11 +592,13 @@ final class CarbonStyles implements Http.Handler {
 
         componentsSideNav(),
 
-        compoentsTile(),
+        componentsTile(),
 
         componentsTypography(),
 
         extendColors(),
+
+        extendSpacing(),
 
         Css.overrideBorderWidth("""
         : 1px
@@ -674,72 +676,6 @@ final class CarbonStyles implements Http.Handler {
         0.96px: 0.96px
         """),
 
-        Css.overrideSpacing("""
-        header: var(--spacing-header)
-        side-nav: var(--spacing-side-nav)
-
-        01: var(--cds-spacing-01)
-        02: var(--cds-spacing-02)
-        03: var(--cds-spacing-03)
-        04: var(--cds-spacing-04)
-        05: var(--cds-spacing-05)
-        06: var(--cds-spacing-06)
-        07: var(--cds-spacing-07)
-        08: var(--cds-spacing-08)
-        09: var(--cds-spacing-09)
-        10: var(--cds-spacing-10)
-        11: var(--cds-spacing-11)
-        12: var(--cds-spacing-12)
-        13: var(--cds-spacing-13)
-
-        0px: 0px
-        0.5px: 0.5px
-        1px: 0.0625rem
-        2px: 0.125rem
-        4px: 0.25rem
-        6px: 0.375rem
-        8px: 0.5rem
-
-        10px: 0.625rem
-        12px: 0.75rem
-        14px: 0.875rem
-        16px: 1rem
-
-        20px: 1.25rem
-        24px: 1.5rem
-        28px: 1.75rem
-
-        32px: 2rem
-        36px: 2.25rem
-
-        40px: 2.5rem
-        44px: 2.75rem
-        48px: 3rem
-
-        56px: 3.5rem
-
-        64px: 4rem
-
-        80px: 5rem
-
-        96px: 6rem
-
-        112px: 7rem
-        128px: 8rem
-        144px: 9rem
-        160px: 10rem
-        176px: 11rem
-        192px: 12rem
-
-        208px: 13rem
-        224px: 14rem
-        240px: 15rem
-        256px: 16rem
-        288px: 18rem
-        320px: 20rem
-        384px: 24rem
-        """),
-
         Css.overrideZIndex("""
         auto: auto
         dropdown: 9100
@@ -752,6 +688,12 @@ final class CarbonStyles implements Http.Handler {
         """),
 
         Css.variants("""
+        h1: & h1
+        h2: & h2
+        h3: & h3
+        h4: & h4
+        h5: & h5
+        h6: & h6
         more: &:not(:root)
         span: & span
         svg: & > svg
@@ -1190,6 +1132,26 @@ final class CarbonStyles implements Http.Handler {
 
   private Css.Option componentsDataTable() {
     return Css.components("""
+    # data-table-container
+    relative
+    pt-spacing-01
+
+    # data-table-header
+    bg-layer
+    pt-spacing-05 px-spacing-05 pb-spacing-06
+
+    # data-table-header-title
+    heading-03
+    text-text-primary
+
+    # data-table-header-description
+    body-compact-01
+    text-text-secondary
+
+    md:max-w-[50ch]
+
+    lg:max-w-[80ch]
+
     # data-table-content
     block overflow-x-auto
     outline outline-2 -outline-offset-2 outline-transparent
@@ -1249,8 +1211,8 @@ final class CarbonStyles implements Http.Handler {
     # data-table-xl
     __data-table-base
     tr:h-64px
-    th:py-05 th:align-top
-    td:py-05 td:align-top
+    th:py-spacing-05 th:align-top
+    td:py-spacing-05 td:align-top
     """);
   }
 
@@ -1259,7 +1221,7 @@ final class CarbonStyles implements Http.Handler {
     # header
     fixed top-0px right-0px left-0px z-header
     flex items-center h-header
-    border-b border-b-subtle
+    border-b border-b-border-subtle
     bg-background
 
     # __header-button
@@ -1499,7 +1461,7 @@ final class CarbonStyles implements Http.Handler {
     """);
   }
 
-  private Css.Option compoentsTile() {
+  private Css.Option componentsTile() {
     return Css.components("""
     # tile
     relative block min-w-128px min-h-64px
@@ -1647,6 +1609,74 @@ final class CarbonStyles implements Http.Handler {
     text-on-color-disabled: var(--cds-text-on-color-disabled)
     text-primary: var(--cds-text-primary)
     text-secondary: var(--cds-text-secondary)
+    """);
+  }
+
+  private Css.Option extendSpacing() {
+    return Css.extendSpacing("""
+    header: var(--spacing-header)
+    side-nav: var(--spacing-side-nav)
+
+    spacing-01: var(--cds-spacing-01)
+    spacing-02: var(--cds-spacing-02)
+    spacing-03: var(--cds-spacing-03)
+    spacing-04: var(--cds-spacing-04)
+    spacing-05: var(--cds-spacing-05)
+    spacing-06: var(--cds-spacing-06)
+    spacing-07: var(--cds-spacing-07)
+    spacing-08: var(--cds-spacing-08)
+    spacing-09: var(--cds-spacing-09)
+    spacing-10: var(--cds-spacing-10)
+    spacing-11: var(--cds-spacing-11)
+    spacing-12: var(--cds-spacing-12)
+    spacing-13: var(--cds-spacing-13)
+
+    0px: 0px
+    0.5px: 0.5px
+    1px: 0.0625rem
+    2px: 0.125rem
+    4px: 0.25rem
+    6px: 0.375rem
+    8px: 0.5rem
+
+    10px: 0.625rem
+    12px: 0.75rem
+    14px: 0.875rem
+    16px: 1rem
+
+    20px: 1.25rem
+    24px: 1.5rem
+    28px: 1.75rem
+
+    32px: 2rem
+    36px: 2.25rem
+
+    40px: 2.5rem
+    44px: 2.75rem
+    48px: 3rem
+
+    56px: 3.5rem
+
+    64px: 4rem
+
+    80px: 5rem
+
+    96px: 6rem
+
+    112px: 7rem
+    128px: 8rem
+    144px: 9rem
+    160px: 10rem
+    176px: 11rem
+    192px: 12rem
+
+    208px: 13rem
+    224px: 14rem
+    240px: 15rem
+    256px: 16rem
+    288px: 18rem
+    320px: 20rem
+    384px: 24rem
     """);
   }
 
