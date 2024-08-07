@@ -37,7 +37,7 @@ final class ComponentsButton extends CarbonPage {
   @Override
   protected final void renderContent() {
     div(
-        className("grid-wide max-w-full py-05 bg-layer"),
+        className("grid-wide max-w-full py-spacing-05 bg-layer"),
 
         h1(
             className("col-span-full heading-04"),
@@ -47,7 +47,7 @@ final class ComponentsButton extends CarbonPage {
     );
 
     section(
-        className("grid-wide grid-cols-2 md:grid-cols-3 gap-03 max:grid-cols-6 *:self-start"),
+        className("grid-wide grid-cols-2 md:grid-cols-3 gap-spacing-03 max:grid-cols-6 *:self-start"),
 
         f(this::renderSection)
     );

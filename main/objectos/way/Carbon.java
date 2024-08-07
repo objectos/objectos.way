@@ -152,6 +152,13 @@ public final class Carbon {
     };
   }
 
+  public static Script.Action openTearsheet(Html.Id id) {
+    return Script.actions(
+        Script.replaceClass(id, "tearsheet-hidden", "tearsheet"),
+        Script.setProperty(id, "aria-hidden", "false")
+    );
+  }
+
   public final Http.Module createHttpModule() {
     final byte[] script;
 

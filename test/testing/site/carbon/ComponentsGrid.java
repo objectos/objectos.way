@@ -35,7 +35,7 @@ final class ComponentsGrid extends CarbonPage {
 
   @Override
   protected final void renderContent() {
-    className("pt-07");
+    className("pt-spacing-07");
 
     div(
         className("grid-wide grid-cols-1"),

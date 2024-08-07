@@ -61,7 +61,7 @@ final class ComponentsPageHeader extends CarbonPage {
     );
 
     div(
-        className("grid-narrow grid-cols-4 mt-07"),
+        className("grid-narrow grid-cols-4 mt-spacing-07"),
 
         div(
             className("tile min-h-screen col-span-1"),

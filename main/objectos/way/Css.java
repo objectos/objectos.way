@@ -793,6 +793,19 @@ public final class Css {
     return extend(Key._SPACING, text);
   }
 
+  /**
+   * Option: extends the built-in or the overridden z-index with the values
+   * obtained from parsing the specified key-value configuration text.
+   *
+   * @param text
+   *        the key-value configuration text
+   *
+   * @return a new configuration option
+   */
+  public static Option extendZIndex(String text) {
+    return extend(Key.Z_INDEX, text);
+  }
+
   private static Option extend(Key key, String text) {
     CssProperties properties;
     properties = parseProperties(text);

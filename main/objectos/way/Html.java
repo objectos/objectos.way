@@ -922,6 +922,10 @@ public final class Html {
       return Html.NOOP;
     }
 
+    protected final NoOpInstruction noop(String ignored) {
+      return Html.NOOP;
+    }
+
     protected final ElementInstruction raw(String text) {
       return $compiler().raw(text);
     }

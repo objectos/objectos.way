@@ -586,11 +586,15 @@ final class CarbonStyles implements Http.Handler {
 
         componentsLink(),
 
+        componentsModal(),
+
         componentsOverlay(),
 
         componentsPageHeader(),
 
         componentsSideNav(),
+
+        componentsTearsheet(),
 
         componentsTile(),
 
@@ -599,6 +603,8 @@ final class CarbonStyles implements Http.Handler {
         extendColors(),
 
         extendSpacing(),
+
+        extendZIndex(),
 
         Css.overrideBorderWidth("""
         : 1px
@@ -674,17 +680,6 @@ final class CarbonStyles implements Http.Handler {
         0.32px: 0.32px
         0.64px: 0.64px
         0.96px: 0.96px
-        """),
-
-        Css.overrideZIndex("""
-        auto: auto
-        dropdown: 9100
-        modal: 9000
-        header: 8000
-        overlay: 6000
-        floating: 6000
-        footer: 5000
-        hidden: -1
         """),
 
         Css.variants("""
@@ -1346,6 +1341,16 @@ final class CarbonStyles implements Http.Handler {
     """);
   }
 
+  private Css.Option componentsModal() {
+    return Css.components("""
+    # __modal-container-base
+    fixed w-full h-full max-h-full
+    grid-cols-[100%] grid-rows-[100%]
+    bg-layer
+    outline outline-3 -outline-offset-3 outline-transparent
+    """);
+  }
+
   private Css.Option componentsOverlay() {
     return Css.components("""
     # __overlay
@@ -1458,6 +1463,31 @@ final class CarbonStyles implements Http.Handler {
 
     # side-nav-persistent
     lg:visible lg:more:block lg:w-side-nav
+    """);
+  }
+
+  private Css.Option componentsTearsheet() {
+    return Css.components("""
+    # __tearsheet
+    fixed inset-0px z-tearsheet
+    bg-overlay
+    transition-opacity duration-1000
+
+    # tearsheet
+    __tearsheet
+    block opacity-100
+
+    # tearsheet-hidden
+    __tearsheet
+    hidden opacity-0
+
+    # tearsheet-modal
+    absolute grid inset-0px
+    grid-cols-[100%] grid-rows-[100%]
+    bg-layer
+    outline outline-3 -outline-offset-3 outline-transparent
+
+    md:top-48px md:left-64px md:right-64px
     """);
   }
 
@@ -1677,6 +1707,20 @@ final class CarbonStyles implements Http.Handler {
     288px: 18rem
     320px: 20rem
     384px: 24rem
+    """);
+  }
+
+  private Css.Option extendZIndex() {
+    return Css.extendZIndex("""
+    auto: auto
+    dropdown: 9100
+    tearsheet: 9000
+    modal: 9000
+    header: 8000
+    overlay: 6000
+    floating: 6000
+    footer: 5000
+    hidden: -1
     """);
   }
 

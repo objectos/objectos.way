@@ -216,6 +216,7 @@ abstract class CarbonPage extends Carbon.Template {
         renderSideNavLink("Grid", "/components/grid", clickAction);
         renderSideNavLink("Link", "/components/link", clickAction);
         renderSideNavLink("Page header", "/components/page-header", clickAction);
+        renderSideNavLink("Tearsheet", "/components/tearsheet", clickAction);
       }
 
       default -> {}
