@@ -78,7 +78,15 @@ final class ComponentsTearsheet extends CarbonPage {
             ),
 
             div(
-                className("tearsheet-body")
+                className("tearsheet-body"),
+
+                div(
+                    className("tearsheet-influencer")
+                ),
+
+                div(
+                    className("tearsheet-main")
+                )
             )
         )
     );

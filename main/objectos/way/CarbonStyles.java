@@ -1498,11 +1498,12 @@ final class CarbonStyles implements Http.Handler {
     md:top-48px md:left-64px md:right-64px
 
     # tearsheet-header
+    flex-none
     border-b border-b-border-subtle
     py-spacing-06 px-spacing-07
 
     # tearsheet-header-title
-    text-28px leading-36px font-400 tracking-0px
+    heading-04
     text-text-primary
 
     # tearsheet-header-description
@@ -1511,6 +1512,14 @@ final class CarbonStyles implements Http.Handler {
     body-compact-01
 
     md:max-w-[60%]
+
+    # tearsheet-body
+    flex grow
+
+    # tearsheet-influencer
+    flex-[0_0_257px]
+    border-r border-r-border-subtle
+    overflow-y-auto
     """);
   }
 
