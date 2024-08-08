@@ -1010,6 +1010,29 @@ public class CssGeneratorTest {
   }
 
   @Test
+  public void flex() {
+    class Subject extends AbstractSubject {
+      @Override
+      final void classes() {
+        className("flex-1 flex-auto flex-initial flex-none");
+        className("flex-[2_2_0%]");
+      }
+    }
+
+    test(
+        Subject.class,
+
+        """
+        .flex-1 { flex: 1 1 0% }
+        .flex-auto { flex: 1 1 auto }
+        .flex-initial { flex: 0 1 auto }
+        .flex-none { flex: none }
+        .flex-\\[2_2_0%\\] { flex: 2 2 0% }
+        """
+    );
+  }
+
+  @Test
   public void flexDirection() {
     class Subject extends AbstractSubject {
       @Override

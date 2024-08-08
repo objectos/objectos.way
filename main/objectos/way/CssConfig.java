@@ -343,27 +343,6 @@ final class CssConfig {
         )
     );
 
-    var lineHeight = values(
-        Css.Key.LINE_HEIGHT,
-
-        """
-        3: 0.75rem
-        4: 1rem
-        5: 1.25rem
-        6: 1.5rem
-        7: 1.75rem
-        8: 2rem
-        9: 2.25rem
-        10: 2.5rem
-        none: 1
-        tight: 1.25
-        snug: 1.375
-        normal: 1.5
-        relaxed: 1.625
-        loose: 2
-        """
-    );
-
     // A
 
     specA();
@@ -511,7 +490,7 @@ final class CssConfig {
 
     // F
 
-    specF(colors, lineHeight);
+    specF();
 
     // G
 
@@ -612,7 +591,7 @@ final class CssConfig {
         "tracking", "letter-spacing"
     );
 
-    funcUtility(Css.Key.LINE_HEIGHT, lineHeight, "leading", "line-height");
+    funcUtility(Css.Key.LINE_HEIGHT, values(Css.Key.LINE_HEIGHT, Css.DEFAULT_LINE_HEIGHT), "leading", "line-height");
 
     // M
 
@@ -1704,7 +1683,9 @@ final class CssConfig {
     }
   }
 
-  private void specF(Map<String, String> colors, Map<String, String> lineHeight) {
+  private void specF() {
+    var colors = values(Css.Key._COLORS, Css.DEFAULT_COLORS);
+
     funcUtility(
         Css.Key.FILL,
 
@@ -1721,6 +1702,25 @@ final class CssConfig {
         ),
 
         "fill"
+    );
+
+    funcUtility(
+        Css.Key.FLEX,
+
+        values(
+            Css.Key.FLEX,
+
+            """
+            1: 1 1 0%
+            auto: 1 1 auto
+            initial: 0 1 auto
+            none: none
+            """
+        ),
+
+        STRING,
+
+        "flex"
     );
 
     staticUtility(
@@ -1741,9 +1741,9 @@ final class CssConfig {
             Css.Key.FLEX_GROW,
 
             """
-          : 1
-          0: 0
-          """
+            : 1
+            0: 0
+            """
         ),
 
         INTEGER,
@@ -1820,7 +1820,7 @@ final class CssConfig {
                 """
             ),
 
-            lineHeight
+            values(Css.Key.LINE_HEIGHT, Css.DEFAULT_LINE_HEIGHT)
         )
     );
 

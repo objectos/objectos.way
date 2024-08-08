@@ -246,6 +246,7 @@ public final class Css {
     MAX_WIDTH,
     MIN_WIDTH,
 
+    FLEX,
     FLEX_GROW,
     FLEX_SHRINK,
 
@@ -1712,6 +1713,23 @@ public final class Css {
       rose-800: #9f1239
       rose-900: #881337
       rose-950: #4c0519
+      """;
+
+  static final String DEFAULT_LINE_HEIGHT = """
+      3: 0.75rem
+      4: 1rem
+      5: 1.25rem
+      6: 1.5rem
+      7: 1.75rem
+      8: 2rem
+      9: 2.25rem
+      10: 2.5rem
+      none: 1
+      tight: 1.25
+      snug: 1.375
+      normal: 1.5
+      relaxed: 1.625
+      loose: 2
       """;
 
   static final String DEFAULT_SPACING = """
