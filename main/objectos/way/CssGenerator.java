@@ -347,7 +347,7 @@ final class CssGenerator extends CssGeneratorAdapter implements Css.Generator, C
   }
 
   @Override
-  final Css.Rule getFragment(String className) {
+  final Css.Rule getRule(String className) {
     return rules.get(className);
   }
 

@@ -38,7 +38,7 @@ class CssGeneratorAdapter {
 
   void processToken(String token) {
     Css.Rule existing;
-    existing = getFragment(token);
+    existing = getRule(token);
 
     if (existing == null) {
       Css.Rule newRule;
@@ -138,7 +138,7 @@ class CssGeneratorAdapter {
     throw new UnsupportedOperationException("Implement me");
   }
 
-  Css.Rule getFragment(String token) {
+  Css.Rule getRule(String token) {
     throw new UnsupportedOperationException("Implement me");
   }
 

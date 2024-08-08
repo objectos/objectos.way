@@ -68,7 +68,7 @@ public class CssGeneratorAdapterTest {
       }
 
       @Override
-      Css.Rule getFragment(String token) {
+      Css.Rule getRule(String token) {
         return "foo".equals(token) ? foo : null;
       }
     }
@@ -96,7 +96,7 @@ public class CssGeneratorAdapterTest {
       }
 
       @Override
-      Css.Rule getFragment(String token) {
+      Css.Rule getRule(String token) {
         return null;
       }
 

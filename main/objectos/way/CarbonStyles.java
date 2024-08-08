@@ -1471,23 +1471,46 @@ final class CarbonStyles implements Http.Handler {
     # __tearsheet
     fixed inset-0px z-tearsheet
     bg-overlay
-    transition-opacity duration-1000
+    transition-opacity duration-300
 
     # tearsheet
     __tearsheet
-    block opacity-100
+    block
+    opacity-0
+    *:translate-y-3/4
 
     # tearsheet-hidden
     __tearsheet
-    hidden opacity-0
+    hidden
+    opacity-0
+    *:translate-y-3/4
 
-    # tearsheet-modal
-    absolute grid inset-0px
-    grid-cols-[100%] grid-rows-[100%]
+    # tearsheet-transition
+    opacity-100
+    *:translate-y-0
+
+    # tearsheet-container
+    absolute flex flex-col inset-0px
     bg-layer
     outline outline-3 -outline-offset-3 outline-transparent
+    transition-transform duration-300
 
     md:top-48px md:left-64px md:right-64px
+
+    # tearsheet-header
+    border-b border-b-border-subtle
+    py-spacing-06 px-spacing-07
+
+    # tearsheet-header-title
+    text-28px leading-36px font-400 tracking-0px
+    text-text-primary
+
+    # tearsheet-header-description
+    mt-spacing-05
+    overflow-hidden
+    body-compact-01
+
+    md:max-w-[60%]
     """);
   }
 

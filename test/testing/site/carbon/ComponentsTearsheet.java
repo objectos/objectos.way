@@ -54,10 +54,11 @@ final class ComponentsTearsheet extends CarbonPage {
     );
 
     div(
-        TEARSHEET_01, noop("tearsheet"), className("tearsheet-hidden"), role("presentation"), ariaHidden("true"),
+        TEARSHEET_01, className("tearsheet-hidden"), noop("tearsheet tearsheet-transition"),
+        role("presentation"), ariaHidden("true"),
 
         div(
-            className("tearsheet-modal"),
+            className("tearsheet-container"),
             role("dialog"), /*ariaModal("true"),*/ ariaLabel("Example 01"),
 
             div(
