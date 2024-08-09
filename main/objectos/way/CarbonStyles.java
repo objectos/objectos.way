@@ -15,17 +15,29 @@
  */
 package objectos.way;
 
+import java.util.Set;
+
 final class CarbonStyles implements Http.Handler {
 
-  private final Css.Generator.Classes classes;
+  private final Set<Class<?>> classes;
 
-  public CarbonStyles(Css.Generator.Classes classes) {
+  CarbonStyles(Set<Class<?>> classes) {
     this.classes = classes;
   }
 
   private Css.StyleSheet generateStyleSheet() {
     return Css.generateStyleSheet(
-        classes,
+        Css.classes(classes),
+
+        Css.classes(
+            CarbonHeader.class,
+            CarbonHeaderCloseButton.class,
+            CarbonHeaderMenuButton.class,
+            CarbonHeaderName.class,
+            CarbonHeaderNavigation.class,
+            CarbonProgressIndicator.class,
+            CarbonClasses.class
+        ),
 
         Css.useLogicalProperties(),
 
@@ -618,12 +630,6 @@ final class CarbonStyles implements Http.Handler {
         empty: ""
         """),
 
-        Css.overrideFill("""
-        disabled: var(--cds-icon-disabled)
-        primary: var(--cds-icon-primary)
-        secondary: var(--cds-icon-secondary)
-        """),
-
         Css.overrideFontSize("""
         12px: 0.75rem
         14px: 0.875rem
@@ -1036,7 +1042,7 @@ final class CarbonStyles implements Http.Handler {
     # __button-icon-ghost-base
     __button-icon-base
     __button-ghost
-    svg:fill-primary
+    svg:fill-icon-primary
 
     # button-icon-ghost
     __button-icon-ghost-base __button-icon-size-lg
@@ -1228,7 +1234,7 @@ final class CarbonStyles implements Http.Handler {
     focus:border-focus focus:outline-none
     hover:bg-background-hover
     lg:hidden
-    svg:fill-primary
+    svg:fill-icon-primary
 
     # header-menu-button
     __header-button
@@ -1659,6 +1665,9 @@ final class CarbonStyles implements Http.Handler {
     button-tertiary-active: var(--cds-button-tertiary-active)
     button-tertiary-hover: var(--cds-button-tertiary-hover)
     focus: var(--cds-focus)
+    icon-disabled: var(--cds-icon-disabled)
+    icon-primary: var(--cds-icon-primary)
+    icon-secondary: var(--cds-icon-secondary)
     layer: var(--cds-layer)
     layer-accent: var(--cds-layer-accent)
     layer-hover: var(--cds-layer-hover)

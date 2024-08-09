@@ -16,6 +16,7 @@
 package testing.site.carbon;
 
 import objectos.way.Carbon;
+import objectos.way.Http;
 import objectos.way.Web;
 import testing.zite.TestingSiteInjector;
 
@@ -26,7 +27,7 @@ public final class CarbonWeb extends Web.Module {
 
   @Override
   protected final void configure() {
-    Carbon carbon;
+    Http.Module carbon;
     carbon = Carbon.create(
         Carbon.classes(
             CarbonPage.class,
@@ -36,12 +37,13 @@ public final class CarbonWeb extends Web.Module {
             ComponentsGrid.class,
             ComponentsLink.class,
             ComponentsPageHeader.class,
+            ComponentsProgressIndicator.class,
             ComponentsTearsheet.class,
             Index.class
         )
     );
 
-    install(carbon.createHttpModule());
+    install(carbon);
 
     route("/", GET(Index::new));
     route("/components", GET(Components::new));
@@ -50,6 +52,7 @@ public final class CarbonWeb extends Web.Module {
     route("/components/grid", GET(ComponentsGrid::new));
     route("/components/link", GET(ComponentsLink::new));
     route("/components/page-header", GET(ComponentsPageHeader::new));
+    route("/components/progress-indicator", GET(ComponentsProgressIndicator::new));
     route("/components/tearsheet", GET(ComponentsTearsheet::new));
   }
 

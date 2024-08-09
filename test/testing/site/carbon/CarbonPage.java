@@ -57,6 +57,7 @@ abstract class CarbonPage extends Carbon.Template {
 
   protected abstract void renderHead();
 
+  @SuppressWarnings("unused")
   private void renderBody() {
     final Html.Id closeButton;
     closeButton = Html.id("close-button");
@@ -84,80 +85,111 @@ abstract class CarbonPage extends Carbon.Template {
         Script.replaceClass(sideNav, "side-nav", "side-nav-toggle", true)
     );
 
+    List<Carbon.Header.MenuItem> headerMenuItems = List.of(
+        carbon.headerMenuItem("Components", "/components", topSection == TopSection.COMPONENTS),
+
+        carbon.headerMenuItem("Gallery", "#", false)
+    );
+
+    carbon.header()
+        .theme(Carbon.THEME_G100)
+        .description("Objectos Carbon")
+        .menuButton(
+            carbon.headerMenuButton().description("Open menu")
+        )
+        .closeButton(
+            carbon.headerCloseButton().description("Close menu")
+        )
+        .name(
+            carbon.headerName()
+                .prefix("Objectos")
+                .text("Carbon")
+                .href("/")
+        )
+        .navigation(
+            carbon.headerNavigation()
+                .dataFrame("header-nav", topSection.name())
+                .description("Objectos Carbon navigation")
+                .addItems(headerMenuItems)
+        )
+        .render();
+
+    /*
     header(
         className("theme-g100 header"),
-
+    
         ariaLabel("Objectos Carbon"),
-
+    
         button(
             menuButton, className("header-menu-button"),
-
+    
             ariaLabel("Open menu"), title("Open"), type("button"),
-
+    
             dataOnClick(openMenuAction),
-
+    
             icon20(Carbon.Icon.MENU, ariaHidden("true"))
         ),
-
+    
         button(
             closeButton, className("header-close-button"),
-
+    
             ariaLabel("Close menu"), title("Close"), type("button"),
-
+    
             dataOnClick(closeMenuAction),
-
+    
             icon20(Carbon.Icon.CLOSE, ariaHidden("true"))
         ),
-
+    
         a(
             className("header-name"),
-
+    
             dataOnClick(closeMenuAction),
             dataOnClick(Script.location("/")),
-
+    
             href("/"),
-
+    
             span("Objectos"), nbsp(), t("Carbon")
         ),
-
+    
         nav(
             className("header-nav"),
-
+    
             ariaLabel("Objectos Carbon navigation"),
-
+    
             dataFrame("header-nav", topSection.name()),
-
+    
             ul(
                 className("header-nav-list"),
-
+    
                 f(this::renderHeaderNavItems)
             )
         )
     );
-
+    
     div(overlay, className("overlay header-offset"));
-
+    
     nav(
         sideNav, className("theme-g100 side-nav side-nav-persistent header-offset"),
-
+    
         ariaLabel("Side navigation"),
-
+    
         tabindex("-1"),
-
+    
         ul(
             className("side-nav-list"),
-
+    
             dataFrame("side-nav", getClass().getSimpleName()),
-
+    
             ul(
                 className("side-nav-header-list"),
-
+    
                 f(this::renderSideNavHeaderItems, closeMenuAction)
             ),
-
+    
             f(this::renderSideNavItems, closeMenuAction)
         )
     );
+    */
 
     main(
         dataFrame("main", getClass().getSimpleName()),
@@ -216,6 +248,7 @@ abstract class CarbonPage extends Carbon.Template {
         renderSideNavLink("Grid", "/components/grid", clickAction);
         renderSideNavLink("Link", "/components/link", clickAction);
         renderSideNavLink("Page header", "/components/page-header", clickAction);
+        renderSideNavLink("Progress indicator", "/components/progress-indicator", clickAction);
         renderSideNavLink("Tearsheet", "/components/tearsheet", clickAction);
       }
 

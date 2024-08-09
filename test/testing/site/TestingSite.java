@@ -185,7 +185,8 @@ public class TestingSite {
 
         classReloaderBuilder.watchService(watchService);
 
-        classReloaderBuilder.watch(classOutputOption.get(), "objectos.way.Carbon");
+        //classReloaderBuilder.watch(classOutputOption.get(), "objectos.way.Carbon");
+        //classReloaderBuilder.watch(classOutputOption.get(), "objectos.way.Html");
 
         classReloaderBuilder.watch(testClassOutputOption.get(), "testing.site");
 

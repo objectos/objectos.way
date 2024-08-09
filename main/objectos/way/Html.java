@@ -1002,45 +1002,59 @@ public final class Html {
     return new HtmlCompiler();
   }
 
-  public static ClassName className(ClassName className, String... values) {
+  public static ClassName className(ClassName... classNames) {
+    StringBuilder sb;
+    sb = new StringBuilder();
+
+    for (int i = 0, len = classNames.length; i < len; i++) {
+      if (i != 0) {
+        sb.append(' ');
+      }
+
+      ClassName cn;
+      cn = classNames[i];
+
+      String value;
+      value = cn.value();
+
+      sb.append(value);
+    }
+
+    String value;
+    value = sb.toString();
+
+    return new HtmlClassName(value);
+  }
+
+  public static ClassName className(ClassName className, String text) {
     StringBuilder sb;
     sb = new StringBuilder();
 
     sb.append(className.value());
 
-    sb.append(' ');
+    String[] lines;
+    lines = text.split("\n+");
 
-    classNameValues(sb, values);
+    for (var line : lines) {
+      sb.append(' ');
 
-    String value;
-    value = sb.toString();
-
-    return new HtmlClassName(value);
-  }
-
-  public static ClassName className(String... values) {
-    StringBuilder sb;
-    sb = new StringBuilder();
-
-    classNameValues(sb, values);
-
-    String value;
-    value = sb.toString();
-
-    return new HtmlClassName(value);
-  }
-
-  private static void classNameValues(StringBuilder sb, String... values) {
-    for (int i = 0; i < values.length; i++) {
-      if (i > 0) {
-        sb.append(' ');
-      }
-
-      String value;
-      value = Check.notNull(values[i], "values[", i, "] == null");
-
-      sb.append(value);
+      sb.append(line);
     }
+
+    String value;
+    value = sb.toString();
+
+    return new HtmlClassName(value);
+  }
+
+  public static ClassName className(String text) {
+    String[] lines;
+    lines = text.split("\n+");
+
+    String joined;
+    joined = String.join(" ", lines);
+
+    return new HtmlClassName(joined);
   }
 
   public static Id id(String value) {
@@ -1120,7 +1134,7 @@ public final class Html {
   /**
    * The value of an HTML {@code class} attribute.
    */
-  public sealed interface ClassName extends ObjectInstruction, VoidInstruction {
+  public non-sealed interface ClassName extends ObjectInstruction, VoidInstruction {
 
     /**
      * The {@code class} value.

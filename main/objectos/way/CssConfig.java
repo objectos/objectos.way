@@ -31,6 +31,7 @@ import objectos.notes.NoOpNoteSink;
 import objectos.notes.NoteSink;
 import objectos.util.list.GrowableList;
 import objectos.util.map.GrowableMap;
+import objectos.util.set.GrowableSet;
 
 final class CssConfig {
 
@@ -46,7 +47,7 @@ final class CssConfig {
 
   private List<String> baseLayer;
 
-  private Set<Class<?>> classes;
+  private final Set<Class<?>> classes;
 
   private Map<String, String> components;
 
@@ -71,12 +72,11 @@ final class CssConfig {
   private boolean variantsInitialized;
 
   public CssConfig() {
+    classes = new GrowableSet<>();
   }
 
   // testing helper
   CssConfig(Class<?> type) {
-    this();
-
     classes = Set.of(type);
   }
 
@@ -165,7 +165,7 @@ final class CssConfig {
   }
 
   public final void classes(Set<Class<?>> set) {
-    classes = set;
+    classes.addAll(set);
   }
 
   public final void noteSink(NoteSink noteSink) {

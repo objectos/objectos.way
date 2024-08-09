@@ -17,8 +17,9 @@ package objectos.way;
 
 import java.io.IOException;
 import java.io.UncheckedIOException;
+import java.util.Set;
 import objectos.lang.object.Check;
-import objectos.way.Css.Generator.Classes;
+import objectos.way.Carbon.Component.ProgressIndicator;
 
 /**
  * The <strong>Objectos Carbon UI</strong> main class.
@@ -27,7 +28,270 @@ import objectos.way.Css.Generator.Classes;
  * Objectos Carbon UI is an implementation of the Carbon Design System in pure
  * Java.
  */
-public final class Carbon {
+public final class Carbon extends CarbonClasses {
+
+  //
+  // Components
+  //
+
+  /**
+   * An UI component.
+   */
+  public sealed interface Component {
+
+    public sealed interface ProgressIndicator extends Component permits CarbonProgressIndicator {
+
+      public sealed interface Step extends Component permits CarbonProgressIndicator {
+
+        Step step(String title, String description);
+
+        Step step(String title, String description, String optionalLabel);
+
+        Step enabled(boolean value);
+
+        Step valid(boolean value);
+
+      }
+
+      ProgressIndicator currentIndex(int value);
+
+      ProgressIndicator vertical();
+
+      Step step(String title, String description);
+
+      Step step(String title, String description, String optionalLabel);
+
+    }
+
+    Html.ElementInstruction render();
+
+  }
+
+  /**
+   * UI component: UI shell header.
+   */
+  public sealed interface Header extends Component permits CarbonHeader {
+
+    /**
+     * UI component: mobile header navigation close button.
+     */
+    public sealed interface CloseButton extends Component permits CarbonHeaderCloseButton {
+
+      /**
+       * Sets the auxiliary description to the specified value.
+       *
+       * @param value
+       *        the new value
+       *
+       * @return a reference to this object
+       */
+      CloseButton description(String value);
+
+    }
+
+    /**
+     * UI component: mobile header navigation menu button.
+     */
+    public sealed interface MenuButton extends Component permits CarbonHeaderMenuButton {
+
+      /**
+       * Sets the auxiliary description to the specified value.
+       *
+       * @param value
+       *        the new value
+       *
+       * @return a reference to this object
+       */
+      MenuButton description(String value);
+
+    }
+
+    /**
+     * A header navigation menu item.
+     */
+    public sealed interface MenuItem {}
+
+    /**
+     * UI component: the header name.
+     */
+    public sealed interface Name extends Component permits CarbonHeaderName {
+
+      Name href(String value);
+
+      Name prefix(String value);
+
+      Name text(String value);
+
+    }
+
+    /**
+     * UI component: the header top-level navigation.
+     */
+    public sealed interface Navigation extends Component permits CarbonHeaderNavigation {
+
+      /**
+       * Adds all of the specified items to this header navigation.
+       *
+       * @param values
+       *        the items to add
+       *
+       * @return a reference to this object
+       */
+      Navigation addItems(Iterable<MenuItem> values);
+
+      /**
+       * Sets the {@code data-frame} attribute to the specified name:value pair.
+       *
+       * @param name
+       *        the name of the frame
+       * @param value
+       *        the value of the frame
+       *
+       * @return a reference to this object
+       */
+      Navigation dataFrame(String name, String value);
+
+      /**
+       * Sets the auxiliary description to the specified value.
+       *
+       * @param value
+       *        the new value
+       *
+       * @return a reference to this object
+       */
+      Navigation description(String value);
+
+      /**
+       * Use expressive type sets.
+       *
+       * @return a reference to this object
+       */
+      Navigation expressive();
+
+    }
+
+    /**
+     * Sets the auxiliary description to the specified value.
+     *
+     * @param value
+     *        the new value
+     *
+     * @return a reference to this object
+     */
+    Header description(String value);
+
+    /**
+     * Sets the close button to the specified value.
+     *
+     * @param value
+     *        the new value
+     *
+     * @return a reference to this object
+     */
+    Header closeButton(CloseButton value);
+
+    /**
+     * Sets the menu button to the specified value.
+     *
+     * @param value
+     *        the new value
+     *
+     * @return a reference to this object
+     */
+    Header menuButton(MenuButton value);
+
+    /**
+     * Sets the header name to the specified value.
+     *
+     * @param value
+     *        the new value
+     *
+     * @return a reference to this object
+     */
+    Header name(Name value);
+
+    /**
+     * Sets the header navigation to the specified value.
+     *
+     * @param value
+     *        the new value
+     *
+     * @return a reference to this object
+     */
+    Header navigation(Navigation value);
+
+    /**
+     * Sets the theme to the specified value.
+     *
+     * @param value
+     *        the new value
+     *
+     * @return a reference to this object
+     */
+    Header theme(Theme value);
+
+  }
+
+  /**
+   * Creates a new header component.
+   *
+   * @return a newly created component instance
+   */
+  public final Header header() {
+    return new CarbonHeader(tmpl);
+  }
+
+  /**
+   * Creates a new header close button component.
+   *
+   * @return a newly created component instance
+   */
+  public final Header.CloseButton headerCloseButton() {
+    return new CarbonHeaderCloseButton(tmpl);
+  }
+
+  /**
+   * Creates a new header menu button component.
+   *
+   * @return a newly created component instance
+   */
+  public final Header.MenuButton headerMenuButton() {
+    return new CarbonHeaderMenuButton(tmpl);
+  }
+
+  record CarbonHeaderMenuItem(String text, String href, boolean active) implements Header.MenuItem {}
+
+  /**
+   * Creates a new header navigation menu item with the specified values.
+   *
+   * @param text
+   *        the text contents of the menu item
+   * @param href
+   *        the {@code href} value of the menu item
+   * @param active
+   *        whether the menu item is active
+   *
+   * @return a newly created header menu item instance
+   */
+  public final Header.MenuItem headerMenuItem(String text, String href, boolean active) {
+    Check.notNull(text, "text == null");
+    Check.notNull(href, "href == null");
+
+    return new CarbonHeaderMenuItem(text, href, active);
+  }
+
+  public final Header.Name headerName() {
+    return new CarbonHeaderName(tmpl);
+  }
+
+  /**
+   * Creates a new header navigation component.
+   *
+   * @return a newly created component instance
+   */
+  public final Header.Navigation headerNavigation() {
+    return new CarbonHeaderNavigation(tmpl);
+  }
 
   public enum Icon {
 
@@ -86,24 +350,77 @@ public final class Carbon {
 
   }
 
+  /**
+   * A Carbon UI theme.
+   */
+  public sealed interface Theme extends Html.ClassName {}
+
+  private record CarbonTheme(String value) implements Theme {}
+
+  /**
+   * The {@code white} Carbon theme.
+   */
+  public static final Theme THEME_WHITE = new CarbonTheme("theme-white");
+
+  /**
+   * The {@code g10} Carbon theme.
+   */
+  public static final Theme THEME_G10 = new CarbonTheme("theme-g10");
+
+  /**
+   * The {@code g90} Carbon theme.
+   */
+  public static final Theme THEME_G90 = new CarbonTheme("theme-g90");
+
+  /**
+   * The {@code g100} Carbon theme.
+   */
+  public static final Theme THEME_G100 = new CarbonTheme("theme-g100");
+
   //
   // non-public types
   //
 
-  private static final class Builder {
+  private static final class Builder extends Web.Module {
 
-    Css.Generator.Classes classes;
+    Set<Class<?>> classes = Set.of();
 
-    public final Carbon build() {
-      return new Carbon(
-          classes != null ? classes : Css.classes()
-      );
+    private byte[] script;
+
+    public final Http.Module build() {
+      try {
+        script = Script.getBytes();
+      } catch (IOException e) {
+        throw new UncheckedIOException(e);
+      }
+
+      return this;
     }
 
-    final void classes(Classes value) {
-      Check.state(classes == null, "classes was already set");
-
+    final void classes(Set<Class<?>> value) {
       classes = value;
+    }
+
+    @Override
+    protected final void configure() {
+      route("/ui/script.js", GET(this::script));
+
+      CarbonStyles styles;
+      styles = new CarbonStyles(classes);
+
+      route("/ui/carbon.css", GET(styles));
+    }
+
+    private void script(Http.Exchange http) {
+      http.status(Http.OK);
+
+      http.dateNow();
+
+      http.header(Http.CONTENT_TYPE, "text/javascript; charset=utf-8");
+
+      http.header(Http.CONTENT_LENGTH, script.length);
+
+      http.send(script);
     }
 
   }
@@ -114,16 +431,18 @@ public final class Carbon {
 
   }
 
-  private final Css.Generator.Classes classes;
+  private final Html.TemplateBase tmpl;
 
-  private Carbon(Css.Generator.Classes classes) {
-    this.classes = classes;
+  Carbon(Html.TemplateBase tmpl) {
+    this.tmpl = tmpl;
   }
 
   /**
-   * Creates a new carbon instance with the specified configuration options.
+   * Creates a new carbon HTTP module with the specified configuration options.
+   *
+   * @return a newly created HTTP module
    */
-  public static Carbon create(Option... options) {
+  public static Http.Module create(Option... options) {
     Builder builder;
     builder = new Builder();
 
@@ -141,13 +460,13 @@ public final class Carbon {
   }
 
   public static Option classes(Class<?>... classesToScan) {
-    Classes value;
-    value = Css.classes(classesToScan);
+    Set<Class<?>> set;
+    set = Set.of(classesToScan);
 
     return new CarbonOption() {
       @Override
       final void acceptBuilder(Builder builder) {
-        builder.classes(value);
+        builder.classes(set);
       }
     };
   }
@@ -160,40 +479,8 @@ public final class Carbon {
     );
   }
 
-  public final Http.Module createHttpModule() {
-    final byte[] script;
-
-    try {
-      script = Script.getBytes();
-    } catch (IOException e) {
-      throw new UncheckedIOException(e);
-    }
-
-    return new Web.Module() {
-      @Override
-      protected final void configure() {
-        route("/ui/script.js", GET(this::script));
-        route("/ui/carbon.css", GET(new CarbonStyles(classes)));
-
-        filter(this::injectCarbon);
-      }
-
-      private void script(Http.Exchange http) {
-        http.status(Http.OK);
-
-        http.dateNow();
-
-        http.header(Http.CONTENT_TYPE, "text/javascript; charset=utf-8");
-
-        http.header(Http.CONTENT_LENGTH, script.length);
-
-        http.send(script);
-      }
-
-      private void injectCarbon(Http.Exchange http) {
-        http.set(Carbon.class, Carbon.this);
-      }
-    };
+  public final ProgressIndicator progressIndicator() {
+    return new CarbonProgressIndicator(tmpl);
   }
 
   static Script.Action joinIf(Script.Action existing, Script.Action value) {
@@ -205,6 +492,34 @@ public final class Carbon {
     } else {
       return Script.join(existing, a);
     }
+  }
+
+  static Html.ElementInstruction icon16(Html.TemplateBase tmpl, Icon icon, Html.AttributeInstruction... attributes) {
+    return icon(tmpl, icon, "1rem", attributes);
+  }
+
+  static Html.ElementInstruction icon20(Html.TemplateBase tmpl, Icon icon, Html.AttributeInstruction... attributes) {
+    return icon(tmpl, icon, "1.25rem", attributes);
+  }
+
+  static Html.ElementInstruction icon24(Html.TemplateBase tmpl, Icon icon, Html.AttributeInstruction... attributes) {
+    return icon(tmpl, icon, "1.5rem", attributes);
+  }
+
+  static Html.ElementInstruction icon32(Html.TemplateBase tmpl, Icon icon, Html.AttributeInstruction... attributes) {
+    return icon(tmpl, icon, "2rem", attributes);
+  }
+
+  private static Html.ElementInstruction icon(Html.TemplateBase tmpl, Icon icon, String size, Html.AttributeInstruction... attributes) {
+    return tmpl.svg(
+        tmpl.xmlns("http://www.w3.org/2000/svg"),
+        tmpl.fill("currentColor"),
+        tmpl.width(size), tmpl.height(size), tmpl.viewBox("0 0 32 32"),
+
+        tmpl.flatten(attributes),
+
+        tmpl.raw(icon.raw)
+    );
   }
 
 }

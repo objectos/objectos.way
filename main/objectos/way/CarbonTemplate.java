@@ -17,10 +17,14 @@ package objectos.way;
 
 abstract class CarbonTemplate extends Html.Template implements Web.Action {
 
+  protected final Carbon carbon;
+
   protected final Http.Exchange http;
 
   protected CarbonTemplate(Http.Exchange http) {
     this.http = http;
+
+    carbon = new Carbon(this);
   }
 
   @Override

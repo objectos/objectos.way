@@ -39,14 +39,7 @@ public final class Css {
    * Generates a style sheet by scanning Java class files for predefined CSS
    * utility class names.
    */
-  public sealed interface Generator permits CssGenerator {
-
-    /**
-     * The set of classes to scan.
-     */
-    public sealed interface Classes {}
-
-  }
+  public sealed interface Generator permits CssGenerator {}
 
   /**
    * A style sheet generation option.
@@ -146,14 +139,9 @@ public final class Css {
 
   }
 
-  private non-sealed static abstract class GeneratorOption implements Generator.Classes, Option {
+  private non-sealed static abstract class GeneratorOption implements Option {
 
     GeneratorOption() {}
-
-    public static GeneratorOption cast(Generator.Classes o) {
-      // this cast is safe as Css.Generator.Classes is sealed
-      return (GeneratorOption) o;
-    }
 
     public static GeneratorOption cast(Option o) {
       // this cast is safe as Css.Option is sealed
@@ -674,17 +662,12 @@ public final class Css {
 
   private Css() {}
 
-  public static String generateCss(Generator.Classes classes, Option... options) {
+  public static String generateCss(Option... options) {
     int len;
     len = options.length; // implicit null-check
 
     CssConfig config;
     config = new CssConfig();
-
-    GeneratorOption classesOption;
-    classesOption = GeneratorOption.cast(classes);
-
-    classesOption.acceptCssConfig(config);
 
     for (int i = 0; i < len; i++) {
       Option o;
@@ -704,9 +687,9 @@ public final class Css {
     return round.generate();
   }
 
-  public static StyleSheet generateStyleSheet(Generator.Classes classes, Option... options) {
+  public static StyleSheet generateStyleSheet(Option... options) {
     String css;
-    css = generateCss(classes, options);
+    css = generateCss(options);
 
     return new ThisStyleSheet(css);
   }
@@ -736,9 +719,21 @@ public final class Css {
     };
   }
 
-  public static Generator.Classes classes(Class<?>... values) {
+  public static Option classes(Class<?>... values) {
     Set<Class<?>> set;
     set = Set.of(values);
+
+    return new GeneratorOption() {
+      @Override
+      final void acceptCssConfig(CssConfig config) {
+        config.classes(set);
+      }
+    };
+  }
+
+  public static Option classes(Set<Class<?>> values) {
+    Set<Class<?>> set;
+    set = Set.copyOf(values);
 
     return new GeneratorOption() {
       @Override
