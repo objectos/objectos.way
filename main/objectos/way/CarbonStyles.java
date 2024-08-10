@@ -30,12 +30,18 @@ final class CarbonStyles implements Http.Handler {
         Css.classes(classes),
 
         Css.classes(
+            CarbonContent.class,
             CarbonHeader.class,
             CarbonHeaderCloseButton.class,
             CarbonHeaderMenuButton.class,
+            CarbonHeaderMenuItem.class,
             CarbonHeaderName.class,
             CarbonHeaderNavigation.class,
             CarbonProgressIndicator.class,
+            CarbonShell.class,
+            CarbonShellContent.class,
+            CarbonSideNav.class,
+            CarbonSideNavMenuItem.class,
             CarbonClasses.class
         ),
 

@@ -148,6 +148,12 @@ public final class Html {
 
   }
 
+  public interface ElementComponent {
+
+    Html.Instruction render();
+
+  }
+
   public non-sealed interface RawText extends Node {
 
     String value();
@@ -524,10 +530,6 @@ public final class Html {
      */
     protected abstract void render() throws Exception;
 
-    protected final Html.Id nextId() {
-      return $compiler().nextId();
-    }
-
     private void tryToRender() {
       try {
         preRender();
@@ -890,6 +892,10 @@ public final class Html {
 
     protected final ElementInstruction nbsp() {
       return raw("&nbsp;");
+    }
+
+    protected final Html.Id nextId() {
+      return $compiler().nextId();
     }
 
     /**

@@ -31,7 +31,7 @@ final class UiStyles implements Http.Handler {
 
   private StyleSheet generateStyleSheet() {
     return Css.generateStyleSheet(
-        Css.classes(UiTemplate.class, ShellPage.class),
+        Css.classes(UiTemplate.class),
 
         Css.noteSink(noteSink),
 

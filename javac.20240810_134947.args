@@ -1,0 +1,14 @@
+-g
+-d
+work/main
+-Xlint:none
+-Xpkginfo:always
+--module-path
+@work/compile-path
+--module-version
+0.20-SNAPSHOT
+--release
+21
+--source-path
+main
+@work/compile-sources

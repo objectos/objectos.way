@@ -15,10 +15,7 @@
  */
 package objectos.way;
 
-import objectos.lang.object.Check;
-import objectos.way.Carbon.Header.Name;
-
-final class CarbonHeaderName implements Carbon.Header.Name {
+final class CarbonHeaderName implements Carbon.HeaderName {
 
   static final Html.ClassName HEADER_NAME = Html.className("""
   flex h-full select-none items-center
@@ -35,43 +32,30 @@ final class CarbonHeaderName implements Carbon.Header.Name {
   font-400
   """);
 
+  private CarbonHeaderCloseButton closeButton;
+
+  String href;
+
+  String prefix;
+
+  String text;
+
   private final Html.TemplateBase tmpl;
-
-  private String href;
-
-  private String prefix;
-
-  private String text;
 
   CarbonHeaderName(Html.TemplateBase tmpl) {
     this.tmpl = tmpl;
   }
 
   @Override
-  public final Name href(String value) {
-    href = Check.notNull(value, "value == null");
-
-    return this;
-  }
-
-  @Override
-  public final Name prefix(String value) {
-    prefix = Check.notNull(value, "value == null");
-
-    return this;
-  }
-
-  @Override
-  public final Name text(String value) {
-    text = Check.notNull(value, "value == null");
-
-    return this;
-  }
-
-  @Override
   public final Html.ElementInstruction render() {
+    Script.Action closeAction;
+    closeAction = closeButton != null ? closeButton.action() : null;
+
     return tmpl.a(
         HEADER_NAME,
+
+        closeAction != null ? tmpl.dataOnClick(closeAction) : tmpl.noop(),
+        closeAction != null ? tmpl.dataOnClick(Script.location(href)) : tmpl.noop(),
 
         href != null ? tmpl.href(href) : tmpl.noop(),
 
@@ -80,6 +64,10 @@ final class CarbonHeaderName implements Carbon.Header.Name {
 
         text != null ? tmpl.t(text) : tmpl.noop()
     );
+  }
+
+  final void accept(CarbonHeaderCloseButton closeButton) {
+    this.closeButton = closeButton;
   }
 
 }

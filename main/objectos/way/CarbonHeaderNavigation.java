@@ -15,13 +15,36 @@
  */
 package objectos.way;
 
-import objectos.lang.object.Check;
+import java.util.List;
 import objectos.util.list.GrowableList;
-import objectos.way.Carbon.CarbonHeaderMenuItem;
-import objectos.way.Carbon.Header.MenuItem;
-import objectos.way.Carbon.Header.Navigation;
+import objectos.way.Carbon.CarbonDataFrame;
+import objectos.way.Carbon.CarbonDescription;
 
-final class CarbonHeaderNavigation implements Carbon.Header.Navigation {
+final class CarbonHeaderNavigation implements Carbon.HeaderNavigation {
+
+  private CarbonDataFrame dataFrame;
+
+  private String description;
+
+  private boolean expressive;
+
+  private final GrowableList<CarbonHeaderMenuItem> items = new GrowableList<>();
+
+  private final Html.TemplateBase tmpl;
+
+  CarbonHeaderNavigation(Html.TemplateBase tmpl, Carbon.HeaderNavigation.Value[] values) {
+    this.tmpl = tmpl;
+
+    for (var value : values) {
+      switch (value) {
+        case CarbonDataFrame o -> dataFrame = o;
+
+        case CarbonDescription o -> description = o.value();
+
+        case CarbonHeaderMenuItem o -> items.add(o);
+      }
+    }
+  }
 
   static final Html.ClassName HEADER_NAVIGATION = Html.className("""
   relative hidden h-full pl-16px
@@ -39,109 +62,12 @@ final class CarbonHeaderNavigation implements Carbon.Header.Navigation {
   text-text-secondary
   """);
 
-  private static final Html.ClassName __HEADER_NAV_LINK = Html.className("""
-  relative flex h-full select-none items-center
-  border-2 border-transparent
-  bg-background
-  px-16px
-  transition-colors duration-100
-  active:bg-background-active active:text-text-primary
-  focus:border-focus focus:outline-none
-  hover:bg-background-hover hover:text-text-primary
-  """);
-
-  private static final Html.ClassName __HEADER_NAV_LINK_ACTIVE = Html.className("""
-  text-text-primary
-  after:absolute after:-bottom-2px after:-left-2px after:-right-2px
-  after:block after:border-b-3 after:border-b-border-interactive after:content-empty
-  """);
-
-  private static final Html.ClassName __HEADER_NAV_LINK_INACTIVE = Html.className("""
-  text-text-secondary
-  """);
-
-  private static final Html.ClassName __HEADER_NAV_LINK_PRODUCTIVE = Html.className("""
-  text-14px leading-18px font-400 tracking-0px
-  """);
-
-  static final Html.ClassName HEADER_NAV_LINK_ACTIVE = Html.className(
-      __HEADER_NAV_LINK, __HEADER_NAV_LINK_ACTIVE, __HEADER_NAV_LINK_PRODUCTIVE
-  );
-
-  static final Html.ClassName HEADER_NAV_LINK_INACTIVE = Html.className(
-      __HEADER_NAV_LINK, __HEADER_NAV_LINK_INACTIVE, __HEADER_NAV_LINK_PRODUCTIVE
-  );
-
-  static final Html.ClassName HEADER_NAV_LINK_ACTIVE_EXPRESSIVE = Html.className(
-      __HEADER_NAV_LINK, __HEADER_NAV_LINK_ACTIVE, CarbonClasses.BODY_COMPACT_02
-  );
-
-  static final Html.ClassName HEADER_NAV_LINK_INACTIVE_EXPRESSIVE = Html.className(
-      __HEADER_NAV_LINK, __HEADER_NAV_LINK_INACTIVE, CarbonClasses.BODY_COMPACT_02
-  );
-
-  private String dataFrameName;
-  private String dataFrameValue;
-
-  private String description;
-
-  private boolean expressive;
-
-  private final GrowableList<CarbonHeaderMenuItem> items = new GrowableList<>();
-
-  private final Html.TemplateBase tmpl;
-
-  CarbonHeaderNavigation(Html.TemplateBase tmpl) {
-    this.tmpl = tmpl;
-  }
-
-  @Override
-  public final Navigation addItems(Iterable<MenuItem> values) {
-    for (var value : values) {
-      MenuItem o;
-      o = Check.notNull(value, "value == null");
-
-      CarbonHeaderMenuItem item;
-      item = (CarbonHeaderMenuItem) o;
-
-      items.add(item);
-    }
-
-    return this;
-  }
-
-  @Override
-  public final Navigation dataFrame(String name, String value) {
-    dataFrameName = Check.notNull(name, "name == null");
-    dataFrameValue = Check.notNull(value, "value == null");
-
-    return this;
-  }
-
-  @Override
-  public final Navigation description(String value) {
-    description = Check.notNull(value, "value == null");
-
-    return this;
-  }
-
-  @Override
-  public final Navigation expressive() {
-    expressive = true;
-
-    return this;
-  }
-
   @Override
   public final Html.ElementInstruction render() {
     return tmpl.nav(
         HEADER_NAVIGATION,
 
-        dataFrameName != null
-            ? dataFrameValue != null
-                ? tmpl.dataFrame(dataFrameName, dataFrameValue)
-                : tmpl.dataFrame(dataFrameName)
-            : tmpl.noop(),
+        dataFrame != null ? dataFrame.render(tmpl) : tmpl.noop(),
 
         description != null ? tmpl.ariaLabel(description) : tmpl.noop(),
 
@@ -155,20 +81,12 @@ final class CarbonHeaderNavigation implements Carbon.Header.Navigation {
 
   private void renderItems() {
     for (var item : items) {
-      tmpl.li(
-          tmpl.a(
-              item.active()
-                  ? expressive ? HEADER_NAV_LINK_ACTIVE_EXPRESSIVE : HEADER_NAV_LINK_ACTIVE
-                  : expressive ? HEADER_NAV_LINK_INACTIVE_EXPRESSIVE : HEADER_NAV_LINK_INACTIVE,
-
-              tmpl.href(item.href()),
-
-              tmpl.tabindex("0"),
-
-              tmpl.span(item.text())
-          )
-      );
+      item.renderHeader(expressive);
     }
+  }
+
+  final List<CarbonHeaderMenuItem> items() {
+    return items;
   }
 
 }

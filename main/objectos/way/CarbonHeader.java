@@ -15,7 +15,8 @@
  */
 package objectos.way;
 
-import objectos.lang.object.Check;
+import java.util.List;
+import objectos.way.Carbon.CarbonDescription;
 
 final class CarbonHeader implements Carbon.Header {
 
@@ -30,60 +31,34 @@ final class CarbonHeader implements Carbon.Header {
 
   private String description;
 
-  private CloseButton closeButton;
+  private CarbonHeaderCloseButton closeButton;
 
-  private MenuButton menuButton;
+  private CarbonHeaderMenuButton menuButton;
 
-  private Name name;
+  private CarbonHeaderName name;
 
-  private Navigation navigation;
+  private CarbonHeaderNavigation navigation;
 
   private Carbon.Theme theme;
 
-  CarbonHeader(Html.TemplateBase tmpl) {
+  CarbonHeader(Html.TemplateBase tmpl, Carbon.Header.Value[] values) {
     this.tmpl = tmpl;
-  }
 
-  @Override
-  public final Carbon.Header description(String value) {
-    description = Check.notNull(value, "value == null");
+    for (var value : values) {
+      switch (value) {
+        case CarbonDescription o -> description = o.value();
 
-    return this;
-  }
+        case CarbonHeaderCloseButton o -> closeButton = o;
 
-  @Override
-  public final Carbon.Header closeButton(CloseButton value) {
-    closeButton = Check.notNull(value, "value == null");
+        case CarbonHeaderMenuButton o -> menuButton = o;
 
-    return this;
-  }
+        case CarbonHeaderName o -> name = o;
 
-  @Override
-  public final Carbon.Header menuButton(MenuButton value) {
-    menuButton = Check.notNull(value, "value == null");
+        case CarbonHeaderNavigation o -> navigation = o;
 
-    return this;
-  }
-
-  @Override
-  public final Carbon.Header name(Name value) {
-    name = Check.notNull(value, "value == null");
-
-    return this;
-  }
-
-  @Override
-  public final Carbon.Header navigation(Navigation value) {
-    navigation = Check.notNull(value, "value == null");
-
-    return this;
-  }
-
-  @Override
-  public final Carbon.Header theme(Carbon.Theme value) {
-    theme = Check.notNull(value, "value == null");
-
-    return this;
+        case Carbon.Theme o -> theme = o;
+      }
+    }
   }
 
   @Override
@@ -103,6 +78,28 @@ final class CarbonHeader implements Carbon.Header {
 
         navigation != null ? navigation.render() : tmpl.noop()
     );
+  }
+
+  final void accept(CarbonSideNav sideNavigation) {
+    if (closeButton != null) {
+      closeButton.accept(menuButton, sideNavigation);
+    }
+
+    if (menuButton != null) {
+      menuButton.accept(closeButton, sideNavigation);
+    }
+
+    if (name != null) {
+      name.accept(closeButton);
+    }
+  }
+
+  final Script.Action closeButtonAction() {
+    return closeButton != null ? closeButton.action() : null;
+  }
+
+  final List<CarbonHeaderMenuItem> navigationItems() {
+    return navigation != null ? navigation.items() : null;
   }
 
 }

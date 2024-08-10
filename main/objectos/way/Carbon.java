@@ -18,6 +18,7 @@ package objectos.way;
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.util.Set;
+import java.util.function.Predicate;
 import objectos.lang.object.Check;
 import objectos.way.Carbon.Component.ProgressIndicator;
 
@@ -31,13 +32,13 @@ import objectos.way.Carbon.Component.ProgressIndicator;
 public final class Carbon extends CarbonClasses {
 
   //
-  // Components
+  // Components and attributes
   //
 
   /**
    * An UI component.
    */
-  public sealed interface Component {
+  public sealed interface Component extends Html.ElementComponent {
 
     public sealed interface ProgressIndicator extends Component permits CarbonProgressIndicator {
 
@@ -63,173 +64,93 @@ public final class Carbon extends CarbonClasses {
 
     }
 
+    @Override
     Html.ElementInstruction render();
 
   }
 
   /**
+   * UI component:
+   */
+  public sealed interface Content extends Html.ElementComponent, ShellContent.Value permits CarbonContent {}
+
+  public final Content content(Html.FragmentLambda value) {
+    return new CarbonContent(
+        tmpl,
+
+        Check.notNull(value, "value == null")
+    );
+  }
+
+  /**
+   * The {@code data-frame} attribute.
+   */
+  public sealed interface DataFrame
+      extends
+      HeaderNavigation.Value,
+      ShellContent.Value,
+      SideNav.Value {}
+
+  record CarbonDataFrame(String name, String value) implements DataFrame {
+    final Html.AttributeInstruction render(Html.TemplateBase tmpl) {
+      return value != null ? tmpl.dataFrame(name, value) : tmpl.dataFrame(name);
+    }
+  }
+
+  /**
+   * Creates a new {@code data-frame} attribute with the specified name and
+   * value.
+   *
+   * @param name
+   *        the frame name
+   * @param value
+   *        the frame value
+   *
+   * @return a newly constructed {@code data-frame} attribute
+   */
+  public final DataFrame dataFrame(String name, String value) {
+    return new CarbonDataFrame(
+        Check.notNull(name, "name == null"),
+        Check.notNull(value, "value == null")
+    );
+  }
+
+  /**
+   * An auxiliary description of an UI component. It might be rendered as one or
+   * more HTML attributes such as {@code aria-label} or {@code title}.
+   */
+  public sealed interface Description
+      extends
+      Header.Value,
+      HeaderCloseButton.Value,
+      HeaderMenuButton.Value,
+      HeaderNavigation.Value,
+      SideNav.Value {}
+
+  record CarbonDescription(String value) implements Description {}
+
+  /**
+   * Creates a new description instance with the specified value.
+   *
+   * @param value
+   *        the description value
+   *
+   * @return a newly created description instance
+   */
+  public final Description description(String value) {
+    return new CarbonDescription(
+        Check.notNull(value, "value == null")
+    );
+  }
+
+  /**
    * UI component: UI shell header.
    */
-  public sealed interface Header extends Component permits CarbonHeader {
-
+  public sealed interface Header extends Html.ElementComponent, Shell.Value permits CarbonHeader {
     /**
-     * UI component: mobile header navigation close button.
+     * An UI shell header rendering value.
      */
-    public sealed interface CloseButton extends Component permits CarbonHeaderCloseButton {
-
-      /**
-       * Sets the auxiliary description to the specified value.
-       *
-       * @param value
-       *        the new value
-       *
-       * @return a reference to this object
-       */
-      CloseButton description(String value);
-
-    }
-
-    /**
-     * UI component: mobile header navigation menu button.
-     */
-    public sealed interface MenuButton extends Component permits CarbonHeaderMenuButton {
-
-      /**
-       * Sets the auxiliary description to the specified value.
-       *
-       * @param value
-       *        the new value
-       *
-       * @return a reference to this object
-       */
-      MenuButton description(String value);
-
-    }
-
-    /**
-     * A header navigation menu item.
-     */
-    public sealed interface MenuItem {}
-
-    /**
-     * UI component: the header name.
-     */
-    public sealed interface Name extends Component permits CarbonHeaderName {
-
-      Name href(String value);
-
-      Name prefix(String value);
-
-      Name text(String value);
-
-    }
-
-    /**
-     * UI component: the header top-level navigation.
-     */
-    public sealed interface Navigation extends Component permits CarbonHeaderNavigation {
-
-      /**
-       * Adds all of the specified items to this header navigation.
-       *
-       * @param values
-       *        the items to add
-       *
-       * @return a reference to this object
-       */
-      Navigation addItems(Iterable<MenuItem> values);
-
-      /**
-       * Sets the {@code data-frame} attribute to the specified name:value pair.
-       *
-       * @param name
-       *        the name of the frame
-       * @param value
-       *        the value of the frame
-       *
-       * @return a reference to this object
-       */
-      Navigation dataFrame(String name, String value);
-
-      /**
-       * Sets the auxiliary description to the specified value.
-       *
-       * @param value
-       *        the new value
-       *
-       * @return a reference to this object
-       */
-      Navigation description(String value);
-
-      /**
-       * Use expressive type sets.
-       *
-       * @return a reference to this object
-       */
-      Navigation expressive();
-
-    }
-
-    /**
-     * Sets the auxiliary description to the specified value.
-     *
-     * @param value
-     *        the new value
-     *
-     * @return a reference to this object
-     */
-    Header description(String value);
-
-    /**
-     * Sets the close button to the specified value.
-     *
-     * @param value
-     *        the new value
-     *
-     * @return a reference to this object
-     */
-    Header closeButton(CloseButton value);
-
-    /**
-     * Sets the menu button to the specified value.
-     *
-     * @param value
-     *        the new value
-     *
-     * @return a reference to this object
-     */
-    Header menuButton(MenuButton value);
-
-    /**
-     * Sets the header name to the specified value.
-     *
-     * @param value
-     *        the new value
-     *
-     * @return a reference to this object
-     */
-    Header name(Name value);
-
-    /**
-     * Sets the header navigation to the specified value.
-     *
-     * @param value
-     *        the new value
-     *
-     * @return a reference to this object
-     */
-    Header navigation(Navigation value);
-
-    /**
-     * Sets the theme to the specified value.
-     *
-     * @param value
-     *        the new value
-     *
-     * @return a reference to this object
-     */
-    Header theme(Theme value);
-
+    public sealed interface Value {}
   }
 
   /**
@@ -237,51 +158,134 @@ public final class Carbon extends CarbonClasses {
    *
    * @return a newly created component instance
    */
-  public final Header header() {
-    return new CarbonHeader(tmpl);
+  public final Header header(Header.Value... values) {
+    return new CarbonHeader(tmpl, values);
   }
 
   /**
-   * Creates a new header close button component.
-   *
-   * @return a newly created component instance
+   * UI component: mobile header navigation close button.
    */
-  public final Header.CloseButton headerCloseButton() {
-    return new CarbonHeaderCloseButton(tmpl);
+  public sealed interface HeaderCloseButton extends Html.ElementComponent, Header.Value permits CarbonHeaderCloseButton {
+    /**
+     * A close button rendering value.
+     */
+    public sealed interface Value {}
   }
 
   /**
-   * Creates a new header menu button component.
+   * Creates a new header close button component with the specified auxiliary
+   * description.
+   *
+   * @param description
+   *        the button auxiliary description
    *
    * @return a newly created component instance
    */
-  public final Header.MenuButton headerMenuButton() {
-    return new CarbonHeaderMenuButton(tmpl);
+  public final HeaderCloseButton headerCloseButton(String description) {
+    return headerCloseButton(description(description));
   }
 
-  record CarbonHeaderMenuItem(String text, String href, boolean active) implements Header.MenuItem {}
+  /**
+   * Creates a new header close button component with the specified nested
+   * values.
+   *
+   * @param values
+   *        the nested values
+   *
+   * @return a newly created component instance
+   */
+  public final HeaderCloseButton headerCloseButton(HeaderCloseButton.Value... values) {
+    return new CarbonHeaderCloseButton(tmpl, values);
+  }
+
+  /**
+   * UI component: mobile header navigation menu button.
+   */
+  public sealed interface HeaderMenuButton extends Html.ElementComponent, Header.Value permits CarbonHeaderMenuButton {
+    /**
+     * A menu button rendering value.
+     */
+    public sealed interface Value {}
+  }
+
+  /**
+   * Creates a new header menu button component with the specified auxiliary
+   * description.
+   *
+   * @param description
+   *        the button auxiliary description
+   *
+   * @return a newly created component instance
+   */
+  public final HeaderMenuButton headerMenuButton(String description) {
+    return headerMenuButton(description(description));
+  }
+
+  /**
+   * Creates a new header menu button component with the specified nested
+   * values.
+   *
+   * @param values
+   *        the nested values
+   *
+   * @return a newly created component instance
+   */
+  public final HeaderMenuButton headerMenuButton(HeaderMenuButton.Value... values) {
+    return new CarbonHeaderMenuButton(tmpl, values);
+  }
+
+  /**
+   * UI component: a header navigation menu item.
+   */
+  public sealed interface HeaderMenuItem extends HeaderNavigation.Value permits CarbonHeaderMenuItem {}
 
   /**
    * Creates a new header navigation menu item with the specified values.
    *
-   * @param text
-   *        the text contents of the menu item
-   * @param href
-   *        the {@code href} value of the menu item
-   * @param active
-   *        whether the menu item is active
+   * @param text the menu item text
+   * @param href the menu {@code href} value
+   * @param active if this menu item is active or not
    *
-   * @return a newly created header menu item instance
+   * @return a newly created component instance
    */
-  public final Header.MenuItem headerMenuItem(String text, String href, boolean active) {
+  public final HeaderMenuItem headerMenuItem(String text, String href, boolean active) {
     Check.notNull(text, "text == null");
     Check.notNull(href, "href == null");
 
-    return new CarbonHeaderMenuItem(text, href, active);
+    return new CarbonHeaderMenuItem(tmpl, text, href, active);
   }
 
-  public final Header.Name headerName() {
-    return new CarbonHeaderName(tmpl);
+  /**
+   * UI component: the header name.
+   */
+  public sealed interface HeaderName extends Html.ElementComponent, Header.Value permits CarbonHeaderName {}
+
+  /**
+   * Creates a new header name component.
+   *
+   * @return a newly created component instance
+   */
+  public final HeaderName headerName(String prefix, String text, String href) {
+    CarbonHeaderName o;
+    o = new CarbonHeaderName(tmpl);
+
+    o.prefix = Check.notNull(prefix, "prefix == null");
+
+    o.text = Check.notNull(text, "text == null");
+
+    o.href = Check.notNull(href, "href == null");
+
+    return o;
+  }
+
+  /**
+   * UI component: the header top-level navigation.
+   */
+  public sealed interface HeaderNavigation extends Html.ElementComponent, Header.Value permits CarbonHeaderNavigation {
+    /**
+     * A header top-level navigation rendering value.
+     */
+    public sealed interface Value {}
   }
 
   /**
@@ -289,8 +293,122 @@ public final class Carbon extends CarbonClasses {
    *
    * @return a newly created component instance
    */
-  public final Header.Navigation headerNavigation() {
-    return new CarbonHeaderNavigation(tmpl);
+  public final HeaderNavigation headerNavigation(HeaderNavigation.Value... values) {
+    return new CarbonHeaderNavigation(tmpl, values);
+  }
+
+  /**
+   * The {@code id} attribute.
+   */
+  public sealed interface Id
+      extends
+      HeaderCloseButton.Value,
+      HeaderMenuButton.Value,
+      SideNav.Value {}
+
+  record CarbonId(Html.Id value) implements Id {}
+
+  /**
+   * Creates a new {@code id} attribute with the specified value.
+   *
+   * @param value
+   *        the id value
+   *
+   * @return a newly constructed attribute
+   */
+  public final Id id(String value) {
+    return new CarbonId(
+        Html.id(value)
+    );
+  }
+
+  /**
+   * Indicates if an UI component is persistent.
+   */
+  public sealed interface Persistent extends SideNav.Value {}
+
+  record CarbonPersistent(boolean value) implements Persistent {
+    static final Persistent TRUE = new CarbonPersistent(true);
+  }
+
+  /**
+   * Indicates that an UI component is persistent.
+   *
+   * @return an object indicating that an UI component is persistent
+   */
+  public final Persistent persistent() {
+    return CarbonPersistent.TRUE;
+  }
+
+  /**
+   * UI component: the top-level component of a Carbon web page.
+   */
+  public sealed interface Shell permits CarbonShell {
+    /**
+     * A shell rendering value.
+     */
+    public sealed interface Value {}
+  }
+
+  /**
+   * Renders an UI shell with the specified values.
+   */
+  public final void shell(Shell.Value... values) {
+    CarbonShell shell;
+    shell = new CarbonShell(tmpl, values);
+
+    shell.render();
+  }
+
+  /**
+   * UI component: the main content of the UI shell.
+   */
+  public sealed interface ShellContent extends Html.ElementComponent, Shell.Value permits CarbonShellContent {
+    /**
+     * A main content rendering value.
+     */
+    public sealed interface Value {}
+  }
+
+  public final ShellContent shellContent(ShellContent.Value... values) {
+    return new CarbonShellContent(tmpl, values);
+  }
+
+  /**
+   * UI component: application side navigation.
+   */
+  public sealed interface SideNav extends Html.ElementComponent, Shell.Value permits CarbonSideNav {
+    /**
+     * An application side navigation rendering value.
+     */
+    public sealed interface Value {}
+  }
+
+  public final SideNav sideNav(SideNav.Value... values) {
+    return new CarbonSideNav(tmpl, values);
+  }
+
+  public sealed interface SideNavMenuItem extends SideNav.Value permits CarbonSideNavMenuItem {}
+
+  /**
+   * Creates a new side navigation menu item with the specified values.
+   *
+   * @param text the menu item text
+   * @param href the menu {@code href} value
+   * @param activePredicate returns {@code true} if this item is active
+   *        based on the specified {@code href} value; returns {@code false}
+   *        otherwise
+   *
+   * @return a newly created component instance
+   */
+  public final SideNavMenuItem sideNavMenuItem(String text, String href, Predicate<String> activePredicate) {
+    Check.notNull(text, "text == null");
+    Check.notNull(href, "href == null");
+
+    boolean active;
+    active = activePredicate.test(href);
+
+    return new CarbonSideNavMenuItem(tmpl, text, href, active);
   }
 
   public enum Icon {
@@ -353,7 +471,12 @@ public final class Carbon extends CarbonClasses {
   /**
    * A Carbon UI theme.
    */
-  public sealed interface Theme extends Html.ClassName {}
+  public sealed interface Theme
+      extends
+      Html.ClassName,
+      Header.Value,
+      Shell.Value,
+      SideNav.Value {}
 
   private record CarbonTheme(String value) implements Theme {}
 
@@ -520,6 +643,10 @@ public final class Carbon extends CarbonClasses {
 
         tmpl.raw(icon.raw)
     );
+  }
+
+  static Html.Instruction render(Html.TemplateBase tmpl, Html.ElementComponent component) {
+    return component != null ? component.render() : tmpl.noop();
   }
 
 }

@@ -15,32 +15,44 @@
  */
 package objectos.way;
 
-import objectos.lang.object.Check;
+import objectos.way.Carbon.CarbonDescription;
+import objectos.way.Carbon.CarbonId;
 
-final class CarbonHeaderCloseButton implements Carbon.Header.CloseButton {
+final class CarbonHeaderCloseButton implements Carbon.HeaderCloseButton {
 
   static final Html.ClassName HEADER_CLOSE_BUTTON = Html.className(
       CarbonHeaderMenuButton.BASE, "hidden"
   );
 
+  private Script.Action action;
+
   private String description;
+
+  private final Html.Id id;
 
   private final Html.TemplateBase tmpl;
 
-  CarbonHeaderCloseButton(Html.TemplateBase tmpl) {
+  CarbonHeaderCloseButton(Html.TemplateBase tmpl, Carbon.HeaderCloseButton.Value[] values) {
     this.tmpl = tmpl;
-  }
 
-  @Override
-  public final Carbon.Header.CloseButton description(String value) {
-    description = Check.notNull(value, "value == null");
+    Html.Id id = null;
 
-    return this;
+    for (var value : values) { // implicit null-check
+      switch (value) {
+        case CarbonDescription o -> description = o.value();
+
+        case CarbonId o -> id = o.value();
+      }
+    }
+
+    this.id = id != null ? id : tmpl.nextId();
   }
 
   @Override
   public final Html.ElementInstruction render() {
     return tmpl.button(
+        id,
+
         HEADER_CLOSE_BUTTON,
 
         description != null ? tmpl.ariaLabel(description) : tmpl.noop(),
@@ -49,12 +61,34 @@ final class CarbonHeaderCloseButton implements Carbon.Header.CloseButton {
 
         tmpl.type("button"),
 
+        action != null ? tmpl.dataOnClick(action) : tmpl.noop(),
+
         Carbon.icon20(
             tmpl, Carbon.Icon.CLOSE,
             tmpl.className("fill-icon-primary"),
             tmpl.ariaHidden("true")
         )
     );
+  }
+
+  final void accept(CarbonHeaderMenuButton menuButton, CarbonSideNav sideNavigation) {
+    action = Script.actions(
+        hideAction(),
+        sideNavigation != null ? sideNavigation.hideAction() : Script.noop(),
+        menuButton != null ? menuButton.showAction() : Script.noop()
+    );
+  }
+
+  final Script.Action action() {
+    return action;
+  }
+
+  final Script.Action hideAction() {
+    return Script.replaceClass(id, "hidden", "flex", true);
+  }
+
+  final Script.Action showAction() {
+    return Script.replaceClass(id, "hidden", "flex");
   }
 
 }

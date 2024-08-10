@@ -13,22 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package testing.site.ui;
+package objectos.way;
 
-import objectos.way.Http;
-import testing.zite.TestingSiteInjector;
+import objectos.way.Carbon.Content;
 
-public final class UiHttpModule extends Http.Module {
+final class CarbonContent implements Content {
 
-  private final TestingSiteInjector injector;
+  private final Html.TemplateBase tmpl;
 
-  public UiHttpModule(TestingSiteInjector injector) {
-    this.injector = injector;
+  private final Html.FragmentLambda fragment;
+
+  CarbonContent(Html.TemplateBase tmpl, Html.FragmentLambda fragment) {
+    this.tmpl = tmpl;
+
+    this.fragment = fragment;
   }
 
   @Override
-  protected final void configure() {
-    route("/ui/styles.css", factory(UiStyles::new, injector));
+  public final Html.Instruction render() {
+    return tmpl.include(fragment);
   }
 
 }

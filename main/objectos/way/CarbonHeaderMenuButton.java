@@ -15,9 +15,10 @@
  */
 package objectos.way;
 
-import objectos.lang.object.Check;
+import objectos.way.Carbon.CarbonDescription;
+import objectos.way.Carbon.CarbonId;
 
-final class CarbonHeaderMenuButton implements Carbon.Header.MenuButton {
+final class CarbonHeaderMenuButton implements Carbon.HeaderMenuButton {
 
   static final Html.ClassName BASE = Html.className("""
   cursor-pointer appearance-none
@@ -39,24 +40,35 @@ final class CarbonHeaderMenuButton implements Carbon.Header.MenuButton {
       "fill-primary"
   );
 
+  private Script.Action dataOnClick;
+
   private String description;
+
+  private final Html.Id id;
 
   private final Html.TemplateBase tmpl;
 
-  CarbonHeaderMenuButton(Html.TemplateBase tmpl) {
+  CarbonHeaderMenuButton(Html.TemplateBase tmpl, Carbon.HeaderMenuButton.Value[] values) {
     this.tmpl = tmpl;
-  }
 
-  @Override
-  public final Carbon.Header.MenuButton description(String value) {
-    description = Check.notNull(value, "value == null");
+    Html.Id id = null;
 
-    return this;
+    for (var value : values) {
+      switch (value) {
+        case CarbonDescription o -> description = o.value();
+
+        case CarbonId o -> id = o.value();
+      }
+    }
+
+    this.id = id != null ? id : tmpl.nextId();
   }
 
   @Override
   public final Html.ElementInstruction render() {
     return tmpl.button(
+        id != null ? id : tmpl.nextId(),
+
         HEADER_MENU_BUTTON,
 
         description != null ? tmpl.ariaLabel(description) : tmpl.noop(),
@@ -65,12 +77,30 @@ final class CarbonHeaderMenuButton implements Carbon.Header.MenuButton {
 
         tmpl.type("button"),
 
+        dataOnClick != null ? tmpl.dataOnClick(dataOnClick) : tmpl.noop(),
+
         Carbon.icon20(
             tmpl, Carbon.Icon.MENU,
             tmpl.className("fill-icon-primary"),
             tmpl.ariaHidden("true")
         )
     );
+  }
+
+  final void accept(CarbonHeaderCloseButton closeButton, CarbonSideNav sideNavigation) {
+    dataOnClick = Script.actions(
+        hideAction(),
+        closeButton != null ? closeButton.showAction() : Script.noop(),
+        sideNavigation != null ? sideNavigation.showAction() : Script.noop()
+    );
+  }
+
+  final Script.Action hideAction() {
+    return Script.replaceClass(id, "hidden", "flex", true);
+  }
+
+  final Script.Action showAction() {
+    return Script.replaceClass(id, "hidden", "flex");
   }
 
 }
