@@ -51,6 +51,10 @@ final class CarbonShell implements Carbon.Shell {
     if (sideNavigation != null) {
       sideNavigation.accept(header);
     }
+
+    if (content != null) {
+      content.accept(header, sideNavigation);
+    }
   }
 
   public final void render() {

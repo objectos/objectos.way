@@ -600,8 +600,6 @@ final class CarbonStyles implements Http.Handler {
 
         componentsGrid(),
 
-        componentsHeader(),
-
         componentsLink(),
 
         componentsModal(),
@@ -609,8 +607,6 @@ final class CarbonStyles implements Http.Handler {
         componentsOverlay(),
 
         componentsPageHeader(),
-
-        componentsSideNav(),
 
         componentsTearsheet(),
 
@@ -1223,112 +1219,6 @@ final class CarbonStyles implements Http.Handler {
     """);
   }
 
-  private Css.Option componentsHeader() {
-    return Css.components("""
-    # header
-    fixed top-0px right-0px left-0px z-header
-    flex items-center h-header
-    border-b border-b-border-subtle
-    bg-background
-
-    # __header-button
-    button-reset
-    size-header items-center justify-center
-    border border-transparent
-    transition-colors duration-100
-    active:bg-background-active
-    focus:border-focus focus:outline-none
-    hover:bg-background-hover
-    lg:hidden
-    svg:fill-icon-primary
-
-    # header-menu-button
-    __header-button
-    flex
-
-    # header-menu-button-toggle
-    __header-button
-    hidden
-
-    # header-close-button
-    __header-button
-    hidden border-x-border-subtle bg-layer
-
-    # header-close-button-toggle
-    __header-button
-    flex border-x-border-subtle bg-layer
-
-    # header-name
-    flex h-full select-none items-center
-    border-2 border-transparent
-    px-16px
-    body-compact-01 text-text-primary font-600 leading-20px tracking-0.1px
-    outline-none
-    transition-colors duration-100
-    focus:border-focus
-    lg:pl-16px lg:pr-32px
-    span:font-400
-
-    # header-nav
-    relative hidden h-full pl-16px
-    lg:flex lg:items-center
-    lg:before:relative lg:before:-left-16px lg:before:z-header lg:before:block
-    lg:before:h-1/2 lg:before:w-1px
-    lg:before:border-l lg:before:border-l-border-subtle
-    lg:before:content-empty
-
-    # __header-nav-link
-    relative flex h-full select-none items-center
-    border-2 border-transparent
-    bg-background
-    px-16px
-    transition-colors duration-100
-    active:bg-background-active active:text-text-primary
-    focus:border-focus focus:outline-none
-    hover:bg-background-hover hover:text-text-primary
-
-    # __header-nav-link-productive
-    text-14px leading-18px font-400 tracking-0px
-
-    # __header-nav-link-expressive
-    body-compact-02
-
-    # __header-nav-link-active
-    text-text-primary
-    after:absolute after:-bottom-2px after:-left-2px after:-right-2px
-    after:block after:border-b-3 after:border-b-border-interactive after:content-empty
-
-    # __header-nav-link-inactive
-    text-text-secondary
-
-    # header-nav-link-active
-    __header-nav-link
-    __header-nav-link-productive
-    __header-nav-link-active
-
-    # header-nav-link-inactive
-    __header-nav-link
-    __header-nav-link-productive
-    __header-nav-link-inactive
-
-    # header-nav-link-active-expressive
-    __header-nav-link
-    __header-nav-link-expressive
-    __header-nav-link-active
-
-    # header-nav-link-inactive-expressive
-    __header-nav-link
-    __header-nav-link-expressive
-    __header-nav-link-inactive
-
-    # header-nav-list
-    h-full flex text-text-secondary
-
-    # header-offset
-    mt-header
-    """);
-  }
-
   private Css.Option componentsLink() {
     return Css.components("""
     # __link
@@ -1399,82 +1289,6 @@ final class CarbonStyles implements Http.Handler {
 
     # page-header-title-row
     grid-wide grid-cols-5 gap-y-16px
-    """);
-  }
-
-  private Css.Option componentsSideNav() {
-    return Css.components("""
-    # __side-nav
-    fixed top-0px bottom-0px left-0px z-header
-    bg-background
-    text-text-secondary
-    transition-all duration-100
-    lg:hidden
-
-    # side-nav
-    __side-nav invisible w-0px
-
-    # side-nav-toggle
-    __side-nav visible w-side-nav
-
-    # __side-nav-header-link
-    relative flex min-h-32px
-    items-center justify-between whitespace-nowrap
-    border-2 border-transparent
-    px-16px
-    heading-compact-01 text-text-secondary
-    outline outline-2 -outline-offset-2 outline-transparent
-    transition-colors duration-100
-    active:bg-background-active active:text-text-primary
-    focus:outline-focus
-    hover:bg-background-hover hover:text-text-primary
-
-    # side-nav-header-link-active
-    __side-nav-header-link
-    after:absolute after:-top-2px after:-bottom-2px after:-left-2px
-    after:block after:border-l-3 after:border-l-border-interactive after:content-empty
-
-    # side-nav-header-link-inactive
-    __side-nav-header-link
-    text-text-secondary
-
-    # side-nav-header-list
-    margin-bottom-32px
-    lg:hidden
-
-    # side-nav-header-item
-    w-auto h-auto overflow-hidden
-
-    # side-nav-list
-    flex-1 pt-16px
-
-    # side-nav-link
-    relative flex min-h-32px
-    items-center justify-between whitespace-nowrap
-    px-16px
-    heading-compact-01
-    outline outline-2 -outline-offset-2 outline-transparent
-    transition-colors duration-100
-    focus:outline-focus
-    hover:bg-background-hover hover:text-text-primary
-    span:select-none span:text-14px span:leading-20px span:tracking-0.1px span:truncate
-
-    # side-nav-link-active
-    side-nav-link
-    bg-selected text-link-primary font-600
-    after:absolute after:top-0px after:bottom-0px after:left-0px
-    after:block after:border-l-3 after:border-l-border-interactive after:content-empty
-    span:text-text-primary
-
-    # side-nav-link-inactive
-    side-nav-link
-    span:text-text-secondary
-
-    # side-nav-offset
-    lg:ml-side-nav
-
-    # side-nav-persistent
-    lg:visible lg:more:block lg:w-side-nav
     """);
   }
 

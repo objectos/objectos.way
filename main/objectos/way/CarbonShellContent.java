@@ -19,12 +19,15 @@ import objectos.way.Carbon.CarbonDataFrame;
 
 final class CarbonShellContent implements Carbon.ShellContent {
 
-  @SuppressWarnings("unused")
   private CarbonContent content;
 
   private CarbonDataFrame dataFrame;
 
   private final Html.TemplateBase tmpl;
+
+  private CarbonHeader header;
+
+  private CarbonSideNav sideNavigation;
 
   CarbonShellContent(Html.TemplateBase tmpl, Carbon.ShellContent.Value[] values) {
     this.tmpl = tmpl;
@@ -41,8 +44,20 @@ final class CarbonShellContent implements Carbon.ShellContent {
   @Override
   public final Html.ElementInstruction render() {
     return tmpl.main(
-        dataFrame != null ? dataFrame.render(tmpl) : tmpl.noop()
+        header != null ? tmpl.className("mt-header") : tmpl.noop(),
+
+        sideNavigation != null ? tmpl.className("lg:ml-side-nav") : tmpl.noop(),
+
+        dataFrame != null ? dataFrame.render(tmpl) : tmpl.noop(),
+
+        content != null ? content.render() : tmpl.noop()
     );
+  }
+
+  final void accept(CarbonHeader header, CarbonSideNav sideNavigation) {
+    this.header = header;
+
+    this.sideNavigation = sideNavigation;
   }
 
 }
