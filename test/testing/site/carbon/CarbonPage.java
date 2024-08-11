@@ -63,7 +63,8 @@ abstract class CarbonPage extends Carbon.Template {
             carbon.sideNavMenuItem("Link", "/components/link", this::currentPage),
             carbon.sideNavMenuItem("Page header", "/components/page-header", this::currentPage),
             carbon.sideNavMenuItem("Progress indicator", "/components/progress-indicator", this::currentPage),
-            carbon.sideNavMenuItem("Tearsheet", "/components/tearsheet", this::currentPage)
+            carbon.sideNavMenuItem("Tearsheet", "/components/tearsheet", this::currentPage),
+            carbon.sideNavMenuItem("Typography", "/components/typography", this::currentPage)
         ),
 
         carbon.shellContent(

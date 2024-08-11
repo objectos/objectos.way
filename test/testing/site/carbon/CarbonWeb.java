@@ -39,6 +39,7 @@ public final class CarbonWeb extends Web.Module {
             ComponentsPageHeader.class,
             ComponentsProgressIndicator.class,
             ComponentsTearsheet.class,
+            ComponentsTypography.class,
             Index.class
         )
     );
@@ -54,6 +55,7 @@ public final class CarbonWeb extends Web.Module {
     route("/components/page-header", GET(ComponentsPageHeader::new));
     route("/components/progress-indicator", GET(ComponentsProgressIndicator::new));
     route("/components/tearsheet", GET(ComponentsTearsheet::new));
+    route("/components/typography", GET(ComponentsTypography::new));
   }
 
 }
