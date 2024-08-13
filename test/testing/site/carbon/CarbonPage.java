@@ -86,41 +86,49 @@ abstract class CarbonPage extends Carbon.Template {
         Carbon.menuLink("Typography", "/components/typography", this::currentPage, closeMenu)
     );
 
-    carbonHeader(
+    carbon.header(
         Carbon.THEME_G100, ariaLabel("Objectos Carbon"),
 
-        carbonHeaderMenuButton(
+        carbon.headerMenuButton(
             menuButton, ariaLabel("Open menu"), title("Open"), dataOnClick(openMenu)
         ),
 
-        carbonHeaderCloseButton(
+        carbon.headerCloseButton(
             closeButton, ariaLabel("Close menu"), title("Close"), dataOnClick(closeMenu)
         ),
 
-        carbonHeaderName("Objectos", "Carbon", "/", closeMenu),
+        carbon.headerName("Objectos", "Carbon", "/", closeMenu),
 
-        carbonHeaderNavigation(
+        carbon.headerNavigation(
             dataFrame("header-nav", topSection.name()), ariaLabel("Objectos Carbon navigation"),
-            carbonHeaderNavigationItems(headerMenuItems)
+            carbon.headerNavigationItems(headerMenuItems)
         )
     );
 
-    carbonSideNav(
-        Carbon.THEME_G100, SIDE_NAV_PERSISTENT, sideNav,
+    carbon.sideNav(
+        Carbon.THEME_G100, Carbon.SIDE_NAV_PERSISTENT, sideNav,
 
-        carbonSideNavBody(
-            Carbon.HEADER_OFFSET, SIDE_NAV_BODY_PERSISTENT, sideNavBody,
+        carbon.sideNavBody(
+            Carbon.HEADER_OFFSET, Carbon.SIDE_NAV_BODY_PERSISTENT, sideNavBody,
             dataFrame("side-nav", getClass().getSimpleName()), ariaLabel("Side navigation"),
 
-            carbonSideNavHeaderItems(headerMenuItems),
+            carbon.sideNavHeaderItems(headerMenuItems),
 
-            carbonSideNavItems(sideNavItems)
+            carbon.sideNavItems(sideNavItems)
         )
+    );
+
+    main(
+        dataFrame("main", getClass().getSimpleName()),
+
+        Carbon.HEADER_OFFSET, Carbon.SIDE_NAV_OFFSET,
+
+        f(this::renderContent)
     );
   }
 
   protected abstract void renderHead();
 
-  protected abstract Carbon.ShellContent renderContent();
+  protected abstract void renderContent();
 
 }

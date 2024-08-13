@@ -50,8 +50,7 @@ final class CarbonStyles implements Http.Handler {
         Css.classes(classes),
 
         Css.classes(
-            CarbonClasses.class,
-            CarbonTemplate.class
+            CarbonComponents.class
         ),
 
         Css.useLogicalProperties(),

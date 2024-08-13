@@ -35,10 +35,7 @@ final class ComponentsButton extends CarbonPage {
   }
 
   @Override
-  protected final Carbon.ShellContent renderContent() {
-    return carbon.shellContent(
-        carbon.dataFrame("main", getClass().getSimpleName())
-    );
+  protected final void renderContent() {
   }
 
   protected final void renderContent0() {

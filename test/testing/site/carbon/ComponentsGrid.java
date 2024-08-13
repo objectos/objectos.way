@@ -15,7 +15,6 @@
  */
 package testing.site.carbon;
 
-import objectos.way.Carbon;
 import objectos.way.Http;
 
 final class ComponentsGrid extends CarbonPage {
@@ -35,10 +34,7 @@ final class ComponentsGrid extends CarbonPage {
   }
 
   @Override
-  protected final Carbon.ShellContent renderContent() {
-    return carbon.shellContent(
-        carbon.dataFrame("main", getClass().getSimpleName())
-
+  protected final void renderContent() {
     //        , carbon.gridWide(
     //            carbon.gridColumns(1, Carbon.MD, 2, Carbon.LG, 4),
     //
@@ -74,7 +70,6 @@ final class ComponentsGrid extends CarbonPage {
     //                carbon.text("Column 4")
     //            )
     //        )
-    );
   }
 
   protected final void renderContent0() {

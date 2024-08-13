@@ -663,6 +663,24 @@ public final class Html {
       return $attributes().className(value);
     }
 
+    /**
+     * Generates the {@code class} attribute by joining all of the lines in the
+     * specified text block.
+     *
+     * @param text the text block value
+     *
+     * @return an instruction representing this attribute.
+     */
+    protected final AttributeInstruction classText(String text) {
+      String[] lines;
+      lines = text.split("\n+");
+
+      String value;
+      value = String.join(" ", lines);
+
+      return $attributes().className(value);
+    }
+
     protected final AttributeInstruction dataFrame(String name) {
       Check.notNull(name, "name == null");
 

@@ -15,7 +15,6 @@
  */
 package testing.site.carbon;
 
-import objectos.way.Carbon;
 import objectos.way.Http;
 
 final class Components extends CarbonPage {
@@ -35,10 +34,7 @@ final class Components extends CarbonPage {
   }
 
   @Override
-  protected final Carbon.ShellContent renderContent() {
-    return carbon.shellContent(
-        carbon.dataFrame("main", getClass().getSimpleName())
-    );
+  protected final void renderContent() {
   }
 
 }

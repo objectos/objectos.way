@@ -15,7 +15,6 @@
  */
 package testing.site.carbon;
 
-import objectos.way.Carbon;
 import objectos.way.Http;
 
 final class ComponentsProgressIndicator extends CarbonPage {
@@ -35,10 +34,7 @@ final class ComponentsProgressIndicator extends CarbonPage {
   }
 
   @Override
-  protected final Carbon.ShellContent renderContent() {
-    return carbon.shellContent(
-        carbon.dataFrame("main", getClass().getSimpleName())
-    );
+  protected final void renderContent() {
   }
 
   protected final void renderContent0() {
@@ -70,6 +66,7 @@ final class ComponentsProgressIndicator extends CarbonPage {
         t("Vertical")
     );
 
+    /*
     carbon.progressIndicator()
         .vertical()
         .currentIndex(1)
@@ -79,6 +76,7 @@ final class ComponentsProgressIndicator extends CarbonPage {
         .step("Fourth step", "Step 4: Getting started with Carbon Design System", "Example invalid step").valid(false)
         .step("Fifth step", "Step 5: Getting started with Carbon Design System").enabled(false)
         .render();
+        */
   }
 
 }
