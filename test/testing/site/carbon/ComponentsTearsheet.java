@@ -38,7 +38,13 @@ final class ComponentsTearsheet extends CarbonPage {
   private static final Html.Id TEARSHEET_01 = Html.id("tearsheet-01");
 
   @Override
-  protected final void renderContent() {
+  protected final Carbon.ShellContent renderContent() {
+    return carbon.shellContent(
+        carbon.dataFrame("main", getClass().getSimpleName())
+    );
+  }
+
+  protected final void renderContent0() {
     section(
         className("page-header page-header-title-only"),
 

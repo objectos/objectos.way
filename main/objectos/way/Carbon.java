@@ -36,9 +36,48 @@ public final class Carbon extends CarbonClasses {
   //
 
   /**
+   * A carbon component attribute.
+   */
+  sealed interface Attribute
+      extends
+      Grid.Value {}
+
+  /**
+   * A screen width breakpoint for responsive design.
+   */
+  public sealed interface Breakpoint {}
+
+  record CarbonBreakpoint(String name) implements Breakpoint {}
+
+  /**
+   * The Small breakpoint.
+   */
+  public static final Breakpoint SM = new CarbonBreakpoint("sm");
+
+  /**
+   * The Medium breakpoint.
+   */
+  public static final Breakpoint MD = new CarbonBreakpoint("md");
+
+  /**
+   * The Large breakpoint.
+   */
+  public static final Breakpoint LG = new CarbonBreakpoint("lg");
+
+  /**
+   * The X-Large breakpoint.
+   */
+  public static final Breakpoint XL = new CarbonBreakpoint("xl");
+
+  /**
+   * The Max breakpoint.
+   */
+  public static final Breakpoint MAX = new CarbonBreakpoint("max");
+
+  /**
    * An UI component.
    */
-  public sealed interface Component extends Html.ElementComponent {
+  public sealed interface Component extends Html.ElementComponent, ShellContent.Value {
 
     public sealed interface ProgressIndicator extends Component permits CarbonProgressIndicator {
 
@@ -70,6 +109,68 @@ public final class Carbon extends CarbonClasses {
   }
 
   /**
+   * The {@code class} HTML attribute.
+   */
+  public sealed interface ClassName extends Html.ClassName, Attribute {}
+
+  record CarbonClassName(String value) implements ClassName {}
+
+  public static ClassName className(ClassName... classNames) {
+    StringBuilder sb;
+    sb = new StringBuilder();
+
+    for (int i = 0, len = classNames.length; i < len; i++) {
+      if (i != 0) {
+        sb.append(' ');
+      }
+
+      ClassName cn;
+      cn = classNames[i];
+
+      String value;
+      value = cn.value();
+
+      sb.append(value);
+    }
+
+    String value;
+    value = sb.toString();
+
+    return new CarbonClassName(value);
+  }
+
+  public static ClassName className(ClassName className, String text) {
+    StringBuilder sb;
+    sb = new StringBuilder();
+
+    sb.append(className.value());
+
+    String[] lines;
+    lines = text.split("\n+");
+
+    for (var line : lines) {
+      sb.append(' ');
+
+      sb.append(line);
+    }
+
+    String value;
+    value = sb.toString();
+
+    return new CarbonClassName(value);
+  }
+
+  public static ClassName classText(String text) {
+    String[] lines;
+    lines = text.split("\n+");
+
+    String joined;
+    joined = String.join(" ", lines);
+
+    return new CarbonClassName(joined);
+  }
+
+  /**
    * UI component:
    */
   public sealed interface Content extends Html.ElementComponent, ShellContent.Value permits CarbonContent {}
@@ -83,13 +184,11 @@ public final class Carbon extends CarbonClasses {
   }
 
   /**
-   * The {@code data-frame} attribute.
+   * The {@code data-frame} HTML attribute.
    */
   public sealed interface DataFrame
       extends
-      HeaderNavigation.Value,
-      ShellContent.Value,
-      SideNav.Value {}
+      ShellContent.Value {}
 
   record CarbonDataFrame(String name, String value) implements DataFrame {
     final Html.AttributeInstruction render(Html.TemplateBase tmpl) {
@@ -116,228 +215,79 @@ public final class Carbon extends CarbonClasses {
   }
 
   /**
-   * An auxiliary description of an UI component. It might be rendered as one or
-   * more HTML attributes such as {@code aria-label} or {@code title}.
+   * UI component: the 2x grid.
    */
-  public sealed interface Description
-      extends
-      Header.Value,
-      HeaderCloseButton.Value,
-      HeaderMenuButton.Value,
-      HeaderNavigation.Value,
-      SideNav.Value {}
-
-  record CarbonDescription(String value) implements Description {}
-
-  /**
-   * Creates a new description instance with the specified value.
-   *
-   * @param value
-   *        the description value
-   *
-   * @return a newly created description instance
-   */
-  public final Description description(String value) {
-    return new CarbonDescription(
-        Check.notNull(value, "value == null")
-    );
-  }
-
-  /**
-   * UI component: UI shell header.
-   */
-  public sealed interface Header extends Html.ElementComponent, Shell.Value permits CarbonHeader {
+  public sealed interface Grid extends Component permits CarbonGrid {
     /**
-     * An UI shell header rendering value.
+     * A 2x grid rendering value.
      */
     public sealed interface Value {}
   }
 
-  /**
-   * Creates a new header component.
-   *
-   * @return a newly created component instance
-   */
-  public final Header header(Header.Value... values) {
-    return new CarbonHeader(tmpl, values);
+  enum GridStyle {
+    WIDE,
+
+    NARROW,
+
+    CONDENSED;
   }
 
-  /**
-   * UI component: mobile header navigation close button.
-   */
-  public sealed interface HeaderCloseButton extends Html.ElementComponent, Header.Value permits CarbonHeaderCloseButton {
-    /**
-     * A close button rendering value.
-     */
-    public sealed interface Value {}
+  public final ClassName gridColumns(int mobile) {
+    return new CarbonClassName("grid-cols-" + mobile);
   }
 
-  /**
-   * Creates a new header close button component with the specified auxiliary
-   * description.
-   *
-   * @param description
-   *        the button auxiliary description
-   *
-   * @return a newly created component instance
-   */
-  public final HeaderCloseButton headerCloseButton(String description) {
-    return headerCloseButton(description(description));
+  public final ClassName gridColumns(int mobile, Breakpoint point1, int value1) {
+    return new CarbonClassName("grid-cols-" + mobile + " " + point1 + ":grid-cols-" + value1);
   }
 
-  /**
-   * Creates a new header close button component with the specified nested
-   * values.
-   *
-   * @param values
-   *        the nested values
-   *
-   * @return a newly created component instance
-   */
-  public final HeaderCloseButton headerCloseButton(HeaderCloseButton.Value... values) {
-    return new CarbonHeaderCloseButton(tmpl, values);
+  public final ClassName gridColumns(int mobile, Breakpoint point1, int value1, Breakpoint point2, int value2) {
+    return new CarbonClassName("grid-cols-" + mobile + " " + point1 + ":grid-cols-" + value1 + " " + point2 + ":grid-cols-" + value2);
   }
 
-  /**
-   * UI component: mobile header navigation menu button.
-   */
-  public sealed interface HeaderMenuButton extends Html.ElementComponent, Header.Value permits CarbonHeaderMenuButton {
-    /**
-     * A menu button rendering value.
-     */
-    public sealed interface Value {}
+  public final Grid gridWide(Grid.Value... values) {
+    return new CarbonGrid(tmpl, GridStyle.WIDE, values);
   }
 
-  /**
-   * Creates a new header menu button component with the specified auxiliary
-   * description.
-   *
-   * @param description
-   *        the button auxiliary description
-   *
-   * @return a newly created component instance
-   */
-  public final HeaderMenuButton headerMenuButton(String description) {
-    return headerMenuButton(description(description));
-  }
+  public sealed interface MenuElement {}
 
-  /**
-   * Creates a new header menu button component with the specified nested
-   * values.
-   *
-   * @param values
-   *        the nested values
-   *
-   * @return a newly created component instance
-   */
-  public final HeaderMenuButton headerMenuButton(HeaderMenuButton.Value... values) {
-    return new CarbonHeaderMenuButton(tmpl, values);
-  }
+  public sealed interface MenuLink extends MenuElement {}
 
-  /**
-   * UI component: a header navigation menu item.
-   */
-  public sealed interface HeaderMenuItem extends HeaderNavigation.Value permits CarbonHeaderMenuItem {}
+  record CarbonMenuLink(String text, String href, boolean active, Script.Action onClick) implements MenuLink {}
 
-  /**
-   * Creates a new header navigation menu item with the specified values.
-   *
-   * @param text the menu item text
-   * @param href the menu {@code href} value
-   * @param active if this menu item is active or not
-   *
-   * @return a newly created component instance
-   */
-  public final HeaderMenuItem headerMenuItem(String text, String href, boolean active) {
+  public static MenuLink menuLink(String text, String href, boolean active) {
     Check.notNull(text, "text == null");
     Check.notNull(href, "href == null");
 
-    return new CarbonHeaderMenuItem(tmpl, text, href, active);
+    return new CarbonMenuLink(text, href, active, null);
   }
 
-  /**
-   * UI component: the header name.
-   */
-  public sealed interface HeaderName extends Html.ElementComponent, Header.Value permits CarbonHeaderName {}
+  public static MenuLink menuLink(String text, String href, boolean active, Script.Action onClick) {
+    Check.notNull(text, "text == null");
+    Check.notNull(href, "href == null");
+    Check.notNull(onClick, "onClick == null");
 
-  /**
-   * Creates a new header name component.
-   *
-   * @return a newly created component instance
-   */
-  public final HeaderName headerName(String prefix, String text, String href) {
-    CarbonHeaderName o;
-    o = new CarbonHeaderName(tmpl);
-
-    o.prefix = Check.notNull(prefix, "prefix == null");
-
-    o.text = Check.notNull(text, "text == null");
-
-    o.href = Check.notNull(href, "href == null");
-
-    return o;
+    return new CarbonMenuLink(text, href, active, onClick);
   }
 
-  /**
-   * UI component: the header top-level navigation.
-   */
-  public sealed interface HeaderNavigation extends Html.ElementComponent, Header.Value permits CarbonHeaderNavigation {
-    /**
-     * A header top-level navigation rendering value.
-     */
-    public sealed interface Value {}
+  public static MenuLink menuLink(String text, String href, Predicate<String> activePredicate) {
+    Check.notNull(text, "text == null");
+    Check.notNull(href, "href == null");
+
+    boolean active;
+    active = activePredicate.test(href);
+
+    return new CarbonMenuLink(text, href, active, null);
   }
 
-  /**
-   * Creates a new header navigation component.
-   *
-   * @return a newly created component instance
-   */
-  public final HeaderNavigation headerNavigation(HeaderNavigation.Value... values) {
-    return new CarbonHeaderNavigation(tmpl, values);
-  }
+  public static MenuLink menuLink(String text, String href, Predicate<String> activePredicate, Script.Action onClick) {
+    Check.notNull(text, "text == null");
+    Check.notNull(href, "href == null");
+    Check.notNull(onClick, "onClick == null");
 
-  /**
-   * The {@code id} attribute.
-   */
-  public sealed interface Id
-      extends
-      HeaderCloseButton.Value,
-      HeaderMenuButton.Value,
-      SideNav.Value {}
+    boolean active;
+    active = activePredicate.test(href);
 
-  record CarbonId(Html.Id value) implements Id {}
-
-  /**
-   * Creates a new {@code id} attribute with the specified value.
-   *
-   * @param value
-   *        the id value
-   *
-   * @return a newly constructed attribute
-   */
-  public final Id id(String value) {
-    return new CarbonId(
-        Html.id(value)
-    );
-  }
-
-  /**
-   * Indicates if an UI component is persistent.
-   */
-  public sealed interface Persistent extends SideNav.Value {}
-
-  record CarbonPersistent(boolean value) implements Persistent {
-    static final Persistent TRUE = new CarbonPersistent(true);
-  }
-
-  /**
-   * Indicates that an UI component is persistent.
-   *
-   * @return an object indicating that an UI component is persistent
-   */
-  public final Persistent persistent() {
-    return CarbonPersistent.TRUE;
+    return new CarbonMenuLink(text, href, active, onClick);
   }
 
   /**
@@ -372,43 +322,6 @@ public final class Carbon extends CarbonClasses {
 
   public final ShellContent shellContent(ShellContent.Value... values) {
     return new CarbonShellContent(tmpl, values);
-  }
-
-  /**
-   * UI component: application side navigation.
-   */
-  public sealed interface SideNav extends Html.ElementComponent, Shell.Value permits CarbonSideNav {
-    /**
-     * An application side navigation rendering value.
-     */
-    public sealed interface Value {}
-  }
-
-  public final SideNav sideNav(SideNav.Value... values) {
-    return new CarbonSideNav(tmpl, values);
-  }
-
-  public sealed interface SideNavMenuItem extends SideNav.Value permits CarbonSideNavMenuItem {}
-
-  /**
-   * Creates a new side navigation menu item with the specified values.
-   *
-   * @param text the menu item text
-   * @param href the menu {@code href} value
-   * @param activePredicate returns {@code true} if this item is active
-   *        based on the specified {@code href} value; returns {@code false}
-   *        otherwise
-   *
-   * @return a newly created component instance
-   */
-  public final SideNavMenuItem sideNavMenuItem(String text, String href, Predicate<String> activePredicate) {
-    Check.notNull(text, "text == null");
-    Check.notNull(href, "href == null");
-
-    boolean active;
-    active = activePredicate.test(href);
-
-    return new CarbonSideNavMenuItem(tmpl, text, href, active);
   }
 
   public enum Icon {
@@ -474,9 +387,7 @@ public final class Carbon extends CarbonClasses {
   public sealed interface Theme
       extends
       Html.ClassName,
-      Header.Value,
-      Shell.Value,
-      SideNav.Value {}
+      Shell.Value {}
 
   private record CarbonTheme(String value) implements Theme {}
 
@@ -600,6 +511,30 @@ public final class Carbon extends CarbonClasses {
         Script.setProperty(id, "aria-hidden", "false"),
         Script.delay(50, Script.addClass(id, "tearsheet-transition"))
     );
+  }
+
+  public static Script.Action hideHeaderButton(Html.Id id) {
+    return CarbonTemplate.hideHeaderButton(id);
+  }
+
+  public static Script.Action hideSideNav(Html.Id id) {
+    return CarbonTemplate.hideSideNav(id);
+  }
+
+  public static Script.Action hideSideNavBody(Html.Id id) {
+    return CarbonTemplate.hideSideNavBody(id);
+  }
+
+  public static Script.Action showHeaderButton(Html.Id id) {
+    return CarbonTemplate.showHeaderButton(id);
+  }
+
+  public static Script.Action showSideNav(Html.Id id) {
+    return CarbonTemplate.showSideNav(id);
+  }
+
+  public static Script.Action showSideNavBody(Html.Id id) {
+    return CarbonTemplate.showSideNavBody(id);
   }
 
   public final ProgressIndicator progressIndicator() {

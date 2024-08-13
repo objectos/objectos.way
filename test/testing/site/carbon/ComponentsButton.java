@@ -35,7 +35,13 @@ final class ComponentsButton extends CarbonPage {
   }
 
   @Override
-  protected final void renderContent() {
+  protected final Carbon.ShellContent renderContent() {
+    return carbon.shellContent(
+        carbon.dataFrame("main", getClass().getSimpleName())
+    );
+  }
+
+  protected final void renderContent0() {
     div(
         className("grid-wide max-w-full py-spacing-05 bg-layer"),
 

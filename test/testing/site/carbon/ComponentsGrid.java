@@ -15,6 +15,7 @@
  */
 package testing.site.carbon;
 
+import objectos.way.Carbon;
 import objectos.way.Http;
 
 final class ComponentsGrid extends CarbonPage {
@@ -34,7 +35,49 @@ final class ComponentsGrid extends CarbonPage {
   }
 
   @Override
-  protected final void renderContent() {
+  protected final Carbon.ShellContent renderContent() {
+    return carbon.shellContent(
+        carbon.dataFrame("main", getClass().getSimpleName())
+
+    //        , carbon.gridWide(
+    //            carbon.gridColumns(1, Carbon.MD, 2, Carbon.LG, 4),
+    //
+    //            carbon.heading2(
+    //                Carbon.HEADING_03,
+    //
+    //                carbon.gridSpan(0),
+    //
+    //                carbon.text("Grid (Wide)")
+    //            ),
+    //
+    //            carbon.tile(
+    //                Carbon.ASPECT_2X1,
+    //
+    //                carbon.text("Column 1")
+    //            ),
+    //
+    //            carbon.tile(
+    //                Carbon.ASPECT_2X1,
+    //
+    //                carbon.text("Column 2")
+    //            ),
+    //
+    //            carbon.tile(
+    //                Carbon.ASPECT_2X1,
+    //
+    //                carbon.text("Column 3")
+    //            ),
+    //
+    //            carbon.tile(
+    //                Carbon.ASPECT_2X1,
+    //
+    //                carbon.text("Column 4")
+    //            )
+    //        )
+    );
+  }
+
+  protected final void renderContent0() {
     className("pt-spacing-07");
 
     div(

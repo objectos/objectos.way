@@ -25,24 +25,33 @@ final class CarbonStyles implements Http.Handler {
     this.classes = classes;
   }
 
-  private Css.StyleSheet generateStyleSheet() {
+  @Override
+  public final void handle(Http.Exchange http) {
+    Css.StyleSheet s;
+    s = generateStyleSheet();
+
+    byte[] bytes;
+    bytes = s.toByteArray();
+
+    http.status(Http.OK);
+
+    http.dateNow();
+
+    http.header(Http.CONTENT_TYPE, s.contentType());
+
+    http.header(Http.CONTENT_LENGTH, bytes.length);
+
+    http.send(bytes);
+  }
+
+  // visible for testing
+  final Css.StyleSheet generateStyleSheet() {
     return Css.generateStyleSheet(
         Css.classes(classes),
 
         Css.classes(
-            CarbonContent.class,
-            CarbonHeader.class,
-            CarbonHeaderCloseButton.class,
-            CarbonHeaderMenuButton.class,
-            CarbonHeaderMenuItem.class,
-            CarbonHeaderName.class,
-            CarbonHeaderNavigation.class,
-            CarbonProgressIndicator.class,
-            CarbonShell.class,
-            CarbonShellContent.class,
-            CarbonSideNav.class,
-            CarbonSideNavMenuItem.class,
-            CarbonClasses.class
+            CarbonClasses.class,
+            CarbonTemplate.class
         ),
 
         Css.useLogicalProperties(),
@@ -705,25 +714,6 @@ final class CarbonStyles implements Http.Handler {
         tr: & tr
         """)
     );
-  }
-
-  @Override
-  public final void handle(Http.Exchange http) {
-    Css.StyleSheet s;
-    s = generateStyleSheet();
-
-    byte[] bytes;
-    bytes = s.toByteArray();
-
-    http.status(Http.OK);
-
-    http.dateNow();
-
-    http.header(Http.CONTENT_TYPE, s.contentType());
-
-    http.header(Http.CONTENT_LENGTH, bytes.length);
-
-    http.send(bytes);
   }
 
   private Css.Option componentsButton() {

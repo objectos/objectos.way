@@ -13,32 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package testing.site.carbon;
+package objectos.way;
 
-import objectos.way.Carbon;
-import objectos.way.Http;
+import static org.testng.Assert.assertNotNull;
 
-final class Index extends CarbonPage {
+import java.util.Set;
+import objectos.way.Css.StyleSheet;
+import org.testng.annotations.Test;
 
-  public Index(Http.Exchange http) {
-    super(http);
-  }
+public class CarbonStylesTest {
 
-  @Override
-  protected final void preRender() {
-    topSection = TopSection.HOME;
-  }
+  @Test
+  public void generate() {
+    CarbonStyles styles = new CarbonStyles(Set.of());
 
-  @Override
-  protected final void renderHead() {
-    title("Objectos Carbon");
-  }
+    StyleSheet result = styles.generateStyleSheet();
 
-  @Override
-  protected final Carbon.ShellContent renderContent() {
-    return carbon.shellContent(
-        carbon.dataFrame("main", getClass().getSimpleName())
-    );
+    assertNotNull(result);
   }
 
 }

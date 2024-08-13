@@ -19,10 +19,6 @@ final class CarbonShell implements Carbon.Shell {
 
   private CarbonShellContent content;
 
-  private CarbonHeader header;
-
-  private CarbonSideNav sideNavigation;
-
   private Carbon.Theme theme;
 
   private final Html.TemplateBase tmpl;
@@ -34,32 +30,12 @@ final class CarbonShell implements Carbon.Shell {
       switch (value) {
         case CarbonShellContent o -> content = o;
 
-        case CarbonHeader o -> header = o;
-
-        case CarbonSideNav o -> sideNavigation = o;
-
         case Carbon.Theme o -> theme = o;
       }
     }
   }
 
-  private void preRender() {
-    if (header != null) {
-      header.accept(sideNavigation);
-    }
-
-    if (sideNavigation != null) {
-      sideNavigation.accept(header);
-    }
-
-    if (content != null) {
-      content.accept(header, sideNavigation);
-    }
-  }
-
   public final void render() {
-    preRender();
-
     tmpl.doctype();
 
     tmpl.html(
@@ -75,10 +51,6 @@ final class CarbonShell implements Carbon.Shell {
         ),
 
         tmpl.body(
-            Carbon.render(tmpl, header),
-
-            Carbon.render(tmpl, sideNavigation),
-
             Carbon.render(tmpl, content)
         )
     );

@@ -13,32 +13,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package testing.site.carbon;
+package objectos.way;
 
-import objectos.way.Carbon;
-import objectos.way.Http;
+import objectos.way.Carbon.Grid;
+import objectos.way.Carbon.GridStyle;
 
-final class Index extends CarbonPage {
+final class CarbonGrid implements Grid {
 
-  public Index(Http.Exchange http) {
-    super(http);
+  @SuppressWarnings("unused")
+  private final GridStyle style;
+
+  @SuppressWarnings("unused")
+  private final Html.TemplateBase tmpl;
+
+  CarbonGrid(Html.TemplateBase tmpl, GridStyle style, Grid.Value[] values) {
+    this.tmpl = tmpl;
+    this.style = style;
   }
 
   @Override
-  protected final void preRender() {
-    topSection = TopSection.HOME;
-  }
-
-  @Override
-  protected final void renderHead() {
-    title("Objectos Carbon");
-  }
-
-  @Override
-  protected final Carbon.ShellContent renderContent() {
-    return carbon.shellContent(
-        carbon.dataFrame("main", getClass().getSimpleName())
-    );
+  public final Html.ElementInstruction render() {
+    throw new UnsupportedOperationException("Implement me");
   }
 
 }

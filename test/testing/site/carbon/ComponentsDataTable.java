@@ -15,6 +15,7 @@
  */
 package testing.site.carbon;
 
+import objectos.way.Carbon;
 import objectos.way.Http;
 
 final class ComponentsDataTable extends CarbonPage {
@@ -34,7 +35,13 @@ final class ComponentsDataTable extends CarbonPage {
   }
 
   @Override
-  protected final void renderContent() {
+  protected final Carbon.ShellContent renderContent() {
+    return carbon.shellContent(
+        carbon.dataFrame("main", getClass().getSimpleName())
+    );
+  }
+
+  protected final void renderContent0() {
     section(
         className("page-header page-header-title-only"),
 

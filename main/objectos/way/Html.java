@@ -1053,7 +1053,38 @@ public final class Html {
     return new HtmlClassName(value);
   }
 
-  public static ClassName className(String text) {
+  public static ClassName className(String value) {
+    return new HtmlClassName(
+        Check.notNull(value, "value == null")
+    );
+  }
+
+  public static ClassName className(String... values) {
+    StringBuilder sb;
+    sb = new StringBuilder();
+
+    classNameValues(sb, values);
+
+    String value;
+    value = sb.toString();
+
+    return new HtmlClassName(value);
+  }
+
+  private static void classNameValues(StringBuilder sb, String... values) {
+    for (int i = 0; i < values.length; i++) {
+      if (i > 0) {
+        sb.append(' ');
+      }
+
+      String value;
+      value = Check.notNull(values[i], "values[", i, "] == null");
+
+      sb.append(value);
+    }
+  }
+
+  public static ClassName classText(String text) {
     String[] lines;
     lines = text.split("\n+");
 

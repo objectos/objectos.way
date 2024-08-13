@@ -15,8 +15,11 @@
  */
 package testing.site.carbon;
 
+import java.util.List;
 import objectos.way.Carbon;
+import objectos.way.Html;
 import objectos.way.Http;
+import objectos.way.Script;
 
 abstract class CarbonPage extends Carbon.Template {
 
@@ -28,54 +31,96 @@ abstract class CarbonPage extends Carbon.Template {
 
   @Override
   protected final void render() throws Exception {
-    carbon.shell(
+    doctype();
+
+    html(
         Carbon.THEME_WHITE,
 
-        carbon.header(
-            Carbon.THEME_G100,
-            carbon.description("Objectos Carbon"),
-            carbon.headerMenuButton(
-                carbon.id("menu-button"),
-                carbon.description("Open menu")
-            ),
-            carbon.headerCloseButton(
-                carbon.id("close-button"),
-                carbon.description("Close menu")
-            ),
-            carbon.headerName("Objectos", "Carbon", "/"),
-            carbon.headerNavigation(
-                carbon.dataFrame("header-nav", topSection.name()),
-                carbon.description("Objectos Carbon navigation"),
-                carbon.headerMenuItem("Components", "/components", topSection == TopSection.COMPONENTS),
-                carbon.headerMenuItem("Gallery", "#", false)
-            )
+        head(
+            f(this::renderStandardHead),
+            f(this::renderHead)
         ),
 
-        carbon.sideNav(
-            Carbon.THEME_G100,
-            carbon.id("side-nav"),
-            carbon.dataFrame("side-nav", getClass().getSimpleName()),
-            carbon.description("Side navigation"),
-            carbon.persistent(),
-            carbon.sideNavMenuItem("Button", "/components/button", this::currentPage),
-            carbon.sideNavMenuItem("Data table", "/components/data-table", this::currentPage),
-            carbon.sideNavMenuItem("Grid", "/components/grid", this::currentPage),
-            carbon.sideNavMenuItem("Link", "/components/link", this::currentPage),
-            carbon.sideNavMenuItem("Page header", "/components/page-header", this::currentPage),
-            carbon.sideNavMenuItem("Progress indicator", "/components/progress-indicator", this::currentPage),
-            carbon.sideNavMenuItem("Tearsheet", "/components/tearsheet", this::currentPage),
-            carbon.sideNavMenuItem("Typography", "/components/typography", this::currentPage)
+        body(
+            f(this::renderBody)
+        )
+    );
+  }
+
+  private static final Html.Id menuButton = Html.id("menu-button");
+
+  private static final Html.Id closeButton = Html.id("close-button");
+
+  private static final Html.Id sideNav = Html.id("side-nav");
+
+  private static final Html.Id sideNavBody = Html.id("side-nav-body");
+
+  private static final Script.Action openMenu = Script.actions(
+      Carbon.hideHeaderButton(menuButton),
+      Carbon.showHeaderButton(closeButton),
+      Carbon.showSideNav(sideNav),
+      Carbon.showSideNavBody(sideNavBody)
+  );
+
+  private static final Script.Action closeMenu = Script.actions(
+      Carbon.hideHeaderButton(closeButton),
+      Carbon.showHeaderButton(menuButton),
+      Carbon.hideSideNavBody(sideNavBody),
+      Carbon.hideSideNav(sideNav)
+  );
+
+  private void renderBody() {
+    List<Carbon.MenuElement> headerMenuItems = List.of(
+        Carbon.menuLink("Components", "/components", topSection == TopSection.COMPONENTS, closeMenu),
+        Carbon.menuLink("Gallery", "#", false, closeMenu)
+    );
+
+    List<Carbon.MenuElement> sideNavItems = List.of(
+        Carbon.menuLink("Button", "/components/button", this::currentPage, closeMenu),
+        Carbon.menuLink("Data table", "/components/data-table", this::currentPage, closeMenu),
+        Carbon.menuLink("Grid", "/components/grid", this::currentPage, closeMenu),
+        Carbon.menuLink("Link", "/components/link", this::currentPage, closeMenu),
+        Carbon.menuLink("Page header", "/components/page-header", this::currentPage, closeMenu),
+        Carbon.menuLink("Progress indicator", "/components/progress-indicator", this::currentPage, closeMenu),
+        Carbon.menuLink("Tearsheet", "/components/tearsheet", this::currentPage, closeMenu),
+        Carbon.menuLink("Typography", "/components/typography", this::currentPage, closeMenu)
+    );
+
+    carbonHeader(
+        Carbon.THEME_G100, ariaLabel("Objectos Carbon"),
+
+        carbonHeaderMenuButton(
+            menuButton, ariaLabel("Open menu"), title("Open"), dataOnClick(openMenu)
         ),
 
-        carbon.shellContent(
-            carbon.dataFrame("main", getClass().getSimpleName()),
-            carbon.content(this::renderContent)
+        carbonHeaderCloseButton(
+            closeButton, ariaLabel("Close menu"), title("Close"), dataOnClick(closeMenu)
+        ),
+
+        carbonHeaderName("Objectos", "Carbon", "/", closeMenu),
+
+        carbonHeaderNavigation(
+            dataFrame("header-nav", topSection.name()), ariaLabel("Objectos Carbon navigation"),
+            carbonHeaderNavigationItems(headerMenuItems)
+        )
+    );
+
+    carbonSideNav(
+        Carbon.THEME_G100, SIDE_NAV_PERSISTENT, sideNav,
+
+        carbonSideNavBody(
+            Carbon.HEADER_OFFSET, SIDE_NAV_BODY_PERSISTENT, sideNavBody,
+            dataFrame("side-nav", getClass().getSimpleName()), ariaLabel("Side navigation"),
+
+            carbonSideNavHeaderItems(headerMenuItems),
+
+            carbonSideNavItems(sideNavItems)
         )
     );
   }
 
   protected abstract void renderHead();
 
-  protected abstract void renderContent();
+  protected abstract Carbon.ShellContent renderContent();
 
 }

@@ -563,7 +563,8 @@ class HtmlRecorder {
           mainAdd(proto, idx0, idx1);
         }
 
-        case HtmlByteProto.ATTRIBUTE1,
+        case HtmlByteProto.AMBIGUOUS1,
+             HtmlByteProto.ATTRIBUTE1,
              HtmlByteProto.ELEMENT,
              HtmlByteProto.TEXT,
              HtmlByteProto.RAW -> {
