@@ -252,27 +252,107 @@ abstract class CarbonComponents {
       *:mx-0.5px
       """);
 
-  private static final Html.ClassName GRID_WIDE = Html.className(__GRID, __GRID_WIDE);
+  public static final Html.ClassName GRID_CONDENSED = Html.className(__GRID, __GRID_CONDENSED);
 
-  @SuppressWarnings("unused")
-  private static final Html.ClassName GRID_NARROW = Html.className(__GRID, __GRID_NARROW);
+  public static final Html.ClassName GRID_NARROW = Html.className(__GRID, __GRID_NARROW);
 
-  @SuppressWarnings("unused")
-  private static final Html.ClassName GRID_CONDENSED = Html.className(__GRID, __GRID_CONDENSED);
+  public static final Html.ClassName GRID_WIDE = Html.className(__GRID, __GRID_WIDE);
 
-  public final Html.ClassName gridColumns(int mobile) {
-    //return new CarbonClassName("grid-cols-" + mobile);
-    throw new UnsupportedOperationException("Implement me");
+  public final Html.ElementInstruction gridCondensed(Html.Instruction... contents) {
+    return tmpl.div(
+        GRID_CONDENSED,
+
+        tmpl.flatten(contents)
+    );
   }
 
-  public final ClassName gridColumns(int mobile, Breakpoint point1, int value1) {
-    //return new CarbonClassName("grid-cols-" + mobile + " " + point1 + ":grid-cols-" + value1);
-    throw new UnsupportedOperationException("Implement me");
+  public final Html.ElementInstruction gridNarrow(Html.Instruction... contents) {
+    return tmpl.div(
+        GRID_NARROW,
+
+        tmpl.flatten(contents)
+    );
   }
 
-  public final ClassName gridColumns(int mobile, Breakpoint point1, int value1, Breakpoint point2, int value2) {
-    //return new CarbonClassName("grid-cols-" + mobile + " " + point1 + ":grid-cols-" + value1 + " " + point2 + ":grid-cols-" + value2);
-    throw new UnsupportedOperationException("Implement me");
+  public final Html.ElementInstruction gridWide(Html.Instruction... contents) {
+    return tmpl.div(
+        GRID_WIDE,
+
+        tmpl.flatten(contents)
+    );
+  }
+
+  private static final String[][] GRID_COLUMNS = {
+      {"grid-cols-1", "grid-cols-2", "grid-cols-3", "grid-cols-4", "grid-cols-5", "grid-cols-6",
+          "grid-cols-7", "grid-cols-8", "grid-cols-9", "grid-cols-10", "grid-cols-11", "grid-cols-12"},
+
+      {"sm:grid-cols-1", "sm:grid-cols-2", "sm:grid-cols-3", "sm:grid-cols-4", "sm:grid-cols-5", "sm:grid-cols-6",
+          "sm:grid-cols-7", "sm:grid-cols-8", "sm:grid-cols-9", "sm:grid-cols-10", "sm:grid-cols-11", "sm:grid-cols-12"},
+
+      {"md:grid-cols-1", "md:grid-cols-2", "md:grid-cols-3", "md:grid-cols-4", "md:grid-cols-5", "md:grid-cols-6",
+          "md:grid-cols-7", "md:grid-cols-8", "md:grid-cols-9", "md:grid-cols-10", "md:grid-cols-11", "md:grid-cols-12"},
+
+      {"lg:grid-cols-1", "lg:grid-cols-2", "lg:grid-cols-3", "lg:grid-cols-4", "lg:grid-cols-5", "lg:grid-cols-6",
+          "lg:grid-cols-7", "lg:grid-cols-8", "lg:grid-cols-9", "lg:grid-cols-10", "lg:grid-cols-11", "lg:grid-cols-12"},
+
+      {"xl:grid-cols-1", "xl:grid-cols-2", "xl:grid-cols-3", "xl:grid-cols-4", "xl:grid-cols-5", "xl:grid-cols-6",
+          "xl:grid-cols-7", "xl:grid-cols-8", "xl:grid-cols-9", "xl:grid-cols-10", "xl:grid-cols-11", "xl:grid-cols-12"},
+
+      {"max:grid-cols-1", "max:grid-cols-2", "max:grid-cols-3", "max:grid-cols-4", "max:grid-cols-5", "max:grid-cols-6",
+          "max:grid-cols-7", "max:grid-cols-8", "max:grid-cols-9", "max:grid-cols-10", "max:grid-cols-11", "max:grid-cols-12"}
+  };
+
+  public final Html.AttributeInstruction gridColumns(int mobile) {
+    String cn = checkGridColumns(Carbon.NONE, mobile);
+
+    return tmpl.className(cn);
+  }
+
+  public final Html.AttributeInstruction gridColumns(int mobile, Breakpoint point1, int value1) {
+    String cn0 = checkGridColumns(Carbon.NONE, mobile);
+    String cn1 = checkGridColumns(point1, value1);
+
+    return tmpl.className(cn0, cn1);
+  }
+
+  public final Html.AttributeInstruction gridColumns(int mobile, Breakpoint point1, int value1, Breakpoint point2, int value2) {
+    String cn0 = checkGridColumns(Carbon.NONE, mobile);
+    String cn1 = checkGridColumns(point1, value1);
+    String cn2 = checkGridColumns(point2, value2);
+
+    return tmpl.className(cn0, cn1, cn2);
+  }
+
+  public final Html.AttributeInstruction gridColumns(
+      int mobile, Breakpoint point1, int value1, Breakpoint point2, int value2, Breakpoint point3, int value3) {
+    String cn0 = checkGridColumns(Carbon.NONE, mobile);
+    String cn1 = checkGridColumns(point1, value1);
+    String cn2 = checkGridColumns(point2, value2);
+    String cn3 = checkGridColumns(point3, value3);
+
+    return tmpl.className(cn0, cn1, cn2, cn3);
+  }
+
+  private String checkGridColumns(Breakpoint point, int value) {
+    int pointIndex;
+    pointIndex = point.index();
+
+    if (value < 1) {
+      throw new IllegalArgumentException("Grid columns must be equal or greater than 1");
+    }
+
+    if (value > 12) {
+      throw new IllegalArgumentException("Grid columns must be equal or lesser than 12");
+    }
+
+    int valueIndex;
+    valueIndex = value - 1;
+
+    return GRID_COLUMNS[pointIndex][valueIndex];
+  }
+
+  public final ClassName gridSpan(int mobile) {
+    return null;
   }
 
   //

@@ -44,66 +44,18 @@ final class ComponentsGrid extends CarbonPage {
         )
     );
 
-    /*
     carbon.gridWide(
-        carbon.gridColumns(1, Carbon.MD, 2, Carbon.LG, 4),
-    
+        carbon.gridColumns(1),
+
         h2(
             Carbon.HEADING_03,
-    
-            carbon.gridSpan(0),
-    
+
             t("Grid (Wide)")
-        ),
-    
-        carbon.tile(
-            Carbon.ASPECT_2X1,
-    
-            t("Column 1")
-        ),
-    
-        carbon.tile(
-            Carbon.ASPECT_2X1,
-    
-            t("Column 2")
-        ),
-    
-        carbon.tile(
-            Carbon.ASPECT_2X1,
-    
-            t("Column 3")
-        ),
-    
-        carbon.tile(
-            Carbon.ASPECT_2X1,
-    
-            t("Column 4")
-        )
-    );
-    */
-  }
-
-  protected final void renderContent0() {
-    className("pt-spacing-07");
-
-    div(
-        className("grid-wide grid-cols-1"),
-
-        h1(
-            className("heading-03"),
-
-            t("Grid")
-        ),
-
-        h2(
-            className("heading-02"),
-
-            t("Wide")
         )
     );
 
-    div(
-        className("grid-wide grid-cols-1 md:grid-cols-2 lg:grid-cols-4"),
+    carbon.gridWide(
+        carbon.gridColumns(1, Carbon.MD, 2, Carbon.LG, 4),
 
         div(
             className("aspect-2x1 tile"),
@@ -130,18 +82,18 @@ final class ComponentsGrid extends CarbonPage {
         )
     );
 
-    div(
-        className("grid-wide grid-cols-1"),
+    carbon.gridWide(
+        carbon.gridColumns(1),
 
         h2(
-            className("heading-02"),
+            Carbon.HEADING_03,
 
-            t("Narrow")
+            t("Grid (Narrow)")
         )
     );
 
-    div(
-        className("grid-narrow grid-cols-1 md:grid-cols-2 lg:grid-cols-4"),
+    carbon.gridNarrow(
+        carbon.gridColumns(1, Carbon.MD, 2, Carbon.LG, 4),
 
         div(
             className("aspect-2x1 tile"),
@@ -168,18 +120,18 @@ final class ComponentsGrid extends CarbonPage {
         )
     );
 
-    div(
-        className("grid-wide grid-cols-1"),
+    carbon.gridWide(
+        carbon.gridColumns(1),
 
         h2(
-            className("heading-02"),
+            Carbon.HEADING_03,
 
-            t("Condensed")
+            t("Grid (Condensed)")
         )
     );
 
-    div(
-        className("grid-condensed grid-cols-1 md:grid-cols-2 lg:grid-cols-4"),
+    carbon.gridCondensed(
+        carbon.gridColumns(1, Carbon.MD, 2, Carbon.LG, 4),
 
         div(
             className("aspect-2x1 tile"),

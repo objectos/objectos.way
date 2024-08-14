@@ -37,34 +37,38 @@ public final class Carbon extends CarbonComponents {
   /**
    * A screen width breakpoint for responsive design.
    */
-  public sealed interface Breakpoint {}
+  public sealed interface Breakpoint {
+    int index();
+  }
 
-  record CarbonBreakpoint(String name) implements Breakpoint {}
+  record CarbonBreakpoint(int index, String name) implements Breakpoint {}
+
+  static final Breakpoint NONE = new CarbonBreakpoint(0, "none");
 
   /**
    * The Small breakpoint.
    */
-  public static final Breakpoint SM = new CarbonBreakpoint("sm");
+  public static final Breakpoint SM = new CarbonBreakpoint(1, "sm");
 
   /**
    * The Medium breakpoint.
    */
-  public static final Breakpoint MD = new CarbonBreakpoint("md");
+  public static final Breakpoint MD = new CarbonBreakpoint(2, "md");
 
   /**
    * The Large breakpoint.
    */
-  public static final Breakpoint LG = new CarbonBreakpoint("lg");
+  public static final Breakpoint LG = new CarbonBreakpoint(3, "lg");
 
   /**
    * The X-Large breakpoint.
    */
-  public static final Breakpoint XL = new CarbonBreakpoint("xl");
+  public static final Breakpoint XL = new CarbonBreakpoint(4, "xl");
 
   /**
    * The Max breakpoint.
    */
-  public static final Breakpoint MAX = new CarbonBreakpoint("max");
+  public static final Breakpoint MAX = new CarbonBreakpoint(5, "max");
 
   public sealed interface MenuElement {}
 
