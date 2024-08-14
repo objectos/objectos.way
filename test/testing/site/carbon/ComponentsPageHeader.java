@@ -15,6 +15,7 @@
  */
 package testing.site.carbon;
 
+import objectos.way.Carbon;
 import objectos.way.Http;
 
 final class ComponentsPageHeader extends CarbonPage {
@@ -35,6 +36,13 @@ final class ComponentsPageHeader extends CarbonPage {
 
   @Override
   protected final void renderContent() {
+    carbon.pageHeader(
+        Carbon.PAGE_HEADER_TITLE_ONLY,
+
+        carbon.pageHeaderTitleRow(
+            carbon.pageHeaderTitle("Page header")
+        )
+    );
   }
 
   protected final void renderContent0() {

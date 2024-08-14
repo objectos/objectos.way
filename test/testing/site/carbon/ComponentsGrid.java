@@ -15,6 +15,7 @@
  */
 package testing.site.carbon;
 
+import objectos.way.Carbon;
 import objectos.way.Http;
 
 final class ComponentsGrid extends CarbonPage {
@@ -35,41 +36,51 @@ final class ComponentsGrid extends CarbonPage {
 
   @Override
   protected final void renderContent() {
-    //        , carbon.gridWide(
-    //            carbon.gridColumns(1, Carbon.MD, 2, Carbon.LG, 4),
-    //
-    //            carbon.heading2(
-    //                Carbon.HEADING_03,
-    //
-    //                carbon.gridSpan(0),
-    //
-    //                carbon.text("Grid (Wide)")
-    //            ),
-    //
-    //            carbon.tile(
-    //                Carbon.ASPECT_2X1,
-    //
-    //                carbon.text("Column 1")
-    //            ),
-    //
-    //            carbon.tile(
-    //                Carbon.ASPECT_2X1,
-    //
-    //                carbon.text("Column 2")
-    //            ),
-    //
-    //            carbon.tile(
-    //                Carbon.ASPECT_2X1,
-    //
-    //                carbon.text("Column 3")
-    //            ),
-    //
-    //            carbon.tile(
-    //                Carbon.ASPECT_2X1,
-    //
-    //                carbon.text("Column 4")
-    //            )
-    //        )
+    carbon.pageHeader(
+        Carbon.PAGE_HEADER_TITLE_ONLY,
+
+        carbon.pageHeaderTitleRow(
+            carbon.pageHeaderTitle("Grid")
+        )
+    );
+
+    /*
+    carbon.gridWide(
+        carbon.gridColumns(1, Carbon.MD, 2, Carbon.LG, 4),
+    
+        h2(
+            Carbon.HEADING_03,
+    
+            carbon.gridSpan(0),
+    
+            t("Grid (Wide)")
+        ),
+    
+        carbon.tile(
+            Carbon.ASPECT_2X1,
+    
+            t("Column 1")
+        ),
+    
+        carbon.tile(
+            Carbon.ASPECT_2X1,
+    
+            t("Column 2")
+        ),
+    
+        carbon.tile(
+            Carbon.ASPECT_2X1,
+    
+            t("Column 3")
+        ),
+    
+        carbon.tile(
+            Carbon.ASPECT_2X1,
+    
+            t("Column 4")
+        )
+    );
+    */
   }
 
   protected final void renderContent0() {

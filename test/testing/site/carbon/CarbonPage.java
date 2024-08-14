@@ -122,6 +122,7 @@ abstract class CarbonPage extends Carbon.Template {
         dataFrame("main", getClass().getSimpleName()),
 
         Carbon.HEADER_OFFSET, Carbon.SIDE_NAV_OFFSET,
+        className("flex flex-col gap-y-spacing-05"),
 
         f(this::renderContent)
     );

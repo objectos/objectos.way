@@ -231,6 +231,51 @@ abstract class CarbonComponents {
   """);
 
   //
+  // Grid
+  //
+
+  private static final Html.ClassName __GRID = Html.classText("""
+      mx-auto grid w-full max-w-screen-max
+      md:px-16px
+      max:px-24px
+      """);
+
+  private static final Html.ClassName __GRID_WIDE = Html.classText("""
+      *:mx-16px
+      """);
+
+  private static final Html.ClassName __GRID_NARROW = Html.classText("""
+      *:mr-16px
+      """);
+
+  private static final Html.ClassName __GRID_CONDENSED = Html.classText("""
+      *:mx-0.5px
+      """);
+
+  private static final Html.ClassName GRID_WIDE = Html.className(__GRID, __GRID_WIDE);
+
+  @SuppressWarnings("unused")
+  private static final Html.ClassName GRID_NARROW = Html.className(__GRID, __GRID_NARROW);
+
+  @SuppressWarnings("unused")
+  private static final Html.ClassName GRID_CONDENSED = Html.className(__GRID, __GRID_CONDENSED);
+
+  public final Html.ClassName gridColumns(int mobile) {
+    //return new CarbonClassName("grid-cols-" + mobile);
+    throw new UnsupportedOperationException("Implement me");
+  }
+
+  public final ClassName gridColumns(int mobile, Breakpoint point1, int value1) {
+    //return new CarbonClassName("grid-cols-" + mobile + " " + point1 + ":grid-cols-" + value1);
+    throw new UnsupportedOperationException("Implement me");
+  }
+
+  public final ClassName gridColumns(int mobile, Breakpoint point1, int value1, Breakpoint point2, int value2) {
+    //return new CarbonClassName("grid-cols-" + mobile + " " + point1 + ":grid-cols-" + value1 + " " + point2 + ":grid-cols-" + value2);
+    throw new UnsupportedOperationException("Implement me");
+  }
+
+  //
   // Header
   //
 
@@ -532,6 +577,54 @@ abstract class CarbonComponents {
   }
 
   //
+  // PageHeader
+  //
+
+  private static final Html.ClassName PAGE_HEADER = Html.classText("""
+      sticky bg-layer
+      shadow-[0_1px_0_var(--cds-layer-accent)]
+      """);
+
+  public static final Html.ClassName PAGE_HEADER_TITLE_ONLY = Html.classText("""
+      py-32px
+      """);
+
+  public final Html.ElementInstruction pageHeader(Html.Instruction... contents) {
+    return tmpl.div(
+        PAGE_HEADER,
+
+        tmpl.flatten(contents)
+    );
+  }
+
+  private static final Html.ClassName PAGE_HEADER_TITLE = Html.classText("""
+      col-span-full
+      md:col-span-3
+      """);
+
+  public final Html.ElementInstruction pageHeaderTitle(String title) {
+    Check.notNull(title, "title == null");
+
+    return tmpl.h1(
+        PAGE_HEADER_TITLE, HEADING_04,
+
+        tmpl.t(title)
+    );
+  }
+
+  private static final Html.ClassName __PAGE_HEADER_TITLE_ROW = Html.classText("""
+      grid-cols-5 gap-y-spacing-05
+      """);
+
+  public final Html.ElementInstruction pageHeaderTitleRow(Html.Instruction... contents) {
+    return tmpl.div(
+        GRID_WIDE, __PAGE_HEADER_TITLE_ROW,
+
+        tmpl.flatten(contents)
+    );
+  }
+
+  //
   // SideNav
   //
 
@@ -759,21 +852,6 @@ abstract class CarbonComponents {
             tmpl.span(link.text())
         )
     );
-  }
-
-  public final Html.ClassName gridColumns(int mobile) {
-    //return new CarbonClassName("grid-cols-" + mobile);
-    throw new UnsupportedOperationException("Implement me");
-  }
-
-  public final ClassName gridColumns(int mobile, Breakpoint point1, int value1) {
-    //return new CarbonClassName("grid-cols-" + mobile + " " + point1 + ":grid-cols-" + value1);
-    throw new UnsupportedOperationException("Implement me");
-  }
-
-  public final ClassName gridColumns(int mobile, Breakpoint point1, int value1, Breakpoint point2, int value2) {
-    //return new CarbonClassName("grid-cols-" + mobile + " " + point1 + ":grid-cols-" + value1 + " " + point2 + ":grid-cols-" + value2);
-    throw new UnsupportedOperationException("Implement me");
   }
 
 }
