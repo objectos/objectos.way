@@ -606,8 +606,6 @@ final class CarbonStyles implements Http.Handler {
 
         componentsDataTable(),
 
-        componentsGrid(),
-
         componentsLink(),
 
         componentsModal(),
@@ -1096,27 +1094,6 @@ final class CarbonStyles implements Http.Handler {
     __button-icon-danger-ghost-base __button-icon-size-xl
     # button-icon-danger-ghost-2xl
     __button-icon-danger-ghost-base __button-icon-size-2xl
-    """);
-  }
-
-  private Css.Option componentsGrid() {
-    return Css.components("""
-    # __grid
-    mx-auto grid w-full max-w-screen-max
-    md:px-16px
-    max:px-24px
-
-    # grid-wide
-    __grid
-    *:mx-16px
-
-    # grid-narrow
-    __grid
-    *:mr-16px
-
-    # grid-condensed
-    __grid
-    *:mx-0.5px
     """);
   }
 
