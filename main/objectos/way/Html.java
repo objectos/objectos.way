@@ -103,6 +103,9 @@ public final class Html {
    * pseudom types
    */
 
+  /**
+   * An attribute in a compiled {@link Html.Template}
+   */
   public interface Attribute {
 
     String name();
@@ -120,7 +123,7 @@ public final class Html {
   }
 
   /**
-   * A compiled {@link HtmlTemplate}.
+   * A compiled {@link Html.Template}.
    */
   public interface Document {
 
@@ -1077,31 +1080,15 @@ public final class Html {
     );
   }
 
-  public static ClassName className(String... values) {
-    StringBuilder sb;
-    sb = new StringBuilder();
-
-    classNameValues(sb, values);
-
-    String value;
-    value = sb.toString();
-
-    return new HtmlClassName(value);
-  }
-
-  private static void classNameValues(StringBuilder sb, String... values) {
-    for (int i = 0; i < values.length; i++) {
-      if (i > 0) {
-        sb.append(' ');
-      }
-
-      String value;
-      value = Check.notNull(values[i], "values[", i, "] == null");
-
-      sb.append(value);
-    }
-  }
-
+  /**
+   * Creates a new {@code ClassName} instance whose value is given by joining
+   * the lines of specified text block around the space character.
+   *
+   * @param text
+   *        the text block value
+   *
+   * @return a newly constructed {@code ClassName} instance
+   */
   public static ClassName classText(String text) {
     String[] lines;
     lines = text.split("\n+");
@@ -1187,15 +1174,47 @@ public final class Html {
   public sealed interface ObjectInstruction extends Instruction {}
 
   /**
-   * The value of an HTML {@code class} attribute.
+   * An instruction to render an HTML attribute and its value.
    */
-  public non-sealed interface ClassName extends ObjectInstruction, VoidInstruction {
+  public non-sealed interface AttributeObject extends ObjectInstruction, VoidInstruction {
+
+    /**
+     * The HTML attribute name.
+     *
+     * @return the HTML attribute name
+     */
+    AttributeName name();
+
+    /**
+     * The HTML attribute value.
+     *
+     * @return the HTML attribute value
+     */
+    String value();
+
+  }
+
+  /**
+   * An instruction to render an HTML {@code class} attribute.
+   */
+  public interface ClassName extends AttributeObject {
+
+    /**
+     * The {@code class} attribute name.
+     *
+     * @return the {@code class} attribute name
+     */
+    @Override
+    default AttributeName name() {
+      return HtmlAttributeName.CLASS;
+    }
 
     /**
      * The {@code class} value.
      *
      * @return the {@code class} value
      */
+    @Override
     String value();
 
   }
@@ -1203,15 +1222,26 @@ public final class Html {
   record HtmlClassName(String value) implements ClassName {}
 
   /**
-   * The value of an HTML {@code id} attribute.
+   * An instruction to render an HTML {@code id} attribute.
    */
-  public sealed interface Id extends ObjectInstruction, VoidInstruction {
+  public interface Id extends AttributeObject {
+
+    /**
+     * The {@code id} attribute name.
+     *
+     * @return the {@code id} attribute name
+     */
+    @Override
+    default AttributeName name() {
+      return HtmlAttributeName.ID;
+    }
 
     /**
      * The {@code id} value.
      *
      * @return the {@code id} value
      */
+    @Override
     String value();
 
   }

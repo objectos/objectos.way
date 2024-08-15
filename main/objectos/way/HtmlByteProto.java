@@ -46,8 +46,9 @@ final class HtmlByteProto {
 
   public static final byte ATTRIBUTE0 = -20;
   public static final byte ATTRIBUTE1 = -21;
-  public static final byte ATTRIBUTE_CLASS = -22;
-  public static final byte ATTRIBUTE_ID = -23;
+  //public static final byte ATTRIBUTE_CLASS = -22;
+  //public static final byte ATTRIBUTE_ID = -23;
+  public static final byte ATTRIBUTE_EXT1 = -22;
 
   private HtmlByteProto() {}
 

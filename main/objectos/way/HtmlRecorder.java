@@ -18,6 +18,7 @@ package objectos.way;
 import objectos.lang.object.Check;
 import objectos.util.array.ByteArrays;
 import objectos.util.array.ObjectArrays;
+import objectos.way.Html.AttributeName;
 
 class HtmlRecorder {
 
@@ -208,27 +209,29 @@ class HtmlRecorder {
       auxAdd(HtmlByteProto.INTERNAL);
     }
 
-    else if (value instanceof Html.Id ext) {
-      int index;
-      index = externalValue(ext.value());
+    else if (value instanceof Html.AttributeObject ext) {
+      AttributeName name;
+      name = ext.name();
+
+      int nameIndex;
+      nameIndex = name.index();
+
+      if (nameIndex < 0) {
+        throw new UnsupportedOperationException("Custom attribute name");
+      }
+
+      int valueIndex;
+      valueIndex = externalValue(ext.value());
 
       auxAdd(
-          HtmlByteProto.ATTRIBUTE_ID,
+          HtmlByteProto.ATTRIBUTE_EXT1,
 
-          HtmlBytes.encodeInt0(index),
-          HtmlBytes.encodeInt1(index)
-      );
-    }
+          // name
+          HtmlBytes.encodeInt0(nameIndex),
 
-    else if (value instanceof Html.ClassName ext) {
-      int index;
-      index = externalValue(ext.value());
-
-      auxAdd(
-          HtmlByteProto.ATTRIBUTE_CLASS,
-
-          HtmlBytes.encodeInt0(index),
-          HtmlBytes.encodeInt1(index)
+          // value
+          HtmlBytes.encodeInt0(valueIndex),
+          HtmlBytes.encodeInt1(valueIndex)
       );
     }
 
@@ -259,10 +262,12 @@ class HtmlRecorder {
       mark = aux[index++];
 
       switch (mark) {
-        case HtmlByteProto.ATTRIBUTE_CLASS,
-             HtmlByteProto.ATTRIBUTE_ID,
-             HtmlByteProto.TEXT -> {
+        case HtmlByteProto.TEXT -> {
           mainAdd(mark, aux[index++], aux[index++]);
+        }
+
+        case HtmlByteProto.ATTRIBUTE_EXT1 -> {
+          mainAdd(mark, aux[index++], aux[index++], aux[index++]);
         }
 
         case HtmlByteProto.INTERNAL -> {
@@ -552,15 +557,17 @@ class HtmlRecorder {
       proto = main[index++];
 
       switch (proto) {
-        case HtmlByteProto.ATTRIBUTE_CLASS,
-             HtmlByteProto.ATTRIBUTE_ID -> {
+        case HtmlByteProto.ATTRIBUTE_EXT1 -> {
           byte idx0;
           idx0 = main[index++];
 
           byte idx1;
           idx1 = main[index++];
 
-          mainAdd(proto, idx0, idx1);
+          byte idx2;
+          idx2 = main[index++];
+
+          mainAdd(proto, idx0, idx1, idx2);
         }
 
         case HtmlByteProto.AMBIGUOUS1,

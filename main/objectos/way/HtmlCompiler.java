@@ -62,6 +62,7 @@ final class HtmlCompiler extends HtmlCompilerElements implements Html.Compiler {
 
   private int id = 0;
 
+  @Override
   public final Html.Id nextId() {
     return Html.id("html-" + ++id);
   }
@@ -632,8 +633,7 @@ final class HtmlCompiler extends HtmlCompilerElements implements Html.Compiler {
 
         case HtmlByteProto.ATTRIBUTE0,
              HtmlByteProto.ATTRIBUTE1,
-             HtmlByteProto.ATTRIBUTE_CLASS,
-             HtmlByteProto.ATTRIBUTE_ID -> {
+             HtmlByteProto.ATTRIBUTE_EXT1 -> {
           index = rollbackIndex;
 
           nextState = _ELEMENT_ATTRS_HAS_NEXT;
@@ -727,22 +727,8 @@ final class HtmlCompiler extends HtmlCompilerElements implements Html.Compiler {
         v1 = main[auxStart++];
       }
 
-      case HtmlByteProto.ATTRIBUTE_CLASS -> {
-        int ordinal;
-        ordinal = HtmlAttributeName.CLASS.index();
-
-        attr = HtmlBytes.encodeInt0(ordinal);
-
-        v0 = main[index++];
-
-        v1 = main[index++];
-      }
-
-      case HtmlByteProto.ATTRIBUTE_ID -> {
-        int ordinal;
-        ordinal = HtmlAttributeName.ID.index();
-
-        attr = HtmlBytes.encodeInt0(ordinal);
+      case HtmlByteProto.ATTRIBUTE_EXT1 -> {
+        attr = main[index++];
 
         v0 = main[index++];
 
@@ -901,28 +887,9 @@ final class HtmlCompiler extends HtmlCompilerElements implements Html.Compiler {
           break loop;
         }
 
-        case HtmlByteProto.ATTRIBUTE_CLASS -> {
-          int ordinal;
-          ordinal = HtmlAttributeName.CLASS.index();
-
+        case HtmlByteProto.ATTRIBUTE_EXT1 -> {
           byte attr;
-          attr = HtmlBytes.encodeInt0(ordinal);
-
-          if (attr == currentAttr) {
-            nextState = _ATTRIBUTE_VALUES_HAS_NEXT;
-          }
-
-          index = rollbackIndex;
-
-          break loop;
-        }
-
-        case HtmlByteProto.ATTRIBUTE_ID -> {
-          int ordinal;
-          ordinal = HtmlAttributeName.ID.index();
-
-          byte attr;
-          attr = HtmlBytes.encodeInt0(ordinal);
+          attr = main[index++];
 
           if (attr == currentAttr) {
             nextState = _ATTRIBUTE_VALUES_HAS_NEXT;
@@ -1005,7 +972,10 @@ final class HtmlCompiler extends HtmlCompilerElements implements Html.Compiler {
         yield toObject(v0, v1);
       }
 
-      case HtmlByteProto.ATTRIBUTE_CLASS -> {
+      case HtmlByteProto.ATTRIBUTE_EXT1 -> {
+        // skip ordinal
+        index++;
+
         byte v0;
         v0 = main[index++];
 
@@ -1146,8 +1116,7 @@ final class HtmlCompiler extends HtmlCompilerElements implements Html.Compiler {
         case HtmlByteProto.ATTRIBUTE0,
              HtmlByteProto.ATTRIBUTE1 -> index = skipVarInt(index);
 
-        case HtmlByteProto.ATTRIBUTE_CLASS,
-             HtmlByteProto.ATTRIBUTE_ID -> index += 2;
+        case HtmlByteProto.ATTRIBUTE_EXT1 -> index += 3;
 
         case HtmlByteProto.ELEMENT,
              HtmlByteProto.RAW,
