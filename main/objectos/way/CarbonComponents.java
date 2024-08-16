@@ -633,6 +633,30 @@ abstract class CarbonComponents {
     );
   }
 
+  public final Html.ElementInstruction button(
+      Html.ElementName renderAs, Carbon.ButtonVariant variant, Carbon.ButtonSize size,
+      boolean iconOnly, Html.Instruction... contents) {
+    CarbonButtonVariant thisVariant;
+    thisVariant = (CarbonButtonVariant) variant;
+
+    int variantIndex;
+    variantIndex = thisVariant.index();
+
+    CarbonSize thisSize;
+    thisSize = (CarbonSize) size;
+
+    int sizeIndex;
+    sizeIndex = thisSize.index();
+
+    return tmpl.element(
+        renderAs,
+        iconOnly ? BUTTON_ICON_ONLY_VARIANTS[variantIndex] : BUTTON_VARIANTS[variantIndex],
+        iconOnly ? BUTTON_ICON_ONLY_SIZES[sizeIndex] : BUTTON_SIZES[sizeIndex],
+
+        tmpl.flatten(contents)
+    );
+  }
+
   //
   // DataTable
   //

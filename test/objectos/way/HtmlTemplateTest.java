@@ -1472,6 +1472,27 @@ public class HtmlTemplateTest {
     );
   }
 
+  @Test(description = """
+  Generic element
+  """)
+  public void testCase64() {
+    test(
+        new Html.Template() {
+          @Override
+          protected final void render() throws IOException {
+            element(
+                Html.ElementName.BLOCKQUOTE,
+                className("foo")
+            );
+          }
+        },
+
+        """
+        <blockquote class="foo"></blockquote>
+        """
+    );
+  }
+
   private void test(Html.Template template, String expected) {
     String result;
     result = template.toString();

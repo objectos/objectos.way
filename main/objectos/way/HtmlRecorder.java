@@ -131,7 +131,9 @@ class HtmlRecorder {
     return Html.ATTRIBUTE;
   }
 
-  final void element(Html.ElementName name, Html.Instruction[] contents) {
+  public final Html.ElementInstruction element(Html.ElementName name, Html.Instruction... contents) {
+    Check.notNull(name, "name == null");
+
     elementBegin(name);
 
     for (int i = 0; i < contents.length; i++) {
@@ -142,14 +144,21 @@ class HtmlRecorder {
     }
 
     elementEnd();
+
+    return Html.ELEMENT;
   }
 
-  final void element(Html.ElementName name, String text) {
+  public final Html.ElementInstruction element(Html.ElementName name, String text) {
+    Check.notNull(name, "name == null");
+    Check.notNull(text, "text == null");
+
     textImpl(text);
 
     elementBegin(name);
     elementValue(Html.ELEMENT);
     elementEnd();
+
+    return Html.ELEMENT;
   }
 
   final void elementBegin(Html.ElementName name) {

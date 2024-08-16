@@ -182,6 +182,10 @@ public final class Html {
 
     DataOnInstruction dataOn(AttributeName name, Script.Action value);
 
+    ElementInstruction element(ElementName name, Html.Instruction... contents);
+
+    ElementInstruction element(ElementName name, String text);
+
     /**
      * Flattens the specified instructions so that each of the specified
      * instructions is individually added, in order, to a receiving element.
@@ -726,6 +730,10 @@ public final class Html {
       value = Script.join(actions);
 
       return $compiler().dataOn(name, value);
+    }
+
+    protected final Html.ElementInstruction element(Html.ElementName name, Html.Instruction... contents) {
+      return $compiler().element(name, contents);
     }
 
     /**
