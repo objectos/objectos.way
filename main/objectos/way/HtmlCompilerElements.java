@@ -32,8 +32,7 @@ abstract class HtmlCompilerElements extends HtmlCompilerAttributes {
    * @return an instruction representing this element.
    */
   public final Html.ElementInstruction a(Html.Instruction... contents) {
-    element(HtmlElementName.A, contents);
-    return Html.ELEMENT;
+    return element(HtmlElementName.A, contents);
   }
 
   /**
@@ -45,8 +44,7 @@ abstract class HtmlCompilerElements extends HtmlCompilerAttributes {
    * @return an instruction representing this element.
    */
   public final Html.ElementInstruction a(String text) {
-    element(HtmlElementName.A, text);
-    return Html.ELEMENT;
+    return element(HtmlElementName.A, text);
   }
 
   /**
@@ -58,8 +56,7 @@ abstract class HtmlCompilerElements extends HtmlCompilerAttributes {
    * @return an instruction representing this element.
    */
   public final Html.ElementInstruction abbr(Html.Instruction... contents) {
-    element(HtmlElementName.ABBR, contents);
-    return Html.ELEMENT;
+    return element(HtmlElementName.ABBR, contents);
   }
 
   /**
@@ -71,8 +68,7 @@ abstract class HtmlCompilerElements extends HtmlCompilerAttributes {
    * @return an instruction representing this element.
    */
   public final Html.ElementInstruction abbr(String text) {
-    element(HtmlElementName.ABBR, text);
-    return Html.ELEMENT;
+    return element(HtmlElementName.ABBR, text);
   }
 
   /**
@@ -84,8 +80,7 @@ abstract class HtmlCompilerElements extends HtmlCompilerAttributes {
    * @return an instruction representing this element.
    */
   public final Html.ElementInstruction article(Html.Instruction... contents) {
-    element(HtmlElementName.ARTICLE, contents);
-    return Html.ELEMENT;
+    return element(HtmlElementName.ARTICLE, contents);
   }
 
   /**
@@ -97,8 +92,7 @@ abstract class HtmlCompilerElements extends HtmlCompilerAttributes {
    * @return an instruction representing this element.
    */
   public final Html.ElementInstruction article(String text) {
-    element(HtmlElementName.ARTICLE, text);
-    return Html.ELEMENT;
+    return element(HtmlElementName.ARTICLE, text);
   }
 
   /**
@@ -110,8 +104,7 @@ abstract class HtmlCompilerElements extends HtmlCompilerAttributes {
    * @return an instruction representing this element.
    */
   public final Html.ElementInstruction b(Html.Instruction... contents) {
-    element(HtmlElementName.B, contents);
-    return Html.ELEMENT;
+    return element(HtmlElementName.B, contents);
   }
 
   /**
@@ -123,8 +116,7 @@ abstract class HtmlCompilerElements extends HtmlCompilerAttributes {
    * @return an instruction representing this element.
    */
   public final Html.ElementInstruction b(String text) {
-    element(HtmlElementName.B, text);
-    return Html.ELEMENT;
+    return element(HtmlElementName.B, text);
   }
 
   /**
@@ -136,8 +128,7 @@ abstract class HtmlCompilerElements extends HtmlCompilerAttributes {
    * @return an instruction representing this element.
    */
   public final Html.ElementInstruction blockquote(Html.Instruction... contents) {
-    element(HtmlElementName.BLOCKQUOTE, contents);
-    return Html.ELEMENT;
+    return element(HtmlElementName.BLOCKQUOTE, contents);
   }
 
   /**
@@ -149,8 +140,7 @@ abstract class HtmlCompilerElements extends HtmlCompilerAttributes {
    * @return an instruction representing this element.
    */
   public final Html.ElementInstruction blockquote(String text) {
-    element(HtmlElementName.BLOCKQUOTE, text);
-    return Html.ELEMENT;
+    return element(HtmlElementName.BLOCKQUOTE, text);
   }
 
   /**
@@ -162,8 +152,7 @@ abstract class HtmlCompilerElements extends HtmlCompilerAttributes {
    * @return an instruction representing this element.
    */
   public final Html.ElementInstruction body(Html.Instruction... contents) {
-    element(HtmlElementName.BODY, contents);
-    return Html.ELEMENT;
+    return element(HtmlElementName.BODY, contents);
   }
 
   /**
@@ -175,8 +164,7 @@ abstract class HtmlCompilerElements extends HtmlCompilerAttributes {
    * @return an instruction representing this element.
    */
   public final Html.ElementInstruction body(String text) {
-    element(HtmlElementName.BODY, text);
-    return Html.ELEMENT;
+    return element(HtmlElementName.BODY, text);
   }
 
   /**
@@ -188,8 +176,7 @@ abstract class HtmlCompilerElements extends HtmlCompilerAttributes {
    * @return an instruction representing this element.
    */
   public final Html.ElementInstruction br(Html.VoidInstruction... contents) {
-    element(HtmlElementName.BR, contents);
-    return Html.ELEMENT;
+    return element(HtmlElementName.BR, contents);
   }
 
   /**
@@ -201,8 +188,7 @@ abstract class HtmlCompilerElements extends HtmlCompilerAttributes {
    * @return an instruction representing this element.
    */
   public final Html.ElementInstruction button(Html.Instruction... contents) {
-    element(HtmlElementName.BUTTON, contents);
-    return Html.ELEMENT;
+    return element(HtmlElementName.BUTTON, contents);
   }
 
   /**
@@ -214,8 +200,7 @@ abstract class HtmlCompilerElements extends HtmlCompilerAttributes {
    * @return an instruction representing this element.
    */
   public final Html.ElementInstruction button(String text) {
-    element(HtmlElementName.BUTTON, text);
-    return Html.ELEMENT;
+    return element(HtmlElementName.BUTTON, text);
   }
 
   /**
@@ -227,8 +212,7 @@ abstract class HtmlCompilerElements extends HtmlCompilerAttributes {
    * @return an instruction representing this element.
    */
   public final Html.ElementInstruction clipPath(Html.Instruction... contents) {
-    element(HtmlElementName.CLIPPATH, contents);
-    return Html.ELEMENT;
+    return element(HtmlElementName.CLIPPATH, contents);
   }
 
   /**
@@ -253,8 +237,7 @@ abstract class HtmlCompilerElements extends HtmlCompilerAttributes {
    * @return an instruction representing this element.
    */
   public final Html.ElementInstruction code(Html.Instruction... contents) {
-    element(HtmlElementName.CODE, contents);
-    return Html.ELEMENT;
+    return element(HtmlElementName.CODE, contents);
   }
 
   /**
@@ -266,8 +249,7 @@ abstract class HtmlCompilerElements extends HtmlCompilerAttributes {
    * @return an instruction representing this element.
    */
   public final Html.ElementInstruction code(String text) {
-    element(HtmlElementName.CODE, text);
-    return Html.ELEMENT;
+    return element(HtmlElementName.CODE, text);
   }
 
   /**
@@ -279,8 +261,7 @@ abstract class HtmlCompilerElements extends HtmlCompilerAttributes {
    * @return an instruction representing this element.
    */
   public final Html.ElementInstruction dd(Html.Instruction... contents) {
-    element(HtmlElementName.DD, contents);
-    return Html.ELEMENT;
+    return element(HtmlElementName.DD, contents);
   }
 
   /**
@@ -292,8 +273,7 @@ abstract class HtmlCompilerElements extends HtmlCompilerAttributes {
    * @return an instruction representing this element.
    */
   public final Html.ElementInstruction dd(String text) {
-    element(HtmlElementName.DD, text);
-    return Html.ELEMENT;
+    return element(HtmlElementName.DD, text);
   }
 
   /**
@@ -305,8 +285,7 @@ abstract class HtmlCompilerElements extends HtmlCompilerAttributes {
    * @return an instruction representing this element.
    */
   public final Html.ElementInstruction defs(Html.Instruction... contents) {
-    element(HtmlElementName.DEFS, contents);
-    return Html.ELEMENT;
+    return element(HtmlElementName.DEFS, contents);
   }
 
   /**
@@ -318,8 +297,7 @@ abstract class HtmlCompilerElements extends HtmlCompilerAttributes {
    * @return an instruction representing this element.
    */
   public final Html.ElementInstruction defs(String text) {
-    element(HtmlElementName.DEFS, text);
-    return Html.ELEMENT;
+    return element(HtmlElementName.DEFS, text);
   }
 
   /**
@@ -331,8 +309,7 @@ abstract class HtmlCompilerElements extends HtmlCompilerAttributes {
    * @return an instruction representing this element.
    */
   public final Html.ElementInstruction details(Html.Instruction... contents) {
-    element(HtmlElementName.DETAILS, contents);
-    return Html.ELEMENT;
+    return element(HtmlElementName.DETAILS, contents);
   }
 
   /**
@@ -344,8 +321,7 @@ abstract class HtmlCompilerElements extends HtmlCompilerAttributes {
    * @return an instruction representing this element.
    */
   public final Html.ElementInstruction details(String text) {
-    element(HtmlElementName.DETAILS, text);
-    return Html.ELEMENT;
+    return element(HtmlElementName.DETAILS, text);
   }
 
   /**
@@ -357,8 +333,7 @@ abstract class HtmlCompilerElements extends HtmlCompilerAttributes {
    * @return an instruction representing this element.
    */
   public final Html.ElementInstruction div(Html.Instruction... contents) {
-    element(HtmlElementName.DIV, contents);
-    return Html.ELEMENT;
+    return element(HtmlElementName.DIV, contents);
   }
 
   /**
@@ -370,8 +345,7 @@ abstract class HtmlCompilerElements extends HtmlCompilerAttributes {
    * @return an instruction representing this element.
    */
   public final Html.ElementInstruction div(String text) {
-    element(HtmlElementName.DIV, text);
-    return Html.ELEMENT;
+    return element(HtmlElementName.DIV, text);
   }
 
   /**
@@ -383,8 +357,7 @@ abstract class HtmlCompilerElements extends HtmlCompilerAttributes {
    * @return an instruction representing this element.
    */
   public final Html.ElementInstruction dl(Html.Instruction... contents) {
-    element(HtmlElementName.DL, contents);
-    return Html.ELEMENT;
+    return element(HtmlElementName.DL, contents);
   }
 
   /**
@@ -396,8 +369,7 @@ abstract class HtmlCompilerElements extends HtmlCompilerAttributes {
    * @return an instruction representing this element.
    */
   public final Html.ElementInstruction dl(String text) {
-    element(HtmlElementName.DL, text);
-    return Html.ELEMENT;
+    return element(HtmlElementName.DL, text);
   }
 
   /**
@@ -409,8 +381,7 @@ abstract class HtmlCompilerElements extends HtmlCompilerAttributes {
    * @return an instruction representing this element.
    */
   public final Html.ElementInstruction dt(Html.Instruction... contents) {
-    element(HtmlElementName.DT, contents);
-    return Html.ELEMENT;
+    return element(HtmlElementName.DT, contents);
   }
 
   /**
@@ -422,8 +393,7 @@ abstract class HtmlCompilerElements extends HtmlCompilerAttributes {
    * @return an instruction representing this element.
    */
   public final Html.ElementInstruction dt(String text) {
-    element(HtmlElementName.DT, text);
-    return Html.ELEMENT;
+    return element(HtmlElementName.DT, text);
   }
 
   /**
@@ -435,8 +405,7 @@ abstract class HtmlCompilerElements extends HtmlCompilerAttributes {
    * @return an instruction representing this element.
    */
   public final Html.ElementInstruction em(Html.Instruction... contents) {
-    element(HtmlElementName.EM, contents);
-    return Html.ELEMENT;
+    return element(HtmlElementName.EM, contents);
   }
 
   /**
@@ -448,8 +417,7 @@ abstract class HtmlCompilerElements extends HtmlCompilerAttributes {
    * @return an instruction representing this element.
    */
   public final Html.ElementInstruction em(String text) {
-    element(HtmlElementName.EM, text);
-    return Html.ELEMENT;
+    return element(HtmlElementName.EM, text);
   }
 
   /**
@@ -461,8 +429,7 @@ abstract class HtmlCompilerElements extends HtmlCompilerAttributes {
    * @return an instruction representing this element.
    */
   public final Html.ElementInstruction fieldset(Html.Instruction... contents) {
-    element(HtmlElementName.FIELDSET, contents);
-    return Html.ELEMENT;
+    return element(HtmlElementName.FIELDSET, contents);
   }
 
   /**
@@ -474,8 +441,7 @@ abstract class HtmlCompilerElements extends HtmlCompilerAttributes {
    * @return an instruction representing this element.
    */
   public final Html.ElementInstruction fieldset(String text) {
-    element(HtmlElementName.FIELDSET, text);
-    return Html.ELEMENT;
+    return element(HtmlElementName.FIELDSET, text);
   }
 
   /**
@@ -487,8 +453,7 @@ abstract class HtmlCompilerElements extends HtmlCompilerAttributes {
    * @return an instruction representing this element.
    */
   public final Html.ElementInstruction figure(Html.Instruction... contents) {
-    element(HtmlElementName.FIGURE, contents);
-    return Html.ELEMENT;
+    return element(HtmlElementName.FIGURE, contents);
   }
 
   /**
@@ -500,8 +465,7 @@ abstract class HtmlCompilerElements extends HtmlCompilerAttributes {
    * @return an instruction representing this element.
    */
   public final Html.ElementInstruction figure(String text) {
-    element(HtmlElementName.FIGURE, text);
-    return Html.ELEMENT;
+    return element(HtmlElementName.FIGURE, text);
   }
 
   /**
@@ -513,8 +477,7 @@ abstract class HtmlCompilerElements extends HtmlCompilerAttributes {
    * @return an instruction representing this element.
    */
   public final Html.ElementInstruction footer(Html.Instruction... contents) {
-    element(HtmlElementName.FOOTER, contents);
-    return Html.ELEMENT;
+    return element(HtmlElementName.FOOTER, contents);
   }
 
   /**
@@ -526,8 +489,7 @@ abstract class HtmlCompilerElements extends HtmlCompilerAttributes {
    * @return an instruction representing this element.
    */
   public final Html.ElementInstruction footer(String text) {
-    element(HtmlElementName.FOOTER, text);
-    return Html.ELEMENT;
+    return element(HtmlElementName.FOOTER, text);
   }
 
   /**
@@ -539,8 +501,7 @@ abstract class HtmlCompilerElements extends HtmlCompilerAttributes {
    * @return an instruction representing this element.
    */
   public final Html.ElementInstruction form(Html.Instruction... contents) {
-    element(HtmlElementName.FORM, contents);
-    return Html.ELEMENT;
+    return element(HtmlElementName.FORM, contents);
   }
 
   /**
@@ -565,8 +526,7 @@ abstract class HtmlCompilerElements extends HtmlCompilerAttributes {
    * @return an instruction representing this element.
    */
   public final Html.ElementInstruction g(Html.Instruction... contents) {
-    element(HtmlElementName.G, contents);
-    return Html.ELEMENT;
+    return element(HtmlElementName.G, contents);
   }
 
   /**
@@ -578,8 +538,7 @@ abstract class HtmlCompilerElements extends HtmlCompilerAttributes {
    * @return an instruction representing this element.
    */
   public final Html.ElementInstruction g(String text) {
-    element(HtmlElementName.G, text);
-    return Html.ELEMENT;
+    return element(HtmlElementName.G, text);
   }
 
   /**
@@ -591,8 +550,7 @@ abstract class HtmlCompilerElements extends HtmlCompilerAttributes {
    * @return an instruction representing this element.
    */
   public final Html.ElementInstruction h1(Html.Instruction... contents) {
-    element(HtmlElementName.H1, contents);
-    return Html.ELEMENT;
+    return element(HtmlElementName.H1, contents);
   }
 
   /**
@@ -604,8 +562,7 @@ abstract class HtmlCompilerElements extends HtmlCompilerAttributes {
    * @return an instruction representing this element.
    */
   public final Html.ElementInstruction h1(String text) {
-    element(HtmlElementName.H1, text);
-    return Html.ELEMENT;
+    return element(HtmlElementName.H1, text);
   }
 
   /**
@@ -617,8 +574,7 @@ abstract class HtmlCompilerElements extends HtmlCompilerAttributes {
    * @return an instruction representing this element.
    */
   public final Html.ElementInstruction h2(Html.Instruction... contents) {
-    element(HtmlElementName.H2, contents);
-    return Html.ELEMENT;
+    return element(HtmlElementName.H2, contents);
   }
 
   /**
@@ -630,8 +586,7 @@ abstract class HtmlCompilerElements extends HtmlCompilerAttributes {
    * @return an instruction representing this element.
    */
   public final Html.ElementInstruction h2(String text) {
-    element(HtmlElementName.H2, text);
-    return Html.ELEMENT;
+    return element(HtmlElementName.H2, text);
   }
 
   /**
@@ -643,8 +598,7 @@ abstract class HtmlCompilerElements extends HtmlCompilerAttributes {
    * @return an instruction representing this element.
    */
   public final Html.ElementInstruction h3(Html.Instruction... contents) {
-    element(HtmlElementName.H3, contents);
-    return Html.ELEMENT;
+    return element(HtmlElementName.H3, contents);
   }
 
   /**
@@ -656,8 +610,7 @@ abstract class HtmlCompilerElements extends HtmlCompilerAttributes {
    * @return an instruction representing this element.
    */
   public final Html.ElementInstruction h3(String text) {
-    element(HtmlElementName.H3, text);
-    return Html.ELEMENT;
+    return element(HtmlElementName.H3, text);
   }
 
   /**
@@ -669,8 +622,7 @@ abstract class HtmlCompilerElements extends HtmlCompilerAttributes {
    * @return an instruction representing this element.
    */
   public final Html.ElementInstruction h4(Html.Instruction... contents) {
-    element(HtmlElementName.H4, contents);
-    return Html.ELEMENT;
+    return element(HtmlElementName.H4, contents);
   }
 
   /**
@@ -682,8 +634,7 @@ abstract class HtmlCompilerElements extends HtmlCompilerAttributes {
    * @return an instruction representing this element.
    */
   public final Html.ElementInstruction h4(String text) {
-    element(HtmlElementName.H4, text);
-    return Html.ELEMENT;
+    return element(HtmlElementName.H4, text);
   }
 
   /**
@@ -695,8 +646,7 @@ abstract class HtmlCompilerElements extends HtmlCompilerAttributes {
    * @return an instruction representing this element.
    */
   public final Html.ElementInstruction h5(Html.Instruction... contents) {
-    element(HtmlElementName.H5, contents);
-    return Html.ELEMENT;
+    return element(HtmlElementName.H5, contents);
   }
 
   /**
@@ -708,8 +658,7 @@ abstract class HtmlCompilerElements extends HtmlCompilerAttributes {
    * @return an instruction representing this element.
    */
   public final Html.ElementInstruction h5(String text) {
-    element(HtmlElementName.H5, text);
-    return Html.ELEMENT;
+    return element(HtmlElementName.H5, text);
   }
 
   /**
@@ -721,8 +670,7 @@ abstract class HtmlCompilerElements extends HtmlCompilerAttributes {
    * @return an instruction representing this element.
    */
   public final Html.ElementInstruction h6(Html.Instruction... contents) {
-    element(HtmlElementName.H6, contents);
-    return Html.ELEMENT;
+    return element(HtmlElementName.H6, contents);
   }
 
   /**
@@ -734,8 +682,7 @@ abstract class HtmlCompilerElements extends HtmlCompilerAttributes {
    * @return an instruction representing this element.
    */
   public final Html.ElementInstruction h6(String text) {
-    element(HtmlElementName.H6, text);
-    return Html.ELEMENT;
+    return element(HtmlElementName.H6, text);
   }
 
   /**
@@ -747,8 +694,7 @@ abstract class HtmlCompilerElements extends HtmlCompilerAttributes {
    * @return an instruction representing this element.
    */
   public final Html.ElementInstruction head(Html.Instruction... contents) {
-    element(HtmlElementName.HEAD, contents);
-    return Html.ELEMENT;
+    return element(HtmlElementName.HEAD, contents);
   }
 
   /**
@@ -760,8 +706,7 @@ abstract class HtmlCompilerElements extends HtmlCompilerAttributes {
    * @return an instruction representing this element.
    */
   public final Html.ElementInstruction head(String text) {
-    element(HtmlElementName.HEAD, text);
-    return Html.ELEMENT;
+    return element(HtmlElementName.HEAD, text);
   }
 
   /**
@@ -773,8 +718,7 @@ abstract class HtmlCompilerElements extends HtmlCompilerAttributes {
    * @return an instruction representing this element.
    */
   public final Html.ElementInstruction header(Html.Instruction... contents) {
-    element(HtmlElementName.HEADER, contents);
-    return Html.ELEMENT;
+    return element(HtmlElementName.HEADER, contents);
   }
 
   /**
@@ -786,8 +730,7 @@ abstract class HtmlCompilerElements extends HtmlCompilerAttributes {
    * @return an instruction representing this element.
    */
   public final Html.ElementInstruction header(String text) {
-    element(HtmlElementName.HEADER, text);
-    return Html.ELEMENT;
+    return element(HtmlElementName.HEADER, text);
   }
 
   /**
@@ -799,8 +742,7 @@ abstract class HtmlCompilerElements extends HtmlCompilerAttributes {
    * @return an instruction representing this element.
    */
   public final Html.ElementInstruction hgroup(Html.Instruction... contents) {
-    element(HtmlElementName.HGROUP, contents);
-    return Html.ELEMENT;
+    return element(HtmlElementName.HGROUP, contents);
   }
 
   /**
@@ -812,8 +754,7 @@ abstract class HtmlCompilerElements extends HtmlCompilerAttributes {
    * @return an instruction representing this element.
    */
   public final Html.ElementInstruction hgroup(String text) {
-    element(HtmlElementName.HGROUP, text);
-    return Html.ELEMENT;
+    return element(HtmlElementName.HGROUP, text);
   }
 
   /**
@@ -825,8 +766,7 @@ abstract class HtmlCompilerElements extends HtmlCompilerAttributes {
    * @return an instruction representing this element.
    */
   public final Html.ElementInstruction hr(Html.VoidInstruction... contents) {
-    element(HtmlElementName.HR, contents);
-    return Html.ELEMENT;
+    return element(HtmlElementName.HR, contents);
   }
 
   /**
@@ -838,8 +778,7 @@ abstract class HtmlCompilerElements extends HtmlCompilerAttributes {
    * @return an instruction representing this element.
    */
   public final Html.ElementInstruction html(Html.Instruction... contents) {
-    element(HtmlElementName.HTML, contents);
-    return Html.ELEMENT;
+    return element(HtmlElementName.HTML, contents);
   }
 
   /**
@@ -851,8 +790,7 @@ abstract class HtmlCompilerElements extends HtmlCompilerAttributes {
    * @return an instruction representing this element.
    */
   public final Html.ElementInstruction html(String text) {
-    element(HtmlElementName.HTML, text);
-    return Html.ELEMENT;
+    return element(HtmlElementName.HTML, text);
   }
 
   /**
@@ -864,8 +802,7 @@ abstract class HtmlCompilerElements extends HtmlCompilerAttributes {
    * @return an instruction representing this element.
    */
   public final Html.ElementInstruction img(Html.VoidInstruction... contents) {
-    element(HtmlElementName.IMG, contents);
-    return Html.ELEMENT;
+    return element(HtmlElementName.IMG, contents);
   }
 
   /**
@@ -877,8 +814,7 @@ abstract class HtmlCompilerElements extends HtmlCompilerAttributes {
    * @return an instruction representing this element.
    */
   public final Html.ElementInstruction input(Html.VoidInstruction... contents) {
-    element(HtmlElementName.INPUT, contents);
-    return Html.ELEMENT;
+    return element(HtmlElementName.INPUT, contents);
   }
 
   /**
@@ -890,8 +826,7 @@ abstract class HtmlCompilerElements extends HtmlCompilerAttributes {
    * @return an instruction representing this element.
    */
   public final Html.ElementInstruction kbd(Html.Instruction... contents) {
-    element(HtmlElementName.KBD, contents);
-    return Html.ELEMENT;
+    return element(HtmlElementName.KBD, contents);
   }
 
   /**
@@ -903,8 +838,7 @@ abstract class HtmlCompilerElements extends HtmlCompilerAttributes {
    * @return an instruction representing this element.
    */
   public final Html.ElementInstruction kbd(String text) {
-    element(HtmlElementName.KBD, text);
-    return Html.ELEMENT;
+    return element(HtmlElementName.KBD, text);
   }
 
   /**
@@ -916,8 +850,7 @@ abstract class HtmlCompilerElements extends HtmlCompilerAttributes {
    * @return an instruction representing this element.
    */
   public final Html.ElementInstruction label(Html.Instruction... contents) {
-    element(HtmlElementName.LABEL, contents);
-    return Html.ELEMENT;
+    return element(HtmlElementName.LABEL, contents);
   }
 
   /**
@@ -942,8 +875,7 @@ abstract class HtmlCompilerElements extends HtmlCompilerAttributes {
    * @return an instruction representing this element.
    */
   public final Html.ElementInstruction legend(Html.Instruction... contents) {
-    element(HtmlElementName.LEGEND, contents);
-    return Html.ELEMENT;
+    return element(HtmlElementName.LEGEND, contents);
   }
 
   /**
@@ -955,8 +887,7 @@ abstract class HtmlCompilerElements extends HtmlCompilerAttributes {
    * @return an instruction representing this element.
    */
   public final Html.ElementInstruction legend(String text) {
-    element(HtmlElementName.LEGEND, text);
-    return Html.ELEMENT;
+    return element(HtmlElementName.LEGEND, text);
   }
 
   /**
@@ -968,8 +899,7 @@ abstract class HtmlCompilerElements extends HtmlCompilerAttributes {
    * @return an instruction representing this element.
    */
   public final Html.ElementInstruction li(Html.Instruction... contents) {
-    element(HtmlElementName.LI, contents);
-    return Html.ELEMENT;
+    return element(HtmlElementName.LI, contents);
   }
 
   /**
@@ -981,8 +911,7 @@ abstract class HtmlCompilerElements extends HtmlCompilerAttributes {
    * @return an instruction representing this element.
    */
   public final Html.ElementInstruction li(String text) {
-    element(HtmlElementName.LI, text);
-    return Html.ELEMENT;
+    return element(HtmlElementName.LI, text);
   }
 
   /**
@@ -994,8 +923,7 @@ abstract class HtmlCompilerElements extends HtmlCompilerAttributes {
    * @return an instruction representing this element.
    */
   public final Html.ElementInstruction link(Html.VoidInstruction... contents) {
-    element(HtmlElementName.LINK, contents);
-    return Html.ELEMENT;
+    return element(HtmlElementName.LINK, contents);
   }
 
   /**
@@ -1007,8 +935,7 @@ abstract class HtmlCompilerElements extends HtmlCompilerAttributes {
    * @return an instruction representing this element.
    */
   public final Html.ElementInstruction main(Html.Instruction... contents) {
-    element(HtmlElementName.MAIN, contents);
-    return Html.ELEMENT;
+    return element(HtmlElementName.MAIN, contents);
   }
 
   /**
@@ -1020,8 +947,7 @@ abstract class HtmlCompilerElements extends HtmlCompilerAttributes {
    * @return an instruction representing this element.
    */
   public final Html.ElementInstruction main(String text) {
-    element(HtmlElementName.MAIN, text);
-    return Html.ELEMENT;
+    return element(HtmlElementName.MAIN, text);
   }
 
   /**
@@ -1033,8 +959,7 @@ abstract class HtmlCompilerElements extends HtmlCompilerAttributes {
    * @return an instruction representing this element.
    */
   public final Html.ElementInstruction menu(Html.Instruction... contents) {
-    element(HtmlElementName.MENU, contents);
-    return Html.ELEMENT;
+    return element(HtmlElementName.MENU, contents);
   }
 
   /**
@@ -1046,8 +971,7 @@ abstract class HtmlCompilerElements extends HtmlCompilerAttributes {
    * @return an instruction representing this element.
    */
   public final Html.ElementInstruction menu(String text) {
-    element(HtmlElementName.MENU, text);
-    return Html.ELEMENT;
+    return element(HtmlElementName.MENU, text);
   }
 
   /**
@@ -1059,8 +983,7 @@ abstract class HtmlCompilerElements extends HtmlCompilerAttributes {
    * @return an instruction representing this element.
    */
   public final Html.ElementInstruction meta(Html.VoidInstruction... contents) {
-    element(HtmlElementName.META, contents);
-    return Html.ELEMENT;
+    return element(HtmlElementName.META, contents);
   }
 
   /**
@@ -1072,8 +995,7 @@ abstract class HtmlCompilerElements extends HtmlCompilerAttributes {
    * @return an instruction representing this element.
    */
   public final Html.ElementInstruction nav(Html.Instruction... contents) {
-    element(HtmlElementName.NAV, contents);
-    return Html.ELEMENT;
+    return element(HtmlElementName.NAV, contents);
   }
 
   /**
@@ -1085,8 +1007,7 @@ abstract class HtmlCompilerElements extends HtmlCompilerAttributes {
    * @return an instruction representing this element.
    */
   public final Html.ElementInstruction nav(String text) {
-    element(HtmlElementName.NAV, text);
-    return Html.ELEMENT;
+    return element(HtmlElementName.NAV, text);
   }
 
   /**
@@ -1098,8 +1019,7 @@ abstract class HtmlCompilerElements extends HtmlCompilerAttributes {
    * @return an instruction representing this element.
    */
   public final Html.ElementInstruction ol(Html.Instruction... contents) {
-    element(HtmlElementName.OL, contents);
-    return Html.ELEMENT;
+    return element(HtmlElementName.OL, contents);
   }
 
   /**
@@ -1111,8 +1031,7 @@ abstract class HtmlCompilerElements extends HtmlCompilerAttributes {
    * @return an instruction representing this element.
    */
   public final Html.ElementInstruction ol(String text) {
-    element(HtmlElementName.OL, text);
-    return Html.ELEMENT;
+    return element(HtmlElementName.OL, text);
   }
 
   /**
@@ -1124,8 +1043,7 @@ abstract class HtmlCompilerElements extends HtmlCompilerAttributes {
    * @return an instruction representing this element.
    */
   public final Html.ElementInstruction optgroup(Html.Instruction... contents) {
-    element(HtmlElementName.OPTGROUP, contents);
-    return Html.ELEMENT;
+    return element(HtmlElementName.OPTGROUP, contents);
   }
 
   /**
@@ -1137,8 +1055,7 @@ abstract class HtmlCompilerElements extends HtmlCompilerAttributes {
    * @return an instruction representing this element.
    */
   public final Html.ElementInstruction optgroup(String text) {
-    element(HtmlElementName.OPTGROUP, text);
-    return Html.ELEMENT;
+    return element(HtmlElementName.OPTGROUP, text);
   }
 
   /**
@@ -1150,8 +1067,7 @@ abstract class HtmlCompilerElements extends HtmlCompilerAttributes {
    * @return an instruction representing this element.
    */
   public final Html.ElementInstruction option(Html.Instruction... contents) {
-    element(HtmlElementName.OPTION, contents);
-    return Html.ELEMENT;
+    return element(HtmlElementName.OPTION, contents);
   }
 
   /**
@@ -1163,8 +1079,7 @@ abstract class HtmlCompilerElements extends HtmlCompilerAttributes {
    * @return an instruction representing this element.
    */
   public final Html.ElementInstruction option(String text) {
-    element(HtmlElementName.OPTION, text);
-    return Html.ELEMENT;
+    return element(HtmlElementName.OPTION, text);
   }
 
   /**
@@ -1176,8 +1091,7 @@ abstract class HtmlCompilerElements extends HtmlCompilerAttributes {
    * @return an instruction representing this element.
    */
   public final Html.ElementInstruction p(Html.Instruction... contents) {
-    element(HtmlElementName.P, contents);
-    return Html.ELEMENT;
+    return element(HtmlElementName.P, contents);
   }
 
   /**
@@ -1189,8 +1103,7 @@ abstract class HtmlCompilerElements extends HtmlCompilerAttributes {
    * @return an instruction representing this element.
    */
   public final Html.ElementInstruction p(String text) {
-    element(HtmlElementName.P, text);
-    return Html.ELEMENT;
+    return element(HtmlElementName.P, text);
   }
 
   /**
@@ -1202,8 +1115,7 @@ abstract class HtmlCompilerElements extends HtmlCompilerAttributes {
    * @return an instruction representing this element.
    */
   public final Html.ElementInstruction path(Html.Instruction... contents) {
-    element(HtmlElementName.PATH, contents);
-    return Html.ELEMENT;
+    return element(HtmlElementName.PATH, contents);
   }
 
   /**
@@ -1215,8 +1127,7 @@ abstract class HtmlCompilerElements extends HtmlCompilerAttributes {
    * @return an instruction representing this element.
    */
   public final Html.ElementInstruction path(String text) {
-    element(HtmlElementName.PATH, text);
-    return Html.ELEMENT;
+    return element(HtmlElementName.PATH, text);
   }
 
   /**
@@ -1228,8 +1139,7 @@ abstract class HtmlCompilerElements extends HtmlCompilerAttributes {
    * @return an instruction representing this element.
    */
   public final Html.ElementInstruction pre(Html.Instruction... contents) {
-    element(HtmlElementName.PRE, contents);
-    return Html.ELEMENT;
+    return element(HtmlElementName.PRE, contents);
   }
 
   /**
@@ -1241,8 +1151,7 @@ abstract class HtmlCompilerElements extends HtmlCompilerAttributes {
    * @return an instruction representing this element.
    */
   public final Html.ElementInstruction pre(String text) {
-    element(HtmlElementName.PRE, text);
-    return Html.ELEMENT;
+    return element(HtmlElementName.PRE, text);
   }
 
   /**
@@ -1254,8 +1163,7 @@ abstract class HtmlCompilerElements extends HtmlCompilerAttributes {
    * @return an instruction representing this element.
    */
   public final Html.ElementInstruction progress(Html.Instruction... contents) {
-    element(HtmlElementName.PROGRESS, contents);
-    return Html.ELEMENT;
+    return element(HtmlElementName.PROGRESS, contents);
   }
 
   /**
@@ -1267,8 +1175,7 @@ abstract class HtmlCompilerElements extends HtmlCompilerAttributes {
    * @return an instruction representing this element.
    */
   public final Html.ElementInstruction progress(String text) {
-    element(HtmlElementName.PROGRESS, text);
-    return Html.ELEMENT;
+    return element(HtmlElementName.PROGRESS, text);
   }
 
   /**
@@ -1280,8 +1187,7 @@ abstract class HtmlCompilerElements extends HtmlCompilerAttributes {
    * @return an instruction representing this element.
    */
   public final Html.ElementInstruction samp(Html.Instruction... contents) {
-    element(HtmlElementName.SAMP, contents);
-    return Html.ELEMENT;
+    return element(HtmlElementName.SAMP, contents);
   }
 
   /**
@@ -1293,8 +1199,7 @@ abstract class HtmlCompilerElements extends HtmlCompilerAttributes {
    * @return an instruction representing this element.
    */
   public final Html.ElementInstruction samp(String text) {
-    element(HtmlElementName.SAMP, text);
-    return Html.ELEMENT;
+    return element(HtmlElementName.SAMP, text);
   }
 
   /**
@@ -1306,8 +1211,7 @@ abstract class HtmlCompilerElements extends HtmlCompilerAttributes {
    * @return an instruction representing this element.
    */
   public final Html.ElementInstruction script(Html.Instruction... contents) {
-    element(HtmlElementName.SCRIPT, contents);
-    return Html.ELEMENT;
+    return element(HtmlElementName.SCRIPT, contents);
   }
 
   /**
@@ -1319,8 +1223,7 @@ abstract class HtmlCompilerElements extends HtmlCompilerAttributes {
    * @return an instruction representing this element.
    */
   public final Html.ElementInstruction script(String text) {
-    element(HtmlElementName.SCRIPT, text);
-    return Html.ELEMENT;
+    return element(HtmlElementName.SCRIPT, text);
   }
 
   /**
@@ -1332,8 +1235,7 @@ abstract class HtmlCompilerElements extends HtmlCompilerAttributes {
    * @return an instruction representing this element.
    */
   public final Html.ElementInstruction section(Html.Instruction... contents) {
-    element(HtmlElementName.SECTION, contents);
-    return Html.ELEMENT;
+    return element(HtmlElementName.SECTION, contents);
   }
 
   /**
@@ -1345,8 +1247,7 @@ abstract class HtmlCompilerElements extends HtmlCompilerAttributes {
    * @return an instruction representing this element.
    */
   public final Html.ElementInstruction section(String text) {
-    element(HtmlElementName.SECTION, text);
-    return Html.ELEMENT;
+    return element(HtmlElementName.SECTION, text);
   }
 
   /**
@@ -1358,8 +1259,7 @@ abstract class HtmlCompilerElements extends HtmlCompilerAttributes {
    * @return an instruction representing this element.
    */
   public final Html.ElementInstruction select(Html.Instruction... contents) {
-    element(HtmlElementName.SELECT, contents);
-    return Html.ELEMENT;
+    return element(HtmlElementName.SELECT, contents);
   }
 
   /**
@@ -1371,8 +1271,7 @@ abstract class HtmlCompilerElements extends HtmlCompilerAttributes {
    * @return an instruction representing this element.
    */
   public final Html.ElementInstruction select(String text) {
-    element(HtmlElementName.SELECT, text);
-    return Html.ELEMENT;
+    return element(HtmlElementName.SELECT, text);
   }
 
   /**
@@ -1384,8 +1283,7 @@ abstract class HtmlCompilerElements extends HtmlCompilerAttributes {
    * @return an instruction representing this element.
    */
   public final Html.ElementInstruction small(Html.Instruction... contents) {
-    element(HtmlElementName.SMALL, contents);
-    return Html.ELEMENT;
+    return element(HtmlElementName.SMALL, contents);
   }
 
   /**
@@ -1397,8 +1295,7 @@ abstract class HtmlCompilerElements extends HtmlCompilerAttributes {
    * @return an instruction representing this element.
    */
   public final Html.ElementInstruction small(String text) {
-    element(HtmlElementName.SMALL, text);
-    return Html.ELEMENT;
+    return element(HtmlElementName.SMALL, text);
   }
 
   /**
@@ -1410,8 +1307,7 @@ abstract class HtmlCompilerElements extends HtmlCompilerAttributes {
    * @return an instruction representing this element.
    */
   public final Html.ElementInstruction span(Html.Instruction... contents) {
-    element(HtmlElementName.SPAN, contents);
-    return Html.ELEMENT;
+    return element(HtmlElementName.SPAN, contents);
   }
 
   /**
@@ -1423,8 +1319,7 @@ abstract class HtmlCompilerElements extends HtmlCompilerAttributes {
    * @return an instruction representing this element.
    */
   public final Html.ElementInstruction span(String text) {
-    element(HtmlElementName.SPAN, text);
-    return Html.ELEMENT;
+    return element(HtmlElementName.SPAN, text);
   }
 
   /**
@@ -1436,8 +1331,7 @@ abstract class HtmlCompilerElements extends HtmlCompilerAttributes {
    * @return an instruction representing this element.
    */
   public final Html.ElementInstruction strong(Html.Instruction... contents) {
-    element(HtmlElementName.STRONG, contents);
-    return Html.ELEMENT;
+    return element(HtmlElementName.STRONG, contents);
   }
 
   /**
@@ -1449,8 +1343,7 @@ abstract class HtmlCompilerElements extends HtmlCompilerAttributes {
    * @return an instruction representing this element.
    */
   public final Html.ElementInstruction strong(String text) {
-    element(HtmlElementName.STRONG, text);
-    return Html.ELEMENT;
+    return element(HtmlElementName.STRONG, text);
   }
 
   /**
@@ -1462,8 +1355,7 @@ abstract class HtmlCompilerElements extends HtmlCompilerAttributes {
    * @return an instruction representing this element.
    */
   public final Html.ElementInstruction style(Html.Instruction... contents) {
-    element(HtmlElementName.STYLE, contents);
-    return Html.ELEMENT;
+    return element(HtmlElementName.STYLE, contents);
   }
 
   /**
@@ -1475,8 +1367,7 @@ abstract class HtmlCompilerElements extends HtmlCompilerAttributes {
    * @return an instruction representing this element.
    */
   public final Html.ElementInstruction style(String text) {
-    element(HtmlElementName.STYLE, text);
-    return Html.ELEMENT;
+    return element(HtmlElementName.STYLE, text);
   }
 
   /**
@@ -1488,8 +1379,7 @@ abstract class HtmlCompilerElements extends HtmlCompilerAttributes {
    * @return an instruction representing this element.
    */
   public final Html.ElementInstruction sub(Html.Instruction... contents) {
-    element(HtmlElementName.SUB, contents);
-    return Html.ELEMENT;
+    return element(HtmlElementName.SUB, contents);
   }
 
   /**
@@ -1501,8 +1391,7 @@ abstract class HtmlCompilerElements extends HtmlCompilerAttributes {
    * @return an instruction representing this element.
    */
   public final Html.ElementInstruction sub(String text) {
-    element(HtmlElementName.SUB, text);
-    return Html.ELEMENT;
+    return element(HtmlElementName.SUB, text);
   }
 
   /**
@@ -1514,8 +1403,7 @@ abstract class HtmlCompilerElements extends HtmlCompilerAttributes {
    * @return an instruction representing this element.
    */
   public final Html.ElementInstruction summary(Html.Instruction... contents) {
-    element(HtmlElementName.SUMMARY, contents);
-    return Html.ELEMENT;
+    return element(HtmlElementName.SUMMARY, contents);
   }
 
   /**
@@ -1527,8 +1415,7 @@ abstract class HtmlCompilerElements extends HtmlCompilerAttributes {
    * @return an instruction representing this element.
    */
   public final Html.ElementInstruction summary(String text) {
-    element(HtmlElementName.SUMMARY, text);
-    return Html.ELEMENT;
+    return element(HtmlElementName.SUMMARY, text);
   }
 
   /**
@@ -1540,8 +1427,7 @@ abstract class HtmlCompilerElements extends HtmlCompilerAttributes {
    * @return an instruction representing this element.
    */
   public final Html.ElementInstruction sup(Html.Instruction... contents) {
-    element(HtmlElementName.SUP, contents);
-    return Html.ELEMENT;
+    return element(HtmlElementName.SUP, contents);
   }
 
   /**
@@ -1553,8 +1439,7 @@ abstract class HtmlCompilerElements extends HtmlCompilerAttributes {
    * @return an instruction representing this element.
    */
   public final Html.ElementInstruction sup(String text) {
-    element(HtmlElementName.SUP, text);
-    return Html.ELEMENT;
+    return element(HtmlElementName.SUP, text);
   }
 
   /**
@@ -1566,8 +1451,7 @@ abstract class HtmlCompilerElements extends HtmlCompilerAttributes {
    * @return an instruction representing this element.
    */
   public final Html.ElementInstruction svg(Html.Instruction... contents) {
-    element(HtmlElementName.SVG, contents);
-    return Html.ELEMENT;
+    return element(HtmlElementName.SVG, contents);
   }
 
   /**
@@ -1579,8 +1463,7 @@ abstract class HtmlCompilerElements extends HtmlCompilerAttributes {
    * @return an instruction representing this element.
    */
   public final Html.ElementInstruction svg(String text) {
-    element(HtmlElementName.SVG, text);
-    return Html.ELEMENT;
+    return element(HtmlElementName.SVG, text);
   }
 
   /**
@@ -1592,8 +1475,7 @@ abstract class HtmlCompilerElements extends HtmlCompilerAttributes {
    * @return an instruction representing this element.
    */
   public final Html.ElementInstruction table(Html.Instruction... contents) {
-    element(HtmlElementName.TABLE, contents);
-    return Html.ELEMENT;
+    return element(HtmlElementName.TABLE, contents);
   }
 
   /**
@@ -1605,8 +1487,7 @@ abstract class HtmlCompilerElements extends HtmlCompilerAttributes {
    * @return an instruction representing this element.
    */
   public final Html.ElementInstruction table(String text) {
-    element(HtmlElementName.TABLE, text);
-    return Html.ELEMENT;
+    return element(HtmlElementName.TABLE, text);
   }
 
   /**
@@ -1618,8 +1499,7 @@ abstract class HtmlCompilerElements extends HtmlCompilerAttributes {
    * @return an instruction representing this element.
    */
   public final Html.ElementInstruction tbody(Html.Instruction... contents) {
-    element(HtmlElementName.TBODY, contents);
-    return Html.ELEMENT;
+    return element(HtmlElementName.TBODY, contents);
   }
 
   /**
@@ -1631,8 +1511,7 @@ abstract class HtmlCompilerElements extends HtmlCompilerAttributes {
    * @return an instruction representing this element.
    */
   public final Html.ElementInstruction tbody(String text) {
-    element(HtmlElementName.TBODY, text);
-    return Html.ELEMENT;
+    return element(HtmlElementName.TBODY, text);
   }
 
   /**
@@ -1644,8 +1523,7 @@ abstract class HtmlCompilerElements extends HtmlCompilerAttributes {
    * @return an instruction representing this element.
    */
   public final Html.ElementInstruction td(Html.Instruction... contents) {
-    element(HtmlElementName.TD, contents);
-    return Html.ELEMENT;
+    return element(HtmlElementName.TD, contents);
   }
 
   /**
@@ -1657,8 +1535,7 @@ abstract class HtmlCompilerElements extends HtmlCompilerAttributes {
    * @return an instruction representing this element.
    */
   public final Html.ElementInstruction td(String text) {
-    element(HtmlElementName.TD, text);
-    return Html.ELEMENT;
+    return element(HtmlElementName.TD, text);
   }
 
   /**
@@ -1670,8 +1547,7 @@ abstract class HtmlCompilerElements extends HtmlCompilerAttributes {
    * @return an instruction representing this element.
    */
   public final Html.ElementInstruction template(Html.Instruction... contents) {
-    element(HtmlElementName.TEMPLATE, contents);
-    return Html.ELEMENT;
+    return element(HtmlElementName.TEMPLATE, contents);
   }
 
   /**
@@ -1683,8 +1559,7 @@ abstract class HtmlCompilerElements extends HtmlCompilerAttributes {
    * @return an instruction representing this element.
    */
   public final Html.ElementInstruction template(String text) {
-    element(HtmlElementName.TEMPLATE, text);
-    return Html.ELEMENT;
+    return element(HtmlElementName.TEMPLATE, text);
   }
 
   /**
@@ -1696,8 +1571,7 @@ abstract class HtmlCompilerElements extends HtmlCompilerAttributes {
    * @return an instruction representing this element.
    */
   public final Html.ElementInstruction textarea(Html.Instruction... contents) {
-    element(HtmlElementName.TEXTAREA, contents);
-    return Html.ELEMENT;
+    return element(HtmlElementName.TEXTAREA, contents);
   }
 
   /**
@@ -1709,8 +1583,7 @@ abstract class HtmlCompilerElements extends HtmlCompilerAttributes {
    * @return an instruction representing this element.
    */
   public final Html.ElementInstruction textarea(String text) {
-    element(HtmlElementName.TEXTAREA, text);
-    return Html.ELEMENT;
+    return element(HtmlElementName.TEXTAREA, text);
   }
 
   /**
@@ -1722,8 +1595,7 @@ abstract class HtmlCompilerElements extends HtmlCompilerAttributes {
    * @return an instruction representing this element.
    */
   public final Html.ElementInstruction th(Html.Instruction... contents) {
-    element(HtmlElementName.TH, contents);
-    return Html.ELEMENT;
+    return element(HtmlElementName.TH, contents);
   }
 
   /**
@@ -1735,8 +1607,7 @@ abstract class HtmlCompilerElements extends HtmlCompilerAttributes {
    * @return an instruction representing this element.
    */
   public final Html.ElementInstruction th(String text) {
-    element(HtmlElementName.TH, text);
-    return Html.ELEMENT;
+    return element(HtmlElementName.TH, text);
   }
 
   /**
@@ -1748,8 +1619,7 @@ abstract class HtmlCompilerElements extends HtmlCompilerAttributes {
    * @return an instruction representing this element.
    */
   public final Html.ElementInstruction thead(Html.Instruction... contents) {
-    element(HtmlElementName.THEAD, contents);
-    return Html.ELEMENT;
+    return element(HtmlElementName.THEAD, contents);
   }
 
   /**
@@ -1761,8 +1631,7 @@ abstract class HtmlCompilerElements extends HtmlCompilerAttributes {
    * @return an instruction representing this element.
    */
   public final Html.ElementInstruction thead(String text) {
-    element(HtmlElementName.THEAD, text);
-    return Html.ELEMENT;
+    return element(HtmlElementName.THEAD, text);
   }
 
   /**
@@ -1774,8 +1643,7 @@ abstract class HtmlCompilerElements extends HtmlCompilerAttributes {
    * @return an instruction representing this element.
    */
   public final Html.ElementInstruction title(Html.Instruction... contents) {
-    element(HtmlElementName.TITLE, contents);
-    return Html.ELEMENT;
+    return element(HtmlElementName.TITLE, contents);
   }
 
   /**
@@ -1800,8 +1668,7 @@ abstract class HtmlCompilerElements extends HtmlCompilerAttributes {
    * @return an instruction representing this element.
    */
   public final Html.ElementInstruction tr(Html.Instruction... contents) {
-    element(HtmlElementName.TR, contents);
-    return Html.ELEMENT;
+    return element(HtmlElementName.TR, contents);
   }
 
   /**
@@ -1813,8 +1680,7 @@ abstract class HtmlCompilerElements extends HtmlCompilerAttributes {
    * @return an instruction representing this element.
    */
   public final Html.ElementInstruction tr(String text) {
-    element(HtmlElementName.TR, text);
-    return Html.ELEMENT;
+    return element(HtmlElementName.TR, text);
   }
 
   /**
@@ -1826,8 +1692,7 @@ abstract class HtmlCompilerElements extends HtmlCompilerAttributes {
    * @return an instruction representing this element.
    */
   public final Html.ElementInstruction ul(Html.Instruction... contents) {
-    element(HtmlElementName.UL, contents);
-    return Html.ELEMENT;
+    return element(HtmlElementName.UL, contents);
   }
 
   /**
@@ -1839,8 +1704,7 @@ abstract class HtmlCompilerElements extends HtmlCompilerAttributes {
    * @return an instruction representing this element.
    */
   public final Html.ElementInstruction ul(String text) {
-    element(HtmlElementName.UL, text);
-    return Html.ELEMENT;
+    return element(HtmlElementName.UL, text);
   }
 
 }

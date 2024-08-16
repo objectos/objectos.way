@@ -559,6 +559,10 @@ abstract class CarbonComponents {
       justify-center
       """);
 
+  private static final Html.ClassName __BUTTON_ICON_ONLY_FILL_PRIMARY = Html.classText("""
+      svg:fill-icon-primary
+      """);
+
   private static final Html.ClassName __BUTTON_ICON_ONLY_SM = Html.classText("""
       size-32px pt-[7px]
       """);
@@ -587,7 +591,7 @@ abstract class CarbonComponents {
       // tertiary
       Html.className(__BUTTON_BASE, __BUTTON_JUSTIFY_ICON_ONLY, __BUTTON_TERTIARY),
       // ghost
-      Html.className(__BUTTON_BASE, __BUTTON_JUSTIFY_ICON_ONLY, __BUTTON_GHOST),
+      Html.className(__BUTTON_BASE, __BUTTON_JUSTIFY_ICON_ONLY, __BUTTON_GHOST, __BUTTON_ICON_ONLY_FILL_PRIMARY),
       // danger
       Html.className(__BUTTON_BASE, __BUTTON_JUSTIFY_ICON_ONLY, __BUTTON_DANGER),
       // danger-tertiary
