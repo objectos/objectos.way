@@ -47,7 +47,7 @@ final class HtmlBytes {
     return (byte) (value >>> 16);
   }
 
-  public static byte encodeName(HtmlElementName name) {
+  public static byte encodeName(Html.ElementName name) {
     int ordinal;
     ordinal = name.index();
 

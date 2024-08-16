@@ -579,7 +579,7 @@ final class HtmlCompiler extends HtmlCompilerElements implements Html.Compiler {
     stateCAS(_ELEMENT_ATTRS_ITERABLE, _ELEMENT_ATTRS_ITERATOR);
   }
 
-  final boolean elementAttributesHasNext(HtmlElementName parent) {
+  final boolean elementAttributesHasNext(Html.ElementName parent) {
     // state check
     switch (statePeek()) {
       case _ELEMENT_ATTRS_ITERATOR,

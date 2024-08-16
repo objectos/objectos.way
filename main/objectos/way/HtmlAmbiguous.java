@@ -22,30 +22,30 @@ enum HtmlAmbiguous {
   CLIPPATH(HtmlAttributeName.CLIP_PATH, HtmlElementName.CLIPPATH) {
     @Override
     public final boolean isAttributeOf(ElementName element) {
-      return element != HtmlElementName.SVG;
+      return element != Html.ElementName.SVG;
     }
   },
 
   FORM(HtmlAttributeName.FORM, HtmlElementName.FORM) {
     @Override
     public final boolean isAttributeOf(Html.ElementName element) {
-      return element == HtmlElementName.SELECT
-          || element == HtmlElementName.TEXTAREA;
+      return element == Html.ElementName.SELECT
+          || element == Html.ElementName.TEXTAREA;
     }
   },
 
   LABEL(HtmlAttributeName.LABEL, HtmlElementName.LABEL) {
     @Override
     public final boolean isAttributeOf(Html.ElementName element) {
-      return element == HtmlElementName.OPTION;
+      return element == Html.ElementName.OPTION;
     }
   },
 
   TITLE(HtmlAttributeName.TITLE, HtmlElementName.TITLE) {
     @Override
     public final boolean isAttributeOf(Html.ElementName element) {
-      return element != HtmlElementName.HEAD
-          && element != HtmlElementName.SVG;
+      return element != Html.ElementName.HEAD
+          && element != Html.ElementName.SVG;
     }
   };
 

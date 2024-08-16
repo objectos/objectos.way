@@ -15,6 +15,7 @@
  */
 package testing.site.carbon;
 
+import objectos.way.Carbon;
 import objectos.way.Http;
 
 final class ComponentsDataTable extends CarbonPage {
@@ -35,121 +36,115 @@ final class ComponentsDataTable extends CarbonPage {
 
   @Override
   protected final void renderContent() {
-  }
+    carbon.pageHeader(
+        Carbon.PAGE_HEADER_TITLE_ONLY,
 
-  protected final void renderContent0() {
-    section(
-        className("page-header page-header-title-only"),
+        carbon.pageHeaderTitleRow(
+            carbon.pageHeaderTitle("Data table")
+        )
+    );
 
-        div(
-            className("page-header-title-row"),
+    carbon.gridWide(
+        carbon.gridColumns(1), carbon.gap(Carbon.SPACING_05),
 
-            h1(
-                className("page-header-title"),
+        h2(
+            Carbon.HEADING_03,
 
-                t("Data table")
+            t("Basic")
+        ),
+
+        carbon.dataTable(
+            ariaLabel("sample table"),
+
+            carbon.dataTableHead(
+                f(this::tableHead)
+            ),
+
+            carbon.dataTableBody(
+                f(this::tableBody)
+            )
+        ),
+
+        h2(
+            Carbon.HEADING_03,
+
+            t("Basic (xs)")
+        ),
+
+        carbon.dataTable(
+            Carbon.XS,
+            ariaLabel("sample table"),
+
+            carbon.dataTableHead(
+                f(this::tableHead)
+            ),
+
+            carbon.dataTableBody(
+                f(this::tableBody)
+            )
+        ),
+
+        h2(
+            Carbon.HEADING_03,
+
+            t("Basic (sm)")
+        ),
+
+        carbon.dataTable(
+            Carbon.SM,
+            ariaLabel("sample table"),
+
+            carbon.dataTableHead(
+                f(this::tableHead)
+            ),
+
+            carbon.dataTableBody(
+                f(this::tableBody)
+            )
+        ),
+
+        h2(
+            Carbon.HEADING_03,
+
+            t("Basic (md)")
+        ),
+
+        carbon.dataTable(
+            Carbon.MD,
+            ariaLabel("sample table"),
+
+            carbon.dataTableHead(
+                f(this::tableHead)
+            ),
+
+            carbon.dataTableBody(
+                f(this::tableBody)
+            )
+        ),
+
+        h2(
+            Carbon.HEADING_03,
+
+            t("Basic (xl)")
+        ),
+
+        carbon.dataTable(
+            Carbon.XL,
+            ariaLabel("sample table"),
+
+            carbon.dataTableHead(
+                f(this::tableHead)
+            ),
+
+            carbon.dataTableBody(
+                f(this::tableBody)
             )
         )
     );
-
-    div(
-        className("grid-wide grid-cols-1"),
-
-        f(this::renderTables)
-    );
   }
 
+  @SuppressWarnings("unused")
   private void renderTables() {
-    h2(
-        className("heading-03 my-spacing-05"),
-
-        t("Basic")
-    );
-
-    div(
-        className("data-table-content"),
-        tabindex("0"),
-
-        table(
-            className("data-table"),
-            ariaLabel("sample table"),
-
-            f(this::tableContents)
-        )
-    );
-
-    h2(
-        className("heading-03 my-spacing-05"),
-
-        t("Basic (xs)")
-    );
-
-    div(
-        className("data-table-content"),
-        tabindex("0"),
-
-        table(
-            className("data-table-xs"),
-            ariaLabel("sample table"),
-
-            f(this::tableContents)
-        )
-    );
-
-    h2(
-        className("heading-03 my-spacing-05"),
-
-        t("Basic (sm)")
-    );
-
-    div(
-        className("data-table-content"),
-        tabindex("0"),
-
-        table(
-            className("data-table-sm"),
-            ariaLabel("sample table"),
-
-            f(this::tableContents)
-        )
-    );
-
-    h2(
-        className("heading-03 my-spacing-05"),
-
-        t("Basic (md)")
-    );
-
-    div(
-        className("data-table-content"),
-        tabindex("0"),
-
-        table(
-            className("data-table-md"),
-            ariaLabel("sample table"),
-
-            f(this::tableContents)
-        )
-    );
-
-    h2(
-        className("heading-03 my-spacing-05"),
-
-        t("Basic (xl)")
-    );
-
-    div(
-        className("data-table-content"),
-        tabindex("0"),
-
-        table(
-            className("data-table-xl"),
-            ariaLabel("sample table"),
-
-            f(this::tableContents)
-        )
-    );
-
     div(
         className("data-table-container my-spacing-05"),
 
@@ -220,6 +215,27 @@ final class ComponentsDataTable extends CarbonPage {
         tr(td("Load Balancer 6"), td("Round robin"), td("Disabled"), td("Test"), td("22")),
         tr(td("Load Balancer 7"), td("Round robin"), td("Disabled"), td("Test"), td("22"))
     );
+  }
+
+  private void tableHead() {
+    tr(
+        th(/*scope("col"), */ t("Name")),
+        th(/*scope("col"), */ t("Rule")),
+        th(/*scope("col"), */ t("Status")),
+        th(/*scope("col"), */ t("Other")),
+        th(/*scope("col"), */ t("Example"))
+    );
+  }
+
+  private void tableBody() {
+    /*ariaLive("polite"),*/
+    tr(td("Load Balancer 1"), td("Round robin"), td("Starting"), td("Test"), td("22"));
+    tr(td("Load Balancer 2"), td("DNS delegation"), td("Active"), td("Test"), td("22"));
+    tr(td("Load Balancer 3"), td("Round robin"), td("Disabled"), td("Test"), td("22"));
+    tr(td("Load Balancer 4"), td("Round robin"), td("Disabled"), td("Test"), td("22"));
+    tr(td("Load Balancer 5"), td("Round robin"), td("Disabled"), td("Test"), td("22"));
+    tr(td("Load Balancer 6"), td("Round robin"), td("Disabled"), td("Test"), td("22"));
+    tr(td("Load Balancer 7"), td("Round robin"), td("Disabled"), td("Test"), td("22"));
   }
 
 }

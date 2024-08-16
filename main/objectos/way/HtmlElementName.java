@@ -18,7 +18,7 @@ package objectos.way;
 import java.util.ArrayList;
 import java.util.List;
 
-final class HtmlElementName extends HtmlElementNameGenerated implements Html.ElementName {
+final class HtmlElementName implements Html.ElementName {
 
   static final class Builder {
 

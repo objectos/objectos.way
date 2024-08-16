@@ -103,9 +103,6 @@ JAVA_RELEASE := 21
 ## compile deps
 COMPILE_DEPS := $(NOTES)
 
-## compilation depends on selfgen
-COMPILE_REQS := $(SELFGEN_MARKER)
-
 ## resources
 RESOURCES := resources
 

@@ -35,7 +35,7 @@ public final class Html {
   /**
    * The name of an HTML attribute.
    */
-  public sealed interface AttributeName permits HtmlAttributeName {
+  public sealed interface AttributeName extends HtmlAttributeNameGenerated permits HtmlAttributeName {
 
     /**
      * Index of this attribute.
@@ -73,7 +73,7 @@ public final class Html {
   /**
    * The name of an HTML element.
    */
-  public sealed interface ElementName permits HtmlElementName {
+  public sealed interface ElementName extends HtmlElementNameGenerated permits HtmlElementName {
 
     /**
      * Index of this element name.
@@ -1025,6 +1025,13 @@ public final class Html {
 
   private Html() {}
 
+  public static AttributeObject attribute(AttributeName name, String value) {
+    return new HtmlAttributeObject(
+        Check.notNull(name, "name == null"),
+        Check.notNull(value, "value == null")
+    );
+  }
+
   public static Compiler createCompiler() {
     return new HtmlCompiler();
   }
@@ -1193,6 +1200,8 @@ public final class Html {
     String value();
 
   }
+
+  private record HtmlAttributeObject(AttributeName name, String value) implements AttributeObject {}
 
   /**
    * An instruction to render an HTML {@code class} attribute.

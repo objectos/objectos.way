@@ -131,7 +131,7 @@ class HtmlRecorder {
     return Html.ATTRIBUTE;
   }
 
-  final void element(HtmlElementName name, Html.Instruction[] contents) {
+  final void element(Html.ElementName name, Html.Instruction[] contents) {
     elementBegin(name);
 
     for (int i = 0; i < contents.length; i++) {
@@ -144,7 +144,7 @@ class HtmlRecorder {
     elementEnd();
   }
 
-  final void element(HtmlElementName name, String text) {
+  final void element(Html.ElementName name, String text) {
     textImpl(text);
 
     elementBegin(name);
@@ -152,7 +152,7 @@ class HtmlRecorder {
     elementEnd();
   }
 
-  final void elementBegin(HtmlElementName name) {
+  final void elementBegin(Html.ElementName name) {
     commonBegin();
 
     mainAdd(

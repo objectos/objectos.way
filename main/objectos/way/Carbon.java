@@ -20,6 +20,8 @@ import java.io.UncheckedIOException;
 import java.util.Set;
 import java.util.function.Predicate;
 import objectos.lang.object.Check;
+import objectos.way.Carbon.Size.ExtraSmall;
+import objectos.way.Carbon.Size.Max;
 
 /**
  * The <strong>Objectos Carbon UI</strong> main class.
@@ -37,16 +39,28 @@ public final class Carbon extends CarbonComponents {
   /**
    * A screen width breakpoint for responsive design.
    */
-  public sealed interface Breakpoint {
-    int index();
-  }
+  public sealed interface Breakpoint {}
 
+  /**
+   * A button variant.
+   */
   public sealed interface ButtonVariant {}
 
+  /**
+   * A button size.
+   */
   public sealed interface ButtonSize {}
 
   record CarbonButtonVariant(int index) implements ButtonVariant {}
 
+  /**
+   * A data table size.
+   */
+  public sealed interface DataTableSize {}
+
+  /**
+   * An icon.
+   */
   public enum Icon {
 
     // @formatter:off
@@ -129,9 +143,15 @@ public final class Carbon extends CarbonComponents {
    */
   public sealed interface Option {}
 
-  public sealed interface Size extends Breakpoint, ButtonSize {}
+  public sealed interface Size extends Breakpoint, ButtonSize, DataTableSize {
 
-  record CarbonSize(int index) implements Size {}
+    public sealed interface ExtraSmall extends DataTableSize {}
+
+    public sealed interface Max extends Breakpoint, ButtonSize {}
+
+  }
+
+  record CarbonSize(int index) implements ExtraSmall, Size, Max {}
 
   /**
    * A Carbon spacing token.

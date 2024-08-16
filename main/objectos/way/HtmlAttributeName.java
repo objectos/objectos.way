@@ -18,7 +18,7 @@ package objectos.way;
 import java.util.ArrayList;
 import java.util.List;
 
-final class HtmlAttributeName extends HtmlAttributeNameGenerated implements Html.AttributeName {
+final class HtmlAttributeName implements Html.AttributeName {
 
   /**
    * The {@code data-frame} attribute.

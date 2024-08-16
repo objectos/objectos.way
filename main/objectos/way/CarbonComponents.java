@@ -22,6 +22,7 @@ import objectos.way.Carbon.CarbonButtonVariant;
 import objectos.way.Carbon.CarbonMenuLink;
 import objectos.way.Carbon.CarbonSize;
 import objectos.way.Carbon.CarbonSpacing;
+import objectos.way.Carbon.DataTableSize;
 import objectos.way.Carbon.Icon;
 import objectos.way.Carbon.Size;
 import objectos.way.Carbon.Spacing;
@@ -38,29 +39,34 @@ abstract class CarbonComponents {
   static final Size NONE = new CarbonSize(0);
 
   /**
-   * The Small breakpoint.
+   * The Extra Small size.
+   */
+  public static final Size.ExtraSmall XS = new CarbonSize(0);
+
+  /**
+   * The Small size.
    */
   public static final Size SM = new CarbonSize(1);
 
   /**
-   * The Medium breakpoint.
+   * The Medium size.
    */
   public static final Size MD = new CarbonSize(2);
 
   /**
-   * The Large breakpoint.
+   * The Large size.
    */
   public static final Size LG = new CarbonSize(3);
 
   /**
-   * The X-Large breakpoint.
+   * The Extra Large size.
    */
   public static final Size XL = new CarbonSize(4);
 
   /**
-   * The Max breakpoint.
+   * The Max size.
    */
-  public static final Size MAX = new CarbonSize(5);
+  public static final Size.Max MAX = new CarbonSize(5);
 
   //
   // Typography
@@ -628,6 +634,136 @@ abstract class CarbonComponents {
   }
 
   //
+  // DataTable
+  //
+
+  private static final Html.ClassName DATA_TABLE_CONTENT = Html.classText("""
+      block overflow-x-auto
+      outline outline-2 -outline-offset-2 outline-transparent
+      focus:outline-focus
+      """);
+
+  private static final Html.ClassName __DATA_TABLE_BASE = Html.classText("""
+      w-full border-collapse border-spacing-0
+
+      tr:w-full tr:border-none
+      """);
+
+  private static final Html.ClassName __DATA_TABLE_XS = Html.classText("""
+      tr:h-24px
+      th:py-2px
+      td:py-2px
+      """);
+
+  private static final Html.ClassName __DATA_TABLE_SM = Html.classText("""
+      tr:h-32px
+      th:py-[7px]
+      td:py-[7px]
+      """);
+
+  private static final Html.ClassName __DATA_TABLE_MD = Html.classText("""
+      tr:h-40px
+      th:pt-[6px] th:pb-[7px]
+      td:pt-[6px] td:pb-[7px]
+      """);
+
+  private static final Html.ClassName __DATA_TABLE_LG = Html.classText("""
+      tr:h-48px
+      """);
+
+  private static final Html.ClassName __DATA_TABLE_XL = Html.classText("""
+      tr:h-64px
+      th:py-spacing-05 th:align-top
+      td:py-spacing-05 td:align-top
+      """);
+
+  private static final Html.ClassName[] DATA_TABLE_SIZES = {
+      __DATA_TABLE_XS, __DATA_TABLE_SM, __DATA_TABLE_MD, __DATA_TABLE_LG, __DATA_TABLE_XL
+  };
+
+  private static final Html.AttributeObject TABINDEX_0 = Html.attribute(HtmlAttributeName.TABINDEX, "0");
+
+  public final Html.ElementInstruction dataTable(Html.Instruction... contents) {
+    return dataTable(Carbon.LG, contents);
+  }
+
+  public final Html.ElementInstruction dataTable(DataTableSize size, Html.Instruction... contents) {
+    CarbonSize sizeImpl;
+    sizeImpl = (CarbonSize) size;
+
+    int sizeIndex;
+    sizeIndex = sizeImpl.index();
+
+    return tmpl.div(
+        DATA_TABLE_CONTENT, TABINDEX_0,
+
+        tmpl.table(
+            __DATA_TABLE_BASE,
+            DATA_TABLE_SIZES[sizeIndex],
+
+            tmpl.flatten(contents)
+        )
+    );
+  }
+
+  private static final Html.ClassName DATA_TABLE_THEAD = Html.classText("""
+      bg-layer-accent
+      text-14px leading-18px font-600 tracking-0.16px
+
+      th:bg-layer-accent
+      th:px-16px
+      th:text-start th:align-middle th:text-text-primary
+      """);
+
+  public final Html.ElementInstruction dataTableHead(Html.Instruction... contents) {
+    return tmpl.thead(
+        DATA_TABLE_THEAD,
+
+        tmpl.flatten(contents)
+    );
+  }
+
+  private static final Html.ClassName DATA_TABLE_TBODY = Html.classText("""
+      w-full bg-layer
+      text-14px leading-18px font-400 tracking-0.16px
+
+      tr:transition-colors tr:duration-75
+      tr:hover:bg-layer-hover
+
+      td:border-solid
+      td:border-t td:border-t-layer
+      td:border-b td:border-b-border-subtle
+      td:px-16px
+      td:text-start td:align-middle td:text-text-secondary
+      """);
+
+  public final Html.ElementInstruction dataTableBody(Html.Instruction... contents) {
+    return tmpl.thead(
+        DATA_TABLE_TBODY,
+
+        tmpl.flatten(contents)
+    );
+  }
+
+  //
+  // Expressive
+  //
+
+  private boolean expressive;
+
+  public final Html.NoOpInstruction expressive() {
+    expressive = true;
+
+    return tmpl.noop();
+  }
+
+  private Html.ElementInstruction resetExpressive(Html.ElementInstruction component) {
+    expressive = false;
+
+    return component;
+  }
+
+  //
   // Gap
   //
 
@@ -674,7 +810,7 @@ abstract class CarbonComponents {
 
   private String checkGap(Breakpoint point, Spacing value) {
     int pointIndex;
-    pointIndex = point.index();
+    pointIndex = checkBreakpoint(point);
 
     CarbonSpacing spacing;
     spacing = (CarbonSpacing) value;
@@ -683,6 +819,13 @@ abstract class CarbonComponents {
     valueIndex = spacing.value() - 1;
 
     return GAP[pointIndex][valueIndex];
+  }
+
+  private int checkBreakpoint(Breakpoint point) {
+    CarbonSize size;
+    size = (CarbonSize) point;
+
+    return size.index();
   }
 
   //
@@ -790,7 +933,7 @@ abstract class CarbonComponents {
 
   private String checkGridColumns(Breakpoint point, int value) {
     int pointIndex;
-    pointIndex = point.index();
+    pointIndex = checkBreakpoint(point);
 
     if (value < 1) {
       throw new IllegalArgumentException("Grid columns must be equal or greater than 1");
@@ -937,8 +1080,6 @@ abstract class CarbonComponents {
   );
 
   private Html.ElementInstruction headerMenuItem(CarbonMenuLink link) {
-    boolean expressive = false;
-
     Script.Action onClick;
     onClick = link.onClick();
 
@@ -978,6 +1119,14 @@ abstract class CarbonComponents {
   private static final Html.ClassName HEADER_NAME_PREFIX = Html.classText("""
       font-400
       """);
+
+  public final Html.ElementInstruction headerName(Html.Instruction... contents) {
+    return tmpl.a(
+        HEADER_NAME,
+
+        tmpl.flatten(contents)
+    );
+  }
 
   public final Html.ElementInstruction headerName(String prefix, String text, String href) {
     Check.notNull(prefix, "prefix == null");
@@ -1043,10 +1192,12 @@ abstract class CarbonComponents {
       """);
 
   public final Html.ElementInstruction headerNavigation(Html.Instruction... contents) {
-    return tmpl.nav(
-        HEADER_NAVIGATION,
+    return resetExpressive(
+        tmpl.nav(
+            HEADER_NAVIGATION,
 
-        tmpl.flatten(contents)
+            tmpl.flatten(contents)
+        )
     );
   }
 
