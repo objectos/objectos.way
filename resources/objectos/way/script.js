@@ -193,7 +193,7 @@
 		}
 
 		for (const action of actions) {
-			
+
 			const cmd = action.cmd;
 
 			if (!cmd) {
@@ -206,7 +206,7 @@
 
 					break;
 				}
-				
+
 				case "delay": {
 					executeDelay(action, element);
 
@@ -258,7 +258,7 @@
 
 		}
 	}
-	
+
 	function executeAddClass(action) {
 		withElementClassList(action, "add");
 	}
@@ -383,6 +383,8 @@
 				elem.replaceWith(newElem);
 			}
 		}
+
+		window.scrollTo(0, 0);
 	}
 
 	function executeLocation(location) {
@@ -472,7 +474,7 @@
 	function executeToggleClass(action) {
 		withElementClassList(action, "toggle");
 	}
-	
+
 	function withElementClassList(action, methodName) {
 		const args = action.args;
 
