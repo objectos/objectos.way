@@ -96,6 +96,53 @@ public final class Carbon extends CarbonComponents {
 
   }
 
+  /**
+   * A Carbon link style.
+   */
+  public sealed interface LinkStyle {}
+
+  /**
+   * The standard link style: no text decoration and the visited links are
+   * rendered the same as the not-visited ones.
+   */
+  public static final LinkStyle LINK_STANDARD = CarbonLinkStyle.STANDARD;
+
+  /**
+   * The visited link style: no text decoration and the visited links are
+   * rendered with a color that is distinct of the not-visited ones.
+   */
+  public static final LinkStyle LINK_VISITED = CarbonLinkStyle.VISITED;
+
+  /**
+   * The inline link style: has text decoration and the visited links are
+   * rendered the same as the not-visited ones.
+   */
+  public static final LinkStyle LINK_INLINE = CarbonLinkStyle.INLINE;
+
+  /**
+   * The inline-visited link style: has text decoration and the visited links
+   * are rendered with a color that is distinct of the not-visited ones.
+   */
+  public static final LinkStyle LINK_INLINE_VISITED = CarbonLinkStyle.INLINE_VISITED;
+
+  enum CarbonLinkStyle implements LinkStyle {
+    STANDARD(false, false),
+
+    VISITED(false, true),
+
+    INLINE(true, false),
+
+    INLINE_VISITED(true, true);
+
+    final boolean inline;
+    final boolean visited;
+
+    private CarbonLinkStyle(boolean inline, boolean visited) {
+      this.inline = inline;
+      this.visited = visited;
+    }
+  }
+
   public sealed interface MenuElement {}
 
   public sealed interface MenuLink extends MenuElement {}

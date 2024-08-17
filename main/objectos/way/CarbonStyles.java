@@ -604,8 +604,6 @@ final class CarbonStyles implements Http.Handler {
 
         componentsDataTable(),
 
-        componentsLink(),
-
         componentsModal(),
 
         componentsPageHeader(),
@@ -792,30 +790,6 @@ final class CarbonStyles implements Http.Handler {
     tr:h-64px
     th:py-spacing-05 th:align-top
     td:py-spacing-05 td:align-top
-    """);
-  }
-
-  private Css.Option componentsLink() {
-    return Css.components("""
-    # __link
-    inline-flex
-    text-link-primary outline-none
-    transition-colors duration-100
-    active:underline active:outline active:outline-1 active:outline-focus active:outline-offset-0
-    focus:outline focus:outline-1 focus:outline-focus focus:outline-offset-0
-    hover:text-link-primary-hover hover:underline
-
-    # link
-    __link
-    no-underline
-
-    # link-inline
-    __link
-    underline
-
-    # link-visited
-    visited:text-link-visited
-    visited:hover:text-link-primary-hover
     """);
   }
 

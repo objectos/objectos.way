@@ -19,11 +19,13 @@ import objectos.lang.object.Check;
 import objectos.way.Carbon.Breakpoint;
 import objectos.way.Carbon.ButtonVariant;
 import objectos.way.Carbon.CarbonButtonVariant;
+import objectos.way.Carbon.CarbonLinkStyle;
 import objectos.way.Carbon.CarbonMenuLink;
 import objectos.way.Carbon.CarbonSize;
 import objectos.way.Carbon.CarbonSpacing;
 import objectos.way.Carbon.DataTableSize;
 import objectos.way.Carbon.Icon;
+import objectos.way.Carbon.LinkStyle;
 import objectos.way.Carbon.Size;
 import objectos.way.Carbon.Spacing;
 import objectos.way.Html.TemplateBase;
@@ -1255,7 +1257,7 @@ abstract class CarbonComponents {
   }
 
   //
-  // Icon
+  // I
   //
 
   public final Html.ElementInstruction icon16(Icon icon, Html.Instruction... attributes) {
@@ -1283,6 +1285,36 @@ abstract class CarbonComponents {
         tmpl.flatten(attributes),
 
         tmpl.raw(icon.raw)
+    );
+  }
+
+  //
+  // L
+  //
+
+  public final Html.ElementInstruction link(LinkStyle style, String text, String href) {
+    CarbonLinkStyle linkStyle = (CarbonLinkStyle) Check.notNull(style, "style == null");
+    Check.notNull(text, "text == null");
+    Check.notNull(href, "href == null");
+
+    boolean inline = linkStyle.inline;
+    boolean visited = linkStyle.visited;
+
+    return tmpl.a(
+        tmpl.className("""
+            inline-flex
+            text-link-primary outline-none
+            transition-colors duration-100
+            active:underline active:outline active:outline-1 active:outline-focus active:outline-offset-0
+            focus:outline focus:outline-1 focus:outline-focus focus:outline-offset-0
+            hover:text-link-primary-hover hover:underline
+            """),
+
+        inline ? tmpl.className("underline") : tmpl.className("no-underline"),
+
+        visited ? tmpl.className("visited:text-link-visited visited:hover:text-link-primary-hover") : tmpl.noop(),
+
+        tmpl.href(href), tmpl.t(text)
     );
   }
 

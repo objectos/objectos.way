@@ -15,6 +15,7 @@
  */
 package testing.site.carbon;
 
+import objectos.way.Carbon;
 import objectos.way.Http;
 
 final class ComponentsLink extends CarbonPage {
@@ -35,60 +36,31 @@ final class ComponentsLink extends CarbonPage {
 
   @Override
   protected final void renderContent() {
-  }
+    carbon.pageHeader(
+        Carbon.PAGE_HEADER_TITLE_ONLY,
 
-  protected final void renderContent0() {
-    div(
-        className("grid-wide max-w-full py-spacing-05 bg-layer"),
-
-        h1(
-            className("col-span-full heading-04"),
-
-            t("Link")
+        carbon.pageHeaderTitleRow(
+            carbon.pageHeaderTitle("Link")
         )
     );
 
-    section(
-        className("grid-wide grid-cols-2 md:grid-cols-3 gap-spacing-03 max:grid-cols-6 *:self-start"),
+    carbon.gridWide(
+        carbon.gridColumns(2, Carbon.MD, 3, Carbon.MAX, 6),
 
-        f(this::renderSection)
-    );
-  }
+        div(
+            carbon.link(Carbon.LINK_STANDARD, "Link", "https://www.objectos.com.br")
+        ),
 
-  private void renderSection() {
-    h2(
-        className("col-span-full heading-03"),
+        div(
+            carbon.link(Carbon.LINK_VISITED, "Link visited", "https://www.objectos.com.br")
+        ),
 
-        t("Link")
-    );
+        div(
+            carbon.link(Carbon.LINK_INLINE, "Link inline", "https://www.objectos.com.br")
+        ),
 
-    div(
-        a(
-            className("link"),
-
-            href("https://www.objectos.com.br"), t("Link")
-        )
-    );
-
-    div(
-        a(
-            className("link link-visited"),
-
-            href("https://www.objectos.com.br"), t("Link visited")
-        )
-    );
-
-    h2(
-        className("col-span-full heading-03"),
-
-        t("Link (inline)")
-    );
-
-    div(
-        a(
-            className("link-inline"),
-
-            href("https://www.objectos.com.br"), t("Objectos")
+        div(
+            carbon.link(Carbon.LINK_INLINE_VISITED, "Link inline-visited", "https://www.objectos.com.br")
         )
     );
   }
