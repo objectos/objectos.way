@@ -26,7 +26,6 @@ import objectos.way.Carbon.CarbonSpacing;
 import objectos.way.Carbon.DataTableSize;
 import objectos.way.Carbon.Icon;
 import objectos.way.Carbon.LinkStyle;
-import objectos.way.Carbon.Size;
 import objectos.way.Carbon.Spacing;
 import objectos.way.Html.TemplateBase;
 
@@ -37,38 +36,6 @@ abstract class CarbonComponents {
   CarbonComponents(TemplateBase tmpl) {
     this.tmpl = tmpl;
   }
-
-  static final Size NONE = new CarbonSize(0);
-
-  /**
-   * The Extra Small size.
-   */
-  public static final Size.ExtraSmall XS = new CarbonSize(0);
-
-  /**
-   * The Small size.
-   */
-  public static final Size SM = new CarbonSize(1);
-
-  /**
-   * The Medium size.
-   */
-  public static final Size MD = new CarbonSize(2);
-
-  /**
-   * The Large size.
-   */
-  public static final Size LG = new CarbonSize(3);
-
-  /**
-   * The Extra Large size.
-   */
-  public static final Size XL = new CarbonSize(4);
-
-  /**
-   * The Max size.
-   */
-  public static final Size.Max MAX = new CarbonSize(5);
 
   //
   // Typography
@@ -438,7 +405,7 @@ abstract class CarbonComponents {
   }
 
   public final Html.ElementInstruction button(Carbon.ButtonVariant variant, String text) {
-    return button(variant, LG, text);
+    return button(variant, Carbon.LG, text);
   }
 
   public final Html.ElementInstruction button(Carbon.ButtonVariant variant, Carbon.ButtonSize size, String text) {
@@ -526,7 +493,7 @@ abstract class CarbonComponents {
   }
 
   public final Html.ElementInstruction button(Carbon.ButtonVariant variant, String text, Carbon.Icon icon) {
-    return button(variant, LG, text, icon);
+    return button(variant, Carbon.LG, text, icon);
   }
 
   public final Html.ElementInstruction button(Carbon.ButtonVariant variant, Carbon.ButtonSize size, String text, Carbon.Icon icon) {
@@ -611,7 +578,7 @@ abstract class CarbonComponents {
   }
 
   public final Html.ElementInstruction button(Carbon.ButtonVariant variant, Carbon.Icon icon) {
-    return button(variant, LG, icon);
+    return button(variant, Carbon.LG, icon);
   }
 
   public final Html.ElementInstruction button(Carbon.ButtonVariant variant, Carbon.ButtonSize size, Carbon.Icon icon) {
@@ -1292,34 +1259,74 @@ abstract class CarbonComponents {
   // L
   //
 
+  private static final Html.ClassName __LINK_BASE = Html.classText("""
+      inline-flex
+      text-link-primary outline-none
+      transition-colors duration-100
+      active:underline active:outline active:outline-1 active:outline-focus active:outline-offset-0
+      focus:outline focus:outline-1 focus:outline-focus focus:outline-offset-0
+      hover:text-link-primary-hover hover:underline
+      """);
+
+  private static final Html.ClassName __LINK_STANDARD = Html.classText("""
+      no-underline
+      """);
+
+  private static final Html.ClassName __LINK_INLINE = Html.classText("""
+      underline
+      """);
+
+  private static final Html.ClassName __LINK_VISITED = Html.classText("""
+      visited:text-link-visited
+      visited:hover:text-link-primary-hover
+      """);
+
+  private static final Html.ClassName LINK = Html.className(
+      __LINK_BASE, __LINK_STANDARD
+  );
+
+  private static final Html.ClassName LINK_VISITED = Html.className(
+      __LINK_BASE, __LINK_VISITED
+  );
+
+  private static final Html.ClassName LINK_INLINE = Html.className(
+      __LINK_BASE, __LINK_INLINE
+  );
+
+  private static final Html.ClassName LINK_INLINE_VISITED = Html.className(
+      __LINK_BASE, __LINK_INLINE, __LINK_VISITED
+  );
+
   public final Html.ElementInstruction link(LinkStyle style, String text, String href) {
-    CarbonLinkStyle linkStyle = (CarbonLinkStyle) Check.notNull(style, "style == null");
+    Check.notNull(style, "style == null");
     Check.notNull(text, "text == null");
     Check.notNull(href, "href == null");
 
-    boolean inline = linkStyle.inline;
-    boolean visited = linkStyle.visited;
+    return link(style, tmpl.href(href), tmpl.t(text));
+  }
+
+  public final Html.ElementInstruction link(LinkStyle style, Html.Instruction... contents) {
+    Check.notNull(style, "style == null");
 
     return tmpl.a(
-        tmpl.className("""
-            inline-flex
-            text-link-primary outline-none
-            transition-colors duration-100
-            active:underline active:outline active:outline-1 active:outline-focus active:outline-offset-0
-            focus:outline focus:outline-1 focus:outline-focus focus:outline-offset-0
-            hover:text-link-primary-hover hover:underline
-            """),
+        switch (style) {
+          case CarbonLinkStyle.STANDARD -> LINK;
 
-        inline ? tmpl.className("underline") : tmpl.className("no-underline"),
+          case CarbonLinkStyle.VISITED -> LINK_VISITED;
 
-        visited ? tmpl.className("visited:text-link-visited visited:hover:text-link-primary-hover") : tmpl.noop(),
+          case CarbonLinkStyle.INLINE -> LINK_INLINE;
 
-        tmpl.href(href), tmpl.t(text)
+          case CarbonLinkStyle.INLINE_VISITED -> LINK_INLINE_VISITED;
+
+          default -> tmpl.noop();
+        },
+
+        tmpl.flatten(contents)
     );
   }
 
   //
-  // PageHeader
+  // P
   //
 
   private static final Html.ClassName PAGE_HEADER = Html.classText("""

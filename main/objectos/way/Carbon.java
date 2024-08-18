@@ -126,21 +126,13 @@ public final class Carbon extends CarbonComponents {
   public static final LinkStyle LINK_INLINE_VISITED = CarbonLinkStyle.INLINE_VISITED;
 
   enum CarbonLinkStyle implements LinkStyle {
-    STANDARD(false, false),
+    STANDARD,
 
-    VISITED(false, true),
+    VISITED,
 
-    INLINE(true, false),
+    INLINE,
 
-    INLINE_VISITED(true, true);
-
-    final boolean inline;
-    final boolean visited;
-
-    private CarbonLinkStyle(boolean inline, boolean visited) {
-      this.inline = inline;
-      this.visited = visited;
-    }
+    INLINE_VISITED;
   }
 
   public sealed interface MenuElement {}
@@ -190,15 +182,56 @@ public final class Carbon extends CarbonComponents {
    */
   public sealed interface Option {}
 
+  /**
+   * A Carbon size variant.
+   */
   public sealed interface Size extends Breakpoint, ButtonSize, DataTableSize {
 
+    /**
+     * The Extra Small size variant.
+     */
     public sealed interface ExtraSmall extends DataTableSize {}
 
+    /**
+     * The Max size variant.
+     */
     public sealed interface Max extends Breakpoint, ButtonSize {}
 
   }
 
   record CarbonSize(int index) implements ExtraSmall, Size, Max {}
+
+  static final Size NONE = new CarbonSize(0);
+
+  /**
+   * The Extra Small size.
+   */
+  public static final Size.ExtraSmall XS = new CarbonSize(0);
+
+  /**
+   * The Small size.
+   */
+  public static final Size SM = new CarbonSize(1);
+
+  /**
+   * The Medium size.
+   */
+  public static final Size MD = new CarbonSize(2);
+
+  /**
+   * The Large size.
+   */
+  public static final Size LG = new CarbonSize(3);
+
+  /**
+   * The Extra Large size.
+   */
+  public static final Size XL = new CarbonSize(4);
+
+  /**
+   * The Max size.
+   */
+  public static final Size.Max MAX = new CarbonSize(5);
 
   /**
    * A Carbon spacing token.
