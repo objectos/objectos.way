@@ -39,23 +39,36 @@ final class ComponentsTearsheet extends CarbonPage {
 
   @Override
   protected final void renderContent() {
-  }
+    carbon.pageHeader(
+        Carbon.PAGE_HEADER_TITLE_ONLY,
 
-  protected final void renderContent0() {
-    section(
-        className("page-header page-header-title-only"),
-
-        div(
-            className("page-header-title-row"),
-
-            h1(
-                className("page-header-title"),
-
-                t("Tearsheet")
-            )
+        carbon.pageHeaderTitleRow(
+            carbon.pageHeaderTitle("Tearsheet")
         )
     );
 
+    carbon.gridWide(
+        carbon.gridColumns(2), carbon.gap(Carbon.SPACING_05),
+
+        h2(
+            Carbon.HEADING_03,
+
+            t("Title + description + influencer")
+        ),
+
+        carbon.button(
+            Html.ElementName.BUTTON, Carbon.PRIMARY, Carbon.LG, false,
+            dataOnClick(Carbon.showTearsheet(TEARSHEET_01)),
+            t("Open Tearsheet")
+        )
+    );
+
+    carbon.tearsheet(
+        TEARSHEET_01
+    );
+  }
+
+  protected final void renderContent0() {
     div(
         TEARSHEET_01, className("tearsheet-hidden"), noop("tearsheet tearsheet-transition"),
         role("presentation"), ariaHidden("true"),
@@ -111,7 +124,7 @@ final class ComponentsTearsheet extends CarbonPage {
     button(
         className("button-primary"), type("button"),
 
-        dataOnClick(Carbon.openTearsheet(TEARSHEET_01)),
+        dataOnClick(Carbon.showTearsheet(TEARSHEET_01)),
 
         t("Open Tearsheet")
     );

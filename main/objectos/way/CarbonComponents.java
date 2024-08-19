@@ -37,6 +37,8 @@ abstract class CarbonComponents {
     this.tmpl = tmpl;
   }
 
+  private static final Html.ClassName INVISIBLE = Html.className("invisible");
+
   //
   // Typography
   //
@@ -1374,7 +1376,7 @@ abstract class CarbonComponents {
   }
 
   //
-  // SideNav
+  // S
   //
 
   private static final Html.ClassName SIDE_NAV = Html.classText("""
@@ -1386,11 +1388,11 @@ abstract class CarbonComponents {
       lg:hidden
       """);
 
-  public static final Html.ClassName SIDE_NAV_OFFSET = Html.className("""
+  public static final Html.ClassName SIDE_NAV_OFFSET = Html.classText("""
       lg:ml-side-nav
       """);
 
-  public static final Html.ClassName SIDE_NAV_PERSISTENT = Html.className("""
+  public static final Html.ClassName SIDE_NAV_PERSISTENT = Html.classText("""
       lg:visible lg:right-auto lg:w-side-nav lg:opacity-100
 
       lg:more:block
@@ -1600,6 +1602,35 @@ abstract class CarbonComponents {
 
             tmpl.span(link.text())
         )
+    );
+  }
+
+  //
+  // T
+  //
+
+  private static final Html.ClassName __TEARSHEET = Html.classText("""
+      fixed inset-0px z-tearsheet
+      bg-overlay
+      opacity-0
+      transition-opacity duration-300
+      """);
+
+  public static Script.Action showTearsheet(Html.Id id) {
+    return Script.actions(
+        Script.replaceClass(id, "invisible", "visible"),
+        Script.replaceClass(id, "opacity-0", "opacity-100"),
+        Script.setProperty(id, "aria-hidden", "false")
+    //Script.delay(50, Script.addClass(id, "tearsheet-transition"))
+    );
+  }
+
+  public final Html.ElementInstruction tearsheet(Html.Instruction... contents) {
+    return tmpl.div(
+        __TEARSHEET,
+        INVISIBLE,
+
+        tmpl.flatten(contents)
     );
   }
 

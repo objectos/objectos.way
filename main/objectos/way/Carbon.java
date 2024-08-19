@@ -434,12 +434,4 @@ public final class Carbon extends CarbonComponents {
     };
   }
 
-  public static Script.Action openTearsheet(Html.Id id) {
-    return Script.actions(
-        Script.replaceClass(id, "tearsheet-hidden", "tearsheet"),
-        Script.setProperty(id, "aria-hidden", "false"),
-        Script.delay(50, Script.addClass(id, "tearsheet-transition"))
-    );
-  }
-
 }
