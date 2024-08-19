@@ -35,8 +35,6 @@ final class ComponentsTearsheet extends CarbonPage {
     title("Tearsheet - Objectos Carbon");
   }
 
-  private static final Html.Id TEARSHEET_01 = Html.id("tearsheet-01");
-
   @Override
   protected final void renderContent() {
     carbon.pageHeader(
@@ -46,6 +44,12 @@ final class ComponentsTearsheet extends CarbonPage {
             carbon.pageHeaderTitle("Tearsheet")
         )
     );
+
+    final Html.Id sheet01;
+    sheet01 = Html.id("tearsheet-01");
+
+    final Html.Id sheet01Modal;
+    sheet01Modal = Html.id("tearsheet-01-modal");
 
     carbon.gridWide(
         carbon.gridColumns(2), carbon.gap(Carbon.SPACING_05),
@@ -58,75 +62,30 @@ final class ComponentsTearsheet extends CarbonPage {
 
         carbon.button(
             Html.ElementName.BUTTON, Carbon.PRIMARY, Carbon.LG, false,
-            dataOnClick(Carbon.showTearsheet(TEARSHEET_01)),
+            dataOnClick(
+                Carbon.showTearsheet(sheet01),
+                Carbon.showTearsheetModal(sheet01Modal)
+            ),
             t("Open Tearsheet")
         )
     );
 
     carbon.tearsheet(
-        TEARSHEET_01
-    );
-  }
+        sheet01,
 
-  protected final void renderContent0() {
-    div(
-        TEARSHEET_01, className("tearsheet-hidden"), noop("tearsheet tearsheet-transition"),
-        role("presentation"), ariaHidden("true"),
+        carbon.tearsheetModal(
+            sheet01Modal, ariaLabel("Example 01"),
 
-        div(
-            className("tearsheet-container"),
-            role("dialog"), /*ariaModal("true"),*/ ariaLabel("Example 01"),
-
-            div(
-                className("tearsheet-header"),
-
-                h3(
-                    className("tearsheet-header-title"),
-
-                    t("Create topic")
-                ),
-
-                p(
-                    className("tearsheet-header-description"),
-
-                    t("Specify details for the new topic you want to create")
-                )
+            carbon.tearsheetHeader(
+                carbon.tearsheetHeaderTitle("Create topic"),
+                carbon.tearsheetHeaderDescription("Specify details for the new topic you want to create")
             ),
 
-            div(
-                className("tearsheet-body"),
-
-                div(
-                    className("tearsheet-influencer")
-                ),
-
-                div(
-                    className("tearsheet-main")
-                )
+            carbon.tearsheetBody(
+                carbon.tearsheetInfluencer(),
+                carbon.tearsheetMain()
             )
         )
-    );
-
-    div(
-        className("grid-wide mt-spacing-05 grid-cols-2 items-center"),
-
-        f(this::renderExamples)
-    );
-  }
-
-  private void renderExamples() {
-    h2(
-        className("heading-03"),
-
-        t("Title + description + influencer")
-    );
-
-    button(
-        className("button-primary"), type("button"),
-
-        dataOnClick(Carbon.showTearsheet(TEARSHEET_01)),
-
-        t("Open Tearsheet")
     );
   }
 

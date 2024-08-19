@@ -608,8 +608,6 @@ final class CarbonStyles implements Http.Handler {
 
         componentsPageHeader(),
 
-        componentsTearsheet(),
-
         componentsTile(),
 
         extendColors(),
@@ -823,63 +821,6 @@ final class CarbonStyles implements Http.Handler {
 
     # page-header-title-row
     grid-wide grid-cols-5 gap-y-16px
-    """);
-  }
-
-  private Css.Option componentsTearsheet() {
-    return Css.components("""
-    # __tearsheet
-    fixed inset-0px z-tearsheet
-    bg-overlay
-    transition-opacity duration-300
-
-    # tearsheet
-    __tearsheet
-    block
-    opacity-0
-    *:translate-y-3/4
-
-    # tearsheet-hidden
-    __tearsheet
-    hidden
-    opacity-0
-    *:translate-y-3/4
-
-    # tearsheet-transition
-    opacity-100
-    *:translate-y-0
-
-    # tearsheet-container
-    absolute flex flex-col inset-0px
-    bg-layer
-    outline outline-3 -outline-offset-3 outline-transparent
-    transition-transform duration-300
-
-    md:top-48px md:left-64px md:right-64px
-
-    # tearsheet-header
-    flex-none
-    border-b border-b-border-subtle
-    py-spacing-06 px-spacing-07
-
-    # tearsheet-header-title
-    heading-04
-    text-text-primary
-
-    # tearsheet-header-description
-    mt-spacing-05
-    overflow-hidden
-    body-compact-01
-
-    md:max-w-[60%]
-
-    # tearsheet-body
-    flex grow
-
-    # tearsheet-influencer
-    flex-[0_0_257px]
-    border-r border-r-border-subtle
-    overflow-y-auto
     """);
   }
 

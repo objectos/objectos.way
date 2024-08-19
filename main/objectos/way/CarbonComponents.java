@@ -37,6 +37,18 @@ abstract class CarbonComponents {
     this.tmpl = tmpl;
   }
 
+  //
+  // Attributes
+  //
+
+  private static final Html.AttributeObject ARIA_HIDDEN_TRUE = Html.attribute(HtmlAttributeName.ARIA_HIDDEN, "true");
+
+  private static final Html.AttributeObject ROLE_DIALOG = Html.attribute(HtmlAttributeName.ROLE, "dialog");
+
+  private static final Html.AttributeObject ROLE_PRESENTATION = Html.attribute(HtmlAttributeName.ROLE, "presentation");
+
+  private static final Html.AttributeObject TABINDEX_0 = Html.attribute(HtmlAttributeName.TABINDEX, "0");
+
   private static final Html.ClassName INVISIBLE = Html.className("invisible");
 
   //
@@ -679,8 +691,6 @@ abstract class CarbonComponents {
   private static final Html.ClassName[] DATA_TABLE_SIZES = {
       __DATA_TABLE_XS, __DATA_TABLE_SM, __DATA_TABLE_MD, __DATA_TABLE_LG, __DATA_TABLE_XL
   };
-
-  private static final Html.AttributeObject TABINDEX_0 = Html.attribute(HtmlAttributeName.TABINDEX, "0");
 
   public final Html.ElementInstruction dataTable(Html.Instruction... contents) {
     return dataTable(Carbon.LG, contents);
@@ -1616,6 +1626,51 @@ abstract class CarbonComponents {
       transition-opacity duration-300
       """);
 
+  private static final Html.ClassName TEARSHEET_MODAL = Html.classText("""
+      absolute flex flex-col inset-0px
+      bg-layer
+      outline outline-3 -outline-offset-3 outline-transparent
+      transition-transform duration-300
+      translate-y-3/4
+
+      md:top-48px md:left-64px md:right-64px
+      """);
+
+  private static final Html.ClassName TEARSHEET_HEADER = Html.classText("""
+      flex-none
+      border-b border-b-border-subtle
+      py-spacing-06 px-spacing-07
+      """);
+
+  private static final Html.ClassName __TEARSHEET_HEADER_TITLE = Html.classText("""
+      text-text-primary
+      """);
+
+  private static final Html.ClassName TEARSHEET_HEADER_TITLE = Html.className(
+      __TEARSHEET_HEADER_TITLE, HEADING_04
+  );
+
+  private static final Html.ClassName __TEARSHEET_HEADER_DESCRIPTION = Html.classText("""
+      mt-spacing-05
+      overflow-hidden
+
+      md:max-w-[60%]
+      """);
+
+  private static final Html.ClassName TEARSHEET_HEADER_DESCRIPTION = Html.className(
+      __TEARSHEET_HEADER_DESCRIPTION, BODY_COMPACT_01
+  );
+
+  private static final Html.ClassName TEARSHEET_BODY = Html.classText("""
+      flex grow
+      """);
+
+  private static final Html.ClassName TEARSHEET_INFLUENCER = Html.classText("""
+      flex-[0_0_257px]
+      border-r border-r-border-subtle
+      overflow-y-auto
+      """);
+
   public static Script.Action showTearsheet(Html.Id id) {
     return Script.actions(
         Script.replaceClass(id, "invisible", "visible"),
@@ -1625,11 +1680,72 @@ abstract class CarbonComponents {
     );
   }
 
+  public static Script.Action showTearsheetModal(Html.Id id) {
+    return Script.replaceClass(id, "translate-y-3/4", "translate-y-0");
+  }
+
   public final Html.ElementInstruction tearsheet(Html.Instruction... contents) {
     return tmpl.div(
-        __TEARSHEET,
-        INVISIBLE,
+        ROLE_PRESENTATION, ARIA_HIDDEN_TRUE,
 
+        __TEARSHEET, INVISIBLE,
+
+        tmpl.flatten(contents)
+    );
+  }
+
+  public final Html.ElementInstruction tearsheetModal(Html.Instruction... contents) {
+    return tmpl.div(
+        ROLE_DIALOG,
+
+        TEARSHEET_MODAL,
+
+        tmpl.flatten(contents)
+    );
+  }
+
+  public final Html.ElementInstruction tearsheetHeader(Html.Instruction... contents) {
+    return tmpl.div(
+        TEARSHEET_HEADER,
+
+        tmpl.flatten(contents)
+    );
+  }
+
+  public final Html.ElementInstruction tearsheetHeaderTitle(String text) {
+    return tmpl.h3(
+        TEARSHEET_HEADER_TITLE,
+
+        tmpl.t(text)
+    );
+  }
+
+  public final Html.ElementInstruction tearsheetHeaderDescription(String text) {
+    return tmpl.p(
+        TEARSHEET_HEADER_DESCRIPTION,
+
+        tmpl.t(text)
+    );
+  }
+
+  public final Html.ElementInstruction tearsheetBody(Html.Instruction... contents) {
+    return tmpl.div(
+        TEARSHEET_BODY,
+
+        tmpl.flatten(contents)
+    );
+  }
+
+  public final Html.ElementInstruction tearsheetInfluencer(Html.Instruction... contents) {
+    return tmpl.div(
+        TEARSHEET_INFLUENCER,
+
+        tmpl.flatten(contents)
+    );
+  }
+
+  public final Html.ElementInstruction tearsheetMain(Html.Instruction... contents) {
+    return tmpl.div(
         tmpl.flatten(contents)
     );
   }
