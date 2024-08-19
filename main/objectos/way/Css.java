@@ -254,6 +254,8 @@ public final class Css {
 
     USER_SELECT,
 
+    LIST_STYLE_TYPE,
+
     APPEARANCE,
 
     GRID_TEMPLATE_COLUMNS,

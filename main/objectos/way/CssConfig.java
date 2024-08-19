@@ -568,30 +568,7 @@ final class CssConfig {
 
     // L
 
-    funcUtility(Css.Key.LEFT, inset, NEGATIVE, "left", propertyType.left());
-
-    funcUtility(
-        Css.Key.LETTER_SPACING,
-
-        values(
-            Css.Key.LETTER_SPACING,
-
-            """
-            tighter: -0.05em
-            tight: -0.025em
-            normal: 0em
-            wide: 0.025em
-            wider: 0.05em
-            widest: 0.1em
-            """
-        ),
-
-        NEGATIVE,
-
-        "tracking", "letter-spacing"
-    );
-
-    funcUtility(Css.Key.LINE_HEIGHT, values(Css.Key.LINE_HEIGHT, Css.DEFAULT_LINE_HEIGHT), "leading", "line-height");
+    specL(inset);
 
     // M
 
@@ -1993,6 +1970,51 @@ final class CssConfig {
         STRING,
 
         "grid-rows", "grid-template-rows"
+    );
+  }
+
+  private void specL(Map<String, String> inset) {
+    funcUtility(Css.Key.LEFT, inset, NEGATIVE, "left", propertyType.left());
+
+    funcUtility(
+        Css.Key.LETTER_SPACING,
+
+        values(
+            Css.Key.LETTER_SPACING,
+
+            """
+          tighter: -0.05em
+          tight: -0.025em
+          normal: 0em
+          wide: 0.025em
+          wider: 0.05em
+          widest: 0.1em
+          """
+        ),
+
+        NEGATIVE,
+
+        "tracking", "letter-spacing"
+    );
+
+    funcUtility(Css.Key.LINE_HEIGHT, values(Css.Key.LINE_HEIGHT, Css.DEFAULT_LINE_HEIGHT), "leading", "line-height");
+
+    funcUtility(
+        Css.Key.LIST_STYLE_TYPE,
+
+        values(
+            Css.Key.LIST_STYLE_TYPE,
+
+            """
+            none: none
+            disc: disc
+            decimal: decimal
+            """
+        ),
+
+        STRING,
+
+        "list", "list-style-type"
     );
   }
 

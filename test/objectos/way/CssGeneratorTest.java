@@ -2009,6 +2009,27 @@ public class CssGeneratorTest {
   }
 
   @Test
+  public void listStyleType() {
+    class Subject extends AbstractSubject {
+      @Override
+      final void classes() {
+        className("list-none list-disc list-decimal list-[upper-roman]");
+      }
+    }
+
+    test(
+        Subject.class,
+
+        """
+        .list-none { list-style-type: none }
+        .list-disc { list-style-type: disc }
+        .list-decimal { list-style-type: decimal }
+        .list-\\[upper-roman\\] { list-style-type: upper-roman }
+        """
+    );
+  }
+
+  @Test
   public void margin() {
     class Subject extends AbstractSubject {
       @Override
