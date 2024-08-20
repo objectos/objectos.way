@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023-2024 Objectos Software LTDA.
+ * Copyright (C) R2023-2024 Objectos Software LTDA.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -50,7 +50,9 @@ final class CarbonStyles implements Http.Handler {
         Css.classes(classes),
 
         Css.classes(
-            CarbonComponents.class
+            CarbonComponents.class,
+            CarbonProgressIndicator.class,
+            CarbonProgressStep.class
         ),
 
         Css.useLogicalProperties(),
@@ -114,6 +116,7 @@ final class CarbonStyles implements Http.Handler {
           --cds-icon-on-color-disabled: #8d8d8d;
           --cds-icon-primary: #161616;
           --cds-icon-secondary: #525252;
+          --cds-interactive: #0f62fe;
           --cds-layer-01: #f4f4f4;
           --cds-layer-02: #ffffff;
           --cds-layer-03: #f4f4f4;
@@ -211,6 +214,7 @@ final class CarbonStyles implements Http.Handler {
           --cds-focus: #0f62fe;
           --cds-focus-inset: #ffffff;
           --cds-focus-inverse: #ffffff;
+          --cds-interactive: #0f62fe;
           --cds-icon-disabled: rgba(22, 22, 22, 0.25);
           --cds-icon-interactive: #0f62fe;
           --cds-icon-inverse: #ffffff;
@@ -322,6 +326,7 @@ final class CarbonStyles implements Http.Handler {
           --cds-icon-on-color-disabled: rgba(255, 255, 255, 0.25);
           --cds-icon-primary: #f4f4f4;
           --cds-icon-secondary: #c6c6c6;
+          --cds-interactive: #4589ff;
           --cds-layer-01: #393939;
           --cds-layer-02: #525252;
           --cds-layer-03: #6f6f6f;
@@ -419,6 +424,7 @@ final class CarbonStyles implements Http.Handler {
           --cds-focus: #ffffff;
           --cds-focus-inset: #161616;
           --cds-focus-inverse: #0f62fe;
+          --cds-interactive: #4589ff;
           --cds-icon-disabled: rgba(244, 244, 244, 0.25);
           --cds-icon-interactive: #ffffff;
           --cds-icon-inverse: #161616;
@@ -504,6 +510,7 @@ final class CarbonStyles implements Http.Handler {
           --cds-button-secondary-hover: #474747;
           --cds-button-tertiary-hover: #0050e6;
           --cds-button-disabled: #c6c6c6;
+          --cds-interactive: #0f62fe;
           --cds-layer: var(--cds-layer-01, #f4f4f4);
           --cds-layer-active: var(--cds-layer-active-01, #c6c6c6);
           --cds-layer-hover: var(--cds-layer-hover-01, #e8e8e8);
@@ -859,6 +866,7 @@ final class CarbonStyles implements Http.Handler {
     icon-disabled: var(--cds-icon-disabled)
     icon-primary: var(--cds-icon-primary)
     icon-secondary: var(--cds-icon-secondary)
+    interactive: var(--cds-interactive)
     layer: var(--cds-layer)
     layer-accent: var(--cds-layer-accent)
     layer-hover: var(--cds-layer-hover)

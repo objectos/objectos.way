@@ -27,56 +27,6 @@ final class CarbonProgressIndicator {
       flex flex-col
       """);
 
-  /*<li>*/
-
-  private static final Html.ClassName __LI = Html.classText("""
-      relative inline-flex overflow-visible
-      """);
-
-  private static final Html.ClassName __LI_VERTICAL = Html.classText("""
-      min-h-[3.625rem]
-      """);
-
-  public static final Html.ClassName LI_HORIZONTAL = Html.className(
-      __LI
-  );
-
-  public static final Html.ClassName LI_VERTICAL = Html.className(
-      __LI, __LI_VERTICAL
-  );
-
-  /*<button>*/
-
-  private static final Html.ClassName __BUTTON = Html.classText("""
-      flex text-start
-      """);
-
-  private static final Html.ClassName __BUTTON_VERTICAL = Html.classText("""
-
-      """);
-
-  public static final Html.ClassName BUTTON_HORIZONTAL = Html.className(
-      __BUTTON
-  );
-
-  public static final Html.ClassName BUTTON_VERTICAL = Html.className(
-      __BUTTON, __BUTTON_VERTICAL
-  );
-
-  /*<svg>*/
-
-  private static final Html.ClassName __ICON = Html.classText("""
-
-      """);
-
-  private static final Html.ClassName __ICON_VERTICAL = Html.classText("""
-
-      """);
-
-  public static final Html.ClassName ICON_VERTICAL = Html.className(
-      __ICON, __ICON_VERTICAL
-  );
-
   private CarbonProgressIndicator() {}
 
 }

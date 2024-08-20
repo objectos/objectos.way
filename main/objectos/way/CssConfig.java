@@ -2013,7 +2013,20 @@ final class CssConfig {
         "tracking", "letter-spacing"
     );
 
-    funcUtility(Css.Key.LINE_HEIGHT, values(Css.Key.LINE_HEIGHT, Css.DEFAULT_LINE_HEIGHT), "leading", "line-height");
+    funcUtility(
+        Css.Key.LINE_HEIGHT,
+
+        values(Css.Key.LINE_HEIGHT, Css.DEFAULT_LINE_HEIGHT),
+
+        EnumSet.of(
+            Css.ValueType.INTEGER,
+            Css.ValueType.DECIMAL,
+            Css.ValueType.LENGTH,
+            Css.ValueType.PERCENTAGE
+        ),
+
+        "leading", "line-height"
+    );
 
     funcUtility(
         Css.Key.LIST_STYLE_TYPE,

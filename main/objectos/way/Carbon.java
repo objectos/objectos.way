@@ -71,8 +71,17 @@ public final class Carbon extends CarbonComponents {
     ADD_LARGE("""
     <polygon points="17 15 17 5 15 5 15 15 5 15 5 17 15 17 15 27 17 27 17 17 27 17 27 15 17 15"/>"""),
 
+    CHECKMARK_OUTLINE("""
+    <path d="M14 21.414L9 16.413 10.413 15 14 18.586 21.585 11 23 12.415 14 21.414z"/><path d="M16,2A14,14,0,1,0,30,16,14,14,0,0,0,16,2Zm0,26A12,12,0,1,1,28,16,12,12,0,0,1,16,28Z"/>"""),
+
+    CIRCLE_DASH("""
+    <path d="M7.7 4.7a14.7 14.7 0 00-3 3.1L6.3 9A13.26 13.26 0 018.9 6.3zM4.6 12.3l-1.9-.6A12.51 12.51 0 002 16H4A11.48 11.48 0 014.6 12.3zM2.7 20.4a14.4 14.4 0 002 3.9l1.6-1.2a12.89 12.89 0 01-1.7-3.3zM7.8 27.3a14.4 14.4 0 003.9 2l.6-1.9A12.89 12.89 0 019 25.7zM11.7 2.7l.6 1.9A11.48 11.48 0 0116 4V2A12.51 12.51 0 0011.7 2.7zM24.2 27.3a15.18 15.18 0 003.1-3.1L25.7 23A11.53 11.53 0 0123 25.7zM27.4 19.7l1.9.6A15.47 15.47 0 0030 16H28A11.48 11.48 0 0127.4 19.7zM29.2 11.6a14.4 14.4 0 00-2-3.9L25.6 8.9a12.89 12.89 0 011.7 3.3zM24.1 4.6a14.4 14.4 0 00-3.9-2l-.6 1.9a12.89 12.89 0 013.3 1.7zM20.3 29.3l-.6-1.9A11.48 11.48 0 0116 28v2A21.42 21.42 0 0020.3 29.3z"/>"""),
+
     CLOSE("""
     <polygon points="17.4141 16 24 9.4141 22.5859 8 16 14.5859 9.4143 8 8 9.4141 14.5859 16 8 22.5859 9.4143 24 16 17.4141 22.5859 24 24 22.5859 17.4141 16"/>"""),
+
+    INCOMPLETE("""
+    <path d="M23.7642 6.8593l1.2851-1.5315A13.976 13.976 0 0020.8672 2.887l-.6836 1.8776A11.9729 11.9729 0 0123.7642 6.8593zM27.81 14l1.9677-.4128A13.8888 13.8888 0 0028.14 9.0457L26.4087 10A12.52 12.52 0 0127.81 14zM20.1836 27.2354l.6836 1.8776a13.976 13.976 0 004.1821-2.4408l-1.2851-1.5315A11.9729 11.9729 0 0120.1836 27.2354zM26.4087 22L28.14 23a14.14 14.14 0 001.6382-4.5872L27.81 18.0659A12.1519 12.1519 0 0126.4087 22zM16 30V2a14 14 0 000 28z"/>"""),
 
     LOGO_GITHUB("""
     <path d="M16,2a14,14,0,0,0-4.43,27.28c.7.13,1-.3,1-.67s0-1.21,0-2.38c-3.89.84-4.71-1.88-4.71-1.88A3.71,3.71,0,0,0,6.24,22.3c-1.27-.86.1-.85.1-.85A2.94,2.94,0,0,1,8.48,22.9a3,3,0,0,0,4.08,1.16,2.93,2.93,0,0,1,.88-1.87c-3.1-.36-6.37-1.56-6.37-6.92a5.4,5.4,0,0,1,1.44-3.76,5,5,0,0,1,.14-3.7s1.17-.38,3.85,1.43a13.3,13.3,0,0,1,7,0c2.67-1.81,3.84-1.43,3.84-1.43a5,5,0,0,1,.14,3.7,5.4,5.4,0,0,1,1.44,3.76c0,5.38-3.27,6.56-6.39,6.91a3.33,3.33,0,0,1,.95,2.59c0,1.87,0,3.38,0,3.84s.25.81,1,.67A14,14,0,0,0,16,2Z"/>"""),
@@ -181,6 +190,62 @@ public final class Carbon extends CarbonComponents {
    * A Carbon configuration option.
    */
   public sealed interface Option {}
+
+  enum CarbonPlane implements ProgressIndicatorVariant {
+    HORIZONTAL,
+
+    VERTICAL;
+  }
+
+  /**
+   * The horizontal plane.
+   */
+  public static final ProgressIndicatorVariant HORIZONTAL = CarbonPlane.HORIZONTAL;
+
+  /**
+   * The vertical plane.
+   */
+  public static final ProgressIndicatorVariant VERTICAL = CarbonPlane.VERTICAL;
+
+  /**
+   * A Carbon progress indicator variant.
+   */
+  public sealed interface ProgressIndicatorVariant {}
+
+  /**
+   * A Carbon progress step.
+   */
+  public sealed interface ProgressStep permits CarbonProgressStep {}
+
+  /**
+   * A Carbon progress step variant.
+   */
+  public sealed interface ProgressStepVariant {}
+
+  enum CarbonProgressStepVariant implements ProgressStepVariant {
+
+    STEP_COMPLETE,
+
+    STEP_CURRENT,
+
+    STEP_INCOMPLETE;
+
+  }
+
+  /**
+   * The complete step.
+   */
+  public static final ProgressStepVariant STEP_COMPLETE = CarbonProgressStepVariant.STEP_COMPLETE;
+
+  /**
+   * The current step.
+   */
+  public static final ProgressStepVariant STEP_CURRENT = CarbonProgressStepVariant.STEP_CURRENT;
+
+  /**
+   * The incomplete step.
+   */
+  public static final ProgressStepVariant STEP_INCOMPLETE = CarbonProgressStepVariant.STEP_INCOMPLETE;
 
   /**
    * A Carbon size variant.
@@ -432,6 +497,71 @@ public final class Carbon extends CarbonComponents {
         builder.classes(set);
       }
     };
+  }
+
+  static Html.ElementInstruction renderIcon16(Html.TemplateBase tmpl, Icon icon, Html.Instruction... attributes) {
+    return Carbon.renderIcon(tmpl, icon, "1rem", attributes);
+  }
+
+  static Html.ElementInstruction renderIcon20(Html.TemplateBase tmpl, Icon icon, Html.Instruction... attributes) {
+    return Carbon.renderIcon(tmpl, icon, "1.25rem", attributes);
+  }
+
+  static Html.ElementInstruction renderIcon24(Html.TemplateBase tmpl, Icon icon, Html.Instruction... attributes) {
+    return Carbon.renderIcon(tmpl, icon, "1.5rem", attributes);
+  }
+
+  static Html.ElementInstruction renderIcon32(Html.TemplateBase tmpl, Icon icon, Html.Instruction... attributes) {
+    return Carbon.renderIcon(tmpl, icon, "2rem", attributes);
+  }
+
+  private static Html.ElementInstruction renderIcon(Html.TemplateBase tmpl, Icon icon, String size, Html.Instruction... attributes) {
+    return tmpl.svg(
+        tmpl.xmlns("http://www.w3.org/2000/svg"),
+        tmpl.fill("currentColor"),
+        tmpl.width(size), tmpl.height(size), tmpl.viewBox("0 0 32 32"),
+
+        tmpl.flatten(attributes),
+
+        tmpl.raw(icon.raw)
+    );
+  }
+
+  //
+  // Components
+  //
+
+  //
+  // P
+  //
+
+  public final Html.ElementInstruction progressIndicator(ProgressIndicatorVariant variant, ProgressStep... steps) {
+    Check.notNull(variant, "variant == null");
+
+    boolean horizontal = variant == CarbonPlane.HORIZONTAL;
+
+    Html.Instruction[] instructions = new Html.Instruction[steps.length];
+
+    for (int i = 0; i < steps.length; i++) {
+      ProgressStep step = Check.notNull(steps[i], "steps[", i, "] == null");
+
+      CarbonProgressStep carbonStep = (CarbonProgressStep) step;
+
+      instructions[i] = carbonStep.render(horizontal);
+    }
+
+    return tmpl.ul(
+        horizontal ? CarbonProgressIndicator.HORIZONTAL : CarbonProgressIndicator.VERTICAL,
+
+        tmpl.flatten(instructions)
+    );
+  }
+
+  public final ProgressStep progressStep(ProgressStepVariant variant, String label) {
+    Check.notNull(variant, "variant == null");
+    Check.notNull(label, "label == null");
+
+    return new CarbonProgressStep(tmpl, variant, label);
   }
 
 }

@@ -31,7 +31,7 @@ import objectos.way.Html.TemplateBase;
 
 abstract class CarbonComponents {
 
-  private final Html.TemplateBase tmpl;
+  final Html.TemplateBase tmpl;
 
   CarbonComponents(TemplateBase tmpl) {
     this.tmpl = tmpl;
@@ -1240,31 +1240,19 @@ abstract class CarbonComponents {
   //
 
   public final Html.ElementInstruction icon16(Icon icon, Html.Instruction... attributes) {
-    return icon(icon, "1rem", attributes);
+    return Carbon.renderIcon16(tmpl, icon, attributes);
   }
 
   public final Html.ElementInstruction icon20(Icon icon, Html.Instruction... attributes) {
-    return icon(icon, "1.25rem", attributes);
+    return Carbon.renderIcon20(tmpl, icon, attributes);
   }
 
   public final Html.ElementInstruction icon24(Icon icon, Html.Instruction... attributes) {
-    return icon(icon, "1.5rem", attributes);
+    return Carbon.renderIcon24(tmpl, icon, attributes);
   }
 
   public final Html.ElementInstruction icon32(Icon icon, Html.Instruction... attributes) {
-    return icon(icon, "2rem", attributes);
-  }
-
-  private Html.ElementInstruction icon(Icon icon, String size, Html.Instruction... attributes) {
-    return tmpl.svg(
-        tmpl.xmlns("http://www.w3.org/2000/svg"),
-        tmpl.fill("currentColor"),
-        tmpl.width(size), tmpl.height(size), tmpl.viewBox("0 0 32 32"),
-
-        tmpl.flatten(attributes),
-
-        tmpl.raw(icon.raw)
-    );
+    return Carbon.renderIcon32(tmpl, icon, attributes);
   }
 
   //

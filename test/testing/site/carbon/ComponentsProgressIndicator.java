@@ -15,6 +15,7 @@
  */
 package testing.site.carbon;
 
+import objectos.way.Carbon;
 import objectos.way.Http;
 
 final class ComponentsProgressIndicator extends CarbonPage {
@@ -35,37 +36,36 @@ final class ComponentsProgressIndicator extends CarbonPage {
 
   @Override
   protected final void renderContent() {
-  }
+    carbon.pageHeader(
+        Carbon.PAGE_HEADER_TITLE_ONLY,
 
-  protected final void renderContent0() {
-    section(
-        className("page-header page-header-title-only"),
-
-        div(
-            className("page-header-title-row"),
-
-            h1(
-                className("page-header-title"),
-
-                t("Progress indicator")
-            )
+        carbon.pageHeaderTitleRow(
+            carbon.pageHeaderTitle("Progress indicator")
         )
     );
 
-    section(
-        className("grid-wide grid-cols-1"),
+    carbon.gridWide(
+        carbon.gridColumns(1), carbon.gap(Carbon.SPACING_05),
 
-        f(this::renderSection)
+        h2(
+            Carbon.HEADING_03,
+
+            t("Vertical")
+        ),
+
+        carbon.progressIndicator(
+            Carbon.VERTICAL,
+
+            carbon.progressStep(Carbon.STEP_COMPLETE, "First step"),
+            carbon.progressStep(Carbon.STEP_CURRENT, "Second step with tooltip"),
+            carbon.progressStep(Carbon.STEP_INCOMPLETE, "Third step with tooltip"),
+            carbon.progressStep(Carbon.STEP_INCOMPLETE, "Fourth step"),
+            carbon.progressStep(Carbon.STEP_INCOMPLETE, "Fifth step")
+        )
     );
   }
 
-  private void renderSection() {
-    h2(
-        className("heading-03 my-spacing-05"),
-
-        t("Vertical")
-    );
-
+  final void renderSection() {
     /*
     carbon.progressIndicator()
         .vertical()
