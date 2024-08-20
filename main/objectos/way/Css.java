@@ -263,6 +263,7 @@ public final class Css {
 
     FLEX_DIRECTION,
     FLEX_WRAP,
+    ALIGN_CONTENT,
     ALIGN_ITEMS,
     JUSTIFY_CONTENT,
     GAP,

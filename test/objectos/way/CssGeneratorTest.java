@@ -34,6 +34,32 @@ public class CssGeneratorTest {
   }
 
   @Test
+  public void alignContent() {
+    class Subject extends AbstractSubject {
+      @Override
+      final void classes() {
+        className("content-normal content-center content-start content-end content-between content-around content-evenly content-baseline content-stretch");
+      }
+    }
+
+    test(
+        Subject.class,
+
+        """
+        .content-normal { align-content: normal }
+        .content-center { align-content: center }
+        .content-start { align-content: flex-start }
+        .content-end { align-content: flex-end }
+        .content-between { align-content: space-between }
+        .content-around { align-content: space-around }
+        .content-evenly { align-content: space-evenly }
+        .content-baseline { align-content: baseline }
+        .content-stretch { align-content: stretch }
+        """
+    );
+  }
+
+  @Test
   public void alignItems() {
     class Subject extends AbstractSubject {
       @Override
