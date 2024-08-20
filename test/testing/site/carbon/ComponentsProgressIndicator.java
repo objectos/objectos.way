@@ -56,10 +56,10 @@ final class ComponentsProgressIndicator extends CarbonPage {
         carbon.progressIndicator(
             Carbon.VERTICAL,
 
-            carbon.progressStep(Carbon.STEP_COMPLETE, "First step"),
+            carbon.progressStep(Carbon.STEP_COMPLETE, "First step", "Optional label"),
             carbon.progressStep(Carbon.STEP_CURRENT, "Second step with tooltip"),
-            carbon.progressStep(Carbon.STEP_INCOMPLETE, "Third step with tooltip"),
-            carbon.progressStep(Carbon.STEP_INCOMPLETE, "Fourth step"),
+            carbon.progressStep(Carbon.STEP_INCOMPLETE, "Third step with tooltip").invalid(false),
+            carbon.progressStep(Carbon.STEP_INCOMPLETE, "Fourth step").secondaryLabel("Example invalid step").invalid(true),
             carbon.progressStep(Carbon.STEP_INCOMPLETE, "Fifth step")
         )
     );

@@ -72,6 +72,20 @@ abstract class CarbonComponents {
   """);
 
   /**
+   * Typography: the {@code label-01} style class.
+   */
+  public static final Html.ClassName LABEL_01 = Html.classText("""
+  text-12px leading-16px font-400 tracking-0.32px
+  """);
+
+  /**
+   * Typography: the {@code label-02} style class.
+   */
+  public static final Html.ClassName LABEL_02 = Html.classText("""
+  text-14px leading-18px font-400 tracking-0.16px
+  """);
+
+  /**
    * Typography: the {@code body-compact-01} style class.
    */
   public static final Html.ClassName BODY_COMPACT_01 = Html.classText("""

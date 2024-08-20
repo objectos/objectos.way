@@ -93,7 +93,10 @@ public final class Carbon extends CarbonComponents {
     <rect x="4" y="6" width="24" height="2"/><rect x="4" y="24" width="24" height="2"/><rect x="4" y="12" width="24" height="2"/><rect x="4" y="18" width="24" height="2"/>"""),
 
     TRASH_CAN("""
-    <rect x="12" y="12" width="2" height="12"/><rect x="18" y="12" width="2" height="12"/><path d="M4,6V8H6V28a2,2,0,0,0,2,2H24a2,2,0,0,0,2-2V8h2V6ZM8,28V8H24V28Z"/><rect x="12" y="2" width="8" height="2"/>""");
+    <rect x="12" y="12" width="2" height="12"/><rect x="18" y="12" width="2" height="12"/><path d="M4,6V8H6V28a2,2,0,0,0,2,2H24a2,2,0,0,0,2-2V8h2V6ZM8,28V8H24V28Z"/><rect x="12" y="2" width="8" height="2"/>"""),
+
+    WARNING("""
+    <path d="M16,2A14,14,0,1,0,30,16,14,14,0,0,0,16,2Zm0,26A12,12,0,1,1,28,16,12,12,0,0,1,16,28Z"/><path d="M15 8H17V19H15zM16 22a1.5 1.5 0 101.5 1.5A1.5 1.5 0 0016 22z"/>""");
 
     // @formatter:on
 
@@ -215,7 +218,13 @@ public final class Carbon extends CarbonComponents {
   /**
    * A Carbon progress step.
    */
-  public sealed interface ProgressStep permits CarbonProgressStep {}
+  public sealed interface ProgressStep permits CarbonProgressStep {
+
+    ProgressStep secondaryLabel(String value);
+
+    ProgressStep invalid(boolean value);
+
+  }
 
   /**
    * A Carbon progress step variant.
@@ -562,6 +571,14 @@ public final class Carbon extends CarbonComponents {
     Check.notNull(label, "label == null");
 
     return new CarbonProgressStep(tmpl, variant, label);
+  }
+
+  public final ProgressStep progressStep(ProgressStepVariant variant, String label, String secondaryLabel) {
+    Check.notNull(variant, "variant == null");
+    Check.notNull(label, "label == null");
+    Check.notNull(secondaryLabel, "secondaryLabel == null");
+
+    return new CarbonProgressStep(tmpl, variant, label).secondaryLabel(secondaryLabel);
   }
 
 }

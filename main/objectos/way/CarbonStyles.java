@@ -153,6 +153,17 @@ final class CarbonStyles implements Http.Handler {
           --cds-link-visited: #8a3ffc;
           --cds-overlay: rgba(22, 22, 22, 0.5);
           --cds-shadow: rgba(0, 0, 0, 0.3);
+          --cds-support-caution-major: #ff832b;
+          --cds-support-caution-minor: #f1c21b;
+          --cds-support-caution-undefined: #8a3ffc;
+          --cds-support-error: #da1e28;
+          --cds-support-error-inverse: #fa4d56;
+          --cds-support-info: #0043ce;
+          --cds-support-info-inverse: #4589ff;
+          --cds-support-success: #24a148;
+          --cds-support-success-inverse: #42be65;
+          --cds-support-warning: #f1c21b;
+          --cds-support-warning-inverse: #f1c21b;
           --cds-text-disabled: rgba(22, 22, 22, 0.25);
           --cds-text-error: #da1e28;
           --cds-text-helper: #6f6f6f;
@@ -258,6 +269,17 @@ final class CarbonStyles implements Http.Handler {
           --cds-link-visited: #8a3ffc;
           --cds-overlay: rgba(22, 22, 22, 0.5);
           --cds-shadow: rgba(0, 0, 0, 0.3);
+          --cds-support-caution-major: #ff832b;
+          --cds-support-caution-minor: #f1c21b;
+          --cds-support-caution-undefined: #8a3ffc;
+          --cds-support-error: #da1e28;
+          --cds-support-error-inverse: #fa4d56;
+          --cds-support-info: #0043ce;
+          --cds-support-info-inverse: #4589ff;
+          --cds-support-success: #24a148;
+          --cds-support-success-inverse: #42be65;
+          --cds-support-warning: #f1c21b;
+          --cds-support-warning-inverse: #f1c21b;
           --cds-text-disabled: rgba(22, 22, 22, 0.25);
           --cds-text-error: #da1e28;
           --cds-text-helper: #6f6f6f;
@@ -363,6 +385,17 @@ final class CarbonStyles implements Http.Handler {
           --cds-link-visited: #be95ff;
           --cds-overlay: rgba(0, 0, 0, 0.65);
           --cds-shadow: rgba(0, 0, 0, 0.8);
+          --cds-support-caution-major: #ff832b;
+          --cds-support-caution-minor: #f1c21b;
+          --cds-support-caution-undefined: #a56eff;
+          --cds-support-error: #ff8389;
+          --cds-support-error-inverse: #da1e28;
+          --cds-support-info: #4589ff;
+          --cds-support-info-inverse: #0043ce;
+          --cds-support-success: #42be65;
+          --cds-support-success-inverse: #24a148;
+          --cds-support-warning: #f1c21b;
+          --cds-support-warning-inverse: #f1c21b;
           --cds-text-disabled: rgba(244, 244, 244, 0.25);
           --cds-text-error: #ffb3b8;
           --cds-text-helper: #c6c6c6;
@@ -468,6 +501,17 @@ final class CarbonStyles implements Http.Handler {
           --cds-link-visited: #be95ff;
           --cds-overlay: rgba(0, 0, 0, 0.65);
           --cds-shadow: rgba(0, 0, 0, 0.8);
+          --cds-support-caution-major: #ff832b;
+          --cds-support-caution-minor: #f1c21b;
+          --cds-support-caution-undefined: #a56eff;
+          --cds-support-error: #fa4d56;
+          --cds-support-error-inverse: #da1e28;
+          --cds-support-info: #4589ff;
+          --cds-support-info-inverse: #0043ce;
+          --cds-support-success: #42be65;
+          --cds-support-success-inverse: #24a148;
+          --cds-support-warning: #f1c21b;
+          --cds-support-warning-inverse: #f1c21b;
           --cds-text-disabled: rgba(244, 244, 244, 0.25);
           --cds-text-error: #ff8389;
           --cds-text-helper: #a8a8a8;
@@ -527,6 +571,17 @@ final class CarbonStyles implements Http.Handler {
           --cds-link-primary-hover: #0043ce;
           --cds-link-secondary: #0043ce;
           --cds-link-visited: #8a3ffc;
+          --cds-support-caution-major: #ff832b;
+          --cds-support-caution-minor: #f1c21b;
+          --cds-support-caution-undefined: #8a3ffc;
+          --cds-support-error: #da1e28;
+          --cds-support-error-inverse: #fa4d56;
+          --cds-support-info: #0043ce;
+          --cds-support-info-inverse: #4589ff;
+          --cds-support-success: #24a148;
+          --cds-support-success-inverse: #42be65;
+          --cds-support-warning: #f1c21b;
+          --cds-support-warning-inverse: #f1c21b;
           --cds-text-disabled: rgba(22, 22, 22, 0.25);
           --cds-text-error: #da1e28;
           --cds-text-helper: #6f6f6f;
@@ -874,6 +929,7 @@ final class CarbonStyles implements Http.Handler {
     link-primary-hover: var(--cds-link-primary-hover)
     link-visited: var(--cds-link-visited)
     overlay: var(--cds-overlay)
+    support-error: var(--cds-support-error)
     text-inverse: var(--cds-text-inverse)
     text-on-color: var(--cds-text-on-color)
     text-on-color-disabled: var(--cds-text-on-color-disabled)

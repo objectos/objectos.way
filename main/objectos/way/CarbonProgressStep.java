@@ -15,6 +15,7 @@
  */
 package objectos.way;
 
+import objectos.lang.object.Check;
 import objectos.way.Carbon.CarbonProgressStepVariant;
 import objectos.way.Carbon.Icon;
 import objectos.way.Carbon.ProgressStep;
@@ -26,7 +27,11 @@ final class CarbonProgressStep implements ProgressStep {
 
   final CarbonProgressStepVariant variant;
 
+  boolean invalid;
+
   final String label;
+
+  String secondaryLabel;
 
   CarbonProgressStep(Html.TemplateBase tmpl, ProgressStepVariant variant, String label) {
     this.tmpl = tmpl;
@@ -34,6 +39,20 @@ final class CarbonProgressStep implements ProgressStep {
     this.variant = (CarbonProgressStepVariant) variant;
 
     this.label = label;
+  }
+
+  @Override
+  public final ProgressStep invalid(boolean value) {
+    invalid = value;
+
+    return this;
+  }
+
+  @Override
+  public final ProgressStep secondaryLabel(String value) {
+    secondaryLabel = Check.notNull(value, "value == null");
+
+    return this;
   }
 
   private static final Html.Instruction LI_HORIZONTAL = Html.NOOP;
@@ -51,8 +70,16 @@ final class CarbonProgressStep implements ProgressStep {
   private static final Html.Instruction ICON_HORIZONTAL = Html.NOOP;
 
   private static final Html.ClassName ICON_VERTICAL = Html.classText("""
-    mt-1px mx-spacing-03 inline-block shrink-0 fill-interactive
-    """);
+      mt-1px mx-spacing-03 inline-block shrink-0
+      """);
+
+  private static final Html.ClassName ICON_FILL_STANDARD = Html.className(
+      "fill-interactive"
+  );
+
+  private static final Html.ClassName ICON_FILL_WARNING = Html.className(
+      "fill-support-error"
+  );
 
   private static final Html.Instruction TEXT_HORIZONTAL = Html.NOOP;
 
@@ -68,6 +95,39 @@ final class CarbonProgressStep implements ProgressStep {
       align-top leading-[1.45] text-text-primary
       """);
 
+  private static final Html.Instruction OPTIONAL_HORIZONTAL = Html.NOOP;
+
+  private static final Html.ClassName OPTIONAL_VERTICAL = Html.classText("""
+      static w-full text-text-secondary
+      """);
+
+  private static final Html.Instruction LINE_COMPLETE_HORIZONTAL = Html.NOOP;
+
+  private static final Html.ClassName LINE_COMPLETE_VERTICAL = Html.classText("""
+      top-0px left-0px absolute h-full w-1px
+      border border-transparent
+
+      bg-interactive
+      """);
+
+  private static final Html.Instruction LINE_CURRENT_HORIZONTAL = Html.NOOP;
+
+  private static final Html.ClassName LINE_CURRENT_VERTICAL = Html.classText("""
+      top-0px left-0px absolute h-full w-1px
+      border border-transparent
+
+      bg-interactive
+      """);
+
+  private static final Html.Instruction LINE_INCOMPLETE_HORIZONTAL = Html.NOOP;
+
+  private static final Html.ClassName LINE_INCOMPLETE_VERTICAL = Html.classText("""
+      top-0px left-0px absolute h-full w-1px
+      border border-transparent
+
+      bg-border-subtle
+      """);
+
   public final Html.Instruction render(boolean horizontal) {
     return tmpl.li(
         horizontal ? LI_HORIZONTAL : LI_VERTICAL,
@@ -81,15 +141,19 @@ final class CarbonProgressStep implements ProgressStep {
             Carbon.renderIcon16(
                 tmpl,
 
-                switch (variant) {
-                  case STEP_COMPLETE -> Icon.CHECKMARK_OUTLINE;
+                !invalid
+                    ? switch (variant) {
+                      case STEP_COMPLETE -> Icon.CHECKMARK_OUTLINE;
 
-                  case STEP_CURRENT -> Icon.INCOMPLETE;
+                      case STEP_CURRENT -> Icon.INCOMPLETE;
 
-                  case STEP_INCOMPLETE -> Icon.CIRCLE_DASH;
-                },
+                      case STEP_INCOMPLETE -> Icon.CIRCLE_DASH;
+                    }
+                    : Icon.WARNING,
 
                 horizontal ? ICON_HORIZONTAL : ICON_VERTICAL,
+
+                !invalid ? ICON_FILL_STANDARD : ICON_FILL_WARNING,
 
                 tmpl.ariaHidden("true")
             ),
@@ -103,7 +167,39 @@ final class CarbonProgressStep implements ProgressStep {
                     horizontal ? LABEL_HORIZONTAL : LABEL_VERTICAL,
 
                     tmpl.t(label)
-                )
+                ),
+
+                secondaryLabel != null
+                    ? tmpl.p(
+                        Carbon.LABEL_01,
+
+                        horizontal ? OPTIONAL_HORIZONTAL : OPTIONAL_VERTICAL,
+
+                        tmpl.t(secondaryLabel)
+                    )
+                    : tmpl.noop()
+            ),
+
+            tmpl.span(
+                tmpl.className("sr-only"),
+
+                switch (variant) {
+                  case STEP_COMPLETE -> tmpl.t("Complete");
+
+                  case STEP_CURRENT -> tmpl.t("Current");
+
+                  case STEP_INCOMPLETE -> tmpl.t("Incomplete");
+                }
+            ),
+
+            tmpl.span(
+                switch (variant) {
+                  case STEP_COMPLETE -> horizontal ? LINE_COMPLETE_HORIZONTAL : LINE_COMPLETE_VERTICAL;
+
+                  case STEP_CURRENT -> horizontal ? LINE_CURRENT_HORIZONTAL : LINE_CURRENT_VERTICAL;
+
+                  case STEP_INCOMPLETE -> horizontal ? LINE_INCOMPLETE_HORIZONTAL : LINE_INCOMPLETE_VERTICAL;
+                }
             )
         )
     );
