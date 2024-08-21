@@ -22,6 +22,7 @@ import java.util.function.Predicate;
 import objectos.lang.object.Check;
 import objectos.way.Carbon.Size.ExtraSmall;
 import objectos.way.Carbon.Size.Max;
+import objectos.way.Html.ElementName;
 
 /**
  * The <strong>Objectos Carbon UI</strong> main class.
@@ -470,6 +471,12 @@ public final class Carbon extends CarbonComponents {
 
   }
 
+  private Html.ElementName element;
+
+  private boolean flagIconOnly;
+
+  private Icon icon;
+
   Carbon(Html.TemplateBase tmpl) {
     super(tmpl);
   }
@@ -545,6 +552,76 @@ public final class Carbon extends CarbonComponents {
   static final Html.AttributeObject ROLE_DIALOG = Html.attribute(HtmlAttributeName.ROLE, "dialog");
 
   static final Html.AttributeObject ROLE_PRESENTATION = Html.attribute(HtmlAttributeName.ROLE, "presentation");
+
+  public final Html.NoOpInstruction iconOnly() {
+    flagIconOnly = true;
+
+    return Html.NOOP;
+  }
+
+  private boolean readIconOnly() {
+    boolean res = flagIconOnly;
+
+    flagIconOnly = false;
+
+    return res;
+  }
+
+  public final Html.NoOpInstruction renderAs(Html.ElementName element) {
+    this.element = Check.notNull(element, "element == null");
+
+    return Html.NOOP;
+  }
+
+  private Html.ElementName readRenderAs(Html.ElementName defaultValue) {
+    ElementName result = defaultValue;
+
+    if (element != null) {
+      result = element;
+
+      element = null;
+    }
+
+    return result;
+  }
+
+  public final Html.NoOpInstruction renderIcon(Icon icon) {
+    this.icon = Check.notNull(icon, "icon == null");
+
+    return Html.NOOP;
+  }
+
+  private Icon readIcon() {
+    Icon result = icon;
+
+    icon = null;
+
+    return result;
+  }
+
+  //
+  // B
+  //
+
+  public final Html.ElementInstruction button(Carbon.ButtonVariant variant, Carbon.ButtonSize size, Html.Instruction... contents) {
+    Check.notNull(variant, "variant == null");
+    Check.notNull(size, "size == null");
+
+    Html.ElementName renderAs;
+    renderAs = readRenderAs(Html.ElementName.BUTTON);
+
+    CarbonButtonVariant thisVariant;
+    thisVariant = (CarbonButtonVariant) variant;
+
+    CarbonSize thisSize;
+    thisSize = (CarbonSize) size;
+
+    Icon icon = readIcon();
+
+    boolean iconOnly = readIconOnly();
+
+    return CarbonButton.button(tmpl, renderAs, thisVariant, thisSize, icon, iconOnly, contents);
+  }
 
   //
   // P

@@ -109,12 +109,12 @@ final class ComponentsButton extends CarbonPage {
         carbon.gap(Carbon.SPACING_03),
         className("*:self-start"),
 
-        carbon.button(variant, label),
-        carbon.button(variant, Carbon.SM, label),
-        carbon.button(variant, Carbon.MD, label),
-        carbon.button(variant, Carbon.LG, label),
-        carbon.button(variant, Carbon.XL, label),
-        carbon.button(variant, Carbon.MAX, label)
+        carbon.button(variant, Carbon.LG, type("button"), t(label)),
+        carbon.button(variant, Carbon.SM, type("button"), t(label)),
+        carbon.button(variant, Carbon.MD, type("button"), t(label)),
+        carbon.button(variant, Carbon.LG, type("button"), t(label)),
+        carbon.button(variant, Carbon.XL, type("button"), t(label)),
+        carbon.button(variant, Carbon.MAX, type("button"), t(label))
     );
   }
 
@@ -134,12 +134,12 @@ final class ComponentsButton extends CarbonPage {
         carbon.gap(Carbon.SPACING_03),
         className("*:self-start"),
 
-        carbon.button(variant, label, icon),
-        carbon.button(variant, Carbon.SM, label, icon),
-        carbon.button(variant, Carbon.MD, label, icon),
-        carbon.button(variant, Carbon.LG, label, icon),
-        carbon.button(variant, Carbon.XL, label, icon),
-        carbon.button(variant, Carbon.MAX, label, icon)
+        carbon.button(variant, Carbon.LG, type("button"), t(label), carbon.renderIcon(icon)),
+        carbon.button(variant, Carbon.SM, type("button"), t(label), carbon.renderIcon(icon)),
+        carbon.button(variant, Carbon.MD, type("button"), t(label), carbon.renderIcon(icon)),
+        carbon.button(variant, Carbon.LG, type("button"), t(label), carbon.renderIcon(icon)),
+        carbon.button(variant, Carbon.XL, type("button"), t(label), carbon.renderIcon(icon)),
+        carbon.button(variant, Carbon.MAX, type("button"), t(label), carbon.renderIcon(icon))
     );
   }
 
@@ -159,12 +159,12 @@ final class ComponentsButton extends CarbonPage {
         carbon.gap(Carbon.SPACING_03),
         className("*:self-start"),
 
-        carbon.button(variant, icon),
-        carbon.button(variant, Carbon.SM, icon),
-        carbon.button(variant, Carbon.MD, icon),
-        carbon.button(variant, Carbon.LG, icon),
-        carbon.button(variant, Carbon.XL, icon),
-        carbon.button(variant, Carbon.MAX, icon)
+        carbon.button(variant, Carbon.LG, type("button"), carbon.iconOnly(), carbon.renderIcon(icon)),
+        carbon.button(variant, Carbon.SM, type("button"), carbon.iconOnly(), carbon.renderIcon(icon)),
+        carbon.button(variant, Carbon.MD, type("button"), carbon.iconOnly(), carbon.renderIcon(icon)),
+        carbon.button(variant, Carbon.LG, type("button"), carbon.iconOnly(), carbon.renderIcon(icon)),
+        carbon.button(variant, Carbon.XL, type("button"), carbon.iconOnly(), carbon.renderIcon(icon)),
+        carbon.button(variant, Carbon.MAX, type("button"), carbon.iconOnly(), carbon.renderIcon(icon))
     );
   }
 

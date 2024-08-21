@@ -61,7 +61,8 @@ final class ComponentsTearsheet extends CarbonPage {
         ),
 
         carbon.button(
-            Html.ElementName.BUTTON, Carbon.PRIMARY, Carbon.LG, false,
+            Carbon.PRIMARY, Carbon.LG,
+            type("button"),
             dataOnClick(
                 Carbon.showTearsheet(sheet01),
                 Carbon.showTearsheetModal(sheet01Modal)
