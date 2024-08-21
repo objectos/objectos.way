@@ -82,8 +82,27 @@ final class ComponentsTearsheet extends CarbonPage {
             ),
 
             carbon.tearsheetBody(
-                carbon.tearsheetInfluencer(),
-                carbon.tearsheetMain()
+                carbon.tearsheetInfluencer(
+                    className("py-spacing-06 px-spacing-07"),
+
+                    carbon.progressIndicator(
+                        Carbon.VERTICAL,
+
+                        carbon.progressStep(Carbon.STEP_CURRENT, "Topic name"),
+                        carbon.progressStep(Carbon.STEP_INCOMPLETE, "Location"),
+                        carbon.progressStep(Carbon.STEP_INCOMPLETE, "Partitions"),
+                        carbon.progressStep(Carbon.STEP_INCOMPLETE, "Message retention")
+                    )
+                ),
+                carbon.tearsheetRight(
+                    carbon.tearsheetMain(),
+
+                    carbon.tearsheetActions(
+                      //carbon.tearsheetCancelAction("Cancel"),
+                    //carbon.tearsheetBackAction("Back"),
+                    //carbon.tearsheetNextAction("Next")
+                    )
+                )
             )
         )
     );

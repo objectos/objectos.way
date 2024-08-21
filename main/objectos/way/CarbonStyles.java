@@ -52,7 +52,8 @@ final class CarbonStyles implements Http.Handler {
         Css.classes(
             CarbonComponents.class,
             CarbonProgressIndicator.class,
-            CarbonProgressStep.class
+            CarbonProgressStep.class,
+            CarbonTearsheet.class
         ),
 
         Css.useLogicalProperties(),

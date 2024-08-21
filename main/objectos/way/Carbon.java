@@ -540,6 +540,12 @@ public final class Carbon extends CarbonComponents {
   // Components
   //
 
+  static final Html.AttributeObject ARIA_HIDDEN_TRUE = Html.attribute(HtmlAttributeName.ARIA_HIDDEN, "true");
+
+  static final Html.AttributeObject ROLE_DIALOG = Html.attribute(HtmlAttributeName.ROLE, "dialog");
+
+  static final Html.AttributeObject ROLE_PRESENTATION = Html.attribute(HtmlAttributeName.ROLE, "presentation");
+
   //
   // P
   //
@@ -579,6 +585,58 @@ public final class Carbon extends CarbonComponents {
     Check.notNull(secondaryLabel, "secondaryLabel == null");
 
     return new CarbonProgressStep(tmpl, variant, label).secondaryLabel(secondaryLabel);
+  }
+
+  //
+  // T
+  //
+
+  public static Script.Action showTearsheet(Html.Id id) {
+    return CarbonTearsheet.showTearsheet(id);
+  }
+
+  public static Script.Action showTearsheetModal(Html.Id id) {
+    return CarbonTearsheet.showTearsheetModal(id);
+  }
+
+  public final Html.ElementInstruction tearsheet(Html.Instruction... contents) {
+    return CarbonTearsheet.tearsheet(tmpl, contents);
+  }
+
+  public final Html.ElementInstruction tearsheetModal(Html.Instruction... contents) {
+    return CarbonTearsheet.tearsheetModal(tmpl, contents);
+  }
+
+  public final Html.ElementInstruction tearsheetHeader(Html.Instruction... contents) {
+    return CarbonTearsheet.tearsheetHeader(tmpl, contents);
+  }
+
+  public final Html.ElementInstruction tearsheetHeaderTitle(String text) {
+    return CarbonTearsheet.tearsheetHeaderTitle(tmpl, text);
+  }
+
+  public final Html.ElementInstruction tearsheetHeaderDescription(String text) {
+    return CarbonTearsheet.tearsheetHeaderDescription(tmpl, text);
+  }
+
+  public final Html.ElementInstruction tearsheetBody(Html.Instruction... contents) {
+    return CarbonTearsheet.tearsheetBody(tmpl, contents);
+  }
+
+  public final Html.ElementInstruction tearsheetInfluencer(Html.Instruction... contents) {
+    return CarbonTearsheet.tearsheetInfluencer(tmpl, contents);
+  }
+
+  public final Html.ElementInstruction tearsheetRight(Html.Instruction... contents) {
+    return CarbonTearsheet.tearsheetRight(tmpl, contents);
+  }
+
+  public final Html.ElementInstruction tearsheetMain(Html.Instruction... contents) {
+    return CarbonTearsheet.tearsheetMain(tmpl, contents);
+  }
+
+  public final Html.ElementInstruction tearsheetActions(Html.Instruction... contents) {
+    return CarbonTearsheet.tearsheetActions(tmpl, contents);
   }
 
 }

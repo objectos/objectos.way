@@ -58,25 +58,14 @@ final class ComponentsProgressIndicator extends CarbonPage {
 
             carbon.progressStep(Carbon.STEP_COMPLETE, "First step", "Optional label"),
             carbon.progressStep(Carbon.STEP_CURRENT, "Second step with tooltip"),
-            carbon.progressStep(Carbon.STEP_INCOMPLETE, "Third step with tooltip").invalid(false),
-            carbon.progressStep(Carbon.STEP_INCOMPLETE, "Fourth step").secondaryLabel("Example invalid step").invalid(true),
+            carbon.progressStep(Carbon.STEP_INCOMPLETE, "Third step with tooltip")
+                .invalid(false),
+            carbon.progressStep(Carbon.STEP_INCOMPLETE, "Fourth step")
+                .secondaryLabel("Example invalid step")
+                .invalid(true),
             carbon.progressStep(Carbon.STEP_INCOMPLETE, "Fifth step")
         )
     );
-  }
-
-  final void renderSection() {
-    /*
-    carbon.progressIndicator()
-        .vertical()
-        .currentIndex(1)
-        .step("First step", "Step 1: Getting started with Carbon Design System", "Optional label")
-        .step("Second step with tooltip", "Step 2: Getting started with Carbon Design System")
-        .step("Third step with tooltip", "Step 3: Getting started with Carbon Design System")
-        .step("Fourth step", "Step 4: Getting started with Carbon Design System", "Example invalid step").valid(false)
-        .step("Fifth step", "Step 5: Getting started with Carbon Design System").enabled(false)
-        .render();
-        */
   }
 
 }

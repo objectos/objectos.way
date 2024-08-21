@@ -92,7 +92,9 @@ final class CarbonProgressStep implements ProgressStep {
   private static final Html.ClassName LABEL_VERTICAL = Html.classText("""
       inline-block max-w-160px
       overflow-hidden text-ellipsis
-      align-top leading-[1.45] text-text-primary
+      align-top text-text-primary
+
+      more:leading-[1.45]
       """);
 
   private static final Html.Instruction OPTIONAL_HORIZONTAL = Html.NOOP;
