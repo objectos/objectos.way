@@ -237,6 +237,7 @@ public final class Css {
     FLEX,
     FLEX_GROW,
     FLEX_SHRINK,
+    FLEX_BASIS,
 
     TABLE_LAYOUT,
 

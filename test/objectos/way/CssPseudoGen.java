@@ -28,7 +28,8 @@ public class CssPseudoGen {
     CssPseudoGen gen;
     gen = new CssPseudoGen();
 
-    gen.classNameSingleLine(MAX_HEIGHT, "max-h-");
+    gen.classNameSingleLine(SPACING, "basis-");
+    gen.classNameSingleLine(FLEX_BASIS, "basis-");
   }
 
   private static final Map<String, String> SCREENS = seqmap(
@@ -166,6 +167,37 @@ public class CssPseudoGen {
       kv("contents", "contents"),
       kv("list-item", "list-item"),
       kv("hidden", "none")
+  );
+
+  static final Map<String, String> FLEX_BASIS = seqmap(
+      kv("auto", "auto"),
+      kv("1/2", "50%"),
+      kv("1/3", "33.333333%"),
+      kv("2/3", "66.666667%"),
+      kv("1/4", "25%"),
+      kv("2/4", "50%"),
+      kv("3/4", "75%"),
+      kv("1/5", "20%"),
+      kv("2/5", "40%"),
+      kv("3/5", "60%"),
+      kv("4/5", "80%"),
+      kv("1/6", "16.666667%"),
+      kv("2/6", "33.333333%"),
+      kv("3/6", "50%"),
+      kv("4/6", "66.666667%"),
+      kv("5/6", "83.333333%"),
+      kv("1/12", "8.333333%"),
+      kv("2/12", "16.666667%"),
+      kv("3/12", "25%"),
+      kv("4/12", "33.333333%"),
+      kv("5/12", "41.666667%"),
+      kv("6/12", "50%"),
+      kv("7/12", "58.333333%"),
+      kv("8/12", "66.666667%"),
+      kv("9/12", "75%"),
+      kv("10/12", "83.333333%"),
+      kv("11/12", "91.666667%"),
+      kv("full", "100%")
   );
 
   static final Map<String, String> FLEX_DIRECTION = seqmap(
