@@ -240,6 +240,7 @@ final class CssConfig {
       putVariant("hover", new Css.ClassNameFormat("", ":hover"));
       putVariant("active", new Css.ClassNameFormat("", ":active"));
       putVariant("visited", new Css.ClassNameFormat("", ":visited"));
+      putVariant("disabled", new Css.ClassNameFormat("", ":disabled"));
 
       putVariant("ltr", new Css.ClassNameFormat("", ":where([dir=\"ltr\"], [dir=\"ltr\"] *)"));
       putVariant("rtl", new Css.ClassNameFormat("", ":where([dir=\"rtl\"], [dir=\"rtl\"] *)"));

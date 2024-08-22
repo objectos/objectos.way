@@ -4963,6 +4963,7 @@ public class CssGeneratorTest {
         className("visited:text-white visited:hover:text-black");
         className("before:block after:text-black");
         className("ltr:ml-1 rtl:mr-1");
+        className("disabled:bg-black");
       }
     }
 
@@ -4986,6 +4987,7 @@ public class CssGeneratorTest {
         .\\*\\:rounded-full > * { border-radius: 9999px }
         .hover\\:bg-black:hover { background-color: #000000 }
         .active\\:bg-white:active { background-color: #ffffff }
+        .disabled\\:bg-black:disabled { background-color: #000000 }
         .after\\:text-black::after { color: #000000 }
         .visited\\:text-white:visited { color: #ffffff }
         .visited\\:hover\\:text-black:visited:hover { color: #000000 }
