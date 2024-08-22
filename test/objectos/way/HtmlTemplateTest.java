@@ -978,14 +978,15 @@ public class HtmlTemplateTest {
             form(
                 flatten(
                     label(),
-                    input()
+                    input(),
+                    disabled()
                 )
             );
           }
         },
 
         """
-        <form><label></label><input></form>
+        <form disabled><label></label><input></form>
         """
     );
   }

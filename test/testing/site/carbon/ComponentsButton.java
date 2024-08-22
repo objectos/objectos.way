@@ -109,12 +109,19 @@ final class ComponentsButton extends CarbonPage {
         carbon.gap(Carbon.SPACING_03),
         className("*:self-start"),
 
-        carbon.button(variant, Carbon.LG, type("button"), t(label)),
         carbon.button(variant, Carbon.SM, type("button"), t(label)),
         carbon.button(variant, Carbon.MD, type("button"), t(label)),
         carbon.button(variant, Carbon.LG, type("button"), t(label)),
         carbon.button(variant, Carbon.XL, type("button"), t(label)),
-        carbon.button(variant, Carbon.MAX, type("button"), t(label))
+        carbon.button(variant, Carbon.MAX, type("button"), t(label)),
+
+        div(className("col-span-full")),
+
+        carbon.button(variant, Carbon.SM, disabled(), type("button"), t(label)),
+        carbon.button(variant, Carbon.MD, disabled(), type("button"), t(label)),
+        carbon.button(variant, Carbon.LG, disabled(), type("button"), t(label)),
+        carbon.button(variant, Carbon.XL, disabled(), type("button"), t(label)),
+        carbon.button(variant, Carbon.MAX, disabled(), type("button"), t(label))
     );
   }
 
@@ -134,7 +141,6 @@ final class ComponentsButton extends CarbonPage {
         carbon.gap(Carbon.SPACING_03),
         className("*:self-start"),
 
-        carbon.button(variant, Carbon.LG, type("button"), t(label), carbon.renderIcon(icon)),
         carbon.button(variant, Carbon.SM, type("button"), t(label), carbon.renderIcon(icon)),
         carbon.button(variant, Carbon.MD, type("button"), t(label), carbon.renderIcon(icon)),
         carbon.button(variant, Carbon.LG, type("button"), t(label), carbon.renderIcon(icon)),
@@ -159,7 +165,6 @@ final class ComponentsButton extends CarbonPage {
         carbon.gap(Carbon.SPACING_03),
         className("*:self-start"),
 
-        carbon.button(variant, Carbon.LG, type("button"), carbon.iconOnly(), carbon.renderIcon(icon)),
         carbon.button(variant, Carbon.SM, type("button"), carbon.iconOnly(), carbon.renderIcon(icon)),
         carbon.button(variant, Carbon.MD, type("button"), carbon.iconOnly(), carbon.renderIcon(icon)),
         carbon.button(variant, Carbon.LG, type("button"), carbon.iconOnly(), carbon.renderIcon(icon)),

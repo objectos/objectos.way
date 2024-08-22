@@ -580,6 +580,7 @@ class HtmlRecorder {
         }
 
         case HtmlByteProto.AMBIGUOUS1,
+             HtmlByteProto.ATTRIBUTE0,
              HtmlByteProto.ATTRIBUTE1,
              HtmlByteProto.ELEMENT,
              HtmlByteProto.TEXT,

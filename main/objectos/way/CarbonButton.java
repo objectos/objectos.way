@@ -34,6 +34,29 @@ final class CarbonButton {
       """)
   );
 
+  static final Html.ClassName __BUTTON_DISABLED_STANDARD = Html.classText("""
+      disabled:cursor-not-allowed
+      disabled:border-button-disabled disabled:bg-button-disabled
+      disabled:text-text-on-color-disabled
+      disabled:shadow-none
+      """);
+
+  static final Html.ClassName __BUTTON_DISABLED_TERTIARY = Html.classText("""
+      disabled:cursor-not-allowed
+      disabled:border-button-disabled
+      disabled:text-text-disabled
+      disabled:shadow-none
+      disabled:hover:bg-transparent
+      """);
+
+  static final Html.ClassName __BUTTON_DISABLED_GHOST = Html.classText("""
+      disabled:cursor-not-allowed
+      disabled:border-transparent disabled:bg-transparent
+      disabled:text-text-disabled
+      disabled:shadow-none
+      disabled:hover:bg-transparent
+      """);
+
   private static final Html.ClassName __BUTTON_JUSTIFY_STANDARD = Html.classText("""
       justify-between
       """);
@@ -125,19 +148,19 @@ final class CarbonButton {
 
   private static final Html.ClassName[] BUTTON_VARIANTS = {
       // primary
-      Html.className(__BUTTON_BASE, __BUTTON_JUSTIFY_STANDARD, __BUTTON_PADDING_STANDARD, __BUTTON_PRIMARY),
+      Html.className(__BUTTON_BASE, __BUTTON_DISABLED_STANDARD, __BUTTON_JUSTIFY_STANDARD, __BUTTON_PADDING_STANDARD, __BUTTON_PRIMARY),
       // secondary
-      Html.className(__BUTTON_BASE, __BUTTON_JUSTIFY_STANDARD, __BUTTON_PADDING_STANDARD, __BUTTON_SECONDARY),
+      Html.className(__BUTTON_BASE, __BUTTON_DISABLED_STANDARD, __BUTTON_JUSTIFY_STANDARD, __BUTTON_PADDING_STANDARD, __BUTTON_SECONDARY),
       // tertiary
-      Html.className(__BUTTON_BASE, __BUTTON_JUSTIFY_STANDARD, __BUTTON_PADDING_STANDARD, __BUTTON_TERTIARY),
+      Html.className(__BUTTON_BASE, __BUTTON_DISABLED_TERTIARY, __BUTTON_JUSTIFY_STANDARD, __BUTTON_PADDING_STANDARD, __BUTTON_TERTIARY),
       // ghost
-      Html.className(__BUTTON_BASE, __BUTTON_JUSTIFY_STANDARD, __BUTTON_PADDING_GHOST, __BUTTON_GHOST),
+      Html.className(__BUTTON_BASE, __BUTTON_DISABLED_GHOST, __BUTTON_JUSTIFY_STANDARD, __BUTTON_PADDING_GHOST, __BUTTON_GHOST),
       // danger
-      Html.className(__BUTTON_BASE, __BUTTON_JUSTIFY_STANDARD, __BUTTON_PADDING_STANDARD, __BUTTON_DANGER),
+      Html.className(__BUTTON_BASE, __BUTTON_DISABLED_STANDARD, __BUTTON_JUSTIFY_STANDARD, __BUTTON_PADDING_STANDARD, __BUTTON_DANGER),
       // danger-tertiary
-      Html.className(__BUTTON_BASE, __BUTTON_JUSTIFY_STANDARD, __BUTTON_PADDING_STANDARD, __BUTTON_DANGER_TERTIARY),
+      Html.className(__BUTTON_BASE, __BUTTON_DISABLED_TERTIARY, __BUTTON_JUSTIFY_STANDARD, __BUTTON_PADDING_STANDARD, __BUTTON_DANGER_TERTIARY),
       // danger-ghost
-      Html.className(__BUTTON_BASE, __BUTTON_JUSTIFY_STANDARD, __BUTTON_PADDING_GHOST, __BUTTON_DANGER_GHOST)
+      Html.className(__BUTTON_BASE, __BUTTON_DISABLED_GHOST, __BUTTON_JUSTIFY_STANDARD, __BUTTON_PADDING_GHOST, __BUTTON_DANGER_GHOST)
   };
 
   private static final Html.ClassName[] BUTTON_SIZES = {
