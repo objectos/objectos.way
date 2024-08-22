@@ -137,4 +137,22 @@ public class CssTest {
     assertEquals(Css.typeOf("[1.23%]"), Css.ValueType.PERCENTAGE);
   }
 
+  @Test
+  public void writeClassName() {
+    assertEquals(writeClassName("foo"), ".foo");
+    assertEquals(writeClassName("after:block"), ".after\\:block");
+    assertEquals(
+        writeClassName("focus:shadow-[inset_0_0_0_1px_var(--cds-focus),inset_0_0_0_2px_var(--cds-background)]"),
+        ".focus\\:shadow-\\[inset_0_0_0_1px_var\\(--cds-focus\\)\\2c inset_0_0_0_2px_var\\(--cds-background\\)\\]"
+    );
+  }
+
+  private String writeClassName(String className) {
+    StringBuilder out = new StringBuilder();
+
+    Css.writeClassName(out, className);
+
+    return out.toString();
+  }
+
 }

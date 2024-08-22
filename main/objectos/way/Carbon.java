@@ -716,4 +716,16 @@ public final class Carbon extends CarbonComponents {
     return CarbonTearsheet.tearsheetActions(tmpl, contents);
   }
 
+  public final Html.ElementInstruction tearsheetCancelAction(String label) {
+    return CarbonTearsheet.tearsheetCancelAction(tmpl, label);
+  }
+
+  public final Html.ElementInstruction tearsheetBackAction(String label) {
+    return CarbonTearsheet.tearsheetBackAction(tmpl, label);
+  }
+
+  public final Html.ElementInstruction tearsheetNextAction(String label) {
+    return CarbonTearsheet.tearsheetNextAction(tmpl, label);
+  }
+
 }

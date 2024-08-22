@@ -1416,7 +1416,17 @@ public final class Css {
       c = className.charAt(index);
 
       switch (c) {
-        case ' ', ',', '.', '/', ':', '@', '[', ']', '*' -> {
+        case ',' -> {
+          out.append("\\");
+
+          out.append(Integer.toHexString(c));
+
+          out.append(' ');
+
+          escaped = false;
+        }
+
+        case ' ', '.', '/', ':', '@', '(', ')', '[', ']', '*' -> {
           out.append("\\");
 
           out.append(c);

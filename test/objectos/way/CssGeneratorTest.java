@@ -782,7 +782,7 @@ public class CssGeneratorTest {
           --tw-shadow-colored: none;
           box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow, 0 0 #0000);
         }
-        .shadow-\\[0_35px_60px_-15px_rgb(0_0_0_\\/_0\\.3)\\] {
+        .shadow-\\[0_35px_60px_-15px_rgb\\(0_0_0_\\/_0\\.3\\)\\] {
           --tw-shadow: 0 35px 60px -15px rgb(0 0 0 / 0.3);
           --tw-shadow-colored: 0 35px 60px -15px var(--tw-shadow-color);
           box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow, 0 0 #0000);
@@ -1520,7 +1520,7 @@ public class CssGeneratorTest {
         .grid-cols-10 { grid-template-columns: repeat(10, minmax(0, 1fr)) }
         .grid-cols-11 { grid-template-columns: repeat(11, minmax(0, 1fr)) }
         .grid-cols-12 { grid-template-columns: repeat(12, minmax(0, 1fr)) }
-        .grid-cols-\\[200px_minmax(900px\\,_1fr)_100px\\] { grid-template-columns: 200px minmax(900px, 1fr) 100px }
+        .grid-cols-\\[200px_minmax\\(900px\\2c _1fr\\)_100px\\] { grid-template-columns: 200px minmax(900px, 1fr) 100px }
         """
     );
   }
@@ -1554,7 +1554,7 @@ public class CssGeneratorTest {
         .grid-rows-10 { grid-template-rows: repeat(10, minmax(0, 1fr)) }
         .grid-rows-11 { grid-template-rows: repeat(11, minmax(0, 1fr)) }
         .grid-rows-12 { grid-template-rows: repeat(12, minmax(0, 1fr)) }
-        .grid-rows-\\[200px_minmax(900px\\,_1fr)_100px\\] { grid-template-rows: 200px minmax(900px, 1fr) 100px }
+        .grid-rows-\\[200px_minmax\\(900px\\2c _1fr\\)_100px\\] { grid-template-rows: 200px minmax(900px, 1fr) 100px }
         """
     );
   }

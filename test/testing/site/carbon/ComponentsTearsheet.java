@@ -99,9 +99,9 @@ final class ComponentsTearsheet extends CarbonPage {
                     carbon.tearsheetMain(),
 
                     carbon.tearsheetActions(
-                      //carbon.tearsheetCancelAction("Cancel"),
-                    //carbon.tearsheetBackAction("Back"),
-                    //carbon.tearsheetNextAction("Next")
+                        carbon.tearsheetCancelAction("Cancel"),
+                        carbon.tearsheetBackAction("Back"),
+                        carbon.tearsheetNextAction("Next")
                     )
                 )
             )

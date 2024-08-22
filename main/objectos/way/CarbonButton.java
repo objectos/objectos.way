@@ -20,7 +20,7 @@ import objectos.way.Carbon.CarbonSize;
 
 final class CarbonButton {
 
-  private static final Html.ClassName __BUTTON_BASE = Html.className(
+  static final Html.ClassName __BUTTON_BASE = Html.className(
       Carbon.BODY_COMPACT_01,
 
       Html.classText("""
@@ -38,7 +38,7 @@ final class CarbonButton {
       justify-between
       """);
 
-  private static final Html.ClassName __BUTTON_PADDING_STANDARD = Html.classText("""
+  static final Html.ClassName __BUTTON_PADDING_STANDARD = Html.classText("""
       pr-[63px] pl-[15px]
       """);
 
@@ -66,7 +66,7 @@ final class CarbonButton {
       w-max max-w-320px min-h-80px py-14px
       """);
 
-  private static final Html.ClassName __BUTTON_PRIMARY = Html.classText("""
+  static final Html.ClassName __BUTTON_PRIMARY = Html.classText("""
       bg-button-primary
       border border-transparent
       text-text-on-color
@@ -74,7 +74,7 @@ final class CarbonButton {
       hover:bg-button-primary-hover
       """);
 
-  private static final Html.ClassName __BUTTON_SECONDARY = Html.classText("""
+  static final Html.ClassName __BUTTON_SECONDARY = Html.classText("""
       bg-button-secondary
       border border-transparent
       text-text-on-color
@@ -90,7 +90,7 @@ final class CarbonButton {
       hover:bg-button-tertiary-hover hover:text-text-inverse
       """);
 
-  private static final Html.ClassName __BUTTON_GHOST = Html.classText("""
+  static final Html.ClassName __BUTTON_GHOST = Html.classText("""
       bg-transparent
       border border-transparent
       text-link-primary

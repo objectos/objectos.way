@@ -81,7 +81,18 @@ final class CarbonTearsheet {
       """);
 
   private static final Html.ClassName ACTIONS = Html.classText("""
-      grow-0
+      inline-flex min-w-full grow-0
+      border-t border-t-border-subtle
+      """);
+
+  private static final Html.ClassName CANCEL_ACTION = Html.classText("""
+      w-full h-80px grow shrink basis-1/2 items-center
+      pt-16px pr-[15px] pb-32px pl-32px
+      """);
+
+  private static final Html.ClassName ACTION_25 = Html.classText("""
+      max-w-[14.5rem] h-80px grow-0 shrink basis-1/4 items-center
+      pt-16px pr-[63px] pb-32px pl-[15px]
       """);
 
   private CarbonTearsheet() {}
@@ -184,9 +195,39 @@ final class CarbonTearsheet {
     );
   }
 
-  public static Html.ElementInstruction tearsheetCancelAction(Html.TemplateBase tmpl, Html.Instruction... contents) {
-    return tmpl.div(
-        tmpl.flatten(contents)
+  public static Html.ElementInstruction tearsheetCancelAction(Html.TemplateBase tmpl, String label) {
+    return tmpl.button(
+        CarbonButton.__BUTTON_BASE, CarbonButton.__BUTTON_GHOST,
+
+        CANCEL_ACTION,
+
+        tmpl.type("button"),
+
+        tmpl.t(label)
+    );
+  }
+
+  public static Html.ElementInstruction tearsheetBackAction(Html.TemplateBase tmpl, String label) {
+    return tmpl.button(
+        CarbonButton.__BUTTON_BASE, CarbonButton.__BUTTON_SECONDARY,
+
+        ACTION_25,
+
+        tmpl.type("button"),
+
+        tmpl.t(label)
+    );
+  }
+
+  public static Html.ElementInstruction tearsheetNextAction(Html.TemplateBase tmpl, String label) {
+    return tmpl.button(
+        CarbonButton.__BUTTON_BASE, CarbonButton.__BUTTON_PRIMARY,
+
+        ACTION_25,
+
+        tmpl.type("button"),
+
+        tmpl.t(label)
     );
   }
 
