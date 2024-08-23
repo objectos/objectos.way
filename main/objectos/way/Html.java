@@ -688,6 +688,11 @@ public final class Html {
       return $attributes().className(value);
     }
 
+    /**
+     * The {@code data-execute-default} boolean attribute.
+     */
+    protected static final AttributeObject dataExecuteDefault = Html.attribute(HtmlAttributeName.DATA_EXECUTE_DEFAULT, "");
+
     protected final AttributeInstruction dataFrame(String name) {
       Check.notNull(name, "name == null");
 

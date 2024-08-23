@@ -41,9 +41,13 @@
 					return;
 				}
 
-				event.preventDefault();
+				const dataset = anchor.dataset;
 
-				executeLocation(anchor.href);
+				if (dataset.executeDefault === undefined) {
+					event.preventDefault();
+
+					executeLocation(anchor.href);
+				}
 
 				return;
 
