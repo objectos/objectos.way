@@ -624,6 +624,24 @@ public final class Carbon extends CarbonComponents {
   }
 
   //
+  // L
+  //
+
+  public final Html.ElementInstruction link(LinkStyle style, String text, String href) {
+    Check.notNull(style, "style == null");
+    Check.notNull(text, "text == null");
+    Check.notNull(href, "href == null");
+
+    return CarbonLink.render(tmpl, style, tmpl.href(href), tmpl.t(text));
+  }
+
+  public final Html.ElementInstruction link(LinkStyle style, Html.Instruction... contents) {
+    Check.notNull(style, "style == null");
+
+    return CarbonLink.render(tmpl, style, contents);
+  }
+
+  //
   // P
   //
 

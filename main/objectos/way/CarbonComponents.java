@@ -19,13 +19,11 @@ import objectos.lang.object.Check;
 import objectos.way.Carbon.Breakpoint;
 import objectos.way.Carbon.ButtonVariant;
 import objectos.way.Carbon.CarbonButtonVariant;
-import objectos.way.Carbon.CarbonLinkStyle;
 import objectos.way.Carbon.CarbonMenuLink;
 import objectos.way.Carbon.CarbonSize;
 import objectos.way.Carbon.CarbonSpacing;
 import objectos.way.Carbon.DataTableSize;
 import objectos.way.Carbon.Icon;
-import objectos.way.Carbon.LinkStyle;
 import objectos.way.Carbon.Spacing;
 import objectos.way.Html.TemplateBase;
 
@@ -905,76 +903,6 @@ abstract class CarbonComponents {
 
   public final Html.ElementInstruction icon32(Icon icon, Html.Instruction... attributes) {
     return Carbon.renderIcon32(tmpl, icon, attributes);
-  }
-
-  //
-  // L
-  //
-
-  private static final Html.ClassName __LINK_BASE = Html.classText("""
-      inline-flex
-      text-link-primary outline-none
-      transition-colors duration-100
-      active:underline active:outline active:outline-1 active:outline-focus active:outline-offset-0
-      focus:outline focus:outline-1 focus:outline-focus focus:outline-offset-0
-      hover:text-link-primary-hover hover:underline
-      """);
-
-  private static final Html.ClassName __LINK_STANDARD = Html.classText("""
-      no-underline
-      """);
-
-  private static final Html.ClassName __LINK_INLINE = Html.classText("""
-      underline
-      """);
-
-  private static final Html.ClassName __LINK_VISITED = Html.classText("""
-      visited:text-link-visited
-      visited:hover:text-link-primary-hover
-      """);
-
-  private static final Html.ClassName LINK = Html.className(
-      __LINK_BASE, __LINK_STANDARD
-  );
-
-  private static final Html.ClassName LINK_VISITED = Html.className(
-      __LINK_BASE, __LINK_VISITED
-  );
-
-  private static final Html.ClassName LINK_INLINE = Html.className(
-      __LINK_BASE, __LINK_INLINE
-  );
-
-  private static final Html.ClassName LINK_INLINE_VISITED = Html.className(
-      __LINK_BASE, __LINK_INLINE, __LINK_VISITED
-  );
-
-  public final Html.ElementInstruction link(LinkStyle style, String text, String href) {
-    Check.notNull(style, "style == null");
-    Check.notNull(text, "text == null");
-    Check.notNull(href, "href == null");
-
-    return link(style, tmpl.href(href), tmpl.t(text));
-  }
-
-  public final Html.ElementInstruction link(LinkStyle style, Html.Instruction... contents) {
-    Check.notNull(style, "style == null");
-
-    return tmpl.a(
-        switch (style) {
-          case CarbonLinkStyle.STANDARD -> LINK;
-
-          case CarbonLinkStyle.VISITED -> LINK_VISITED;
-
-          case CarbonLinkStyle.INLINE -> LINK_INLINE;
-
-          case CarbonLinkStyle.INLINE_VISITED -> LINK_INLINE_VISITED;
-
-          default -> tmpl.noop();
-        },
-
-        tmpl.flatten(contents)
-    );
   }
 
   //
