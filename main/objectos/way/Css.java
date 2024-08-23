@@ -328,6 +328,7 @@ public final class Css {
 
     FONT_SIZE,
     FONT_WEIGHT,
+    FONT_STYLE,
 
     LINE_HEIGHT,
 

@@ -1867,6 +1867,15 @@ final class CssConfig {
         )
     );
 
+    staticUtility(
+        Css.Key.FONT_STYLE,
+
+        """
+        italic     | font-style: italic
+        not-italic | font-style: normal
+        """
+    );
+
     funcUtility(
         Css.Key.FONT_WEIGHT,
 

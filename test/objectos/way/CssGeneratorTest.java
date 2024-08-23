@@ -1278,6 +1278,25 @@ public class CssGeneratorTest {
   }
 
   @Test
+  public void fontStyle() {
+    class Subject extends AbstractSubject {
+      @Override
+      final void classes() {
+        className("italic not-italic");
+      }
+    }
+
+    test(
+        Subject.class,
+
+        """
+        .italic { font-style: italic }
+        .not-italic { font-style: normal }
+        """
+    );
+  }
+
+  @Test
   public void fontWeight() {
     class Subject extends AbstractSubject {
       @Override
