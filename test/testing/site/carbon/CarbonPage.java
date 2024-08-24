@@ -83,6 +83,7 @@ abstract class CarbonPage extends Carbon.Template {
         Carbon.menuLink("Page header", "/components/page-header", this::currentPage, closeMenu),
         Carbon.menuLink("Progress indicator", "/components/progress-indicator", this::currentPage, closeMenu),
         Carbon.menuLink("Tearsheet", "/components/tearsheet", this::currentPage, closeMenu),
+        Carbon.menuLink("Tile", "/components/tile", this::currentPage, closeMenu),
         Carbon.menuLink("Typography", "/components/typography", this::currentPage, closeMenu)
     );
 

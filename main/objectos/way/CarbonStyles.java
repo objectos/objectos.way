@@ -55,7 +55,8 @@ final class CarbonStyles implements Http.Handler {
             CarbonLink.class,
             CarbonProgressIndicator.class,
             CarbonProgressStep.class,
-            CarbonTearsheet.class
+            CarbonTearsheet.class,
+            CarbonTile.class
         ),
 
         Css.useLogicalProperties(),
@@ -673,8 +674,6 @@ final class CarbonStyles implements Http.Handler {
 
         componentsPageHeader(),
 
-        componentsTile(),
-
         extendColors(),
 
         extendSpacing(),
@@ -889,16 +888,6 @@ final class CarbonStyles implements Http.Handler {
     """);
   }
 
-  private Css.Option componentsTile() {
-    return Css.components("""
-    # tile
-    relative block min-w-128px min-h-64px
-    bg-layer
-    p-16px
-    outline outline-2 -outline-offset-2 outline-transparent
-    """);
-  }
-
   private Css.Option extendColors() {
     return Css.extendColors("""
     background: var(--cds-background)
@@ -923,6 +912,7 @@ final class CarbonStyles implements Http.Handler {
     button-disabled: var(--cds-button-disabled)
     focus: var(--cds-focus)
     icon-disabled: var(--cds-icon-disabled)
+    icon-interactive: var(--cds-icon-interactive)
     icon-primary: var(--cds-icon-primary)
     icon-secondary: var(--cds-icon-secondary)
     interactive: var(--cds-interactive)

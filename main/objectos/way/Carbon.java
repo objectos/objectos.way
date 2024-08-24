@@ -72,6 +72,9 @@ public final class Carbon extends CarbonComponents {
     ADD_LARGE("""
     <polygon points="17 15 17 5 15 5 15 15 5 15 5 17 15 17 15 27 17 27 17 17 27 17 27 15 17 15"/>"""),
 
+    ARROW_RIGHT("""
+    <polygon points="18 6 16.57 7.393 24.15 15 4 15 4 17 24.15 17 16.57 24.573 18 26 28 16 18 6"/>"""),
+
     CHECKMARK_OUTLINE("""
     <path d="M14 21.414L9 16.413 10.413 15 14 18.586 21.585 11 23 12.415 14 21.414z"/><path d="M16,2A14,14,0,1,0,30,16,14,14,0,0,0,16,2Zm0,26A12,12,0,1,1,28,16,12,12,0,0,1,16,28Z"/>"""),
 
@@ -417,6 +420,20 @@ public final class Carbon extends CarbonComponents {
    */
   public static final Html.ClassName THEME_G100 = Html.className("theme-g100");
 
+  /**
+   * A Carbon tile variant.
+   */
+  public sealed interface TileVariant {}
+
+  /**
+   * The clickable tile variant.
+   */
+  public static final TileVariant TILE_CLICKABLE = CarbonTileVariant.TILE_CLICKABLE;
+
+  enum CarbonTileVariant implements TileVariant {
+    TILE_CLICKABLE;
+  }
+
   //
   // non-public types
   //
@@ -591,7 +608,7 @@ public final class Carbon extends CarbonComponents {
     return Html.NOOP;
   }
 
-  private Icon readIcon() {
+  private Icon readRenderIcon() {
     Icon result = icon;
 
     icon = null;
@@ -616,7 +633,7 @@ public final class Carbon extends CarbonComponents {
     CarbonSize thisSize;
     thisSize = (CarbonSize) size;
 
-    Icon icon = readIcon();
+    Icon icon = readRenderIcon();
 
     boolean iconOnly = readIconOnly();
 
@@ -686,6 +703,8 @@ public final class Carbon extends CarbonComponents {
   // T
   //
 
+  // Tearsheet
+
   public static Script.Action showTearsheet(Html.Id id) {
     return CarbonTearsheet.showTearsheet(id);
   }
@@ -744,6 +763,16 @@ public final class Carbon extends CarbonComponents {
 
   public final Html.ElementInstruction tearsheetNextAction(String label) {
     return CarbonTearsheet.tearsheetNextAction(tmpl, label);
+  }
+
+  // Tile
+
+  public final Html.ElementInstruction tile(TileVariant variant, Html.Instruction... contents) {
+    Check.notNull(variant, "variant == null");
+
+    Icon icon = readRenderIcon();
+
+    return CarbonTile.renderTile(tmpl, (CarbonTileVariant) variant, icon, contents);
   }
 
 }
