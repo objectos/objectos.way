@@ -972,8 +972,7 @@ public final class Html {
 
     /**
      * Generates a text node with the specified {@code text} value. The text
-     * value
-     * is escaped before being emitted to the output.
+     * value is escaped before being emitted to the output.
      *
      * <p>
      * The following Objectos HTML template:

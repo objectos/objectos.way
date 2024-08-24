@@ -25,7 +25,7 @@ import java.time.Duration;
 import java.time.Instant;
 import org.testng.annotations.Test;
 
-public class HttpSessionStoreTest {
+public class WebSessionStoreTest {
 
   @Test(description = """
   Create a new session and confirm it can be found in the store
