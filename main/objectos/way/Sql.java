@@ -20,6 +20,7 @@ import java.sql.DatabaseMetaData;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import javax.sql.DataSource;
 import objectos.lang.object.Check;
 import objectos.notes.Note3;
@@ -195,6 +196,8 @@ public final class Sql {
 
     int count(String sql, Object... args) throws UncheckedSqlException;
 
+    int[] executeUpdateText(String sqlText) throws UncheckedSqlException;
+
     /**
      * Use the specified processor to process the results of the execution of
      * the specified row-retriving SQL statement. The specified arguments
@@ -323,7 +326,11 @@ public final class Sql {
     switch (value) {
       case Boolean b -> stmt.setBoolean(index, b.booleanValue());
 
+      case Double d -> stmt.setDouble(index, d.doubleValue());
+
       case Integer i -> stmt.setInt(index, i.intValue());
+
+      case LocalDate ld -> stmt.setObject(index, ld);
 
       case Long i -> stmt.setLong(index, i.longValue());
 

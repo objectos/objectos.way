@@ -37,7 +37,7 @@ public class SqlTransactionTest {
 
     stmt.batches(new int[] {1, 1});
 
-    conn.statements(stmt);
+    conn.preparedStatements(stmt);
 
     try (SqlTransaction trx = trx(conn)) {
       int[] result;
@@ -92,7 +92,7 @@ public class SqlTransactionTest {
 
     stmt.queries(query);
 
-    conn.statements(stmt);
+    conn.preparedStatements(stmt);
 
     try (SqlTransaction trx = trx(conn)) {
       int count;
@@ -134,6 +134,89 @@ public class SqlTransactionTest {
     );
   }
 
+  @Test
+  public void executeUpdateText01() {
+    TestingConnection conn;
+    conn = new TestingConnection();
+
+    TestingStatement stmt;
+    stmt = new TestingStatement();
+
+    stmt.batches(new int[] {1});
+
+    conn.statements(stmt);
+
+    try (SqlTransaction trx = trx(conn)) {
+      int[] result = trx.executeUpdateText("""
+      insert into FOO (A, B) values (1, 5)
+      """);
+
+      assertEquals(result, new int[] {1});
+    }
+
+    assertEquals(
+        conn.toString(),
+
+        """
+        createStatement()
+        close()
+        """
+    );
+
+    assertEquals(
+        stmt.toString(),
+
+        """
+        addBatch(insert into FOO (A, B) values (1, 5))
+        executeBatch()
+        close()
+        """
+    );
+  }
+
+  @Test
+  public void executeUpdateText02() {
+    TestingConnection conn;
+    conn = new TestingConnection();
+
+    TestingStatement stmt;
+    stmt = new TestingStatement();
+
+    stmt.batches(new int[] {1});
+
+    conn.statements(stmt);
+
+    try (SqlTransaction trx = trx(conn)) {
+      int[] result = trx.executeUpdateText("""
+      insert into FOO (A, B) values (1, 5)
+
+      insert into BAR (X, Y) values ('A', 'B')
+      """);
+
+      assertEquals(result, new int[] {1});
+    }
+
+    assertEquals(
+        conn.toString(),
+
+        """
+        createStatement()
+        close()
+        """
+    );
+
+    assertEquals(
+        stmt.toString(),
+
+        """
+        addBatch(insert into FOO (A, B) values (1, 5))
+        addBatch(insert into BAR (X, Y) values ('A', 'B'))
+        executeBatch()
+        close()
+        """
+    );
+  }
+
   @Test(description = """
   No optional fragments
   """)
@@ -149,7 +232,7 @@ public class SqlTransactionTest {
 
     stmt.queries(query);
 
-    conn.statements(stmt);
+    conn.preparedStatements(stmt);
 
     try (SqlTransaction trx = trx(conn)) {
       trx.processQuery(this::row, """
@@ -205,7 +288,7 @@ public class SqlTransactionTest {
 
     stmt.queries(query);
 
-    conn.statements(stmt);
+    conn.preparedStatements(stmt);
 
     try (SqlTransaction trx = trx(conn)) {
       trx.processQuery(this::row, page(15), """
@@ -263,7 +346,7 @@ public class SqlTransactionTest {
 
     stmt.queries(query);
 
-    conn.statements(stmt);
+    conn.preparedStatements(stmt);
 
     try (SqlTransaction trx = trx(conn)) {
       trx.processQuery(this::row, page(15), """
@@ -324,7 +407,7 @@ public class SqlTransactionTest {
 
     stmt.queries(query);
 
-    conn.statements(stmt);
+    conn.preparedStatements(stmt);
 
     try (SqlTransaction trx = trx(conn)) {
       trx.processQuery(this::row, page(15), """
@@ -385,7 +468,7 @@ public class SqlTransactionTest {
 
     stmt.queries(query);
 
-    conn.statements(stmt);
+    conn.preparedStatements(stmt);
 
     try (SqlTransaction trx = trx(conn)) {
       trx.processQuery(this::row, Sql.createPage(2, 15), """
@@ -442,7 +525,7 @@ public class SqlTransactionTest {
 
     stmt.queries(query);
 
-    conn.statements(stmt);
+    conn.preparedStatements(stmt);
 
     try (SqlTransaction trx = trx(conn)) {
       trx.processQuery(this::row, page(15), """

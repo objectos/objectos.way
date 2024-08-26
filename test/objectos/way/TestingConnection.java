@@ -39,17 +39,25 @@ import java.util.concurrent.Executor;
 
 final class TestingConnection extends AbstractTestable implements Connection {
 
+  private Iterator<PreparedStatement> preparedStatements = Collections.emptyIterator();
+
   private SQLException rollbackException;
-  
+
+  private Iterator<Statement> statements = Collections.emptyIterator();
+
+  public final void preparedStatements(PreparedStatement... stmts) {
+    preparedStatements = Arrays.asList(stmts).iterator();
+  }
+
   public final void rollbackException(SQLException error) {
     rollbackException = error;
   }
 
-  private Iterator<PreparedStatement> statements = Collections.emptyIterator();
-
-  public final void statements(PreparedStatement... stmts) {
+  public final void statements(Statement... stmts) {
     statements = Arrays.asList(stmts).iterator();
   }
+
+  //
 
   @Override
   public <T> T unwrap(Class<T> iface) throws SQLException { throw new UnsupportedOperationException("Implement me"); }
@@ -58,17 +66,25 @@ final class TestingConnection extends AbstractTestable implements Connection {
   public boolean isWrapperFor(Class<?> iface) throws SQLException { throw new UnsupportedOperationException("Implement me"); }
 
   @Override
-  public Statement createStatement() throws SQLException { throw new UnsupportedOperationException("Implement me"); }
-
-  @Override
-  public PreparedStatement prepareStatement(String sql) throws SQLException {
-    logMethod("prepareStatement", sql);
+  public Statement createStatement() throws SQLException {
+    logMethod("createStatement");
 
     if (!statements.hasNext()) {
       throw new IllegalStateException("No more statements");
     }
 
     return statements.next();
+  }
+
+  @Override
+  public PreparedStatement prepareStatement(String sql) throws SQLException {
+    logMethod("prepareStatement", sql);
+
+    if (!preparedStatements.hasNext()) {
+      throw new IllegalStateException("No more statements");
+    }
+
+    return preparedStatements.next();
   }
 
   @Override
@@ -85,11 +101,11 @@ final class TestingConnection extends AbstractTestable implements Connection {
 
   @Override
   public void commit() throws SQLException { throw new UnsupportedOperationException("Implement me"); }
-  
+
   @Override
   public void rollback() throws SQLException {
     logMethod("rollback");
-    
+
     if (rollbackException != null) {
       throw rollbackException;
     }

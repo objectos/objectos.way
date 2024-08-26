@@ -18,6 +18,7 @@ package objectos.way;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.sql.Statement;
 import objectos.lang.object.Check;
 import objectos.way.Sql.UncheckedSqlException;
 
@@ -94,6 +95,45 @@ final class SqlTransaction implements Sql.Transaction {
     template = SqlTemplate.parse(sql, args);
 
     return template.count(dialect, connection);
+  }
+
+  @Override
+  public final int[] executeUpdateText(String sqlText) throws UncheckedSqlException {
+    String[] lines;
+    lines = sqlText.split("\n"); // implicit null check
+
+    StringBuilder sql;
+    sql = new StringBuilder();
+
+    try (Statement stmt = connection.createStatement()) {
+      for (String line : lines) {
+
+        if (!line.isBlank()) {
+          sql.append(line);
+        }
+
+        else if (!sql.isEmpty()) {
+          String batch;
+          batch = sql.toString();
+
+          sql.setLength(0);
+
+          stmt.addBatch(batch);
+        }
+
+      }
+
+      if (!sql.isEmpty()) {
+        String batch;
+        batch = sql.toString();
+
+        stmt.addBatch(batch);
+      }
+
+      return stmt.executeBatch();
+    } catch (SQLException e) {
+      throw new Sql.UncheckedSqlException(e);
+    }
   }
 
   @Override
