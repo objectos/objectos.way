@@ -25,17 +25,17 @@ import java.time.Duration;
 import java.time.Instant;
 import org.testng.annotations.Test;
 
-public class WebSessionStoreTest {
+public class SessionRepositoryTest {
 
   @Test(description = """
-  Create a new session and confirm it can be found in the store
+  Create a new session and confirm it can be found in the repo
   """)
   public void testCase01() {
-    SessionStore store;
-    store = new AppSessionStore();
+    Session.Repository repo;
+    repo = Session.createRepository();
 
-    Web.Session session;
-    session = store.nextSession();
+    Session.Instance session;
+    session = repo.createNext();
 
     assertNotNull(session);
 
@@ -44,21 +44,21 @@ public class WebSessionStoreTest {
 
     assertNotNull(id);
 
-    Web.Session maybe;
-    maybe = store.get(id);
+    Session.Instance maybe;
+    maybe = repo.get(id);
 
     assertSame(maybe, session);
   }
 
   @Test(description = """
-  It should be possible to store values to and retrieve values from the session.
+  It should be possible to repo values to and retrieve values from the session.
   """)
   public void testCase02() {
-    SessionStore store;
-    store = new AppSessionStore();
+    Session.Repository repo;
+    repo = Session.createRepository();
 
-    Web.Session session;
-    session = store.nextSession();
+    Session.Instance session;
+    session = repo.createNext();
 
     Object user;
     user = "foo";
@@ -79,24 +79,24 @@ public class WebSessionStoreTest {
   It should not be possible to retrieve a session after it has been invalidated
   """)
   public void testCase03() {
-    SessionStore store;
-    store = new AppSessionStore();
+    Session.Repository repo;
+    repo = Session.createRepository();
 
-    Web.Session session;
-    session = store.nextSession();
+    Session.Instance session;
+    session = repo.createNext();
 
     assertNotNull(session);
 
     String id;
     id = session.id();
 
-    assertSame(store.get(id), session);
+    assertSame(repo.get(id), session);
 
     session.invalidate();
 
-    assertNull(store.get(id));
+    assertNull(repo.get(id));
   }
-  
+
   @Test(description = """
   It should update last access time on each get
   """)
@@ -104,30 +104,32 @@ public class WebSessionStoreTest {
     IncrementingClock clock;
     clock = new IncrementingClock(2024, 4, 29);
 
-    AppSessionStore store;
-    store = new AppSessionStore(clock);
-    
+    Session.Repository repo;
+    repo = Session.createRepository(
+        Session.clock(clock)
+    );
+
     String id;
     id = "foo";
 
-    WebSession session;
-    session = new WebSession(id);
+    SessionInstance session;
+    session = new SessionInstance(id);
 
     Instant start;
     start = clock.instant();
 
     session.accessTime = start;
 
-    store.add(session);
-    
-    Web.Session res;
-    res = store.get(id);
-    
+    repo.store(session);
+
+    Session.Instance res;
+    res = repo.get(id);
+
     assertSame(res, session);
-    
+
     assertTrue(session.accessTime.isAfter(start));
   }
-  
+
   @Test(description = """
   It should remove all invalid sessions
   """)
@@ -135,28 +137,30 @@ public class WebSessionStoreTest {
     IncrementingClock clock;
     clock = new IncrementingClock(2024, 4, 29);
 
-    AppSessionStore store;
-    store = new AppSessionStore(clock);
+    Session.Repository repo;
+    repo = Session.createRepository(
+        Session.clock(clock)
+    );
 
-    WebSession a = new WebSession("a");
-    WebSession b = new WebSession("b");
-    WebSession c = new WebSession("c");
+    SessionInstance a = new SessionInstance("a");
+    SessionInstance b = new SessionInstance("b");
+    SessionInstance c = new SessionInstance("c");
 
-    store.add(a);
-    store.add(b);
-    store.add(c);
+    repo.store(a);
+    repo.store(b);
+    repo.store(c);
 
-    assertSame(store.get("a"), a);
-    assertSame(store.get("b"), b);
-    assertSame(store.get("c"), c);
+    assertSame(repo.get("a"), a);
+    assertSame(repo.get("b"), b);
+    assertSame(repo.get("c"), c);
 
     b.invalidate();
 
-    store.cleanUp();
+    repo.cleanUp();
 
-    assertSame(store.get("a"), a);
-    assertNull(store.get("b"));
-    assertSame(store.get("c"), c);
+    assertSame(repo.get("a"), a);
+    assertNull(repo.get("b"));
+    assertSame(repo.get("c"), c);
   }
 
   @Test(description = """
@@ -166,32 +170,34 @@ public class WebSessionStoreTest {
     Clock clock;
     clock = TestingClock.FIXED;
 
-    AppSessionStore store;
-    store = new AppSessionStore(clock);
+    Session.Repository repo;
+    repo = Session.createRepository(
+        Session.clock(clock),
 
-    store.emptyMaxAge(Duration.ofMinutes(1));
+        Session.emptyMaxAge(Duration.ofMinutes(1))
+    );
 
-    WebSession a = new WebSession("a");
-    WebSession b = new WebSession("b");
-    WebSession c = new WebSession("c");
+    SessionInstance a = new SessionInstance("a");
+    SessionInstance b = new SessionInstance("b");
+    SessionInstance c = new SessionInstance("c");
 
-    store.add(a);
-    store.add(b);
-    store.add(c);
+    repo.store(a);
+    repo.store(b);
+    repo.store(c);
 
-    assertSame(store.get("a"), a);
-    assertSame(store.get("b"), b);
-    assertSame(store.get("c"), c);
+    assertSame(repo.get("a"), a);
+    assertSame(repo.get("b"), b);
+    assertSame(repo.get("c"), c);
 
     a.accessTime = clock.instant().minusSeconds(59);
     b.accessTime = clock.instant().minusSeconds(60);
     c.accessTime = clock.instant().minusSeconds(61);
 
-    store.cleanUp();
+    repo.cleanUp();
 
-    assertSame(store.get("a"), a);
-    assertSame(store.get("b"), b);
-    assertNull(store.get("c"));
+    assertSame(repo.get("a"), a);
+    assertSame(repo.get("b"), b);
+    assertNull(repo.get("c"));
   }
 
 }
