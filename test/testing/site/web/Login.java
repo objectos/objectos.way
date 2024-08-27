@@ -18,13 +18,17 @@ package testing.site.web;
 import java.io.IOException;
 import objectos.way.Html;
 import objectos.way.Http;
-import objectos.way.Web;
+import objectos.way.Session;
 import testing.site.auth.User;
 import testing.zite.TestingSiteInjector;
 
 final class Login extends WebTemplate implements Http.Handler {
 
+  private final Session.Repository sessionStore;
+
   public Login(TestingSiteInjector injector) {
+    sessionStore = injector.sessionStore();
+
     title = "Login Page";
   }
 
@@ -39,11 +43,15 @@ final class Login extends WebTemplate implements Http.Handler {
   // GET
 
   private void get(Http.Exchange http) {
-    Web.Session session;
-    session = http.session();
-
     User user;
-    user = session.get(User.class);
+    user = null;
+
+    Session.Instance session;
+    session = http.get(Session.Instance.class);
+
+    if (session != null) {
+      user = session.get(User.class);
+    }
 
     if (user != null) {
       http.found("/");
@@ -189,11 +197,15 @@ final class Login extends WebTemplate implements Http.Handler {
   // POST
 
   private void post(Http.Exchange http) {
-    Web.Session session;
-    session = http.session();
-
     User user;
-    user = session.get(User.class);
+    user = null;
+
+    Session.Instance session;
+    session = http.get(Session.Instance.class);
+
+    if (session != null) {
+      user = session.get(User.class);
+    }
 
     if (user != null) {
       http.ok();
@@ -247,10 +259,15 @@ final class Login extends WebTemplate implements Http.Handler {
     user = authenticate(login, password);
 
     if (user != null) {
-      Web.Session session;
-      session = http.session();
+      Session.Instance session;
+      session = sessionStore.createNext();
 
       session.put(User.class, user);
+
+      String setCookie;
+      setCookie = sessionStore.setCookie(session.id());
+
+      http.header(Http.SET_COOKIE, setCookie);
 
       http.found("/");
     } else {

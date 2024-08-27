@@ -16,8 +16,8 @@
 package testing.site.web;
 
 import objectos.way.Http;
-import objectos.way.Http.Exchange;
-import objectos.way.Web;
+import objectos.way.Session;
+import objectos.way.Session.Repository;
 import testing.site.auth.User;
 import testing.site.carbon.CarbonWeb;
 import testing.site.ui.UiHttpModule;
@@ -35,8 +35,6 @@ public class TestingHttpModule extends Http.Module {
   protected final void configure() {
     host("dev.carbon:8003", new CarbonWeb(injector));
 
-    sessionStore(injector.sessionStore());
-
     route("/ui/*", new UiHttpModule(injector));
 
     route("/login", factory(Login::new, injector));
@@ -45,21 +43,32 @@ public class TestingHttpModule extends Http.Module {
 
     route("/styles.css", new Styles(injector));
 
+    Repository sessionStore;
+    sessionStore = injector.sessionStore();
+
+    filter(sessionStore::filter);
+
     filter(this::requireLogin);
 
     route("/", factory(Home::new, injector));
   }
 
-  private void requireLogin(Exchange http) {
-    Web.Session session;
-    session = http.session();
+  private void requireLogin(Http.Exchange http) {
+    Session.Instance session;
+    session = http.get(Session.Instance.class);
+
+    if (session == null) {
+      return;
+    }
 
     User user;
     user = session.get(User.class);
 
-    if (user == null) {
-      http.found("/login");
+    if (user != null) {
+      return;
     }
+
+    http.found("/login");
   }
 
 }

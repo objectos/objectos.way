@@ -84,21 +84,6 @@ abstract class HttpModule {
 
   protected abstract void configure();
 
-  /**
-   * Uses the specified session store for HTTP session handling.
-   *
-   * @param sessionStore
-   *        the session store instance to use
-   *
-   * @throws IllegalStateException
-   *         if a session store has already been configured
-   */
-  protected final void sessionStore(SessionStore sessionStore) {
-    Check.notNull(sessionStore, "sessionStore == null");
-
-    compiler.sessionStore(sessionStore);
-  }
-
   protected final void install(Http.Module module) {
     Check.notNull(module, "module == null");
 

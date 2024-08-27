@@ -94,11 +94,9 @@ final class HttpExchangeLoop extends HttpRequestBody implements Http.Exchange, C
 
   private static final int KEEP_ALIVE = 1 << 4;
 
-  private static final int SESSION_NEW = 1 << 5;
+  private static final int CONTENT_LENGTH = 1 << 5;
 
-  private static final int CONTENT_LENGTH = 1 << 6;
-
-  private static final int CHUNKED = 1 << 7;
+  private static final int CHUNKED = 1 << 6;
 
   private Map<String, Object> attributes;
 
@@ -109,10 +107,6 @@ final class HttpExchangeLoop extends HttpRequestBody implements Http.Exchange, C
   private Clock clock;
 
   private Object responseBody;
-
-  private Web.Session session;
-
-  private SessionStore sessionStore;
 
   private final Socket socket;
 
@@ -144,22 +138,6 @@ final class HttpExchangeLoop extends HttpRequestBody implements Http.Exchange, C
     checkConfig();
 
     super.noteSink(noteSink);
-  }
-
-  /**
-   * Use the specified {@link SessionStore} for session handling.
-   *
-   * <p>
-   * If the specified value is {@code null} then session handling is disabled.
-   *
-   * @param sessionStore
-   *        the session store to use or {@code null} to disable session
-   *        handling
-   */
-  public final void sessionStore(SessionStore sessionStore) {
-    checkConfig();
-
-    this.sessionStore = sessionStore;
   }
 
   private void checkConfig() {
@@ -256,9 +234,6 @@ final class HttpExchangeLoop extends HttpRequestBody implements Http.Exchange, C
       }
     }
 
-    // handle session
-    acceptSessionStore0();
-
     setState(_REQUEST);
 
     return parseStatus;
@@ -303,43 +278,6 @@ final class HttpExchangeLoop extends HttpRequestBody implements Http.Exchange, C
     return attributes;
   }
 
-  @Override
-  public final void acceptSessionStore(SessionStore sessionStore) {
-    checkRequest();
-    this.sessionStore = Check.notNull(sessionStore, "sessionStore == null");
-
-    acceptSessionStore0();
-  }
-
-  private void acceptSessionStore0() {
-    session = null;
-
-    clearBit(SESSION_NEW);
-
-    if (sessionStore != null) {
-
-      HttpHeader cookie;
-      cookie = headerUnchecked(Http.COOKIE);
-
-      if (cookie != null) {
-        String cookieHeader;
-        cookieHeader = cookie.get();
-
-        Http.Request.Cookies cookies;
-        cookies = Http.parseCookies(cookieHeader);
-
-        session = sessionStore.get(cookies);
-      }
-
-      if (session == null) {
-        session = sessionStore.nextSession();
-
-        setBit(SESSION_NEW);
-      }
-
-    }
-  }
-
   private boolean badRequest() {
     Check.state(testState(_REQUEST), "Http.Request.Method can only be invoked after a parse() operation");
 
@@ -374,13 +312,6 @@ final class HttpExchangeLoop extends HttpRequestBody implements Http.Exchange, C
     checkRequest();
 
     return this;
-  }
-
-  @Override
-  public final Web.Session session() {
-    checkRequest();
-
-    return session;
   }
 
   private void checkRequest() {
@@ -687,16 +618,6 @@ final class HttpExchangeLoop extends HttpRequestBody implements Http.Exchange, C
 
   public final void commit() throws IOException, IllegalStateException {
     Check.state(testState(_PROCESSED), "Cannot commit as we are not in the processed phase");
-
-    if (testBit(SESSION_NEW)) {
-      String id;
-      id = session.id();
-
-      String setCookie;
-      setCookie = sessionStore.setCookie(id);
-
-      header0(Http.SET_COOKIE, setCookie);
-    }
 
     writeBytes(Bytes.CRLF);
 

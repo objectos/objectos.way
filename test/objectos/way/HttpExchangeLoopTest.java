@@ -16,14 +16,12 @@
 package objectos.way;
 
 import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertSame;
 import static org.testng.Assert.assertTrue;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Random;
 import java.util.Set;
 import objectos.lang.CharWritable;
 import objectos.lang.TestingCharWritable;
@@ -705,119 +703,6 @@ public class HttpExchangeLoopTest {
   }
 
   @Test(description = """
-  SessionStore integration
-  """)
-  public void testCase011() {
-    TestableSocket socket;
-    socket = TestableSocket.of("""
-    GET /login HTTP/1.1\r
-    Host: www.example.com\r
-    Cookie: OBJECTOSWAY=298zf09hf012fh2\r
-    \r
-    """);
-
-    String resp01 = """
-    HTTP/1.1 302 FOUND\r
-    Date: Wed, 28 Jun 2023 12:08:43 GMT\r
-    Location: /\r
-    \r
-    """;
-
-    AppSessionStore sessionStore;
-    sessionStore = new AppSessionStore();
-
-    String id;
-    id = "298zf09hf012fh2";
-
-    WebSession session;
-    session = new WebSession(id);
-
-    sessionStore.add(session);
-
-    try (HttpExchangeLoop http = new HttpExchangeLoop(socket)) {
-      http.bufferSize(128, 256);
-      http.clock(TestingClock.FIXED);
-      http.noteSink(TestingNoteSink.INSTANCE);
-      http.sessionStore(sessionStore);
-
-      ParseStatus parse;
-      parse = http.parse();
-
-      assertEquals(parse.isError(), false);
-
-      assertSame(http.session(), session);
-
-      http.found("/");
-
-      http.commit();
-
-      assertEquals(socket.outputAsString(), resp01);
-
-      assertEquals(http.keepAlive(), true);
-    } catch (IOException e) {
-      throw new AssertionError("Failed with IOException", e);
-    }
-  }
-
-  @Test(description = """
-  SessionStore integration: set-cookie
-  """)
-  public void testCase012() {
-    TestableSocket socket;
-    socket = TestableSocket.of("""
-    GET /login HTTP/1.1\r
-    Host: www.example.com\r
-    \r
-    """);
-
-    String resp01 = """
-    HTTP/1.1 200 OK\r
-    Date: Wed, 28 Jun 2023 12:08:43 GMT\r
-    Content-Type: text/html; charset=utf-8\r
-    Transfer-Encoding: chunked\r
-    Set-Cookie: OBJECTOSWAY=a86886a5d2978142da2d8cf378ebc83c; Path=/\r
-    \r
-    1c\r
-    <html>
-    <p>LOGIN</p>
-    </html>
-    \r
-    0\r
-    \r
-    """;
-
-    AppSessionStore sessionStore;
-    sessionStore = new AppSessionStore();
-
-    Random random;
-    random = new Random(1234L);
-
-    sessionStore.random(random);
-
-    try (HttpExchangeLoop http = new HttpExchangeLoop(socket)) {
-      http.bufferSize(128, 256);
-      http.clock(TestingClock.FIXED);
-      http.noteSink(TestingNoteSink.INSTANCE);
-      http.sessionStore(sessionStore);
-
-      ParseStatus parse;
-      parse = http.parse();
-
-      assertEquals(parse.isError(), false);
-
-      http.ok(new SingleParagraph("LOGIN"));
-
-      http.commit();
-
-      assertEquals(socket.outputAsString(), resp01);
-
-      assertEquals(http.keepAlive(), true);
-    } catch (IOException e) {
-      throw new AssertionError("Failed with IOException", e);
-    }
-  }
-
-  @Test(description = """
   Fail if:
   - content-length is set
   - body instanceof CharWritable
@@ -1313,19 +1198,6 @@ public class HttpExchangeLoopTest {
       assertEquals(ObjectosHttp.readAllBytes(body), ByteArrays.empty());
     } catch (IOException e) {
       throw new AssertionError("Failed with IOException", e);
-    }
-  }
-
-  private static class SingleParagraph extends Html.Template {
-    private final String text;
-
-    public SingleParagraph(String text) { this.text = text; }
-
-    @Override
-    protected final void render() {
-      html(
-          p(text)
-      );
     }
   }
 

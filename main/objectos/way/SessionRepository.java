@@ -84,6 +84,7 @@ final class SessionRepository implements Session.Repository {
     random = builder.random;
   }
 
+  @Override
   public final void cleanUp() {
     Instant now;
     now = Instant.now(clock);
@@ -129,15 +130,35 @@ final class SessionRepository implements Session.Repository {
   }
 
   @Override
-  public final Session.Instance get(Http.Request.Cookies cookies) {
-    String maybe;
-    maybe = cookies.get(cookieName); // implicit cookies null check
+  public final void filter(Http.Exchange http) {
+    Http.Request.Headers headers;
+    headers = http.headers();
 
-    if (maybe == null) {
-      return null;
-    } else {
-      return get(maybe);
+    String cookieHeaderValue;
+    cookieHeaderValue = headers.first(Http.COOKIE);
+
+    if (cookieHeaderValue == null) {
+      return;
     }
+
+    Http.Request.Cookies cookies;
+    cookies = Http.parseCookies(cookieHeaderValue);
+
+    String id;
+    id = cookies.get(cookieName);
+
+    if (id == null) {
+      return;
+    }
+
+    Session.Instance session;
+    session = get(id);
+
+    if (session == null) {
+      return;
+    }
+
+    http.set(Session.Instance.class, session);
   }
 
   @Override

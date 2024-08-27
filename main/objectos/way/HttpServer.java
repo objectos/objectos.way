@@ -27,23 +27,21 @@ import objectos.notes.NoteSink;
  * The Objectos Way {@link HttpServer} implementation.
  */
 final class HttpServer implements Http.Server {
-  
+
   static final class Builder {
 
     int bufferSizeInitial = 1024;
 
     int bufferSizeMax = 4096;
-    
+
     Clock clock = Clock.systemUTC();
-    
+
     final HandlerFactory factory;
-    
+
     NoteSink noteSink = NoOpNoteSink.of();
 
     int port = 0;
-    
-    SessionStore sessionStore;
-    
+
     public Builder(HandlerFactory factory) {
       this.factory = factory;
     }
@@ -66,8 +64,6 @@ final class HttpServer implements Http.Server {
 
   private final int port;
 
-  private final SessionStore sessionStore;
-
   private ServerSocket serverSocket;
 
   private Thread thread;
@@ -79,7 +75,6 @@ final class HttpServer implements Http.Server {
     factory = builder.factory;
     noteSink = builder.noteSink;
     port = builder.port;
-    sessionStore = builder.sessionStore;
   }
 
   @Override
@@ -110,8 +105,6 @@ final class HttpServer implements Http.Server {
     loop.clock = clock;
 
     loop.noteSink = noteSink;
-
-    loop.sessionStore = sessionStore;
 
     thread = Thread.ofPlatform().name("HTTP").start(loop);
   }

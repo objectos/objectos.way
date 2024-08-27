@@ -41,8 +41,6 @@ public final class WayTestingServerExchange implements TestingServerExchange {
 
   private NoteSink noteSink = NoOpNoteSink.of();
 
-  private SessionStore sessionStore;
-
   public WayTestingServerExchange() {}
 
   public final void bufferSize(int initial, int max) {
@@ -60,20 +58,6 @@ public final class WayTestingServerExchange implements TestingServerExchange {
 
   public final void noteSink(NoteSink noteSink) {
     this.noteSink = Check.notNull(noteSink, "noteSink == null");
-  }
-
-  /**
-   * Use the specified {@link SessionStore} for session handling.
-   *
-   * <p>
-   * If the specified value is {@code null} then session handling is disabled.
-   *
-   * @param sessionStore
-   *        the session store to use or {@code null} to disable session
-   *        handling
-   */
-  public final void sessionStore(SessionStore sessionStore) {
-    this.sessionStore = sessionStore;
   }
 
   @Override
@@ -99,8 +83,6 @@ public final class WayTestingServerExchange implements TestingServerExchange {
         throw new UnsupportedOperationException("Bad request");
       }
 
-      loop.acceptSessionStore(sessionStore);
-
       try {
         handler.accept(loop);
       } catch (Throwable t) {
@@ -114,7 +96,7 @@ public final class WayTestingServerExchange implements TestingServerExchange {
       throw new UncheckedIOException("Unexpected IOException: testing server exchange executed in-memory", e);
     }
   }
-  
+
   private static class TestingSocket extends Socket {
 
     private final InputStream inputStream;

@@ -106,54 +106,6 @@ public final class Web {
 
   }
 
-  /**
-   * An web session.
-   */
-  public interface Session {
-
-    /**
-     * The identifier of this session.
-     *
-     * @return the identifier of this session.
-     */
-    String id();
-
-    /**
-     * Returns the object associated to the specified class instance, or
-     * {@code null} if there's no object associated.
-     *
-     * @param <T> the type of the object
-     *
-     * @param type
-     *        the class instance to search for
-     *
-     * @return the object associated or {@code null} if there's no object
-     *         associated
-     */
-    <T> T get(Class<T> type);
-
-    /**
-     * Returns the object associated to the specified name, or {@code null} if
-     * there's no object associated.
-     *
-     * @param name
-     *        the name to search for
-     *
-     * @return the object associated or {@code null} if there's no object
-     *         associated
-     */
-    Object get(String name);
-
-    <T> Object put(Class<T> type, T value);
-
-    Object put(String name, Object value);
-
-    Object remove(String name);
-
-    void invalidate();
-
-  }
-
   private non-sealed interface WebResourcesOption extends Resources.Option {
 
     void accept(WebResources.Builder builder);

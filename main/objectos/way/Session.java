@@ -94,7 +94,7 @@ public final class Session {
      */
     Instance createNext();
 
-    Instance get(Http.Request.Cookies cookies);
+    void filter(Http.Exchange http);
 
     Instance get(String id);
 
@@ -129,6 +129,10 @@ public final class Session {
   }
 
   private Session() {}
+
+  public static Instance createInstance(String id) {
+    return new SessionInstance(id);
+  }
 
   /**
    * Creates a new session repository with the specified configuration options.

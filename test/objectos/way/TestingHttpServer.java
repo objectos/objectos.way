@@ -24,6 +24,7 @@ import java.io.UncheckedIOException;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 import objectos.notes.Note;
 
 public final class TestingHttpServer {
@@ -74,8 +75,27 @@ public final class TestingHttpServer {
     InputStream in;
     in = socket.getInputStream();
 
+    int offset;
+    offset = 0;
+
+    int remaining;
+    remaining = expectedBytes.length;
+
+    while (remaining > 0) {
+      int read;
+      read = in.read(expectedBytes, offset, remaining);
+
+      if (read <= 0) {
+        break;
+      }
+
+      offset += read;
+
+      remaining -= read;
+    }
+
     byte[] responseBytes;
-    responseBytes = in.readNBytes(expectedBytes.length);
+    responseBytes = Arrays.copyOf(expectedBytes, offset);
 
     String res;
     res = new String(responseBytes, StandardCharsets.UTF_8);

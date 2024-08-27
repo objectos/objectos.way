@@ -17,7 +17,6 @@ package objectos.way;
 
 import java.util.Arrays;
 import java.util.function.Supplier;
-import objectos.lang.object.Check;
 import objectos.util.array.ObjectArrays;
 
 final class HttpModuleCompiler extends HttpModuleMatcherParser implements Http.Handler {
@@ -27,8 +26,6 @@ final class HttpModuleCompiler extends HttpModuleMatcherParser implements Http.H
   private int actionsIndex;
 
   private Http.Handler.Interceptor interceptor;
-
-  private SessionStore sessionStore;
 
   public final Http.Handler compile() {
     if (actions != null) {
@@ -42,10 +39,6 @@ final class HttpModuleCompiler extends HttpModuleMatcherParser implements Http.H
 
   @Override
   public final void handle(Http.Exchange http) {
-    if (sessionStore != null) {
-      http.acceptSessionStore(sessionStore);
-    }
-
     for (int index = 0, length = actions.length; index < length; index++) {
       HttpModuleAction action;
       action = actions[index];
@@ -134,12 +127,6 @@ final class HttpModuleCompiler extends HttpModuleMatcherParser implements Http.H
     index = nextSlot();
 
     actions[index] = new HttpModuleRoute.RouteSupplier(matcher, actualSupplier);
-  }
-
-  final void sessionStore(SessionStore sessionStore) {
-    Check.state(this.sessionStore == null, "A session store has already been configured");
-
-    this.sessionStore = sessionStore;
   }
 
   private HttpModuleMatcher parseAndDecorate(String pathExpression, HttpModuleRouteOptions options) {

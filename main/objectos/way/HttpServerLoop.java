@@ -55,8 +55,6 @@ final class HttpServerLoop implements Runnable {
 
   NoteSink noteSink;
 
-  SessionStore sessionStore;
-
   final ServerSocket serverSocket;
 
   final HandlerFactory handlerFactory;
@@ -116,8 +114,6 @@ final class HttpServerLoop implements Runnable {
       loop.clock(clock);
 
       loop.noteSink(noteSink);
-
-      loop.sessionStore(sessionStore);
 
       try (loop) {
         Exchange http;

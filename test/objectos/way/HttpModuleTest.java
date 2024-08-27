@@ -34,43 +34,38 @@ public class HttpModuleTest extends Http.Module {
   @SuppressWarnings("serial")
   private static class TestException extends RuntimeException {}
 
-  private AppSessionStore sessionStore;
+  private Session.Repository sessionStore;
 
   private SequentialRandom random;
 
   @BeforeClass
   public void beforeClass() {
-    AppSessionStore sessionStore;
-    sessionStore = new AppSessionStore();
-
-    sessionStore.cookieName("HTTPMODULETEST");
-
     random = new SequentialRandom();
 
-    sessionStore.random(random);
+    this.sessionStore = Session.createRepository(
+        Session.cookieName("HTTPMODULETEST"),
 
-    this.sessionStore = sessionStore;
+        Session.random(random)
+    );
 
     TestingHttpServer.bindHttpModuleTest(this);
   }
 
   @BeforeMethod
   public void beforeMethod() {
-    sessionStore.clear();
-
-    WebSession session;
-    session = new WebSession("TEST_COOKIE");
+    Session.Instance session;
+    session = Session.createInstance("TEST_COOKIE");
 
     session.put(User.class, new User("test"));
 
-    sessionStore.add(session);
+    sessionStore.store(session);
 
     random.reset();
   }
 
   @Override
   protected final void configure() {
-    sessionStore(sessionStore);
+    filter(sessionStore::filter);
 
     // matches: /testCase01/foo
     // but not: /testCase01, /testCase01/, /testCase01/foo/bar
@@ -141,7 +136,6 @@ public class HttpModuleTest extends Http.Module {
           Date: Wed, 28 Jun 2023 12:08:43 GMT\r
           Content-Type: text/html; charset=utf-8\r
           Transfer-Encoding: chunked\r
-          Set-Cookie: HTTPMODULETEST=00000000000000000000000000000001; Path=/\r
           \r
           1a\r
           <html>
@@ -157,15 +151,14 @@ public class HttpModuleTest extends Http.Module {
           """
           GET /testCase01 HTTP/1.1\r
           Host: http.module.test\r
-          Cookie:
+          Cookie: HTTPMODULETEST=TEST_COOKIE\r
           \r
           """,
 
           """
-          HTTP/1.1 302 FOUND\r
+          HTTP/1.1 404 NOT FOUND\r
           Date: Wed, 28 Jun 2023 12:08:43 GMT\r
-          Location: /login\r
-          Set-Cookie: HTTPMODULETEST=00000000000000000000000000000003; Path=/\r
+          Connection: close\r
           \r
           """
       );
@@ -176,14 +169,14 @@ public class HttpModuleTest extends Http.Module {
           """
           GET /testCase01/ HTTP/1.1\r
           Host: http.module.test\r
+          Cookie: HTTPMODULETEST=TEST_COOKIE\r
           \r
           """,
 
           """
-          HTTP/1.1 302 FOUND\r
+          HTTP/1.1 404 NOT FOUND\r
           Date: Wed, 28 Jun 2023 12:08:43 GMT\r
-          Location: /login\r
-          Set-Cookie: HTTPMODULETEST=00000000000000000000000000000004; Path=/\r
+          Connection: close\r
           \r
           """
       );
@@ -194,14 +187,14 @@ public class HttpModuleTest extends Http.Module {
           """
           GET /testCase01/foo/bar HTTP/1.1\r
           Host: http.module.test\r
+          Cookie: HTTPMODULETEST=TEST_COOKIE\r
           \r
           """,
 
           """
-          HTTP/1.1 302 FOUND\r
+          HTTP/1.1 404 NOT FOUND\r
           Date: Wed, 28 Jun 2023 12:08:43 GMT\r
-          Location: /login\r
-          Set-Cookie: HTTPMODULETEST=00000000000000000000000000000005; Path=/\r
+          Connection: close\r
           \r
           """
       );
@@ -209,11 +202,15 @@ public class HttpModuleTest extends Http.Module {
   }
 
   private void testCase02(Http.Exchange http) {
-    Web.Session session;
-    session = http.session();
-
     User user;
-    user = session.get(User.class);
+    user = null;
+
+    Session.Instance session;
+    session = http.get(Session.Instance.class);
+
+    if (session != null) {
+      user = session.get(User.class);
+    }
 
     if (user == null) {
       http.found("/login");
@@ -234,7 +231,6 @@ public class HttpModuleTest extends Http.Module {
           HTTP/1.1 302 FOUND\r
           Date: Wed, 28 Jun 2023 12:08:43 GMT\r
           Location: /login\r
-          Set-Cookie: HTTPMODULETEST=00000000000000000000000000000001; Path=/\r
           \r
           """
       );

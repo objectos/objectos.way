@@ -32,10 +32,10 @@ import objectos.notes.Level;
 import objectos.notes.Note2;
 import objectos.notes.NoteSink;
 import objectos.notes.impl.ConsoleNoteSink;
-import objectos.way.AppSessionStore;
 import objectos.way.HandlerFactory;
 import objectos.way.Http;
 import objectos.way.Script;
+import objectos.way.Session;
 import objectos.way.Web;
 import objectos.web.BootstrapException;
 import objectos.web.Stage;
@@ -134,8 +134,8 @@ public class TestingSite {
     }
 
     // SessionStore
-    AppSessionStore sessionStore;
-    sessionStore = new AppSessionStore();
+    Session.Repository sessionStore;
+    sessionStore = Session.createRepository();
 
     // Web.Resources
 
@@ -229,9 +229,7 @@ public class TestingSite {
 
           Http.noteSink(noteSink),
 
-          Http.port(portOption.get()),
-
-          Http.sessionStore(sessionStore)
+          Http.port(portOption.get())
       );
 
       shutdownHook.addAutoCloseable(httpServer);

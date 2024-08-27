@@ -22,8 +22,9 @@ import static org.testng.Assert.assertEquals;
 import static testing.zite.TestingTestingSite.serverExchange;
 
 import java.io.IOException;
-import objectos.way.WebSession;
+import objectos.way.Session;
 import org.testng.annotations.Test;
+import testing.zite.TestingSiteInjector;
 import testing.zite.TestingTestingSite;
 
 public class LoginTest {
@@ -47,7 +48,6 @@ public class LoginTest {
         Date: Wed, 28 Jun 2023 12:08:43 GMT\r
         Content-Type: text/html; charset=utf-8\r
         Transfer-Encoding: chunked\r
-        Set-Cookie: OBJECTOSWAY=a86886a5d2978142da2d8cf378ebc83c; Path=/\r
         \r
         5e6\r
         <!DOCTYPE html>
@@ -82,11 +82,19 @@ public class LoginTest {
 
   """)
   public void testCase02() {
-    Login login;
-    login = new Login(TestingTestingSite.INJECTOR);
+    TestingSiteInjector injector;
+    injector = TestingTestingSite.INJECTOR;
 
-    WebSession session;
-    session = new WebSession("a86886a5d2978142da2d8cf378ebc83c");
+    Login login;
+    login = new Login(injector);
+
+    Session.Instance session;
+    session = Session.createInstance("a86886a5d2978142da2d8cf378ebc83c");
+
+    Session.Repository repository;
+    repository = injector.sessionStore();
+
+    repository.store(session);
 
     assertEquals(
         serverExchange("""
@@ -96,7 +104,7 @@ public class LoginTest {
         Content-Length: 20\r
         Cookie: OBJECTOSWAY=a86886a5d2978142da2d8cf378ebc83c\r
         \r
-        step=one&login=admin""", login::handle, store -> store.add(session)),
+        step=one&login=admin""", login::handle),
 
         """
         HTTP/1.1 200 OK\r

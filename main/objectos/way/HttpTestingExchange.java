@@ -23,7 +23,6 @@ import objectos.lang.object.Check;
 import objectos.util.map.GrowableMap;
 import objectos.way.Http.HeaderName;
 import objectos.way.Http.Response.Status;
-import objectos.way.Web.Session;
 
 final class HttpTestingExchange implements Http.TestingExchange {
 
@@ -73,16 +72,6 @@ final class HttpTestingExchange implements Http.TestingExchange {
     } else {
       return (T) attributes.get(key);
     }
-  }
-
-  @Override
-  public Session session() {
-    throw new UnsupportedOperationException();
-  }
-
-  @Override
-  public void acceptSessionStore(SessionStore sessionStore) {
-    throw new UnsupportedOperationException();
   }
 
   @Override

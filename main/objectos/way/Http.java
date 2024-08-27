@@ -91,21 +91,11 @@ public final class Http {
 
     // request
 
-    /**
-     * Returns the session associated with this request or {@code null} if no
-     * session was found.
-     *
-     * @return the session associated with this request or {@code null}
-     */
-    Web.Session session();
-
     // response
 
     default void accept(Handler handler) {
       handler.handle(this);
     }
-
-    void acceptSessionStore(SessionStore sessionStore);
 
     default void methodMatrix(Request.Method method, Handler handler) {
       Check.notNull(method, "method == null");
@@ -1120,17 +1110,6 @@ public final class Http {
       @Override
       final void acceptHttpServerBuilder(Builder builder) {
         builder.port = port;
-      }
-    };
-  }
-
-  public static Server.Option sessionStore(SessionStore sessionStore) {
-    Check.notNull(sessionStore, "sessionStore == null");
-
-    return new HttpServerOption() {
-      @Override
-      final void acceptHttpServerBuilder(Builder builder) {
-        builder.sessionStore = sessionStore;
       }
     };
   }
