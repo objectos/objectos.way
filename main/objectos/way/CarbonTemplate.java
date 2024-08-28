@@ -15,20 +15,20 @@
  */
 package objectos.way;
 
-abstract class CarbonTemplate extends Html.Template implements Web.Action {
+abstract class CarbonTemplate extends Html.Template implements Http.Handler {
 
   protected final Carbon carbon;
 
-  protected final Http.Exchange http;
+  protected Http.Exchange http;
 
-  protected CarbonTemplate(Http.Exchange http) {
-    this.http = http;
-
+  protected CarbonTemplate() {
     carbon = new Carbon(this);
   }
 
   @Override
-  public void execute() {
+  public void handle(Http.Exchange http) {
+    this.http = http;
+
     http.ok(this);
   }
 

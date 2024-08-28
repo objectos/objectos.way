@@ -16,13 +16,8 @@
 package testing.site.carbon;
 
 import objectos.way.Carbon;
-import objectos.way.Http;
 
 final class ComponentsGrid extends CarbonPage {
-
-  ComponentsGrid(Http.Exchange http) {
-    super(http);
-  }
 
   @Override
   protected final void preRender() {

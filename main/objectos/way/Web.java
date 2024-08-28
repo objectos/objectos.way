@@ -35,18 +35,6 @@ public final class Web {
   // types
 
   /**
-   * An action to be executed as a response to an web request.
-   */
-  public interface Action {
-
-    /**
-     * Executes this action.
-     */
-    void execute();
-
-  }
-
-  /**
    * An abstract HTTP module suited for web applications.
    */
   public static abstract class Module extends WebModule {

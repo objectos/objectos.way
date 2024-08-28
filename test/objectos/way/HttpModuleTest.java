@@ -82,8 +82,7 @@ public class HttpModuleTest extends Http.Module {
     route("/testCase03/*", testCase03);
 
     // matches: /testCase04, /testCase04/foo, /testCase04/foo/bar
-    TestCase04 testCase04 = new TestCase04();
-    route("/testCase04*", testCase04);
+    install(new TestCase04());
 
     // matches: /testCase05/img, /testCase05/img/, /testCase05/img/a, /testCase05/img/b
     Http.Handler testCase05 = this::testCase05;

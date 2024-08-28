@@ -390,12 +390,8 @@ public final class Carbon extends CarbonComponents {
 
     /**
      * Sole constructor.
-     *
-     * @param http
-     *        the HTTP exchange
      */
-    protected Template(Http.Exchange http) {
-      super(http);
+    protected Template() {
     }
 
   }
@@ -460,12 +456,12 @@ public final class Carbon extends CarbonComponents {
 
     @Override
     protected final void configure() {
-      route("/ui/script.js", GET(this::script));
+      route("/ui/script.js", Http.GET, this::script);
 
       CarbonStyles styles;
       styles = new CarbonStyles(classes);
 
-      route("/ui/carbon.css", GET(styles));
+      route("/ui/carbon.css", Http.GET, styles);
     }
 
     private void script(Http.Exchange http) {

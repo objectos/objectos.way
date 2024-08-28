@@ -16,13 +16,8 @@
 package testing.site.carbon;
 
 import objectos.way.Carbon;
-import objectos.way.Http;
 
 final class ComponentsProgressIndicator extends CarbonPage {
-
-  ComponentsProgressIndicator(Http.Exchange http) {
-    super(http);
-  }
 
   @Override
   protected final void preRender() {

@@ -34,9 +34,9 @@ public class TestingHttpModule extends Http.Module {
   protected final void configure() {
     host("dev.carbon:8003", new CarbonWeb(injector));
 
-    route("/ui/*", new UiHttpModule(injector));
+    install(new UiHttpModule(injector));
 
-    route("/login", factory(Login::new, injector));
+    route("/login", f(Login::new, injector));
 
     route("/common/*", injector.webResources());
 
@@ -49,7 +49,7 @@ public class TestingHttpModule extends Http.Module {
 
     filter(this::requireLogin);
 
-    route("/", factory(Home::new, injector));
+    route("/", f(Home::new, injector));
   }
 
   private void requireLogin(Http.Exchange http) {

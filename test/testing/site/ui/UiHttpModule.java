@@ -28,7 +28,7 @@ public final class UiHttpModule extends Http.Module {
 
   @Override
   protected final void configure() {
-    route("/ui/styles.css", factory(UiStyles::new, injector));
+    route("/ui/styles.css", f(UiStyles::new, injector));
   }
 
 }

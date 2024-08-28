@@ -18,7 +18,6 @@ package objectos.way;
 import java.io.IOException;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
-import objectos.way.Http.Exchange;
 import objectox.way.TestingH2;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -34,16 +33,8 @@ public class WebModuleTest extends Web.Module {
   protected final void configure() {
     source(TestingH2.SOURCE);
 
-    route("/testCase01/trx",
-        GET(transactional(this::$testCase01))
-    );
-    route("/testCase01/xrt",
-        GET(this::$testCase01)
-    );
-
-    route("/testCase02",
-        GET(TestCase02::new)
-    );
+    route("/testCase01/trx", transactional(this::$testCase01));
+    route("/testCase01/xrt", this::$testCase01);
   }
 
   private void $testCase01(Http.Exchange http) {
@@ -96,44 +87,6 @@ public class WebModuleTest extends Web.Module {
           Content-Length: 12\r
           \r
           trx is null
-          """
-      );
-    }
-  }
-
-  private static class TestCase02 implements Web.Action {
-    private final Http.Exchange http;
-
-    public TestCase02(Exchange http) {
-      this.http = http;
-    }
-
-    @Override
-    public final void execute() {
-      http.okText("Web Action\n", StandardCharsets.UTF_8);
-    }
-  }
-
-  @Test
-  public void testCase02() throws IOException {
-    try (Socket socket = newSocket()) {
-      test(
-          socket,
-
-          """
-          GET /testCase02 HTTP/1.1\r
-          Host: web.module.test\r
-          Connection: close\r
-          \r
-          """,
-
-          """
-          HTTP/1.1 200 OK\r
-          Date: Wed, 28 Jun 2023 12:08:43 GMT\r
-          Content-Type: text/plain; charset=utf-8\r
-          Content-Length: 11\r
-          \r
-          Web Action
           """
       );
     }

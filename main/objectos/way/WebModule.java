@@ -15,59 +15,15 @@
  */
 package objectos.way;
 
-import java.util.function.Function;
 import objectos.lang.object.Check;
-import objectos.way.Http.Exchange;
-import objectos.way.Web.Action;
 
 abstract class WebModule extends Http.Module {
-
-  private static final class WebActionHandler implements Http.Handler {
-    private final Function<Http.Exchange, Web.Action> constructor;
-
-    public WebActionHandler(Function<Exchange, Action> constructor) {
-      this.constructor = constructor;
-    }
-
-    @Override
-    public final void handle(Http.Exchange http) {
-      Web.Action action;
-      action = constructor.apply(http);
-
-      action.execute();
-    }
-  }
 
   private final Sql.Transaction.IsolationLevel isolationLevel = Sql.Transaction.IsolationLevel.SERIALIZABLE;
 
   private Sql.Source source;
 
   protected WebModule() {}
-
-  protected final MethodHandler DELETE(Function<Http.Exchange, Web.Action> actionConstructor) {
-    return METHOD(Http.DELETE, actionConstructor);
-  }
-
-  protected final MethodHandler GET(Function<Http.Exchange, Web.Action> actionConstructor) {
-    return METHOD(Http.GET, actionConstructor);
-  }
-
-  protected final MethodHandler POST(Function<Http.Exchange, Web.Action> actionConstructor) {
-    return METHOD(Http.POST, actionConstructor);
-  }
-
-  protected final MethodHandler PUT(Function<Http.Exchange, Web.Action> actionConstructor) {
-    return METHOD(Http.PUT, actionConstructor);
-  }
-
-  private MethodHandler METHOD(Http.Request.Method method, Function<Http.Exchange, Web.Action> actionConstructor) {
-    Check.notNull(actionConstructor, "actionConstructor == null");
-
-    WebActionHandler handler;
-    handler = new WebActionHandler(actionConstructor);
-
-    return HttpModuleMethodHandler.ofHandler(method, handler);
-  }
 
   /**
    * Use the specified data source for obtaining database connections.

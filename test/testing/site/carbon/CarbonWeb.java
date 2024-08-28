@@ -15,6 +15,8 @@
  */
 package testing.site.carbon;
 
+import static objectos.way.Http.GET;
+
 import objectos.way.Carbon;
 import objectos.way.Http;
 import objectos.way.Web;
@@ -22,7 +24,10 @@ import testing.zite.TestingSiteInjector;
 
 public final class CarbonWeb extends Web.Module {
 
+  private final Web.Store sessionStore;
+
   public CarbonWeb(TestingSiteInjector injector) {
+    sessionStore = injector.sessionStore();
   }
 
   @Override
@@ -47,17 +52,19 @@ public final class CarbonWeb extends Web.Module {
 
     install(carbon);
 
-    route("/", GET(Index::new));
-    route("/components", GET(Components::new));
-    route("/components/button", GET(ComponentsButton::new));
-    route("/components/data-table", GET(ComponentsDataTable::new));
-    route("/components/grid", GET(ComponentsGrid::new));
-    route("/components/link", GET(ComponentsLink::new));
-    route("/components/page-header", GET(ComponentsPageHeader::new));
-    route("/components/progress-indicator", GET(ComponentsProgressIndicator::new));
-    route("/components/tearsheet", GET(ComponentsTearsheet::new));
-    route("/components/tile", GET(ComponentsTile::new));
-    route("/components/typography", GET(ComponentsTypography::new));
+    filter(sessionStore::filter);
+
+    route("/", GET, f(Index::new));
+    route("/components", GET, f(Components::new));
+    route("/components/button", GET, f(ComponentsButton::new));
+    route("/components/data-table", GET, f(ComponentsDataTable::new));
+    route("/components/grid", GET, f(ComponentsGrid::new));
+    route("/components/link", GET, f(ComponentsLink::new));
+    route("/components/page-header", GET, f(ComponentsPageHeader::new));
+    route("/components/progress-indicator", GET, f(ComponentsProgressIndicator::new));
+    route("/components/tearsheet", GET, f(ComponentsTearsheet::new));
+    route("/components/tile", GET, f(ComponentsTile::new));
+    route("/components/typography", GET, f(ComponentsTypography::new));
   }
 
 }

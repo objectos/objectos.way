@@ -18,16 +18,11 @@ package testing.site.carbon;
 import java.util.List;
 import objectos.way.Carbon;
 import objectos.way.Html;
-import objectos.way.Http;
 import objectos.way.Script;
 
 abstract class CarbonPage extends Carbon.Template {
 
   TopSection topSection = TopSection.HOME;
-
-  CarbonPage(Http.Exchange http) {
-    super(http);
-  }
 
   @Override
   protected final void render() throws Exception {

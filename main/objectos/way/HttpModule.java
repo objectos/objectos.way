@@ -45,18 +45,50 @@ abstract class HttpModule {
 
   }
 
-  protected sealed static abstract class MethodHandler permits HttpModuleMethodHandler {
-
-    MethodHandler() {}
-
-    abstract Http.Handler compile();
-
-  }
-
   protected sealed static abstract class RouteOption permits HttpModuleRouteParameters {
 
     RouteOption() {}
 
+  }
+
+  private record Factory1Handler<T>(Function<T, Http.Handler> function, T value) implements Http.Handler {
+    @Override
+    public final void handle(Http.Exchange http) {
+      Http.Handler handler;
+      handler = function.apply(value);
+
+      handler.handle(http);
+    }
+  }
+
+  private record MethodHandler(Http.Request.Method method, Http.Handler handler) implements Http.Handler {
+    @Override
+    public final void handle(Http.Exchange http) {
+      Http.Request.Method actual;
+      actual = http.method();
+
+      if (method.is(actual)) {
+        handler.handle(http);
+      }
+
+      else if (method.is(Http.GET) && actual.is(Http.GET, Http.HEAD)) {
+        handler.handle(http);
+      }
+
+      else {
+        http.methodNotAllowed();
+      }
+    }
+  }
+
+  private record SupplierHandler(Supplier<Http.Handler> supplier) implements Http.Handler {
+    @Override
+    public final void handle(Http.Exchange http) {
+      Http.Handler handler;
+      handler = supplier.get();
+
+      handler.handle(http);
+    }
   }
 
   private HttpModuleCompiler compiler;
@@ -162,7 +194,6 @@ abstract class HttpModule {
   protected final void route(String pathExpression, Http.Handler handler, RouteOption... options) {
     Check.notNull(pathExpression, "pathExpression == null");
     Check.notNull(handler, "handler == null");
-    Check.notNull(options, "options == null");
 
     HttpModuleRouteOptions routeOptions;
     routeOptions = HttpModuleRouteOptions.of(options);
@@ -170,47 +201,32 @@ abstract class HttpModule {
     compiler.route(pathExpression, handler, routeOptions);
   }
 
-  protected final void route(String pathExpression, Http.Module module, RouteOption... options) {
+  protected final void route(String pathExpression, Http.Request.Method method, Http.Handler handler, RouteOption... options) {
     Check.notNull(pathExpression, "pathExpression == null");
-    Check.notNull(options, "options == null");
+    Check.notNull(method, "method == null");
+    Check.notNull(handler, "handler == null");
 
-    Http.Handler handler;
-    handler = module.compile(); // implicit null-check
+    MethodHandler methodHandler;
+    methodHandler = new MethodHandler(method, handler);
 
     HttpModuleRouteOptions routeOptions;
     routeOptions = HttpModuleRouteOptions.of(options);
 
-    compiler.route(pathExpression, handler, routeOptions);
-  }
-
-  protected final void route(String pathExpression, MethodHandler handler, RouteOption... options) {
-    Check.notNull(pathExpression, "pathExpression == null");
-    Check.notNull(options, "options == null");
-
-    Http.Handler httpHandler; // implicit null-check
-    httpHandler = handler.compile();
-
-    HttpModuleRouteOptions routeOptions;
-    routeOptions = HttpModuleRouteOptions.of(options);
-
-    compiler.route(pathExpression, httpHandler, routeOptions);
-  }
-
-  protected final void route(String pathExpression, Supplier<Http.Handler> supplier, RouteOption... options) {
-    Check.notNull(pathExpression, "pathExpression == null");
-    Check.notNull(supplier, "supplier == null");
-    Check.notNull(options, "options == null");
-
-    HttpModuleRouteOptions routeOptions;
-    routeOptions = HttpModuleRouteOptions.of(options);
-
-    compiler.route(pathExpression, supplier, routeOptions);
+    compiler.route(pathExpression, methodHandler, routeOptions);
   }
 
   // handler suppliers
 
-  protected final <T> Supplier<Http.Handler> factory(Function<T, Http.Handler> function, T value) {
-    return () -> function.apply(value);
+  protected final Http.Handler f(Supplier<Http.Handler> supplier) {
+    Check.notNull(supplier, "supplier == null");
+
+    return new SupplierHandler(supplier);
+  }
+
+  protected final <T> Http.Handler f(Function<T, Http.Handler> function, T value) {
+    Check.notNull(function, "function == null");
+
+    return new Factory1Handler<T>(function, value);
   }
 
   // route options
@@ -246,37 +262,6 @@ abstract class HttpModule {
     pattern = Pattern.compile(regex);
 
     return new HttpModuleCondition.Regex(name, pattern);
-  }
-
-  // actions
-
-  protected final MethodHandler DELETE(Http.Handler handler) {
-    return METHOD(Http.DELETE, handler);
-  }
-
-  protected final MethodHandler GET(Http.Handler handler) {
-    return METHOD(Http.GET, handler);
-  }
-
-  protected final MethodHandler POST(Http.Handler handler) {
-    return METHOD(Http.POST, handler);
-  }
-
-  protected final MethodHandler PUT(Http.Handler handler) {
-    return METHOD(Http.PUT, handler);
-  }
-
-  private MethodHandler METHOD(Http.Request.Method method, Http.Handler handler) {
-    Check.notNull(handler, "handler == null");
-
-    return HttpModuleMethodHandler.ofHandler(method, handler);
-  }
-
-  protected final MethodHandler method(Http.Request.Method method, Http.Handler handler) {
-    Check.notNull(method, "method == null");
-    Check.notNull(handler, "handler == null");
-
-    return HttpModuleMethodHandler.ofHandler(method, handler);
   }
 
   // pre-made actions

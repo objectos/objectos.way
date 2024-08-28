@@ -15,13 +15,7 @@
  */
 package testing.site.carbon;
 
-import objectos.way.Http;
-
 final class ComponentsTypography extends CarbonPage {
-
-  ComponentsTypography(Http.Exchange http) {
-    super(http);
-  }
 
   @Override
   protected final void preRender() {

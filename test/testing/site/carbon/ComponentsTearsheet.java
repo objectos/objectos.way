@@ -17,13 +17,12 @@ package testing.site.carbon;
 
 import objectos.way.Carbon;
 import objectos.way.Html;
-import objectos.way.Http;
 
 final class ComponentsTearsheet extends CarbonPage {
 
-  ComponentsTearsheet(Http.Exchange http) {
-    super(http);
-  }
+  private static final Html.Id SHEET_01 = Html.id("tearsheet-01");
+
+  private static final Html.Id SHEET_01_MODAL = Html.id("tearsheet-01-modal");
 
   @Override
   protected final void preRender() {
@@ -45,12 +44,6 @@ final class ComponentsTearsheet extends CarbonPage {
         )
     );
 
-    final Html.Id sheet01;
-    sheet01 = Html.id("tearsheet-01");
-
-    final Html.Id sheet01Modal;
-    sheet01Modal = Html.id("tearsheet-01-modal");
-
     carbon.gridWide(
         carbon.gridColumns(2), carbon.gap(Carbon.SPACING_05),
 
@@ -64,18 +57,22 @@ final class ComponentsTearsheet extends CarbonPage {
             Carbon.PRIMARY, Carbon.LG,
             type("button"),
             dataOnClick(
-                Carbon.showTearsheet(sheet01),
-                Carbon.showTearsheetModal(sheet01Modal)
+                Carbon.showTearsheet(SHEET_01),
+                Carbon.showTearsheetModal(SHEET_01_MODAL)
             ),
             t("Open Tearsheet")
         )
     );
 
+    renderExample01();
+  }
+
+  private void renderExample01() {
     carbon.tearsheet(
-        sheet01,
+        SHEET_01,
 
         carbon.tearsheetModal(
-            sheet01Modal, ariaLabel("Example 01"),
+            SHEET_01_MODAL, ariaLabel("Example 01"),
 
             carbon.tearsheetHeader(
                 carbon.tearsheetHeaderTitle("Create topic"),
@@ -95,6 +92,7 @@ final class ComponentsTearsheet extends CarbonPage {
                         carbon.progressStep(Carbon.STEP_INCOMPLETE, "Message retention")
                     )
                 ),
+
                 carbon.tearsheetRight(
                     carbon.tearsheetMain(),
 

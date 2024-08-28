@@ -16,7 +16,6 @@
 package objectos.way;
 
 import java.util.Arrays;
-import java.util.function.Supplier;
 import objectos.util.array.ObjectArrays;
 
 final class HttpModuleCompiler extends HttpModuleMatcherParser implements Http.Handler {
@@ -113,20 +112,7 @@ final class HttpModuleCompiler extends HttpModuleMatcherParser implements Http.H
     int index;
     index = nextSlot();
 
-    actions[index] = new HttpModuleRoute.RouteHandler(matcher, actualHandler);
-  }
-
-  final void route(String pathExpression, Supplier<Http.Handler> supplier, HttpModuleRouteOptions options) {
-    HttpModuleMatcher matcher;
-    matcher = parseAndDecorate(pathExpression, options);
-
-    Supplier<Http.Handler> actualSupplier;
-    actualSupplier = interceptor == null ? supplier : () -> interceptor.intercept(supplier.get());
-
-    int index;
-    index = nextSlot();
-
-    actions[index] = new HttpModuleRoute.RouteSupplier(matcher, actualSupplier);
+    actions[index] = new HttpModuleRoute(matcher, actualHandler);
   }
 
   private HttpModuleMatcher parseAndDecorate(String pathExpression, HttpModuleRouteOptions options) {

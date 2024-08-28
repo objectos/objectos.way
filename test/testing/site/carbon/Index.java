@@ -15,13 +15,7 @@
  */
 package testing.site.carbon;
 
-import objectos.way.Http;
-
 final class Index extends CarbonPage {
-
-  public Index(Http.Exchange http) {
-    super(http);
-  }
 
   @Override
   protected final void preRender() {

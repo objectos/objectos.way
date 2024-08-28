@@ -19,13 +19,9 @@ final class MarketingSite extends Http.Module {
 
   @Override
   protected final void configure() {
-    route("/",
-        method(Http.GET, movedPermanently("/index.html"))
-    );
+    route("/", movedPermanently("/index.html"));
 
-    route("/index.html",
-        method(Http.GET, this::indexHtml)
-    );
+    route("/index.html", Http.GET, this::indexHtml);
   }
 
   private void indexHtml(Http.Exchange http) {
