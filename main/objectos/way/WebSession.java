@@ -21,7 +21,7 @@ import java.util.HashMap;
 import java.util.Map;
 import objectos.lang.object.Check;
 
-final class SessionInstance implements Session.Instance {
+final class WebSession implements Web.Session {
 
   private final String id;
 
@@ -31,7 +31,7 @@ final class SessionInstance implements Session.Instance {
 
   volatile boolean valid = true;
 
-  public SessionInstance(String id) {
+  public WebSession(String id) {
     this.id = Check.notNull(id, "id == null");
   }
 

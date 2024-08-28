@@ -25,16 +25,16 @@ import java.time.Duration;
 import java.time.Instant;
 import org.testng.annotations.Test;
 
-public class SessionRepositoryTest {
+public class WebStoreTest {
 
   @Test(description = """
   Create a new session and confirm it can be found in the repo
   """)
   public void testCase01() {
-    Session.Repository repo;
-    repo = Session.createRepository();
+    Web.Store repo;
+    repo = Web.createStore();
 
-    Session.Instance session;
+    Web.Session session;
     session = repo.createNext();
 
     assertNotNull(session);
@@ -44,7 +44,7 @@ public class SessionRepositoryTest {
 
     assertNotNull(id);
 
-    Session.Instance maybe;
+    Web.Session maybe;
     maybe = repo.get(id);
 
     assertSame(maybe, session);
@@ -54,10 +54,10 @@ public class SessionRepositoryTest {
   It should be possible to repo values to and retrieve values from the session.
   """)
   public void testCase02() {
-    Session.Repository repo;
-    repo = Session.createRepository();
+    Web.Store repo;
+    repo = Web.createStore();
 
-    Session.Instance session;
+    Web.Session session;
     session = repo.createNext();
 
     Object user;
@@ -79,10 +79,10 @@ public class SessionRepositoryTest {
   It should not be possible to retrieve a session after it has been invalidated
   """)
   public void testCase03() {
-    Session.Repository repo;
-    repo = Session.createRepository();
+    Web.Store repo;
+    repo = Web.createStore();
 
-    Session.Instance session;
+    Web.Session session;
     session = repo.createNext();
 
     assertNotNull(session);
@@ -104,16 +104,16 @@ public class SessionRepositoryTest {
     IncrementingClock clock;
     clock = new IncrementingClock(2024, 4, 29);
 
-    Session.Repository repo;
-    repo = Session.createRepository(
-        Session.clock(clock)
+    Web.Store repo;
+    repo = Web.createStore(
+        Web.clock(clock)
     );
 
     String id;
     id = "foo";
 
-    SessionInstance session;
-    session = new SessionInstance(id);
+    WebSession session;
+    session = new WebSession(id);
 
     Instant start;
     start = clock.instant();
@@ -122,7 +122,7 @@ public class SessionRepositoryTest {
 
     repo.store(session);
 
-    Session.Instance res;
+    Web.Session res;
     res = repo.get(id);
 
     assertSame(res, session);
@@ -137,14 +137,14 @@ public class SessionRepositoryTest {
     IncrementingClock clock;
     clock = new IncrementingClock(2024, 4, 29);
 
-    Session.Repository repo;
-    repo = Session.createRepository(
-        Session.clock(clock)
+    Web.Store repo;
+    repo = Web.createStore(
+        Web.clock(clock)
     );
 
-    SessionInstance a = new SessionInstance("a");
-    SessionInstance b = new SessionInstance("b");
-    SessionInstance c = new SessionInstance("c");
+    WebSession a = new WebSession("a");
+    WebSession b = new WebSession("b");
+    WebSession c = new WebSession("c");
 
     repo.store(a);
     repo.store(b);
@@ -170,16 +170,16 @@ public class SessionRepositoryTest {
     Clock clock;
     clock = TestingClock.FIXED;
 
-    Session.Repository repo;
-    repo = Session.createRepository(
-        Session.clock(clock),
+    Web.Store repo;
+    repo = Web.createStore(
+        Web.clock(clock),
 
-        Session.emptyMaxAge(Duration.ofMinutes(1))
+        Web.emptyMaxAge(Duration.ofMinutes(1))
     );
 
-    SessionInstance a = new SessionInstance("a");
-    SessionInstance b = new SessionInstance("b");
-    SessionInstance c = new SessionInstance("c");
+    WebSession a = new WebSession("a");
+    WebSession b = new WebSession("b");
+    WebSession c = new WebSession("c");
 
     repo.store(a);
     repo.store(b);

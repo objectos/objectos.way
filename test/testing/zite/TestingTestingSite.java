@@ -32,7 +32,6 @@ import objectos.notes.Level;
 import objectos.notes.NoteSink;
 import objectos.notes.impl.ConsoleNoteSink;
 import objectos.way.Http.Exchange;
-import objectos.way.Session;
 import objectos.way.WayTestingServerExchange;
 import objectos.way.Web;
 import objectos.web.Stage;
@@ -79,9 +78,9 @@ public final class TestingTestingSite {
     Random random;
     random = new Random(1234L);
 
-    Session.Repository sessionStore;
-    sessionStore = Session.createRepository(
-        Session.random(random)
+    Web.Store sessionStore;
+    sessionStore = Web.createStore(
+        Web.random(random)
     );
 
     // Stage

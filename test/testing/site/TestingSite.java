@@ -35,7 +35,6 @@ import objectos.notes.impl.ConsoleNoteSink;
 import objectos.way.HandlerFactory;
 import objectos.way.Http;
 import objectos.way.Script;
-import objectos.way.Session;
 import objectos.way.Web;
 import objectos.web.BootstrapException;
 import objectos.web.Stage;
@@ -134,8 +133,8 @@ public class TestingSite {
     }
 
     // SessionStore
-    Session.Repository sessionStore;
-    sessionStore = Session.createRepository();
+    Web.Store sessionStore;
+    sessionStore = Web.createStore();
 
     // Web.Resources
 

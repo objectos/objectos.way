@@ -25,12 +25,11 @@ import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import objectos.lang.object.Check;
-import objectos.way.Session.Repository;
 
 /**
  * The Objectos Way {@link SessionStore} implementation.
  */
-final class SessionRepository implements Session.Repository {
+final class WebStore implements Web.Store {
 
   static class Builder {
 
@@ -46,8 +45,8 @@ final class SessionRepository implements Session.Repository {
 
     Random random = new SecureRandom();
 
-    public final Repository build() {
-      return new SessionRepository(this);
+    public final Web.Store build() {
+      return new WebStore(this);
     }
 
   }
@@ -68,9 +67,9 @@ final class SessionRepository implements Session.Repository {
 
   private final Random random;
 
-  private final ConcurrentMap<String, SessionInstance> sessions = new ConcurrentHashMap<>();
+  private final ConcurrentMap<String, WebSession> sessions = new ConcurrentHashMap<>();
 
-  SessionRepository(Builder builder) {
+  WebStore(Builder builder) {
     clock = builder.clock;
 
     cookieMaxAge = builder.cookieMaxAge;
@@ -92,10 +91,10 @@ final class SessionRepository implements Session.Repository {
     Instant min;
     min = now.minus(emptyMaxAge);
 
-    Collection<SessionInstance> values;
+    Collection<WebSession> values;
     values = sessions.values();
 
-    for (SessionInstance session : values) {
+    for (WebSession session : values) {
       if (session.shouldCleanUp(min)) {
         sessions.remove(session.id());
       }
@@ -106,7 +105,7 @@ final class SessionRepository implements Session.Repository {
     sessions.clear();
   }
 
-  final SessionInstance put(String id, SessionInstance session) {
+  final WebSession put(String id, WebSession session) {
     Check.notNull(id, "id == null");
     Check.notNull(session, "session == null");
 
@@ -114,14 +113,14 @@ final class SessionRepository implements Session.Repository {
   }
 
   @Override
-  public final Session.Instance createNext() {
-    SessionInstance session, maybeExisting;
+  public final Web.Session createNext() {
+    WebSession session, maybeExisting;
 
     do {
       String id;
       id = nextId();
 
-      session = new SessionInstance(id);
+      session = new WebSession(id);
 
       maybeExisting = sessions.putIfAbsent(id, session);
     } while (maybeExisting != null);
@@ -151,19 +150,19 @@ final class SessionRepository implements Session.Repository {
       return;
     }
 
-    Session.Instance session;
+    Web.Session session;
     session = get(id);
 
     if (session == null) {
       return;
     }
 
-    http.set(Session.Instance.class, session);
+    http.set(Web.Session.class, session);
   }
 
   @Override
-  public final Session.Instance get(String id) {
-    SessionInstance session;
+  public final Web.Session get(String id) {
+    WebSession session;
     session = sessions.get(id);
 
     if (session == null) {
@@ -208,11 +207,11 @@ final class SessionRepository implements Session.Repository {
   }
 
   @Override
-  public final Session.Instance store(Session.Instance session) {
+  public final Web.Session store(Web.Session session) {
     String id;
     id = session.id();
 
-    return sessions.put(id, (SessionInstance) session);
+    return sessions.put(id, (WebSession) session);
   }
 
   private String nextId() {

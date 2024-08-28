@@ -18,13 +18,13 @@ package testing.site.web;
 import java.io.IOException;
 import objectos.way.Html;
 import objectos.way.Http;
-import objectos.way.Session;
+import objectos.way.Web;
 import testing.site.auth.User;
 import testing.zite.TestingSiteInjector;
 
 final class Login extends WebTemplate implements Http.Handler {
 
-  private final Session.Repository sessionStore;
+  private final Web.Store sessionStore;
 
   public Login(TestingSiteInjector injector) {
     sessionStore = injector.sessionStore();
@@ -46,8 +46,8 @@ final class Login extends WebTemplate implements Http.Handler {
     User user;
     user = null;
 
-    Session.Instance session;
-    session = http.get(Session.Instance.class);
+    Web.Session session;
+    session = http.get(Web.Session.class);
 
     if (session != null) {
       user = session.get(User.class);
@@ -200,8 +200,8 @@ final class Login extends WebTemplate implements Http.Handler {
     User user;
     user = null;
 
-    Session.Instance session;
-    session = http.get(Session.Instance.class);
+    Web.Session session;
+    session = http.get(Web.Session.class);
 
     if (session != null) {
       user = session.get(User.class);
@@ -259,7 +259,7 @@ final class Login extends WebTemplate implements Http.Handler {
     user = authenticate(login, password);
 
     if (user != null) {
-      Session.Instance session;
+      Web.Session session;
       session = sessionStore.createNext();
 
       session.put(User.class, user);

@@ -34,7 +34,7 @@ public class HttpModuleTest extends Http.Module {
   @SuppressWarnings("serial")
   private static class TestException extends RuntimeException {}
 
-  private Session.Repository sessionStore;
+  private Web.Store sessionStore;
 
   private SequentialRandom random;
 
@@ -42,10 +42,10 @@ public class HttpModuleTest extends Http.Module {
   public void beforeClass() {
     random = new SequentialRandom();
 
-    this.sessionStore = Session.createRepository(
-        Session.cookieName("HTTPMODULETEST"),
+    this.sessionStore = Web.createStore(
+        Web.cookieName("HTTPMODULETEST"),
 
-        Session.random(random)
+        Web.random(random)
     );
 
     TestingHttpServer.bindHttpModuleTest(this);
@@ -53,8 +53,8 @@ public class HttpModuleTest extends Http.Module {
 
   @BeforeMethod
   public void beforeMethod() {
-    Session.Instance session;
-    session = Session.createInstance("TEST_COOKIE");
+    Web.Session session;
+    session = Web.createSession("TEST_COOKIE");
 
     session.put(User.class, new User("test"));
 
@@ -205,8 +205,8 @@ public class HttpModuleTest extends Http.Module {
     User user;
     user = null;
 
-    Session.Instance session;
-    session = http.get(Session.Instance.class);
+    Web.Session session;
+    session = http.get(Web.Session.class);
 
     if (session != null) {
       user = session.get(User.class);

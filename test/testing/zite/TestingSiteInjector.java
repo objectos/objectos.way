@@ -16,11 +16,10 @@
 package testing.zite;
 
 import objectos.notes.NoteSink;
-import objectos.way.Session;
 import objectos.way.Web;
 import objectos.web.Stage;
 
 public record TestingSiteInjector(NoteSink noteSink,
-                                  Session.Repository sessionStore,
+                                  Web.Store sessionStore,
                                   Stage stage,
                                   Web.Resources webResources) {}

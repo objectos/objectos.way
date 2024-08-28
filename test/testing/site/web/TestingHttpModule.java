@@ -16,8 +16,7 @@
 package testing.site.web;
 
 import objectos.way.Http;
-import objectos.way.Session;
-import objectos.way.Session.Repository;
+import objectos.way.Web;
 import testing.site.auth.User;
 import testing.site.carbon.CarbonWeb;
 import testing.site.ui.UiHttpModule;
@@ -43,7 +42,7 @@ public class TestingHttpModule extends Http.Module {
 
     route("/styles.css", new Styles(injector));
 
-    Repository sessionStore;
+    Web.Store sessionStore;
     sessionStore = injector.sessionStore();
 
     filter(sessionStore::filter);
@@ -54,8 +53,8 @@ public class TestingHttpModule extends Http.Module {
   }
 
   private void requireLogin(Http.Exchange http) {
-    Session.Instance session;
-    session = http.get(Session.Instance.class);
+    Web.Session session;
+    session = http.get(Web.Session.class);
 
     if (session == null) {
       return;

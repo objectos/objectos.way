@@ -18,7 +18,11 @@ package objectos.way;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.time.Clock;
+import java.time.Duration;
 import java.util.Map;
+import java.util.Objects;
+import java.util.Random;
 import objectos.lang.object.Check;
 import objectos.notes.Note1;
 import objectos.notes.NoteSink;
@@ -112,6 +116,107 @@ public final class Web {
 
   }
 
+  /**
+   * An web session uniquely identifies the user of an application.
+   */
+  public sealed interface Session permits WebSession {
+
+    /**
+     * The identifier of this session.
+     *
+     * @return the identifier of this session.
+     */
+    String id();
+
+    /**
+     * Returns the object associated to the specified class instance, or
+     * {@code null} if there's no object associated.
+     *
+     * @param <T> the type of the object
+     *
+     * @param type
+     *        the class instance to search for
+     *
+     * @return the object associated or {@code null} if there's no object
+     *         associated
+     */
+    <T> T get(Class<T> type);
+
+    /**
+     * Returns the object associated to the specified name, or {@code null} if
+     * there's no object associated.
+     *
+     * @param name
+     *        the name to search for
+     *
+     * @return the object associated or {@code null} if there's no object
+     *         associated
+     */
+    Object get(String name);
+
+    <T> Object put(Class<T> type, T value);
+
+    Object put(String name, Object value);
+
+    Object remove(String name);
+
+    void invalidate();
+
+  }
+
+  /**
+   * Creates, stores and manages session instances.
+   */
+  public sealed interface Store permits WebStore {
+
+    /**
+     * A store configuration option.
+     */
+    public sealed interface Option {}
+
+    void cleanUp();
+
+    /**
+     * Creates and immediately stores a new session instance.
+     *
+     * @return a newly created session instance.
+     */
+    Session createNext();
+
+    void filter(Http.Exchange http);
+
+    Session get(String id);
+
+    /**
+     * Returns a Set-Cookie header value for the specified session ID.
+     *
+     * @param id
+     *        the id of the session
+     *
+     * @return the value of a Set-Cookie header for the specified session ID
+     */
+    String setCookie(String id);
+
+    /**
+     * Stores the specified {@code session} in this repository. If a session
+     * instance with the same ID is already managed by this repository then the
+     * existing session is replaced by the specified one.
+     *
+     * @param session
+     *        the session instance to be stored
+     *
+     * @return the previously stored session instance or {@code null}
+     */
+    Session store(Session session);
+
+  }
+
+  non-sealed static abstract class WebStoreOption implements Store.Option {
+
+    abstract void accept(WebStore.Builder builder);
+
+  }
+
   private Web() {}
 
   /**
@@ -161,9 +266,169 @@ public final class Web {
     return builder.build();
   }
 
+  public static Session createSession(String id) {
+    return new WebSession(id);
+  }
+
   /**
-   * Option: map file extension names to content type (media type) values as
-   * defined by the specified properties string.
+   * Creates a new session store with the specified configuration options.
+   */
+  public static Store createStore(Store.Option... options) {
+    WebStore.Builder builder;
+    builder = new WebStore.Builder();
+
+    for (int i = 0, len = options.length; i < len; i++) {
+      Store.Option o;
+      o = Check.notNull(options[i], "options[", i, "] == null");
+
+      WebStoreOption option;
+      option = (WebStoreOption) o;
+
+      option.accept(builder);
+    }
+
+    return builder.build();
+  }
+
+  /**
+   * Store option: use the specified {@code clock} when setting session
+   * instances time related values.
+   *
+   * @param value
+   *        the clock instance to use
+   *
+   * @return a new store configuration option
+   */
+  public static Store.Option clock(Clock value) {
+    Check.notNull(value, "value == null");
+
+    return new WebStoreOption() {
+      @Override
+      final void accept(WebStore.Builder builder) {
+        builder.clock = value;
+      }
+    };
+  }
+
+  /**
+   * Store option: use the specified {@code name} when setting the client
+   * session cookie.
+   *
+   * @param name
+   *        the cookie name to use
+   *
+   * @return a new store configuration option
+   */
+  public static Store.Option cookieName(String name) {
+    Check.notNull(name, "name == null");
+
+    return new WebStoreOption() {
+      @Override
+      final void accept(WebStore.Builder builder) {
+        builder.cookieName = name;
+      }
+    };
+  }
+
+  /**
+   * Store option: sets the session cookie Path attribute to the specified
+   * value.
+   *
+   * @param path
+   *        the value of the Path attribute
+   *
+   * @return a new store configuration option
+   */
+  public static Store.Option cookiePath(String path) {
+    Check.notNull(path, "path == null");
+
+    return new WebStoreOption() {
+      @Override
+      final void accept(WebStore.Builder builder) {
+        builder.cookiePath = path;
+      }
+    };
+  }
+
+  /**
+   * Store option: sets the session cookie Max-Age attribute to the
+   * specified value.
+   *
+   * @param duration
+   *        the value of the Max-Age attribute
+   *
+   * @return a new store configuration option
+   */
+  public static Store.Option cookieMaxAge(Duration duration) {
+    Objects.requireNonNull(duration, "duration == null");
+
+    if (duration.isZero()) {
+      throw new IllegalArgumentException("maxAge must not be zero");
+    }
+
+    if (duration.isNegative()) {
+      throw new IllegalArgumentException("maxAge must not be negative");
+    }
+
+    return new WebStoreOption() {
+      @Override
+      final void accept(WebStore.Builder builder) {
+        builder.cookieMaxAge = duration;
+      }
+    };
+  }
+
+  /**
+   * Store option: discards empty sessions, during a {@link #cleanUp()}
+   * operation, whose last access time is greater than the specified duration.
+   *
+   * @param duration
+   *        the duration value
+   *
+   * @return a new store configuration option
+   */
+  public static Store.Option emptyMaxAge(Duration duration) {
+    Objects.requireNonNull(duration, "duration == null");
+
+    if (duration.isZero()) {
+      throw new IllegalArgumentException("emptyMaxAge must not be zero");
+    }
+
+    if (duration.isNegative()) {
+      throw new IllegalArgumentException("emptyMaxAge must not be negative");
+    }
+
+    return new WebStoreOption() {
+      @Override
+      final void accept(WebStore.Builder builder) {
+        builder.emptyMaxAge = duration;
+      }
+    };
+  }
+
+  /**
+   * Store option: use the specified {@link Random} instance for generating
+   * session IDs.
+   *
+   * @param random
+   *        the {@link Random} instance to use
+   *
+   * @return a new store configuration option
+   */
+  public static Store.Option random(Random random) {
+    Check.notNull(random, "random == null");
+
+    return new WebStoreOption() {
+      @Override
+      final void accept(WebStore.Builder builder) {
+        builder.random = random;
+      }
+    };
+  }
+
+  /**
+   * Resources option: map file extension names to content type (media type)
+   * values as defined by the specified properties string.
    *
    * <p>
    * A typical usage is:
@@ -209,7 +474,7 @@ public final class Web {
   }
 
   /**
-   * Option: set the note sink to the specified instance.
+   * Resources option: set the note sink to the specified instance.
    *
    * @param noteSink
    *        the note sink instance
@@ -228,7 +493,8 @@ public final class Web {
   }
 
   /**
-   * Option: serve the contents of the specified directory as if they were at
+   * Resources option: serve the contents of the specified directory as if they
+   * were at
    * the root of the web server.
    *
    * @param directory
@@ -248,7 +514,8 @@ public final class Web {
   }
 
   /**
-   * Option: serve at the specified path name a file with the specified
+   * Resources option: serve at the specified path name a file with the
+   * specified
    * contents. The behavior of this option is not specified if the
    * contents of the array is changed while this option is configuring the
    * creation of a resources instance.

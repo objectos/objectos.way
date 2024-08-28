@@ -22,7 +22,7 @@ import static org.testng.Assert.assertEquals;
 import static testing.zite.TestingTestingSite.serverExchange;
 
 import java.io.IOException;
-import objectos.way.Session;
+import objectos.way.Web;
 import org.testng.annotations.Test;
 import testing.zite.TestingSiteInjector;
 import testing.zite.TestingTestingSite;
@@ -88,10 +88,10 @@ public class LoginTest {
     Login login;
     login = new Login(injector);
 
-    Session.Instance session;
-    session = Session.createInstance("a86886a5d2978142da2d8cf378ebc83c");
+    Web.Session session;
+    session = Web.createSession("a86886a5d2978142da2d8cf378ebc83c");
 
-    Session.Repository repository;
+    Web.Store repository;
     repository = injector.sessionStore();
 
     repository.store(session);
