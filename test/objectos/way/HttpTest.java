@@ -43,6 +43,19 @@ public class HttpTest {
     assertEquals(res.index() >= 0, true);
   }
 
+  @Test
+  public void method() {
+    assertEquals(Http.method(Http.CONNECT).name(), "CONNECT");
+    assertEquals(Http.method(Http.DELETE).name(), "DELETE");
+    assertEquals(Http.method(Http.GET).name(), "GET");
+    assertEquals(Http.method(Http.HEAD).name(), "HEAD");
+    assertEquals(Http.method(Http.OPTIONS).name(), "OPTIONS");
+    assertEquals(Http.method(Http.PATCH).name(), "PATCH");
+    assertEquals(Http.method(Http.POST).name(), "POST");
+    assertEquals(Http.method(Http.PUT).name(), "PUT");
+    assertEquals(Http.method(Http.TRACE).name(), "TRACE");
+  }
+
   @Test(description = """
   It should parse a single name-value pair
   """)

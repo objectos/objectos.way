@@ -418,6 +418,20 @@ public final class Http {
     }
 
     /**
+     * The method of an HTTP request message.
+     */
+    public sealed interface Method {
+
+      /**
+       * The name of this method.
+       *
+       * @return the name of this method.
+       */
+      String name();
+
+    }
+
+    /**
      * The request-target of an HTTP request message.
      *
      * <p>
@@ -824,6 +838,49 @@ public final class Http {
    * The TRACE method code.
    */
   public static final byte TRACE = 9;
+
+  enum HttpRequestMethod implements Http.Request.Method {
+
+    CONNECT,
+    DELETE,
+    GET,
+    HEAD,
+    OPTIONS,
+    PATCH,
+    POST,
+    PUT,
+    TRACE;
+
+    static final HttpRequestMethod[] VALUES = values();
+
+  }
+
+  /**
+   * Returns an HTTP request method object representing the specified method
+   * code.
+   *
+   * @param code
+   *        the method code
+   *
+   * @return an HTTP request method instance
+   *
+   * @throws IllegalArgumentException
+   *         if the specified code does not represent a valid HTTP method
+   */
+  public static Http.Request.Method method(byte code) {
+    return switch (code) {
+      case Http.CONNECT -> HttpRequestMethod.CONNECT;
+      case Http.DELETE -> HttpRequestMethod.DELETE;
+      case Http.GET -> HttpRequestMethod.GET;
+      case Http.HEAD -> HttpRequestMethod.HEAD;
+      case Http.OPTIONS -> HttpRequestMethod.OPTIONS;
+      case Http.PATCH -> HttpRequestMethod.PATCH;
+      case Http.POST -> HttpRequestMethod.POST;
+      case Http.PUT -> HttpRequestMethod.PUT;
+      case Http.TRACE -> HttpRequestMethod.TRACE;
+      default -> throw new IllegalArgumentException("The value " + code + " is not mapped to a Http.Request.Method value");
+    };
+  }
 
   // Response constants
 
