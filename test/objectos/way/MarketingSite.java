@@ -21,11 +21,15 @@ final class MarketingSite extends Http.Module {
   protected final void configure() {
     route("/", movedPermanently("/index.html"));
 
-    route("/index.html", Http.GET, this::indexHtml);
+    route("/index.html", this::indexHtml);
   }
 
   private void indexHtml(Http.Exchange http) {
-    http.ok(new MarketingSiteHome());
+    switch (http.method()) {
+      case Http.GET, Http.HEAD -> http.ok(new MarketingSiteHome());
+
+      default -> http.methodNotAllowed();
+    }
   }
 
   private static class MarketingSiteHome extends Html.Template {

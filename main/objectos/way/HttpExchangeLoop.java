@@ -287,7 +287,7 @@ final class HttpExchangeLoop extends HttpRequestBody implements Http.Exchange, C
   // request
 
   @Override
-  public final Http.Request.Method method() {
+  public final byte method() {
     checkRequest();
 
     return method;
@@ -348,29 +348,6 @@ final class HttpExchangeLoop extends HttpRequestBody implements Http.Exchange, C
     }
 
     STATUS_LINES = map;
-  }
-
-  @Override
-  public final void methodMatrix(Http.Request.Method method, Http.Handler handler) {
-    Check.notNull(method, "method == null");
-    Check.notNull(handler, "handler == null");
-
-    Http.Request.Method actual;
-    actual = method();
-
-    if (handles(method, actual)) {
-      handler.handle(this);
-    } else {
-      methodNotAllowed();
-    }
-  }
-
-  private boolean handles(Http.Request.Method method, Http.Request.Method actual) {
-    if (method.is(Http.GET)) {
-      return actual.is(Http.GET, Http.HEAD);
-    } else {
-      return actual.is(method);
-    }
   }
 
   @Override

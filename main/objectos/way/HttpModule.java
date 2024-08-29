@@ -61,26 +61,6 @@ abstract class HttpModule {
     }
   }
 
-  private record MethodHandler(Http.Request.Method method, Http.Handler handler) implements Http.Handler {
-    @Override
-    public final void handle(Http.Exchange http) {
-      Http.Request.Method actual;
-      actual = http.method();
-
-      if (method.is(actual)) {
-        handler.handle(http);
-      }
-
-      else if (method.is(Http.GET) && actual.is(Http.GET, Http.HEAD)) {
-        handler.handle(http);
-      }
-
-      else {
-        http.methodNotAllowed();
-      }
-    }
-  }
-
   private record SupplierHandler(Supplier<Http.Handler> supplier) implements Http.Handler {
     @Override
     public final void handle(Http.Exchange http) {
@@ -199,20 +179,6 @@ abstract class HttpModule {
     routeOptions = HttpModuleRouteOptions.of(options);
 
     compiler.route(pathExpression, handler, routeOptions);
-  }
-
-  protected final void route(String pathExpression, Http.Request.Method method, Http.Handler handler, RouteOption... options) {
-    Check.notNull(pathExpression, "pathExpression == null");
-    Check.notNull(method, "method == null");
-    Check.notNull(handler, "handler == null");
-
-    MethodHandler methodHandler;
-    methodHandler = new MethodHandler(method, handler);
-
-    HttpModuleRouteOptions routeOptions;
-    routeOptions = HttpModuleRouteOptions.of(options);
-
-    compiler.route(pathExpression, methodHandler, routeOptions);
   }
 
   // handler suppliers

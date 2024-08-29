@@ -224,7 +224,7 @@ final class WebResources implements AutoCloseable, Web.Resources {
       return;
     }
 
-    Http.Request.Method method;
+    byte method;
     method = http.method();
 
     if (method != Http.GET && method != Http.HEAD) {

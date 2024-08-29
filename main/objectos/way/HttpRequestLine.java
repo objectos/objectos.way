@@ -30,7 +30,10 @@ import objectos.way.HttpExchangeLoop.ParseStatus;
 
 non-sealed class HttpRequestLine extends HttpSocketInput implements Http.Request.Target {
 
-  Http.Request.Method method;
+  // force Http class init
+  static final byte HTTP_REQUEST_LINE = Http.GET;
+
+  byte method;
 
   private String path;
 
@@ -217,7 +220,7 @@ non-sealed class HttpRequestLine extends HttpSocketInput implements Http.Request
   }
 
   final void resetRequestLine() {
-    method = null;
+    method = 0;
 
     pathLimit = 0;
 
@@ -254,7 +257,7 @@ non-sealed class HttpRequestLine extends HttpSocketInput implements Http.Request
 
     parseMethod();
 
-    if (method == null) {
+    if (method == 0) {
       // parse method failed -> bad request
       parseStatus = ParseStatus.INVALID_METHOD;
 
@@ -294,6 +297,24 @@ non-sealed class HttpRequestLine extends HttpSocketInput implements Http.Request
     }
   }
 
+  private static final byte[] _CONNECT = "CONNECT ".getBytes(StandardCharsets.UTF_8);
+
+  private static final byte[] _DELETE = "DELETE ".getBytes(StandardCharsets.UTF_8);
+
+  private static final byte[] _GET = "GET ".getBytes(StandardCharsets.UTF_8);
+
+  private static final byte[] _HEAD = "HEAD ".getBytes(StandardCharsets.UTF_8);
+
+  private static final byte[] _OPTIONS = "OPTIONS ".getBytes(StandardCharsets.UTF_8);
+
+  private static final byte[] _POST = "POST ".getBytes(StandardCharsets.UTF_8);
+
+  private static final byte[] _PUT = "PUT ".getBytes(StandardCharsets.UTF_8);
+
+  private static final byte[] _PATCH = "PATCH ".getBytes(StandardCharsets.UTF_8);
+
+  private static final byte[] _TRACE = "TRACE ".getBytes(StandardCharsets.UTF_8);
+
   private void parseMethod() throws IOException {
     if (bufferIndex >= lineLimit) {
       // empty line... nothing to do
@@ -306,54 +327,23 @@ non-sealed class HttpRequestLine extends HttpSocketInput implements Http.Request
     // based on the first char, we select out method candidate
 
     switch (first) {
-      case 'C' -> parseMethod0(Http.CONNECT);
+      case 'C' -> parseMethod0(Http.CONNECT, _CONNECT);
 
-      case 'D' -> parseMethod0(Http.DELETE);
+      case 'D' -> parseMethod0(Http.DELETE, _DELETE);
 
-      case 'G' -> parseMethod0(GET);
+      case 'G' -> parseMethod0(Http.GET, _GET);
 
-      case 'H' -> parseMethod0(Http.HEAD);
+      case 'H' -> parseMethod0(Http.HEAD, _HEAD);
 
-      case 'O' -> parseMethod0(Http.OPTIONS);
+      case 'O' -> parseMethod0(Http.OPTIONS, _OPTIONS);
 
       case 'P' -> parseMethodP();
 
-      case 'T' -> parseMethod0(Http.TRACE);
+      case 'T' -> parseMethod0(Http.TRACE, _TRACE);
     }
   }
 
-  // force Http init
-  static final Http.Request.Method GET = Http.GET;
-
-  static final byte[][] STD_METHOD_BYTES;
-
-  static {
-    int size;
-    size = HttpRequestMethod.size();
-
-    byte[][] map;
-    map = new byte[size][];
-
-    for (int index = 0; index < size; index++) {
-      HttpRequestMethod method;
-      method = HttpRequestMethod.get(index);
-
-      String nameAndSpace;
-      nameAndSpace = method.text() + " ";
-
-      map[index] = nameAndSpace.getBytes(StandardCharsets.UTF_8);
-    }
-
-    STD_METHOD_BYTES = map;
-  }
-
-  private void parseMethod0(Http.Request.Method candidate) throws IOException {
-    int index;
-    index = candidate.index();
-
-    byte[] candidateBytes;
-    candidateBytes = STD_METHOD_BYTES[index];
-
+  private void parseMethod0(byte candidate, byte[] candidateBytes) throws IOException {
     if (matches(candidateBytes)) {
       method = candidate;
     }
@@ -367,21 +357,21 @@ non-sealed class HttpRequestLine extends HttpSocketInput implements Http.Request
 
     // we'll try them in sequence
 
-    parseMethod0(Http.POST);
+    parseMethod0(Http.POST, _POST);
 
-    if (method != null) {
+    if (method != 0) {
       return;
     }
 
-    parseMethod0(Http.PUT);
+    parseMethod0(Http.PUT, _PUT);
 
-    if (method != null) {
+    if (method != 0) {
       return;
     }
 
-    parseMethod0(Http.PATCH);
+    parseMethod0(Http.PATCH, _PATCH);
 
-    if (method != null) {
+    if (method != 0) {
       return;
     }
   }

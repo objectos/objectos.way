@@ -64,7 +64,11 @@ public class HttpServerTest extends Http.Module {
 
   @SuppressWarnings("unused")
   private void testCase01(Http.Exchange http) {
-    http.methodMatrix(Http.GET, this::testCase01Get);
+    switch (http.method()) {
+      case Http.GET -> testCase01Get(http);
+
+      default -> http.methodNotAllowed();
+    }
   }
 
   private void testCase01Get(Http.Exchange http) {
@@ -119,7 +123,11 @@ public class HttpServerTest extends Http.Module {
 
   @SuppressWarnings("unused")
   private void testCase02(Http.Exchange http) {
-    http.methodMatrix(Http.GET, this::testCase02Get);
+    switch (http.method()) {
+      case Http.GET, Http.HEAD -> testCase02Get(http);
+
+      default -> http.methodNotAllowed();
+    }
   }
 
   private void testCase02Get(Http.Exchange http) {
@@ -172,10 +180,13 @@ public class HttpServerTest extends Http.Module {
 
   @SuppressWarnings("unused")
   private void testCase03(Http.Exchange http) {
-    http.methodMatrix(
-        Http.GET, this::testCase03Get,
-        Http.POST, this::testCase03Post
-    );
+    switch (http.method()) {
+      case Http.GET, Http.HEAD -> testCase03Get(http);
+
+      case Http.POST -> testCase03Post(http);
+
+      default -> http.methodNotAllowed();
+    }
   }
 
   private void testCase03Get(Http.Exchange http) {
@@ -278,10 +289,13 @@ public class HttpServerTest extends Http.Module {
 
   @SuppressWarnings("unused")
   private void testCase04(Http.Exchange http) {
-    http.methodMatrix(
-        Http.GET, this::testCase04Get,
-        Http.POST, this::testCase04Post
-    );
+    switch (http.method()) {
+      case Http.GET -> testCase04Get(http);
+
+      case Http.POST -> testCase04Post(http);
+
+      default -> http.methodNotAllowed();
+    }
   }
 
   private void testCase04Get(Http.Exchange http) {

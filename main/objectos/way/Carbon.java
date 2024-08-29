@@ -456,24 +456,30 @@ public final class Carbon extends CarbonComponents {
 
     @Override
     protected final void configure() {
-      route("/ui/script.js", Http.GET, this::script);
+      route("/ui/script.js", this::script);
 
       CarbonStyles styles;
       styles = new CarbonStyles(classes);
 
-      route("/ui/carbon.css", Http.GET, styles);
+      route("/ui/carbon.css", styles);
     }
 
     private void script(Http.Exchange http) {
-      http.status(Http.OK);
+      switch (http.method()) {
+        case Http.GET -> {
+          http.status(Http.OK);
 
-      http.dateNow();
+          http.dateNow();
 
-      http.header(Http.CONTENT_TYPE, "text/javascript; charset=utf-8");
+          http.header(Http.CONTENT_TYPE, "text/javascript; charset=utf-8");
 
-      http.header(Http.CONTENT_LENGTH, script.length);
+          http.header(Http.CONTENT_LENGTH, script.length);
 
-      http.send(script);
+          http.send(script);
+        }
+
+        default -> http.methodNotAllowed();
+      }
     }
 
   }

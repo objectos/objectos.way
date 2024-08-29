@@ -203,7 +203,7 @@ class HttpRequestHeaders extends HttpRequestLine implements Http.Request.Headers
 
   static {
     int size;
-    size = HttpHeaderName.standardNamesSize();
+    size = Http.headerNameSize();
 
     byte[][] map;
     map = new byte[size][];
@@ -257,7 +257,7 @@ class HttpRequestHeaders extends HttpRequestLine implements Http.Request.Headers
   }
 
   private void parseHeaderName0(Http.HeaderName c0, Http.HeaderName c1, Http.HeaderName c2,
-                                Http.HeaderName c3) {
+      Http.HeaderName c3) {
     parseHeaderName0(c0);
 
     if (headerName != null) {
@@ -319,7 +319,7 @@ class HttpRequestHeaders extends HttpRequestLine implements Http.Request.Headers
     if (startIndex > endIndex) {
       // value has negative length... is it possible?
       hexDump();
-      
+
       throw new UnsupportedOperationException("Implement me");
     }
 
@@ -391,7 +391,7 @@ class HttpRequestHeaders extends HttpRequestLine implements Http.Request.Headers
       // value ends at the CR of the line end CRLF
       end = end - 1;
     }
-    
+
     if (end != startIndex) {
 
       byte maybeOWS;

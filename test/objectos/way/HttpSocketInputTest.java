@@ -34,6 +34,8 @@ public class HttpSocketInputTest {
   Connection: close
   """)
   public void testCase001() throws IOException {
+    Http.init();
+
     HttpSocketInput input;
     input = regularInput("""
     GET / HTTP/1.1\r
@@ -48,7 +50,7 @@ public class HttpSocketInputTest {
     assertEquals(input.parseStatus, ParseStatus.NORMAL);
     assertEquals(hasNext(input), true);
     assertEquals(peek(input), 'G');
-    assertEquals(input.matches(HttpRequestLine.STD_METHOD_BYTES[Http.GET.index()]), true);
+    assertEquals(input.matches("GET ".getBytes(StandardCharsets.UTF_8)), true);
     assertEquals(peek(input), '/');
     assertEquals(input.bufferIndex, 4);
     assertEquals(input.indexOf(Bytes.QUESTION_MARK, Bytes.SP), 5);
@@ -131,7 +133,7 @@ public class HttpSocketInputTest {
       Files.delete(file);
     }
   }
-  
+
   @Test(description = """
   It should properly handle EOF on subsequent request line
   """)
@@ -146,7 +148,7 @@ public class HttpSocketInputTest {
     assertEquals(input.parseStatus, ParseStatus.NORMAL);
     assertEquals(hasNext(input), true);
     assertEquals(peek(input), 'G');
-    assertEquals(input.matches(HttpRequestLine.STD_METHOD_BYTES[Http.GET.index()]), true);
+    assertEquals(input.matches("GET ".getBytes(StandardCharsets.UTF_8)), true);
     assertEquals(peek(input), '/');
     assertEquals(input.bufferIndex, 4);
     assertEquals(input.indexOf(Bytes.QUESTION_MARK, Bytes.SP), 5);
@@ -195,7 +197,7 @@ public class HttpSocketInputTest {
 
     assertEquals(res, "GET /abcdefghijklmnopqrstuvwxyz HTTP/1.1\r");
   }
-  
+
   @Test(description = "It should be possible to serialize contents for debugging purposes")
   public void hexDump() throws IOException {
     HttpSocketInput input;
@@ -205,7 +207,7 @@ public class HttpSocketInputTest {
     Connection: close\r
     \r
     """);
-    
+
     input.noteSink(TestingNoteSink.INSTANCE);
 
     input.parseLine();

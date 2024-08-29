@@ -15,8 +15,6 @@
  */
 package testing.site.carbon;
 
-import static objectos.way.Http.GET;
-
 import objectos.way.Carbon;
 import objectos.way.Http;
 import objectos.way.Web;
@@ -54,17 +52,17 @@ public final class CarbonWeb extends Web.Module {
 
     filter(sessionStore::filter);
 
-    route("/", GET, f(Index::new));
-    route("/components", GET, f(Components::new));
-    route("/components/button", GET, f(ComponentsButton::new));
-    route("/components/data-table", GET, f(ComponentsDataTable::new));
-    route("/components/grid", GET, f(ComponentsGrid::new));
-    route("/components/link", GET, f(ComponentsLink::new));
-    route("/components/page-header", GET, f(ComponentsPageHeader::new));
-    route("/components/progress-indicator", GET, f(ComponentsProgressIndicator::new));
-    route("/components/tearsheet", GET, f(ComponentsTearsheet::new));
-    route("/components/tile", GET, f(ComponentsTile::new));
-    route("/components/typography", GET, f(ComponentsTypography::new));
+    route("/", f(Index::new));
+    route("/components", f(Components::new));
+    route("/components/button", f(ComponentsButton::new));
+    route("/components/data-table", f(ComponentsDataTable::new));
+    route("/components/grid", f(ComponentsGrid::new));
+    route("/components/link", f(ComponentsLink::new));
+    route("/components/page-header", f(ComponentsPageHeader::new));
+    route("/components/progress-indicator", f(ComponentsProgressIndicator::new));
+    route("/components/tearsheet", f(ComponentsTearsheet::new));
+    route("/components/tile", f(ComponentsTile::new));
+    route("/components/typography", f(ComponentsTypography::new));
   }
 
 }

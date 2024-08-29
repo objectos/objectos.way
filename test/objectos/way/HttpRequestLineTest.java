@@ -40,7 +40,7 @@ public class HttpRequestLineTest {
     line.parseRequestLine();
 
     // method
-    Http.Request.Method method;
+    byte method;
     method = line.method;
 
     assertEquals(method, Http.GET);
@@ -75,7 +75,7 @@ public class HttpRequestLineTest {
     line.parseRequestLine();
 
     // method
-    Http.Request.Method method;
+    byte method;
     method = line.method;
 
     assertEquals(method, Http.GET);
@@ -106,7 +106,7 @@ public class HttpRequestLineTest {
 
     line.parseRequestLine();
 
-    assertEquals(line.method, null);
+    assertEquals(line.method, 0);
     assertEquals(line.parseStatus.isError(), true);
   }
 

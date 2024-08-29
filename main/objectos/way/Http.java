@@ -89,77 +89,10 @@ public final class Http {
      */
     <T> T get(Class<T> key);
 
-    // request
-
     // response
 
     default void accept(Handler handler) {
       handler.handle(this);
-    }
-
-    default void methodMatrix(Request.Method method, Handler handler) {
-      Check.notNull(method, "method == null");
-      Check.notNull(handler, "handler == null");
-
-      Request.Method actual;
-      actual = method();
-
-      if (handles(method, actual)) {
-        handler.handle(this);
-      } else {
-        methodNotAllowed();
-      }
-    }
-
-    default void methodMatrix(Request.Method method1, Handler handler1,
-        Request.Method method2, Handler handler2) {
-      Check.notNull(method1, "method1 == null");
-      Check.notNull(handler1, "handler1 == null");
-      Check.notNull(method2, "method2 == null");
-      Check.notNull(handler2, "handler2 == null");
-
-      Request.Method actual;
-      actual = method();
-
-      if (handles(method1, actual)) {
-        handler1.handle(this);
-      } else if (handles(method2, actual)) {
-        handler2.handle(this);
-      } else {
-        methodNotAllowed();
-      }
-    }
-
-    default void methodMatrix(Request.Method method1, Handler handler1,
-        Request.Method method2, Handler handler2,
-        Request.Method method3, Handler handler3) {
-      Check.notNull(method1, "method1 == null");
-      Check.notNull(handler1, "handler1 == null");
-      Check.notNull(method2, "method2 == null");
-      Check.notNull(handler2, "handler2 == null");
-      Check.notNull(method3, "method3 == null");
-      Check.notNull(handler3, "handler3 == null");
-
-      Request.Method actual;
-      actual = method();
-
-      if (handles(method1, actual)) {
-        handler1.handle(this);
-      } else if (handles(method2, actual)) {
-        handler2.handle(this);
-      } else if (handles(method3, actual)) {
-        handler3.handle(this);
-      } else {
-        methodNotAllowed();
-      }
-    }
-
-    private boolean handles(Request.Method method, Request.Method actual) {
-      if (method.is(Http.GET)) {
-        return actual.is(Http.GET, Http.HEAD);
-      } else {
-        return actual.is(method);
-      }
     }
 
     void status(Response.Status status);
@@ -485,51 +418,6 @@ public final class Http {
     }
 
     /**
-     * The method of an HTTP request message.
-     */
-    public sealed interface Method permits HttpRequestMethod {
-
-      /**
-       * Tests if this method is the same as the specified method.
-       *
-       * @param method
-       *        the method to test against this method
-       *
-       * @return {@code true} if this method is the same as the specified
-       *         method, {@code false} otherwise
-       */
-      boolean is(Method method);
-
-      /**
-       * Tests if this method is the same as one of the two specified methods.
-       *
-       * @param method1
-       *        the first method to test against this method
-       * @param method2
-       *        the second method to test against this method
-       *
-       * @return {@code true} if this method is the same as first or the second
-       *         specified methods, {@code false} otherwise
-       */
-      boolean is(Method method1, Method method2);
-
-      /**
-       * The index of this method.
-       *
-       * @return the index of this method.
-       */
-      int index();
-
-      /**
-       * The name of this method.
-       *
-       * @return the name of this method.
-       */
-      String text();
-
-    }
-
-    /**
      * The request-target of an HTTP request message.
      *
      * <p>
@@ -619,11 +507,11 @@ public final class Http {
     Headers headers();
 
     /**
-     * The method of this request message.
+     * The code of the method of this request message.
      *
-     * @return the method of this request message
+     * @return the code of the method of this request message
      */
-    Method method();
+    byte method();
 
     /**
      * The request-target of this HTTP request message.
@@ -893,49 +781,49 @@ public final class Http {
   // Request constants
 
   /**
-   * The CONNECT method.
+   * The CONNECT method code.
    */
-  public static final Request.Method CONNECT = HttpRequestMethod.create("CONNECT");
+  public static final byte CONNECT = 1;
 
   /**
-   * The DELETE method.
+   * The DELETE method code.
    */
-  public static final Request.Method DELETE = HttpRequestMethod.create("DELETE");
+  public static final byte DELETE = 2;
 
   /**
-   * The GET method.
+   * The GET method code.
    */
-  public static final Request.Method GET = HttpRequestMethod.create("GET");
+  public static final byte GET = 3;
 
   /**
-   * The HEAD method.
+   * The HEAD method code.
    */
-  public static final Request.Method HEAD = HttpRequestMethod.create("HEAD");
+  public static final byte HEAD = 4;
 
   /**
-   * The OPTIONS method.
+   * The OPTIONS method code.
    */
-  public static final Request.Method OPTIONS = HttpRequestMethod.create("OPTIONS");
+  public static final byte OPTIONS = 5;
 
   /**
-   * The PATCH method.
+   * The PATCH method code.
    */
-  public static final Request.Method PATCH = HttpRequestMethod.create("PATCH");
+  public static final byte PATCH = 6;
 
   /**
-   * The POST method.
+   * The POST method code.
    */
-  public static final Request.Method POST = HttpRequestMethod.create("POST");
+  public static final byte POST = 7;
 
   /**
-   * The PUT method.
+   * The PUT method code.
    */
-  public static final Request.Method PUT = HttpRequestMethod.create("PUT");
+  public static final byte PUT = 8;
 
   /**
-   * The TRACE method.
+   * The TRACE method code.
    */
-  public static final Request.Method TRACE = HttpRequestMethod.createLast("TRACE");
+  public static final byte TRACE = 9;
 
   // Response constants
 
@@ -1288,6 +1176,10 @@ public final class Http {
 
   // utils
 
+  static void init() {
+
+  }
+
   private static final DateTimeFormatter IMF_FIXDATE;
 
   static {
@@ -1393,6 +1285,10 @@ public final class Http {
 
   static byte[] utf8(String value) {
     return value.getBytes(StandardCharsets.UTF_8);
+  }
+
+  static int headerNameSize() {
+    return HttpHeaderName.standardNamesSize();
   }
 
 }

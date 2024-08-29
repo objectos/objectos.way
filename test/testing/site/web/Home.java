@@ -28,7 +28,11 @@ final class Home extends WebTemplate implements Http.Handler {
 
   @Override
   public final void handle(Http.Exchange http) {
-    http.methodMatrix(Http.GET, this::get);
+    switch (http.method()) {
+      case Http.GET, Http.HEAD -> get(http);
+
+      default -> http.methodNotAllowed();
+    }
   }
 
   // GET
@@ -41,6 +45,7 @@ final class Home extends WebTemplate implements Http.Handler {
     http.ok(this);
   }
 
+  @Override
   final void bodyImpl() {
     dataFrame("root", "shell");
 

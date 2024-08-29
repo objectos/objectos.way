@@ -34,10 +34,13 @@ final class Login extends WebTemplate implements Http.Handler {
 
   @Override
   public final void handle(Http.Exchange http) {
-    http.methodMatrix(
-        Http.GET, this::get,
-        Http.POST, this::post
-    );
+    switch (http.method()) {
+      case Http.GET, Http.HEAD -> get(http);
+
+      case Http.POST -> post(http);
+
+      default -> http.methodNotAllowed();
+    }
   }
 
   // GET

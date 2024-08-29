@@ -21,8 +21,6 @@ import java.util.Map;
 import objectos.lang.CharWritable;
 import objectos.lang.object.Check;
 import objectos.util.map.GrowableMap;
-import objectos.way.Http.HeaderName;
-import objectos.way.Http.Response.Status;
 
 final class HttpTestingExchange implements Http.TestingExchange {
 
@@ -31,17 +29,17 @@ final class HttpTestingExchange implements Http.TestingExchange {
   Http.Request.Target requestTarget;
 
   @Override
-  public final Body body() {
+  public final Http.Request.Body body() {
     throw new UnsupportedOperationException();
   }
 
   @Override
-  public final Headers headers() {
+  public final Http.Request.Headers headers() {
     throw new UnsupportedOperationException();
   }
 
   @Override
-  public final Method method() {
+  public final byte method() {
     throw new UnsupportedOperationException();
   }
 
@@ -75,12 +73,12 @@ final class HttpTestingExchange implements Http.TestingExchange {
   }
 
   @Override
-  public void header(HeaderName name, long value) {
+  public void header(Http.HeaderName name, long value) {
     throw new UnsupportedOperationException();
   }
 
   @Override
-  public void header(HeaderName name, String value) {
+  public void header(Http.HeaderName name, String value) {
     throw new UnsupportedOperationException();
   }
 
@@ -130,7 +128,7 @@ final class HttpTestingExchange implements Http.TestingExchange {
   }
 
   @Override
-  public void status(Status arg0) {
+  public void status(Http.Response.Status value) {
     throw new UnsupportedOperationException();
   }
 
