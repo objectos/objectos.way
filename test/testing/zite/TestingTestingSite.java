@@ -32,9 +32,9 @@ import objectos.notes.Level;
 import objectos.notes.NoteSink;
 import objectos.notes.impl.ConsoleNoteSink;
 import objectos.way.Http.Exchange;
+import testing.site.Stage;
 import objectos.way.WayTestingServerExchange;
 import objectos.way.Web;
-import objectos.web.Stage;
 
 public final class TestingTestingSite {
 

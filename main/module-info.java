@@ -23,7 +23,6 @@ module objectos.way {
   exports objectos.lang.classloader;
   exports objectos.notes.impl;
   exports objectos.way;
-  exports objectos.web;
 
   requires transitive objectos.notes;
   requires transitive java.sql;

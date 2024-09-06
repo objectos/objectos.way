@@ -17,7 +17,7 @@ package testing.zite;
 
 import objectos.notes.NoteSink;
 import objectos.way.Web;
-import objectos.web.Stage;
+import testing.site.Stage;
 
 public record TestingSiteInjector(NoteSink noteSink,
                                   Web.Store sessionStore,

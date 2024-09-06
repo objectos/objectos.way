@@ -29,15 +29,14 @@ import objectos.args.PathOption;
 import objectos.lang.WayShutdownHook;
 import objectos.lang.classloader.ClassReloader;
 import objectos.notes.Level;
-import objectos.notes.Note2;
+import objectos.notes.Note1;
 import objectos.notes.NoteSink;
 import objectos.notes.impl.ConsoleNoteSink;
+import objectos.way.App;
 import objectos.way.HandlerFactory;
 import objectos.way.Http;
 import objectos.way.Script;
 import objectos.way.Web;
-import objectos.web.BootstrapException;
-import objectos.web.Stage;
 import testing.zite.TestingSiteInjector;
 
 public class TestingSite {
@@ -104,12 +103,12 @@ public class TestingSite {
   final void start() {
     try {
       bootstrap();
-    } catch (BootstrapException e) {
+    } catch (Exception e) {
       fail(e);
     }
   }
 
-  private void bootstrap() throws BootstrapException {
+  private void bootstrap() {
     Stage stage;
     stage = stageOption.get();
 
@@ -150,7 +149,7 @@ public class TestingSite {
           Web.serveFile("/common/way.js", Script.getBytes())
       );
     } catch (IOException e) {
-      throw new BootstrapException("WebResources", e);
+      throw App.serviceFailed("WebResources", e);
     }
 
     shutdownHook.addAutoCloseable(webResources);
@@ -172,7 +171,7 @@ public class TestingSite {
         try {
           watchService = fileSystem.newWatchService();
         } catch (IOException e) {
-          throw new BootstrapException("WatchService", e);
+          throw App.serviceFailed("WatchService", e);
         }
 
         shutdownHook.addAutoCloseable(watchService);
@@ -196,7 +195,7 @@ public class TestingSite {
 
           shutdownHook.addAutoCloseable(classReloader);
         } catch (IOException e) {
-          throw new BootstrapException("ClassReloader", e);
+          throw App.serviceFailed("ClassReloader", e);
         }
 
         handlerFactory = new DevHandlerFactory(classReloader, injector);
@@ -235,7 +234,7 @@ public class TestingSite {
 
       httpServer.start();
     } catch (IOException e) {
-      throw new BootstrapException("WebServer", e);
+      throw App.serviceFailed("WebServer", e);
     }
   }
 
@@ -243,20 +242,17 @@ public class TestingSite {
     throw new UnsupportedOperationException();
   }
 
-  private void fail(BootstrapException e) {
+  private void fail(Exception e) {
     NoteSink noteSink;
     noteSink = new ConsoleNoteSink(Level.ERROR);
 
-    Note2<String, Throwable> note;
-    note = Note2.error(TestingSite.class, "Bootstrap failed [service]");
-
-    String service;
-    service = e.getMessage();
+    Note1<Throwable> note;
+    note = Note1.error(TestingSite.class, "Bootstrap failed");
 
     Throwable error;
     error = e.getCause();
 
-    noteSink.send(note, service, error);
+    noteSink.send(note, error);
 
     System.exit(2);
   }

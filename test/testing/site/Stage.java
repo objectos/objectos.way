@@ -13,14 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.web;
+package testing.site;
 
-public class BootstrapException extends Exception {
+public enum Stage {
 
-  private static final long serialVersionUID = 400362902157038967L;
+  DEVELOPMENT,
 
-  public BootstrapException(String message, Throwable cause) {
-    super(message, cause);
-  }
+  TESTING,
+
+  PRODUCTION;
 
 }
