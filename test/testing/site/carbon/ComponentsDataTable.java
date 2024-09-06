@@ -39,7 +39,8 @@ final class ComponentsDataTable extends CarbonPage {
         )
     );
 
-    carbon.gridWide(
+    carbon.grid(
+        Carbon.WIDE,
         carbon.gridColumns(1), carbon.gap(Carbon.SPACING_05),
 
         h2(

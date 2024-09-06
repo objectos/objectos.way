@@ -487,58 +487,6 @@ abstract class CarbonComponents {
     return size.index();
   }
 
-  //
-  // Grid
-  //
-
-  private static final Html.ClassName __GRID = Html.classText("""
-      mx-auto grid w-full max-w-screen-max
-      md:px-16px
-      max:px-24px
-      """);
-
-  private static final Html.ClassName __GRID_WIDE = Html.classText("""
-      *:mx-16px
-      """);
-
-  private static final Html.ClassName __GRID_NARROW = Html.classText("""
-      *:mr-16px
-      """);
-
-  private static final Html.ClassName __GRID_CONDENSED = Html.classText("""
-      *:mx-0.5px
-      """);
-
-  public static final Html.ClassName GRID_CONDENSED = Html.className(__GRID, __GRID_CONDENSED);
-
-  public static final Html.ClassName GRID_NARROW = Html.className(__GRID, __GRID_NARROW);
-
-  public static final Html.ClassName GRID_WIDE = Html.className(__GRID, __GRID_WIDE);
-
-  public final Html.ElementInstruction gridCondensed(Html.Instruction... contents) {
-    return tmpl.div(
-        GRID_CONDENSED,
-
-        tmpl.flatten(contents)
-    );
-  }
-
-  public final Html.ElementInstruction gridNarrow(Html.Instruction... contents) {
-    return tmpl.div(
-        GRID_NARROW,
-
-        tmpl.flatten(contents)
-    );
-  }
-
-  public final Html.ElementInstruction gridWide(Html.Instruction... contents) {
-    return tmpl.div(
-        GRID_WIDE,
-
-        tmpl.flatten(contents)
-    );
-  }
-
   private static final String[][] GRID_COLUMNS = {
       {"grid-cols-1", "grid-cols-2", "grid-cols-3", "grid-cols-4", "grid-cols-5", "grid-cols-6",
           "grid-cols-7", "grid-cols-8", "grid-cols-9", "grid-cols-10", "grid-cols-11", "grid-cols-12"},
@@ -947,7 +895,7 @@ abstract class CarbonComponents {
 
   public final Html.ElementInstruction pageHeaderTitleRow(Html.Instruction... contents) {
     return tmpl.div(
-        GRID_WIDE, __PAGE_HEADER_TITLE_ROW,
+        CarbonGrid.VARIANTS.get(Carbon.WIDE), __PAGE_HEADER_TITLE_ROW,
 
         tmpl.flatten(contents)
     );

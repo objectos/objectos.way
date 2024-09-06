@@ -41,7 +41,8 @@ final class ComponentsTile extends CarbonPage {
 
     //
 
-    carbon.gridWide(
+    carbon.grid(
+        Carbon.WIDE,
         carbon.gridColumns(1),
 
         h2(
@@ -51,7 +52,8 @@ final class ComponentsTile extends CarbonPage {
         )
     );
 
-    carbon.gridWide(
+    carbon.grid(
+        Carbon.WIDE,
         carbon.gridColumns(2, Carbon.MD, 4),
         carbon.gap(Carbon.SPACING_03),
 

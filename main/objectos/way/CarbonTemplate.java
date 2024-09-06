@@ -29,15 +29,15 @@ abstract class CarbonTemplate extends Html.Template implements Http.Handler {
   public final void handle(Http.Exchange http) {
     this.http = http;
 
+    handle();
+  }
+
+  protected void handle() {
     switch (http.method()) {
       case Http.GET, Http.HEAD -> http.ok(this);
 
-      default -> handleMore();
+      default -> http.methodNotAllowed();
     }
-  }
-
-  protected void handleMore() {
-    http.methodNotAllowed();
   }
 
   /**

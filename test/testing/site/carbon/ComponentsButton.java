@@ -89,7 +89,8 @@ final class ComponentsButton extends CarbonPage {
   }
 
   private void renderButtons(String title, Carbon.ButtonVariant variant, String label) {
-    carbon.gridWide(
+    carbon.grid(
+        Carbon.WIDE,
         carbon.gridColumns(1),
 
         h2(
@@ -99,7 +100,8 @@ final class ComponentsButton extends CarbonPage {
         )
     );
 
-    carbon.gridWide(
+    carbon.grid(
+        Carbon.WIDE,
         carbon.gridColumns(2, Carbon.MD, 3, Carbon.MAX, 6),
         carbon.gap(Carbon.SPACING_03),
         className("*:self-start"),
@@ -121,7 +123,8 @@ final class ComponentsButton extends CarbonPage {
   }
 
   private void renderWithIcon(String title, Carbon.ButtonVariant variant, String label, Carbon.Icon icon) {
-    carbon.gridWide(
+    carbon.grid(
+        Carbon.WIDE,
         carbon.gridColumns(1),
 
         h2(
@@ -131,7 +134,8 @@ final class ComponentsButton extends CarbonPage {
         )
     );
 
-    carbon.gridWide(
+    carbon.grid(
+        Carbon.WIDE,
         carbon.gridColumns(2, Carbon.MD, 3, Carbon.MAX, 6),
         carbon.gap(Carbon.SPACING_03),
         className("*:self-start"),
@@ -153,7 +157,8 @@ final class ComponentsButton extends CarbonPage {
   }
 
   private void renderIconOnly(String title, Carbon.ButtonVariant variant, Carbon.Icon icon) {
-    carbon.gridWide(
+    carbon.grid(
+        Carbon.WIDE,
         carbon.gridColumns(1),
 
         h2(
@@ -163,7 +168,8 @@ final class ComponentsButton extends CarbonPage {
         )
     );
 
-    carbon.gridWide(
+    carbon.grid(
+        Carbon.WIDE,
         carbon.gridColumns(2, Carbon.MD, 3, Carbon.MAX, 6),
         carbon.gap(Carbon.SPACING_03),
         className("*:self-start"),

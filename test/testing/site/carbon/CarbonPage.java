@@ -73,6 +73,7 @@ abstract class CarbonPage extends Carbon.Template {
     List<Carbon.MenuElement> sideNavItems = List.of(
         Carbon.menuLink("Button", "/components/button", this::currentPage, closeMenu),
         Carbon.menuLink("Data table", "/components/data-table", this::currentPage, closeMenu),
+        Carbon.menuLink("Form", "/components/form", this::currentPage, closeMenu),
         Carbon.menuLink("Grid", "/components/grid", this::currentPage, closeMenu),
         Carbon.menuLink("Link", "/components/link", this::currentPage, closeMenu),
         Carbon.menuLink("Page header", "/components/page-header", this::currentPage, closeMenu),

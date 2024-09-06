@@ -17,7 +17,7 @@ package testing.site.carbon;
 
 import objectos.way.Carbon;
 
-final class ComponentsLink extends CarbonPage {
+final class ComponentsForm extends CarbonPage {
 
   @Override
   protected final void preRender() {
@@ -26,7 +26,7 @@ final class ComponentsLink extends CarbonPage {
 
   @Override
   protected final void renderHead() {
-    title("Link - Objectos Carbon");
+    title("Form - Objectos Carbon");
   }
 
   @Override
@@ -35,28 +35,7 @@ final class ComponentsLink extends CarbonPage {
         Carbon.PAGE_HEADER_TITLE_ONLY,
 
         carbon.pageHeaderTitleRow(
-            carbon.pageHeaderTitle("Link")
-        )
-    );
-
-    carbon.grid(
-        Carbon.WIDE,
-        carbon.gridColumns(2, Carbon.MD, 3, Carbon.MAX, 6),
-
-        div(
-            carbon.link(Carbon.LINK_STANDARD, "Link", "https://www.objectos.com.br")
-        ),
-
-        div(
-            carbon.link(Carbon.LINK_VISITED, "Link visited", "https://www.objectos.com.br")
-        ),
-
-        div(
-            carbon.link(Carbon.LINK_INLINE, "Link inline", "https://www.objectos.com.br")
-        ),
-
-        div(
-            carbon.link(Carbon.LINK_INLINE_VISITED, "Link inline-visited", "https://www.objectos.com.br")
+            carbon.pageHeaderTitle("Form")
         )
     );
   }

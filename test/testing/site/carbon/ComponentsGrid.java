@@ -39,8 +39,8 @@ final class ComponentsGrid extends CarbonPage {
         )
     );
 
-    carbon.gridWide(
-        carbon.gridColumns(1),
+    carbon.grid(
+        Carbon.WIDE, carbon.gridColumns(1),
 
         h2(
             Carbon.HEADING_03,
@@ -49,8 +49,8 @@ final class ComponentsGrid extends CarbonPage {
         )
     );
 
-    carbon.gridWide(
-        carbon.gridColumns(1, Carbon.MD, 2, Carbon.LG, 4),
+    carbon.grid(
+        Carbon.WIDE, carbon.gridColumns(1, Carbon.MD, 2, Carbon.LG, 4),
 
         div(
             className("aspect-2x1 tile"),
@@ -77,8 +77,8 @@ final class ComponentsGrid extends CarbonPage {
         )
     );
 
-    carbon.gridWide(
-        carbon.gridColumns(1),
+    carbon.grid(
+        Carbon.WIDE, carbon.gridColumns(1),
 
         h2(
             Carbon.HEADING_03,
@@ -87,8 +87,8 @@ final class ComponentsGrid extends CarbonPage {
         )
     );
 
-    carbon.gridNarrow(
-        carbon.gridColumns(1, Carbon.MD, 2, Carbon.LG, 4),
+    carbon.grid(
+        Carbon.NARROW, carbon.gridColumns(1, Carbon.MD, 2, Carbon.LG, 4),
 
         div(
             className("aspect-2x1 tile"),
@@ -115,8 +115,8 @@ final class ComponentsGrid extends CarbonPage {
         )
     );
 
-    carbon.gridWide(
-        carbon.gridColumns(1),
+    carbon.grid(
+        Carbon.WIDE, carbon.gridColumns(1),
 
         h2(
             Carbon.HEADING_03,
@@ -125,8 +125,8 @@ final class ComponentsGrid extends CarbonPage {
         )
     );
 
-    carbon.gridCondensed(
-        carbon.gridColumns(1, Carbon.MD, 2, Carbon.LG, 4),
+    carbon.grid(
+        Carbon.CONDENSED, carbon.gridColumns(1, Carbon.MD, 2, Carbon.LG, 4),
 
         div(
             className("aspect-2x1 tile"),

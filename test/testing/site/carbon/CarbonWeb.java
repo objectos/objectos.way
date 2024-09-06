@@ -56,6 +56,7 @@ public final class CarbonWeb extends Web.Module {
     route("/components", f(Components::new));
     route("/components/button", f(ComponentsButton::new));
     route("/components/data-table", f(ComponentsDataTable::new));
+    route("/components/form", f(ComponentsForm::new));
     route("/components/grid", f(ComponentsGrid::new));
     route("/components/link", f(ComponentsLink::new));
     route("/components/page-header", f(ComponentsPageHeader::new));

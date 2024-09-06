@@ -15,14 +15,59 @@
  */
 package testing.site.carbon;
 
+import java.io.IOException;
 import objectos.way.Carbon;
 import objectos.way.Html;
+import objectos.way.Http;
 
 final class ComponentsTearsheet extends CarbonPage {
+
+  private static final String EXAMPLE = "example";
 
   private static final Html.Id SHEET_01 = Html.id("tearsheet-01");
 
   private static final Html.Id SHEET_01_MODAL = Html.id("tearsheet-01-modal");
+
+  @Override
+  protected final void handle() {
+    switch (http.method()) {
+      case Http.GET, Http.HEAD -> get();
+
+      case Http.POST -> post();
+
+      default -> http.methodNotAllowed();
+    }
+  }
+
+  private void get() {
+    http.ok(this);
+  }
+
+  private void post() {
+    try {
+      Http.FormUrlEncoded form;
+      form = Http.parseFormUrlEncoded(http);
+
+      String step;
+      step = form.getOrDefault(EXAMPLE, "");
+
+      switch (step) {
+        case "01" -> postExample01(form);
+
+        default -> http.unprocessableContent();
+      }
+
+      http.ok(this);
+    } catch (IOException e) {
+      http.internalServerError(e);
+    } catch (Http.UnsupportedMediaTypeException e) {
+      http.unsupportedMediaType();
+    }
+  }
+
+  private void postExample01(Http.FormUrlEncoded form) {
+
+  }
 
   @Override
   protected final void preRender() {
@@ -44,7 +89,8 @@ final class ComponentsTearsheet extends CarbonPage {
         )
     );
 
-    carbon.gridWide(
+    carbon.grid(
+        Carbon.WIDE,
         carbon.gridColumns(2), carbon.gap(Carbon.SPACING_05),
 
         h2(

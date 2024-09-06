@@ -60,6 +60,36 @@ public final class Carbon extends CarbonComponents {
   public sealed interface DataTableSize {}
 
   /**
+   * A grid variant.
+   */
+  public sealed interface GridVariant {}
+
+  enum CarbonGridVariant implements GridVariant {
+
+    WIDE,
+
+    NARROW,
+
+    CONDENSED;
+
+  }
+
+  /**
+   * The {@code wide} grid variant.
+   */
+  public static final GridVariant WIDE = CarbonGridVariant.WIDE;
+
+  /**
+   * The {@code narrow} grid variant.
+   */
+  public static final GridVariant NARROW = CarbonGridVariant.NARROW;
+
+  /**
+   * The {@code condensed} grid variant.
+   */
+  public static final GridVariant CONDENSED = CarbonGridVariant.CONDENSED;
+
+  /**
    * An icon.
    */
   public enum Icon {
@@ -622,7 +652,7 @@ public final class Carbon extends CarbonComponents {
   // B
   //
 
-  public final Html.ElementInstruction button(Carbon.ButtonVariant variant, Carbon.ButtonSize size, Html.Instruction... contents) {
+  public final Html.ElementInstruction button(ButtonVariant variant, ButtonSize size, Html.Instruction... contents) {
     Check.notNull(variant, "variant == null");
     Check.notNull(size, "size == null");
 
@@ -640,6 +670,30 @@ public final class Carbon extends CarbonComponents {
     boolean iconOnly = readIconOnly();
 
     return CarbonButton.button(tmpl, renderAs, thisVariant, thisSize, icon, iconOnly, contents);
+  }
+
+  //
+  // G
+  //
+
+  public final Html.ElementInstruction grid(GridVariant variant, Html.Instruction... contents) {
+    Check.notNull(variant, "variant == null");
+
+    return grid0(Html.ElementName.DIV, variant, contents);
+  }
+
+  public final Html.ElementInstruction grid(Html.ElementName renderAs, GridVariant variant, Html.Instruction... contents) {
+    Check.notNull(renderAs, "renderAs == null");
+    Check.notNull(variant, "variant == null");
+
+    return grid0(renderAs, variant, contents);
+  }
+
+  private Html.ElementInstruction grid0(Html.ElementName renderAs, GridVariant variant, Html.Instruction... contents) {
+    CarbonGridVariant variantImpl;
+    variantImpl = (CarbonGridVariant) variant;
+
+    return CarbonGrid.render(tmpl, renderAs, variantImpl, contents);
   }
 
   //
