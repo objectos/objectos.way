@@ -25,6 +25,7 @@ import objectos.args.SetOption;
 import objectos.args.StringOption;
 import objectos.notes.Level;
 import objectos.notes.Note1;
+import objectos.notes.Note2;
 import objectos.notes.NoteSink;
 import objectos.notes.impl.ConsoleNoteSink;
 
@@ -33,13 +34,16 @@ import objectos.notes.impl.ConsoleNoteSink;
  */
 public final class App {
 
-  public static abstract class Bootstrap {
+  public static abstract class Bootstrap extends AppBootstrap {
 
     private final CommandLine cli = new CommandLine();
 
     protected Bootstrap() {
     }
 
+    /**
+     * Starts the application with the specified command line arguments.
+     */
     public final void start(String[] args) {
       try {
         cli.parse(args);
@@ -51,6 +55,22 @@ public final class App {
 
       try {
         bootstrap();
+      } catch (ServiceFailedException e) {
+        NoteSink noteSink;
+        noteSink = new ConsoleNoteSink(Level.ERROR);
+
+        Note2<String, Throwable> note;
+        note = Note2.error(getClass(), "Bootstrap failed [service]");
+
+        String service;
+        service = e.getMessage();
+
+        Throwable cause;
+        cause = e.getCause();
+
+        noteSink.send(note, service, cause);
+
+        System.exit(2);
       } catch (Throwable e) {
         NoteSink noteSink;
         noteSink = new ConsoleNoteSink(Level.ERROR);
@@ -58,15 +78,15 @@ public final class App {
         Note1<Throwable> note;
         note = Note1.error(getClass(), "Bootstrap failed");
 
-        Throwable error;
-        error = e.getCause();
-
-        noteSink.send(note, error);
+        noteSink.send(note, e);
 
         System.exit(2);
       }
     }
 
+    /**
+     * Bootstraps the application.
+     */
     protected abstract void bootstrap();
 
     protected final <E extends Enum<E>> EnumOption<E> newEnumOption(Class<E> type, String name) {
@@ -102,6 +122,38 @@ public final class App {
     ServiceFailedException(String message, Throwable cause) {
       super(message, cause);
     }
+
+  }
+
+  /**
+   * Represents an application command line option.
+   *
+   * @param <T> the option type
+   */
+  public sealed interface Option<T> permits AppOption {
+
+    /**
+     * An option configuration.
+     */
+    public sealed interface Configuration<T> {}
+
+    /**
+     * Converts the raw command line argument into the an instance of the target
+     * option type.
+     */
+    public interface Converter<T> {
+
+      T convert(String value);
+
+    }
+
+    T get();
+
+  }
+
+  non-sealed static abstract class OptionConfiguration<T> implements Option.Configuration<T> {
+
+    abstract void accept(AppOption<T> option);
 
   }
 
