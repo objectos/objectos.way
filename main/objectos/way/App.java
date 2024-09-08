@@ -15,14 +15,6 @@
  */
 package objectos.way;
 
-import java.util.function.Function;
-import objectos.args.CommandLine;
-import objectos.args.CommandLineException;
-import objectos.args.EnumOption;
-import objectos.args.IntegerOption;
-import objectos.args.PathOption;
-import objectos.args.SetOption;
-import objectos.args.StringOption;
 import objectos.notes.Level;
 import objectos.notes.Note1;
 import objectos.notes.Note2;
@@ -36,8 +28,6 @@ public final class App {
 
   public static abstract class Bootstrap extends AppBootstrap {
 
-    private final CommandLine cli = new CommandLine();
-
     protected Bootstrap() {
     }
 
@@ -45,10 +35,24 @@ public final class App {
      * Starts the application with the specified command line arguments.
      */
     public final void start(String[] args) {
-      try {
-        cli.parse(args);
-      } catch (CommandLineException e) {
-        e.printMessage();
+      parseArgs(args);
+
+      int messagesSize;
+      messagesSize = messagesSize();
+
+      if (messagesSize > 0) {
+        NoteSink noteSink;
+        noteSink = new ConsoleNoteSink(Level.ERROR);
+
+        Note1<String> note;
+        note = Note1.error(getClass(), "Invalid argument");
+
+        for (int idx = 0; idx < messagesSize; idx++) {
+          String msg;
+          msg = message(idx);
+
+          noteSink.send(note, msg);
+        }
 
         System.exit(1);
       }
@@ -88,26 +92,6 @@ public final class App {
      * Bootstraps the application.
      */
     protected abstract void bootstrap();
-
-    protected final <E extends Enum<E>> EnumOption<E> newEnumOption(Class<E> type, String name) {
-      return cli.newEnumOption(type, name);
-    }
-
-    protected final IntegerOption newIntegerOption(String name) {
-      return cli.newIntegerOption(name);
-    }
-
-    protected final PathOption newPathOption(String name) {
-      return cli.newPathOption(name);
-    }
-
-    protected final <T> SetOption<T> newSetOption(String string, Function<String, ? extends T> converter) {
-      return cli.newSetOption(string, converter);
-    }
-
-    protected final StringOption newStringOption(String name) {
-      return cli.newStringOption(name);
-    }
 
   }
 

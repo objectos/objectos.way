@@ -157,7 +157,7 @@ include make/java-test.mk
 #
 
 ## dev main class
-DEV_MAIN_CLASS := testing.site.TestingSite
+DEV_MAIN_CLASS := testing.site.TestingSiteDev
 
 ## dev deps
 DEV_DEPS := $(TEST_COMPILE_MARKER)
@@ -183,7 +183,6 @@ DEV_JAVAX += --add-exports $(MODULE)/objectos.util.set=ALL-UNNAMED
 DEV_JAVAX += --add-exports $(MODULE)/testing.zite=ALL-UNNAMED
 DEV_JAVAX += --module $(MODULE)/$(DEV_MAIN_CLASS)
 ## dev app args
-DEV_JAVAX += --stage DEVELOPMENT
 DEV_JAVAX += --class-output $(CLASS_OUTPUT)
 DEV_JAVAX += --test-class-output $(TEST_CLASS_OUTPUT)
 

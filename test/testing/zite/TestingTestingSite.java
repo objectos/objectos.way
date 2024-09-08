@@ -32,7 +32,6 @@ import objectos.notes.Level;
 import objectos.notes.NoteSink;
 import objectos.notes.impl.ConsoleNoteSink;
 import objectos.way.Http.Exchange;
-import testing.site.Stage;
 import objectos.way.WayTestingServerExchange;
 import objectos.way.Web;
 
@@ -83,10 +82,6 @@ public final class TestingTestingSite {
         Web.random(random)
     );
 
-    // Stage
-    Stage stage;
-    stage = Stage.TESTING;
-
     // WebResources
     Web.Resources webResources;
 
@@ -98,7 +93,7 @@ public final class TestingTestingSite {
 
     shutdownHook.addAutoCloseable(webResources);
 
-    INJECTOR = new TestingSiteInjector(noteSink, sessionStore, stage, webResources);
+    INJECTOR = new TestingSiteInjector(noteSink, sessionStore, webResources);
   }
 
   private TestingTestingSite() {}
