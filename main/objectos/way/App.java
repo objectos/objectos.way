@@ -141,6 +141,7 @@ public final class App {
      * Converts the raw command line argument into the an instance of the target
      * option type.
      */
+    @FunctionalInterface
     public interface Converter<T> {
 
       T convert(String value);

@@ -15,22 +15,36 @@
  */
 package objectos.way;
 
+import java.util.List;
 import java.util.Map;
+import java.util.function.Predicate;
+import objectos.util.list.GrowableList;
 
 final class AppOption<T> implements App.Option<T> {
 
-  private final String name;
+  private record Validator<T>(Predicate<T> predicate, String reasonPhrase) {
+    public final void accept(AppBootstrap collector, String name, T value) {
+      if (!predicate.test(value)) {
+        collector.addMessage("Invalid " + name + " value: " + reasonPhrase);
+      }
+    }
+  }
 
   private final App.Option.Converter<T> converter;
 
   private RuntimeException error;
 
+  private final String name;
+
   private boolean required;
+
+  private List<Validator<? super T>> validators;
 
   private T value;
 
   AppOption(String name, Converter<T> converter) {
     this.name = name;
+
     this.converter = converter;
   }
 
@@ -49,8 +63,6 @@ final class AppOption<T> implements App.Option<T> {
       } catch (RuntimeException e) {
         error = e;
       }
-    } else {
-      value = null;
     }
 
     return index;
@@ -63,6 +75,16 @@ final class AppOption<T> implements App.Option<T> {
     if (previous != null) {
       throw new IllegalArgumentException("Duplicate option name: " + name);
     }
+  }
+
+  final void addValidator(Predicate<T> predicate, String reasonPhrase) {
+    if (validators == null) {
+      validators = new GrowableList<>();
+    }
+
+    validators.add(
+        new Validator<>(predicate, reasonPhrase)
+    );
   }
 
   final void required() {
@@ -83,6 +105,24 @@ final class AppOption<T> implements App.Option<T> {
       message = "Missing required option: " + name;
 
       collector.addMessage(message);
+    }
+
+    if (validators != null && value != null) {
+
+      int sizeBefore;
+      sizeBefore = collector.messagesSize();
+
+      for (Validator<? super T> validator : validators) {
+        validator.accept(collector, name, value);
+      }
+
+      int sizeAfter;
+      sizeAfter = collector.messagesSize();
+
+      if (sizeAfter > sizeBefore) {
+        value = null;
+      }
+
     }
   }
 

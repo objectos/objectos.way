@@ -15,28 +15,55 @@
  */
 package objectos.way;
 
+import java.nio.file.Path;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Predicate;
+import java.util.function.Supplier;
 import objectos.lang.object.Check;
 import objectos.util.list.GrowableList;
 import objectos.util.map.GrowableMap;
-import objectos.way.App.Option.Configuration;
 
 abstract class AppBootstrap {
-
-  private static final App.Option.Converter<String> CONVERTER_STRING = s -> s;
-
-  private static final App.OptionConfiguration<Object> REQUIRED = new App.OptionConfiguration<>() {
-    @Override
-    final void accept(AppOption<Object> option) { option.required(); }
-  };
 
   private List<AppOption<?>> options;
 
   private List<String> messages;
 
+  protected final <C extends Collection<? super E>, E> App.Option.Converter<C> ofCollection(Supplier<C> supplier, App.Option.Converter<? extends E> converter) {
+    Check.notNull(converter, "conveter == null");
+
+    C collection;
+    collection = supplier.get();
+
+    return new OfCollection<>(collection, converter);
+  }
+
+  private record OfCollection<C extends Collection<? super E>, E>(C collection, App.Option.Converter<? extends E> converter) implements App.Option.Converter<C> {
+
+    @Override
+    public final C convert(String value) {
+      E convert;
+      convert = converter.convert(value);
+
+      collection.add(convert);
+
+      return collection;
+    }
+
+  }
+
+  protected final App.Option.Converter<Integer> ofInteger() {
+    return Integer::parseInt;
+  }
+
+  protected final App.Option.Converter<Path> ofPath() {
+    return Path::of;
+  }
+
   protected final App.Option.Converter<String> ofString() {
-    return CONVERTER_STRING;
+    return s -> s;
   }
 
   @SafeVarargs
@@ -60,7 +87,41 @@ abstract class AppBootstrap {
     return register(option);
   }
 
-  protected final <T> App.Option.Configuration<T> defaultValue(T value) {
+  /**
+   * Option config: sets the option to be required. In other words, the
+   * bootstrap will fail if a valid value for the option is not supplied.
+   *
+   * @return an option configuration
+   */
+  protected final <T> App.Option.Configuration<T> required() {
+    return new App.OptionConfiguration<T>() {
+      @Override
+      final void accept(AppOption<T> option) {
+        option.required();
+      }
+    };
+  }
+
+  protected final <T> App.Option.Configuration<T> withValidator(Predicate<T> predicate, String reasonPhrase) {
+    Check.notNull(predicate, "predicate == null");
+    Check.notNull(reasonPhrase, "reasonPhrase == null");
+
+    return new App.OptionConfiguration<T>() {
+      @Override
+      final void accept(AppOption<T> option) {
+        option.addValidator(predicate, reasonPhrase);
+      }
+    };
+  }
+
+  /**
+   * Option config: sets the initial value of the option to the specified value.
+   *
+   * @param value the option initial value
+   *
+   * @return an option configuration
+   */
+  protected final <T> App.Option.Configuration<T> withValue(T value) {
     Check.notNull(value, "value == null");
 
     return new App.OptionConfiguration<T>() {
@@ -71,17 +132,6 @@ abstract class AppBootstrap {
     };
   }
 
-  /**
-   * Option config: indicates that an option is required. In other words, the
-   * bootstrap fails if a valid value for the option is not supplied.
-   *
-   * @return an option configuration
-   */
-  @SuppressWarnings("unchecked")
-  protected final <T> App.Option.Configuration<T> required() {
-    return (Configuration<T>) REQUIRED;
-  }
-
   final void addMessage(String message) {
     if (messages == null) {
       messages = new GrowableList<>();
@@ -90,12 +140,12 @@ abstract class AppBootstrap {
     messages.add(message);
   }
 
-  final boolean hasMessages() {
-    return messages != null && messages.size() > 0;
-  }
-
   final String message(int index) {
     return messages == null ? null : messages.get(index);
+  }
+
+  final int messagesSize() {
+    return messages == null ? 0 : messages.size();
   }
 
   final void parseArgs(String[] args) {

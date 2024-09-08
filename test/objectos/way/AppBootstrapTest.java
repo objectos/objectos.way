@@ -16,7 +16,11 @@
 package objectos.way;
 
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertTrue;
 
+import java.nio.file.Path;
+import java.util.LinkedHashSet;
+import java.util.Set;
 import org.testng.annotations.Test;
 
 public class AppBootstrapTest {
@@ -36,7 +40,7 @@ public class AppBootstrapTest {
 
     var subject = parseArgs(new Subject(), "--test01", "foo");
 
-    assertEquals(subject.hasMessages(), false);
+    assertEquals(subject.messagesSize(), 0);
     assertEquals(subject.option.get(), "foo");
   }
 
@@ -50,7 +54,7 @@ public class AppBootstrapTest {
 
     var subject = parseArgs(new Subject(), "--test01", "foo");
 
-    assertEquals(subject.hasMessages(), true);
+    assertEquals(subject.messagesSize(), 1);
     assertEquals(subject.message(0), "Missing required option: --test02");
     assertEquals(subject.option.get(), null);
   }
@@ -60,13 +64,79 @@ public class AppBootstrapTest {
   """)
   public void testCase03() {
     class Subject extends Args {
-      final App.Option<String> option = option("--test03", ofString(), required(), defaultValue("default"));
+      final App.Option<String> option = option("--test03", ofString(), required(), withValue("default"));
     }
 
     var subject = parseArgs(new Subject(), "--test01", "foo");
 
-    assertEquals(subject.hasMessages(), false);
+    assertEquals(subject.messagesSize(), 0);
     assertEquals(subject.option.get(), "default");
+  }
+
+  @Test(description = """
+  Support custom validator
+  """)
+  public void testCase04() {
+    class Subject extends Args {
+      final App.Option<String> option = option("--test04", ofString(), withValidator(this::validateName, "name must be at least 10 characters long"));
+
+      private boolean validateName(String name) {
+        return name.length() > 10;
+      }
+    }
+
+    var subject = parseArgs(new Subject(), "--test04", "foo");
+
+    assertEquals(subject.messagesSize(), 1);
+    assertEquals(subject.message(0), "Invalid --test04 value: name must be at least 10 characters long");
+    assertEquals(subject.option.get(), null);
+  }
+
+  @Test(description = """
+  option("--foo", ofInteger())
+  """)
+  public void testCase05() {
+    class Subject extends Args {
+      final App.Option<Integer> option = option("--test05", ofInteger());
+    }
+
+    var subject = parseArgs(new Subject(), "--test05", "123");
+
+    assertEquals(subject.messagesSize(), 0);
+    assertEquals(subject.option.get(), 123);
+  }
+
+  @Test(description = """
+  option("--foo", ofPath())
+  """)
+  public void testCase06() {
+    class Subject extends Args {
+      final App.Option<Path> option = option("--test06", ofPath());
+    }
+
+    var subject = parseArgs(new Subject(), "--test06", "a/b/c.txt");
+
+    assertEquals(subject.messagesSize(), 0);
+    assertEquals(subject.option.get(), Path.of("a", "b", "c.txt"));
+  }
+
+  @Test(description = """
+  option("--foo", ofCollection())
+  """)
+  public void testCase07() {
+    class Subject extends Args {
+      final App.Option<Set<Path>> option = option("--test07", ofCollection(LinkedHashSet::new, ofPath()));
+    }
+
+    var subject = parseArgs(new Subject(), "--test07", "a.txt", "foo", "--test07", "b.txt");
+
+    assertEquals(subject.messagesSize(), 0);
+
+    Set<Path> set = subject.option.get();
+
+    assertEquals(set.size(), 2);
+    assertTrue(set.contains(Path.of("a.txt")));
+    assertTrue(set.contains(Path.of("b.txt")));
   }
 
   private <T extends Args> T parseArgs(T subject, String... args) {
