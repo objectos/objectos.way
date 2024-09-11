@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.lang.classloader;
+package objectos.way;
 
 import java.io.IOException;
 import java.io.Writer;
@@ -28,7 +28,7 @@ import javax.tools.StandardLocation;
 import javax.tools.ToolProvider;
 import objectos.util.list.GrowableList;
 
-final class ClassReloaderHelper implements AutoCloseable {
+final class AppReloaderHelper implements AutoCloseable {
 
 	private final Path root;
 	private final Path src;
@@ -39,7 +39,7 @@ final class ClassReloaderHelper implements AutoCloseable {
 
 	private final List<Path> sourceFiles = new GrowableList<>();
 
-	public ClassReloaderHelper(	Path root,
+	public AppReloaderHelper(	Path root,
 															Path src,
 															Path cls,
 															JavaCompiler javaCompiler,
@@ -51,7 +51,7 @@ final class ClassReloaderHelper implements AutoCloseable {
 		this.fileManager = fileManager;
 	}
 
-	public static ClassReloaderHelper of() throws IOException {
+	public static AppReloaderHelper of() throws IOException {
 		Path root;
 		root = Files.createTempDirectory("class-reloader-");
 
@@ -75,7 +75,7 @@ final class ClassReloaderHelper implements AutoCloseable {
 
 		fileManager.setLocationFromPaths(StandardLocation.CLASS_OUTPUT, List.of(cls));
 
-		return new ClassReloaderHelper(
+		return new AppReloaderHelper(
 				root, src, cls, javaCompiler, fileManager
 		);
 	}

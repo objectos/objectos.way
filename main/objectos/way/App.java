@@ -15,6 +15,11 @@
  */
 package objectos.way;
 
+import java.io.Closeable;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.WatchService;
 import objectos.lang.object.Check;
 import objectos.notes.Level;
 import objectos.notes.Note1;
@@ -130,6 +135,39 @@ public final class App {
   }
 
   /**
+   * Reloads the application's HTTP handler and its dependencies if changes were
+   * observed in configured directories. It is meant to be used during the
+   * development of an application.
+   */
+  public sealed interface Reloader extends Closeable permits AppReloader {
+
+    public sealed interface Option {}
+
+    /**
+     * Closes this class reloader.
+     *
+     * @throws IOException
+     *         if an I/O error occurs
+     */
+    @Override
+    void close() throws IOException;
+
+    /**
+     * Returns the class object representing the class of this reloader that is
+     * in sync with any file system change.
+     *
+     * @return the class object that is in sync with any file system change
+     *
+     * @throws ClassNotFoundException
+     *         if a class with the configured binary name could not be found
+     * @throws IOException
+     *         if an I/O error occurs
+     */
+    Class<?> get() throws ClassNotFoundException, IOException;
+
+  }
+
+  /**
    * Thrown to indicate that a particular service failed to start preventing the
    * bootstrap of the application.
    */
@@ -197,7 +235,35 @@ public final class App {
 
   }
 
+  non-sealed static class CreateOption implements Reloader.Option {
+
+    void acceptReloader(AppReloader reloader) {
+      throw new UnsupportedOperationException();
+    }
+
+  }
+
   private App() {}
+
+  public static Reloader createReloader(String binaryName, WatchService watchService, Reloader.Option... options) throws IOException {
+    Check.notNull(binaryName, "binaryName == null");
+    Check.notNull(watchService, "watchService == null");
+
+    AppReloader builder;
+    builder = new AppReloader(binaryName, watchService);
+
+    for (int i = 0; i < options.length; i++) {
+      Reloader.Option o;
+      o = Check.notNull(options[i], "options[", i, "] == null");
+
+      CreateOption option;
+      option = (CreateOption) o;
+
+      option.acceptReloader(builder);
+    }
+
+    return builder.init();
+  }
 
   public static ShutdownHook createShutdownHook(NoteSink noteSink) {
     Check.notNull(noteSink, "noteSink == null");
@@ -205,8 +271,32 @@ public final class App {
     return new AppShutdownHook(noteSink);
   }
 
+  public static Reloader.Option noteSink(NoteSink value) {
+    Check.notNull(value, "value == null");
+
+    return new CreateOption() {
+      @Override
+      final void acceptReloader(AppReloader reloader) {
+        reloader.noteSink(value);
+      }
+    };
+  }
+
   public static ServiceFailedException serviceFailed(String name, Throwable cause) {
     return new ServiceFailedException(name, cause);
+  }
+
+  public static Reloader.Option watchDirectory(Path path) {
+    if (!Files.isDirectory(path)) {
+      throw new IllegalArgumentException("Path does not represent a directory: " + path);
+    }
+
+    return new CreateOption() {
+      @Override
+      final void acceptReloader(AppReloader reloader) {
+        reloader.addDirectory(path);
+      }
+    };
   }
 
 }
