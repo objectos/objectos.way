@@ -17,6 +17,10 @@ package objectos.way;
 
 import java.io.Closeable;
 import java.io.IOException;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.WatchService;
@@ -100,6 +104,10 @@ public final class App {
     protected abstract void bootstrap();
 
   }
+
+  @Retention(RetentionPolicy.CLASS)
+  @Target(ElementType.TYPE)
+  public @interface DoNotReload {}
 
   /**
    * Represents an application command line option.

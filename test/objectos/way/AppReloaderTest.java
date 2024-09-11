@@ -93,6 +93,76 @@ public class AppReloaderTest {
     }
   }
 
+  @Test(enabled = false)
+  public void testCase02() throws Exception {
+    try (AppReloaderHelper helper = AppReloaderHelper.of()) {
+      // first subject version
+      Path subjectSrc;
+      subjectSrc = Path.of("test", "Subject.java");
+
+      helper.writeJavaFile(
+          subjectSrc,
+
+          """
+          package test;
+
+          import objectos.way.App;
+
+          @App.DoNotReload
+          public class Subject implements java.util.function.Supplier<String> {
+            public String get() {
+              return "A";
+            }
+          }
+          """
+      );
+
+      assertTrue(helper.compile());
+
+      FileSystem fileSystem;
+      fileSystem = FileSystems.getDefault();
+
+      try (WatchService watchService = fileSystem.newWatchService();
+          App.Reloader reloader = App.createReloader(
+              "test.Subject", watchService,
+              App.noteSink(TestingNoteSink.INSTANCE),
+              App.watchDirectory(helper.classOutput())
+          )) {
+        String firstGet;
+        firstGet = newInstanceAndGet(reloader);
+
+        assertEquals(firstGet, "A");
+
+        // second subject version
+        helper.writeJavaFile(
+            subjectSrc,
+
+            """
+            package test;
+
+            import objectos.way.App;
+
+            @App.DoNotReload
+            public class Subject implements java.util.function.Supplier<String> {
+              public String get() {
+                return "B";
+              }
+            }
+            """
+        );
+
+        assertTrue(helper.compile());
+
+        TimeUnit.MILLISECONDS.sleep(5);
+
+        String secondGet;
+        secondGet = newInstanceAndGet(reloader);
+
+        assertEquals(secondGet, "A");
+      }
+    }
+  }
+
   @SuppressWarnings("unchecked")
   private String newInstanceAndGet(App.Reloader reloader) throws Exception {
     Class<?> type;

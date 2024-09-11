@@ -104,8 +104,7 @@ final class AppReloader implements App.Reloader {
   }
 
   @Override
-  public final void close() throws IOException {
-    service.close();
+  public final void close() {
   }
 
   @Override
@@ -291,6 +290,10 @@ final class AppReloader implements App.Reloader {
           throw new ClassNotFoundException(name, e);
         }
 
+        if (doNotReload(bytes)) {
+          break;
+        }
+
         Class<?> clazz;
         clazz = defineClass(name, bytes, 0, bytes.length);
 
@@ -309,6 +312,10 @@ final class AppReloader implements App.Reloader {
       return systemLoader.loadClass(name);
     }
 
+  }
+
+  private boolean doNotReload(byte[] bytes) {
+    return false;
   }
 
 }

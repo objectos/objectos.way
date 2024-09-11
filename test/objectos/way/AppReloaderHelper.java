@@ -30,96 +30,96 @@ import objectos.util.list.GrowableList;
 
 final class AppReloaderHelper implements AutoCloseable {
 
-	private final Path root;
-	private final Path src;
-	private final Path cls;
+  private final Path root;
+  private final Path src;
+  private final Path cls;
 
-	private final JavaCompiler javaCompiler;
-	private final StandardJavaFileManager fileManager;
+  private final JavaCompiler javaCompiler;
+  private final StandardJavaFileManager fileManager;
 
-	private final List<Path> sourceFiles = new GrowableList<>();
+  private final List<Path> sourceFiles = new GrowableList<>();
 
-	public AppReloaderHelper(	Path root,
-															Path src,
-															Path cls,
-															JavaCompiler javaCompiler,
-															StandardJavaFileManager fileManager) {
-		this.root = root;
-		this.src = src;
-		this.cls = cls;
-		this.javaCompiler = javaCompiler;
-		this.fileManager = fileManager;
-	}
+  public AppReloaderHelper(Path root,
+                           Path src,
+                           Path cls,
+                           JavaCompiler javaCompiler,
+                           StandardJavaFileManager fileManager) {
+    this.root = root;
+    this.src = src;
+    this.cls = cls;
+    this.javaCompiler = javaCompiler;
+    this.fileManager = fileManager;
+  }
 
-	public static AppReloaderHelper of() throws IOException {
-		Path root;
-		root = Files.createTempDirectory("class-reloader-");
+  public static AppReloaderHelper of() throws IOException {
+    Path root;
+    root = Files.createTempDirectory("class-reloader-");
 
-		JavaCompiler javaCompiler;
-		javaCompiler = ToolProvider.getSystemJavaCompiler();
+    JavaCompiler javaCompiler;
+    javaCompiler = ToolProvider.getSystemJavaCompiler();
 
-		StandardJavaFileManager fileManager;
-		fileManager = javaCompiler.getStandardFileManager(null, null, null);
+    StandardJavaFileManager fileManager;
+    fileManager = javaCompiler.getStandardFileManager(null, null, null);
 
-		Path src;
-		src = root.resolve("src");
+    Path src;
+    src = root.resolve("src");
 
-		Files.createDirectories(src);
+    Files.createDirectories(src);
 
-		fileManager.setLocationFromPaths(StandardLocation.SOURCE_PATH, List.of(src));
+    fileManager.setLocationFromPaths(StandardLocation.SOURCE_PATH, List.of(src));
 
-		Path cls;
-		cls = root.resolve("cls");
+    Path cls;
+    cls = root.resolve("cls");
 
-		Files.createDirectories(cls);
+    Files.createDirectories(cls);
 
-		fileManager.setLocationFromPaths(StandardLocation.CLASS_OUTPUT, List.of(cls));
+    fileManager.setLocationFromPaths(StandardLocation.CLASS_OUTPUT, List.of(cls));
 
-		return new AppReloaderHelper(
-				root, src, cls, javaCompiler, fileManager
-		);
-	}
+    return new AppReloaderHelper(
+        root, src, cls, javaCompiler, fileManager
+    );
+  }
 
-	public final void writeJavaFile(Path path, String source) throws IOException {
-		Path javaFile;
-		javaFile = src.resolve(path);
+  public final void writeJavaFile(Path path, String source) throws IOException {
+    Path javaFile;
+    javaFile = src.resolve(path);
 
-		Path parent;
-		parent = javaFile.getParent();
+    Path parent;
+    parent = javaFile.getParent();
 
-		Files.createDirectories(parent);
+    Files.createDirectories(parent);
 
-		try (Writer w = Files.newBufferedWriter(javaFile)) {
-			w.write(source);
-		}
+    try (Writer w = Files.newBufferedWriter(javaFile)) {
+      w.write(source);
+    }
 
-		sourceFiles.add(javaFile);
-	}
+    sourceFiles.add(javaFile);
+  }
 
-	public final boolean compile() {
-		Iterable<? extends JavaFileObject> compilationUnits;
-		compilationUnits = fileManager.getJavaFileObjectsFromPaths(sourceFiles);
+  public final boolean compile() {
+    Iterable<? extends JavaFileObject> compilationUnits;
+    compilationUnits = fileManager.getJavaFileObjectsFromPaths(sourceFiles);
 
-		sourceFiles.clear();
+    sourceFiles.clear();
 
-		CompilationTask task;
-		task = javaCompiler.getTask(null, fileManager, null, null, null, compilationUnits);
+    CompilationTask task;
+    task = javaCompiler.getTask(null, fileManager, null, null, null, compilationUnits);
 
-		Boolean result;
-		result = task.call();
+    Boolean result;
+    result = task.call();
 
-		return result.booleanValue();
-	}
+    return result.booleanValue();
+  }
 
-	public final Path classOutput() {
-		return cls;
-	}
+  public final Path classOutput() {
+    return cls;
+  }
 
-	@Override
-	public final void close() throws IOException {
-		try (fileManager) {
-			Rmdir.rmdir(root);
-		}
-	}
+  @Override
+  public final void close() throws IOException {
+    try (fileManager) {
+      Rmdir.rmdir(root);
+    }
+  }
 
 }
