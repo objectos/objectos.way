@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Objectos Software LTDA.
+ * Copyright (C) 2023-2024 Objectos Software LTDA.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,33 +13,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.lang;
+package objectos.way;
 
 import java.util.List;
 import objectos.lang.object.Check;
 import objectos.notes.LongNote;
-import objectos.notes.NoOpNoteSink;
 import objectos.notes.Note0;
 import objectos.notes.Note1;
 import objectos.notes.Note2;
 import objectos.notes.NoteSink;
 import objectos.util.list.GrowableList;
 
-/**
- * The standard Objectos Way {@link ShutdownHook} implementation.
- *
- * <p>
- * Instances of this class are not thread-safe.
- */
-public final class WayShutdownHook implements ShutdownHook {
+final class AppShutdownHook implements App.ShutdownHook {
 
   private final List<Object> hooks = new GrowableList<>();
 
   private final Job job;
 
-  private NoteSink noteSink = NoOpNoteSink.of();
+  private final NoteSink noteSink;
 
-  public WayShutdownHook() {
+  AppShutdownHook(NoteSink noteSink) {
+    this.noteSink = noteSink;
+
     job = new Job();
 
     job.setDaemon(true);
@@ -50,22 +45,11 @@ public final class WayShutdownHook implements ShutdownHook {
     runtime.addShutdownHook(job);
   }
 
-  public final void noteSink(NoteSink sink) {
-    noteSink = Check.notNull(sink, "sink == null");
-  }
-
   @Override
-  public final void addAutoCloseable(AutoCloseable closeable) {
+  public final void register(AutoCloseable closeable) {
     Check.notNull(closeable, "closeable == null");
 
     addHook(closeable);
-  }
-
-  @Override
-  public final void addThread(Thread thread) {
-    Check.notNull(thread, "thread == null");
-
-    addHook(thread);
   }
 
   @Override
@@ -79,6 +63,13 @@ public final class WayShutdownHook implements ShutdownHook {
     } else {
       noteSink.send(IGNORED, resource);
     }
+  }
+
+  @Override
+  public final void registerThread(Thread thread) {
+    Check.notNull(thread, "thread == null");
+
+    addHook(thread);
   }
 
   private void addHook(Object hook) {
@@ -112,7 +103,7 @@ public final class WayShutdownHook implements ShutdownHook {
 
     static {
       Class<?> s;
-      s = WayShutdownHook.class;
+      s = App.ShutdownHook.class;
 
       START = Note0.info(s, "Start");
 

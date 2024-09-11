@@ -15,6 +15,7 @@
  */
 package objectos.way;
 
+import objectos.lang.object.Check;
 import objectos.notes.Level;
 import objectos.notes.Note1;
 import objectos.notes.Note2;
@@ -96,20 +97,6 @@ public final class App {
   }
 
   /**
-   * Thrown to indicate that a particular service failed to start preventing the
-   * bootstrap of the application.
-   */
-  public static final class ServiceFailedException extends RuntimeException {
-
-    private static final long serialVersionUID = -4563807163596633953L;
-
-    ServiceFailedException(String message, Throwable cause) {
-      super(message, cause);
-    }
-
-  }
-
-  /**
    * Represents an application command line option.
    *
    * @param <T> the option type
@@ -142,7 +129,81 @@ public final class App {
 
   }
 
+  /**
+   * Thrown to indicate that a particular service failed to start preventing the
+   * bootstrap of the application.
+   */
+  public static final class ServiceFailedException extends RuntimeException {
+
+    private static final long serialVersionUID = -4563807163596633953L;
+
+    ServiceFailedException(String message, Throwable cause) {
+      super(message, cause);
+    }
+
+  }
+
+  /**
+   * An utility for registering objects with the JVM shutdown hook facility.
+   *
+   * @see Runtime#addShutdownHook(Thread)
+   */
+  public sealed interface ShutdownHook permits AppShutdownHook {
+
+    /**
+     * A note that informs of a object registration in this shutdown hook.
+     */
+    Note1<Object> REGISTRATION = Note1.info(ShutdownHook.class, "Registration");
+
+    /**
+     * A note that informs that a specified resource was not registered.
+     */
+    Note1<Object> IGNORED = Note1.info(ShutdownHook.class, "Ignored");
+
+    /**
+     * Closes the specified {@link AutoCloseable} instance when this shutdown
+     * hook runs.
+     *
+     * <p>
+     * In other words, the closeable {@link AutoCloseable#close()} method is
+     * called by the shutdown hook when the latter runs.
+     *
+     * @param closeable
+     *        the auto closeable instance to be closed
+     */
+    void register(AutoCloseable closeable);
+
+    /**
+     * Registers the specified resource with this shutdown hook if it is
+     * possible to do so.
+     *
+     * @param resource
+     *        the resource to be registered (if possible)
+     */
+    void registerIfPossible(Object resource);
+
+    /**
+     * Interrupts the specified {@link Thread} instance when this shutdown hook
+     * runs.
+     *
+     * <p>
+     * In other words, the thread {@link Thread#interrupt()} is called by the
+     * shutdown hook when the latter runs.
+     *
+     * @param thread
+     *        the thread instance to be interrupted
+     */
+    void registerThread(Thread thread);
+
+  }
+
   private App() {}
+
+  public static ShutdownHook createShutdownHook(NoteSink noteSink) {
+    Check.notNull(noteSink, "noteSink == null");
+
+    return new AppShutdownHook(noteSink);
+  }
 
   public static ServiceFailedException serviceFailed(String name, Throwable cause) {
     return new ServiceFailedException(name, cause);

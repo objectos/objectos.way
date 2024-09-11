@@ -27,10 +27,10 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.Random;
 import java.util.function.Consumer;
-import objectos.lang.WayShutdownHook;
 import objectos.notes.Level;
 import objectos.notes.NoteSink;
 import objectos.notes.impl.ConsoleNoteSink;
+import objectos.way.App;
 import objectos.way.Http.Exchange;
 import objectos.way.WayTestingServerExchange;
 import objectos.way.Web;
@@ -68,10 +68,8 @@ public final class TestingTestingSite {
     NOTE_SINK = noteSink;
 
     // ShutdownHook
-    WayShutdownHook shutdownHook;
-    shutdownHook = new WayShutdownHook();
-
-    shutdownHook.noteSink(noteSink);
+    App.ShutdownHook shutdownHook;
+    shutdownHook = App.createShutdownHook(noteSink);
 
     // SessionStore
     Random random;
@@ -91,7 +89,7 @@ public final class TestingTestingSite {
       throw new UncheckedIOException(e);
     }
 
-    shutdownHook.addAutoCloseable(webResources);
+    shutdownHook.register(webResources);
 
     INJECTOR = new TestingSiteInjector(noteSink, sessionStore, webResources);
   }

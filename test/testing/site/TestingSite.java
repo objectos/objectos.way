@@ -17,10 +17,9 @@ package testing.site;
 
 import java.io.IOException;
 import java.time.Clock;
-import objectos.lang.ShutdownHook;
-import objectos.lang.WayShutdownHook;
 import objectos.notes.NoteSink;
 import objectos.way.App;
+import objectos.way.App.ShutdownHook;
 import objectos.way.HandlerFactory;
 import objectos.way.Http;
 import objectos.way.Script;
@@ -50,14 +49,10 @@ abstract class TestingSite extends App.Bootstrap {
     noteSink = noteSink();
 
     // ShutdownHook
-    WayShutdownHook shutdownHook;
-    shutdownHook = new WayShutdownHook();
+    App.ShutdownHook shutdownHook;
+    shutdownHook = App.createShutdownHook(noteSink);
 
-    shutdownHook.noteSink(noteSink);
-
-    if (noteSink instanceof AutoCloseable closeable) {
-      shutdownHook.addAutoCloseable(closeable);
-    }
+    shutdownHook.registerIfPossible(noteSink);
 
     // SessionStore
     Web.Store sessionStore;
@@ -80,7 +75,7 @@ abstract class TestingSite extends App.Bootstrap {
       throw App.serviceFailed("WebResources", e);
     }
 
-    shutdownHook.addAutoCloseable(webResources);
+    shutdownHook.register(webResources);
 
     // Injector
     TestingSiteInjector injector;
@@ -110,7 +105,7 @@ abstract class TestingSite extends App.Bootstrap {
           Http.port(portOption.get())
       );
 
-      shutdownHook.addAutoCloseable(httpServer);
+      shutdownHook.register(httpServer);
 
       httpServer.start();
     } catch (IOException e) {

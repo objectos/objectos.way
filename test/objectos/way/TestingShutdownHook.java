@@ -15,24 +15,16 @@
  */
 package objectos.way;
 
-import objectos.lang.ShutdownHook;
-import objectos.lang.WayShutdownHook;
-
 public final class TestingShutdownHook {
 
-  public static final ShutdownHook INSTANCE;
+  public static final App.ShutdownHook INSTANCE;
 
   static {
-    WayShutdownHook shutdownHook;
-    shutdownHook = new WayShutdownHook();
-
-    shutdownHook.noteSink(TestingNoteSink.INSTANCE);
-
-    INSTANCE = shutdownHook;
+    INSTANCE = App.createShutdownHook(TestingNoteSink.INSTANCE);
   }
 
   public static void register(AutoCloseable closeable) {
-    INSTANCE.addAutoCloseable(closeable);
+    INSTANCE.register(closeable);
   }
 
 }

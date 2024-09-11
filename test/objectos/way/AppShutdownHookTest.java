@@ -13,37 +13,59 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.lang;
+package objectos.way;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertSame;
 import static org.testng.Assert.assertTrue;
 
+import java.io.Closeable;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import objectos.notes.Note1;
 import objectos.notes.Note2;
-import objectos.way.TestingNoteSink;
+import objectos.way.App.ShutdownHook;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-public class WayShutdownHookTest {
+public class AppShutdownHookTest {
+
+  private static final class CloseableImpl implements Closeable {
+
+    boolean closed;
+
+    IOException exception;
+
+    CloseableImpl() {}
+
+    CloseableImpl(IOException exception) {
+      this.exception = exception;
+    }
+
+    @Override
+    public final void close() throws IOException {
+      closed = true;
+
+      if (exception != null) {
+        throw exception;
+      }
+    }
+
+  }
 
   @Test
   public void getShutdownHook() {
-    WayShutdownHook hook;
-    hook = new WayShutdownHook();
-
     ThisNoteSink noteSink;
     noteSink = new ThisNoteSink();
 
-    hook.noteSink(noteSink);
+    AppShutdownHook hook;
+    hook = new AppShutdownHook(noteSink);
 
     CloseableImpl cleanClosable;
     cleanClosable = new CloseableImpl();
 
-    hook.addAutoCloseable(cleanClosable);
+    hook.register(cleanClosable);
 
     IOException ioException;
     ioException = new IOException();
@@ -51,7 +73,7 @@ public class WayShutdownHookTest {
     CloseableImpl dirtyCloseable;
     dirtyCloseable = new CloseableImpl(ioException);
 
-    hook.addAutoCloseable(dirtyCloseable);
+    hook.register(dirtyCloseable);
 
     class SomeThread extends Thread {
       private boolean intCalled;
@@ -78,7 +100,7 @@ public class WayShutdownHookTest {
       public final synchronized void start() {
         super.start();
 
-        hook.addThread(this);
+        hook.registerThread(this);
       }
     }
 
@@ -97,9 +119,9 @@ public class WayShutdownHookTest {
 
     List<Object> ignored;
     ignored = noteSink.ignored;
-    
+
     assertEquals(ignored.size(), 0);
-    
+
     try {
       Thread thread;
       thread = hook.startAndJoinThread();
@@ -125,25 +147,23 @@ public class WayShutdownHookTest {
       Assert.fail("InterruptedException", e);
     }
   }
-  
+
   @Test
   public void registerIfPossible() {
-    WayShutdownHook hook;
-    hook = new WayShutdownHook();
-
     ThisNoteSink noteSink;
     noteSink = new ThisNoteSink();
 
-    hook.noteSink(noteSink);
+    AppShutdownHook hook;
+    hook = new AppShutdownHook(noteSink);
 
     CloseableImpl closable;
     closable = new CloseableImpl();
 
     hook.registerIfPossible(closable);
-    
+
     Thread thread;
     thread = new Thread();
-    
+
     hook.registerIfPossible(thread);
 
     NotCloseable notCloseable;
@@ -164,7 +184,7 @@ public class WayShutdownHookTest {
     assertEquals(ignored.size(), 1);
     assertSame(ignored.get(0), notCloseable);
   }
-  
+
   private static class NotCloseable {
     @SuppressWarnings("unused")
     public final void close() throws IOException {}
@@ -177,7 +197,7 @@ public class WayShutdownHookTest {
     final List<Object> hooks = new ArrayList<>();
 
     final List<Object> ignored = new ArrayList<>();
-    
+
     @Override
     public <T1> void send(Note1<T1> note, T1 v1) {
       super.send(note, v1);

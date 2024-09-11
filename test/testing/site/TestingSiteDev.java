@@ -21,7 +21,6 @@ import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.WatchService;
-import objectos.lang.ShutdownHook;
 import objectos.lang.classloader.ClassReloader;
 import objectos.notes.Level;
 import objectos.notes.NoteSink;
@@ -55,7 +54,7 @@ public final class TestingSiteDev extends TestingSite {
   }
 
   @Override
-  final HandlerFactory handlerFactory(NoteSink noteSink, ShutdownHook shutdownHook, TestingSiteInjector injector) {
+  final HandlerFactory handlerFactory(NoteSink noteSink, App.ShutdownHook shutdownHook, TestingSiteInjector injector) {
     FileSystem fileSystem;
     fileSystem = FileSystems.getDefault();
 
@@ -67,7 +66,7 @@ public final class TestingSiteDev extends TestingSite {
       throw App.serviceFailed("WatchService", e);
     }
 
-    shutdownHook.addAutoCloseable(watchService);
+    shutdownHook.register(watchService);
 
     ClassReloader.Builder classReloaderBuilder;
     classReloaderBuilder = ClassReloader.builder();
@@ -86,7 +85,7 @@ public final class TestingSiteDev extends TestingSite {
     try {
       classReloader = classReloaderBuilder.of("testing.site.web.TestingHttpModule");
 
-      shutdownHook.addAutoCloseable(classReloader);
+      shutdownHook.register(classReloader);
     } catch (IOException e) {
       throw App.serviceFailed("ClassReloader", e);
     }

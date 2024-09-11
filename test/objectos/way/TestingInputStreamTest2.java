@@ -25,7 +25,6 @@ import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.concurrent.TimeUnit;
-import objectos.lang.WayShutdownHook;
 import objectos.notes.Level;
 import objectos.notes.Note1;
 import objectos.notes.Note2;
@@ -40,8 +39,8 @@ public class TestingInputStreamTest2 {
   public static void main(String[] args) {
     ConsoleNoteSink noteSink = new ConsoleNoteSink(Level.TRACE);
 
-    WayShutdownHook shutdownHook;
-    shutdownHook = new WayShutdownHook();
+    App.ShutdownHook shutdownHook;
+    shutdownHook = App.createShutdownHook(noteSink);
 
     InetAddress localHost;
 
@@ -57,7 +56,7 @@ public class TestingInputStreamTest2 {
 
       serverSocket = new ServerSocket();
 
-      shutdownHook.addAutoCloseable(serverSocket);
+      shutdownHook.register(serverSocket);
 
       serverSocket.bind(socketAddress);
     } catch (IOException e) {
