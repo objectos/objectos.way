@@ -1142,42 +1142,6 @@ public final class Css {
     return map.toUnmodifiableMap();
   }
 
-  private static final int UNSIGNED = 0xFF;
-
-  static int toUnsignedInt(byte b) {
-    return b & UNSIGNED;
-  }
-
-  static int toBigEndianInt(byte b0, byte b1) {
-    int v0;
-    v0 = toInt(b0, 8);
-
-    int v1;
-    v1 = toInt(b1, 0);
-
-    return v1 | v0;
-  }
-
-  static int toBigEndianInt(byte b0, byte b1, byte b2, byte b3) {
-    int v0;
-    v0 = toInt(b0, 24);
-
-    int v1;
-    v1 = toInt(b1, 16);
-
-    int v2;
-    v2 = toInt(b2, 8);
-
-    int v3;
-    v3 = toInt(b3, 0);
-
-    return v3 | v2 | v1 | v0;
-  }
-
-  private static int toInt(byte b, int shift) {
-    return toUnsignedInt(b) << shift;
-  }
-
   static Map<String, String> merge(String text, Map<String, String> more) {
     CssProperties properties;
     properties = parseProperties(text);

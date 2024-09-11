@@ -107,7 +107,7 @@ public class CssGeneratorScannerTest {
     result = new ArrayList<>();
 
     CssGeneratorScanner scanner;
-    scanner = new CssGeneratorScanner();
+    scanner = new CssGeneratorScanner(TestingNoteSink.INSTANCE);
 
     scanner.scan(type, result::add);
 
