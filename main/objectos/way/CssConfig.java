@@ -15,6 +15,7 @@
  */
 package objectos.way;
 
+import java.nio.file.Path;
 import java.text.NumberFormat;
 import java.util.EnumMap;
 import java.util.EnumSet;
@@ -50,6 +51,8 @@ final class CssConfig {
   private final Set<Class<?>> classes;
 
   private Map<String, String> components;
+
+  private Set<Path> directories;
 
   private final Map<Css.Key, CssProperties> extensions = new EnumMap<>(Css.Key.class);
 
@@ -93,6 +96,14 @@ final class CssConfig {
           "The class name " + name + " is mapped to an existing component."
       );
     }
+  }
+
+  public final void addDirectory(Path directory) {
+    if (directories == null) {
+      directories = new GrowableSet<>();
+    }
+
+    directories.add(directory);
   }
 
   public final void addUtility(String className, CssProperties properties) {
@@ -208,6 +219,10 @@ final class CssConfig {
 
   final Iterable<Class<?>> classes() {
     return classes != null ? classes : List.of();
+  }
+
+  final Iterable<Path> directories() {
+    return directories != null ? directories : Set.of();
   }
 
   final String getComponent(String value) {

@@ -15,7 +15,12 @@
  */
 package objectos.way;
 
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Path;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
@@ -45,6 +50,10 @@ public final class Css {
    * A style sheet generation option.
    */
   public sealed interface Option {}
+
+  @Retention(RetentionPolicy.CLASS)
+  @Target(ElementType.TYPE)
+  public @interface Source {}
 
   /**
    * A CSS style sheet.
@@ -932,6 +941,17 @@ public final class Css {
       @Override
       final void acceptCssConfig(CssConfig config) {
         config.override(key, properties);
+      }
+    };
+  }
+
+  public static Option scanDirectory(Path directory) {
+    Check.notNull(directory, "directory == null");
+
+    return new GeneratorOption() {
+      @Override
+      final void acceptCssConfig(CssConfig config) {
+        config.addDirectory(directory);
       }
     };
   }

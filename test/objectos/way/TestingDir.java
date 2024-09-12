@@ -20,11 +20,30 @@ import java.io.UncheckedIOException;
 import java.nio.file.FileVisitor;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
+import java.util.HexFormat;
 import objectos.io.FileVisitors;
 
 public final class TestingDir {
 
   private TestingDir() {}
+
+  public static void hexDump(Path file, String dump) throws IOException {
+    Path parent;
+    parent = file.getParent();
+
+    if (!Files.exists(parent)) {
+      Files.createDirectories(parent);
+    }
+
+    HexFormat hexFormat;
+    hexFormat = HexFormat.of();
+
+    byte[] bytes;
+    bytes = hexFormat.parseHex(dump);
+
+    Files.write(file, bytes, StandardOpenOption.CREATE);
+  }
 
   public static Path next() {
     try {

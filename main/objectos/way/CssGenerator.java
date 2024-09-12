@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
+import java.util.function.Consumer;
 import objectos.util.map.GrowableSequencedMap;
 import objectos.way.Css.MediaQuery;
 import objectos.way.Css.ValueType;
@@ -168,8 +169,15 @@ final class CssGenerator extends CssGeneratorAdapter implements Css.Generator, C
     CssGeneratorScanner scanner;
     scanner = new CssGeneratorScanner(config.noteSink());
 
+    Consumer<String> processor;
+    processor = adapter::processRawString;
+
     for (var clazz : config.classes()) {
-      scanner.scan(clazz, adapter::processRawString);
+      scanner.scan(clazz, processor);
+    }
+
+    for (var directory : config.directories()) {
+      scanner.scanDirectory(directory, processor);
     }
 
     // 02. process

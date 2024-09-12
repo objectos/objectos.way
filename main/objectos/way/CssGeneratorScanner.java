@@ -18,7 +18,11 @@ package objectos.way;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.Iterator;
 import java.util.function.Consumer;
+import java.util.stream.Stream;
 import objectos.notes.Note1;
 import objectos.notes.Note2;
 import objectos.notes.NoteSink;
@@ -31,6 +35,8 @@ final class CssGeneratorScanner {
 
   private static final Note1<String> CLASS_LOADED;
 
+  private static final Note2<Path, IOException> DIR_IO_ERROR;
+
   static {
     Class<?> s;
     s = Css.Generator.class;
@@ -41,6 +47,7 @@ final class CssGeneratorScanner {
 
     CLASS_LOADED = Note1.debug(s, "Class file loaded");
 
+    DIR_IO_ERROR = Note2.error(s, "Directory I/O error");
   }
 
   private final NoteSink noteSink;
@@ -93,6 +100,45 @@ final class CssGeneratorScanner {
     reader.init(binaryName, bytes);
 
     reader.processStringConstants(stringProcessor);
+  }
+
+  public final void scanDirectory(Path directory, Consumer<String> stringProcessor) {
+    try (Stream<Path> stream = Files.walk(directory, Integer.MAX_VALUE).filter(Files::isRegularFile)) {
+
+      Iterator<Path> iterator;
+      iterator = stream.iterator();
+
+      while (iterator.hasNext()) {
+        Path entry;
+        entry = iterator.next();
+
+        Path relative;
+        relative = directory.relativize(entry);
+
+        String fileName;
+        fileName = relative.toString();
+
+        if (!fileName.endsWith(".class")) {
+          continue;
+        }
+
+        byte[] bytes;
+        bytes = Files.readAllBytes(entry);
+
+        reader.init(fileName, bytes);
+
+        if (!reader.isAnnotationPresent(Css.Source.class)) {
+          continue;
+        }
+
+        noteSink.send(CLASS_LOADED, fileName);
+
+        reader.processStringConstants(stringProcessor);
+      }
+
+    } catch (IOException e) {
+      noteSink.send(DIR_IO_ERROR, directory, e);
+    }
   }
 
 }
