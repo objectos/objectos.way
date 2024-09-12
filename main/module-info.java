@@ -19,7 +19,6 @@
 module objectos.way {
   exports objectos.io;
   exports objectos.lang;
-  exports objectos.lang.classloader;
   exports objectos.notes.impl;
   exports objectos.way;
 

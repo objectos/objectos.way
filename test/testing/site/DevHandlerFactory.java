@@ -16,18 +16,18 @@
 package testing.site;
 
 import java.lang.reflect.Constructor;
-import objectos.lang.classloader.ClassReloader;
+import objectos.way.App;
 import objectos.way.HandlerFactory;
 import objectos.way.Http;
 import testing.zite.TestingSiteInjector;
 
 final class DevHandlerFactory implements HandlerFactory {
 
-  private final ClassReloader classReloader;
+  private final App.Reloader classReloader;
 
   private final TestingSiteInjector injector;
 
-  public DevHandlerFactory(ClassReloader classReloader, TestingSiteInjector injector) {
+  public DevHandlerFactory(App.Reloader classReloader, TestingSiteInjector injector) {
     this.classReloader = classReloader;
 
     this.injector = injector;

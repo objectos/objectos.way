@@ -21,7 +21,6 @@ import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.WatchService;
-import objectos.lang.classloader.ClassReloader;
 import objectos.notes.Level;
 import objectos.notes.NoteSink;
 import objectos.notes.impl.ConsoleNoteSink;
@@ -68,22 +67,16 @@ public final class TestingSiteDev extends TestingSite {
 
     shutdownHook.register(watchService);
 
-    ClassReloader.Builder classReloaderBuilder;
-    classReloaderBuilder = ClassReloader.builder();
-
-    classReloaderBuilder.noteSink(noteSink);
-
-    classReloaderBuilder.watchService(watchService);
-
-    //classReloaderBuilder.watch(classOutputOption.get(), "objectos.way.Carbon");
-    //classReloaderBuilder.watch(classOutputOption.get(), "objectos.way.Html");
-
-    classReloaderBuilder.watch(testClassOutputOption.get(), "testing.site");
-
-    ClassReloader classReloader;
+    App.Reloader classReloader;
 
     try {
-      classReloader = classReloaderBuilder.of("testing.site.web.TestingHttpModule");
+      classReloader = App.createReloader(
+          "testing.site.web.TestingHttpModule", watchService,
+
+          App.noteSink(noteSink),
+
+          App.watchDirectory(testClassOutputOption.get())
+      );
 
       shutdownHook.register(classReloader);
     } catch (IOException e) {
