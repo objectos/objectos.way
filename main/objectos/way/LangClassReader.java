@@ -15,6 +15,7 @@
  */
 package objectos.way;
 
+import java.lang.annotation.Annotation;
 import java.nio.charset.StandardCharsets;
 import java.util.function.Consumer;
 import objectos.lang.object.Check;
@@ -23,7 +24,15 @@ import objectos.notes.NoteSink;
 
 final class LangClassReader implements Lang.ClassReader {
 
-  private static final Note2<String, String> INVALID_CLASS;
+  private static final class InvalidClassException extends Exception {
+    private static final long serialVersionUID = -601141059152548162L;
+
+    InvalidClassException(String message) {
+      super(message);
+    }
+  }
+
+  private static final Note2<String, Exception> INVALID_CLASS;
 
   static {
     Class<?> s;
@@ -50,6 +59,9 @@ final class LangClassReader implements Lang.ClassReader {
   private static final byte CONSTANT_Module = 19;
   private static final byte CONSTANT_Package = 20;
 
+  private static final String RUNTIME_INVISIBLE_ANNOTATIONS = "RuntimeInvisibleAnnotations";
+  private static final String RUNTIME_VISIBLE_ANNOTATIONS = "RuntimeVisibleAnnotations";
+
   private final NoteSink noteSink;
 
   private String binaryName;
@@ -69,19 +81,154 @@ final class LangClassReader implements Lang.ClassReader {
     this.binaryName = binaryName;
 
     bytes = contents;
+  }
 
-    bytesIndex = 0;
+  @Override
+  public final boolean isAnnotationPresent(Class<? extends Annotation> annotationType) {
+    String annotationName;
+    annotationName = annotationType.getName();
 
-    constantPoolIndex = null;
+    String nameToLookFor;
+    nameToLookFor = "L" + annotationName.replace('.', '/') + ";";
+
+    boolean result;
+    result = false;
+
+    try {
+      result = isAnnotated0(nameToLookFor);
+    } catch (ArrayIndexOutOfBoundsException e) {
+      noteSink.send(INVALID_CLASS, binaryName, e);
+    } catch (InvalidClassException e) {
+      noteSink.send(INVALID_CLASS, binaryName, e);
+    }
+
+    return result;
+  }
+
+  private boolean isAnnotated0(String annotationName) throws InvalidClassException {
+    reset();
+
+    readConstantPool();
+
+    // skip access_flags
+
+    skipU2();
+
+    // skip this_class
+
+    skipU2();
+
+    // skip super_class
+
+    skipU2();
+
+    // skip interfaces
+
+    int interfacesCount;
+    interfacesCount = readU2();
+
+    bytesIndex += interfacesCount * 2;
+
+    // skip fields
+
+    skipFieldsOrMethods();
+
+    // skip methods
+
+    skipFieldsOrMethods();
+
+    int attributesCount;
+    attributesCount = readU2();
+
+    for (int attr = 0; attr < attributesCount; attr++) {
+      int nameIndex;
+      nameIndex = readU2();
+
+      int attrLength;
+      attrLength = readU4();
+
+      if (attrLength < 0) {
+        throw new UnsupportedOperationException("Implement me :: u4 as int overflow");
+      }
+
+      String attrName;
+      attrName = readUtf8(nameIndex);
+
+      if (RUNTIME_INVISIBLE_ANNOTATIONS.equals(attrName) || RUNTIME_VISIBLE_ANNOTATIONS.equals(attrName)) {
+        int numAnnotations;
+        numAnnotations = readU2();
+
+        for (int ann = 0; ann < numAnnotations; ann++) {
+          int typeIndex;
+          typeIndex = readU2();
+
+          String typeName;
+          typeName = readUtf8(typeIndex);
+
+          if (typeName.equals(annotationName)) {
+            return true;
+          }
+
+          skipAnnotationContents();
+        }
+      } else {
+        bytesIndex += attrLength;
+      }
+    }
+
+    return false;
+  }
+
+  private void skipAnnotationContents() {
+    int numElementValuePairs;
+    numElementValuePairs = readU2();
+
+    for (int pair = 0; pair < numElementValuePairs; pair++) {
+      // skip element_name_index
+
+      skipU2();
+
+      byte tag;
+      tag = readU1();
+
+      switch (tag) {
+        case 'B', 'C', 'D', 'F', 'I', 'J', 'S', 'Z', 's' -> {
+          // skip const_value_index
+          skipU2();
+        }
+
+        case 'e' -> {
+          // skip type_name_index
+          skipU2();
+
+          // skip const_name_index
+          skipU2();
+        }
+
+        default -> {
+          throw new UnsupportedOperationException("Implement me");
+        }
+      }
+    }
   }
 
   @Override
   public final void processStringConstants(Consumer<String> processor) {
     Check.notNull(processor, "processor == null");
 
-    if (!readConstantPool()) {
-      return;
+    try {
+      processStringConstants0(processor);
+    } catch (ArrayIndexOutOfBoundsException e) {
+      noteSink.send(INVALID_CLASS, binaryName, e);
+    } catch (InvalidClassException e) {
+      noteSink.send(INVALID_CLASS, binaryName, e);
     }
+  }
+
+  private void processStringConstants0(Consumer<String> processor) throws InvalidClassException {
+    reset();
+
+    readConstantPool();
 
     for (int index = 1; index < constantPoolIndex.length; index++) {
       bytesIndex = constantPoolIndex[index];
@@ -92,7 +239,7 @@ final class LangClassReader implements Lang.ClassReader {
       // -> we have already been at this index in the previous step
 
       byte maybeString;
-      maybeString = bytes[bytesIndex++];
+      maybeString = readU1();
 
       if (maybeString != CONSTANT_String) {
         // not String -> continue
@@ -109,38 +256,21 @@ final class LangClassReader implements Lang.ClassReader {
 
       // try to load utf8
 
-      bytesIndex = constantPoolIndex[stringIndex];
-
-      byte tag;
-      tag = bytes[bytesIndex++];
-
-      if (tag != CONSTANT_Utf8) {
-        noteSink.send(INVALID_CLASS, binaryName, "Malformed constant pool");
-
-        return;
-      }
-
-      int length;
-      length = readU2();
-
       String utf8;
-      utf8 = utf8Value(length);
+      utf8 = readUtf8(stringIndex);
 
       processor.accept(utf8);
     }
   }
 
-  private boolean readConstantPool() {
+  private void reset() {
+    bytesIndex = 0;
+
+    constantPoolIndex = null;
+  }
+
+  private void readConstantPool() throws InvalidClassException {
     // 1. verify magic
-
-    if (bytes.length < 4) {
-      // the class file has less bytes than the magic length
-      // -> invalid class
-
-      noteSink.send(INVALID_CLASS, binaryName, "Magic not found");
-
-      return false;
-    }
 
     final int magic;
     magic = readU4();
@@ -149,38 +279,18 @@ final class LangClassReader implements Lang.ClassReader {
       // magic does not match expected value
       // -> invalid class
 
-      noteSink.send(INVALID_CLASS, binaryName, "Magic not found");
-
-      return false;
+      throw new InvalidClassException("Magic not found");
     }
 
     // 2. skip minor
-
-    if (!canReadU2()) {
-      noteSink.send(INVALID_CLASS, binaryName, "Version minor not found");
-
-      return false;
-    }
 
     skipU2();
 
     // 3. skip major
 
-    if (!canReadU2()) {
-      noteSink.send(INVALID_CLASS, binaryName, "Version major not found");
-
-      return false;
-    }
-
     skipU2();
 
     // 4. load constant pool count
-
-    if (!canReadU2()) {
-      noteSink.send(INVALID_CLASS, binaryName, "Constant pool count not found");
-
-      return false;
-    }
 
     int constantPoolCount;
     constantPoolCount = readU2();
@@ -190,25 +300,13 @@ final class LangClassReader implements Lang.ClassReader {
     constantPoolIndex = new int[constantPoolCount];
 
     for (int index = 1; index < constantPoolCount; index++) {
-      if (!canRead()) {
-        noteSink.send(INVALID_CLASS, binaryName, "Unexpected constant pool end");
-
-        return false;
-      }
-
       constantPoolIndex[index] = bytesIndex;
 
       byte tag;
-      tag = bytes[bytesIndex++];
+      tag = readU1();
 
       switch (tag) {
         case CONSTANT_Utf8 -> {
-          if (!canReadU2()) {
-            noteSink.send(INVALID_CLASS, binaryName, "Unexpected constant pool end");
-
-            return false;
-          }
-
           int length;
           length = readU2();
 
@@ -264,22 +362,51 @@ final class LangClassReader implements Lang.ClassReader {
         case CONSTANT_Package -> bytesIndex += 2;
 
         default -> {
-          noteSink.send(INVALID_CLASS, binaryName, "Unknown constant pool tag=" + tag);
-
-          return false;
+          throw new InvalidClassException("Unknown constant pool tag=" + tag);
         }
       }
     }
-
-    return true;
   }
 
-  private boolean canRead() {
-    return bytesIndex < bytes.length;
+  private void skipFieldsOrMethods() {
+    int count;
+    count = readU2();
+
+    for (int item = 0; item < count; item++) {
+      // skip access_flags
+
+      skipU2();
+
+      // skip name_index
+
+      skipU2();
+
+      // skip descriptor_index
+
+      skipU2();
+
+      int attributeCount;
+      attributeCount = readU2();
+
+      for (int attr = 0; attr < attributeCount; attr++) {
+        // skip attribute_name_index
+
+        skipU2();
+
+        int length;
+        length = readU4(); // might overflow...
+
+        if (length < 0) {
+          throw new UnsupportedOperationException("Implement me :: u4 as int overflow");
+        }
+
+        bytesIndex += length;
+      }
+    }
   }
 
-  private boolean canReadU2() {
-    return bytesIndex <= bytes.length - 2;
+  private byte readU1() {
+    return bytes[bytesIndex++];
   }
 
   private int readU2() {
@@ -308,10 +435,32 @@ final class LangClassReader implements Lang.ClassReader {
     return Lang.toBigEndianInt(b0, b1, b2, b3);
   }
 
-  private boolean skipU2() {
-    bytesIndex += 2;
+  private String readUtf8(int contanstPoolIndex) throws InvalidClassException {
+    int returnTo;
+    returnTo = bytesIndex;
 
-    return bytesIndex <= bytes.length;
+    bytesIndex = constantPoolIndex[contanstPoolIndex];
+
+    byte tag;
+    tag = readU1();
+
+    if (tag != CONSTANT_Utf8) {
+      throw new InvalidClassException("Malformed constant pool");
+    }
+
+    int length;
+    length = readU2();
+
+    String value;
+    value = utf8Value(length);
+
+    bytesIndex = returnTo;
+
+    return value;
+  }
+
+  private void skipU2() {
+    bytesIndex += 2;
   }
 
   private String utf8Value(int length) {

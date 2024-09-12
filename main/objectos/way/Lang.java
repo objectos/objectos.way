@@ -15,6 +15,7 @@
  */
 package objectos.way;
 
+import java.lang.annotation.Annotation;
 import java.util.function.Consumer;
 import objectos.notes.NoteSink;
 
@@ -26,6 +27,8 @@ public final class Lang {
   sealed interface ClassReader permits LangClassReader {
 
     void init(String binaryName, byte[] contents);
+
+    boolean isAnnotationPresent(Class<? extends Annotation> annotationType);
 
     void processStringConstants(Consumer<String> processor);
 

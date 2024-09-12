@@ -16,6 +16,8 @@
 package objectos.way;
 
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertFalse;
+import static org.testng.Assert.assertTrue;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -35,6 +37,17 @@ public class LangClassReaderTest {
   }
 
   @Test
+  public void isAnnotationPresent01() throws IOException {
+    @App.DoNotReload
+    class Subject {}
+
+    init(Subject.class);
+
+    assertFalse(reader.isAnnotationPresent(TestingAnnotations.RetentionClass.class));
+    assertTrue(reader.isAnnotationPresent(App.DoNotReload.class));
+  }
+
+  @Test
   public void processStringConstants01() throws IOException {
     @SuppressWarnings("unused")
     class Subject {
@@ -45,8 +58,10 @@ public class LangClassReaderTest {
       }
     }
 
+    init(Subject.class);
+
     assertEquals(
-        processStringConstants(Subject.class),
+        processStringConstants(),
 
         Set.of("first", "second")
     );
@@ -54,7 +69,7 @@ public class LangClassReaderTest {
 
   private void consume(String string) {}
 
-  private Set<String> processStringConstants(Class<?> clazz) throws IOException {
+  private void init(Class<?> clazz) throws IOException {
     String binaryName;
     binaryName = clazz.getName();
 
@@ -62,7 +77,9 @@ public class LangClassReaderTest {
     bytes = loadBytes(clazz);
 
     reader.init(binaryName, bytes);
+  }
 
+  private Set<String> processStringConstants() {
     Set<String> set;
     set = new GrowableSet<>();
 
