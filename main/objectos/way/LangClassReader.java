@@ -179,35 +179,64 @@ final class LangClassReader implements Lang.ClassReader {
     return false;
   }
 
-  private void skipAnnotationContents() {
+  private void skipAnnotation() throws InvalidClassException {
+    // skip typeIndex
+    skipU2();
+
+    // skip contents
+    skipAnnotationContents();
+  }
+
+  private void skipAnnotationContents() throws InvalidClassException {
     int numElementValuePairs;
     numElementValuePairs = readU2();
 
     for (int pair = 0; pair < numElementValuePairs; pair++) {
       // skip element_name_index
-
       skipU2();
 
-      byte tag;
-      tag = readU1();
+      skipAnnotationElementValue();
+    }
+  }
 
-      switch (tag) {
-        case 'B', 'C', 'D', 'F', 'I', 'J', 'S', 'Z', 's' -> {
-          // skip const_value_index
-          skipU2();
+  private void skipAnnotationElementValue() throws InvalidClassException {
+    byte tag;
+    tag = readU1();
+
+    switch (tag) {
+      case 'B', 'C', 'D', 'F', 'I', 'J', 'S', 'Z', 's' -> {
+        // skip const_value_index
+        skipU2();
+      }
+
+      case 'e' -> {
+        // skip type_name_index
+        skipU2();
+
+        // skip const_name_index
+        skipU2();
+      }
+
+      case 'c' -> {
+        // skip class_info_index
+        skipU2();
+      }
+
+      case '@' -> {
+        skipAnnotation();
+      }
+
+      case '[' -> {
+        int numValues;
+        numValues = readU2();
+
+        for (int idx = 0; idx < numValues; idx++) {
+          skipAnnotationElementValue();
         }
+      }
 
-        case 'e' -> {
-          // skip type_name_index
-          skipU2();
-
-          // skip const_name_index
-          skipU2();
-        }
-
-        default -> {
-          throw new UnsupportedOperationException("Implement me");
-        }
+      default -> {
+        throw new InvalidClassException("Unknown annotation element value tag=" + tag);
       }
     }
   }

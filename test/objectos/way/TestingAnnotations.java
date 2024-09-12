@@ -22,6 +22,47 @@ import java.lang.annotation.Target;
 
 public final class TestingAnnotations {
 
+  @Retention(RetentionPolicy.RUNTIME)
+  @Target(ElementType.TYPE)
+  public @interface ConstantValues {
+    byte byteValue();
+    char charValue();
+    double doubleValue();
+    float floatValue();
+    int intValue();
+    long longValue();
+    short shortValue();
+    boolean booleanValue();
+    String stringValue();
+  }
+
+  @Retention(RetentionPolicy.CLASS)
+  @Target(ElementType.TYPE)
+  public @interface EnumConstValue {
+    ElementType value();
+  }
+
+  @Retention(RetentionPolicy.CLASS)
+  @Target(ElementType.TYPE)
+  public @interface ClassInfoValue {
+    Class<?> value();
+  }
+
+  @Retention(RetentionPolicy.CLASS)
+  @Target(ElementType.TYPE)
+  public @interface AnnotationValue {
+    ClassInfoValue value();
+  }
+
+  @Retention(RetentionPolicy.CLASS)
+  @Target(ElementType.TYPE)
+  public @interface ArrayValue {
+    String[] constantArray();
+    ElementType[] enumArray();
+    Class<?>[] classArray();
+    AnnotationValue[] annotationArray();
+  }
+
   @Retention(RetentionPolicy.CLASS)
   @Target(ElementType.TYPE)
   public @interface RetentionClass {}

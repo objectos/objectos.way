@@ -22,6 +22,7 @@ import static org.testng.Assert.assertTrue;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.annotation.ElementType;
 import java.util.Set;
 import objectos.util.set.GrowableSet;
 import org.testng.annotations.BeforeClass;
@@ -45,6 +46,62 @@ public class LangClassReaderTest {
 
     assertFalse(reader.isAnnotationPresent(TestingAnnotations.RetentionClass.class));
     assertTrue(reader.isAnnotationPresent(App.DoNotReload.class));
+  }
+
+  @Test
+  public void isAnnotationPresent02() throws IOException {
+    @TestingAnnotations.ConstantValues(
+        byteValue = 1, charValue = 'c', doubleValue = 2.34, floatValue = 7.89F,
+        intValue = 345, longValue = 890, shortValue = 523, booleanValue = true,
+        stringValue = "CONSTANT"
+    )
+    @SuppressWarnings("unused")
+    class Subject {
+      String filed = "abc";
+
+      void method() {
+        assert true != false;
+      }
+    }
+
+    init(Subject.class);
+
+    assertFalse(reader.isAnnotationPresent(TestingAnnotations.RetentionClass.class));
+    assertTrue(reader.isAnnotationPresent(TestingAnnotations.ConstantValues.class));
+  }
+
+  @Test
+  public void isAnnotationPresent03() throws IOException {
+    @TestingAnnotations.EnumConstValue(ElementType.ANNOTATION_TYPE)
+    @TestingAnnotations.ClassInfoValue(Lang.ClassReader.class)
+    @TestingAnnotations.AnnotationValue(@TestingAnnotations.ClassInfoValue(Integer.class))
+    class Subject {}
+
+    init(Subject.class);
+
+    assertFalse(reader.isAnnotationPresent(TestingAnnotations.RetentionClass.class));
+    assertTrue(reader.isAnnotationPresent(TestingAnnotations.EnumConstValue.class));
+    assertTrue(reader.isAnnotationPresent(TestingAnnotations.ClassInfoValue.class));
+    assertTrue(reader.isAnnotationPresent(TestingAnnotations.AnnotationValue.class));
+  }
+
+  @Test
+  public void isAnnotationPresent04() throws IOException {
+    @TestingAnnotations.ArrayValue(
+        constantArray = {"a", "b", "c"},
+        enumArray = {ElementType.ANNOTATION_TYPE, ElementType.PACKAGE},
+        classArray = {Lang.ClassReader.class},
+        annotationArray = {
+            @TestingAnnotations.AnnotationValue(@TestingAnnotations.ClassInfoValue(Integer.class)),
+            @TestingAnnotations.AnnotationValue(@TestingAnnotations.ClassInfoValue(Long.class))
+        }
+    )
+    class Subject {}
+
+    init(Subject.class);
+
+    assertFalse(reader.isAnnotationPresent(TestingAnnotations.RetentionClass.class));
+    assertTrue(reader.isAnnotationPresent(TestingAnnotations.ArrayValue.class));
   }
 
   @Test
