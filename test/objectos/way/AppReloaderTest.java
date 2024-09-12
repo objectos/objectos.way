@@ -25,6 +25,7 @@ import java.nio.file.Path;
 import java.nio.file.WatchService;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
+import org.testng.Assert;
 import org.testng.annotations.Test;
 
 public class AppReloaderTest {
@@ -93,7 +94,7 @@ public class AppReloaderTest {
     }
   }
 
-  @Test(enabled = false)
+  @Test
   public void testCase02() throws Exception {
     try (AppReloaderHelper helper = AppReloaderHelper.of()) {
       // first subject version
@@ -101,14 +102,31 @@ public class AppReloaderTest {
       subjectSrc = Path.of("test", "Subject.java");
 
       helper.writeJavaFile(
+          Path.of("objectos", "way", "App.java"),
+
+          """
+          package objectos.way;
+
+          import java.lang.annotation.ElementType;
+          import java.lang.annotation.Retention;
+          import java.lang.annotation.RetentionPolicy;
+          import java.lang.annotation.Target;
+
+          public final class App {
+            @Retention(RetentionPolicy.CLASS)
+            @Target(ElementType.TYPE)
+            public @interface DoNotReload {}
+          }
+          """
+      );
+
+      helper.writeJavaFile(
           subjectSrc,
 
           """
           package test;
 
-          import objectos.way.App;
-
-          @App.DoNotReload
+          @objectos.way.App.DoNotReload
           public class Subject implements java.util.function.Supplier<String> {
             public String get() {
               return "A";
@@ -128,37 +146,14 @@ public class AppReloaderTest {
               App.noteSink(TestingNoteSink.INSTANCE),
               App.watchDirectory(helper.classOutput())
           )) {
-        String firstGet;
-        firstGet = newInstanceAndGet(reloader);
 
-        assertEquals(firstGet, "A");
+        try {
+          newInstanceAndGet(reloader);
 
-        // second subject version
-        helper.writeJavaFile(
-            subjectSrc,
+          Assert.fail();
+        } catch (ClassNotFoundException expected) {
 
-            """
-            package test;
-
-            import objectos.way.App;
-
-            @App.DoNotReload
-            public class Subject implements java.util.function.Supplier<String> {
-              public String get() {
-                return "B";
-              }
-            }
-            """
-        );
-
-        assertTrue(helper.compile());
-
-        TimeUnit.MILLISECONDS.sleep(5);
-
-        String secondGet;
-        secondGet = newInstanceAndGet(reloader);
-
-        assertEquals(secondGet, "A");
+        }
       }
     }
   }

@@ -49,6 +49,8 @@ final class AppReloader implements App.Reloader {
 
   static final Note1<Class<?>> LOAD;
 
+  static final Note1<String> DO_NOT_RELOAD;
+
   static {
     Class<?> s;
     s = App.Reloader.class;
@@ -60,6 +62,8 @@ final class AppReloader implements App.Reloader {
     FS_EVENT = Note2.trace(s, "FS");
 
     LOAD = Note1.trace(s, "Load");
+
+    DO_NOT_RELOAD = Note1.debug(s, "Do not reload");
   }
 
   record Directory(Path path, String packageName) {
@@ -69,6 +73,8 @@ final class AppReloader implements App.Reloader {
   }
 
   private NoteSink noteSink = NoOpNoteSink.of();
+
+  private Lang.ClassReader classReader;
 
   private final List<Path> directories = new GrowableList<>();
 
@@ -133,6 +139,8 @@ final class AppReloader implements App.Reloader {
 
       Files.walkFileTree(directory, visitor);
     }
+
+    classReader = Lang.createClassReader(noteSink);
 
     return this;
   }
@@ -290,7 +298,9 @@ final class AppReloader implements App.Reloader {
           throw new ClassNotFoundException(name, e);
         }
 
-        if (doNotReload(bytes)) {
+        if (doNotReload(name, bytes)) {
+          noteSink.send(DO_NOT_RELOAD, name);
+
           break;
         }
 
@@ -314,8 +324,10 @@ final class AppReloader implements App.Reloader {
 
   }
 
-  private boolean doNotReload(byte[] bytes) {
-    return false;
+  private boolean doNotReload(String binaryName, byte[] contents) {
+    classReader.init(binaryName, contents);
+
+    return classReader.isAnnotationPresent(App.DoNotReload.class);
   }
 
 }
