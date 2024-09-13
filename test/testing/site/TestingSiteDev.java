@@ -54,8 +54,8 @@ public final class TestingSiteDev extends TestingSite {
   }
 
   @Override
-  final Http.Handler carbonHandler() {
-    return Carbon.generateOnGetHandler(testClassOutputOption.get());
+  final Http.Handler carbonHandler(NoteSink noteSink) {
+    return Carbon.generateOnGetHandler(noteSink, testClassOutputOption.get());
   }
 
   @Override

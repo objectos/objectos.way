@@ -16,6 +16,7 @@
 package objectos.way;
 
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertTrue;
 
 import java.io.IOException;
@@ -26,6 +27,7 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.net.http.HttpResponse.BodyHandlers;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.Duration;
 import org.testng.annotations.AfterClass;
@@ -46,18 +48,19 @@ public class CarbonStylesTest extends Http.Module {
   0300200022040900230025002726090028002a002c0609002d002a002f0609000f002a00300609\
   """;
 
+  private Path directory;
+
   private Http.Handler stylesHandler;
 
   private HttpClient client;
 
   @BeforeClass
   public void beforeClass() throws IOException {
-    Path directory;
     directory = TestingDir.next();
 
     TestingDir.hexDump(directory.resolve("objectos/way/Carbon01.class"), CARBON01);
 
-    stylesHandler = Carbon.generateOnGetHandler(directory);
+    stylesHandler = Carbon.generateOnGetHandler(TestingNoteSink.INSTANCE, directory);
 
     TestingHttpServer.bindCarbonStylesTest(this);
 
@@ -95,6 +98,21 @@ public class CarbonStylesTest extends Http.Module {
 
     String body;
     body = response.body();
+
+    assertTrue(body.contains(".bg-zinc-500"));
+  }
+
+  @Test
+  public void testCase02() throws IOException {
+    Path file;
+    file = directory.resolve("carbon.css");
+
+    assertFalse(Files.exists(file));
+
+    Carbon.generate(TestingNoteSink.INSTANCE, directory, file);
+
+    String body;
+    body = Files.readString(file);
 
     assertTrue(body.contains(".bg-zinc-500"));
   }

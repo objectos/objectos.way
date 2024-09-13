@@ -15,13 +15,22 @@
  */
 package objectos.way;
 
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
+import objectos.notes.NoteSink;
+import objectos.way.Css.StyleSheet;
 
 final class CarbonStyles implements Http.Handler {
 
+  private final NoteSink noteSink;
+
   private final Path directory;
 
-  public CarbonStyles(Path directory) {
+  public CarbonStyles(NoteSink noteSink, Path directory) {
+    this.noteSink = noteSink;
     this.directory = directory;
   }
 
@@ -44,8 +53,28 @@ final class CarbonStyles implements Http.Handler {
     http.send(bytes);
   }
 
+  public final void write(Path targetFile) throws IOException {
+    Path parent;
+    parent = targetFile.getParent();
+
+    Files.createDirectories(parent);
+
+    StyleSheet s;
+    s = generateStyleSheet();
+
+    String css;
+    css = s.css();
+
+    Files.writeString(
+        targetFile, css, StandardCharsets.UTF_8,
+        StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING
+    );
+  }
+
   final Css.StyleSheet generateStyleSheet() {
     return Css.generateStyleSheet(
+        Css.noteSink(noteSink),
+
         Css.classes(
             CarbonButton.class,
             CarbonComponents.class,

@@ -15,9 +15,11 @@
  */
 package objectos.way;
 
+import java.io.IOException;
 import java.nio.file.Path;
 import java.util.function.Predicate;
 import objectos.lang.object.Check;
+import objectos.notes.NoteSink;
 import objectos.way.Carbon.Size.ExtraSmall;
 import objectos.way.Carbon.Size.Max;
 import objectos.way.Html.ElementName;
@@ -467,10 +469,22 @@ public final class Carbon extends CarbonComponents {
     super(tmpl);
   }
 
-  public static Http.Handler generateOnGetHandler(Path directory) {
+  public static void generate(NoteSink noteSink, Path directory, Path targetFile) throws IOException {
+    Check.notNull(noteSink, "noteSink == null");
+    Check.notNull(directory, "directory == null");
+    Check.notNull(targetFile, "targetFile == null");
+
+    CarbonStyles styles;
+    styles = new CarbonStyles(noteSink, directory);
+
+    styles.write(targetFile);
+  }
+
+  public static Http.Handler generateOnGetHandler(NoteSink noteSink, Path directory) {
+    Check.notNull(noteSink, "noteSink == null");
     Check.notNull(directory, "directory == null");
 
-    return new CarbonStyles(directory);
+    return new CarbonStyles(noteSink, directory);
   }
 
   static Html.ElementInstruction renderIcon16(Html.TemplateBase tmpl, Icon icon, Html.Instruction... attributes) {
