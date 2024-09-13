@@ -21,6 +21,7 @@ import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+import java.lang.reflect.Constructor;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.WatchService;
@@ -251,7 +252,48 @@ public final class App {
 
   }
 
+  private static class ReloadingHandlerFactory1 implements Http.HandlerFactory {
+
+    private final App.Reloader reloader;
+
+    private final Class<?> type1;
+
+    private final Object value1;
+
+    public ReloadingHandlerFactory1(Reloader reloader, Class<?> type1, Object value1) {
+      this.reloader = reloader;
+      this.type1 = type1;
+      this.value1 = value1;
+    }
+
+    @Override
+    public final Http.Handler create() throws Exception {
+      Class<?> handlerClass;
+      handlerClass = reloader.get();
+
+      Constructor<?> constructor;
+      constructor = handlerClass.getConstructor(type1);
+
+      Object instance;
+      instance = constructor.newInstance(value1);
+
+      Http.Module module;
+      module = (Http.Module) instance;
+
+      return module.compile();
+    }
+
+  }
+
   private App() {}
+
+  public static <T1> Http.HandlerFactory createHandlerFactory(Reloader reloader, Class<T1> type1, T1 value1) {
+    Check.notNull(reloader, "reloader == null");
+    Check.notNull(type1, "type1 == null");
+    Check.notNull(value1, "value1 == null");
+
+    return new ReloadingHandlerFactory1(reloader, type1, value1);
+  }
 
   public static Reloader createReloader(String binaryName, WatchService watchService, Reloader.Option... options) throws IOException {
     Check.notNull(binaryName, "binaryName == null");

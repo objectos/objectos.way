@@ -974,6 +974,27 @@ public final class Http {
 
   private Http() {}
 
+  private static final class SimpleHandlerFactory implements Http.HandlerFactory {
+
+    private final Http.Handler handler;
+
+    public SimpleHandlerFactory(Handler handler) {
+      this.handler = handler;
+    }
+
+    @Override
+    public final Handler create() {
+      return handler;
+    }
+
+  }
+
+  public static HandlerFactory createHandlerFactory(Http.Handler handler) {
+    Check.notNull(handler, "handler == null");
+
+    return new SimpleHandlerFactory(handler);
+  }
+
   public static HeaderName createHeaderName(String name) {
     Check.notNull(name, "name == null");
 

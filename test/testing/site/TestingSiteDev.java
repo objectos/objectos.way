@@ -89,7 +89,7 @@ public final class TestingSiteDev extends TestingSite {
       throw App.serviceFailed("ClassReloader", e);
     }
 
-    return new DevHandlerFactory(reloader, injector);
+    return App.createHandlerFactory(reloader, TestingSiteInjector.class, injector);
   }
 
 }
