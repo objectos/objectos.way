@@ -131,6 +131,7 @@ TEST_RUNTIME_DEPS := $(SLF4J_NOP)
 ## test modules
 TEST_ADD_MODULES := org.testng
 TEST_ADD_MODULES += com.h2database
+TEST_ADD_MODULES += java.net.http
 
 ## test runtime exports
 TEST_JAVAX_EXPORTS := objectos.lang.object
@@ -149,6 +150,7 @@ TEST_ADD_EXPORTS := $(foreach pkg,$(TEST_JAVAX_EXPORTS),objectos.way/$(pkg)=org.
 TEST_ADD_READS := objectos.way=org.testng
 TEST_ADD_READS += objectos.way=com.h2database
 TEST_ADD_READS += objectos.way=java.compiler
+TEST_ADD_READS += objectos.way=java.net.http
 
 include make/java-test.mk
 

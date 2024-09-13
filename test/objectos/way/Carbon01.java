@@ -13,25 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package testing.site.carbon;
-
-import objectos.way.Css;
+package objectos.way;
 
 @Css.Source
-final class Index extends CarbonPage {
+final class Carbon01 extends Carbon.Template {
 
   @Override
-  protected final void preRender() {
-    topSection = TopSection.HOME;
-  }
-
-  @Override
-  protected final void renderHead() {
-    title("Objectos Carbon");
-  }
-
-  @Override
-  protected final void renderContent() {
+  protected final void render() {
+    div(className("bg-zinc-500"));
   }
 
 }

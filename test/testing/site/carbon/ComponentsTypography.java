@@ -15,6 +15,9 @@
  */
 package testing.site.carbon;
 
+import objectos.way.Css;
+
+@Css.Source
 final class ComponentsTypography extends CarbonPage {
 
   @Override

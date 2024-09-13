@@ -15,40 +15,24 @@
  */
 package testing.site.carbon;
 
-import objectos.way.Carbon;
-import objectos.way.Http;
 import objectos.way.Web;
 import testing.zite.TestingSiteInjector;
 
 public final class CarbonWeb extends Web.Module {
 
-  private final Web.Store sessionStore;
+  private final TestingSiteInjector injector;
 
   public CarbonWeb(TestingSiteInjector injector) {
-    sessionStore = injector.sessionStore();
+    this.injector = injector;
   }
 
   @Override
   protected final void configure() {
-    Http.Module carbon;
-    carbon = Carbon.createHttpModule(
-        Carbon.classes(
-            CarbonPage.class,
-            Components.class,
-            ComponentsButton.class,
-            ComponentsDataTable.class,
-            ComponentsGrid.class,
-            ComponentsLink.class,
-            ComponentsPageHeader.class,
-            ComponentsProgressIndicator.class,
-            ComponentsTearsheet.class,
-            ComponentsTile.class,
-            ComponentsTypography.class,
-            Index.class
-        )
-    );
+    route("/ui/carbon.css", injector.carbonHandler());
+    route("/ui/script.js", injector.webResources());
 
-    install(carbon);
+    Web.Store sessionStore;
+    sessionStore = injector.sessionStore();
 
     filter(sessionStore::filter);
 

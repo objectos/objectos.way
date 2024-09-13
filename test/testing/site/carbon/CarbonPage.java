@@ -17,9 +17,11 @@ package testing.site.carbon;
 
 import java.util.List;
 import objectos.way.Carbon;
+import objectos.way.Css;
 import objectos.way.Html;
 import objectos.way.Script;
 
+@Css.Source
 abstract class CarbonPage extends Carbon.Template {
 
   TopSection topSection = TopSection.HOME;

@@ -17,9 +17,11 @@ package testing.site.carbon;
 
 import java.io.IOException;
 import objectos.way.Carbon;
+import objectos.way.Css;
 import objectos.way.Html;
 import objectos.way.Http;
 
+@Css.Source
 final class ComponentsTearsheet extends CarbonPage {
 
   private static final String EXAMPLE = "example";

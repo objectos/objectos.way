@@ -482,8 +482,7 @@ public final class Web {
 
   /**
    * Resources option: serve the contents of the specified directory as if they
-   * were at
-   * the root of the web server.
+   * were at the root of the web server.
    *
    * @param directory
    *        the directory whose contents are to be served

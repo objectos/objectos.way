@@ -25,7 +25,9 @@ import objectos.notes.Level;
 import objectos.notes.NoteSink;
 import objectos.notes.impl.ConsoleNoteSink;
 import objectos.way.App;
+import objectos.way.Carbon;
 import objectos.way.HandlerFactory;
+import objectos.way.Http;
 import testing.zite.TestingSiteInjector;
 
 public final class TestingSiteDev extends TestingSite {
@@ -53,6 +55,11 @@ public final class TestingSiteDev extends TestingSite {
   }
 
   @Override
+  final Http.Handler carbonHandler() {
+    return Carbon.generateOnGetHandler(testClassOutputOption.get());
+  }
+
+  @Override
   final HandlerFactory handlerFactory(NoteSink noteSink, App.ShutdownHook shutdownHook, TestingSiteInjector injector) {
     FileSystem fileSystem;
     fileSystem = FileSystems.getDefault();
@@ -67,10 +74,10 @@ public final class TestingSiteDev extends TestingSite {
 
     shutdownHook.register(watchService);
 
-    App.Reloader classReloader;
+    App.Reloader reloader;
 
     try {
-      classReloader = App.createReloader(
+      reloader = App.createReloader(
           "testing.site.web.TestingHttpModule", watchService,
 
           App.noteSink(noteSink),
@@ -78,12 +85,12 @@ public final class TestingSiteDev extends TestingSite {
           App.watchDirectory(testClassOutputOption.get())
       );
 
-      shutdownHook.register(classReloader);
+      shutdownHook.register(reloader);
     } catch (IOException e) {
       throw App.serviceFailed("ClassReloader", e);
     }
 
-    return new DevHandlerFactory(classReloader, injector);
+    return new DevHandlerFactory(reloader, injector);
   }
 
 }

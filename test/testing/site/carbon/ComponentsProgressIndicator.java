@@ -16,7 +16,9 @@
 package testing.site.carbon;
 
 import objectos.way.Carbon;
+import objectos.way.Css;
 
+@Css.Source
 final class ComponentsProgressIndicator extends CarbonPage {
 
   @Override

@@ -69,7 +69,8 @@ abstract class TestingSite extends App.Bootstrap {
           .js: text/javascript; charset=utf-8
           """),
 
-          Web.serveFile("/common/way.js", Script.getBytes())
+          Web.serveFile("/common/way.js", Script.getBytes()),
+          Web.serveFile("/ui/script.js", Script.getBytes())
       );
     } catch (IOException e) {
       throw App.serviceFailed("WebResources", e);
@@ -77,9 +78,13 @@ abstract class TestingSite extends App.Bootstrap {
 
     shutdownHook.register(webResources);
 
+    // Carbon
+    Http.Handler carbonHandler;
+    carbonHandler = carbonHandler();
+
     // Injector
     TestingSiteInjector injector;
-    injector = new TestingSiteInjector(noteSink, sessionStore, webResources);
+    injector = new TestingSiteInjector(noteSink, sessionStore, webResources, carbonHandler);
 
     // HandlerFactory
     HandlerFactory handlerFactory;
@@ -114,6 +119,8 @@ abstract class TestingSite extends App.Bootstrap {
   }
 
   abstract NoteSink noteSink();
+
+  abstract Http.Handler carbonHandler();
 
   abstract HandlerFactory handlerFactory(NoteSink noteSink, ShutdownHook shutdownHook, TestingSiteInjector injector);
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) R2023-2024 Objectos Software LTDA.
+ * Copyright (C) 2023-2024 Objectos Software LTDA.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,14 +15,14 @@
  */
 package objectos.way;
 
-import java.util.Set;
+import java.nio.file.Path;
 
 final class CarbonStyles implements Http.Handler {
 
-  private final Set<Class<?>> classes;
+  private final Path directory;
 
-  CarbonStyles(Set<Class<?>> classes) {
-    this.classes = classes;
+  public CarbonStyles(Path directory) {
+    this.directory = directory;
   }
 
   @Override
@@ -44,11 +44,8 @@ final class CarbonStyles implements Http.Handler {
     http.send(bytes);
   }
 
-  // visible for testing
   final Css.StyleSheet generateStyleSheet() {
     return Css.generateStyleSheet(
-        Css.classes(classes),
-
         Css.classes(
             CarbonButton.class,
             CarbonComponents.class,
@@ -59,6 +56,8 @@ final class CarbonStyles implements Http.Handler {
             CarbonTearsheet.class,
             CarbonTile.class
         ),
+
+        Css.scanDirectory(directory),
 
         Css.useLogicalProperties(),
 

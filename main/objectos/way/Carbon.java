@@ -15,9 +15,7 @@
  */
 package objectos.way;
 
-import java.io.IOException;
-import java.io.UncheckedIOException;
-import java.util.Set;
+import java.nio.file.Path;
 import java.util.function.Predicate;
 import objectos.lang.object.Check;
 import objectos.way.Carbon.Size.ExtraSmall;
@@ -222,11 +220,6 @@ public final class Carbon extends CarbonComponents {
 
     return new CarbonMenuLink(text, href, active, onClick);
   }
-
-  /**
-   * A Carbon configuration option.
-   */
-  public sealed interface Option {}
 
   enum CarbonPlane implements ProgressIndicatorVariant {
     HORIZONTAL,
@@ -464,62 +457,6 @@ public final class Carbon extends CarbonComponents {
   // non-public types
   //
 
-  private static final class Builder extends Web.Module {
-
-    Set<Class<?>> classes = Set.of();
-
-    private byte[] script;
-
-    public final Http.Module build() {
-      try {
-        script = Script.getBytes();
-      } catch (IOException e) {
-        throw new UncheckedIOException(e);
-      }
-
-      return this;
-    }
-
-    final void classes(Set<Class<?>> value) {
-      classes = value;
-    }
-
-    @Override
-    protected final void configure() {
-      route("/ui/script.js", this::script);
-
-      CarbonStyles styles;
-      styles = new CarbonStyles(classes);
-
-      route("/ui/carbon.css", styles);
-    }
-
-    private void script(Http.Exchange http) {
-      switch (http.method()) {
-        case Http.GET -> {
-          http.status(Http.OK);
-
-          http.dateNow();
-
-          http.header(Http.CONTENT_TYPE, "text/javascript; charset=utf-8");
-
-          http.header(Http.CONTENT_LENGTH, script.length);
-
-          http.send(script);
-        }
-
-        default -> http.methodNotAllowed();
-      }
-    }
-
-  }
-
-  private non-sealed static abstract class CarbonOption implements Option {
-
-    abstract void acceptBuilder(Builder builder);
-
-  }
-
   private Html.ElementName element;
 
   private boolean flagIconOnly;
@@ -530,38 +467,10 @@ public final class Carbon extends CarbonComponents {
     super(tmpl);
   }
 
-  /**
-   * Creates a new carbon HTTP module with the specified configuration options.
-   *
-   * @return a newly created HTTP module
-   */
-  public static Http.Module createHttpModule(Option... options) {
-    Builder builder;
-    builder = new Builder();
+  public static Http.Handler generateOnGetHandler(Path directory) {
+    Check.notNull(directory, "directory == null");
 
-    for (int i = 0; i < options.length; i++) {
-      Option o;
-      o = Check.notNull(options[i], "options[", i, "] == null");
-
-      CarbonOption option;
-      option = (CarbonOption) o;
-
-      option.acceptBuilder(builder);
-    }
-
-    return builder.build();
-  }
-
-  public static Option classes(Class<?>... classesToScan) {
-    Set<Class<?>> set;
-    set = Set.of(classesToScan);
-
-    return new CarbonOption() {
-      @Override
-      final void acceptBuilder(Builder builder) {
-        builder.classes(set);
-      }
-    };
+    return new CarbonStyles(directory);
   }
 
   static Html.ElementInstruction renderIcon16(Html.TemplateBase tmpl, Icon icon, Html.Instruction... attributes) {

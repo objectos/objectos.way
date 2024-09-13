@@ -18,6 +18,7 @@ package objectos.way;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.SocketException;
 import java.time.Clock;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -83,17 +84,25 @@ final class HttpServerLoop implements Runnable {
 
         executor.submit(task);
       }
+    } catch (SocketException e) {
+      if (!serverSocket.isClosed()) {
+        onIOException(e);
+      }
     } catch (IOException e) {
-      Note1<IOException> errorNote;
-      errorNote = Note1.info(getClass(), "Failed to open remote socket");
-
-      noteSink.send(errorNote, e);
+      onIOException(e);
     }
 
     Note0 stopNote;
     stopNote = Note0.info(getClass(), "Stop");
 
     noteSink.send(stopNote);
+  }
+
+  private void onIOException(IOException e) {
+    Note1<IOException> errorNote;
+    errorNote = Note1.info(getClass(), "Failed to open remote socket");
+
+    noteSink.send(errorNote, e);
   }
 
   private class ThisTask implements Runnable {
