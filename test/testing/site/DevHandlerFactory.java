@@ -17,11 +17,10 @@ package testing.site;
 
 import java.lang.reflect.Constructor;
 import objectos.way.App;
-import objectos.way.HandlerFactory;
 import objectos.way.Http;
 import testing.zite.TestingSiteInjector;
 
-final class DevHandlerFactory implements HandlerFactory {
+final class DevHandlerFactory implements Http.HandlerFactory {
 
   private final App.Reloader classReloader;
 

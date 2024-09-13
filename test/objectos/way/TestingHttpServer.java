@@ -179,7 +179,7 @@ public final class TestingHttpServer {
 
   }
 
-  private static class ThisHandlerFactory extends Http.Module implements HandlerFactory {
+  private static class ThisHandlerFactory extends Http.Module implements Http.HandlerFactory {
 
     private final DelegatingHandler carbonStylesTest = new DelegatingHandler();
 

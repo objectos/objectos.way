@@ -26,7 +26,6 @@ import objectos.notes.NoteSink;
 import objectos.notes.impl.ConsoleNoteSink;
 import objectos.way.App;
 import objectos.way.Carbon;
-import objectos.way.HandlerFactory;
 import objectos.way.Http;
 import testing.zite.TestingSiteInjector;
 
@@ -60,7 +59,7 @@ public final class TestingSiteDev extends TestingSite {
   }
 
   @Override
-  final HandlerFactory handlerFactory(NoteSink noteSink, App.ShutdownHook shutdownHook, TestingSiteInjector injector) {
+  final Http.HandlerFactory handlerFactory(NoteSink noteSink, App.ShutdownHook shutdownHook, TestingSiteInjector injector) {
     FileSystem fileSystem;
     fileSystem = FileSystems.getDefault();
 

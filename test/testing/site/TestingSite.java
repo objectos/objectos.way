@@ -20,7 +20,6 @@ import java.time.Clock;
 import objectos.notes.NoteSink;
 import objectos.way.App;
 import objectos.way.App.ShutdownHook;
-import objectos.way.HandlerFactory;
 import objectos.way.Http;
 import objectos.way.Script;
 import objectos.way.Web;
@@ -87,7 +86,7 @@ abstract class TestingSite extends App.Bootstrap {
     injector = new TestingSiteInjector(noteSink, sessionStore, webResources, carbonHandler);
 
     // HandlerFactory
-    HandlerFactory handlerFactory;
+    Http.HandlerFactory handlerFactory;
     handlerFactory = handlerFactory(noteSink, shutdownHook, injector);
 
     // Clock
@@ -122,7 +121,7 @@ abstract class TestingSite extends App.Bootstrap {
 
   abstract Http.Handler carbonHandler();
 
-  abstract HandlerFactory handlerFactory(NoteSink noteSink, ShutdownHook shutdownHook, TestingSiteInjector injector);
+  abstract Http.HandlerFactory handlerFactory(NoteSink noteSink, ShutdownHook shutdownHook, TestingSiteInjector injector);
 
   Clock clock() {
     return Clock.systemUTC();

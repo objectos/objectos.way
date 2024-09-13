@@ -317,6 +317,16 @@ public final class Http {
   }
 
   /**
+   * The HTTP handler factory of an HTTP server.
+   */
+  @FunctionalInterface
+  public interface HandlerFactory {
+
+    Http.Handler create() throws Exception;
+
+  }
+
+  /**
    * An HTTP header name.
    */
   public sealed interface HeaderName permits HttpHeaderName {

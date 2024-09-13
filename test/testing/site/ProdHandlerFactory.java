@@ -15,12 +15,11 @@
  */
 package testing.site;
 
-import objectos.way.HandlerFactory;
 import objectos.way.Http;
 import testing.site.web.TestingHttpModule;
 import testing.zite.TestingSiteInjector;
 
-final class ProdHandlerFactory implements HandlerFactory {
+final class ProdHandlerFactory implements Http.HandlerFactory {
 
   private final Http.Handler handler;
 

@@ -58,9 +58,9 @@ final class HttpServerLoop implements Runnable {
 
   final ServerSocket serverSocket;
 
-  final HandlerFactory handlerFactory;
+  final Http.HandlerFactory handlerFactory;
 
-  public HttpServerLoop(ServerSocket serverSocket, HandlerFactory handlerFactory) {
+  public HttpServerLoop(ServerSocket serverSocket, Http.HandlerFactory handlerFactory) {
     this.serverSocket = serverSocket;
 
     this.handlerFactory = handlerFactory;

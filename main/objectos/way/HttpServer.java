@@ -36,13 +36,13 @@ final class HttpServer implements Http.Server {
 
     Clock clock = Clock.systemUTC();
 
-    final HandlerFactory factory;
+    final Http.HandlerFactory factory;
 
     NoteSink noteSink = NoOpNoteSink.of();
 
     int port = 0;
 
-    public Builder(HandlerFactory factory) {
+    public Builder(Http.HandlerFactory factory) {
       this.factory = factory;
     }
 
@@ -58,7 +58,7 @@ final class HttpServer implements Http.Server {
 
   private final Clock clock;
 
-  private final HandlerFactory factory;
+  private final Http.HandlerFactory factory;
 
   private final NoteSink noteSink;
 
