@@ -145,6 +145,10 @@ public class CssTest {
         writeClassName("focus:shadow-[inset_0_0_0_1px_var(--cds-focus),inset_0_0_0_2px_var(--cds-background)]"),
         ".focus\\:shadow-\\[inset_0_0_0_1px_var\\(--cds-focus\\)\\2c inset_0_0_0_2px_var\\(--cds-background\\)\\]"
     );
+    assertEquals(
+        writeClassName("md:max-w-[60%]"),
+        ".md\\:max-w-\\[60\\%\\]"
+    );
   }
 
   private String writeClassName(String className) {

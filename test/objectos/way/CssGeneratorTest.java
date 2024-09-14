@@ -1055,7 +1055,7 @@ public class CssGeneratorTest {
         .flex-auto { flex: 1 1 auto }
         .flex-initial { flex: 0 1 auto }
         .flex-none { flex: none }
-        .flex-\\[2_2_0%\\] { flex: 2 2 0% }
+        .flex-\\[2_2_0\\%\\] { flex: 2 2 0% }
         """
     );
   }
@@ -1140,7 +1140,7 @@ public class CssGeneratorTest {
         .basis-10\\/12 { flex-basis: 83.333333% }
         .basis-11\\/12 { flex-basis: 91.666667% }
         .basis-full { flex-basis: 100% }
-        .basis-\\[14\\.2857143%\\] { flex-basis: 14.2857143% }
+        .basis-\\[14\\.2857143\\%\\] { flex-basis: 14.2857143% }
         """
     );
   }

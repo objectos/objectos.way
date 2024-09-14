@@ -1411,7 +1411,7 @@ public final class Css {
           escaped = false;
         }
 
-        case ' ', '.', '/', ':', '@', '(', ')', '[', ']', '*' -> {
+        case ' ', '.', '/', ':', '@', '(', ')', '[', ']', '*', '%' -> {
           out.append("\\");
 
           out.append(c);
