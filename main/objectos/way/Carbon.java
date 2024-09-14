@@ -19,7 +19,9 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.util.function.Predicate;
 import objectos.lang.object.Check;
+import objectos.notes.Level;
 import objectos.notes.NoteSink;
+import objectos.notes.impl.ConsoleNoteSink;
 import objectos.way.Carbon.Size.ExtraSmall;
 import objectos.way.Carbon.Size.Max;
 import objectos.way.Html.ElementName;
@@ -459,6 +461,32 @@ public final class Carbon extends CarbonComponents {
   // non-public types
   //
 
+  private static final class CarbonBuild extends App.Bootstrap {
+
+    private final App.Option<Path> classOutput = option(
+        "--class-output", ofPath(), required()
+    );
+
+    private final App.Option<Path> outputFile = option(
+        "--output-file", ofPath(), required()
+    );
+
+    private CarbonBuild() {}
+
+    @Override
+    protected final void bootstrap() {
+      try {
+        NoteSink noteSink;
+        noteSink = new ConsoleNoteSink(Level.INFO);
+
+        Carbon.generate(noteSink, classOutput.get(), outputFile.get());
+      } catch (IOException e) {
+        throw App.serviceFailed("Carbon CSS generation", e);
+      }
+    }
+
+  }
+
   private Html.ElementName element;
 
   private boolean flagIconOnly;
@@ -485,6 +513,13 @@ public final class Carbon extends CarbonComponents {
     Check.notNull(directory, "directory == null");
 
     return new CarbonStyles(noteSink, directory);
+  }
+
+  /**
+   * Generates the Carbon stylesheet file.
+   */
+  public static void main(String[] args) {
+    new CarbonBuild().start(args);
   }
 
   static Html.ElementInstruction renderIcon16(Html.TemplateBase tmpl, Icon icon, Html.Instruction... attributes) {
