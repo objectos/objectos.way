@@ -26,7 +26,7 @@ import java.time.Instant;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-public class WebResourcesTest implements Http.Handler {
+public class WebResourcesTest extends Http.Module {
 
   private Path root;
 
@@ -46,7 +46,6 @@ public class WebResourcesTest implements Http.Handler {
         """),
 
         testCase01Option(),
-        testCase02Option(),
         testCase03Option(),
         testCase04Option(),
         testCase05Option()
@@ -58,8 +57,13 @@ public class WebResourcesTest implements Http.Handler {
   }
 
   @Override
-  public final void handle(Http.Exchange http) {
-    resources.handle(http);
+  protected final void configure() {
+    route("/tc01.txt", resources);
+    route("/tc02.txt", resources);
+    route("/tc02.txt", this::testCase02);
+    route("/tc03.txt", resources);
+    route("/tc04.txt", resources);
+    route("/tc05.txt", resources);
   }
 
   private Web.Resources.Option testCase01Option() throws IOException {
@@ -102,46 +106,32 @@ public class WebResourcesTest implements Http.Handler {
     }
   }
 
-  private Web.Resources.Option testCase02Option() throws IOException {
-    Path src;
-    src = TestingDir.next();
-
-    Path a;
-    a = Path.of("tc02.txt");
-
-    write(src, a, "AAAA\n");
-
-    return Web.serveDirectory(src);
+  private void testCase02(Http.Exchange http) {
+    http.okText("BBBB\n", StandardCharsets.UTF_8);
   }
 
   @Test(description = """
-  It should 404 if the file does not exist
+  It should not handle if the file does not exist
   """)
   public void testCase02() throws IOException {
     try (Socket socket = newSocket()) {
-      Path src;
-      src = TestingDir.next();
-
-      Path a;
-      a = Path.of("tc02.txt");
-
-      write(src, a, "AAAA\n");
-
       test(
           socket,
 
           """
-          GET /b.txt HTTP/1.1\r
+          GET /tc02.txt HTTP/1.1\r
           Host: web.resources.test\r
           Connection: close\r
           \r
           """,
 
           """
-          HTTP/1.1 404 NOT FOUND\r
+          HTTP/1.1 200 OK\r
           Date: Wed, 28 Jun 2023 12:08:43 GMT\r
-          Connection: close\r
+          Content-Type: text/plain; charset=utf-8\r
+          Content-Length: 5\r
           \r
+          BBBB
           """
       );
     }

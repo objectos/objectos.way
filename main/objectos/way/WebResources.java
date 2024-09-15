@@ -199,8 +199,6 @@ final class WebResources implements AutoCloseable, Web.Resources {
     if (!file.startsWith(rootDirectory)) {
       noteSink.send(TRAVERSAL, relativePath);
 
-      http.notFound();
-
       return;
     }
 
@@ -209,8 +207,6 @@ final class WebResources implements AutoCloseable, Web.Resources {
     try {
       attributes = Files.readAttributes(file, BasicFileAttributes.class);
     } catch (NoSuchFileException e) {
-      http.notFound();
-
       return;
     } catch (IOException e) {
       http.internalServerError(e);
@@ -219,8 +215,6 @@ final class WebResources implements AutoCloseable, Web.Resources {
     }
 
     if (!attributes.isRegularFile()) {
-      http.notFound();
-
       return;
     }
 

@@ -137,7 +137,7 @@ public final class TestingHttpServer {
     }
 
     public static void bindWebResourcesTest(WebResourcesTest test) {
-      HANDLER.webResourcesTest.delegate = test;
+      HANDLER.webResourcesTest.delegate = test.compile();
     }
 
     private static Http.Server create() {
