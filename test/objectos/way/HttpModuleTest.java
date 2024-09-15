@@ -15,10 +15,12 @@
  */
 package objectos.way;
 
+import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 
 import java.io.IOException;
 import java.net.Socket;
+import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
 import objectos.way.TestingRandom.SequentialRandom;
 import org.testng.annotations.BeforeClass;
@@ -69,45 +71,54 @@ public class HttpModuleTest extends Http.Module {
 
     // matches: /testCase01/foo
     // but not: /testCase01, /testCase01/, /testCase01/foo/bar
-    route("/testCase01/:text", this::$testCase01,
-        params(notEmpty("text"))
-    );
+    route("/testCase01/:text",
+        pathParams(notEmpty("text")),
+        handler(this::$testCase01));
 
     // redirect non-authenticated requests
     filter(this::testCase02);
 
     // matches: /testCase03, /testCase03/foo, /testCase03/foo/bar
     Http.Handler testCase03 = this::testCase03;
-    route("/testCase03", testCase03);
-    route("/testCase03/*", testCase03);
+    route("/testCase03", handler(testCase03));
+    route("/testCase03/*", handler(testCase03));
 
     // matches: /testCase04, /testCase04/foo, /testCase04/foo/bar
     install(new TestCase04());
 
     // matches: /testCase05/img, /testCase05/img/, /testCase05/img/a, /testCase05/img/b
     Http.Handler testCase05 = this::testCase05;
-    route("/testCase05/img", testCase05);
-    route("/testCase05/img/*", testCase05);
+    route("/testCase05/img", handler(testCase05));
+    route("/testCase05/img/*", handler(testCase05));
 
     // matches: /testCase06/, /testCase06/foo, /testCase06/foo/bar
     // but not: /testCase06
-    route("/testCase06/*", this::$testCase06);
+    route("/testCase06/*", handler(this::$testCase06));
 
     // tc07: interceptMatched
-    route("/testCase07/before", this::$testCase07);
+    route("/testCase07/before", handler(this::$testCase07));
 
     interceptMatched(this::testCase07);
 
-    route("/testCase07/after", this::$testCase07);
+    route("/testCase07/after", handler(this::$testCase07));
 
     // tc08: install
     install(new TestCase08());
 
     // tc09: notEmpty, digits
-    route("/testCase09/:notEmpty/:digits", this::$testCase09, params(notEmpty("notEmpty"), digits("digits")));
+    route("/testCase09/:notEmpty/:digits",
+        pathParams(notEmpty("notEmpty"), digits("digits")),
+        handler(this::$testCase09));
 
     // tc10: regex
-    route("/testCase10/:regex", this::$testCase10, params(regex("regex", "[0-9a-z]+")));
+    route("/testCase10/:regex",
+        pathParams(regex("regex", "[0-9a-z]+")),
+        handler(this::$testCase10));
+
+    // tc11: multiple handlers
+    Http.Handler noop = http -> {};
+    Http.Handler nono = http -> http.okText("nonono\n", StandardCharsets.UTF_8);
+    route("/testCase11", handler(noop), handler(this::$testCase11), handler(nono));
   }
 
   private void $testCase01(Http.Exchange http) {
@@ -338,11 +349,11 @@ public class HttpModuleTest extends Http.Module {
   private static class TestCase04 extends Http.Module {
     @Override
     protected final void configure() {
-      route("/testCase04", http -> http.okText("ROOT", StandardCharsets.UTF_8));
+      route("/testCase04", handler(http -> http.okText("ROOT", StandardCharsets.UTF_8)));
 
-      route("/testCase04/", http -> http.movedPermanently("/testCase04"));
+      route("/testCase04/", handler(http -> http.movedPermanently("/testCase04")));
 
-      route("/testCase04/foo", http -> http.okText("foo", StandardCharsets.UTF_8));
+      route("/testCase04/foo", handler(http -> http.okText("foo", StandardCharsets.UTF_8)));
     }
   }
 
@@ -710,7 +721,7 @@ public class HttpModuleTest extends Http.Module {
   private static class TestCase08 extends Http.Module {
     @Override
     protected final void configure() {
-      route("/testCase08", http -> http.okText("TC08", StandardCharsets.UTF_8));
+      route("/testCase08", handler(http -> http.okText("TC08", StandardCharsets.UTF_8)));
     }
   }
 
@@ -847,6 +858,27 @@ public class HttpModuleTest extends Http.Module {
           """
       );
     }
+  }
+
+  private void $testCase11(Http.Exchange http) {
+    http.okText("SECOND", StandardCharsets.UTF_8);
+  }
+
+  @Test
+  public void testCase11() throws IOException, InterruptedException {
+    HttpResponse<String> response;
+    response = Testing.httpClient(
+        "/testCase11",
+
+        Testing.headers(
+            "Host", "http.module.test",
+            "Connection", "close",
+            "Cookie", "HTTPMODULETEST=TEST_COOKIE"
+        )
+    );
+
+    assertEquals(response.statusCode(), 200);
+    assertEquals(response.body(), "SECOND");
   }
 
   @Test

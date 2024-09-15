@@ -22,6 +22,8 @@ import objectos.lang.object.Check;
 
 abstract class HttpModule {
 
+  // user types
+
   protected sealed static abstract class Condition permits HttpModuleCondition {
 
     final String name;
@@ -45,13 +47,37 @@ abstract class HttpModule {
 
   }
 
-  protected sealed static abstract class RouteOption permits HttpModuleRouteParameters {
+  protected sealed interface RouteOption {}
 
-    RouteOption() {}
+  // internal types
 
+  private sealed interface ThisRouteOption extends RouteOption {
+    void accept(HttpModuleCompiler compiler);
   }
 
-  private record Factory1Handler<T>(Function<T, Http.Handler> function, T value) implements Http.Handler {
+  private record HandlerOption(Http.Handler instance) implements ThisRouteOption {
+    @Override
+    public final void accept(HttpModuleCompiler compiler) {
+      compiler.handleWith(instance);
+    }
+  }
+
+  private record HandlerFactory0Option(Supplier<Http.Handler> factory) implements Http.Handler, ThisRouteOption {
+    @Override
+    public final void handle(Http.Exchange http) {
+      Http.Handler handler;
+      handler = factory.get();
+
+      handler.handle(http);
+    }
+
+    @Override
+    public final void accept(HttpModuleCompiler compiler) {
+      compiler.handleWith(this);
+    }
+  }
+
+  private record HandlerFactory1Option<T>(Function<T, Http.Handler> function, T value) implements Http.Handler, ThisRouteOption {
     @Override
     public final void handle(Http.Exchange http) {
       Http.Handler handler;
@@ -59,17 +85,39 @@ abstract class HttpModule {
 
       handler.handle(http);
     }
-  }
 
-  private record SupplierHandler(Supplier<Http.Handler> supplier) implements Http.Handler {
     @Override
-    public final void handle(Http.Exchange http) {
-      Http.Handler handler;
-      handler = supplier.get();
-
-      handler.handle(http);
+    public final void accept(HttpModuleCompiler compiler) {
+      compiler.handleWith(this);
     }
   }
+
+  private record MovedPermanentlyOption(String location) implements Http.Handler, ThisRouteOption {
+    @Override
+    public final void handle(Http.Exchange http) {
+      http.status(Http.MOVED_PERMANENTLY);
+
+      http.dateNow();
+
+      http.header(Http.LOCATION, location);
+
+      http.send();
+    }
+
+    @Override
+    public final void accept(HttpModuleCompiler compiler) {
+      compiler.handleWith(this);
+    }
+  }
+
+  private record PathParametersOption(Condition[] conditions) implements ThisRouteOption {
+    @Override
+    public final void accept(HttpModuleCompiler compiler) {
+      compiler.pathParams(conditions);
+    }
+  }
+
+  // fields
 
   private HttpModuleCompiler compiler;
 
@@ -169,35 +217,53 @@ abstract class HttpModule {
     compiler.interceptor(interceptor);
   }
 
-  // routes
+  // route
 
-  protected final void route(String pathExpression, Http.Handler handler, RouteOption... options) {
+  protected final void route(String pathExpression, RouteOption... options) {
     Check.notNull(pathExpression, "pathExpression == null");
-    Check.notNull(handler, "handler == null");
 
-    HttpModuleRouteOptions routeOptions;
-    routeOptions = HttpModuleRouteOptions.of(options);
+    compiler.routeStart(pathExpression);
 
-    compiler.route(pathExpression, handler, routeOptions);
-  }
+    for (int idx = 0; idx < options.length; idx++) {
+      RouteOption o;
+      o = Check.notNull(options[idx], "options[", idx, "] == null");
 
-  // handler suppliers
+      ThisRouteOption option;
+      option = (ThisRouteOption) o;
 
-  protected final Http.Handler f(Supplier<Http.Handler> supplier) {
-    Check.notNull(supplier, "supplier == null");
+      option.accept(compiler);
+    }
 
-    return new SupplierHandler(supplier);
-  }
-
-  protected final <T> Http.Handler f(Function<T, Http.Handler> function, T value) {
-    Check.notNull(function, "function == null");
-
-    return new Factory1Handler<T>(function, value);
+    compiler.routeEnd();
   }
 
   // route options
 
-  protected final RouteOption params(Condition... conditions) {
+  protected final RouteOption handler(Http.Handler handler) {
+    Check.notNull(handler, "handler == null");
+
+    return new HandlerOption(handler);
+  }
+
+  protected final RouteOption handlerFactory(Supplier<Http.Handler> factory) {
+    Check.notNull(factory, "factory == null");
+
+    return new HandlerFactory0Option(factory);
+  }
+
+  protected final <T> RouteOption handlerFactory(Function<T, Http.Handler> factory, T value) {
+    Check.notNull(factory, "factory == null");
+
+    return new HandlerFactory1Option<>(factory, value);
+  }
+
+  protected final RouteOption movedPermanently(String location) {
+    Check.notNull(location, "location == null");
+
+    return new MovedPermanentlyOption(location);
+  }
+
+  protected final RouteOption pathParams(Condition... conditions) {
     Condition[] copy;
     copy = new Condition[conditions.length];
 
@@ -205,8 +271,10 @@ abstract class HttpModule {
       copy[i] = Check.notNull(conditions[i], "conditions[", i, "] == null");
     }
 
-    return new HttpModuleRouteParameters(copy);
+    return new PathParametersOption(copy);
   }
+
+  //
 
   protected final Condition digits(String name) {
     Check.notNull(name, "name == null");
@@ -228,14 +296,6 @@ abstract class HttpModule {
     pattern = Pattern.compile(regex);
 
     return new HttpModuleCondition.Regex(name, pattern);
-  }
-
-  // pre-made actions
-
-  protected final Http.Handler movedPermanently(String location) {
-    Check.notNull(location, "location == null");
-
-    return http -> http.movedPermanently(location);
   }
 
 }

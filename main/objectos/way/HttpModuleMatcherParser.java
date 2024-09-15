@@ -27,39 +27,39 @@ class HttpModuleMatcherParser {
 
   private static final String WILDCARD_CHAR = "The '*' wildcard character can only be used once at the end of the path expression";
 
-  final HttpModuleMatcher matcher(String path) {
+  final HttpModuleMatcher matcher(String pathExpression) {
     int length;
-    length = path.length();
+    length = pathExpression.length(); // implicit null check
 
     if (length == 0) {
-      throw illegal(PATH_DOES_START_WITH_SOLIDUS, path);
+      throw illegal(PATH_DOES_START_WITH_SOLIDUS, pathExpression);
     }
 
     int index;
     index = 0;
 
     char c;
-    c = path.charAt(index++);
+    c = pathExpression.charAt(index++);
 
     if (c != '/') {
-      throw illegal(PATH_DOES_START_WITH_SOLIDUS, path);
+      throw illegal(PATH_DOES_START_WITH_SOLIDUS, pathExpression);
     }
 
     HttpModuleMatcher matcher;
     matcher = null;
 
     int colon;
-    colon = path.indexOf(COLON, index);
+    colon = pathExpression.indexOf(COLON, index);
 
     while (colon > 0) {
       if (matcher == null) {
         String value;
-        value = path.substring(0, colon);
+        value = pathExpression.substring(0, colon);
 
         matcher = new HttpModuleMatcher.StartsWith(value);
       } else {
         String value;
-        value = path.substring(index, colon);
+        value = pathExpression.substring(index, colon);
 
         matcher = matcher.append(new HttpModuleMatcher.Region(value));
       }
@@ -71,14 +71,14 @@ class HttpModuleMatcherParser {
       }
 
       int solidus;
-      solidus = path.indexOf(SOLIDUS, index);
+      solidus = pathExpression.indexOf(SOLIDUS, index);
 
       String name;
 
       if (solidus < 0) {
-        name = path.substring(index);
+        name = pathExpression.substring(index);
       } else {
-        name = path.substring(index, solidus);
+        name = pathExpression.substring(index, solidus);
       }
 
       matcher = matcher.append(new HttpModuleMatcher.NamedVariable(name));
@@ -89,33 +89,33 @@ class HttpModuleMatcherParser {
 
       index = solidus;
 
-      colon = path.indexOf(COLON, index);
+      colon = pathExpression.indexOf(COLON, index);
     }
 
     if (matcher != null) {
       String value;
-      value = path.substring(index);
+      value = pathExpression.substring(index);
 
       return matcher.append(new HttpModuleMatcher.Region(value));
     }
 
     int asterisk;
-    asterisk = path.indexOf(ASTERISK, index);
+    asterisk = pathExpression.indexOf(ASTERISK, index);
 
     if (asterisk > 0) {
       int lastIndex;
       lastIndex = length - 1;
 
       if (asterisk != lastIndex) {
-        throw illegal(WILDCARD_CHAR, path);
+        throw illegal(WILDCARD_CHAR, pathExpression);
       }
 
       String value;
-      value = path.substring(0, lastIndex);
+      value = pathExpression.substring(0, lastIndex);
 
       return new HttpModuleMatcher.StartsWith(value);
     } else {
-      return new HttpModuleMatcher.Exact(path);
+      return new HttpModuleMatcher.Exact(pathExpression);
     }
   }
 

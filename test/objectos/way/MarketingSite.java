@@ -21,7 +21,7 @@ final class MarketingSite extends Http.Module {
   protected final void configure() {
     route("/", movedPermanently("/index.html"));
 
-    route("/index.html", this::indexHtml);
+    route("/index.html", handler(this::indexHtml));
   }
 
   private void indexHtml(Http.Exchange http) {

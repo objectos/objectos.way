@@ -15,15 +15,13 @@
  */
 package objectos.way;
 
-import objectos.way.Http.Handler;
-
 final class HttpModuleRoute implements HttpModuleAction {
 
   private final HttpModuleMatcher matcher;
 
   private final Http.Handler handler;
 
-  public HttpModuleRoute(HttpModuleMatcher matcher, Handler handler) {
+  public HttpModuleRoute(HttpModuleMatcher matcher, Http.Handler handler) {
     this.matcher = matcher;
     this.handler = handler;
   }

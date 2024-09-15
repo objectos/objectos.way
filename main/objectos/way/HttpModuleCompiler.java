@@ -17,14 +17,32 @@ package objectos.way;
 
 import java.util.Arrays;
 import objectos.util.array.ObjectArrays;
+import objectos.way.HttpModule.Condition;
 
 final class HttpModuleCompiler extends HttpModuleMatcherParser implements Http.Handler {
+
+  private record FallbackHandler(Http.Handler main, Http.Handler fallback) implements Http.Handler {
+    @Override
+    public final void handle(Http.Exchange http) {
+      main.handle(http);
+
+      if (http.processed()) {
+        return;
+      }
+
+      fallback.handle(http);
+    }
+  }
 
   private HttpModuleAction[] actions;
 
   private int actionsIndex;
 
   private Http.Handler.Interceptor interceptor;
+
+  private HttpModuleMatcher routeMatcher;
+
+  private Http.Handler routeHandler;
 
   public final Http.Handler compile() {
     if (actions != null) {
@@ -48,6 +66,40 @@ final class HttpModuleCompiler extends HttpModuleMatcherParser implements Http.H
     }
 
     http.notFound();
+  }
+
+  public final void routeStart(String pathExpression) {
+    routeMatcher = matcher(pathExpression);
+  }
+
+  public final void handleWith(Http.Handler handler) {
+    if (routeHandler == null) {
+      routeHandler = handler;
+    } else {
+      routeHandler = new FallbackHandler(routeHandler, handler);
+    }
+  }
+
+  public final void pathParams(Condition[] conditions) {
+    routeMatcher = routeMatcher.withConditions(conditions);
+  }
+
+  public final void routeEnd() {
+    if (routeHandler == null) {
+      throw new IllegalArgumentException("Route without handler");
+    }
+
+    Http.Handler actualHandler;
+    actualHandler = decorate(routeHandler);
+
+    int index;
+    index = nextSlot();
+
+    actions[index] = new HttpModuleRoute(routeMatcher, actualHandler);
+
+    routeMatcher = null;
+
+    routeHandler = null;
   }
 
   private record HttpModuleFilter(Http.Handler handler) implements HttpModuleAction {
@@ -100,26 +152,6 @@ final class HttpModuleCompiler extends HttpModuleMatcherParser implements Http.H
     } else {
       interceptor = handler -> interceptor.intercept(next.intercept(handler));
     }
-  }
-
-  final void route(String pathExpression, Http.Handler handler, HttpModuleRouteOptions options) {
-    HttpModuleMatcher matcher;
-    matcher = parseAndDecorate(pathExpression, options);
-
-    Http.Handler actualHandler;
-    actualHandler = decorate(handler);
-
-    int index;
-    index = nextSlot();
-
-    actions[index] = new HttpModuleRoute(matcher, actualHandler);
-  }
-
-  private HttpModuleMatcher parseAndDecorate(String pathExpression, HttpModuleRouteOptions options) {
-    HttpModuleMatcher matcher;
-    matcher = matcher(pathExpression);
-
-    return options.decorate(matcher);
   }
 
   private Http.Handler decorate(Http.Handler handler) {

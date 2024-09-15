@@ -33,8 +33,8 @@ public class WebModuleTest extends Web.Module {
   protected final void configure() {
     source(TestingH2.SOURCE);
 
-    route("/testCase01/trx", transactional(this::$testCase01));
-    route("/testCase01/xrt", this::$testCase01);
+    route("/testCase01/trx", handler(transactional(this::$testCase01)));
+    route("/testCase01/xrt", handler(this::$testCase01));
   }
 
   private void $testCase01(Http.Exchange http) {

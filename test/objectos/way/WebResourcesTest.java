@@ -58,12 +58,12 @@ public class WebResourcesTest extends Http.Module {
 
   @Override
   protected final void configure() {
-    route("/tc01.txt", resources);
-    route("/tc02.txt", resources);
-    route("/tc02.txt", this::testCase02);
-    route("/tc03.txt", resources);
-    route("/tc04.txt", resources);
-    route("/tc05.txt", resources);
+    route("/tc01.txt", handler(resources));
+    route("/tc02.txt", handler(resources));
+    route("/tc02.txt", handler(this::testCase02));
+    route("/tc03.txt", handler(resources));
+    route("/tc04.txt", handler(resources));
+    route("/tc05.txt", handler(resources));
   }
 
   private Web.Resources.Option testCase01Option() throws IOException {

@@ -28,26 +28,26 @@ public final class CarbonWeb extends Web.Module {
 
   @Override
   protected final void configure() {
-    route("/ui/carbon.css", injector.carbonHandler());
-    route("/ui/script.js", injector.webResources());
+    route("/ui/carbon.css", handler(injector.carbonHandler()));
+    route("/ui/script.js", handler(injector.webResources()));
 
     Web.Store sessionStore;
     sessionStore = injector.sessionStore();
 
     filter(sessionStore::filter);
 
-    route("/", f(Index::new));
-    route("/components", f(Components::new));
-    route("/components/button", f(ComponentsButton::new));
-    route("/components/data-table", f(ComponentsDataTable::new));
-    route("/components/form", f(ComponentsForm::new));
-    route("/components/grid", f(ComponentsGrid::new));
-    route("/components/link", f(ComponentsLink::new));
-    route("/components/page-header", f(ComponentsPageHeader::new));
-    route("/components/progress-indicator", f(ComponentsProgressIndicator::new));
-    route("/components/tearsheet", f(ComponentsTearsheet::new));
-    route("/components/tile", f(ComponentsTile::new));
-    route("/components/typography", f(ComponentsTypography::new));
+    route("/", handlerFactory(Index::new));
+    route("/components", handlerFactory(Components::new));
+    route("/components/button", handlerFactory(ComponentsButton::new));
+    route("/components/data-table", handlerFactory(ComponentsDataTable::new));
+    route("/components/form", handlerFactory(ComponentsForm::new));
+    route("/components/grid", handlerFactory(ComponentsGrid::new));
+    route("/components/link", handlerFactory(ComponentsLink::new));
+    route("/components/page-header", handlerFactory(ComponentsPageHeader::new));
+    route("/components/progress-indicator", handlerFactory(ComponentsProgressIndicator::new));
+    route("/components/tearsheet", handlerFactory(ComponentsTearsheet::new));
+    route("/components/tile", handlerFactory(ComponentsTile::new));
+    route("/components/typography", handlerFactory(ComponentsTypography::new));
   }
 
 }

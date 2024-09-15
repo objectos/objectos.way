@@ -33,7 +33,7 @@ public class HttpServerTest extends Http.Module {
 
   @Override
   protected final void configure() {
-    route("/test/:name", this::handle1);
+    route("/test/:name", handler(this::handle1));
   }
 
   private void handle1(Http.Exchange http) {

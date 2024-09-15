@@ -20,17 +20,9 @@ import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertTrue;
 
 import java.io.IOException;
-import java.net.URI;
-import java.net.http.HttpClient;
-import java.net.http.HttpClient.Version;
-import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-import java.net.http.HttpResponse.BodyHandlers;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.time.Duration;
-import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
@@ -39,8 +31,6 @@ public class CarbonStylesTest extends Http.Module {
   private Path directory;
 
   private Http.Handler stylesHandler;
-
-  private HttpClient client;
 
   @BeforeClass
   public void beforeClass() throws IOException {
@@ -51,36 +41,23 @@ public class CarbonStylesTest extends Http.Module {
     stylesHandler = Carbon.generateOnGetHandler(TestingNoteSink.INSTANCE, directory);
 
     TestingHttpServer.bindCarbonStylesTest(this);
-
-    System.setProperty("jdk.httpclient.allowRestrictedHeaders", "host");
-
-    client = HttpClient.newBuilder().version(Version.HTTP_1_1).build();
-  }
-
-  @AfterClass(alwaysRun = true)
-  public void afterClass() {
-    if (client != null) {
-      client.close();
-    }
   }
 
   @Override
   protected final void configure() {
-    route("/carbon.css", stylesHandler);
+    route("/carbon.css", handler(stylesHandler));
   }
 
   @Test
   public void testCase01() throws IOException, InterruptedException {
-    int port = TestingHttpServer.port();
-
-    HttpRequest request = HttpRequest.newBuilder()
-        .uri(URI.create("http://localhost:" + port + "/carbon.css"))
-        .header("Host", "carbon.styles.test")
-        .timeout(Duration.ofMinutes(1))
-        .build();
-
     HttpResponse<String> response;
-    response = client.send(request, BodyHandlers.ofString(StandardCharsets.UTF_8));
+    response = Testing.httpClient(
+        "/carbon.css",
+        Testing.headers(
+            "Host", "carbon.styles.test",
+            "Connection", "close"
+        )
+    );
 
     assertEquals(response.statusCode(), 200);
 

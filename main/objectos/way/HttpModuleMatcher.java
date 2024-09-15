@@ -16,6 +16,7 @@
 package objectos.way;
 
 import java.util.Arrays;
+import objectos.way.HttpModule.Condition;
 
 @SuppressWarnings("exports")
 interface HttpModuleMatcher {
@@ -143,8 +144,29 @@ interface HttpModuleMatcher {
     }
   }
 
+  record WithConditions(HttpModuleMatcher matcher, HttpModule.Condition[] conditions) implements HttpModuleMatcher {
+    @Override
+    public final boolean test(HttpRequestLine path) {
+      return matcher.test(path) && testConditions(path);
+    }
+
+    private boolean testConditions(HttpRequestLine path) {
+      for (HttpModule.Condition condition : conditions) {
+        if (!condition.test(path)) {
+          return false;
+        }
+      }
+
+      return true;
+    }
+  }
+
   default HttpModuleMatcher append(HttpModuleMatcher other) {
     return new Matcher2(this, other);
+  }
+
+  default HttpModuleMatcher withConditions(Condition[] conditions) {
+    return new WithConditions(this, conditions);
   }
 
   boolean test(HttpRequestLine target);

@@ -36,11 +36,11 @@ public class TestingHttpModule extends Http.Module {
 
     install(new UiHttpModule(injector));
 
-    route("/login", f(Login::new, injector));
+    route("/login", handlerFactory(Login::new, injector));
 
-    route("/common/*", injector.webResources());
+    route("/common/*", handler(injector.webResources()));
 
-    route("/styles.css", new Styles(injector));
+    route("/styles.css", handler(new Styles(injector)));
 
     Web.Store sessionStore;
     sessionStore = injector.sessionStore();
@@ -49,7 +49,7 @@ public class TestingHttpModule extends Http.Module {
 
     filter(this::requireLogin);
 
-    route("/", f(Home::new, injector));
+    route("/", handlerFactory(Home::new, injector));
   }
 
   private void requireLogin(Http.Exchange http) {
