@@ -269,6 +269,46 @@ public class SqlTransactionTest {
     );
   }
 
+  @Test(description = "trx.sql(sql).update()")
+  public void testCase05() {
+    TestingConnection conn;
+    conn = new TestingConnection();
+
+    TestingStatement stmt;
+    stmt = new TestingStatement();
+
+    stmt.updates(1);
+
+    conn.statements(stmt);
+
+    try (SqlTransaction trx = trx(conn)) {
+      trx.sql("create table TEMP (ID)");
+
+      int result;
+      result = trx.update();
+
+      assertEquals(result, 1);
+    }
+
+    assertEquals(
+        conn.toString(),
+
+        """
+        createStatement()
+        close()
+        """
+    );
+
+    assertEquals(
+        stmt.toString(),
+
+        """
+        update(create table TEMP (ID))
+        close()
+        """
+    );
+  }
+
   @Test
   public void batchUpdate01() {
     TestingConnection conn;

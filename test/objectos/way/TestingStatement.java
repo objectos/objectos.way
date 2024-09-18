@@ -20,6 +20,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.SQLWarning;
 import java.sql.Statement;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.stream.Stream;
@@ -30,12 +31,18 @@ final class TestingStatement extends AbstractTestable implements Statement {
 
   private Iterator<ResultSet> queries = Collections.emptyIterator();
 
+  private Iterator<Integer> updates = Collections.emptyIterator();
+
   public final void batches(int[]... values) {
     batches = Stream.of(values).iterator();
   }
 
   public final void queries(ResultSet... values) {
     queries = Stream.of(values).iterator();
+  }
+
+  public final void updates(int... values) {
+    updates = Arrays.stream(values).iterator();
   }
 
   @Override
@@ -50,7 +57,15 @@ final class TestingStatement extends AbstractTestable implements Statement {
   }
 
   @Override
-  public int executeUpdate(String sql) throws SQLException { throw new UnsupportedOperationException("Implement me"); }
+  public final int executeUpdate(String sql) throws SQLException {
+    logMethod("update", sql);
+
+    if (!updates.hasNext()) {
+      throw new IllegalStateException("No more updates");
+    }
+
+    return updates.next();
+  }
 
   @Override
   public void close() throws SQLException {
