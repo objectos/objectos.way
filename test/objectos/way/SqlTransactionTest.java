@@ -309,6 +309,58 @@ public class SqlTransactionTest {
     );
   }
 
+  @Test(description = "trx.sql(sql).add(1).addBatch().add(2).addBatch().batchUpdate()")
+  public void testCase06() {
+    TestingConnection conn;
+    conn = new TestingConnection();
+
+    TestingPreparedStatement stmt;
+    stmt = new TestingPreparedStatement();
+
+    stmt.batches(new int[] {1, 1});
+
+    conn.preparedStatements(stmt);
+
+    try (SqlTransaction trx = trx(conn)) {
+      trx.sql("insert into BAR (X) values (?)");
+
+      trx.add(1);
+
+      trx.addBatch();
+
+      trx.add(2);
+
+      trx.addBatch();
+
+      int[] result;
+      result = trx.batchUpdate();
+
+      assertEquals(result, new int[] {1, 1});
+    }
+
+    assertEquals(
+        conn.toString(),
+
+        """
+        prepareStatement(insert into BAR (X) values (?))
+        close()
+        """
+    );
+
+    assertEquals(
+        stmt.toString(),
+
+        """
+        setInt(1, 1)
+        addBatch()
+        setInt(1, 2)
+        addBatch()
+        executeBatch()
+        close()
+        """
+    );
+  }
+
   @Test
   public void batchUpdate01() {
     TestingConnection conn;

@@ -23,6 +23,7 @@ import java.sql.Statement;
 import java.util.List;
 import objectos.lang.object.Check;
 import objectos.util.list.GrowableList;
+import objectos.util.list.UnmodifiableList;
 import objectos.way.Sql.RowMapper;
 import objectos.way.Sql.Transaction;
 import objectos.way.Sql.UncheckedSqlException;
@@ -35,7 +36,9 @@ final class SqlTransaction implements Sql.Transaction {
 
   private String sql;
 
-  private List<Object> arguments;
+  private GrowableList<Object> arguments;
+
+  private List<List<Object>> batches;
 
   SqlTransaction(SqlDialect dialect, Connection connection) {
     this.dialect = dialect;
@@ -180,12 +183,18 @@ final class SqlTransaction implements Sql.Transaction {
       arguments.clear();
     }
 
+    if (batches != null) {
+      batches.clear();
+    }
+
     return this;
   }
 
   @Override
   public final Transaction add(Object value) {
     Check.notNull(value, "value == null");
+
+    checkSql();
 
     if (arguments == null) {
       arguments = new GrowableList<>();
@@ -197,10 +206,50 @@ final class SqlTransaction implements Sql.Transaction {
   }
 
   @Override
-  public final <T> List<T> query(Sql.RowMapper<T> mapper) throws UncheckedSqlException {
-    Check.notNull(mapper, "mapper == null");
-
+  public final Transaction addBatch() {
     checkSql();
+
+    if (!hasArguments()) {
+      throw new IllegalStateException("No arguments were defined");
+    }
+
+    if (batches == null) {
+      batches = new GrowableList<>();
+    }
+
+    UnmodifiableList<Object> batch;
+    batch = arguments.toUnmodifiableList();
+
+    arguments.clear();
+
+    batches.add(batch);
+
+    return this;
+  }
+
+  @Override
+  public final int[] batchUpdate() {
+    Check.state(hasBatches(), "No batches were defined");
+    Check.state(!hasArguments(), "Dangling arguments not added to a batch");
+
+    try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+      for (var batch : batches) {
+        setArguments(stmt, batch);
+
+        stmt.addBatch();
+      }
+
+      batches.clear();
+
+      return stmt.executeBatch();
+    } catch (SQLException e) {
+      throw new Sql.UncheckedSqlException(e);
+    }
+  }
+
+  @Override
+  public final <T> List<T> query(Sql.RowMapper<T> mapper) throws UncheckedSqlException {
+    checkQuery(mapper);
 
     GrowableList<T> list;
     list = new GrowableList<>();
@@ -237,9 +286,7 @@ final class SqlTransaction implements Sql.Transaction {
 
   @Override
   public final <T> T queryOne(Sql.RowMapper<T> mapper) throws UncheckedSqlException {
-    Check.notNull(mapper, "mapper == null");
-
-    checkSql();
+    checkQuery(mapper);
 
     T result;
 
@@ -282,9 +329,7 @@ final class SqlTransaction implements Sql.Transaction {
 
   @Override
   public final <T> T queryOneOrNull(RowMapper<T> mapper) throws UncheckedSqlException {
-    Check.notNull(mapper, "mapper == null");
-
-    checkSql();
+    checkQuery(mapper);
 
     T result;
 
@@ -328,6 +373,7 @@ final class SqlTransaction implements Sql.Transaction {
   @Override
   public final int update() {
     checkSql();
+    Check.state(!hasBatches(), "One or more batches were defined");
 
     int result;
 
@@ -356,8 +402,20 @@ final class SqlTransaction implements Sql.Transaction {
     Check.state(sql != null, "No SQL statement was defined");
   }
 
+  private void checkQuery(RowMapper<?> mapper) {
+    Check.notNull(mapper, "mapper == null");
+
+    Check.state(sql != null, "No SQL statement was defined");
+
+    Check.state(!hasBatches(), "Cannot execute query: one or more batches were defined");
+  }
+
   private boolean hasArguments() {
     return arguments != null && !arguments.isEmpty();
+  }
+
+  private boolean hasBatches() {
+    return batches != null && !batches.isEmpty();
   }
 
   private PreparedStatement prepare() throws SQLException {
@@ -365,14 +423,21 @@ final class SqlTransaction implements Sql.Transaction {
     stmt = connection.prepareStatement(sql);
 
     // we assume this method was called after hasArguments() returned true
+    // so arguments is guaranteed to be non-null
+    setArguments(stmt, arguments);
+
+    arguments.clear();
+
+    return stmt;
+  }
+
+  private void setArguments(PreparedStatement stmt, List<Object> arguments) throws SQLException {
     for (int idx = 0, size = arguments.size(); idx < size; idx++) {
       Object argument;
       argument = arguments.get(idx);
 
       Sql.set(stmt, idx + 1, argument);
     }
-
-    return stmt;
   }
 
 }

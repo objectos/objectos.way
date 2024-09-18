@@ -282,6 +282,10 @@ public final class Sql {
      */
     Transaction add(Object value);
 
+    Transaction addBatch();
+
+    int[] batchUpdate();
+
     /**
      * Executes the current SQL statement as a row-retrieving query.
      */
