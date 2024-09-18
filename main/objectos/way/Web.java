@@ -16,6 +16,7 @@
 package objectos.way;
 
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.Clock;
@@ -23,6 +24,7 @@ import java.time.Duration;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Random;
+import objectos.lang.CharWritable;
 import objectos.lang.object.Check;
 import objectos.notes.Note1;
 import objectos.notes.NoteSink;
@@ -94,7 +96,15 @@ public final class Web {
      * An error note indicating that a request has been denied because an
      * attempted filesystem traversal has been detected.
      */
-    Note1<Path> TRAVERSAL = Note1.error(Resources.class, "Traversal detected");
+    Note1<String> TRAVERSAL = Note1.error(Resources.class, "Traversal detected");
+
+    /**
+     * Creates a new file at the specified path with the specified text content.
+     *
+     * @throws IOException
+     *         if an I/O error occurs
+     */
+    void writeCharWritable(String path, CharWritable contents, Charset charset) throws IOException;
 
   }
 

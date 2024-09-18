@@ -15,12 +15,15 @@
  */
 package objectos.way;
 
+import java.io.BufferedWriter;
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.FileVisitResult;
 import java.nio.file.FileVisitor;
 import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
+import java.nio.file.OpenOption;
 import java.nio.file.Path;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.StandardCopyOption;
@@ -29,11 +32,15 @@ import java.nio.file.attribute.BasicFileAttributes;
 import java.nio.file.attribute.FileTime;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 import objectos.io.FileVisitors;
+import objectos.lang.CharWritable;
 import objectos.lang.object.Check;
 import objectos.notes.NoOpNoteSink;
 import objectos.notes.NoteSink;
 import objectos.util.list.GrowableList;
+import objectos.way.Http.Exchange;
 
 final class WebResources implements AutoCloseable, Web.Resources {
 
@@ -141,6 +148,8 @@ final class WebResources implements AutoCloseable, Web.Resources {
 
   }
 
+  private static final OpenOption[] OPEN_CREATE = new OpenOption[] {StandardOpenOption.CREATE_NEW};
+
   private final Map<String, String> contentTypes;
 
   private final String defaultContentType;
@@ -148,6 +157,12 @@ final class WebResources implements AutoCloseable, Web.Resources {
   private final NoteSink noteSink;
 
   private final Path rootDirectory;
+
+  private final ReentrantReadWriteLock rwl = new ReentrantReadWriteLock();
+
+  private final Lock readLock = rwl.readLock();
+
+  private final Lock writeLock = rwl.writeLock();
 
   private WebResources(Builder builder) {
     this.contentTypes = builder.contentTypes;
@@ -185,23 +200,25 @@ final class WebResources implements AutoCloseable, Web.Resources {
     String pathName;
     pathName = http.path();
 
-    String relative;
-    relative = pathName.substring(1);
-
-    Path relativePath;
-    relativePath = Path.of(relative);
-
     Path file;
-    file = rootDirectory.resolve(relativePath);
-
-    file = file.normalize();
+    file = resolve(pathName);
 
     if (!file.startsWith(rootDirectory)) {
-      noteSink.send(TRAVERSAL, relativePath);
+      noteSink.send(TRAVERSAL, pathName);
 
       return;
     }
 
+    readLock.lock();
+
+    try {
+      handle(http, file);
+    } finally {
+      readLock.unlock();
+    }
+  }
+
+  private void handle(Exchange http, Path file) {
     BasicFileAttributes attributes;
 
     try {
@@ -281,6 +298,38 @@ final class WebResources implements AutoCloseable, Web.Resources {
     }
   }
 
+  @Override
+  public final void writeCharWritable(String path, CharWritable contents, Charset charset) throws IOException {
+    Check.notNull(path, "path == null");
+    Check.notNull(contents, "contents == null");
+    Check.notNull(charset, "charset == null");
+
+    Path file;
+    file = resolve(path);
+
+    if (!file.startsWith(rootDirectory)) {
+      throw new IOException("Traversal detected: " + path);
+    }
+
+    writeLock.lock();
+
+    try (BufferedWriter writer = Files.newBufferedWriter(file, charset, OPEN_CREATE)) {
+      contents.writeTo(writer);
+    } finally {
+      writeLock.unlock();
+    }
+  }
+
+  @Override
+  public final void close() throws IOException {
+    if (Files.exists(rootDirectory)) {
+      FileVisitor<Path> deleteRecursively;
+      deleteRecursively = FileVisitors.deleteRecursively();
+
+      Files.walkFileTree(rootDirectory, deleteRecursively);
+    }
+  }
+
   private String etag(BasicFileAttributes attributes) {
     FileTime lastModifiedFileTime;
     lastModifiedFileTime = attributes.lastModifiedTime();
@@ -294,12 +343,19 @@ final class WebResources implements AutoCloseable, Web.Resources {
     return Long.toHexString(lastModifiedMillis) + "-" + Long.toHexString(size);
   }
 
-  @Override
-  public final void close() throws IOException {
-    FileVisitor<Path> deleteRecursively;
-    deleteRecursively = FileVisitors.deleteRecursively();
+  private Path resolve(String pathName) {
+    String relative;
+    relative = pathName.substring(1);
 
-    Files.walkFileTree(rootDirectory, deleteRecursively);
+    Path relativePath;
+    relativePath = Path.of(relative);
+
+    Path file;
+    file = rootDirectory.resolve(relativePath);
+
+    file = file.normalize();
+
+    return file;
   }
 
 }

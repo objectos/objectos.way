@@ -17,9 +17,14 @@ package objectos.way;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.List;
 import objectos.lang.object.Check;
+import objectos.util.list.GrowableList;
+import objectos.way.Sql.RowMapper;
+import objectos.way.Sql.Transaction;
 import objectos.way.Sql.UncheckedSqlException;
 
 final class SqlTransaction implements Sql.Transaction {
@@ -27,6 +32,10 @@ final class SqlTransaction implements Sql.Transaction {
   private final SqlDialect dialect;
 
   private final Connection connection;
+
+  private String sql;
+
+  private List<Object> arguments;
 
   SqlTransaction(SqlDialect dialect, Connection connection) {
     this.dialect = dialect;
@@ -161,6 +170,209 @@ final class SqlTransaction implements Sql.Transaction {
     template.paginate(dialect, page);
 
     template.process(connection, processor);
+  }
+
+  @Override
+  public final Transaction sql(String value) {
+    sql = Check.notNull(value, "value == null");
+
+    if (arguments != null) {
+      arguments.clear();
+    }
+
+    return this;
+  }
+
+  @Override
+  public final Transaction add(Object value) {
+    Check.notNull(value, "value == null");
+
+    if (arguments == null) {
+      arguments = new GrowableList<>();
+    }
+
+    arguments.add(value);
+
+    return this;
+  }
+
+  @Override
+  public final <T> List<T> query(Sql.RowMapper<T> mapper) throws UncheckedSqlException {
+    Check.notNull(mapper, "mapper == null");
+
+    checkSql();
+
+    GrowableList<T> list;
+    list = new GrowableList<>();
+
+    if (hasArguments()) {
+
+      try (PreparedStatement stmt = prepare(); ResultSet rs = stmt.executeQuery()) {
+        query0(mapper, list, rs);
+      } catch (SQLException e) {
+        throw new Sql.UncheckedSqlException(e);
+      }
+
+    } else {
+
+      try (Statement stmt = connection.createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
+        query0(mapper, list, rs);
+      } catch (SQLException e) {
+        throw new Sql.UncheckedSqlException(e);
+      }
+
+    }
+
+    return list.toUnmodifiableList();
+  }
+
+  private <T> void query0(Sql.RowMapper<T> mapper, GrowableList<T> list, ResultSet rs) throws SQLException {
+    while (rs.next()) {
+      T instance;
+      instance = mapper.mapRow(rs);
+
+      list.add(instance);
+    }
+  }
+
+  @Override
+  public final <T> T queryOne(Sql.RowMapper<T> mapper) throws UncheckedSqlException {
+    Check.notNull(mapper, "mapper == null");
+
+    checkSql();
+
+    T result;
+
+    if (hasArguments()) {
+
+      try (PreparedStatement stmt = prepare(); ResultSet rs = stmt.executeQuery()) {
+        result = queryOne0(mapper, rs);
+      } catch (SQLException e) {
+        throw new Sql.UncheckedSqlException(e);
+      }
+
+    } else {
+
+      try (Statement stmt = connection.createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
+        result = queryOne0(mapper, rs);
+      } catch (SQLException e) {
+        throw new Sql.UncheckedSqlException(e);
+      }
+
+    }
+
+    return result;
+  }
+
+  private <T> T queryOne0(Sql.RowMapper<T> mapper, ResultSet rs) throws SQLException {
+    T result;
+
+    if (!rs.next()) {
+      throw new UnsupportedOperationException("Implement me");
+    }
+
+    result = mapper.mapRow(rs);
+
+    if (rs.next()) {
+      throw new UnsupportedOperationException("Implement me");
+    }
+
+    return result;
+  }
+
+  @Override
+  public final <T> T queryOneOrNull(RowMapper<T> mapper) throws UncheckedSqlException {
+    Check.notNull(mapper, "mapper == null");
+
+    checkSql();
+
+    T result;
+
+    if (hasArguments()) {
+
+      try (PreparedStatement stmt = prepare(); ResultSet rs = stmt.executeQuery()) {
+        result = queryOneOrNull0(mapper, rs);
+      } catch (SQLException e) {
+        throw new Sql.UncheckedSqlException(e);
+      }
+
+    } else {
+
+      try (Statement stmt = connection.createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
+        result = queryOneOrNull0(mapper, rs);
+      } catch (SQLException e) {
+        throw new Sql.UncheckedSqlException(e);
+      }
+
+    }
+
+    return result;
+  }
+
+  private <T> T queryOneOrNull0(Sql.RowMapper<T> mapper, ResultSet rs) throws SQLException {
+    T result;
+
+    if (!rs.next()) {
+      result = null;
+    } else {
+      result = mapper.mapRow(rs);
+    }
+
+    if (rs.next()) {
+      throw new UnsupportedOperationException("Implement me");
+    }
+
+    return result;
+  }
+
+  @Override
+  public final int update() {
+    checkSql();
+
+    int result;
+
+    if (hasArguments()) {
+
+      try (PreparedStatement stmt = prepare()) {
+        result = stmt.executeUpdate();
+      } catch (SQLException e) {
+        throw new Sql.UncheckedSqlException(e);
+      }
+
+    } else {
+
+      try (Statement stmt = connection.createStatement()) {
+        result = stmt.executeUpdate(sql);
+      } catch (SQLException e) {
+        throw new Sql.UncheckedSqlException(e);
+      }
+
+    }
+
+    return result;
+  }
+
+  private void checkSql() {
+    Check.state(sql != null, "No SQL statement was defined");
+  }
+
+  private boolean hasArguments() {
+    return arguments != null && !arguments.isEmpty();
+  }
+
+  private PreparedStatement prepare() throws SQLException {
+    PreparedStatement stmt;
+    stmt = connection.prepareStatement(sql);
+
+    // we assume this method was called after hasArguments() returned true
+    for (int idx = 0, size = arguments.size(); idx < size; idx++) {
+      Object argument;
+      argument = arguments.get(idx);
+
+      Sql.set(stmt, idx + 1, argument);
+    }
+
+    return stmt;
   }
 
 }

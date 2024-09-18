@@ -15,14 +15,20 @@
  */
 package objectos.way;
 
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertTrue;
+
 import java.io.IOException;
 import java.net.Socket;
+import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.attribute.FileTime;
 import java.time.Clock;
 import java.time.Instant;
+import java.util.Optional;
+import objectos.lang.CharWritable;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
@@ -31,6 +37,8 @@ public class WebResourcesTest extends Http.Module {
   private Path root;
 
   private Web.Resources resources;
+
+  private int testCase06Count;
 
   @BeforeClass
   public void beforeClass() throws IOException {
@@ -59,11 +67,11 @@ public class WebResourcesTest extends Http.Module {
   @Override
   protected final void configure() {
     route("/tc01.txt", handler(resources));
-    route("/tc02.txt", handler(resources));
-    route("/tc02.txt", handler(this::testCase02));
+    route("/tc02.txt", handler(resources), handler(this::testCase02));
     route("/tc03.txt", handler(resources));
     route("/tc04.txt", handler(resources));
     route("/tc05.txt", handler(resources));
+    route("/tc06.txt", handler(resources), handler(this::testCase06));
   }
 
   private Web.Resources.Option testCase01Option() throws IOException {
@@ -256,6 +264,61 @@ public class WebResourcesTest extends Http.Module {
           """
       );
     }
+  }
+
+  private void testCase06(Http.Exchange http) {
+    testCase06Count++;
+
+    try {
+      String path;
+      path = http.path();
+
+      CharWritable contents;
+      contents = out -> out.append("test-case-06");
+
+      resources.writeCharWritable(path, contents, StandardCharsets.UTF_8);
+
+      resources.handle(http);
+    } catch (IOException e) {
+      http.internalServerError(e);
+    }
+  }
+
+  @Test(description = """
+  Web.Resources::writeCharWritable
+  """)
+  public void testCase06() throws IOException, InterruptedException {
+    final HttpResponse<String> resp01;
+    resp01 = Testing.httpClient(
+        "/tc06.txt",
+
+        Testing.headers(
+            "Host", "web.resources.test"
+        )
+    );
+
+    assertEquals(resp01.statusCode(), 200);
+    assertEquals(resp01.body(), "test-case-06");
+
+    Optional<String> maybeTag;
+    maybeTag = resp01.headers().firstValue("ETag");
+
+    assertTrue(maybeTag.isPresent());
+
+    final HttpResponse<String> resp02;
+    resp02 = Testing.httpClient(
+        "/tc06.txt",
+
+        Testing.headers(
+            "Host", "web.resources.test",
+            "If-None-Match", maybeTag.get(),
+            "Connection", "close"
+        )
+    );
+
+    assertEquals(resp02.statusCode(), 304);
+
+    assertEquals(testCase06Count, 1);
   }
 
   private void write(Path directory, Path file, String text) throws IOException {

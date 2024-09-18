@@ -15,12 +15,17 @@
  */
 package objectos.way;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.RecordComponent;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.util.List;
 import javax.sql.DataSource;
 import objectos.lang.object.Check;
 import objectos.notes.Note3;
@@ -100,6 +105,13 @@ public final class Sql {
 
   }
 
+  @FunctionalInterface
+  public interface RowMapper<T> {
+
+    T mapRow(ResultSet rs) throws SQLException;
+
+  }
+
   /**
    * A source for SQL connections. It typically wraps a {@link DataSource}
    * instance.
@@ -127,7 +139,7 @@ public final class Sql {
   /**
    * A connection to a running transaction in a database.
    */
-  public interface Transaction extends AutoCloseable {
+  public sealed interface Transaction extends AutoCloseable permits SqlTransaction {
 
     /**
      * Transaction isolation level.
@@ -244,8 +256,68 @@ public final class Sql {
       processQuery(processor, page, sql, args);
     }
 
+    /**
+     * Sets the SQL statement of this transaction to the specified value.
+     *
+     * <p>
+     * Invoking this method additionally:
+     *
+     * <ul>
+     * <li>clears any previously set arguments;
+     *
+     * @param value
+     *        the raw SQL statement
+     *
+     * @return this object
+     */
+    Transaction sql(String value);
+
+    /**
+     * Adds the specified value to the SQL statement argument list.
+     *
+     * @param value
+     *        the argument value
+     *
+     * @return this object
+     */
+    Transaction add(Object value);
+
+    /**
+     * Executes the current SQL statement as a row-retrieving query.
+     */
+    <T> List<T> query(RowMapper<T> mapper) throws UncheckedSqlException;
+
+    /**
+     * Executes the current SQL statement as a row-retrieving query.
+     */
+    <T> T queryOne(RowMapper<T> mapper) throws UncheckedSqlException;
+
+    /**
+     * Executes the current SQL statement as a row-retrieving query.
+     */
+    <T> T queryOneOrNull(RowMapper<T> mapper) throws UncheckedSqlException;
+
+    /**
+     * Executes the current SQL statement as an update operation.
+     */
+    int update();
+
     default Object[] values(Object... values) {
       return values;
+    }
+
+  }
+
+  public static class MappingException extends RuntimeException {
+
+    private static final long serialVersionUID = -3104952657116253825L;
+
+    MappingException(String message) {
+      super(message);
+    }
+
+    MappingException(String message, Throwable cause) {
+      super(message, cause);
     }
 
   }
@@ -309,6 +381,10 @@ public final class Sql {
     return new SqlPage(number, size);
   }
 
+  static <R extends Record> RowMapper<R> createRowMapper(Class<R> recordType) {
+    return RecordRowMapper.of(recordType);
+  }
+
   public static Sql.Source.Option noteSink(NoteSink noteSink) {
     Check.notNull(noteSink, "noteSink == null");
 
@@ -338,6 +414,85 @@ public final class Sql {
 
       default -> throw new IllegalArgumentException("Unexpected type: " + value.getClass());
     }
+  }
+
+  private static final class RecordRowMapper<R extends Record> implements RowMapper<R> {
+
+    private final Class<?>[] types;
+
+    private final Constructor<R> constructor;
+
+    private final Object[] values;
+
+    RecordRowMapper(Class<?>[] types, Constructor<R> constructor) {
+      this.types = types;
+
+      this.constructor = constructor;
+
+      this.values = new Object[types.length];
+    }
+
+    static <R extends Record> RecordRowMapper<R> of(Class<R> recordType) {
+      RecordComponent[] components; // early implicit null-check
+      components = recordType.getRecordComponents();
+
+      Class<?>[] types;
+      types = new Class<?>[components.length];
+
+      for (int idx = 0; idx < components.length; idx++) {
+        RecordComponent component;
+        component = components[idx];
+
+        types[idx] = component.getType();
+      }
+
+      Constructor<R> constructor;
+
+      try {
+        constructor = recordType.getDeclaredConstructor(types);
+
+        if (!constructor.canAccess(null)) {
+          constructor.setAccessible(true);
+        }
+      } catch (NoSuchMethodException | SecurityException e) {
+        throw new Sql.MappingException("Failed to obtain record canonical constructor", e);
+      }
+
+      return new RecordRowMapper<R>(types, constructor);
+    }
+
+    @Override
+    public final R mapRow(ResultSet rs) throws SQLException {
+      try {
+        for (int idx = 0, len = types.length; idx < len; idx++) {
+          Class<?> type;
+          type = types[idx];
+
+          Object value;
+          value = rs.getObject(idx + 1, type);
+
+          values[idx] = value;
+        }
+
+        return constructor.newInstance(values);
+      } catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+        throw new Sql.MappingException("Failed to create record instance", e);
+      }
+    }
+
+    @SuppressWarnings("unused")
+    final void checkColumnCount(ResultSet rs) throws SQLException {
+      ResultSetMetaData meta;
+      meta = rs.getMetaData();
+
+      int columnCount;
+      columnCount = meta.getColumnCount();
+
+      if (columnCount != types.length) {
+        throw new Sql.MappingException("Query returned " + columnCount + " columns but record has only " + types.length + " components");
+      }
+    }
+
   }
 
 }

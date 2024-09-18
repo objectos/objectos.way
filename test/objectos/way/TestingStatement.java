@@ -28,12 +28,26 @@ final class TestingStatement extends AbstractTestable implements Statement {
 
   private Iterator<int[]> batches = Collections.emptyIterator();
 
+  private Iterator<ResultSet> queries = Collections.emptyIterator();
+
   public final void batches(int[]... values) {
     batches = Stream.of(values).iterator();
   }
 
+  public final void queries(ResultSet... values) {
+    queries = Stream.of(values).iterator();
+  }
+
   @Override
-  public ResultSet executeQuery(String sql) throws SQLException { throw new UnsupportedOperationException("Implement me"); }
+  public final ResultSet executeQuery(String sql) throws SQLException {
+    logMethod("executeQuery", sql);
+
+    if (!queries.hasNext()) {
+      throw new IllegalStateException("No more queries");
+    }
+
+    return queries.next();
+  }
 
   @Override
   public int executeUpdate(String sql) throws SQLException { throw new UnsupportedOperationException("Implement me"); }

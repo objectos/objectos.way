@@ -21,11 +21,253 @@ import static org.testng.Assert.assertSame;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
+import java.util.List;
 import java.util.Map;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
 public class SqlTransactionTest {
+
+  @Test(description = "trx.sql(sql).args(args).query(Record::new)")
+  public void testCase01() {
+    TestingConnection conn;
+    conn = new TestingConnection();
+
+    TestingPreparedStatement stmt;
+    stmt = new TestingPreparedStatement();
+
+    TestingResultSet query;
+    query = new TestingResultSet(
+        Map.of("1", 567, "2", "BAR", "3", LocalDate.of(2024, 12, 1))
+    );
+
+    stmt.queries(query);
+
+    conn.preparedStatements(stmt);
+
+    try (SqlTransaction trx = trx(conn)) {
+      trx.sql("select A, B, C from FOO where X = ?");
+
+      trx.add(123);
+
+      List<Foo> result;
+      result = trx.query(Foo::new);
+
+      assertEquals(result.size(), 1);
+      assertEquals(result.get(0), new Foo(567, "BAR", LocalDate.of(2024, 12, 1)));
+    }
+
+    assertEquals(
+        conn.toString(),
+
+        """
+        prepareStatement(select A, B, C from FOO where X = ?)
+        close()
+        """
+    );
+
+    assertEquals(
+        stmt.toString(),
+
+        """
+        setInt(1, 123)
+        executeQuery()
+        close()
+        """
+    );
+
+    assertEquals(
+        query.toString(),
+
+        """
+        next()
+        getInt(1)
+        getString(2)
+        getObject(3, class java.time.LocalDate)
+        next()
+        close()
+        """
+    );
+  }
+
+  @Test(description = "trx.sql(sql).args(args).queryOne(Record::new)")
+  public void testCase02() {
+    TestingConnection conn;
+    conn = new TestingConnection();
+
+    TestingPreparedStatement stmt;
+    stmt = new TestingPreparedStatement();
+
+    TestingResultSet query;
+    query = new TestingResultSet(
+        Map.of("1", 567, "2", "BAR", "3", LocalDate.of(2024, 12, 1))
+    );
+
+    stmt.queries(query);
+
+    conn.preparedStatements(stmt);
+
+    try (SqlTransaction trx = trx(conn)) {
+      trx.sql("select A, B, C from FOO where X = ?");
+
+      trx.add(123);
+
+      Foo result;
+      result = trx.queryOne(Foo::new);
+
+      assertEquals(result, new Foo(567, "BAR", LocalDate.of(2024, 12, 1)));
+    }
+
+    assertEquals(
+        conn.toString(),
+
+        """
+        prepareStatement(select A, B, C from FOO where X = ?)
+        close()
+        """
+    );
+
+    assertEquals(
+        stmt.toString(),
+
+        """
+        setInt(1, 123)
+        executeQuery()
+        close()
+        """
+    );
+
+    assertEquals(
+        query.toString(),
+
+        """
+        next()
+        getInt(1)
+        getString(2)
+        getObject(3, class java.time.LocalDate)
+        next()
+        close()
+        """
+    );
+  }
+
+  @Test(description = "trx.sql(sql).query(Record::new)")
+  public void testCase03() {
+    TestingConnection conn;
+    conn = new TestingConnection();
+
+    TestingStatement stmt;
+    stmt = new TestingStatement();
+
+    TestingResultSet query;
+    query = new TestingResultSet(
+        Map.of("1", 567, "2", "BAR", "3", LocalDate.of(2024, 12, 1))
+    );
+
+    stmt.queries(query);
+
+    conn.statements(stmt);
+
+    try (SqlTransaction trx = trx(conn)) {
+      trx.sql("select A, B, C from FOO");
+
+      List<Foo> result;
+      result = trx.query(Foo::new);
+
+      assertEquals(result.size(), 1);
+      assertEquals(result.get(0), new Foo(567, "BAR", LocalDate.of(2024, 12, 1)));
+    }
+
+    assertEquals(
+        conn.toString(),
+
+        """
+        createStatement()
+        close()
+        """
+    );
+
+    assertEquals(
+        stmt.toString(),
+
+        """
+        executeQuery(select A, B, C from FOO)
+        close()
+        """
+    );
+
+    assertEquals(
+        query.toString(),
+
+        """
+        next()
+        getInt(1)
+        getString(2)
+        getObject(3, class java.time.LocalDate)
+        next()
+        close()
+        """
+    );
+  }
+
+  @Test(description = "trx.sql(sql).queryOne(Record::new)")
+  public void testCase04() {
+    TestingConnection conn;
+    conn = new TestingConnection();
+
+    TestingStatement stmt;
+    stmt = new TestingStatement();
+
+    TestingResultSet query;
+    query = new TestingResultSet(
+        Map.of("1", 567, "2", "BAR", "3", LocalDate.of(2024, 12, 1))
+    );
+
+    stmt.queries(query);
+
+    conn.statements(stmt);
+
+    try (SqlTransaction trx = trx(conn)) {
+      trx.sql("select A, B, C from FOO");
+
+      Foo result;
+      result = trx.queryOne(Foo::new);
+
+      assertEquals(result, new Foo(567, "BAR", LocalDate.of(2024, 12, 1)));
+    }
+
+    assertEquals(
+        conn.toString(),
+
+        """
+        createStatement()
+        close()
+        """
+    );
+
+    assertEquals(
+        stmt.toString(),
+
+        """
+        executeQuery(select A, B, C from FOO)
+        close()
+        """
+    );
+
+    assertEquals(
+        query.toString(),
+
+        """
+        next()
+        getInt(1)
+        getString(2)
+        getObject(3, class java.time.LocalDate)
+        next()
+        close()
+        """
+    );
+  }
 
   @Test
   public void batchUpdate01() {
@@ -87,7 +329,7 @@ public class SqlTransactionTest {
 
     TestingResultSet query;
     query = new TestingResultSet(
-        Map.of("1", "567")
+        Map.of("1", 567)
     );
 
     stmt.queries(query);
@@ -129,6 +371,7 @@ public class SqlTransactionTest {
 
         """
         next()
+        getInt(1)
         close()
         """
     );
@@ -725,6 +968,12 @@ public class SqlTransactionTest {
 
   private Sql.Page page(int pageSize) {
     return Sql.createPage(1, pageSize);
+  }
+
+  private record Foo(Integer a, String b, LocalDate c) {
+    Foo(ResultSet rs) throws SQLException {
+      this(rs.getInt(1), rs.getString(2), rs.getObject(3, LocalDate.class));
+    }
   }
 
 }

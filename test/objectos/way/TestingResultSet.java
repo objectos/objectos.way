@@ -37,17 +37,24 @@ import java.sql.Timestamp;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
+import objectos.lang.object.Check;
 
 final class TestingResultSet extends AbstractTestable implements ResultSet {
 
-  private final List<Map<String, String>> rows;
-  
-  private int index = -1; 
+  private final List<Map<String, Object>> rows;
+
+  private int index = -1;
+
+  private TestingResultSetMetaData metaData;
 
   @SafeVarargs
   @SuppressWarnings("unchecked")
-  public TestingResultSet(Map<String, String>... rows) {
+  public TestingResultSet(Map<String, Object>... rows) {
     this.rows = List.of(rows);
+  }
+
+  public final void metaData(TestingResultSetMetaData value) {
+    metaData = value;
   }
 
   @Override
@@ -59,7 +66,7 @@ final class TestingResultSet extends AbstractTestable implements ResultSet {
   @Override
   public boolean next() throws SQLException {
     logMethod("next");
-    
+
     index++;
 
     return index < rows.size();
@@ -74,7 +81,20 @@ final class TestingResultSet extends AbstractTestable implements ResultSet {
   public boolean wasNull() throws SQLException { throw new UnsupportedOperationException("Implement me"); }
 
   @Override
-  public String getString(int columnIndex) throws SQLException { throw new UnsupportedOperationException("Implement me"); }
+  public final String getString(int columnIndex) throws SQLException {
+    logMethod("getString", columnIndex);
+
+    String key;
+    key = Integer.toString(columnIndex);
+
+    Map<String, Object> row;
+    row = rows.get(index);
+
+    Object value;
+    value = row.get(key);
+
+    return (String) value;
+  }
 
   @Override
   public boolean getBoolean(int columnIndex) throws SQLException { throw new UnsupportedOperationException("Implement me"); }
@@ -87,16 +107,18 @@ final class TestingResultSet extends AbstractTestable implements ResultSet {
 
   @Override
   public int getInt(int columnIndex) throws SQLException {
+    logMethod("getInt", columnIndex);
+
     String key;
     key = Integer.toString(columnIndex);
-    
-    Map<String, String> row;
+
+    Map<String, Object> row;
     row = rows.get(index);
-    
-    String value;
+
+    Object value;
     value = row.get(key);
-    
-    return Integer.parseInt(value);
+
+    return (int) value;
   }
 
   @Override
@@ -190,7 +212,11 @@ final class TestingResultSet extends AbstractTestable implements ResultSet {
   public String getCursorName() throws SQLException { throw new UnsupportedOperationException("Implement me"); }
 
   @Override
-  public ResultSetMetaData getMetaData() throws SQLException { throw new UnsupportedOperationException("Implement me"); }
+  public final ResultSetMetaData getMetaData() throws SQLException {
+    Check.state(metaData != null, "meta data was not set");
+
+    return metaData;
+  }
 
   @Override
   public Object getObject(int columnIndex) throws SQLException { throw new UnsupportedOperationException("Implement me"); }
@@ -636,8 +662,19 @@ final class TestingResultSet extends AbstractTestable implements ResultSet {
   @Override
   public void updateNClob(String columnLabel, Reader reader) throws SQLException { throw new UnsupportedOperationException("Implement me"); }
 
+  @SuppressWarnings("unchecked")
   @Override
-  public <T> T getObject(int columnIndex, Class<T> type) throws SQLException { throw new UnsupportedOperationException("Implement me"); }
+  public final <T> T getObject(int columnIndex, Class<T> type) throws SQLException {
+    logMethod("getObject", columnIndex, type);
+
+    String key;
+    key = Integer.toString(columnIndex);
+
+    Map<String, Object> row;
+    row = rows.get(index);
+
+    return (T) row.get(key);
+  }
 
   @Override
   public <T> T getObject(String columnLabel, Class<T> type) throws SQLException { throw new UnsupportedOperationException("Implement me"); }
