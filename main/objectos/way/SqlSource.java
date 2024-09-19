@@ -77,9 +77,9 @@ final class SqlSource implements Sql.Source {
     }
 
     try {
-      connection.setAutoCommit(false);
-
       connection.setTransactionIsolation(transactionIsolation);
+
+      connection.setAutoCommit(false);
 
       return new SqlTransaction(dialect, connection);
     } catch (SQLException e) {
