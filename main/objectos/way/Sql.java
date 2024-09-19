@@ -204,8 +204,6 @@ public final class Sql {
     @Override
     void close() throws UncheckedSqlException;
 
-    int[] batchUpdate(String sql, Object[]... batches) throws UncheckedSqlException;
-
     int count(String sql, Object... args) throws UncheckedSqlException;
 
     int[] executeUpdateText(String sqlText) throws UncheckedSqlException;
@@ -305,10 +303,6 @@ public final class Sql {
      * Executes the current SQL statement as an update operation.
      */
     int update();
-
-    default Object[] values(Object... values) {
-      return values;
-    }
 
   }
 

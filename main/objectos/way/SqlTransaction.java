@@ -74,31 +74,6 @@ final class SqlTransaction implements Sql.Transaction {
   }
 
   @Override
-  public final int[] batchUpdate(String sql, Object[]... batches) throws Sql.UncheckedSqlException {
-    Check.notNull(sql, "sql == null");
-    Check.notNull(batches, "batches == null");
-
-    try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-
-      for (Object[] batch : batches) {
-        for (int index = 0; index < batch.length;) {
-          Object value;
-          value = batch[index++];
-
-          Sql.set(stmt, index, value);
-        }
-
-        stmt.addBatch();
-      }
-
-      return stmt.executeBatch();
-
-    } catch (SQLException e) {
-      throw new Sql.UncheckedSqlException(e);
-    }
-  }
-
-  @Override
   public final int count(String sql, Object... args) throws Sql.UncheckedSqlException {
     Check.notNull(sql, "sql == null");
     Check.notNull(args, "args == null");
