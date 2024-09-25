@@ -18,6 +18,8 @@ package objectos.way;
 import static org.testng.Assert.assertEquals;
 
 import java.sql.SQLException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import org.testng.annotations.Test;
 
 public class SqlTest {
@@ -31,6 +33,9 @@ public class SqlTest {
     Sql.set(stmt, 2, Boolean.TRUE);
     Sql.set(stmt, 3, Integer.valueOf(123));
     Sql.set(stmt, 4, Long.valueOf(567L));
+    Sql.set(stmt, 5, Double.valueOf(4.56));
+    Sql.set(stmt, 6, LocalDate.of(2024, 9, 25));
+    Sql.set(stmt, 7, LocalDateTime.of(2024, 9, 25, 13, 0));
 
     assertEquals(
         stmt.toString(),
@@ -40,6 +45,9 @@ public class SqlTest {
         setBoolean(2, true)
         setInt(3, 123)
         setLong(4, 567)
+        setDouble(5, 4.56)
+        setObject(6, 2024-09-25)
+        setObject(7, 2024-09-25T13:00)
         """
     );
   }

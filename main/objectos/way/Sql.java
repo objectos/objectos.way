@@ -25,6 +25,7 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import javax.sql.DataSource;
 import objectos.lang.object.Check;
@@ -177,6 +178,21 @@ public final class Sql {
      *         if the underlying {@link Connection#rollback()} method throws
      */
     void rollback() throws UncheckedSqlException;
+
+    default Throwable rollbackAndMerge(Throwable throwable) {
+      Check.notNull(throwable, "throwable == null");
+
+      try {
+        rollback();
+      } catch (UncheckedSqlException e) {
+        SQLException sqlException;
+        sqlException = e.getCause();
+
+        throwable.addSuppressed(sqlException);
+      }
+
+      return throwable;
+    }
 
     default void rollbackAndRethrow(Throwable rethrow) {
       Check.notNull(rethrow, "rethrow == null");
@@ -405,6 +421,8 @@ public final class Sql {
       case Integer i -> stmt.setInt(index, i.intValue());
 
       case LocalDate ld -> stmt.setObject(index, ld);
+
+      case LocalDateTime dt -> stmt.setObject(index, dt);
 
       case Long i -> stmt.setLong(index, i.longValue());
 

@@ -44,7 +44,7 @@ import java.util.stream.Stream;
 final class TestingPreparedStatement extends AbstractTestable implements PreparedStatement {
 
   private Iterator<int[]> batches = Collections.emptyIterator();
-  
+
   private Iterator<ResultSet> queries = Collections.emptyIterator();
 
   public final void batches(int[]... values) {
@@ -226,12 +226,12 @@ final class TestingPreparedStatement extends AbstractTestable implements Prepare
   public void setShort(int parameterIndex, short x) throws SQLException { throw new UnsupportedOperationException("Implement me"); }
 
   @Override
-  public void setInt(int parameterIndex, int x) throws SQLException {
+  public final void setInt(int parameterIndex, int x) throws SQLException {
     logMethod("setInt", parameterIndex, x);
   }
 
   @Override
-  public void setLong(int parameterIndex, long x) throws SQLException {
+  public final void setLong(int parameterIndex, long x) throws SQLException {
     logMethod("setLong", parameterIndex, x);
   }
 
@@ -239,13 +239,15 @@ final class TestingPreparedStatement extends AbstractTestable implements Prepare
   public void setFloat(int parameterIndex, float x) throws SQLException { throw new UnsupportedOperationException("Implement me"); }
 
   @Override
-  public void setDouble(int parameterIndex, double x) throws SQLException { throw new UnsupportedOperationException("Implement me"); }
+  public final void setDouble(int parameterIndex, double x) throws SQLException {
+    logMethod("setDouble", parameterIndex, x);
+  }
 
   @Override
   public void setBigDecimal(int parameterIndex, BigDecimal x) throws SQLException { throw new UnsupportedOperationException("Implement me"); }
 
   @Override
-  public void setString(int parameterIndex, String x) throws SQLException {
+  public final void setString(int parameterIndex, String x) throws SQLException {
     logMethod("setString", parameterIndex, x);
   }
 
@@ -277,13 +279,15 @@ final class TestingPreparedStatement extends AbstractTestable implements Prepare
   public void setObject(int parameterIndex, Object x, int targetSqlType) throws SQLException { throw new UnsupportedOperationException("Implement me"); }
 
   @Override
-  public void setObject(int parameterIndex, Object x) throws SQLException { throw new UnsupportedOperationException("Implement me"); }
+  public final void setObject(int parameterIndex, Object x) throws SQLException {
+    logMethod("setObject", parameterIndex, x);
+  }
 
   @Override
   public boolean execute() throws SQLException { throw new UnsupportedOperationException("Implement me"); }
 
   @Override
-  public void addBatch() throws SQLException {
+  public final void addBatch() throws SQLException {
     logMethod("addBatch");
   }
 
