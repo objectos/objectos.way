@@ -909,19 +909,23 @@ public class SqlTransactionTest {
   @Test(description = """
   rethrow is java.lang.Error
   """)
-  public void rollbackAndRethrow01() {
+  public void rollbackUnchecked01() {
     TestingConnection conn;
     conn = new TestingConnection();
 
     Throwable rethrow;
     rethrow = new Error();
 
-    try (SqlTransaction trx = trx(conn)) {
-      trx.rollbackAndRethrow(rethrow);
-    } catch (Error expected) {
-      assertSame(expected, rethrow);
-    } catch (Throwable e) {
-      Assert.fail("Not an Error", e);
+    SqlTransaction trx;
+    trx = trx(conn);
+
+    try (trx) {
+
+      RuntimeException result;
+      result = trx.rollbackUnchecked(rethrow);
+
+      assertEquals(result.getCause(), rethrow);
+
     }
 
     assertEquals(
@@ -937,19 +941,23 @@ public class SqlTransactionTest {
   @Test(description = """
   rethrow is java.lang.RuntimeException
   """)
-  public void rollbackAndRethrow02() {
+  public void rollbackUnchecked02() {
     TestingConnection conn;
     conn = new TestingConnection();
 
     Throwable rethrow;
     rethrow = new IllegalArgumentException();
 
-    try (SqlTransaction trx = trx(conn)) {
-      trx.rollbackAndRethrow(rethrow);
-    } catch (RuntimeException expected) {
-      assertSame(expected, rethrow);
-    } catch (Throwable e) {
-      Assert.fail("Not an RuntimeException", e);
+    SqlTransaction trx;
+    trx = trx(conn);
+
+    try (trx) {
+
+      RuntimeException result;
+      result = trx.rollbackUnchecked(rethrow);
+
+      assertSame(result, rethrow);
+
     }
 
     assertEquals(
@@ -972,15 +980,16 @@ public class SqlTransactionTest {
     Throwable rethrow;
     rethrow = new SQLException();
 
-    try (SqlTransaction trx = trx(conn)) {
-      trx.rollbackAndRethrow(rethrow);
-    } catch (RuntimeException expected) {
-      Throwable cause;
-      cause = expected.getCause();
+    SqlTransaction trx;
+    trx = trx(conn);
 
-      assertSame(cause, rethrow);
-    } catch (Throwable e) {
-      Assert.fail("Not an RuntimeException", e);
+    try (trx) {
+
+      RuntimeException result;
+      result = trx.rollbackUnchecked(rethrow);
+
+      assertEquals(result.getCause(), rethrow);
+
     }
 
     assertEquals(

@@ -179,44 +179,11 @@ public final class Sql {
      */
     void rollback() throws UncheckedSqlException;
 
-    default Throwable rollbackAndMerge(Throwable throwable) {
-      Check.notNull(throwable, "throwable == null");
+    RuntimeException rollbackUnchecked(Throwable error);
 
-      try {
-        rollback();
-      } catch (UncheckedSqlException e) {
-        SQLException sqlException;
-        sqlException = e.getCause();
-
-        throwable.addSuppressed(sqlException);
-      }
-
-      return throwable;
-    }
-
-    default void rollbackAndRethrow(Throwable rethrow) {
-      Check.notNull(rethrow, "rethrow == null");
-
-      try {
-        rollback();
-      } catch (UncheckedSqlException e) {
-        SQLException sqlException;
-        sqlException = e.getCause();
-
-        rethrow.addSuppressed(sqlException);
-      }
-
-      if (rethrow instanceof Error error) {
-        throw error;
-      }
-
-      if (rethrow instanceof RuntimeException re) {
-        throw re;
-      }
-
-      throw new RuntimeException(rethrow);
-    }
-
+    /**
+     * Closes the underlying database connection.
+     */
     @Override
     void close() throws UncheckedSqlException;
 

@@ -54,25 +54,17 @@ abstract class WebModule extends Http.Module {
 
     return http -> {
 
-      try (Sql.Transaction trx = source.beginTransaction(isolationLevel)) {
+      Sql.Transaction trx;
+      trx = source.beginTransaction(isolationLevel);
 
+      try (trx) {
         http.set(Sql.Transaction.class, trx);
 
-        Throwable rethrow;
-        rethrow = null;
+        handler.handle(http);
 
-        try {
-          handler.handle(http);
-        } catch (Throwable t) {
-          rethrow = t;
-        }
-
-        if (rethrow == null) {
-          trx.commit();
-        } else {
-          trx.rollbackAndRethrow(rethrow);
-        }
-
+        trx.commit();
+      } catch (Throwable error) {
+        throw trx.rollbackUnchecked(error);
       }
 
     };

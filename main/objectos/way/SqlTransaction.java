@@ -65,6 +65,27 @@ final class SqlTransaction implements Sql.Transaction {
   }
 
   @Override
+  public final RuntimeException rollbackUnchecked(Throwable error) {
+    Check.notNull(error, "error == null");
+
+    RuntimeException rethrow;
+
+    if (error instanceof RuntimeException unchecked) {
+      rethrow = unchecked;
+    } else {
+      rethrow = new RuntimeException(error);
+    }
+
+    try {
+      connection.rollback();
+    } catch (SQLException e) {
+      rethrow.addSuppressed(e);
+    }
+
+    return rethrow;
+  }
+
+  @Override
   public final void close() throws Sql.UncheckedSqlException {
     try {
       connection.close();
