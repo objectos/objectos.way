@@ -202,6 +202,21 @@ final class SqlTransaction implements Sql.Transaction {
   }
 
   @Override
+  public final Transaction add(Object value, int sqlType) {
+    checkSql();
+
+    Object nullable = Sql.nullable(value, sqlType);
+
+    if (arguments == null) {
+      arguments = new GrowableList<>();
+    }
+
+    arguments.add(nullable);
+
+    return this;
+  }
+
+  @Override
   public final Transaction addBatch() {
     checkSql();
 

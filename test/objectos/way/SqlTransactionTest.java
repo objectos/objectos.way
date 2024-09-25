@@ -21,6 +21,7 @@ import static org.testng.Assert.assertSame;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Types;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
@@ -356,6 +357,52 @@ public class SqlTransactionTest {
         setInt(1, 2)
         addBatch()
         executeBatch()
+        close()
+        """
+    );
+  }
+
+  @Test
+  public void testCase07() {
+    TestingConnection conn;
+    conn = new TestingConnection();
+
+    TestingPreparedStatement stmt;
+    stmt = new TestingPreparedStatement();
+
+    stmt.updates(1);
+
+    conn.preparedStatements(stmt);
+
+    try (SqlTransaction trx = trx(conn)) {
+      trx.sql("insert into BAR (X, Y) values (?, ?)");
+
+      trx.add(1);
+
+      trx.add(null, Types.DATE);
+
+      int result;
+      result = trx.update();
+
+      assertEquals(result, 1);
+    }
+
+    assertEquals(
+        conn.toString(),
+
+        """
+        prepareStatement(insert into BAR (X, Y) values (?, ?))
+        close()
+        """
+    );
+
+    assertEquals(
+        stmt.toString(),
+
+        """
+        setInt(1, 1)
+        setNull(2, 91)
+        executeUpdate()
         close()
         """
     );

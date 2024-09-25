@@ -257,11 +257,23 @@ public final class Sql {
      * Adds the specified value to the SQL statement argument list.
      *
      * @param value
-     *        the argument value
+     *        the argument value which must not be {@code null}
      *
      * @return this object
      */
     Transaction add(Object value);
+
+    /**
+     * Adds the specified value to the SQL statement argument list.
+     *
+     * @param value
+     *        the argument value which may be {@code null}
+     * @param sqlType
+     *        the SQL type (as defined in java.sql.Types)
+     *
+     * @return this object
+     */
+    Transaction add(Object value, int sqlType);
 
     Transaction addBatch();
 
@@ -379,6 +391,16 @@ public final class Sql {
 
   // utils
 
+  private record Null(int sqlType) {}
+
+  static Object nullable(Object value, int sqlType) {
+    if (value == null) {
+      return new Null(sqlType);
+    } else {
+      return value;
+    }
+  }
+
   static void set(PreparedStatement stmt, int index, Object value) throws SQLException {
     switch (value) {
       case Boolean b -> stmt.setBoolean(index, b.booleanValue());
@@ -394,6 +416,8 @@ public final class Sql {
       case Long i -> stmt.setLong(index, i.longValue());
 
       case String s -> stmt.setString(index, s);
+
+      case Null x -> stmt.setNull(index, x.sqlType);
 
       default -> throw new IllegalArgumentException("Unexpected type: " + value.getClass());
     }

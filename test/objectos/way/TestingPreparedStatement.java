@@ -36,6 +36,7 @@ import java.sql.SQLWarning;
 import java.sql.SQLXML;
 import java.sql.Time;
 import java.sql.Timestamp;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Iterator;
@@ -47,12 +48,18 @@ final class TestingPreparedStatement extends AbstractTestable implements Prepare
 
   private Iterator<ResultSet> queries = Collections.emptyIterator();
 
+  private Iterator<Integer> updates = Collections.emptyIterator();
+
   public final void batches(int[]... values) {
     batches = Stream.of(values).iterator();
   }
 
   public final void queries(ResultSet... values) {
     queries = Stream.of(values).iterator();
+  }
+
+  public final void updates(int... values) {
+    updates = Arrays.stream(values).boxed().iterator();
   }
 
   @Override
@@ -209,10 +216,20 @@ final class TestingPreparedStatement extends AbstractTestable implements Prepare
   }
 
   @Override
-  public int executeUpdate() throws SQLException { throw new UnsupportedOperationException("Implement me"); }
+  public final int executeUpdate() throws SQLException {
+    logMethod("executeUpdate");
+
+    if (!updates.hasNext()) {
+      throw new IllegalStateException("No more updates");
+    }
+
+    return updates.next();
+  }
 
   @Override
-  public void setNull(int parameterIndex, int sqlType) throws SQLException { throw new UnsupportedOperationException("Implement me"); }
+  public final void setNull(int parameterIndex, int sqlType) throws SQLException {
+    logMethod("setNull", parameterIndex, sqlType);
+  }
 
   @Override
   public void setBoolean(int parameterIndex, boolean x) throws SQLException {
