@@ -18,6 +18,7 @@ package objectos.way;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertSame;
 
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -25,6 +26,7 @@ import java.sql.Types;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
+import objectos.way.Sql.RollbackWrapperException;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -1110,25 +1112,32 @@ public class SqlTransactionTest {
   }
 
   @Test(description = """
-  rethrow is java.lang.Error
+  rollbackAndSuppress: rollback does not throw
   """)
-  public void rollbackUnchecked01() {
+  public void rollbackAndSuppress01() {
     TestingConnection conn;
     conn = new TestingConnection();
 
-    Throwable rethrow;
-    rethrow = new Error();
+    Throwable cause;
+    cause = new IOException();
 
     SqlTransaction trx;
     trx = trx(conn);
 
     try {
 
-      RuntimeException result;
-      result = trx.rollbackUnchecked(rethrow);
+      throw cause;
 
-      assertEquals(result.getCause(), rethrow);
+    } catch (Throwable t) {
+      Throwable result;
+      result = trx.rollbackAndSuppress(t);
 
+      assertSame(result, cause);
+
+      Throwable[] suppressed;
+      suppressed = result.getSuppressed();
+
+      assertEquals(suppressed.length, 0);
     } finally {
       trx.close();
     }
@@ -1145,25 +1154,38 @@ public class SqlTransactionTest {
   }
 
   @Test(description = """
-  rethrow is java.lang.RuntimeException
+  rollbackAndSuppress: rollback does throw SQLException
   """)
-  public void rollbackUnchecked02() {
+  public void rollbackAndSuppress02() {
     TestingConnection conn;
     conn = new TestingConnection();
 
-    Throwable rethrow;
-    rethrow = new IllegalArgumentException();
+    SQLException rollback;
+    rollback = new SQLException();
+
+    conn.rollbackException(rollback);
+
+    Throwable cause;
+    cause = new IOException();
 
     SqlTransaction trx;
     trx = trx(conn);
 
     try {
 
-      RuntimeException result;
-      result = trx.rollbackUnchecked(rethrow);
+      throw cause;
 
-      assertSame(result, rethrow);
+    } catch (Throwable t) {
+      Throwable result;
+      result = trx.rollbackAndSuppress(t);
 
+      assertSame(result, cause);
+
+      Throwable[] suppressed;
+      suppressed = result.getSuppressed();
+
+      assertEquals(suppressed.length, 1);
+      assertSame(suppressed[0], rollback);
     } finally {
       trx.close();
     }
@@ -1180,25 +1202,80 @@ public class SqlTransactionTest {
   }
 
   @Test(description = """
-  rethrow is checked
+  rollbackAndWrap: rollback does not throw
   """)
-  public void rollbackAndRethrow03() {
+  public void rollbackAndWrap01() {
     TestingConnection conn;
     conn = new TestingConnection();
 
-    Throwable rethrow;
-    rethrow = new SQLException();
+    Throwable cause;
+    cause = new IOException();
 
     SqlTransaction trx;
     trx = trx(conn);
 
     try {
 
-      RuntimeException result;
-      result = trx.rollbackUnchecked(rethrow);
+      throw cause;
 
-      assertEquals(result.getCause(), rethrow);
+    } catch (Throwable t) {
+      RollbackWrapperException result;
+      result = trx.rollbackAndWrap(t);
 
+      assertSame(result.getCause(), cause);
+
+      Throwable[] suppressed;
+      suppressed = result.getSuppressed();
+
+      assertEquals(suppressed.length, 0);
+    } finally {
+      trx.close();
+    }
+
+    assertEquals(
+        conn.toString(),
+
+        """
+        rollback()
+        setAutoCommit(true)
+        close()
+        """
+    );
+  }
+
+  @Test(description = """
+  rollbackAndWrap: rollback does throw SQLException
+  """)
+  public void rollbackAndWrap02() {
+    TestingConnection conn;
+    conn = new TestingConnection();
+
+    SQLException rollback;
+    rollback = new SQLException();
+
+    conn.rollbackException(rollback);
+
+    Throwable cause;
+    cause = new IOException();
+
+    SqlTransaction trx;
+    trx = trx(conn);
+
+    try {
+
+      throw cause;
+
+    } catch (Throwable t) {
+      RollbackWrapperException result;
+      result = trx.rollbackAndWrap(t);
+
+      assertSame(result.getCause(), cause);
+
+      Throwable[] suppressed;
+      suppressed = result.getSuppressed();
+
+      assertEquals(suppressed.length, 1);
+      assertSame(suppressed[0], rollback);
     } finally {
       trx.close();
     }

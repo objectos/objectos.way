@@ -64,7 +64,7 @@ abstract class WebModule extends Http.Module {
 
         trx.commit();
       } catch (Throwable error) {
-        throw trx.rollbackUnchecked(error);
+        throw trx.rollbackAndWrap(error);
       } finally {
         trx.close();
       }

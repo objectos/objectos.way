@@ -24,6 +24,7 @@ import java.util.List;
 import objectos.lang.object.Check;
 import objectos.util.list.GrowableList;
 import objectos.util.list.UnmodifiableList;
+import objectos.way.Sql.RollbackWrapperException;
 import objectos.way.Sql.RowMapper;
 import objectos.way.Sql.Transaction;
 import objectos.way.Sql.UncheckedSqlException;
@@ -65,24 +66,30 @@ final class SqlTransaction implements Sql.Transaction {
   }
 
   @Override
-  public final RuntimeException rollbackUnchecked(Throwable error) {
+  public final Throwable rollbackAndSuppress(Throwable error) {
     Check.notNull(error, "error == null");
 
-    RuntimeException rethrow;
+    return rollbackAndSuppress0(error);
+  }
 
-    if (error instanceof RuntimeException unchecked) {
-      rethrow = unchecked;
-    } else {
-      rethrow = new RuntimeException(error);
-    }
-
+  private <E extends Throwable> E rollbackAndSuppress0(E error) {
     try {
       connection.rollback();
     } catch (SQLException e) {
-      rethrow.addSuppressed(e);
+      error.addSuppressed(e);
     }
 
-    return rethrow;
+    return error;
+  }
+
+  @Override
+  public final RollbackWrapperException rollbackAndWrap(Throwable error) {
+    Check.notNull(error, "error == null");
+
+    RollbackWrapperException wrapper;
+    wrapper = new Sql.RollbackWrapperException(error);
+
+    return rollbackAndSuppress0(wrapper);
   }
 
   @Override

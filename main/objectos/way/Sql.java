@@ -179,7 +179,60 @@ public final class Sql {
      */
     void rollback() throws UncheckedSqlException;
 
-    RuntimeException rollbackUnchecked(Throwable error);
+    /**
+     * Rolls back this transaction and returns the specified exception. If the
+     * rollback operation throws then the thrown exception is added as a
+     * suppressed exception to the specified exception.
+     *
+     * <p>
+     * A typical usage is:
+     *
+     * <pre>
+     * Sql.Transaction sql = source.beginTransaction(Sql.SERIALIZABLE);
+     *
+     * try {
+     *   // code that may throw
+     * } catch (Throwable t) {
+     *   logger.log("Operation failed", trx.rollbackAndSuppress(t));
+     * } finally {
+     *   trx.close();
+     * }</pre>
+     *
+     * @param error
+     *        a throwable instance
+     *
+     * @return the specified throwable which may or may not contain a new
+     *         suppressed exception (from the rollback operation)
+     */
+    Throwable rollbackAndSuppress(Throwable error);
+
+    /**
+     * Rolls back this transaction, wraps the specified throwable into an
+     * unchecked exception and returns the wrapping exception. If the rollback
+     * operation throws then the thrown exception is added as a suppressed
+     * exception to the wrapping exception.
+     *
+     * <p>
+     * A typical usage is:
+     *
+     * <pre>
+     * Sql.Transaction sql = source.beginTransaction(Sql.SERIALIZABLE);
+     *
+     * try {
+     *   // code that may throw
+     * } catch (Throwable t) {
+     *   throw trx.rollbackAndWrap(t);
+     * } finally {
+     *   trx.close();
+     * }</pre>
+     *
+     * @param error
+     *        the throwable to be wrapped
+     *
+     * @return a newly created wrapping exception whose cause is the specified
+     *         throwable
+     */
+    RollbackWrapperException rollbackAndWrap(Throwable error);
 
     /**
      * Closes the underlying database connection.
@@ -313,7 +366,7 @@ public final class Sql {
 
   }
 
-  public static class MappingException extends RuntimeException {
+  static final class MappingException extends RuntimeException {
 
     private static final long serialVersionUID = -3104952657116253825L;
 
@@ -327,11 +380,21 @@ public final class Sql {
 
   }
 
-  public static class UncheckedSqlException extends RuntimeException {
+  public static final class RollbackWrapperException extends RuntimeException {
+
+    private static final long serialVersionUID = 6575236786994565106L;
+
+    RollbackWrapperException(Throwable cause) {
+      super(cause);
+    }
+
+  }
+
+  public static final class UncheckedSqlException extends RuntimeException {
 
     private static final long serialVersionUID = 9207295421842688968L;
 
-    public UncheckedSqlException(SQLException cause) {
+    UncheckedSqlException(SQLException cause) {
       super(cause);
     }
 
