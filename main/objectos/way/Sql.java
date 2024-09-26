@@ -106,10 +106,24 @@ public final class Sql {
 
   }
 
+  /**
+   * Maps rows from a {@code ResultSet} to objects of type {@code T}.
+   */
   @FunctionalInterface
   public interface RowMapper<T> {
 
-    T mapRow(ResultSet rs) throws SQLException;
+    /**
+     * Implementations should not invoke the {@code next()} method on the
+     * {@code ResultSet} object.
+     *
+     * @param rs
+     *        the result set object positioned at the row to be mapped
+     * @param startingParameterIndex
+     *        the starting parameter index (always the value {@code 1})
+     *
+     * @return the mapped object
+     */
+    T mapRow(ResultSet rs, int startingParameterIndex) throws SQLException;
 
   }
 
@@ -544,7 +558,7 @@ public final class Sql {
     }
 
     @Override
-    public final R mapRow(ResultSet rs) throws SQLException {
+    public final R mapRow(ResultSet rs, int startingIndex) throws SQLException {
       try {
         for (int idx = 0, len = types.length; idx < len; idx++) {
           Class<?> type;

@@ -305,7 +305,7 @@ final class SqlTransaction implements Sql.Transaction {
   private <T> void query0(Sql.RowMapper<T> mapper, GrowableList<T> list, ResultSet rs) throws SQLException {
     while (rs.next()) {
       T instance;
-      instance = mapper.mapRow(rs);
+      instance = mapper.mapRow(rs, 1);
 
       list.add(instance);
     }
@@ -345,7 +345,7 @@ final class SqlTransaction implements Sql.Transaction {
       throw new UnsupportedOperationException("Implement me");
     }
 
-    result = mapper.mapRow(rs);
+    result = mapper.mapRow(rs, 1);
 
     if (rs.next()) {
       throw new UnsupportedOperationException("Implement me");
@@ -387,7 +387,7 @@ final class SqlTransaction implements Sql.Transaction {
     if (!rs.next()) {
       result = null;
     } else {
-      result = mapper.mapRow(rs);
+      result = mapper.mapRow(rs, 1);
     }
 
     if (rs.next()) {

@@ -1311,8 +1311,8 @@ public class SqlTransactionTest {
   }
 
   private record Foo(Integer a, String b, LocalDate c) {
-    Foo(ResultSet rs) throws SQLException {
-      this(rs.getInt(1), rs.getString(2), rs.getObject(3, LocalDate.class));
+    Foo(ResultSet rs, int idx) throws SQLException {
+      this(rs.getInt(idx++), rs.getString(idx++), rs.getObject(idx++, LocalDate.class));
     }
   }
 
