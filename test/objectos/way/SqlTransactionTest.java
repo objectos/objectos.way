@@ -451,6 +451,54 @@ public class SqlTransactionTest {
   }
 
   @Test
+  public void testCase08() {
+    TestingConnection conn;
+    conn = new TestingConnection();
+
+    TestingStatement stmt;
+    stmt = new TestingStatement();
+
+    stmt.updates(1);
+
+    conn.statements(stmt);
+
+    SqlTransaction trx;
+    trx = trx(conn);
+
+    try {
+      trx.sql("insert into BAR (X, Y) values (%1$d, '%2$s')");
+
+      trx.format(123, LocalDate.of(2024, 9, 26));
+
+      int result;
+      result = trx.update();
+
+      assertEquals(result, 1);
+    } finally {
+      trx.close();
+    }
+
+    assertEquals(
+        conn.toString(),
+
+        """
+        createStatement()
+        setAutoCommit(true)
+        close()
+        """
+    );
+
+    assertEquals(
+        stmt.toString(),
+
+        """
+        update(insert into BAR (X, Y) values (123, '2024-09-26'))
+        close()
+        """
+    );
+  }
+
+  @Test
   public void count01() {
     TestingConnection conn;
     conn = new TestingConnection();

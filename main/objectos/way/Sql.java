@@ -253,6 +253,19 @@ public final class Sql {
     Transaction sql(String value);
 
     /**
+     * Replaces the current SQL statement with the result of
+     * applying the specified arguments to the SQL statement as if it were a
+     * <em>format string<em>.
+     *
+     * @param args
+     *        arguments referenced by the format specifiers in the format
+     *        string.
+     *
+     * @return this object
+     */
+    Transaction format(Object... args);
+
+    /**
      * Adds the specified value to the SQL statement argument list.
      *
      * @param value

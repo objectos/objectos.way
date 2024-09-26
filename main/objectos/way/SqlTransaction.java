@@ -187,6 +187,15 @@ final class SqlTransaction implements Sql.Transaction {
   }
 
   @Override
+  public final Transaction format(Object... args) {
+    checkSql();
+
+    sql = String.format(sql, args);
+
+    return this;
+  }
+
+  @Override
   public final Transaction add(Object value) {
     Check.notNull(value, "value == null");
 
