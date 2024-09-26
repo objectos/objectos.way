@@ -57,7 +57,7 @@ abstract class WebModule extends Http.Module {
       Sql.Transaction trx;
       trx = source.beginTransaction(isolationLevel);
 
-      try (trx) {
+      try {
         http.set(Sql.Transaction.class, trx);
 
         handler.handle(http);
@@ -65,6 +65,8 @@ abstract class WebModule extends Http.Module {
         trx.commit();
       } catch (Throwable error) {
         throw trx.rollbackUnchecked(error);
+      } finally {
+        trx.close();
       }
 
     };

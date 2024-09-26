@@ -140,7 +140,7 @@ public final class Sql {
   /**
    * A connection to a running transaction in a database.
    */
-  public sealed interface Transaction extends AutoCloseable permits SqlTransaction {
+  public sealed interface Transaction permits SqlTransaction {
 
     /**
      * Transaction isolation level.
@@ -184,7 +184,6 @@ public final class Sql {
     /**
      * Closes the underlying database connection.
      */
-    @Override
     void close() throws UncheckedSqlException;
 
     int count(String sql, Object... args) throws UncheckedSqlException;

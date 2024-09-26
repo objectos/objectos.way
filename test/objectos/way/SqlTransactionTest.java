@@ -47,7 +47,10 @@ public class SqlTransactionTest {
 
     conn.preparedStatements(stmt);
 
-    try (SqlTransaction trx = trx(conn)) {
+    SqlTransaction trx;
+    trx = trx(conn);
+
+    try {
       trx.sql("select A, B, C from FOO where X = ?");
 
       trx.add(123);
@@ -57,6 +60,8 @@ public class SqlTransactionTest {
 
       assertEquals(result.size(), 1);
       assertEquals(result.get(0), new Foo(567, "BAR", LocalDate.of(2024, 12, 1)));
+    } finally {
+      trx.close();
     }
 
     assertEquals(
@@ -64,6 +69,7 @@ public class SqlTransactionTest {
 
         """
         prepareStatement(select A, B, C from FOO where X = ?)
+        setAutoCommit(true)
         close()
         """
     );
@@ -109,7 +115,10 @@ public class SqlTransactionTest {
 
     conn.preparedStatements(stmt);
 
-    try (SqlTransaction trx = trx(conn)) {
+    SqlTransaction trx;
+    trx = trx(conn);
+
+    try {
       trx.sql("select A, B, C from FOO where X = ?");
 
       trx.add(123);
@@ -118,6 +127,8 @@ public class SqlTransactionTest {
       result = trx.queryOne(Foo::new);
 
       assertEquals(result, new Foo(567, "BAR", LocalDate.of(2024, 12, 1)));
+    } finally {
+      trx.close();
     }
 
     assertEquals(
@@ -125,6 +136,7 @@ public class SqlTransactionTest {
 
         """
         prepareStatement(select A, B, C from FOO where X = ?)
+        setAutoCommit(true)
         close()
         """
     );
@@ -170,7 +182,10 @@ public class SqlTransactionTest {
 
     conn.statements(stmt);
 
-    try (SqlTransaction trx = trx(conn)) {
+    SqlTransaction trx;
+    trx = trx(conn);
+
+    try {
       trx.sql("select A, B, C from FOO");
 
       List<Foo> result;
@@ -178,6 +193,8 @@ public class SqlTransactionTest {
 
       assertEquals(result.size(), 1);
       assertEquals(result.get(0), new Foo(567, "BAR", LocalDate.of(2024, 12, 1)));
+    } finally {
+      trx.close();
     }
 
     assertEquals(
@@ -185,6 +202,7 @@ public class SqlTransactionTest {
 
         """
         createStatement()
+        setAutoCommit(true)
         close()
         """
     );
@@ -229,13 +247,18 @@ public class SqlTransactionTest {
 
     conn.statements(stmt);
 
-    try (SqlTransaction trx = trx(conn)) {
+    SqlTransaction trx;
+    trx = trx(conn);
+
+    try {
       trx.sql("select A, B, C from FOO");
 
       Foo result;
       result = trx.queryOne(Foo::new);
 
       assertEquals(result, new Foo(567, "BAR", LocalDate.of(2024, 12, 1)));
+    } finally {
+      trx.close();
     }
 
     assertEquals(
@@ -243,6 +266,7 @@ public class SqlTransactionTest {
 
         """
         createStatement()
+        setAutoCommit(true)
         close()
         """
     );
@@ -282,13 +306,18 @@ public class SqlTransactionTest {
 
     conn.statements(stmt);
 
-    try (SqlTransaction trx = trx(conn)) {
+    SqlTransaction trx;
+    trx = trx(conn);
+
+    try {
       trx.sql("create table TEMP (ID)");
 
       int result;
       result = trx.update();
 
       assertEquals(result, 1);
+    } finally {
+      trx.close();
     }
 
     assertEquals(
@@ -296,6 +325,7 @@ public class SqlTransactionTest {
 
         """
         createStatement()
+        setAutoCommit(true)
         close()
         """
     );
@@ -322,7 +352,10 @@ public class SqlTransactionTest {
 
     conn.preparedStatements(stmt);
 
-    try (SqlTransaction trx = trx(conn)) {
+    SqlTransaction trx;
+    trx = trx(conn);
+
+    try {
       trx.sql("insert into BAR (X) values (?)");
 
       trx.add(1);
@@ -337,6 +370,8 @@ public class SqlTransactionTest {
       result = trx.batchUpdate();
 
       assertEquals(result, new int[] {1, 1});
+    } finally {
+      trx.close();
     }
 
     assertEquals(
@@ -344,6 +379,7 @@ public class SqlTransactionTest {
 
         """
         prepareStatement(insert into BAR (X) values (?))
+        setAutoCommit(true)
         close()
         """
     );
@@ -374,7 +410,10 @@ public class SqlTransactionTest {
 
     conn.preparedStatements(stmt);
 
-    try (SqlTransaction trx = trx(conn)) {
+    SqlTransaction trx;
+    trx = trx(conn);
+
+    try {
       trx.sql("insert into BAR (X, Y) values (?, ?)");
 
       trx.add(1);
@@ -385,6 +424,8 @@ public class SqlTransactionTest {
       result = trx.update();
 
       assertEquals(result, 1);
+    } finally {
+      trx.close();
     }
 
     assertEquals(
@@ -392,6 +433,7 @@ public class SqlTransactionTest {
 
         """
         prepareStatement(insert into BAR (X, Y) values (?, ?))
+        setAutoCommit(true)
         close()
         """
     );
@@ -425,7 +467,10 @@ public class SqlTransactionTest {
 
     conn.preparedStatements(stmt);
 
-    try (SqlTransaction trx = trx(conn)) {
+    SqlTransaction trx;
+    trx = trx(conn);
+
+    try {
       int count;
       count = trx.count("""
       select A, B
@@ -434,6 +479,8 @@ public class SqlTransactionTest {
       """, 123);
 
       assertEquals(count, 567);
+    } finally {
+      trx.close();
     }
 
     assertEquals(
@@ -441,6 +488,7 @@ public class SqlTransactionTest {
 
         """
         prepareStatement(select count(*) from ( select A, B from FOO where C = ? ) x)
+        setAutoCommit(true)
         close()
         """
     );
@@ -478,12 +526,17 @@ public class SqlTransactionTest {
 
     conn.statements(stmt);
 
-    try (SqlTransaction trx = trx(conn)) {
+    SqlTransaction trx;
+    trx = trx(conn);
+
+    try {
       int[] result = trx.executeUpdateText("""
       insert into FOO (A, B) values (1, 5)
       """);
 
       assertEquals(result, new int[] {1});
+    } finally {
+      trx.close();
     }
 
     assertEquals(
@@ -491,6 +544,7 @@ public class SqlTransactionTest {
 
         """
         createStatement()
+        setAutoCommit(true)
         close()
         """
     );
@@ -518,7 +572,10 @@ public class SqlTransactionTest {
 
     conn.statements(stmt);
 
-    try (SqlTransaction trx = trx(conn)) {
+    SqlTransaction trx;
+    trx = trx(conn);
+
+    try {
       int[] result = trx.executeUpdateText("""
       insert into FOO (A, B) values (1, 5)
 
@@ -526,6 +583,8 @@ public class SqlTransactionTest {
       """);
 
       assertEquals(result, new int[] {1});
+    } finally {
+      trx.close();
     }
 
     assertEquals(
@@ -533,6 +592,7 @@ public class SqlTransactionTest {
 
         """
         createStatement()
+        setAutoCommit(true)
         close()
         """
     );
@@ -566,12 +626,17 @@ public class SqlTransactionTest {
 
     conn.preparedStatements(stmt);
 
-    try (SqlTransaction trx = trx(conn)) {
+    SqlTransaction trx;
+    trx = trx(conn);
+
+    try {
       trx.processQuery(this::row, """
       select A, B
       from FOO
       where ID = ?
       """, 123);
+    } finally {
+      trx.close();
     }
 
     assertEquals(
@@ -579,6 +644,7 @@ public class SqlTransactionTest {
 
         """
         prepareStatement(select A, B from FOO where ID = ?)
+        setAutoCommit(true)
         close()
         """
     );
@@ -622,12 +688,17 @@ public class SqlTransactionTest {
 
     conn.preparedStatements(stmt);
 
-    try (SqlTransaction trx = trx(conn)) {
+    SqlTransaction trx;
+    trx = trx(conn);
+
+    try {
       trx.processQuery(this::row, page(15), """
       select A, B
       from FOO
       where C = ?
       """, 123);
+    } finally {
+      trx.close();
     }
 
     assertEquals(
@@ -635,6 +706,7 @@ public class SqlTransactionTest {
 
         """
         prepareStatement(select A, B from FOO where C = ? limit 15)
+        setAutoCommit(true)
         close()
         """
     );
@@ -680,7 +752,10 @@ public class SqlTransactionTest {
 
     conn.preparedStatements(stmt);
 
-    try (SqlTransaction trx = trx(conn)) {
+    SqlTransaction trx;
+    trx = trx(conn);
+
+    try {
       trx.processQuery(this::row, page(15), """
       select A, B
       from FOO
@@ -689,6 +764,8 @@ public class SqlTransactionTest {
       and D = ?
       --
       """, 123, null);
+    } finally {
+      trx.close();
     }
 
     assertEquals(
@@ -696,6 +773,7 @@ public class SqlTransactionTest {
 
         """
         prepareStatement(select A, B from FOO where C = ? limit 15)
+        setAutoCommit(true)
         close()
         """
     );
@@ -741,7 +819,10 @@ public class SqlTransactionTest {
 
     conn.preparedStatements(stmt);
 
-    try (SqlTransaction trx = trx(conn)) {
+    SqlTransaction trx;
+    trx = trx(conn);
+
+    try {
       trx.processQuery(this::row, page(15), """
       select A, B
       from FOO
@@ -750,6 +831,8 @@ public class SqlTransactionTest {
       and D = ?
       --
       """, 123, "abc");
+    } finally {
+      trx.close();
     }
 
     assertEquals(
@@ -757,6 +840,7 @@ public class SqlTransactionTest {
 
         """
         prepareStatement(select A, B from FOO where C = ? and D = ? limit 15)
+        setAutoCommit(true)
         close()
         """
     );
@@ -802,12 +886,17 @@ public class SqlTransactionTest {
 
     conn.preparedStatements(stmt);
 
-    try (SqlTransaction trx = trx(conn)) {
+    SqlTransaction trx;
+    trx = trx(conn);
+
+    try {
       trx.processQuery(this::row, Sql.createPage(2, 15), """
       select A, B
       from FOO
       where C = ?
       """, 123);
+    } finally {
+      trx.close();
     }
 
     assertEquals(
@@ -815,6 +904,7 @@ public class SqlTransactionTest {
 
         """
         prepareStatement(select A, B from FOO where C = ? limit 15 offset 15)
+        setAutoCommit(true)
         close()
         """
     );
@@ -859,7 +949,10 @@ public class SqlTransactionTest {
 
     conn.preparedStatements(stmt);
 
-    try (SqlTransaction trx = trx(conn)) {
+    SqlTransaction trx;
+    trx = trx(conn);
+
+    try {
       trx.processQuery(this::row, page(15), """
       select A, B
       from FOO
@@ -869,6 +962,8 @@ public class SqlTransactionTest {
       --
       and E = ?
       """, 123, null);
+    } finally {
+      trx.close();
     }
 
     assertEquals(
@@ -876,6 +971,7 @@ public class SqlTransactionTest {
 
         """
         prepareStatement(select A, B from FOO where C = ? and D is not null limit 15)
+        setAutoCommit(true)
         close()
         """
     );
@@ -906,8 +1002,13 @@ public class SqlTransactionTest {
     TestingConnection conn;
     conn = new TestingConnection();
 
-    try (SqlTransaction trx = trx(conn)) {
+    SqlTransaction trx;
+    trx = trx(conn);
+
+    try {
       trx.rollback();
+    } finally {
+      trx.close();
     }
 
     assertEquals(
@@ -915,6 +1016,7 @@ public class SqlTransactionTest {
 
         """
         rollback()
+        setAutoCommit(true)
         close()
         """
     );
@@ -932,7 +1034,10 @@ public class SqlTransactionTest {
 
     conn.rollbackException(exception);
 
-    try (SqlTransaction trx = trx(conn)) {
+    SqlTransaction trx;
+    trx = trx(conn);
+
+    try {
       trx.rollback();
 
       Assert.fail();
@@ -941,6 +1046,8 @@ public class SqlTransactionTest {
       cause = e.getCause();
 
       assertSame(cause, exception);
+    } finally {
+      trx.close();
     }
 
     assertEquals(
@@ -948,6 +1055,7 @@ public class SqlTransactionTest {
 
         """
         rollback()
+        setAutoCommit(true)
         close()
         """
     );
@@ -966,13 +1074,15 @@ public class SqlTransactionTest {
     SqlTransaction trx;
     trx = trx(conn);
 
-    try (trx) {
+    try {
 
       RuntimeException result;
       result = trx.rollbackUnchecked(rethrow);
 
       assertEquals(result.getCause(), rethrow);
 
+    } finally {
+      trx.close();
     }
 
     assertEquals(
@@ -980,6 +1090,7 @@ public class SqlTransactionTest {
 
         """
         rollback()
+        setAutoCommit(true)
         close()
         """
     );
@@ -998,13 +1109,15 @@ public class SqlTransactionTest {
     SqlTransaction trx;
     trx = trx(conn);
 
-    try (trx) {
+    try {
 
       RuntimeException result;
       result = trx.rollbackUnchecked(rethrow);
 
       assertSame(result, rethrow);
 
+    } finally {
+      trx.close();
     }
 
     assertEquals(
@@ -1012,6 +1125,7 @@ public class SqlTransactionTest {
 
         """
         rollback()
+        setAutoCommit(true)
         close()
         """
     );
@@ -1030,13 +1144,15 @@ public class SqlTransactionTest {
     SqlTransaction trx;
     trx = trx(conn);
 
-    try (trx) {
+    try {
 
       RuntimeException result;
       result = trx.rollbackUnchecked(rethrow);
 
       assertEquals(result.getCause(), rethrow);
 
+    } finally {
+      trx.close();
     }
 
     assertEquals(
@@ -1044,6 +1160,7 @@ public class SqlTransactionTest {
 
         """
         rollback()
+        setAutoCommit(true)
         close()
         """
     );

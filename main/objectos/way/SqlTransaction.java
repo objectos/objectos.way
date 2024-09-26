@@ -87,8 +87,8 @@ final class SqlTransaction implements Sql.Transaction {
 
   @Override
   public final void close() throws Sql.UncheckedSqlException {
-    try {
-      connection.close();
+    try (connection) {
+      connection.setAutoCommit(true);
     } catch (SQLException e) {
       throw new Sql.UncheckedSqlException(e);
     }

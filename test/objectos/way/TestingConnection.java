@@ -94,7 +94,9 @@ final class TestingConnection extends AbstractTestable implements Connection {
   public String nativeSQL(String sql) throws SQLException { throw new UnsupportedOperationException("Implement me"); }
 
   @Override
-  public void setAutoCommit(boolean autoCommit) throws SQLException { throw new UnsupportedOperationException("Implement me"); }
+  public final void setAutoCommit(boolean autoCommit) throws SQLException {
+    logMethod("setAutoCommit", autoCommit);
+  }
 
   @Override
   public boolean getAutoCommit() throws SQLException { throw new UnsupportedOperationException("Implement me"); }
