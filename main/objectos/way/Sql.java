@@ -27,6 +27,7 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.OptionalInt;
 import javax.sql.DataSource;
 import objectos.lang.object.Check;
 import objectos.notes.Note3;
@@ -364,14 +365,18 @@ public final class Sql {
     <T> List<T> query(RowMapper<T> mapper) throws UncheckedSqlException;
 
     /**
-     * Executes the current SQL statement as a row-retrieving query.
+     * Executes the current SQL statement as a row-retrieving query which must
+     * return a single result (no more and no less).
      */
-    <T> T queryOne(RowMapper<T> mapper) throws UncheckedSqlException;
+    <T> T querySingle(RowMapper<T> mapper) throws UncheckedSqlException;
 
     /**
-     * Executes the current SQL statement as a row-retrieving query.
+     * Executes the current SQL statement as a row-retrieving query which may
+     * return a single result or {@code null} if there were no results.
      */
-    <T> T queryOneOrNull(RowMapper<T> mapper) throws UncheckedSqlException;
+    <T> T queryNullable(RowMapper<T> mapper) throws UncheckedSqlException;
+
+    OptionalInt queryOptionalInt() throws UncheckedSqlException;
 
     /**
      * Executes the current SQL statement as an update operation.

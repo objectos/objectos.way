@@ -26,6 +26,7 @@ import java.sql.Types;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
+import java.util.OptionalInt;
 import objectos.way.Sql.RollbackWrapperException;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -126,7 +127,7 @@ public class SqlTransactionTest {
       trx.add(123);
 
       Foo result;
-      result = trx.queryOne(Foo::new);
+      result = trx.querySingle(Foo::new);
 
       assertEquals(result, new Foo(567, "BAR", LocalDate.of(2024, 12, 1)));
     } finally {
@@ -256,7 +257,7 @@ public class SqlTransactionTest {
       trx.sql("select A, B, C from FOO");
 
       Foo result;
-      result = trx.queryOne(Foo::new);
+      result = trx.querySingle(Foo::new);
 
       assertEquals(result, new Foo(567, "BAR", LocalDate.of(2024, 12, 1)));
     } finally {
@@ -452,7 +453,7 @@ public class SqlTransactionTest {
     );
   }
 
-  @Test
+  @Test(description = "trx.sql().format()")
   public void testCase08() {
     TestingConnection conn;
     conn = new TestingConnection();
@@ -495,6 +496,72 @@ public class SqlTransactionTest {
 
         """
         update(insert into BAR (X, Y) values (123, '2024-09-26'))
+        close()
+        """
+    );
+  }
+
+  @Test(description = "trx.sql().queryOptionalInt")
+  public void testCase09() {
+    TestingConnection conn;
+    conn = new TestingConnection();
+
+    TestingPreparedStatement stmt;
+    stmt = new TestingPreparedStatement();
+
+    TestingResultSet query;
+    query = new TestingResultSet(
+        Map.of("1", 23)
+    );
+
+    stmt.queries(query);
+
+    conn.preparedStatements(stmt);
+
+    SqlTransaction trx;
+    trx = trx(conn);
+
+    try {
+      trx.sql("select max(SEQ) from FOO where X = ?");
+
+      trx.add(123);
+
+      OptionalInt maybe;
+      maybe = trx.queryOptionalInt();
+
+      assertEquals(maybe.isPresent(), true);
+      assertEquals(maybe.getAsInt(), 23);
+    } finally {
+      trx.close();
+    }
+
+    assertEquals(
+        conn.toString(),
+
+        """
+        prepareStatement(select max(SEQ) from FOO where X = ?)
+        setAutoCommit(true)
+        close()
+        """
+    );
+
+    assertEquals(
+        stmt.toString(),
+
+        """
+        setInt(1, 123)
+        executeQuery()
+        close()
+        """
+    );
+
+    assertEquals(
+        query.toString(),
+
+        """
+        next()
+        getInt(1)
+        next()
         close()
         """
     );

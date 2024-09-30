@@ -21,6 +21,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.List;
+import java.util.OptionalInt;
 import objectos.lang.object.Check;
 import objectos.util.list.GrowableList;
 import objectos.util.list.UnmodifiableList;
@@ -312,7 +313,7 @@ final class SqlTransaction implements Sql.Transaction {
   }
 
   @Override
-  public final <T> T queryOne(Sql.RowMapper<T> mapper) throws UncheckedSqlException {
+  public final <T> T querySingle(Sql.RowMapper<T> mapper) throws UncheckedSqlException {
     checkQuery(mapper);
 
     T result;
@@ -320,7 +321,7 @@ final class SqlTransaction implements Sql.Transaction {
     if (hasArguments()) {
 
       try (PreparedStatement stmt = prepare(); ResultSet rs = stmt.executeQuery()) {
-        result = queryOne0(mapper, rs);
+        result = querySingle0(mapper, rs);
       } catch (SQLException e) {
         throw new Sql.UncheckedSqlException(e);
       }
@@ -328,7 +329,7 @@ final class SqlTransaction implements Sql.Transaction {
     } else {
 
       try (Statement stmt = connection.createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
-        result = queryOne0(mapper, rs);
+        result = querySingle0(mapper, rs);
       } catch (SQLException e) {
         throw new Sql.UncheckedSqlException(e);
       }
@@ -338,7 +339,7 @@ final class SqlTransaction implements Sql.Transaction {
     return result;
   }
 
-  private <T> T queryOne0(Sql.RowMapper<T> mapper, ResultSet rs) throws SQLException {
+  private <T> T querySingle0(Sql.RowMapper<T> mapper, ResultSet rs) throws SQLException {
     T result;
 
     if (!rs.next()) {
@@ -355,7 +356,7 @@ final class SqlTransaction implements Sql.Transaction {
   }
 
   @Override
-  public final <T> T queryOneOrNull(RowMapper<T> mapper) throws UncheckedSqlException {
+  public final <T> T queryNullable(RowMapper<T> mapper) throws UncheckedSqlException {
     checkQuery(mapper);
 
     T result;
@@ -363,7 +364,7 @@ final class SqlTransaction implements Sql.Transaction {
     if (hasArguments()) {
 
       try (PreparedStatement stmt = prepare(); ResultSet rs = stmt.executeQuery()) {
-        result = queryOneOrNull0(mapper, rs);
+        result = queryNullable0(mapper, rs);
       } catch (SQLException e) {
         throw new Sql.UncheckedSqlException(e);
       }
@@ -371,7 +372,7 @@ final class SqlTransaction implements Sql.Transaction {
     } else {
 
       try (Statement stmt = connection.createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
-        result = queryOneOrNull0(mapper, rs);
+        result = queryNullable0(mapper, rs);
       } catch (SQLException e) {
         throw new Sql.UncheckedSqlException(e);
       }
@@ -381,13 +382,59 @@ final class SqlTransaction implements Sql.Transaction {
     return result;
   }
 
-  private <T> T queryOneOrNull0(Sql.RowMapper<T> mapper, ResultSet rs) throws SQLException {
+  private <T> T queryNullable0(Sql.RowMapper<T> mapper, ResultSet rs) throws SQLException {
     T result;
 
     if (!rs.next()) {
       result = null;
     } else {
       result = mapper.mapRow(rs, 1);
+    }
+
+    if (rs.next()) {
+      throw new UnsupportedOperationException("Implement me");
+    }
+
+    return result;
+  }
+
+  @Override
+  public final OptionalInt queryOptionalInt() throws UncheckedSqlException {
+    checkQuery();
+
+    OptionalInt result;
+
+    if (hasArguments()) {
+
+      try (PreparedStatement stmt = prepare(); ResultSet rs = stmt.executeQuery()) {
+        result = queryOptionalInt0(rs);
+      } catch (SQLException e) {
+        throw new Sql.UncheckedSqlException(e);
+      }
+
+    } else {
+
+      try (Statement stmt = connection.createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
+        result = queryOptionalInt0(rs);
+      } catch (SQLException e) {
+        throw new Sql.UncheckedSqlException(e);
+      }
+
+    }
+
+    return result;
+  }
+
+  private OptionalInt queryOptionalInt0(ResultSet rs) throws SQLException {
+    OptionalInt result;
+
+    if (!rs.next()) {
+      result = OptionalInt.empty();
+    } else {
+      int value;
+      value = rs.getInt(1);
+
+      result = OptionalInt.of(value);
     }
 
     if (rs.next()) {
@@ -432,6 +479,10 @@ final class SqlTransaction implements Sql.Transaction {
   private void checkQuery(RowMapper<?> mapper) {
     Check.notNull(mapper, "mapper == null");
 
+    checkQuery();
+  }
+
+  private void checkQuery() {
     Check.state(sql != null, "No SQL statement was defined");
 
     Check.state(!hasBatches(), "Cannot execute query: one or more batches were defined");
