@@ -71,7 +71,7 @@ public class SqlTransactionTest {
         conn.toString(),
 
         """
-        prepareStatement(select A, B, C from FOO where X = ?)
+        prepareStatement(select A, B, C from FOO where X = ?, 2)
         setAutoCommit(true)
         close()
         """
@@ -138,7 +138,7 @@ public class SqlTransactionTest {
         conn.toString(),
 
         """
-        prepareStatement(select A, B, C from FOO where X = ?)
+        prepareStatement(select A, B, C from FOO where X = ?, 2)
         setAutoCommit(true)
         close()
         """
@@ -337,7 +337,7 @@ public class SqlTransactionTest {
         stmt.toString(),
 
         """
-        update(create table TEMP (ID))
+        executeUpdate(create table TEMP (ID))
         close()
         """
     );
@@ -401,7 +401,7 @@ public class SqlTransactionTest {
     );
   }
 
-  @Test
+  @Test(description = "trx.add(null, Types.DATE)")
   public void testCase07() {
     TestingConnection conn;
     conn = new TestingConnection();
@@ -435,7 +435,7 @@ public class SqlTransactionTest {
         conn.toString(),
 
         """
-        prepareStatement(insert into BAR (X, Y) values (?, ?))
+        prepareStatement(insert into BAR (X, Y) values (?, ?), 2)
         setAutoCommit(true)
         close()
         """
@@ -495,7 +495,7 @@ public class SqlTransactionTest {
         stmt.toString(),
 
         """
-        update(insert into BAR (X, Y) values (123, '2024-09-26'))
+        executeUpdate(insert into BAR (X, Y) values (123, '2024-09-26'))
         close()
         """
     );
@@ -539,7 +539,7 @@ public class SqlTransactionTest {
         conn.toString(),
 
         """
-        prepareStatement(select max(SEQ) from FOO where X = ?)
+        prepareStatement(select max(SEQ) from FOO where X = ?, 2)
         setAutoCommit(true)
         close()
         """
@@ -551,6 +551,152 @@ public class SqlTransactionTest {
         """
         setInt(1, 123)
         executeQuery()
+        close()
+        """
+    );
+
+    assertEquals(
+        query.toString(),
+
+        """
+        next()
+        getInt(1)
+        next()
+        close()
+        """
+    );
+  }
+
+  @Test(description = "trx.sql(insert into FOO values (123, 456)).updateWithGeneratedKeys(keys)")
+  public void testCase10() {
+    TestingConnection conn;
+    conn = new TestingConnection();
+
+    TestingStatement stmt;
+    stmt = new TestingStatement();
+
+    TestingResultSet query;
+    query = new TestingResultSet(
+        Map.of("1", 23)
+    );
+
+    stmt.generatedKeys(query);
+
+    stmt.updates(1);
+
+    conn.statements(stmt);
+
+    SqlTransaction trx;
+    trx = trx(conn);
+
+    try {
+      trx.sql("insert into FOO (A, B) values (123, 'bar')");
+
+      Sql.GeneratedKeys.OfInt generatedKeys;
+      generatedKeys = Sql.createGeneratedKeysOfInt();
+
+      int update;
+      update = trx.updateWithGeneratedKeys(generatedKeys);
+
+      assertEquals(update, 1);
+
+      assertEquals(generatedKeys.size(), 1);
+      assertEquals(generatedKeys.getAsInt(0), 23);
+    } finally {
+      trx.close();
+    }
+
+    assertEquals(
+        conn.toString(),
+
+        """
+        createStatement()
+        setAutoCommit(true)
+        close()
+        """
+    );
+
+    assertEquals(
+        stmt.toString(),
+
+        """
+        executeUpdate(insert into FOO (A, B) values (123, 'bar'), 1)
+        getGeneratedKeys()
+        close()
+        """
+    );
+
+    assertEquals(
+        query.toString(),
+
+        """
+        next()
+        getInt(1)
+        next()
+        close()
+        """
+    );
+  }
+
+  @Test(description = "trx.sql(insert into FOO values (?)).add(some param).updateWithGeneratedKeys(keys)")
+  public void testCase11() {
+    TestingConnection conn;
+    conn = new TestingConnection();
+
+    TestingPreparedStatement stmt;
+    stmt = new TestingPreparedStatement();
+
+    TestingResultSet query;
+    query = new TestingResultSet(
+        Map.of("1", 23)
+    );
+
+    stmt.generatedKeys(query);
+
+    stmt.updates(1);
+
+    conn.preparedStatements(stmt);
+
+    SqlTransaction trx;
+    trx = trx(conn);
+
+    try {
+      trx.sql("insert into FOO (A, B) values (?, ?)");
+
+      trx.add(123).add("bar");
+
+      Sql.GeneratedKeys.OfInt generatedKeys;
+      generatedKeys = Sql.createGeneratedKeysOfInt();
+
+      int update;
+      update = trx.updateWithGeneratedKeys(generatedKeys);
+
+      assertEquals(update, 1);
+
+      assertEquals(generatedKeys.size(), 1);
+      assertEquals(generatedKeys.getAsInt(0), 23);
+    } finally {
+      trx.close();
+    }
+
+    assertEquals(
+        conn.toString(),
+
+        """
+        prepareStatement(insert into FOO (A, B) values (?, ?), 1)
+        setAutoCommit(true)
+        close()
+        """
+    );
+
+    assertEquals(
+        stmt.toString(),
+
+        """
+        setInt(1, 123)
+        setString(2, bar)
+        executeUpdate()
+        getGeneratedKeys()
         close()
         """
     );

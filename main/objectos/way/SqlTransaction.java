@@ -25,8 +25,10 @@ import java.util.OptionalInt;
 import objectos.lang.object.Check;
 import objectos.util.list.GrowableList;
 import objectos.util.list.UnmodifiableList;
+import objectos.way.Sql.GeneratedKeys;
 import objectos.way.Sql.RollbackWrapperException;
 import objectos.way.Sql.RowMapper;
+import objectos.way.Sql.SqlGeneratedKeys;
 import objectos.way.Sql.Transaction;
 import objectos.way.Sql.UncheckedSqlException;
 
@@ -472,6 +474,41 @@ final class SqlTransaction implements Sql.Transaction {
     return result;
   }
 
+  @Override
+  public final int updateWithGeneratedKeys(GeneratedKeys<?> generatedKeys) {
+    checkSql();
+    Check.state(!hasBatches(), "One or more batches were defined");
+
+    Sql.SqlGeneratedKeys<?> impl;
+    impl = (SqlGeneratedKeys<?>) generatedKeys;
+
+    int result;
+
+    if (hasArguments()) {
+
+      try (PreparedStatement stmt = prepare(Statement.RETURN_GENERATED_KEYS)) {
+        result = stmt.executeUpdate();
+
+        impl.accept(stmt);
+      } catch (SQLException e) {
+        throw new Sql.UncheckedSqlException(e);
+      }
+
+    } else {
+
+      try (Statement stmt = connection.createStatement()) {
+        result = stmt.executeUpdate(sql, Statement.RETURN_GENERATED_KEYS);
+
+        impl.accept(stmt);
+      } catch (SQLException e) {
+        throw new Sql.UncheckedSqlException(e);
+      }
+
+    }
+
+    return result;
+  }
+
   private void checkSql() {
     Check.state(sql != null, "No SQL statement was defined");
   }
@@ -497,8 +534,12 @@ final class SqlTransaction implements Sql.Transaction {
   }
 
   private PreparedStatement prepare() throws SQLException {
+    return prepare(Statement.NO_GENERATED_KEYS);
+  }
+
+  private PreparedStatement prepare(int generatedKeys) throws SQLException {
     PreparedStatement stmt;
-    stmt = connection.prepareStatement(sql);
+    stmt = connection.prepareStatement(sql, generatedKeys);
 
     // we assume this method was called after hasArguments() returned true
     // so arguments is guaranteed to be non-null

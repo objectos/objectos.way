@@ -24,14 +24,17 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 import java.util.OptionalInt;
 import javax.sql.DataSource;
 import objectos.lang.object.Check;
 import objectos.notes.Note3;
 import objectos.notes.NoteSink;
+import objectos.util.array.IntArrays;
 import objectos.way.Sql.Source.Option;
 import objectos.way.SqlSource.Builder;
 
@@ -52,6 +55,20 @@ public final class Sql {
   }
 
   // types
+
+  public sealed interface GeneratedKeys<T> {
+
+    public sealed interface OfInt extends GeneratedKeys<Integer> {
+
+      int getAsInt(int index);
+
+    }
+
+    T get(int index);
+
+    int size();
+
+  }
 
   public interface Page {
 
@@ -383,6 +400,11 @@ public final class Sql {
      */
     int update();
 
+    /**
+     * Executes the current SQL statement as an update operation.
+     */
+    int updateWithGeneratedKeys(GeneratedKeys<?> generatedKeys);
+
   }
 
   static final class MappingException extends RuntimeException {
@@ -425,6 +447,10 @@ public final class Sql {
   }
 
   private Sql() {}
+
+  public static GeneratedKeys.OfInt createGeneratedKeysOfInt() {
+    return new SqlGeneratedKeysOfInt();
+  }
 
   /**
    * Creates a new {@code Source} instance from the specified data source.
@@ -515,6 +541,73 @@ public final class Sql {
 
       default -> throw new IllegalArgumentException("Unexpected type: " + value.getClass());
     }
+  }
+
+  // non-public types
+
+  static non-sealed abstract class SqlGeneratedKeys<T> implements Sql.GeneratedKeys<T> {
+
+    final void accept(Statement stmt) throws SQLException {
+      try (ResultSet generatedKeys = stmt.getGeneratedKeys()) {
+        clear();
+
+        accept(generatedKeys);
+      }
+    }
+
+    abstract void accept(ResultSet rs) throws SQLException;
+
+    abstract void clear();
+
+  }
+
+  static final class SqlGeneratedKeysOfInt extends SqlGeneratedKeys<Integer> implements Sql.GeneratedKeys.OfInt {
+
+    private int[] keys = IntArrays.empty();
+
+    private int size = 0;
+
+    @Override
+    public final Integer get(int index) {
+      return getAsInt(index);
+    }
+
+    @Override
+    public final int getAsInt(int index) {
+      Objects.checkIndex(index, size);
+
+      return keys[index];
+    }
+
+    @Override
+    public final int size() {
+      return size;
+    }
+
+    @Override
+    final void accept(ResultSet rs) throws SQLException {
+      while (rs.next()) {
+        int value;
+        value = rs.getInt(1);
+
+        add(value);
+      }
+    }
+
+    @Override
+    final void clear() {
+      size = 0;
+    }
+
+    private void add(int value) {
+      int requiredIndex;
+      requiredIndex = size++;
+
+      keys = IntArrays.growIfNecessary(keys, requiredIndex);
+
+      keys[requiredIndex] = value;
+    }
+
   }
 
   private static final class RecordRowMapper<R extends Record> implements RowMapper<R> {
