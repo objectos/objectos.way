@@ -35,8 +35,8 @@ import objectos.lang.object.Check;
 import objectos.notes.Note3;
 import objectos.notes.NoteSink;
 import objectos.util.array.IntArrays;
-import objectos.way.Sql.Source.Option;
-import objectos.way.SqlSource.Builder;
+import objectos.way.Sql.Database.Option;
+import objectos.way.SqlDatabase.Builder;
 
 /**
  * The <strong>Objectos SQL</strong> main class.
@@ -54,7 +54,62 @@ public final class Sql {
     METADATA = Note3.debug(s, "Database metadata");
   }
 
+  // trx isolation levels
+
+  public static final Transaction.Isolation READ_UNCOMMITED = TransactionIsolation.READ_UNCOMMITED;
+
+  public static final Transaction.Isolation READ_COMMITED = TransactionIsolation.READ_COMMITED;
+
+  public static final Transaction.Isolation REPEATABLE_READ = TransactionIsolation.REPEATABLE_READ;
+
+  public static final Transaction.Isolation SERIALIZABLE = TransactionIsolation.SERIALIZABLE;
+
   // types
+
+  /**
+   * A source for SQL database connections. It typically wraps a
+   * {@link DataSource} instance.
+   */
+  public sealed interface Database permits SqlDatabase {
+
+    /**
+     * A {@code Sql.Database} configuration option.
+     */
+    public sealed interface Option permits SqlOption {}
+
+    /**
+     * Begins a transaction with the specified isolation level.
+     *
+     * @param level
+     *        the transaction isolation level
+     *
+     * @return a connection to the underlying database with a transaction
+     *         started with the specified isolation level
+     *
+     * @throws DatabaseException
+     *         if a database access error occurs
+     */
+    Transaction beginTransaction(Transaction.Isolation level) throws DatabaseException;
+
+  }
+
+  /**
+   * Thrown to indicate a database access error.
+   */
+  public static class DatabaseException extends RuntimeException {
+
+    private static final long serialVersionUID = 1L;
+
+    DatabaseException(SQLException cause) {
+      super(cause);
+    }
+
+    @Override
+    public final SQLException getCause() {
+      return (SQLException) super.getCause();
+    }
+
+  }
 
   public sealed interface GeneratedKeys<T> {
 
@@ -146,70 +201,30 @@ public final class Sql {
   }
 
   /**
-   * A source for SQL connections. It typically wraps a {@link DataSource}
-   * instance.
-   */
-  public interface Source {
-
-    public sealed interface Option permits SqlOption {}
-
-    /**
-     * Begins a transaction with the specified isolation level.
-     *
-     * @param level
-     *        the transaction isolation level
-     *
-     * @return a connection to the underlying database with a transaction
-     *         started with the specified isolation level
-     *
-     * @throws UncheckedSqlException
-     *         if a database access error occurs
-     */
-    Transaction beginTransaction(Transaction.IsolationLevel level) throws UncheckedSqlException;
-
-  }
-
-  /**
    * A connection to a running transaction in a database.
    */
   public sealed interface Transaction permits SqlTransaction {
 
     /**
-     * Transaction isolation level.
+     * The isolation level of a transaction.
      */
-    public enum IsolationLevel {
-
-      READ_UNCOMMITED(Connection.TRANSACTION_READ_UNCOMMITTED),
-
-      READ_COMMITED(Connection.TRANSACTION_READ_COMMITTED),
-
-      REPEATABLE_READ(Connection.TRANSACTION_REPEATABLE_READ),
-
-      SERIALIZABLE(Connection.TRANSACTION_SERIALIZABLE);
-
-      public final int jdbcValue;
-
-      private IsolationLevel(int level) {
-        this.jdbcValue = level;
-      }
-
-    }
+    public sealed interface Isolation {}
 
     /**
      * Commits this transaction.
      *
-     * @throws UncheckedSqlException
+     * @throws DatabaseException
      *         if the underlying {@link Connection#commit()} method throws
      */
-    void commit() throws UncheckedSqlException;
+    void commit() throws DatabaseException;
 
     /**
      * Undoes all changes made in this transaction.
      *
-     * @throws UncheckedSqlException
+     * @throws DatabaseException
      *         if the underlying {@link Connection#rollback()} method throws
      */
-    void rollback() throws UncheckedSqlException;
+    void rollback() throws DatabaseException;
 
     /**
      * Rolls back this transaction and returns the specified exception. If the
@@ -269,11 +284,11 @@ public final class Sql {
     /**
      * Closes the underlying database connection.
      */
-    void close() throws UncheckedSqlException;
+    void close() throws DatabaseException;
 
-    int count(String sql, Object... args) throws UncheckedSqlException;
+    int count(String sql, Object... args) throws DatabaseException;
 
-    int[] executeUpdateText(String sqlText) throws UncheckedSqlException;
+    int[] executeUpdateText(String sqlText) throws DatabaseException;
 
     /**
      * Use the specified processor to process the results of the execution of
@@ -288,10 +303,10 @@ public final class Sql {
      * @param args
      *        the arguments of the SQL statement
      *
-     * @throws UncheckedSqlException
+     * @throws DatabaseException
      *         if a database access error occurs
      */
-    void processQuery(QueryProcessor processor, String sql, Object... args) throws UncheckedSqlException;
+    void processQuery(QueryProcessor processor, String sql, Object... args) throws DatabaseException;
 
     /**
      * Use the specified processor to process the results of the execution of
@@ -309,12 +324,12 @@ public final class Sql {
      * @param args
      *        the arguments of the SQL statement
      *
-     * @throws UncheckedSqlException
+     * @throws DatabaseException
      *         if a database access error occurs
      */
-    void processQuery(QueryProcessor processor, Page page, String sql, Object... args) throws UncheckedSqlException;
+    void processQuery(QueryProcessor processor, Page page, String sql, Object... args) throws DatabaseException;
 
-    default void processQuery(QueryProcessor processor, PageProvider pageProvider, String sql, Object... args) throws UncheckedSqlException {
+    default void processQuery(QueryProcessor processor, PageProvider pageProvider, String sql, Object... args) throws DatabaseException {
       Page page;
       page = pageProvider.page(); // implicit null-check
 
@@ -379,21 +394,21 @@ public final class Sql {
     /**
      * Executes the current SQL statement as a row-retrieving query.
      */
-    <T> List<T> query(RowMapper<T> mapper) throws UncheckedSqlException;
+    <T> List<T> query(RowMapper<T> mapper) throws DatabaseException;
 
     /**
      * Executes the current SQL statement as a row-retrieving query which must
      * return a single result (no more and no less).
      */
-    <T> T querySingle(RowMapper<T> mapper) throws UncheckedSqlException;
+    <T> T querySingle(RowMapper<T> mapper) throws DatabaseException;
 
     /**
      * Executes the current SQL statement as a row-retrieving query which may
      * return a single result or {@code null} if there were no results.
      */
-    <T> T queryNullable(RowMapper<T> mapper) throws UncheckedSqlException;
+    <T> T queryNullable(RowMapper<T> mapper) throws DatabaseException;
 
-    OptionalInt queryOptionalInt() throws UncheckedSqlException;
+    OptionalInt queryOptionalInt() throws DatabaseException;
 
     /**
      * Executes the current SQL statement as an update operation.
@@ -431,21 +446,6 @@ public final class Sql {
 
   }
 
-  public static final class UncheckedSqlException extends RuntimeException {
-
-    private static final long serialVersionUID = 9207295421842688968L;
-
-    UncheckedSqlException(SQLException cause) {
-      super(cause);
-    }
-
-    @Override
-    public final SQLException getCause() {
-      return (SQLException) super.getCause();
-    }
-
-  }
-
   private Sql() {}
 
   public static GeneratedKeys.OfInt createGeneratedKeysOfInt() {
@@ -463,12 +463,12 @@ public final class Sql {
    * @throws SQLException
    *         if a database access error occurs
    */
-  public static Source createSource(DataSource dataSource, Source.Option... options) throws SQLException {
+  public static Database createSource(DataSource dataSource, Database.Option... options) throws SQLException {
     Check.notNull(dataSource, "dataSource == null");
     Check.notNull(options, "options == null");
 
-    SqlSource.Builder builder;
-    builder = new SqlSource.Builder(dataSource);
+    SqlDatabase.Builder builder;
+    builder = new SqlDatabase.Builder(dataSource);
 
     for (int idx = 0; idx < options.length; idx++) {
       Option o;
@@ -494,11 +494,11 @@ public final class Sql {
     return new SqlPage(number, size);
   }
 
-  static <R extends Record> RowMapper<R> createRowMapper(Class<R> recordType) {
+  public static <R extends Record> RowMapper<R> createRowMapper(Class<R> recordType) {
     return RecordRowMapper.of(recordType);
   }
 
-  public static Sql.Source.Option noteSink(NoteSink noteSink) {
+  public static Sql.Database.Option noteSink(NoteSink noteSink) {
     Check.notNull(noteSink, "noteSink == null");
 
     return new SqlOption() {
@@ -685,6 +685,24 @@ public final class Sql {
       if (columnCount != types.length) {
         throw new Sql.MappingException("Query returned " + columnCount + " columns but record has only " + types.length + " components");
       }
+    }
+
+  }
+
+  enum TransactionIsolation implements Transaction.Isolation {
+
+    READ_UNCOMMITED(Connection.TRANSACTION_READ_UNCOMMITTED),
+
+    READ_COMMITED(Connection.TRANSACTION_READ_COMMITTED),
+
+    REPEATABLE_READ(Connection.TRANSACTION_REPEATABLE_READ),
+
+    SERIALIZABLE(Connection.TRANSACTION_SERIALIZABLE);
+
+    final int jdbcValue;
+
+    private TransactionIsolation(int level) {
+      this.jdbcValue = level;
     }
 
   }

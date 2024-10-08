@@ -1304,7 +1304,7 @@ public class SqlTransactionTest {
       trx.rollback();
 
       Assert.fail();
-    } catch (Sql.UncheckedSqlException e) {
+    } catch (Sql.DatabaseException e) {
       SQLException cause;
       cause = e.getCause();
 

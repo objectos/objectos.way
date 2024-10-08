@@ -15,8 +15,8 @@
  */
 package objectos.way;
 
-non-sealed abstract class SqlOption implements Sql.Source.Option {
+non-sealed abstract class SqlOption implements Sql.Database.Option {
   
-  void acceptSqlSourceBuilder(SqlSource.Builder builder) {}
+  void acceptSqlSourceBuilder(SqlDatabase.Builder builder) {}
 
 }

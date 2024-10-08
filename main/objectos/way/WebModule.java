@@ -19,9 +19,9 @@ import objectos.lang.object.Check;
 
 abstract class WebModule extends Http.Module {
 
-  private final Sql.Transaction.IsolationLevel isolationLevel = Sql.Transaction.IsolationLevel.SERIALIZABLE;
+  private final Sql.Transaction.Isolation trxIsolation = Sql.SERIALIZABLE;
 
-  private Sql.Source source;
+  private Sql.Database source;
 
   protected WebModule() {}
 
@@ -34,7 +34,7 @@ abstract class WebModule extends Http.Module {
    * @throws IllegalStateException
    *         if a source has already been defined
    */
-  protected final void source(Sql.Source source) {
+  protected final void source(Sql.Database source) {
     Check.state(this.source == null, "this module's data source has already been defined");
 
     this.source = Check.notNull(source, "source == null");
@@ -55,7 +55,7 @@ abstract class WebModule extends Http.Module {
     return http -> {
 
       Sql.Transaction trx;
-      trx = source.beginTransaction(isolationLevel);
+      trx = source.beginTransaction(trxIsolation);
 
       try {
         http.set(Sql.Transaction.class, trx);

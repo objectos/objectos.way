@@ -20,7 +20,6 @@ import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.sql.RowIdLifetime;
 import java.sql.SQLException;
-import objectos.way.Sql.UncheckedSqlException;
 
 final class TestingDatabaseMetaData implements DatabaseMetaData {
 
@@ -46,12 +45,12 @@ final class TestingDatabaseMetaData implements DatabaseMetaData {
     this.databaseMinorVersion = databaseMinorVersion;
     this.databaseProductVersion = databaseProductVersion;
   }
-  
+
   public final SqlDialect toSqlDialect() {
     try {
       return SqlDialect.of(this);
     } catch (SQLException e) {
-      throw new UncheckedSqlException(e);
+      throw new Sql.DatabaseException(e);
     }
   }
 

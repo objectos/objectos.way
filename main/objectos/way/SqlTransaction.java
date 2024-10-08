@@ -25,12 +25,12 @@ import java.util.OptionalInt;
 import objectos.lang.object.Check;
 import objectos.util.list.GrowableList;
 import objectos.util.list.UnmodifiableList;
+import objectos.way.Sql.DatabaseException;
 import objectos.way.Sql.GeneratedKeys;
 import objectos.way.Sql.RollbackWrapperException;
 import objectos.way.Sql.RowMapper;
 import objectos.way.Sql.SqlGeneratedKeys;
 import objectos.way.Sql.Transaction;
-import objectos.way.Sql.UncheckedSqlException;
 
 final class SqlTransaction implements Sql.Transaction {
 
@@ -51,20 +51,20 @@ final class SqlTransaction implements Sql.Transaction {
   }
 
   @Override
-  public final void commit() throws Sql.UncheckedSqlException {
+  public final void commit() throws Sql.DatabaseException {
     try {
       connection.commit();
     } catch (SQLException e) {
-      throw new Sql.UncheckedSqlException(e);
+      throw new Sql.DatabaseException(e);
     }
   }
 
   @Override
-  public final void rollback() throws Sql.UncheckedSqlException {
+  public final void rollback() throws Sql.DatabaseException {
     try {
       connection.rollback();
     } catch (SQLException e) {
-      throw new Sql.UncheckedSqlException(e);
+      throw new Sql.DatabaseException(e);
     }
   }
 
@@ -96,16 +96,16 @@ final class SqlTransaction implements Sql.Transaction {
   }
 
   @Override
-  public final void close() throws Sql.UncheckedSqlException {
+  public final void close() throws Sql.DatabaseException {
     try (connection) {
       connection.setAutoCommit(true);
     } catch (SQLException e) {
-      throw new Sql.UncheckedSqlException(e);
+      throw new Sql.DatabaseException(e);
     }
   }
 
   @Override
-  public final int count(String sql, Object... args) throws Sql.UncheckedSqlException {
+  public final int count(String sql, Object... args) throws Sql.DatabaseException {
     Check.notNull(sql, "sql == null");
     Check.notNull(args, "args == null");
 
@@ -116,7 +116,7 @@ final class SqlTransaction implements Sql.Transaction {
   }
 
   @Override
-  public final int[] executeUpdateText(String sqlText) throws UncheckedSqlException {
+  public final int[] executeUpdateText(String sqlText) throws DatabaseException {
     String[] lines;
     lines = sqlText.split("\n"); // implicit null check
 
@@ -150,12 +150,12 @@ final class SqlTransaction implements Sql.Transaction {
 
       return stmt.executeBatch();
     } catch (SQLException e) {
-      throw new Sql.UncheckedSqlException(e);
+      throw new Sql.DatabaseException(e);
     }
   }
 
   @Override
-  public final void processQuery(Sql.QueryProcessor processor, String sql, Object... args) throws UncheckedSqlException {
+  public final void processQuery(Sql.QueryProcessor processor, String sql, Object... args) throws DatabaseException {
     Check.notNull(processor, "processor == null");
     Check.notNull(sql, "sql == null");
     Check.notNull(args, "args == null");
@@ -167,7 +167,7 @@ final class SqlTransaction implements Sql.Transaction {
   }
 
   @Override
-  public final void processQuery(Sql.QueryProcessor processor, Sql.Page page, String sql, Object... args) throws Sql.UncheckedSqlException {
+  public final void processQuery(Sql.QueryProcessor processor, Sql.Page page, String sql, Object... args) throws Sql.DatabaseException {
     Check.notNull(processor, "processor == null");
     Check.notNull(page, "page == null");
     Check.notNull(sql, "sql == null");
@@ -273,12 +273,12 @@ final class SqlTransaction implements Sql.Transaction {
 
       return stmt.executeBatch();
     } catch (SQLException e) {
-      throw new Sql.UncheckedSqlException(e);
+      throw new Sql.DatabaseException(e);
     }
   }
 
   @Override
-  public final <T> List<T> query(Sql.RowMapper<T> mapper) throws UncheckedSqlException {
+  public final <T> List<T> query(Sql.RowMapper<T> mapper) throws DatabaseException {
     checkQuery(mapper);
 
     GrowableList<T> list;
@@ -289,7 +289,7 @@ final class SqlTransaction implements Sql.Transaction {
       try (PreparedStatement stmt = prepare(); ResultSet rs = stmt.executeQuery()) {
         query0(mapper, list, rs);
       } catch (SQLException e) {
-        throw new Sql.UncheckedSqlException(e);
+        throw new Sql.DatabaseException(e);
       }
 
     } else {
@@ -297,7 +297,7 @@ final class SqlTransaction implements Sql.Transaction {
       try (Statement stmt = connection.createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
         query0(mapper, list, rs);
       } catch (SQLException e) {
-        throw new Sql.UncheckedSqlException(e);
+        throw new Sql.DatabaseException(e);
       }
 
     }
@@ -315,7 +315,7 @@ final class SqlTransaction implements Sql.Transaction {
   }
 
   @Override
-  public final <T> T querySingle(Sql.RowMapper<T> mapper) throws UncheckedSqlException {
+  public final <T> T querySingle(Sql.RowMapper<T> mapper) throws DatabaseException {
     checkQuery(mapper);
 
     T result;
@@ -325,7 +325,7 @@ final class SqlTransaction implements Sql.Transaction {
       try (PreparedStatement stmt = prepare(); ResultSet rs = stmt.executeQuery()) {
         result = querySingle0(mapper, rs);
       } catch (SQLException e) {
-        throw new Sql.UncheckedSqlException(e);
+        throw new Sql.DatabaseException(e);
       }
 
     } else {
@@ -333,7 +333,7 @@ final class SqlTransaction implements Sql.Transaction {
       try (Statement stmt = connection.createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
         result = querySingle0(mapper, rs);
       } catch (SQLException e) {
-        throw new Sql.UncheckedSqlException(e);
+        throw new Sql.DatabaseException(e);
       }
 
     }
@@ -358,7 +358,7 @@ final class SqlTransaction implements Sql.Transaction {
   }
 
   @Override
-  public final <T> T queryNullable(RowMapper<T> mapper) throws UncheckedSqlException {
+  public final <T> T queryNullable(RowMapper<T> mapper) throws DatabaseException {
     checkQuery(mapper);
 
     T result;
@@ -368,7 +368,7 @@ final class SqlTransaction implements Sql.Transaction {
       try (PreparedStatement stmt = prepare(); ResultSet rs = stmt.executeQuery()) {
         result = queryNullable0(mapper, rs);
       } catch (SQLException e) {
-        throw new Sql.UncheckedSqlException(e);
+        throw new Sql.DatabaseException(e);
       }
 
     } else {
@@ -376,7 +376,7 @@ final class SqlTransaction implements Sql.Transaction {
       try (Statement stmt = connection.createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
         result = queryNullable0(mapper, rs);
       } catch (SQLException e) {
-        throw new Sql.UncheckedSqlException(e);
+        throw new Sql.DatabaseException(e);
       }
 
     }
@@ -401,7 +401,7 @@ final class SqlTransaction implements Sql.Transaction {
   }
 
   @Override
-  public final OptionalInt queryOptionalInt() throws UncheckedSqlException {
+  public final OptionalInt queryOptionalInt() throws DatabaseException {
     checkQuery();
 
     OptionalInt result;
@@ -411,7 +411,7 @@ final class SqlTransaction implements Sql.Transaction {
       try (PreparedStatement stmt = prepare(); ResultSet rs = stmt.executeQuery()) {
         result = queryOptionalInt0(rs);
       } catch (SQLException e) {
-        throw new Sql.UncheckedSqlException(e);
+        throw new Sql.DatabaseException(e);
       }
 
     } else {
@@ -419,7 +419,7 @@ final class SqlTransaction implements Sql.Transaction {
       try (Statement stmt = connection.createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
         result = queryOptionalInt0(rs);
       } catch (SQLException e) {
-        throw new Sql.UncheckedSqlException(e);
+        throw new Sql.DatabaseException(e);
       }
 
     }
@@ -458,7 +458,7 @@ final class SqlTransaction implements Sql.Transaction {
       try (PreparedStatement stmt = prepare()) {
         result = stmt.executeUpdate();
       } catch (SQLException e) {
-        throw new Sql.UncheckedSqlException(e);
+        throw new Sql.DatabaseException(e);
       }
 
     } else {
@@ -466,7 +466,7 @@ final class SqlTransaction implements Sql.Transaction {
       try (Statement stmt = connection.createStatement()) {
         result = stmt.executeUpdate(sql);
       } catch (SQLException e) {
-        throw new Sql.UncheckedSqlException(e);
+        throw new Sql.DatabaseException(e);
       }
 
     }
@@ -491,7 +491,7 @@ final class SqlTransaction implements Sql.Transaction {
 
         impl.accept(stmt);
       } catch (SQLException e) {
-        throw new Sql.UncheckedSqlException(e);
+        throw new Sql.DatabaseException(e);
       }
 
     } else {
@@ -501,7 +501,7 @@ final class SqlTransaction implements Sql.Transaction {
 
         impl.accept(stmt);
       } catch (SQLException e) {
-        throw new Sql.UncheckedSqlException(e);
+        throw new Sql.DatabaseException(e);
       }
 
     }

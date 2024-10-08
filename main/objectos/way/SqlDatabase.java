@@ -22,7 +22,7 @@ import javax.sql.DataSource;
 import objectos.notes.NoOpNoteSink;
 import objectos.notes.NoteSink;
 
-final class SqlSource implements Sql.Source {
+final class SqlDatabase implements Sql.Database {
 
   static class Builder {
 
@@ -34,7 +34,7 @@ final class SqlSource implements Sql.Source {
       this.dataSource = dataSource;
     }
 
-    public final SqlSource build() throws SQLException {
+    public final SqlDatabase build() throws SQLException {
       try (Connection connection = dataSource.getConnection()) {
         DatabaseMetaData data;
         data = connection.getMetaData();
@@ -44,7 +44,7 @@ final class SqlSource implements Sql.Source {
         SqlDialect dialect;
         dialect = SqlDialect.of(data);
 
-        return new SqlSource(dataSource, dialect, noteSink);
+        return new SqlDatabase(dataSource, dialect, noteSink);
       }
     }
 
@@ -57,23 +57,26 @@ final class SqlSource implements Sql.Source {
   @SuppressWarnings("unused")
   private final NoteSink noteSink;
 
-  private SqlSource(DataSource dataSource, SqlDialect dialect, NoteSink noteSink) {
+  private SqlDatabase(DataSource dataSource, SqlDialect dialect, NoteSink noteSink) {
     this.dataSource = dataSource;
     this.dialect = dialect;
     this.noteSink = noteSink;
   }
 
   @Override
-  public final Sql.Transaction beginTransaction(Sql.Transaction.IsolationLevel level) throws Sql.UncheckedSqlException {
+  public final Sql.Transaction beginTransaction(Sql.Transaction.Isolation level) throws Sql.DatabaseException {
+    Sql.TransactionIsolation impl;
+    impl = (Sql.TransactionIsolation) level;
+
     int transactionIsolation;
-    transactionIsolation = level.jdbcValue;
+    transactionIsolation = impl.jdbcValue;
 
     Connection connection;
 
     try {
       connection = dataSource.getConnection();
     } catch (SQLException e) {
-      throw new Sql.UncheckedSqlException(e);
+      throw new Sql.DatabaseException(e);
     }
 
     try {
@@ -89,7 +92,7 @@ final class SqlSource implements Sql.Source {
         e.addSuppressed(suppressed);
       }
 
-      throw new Sql.UncheckedSqlException(e);
+      throw new Sql.DatabaseException(e);
     }
   }
 

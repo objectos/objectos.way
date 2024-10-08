@@ -24,7 +24,7 @@ import org.h2.jdbcx.JdbcConnectionPool;
 
 public final class TestingH2 {
 
-  public static final Sql.Source SOURCE;
+  public static final Sql.Database SOURCE;
 
   static {
     try {
@@ -47,7 +47,7 @@ public final class TestingH2 {
 
   private TestingH2() {}
 
-  private static Sql.Source source() throws SQLException {
+  private static Sql.Database source() throws SQLException {
     return Sql.createSource(
         create(),
 
