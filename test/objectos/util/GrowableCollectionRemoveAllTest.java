@@ -17,13 +17,14 @@ package objectos.util;
 
 import static org.testng.Assert.assertTrue;
 
+import objectos.way.UtilGrowableCollection;
 import org.testng.Assert;
 
-final class GrowableCollectionRemoveAllTest {
+public final class GrowableCollectionRemoveAllTest {
 
-  private final GrowableCollection<Thing> it;
+  private final UtilGrowableCollection<Thing> it;
 
-  public GrowableCollectionRemoveAllTest(GrowableCollection<Thing> it) {
+  public GrowableCollectionRemoveAllTest(UtilGrowableCollection<Thing> it) {
     this.it = it;
   }
 

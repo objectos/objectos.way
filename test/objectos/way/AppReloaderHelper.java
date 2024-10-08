@@ -22,7 +22,6 @@ import java.nio.file.Path;
 import java.util.List;
 import javax.tools.JavaCompiler;
 import javax.tools.JavaCompiler.CompilationTask;
-import objectos.util.GrowableList;
 import javax.tools.JavaFileObject;
 import javax.tools.StandardJavaFileManager;
 import javax.tools.StandardLocation;
@@ -37,13 +36,14 @@ final class AppReloaderHelper implements AutoCloseable {
   private final JavaCompiler javaCompiler;
   private final StandardJavaFileManager fileManager;
 
-  private final List<Path> sourceFiles = new GrowableList<>();
+  private final Util.GrowableList<Path> sourceFiles = Util.createGrowableList();
 
-  public AppReloaderHelper(Path root,
-                           Path src,
-                           Path cls,
-                           JavaCompiler javaCompiler,
-                           StandardJavaFileManager fileManager) {
+  public AppReloaderHelper(
+      Path root,
+      Path src,
+      Path cls,
+      JavaCompiler javaCompiler,
+      StandardJavaFileManager fileManager) {
     this.root = root;
     this.src = src;
     this.cls = cls;

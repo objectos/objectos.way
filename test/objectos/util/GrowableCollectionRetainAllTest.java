@@ -18,13 +18,14 @@ package objectos.util;
 import static org.testng.Assert.assertTrue;
 
 import java.util.List;
+import objectos.way.UtilGrowableCollection;
 import org.testng.Assert;
 
-final class GrowableCollectionRetainAllTest {
+public final class GrowableCollectionRetainAllTest {
 
-  private final GrowableCollection<Thing> it;
+  private final UtilGrowableCollection<Thing> it;
 
-  public GrowableCollectionRetainAllTest(GrowableCollection<Thing> it) {
+  public GrowableCollectionRetainAllTest(UtilGrowableCollection<Thing> it) {
     this.it = it;
   }
 

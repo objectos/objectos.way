@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.util;
+package objectos.way;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -24,10 +24,12 @@ import java.util.ListIterator;
 import java.util.RandomAccess;
 import java.util.function.UnaryOperator;
 import objectos.lang.object.Check;
-import objectos.way.Util;
+import objectos.util.UnmodifiableIterator;
+import objectos.way.Util.BaseCollection;
+import objectos.way.Util.UnmodifiableList;
 
 /**
- * An array-based {@link GrowableCollection} and
+ * An array-based {@link UtilGrowableCollection} and
  * {@link java.util.List} implementation. The main goal of this class is to
  * provide a single mutable list API to be used <em>internally</em> by the
  * Objectos libraries themselves.
@@ -53,12 +55,10 @@ import objectos.way.Util;
  * @param <E> type of the elements in this list
  *
  * @see BaseCollection
- * @see GrowableCollection
+ * @see UtilGrowableCollection
  * @see java.util.List
  */
-public final class GrowableList<E>
-    extends GrowableCollection<E>
-    implements List<E>, RandomAccess {
+final class UtilGrowableList<E> extends UtilGrowableCollection<E> implements Util.GrowableList<E> {
 
   private Object[] data = Util.EMPTY_OBJECT_ARRAY;
 
@@ -67,9 +67,9 @@ public final class GrowableList<E>
   /**
    * Creates a new {@code GrowableList} instance.
    */
-  public GrowableList() {}
+  public UtilGrowableList() {}
 
-  GrowableList(Object[] elements) {
+  UtilGrowableList(Object[] elements) {
     data = elements;
 
     size = elements.length;
@@ -274,7 +274,7 @@ public final class GrowableList<E>
    */
   @Override
   public final boolean contains(Object o) {
-    return Lists.containsImpl(data, size, o);
+    return UtilLists.containsImpl(data, size, o);
   }
 
   /**
@@ -298,7 +298,7 @@ public final class GrowableList<E>
    */
   @Override
   public final boolean equals(Object obj) {
-    return Lists.equalsImpl(this, obj);
+    return UtilLists.equalsImpl(this, obj);
   }
 
   /**
@@ -320,7 +320,7 @@ public final class GrowableList<E>
    */
   @Override
   public final void formatToString(StringBuilder toString, int level) {
-    Lists.formatToStringImpl(this, data, size, toString, level);
+    UtilLists.formatToStringImpl(this, data, size, toString, level);
   }
 
   /**
@@ -336,7 +336,7 @@ public final class GrowableList<E>
   @SuppressWarnings("unchecked")
   @Override
   public final E get(int index) {
-    return (E) Lists.getImpl(data, size, index);
+    return (E) UtilLists.getImpl(data, size, index);
   }
 
   /**
@@ -346,7 +346,7 @@ public final class GrowableList<E>
    */
   @Override
   public final int hashCode() {
-    return Lists.hashCodeImpl(data, size);
+    return UtilLists.hashCodeImpl(data, size);
   }
 
   /**
@@ -364,7 +364,7 @@ public final class GrowableList<E>
    */
   @Override
   public final int indexOf(Object o) {
-    return Lists.indexOfImpl(data, size, o);
+    return UtilLists.indexOfImpl(data, size, o);
   }
 
   /**
@@ -374,7 +374,7 @@ public final class GrowableList<E>
    */
   @Override
   public final UnmodifiableIterator<E> iterator() {
-    return new Lists.SimpleIterator<>(data, size);
+    return new UtilLists.SimpleIterator<>(data, size);
   }
 
   /**
@@ -389,7 +389,7 @@ public final class GrowableList<E>
    */
   @Override
   public final String join() {
-    return Lists.joinImpl(data, size);
+    return UtilLists.joinImpl(data, size);
   }
 
   /**
@@ -408,7 +408,7 @@ public final class GrowableList<E>
    */
   @Override
   public final String join(String delimiter) {
-    return Lists.joinImpl(data, size, delimiter);
+    return UtilLists.joinImpl(data, size, delimiter);
   }
 
   /**
@@ -427,7 +427,7 @@ public final class GrowableList<E>
    */
   @Override
   public final String join(String delimiter, String prefix, String suffix) {
-    return Lists.joinImpl(data, size, delimiter, prefix, suffix);
+    return UtilLists.joinImpl(data, size, delimiter, prefix, suffix);
   }
 
   /**
@@ -445,7 +445,7 @@ public final class GrowableList<E>
    */
   @Override
   public final int lastIndexOf(Object o) {
-    return Lists.lastIndexOfImpl(data, size, o);
+    return UtilLists.lastIndexOfImpl(data, size, o);
   }
 
   /**
@@ -623,7 +623,7 @@ public final class GrowableList<E>
    */
   @Override
   public final <T> T[] toArray(T[] a) {
-    return Lists.toArrayImpl(data, size, a);
+    return UtilLists.toArrayImpl(data, size, a);
   }
 
   /**
@@ -646,16 +646,17 @@ public final class GrowableList<E>
    *
    * @return an {@link UnmodifiableList} copy of this list
    */
-  public final UnmodifiableList<E> toUnmodifiableList() {
+  @Override
+  public final UtilUnmodifiableList<E> toUnmodifiableList() {
     switch (size) {
       case 0:
-        return UnmodifiableList.of();
+        return UtilUnmodifiableList.of();
       default:
         var copy = new Object[size];
 
         System.arraycopy(data, 0, copy, 0, size);
 
-        return new UnmodifiableList<>(copy);
+        return new UtilUnmodifiableList<>(copy);
     }
   }
 
@@ -676,7 +677,7 @@ public final class GrowableList<E>
    * @return a sorted {@link UnmodifiableList} copy of this list
    */
   @SuppressWarnings("unchecked")
-  public final UnmodifiableList<E> toUnmodifiableList(Comparator<? super E> c) {
+  public final UtilUnmodifiableList<E> toUnmodifiableList(Comparator<? super E> c) {
     Check.notNull(c, "c == null");
 
     switch (size) {
@@ -690,7 +691,7 @@ public final class GrowableList<E>
 
         Arrays.sort((E[]) copy, 0, size, c);
 
-        return new UnmodifiableList<E>(copy);
+        return new UtilUnmodifiableList<E>(copy);
     }
   }
 
@@ -700,9 +701,9 @@ public final class GrowableList<E>
     }
 
     if (data == Util.EMPTY_OBJECT_ARRAY) {
-      data = new Object[Grow.DEFAULT_CAPACITY];
+      data = new Object[Util.DEFAULT_CAPACITY];
     } else {
-      var newLength = Grow.growByOne(data.length);
+      var newLength = Util.growByOne(data.length);
 
       copyData(newLength);
     }
@@ -823,10 +824,10 @@ public final class GrowableList<E>
     if (requiredIndex >= data.length) {
       int newLength;
 
-      if (data == Util.EMPTY_OBJECT_ARRAY && requiredIndex < Grow.DEFAULT_CAPACITY) {
-        newLength = Grow.DEFAULT_CAPACITY;
+      if (data == Util.EMPTY_OBJECT_ARRAY && requiredIndex < Util.DEFAULT_CAPACITY) {
+        newLength = Util.DEFAULT_CAPACITY;
       } else {
-        newLength = Grow.growBy(data.length, otherSize);
+        newLength = Util.growBy(data.length, otherSize);
       }
 
       copyData(newLength);

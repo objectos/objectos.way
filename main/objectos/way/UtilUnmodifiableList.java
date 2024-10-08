@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.util;
+package objectos.way;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -24,7 +24,8 @@ import java.util.ListIterator;
 import java.util.RandomAccess;
 import java.util.function.UnaryOperator;
 import objectos.lang.object.Check;
-import objectos.way.Util;
+import objectos.util.UnmodifiableCollection;
+import objectos.util.UnmodifiableIterator;
 
 /**
  * An array-based unmodifiable {@link java.util.List} implementation.
@@ -32,17 +33,17 @@ import objectos.way.Util;
  * @param <E>
  *        type of the elements in this list
  */
-public final class UnmodifiableList<E>
+final class UtilUnmodifiableList<E>
     extends UnmodifiableCollection<E>
-    implements List<E>, RandomAccess {
+    implements Util.UnmodifiableList<E> {
 
-  static final UnmodifiableList<Object> EMPTY = new UnmodifiableList<Object>(
+  static final UtilUnmodifiableList<Object> EMPTY = new UtilUnmodifiableList<Object>(
       Util.EMPTY_OBJECT_ARRAY
   );
 
   private final Object[] data;
 
-  UnmodifiableList(java.lang.Object[] array) {
+  UtilUnmodifiableList(java.lang.Object[] array) {
     this.data = array;
   }
 
@@ -70,12 +71,12 @@ public final class UnmodifiableList<E>
    *         if the array is {@code null} or any element in the array is
    *         {@code null}
    */
-  public static <E> UnmodifiableList<E> copyOf(E[] array) {
+  public static <E> UtilUnmodifiableList<E> copyOf(E[] array) {
     Check.notNull(array, "array == null");
 
     switch (array.length) {
       case 0:
-        return UnmodifiableList.of();
+        return UtilUnmodifiableList.of();
       default:
         var copy = new Object[array.length];
 
@@ -85,7 +86,7 @@ public final class UnmodifiableList<E>
           copy[i] = Check.notNull(e, "array[", i, "] == null");
         }
 
-        return new UnmodifiableList<E>(copy);
+        return new UtilUnmodifiableList<E>(copy);
     }
   }
 
@@ -117,15 +118,15 @@ public final class UnmodifiableList<E>
    *         iterable's iterator is {@code null}
    */
   @SuppressWarnings("unchecked")
-  public static <E> UnmodifiableList<E> copyOf(Iterable<? extends E> elements) {
+  public static <E> UtilUnmodifiableList<E> copyOf(Iterable<? extends E> elements) {
     Check.notNull(elements, "elements == null");
 
-    if (elements instanceof UnmodifiableList) {
-      return (UnmodifiableList<E>) elements;
+    if (elements instanceof UtilUnmodifiableList) {
+      return (UtilUnmodifiableList<E>) elements;
     }
 
-    if (elements instanceof GrowableList<? extends E> list) {
-      return (UnmodifiableList<E>) list.toUnmodifiableList();
+    if (elements instanceof UtilGrowableList<? extends E> list) {
+      return (UtilUnmodifiableList<E>) list.toUnmodifiableList();
     }
 
     if (elements instanceof RandomAccess && elements instanceof List<? extends E> list) {
@@ -139,7 +140,7 @@ public final class UnmodifiableList<E>
         data[i] = Check.notNull(e, "elements[", i, "] == null");
       }
 
-      return new UnmodifiableList<>(data);
+      return new UtilUnmodifiableList<>(data);
     }
 
     if (elements instanceof Collection<? extends E> coll) {
@@ -155,7 +156,7 @@ public final class UnmodifiableList<E>
         data[index++] = e;
       }
 
-      return new UnmodifiableList<>(data);
+      return new UtilUnmodifiableList<>(data);
     }
 
     var iterator = elements.iterator();
@@ -182,7 +183,7 @@ public final class UnmodifiableList<E>
    *         if the iterator is {@code null} or any element produced by the
    *         iterator is {@code null}
    */
-  public static <E> UnmodifiableList<E> copyOf(Iterator<? extends E> iterator) {
+  public static <E> UtilUnmodifiableList<E> copyOf(Iterator<? extends E> iterator) {
     Check.notNull(iterator, "iterator == null");
 
     return copyOf0(iterator);
@@ -197,8 +198,8 @@ public final class UnmodifiableList<E>
    * @return the empty {@code UnmodifiableList}
    */
   @SuppressWarnings("unchecked")
-  public static <E> UnmodifiableList<E> of() {
-    return (UnmodifiableList<E>) EMPTY;
+  public static <E> UtilUnmodifiableList<E> of() {
+    return (UtilUnmodifiableList<E>) EMPTY;
   }
 
   /**
@@ -215,10 +216,10 @@ public final class UnmodifiableList<E>
    * @throws NullPointerException
    *         if the specified element is {@code null}
    */
-  public static <E> UnmodifiableList<E> of(E element) {
+  public static <E> UtilUnmodifiableList<E> of(E element) {
     Check.notNull(element, "element == null");
 
-    return new UnmodifiableList<>(
+    return new UtilUnmodifiableList<>(
         new Object[] {element}
     );
   }
@@ -242,7 +243,7 @@ public final class UnmodifiableList<E>
    *         if the specified element is {@code null}
    */
   @SuppressWarnings("unchecked")
-  public static <E> UnmodifiableList<E> of(E first, E... more) {
+  public static <E> UtilUnmodifiableList<E> of(E first, E... more) {
     Check.notNull(first, "first == null");
     Check.notNull(more, "more == null");
 
@@ -256,11 +257,11 @@ public final class UnmodifiableList<E>
       elements[i + 1] = Check.notNull(e, "more[" + i + "] == null");
     }
 
-    return new UnmodifiableList<E>(elements);
+    return new UtilUnmodifiableList<E>(elements);
   }
 
-  private static <E> UnmodifiableList<E> copyOf0(Iterator<? extends E> iterator) {
-    var list = new GrowableList<E>();
+  private static <E> UtilUnmodifiableList<E> copyOf0(Iterator<? extends E> iterator) {
+    var list = new UtilGrowableList<E>();
 
     list.addAll(iterator);
 
@@ -324,7 +325,7 @@ public final class UnmodifiableList<E>
    */
   @Override
   public final boolean contains(Object o) {
-    return Lists.containsImpl(data, data.length, o);
+    return UtilLists.containsImpl(data, data.length, o);
   }
 
   /**
@@ -348,7 +349,7 @@ public final class UnmodifiableList<E>
    */
   @Override
   public final boolean equals(Object obj) {
-    return Lists.equalsImpl(this, obj);
+    return UtilLists.equalsImpl(this, obj);
   }
 
   /**
@@ -370,7 +371,7 @@ public final class UnmodifiableList<E>
    */
   @Override
   public final void formatToString(StringBuilder toString, int level) {
-    Lists.formatToStringImpl(this, data, data.length, toString, level);
+    UtilLists.formatToStringImpl(this, data, data.length, toString, level);
   }
 
   /**
@@ -386,7 +387,7 @@ public final class UnmodifiableList<E>
   @SuppressWarnings("unchecked")
   @Override
   public final E get(int index) {
-    return (E) Lists.getImpl(data, data.length, index);
+    return (E) UtilLists.getImpl(data, data.length, index);
   }
 
   /**
@@ -396,7 +397,7 @@ public final class UnmodifiableList<E>
    */
   @Override
   public final int hashCode() {
-    return Lists.hashCodeImpl(data, data.length);
+    return UtilLists.hashCodeImpl(data, data.length);
   }
 
   /**
@@ -414,7 +415,7 @@ public final class UnmodifiableList<E>
    */
   @Override
   public final int indexOf(Object o) {
-    return Lists.indexOfImpl(data, data.length, o);
+    return UtilLists.indexOfImpl(data, data.length, o);
   }
 
   /**
@@ -424,7 +425,7 @@ public final class UnmodifiableList<E>
    */
   @Override
   public final UnmodifiableIterator<E> iterator() {
-    return new Lists.SimpleIterator<>(data, data.length);
+    return new UtilLists.SimpleIterator<>(data, data.length);
   }
 
   /**
@@ -439,7 +440,7 @@ public final class UnmodifiableList<E>
    */
   @Override
   public final String join() {
-    return Lists.joinImpl(data, data.length);
+    return UtilLists.joinImpl(data, data.length);
   }
 
   /**
@@ -458,7 +459,7 @@ public final class UnmodifiableList<E>
    */
   @Override
   public final String join(String delimiter) {
-    return Lists.joinImpl(data, data.length, delimiter);
+    return UtilLists.joinImpl(data, data.length, delimiter);
   }
 
   /**
@@ -477,7 +478,7 @@ public final class UnmodifiableList<E>
    */
   @Override
   public final String join(String delimiter, String prefix, String suffix) {
-    return Lists.joinImpl(data, data.length, delimiter, prefix, suffix);
+    return UtilLists.joinImpl(data, data.length, delimiter, prefix, suffix);
   }
 
   /**
@@ -495,7 +496,7 @@ public final class UnmodifiableList<E>
    */
   @Override
   public final int lastIndexOf(Object o) {
-    return Lists.lastIndexOfImpl(data, data.length, o);
+    return UtilLists.lastIndexOfImpl(data, data.length, o);
   }
 
   /**
@@ -677,7 +678,7 @@ public final class UnmodifiableList<E>
    */
   @Override
   public final <T> T[] toArray(T[] a) {
-    return Lists.toArrayImpl(data, data.length, a);
+    return UtilLists.toArrayImpl(data, data.length, a);
   }
 
 }

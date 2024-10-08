@@ -30,7 +30,6 @@ import java.nio.file.StandardCopyOption;
 import java.nio.file.StandardOpenOption;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.nio.file.attribute.FileTime;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
@@ -38,7 +37,6 @@ import objectos.io.FileVisitors;
 import objectos.lang.object.Check;
 import objectos.notes.NoOpNoteSink;
 import objectos.notes.NoteSink;
-import objectos.util.GrowableList;
 import objectos.way.Http.Exchange;
 
 final class WebResources implements AutoCloseable, Web.Resources {
@@ -51,9 +49,9 @@ final class WebResources implements AutoCloseable, Web.Resources {
 
     final String defaultContentType = "application/octet-stream";
 
-    final List<Path> directories = new GrowableList<>();
+    final Util.GrowableList<Path> directories = Util.createGrowableList();
 
-    final List<FileBytes> files = new GrowableList<>();
+    final Util.GrowableList<FileBytes> files = Util.createGrowableList();
 
     NoteSink noteSink = NoOpNoteSink.of();
 

@@ -20,16 +20,19 @@ import static org.testng.Assert.assertFalse;
 
 import java.util.Arrays;
 import java.util.List;
+import objectos.way.TestingArrayBackedIterable;
+import objectos.way.UtilGrowableCollection;
 import org.testng.Assert;
 
-final class GrowableCollectionAddAllIterableTest {
+public final class GrowableCollectionAddAllIterableTest {
 
-  private final GrowableCollection<Thing> it;
+  private final UtilGrowableCollection<Thing> it;
 
   private final AssertContents assertContents;
 
-  public GrowableCollectionAddAllIterableTest(GrowableCollection<Thing> it,
-                                              AssertContents assertContents) {
+  public GrowableCollectionAddAllIterableTest(
+      UtilGrowableCollection<Thing> it,
+      AssertContents assertContents) {
     this.it = it;
     this.assertContents = assertContents;
   }
@@ -47,7 +50,7 @@ final class GrowableCollectionAddAllIterableTest {
     // one
     var t1 = Thing.next();
 
-    it.addAllIterable(ArrayBackedIterable.of(t1));
+    it.addAllIterable(TestingArrayBackedIterable.of(t1));
     assertContents.execute(t1);
 
     // two
@@ -72,7 +75,7 @@ final class GrowableCollectionAddAllIterableTest {
 
     arrayWithNull[Thing.HALF] = null;
 
-    var iterWithNull = new ArrayBackedIterable<>(arrayWithNull);
+    var iterWithNull = new TestingArrayBackedIterable<>(arrayWithNull);
 
     try {
       it.addAllIterable(iterWithNull);

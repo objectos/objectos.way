@@ -17,6 +17,7 @@ package objectos.util;
 
 import java.util.Collection;
 import java.util.Set;
+import objectos.way.UtilBaseCollection;
 
 /**
  * An unmodifiable view of a map's keys, values or entries. All of the mutator
@@ -24,7 +25,7 @@ import java.util.Set;
  *
  * @param <E> the type of the elements in this view
  */
-public abstract class UnmodifiableView<E> extends AbstractBaseCollection<E> implements Set<E> {
+public abstract class UnmodifiableView<E> extends UtilBaseCollection<E> implements Set<E> {
 
   UnmodifiableView() {}
 

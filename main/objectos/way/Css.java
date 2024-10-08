@@ -27,7 +27,6 @@ import java.util.Map;
 import java.util.Set;
 import objectos.lang.object.Check;
 import objectos.notes.NoteSink;
-import objectos.util.GrowableList;
 import objectos.util.GrowableMap;
 import objectos.util.GrowableSequencedMap;
 
@@ -125,7 +124,7 @@ public final class Css {
    */
   static abstract class Context {
 
-    final GrowableList<Rule> rules = new GrowableList<>();
+    final Util.GrowableList<Rule> rules = Util.createGrowableList();
 
     Context() {
     }
@@ -453,42 +452,42 @@ public final class Css {
   //
 
   record PropertyType(String borderColorTop,
-                      String borderColorRight,
-                      String borderColorBottom,
-                      String borderColorLeft,
+      String borderColorRight,
+      String borderColorBottom,
+      String borderColorLeft,
 
-                      String borderRadiusTopLeft,
-                      String borderRadiusTopRight,
-                      String borderRadiusBottomRight,
-                      String borderRadiusBottomLeft,
+      String borderRadiusTopLeft,
+      String borderRadiusTopRight,
+      String borderRadiusBottomRight,
+      String borderRadiusBottomLeft,
 
-                      String borderWidthTop,
-                      String borderWidthRight,
-                      String borderWidthBottom,
-                      String borderWidthLeft,
+      String borderWidthTop,
+      String borderWidthRight,
+      String borderWidthBottom,
+      String borderWidthLeft,
 
-                      String marginTop,
-                      String marginRight,
-                      String marginBottom,
-                      String marginLeft,
+      String marginTop,
+      String marginRight,
+      String marginBottom,
+      String marginLeft,
 
-                      String paddingTop,
-                      String paddingRight,
-                      String paddingBottom,
-                      String paddingLeft,
+      String paddingTop,
+      String paddingRight,
+      String paddingBottom,
+      String paddingLeft,
 
-                      String height,
-                      String maxHeight,
-                      String minHeight,
+      String height,
+      String maxHeight,
+      String minHeight,
 
-                      String width,
-                      String maxWidth,
-                      String minWidth,
+      String width,
+      String maxWidth,
+      String minWidth,
 
-                      String top,
-                      String right,
-                      String bottom,
-                      String left) {}
+      String top,
+      String right,
+      String bottom,
+      String left) {}
 
   static final PropertyType PHYSICAL = new PropertyType(
       "border-top-color",
@@ -1014,8 +1013,8 @@ public final class Css {
     String name;
     name = "";
 
-    GrowableList<String> definition;
-    definition = new GrowableList<>();
+    Util.GrowableList<String> definition;
+    definition = Util.createGrowableList();
 
     String[] lines;
     lines = text.split("\n");

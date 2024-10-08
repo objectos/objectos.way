@@ -20,13 +20,14 @@ import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertTrue;
 
 import java.util.ArrayList;
+import objectos.way.UtilGrowableCollection;
 import org.testng.Assert;
 
-final class GrowableCollectionContainsAllTest {
+public final class GrowableCollectionContainsAllTest {
 
-  private final GrowableCollection<Thing> it;
+  private final UtilGrowableCollection<Thing> it;
 
-  public GrowableCollectionContainsAllTest(GrowableCollection<Thing> it) {
+  public GrowableCollectionContainsAllTest(UtilGrowableCollection<Thing> it) {
     this.it = it;
   }
 

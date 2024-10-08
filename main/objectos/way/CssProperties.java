@@ -19,14 +19,13 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import objectos.util.GrowableList;
 import objectos.util.GrowableMap;
 
 final class CssProperties implements Iterable<Map.Entry<String, String>> {
 
   static final class Builder {
 
-    private final GrowableList<Map.Entry<String, String>> values = new GrowableList<>();
+    private final Util.GrowableList<Map.Entry<String, String>> values = Util.createGrowableList();
 
     public final void add(String key, String value) {
       Entry<String, String> entry;

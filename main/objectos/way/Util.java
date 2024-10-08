@@ -16,14 +16,290 @@
 package objectos.way;
 
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
 import java.util.Map;
+import java.util.RandomAccess;
 import objectos.lang.object.Check;
+import objectos.lang.object.ToString;
 import objectos.util.GrowableMap;
+import objectos.util.UnmodifiableIterator;
 
 /**
  * The <strong>Objectos Util</strong> main class.
  */
 public final class Util {
+
+  // public types
+
+  /**
+   * The base {@link Collection} interface for the Objectos Util collections
+   * API.
+   *
+   * <p>
+   * Implementations of this interface are required to reject {@code null}
+   * elements.
+   *
+   * @param <E> type of the elements in this collection
+   */
+  interface BaseCollection<E> extends Collection<E>, ToString.Formattable {
+
+    /**
+     * Adds the specified element to this collection.
+     *
+     * @param e
+     *        an element to be added to this collection
+     *
+     * @return {@code true} if this collection was modified as a result of this
+     *         operation
+     *
+     * @throws NullPointerException
+     *         if the specified element is {@code null}
+     */
+    @Override
+    boolean add(E e);
+
+    /**
+     * Adds all of the elements of the specified collection to this collection.
+     *
+     * @param c
+     *        a collection containing the elements to be added to this
+     *        collection
+     *
+     * @return {@code true} if this collection was modified as a result of this
+     *         operation
+     *
+     * @throws NullPointerException
+     *         if the specified collection is {@code null} or if any of its
+     *         element is null
+     */
+    @Override
+    boolean addAll(Collection<? extends E> c);
+
+    /**
+     * Returns an unmodifiable iterator over the elements in this collection.
+     *
+     * @return an unmodifiable iterator over the elements in this collection
+     */
+    @Override
+    UnmodifiableIterator<E> iterator();
+
+    /**
+     * Returns a new string by joining together the string representation of
+     * each of its elements.
+     *
+     * @return a new string resulting from joining together the elements
+     */
+    String join();
+
+    /**
+     * Returns a new string by joining together the string representation of
+     * each of its elements separated by the specified {@code delimiter}.
+     *
+     * @param delimiter
+     *        the separator to use between each element's string representation
+     *
+     * @return a new string resulting from joining together the elements
+     *         separated
+     *         by the specified {@code delimiter}
+     */
+    String join(String delimiter);
+
+    /**
+     * Returns a new string by joining together the string representations of
+     * each of its elements separated by the specified {@code delimiter} and
+     * with
+     * the specified {@code prefix} and {@code suffix}.
+     *
+     * @param delimiter
+     *        the separator to use between each element's string representation
+     * @param prefix
+     *        the value to be used as the first part of the result string
+     * @param suffix
+     *        the value to be used as the last part of the result string
+     *
+     * @return a new string resulting from joining together the elements
+     *         separated
+     *         by the specified {@code delimiter} and with the specified
+     *         {@code prefix} and {@code suffix}.
+     */
+    String join(String delimiter, String prefix, String suffix);
+
+    //    /**
+    //     * This operation is not supported.
+    //     *
+    //     * <p>
+    //     * This method performs no operation other than throw an
+    //     * {@link UnsupportedOperationException}.
+    //     *
+    //     * @param o
+    //     *        ignored (this operation is not supported)
+    //     *
+    //     * @return this method does not return as it always throw an exception
+    //     *
+    //     * @throws UnsupportedOperationException
+    //     *         always
+    //     */
+    //    @Override
+    //    default boolean remove(Object o) {
+    //      throw new UnsupportedOperationException();
+    //    }
+
+    //    /**
+    //     * This operation is not supported.
+    //     *
+    //     * <p>
+    //     * This method performs no operation other than throw an
+    //     * {@link UnsupportedOperationException}.
+    //     *
+    //     * @param c
+    //     *        ignored (this operation is not supported)
+    //     *
+    //     * @return this method does not return as it always throw an exception
+    //     *
+    //     * @throws UnsupportedOperationException
+    //     *         always
+    //     */
+    //    @Override
+    //    default boolean removeAll(Collection<?> c) {
+    //      throw new UnsupportedOperationException();
+    //    }
+
+    //    /**
+    //     * This operation is not supported.
+    //     *
+    //     * <p>
+    //     * This method performs no operation other than throw an
+    //     * {@link UnsupportedOperationException}.
+    //     *
+    //     * @param filter
+    //     *        ignored (this operation is not supported)
+    //     *
+    //     * @return this method does not return as it always throw an exception
+    //     *
+    //     * @throws UnsupportedOperationException
+    //     *         always
+    //     */
+    //    @Override
+    //    default boolean removeIf(Predicate<? super E> filter) {
+    //      throw new UnsupportedOperationException();
+    //    }
+
+    //    /**
+    //     * This operation is not supported.
+    //     *
+    //     * <p>
+    //     * This method performs no operation other than throw an
+    //     * {@link UnsupportedOperationException}.
+    //     *
+    //     * @param c
+    //     *        ignored (this operation is not supported)
+    //     *
+    //     * @return this method does not return as it always throw an exception
+    //     *
+    //     * @throws UnsupportedOperationException
+    //     *         always
+    //     */
+    //    @Override
+    //    default boolean retainAll(Collection<?> c) {
+    //      throw new UnsupportedOperationException();
+    //    }
+
+  }
+
+  /**
+   * A {@link Collection} that can be modified by adding elements.
+   * Except for the {@link #clear()} method, it does not support most of the
+   * methods that remove elements.
+   *
+   * <p>
+   * This class extends the {@code BaseCollection} class by providing
+   * additional methods for adding elements to the collection.
+   *
+   * @param <E> type of the elements in this collection
+   */
+  public interface GrowableCollection<E> extends BaseCollection<E> {
+
+    /**
+     * Adds all elements of the given {@link Iterable} to this collection.
+     *
+     * <p>
+     * Elements are added in the order they are returned by the given iterable's
+     * iterator. If the iterator returns a {@code null} element then this method
+     * does not return and throws a {@link NullPointerException} instead.
+     *
+     * @param elements
+     *        the elements to be added to this collection
+     *
+     * @return {@code true} if this collection changed as a result of this
+     *         operation
+     */
+    boolean addAllIterable(Iterable<? extends E> elements);
+
+    /**
+     * Adds the specified element {@code e} to this collection or throws a
+     * {@code NullPointerException} if the element is {@code null}.
+     *
+     * <p>
+     * If a {@code NullPointerException} is to be thrown, the
+     * {@code nullMessage}
+     * value is used as the exception's message.
+     *
+     * <p>
+     * Typical usage:
+     *
+     * <pre>
+     * coll.addWithNullMessage(value, "value == null");</pre>
+     *
+     * @param e
+     *        an element to be added to this collection
+     * @param nullMessage
+     *        the {@code NullPointerException} message
+     *
+     * @return {@code true} if this collection changed as a result of this
+     *         operation
+     */
+    boolean addWithNullMessage(E e, Object nullMessage);
+
+    /**
+     * Adds the specified element {@code e} to this collection or throws a
+     * {@code NullPointerException} if the element is {@code null}.
+     *
+     * <p>
+     * If a {@code NullPointerException} is to be thrown, the concatenation of
+     * {@code nullMessageStart}, {@code index} and {@code nullMessageEnd} is
+     * used as the exception's message.
+     *
+     * <p>
+     * Typical usage:
+     *
+     * <pre>
+     * coll.addWithNullMessage(element, "elements[", index, "] == null");</pre>
+     *
+     * @param e
+     *        an element to be added to this collection
+     * @param nullMessageStart
+     *        the first part of the {@code NullPointerException} message
+     * @param index
+     *        the second part of the {@code NullPointerException} message
+     * @param nullMessageEnd
+     *        the third part of the {@code NullPointerException} message
+     *
+     * @return {@code true} if this collection changed as a result of this
+     *         operation
+     */
+    boolean addWithNullMessage(
+        E e, Object nullMessageStart, int index, Object nullMessageEnd);
+
+  }
+
+  public interface GrowableList<E> extends GrowableCollection<E>, List<E>, RandomAccess {
+
+    UnmodifiableList<E> toUnmodifiableList();
+
+  }
+
+  public interface UnmodifiableList<E> extends List<E>, RandomAccess {}
 
   /**
    * An empty zero-length {@code byte} array instance.
@@ -54,6 +330,10 @@ public final class Util {
   private static final int HEX_MASK = 0xf;
 
   private Util() {}
+
+  public static <E> GrowableList<E> createGrowableList() {
+    return new UtilGrowableList<>();
+  }
 
   /**
    * Copies the values of the array into a larger one (if necessary) so that a

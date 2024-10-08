@@ -22,7 +22,6 @@ import java.util.Map;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 import objectos.lang.object.Check;
-import objectos.util.GrowableList;
 import objectos.util.GrowableMap;
 
 abstract class AppBootstrap {
@@ -134,7 +133,7 @@ abstract class AppBootstrap {
 
   final void addMessage(String message) {
     if (messages == null) {
-      messages = new GrowableList<>();
+      messages = Util.createGrowableList();
     }
 
     messages.add(message);
@@ -189,7 +188,7 @@ abstract class AppBootstrap {
 
   private <T> App.Option<T> register(AppOption<T> option) {
     if (options == null) {
-      options = new GrowableList<>();
+      options = Util.createGrowableList();
     }
 
     options.add(option);

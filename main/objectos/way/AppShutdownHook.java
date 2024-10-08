@@ -15,18 +15,16 @@
  */
 package objectos.way;
 
-import java.util.List;
 import objectos.lang.object.Check;
 import objectos.notes.LongNote;
 import objectos.notes.Note0;
 import objectos.notes.Note1;
 import objectos.notes.Note2;
 import objectos.notes.NoteSink;
-import objectos.util.GrowableList;
 
 final class AppShutdownHook implements App.ShutdownHook {
 
-  private final List<Object> hooks = new GrowableList<>();
+  private final Util.GrowableList<Object> hooks = Util.createGrowableList();
 
   private final Job job;
 

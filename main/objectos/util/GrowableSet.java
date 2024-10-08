@@ -22,13 +22,14 @@ import java.util.RandomAccess;
 import java.util.Set;
 import objectos.lang.object.Check;
 import objectos.way.Util;
+import objectos.way.UtilGrowableCollection;
 
 /**
- * A hash-based {@link Set} and {@link GrowableCollection} implementation.
+ * A hash-based {@link Set} and {@link UtilGrowableCollection} implementation.
  *
  * @param <E> type of the elements in this set
  */
-public final class GrowableSet<E> extends GrowableCollection<E> implements Set<E> {
+public final class GrowableSet<E> extends UtilGrowableCollection<E> implements Set<E> {
 
   private static final int MAX_POSITIVE_POWER_OF_TWO = 1 << 30;
 

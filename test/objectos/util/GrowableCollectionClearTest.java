@@ -17,14 +17,17 @@ package objectos.util;
 
 import static org.testng.Assert.assertEquals;
 
-final class GrowableCollectionClearTest {
+import objectos.way.UtilGrowableCollection;
 
-  private final GrowableCollection<Thing> it;
+public final class GrowableCollectionClearTest {
+
+  private final UtilGrowableCollection<Thing> it;
 
   private final AssertContents assertContents;
 
-  public GrowableCollectionClearTest(GrowableCollection<Thing> it,
-                                     AssertContents assertContents) {
+  public GrowableCollectionClearTest(
+      UtilGrowableCollection<Thing> it,
+      AssertContents assertContents) {
     this.it = it;
     this.assertContents = assertContents;
   }

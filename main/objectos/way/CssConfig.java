@@ -30,7 +30,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import objectos.notes.NoOpNoteSink;
 import objectos.notes.NoteSink;
-import objectos.util.GrowableList;
 import objectos.util.GrowableMap;
 import objectos.util.GrowableSet;
 
@@ -147,7 +146,7 @@ final class CssConfig {
 
   public final void baseLayer(String contents) {
     if (baseLayer == null) {
-      baseLayer = new GrowableList<>();
+      baseLayer = Util.createGrowableList();
     }
 
     baseLayer.add(contents);
@@ -156,8 +155,8 @@ final class CssConfig {
   public final void breakpoints(CssProperties properties) {
     int index = 0;
 
-    GrowableList<Css.Breakpoint> builder;
-    builder = new GrowableList<>();
+    Util.GrowableList<Css.Breakpoint> builder;
+    builder = Util.createGrowableList();
 
     for (var entry : properties) {
       String name;

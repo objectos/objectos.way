@@ -13,30 +13,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.util;
+package objectos.way;
 
 import java.util.Arrays;
 import java.util.Iterator;
+import objectos.util.ArrayBackedIterator;
 
-final class ArrayBackedIterable<E> implements Iterable<E> {
+public final class TestingArrayBackedIterable<E> implements Iterable<E> {
 
-	private final E[] array;
+  private final E[] array;
 
-	ArrayBackedIterable(E[] array) {
-		this.array = array;
-	}
+  public TestingArrayBackedIterable(E[] array) {
+    this.array = array;
+  }
 
-	@SafeVarargs
-	@SuppressWarnings("varargs")
-	public static <E> ArrayBackedIterable<E> of(E... elements) {
-		E[] copy = Arrays.copyOf(elements, elements.length);
+  @SafeVarargs
+  @SuppressWarnings("varargs")
+  public static <E> TestingArrayBackedIterable<E> of(E... elements) {
+    E[] copy = Arrays.copyOf(elements, elements.length);
 
-		return new ArrayBackedIterable<>(copy);
-	}
+    return new TestingArrayBackedIterable<>(copy);
+  }
 
-	@Override
-	public final Iterator<E> iterator() {
-		return new ArrayBackedIterator<E>(array);
-	}
+  @Override
+  public final Iterator<E> iterator() {
+    return new ArrayBackedIterator<E>(array);
+  }
 
 }

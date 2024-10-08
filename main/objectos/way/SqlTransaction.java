@@ -23,8 +23,7 @@ import java.sql.Statement;
 import java.util.List;
 import java.util.OptionalInt;
 import objectos.lang.object.Check;
-import objectos.util.GrowableList;
-import objectos.util.UnmodifiableList;
+import objectos.way.Util.GrowableList;
 
 final class SqlTransaction implements Sql.Transaction {
 
@@ -34,9 +33,9 @@ final class SqlTransaction implements Sql.Transaction {
 
   private String sql;
 
-  private GrowableList<Object> arguments;
+  private Util.GrowableList<Object> arguments;
 
-  private List<List<Object>> batches;
+  private Util.GrowableList<Util.UnmodifiableList<Object>> batches;
 
   SqlTransaction(SqlDialect dialect, Connection connection) {
     this.dialect = dialect;
@@ -194,7 +193,7 @@ final class SqlTransaction implements Sql.Transaction {
     checkSql();
 
     if (arguments == null) {
-      arguments = new GrowableList<>();
+      arguments = Util.createGrowableList();
     }
 
     arguments.add(value);
@@ -209,7 +208,7 @@ final class SqlTransaction implements Sql.Transaction {
     Object nullable = Sql.nullable(value, sqlType);
 
     if (arguments == null) {
-      arguments = new GrowableList<>();
+      arguments = Util.createGrowableList();
     }
 
     arguments.add(nullable);
@@ -226,10 +225,10 @@ final class SqlTransaction implements Sql.Transaction {
     }
 
     if (batches == null) {
-      batches = new GrowableList<>();
+      batches = Util.createGrowableList();
     }
 
-    UnmodifiableList<Object> batch;
+    Util.UnmodifiableList<Object> batch;
     batch = arguments.toUnmodifiableList();
 
     arguments.clear();
@@ -263,8 +262,8 @@ final class SqlTransaction implements Sql.Transaction {
   public final <T> List<T> query(Sql.Mapper<T> mapper) throws Sql.DatabaseException {
     checkQuery(mapper);
 
-    GrowableList<T> list;
-    list = new GrowableList<>();
+    Util.GrowableList<T> list;
+    list = Util.createGrowableList();
 
     if (hasArguments()) {
 

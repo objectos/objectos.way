@@ -15,13 +15,13 @@
  */
 package objectos.util;
 
-final class ArrayBackedIterator<E> extends AbstractIterator<E> {
+public final class ArrayBackedIterator<E> extends AbstractIterator<E> {
 
   private int index;
 
   private final E[] values;
 
-  ArrayBackedIterator(E[] values) {
+  public ArrayBackedIterator(E[] values) {
     this.values = values;
   }
 

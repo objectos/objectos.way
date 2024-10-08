@@ -30,6 +30,7 @@ import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.Set;
 import java.util.function.Consumer;
+import objectos.way.TestingArrayBackedIterable;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -222,7 +223,7 @@ public class UnmodifiableSetTest {
     }
 
     // iterable
-    var iterable = new ArrayBackedIterable<>(array);
+    var iterable = new TestingArrayBackedIterable<>(array);
 
     var ulIterable = UnmodifiableSet.copyOf(iterable);
 

@@ -15,13 +15,11 @@
  */
 package objectos.way;
 
-import objectos.util.GrowableList;
-
 class CssGeneratorAdapter {
 
-  private final GrowableList<Css.ClassNameFormat> classNameFormats = new GrowableList<>();
+  private final Util.GrowableList<Css.ClassNameFormat> classNameFormats = Util.createGrowableList();
 
-  private final GrowableList<Css.MediaQuery> mediaQueries = new GrowableList<>();
+  private final Util.GrowableList<Css.MediaQuery> mediaQueries = Util.createGrowableList();
 
   private boolean invalid;
 

@@ -20,39 +20,39 @@ import static org.testng.Assert.assertTrue;
 import java.util.HashSet;
 import java.util.Set;
 
-final class SetAssert {
+public final class SetAssert {
 
-	private SetAssert() {}
+  private SetAssert() {}
 
-	public static Set<Object> all(Object... expected) {
-		var jdk = new HashSet<>();
+  public static Set<Object> all(Object... expected) {
+    var jdk = new HashSet<>();
 
-		for (var o : expected) {
-			if (o instanceof Thing t) {
-				jdk.add(t);
-			} else if (o instanceof Iterable<?> iter) {
-				for (var t : iter) {
-					jdk.add(t);
-				}
-			} else if (o instanceof Thing[] a) {
-				for (var t : a) {
-					jdk.add(t);
-				}
-			} else {
-				throw new UnsupportedOperationException("Implement me: " + o.getClass());
-			}
-		}
-		return jdk;
-	}
+    for (var o : expected) {
+      if (o instanceof Thing t) {
+        jdk.add(t);
+      } else if (o instanceof Iterable<?> iter) {
+        for (var t : iter) {
+          jdk.add(t);
+        }
+      } else if (o instanceof Thing[] a) {
+        for (var t : a) {
+          jdk.add(t);
+        }
+      } else {
+        throw new UnsupportedOperationException("Implement me: " + o.getClass());
+      }
+    }
+    return jdk;
+  }
 
-	public static void iterator(Set<?> it, Object... expected) {
-		var jdk = all(expected);
+  public static void iterator(Set<?> it, Object... expected) {
+    var jdk = all(expected);
 
-		for (Object e : it) {
-			assertTrue(jdk.remove(e));
-		}
+    for (Object e : it) {
+      assertTrue(jdk.remove(e));
+    }
 
-		assertTrue(jdk.isEmpty());
-	}
+    assertTrue(jdk.isEmpty());
+  }
 
 }

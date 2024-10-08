@@ -23,7 +23,7 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 import org.testng.Assert;
 
-final class UnmodifiableIteratorTester<E> {
+public final class UnmodifiableIteratorTester<E> {
 
   private final Iterable<E> source;
 

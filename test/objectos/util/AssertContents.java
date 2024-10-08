@@ -16,6 +16,6 @@
 package objectos.util;
 
 @FunctionalInterface
-interface AssertContents {
+public interface AssertContents {
   void execute(Object... expected);
 }

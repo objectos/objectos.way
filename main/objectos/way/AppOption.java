@@ -15,10 +15,8 @@
  */
 package objectos.way;
 
-import java.util.List;
 import java.util.Map;
 import java.util.function.Predicate;
-import objectos.util.GrowableList;
 
 final class AppOption<T> implements App.Option<T> {
 
@@ -38,7 +36,7 @@ final class AppOption<T> implements App.Option<T> {
 
   private boolean required;
 
-  private List<Validator<? super T>> validators;
+  private Util.GrowableList<Validator<? super T>> validators;
 
   private T value;
 
@@ -79,7 +77,7 @@ final class AppOption<T> implements App.Option<T> {
 
   final void addValidator(Predicate<T> predicate, String reasonPhrase) {
     if (validators == null) {
-      validators = new GrowableList<>();
+      validators = Util.createGrowableList();
     }
 
     validators.add(

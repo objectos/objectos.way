@@ -26,9 +26,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import objectos.lang.object.ToString;
+import objectos.way.TestingArrayBackedIterable;
 import objectos.way.Util;
 
-final class Thing implements ToString.Formattable {
+public final class Thing implements ToString.Formattable {
 
   static final Comparator<Thing> NATURAL_ORDER = new Comparator<Thing>() {
     @Override
@@ -43,17 +44,17 @@ final class Thing implements ToString.Formattable {
     }
   };
 
-  static final Thing[] EMPTY_ARRAY = new Thing[0];
+  public static final Thing[] EMPTY_ARRAY = new Thing[0];
 
-  static final Iterable<Thing> EMPTY_ITERABLE = new ArrayBackedIterable<>(EMPTY_ARRAY);
+  static final Iterable<Thing> EMPTY_ITERABLE = new TestingArrayBackedIterable<>(EMPTY_ARRAY);
 
-  static final List<Thing> EMPTY_LIST = Collections.emptyList();
+  public static final List<Thing> EMPTY_LIST = Collections.emptyList();
 
   static final Set<Thing> EMPTY_SET = Collections.emptySet();
 
-  static final int MANY = 100;
+  public static final int MANY = 100;
 
-  static final int HALF = MANY / 2;
+  public static final int HALF = MANY / 2;
 
   private final byte[] value;
 
@@ -100,7 +101,7 @@ final class Thing implements ToString.Formattable {
   public static Iterable<Thing> nextIterable() {
     var array = nextArray();
 
-    return new ArrayBackedIterable<>(array);
+    return new TestingArrayBackedIterable<>(array);
   }
 
   public static Thing parse(String s) {

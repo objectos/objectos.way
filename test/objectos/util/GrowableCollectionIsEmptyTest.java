@@ -18,11 +18,13 @@ package objectos.util;
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertTrue;
 
-final class GrowableCollectionIsEmptyTest {
+import objectos.way.UtilGrowableCollection;
 
-  private final GrowableCollection<Thing> it;
+public final class GrowableCollectionIsEmptyTest {
 
-  public GrowableCollectionIsEmptyTest(GrowableCollection<Thing> it) {
+  private final UtilGrowableCollection<Thing> it;
+
+  public GrowableCollectionIsEmptyTest(UtilGrowableCollection<Thing> it) {
     this.it = it;
   }
 

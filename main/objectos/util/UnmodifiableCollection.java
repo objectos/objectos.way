@@ -16,6 +16,7 @@
 package objectos.util;
 
 import java.util.Collection;
+import objectos.way.UtilBaseCollection;
 
 /**
  * A {@link Collection} that does not allow adding nor removing elements.
@@ -27,7 +28,7 @@ import java.util.Collection;
  *
  * @param <E> type of the elements in this collection
  */
-public abstract class UnmodifiableCollection<E> extends AbstractBaseCollection<E> {
+public abstract class UnmodifiableCollection<E> extends UtilBaseCollection<E> {
 
 	/**
 	 * Sole constructor.

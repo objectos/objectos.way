@@ -24,7 +24,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.function.Function;
 import objectos.lang.object.Check;
-import objectos.util.GrowableList;
 import objectos.util.GrowableMap;
 import objectos.way.HttpExchangeLoop.ParseStatus;
 
@@ -687,8 +686,8 @@ non-sealed class HttpRequestLine extends HttpSocketInput implements Http.Request
       if (value.equals("")) {
         map.put(key, s);
       } else {
-        List<String> list;
-        list = new GrowableList<>();
+        Util.GrowableList<String> list;
+        list = Util.createGrowableList();
 
         list.add(s);
 

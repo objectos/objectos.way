@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.util;
+package objectos.way;
 
 import java.util.Arrays;
 import java.util.List;
@@ -21,12 +21,14 @@ import java.util.NoSuchElementException;
 import java.util.Objects;
 import objectos.lang.object.Check;
 import objectos.lang.object.ToString;
+import objectos.util.MoreCollections;
+import objectos.util.UnmodifiableIterator;
 
 /**
  * This class provides {@code static} utility methods for {@link java.util.List}
  * classes and objects.
  */
-final class Lists {
+final class UtilLists {
 
   static class SimpleIterator<E> extends UnmodifiableIterator<E> {
     private final Object[] data;
@@ -62,7 +64,7 @@ final class Lists {
     }
   }
 
-  private Lists() {}
+  private UtilLists() {}
 
   /**
    * Returns the only element of the specified list or throws an exception if
@@ -139,14 +141,14 @@ final class Lists {
       int length = MoreCollections.sizeDigits(self);
 
       ToString.formatFirstPair(
-        toString, level,
-        MoreCollections.indexName(0, length), data[0]
+          toString, level,
+          MoreCollections.indexName(0, length), data[0]
       );
 
       for (int i = 1; i < size; i++) {
         ToString.formatNextPair(
-          toString, level,
-          MoreCollections.indexName(i, length), data[i]
+            toString, level,
+            MoreCollections.indexName(i, length), data[i]
         );
       }
     }

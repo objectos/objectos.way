@@ -17,13 +17,14 @@ package objectos.util;
 
 import static org.testng.Assert.assertEquals;
 
+import objectos.way.UtilGrowableCollection;
 import org.testng.Assert;
 
-final class GrowableCollectionAddWithNullMessageTest {
+public final class GrowableCollectionAddWithNullMessageTest {
 
-  private final GrowableCollection<Thing> it;
+  private final UtilGrowableCollection<Thing> it;
 
-  public GrowableCollectionAddWithNullMessageTest(GrowableCollection<Thing> it) {
+  public GrowableCollectionAddWithNullMessageTest(UtilGrowableCollection<Thing> it) {
     this.it = it;
   }
 
