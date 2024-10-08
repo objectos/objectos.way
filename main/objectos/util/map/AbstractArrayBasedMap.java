@@ -22,8 +22,8 @@ import java.util.function.BiFunction;
 import objectos.lang.object.Check;
 import objectos.lang.object.HashCode;
 import objectos.lang.object.ToString;
-import objectos.util.array.ObjectArrays;
 import objectos.util.collection.UnmodifiableIterator;
+import objectos.way.Util;
 
 abstract class AbstractArrayBasedMap<K, V> implements Map<K, V>, ToString.Formattable {
 
@@ -120,7 +120,7 @@ abstract class AbstractArrayBasedMap<K, V> implements Map<K, V>, ToString.Format
 
   static final int MAX_POSITIVE_POWER_OF_TWO = 1 << 30;
 
-  Object[] array = ObjectArrays.empty();
+  Object[] array = Util.EMPTY_OBJECT_ARRAY;
 
   int hashMask;
 
@@ -142,7 +142,7 @@ abstract class AbstractArrayBasedMap<K, V> implements Map<K, V>, ToString.Format
       return false;
     }
 
-    if (array == ObjectArrays.empty()) {
+    if (array == Util.EMPTY_OBJECT_ARRAY) {
       return false;
     }
 
@@ -331,7 +331,7 @@ abstract class AbstractArrayBasedMap<K, V> implements Map<K, V>, ToString.Format
   @SuppressWarnings("unchecked")
   @Override
   public final V get(Object key) {
-    if (array == ObjectArrays.empty()) {
+    if (array == Util.EMPTY_OBJECT_ARRAY) {
       return null;
     }
 

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.util.array;
+package objectos.way;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotSame;
@@ -22,11 +22,11 @@ import static org.testng.Assert.assertTrue;
 
 import org.testng.annotations.Test;
 
-public class ObjectArraysTest {
+public class UtilObjectArraysTest {
 
   @Test
   public void empty() {
-    assertEquals(ObjectArrays.empty().length, 0);
+    assertEquals(Util.EMPTY_OBJECT_ARRAY.length, 0);
   }
 
   @Test
@@ -34,12 +34,12 @@ public class ObjectArraysTest {
     // String
     var array = new String[3];
 
-    var noGrowthRequired = ObjectArrays.growIfNecessary(array, 2);
+    var noGrowthRequired = Util.growIfNecessary(array, 2);
 
     assertSame(noGrowthRequired, array);
     assertEquals(noGrowthRequired.length, 3);
 
-    var growthRequired = ObjectArrays.growIfNecessary(array, 3);
+    var growthRequired = Util.growIfNecessary(array, 3);
 
     var c = growthRequired.getClass();
 

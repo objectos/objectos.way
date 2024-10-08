@@ -16,7 +16,6 @@
 package objectos.way;
 
 import objectos.lang.object.Check;
-import objectos.util.array.ObjectArrays;
 import objectos.way.Html.AttributeName;
 
 class HtmlRecorder {
@@ -906,7 +905,7 @@ class HtmlRecorder {
       objectArray = new Object[10];
     }
 
-    objectArray = ObjectArrays.growIfNecessary(objectArray, objectIndex);
+    objectArray = Util.growIfNecessary(objectArray, objectIndex);
 
     objectArray[index] = value;
 

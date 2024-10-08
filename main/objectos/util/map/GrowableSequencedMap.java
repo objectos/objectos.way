@@ -16,8 +16,8 @@
 package objectos.util.map;
 
 import java.util.Arrays;
-import objectos.util.array.ObjectArrays;
 import objectos.util.collection.UnmodifiableIterator;
+import objectos.way.Util;
 
 /**
  * A {@link GrowableMap} variant with a predictable iteration order.
@@ -27,104 +27,104 @@ import objectos.util.collection.UnmodifiableIterator;
  */
 public final class GrowableSequencedMap<K, V> extends GrowableMap<K, V> {
 
-	private Object[] iteratorArray;
+  private Object[] iteratorArray;
 
-	/**
-	 * Creates a new {@code MutableOrderedMap} instance.
-	 */
-	public GrowableSequencedMap() {
-		iteratorArray = ObjectArrays.empty();
-	}
+  /**
+   * Creates a new {@code MutableOrderedMap} instance.
+   */
+  public GrowableSequencedMap() {
+    iteratorArray = Util.EMPTY_OBJECT_ARRAY;
+  }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public final void clear() {
-		super.clear();
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public final void clear() {
+    super.clear();
 
-		Arrays.fill(iteratorArray, null);
-	}
+    Arrays.fill(iteratorArray, null);
+  }
 
-	/**
-	 * Returns an {@link UnmodifiableSequencedMap} copy of this map.
-	 *
-	 * <p>
-	 * The returned {@code ImmutableOrderedMap} will contain all of the entries
-	 * from this map in the same order.
-	 *
-	 * <p>
-	 * The returned map will be a copy in the sense that, after this method
-	 * returns, modifying this map will have no effect on the returned (copied)
-	 * one.
-	 *
-	 * <p>
-	 * Note, however, that the behaviour of this method is undefined if this map
-	 * is modified while the copy is being made.
-	 *
-	 * @return an {@link UnmodifiableSequencedMap} copy of this set
-	 */
-	@Override
-	public final UnmodifiableSequencedMap<K, V> toUnmodifiableMap() {
-		switch (size) {
-			case 0:
-				return UnmodifiableSequencedMap.orderedEmpty();
-			default:
-				return new UnmodifiableSequencedMap<K, V>(
-						Arrays.copyOf(array, array.length),
+  /**
+   * Returns an {@link UnmodifiableSequencedMap} copy of this map.
+   *
+   * <p>
+   * The returned {@code ImmutableOrderedMap} will contain all of the entries
+   * from this map in the same order.
+   *
+   * <p>
+   * The returned map will be a copy in the sense that, after this method
+   * returns, modifying this map will have no effect on the returned (copied)
+   * one.
+   *
+   * <p>
+   * Note, however, that the behaviour of this method is undefined if this map
+   * is modified while the copy is being made.
+   *
+   * @return an {@link UnmodifiableSequencedMap} copy of this set
+   */
+  @Override
+  public final UnmodifiableSequencedMap<K, V> toUnmodifiableMap() {
+    switch (size) {
+      case 0:
+        return UnmodifiableSequencedMap.orderedEmpty();
+      default:
+        return new UnmodifiableSequencedMap<K, V>(
+            Arrays.copyOf(array, array.length),
 
-						size,
+            size,
 
-						Arrays.copyOf(iteratorArray, size << 1)
-				);
-		}
-	}
+            Arrays.copyOf(iteratorArray, size << 1)
+        );
+    }
+  }
 
-	@Override
-	final UnmodifiableIterator<Entry<K, V>> entryIterator() {
-		return Maps.orderedEntryIterator(iteratorArray, size << 1);
-	}
+  @Override
+  final UnmodifiableIterator<Entry<K, V>> entryIterator() {
+    return Maps.orderedEntryIterator(iteratorArray, size << 1);
+  }
 
-	@Override
-	final void insert(int index, Object key, Object value) {
-		var keyIndex = size << 1;
+  @Override
+  final void insert(int index, Object key, Object value) {
+    var keyIndex = size << 1;
 
-		var valueIndex = keyIndex + 1;
+    var valueIndex = keyIndex + 1;
 
-		super.insert(index, key, value);
+    super.insert(index, key, value);
 
-		if (iteratorArray.length != array.length) {
-			iteratorArray = Arrays.copyOf(iteratorArray, array.length);
-		}
+    if (iteratorArray.length != array.length) {
+      iteratorArray = Arrays.copyOf(iteratorArray, array.length);
+    }
 
-		iteratorArray[keyIndex] = key;
+    iteratorArray[keyIndex] = key;
 
-		iteratorArray[valueIndex] = value;
-	}
+    iteratorArray[valueIndex] = value;
+  }
 
-	@Override
-	final UnmodifiableIterator<K> keyIterator() {
-		return Maps.orderedKeyIterator(iteratorArray, size << 1);
-	}
+  @Override
+  final UnmodifiableIterator<K> keyIterator() {
+    return Maps.orderedKeyIterator(iteratorArray, size << 1);
+  }
 
-	@Override
-	final V replace(int keyIndex, Object key, Object value) {
-		for (int i = 0, iteratorSize = size << 1; i < iteratorSize; i = i + 2) {
-			var maybeKey = iteratorArray[i];
+  @Override
+  final V replace(int keyIndex, Object key, Object value) {
+    for (int i = 0, iteratorSize = size << 1; i < iteratorSize; i = i + 2) {
+      var maybeKey = iteratorArray[i];
 
-			if (maybeKey.equals(key)) {
-				iteratorArray[i + 1] = value;
+      if (maybeKey.equals(key)) {
+        iteratorArray[i + 1] = value;
 
-				break;
-			}
-		}
+        break;
+      }
+    }
 
-		return super.replace(keyIndex, key, value);
-	}
+    return super.replace(keyIndex, key, value);
+  }
 
-	@Override
-	final UnmodifiableIterator<V> valueIterator() {
-		return Maps.orderedValueIterator(iteratorArray, size << 1);
-	}
+  @Override
+  final UnmodifiableIterator<V> valueIterator() {
+    return Maps.orderedValueIterator(iteratorArray, size << 1);
+  }
 
 }

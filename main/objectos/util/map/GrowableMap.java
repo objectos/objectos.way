@@ -20,7 +20,7 @@ import java.util.Map;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 import objectos.lang.object.Check;
-import objectos.util.array.ObjectArrays;
+import objectos.way.Util;
 
 /**
  * A hash-based implementation of the {@link Map} interface.
@@ -110,7 +110,7 @@ public sealed class GrowableMap<K, V>
    */
   @Override
   public final V computeIfPresent(
-                                  K key, BiFunction<? super K, ? super V, ? extends V> remappingFunction) {
+      K key, BiFunction<? super K, ? super V, ? extends V> remappingFunction) {
     throw new UnsupportedOperationException("Not yet implemented");
   }
 
@@ -273,7 +273,7 @@ public sealed class GrowableMap<K, V>
   }
 
   private void firstResizeIfNecessary() {
-    if (array == ObjectArrays.empty()) {
+    if (array == Util.EMPTY_OBJECT_ARRAY) {
       resizeTo(FIRST_RESIZE);
     }
   }

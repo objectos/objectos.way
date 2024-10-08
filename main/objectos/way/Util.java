@@ -15,6 +15,7 @@
  */
 package objectos.way;
 
+import java.util.Arrays;
 import java.util.Map;
 import objectos.lang.object.Check;
 import objectos.util.map.GrowableMap;
@@ -33,6 +34,11 @@ public final class Util {
    * An empty zero-length {@code int} array instance.
    */
   public static final int[] EMPTY_INT_ARRAY = new int[0];
+
+  /**
+   * An empty zero-length {@code Object} array instance.
+   */
+  public static final Object[] EMPTY_OBJECT_ARRAY = new Object[0];
 
   static final int DEFAULT_CAPACITY = 10;
 
@@ -171,6 +177,67 @@ public final class Util {
     System.arraycopy(array, 0, result, 0, length);
 
     return result;
+  }
+
+  /**
+   * Copies the values of the array into a larger one (if necessary) so that a
+   * value can be inserted at the required index. More formally:
+   *
+   * <p>
+   * If the {@code requiredIndex} is smaller than {@code 0} then an
+   * {@link java.lang.IllegalArgumentException} is thrown.
+   *
+   * <p>
+   * If the {@code requiredIndex} is smaller than {@code array.length} then the
+   * array is not copied and is returned unchanged.
+   *
+   * <p>
+   * If the {@code requiredIndex} is equal to or is greater than
+   * {@code array.length} then:
+   *
+   * <ol>
+   * <li>a new array instance is created. The resulting array is of exactly the
+   * same class as the original array. The length of the new
+   * array is guaranteed to be greater than {@code requiredIndex};</li>
+   * <li>all values from the original array are copied into the new array so
+   * that, for all valid indices in the original array, the new array contains
+   * an identical value for the same index; and</li>
+   * <li>the new array instance is returned.</li>
+   * </ol>
+   *
+   * <p>
+   * A typical usage is:
+   *
+   * <pre>
+   * Foo foo = computeFoo();
+   * array = ObjectArrays.growIfNecessary(array, currentIndex);
+   * array[currentIndex++] = foo;</pre>
+   *
+   * @param <T>
+   *        the type of the objects in the array
+   * @param array
+   *        the array instance to be copied if necessary
+   * @param requiredIndex
+   *        the index where a value is to be inserted
+   *
+   * @return the {@code array} instance itself or a larger copy of the
+   *         original
+   *
+   * @throws IllegalArgumentException
+   *         if {@code requiredIndex < 0}
+   */
+  public static <T> T[] growIfNecessary(T[] array, int requiredIndex) {
+    Check.argument(requiredIndex >= 0, "requiredIndex cannot be negative");
+
+    var length = array.length;
+
+    if (requiredIndex < length) {
+      return array;
+    }
+
+    var newLength = arrayLength(length, requiredIndex);
+
+    return Arrays.copyOf(array, newLength);
   }
 
   /**

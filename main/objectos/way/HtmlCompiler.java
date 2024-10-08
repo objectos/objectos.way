@@ -18,7 +18,6 @@ package objectos.way;
 import java.io.IOException;
 import java.util.function.Consumer;
 import objectos.lang.object.Check;
-import objectos.util.array.ObjectArrays;
 
 final class HtmlCompiler extends HtmlCompilerElements implements Html.Compiler {
 
@@ -306,7 +305,7 @@ final class HtmlCompiler extends HtmlCompilerElements implements Html.Compiler {
     if (objectArray == null) {
       objectArray = new Object[10];
     } else {
-      objectArray = ObjectArrays.growIfNecessary(objectArray, objectIndex + OFFSET_MAX);
+      objectArray = Util.growIfNecessary(objectArray, objectIndex + OFFSET_MAX);
     }
 
     objectArray[objectIndex + OFFSET_ELEMENT] = new HtmlElement(this);

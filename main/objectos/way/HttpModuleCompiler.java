@@ -16,7 +16,6 @@
 package objectos.way;
 
 import java.util.Arrays;
-import objectos.util.array.ObjectArrays;
 import objectos.way.HttpModule.Condition;
 
 final class HttpModuleCompiler extends HttpModuleMatcherParser implements Http.Handler {
@@ -169,7 +168,7 @@ final class HttpModuleCompiler extends HttpModuleMatcherParser implements Http.H
     if (actions == null) {
       actions = new HttpModuleAction[10];
     } else {
-      actions = ObjectArrays.growIfNecessary(actions, requiredIndex);
+      actions = Util.growIfNecessary(actions, requiredIndex);
     }
 
     return requiredIndex;

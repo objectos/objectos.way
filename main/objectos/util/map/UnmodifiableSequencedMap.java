@@ -15,8 +15,8 @@
  */
 package objectos.util.map;
 
-import objectos.util.array.ObjectArrays;
 import objectos.util.collection.UnmodifiableIterator;
+import objectos.way.Util;
 
 /**
  * A {@link UnmodifiableMap} variant with a predictable iteration order.
@@ -28,11 +28,11 @@ public final class UnmodifiableSequencedMap<K, V> extends UnmodifiableMap<K, V> 
 
   private static final UnmodifiableSequencedMap<Object, Object> EMPTY
       = new UnmodifiableSequencedMap<Object, Object>(
-        ObjectArrays.empty(),
+          Util.EMPTY_OBJECT_ARRAY,
 
-        0,
+          0,
 
-        ObjectArrays.empty()
+          Util.EMPTY_OBJECT_ARRAY
       );
 
   private final Object[] iteratorArray;
