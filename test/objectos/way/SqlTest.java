@@ -16,13 +16,149 @@
 package objectos.way;
 
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertSame;
 
+import java.sql.Connection;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import org.testng.Assert;
 import org.testng.annotations.Test;
 
 public class SqlTest {
+
+  @Test
+  public void rollbackAndClose01() {
+    TestingConnection connection;
+    connection = new TestingConnection();
+
+    SqlTransaction trx;
+    trx = trx(connection);
+
+    Sql.rollbackAndClose(trx);
+
+    assertEquals(
+        connection.toString(),
+
+        """
+        rollback()
+        close()
+        """
+    );
+  }
+
+  @Test
+  public void rollbackAndClose02() {
+    TestingConnection connection;
+    connection = new TestingConnection();
+
+    SQLException error;
+    error = new SQLException();
+
+    connection.rollbackException(error);
+
+    SqlTransaction trx;
+    trx = trx(connection);
+
+    try {
+      Sql.rollbackAndClose(trx);
+
+      Assert.fail();
+    } catch (Sql.DatabaseException expected) {
+      SQLException cause;
+      cause = expected.getCause();
+
+      assertSame(cause, error);
+    }
+
+    assertEquals(
+        connection.toString(),
+
+        """
+        rollback()
+        close()
+        """
+    );
+  }
+
+  @Test
+  public void rollbackAndClose03() {
+    TestingConnection connection;
+    connection = new TestingConnection();
+
+    SQLException error;
+    error = new SQLException();
+
+    connection.closeException(error);
+
+    SqlTransaction trx;
+    trx = trx(connection);
+
+    try {
+      Sql.rollbackAndClose(trx);
+
+      Assert.fail();
+    } catch (Sql.DatabaseException expected) {
+      SQLException cause;
+      cause = expected.getCause();
+
+      assertSame(cause, error);
+    }
+
+    assertEquals(
+        connection.toString(),
+
+        """
+        rollback()
+        close()
+        """
+    );
+  }
+
+  @Test
+  public void rollbackAndClose04() {
+    TestingConnection connection;
+    connection = new TestingConnection();
+
+    SQLException rollback;
+    rollback = new SQLException();
+
+    connection.rollbackException(rollback);
+
+    SQLException close;
+    close = new SQLException();
+
+    connection.closeException(close);
+
+    SqlTransaction trx;
+    trx = trx(connection);
+
+    try {
+      Sql.rollbackAndClose(trx);
+
+      Assert.fail();
+    } catch (Sql.DatabaseException expected) {
+      SQLException cause;
+      cause = expected.getCause();
+
+      assertSame(cause, rollback);
+
+      Throwable[] suppressed;
+      suppressed = rollback.getSuppressed();
+
+      assertEquals(suppressed.length, 1);
+      assertSame(suppressed[0], close);
+    }
+
+    assertEquals(
+        connection.toString(),
+
+        """
+        rollback()
+        close()
+        """
+    );
+  }
 
   @Test
   public void set() throws SQLException {
@@ -50,6 +186,13 @@ public class SqlTest {
         setObject(7, 2024-09-25T13:00)
         """
     );
+  }
+
+  private SqlTransaction trx(Connection connection) {
+    SqlDialect dialect;
+    dialect = TestingDatabaseMetaData.H2.toSqlDialect();
+
+    return new SqlTransaction(dialect, connection);
   }
 
 }

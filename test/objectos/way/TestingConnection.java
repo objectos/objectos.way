@@ -39,11 +39,17 @@ import java.util.concurrent.Executor;
 
 final class TestingConnection extends AbstractTestable implements Connection {
 
+  private SQLException closeException;
+
   private Iterator<PreparedStatement> preparedStatements = Collections.emptyIterator();
 
   private SQLException rollbackException;
 
   private Iterator<Statement> statements = Collections.emptyIterator();
+
+  public final void closeException(SQLException error) {
+    closeException = error;
+  }
 
   public final void preparedStatements(PreparedStatement... stmts) {
     preparedStatements = Arrays.asList(stmts).iterator();
@@ -116,6 +122,10 @@ final class TestingConnection extends AbstractTestable implements Connection {
   @Override
   public void close() throws SQLException {
     logMethod("close");
+
+    if (closeException != null) {
+      throw closeException;
+    }
   }
 
   @Override

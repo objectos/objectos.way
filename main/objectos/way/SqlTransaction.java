@@ -68,6 +68,33 @@ final class SqlTransaction implements Sql.Transaction {
     }
   }
 
+  final void rollbackAndClose() throws DatabaseException {
+    SQLException rethrow;
+    rethrow = null;
+
+    try {
+      connection.rollback();
+    } catch (SQLException e) {
+      rethrow = e;
+    } finally {
+
+      try {
+        connection.close();
+      } catch (SQLException e) {
+        if (rethrow != null) {
+          rethrow.addSuppressed(e);
+        } else {
+          rethrow = e;
+        }
+      }
+
+    }
+
+    if (rethrow != null) {
+      throw new Sql.DatabaseException(rethrow);
+    }
+  }
+
   @Override
   public final Throwable rollbackAndSuppress(Throwable error) {
     Check.notNull(error, "error == null");

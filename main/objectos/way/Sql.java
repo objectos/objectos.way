@@ -542,6 +542,25 @@ public final class Sql {
     };
   }
 
+  /**
+   * Undoes all changes made in the specified transaction and closes its
+   * underlying database connection.
+   *
+   * @param trx
+   *        the transaction object
+   *
+   * @throws DatabaseException
+   *         if a database access error occurs
+   */
+  public static void rollbackAndClose(Sql.Transaction trx) throws DatabaseException {
+    Objects.requireNonNull(trx, "trx == null");
+
+    SqlTransaction impl;
+    impl = (SqlTransaction) trx;
+
+    impl.rollbackAndClose();
+  }
+
   // utils
 
   private record Null(int sqlType) {}
@@ -559,6 +578,8 @@ public final class Sql {
       case Boolean b -> stmt.setBoolean(index, b.booleanValue());
 
       case Double d -> stmt.setDouble(index, d.doubleValue());
+
+      case Float f -> stmt.setFloat(index, f.floatValue());
 
       case Integer i -> stmt.setInt(index, i.intValue());
 
