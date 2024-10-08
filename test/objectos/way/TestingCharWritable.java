@@ -13,11 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.lang;
+package objectos.way;
 
 import java.io.IOException;
 
-public class TestingCharWritable implements CharWritable {
+public class TestingCharWritable implements Lang.CharWritable {
 
   private static final int LINE_LENGTH = 50;
 

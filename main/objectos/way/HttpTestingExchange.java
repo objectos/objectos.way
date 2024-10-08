@@ -18,7 +18,6 @@ package objectos.way;
 import java.nio.charset.Charset;
 import java.nio.file.Path;
 import java.util.Map;
-import objectos.lang.CharWritable;
 import objectos.lang.object.Check;
 import objectos.util.map.GrowableMap;
 
@@ -98,7 +97,7 @@ final class HttpTestingExchange implements Http.TestingExchange {
   }
 
   @Override
-  public void send(CharWritable body, Charset charset) {
+  public void send(Lang.CharWritable body, Charset charset) {
     throw new UnsupportedOperationException();
   }
 

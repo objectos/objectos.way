@@ -29,10 +29,10 @@ import java.time.Clock;
 import java.time.ZonedDateTime;
 import java.util.Arrays;
 import java.util.Map;
-import objectos.lang.CharWritable;
 import objectos.lang.object.Check;
 import objectos.notes.NoteSink;
 import objectos.util.map.GrowableMap;
+import objectos.way.Lang.CharWritable;
 
 final class HttpExchangeLoop extends HttpRequestBody implements Http.Exchange, Closeable {
 
@@ -466,7 +466,7 @@ final class HttpExchangeLoop extends HttpRequestBody implements Http.Exchange, C
   }
 
   @Override
-  public final void send(CharWritable body, Charset charset) {
+  public final void send(Lang.CharWritable body, Charset charset) {
     checkResponse();
 
     responseBody = Check.notNull(body, "body == null");

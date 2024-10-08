@@ -28,7 +28,6 @@ import java.nio.file.attribute.FileTime;
 import java.time.Clock;
 import java.time.Instant;
 import java.util.Optional;
-import objectos.lang.CharWritable;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
@@ -273,7 +272,7 @@ public class WebResourcesTest extends Http.Module {
       String path;
       path = http.path();
 
-      CharWritable contents;
+      Lang.CharWritable contents;
       contents = out -> out.append("test-case-06");
 
       resources.writeCharWritable(path, contents, StandardCharsets.UTF_8);

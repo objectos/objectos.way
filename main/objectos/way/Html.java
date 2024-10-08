@@ -19,7 +19,6 @@ import java.io.IOException;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import objectos.lang.CharWritable;
 import objectos.lang.IterableOnce;
 import objectos.lang.object.Check;
 
@@ -172,7 +171,7 @@ public final class Html {
   /**
    * Compiles an HTML template into a materialized HTML document.
    */
-  public sealed interface Compiler extends CompilerAttributes, CompilerElements, CharWritable permits HtmlCompiler {
+  public sealed interface Compiler extends CompilerAttributes, CompilerElements, Lang.CharWritable permits HtmlCompiler {
 
     Html.Id nextId();
 

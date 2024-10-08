@@ -24,7 +24,6 @@ import java.time.Duration;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Random;
-import objectos.lang.CharWritable;
 import objectos.lang.object.Check;
 import objectos.notes.Note1;
 import objectos.notes.NoteSink;
@@ -104,7 +103,7 @@ public final class Web {
      * @throws IOException
      *         if an I/O error occurs
      */
-    void writeCharWritable(String path, CharWritable contents, Charset charset) throws IOException;
+    void writeCharWritable(String path, Lang.CharWritable contents, Charset charset) throws IOException;
 
   }
 

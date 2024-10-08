@@ -15,6 +15,7 @@
  */
 package objectos.way;
 
+import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.util.function.Consumer;
 import objectos.notes.NoteSink;
@@ -23,6 +24,27 @@ import objectos.notes.NoteSink;
  * The <strong>Objectos Lang</strong> main class.
  */
 public final class Lang {
+
+  // public types
+
+  /**
+   * An object that can write out its string representation.
+   */
+  @FunctionalInterface
+  public interface CharWritable {
+
+    /**
+     * Writes this object's textual representation to the appendable.
+     *
+     * @param dest the appendable where to write characters into.
+     *
+     * @throws IOException if an I/O error occurs
+     */
+    void writeTo(Appendable dest) throws IOException;
+
+  }
+
+  // non-public types
 
   sealed interface ClassReader permits LangClassReader {
 

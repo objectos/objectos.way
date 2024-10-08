@@ -34,7 +34,6 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
-import objectos.lang.CharWritable;
 import objectos.lang.object.Check;
 import objectos.notes.Note1;
 import objectos.notes.NoteSink;
@@ -111,7 +110,7 @@ public final class Http {
 
     void send(byte[] body);
 
-    void send(CharWritable body, Charset charset);
+    void send(Lang.CharWritable body, Charset charset);
 
     void send(Path file);
 

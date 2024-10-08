@@ -23,8 +23,6 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Set;
-import objectos.lang.CharWritable;
-import objectos.lang.TestingCharWritable;
 import objectos.util.array.ByteArrays;
 import objectos.way.HttpExchangeLoop.ParseStatus;
 import org.testng.Assert;
@@ -979,7 +977,7 @@ public class HttpExchangeLoopTest {
     .................................................
     123456""";
 
-    CharWritable writable;
+    Lang.CharWritable writable;
     writable = out -> out.append(chunk256);
 
     String resp01 = """

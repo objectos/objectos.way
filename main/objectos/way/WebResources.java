@@ -35,7 +35,6 @@ import java.util.Map;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 import objectos.io.FileVisitors;
-import objectos.lang.CharWritable;
 import objectos.lang.object.Check;
 import objectos.notes.NoOpNoteSink;
 import objectos.notes.NoteSink;
@@ -299,7 +298,7 @@ final class WebResources implements AutoCloseable, Web.Resources {
   }
 
   @Override
-  public final void writeCharWritable(String path, CharWritable contents, Charset charset) throws IOException {
+  public final void writeCharWritable(String path, Lang.CharWritable contents, Charset charset) throws IOException {
     Check.notNull(path, "path == null");
     Check.notNull(contents, "contents == null");
     Check.notNull(charset, "charset == null");

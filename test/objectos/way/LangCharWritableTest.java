@@ -13,14 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.lang;
+package objectos.way;
 
 import static org.testng.Assert.assertEquals;
 
 import java.io.IOException;
 import org.testng.annotations.Test;
 
-public class TestingCharWritableTest {
+public class LangCharWritableTest {
 
   @Test(description = """
   It fits in the first line
