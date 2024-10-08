@@ -23,7 +23,6 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Set;
-import objectos.util.array.ByteArrays;
 import objectos.way.HttpExchangeLoop.ParseStatus;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -84,7 +83,7 @@ public class HttpExchangeLoopTest {
       Http.Request.Body body;
       body = http.body();
 
-      assertEquals(ObjectosHttp.readAllBytes(body), ByteArrays.empty());
+      assertEquals(ObjectosHttp.readAllBytes(body), Util.EMPTY_BYTE_ARRAY);
 
       // response phase
       byte[] msg;
@@ -185,7 +184,7 @@ public class HttpExchangeLoopTest {
       Http.Request.Body body;
       body = http.body();
 
-      assertEquals(ObjectosHttp.readAllBytes(body), ByteArrays.empty());
+      assertEquals(ObjectosHttp.readAllBytes(body), Util.EMPTY_BYTE_ARRAY);
 
       // response phase
       byte[] msg;
@@ -222,7 +221,7 @@ public class HttpExchangeLoopTest {
       // body
       body = http.body();
 
-      assertEquals(ObjectosHttp.readAllBytes(body), ByteArrays.empty());
+      assertEquals(ObjectosHttp.readAllBytes(body), Util.EMPTY_BYTE_ARRAY);
 
       // response phase
       msg = body02.getBytes(StandardCharsets.UTF_8);
@@ -1105,7 +1104,7 @@ public class HttpExchangeLoopTest {
       Http.Request.Body body;
       body = http.body();
 
-      assertEquals(ObjectosHttp.readAllBytes(body), ByteArrays.empty());
+      assertEquals(ObjectosHttp.readAllBytes(body), Util.EMPTY_BYTE_ARRAY);
     } catch (IOException e) {
       throw new AssertionError("Failed with IOException", e);
     }
@@ -1149,7 +1148,7 @@ public class HttpExchangeLoopTest {
       Http.Request.Body body;
       body = http.body();
 
-      assertEquals(ObjectosHttp.readAllBytes(body), ByteArrays.empty());
+      assertEquals(ObjectosHttp.readAllBytes(body), Util.EMPTY_BYTE_ARRAY);
     } catch (IOException e) {
       throw new AssertionError("Failed with IOException", e);
     }
@@ -1193,7 +1192,7 @@ public class HttpExchangeLoopTest {
       Http.Request.Body body;
       body = http.body();
 
-      assertEquals(ObjectosHttp.readAllBytes(body), ByteArrays.empty());
+      assertEquals(ObjectosHttp.readAllBytes(body), Util.EMPTY_BYTE_ARRAY);
     } catch (IOException e) {
       throw new AssertionError("Failed with IOException", e);
     }

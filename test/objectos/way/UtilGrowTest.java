@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.util.array;
+package objectos.way;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
@@ -21,7 +21,7 @@ import static org.testng.Assert.assertTrue;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-public class GrowTest {
+public class UtilGrowTest {
 
   @Test
   public void arrayLength() {
@@ -40,7 +40,7 @@ public class GrowTest {
 
       requiredLength = length + delta;
 
-      length = Grow.arrayLength(oldLength, requiredLength);
+      length = Util.arrayLength(oldLength, requiredLength);
 
       assertTrue(length > oldLength);
 
@@ -69,26 +69,26 @@ public class GrowTest {
   - simulate add(Collection.size = 1)
   """)
   public void growBy() {
-    var length = Grow.DEFAULT_CAPACITY;
+    var length = Util.DEFAULT_CAPACITY;
 
-    length = Grow.growBy(length, 1);
+    length = Util.growBy(length, 1);
 
     assertEquals(length, 15);
 
-    length = Grow.growBy(length, 1);
+    length = Util.growBy(length, 1);
 
     assertEquals(length, 22);
 
-    length = Grow.growBy(1_197_571_635, 1);
+    length = Util.growBy(1_197_571_635, 1);
 
     assertEquals(length, 1_796_357_452);
 
-    length = Grow.growBy(length, 1);
+    length = Util.growBy(length, 1);
 
-    assertEquals(length, Grow.JVM_SOFT_LIMIT);
+    assertEquals(length, Util.JVM_SOFT_LIMIT);
 
     try {
-      Grow.growByOne(Grow.JVM_SOFT_LIMIT);
+      Util.growByOne(Util.JVM_SOFT_LIMIT);
 
       Assert.fail();
     } catch (OutOfMemoryError expected) {
@@ -105,26 +105,26 @@ public class GrowTest {
   - simulate add(E e)
   """)
   public void growByOne() {
-    var length = Grow.DEFAULT_CAPACITY;
+    var length = Util.DEFAULT_CAPACITY;
 
-    length = Grow.growByOne(length);
+    length = Util.growByOne(length);
 
     assertEquals(length, 15);
 
-    length = Grow.growByOne(length);
+    length = Util.growByOne(length);
 
     assertEquals(length, 22);
 
-    length = Grow.growByOne(1_197_571_635);
+    length = Util.growByOne(1_197_571_635);
 
     assertEquals(length, 1_796_357_452);
 
-    length = Grow.growByOne(length);
+    length = Util.growByOne(length);
 
-    assertEquals(length, Grow.JVM_SOFT_LIMIT);
+    assertEquals(length, Util.JVM_SOFT_LIMIT);
 
     try {
-      Grow.growByOne(Grow.JVM_SOFT_LIMIT);
+      Util.growByOne(Util.JVM_SOFT_LIMIT);
 
       Assert.fail();
     } catch (OutOfMemoryError expected) {

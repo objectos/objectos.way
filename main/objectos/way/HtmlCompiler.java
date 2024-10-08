@@ -18,7 +18,6 @@ package objectos.way;
 import java.io.IOException;
 import java.util.function.Consumer;
 import objectos.lang.object.Check;
-import objectos.util.array.ByteArrays;
 import objectos.util.array.ObjectArrays;
 
 final class HtmlCompiler extends HtmlCompilerElements implements Html.Compiler {
@@ -1196,7 +1195,7 @@ final class HtmlCompiler extends HtmlCompilerElements implements Html.Compiler {
         Html.ElementName element;
         element = ambiguous.element;
 
-        main = ByteArrays.growIfNecessary(main, mainIndex + 13);
+        main = Util.growIfNecessary(main, mainIndex + 13);
 
         /*00*/main[mainIndex++] = HtmlByteProto.MARKED4;
         /*01*/main[mainIndex++] = v0;
@@ -1300,7 +1299,7 @@ final class HtmlCompiler extends HtmlCompilerElements implements Html.Compiler {
     mainStart = auxIndex;
 
     // ensure aux length
-    aux = ByteArrays.growIfNecessary(aux, auxIndex + 13);
+    aux = Util.growIfNecessary(aux, auxIndex + 13);
 
     // 0
     aux[auxIndex++] = _ELEMENT_START;

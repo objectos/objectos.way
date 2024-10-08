@@ -26,126 +26,126 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import objectos.lang.object.ToString;
-import objectos.util.array.ByteArrays;
+import objectos.way.Util;
 
 final class Thing implements ToString.Formattable {
 
-	static final Comparator<Thing> NATURAL_ORDER = new Comparator<Thing>() {
-		@Override
-		public final int compare(Thing o1, Thing o2) {
-			String hex1;
-			hex1 = o1.toHexString();
+  static final Comparator<Thing> NATURAL_ORDER = new Comparator<Thing>() {
+    @Override
+    public final int compare(Thing o1, Thing o2) {
+      String hex1;
+      hex1 = o1.toHexString();
 
-			String hex2;
-			hex2 = o2.toHexString();
+      String hex2;
+      hex2 = o2.toHexString();
 
-			return hex1.compareTo(hex2);
-		}
-	};
+      return hex1.compareTo(hex2);
+    }
+  };
 
-	static final Thing[] EMPTY_ARRAY = new Thing[0];
+  static final Thing[] EMPTY_ARRAY = new Thing[0];
 
-	static final List<Thing> EMPTY_LIST = Collections.emptyList();
+  static final List<Thing> EMPTY_LIST = Collections.emptyList();
 
-	static final Set<Thing> EMPTY_SET = Collections.emptySet();
+  static final Set<Thing> EMPTY_SET = Collections.emptySet();
 
-	static final int MANY = 100;
+  static final int MANY = 100;
 
-	static final int HALF = MANY / 2;
+  static final int HALF = MANY / 2;
 
-	private final byte[] value;
+  private final byte[] value;
 
-	private Thing(byte[] value) {
-		this.value = value;
-	}
+  private Thing(byte[] value) {
+    this.value = value;
+  }
 
-	public static Thing next() {
-		var value = Next.bytes(16);
+  public static Thing next() {
+    var value = Next.bytes(16);
 
-		return new Thing(value);
-	}
+    return new Thing(value);
+  }
 
-	public static Thing[] nextArray() {
-		var array = new Thing[MANY];
+  public static Thing[] nextArray() {
+    var array = new Thing[MANY];
 
-		for (int i = 0; i < array.length; i++) {
-			array[i] = next();
-		}
+    for (int i = 0; i < array.length; i++) {
+      array[i] = next();
+    }
 
-		return array;
-	}
+    return array;
+  }
 
-	public static ArrayDeque<Thing> nextArrayDeque() {
-		var deque = new ArrayDeque<Thing>(MANY);
+  public static ArrayDeque<Thing> nextArrayDeque() {
+    var deque = new ArrayDeque<Thing>(MANY);
 
-		for (int i = 0; i < MANY; i++) {
-			deque.add(next());
-		}
+    for (int i = 0; i < MANY; i++) {
+      deque.add(next());
+    }
 
-		return deque;
-	}
+    return deque;
+  }
 
-	public static ArrayList<Thing> nextArrayList() {
-		var list = new ArrayList<Thing>(MANY);
+  public static ArrayList<Thing> nextArrayList() {
+    var list = new ArrayList<Thing>(MANY);
 
-		for (int i = 0; i < MANY; i++) {
-			list.add(next());
-		}
+    for (int i = 0; i < MANY; i++) {
+      list.add(next());
+    }
 
-		return list;
-	}
+    return list;
+  }
 
-	public static Thing parse(String s) {
-		var format = HexFormat.of();
+  public static Thing parse(String s) {
+    var format = HexFormat.of();
 
-		var bytes = format.parseHex(s);
+    var bytes = format.parseHex(s);
 
-		return new Thing(bytes);
-	}
+    return new Thing(bytes);
+  }
 
-	@Override
-	public final boolean equals(Object obj) {
-		return obj == this || obj instanceof Thing that
-				&& Arrays.equals(value, that.value);
-	}
+  @Override
+  public final boolean equals(Object obj) {
+    return obj == this || obj instanceof Thing that
+        && Arrays.equals(value, that.value);
+  }
 
-	@Override
-	public final void formatToString(StringBuilder sb, int depth) {
-		ToString.format(
-				sb, depth, this,
-				"value", ByteArrays.toHexString(value)
-		);
-	}
+  @Override
+  public final void formatToString(StringBuilder sb, int depth) {
+    ToString.format(
+        sb, depth, this,
+        "value", Util.toHexString(value)
+    );
+  }
 
-	@Override
-	public final int hashCode() {
-		return Arrays.hashCode(value);
-	}
+  @Override
+  public final int hashCode() {
+    return Arrays.hashCode(value);
+  }
 
-	public final String toDecimalString() {
-		BigInteger bigInteger;
-		bigInteger = new BigInteger(value);
+  public final String toDecimalString() {
+    BigInteger bigInteger;
+    bigInteger = new BigInteger(value);
 
-		return bigInteger.toString();
-	}
+    return bigInteger.toString();
+  }
 
-	public final String toHexString() {
-		var format = HexFormat.of();
+  public final String toHexString() {
+    var format = HexFormat.of();
 
-		return format.formatHex(value);
-	}
+    return format.formatHex(value);
+  }
 
-	@Override
-	public final String toString() {
-		return ToString.of(this);
-	}
+  @Override
+  public final String toString() {
+    return ToString.of(this);
+  }
 
-	final String putDec(Map<Thing, String> map) {
-		return map.put(this, toDecimalString());
-	}
+  final String putDec(Map<Thing, String> map) {
+    return map.put(this, toDecimalString());
+  }
 
-	final String putHex(Map<Thing, String> map) {
-		return map.put(this, toHexString());
-	}
+  final String putHex(Map<Thing, String> map) {
+    return map.put(this, toHexString());
+  }
 
 }

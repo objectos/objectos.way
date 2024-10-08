@@ -26,7 +26,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import objectos.lang.object.ToString;
-import objectos.util.array.ByteArrays;
+import objectos.way.Util;
 
 final class Thing implements ToString.Formattable {
 
@@ -120,8 +120,8 @@ final class Thing implements ToString.Formattable {
   @Override
   public final void formatToString(StringBuilder sb, int depth) {
     ToString.format(
-      sb, depth, this,
-      "value", ByteArrays.toHexString(value)
+        sb, depth, this,
+        "value", Util.toHexString(value)
     );
   }
 

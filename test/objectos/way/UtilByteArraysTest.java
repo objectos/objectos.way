@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.util.array;
+package objectos.way;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotSame;
@@ -26,31 +26,31 @@ import objectos.lang.object.Check;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-public class ByteArraysTest {
+public class UtilByteArraysTest {
 
   @Test
   public void emptyByteArray() {
-    assertEquals(ByteArrays.empty().length, 0);
+    assertEquals(Util.EMPTY_BYTE_ARRAY.length, 0);
   }
 
   @Test
   public void growIfNecessary() {
     var bytes = new byte[3];
 
-    var bytesNoGrowthRequired = ByteArrays.growIfNecessary(bytes, 2);
+    var bytesNoGrowthRequired = Util.growIfNecessary(bytes, 2);
 
     assertSame(bytesNoGrowthRequired, bytes);
 
     assertEquals(bytesNoGrowthRequired.length, 3);
 
-    var bytesGrowthRequired = ByteArrays.growIfNecessary(bytes, 3);
+    var bytesGrowthRequired = Util.growIfNecessary(bytes, 3);
 
     assertNotSame(bytesGrowthRequired, bytes);
 
     assertTrue(bytesGrowthRequired.length > bytes.length);
 
     try {
-      ByteArrays.growIfNecessary(bytes, -1);
+      Util.growIfNecessary(bytes, -1);
 
       Assert.fail();
     } catch (IllegalArgumentException expected) {
@@ -91,11 +91,11 @@ public class ByteArraysTest {
 
       Arrays.fill(zeroes, '0');
 
-      assertEquals(ByteArrays.toHexString(longBytes), new String(zeroes) + expected);
+      assertEquals(Util.toHexString(longBytes), new String(zeroes) + expected);
     }
 
     try {
-      ByteArrays.toHexString(null);
+      Util.toHexString(null);
 
       Assert.fail();
     } catch (NullPointerException expected) {
@@ -138,7 +138,7 @@ public class ByteArraysTest {
       bytes[i] = (byte) (intValue & 0xff);
     }
 
-    assertEquals(ByteArrays.toHexString(bytes), expected);
+    assertEquals(Util.toHexString(bytes), expected);
   }
 
 }

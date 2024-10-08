@@ -16,7 +16,6 @@
 package objectos.way;
 
 import objectos.lang.object.Check;
-import objectos.util.array.ByteArrays;
 import objectos.util.array.ObjectArrays;
 import objectos.way.Html.AttributeName;
 
@@ -397,25 +396,25 @@ class HtmlRecorder {
   }
 
   final void auxAdd(byte b0) {
-    aux = ByteArrays.growIfNecessary(aux, auxIndex + 0);
+    aux = Util.growIfNecessary(aux, auxIndex + 0);
     aux[auxIndex++] = b0;
   }
 
   final void auxAdd(byte b0, byte b1) {
-    aux = ByteArrays.growIfNecessary(aux, auxIndex + 1);
+    aux = Util.growIfNecessary(aux, auxIndex + 1);
     aux[auxIndex++] = b0;
     aux[auxIndex++] = b1;
   }
 
   final void auxAdd(byte b0, byte b1, byte b2) {
-    aux = ByteArrays.growIfNecessary(aux, auxIndex + 2);
+    aux = Util.growIfNecessary(aux, auxIndex + 2);
     aux[auxIndex++] = b0;
     aux[auxIndex++] = b1;
     aux[auxIndex++] = b2;
   }
 
   final void auxAdd(byte b0, byte b1, byte b2, byte b3) {
-    aux = ByteArrays.growIfNecessary(aux, auxIndex + 3);
+    aux = Util.growIfNecessary(aux, auxIndex + 3);
     aux[auxIndex++] = b0;
     aux[auxIndex++] = b1;
     aux[auxIndex++] = b2;
@@ -423,7 +422,7 @@ class HtmlRecorder {
   }
 
   final void auxAdd(byte b0, byte b1, byte b2, byte b3, byte b4) {
-    aux = ByteArrays.growIfNecessary(aux, auxIndex + 4);
+    aux = Util.growIfNecessary(aux, auxIndex + 4);
     aux[auxIndex++] = b0;
     aux[auxIndex++] = b1;
     aux[auxIndex++] = b2;
@@ -432,7 +431,7 @@ class HtmlRecorder {
   }
 
   final void auxAdd(byte b0, byte b1, byte b2, byte b3, byte b4, byte b5) {
-    aux = ByteArrays.growIfNecessary(aux, auxIndex + 5);
+    aux = Util.growIfNecessary(aux, auxIndex + 5);
     aux[auxIndex++] = b0;
     aux[auxIndex++] = b1;
     aux[auxIndex++] = b2;
@@ -442,7 +441,7 @@ class HtmlRecorder {
   }
 
   final void auxAdd(byte b0, byte b1, byte b2, byte b3, byte b4, byte b5, byte b6) {
-    aux = ByteArrays.growIfNecessary(aux, auxIndex + 6);
+    aux = Util.growIfNecessary(aux, auxIndex + 6);
     aux[auxIndex++] = b0;
     aux[auxIndex++] = b1;
     aux[auxIndex++] = b2;
@@ -453,7 +452,7 @@ class HtmlRecorder {
   }
 
   final void auxAdd(byte b0, byte b1, byte b2, byte b3, byte b4, byte b5, byte b6, byte b7) {
-    aux = ByteArrays.growIfNecessary(aux, auxIndex + 7);
+    aux = Util.growIfNecessary(aux, auxIndex + 7);
     aux[auxIndex++] = b0;
     aux[auxIndex++] = b1;
     aux[auxIndex++] = b2;
@@ -481,7 +480,7 @@ class HtmlRecorder {
     // - length
     // - length
     // - ByteProto.INTERNAL
-    main = ByteArrays.growIfNecessary(main, mainIndex + 4);
+    main = Util.growIfNecessary(main, mainIndex + 4);
 
     // mark the end
     main[mainIndex++] = HtmlByteProto.END;
@@ -528,7 +527,7 @@ class HtmlRecorder {
     // ensure main can hold least 4 elements
     // 0   - ByteProto
     // 1-3 - variable length
-    main = ByteArrays.growIfNecessary(main, mainIndex + 3);
+    main = Util.growIfNecessary(main, mainIndex + 3);
 
     main[mainIndex++] = proto;
 
@@ -600,7 +599,7 @@ class HtmlRecorder {
           // ensure main can hold least 4 elements
           // 0   - ByteProto
           // 1-3 - variable length
-          main = ByteArrays.growIfNecessary(main, mainIndex + 3);
+          main = Util.growIfNecessary(main, mainIndex + 3);
 
           main[mainIndex++] = proto;
 
@@ -707,7 +706,7 @@ class HtmlRecorder {
     // ensure main can hold least 4 elements
     // 0   - ByteProto
     // 1-3 - variable length
-    main = ByteArrays.growIfNecessary(main, mainIndex + 3);
+    main = Util.growIfNecessary(main, mainIndex + 3);
 
     main[mainIndex++] = proto;
 
@@ -734,7 +733,7 @@ class HtmlRecorder {
     // ensure main can hold least 4 elements
     // 0   - ByteProto
     // 1-3 - variable length
-    main = ByteArrays.growIfNecessary(main, mainIndex + 3);
+    main = Util.growIfNecessary(main, mainIndex + 3);
 
     main[mainIndex++] = proto;
 
@@ -761,7 +760,7 @@ class HtmlRecorder {
     // ensure main can hold least 4 elements
     // 0   - ByteProto
     // 1-3 - variable length
-    main = ByteArrays.growIfNecessary(main, mainIndex + 3);
+    main = Util.growIfNecessary(main, mainIndex + 3);
 
     main[mainIndex++] = proto;
 
@@ -846,7 +845,7 @@ class HtmlRecorder {
     // - length
     // - length
     // - ByteProto.INTERNAL
-    main = ByteArrays.growIfNecessary(main, mainIndex + 4);
+    main = Util.growIfNecessary(main, mainIndex + 4);
 
     // mark the end
     main[mainIndex++] = HtmlByteProto.END;
@@ -871,19 +870,19 @@ class HtmlRecorder {
   }
 
   private void mainAdd(byte b0) {
-    main = ByteArrays.growIfNecessary(main, mainIndex + 0);
+    main = Util.growIfNecessary(main, mainIndex + 0);
     main[mainIndex++] = b0;
   }
 
   private void mainAdd(byte b0, byte b1, byte b2) {
-    main = ByteArrays.growIfNecessary(main, mainIndex + 2);
+    main = Util.growIfNecessary(main, mainIndex + 2);
     main[mainIndex++] = b0;
     main[mainIndex++] = b1;
     main[mainIndex++] = b2;
   }
 
   private void mainAdd(byte b0, byte b1, byte b2, byte b3) {
-    main = ByteArrays.growIfNecessary(main, mainIndex + 3);
+    main = Util.growIfNecessary(main, mainIndex + 3);
     main[mainIndex++] = b0;
     main[mainIndex++] = b1;
     main[mainIndex++] = b2;
@@ -891,7 +890,7 @@ class HtmlRecorder {
   }
 
   private void mainAdd(byte b0, byte b1, byte b2, byte b3, byte b4) {
-    main = ByteArrays.growIfNecessary(main, mainIndex + 4);
+    main = Util.growIfNecessary(main, mainIndex + 4);
     main[mainIndex++] = b0;
     main[mainIndex++] = b1;
     main[mainIndex++] = b2;
