@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.util.array;
+package objectos.way;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotSame;
@@ -22,11 +22,11 @@ import static org.testng.Assert.assertTrue;
 
 import org.testng.annotations.Test;
 
-public class IntArraysTest {
+public class UtilIntArraysTest {
 
   @Test
   public void empty() {
-    assertEquals(IntArrays.empty().length, 0);
+    assertEquals(Util.EMPTY_INT_ARRAY.length, 0);
   }
 
   @Test
@@ -34,30 +34,15 @@ public class IntArraysTest {
     // int
     var ints = new int[3];
 
-    var intsNoGrowthRequired = IntArrays.growIfNecessary(ints, 2);
+    var intsNoGrowthRequired = Util.growIfNecessary(ints, 2);
 
     assertSame(intsNoGrowthRequired, ints);
     assertEquals(intsNoGrowthRequired.length, 3);
 
-    var intsGrowthRequired = IntArrays.growIfNecessary(ints, 3);
+    var intsGrowthRequired = Util.growIfNecessary(ints, 3);
 
     assertNotSame(intsGrowthRequired, ints);
     assertTrue(intsGrowthRequired.length > ints.length);
-
-    // int[]
-    int[][] ints2;
-    ints2 = new int[3][];
-
-    int[][] ints2NoGrowthRequired;
-    ints2NoGrowthRequired = IntArrays.growIfNecessary(ints2, 2);
-
-    assertSame(ints2NoGrowthRequired, ints2);
-    assertEquals(ints2NoGrowthRequired.length, 3);
-
-    int[][] ints2GrowthRequired = IntArrays.growIfNecessary(ints2, 3);
-
-    assertNotSame(ints2GrowthRequired, ints2);
-    assertTrue(ints2GrowthRequired.length > ints2.length);
   }
 
 }

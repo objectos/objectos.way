@@ -34,7 +34,6 @@ import javax.sql.DataSource;
 import objectos.lang.object.Check;
 import objectos.notes.Note3;
 import objectos.notes.NoteSink;
-import objectos.util.array.IntArrays;
 import objectos.way.SqlDatabase.Builder;
 
 /**
@@ -630,7 +629,7 @@ public final class Sql {
 
   static final class SqlGeneratedKeysOfInt extends SqlGeneratedKeys<Integer> implements Sql.GeneratedKeys.OfInt {
 
-    private int[] keys = IntArrays.empty();
+    private int[] keys = Util.EMPTY_INT_ARRAY;
 
     private int size = 0;
 
@@ -670,7 +669,7 @@ public final class Sql {
       int requiredIndex;
       requiredIndex = size++;
 
-      keys = IntArrays.growIfNecessary(keys, requiredIndex);
+      keys = Util.growIfNecessary(keys, requiredIndex);
 
       keys[requiredIndex] = value;
     }
