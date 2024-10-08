@@ -48,7 +48,7 @@ public final class TestingH2 {
   private TestingH2() {}
 
   private static Sql.Database source() throws SQLException {
-    return Sql.createSource(
+    return Sql.createDatabase(
         create(),
 
         Sql.noteSink(TestingNoteSink.INSTANCE)
@@ -62,9 +62,9 @@ public final class TestingH2 {
     ds.setMaxConnections(4);
 
     try (Connection c = ds.getConnection()) {
-      c.setAutoCommit(false);
-
       c.setTransactionIsolation(Connection.TRANSACTION_SERIALIZABLE);
+
+      c.setAutoCommit(false);
 
       try (Statement s = c.createStatement()) {
         s.executeUpdate(SQL);

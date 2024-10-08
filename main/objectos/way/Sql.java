@@ -35,7 +35,6 @@ import objectos.lang.object.Check;
 import objectos.notes.Note3;
 import objectos.notes.NoteSink;
 import objectos.util.array.IntArrays;
-import objectos.way.Sql.Database.Option;
 import objectos.way.SqlDatabase.Builder;
 
 /**
@@ -125,6 +124,27 @@ public final class Sql {
 
   }
 
+  /**
+   * Maps a row from a {@code ResultSet} to an object of type {@code T}.
+   */
+  @FunctionalInterface
+  public interface Mapper<T> {
+
+    /**
+     * Implementations should not invoke the {@code next()} method on the
+     * {@code ResultSet} object.
+     *
+     * @param rs
+     *        the result set object positioned at the row to be mapped
+     * @param startingParameterIndex
+     *        the starting parameter index (always the value {@code 1})
+     *
+     * @return the mapped object
+     */
+    T map(ResultSet rs, int startingParameterIndex) throws SQLException;
+
+  }
+
   public interface Page {
 
     /**
@@ -176,27 +196,6 @@ public final class Sql {
      *         if the result set throws
      */
     void process(ResultSet rs) throws SQLException;
-
-  }
-
-  /**
-   * Maps rows from a {@code ResultSet} to objects of type {@code T}.
-   */
-  @FunctionalInterface
-  public interface RowMapper<T> {
-
-    /**
-     * Implementations should not invoke the {@code next()} method on the
-     * {@code ResultSet} object.
-     *
-     * @param rs
-     *        the result set object positioned at the row to be mapped
-     * @param startingParameterIndex
-     *        the starting parameter index (always the value {@code 1})
-     *
-     * @return the mapped object
-     */
-    T mapRow(ResultSet rs, int startingParameterIndex) throws SQLException;
 
   }
 
@@ -396,19 +395,19 @@ public final class Sql {
     /**
      * Executes the current SQL statement as a row-retrieving query.
      */
-    <T> List<T> query(RowMapper<T> mapper) throws DatabaseException;
+    <T> List<T> query(Mapper<T> mapper) throws DatabaseException;
 
     /**
      * Executes the current SQL statement as a row-retrieving query which must
      * return a single result (no more and no less).
      */
-    <T> T querySingle(RowMapper<T> mapper) throws DatabaseException;
+    <T> T querySingle(Mapper<T> mapper) throws DatabaseException;
 
     /**
      * Executes the current SQL statement as a row-retrieving query which may
      * return a single result or {@code null} if there were no results.
      */
-    <T> T queryNullable(RowMapper<T> mapper) throws DatabaseException;
+    <T> T queryNullable(Mapper<T> mapper) throws DatabaseException;
 
     OptionalInt queryOptionalInt() throws DatabaseException;
 
@@ -485,41 +484,48 @@ public final class Sql {
 
   private Sql() {}
 
-  public static GeneratedKeys.OfInt createGeneratedKeysOfInt() {
-    return new SqlGeneratedKeysOfInt();
-  }
-
   /**
-   * Creates a new {@code Source} instance from the specified data source.
+   * Creates a new {@code Database} instance from the specified data source and
+   * configured with the specified options.
    *
    * @param dataSource
    *        the data source
+   * @param options
+   *        the configuration options
    *
-   * @return a new {@code Source} instance
+   * @return a new {@code Database} instance
    *
-   * @throws SQLException
+   * @throws DatabaseException
    *         if a database access error occurs
    */
-  public static Database createSource(DataSource dataSource, Database.Option... options) throws SQLException {
+  public static Database createDatabase(DataSource dataSource, Database.Option... options) throws DatabaseException {
     Check.notNull(dataSource, "dataSource == null");
     Check.notNull(options, "options == null");
 
-    SqlDatabase.Builder builder;
-    builder = new SqlDatabase.Builder(dataSource);
+    try {
+      SqlDatabase.Builder builder;
+      builder = new SqlDatabase.Builder(dataSource);
 
-    for (int idx = 0; idx < options.length; idx++) {
-      Option o;
-      o = options[idx];
+      for (int idx = 0; idx < options.length; idx++) {
+        Database.Option o;
+        o = options[idx];
 
-      Check.notNull(o, "options[", idx, "] == null");
+        Check.notNull(o, "options[", idx, "] == null");
 
-      SqlOption option;
-      option = (SqlOption) o;
+        SqlOption option;
+        option = (SqlOption) o;
 
-      option.acceptSqlSourceBuilder(builder);
+        option.acceptSqlSourceBuilder(builder);
+      }
+
+      return builder.build();
+    } catch (SQLException e) {
+      throw new DatabaseException(e);
     }
+  }
 
-    return builder.build();
+  public static GeneratedKeys.OfInt createGeneratedKeysOfInt() {
+    return new SqlGeneratedKeysOfInt();
   }
 
   public static Page createPage(int number, int size) {
@@ -531,8 +537,11 @@ public final class Sql {
     return new SqlPage(number, size);
   }
 
-  public static <R extends Record> RowMapper<R> createRowMapper(Class<R> recordType) {
-    return RecordRowMapper.of(recordType);
+  /**
+   * Creates a {@link Sql.Mapper} for the specified record type.
+   */
+  public static <R extends Record> Mapper<R> createRecordMapper(Class<R> recordType) {
+    return RecordMapper.of(recordType);
   }
 
   public static Sql.Database.Option noteSink(NoteSink noteSink) {
@@ -668,7 +677,7 @@ public final class Sql {
 
   }
 
-  private static final class RecordRowMapper<R extends Record> implements RowMapper<R> {
+  private static final class RecordMapper<R extends Record> implements Mapper<R> {
 
     private final Class<?>[] types;
 
@@ -676,7 +685,7 @@ public final class Sql {
 
     private final Object[] values;
 
-    RecordRowMapper(Class<?>[] types, Constructor<R> constructor) {
+    RecordMapper(Class<?>[] types, Constructor<R> constructor) {
       this.types = types;
 
       this.constructor = constructor;
@@ -684,7 +693,7 @@ public final class Sql {
       this.values = new Object[types.length];
     }
 
-    static <R extends Record> RecordRowMapper<R> of(Class<R> recordType) {
+    static <R extends Record> RecordMapper<R> of(Class<R> recordType) {
       RecordComponent[] components; // early implicit null-check
       components = recordType.getRecordComponents();
 
@@ -710,11 +719,11 @@ public final class Sql {
         throw new Sql.MappingException("Failed to obtain record canonical constructor", e);
       }
 
-      return new RecordRowMapper<R>(types, constructor);
+      return new RecordMapper<R>(types, constructor);
     }
 
     @Override
-    public final R mapRow(ResultSet rs, int startingIndex) throws SQLException {
+    public final R map(ResultSet rs, int startingIndex) throws SQLException {
       try {
         for (int idx = 0, len = types.length; idx < len; idx++) {
           Class<?> type;
