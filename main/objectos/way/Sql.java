@@ -239,6 +239,8 @@ public final class Sql {
      *
      * try {
      *   // code that may throw
+     * } catch (KnownException e) {
+     *   throw trx.rollbackAndSuppress(e);
      * } catch (Throwable t) {
      *   logger.log("Operation failed", trx.rollbackAndSuppress(t));
      * } finally {
@@ -247,11 +249,13 @@ public final class Sql {
      *
      * @param error
      *        a throwable instance
+     * @param <T>
+     *        the type of the throwable instance
      *
      * @return the specified throwable which may or may not contain a new
      *         suppressed exception (from the rollback operation)
      */
-    Throwable rollbackAndSuppress(Throwable error);
+    <T extends Throwable> T rollbackAndSuppress(T error);
 
     /**
      * Rolls back this transaction, wraps the specified throwable into an

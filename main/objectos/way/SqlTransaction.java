@@ -96,7 +96,7 @@ final class SqlTransaction implements Sql.Transaction {
   }
 
   @Override
-  public final Throwable rollbackAndSuppress(Throwable error) {
+  public final <T extends Throwable> T rollbackAndSuppress(T error) {
     Check.notNull(error, "error == null");
 
     return rollbackAndSuppress0(error);
