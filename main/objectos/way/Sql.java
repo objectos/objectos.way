@@ -288,8 +288,6 @@ public final class Sql {
 
     int count(String sql, Object... args) throws DatabaseException;
 
-    int[] executeUpdateText(String sqlText) throws DatabaseException;
-
     /**
      * Use the specified processor to process the results of the execution of
      * the specified row-retriving SQL statement. The specified arguments
@@ -337,7 +335,7 @@ public final class Sql {
     }
 
     /**
-     * Sets the SQL statement of this transaction to the specified value.
+     * Sets the SQL contents of this transaction to the specified value.
      *
      * <p>
      * Invoking this method additionally:
@@ -346,7 +344,7 @@ public final class Sql {
      * <li>clears any previously set arguments;
      *
      * @param value
-     *        the raw SQL statement
+     *        the raw SQL contents
      *
      * @return this object
      */
@@ -411,14 +409,49 @@ public final class Sql {
     OptionalInt queryOptionalInt() throws DatabaseException;
 
     /**
-     * Executes the current SQL statement as an update operation.
+     * Executes the current SQL contents as a script. The SQL contents is
+     * assumed to be a blank line separated list of SQL statements. The
+     * statements will typically be SQL {@code INSERT} or {@code UPDATE}
+     * statements.
+     *
+     * <p>
+     * A typical usage is:
+     *
+     * <pre>
+     * trx.sql("""
+     * insert into City (id, name)
+     * values (1, 'São Paulo')
+     * ,      (2, 'New York')
+     * ,      (3, 'Tokyo')
+     *
+     * insert into Country (id, name)
+     * values (1, 'Brazil')
+     * ,      (2, 'United States of America')
+     * ,      (3, 'Japan')
+     * """);
+     *
+     * int[] result = trx.scriptUpdate();
+     *
+     * assertEquals(result.length, 2);
+     * assertEquals(result[0], 3);
+     * assertEquals(result[1], 3);</pre>
+     *
+     * @return an array of update counts containing one element for each
+     *         statement in the script. The elements of the array are ordered
+     *         according to the order in which statements were listed in the
+     *         script.
      */
-    int update();
+    int[] scriptUpdate() throws DatabaseException;
 
     /**
      * Executes the current SQL statement as an update operation.
      */
-    int updateWithGeneratedKeys(GeneratedKeys<?> generatedKeys);
+    int update() throws DatabaseException;
+
+    /**
+     * Executes the current SQL statement as an update operation.
+     */
+    int updateWithGeneratedKeys(GeneratedKeys<?> generatedKeys) throws DatabaseException;
 
   }
 

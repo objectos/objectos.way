@@ -116,45 +116,6 @@ final class SqlTransaction implements Sql.Transaction {
   }
 
   @Override
-  public final int[] executeUpdateText(String sqlText) throws DatabaseException {
-    String[] lines;
-    lines = sqlText.split("\n"); // implicit null check
-
-    StringBuilder sql;
-    sql = new StringBuilder();
-
-    try (Statement stmt = connection.createStatement()) {
-      for (String line : lines) {
-
-        if (!line.isBlank()) {
-          sql.append(line);
-        }
-
-        else if (!sql.isEmpty()) {
-          String batch;
-          batch = sql.toString();
-
-          sql.setLength(0);
-
-          stmt.addBatch(batch);
-        }
-
-      }
-
-      if (!sql.isEmpty()) {
-        String batch;
-        batch = sql.toString();
-
-        stmt.addBatch(batch);
-      }
-
-      return stmt.executeBatch();
-    } catch (SQLException e) {
-      throw new Sql.DatabaseException(e);
-    }
-  }
-
-  @Override
   public final void processQuery(Sql.QueryProcessor processor, String sql, Object... args) throws DatabaseException {
     Check.notNull(processor, "processor == null");
     Check.notNull(sql, "sql == null");
@@ -444,6 +405,49 @@ final class SqlTransaction implements Sql.Transaction {
     }
 
     return result;
+  }
+
+  @Override
+  public final int[] scriptUpdate() throws DatabaseException {
+    checkSql();
+    Check.state(!hasBatches(), "One or more batches were defined");
+    Check.state(!hasArguments(), "One or more arguments were added to operation");
+
+    String[] lines;
+    lines = sql.split("\n"); // implicit null check
+
+    StringBuilder sql;
+    sql = new StringBuilder();
+
+    try (Statement stmt = connection.createStatement()) {
+      for (String line : lines) {
+
+        if (!line.isBlank()) {
+          sql.append(line);
+        }
+
+        else if (!sql.isEmpty()) {
+          String batch;
+          batch = sql.toString();
+
+          sql.setLength(0);
+
+          stmt.addBatch(batch);
+        }
+
+      }
+
+      if (!sql.isEmpty()) {
+        String batch;
+        batch = sql.toString();
+
+        stmt.addBatch(batch);
+      }
+
+      return stmt.executeBatch();
+    } catch (SQLException e) {
+      throw new Sql.DatabaseException(e);
+    }
   }
 
   @Override

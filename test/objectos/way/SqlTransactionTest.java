@@ -778,7 +778,7 @@ public class SqlTransactionTest {
   }
 
   @Test
-  public void executeUpdateText01() {
+  public void scriptUpdate01() {
     TestingConnection conn;
     conn = new TestingConnection();
 
@@ -793,9 +793,12 @@ public class SqlTransactionTest {
     trx = trx(conn);
 
     try {
-      int[] result = trx.executeUpdateText("""
+      trx.sql("""
       insert into FOO (A, B) values (1, 5)
       """);
+
+      int[] result;
+      result = trx.scriptUpdate();
 
       assertEquals(result, new int[] {1});
     } finally {
@@ -824,7 +827,7 @@ public class SqlTransactionTest {
   }
 
   @Test
-  public void executeUpdateText02() {
+  public void scriptUpdate02() {
     TestingConnection conn;
     conn = new TestingConnection();
 
@@ -839,11 +842,14 @@ public class SqlTransactionTest {
     trx = trx(conn);
 
     try {
-      int[] result = trx.executeUpdateText("""
+      trx.sql("""
       insert into FOO (A, B) values (1, 5)
 
       insert into BAR (X, Y) values ('A', 'B')
       """);
+
+      int[] result;
+      result = trx.scriptUpdate();
 
       assertEquals(result, new int[] {1});
     } finally {
