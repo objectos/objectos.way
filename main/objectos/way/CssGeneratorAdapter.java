@@ -15,7 +15,7 @@
  */
 package objectos.way;
 
-import objectos.util.list.GrowableList;
+import objectos.util.GrowableList;
 
 class CssGeneratorAdapter {
 

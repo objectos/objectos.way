@@ -22,8 +22,8 @@ import java.util.Map;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 import objectos.lang.object.Check;
-import objectos.util.list.GrowableList;
-import objectos.util.map.GrowableMap;
+import objectos.util.GrowableList;
+import objectos.util.GrowableMap;
 
 abstract class AppBootstrap {
 

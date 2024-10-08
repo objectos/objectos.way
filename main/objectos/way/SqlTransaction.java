@@ -23,8 +23,8 @@ import java.sql.Statement;
 import java.util.List;
 import java.util.OptionalInt;
 import objectos.lang.object.Check;
-import objectos.util.list.GrowableList;
-import objectos.util.list.UnmodifiableList;
+import objectos.util.GrowableList;
+import objectos.util.UnmodifiableList;
 
 final class SqlTransaction implements Sql.Transaction {
 

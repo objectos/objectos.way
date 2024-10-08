@@ -19,7 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import objectos.util.map.GrowableMap;
+import objectos.util.GrowableMap;
 
 final class HttpHeaderName implements Http.HeaderName {
 

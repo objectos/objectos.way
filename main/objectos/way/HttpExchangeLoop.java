@@ -31,7 +31,7 @@ import java.util.Arrays;
 import java.util.Map;
 import objectos.lang.object.Check;
 import objectos.notes.NoteSink;
-import objectos.util.map.GrowableMap;
+import objectos.util.GrowableMap;
 import objectos.way.Lang.CharWritable;
 
 final class HttpExchangeLoop extends HttpRequestBody implements Http.Exchange, Closeable {

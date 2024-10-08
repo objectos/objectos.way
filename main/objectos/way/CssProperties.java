@@ -19,8 +19,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import objectos.util.list.GrowableList;
-import objectos.util.map.GrowableMap;
+import objectos.util.GrowableList;
+import objectos.util.GrowableMap;
 
 final class CssProperties implements Iterable<Map.Entry<String, String>> {
 

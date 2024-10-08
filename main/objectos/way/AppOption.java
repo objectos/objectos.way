@@ -18,7 +18,7 @@ package objectos.way;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Predicate;
-import objectos.util.list.GrowableList;
+import objectos.util.GrowableList;
 
 final class AppOption<T> implements App.Option<T> {
 

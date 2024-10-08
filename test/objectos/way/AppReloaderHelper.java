@@ -22,11 +22,11 @@ import java.nio.file.Path;
 import java.util.List;
 import javax.tools.JavaCompiler;
 import javax.tools.JavaCompiler.CompilationTask;
+import objectos.util.GrowableList;
 import javax.tools.JavaFileObject;
 import javax.tools.StandardJavaFileManager;
 import javax.tools.StandardLocation;
 import javax.tools.ToolProvider;
-import objectos.util.list.GrowableList;
 
 final class AppReloaderHelper implements AutoCloseable {
 

@@ -135,10 +135,7 @@ TEST_ADD_MODULES += java.net.http
 
 ## test runtime exports
 TEST_JAVAX_EXPORTS := objectos.lang.object
-TEST_JAVAX_EXPORTS += objectos.util.collection
-TEST_JAVAX_EXPORTS += objectos.util.list
-TEST_JAVAX_EXPORTS += objectos.util.map
-TEST_JAVAX_EXPORTS += objectos.util.set
+TEST_JAVAX_EXPORTS += objectos.util
 TEST_JAVAX_EXPORTS += objectos.way
 TEST_JAVAX_EXPORTS += objectox.lang
 TEST_JAVAX_EXPORTS += testing.site.web

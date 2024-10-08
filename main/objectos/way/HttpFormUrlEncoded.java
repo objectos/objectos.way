@@ -18,8 +18,8 @@ package objectos.way;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Set;
-import objectos.util.map.GrowableMap;
-import objectos.util.map.UnmodifiableMap;
+import objectos.util.GrowableMap;
+import objectos.util.UnmodifiableMap;
 
 final class HttpFormUrlEncoded implements Http.FormUrlEncoded {
 

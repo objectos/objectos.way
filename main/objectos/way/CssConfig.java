@@ -30,9 +30,9 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import objectos.notes.NoOpNoteSink;
 import objectos.notes.NoteSink;
-import objectos.util.list.GrowableList;
-import objectos.util.map.GrowableMap;
-import objectos.util.set.GrowableSet;
+import objectos.util.GrowableList;
+import objectos.util.GrowableMap;
+import objectos.util.GrowableSet;
 
 final class CssConfig {
 

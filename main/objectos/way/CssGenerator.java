@@ -23,7 +23,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.function.Consumer;
-import objectos.util.map.GrowableSequencedMap;
+import objectos.util.GrowableSequencedMap;
 import objectos.way.Css.MediaQuery;
 import objectos.way.Css.ValueType;
 

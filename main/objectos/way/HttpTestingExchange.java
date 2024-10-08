@@ -19,7 +19,7 @@ import java.nio.charset.Charset;
 import java.nio.file.Path;
 import java.util.Map;
 import objectos.lang.object.Check;
-import objectos.util.map.GrowableMap;
+import objectos.util.GrowableMap;
 
 final class HttpTestingExchange implements Http.TestingExchange {
 

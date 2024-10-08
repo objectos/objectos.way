@@ -16,7 +16,7 @@
 package objectos.way;
 
 import java.util.Map;
-import objectos.util.map.GrowableSequencedMap;
+import objectos.util.GrowableSequencedMap;
 
 public class CssPalette {
 

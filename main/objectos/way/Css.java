@@ -27,9 +27,9 @@ import java.util.Map;
 import java.util.Set;
 import objectos.lang.object.Check;
 import objectos.notes.NoteSink;
-import objectos.util.list.GrowableList;
-import objectos.util.map.GrowableMap;
-import objectos.util.map.GrowableSequencedMap;
+import objectos.util.GrowableList;
+import objectos.util.GrowableMap;
+import objectos.util.GrowableSequencedMap;
 
 /**
  * The <strong>Objectos CSS</strong> main class.

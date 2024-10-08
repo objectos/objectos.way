@@ -38,7 +38,7 @@ import objectos.io.FileVisitors;
 import objectos.lang.object.Check;
 import objectos.notes.NoOpNoteSink;
 import objectos.notes.NoteSink;
-import objectos.util.list.GrowableList;
+import objectos.util.GrowableList;
 import objectos.way.Http.Exchange;
 
 final class WebResources implements AutoCloseable, Web.Resources {

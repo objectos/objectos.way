@@ -24,7 +24,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.annotation.ElementType;
 import java.util.Set;
-import objectos.util.set.GrowableSet;
+import objectos.util.GrowableSet;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 

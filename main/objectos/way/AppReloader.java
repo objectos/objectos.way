@@ -35,8 +35,8 @@ import objectos.notes.NoOpNoteSink;
 import objectos.notes.Note1;
 import objectos.notes.Note2;
 import objectos.notes.NoteSink;
-import objectos.util.list.GrowableList;
-import objectos.util.map.GrowableMap;
+import objectos.util.GrowableList;
+import objectos.util.GrowableMap;
 import objectos.way.App.Reloader;
 
 final class AppReloader implements App.Reloader {

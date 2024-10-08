@@ -18,7 +18,7 @@ package objectos.way;
 import java.util.Arrays;
 import java.util.Map;
 import objectos.lang.object.Check;
-import objectos.util.map.GrowableMap;
+import objectos.util.GrowableMap;
 
 /**
  * The <strong>Objectos Util</strong> main class.

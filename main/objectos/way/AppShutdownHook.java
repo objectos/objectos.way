@@ -22,7 +22,7 @@ import objectos.notes.Note0;
 import objectos.notes.Note1;
 import objectos.notes.Note2;
 import objectos.notes.NoteSink;
-import objectos.util.list.GrowableList;
+import objectos.util.GrowableList;
 
 final class AppShutdownHook implements App.ShutdownHook {
 
