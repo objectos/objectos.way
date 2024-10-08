@@ -19,7 +19,6 @@ import java.io.IOException;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import objectos.lang.IterableOnce;
 import objectos.lang.object.Check;
 
 /**
@@ -126,7 +125,7 @@ public final class Html {
    */
   public interface Document {
 
-    IterableOnce<Node> nodes();
+    Lang.IterableOnce<Node> nodes();
 
   }
 
@@ -136,13 +135,13 @@ public final class Html {
 
   public non-sealed interface Element extends Node {
 
-    IterableOnce<Attribute> attributes();
+    Lang.IterableOnce<Attribute> attributes();
 
     boolean isVoid();
 
     String name();
 
-    IterableOnce<Node> nodes();
+    Lang.IterableOnce<Node> nodes();
 
     default boolean hasName(String name) {
       return name().equals(name);

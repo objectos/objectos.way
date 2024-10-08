@@ -17,6 +17,7 @@ package objectos.way;
 
 import java.io.IOException;
 import java.lang.annotation.Annotation;
+import java.util.Iterator;
 import java.util.function.Consumer;
 import objectos.notes.NoteSink;
 
@@ -41,6 +42,24 @@ public final class Lang {
      * @throws IOException if an I/O error occurs
      */
     void writeTo(Appendable dest) throws IOException;
+
+  }
+
+  /**
+   * An {@link Iterable} which can be traversed only once.
+   */
+  public interface IterableOnce<T> extends Iterable<T> {
+
+    /**
+     * Returns an iterator over elements of type T.
+     *
+     * @return an iterator
+     *
+     * @throws IllegalStateException
+     *         if this {@code Iterable} has already been traversed
+     */
+    @Override
+    Iterator<T> iterator();
 
   }
 

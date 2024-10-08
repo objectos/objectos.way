@@ -16,11 +16,10 @@
 package objectos.way;
 
 import java.util.Iterator;
-import objectos.lang.IterableOnce;
 
-final class HtmlElement implements Html.Element, IterableOnce<Html.Node>, Iterator<Html.Node> {
+final class HtmlElement implements Html.Element, Lang.IterableOnce<Html.Node>, Iterator<Html.Node> {
 
-  private class ThisAttributes implements IterableOnce<Html.Attribute>, Iterator<Html.Attribute> {
+  private class ThisAttributes implements Lang.IterableOnce<Html.Attribute>, Iterator<Html.Attribute> {
 
     @Override
     public final boolean hasNext() {
@@ -52,7 +51,7 @@ final class HtmlElement implements Html.Element, IterableOnce<Html.Node>, Iterat
   }
 
   @Override
-  public final IterableOnce<Html.Attribute> attributes() {
+  public final Lang.IterableOnce<Html.Attribute> attributes() {
     player.elementAttributes();
 
     if (attributes == null) {
@@ -90,7 +89,7 @@ final class HtmlElement implements Html.Element, IterableOnce<Html.Node>, Iterat
   }
 
   @Override
-  public final IterableOnce<Html.Node> nodes() {
+  public final Lang.IterableOnce<Html.Node> nodes() {
     player.elementNodes();
 
     return this;

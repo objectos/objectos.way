@@ -18,7 +18,6 @@
  */
 module objectos.way {
   exports objectos.io;
-  exports objectos.lang;
   exports objectos.notes.impl;
   exports objectos.way;
 

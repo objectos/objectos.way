@@ -16,9 +16,8 @@
 package objectos.way;
 
 import java.util.Iterator;
-import objectos.lang.IterableOnce;
 
-final class HtmlDocument implements Html.Document, IterableOnce<Html.Node>, Iterator<Html.Node> {
+final class HtmlDocument implements Html.Document, Lang.IterableOnce<Html.Node>, Iterator<Html.Node> {
 
   private final HtmlCompiler player;
 
@@ -27,7 +26,7 @@ final class HtmlDocument implements Html.Document, IterableOnce<Html.Node>, Iter
   }
 
   @Override
-  public final IterableOnce<Html.Node> nodes() {
+  public final Lang.IterableOnce<Html.Node> nodes() {
     player.documentIterable();
 
     return this;

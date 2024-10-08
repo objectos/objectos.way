@@ -18,7 +18,6 @@ package objectos.way;
 import static org.testng.Assert.assertEquals;
 
 import java.util.Iterator;
-import objectos.lang.IterableOnce;
 import org.testng.annotations.Test;
 
 public class HtmlCompilerTestProcessor {
@@ -81,7 +80,7 @@ public class HtmlCompilerTestProcessor {
     HtmlDocument document;
     document = compiler.compile();
 
-    IterableOnce<Html.Node> nodes;
+    Lang.IterableOnce<Html.Node> nodes;
     nodes = document.nodes();
 
     Iterator<Html.Node> nodesIter;
@@ -117,7 +116,7 @@ public class HtmlCompilerTestProcessor {
     out.append('<');
     out.append(elementName);
 
-    IterableOnce<Html.Attribute> attrs;
+    Lang.IterableOnce<Html.Attribute> attrs;
     attrs = element.attributes();
 
     Iterator<Html.Attribute> attrsIter;
@@ -137,7 +136,7 @@ public class HtmlCompilerTestProcessor {
       return;
     }
 
-    IterableOnce<Html.Node> nodes;
+    Lang.IterableOnce<Html.Node> nodes;
     nodes = element.nodes();
 
     Iterator<Html.Node> nodesIter;

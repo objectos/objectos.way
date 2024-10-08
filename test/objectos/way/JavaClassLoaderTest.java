@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.lang;
+package objectos.way;
 
 import static org.testng.Assert.assertTrue;
 
@@ -26,14 +26,14 @@ import java.nio.charset.StandardCharsets;
 import java.util.List;
 import org.testng.annotations.Test;
 
-public class ClassLoaderTest {
+public class JavaClassLoaderTest {
 
   @Test
   public void getResourceAsStream() throws IOException {
     ClassLoader loader;
     loader = ClassLoader.getSystemClassLoader();
 
-    try (InputStream stream = loader.getResourceAsStream("objectos/lang");
+    try (InputStream stream = loader.getResourceAsStream("objectos/way");
         Reader intermediate = new InputStreamReader(stream, StandardCharsets.UTF_8);
         BufferedReader reader = new BufferedReader(intermediate)) {
       List<String> lines = reader.lines().toList();
