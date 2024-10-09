@@ -18,8 +18,8 @@ package objectos.way;
 import java.lang.reflect.Array;
 import java.util.Collection;
 import java.util.Map;
+import java.util.Objects;
 import java.util.function.BiFunction;
-import objectos.lang.object.HashCode;
 import objectos.lang.object.ToString;
 import objectos.way.Util.UnmodifiableIterator;
 import objectos.way.Util.UnmodifiableView;
@@ -594,7 +594,7 @@ abstract class UtilArrayBasedMap<K, V> implements Map<K, V>, ToString.Formattabl
   }
 
   final int hashIndex(Object o) {
-    var hashCode = HashCode.of(o);
+    var hashCode = Objects.hashCode(o);
 
     var half = hashCode & hashMask;
 

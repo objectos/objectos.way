@@ -16,6 +16,7 @@
 package objectos.util;
 
 import java.util.Iterator;
+import java.util.Objects;
 
 final class Iterators {
 
@@ -58,7 +59,7 @@ final class Iterators {
 
         bn = b.next();
 
-        if (!objectos.lang.object.Equals.of(an, bn)) {
+        if (!Objects.equals(an, bn)) {
           return false;
         }
       }
