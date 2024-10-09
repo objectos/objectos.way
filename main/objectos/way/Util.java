@@ -482,4 +482,124 @@ public final class Util {
 
   }
 
+  /**
+   * An unmodifiable view of a map's keys, values or entries. All of the mutator
+   * methods throw an {@link UnsupportedOperationException} when invoked.
+   *
+   * @param <E> the type of the elements in this view
+   */
+  static abstract class UnmodifiableView<E> extends UtilBaseCollection<E> implements Set<E> {
+
+    protected UnmodifiableView() {}
+
+    /**
+     * This operation is not supported.
+     *
+     * <p>
+     * This method performs no operation other than throw an
+     * {@link UnsupportedOperationException}.
+     *
+     * @param e
+     *        ignored (the operation is not supported)
+     *
+     * @return this method does not return as it always throw an exception
+     *
+     * @throws UnsupportedOperationException
+     *         always
+     */
+    @Override
+    public final boolean add(E e) {
+      throw new UnsupportedOperationException();
+    }
+
+    /**
+     * This operation is not supported.
+     *
+     * <p>
+     * This method performs no operation other than throw an
+     * {@link UnsupportedOperationException}.
+     *
+     * @param c
+     *        ignored (the operation is not supported)
+     *
+     * @return this method does not return as it always throw an exception
+     *
+     * @throws UnsupportedOperationException
+     *         always
+     */
+    @Override
+    public final boolean addAll(Collection<? extends E> c) {
+      throw new UnsupportedOperationException();
+    }
+
+    /**
+     * This operation is not supported.
+     *
+     * <p>
+     * This method performs no operation other than throw an
+     * {@link UnsupportedOperationException}.
+     *
+     * @throws UnsupportedOperationException
+     *         always
+     */
+    @Override
+    public final void clear() {
+      throw new UnsupportedOperationException();
+    }
+
+    /**
+     * <p>
+     * Compares the specified object with this view for equality. Returns
+     * {@code true} if and only if
+     *
+     * <ul>
+     * <li>the specified object is also a {@link Collection};</li>
+     * <li>both collections have same size; and</li>
+     * <li>each element in this view is also present in the specified
+     * collection.</li>
+     * </ul>
+     *
+     * @param obj
+     *        the object to be compared for equality with this view
+     *
+     * @return {@code true} if the specified object is equal to this view
+     */
+    @Override
+    public final boolean equals(Object obj) {
+      return obj == this
+          || obj instanceof Collection<?> that && equals0(that);
+    }
+
+    @Override
+    public Object[] toArray() {
+      throw new UnsupportedOperationException("Implement me");
+    }
+
+    @Override
+    public <T> T[] toArray(T[] a) {
+      throw new UnsupportedOperationException("Implement me");
+    }
+
+    private boolean equals0(Collection<?> that) {
+      var size = size();
+
+      if (size != that.size()) {
+        return false;
+      }
+
+      var iter = iterator();
+
+      while (iter.hasNext()) {
+        var o = iter.next();
+
+        if (!that.contains(o)) {
+          return false;
+        }
+      }
+
+      return true;
+    }
+
+  }
+
 }

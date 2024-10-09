@@ -22,12 +22,12 @@ import java.util.function.BiFunction;
 import objectos.lang.object.Check;
 import objectos.lang.object.HashCode;
 import objectos.lang.object.ToString;
-import objectos.util.UnmodifiableView;
 import objectos.way.Util.UnmodifiableIterator;
+import objectos.way.Util.UnmodifiableView;
 
 abstract class UtilArrayBasedMap<K, V> implements Map<K, V>, ToString.Formattable {
 
-  private abstract class AbstractSet<E> extends UnmodifiableView<E> {
+  private abstract class AbstractSet<E> extends Util.UnmodifiableView<E> {
 
     final UtilArrayBasedMap<K, V> outer = UtilArrayBasedMap.this;
 

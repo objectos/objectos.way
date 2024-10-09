@@ -27,7 +27,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 import objectos.util.Hex;
 import objectos.util.Thing;
-import objectos.util.UnmodifiableView;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
@@ -252,7 +251,7 @@ public class UtilSequencedMapTest {
     assertEntrySet(set, (Object) array);
   }
 
-  private void assertEntrySet(UnmodifiableView<Entry<Thing, String>> set, Object... expected) {
+  private void assertEntrySet(Util.UnmodifiableView<Entry<Thing, String>> set, Object... expected) {
     var map = new LinkedHashMap<Thing, String>();
 
     for (var entry : set) {
@@ -400,7 +399,7 @@ public class UtilSequencedMapTest {
     assertKeySet(set, (Object) array);
   }
 
-  private void assertKeySet(UnmodifiableView<Thing> set, Object... expected) {
+  private void assertKeySet(Util.UnmodifiableView<Thing> set, Object... expected) {
     var map = new LinkedHashMap<Thing, String>();
 
     for (var key : set) {
