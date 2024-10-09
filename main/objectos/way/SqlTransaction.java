@@ -192,7 +192,7 @@ final class SqlTransaction implements Sql.Transaction {
     checkSql();
 
     if (arguments == null) {
-      arguments = Util.createGrowableList();
+      arguments = Util.createList();
     }
 
     arguments.add(value);
@@ -207,7 +207,7 @@ final class SqlTransaction implements Sql.Transaction {
     Object nullable = Sql.nullable(value, sqlType);
 
     if (arguments == null) {
-      arguments = Util.createGrowableList();
+      arguments = Util.createList();
     }
 
     arguments.add(nullable);
@@ -224,7 +224,7 @@ final class SqlTransaction implements Sql.Transaction {
     }
 
     if (batches == null) {
-      batches = Util.createGrowableList();
+      batches = Util.createList();
     }
 
     List<Object> batch;
@@ -262,7 +262,7 @@ final class SqlTransaction implements Sql.Transaction {
     checkQuery(mapper);
 
     List<T> list;
-    list = Util.createGrowableList();
+    list = Util.createList();
 
     if (hasArguments()) {
 

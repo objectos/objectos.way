@@ -258,7 +258,7 @@ public class UtilUnmodifiableListTest {
     assertSame(UtilUnmodifiableList.copyOf(ulIterable), ulIterable);
 
     // GrowableList
-    var growableList = Util.<Thing> createGrowableList();
+    var growableList = Util.<Thing> createList();
 
     for (var o : array) {
       growableList.add(o);

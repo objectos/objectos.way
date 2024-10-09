@@ -73,7 +73,7 @@ final class AppReloader implements App.Reloader {
 
   private Lang.ClassReader classReader;
 
-  private final List<Path> directories = Util.createGrowableList();
+  private final List<Path> directories = Util.createList();
 
   private final Util.GrowableMap<WatchKey, Path> keys = Util.createGrowableMap();
 

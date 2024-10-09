@@ -30,26 +30,6 @@ public final class Util {
 
   // types
 
-  /*
-  interface GrowableList<E> extends Iterable<E>, RandomAccess {
-
-    boolean add(E e);
-
-    void clear();
-
-    E get(int index);
-
-    boolean isEmpty();
-
-    int size();
-
-    void sort(Comparator<? super E> c);
-
-    UnmodifiableList<E> toUnmodifiableList();
-
-  }
-  */
-
   interface GrowableMap<K, V> extends Map<K, V> {
 
     UnmodifiableMap<K, V> toUnmodifiableMap();
@@ -103,8 +83,8 @@ public final class Util {
 
   private Util() {}
 
-  static <E> List<E> createGrowableList() {
-    return new UtilGrowableList<>();
+  static <E> List<E> createList() {
+    return new UtilList<>();
   }
 
   static <K, V> GrowableMap<K, V> createGrowableMap() {
@@ -317,7 +297,7 @@ public final class Util {
    *         separated by the specified {@code delimiter}
    */
   static String join(Collection<?> coll, String delimiter) {
-    if (coll instanceof UtilGrowableList list) {
+    if (coll instanceof UtilList list) {
       return list.join(delimiter);
     } else {
       throw new UnsupportedOperationException();
@@ -359,7 +339,7 @@ public final class Util {
   }
 
   static <E> List<E> toUnmodifiableList(List<E> list) {
-    if (list instanceof UtilGrowableList<E> growable) {
+    if (list instanceof UtilList<E> growable) {
       return growable.toUnmodifiableList();
     } else {
       throw new UnsupportedOperationException();

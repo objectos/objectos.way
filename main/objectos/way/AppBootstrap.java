@@ -131,7 +131,7 @@ abstract class AppBootstrap {
 
   final void addMessage(String message) {
     if (messages == null) {
-      messages = Util.createGrowableList();
+      messages = Util.createList();
     }
 
     messages.add(message);
@@ -186,7 +186,7 @@ abstract class AppBootstrap {
 
   private <T> App.Option<T> register(AppOption<T> option) {
     if (options == null) {
-      options = Util.createGrowableList();
+      options = Util.createList();
     }
 
     options.add(option);

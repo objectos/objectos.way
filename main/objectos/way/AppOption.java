@@ -78,7 +78,7 @@ final class AppOption<T> implements App.Option<T> {
 
   final void addValidator(Predicate<T> predicate, String reasonPhrase) {
     if (validators == null) {
-      validators = Util.createGrowableList();
+      validators = Util.createList();
     }
 
     validators.add(

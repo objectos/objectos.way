@@ -19,9 +19,9 @@ import java.util.List;
 
 class CssGeneratorAdapter {
 
-  private final List<Css.ClassNameFormat> classNameFormats = Util.createGrowableList();
+  private final List<Css.ClassNameFormat> classNameFormats = Util.createList();
 
-  private final List<Css.MediaQuery> mediaQueries = Util.createGrowableList();
+  private final List<Css.MediaQuery> mediaQueries = Util.createList();
 
   private boolean invalid;
 

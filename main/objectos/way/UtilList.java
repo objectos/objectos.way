@@ -57,22 +57,13 @@ import objectos.way.Util.UnmodifiableList;
  * @see UtilGrowableCollection
  * @see java.util.List
  */
-final class UtilGrowableList<E> extends UtilBaseCollection<E> implements List<E> {
+final class UtilList<E> extends UtilBaseCollection<E> implements List<E> {
 
   private Object[] data = Util.EMPTY_OBJECT_ARRAY;
 
   private int size = 0;
 
-  /**
-   * Creates a new {@code GrowableList} instance.
-   */
-  public UtilGrowableList() {}
-
-  UtilGrowableList(Object[] elements) {
-    data = elements;
-
-    size = elements.length;
-  }
+  UtilList() {}
 
   /**
    * Appends the specified element to this list or throws an exception if the
@@ -153,96 +144,6 @@ final class UtilGrowableList<E> extends UtilBaseCollection<E> implements List<E>
   @Override
   public final boolean addAll(int index, Collection<? extends E> c) {
     throw new UnsupportedOperationException();
-  }
-
-  /**
-   * Appends all of the elements in the specified iterable to the end of this
-   * list, in the order that they are returned by the specified iterable's
-   * iterator.
-   *
-   * <p>
-   * The behavior of this operation is undefined if the specified iterable is
-   * modified while the operation is in progress. (This implies that the
-   * behavior of this call is undefined if the specified iterable is this list,
-   * and this list is nonempty.)
-   *
-   * @param iterable
-   *        {@code Iterable} containing elements to be added to this list
-   *
-   * @return {@code true} if this list changed as a result of the call
-   */
-  public final boolean addAllIterable(Iterable<? extends E> iterable) {
-    Check.notNull(iterable, "iterable == null");
-
-    if (iterable instanceof Collection<? extends E> coll) {
-      return addAll0(coll, "iterable[");
-    }
-
-    else {
-      var iterator = iterable.iterator();
-
-      return addAll0Iterator(iterator, "iterable[");
-    }
-  }
-
-  /**
-   * Appends the specified element {@code e} to this list or throws a
-   * {@code NullPointerException} if the element is {@code null}.
-   *
-   * <p>
-   * If a {@code NullPointerException} is to be thrown, the {@code nullMessage}
-   * value is used as the exception's message.
-   *
-   * <p>
-   * Typical usage:
-   *
-   * <pre>
-   * list.addWithNullMessage(value, "value == null");</pre>
-   *
-   * @param e
-   *        an element to be added to this list (if it not null)
-   * @param nullMessage
-   *        the {@code NullPointerException} message
-   *
-   * @return {@code true}
-   */
-  public final boolean addWithNullMessage(E e, Object nullMessage) {
-    Check.notNull(e, nullMessage);
-
-    return add0(e);
-  }
-
-  /**
-   * Appends the specified element {@code e} to this list or throws a
-   * {@code NullPointerException} if the element is {@code null}.
-   *
-   * <p>
-   * If a {@code NullPointerException} is to be thrown, the concatenation of
-   * {@code nullMessageStart}, {@code index} and {@code nullMessageEnd} is
-   * used as the exception's message.
-   *
-   * <p>
-   * Typical usage:
-   *
-   * <pre>
-   * list.addWithNullMessage(element, "elements[", index, "] == null");</pre>
-   *
-   * @param e
-   *        an element to be added to this list (if it not null)
-   * @param nullMessageStart
-   *        the first part of the {@code NullPointerException} message
-   * @param index
-   *        the second part of the {@code NullPointerException} message
-   * @param nullMessageEnd
-   *        the third part of the {@code NullPointerException} message
-   *
-   * @return {@code true}
-   */
-  public final boolean addWithNullMessage(
-      E e, Object nullMessageStart, int index, Object nullMessageEnd) {
-    Check.notNull(e, nullMessageStart, index, nullMessageEnd);
-
-    return add0(e);
   }
 
   /**
@@ -713,32 +614,6 @@ final class UtilGrowableList<E> extends UtilBaseCollection<E> implements List<E>
   @SuppressWarnings("unchecked")
   final void sortImpl(Comparator<? super E> c) {
     Arrays.sort((E[]) data, 0, size, c);
-  }
-
-  /**
-   * Truncates this list to the specified size.
-   *
-   * <p>
-   * More formally, removes all of the elements from list having indices
-   * {@code i} such that {@code i >= newSize}. If specified size is equal to or
-   * greater than the current size then the list is left unmodified.
-   *
-   * @param newSize
-   *        the new size to set for this list
-   *
-   * @throws IllegalArgumentException
-   *         if {@code newSize < 0}
-   */
-  final void truncate(int newSize) {
-    Check.argument(newSize >= 0, "newSize must not be negative");
-
-    if (newSize >= size) {
-      return;
-    }
-
-    Arrays.fill(data, newSize, size, null);
-
-    size = newSize;
   }
 
   private boolean addAll0(Collection<? extends E> c, String nullMessageStart) {

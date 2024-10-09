@@ -25,7 +25,6 @@ import static org.testng.Assert.fail;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedList;
@@ -37,13 +36,13 @@ import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-public class UtilGrowableListTest {
+public class UtilListTest {
 
-  private UtilGrowableList<Thing> it;
+  private UtilList<Thing> it;
 
   @BeforeMethod
   public void _beforeMethod() {
-    it = new UtilGrowableList<>();
+    it = new UtilList<>();
   }
 
   @Test
@@ -178,97 +177,6 @@ public class UtilGrowableListTest {
   }
 
   @Test
-  public void addAllIterable() {
-    // empty
-    assertEquals(it.size(), 0);
-
-    assertFalse(it.addAllIterable(Thing.EMPTY_ITERABLE));
-    assertContents();
-
-    assertFalse(it.addAllIterable(Thing.EMPTY_LIST));
-    assertContents();
-
-    // one
-    var t1 = Thing.next();
-
-    it.addAllIterable(TestingArrayBackedIterable.of(t1));
-    assertContents(t1);
-
-    // two
-    var t2 = Thing.next();
-
-    it.addAllIterable(List.of(t2));
-    assertContents(t1, t2);
-
-    // many
-    var iterable = Thing.nextIterable();
-
-    it.addAllIterable(iterable);
-    assertContents(t1, t2, iterable);
-
-    var arrayList = Thing.nextArrayList();
-
-    it.addAllIterable(arrayList);
-    assertContents(t1, t2, iterable, arrayList);
-
-    // must reject null
-    var arrayWithNull = Thing.nextArray();
-
-    arrayWithNull[Thing.HALF] = null;
-
-    var iterWithNull = new TestingArrayBackedIterable<>(arrayWithNull);
-
-    try {
-      it.addAllIterable(iterWithNull);
-
-      Assert.fail("Must throw NullPointerException");
-    } catch (NullPointerException expected) {
-      assertEquals(expected.getMessage(), "iterable[50] == null");
-    }
-
-    var copy = Arrays.copyOf(arrayWithNull, Thing.HALF);
-
-    var sub = List.of(copy);
-
-    assertContents(t1, t2, iterable, arrayList, sub);
-  }
-
-  @Test
-  public void addWithNullMessage() {
-    try {
-      it.addWithNullMessage(null, "my message");
-
-      Assert.fail("NPE was expected");
-    } catch (NullPointerException expected) {
-      assertEquals(expected.getMessage(), "my message");
-    }
-
-    try {
-      it.addWithNullMessage(null, null);
-
-      Assert.fail("NPE was expected");
-    } catch (NullPointerException expected) {
-      assertEquals(expected.getMessage(), "null");
-    }
-
-    try {
-      it.addWithNullMessage(null, "[", 123, "]");
-
-      Assert.fail("NPE was expected");
-    } catch (NullPointerException expected) {
-      assertEquals(expected.getMessage(), "[123]");
-    }
-
-    try {
-      it.addWithNullMessage(null, null, 123, null);
-
-      Assert.fail("NPE was expected");
-    } catch (NullPointerException expected) {
-      assertEquals(expected.getMessage(), "null123null");
-    }
-  }
-
-  @Test
   public void clear() {
     assertEquals(it.size(), 0);
 
@@ -368,9 +276,9 @@ public class UtilGrowableListTest {
 
   @Test
   public void equals() {
-    var a = new UtilGrowableList<Thing>();
+    var a = new UtilList<Thing>();
 
-    var b = new UtilGrowableList<Thing>();
+    var b = new UtilList<Thing>();
 
     assertTrue(a.equals(b));
     assertTrue(b.equals(a));
@@ -390,7 +298,7 @@ public class UtilGrowableListTest {
 
     assertFalse(a.equals(b));
 
-    var c = new UtilGrowableList<Thing>();
+    var c = new UtilList<Thing>();
 
     c.addAll(arrayList);
 
@@ -852,7 +760,7 @@ public class UtilGrowableListTest {
     assertEquals(
         it.toString(),
 
-        "UtilGrowableList []"
+        "UtilList []"
     );
 
     var t1 = Thing.parse("7d58452fb817ae98b6d587fe747b87ae");
@@ -865,7 +773,7 @@ public class UtilGrowableListTest {
         it.toString(),
 
         """
-        UtilGrowableList [
+        UtilList [
           0 = Thing [
             value = 7d58452fb817ae98b6d587fe747b87ae
           ]
@@ -977,7 +885,7 @@ public class UtilGrowableListTest {
   public void toUnmodifiableList_withComparator() {
     var c = Comparator.<Integer> naturalOrder();
 
-    var it = new UtilGrowableList<Integer>();
+    var it = new UtilList<Integer>();
 
     var result = it.toUnmodifiableList(c);
 
@@ -1003,7 +911,7 @@ public class UtilGrowableListTest {
     assertEquals(result, UtilUnmodifiableList.of(1, 2, 3));
     assertEquals(it, UtilUnmodifiableList.of(3, 1, 2));
 
-    it = new UtilGrowableList<Integer>();
+    it = new UtilList<Integer>();
 
     for (int i = 0; i < Thing.MANY; i++) {
       var next = Next.intValue();
@@ -1026,54 +934,54 @@ public class UtilGrowableListTest {
   @Test
   public void truncate() {
     /*
-
+    
     // truncate is not public anymore
-
+    
     var t1 = Thing.next();
     var t2 = Thing.next();
     var t3 = Thing.next();
-
+    
     it.add(t1);
     it.add(t2);
     it.add(t3);
-
+    
     assertEquals(it.size(), 3);
-
+    
     it.truncate(4);
-
+    
     assertEquals(it.size(), 3);
     assertEquals(it.get(0), t1);
     assertEquals(it.get(1), t2);
     assertEquals(it.get(2), t3);
-
+    
     it.truncate(3);
-
+    
     assertEquals(it.size(), 3);
     assertEquals(it.get(0), t1);
     assertEquals(it.get(1), t2);
     assertEquals(it.get(2), t3);
-
+    
     it.truncate(2);
-
+    
     assertEquals(it.size(), 2);
     assertEquals(it.get(0), t1);
     assertEquals(it.get(1), t2);
-
+    
     it.truncate(1);
-
+    
     assertEquals(it.size(), 1);
     assertEquals(it.get(0), t1);
-
+    
     it.truncate(0);
-
+    
     assertEquals(it.size(), 0);
-
+    
     try {
       it.truncate(-1);
-
+    
       Assert.fail();
     } catch (IllegalArgumentException expected) {
-
+    
     }
     */
   }

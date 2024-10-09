@@ -144,7 +144,7 @@ final class CssConfig {
 
   public final void baseLayer(String contents) {
     if (baseLayer == null) {
-      baseLayer = Util.createGrowableList();
+      baseLayer = Util.createList();
     }
 
     baseLayer.add(contents);
@@ -154,7 +154,7 @@ final class CssConfig {
     int index = 0;
 
     List<Css.Breakpoint> builder;
-    builder = Util.createGrowableList();
+    builder = Util.createList();
 
     for (var entry : properties) {
       String name;

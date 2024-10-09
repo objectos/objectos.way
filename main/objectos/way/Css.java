@@ -122,7 +122,7 @@ public final class Css {
    */
   static abstract class Context {
 
-    final List<Rule> rules = Util.createGrowableList();
+    final List<Rule> rules = Util.createList();
 
     Context() {
     }
@@ -1012,7 +1012,7 @@ public final class Css {
     name = "";
 
     List<String> definition;
-    definition = Util.createGrowableList();
+    definition = Util.createList();
 
     String[] lines;
     lines = text.split("\n");

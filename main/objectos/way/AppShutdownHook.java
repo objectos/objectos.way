@@ -25,7 +25,7 @@ import objectos.notes.NoteSink;
 
 final class AppShutdownHook implements App.ShutdownHook {
 
-  private final List<Object> hooks = Util.createGrowableList();
+  private final List<Object> hooks = Util.createList();
 
   private final Job job;
 

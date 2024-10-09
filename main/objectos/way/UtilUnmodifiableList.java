@@ -32,9 +32,7 @@ import objectos.util.UnmodifiableIterator;
  * @param <E>
  *        type of the elements in this list
  */
-final class UtilUnmodifiableList<E>
-    extends UtilUnmodifiableCollection<E>
-    implements Util.UnmodifiableList<E> {
+final class UtilUnmodifiableList<E> extends UtilUnmodifiableCollection<E> implements Util.UnmodifiableList<E> {
 
   static final UtilUnmodifiableList<Object> EMPTY = new UtilUnmodifiableList<Object>(
       Util.EMPTY_OBJECT_ARRAY
@@ -124,7 +122,7 @@ final class UtilUnmodifiableList<E>
       return (UtilUnmodifiableList<E>) elements;
     }
 
-    if (elements instanceof UtilGrowableList<? extends E> list) {
+    if (elements instanceof UtilList<? extends E> list) {
       return (UtilUnmodifiableList<E>) list.toUnmodifiableList();
     }
 
@@ -260,7 +258,7 @@ final class UtilUnmodifiableList<E>
   }
 
   private static <E> UtilUnmodifiableList<E> copyOf0(Iterator<? extends E> iterator) {
-    var list = new UtilGrowableList<E>();
+    var list = new UtilList<E>();
 
     list.addAll(iterator);
 

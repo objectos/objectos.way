@@ -50,9 +50,9 @@ final class WebResources implements AutoCloseable, Web.Resources {
 
     final String defaultContentType = "application/octet-stream";
 
-    final List<Path> directories = Util.createGrowableList();
+    final List<Path> directories = Util.createList();
 
-    final List<FileBytes> files = Util.createGrowableList();
+    final List<FileBytes> files = Util.createList();
 
     NoteSink noteSink = NoOpNoteSink.of();
 
