@@ -20,6 +20,7 @@ import java.util.Deque;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.SequencedMap;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.function.Consumer;
@@ -140,7 +141,7 @@ final class CssGenerator extends CssGeneratorAdapter implements Css.Generator, C
 
   private final Deque<Css.Repository> repositories = new ArrayDeque<>(4);
 
-  private final Util.GrowableSequencedMap<String, Css.Rule> rules = Util.createGrowableSequencedMap();
+  private final SequencedMap<String, Css.Rule> rules = Util.createSequencedMap();
 
   CssGenerator(CssConfig config) {
     this.adapter = this;

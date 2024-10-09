@@ -65,7 +65,7 @@ final class CssConfig {
 
   boolean skipReset;
 
-  private final Map<String, Css.StaticUtility> staticUtilities = Util.createGrowableMap();
+  private final Map<String, Css.StaticUtility> staticUtilities = Util.createMap();
 
   private Map<String, Css.Variant> variants;
 
@@ -82,7 +82,7 @@ final class CssConfig {
 
   public final void addComponent(String name, String definition) {
     if (components == null) {
-      components = Util.createGrowableMap();
+      components = Util.createMap();
     }
 
     String existing;
@@ -121,7 +121,7 @@ final class CssConfig {
 
   public final void addVariants(CssProperties props) {
     if (variants == null) {
-      variants = Util.createGrowableMap();
+      variants = Util.createMap();
     }
 
     for (Map.Entry<String, String> entry : props) {
@@ -240,7 +240,7 @@ final class CssConfig {
 
   private Map<String, Css.Variant> variants() {
     if (variants == null) {
-      variants = Util.createGrowableMap();
+      variants = Util.createMap();
     }
 
     if (!variantsInitialized) {
@@ -643,7 +643,7 @@ final class CssConfig {
 
             () -> {
               Map<String, String> maxWidth;
-              maxWidth = Util.createGrowableMap();
+              maxWidth = Util.createMap();
 
               maxWidth.putAll(spacing);
 
@@ -2387,7 +2387,7 @@ final class CssConfig {
     }
 
     Map<String, String> values;
-    values = Util.createGrowableMap();
+    values = Util.createMap();
 
     values.putAll(properties);
 

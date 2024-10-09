@@ -19,6 +19,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.SequencedMap;
 import java.util.Set;
 import objectos.lang.object.Check;
 
@@ -26,18 +27,6 @@ import objectos.lang.object.Check;
  * The <strong>Objectos Util</strong> main class.
  */
 public final class Util {
-
-  // types
-
-  interface GrowableSequencedMap<K, V> extends Map<K, V> {
-
-    UnmodifiableSequencedMap<K, V> toUnmodifiableMap();
-
-  }
-
-  interface UnmodifiableMap<K, V> extends Map<K, V> {}
-
-  interface UnmodifiableSequencedMap<K, V> extends UnmodifiableMap<K, V> {}
 
   /**
    * An empty zero-length {@code byte} array instance.
@@ -73,12 +62,12 @@ public final class Util {
     return new UtilList<>();
   }
 
-  static <K, V> Map<K, V> createGrowableMap() {
-    return new UtilGrowableMap<>();
+  static <K, V> Map<K, V> createMap() {
+    return new UtilMap<>();
   }
 
-  static <K, V> GrowableSequencedMap<K, V> createGrowableSequencedMap() {
-    return new UtilGrowableSequencedMap<>();
+  static <K, V> SequencedMap<K, V> createSequencedMap() {
+    return new UtilSequencedMap<>();
   }
 
   static <E> Set<E> createSet() {
@@ -333,7 +322,7 @@ public final class Util {
   }
 
   static <K, V> Map<K, V> toUnmodifiableMap(Map<K, V> map) {
-    if (map instanceof UtilGrowableMap<K, V> impl) {
+    if (map instanceof UtilMap<K, V> impl) {
       return impl.toUnmodifiableMap();
     } else {
       throw new UnsupportedOperationException();
@@ -431,7 +420,7 @@ public final class Util {
 
   static Map<String, String> parsePropertiesMap(String string) {
     Map<String, String> builder;
-    builder = createGrowableMap();
+    builder = createMap();
 
     String[] lines;
     lines = string.split("\n");

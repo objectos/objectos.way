@@ -76,7 +76,7 @@ final class AppReloader implements App.Reloader {
 
   private final List<Path> directories = Util.createList();
 
-  private final Map<WatchKey, Path> keys = Util.createGrowableMap();
+  private final Map<WatchKey, Path> keys = Util.createMap();
 
   private final String binaryName;
 

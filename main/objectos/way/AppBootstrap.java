@@ -156,7 +156,7 @@ abstract class AppBootstrap {
     }
 
     Map<String, AppOption<?>> optionsByName;
-    optionsByName = Util.createGrowableMap();
+    optionsByName = Util.createMap();
 
     for (AppOption<?> o : options) {
       o.acceptByName(optionsByName);

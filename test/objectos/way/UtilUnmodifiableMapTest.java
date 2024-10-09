@@ -318,7 +318,7 @@ public class UtilUnmodifiableMapTest extends UtilUnmodifiableMapTestAdapter {
 
   @Override
   final UtilUnmodifiableMap<Thing, String> mapX(Thing[] many) {
-    var manyMap = new UtilGrowableMap<Thing, String>();
+    var manyMap = new UtilMap<Thing, String>();
 
     for (var thing : many) {
       thing.putDec(manyMap);

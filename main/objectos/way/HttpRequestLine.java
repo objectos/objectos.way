@@ -117,7 +117,7 @@ non-sealed class HttpRequestLine extends HttpSocketInput implements Http.Request
   private Map<String, Object> $queryParams() {
     if (!queryParamsReady) {
       if (queryParams == null) {
-        queryParams = Util.createGrowableMap();
+        queryParams = Util.createMap();
       }
 
       makeQueryParams(queryParams, this::decode);
@@ -155,7 +155,7 @@ non-sealed class HttpRequestLine extends HttpSocketInput implements Http.Request
 
   private Map<String, Object> $rawQueryParams() {
     Map<String, Object> map;
-    map = Util.createGrowableMap();
+    map = Util.createMap();
 
     makeQueryParams(map, Function.identity());
 
@@ -591,7 +591,7 @@ non-sealed class HttpRequestLine extends HttpSocketInput implements Http.Request
 
   private void variable(String name, String value) {
     if (pathParams == null) {
-      pathParams = Util.createGrowableMap();
+      pathParams = Util.createMap();
     }
 
     pathParams.put(name, value);

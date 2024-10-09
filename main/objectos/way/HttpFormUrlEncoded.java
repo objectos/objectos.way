@@ -55,7 +55,7 @@ final class HttpFormUrlEncoded implements Http.FormUrlEncoded {
 
   private static HttpFormUrlEncoded parse0(InputStream in) throws IOException {
     Map<String, String> map;
-    map = Util.createGrowableMap();
+    map = Util.createMap();
 
     StringBuilder sb;
     sb = new StringBuilder();

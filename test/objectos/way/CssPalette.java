@@ -16,14 +16,15 @@
 package objectos.way;
 
 import java.util.Map;
+import java.util.SequencedMap;
 
 public class CssPalette {
 
   static final Map<String, String> DEFAULT;
 
   static {
-    Util.GrowableSequencedMap<String, String> colors;
-    colors = Util.createGrowableSequencedMap();
+    SequencedMap<String, String> colors;
+    colors = Util.createSequencedMap();
 
     colors.put("inherit", "inherit");
     colors.put("current", "currentColor");
@@ -296,7 +297,7 @@ public class CssPalette {
     colors.put("rose-900", "#881337");
     colors.put("rose-950", "#4c0519");
 
-    DEFAULT = colors.toUnmodifiableMap();
+    DEFAULT = Util.toUnmodifiableMap(colors);
   }
 
   private final Map<String, String> colors;

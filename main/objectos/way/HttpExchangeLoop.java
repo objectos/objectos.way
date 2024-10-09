@@ -271,7 +271,7 @@ final class HttpExchangeLoop extends HttpRequestBody implements Http.Exchange, C
 
   private Map<String, Object> attributes() {
     if (attributes == null) {
-      attributes = Util.createGrowableMap();
+      attributes = Util.createMap();
     }
 
     return attributes;

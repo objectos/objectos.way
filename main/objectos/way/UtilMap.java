@@ -27,7 +27,7 @@ import objectos.lang.object.Check;
  * @param <K> type of the keys in this map
  * @param <V> type of the values in this map
  */
-sealed class UtilGrowableMap<K, V> extends UtilArrayBasedMap<K, V> permits UtilGrowableSequencedMap {
+sealed class UtilMap<K, V> extends UtilArrayBasedMap<K, V> permits UtilSequencedMap {
 
   private static final float DEFAULT_LOAD_FACTOR = 0.75F;
 
@@ -42,7 +42,7 @@ sealed class UtilGrowableMap<K, V> extends UtilArrayBasedMap<K, V> permits UtilG
   /**
    * Creates a new {@code GrowableMap} instance.
    */
-  public UtilGrowableMap() {}
+  public UtilMap() {}
 
   /**
    * Removes all of the mappings in this map.

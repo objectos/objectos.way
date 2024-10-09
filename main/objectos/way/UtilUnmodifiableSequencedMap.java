@@ -15,6 +15,7 @@
  */
 package objectos.way;
 
+import java.util.SequencedMap;
 import objectos.util.UnmodifiableIterator;
 
 /**
@@ -23,9 +24,7 @@ import objectos.util.UnmodifiableIterator;
  * @param <K> type of the keys in this map
  * @param <V> type of the values in this map
  */
-final class UtilUnmodifiableSequencedMap<K, V>
-    extends UtilUnmodifiableMap<K, V>
-    implements Util.UnmodifiableSequencedMap<K, V> {
+final class UtilUnmodifiableSequencedMap<K, V> extends UtilUnmodifiableMap<K, V> implements SequencedMap<K, V> {
 
   private static final UtilUnmodifiableSequencedMap<Object, Object> EMPTY
       = new UtilUnmodifiableSequencedMap<Object, Object>(
@@ -47,6 +46,11 @@ final class UtilUnmodifiableSequencedMap<K, V>
   @SuppressWarnings("unchecked")
   static <K, V> UtilUnmodifiableSequencedMap<K, V> orderedEmpty() {
     return (UtilUnmodifiableSequencedMap<K, V>) EMPTY;
+  }
+
+  @Override
+  public final SequencedMap<K, V> reversed() {
+    throw new UnsupportedOperationException();
   }
 
   @Override

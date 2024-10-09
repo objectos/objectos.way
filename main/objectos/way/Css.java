@@ -24,6 +24,7 @@ import java.nio.file.Path;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.SequencedMap;
 import java.util.Set;
 import objectos.lang.object.Check;
 import objectos.notes.NoteSink;
@@ -1005,8 +1006,8 @@ public final class Css {
   // private stuff
 
   static Map<String, String> parseComponents(String text) {
-    Util.GrowableSequencedMap<String, String> map;
-    map = Util.createGrowableSequencedMap();
+    SequencedMap<String, String> map;
+    map = Util.createSequencedMap();
 
     String name;
     name = "";
@@ -1056,7 +1057,7 @@ public final class Css {
       map.put(name, value);
     }
 
-    return map.toUnmodifiableMap();
+    return Util.toUnmodifiableMap(map);
   }
 
   static CssProperties parseProperties(String text) {
@@ -1094,7 +1095,7 @@ public final class Css {
 
   static Map<String, CssProperties> parseTable(String text) {
     Map<String, CssProperties> map;
-    map = Util.createGrowableMap();
+    map = Util.createMap();
 
     String[] lines;
     lines = text.split("\n");

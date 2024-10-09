@@ -33,7 +33,7 @@ import objectos.lang.object.Check;
  * @param <K> type of the keys in this map
  * @param <V> type of the values in this map
  */
-class UtilUnmodifiableMap<K, V> extends UtilArrayBasedMap<K, V> implements Util.UnmodifiableMap<K, V> {
+class UtilUnmodifiableMap<K, V> extends UtilArrayBasedMap<K, V> {
 
   private static final UtilUnmodifiableMap<Object, Object> EMPTY
       = new UtilUnmodifiableMap<Object, Object>();
@@ -57,7 +57,7 @@ class UtilUnmodifiableMap<K, V> extends UtilArrayBasedMap<K, V> implements Util.
     Check.notNull(key, "key == null");
     Check.notNull(value, "value == null");
 
-    var map = new UtilGrowableMap<K, V>();
+    var map = new UtilMap<K, V>();
 
     map.put(key, value);
 
@@ -70,7 +70,7 @@ class UtilUnmodifiableMap<K, V> extends UtilArrayBasedMap<K, V> implements Util.
     Check.notNull(k2, "k2 == null");
     Check.notNull(v2, "v2 == null");
 
-    var map = new UtilGrowableMap<K, V>();
+    var map = new UtilMap<K, V>();
 
     map.put(k1, v1);
     map.put(k2, v2);
@@ -86,7 +86,7 @@ class UtilUnmodifiableMap<K, V> extends UtilArrayBasedMap<K, V> implements Util.
     Check.notNull(k3, "k3 == null");
     Check.notNull(v3, "v3 == null");
 
-    var map = new UtilGrowableMap<K, V>();
+    var map = new UtilMap<K, V>();
 
     map.put(k1, v1);
     map.put(k2, v2);

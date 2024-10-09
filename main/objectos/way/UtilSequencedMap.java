@@ -16,22 +16,23 @@
 package objectos.way;
 
 import java.util.Arrays;
+import java.util.SequencedMap;
 import objectos.util.UnmodifiableIterator;
 
 /**
- * A {@link UtilGrowableMap} variant with a predictable iteration order.
+ * A {@link UtilMap} variant with a predictable iteration order.
  *
  * @param <K> type of the keys in this map
  * @param <V> type of the values in this map
  */
-final class UtilGrowableSequencedMap<K, V> extends UtilGrowableMap<K, V> implements Util.GrowableSequencedMap<K, V> {
+final class UtilSequencedMap<K, V> extends UtilMap<K, V> implements SequencedMap<K, V> {
 
   private Object[] iteratorArray;
 
   /**
    * Creates a new {@code MutableOrderedMap} instance.
    */
-  public UtilGrowableSequencedMap() {
+  public UtilSequencedMap() {
     iteratorArray = Util.EMPTY_OBJECT_ARRAY;
   }
 
@@ -43,6 +44,11 @@ final class UtilGrowableSequencedMap<K, V> extends UtilGrowableMap<K, V> impleme
     super.clear();
 
     Arrays.fill(iteratorArray, null);
+  }
+
+  @Override
+  public final SequencedMap<K, V> reversed() {
+    throw new UnsupportedOperationException();
   }
 
   /**

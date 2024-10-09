@@ -54,7 +54,7 @@ final class HttpTestingExchange implements Http.TestingExchange {
     Check.notNull(value, "value == null");
 
     if (attributes == null) {
-      attributes = Util.createGrowableMap();
+      attributes = Util.createMap();
     }
 
     attributes.put(key, value);

@@ -80,7 +80,7 @@ final class HttpHeaderName implements Http.HeaderName {
     STANDARD_NAMES = builder.buildNames();
 
     Map<String, HttpHeaderName> findByName;
-    findByName = Util.createGrowableMap();
+    findByName = Util.createMap();
 
     for (HttpHeaderName value : STANDARD_NAMES) {
       findByName.put(value.capitalized, value);

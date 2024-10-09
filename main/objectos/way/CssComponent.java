@@ -19,6 +19,7 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.SequencedMap;
 import java.util.TreeMap;
 import objectos.way.Css.ClassNameFormat;
 import objectos.way.Css.Context;
@@ -206,7 +207,7 @@ final class CssComponent implements Repository, Rule {
 
   private final String className;
 
-  private final Util.GrowableSequencedMap<String, Rule> rules = Util.createGrowableSequencedMap();
+  private final SequencedMap<String, Rule> rules = Util.createSequencedMap();
 
   CssComponent(String className) {
     this.className = className;
