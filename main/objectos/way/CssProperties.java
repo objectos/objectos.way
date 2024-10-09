@@ -85,7 +85,7 @@ final class CssProperties implements Iterable<Map.Entry<String, String>> {
   }
 
   public final Map<String, String> toMap(Map<String, String> more) {
-    Util.GrowableMap<String, String> map;
+    Map<String, String> map;
     map = Util.createGrowableMap();
 
     for (Map.Entry<String, String> entry : values) {
@@ -98,11 +98,11 @@ final class CssProperties implements Iterable<Map.Entry<String, String>> {
 
     map.putAll(more);
 
-    return map.toUnmodifiableMap();
+    return Util.toUnmodifiableMap(map);
   }
 
   public final Map<String, String> toMap(CssProperties extension) {
-    Util.GrowableMap<String, String> map;
+    Map<String, String> map;
     map = Util.createGrowableMap();
 
     for (Map.Entry<String, String> entry : values) {
@@ -121,7 +121,7 @@ final class CssProperties implements Iterable<Map.Entry<String, String>> {
       );
     }
 
-    return map.toUnmodifiableMap();
+    return Util.toUnmodifiableMap(map);
   }
 
   public final int size() {

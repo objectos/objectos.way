@@ -97,7 +97,7 @@ final class HttpExchangeLoop extends HttpRequestBody implements Http.Exchange, C
 
   private static final int CHUNKED = 1 << 6;
 
-  private Util.GrowableMap<String, Object> attributes;
+  private Map<String, Object> attributes;
 
   private int bitset;
 

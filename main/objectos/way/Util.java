@@ -29,15 +29,8 @@ public final class Util {
 
   // types
 
-  interface GrowableMap<K, V> extends Map<K, V> {
+  interface GrowableSequencedMap<K, V> extends Map<K, V> {
 
-    UnmodifiableMap<K, V> toUnmodifiableMap();
-
-  }
-
-  interface GrowableSequencedMap<K, V> extends GrowableMap<K, V> {
-
-    @Override
     UnmodifiableSequencedMap<K, V> toUnmodifiableMap();
 
   }
@@ -45,8 +38,6 @@ public final class Util {
   interface UnmodifiableMap<K, V> extends Map<K, V> {}
 
   interface UnmodifiableSequencedMap<K, V> extends UnmodifiableMap<K, V> {}
-
-  interface UnmodifiableSet<E> extends Set<E> {}
 
   /**
    * An empty zero-length {@code byte} array instance.
@@ -82,7 +73,7 @@ public final class Util {
     return new UtilList<>();
   }
 
-  static <K, V> GrowableMap<K, V> createGrowableMap() {
+  static <K, V> Map<K, V> createGrowableMap() {
     return new UtilGrowableMap<>();
   }
 
@@ -334,8 +325,16 @@ public final class Util {
   }
 
   static <E> List<E> toUnmodifiableList(List<E> list) {
-    if (list instanceof UtilList<E> growable) {
-      return growable.toUnmodifiableList();
+    if (list instanceof UtilList<E> impl) {
+      return impl.toUnmodifiableList();
+    } else {
+      throw new UnsupportedOperationException();
+    }
+  }
+
+  static <K, V> Map<K, V> toUnmodifiableMap(Map<K, V> map) {
+    if (map instanceof UtilGrowableMap<K, V> impl) {
+      return impl.toUnmodifiableMap();
     } else {
       throw new UnsupportedOperationException();
     }
@@ -431,7 +430,7 @@ public final class Util {
   }
 
   static Map<String, String> parsePropertiesMap(String string) {
-    GrowableMap<String, String> builder;
+    Map<String, String> builder;
     builder = createGrowableMap();
 
     String[] lines;
@@ -460,7 +459,7 @@ public final class Util {
       builder.put(key.trim(), value.trim());
     }
 
-    return builder.toUnmodifiableMap();
+    return toUnmodifiableMap(builder);
   }
 
 }

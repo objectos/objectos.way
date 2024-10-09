@@ -25,7 +25,6 @@ import java.util.Set;
 import java.util.function.Function;
 import objectos.lang.object.Check;
 import objectos.way.HttpExchangeLoop.ParseStatus;
-import objectos.way.Util.GrowableMap;
 
 non-sealed class HttpRequestLine extends HttpSocketInput implements Http.Request.Target {
 
@@ -38,9 +37,9 @@ non-sealed class HttpRequestLine extends HttpSocketInput implements Http.Request
 
   private int pathLimit;
 
-  Util.GrowableMap<String, String> pathParams;
+  Map<String, String> pathParams;
 
-  private Util.GrowableMap<String, Object> queryParams;
+  private Map<String, Object> queryParams;
 
   private boolean queryParamsReady;
 
@@ -109,13 +108,13 @@ non-sealed class HttpRequestLine extends HttpSocketInput implements Http.Request
 
   @Override
   public final Set<String> queryParamNames() {
-    GrowableMap<String, Object> params;
+    Map<String, Object> params;
     params = $queryParams();
 
     return params.keySet();
   }
 
-  private GrowableMap<String, Object> $queryParams() {
+  private Map<String, Object> $queryParams() {
     if (!queryParamsReady) {
       if (queryParams == null) {
         queryParams = Util.createGrowableMap();
@@ -155,7 +154,7 @@ non-sealed class HttpRequestLine extends HttpSocketInput implements Http.Request
   }
 
   private Map<String, Object> $rawQueryParams() {
-    Util.GrowableMap<String, Object> map;
+    Map<String, Object> map;
     map = Util.createGrowableMap();
 
     makeQueryParams(map, Function.identity());

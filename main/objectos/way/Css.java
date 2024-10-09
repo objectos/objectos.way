@@ -1093,7 +1093,7 @@ public final class Css {
   }
 
   static Map<String, CssProperties> parseTable(String text) {
-    Util.GrowableMap<String, CssProperties> map;
+    Map<String, CssProperties> map;
     map = Util.createGrowableMap();
 
     String[] lines;
@@ -1156,7 +1156,7 @@ public final class Css {
       map.put(className, props.build());
     }
 
-    return map.toUnmodifiableMap();
+    return Util.toUnmodifiableMap(map);
   }
 
   static Map<String, String> merge(String text, Map<String, String> more) {

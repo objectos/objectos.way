@@ -17,15 +17,16 @@ package objectos.way;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Map;
 import java.util.Set;
 
 final class HttpFormUrlEncoded implements Http.FormUrlEncoded {
 
   private static final String EMPTY = "";
 
-  private final Util.UnmodifiableMap<String, String> map;
+  private final Map<String, String> map;
 
-  private HttpFormUrlEncoded(Util.UnmodifiableMap<String, String> map) {
+  private HttpFormUrlEncoded(Map<String, String> map) {
     this.map = map;
   }
 
@@ -53,7 +54,7 @@ final class HttpFormUrlEncoded implements Http.FormUrlEncoded {
   }
 
   private static HttpFormUrlEncoded parse0(InputStream in) throws IOException {
-    Util.GrowableMap<String, String> map;
+    Map<String, String> map;
     map = Util.createGrowableMap();
 
     StringBuilder sb;
@@ -140,7 +141,7 @@ final class HttpFormUrlEncoded implements Http.FormUrlEncoded {
     }
 
     return new HttpFormUrlEncoded(
-        map.toUnmodifiableMap()
+        Util.toUnmodifiableMap(map)
     );
   }
 

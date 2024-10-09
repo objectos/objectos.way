@@ -47,7 +47,7 @@ final class CssConfig {
 
   private final Set<Class<?>> classes;
 
-  private Util.GrowableMap<String, String> components;
+  private Map<String, String> components;
 
   private Set<Path> directories;
 
@@ -65,9 +65,9 @@ final class CssConfig {
 
   boolean skipReset;
 
-  private final Util.GrowableMap<String, Css.StaticUtility> staticUtilities = Util.createGrowableMap();
+  private final Map<String, Css.StaticUtility> staticUtilities = Util.createGrowableMap();
 
-  private Util.GrowableMap<String, Css.Variant> variants;
+  private Map<String, Css.Variant> variants;
 
   private boolean variantsInitialized;
 
@@ -642,7 +642,7 @@ final class CssConfig {
             Css.Key.MAX_WIDTH,
 
             () -> {
-              Util.GrowableMap<String, String> maxWidth;
+              Map<String, String> maxWidth;
               maxWidth = Util.createGrowableMap();
 
               maxWidth.putAll(spacing);
@@ -2386,7 +2386,7 @@ final class CssConfig {
       return properties;
     }
 
-    Util.GrowableMap<String, String> values;
+    Map<String, String> values;
     values = Util.createGrowableMap();
 
     values.putAll(properties);
@@ -2395,7 +2395,7 @@ final class CssConfig {
       values.put(entry.getKey(), entry.getValue());
     }
 
-    return values.toUnmodifiableMap();
+    return Util.toUnmodifiableMap(values);
   }
 
   public void specPrintMultiPrefix() {

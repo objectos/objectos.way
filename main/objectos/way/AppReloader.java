@@ -30,6 +30,7 @@ import java.nio.file.WatchKey;
 import java.nio.file.WatchService;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.List;
+import java.util.Map;
 import objectos.notes.NoOpNoteSink;
 import objectos.notes.Note1;
 import objectos.notes.Note2;
@@ -75,7 +76,7 @@ final class AppReloader implements App.Reloader {
 
   private final List<Path> directories = Util.createList();
 
-  private final Util.GrowableMap<WatchKey, Path> keys = Util.createGrowableMap();
+  private final Map<WatchKey, Path> keys = Util.createGrowableMap();
 
   private final String binaryName;
 

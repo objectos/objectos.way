@@ -17,11 +17,12 @@ package objectos.way;
 
 import java.nio.charset.Charset;
 import java.nio.file.Path;
+import java.util.Map;
 import objectos.lang.object.Check;
 
 final class HttpTestingExchange implements Http.TestingExchange {
 
-  Util.GrowableMap<Object, Object> attributes;
+  Map<Object, Object> attributes;
 
   Http.Request.Target requestTarget;
 
