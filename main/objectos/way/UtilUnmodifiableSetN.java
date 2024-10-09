@@ -16,7 +16,6 @@
 package objectos.way;
 
 import java.util.Set;
-import objectos.util.UnmodifiableIterator;
 
 final class UtilUnmodifiableSetN<E> extends UtilUnmodifiableSet<E> {
   private final Object[] array;
@@ -82,7 +81,7 @@ final class UtilUnmodifiableSetN<E> extends UtilUnmodifiableSet<E> {
    * @return an iterator over the elements in this set
    */
   @Override
-  public final UnmodifiableIterator<E> iterator() {
+  public final Util.UnmodifiableIterator<E> iterator() {
     return new UtilSets.SetIterator<>(array);
   }
 

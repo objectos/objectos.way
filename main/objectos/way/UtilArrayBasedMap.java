@@ -22,8 +22,8 @@ import java.util.function.BiFunction;
 import objectos.lang.object.Check;
 import objectos.lang.object.HashCode;
 import objectos.lang.object.ToString;
-import objectos.util.UnmodifiableIterator;
 import objectos.util.UnmodifiableView;
+import objectos.way.Util.UnmodifiableIterator;
 
 abstract class UtilArrayBasedMap<K, V> implements Map<K, V>, ToString.Formattable {
 
@@ -84,7 +84,7 @@ abstract class UtilArrayBasedMap<K, V> implements Map<K, V>, ToString.Formattabl
     }
 
     @Override
-    public final UnmodifiableIterator<Entry<K, V>> iterator() {
+    public final Util.UnmodifiableIterator<Entry<K, V>> iterator() {
       return outer.entryIterator();
     }
 
@@ -98,7 +98,7 @@ abstract class UtilArrayBasedMap<K, V> implements Map<K, V>, ToString.Formattabl
     }
 
     @Override
-    public final UnmodifiableIterator<K> iterator() {
+    public final Util.UnmodifiableIterator<K> iterator() {
       return outer.keyIterator();
     }
 
@@ -112,7 +112,7 @@ abstract class UtilArrayBasedMap<K, V> implements Map<K, V>, ToString.Formattabl
     }
 
     @Override
-    public final UnmodifiableIterator<V> iterator() {
+    public final Util.UnmodifiableIterator<V> iterator() {
       return outer.valueIterator();
     }
 

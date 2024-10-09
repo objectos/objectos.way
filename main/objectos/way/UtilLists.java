@@ -21,7 +21,6 @@ import java.util.NoSuchElementException;
 import java.util.Objects;
 import objectos.lang.object.Check;
 import objectos.lang.object.ToString;
-import objectos.util.UnmodifiableIterator;
 
 /**
  * This class provides {@code static} utility methods for {@link java.util.List}
@@ -29,7 +28,7 @@ import objectos.util.UnmodifiableIterator;
  */
 final class UtilLists {
 
-  static class SimpleIterator<E> extends UnmodifiableIterator<E> {
+  static class SimpleIterator<E> extends Util.UnmodifiableIterator<E> {
     private final Object[] data;
 
     private final int size;

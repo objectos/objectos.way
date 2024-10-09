@@ -21,7 +21,6 @@ import java.util.List;
 import java.util.RandomAccess;
 import java.util.Set;
 import objectos.lang.object.Check;
-import objectos.util.UnmodifiableIterator;
 
 /**
  * A hash-based {@link Set} and {@link UtilGrowableCollection} implementation.
@@ -258,7 +257,7 @@ final class UtilSet<E> extends UtilBaseCollection<E> implements Set<E> {
    * @return an iterator over the elements in this set
    */
   @Override
-  public final UnmodifiableIterator<E> iterator() {
+  public final Util.UnmodifiableIterator<E> iterator() {
     return new UtilSets.SetIterator<>(array);
   }
 

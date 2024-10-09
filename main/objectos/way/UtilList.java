@@ -24,7 +24,6 @@ import java.util.ListIterator;
 import java.util.RandomAccess;
 import java.util.function.UnaryOperator;
 import objectos.lang.object.Check;
-import objectos.util.UnmodifiableIterator;
 
 /**
  * An array-based {@link UtilGrowableCollection} and
@@ -269,7 +268,7 @@ final class UtilList<E> extends UtilBaseCollection<E> implements List<E> {
    * @return an iterator over the elements in this list in proper sequence
    */
   @Override
-  public final UnmodifiableIterator<E> iterator() {
+  public final Util.UnmodifiableIterator<E> iterator() {
     return new UtilLists.SimpleIterator<>(data, size);
   }
 

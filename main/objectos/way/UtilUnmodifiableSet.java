@@ -18,7 +18,6 @@ package objectos.way;
 import java.util.Iterator;
 import java.util.Set;
 import objectos.lang.object.Check;
-import objectos.util.UnmodifiableIterator;
 
 /**
  * An unmodifiable implementation of the {@link Set} interface.
@@ -313,7 +312,7 @@ abstract sealed class UtilUnmodifiableSet<E>
    * @return an iterator over the elements in this set
    */
   @Override
-  public abstract UnmodifiableIterator<E> iterator();
+  public abstract Util.UnmodifiableIterator<E> iterator();
 
   /**
    * Returns the size of this set. The size of a set is equal to the number of

@@ -19,11 +19,10 @@ import java.lang.reflect.Array;
 import java.util.NoSuchElementException;
 import java.util.Set;
 import objectos.lang.object.Check;
-import objectos.util.UnmodifiableIterator;
 
 final class UtilSets {
 
-  static class SetIterator<E> extends UnmodifiableIterator<E> {
+  static class SetIterator<E> extends Util.UnmodifiableIterator<E> {
 
     private final Object[] array;
 

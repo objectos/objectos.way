@@ -17,7 +17,6 @@ package objectos.way;
 
 import java.util.Arrays;
 import java.util.SequencedMap;
-import objectos.util.UnmodifiableIterator;
 
 /**
  * A {@link UtilMap} variant with a predictable iteration order.
@@ -86,7 +85,7 @@ final class UtilSequencedMap<K, V> extends UtilMap<K, V> implements SequencedMap
   }
 
   @Override
-  final UnmodifiableIterator<Entry<K, V>> entryIterator() {
+  final Util.UnmodifiableIterator<Entry<K, V>> entryIterator() {
     return UtilMaps.orderedEntryIterator(iteratorArray, size << 1);
   }
 
@@ -108,7 +107,7 @@ final class UtilSequencedMap<K, V> extends UtilMap<K, V> implements SequencedMap
   }
 
   @Override
-  final UnmodifiableIterator<K> keyIterator() {
+  final Util.UnmodifiableIterator<K> keyIterator() {
     return UtilMaps.orderedKeyIterator(iteratorArray, size << 1);
   }
 
@@ -128,7 +127,7 @@ final class UtilSequencedMap<K, V> extends UtilMap<K, V> implements SequencedMap
   }
 
   @Override
-  final UnmodifiableIterator<V> valueIterator() {
+  final Util.UnmodifiableIterator<V> valueIterator() {
     return UtilMaps.orderedValueIterator(iteratorArray, size << 1);
   }
 

@@ -18,7 +18,6 @@ package objectos.way;
 import java.util.AbstractMap;
 import java.util.AbstractMap.SimpleEntry;
 import java.util.Map.Entry;
-import objectos.util.UnmodifiableIterator;
 import java.util.NoSuchElementException;
 
 /**
@@ -32,7 +31,7 @@ import java.util.NoSuchElementException;
  */
 final class UtilMaps {
 
-  private static class OrderedEntryIterator<K, V> extends UnmodifiableIterator<Entry<K, V>> {
+  private static class OrderedEntryIterator<K, V> extends Util.UnmodifiableIterator<Entry<K, V>> {
 
     private final Object[] array;
 
@@ -73,7 +72,7 @@ final class UtilMaps {
 
   }
 
-  private static class OrderedKeyOrValueIterator<K> extends UnmodifiableIterator<K> {
+  private static class OrderedKeyOrValueIterator<K> extends Util.UnmodifiableIterator<K> {
 
     private final Object[] array;
 
@@ -112,7 +111,7 @@ final class UtilMaps {
 
   }
 
-  private static class SparseEntryIterator<K, V> extends UnmodifiableIterator<Entry<K, V>> {
+  private static class SparseEntryIterator<K, V> extends Util.UnmodifiableIterator<Entry<K, V>> {
 
     private final Object[] array;
 
@@ -174,7 +173,7 @@ final class UtilMaps {
 
   }
 
-  private static class SparseKeyOrValueIterator<K> extends UnmodifiableIterator<K> {
+  private static class SparseKeyOrValueIterator<K> extends Util.UnmodifiableIterator<K> {
 
     private final Object[] array;
 
@@ -231,27 +230,27 @@ final class UtilMaps {
 
   private UtilMaps() {}
 
-  static <K, V> UnmodifiableIterator<Entry<K, V>> orderedEntryIterator(Object[] array, int size) {
+  static <K, V> Util.UnmodifiableIterator<Entry<K, V>> orderedEntryIterator(Object[] array, int size) {
     return new OrderedEntryIterator<K, V>(array, size);
   }
 
-  static <K> UnmodifiableIterator<K> orderedKeyIterator(Object[] array, int size) {
+  static <K> Util.UnmodifiableIterator<K> orderedKeyIterator(Object[] array, int size) {
     return new OrderedKeyOrValueIterator<K>(array, size, 0);
   }
 
-  static <V> UnmodifiableIterator<V> orderedValueIterator(Object[] array, int size) {
+  static <V> Util.UnmodifiableIterator<V> orderedValueIterator(Object[] array, int size) {
     return new OrderedKeyOrValueIterator<V>(array, size, 1);
   }
 
-  static <K, V> UnmodifiableIterator<Entry<K, V>> sparseEntryIterator(Object[] array) {
+  static <K, V> Util.UnmodifiableIterator<Entry<K, V>> sparseEntryIterator(Object[] array) {
     return new SparseEntryIterator<K, V>(array);
   }
 
-  static <K> UnmodifiableIterator<K> sparseKeyIterator(Object[] array) {
+  static <K> Util.UnmodifiableIterator<K> sparseKeyIterator(Object[] array) {
     return new SparseKeyOrValueIterator<K>(array, 0);
   }
 
-  static <V> UnmodifiableIterator<V> sparseValueIterator(Object[] array) {
+  static <V> Util.UnmodifiableIterator<V> sparseValueIterator(Object[] array) {
     return new SparseKeyOrValueIterator<V>(array, 1);
   }
 

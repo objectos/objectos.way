@@ -28,9 +28,9 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
+import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.function.Consumer;
-import objectos.util.ArrayIterator;
 import objectos.util.SetAssert;
 import objectos.util.SingletonIterator;
 import objectos.util.Thing;
@@ -618,6 +618,38 @@ public class UtilUnmodifiableSetTest {
     if (result.length > expected.length) {
       assertNull(result[expected.length]);
     }
+  }
+
+  private static final class ArrayIterator<E> extends Util.UnmodifiableIterator<E> {
+
+    private final Object[] array;
+
+    private int index;
+
+    private final int size;
+
+    public ArrayIterator(Object[] array, int size) {
+      this.array = array;
+      this.size = size;
+    }
+
+    @Override
+    public final boolean hasNext() {
+      return index < size;
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public final E next() {
+      if (!hasNext()) {
+        throw new NoSuchElementException();
+      }
+
+      else {
+        return (E) array[index++];
+      }
+    }
+
   }
 
 }

@@ -17,6 +17,7 @@ package objectos.way;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.SequencedMap;
@@ -449,6 +450,36 @@ public final class Util {
     }
 
     return toUnmodifiableMap(builder);
+  }
+
+  /**
+   * An {@link java.util.Iterator} implementation that does not support the
+   * remove operation.
+   *
+   * @param <E> the type of the elements in this iterator
+   */
+  static abstract class UnmodifiableIterator<E> implements Iterator<E> {
+
+    /**
+     * Sole constructor.
+     */
+    protected UnmodifiableIterator() {}
+
+    /**
+     * This operation is not supported.
+     *
+     * <p>
+     * This method performs no operation other than throw an
+     * {@link UnsupportedOperationException}.
+     *
+     * @throws UnsupportedOperationException
+     *         always
+     */
+    @Override
+    public final void remove() {
+      throw new UnsupportedOperationException();
+    }
+
   }
 
 }
