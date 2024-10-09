@@ -1035,7 +1035,7 @@ public final class Css {
 
       if (!definition.isEmpty()) {
         String value;
-        value = definition.join(" ");
+        value = Util.join(definition, " ");
 
         map.put(name, value);
 
@@ -1051,7 +1051,7 @@ public final class Css {
 
     if (!definition.isEmpty()) {
       String value;
-      value = definition.join(" ");
+      value = Util.join(definition, " ");
 
       map.put(name, value);
     }

@@ -25,7 +25,6 @@ import java.util.RandomAccess;
 import java.util.function.UnaryOperator;
 import objectos.lang.object.Check;
 import objectos.util.UnmodifiableIterator;
-import objectos.way.Util.BaseCollection;
 import objectos.way.Util.UnmodifiableList;
 
 /**
@@ -58,7 +57,7 @@ import objectos.way.Util.UnmodifiableList;
  * @see UtilGrowableCollection
  * @see java.util.List
  */
-final class UtilGrowableList<E> extends UtilGrowableCollection<E> implements Util.GrowableList<E> {
+final class UtilGrowableList<E> extends UtilBaseCollection<E> implements Util.GrowableList<E> {
 
   private Object[] data = Util.EMPTY_OBJECT_ARRAY;
 
@@ -172,7 +171,6 @@ final class UtilGrowableList<E> extends UtilGrowableCollection<E> implements Uti
    *
    * @return {@code true} if this list changed as a result of the call
    */
-  @Override
   public final boolean addAllIterable(Iterable<? extends E> iterable) {
     Check.notNull(iterable, "iterable == null");
 
@@ -208,7 +206,6 @@ final class UtilGrowableList<E> extends UtilGrowableCollection<E> implements Uti
    *
    * @return {@code true}
    */
-  @Override
   public final boolean addWithNullMessage(E e, Object nullMessage) {
     Check.notNull(e, nullMessage);
 
@@ -241,7 +238,6 @@ final class UtilGrowableList<E> extends UtilGrowableCollection<E> implements Uti
    *
    * @return {@code true}
    */
-  @Override
   public final boolean addWithNullMessage(
       E e, Object nullMessageStart, int index, Object nullMessageEnd) {
     Check.notNull(e, nullMessageStart, index, nullMessageEnd);

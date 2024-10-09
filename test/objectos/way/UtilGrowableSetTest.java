@@ -20,21 +20,13 @@ import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertTrue;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.function.Consumer;
-import objectos.util.GrowableCollectionAddAllIterableTest;
-import objectos.util.GrowableCollectionAddWithNullMessageTest;
-import objectos.util.GrowableCollectionClearTest;
-import objectos.util.GrowableCollectionContainsAllTest;
-import objectos.util.GrowableCollectionContainsTest;
-import objectos.util.GrowableCollectionIsEmptyTest;
-import objectos.util.GrowableCollectionRemoveAllTest;
-import objectos.util.GrowableCollectionRemoveIfTest;
-import objectos.util.GrowableCollectionRetainAllTest;
 import objectos.util.SetAssert;
 import objectos.util.Thing;
 import org.testng.Assert;
@@ -158,37 +150,191 @@ public class UtilGrowableSetTest {
 
   @Test
   public void addAllIterable() {
-    var test = new GrowableCollectionAddAllIterableTest(it, this::assertContents);
+    // empty
+    assertEquals(it.size(), 0);
 
-    test.execute();
+    assertFalse(it.addAllIterable(Thing.EMPTY_ITERABLE));
+    assertContents();
+
+    assertFalse(it.addAllIterable(Thing.EMPTY_LIST));
+    assertContents();
+
+    // one
+    var t1 = Thing.next();
+
+    it.addAllIterable(TestingArrayBackedIterable.of(t1));
+    assertContents(t1);
+
+    // two
+    var t2 = Thing.next();
+
+    it.addAllIterable(List.of(t2));
+    assertContents(t1, t2);
+
+    // many
+    var iterable = Thing.nextIterable();
+
+    it.addAllIterable(iterable);
+    assertContents(t1, t2, iterable);
+
+    var arrayList = Thing.nextArrayList();
+
+    it.addAllIterable(arrayList);
+    assertContents(t1, t2, iterable, arrayList);
+
+    // must reject null
+    var arrayWithNull = Thing.nextArray();
+
+    arrayWithNull[Thing.HALF] = null;
+
+    var iterWithNull = new TestingArrayBackedIterable<>(arrayWithNull);
+
+    try {
+      it.addAllIterable(iterWithNull);
+
+      Assert.fail("Must throw NullPointerException");
+    } catch (NullPointerException expected) {
+      assertEquals(expected.getMessage(), "iterable[50] == null");
+    }
+
+    var copy = Arrays.copyOf(arrayWithNull, Thing.HALF);
+
+    var sub = List.of(copy);
+
+    assertContents(t1, t2, iterable, arrayList, sub);
   }
 
   @Test
   public void addWithNullMessage() {
-    var test = new GrowableCollectionAddWithNullMessageTest(it);
+    try {
+      it.addWithNullMessage(null, "my message");
 
-    test.execute();
+      Assert.fail("NPE was expected");
+    } catch (NullPointerException expected) {
+      assertEquals(expected.getMessage(), "my message");
+    }
+
+    try {
+      it.addWithNullMessage(null, null);
+
+      Assert.fail("NPE was expected");
+    } catch (NullPointerException expected) {
+      assertEquals(expected.getMessage(), "null");
+    }
+
+    try {
+      it.addWithNullMessage(null, "[", 123, "]");
+
+      Assert.fail("NPE was expected");
+    } catch (NullPointerException expected) {
+      assertEquals(expected.getMessage(), "[123]");
+    }
+
+    try {
+      it.addWithNullMessage(null, null, 123, null);
+
+      Assert.fail("NPE was expected");
+    } catch (NullPointerException expected) {
+      assertEquals(expected.getMessage(), "null123null");
+    }
   }
 
   @Test
   public void clear() {
-    var test = new GrowableCollectionClearTest(it, this::assertContents);
+    assertEquals(it.size(), 0);
 
-    test.execute();
+    it.clear();
+    assertContents();
+
+    var arrayList = Thing.nextArrayList();
+
+    it.addAll(arrayList);
+    it.clear();
+    assertContents();
   }
 
   @Test
   public void contains() {
-    var test = new GrowableCollectionContainsTest(it);
+    // null must return false
+    assertFalse(it.contains(null));
 
-    test.execute();
+    // mutate
+    var t1 = Thing.next();
+    var t2 = Thing.next();
+    var array = Thing.nextArray();
+
+    assertFalse(it.contains(t1));
+
+    assertFalse(it.contains(t2));
+
+    it.add(t1);
+
+    assertTrue(it.contains(t1));
+
+    for (var t : array) {
+      it.add(t);
+
+      assertTrue(it.contains(t));
+    }
+
+    it.add(t2);
+
+    assertTrue(it.contains(t2));
+
+    // verify still true
+    assertTrue(it.contains(t1));
+
+    for (var t : array) {
+      assertTrue(it.contains(t));
+    }
+
+    assertTrue(it.contains(t2));
   }
 
   @Test
   public void containsAll() {
-    var test = new GrowableCollectionContainsAllTest(it);
+    assertTrue(it.containsAll(Thing.EMPTY_LIST));
 
-    test.execute();
+    assertTrue(it.containsAll(Thing.EMPTY_SET));
+
+    // all
+    var arrayList = Thing.nextArrayList();
+
+    it.addAll(arrayList);
+
+    assertTrue(it.containsAll(arrayList));
+
+    // with more
+    var withMore = new ArrayList<>(arrayList);
+
+    var t1 = Thing.next();
+
+    withMore.add(t1);
+
+    assertFalse(it.containsAll(withMore));
+
+    // with less
+    var withLess = new ArrayList<>(arrayList);
+
+    withLess.remove(withLess.size() - 1);
+
+    assertTrue(it.containsAll(withLess));
+
+    // with null
+    var listWithNull = new ArrayList<>(arrayList);
+
+    listWithNull.set(Thing.HALF, null);
+
+    assertFalse(it.containsAll(listWithNull));
+
+    // must reject null argument
+    try {
+      it.containsAll(null);
+
+      Assert.fail("Expected a NullPointerException");
+    } catch (NullPointerException expected) {
+      assertEquals(expected.getMessage(), "c == null");
+    }
   }
 
   @Test
@@ -260,9 +406,17 @@ public class UtilGrowableSetTest {
 
   @Test
   public void isEmpty() {
-    var test = new GrowableCollectionIsEmptyTest(it);
+    assertTrue(it.isEmpty());
 
-    test.execute();
+    var t1 = Thing.next();
+
+    it.add(t1);
+
+    assertFalse(it.isEmpty());
+
+    it.clear();
+
+    assertTrue(it.isEmpty());
   }
 
   @Test
@@ -368,23 +522,50 @@ public class UtilGrowableSetTest {
 
   @Test
   public void removeAll() {
-    var test = new GrowableCollectionRemoveAllTest(it);
+    var arrayList = Thing.nextArrayList();
 
-    test.execute();
+    it.addAll(arrayList);
+
+    try {
+      it.removeAll(arrayList);
+
+      Assert.fail("Expected an UnsupportedOperationException");
+    } catch (UnsupportedOperationException expected) {
+      assertTrue(it.containsAll(arrayList));
+    }
   }
 
   @Test
   public void removeIf() {
-    var test = new GrowableCollectionRemoveIfTest(it);
+    var t1 = Thing.next();
 
-    test.execute();
+    it.add(t1);
+
+    try {
+      it.removeIf(e -> e.equals(t1));
+
+      Assert.fail("Expected an UnsupportedOperationException");
+    } catch (UnsupportedOperationException expected) {
+      assertTrue(it.contains(t1));
+    }
   }
 
   @Test
   public void retainAll() {
-    var test = new GrowableCollectionRetainAllTest(it);
+    var t1 = Thing.next();
+    var t2 = Thing.next();
 
-    test.execute();
+    it.add(t1);
+    it.add(t2);
+
+    try {
+      it.retainAll(List.of(t1));
+
+      Assert.fail("Expected an UnsupportedOperationException");
+    } catch (UnsupportedOperationException expected) {
+      assertTrue(it.contains(t1));
+      assertTrue(it.contains(t2));
+    }
   }
 
   @Test

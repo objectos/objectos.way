@@ -229,7 +229,8 @@ final class UtilLists {
       return o.toString();
     }
 
-    var sb = new StringBuilder();
+    StringBuilder sb;
+    sb = new StringBuilder();
 
     o = data[0];
 

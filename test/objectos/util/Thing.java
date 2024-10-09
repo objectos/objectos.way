@@ -46,7 +46,7 @@ public final class Thing implements ToString.Formattable {
 
   public static final Thing[] EMPTY_ARRAY = new Thing[0];
 
-  static final Iterable<Thing> EMPTY_ITERABLE = new TestingArrayBackedIterable<>(EMPTY_ARRAY);
+  public static final Iterable<Thing> EMPTY_ITERABLE = new TestingArrayBackedIterable<>(EMPTY_ARRAY);
 
   public static final List<Thing> EMPTY_LIST = Collections.emptyList();
 

@@ -28,7 +28,7 @@ import objectos.util.UnmodifiableIterator;
  *
  * @param <E> type of the elements in this set
  */
-final class UtilGrowableSet<E> extends UtilGrowableCollection<E> implements Util.GrowableSet<E> {
+final class UtilGrowableSet<E> extends UtilBaseCollection<E> implements Util.GrowableSet<E> {
 
   private static final int MAX_POSITIVE_POWER_OF_TWO = 1 << 30;
 
@@ -118,7 +118,6 @@ final class UtilGrowableSet<E> extends UtilGrowableCollection<E> implements Util
    *         if the specified iterable is {@code null} or if it provides any
    *         element that is {@code null}
    */
-  @Override
   public final boolean addAllIterable(Iterable<? extends E> iterable) {
     Check.notNull(iterable, "iterable == null");
 
@@ -153,7 +152,6 @@ final class UtilGrowableSet<E> extends UtilGrowableCollection<E> implements Util
    *
    * @see Check#notNull(Object, Object)
    */
-  @Override
   public final boolean addWithNullMessage(E e, Object nullMessage) {
     Check.notNull(e, nullMessage);
 
@@ -190,7 +188,6 @@ final class UtilGrowableSet<E> extends UtilGrowableCollection<E> implements Util
    *
    * @see Check#notNull(Object, Object, int, Object)
    */
-  @Override
   public final boolean addWithNullMessage(
       E e, Object nullMessageStart, int index, Object nullMessageEnd) {
     Check.notNull(e, nullMessageStart, index, nullMessageEnd);
