@@ -25,7 +25,6 @@ import java.util.RandomAccess;
 import java.util.function.UnaryOperator;
 import objectos.lang.object.Check;
 import objectos.util.UnmodifiableIterator;
-import objectos.way.Util.UnmodifiableList;
 
 /**
  * An array-based {@link UtilGrowableCollection} and

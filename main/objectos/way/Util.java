@@ -19,7 +19,6 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-import java.util.RandomAccess;
 import java.util.Set;
 import objectos.lang.object.Check;
 
@@ -44,8 +43,6 @@ public final class Util {
   }
 
   interface GrowableSet<E> extends Set<E> {}
-
-  interface UnmodifiableList<E> extends List<E>, RandomAccess {}
 
   interface UnmodifiableMap<K, V> extends Map<K, V> {}
 

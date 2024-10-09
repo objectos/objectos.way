@@ -32,7 +32,7 @@ import objectos.util.UnmodifiableIterator;
  * @param <E>
  *        type of the elements in this list
  */
-final class UtilUnmodifiableList<E> extends UtilUnmodifiableCollection<E> implements Util.UnmodifiableList<E> {
+final class UtilUnmodifiableList<E> extends UtilUnmodifiableCollection<E> implements List<E> {
 
   static final UtilUnmodifiableList<Object> EMPTY = new UtilUnmodifiableList<Object>(
       Util.EMPTY_OBJECT_ARRAY
