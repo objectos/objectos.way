@@ -18,11 +18,9 @@ package objectos.way;
 import java.nio.file.Path;
 import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 import objectos.lang.object.Check;
-import objectos.util.GrowableMap;
 
 abstract class AppBootstrap {
 
@@ -156,8 +154,8 @@ abstract class AppBootstrap {
       messages.clear();
     }
 
-    Map<String, AppOption<?>> optionsByName;
-    optionsByName = new GrowableMap<>();
+    Util.GrowableMap<String, AppOption<?>> optionsByName;
+    optionsByName = Util.createGrowableMap();
 
     for (AppOption<?> o : options) {
       o.acceptByName(optionsByName);

@@ -29,12 +29,10 @@ import java.nio.file.WatchEvent;
 import java.nio.file.WatchKey;
 import java.nio.file.WatchService;
 import java.nio.file.attribute.BasicFileAttributes;
-import java.util.Map;
 import objectos.notes.NoOpNoteSink;
 import objectos.notes.Note1;
 import objectos.notes.Note2;
 import objectos.notes.NoteSink;
-import objectos.util.GrowableMap;
 import objectos.way.App.Reloader;
 
 final class AppReloader implements App.Reloader {
@@ -76,7 +74,7 @@ final class AppReloader implements App.Reloader {
 
   private final Util.GrowableList<Path> directories = Util.createGrowableList();
 
-  private final Map<WatchKey, Path> keys = new GrowableMap<>();
+  private final Util.GrowableMap<WatchKey, Path> keys = Util.createGrowableMap();
 
   private final String binaryName;
 
@@ -244,8 +242,7 @@ final class AppReloader implements App.Reloader {
   private void register(Path directory) throws IOException {
     class ThisVisitor extends SimpleFileVisitor<Path> {
       @Override
-      public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs)
-                                                                                    throws IOException {
+      public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
         registerImpl(dir);
         return FileVisitResult.CONTINUE;
       }

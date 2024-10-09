@@ -19,7 +19,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import objectos.util.GrowableMap;
 
 final class HttpHeaderName implements Http.HeaderName {
 
@@ -80,8 +79,8 @@ final class HttpHeaderName implements Http.HeaderName {
 
     STANDARD_NAMES = builder.buildNames();
 
-    GrowableMap<String, HttpHeaderName> findByName;
-    findByName = new GrowableMap<>();
+    Util.GrowableMap<String, HttpHeaderName> findByName;
+    findByName = Util.createGrowableMap();
 
     for (HttpHeaderName value : STANDARD_NAMES) {
       findByName.put(value.capitalized, value);

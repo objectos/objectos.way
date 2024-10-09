@@ -21,7 +21,6 @@ import java.util.NoSuchElementException;
 import java.util.Objects;
 import objectos.lang.object.Check;
 import objectos.lang.object.ToString;
-import objectos.util.MoreCollections;
 import objectos.util.UnmodifiableIterator;
 
 /**
@@ -138,17 +137,17 @@ final class UtilLists {
     ToString.formatStart(toString, self);
 
     if (size > 0) {
-      int length = MoreCollections.sizeDigits(self);
+      int length = UtilCollections.sizeDigits(self);
 
       ToString.formatFirstPair(
           toString, level,
-          MoreCollections.indexName(0, length), data[0]
+          UtilCollections.indexName(0, length), data[0]
       );
 
       for (int i = 1; i < size; i++) {
         ToString.formatNextPair(
             toString, level,
-            MoreCollections.indexName(i, length), data[i]
+            UtilCollections.indexName(i, length), data[i]
         );
       }
     }

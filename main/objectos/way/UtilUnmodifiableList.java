@@ -24,7 +24,6 @@ import java.util.ListIterator;
 import java.util.RandomAccess;
 import java.util.function.UnaryOperator;
 import objectos.lang.object.Check;
-import objectos.util.UnmodifiableCollection;
 import objectos.util.UnmodifiableIterator;
 
 /**
@@ -34,7 +33,7 @@ import objectos.util.UnmodifiableIterator;
  *        type of the elements in this list
  */
 final class UtilUnmodifiableList<E>
-    extends UnmodifiableCollection<E>
+    extends UtilUnmodifiableCollection<E>
     implements Util.UnmodifiableList<E> {
 
   static final UtilUnmodifiableList<Object> EMPTY = new UtilUnmodifiableList<Object>(

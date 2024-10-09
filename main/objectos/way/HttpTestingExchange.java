@@ -17,13 +17,11 @@ package objectos.way;
 
 import java.nio.charset.Charset;
 import java.nio.file.Path;
-import java.util.Map;
 import objectos.lang.object.Check;
-import objectos.util.GrowableMap;
 
 final class HttpTestingExchange implements Http.TestingExchange {
 
-  Map<Object, Object> attributes;
+  Util.GrowableMap<Object, Object> attributes;
 
   Http.Request.Target requestTarget;
 
@@ -55,7 +53,7 @@ final class HttpTestingExchange implements Http.TestingExchange {
     Check.notNull(value, "value == null");
 
     if (attributes == null) {
-      attributes = new GrowableMap<>();
+      attributes = Util.createGrowableMap();
     }
 
     attributes.put(key, value);

@@ -27,7 +27,7 @@ import objectos.way.UtilBaseCollection;
  */
 public abstract class UnmodifiableView<E> extends UtilBaseCollection<E> implements Set<E> {
 
-  UnmodifiableView() {}
+  protected UnmodifiableView() {}
 
   /**
    * This operation is not supported.

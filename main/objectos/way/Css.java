@@ -27,8 +27,6 @@ import java.util.Map;
 import java.util.Set;
 import objectos.lang.object.Check;
 import objectos.notes.NoteSink;
-import objectos.util.GrowableMap;
-import objectos.util.GrowableSequencedMap;
 
 /**
  * The <strong>Objectos CSS</strong> main class.
@@ -1007,8 +1005,8 @@ public final class Css {
   // private stuff
 
   static Map<String, String> parseComponents(String text) {
-    GrowableSequencedMap<String, String> map;
-    map = new GrowableSequencedMap<>();
+    Util.GrowableSequencedMap<String, String> map;
+    map = Util.createGrowableSequencedMap();
 
     String name;
     name = "";
@@ -1095,8 +1093,8 @@ public final class Css {
   }
 
   static Map<String, CssProperties> parseTable(String text) {
-    GrowableMap<String, CssProperties> map;
-    map = new GrowableMap<>();
+    Util.GrowableMap<String, CssProperties> map;
+    map = Util.createGrowableMap();
 
     String[] lines;
     lines = text.split("\n");

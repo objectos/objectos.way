@@ -149,11 +149,11 @@ public final class Thing implements ToString.Formattable {
     return ToString.of(this);
   }
 
-  final String putDec(Map<Thing, String> map) {
+  public final String putDec(Map<Thing, String> map) {
     return map.put(this, toDecimalString());
   }
 
-  final String putHex(Map<Thing, String> map) {
+  public final String putHex(Map<Thing, String> map) {
     return map.put(this, toHexString());
   }
 

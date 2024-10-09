@@ -31,7 +31,6 @@ import java.util.Arrays;
 import java.util.Map;
 import objectos.lang.object.Check;
 import objectos.notes.NoteSink;
-import objectos.util.GrowableMap;
 import objectos.way.Lang.CharWritable;
 
 final class HttpExchangeLoop extends HttpRequestBody implements Http.Exchange, Closeable {
@@ -98,7 +97,7 @@ final class HttpExchangeLoop extends HttpRequestBody implements Http.Exchange, C
 
   private static final int CHUNKED = 1 << 6;
 
-  private Map<String, Object> attributes;
+  private Util.GrowableMap<String, Object> attributes;
 
   private int bitset;
 
@@ -272,7 +271,7 @@ final class HttpExchangeLoop extends HttpRequestBody implements Http.Exchange, C
 
   private Map<String, Object> attributes() {
     if (attributes == null) {
-      attributes = new GrowableMap<>();
+      attributes = Util.createGrowableMap();
     }
 
     return attributes;

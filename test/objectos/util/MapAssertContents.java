@@ -18,6 +18,6 @@ package objectos.util;
 import java.util.Map;
 
 @FunctionalInterface
-interface MapAssertContents {
+public interface MapAssertContents {
   void execute(Map<?, ?> map, Object... expected);
 }

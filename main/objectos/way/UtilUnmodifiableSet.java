@@ -18,7 +18,6 @@ package objectos.way;
 import java.util.Iterator;
 import java.util.Set;
 import objectos.lang.object.Check;
-import objectos.util.UnmodifiableCollection;
 import objectos.util.UnmodifiableIterator;
 
 /**
@@ -34,7 +33,7 @@ import objectos.util.UnmodifiableIterator;
  * @param <E> type of the elements in this set
  */
 abstract sealed class UtilUnmodifiableSet<E>
-    extends UnmodifiableCollection<E>
+    extends UtilUnmodifiableCollection<E>
     implements Set<E> permits UtilUnmodifiableSetN {
 
   private static final UtilUnmodifiableSet<Object> EMPTY = new UtilUnmodifiableSetN<Object>(

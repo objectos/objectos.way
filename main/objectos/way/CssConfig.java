@@ -30,7 +30,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import objectos.notes.NoOpNoteSink;
 import objectos.notes.NoteSink;
-import objectos.util.GrowableMap;
 
 final class CssConfig {
 
@@ -48,7 +47,7 @@ final class CssConfig {
 
   private final Set<Class<?>> classes;
 
-  private Map<String, String> components;
+  private Util.GrowableMap<String, String> components;
 
   private Util.GrowableSet<Path> directories;
 
@@ -66,9 +65,9 @@ final class CssConfig {
 
   boolean skipReset;
 
-  private final Map<String, Css.StaticUtility> staticUtilities = new GrowableMap<>();
+  private final Util.GrowableMap<String, Css.StaticUtility> staticUtilities = Util.createGrowableMap();
 
-  private Map<String, Css.Variant> variants;
+  private Util.GrowableMap<String, Css.Variant> variants;
 
   private boolean variantsInitialized;
 
@@ -83,7 +82,7 @@ final class CssConfig {
 
   public final void addComponent(String name, String definition) {
     if (components == null) {
-      components = new GrowableMap<>();
+      components = Util.createGrowableMap();
     }
 
     String existing;
@@ -122,7 +121,7 @@ final class CssConfig {
 
   public final void addVariants(CssProperties props) {
     if (variants == null) {
-      variants = new GrowableMap<>();
+      variants = Util.createGrowableMap();
     }
 
     for (Map.Entry<String, String> entry : props) {
@@ -241,7 +240,7 @@ final class CssConfig {
 
   private Map<String, Css.Variant> variants() {
     if (variants == null) {
-      variants = new GrowableMap<>();
+      variants = Util.createGrowableMap();
     }
 
     if (!variantsInitialized) {
@@ -643,8 +642,8 @@ final class CssConfig {
             Css.Key.MAX_WIDTH,
 
             () -> {
-              GrowableMap<String, String> maxWidth;
-              maxWidth = new GrowableMap<>();
+              Util.GrowableMap<String, String> maxWidth;
+              maxWidth = Util.createGrowableMap();
 
               maxWidth.putAll(spacing);
 
@@ -2387,8 +2386,8 @@ final class CssConfig {
       return properties;
     }
 
-    GrowableMap<String, String> values;
-    values = new GrowableMap<>();
+    Util.GrowableMap<String, String> values;
+    values = Util.createGrowableMap();
 
     values.putAll(properties);
 

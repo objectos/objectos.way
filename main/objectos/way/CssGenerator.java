@@ -23,7 +23,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.function.Consumer;
-import objectos.util.GrowableSequencedMap;
 import objectos.way.Css.MediaQuery;
 import objectos.way.Css.ValueType;
 
@@ -141,7 +140,7 @@ final class CssGenerator extends CssGeneratorAdapter implements Css.Generator, C
 
   private final Deque<Css.Repository> repositories = new ArrayDeque<>(4);
 
-  private final Map<String, Css.Rule> rules = new GrowableSequencedMap<>();
+  private final Util.GrowableSequencedMap<String, Css.Rule> rules = Util.createGrowableSequencedMap();
 
   CssGenerator(CssConfig config) {
     this.adapter = this;

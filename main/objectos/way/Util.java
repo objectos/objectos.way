@@ -23,15 +23,12 @@ import java.util.RandomAccess;
 import java.util.Set;
 import objectos.lang.object.Check;
 import objectos.lang.object.ToString;
-import objectos.util.GrowableMap;
 import objectos.util.UnmodifiableIterator;
 
 /**
  * The <strong>Objectos Util</strong> main class.
  */
 public final class Util {
-
-  // public types
 
   /**
    * The base {@link Collection} interface for the Objectos Util collections
@@ -219,7 +216,7 @@ public final class Util {
    *
    * @param <E> type of the elements in this collection
    */
-  public interface GrowableCollection<E> extends BaseCollection<E> {
+  interface GrowableCollection<E> extends BaseCollection<E> {
 
     /**
      * Adds all elements of the given {@link Iterable} to this collection.
@@ -294,17 +291,34 @@ public final class Util {
 
   }
 
-  public interface GrowableList<E> extends GrowableCollection<E>, List<E>, RandomAccess {
+  interface GrowableList<E> extends GrowableCollection<E>, List<E>, RandomAccess {
 
     UnmodifiableList<E> toUnmodifiableList();
 
   }
 
-  public interface GrowableSet<E> extends GrowableCollection<E>, Set<E> {}
+  interface GrowableMap<K, V> extends Map<K, V> {
 
-  public interface UnmodifiableList<E> extends List<E>, RandomAccess {}
+    UnmodifiableMap<K, V> toUnmodifiableMap();
 
-  public interface UnmodifiableSet<E> extends Set<E> {}
+  }
+
+  interface GrowableSequencedMap<K, V> extends GrowableMap<K, V> {
+
+    @Override
+    UnmodifiableSequencedMap<K, V> toUnmodifiableMap();
+
+  }
+
+  interface GrowableSet<E> extends GrowableCollection<E>, Set<E> {}
+
+  interface UnmodifiableList<E> extends List<E>, RandomAccess {}
+
+  interface UnmodifiableMap<K, V> extends Map<K, V> {}
+
+  interface UnmodifiableSequencedMap<K, V> extends UnmodifiableMap<K, V> {}
+
+  interface UnmodifiableSet<E> extends Set<E> {}
 
   /**
    * An empty zero-length {@code byte} array instance.
@@ -336,11 +350,19 @@ public final class Util {
 
   private Util() {}
 
-  public static <E> GrowableList<E> createGrowableList() {
+  static <E> GrowableList<E> createGrowableList() {
     return new UtilGrowableList<>();
   }
 
-  public static <E> GrowableSet<E> createGrowableSet() {
+  static <K, V> GrowableMap<K, V> createGrowableMap() {
+    return new UtilGrowableMap<>();
+  }
+
+  static <K, V> GrowableSequencedMap<K, V> createGrowableSequencedMap() {
+    return new UtilGrowableSequencedMap<>();
+  }
+
+  static <E> GrowableSet<E> createGrowableSet() {
     return new UtilGrowableSet<>();
   }
 
@@ -654,7 +676,7 @@ public final class Util {
 
   static Map<String, String> parsePropertiesMap(String string) {
     GrowableMap<String, String> builder;
-    builder = new GrowableMap<>();
+    builder = createGrowableMap();
 
     String[] lines;
     lines = string.split("\n");

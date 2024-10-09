@@ -18,6 +18,6 @@ package objectos.util;
 import java.util.Collection;
 
 @FunctionalInterface
-interface MapAssertValues {
-	void execute(Collection<String> set, Thing... expected);
+public interface MapAssertValues {
+  void execute(Collection<String> set, Thing... expected);
 }

@@ -15,4 +15,4 @@
  */
 package objectos.util;
 
-record Hex(Thing value) {}
+public record Hex(Thing value) {}
