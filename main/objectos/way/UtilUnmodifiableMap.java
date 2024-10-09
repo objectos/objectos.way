@@ -18,7 +18,6 @@ package objectos.way;
 import java.util.Map;
 import java.util.function.BiFunction;
 import java.util.function.Function;
-import objectos.lang.object.Check;
 
 /**
  * A hash-based unmodifiable implementation of the {@link Map} interface.

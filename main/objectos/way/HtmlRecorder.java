@@ -15,7 +15,6 @@
  */
 package objectos.way;
 
-import objectos.lang.object.Check;
 import objectos.way.Html.AttributeName;
 
 class HtmlRecorder {

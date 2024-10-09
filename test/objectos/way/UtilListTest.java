@@ -29,7 +29,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
-import objectos.util.Next;
 import objectos.util.Thing;
 import objectos.util.UnmodifiableIteratorTester;
 import org.testng.Assert;

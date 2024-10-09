@@ -21,7 +21,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
-import objectos.lang.object.Check;
 
 abstract class AppBootstrap {
 

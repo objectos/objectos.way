@@ -25,7 +25,6 @@ import java.lang.reflect.Constructor;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.WatchService;
-import objectos.lang.object.Check;
 import objectos.notes.Level;
 import objectos.notes.Note1;
 import objectos.notes.Note2;

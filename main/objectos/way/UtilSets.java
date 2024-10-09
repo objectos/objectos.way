@@ -18,7 +18,6 @@ package objectos.way;
 import java.lang.reflect.Array;
 import java.util.NoSuchElementException;
 import java.util.Set;
-import objectos.lang.object.Check;
 
 final class UtilSets {
 

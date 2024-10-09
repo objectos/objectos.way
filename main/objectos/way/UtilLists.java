@@ -19,7 +19,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Objects;
-import objectos.lang.object.Check;
 import objectos.lang.object.ToString;
 
 /**

@@ -15,8 +15,6 @@
  */
 package objectos.way;
 
-import objectos.lang.object.Check;
-
 abstract class WebModule extends Http.Module {
 
   private final Sql.Transaction.Isolation trxIsolation = Sql.SERIALIZABLE;

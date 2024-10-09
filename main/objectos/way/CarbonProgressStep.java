@@ -15,7 +15,6 @@
  */
 package objectos.way;
 
-import objectos.lang.object.Check;
 import objectos.way.Carbon.CarbonProgressStepVariant;
 import objectos.way.Carbon.Icon;
 import objectos.way.Carbon.ProgressStep;

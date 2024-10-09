@@ -16,7 +16,6 @@
 package objectos.way;
 
 import java.util.List;
-import objectos.lang.object.Check;
 import objectos.notes.LongNote;
 import objectos.notes.Note0;
 import objectos.notes.Note1;

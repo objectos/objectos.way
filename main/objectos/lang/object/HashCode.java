@@ -15,6 +15,8 @@
  */
 package objectos.lang.object;
 
+import java.util.Objects;
+
 /**
  * Provides {@code static} convenience methods for computing the hash
  * code of an object. It is useful for implementing the
@@ -64,427 +66,427 @@ package objectos.lang.object;
  */
 public final class HashCode {
 
-	static final int MULTIPLIER = 31;
+  static final int MULTIPLIER = 31;
 
-	static final int START = 17;
+  static final int START = 17;
 
-	private HashCode() {}
+  private HashCode() {}
 
-	/**
-	 * Returns a hash code for a {@code boolean} value.
-	 *
-	 * @param b
-	 *        a {@code boolean} value
-	 *
-	 * @return the hash code
-	 */
-	public static int of(boolean b) {
-		return b ? 1 : 0;
-	}
+  /**
+   * Returns a hash code for a {@code boolean} value.
+   *
+   * @param b
+   *        a {@code boolean} value
+   *
+   * @return the hash code
+   */
+  public static int of(boolean b) {
+    return b ? 1 : 0;
+  }
 
-	/**
-	 * Returns a hash code for a {@code byte} value.
-	 *
-	 * @param b
-	 *        a {@code byte} value
-	 *
-	 * @return the hash code
-	 */
-	public static int of(byte b) {
-		return b;
-	}
+  /**
+   * Returns a hash code for a {@code byte} value.
+   *
+   * @param b
+   *        a {@code byte} value
+   *
+   * @return the hash code
+   */
+  public static int of(byte b) {
+    return b;
+  }
 
-	/**
-	 * Returns a hash code for a {@code double} value.
-	 *
-	 * @param d
-	 *        a {@code double} value
-	 *
-	 * @return the hash code
-	 */
-	public static int of(double d) {
-		var l = Double.doubleToLongBits(d);
+  /**
+   * Returns a hash code for a {@code double} value.
+   *
+   * @param d
+   *        a {@code double} value
+   *
+   * @return the hash code
+   */
+  public static int of(double d) {
+    var l = Double.doubleToLongBits(d);
 
-		return of(l);
-	}
+    return of(l);
+  }
 
-	/**
-	 * Returns a hash code for a {@code float} value.
-	 *
-	 * @param f
-	 *        a {@code float} value
-	 *
-	 * @return the hash code
-	 */
-	public static int of(float f) {
-		return Float.floatToIntBits(f);
-	}
+  /**
+   * Returns a hash code for a {@code float} value.
+   *
+   * @param f
+   *        a {@code float} value
+   *
+   * @return the hash code
+   */
+  public static int of(float f) {
+    return Float.floatToIntBits(f);
+  }
 
-	/**
-	 * Returns a hash code for a {@code int} value.
-	 *
-	 * @param i
-	 *        an {@code int} value
-	 *
-	 * @return the hash code
-	 */
-	public static int of(int i) {
-		return i;
-	}
+  /**
+   * Returns a hash code for a {@code int} value.
+   *
+   * @param i
+   *        an {@code int} value
+   *
+   * @return the hash code
+   */
+  public static int of(int i) {
+    return i;
+  }
 
-	/**
-	 * Returns the computed hash code from the two individual hash code values.
-	 *
-	 * @param hc1
-	 *        the first hash code value
-	 * @param hc2
-	 *        the second hash code value
-	 *
-	 * @return the computed hash code
-	 */
-	public static int of(int hc1, int hc2) {
-		var result = START;
+  /**
+   * Returns the computed hash code from the two individual hash code values.
+   *
+   * @param hc1
+   *        the first hash code value
+   * @param hc2
+   *        the second hash code value
+   *
+   * @return the computed hash code
+   */
+  public static int of(int hc1, int hc2) {
+    var result = START;
 
-		result = update(result, hc1);
+    result = update(result, hc1);
 
-		result = update(result, hc2);
+    result = update(result, hc2);
 
-		return result;
-	}
+    return result;
+  }
 
-	/**
-	 * Returns the computed hash code from the three individual hash code values.
-	 *
-	 * @param hc1
-	 *        the first hash code value
-	 * @param hc2
-	 *        the second hash code value
-	 * @param hc3
-	 *        the third hash code value
-	 *
-	 * @return the computed hash code
-	 */
-	public static int of(int hc1, int hc2, int hc3) {
-		var result = START;
+  /**
+   * Returns the computed hash code from the three individual hash code values.
+   *
+   * @param hc1
+   *        the first hash code value
+   * @param hc2
+   *        the second hash code value
+   * @param hc3
+   *        the third hash code value
+   *
+   * @return the computed hash code
+   */
+  public static int of(int hc1, int hc2, int hc3) {
+    var result = START;
 
-		result = update(result, hc1);
+    result = update(result, hc1);
 
-		result = update(result, hc2);
+    result = update(result, hc2);
 
-		result = update(result, hc3);
+    result = update(result, hc3);
 
-		return result;
-	}
+    return result;
+  }
 
-	/**
-	 * Returns the computed hash code from the four individual hash code values.
-	 *
-	 * @param hc1
-	 *        the first hash code value
-	 * @param hc2
-	 *        the second hash code value
-	 * @param hc3
-	 *        the third hash code value
-	 * @param hc4
-	 *        the fourth hash code value
-	 *
-	 * @return the computed hash code
-	 */
-	public static int of(int hc1, int hc2, int hc3, int hc4) {
-		var result = START;
+  /**
+   * Returns the computed hash code from the four individual hash code values.
+   *
+   * @param hc1
+   *        the first hash code value
+   * @param hc2
+   *        the second hash code value
+   * @param hc3
+   *        the third hash code value
+   * @param hc4
+   *        the fourth hash code value
+   *
+   * @return the computed hash code
+   */
+  public static int of(int hc1, int hc2, int hc3, int hc4) {
+    var result = START;
 
-		result = update(result, hc1);
+    result = update(result, hc1);
 
-		result = update(result, hc2);
+    result = update(result, hc2);
 
-		result = update(result, hc3);
+    result = update(result, hc3);
 
-		result = update(result, hc4);
+    result = update(result, hc4);
 
-		return result;
-	}
+    return result;
+  }
 
-	/**
-	 * Returns the computed hash code from the five individual hash code values.
-	 *
-	 * @param hc1
-	 *        the first hash code value
-	 * @param hc2
-	 *        the second hash code value
-	 * @param hc3
-	 *        the third hash code value
-	 * @param hc4
-	 *        the fourth hash code value
-	 * @param hc5
-	 *        the fifth hash code value
-	 *
-	 * @return the computed hash code
-	 */
-	public static int of(int hc1, int hc2, int hc3, int hc4, int hc5) {
-		var result = START;
+  /**
+   * Returns the computed hash code from the five individual hash code values.
+   *
+   * @param hc1
+   *        the first hash code value
+   * @param hc2
+   *        the second hash code value
+   * @param hc3
+   *        the third hash code value
+   * @param hc4
+   *        the fourth hash code value
+   * @param hc5
+   *        the fifth hash code value
+   *
+   * @return the computed hash code
+   */
+  public static int of(int hc1, int hc2, int hc3, int hc4, int hc5) {
+    var result = START;
 
-		result = update(result, hc1);
+    result = update(result, hc1);
 
-		result = update(result, hc2);
+    result = update(result, hc2);
 
-		result = update(result, hc3);
+    result = update(result, hc3);
 
-		result = update(result, hc4);
+    result = update(result, hc4);
 
-		result = update(result, hc5);
+    result = update(result, hc5);
 
-		return result;
-	}
+    return result;
+  }
 
-	/**
-	 * Returns the computed hash code from the six or more individual hash code
-	 * values.
-	 *
-	 * @param hc1
-	 *        the first hash code value
-	 * @param hc2
-	 *        the second hash code value
-	 * @param hc3
-	 *        the third hash code value
-	 * @param hc4
-	 *        the fourth hash code value
-	 * @param hc5
-	 *        the fifth hash code value
-	 * @param rest
-	 *        the remaining hash code values
-	 *
-	 * @return the computed hash code
-	 */
-	public static int of(int hc1, int hc2, int hc3, int hc4, int hc5, int... rest) {
-		Check.notNull(rest, "rest == null");
+  /**
+   * Returns the computed hash code from the six or more individual hash code
+   * values.
+   *
+   * @param hc1
+   *        the first hash code value
+   * @param hc2
+   *        the second hash code value
+   * @param hc3
+   *        the third hash code value
+   * @param hc4
+   *        the fourth hash code value
+   * @param hc5
+   *        the fifth hash code value
+   * @param rest
+   *        the remaining hash code values
+   *
+   * @return the computed hash code
+   */
+  public static int of(int hc1, int hc2, int hc3, int hc4, int hc5, int... rest) {
+    Objects.requireNonNull(rest, "rest == null");
 
-		var result = START;
+    var result = START;
 
-		result = update(result, hc1);
+    result = update(result, hc1);
 
-		result = update(result, hc2);
+    result = update(result, hc2);
 
-		result = update(result, hc3);
+    result = update(result, hc3);
 
-		result = update(result, hc4);
+    result = update(result, hc4);
 
-		result = update(result, hc5);
+    result = update(result, hc5);
 
-		for (int hc : rest) {
-			result = update(result, hc);
-		}
+    for (int hc : rest) {
+      result = update(result, hc);
+    }
 
-		return result;
-	}
+    return result;
+  }
 
-	/**
-	 * Returns a hash code for a {@code long} value.
-	 *
-	 * @param l
-	 *        a {@code long} value
-	 *
-	 * @return the hash code
-	 */
-	public static int of(long l) {
-		return (int) (l ^ (l >>> 32));
-	}
+  /**
+   * Returns a hash code for a {@code long} value.
+   *
+   * @param l
+   *        a {@code long} value
+   *
+   * @return the hash code
+   */
+  public static int of(long l) {
+    return (int) (l ^ (l >>> 32));
+  }
 
-	/**
-	 * Returns a hash code for an object reference. It returns:
-	 *
-	 * <ul>
-	 * <li>{@code 0} if the reference is null; or</li>
-	 * <li>the result of {@code o.hashCode()} otherwise.</li>
-	 * </ul>
-	 *
-	 * @param o
-	 *        an object
-	 *
-	 * @return {@code 0} if {@code o} is null, the computed hash code otherwise
-	 */
-	public static int of(Object o) {
-		if (o == null) {
-			return 0;
-		}
+  /**
+   * Returns a hash code for an object reference. It returns:
+   *
+   * <ul>
+   * <li>{@code 0} if the reference is null; or</li>
+   * <li>the result of {@code o.hashCode()} otherwise.</li>
+   * </ul>
+   *
+   * @param o
+   *        an object
+   *
+   * @return {@code 0} if {@code o} is null, the computed hash code otherwise
+   */
+  public static int of(Object o) {
+    if (o == null) {
+      return 0;
+    }
 
-		return o.hashCode();
-	}
+    return o.hashCode();
+  }
 
-	/**
-	 * Returns the computed hash code from two individual objects.
-	 *
-	 * @param o1
-	 *        the first object
-	 * @param o2
-	 *        the second object
-	 *
-	 * @return the computed hash code
-	 */
-	public static int of(Object o1, Object o2) {
-		return of(
-				of(o1),
-				of(o2)
-		);
-	}
+  /**
+   * Returns the computed hash code from two individual objects.
+   *
+   * @param o1
+   *        the first object
+   * @param o2
+   *        the second object
+   *
+   * @return the computed hash code
+   */
+  public static int of(Object o1, Object o2) {
+    return of(
+        of(o1),
+        of(o2)
+    );
+  }
 
-	/**
-	 * Returns the computed hash code from three individual objects.
-	 *
-	 * @param o1
-	 *        the first object
-	 * @param o2
-	 *        the second object
-	 * @param o3
-	 *        the third object
-	 *
-	 * @return the computed hash code
-	 */
-	public static int of(Object o1, Object o2, Object o3) {
-		return of(
-				of(o1),
-				of(o2),
-				of(o3)
-		);
-	}
+  /**
+   * Returns the computed hash code from three individual objects.
+   *
+   * @param o1
+   *        the first object
+   * @param o2
+   *        the second object
+   * @param o3
+   *        the third object
+   *
+   * @return the computed hash code
+   */
+  public static int of(Object o1, Object o2, Object o3) {
+    return of(
+        of(o1),
+        of(o2),
+        of(o3)
+    );
+  }
 
-	/**
-	 * Returns the computed hash code from four individual objects.
-	 *
-	 * @param o1
-	 *        the first object
-	 * @param o2
-	 *        the second object
-	 * @param o3
-	 *        the third object
-	 * @param o4
-	 *        the fourth object
-	 *
-	 * @return the computed hash code
-	 */
-	public static int of(Object o1, Object o2, Object o3, Object o4) {
-		return of(
-				of(o1),
-				of(o2),
-				of(o3),
-				of(o4)
-		);
-	}
+  /**
+   * Returns the computed hash code from four individual objects.
+   *
+   * @param o1
+   *        the first object
+   * @param o2
+   *        the second object
+   * @param o3
+   *        the third object
+   * @param o4
+   *        the fourth object
+   *
+   * @return the computed hash code
+   */
+  public static int of(Object o1, Object o2, Object o3, Object o4) {
+    return of(
+        of(o1),
+        of(o2),
+        of(o3),
+        of(o4)
+    );
+  }
 
-	/**
-	 * Returns the computed hash code from five individual objects.
-	 *
-	 * @param o1
-	 *        the first object
-	 * @param o2
-	 *        the second object
-	 * @param o3
-	 *        the third object
-	 * @param o4
-	 *        the fourth object
-	 * @param o5
-	 *        the fifth object
-	 *
-	 * @return the computed hash code
-	 */
-	public static int of(Object o1, Object o2, Object o3, Object o4, Object o5) {
-		return of(
-				of(o1),
-				of(o2),
-				of(o3),
-				of(o4),
-				of(o5)
-		);
-	}
+  /**
+   * Returns the computed hash code from five individual objects.
+   *
+   * @param o1
+   *        the first object
+   * @param o2
+   *        the second object
+   * @param o3
+   *        the third object
+   * @param o4
+   *        the fourth object
+   * @param o5
+   *        the fifth object
+   *
+   * @return the computed hash code
+   */
+  public static int of(Object o1, Object o2, Object o3, Object o4, Object o5) {
+    return of(
+        of(o1),
+        of(o2),
+        of(o3),
+        of(o4),
+        of(o5)
+    );
+  }
 
-	/**
-	 * Returns the computed hash code from six or more individual objects.
-	 *
-	 * @param o1
-	 *        the first object
-	 * @param o2
-	 *        the second object
-	 * @param o3
-	 *        the third object
-	 * @param o4
-	 *        the fourth object
-	 * @param o5
-	 *        the fifth object
-	 * @param rest
-	 *        the remaining objects
-	 *
-	 * @return the computed hash code
-	 */
-	public static int of(
-			Object o1, Object o2, Object o3, Object o4, Object o5, Object... rest) {
-		Check.notNull(rest, "rest == null");
+  /**
+   * Returns the computed hash code from six or more individual objects.
+   *
+   * @param o1
+   *        the first object
+   * @param o2
+   *        the second object
+   * @param o3
+   *        the third object
+   * @param o4
+   *        the fourth object
+   * @param o5
+   *        the fifth object
+   * @param rest
+   *        the remaining objects
+   *
+   * @return the computed hash code
+   */
+  public static int of(
+      Object o1, Object o2, Object o3, Object o4, Object o5, Object... rest) {
+    Objects.requireNonNull(rest, "rest == null");
 
-		var result = START;
+    var result = START;
 
-		result = update(result, of(o1));
+    result = update(result, of(o1));
 
-		result = update(result, of(o2));
+    result = update(result, of(o2));
 
-		result = update(result, of(o3));
+    result = update(result, of(o3));
 
-		result = update(result, of(o4));
+    result = update(result, of(o4));
 
-		result = update(result, of(o5));
+    result = update(result, of(o5));
 
-		for (Object o : rest) {
-			result = update(result, of(o));
-		}
+    for (Object o : rest) {
+      result = update(result, of(o));
+    }
 
-		return result;
-	}
+    return result;
+  }
 
-	/**
-	 * Returns a hash code for a {@code short} value.
-	 *
-	 * @param s
-	 *        a {@code short} value
-	 *
-	 * @return the hash code
-	 */
-	public static int of(short s) {
-		return s;
-	}
+  /**
+   * Returns a hash code for a {@code short} value.
+   *
+   * @param s
+   *        a {@code short} value
+   *
+   * @return the hash code
+   */
+  public static int of(short s) {
+    return s;
+  }
 
-	/**
-	 * Returns the initial value of a hash code computation.
-	 *
-	 * @return the initial value of hash code computation
-	 */
-	public static int start() {
-		return START;
-	}
+  /**
+   * Returns the initial value of a hash code computation.
+   *
+   * @return the initial value of hash code computation
+   */
+  public static int start() {
+    return START;
+  }
 
-	/**
-	 * Updates a partial hash code computation with an additional hash code value.
-	 *
-	 * @param partial
-	 *        the current partial result of a hash code computation
-	 * @param hashCode
-	 *        the additional hash code value
-	 *
-	 * @return the updated hash code value
-	 */
-	public static int update(int partial, int hashCode) {
-		return MULTIPLIER * partial + hashCode;
-	}
+  /**
+   * Updates a partial hash code computation with an additional hash code value.
+   *
+   * @param partial
+   *        the current partial result of a hash code computation
+   * @param hashCode
+   *        the additional hash code value
+   *
+   * @return the updated hash code value
+   */
+  public static int update(int partial, int hashCode) {
+    return MULTIPLIER * partial + hashCode;
+  }
 
-	/**
-	 * Updates a partial hash code computation with the hash code of an additional
-	 * object.
-	 *
-	 * @param partial
-	 *        the current partial result of a hash code computation
-	 * @param o
-	 *        the additional object
-	 *
-	 * @return the updated hash code value
-	 */
-	public static int update(int partial, Object o) {
-		return update(partial, of(o));
-	}
+  /**
+   * Updates a partial hash code computation with the hash code of an additional
+   * object.
+   *
+   * @param partial
+   *        the current partial result of a hash code computation
+   * @param o
+   *        the additional object
+   *
+   * @return the updated hash code value
+   */
+  public static int update(int partial, Object o) {
+    return update(partial, of(o));
+  }
 
 }

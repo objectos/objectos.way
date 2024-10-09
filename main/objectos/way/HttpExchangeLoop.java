@@ -29,7 +29,6 @@ import java.time.Clock;
 import java.time.ZonedDateTime;
 import java.util.Arrays;
 import java.util.Map;
-import objectos.lang.object.Check;
 import objectos.notes.NoteSink;
 import objectos.way.Lang.CharWritable;
 

@@ -18,7 +18,6 @@ package objectos.way;
 import java.lang.annotation.Annotation;
 import java.nio.charset.StandardCharsets;
 import java.util.function.Consumer;
-import objectos.lang.object.Check;
 import objectos.notes.Note2;
 import objectos.notes.NoteSink;
 

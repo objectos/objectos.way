@@ -31,7 +31,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.OptionalInt;
 import javax.sql.DataSource;
-import objectos.lang.object.Check;
 import objectos.notes.Note3;
 import objectos.notes.NoteSink;
 import objectos.way.SqlDatabase.Builder;

@@ -13,10 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.util;
+package objectos.way;
 
 import java.util.Random;
-import objectox.lang.RandomString;
 
 /**
  * Provides {@code static} methods for generating random byte arrays, string and

@@ -20,7 +20,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.RandomAccess;
 import java.util.function.Predicate;
-import objectos.lang.object.Check;
 import objectos.lang.object.ToString;
 
 /**

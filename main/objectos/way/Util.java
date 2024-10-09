@@ -22,7 +22,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.SequencedMap;
 import java.util.Set;
-import objectos.lang.object.Check;
 
 /**
  * The <strong>Objectos Util</strong> main class.

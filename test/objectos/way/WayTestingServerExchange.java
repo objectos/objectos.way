@@ -25,7 +25,6 @@ import java.net.Socket;
 import java.nio.charset.StandardCharsets;
 import java.time.Clock;
 import java.util.function.Consumer;
-import objectos.lang.object.Check;
 import objectos.notes.NoOpNoteSink;
 import objectos.notes.NoteSink;
 import objectos.way.Http.Exchange;

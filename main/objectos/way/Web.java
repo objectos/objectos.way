@@ -24,7 +24,6 @@ import java.time.Duration;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Random;
-import objectos.lang.object.Check;
 import objectos.notes.Note1;
 import objectos.notes.NoteSink;
 

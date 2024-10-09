@@ -26,6 +26,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import objectos.lang.object.ToString;
+import objectos.way.Next;
 import objectos.way.TestingArrayBackedIterable;
 import objectos.way.Util;
 

@@ -22,7 +22,6 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.List;
 import java.util.OptionalInt;
-import objectos.lang.object.Check;
 
 final class SqlTransaction implements Sql.Transaction {
 

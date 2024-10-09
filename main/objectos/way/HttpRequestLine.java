@@ -23,7 +23,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Function;
-import objectos.lang.object.Check;
 import objectos.way.HttpExchangeLoop.ParseStatus;
 
 non-sealed class HttpRequestLine extends HttpSocketInput implements Http.Request.Target {

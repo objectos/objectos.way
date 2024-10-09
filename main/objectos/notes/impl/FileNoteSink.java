@@ -23,9 +23,9 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
+import java.util.Objects;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
-import objectos.lang.object.Check;
 import objectos.notes.Level;
 import objectos.notes.Note2;
 
@@ -51,9 +51,9 @@ public final class FileNoteSink extends AbstractNoteSink implements Closeable {
   private volatile boolean active;
 
   public FileNoteSink(Path file, Level level) {
-    super(Check.notNull(level, "level == null"));
+    super(Objects.requireNonNull(level, "level == null"));
 
-    this.file = Check.notNull(file, "file == null");
+    this.file = Objects.requireNonNull(file, "file == null");
   }
 
   public final FileNoteSink start() throws IOException {

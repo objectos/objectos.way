@@ -19,7 +19,6 @@ import java.time.Clock;
 import java.time.Instant;
 import java.util.HashMap;
 import java.util.Map;
-import objectos.lang.object.Check;
 
 final class WebSession implements Web.Session {
 

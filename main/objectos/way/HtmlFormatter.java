@@ -17,7 +17,6 @@ package objectos.way;
 
 import java.io.IOException;
 import java.util.Set;
-import objectos.lang.object.Check;
 
 final class HtmlFormatter implements Html.Formatter {
 

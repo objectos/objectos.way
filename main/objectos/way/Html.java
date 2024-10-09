@@ -19,7 +19,6 @@ import java.io.IOException;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import objectos.lang.object.Check;
 
 /**
  * The <strong>Objectos HTML</strong> main class.

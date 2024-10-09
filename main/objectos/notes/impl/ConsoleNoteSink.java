@@ -16,8 +16,9 @@
 package objectos.notes.impl;
 
 import java.io.PrintStream;
-import objectos.lang.object.Check;
+import java.util.Objects;
 import objectos.notes.Level;
+import objectos.notes.NoteSink;
 
 /**
  * A {@link NoteSink} object that writes out notes to the system console.
@@ -27,7 +28,7 @@ public final class ConsoleNoteSink extends AbstractNoteSink {
   private PrintStream stream = System.out;
 
   public ConsoleNoteSink(Level level) {
-    super(Check.notNull(level, "level == null"));
+    super(Objects.requireNonNull(level, "level == null"));
   }
 
   public final void target(PrintStream stream) {

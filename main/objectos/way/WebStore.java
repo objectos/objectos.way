@@ -24,7 +24,6 @@ import java.util.HexFormat;
 import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
-import objectos.lang.object.Check;
 
 /**
  * The Objectos Way {@link SessionStore} implementation.

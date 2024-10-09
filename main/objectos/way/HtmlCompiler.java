@@ -17,7 +17,6 @@ package objectos.way;
 
 import java.io.IOException;
 import java.util.function.Consumer;
-import objectos.lang.object.Check;
 
 final class HtmlCompiler extends HtmlCompilerElements implements Html.Compiler {
 

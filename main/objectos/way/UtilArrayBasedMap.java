@@ -19,7 +19,6 @@ import java.lang.reflect.Array;
 import java.util.Collection;
 import java.util.Map;
 import java.util.function.BiFunction;
-import objectos.lang.object.Check;
 import objectos.lang.object.HashCode;
 import objectos.lang.object.ToString;
 import objectos.way.Util.UnmodifiableIterator;

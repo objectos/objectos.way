@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectox.lang;
+package objectos.way;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;

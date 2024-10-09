@@ -18,7 +18,6 @@ package objectos.way;
 import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.regex.Pattern;
-import objectos.lang.object.Check;
 
 abstract class HttpModule {
 

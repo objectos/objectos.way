@@ -15,7 +15,6 @@
  */
 package objectos.way;
 
-import objectos.lang.object.Check;
 import objectos.way.Carbon.Breakpoint;
 import objectos.way.Carbon.ButtonVariant;
 import objectos.way.Carbon.CarbonButtonVariant;

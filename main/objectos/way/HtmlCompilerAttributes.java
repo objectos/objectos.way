@@ -15,8 +15,6 @@
  */
 package objectos.way;
 
-import objectos.lang.object.Check;
-
 /**
  * Provides methods for rendering HTML attributes.
  */

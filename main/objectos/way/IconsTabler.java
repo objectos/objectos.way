@@ -41,8 +41,6 @@
  */
 package objectos.way;
 
-import objectos.lang.object.Check;
-
 /**
  * Provides SVG icons from the <a href="https://tabler-icons.io/">tabler
  * icons</a> project.

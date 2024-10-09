@@ -34,7 +34,6 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
-import objectos.lang.object.Check;
 import objectos.notes.Note1;
 import objectos.notes.NoteSink;
 import objectos.way.HttpExchangeLoop.ParseStatus;

@@ -18,7 +18,6 @@ package objectos.way;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.function.Predicate;
-import objectos.lang.object.Check;
 import objectos.notes.Level;
 import objectos.notes.NoteSink;
 import objectos.notes.impl.ConsoleNoteSink;

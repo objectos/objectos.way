@@ -20,7 +20,6 @@ import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
-import objectos.lang.object.Check;
 import objectos.way.HttpExchangeLoop.ParseStatus;
 
 class HttpRequestHeaders extends HttpRequestLine implements Http.Request.Headers {
