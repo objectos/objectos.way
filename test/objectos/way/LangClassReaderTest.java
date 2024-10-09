@@ -137,7 +137,7 @@ public class LangClassReaderTest {
 
   private Set<String> processStringConstants() {
     Set<String> set;
-    set = Util.createGrowableSet();
+    set = Util.createSet();
 
     reader.processStringConstants(set::add);
 

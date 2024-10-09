@@ -16,12 +16,12 @@
 package objectos.way;
 
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 import java.util.RandomAccess;
 import java.util.function.Predicate;
 import objectos.lang.object.Check;
 import objectos.lang.object.ToString;
-import objectos.util.UnmodifiableIterator;
 
 /**
  * The base {@link Collection} implementation of the Objectos Util collections
@@ -143,7 +143,7 @@ public abstract class UtilBaseCollection<E> implements Collection<E>, ToString.F
    * @return an unmodifiable iterator over the elements in this collection
    */
   @Override
-  public abstract UnmodifiableIterator<E> iterator();
+  public abstract Iterator<E> iterator();
 
   /**
    * Returns a new string by joining together, in iteration order, the

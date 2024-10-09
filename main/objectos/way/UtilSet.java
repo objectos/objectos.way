@@ -28,7 +28,7 @@ import objectos.util.UnmodifiableIterator;
  *
  * @param <E> type of the elements in this set
  */
-final class UtilGrowableSet<E> extends UtilBaseCollection<E> implements Util.GrowableSet<E> {
+final class UtilSet<E> extends UtilBaseCollection<E> implements Set<E> {
 
   private static final int MAX_POSITIVE_POWER_OF_TWO = 1 << 30;
 
@@ -49,7 +49,7 @@ final class UtilGrowableSet<E> extends UtilBaseCollection<E> implements Util.Gro
   /**
    * Creates a new {@code GrowableSet} instance.
    */
-  public UtilGrowableSet() {}
+  public UtilSet() {}
 
   /**
    * Adds the specified element to this set if it is not already present.
@@ -338,11 +338,6 @@ final class UtilGrowableSet<E> extends UtilBaseCollection<E> implements Util.Gro
 
         return new UtilUnmodifiableSetN<E>(copy, size);
     }
-  }
-
-  @Override
-  protected final Object toStringTypeName() {
-    return "GrowableSet";
   }
 
   final boolean addAll0(Iterable<? extends E> iterable, String nullMessageStart) {

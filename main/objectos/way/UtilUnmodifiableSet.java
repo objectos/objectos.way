@@ -74,7 +74,7 @@ abstract sealed class UtilUnmodifiableSet<E>
   public static <E> UtilUnmodifiableSet<E> copyOf(E[] array) {
     Check.notNull(array, "array == null");
 
-    var set = new UtilGrowableSet<E>();
+    var set = new UtilSet<E>();
 
     E element;
 
@@ -121,11 +121,11 @@ abstract sealed class UtilUnmodifiableSet<E>
       return (UtilUnmodifiableSet<E>) elements;
     }
 
-    if (elements instanceof UtilGrowableSet<? extends E> set) {
+    if (elements instanceof UtilSet<? extends E> set) {
       return (UtilUnmodifiableSet<E>) set.toUnmodifiableSet();
     }
 
-    var set = new UtilGrowableSet<E>();
+    var set = new UtilSet<E>();
 
     set.addAll0(elements, "elements[");
 
@@ -161,7 +161,7 @@ abstract sealed class UtilUnmodifiableSet<E>
       return UtilUnmodifiableSet.of();
     }
 
-    var set = new UtilGrowableSet<E>();
+    var set = new UtilSet<E>();
 
     int i = 0;
 
@@ -219,7 +219,7 @@ abstract sealed class UtilUnmodifiableSet<E>
   public static <E> UtilUnmodifiableSet<E> of(E element) {
     Check.notNull(element, "element == null");
 
-    var set = new UtilGrowableSet<E>();
+    var set = new UtilSet<E>();
 
     set.add(element);
 
@@ -253,7 +253,7 @@ abstract sealed class UtilUnmodifiableSet<E>
     Check.notNull(first, "first == null");
     Check.notNull(more, "more == null");
 
-    var set = new UtilGrowableSet<E>();
+    var set = new UtilSet<E>();
 
     set.add(first);
 

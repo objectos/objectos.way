@@ -42,8 +42,6 @@ public final class Util {
 
   }
 
-  interface GrowableSet<E> extends Set<E> {}
-
   interface UnmodifiableMap<K, V> extends Map<K, V> {}
 
   interface UnmodifiableSequencedMap<K, V> extends UnmodifiableMap<K, V> {}
@@ -92,8 +90,8 @@ public final class Util {
     return new UtilGrowableSequencedMap<>();
   }
 
-  static <E> GrowableSet<E> createGrowableSet() {
-    return new UtilGrowableSet<>();
+  static <E> Set<E> createSet() {
+    return new UtilSet<>();
   }
 
   /**

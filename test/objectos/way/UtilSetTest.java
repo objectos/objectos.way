@@ -33,13 +33,13 @@ import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-public class UtilGrowableSetTest {
+public class UtilSetTest {
 
-  private UtilGrowableSet<Thing> it;
+  private UtilSet<Thing> it;
 
   @BeforeMethod
   public void _beforeMethod() {
-    it = new UtilGrowableSet<>();
+    it = new UtilSet<>();
   }
 
   @Test
@@ -339,9 +339,9 @@ public class UtilGrowableSetTest {
 
   @Test
   public void equals() {
-    var a = new UtilGrowableSet<Thing>();
+    var a = new UtilSet<Thing>();
 
-    var b = new UtilGrowableSet<Thing>();
+    var b = new UtilSet<Thing>();
 
     assertTrue(a.equals(b));
     assertTrue(b.equals(a));
@@ -361,7 +361,7 @@ public class UtilGrowableSetTest {
 
     assertFalse(a.equals(b));
 
-    var c = new UtilGrowableSet<Thing>();
+    var c = new UtilSet<Thing>();
 
     c.addAll(arrayList);
 
@@ -570,7 +570,7 @@ public class UtilGrowableSetTest {
 
   @Test
   public void toStringTest() {
-    assertEquals(it.toString(), "GrowableSet []");
+    assertEquals(it.toString(), "UtilSet []");
 
     var t1 = Thing.next();
 
@@ -580,7 +580,7 @@ public class UtilGrowableSetTest {
         it.toString(),
 
         """
-        GrowableSet [
+        UtilSet [
           0 = Thing [
             value = %s
           ]
@@ -601,7 +601,7 @@ public class UtilGrowableSetTest {
         it.toString(),
 
         """
-        GrowableSet [
+        UtilSet [
           0 = Thing [
             value = %s
           ]

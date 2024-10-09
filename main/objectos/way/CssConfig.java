@@ -49,7 +49,7 @@ final class CssConfig {
 
   private Util.GrowableMap<String, String> components;
 
-  private Util.GrowableSet<Path> directories;
+  private Set<Path> directories;
 
   private final Map<Css.Key, CssProperties> extensions = new EnumMap<>(Css.Key.class);
 
@@ -72,7 +72,7 @@ final class CssConfig {
   private boolean variantsInitialized;
 
   public CssConfig() {
-    classes = Util.createGrowableSet();
+    classes = Util.createSet();
   }
 
   // testing helper
@@ -97,7 +97,7 @@ final class CssConfig {
 
   public final void addDirectory(Path directory) {
     if (directories == null) {
-      directories = Util.createGrowableSet();
+      directories = Util.createSet();
     }
 
     directories.add(directory);
