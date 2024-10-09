@@ -57,7 +57,7 @@ import objectos.way.Util.UnmodifiableList;
  * @see UtilGrowableCollection
  * @see java.util.List
  */
-final class UtilGrowableList<E> extends UtilBaseCollection<E> implements Util.GrowableList<E> {
+final class UtilGrowableList<E> extends UtilBaseCollection<E> implements List<E> {
 
   private Object[] data = Util.EMPTY_OBJECT_ARRAY;
 
@@ -642,7 +642,6 @@ final class UtilGrowableList<E> extends UtilBaseCollection<E> implements Util.Gr
    *
    * @return an {@link UnmodifiableList} copy of this list
    */
-  @Override
   public final UtilUnmodifiableList<E> toUnmodifiableList() {
     switch (size) {
       case 0:

@@ -15,11 +15,13 @@
  */
 package objectos.way;
 
+import java.util.List;
+
 class CssGeneratorAdapter {
 
-  private final Util.GrowableList<Css.ClassNameFormat> classNameFormats = Util.createGrowableList();
+  private final List<Css.ClassNameFormat> classNameFormats = Util.createGrowableList();
 
-  private final Util.GrowableList<Css.MediaQuery> mediaQueries = Util.createGrowableList();
+  private final List<Css.MediaQuery> mediaQueries = Util.createGrowableList();
 
   private boolean invalid;
 
@@ -115,7 +117,10 @@ class CssGeneratorAdapter {
     if (mediaQueries.isEmpty() && classNameFormats.isEmpty()) {
       modifier = Css.EMPTY_MODIFIER;
     } else {
-      modifier = new Css.Modifier(mediaQueries.toUnmodifiableList(), classNameFormats.toUnmodifiableList());
+      modifier = new Css.Modifier(
+          Util.toUnmodifiableList(mediaQueries),
+          Util.toUnmodifiableList(classNameFormats)
+      );
     }
 
     String value;

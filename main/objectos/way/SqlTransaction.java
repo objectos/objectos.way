@@ -23,7 +23,6 @@ import java.sql.Statement;
 import java.util.List;
 import java.util.OptionalInt;
 import objectos.lang.object.Check;
-import objectos.way.Util.GrowableList;
 
 final class SqlTransaction implements Sql.Transaction {
 
@@ -33,9 +32,9 @@ final class SqlTransaction implements Sql.Transaction {
 
   private String sql;
 
-  private Util.GrowableList<Object> arguments;
+  private List<Object> arguments;
 
-  private Util.GrowableList<Util.UnmodifiableList<Object>> batches;
+  private List<List<Object>> batches;
 
   SqlTransaction(SqlDialect dialect, Connection connection) {
     this.dialect = dialect;
@@ -228,8 +227,8 @@ final class SqlTransaction implements Sql.Transaction {
       batches = Util.createGrowableList();
     }
 
-    Util.UnmodifiableList<Object> batch;
-    batch = arguments.toUnmodifiableList();
+    List<Object> batch;
+    batch = Util.toUnmodifiableList(arguments);
 
     arguments.clear();
 
@@ -262,7 +261,7 @@ final class SqlTransaction implements Sql.Transaction {
   public final <T> List<T> query(Sql.Mapper<T> mapper) throws Sql.DatabaseException {
     checkQuery(mapper);
 
-    Util.GrowableList<T> list;
+    List<T> list;
     list = Util.createGrowableList();
 
     if (hasArguments()) {
@@ -283,13 +282,17 @@ final class SqlTransaction implements Sql.Transaction {
 
     }
 
-    return list.toUnmodifiableList();
+    return Util.toUnmodifiableList(list);
   }
 
-  private <T> void query0(Sql.Mapper<T> mapper, GrowableList<T> list, ResultSet rs) throws SQLException {
+  private <T> void query0(Sql.Mapper<T> mapper, List<T> list, ResultSet rs) throws SQLException {
     while (rs.next()) {
       T instance;
       instance = mapper.map(rs, 1);
+
+      if (instance == null) {
+        throw new Sql.MappingException("Mapper produced a null value");
+      }
 
       list.add(instance);
     }

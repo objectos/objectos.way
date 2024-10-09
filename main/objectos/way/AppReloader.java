@@ -29,6 +29,7 @@ import java.nio.file.WatchEvent;
 import java.nio.file.WatchKey;
 import java.nio.file.WatchService;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.util.List;
 import objectos.notes.NoOpNoteSink;
 import objectos.notes.Note1;
 import objectos.notes.Note2;
@@ -72,7 +73,7 @@ final class AppReloader implements App.Reloader {
 
   private Lang.ClassReader classReader;
 
-  private final Util.GrowableList<Path> directories = Util.createGrowableList();
+  private final List<Path> directories = Util.createGrowableList();
 
   private final Util.GrowableMap<WatchKey, Path> keys = Util.createGrowableMap();
 

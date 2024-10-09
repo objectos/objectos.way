@@ -153,7 +153,7 @@ final class CssConfig {
   public final void breakpoints(CssProperties properties) {
     int index = 0;
 
-    Util.GrowableList<Css.Breakpoint> builder;
+    List<Css.Breakpoint> builder;
     builder = Util.createGrowableList();
 
     for (var entry : properties) {
@@ -169,7 +169,7 @@ final class CssConfig {
       builder.add(breakpoint);
     }
 
-    breakpoints = builder.toUnmodifiableList();
+    breakpoints = Util.toUnmodifiableList(builder);
   }
 
   public final void classes(Set<Class<?>> set) {

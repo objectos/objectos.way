@@ -36,7 +36,7 @@ final class AppReloaderHelper implements AutoCloseable {
   private final JavaCompiler javaCompiler;
   private final StandardJavaFileManager fileManager;
 
-  private final Util.GrowableList<Path> sourceFiles = Util.createGrowableList();
+  private final List<Path> sourceFiles = Util.createGrowableList();
 
   public AppReloaderHelper(
       Path root,

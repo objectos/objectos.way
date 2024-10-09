@@ -130,15 +130,15 @@ public final class Sql {
   public interface Mapper<T> {
 
     /**
-     * Implementations should not invoke the {@code next()} method on the
-     * {@code ResultSet} object.
+     * Implementations must not invoke the {@code next()} method on the
+     * {@code ResultSet} object and they must not return {@code null} values.
      *
      * @param rs
      *        the result set object positioned at the row to be mapped
      * @param startingParameterIndex
      *        the starting parameter index (always the value {@code 1})
      *
-     * @return the mapped object
+     * @return the mapped object, never {@code null}
      */
     T map(ResultSet rs, int startingParameterIndex) throws SQLException;
 

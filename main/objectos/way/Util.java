@@ -30,11 +30,25 @@ public final class Util {
 
   // types
 
-  interface GrowableList<E> extends List<E>, RandomAccess {
+  /*
+  interface GrowableList<E> extends Iterable<E>, RandomAccess {
+
+    boolean add(E e);
+
+    void clear();
+
+    E get(int index);
+
+    boolean isEmpty();
+
+    int size();
+
+    void sort(Comparator<? super E> c);
 
     UnmodifiableList<E> toUnmodifiableList();
 
   }
+  */
 
   interface GrowableMap<K, V> extends Map<K, V> {
 
@@ -89,7 +103,7 @@ public final class Util {
 
   private Util() {}
 
-  static <E> GrowableList<E> createGrowableList() {
+  static <E> List<E> createGrowableList() {
     return new UtilGrowableList<>();
   }
 
@@ -341,6 +355,14 @@ public final class Util {
         return "";
       default:
         return toHexStringNonEmpty(array, 0, length);
+    }
+  }
+
+  static <E> List<E> toUnmodifiableList(List<E> list) {
+    if (list instanceof UtilGrowableList<E> growable) {
+      return growable.toUnmodifiableList();
+    } else {
+      throw new UnsupportedOperationException();
     }
   }
 

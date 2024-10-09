@@ -15,6 +15,7 @@
  */
 package objectos.way;
 
+import java.util.List;
 import java.util.Map;
 import java.util.function.Predicate;
 
@@ -36,7 +37,7 @@ final class AppOption<T> implements App.Option<T> {
 
   private boolean required;
 
-  private Util.GrowableList<Validator<? super T>> validators;
+  private List<Validator<? super T>> validators;
 
   private T value;
 
@@ -95,7 +96,12 @@ final class AppOption<T> implements App.Option<T> {
 
   final void validate(AppBootstrap collector) {
     if (error != null) {
-      collector.addMessage(error.getMessage());
+      String message;
+      message = error.getMessage();
+
+      message = String.valueOf(message);
+
+      collector.addMessage(message);
     }
 
     if (required && value == null) {

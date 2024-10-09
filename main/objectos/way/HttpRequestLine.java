@@ -686,7 +686,7 @@ non-sealed class HttpRequestLine extends HttpSocketInput implements Http.Request
       if (value.equals("")) {
         map.put(key, s);
       } else {
-        Util.GrowableList<String> list;
+        List<String> list;
         list = Util.createGrowableList();
 
         list.add(s);
