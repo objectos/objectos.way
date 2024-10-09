@@ -50,7 +50,7 @@ public final class Thing implements ToString.Formattable {
 
   public static final List<Thing> EMPTY_LIST = Collections.emptyList();
 
-  static final Set<Thing> EMPTY_SET = Collections.emptySet();
+  public static final Set<Thing> EMPTY_SET = Collections.emptySet();
 
   public static final int MANY = 100;
 

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.util;
+package objectos.way;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
@@ -26,17 +26,28 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.function.Consumer;
+import objectos.util.GrowableCollectionAddAllIterableTest;
+import objectos.util.GrowableCollectionAddWithNullMessageTest;
+import objectos.util.GrowableCollectionClearTest;
+import objectos.util.GrowableCollectionContainsAllTest;
+import objectos.util.GrowableCollectionContainsTest;
+import objectos.util.GrowableCollectionIsEmptyTest;
+import objectos.util.GrowableCollectionRemoveAllTest;
+import objectos.util.GrowableCollectionRemoveIfTest;
+import objectos.util.GrowableCollectionRetainAllTest;
+import objectos.util.SetAssert;
+import objectos.util.Thing;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-public class GrowableSetTest {
+public class UtilGrowableSetTest {
 
-  private GrowableSet<Thing> it;
+  private UtilGrowableSet<Thing> it;
 
   @BeforeMethod
   public void _beforeMethod() {
-    it = new GrowableSet<>();
+    it = new UtilGrowableSet<>();
   }
 
   @Test
@@ -182,9 +193,9 @@ public class GrowableSetTest {
 
   @Test
   public void equals() {
-    var a = new GrowableSet<Thing>();
+    var a = new UtilGrowableSet<Thing>();
 
-    var b = new GrowableSet<Thing>();
+    var b = new UtilGrowableSet<Thing>();
 
     assertTrue(a.equals(b));
     assertTrue(b.equals(a));
@@ -204,7 +215,7 @@ public class GrowableSetTest {
 
     assertFalse(a.equals(b));
 
-    var c = new GrowableSet<Thing>();
+    var c = new UtilGrowableSet<Thing>();
 
     c.addAll(arrayList);
 
@@ -388,11 +399,11 @@ public class GrowableSetTest {
         it.toString(),
 
         """
-      GrowableSet [
-        0 = Thing [
-          value = %s
-        ]
-      ]""".formatted(t1.toHexString())
+        GrowableSet [
+          0 = Thing [
+            value = %s
+          ]
+        ]""".formatted(t1.toHexString())
     );
 
     var t2 = Thing.next();
@@ -409,14 +420,14 @@ public class GrowableSetTest {
         it.toString(),
 
         """
-      GrowableSet [
-        0 = Thing [
-          value = %s
-        ]
-        1 = Thing [
-          value = %s
-        ]
-      ]""".formatted(o1.toHexString(), o2.toHexString())
+        GrowableSet [
+          0 = Thing [
+            value = %s
+          ]
+          1 = Thing [
+            value = %s
+          ]
+        ]""".formatted(o1.toHexString(), o2.toHexString())
     );
   }
 

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.util;
+package objectos.way;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
@@ -30,27 +30,30 @@ import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.Set;
 import java.util.function.Consumer;
-import objectos.way.TestingArrayBackedIterable;
+import objectos.util.ArrayIterator;
+import objectos.util.SetAssert;
+import objectos.util.SingletonIterator;
+import objectos.util.Thing;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-public class UnmodifiableSetTest {
+public class UtilUnmodifiableSetTest {
 
   @FunctionalInterface
   interface Tester {
-    void execute(UnmodifiableSet<Thing> it, Object... els);
+    void execute(UtilUnmodifiableSet<Thing> it, Object... els);
   }
 
-  private UnmodifiableSet<Thing> us0;
+  private UtilUnmodifiableSet<Thing> us0;
 
-  private UnmodifiableSet<Thing> us1;
+  private UtilUnmodifiableSet<Thing> us1;
 
-  private UnmodifiableSet<Thing> us2;
+  private UtilUnmodifiableSet<Thing> us2;
 
-  private UnmodifiableSet<Thing> us3;
+  private UtilUnmodifiableSet<Thing> us3;
 
-  private UnmodifiableSet<Thing> usX;
+  private UtilUnmodifiableSet<Thing> usX;
 
   private Set<Thing> jdk0;
 
@@ -72,27 +75,27 @@ public class UnmodifiableSetTest {
 
   @BeforeClass
   public void _beforeClass() {
-    us0 = UnmodifiableSet.of();
+    us0 = UtilUnmodifiableSet.of();
     jdk0 = Set.of();
 
     t1 = Thing.next();
 
-    us1 = UnmodifiableSet.of(t1);
+    us1 = UtilUnmodifiableSet.of(t1);
     jdk1 = Set.of(t1);
 
     t2 = Thing.next();
 
-    us2 = UnmodifiableSet.of(t1, t2);
+    us2 = UtilUnmodifiableSet.of(t1, t2);
     jdk2 = Set.of(t1, t2);
 
     t3 = Thing.next();
 
-    us3 = UnmodifiableSet.of(t1, t2, t3);
+    us3 = UtilUnmodifiableSet.of(t1, t2, t3);
     jdk3 = Set.of(t1, t2, t3);
 
     many = Thing.nextArray();
 
-    usX = UnmodifiableSet.copyOf(many);
+    usX = UtilUnmodifiableSet.copyOf(many);
     jdkX = Set.of(many);
   }
 
@@ -205,7 +208,7 @@ public class UnmodifiableSetTest {
   public void copyOf_iterable() {
     final var array = Thing.nextArray();
 
-    Consumer<UnmodifiableSet<Thing>> tester = l -> {
+    Consumer<UtilUnmodifiableSet<Thing>> tester = l -> {
       Object a = array;
 
       SetAssert.iterator(l, a);
@@ -215,7 +218,7 @@ public class UnmodifiableSetTest {
     try {
       Iterable<?> nullIterable = null;
 
-      UnmodifiableSet.copyOf(nullIterable);
+      UtilUnmodifiableSet.copyOf(nullIterable);
 
       Assert.fail("Expected a NullPointerException");
     } catch (NullPointerException expected) {
@@ -225,12 +228,12 @@ public class UnmodifiableSetTest {
     // iterable
     var iterable = new TestingArrayBackedIterable<>(array);
 
-    var ulIterable = UnmodifiableSet.copyOf(iterable);
+    var ulIterable = UtilUnmodifiableSet.copyOf(iterable);
 
     tester.accept(ulIterable);
 
     // UnmodifiableSet
-    assertSame(UnmodifiableSet.copyOf(ulIterable), ulIterable);
+    assertSame(UtilUnmodifiableSet.copyOf(ulIterable), ulIterable);
 
     // LinkedList
     var linkedList = new LinkedList<Thing>();
@@ -239,7 +242,7 @@ public class UnmodifiableSetTest {
       linkedList.add(o);
     }
 
-    tester.accept(UnmodifiableSet.copyOf(linkedList));
+    tester.accept(UtilUnmodifiableSet.copyOf(linkedList));
 
     // List & RandomAccess
     var arrayList = new ArrayList<Thing>(Thing.MANY);
@@ -248,7 +251,7 @@ public class UnmodifiableSetTest {
       arrayList.add(t);
     }
 
-    tester.accept(UnmodifiableSet.copyOf(arrayList));
+    tester.accept(UtilUnmodifiableSet.copyOf(arrayList));
 
     // List & RandomAccess with null
     var arrayListWithNull = new ArrayList<>(arrayList);
@@ -256,7 +259,7 @@ public class UnmodifiableSetTest {
     arrayListWithNull.set(Thing.HALF, null);
 
     try {
-      UnmodifiableSet.copyOf(arrayListWithNull);
+      UtilUnmodifiableSet.copyOf(arrayListWithNull);
 
       Assert.fail("Expected a NullPointerException");
     } catch (NullPointerException expected) {
@@ -270,13 +273,13 @@ public class UnmodifiableSetTest {
       collection.add(t);
     }
 
-    tester.accept(UnmodifiableSet.copyOf(collection));
+    tester.accept(UtilUnmodifiableSet.copyOf(collection));
 
     // Collection with null
     var collectionWithNull = new LinkedHashSet<>(arrayListWithNull);
 
     try {
-      UnmodifiableSet.copyOf(collectionWithNull);
+      UtilUnmodifiableSet.copyOf(collectionWithNull);
 
       Assert.fail("Expected a NullPointerException");
     } catch (NullPointerException expected) {
@@ -287,21 +290,21 @@ public class UnmodifiableSetTest {
   @Test
   public void copyOf_iterator() {
     // empty
-    var it = UnmodifiableSet.<Thing> copyOf(Collections.emptyIterator());
+    var it = UtilUnmodifiableSet.<Thing> copyOf(Collections.emptyIterator());
 
-    assertSame(it, UnmodifiableSet.of());
+    assertSame(it, UtilUnmodifiableSet.of());
 
     // one
     var t1 = Thing.next();
 
-    it = UnmodifiableSet.copyOf(new SingletonIterator<>(t1));
+    it = UtilUnmodifiableSet.copyOf(new SingletonIterator<>(t1));
 
     SetAssert.iterator(it, t1);
 
     // many
     var many = Thing.nextArray();
 
-    it = UnmodifiableSet.copyOf(new ArrayIterator<>(many, many.length));
+    it = UtilUnmodifiableSet.copyOf(new ArrayIterator<>(many, many.length));
 
     SetAssert.iterator(it, (Object) many);
 
@@ -309,7 +312,7 @@ public class UnmodifiableSetTest {
     try {
       Iterator<?> nullIterator = null;
 
-      UnmodifiableSet.copyOf(nullIterator);
+      UtilUnmodifiableSet.copyOf(nullIterator);
 
       Assert.fail("Expected a NullPointerException");
     } catch (NullPointerException expected) {
@@ -361,24 +364,24 @@ public class UnmodifiableSetTest {
   }
 
   /*
-  
+
   // getOnly is not public anymore
-  
+
   @Test
   public void getOnly() {
     try {
       us0.getOnly();
-  
+
       Assert.fail();
     } catch (IllegalStateException expected) {
       assertEquals(expected.getMessage(), "Could not getOnly: empty.");
     }
-  
+
     assertEquals(us1.getOnly(), jdk1.iterator().next());
-  
+
     try {
       us2.getOnly();
-  
+
       Assert.fail();
     } catch (IllegalStateException expected) {
       assertEquals(expected.getMessage(), "Could not getOnly: more than one element.");
@@ -556,11 +559,11 @@ public class UnmodifiableSetTest {
         us1.toString(),
 
         """
-      UnmodifiableSet [
-        0 = Thing [
-          value = %s
-        ]
-      ]""".formatted(t1.toHexString())
+        UnmodifiableSet [
+          0 = Thing [
+            value = %s
+          ]
+        ]""".formatted(t1.toHexString())
     );
 
     var iterator = us2.iterator();
@@ -573,32 +576,32 @@ public class UnmodifiableSetTest {
         us2.toString(),
 
         """
-      UnmodifiableSet [
-        0 = Thing [
-          value = %s
-        ]
-        1 = Thing [
-          value = %s
-        ]
-      ]""".formatted(o1.toHexString(), o2.toHexString())
+        UnmodifiableSet [
+          0 = Thing [
+            value = %s
+          ]
+          1 = Thing [
+            value = %s
+          ]
+        ]""".formatted(o1.toHexString(), o2.toHexString())
     );
   }
 
   private void testAll(Tester tester) {
     // empty
-    tester.execute(UnmodifiableSet.of());
+    tester.execute(UtilUnmodifiableSet.of());
 
     // one
     var t1 = Thing.next();
-    tester.execute(UnmodifiableSet.of(t1), t1);
+    tester.execute(UtilUnmodifiableSet.of(t1), t1);
 
     // two
     var t2 = Thing.next();
-    tester.execute(UnmodifiableSet.of(t1, t2), t1, t2);
+    tester.execute(UtilUnmodifiableSet.of(t1, t2), t1, t2);
 
     //many
     var many = Thing.nextArray();
-    tester.execute(UnmodifiableSet.copyOf(many), (Object) many);
+    tester.execute(UtilUnmodifiableSet.copyOf(many), (Object) many);
   }
 
   private void testToArray(Object[] result, Object... expected) {

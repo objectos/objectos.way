@@ -18,13 +18,13 @@ package objectos.util;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-final class SingletonIterator<E> implements Iterator<E> {
+public final class SingletonIterator<E> implements Iterator<E> {
 
   private boolean consumed;
 
   private final E element;
 
-  SingletonIterator(E element) {
+  public SingletonIterator(E element) {
     this.element = element;
   }
 

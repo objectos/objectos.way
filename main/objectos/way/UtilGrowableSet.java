@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.util;
+package objectos.way;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -21,15 +21,14 @@ import java.util.List;
 import java.util.RandomAccess;
 import java.util.Set;
 import objectos.lang.object.Check;
-import objectos.way.Util;
-import objectos.way.UtilGrowableCollection;
+import objectos.util.UnmodifiableIterator;
 
 /**
  * A hash-based {@link Set} and {@link UtilGrowableCollection} implementation.
  *
  * @param <E> type of the elements in this set
  */
-public final class GrowableSet<E> extends UtilGrowableCollection<E> implements Set<E> {
+final class UtilGrowableSet<E> extends UtilGrowableCollection<E> implements Util.GrowableSet<E> {
 
   private static final int MAX_POSITIVE_POWER_OF_TWO = 1 << 30;
 
@@ -50,7 +49,7 @@ public final class GrowableSet<E> extends UtilGrowableCollection<E> implements S
   /**
    * Creates a new {@code GrowableSet} instance.
    */
-  public GrowableSet() {}
+  public UtilGrowableSet() {}
 
   /**
    * Adds the specified element to this set if it is not already present.
@@ -221,7 +220,7 @@ public final class GrowableSet<E> extends UtilGrowableCollection<E> implements S
    */
   @Override
   public final boolean contains(Object o) {
-    return Sets.containsImpl(array, size, o);
+    return UtilSets.containsImpl(array, size, o);
   }
 
   /**
@@ -242,7 +241,7 @@ public final class GrowableSet<E> extends UtilGrowableCollection<E> implements S
    */
   @Override
   public final boolean equals(Object obj) {
-    return Sets.equalsImpl(this, obj);
+    return UtilSets.equalsImpl(this, obj);
   }
 
   /**
@@ -252,7 +251,7 @@ public final class GrowableSet<E> extends UtilGrowableCollection<E> implements S
    */
   @Override
   public final int hashCode() {
-    return Sets.hashCodeImpl(array);
+    return UtilSets.hashCodeImpl(array);
   }
 
   /**
@@ -263,7 +262,7 @@ public final class GrowableSet<E> extends UtilGrowableCollection<E> implements S
    */
   @Override
   public final UnmodifiableIterator<E> iterator() {
-    return new Sets.SetIterator<>(array);
+    return new UtilSets.SetIterator<>(array);
   }
 
   /**
@@ -285,7 +284,7 @@ public final class GrowableSet<E> extends UtilGrowableCollection<E> implements S
    */
   @Override
   public final Object[] toArray() {
-    return Sets.toArrayImpl(array, size);
+    return UtilSets.toArrayImpl(array, size);
   }
 
   /**
@@ -312,11 +311,11 @@ public final class GrowableSet<E> extends UtilGrowableCollection<E> implements S
    */
   @Override
   public final <T> T[] toArray(T[] a) {
-    return Sets.toArrayImpl(array, size, a);
+    return UtilSets.toArrayImpl(array, size, a);
   }
 
   /**
-   * Returns an {@link UnmodifiableSet} copy of this set.
+   * Returns an {@link UtilUnmodifiableSet} copy of this set.
    *
    * <p>
    * The returned {@code UnmodifiableSet} will contain all of the elements from
@@ -331,17 +330,22 @@ public final class GrowableSet<E> extends UtilGrowableCollection<E> implements S
    * Note, however, that the behaviour of this method is undefined if this set
    * is modified while the copy is being made.
    *
-   * @return an {@link UnmodifiableSet} copy of this set
+   * @return an {@link UtilUnmodifiableSet} copy of this set
    */
-  public final UnmodifiableSet<E> toUnmodifiableSet() {
+  public final UtilUnmodifiableSet<E> toUnmodifiableSet() {
     switch (size) {
       case 0:
-        return UnmodifiableSet.of();
+        return UtilUnmodifiableSet.of();
       default:
         var copy = Arrays.copyOf(array, array.length);
 
-        return new UnmodifiableSetN<E>(copy, size);
+        return new UtilUnmodifiableSetN<E>(copy, size);
     }
+  }
+
+  @Override
+  protected final Object toStringTypeName() {
+    return "GrowableSet";
   }
 
   final boolean addAll0(Iterable<? extends E> iterable, String nullMessageStart) {

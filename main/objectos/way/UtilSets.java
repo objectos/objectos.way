@@ -13,14 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.util;
+package objectos.way;
 
 import java.lang.reflect.Array;
 import java.util.NoSuchElementException;
 import java.util.Set;
 import objectos.lang.object.Check;
+import objectos.util.UnmodifiableIterator;
 
-final class Sets {
+final class UtilSets {
 
   static class SetIterator<E> extends UnmodifiableIterator<E> {
 
@@ -77,7 +78,7 @@ final class Sets {
 
   }
 
-  private Sets() {}
+  private UtilSets() {}
 
   public static boolean equals(Set<?> self, Set<?> that) {
     var size = self.size();

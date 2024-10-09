@@ -31,7 +31,6 @@ import java.util.regex.Pattern;
 import objectos.notes.NoOpNoteSink;
 import objectos.notes.NoteSink;
 import objectos.util.GrowableMap;
-import objectos.util.GrowableSet;
 
 final class CssConfig {
 
@@ -51,7 +50,7 @@ final class CssConfig {
 
   private Map<String, String> components;
 
-  private Set<Path> directories;
+  private Util.GrowableSet<Path> directories;
 
   private final Map<Css.Key, CssProperties> extensions = new EnumMap<>(Css.Key.class);
 
@@ -74,7 +73,7 @@ final class CssConfig {
   private boolean variantsInitialized;
 
   public CssConfig() {
-    classes = new GrowableSet<>();
+    classes = Util.createGrowableSet();
   }
 
   // testing helper
@@ -99,7 +98,7 @@ final class CssConfig {
 
   public final void addDirectory(Path directory) {
     if (directories == null) {
-      directories = new GrowableSet<>();
+      directories = Util.createGrowableSet();
     }
 
     directories.add(directory);

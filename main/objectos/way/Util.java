@@ -20,6 +20,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.RandomAccess;
+import java.util.Set;
 import objectos.lang.object.Check;
 import objectos.lang.object.ToString;
 import objectos.util.GrowableMap;
@@ -299,7 +300,11 @@ public final class Util {
 
   }
 
+  public interface GrowableSet<E> extends GrowableCollection<E>, Set<E> {}
+
   public interface UnmodifiableList<E> extends List<E>, RandomAccess {}
+
+  public interface UnmodifiableSet<E> extends Set<E> {}
 
   /**
    * An empty zero-length {@code byte} array instance.
@@ -333,6 +338,10 @@ public final class Util {
 
   public static <E> GrowableList<E> createGrowableList() {
     return new UtilGrowableList<>();
+  }
+
+  public static <E> GrowableSet<E> createGrowableSet() {
+    return new UtilGrowableSet<>();
   }
 
   /**

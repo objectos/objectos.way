@@ -24,7 +24,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.annotation.ElementType;
 import java.util.Set;
-import objectos.util.GrowableSet;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
@@ -138,7 +137,7 @@ public class LangClassReaderTest {
 
   private Set<String> processStringConstants() {
     Set<String> set;
-    set = new GrowableSet<>();
+    set = Util.createGrowableSet();
 
     reader.processStringConstants(set::add);
 

@@ -13,12 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.util;
+package objectos.way;
 
 import java.util.Iterator;
 import java.util.Set;
 import objectos.lang.object.Check;
-import objectos.way.Util;
+import objectos.util.UnmodifiableCollection;
+import objectos.util.UnmodifiableIterator;
 
 /**
  * An unmodifiable implementation of the {@link Set} interface.
@@ -32,18 +33,18 @@ import objectos.way.Util;
  *
  * @param <E> type of the elements in this set
  */
-public abstract sealed class UnmodifiableSet<E>
+abstract sealed class UtilUnmodifiableSet<E>
     extends UnmodifiableCollection<E>
-    implements Set<E> permits UnmodifiableSetN {
+    implements Set<E> permits UtilUnmodifiableSetN {
 
-  private static final UnmodifiableSet<Object> EMPTY = new UnmodifiableSetN<Object>(
+  private static final UtilUnmodifiableSet<Object> EMPTY = new UtilUnmodifiableSetN<Object>(
       Util.EMPTY_OBJECT_ARRAY, 0
   );
 
   /**
    * Sole constructor.
    */
-  UnmodifiableSet() {}
+  UtilUnmodifiableSet() {}
 
   /**
    * Returns a new {@code UnmodifiableSet} containing all of the distinct
@@ -71,10 +72,10 @@ public abstract sealed class UnmodifiableSet<E>
    *         if the array is {@code null} or any element in the array is
    *         {@code null}
    */
-  public static <E> UnmodifiableSet<E> copyOf(E[] array) {
+  public static <E> UtilUnmodifiableSet<E> copyOf(E[] array) {
     Check.notNull(array, "array == null");
 
-    var set = new GrowableSet<E>();
+    var set = new UtilGrowableSet<E>();
 
     E element;
 
@@ -114,18 +115,18 @@ public abstract sealed class UnmodifiableSet<E>
    *         iterable's iterator is {@code null}
    */
   @SuppressWarnings("unchecked")
-  public static <E> UnmodifiableSet<E> copyOf(Iterable<? extends E> elements) {
+  public static <E> UtilUnmodifiableSet<E> copyOf(Iterable<? extends E> elements) {
     Check.notNull(elements, "elements == null");
 
-    if (elements instanceof UnmodifiableSet) {
-      return (UnmodifiableSet<E>) elements;
+    if (elements instanceof UtilUnmodifiableSet) {
+      return (UtilUnmodifiableSet<E>) elements;
     }
 
-    if (elements instanceof GrowableSet<? extends E> set) {
-      return (UnmodifiableSet<E>) set.toUnmodifiableSet();
+    if (elements instanceof UtilGrowableSet<? extends E> set) {
+      return (UtilUnmodifiableSet<E>) set.toUnmodifiableSet();
     }
 
-    var set = new GrowableSet<E>();
+    var set = new UtilGrowableSet<E>();
 
     set.addAll0(elements, "elements[");
 
@@ -154,14 +155,14 @@ public abstract sealed class UnmodifiableSet<E>
    *         if the iterator is {@code null} or any element produced by the
    *         iterator is {@code null}
    */
-  public static <E> UnmodifiableSet<E> copyOf(Iterator<? extends E> iterator) {
+  public static <E> UtilUnmodifiableSet<E> copyOf(Iterator<? extends E> iterator) {
     Check.notNull(iterator, "iterator == null");
 
     if (!iterator.hasNext()) {
-      return UnmodifiableSet.of();
+      return UtilUnmodifiableSet.of();
     }
 
-    var set = new GrowableSet<E>();
+    var set = new UtilGrowableSet<E>();
 
     int i = 0;
 
@@ -199,8 +200,8 @@ public abstract sealed class UnmodifiableSet<E>
    * @return the empty {@code UnmodifiableSet}
    */
   @SuppressWarnings("unchecked")
-  public static <E> UnmodifiableSet<E> of() {
-    return (UnmodifiableSet<E>) EMPTY;
+  public static <E> UtilUnmodifiableSet<E> of() {
+    return (UtilUnmodifiableSet<E>) EMPTY;
   }
 
   /**
@@ -216,10 +217,10 @@ public abstract sealed class UnmodifiableSet<E>
    * @throws NullPointerException
    *         if the specified element is {@code null}
    */
-  public static <E> UnmodifiableSet<E> of(E element) {
+  public static <E> UtilUnmodifiableSet<E> of(E element) {
     Check.notNull(element, "element == null");
 
-    var set = new GrowableSet<E>();
+    var set = new UtilGrowableSet<E>();
 
     set.add(element);
 
@@ -249,11 +250,11 @@ public abstract sealed class UnmodifiableSet<E>
    *         if any of the specified elements is {@code null}
    */
   @SuppressWarnings("unchecked")
-  public static <E> UnmodifiableSet<E> of(E first, E... more) {
+  public static <E> UtilUnmodifiableSet<E> of(E first, E... more) {
     Check.notNull(first, "first == null");
     Check.notNull(more, "more == null");
 
-    var set = new GrowableSet<E>();
+    var set = new UtilGrowableSet<E>();
 
     set.add(first);
 

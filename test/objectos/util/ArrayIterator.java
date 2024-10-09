@@ -17,7 +17,7 @@ package objectos.util;
 
 import java.util.NoSuchElementException;
 
-final class ArrayIterator<E> extends UnmodifiableIterator<E> {
+public final class ArrayIterator<E> extends UnmodifiableIterator<E> {
 
   private final Object[] array;
 
@@ -25,11 +25,11 @@ final class ArrayIterator<E> extends UnmodifiableIterator<E> {
 
   private final int size;
 
-  ArrayIterator(Object[] array) {
+  public ArrayIterator(Object[] array) {
     this(array, array.length);
   }
 
-  ArrayIterator(Object[] array, int size) {
+  public ArrayIterator(Object[] array, int size) {
     this.array = array;
     this.size = size;
   }
