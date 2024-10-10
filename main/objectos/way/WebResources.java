@@ -20,7 +20,6 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.FileVisitResult;
-import java.nio.file.FileVisitor;
 import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
 import java.nio.file.OpenOption;
@@ -34,7 +33,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
-import objectos.io.FileVisitors;
 import objectos.notes.NoOpNoteSink;
 import objectos.notes.NoteSink;
 import objectos.way.Http.Exchange;
@@ -319,12 +317,7 @@ final class WebResources implements AutoCloseable, Web.Resources {
 
   @Override
   public final void close() throws IOException {
-    if (Files.exists(rootDirectory)) {
-      FileVisitor<Path> deleteRecursively;
-      deleteRecursively = FileVisitors.deleteRecursively();
-
-      Files.walkFileTree(rootDirectory, deleteRecursively);
-    }
+    Io.deleteRecursively(rootDirectory);
   }
 
   private String etag(BasicFileAttributes attributes) {

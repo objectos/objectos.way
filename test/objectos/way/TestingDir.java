@@ -17,12 +17,10 @@ package objectos.way;
 
 import java.io.IOException;
 import java.io.UncheckedIOException;
-import java.nio.file.FileVisitor;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 import java.util.HexFormat;
-import objectos.io.FileVisitors;
 
 public final class TestingDir {
 
@@ -75,12 +73,8 @@ public final class TestingDir {
 
   }
 
-  private static final FileVisitor<Path> DELETE_RECURSIVELY = FileVisitors.deleteRecursively();
-
   public static void deleteRecursively(Path directory) throws IOException {
-    if (Files.exists(directory)) {
-      Files.walkFileTree(directory, DELETE_RECURSIVELY);
-    }
+    Io.deleteRecursively(directory);
   }
 
   private static class DeleteOnShutdown implements AutoCloseable {

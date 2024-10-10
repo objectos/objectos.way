@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.io;
+package objectos.way;
 
 import java.io.IOException;
 import java.nio.file.FileVisitResult;
@@ -23,11 +23,14 @@ import java.nio.file.Path;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
 
-public final class FileVisitors {
+/**
+ * The <strong>Objectos IO</strong> main class.
+ */
+public final class Io {
 
-  private FileVisitors() {}
+  private Io() {}
 
-  public static FileVisitor<Path> deleteRecursively() {
+  static FileVisitor<Path> createDeleteRecursivelyFileVisitor() {
     return new SimpleFileVisitor<Path>() {
       @Override
       public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
@@ -41,6 +44,15 @@ public final class FileVisitors {
         return FileVisitResult.CONTINUE;
       }
     };
+  }
+
+  public static void deleteRecursively(Path directory) throws IOException {
+    if (Files.exists(directory)) {
+      FileVisitor<Path> deleteRecursively;
+      deleteRecursively = createDeleteRecursivelyFileVisitor();
+
+      Files.walkFileTree(directory, deleteRecursively);
+    }
   }
 
 }

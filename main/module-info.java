@@ -17,7 +17,6 @@
  * Defines the Objectos Way API.
  */
 module objectos.way {
-  exports objectos.io;
   exports objectos.notes.impl;
   exports objectos.way;
 
