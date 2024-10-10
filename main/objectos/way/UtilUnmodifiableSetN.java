@@ -134,4 +134,10 @@ final class UtilUnmodifiableSetN<E> extends UtilUnmodifiableSet<E> {
   public final <T> T[] toArray(T[] a) {
     return UtilSets.toArrayImpl(array, size, a);
   }
+
+  @Override
+  public final String toString() {
+    return UtilSets.toStringImpl(this, array);
+  }
+
 }

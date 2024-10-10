@@ -184,7 +184,7 @@ public class UtilUnmodifiableSequencedMapTest extends UtilUnmodifiableMapTestAda
   public void toStringTest() {
     var map0 = map0();
 
-    assertEquals(map0.toString(), "UtilUnmodifiableSequencedMap []");
+    assertEquals(map0.toString(), "{}");
 
     var t1 = Thing.next();
 
@@ -193,10 +193,7 @@ public class UtilUnmodifiableSequencedMapTest extends UtilUnmodifiableMapTestAda
     assertEquals(
         map1.toString(),
 
-        """
-        UtilUnmodifiableSequencedMap [
-          %s = %s
-        ]""".formatted(t1, t1.toDecimalString())
+        "{%s=%s}".formatted(t1, t1.toDecimalString())
     );
 
     var t2 = Thing.next();
@@ -206,11 +203,7 @@ public class UtilUnmodifiableSequencedMapTest extends UtilUnmodifiableMapTestAda
     assertEquals(
         map2.toString(),
 
-        """
-        UtilUnmodifiableSequencedMap [
-          %s = %s
-          %s = %s
-        ]""".formatted(
+        "{%s=%s, %s=%s}".formatted(
             t1, t1.toDecimalString(),
             t2, t2.toDecimalString())
     );
@@ -222,12 +215,7 @@ public class UtilUnmodifiableSequencedMapTest extends UtilUnmodifiableMapTestAda
     assertEquals(
         map3.toString(),
 
-        """
-        UtilUnmodifiableSequencedMap [
-          %s = %s
-          %s = %s
-          %s = %s
-        ]""".formatted(
+        "{%s=%s, %s=%s, %s=%s}".formatted(
             t1, t1.toDecimalString(),
             t2, t2.toDecimalString(),
             t3, t3.toDecimalString())

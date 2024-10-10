@@ -348,28 +348,6 @@ final class UtilUnmodifiableList<E> extends UtilUnmodifiableCollection<E> implem
   }
 
   /**
-   * Formats and appends to the {@code toString} builder at the specified
-   * indentation {@code level} a string representation of this list.
-   *
-   * <p>
-   * The string representation <i>may</i> contain:
-   *
-   * <ul>
-   * <li>the simple name of the list's class; and</li>
-   * <li>the string representation of each element paired with its index</li>
-   * </ul>
-   *
-   * @param toString
-   *        the builder of a {@code toString} method
-   * @param level
-   *        the indentation level.
-   */
-  @Override
-  public final void formatToString(StringBuilder toString, int level) {
-    UtilLists.formatToStringImpl(this, data, data.length, toString, level);
-  }
-
-  /**
    * Returns the element at the specified position in this list.
    *
    * @param index index of the element to return
@@ -674,6 +652,11 @@ final class UtilUnmodifiableList<E> extends UtilUnmodifiableCollection<E> implem
   @Override
   public final <T> T[] toArray(T[] a) {
     return UtilLists.toArrayImpl(data, data.length, a);
+  }
+
+  @Override
+  public final String toString() {
+    return UtilLists.toStringImpl(this, data, data.length);
   }
 
 }

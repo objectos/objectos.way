@@ -759,7 +759,7 @@ public class UtilListTest {
     assertEquals(
         it.toString(),
 
-        "UtilList []"
+        "[]"
     );
 
     var t1 = Thing.parse("7d58452fb817ae98b6d587fe747b87ae");
@@ -771,15 +771,7 @@ public class UtilListTest {
     assertEquals(
         it.toString(),
 
-        """
-        UtilList [
-          0 = Thing [
-            value = 7d58452fb817ae98b6d587fe747b87ae
-          ]
-          1 = Thing [
-            value = 402175c4de2f4f4da528112f2121861c
-          ]
-        ]"""
+        "[Thing[7d58452fb817ae98b6d587fe747b87ae], Thing[402175c4de2f4f4da528112f2121861c]]"
     );
   }
 

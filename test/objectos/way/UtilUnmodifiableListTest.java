@@ -750,19 +750,14 @@ public class UtilUnmodifiableListTest {
 
   @Test
   public void toStringTest() {
-    assertEquals(ul0.toString(), "UtilUnmodifiableList []");
+    assertEquals(ul0.toString(), "[]");
 
     var t1 = jdk1.get(0);
 
     assertEquals(
         ul1.toString(),
 
-        """
-        UtilUnmodifiableList [
-          0 = Thing [
-            value = %s
-          ]
-        ]""".formatted(t1.toHexString())
+        "[Thing[%s]]".formatted(t1.toHexString())
     );
 
     var t2 = jdk2.get(1);
@@ -770,15 +765,7 @@ public class UtilUnmodifiableListTest {
     assertEquals(
         ul2.toString(),
 
-        """
-        UtilUnmodifiableList [
-          0 = Thing [
-            value = %s
-          ]
-          1 = Thing [
-            value = %s
-          ]
-        ]""".formatted(t1.toHexString(), t2.toHexString())
+        "[Thing[%s], Thing[%s]]".formatted(t1.toHexString(), t2.toHexString())
     );
   }
 

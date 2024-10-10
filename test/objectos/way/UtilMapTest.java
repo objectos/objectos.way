@@ -620,7 +620,7 @@ public class UtilMapTest {
 
   @Test
   public void toStringTest() {
-    assertEquals(it.toString(), "UtilMap []");
+    assertEquals(it.toString(), "{}");
 
     var t1 = Thing.next();
 
@@ -629,10 +629,7 @@ public class UtilMapTest {
     assertEquals(
         it.toString(),
 
-        """
-        UtilMap [
-          %s = %s
-        ]""".formatted(t1, t1.toHexString())
+        "{%s=%s}".formatted(t1, t1.toHexString())
     );
 
     var t2 = Thing.next();
@@ -648,11 +645,7 @@ public class UtilMapTest {
     assertEquals(
         it.toString(),
 
-        """
-        UtilMap [
-          %s = %s
-          %s = %s
-        ]""".formatted(e1, e1.toHexString(), e2, e2.toHexString())
+        "{%s=%s, %s=%s}".formatted(e1, e1.toHexString(), e2, e2.toHexString())
     );
   }
 

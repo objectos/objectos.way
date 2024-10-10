@@ -25,12 +25,11 @@ import java.util.HexFormat;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import objectos.lang.object.ToString;
 import objectos.way.Next;
 import objectos.way.TestingArrayBackedIterable;
 import objectos.way.Util;
 
-public final class Thing implements ToString.Formattable {
+public final class Thing {
 
   static final Comparator<Thing> NATURAL_ORDER = new Comparator<Thing>() {
     @Override
@@ -120,14 +119,6 @@ public final class Thing implements ToString.Formattable {
   }
 
   @Override
-  public final void formatToString(StringBuilder sb, int depth) {
-    ToString.format(
-        sb, depth, this,
-        "value", Util.toHexString(value)
-    );
-  }
-
-  @Override
   public final int hashCode() {
     return Arrays.hashCode(value);
   }
@@ -147,7 +138,7 @@ public final class Thing implements ToString.Formattable {
 
   @Override
   public final String toString() {
-    return ToString.of(this);
+    return "Thing[" + Util.toHexString(value) + "]";
   }
 
   public final String putDec(Map<Thing, String> map) {

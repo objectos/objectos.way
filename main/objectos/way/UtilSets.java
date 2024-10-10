@@ -169,7 +169,8 @@ final class UtilSets {
   }
 
   static Object[] toArrayImpl(Object[] array, int size) {
-    var a = new Object[size];
+    Object[] a;
+    a = new Object[size];
 
     fillToArray(array, a);
 
@@ -183,9 +184,11 @@ final class UtilSets {
     Object[] target = a;
 
     if (a.length < size) {
-      var arrayType = a.getClass();
+      Class<?> arrayType;
+      arrayType = a.getClass();
 
-      var componentType = arrayType.getComponentType();
+      Class<?> componentType;
+      componentType = arrayType.getComponentType();
 
       target = (Object[]) Array.newInstance(componentType, size);
     }
@@ -199,11 +202,49 @@ final class UtilSets {
     return (T[]) target;
   }
 
+  static String toStringImpl(Set<?> self, Object[] array) {
+    StringBuilder sb;
+    sb = new StringBuilder();
+
+    sb.append('[');
+
+    boolean first;
+    first = true;
+
+    for (int idx = 0, len = array.length; idx < len; idx++) {
+      Object element;
+      element = array[idx];
+
+      if (element == null) {
+        continue;
+      }
+
+      if (!first) {
+        sb.append(',');
+        sb.append(' ');
+      }
+
+      if (element == self) {
+        sb.append("this Collection");
+      } else {
+        sb.append(element);
+      }
+
+      first = false;
+    }
+
+    sb.append(']');
+
+    return sb.toString();
+  }
+
   private static void fillToArray(Object[] array, Object[] a) {
-    var index = 0;
+    int index;
+    index = 0;
 
     for (int i = 0, len = array.length; i < len; i++) {
-      var maybe = array[i];
+      Object maybe;
+      maybe = array[i];
 
       if (maybe != null) {
         a[index++] = maybe;

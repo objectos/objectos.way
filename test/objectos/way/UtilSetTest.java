@@ -570,7 +570,7 @@ public class UtilSetTest {
 
   @Test
   public void toStringTest() {
-    assertEquals(it.toString(), "UtilSet []");
+    assertEquals(it.toString(), "[]");
 
     var t1 = Thing.next();
 
@@ -579,12 +579,7 @@ public class UtilSetTest {
     assertEquals(
         it.toString(),
 
-        """
-        UtilSet [
-          0 = Thing [
-            value = %s
-          ]
-        ]""".formatted(t1.toHexString())
+        "[Thing[%s]]".formatted(t1.toHexString())
     );
 
     var t2 = Thing.next();
@@ -600,15 +595,7 @@ public class UtilSetTest {
     assertEquals(
         it.toString(),
 
-        """
-        UtilSet [
-          0 = Thing [
-            value = %s
-          ]
-          1 = Thing [
-            value = %s
-          ]
-        ]""".formatted(o1.toHexString(), o2.toHexString())
+        "[Thing[%s], Thing[%s]]".formatted(o1.toHexString(), o2.toHexString())
     );
   }
 

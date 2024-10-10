@@ -332,10 +332,16 @@ final class UtilSet<E> extends UtilBaseCollection<E> implements Set<E> {
       case 0:
         return UtilUnmodifiableSet.of();
       default:
-        var copy = Arrays.copyOf(array, array.length);
+        Object[] copy;
+        copy = Arrays.copyOf(array, array.length);
 
         return new UtilUnmodifiableSetN<E>(copy, size);
     }
+  }
+
+  @Override
+  public final String toString() {
+    return UtilSets.toStringImpl(this, array);
   }
 
   final boolean addAll0(Iterable<? extends E> iterable, String nullMessageStart) {

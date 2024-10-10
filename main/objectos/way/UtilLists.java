@@ -19,7 +19,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Objects;
-import objectos.lang.object.ToString;
 
 /**
  * This class provides {@code static} utility methods for {@link java.util.List}
@@ -128,29 +127,6 @@ final class UtilLists {
   static boolean equalsImpl(List<?> self, Object obj) {
     return obj == self
         || obj instanceof List<?> that && equals0(self, that);
-  }
-
-  static void formatToStringImpl(
-      List<?> self, Object[] data, int size, StringBuilder toString, int level) {
-    ToString.formatStart(toString, self);
-
-    if (size > 0) {
-      int length = UtilCollections.sizeDigits(self);
-
-      ToString.formatFirstPair(
-          toString, level,
-          UtilCollections.indexName(0, length), data[0]
-      );
-
-      for (int i = 1; i < size; i++) {
-        ToString.formatNextPair(
-            toString, level,
-            UtilCollections.indexName(i, length), data[i]
-        );
-      }
-    }
-
-    ToString.formatEnd(toString, level);
   }
 
   static Object getImpl(Object[] data, int size, int index) {
@@ -320,6 +296,37 @@ final class UtilLists {
     }
 
     return a;
+  }
+
+  static String toStringImpl(Object self, Object[] data, int size) {
+    if (size == 0) {
+      return "[]";
+    }
+
+    StringBuilder sb;
+    sb = new StringBuilder();
+
+    sb.append('[');
+
+    for (int idx = 0; idx < size; idx++) {
+      if (idx > 0) {
+        sb.append(',');
+        sb.append(' ');
+      }
+
+      Object o;
+      o = data[idx];
+
+      if (o == self) {
+        sb.append("(this Collection)");
+      } else {
+        sb.append(o);
+      }
+    }
+
+    sb.append(']');
+
+    return sb.toString();
   }
 
 }

@@ -185,7 +185,7 @@ public class UtilUnmodifiableMapTest extends UtilUnmodifiableMapTestAdapter {
   public void toStringTest() {
     var map0 = map0();
 
-    assertEquals(map0.toString(), "UtilUnmodifiableMap []");
+    assertEquals(map0.toString(), "{}");
 
     var t1 = Thing.next();
 
@@ -194,10 +194,7 @@ public class UtilUnmodifiableMapTest extends UtilUnmodifiableMapTestAdapter {
     assertEquals(
         map1.toString(),
 
-        """
-        UtilUnmodifiableMap [
-          %s = %s
-        ]""".formatted(t1, t1.toDecimalString())
+        "{%s=%s}".formatted(t1, t1.toDecimalString())
     );
 
     var t2 = Thing.next();
@@ -213,11 +210,7 @@ public class UtilUnmodifiableMapTest extends UtilUnmodifiableMapTestAdapter {
     assertEquals(
         map2.toString(),
 
-        """
-        UtilUnmodifiableMap [
-          %s = %s
-          %s = %s
-        ]""".formatted(
+        "{%s=%s, %s=%s}".formatted(
             e1, e1.toDecimalString(),
             e2, e2.toDecimalString())
     );
@@ -237,12 +230,7 @@ public class UtilUnmodifiableMapTest extends UtilUnmodifiableMapTestAdapter {
     assertEquals(
         map3.toString(),
 
-        """
-        UtilUnmodifiableMap [
-          %s = %s
-          %s = %s
-          %s = %s
-        ]""".formatted(
+        "{%s=%s, %s=%s, %s=%s}".formatted(
             e1, e1.toDecimalString(),
             e2, e2.toDecimalString(),
             e3, e3.toDecimalString())

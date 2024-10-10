@@ -17,14 +17,14 @@ package objectos.way;
 
 import java.lang.reflect.Array;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Objects;
 import java.util.function.BiFunction;
-import objectos.lang.object.ToString;
 import objectos.way.Util.UnmodifiableIterator;
 import objectos.way.Util.UnmodifiableView;
 
-abstract class UtilArrayBasedMap<K, V> implements Map<K, V>, ToString.Formattable {
+abstract class UtilArrayBasedMap<K, V> implements Map<K, V> {
 
   private abstract class AbstractSet<E> extends Util.UnmodifiableView<E> {
 
@@ -43,17 +43,20 @@ abstract class UtilArrayBasedMap<K, V> implements Map<K, V>, ToString.Formattabl
       Object[] target = a;
 
       if (a.length < size) {
-        var arrayType = a.getClass();
+        Class<?> arrayType;
+        arrayType = a.getClass();
 
-        var componentType = arrayType.getComponentType();
+        Class<?> componentType;
+        componentType = arrayType.getComponentType();
 
         target = (Object[]) Array.newInstance(componentType, size);
       }
 
-      var iterator = iterator();
+      Iterator<E> it;
+      it = iterator();
 
       for (int i = 0; i < size; i++) {
-        target[i] = iterator.next();
+        target[i] = it.next();
       }
 
       if (a.length > size) {
@@ -61,6 +64,41 @@ abstract class UtilArrayBasedMap<K, V> implements Map<K, V>, ToString.Formattabl
       }
 
       return (T[]) target;
+    }
+
+    @Override
+    public final String toString() {
+      if (size == 0) {
+        return "[]";
+      }
+
+      StringBuilder sb;
+      sb = new StringBuilder();
+
+      sb.append('[');
+
+      Iterator<E> it;
+      it = iterator();
+
+      if (it.hasNext()) {
+        E element;
+        element = it.next();
+
+        sb.append(element == this ? "this Collection" : element);
+
+        while (it.hasNext()) {
+          sb.append(',');
+          sb.append(' ');
+
+          element = it.next();
+
+          sb.append(element == this ? "this Collection" : element);
+        }
+      }
+
+      sb.append(']');
+
+      return sb.toString();
     }
 
   }
@@ -265,56 +303,6 @@ abstract class UtilArrayBasedMap<K, V> implements Map<K, V>, ToString.Formattabl
   public final boolean equals(Object obj) {
     return obj == this
         || obj instanceof Map<?, ?> that && equals0(that);
-  }
-
-  /**
-   * Formats and appends to the {@code toString} builder at the specified
-   * indentation {@code level} a string representation of this map.
-   *
-   * <p>
-   * The string representation <i>may</i> contain:
-   *
-   * <ul>
-   * <li>the simple name of the map's class; and</li>
-   * <li>the key/value pairs in iteration order</li>
-   * </ul>
-   *
-   * @param toString
-   *        the builder of a {@code toString} method
-   * @param level
-   *        the indentation level.
-   */
-  @Override
-  public final void formatToString(StringBuilder toString, int level) {
-    ToString.formatStart(toString, this);
-
-    var iterator = entryIterator();
-
-    if (iterator.hasNext()) {
-      var entry = iterator.next();
-
-      var key = entry.getKey();
-
-      var name = key.toString();
-
-      var value = entry.getValue();
-
-      ToString.formatFirstPair(toString, level, name, value);
-
-      while (iterator.hasNext()) {
-        entry = iterator.next();
-
-        key = entry.getKey();
-
-        name = key.toString();
-
-        value = entry.getValue();
-
-        ToString.formatNextPair(toString, level, name, value);
-      }
-    }
-
-    ToString.formatEnd(toString, level);
   }
 
   /**
@@ -570,7 +558,49 @@ abstract class UtilArrayBasedMap<K, V> implements Map<K, V>, ToString.Formattabl
    */
   @Override
   public final String toString() {
-    return ToString.of(this);
+    UnmodifiableView<Entry<K, V>> entries;
+    entries = entrySet();
+
+    Iterator<Entry<K, V>> it;
+    it = entries.iterator();
+
+    if (!it.hasNext()) {
+      return "{}";
+    }
+
+    StringBuilder sb;
+    sb = new StringBuilder();
+
+    sb.append('{');
+
+    while (true) {
+      Entry<K, V> entry;
+      entry = it.next();
+
+      K key;
+      key = entry.getKey();
+
+      V value;
+      value = entry.getValue();
+
+      sb.append(key == this ? "(this Map)" : key);
+
+      sb.append('=');
+
+      sb.append(value == this ? "(this Map)" : value);
+
+      if (!it.hasNext()) {
+        break;
+      }
+
+      sb.append(',');
+
+      sb.append(' ');
+    }
+
+    sb.append('}');
+
+    return sb.toString();
   }
 
   /**

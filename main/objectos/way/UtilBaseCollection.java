@@ -20,7 +20,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.RandomAccess;
 import java.util.function.Predicate;
-import objectos.lang.object.ToString;
 
 /**
  * The base {@link Collection} implementation of the Objectos Util collections
@@ -32,7 +31,7 @@ import objectos.lang.object.ToString;
  *
  * @param <E> type of the elements in this collection
  */
-public abstract class UtilBaseCollection<E> implements Collection<E>, ToString.Formattable {
+public abstract class UtilBaseCollection<E> implements Collection<E> {
 
   /**
    * Sole constructor
@@ -75,55 +74,6 @@ public abstract class UtilBaseCollection<E> implements Collection<E>, ToString.F
     }
 
     return true;
-  }
-
-  /**
-   * Formats and appends to the {@code toString} builder at the specified
-   * indentation {@code level} a string representation of this collection.
-   *
-   * <p>
-   * The string representation <i>may</i> contain:
-   *
-   * <ul>
-   * <li>the simple name of the collections's class; and</li>
-   * <li>the string representation of each element paired with its iteration
-   * index</li>
-   * </ul>
-   *
-   * @param toString
-   *        the builder of a {@code toString} method
-   * @param level
-   *        the indentation level.
-   */
-  @Override
-  public void formatToString(StringBuilder toString, int level) {
-    ToString.formatStart(toString, toStringTypeName());
-
-    var iterator = iterator();
-
-    var index = 0;
-
-    if (iterator.hasNext()) {
-      var length = sizeDigits();
-
-      var name = indexName(index, length);
-
-      var value = iterator.next();
-
-      ToString.formatFirstPair(toString, level, name, value);
-
-      while (iterator.hasNext()) {
-        index++;
-
-        name = indexName(index, length);
-
-        value = iterator.next();
-
-        ToString.formatNextPair(toString, level, name, value);
-      }
-    }
-
-    ToString.formatEnd(toString, level);
   }
 
   /**
@@ -346,9 +296,7 @@ public abstract class UtilBaseCollection<E> implements Collection<E>, ToString.F
    * @return a string representation of this collection
    */
   @Override
-  public final String toString() {
-    return ToString.of(this);
-  }
+  public abstract String toString();
 
   /**
    * Returns the only element in this collection or throws an exception if the

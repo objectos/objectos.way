@@ -364,24 +364,24 @@ public class UtilUnmodifiableSetTest {
   }
 
   /*
-
+  
   // getOnly is not public anymore
-
+  
   @Test
   public void getOnly() {
     try {
       us0.getOnly();
-
+  
       Assert.fail();
     } catch (IllegalStateException expected) {
       assertEquals(expected.getMessage(), "Could not getOnly: empty.");
     }
-
+  
     assertEquals(us1.getOnly(), jdk1.iterator().next());
-
+  
     try {
       us2.getOnly();
-
+  
       Assert.fail();
     } catch (IllegalStateException expected) {
       assertEquals(expected.getMessage(), "Could not getOnly: more than one element.");
@@ -553,17 +553,12 @@ public class UtilUnmodifiableSetTest {
 
   @Test
   public void toStringTest() {
-    assertEquals(us0.toString(), "UnmodifiableSet []");
+    assertEquals(us0.toString(), "[]");
 
     assertEquals(
         us1.toString(),
 
-        """
-        UnmodifiableSet [
-          0 = Thing [
-            value = %s
-          ]
-        ]""".formatted(t1.toHexString())
+        "[Thing[%s]]".formatted(t1.toHexString())
     );
 
     var iterator = us2.iterator();
@@ -575,15 +570,7 @@ public class UtilUnmodifiableSetTest {
     assertEquals(
         us2.toString(),
 
-        """
-        UnmodifiableSet [
-          0 = Thing [
-            value = %s
-          ]
-          1 = Thing [
-            value = %s
-          ]
-        ]""".formatted(o1.toHexString(), o2.toHexString())
+        "[Thing[%s], Thing[%s]]".formatted(o1.toHexString(), o2.toHexString())
     );
   }
 

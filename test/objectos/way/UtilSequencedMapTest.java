@@ -619,7 +619,7 @@ public class UtilSequencedMapTest {
 
   @Test
   public void toStringTest() {
-    assertEquals(it.toString(), "UtilSequencedMap []");
+    assertEquals(it.toString(), "{}");
 
     var t1 = Thing.next();
 
@@ -628,10 +628,7 @@ public class UtilSequencedMapTest {
     assertEquals(
         it.toString(),
 
-        """
-        UtilSequencedMap [
-          %s = %s
-        ]""".formatted(t1, t1.toHexString())
+        "{%s=%s}".formatted(t1, t1.toHexString())
     );
 
     var t2 = Thing.next();
@@ -641,11 +638,7 @@ public class UtilSequencedMapTest {
     assertEquals(
         it.toString(),
 
-        """
-        UtilSequencedMap [
-          %s = %s
-          %s = %s
-        ]""".formatted(t1, t1.toHexString(), t2, t2.toHexString())
+        "{%s=%s, %s=%s}".formatted(t1, t1.toHexString(), t2, t2.toHexString())
     );
 
     var t3 = Thing.next();
@@ -655,13 +648,7 @@ public class UtilSequencedMapTest {
     assertEquals(
         it.toString(),
 
-        """
-        UtilSequencedMap [
-          %s = %s
-          %s = %s
-          %s = %s
-        ]""".formatted(
-            t1, t1.toHexString(), t2, t2.toHexString(), t3, t3.toHexString())
+        "{%s=%s, %s=%s, %s=%s}".formatted(t1, t1.toHexString(), t2, t2.toHexString(), t3, t3.toHexString())
     );
   }
 
