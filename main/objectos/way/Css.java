@@ -41,7 +41,7 @@ public final class Css {
    * Generates a style sheet by scanning Java class files for predefined CSS
    * utility class names.
    */
-  public sealed interface Generator permits CssGenerator {}
+  sealed interface Generator permits CssGenerator {}
 
   /**
    * A style sheet generation option.

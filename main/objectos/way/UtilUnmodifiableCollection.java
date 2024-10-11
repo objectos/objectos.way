@@ -27,66 +27,66 @@ import java.util.Collection;
  *
  * @param <E> type of the elements in this collection
  */
-public abstract class UtilUnmodifiableCollection<E> extends UtilBaseCollection<E> {
+abstract class UtilUnmodifiableCollection<E> extends UtilBaseCollection<E> {
 
-	/**
-	 * Sole constructor.
-	 */
-	protected UtilUnmodifiableCollection() {}
+  /**
+   * Sole constructor.
+   */
+  protected UtilUnmodifiableCollection() {}
 
-	/**
-	 * This operation is not supported.
-	 *
-	 * <p>
-	 * This method performs no operation other than throw an
-	 * {@link UnsupportedOperationException}.
-	 *
-	 * @param e
-	 *        ignored (this operation is not supported)
-	 *
-	 * @return this method does not return as it always throw an exception
-	 *
-	 * @throws UnsupportedOperationException
-	 *         always
-	 */
-	@Override
-	public final boolean add(E e) {
-		throw new UnsupportedOperationException();
-	}
+  /**
+   * This operation is not supported.
+   *
+   * <p>
+   * This method performs no operation other than throw an
+   * {@link UnsupportedOperationException}.
+   *
+   * @param e
+   *        ignored (this operation is not supported)
+   *
+   * @return this method does not return as it always throw an exception
+   *
+   * @throws UnsupportedOperationException
+   *         always
+   */
+  @Override
+  public final boolean add(E e) {
+    throw new UnsupportedOperationException();
+  }
 
-	/**
-	 * This operation is not supported.
-	 *
-	 * <p>
-	 * This method performs no operation other than throw an
-	 * {@link UnsupportedOperationException}.
-	 *
-	 * @param c
-	 *        ignored (this operation is not supported)
-	 *
-	 * @return this method does not return as it always throw an exception
-	 *
-	 * @throws UnsupportedOperationException
-	 *         always
-	 */
-	@Override
-	public final boolean addAll(Collection<? extends E> c) {
-		throw new UnsupportedOperationException();
-	}
+  /**
+   * This operation is not supported.
+   *
+   * <p>
+   * This method performs no operation other than throw an
+   * {@link UnsupportedOperationException}.
+   *
+   * @param c
+   *        ignored (this operation is not supported)
+   *
+   * @return this method does not return as it always throw an exception
+   *
+   * @throws UnsupportedOperationException
+   *         always
+   */
+  @Override
+  public final boolean addAll(Collection<? extends E> c) {
+    throw new UnsupportedOperationException();
+  }
 
-	/**
-	 * This operation is not supported.
-	 *
-	 * <p>
-	 * This method performs no operation other than throw an
-	 * {@link UnsupportedOperationException}.
-	 *
-	 * @throws UnsupportedOperationException
-	 *         always
-	 */
-	@Override
-	public final void clear() {
-		throw new UnsupportedOperationException();
-	}
+  /**
+   * This operation is not supported.
+   *
+   * <p>
+   * This method performs no operation other than throw an
+   * {@link UnsupportedOperationException}.
+   *
+   * @throws UnsupportedOperationException
+   *         always
+   */
+  @Override
+  public final void clear() {
+    throw new UnsupportedOperationException();
+  }
 
 }

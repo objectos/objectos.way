@@ -24,6 +24,21 @@ import objectos.notes.NoteSink;
 
 final class AppShutdownHook implements App.ShutdownHook {
 
+  record Notes(
+      Note.Ref1<Object> registered,
+      Note.Ref1<Object> ignored
+  ) {
+    static Notes create() {
+      Class<?> s;
+      s = App.ShutdownHook.class;
+
+      return new Notes(
+          Note.Ref1.create(s, "Registered", Note.INFO),
+          Note.Ref1.create(s, "Ignored", Note.INFO)
+      );
+    }
+  }
+
   private final List<Object> hooks = Util.createList();
 
   private final Job job;

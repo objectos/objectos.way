@@ -31,7 +31,7 @@ import java.util.function.Predicate;
  *
  * @param <E> type of the elements in this collection
  */
-public abstract class UtilBaseCollection<E> implements Collection<E> {
+abstract class UtilBaseCollection<E> implements Collection<E> {
 
   /**
    * Sole constructor
