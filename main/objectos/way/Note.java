@@ -26,11 +26,19 @@ public sealed abstract class Note {
     Int1(Class<?> source, String key, Marker marker) {
       super(source, key, marker);
     }
+
+    public static Int1 create(Class<?> source, String key, Marker marker) {
+      return new Int1(source, key, marker);
+    }
   }
 
   public static final class Int2 extends Note {
     Int2(Class<?> source, String key, Marker marker) {
       super(source, key, marker);
+    }
+
+    public static Int2 create(Class<?> source, String key, Marker marker) {
+      return new Int2(source, key, marker);
     }
   }
 
@@ -38,11 +46,19 @@ public sealed abstract class Note {
     Int3(Class<?> source, String key, Marker marker) {
       super(source, key, marker);
     }
+
+    public static Int3 create(Class<?> source, String key, Marker marker) {
+      return new Int3(source, key, marker);
+    }
   }
 
   public static final class Long1 extends Note {
     Long1(Class<?> source, String key, Marker marker) {
       super(source, key, marker);
+    }
+
+    public static Long1 create(Class<?> source, String key, Marker marker) {
+      return new Long1(source, key, marker);
     }
   }
 
@@ -50,11 +66,19 @@ public sealed abstract class Note {
     Long2(Class<?> source, String key, Marker marker) {
       super(source, key, marker);
     }
+
+    public static Long2 create(Class<?> source, String key, Marker marker) {
+      return new Long2(source, key, marker);
+    }
   }
 
   public static final class Ref0 extends Note {
     Ref0(Class<?> source, String key, Marker marker) {
       super(source, key, marker);
+    }
+
+    public static Ref0 create(Class<?> source, String key, Marker marker) {
+      return new Ref0(source, key, marker);
     }
   }
 
@@ -72,15 +96,25 @@ public sealed abstract class Note {
     Ref2(Class<?> source, String key, Marker marker) {
       super(source, key, marker);
     }
+
+    public static <T1, T2> Ref2<T1, T2> create(Class<?> source, String key, Marker marker) {
+      return new Ref2<>(source, key, marker);
+    }
   }
 
   public static final class Ref3<T1, T2, T3> extends Note {
     Ref3(Class<?> source, String key, Marker marker) {
       super(source, key, marker);
     }
+
+    public static <T1, T2, T3> Ref3<T1, T2, T3> create(Class<?> source, String key, Marker marker) {
+      return new Ref3<>(source, key, marker);
+    }
   }
 
-  public sealed interface Marker {}
+  public sealed interface Marker {
+    String name();
+  }
 
   /**
    * The TRACE level is typically used for events that are for detailed internal

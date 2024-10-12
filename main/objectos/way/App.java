@@ -17,6 +17,7 @@ package objectos.way;
 
 import java.io.Closeable;
 import java.io.IOException;
+import java.io.PrintStream;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -25,6 +26,9 @@ import java.lang.reflect.Constructor;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.WatchService;
+import java.time.Clock;
+import java.util.function.Consumer;
+import java.util.function.Supplier;
 import objectos.notes.Level;
 import objectos.notes.Note1;
 import objectos.notes.Note2;
@@ -108,6 +112,38 @@ public final class App {
   @Retention(RetentionPolicy.CLASS)
   @Target(ElementType.TYPE)
   public @interface DoNotReload {}
+
+  public sealed interface LoggerAdapter permits AppNoteSink {
+
+    void log(String name, Note.Marker level, String message);
+
+    void log(String name, Note.Marker level, String message, Throwable t);
+
+  }
+
+  public sealed interface NoteSinkSupplier extends AutoCloseable, Supplier<Note.Sink> {
+
+    public sealed interface OfConsole extends NoteSinkSupplier permits AppNoteSinkSupplierOfConsole.Impl {
+
+      public sealed interface Config permits AppNoteSinkSupplierOfConsole {
+
+        void clock(Clock clock);
+
+        void target(PrintStream target);
+
+      }
+
+      static OfConsole create(Consumer<Config> config) {
+        AppNoteSinkSupplierOfConsole builder = new AppNoteSinkSupplierOfConsole();
+
+        config.accept(builder);
+
+        return builder.build();
+      }
+
+    }
+
+  }
 
   /**
    * Represents an application command line option.
@@ -242,6 +278,8 @@ public final class App {
     void registerThread(Thread thread);
 
   }
+
+  // non-public types
 
   non-sealed static class CreateOption implements Reloader.Option {
 
