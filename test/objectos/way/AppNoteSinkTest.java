@@ -19,9 +19,11 @@ import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
 
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.PrintStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.time.LocalDate;
-import org.testng.Assert;
 import org.testng.annotations.Test;
 
 public class AppNoteSinkTest {
@@ -59,36 +61,112 @@ public class AppNoteSinkTest {
     }
   }
 
+  private final Path directory = TestingDir.next();
+
   private final Notes notes = Notes.create();
 
   @Test(description = """
   - console
   - no filtering
   """)
-  public void testCase01() {
+  public void console01() {
     ThisStream stream;
     stream = new ThisStream();
 
-    App.NoteSinkSupplier.OfConsole console;
-    console = App.NoteSinkSupplier.OfConsole.create(config -> {
+    App.NoteSink2.OfConsole noteSink;
+    noteSink = App.NoteSink2.OfConsole.create(config -> {
       config.clock(new IncrementingClock(2023, 10, 31));
 
       config.target(stream);
     });
 
-    try (console) {
-      Note.Sink sink;
-      sink = console.get();
-
-      sendAll(sink);
-    } catch (Exception e) {
-      Assert.fail("NoteSinkSupplier", e);
-    }
+    sendAll(noteSink);
 
     assertFalse(stream.closed);
 
     assertEquals(
         stream.toString(),
+
+        """
+        2023-10-31 10:00:00.000 TRACE --- [main           ] objectos.way.AppNoteSinkTest             : int1 1001
+        2023-10-31 10:01:00.000 DEBUG --- [main           ] objectos.way.AppNoteSinkTest             : int2 2002 3003
+        2023-10-31 10:02:00.000 INFO  --- [main           ] objectos.way.AppNoteSinkTest             : int3 4000 5000 6000
+        2023-10-31 10:03:00.000 WARN  --- [main           ] objectos.way.AppNoteSinkTest             : long1 1000
+        2023-10-31 10:04:00.000 ERROR --- [main           ] objectos.way.AppNoteSinkTest             : long2 2123 3456
+        2023-10-31 10:05:00.000 TRACE --- [main           ] objectos.way.AppNoteSinkTest             : ref0
+        2023-10-31 10:06:00.000 DEBUG --- [main           ] objectos.way.AppNoteSinkTest             : ref1 A
+        2023-10-31 10:07:00.000 INFO  --- [main           ] objectos.way.AppNoteSinkTest             : ref2 id 2024-10-11
+        2023-10-31 10:08:00.000 WARN  --- [main           ] objectos.way.AppNoteSinkTest             : ref3 FOO 2010-05-23 BAR
+        """
+    );
+  }
+
+  @Test(description = """
+  - console
+  - with filtering
+  """)
+  public void console02() {
+    ThisStream stream;
+    stream = new ThisStream();
+
+    App.NoteSink2.OfConsole noteSink;
+    noteSink = App.NoteSink2.OfConsole.create(config -> {
+      config.clock(new IncrementingClock(2023, 10, 31));
+
+      config.filter(note -> {
+        Note.Marker marker;
+        marker = note.marker();
+
+        return marker == Note.INFO
+            || marker == Note.WARN
+            || marker == Note.ERROR;
+      });
+
+      config.target(stream);
+    });
+
+    sendAll(noteSink);
+
+    assertFalse(stream.closed);
+
+    assertEquals(
+        stream.toString(),
+
+        """
+        2023-10-31 10:00:00.000 INFO  --- [main           ] objectos.way.AppNoteSinkTest             : int3 4000 5000 6000
+        2023-10-31 10:01:00.000 WARN  --- [main           ] objectos.way.AppNoteSinkTest             : long1 1000
+        2023-10-31 10:02:00.000 ERROR --- [main           ] objectos.way.AppNoteSinkTest             : long2 2123 3456
+        2023-10-31 10:03:00.000 INFO  --- [main           ] objectos.way.AppNoteSinkTest             : ref2 id 2024-10-11
+        2023-10-31 10:04:00.000 WARN  --- [main           ] objectos.way.AppNoteSinkTest             : ref3 FOO 2010-05-23 BAR
+        """
+    );
+  }
+
+  @Test(description = """
+  - no filtering
+  - log file does not exist
+  - parent directories exist
+  """)
+  public void file01() throws IOException {
+    Path parent;
+    parent = directory.resolve("file01");
+
+    Files.createDirectory(parent);
+
+    Path logFile;
+    logFile = parent.resolve("file.log");
+
+    App.NoteSink2.OfFile noteSink;
+    noteSink = App.NoteSink2.OfFile.create(logFile, config -> {
+      config.clock(new IncrementingClock(2023, 10, 31));
+    });
+
+    try (noteSink) {
+      sendAll(noteSink);
+    }
+
+    assertEquals(
+        Files.readString(logFile),
 
         """
         2023-10-31 10:00:00.000 TRACE --- [main           ] objectos.way.AppNoteSinkTest             : int1 1001

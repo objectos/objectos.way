@@ -18,101 +18,68 @@ package objectos.way;
 import java.util.Objects;
 
 /**
- * The <strong>Objectos Notes</strong> main class.
+ * The <strong>Objectos Notes</strong> main interface.
  */
-public sealed abstract class Note {
+public sealed interface Note {
 
-  public static final class Int1 extends Note {
-    Int1(Class<?> source, String key, Marker marker) {
-      super(source, key, marker);
-    }
-
-    public static Int1 create(Class<?> source, String key, Marker marker) {
-      return new Int1(source, key, marker);
+  sealed interface Int1 extends Note {
+    static Int1 create(Class<?> source, String key, Marker marker) {
+      return new SharedNote(source, key, marker);
     }
   }
 
-  public static final class Int2 extends Note {
-    Int2(Class<?> source, String key, Marker marker) {
-      super(source, key, marker);
-    }
-
-    public static Int2 create(Class<?> source, String key, Marker marker) {
-      return new Int2(source, key, marker);
+  sealed interface Int2 extends Note {
+    static Int2 create(Class<?> source, String key, Marker marker) {
+      return new SharedNote(source, key, marker);
     }
   }
 
-  public static final class Int3 extends Note {
-    Int3(Class<?> source, String key, Marker marker) {
-      super(source, key, marker);
-    }
-
-    public static Int3 create(Class<?> source, String key, Marker marker) {
-      return new Int3(source, key, marker);
+  sealed interface Int3 extends Note {
+    static Int3 create(Class<?> source, String key, Marker marker) {
+      return new SharedNote(source, key, marker);
     }
   }
 
-  public static final class Long1 extends Note {
-    Long1(Class<?> source, String key, Marker marker) {
-      super(source, key, marker);
-    }
-
-    public static Long1 create(Class<?> source, String key, Marker marker) {
-      return new Long1(source, key, marker);
+  sealed interface Long1 extends Note {
+    static Long1 create(Class<?> source, String key, Marker marker) {
+      return new SharedNote(source, key, marker);
     }
   }
 
-  public static final class Long2 extends Note {
-    Long2(Class<?> source, String key, Marker marker) {
-      super(source, key, marker);
-    }
-
-    public static Long2 create(Class<?> source, String key, Marker marker) {
-      return new Long2(source, key, marker);
+  sealed interface Long2 extends Note {
+    static Long2 create(Class<?> source, String key, Marker marker) {
+      return new SharedNote(source, key, marker);
     }
   }
 
-  public static final class Ref0 extends Note {
-    Ref0(Class<?> source, String key, Marker marker) {
-      super(source, key, marker);
-    }
-
-    public static Ref0 create(Class<?> source, String key, Marker marker) {
-      return new Ref0(source, key, marker);
+  sealed interface Ref0 extends Note {
+    static Ref0 create(Class<?> source, String key, Marker marker) {
+      return new SharedNote(source, key, marker);
     }
   }
 
-  public static final class Ref1<T1> extends Note {
-    Ref1(Class<?> source, String key, Marker marker) {
-      super(source, key, marker);
-    }
-
-    public static <T1> Ref1<T1> create(Class<?> source, String key, Marker marker) {
-      return new Ref1<>(source, key, marker);
+  sealed interface Ref1<T1> extends Note {
+    @SuppressWarnings("unchecked")
+    static <T1> Ref1<T1> create(Class<?> source, String key, Marker marker) {
+      return (Ref1<T1>) new SharedNote(source, key, marker);
     }
   }
 
-  public static final class Ref2<T1, T2> extends Note {
-    Ref2(Class<?> source, String key, Marker marker) {
-      super(source, key, marker);
-    }
-
-    public static <T1, T2> Ref2<T1, T2> create(Class<?> source, String key, Marker marker) {
-      return new Ref2<>(source, key, marker);
+  sealed interface Ref2<T1, T2> extends Note {
+    @SuppressWarnings("unchecked")
+    static <T1, T2> Ref2<T1, T2> create(Class<?> source, String key, Marker marker) {
+      return (Ref2<T1, T2>) new SharedNote(source, key, marker);
     }
   }
 
-  public static final class Ref3<T1, T2, T3> extends Note {
-    Ref3(Class<?> source, String key, Marker marker) {
-      super(source, key, marker);
-    }
-
-    public static <T1, T2, T3> Ref3<T1, T2, T3> create(Class<?> source, String key, Marker marker) {
-      return new Ref3<>(source, key, marker);
+  sealed interface Ref3<T1, T2, T3> extends Note {
+    @SuppressWarnings("unchecked")
+    static <T1, T2, T3> Ref3<T1, T2, T3> create(Class<?> source, String key, Marker marker) {
+      return (Ref3<T1, T2, T3>) new SharedNote(source, key, marker);
     }
   }
 
-  public sealed interface Marker {
+  sealed interface Marker {
     String name();
   }
 
@@ -120,34 +87,34 @@ public sealed abstract class Note {
    * The TRACE level is typically used for events that are for detailed internal
    * workings.
    */
-  public static final Marker TRACE = Level.TRACE;
+  Marker TRACE = NoteLevel.TRACE;
 
   /**
    * The DEBUG level is typically used for events that are for debugging
    * purposes.
    */
-  public static final Marker DEBUG = Level.DEBUG;
+  Marker DEBUG = NoteLevel.DEBUG;
 
   /**
    * The INFO level is typically used for events that are informational.
    */
-  public static final Marker INFO = Level.INFO;
+  Marker INFO = NoteLevel.INFO;
 
   /**
    * The WARN level is typically used for events demanding attention.
    */
-  public static final Marker WARN = Level.WARN;
+  Marker WARN = NoteLevel.WARN;
 
   /**
    * The ERROR level is typically used for events demanding immediate attention.
    */
-  public static final Marker ERROR = Level.ERROR;
+  Marker ERROR = NoteLevel.ERROR;
 
   /**
    * Represents the severity of a `Note`. They may be used by `NoteSink`
    * instances to limit which notes are actually sent.
    */
-  enum Level implements Marker {
+  enum NoteLevel implements Marker {
     TRACE,
 
     DEBUG,
@@ -159,7 +126,7 @@ public sealed abstract class Note {
     ERROR;
   }
 
-  public static class NoOpSink implements Sink {
+  static class NoOpSink implements Sink {
 
     @Override
     public boolean isEnabled(Note note) {
@@ -195,7 +162,7 @@ public sealed abstract class Note {
 
   }
 
-  public interface Sink {
+  interface Sink {
 
     boolean isEnabled(Note note);
 
@@ -219,18 +186,36 @@ public sealed abstract class Note {
 
   }
 
-  final String source;
+  String source();
 
-  final String key;
+  String key();
 
-  final Marker marker0;
+  Marker marker();
 
-  Note(Class<?> source, String key, Marker marker) {
-    this.source = source.getCanonicalName();
+}
 
-    this.key = Objects.requireNonNull(key, "key == null");
+record SharedNote(String source, String key, Marker marker)
+    implements
+    Note.Int1,
+    Note.Int2,
+    Note.Int3,
 
-    marker0 = Objects.requireNonNull(marker, "marker == null");
+    Note.Long1,
+    Note.Long2,
+
+    Note.Ref0,
+    Note.Ref1<Object>,
+    Note.Ref2<Object, Object>,
+    Note.Ref3<Object, Object, Object> {
+
+  SharedNote(Class<?> source, String key, Marker marker) {
+    this(
+        source.getCanonicalName(),
+
+        Objects.requireNonNull(key, "key == null"),
+
+        Objects.requireNonNull(marker, "marker == null")
+    );
   }
 
 }
