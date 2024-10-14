@@ -51,6 +51,10 @@ public final class IncrementingClock extends Clock {
     return startTime.getZone();
   }
 
+  public final void reset() {
+    minutes = 0;
+  }
+
   @Override
   public Clock withZone(ZoneId zone) {
     throw new UnsupportedOperationException();

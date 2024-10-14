@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
 import java.time.LocalDate;
 import org.testng.annotations.Test;
 
@@ -144,8 +145,8 @@ public class AppNoteSinkTest {
 
   @Test(description = """
   - no filtering
+  - parent directories exists
   - log file does not exist
-  - parent directories exist
   """)
   public void file01() throws IOException {
     Path parent;
@@ -164,6 +165,59 @@ public class AppNoteSinkTest {
     try (noteSink) {
       sendAll(noteSink);
     }
+
+    assertEquals(
+        Files.readString(logFile),
+
+        """
+        2023-10-31 10:00:00.000 TRACE --- [main           ] objectos.way.AppNoteSinkTest             : int1 1001
+        2023-10-31 10:01:00.000 DEBUG --- [main           ] objectos.way.AppNoteSinkTest             : int2 2002 3003
+        2023-10-31 10:02:00.000 INFO  --- [main           ] objectos.way.AppNoteSinkTest             : int3 4000 5000 6000
+        2023-10-31 10:03:00.000 WARN  --- [main           ] objectos.way.AppNoteSinkTest             : long1 1000
+        2023-10-31 10:04:00.000 ERROR --- [main           ] objectos.way.AppNoteSinkTest             : long2 2123 3456
+        2023-10-31 10:05:00.000 TRACE --- [main           ] objectos.way.AppNoteSinkTest             : ref0
+        2023-10-31 10:06:00.000 DEBUG --- [main           ] objectos.way.AppNoteSinkTest             : ref1 A
+        2023-10-31 10:07:00.000 INFO  --- [main           ] objectos.way.AppNoteSinkTest             : ref2 id 2024-10-11
+        2023-10-31 10:08:00.000 WARN  --- [main           ] objectos.way.AppNoteSinkTest             : ref3 FOO 2010-05-23 BAR
+        """
+    );
+  }
+
+  @Test(description = """
+  - no filtering
+  - parent directory exists
+  - log file exists and should be rotated
+  """)
+  public void file02() throws IOException {
+    Path parent;
+    parent = directory.resolve("file02");
+
+    Files.createDirectory(parent);
+
+    Path logFile;
+    logFile = parent.resolve("file.log");
+
+    Files.writeString(logFile, "Existing content", StandardOpenOption.CREATE);
+
+    IncrementingClock clock;
+    clock = new IncrementingClock(2023, 10, 31);
+
+    App.NoteSink2.OfFile noteSink;
+    noteSink = App.NoteSink2.OfFile.create(logFile, config -> {
+      config.clock(clock);
+    });
+
+    clock.reset();
+
+    try (noteSink) {
+      sendAll(noteSink);
+    }
+
+    assertEquals(
+        Files.readString(parent.resolve("file.log.2023-10-31T10:00:00")),
+
+        "Existing content"
+    );
 
     assertEquals(
         Files.readString(logFile),

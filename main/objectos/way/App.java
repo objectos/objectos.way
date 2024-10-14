@@ -1027,8 +1027,25 @@ final class AppNoteSinkOfFileConfig implements App.NoteSink2.OfFile.Config {
       Files.createDirectories(parent);
     }
 
+    if (Files.exists(file)) {
+      LocalDateTime now;
+      now = LocalDateTime.now(clock);
+
+      String suffix;
+      suffix = DateTimeFormatter.ISO_LOCAL_DATE_TIME.format(now);
+
+      Path target;
+      target = file.resolveSibling(file.getFileName().toString() + "." + suffix);
+
+      Files.copy(file, target);
+    }
+
     SeekableByteChannel channel;
-    channel = Files.newByteChannel(file, StandardOpenOption.WRITE, StandardOpenOption.CREATE, StandardOpenOption.APPEND);
+    channel = Files.newByteChannel(
+        file,
+
+        StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING, StandardOpenOption.WRITE
+    );
 
     return new AppNoteSinkOfFile(clock, filter, buffer, channel);
   }
