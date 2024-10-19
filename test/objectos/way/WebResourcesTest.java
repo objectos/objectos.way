@@ -39,6 +39,8 @@ public class WebResourcesTest extends Http.Module {
 
   private int testCase06Count;
 
+  private int testCase08Count;
+
   @BeforeClass
   public void beforeClass() throws IOException {
     root = TestingDir.next();
@@ -72,6 +74,7 @@ public class WebResourcesTest extends Http.Module {
     route("/tc05.txt", handler(resources));
     route("/tc06.txt", handler(resources), handler(this::testCase06));
     route("/tc07.txt", handler(this::testCase07));
+    route("/tc08.txt", handler(resources), handler(this::testCase08));
   }
 
   private Web.Resources.Option testCase01Option() throws IOException {
@@ -353,6 +356,58 @@ public class WebResourcesTest extends Http.Module {
     );
 
     assertEquals(resp.statusCode(), 404);
+  }
+
+  private void testCase08(Http.Exchange http) {
+    testCase08Count++;
+
+    try {
+      String path;
+      path = http.path();
+
+      resources.writeString(path, "test-case-08", StandardCharsets.UTF_8);
+
+      resources.handle(http);
+    } catch (IOException e) {
+      http.internalServerError(e);
+    }
+  }
+
+  @Test(description = """
+  Web.Resources::writeString
+  """)
+  public void testCase08() throws IOException, InterruptedException {
+    final HttpResponse<String> resp01;
+    resp01 = Testing.httpClient(
+        "/tc08.txt",
+
+        Testing.headers(
+            "Host", "web.resources.test"
+        )
+    );
+
+    assertEquals(resp01.statusCode(), 200);
+    assertEquals(resp01.body(), "test-case-08");
+
+    Optional<String> maybeTag;
+    maybeTag = resp01.headers().firstValue("ETag");
+
+    assertTrue(maybeTag.isPresent());
+
+    final HttpResponse<String> resp02;
+    resp02 = Testing.httpClient(
+        "/tc08.txt",
+
+        Testing.headers(
+            "Host", "web.resources.test",
+            "If-None-Match", maybeTag.get(),
+            "Connection", "close"
+        )
+    );
+
+    assertEquals(resp02.statusCode(), 304);
+
+    assertEquals(testCase08Count, 1);
   }
 
   private void write(Path directory, Path file, String text) throws IOException {

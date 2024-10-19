@@ -331,6 +331,26 @@ final class WebResources implements AutoCloseable, Web.Resources {
     }
   }
 
+  @Override
+  public final void writeString(String path, CharSequence contents, Charset charset) throws IOException {
+    Check.notNull(path, "path == null");
+    Check.notNull(contents, "contents == null");
+    Check.notNull(charset, "charset == null");
+
+    Path file;
+    file = resolve(path);
+
+    checkTraversal(path, file);
+
+    writeLock.lock();
+
+    try {
+      Files.writeString(file, contents, OPEN_CREATE);
+    } finally {
+      writeLock.unlock();
+    }
+  }
+
   private void checkTraversal(String path, Path file) throws IOException {
     if (!file.startsWith(rootDirectory)) {
       throw new IOException("Traversal detected: " + path);

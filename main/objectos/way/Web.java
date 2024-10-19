@@ -112,6 +112,14 @@ public final class Web {
      */
     void writeCharWritable(String path, Lang.CharWritable contents, Charset charset) throws IOException;
 
+    /**
+     * Creates a new file at the specified path with the specified text content.
+     *
+     * @throws IOException
+     *         if an I/O error occurs
+     */
+    void writeString(String path, CharSequence contents, Charset charset) throws IOException;
+
   }
 
   private non-sealed interface WebResourcesOption extends Resources.Option {
