@@ -71,6 +71,7 @@ public class WebResourcesTest extends Http.Module {
     route("/tc04.txt", handler(resources));
     route("/tc05.txt", handler(resources));
     route("/tc06.txt", handler(resources), handler(this::testCase06));
+    route("/tc07.txt", handler(this::testCase07));
   }
 
   private Web.Resources.Option testCase01Option() throws IOException {
@@ -318,6 +319,40 @@ public class WebResourcesTest extends Http.Module {
     assertEquals(resp02.statusCode(), 304);
 
     assertEquals(testCase06Count, 1);
+  }
+
+  private void testCase07(Http.Exchange http) {
+    try {
+      String path;
+      path = http.path();
+
+      Lang.CharWritable contents;
+      contents = out -> out.append("test-case-07");
+
+      resources.writeCharWritable(path, contents, StandardCharsets.UTF_8);
+
+      assertTrue(resources.deleteIfExists(path));
+
+      resources.handle(http);
+    } catch (IOException e) {
+      http.internalServerError(e);
+    }
+  }
+
+  @Test(description = """
+  Web.Resources::delete
+  """)
+  public void testCase07() throws IOException, InterruptedException {
+    final HttpResponse<String> resp;
+    resp = Testing.httpClient(
+        "/tc07.txt",
+
+        Testing.headers(
+            "Host", "web.resources.test"
+        )
+    );
+
+    assertEquals(resp.statusCode(), 404);
   }
 
   private void write(Path directory, Path file, String text) throws IOException {

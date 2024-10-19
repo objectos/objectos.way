@@ -97,6 +97,14 @@ public final class Web {
     Note1<String> TRAVERSAL = Note1.error(Resources.class, "Traversal detected");
 
     /**
+     * Deletes the file at the specified path if it exists.
+     *
+     * @throws IOException
+     *         if an I/O error occurs
+     */
+    boolean deleteIfExists(String path) throws IOException;
+
+    /**
      * Creates a new file at the specified path with the specified text content.
      *
      * @throws IOException

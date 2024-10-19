@@ -191,6 +191,24 @@ final class WebResources implements AutoCloseable, Web.Resources {
   }
 
   @Override
+  public final boolean deleteIfExists(String path) throws IOException {
+    Check.notNull(path, "path == null");
+
+    Path file;
+    file = resolve(path);
+
+    checkTraversal(path, file);
+
+    writeLock.lock();
+
+    try {
+      return Files.deleteIfExists(file);
+    } finally {
+      writeLock.unlock();
+    }
+  }
+
+  @Override
   public final void handle(Http.Exchange http) {
     String pathName;
     pathName = http.path();
@@ -302,9 +320,7 @@ final class WebResources implements AutoCloseable, Web.Resources {
     Path file;
     file = resolve(path);
 
-    if (!file.startsWith(rootDirectory)) {
-      throw new IOException("Traversal detected: " + path);
-    }
+    checkTraversal(path, file);
 
     writeLock.lock();
 
@@ -312,6 +328,12 @@ final class WebResources implements AutoCloseable, Web.Resources {
       contents.writeTo(writer);
     } finally {
       writeLock.unlock();
+    }
+  }
+
+  private void checkTraversal(String path, Path file) throws IOException {
+    if (!file.startsWith(rootDirectory)) {
+      throw new IOException("Traversal detected: " + path);
     }
   }
 
