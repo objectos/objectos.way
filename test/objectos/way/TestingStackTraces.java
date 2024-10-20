@@ -13,29 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.notes.impl;
+package objectos.way;
 
-import static org.testng.Assert.assertEquals;
+final class TestingStackTraces {
 
-import objectos.way.IncrementingClock;
-import org.testng.annotations.Test;
+  private TestingStackTraces() {}
 
-public class StandardLayoutTest {
+  public static Throwable ignore() {
+    return new Throwable();
+  }
 
-	private final Layout layout = new StandardLayout();
+  public static Throwable throwable1() {
+    return new Throwable();
+  }
 
-    @Test
-    public void test() {
-      IncrementingClock clock;
-      clock = new IncrementingClock(2023, 10, 31);
+  public static Throwable throwable2() {
+    return new Throwable();
+  }
 
-      Log0 log0;
-      log0 = new Log0(clock, TestingNotes.TRACE0);
-
-      assertEquals(
-          layout.formatLog0(log0),
-          "2023-10-31 10:00:00.000 TRACE --- [main           ] objectos.notes.impl.TestingNotes         : TRACE0\n"
-      );
-    }
+  public static Throwable throwable3() {
+    return new Throwable();
+  }
 
 }

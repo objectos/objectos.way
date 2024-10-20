@@ -133,13 +133,10 @@ TEST_ADD_MODULES := org.testng
 TEST_ADD_MODULES += com.h2database
 TEST_ADD_MODULES += java.net.http
 
-## test runtime exports
-TEST_JAVAX_EXPORTS += objectos.util
-TEST_JAVAX_EXPORTS += objectos.way
-TEST_JAVAX_EXPORTS += objectox.lang
-TEST_JAVAX_EXPORTS += testing.site.web
-
-TEST_ADD_EXPORTS := $(foreach pkg,$(TEST_JAVAX_EXPORTS),objectos.way/$(pkg)=org.testng)
+## test --add-exports
+TEST_ADD_EXPORTS := objectos.way/objectos.util=org.testng
+TEST_ADD_EXPORTS += objectos.way/objectox.lang=org.testng
+TEST_ADD_EXPORTS += objectos.way/testing.site.web=org.testng
 
 ## test --add-reads
 TEST_ADD_READS := objectos.way=org.testng

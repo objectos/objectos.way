@@ -21,9 +21,7 @@ import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.WatchService;
-import objectos.notes.Level;
 import objectos.notes.NoteSink;
-import objectos.notes.impl.ConsoleNoteSink;
 import objectos.way.App;
 import objectos.way.Carbon;
 import objectos.way.Http;
@@ -49,8 +47,8 @@ public final class TestingSiteDev extends TestingSite {
   }
 
   @Override
-  final NoteSink noteSink() {
-    return new ConsoleNoteSink(Level.TRACE);
+  final App.NoteSink2 noteSink() {
+    return App.NoteSink2.OfConsole.create(config -> {});
   }
 
   @Override

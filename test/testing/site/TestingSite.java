@@ -44,7 +44,7 @@ abstract class TestingSite extends App.Bootstrap {
   @Override
   protected final void bootstrap() {
     // NoteSink
-    NoteSink noteSink;
+    App.NoteSink2 noteSink;
     noteSink = noteSink();
 
     // ShutdownHook
@@ -117,7 +117,7 @@ abstract class TestingSite extends App.Bootstrap {
     }
   }
 
-  abstract NoteSink noteSink();
+  abstract App.NoteSink2 noteSink();
 
   abstract Http.Handler carbonHandler(NoteSink noteSink);
 

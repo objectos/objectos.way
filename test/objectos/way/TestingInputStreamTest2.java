@@ -25,11 +25,9 @@ import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.concurrent.TimeUnit;
-import objectos.notes.Level;
 import objectos.notes.Note1;
 import objectos.notes.Note2;
 import objectos.notes.NoteSink;
-import objectos.notes.impl.ConsoleNoteSink;
 
 public class TestingInputStreamTest2 {
   private static final Note1<String> MSG = Note1.info(TestingInputStreamTest2.class, "Message");
@@ -37,7 +35,7 @@ public class TestingInputStreamTest2 {
   private static final Note2<String, IOException> IO_ERROR = Note2.error(TestingInputStreamTest2.class, "I/O error");
 
   public static void main(String[] args) {
-    ConsoleNoteSink noteSink = new ConsoleNoteSink(Level.TRACE);
+    App.NoteSink2 noteSink = TestingNoteSink.INSTANCE;
 
     App.ShutdownHook shutdownHook;
     shutdownHook = App.createShutdownHook(noteSink);

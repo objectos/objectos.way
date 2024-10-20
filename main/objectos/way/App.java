@@ -48,7 +48,6 @@ import objectos.notes.Note1;
 import objectos.notes.Note2;
 import objectos.notes.Note3;
 import objectos.notes.NoteSink;
-import objectos.notes.impl.ConsoleNoteSink;
 import objectos.way.App.NoteSink2;
 import objectos.way.Note.Marker;
 
@@ -72,11 +71,11 @@ public final class App {
       messagesSize = messagesSize();
 
       if (messagesSize > 0) {
-        NoteSink noteSink;
-        noteSink = new ConsoleNoteSink(Level.ERROR);
+        App.NoteSink2 noteSink;
+        noteSink = App.NoteSink2.OfConsole.create(config -> {});
 
-        Note1<String> note;
-        note = Note1.error(getClass(), "Invalid argument");
+        Note.Ref1<String> note;
+        note = Note.Ref1.create(getClass(), "Invalid argument", Note.ERROR);
 
         for (int idx = 0; idx < messagesSize; idx++) {
           String msg;
@@ -91,8 +90,8 @@ public final class App {
       try {
         bootstrap();
       } catch (ServiceFailedException e) {
-        NoteSink noteSink;
-        noteSink = new ConsoleNoteSink(Level.ERROR);
+        App.NoteSink2 noteSink;
+        noteSink = App.NoteSink2.OfConsole.create(config -> {});
 
         Note2<String, Throwable> note;
         note = Note2.error(getClass(), "Bootstrap failed [service]");
@@ -107,11 +106,11 @@ public final class App {
 
         System.exit(2);
       } catch (Throwable e) {
-        NoteSink noteSink;
-        noteSink = new ConsoleNoteSink(Level.ERROR);
+        App.NoteSink2 noteSink;
+        noteSink = App.NoteSink2.OfConsole.create(config -> {});
 
-        Note1<Throwable> note;
-        note = Note1.error(getClass(), "Bootstrap failed");
+        Note.Ref1<Throwable> note;
+        note = Note.Ref1.create(getClass(), "Bootstrap failed", Note.ERROR);
 
         noteSink.send(note, e);
 
@@ -1210,7 +1209,7 @@ final class AppNoteSinkOfConsoleConfig implements App.NoteSink2.OfConsole.Config
 
   private PrintStream target = System.out;
 
-  private Level legacyLevel = Level.INFO;
+  private Level legacyLevel = Level.TRACE;
 
   @Override
   public final void clock(Clock clock) {
@@ -1331,7 +1330,7 @@ final class AppNoteSinkOfFileConfig implements App.NoteSink2.OfFile.Config {
 
   private Predicate<Note> filter = note -> true;
 
-  private Level legacyLevel = Level.INFO;
+  private Level legacyLevel = Level.TRACE;
 
   private final Path file;
 

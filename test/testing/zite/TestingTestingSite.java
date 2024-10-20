@@ -27,9 +27,7 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.Random;
 import java.util.function.Consumer;
-import objectos.notes.Level;
 import objectos.notes.NoteSink;
-import objectos.notes.impl.ConsoleNoteSink;
 import objectos.way.App;
 import objectos.way.Http.Exchange;
 import objectos.way.WayTestingServerExchange;
@@ -62,8 +60,8 @@ public final class TestingTestingSite {
 
     // NoteSink
 
-    ConsoleNoteSink noteSink;
-    noteSink = new ConsoleNoteSink(Level.TRACE);
+    App.NoteSink2 noteSink;
+    noteSink = App.NoteSink2.OfConsole.create(config -> {});
 
     NOTE_SINK = noteSink;
 

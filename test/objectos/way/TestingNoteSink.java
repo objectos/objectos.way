@@ -15,7 +15,6 @@
  */
 package objectos.way;
 
-import objectos.notes.Level;
 import objectos.notes.LongNote;
 import objectos.notes.Note;
 import objectos.notes.Note0;
@@ -23,14 +22,13 @@ import objectos.notes.Note1;
 import objectos.notes.Note2;
 import objectos.notes.Note3;
 import objectos.notes.NoteSink;
-import objectos.notes.impl.ConsoleNoteSink;
 
 public class TestingNoteSink implements NoteSink {
 
-  public static final NoteSink INSTANCE;
+  public static final App.NoteSink2 INSTANCE;
 
   static {
-    INSTANCE = new ConsoleNoteSink(Level.TRACE);
+    INSTANCE = App.NoteSink2.OfConsole.create(config -> {});
   }
 
   @Override

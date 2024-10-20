@@ -25,6 +25,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 import java.time.LocalDate;
+import java.util.stream.Collectors;
 import org.testng.annotations.Test;
 
 public class AppNoteSinkTest {
@@ -40,7 +41,11 @@ public class AppNoteSinkTest {
       Note.Ref0 ref0,
       Note.Ref1<String> ref1,
       Note.Ref2<String, LocalDate> ref2,
-      Note.Ref3<String, LocalDate, String> ref3
+      Note.Ref3<String, LocalDate, String> ref3,
+
+      Note.Ref1<Throwable> throw1,
+      Note.Ref2<Throwable, Throwable> throw2,
+      Note.Ref3<Throwable, Throwable, Throwable> throw3
   ) {
     static Notes create() {
       Class<?> s;
@@ -57,7 +62,11 @@ public class AppNoteSinkTest {
           Note.Ref0.create(s, "ref0", Note.TRACE),
           Note.Ref1.create(s, "ref1", Note.DEBUG),
           Note.Ref2.create(s, "ref2", Note.INFO),
-          Note.Ref3.create(s, "ref3", Note.WARN)
+          Note.Ref3.create(s, "ref3", Note.WARN),
+
+          Note.Ref1.create(s, "throw1", Note.ERROR),
+          Note.Ref2.create(s, "throw2", Note.ERROR),
+          Note.Ref3.create(s, "throw3", Note.ERROR)
       );
     }
   }
@@ -139,6 +148,71 @@ public class AppNoteSinkTest {
         2023-10-31 10:02:00.000 ERROR --- [main           ] objectos.way.AppNoteSinkTest             : long2 2123 3456
         2023-10-31 10:03:00.000 INFO  --- [main           ] objectos.way.AppNoteSinkTest             : ref2 id 2024-10-11
         2023-10-31 10:04:00.000 WARN  --- [main           ] objectos.way.AppNoteSinkTest             : ref3 FOO 2010-05-23 BAR
+        """
+    );
+  }
+
+  @Test(description = """
+  - console
+  - throwables
+  """)
+  public void console03() {
+    ThisStream stream;
+    stream = new ThisStream();
+
+    App.NoteSink2.OfConsole noteSink;
+    noteSink = App.NoteSink2.OfConsole.create(config -> {
+      config.clock(new IncrementingClock(2023, 10, 31));
+
+      config.target(stream);
+    });
+
+    Throwable ignore;
+    ignore = TestingStackTraces.ignore();
+
+    noteSink.send(notes.throw1, TestingStackTraces.throwable1());
+    noteSink.send(notes.throw2, ignore, TestingStackTraces.throwable2());
+    noteSink.send(notes.throw3, ignore, ignore, TestingStackTraces.throwable3());
+
+    String string;
+    string = stream.toString();
+
+    string = string.lines()
+        .filter(line -> {
+          if (!line.startsWith("\tat")) {
+            return true;
+          }
+
+          return line.startsWith("\tat objectos")
+              && !line.contains("RunTests");
+        })
+        .map(line -> {
+          if (!line.startsWith("\tat objectos")) {
+            return line;
+          }
+
+          return line.replaceFirst("objectos.way(@.*)/", "objectos.way/");
+        })
+        .collect(Collectors.joining("\n"));
+
+    assertEquals(
+        string,
+
+        """
+        2023-10-31 10:00:00.000 ERROR --- [main           ] objectos.way.AppNoteSinkTest             : throw1
+        java.lang.Throwable
+        \tat objectos.way/objectos.way.TestingStackTraces.throwable1(TestingStackTraces.java:27)
+        \tat objectos.way/objectos.way.AppNoteSinkTest.console03(AppNoteSinkTest.java:173)
+
+        2023-10-31 10:01:00.000 ERROR --- [main           ] objectos.way.AppNoteSinkTest             : throw2 java.lang.Throwable
+        java.lang.Throwable
+        \tat objectos.way/objectos.way.TestingStackTraces.throwable2(TestingStackTraces.java:31)
+        \tat objectos.way/objectos.way.AppNoteSinkTest.console03(AppNoteSinkTest.java:174)
+
+        2023-10-31 10:02:00.000 ERROR --- [main           ] objectos.way.AppNoteSinkTest             : throw3 java.lang.Throwable java.lang.Throwable
+        java.lang.Throwable
+        \tat objectos.way/objectos.way.TestingStackTraces.throwable3(TestingStackTraces.java:35)
+        \tat objectos.way/objectos.way.AppNoteSinkTest.console03(AppNoteSinkTest.java:175)
         """
     );
   }

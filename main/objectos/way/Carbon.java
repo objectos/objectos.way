@@ -18,9 +18,7 @@ package objectos.way;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.function.Predicate;
-import objectos.notes.Level;
 import objectos.notes.NoteSink;
-import objectos.notes.impl.ConsoleNoteSink;
 import objectos.way.Carbon.Size.ExtraSmall;
 import objectos.way.Carbon.Size.Max;
 import objectos.way.Html.ElementName;
@@ -475,8 +473,19 @@ public final class Carbon extends CarbonComponents {
     @Override
     protected final void bootstrap() {
       try {
-        NoteSink noteSink;
-        noteSink = new ConsoleNoteSink(Level.INFO);
+        App.NoteSink2 noteSink;
+        noteSink = App.NoteSink2.OfConsole.create(
+            config -> {
+              config.filter(note -> {
+                Note.Marker marker;
+                marker = note.marker();
+
+                return marker == Note.INFO
+                    || marker == Note.WARN
+                    || marker == Note.ERROR;
+              });
+            }
+        );
 
         Carbon.generate(noteSink, classOutput.get(), outputFile.get());
       } catch (IOException e) {

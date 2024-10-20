@@ -15,13 +15,13 @@
  */
 package testing.zite;
 
-import objectos.notes.NoteSink;
 import objectos.way.App;
 import objectos.way.Http;
 import objectos.way.Web;
 
 @App.DoNotReload
-public record TestingSiteInjector(NoteSink noteSink,
-                                  Web.Store sessionStore,
-                                  Web.Resources webResources,
-                                  Http.Handler carbonHandler) {}
+public record TestingSiteInjector(
+    App.NoteSink2 noteSink,
+    Web.Store sessionStore,
+    Web.Resources webResources,
+    Http.Handler carbonHandler) {}
