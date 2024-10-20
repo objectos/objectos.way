@@ -36,43 +36,8 @@ public final class ConsoleNoteSink extends AbstractNoteSink {
   }
 
   @Override
-  protected final void addLog(Log0 log) {
-    String s;
-    s = layout.formatLog0(log);
-
-    stream.print(s);
-  }
-
-  @Override
-  protected final void addLog(Log1 log) {
-    String s;
-    s = layout.formatLog1(log);
-
-    stream.print(s);
-  }
-
-  @Override
-  protected final void addLog(Log2 log) {
-    String s;
-    s = layout.formatLog2(log);
-
-    stream.print(s);
-  }
-
-  @Override
-  protected final void addLog(Log3 log) {
-    String s;
-    s = layout.formatLog3(log);
-
-    stream.print(s);
-  }
-
-  @Override
-  protected final void addLog(LongLog log) {
-    String s;
-    s = layout.formatLongLog(log);
-
-    stream.print(s);
+  protected void writeBytes(byte[] bytes) {
+    stream.writeBytes(bytes);
   }
 
 }

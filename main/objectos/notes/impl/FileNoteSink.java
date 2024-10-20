@@ -19,7 +19,6 @@ import java.io.Closeable;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.channels.WritableByteChannel;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
@@ -97,52 +96,10 @@ public final class FileNoteSink extends AbstractNoteSink implements Closeable {
   }
 
   @Override
-  protected final void addLog(Log0 log) {
-    String s;
-    s = layout.formatLog0(log);
-
-    print(s);
-  }
-
-  @Override
-  protected final void addLog(Log1 log) {
-    String s;
-    s = layout.formatLog1(log);
-
-    print(s);
-  }
-
-  @Override
-  protected final void addLog(Log2 log) {
-    String s;
-    s = layout.formatLog2(log);
-
-    print(s);
-  }
-
-  @Override
-  protected final void addLog(Log3 log) {
-    String s;
-    s = layout.formatLog3(log);
-
-    print(s);
-  }
-
-  @Override
-  protected final void addLog(LongLog log) {
-    String s;
-    s = layout.formatLongLog(log);
-
-    print(s);
-  }
-
-  private void print(String s) {
+  protected final void writeBytes(byte[] bytes) {
     if (!active) {
       return;
     }
-
-    byte[] bytes;
-    bytes = s.getBytes(StandardCharsets.UTF_8);
 
     int remaining;
     remaining = bytes.length;

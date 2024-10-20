@@ -34,6 +34,7 @@ import java.nio.file.StandardOpenOption;
 import java.nio.file.WatchService;
 import java.time.Clock;
 import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 import java.util.concurrent.locks.Lock;
@@ -41,8 +42,11 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 import objectos.notes.Level;
+import objectos.notes.LongNote;
+import objectos.notes.Note0;
 import objectos.notes.Note1;
 import objectos.notes.Note2;
+import objectos.notes.Note3;
 import objectos.notes.NoteSink;
 import objectos.notes.impl.ConsoleNoteSink;
 import objectos.way.App.NoteSink2;
@@ -134,15 +138,21 @@ public final class App {
 
   }
 
-  public sealed interface NoteSink2 extends Note.Sink {
+  private sealed interface NoteSinkConfig {
+
+    void clock(Clock clock);
+
+    void filter(Predicate<Note> filter);
+
+    void legacyLevel(Level level);
+
+  }
+
+  public sealed interface NoteSink2 extends Note.Sink, NoteSink {
 
     sealed interface OfConsole extends NoteSink2 {
 
-      sealed interface Config {
-
-        void clock(Clock clock);
-
-        void filter(Predicate<Note> filter);
+      sealed interface Config extends NoteSinkConfig {
 
         void target(PrintStream target);
 
@@ -161,11 +171,7 @@ public final class App {
 
     sealed interface OfFile extends NoteSink2, Closeable {
 
-      sealed interface Config {
-
-        void clock(Clock clock);
-
-        void filter(Predicate<Note> filter);
+      sealed interface Config extends NoteSinkConfig {
 
       }
 
@@ -429,9 +435,321 @@ public final class App {
 
 }
 
-sealed abstract class AppNoteSink implements App.LoggerAdapter, NoteSink2 {
+abstract class LegacyNoteSink implements NoteSink {
 
-  private final Clock clock;
+  Level level;
+
+  Clock clock;
+
+  public final Level level() {
+    return level;
+  }
+
+  public final void level(Level level) {
+    this.level = Objects.requireNonNull(level, "level == null");
+  }
+
+  public final boolean isEnabled(Level level) {
+    return this.level.compareTo(level) <= 0;
+  }
+
+  @Override
+  public final boolean isEnabled(objectos.notes.Note note) {
+    if (note == null) {
+      return false;
+    }
+
+    return note.isEnabled(level);
+  }
+
+  @Override
+  public final NoteSink replace(NoteSink sink) {
+    return this;
+  }
+
+  @Override
+  public final void send(Note0 note) {
+    if (note == null) {
+      return;
+    }
+
+    if (!note.isEnabled(level)) {
+      return;
+    }
+
+    StringBuilder out;
+    out = format(note);
+
+    write(out);
+  }
+
+  @Override
+  public final void send(LongNote note, long value) {
+    if (note == null) {
+      return;
+    }
+
+    if (!note.isEnabled(level)) {
+      return;
+    }
+
+    StringBuilder out;
+    out = format(note);
+
+    formatLong(out, value);
+
+    write(out);
+  }
+
+  @Override
+  public final <T1> void send(Note1<T1> note, T1 v1) {
+    if (note == null) {
+      return;
+    }
+
+    if (!note.isEnabled(level)) {
+      return;
+    }
+
+    StringBuilder out;
+    out = format(note);
+
+    formatLastValue(out, v1);
+
+    write(out);
+  }
+
+  @Override
+  public final <T1, T2> void send(Note2<T1, T2> note, T1 v1, T2 v2) {
+    if (note == null) {
+      return;
+    }
+
+    if (!note.isEnabled(level)) {
+      return;
+    }
+
+    StringBuilder out;
+    out = format(note);
+
+    formatValue(out, v1);
+
+    formatLastValue(out, v2);
+
+    write(out);
+  }
+
+  @Override
+  public final <T1, T2, T3> void send(Note3<T1, T2, T3> note, T1 v1, T2 v2, T3 v3) {
+    if (note == null) {
+      return;
+    }
+
+    if (!note.isEnabled(level)) {
+      return;
+    }
+
+    StringBuilder out;
+    out = format(note);
+
+    formatValue(out, v1);
+
+    formatValue(out, v2);
+
+    formatLastValue(out, v3);
+
+    write(out);
+  }
+
+  public final void slf4j(String name, Level level, String message) {
+    StringBuilder out;
+    out = format0(level, name, message);
+
+    write(out);
+  }
+
+  public final void slf4j(String name, Level level, String message, Throwable t) {
+    StringBuilder out;
+    out = format0(level, name, message);
+
+    if (t != null) {
+      formatThrowable(out, t);
+    }
+
+    write(out);
+  }
+
+  private static final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS");
+
+  private StringBuilder format(objectos.notes.Note note) {
+    return format0(
+        note.level(),
+
+        note.source(),
+
+        note.key()
+    );
+  }
+
+  private StringBuilder format0(Level level, String source, Object key) {
+    StringBuilder out;
+    out = new StringBuilder();
+
+    ZonedDateTime date;
+    date = ZonedDateTime.now(clock);
+
+    out.append(DATE_FORMAT.format(date));
+
+    out.append(' ');
+
+    String levelName;
+    levelName = level.name();
+
+    pad(out, levelName, 5);
+
+    out.append(" --- ");
+
+    out.append('[');
+
+    Thread currentThread;
+    currentThread = Thread.currentThread();
+
+    String thread;
+    thread = currentThread.getName();
+
+    pad(out, thread, 15);
+
+    out.append(']');
+
+    out.append(' ');
+
+    abbreviate(out, source, 40);
+
+    out.append(' ');
+    out.append(':');
+    out.append(' ');
+
+    out.append(key);
+
+    return out;
+  }
+
+  private void abbreviate(StringBuilder out, String source, int length) {
+    String result;
+    result = source;
+
+    int resultLength;
+    resultLength = result.length();
+
+    if (resultLength > length) {
+      int start;
+      start = resultLength - length;
+
+      result = result.substring(start, resultLength);
+    }
+
+    out.append(result);
+
+    int pad;
+    pad = length - result.length();
+
+    for (int i = 0; i < pad; i++) {
+      out.append(' ');
+    }
+  }
+
+  private void formatLong(StringBuilder out, long value) {
+    out.append(' ');
+
+    out.append(value);
+  }
+
+  private void formatValue(StringBuilder out, Object value) {
+    out.append(' ');
+
+    out.append(value);
+  }
+
+  private void formatLastValue(StringBuilder out, Object value) {
+    if (value instanceof Throwable t) {
+      formatThrowable(out, t);
+    } else {
+      formatValue(out, value);
+    }
+  }
+
+  private void formatThrowable(StringBuilder out, Throwable t) {
+    out.append('\n');
+
+    StringBuilderWriter writer;
+    writer = new StringBuilderWriter(out);
+
+    PrintWriter printWriter;
+    printWriter = new PrintWriter(writer);
+
+    t.printStackTrace(printWriter);
+  }
+
+  private void pad(StringBuilder out, String source, int length) {
+    String result;
+    result = source;
+
+    if (result.length() > length) {
+      result = result.substring(0, length);
+    }
+
+    out.append(result);
+
+    int pad;
+    pad = length - result.length();
+
+    for (int i = 0; i < pad; i++) {
+      out.append(' ');
+    }
+  }
+
+  private void write(StringBuilder out) {
+    out.append('\n');
+
+    String s;
+    s = out.toString();
+
+    byte[] bytes;
+    bytes = s.getBytes(StandardCharsets.UTF_8);
+
+    writeBytes(bytes);
+  }
+
+  protected abstract void writeBytes(byte[] bytes);
+
+  private static class StringBuilderWriter extends Writer {
+
+    private final StringBuilder out;
+
+    public StringBuilderWriter(StringBuilder out) {
+      this.out = out;
+    }
+
+    @Override
+    public void write(char[] cbuf, int off, int len) throws IOException {
+      out.append(cbuf, off, len);
+    }
+
+    @Override
+    public void flush() {
+      // noop, not buffered
+    }
+
+    @Override
+    public void close() {
+      // noop, in-memory only
+    }
+
+  }
+
+}
+
+sealed abstract class AppNoteSink extends LegacyNoteSink implements App.LoggerAdapter, NoteSink2 {
 
   private final DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS");
 
@@ -710,7 +1028,8 @@ sealed abstract class AppNoteSink implements App.LoggerAdapter, NoteSink2 {
     write(out);
   }
 
-  abstract void writeBytes(byte[] bytes);
+  @Override
+  protected abstract void writeBytes(byte[] bytes);
 
   private boolean test(Note note) {
     r.lock();
@@ -877,7 +1196,7 @@ final class AppNoteSinkOfConsole extends AppNoteSink implements App.NoteSink2.Of
   }
 
   @Override
-  final void writeBytes(byte[] bytes) {
+  protected final void writeBytes(byte[] bytes) {
     target.writeBytes(bytes);
   }
 
@@ -891,6 +1210,8 @@ final class AppNoteSinkOfConsoleConfig implements App.NoteSink2.OfConsole.Config
 
   private PrintStream target = System.out;
 
+  private Level legacyLevel = Level.INFO;
+
   @Override
   public final void clock(Clock clock) {
     this.clock = Objects.requireNonNull(clock, "clock == null");
@@ -902,12 +1223,22 @@ final class AppNoteSinkOfConsoleConfig implements App.NoteSink2.OfConsole.Config
   }
 
   @Override
+  public final void legacyLevel(Level level) {
+    legacyLevel = Objects.requireNonNull(level, "level == null");
+  }
+
+  @Override
   public final void target(PrintStream target) {
     this.target = Objects.requireNonNull(target, "target == null");
   }
 
   final AppNoteSinkOfConsole build() {
-    return new AppNoteSinkOfConsole(clock, filter, target);
+    AppNoteSinkOfConsole result;
+    result = new AppNoteSinkOfConsole(clock, filter, target);
+
+    result.level(legacyLevel);
+
+    return result;
   }
 
 }
@@ -948,7 +1279,7 @@ final class AppNoteSinkOfFile extends AppNoteSink implements App.NoteSink2.OfFil
   }
 
   @Override
-  final void writeBytes(byte[] bytes) {
+  protected final void writeBytes(byte[] bytes) {
     if (!active) {
       return;
     }
@@ -1000,6 +1331,8 @@ final class AppNoteSinkOfFileConfig implements App.NoteSink2.OfFile.Config {
 
   private Predicate<Note> filter = note -> true;
 
+  private Level legacyLevel = Level.INFO;
+
   private final Path file;
 
   public AppNoteSinkOfFileConfig(Path file) {
@@ -1014,6 +1347,11 @@ final class AppNoteSinkOfFileConfig implements App.NoteSink2.OfFile.Config {
   @Override
   public final void filter(Predicate<Note> filter) {
     this.filter = Objects.requireNonNull(filter, "filter == null");
+  }
+
+  @Override
+  public final void legacyLevel(Level level) {
+    legacyLevel = Objects.requireNonNull(level, "level == null");
   }
 
   final AppNoteSinkOfFile build() throws IOException {
@@ -1047,7 +1385,12 @@ final class AppNoteSinkOfFileConfig implements App.NoteSink2.OfFile.Config {
         StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING, StandardOpenOption.WRITE
     );
 
-    return new AppNoteSinkOfFile(clock, filter, buffer, channel);
+    AppNoteSinkOfFile result;
+    result = new AppNoteSinkOfFile(clock, filter, buffer, channel);
+
+    result.level(legacyLevel);
+
+    return result;
   }
 
 }

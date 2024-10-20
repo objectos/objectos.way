@@ -15,7 +15,13 @@
  */
 package objectos.notes.impl;
 
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.Writer;
+import java.nio.charset.StandardCharsets;
 import java.time.Clock;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import objectos.notes.Level;
 import objectos.notes.LongNote;
 import objectos.notes.Note;
@@ -36,7 +42,7 @@ public abstract class AbstractNoteSink implements NoteSink {
   public AbstractNoteSink(Level level) {
     this.level = level;
   }
-  
+
   public final Level level() {
     return level;
   }
@@ -73,10 +79,10 @@ public abstract class AbstractNoteSink implements NoteSink {
       return;
     }
 
-    Log0 log;
-    log = new Log0(clock, note);
+    StringBuilder out;
+    out = format(note);
 
-    addLog(log);
+    write(out);
   }
 
   @Override
@@ -89,10 +95,12 @@ public abstract class AbstractNoteSink implements NoteSink {
       return;
     }
 
-    LongLog log;
-    log = new LongLog(clock, note, value);
+    StringBuilder out;
+    out = format(note);
 
-    addLog(log);
+    formatLong(out, value);
+
+    write(out);
   }
 
   @Override
@@ -105,10 +113,12 @@ public abstract class AbstractNoteSink implements NoteSink {
       return;
     }
 
-    Log1 log;
-    log = new Log1(clock, note, v1);
+    StringBuilder out;
+    out = format(note);
 
-    addLog(log);
+    formatLastValue(out, v1);
+
+    write(out);
   }
 
   @Override
@@ -121,10 +131,14 @@ public abstract class AbstractNoteSink implements NoteSink {
       return;
     }
 
-    Log2 log;
-    log = new Log2(clock, note, v1, v2);
+    StringBuilder out;
+    out = format(note);
 
-    addLog(log);
+    formatValue(out, v1);
+
+    formatLastValue(out, v2);
+
+    write(out);
   }
 
   @Override
@@ -137,35 +151,160 @@ public abstract class AbstractNoteSink implements NoteSink {
       return;
     }
 
-    Log3 log;
-    log = new Log3(clock, note, v1, v2, v3);
+    StringBuilder out;
+    out = format(note);
 
-    addLog(log);
+    formatValue(out, v1);
+
+    formatValue(out, v2);
+
+    formatLastValue(out, v3);
+
+    write(out);
   }
 
-
   public final void slf4j(String name, Level level, String message) {
-    Log0 log;
-    log = new Log0(clock, name, level, message);
-    
-    addLog(log);
+    StringBuilder out;
+    out = format0(level, name, message);
+
+    write(out);
   }
 
   public final void slf4j(String name, Level level, String message, Throwable t) {
-    Log1 log;
-    log = new Log1(clock, name, level, message, t);
+    StringBuilder out;
+    out = format0(level, name, message);
 
-    addLog(log);
+    if (t != null) {
+      formatThrowable(out, t);
+    }
+
+    write(out);
   }
 
-  protected abstract void addLog(Log0 log);
+  private static final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS");
 
-  protected abstract void addLog(Log1 log);
+  private StringBuilder format(Note note) {
+    return format0(
+        note.level(),
 
-  protected abstract void addLog(Log2 log);
+        note.source(),
 
-  protected abstract void addLog(Log3 log);
+        note.key()
+    );
+  }
 
-  protected abstract void addLog(LongLog log);
+  private StringBuilder format0(Level level, String source, Object key) {
+    StringBuilder out;
+    out = new StringBuilder();
+
+    ZonedDateTime date;
+    date = ZonedDateTime.now(clock);
+
+    out.append(DATE_FORMAT.format(date));
+
+    out.append(' ');
+
+    String levelName;
+    levelName = level.name();
+
+    Logging.pad(out, levelName, 5);
+
+    out.append(" --- ");
+
+    out.append('[');
+
+    Thread currentThread;
+    currentThread = Thread.currentThread();
+
+    String thread;
+    thread = currentThread.getName();
+
+    Logging.pad(out, thread, 15);
+
+    out.append(']');
+
+    out.append(' ');
+
+    Logging.abbreviate(out, source, 40);
+
+    out.append(' ');
+    out.append(':');
+    out.append(' ');
+
+    out.append(key);
+
+    return out;
+  }
+
+  private void formatLong(StringBuilder out, long value) {
+    out.append(' ');
+
+    out.append(value);
+  }
+
+  private void formatValue(StringBuilder out, Object value) {
+    out.append(' ');
+
+    out.append(value);
+  }
+
+  private void formatLastValue(StringBuilder out, Object value) {
+    if (value instanceof Throwable t) {
+      formatThrowable(out, t);
+    } else {
+      formatValue(out, value);
+    }
+  }
+
+  private void formatThrowable(StringBuilder out, Throwable t) {
+    out.append('\n');
+
+    StringBuilderWriter writer;
+    writer = new StringBuilderWriter(out);
+
+    PrintWriter printWriter;
+    printWriter = new PrintWriter(writer);
+
+    t.printStackTrace(printWriter);
+  }
+
+  private void write(StringBuilder out) {
+    out.append('\n');
+
+    String s;
+    s = out.toString();
+
+    byte[] bytes;
+    bytes = s.getBytes(StandardCharsets.UTF_8);
+
+    writeBytes(bytes);
+  }
+
+  protected abstract void writeBytes(byte[] bytes);
+
+  private static class StringBuilderWriter extends Writer {
+
+    private final StringBuilder out;
+
+    public StringBuilderWriter(StringBuilder out) {
+      this.out = out;
+    }
+
+    @Override
+    public void write(char[] cbuf, int off, int len) throws IOException {
+      out.append(cbuf, off, len);
+    }
+
+    @Override
+    public void flush() {
+      // noop, not buffered
+    }
+
+    @Override
+    public void close() {
+      // noop, in-memory only
+    }
+
+  }
 
 }
