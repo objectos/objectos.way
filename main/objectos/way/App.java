@@ -47,8 +47,6 @@ import objectos.notes.Note0;
 import objectos.notes.Note1;
 import objectos.notes.Note2;
 import objectos.notes.Note3;
-import objectos.notes.NoteSink;
-import objectos.way.App.NoteSink2;
 import objectos.way.Note.Marker;
 
 /**
@@ -71,8 +69,8 @@ public final class App {
       messagesSize = messagesSize();
 
       if (messagesSize > 0) {
-        App.NoteSink2 noteSink;
-        noteSink = App.NoteSink2.OfConsole.create(config -> {});
+        App.NoteSink noteSink;
+        noteSink = App.NoteSink.OfConsole.create(config -> {});
 
         Note.Ref1<String> note;
         note = Note.Ref1.create(getClass(), "Invalid argument", Note.ERROR);
@@ -90,8 +88,8 @@ public final class App {
       try {
         bootstrap();
       } catch (ServiceFailedException e) {
-        App.NoteSink2 noteSink;
-        noteSink = App.NoteSink2.OfConsole.create(config -> {});
+        App.NoteSink noteSink;
+        noteSink = App.NoteSink.OfConsole.create(config -> {});
 
         Note2<String, Throwable> note;
         note = Note2.error(getClass(), "Bootstrap failed [service]");
@@ -106,8 +104,8 @@ public final class App {
 
         System.exit(2);
       } catch (Throwable e) {
-        App.NoteSink2 noteSink;
-        noteSink = App.NoteSink2.OfConsole.create(config -> {});
+        App.NoteSink noteSink;
+        noteSink = App.NoteSink.OfConsole.create(config -> {});
 
         Note.Ref1<Throwable> note;
         note = Note.Ref1.create(getClass(), "Bootstrap failed", Note.ERROR);
@@ -129,14 +127,6 @@ public final class App {
   @Target(ElementType.TYPE)
   public @interface DoNotReload {}
 
-  public sealed interface LoggerAdapter permits AppNoteSink {
-
-    void log(String name, Note.Marker level, String message);
-
-    void log(String name, Note.Marker level, String message, Throwable t);
-
-  }
-
   private sealed interface NoteSinkConfig {
 
     void clock(Clock clock);
@@ -147,14 +137,21 @@ public final class App {
 
   }
 
-  public sealed interface NoteSink2 extends Note.Sink, NoteSink {
+  public sealed interface NoteSink extends Note.Sink, objectos.notes.NoteSink {
 
-    sealed interface OfConsole extends NoteSink2 {
+    sealed interface OfConsole extends NoteSink {
 
       sealed interface Config extends NoteSinkConfig {
 
         void target(PrintStream target);
 
+      }
+
+      static OfConsole create() {
+        AppNoteSinkOfConsoleConfig builder;
+        builder = new AppNoteSinkOfConsoleConfig();
+
+        return builder.build();
       }
 
       static OfConsole create(Consumer<Config> config) {
@@ -168,7 +165,7 @@ public final class App {
 
     }
 
-    sealed interface OfFile extends NoteSink2, Closeable {
+    sealed interface OfFile extends NoteSink, Closeable {
 
       sealed interface Config extends NoteSinkConfig {
 
@@ -398,13 +395,13 @@ public final class App {
     return builder.init();
   }
 
-  public static ShutdownHook createShutdownHook(NoteSink noteSink) {
+  public static ShutdownHook createShutdownHook(objectos.notes.NoteSink noteSink) {
     Check.notNull(noteSink, "noteSink == null");
 
     return new AppShutdownHook(noteSink);
   }
 
-  public static Reloader.Option noteSink(NoteSink value) {
+  public static Reloader.Option noteSink(objectos.notes.NoteSink value) {
     Check.notNull(value, "value == null");
 
     return new CreateOption() {
@@ -434,7 +431,7 @@ public final class App {
 
 }
 
-abstract class LegacyNoteSink implements NoteSink {
+abstract class LegacyNoteSink implements objectos.notes.NoteSink {
 
   Level level;
 
@@ -462,7 +459,7 @@ abstract class LegacyNoteSink implements NoteSink {
   }
 
   @Override
-  public final NoteSink replace(NoteSink sink) {
+  public final objectos.notes.NoteSink replace(objectos.notes.NoteSink sink) {
     return this;
   }
 
@@ -606,7 +603,7 @@ abstract class LegacyNoteSink implements NoteSink {
 
     pad(out, levelName, 5);
 
-    out.append(" --- ");
+    out.append(' ');
 
     out.append('[');
 
@@ -748,7 +745,7 @@ abstract class LegacyNoteSink implements NoteSink {
 
 }
 
-sealed abstract class AppNoteSink extends LegacyNoteSink implements App.LoggerAdapter, NoteSink2 {
+sealed abstract class AppNoteSink extends LegacyNoteSink implements App.NoteSink {
 
   private final DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS");
 
@@ -926,9 +923,10 @@ sealed abstract class AppNoteSink extends LegacyNoteSink implements App.LoggerAd
     StringBuilder out;
     out = new StringBuilder();
 
-    format(out, note);
+    int length;
+    length = format(out, note);
 
-    formatLastValue(out, value);
+    formatLastValue(out, length, value);
 
     write(out);
   }
@@ -946,11 +944,12 @@ sealed abstract class AppNoteSink extends LegacyNoteSink implements App.LoggerAd
     StringBuilder out;
     out = new StringBuilder();
 
-    format(out, note);
+    int length;
+    length = format(out, note);
 
-    formatValue(out, value1);
+    length = formatValue(out, length, value1);
 
-    formatLastValue(out, value2);
+    formatLastValue(out, length, value2);
 
     write(out);
   }
@@ -968,18 +967,18 @@ sealed abstract class AppNoteSink extends LegacyNoteSink implements App.LoggerAd
     StringBuilder out;
     out = new StringBuilder();
 
-    format(out, note);
+    int length;
+    length = format(out, note);
 
-    formatValue(out, value1);
+    length = formatValue(out, length, value1);
 
-    formatValue(out, value2);
+    length = formatValue(out, length, value2);
 
-    formatLastValue(out, value3);
+    formatLastValue(out, length, value3);
 
     write(out);
   }
 
-  @Override
   public final void log(String name, Marker level, String message) {
     if (level == null) {
       return;
@@ -1001,7 +1000,6 @@ sealed abstract class AppNoteSink extends LegacyNoteSink implements App.LoggerAd
     write(out);
   }
 
-  @Override
   public final void log(String name, Marker level, String message, Throwable t) {
     if (level == null) {
       return;
@@ -1039,8 +1037,8 @@ sealed abstract class AppNoteSink extends LegacyNoteSink implements App.LoggerAd
     }
   }
 
-  private void format(StringBuilder out, Note note) {
-    format(
+  private int format(StringBuilder out, Note note) {
+    return format(
         out,
 
         note.marker(),
@@ -1051,7 +1049,7 @@ sealed abstract class AppNoteSink extends LegacyNoteSink implements App.LoggerAd
     );
   }
 
-  private void format(StringBuilder out, Marker marker, String source, String key) {
+  private int format(StringBuilder out, Marker marker, String source, String key) {
     LocalDateTime date;
     date = LocalDateTime.now(clock);
 
@@ -1064,7 +1062,7 @@ sealed abstract class AppNoteSink extends LegacyNoteSink implements App.LoggerAd
 
     pad(out, markerName, 5);
 
-    out.append(" --- ");
+    out.append(' ');
 
     out.append('[');
 
@@ -1086,7 +1084,12 @@ sealed abstract class AppNoteSink extends LegacyNoteSink implements App.LoggerAd
     out.append(':');
     out.append(' ');
 
+    int length;
+    length = out.length();
+
     out.append(key);
+
+    return length;
   }
 
   private void formatInt(StringBuilder out, int value) {
@@ -1101,17 +1104,24 @@ sealed abstract class AppNoteSink extends LegacyNoteSink implements App.LoggerAd
     out.append(value);
   }
 
-  private void formatValue(StringBuilder out, Object value) {
-    out.append(' ');
+  private int formatValue(StringBuilder out, int length, Object value) {
+    if (out.length() != length) {
+      out.append(' ');
+    }
+
+    int result;
+    result = out.length();
 
     out.append(value);
+
+    return result;
   }
 
-  private void formatLastValue(StringBuilder out, Object value) {
+  private void formatLastValue(StringBuilder out, int length, Object value) {
     if (value instanceof Throwable t) {
       formatThrowable(out, t);
     } else {
-      formatValue(out, value);
+      formatValue(out, length, value);
     }
   }
 
@@ -1184,7 +1194,7 @@ sealed abstract class AppNoteSink extends LegacyNoteSink implements App.LoggerAd
 
 }
 
-final class AppNoteSinkOfConsole extends AppNoteSink implements App.NoteSink2.OfConsole {
+final class AppNoteSinkOfConsole extends AppNoteSink implements App.NoteSink.OfConsole {
 
   private final PrintStream target;
 
@@ -1201,7 +1211,7 @@ final class AppNoteSinkOfConsole extends AppNoteSink implements App.NoteSink2.Of
 
 }
 
-final class AppNoteSinkOfConsoleConfig implements App.NoteSink2.OfConsole.Config {
+final class AppNoteSinkOfConsoleConfig implements App.NoteSink.OfConsole.Config {
 
   private Clock clock = Clock.systemDefaultZone();
 
@@ -1242,7 +1252,7 @@ final class AppNoteSinkOfConsoleConfig implements App.NoteSink2.OfConsole.Config
 
 }
 
-final class AppNoteSinkOfFile extends AppNoteSink implements App.NoteSink2.OfFile {
+final class AppNoteSinkOfFile extends AppNoteSink implements App.NoteSink.OfFile {
 
   private final ByteBuffer buffer;
 
@@ -1322,7 +1332,7 @@ final class AppNoteSinkOfFile extends AppNoteSink implements App.NoteSink2.OfFil
 
 }
 
-final class AppNoteSinkOfFileConfig implements App.NoteSink2.OfFile.Config {
+final class AppNoteSinkOfFileConfig implements App.NoteSink.OfFile.Config {
 
   private final int bufferSize = 4096;
 

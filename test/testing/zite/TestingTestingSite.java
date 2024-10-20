@@ -60,8 +60,8 @@ public final class TestingTestingSite {
 
     // NoteSink
 
-    App.NoteSink2 noteSink;
-    noteSink = App.NoteSink2.OfConsole.create(config -> {});
+    App.NoteSink noteSink;
+    noteSink = App.NoteSink.OfConsole.create(config -> {});
 
     NOTE_SINK = noteSink;
 

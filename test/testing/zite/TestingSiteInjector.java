@@ -21,7 +21,7 @@ import objectos.way.Web;
 
 @App.DoNotReload
 public record TestingSiteInjector(
-    App.NoteSink2 noteSink,
+    App.NoteSink noteSink,
     Web.Store sessionStore,
     Web.Resources webResources,
     Http.Handler carbonHandler) {}

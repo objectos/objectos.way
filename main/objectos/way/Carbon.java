@@ -473,8 +473,8 @@ public final class Carbon extends CarbonComponents {
     @Override
     protected final void bootstrap() {
       try {
-        App.NoteSink2 noteSink;
-        noteSink = App.NoteSink2.OfConsole.create(
+        App.NoteSink noteSink;
+        noteSink = App.NoteSink.OfConsole.create(
             config -> {
               config.filter(note -> {
                 Note.Marker marker;

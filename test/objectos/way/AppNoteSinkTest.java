@@ -43,6 +43,8 @@ public class AppNoteSinkTest {
       Note.Ref2<String, LocalDate> ref2,
       Note.Ref3<String, LocalDate, String> ref3,
 
+      Note.Ref3<Object, Object, Object> emptyKey,
+
       Note.Ref1<Throwable> throw1,
       Note.Ref2<Throwable, Throwable> throw2,
       Note.Ref3<Throwable, Throwable, Throwable> throw3
@@ -64,6 +66,8 @@ public class AppNoteSinkTest {
           Note.Ref2.create(s, "ref2", Note.INFO),
           Note.Ref3.create(s, "ref3", Note.WARN),
 
+          Note.Ref3.create(s, "", Note.INFO),
+
           Note.Ref1.create(s, "throw1", Note.ERROR),
           Note.Ref2.create(s, "throw2", Note.ERROR),
           Note.Ref3.create(s, "throw3", Note.ERROR)
@@ -83,8 +87,8 @@ public class AppNoteSinkTest {
     ThisStream stream;
     stream = new ThisStream();
 
-    App.NoteSink2.OfConsole noteSink;
-    noteSink = App.NoteSink2.OfConsole.create(config -> {
+    App.NoteSink.OfConsole noteSink;
+    noteSink = App.NoteSink.OfConsole.create(config -> {
       config.clock(new IncrementingClock(2023, 10, 31));
 
       config.target(stream);
@@ -98,15 +102,15 @@ public class AppNoteSinkTest {
         stream.toString(),
 
         """
-        2023-10-31 10:00:00.000 TRACE --- [main           ] objectos.way.AppNoteSinkTest             : int1 1001
-        2023-10-31 10:01:00.000 DEBUG --- [main           ] objectos.way.AppNoteSinkTest             : int2 2002 3003
-        2023-10-31 10:02:00.000 INFO  --- [main           ] objectos.way.AppNoteSinkTest             : int3 4000 5000 6000
-        2023-10-31 10:03:00.000 WARN  --- [main           ] objectos.way.AppNoteSinkTest             : long1 1000
-        2023-10-31 10:04:00.000 ERROR --- [main           ] objectos.way.AppNoteSinkTest             : long2 2123 3456
-        2023-10-31 10:05:00.000 TRACE --- [main           ] objectos.way.AppNoteSinkTest             : ref0
-        2023-10-31 10:06:00.000 DEBUG --- [main           ] objectos.way.AppNoteSinkTest             : ref1 A
-        2023-10-31 10:07:00.000 INFO  --- [main           ] objectos.way.AppNoteSinkTest             : ref2 id 2024-10-11
-        2023-10-31 10:08:00.000 WARN  --- [main           ] objectos.way.AppNoteSinkTest             : ref3 FOO 2010-05-23 BAR
+        2023-10-31 10:00:00.000 TRACE [main           ] objectos.way.AppNoteSinkTest             : int1 1001
+        2023-10-31 10:01:00.000 DEBUG [main           ] objectos.way.AppNoteSinkTest             : int2 2002 3003
+        2023-10-31 10:02:00.000 INFO  [main           ] objectos.way.AppNoteSinkTest             : int3 4000 5000 6000
+        2023-10-31 10:03:00.000 WARN  [main           ] objectos.way.AppNoteSinkTest             : long1 1000
+        2023-10-31 10:04:00.000 ERROR [main           ] objectos.way.AppNoteSinkTest             : long2 2123 3456
+        2023-10-31 10:05:00.000 TRACE [main           ] objectos.way.AppNoteSinkTest             : ref0
+        2023-10-31 10:06:00.000 DEBUG [main           ] objectos.way.AppNoteSinkTest             : ref1 A
+        2023-10-31 10:07:00.000 INFO  [main           ] objectos.way.AppNoteSinkTest             : ref2 id 2024-10-11
+        2023-10-31 10:08:00.000 WARN  [main           ] objectos.way.AppNoteSinkTest             : ref3 FOO 2010-05-23 BAR
         """
     );
   }
@@ -119,8 +123,8 @@ public class AppNoteSinkTest {
     ThisStream stream;
     stream = new ThisStream();
 
-    App.NoteSink2.OfConsole noteSink;
-    noteSink = App.NoteSink2.OfConsole.create(config -> {
+    App.NoteSink.OfConsole noteSink;
+    noteSink = App.NoteSink.OfConsole.create(config -> {
       config.clock(new IncrementingClock(2023, 10, 31));
 
       config.filter(note -> {
@@ -143,11 +147,11 @@ public class AppNoteSinkTest {
         stream.toString(),
 
         """
-        2023-10-31 10:00:00.000 INFO  --- [main           ] objectos.way.AppNoteSinkTest             : int3 4000 5000 6000
-        2023-10-31 10:01:00.000 WARN  --- [main           ] objectos.way.AppNoteSinkTest             : long1 1000
-        2023-10-31 10:02:00.000 ERROR --- [main           ] objectos.way.AppNoteSinkTest             : long2 2123 3456
-        2023-10-31 10:03:00.000 INFO  --- [main           ] objectos.way.AppNoteSinkTest             : ref2 id 2024-10-11
-        2023-10-31 10:04:00.000 WARN  --- [main           ] objectos.way.AppNoteSinkTest             : ref3 FOO 2010-05-23 BAR
+        2023-10-31 10:00:00.000 INFO  [main           ] objectos.way.AppNoteSinkTest             : int3 4000 5000 6000
+        2023-10-31 10:01:00.000 WARN  [main           ] objectos.way.AppNoteSinkTest             : long1 1000
+        2023-10-31 10:02:00.000 ERROR [main           ] objectos.way.AppNoteSinkTest             : long2 2123 3456
+        2023-10-31 10:03:00.000 INFO  [main           ] objectos.way.AppNoteSinkTest             : ref2 id 2024-10-11
+        2023-10-31 10:04:00.000 WARN  [main           ] objectos.way.AppNoteSinkTest             : ref3 FOO 2010-05-23 BAR
         """
     );
   }
@@ -160,8 +164,8 @@ public class AppNoteSinkTest {
     ThisStream stream;
     stream = new ThisStream();
 
-    App.NoteSink2.OfConsole noteSink;
-    noteSink = App.NoteSink2.OfConsole.create(config -> {
+    App.NoteSink.OfConsole noteSink;
+    noteSink = App.NoteSink.OfConsole.create(config -> {
       config.clock(new IncrementingClock(2023, 10, 31));
 
       config.target(stream);
@@ -199,20 +203,43 @@ public class AppNoteSinkTest {
         string,
 
         """
-        2023-10-31 10:00:00.000 ERROR --- [main           ] objectos.way.AppNoteSinkTest             : throw1
+        2023-10-31 10:00:00.000 ERROR [main           ] objectos.way.AppNoteSinkTest             : throw1
         java.lang.Throwable
         \tat objectos.way/objectos.way.TestingStackTraces.throwable1(TestingStackTraces.java:27)
-        \tat objectos.way/objectos.way.AppNoteSinkTest.console03(AppNoteSinkTest.java:173)
+        \tat objectos.way/objectos.way.AppNoteSinkTest.console03(AppNoteSinkTest.java:177)
 
-        2023-10-31 10:01:00.000 ERROR --- [main           ] objectos.way.AppNoteSinkTest             : throw2 java.lang.Throwable
+        2023-10-31 10:01:00.000 ERROR [main           ] objectos.way.AppNoteSinkTest             : throw2 java.lang.Throwable
         java.lang.Throwable
         \tat objectos.way/objectos.way.TestingStackTraces.throwable2(TestingStackTraces.java:31)
-        \tat objectos.way/objectos.way.AppNoteSinkTest.console03(AppNoteSinkTest.java:174)
+        \tat objectos.way/objectos.way.AppNoteSinkTest.console03(AppNoteSinkTest.java:178)
 
-        2023-10-31 10:02:00.000 ERROR --- [main           ] objectos.way.AppNoteSinkTest             : throw3 java.lang.Throwable java.lang.Throwable
+        2023-10-31 10:02:00.000 ERROR [main           ] objectos.way.AppNoteSinkTest             : throw3 java.lang.Throwable java.lang.Throwable
         java.lang.Throwable
         \tat objectos.way/objectos.way.TestingStackTraces.throwable3(TestingStackTraces.java:35)
-        \tat objectos.way/objectos.way.AppNoteSinkTest.console03(AppNoteSinkTest.java:175)
+        \tat objectos.way/objectos.way.AppNoteSinkTest.console03(AppNoteSinkTest.java:179)
+        """
+    );
+  }
+
+  @Test
+  public void console04() {
+    ThisStream stream;
+    stream = new ThisStream();
+
+    App.NoteSink.OfConsole noteSink;
+    noteSink = App.NoteSink.OfConsole.create(config -> {
+      config.clock(new IncrementingClock(2023, 10, 31));
+
+      config.target(stream);
+    });
+
+    noteSink.send(notes.emptyKey, "Hello", "", "World");
+
+    assertEquals(
+        stream.toString(),
+
+        """
+        2023-10-31 10:00:00.000 INFO  [main           ] objectos.way.AppNoteSinkTest             : Hello World
         """
     );
   }
@@ -231,8 +258,8 @@ public class AppNoteSinkTest {
     Path logFile;
     logFile = parent.resolve("file.log");
 
-    App.NoteSink2.OfFile noteSink;
-    noteSink = App.NoteSink2.OfFile.create(logFile, config -> {
+    App.NoteSink.OfFile noteSink;
+    noteSink = App.NoteSink.OfFile.create(logFile, config -> {
       config.clock(new IncrementingClock(2023, 10, 31));
     });
 
@@ -244,15 +271,15 @@ public class AppNoteSinkTest {
         Files.readString(logFile),
 
         """
-        2023-10-31 10:00:00.000 TRACE --- [main           ] objectos.way.AppNoteSinkTest             : int1 1001
-        2023-10-31 10:01:00.000 DEBUG --- [main           ] objectos.way.AppNoteSinkTest             : int2 2002 3003
-        2023-10-31 10:02:00.000 INFO  --- [main           ] objectos.way.AppNoteSinkTest             : int3 4000 5000 6000
-        2023-10-31 10:03:00.000 WARN  --- [main           ] objectos.way.AppNoteSinkTest             : long1 1000
-        2023-10-31 10:04:00.000 ERROR --- [main           ] objectos.way.AppNoteSinkTest             : long2 2123 3456
-        2023-10-31 10:05:00.000 TRACE --- [main           ] objectos.way.AppNoteSinkTest             : ref0
-        2023-10-31 10:06:00.000 DEBUG --- [main           ] objectos.way.AppNoteSinkTest             : ref1 A
-        2023-10-31 10:07:00.000 INFO  --- [main           ] objectos.way.AppNoteSinkTest             : ref2 id 2024-10-11
-        2023-10-31 10:08:00.000 WARN  --- [main           ] objectos.way.AppNoteSinkTest             : ref3 FOO 2010-05-23 BAR
+        2023-10-31 10:00:00.000 TRACE [main           ] objectos.way.AppNoteSinkTest             : int1 1001
+        2023-10-31 10:01:00.000 DEBUG [main           ] objectos.way.AppNoteSinkTest             : int2 2002 3003
+        2023-10-31 10:02:00.000 INFO  [main           ] objectos.way.AppNoteSinkTest             : int3 4000 5000 6000
+        2023-10-31 10:03:00.000 WARN  [main           ] objectos.way.AppNoteSinkTest             : long1 1000
+        2023-10-31 10:04:00.000 ERROR [main           ] objectos.way.AppNoteSinkTest             : long2 2123 3456
+        2023-10-31 10:05:00.000 TRACE [main           ] objectos.way.AppNoteSinkTest             : ref0
+        2023-10-31 10:06:00.000 DEBUG [main           ] objectos.way.AppNoteSinkTest             : ref1 A
+        2023-10-31 10:07:00.000 INFO  [main           ] objectos.way.AppNoteSinkTest             : ref2 id 2024-10-11
+        2023-10-31 10:08:00.000 WARN  [main           ] objectos.way.AppNoteSinkTest             : ref3 FOO 2010-05-23 BAR
         """
     );
   }
@@ -276,8 +303,8 @@ public class AppNoteSinkTest {
     IncrementingClock clock;
     clock = new IncrementingClock(2023, 10, 31);
 
-    App.NoteSink2.OfFile noteSink;
-    noteSink = App.NoteSink2.OfFile.create(logFile, config -> {
+    App.NoteSink.OfFile noteSink;
+    noteSink = App.NoteSink.OfFile.create(logFile, config -> {
       config.clock(clock);
     });
 
@@ -297,15 +324,15 @@ public class AppNoteSinkTest {
         Files.readString(logFile),
 
         """
-        2023-10-31 10:00:00.000 TRACE --- [main           ] objectos.way.AppNoteSinkTest             : int1 1001
-        2023-10-31 10:01:00.000 DEBUG --- [main           ] objectos.way.AppNoteSinkTest             : int2 2002 3003
-        2023-10-31 10:02:00.000 INFO  --- [main           ] objectos.way.AppNoteSinkTest             : int3 4000 5000 6000
-        2023-10-31 10:03:00.000 WARN  --- [main           ] objectos.way.AppNoteSinkTest             : long1 1000
-        2023-10-31 10:04:00.000 ERROR --- [main           ] objectos.way.AppNoteSinkTest             : long2 2123 3456
-        2023-10-31 10:05:00.000 TRACE --- [main           ] objectos.way.AppNoteSinkTest             : ref0
-        2023-10-31 10:06:00.000 DEBUG --- [main           ] objectos.way.AppNoteSinkTest             : ref1 A
-        2023-10-31 10:07:00.000 INFO  --- [main           ] objectos.way.AppNoteSinkTest             : ref2 id 2024-10-11
-        2023-10-31 10:08:00.000 WARN  --- [main           ] objectos.way.AppNoteSinkTest             : ref3 FOO 2010-05-23 BAR
+        2023-10-31 10:00:00.000 TRACE [main           ] objectos.way.AppNoteSinkTest             : int1 1001
+        2023-10-31 10:01:00.000 DEBUG [main           ] objectos.way.AppNoteSinkTest             : int2 2002 3003
+        2023-10-31 10:02:00.000 INFO  [main           ] objectos.way.AppNoteSinkTest             : int3 4000 5000 6000
+        2023-10-31 10:03:00.000 WARN  [main           ] objectos.way.AppNoteSinkTest             : long1 1000
+        2023-10-31 10:04:00.000 ERROR [main           ] objectos.way.AppNoteSinkTest             : long2 2123 3456
+        2023-10-31 10:05:00.000 TRACE [main           ] objectos.way.AppNoteSinkTest             : ref0
+        2023-10-31 10:06:00.000 DEBUG [main           ] objectos.way.AppNoteSinkTest             : ref1 A
+        2023-10-31 10:07:00.000 INFO  [main           ] objectos.way.AppNoteSinkTest             : ref2 id 2024-10-11
+        2023-10-31 10:08:00.000 WARN  [main           ] objectos.way.AppNoteSinkTest             : ref3 FOO 2010-05-23 BAR
         """
     );
   }

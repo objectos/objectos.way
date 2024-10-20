@@ -35,7 +35,7 @@ public class TestingInputStreamTest2 {
   private static final Note2<String, IOException> IO_ERROR = Note2.error(TestingInputStreamTest2.class, "I/O error");
 
   public static void main(String[] args) {
-    App.NoteSink2 noteSink = TestingNoteSink.INSTANCE;
+    App.NoteSink noteSink = TestingNoteSink.INSTANCE;
 
     App.ShutdownHook shutdownHook;
     shutdownHook = App.createShutdownHook(noteSink);

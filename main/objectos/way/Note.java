@@ -26,10 +26,18 @@ public sealed interface Note {
     static Int1 create(Class<?> source, String key, Marker marker) {
       return new SharedNote(source, key, marker);
     }
+
+    static Int1 create(String source, String key, Marker marker) {
+      return new SharedNote(source, key, marker);
+    }
   }
 
   sealed interface Int2 extends Note {
     static Int2 create(Class<?> source, String key, Marker marker) {
+      return new SharedNote(source, key, marker);
+    }
+
+    static Int2 create(String source, String key, Marker marker) {
       return new SharedNote(source, key, marker);
     }
   }
@@ -38,10 +46,18 @@ public sealed interface Note {
     static Int3 create(Class<?> source, String key, Marker marker) {
       return new SharedNote(source, key, marker);
     }
+
+    static Int3 create(String source, String key, Marker marker) {
+      return new SharedNote(source, key, marker);
+    }
   }
 
   sealed interface Long1 extends Note {
     static Long1 create(Class<?> source, String key, Marker marker) {
+      return new SharedNote(source, key, marker);
+    }
+
+    static Long1 create(String source, String key, Marker marker) {
       return new SharedNote(source, key, marker);
     }
   }
@@ -50,10 +66,18 @@ public sealed interface Note {
     static Long2 create(Class<?> source, String key, Marker marker) {
       return new SharedNote(source, key, marker);
     }
+
+    static Long2 create(String source, String key, Marker marker) {
+      return new SharedNote(source, key, marker);
+    }
   }
 
   sealed interface Ref0 extends Note {
     static Ref0 create(Class<?> source, String key, Marker marker) {
+      return new SharedNote(source, key, marker);
+    }
+
+    static Ref0 create(String source, String key, Marker marker) {
       return new SharedNote(source, key, marker);
     }
   }
@@ -63,6 +87,11 @@ public sealed interface Note {
     static <T1> Ref1<T1> create(Class<?> source, String key, Marker marker) {
       return (Ref1<T1>) new SharedNote(source, key, marker);
     }
+
+    @SuppressWarnings("unchecked")
+    static <T1> Ref1<T1> create(String source, String key, Marker marker) {
+      return (Ref1<T1>) new SharedNote(source, key, marker);
+    }
   }
 
   sealed interface Ref2<T1, T2> extends Note {
@@ -70,11 +99,21 @@ public sealed interface Note {
     static <T1, T2> Ref2<T1, T2> create(Class<?> source, String key, Marker marker) {
       return (Ref2<T1, T2>) new SharedNote(source, key, marker);
     }
+
+    @SuppressWarnings("unchecked")
+    static <T1, T2> Ref2<T1, T2> create(String source, String key, Marker marker) {
+      return (Ref2<T1, T2>) new SharedNote(source, key, marker);
+    }
   }
 
   sealed interface Ref3<T1, T2, T3> extends Note {
     @SuppressWarnings("unchecked")
     static <T1, T2, T3> Ref3<T1, T2, T3> create(Class<?> source, String key, Marker marker) {
+      return (Ref3<T1, T2, T3>) new SharedNote(source, key, marker);
+    }
+
+    @SuppressWarnings("unchecked")
+    static <T1, T2, T3> Ref3<T1, T2, T3> create(String source, String key, Marker marker) {
       return (Ref3<T1, T2, T3>) new SharedNote(source, key, marker);
     }
   }
@@ -212,10 +251,18 @@ record SharedNote(String source, String key, Marker marker)
     this(
         source.getCanonicalName(),
 
-        Objects.requireNonNull(key, "key == null"),
+        key,
 
-        Objects.requireNonNull(marker, "marker == null")
+        marker
     );
+  }
+
+  SharedNote {
+    Objects.requireNonNull(source, "source == null");
+
+    Objects.requireNonNull(key, "key == null");
+
+    Objects.requireNonNull(marker, "marker == null");
   }
 
 }

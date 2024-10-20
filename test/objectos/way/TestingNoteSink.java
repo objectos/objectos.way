@@ -25,10 +25,10 @@ import objectos.notes.NoteSink;
 
 public class TestingNoteSink implements NoteSink {
 
-  public static final App.NoteSink2 INSTANCE;
+  public static final App.NoteSink INSTANCE;
 
   static {
-    INSTANCE = App.NoteSink2.OfConsole.create(config -> {});
+    INSTANCE = App.NoteSink.OfConsole.create(config -> {});
   }
 
   @Override

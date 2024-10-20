@@ -47,8 +47,8 @@ public final class TestingSiteDev extends TestingSite {
   }
 
   @Override
-  final App.NoteSink2 noteSink() {
-    return App.NoteSink2.OfConsole.create(config -> {});
+  final App.NoteSink noteSink() {
+    return App.NoteSink.OfConsole.create(config -> {});
   }
 
   @Override
