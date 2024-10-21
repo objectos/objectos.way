@@ -49,7 +49,7 @@ abstract class TestingSite extends App.Bootstrap {
 
     // ShutdownHook
     App.ShutdownHook shutdownHook;
-    shutdownHook = App.createShutdownHook(noteSink);
+    shutdownHook = App.ShutdownHook.create(noteSink);
 
     shutdownHook.registerIfPossible(noteSink);
 

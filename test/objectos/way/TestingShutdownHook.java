@@ -20,7 +20,7 @@ public final class TestingShutdownHook {
   public static final App.ShutdownHook INSTANCE;
 
   static {
-    INSTANCE = App.createShutdownHook(TestingNoteSink.INSTANCE);
+    INSTANCE = App.ShutdownHook.create(TestingNoteSink.INSTANCE);
   }
 
   public static void register(AutoCloseable closeable) {

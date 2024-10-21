@@ -36,6 +36,7 @@ import java.time.Clock;
 import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
@@ -273,17 +274,31 @@ public final class App {
    *
    * @see Runtime#addShutdownHook(Thread)
    */
-  public sealed interface ShutdownHook permits AppShutdownHook {
+  public sealed interface ShutdownHook {
 
-    /**
-     * A note that informs of a object registration in this shutdown hook.
-     */
-    Note1<Object> REGISTRATION = Note1.info(ShutdownHook.class, "Registration");
+    public sealed interface Notes {
 
-    /**
-     * A note that informs that a specified resource was not registered.
-     */
-    Note1<Object> IGNORED = Note1.info(ShutdownHook.class, "Ignored");
+      static Notes create() {
+        return AppShutdownHook.Notes.get();
+      }
+
+      /**
+       * A note that informs of a object registration in this shutdown hook.
+       */
+      Note.Ref1<Object> registered();
+
+      /**
+       * A note that informs that a specified resource was not registered.
+       */
+      Note.Ref1<Object> ignored();
+
+    }
+
+    static ShutdownHook create(Note.Sink noteSink) {
+      Objects.requireNonNull(noteSink, "noteSink == null");
+
+      return new AppShutdownHook(noteSink);
+    }
 
     /**
      * Closes the specified {@link AutoCloseable} instance when this shutdown
@@ -393,12 +408,6 @@ public final class App {
     }
 
     return builder.init();
-  }
-
-  public static ShutdownHook createShutdownHook(objectos.notes.NoteSink noteSink) {
-    Check.notNull(noteSink, "noteSink == null");
-
-    return new AppShutdownHook(noteSink);
   }
 
   public static Reloader.Option noteSink(objectos.notes.NoteSink value) {
@@ -575,6 +584,26 @@ abstract class LegacyNoteSink implements objectos.notes.NoteSink {
     write(out);
   }
 
+  final void pad(StringBuilder out, String value, int length) {
+    int valueLength;
+    valueLength = value.length();
+
+    if (valueLength > length) {
+      out.append(value, 0, length);
+
+      valueLength = length;
+    } else {
+      out.append(value);
+
+      int pad;
+      pad = length - valueLength;
+
+      for (int i = 0; i < pad; i++) {
+        out.append(' ');
+      }
+    }
+  }
+
   private static final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS");
 
   private StringBuilder format(objectos.notes.Note note) {
@@ -684,24 +713,6 @@ abstract class LegacyNoteSink implements objectos.notes.NoteSink {
     printWriter = new PrintWriter(writer);
 
     t.printStackTrace(printWriter);
-  }
-
-  private void pad(StringBuilder out, String source, int length) {
-    String result;
-    result = source;
-
-    if (result.length() > length) {
-      result = result.substring(0, length);
-    }
-
-    out.append(result);
-
-    int pad;
-    pad = length - result.length();
-
-    for (int i = 0; i < pad; i++) {
-      out.append(' ');
-    }
   }
 
   private void write(StringBuilder out) {
@@ -1137,24 +1148,6 @@ sealed abstract class AppNoteSink extends LegacyNoteSink implements App.NoteSink
     t.printStackTrace(printWriter);
   }
 
-  private void pad(StringBuilder out, String value, int length) {
-    String result;
-    result = value;
-
-    if (result.length() > length) {
-      result = result.substring(0, length);
-    }
-
-    out.append(result);
-
-    int pad;
-    pad = length - result.length();
-
-    for (int i = 0; i < pad; i++) {
-      out.append(' ');
-    }
-  }
-
   private void write(StringBuilder out) {
     out.append('\n');
 
@@ -1400,6 +1393,148 @@ final class AppNoteSinkOfFileConfig implements App.NoteSink.OfFile.Config {
     result.level(legacyLevel);
 
     return result;
+  }
+
+}
+
+final class AppShutdownHook implements App.ShutdownHook {
+
+  record Notes(
+      Note.Ref1<Object> registered,
+      Note.Ref1<Object> ignored,
+
+      Note.Ref0 started,
+      Note.Ref1<Object> resourceStarted,
+      Note.Ref2<Object, Throwable> resourceError,
+      Note.Long1 totalTime
+  ) implements App.ShutdownHook.Notes {
+    static Notes get() {
+      Class<?> s;
+      s = App.ShutdownHook.class;
+
+      return new Notes(
+          Note.Ref1.create(s, "Registered", Note.INFO),
+          Note.Ref1.create(s, "Ignored", Note.INFO),
+
+          Note.Ref0.create(s, "Started", Note.INFO),
+          Note.Ref1.create(s, "Resource started", Note.DEBUG),
+          Note.Ref2.create(s, "Resource error", Note.WARN),
+          Note.Long1.create(s, "Total time [ms]", Note.INFO)
+      );
+    }
+  }
+
+  private final Notes notes = Notes.get();
+
+  private final List<Object> hooks = Util.createList();
+
+  private final Job job;
+
+  private final Note.Sink noteSink;
+
+  AppShutdownHook(Note.Sink noteSink) {
+    this.noteSink = noteSink;
+
+    job = new Job();
+
+    job.setDaemon(true);
+
+    Runtime runtime;
+    runtime = Runtime.getRuntime();
+
+    runtime.addShutdownHook(job);
+  }
+
+  @Override
+  public final void register(AutoCloseable closeable) {
+    Check.notNull(closeable, "closeable == null");
+
+    addHook(closeable);
+  }
+
+  @Override
+  public final void registerIfPossible(Object resource) {
+    Check.notNull(resource, "resource == null");
+
+    if (resource instanceof AutoCloseable) {
+      addHook(resource);
+    } else if (resource instanceof Thread) {
+      addHook(resource);
+    } else {
+      noteSink.send(notes.ignored, resource);
+    }
+  }
+
+  @Override
+  public final void registerThread(Thread thread) {
+    Check.notNull(thread, "thread == null");
+
+    addHook(thread);
+  }
+
+  private void addHook(Object hook) {
+    noteSink.send(notes.registered, hook);
+
+    hooks.add(hook);
+  }
+
+  // visible for testing
+  final Thread startAndJoinThread() throws InterruptedException {
+    job.start();
+
+    job.join();
+
+    return job;
+  }
+
+  private class Job extends Thread {
+    Job() {
+      super("ShutdownHook");
+    }
+
+    @Override
+    public final void run() {
+      long startTime;
+      startTime = System.currentTimeMillis();
+
+      noteSink.send(notes.started);
+
+      if (hooks != null) {
+        doHooks();
+      }
+
+      long totalTime;
+      totalTime = System.currentTimeMillis() - startTime;
+
+      noteSink.send(notes.totalTime, totalTime);
+    }
+
+    private void doHooks() {
+      for (int i = 0, size = hooks.size(); i < size; i++) {
+        Object hook;
+        hook = hooks.get(i);
+
+        noteSink.send(notes.resourceStarted, hook);
+
+        try {
+
+          if (hook instanceof AutoCloseable c) {
+            c.close();
+          }
+
+          else if (hook instanceof Thread t) {
+            t.interrupt();
+          }
+
+          else {
+            throw new AssertionError("Unknown hook type=" + hook.getClass());
+          }
+
+        } catch (Throwable t) {
+          noteSink.send(notes.resourceError, hook, t);
+        }
+      }
+    }
   }
 
 }

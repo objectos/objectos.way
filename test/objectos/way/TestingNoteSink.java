@@ -22,14 +22,75 @@ import objectos.notes.Note1;
 import objectos.notes.Note2;
 import objectos.notes.Note3;
 import objectos.notes.NoteSink;
+import objectos.way.Note.Int1;
+import objectos.way.Note.Int2;
+import objectos.way.Note.Int3;
+import objectos.way.Note.Long1;
+import objectos.way.Note.Long2;
+import objectos.way.Note.Ref0;
+import objectos.way.Note.Ref1;
+import objectos.way.Note.Ref2;
+import objectos.way.Note.Ref3;
 
-public class TestingNoteSink implements NoteSink {
+public class TestingNoteSink implements objectos.way.Note.Sink, objectos.notes.NoteSink {
 
   public static final App.NoteSink INSTANCE;
 
   static {
     INSTANCE = App.NoteSink.OfConsole.create(config -> {});
   }
+
+  @Override
+  public boolean isEnabled(objectos.way.Note note) {
+    return INSTANCE.isEnabled(note);
+  }
+
+  @Override
+  public void send(Int1 note, int value) {
+    INSTANCE.send(note, value);
+  }
+
+  @Override
+  public void send(Int2 note, int value1, int value2) {
+    INSTANCE.send(note, value1, value2);
+  }
+
+  @Override
+  public void send(Int3 note, int value1, int value2, int value3) {
+    INSTANCE.send(note, value1, value2, value3);
+  }
+
+  @Override
+  public void send(Long1 note, long value) {
+    INSTANCE.send(note, value);
+  }
+
+  @Override
+  public void send(Long2 note, long value1, long value2) {
+    INSTANCE.send(note, value1, value2);
+  }
+
+  @Override
+  public void send(Ref0 note) {
+    INSTANCE.send(note);
+  }
+
+  @Override
+  public <T1> void send(Ref1<T1> note, T1 value) {
+    INSTANCE.send(note, value);
+  }
+
+  @Override
+  public <T1, T2> void send(Ref2<T1, T2> note, T1 value1, T2 value2) {
+    INSTANCE.send(note, value1, value2);
+  }
+
+  @Override
+  public <T1, T2, T3> void send(Ref3<T1, T2, T3> note, T1 value1, T2 value2, T3 value3) {
+    INSTANCE.send(note, value1, value2, value3);
+  }
+
+  // legacy methods
 
   @Override
   public NoteSink replace(NoteSink sink) { return null; }

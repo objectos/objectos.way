@@ -23,9 +23,6 @@ import java.io.Closeable;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import objectos.notes.Note1;
-import objectos.notes.Note2;
-import objectos.way.App.ShutdownHook;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -190,7 +187,9 @@ public class AppShutdownHookTest {
     public final void close() throws IOException {}
   }
 
-  private static class ThisNoteSink extends TestingNoteSink {
+  private class ThisNoteSink extends TestingNoteSink {
+
+    private final App.ShutdownHook.Notes notes = App.ShutdownHook.Notes.create();
 
     final List<Throwable> exceptions = new ArrayList<>();
 
@@ -199,18 +198,18 @@ public class AppShutdownHookTest {
     final List<Object> ignored = new ArrayList<>();
 
     @Override
-    public <T1> void send(Note1<T1> note, T1 v1) {
+    public <T1> void send(Note.Ref1<T1> note, T1 v1) {
       super.send(note, v1);
 
-      if (note == ShutdownHook.REGISTRATION) {
+      if (note.equals(notes.registered())) {
         hooks.add(v1);
-      } else if (note == ShutdownHook.IGNORED) {
+      } else if (note.equals(notes.ignored())) {
         ignored.add(v1);
       }
     }
 
     @Override
-    public <T1, T2> void send(Note2<T1, T2> note, T1 v1, T2 v2) {
+    public <T1, T2> void send(Note.Ref2<T1, T2> note, T1 v1, T2 v2) {
       super.send(note, v1, v2);
 
       if (v2 instanceof Throwable t) {
