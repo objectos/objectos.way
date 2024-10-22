@@ -38,7 +38,6 @@ import java.util.Set;
 import java.util.function.Consumer;
 import objectos.notes.Note1;
 import objectos.notes.NoteSink;
-import objectos.way.Http.TestingExchange.Config;
 import objectos.way.HttpExchangeLoop.ParseStatus;
 import objectos.way.HttpServer.Builder;
 
@@ -539,24 +538,11 @@ public final class Http {
     byte method();
 
     /**
-     * The request-target of this HTTP request message.
-     *
-     * @return the request-target of this HTTP request message
-     */
-    Target target();
-
-    // convenience methods
-
-    /**
      * The value of the path component of the request-target.
      *
      * @return value of the path component of the request-target
-     *
-     * @see Http.Request.Target#path()
      */
-    default String path() {
-      return target().path();
-    }
+    String path();
 
     /**
      * Returns the value of the path parameter with the specified name if it
@@ -566,12 +552,8 @@ public final class Http {
      *        the name of the path parameter
      *
      * @return the value if it exists or {@code null} if it does not
-     *
-     * @see Http.Request.Target#pathParam(String)
      */
-    default String pathParam(String name) {
-      return target().pathParam(name);
-    }
+    String pathParam(String name);
 
     /**
      * Returns the first value of the query parameter with the specified name
@@ -584,9 +566,7 @@ public final class Http {
      *
      * @see Http.Request.Target#queryParam(String)
      */
-    default String queryParam(String name) {
-      return target().queryParam(name);
-    }
+    String queryParam(String name);
 
   }
 
@@ -676,24 +656,50 @@ public final class Http {
     sealed interface Config {
 
       /**
-       * Sets the request-target to the result of parsing the specified string.
-       *
-       * @param target
-       *        the raw (undecoded) request-target value
-       *
-       * @return this config instance
-       */
-      Config requestTarget(String target);
-
-      /**
        * Sets the request method to the specified value.
        *
-       * @param method
-       *        the byte value representing a HTTP method
+       * @param value
+       *        the byte value representing the HTTP method
        *
        * @return this config instance
        */
-      Config requestMethod(byte method);
+      Config method(byte value);
+
+      /**
+       * Sets the path component of the request-target to the specified value.
+       *
+       * @param value
+       *        the decoded path value
+       *
+       * @return this config instance
+       */
+      Config path(String value);
+
+      /**
+       * Sets the request-path parameter with the specified name to the
+       * specified value.
+       *
+       * @param name
+       *        the name of the path parameter
+       * @param value
+       *        the decoded value of the path parameter
+       *
+       * @return this config instance
+       */
+      Config pathParam(String name, String value);
+
+      /**
+       * Sets the request-target query parameter with the specified name to the
+       * specified value.
+       *
+       * @param name
+       *        the name of the query parameter
+       * @param value
+       *        the decoded value of the query parameter
+       *
+       * @return this config instance
+       */
+      Config queryParam(String name, String value);
 
       /**
        * Stores the provided key-value pair in the testing exchange.
@@ -1371,18 +1377,22 @@ public final class Http {
 
 final class HttpTestingExchange implements Http.TestingExchange {
 
-  private Map<Object, Object> attributes;
+  private Map<Object, Object> objectStore;
 
-  private final byte requestMethod;
+  private final byte method;
 
-  private final Http.Request.Target requestTarget;
+  private final String path;
+
+  private final Map<String, String> queryParams;
 
   HttpTestingExchange(HttpTestingExchangeConfig config) {
-    attributes = config.attributes;
+    objectStore = config.objectStore;
 
-    requestMethod = config.requestMethod;
+    method = config.method;
 
-    requestTarget = config.requestTarget;
+    path = config.path;
+
+    queryParams = config.queryParams;
   }
 
   @Override
@@ -1397,14 +1407,32 @@ final class HttpTestingExchange implements Http.TestingExchange {
 
   @Override
   public final byte method() {
-    return Http.checkMethod(requestMethod);
+    return Http.checkMethod(method);
   }
 
   @Override
-  public final Http.Request.Target target() {
-    Check.state(requestTarget != null, "The request target was not set");
+  public final String path() {
+    Check.state(path != null, "path was not set");
 
-    return requestTarget;
+    return path;
+  }
+
+  @Override
+  public final String pathParam(String name) {
+    if (objectStore == null) {
+      return null;
+    } else {
+      return (String) objectStore.get(name);
+    }
+  }
+
+  @Override
+  public final String queryParam(String name) {
+    if (queryParams == null) {
+      return null;
+    } else {
+      return queryParams.get(name);
+    }
   }
 
   @Override
@@ -1412,20 +1440,20 @@ final class HttpTestingExchange implements Http.TestingExchange {
     Check.notNull(key, "key == null");
     Check.notNull(value, "value == null");
 
-    if (attributes == null) {
-      attributes = Util.createMap();
+    if (objectStore == null) {
+      objectStore = Util.createMap();
     }
 
-    attributes.put(key, value);
+    objectStore.put(key, value);
   }
 
   @SuppressWarnings("unchecked")
   @Override
   public final <T> T get(Class<T> key) {
-    if (attributes == null) {
+    if (objectStore == null) {
       return null;
     } else {
-      return (T) attributes.get(key);
+      return (T) objectStore.get(key);
     }
   }
 
@@ -1493,26 +1521,56 @@ final class HttpTestingExchange implements Http.TestingExchange {
 
 final class HttpTestingExchangeConfig implements Http.TestingExchange.Config {
 
-  Map<Object, Object> attributes;
+  Map<Object, Object> objectStore;
 
-  byte requestMethod;
+  byte method;
 
-  Http.Request.Target requestTarget;
+  String path;
+
+  Map<String, String> queryParams;
 
   public final Http.TestingExchange build() {
     return new HttpTestingExchange(this);
   }
 
   @Override
-  public final Config requestMethod(byte method) {
-    requestMethod = Http.checkMethod(method);
+  public final Http.TestingExchange.Config method(byte value) {
+    method = Http.checkMethod(value);
 
     return this;
   }
 
   @Override
-  public final Http.TestingExchange.Config requestTarget(String target) {
-    requestTarget = Http.parseRequestTarget(target);
+  public final Http.TestingExchange.Config path(String value) {
+    path = Objects.requireNonNull(value, "value == null");
+
+    return this;
+  }
+
+  @Override
+  public final Http.TestingExchange.Config pathParam(String name, String value) {
+    Objects.requireNonNull(name, "name == null");
+    Objects.requireNonNull(value, "value == null");
+
+    if (objectStore == null) {
+      objectStore = Util.createMap();
+    }
+
+    objectStore.put(name, value);
+
+    return this;
+  }
+
+  @Override
+  public final Http.TestingExchange.Config queryParam(String name, String value) {
+    Objects.requireNonNull(name, "name == null");
+    Objects.requireNonNull(value, "value == null");
+
+    if (queryParams == null) {
+      queryParams = Util.createMap();
+    }
+
+    queryParams.put(name, value);
 
     return this;
   }
@@ -1522,11 +1580,11 @@ final class HttpTestingExchangeConfig implements Http.TestingExchange.Config {
     Objects.requireNonNull(key, "key == null");
     Objects.requireNonNull(value, "value == null");
 
-    if (attributes == null) {
-      attributes = Util.createMap();
+    if (objectStore == null) {
+      objectStore = Util.createMap();
     }
 
-    attributes.put(key, value);
+    objectStore.put(key, value);
 
     return this;
   }

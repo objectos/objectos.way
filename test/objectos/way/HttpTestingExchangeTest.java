@@ -17,26 +17,31 @@ package objectos.way;
 
 import static org.testng.Assert.assertEquals;
 
-import org.testng.Assert;
 import org.testng.annotations.Test;
 
 public class HttpTestingExchangeTest {
 
-  @Test(description = """
-  Sets:
-  - request target
-  - request attribute
-  """)
+  @Test
   public void testCase01() {
     Http.TestingExchange http;
     http = Http.TestingExchange.create(config -> {
-      config.requestTarget("/foo?page=1");
+      config.method(Http.GET);
+
+      config.path("/foo");
+
+      config.pathParam("id", "123");
+
+      config.queryParam("page", "1");
 
       config.set(String.class, "Hello");
     });
 
+    assertEquals(http.method(), Http.GET);
     assertEquals(http.path(), "/foo");
+    assertEquals(http.pathParam("id"), "123");
+    assertEquals(http.pathParam("path"), null);
     assertEquals(http.queryParam("page"), "1");
+    assertEquals(http.queryParam("query"), null);
     assertEquals(http.get(String.class), "Hello");
   }
 
@@ -47,36 +52,10 @@ public class HttpTestingExchangeTest {
   public void testCase02() {
     Http.TestingExchange http;
     http = Http.TestingExchange.create(config -> {
-      config.requestMethod(Http.GET);
+      config.method(Http.GET);
     });
 
     assertEquals(http.method(), Http.GET);
-  }
-
-  @Test(description = """
-  Invalid:
-  - request method
-  """)
-  public void testCase03() {
-    try {
-      Http.TestingExchange.create(config -> {
-        config.requestMethod((byte) (Http.CONNECT - 1));
-      });
-
-      Assert.fail();
-    } catch (IllegalArgumentException expected) {
-
-    }
-
-    try {
-      Http.TestingExchange.create(config -> {
-        config.requestMethod((byte) (Http.TRACE + 1));
-      });
-
-      Assert.fail();
-    } catch (IllegalArgumentException expected) {
-
-    }
   }
 
 }

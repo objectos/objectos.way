@@ -53,21 +53,15 @@ abstract class CarbonTemplate extends Html.Template implements Http.Handler {
   }
 
   protected final boolean currentPage(String href) {
-    Http.Request.Target target;
-    target = http.target();
-
     String path;
-    path = target.path();
+    path = http.path();
 
     return path.equals(href);
   }
 
   protected final boolean currentPageStartsWith(String href) {
-    Http.Request.Target target;
-    target = http.target();
-
     String path;
-    path = target.path();
+    path = http.path();
 
     return path.startsWith(href);
   }

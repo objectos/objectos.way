@@ -31,11 +31,8 @@ final class HttpModuleRoute implements HttpModuleAction {
     boolean result;
     result = false;
 
-    Http.Request.Target target;
-    target = http.target();
-
     HttpRequestLine t;
-    t = (HttpRequestLine) target;
+    t = (HttpRequestLine) http;
 
     t.matcherReset();
 
