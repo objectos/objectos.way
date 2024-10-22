@@ -19,6 +19,7 @@ import java.time.Clock;
 import java.time.Instant;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 final class WebSession implements Web.Session {
 
@@ -31,7 +32,7 @@ final class WebSession implements Web.Session {
   volatile boolean valid = true;
 
   public WebSession(String id) {
-    this.id = Check.notNull(id, "id == null");
+    this.id = Objects.requireNonNull(id, "id == null");
   }
 
   @Override

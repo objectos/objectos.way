@@ -134,6 +134,18 @@ public final class Web {
   public sealed interface Session permits WebSession {
 
     /**
+     * Creates a new web session with the specified identifier.
+     *
+     * @param id
+     *        the session identifier
+     *
+     * @return a newly created session object
+     */
+    static Session create(String id) {
+      return new WebSession(id);
+    }
+
+    /**
      * The identifier of this session.
      *
      * @return the identifier of this session.
@@ -276,10 +288,6 @@ public final class Web {
     }
 
     return builder.build();
-  }
-
-  public static Session createSession(String id) {
-    return new WebSession(id);
   }
 
   /**

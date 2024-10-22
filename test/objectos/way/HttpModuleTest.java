@@ -56,7 +56,7 @@ public class HttpModuleTest extends Http.Module {
   @BeforeMethod
   public void beforeMethod() {
     Web.Session session;
-    session = Web.createSession("TEST_COOKIE");
+    session = Web.Session.create("TEST_COOKIE");
 
     session.put(User.class, new User("test"));
 

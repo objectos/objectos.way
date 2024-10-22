@@ -89,7 +89,7 @@ public class LoginTest {
     login = new Login(injector);
 
     Web.Session session;
-    session = Web.createSession("a86886a5d2978142da2d8cf378ebc83c");
+    session = Web.Session.create("a86886a5d2978142da2d8cf378ebc83c");
 
     Web.Store repository;
     repository = injector.sessionStore();
