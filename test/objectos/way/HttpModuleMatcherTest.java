@@ -146,7 +146,7 @@ public class HttpModuleMatcherTest {
   }
 
   private void test(HttpModuleMatcher matcher, String target, boolean expected) {
-    Http.Request.Target requestTarget;
+    Http.RequestTarget requestTarget;
     requestTarget = Http.parseRequestTarget(target);
 
     HttpRequestLine path;
@@ -156,7 +156,7 @@ public class HttpModuleMatcherTest {
   }
 
   private void test(HttpModuleMatcher matcher, String target, Map<String, String> expected) {
-    Http.Request.Target requestTarget;
+    Http.RequestTarget requestTarget;
     requestTarget = Http.parseRequestTarget(target);
 
     HttpRequestLine path;

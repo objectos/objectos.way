@@ -55,7 +55,7 @@ public class HttpModuleConditionTest {
   }
 
   private void test(HttpModule.Condition condition, String target, boolean expected) {
-    Http.Request.Target requestTarget;
+    Http.RequestTarget requestTarget;
     requestTarget = Http.parseRequestTarget(target);
 
     HttpRequestLine path;

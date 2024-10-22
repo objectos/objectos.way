@@ -26,7 +26,7 @@ public class HttpRequestTargetQueryTest {
   UriQuery: empty
   """)
   public void testCase01() {
-    Http.Request.Target q;
+    Http.RequestTarget q;
     q = queryOf("");
 
     assertEquals(q.queryParam("foo"), null);
@@ -38,7 +38,7 @@ public class HttpRequestTargetQueryTest {
   UriQuery: single value
   """)
   public void testCase02() {
-    Http.Request.Target q;
+    Http.RequestTarget q;
     q = queryOf("foo=bar");
 
     assertEquals(q.queryParam("foo"), "bar");
@@ -50,7 +50,7 @@ public class HttpRequestTargetQueryTest {
   UriQuery: name only
   """)
   public void testCase03() {
-    Http.Request.Target q;
+    Http.RequestTarget q;
     q = queryOf("foo");
 
     assertEquals(q.queryParam("foo"), "");
@@ -62,7 +62,7 @@ public class HttpRequestTargetQueryTest {
   UriQuery: empty value
   """)
   public void testCase04() {
-    Http.Request.Target q;
+    Http.RequestTarget q;
     q = queryOf("foo=");
 
     assertEquals(q.queryParam("foo"), "");
@@ -74,7 +74,7 @@ public class HttpRequestTargetQueryTest {
   UriQuery: corner cases
   """)
   public void testCase05() {
-    Http.Request.Target q;
+    Http.RequestTarget q;
     q = queryOf("a&foo=");
 
     assertEquals(q.queryParam("a"), "");
@@ -87,7 +87,7 @@ public class HttpRequestTargetQueryTest {
   UriQuery: corner cases
   """)
   public void testCase06() {
-    Http.Request.Target q;
+    Http.RequestTarget q;
     q = queryOf("a=1+2+3&b=foo");
 
     assertEquals(q.queryParam("a"), "1 2 3");
@@ -100,7 +100,7 @@ public class HttpRequestTargetQueryTest {
   UriQuery: getAsInt()
   """)
   public void testCase07() {
-    Http.Request.Target q;
+    Http.RequestTarget q;
     q = queryOf("a=123&b=-456&c=foo&d=&e&f=123.45");
 
     assertEquals(q.queryParamAsInt("a", -1), 123);
@@ -116,7 +116,7 @@ public class HttpRequestTargetQueryTest {
   UriQuery: set
   """)
   public void testCase08() {
-    Http.Request.Target q;
+    Http.RequestTarget q;
     q = queryOf("a=1&b=2&c=3&d");
 
     assertEquals(q.queryParam("a"), "1");
@@ -130,7 +130,7 @@ public class HttpRequestTargetQueryTest {
   UriQuery: duplicate name should return first value
   """)
   public void testCase09() {
-    Http.Request.Target q;
+    Http.RequestTarget q;
     q = queryOf("a=123&b=xpto&c&b=");
 
     assertEquals(q.queryParam("a"), "123");
@@ -141,7 +141,7 @@ public class HttpRequestTargetQueryTest {
 
   @Test
   public void testCase10() {
-    Http.Request.Target q;
+    Http.RequestTarget q;
     q = queryOf("%26=the%20%26%20char&foo=bar");
 
     assertEquals(q.queryParam("&"), "the & char");
@@ -150,7 +150,7 @@ public class HttpRequestTargetQueryTest {
     assertEquals(q.queryParamNames(), Set.of("&", "foo"));
   }
 
-  private Http.Request.Target queryOf(String q) {
+  private Http.RequestTarget queryOf(String q) {
     return Http.parseRequestTarget("/test?" + q);
   }
 

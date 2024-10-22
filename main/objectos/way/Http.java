@@ -21,6 +21,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.InetAddress;
 import java.net.ServerSocket;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
@@ -31,11 +33,13 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeFormatterBuilder;
 import java.time.temporal.ChronoField;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.function.Consumer;
+import java.util.function.Function;
 import objectos.notes.Note1;
 import objectos.notes.NoteSink;
 import objectos.way.HttpExchangeLoop.ParseStatus;
@@ -363,7 +367,7 @@ public final class Http {
   /**
    * An HTTP request message.
    */
-  public sealed interface Request {
+  public sealed interface Request extends RequestTarget {
 
     /**
      * The body of an HTTP request message.
@@ -442,81 +446,6 @@ public final class Http {
     }
 
     /**
-     * The request-target of an HTTP request message.
-     *
-     * <p>
-     * Unless otherwise specified the values returned by the methods of this
-     * interface are decoded.
-     */
-    public sealed interface Target permits HttpRequestLine {
-
-      /**
-       * The value of the path component.
-       *
-       * @return the value of the path component
-       */
-      String path();
-
-      /**
-       * Returns the value of the path parameter with the specified name
-       * if it exists or returns {@code null} otherwise.
-       *
-       * @param name
-       *        the name of the path parameter
-       *
-       * @return the value if it exists or {@code null} if it does not
-       */
-      String pathParam(String name);
-
-      /**
-       * Returns the first value of the query parameter with the specified name
-       * or {@code null} if there are no values.
-       *
-       * @param name
-       *        the name of the query parameter
-       *
-       * @return the first value if it exists or {@code null} if it does not
-       */
-      String queryParam(String name);
-
-      /**
-       * The names of all of the query parameters in this request-target.
-       *
-       * @return the names of all of the query parameters
-       */
-      Set<String> queryParamNames();
-
-      /**
-       * Returns, as an {@code int}, the first value of the query parameter with
-       * the specified name or returns the specified default value.
-       *
-       * <p>
-       * The specified default value will be returned if the query component
-       * does not contain a parameter with the specified name or if the first
-       * value of such parameter does not represent an {@code int} value.
-       *
-       * @param name
-       *        the name of the query parameter
-       * @param defaultValue
-       *        the value to be returned if the parameter does not exist or if
-       *        its first value cannot be converted to an {@code int} value
-       *
-       * @return the first value converted to {@code int} if it exists or the
-       *         specified default value otherwise
-       */
-      int queryParamAsInt(String name, int defaultValue);
-
-      /**
-       * The raw (encoded) value of the query component. This method returns
-       * {@code null} if this request-target does not have a query component.
-       *
-       * @return the raw (encoded) value of the query component or {@code null}
-       */
-      String rawQuery();
-
-    }
-
-    /**
      * The body of this request message.
      *
      * @return the body of this request message
@@ -542,11 +471,116 @@ public final class Http {
      *
      * @return value of the path component of the request-target
      */
+    @Override
     String path();
 
     /**
      * Returns the value of the path parameter with the specified name if it
      * exists or returns {@code null} otherwise.
+     *
+     * @param name
+     *        the name of the path parameter
+     *
+     * @return the value if it exists or {@code null} if it does not
+     */
+    @Override
+    String pathParam(String name);
+
+    /**
+     * Returns the first value of the query parameter with the specified name
+     * or {@code null} if there are no values.
+     *
+     * @param name
+     *        the name of the query parameter
+     *
+     * @return the first value if it exists or {@code null} if it does not
+     *
+     * @see Http.Request.Target#queryParam(String)
+     */
+    @Override
+    String queryParam(String name);
+
+    /**
+     * Returns as an {@code int} the first value of the query parameter with
+     * the specified name or returns the specified default value.
+     *
+     * <p>
+     * The specified default value will be returned if the query component
+     * does not contain a parameter with the specified name or if the first
+     * value of such parameter does not represent an {@code int} value.
+     *
+     * @param name
+     *        the name of the query parameter
+     * @param defaultValue
+     *        the value to be returned if the parameter does not exist or if
+     *        its first value cannot be converted to an {@code int} value
+     *
+     * @return the first value converted to {@code int} if it exists or the
+     *         specified default value otherwise
+     */
+    @Override
+    default int queryParamAsInt(String name, int defaultValue) {
+      String maybe;
+      maybe = queryParam(name);
+
+      if (maybe == null) {
+        return defaultValue;
+      }
+
+      try {
+        return Integer.parseInt(maybe);
+      } catch (NumberFormatException expected) {
+        return defaultValue;
+      }
+    }
+
+    /**
+     * The names of all of the query parameters in the target of this request.
+     *
+     * @return the names of all of the query parameters
+     */
+    @Override
+    Set<String> queryParamNames();
+
+    /**
+     * The raw (encoded) value of the path component of the request-target.
+     *
+     * @return the raw (encoded) value of the path component
+     */
+    @Override
+    String rawPath();
+
+    /**
+     * The raw (encoded) value of the query component of the request-target.
+     * This method returns {@code null} if this request-target does not have a
+     * query component.
+     *
+     * @return the raw (encoded) value of the query component or {@code null}
+     */
+    @Override
+    String rawQuery();
+
+  }
+
+  /**
+   * The request-target of an HTTP request message.
+   *
+   * <p>
+   * Unless otherwise specified the values returned by the methods of this
+   * interface are decoded.
+   */
+  public sealed interface RequestTarget {
+
+    /**
+     * The value of the path component.
+     *
+     * @return the value of the path component
+     */
+    String path();
+
+    /**
+     * Returns the value of the path parameter with the specified name
+     * if it exists or returns {@code null} otherwise.
      *
      * @param name
      *        the name of the path parameter
@@ -563,10 +597,50 @@ public final class Http {
      *        the name of the query parameter
      *
      * @return the first value if it exists or {@code null} if it does not
-     *
-     * @see Http.Request.Target#queryParam(String)
      */
     String queryParam(String name);
+
+    /**
+     * The names of all of the query parameters in this request-target.
+     *
+     * @return the names of all of the query parameters
+     */
+    Set<String> queryParamNames();
+
+    /**
+     * Returns, as an {@code int}, the first value of the query parameter with
+     * the specified name or returns the specified default value.
+     *
+     * <p>
+     * The specified default value will be returned if the query component
+     * does not contain a parameter with the specified name or if the first
+     * value of such parameter does not represent an {@code int} value.
+     *
+     * @param name
+     *        the name of the query parameter
+     * @param defaultValue
+     *        the value to be returned if the parameter does not exist or if
+     *        its first value cannot be converted to an {@code int} value
+     *
+     * @return the first value converted to {@code int} if it exists or the
+     *         specified default value otherwise
+     */
+    int queryParamAsInt(String name, int defaultValue);
+
+    /**
+     * The raw (encoded) value of the path component.
+     *
+     * @return the raw (encoded) value of the path component
+     */
+    String rawPath();
+
+    /**
+     * The raw (encoded) value of the query component. This method returns
+     * {@code null} if this request-target does not have a query component.
+     *
+     * @return the raw (encoded) value of the query component or {@code null}
+     */
+    String rawQuery();
 
   }
 
@@ -1220,7 +1294,7 @@ public final class Http {
    * @throws IllegalArgumentException
    *         if the string represents an invalid request-target value
    */
-  public static Request.Target parseRequestTarget(String target) throws IllegalArgumentException {
+  static RequestTarget parseRequestTarget(String target) throws IllegalArgumentException {
     Check.notNull(target, "target == null");
 
     HttpRequestLine requestLine;
@@ -1395,6 +1469,8 @@ final class HttpTestingExchange implements Http.TestingExchange {
     queryParams = config.queryParams;
   }
 
+  // request methods
+
   @Override
   public final Http.Request.Body body() {
     throw new UnsupportedOperationException();
@@ -1433,6 +1509,25 @@ final class HttpTestingExchange implements Http.TestingExchange {
     } else {
       return queryParams.get(name);
     }
+  }
+
+  @Override
+  public final Set<String> queryParamNames() {
+    if (queryParams == null) {
+      return Set.of();
+    } else {
+      return queryParams.keySet();
+    }
+  }
+
+  @Override
+  public final String rawPath() {
+    return URLEncoder.encode(path(), StandardCharsets.UTF_8);
+  }
+
+  @Override
+  public final String rawQuery() {
+    throw new IllegalStateException("query was not set");
   }
 
   @Override
@@ -1587,6 +1682,690 @@ final class HttpTestingExchangeConfig implements Http.TestingExchange.Config {
     objectStore.put(key, value);
 
     return this;
+  }
+
+}
+
+non-sealed class HttpRequestLine extends HttpSocketInput implements Http.RequestTarget {
+
+  // force Http class init
+  static final byte HTTP_REQUEST_LINE = Http.GET;
+
+  byte method;
+
+  private String path;
+
+  private int pathLimit;
+
+  Map<String, String> pathParams;
+
+  private Map<String, Object> queryParams;
+
+  private boolean queryParamsReady;
+
+  private int queryStart;
+
+  private String rawValue;
+
+  byte versionMajor;
+
+  byte versionMinor;
+
+  HttpRequestLine() {}
+
+  @Override
+  public final String path() {
+    if (path == null) {
+      String raw;
+      raw = rawPath();
+
+      path = decode(raw);
+    }
+
+    return path;
+  }
+
+  private String decode(String raw) {
+    return URLDecoder.decode(raw, StandardCharsets.UTF_8);
+  }
+
+  @Override
+  public final String pathParam(String name) {
+    Check.notNull(name, "name == null");
+
+    String result;
+    result = null;
+
+    if (pathParams != null) {
+      result = pathParams.get(name);
+    }
+
+    return result;
+  }
+
+  @Override
+  public final String queryParam(String name) {
+    Check.notNull(name, "name == null");
+
+    Map<String, Object> params;
+    params = $queryParams();
+
+    Object maybe;
+    maybe = params.get(name);
+
+    return switch (maybe) {
+      case null -> null;
+
+      case String s -> s;
+
+      case List<?> l -> (String) l.get(0);
+
+      default -> throw new AssertionError(
+          "Type should not have been put into the map: " + maybe.getClass()
+      );
+    };
+  }
+
+  @Override
+  public final Set<String> queryParamNames() {
+    Map<String, Object> params;
+    params = $queryParams();
+
+    return params.keySet();
+  }
+
+  private Map<String, Object> $queryParams() {
+    if (!queryParamsReady) {
+      if (queryParams == null) {
+        queryParams = Util.createMap();
+      }
+
+      makeQueryParams(queryParams, this::decode);
+
+      queryParamsReady = true;
+    }
+
+    return queryParams;
+  }
+
+  @Override
+  public final int queryParamAsInt(String name, int defaultValue) {
+    String maybe;
+    maybe = queryParam(name);
+
+    if (maybe == null) {
+      return defaultValue;
+    }
+
+    try {
+      return Integer.parseInt(maybe);
+    } catch (NumberFormatException expected) {
+      return defaultValue;
+    }
+  }
+
+  @Override
+  public final String rawPath() {
+    return rawValue.substring(0, pathLimit);
+  }
+
+  @Override
+  public final String rawQuery() {
+    return queryStart == pathLimit ? null : rawValue.substring(queryStart);
+  }
+
+  private Map<String, Object> $rawQueryParams() {
+    Map<String, Object> map;
+    map = Util.createMap();
+
+    makeQueryParams(map, Function.identity());
+
+    return map;
+  }
+
+  public final String rawValue() {
+    return rawValue;
+  }
+
+  public final String rawValue(String queryParamName, String queryParamValue) {
+    Check.notNull(queryParamName, "queryParamName == null");
+    Check.notNull(queryParamValue, "queryParamValue == null");
+
+    StringBuilder builder;
+    builder = new StringBuilder(rawPath());
+
+    builder.append('?');
+
+    Map<String, Object> params;
+    params = $rawQueryParams();
+
+    String rawName;
+    rawName = encode(queryParamName);
+
+    String rawValue;
+    rawValue = encode(queryParamValue);
+
+    params.put(rawName, rawValue);
+
+    int count;
+    count = 0;
+
+    for (String key : params.keySet()) {
+      if (count++ > 0) {
+        builder.append('&');
+      }
+
+      builder.append(key);
+
+      builder.append('=');
+
+      Object value;
+      value = params.get(key);
+
+      if (value instanceof String s) {
+        builder.append(s);
+      }
+
+      else {
+        throw new UnsupportedOperationException("Implement me");
+      }
+    }
+
+    return builder.toString();
+  }
+
+  private String encode(String value) {
+    return URLEncoder.encode(value, StandardCharsets.UTF_8);
+  }
+
+  final void resetRequestLine() {
+    method = 0;
+
+    pathLimit = 0;
+
+    if (pathParams != null) {
+      pathParams.clear();
+    }
+
+    path = null;
+
+    if (queryParams != null) {
+      queryParams.clear();
+    }
+
+    queryParamsReady = false;
+
+    queryStart = 0;
+
+    rawValue = null;
+
+    versionMajor = versionMinor = 0;
+  }
+
+  final void parseRequestLine() throws IOException {
+    parseLine();
+
+    if (parseStatus == ParseStatus.UNEXPECTED_EOF) {
+      if (bufferLimit == 0) {
+        // buffer is empty, this is an expected EOF
+        parseStatus = ParseStatus.EOF;
+      }
+
+      return;
+    }
+
+    parseMethod();
+
+    if (method == 0) {
+      // parse method failed -> bad request
+      parseStatus = ParseStatus.INVALID_METHOD;
+
+      return;
+    }
+
+    parseRequestTarget();
+
+    parseVersion();
+
+    if (parseStatus.isError()) {
+      // bad request -> fail
+      return;
+    }
+
+    if (!consumeIfEndOfLine()) {
+      parseStatus = ParseStatus.INVALID_REQUEST_LINE_TERMINATOR;
+
+      return;
+    }
+  }
+
+  final void parseRequestTarget() throws IOException {
+    int startIndex;
+    startIndex = parsePathStart();
+
+    if (parseStatus.isError()) {
+      // bad request -> fail
+      return;
+    }
+
+    parsePathRest(startIndex);
+
+    if (parseStatus.isError()) {
+      // bad request -> fail
+      return;
+    }
+  }
+
+  private static final byte[] _CONNECT = "CONNECT ".getBytes(StandardCharsets.UTF_8);
+
+  private static final byte[] _DELETE = "DELETE ".getBytes(StandardCharsets.UTF_8);
+
+  private static final byte[] _GET = "GET ".getBytes(StandardCharsets.UTF_8);
+
+  private static final byte[] _HEAD = "HEAD ".getBytes(StandardCharsets.UTF_8);
+
+  private static final byte[] _OPTIONS = "OPTIONS ".getBytes(StandardCharsets.UTF_8);
+
+  private static final byte[] _POST = "POST ".getBytes(StandardCharsets.UTF_8);
+
+  private static final byte[] _PUT = "PUT ".getBytes(StandardCharsets.UTF_8);
+
+  private static final byte[] _PATCH = "PATCH ".getBytes(StandardCharsets.UTF_8);
+
+  private static final byte[] _TRACE = "TRACE ".getBytes(StandardCharsets.UTF_8);
+
+  private void parseMethod() throws IOException {
+    if (bufferIndex >= lineLimit) {
+      // empty line... nothing to do
+      return;
+    }
+
+    byte first;
+    first = buffer[bufferIndex];
+
+    // based on the first char, we select out method candidate
+
+    switch (first) {
+      case 'C' -> parseMethod0(Http.CONNECT, _CONNECT);
+
+      case 'D' -> parseMethod0(Http.DELETE, _DELETE);
+
+      case 'G' -> parseMethod0(Http.GET, _GET);
+
+      case 'H' -> parseMethod0(Http.HEAD, _HEAD);
+
+      case 'O' -> parseMethod0(Http.OPTIONS, _OPTIONS);
+
+      case 'P' -> parseMethodP();
+
+      case 'T' -> parseMethod0(Http.TRACE, _TRACE);
+    }
+  }
+
+  private void parseMethod0(byte candidate, byte[] candidateBytes) throws IOException {
+    if (matches(candidateBytes)) {
+      method = candidate;
+    }
+  }
+
+  private void parseMethodP() throws IOException {
+    // method starts with a P. It might be:
+    // - POST
+    // - PUT
+    // - PATCH
+
+    // we'll try them in sequence
+
+    parseMethod0(Http.POST, _POST);
+
+    if (method != 0) {
+      return;
+    }
+
+    parseMethod0(Http.PUT, _PUT);
+
+    if (method != 0) {
+      return;
+    }
+
+    parseMethod0(Http.PATCH, _PATCH);
+
+    if (method != 0) {
+      return;
+    }
+  }
+
+  private int parsePathStart() throws IOException {
+    // we will check if the request target starts with a '/' char
+
+    int targetStart;
+    targetStart = bufferIndex;
+
+    if (bufferIndex >= lineLimit) {
+      // reached EOL -> bad request
+      parseStatus = ParseStatus.INVALID_TARGET;
+
+      return 0;
+    }
+
+    byte b;
+    b = buffer[bufferIndex++];
+
+    if (b != Bytes.SOLIDUS) {
+      // first char IS NOT '/' => BAD_REQUEST
+      parseStatus = ParseStatus.INVALID_TARGET;
+
+      return 0;
+    }
+
+    // mark request path start
+
+    return targetStart;
+  }
+
+  private void parsePathRest(int startIndex) throws IOException {
+    // we will look for the first:
+    // - ? char
+    // - SP char
+    int index;
+    index = indexOf(Bytes.QUESTION_MARK, Bytes.SP);
+
+    if (index < 0) {
+      // trailing char was not found
+      parseStatus = ParseStatus.URI_TOO_LONG;
+
+      return;
+    }
+
+    // index where path ends
+    int pathEndIndex;
+    pathEndIndex = index;
+
+    // as of now target ends at the path
+    int targetEndIndex;
+    targetEndIndex = pathEndIndex;
+
+    // as of now query starts and ends at path i.e. len = 0
+    int queryStartIndex;
+    queryStartIndex = pathEndIndex;
+
+    // we'll continue at the '?' or SP char
+    bufferIndex = index;
+
+    byte b;
+    b = buffer[bufferIndex++];
+
+    if (b == Bytes.QUESTION_MARK) {
+      queryStartIndex = bufferIndex;
+
+      targetEndIndex = indexOf(Bytes.SP);
+
+      if (targetEndIndex < 0) {
+        // trailing char was not found
+        parseStatus = ParseStatus.URI_TOO_LONG;
+
+        return;
+      }
+
+      // we'll continue immediately after the SP
+      bufferIndex = targetEndIndex + 1;
+    }
+
+    rawValue = bufferToString(startIndex, targetEndIndex);
+
+    pathLimit = pathEndIndex - startIndex;
+
+    queryStart = queryStartIndex - startIndex;
+  }
+
+  static final byte[] HTTP_VERSION_PREFIX = {'H', 'T', 'T', 'P', '/'};
+
+  private void parseVersion() {
+    // 'H' 'T' 'T' 'P' '/' '1' '.' '1' = 8 bytes
+
+    if (!matches(HTTP_VERSION_PREFIX)) {
+      // buffer does not start with 'HTTP/'
+      parseStatus = ParseStatus.INVALID_PROTOCOL;
+
+      return;
+    }
+
+    // check if we  have '1' '.' '1' = 3 bytes
+
+    int requiredIndex;
+    requiredIndex = bufferIndex + 3 - 1;
+
+    if (requiredIndex >= lineLimit) {
+      parseStatus = ParseStatus.INVALID_PROTOCOL;
+
+      return;
+    }
+
+    byte maybeMajor;
+    maybeMajor = buffer[bufferIndex++];
+
+    if (!Http.isDigit(maybeMajor)) {
+      // major version is not a digit => bad request
+      parseStatus = ParseStatus.INVALID_PROTOCOL;
+
+      return;
+    }
+
+    byte maybeDot;
+    maybeDot = buffer[bufferIndex++];
+
+    if (maybeDot != '.') {
+      // major version not followed by a DOT => bad request
+      parseStatus = ParseStatus.INVALID_PROTOCOL;
+
+      return;
+    }
+
+    byte maybeMinor;
+    maybeMinor = buffer[bufferIndex++];
+
+    if (!Http.isDigit(maybeMinor)) {
+      // minor version is not a digit => bad request
+      parseStatus = ParseStatus.INVALID_PROTOCOL;
+
+      return;
+    }
+
+    versionMajor = (byte) (maybeMajor - 0x30);
+
+    versionMinor = (byte) (maybeMinor - 0x30);
+  }
+
+  // matcher methods
+
+  private int matcherIndex;
+
+  final void matcherReset() {
+    matcherIndex = 0;
+
+    if (pathParams != null) {
+      pathParams.clear();
+    }
+  }
+
+  final boolean atEnd() {
+    return matcherIndex == pathLimit;
+  }
+
+  final boolean exact(String other) {
+    String value;
+    value = path();
+
+    boolean result;
+    result = value.equals(other);
+
+    matcherIndex += value.length();
+
+    return result;
+  }
+
+  final boolean namedVariable(String name) {
+    String value;
+    value = path();
+
+    int solidus;
+    solidus = value.indexOf('/', matcherIndex);
+
+    String varValue;
+
+    if (solidus < 0) {
+      varValue = value.substring(matcherIndex);
+    } else {
+      varValue = value.substring(matcherIndex, solidus);
+    }
+
+    matcherIndex += varValue.length();
+
+    variable(name, varValue);
+
+    return true;
+  }
+
+  final boolean region(String region) {
+    String value;
+    value = path();
+
+    boolean result;
+    result = value.regionMatches(matcherIndex, region, 0, region.length());
+
+    matcherIndex += region.length();
+
+    return result;
+  }
+
+  final boolean startsWithMatcher(String prefix) {
+    String value;
+    value = path();
+
+    boolean result;
+    result = value.startsWith(prefix);
+
+    matcherIndex += prefix.length();
+
+    return result;
+  }
+
+  private void variable(String name, String value) {
+    if (pathParams == null) {
+      pathParams = Util.createMap();
+    }
+
+    pathParams.put(name, value);
+  }
+
+  // query param stuff
+
+  private void makeQueryParams(Map<String, Object> map, Function<String, String> decoder) {
+    int queryLength;
+    queryLength = rawValue.length() - queryStart;
+
+    if (queryLength < 2) {
+      // query is empty: either "" or "?"
+      return;
+    }
+
+    String source;
+    source = rawQuery();
+
+    StringBuilder sb;
+    sb = new StringBuilder();
+
+    String key;
+    key = null;
+
+    for (int i = 0, len = source.length(); i < len; i++) {
+      char c;
+      c = source.charAt(i);
+
+      switch (c) {
+        case '=' -> {
+          key = sb.toString();
+
+          sb.setLength(0);
+
+          putQueryParams(map, decoder, key, "");
+        }
+
+        case '&' -> {
+          String value;
+          value = sb.toString();
+
+          sb.setLength(0);
+
+          if (key == null) {
+            putQueryParams(map, decoder, value, "");
+
+            continue;
+          }
+
+          putQueryParams(map, decoder, key, value);
+
+          key = null;
+        }
+
+        default -> sb.append(c);
+      }
+    }
+
+    String value;
+    value = sb.toString();
+
+    if (key != null) {
+      putQueryParams(map, decoder, key, value);
+    } else {
+      putQueryParams(map, decoder, value, "");
+    }
+  }
+
+  @SuppressWarnings("unchecked")
+  private void putQueryParams(Map<String, Object> map, Function<String, String> decoder, String rawKey, String rawValue) {
+    String key;
+    key = decoder.apply(rawKey);
+
+    String value;
+    value = decoder.apply(rawValue);
+
+    Object oldValue;
+    oldValue = map.put(key, value);
+
+    if (oldValue == null) {
+      return;
+    }
+
+    if (oldValue.equals("")) {
+      return;
+    }
+
+    if (oldValue instanceof String s) {
+
+      if (value.equals("")) {
+        map.put(key, s);
+      } else {
+        List<String> list;
+        list = Util.createList();
+
+        list.add(s);
+
+        list.add(value);
+
+        map.put(key, list);
+      }
+
+    }
+
+    else {
+      List<String> list;
+      list = (List<String>) oldValue;
+
+      list.add(value);
+
+      map.put(key, list);
+    }
   }
 
 }

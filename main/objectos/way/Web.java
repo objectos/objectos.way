@@ -246,20 +246,20 @@ public final class Web {
   /**
    * Creates a new paginator instance.
    *
-   * @param target the request target
+   * @param request the request target
    * @param pageAttrName the name of the page query parameter
    * @param pageSize the maximum number of elements in each page
    * @param totalCount the number of elements in all of the pages
    *
    * @return a new paginator instance
    */
-  public static Paginator createPaginator(Http.Request.Target target, String pageAttrName, int pageSize, int totalCount) {
-    Check.notNull(target, "target == null");
+  public static Paginator createPaginator(Http.Request request, String pageAttrName, int pageSize, int totalCount) {
+    Check.notNull(request, "request == null");
     Check.notNull(pageAttrName, "pageAttrName == null");
     Check.argument(pageSize > 0, "pageSize must be positive");
     Check.argument(totalCount >= 0, "totalCount must be equal or greater than zero");
 
-    return WebPaginator.of(target, pageAttrName, pageSize, totalCount);
+    return WebPaginator.of(request, pageAttrName, pageSize, totalCount);
   }
 
   /**
@@ -556,7 +556,7 @@ public final class Web {
    * @return a new configuration option
    */
   public static Resources.Option serveFile(String pathName, byte[] contents) {
-    Http.Request.Target target;
+    Http.RequestTarget target;
     target = Http.parseRequestTarget(pathName);
 
     String query;

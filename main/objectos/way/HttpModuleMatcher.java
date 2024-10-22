@@ -28,7 +28,10 @@ interface HttpModuleMatcher {
     }
   }
 
-  record Matcher2(HttpModuleMatcher matcher1, HttpModuleMatcher matcher2) implements HttpModuleMatcher {
+  record Matcher2(
+      HttpModuleMatcher matcher1,
+      HttpModuleMatcher matcher2)
+      implements HttpModuleMatcher {
     @Override
     public final HttpModuleMatcher append(HttpModuleMatcher other) {
       return new Matcher3(matcher1, matcher2, other);
@@ -42,7 +45,11 @@ interface HttpModuleMatcher {
     }
   }
 
-  record Matcher3(HttpModuleMatcher matcher1, HttpModuleMatcher matcher2, HttpModuleMatcher matcher3) implements HttpModuleMatcher {
+  record Matcher3(
+      HttpModuleMatcher matcher1,
+      HttpModuleMatcher matcher2,
+      HttpModuleMatcher matcher3)
+      implements HttpModuleMatcher {
     @Override
     public final HttpModuleMatcher append(HttpModuleMatcher other) {
       return new Matcher4(matcher1, matcher2, matcher3, other);
@@ -57,10 +64,11 @@ interface HttpModuleMatcher {
     }
   }
 
-  record Matcher4(HttpModuleMatcher matcher1,
-                  HttpModuleMatcher matcher2,
-                  HttpModuleMatcher matcher3,
-                  HttpModuleMatcher matcher4)
+  record Matcher4(
+      HttpModuleMatcher matcher1,
+      HttpModuleMatcher matcher2,
+      HttpModuleMatcher matcher3,
+      HttpModuleMatcher matcher4)
       implements HttpModuleMatcher {
     @Override
     public final HttpModuleMatcher append(HttpModuleMatcher other) {
@@ -77,11 +85,12 @@ interface HttpModuleMatcher {
     }
   }
 
-  record Matcher5(HttpModuleMatcher matcher1,
-                  HttpModuleMatcher matcher2,
-                  HttpModuleMatcher matcher3,
-                  HttpModuleMatcher matcher4,
-                  HttpModuleMatcher matcher5)
+  record Matcher5(
+      HttpModuleMatcher matcher1,
+      HttpModuleMatcher matcher2,
+      HttpModuleMatcher matcher3,
+      HttpModuleMatcher matcher4,
+      HttpModuleMatcher matcher5)
       implements HttpModuleMatcher {
     @Override
     public final HttpModuleMatcher append(HttpModuleMatcher other) {

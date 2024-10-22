@@ -68,7 +68,7 @@ public class HttpTest {
 
   @Test
   public void parseRequestTarget01() {
-    Http.Request.Target target;
+    Http.RequestTarget target;
     target = Http.parseRequestTarget("/");
 
     assertEquals(target.path(), "/");
@@ -76,7 +76,7 @@ public class HttpTest {
 
   @Test
   public void parseRequestTarget02() {
-    Http.Request.Target target;
+    Http.RequestTarget target;
     target = Http.parseRequestTarget("/foo/bar?page=1&sort=asc");
 
     assertEquals(target.path(), "/foo/bar");

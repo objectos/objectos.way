@@ -15,11 +15,11 @@
  */
 package objectos.way;
 
-final record WebPaginator(Http.Request.Target target, Sql.Page page, int firstItem, int lastItem, int totalCount, int previousPage, int nextPage) implements Web.Paginator {
+final record WebPaginator(Http.RequestTarget request, Sql.Page page, int firstItem, int lastItem, int totalCount, int previousPage, int nextPage) implements Web.Paginator {
 
-  public static WebPaginator of(Http.Request.Target target, String pageAttrName, int pageSize, int totalCount) {
+  public static WebPaginator of(Http.RequestTarget request, String pageAttrName, int pageSize, int totalCount) {
     int pageNumber;
-    pageNumber = target.queryParamAsInt(pageAttrName, 1);
+    pageNumber = request.queryParamAsInt(pageAttrName, 1);
 
     int previousPage;
     previousPage = pageNumber - 1;
@@ -51,7 +51,7 @@ final record WebPaginator(Http.Request.Target target, Sql.Page page, int firstIt
     Sql.Page page;
     page = Sql.createPage(pageNumber, pageSize);
 
-    return new WebPaginator(target, page, firstItem, lastItem, totalCount, previousPage, nextPage);
+    return new WebPaginator(request, page, firstItem, lastItem, totalCount, previousPage, nextPage);
   }
 
   @Override
@@ -75,11 +75,14 @@ final record WebPaginator(Http.Request.Target target, Sql.Page page, int firstIt
   }
 
   private String pageHref(int page) {
-    HttpRequestLine impl = (HttpRequestLine) target;
+    String value;
+    value = Integer.toString(page);
 
-    String value = Integer.toString(page);
-
-    return impl.rawValue("page", value);
+    if (request instanceof HttpRequestLine line) {
+      return line.rawValue("page", value);
+    } else {
+      throw new UnsupportedOperationException("Implement me");
+    }
   }
 
 }
