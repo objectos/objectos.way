@@ -27,11 +27,12 @@ public class HttpTestingExchangeTest {
   - request attribute
   """)
   public void testCase01() {
-    Http.TestingExchange http = Http.testingExchange(
-        Http.requestTarget("/foo?page=1"),
+    Http.TestingExchange http;
+    http = Http.TestingExchange.create(config -> {
+      config.requestTarget("/foo?page=1");
 
-        Http.set(String.class, "Hello")
-    );
+      config.set(String.class, "Hello");
+    });
 
     assertEquals(http.path(), "/foo");
     assertEquals(http.queryParam("page"), "1");

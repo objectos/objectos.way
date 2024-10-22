@@ -33,7 +33,9 @@ import java.time.temporal.ChronoField;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
+import java.util.function.Consumer;
 import objectos.notes.Note1;
 import objectos.notes.NoteSink;
 import objectos.way.HttpExchangeLoop.ParseStatus;
@@ -665,12 +667,53 @@ public final class Http {
   /**
    * A test-only HTTP exchange.
    */
-  public sealed interface TestingExchange extends Exchange permits HttpTestingExchange {
+  public sealed interface TestingExchange extends Exchange {
 
     /**
-     * Configures the creation of a exchange instance.
+     * Configures the creation of a testing exchange instance.
      */
-    public sealed interface Option {}
+    sealed interface Config {
+
+      /**
+       * Sets the request-target to the result of parsing the specified string.
+       *
+       * @param target
+       *        the raw (undecoded) request-target value
+       *
+       * @return this config instance
+       */
+      Config requestTarget(String target);
+
+      /**
+       * Stores the provided key-value pair in the testing exchange.
+       *
+       * @param key
+       *        the key to be stored
+       * @param value
+       *        the value to be stored
+       *
+       * @return this config instance
+       */
+      <T> Config set(Class<T> key, T value);
+
+    }
+
+    /**
+     * Creates an exchange instance suitable for test cases.
+     *
+     * @param config
+     *        configures the exchange instance creation
+     *
+     * @return a newly created exchange instance with the configured options
+     */
+    static TestingExchange create(Consumer<Config> config) {
+      HttpTestingExchangeConfig builder;
+      builder = new HttpTestingExchangeConfig();
+
+      config.accept(builder);
+
+      return builder.build();
+    }
 
   }
 
@@ -700,14 +743,6 @@ public final class Http {
     public UnsupportedMediaTypeException(String contentType) {
       super(contentType);
     }
-
-  }
-
-  // non-public types
-
-  non-sealed static abstract class HttpTestingExchangeOption implements Http.TestingExchange.Option {
-
-    abstract void acceptHttpTestingExchange(HttpTestingExchange http);
 
   }
 
@@ -1192,79 +1227,7 @@ public final class Http {
     return requestLine;
   }
 
-  /**
-   * Creates an exchange instance suitable for test cases.
-   *
-   * @param options
-   *        configures the created exchange instance
-   *
-   * @return a newly created exchange instance with the provided options
-   */
-  public static TestingExchange testingExchange(TestingExchange.Option... options) {
-    Check.notNull(options, "options == null");
-
-    HttpTestingExchange result;
-    result = new HttpTestingExchange();
-
-    for (int idx = 0; idx < options.length; idx++) {
-      TestingExchange.Option o;
-      o = Check.notNull(options[idx], "options[", idx, "] == null");
-
-      HttpTestingExchangeOption option;
-      option = (HttpTestingExchangeOption) o;
-
-      option.acceptHttpTestingExchange(result);
-    }
-
-    return result;
-  }
-
-  /**
-   * Testing exchange option: sets the request-target to the result of parsing
-   * the specified string.
-   *
-   * @param target
-   *        the raw (undecoded) request-target value
-   *
-   * @return a new testing exchange option
-   */
-  public static TestingExchange.Option requestTarget(String target) {
-    Request.Target requestTarget;
-    requestTarget = parseRequestTarget(target);
-
-    return new HttpTestingExchangeOption() {
-      @Override
-      final void acceptHttpTestingExchange(HttpTestingExchange http) {
-        http.requestTarget = requestTarget;
-      }
-    };
-  }
-
-  /**
-   * Testing exchange option: stores the provided key-value pair in the testing
-   * exchange.
-   *
-   * @param key
-   *        the key to be stored
-   * @param value
-   *        the value to be stored
-   *
-   * @return a new testing exchange option
-   */
-  public static <T> TestingExchange.Option set(Class<T> key, T value) {
-    return new HttpTestingExchangeOption() {
-      @Override
-      final void acceptHttpTestingExchange(HttpTestingExchange http) {
-        http.set(key, value);
-      }
-    };
-  }
-
   // utils
-
-  static void init() {
-
-  }
 
   private static final DateTimeFormatter IMF_FIXDATE;
 
@@ -1375,6 +1338,161 @@ public final class Http {
 
   static int headerNameSize() {
     return HttpHeaderName.standardNamesSize();
+  }
+
+  static void init() {
+    // noop: mostly for testing
+  }
+
+}
+
+final class HttpTestingExchange implements Http.TestingExchange {
+
+  private Map<Object, Object> attributes;
+
+  private final Http.Request.Target requestTarget;
+
+  HttpTestingExchange(HttpTestingExchangeConfig config) {
+    attributes = config.attributes;
+
+    requestTarget = config.requestTarget;
+  }
+
+  @Override
+  public final Http.Request.Body body() {
+    throw new UnsupportedOperationException();
+  }
+
+  @Override
+  public final Http.Request.Headers headers() {
+    throw new UnsupportedOperationException();
+  }
+
+  @Override
+  public final byte method() {
+    throw new UnsupportedOperationException();
+  }
+
+  @Override
+  public final Http.Request.Target target() {
+    Check.state(requestTarget != null, "The request target was not set");
+
+    return requestTarget;
+  }
+
+  @Override
+  public final <T> void set(Class<T> key, T value) {
+    Check.notNull(key, "key == null");
+    Check.notNull(value, "value == null");
+
+    if (attributes == null) {
+      attributes = Util.createMap();
+    }
+
+    attributes.put(key, value);
+  }
+
+  @SuppressWarnings("unchecked")
+  @Override
+  public final <T> T get(Class<T> key) {
+    if (attributes == null) {
+      return null;
+    } else {
+      return (T) attributes.get(key);
+    }
+  }
+
+  @Override
+  public void header(Http.HeaderName name, long value) {
+    throw new UnsupportedOperationException();
+  }
+
+  @Override
+  public void header(Http.HeaderName name, String value) {
+    throw new UnsupportedOperationException();
+  }
+
+  @Override
+  public void dateNow() {
+    throw new UnsupportedOperationException();
+  }
+
+  @Override
+  public void send() {
+    throw new UnsupportedOperationException();
+  }
+
+  @Override
+  public void send(byte[] body) {
+    throw new UnsupportedOperationException();
+  }
+
+  @Override
+  public void send(Lang.CharWritable body, Charset charset) {
+    throw new UnsupportedOperationException();
+  }
+
+  @Override
+  public void send(Path file) {
+    throw new UnsupportedOperationException();
+  }
+
+  @Override
+  public void notFound() {
+    throw new UnsupportedOperationException();
+  }
+
+  @Override
+  public void methodNotAllowed() {
+    throw new UnsupportedOperationException();
+  }
+
+  @Override
+  public void internalServerError(Throwable t) {
+    throw new UnsupportedOperationException();
+  }
+
+  @Override
+  public boolean processed() {
+    throw new UnsupportedOperationException();
+  }
+
+  @Override
+  public void status(Http.Response.Status value) {
+    throw new UnsupportedOperationException();
+  }
+
+}
+
+final class HttpTestingExchangeConfig implements Http.TestingExchange.Config {
+
+  Map<Object, Object> attributes;
+
+  Http.Request.Target requestTarget;
+
+  public final Http.TestingExchange build() {
+    return new HttpTestingExchange(this);
+  }
+
+  @Override
+  public final Http.TestingExchange.Config requestTarget(String target) {
+    requestTarget = Http.parseRequestTarget(target);
+
+    return this;
+  }
+
+  @Override
+  public final <T> Http.TestingExchange.Config set(Class<T> key, T value) {
+    Objects.requireNonNull(key, "key == null");
+    Objects.requireNonNull(value, "value == null");
+
+    if (attributes == null) {
+      attributes = Util.createMap();
+    }
+
+    attributes.put(key, value);
+
+    return this;
   }
 
 }
