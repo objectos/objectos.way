@@ -43,6 +43,8 @@ final class HttpModuleCompiler extends HttpModuleMatcherParser implements Http.H
 
   private Http.Handler routeHandler;
 
+  private Http.Handler.Interceptor routeInterceptor;
+
   public final Http.Handler compile() {
     if (actions != null) {
       actions = Arrays.copyOf(actions, actionsIndex);
@@ -72,10 +74,25 @@ final class HttpModuleCompiler extends HttpModuleMatcherParser implements Http.H
   }
 
   public final void handleWith(Http.Handler handler) {
-    if (routeHandler == null) {
-      routeHandler = handler;
+    Http.Handler result;
+    result = handler;
+
+    if (routeInterceptor != null) {
+      result = routeInterceptor.intercept(result);
+    }
+
+    if (routeHandler != null) {
+      result = new FallbackHandler(routeHandler, result);
+    }
+
+    routeHandler = result;
+  }
+
+  public final void interceptWith(Interceptor interceptor) {
+    if (routeInterceptor == null) {
+      routeInterceptor = interceptor;
     } else {
-      routeHandler = new FallbackHandler(routeHandler, handler);
+      routeInterceptor = handler -> routeInterceptor.intercept(interceptor.intercept(handler));
     }
   }
 
@@ -99,6 +116,8 @@ final class HttpModuleCompiler extends HttpModuleMatcherParser implements Http.H
     routeMatcher = null;
 
     routeHandler = null;
+
+    routeInterceptor = null;
   }
 
   private record HttpModuleFilter(Http.Handler handler) implements HttpModuleAction {

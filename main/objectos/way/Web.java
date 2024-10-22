@@ -246,20 +246,20 @@ public final class Web {
   /**
    * Creates a new paginator instance.
    *
-   * @param request the request target
+   * @param target the request target
    * @param pageAttrName the name of the page query parameter
    * @param pageSize the maximum number of elements in each page
    * @param totalCount the number of elements in all of the pages
    *
    * @return a new paginator instance
    */
-  public static Paginator createPaginator(Http.Request request, String pageAttrName, int pageSize, int totalCount) {
-    Check.notNull(request, "request == null");
+  public static Paginator createPaginator(Http.RequestTarget target, String pageAttrName, int pageSize, int totalCount) {
+    Check.notNull(target, "target == null");
     Check.notNull(pageAttrName, "pageAttrName == null");
     Check.argument(pageSize > 0, "pageSize must be positive");
     Check.argument(totalCount >= 0, "totalCount must be equal or greater than zero");
 
-    return WebPaginator.of(request, pageAttrName, pageSize, totalCount);
+    return WebPaginator.of(target, pageAttrName, pageSize, totalCount);
   }
 
   /**

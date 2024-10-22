@@ -17,6 +17,7 @@ package objectos.way;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
+import static org.testng.Assert.assertNull;
 
 import java.io.IOException;
 import java.net.Socket;
@@ -119,6 +120,28 @@ public class HttpModuleTest extends Http.Module {
     Http.Handler noop = http -> {};
     Http.Handler nono = http -> http.okText("nonono\n", StandardCharsets.UTF_8);
     route("/testCase11", handler(noop), handler(this::$testCase11), handler(nono));
+
+    // tc12: interceptor
+    Http.Handler tc12A = http -> {
+      assertNull(http.get(String.class));
+      http.set(Integer.class, 123);
+    };
+
+    Http.Handler.Interceptor tc12X = handler -> {
+      return http -> {
+        http.set(String.class, "ABC");
+
+        handler.handle(http);
+      };
+    };
+
+    Http.Handler tc12C = http -> {
+      String s = http.get(String.class);
+      Integer i = http.get(Integer.class);
+      http.okText("tc12=" + s + "-" + i.toString(), StandardCharsets.UTF_8);
+    };
+
+    route("/testCase12", handler(tc12A), interceptor(tc12X), handler(tc12C));
   }
 
   private void $testCase01(Http.Exchange http) {
@@ -879,6 +902,23 @@ public class HttpModuleTest extends Http.Module {
 
     assertEquals(response.statusCode(), 200);
     assertEquals(response.body(), "SECOND");
+  }
+
+  @Test
+  public void testCase12() throws IOException, InterruptedException {
+    HttpResponse<String> response;
+    response = Testing.httpClient(
+        "/testCase12",
+
+        Testing.headers(
+            "Host", "http.module.test",
+            "Connection", "close",
+            "Cookie", "HTTPMODULETEST=TEST_COOKIE"
+        )
+    );
+
+    assertEquals(response.statusCode(), 200);
+    assertEquals(response.body(), "tc12=ABC-123");
   }
 
   @Test

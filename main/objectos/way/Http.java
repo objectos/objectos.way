@@ -40,6 +40,8 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.function.Supplier;
+import java.util.regex.Pattern;
 import objectos.notes.Note1;
 import objectos.notes.NoteSink;
 import objectos.way.HttpExchangeLoop.ParseStatus;
@@ -466,100 +468,6 @@ public final class Http {
      */
     byte method();
 
-    /**
-     * The value of the path component of the request-target.
-     *
-     * @return value of the path component of the request-target
-     */
-    @Override
-    String path();
-
-    /**
-     * Returns the value of the path parameter with the specified name if it
-     * exists or returns {@code null} otherwise.
-     *
-     * @param name
-     *        the name of the path parameter
-     *
-     * @return the value if it exists or {@code null} if it does not
-     */
-    @Override
-    String pathParam(String name);
-
-    /**
-     * Returns the first value of the query parameter with the specified name
-     * or {@code null} if there are no values.
-     *
-     * @param name
-     *        the name of the query parameter
-     *
-     * @return the first value if it exists or {@code null} if it does not
-     *
-     * @see Http.Request.Target#queryParam(String)
-     */
-    @Override
-    String queryParam(String name);
-
-    /**
-     * Returns as an {@code int} the first value of the query parameter with
-     * the specified name or returns the specified default value.
-     *
-     * <p>
-     * The specified default value will be returned if the query component
-     * does not contain a parameter with the specified name or if the first
-     * value of such parameter does not represent an {@code int} value.
-     *
-     * @param name
-     *        the name of the query parameter
-     * @param defaultValue
-     *        the value to be returned if the parameter does not exist or if
-     *        its first value cannot be converted to an {@code int} value
-     *
-     * @return the first value converted to {@code int} if it exists or the
-     *         specified default value otherwise
-     */
-    @Override
-    default int queryParamAsInt(String name, int defaultValue) {
-      String maybe;
-      maybe = queryParam(name);
-
-      if (maybe == null) {
-        return defaultValue;
-      }
-
-      try {
-        return Integer.parseInt(maybe);
-      } catch (NumberFormatException expected) {
-        return defaultValue;
-      }
-    }
-
-    /**
-     * The names of all of the query parameters in the target of this request.
-     *
-     * @return the names of all of the query parameters
-     */
-    @Override
-    Set<String> queryParamNames();
-
-    /**
-     * The raw (encoded) value of the path component of the request-target.
-     *
-     * @return the raw (encoded) value of the path component
-     */
-    @Override
-    String rawPath();
-
-    /**
-     * The raw (encoded) value of the query component of the request-target.
-     * This method returns {@code null} if this request-target does not have a
-     * query component.
-     *
-     * @return the raw (encoded) value of the query component or {@code null}
-     */
-    @Override
-    String rawQuery();
-
   }
 
   /**
@@ -625,7 +533,20 @@ public final class Http {
      * @return the first value converted to {@code int} if it exists or the
      *         specified default value otherwise
      */
-    int queryParamAsInt(String name, int defaultValue);
+    default int queryParamAsInt(String name, int defaultValue) {
+      String maybe;
+      maybe = queryParam(name);
+
+      if (maybe == null) {
+        return defaultValue;
+      }
+
+      try {
+        return Integer.parseInt(maybe);
+      } catch (NumberFormatException expected) {
+        return defaultValue;
+      }
+    }
 
     /**
      * The raw (encoded) value of the path component.
@@ -1449,239 +1370,295 @@ public final class Http {
 
 }
 
-final class HttpTestingExchange implements Http.TestingExchange {
+abstract class HttpModule {
 
-  private Map<Object, Object> objectStore;
+  // user types
 
-  private final byte method;
+  protected sealed static abstract class Condition permits HttpModuleCondition {
 
-  private final String path;
+    final String name;
 
-  private final Map<String, String> queryParams;
+    Condition(String name) {
+      this.name = name;
+    }
 
-  HttpTestingExchange(HttpTestingExchangeConfig config) {
-    objectStore = config.objectStore;
+    final boolean test(HttpRequestLine path) {
+      String value;
+      value = path.pathParam(name);
 
-    method = config.method;
+      if (value == null) {
+        return true;
+      } else {
+        return test(value);
+      }
+    }
 
-    path = config.path;
+    abstract boolean test(String value);
 
-    queryParams = config.queryParams;
   }
 
-  // request methods
+  protected sealed interface RouteOption {}
 
-  @Override
-  public final Http.Request.Body body() {
-    throw new UnsupportedOperationException();
+  // internal types
+
+  private sealed interface ThisRouteOption extends RouteOption {
+    void accept(HttpModuleCompiler compiler);
   }
 
-  @Override
-  public final Http.Request.Headers headers() {
-    throw new UnsupportedOperationException();
-  }
-
-  @Override
-  public final byte method() {
-    return Http.checkMethod(method);
-  }
-
-  @Override
-  public final String path() {
-    Check.state(path != null, "path was not set");
-
-    return path;
-  }
-
-  @Override
-  public final String pathParam(String name) {
-    if (objectStore == null) {
-      return null;
-    } else {
-      return (String) objectStore.get(name);
+  private record HandlerOption(Http.Handler instance) implements ThisRouteOption {
+    @Override
+    public final void accept(HttpModuleCompiler compiler) {
+      compiler.handleWith(instance);
     }
   }
 
-  @Override
-  public final String queryParam(String name) {
-    if (queryParams == null) {
-      return null;
-    } else {
-      return queryParams.get(name);
+  private record HandlerFactory0Option(Supplier<Http.Handler> factory) implements Http.Handler, ThisRouteOption {
+    @Override
+    public final void handle(Http.Exchange http) {
+      Http.Handler handler;
+      handler = factory.get();
+
+      handler.handle(http);
+    }
+
+    @Override
+    public final void accept(HttpModuleCompiler compiler) {
+      compiler.handleWith(this);
     }
   }
 
-  @Override
-  public final Set<String> queryParamNames() {
-    if (queryParams == null) {
-      return Set.of();
-    } else {
-      return queryParams.keySet();
+  private record HandlerFactory1Option<T>(Function<T, Http.Handler> function, T value) implements Http.Handler, ThisRouteOption {
+    @Override
+    public final void handle(Http.Exchange http) {
+      Http.Handler handler;
+      handler = function.apply(value);
+
+      handler.handle(http);
+    }
+
+    @Override
+    public final void accept(HttpModuleCompiler compiler) {
+      compiler.handleWith(this);
     }
   }
 
-  @Override
-  public final String rawPath() {
-    return URLEncoder.encode(path(), StandardCharsets.UTF_8);
-  }
+  private record MovedPermanentlyOption(String location) implements Http.Handler, ThisRouteOption {
+    @Override
+    public final void handle(Http.Exchange http) {
+      http.status(Http.MOVED_PERMANENTLY);
 
-  @Override
-  public final String rawQuery() {
-    throw new IllegalStateException("query was not set");
-  }
+      http.dateNow();
 
-  @Override
-  public final <T> void set(Class<T> key, T value) {
-    Check.notNull(key, "key == null");
-    Check.notNull(value, "value == null");
+      http.header(Http.LOCATION, location);
 
-    if (objectStore == null) {
-      objectStore = Util.createMap();
+      http.send();
     }
 
-    objectStore.put(key, value);
-  }
-
-  @SuppressWarnings("unchecked")
-  @Override
-  public final <T> T get(Class<T> key) {
-    if (objectStore == null) {
-      return null;
-    } else {
-      return (T) objectStore.get(key);
+    @Override
+    public final void accept(HttpModuleCompiler compiler) {
+      compiler.handleWith(this);
     }
   }
 
-  @Override
-  public void header(Http.HeaderName name, long value) {
-    throw new UnsupportedOperationException();
+  private record PathParametersOption(Condition[] conditions) implements ThisRouteOption {
+    @Override
+    public final void accept(HttpModuleCompiler compiler) {
+      compiler.pathParams(conditions);
+    }
   }
 
-  @Override
-  public void header(Http.HeaderName name, String value) {
-    throw new UnsupportedOperationException();
+  // fields
+
+  private HttpModuleCompiler compiler;
+
+  protected HttpModule() {}
+
+  /**
+   * Generates a handler instance based on the configuration of this module.
+   *
+   * @return a configured handler instance
+   */
+  public final Http.Handler compile() {
+    Check.state(compiler == null, "Another compilation is already in progress");
+
+    try {
+      compiler = new HttpModuleCompiler();
+
+      configure();
+
+      return compiler.compile();
+    } finally {
+      compiler = null;
+    }
   }
 
-  @Override
-  public void dateNow() {
-    throw new UnsupportedOperationException();
+  protected abstract void configure();
+
+  protected final void install(Http.Module module) {
+    Check.notNull(module, "module == null");
+
+    module.acceptHttpModuleCompiler(compiler);
   }
 
-  @Override
-  public void send() {
-    throw new UnsupportedOperationException();
+  final void acceptHttpModuleCompiler(HttpModuleCompiler _compiler) {
+    Check.state(compiler == null, "Another compilation is already in progress");
+
+    try {
+      compiler = _compiler;
+
+      configure();
+    } finally {
+      compiler = null;
+    }
   }
 
-  @Override
-  public void send(byte[] body) {
-    throw new UnsupportedOperationException();
+  protected final void filter(Http.Handler handler) {
+    Check.notNull(handler, "handler == null");
+
+    compiler.filter(handler);
   }
 
-  @Override
-  public void send(Lang.CharWritable body, Charset charset) {
-    throw new UnsupportedOperationException();
+  /**
+   * If the {@code Host} request header value is equal to the specified name
+   * then dispatches to the specified module.
+   *
+   * @param name
+   *        the host name
+   * @param module
+   *        the module to dispatch to
+   */
+  protected final void host(String name, Http.Module module) {
+    Check.notNull(name, "name == null");
+
+    Http.Handler handler;
+    handler = module.compile();
+
+    compiler.host(name, handler);
   }
 
-  @Override
-  public void send(Path file) {
-    throw new UnsupportedOperationException();
+  /**
+   * If the {@code Host} request header value is equal to the specified name
+   * then dispatches to the specified handler.
+   *
+   * <p>
+   * Please note that if the specified handler is not exhaustive then this
+   * module might dispatch the request to any existing subsequent handler.
+   *
+   * @param name
+   *        the host name
+   * @param handler
+   *        the handler to dispatch to
+   */
+  protected final void host(String name, Http.Handler handler) {
+    Check.notNull(name, "name == null");
+
+    compiler.host(name, handler);
   }
 
-  @Override
-  public void notFound() {
-    throw new UnsupportedOperationException();
+  /**
+   * Intercepts all matched routes with the specified interceptor.
+   *
+   * @param interceptor
+   *        the interceptor to use
+   */
+  protected final void interceptMatched(Http.Handler.Interceptor interceptor) {
+    Check.notNull(interceptor, "interceptor == null");
+
+    compiler.interceptor(interceptor);
   }
 
-  @Override
-  public void methodNotAllowed() {
-    throw new UnsupportedOperationException();
-  }
+  // route
 
-  @Override
-  public void internalServerError(Throwable t) {
-    throw new UnsupportedOperationException();
-  }
+  protected final void route(String pathExpression, RouteOption... options) {
+    Check.notNull(pathExpression, "pathExpression == null");
 
-  @Override
-  public boolean processed() {
-    throw new UnsupportedOperationException();
-  }
+    compiler.routeStart(pathExpression);
 
-  @Override
-  public void status(Http.Response.Status value) {
-    throw new UnsupportedOperationException();
-  }
+    for (int idx = 0; idx < options.length; idx++) {
+      RouteOption o;
+      o = Check.notNull(options[idx], "options[", idx, "] == null");
 
-}
+      ThisRouteOption option;
+      option = (ThisRouteOption) o;
 
-final class HttpTestingExchangeConfig implements Http.TestingExchange.Config {
-
-  Map<Object, Object> objectStore;
-
-  byte method;
-
-  String path;
-
-  Map<String, String> queryParams;
-
-  public final Http.TestingExchange build() {
-    return new HttpTestingExchange(this);
-  }
-
-  @Override
-  public final Http.TestingExchange.Config method(byte value) {
-    method = Http.checkMethod(value);
-
-    return this;
-  }
-
-  @Override
-  public final Http.TestingExchange.Config path(String value) {
-    path = Objects.requireNonNull(value, "value == null");
-
-    return this;
-  }
-
-  @Override
-  public final Http.TestingExchange.Config pathParam(String name, String value) {
-    Objects.requireNonNull(name, "name == null");
-    Objects.requireNonNull(value, "value == null");
-
-    if (objectStore == null) {
-      objectStore = Util.createMap();
+      option.accept(compiler);
     }
 
-    objectStore.put(name, value);
-
-    return this;
+    compiler.routeEnd();
   }
 
-  @Override
-  public final Http.TestingExchange.Config queryParam(String name, String value) {
-    Objects.requireNonNull(name, "name == null");
-    Objects.requireNonNull(value, "value == null");
+  // route options
 
-    if (queryParams == null) {
-      queryParams = Util.createMap();
-    }
+  protected final RouteOption handler(Http.Handler handler) {
+    Check.notNull(handler, "handler == null");
 
-    queryParams.put(name, value);
-
-    return this;
+    return new HandlerOption(handler);
   }
 
-  @Override
-  public final <T> Http.TestingExchange.Config set(Class<T> key, T value) {
-    Objects.requireNonNull(key, "key == null");
-    Objects.requireNonNull(value, "value == null");
+  protected final RouteOption handlerFactory(Supplier<Http.Handler> factory) {
+    Check.notNull(factory, "factory == null");
 
-    if (objectStore == null) {
-      objectStore = Util.createMap();
+    return new HandlerFactory0Option(factory);
+  }
+
+  protected final <T> RouteOption handlerFactory(Function<T, Http.Handler> factory, T value) {
+    Check.notNull(factory, "factory == null");
+
+    return new HandlerFactory1Option<>(factory, value);
+  }
+
+  private record InterceptorOption(Http.Handler.Interceptor interceptor) implements ThisRouteOption {
+    @Override
+    public final void accept(HttpModuleCompiler compiler) {
+      compiler.interceptWith(interceptor);
+    }
+  }
+
+  protected final RouteOption interceptor(Http.Handler.Interceptor interceptor) {
+    Objects.requireNonNull(interceptor, "interceptor == null");
+
+    return new InterceptorOption(interceptor);
+  }
+
+  protected final RouteOption movedPermanently(String location) {
+    Check.notNull(location, "location == null");
+
+    return new MovedPermanentlyOption(location);
+  }
+
+  protected final RouteOption pathParams(Condition... conditions) {
+    Condition[] copy;
+    copy = new Condition[conditions.length];
+
+    for (int i = 0; i < conditions.length; i++) {
+      copy[i] = Check.notNull(conditions[i], "conditions[", i, "] == null");
     }
 
-    objectStore.put(key, value);
+    return new PathParametersOption(copy);
+  }
 
-    return this;
+  //
+
+  protected final Condition digits(String name) {
+    Check.notNull(name, "name == null");
+
+    return new HttpModuleCondition.Digits(name);
+  }
+
+  protected final Condition notEmpty(String name) {
+    Check.notNull(name, "name == null");
+
+    return new HttpModuleCondition.NotEmpty(name);
+  }
+
+  protected final Condition regex(String name, String regex) {
+    Check.notNull(name, "name == null");
+    Check.notNull(regex, "regex == null");
+
+    Pattern pattern;
+    pattern = Pattern.compile(regex);
+
+    return new HttpModuleCondition.Regex(name, pattern);
   }
 
 }
@@ -1786,22 +1763,6 @@ non-sealed class HttpRequestLine extends HttpSocketInput implements Http.Request
     }
 
     return queryParams;
-  }
-
-  @Override
-  public final int queryParamAsInt(String name, int defaultValue) {
-    String maybe;
-    maybe = queryParam(name);
-
-    if (maybe == null) {
-      return defaultValue;
-    }
-
-    try {
-      return Integer.parseInt(maybe);
-    } catch (NumberFormatException expected) {
-      return defaultValue;
-    }
   }
 
   @Override
@@ -2366,6 +2327,243 @@ non-sealed class HttpRequestLine extends HttpSocketInput implements Http.Request
 
       map.put(key, list);
     }
+  }
+
+}
+
+final class HttpTestingExchange implements Http.TestingExchange {
+
+  private Map<Object, Object> objectStore;
+
+  private final byte method;
+
+  private final String path;
+
+  private final Map<String, String> queryParams;
+
+  HttpTestingExchange(HttpTestingExchangeConfig config) {
+    objectStore = config.objectStore;
+
+    method = config.method;
+
+    path = config.path;
+
+    queryParams = config.queryParams;
+  }
+
+  // request methods
+
+  @Override
+  public final Http.Request.Body body() {
+    throw new UnsupportedOperationException();
+  }
+
+  @Override
+  public final Http.Request.Headers headers() {
+    throw new UnsupportedOperationException();
+  }
+
+  @Override
+  public final byte method() {
+    return Http.checkMethod(method);
+  }
+
+  @Override
+  public final String path() {
+    Check.state(path != null, "path was not set");
+
+    return path;
+  }
+
+  @Override
+  public final String pathParam(String name) {
+    if (objectStore == null) {
+      return null;
+    } else {
+      return (String) objectStore.get(name);
+    }
+  }
+
+  @Override
+  public final String queryParam(String name) {
+    if (queryParams == null) {
+      return null;
+    } else {
+      return queryParams.get(name);
+    }
+  }
+
+  @Override
+  public final Set<String> queryParamNames() {
+    if (queryParams == null) {
+      return Set.of();
+    } else {
+      return queryParams.keySet();
+    }
+  }
+
+  @Override
+  public final String rawPath() {
+    return URLEncoder.encode(path(), StandardCharsets.UTF_8);
+  }
+
+  @Override
+  public final String rawQuery() {
+    throw new IllegalStateException("query was not set");
+  }
+
+  @Override
+  public final <T> void set(Class<T> key, T value) {
+    Check.notNull(key, "key == null");
+    Check.notNull(value, "value == null");
+
+    if (objectStore == null) {
+      objectStore = Util.createMap();
+    }
+
+    objectStore.put(key, value);
+  }
+
+  @SuppressWarnings("unchecked")
+  @Override
+  public final <T> T get(Class<T> key) {
+    if (objectStore == null) {
+      return null;
+    } else {
+      return (T) objectStore.get(key);
+    }
+  }
+
+  @Override
+  public void header(Http.HeaderName name, long value) {
+    throw new UnsupportedOperationException();
+  }
+
+  @Override
+  public void header(Http.HeaderName name, String value) {
+    throw new UnsupportedOperationException();
+  }
+
+  @Override
+  public void dateNow() {
+    throw new UnsupportedOperationException();
+  }
+
+  @Override
+  public void send() {
+    throw new UnsupportedOperationException();
+  }
+
+  @Override
+  public void send(byte[] body) {
+    throw new UnsupportedOperationException();
+  }
+
+  @Override
+  public void send(Lang.CharWritable body, Charset charset) {
+    throw new UnsupportedOperationException();
+  }
+
+  @Override
+  public void send(Path file) {
+    throw new UnsupportedOperationException();
+  }
+
+  @Override
+  public void notFound() {
+    throw new UnsupportedOperationException();
+  }
+
+  @Override
+  public void methodNotAllowed() {
+    throw new UnsupportedOperationException();
+  }
+
+  @Override
+  public void internalServerError(Throwable t) {
+    throw new UnsupportedOperationException();
+  }
+
+  @Override
+  public boolean processed() {
+    throw new UnsupportedOperationException();
+  }
+
+  @Override
+  public void status(Http.Response.Status value) {
+    throw new UnsupportedOperationException();
+  }
+
+}
+
+final class HttpTestingExchangeConfig implements Http.TestingExchange.Config {
+
+  Map<Object, Object> objectStore;
+
+  byte method;
+
+  String path;
+
+  Map<String, String> queryParams;
+
+  public final Http.TestingExchange build() {
+    return new HttpTestingExchange(this);
+  }
+
+  @Override
+  public final Http.TestingExchange.Config method(byte value) {
+    method = Http.checkMethod(value);
+
+    return this;
+  }
+
+  @Override
+  public final Http.TestingExchange.Config path(String value) {
+    path = Objects.requireNonNull(value, "value == null");
+
+    return this;
+  }
+
+  @Override
+  public final Http.TestingExchange.Config pathParam(String name, String value) {
+    Objects.requireNonNull(name, "name == null");
+    Objects.requireNonNull(value, "value == null");
+
+    if (objectStore == null) {
+      objectStore = Util.createMap();
+    }
+
+    objectStore.put(name, value);
+
+    return this;
+  }
+
+  @Override
+  public final Http.TestingExchange.Config queryParam(String name, String value) {
+    Objects.requireNonNull(name, "name == null");
+    Objects.requireNonNull(value, "value == null");
+
+    if (queryParams == null) {
+      queryParams = Util.createMap();
+    }
+
+    queryParams.put(name, value);
+
+    return this;
+  }
+
+  @Override
+  public final <T> Http.TestingExchange.Config set(Class<T> key, T value) {
+    Objects.requireNonNull(key, "key == null");
+    Objects.requireNonNull(value, "value == null");
+
+    if (objectStore == null) {
+      objectStore = Util.createMap();
+    }
+
+    objectStore.put(key, value);
+
+    return this;
   }
 
 }
