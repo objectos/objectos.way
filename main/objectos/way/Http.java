@@ -38,6 +38,7 @@ import java.util.Set;
 import java.util.function.Consumer;
 import objectos.notes.Note1;
 import objectos.notes.NoteSink;
+import objectos.way.Http.TestingExchange.Config;
 import objectos.way.HttpExchangeLoop.ParseStatus;
 import objectos.way.HttpServer.Builder;
 
@@ -685,6 +686,16 @@ public final class Http {
       Config requestTarget(String target);
 
       /**
+       * Sets the request method to the specified value.
+       *
+       * @param method
+       *        the byte value representing a HTTP method
+       *
+       * @return this config instance
+       */
+      Config requestMethod(byte method);
+
+      /**
        * Stores the provided key-value pair in the testing exchange.
        *
        * @param key
@@ -881,6 +892,18 @@ public final class Http {
    * The TRACE method code.
    */
   public static final byte TRACE = 9;
+
+  static byte checkMethod(byte method) {
+    if (method < CONNECT) {
+      throw new IllegalArgumentException("The value " + method + " does not represent a valid HTTP method");
+    }
+
+    if (method > TRACE) {
+      throw new IllegalArgumentException("The value " + method + " does not represent a valid HTTP method");
+    }
+
+    return method;
+  }
 
   enum HttpRequestMethod implements Http.Request.Method {
 
@@ -1350,10 +1373,14 @@ final class HttpTestingExchange implements Http.TestingExchange {
 
   private Map<Object, Object> attributes;
 
+  private final byte requestMethod;
+
   private final Http.Request.Target requestTarget;
 
   HttpTestingExchange(HttpTestingExchangeConfig config) {
     attributes = config.attributes;
+
+    requestMethod = config.requestMethod;
 
     requestTarget = config.requestTarget;
   }
@@ -1370,7 +1397,7 @@ final class HttpTestingExchange implements Http.TestingExchange {
 
   @Override
   public final byte method() {
-    throw new UnsupportedOperationException();
+    return Http.checkMethod(requestMethod);
   }
 
   @Override
@@ -1468,10 +1495,19 @@ final class HttpTestingExchangeConfig implements Http.TestingExchange.Config {
 
   Map<Object, Object> attributes;
 
+  byte requestMethod;
+
   Http.Request.Target requestTarget;
 
   public final Http.TestingExchange build() {
     return new HttpTestingExchange(this);
+  }
+
+  @Override
+  public final Config requestMethod(byte method) {
+    requestMethod = Http.checkMethod(method);
+
+    return this;
   }
 
   @Override

@@ -17,6 +17,7 @@ package objectos.way;
 
 import static org.testng.Assert.assertEquals;
 
+import org.testng.Assert;
 import org.testng.annotations.Test;
 
 public class HttpTestingExchangeTest {
@@ -37,6 +38,45 @@ public class HttpTestingExchangeTest {
     assertEquals(http.path(), "/foo");
     assertEquals(http.queryParam("page"), "1");
     assertEquals(http.get(String.class), "Hello");
+  }
+
+  @Test(description = """
+  Sets:
+  - request method
+  """)
+  public void testCase02() {
+    Http.TestingExchange http;
+    http = Http.TestingExchange.create(config -> {
+      config.requestMethod(Http.GET);
+    });
+
+    assertEquals(http.method(), Http.GET);
+  }
+
+  @Test(description = """
+  Invalid:
+  - request method
+  """)
+  public void testCase03() {
+    try {
+      Http.TestingExchange.create(config -> {
+        config.requestMethod((byte) (Http.CONNECT - 1));
+      });
+
+      Assert.fail();
+    } catch (IllegalArgumentException expected) {
+
+    }
+
+    try {
+      Http.TestingExchange.create(config -> {
+        config.requestMethod((byte) (Http.TRACE + 1));
+      });
+
+      Assert.fail();
+    } catch (IllegalArgumentException expected) {
+
+    }
   }
 
 }
