@@ -137,7 +137,7 @@ public final class Http {
 
     default void ok(Html.Template template) {
       Html.Compiler html;
-      html = Html.createCompiler();
+      html = Html.Compiler.create();
 
       template.accept(html);
 

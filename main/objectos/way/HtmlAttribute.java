@@ -47,38 +47,38 @@ final class HtmlAttribute implements Html.Attribute {
     player.attributeValues();
 
     player.attributeValuesIterator();
-    
+
     if (!hasNext()) {
       return "";
     }
-    
+
     Object result;
     result = next();
-    
+
     if (!hasNext()) {
       return String.valueOf(result);
     }
-    
+
     Class<?> type;
     type = name.type();
-    
+
     if (type == Script.Action.class) {
-      
+
       ScriptActionJoiner joiner;
       joiner = new ScriptActionJoiner();
-      
+
       joiner.add(result);
-      
+
       joiner.add(next());
-      
+
       while (hasNext()) {
         joiner.add(next());
       }
-      
+
       return joiner.join();
-      
+
     } else {
-      
+
       StringBuilder value;
       value = new StringBuilder();
 
@@ -95,8 +95,8 @@ final class HtmlAttribute implements Html.Attribute {
       }
 
       return value.toString();
-      
-    }    
+
+    }
   }
 
   private boolean hasNext() {

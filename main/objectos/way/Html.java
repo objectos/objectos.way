@@ -171,7 +171,9 @@ public final class Html {
    */
   public sealed interface Compiler extends CompilerAttributes, CompilerElements, Lang.CharWritable permits HtmlCompiler {
 
-    Html.Id nextId();
+    static Compiler create() {
+      return new HtmlCompiler();
+    }
 
     Html.Document compile();
 
@@ -925,10 +927,6 @@ public final class Html {
       return raw("&nbsp;");
     }
 
-    protected final Html.Id nextId() {
-      return $compiler().nextId();
-    }
-
     /**
      * The no-op instruction.
      *
@@ -1039,10 +1037,6 @@ public final class Html {
         Check.notNull(name, "name == null"),
         Check.notNull(value, "value == null")
     );
-  }
-
-  public static Compiler createCompiler() {
-    return new HtmlCompiler();
   }
 
   public static ClassName className(ClassName... classNames) {
