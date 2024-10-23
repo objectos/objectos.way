@@ -17,6 +17,8 @@ package objectos.way;
 
 import static org.testng.Assert.assertEquals;
 
+import java.nio.charset.StandardCharsets;
+import org.testng.Assert;
 import org.testng.annotations.Test;
 
 public class HttpTestingExchangeTest {
@@ -46,16 +48,59 @@ public class HttpTestingExchangeTest {
   }
 
   @Test(description = """
-  Sets:
+  Invalid:
   - request method
   """)
   public void testCase02() {
-    Http.TestingExchange http;
-    http = Http.TestingExchange.create(config -> {
-      config.method(Http.GET);
-    });
+    try {
+      Http.TestingExchange.create(config -> {
+        config.method((byte) (Http.CONNECT - 1));
+      });
 
-    assertEquals(http.method(), Http.GET);
+      Assert.fail();
+    } catch (IllegalArgumentException expected) {
+
+    }
+
+    try {
+      Http.TestingExchange.create(config -> {
+        config.method((byte) (Http.TRACE + 1));
+      });
+
+      Assert.fail();
+    } catch (IllegalArgumentException expected) {
+
+    }
+  }
+
+  @Test(description = "Lang.CharWritable response")
+  public void testCase03() {
+    class Template extends Html.Template {
+      @Override
+      protected void render() {
+        div("tc03");
+      }
+    }
+
+    Http.TestingExchange http;
+    http = Http.TestingExchange.create(config -> {});
+
+    http.ok(new Template());
+
+    assertEquals(http.responseStatus(), Http.OK);
+
+    Lang.CharWritable body;
+    body = (Lang.CharWritable) http.responseBody();
+
+    assertEquals(
+        body.toString(),
+
+        """
+        <div>tc03</div>
+        """
+    );
+
+    assertEquals(http.responseCharset(), StandardCharsets.UTF_8);
   }
 
 }

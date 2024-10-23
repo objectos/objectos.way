@@ -19,6 +19,8 @@ import java.io.ByteArrayInputStream;
 import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.URLDecoder;
@@ -44,6 +46,7 @@ import java.util.function.Supplier;
 import java.util.regex.Pattern;
 import objectos.notes.Note1;
 import objectos.notes.NoteSink;
+import objectos.way.Http.TestingExchange.Config;
 import objectos.way.HttpExchangeLoop.ParseStatus;
 import objectos.way.HttpServer.Builder;
 
@@ -651,6 +654,16 @@ public final class Http {
     sealed interface Config {
 
       /**
+       * Use the specified clock instance for generating time related values.
+       *
+       * @param value
+       *        the clock instance to use
+       *
+       * @return this config instance
+       */
+      Config clock(Clock value);
+
+      /**
        * Sets the request method to the specified value.
        *
        * @param value
@@ -726,6 +739,12 @@ public final class Http {
 
       return builder.build();
     }
+
+    Response.Status responseStatus();
+
+    Object responseBody();
+
+    Charset responseCharset();
 
   }
 
@@ -2333,6 +2352,8 @@ non-sealed class HttpRequestLine extends HttpSocketInput implements Http.Request
 
 final class HttpTestingExchange implements Http.TestingExchange {
 
+  private final Clock clock;
+
   private Map<Object, Object> objectStore;
 
   private final byte method;
@@ -2341,7 +2362,17 @@ final class HttpTestingExchange implements Http.TestingExchange {
 
   private final Map<String, String> queryParams;
 
+  private Object responseBody;
+
+  private Charset responseCharset;
+
+  private Map<Http.HeaderName, Object> responseHeaders;
+
+  private Http.Response.Status responseStatus;
+
   HttpTestingExchange(HttpTestingExchangeConfig config) {
+    clock = config.clock;
+
     objectStore = config.objectStore;
 
     method = config.method;
@@ -2349,6 +2380,23 @@ final class HttpTestingExchange implements Http.TestingExchange {
     path = config.path;
 
     queryParams = config.queryParams;
+  }
+
+  // testing methods
+
+  @Override
+  public final Http.Response.Status responseStatus() {
+    return responseStatus;
+  }
+
+  @Override
+  public final Object responseBody() {
+    return responseBody;
+  }
+
+  @Override
+  public final Charset responseCharset() {
+    return responseCharset;
   }
 
   // request methods
@@ -2434,69 +2482,146 @@ final class HttpTestingExchange implements Http.TestingExchange {
     }
   }
 
+  // response methods
+
   @Override
-  public void header(Http.HeaderName name, long value) {
-    throw new UnsupportedOperationException();
+  public final void header(Http.HeaderName name, long value) {
+    header(name, Long.toString(value));
   }
 
   @Override
-  public void header(Http.HeaderName name, String value) {
-    throw new UnsupportedOperationException();
+  public final void header(Http.HeaderName name, String value) {
+    if (responseHeaders == null) {
+      responseHeaders = Util.createSequencedMap();
+    }
+
+    Object previous;
+    previous = responseHeaders.put(name, value);
+
+    if (previous instanceof List<?> list) {
+      @SuppressWarnings("unchecked")
+      List<String> ofString = (List<String>) list;
+
+      ofString.add(value);
+
+      responseHeaders.put(name, ofString);
+    } else if (previous instanceof String s) {
+      List<String> list = Util.createList();
+
+      list.add(s);
+
+      list.add(value);
+
+      responseHeaders.put(name, list);
+    }
   }
 
   @Override
-  public void dateNow() {
-    throw new UnsupportedOperationException();
+  public final void dateNow() {
+    Clock theClock;
+    theClock = clock;
+
+    if (theClock == null) {
+      theClock = Clock.systemUTC();
+    }
+
+    ZonedDateTime now;
+    now = ZonedDateTime.now(theClock);
+
+    String value;
+    value = Http.formatDate(now);
+
+    header(Http.DATE, value);
   }
 
   @Override
-  public void send() {
-    throw new UnsupportedOperationException();
+  public final void send() {
+    responseBody = null;
   }
 
   @Override
-  public void send(byte[] body) {
-    throw new UnsupportedOperationException();
+  public final void send(byte[] body) {
+    responseBody = Objects.requireNonNull(body, "body == null");
   }
 
   @Override
-  public void send(Lang.CharWritable body, Charset charset) {
-    throw new UnsupportedOperationException();
+  public final void send(Lang.CharWritable body, Charset charset) {
+    responseBody = Objects.requireNonNull(body, "body == null");
+
+    responseCharset = Objects.requireNonNull(charset, "charset == null");
   }
 
   @Override
-  public void send(Path file) {
-    throw new UnsupportedOperationException();
+  public final void send(Path file) {
+    responseBody = Objects.requireNonNull(file, "file == null");
   }
 
   @Override
-  public void notFound() {
-    throw new UnsupportedOperationException();
+  public final void notFound() {
+    status(Http.NOT_FOUND);
+
+    dateNow();
+
+    header(Http.CONNECTION, "close");
+
+    send();
   }
 
   @Override
-  public void methodNotAllowed() {
-    throw new UnsupportedOperationException();
+  public final void methodNotAllowed() {
+    status(Http.METHOD_NOT_ALLOWED);
+
+    dateNow();
+
+    header(Http.CONNECTION, "close");
+
+    send();
   }
 
   @Override
-  public void internalServerError(Throwable t) {
-    throw new UnsupportedOperationException();
+  public final void internalServerError(Throwable t) {
+    StringWriter sw;
+    sw = new StringWriter();
+
+    PrintWriter pw;
+    pw = new PrintWriter(sw);
+
+    t.printStackTrace(pw);
+
+    String msg;
+    msg = sw.toString();
+
+    byte[] bytes;
+    bytes = msg.getBytes();
+
+    status(Http.INTERNAL_SERVER_ERROR);
+
+    dateNow();
+
+    header(Http.CONTENT_LENGTH, bytes.length);
+
+    header(Http.CONTENT_TYPE, "text/plain");
+
+    header(Http.CONNECTION, "close");
+
+    send(bytes);
   }
 
   @Override
-  public boolean processed() {
-    throw new UnsupportedOperationException();
+  public final boolean processed() {
+    return responseStatus != null;
   }
 
   @Override
-  public void status(Http.Response.Status value) {
-    throw new UnsupportedOperationException();
+  public final void status(Http.Response.Status value) {
+    responseStatus = Objects.requireNonNull(value, "value == null");
   }
 
 }
 
 final class HttpTestingExchangeConfig implements Http.TestingExchange.Config {
+
+  Clock clock;
 
   Map<Object, Object> objectStore;
 
@@ -2508,6 +2633,13 @@ final class HttpTestingExchangeConfig implements Http.TestingExchange.Config {
 
   public final Http.TestingExchange build() {
     return new HttpTestingExchange(this);
+  }
+
+  @Override
+  public final Config clock(Clock value) {
+    clock = Objects.requireNonNull(value, "value == null");
+
+    return this;
   }
 
   @Override
