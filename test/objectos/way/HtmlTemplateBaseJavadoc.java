@@ -74,7 +74,7 @@ public class HtmlTemplateBaseJavadoc {
     class MyComponent extends Html.Component {
       public MyComponent(Html.Template parent) { super(parent); }
 
-      public Html.ElementInstruction render(Html.Instruction... contents) {
+      public Html.Instruction.OfElement render(Html.Instruction... contents) {
         return div(
             className("my-component"),
 

@@ -46,7 +46,7 @@ final class CarbonTile {
 
   private CarbonTile() {}
 
-  public static Html.ElementInstruction renderTile(TemplateBase tmpl, CarbonTileVariant variant, Icon icon, Instruction[] contents) {
+  public static Html.Instruction.OfElement renderTile(TemplateBase tmpl, CarbonTileVariant variant, Icon icon, Instruction[] contents) {
     return switch (variant) {
       case TILE_CLICKABLE -> tmpl.a(
           Carbon.BODY_COMPACT_01, TILE_CLICKABLE,

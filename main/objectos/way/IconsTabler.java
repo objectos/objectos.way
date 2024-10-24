@@ -102,7 +102,7 @@ final class IconsTabler extends Html.Component implements Icons.Tabler {
    * @return the {@code svg} element
    */
   @Override
-  public final Html.ElementInstruction arrowLeft(Html.Instruction... contents) {
+  public final Html.Instruction.OfElement arrowLeft(Html.Instruction... contents) {
     return icon(
         flatten(contents),
         path(stroke("none"), d("M0 0h24v24H0z"), fill("none")),
@@ -120,7 +120,7 @@ final class IconsTabler extends Html.Component implements Icons.Tabler {
    * @return the {@code svg} element
    */
   @Override
-  public final Html.ElementInstruction arrowNarrowLeft(Html.Instruction... contents) {
+  public final Html.Instruction.OfElement arrowNarrowLeft(Html.Instruction... contents) {
     return icon(
         flatten(contents),
         path(stroke("none"), d("M0 0h24v24H0z"), fill("none")),
@@ -138,7 +138,7 @@ final class IconsTabler extends Html.Component implements Icons.Tabler {
    * @return the {@code svg} element
    */
   @Override
-  public final Html.ElementInstruction arrowNarrowRight(Html.Instruction... contents) {
+  public final Html.Instruction.OfElement arrowNarrowRight(Html.Instruction... contents) {
     return icon(
         flatten(contents),
         path(stroke("none"), d("M0 0h24v24H0z"), fill("none")),
@@ -156,7 +156,7 @@ final class IconsTabler extends Html.Component implements Icons.Tabler {
    * @return the {@code svg} element
    */
   @Override
-  public final Html.ElementInstruction arrowRight(Html.Instruction... contents) {
+  public final Html.Instruction.OfElement arrowRight(Html.Instruction... contents) {
     return icon(
         flatten(contents),
         path(stroke("none"), d("M0 0h24v24H0z"), fill("none")),
@@ -173,7 +173,7 @@ final class IconsTabler extends Html.Component implements Icons.Tabler {
    * @return the {@code svg} element
    */
   @Override
-  public final Html.ElementInstruction box(Html.Instruction... contents) {
+  public final Html.Instruction.OfElement box(Html.Instruction... contents) {
     return icon(
         flatten(contents),
         path(stroke("none"), d("M0 0h24v24H0z"), fill("none")),
@@ -191,7 +191,7 @@ final class IconsTabler extends Html.Component implements Icons.Tabler {
    * @return the {@code svg} element
    */
   @Override
-  public final Html.ElementInstruction briefcase(Html.Instruction... contents) {
+  public final Html.Instruction.OfElement briefcase(Html.Instruction... contents) {
     return icon(
         flatten(contents),
         path(stroke("none"), d("M0 0h24v24H0z"), fill("none")),
@@ -210,7 +210,7 @@ final class IconsTabler extends Html.Component implements Icons.Tabler {
    * @return the {@code svg} element
    */
   @Override
-  public final Html.ElementInstruction calendarRepeat(Html.Instruction... contents) {
+  public final Html.Instruction.OfElement calendarRepeat(Html.Instruction... contents) {
     return icon(
         flatten(contents),
         path(stroke("none"), d("M0 0h24v24H0z"), fill("none")),
@@ -231,7 +231,7 @@ final class IconsTabler extends Html.Component implements Icons.Tabler {
    * @return the {@code svg} element
    */
   @Override
-  public final Html.ElementInstruction caretLeftFilled(Html.Instruction... contents) {
+  public final Html.Instruction.OfElement caretLeftFilled(Html.Instruction... contents) {
     // @formatter:off
     return filled(
         flatten(contents),
@@ -248,7 +248,7 @@ final class IconsTabler extends Html.Component implements Icons.Tabler {
    * @return the {@code svg} element
    */
   @Override
-  public final Html.ElementInstruction caretRightFilled(Html.Instruction... contents) {
+  public final Html.Instruction.OfElement caretRightFilled(Html.Instruction... contents) {
     // @formatter:off
     return filled(
         flatten(contents),
@@ -265,7 +265,7 @@ final class IconsTabler extends Html.Component implements Icons.Tabler {
    * @return the {@code svg} element
    */
   @Override
-  public final Html.ElementInstruction chevronLeft(Html.Instruction... contents) {
+  public final Html.Instruction.OfElement chevronLeft(Html.Instruction... contents) {
     return icon(
         flatten(contents),
         path(stroke("none"), d("M0 0h24v24H0z"), fill("none")),
@@ -281,7 +281,7 @@ final class IconsTabler extends Html.Component implements Icons.Tabler {
    * @return the {@code svg} element
    */
   @Override
-  public final Html.ElementInstruction chevronRight(Html.Instruction... contents) {
+  public final Html.Instruction.OfElement chevronRight(Html.Instruction... contents) {
     return icon(
         flatten(contents),
         path(stroke("none"), d("M0 0h24v24H0z"), fill("none")),
@@ -297,7 +297,7 @@ final class IconsTabler extends Html.Component implements Icons.Tabler {
    * @return the {@code svg} element
    */
   @Override
-  public final Html.ElementInstruction creditCardPay(Html.Instruction... contents) {
+  public final Html.Instruction.OfElement creditCardPay(Html.Instruction... contents) {
     return icon(
         flatten(contents),
         path(stroke("none"), d("M0 0h24v24H0z"), fill("none")),
@@ -318,7 +318,7 @@ final class IconsTabler extends Html.Component implements Icons.Tabler {
    * @return the {@code svg} element
    */
   @Override
-  public final Html.ElementInstruction exclamationCircle(Html.Instruction... contents) {
+  public final Html.Instruction.OfElement exclamationCircle(Html.Instruction... contents) {
     return icon(
         flatten(contents),
         path(stroke("none"), d("M0 0h24v24H0z"), fill("none")),
@@ -335,7 +335,7 @@ final class IconsTabler extends Html.Component implements Icons.Tabler {
    * @return the {@code svg} element
    */
   @Override
-  public final Html.ElementInstruction fileText(Html.Instruction... contents) {
+  public final Html.Instruction.OfElement fileText(Html.Instruction... contents) {
     return icon(
         flatten(contents),
         path(stroke("none"), d("M0 0h24v24H0z"), fill("none")),
@@ -355,7 +355,7 @@ final class IconsTabler extends Html.Component implements Icons.Tabler {
    * @return the {@code svg} element
    */
   @Override
-  public final Html.ElementInstruction healthRecognition(Html.Instruction... contents) {
+  public final Html.Instruction.OfElement healthRecognition(Html.Instruction... contents) {
     return icon(
         flatten(contents),
         path(stroke("none"), d("M0 0h24v24H0z"), fill("none")),
@@ -373,7 +373,7 @@ final class IconsTabler extends Html.Component implements Icons.Tabler {
    * @return the {@code svg} element
    */
   @Override
-  public final Html.ElementInstruction home(Html.Instruction... contents) {
+  public final Html.Instruction.OfElement home(Html.Instruction... contents) {
     return icon(
         flatten(contents),
         path(stroke("none"), d("M0 0h24v24H0z"), fill("none")),
@@ -389,7 +389,7 @@ final class IconsTabler extends Html.Component implements Icons.Tabler {
    * @return the {@code svg} element
    */
   @Override
-  public final Html.ElementInstruction home2(Html.Instruction... contents) {
+  public final Html.Instruction.OfElement home2(Html.Instruction... contents) {
     return icon(
         flatten(contents),
         path(stroke("none"), d("M0 0h24v24H0z"), fill("none")),
@@ -400,7 +400,7 @@ final class IconsTabler extends Html.Component implements Icons.Tabler {
   }
 
   @Override
-  public final Html.ElementInstruction mapPin(Html.Instruction... contents) {
+  public final Html.Instruction.OfElement mapPin(Html.Instruction... contents) {
     return icon(
         flatten(contents),
         path(stroke("none"), d("M0 0h24v24H0z"), fill("none")),
@@ -410,7 +410,7 @@ final class IconsTabler extends Html.Component implements Icons.Tabler {
   }
 
   @Override
-  public final Html.ElementInstruction menu1(Html.Instruction... contents) {
+  public final Html.Instruction.OfElement menu1(Html.Instruction... contents) {
     return icon(
         flatten(contents),
         path(stroke("none"), d("M0 0h24v24H0z"), fill("none")),
@@ -420,7 +420,7 @@ final class IconsTabler extends Html.Component implements Icons.Tabler {
   }
 
   @Override
-  public final Html.ElementInstruction menu2(Html.Instruction... contents) {
+  public final Html.Instruction.OfElement menu2(Html.Instruction... contents) {
     return icon(
         flatten(contents),
         path(stroke("none"), d("M0 0h24v24H0z"), fill("none")),
@@ -431,7 +431,7 @@ final class IconsTabler extends Html.Component implements Icons.Tabler {
   }
 
   @Override
-  public final Html.ElementInstruction paw(Html.Instruction... contents) {
+  public final Html.Instruction.OfElement paw(Html.Instruction... contents) {
     // @formatter:off
     return icon(
         flatten(contents),
@@ -446,7 +446,7 @@ final class IconsTabler extends Html.Component implements Icons.Tabler {
   }
 
   @Override
-  public final Html.ElementInstruction phone(Html.Instruction... contents) {
+  public final Html.Instruction.OfElement phone(Html.Instruction... contents) {
     // @formatter:off
     return icon(
         flatten(contents),
@@ -457,7 +457,7 @@ final class IconsTabler extends Html.Component implements Icons.Tabler {
   }
 
   @Override
-  public final Html.ElementInstruction user(Html.Instruction... contents) {
+  public final Html.Instruction.OfElement user(Html.Instruction... contents) {
     // @formatter:off
     return icon(
         flatten(contents),
@@ -469,7 +469,7 @@ final class IconsTabler extends Html.Component implements Icons.Tabler {
   }
 
   @Override
-  public final Html.ElementInstruction users(Html.Instruction... contents) {
+  public final Html.Instruction.OfElement users(Html.Instruction... contents) {
     // @formatter:off
     return icon(
         flatten(contents),
@@ -488,7 +488,7 @@ final class IconsTabler extends Html.Component implements Icons.Tabler {
    * @return the {@code svg} element
    */
   @Override
-  public final Html.ElementInstruction x(Html.Instruction... contents) {
+  public final Html.Instruction.OfElement x(Html.Instruction... contents) {
     return icon(
         flatten(contents),
         path(stroke("none"), d("M0 0h24v24H0z"), fill("none")),
@@ -497,8 +497,8 @@ final class IconsTabler extends Html.Component implements Icons.Tabler {
     );
   }
 
-  private Html.ElementInstruction icon(Html.Instruction... contents) {
-    Html.ElementInstruction svg;
+  private Html.Instruction.OfElement icon(Html.Instruction... contents) {
+    Html.Instruction.OfElement svg;
     svg = svg(
         id != null ? id : noop(),
 
@@ -520,8 +520,8 @@ final class IconsTabler extends Html.Component implements Icons.Tabler {
     return svg;
   }
 
-  private Html.ElementInstruction filled(Html.Instruction... contents) {
-    Html.ElementInstruction svg;
+  private Html.Instruction.OfElement filled(Html.Instruction... contents) {
+    Html.Instruction.OfElement svg;
     svg = svg(
         id != null ? id : noop(),
 

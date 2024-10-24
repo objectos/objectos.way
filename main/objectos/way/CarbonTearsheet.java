@@ -110,7 +110,7 @@ final class CarbonTearsheet {
     return Script.replaceClass(id, "translate-y-3/4", "translate-y-0");
   }
 
-  public static Html.ElementInstruction tearsheet(Html.TemplateBase tmpl, Html.Instruction... contents) {
+  public static Html.Instruction.OfElement tearsheet(Html.TemplateBase tmpl, Html.Instruction... contents) {
     return tmpl.div(
         Carbon.ROLE_PRESENTATION,
         Carbon.ARIA_HIDDEN_TRUE,
@@ -121,7 +121,7 @@ final class CarbonTearsheet {
     );
   }
 
-  public static Html.ElementInstruction tearsheetModal(Html.TemplateBase tmpl, Html.Instruction... contents) {
+  public static Html.Instruction.OfElement tearsheetModal(Html.TemplateBase tmpl, Html.Instruction... contents) {
     return tmpl.div(
         Carbon.ROLE_DIALOG,
 
@@ -131,7 +131,7 @@ final class CarbonTearsheet {
     );
   }
 
-  public static Html.ElementInstruction tearsheetHeader(Html.TemplateBase tmpl, Html.Instruction... contents) {
+  public static Html.Instruction.OfElement tearsheetHeader(Html.TemplateBase tmpl, Html.Instruction... contents) {
     return tmpl.div(
         HEADER,
 
@@ -139,7 +139,7 @@ final class CarbonTearsheet {
     );
   }
 
-  public static Html.ElementInstruction tearsheetHeaderTitle(Html.TemplateBase tmpl, String text) {
+  public static Html.Instruction.OfElement tearsheetHeaderTitle(Html.TemplateBase tmpl, String text) {
     return tmpl.h3(
         HEADER_TITLE,
 
@@ -147,7 +147,7 @@ final class CarbonTearsheet {
     );
   }
 
-  public static Html.ElementInstruction tearsheetHeaderDescription(Html.TemplateBase tmpl, String text) {
+  public static Html.Instruction.OfElement tearsheetHeaderDescription(Html.TemplateBase tmpl, String text) {
     return tmpl.p(
         HEADER_DESCRIPTION,
 
@@ -155,7 +155,7 @@ final class CarbonTearsheet {
     );
   }
 
-  public static Html.ElementInstruction tearsheetBody(Html.TemplateBase tmpl, Html.Instruction... contents) {
+  public static Html.Instruction.OfElement tearsheetBody(Html.TemplateBase tmpl, Html.Instruction... contents) {
     return tmpl.div(
         BODY,
 
@@ -163,7 +163,7 @@ final class CarbonTearsheet {
     );
   }
 
-  public static Html.ElementInstruction tearsheetInfluencer(Html.TemplateBase tmpl, Html.Instruction... contents) {
+  public static Html.Instruction.OfElement tearsheetInfluencer(Html.TemplateBase tmpl, Html.Instruction... contents) {
     return tmpl.div(
         INFLUENCER,
 
@@ -171,7 +171,7 @@ final class CarbonTearsheet {
     );
   }
 
-  public static Html.ElementInstruction tearsheetRight(Html.TemplateBase tmpl, Html.Instruction... contents) {
+  public static Html.Instruction.OfElement tearsheetRight(Html.TemplateBase tmpl, Html.Instruction... contents) {
     return tmpl.div(
         RIGHT,
 
@@ -179,7 +179,7 @@ final class CarbonTearsheet {
     );
   }
 
-  public static Html.ElementInstruction tearsheetMain(Html.TemplateBase tmpl, Html.Instruction... contents) {
+  public static Html.Instruction.OfElement tearsheetMain(Html.TemplateBase tmpl, Html.Instruction... contents) {
     return tmpl.div(
         MAIN,
 
@@ -187,7 +187,7 @@ final class CarbonTearsheet {
     );
   }
 
-  public static Html.ElementInstruction tearsheetActions(Html.TemplateBase tmpl, Html.Instruction... contents) {
+  public static Html.Instruction.OfElement tearsheetActions(Html.TemplateBase tmpl, Html.Instruction... contents) {
     return tmpl.div(
         ACTIONS,
 
@@ -195,7 +195,7 @@ final class CarbonTearsheet {
     );
   }
 
-  public static Html.ElementInstruction tearsheetCancelAction(Html.TemplateBase tmpl, String label) {
+  public static Html.Instruction.OfElement tearsheetCancelAction(Html.TemplateBase tmpl, String label) {
     return tmpl.button(
         CarbonButton.__BUTTON_BASE, CarbonButton.__BUTTON_GHOST,
 
@@ -207,7 +207,7 @@ final class CarbonTearsheet {
     );
   }
 
-  public static Html.ElementInstruction tearsheetBackAction(Html.TemplateBase tmpl, String label) {
+  public static Html.Instruction.OfElement tearsheetBackAction(Html.TemplateBase tmpl, String label) {
     return tmpl.button(
         CarbonButton.__BUTTON_BASE, CarbonButton.__BUTTON_SECONDARY,
 
@@ -219,7 +219,7 @@ final class CarbonTearsheet {
     );
   }
 
-  public static Html.ElementInstruction tearsheetNextAction(Html.TemplateBase tmpl, String label) {
+  public static Html.Instruction.OfElement tearsheetNextAction(Html.TemplateBase tmpl, String label) {
     return tmpl.button(
         CarbonButton.__BUTTON_BASE, CarbonButton.__BUTTON_PRIMARY,
 

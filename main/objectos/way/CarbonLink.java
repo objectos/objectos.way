@@ -60,7 +60,7 @@ final class CarbonLink {
 
   private CarbonLink() {}
 
-  public static Html.ElementInstruction render(Html.TemplateBase tmpl, LinkStyle style, Html.Instruction... contents) {
+  public static Html.Instruction.OfElement render(Html.TemplateBase tmpl, LinkStyle style, Html.Instruction... contents) {
     return tmpl.a(
         switch (style) {
           case CarbonLinkStyle.STANDARD -> LINK;

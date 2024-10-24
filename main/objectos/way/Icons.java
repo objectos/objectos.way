@@ -33,7 +33,7 @@ public final class Icons {
      *
      * @return the {@code svg} element
      */
-    Html.ElementInstruction envelope(Html.Instruction... contents);
+    Html.Instruction.OfElement envelope(Html.Instruction... contents);
 
     /**
      * Renders the
@@ -43,7 +43,7 @@ public final class Icons {
      *
      * @return the {@code svg} element
      */
-    Html.ElementInstruction envelopeFill(Html.Instruction... contents);
+    Html.Instruction.OfElement envelopeFill(Html.Instruction... contents);
 
     /**
      * Renders the
@@ -52,7 +52,7 @@ public final class Icons {
      *
      * @return the {@code svg} element
      */
-    Html.ElementInstruction github(Html.Instruction... contents);
+    Html.Instruction.OfElement github(Html.Instruction... contents);
 
     /**
      * Renders the
@@ -61,7 +61,7 @@ public final class Icons {
      *
      * @return the {@code svg} element
      */
-    Html.ElementInstruction linkedin(Html.Instruction... contents);
+    Html.Instruction.OfElement linkedin(Html.Instruction... contents);
 
     /**
      * Renders the
@@ -70,7 +70,7 @@ public final class Icons {
      *
      * @return the {@code svg} element
      */
-    Html.ElementInstruction list(Html.Instruction... contents);
+    Html.Instruction.OfElement list(Html.Instruction... contents);
 
     /**
      * Renders the
@@ -79,7 +79,7 @@ public final class Icons {
      *
      * @return the {@code svg} element
      */
-    Html.ElementInstruction personVcard(Html.Instruction... contents);
+    Html.Instruction.OfElement personVcard(Html.Instruction... contents);
 
     /**
      * Renders the
@@ -88,7 +88,7 @@ public final class Icons {
      *
      * @return the {@code svg} element
      */
-    Html.ElementInstruction threeDots(Html.Instruction... contents);
+    Html.Instruction.OfElement threeDots(Html.Instruction... contents);
 
     /**
      * Renders the
@@ -97,7 +97,7 @@ public final class Icons {
      *
      * @return the {@code svg} element
      */
-    Html.ElementInstruction twitter(Html.Instruction... contents);
+    Html.Instruction.OfElement twitter(Html.Instruction... contents);
 
     /**
      * Renders the
@@ -106,14 +106,14 @@ public final class Icons {
      *
      * @return the {@code svg} element
      */
-    Html.ElementInstruction twitterX(Html.Instruction... contents);
+    Html.Instruction.OfElement twitterX(Html.Instruction... contents);
 
     /**
      * Renders the <a href="https://icons.getbootstrap.com/icons/x/">x</a> icon.
      *
      * @return the {@code svg} element
      */
-    Html.ElementInstruction x(Html.Instruction... contents);
+    Html.Instruction.OfElement x(Html.Instruction... contents);
 
   }
 
@@ -151,7 +151,7 @@ public final class Icons {
      *
      * @return the {@code svg} element
      */
-    Html.ElementInstruction arrowLeft(Html.Instruction... contents);
+    Html.Instruction.OfElement arrowLeft(Html.Instruction... contents);
 
     /**
      * Renders the <a href=
@@ -160,7 +160,7 @@ public final class Icons {
      *
      * @return the {@code svg} element
      */
-    Html.ElementInstruction arrowNarrowLeft(Html.Instruction... contents);
+    Html.Instruction.OfElement arrowNarrowLeft(Html.Instruction... contents);
 
     /**
      * Renders the <a href=
@@ -169,7 +169,7 @@ public final class Icons {
      *
      * @return the {@code svg} element
      */
-    Html.ElementInstruction arrowNarrowRight(Html.Instruction... contents);
+    Html.Instruction.OfElement arrowNarrowRight(Html.Instruction... contents);
 
     /**
      * Renders the
@@ -178,7 +178,7 @@ public final class Icons {
      *
      * @return the {@code svg} element
      */
-    Html.ElementInstruction arrowRight(Html.Instruction... contents);
+    Html.Instruction.OfElement arrowRight(Html.Instruction... contents);
 
     /**
      * Renders the <a href="https://tabler.io/icons/icon/box">box</a>
@@ -186,7 +186,7 @@ public final class Icons {
      *
      * @return the {@code svg} element
      */
-    Html.ElementInstruction box(Html.Instruction... contents);
+    Html.Instruction.OfElement box(Html.Instruction... contents);
 
     /**
      * Renders the
@@ -195,7 +195,7 @@ public final class Icons {
      *
      * @return the {@code svg} element
      */
-    Html.ElementInstruction briefcase(Html.Instruction... contents);
+    Html.Instruction.OfElement briefcase(Html.Instruction... contents);
 
     /**
      * Renders the
@@ -205,7 +205,7 @@ public final class Icons {
      *
      * @return the {@code svg} element
      */
-    Html.ElementInstruction calendarRepeat(Html.Instruction... contents);
+    Html.Instruction.OfElement calendarRepeat(Html.Instruction... contents);
 
     /**
      * Renders the <a href="https://tabler.io/icons/icon/caret-left">caret-left
@@ -213,7 +213,7 @@ public final class Icons {
      *
      * @return the {@code svg} element
      */
-    Html.ElementInstruction caretLeftFilled(Html.Instruction... contents);
+    Html.Instruction.OfElement caretLeftFilled(Html.Instruction... contents);
 
     /**
      * Renders the
@@ -222,7 +222,7 @@ public final class Icons {
      *
      * @return the {@code svg} element
      */
-    Html.ElementInstruction caretRightFilled(Html.Instruction... contents);
+    Html.Instruction.OfElement caretRightFilled(Html.Instruction... contents);
 
     /**
      * Renders the
@@ -231,7 +231,7 @@ public final class Icons {
      *
      * @return the {@code svg} element
      */
-    Html.ElementInstruction chevronLeft(Html.Instruction... contents);
+    Html.Instruction.OfElement chevronLeft(Html.Instruction... contents);
 
     /**
      * Renders the
@@ -240,7 +240,7 @@ public final class Icons {
      *
      * @return the {@code svg} element
      */
-    Html.ElementInstruction chevronRight(Html.Instruction... contents);
+    Html.Instruction.OfElement chevronRight(Html.Instruction... contents);
 
     /**
      * Renders the
@@ -250,7 +250,7 @@ public final class Icons {
      *
      * @return the {@code svg} element
      */
-    Html.ElementInstruction creditCardPay(Html.Instruction... contents);
+    Html.Instruction.OfElement creditCardPay(Html.Instruction... contents);
 
     /**
      * Renders the <a href=
@@ -259,7 +259,7 @@ public final class Icons {
      *
      * @return the {@code svg} element
      */
-    Html.ElementInstruction exclamationCircle(Html.Instruction... contents);
+    Html.Instruction.OfElement exclamationCircle(Html.Instruction... contents);
 
     /**
      * Renders the
@@ -268,7 +268,7 @@ public final class Icons {
      *
      * @return the {@code svg} element
      */
-    Html.ElementInstruction fileText(Html.Instruction... contents);
+    Html.Instruction.OfElement fileText(Html.Instruction... contents);
 
     /**
      * Renders the <a href=
@@ -277,14 +277,14 @@ public final class Icons {
      *
      * @return the {@code svg} element
      */
-    Html.ElementInstruction healthRecognition(Html.Instruction... contents);
+    Html.Instruction.OfElement healthRecognition(Html.Instruction... contents);
 
     /**
      * Renders the <a href="https://tabler.io/icons/icon/home">home</a> icon.
      *
      * @return the {@code svg} element
      */
-    Html.ElementInstruction home(Html.Instruction... contents);
+    Html.Instruction.OfElement home(Html.Instruction... contents);
 
     /**
      * Renders the <a href="https://tabler.io/icons/icon/home-2">home-2</a>
@@ -292,7 +292,7 @@ public final class Icons {
      *
      * @return the {@code svg} element
      */
-    Html.ElementInstruction home2(Html.Instruction... contents);
+    Html.Instruction.OfElement home2(Html.Instruction... contents);
 
     /**
      * Renders the <a href="https://tabler.io/icons/icon/map-pin">map-pin</a>
@@ -300,56 +300,56 @@ public final class Icons {
      *
      * @return the {@code svg} element
      */
-    Html.ElementInstruction mapPin(Html.Instruction... contents);
+    Html.Instruction.OfElement mapPin(Html.Instruction... contents);
 
     /**
      * Renders the <a href="https://tabler.io/icons/icon/menu">menu</a> icon.
      *
      * @return the {@code svg} element
      */
-    Html.ElementInstruction menu1(Html.Instruction... contents);
+    Html.Instruction.OfElement menu1(Html.Instruction... contents);
 
     /**
      * Renders the <a href="https://tabler-icons.io/i/menu-2">menu-2</a> icon.
      *
      * @return the {@code svg} element
      */
-    Html.ElementInstruction menu2(Html.Instruction... contents);
+    Html.Instruction.OfElement menu2(Html.Instruction... contents);
 
     /**
      * Renders the <a href="https://tabler-icons.io/i/paw">paw</a> icon.
      *
      * @return the {@code svg} element
      */
-    Html.ElementInstruction paw(Html.Instruction... contents);
+    Html.Instruction.OfElement paw(Html.Instruction... contents);
 
     /**
      * Renders the <a href="https://tabler.io/icons/icon/user">phone</a> icon.
      *
      * @return the {@code svg} element
      */
-    Html.ElementInstruction phone(Html.Instruction... contents);
+    Html.Instruction.OfElement phone(Html.Instruction... contents);
 
     /**
      * Renders the <a href="https://tabler.io/icons/icon/user">user</a> icon.
      *
      * @return the {@code svg} element
      */
-    Html.ElementInstruction user(Html.Instruction... contents);
+    Html.Instruction.OfElement user(Html.Instruction... contents);
 
     /**
      * Renders the <a href="https://tabler.io/icons/icon/users">users</a> icon.
      *
      * @return the {@code svg} element
      */
-    Html.ElementInstruction users(Html.Instruction... contents);
+    Html.Instruction.OfElement users(Html.Instruction... contents);
 
     /**
      * Renders the <a href="https://tabler.io/icons/icon/x">x</a> icon.
      *
      * @return the {@code svg} element
      */
-    Html.ElementInstruction x(Html.Instruction... contents);
+    Html.Instruction.OfElement x(Html.Instruction... contents);
 
   }
 

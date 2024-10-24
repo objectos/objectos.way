@@ -530,23 +530,23 @@ public final class Carbon extends CarbonComponents {
     new CarbonBuild().start(args);
   }
 
-  static Html.ElementInstruction renderIcon16(Html.TemplateBase tmpl, Icon icon, Html.Instruction... attributes) {
+  static Html.Instruction.OfElement renderIcon16(Html.TemplateBase tmpl, Icon icon, Html.Instruction... attributes) {
     return Carbon.renderIcon(tmpl, icon, "1rem", attributes);
   }
 
-  static Html.ElementInstruction renderIcon20(Html.TemplateBase tmpl, Icon icon, Html.Instruction... attributes) {
+  static Html.Instruction.OfElement renderIcon20(Html.TemplateBase tmpl, Icon icon, Html.Instruction... attributes) {
     return Carbon.renderIcon(tmpl, icon, "1.25rem", attributes);
   }
 
-  static Html.ElementInstruction renderIcon24(Html.TemplateBase tmpl, Icon icon, Html.Instruction... attributes) {
+  static Html.Instruction.OfElement renderIcon24(Html.TemplateBase tmpl, Icon icon, Html.Instruction... attributes) {
     return Carbon.renderIcon(tmpl, icon, "1.5rem", attributes);
   }
 
-  static Html.ElementInstruction renderIcon32(Html.TemplateBase tmpl, Icon icon, Html.Instruction... attributes) {
+  static Html.Instruction.OfElement renderIcon32(Html.TemplateBase tmpl, Icon icon, Html.Instruction... attributes) {
     return Carbon.renderIcon(tmpl, icon, "2rem", attributes);
   }
 
-  private static Html.ElementInstruction renderIcon(Html.TemplateBase tmpl, Icon icon, String size, Html.Instruction... attributes) {
+  private static Html.Instruction.OfElement renderIcon(Html.TemplateBase tmpl, Icon icon, String size, Html.Instruction... attributes) {
     return tmpl.svg(
         tmpl.xmlns("http://www.w3.org/2000/svg"),
         tmpl.fill("currentColor"),
@@ -568,7 +568,7 @@ public final class Carbon extends CarbonComponents {
 
   static final Html.AttributeObject ROLE_PRESENTATION = Html.AttributeObject.create(HtmlAttributeName.ROLE, "presentation");
 
-  public final Html.NoOpInstruction iconOnly() {
+  public final Html.Instruction.NoOp iconOnly() {
     flagIconOnly = true;
 
     return Html.NOOP;
@@ -582,7 +582,7 @@ public final class Carbon extends CarbonComponents {
     return res;
   }
 
-  public final Html.NoOpInstruction renderAs(Html.ElementName element) {
+  public final Html.Instruction.NoOp renderAs(Html.ElementName element) {
     this.element = Check.notNull(element, "element == null");
 
     return Html.NOOP;
@@ -600,7 +600,7 @@ public final class Carbon extends CarbonComponents {
     return result;
   }
 
-  public final Html.NoOpInstruction renderIcon(Icon icon) {
+  public final Html.Instruction.NoOp renderIcon(Icon icon) {
     this.icon = Check.notNull(icon, "icon == null");
 
     return Html.NOOP;
@@ -618,7 +618,7 @@ public final class Carbon extends CarbonComponents {
   // B
   //
 
-  public final Html.ElementInstruction button(ButtonVariant variant, ButtonSize size, Html.Instruction... contents) {
+  public final Html.Instruction.OfElement button(ButtonVariant variant, ButtonSize size, Html.Instruction... contents) {
     Check.notNull(variant, "variant == null");
     Check.notNull(size, "size == null");
 
@@ -642,20 +642,20 @@ public final class Carbon extends CarbonComponents {
   // G
   //
 
-  public final Html.ElementInstruction grid(GridVariant variant, Html.Instruction... contents) {
+  public final Html.Instruction.OfElement grid(GridVariant variant, Html.Instruction... contents) {
     Check.notNull(variant, "variant == null");
 
     return grid0(Html.ElementName.DIV, variant, contents);
   }
 
-  public final Html.ElementInstruction grid(Html.ElementName renderAs, GridVariant variant, Html.Instruction... contents) {
+  public final Html.Instruction.OfElement grid(Html.ElementName renderAs, GridVariant variant, Html.Instruction... contents) {
     Check.notNull(renderAs, "renderAs == null");
     Check.notNull(variant, "variant == null");
 
     return grid0(renderAs, variant, contents);
   }
 
-  private Html.ElementInstruction grid0(Html.ElementName renderAs, GridVariant variant, Html.Instruction... contents) {
+  private Html.Instruction.OfElement grid0(Html.ElementName renderAs, GridVariant variant, Html.Instruction... contents) {
     CarbonGridVariant variantImpl;
     variantImpl = (CarbonGridVariant) variant;
 
@@ -666,7 +666,7 @@ public final class Carbon extends CarbonComponents {
   // L
   //
 
-  public final Html.ElementInstruction link(LinkStyle style, String text, String href) {
+  public final Html.Instruction.OfElement link(LinkStyle style, String text, String href) {
     Check.notNull(style, "style == null");
     Check.notNull(text, "text == null");
     Check.notNull(href, "href == null");
@@ -674,7 +674,7 @@ public final class Carbon extends CarbonComponents {
     return CarbonLink.render(tmpl, style, tmpl.href(href), tmpl.t(text));
   }
 
-  public final Html.ElementInstruction link(LinkStyle style, Html.Instruction... contents) {
+  public final Html.Instruction.OfElement link(LinkStyle style, Html.Instruction... contents) {
     Check.notNull(style, "style == null");
 
     return CarbonLink.render(tmpl, style, contents);
@@ -684,7 +684,7 @@ public final class Carbon extends CarbonComponents {
   // P
   //
 
-  public final Html.ElementInstruction progressIndicator(ProgressIndicatorVariant variant, ProgressStep... steps) {
+  public final Html.Instruction.OfElement progressIndicator(ProgressIndicatorVariant variant, ProgressStep... steps) {
     Check.notNull(variant, "variant == null");
 
     boolean horizontal = variant == CarbonPlane.HORIZONTAL;
@@ -735,61 +735,61 @@ public final class Carbon extends CarbonComponents {
     return CarbonTearsheet.showTearsheetModal(id);
   }
 
-  public final Html.ElementInstruction tearsheet(Html.Instruction... contents) {
+  public final Html.Instruction.OfElement tearsheet(Html.Instruction... contents) {
     return CarbonTearsheet.tearsheet(tmpl, contents);
   }
 
-  public final Html.ElementInstruction tearsheetModal(Html.Instruction... contents) {
+  public final Html.Instruction.OfElement tearsheetModal(Html.Instruction... contents) {
     return CarbonTearsheet.tearsheetModal(tmpl, contents);
   }
 
-  public final Html.ElementInstruction tearsheetHeader(Html.Instruction... contents) {
+  public final Html.Instruction.OfElement tearsheetHeader(Html.Instruction... contents) {
     return CarbonTearsheet.tearsheetHeader(tmpl, contents);
   }
 
-  public final Html.ElementInstruction tearsheetHeaderTitle(String text) {
+  public final Html.Instruction.OfElement tearsheetHeaderTitle(String text) {
     return CarbonTearsheet.tearsheetHeaderTitle(tmpl, text);
   }
 
-  public final Html.ElementInstruction tearsheetHeaderDescription(String text) {
+  public final Html.Instruction.OfElement tearsheetHeaderDescription(String text) {
     return CarbonTearsheet.tearsheetHeaderDescription(tmpl, text);
   }
 
-  public final Html.ElementInstruction tearsheetBody(Html.Instruction... contents) {
+  public final Html.Instruction.OfElement tearsheetBody(Html.Instruction... contents) {
     return CarbonTearsheet.tearsheetBody(tmpl, contents);
   }
 
-  public final Html.ElementInstruction tearsheetInfluencer(Html.Instruction... contents) {
+  public final Html.Instruction.OfElement tearsheetInfluencer(Html.Instruction... contents) {
     return CarbonTearsheet.tearsheetInfluencer(tmpl, contents);
   }
 
-  public final Html.ElementInstruction tearsheetRight(Html.Instruction... contents) {
+  public final Html.Instruction.OfElement tearsheetRight(Html.Instruction... contents) {
     return CarbonTearsheet.tearsheetRight(tmpl, contents);
   }
 
-  public final Html.ElementInstruction tearsheetMain(Html.Instruction... contents) {
+  public final Html.Instruction.OfElement tearsheetMain(Html.Instruction... contents) {
     return CarbonTearsheet.tearsheetMain(tmpl, contents);
   }
 
-  public final Html.ElementInstruction tearsheetActions(Html.Instruction... contents) {
+  public final Html.Instruction.OfElement tearsheetActions(Html.Instruction... contents) {
     return CarbonTearsheet.tearsheetActions(tmpl, contents);
   }
 
-  public final Html.ElementInstruction tearsheetCancelAction(String label) {
+  public final Html.Instruction.OfElement tearsheetCancelAction(String label) {
     return CarbonTearsheet.tearsheetCancelAction(tmpl, label);
   }
 
-  public final Html.ElementInstruction tearsheetBackAction(String label) {
+  public final Html.Instruction.OfElement tearsheetBackAction(String label) {
     return CarbonTearsheet.tearsheetBackAction(tmpl, label);
   }
 
-  public final Html.ElementInstruction tearsheetNextAction(String label) {
+  public final Html.Instruction.OfElement tearsheetNextAction(String label) {
     return CarbonTearsheet.tearsheetNextAction(tmpl, label);
   }
 
   // Tile
 
-  public final Html.ElementInstruction tile(TileVariant variant, Html.Instruction... contents) {
+  public final Html.Instruction.OfElement tile(TileVariant variant, Html.Instruction... contents) {
     Check.notNull(variant, "variant == null");
 
     Icon icon = readRenderIcon();

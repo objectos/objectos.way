@@ -24,7 +24,6 @@ import java.util.Set;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import objectos.way.Html.AttributeInstruction;
 import objectos.way.Html.AttributeName;
 import objectos.way.Html.ElementName;
 
@@ -283,6 +282,76 @@ public final class Html extends HtmlRecorder {
 
   }
 
+  /**
+   * Represents an instruction that generates part of the output of an HTML
+   * template.
+   */
+  public sealed interface Instruction {
+
+    /**
+     * Class of instructions that are represented by object instances.
+     *
+     * <p>
+     * Instances of this interface can be safely reused in multiple templates.
+     */
+    sealed interface AsObject extends Instruction {}
+
+    /**
+     * Class of instructions that are represented by methods of the
+     * {@link Html.Template} class.
+     *
+     * <p>
+     * Instances of this interface MUST NOT be reused in a template.
+     */
+    sealed interface AsMethod extends Instruction {}
+
+    /**
+     * An instruction to generate an HTML attribute in template.
+     */
+    sealed interface OfAttribute extends AsMethod, OfVoid {}
+
+    /**
+     * An instruction to generate a {@code data-on-*} HTML attribute in a
+     * template.
+     */
+    sealed interface OfDataOn extends AsMethod, OfVoid {}
+
+    /**
+     * An instruction to generate an HTML element in a template.
+     */
+    sealed interface OfElement extends AsMethod {}
+
+    /**
+     * An instruction to include an HTML fragment to a template.
+     */
+    sealed interface OfFragment extends AsMethod, OfVoid {}
+
+    /**
+     * Class of instructions that are allowed as arguments to template
+     * methods that represent void elements.
+     */
+    sealed interface OfVoid extends Instruction {}
+
+    /**
+     * The no-op instruction.
+     */
+    sealed interface NoOp extends AsMethod, OfVoid {}
+
+  }
+
+  sealed interface AttributeOrNoOp extends Instruction.OfAttribute, Instruction.OfDataOn, Instruction.NoOp {}
+
+  private static final class HtmlInstruction
+      implements
+      AttributeOrNoOp,
+      Html.Instruction.OfElement,
+      Html.Instruction.OfFragment {}
+
+  static final Html.AttributeOrNoOp ATTRIBUTE = new HtmlInstruction();
+  static final Html.Instruction.OfElement ELEMENT = new HtmlInstruction();
+  static final Html.Instruction.OfFragment FRAGMENT = new HtmlInstruction();
+  static final Html.AttributeOrNoOp NOOP = new HtmlInstruction();
+
   /*
    * Template related classes
    */
@@ -468,7 +537,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this attribute.
      */
-    protected final AttributeInstruction className(String v0, String v1) {
+    protected final Instruction.OfAttribute className(String v0, String v1) {
       Check.notNull(v0, "v0 == null");
       Check.notNull(v1, "v1 == null");
 
@@ -486,7 +555,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this attribute.
      */
-    protected final AttributeInstruction className(String v0, String v1, String v2) {
+    protected final Instruction.OfAttribute className(String v0, String v1, String v2) {
       Check.notNull(v0, "v0 == null");
       Check.notNull(v1, "v1 == null");
       Check.notNull(v2, "v2 == null");
@@ -506,7 +575,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this attribute.
      */
-    protected final AttributeInstruction className(String v0, String v1, String v2, String v3) {
+    protected final Instruction.OfAttribute className(String v0, String v1, String v2, String v3) {
       Check.notNull(v0, "v0 == null");
       Check.notNull(v1, "v1 == null");
       Check.notNull(v2, "v2 == null");
@@ -524,7 +593,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this attribute.
      */
-    protected final AttributeInstruction className(String... values) {
+    protected final Instruction.OfAttribute className(String... values) {
       Check.notNull(values, "values == null");
 
       String value;
@@ -541,7 +610,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this attribute.
      */
-    protected final AttributeInstruction classText(String text) {
+    protected final Instruction.OfAttribute classText(String text) {
       String[] lines;
       lines = text.split("\n+");
 
@@ -551,42 +620,42 @@ public final class Html extends HtmlRecorder {
       return $attributes().className(value);
     }
 
-    protected final AttributeInstruction dataFrame(String name) {
+    protected final Instruction.OfAttribute dataFrame(String name) {
       Check.notNull(name, "name == null");
 
       return $compiler().attribute(HtmlAttributeName.DATA_FRAME, name);
     }
 
-    protected final AttributeInstruction dataFrame(String name, String value) {
+    protected final Instruction.OfAttribute dataFrame(String name, String value) {
       Check.notNull(name, "name == null");
       Check.notNull(value, "value == null");
 
       return $compiler().attribute(HtmlAttributeName.DATA_FRAME, name + ":" + value);
     }
 
-    protected final DataOnInstruction dataOnClick(Script.Action action) {
+    protected final Html.Instruction.OfDataOn dataOnClick(Script.Action action) {
       return dataOn(HtmlAttributeName.DATA_ON_CLICK, action);
     }
 
-    protected final DataOnInstruction dataOnClick(Script.Action... actions) {
+    protected final Html.Instruction.OfDataOn dataOnClick(Script.Action... actions) {
       return dataOn(HtmlAttributeName.DATA_ON_CLICK, actions);
     }
 
-    protected final DataOnInstruction dataOnInput(Script.Action action) {
+    protected final Html.Instruction.OfDataOn dataOnInput(Script.Action action) {
       return dataOn(HtmlAttributeName.DATA_ON_INPUT, action);
     }
 
-    protected final DataOnInstruction dataOnInput(Script.Action... actions) {
+    protected final Html.Instruction.OfDataOn dataOnInput(Script.Action... actions) {
       return dataOn(HtmlAttributeName.DATA_ON_INPUT, actions);
     }
 
-    private final DataOnInstruction dataOn(AttributeName name, Script.Action action) {
+    private final Html.Instruction.OfDataOn dataOn(AttributeName name, Script.Action action) {
       Check.notNull(action, "action == null");
 
       return $compiler().dataOn(name, action);
     }
 
-    private final DataOnInstruction dataOn(AttributeName name, Script.Action... actions) {
+    private final Html.Instruction.OfDataOn dataOn(AttributeName name, Script.Action... actions) {
       Check.notNull(actions, "actions == null");
 
       Script.Action value;
@@ -595,7 +664,7 @@ public final class Html extends HtmlRecorder {
       return $compiler().dataOn(name, value);
     }
 
-    protected final Html.ElementInstruction element(Html.ElementName name, Html.Instruction... contents) {
+    protected final Html.Instruction.OfElement element(Html.ElementName name, Html.Instruction... contents) {
       return $compiler().element(name, contents);
     }
 
@@ -639,23 +708,23 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this fragment
      */
-    protected final FragmentInstruction f(FragmentLambda fragment) {
+    protected final Html.Instruction.OfFragment f(FragmentLambda fragment) {
       return $compiler().include(fragment);
     }
 
-    protected final <T1> FragmentInstruction f(FragmentLambda1<T1> fragment, T1 arg1) {
+    protected final <T1> Html.Instruction.OfFragment f(FragmentLambda1<T1> fragment, T1 arg1) {
       return $compiler().include(fragment, arg1);
     }
 
-    protected final <T1, T2> FragmentInstruction f(FragmentLambda2<T1, T2> fragment, T1 arg1, T2 arg2) {
+    protected final <T1, T2> Html.Instruction.OfFragment f(FragmentLambda2<T1, T2> fragment, T1 arg1, T2 arg2) {
       return $compiler().include(fragment, arg1, arg2);
     }
 
-    protected final <T1, T2, T3> FragmentInstruction f(FragmentLambda3<T1, T2, T3> fragment, T1 arg1, T2 arg2, T3 arg3) {
+    protected final <T1, T2, T3> Html.Instruction.OfFragment f(FragmentLambda3<T1, T2, T3> fragment, T1 arg1, T2 arg2, T3 arg3) {
       return $compiler().include(fragment, arg1, arg2, arg3);
     }
 
-    protected final <T1, T2, T3, T4> FragmentInstruction f(FragmentLambda4<T1, T2, T3, T4> fragment, T1 arg1, T2 arg2, T3 arg3, T4 arg4) {
+    protected final <T1, T2, T3, T4> Html.Instruction.OfFragment f(FragmentLambda4<T1, T2, T3, T4> fragment, T1 arg1, T2 arg2, T3 arg3, T4 arg4) {
       return $compiler().include(fragment, arg1, arg2, arg3, arg4);
     }
 
@@ -700,11 +769,11 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this flatten operation
      */
-    protected final ElementInstruction flatten(Instruction... contents) {
+    protected final Html.Instruction.OfElement flatten(Instruction... contents) {
       return $compiler().flatten(contents);
     }
 
-    protected final ElementInstruction flattenNonNull(Instruction... contents) {
+    protected final Html.Instruction.OfElement flattenNonNull(Instruction... contents) {
       return $compiler().flattenNonNull(contents);
     }
 
@@ -748,7 +817,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this fragment
      */
-    protected final FragmentInstruction include(FragmentLambda fragment) {
+    protected final Html.Instruction.OfFragment include(FragmentLambda fragment) {
       return $compiler().include(fragment);
     }
 
@@ -760,7 +829,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing the inclusion of the template.
      */
-    protected final FragmentInstruction include(Html.Template template) {
+    protected final Html.Instruction.OfFragment include(Html.Template template) {
       Check.notNull(template, "template == null");
 
       try {
@@ -782,7 +851,7 @@ public final class Html extends HtmlRecorder {
       return Html.FRAGMENT;
     }
 
-    protected final ElementInstruction nbsp() {
+    protected final Html.Instruction.OfElement nbsp() {
       return raw("&nbsp;");
     }
 
@@ -812,15 +881,15 @@ public final class Html extends HtmlRecorder {
      *
      * @return the no-op instruction.
      */
-    protected final NoOpInstruction noop() {
+    protected final Html.Instruction.NoOp noop() {
       return Html.NOOP;
     }
 
-    protected final NoOpInstruction noop(String ignored) {
+    protected final Html.Instruction.NoOp noop(String ignored) {
       return Html.NOOP;
     }
 
-    protected final ElementInstruction raw(String text) {
+    protected final Html.Instruction.OfElement raw(String text) {
       return $compiler().raw(text);
     }
 
@@ -846,11 +915,11 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing the text node
      */
-    protected final ElementInstruction t(String text) {
+    protected final Html.Instruction.OfElement t(String text) {
       return $compiler().text(text);
     }
 
-    protected final AttributeInstruction testable(String name) {
+    protected final Instruction.OfAttribute testable(String name) {
       return $compiler().testable(name);
     }
 
@@ -899,7 +968,7 @@ public final class Html extends HtmlRecorder {
     return new Html();
   }
 
-  public final Html.FragmentInstruction render(Consumer<Html> fragment) {
+  public final Html.Instruction.OfFragment render(Consumer<Html> fragment) {
     Check.notNull(fragment, "fragment == null");
 
     int index;
@@ -913,77 +982,9 @@ public final class Html extends HtmlRecorder {
   }
 
   /**
-   * Represents an instruction that generates part of the output of an HTML
-   * template.
-   */
-  public sealed interface Instruction {}
-
-  /**
-   * Class of instructions that are represented by methods of the template
-   * class.
-   *
-   * <p>
-   * Instances of this interface MUST NOT be reused in a template.
-   */
-  public sealed interface MethodInstruction extends Instruction {}
-
-  /**
-   * Class of instructions that are allowed as arguments to template
-   * methods that represent void elements.
-   */
-  public sealed interface VoidInstruction extends Instruction {}
-
-  /**
-   * An instruction to generate an HTML attribute in template.
-   */
-  public sealed interface AttributeInstruction extends MethodInstruction, VoidInstruction {}
-
-  /**
-   * An instruction to generate a {@code data-on-*} HTML attribute in a
-   * template.
-   */
-  public sealed interface DataOnInstruction extends MethodInstruction, VoidInstruction {}
-
-  /**
-   * An instruction to generate an HTML element in a template.
-   */
-  public sealed interface ElementInstruction extends MethodInstruction {}
-
-  /**
-   * An instruction to include an HTML fragment to a template.
-   */
-  public sealed interface FragmentInstruction extends MethodInstruction, VoidInstruction {}
-
-  /**
-   * The no-op instruction.
-   */
-  public sealed interface NoOpInstruction extends MethodInstruction, VoidInstruction {}
-
-  sealed interface AttributeOrNoOp extends AttributeInstruction, DataOnInstruction, NoOpInstruction {}
-
-  private static final class InstructionImpl
-      implements
-      AttributeOrNoOp,
-      ElementInstruction,
-      FragmentInstruction {}
-
-  static final AttributeOrNoOp ATTRIBUTE = new InstructionImpl();
-  static final ElementInstruction ELEMENT = new InstructionImpl();
-  static final FragmentInstruction FRAGMENT = new InstructionImpl();
-  static final AttributeOrNoOp NOOP = new InstructionImpl();
-
-  /**
-   * Class of instructions that are represented by object instances.
-   *
-   * <p>
-   * Instances of this interface can be safely reused in multiple templates.
-   */
-  public sealed interface ObjectInstruction extends Instruction {}
-
-  /**
    * An instruction to render an HTML attribute and its value.
    */
-  public non-sealed interface AttributeObject extends ObjectInstruction, VoidInstruction {
+  public sealed interface AttributeObject extends Instruction.AsObject, Instruction.OfVoid {
 
     static AttributeObject create(AttributeName name, String value) {
       return new HtmlAttributeObject(
@@ -1013,7 +1014,7 @@ public final class Html extends HtmlRecorder {
   /**
    * An instruction to render an HTML {@code class} attribute.
    */
-  public interface ClassName extends AttributeObject {
+  public sealed interface ClassName extends AttributeObject {
 
     static ClassName className(ClassName... classNames) {
       StringBuilder sb;
@@ -1110,7 +1111,7 @@ public final class Html extends HtmlRecorder {
   /**
    * An instruction to render an HTML {@code id} attribute.
    */
-  public interface Id extends AttributeObject {
+  public sealed interface Id extends AttributeObject {
 
     static Id id(String value) {
       Check.notNull(value, "value == null");
@@ -1155,7 +1156,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this attribute.
      */
-    protected final AttributeInstruction accesskey(String value) {
+    protected final Instruction.OfAttribute accesskey(String value) {
       return $attributes().accesskey(value);
     }
 
@@ -1167,7 +1168,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this attribute.
      */
-    protected final AttributeInstruction action(String value) {
+    protected final Instruction.OfAttribute action(String value) {
       return $attributes().action(value);
     }
 
@@ -1179,7 +1180,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this attribute.
      */
-    protected final AttributeInstruction align(String value) {
+    protected final Instruction.OfAttribute align(String value) {
       return $attributes().align(value);
     }
 
@@ -1192,7 +1193,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this attribute.
      */
-    protected final AttributeInstruction alignmentBaseline(String value) {
+    protected final Instruction.OfAttribute alignmentBaseline(String value) {
       return $attributes().alignmentBaseline(value);
     }
 
@@ -1204,7 +1205,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this attribute.
      */
-    protected final AttributeInstruction alt(String value) {
+    protected final Instruction.OfAttribute alt(String value) {
       return $attributes().alt(value);
     }
 
@@ -1216,7 +1217,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this attribute.
      */
-    protected final AttributeInstruction ariaHidden(String value) {
+    protected final Instruction.OfAttribute ariaHidden(String value) {
       return $attributes().ariaHidden(value);
     }
 
@@ -1228,7 +1229,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this attribute.
      */
-    protected final AttributeInstruction ariaLabel(String value) {
+    protected final Instruction.OfAttribute ariaLabel(String value) {
       return $attributes().ariaLabel(value);
     }
 
@@ -1237,7 +1238,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this attribute.
      */
-    protected final AttributeInstruction async() {
+    protected final Instruction.OfAttribute async() {
       return $attributes().async();
     }
 
@@ -1249,7 +1250,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this attribute.
      */
-    protected final AttributeInstruction autocomplete(String value) {
+    protected final Instruction.OfAttribute autocomplete(String value) {
       return $attributes().autocomplete(value);
     }
 
@@ -1258,7 +1259,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this attribute.
      */
-    protected final AttributeInstruction autofocus() {
+    protected final Instruction.OfAttribute autofocus() {
       return $attributes().autofocus();
     }
 
@@ -1270,7 +1271,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this attribute.
      */
-    protected final AttributeInstruction baselineShift(String value) {
+    protected final Instruction.OfAttribute baselineShift(String value) {
       return $attributes().baselineShift(value);
     }
 
@@ -1282,7 +1283,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this attribute.
      */
-    protected final AttributeInstruction border(String value) {
+    protected final Instruction.OfAttribute border(String value) {
       return $attributes().border(value);
     }
 
@@ -1294,7 +1295,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this attribute.
      */
-    protected final AttributeInstruction cellpadding(String value) {
+    protected final Instruction.OfAttribute cellpadding(String value) {
       return $attributes().cellpadding(value);
     }
 
@@ -1306,7 +1307,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this attribute.
      */
-    protected final AttributeInstruction cellspacing(String value) {
+    protected final Instruction.OfAttribute cellspacing(String value) {
       return $attributes().cellspacing(value);
     }
 
@@ -1318,7 +1319,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this attribute.
      */
-    protected final AttributeInstruction charset(String value) {
+    protected final Instruction.OfAttribute charset(String value) {
       return $attributes().charset(value);
     }
 
@@ -1330,7 +1331,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this attribute.
      */
-    protected final AttributeInstruction cite(String value) {
+    protected final Instruction.OfAttribute cite(String value) {
       return $attributes().cite(value);
     }
 
@@ -1342,7 +1343,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this attribute.
      */
-    protected final AttributeInstruction className(String value) {
+    protected final Instruction.OfAttribute className(String value) {
       return $attributes().className(value);
     }
 
@@ -1354,7 +1355,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this attribute.
      */
-    protected final AttributeInstruction clipRule(String value) {
+    protected final Instruction.OfAttribute clipRule(String value) {
       return $attributes().clipRule(value);
     }
 
@@ -1366,7 +1367,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this attribute.
      */
-    protected final AttributeInstruction color(String value) {
+    protected final Instruction.OfAttribute color(String value) {
       return $attributes().color(value);
     }
 
@@ -1379,7 +1380,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this attribute.
      */
-    protected final AttributeInstruction colorInterpolation(String value) {
+    protected final Instruction.OfAttribute colorInterpolation(String value) {
       return $attributes().colorInterpolation(value);
     }
 
@@ -1392,7 +1393,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this attribute.
      */
-    protected final AttributeInstruction colorInterpolationFilters(String value) {
+    protected final Instruction.OfAttribute colorInterpolationFilters(String value) {
       return $attributes().colorInterpolationFilters(value);
     }
 
@@ -1404,7 +1405,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this attribute.
      */
-    protected final AttributeInstruction cols(String value) {
+    protected final Instruction.OfAttribute cols(String value) {
       return $attributes().cols(value);
     }
 
@@ -1416,7 +1417,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this attribute.
      */
-    protected final AttributeInstruction content(String value) {
+    protected final Instruction.OfAttribute content(String value) {
       return $attributes().content(value);
     }
 
@@ -1428,7 +1429,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this attribute.
      */
-    protected final AttributeInstruction contenteditable(String value) {
+    protected final Instruction.OfAttribute contenteditable(String value) {
       return $attributes().contenteditable(value);
     }
 
@@ -1440,7 +1441,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this attribute.
      */
-    protected final AttributeInstruction crossorigin(String value) {
+    protected final Instruction.OfAttribute crossorigin(String value) {
       return $attributes().crossorigin(value);
     }
 
@@ -1452,7 +1453,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this attribute.
      */
-    protected final AttributeInstruction cursor(String value) {
+    protected final Instruction.OfAttribute cursor(String value) {
       return $attributes().cursor(value);
     }
 
@@ -1464,7 +1465,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this attribute.
      */
-    protected final AttributeInstruction d(String value) {
+    protected final Instruction.OfAttribute d(String value) {
       return $attributes().d(value);
     }
 
@@ -1473,7 +1474,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this attribute.
      */
-    protected final AttributeInstruction defer() {
+    protected final Instruction.OfAttribute defer() {
       return $attributes().defer();
     }
 
@@ -1485,7 +1486,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this attribute.
      */
-    protected final AttributeInstruction dir(String value) {
+    protected final Instruction.OfAttribute dir(String value) {
       return $attributes().dir(value);
     }
 
@@ -1497,7 +1498,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this attribute.
      */
-    protected final AttributeInstruction direction(String value) {
+    protected final Instruction.OfAttribute direction(String value) {
       return $attributes().direction(value);
     }
 
@@ -1509,7 +1510,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this attribute.
      */
-    protected final AttributeInstruction dirname(String value) {
+    protected final Instruction.OfAttribute dirname(String value) {
       return $attributes().dirname(value);
     }
 
@@ -1518,7 +1519,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this attribute.
      */
-    protected final AttributeInstruction disabled() {
+    protected final Instruction.OfAttribute disabled() {
       return $attributes().disabled();
     }
 
@@ -1530,7 +1531,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this attribute.
      */
-    protected final AttributeInstruction display(String value) {
+    protected final Instruction.OfAttribute display(String value) {
       return $attributes().display(value);
     }
 
@@ -1543,7 +1544,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this attribute.
      */
-    protected final AttributeInstruction dominantBaseline(String value) {
+    protected final Instruction.OfAttribute dominantBaseline(String value) {
       return $attributes().dominantBaseline(value);
     }
 
@@ -1555,7 +1556,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this attribute.
      */
-    protected final AttributeInstruction draggable(String value) {
+    protected final Instruction.OfAttribute draggable(String value) {
       return $attributes().draggable(value);
     }
 
@@ -1567,7 +1568,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this attribute.
      */
-    protected final AttributeInstruction enctype(String value) {
+    protected final Instruction.OfAttribute enctype(String value) {
       return $attributes().enctype(value);
     }
 
@@ -1579,7 +1580,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this attribute.
      */
-    protected final AttributeInstruction fill(String value) {
+    protected final Instruction.OfAttribute fill(String value) {
       return $attributes().fill(value);
     }
 
@@ -1591,7 +1592,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this attribute.
      */
-    protected final AttributeInstruction fillOpacity(String value) {
+    protected final Instruction.OfAttribute fillOpacity(String value) {
       return $attributes().fillOpacity(value);
     }
 
@@ -1603,7 +1604,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this attribute.
      */
-    protected final AttributeInstruction fillRule(String value) {
+    protected final Instruction.OfAttribute fillRule(String value) {
       return $attributes().fillRule(value);
     }
 
@@ -1615,7 +1616,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this attribute.
      */
-    protected final AttributeInstruction filter(String value) {
+    protected final Instruction.OfAttribute filter(String value) {
       return $attributes().filter(value);
     }
 
@@ -1627,7 +1628,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this attribute.
      */
-    protected final AttributeInstruction floodColor(String value) {
+    protected final Instruction.OfAttribute floodColor(String value) {
       return $attributes().floodColor(value);
     }
 
@@ -1639,7 +1640,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this attribute.
      */
-    protected final AttributeInstruction floodOpacity(String value) {
+    protected final Instruction.OfAttribute floodOpacity(String value) {
       return $attributes().floodOpacity(value);
     }
 
@@ -1651,7 +1652,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this attribute.
      */
-    protected final AttributeInstruction fontFamily(String value) {
+    protected final Instruction.OfAttribute fontFamily(String value) {
       return $attributes().fontFamily(value);
     }
 
@@ -1663,7 +1664,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this attribute.
      */
-    protected final AttributeInstruction fontSize(String value) {
+    protected final Instruction.OfAttribute fontSize(String value) {
       return $attributes().fontSize(value);
     }
 
@@ -1676,7 +1677,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this attribute.
      */
-    protected final AttributeInstruction fontSizeAdjust(String value) {
+    protected final Instruction.OfAttribute fontSizeAdjust(String value) {
       return $attributes().fontSizeAdjust(value);
     }
 
@@ -1688,7 +1689,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this attribute.
      */
-    protected final AttributeInstruction fontStretch(String value) {
+    protected final Instruction.OfAttribute fontStretch(String value) {
       return $attributes().fontStretch(value);
     }
 
@@ -1700,7 +1701,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this attribute.
      */
-    protected final AttributeInstruction fontStyle(String value) {
+    protected final Instruction.OfAttribute fontStyle(String value) {
       return $attributes().fontStyle(value);
     }
 
@@ -1712,7 +1713,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this attribute.
      */
-    protected final AttributeInstruction fontVariant(String value) {
+    protected final Instruction.OfAttribute fontVariant(String value) {
       return $attributes().fontVariant(value);
     }
 
@@ -1724,7 +1725,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this attribute.
      */
-    protected final AttributeInstruction fontWeight(String value) {
+    protected final Instruction.OfAttribute fontWeight(String value) {
       return $attributes().fontWeight(value);
     }
 
@@ -1736,7 +1737,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this attribute.
      */
-    protected final AttributeInstruction forAttr(String value) {
+    protected final Instruction.OfAttribute forAttr(String value) {
       return $attributes().forAttr(value);
     }
 
@@ -1748,7 +1749,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this attribute.
      */
-    protected final AttributeInstruction forElement(String value) {
+    protected final Instruction.OfAttribute forElement(String value) {
       return $attributes().forElement(value);
     }
 
@@ -1761,7 +1762,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this attribute.
      */
-    protected final AttributeInstruction glyphOrientationHorizontal(String value) {
+    protected final Instruction.OfAttribute glyphOrientationHorizontal(String value) {
       return $attributes().glyphOrientationHorizontal(value);
     }
 
@@ -1774,7 +1775,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this attribute.
      */
-    protected final AttributeInstruction glyphOrientationVertical(String value) {
+    protected final Instruction.OfAttribute glyphOrientationVertical(String value) {
       return $attributes().glyphOrientationVertical(value);
     }
 
@@ -1786,7 +1787,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this attribute.
      */
-    protected final AttributeInstruction height(String value) {
+    protected final Instruction.OfAttribute height(String value) {
       return $attributes().height(value);
     }
 
@@ -1795,7 +1796,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this attribute.
      */
-    protected final AttributeInstruction hidden() {
+    protected final Instruction.OfAttribute hidden() {
       return $attributes().hidden();
     }
 
@@ -1807,7 +1808,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this attribute.
      */
-    protected final AttributeInstruction href(String value) {
+    protected final Instruction.OfAttribute href(String value) {
       return $attributes().href(value);
     }
 
@@ -1819,7 +1820,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this attribute.
      */
-    protected final AttributeInstruction httpEquiv(String value) {
+    protected final Instruction.OfAttribute httpEquiv(String value) {
       return $attributes().httpEquiv(value);
     }
 
@@ -1831,7 +1832,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this attribute.
      */
-    protected final AttributeInstruction id(String value) {
+    protected final Instruction.OfAttribute id(String value) {
       return $attributes().id(value);
     }
 
@@ -1843,7 +1844,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this attribute.
      */
-    protected final AttributeInstruction imageRendering(String value) {
+    protected final Instruction.OfAttribute imageRendering(String value) {
       return $attributes().imageRendering(value);
     }
 
@@ -1855,7 +1856,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this attribute.
      */
-    protected final AttributeInstruction integrity(String value) {
+    protected final Instruction.OfAttribute integrity(String value) {
       return $attributes().integrity(value);
     }
 
@@ -1867,7 +1868,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this attribute.
      */
-    protected final AttributeInstruction lang(String value) {
+    protected final Instruction.OfAttribute lang(String value) {
       return $attributes().lang(value);
     }
 
@@ -1879,7 +1880,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this attribute.
      */
-    protected final AttributeInstruction letterSpacing(String value) {
+    protected final Instruction.OfAttribute letterSpacing(String value) {
       return $attributes().letterSpacing(value);
     }
 
@@ -1891,7 +1892,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this attribute.
      */
-    protected final AttributeInstruction lightingColor(String value) {
+    protected final Instruction.OfAttribute lightingColor(String value) {
       return $attributes().lightingColor(value);
     }
 
@@ -1903,7 +1904,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this attribute.
      */
-    protected final AttributeInstruction markerEnd(String value) {
+    protected final Instruction.OfAttribute markerEnd(String value) {
       return $attributes().markerEnd(value);
     }
 
@@ -1915,7 +1916,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this attribute.
      */
-    protected final AttributeInstruction markerMid(String value) {
+    protected final Instruction.OfAttribute markerMid(String value) {
       return $attributes().markerMid(value);
     }
 
@@ -1927,7 +1928,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this attribute.
      */
-    protected final AttributeInstruction markerStart(String value) {
+    protected final Instruction.OfAttribute markerStart(String value) {
       return $attributes().markerStart(value);
     }
 
@@ -1939,7 +1940,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this attribute.
      */
-    protected final AttributeInstruction mask(String value) {
+    protected final Instruction.OfAttribute mask(String value) {
       return $attributes().mask(value);
     }
 
@@ -1951,7 +1952,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this attribute.
      */
-    protected final AttributeInstruction maskType(String value) {
+    protected final Instruction.OfAttribute maskType(String value) {
       return $attributes().maskType(value);
     }
 
@@ -1963,7 +1964,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this attribute.
      */
-    protected final AttributeInstruction maxlength(String value) {
+    protected final Instruction.OfAttribute maxlength(String value) {
       return $attributes().maxlength(value);
     }
 
@@ -1975,7 +1976,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this attribute.
      */
-    protected final AttributeInstruction media(String value) {
+    protected final Instruction.OfAttribute media(String value) {
       return $attributes().media(value);
     }
 
@@ -1987,7 +1988,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this attribute.
      */
-    protected final AttributeInstruction method(String value) {
+    protected final Instruction.OfAttribute method(String value) {
       return $attributes().method(value);
     }
 
@@ -1999,7 +2000,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this attribute.
      */
-    protected final AttributeInstruction minlength(String value) {
+    protected final Instruction.OfAttribute minlength(String value) {
       return $attributes().minlength(value);
     }
 
@@ -2008,7 +2009,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this attribute.
      */
-    protected final AttributeInstruction multiple() {
+    protected final Instruction.OfAttribute multiple() {
       return $attributes().multiple();
     }
 
@@ -2020,7 +2021,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this attribute.
      */
-    protected final AttributeInstruction name(String value) {
+    protected final Instruction.OfAttribute name(String value) {
       return $attributes().name(value);
     }
 
@@ -2029,7 +2030,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this attribute.
      */
-    protected final AttributeInstruction nomodule() {
+    protected final Instruction.OfAttribute nomodule() {
       return $attributes().nomodule();
     }
 
@@ -2041,7 +2042,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this attribute.
      */
-    protected final AttributeInstruction onafterprint(String value) {
+    protected final Instruction.OfAttribute onafterprint(String value) {
       return $attributes().onafterprint(value);
     }
 
@@ -2053,7 +2054,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this attribute.
      */
-    protected final AttributeInstruction onbeforeprint(String value) {
+    protected final Instruction.OfAttribute onbeforeprint(String value) {
       return $attributes().onbeforeprint(value);
     }
 
@@ -2065,7 +2066,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this attribute.
      */
-    protected final AttributeInstruction onbeforeunload(String value) {
+    protected final Instruction.OfAttribute onbeforeunload(String value) {
       return $attributes().onbeforeunload(value);
     }
 
@@ -2077,7 +2078,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this attribute.
      */
-    protected final AttributeInstruction onclick(String value) {
+    protected final Instruction.OfAttribute onclick(String value) {
       return $attributes().onclick(value);
     }
 
@@ -2089,7 +2090,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this attribute.
      */
-    protected final AttributeInstruction onhashchange(String value) {
+    protected final Instruction.OfAttribute onhashchange(String value) {
       return $attributes().onhashchange(value);
     }
 
@@ -2102,7 +2103,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this attribute.
      */
-    protected final AttributeInstruction onlanguagechange(String value) {
+    protected final Instruction.OfAttribute onlanguagechange(String value) {
       return $attributes().onlanguagechange(value);
     }
 
@@ -2114,7 +2115,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this attribute.
      */
-    protected final AttributeInstruction onmessage(String value) {
+    protected final Instruction.OfAttribute onmessage(String value) {
       return $attributes().onmessage(value);
     }
 
@@ -2126,7 +2127,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this attribute.
      */
-    protected final AttributeInstruction onoffline(String value) {
+    protected final Instruction.OfAttribute onoffline(String value) {
       return $attributes().onoffline(value);
     }
 
@@ -2138,7 +2139,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this attribute.
      */
-    protected final AttributeInstruction ononline(String value) {
+    protected final Instruction.OfAttribute ononline(String value) {
       return $attributes().ononline(value);
     }
 
@@ -2150,7 +2151,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this attribute.
      */
-    protected final AttributeInstruction onpagehide(String value) {
+    protected final Instruction.OfAttribute onpagehide(String value) {
       return $attributes().onpagehide(value);
     }
 
@@ -2162,7 +2163,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this attribute.
      */
-    protected final AttributeInstruction onpageshow(String value) {
+    protected final Instruction.OfAttribute onpageshow(String value) {
       return $attributes().onpageshow(value);
     }
 
@@ -2174,7 +2175,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this attribute.
      */
-    protected final AttributeInstruction onpopstate(String value) {
+    protected final Instruction.OfAttribute onpopstate(String value) {
       return $attributes().onpopstate(value);
     }
 
@@ -2187,7 +2188,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this attribute.
      */
-    protected final AttributeInstruction onrejectionhandled(String value) {
+    protected final Instruction.OfAttribute onrejectionhandled(String value) {
       return $attributes().onrejectionhandled(value);
     }
 
@@ -2199,7 +2200,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this attribute.
      */
-    protected final AttributeInstruction onstorage(String value) {
+    protected final Instruction.OfAttribute onstorage(String value) {
       return $attributes().onstorage(value);
     }
 
@@ -2211,7 +2212,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this attribute.
      */
-    protected final AttributeInstruction onsubmit(String value) {
+    protected final Instruction.OfAttribute onsubmit(String value) {
       return $attributes().onsubmit(value);
     }
 
@@ -2224,7 +2225,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this attribute.
      */
-    protected final AttributeInstruction onunhandledrejection(String value) {
+    protected final Instruction.OfAttribute onunhandledrejection(String value) {
       return $attributes().onunhandledrejection(value);
     }
 
@@ -2236,7 +2237,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this attribute.
      */
-    protected final AttributeInstruction onunload(String value) {
+    protected final Instruction.OfAttribute onunload(String value) {
       return $attributes().onunload(value);
     }
 
@@ -2248,7 +2249,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this attribute.
      */
-    protected final AttributeInstruction opacity(String value) {
+    protected final Instruction.OfAttribute opacity(String value) {
       return $attributes().opacity(value);
     }
 
@@ -2257,7 +2258,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this attribute.
      */
-    protected final AttributeInstruction open() {
+    protected final Instruction.OfAttribute open() {
       return $attributes().open();
     }
 
@@ -2269,7 +2270,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this attribute.
      */
-    protected final AttributeInstruction overflow(String value) {
+    protected final Instruction.OfAttribute overflow(String value) {
       return $attributes().overflow(value);
     }
 
@@ -2281,7 +2282,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this attribute.
      */
-    protected final AttributeInstruction paintOrder(String value) {
+    protected final Instruction.OfAttribute paintOrder(String value) {
       return $attributes().paintOrder(value);
     }
 
@@ -2293,7 +2294,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this attribute.
      */
-    protected final AttributeInstruction placeholder(String value) {
+    protected final Instruction.OfAttribute placeholder(String value) {
       return $attributes().placeholder(value);
     }
 
@@ -2305,7 +2306,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this attribute.
      */
-    protected final AttributeInstruction pointerEvents(String value) {
+    protected final Instruction.OfAttribute pointerEvents(String value) {
       return $attributes().pointerEvents(value);
     }
 
@@ -2317,7 +2318,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this attribute.
      */
-    protected final AttributeInstruction property(String value) {
+    protected final Instruction.OfAttribute property(String value) {
       return $attributes().property(value);
     }
 
@@ -2326,7 +2327,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this attribute.
      */
-    protected final AttributeInstruction readonly() {
+    protected final Instruction.OfAttribute readonly() {
       return $attributes().readonly();
     }
 
@@ -2338,7 +2339,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this attribute.
      */
-    protected final AttributeInstruction referrerpolicy(String value) {
+    protected final Instruction.OfAttribute referrerpolicy(String value) {
       return $attributes().referrerpolicy(value);
     }
 
@@ -2350,7 +2351,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this attribute.
      */
-    protected final AttributeInstruction rel(String value) {
+    protected final Instruction.OfAttribute rel(String value) {
       return $attributes().rel(value);
     }
 
@@ -2359,7 +2360,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this attribute.
      */
-    protected final AttributeInstruction required() {
+    protected final Instruction.OfAttribute required() {
       return $attributes().required();
     }
 
@@ -2371,7 +2372,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this attribute.
      */
-    protected final AttributeInstruction rev(String value) {
+    protected final Instruction.OfAttribute rev(String value) {
       return $attributes().rev(value);
     }
 
@@ -2380,7 +2381,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this attribute.
      */
-    protected final AttributeInstruction reversed() {
+    protected final Instruction.OfAttribute reversed() {
       return $attributes().reversed();
     }
 
@@ -2392,7 +2393,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this attribute.
      */
-    protected final AttributeInstruction role(String value) {
+    protected final Instruction.OfAttribute role(String value) {
       return $attributes().role(value);
     }
 
@@ -2404,7 +2405,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this attribute.
      */
-    protected final AttributeInstruction rows(String value) {
+    protected final Instruction.OfAttribute rows(String value) {
       return $attributes().rows(value);
     }
 
@@ -2413,7 +2414,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this attribute.
      */
-    protected final AttributeInstruction selected() {
+    protected final Instruction.OfAttribute selected() {
       return $attributes().selected();
     }
 
@@ -2425,7 +2426,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this attribute.
      */
-    protected final AttributeInstruction shapeRendering(String value) {
+    protected final Instruction.OfAttribute shapeRendering(String value) {
       return $attributes().shapeRendering(value);
     }
 
@@ -2437,7 +2438,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this attribute.
      */
-    protected final AttributeInstruction size(String value) {
+    protected final Instruction.OfAttribute size(String value) {
       return $attributes().size(value);
     }
 
@@ -2449,7 +2450,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this attribute.
      */
-    protected final AttributeInstruction sizes(String value) {
+    protected final Instruction.OfAttribute sizes(String value) {
       return $attributes().sizes(value);
     }
 
@@ -2461,7 +2462,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this attribute.
      */
-    protected final AttributeInstruction spellcheck(String value) {
+    protected final Instruction.OfAttribute spellcheck(String value) {
       return $attributes().spellcheck(value);
     }
 
@@ -2473,7 +2474,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this attribute.
      */
-    protected final AttributeInstruction src(String value) {
+    protected final Instruction.OfAttribute src(String value) {
       return $attributes().src(value);
     }
 
@@ -2485,7 +2486,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this attribute.
      */
-    protected final AttributeInstruction srcset(String value) {
+    protected final Instruction.OfAttribute srcset(String value) {
       return $attributes().srcset(value);
     }
 
@@ -2497,7 +2498,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this attribute.
      */
-    protected final AttributeInstruction start(String value) {
+    protected final Instruction.OfAttribute start(String value) {
       return $attributes().start(value);
     }
 
@@ -2509,7 +2510,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this attribute.
      */
-    protected final AttributeInstruction stopColor(String value) {
+    protected final Instruction.OfAttribute stopColor(String value) {
       return $attributes().stopColor(value);
     }
 
@@ -2521,7 +2522,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this attribute.
      */
-    protected final AttributeInstruction stopOpacity(String value) {
+    protected final Instruction.OfAttribute stopOpacity(String value) {
       return $attributes().stopOpacity(value);
     }
 
@@ -2533,7 +2534,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this attribute.
      */
-    protected final AttributeInstruction stroke(String value) {
+    protected final Instruction.OfAttribute stroke(String value) {
       return $attributes().stroke(value);
     }
 
@@ -2546,7 +2547,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this attribute.
      */
-    protected final AttributeInstruction strokeDasharray(String value) {
+    protected final Instruction.OfAttribute strokeDasharray(String value) {
       return $attributes().strokeDasharray(value);
     }
 
@@ -2559,7 +2560,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this attribute.
      */
-    protected final AttributeInstruction strokeDashoffset(String value) {
+    protected final Instruction.OfAttribute strokeDashoffset(String value) {
       return $attributes().strokeDashoffset(value);
     }
 
@@ -2571,7 +2572,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this attribute.
      */
-    protected final AttributeInstruction strokeLinecap(String value) {
+    protected final Instruction.OfAttribute strokeLinecap(String value) {
       return $attributes().strokeLinecap(value);
     }
 
@@ -2583,7 +2584,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this attribute.
      */
-    protected final AttributeInstruction strokeLinejoin(String value) {
+    protected final Instruction.OfAttribute strokeLinejoin(String value) {
       return $attributes().strokeLinejoin(value);
     }
 
@@ -2596,7 +2597,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this attribute.
      */
-    protected final AttributeInstruction strokeMiterlimit(String value) {
+    protected final Instruction.OfAttribute strokeMiterlimit(String value) {
       return $attributes().strokeMiterlimit(value);
     }
 
@@ -2608,7 +2609,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this attribute.
      */
-    protected final AttributeInstruction strokeOpacity(String value) {
+    protected final Instruction.OfAttribute strokeOpacity(String value) {
       return $attributes().strokeOpacity(value);
     }
 
@@ -2620,7 +2621,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this attribute.
      */
-    protected final AttributeInstruction strokeWidth(String value) {
+    protected final Instruction.OfAttribute strokeWidth(String value) {
       return $attributes().strokeWidth(value);
     }
 
@@ -2632,7 +2633,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this attribute.
      */
-    protected final AttributeInstruction inlineStyle(String value) {
+    protected final Instruction.OfAttribute inlineStyle(String value) {
       return $attributes().inlineStyle(value);
     }
 
@@ -2644,7 +2645,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this attribute.
      */
-    protected final AttributeInstruction tabindex(String value) {
+    protected final Instruction.OfAttribute tabindex(String value) {
       return $attributes().tabindex(value);
     }
 
@@ -2656,7 +2657,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this attribute.
      */
-    protected final AttributeInstruction target(String value) {
+    protected final Instruction.OfAttribute target(String value) {
       return $attributes().target(value);
     }
 
@@ -2668,7 +2669,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this attribute.
      */
-    protected final AttributeInstruction textAnchor(String value) {
+    protected final Instruction.OfAttribute textAnchor(String value) {
       return $attributes().textAnchor(value);
     }
 
@@ -2680,7 +2681,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this attribute.
      */
-    protected final AttributeInstruction textDecoration(String value) {
+    protected final Instruction.OfAttribute textDecoration(String value) {
       return $attributes().textDecoration(value);
     }
 
@@ -2692,7 +2693,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this attribute.
      */
-    protected final AttributeInstruction textOverflow(String value) {
+    protected final Instruction.OfAttribute textOverflow(String value) {
       return $attributes().textOverflow(value);
     }
 
@@ -2704,7 +2705,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this attribute.
      */
-    protected final AttributeInstruction textRendering(String value) {
+    protected final Instruction.OfAttribute textRendering(String value) {
       return $attributes().textRendering(value);
     }
 
@@ -2716,7 +2717,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this attribute.
      */
-    protected final AttributeInstruction transform(String value) {
+    protected final Instruction.OfAttribute transform(String value) {
       return $attributes().transform(value);
     }
 
@@ -2729,7 +2730,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this attribute.
      */
-    protected final AttributeInstruction transformOrigin(String value) {
+    protected final Instruction.OfAttribute transformOrigin(String value) {
       return $attributes().transformOrigin(value);
     }
 
@@ -2741,7 +2742,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this attribute.
      */
-    protected final AttributeInstruction translate(String value) {
+    protected final Instruction.OfAttribute translate(String value) {
       return $attributes().translate(value);
     }
 
@@ -2753,7 +2754,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this attribute.
      */
-    protected final AttributeInstruction type(String value) {
+    protected final Instruction.OfAttribute type(String value) {
       return $attributes().type(value);
     }
 
@@ -2765,7 +2766,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this attribute.
      */
-    protected final AttributeInstruction unicodeBidi(String value) {
+    protected final Instruction.OfAttribute unicodeBidi(String value) {
       return $attributes().unicodeBidi(value);
     }
 
@@ -2777,7 +2778,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this attribute.
      */
-    protected final AttributeInstruction value(String value) {
+    protected final Instruction.OfAttribute value(String value) {
       return $attributes().value(value);
     }
 
@@ -2789,7 +2790,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this attribute.
      */
-    protected final AttributeInstruction vectorEffect(String value) {
+    protected final Instruction.OfAttribute vectorEffect(String value) {
       return $attributes().vectorEffect(value);
     }
 
@@ -2801,7 +2802,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this attribute.
      */
-    protected final AttributeInstruction viewBox(String value) {
+    protected final Instruction.OfAttribute viewBox(String value) {
       return $attributes().viewBox(value);
     }
 
@@ -2813,7 +2814,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this attribute.
      */
-    protected final AttributeInstruction visibility(String value) {
+    protected final Instruction.OfAttribute visibility(String value) {
       return $attributes().visibility(value);
     }
 
@@ -2825,7 +2826,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this attribute.
      */
-    protected final AttributeInstruction whiteSpace(String value) {
+    protected final Instruction.OfAttribute whiteSpace(String value) {
       return $attributes().whiteSpace(value);
     }
 
@@ -2837,7 +2838,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this attribute.
      */
-    protected final AttributeInstruction width(String value) {
+    protected final Instruction.OfAttribute width(String value) {
       return $attributes().width(value);
     }
 
@@ -2849,7 +2850,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this attribute.
      */
-    protected final AttributeInstruction wordSpacing(String value) {
+    protected final Instruction.OfAttribute wordSpacing(String value) {
       return $attributes().wordSpacing(value);
     }
 
@@ -2861,7 +2862,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this attribute.
      */
-    protected final AttributeInstruction wrap(String value) {
+    protected final Instruction.OfAttribute wrap(String value) {
       return $attributes().wrap(value);
     }
 
@@ -2873,7 +2874,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this attribute.
      */
-    protected final AttributeInstruction writingMode(String value) {
+    protected final Instruction.OfAttribute writingMode(String value) {
       return $attributes().writingMode(value);
     }
 
@@ -2885,7 +2886,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this attribute.
      */
-    protected final AttributeInstruction xmlns(String value) {
+    protected final Instruction.OfAttribute xmlns(String value) {
       return $attributes().xmlns(value);
     }
 
@@ -2918,7 +2919,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this element.
      */
-    protected final ElementInstruction a(Instruction... contents) {
+    protected final Html.Instruction.OfElement a(Instruction... contents) {
       return $elements().a(contents);
     }
 
@@ -2930,7 +2931,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this element.
      */
-    protected final ElementInstruction a(String text) {
+    protected final Html.Instruction.OfElement a(String text) {
       return $elements().a(text);
     }
 
@@ -2942,7 +2943,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this element.
      */
-    protected final ElementInstruction abbr(Instruction... contents) {
+    protected final Html.Instruction.OfElement abbr(Instruction... contents) {
       return $elements().abbr(contents);
     }
 
@@ -2954,7 +2955,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this element.
      */
-    protected final ElementInstruction abbr(String text) {
+    protected final Html.Instruction.OfElement abbr(String text) {
       return $elements().abbr(text);
     }
 
@@ -2966,7 +2967,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this element.
      */
-    protected final ElementInstruction article(Instruction... contents) {
+    protected final Html.Instruction.OfElement article(Instruction... contents) {
       return $elements().article(contents);
     }
 
@@ -2978,7 +2979,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this element.
      */
-    protected final ElementInstruction article(String text) {
+    protected final Html.Instruction.OfElement article(String text) {
       return $elements().article(text);
     }
 
@@ -2990,7 +2991,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this element.
      */
-    protected final ElementInstruction b(Instruction... contents) {
+    protected final Html.Instruction.OfElement b(Instruction... contents) {
       return $elements().b(contents);
     }
 
@@ -3002,7 +3003,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this element.
      */
-    protected final ElementInstruction b(String text) {
+    protected final Html.Instruction.OfElement b(String text) {
       return $elements().b(text);
     }
 
@@ -3014,7 +3015,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this element.
      */
-    protected final ElementInstruction blockquote(Instruction... contents) {
+    protected final Html.Instruction.OfElement blockquote(Instruction... contents) {
       return $elements().blockquote(contents);
     }
 
@@ -3026,7 +3027,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this element.
      */
-    protected final ElementInstruction blockquote(String text) {
+    protected final Html.Instruction.OfElement blockquote(String text) {
       return $elements().blockquote(text);
     }
 
@@ -3038,7 +3039,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this element.
      */
-    protected final ElementInstruction body(Instruction... contents) {
+    protected final Html.Instruction.OfElement body(Instruction... contents) {
       return $elements().body(contents);
     }
 
@@ -3050,7 +3051,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this element.
      */
-    protected final ElementInstruction body(String text) {
+    protected final Html.Instruction.OfElement body(String text) {
       return $elements().body(text);
     }
 
@@ -3062,7 +3063,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this element.
      */
-    protected final ElementInstruction br(VoidInstruction... contents) {
+    protected final Html.Instruction.OfElement br(Instruction.OfVoid... contents) {
       return $elements().br(contents);
     }
 
@@ -3074,7 +3075,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this element.
      */
-    protected final ElementInstruction button(Instruction... contents) {
+    protected final Html.Instruction.OfElement button(Instruction... contents) {
       return $elements().button(contents);
     }
 
@@ -3086,7 +3087,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this element.
      */
-    protected final ElementInstruction button(String text) {
+    protected final Html.Instruction.OfElement button(String text) {
       return $elements().button(text);
     }
 
@@ -3098,7 +3099,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this element.
      */
-    protected final ElementInstruction clipPath(Instruction... contents) {
+    protected final Html.Instruction.OfElement clipPath(Instruction... contents) {
       return $elements().clipPath(contents);
     }
 
@@ -3111,7 +3112,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this attribute or element.
      */
-    protected final ElementInstruction clipPath(String text) {
+    protected final Html.Instruction.OfElement clipPath(String text) {
       return $elements().clipPath(text);
     }
 
@@ -3123,7 +3124,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this element.
      */
-    protected final ElementInstruction code(Instruction... contents) {
+    protected final Html.Instruction.OfElement code(Instruction... contents) {
       return $elements().code(contents);
     }
 
@@ -3135,7 +3136,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this element.
      */
-    protected final ElementInstruction code(String text) {
+    protected final Html.Instruction.OfElement code(String text) {
       return $elements().code(text);
     }
 
@@ -3147,7 +3148,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this element.
      */
-    protected final ElementInstruction dd(Instruction... contents) {
+    protected final Html.Instruction.OfElement dd(Instruction... contents) {
       return $elements().dd(contents);
     }
 
@@ -3159,7 +3160,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this element.
      */
-    protected final ElementInstruction dd(String text) {
+    protected final Html.Instruction.OfElement dd(String text) {
       return $elements().dd(text);
     }
 
@@ -3171,7 +3172,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this element.
      */
-    protected final ElementInstruction defs(Instruction... contents) {
+    protected final Html.Instruction.OfElement defs(Instruction... contents) {
       return $elements().defs(contents);
     }
 
@@ -3183,7 +3184,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this element.
      */
-    protected final ElementInstruction defs(String text) {
+    protected final Html.Instruction.OfElement defs(String text) {
       return $elements().defs(text);
     }
 
@@ -3195,7 +3196,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this element.
      */
-    protected final ElementInstruction details(Instruction... contents) {
+    protected final Html.Instruction.OfElement details(Instruction... contents) {
       return $elements().details(contents);
     }
 
@@ -3207,7 +3208,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this element.
      */
-    protected final ElementInstruction details(String text) {
+    protected final Html.Instruction.OfElement details(String text) {
       return $elements().details(text);
     }
 
@@ -3219,7 +3220,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this element.
      */
-    protected final ElementInstruction div(Instruction... contents) {
+    protected final Html.Instruction.OfElement div(Instruction... contents) {
       return $elements().div(contents);
     }
 
@@ -3231,7 +3232,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this element.
      */
-    protected final ElementInstruction div(String text) {
+    protected final Html.Instruction.OfElement div(String text) {
       return $elements().div(text);
     }
 
@@ -3243,7 +3244,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this element.
      */
-    protected final ElementInstruction dl(Instruction... contents) {
+    protected final Html.Instruction.OfElement dl(Instruction... contents) {
       return $elements().dl(contents);
     }
 
@@ -3255,7 +3256,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this element.
      */
-    protected final ElementInstruction dl(String text) {
+    protected final Html.Instruction.OfElement dl(String text) {
       return $elements().dl(text);
     }
 
@@ -3267,7 +3268,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this element.
      */
-    protected final ElementInstruction dt(Instruction... contents) {
+    protected final Html.Instruction.OfElement dt(Instruction... contents) {
       return $elements().dt(contents);
     }
 
@@ -3279,7 +3280,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this element.
      */
-    protected final ElementInstruction dt(String text) {
+    protected final Html.Instruction.OfElement dt(String text) {
       return $elements().dt(text);
     }
 
@@ -3291,7 +3292,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this element.
      */
-    protected final ElementInstruction em(Instruction... contents) {
+    protected final Html.Instruction.OfElement em(Instruction... contents) {
       return $elements().em(contents);
     }
 
@@ -3303,7 +3304,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this element.
      */
-    protected final ElementInstruction em(String text) {
+    protected final Html.Instruction.OfElement em(String text) {
       return $elements().em(text);
     }
 
@@ -3315,7 +3316,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this element.
      */
-    protected final ElementInstruction fieldset(Instruction... contents) {
+    protected final Html.Instruction.OfElement fieldset(Instruction... contents) {
       return $elements().fieldset(contents);
     }
 
@@ -3327,7 +3328,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this element.
      */
-    protected final ElementInstruction fieldset(String text) {
+    protected final Html.Instruction.OfElement fieldset(String text) {
       return $elements().fieldset(text);
     }
 
@@ -3339,7 +3340,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this element.
      */
-    protected final ElementInstruction figure(Instruction... contents) {
+    protected final Html.Instruction.OfElement figure(Instruction... contents) {
       return $elements().figure(contents);
     }
 
@@ -3351,7 +3352,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this element.
      */
-    protected final ElementInstruction figure(String text) {
+    protected final Html.Instruction.OfElement figure(String text) {
       return $elements().figure(text);
     }
 
@@ -3363,7 +3364,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this element.
      */
-    protected final ElementInstruction footer(Instruction... contents) {
+    protected final Html.Instruction.OfElement footer(Instruction... contents) {
       return $elements().footer(contents);
     }
 
@@ -3375,7 +3376,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this element.
      */
-    protected final ElementInstruction footer(String text) {
+    protected final Html.Instruction.OfElement footer(String text) {
       return $elements().footer(text);
     }
 
@@ -3387,7 +3388,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this element.
      */
-    protected final ElementInstruction form(Instruction... contents) {
+    protected final Html.Instruction.OfElement form(Instruction... contents) {
       return $elements().form(contents);
     }
 
@@ -3399,7 +3400,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this attribute or element.
      */
-    protected final ElementInstruction form(String text) {
+    protected final Html.Instruction.OfElement form(String text) {
       return $elements().form(text);
     }
 
@@ -3411,7 +3412,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this element.
      */
-    protected final ElementInstruction g(Instruction... contents) {
+    protected final Html.Instruction.OfElement g(Instruction... contents) {
       return $elements().g(contents);
     }
 
@@ -3423,7 +3424,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this element.
      */
-    protected final ElementInstruction g(String text) {
+    protected final Html.Instruction.OfElement g(String text) {
       return $elements().g(text);
     }
 
@@ -3435,7 +3436,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this element.
      */
-    protected final ElementInstruction h1(Instruction... contents) {
+    protected final Html.Instruction.OfElement h1(Instruction... contents) {
       return $elements().h1(contents);
     }
 
@@ -3447,7 +3448,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this element.
      */
-    protected final ElementInstruction h1(String text) {
+    protected final Html.Instruction.OfElement h1(String text) {
       return $elements().h1(text);
     }
 
@@ -3459,7 +3460,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this element.
      */
-    protected final ElementInstruction h2(Instruction... contents) {
+    protected final Html.Instruction.OfElement h2(Instruction... contents) {
       return $elements().h2(contents);
     }
 
@@ -3471,7 +3472,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this element.
      */
-    protected final ElementInstruction h2(String text) {
+    protected final Html.Instruction.OfElement h2(String text) {
       return $elements().h2(text);
     }
 
@@ -3483,7 +3484,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this element.
      */
-    protected final ElementInstruction h3(Instruction... contents) {
+    protected final Html.Instruction.OfElement h3(Instruction... contents) {
       return $elements().h3(contents);
     }
 
@@ -3495,7 +3496,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this element.
      */
-    protected final ElementInstruction h3(String text) {
+    protected final Html.Instruction.OfElement h3(String text) {
       return $elements().h3(text);
     }
 
@@ -3507,7 +3508,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this element.
      */
-    protected final ElementInstruction h4(Instruction... contents) {
+    protected final Html.Instruction.OfElement h4(Instruction... contents) {
       return $elements().h4(contents);
     }
 
@@ -3519,7 +3520,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this element.
      */
-    protected final ElementInstruction h4(String text) {
+    protected final Html.Instruction.OfElement h4(String text) {
       return $elements().h4(text);
     }
 
@@ -3531,7 +3532,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this element.
      */
-    protected final ElementInstruction h5(Instruction... contents) {
+    protected final Html.Instruction.OfElement h5(Instruction... contents) {
       return $elements().h5(contents);
     }
 
@@ -3543,7 +3544,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this element.
      */
-    protected final ElementInstruction h5(String text) {
+    protected final Html.Instruction.OfElement h5(String text) {
       return $elements().h5(text);
     }
 
@@ -3555,7 +3556,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this element.
      */
-    protected final ElementInstruction h6(Instruction... contents) {
+    protected final Html.Instruction.OfElement h6(Instruction... contents) {
       return $elements().h6(contents);
     }
 
@@ -3567,7 +3568,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this element.
      */
-    protected final ElementInstruction h6(String text) {
+    protected final Html.Instruction.OfElement h6(String text) {
       return $elements().h6(text);
     }
 
@@ -3579,7 +3580,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this element.
      */
-    protected final ElementInstruction head(Instruction... contents) {
+    protected final Html.Instruction.OfElement head(Instruction... contents) {
       return $elements().head(contents);
     }
 
@@ -3591,7 +3592,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this element.
      */
-    protected final ElementInstruction head(String text) {
+    protected final Html.Instruction.OfElement head(String text) {
       return $elements().head(text);
     }
 
@@ -3603,7 +3604,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this element.
      */
-    protected final ElementInstruction header(Instruction... contents) {
+    protected final Html.Instruction.OfElement header(Instruction... contents) {
       return $elements().header(contents);
     }
 
@@ -3615,7 +3616,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this element.
      */
-    protected final ElementInstruction header(String text) {
+    protected final Html.Instruction.OfElement header(String text) {
       return $elements().header(text);
     }
 
@@ -3627,7 +3628,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this element.
      */
-    protected final ElementInstruction hgroup(Instruction... contents) {
+    protected final Html.Instruction.OfElement hgroup(Instruction... contents) {
       return $elements().hgroup(contents);
     }
 
@@ -3639,7 +3640,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this element.
      */
-    protected final ElementInstruction hgroup(String text) {
+    protected final Html.Instruction.OfElement hgroup(String text) {
       return $elements().hgroup(text);
     }
 
@@ -3651,7 +3652,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this element.
      */
-    protected final ElementInstruction hr(VoidInstruction... contents) {
+    protected final Html.Instruction.OfElement hr(Instruction.OfVoid... contents) {
       return $elements().hr(contents);
     }
 
@@ -3663,7 +3664,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this element.
      */
-    protected final ElementInstruction html(Instruction... contents) {
+    protected final Html.Instruction.OfElement html(Instruction... contents) {
       return $elements().html(contents);
     }
 
@@ -3675,7 +3676,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this element.
      */
-    protected final ElementInstruction html(String text) {
+    protected final Html.Instruction.OfElement html(String text) {
       return $elements().html(text);
     }
 
@@ -3687,7 +3688,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this element.
      */
-    protected final ElementInstruction img(VoidInstruction... contents) {
+    protected final Html.Instruction.OfElement img(Instruction.OfVoid... contents) {
       return $elements().img(contents);
     }
 
@@ -3699,7 +3700,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this element.
      */
-    protected final ElementInstruction input(VoidInstruction... contents) {
+    protected final Html.Instruction.OfElement input(Instruction.OfVoid... contents) {
       return $elements().input(contents);
     }
 
@@ -3711,7 +3712,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this element.
      */
-    protected final ElementInstruction kbd(Instruction... contents) {
+    protected final Html.Instruction.OfElement kbd(Instruction... contents) {
       return $elements().kbd(contents);
     }
 
@@ -3723,7 +3724,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this element.
      */
-    protected final ElementInstruction kbd(String text) {
+    protected final Html.Instruction.OfElement kbd(String text) {
       return $elements().kbd(text);
     }
 
@@ -3735,7 +3736,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this element.
      */
-    protected final ElementInstruction label(Instruction... contents) {
+    protected final Html.Instruction.OfElement label(Instruction... contents) {
       return $elements().label(contents);
     }
 
@@ -3747,7 +3748,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this attribute or element.
      */
-    protected final ElementInstruction label(String text) {
+    protected final Html.Instruction.OfElement label(String text) {
       return $elements().label(text);
     }
 
@@ -3759,7 +3760,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this element.
      */
-    protected final ElementInstruction legend(Instruction... contents) {
+    protected final Html.Instruction.OfElement legend(Instruction... contents) {
       return $elements().legend(contents);
     }
 
@@ -3771,7 +3772,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this element.
      */
-    protected final ElementInstruction legend(String text) {
+    protected final Html.Instruction.OfElement legend(String text) {
       return $elements().legend(text);
     }
 
@@ -3783,7 +3784,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this element.
      */
-    protected final ElementInstruction li(Instruction... contents) {
+    protected final Html.Instruction.OfElement li(Instruction... contents) {
       return $elements().li(contents);
     }
 
@@ -3795,7 +3796,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this element.
      */
-    protected final ElementInstruction li(String text) {
+    protected final Html.Instruction.OfElement li(String text) {
       return $elements().li(text);
     }
 
@@ -3807,7 +3808,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this element.
      */
-    protected final ElementInstruction link(VoidInstruction... contents) {
+    protected final Html.Instruction.OfElement link(Instruction.OfVoid... contents) {
       return $elements().link(contents);
     }
 
@@ -3819,7 +3820,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this element.
      */
-    protected final ElementInstruction main(Instruction... contents) {
+    protected final Html.Instruction.OfElement main(Instruction... contents) {
       return $elements().main(contents);
     }
 
@@ -3831,7 +3832,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this element.
      */
-    protected final ElementInstruction main(String text) {
+    protected final Html.Instruction.OfElement main(String text) {
       return $elements().main(text);
     }
 
@@ -3843,7 +3844,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this element.
      */
-    protected final ElementInstruction menu(Instruction... contents) {
+    protected final Html.Instruction.OfElement menu(Instruction... contents) {
       return $elements().menu(contents);
     }
 
@@ -3855,7 +3856,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this element.
      */
-    protected final ElementInstruction menu(String text) {
+    protected final Html.Instruction.OfElement menu(String text) {
       return $elements().menu(text);
     }
 
@@ -3867,7 +3868,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this element.
      */
-    protected final ElementInstruction meta(VoidInstruction... contents) {
+    protected final Html.Instruction.OfElement meta(Instruction.OfVoid... contents) {
       return $elements().meta(contents);
     }
 
@@ -3879,7 +3880,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this element.
      */
-    protected final ElementInstruction nav(Instruction... contents) {
+    protected final Html.Instruction.OfElement nav(Instruction... contents) {
       return $elements().nav(contents);
     }
 
@@ -3891,7 +3892,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this element.
      */
-    protected final ElementInstruction nav(String text) {
+    protected final Html.Instruction.OfElement nav(String text) {
       return $elements().nav(text);
     }
 
@@ -3903,7 +3904,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this element.
      */
-    protected final ElementInstruction ol(Instruction... contents) {
+    protected final Html.Instruction.OfElement ol(Instruction... contents) {
       return $elements().ol(contents);
     }
 
@@ -3915,7 +3916,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this element.
      */
-    protected final ElementInstruction ol(String text) {
+    protected final Html.Instruction.OfElement ol(String text) {
       return $elements().ol(text);
     }
 
@@ -3927,7 +3928,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this element.
      */
-    protected final ElementInstruction optgroup(Instruction... contents) {
+    protected final Html.Instruction.OfElement optgroup(Instruction... contents) {
       return $elements().optgroup(contents);
     }
 
@@ -3939,7 +3940,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this element.
      */
-    protected final ElementInstruction optgroup(String text) {
+    protected final Html.Instruction.OfElement optgroup(String text) {
       return $elements().optgroup(text);
     }
 
@@ -3951,7 +3952,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this element.
      */
-    protected final ElementInstruction option(Instruction... contents) {
+    protected final Html.Instruction.OfElement option(Instruction... contents) {
       return $elements().option(contents);
     }
 
@@ -3963,7 +3964,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this element.
      */
-    protected final ElementInstruction option(String text) {
+    protected final Html.Instruction.OfElement option(String text) {
       return $elements().option(text);
     }
 
@@ -3975,7 +3976,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this element.
      */
-    protected final ElementInstruction p(Instruction... contents) {
+    protected final Html.Instruction.OfElement p(Instruction... contents) {
       return $elements().p(contents);
     }
 
@@ -3987,7 +3988,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this element.
      */
-    protected final ElementInstruction p(String text) {
+    protected final Html.Instruction.OfElement p(String text) {
       return $elements().p(text);
     }
 
@@ -3999,7 +4000,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this element.
      */
-    protected final ElementInstruction path(Instruction... contents) {
+    protected final Html.Instruction.OfElement path(Instruction... contents) {
       return $elements().path(contents);
     }
 
@@ -4011,7 +4012,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this element.
      */
-    protected final ElementInstruction path(String text) {
+    protected final Html.Instruction.OfElement path(String text) {
       return $elements().path(text);
     }
 
@@ -4023,7 +4024,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this element.
      */
-    protected final ElementInstruction pre(Instruction... contents) {
+    protected final Html.Instruction.OfElement pre(Instruction... contents) {
       return $elements().pre(contents);
     }
 
@@ -4035,7 +4036,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this element.
      */
-    protected final ElementInstruction pre(String text) {
+    protected final Html.Instruction.OfElement pre(String text) {
       return $elements().pre(text);
     }
 
@@ -4047,7 +4048,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this element.
      */
-    protected final ElementInstruction progress(Instruction... contents) {
+    protected final Html.Instruction.OfElement progress(Instruction... contents) {
       return $elements().progress(contents);
     }
 
@@ -4059,7 +4060,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this element.
      */
-    protected final ElementInstruction progress(String text) {
+    protected final Html.Instruction.OfElement progress(String text) {
       return $elements().progress(text);
     }
 
@@ -4071,7 +4072,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this element.
      */
-    protected final ElementInstruction samp(Instruction... contents) {
+    protected final Html.Instruction.OfElement samp(Instruction... contents) {
       return $elements().samp(contents);
     }
 
@@ -4083,7 +4084,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this element.
      */
-    protected final ElementInstruction samp(String text) {
+    protected final Html.Instruction.OfElement samp(String text) {
       return $elements().samp(text);
     }
 
@@ -4095,7 +4096,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this element.
      */
-    protected final ElementInstruction script(Instruction... contents) {
+    protected final Html.Instruction.OfElement script(Instruction... contents) {
       return $elements().script(contents);
     }
 
@@ -4107,7 +4108,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this element.
      */
-    protected final ElementInstruction script(String text) {
+    protected final Html.Instruction.OfElement script(String text) {
       return $elements().script(text);
     }
 
@@ -4119,7 +4120,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this element.
      */
-    protected final ElementInstruction section(Instruction... contents) {
+    protected final Html.Instruction.OfElement section(Instruction... contents) {
       return $elements().section(contents);
     }
 
@@ -4131,7 +4132,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this element.
      */
-    protected final ElementInstruction section(String text) {
+    protected final Html.Instruction.OfElement section(String text) {
       return $elements().section(text);
     }
 
@@ -4143,7 +4144,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this element.
      */
-    protected final ElementInstruction select(Instruction... contents) {
+    protected final Html.Instruction.OfElement select(Instruction... contents) {
       return $elements().select(contents);
     }
 
@@ -4155,7 +4156,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this element.
      */
-    protected final ElementInstruction select(String text) {
+    protected final Html.Instruction.OfElement select(String text) {
       return $elements().select(text);
     }
 
@@ -4167,7 +4168,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this element.
      */
-    protected final ElementInstruction small(Instruction... contents) {
+    protected final Html.Instruction.OfElement small(Instruction... contents) {
       return $elements().small(contents);
     }
 
@@ -4179,7 +4180,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this element.
      */
-    protected final ElementInstruction small(String text) {
+    protected final Html.Instruction.OfElement small(String text) {
       return $elements().small(text);
     }
 
@@ -4191,7 +4192,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this element.
      */
-    protected final ElementInstruction span(Instruction... contents) {
+    protected final Html.Instruction.OfElement span(Instruction... contents) {
       return $elements().span(contents);
     }
 
@@ -4203,7 +4204,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this element.
      */
-    protected final ElementInstruction span(String text) {
+    protected final Html.Instruction.OfElement span(String text) {
       return $elements().span(text);
     }
 
@@ -4215,7 +4216,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this element.
      */
-    protected final ElementInstruction strong(Instruction... contents) {
+    protected final Html.Instruction.OfElement strong(Instruction... contents) {
       return $elements().strong(contents);
     }
 
@@ -4227,7 +4228,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this element.
      */
-    protected final ElementInstruction strong(String text) {
+    protected final Html.Instruction.OfElement strong(String text) {
       return $elements().strong(text);
     }
 
@@ -4239,7 +4240,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this element.
      */
-    protected final ElementInstruction style(Instruction... contents) {
+    protected final Html.Instruction.OfElement style(Instruction... contents) {
       return $elements().style(contents);
     }
 
@@ -4251,7 +4252,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this element.
      */
-    protected final ElementInstruction style(String text) {
+    protected final Html.Instruction.OfElement style(String text) {
       return $elements().style(text);
     }
 
@@ -4263,7 +4264,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this element.
      */
-    protected final ElementInstruction sub(Instruction... contents) {
+    protected final Html.Instruction.OfElement sub(Instruction... contents) {
       return $elements().sub(contents);
     }
 
@@ -4275,7 +4276,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this element.
      */
-    protected final ElementInstruction sub(String text) {
+    protected final Html.Instruction.OfElement sub(String text) {
       return $elements().sub(text);
     }
 
@@ -4287,7 +4288,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this element.
      */
-    protected final ElementInstruction summary(Instruction... contents) {
+    protected final Html.Instruction.OfElement summary(Instruction... contents) {
       return $elements().summary(contents);
     }
 
@@ -4299,7 +4300,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this element.
      */
-    protected final ElementInstruction summary(String text) {
+    protected final Html.Instruction.OfElement summary(String text) {
       return $elements().summary(text);
     }
 
@@ -4311,7 +4312,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this element.
      */
-    protected final ElementInstruction sup(Instruction... contents) {
+    protected final Html.Instruction.OfElement sup(Instruction... contents) {
       return $elements().sup(contents);
     }
 
@@ -4323,7 +4324,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this element.
      */
-    protected final ElementInstruction sup(String text) {
+    protected final Html.Instruction.OfElement sup(String text) {
       return $elements().sup(text);
     }
 
@@ -4335,7 +4336,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this element.
      */
-    protected final ElementInstruction svg(Instruction... contents) {
+    protected final Html.Instruction.OfElement svg(Instruction... contents) {
       return $elements().svg(contents);
     }
 
@@ -4347,7 +4348,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this element.
      */
-    protected final ElementInstruction svg(String text) {
+    protected final Html.Instruction.OfElement svg(String text) {
       return $elements().svg(text);
     }
 
@@ -4359,7 +4360,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this element.
      */
-    protected final ElementInstruction table(Instruction... contents) {
+    protected final Html.Instruction.OfElement table(Instruction... contents) {
       return $elements().table(contents);
     }
 
@@ -4371,7 +4372,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this element.
      */
-    protected final ElementInstruction table(String text) {
+    protected final Html.Instruction.OfElement table(String text) {
       return $elements().table(text);
     }
 
@@ -4383,7 +4384,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this element.
      */
-    protected final ElementInstruction tbody(Instruction... contents) {
+    protected final Html.Instruction.OfElement tbody(Instruction... contents) {
       return $elements().tbody(contents);
     }
 
@@ -4395,7 +4396,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this element.
      */
-    protected final ElementInstruction tbody(String text) {
+    protected final Html.Instruction.OfElement tbody(String text) {
       return $elements().tbody(text);
     }
 
@@ -4407,7 +4408,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this element.
      */
-    protected final ElementInstruction td(Instruction... contents) {
+    protected final Html.Instruction.OfElement td(Instruction... contents) {
       return $elements().td(contents);
     }
 
@@ -4419,7 +4420,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this element.
      */
-    protected final ElementInstruction td(String text) {
+    protected final Html.Instruction.OfElement td(String text) {
       return $elements().td(text);
     }
 
@@ -4431,7 +4432,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this element.
      */
-    protected final ElementInstruction template(Instruction... contents) {
+    protected final Html.Instruction.OfElement template(Instruction... contents) {
       return $elements().template(contents);
     }
 
@@ -4443,7 +4444,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this element.
      */
-    protected final ElementInstruction template(String text) {
+    protected final Html.Instruction.OfElement template(String text) {
       return $elements().template(text);
     }
 
@@ -4455,7 +4456,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this element.
      */
-    protected final ElementInstruction textarea(Instruction... contents) {
+    protected final Html.Instruction.OfElement textarea(Instruction... contents) {
       return $elements().textarea(contents);
     }
 
@@ -4467,7 +4468,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this element.
      */
-    protected final ElementInstruction textarea(String text) {
+    protected final Html.Instruction.OfElement textarea(String text) {
       return $elements().textarea(text);
     }
 
@@ -4479,7 +4480,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this element.
      */
-    protected final ElementInstruction th(Instruction... contents) {
+    protected final Html.Instruction.OfElement th(Instruction... contents) {
       return $elements().th(contents);
     }
 
@@ -4491,7 +4492,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this element.
      */
-    protected final ElementInstruction th(String text) {
+    protected final Html.Instruction.OfElement th(String text) {
       return $elements().th(text);
     }
 
@@ -4503,7 +4504,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this element.
      */
-    protected final ElementInstruction thead(Instruction... contents) {
+    protected final Html.Instruction.OfElement thead(Instruction... contents) {
       return $elements().thead(contents);
     }
 
@@ -4515,7 +4516,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this element.
      */
-    protected final ElementInstruction thead(String text) {
+    protected final Html.Instruction.OfElement thead(String text) {
       return $elements().thead(text);
     }
 
@@ -4527,7 +4528,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this element.
      */
-    protected final ElementInstruction title(Instruction... contents) {
+    protected final Html.Instruction.OfElement title(Instruction... contents) {
       return $elements().title(contents);
     }
 
@@ -4539,7 +4540,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this attribute or element.
      */
-    protected final ElementInstruction title(String text) {
+    protected final Html.Instruction.OfElement title(String text) {
       return $elements().title(text);
     }
 
@@ -4551,7 +4552,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this element.
      */
-    protected final ElementInstruction tr(Instruction... contents) {
+    protected final Html.Instruction.OfElement tr(Instruction... contents) {
       return $elements().tr(contents);
     }
 
@@ -4563,7 +4564,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this element.
      */
-    protected final ElementInstruction tr(String text) {
+    protected final Html.Instruction.OfElement tr(String text) {
       return $elements().tr(text);
     }
 
@@ -4575,7 +4576,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this element.
      */
-    protected final ElementInstruction ul(Instruction... contents) {
+    protected final Html.Instruction.OfElement ul(Instruction... contents) {
       return $elements().ul(contents);
     }
 
@@ -4587,7 +4588,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this element.
      */
-    protected final ElementInstruction ul(String text) {
+    protected final Html.Instruction.OfElement ul(String text) {
       return $elements().ul(text);
     }
 
@@ -5759,14 +5760,14 @@ sealed class HtmlRecorder extends HtmlRecorderElements {
     }
   }
 
-  public final Html.AttributeInstruction attribute(Html.AttributeName name, String value) {
+  public final Html.Instruction.OfAttribute attribute(Html.AttributeName name, String value) {
     Check.notNull(name, "name == null");
     Check.notNull(value, "value == null");
 
     return attribute0(name, value);
   }
 
-  public final Html.DataOnInstruction dataOn(Html.AttributeName name, Script.Action value) {
+  public final Html.Instruction.OfDataOn dataOn(Html.AttributeName name, Script.Action value) {
     Check.notNull(name, "name == null");
 
     Script.Action a;
@@ -5819,7 +5820,7 @@ sealed class HtmlRecorder extends HtmlRecorderElements {
    *
    * @return an instruction representing this flatten operation
    */
-  public final Html.ElementInstruction flatten(Html.Instruction... contents) {
+  public final Html.Instruction.OfElement flatten(Html.Instruction... contents) {
     Check.notNull(contents, "contents == null");
 
     flattenBegin();
@@ -5836,7 +5837,7 @@ sealed class HtmlRecorder extends HtmlRecorderElements {
     return Html.ELEMENT;
   }
 
-  public final Html.ElementInstruction flattenNonNull(Html.Instruction... contents) {
+  public final Html.Instruction.OfElement flattenNonNull(Html.Instruction... contents) {
     Check.notNull(contents, "contents == null");
 
     flattenBegin();
@@ -5895,7 +5896,7 @@ sealed class HtmlRecorder extends HtmlRecorderElements {
    *
    * @return an instruction representing this fragment
    */
-  public final Html.FragmentInstruction include(Html.FragmentLambda fragment) {
+  public final Html.Instruction.OfFragment include(Html.FragmentLambda fragment) {
     Check.notNull(fragment, "fragment == null");
 
     int index;
@@ -5912,7 +5913,7 @@ sealed class HtmlRecorder extends HtmlRecorderElements {
     return Html.FRAGMENT;
   }
 
-  public final <T1> Html.FragmentInstruction include(Html.FragmentLambda1<T1> fragment, T1 arg1) {
+  public final <T1> Html.Instruction.OfFragment include(Html.FragmentLambda1<T1> fragment, T1 arg1) {
     Check.notNull(fragment, "fragment == null");
 
     int index;
@@ -5929,7 +5930,7 @@ sealed class HtmlRecorder extends HtmlRecorderElements {
     return Html.FRAGMENT;
   }
 
-  public final <T1, T2> Html.FragmentInstruction include(Html.FragmentLambda2<T1, T2> fragment, T1 arg1, T2 arg2) {
+  public final <T1, T2> Html.Instruction.OfFragment include(Html.FragmentLambda2<T1, T2> fragment, T1 arg1, T2 arg2) {
     Check.notNull(fragment, "fragment == null");
 
     int index;
@@ -5946,7 +5947,7 @@ sealed class HtmlRecorder extends HtmlRecorderElements {
     return Html.FRAGMENT;
   }
 
-  public final <T1, T2, T3> Html.FragmentInstruction include(
+  public final <T1, T2, T3> Html.Instruction.OfFragment include(
       Html.FragmentLambda3<T1, T2, T3> fragment, T1 arg1, T2 arg2, T3 arg3) {
     Check.notNull(fragment, "fragment == null");
 
@@ -5964,7 +5965,7 @@ sealed class HtmlRecorder extends HtmlRecorderElements {
     return Html.FRAGMENT;
   }
 
-  public final <T1, T2, T3, T4> Html.FragmentInstruction include(
+  public final <T1, T2, T3, T4> Html.Instruction.OfFragment include(
       Html.FragmentLambda4<T1, T2, T3, T4> fragment, T1 arg1, T2 arg2, T3 arg3, T4 arg4) {
     Check.notNull(fragment, "fragment == null");
 
@@ -6007,11 +6008,11 @@ sealed class HtmlRecorder extends HtmlRecorderElements {
    *
    * @return the no-op instruction.
    */
-  public final Html.NoOpInstruction noop() {
+  public final Html.Instruction.NoOp noop() {
     return Html.NOOP;
   }
 
-  public final Html.ElementInstruction raw(String text) {
+  public final Html.Instruction.OfElement raw(String text) {
     Check.notNull(text, "text == null");
 
     rawImpl(text);
@@ -6019,7 +6020,7 @@ sealed class HtmlRecorder extends HtmlRecorderElements {
     return Html.ELEMENT;
   }
 
-  public final AttributeInstruction testable(String name) {
+  public final Html.Instruction.OfAttribute testable(String name) {
     Check.notNull(name, "name == null");
 
     testableImpl(name);
@@ -6049,7 +6050,7 @@ sealed class HtmlRecorder extends HtmlRecorderElements {
    *
    * @return an instruction representing the text node
    */
-  public final Html.ElementInstruction text(String text) {
+  public final Html.Instruction.OfElement text(String text) {
     Check.notNull(text, "text == null");
 
     textImpl(text);
@@ -7397,7 +7398,7 @@ sealed class HtmlRecorderBase {
     );
   }
 
-  final Html.AttributeInstruction attribute0(Html.AttributeName name) {
+  final Html.Instruction.OfAttribute attribute0(Html.AttributeName name) {
     int index;
     index = name.index();
 
@@ -7448,7 +7449,7 @@ sealed class HtmlRecorderBase {
     return Html.ATTRIBUTE;
   }
 
-  public final Html.ElementInstruction element(Html.ElementName name, Html.Instruction... contents) {
+  public final Html.Instruction.OfElement element(Html.ElementName name, Html.Instruction... contents) {
     Check.notNull(name, "name == null");
 
     elementBegin(name);
@@ -7465,7 +7466,7 @@ sealed class HtmlRecorderBase {
     return Html.ELEMENT;
   }
 
-  public final Html.ElementInstruction element(Html.ElementName name, String text) {
+  public final Html.Instruction.OfElement element(Html.ElementName name, String text) {
     Check.notNull(name, "name == null");
     Check.notNull(text, "text == null");
 
@@ -8264,7 +8265,7 @@ sealed class HtmlRecorderAttributes extends HtmlRecorderBase {
    *
    * @return an instruction representing this attribute.
    */
-  public final Html.AttributeInstruction accesskey(String value) {
+  public final Html.Instruction.OfAttribute accesskey(String value) {
     Objects.requireNonNull(value, "value == null");
     return attribute0(HtmlAttributeName.ACCESSKEY, value);
   }
@@ -8277,7 +8278,7 @@ sealed class HtmlRecorderAttributes extends HtmlRecorderBase {
    *
    * @return an instruction representing this attribute.
    */
-  public final Html.AttributeInstruction action(String value) {
+  public final Html.Instruction.OfAttribute action(String value) {
     Objects.requireNonNull(value, "value == null");
     return attribute0(HtmlAttributeName.ACTION, value);
   }
@@ -8290,7 +8291,7 @@ sealed class HtmlRecorderAttributes extends HtmlRecorderBase {
    *
    * @return an instruction representing this attribute.
    */
-  public final Html.AttributeInstruction align(String value) {
+  public final Html.Instruction.OfAttribute align(String value) {
     Objects.requireNonNull(value, "value == null");
     return attribute0(HtmlAttributeName.ALIGN, value);
   }
@@ -8304,7 +8305,7 @@ sealed class HtmlRecorderAttributes extends HtmlRecorderBase {
    *
    * @return an instruction representing this attribute.
    */
-  public final Html.AttributeInstruction alignmentBaseline(String value) {
+  public final Html.Instruction.OfAttribute alignmentBaseline(String value) {
     Objects.requireNonNull(value, "value == null");
     return attribute0(HtmlAttributeName.ALIGNMENT_BASELINE, value);
   }
@@ -8317,7 +8318,7 @@ sealed class HtmlRecorderAttributes extends HtmlRecorderBase {
    *
    * @return an instruction representing this attribute.
    */
-  public final Html.AttributeInstruction alt(String value) {
+  public final Html.Instruction.OfAttribute alt(String value) {
     Objects.requireNonNull(value, "value == null");
     return attribute0(HtmlAttributeName.ALT, value);
   }
@@ -8330,7 +8331,7 @@ sealed class HtmlRecorderAttributes extends HtmlRecorderBase {
    *
    * @return an instruction representing this attribute.
    */
-  public final Html.AttributeInstruction ariaHidden(String value) {
+  public final Html.Instruction.OfAttribute ariaHidden(String value) {
     Objects.requireNonNull(value, "value == null");
     return attribute0(HtmlAttributeName.ARIA_HIDDEN, value);
   }
@@ -8343,7 +8344,7 @@ sealed class HtmlRecorderAttributes extends HtmlRecorderBase {
    *
    * @return an instruction representing this attribute.
    */
-  public final Html.AttributeInstruction ariaLabel(String value) {
+  public final Html.Instruction.OfAttribute ariaLabel(String value) {
     Objects.requireNonNull(value, "value == null");
     return attribute0(HtmlAttributeName.ARIA_LABEL, value);
   }
@@ -8353,7 +8354,7 @@ sealed class HtmlRecorderAttributes extends HtmlRecorderBase {
    *
    * @return an instruction representing this attribute.
    */
-  public final Html.AttributeInstruction async() {
+  public final Html.Instruction.OfAttribute async() {
     return attribute0(HtmlAttributeName.ASYNC);
   }
 
@@ -8365,7 +8366,7 @@ sealed class HtmlRecorderAttributes extends HtmlRecorderBase {
    *
    * @return an instruction representing this attribute.
    */
-  public final Html.AttributeInstruction autocomplete(String value) {
+  public final Html.Instruction.OfAttribute autocomplete(String value) {
     Objects.requireNonNull(value, "value == null");
     return attribute0(HtmlAttributeName.AUTOCOMPLETE, value);
   }
@@ -8375,7 +8376,7 @@ sealed class HtmlRecorderAttributes extends HtmlRecorderBase {
    *
    * @return an instruction representing this attribute.
    */
-  public final Html.AttributeInstruction autofocus() {
+  public final Html.Instruction.OfAttribute autofocus() {
     return attribute0(HtmlAttributeName.AUTOFOCUS);
   }
 
@@ -8387,7 +8388,7 @@ sealed class HtmlRecorderAttributes extends HtmlRecorderBase {
    *
    * @return an instruction representing this attribute.
    */
-  public final Html.AttributeInstruction baselineShift(String value) {
+  public final Html.Instruction.OfAttribute baselineShift(String value) {
     Objects.requireNonNull(value, "value == null");
     return attribute0(HtmlAttributeName.BASELINE_SHIFT, value);
   }
@@ -8400,7 +8401,7 @@ sealed class HtmlRecorderAttributes extends HtmlRecorderBase {
    *
    * @return an instruction representing this attribute.
    */
-  public final Html.AttributeInstruction border(String value) {
+  public final Html.Instruction.OfAttribute border(String value) {
     Objects.requireNonNull(value, "value == null");
     return attribute0(HtmlAttributeName.BORDER, value);
   }
@@ -8413,7 +8414,7 @@ sealed class HtmlRecorderAttributes extends HtmlRecorderBase {
    *
    * @return an instruction representing this attribute.
    */
-  public final Html.AttributeInstruction cellpadding(String value) {
+  public final Html.Instruction.OfAttribute cellpadding(String value) {
     Objects.requireNonNull(value, "value == null");
     return attribute0(HtmlAttributeName.CELLPADDING, value);
   }
@@ -8426,7 +8427,7 @@ sealed class HtmlRecorderAttributes extends HtmlRecorderBase {
    *
    * @return an instruction representing this attribute.
    */
-  public final Html.AttributeInstruction cellspacing(String value) {
+  public final Html.Instruction.OfAttribute cellspacing(String value) {
     Objects.requireNonNull(value, "value == null");
     return attribute0(HtmlAttributeName.CELLSPACING, value);
   }
@@ -8439,7 +8440,7 @@ sealed class HtmlRecorderAttributes extends HtmlRecorderBase {
    *
    * @return an instruction representing this attribute.
    */
-  public final Html.AttributeInstruction charset(String value) {
+  public final Html.Instruction.OfAttribute charset(String value) {
     Objects.requireNonNull(value, "value == null");
     return attribute0(HtmlAttributeName.CHARSET, value);
   }
@@ -8452,7 +8453,7 @@ sealed class HtmlRecorderAttributes extends HtmlRecorderBase {
    *
    * @return an instruction representing this attribute.
    */
-  public final Html.AttributeInstruction cite(String value) {
+  public final Html.Instruction.OfAttribute cite(String value) {
     Objects.requireNonNull(value, "value == null");
     return attribute0(HtmlAttributeName.CITE, value);
   }
@@ -8465,7 +8466,7 @@ sealed class HtmlRecorderAttributes extends HtmlRecorderBase {
    *
    * @return an instruction representing this attribute.
    */
-  public final Html.AttributeInstruction className(String value) {
+  public final Html.Instruction.OfAttribute className(String value) {
     Objects.requireNonNull(value, "value == null");
     return attribute0(HtmlAttributeName.CLASS, value);
   }
@@ -8478,7 +8479,7 @@ sealed class HtmlRecorderAttributes extends HtmlRecorderBase {
    *
    * @return an instruction representing this attribute.
    */
-  public final Html.AttributeInstruction clipRule(String value) {
+  public final Html.Instruction.OfAttribute clipRule(String value) {
     Objects.requireNonNull(value, "value == null");
     return attribute0(HtmlAttributeName.CLIP_RULE, value);
   }
@@ -8491,7 +8492,7 @@ sealed class HtmlRecorderAttributes extends HtmlRecorderBase {
    *
    * @return an instruction representing this attribute.
    */
-  public final Html.AttributeInstruction color(String value) {
+  public final Html.Instruction.OfAttribute color(String value) {
     Objects.requireNonNull(value, "value == null");
     return attribute0(HtmlAttributeName.COLOR, value);
   }
@@ -8505,7 +8506,7 @@ sealed class HtmlRecorderAttributes extends HtmlRecorderBase {
    *
    * @return an instruction representing this attribute.
    */
-  public final Html.AttributeInstruction colorInterpolation(String value) {
+  public final Html.Instruction.OfAttribute colorInterpolation(String value) {
     Objects.requireNonNull(value, "value == null");
     return attribute0(HtmlAttributeName.COLOR_INTERPOLATION, value);
   }
@@ -8519,7 +8520,7 @@ sealed class HtmlRecorderAttributes extends HtmlRecorderBase {
    *
    * @return an instruction representing this attribute.
    */
-  public final Html.AttributeInstruction colorInterpolationFilters(String value) {
+  public final Html.Instruction.OfAttribute colorInterpolationFilters(String value) {
     Objects.requireNonNull(value, "value == null");
     return attribute0(HtmlAttributeName.COLOR_INTERPOLATION_FILTERS, value);
   }
@@ -8532,7 +8533,7 @@ sealed class HtmlRecorderAttributes extends HtmlRecorderBase {
    *
    * @return an instruction representing this attribute.
    */
-  public final Html.AttributeInstruction cols(String value) {
+  public final Html.Instruction.OfAttribute cols(String value) {
     Objects.requireNonNull(value, "value == null");
     return attribute0(HtmlAttributeName.COLS, value);
   }
@@ -8545,7 +8546,7 @@ sealed class HtmlRecorderAttributes extends HtmlRecorderBase {
    *
    * @return an instruction representing this attribute.
    */
-  public final Html.AttributeInstruction content(String value) {
+  public final Html.Instruction.OfAttribute content(String value) {
     Objects.requireNonNull(value, "value == null");
     return attribute0(HtmlAttributeName.CONTENT, value);
   }
@@ -8558,7 +8559,7 @@ sealed class HtmlRecorderAttributes extends HtmlRecorderBase {
    *
    * @return an instruction representing this attribute.
    */
-  public final Html.AttributeInstruction contenteditable(String value) {
+  public final Html.Instruction.OfAttribute contenteditable(String value) {
     Objects.requireNonNull(value, "value == null");
     return attribute0(HtmlAttributeName.CONTENTEDITABLE, value);
   }
@@ -8571,7 +8572,7 @@ sealed class HtmlRecorderAttributes extends HtmlRecorderBase {
    *
    * @return an instruction representing this attribute.
    */
-  public final Html.AttributeInstruction crossorigin(String value) {
+  public final Html.Instruction.OfAttribute crossorigin(String value) {
     Objects.requireNonNull(value, "value == null");
     return attribute0(HtmlAttributeName.CROSSORIGIN, value);
   }
@@ -8584,7 +8585,7 @@ sealed class HtmlRecorderAttributes extends HtmlRecorderBase {
    *
    * @return an instruction representing this attribute.
    */
-  public final Html.AttributeInstruction cursor(String value) {
+  public final Html.Instruction.OfAttribute cursor(String value) {
     Objects.requireNonNull(value, "value == null");
     return attribute0(HtmlAttributeName.CURSOR, value);
   }
@@ -8597,7 +8598,7 @@ sealed class HtmlRecorderAttributes extends HtmlRecorderBase {
    *
    * @return an instruction representing this attribute.
    */
-  public final Html.AttributeInstruction d(String value) {
+  public final Html.Instruction.OfAttribute d(String value) {
     Objects.requireNonNull(value, "value == null");
     return attribute0(HtmlAttributeName.D, value);
   }
@@ -8607,7 +8608,7 @@ sealed class HtmlRecorderAttributes extends HtmlRecorderBase {
    *
    * @return an instruction representing this attribute.
    */
-  public final Html.AttributeInstruction defer() {
+  public final Html.Instruction.OfAttribute defer() {
     return attribute0(HtmlAttributeName.DEFER);
   }
 
@@ -8619,7 +8620,7 @@ sealed class HtmlRecorderAttributes extends HtmlRecorderBase {
    *
    * @return an instruction representing this attribute.
    */
-  public final Html.AttributeInstruction dir(String value) {
+  public final Html.Instruction.OfAttribute dir(String value) {
     Objects.requireNonNull(value, "value == null");
     return attribute0(HtmlAttributeName.DIR, value);
   }
@@ -8632,7 +8633,7 @@ sealed class HtmlRecorderAttributes extends HtmlRecorderBase {
    *
    * @return an instruction representing this attribute.
    */
-  public final Html.AttributeInstruction direction(String value) {
+  public final Html.Instruction.OfAttribute direction(String value) {
     Objects.requireNonNull(value, "value == null");
     return attribute0(HtmlAttributeName.DIRECTION, value);
   }
@@ -8645,7 +8646,7 @@ sealed class HtmlRecorderAttributes extends HtmlRecorderBase {
    *
    * @return an instruction representing this attribute.
    */
-  public final Html.AttributeInstruction dirname(String value) {
+  public final Html.Instruction.OfAttribute dirname(String value) {
     Objects.requireNonNull(value, "value == null");
     return attribute0(HtmlAttributeName.DIRNAME, value);
   }
@@ -8655,7 +8656,7 @@ sealed class HtmlRecorderAttributes extends HtmlRecorderBase {
    *
    * @return an instruction representing this attribute.
    */
-  public final Html.AttributeInstruction disabled() {
+  public final Html.Instruction.OfAttribute disabled() {
     return attribute0(HtmlAttributeName.DISABLED);
   }
 
@@ -8667,7 +8668,7 @@ sealed class HtmlRecorderAttributes extends HtmlRecorderBase {
    *
    * @return an instruction representing this attribute.
    */
-  public final Html.AttributeInstruction display(String value) {
+  public final Html.Instruction.OfAttribute display(String value) {
     Objects.requireNonNull(value, "value == null");
     return attribute0(HtmlAttributeName.DISPLAY, value);
   }
@@ -8680,7 +8681,7 @@ sealed class HtmlRecorderAttributes extends HtmlRecorderBase {
    *
    * @return an instruction representing this attribute.
    */
-  public final Html.AttributeInstruction dominantBaseline(String value) {
+  public final Html.Instruction.OfAttribute dominantBaseline(String value) {
     Objects.requireNonNull(value, "value == null");
     return attribute0(HtmlAttributeName.DOMINANT_BASELINE, value);
   }
@@ -8693,7 +8694,7 @@ sealed class HtmlRecorderAttributes extends HtmlRecorderBase {
    *
    * @return an instruction representing this attribute.
    */
-  public final Html.AttributeInstruction draggable(String value) {
+  public final Html.Instruction.OfAttribute draggable(String value) {
     Objects.requireNonNull(value, "value == null");
     return attribute0(HtmlAttributeName.DRAGGABLE, value);
   }
@@ -8706,7 +8707,7 @@ sealed class HtmlRecorderAttributes extends HtmlRecorderBase {
    *
    * @return an instruction representing this attribute.
    */
-  public final Html.AttributeInstruction enctype(String value) {
+  public final Html.Instruction.OfAttribute enctype(String value) {
     Objects.requireNonNull(value, "value == null");
     return attribute0(HtmlAttributeName.ENCTYPE, value);
   }
@@ -8719,7 +8720,7 @@ sealed class HtmlRecorderAttributes extends HtmlRecorderBase {
    *
    * @return an instruction representing this attribute.
    */
-  public final Html.AttributeInstruction fill(String value) {
+  public final Html.Instruction.OfAttribute fill(String value) {
     Objects.requireNonNull(value, "value == null");
     return attribute0(HtmlAttributeName.FILL, value);
   }
@@ -8732,7 +8733,7 @@ sealed class HtmlRecorderAttributes extends HtmlRecorderBase {
    *
    * @return an instruction representing this attribute.
    */
-  public final Html.AttributeInstruction fillOpacity(String value) {
+  public final Html.Instruction.OfAttribute fillOpacity(String value) {
     Objects.requireNonNull(value, "value == null");
     return attribute0(HtmlAttributeName.FILL_OPACITY, value);
   }
@@ -8745,7 +8746,7 @@ sealed class HtmlRecorderAttributes extends HtmlRecorderBase {
    *
    * @return an instruction representing this attribute.
    */
-  public final Html.AttributeInstruction fillRule(String value) {
+  public final Html.Instruction.OfAttribute fillRule(String value) {
     Objects.requireNonNull(value, "value == null");
     return attribute0(HtmlAttributeName.FILL_RULE, value);
   }
@@ -8758,7 +8759,7 @@ sealed class HtmlRecorderAttributes extends HtmlRecorderBase {
    *
    * @return an instruction representing this attribute.
    */
-  public final Html.AttributeInstruction filter(String value) {
+  public final Html.Instruction.OfAttribute filter(String value) {
     Objects.requireNonNull(value, "value == null");
     return attribute0(HtmlAttributeName.FILTER, value);
   }
@@ -8771,7 +8772,7 @@ sealed class HtmlRecorderAttributes extends HtmlRecorderBase {
    *
    * @return an instruction representing this attribute.
    */
-  public final Html.AttributeInstruction floodColor(String value) {
+  public final Html.Instruction.OfAttribute floodColor(String value) {
     Objects.requireNonNull(value, "value == null");
     return attribute0(HtmlAttributeName.FLOOD_COLOR, value);
   }
@@ -8784,7 +8785,7 @@ sealed class HtmlRecorderAttributes extends HtmlRecorderBase {
    *
    * @return an instruction representing this attribute.
    */
-  public final Html.AttributeInstruction floodOpacity(String value) {
+  public final Html.Instruction.OfAttribute floodOpacity(String value) {
     Objects.requireNonNull(value, "value == null");
     return attribute0(HtmlAttributeName.FLOOD_OPACITY, value);
   }
@@ -8797,7 +8798,7 @@ sealed class HtmlRecorderAttributes extends HtmlRecorderBase {
    *
    * @return an instruction representing this attribute.
    */
-  public final Html.AttributeInstruction fontFamily(String value) {
+  public final Html.Instruction.OfAttribute fontFamily(String value) {
     Objects.requireNonNull(value, "value == null");
     return attribute0(HtmlAttributeName.FONT_FAMILY, value);
   }
@@ -8810,7 +8811,7 @@ sealed class HtmlRecorderAttributes extends HtmlRecorderBase {
    *
    * @return an instruction representing this attribute.
    */
-  public final Html.AttributeInstruction fontSize(String value) {
+  public final Html.Instruction.OfAttribute fontSize(String value) {
     Objects.requireNonNull(value, "value == null");
     return attribute0(HtmlAttributeName.FONT_SIZE, value);
   }
@@ -8823,7 +8824,7 @@ sealed class HtmlRecorderAttributes extends HtmlRecorderBase {
    *
    * @return an instruction representing this attribute.
    */
-  public final Html.AttributeInstruction fontSizeAdjust(String value) {
+  public final Html.Instruction.OfAttribute fontSizeAdjust(String value) {
     Objects.requireNonNull(value, "value == null");
     return attribute0(HtmlAttributeName.FONT_SIZE_ADJUST, value);
   }
@@ -8836,7 +8837,7 @@ sealed class HtmlRecorderAttributes extends HtmlRecorderBase {
    *
    * @return an instruction representing this attribute.
    */
-  public final Html.AttributeInstruction fontStretch(String value) {
+  public final Html.Instruction.OfAttribute fontStretch(String value) {
     Objects.requireNonNull(value, "value == null");
     return attribute0(HtmlAttributeName.FONT_STRETCH, value);
   }
@@ -8849,7 +8850,7 @@ sealed class HtmlRecorderAttributes extends HtmlRecorderBase {
    *
    * @return an instruction representing this attribute.
    */
-  public final Html.AttributeInstruction fontStyle(String value) {
+  public final Html.Instruction.OfAttribute fontStyle(String value) {
     Objects.requireNonNull(value, "value == null");
     return attribute0(HtmlAttributeName.FONT_STYLE, value);
   }
@@ -8862,7 +8863,7 @@ sealed class HtmlRecorderAttributes extends HtmlRecorderBase {
    *
    * @return an instruction representing this attribute.
    */
-  public final Html.AttributeInstruction fontVariant(String value) {
+  public final Html.Instruction.OfAttribute fontVariant(String value) {
     Objects.requireNonNull(value, "value == null");
     return attribute0(HtmlAttributeName.FONT_VARIANT, value);
   }
@@ -8875,7 +8876,7 @@ sealed class HtmlRecorderAttributes extends HtmlRecorderBase {
    *
    * @return an instruction representing this attribute.
    */
-  public final Html.AttributeInstruction fontWeight(String value) {
+  public final Html.Instruction.OfAttribute fontWeight(String value) {
     Objects.requireNonNull(value, "value == null");
     return attribute0(HtmlAttributeName.FONT_WEIGHT, value);
   }
@@ -8888,7 +8889,7 @@ sealed class HtmlRecorderAttributes extends HtmlRecorderBase {
    *
    * @return an instruction representing this attribute.
    */
-  public final Html.AttributeInstruction forAttr(String value) {
+  public final Html.Instruction.OfAttribute forAttr(String value) {
     Objects.requireNonNull(value, "value == null");
     return attribute0(HtmlAttributeName.FOR, value);
   }
@@ -8901,7 +8902,7 @@ sealed class HtmlRecorderAttributes extends HtmlRecorderBase {
    *
    * @return an instruction representing this attribute.
    */
-  public final Html.AttributeInstruction forElement(String value) {
+  public final Html.Instruction.OfAttribute forElement(String value) {
     Objects.requireNonNull(value, "value == null");
     return attribute0(HtmlAttributeName.FOR, value);
   }
@@ -8915,7 +8916,7 @@ sealed class HtmlRecorderAttributes extends HtmlRecorderBase {
    *
    * @return an instruction representing this attribute.
    */
-  public final Html.AttributeInstruction glyphOrientationHorizontal(String value) {
+  public final Html.Instruction.OfAttribute glyphOrientationHorizontal(String value) {
     Objects.requireNonNull(value, "value == null");
     return attribute0(HtmlAttributeName.GLYPH_ORIENTATION_HORIZONTAL, value);
   }
@@ -8929,7 +8930,7 @@ sealed class HtmlRecorderAttributes extends HtmlRecorderBase {
    *
    * @return an instruction representing this attribute.
    */
-  public final Html.AttributeInstruction glyphOrientationVertical(String value) {
+  public final Html.Instruction.OfAttribute glyphOrientationVertical(String value) {
     Objects.requireNonNull(value, "value == null");
     return attribute0(HtmlAttributeName.GLYPH_ORIENTATION_VERTICAL, value);
   }
@@ -8942,7 +8943,7 @@ sealed class HtmlRecorderAttributes extends HtmlRecorderBase {
    *
    * @return an instruction representing this attribute.
    */
-  public final Html.AttributeInstruction height(String value) {
+  public final Html.Instruction.OfAttribute height(String value) {
     Objects.requireNonNull(value, "value == null");
     return attribute0(HtmlAttributeName.HEIGHT, value);
   }
@@ -8952,7 +8953,7 @@ sealed class HtmlRecorderAttributes extends HtmlRecorderBase {
    *
    * @return an instruction representing this attribute.
    */
-  public final Html.AttributeInstruction hidden() {
+  public final Html.Instruction.OfAttribute hidden() {
     return attribute0(HtmlAttributeName.HIDDEN);
   }
 
@@ -8964,7 +8965,7 @@ sealed class HtmlRecorderAttributes extends HtmlRecorderBase {
    *
    * @return an instruction representing this attribute.
    */
-  public final Html.AttributeInstruction href(String value) {
+  public final Html.Instruction.OfAttribute href(String value) {
     Objects.requireNonNull(value, "value == null");
     return attribute0(HtmlAttributeName.HREF, value);
   }
@@ -8977,7 +8978,7 @@ sealed class HtmlRecorderAttributes extends HtmlRecorderBase {
    *
    * @return an instruction representing this attribute.
    */
-  public final Html.AttributeInstruction httpEquiv(String value) {
+  public final Html.Instruction.OfAttribute httpEquiv(String value) {
     Objects.requireNonNull(value, "value == null");
     return attribute0(HtmlAttributeName.HTTP_EQUIV, value);
   }
@@ -8990,7 +8991,7 @@ sealed class HtmlRecorderAttributes extends HtmlRecorderBase {
    *
    * @return an instruction representing this attribute.
    */
-  public final Html.AttributeInstruction id(String value) {
+  public final Html.Instruction.OfAttribute id(String value) {
     Objects.requireNonNull(value, "value == null");
     return attribute0(HtmlAttributeName.ID, value);
   }
@@ -9003,7 +9004,7 @@ sealed class HtmlRecorderAttributes extends HtmlRecorderBase {
    *
    * @return an instruction representing this attribute.
    */
-  public final Html.AttributeInstruction imageRendering(String value) {
+  public final Html.Instruction.OfAttribute imageRendering(String value) {
     Objects.requireNonNull(value, "value == null");
     return attribute0(HtmlAttributeName.IMAGE_RENDERING, value);
   }
@@ -9016,7 +9017,7 @@ sealed class HtmlRecorderAttributes extends HtmlRecorderBase {
    *
    * @return an instruction representing this attribute.
    */
-  public final Html.AttributeInstruction integrity(String value) {
+  public final Html.Instruction.OfAttribute integrity(String value) {
     Objects.requireNonNull(value, "value == null");
     return attribute0(HtmlAttributeName.INTEGRITY, value);
   }
@@ -9029,7 +9030,7 @@ sealed class HtmlRecorderAttributes extends HtmlRecorderBase {
    *
    * @return an instruction representing this attribute.
    */
-  public final Html.AttributeInstruction lang(String value) {
+  public final Html.Instruction.OfAttribute lang(String value) {
     Objects.requireNonNull(value, "value == null");
     return attribute0(HtmlAttributeName.LANG, value);
   }
@@ -9042,7 +9043,7 @@ sealed class HtmlRecorderAttributes extends HtmlRecorderBase {
    *
    * @return an instruction representing this attribute.
    */
-  public final Html.AttributeInstruction letterSpacing(String value) {
+  public final Html.Instruction.OfAttribute letterSpacing(String value) {
     Objects.requireNonNull(value, "value == null");
     return attribute0(HtmlAttributeName.LETTER_SPACING, value);
   }
@@ -9055,7 +9056,7 @@ sealed class HtmlRecorderAttributes extends HtmlRecorderBase {
    *
    * @return an instruction representing this attribute.
    */
-  public final Html.AttributeInstruction lightingColor(String value) {
+  public final Html.Instruction.OfAttribute lightingColor(String value) {
     Objects.requireNonNull(value, "value == null");
     return attribute0(HtmlAttributeName.LIGHTING_COLOR, value);
   }
@@ -9068,7 +9069,7 @@ sealed class HtmlRecorderAttributes extends HtmlRecorderBase {
    *
    * @return an instruction representing this attribute.
    */
-  public final Html.AttributeInstruction markerEnd(String value) {
+  public final Html.Instruction.OfAttribute markerEnd(String value) {
     Objects.requireNonNull(value, "value == null");
     return attribute0(HtmlAttributeName.MARKER_END, value);
   }
@@ -9081,7 +9082,7 @@ sealed class HtmlRecorderAttributes extends HtmlRecorderBase {
    *
    * @return an instruction representing this attribute.
    */
-  public final Html.AttributeInstruction markerMid(String value) {
+  public final Html.Instruction.OfAttribute markerMid(String value) {
     Objects.requireNonNull(value, "value == null");
     return attribute0(HtmlAttributeName.MARKER_MID, value);
   }
@@ -9094,7 +9095,7 @@ sealed class HtmlRecorderAttributes extends HtmlRecorderBase {
    *
    * @return an instruction representing this attribute.
    */
-  public final Html.AttributeInstruction markerStart(String value) {
+  public final Html.Instruction.OfAttribute markerStart(String value) {
     Objects.requireNonNull(value, "value == null");
     return attribute0(HtmlAttributeName.MARKER_START, value);
   }
@@ -9107,7 +9108,7 @@ sealed class HtmlRecorderAttributes extends HtmlRecorderBase {
    *
    * @return an instruction representing this attribute.
    */
-  public final Html.AttributeInstruction mask(String value) {
+  public final Html.Instruction.OfAttribute mask(String value) {
     Objects.requireNonNull(value, "value == null");
     return attribute0(HtmlAttributeName.MASK, value);
   }
@@ -9120,7 +9121,7 @@ sealed class HtmlRecorderAttributes extends HtmlRecorderBase {
    *
    * @return an instruction representing this attribute.
    */
-  public final Html.AttributeInstruction maskType(String value) {
+  public final Html.Instruction.OfAttribute maskType(String value) {
     Objects.requireNonNull(value, "value == null");
     return attribute0(HtmlAttributeName.MASK_TYPE, value);
   }
@@ -9133,7 +9134,7 @@ sealed class HtmlRecorderAttributes extends HtmlRecorderBase {
    *
    * @return an instruction representing this attribute.
    */
-  public final Html.AttributeInstruction maxlength(String value) {
+  public final Html.Instruction.OfAttribute maxlength(String value) {
     Objects.requireNonNull(value, "value == null");
     return attribute0(HtmlAttributeName.MAXLENGTH, value);
   }
@@ -9146,7 +9147,7 @@ sealed class HtmlRecorderAttributes extends HtmlRecorderBase {
    *
    * @return an instruction representing this attribute.
    */
-  public final Html.AttributeInstruction media(String value) {
+  public final Html.Instruction.OfAttribute media(String value) {
     Objects.requireNonNull(value, "value == null");
     return attribute0(HtmlAttributeName.MEDIA, value);
   }
@@ -9159,7 +9160,7 @@ sealed class HtmlRecorderAttributes extends HtmlRecorderBase {
    *
    * @return an instruction representing this attribute.
    */
-  public final Html.AttributeInstruction method(String value) {
+  public final Html.Instruction.OfAttribute method(String value) {
     Objects.requireNonNull(value, "value == null");
     return attribute0(HtmlAttributeName.METHOD, value);
   }
@@ -9172,7 +9173,7 @@ sealed class HtmlRecorderAttributes extends HtmlRecorderBase {
    *
    * @return an instruction representing this attribute.
    */
-  public final Html.AttributeInstruction minlength(String value) {
+  public final Html.Instruction.OfAttribute minlength(String value) {
     Objects.requireNonNull(value, "value == null");
     return attribute0(HtmlAttributeName.MINLENGTH, value);
   }
@@ -9182,7 +9183,7 @@ sealed class HtmlRecorderAttributes extends HtmlRecorderBase {
    *
    * @return an instruction representing this attribute.
    */
-  public final Html.AttributeInstruction multiple() {
+  public final Html.Instruction.OfAttribute multiple() {
     return attribute0(HtmlAttributeName.MULTIPLE);
   }
 
@@ -9194,7 +9195,7 @@ sealed class HtmlRecorderAttributes extends HtmlRecorderBase {
    *
    * @return an instruction representing this attribute.
    */
-  public final Html.AttributeInstruction name(String value) {
+  public final Html.Instruction.OfAttribute name(String value) {
     Objects.requireNonNull(value, "value == null");
     return attribute0(HtmlAttributeName.NAME, value);
   }
@@ -9204,7 +9205,7 @@ sealed class HtmlRecorderAttributes extends HtmlRecorderBase {
    *
    * @return an instruction representing this attribute.
    */
-  public final Html.AttributeInstruction nomodule() {
+  public final Html.Instruction.OfAttribute nomodule() {
     return attribute0(HtmlAttributeName.NOMODULE);
   }
 
@@ -9216,7 +9217,7 @@ sealed class HtmlRecorderAttributes extends HtmlRecorderBase {
    *
    * @return an instruction representing this attribute.
    */
-  public final Html.AttributeInstruction onafterprint(String value) {
+  public final Html.Instruction.OfAttribute onafterprint(String value) {
     Objects.requireNonNull(value, "value == null");
     return attribute0(HtmlAttributeName.ONAFTERPRINT, value);
   }
@@ -9229,7 +9230,7 @@ sealed class HtmlRecorderAttributes extends HtmlRecorderBase {
    *
    * @return an instruction representing this attribute.
    */
-  public final Html.AttributeInstruction onbeforeprint(String value) {
+  public final Html.Instruction.OfAttribute onbeforeprint(String value) {
     Objects.requireNonNull(value, "value == null");
     return attribute0(HtmlAttributeName.ONBEFOREPRINT, value);
   }
@@ -9242,7 +9243,7 @@ sealed class HtmlRecorderAttributes extends HtmlRecorderBase {
    *
    * @return an instruction representing this attribute.
    */
-  public final Html.AttributeInstruction onbeforeunload(String value) {
+  public final Html.Instruction.OfAttribute onbeforeunload(String value) {
     Objects.requireNonNull(value, "value == null");
     return attribute0(HtmlAttributeName.ONBEFOREUNLOAD, value);
   }
@@ -9255,7 +9256,7 @@ sealed class HtmlRecorderAttributes extends HtmlRecorderBase {
    *
    * @return an instruction representing this attribute.
    */
-  public final Html.AttributeInstruction onclick(String value) {
+  public final Html.Instruction.OfAttribute onclick(String value) {
     Objects.requireNonNull(value, "value == null");
     return attribute0(HtmlAttributeName.ONCLICK, value);
   }
@@ -9268,7 +9269,7 @@ sealed class HtmlRecorderAttributes extends HtmlRecorderBase {
    *
    * @return an instruction representing this attribute.
    */
-  public final Html.AttributeInstruction onhashchange(String value) {
+  public final Html.Instruction.OfAttribute onhashchange(String value) {
     Objects.requireNonNull(value, "value == null");
     return attribute0(HtmlAttributeName.ONHASHCHANGE, value);
   }
@@ -9281,7 +9282,7 @@ sealed class HtmlRecorderAttributes extends HtmlRecorderBase {
    *
    * @return an instruction representing this attribute.
    */
-  public final Html.AttributeInstruction onlanguagechange(String value) {
+  public final Html.Instruction.OfAttribute onlanguagechange(String value) {
     Objects.requireNonNull(value, "value == null");
     return attribute0(HtmlAttributeName.ONLANGUAGECHANGE, value);
   }
@@ -9294,7 +9295,7 @@ sealed class HtmlRecorderAttributes extends HtmlRecorderBase {
    *
    * @return an instruction representing this attribute.
    */
-  public final Html.AttributeInstruction onmessage(String value) {
+  public final Html.Instruction.OfAttribute onmessage(String value) {
     Objects.requireNonNull(value, "value == null");
     return attribute0(HtmlAttributeName.ONMESSAGE, value);
   }
@@ -9307,7 +9308,7 @@ sealed class HtmlRecorderAttributes extends HtmlRecorderBase {
    *
    * @return an instruction representing this attribute.
    */
-  public final Html.AttributeInstruction onoffline(String value) {
+  public final Html.Instruction.OfAttribute onoffline(String value) {
     Objects.requireNonNull(value, "value == null");
     return attribute0(HtmlAttributeName.ONOFFLINE, value);
   }
@@ -9320,7 +9321,7 @@ sealed class HtmlRecorderAttributes extends HtmlRecorderBase {
    *
    * @return an instruction representing this attribute.
    */
-  public final Html.AttributeInstruction ononline(String value) {
+  public final Html.Instruction.OfAttribute ononline(String value) {
     Objects.requireNonNull(value, "value == null");
     return attribute0(HtmlAttributeName.ONONLINE, value);
   }
@@ -9333,7 +9334,7 @@ sealed class HtmlRecorderAttributes extends HtmlRecorderBase {
    *
    * @return an instruction representing this attribute.
    */
-  public final Html.AttributeInstruction onpagehide(String value) {
+  public final Html.Instruction.OfAttribute onpagehide(String value) {
     Objects.requireNonNull(value, "value == null");
     return attribute0(HtmlAttributeName.ONPAGEHIDE, value);
   }
@@ -9346,7 +9347,7 @@ sealed class HtmlRecorderAttributes extends HtmlRecorderBase {
    *
    * @return an instruction representing this attribute.
    */
-  public final Html.AttributeInstruction onpageshow(String value) {
+  public final Html.Instruction.OfAttribute onpageshow(String value) {
     Objects.requireNonNull(value, "value == null");
     return attribute0(HtmlAttributeName.ONPAGESHOW, value);
   }
@@ -9359,7 +9360,7 @@ sealed class HtmlRecorderAttributes extends HtmlRecorderBase {
    *
    * @return an instruction representing this attribute.
    */
-  public final Html.AttributeInstruction onpopstate(String value) {
+  public final Html.Instruction.OfAttribute onpopstate(String value) {
     Objects.requireNonNull(value, "value == null");
     return attribute0(HtmlAttributeName.ONPOPSTATE, value);
   }
@@ -9373,7 +9374,7 @@ sealed class HtmlRecorderAttributes extends HtmlRecorderBase {
    *
    * @return an instruction representing this attribute.
    */
-  public final Html.AttributeInstruction onrejectionhandled(String value) {
+  public final Html.Instruction.OfAttribute onrejectionhandled(String value) {
     Objects.requireNonNull(value, "value == null");
     return attribute0(HtmlAttributeName.ONREJECTIONHANDLED, value);
   }
@@ -9386,7 +9387,7 @@ sealed class HtmlRecorderAttributes extends HtmlRecorderBase {
    *
    * @return an instruction representing this attribute.
    */
-  public final Html.AttributeInstruction onstorage(String value) {
+  public final Html.Instruction.OfAttribute onstorage(String value) {
     Objects.requireNonNull(value, "value == null");
     return attribute0(HtmlAttributeName.ONSTORAGE, value);
   }
@@ -9399,7 +9400,7 @@ sealed class HtmlRecorderAttributes extends HtmlRecorderBase {
    *
    * @return an instruction representing this attribute.
    */
-  public final Html.AttributeInstruction onsubmit(String value) {
+  public final Html.Instruction.OfAttribute onsubmit(String value) {
     Objects.requireNonNull(value, "value == null");
     return attribute0(HtmlAttributeName.ONSUBMIT, value);
   }
@@ -9413,7 +9414,7 @@ sealed class HtmlRecorderAttributes extends HtmlRecorderBase {
    *
    * @return an instruction representing this attribute.
    */
-  public final Html.AttributeInstruction onunhandledrejection(String value) {
+  public final Html.Instruction.OfAttribute onunhandledrejection(String value) {
     Objects.requireNonNull(value, "value == null");
     return attribute0(HtmlAttributeName.ONUNHANDLEDREJECTION, value);
   }
@@ -9426,7 +9427,7 @@ sealed class HtmlRecorderAttributes extends HtmlRecorderBase {
    *
    * @return an instruction representing this attribute.
    */
-  public final Html.AttributeInstruction onunload(String value) {
+  public final Html.Instruction.OfAttribute onunload(String value) {
     Objects.requireNonNull(value, "value == null");
     return attribute0(HtmlAttributeName.ONUNLOAD, value);
   }
@@ -9439,7 +9440,7 @@ sealed class HtmlRecorderAttributes extends HtmlRecorderBase {
    *
    * @return an instruction representing this attribute.
    */
-  public final Html.AttributeInstruction opacity(String value) {
+  public final Html.Instruction.OfAttribute opacity(String value) {
     Objects.requireNonNull(value, "value == null");
     return attribute0(HtmlAttributeName.OPACITY, value);
   }
@@ -9449,7 +9450,7 @@ sealed class HtmlRecorderAttributes extends HtmlRecorderBase {
    *
    * @return an instruction representing this attribute.
    */
-  public final Html.AttributeInstruction open() {
+  public final Html.Instruction.OfAttribute open() {
     return attribute0(HtmlAttributeName.OPEN);
   }
 
@@ -9461,7 +9462,7 @@ sealed class HtmlRecorderAttributes extends HtmlRecorderBase {
    *
    * @return an instruction representing this attribute.
    */
-  public final Html.AttributeInstruction overflow(String value) {
+  public final Html.Instruction.OfAttribute overflow(String value) {
     Objects.requireNonNull(value, "value == null");
     return attribute0(HtmlAttributeName.OVERFLOW, value);
   }
@@ -9474,7 +9475,7 @@ sealed class HtmlRecorderAttributes extends HtmlRecorderBase {
    *
    * @return an instruction representing this attribute.
    */
-  public final Html.AttributeInstruction paintOrder(String value) {
+  public final Html.Instruction.OfAttribute paintOrder(String value) {
     Objects.requireNonNull(value, "value == null");
     return attribute0(HtmlAttributeName.PAINT_ORDER, value);
   }
@@ -9487,7 +9488,7 @@ sealed class HtmlRecorderAttributes extends HtmlRecorderBase {
    *
    * @return an instruction representing this attribute.
    */
-  public final Html.AttributeInstruction placeholder(String value) {
+  public final Html.Instruction.OfAttribute placeholder(String value) {
     Objects.requireNonNull(value, "value == null");
     return attribute0(HtmlAttributeName.PLACEHOLDER, value);
   }
@@ -9500,7 +9501,7 @@ sealed class HtmlRecorderAttributes extends HtmlRecorderBase {
    *
    * @return an instruction representing this attribute.
    */
-  public final Html.AttributeInstruction pointerEvents(String value) {
+  public final Html.Instruction.OfAttribute pointerEvents(String value) {
     Objects.requireNonNull(value, "value == null");
     return attribute0(HtmlAttributeName.POINTER_EVENTS, value);
   }
@@ -9513,7 +9514,7 @@ sealed class HtmlRecorderAttributes extends HtmlRecorderBase {
    *
    * @return an instruction representing this attribute.
    */
-  public final Html.AttributeInstruction property(String value) {
+  public final Html.Instruction.OfAttribute property(String value) {
     Objects.requireNonNull(value, "value == null");
     return attribute0(HtmlAttributeName.PROPERTY, value);
   }
@@ -9523,7 +9524,7 @@ sealed class HtmlRecorderAttributes extends HtmlRecorderBase {
    *
    * @return an instruction representing this attribute.
    */
-  public final Html.AttributeInstruction readonly() {
+  public final Html.Instruction.OfAttribute readonly() {
     return attribute0(HtmlAttributeName.READONLY);
   }
 
@@ -9535,7 +9536,7 @@ sealed class HtmlRecorderAttributes extends HtmlRecorderBase {
    *
    * @return an instruction representing this attribute.
    */
-  public final Html.AttributeInstruction referrerpolicy(String value) {
+  public final Html.Instruction.OfAttribute referrerpolicy(String value) {
     Objects.requireNonNull(value, "value == null");
     return attribute0(HtmlAttributeName.REFERRERPOLICY, value);
   }
@@ -9548,7 +9549,7 @@ sealed class HtmlRecorderAttributes extends HtmlRecorderBase {
    *
    * @return an instruction representing this attribute.
    */
-  public final Html.AttributeInstruction rel(String value) {
+  public final Html.Instruction.OfAttribute rel(String value) {
     Objects.requireNonNull(value, "value == null");
     return attribute0(HtmlAttributeName.REL, value);
   }
@@ -9558,7 +9559,7 @@ sealed class HtmlRecorderAttributes extends HtmlRecorderBase {
    *
    * @return an instruction representing this attribute.
    */
-  public final Html.AttributeInstruction required() {
+  public final Html.Instruction.OfAttribute required() {
     return attribute0(HtmlAttributeName.REQUIRED);
   }
 
@@ -9570,7 +9571,7 @@ sealed class HtmlRecorderAttributes extends HtmlRecorderBase {
    *
    * @return an instruction representing this attribute.
    */
-  public final Html.AttributeInstruction rev(String value) {
+  public final Html.Instruction.OfAttribute rev(String value) {
     Objects.requireNonNull(value, "value == null");
     return attribute0(HtmlAttributeName.REV, value);
   }
@@ -9580,7 +9581,7 @@ sealed class HtmlRecorderAttributes extends HtmlRecorderBase {
    *
    * @return an instruction representing this attribute.
    */
-  public final Html.AttributeInstruction reversed() {
+  public final Html.Instruction.OfAttribute reversed() {
     return attribute0(HtmlAttributeName.REVERSED);
   }
 
@@ -9592,7 +9593,7 @@ sealed class HtmlRecorderAttributes extends HtmlRecorderBase {
    *
    * @return an instruction representing this attribute.
    */
-  public final Html.AttributeInstruction role(String value) {
+  public final Html.Instruction.OfAttribute role(String value) {
     Objects.requireNonNull(value, "value == null");
     return attribute0(HtmlAttributeName.ROLE, value);
   }
@@ -9605,7 +9606,7 @@ sealed class HtmlRecorderAttributes extends HtmlRecorderBase {
    *
    * @return an instruction representing this attribute.
    */
-  public final Html.AttributeInstruction rows(String value) {
+  public final Html.Instruction.OfAttribute rows(String value) {
     Objects.requireNonNull(value, "value == null");
     return attribute0(HtmlAttributeName.ROWS, value);
   }
@@ -9615,7 +9616,7 @@ sealed class HtmlRecorderAttributes extends HtmlRecorderBase {
    *
    * @return an instruction representing this attribute.
    */
-  public final Html.AttributeInstruction selected() {
+  public final Html.Instruction.OfAttribute selected() {
     return attribute0(HtmlAttributeName.SELECTED);
   }
 
@@ -9627,7 +9628,7 @@ sealed class HtmlRecorderAttributes extends HtmlRecorderBase {
    *
    * @return an instruction representing this attribute.
    */
-  public final Html.AttributeInstruction shapeRendering(String value) {
+  public final Html.Instruction.OfAttribute shapeRendering(String value) {
     Objects.requireNonNull(value, "value == null");
     return attribute0(HtmlAttributeName.SHAPE_RENDERING, value);
   }
@@ -9640,7 +9641,7 @@ sealed class HtmlRecorderAttributes extends HtmlRecorderBase {
    *
    * @return an instruction representing this attribute.
    */
-  public final Html.AttributeInstruction size(String value) {
+  public final Html.Instruction.OfAttribute size(String value) {
     Objects.requireNonNull(value, "value == null");
     return attribute0(HtmlAttributeName.SIZE, value);
   }
@@ -9653,7 +9654,7 @@ sealed class HtmlRecorderAttributes extends HtmlRecorderBase {
    *
    * @return an instruction representing this attribute.
    */
-  public final Html.AttributeInstruction sizes(String value) {
+  public final Html.Instruction.OfAttribute sizes(String value) {
     Objects.requireNonNull(value, "value == null");
     return attribute0(HtmlAttributeName.SIZES, value);
   }
@@ -9666,7 +9667,7 @@ sealed class HtmlRecorderAttributes extends HtmlRecorderBase {
    *
    * @return an instruction representing this attribute.
    */
-  public final Html.AttributeInstruction spellcheck(String value) {
+  public final Html.Instruction.OfAttribute spellcheck(String value) {
     Objects.requireNonNull(value, "value == null");
     return attribute0(HtmlAttributeName.SPELLCHECK, value);
   }
@@ -9679,7 +9680,7 @@ sealed class HtmlRecorderAttributes extends HtmlRecorderBase {
    *
    * @return an instruction representing this attribute.
    */
-  public final Html.AttributeInstruction src(String value) {
+  public final Html.Instruction.OfAttribute src(String value) {
     Objects.requireNonNull(value, "value == null");
     return attribute0(HtmlAttributeName.SRC, value);
   }
@@ -9692,7 +9693,7 @@ sealed class HtmlRecorderAttributes extends HtmlRecorderBase {
    *
    * @return an instruction representing this attribute.
    */
-  public final Html.AttributeInstruction srcset(String value) {
+  public final Html.Instruction.OfAttribute srcset(String value) {
     Objects.requireNonNull(value, "value == null");
     return attribute0(HtmlAttributeName.SRCSET, value);
   }
@@ -9705,7 +9706,7 @@ sealed class HtmlRecorderAttributes extends HtmlRecorderBase {
    *
    * @return an instruction representing this attribute.
    */
-  public final Html.AttributeInstruction start(String value) {
+  public final Html.Instruction.OfAttribute start(String value) {
     Objects.requireNonNull(value, "value == null");
     return attribute0(HtmlAttributeName.START, value);
   }
@@ -9718,7 +9719,7 @@ sealed class HtmlRecorderAttributes extends HtmlRecorderBase {
    *
    * @return an instruction representing this attribute.
    */
-  public final Html.AttributeInstruction stopColor(String value) {
+  public final Html.Instruction.OfAttribute stopColor(String value) {
     Objects.requireNonNull(value, "value == null");
     return attribute0(HtmlAttributeName.STOP_COLOR, value);
   }
@@ -9731,7 +9732,7 @@ sealed class HtmlRecorderAttributes extends HtmlRecorderBase {
    *
    * @return an instruction representing this attribute.
    */
-  public final Html.AttributeInstruction stopOpacity(String value) {
+  public final Html.Instruction.OfAttribute stopOpacity(String value) {
     Objects.requireNonNull(value, "value == null");
     return attribute0(HtmlAttributeName.STOP_OPACITY, value);
   }
@@ -9744,7 +9745,7 @@ sealed class HtmlRecorderAttributes extends HtmlRecorderBase {
    *
    * @return an instruction representing this attribute.
    */
-  public final Html.AttributeInstruction stroke(String value) {
+  public final Html.Instruction.OfAttribute stroke(String value) {
     Objects.requireNonNull(value, "value == null");
     return attribute0(HtmlAttributeName.STROKE, value);
   }
@@ -9757,7 +9758,7 @@ sealed class HtmlRecorderAttributes extends HtmlRecorderBase {
    *
    * @return an instruction representing this attribute.
    */
-  public final Html.AttributeInstruction strokeDasharray(String value) {
+  public final Html.Instruction.OfAttribute strokeDasharray(String value) {
     Objects.requireNonNull(value, "value == null");
     return attribute0(HtmlAttributeName.STROKE_DASHARRAY, value);
   }
@@ -9770,7 +9771,7 @@ sealed class HtmlRecorderAttributes extends HtmlRecorderBase {
    *
    * @return an instruction representing this attribute.
    */
-  public final Html.AttributeInstruction strokeDashoffset(String value) {
+  public final Html.Instruction.OfAttribute strokeDashoffset(String value) {
     Objects.requireNonNull(value, "value == null");
     return attribute0(HtmlAttributeName.STROKE_DASHOFFSET, value);
   }
@@ -9783,7 +9784,7 @@ sealed class HtmlRecorderAttributes extends HtmlRecorderBase {
    *
    * @return an instruction representing this attribute.
    */
-  public final Html.AttributeInstruction strokeLinecap(String value) {
+  public final Html.Instruction.OfAttribute strokeLinecap(String value) {
     Objects.requireNonNull(value, "value == null");
     return attribute0(HtmlAttributeName.STROKE_LINECAP, value);
   }
@@ -9796,7 +9797,7 @@ sealed class HtmlRecorderAttributes extends HtmlRecorderBase {
    *
    * @return an instruction representing this attribute.
    */
-  public final Html.AttributeInstruction strokeLinejoin(String value) {
+  public final Html.Instruction.OfAttribute strokeLinejoin(String value) {
     Objects.requireNonNull(value, "value == null");
     return attribute0(HtmlAttributeName.STROKE_LINEJOIN, value);
   }
@@ -9809,7 +9810,7 @@ sealed class HtmlRecorderAttributes extends HtmlRecorderBase {
    *
    * @return an instruction representing this attribute.
    */
-  public final Html.AttributeInstruction strokeMiterlimit(String value) {
+  public final Html.Instruction.OfAttribute strokeMiterlimit(String value) {
     Objects.requireNonNull(value, "value == null");
     return attribute0(HtmlAttributeName.STROKE_MITERLIMIT, value);
   }
@@ -9822,7 +9823,7 @@ sealed class HtmlRecorderAttributes extends HtmlRecorderBase {
    *
    * @return an instruction representing this attribute.
    */
-  public final Html.AttributeInstruction strokeOpacity(String value) {
+  public final Html.Instruction.OfAttribute strokeOpacity(String value) {
     Objects.requireNonNull(value, "value == null");
     return attribute0(HtmlAttributeName.STROKE_OPACITY, value);
   }
@@ -9835,7 +9836,7 @@ sealed class HtmlRecorderAttributes extends HtmlRecorderBase {
    *
    * @return an instruction representing this attribute.
    */
-  public final Html.AttributeInstruction strokeWidth(String value) {
+  public final Html.Instruction.OfAttribute strokeWidth(String value) {
     Objects.requireNonNull(value, "value == null");
     return attribute0(HtmlAttributeName.STROKE_WIDTH, value);
   }
@@ -9848,7 +9849,7 @@ sealed class HtmlRecorderAttributes extends HtmlRecorderBase {
    *
    * @return an instruction representing this attribute.
    */
-  public final Html.AttributeInstruction inlineStyle(String value) {
+  public final Html.Instruction.OfAttribute inlineStyle(String value) {
     Objects.requireNonNull(value, "value == null");
     return attribute0(HtmlAttributeName.STYLE, value);
   }
@@ -9861,7 +9862,7 @@ sealed class HtmlRecorderAttributes extends HtmlRecorderBase {
    *
    * @return an instruction representing this attribute.
    */
-  public final Html.AttributeInstruction tabindex(String value) {
+  public final Html.Instruction.OfAttribute tabindex(String value) {
     Objects.requireNonNull(value, "value == null");
     return attribute0(HtmlAttributeName.TABINDEX, value);
   }
@@ -9874,7 +9875,7 @@ sealed class HtmlRecorderAttributes extends HtmlRecorderBase {
    *
    * @return an instruction representing this attribute.
    */
-  public final Html.AttributeInstruction target(String value) {
+  public final Html.Instruction.OfAttribute target(String value) {
     Objects.requireNonNull(value, "value == null");
     return attribute0(HtmlAttributeName.TARGET, value);
   }
@@ -9887,7 +9888,7 @@ sealed class HtmlRecorderAttributes extends HtmlRecorderBase {
    *
    * @return an instruction representing this attribute.
    */
-  public final Html.AttributeInstruction textAnchor(String value) {
+  public final Html.Instruction.OfAttribute textAnchor(String value) {
     Objects.requireNonNull(value, "value == null");
     return attribute0(HtmlAttributeName.TEXT_ANCHOR, value);
   }
@@ -9900,7 +9901,7 @@ sealed class HtmlRecorderAttributes extends HtmlRecorderBase {
    *
    * @return an instruction representing this attribute.
    */
-  public final Html.AttributeInstruction textDecoration(String value) {
+  public final Html.Instruction.OfAttribute textDecoration(String value) {
     Objects.requireNonNull(value, "value == null");
     return attribute0(HtmlAttributeName.TEXT_DECORATION, value);
   }
@@ -9913,7 +9914,7 @@ sealed class HtmlRecorderAttributes extends HtmlRecorderBase {
    *
    * @return an instruction representing this attribute.
    */
-  public final Html.AttributeInstruction textOverflow(String value) {
+  public final Html.Instruction.OfAttribute textOverflow(String value) {
     Objects.requireNonNull(value, "value == null");
     return attribute0(HtmlAttributeName.TEXT_OVERFLOW, value);
   }
@@ -9926,7 +9927,7 @@ sealed class HtmlRecorderAttributes extends HtmlRecorderBase {
    *
    * @return an instruction representing this attribute.
    */
-  public final Html.AttributeInstruction textRendering(String value) {
+  public final Html.Instruction.OfAttribute textRendering(String value) {
     Objects.requireNonNull(value, "value == null");
     return attribute0(HtmlAttributeName.TEXT_RENDERING, value);
   }
@@ -9939,7 +9940,7 @@ sealed class HtmlRecorderAttributes extends HtmlRecorderBase {
    *
    * @return an instruction representing this attribute.
    */
-  public final Html.AttributeInstruction transform(String value) {
+  public final Html.Instruction.OfAttribute transform(String value) {
     Objects.requireNonNull(value, "value == null");
     return attribute0(HtmlAttributeName.TRANSFORM, value);
   }
@@ -9952,7 +9953,7 @@ sealed class HtmlRecorderAttributes extends HtmlRecorderBase {
    *
    * @return an instruction representing this attribute.
    */
-  public final Html.AttributeInstruction transformOrigin(String value) {
+  public final Html.Instruction.OfAttribute transformOrigin(String value) {
     Objects.requireNonNull(value, "value == null");
     return attribute0(HtmlAttributeName.TRANSFORM_ORIGIN, value);
   }
@@ -9965,7 +9966,7 @@ sealed class HtmlRecorderAttributes extends HtmlRecorderBase {
    *
    * @return an instruction representing this attribute.
    */
-  public final Html.AttributeInstruction translate(String value) {
+  public final Html.Instruction.OfAttribute translate(String value) {
     Objects.requireNonNull(value, "value == null");
     return attribute0(HtmlAttributeName.TRANSLATE, value);
   }
@@ -9978,7 +9979,7 @@ sealed class HtmlRecorderAttributes extends HtmlRecorderBase {
    *
    * @return an instruction representing this attribute.
    */
-  public final Html.AttributeInstruction type(String value) {
+  public final Html.Instruction.OfAttribute type(String value) {
     Objects.requireNonNull(value, "value == null");
     return attribute0(HtmlAttributeName.TYPE, value);
   }
@@ -9991,7 +9992,7 @@ sealed class HtmlRecorderAttributes extends HtmlRecorderBase {
    *
    * @return an instruction representing this attribute.
    */
-  public final Html.AttributeInstruction unicodeBidi(String value) {
+  public final Html.Instruction.OfAttribute unicodeBidi(String value) {
     Objects.requireNonNull(value, "value == null");
     return attribute0(HtmlAttributeName.UNICODE_BIDI, value);
   }
@@ -10004,7 +10005,7 @@ sealed class HtmlRecorderAttributes extends HtmlRecorderBase {
    *
    * @return an instruction representing this attribute.
    */
-  public final Html.AttributeInstruction value(String value) {
+  public final Html.Instruction.OfAttribute value(String value) {
     Objects.requireNonNull(value, "value == null");
     return attribute0(HtmlAttributeName.VALUE, value);
   }
@@ -10017,7 +10018,7 @@ sealed class HtmlRecorderAttributes extends HtmlRecorderBase {
    *
    * @return an instruction representing this attribute.
    */
-  public final Html.AttributeInstruction vectorEffect(String value) {
+  public final Html.Instruction.OfAttribute vectorEffect(String value) {
     Objects.requireNonNull(value, "value == null");
     return attribute0(HtmlAttributeName.VECTOR_EFFECT, value);
   }
@@ -10030,7 +10031,7 @@ sealed class HtmlRecorderAttributes extends HtmlRecorderBase {
    *
    * @return an instruction representing this attribute.
    */
-  public final Html.AttributeInstruction viewBox(String value) {
+  public final Html.Instruction.OfAttribute viewBox(String value) {
     Objects.requireNonNull(value, "value == null");
     return attribute0(HtmlAttributeName.VIEWBOX, value);
   }
@@ -10043,7 +10044,7 @@ sealed class HtmlRecorderAttributes extends HtmlRecorderBase {
    *
    * @return an instruction representing this attribute.
    */
-  public final Html.AttributeInstruction visibility(String value) {
+  public final Html.Instruction.OfAttribute visibility(String value) {
     Objects.requireNonNull(value, "value == null");
     return attribute0(HtmlAttributeName.VISIBILITY, value);
   }
@@ -10056,7 +10057,7 @@ sealed class HtmlRecorderAttributes extends HtmlRecorderBase {
    *
    * @return an instruction representing this attribute.
    */
-  public final Html.AttributeInstruction whiteSpace(String value) {
+  public final Html.Instruction.OfAttribute whiteSpace(String value) {
     Objects.requireNonNull(value, "value == null");
     return attribute0(HtmlAttributeName.WHITE_SPACE, value);
   }
@@ -10069,7 +10070,7 @@ sealed class HtmlRecorderAttributes extends HtmlRecorderBase {
    *
    * @return an instruction representing this attribute.
    */
-  public final Html.AttributeInstruction width(String value) {
+  public final Html.Instruction.OfAttribute width(String value) {
     Objects.requireNonNull(value, "value == null");
     return attribute0(HtmlAttributeName.WIDTH, value);
   }
@@ -10082,7 +10083,7 @@ sealed class HtmlRecorderAttributes extends HtmlRecorderBase {
    *
    * @return an instruction representing this attribute.
    */
-  public final Html.AttributeInstruction wordSpacing(String value) {
+  public final Html.Instruction.OfAttribute wordSpacing(String value) {
     Objects.requireNonNull(value, "value == null");
     return attribute0(HtmlAttributeName.WORD_SPACING, value);
   }
@@ -10095,7 +10096,7 @@ sealed class HtmlRecorderAttributes extends HtmlRecorderBase {
    *
    * @return an instruction representing this attribute.
    */
-  public final Html.AttributeInstruction wrap(String value) {
+  public final Html.Instruction.OfAttribute wrap(String value) {
     Objects.requireNonNull(value, "value == null");
     return attribute0(HtmlAttributeName.WRAP, value);
   }
@@ -10108,7 +10109,7 @@ sealed class HtmlRecorderAttributes extends HtmlRecorderBase {
    *
    * @return an instruction representing this attribute.
    */
-  public final Html.AttributeInstruction writingMode(String value) {
+  public final Html.Instruction.OfAttribute writingMode(String value) {
     Objects.requireNonNull(value, "value == null");
     return attribute0(HtmlAttributeName.WRITING_MODE, value);
   }
@@ -10121,7 +10122,7 @@ sealed class HtmlRecorderAttributes extends HtmlRecorderBase {
    *
    * @return an instruction representing this attribute.
    */
-  public final Html.AttributeInstruction xmlns(String value) {
+  public final Html.Instruction.OfAttribute xmlns(String value) {
     Objects.requireNonNull(value, "value == null");
     return attribute0(HtmlAttributeName.XMLNS, value);
   }
@@ -10143,7 +10144,7 @@ sealed class HtmlRecorderElements extends HtmlRecorderAttributes permits HtmlRec
    *
    * @return an instruction representing this element.
    */
-  public final Html.ElementInstruction a(Html.Instruction... contents) {
+  public final Html.Instruction.OfElement a(Html.Instruction... contents) {
     return element(HtmlElementName.A, contents);
   }
 
@@ -10155,7 +10156,7 @@ sealed class HtmlRecorderElements extends HtmlRecorderAttributes permits HtmlRec
    *
    * @return an instruction representing this element.
    */
-  public final Html.ElementInstruction a(String text) {
+  public final Html.Instruction.OfElement a(String text) {
     return element(HtmlElementName.A, text);
   }
 
@@ -10167,7 +10168,7 @@ sealed class HtmlRecorderElements extends HtmlRecorderAttributes permits HtmlRec
    *
    * @return an instruction representing this element.
    */
-  public final Html.ElementInstruction abbr(Html.Instruction... contents) {
+  public final Html.Instruction.OfElement abbr(Html.Instruction... contents) {
     return element(HtmlElementName.ABBR, contents);
   }
 
@@ -10179,7 +10180,7 @@ sealed class HtmlRecorderElements extends HtmlRecorderAttributes permits HtmlRec
    *
    * @return an instruction representing this element.
    */
-  public final Html.ElementInstruction abbr(String text) {
+  public final Html.Instruction.OfElement abbr(String text) {
     return element(HtmlElementName.ABBR, text);
   }
 
@@ -10191,7 +10192,7 @@ sealed class HtmlRecorderElements extends HtmlRecorderAttributes permits HtmlRec
    *
    * @return an instruction representing this element.
    */
-  public final Html.ElementInstruction article(Html.Instruction... contents) {
+  public final Html.Instruction.OfElement article(Html.Instruction... contents) {
     return element(HtmlElementName.ARTICLE, contents);
   }
 
@@ -10203,7 +10204,7 @@ sealed class HtmlRecorderElements extends HtmlRecorderAttributes permits HtmlRec
    *
    * @return an instruction representing this element.
    */
-  public final Html.ElementInstruction article(String text) {
+  public final Html.Instruction.OfElement article(String text) {
     return element(HtmlElementName.ARTICLE, text);
   }
 
@@ -10215,7 +10216,7 @@ sealed class HtmlRecorderElements extends HtmlRecorderAttributes permits HtmlRec
    *
    * @return an instruction representing this element.
    */
-  public final Html.ElementInstruction b(Html.Instruction... contents) {
+  public final Html.Instruction.OfElement b(Html.Instruction... contents) {
     return element(HtmlElementName.B, contents);
   }
 
@@ -10227,7 +10228,7 @@ sealed class HtmlRecorderElements extends HtmlRecorderAttributes permits HtmlRec
    *
    * @return an instruction representing this element.
    */
-  public final Html.ElementInstruction b(String text) {
+  public final Html.Instruction.OfElement b(String text) {
     return element(HtmlElementName.B, text);
   }
 
@@ -10239,7 +10240,7 @@ sealed class HtmlRecorderElements extends HtmlRecorderAttributes permits HtmlRec
    *
    * @return an instruction representing this element.
    */
-  public final Html.ElementInstruction blockquote(Html.Instruction... contents) {
+  public final Html.Instruction.OfElement blockquote(Html.Instruction... contents) {
     return element(HtmlElementName.BLOCKQUOTE, contents);
   }
 
@@ -10251,7 +10252,7 @@ sealed class HtmlRecorderElements extends HtmlRecorderAttributes permits HtmlRec
    *
    * @return an instruction representing this element.
    */
-  public final Html.ElementInstruction blockquote(String text) {
+  public final Html.Instruction.OfElement blockquote(String text) {
     return element(HtmlElementName.BLOCKQUOTE, text);
   }
 
@@ -10263,7 +10264,7 @@ sealed class HtmlRecorderElements extends HtmlRecorderAttributes permits HtmlRec
    *
    * @return an instruction representing this element.
    */
-  public final Html.ElementInstruction body(Html.Instruction... contents) {
+  public final Html.Instruction.OfElement body(Html.Instruction... contents) {
     return element(HtmlElementName.BODY, contents);
   }
 
@@ -10275,7 +10276,7 @@ sealed class HtmlRecorderElements extends HtmlRecorderAttributes permits HtmlRec
    *
    * @return an instruction representing this element.
    */
-  public final Html.ElementInstruction body(String text) {
+  public final Html.Instruction.OfElement body(String text) {
     return element(HtmlElementName.BODY, text);
   }
 
@@ -10287,7 +10288,7 @@ sealed class HtmlRecorderElements extends HtmlRecorderAttributes permits HtmlRec
    *
    * @return an instruction representing this element.
    */
-  public final Html.ElementInstruction br(Html.VoidInstruction... contents) {
+  public final Html.Instruction.OfElement br(Html.Instruction.OfVoid... contents) {
     return element(HtmlElementName.BR, contents);
   }
 
@@ -10299,7 +10300,7 @@ sealed class HtmlRecorderElements extends HtmlRecorderAttributes permits HtmlRec
    *
    * @return an instruction representing this element.
    */
-  public final Html.ElementInstruction button(Html.Instruction... contents) {
+  public final Html.Instruction.OfElement button(Html.Instruction... contents) {
     return element(HtmlElementName.BUTTON, contents);
   }
 
@@ -10311,7 +10312,7 @@ sealed class HtmlRecorderElements extends HtmlRecorderAttributes permits HtmlRec
    *
    * @return an instruction representing this element.
    */
-  public final Html.ElementInstruction button(String text) {
+  public final Html.Instruction.OfElement button(String text) {
     return element(HtmlElementName.BUTTON, text);
   }
 
@@ -10323,7 +10324,7 @@ sealed class HtmlRecorderElements extends HtmlRecorderAttributes permits HtmlRec
    *
    * @return an instruction representing this element.
    */
-  public final Html.ElementInstruction clipPath(Html.Instruction... contents) {
+  public final Html.Instruction.OfElement clipPath(Html.Instruction... contents) {
     return element(HtmlElementName.CLIPPATH, contents);
   }
 
@@ -10336,7 +10337,7 @@ sealed class HtmlRecorderElements extends HtmlRecorderAttributes permits HtmlRec
    *
    * @return an instruction representing this attribute or element.
    */
-  public final Html.ElementInstruction clipPath(String text) {
+  public final Html.Instruction.OfElement clipPath(String text) {
     ambiguous(HtmlAmbiguous.CLIPPATH, text);
     return Html.ELEMENT;
   }
@@ -10349,7 +10350,7 @@ sealed class HtmlRecorderElements extends HtmlRecorderAttributes permits HtmlRec
    *
    * @return an instruction representing this element.
    */
-  public final Html.ElementInstruction code(Html.Instruction... contents) {
+  public final Html.Instruction.OfElement code(Html.Instruction... contents) {
     return element(HtmlElementName.CODE, contents);
   }
 
@@ -10361,7 +10362,7 @@ sealed class HtmlRecorderElements extends HtmlRecorderAttributes permits HtmlRec
    *
    * @return an instruction representing this element.
    */
-  public final Html.ElementInstruction code(String text) {
+  public final Html.Instruction.OfElement code(String text) {
     return element(HtmlElementName.CODE, text);
   }
 
@@ -10373,7 +10374,7 @@ sealed class HtmlRecorderElements extends HtmlRecorderAttributes permits HtmlRec
    *
    * @return an instruction representing this element.
    */
-  public final Html.ElementInstruction dd(Html.Instruction... contents) {
+  public final Html.Instruction.OfElement dd(Html.Instruction... contents) {
     return element(HtmlElementName.DD, contents);
   }
 
@@ -10385,7 +10386,7 @@ sealed class HtmlRecorderElements extends HtmlRecorderAttributes permits HtmlRec
    *
    * @return an instruction representing this element.
    */
-  public final Html.ElementInstruction dd(String text) {
+  public final Html.Instruction.OfElement dd(String text) {
     return element(HtmlElementName.DD, text);
   }
 
@@ -10397,7 +10398,7 @@ sealed class HtmlRecorderElements extends HtmlRecorderAttributes permits HtmlRec
    *
    * @return an instruction representing this element.
    */
-  public final Html.ElementInstruction defs(Html.Instruction... contents) {
+  public final Html.Instruction.OfElement defs(Html.Instruction... contents) {
     return element(HtmlElementName.DEFS, contents);
   }
 
@@ -10409,7 +10410,7 @@ sealed class HtmlRecorderElements extends HtmlRecorderAttributes permits HtmlRec
    *
    * @return an instruction representing this element.
    */
-  public final Html.ElementInstruction defs(String text) {
+  public final Html.Instruction.OfElement defs(String text) {
     return element(HtmlElementName.DEFS, text);
   }
 
@@ -10421,7 +10422,7 @@ sealed class HtmlRecorderElements extends HtmlRecorderAttributes permits HtmlRec
    *
    * @return an instruction representing this element.
    */
-  public final Html.ElementInstruction details(Html.Instruction... contents) {
+  public final Html.Instruction.OfElement details(Html.Instruction... contents) {
     return element(HtmlElementName.DETAILS, contents);
   }
 
@@ -10433,7 +10434,7 @@ sealed class HtmlRecorderElements extends HtmlRecorderAttributes permits HtmlRec
    *
    * @return an instruction representing this element.
    */
-  public final Html.ElementInstruction details(String text) {
+  public final Html.Instruction.OfElement details(String text) {
     return element(HtmlElementName.DETAILS, text);
   }
 
@@ -10445,7 +10446,7 @@ sealed class HtmlRecorderElements extends HtmlRecorderAttributes permits HtmlRec
    *
    * @return an instruction representing this element.
    */
-  public final Html.ElementInstruction div(Html.Instruction... contents) {
+  public final Html.Instruction.OfElement div(Html.Instruction... contents) {
     return element(HtmlElementName.DIV, contents);
   }
 
@@ -10457,7 +10458,7 @@ sealed class HtmlRecorderElements extends HtmlRecorderAttributes permits HtmlRec
    *
    * @return an instruction representing this element.
    */
-  public final Html.ElementInstruction div(String text) {
+  public final Html.Instruction.OfElement div(String text) {
     return element(HtmlElementName.DIV, text);
   }
 
@@ -10469,7 +10470,7 @@ sealed class HtmlRecorderElements extends HtmlRecorderAttributes permits HtmlRec
    *
    * @return an instruction representing this element.
    */
-  public final Html.ElementInstruction dl(Html.Instruction... contents) {
+  public final Html.Instruction.OfElement dl(Html.Instruction... contents) {
     return element(HtmlElementName.DL, contents);
   }
 
@@ -10481,7 +10482,7 @@ sealed class HtmlRecorderElements extends HtmlRecorderAttributes permits HtmlRec
    *
    * @return an instruction representing this element.
    */
-  public final Html.ElementInstruction dl(String text) {
+  public final Html.Instruction.OfElement dl(String text) {
     return element(HtmlElementName.DL, text);
   }
 
@@ -10493,7 +10494,7 @@ sealed class HtmlRecorderElements extends HtmlRecorderAttributes permits HtmlRec
    *
    * @return an instruction representing this element.
    */
-  public final Html.ElementInstruction dt(Html.Instruction... contents) {
+  public final Html.Instruction.OfElement dt(Html.Instruction... contents) {
     return element(HtmlElementName.DT, contents);
   }
 
@@ -10505,7 +10506,7 @@ sealed class HtmlRecorderElements extends HtmlRecorderAttributes permits HtmlRec
    *
    * @return an instruction representing this element.
    */
-  public final Html.ElementInstruction dt(String text) {
+  public final Html.Instruction.OfElement dt(String text) {
     return element(HtmlElementName.DT, text);
   }
 
@@ -10517,7 +10518,7 @@ sealed class HtmlRecorderElements extends HtmlRecorderAttributes permits HtmlRec
    *
    * @return an instruction representing this element.
    */
-  public final Html.ElementInstruction em(Html.Instruction... contents) {
+  public final Html.Instruction.OfElement em(Html.Instruction... contents) {
     return element(HtmlElementName.EM, contents);
   }
 
@@ -10529,7 +10530,7 @@ sealed class HtmlRecorderElements extends HtmlRecorderAttributes permits HtmlRec
    *
    * @return an instruction representing this element.
    */
-  public final Html.ElementInstruction em(String text) {
+  public final Html.Instruction.OfElement em(String text) {
     return element(HtmlElementName.EM, text);
   }
 
@@ -10541,7 +10542,7 @@ sealed class HtmlRecorderElements extends HtmlRecorderAttributes permits HtmlRec
    *
    * @return an instruction representing this element.
    */
-  public final Html.ElementInstruction fieldset(Html.Instruction... contents) {
+  public final Html.Instruction.OfElement fieldset(Html.Instruction... contents) {
     return element(HtmlElementName.FIELDSET, contents);
   }
 
@@ -10553,7 +10554,7 @@ sealed class HtmlRecorderElements extends HtmlRecorderAttributes permits HtmlRec
    *
    * @return an instruction representing this element.
    */
-  public final Html.ElementInstruction fieldset(String text) {
+  public final Html.Instruction.OfElement fieldset(String text) {
     return element(HtmlElementName.FIELDSET, text);
   }
 
@@ -10565,7 +10566,7 @@ sealed class HtmlRecorderElements extends HtmlRecorderAttributes permits HtmlRec
    *
    * @return an instruction representing this element.
    */
-  public final Html.ElementInstruction figure(Html.Instruction... contents) {
+  public final Html.Instruction.OfElement figure(Html.Instruction... contents) {
     return element(HtmlElementName.FIGURE, contents);
   }
 
@@ -10577,7 +10578,7 @@ sealed class HtmlRecorderElements extends HtmlRecorderAttributes permits HtmlRec
    *
    * @return an instruction representing this element.
    */
-  public final Html.ElementInstruction figure(String text) {
+  public final Html.Instruction.OfElement figure(String text) {
     return element(HtmlElementName.FIGURE, text);
   }
 
@@ -10589,7 +10590,7 @@ sealed class HtmlRecorderElements extends HtmlRecorderAttributes permits HtmlRec
    *
    * @return an instruction representing this element.
    */
-  public final Html.ElementInstruction footer(Html.Instruction... contents) {
+  public final Html.Instruction.OfElement footer(Html.Instruction... contents) {
     return element(HtmlElementName.FOOTER, contents);
   }
 
@@ -10601,7 +10602,7 @@ sealed class HtmlRecorderElements extends HtmlRecorderAttributes permits HtmlRec
    *
    * @return an instruction representing this element.
    */
-  public final Html.ElementInstruction footer(String text) {
+  public final Html.Instruction.OfElement footer(String text) {
     return element(HtmlElementName.FOOTER, text);
   }
 
@@ -10613,7 +10614,7 @@ sealed class HtmlRecorderElements extends HtmlRecorderAttributes permits HtmlRec
    *
    * @return an instruction representing this element.
    */
-  public final Html.ElementInstruction form(Html.Instruction... contents) {
+  public final Html.Instruction.OfElement form(Html.Instruction... contents) {
     return element(HtmlElementName.FORM, contents);
   }
 
@@ -10625,7 +10626,7 @@ sealed class HtmlRecorderElements extends HtmlRecorderAttributes permits HtmlRec
    *
    * @return an instruction representing this attribute or element.
    */
-  public final Html.ElementInstruction form(String text) {
+  public final Html.Instruction.OfElement form(String text) {
     ambiguous(HtmlAmbiguous.FORM, text);
     return Html.ELEMENT;
   }
@@ -10638,7 +10639,7 @@ sealed class HtmlRecorderElements extends HtmlRecorderAttributes permits HtmlRec
    *
    * @return an instruction representing this element.
    */
-  public final Html.ElementInstruction g(Html.Instruction... contents) {
+  public final Html.Instruction.OfElement g(Html.Instruction... contents) {
     return element(HtmlElementName.G, contents);
   }
 
@@ -10650,7 +10651,7 @@ sealed class HtmlRecorderElements extends HtmlRecorderAttributes permits HtmlRec
    *
    * @return an instruction representing this element.
    */
-  public final Html.ElementInstruction g(String text) {
+  public final Html.Instruction.OfElement g(String text) {
     return element(HtmlElementName.G, text);
   }
 
@@ -10662,7 +10663,7 @@ sealed class HtmlRecorderElements extends HtmlRecorderAttributes permits HtmlRec
    *
    * @return an instruction representing this element.
    */
-  public final Html.ElementInstruction h1(Html.Instruction... contents) {
+  public final Html.Instruction.OfElement h1(Html.Instruction... contents) {
     return element(HtmlElementName.H1, contents);
   }
 
@@ -10674,7 +10675,7 @@ sealed class HtmlRecorderElements extends HtmlRecorderAttributes permits HtmlRec
    *
    * @return an instruction representing this element.
    */
-  public final Html.ElementInstruction h1(String text) {
+  public final Html.Instruction.OfElement h1(String text) {
     return element(HtmlElementName.H1, text);
   }
 
@@ -10686,7 +10687,7 @@ sealed class HtmlRecorderElements extends HtmlRecorderAttributes permits HtmlRec
    *
    * @return an instruction representing this element.
    */
-  public final Html.ElementInstruction h2(Html.Instruction... contents) {
+  public final Html.Instruction.OfElement h2(Html.Instruction... contents) {
     return element(HtmlElementName.H2, contents);
   }
 
@@ -10698,7 +10699,7 @@ sealed class HtmlRecorderElements extends HtmlRecorderAttributes permits HtmlRec
    *
    * @return an instruction representing this element.
    */
-  public final Html.ElementInstruction h2(String text) {
+  public final Html.Instruction.OfElement h2(String text) {
     return element(HtmlElementName.H2, text);
   }
 
@@ -10710,7 +10711,7 @@ sealed class HtmlRecorderElements extends HtmlRecorderAttributes permits HtmlRec
    *
    * @return an instruction representing this element.
    */
-  public final Html.ElementInstruction h3(Html.Instruction... contents) {
+  public final Html.Instruction.OfElement h3(Html.Instruction... contents) {
     return element(HtmlElementName.H3, contents);
   }
 
@@ -10722,7 +10723,7 @@ sealed class HtmlRecorderElements extends HtmlRecorderAttributes permits HtmlRec
    *
    * @return an instruction representing this element.
    */
-  public final Html.ElementInstruction h3(String text) {
+  public final Html.Instruction.OfElement h3(String text) {
     return element(HtmlElementName.H3, text);
   }
 
@@ -10734,7 +10735,7 @@ sealed class HtmlRecorderElements extends HtmlRecorderAttributes permits HtmlRec
    *
    * @return an instruction representing this element.
    */
-  public final Html.ElementInstruction h4(Html.Instruction... contents) {
+  public final Html.Instruction.OfElement h4(Html.Instruction... contents) {
     return element(HtmlElementName.H4, contents);
   }
 
@@ -10746,7 +10747,7 @@ sealed class HtmlRecorderElements extends HtmlRecorderAttributes permits HtmlRec
    *
    * @return an instruction representing this element.
    */
-  public final Html.ElementInstruction h4(String text) {
+  public final Html.Instruction.OfElement h4(String text) {
     return element(HtmlElementName.H4, text);
   }
 
@@ -10758,7 +10759,7 @@ sealed class HtmlRecorderElements extends HtmlRecorderAttributes permits HtmlRec
    *
    * @return an instruction representing this element.
    */
-  public final Html.ElementInstruction h5(Html.Instruction... contents) {
+  public final Html.Instruction.OfElement h5(Html.Instruction... contents) {
     return element(HtmlElementName.H5, contents);
   }
 
@@ -10770,7 +10771,7 @@ sealed class HtmlRecorderElements extends HtmlRecorderAttributes permits HtmlRec
    *
    * @return an instruction representing this element.
    */
-  public final Html.ElementInstruction h5(String text) {
+  public final Html.Instruction.OfElement h5(String text) {
     return element(HtmlElementName.H5, text);
   }
 
@@ -10782,7 +10783,7 @@ sealed class HtmlRecorderElements extends HtmlRecorderAttributes permits HtmlRec
    *
    * @return an instruction representing this element.
    */
-  public final Html.ElementInstruction h6(Html.Instruction... contents) {
+  public final Html.Instruction.OfElement h6(Html.Instruction... contents) {
     return element(HtmlElementName.H6, contents);
   }
 
@@ -10794,7 +10795,7 @@ sealed class HtmlRecorderElements extends HtmlRecorderAttributes permits HtmlRec
    *
    * @return an instruction representing this element.
    */
-  public final Html.ElementInstruction h6(String text) {
+  public final Html.Instruction.OfElement h6(String text) {
     return element(HtmlElementName.H6, text);
   }
 
@@ -10806,7 +10807,7 @@ sealed class HtmlRecorderElements extends HtmlRecorderAttributes permits HtmlRec
    *
    * @return an instruction representing this element.
    */
-  public final Html.ElementInstruction head(Html.Instruction... contents) {
+  public final Html.Instruction.OfElement head(Html.Instruction... contents) {
     return element(HtmlElementName.HEAD, contents);
   }
 
@@ -10818,7 +10819,7 @@ sealed class HtmlRecorderElements extends HtmlRecorderAttributes permits HtmlRec
    *
    * @return an instruction representing this element.
    */
-  public final Html.ElementInstruction head(String text) {
+  public final Html.Instruction.OfElement head(String text) {
     return element(HtmlElementName.HEAD, text);
   }
 
@@ -10830,7 +10831,7 @@ sealed class HtmlRecorderElements extends HtmlRecorderAttributes permits HtmlRec
    *
    * @return an instruction representing this element.
    */
-  public final Html.ElementInstruction header(Html.Instruction... contents) {
+  public final Html.Instruction.OfElement header(Html.Instruction... contents) {
     return element(HtmlElementName.HEADER, contents);
   }
 
@@ -10842,7 +10843,7 @@ sealed class HtmlRecorderElements extends HtmlRecorderAttributes permits HtmlRec
    *
    * @return an instruction representing this element.
    */
-  public final Html.ElementInstruction header(String text) {
+  public final Html.Instruction.OfElement header(String text) {
     return element(HtmlElementName.HEADER, text);
   }
 
@@ -10854,7 +10855,7 @@ sealed class HtmlRecorderElements extends HtmlRecorderAttributes permits HtmlRec
    *
    * @return an instruction representing this element.
    */
-  public final Html.ElementInstruction hgroup(Html.Instruction... contents) {
+  public final Html.Instruction.OfElement hgroup(Html.Instruction... contents) {
     return element(HtmlElementName.HGROUP, contents);
   }
 
@@ -10866,7 +10867,7 @@ sealed class HtmlRecorderElements extends HtmlRecorderAttributes permits HtmlRec
    *
    * @return an instruction representing this element.
    */
-  public final Html.ElementInstruction hgroup(String text) {
+  public final Html.Instruction.OfElement hgroup(String text) {
     return element(HtmlElementName.HGROUP, text);
   }
 
@@ -10878,7 +10879,7 @@ sealed class HtmlRecorderElements extends HtmlRecorderAttributes permits HtmlRec
    *
    * @return an instruction representing this element.
    */
-  public final Html.ElementInstruction hr(Html.VoidInstruction... contents) {
+  public final Html.Instruction.OfElement hr(Html.Instruction.OfVoid... contents) {
     return element(HtmlElementName.HR, contents);
   }
 
@@ -10890,7 +10891,7 @@ sealed class HtmlRecorderElements extends HtmlRecorderAttributes permits HtmlRec
    *
    * @return an instruction representing this element.
    */
-  public final Html.ElementInstruction html(Html.Instruction... contents) {
+  public final Html.Instruction.OfElement html(Html.Instruction... contents) {
     return element(HtmlElementName.HTML, contents);
   }
 
@@ -10902,7 +10903,7 @@ sealed class HtmlRecorderElements extends HtmlRecorderAttributes permits HtmlRec
    *
    * @return an instruction representing this element.
    */
-  public final Html.ElementInstruction html(String text) {
+  public final Html.Instruction.OfElement html(String text) {
     return element(HtmlElementName.HTML, text);
   }
 
@@ -10914,7 +10915,7 @@ sealed class HtmlRecorderElements extends HtmlRecorderAttributes permits HtmlRec
    *
    * @return an instruction representing this element.
    */
-  public final Html.ElementInstruction img(Html.VoidInstruction... contents) {
+  public final Html.Instruction.OfElement img(Html.Instruction.OfVoid... contents) {
     return element(HtmlElementName.IMG, contents);
   }
 
@@ -10926,7 +10927,7 @@ sealed class HtmlRecorderElements extends HtmlRecorderAttributes permits HtmlRec
    *
    * @return an instruction representing this element.
    */
-  public final Html.ElementInstruction input(Html.VoidInstruction... contents) {
+  public final Html.Instruction.OfElement input(Html.Instruction.OfVoid... contents) {
     return element(HtmlElementName.INPUT, contents);
   }
 
@@ -10938,7 +10939,7 @@ sealed class HtmlRecorderElements extends HtmlRecorderAttributes permits HtmlRec
    *
    * @return an instruction representing this element.
    */
-  public final Html.ElementInstruction kbd(Html.Instruction... contents) {
+  public final Html.Instruction.OfElement kbd(Html.Instruction... contents) {
     return element(HtmlElementName.KBD, contents);
   }
 
@@ -10950,7 +10951,7 @@ sealed class HtmlRecorderElements extends HtmlRecorderAttributes permits HtmlRec
    *
    * @return an instruction representing this element.
    */
-  public final Html.ElementInstruction kbd(String text) {
+  public final Html.Instruction.OfElement kbd(String text) {
     return element(HtmlElementName.KBD, text);
   }
 
@@ -10962,7 +10963,7 @@ sealed class HtmlRecorderElements extends HtmlRecorderAttributes permits HtmlRec
    *
    * @return an instruction representing this element.
    */
-  public final Html.ElementInstruction label(Html.Instruction... contents) {
+  public final Html.Instruction.OfElement label(Html.Instruction... contents) {
     return element(HtmlElementName.LABEL, contents);
   }
 
@@ -10974,7 +10975,7 @@ sealed class HtmlRecorderElements extends HtmlRecorderAttributes permits HtmlRec
    *
    * @return an instruction representing this attribute or element.
    */
-  public final Html.ElementInstruction label(String text) {
+  public final Html.Instruction.OfElement label(String text) {
     ambiguous(HtmlAmbiguous.LABEL, text);
     return Html.ELEMENT;
   }
@@ -10987,7 +10988,7 @@ sealed class HtmlRecorderElements extends HtmlRecorderAttributes permits HtmlRec
    *
    * @return an instruction representing this element.
    */
-  public final Html.ElementInstruction legend(Html.Instruction... contents) {
+  public final Html.Instruction.OfElement legend(Html.Instruction... contents) {
     return element(HtmlElementName.LEGEND, contents);
   }
 
@@ -10999,7 +11000,7 @@ sealed class HtmlRecorderElements extends HtmlRecorderAttributes permits HtmlRec
    *
    * @return an instruction representing this element.
    */
-  public final Html.ElementInstruction legend(String text) {
+  public final Html.Instruction.OfElement legend(String text) {
     return element(HtmlElementName.LEGEND, text);
   }
 
@@ -11011,7 +11012,7 @@ sealed class HtmlRecorderElements extends HtmlRecorderAttributes permits HtmlRec
    *
    * @return an instruction representing this element.
    */
-  public final Html.ElementInstruction li(Html.Instruction... contents) {
+  public final Html.Instruction.OfElement li(Html.Instruction... contents) {
     return element(HtmlElementName.LI, contents);
   }
 
@@ -11023,7 +11024,7 @@ sealed class HtmlRecorderElements extends HtmlRecorderAttributes permits HtmlRec
    *
    * @return an instruction representing this element.
    */
-  public final Html.ElementInstruction li(String text) {
+  public final Html.Instruction.OfElement li(String text) {
     return element(HtmlElementName.LI, text);
   }
 
@@ -11035,7 +11036,7 @@ sealed class HtmlRecorderElements extends HtmlRecorderAttributes permits HtmlRec
    *
    * @return an instruction representing this element.
    */
-  public final Html.ElementInstruction link(Html.VoidInstruction... contents) {
+  public final Html.Instruction.OfElement link(Html.Instruction.OfVoid... contents) {
     return element(HtmlElementName.LINK, contents);
   }
 
@@ -11047,7 +11048,7 @@ sealed class HtmlRecorderElements extends HtmlRecorderAttributes permits HtmlRec
    *
    * @return an instruction representing this element.
    */
-  public final Html.ElementInstruction main(Html.Instruction... contents) {
+  public final Html.Instruction.OfElement main(Html.Instruction... contents) {
     return element(HtmlElementName.MAIN, contents);
   }
 
@@ -11059,7 +11060,7 @@ sealed class HtmlRecorderElements extends HtmlRecorderAttributes permits HtmlRec
    *
    * @return an instruction representing this element.
    */
-  public final Html.ElementInstruction main(String text) {
+  public final Html.Instruction.OfElement main(String text) {
     return element(HtmlElementName.MAIN, text);
   }
 
@@ -11071,7 +11072,7 @@ sealed class HtmlRecorderElements extends HtmlRecorderAttributes permits HtmlRec
    *
    * @return an instruction representing this element.
    */
-  public final Html.ElementInstruction menu(Html.Instruction... contents) {
+  public final Html.Instruction.OfElement menu(Html.Instruction... contents) {
     return element(HtmlElementName.MENU, contents);
   }
 
@@ -11083,7 +11084,7 @@ sealed class HtmlRecorderElements extends HtmlRecorderAttributes permits HtmlRec
    *
    * @return an instruction representing this element.
    */
-  public final Html.ElementInstruction menu(String text) {
+  public final Html.Instruction.OfElement menu(String text) {
     return element(HtmlElementName.MENU, text);
   }
 
@@ -11095,7 +11096,7 @@ sealed class HtmlRecorderElements extends HtmlRecorderAttributes permits HtmlRec
    *
    * @return an instruction representing this element.
    */
-  public final Html.ElementInstruction meta(Html.VoidInstruction... contents) {
+  public final Html.Instruction.OfElement meta(Html.Instruction.OfVoid... contents) {
     return element(HtmlElementName.META, contents);
   }
 
@@ -11107,7 +11108,7 @@ sealed class HtmlRecorderElements extends HtmlRecorderAttributes permits HtmlRec
    *
    * @return an instruction representing this element.
    */
-  public final Html.ElementInstruction nav(Html.Instruction... contents) {
+  public final Html.Instruction.OfElement nav(Html.Instruction... contents) {
     return element(HtmlElementName.NAV, contents);
   }
 
@@ -11119,7 +11120,7 @@ sealed class HtmlRecorderElements extends HtmlRecorderAttributes permits HtmlRec
    *
    * @return an instruction representing this element.
    */
-  public final Html.ElementInstruction nav(String text) {
+  public final Html.Instruction.OfElement nav(String text) {
     return element(HtmlElementName.NAV, text);
   }
 
@@ -11131,7 +11132,7 @@ sealed class HtmlRecorderElements extends HtmlRecorderAttributes permits HtmlRec
    *
    * @return an instruction representing this element.
    */
-  public final Html.ElementInstruction ol(Html.Instruction... contents) {
+  public final Html.Instruction.OfElement ol(Html.Instruction... contents) {
     return element(HtmlElementName.OL, contents);
   }
 
@@ -11143,7 +11144,7 @@ sealed class HtmlRecorderElements extends HtmlRecorderAttributes permits HtmlRec
    *
    * @return an instruction representing this element.
    */
-  public final Html.ElementInstruction ol(String text) {
+  public final Html.Instruction.OfElement ol(String text) {
     return element(HtmlElementName.OL, text);
   }
 
@@ -11155,7 +11156,7 @@ sealed class HtmlRecorderElements extends HtmlRecorderAttributes permits HtmlRec
    *
    * @return an instruction representing this element.
    */
-  public final Html.ElementInstruction optgroup(Html.Instruction... contents) {
+  public final Html.Instruction.OfElement optgroup(Html.Instruction... contents) {
     return element(HtmlElementName.OPTGROUP, contents);
   }
 
@@ -11167,7 +11168,7 @@ sealed class HtmlRecorderElements extends HtmlRecorderAttributes permits HtmlRec
    *
    * @return an instruction representing this element.
    */
-  public final Html.ElementInstruction optgroup(String text) {
+  public final Html.Instruction.OfElement optgroup(String text) {
     return element(HtmlElementName.OPTGROUP, text);
   }
 
@@ -11179,7 +11180,7 @@ sealed class HtmlRecorderElements extends HtmlRecorderAttributes permits HtmlRec
    *
    * @return an instruction representing this element.
    */
-  public final Html.ElementInstruction option(Html.Instruction... contents) {
+  public final Html.Instruction.OfElement option(Html.Instruction... contents) {
     return element(HtmlElementName.OPTION, contents);
   }
 
@@ -11191,7 +11192,7 @@ sealed class HtmlRecorderElements extends HtmlRecorderAttributes permits HtmlRec
    *
    * @return an instruction representing this element.
    */
-  public final Html.ElementInstruction option(String text) {
+  public final Html.Instruction.OfElement option(String text) {
     return element(HtmlElementName.OPTION, text);
   }
 
@@ -11203,7 +11204,7 @@ sealed class HtmlRecorderElements extends HtmlRecorderAttributes permits HtmlRec
    *
    * @return an instruction representing this element.
    */
-  public final Html.ElementInstruction p(Html.Instruction... contents) {
+  public final Html.Instruction.OfElement p(Html.Instruction... contents) {
     return element(HtmlElementName.P, contents);
   }
 
@@ -11215,7 +11216,7 @@ sealed class HtmlRecorderElements extends HtmlRecorderAttributes permits HtmlRec
    *
    * @return an instruction representing this element.
    */
-  public final Html.ElementInstruction p(String text) {
+  public final Html.Instruction.OfElement p(String text) {
     return element(HtmlElementName.P, text);
   }
 
@@ -11227,7 +11228,7 @@ sealed class HtmlRecorderElements extends HtmlRecorderAttributes permits HtmlRec
    *
    * @return an instruction representing this element.
    */
-  public final Html.ElementInstruction path(Html.Instruction... contents) {
+  public final Html.Instruction.OfElement path(Html.Instruction... contents) {
     return element(HtmlElementName.PATH, contents);
   }
 
@@ -11239,7 +11240,7 @@ sealed class HtmlRecorderElements extends HtmlRecorderAttributes permits HtmlRec
    *
    * @return an instruction representing this element.
    */
-  public final Html.ElementInstruction path(String text) {
+  public final Html.Instruction.OfElement path(String text) {
     return element(HtmlElementName.PATH, text);
   }
 
@@ -11251,7 +11252,7 @@ sealed class HtmlRecorderElements extends HtmlRecorderAttributes permits HtmlRec
    *
    * @return an instruction representing this element.
    */
-  public final Html.ElementInstruction pre(Html.Instruction... contents) {
+  public final Html.Instruction.OfElement pre(Html.Instruction... contents) {
     return element(HtmlElementName.PRE, contents);
   }
 
@@ -11263,7 +11264,7 @@ sealed class HtmlRecorderElements extends HtmlRecorderAttributes permits HtmlRec
    *
    * @return an instruction representing this element.
    */
-  public final Html.ElementInstruction pre(String text) {
+  public final Html.Instruction.OfElement pre(String text) {
     return element(HtmlElementName.PRE, text);
   }
 
@@ -11275,7 +11276,7 @@ sealed class HtmlRecorderElements extends HtmlRecorderAttributes permits HtmlRec
    *
    * @return an instruction representing this element.
    */
-  public final Html.ElementInstruction progress(Html.Instruction... contents) {
+  public final Html.Instruction.OfElement progress(Html.Instruction... contents) {
     return element(HtmlElementName.PROGRESS, contents);
   }
 
@@ -11287,7 +11288,7 @@ sealed class HtmlRecorderElements extends HtmlRecorderAttributes permits HtmlRec
    *
    * @return an instruction representing this element.
    */
-  public final Html.ElementInstruction progress(String text) {
+  public final Html.Instruction.OfElement progress(String text) {
     return element(HtmlElementName.PROGRESS, text);
   }
 
@@ -11299,7 +11300,7 @@ sealed class HtmlRecorderElements extends HtmlRecorderAttributes permits HtmlRec
    *
    * @return an instruction representing this element.
    */
-  public final Html.ElementInstruction samp(Html.Instruction... contents) {
+  public final Html.Instruction.OfElement samp(Html.Instruction... contents) {
     return element(HtmlElementName.SAMP, contents);
   }
 
@@ -11311,7 +11312,7 @@ sealed class HtmlRecorderElements extends HtmlRecorderAttributes permits HtmlRec
    *
    * @return an instruction representing this element.
    */
-  public final Html.ElementInstruction samp(String text) {
+  public final Html.Instruction.OfElement samp(String text) {
     return element(HtmlElementName.SAMP, text);
   }
 
@@ -11323,7 +11324,7 @@ sealed class HtmlRecorderElements extends HtmlRecorderAttributes permits HtmlRec
    *
    * @return an instruction representing this element.
    */
-  public final Html.ElementInstruction script(Html.Instruction... contents) {
+  public final Html.Instruction.OfElement script(Html.Instruction... contents) {
     return element(HtmlElementName.SCRIPT, contents);
   }
 
@@ -11335,7 +11336,7 @@ sealed class HtmlRecorderElements extends HtmlRecorderAttributes permits HtmlRec
    *
    * @return an instruction representing this element.
    */
-  public final Html.ElementInstruction script(String text) {
+  public final Html.Instruction.OfElement script(String text) {
     return element(HtmlElementName.SCRIPT, text);
   }
 
@@ -11347,7 +11348,7 @@ sealed class HtmlRecorderElements extends HtmlRecorderAttributes permits HtmlRec
    *
    * @return an instruction representing this element.
    */
-  public final Html.ElementInstruction section(Html.Instruction... contents) {
+  public final Html.Instruction.OfElement section(Html.Instruction... contents) {
     return element(HtmlElementName.SECTION, contents);
   }
 
@@ -11359,7 +11360,7 @@ sealed class HtmlRecorderElements extends HtmlRecorderAttributes permits HtmlRec
    *
    * @return an instruction representing this element.
    */
-  public final Html.ElementInstruction section(String text) {
+  public final Html.Instruction.OfElement section(String text) {
     return element(HtmlElementName.SECTION, text);
   }
 
@@ -11371,7 +11372,7 @@ sealed class HtmlRecorderElements extends HtmlRecorderAttributes permits HtmlRec
    *
    * @return an instruction representing this element.
    */
-  public final Html.ElementInstruction select(Html.Instruction... contents) {
+  public final Html.Instruction.OfElement select(Html.Instruction... contents) {
     return element(HtmlElementName.SELECT, contents);
   }
 
@@ -11383,7 +11384,7 @@ sealed class HtmlRecorderElements extends HtmlRecorderAttributes permits HtmlRec
    *
    * @return an instruction representing this element.
    */
-  public final Html.ElementInstruction select(String text) {
+  public final Html.Instruction.OfElement select(String text) {
     return element(HtmlElementName.SELECT, text);
   }
 
@@ -11395,7 +11396,7 @@ sealed class HtmlRecorderElements extends HtmlRecorderAttributes permits HtmlRec
    *
    * @return an instruction representing this element.
    */
-  public final Html.ElementInstruction small(Html.Instruction... contents) {
+  public final Html.Instruction.OfElement small(Html.Instruction... contents) {
     return element(HtmlElementName.SMALL, contents);
   }
 
@@ -11407,7 +11408,7 @@ sealed class HtmlRecorderElements extends HtmlRecorderAttributes permits HtmlRec
    *
    * @return an instruction representing this element.
    */
-  public final Html.ElementInstruction small(String text) {
+  public final Html.Instruction.OfElement small(String text) {
     return element(HtmlElementName.SMALL, text);
   }
 
@@ -11419,7 +11420,7 @@ sealed class HtmlRecorderElements extends HtmlRecorderAttributes permits HtmlRec
    *
    * @return an instruction representing this element.
    */
-  public final Html.ElementInstruction span(Html.Instruction... contents) {
+  public final Html.Instruction.OfElement span(Html.Instruction... contents) {
     return element(HtmlElementName.SPAN, contents);
   }
 
@@ -11431,7 +11432,7 @@ sealed class HtmlRecorderElements extends HtmlRecorderAttributes permits HtmlRec
    *
    * @return an instruction representing this element.
    */
-  public final Html.ElementInstruction span(String text) {
+  public final Html.Instruction.OfElement span(String text) {
     return element(HtmlElementName.SPAN, text);
   }
 
@@ -11443,7 +11444,7 @@ sealed class HtmlRecorderElements extends HtmlRecorderAttributes permits HtmlRec
    *
    * @return an instruction representing this element.
    */
-  public final Html.ElementInstruction strong(Html.Instruction... contents) {
+  public final Html.Instruction.OfElement strong(Html.Instruction... contents) {
     return element(HtmlElementName.STRONG, contents);
   }
 
@@ -11455,7 +11456,7 @@ sealed class HtmlRecorderElements extends HtmlRecorderAttributes permits HtmlRec
    *
    * @return an instruction representing this element.
    */
-  public final Html.ElementInstruction strong(String text) {
+  public final Html.Instruction.OfElement strong(String text) {
     return element(HtmlElementName.STRONG, text);
   }
 
@@ -11467,7 +11468,7 @@ sealed class HtmlRecorderElements extends HtmlRecorderAttributes permits HtmlRec
    *
    * @return an instruction representing this element.
    */
-  public final Html.ElementInstruction style(Html.Instruction... contents) {
+  public final Html.Instruction.OfElement style(Html.Instruction... contents) {
     return element(HtmlElementName.STYLE, contents);
   }
 
@@ -11479,7 +11480,7 @@ sealed class HtmlRecorderElements extends HtmlRecorderAttributes permits HtmlRec
    *
    * @return an instruction representing this element.
    */
-  public final Html.ElementInstruction style(String text) {
+  public final Html.Instruction.OfElement style(String text) {
     return element(HtmlElementName.STYLE, text);
   }
 
@@ -11491,7 +11492,7 @@ sealed class HtmlRecorderElements extends HtmlRecorderAttributes permits HtmlRec
    *
    * @return an instruction representing this element.
    */
-  public final Html.ElementInstruction sub(Html.Instruction... contents) {
+  public final Html.Instruction.OfElement sub(Html.Instruction... contents) {
     return element(HtmlElementName.SUB, contents);
   }
 
@@ -11503,7 +11504,7 @@ sealed class HtmlRecorderElements extends HtmlRecorderAttributes permits HtmlRec
    *
    * @return an instruction representing this element.
    */
-  public final Html.ElementInstruction sub(String text) {
+  public final Html.Instruction.OfElement sub(String text) {
     return element(HtmlElementName.SUB, text);
   }
 
@@ -11515,7 +11516,7 @@ sealed class HtmlRecorderElements extends HtmlRecorderAttributes permits HtmlRec
    *
    * @return an instruction representing this element.
    */
-  public final Html.ElementInstruction summary(Html.Instruction... contents) {
+  public final Html.Instruction.OfElement summary(Html.Instruction... contents) {
     return element(HtmlElementName.SUMMARY, contents);
   }
 
@@ -11527,7 +11528,7 @@ sealed class HtmlRecorderElements extends HtmlRecorderAttributes permits HtmlRec
    *
    * @return an instruction representing this element.
    */
-  public final Html.ElementInstruction summary(String text) {
+  public final Html.Instruction.OfElement summary(String text) {
     return element(HtmlElementName.SUMMARY, text);
   }
 
@@ -11539,7 +11540,7 @@ sealed class HtmlRecorderElements extends HtmlRecorderAttributes permits HtmlRec
    *
    * @return an instruction representing this element.
    */
-  public final Html.ElementInstruction sup(Html.Instruction... contents) {
+  public final Html.Instruction.OfElement sup(Html.Instruction... contents) {
     return element(HtmlElementName.SUP, contents);
   }
 
@@ -11551,7 +11552,7 @@ sealed class HtmlRecorderElements extends HtmlRecorderAttributes permits HtmlRec
    *
    * @return an instruction representing this element.
    */
-  public final Html.ElementInstruction sup(String text) {
+  public final Html.Instruction.OfElement sup(String text) {
     return element(HtmlElementName.SUP, text);
   }
 
@@ -11563,7 +11564,7 @@ sealed class HtmlRecorderElements extends HtmlRecorderAttributes permits HtmlRec
    *
    * @return an instruction representing this element.
    */
-  public final Html.ElementInstruction svg(Html.Instruction... contents) {
+  public final Html.Instruction.OfElement svg(Html.Instruction... contents) {
     return element(HtmlElementName.SVG, contents);
   }
 
@@ -11575,7 +11576,7 @@ sealed class HtmlRecorderElements extends HtmlRecorderAttributes permits HtmlRec
    *
    * @return an instruction representing this element.
    */
-  public final Html.ElementInstruction svg(String text) {
+  public final Html.Instruction.OfElement svg(String text) {
     return element(HtmlElementName.SVG, text);
   }
 
@@ -11587,7 +11588,7 @@ sealed class HtmlRecorderElements extends HtmlRecorderAttributes permits HtmlRec
    *
    * @return an instruction representing this element.
    */
-  public final Html.ElementInstruction table(Html.Instruction... contents) {
+  public final Html.Instruction.OfElement table(Html.Instruction... contents) {
     return element(HtmlElementName.TABLE, contents);
   }
 
@@ -11599,7 +11600,7 @@ sealed class HtmlRecorderElements extends HtmlRecorderAttributes permits HtmlRec
    *
    * @return an instruction representing this element.
    */
-  public final Html.ElementInstruction table(String text) {
+  public final Html.Instruction.OfElement table(String text) {
     return element(HtmlElementName.TABLE, text);
   }
 
@@ -11611,7 +11612,7 @@ sealed class HtmlRecorderElements extends HtmlRecorderAttributes permits HtmlRec
    *
    * @return an instruction representing this element.
    */
-  public final Html.ElementInstruction tbody(Html.Instruction... contents) {
+  public final Html.Instruction.OfElement tbody(Html.Instruction... contents) {
     return element(HtmlElementName.TBODY, contents);
   }
 
@@ -11623,7 +11624,7 @@ sealed class HtmlRecorderElements extends HtmlRecorderAttributes permits HtmlRec
    *
    * @return an instruction representing this element.
    */
-  public final Html.ElementInstruction tbody(String text) {
+  public final Html.Instruction.OfElement tbody(String text) {
     return element(HtmlElementName.TBODY, text);
   }
 
@@ -11635,7 +11636,7 @@ sealed class HtmlRecorderElements extends HtmlRecorderAttributes permits HtmlRec
    *
    * @return an instruction representing this element.
    */
-  public final Html.ElementInstruction td(Html.Instruction... contents) {
+  public final Html.Instruction.OfElement td(Html.Instruction... contents) {
     return element(HtmlElementName.TD, contents);
   }
 
@@ -11647,7 +11648,7 @@ sealed class HtmlRecorderElements extends HtmlRecorderAttributes permits HtmlRec
    *
    * @return an instruction representing this element.
    */
-  public final Html.ElementInstruction td(String text) {
+  public final Html.Instruction.OfElement td(String text) {
     return element(HtmlElementName.TD, text);
   }
 
@@ -11659,7 +11660,7 @@ sealed class HtmlRecorderElements extends HtmlRecorderAttributes permits HtmlRec
    *
    * @return an instruction representing this element.
    */
-  public final Html.ElementInstruction template(Html.Instruction... contents) {
+  public final Html.Instruction.OfElement template(Html.Instruction... contents) {
     return element(HtmlElementName.TEMPLATE, contents);
   }
 
@@ -11671,7 +11672,7 @@ sealed class HtmlRecorderElements extends HtmlRecorderAttributes permits HtmlRec
    *
    * @return an instruction representing this element.
    */
-  public final Html.ElementInstruction template(String text) {
+  public final Html.Instruction.OfElement template(String text) {
     return element(HtmlElementName.TEMPLATE, text);
   }
 
@@ -11683,7 +11684,7 @@ sealed class HtmlRecorderElements extends HtmlRecorderAttributes permits HtmlRec
    *
    * @return an instruction representing this element.
    */
-  public final Html.ElementInstruction textarea(Html.Instruction... contents) {
+  public final Html.Instruction.OfElement textarea(Html.Instruction... contents) {
     return element(HtmlElementName.TEXTAREA, contents);
   }
 
@@ -11695,7 +11696,7 @@ sealed class HtmlRecorderElements extends HtmlRecorderAttributes permits HtmlRec
    *
    * @return an instruction representing this element.
    */
-  public final Html.ElementInstruction textarea(String text) {
+  public final Html.Instruction.OfElement textarea(String text) {
     return element(HtmlElementName.TEXTAREA, text);
   }
 
@@ -11707,7 +11708,7 @@ sealed class HtmlRecorderElements extends HtmlRecorderAttributes permits HtmlRec
    *
    * @return an instruction representing this element.
    */
-  public final Html.ElementInstruction th(Html.Instruction... contents) {
+  public final Html.Instruction.OfElement th(Html.Instruction... contents) {
     return element(HtmlElementName.TH, contents);
   }
 
@@ -11719,7 +11720,7 @@ sealed class HtmlRecorderElements extends HtmlRecorderAttributes permits HtmlRec
    *
    * @return an instruction representing this element.
    */
-  public final Html.ElementInstruction th(String text) {
+  public final Html.Instruction.OfElement th(String text) {
     return element(HtmlElementName.TH, text);
   }
 
@@ -11731,7 +11732,7 @@ sealed class HtmlRecorderElements extends HtmlRecorderAttributes permits HtmlRec
    *
    * @return an instruction representing this element.
    */
-  public final Html.ElementInstruction thead(Html.Instruction... contents) {
+  public final Html.Instruction.OfElement thead(Html.Instruction... contents) {
     return element(HtmlElementName.THEAD, contents);
   }
 
@@ -11743,7 +11744,7 @@ sealed class HtmlRecorderElements extends HtmlRecorderAttributes permits HtmlRec
    *
    * @return an instruction representing this element.
    */
-  public final Html.ElementInstruction thead(String text) {
+  public final Html.Instruction.OfElement thead(String text) {
     return element(HtmlElementName.THEAD, text);
   }
 
@@ -11755,7 +11756,7 @@ sealed class HtmlRecorderElements extends HtmlRecorderAttributes permits HtmlRec
    *
    * @return an instruction representing this element.
    */
-  public final Html.ElementInstruction title(Html.Instruction... contents) {
+  public final Html.Instruction.OfElement title(Html.Instruction... contents) {
     return element(HtmlElementName.TITLE, contents);
   }
 
@@ -11767,7 +11768,7 @@ sealed class HtmlRecorderElements extends HtmlRecorderAttributes permits HtmlRec
    *
    * @return an instruction representing this attribute or element.
    */
-  public final Html.ElementInstruction title(String text) {
+  public final Html.Instruction.OfElement title(String text) {
     ambiguous(HtmlAmbiguous.TITLE, text);
     return Html.ELEMENT;
   }
@@ -11780,7 +11781,7 @@ sealed class HtmlRecorderElements extends HtmlRecorderAttributes permits HtmlRec
    *
    * @return an instruction representing this element.
    */
-  public final Html.ElementInstruction tr(Html.Instruction... contents) {
+  public final Html.Instruction.OfElement tr(Html.Instruction... contents) {
     return element(HtmlElementName.TR, contents);
   }
 
@@ -11792,7 +11793,7 @@ sealed class HtmlRecorderElements extends HtmlRecorderAttributes permits HtmlRec
    *
    * @return an instruction representing this element.
    */
-  public final Html.ElementInstruction tr(String text) {
+  public final Html.Instruction.OfElement tr(String text) {
     return element(HtmlElementName.TR, text);
   }
 
@@ -11804,7 +11805,7 @@ sealed class HtmlRecorderElements extends HtmlRecorderAttributes permits HtmlRec
    *
    * @return an instruction representing this element.
    */
-  public final Html.ElementInstruction ul(Html.Instruction... contents) {
+  public final Html.Instruction.OfElement ul(Html.Instruction... contents) {
     return element(HtmlElementName.UL, contents);
   }
 
@@ -11816,7 +11817,7 @@ sealed class HtmlRecorderElements extends HtmlRecorderAttributes permits HtmlRec
    *
    * @return an instruction representing this element.
    */
-  public final Html.ElementInstruction ul(String text) {
+  public final Html.Instruction.OfElement ul(String text) {
     return element(HtmlElementName.UL, text);
   }
 

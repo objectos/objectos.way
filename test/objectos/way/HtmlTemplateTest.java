@@ -557,7 +557,7 @@ public class HtmlTemplateTest {
         new Html.Template() {
           @Override
           protected final void render() {
-            Html.ElementInstruction[] children = new Html.ElementInstruction[count];
+            Html.Instruction.OfElement[] children = new Html.Instruction.OfElement[count];
             for (int i = 0; i < count; i++) {
               children[i] = li(Integer.toString(i));
             }

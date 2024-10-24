@@ -51,7 +51,7 @@ final class CarbonGrid {
     VARIANTS.put(CarbonGridVariant.CONDENSED, Html.ClassName.className(__GRID, __GRID_CONDENSED));
   }
 
-  public static Html.ElementInstruction render(
+  public static Html.Instruction.OfElement render(
       Html.TemplateBase tmpl, Html.ElementName element, CarbonGridVariant variant, Html.Instruction... contents) {
 
     Html.ClassName variantClassName;

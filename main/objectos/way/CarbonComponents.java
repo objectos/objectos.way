@@ -341,11 +341,11 @@ abstract class CarbonComponents {
       __DATA_TABLE_XS, __DATA_TABLE_SM, __DATA_TABLE_MD, __DATA_TABLE_LG, __DATA_TABLE_XL
   };
 
-  public final Html.ElementInstruction dataTable(Html.Instruction... contents) {
+  public final Html.Instruction.OfElement dataTable(Html.Instruction... contents) {
     return dataTable(Carbon.LG, contents);
   }
 
-  public final Html.ElementInstruction dataTable(DataTableSize size, Html.Instruction... contents) {
+  public final Html.Instruction.OfElement dataTable(DataTableSize size, Html.Instruction... contents) {
     CarbonSize sizeImpl;
     sizeImpl = (CarbonSize) size;
 
@@ -373,7 +373,7 @@ abstract class CarbonComponents {
       th:text-start th:align-middle th:text-text-primary
       """);
 
-  public final Html.ElementInstruction dataTableHead(Html.Instruction... contents) {
+  public final Html.Instruction.OfElement dataTableHead(Html.Instruction... contents) {
     return tmpl.thead(
         DATA_TABLE_THEAD,
 
@@ -395,7 +395,7 @@ abstract class CarbonComponents {
       td:text-start td:align-middle td:text-text-secondary
       """);
 
-  public final Html.ElementInstruction dataTableBody(Html.Instruction... contents) {
+  public final Html.Instruction.OfElement dataTableBody(Html.Instruction... contents) {
     return tmpl.thead(
         DATA_TABLE_TBODY,
 
@@ -409,13 +409,13 @@ abstract class CarbonComponents {
 
   private boolean expressive;
 
-  public final Html.NoOpInstruction expressive() {
+  public final Html.Instruction.NoOp expressive() {
     expressive = true;
 
     return tmpl.noop();
   }
 
-  private Html.ElementInstruction resetExpressive(Html.ElementInstruction component) {
+  private Html.Instruction.OfElement resetExpressive(Html.Instruction.OfElement component) {
     expressive = false;
 
     return component;
@@ -445,20 +445,20 @@ abstract class CarbonComponents {
           "max:gap-spacing-08", "max:gap-spacing-09", "max:gap-spacing-10", "max:gap-spacing-11", "max:gap-spacing-12", "max:gap-spacing-13"}
   };
 
-  public final Html.AttributeInstruction gap(Spacing mobile) {
+  public final Html.Instruction.OfAttribute gap(Spacing mobile) {
     String cn0 = checkGap(Carbon.NONE, mobile);
 
     return tmpl.className(cn0);
   }
 
-  public final Html.AttributeInstruction gap(Spacing mobile, Breakpoint point1, Spacing value1) {
+  public final Html.Instruction.OfAttribute gap(Spacing mobile, Breakpoint point1, Spacing value1) {
     String cn0 = checkGap(Carbon.NONE, mobile);
     String cn1 = checkGap(point1, value1);
 
     return tmpl.className(cn0, cn1);
   }
 
-  public final Html.AttributeInstruction gap(Spacing mobile, Breakpoint point1, Spacing value1, Breakpoint point2, Spacing value2) {
+  public final Html.Instruction.OfAttribute gap(Spacing mobile, Breakpoint point1, Spacing value1, Breakpoint point2, Spacing value2) {
     String cn0 = checkGap(Carbon.NONE, mobile);
     String cn1 = checkGap(point1, value1);
     String cn2 = checkGap(point2, value2);
@@ -506,20 +506,20 @@ abstract class CarbonComponents {
           "max:grid-cols-7", "max:grid-cols-8", "max:grid-cols-9", "max:grid-cols-10", "max:grid-cols-11", "max:grid-cols-12"}
   };
 
-  public final Html.AttributeInstruction gridColumns(int mobile) {
+  public final Html.Instruction.OfAttribute gridColumns(int mobile) {
     String cn = checkGridColumns(Carbon.NONE, mobile);
 
     return tmpl.className(cn);
   }
 
-  public final Html.AttributeInstruction gridColumns(int mobile, Breakpoint point1, int value1) {
+  public final Html.Instruction.OfAttribute gridColumns(int mobile, Breakpoint point1, int value1) {
     String cn0 = checkGridColumns(Carbon.NONE, mobile);
     String cn1 = checkGridColumns(point1, value1);
 
     return tmpl.className(cn0, cn1);
   }
 
-  public final Html.AttributeInstruction gridColumns(int mobile, Breakpoint point1, int value1, Breakpoint point2, int value2) {
+  public final Html.Instruction.OfAttribute gridColumns(int mobile, Breakpoint point1, int value1, Breakpoint point2, int value2) {
     String cn0 = checkGridColumns(Carbon.NONE, mobile);
     String cn1 = checkGridColumns(point1, value1);
     String cn2 = checkGridColumns(point2, value2);
@@ -527,7 +527,7 @@ abstract class CarbonComponents {
     return tmpl.className(cn0, cn1, cn2);
   }
 
-  public final Html.AttributeInstruction gridColumns(
+  public final Html.Instruction.OfAttribute gridColumns(
       int mobile, Breakpoint point1, int value1, Breakpoint point2, int value2, Breakpoint point3, int value3) {
     String cn0 = checkGridColumns(Carbon.NONE, mobile);
     String cn1 = checkGridColumns(point1, value1);
@@ -566,7 +566,7 @@ abstract class CarbonComponents {
       bg-background
       """);
 
-  public final Html.ElementInstruction header(Html.Instruction... contents) {
+  public final Html.Instruction.OfElement header(Html.Instruction... contents) {
     return tmpl.header(
         HEADER,
 
@@ -604,7 +604,7 @@ abstract class CarbonComponents {
       _HEADER_BUTTON, "hidden"
   );
 
-  public final Html.ElementInstruction headerCloseButton(Html.Instruction... contents) {
+  public final Html.Instruction.OfElement headerCloseButton(Html.Instruction... contents) {
     return tmpl.button(
         HEADER_CLOSE_BUTTON,
 
@@ -624,7 +624,7 @@ abstract class CarbonComponents {
       _HEADER_BUTTON, "flex"
   );
 
-  public final Html.ElementInstruction headerMenuButton(Html.Instruction... contents) {
+  public final Html.Instruction.OfElement headerMenuButton(Html.Instruction... contents) {
     return tmpl.button(
         HEADER_MENU_BUTTON,
 
@@ -685,7 +685,7 @@ abstract class CarbonComponents {
       __HEADER_NAV_LINK, __HEADER_NAV_LINK_INACTIVE, BODY_COMPACT_02
   );
 
-  private Html.ElementInstruction headerMenuItem(CarbonMenuLink link) {
+  private Html.Instruction.OfElement headerMenuItem(CarbonMenuLink link) {
     Script.Action onClick;
     onClick = link.onClick();
 
@@ -726,7 +726,7 @@ abstract class CarbonComponents {
       font-400
       """);
 
-  public final Html.ElementInstruction headerName(Html.Instruction... contents) {
+  public final Html.Instruction.OfElement headerName(Html.Instruction... contents) {
     return tmpl.a(
         HEADER_NAME,
 
@@ -734,7 +734,7 @@ abstract class CarbonComponents {
     );
   }
 
-  public final Html.ElementInstruction headerName(String prefix, String text, String href) {
+  public final Html.Instruction.OfElement headerName(String prefix, String text, String href) {
     Check.notNull(prefix, "prefix == null");
     Check.notNull(text, "text == null");
     Check.notNull(href, "href == null");
@@ -756,7 +756,7 @@ abstract class CarbonComponents {
     );
   }
 
-  public final Html.ElementInstruction headerName(String prefix, String text, String href, Script.Action onClick) {
+  public final Html.Instruction.OfElement headerName(String prefix, String text, String href, Script.Action onClick) {
     Check.notNull(prefix, "prefix == null");
     Check.notNull(text, "text == null");
     Check.notNull(href, "href == null");
@@ -797,7 +797,7 @@ abstract class CarbonComponents {
       lg:before:content-empty
       """);
 
-  public final Html.ElementInstruction headerNavigation(Html.Instruction... contents) {
+  public final Html.Instruction.OfElement headerNavigation(Html.Instruction... contents) {
     return resetExpressive(
         tmpl.nav(
             HEADER_NAVIGATION,
@@ -816,7 +816,7 @@ abstract class CarbonComponents {
       text-text-secondary
       """);
 
-  public final Html.ElementInstruction headerNavigationItems(Iterable<? extends Carbon.MenuElement> elements) {
+  public final Html.Instruction.OfElement headerNavigationItems(Iterable<? extends Carbon.MenuElement> elements) {
     return tmpl.ul(
         HEADER_NAVIGATION_ITEMS,
 
@@ -836,19 +836,19 @@ abstract class CarbonComponents {
   // I
   //
 
-  public final Html.ElementInstruction icon16(Icon icon, Html.Instruction... attributes) {
+  public final Html.Instruction.OfElement icon16(Icon icon, Html.Instruction... attributes) {
     return Carbon.renderIcon16(tmpl, icon, attributes);
   }
 
-  public final Html.ElementInstruction icon20(Icon icon, Html.Instruction... attributes) {
+  public final Html.Instruction.OfElement icon20(Icon icon, Html.Instruction... attributes) {
     return Carbon.renderIcon20(tmpl, icon, attributes);
   }
 
-  public final Html.ElementInstruction icon24(Icon icon, Html.Instruction... attributes) {
+  public final Html.Instruction.OfElement icon24(Icon icon, Html.Instruction... attributes) {
     return Carbon.renderIcon24(tmpl, icon, attributes);
   }
 
-  public final Html.ElementInstruction icon32(Icon icon, Html.Instruction... attributes) {
+  public final Html.Instruction.OfElement icon32(Icon icon, Html.Instruction... attributes) {
     return Carbon.renderIcon32(tmpl, icon, attributes);
   }
 
@@ -865,7 +865,7 @@ abstract class CarbonComponents {
       py-32px
       """);
 
-  public final Html.ElementInstruction pageHeader(Html.Instruction... contents) {
+  public final Html.Instruction.OfElement pageHeader(Html.Instruction... contents) {
     return tmpl.div(
         PAGE_HEADER,
 
@@ -878,7 +878,7 @@ abstract class CarbonComponents {
       md:col-span-3
       """);
 
-  public final Html.ElementInstruction pageHeaderTitle(String title) {
+  public final Html.Instruction.OfElement pageHeaderTitle(String title) {
     Check.notNull(title, "title == null");
 
     return tmpl.h1(
@@ -892,7 +892,7 @@ abstract class CarbonComponents {
       grid-cols-5 gap-y-spacing-05
       """);
 
-  public final Html.ElementInstruction pageHeaderTitleRow(Html.Instruction... contents) {
+  public final Html.Instruction.OfElement pageHeaderTitleRow(Html.Instruction... contents) {
     return tmpl.div(
         CarbonGrid.VARIANTS.get(Carbon.WIDE), __PAGE_HEADER_TITLE_ROW,
 
@@ -939,7 +939,7 @@ abstract class CarbonComponents {
     );
   }
 
-  public final Html.ElementInstruction sideNav(Html.Instruction... contents) {
+  public final Html.Instruction.OfElement sideNav(Html.Instruction... contents) {
     return tmpl.div(
         SIDE_NAV,
 
@@ -967,7 +967,7 @@ abstract class CarbonComponents {
     return Script.replaceClass(id, "w-0px", "w-side-nav");
   }
 
-  public final Html.ElementInstruction sideNavBody(Html.Instruction... contents) {
+  public final Html.Instruction.OfElement sideNavBody(Html.Instruction... contents) {
     return tmpl.nav(
         SIDE_NAV_BODY,
 
@@ -1013,7 +1013,7 @@ abstract class CarbonComponents {
       __SIDE_NAV_HEADER_LINK, Carbon.HEADING_COMPACT_01, __SIDE_NAV_HEADER_LINK_INACTIVE
   );
 
-  private Html.ElementInstruction sideNavHeaderItem(CarbonMenuLink link) {
+  private Html.Instruction.OfElement sideNavHeaderItem(CarbonMenuLink link) {
     Script.Action onClick;
     onClick = link.onClick();
 
@@ -1044,7 +1044,7 @@ abstract class CarbonComponents {
       lg:hidden
       """);
 
-  public final Html.ElementInstruction sideNavHeaderItems(Iterable<? extends Carbon.MenuElement> elements) {
+  public final Html.Instruction.OfElement sideNavHeaderItems(Iterable<? extends Carbon.MenuElement> elements) {
     return tmpl.ul(
         SIDE_NAV_HEADER_ITEMS,
 
@@ -1064,7 +1064,7 @@ abstract class CarbonComponents {
   // SideNavItems
   //
 
-  public final Html.ElementInstruction sideNavItems(Iterable<? extends Carbon.MenuElement> elements) {
+  public final Html.Instruction.OfElement sideNavItems(Iterable<? extends Carbon.MenuElement> elements) {
     return tmpl.ul(
         tmpl.f(this::renderSideNavItems, elements)
     );
@@ -1112,7 +1112,7 @@ abstract class CarbonComponents {
       __SIDE_NAV_LINK, Carbon.HEADING_COMPACT_01, __SIDE_NAV_LINK_INACTIVE
   );
 
-  private Html.ElementInstruction sideNavLink(CarbonMenuLink link) {
+  private Html.Instruction.OfElement sideNavLink(CarbonMenuLink link) {
     Script.Action onClick;
     onClick = link.onClick();
 

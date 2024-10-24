@@ -66,7 +66,7 @@ final class IconsBootstrap extends Html.Component implements Icons.Bootstrap {
    * @return the {@code svg} element
    */
   @Override
-  public final Html.ElementInstruction envelope(Html.Instruction... contents) {
+  public final Html.Instruction.OfElement envelope(Html.Instruction... contents) {
     // @formatter:off
     return icon(
       flatten(contents),
@@ -84,7 +84,7 @@ final class IconsBootstrap extends Html.Component implements Icons.Bootstrap {
    * @return the {@code svg} element
    */
   @Override
-  public final Html.ElementInstruction envelopeFill(Html.Instruction... contents) {
+  public final Html.Instruction.OfElement envelopeFill(Html.Instruction... contents) {
     // @formatter:off
     return icon(
       flatten(contents),
@@ -101,7 +101,7 @@ final class IconsBootstrap extends Html.Component implements Icons.Bootstrap {
    * @return the {@code svg} element
    */
   @Override
-  public final Html.ElementInstruction github(Html.Instruction... contents) {
+  public final Html.Instruction.OfElement github(Html.Instruction... contents) {
     // @formatter:off
     return icon(
       flatten(contents),
@@ -118,7 +118,7 @@ final class IconsBootstrap extends Html.Component implements Icons.Bootstrap {
    * @return the {@code svg} element
    */
   @Override
-  public final Html.ElementInstruction linkedin(Html.Instruction... contents) {
+  public final Html.Instruction.OfElement linkedin(Html.Instruction... contents) {
     // @formatter:off
     return icon(
       flatten(contents),
@@ -135,7 +135,7 @@ final class IconsBootstrap extends Html.Component implements Icons.Bootstrap {
    * @return the {@code svg} element
    */
   @Override
-  public final Html.ElementInstruction list(Html.Instruction... contents) {
+  public final Html.Instruction.OfElement list(Html.Instruction... contents) {
     // @formatter:off
     return icon(
       flatten(contents),
@@ -145,7 +145,7 @@ final class IconsBootstrap extends Html.Component implements Icons.Bootstrap {
   }
 
   @Override
-  public final Html.ElementInstruction personVcard(Html.Instruction... contents) {
+  public final Html.Instruction.OfElement personVcard(Html.Instruction... contents) {
     // @formatter:off
     return icon(
         flatten(contents),
@@ -163,7 +163,7 @@ final class IconsBootstrap extends Html.Component implements Icons.Bootstrap {
    * @return the {@code svg} element
    */
   @Override
-  public final Html.ElementInstruction threeDots(Html.Instruction... contents) {
+  public final Html.Instruction.OfElement threeDots(Html.Instruction... contents) {
     // @formatter:off
     return icon(
       flatten(contents),
@@ -180,7 +180,7 @@ final class IconsBootstrap extends Html.Component implements Icons.Bootstrap {
    * @return the {@code svg} element
    */
   @Override
-  public final Html.ElementInstruction twitter(Html.Instruction... contents) {
+  public final Html.Instruction.OfElement twitter(Html.Instruction... contents) {
     // @formatter:off
     return icon(
       flatten(contents),
@@ -197,7 +197,7 @@ final class IconsBootstrap extends Html.Component implements Icons.Bootstrap {
    * @return the {@code svg} element
    */
   @Override
-  public final Html.ElementInstruction twitterX(Html.Instruction... contents) {
+  public final Html.Instruction.OfElement twitterX(Html.Instruction... contents) {
     // @formatter:off
     return icon(
       flatten(contents),
@@ -212,7 +212,7 @@ final class IconsBootstrap extends Html.Component implements Icons.Bootstrap {
    * @return the {@code svg} element
    */
   @Override
-  public final Html.ElementInstruction x(Html.Instruction... contents) {
+  public final Html.Instruction.OfElement x(Html.Instruction... contents) {
     // @formatter:off
     return icon(
       flatten(contents),
@@ -221,7 +221,7 @@ final class IconsBootstrap extends Html.Component implements Icons.Bootstrap {
     // @formatter:on
   }
 
-  private Html.ElementInstruction icon(Html.Instruction... contents) {
+  private Html.Instruction.OfElement icon(Html.Instruction... contents) {
     return svg(
         xmlns("http://www.w3.org/2000/svg"),
         width("16"),

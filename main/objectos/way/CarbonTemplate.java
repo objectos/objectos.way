@@ -66,23 +66,23 @@ abstract class CarbonTemplate extends Html.Template implements Http.Handler {
     return path.startsWith(href);
   }
 
-  protected final Html.ElementInstruction icon16(Carbon.Icon icon, Html.AttributeInstruction... attributes) {
+  protected final Html.Instruction.OfElement icon16(Carbon.Icon icon, Html.Instruction.OfAttribute... attributes) {
     return renderIcon(icon, "16px", attributes);
   }
 
-  protected final Html.ElementInstruction icon20(Carbon.Icon icon, Html.AttributeInstruction... attributes) {
+  protected final Html.Instruction.OfElement icon20(Carbon.Icon icon, Html.Instruction.OfAttribute... attributes) {
     return renderIcon(icon, "20px", attributes);
   }
 
-  protected final Html.ElementInstruction icon24(Carbon.Icon icon, Html.AttributeInstruction... attributes) {
+  protected final Html.Instruction.OfElement icon24(Carbon.Icon icon, Html.Instruction.OfAttribute... attributes) {
     return renderIcon(icon, "24px", attributes);
   }
 
-  protected final Html.ElementInstruction icon32(Carbon.Icon icon, Html.AttributeInstruction... attributes) {
+  protected final Html.Instruction.OfElement icon32(Carbon.Icon icon, Html.Instruction.OfAttribute... attributes) {
     return renderIcon(icon, "32px", attributes);
   }
 
-  private Html.ElementInstruction renderIcon(Carbon.Icon icon, String size, Html.AttributeInstruction... attributes) {
+  private Html.Instruction.OfElement renderIcon(Carbon.Icon icon, String size, Html.Instruction.OfAttribute... attributes) {
     return svg(
         xmlns("http://www.w3.org/2000/svg"),
         fill("currentColor"),

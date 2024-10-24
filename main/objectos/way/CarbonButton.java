@@ -280,7 +280,7 @@ final class CarbonButton {
 
   private CarbonButton() {}
 
-  public static Html.ElementInstruction button(
+  public static Html.Instruction.OfElement button(
       Html.TemplateBase tmpl,
       Html.ElementName renderAs, Carbon.ButtonVariant variant, Carbon.ButtonSize size,
       Carbon.Icon icon, boolean iconOnly, Html.Instruction... contents) {

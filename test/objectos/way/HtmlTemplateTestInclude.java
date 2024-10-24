@@ -389,7 +389,7 @@ public class HtmlTemplateTestInclude {
         super(parent);
       }
 
-      public final void render(Html.ElementInstruction child) {
+      public final void render(Html.Instruction.OfElement child) {
         div(
             className("component"),
 
@@ -433,7 +433,7 @@ public class HtmlTemplateTestInclude {
         super(parent);
       }
 
-      public final Html.ElementInstruction render(Html.ElementInstruction e) {
+      public final Html.Instruction.OfElement render(Html.Instruction.OfElement e) {
         return div(
             className("c1"),
             e
@@ -446,7 +446,7 @@ public class HtmlTemplateTestInclude {
         super(parent);
       }
 
-      public final Html.ElementInstruction render(Html.ElementInstruction e) {
+      public final Html.Instruction.OfElement render(Html.Instruction.OfElement e) {
         return div(
             className("c2"),
             e
@@ -494,7 +494,7 @@ public class HtmlTemplateTestInclude {
         super(parent);
       }
 
-      public final Html.ElementInstruction render(Html.Instruction... elements) {
+      public final Html.Instruction.OfElement render(Html.Instruction... elements) {
         return nav(
             ul(elements)
         );
@@ -504,7 +504,7 @@ public class HtmlTemplateTestInclude {
     class Link extends Html.Component {
       public Link(Html.Template parent) { super(parent); }
 
-      public final Html.ElementInstruction render(Html.Instruction... elements) {
+      public final Html.Instruction.OfElement render(Html.Instruction... elements) {
         return li(
             a(elements)
         );
