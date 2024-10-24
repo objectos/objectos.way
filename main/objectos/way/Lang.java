@@ -46,7 +46,8 @@ public final class Lang {
   }
 
   /**
-   * An {@link Iterable} which can be traversed only once.
+   * An {@link Iterable} which can be traversed only once. Trying to traverse
+   * this object more than once is not defined.
    */
   public interface IterableOnce<T> extends Iterable<T> {
 
