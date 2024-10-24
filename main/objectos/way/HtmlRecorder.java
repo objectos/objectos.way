@@ -84,8 +84,17 @@ sealed class HtmlRecorder extends HtmlRecorderElements permits Html {
 
           sb.append(testable);
           sb.append(':');
-          sb.append(' ');
-          sb.append(text.value());
+
+          String value;
+          value = text.value();
+
+          value = value.trim();
+
+          if (!value.isEmpty()) {
+            sb.append(' ');
+            sb.append(value);
+          }
+
           sb.append(System.lineSeparator());
         }
 
@@ -1027,6 +1036,7 @@ sealed class HtmlRecorder extends HtmlRecorderElements permits Html {
 
         case HtmlByteProto.ELEMENT,
              HtmlByteProto.RAW,
+             HtmlByteProto.TESTABLE,
              HtmlByteProto.TEXT -> index = skipVarInt(index);
 
         case HtmlByteProto.END -> {

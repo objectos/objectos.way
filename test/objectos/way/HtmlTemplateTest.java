@@ -1495,7 +1495,7 @@ public class HtmlTemplateTest {
   }
 
   @Test(description = """
-  The testable pseudo-attribute
+  The testable text node
   """)
   public void testCase65() {
     Html.Template template;
@@ -1526,6 +1526,56 @@ public class HtmlTemplateTest {
         """
         x: 123
         y: abc
+        """
+    );
+  }
+
+  @Test(description = """
+  The testable text node + attributes
+  """)
+  public void testCase66() {
+    Html.Template template;
+    template = new Html.Template() {
+      @Override
+      protected final void render() throws IOException {
+        div(className("x"), testable("x", "123"));
+      }
+    };
+
+    assertEquals(
+        template.toString(),
+
+        """
+        <div class="x">123</div>
+        """
+    );
+  }
+
+  @Test(description = """
+  The testable text node + empty value
+  """)
+  public void testCase67() {
+    Html.Template template;
+    template = new Html.Template() {
+      @Override
+      protected final void render() throws IOException {
+        div(testable("empty", ""));
+      }
+    };
+
+    assertEquals(
+        template.toString(),
+
+        """
+        <div></div>
+        """
+    );
+
+    assertEquals(
+        template.testableText(),
+
+        """
+        empty:
         """
     );
   }
