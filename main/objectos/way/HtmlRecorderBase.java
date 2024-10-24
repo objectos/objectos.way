@@ -207,6 +207,8 @@ sealed class HtmlRecorderBase permits HtmlRecorderAttributes {
 
         case HtmlByteProto.INTERNAL5 -> mainContents -= 5 - 2;
 
+        case HtmlByteProto.INTERNAL6 -> mainContents -= 6 - 2;
+
         default -> throw new UnsupportedOperationException(
             "Implement me :: proto=" + proto
         );
@@ -323,10 +325,17 @@ sealed class HtmlRecorderBase permits HtmlRecorderAttributes {
 
               case HtmlByteProto.MARKED5 -> contents += 5;
 
+              case HtmlByteProto.MARKED6 -> contents += 6;
+
               case HtmlByteProto.RAW,
-                   HtmlByteProto.TEXT,
-                   HtmlByteProto.TESTABLE -> {
+                   HtmlByteProto.TEXT -> {
                 contents = encodeInternal4(contents, proto);
+
+                continue loop;
+              }
+
+              case HtmlByteProto.TESTABLE -> {
+                contents = encodeInternal6(contents, proto);
 
                 continue loop;
               }
@@ -379,18 +388,25 @@ sealed class HtmlRecorderBase permits HtmlRecorderAttributes {
     );
   }
 
-  final void testableImpl(String name) {
-    int object;
-    object = objectAdd(name);
+  final void testableImpl(String name, String value) {
+    int nameIdx;
+    nameIdx = objectAdd(name);
+
+    int valueIdx;
+    valueIdx = objectAdd(value);
 
     mainAdd(
         HtmlByteProto.TESTABLE,
 
-        // value
-        HtmlBytes.encodeInt0(object),
-        HtmlBytes.encodeInt1(object),
+        // name
+        HtmlBytes.encodeInt0(nameIdx),
+        HtmlBytes.encodeInt1(nameIdx),
 
-        HtmlByteProto.INTERNAL4
+        // value
+        HtmlBytes.encodeInt0(valueIdx),
+        HtmlBytes.encodeInt1(valueIdx),
+
+        HtmlByteProto.INTERNAL6
     );
   }
 
@@ -786,6 +802,33 @@ sealed class HtmlRecorderBase permits HtmlRecorderAttributes {
     return contents + offset;
   }
 
+  private int encodeInternal6(int contents, byte proto) {
+    return encodeInternalN(contents, proto, HtmlByteProto.MARKED6, 6);
+  }
+
+  private int encodeInternalN(int contents, byte proto, byte marker, int offset) {
+    // keep the start index handy
+    int startIndex;
+    startIndex = contents;
+
+    // mark this element
+    main[contents] = marker;
+
+    // ensure main can hold least 4 elements
+    // 0   - ByteProto
+    // 1-3 - variable length
+    main = Util.growIfNecessary(main, mainIndex + 3);
+
+    main[mainIndex++] = proto;
+
+    int length;
+    length = mainIndex - startIndex;
+
+    mainIndex = HtmlBytes.encodeOffset(main, mainIndex, length);
+
+    return contents + offset;
+  }
+
   private int encodeLength2(int contents) {
     contents++;
 
@@ -910,6 +953,16 @@ sealed class HtmlRecorderBase permits HtmlRecorderAttributes {
     main[mainIndex++] = b2;
     main[mainIndex++] = b3;
     main[mainIndex++] = b4;
+  }
+
+  private void mainAdd(byte b0, byte b1, byte b2, byte b3, byte b4, byte b5) {
+    main = Util.growIfNecessary(main, mainIndex + 5);
+    main[mainIndex++] = b0;
+    main[mainIndex++] = b1;
+    main[mainIndex++] = b2;
+    main[mainIndex++] = b3;
+    main[mainIndex++] = b4;
+    main[mainIndex++] = b5;
   }
 
   private int objectAdd(Object value) {

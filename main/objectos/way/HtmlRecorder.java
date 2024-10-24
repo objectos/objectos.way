@@ -70,30 +70,26 @@ sealed class HtmlRecorder extends HtmlRecorderElements permits Html {
   }
 
   private void testableElement(StringBuilder sb, Html.Dom.Element element) {
-    String testField;
-    testField = element.testable();
+    for (var node : element.nodes()) {
+      switch (node) {
+        case Html.Dom.Element child -> testableElement(sb, child);
 
-    if (testField != null) {
-      sb.append(testField);
-      sb.append(':');
-      sb.append(' ');
+        case Html.Dom.Text text -> {
+          String testable;
+          testable = text.testable();
 
-      for (var node : element.nodes()) {
-        switch (node) {
-          case Html.Dom.Text text -> sb.append(text.value());
+          if (testable == null) {
+            continue;
+          }
 
-          default -> {}
+          sb.append(testable);
+          sb.append(':');
+          sb.append(' ');
+          sb.append(text.value());
+          sb.append(System.lineSeparator());
         }
-      }
 
-      sb.append(System.lineSeparator());
-    } else {
-      for (var node : element.nodes()) {
-        switch (node) {
-          case Html.Dom.Element child -> testableElement(sb, child);
-
-          default -> {}
-        }
+        default -> {}
       }
     }
   }
@@ -375,12 +371,13 @@ sealed class HtmlRecorder extends HtmlRecorderElements permits Html {
     return Html.ELEMENT;
   }
 
-  public final Html.Instruction.OfAttribute testable(String name) {
+  public final Html.Instruction.OfElement testable(String name, String value) {
     Check.notNull(name, "name == null");
+    Check.notNull(value, "value == null");
 
-    testableImpl(name);
+    testableImpl(name, value);
 
-    return Html.ATTRIBUTE;
+    return Html.ELEMENT;
   }
 
   /**
@@ -540,6 +537,8 @@ sealed class HtmlRecorder extends HtmlRecorderElements permits Html {
         case HtmlByteProto.MARKED4 -> index += 4;
 
         case HtmlByteProto.MARKED5 -> index += 5;
+
+        case HtmlByteProto.MARKED6 -> index += 6;
 
         default -> throw new UnsupportedOperationException(
             "Implement me :: proto=" + proto
@@ -1240,14 +1239,14 @@ sealed class HtmlRecorder extends HtmlRecorderElements permits Html {
         }
 
         case HtmlByteProto.ATTRIBUTE0,
-             HtmlByteProto.ATTRIBUTE1,
-             HtmlByteProto.TESTABLE -> index = skipVarInt(index);
+             HtmlByteProto.ATTRIBUTE1 -> index = skipVarInt(index);
 
         case HtmlByteProto.ATTRIBUTE_EXT1 -> index += 3;
 
         case HtmlByteProto.ELEMENT,
              HtmlByteProto.RAW,
-             HtmlByteProto.TEXT -> {
+             HtmlByteProto.TEXT,
+             HtmlByteProto.TESTABLE -> {
           index = rollbackIndex;
 
           nextState = _ELEMENT_NODES_HAS_NEXT;
@@ -1388,6 +1387,26 @@ sealed class HtmlRecorder extends HtmlRecorderElements permits Html {
         yield raw;
       }
 
+      case HtmlByteProto.TESTABLE -> {
+        index = jmp2(index);
+
+        byte t0;
+        t0 = main[auxStart++];
+
+        byte t1;
+        t1 = main[auxStart++];
+
+        byte v0;
+        v0 = main[auxStart++];
+
+        byte v1;
+        v1 = main[auxStart++];
+
+        elementCtxNodesIndexStore(index);
+
+        yield htmlText(t0, t1, v0, v1);
+      }
+
       case HtmlByteProto.TEXT -> {
         index = jmp2(index);
 
@@ -1408,61 +1427,25 @@ sealed class HtmlRecorder extends HtmlRecorderElements permits Html {
     };
   }
 
-  final String elementTestField() {
-    // state check
-    switch (statePeek()) {
-      case _ELEMENT_START, _ELEMENT_ATTRS_EXHAUSTED -> {
-        // valid state
-      }
-
-      default -> throw new UnsupportedOperationException(
-          "Implement me :: state=" + statePeek()
-      );
-    }
-
-    // we assume there's no test field
-    String testField;
-    testField = null;
-
-    // restore index from context
-    int index;
-    index = elementCtxAttrsIndexLoad();
-
-    loop: while (index < mainIndex) {
-      byte proto;
-      proto = main[index++];
-
-      switch (proto) {
-        case HtmlByteProto.TESTABLE -> {
-          index = jmp2(index);
-
-          byte v0;
-          v0 = main[auxStart++];
-
-          byte v1;
-          v1 = main[auxStart++];
-
-          testField = toObjectString(v0, v1);
-
-          break loop;
-        }
-
-        case HtmlByteProto.ATTRIBUTE_EXT1 -> index += 2;
-
-        case HtmlByteProto.END -> {
-          break loop;
-        }
-
-        default -> index += 1;
-      }
-    }
-
-    return testField;
-  }
-
   private HtmlDomText htmlText(byte v0, byte v1) {
     HtmlDomText text;
     text = (HtmlDomText) objectArray[objectIndex + OFFSET_TEXT];
+
+    // testable
+    text.testable = null;
+
+    // text value
+    text.value = toObjectString(v0, v1);
+
+    return text;
+  }
+
+  private HtmlDomText htmlText(byte t0, byte t1, byte v0, byte v1) {
+    HtmlDomText text;
+    text = (HtmlDomText) objectArray[objectIndex + OFFSET_TEXT];
+
+    // testable
+    text.testable = toObjectString(t0, t1);
 
     // text value
     text.value = toObjectString(v0, v1);

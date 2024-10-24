@@ -801,62 +801,50 @@ public class HtmlCompilerTestRecorder {
 
     html.div(
         html.div(
-            html.testable("x"),
-            html.text("123")
+            html.testable("x", "123")
         ),
         html.div(
-            html.testable("y"),
-            html.text("abc")
+            html.testable("y", "abc")
         )
     );
 
     test(
         html,
 
-        HtmlByteProto.MARKED4,
+        HtmlByteProto.MARKED6,
         HtmlBytes.encodeInt0(0),
         HtmlBytes.encodeInt1(0),
-        HtmlByteProto.INTERNAL4,
-
-        HtmlByteProto.MARKED4,
         HtmlBytes.encodeInt0(1),
         HtmlBytes.encodeInt1(1),
-        HtmlByteProto.INTERNAL4,
+        HtmlByteProto.INTERNAL6,
 
         HtmlByteProto.LENGTH2,
-        HtmlBytes.encodeInt0(9),
-        HtmlBytes.encodeInt1(9),
+        HtmlBytes.encodeInt0(7),
+        HtmlBytes.encodeInt1(7),
         HtmlByteProto.STANDARD_NAME,
         (byte) HtmlElementName.DIV.index(),
         HtmlByteProto.TESTABLE,
-        HtmlBytes.encodeInt0(14),
-        HtmlByteProto.TEXT,
         HtmlBytes.encodeInt0(12),
         HtmlByteProto.END,
-        HtmlBytes.encodeInt0(17),
+        HtmlBytes.encodeInt0(13),
         HtmlByteProto.INTERNAL,
 
-        HtmlByteProto.MARKED4,
+        HtmlByteProto.MARKED6,
         HtmlBytes.encodeInt0(2),
         HtmlBytes.encodeInt1(2),
-        HtmlByteProto.INTERNAL4,
-
-        HtmlByteProto.MARKED4,
         HtmlBytes.encodeInt0(3),
         HtmlBytes.encodeInt1(3),
-        HtmlByteProto.INTERNAL4,
+        HtmlByteProto.INTERNAL6,
 
         HtmlByteProto.LENGTH2,
-        HtmlBytes.encodeInt0(9),
-        HtmlBytes.encodeInt1(9),
+        HtmlBytes.encodeInt0(7),
+        HtmlBytes.encodeInt1(7),
         HtmlByteProto.STANDARD_NAME,
         (byte) HtmlElementName.DIV.index(),
         HtmlByteProto.TESTABLE,
-        HtmlBytes.encodeInt0(14),
-        HtmlByteProto.TEXT,
         HtmlBytes.encodeInt0(12),
         HtmlByteProto.END,
-        HtmlBytes.encodeInt0(17),
+        HtmlBytes.encodeInt0(13),
         HtmlByteProto.INTERNAL,
 
         HtmlByteProto.ELEMENT,
@@ -865,11 +853,11 @@ public class HtmlCompilerTestRecorder {
         HtmlByteProto.STANDARD_NAME,
         (byte) HtmlElementName.DIV.index(),
         HtmlByteProto.ELEMENT,
-        HtmlBytes.encodeInt0(38),
+        HtmlBytes.encodeInt0(32),
         HtmlByteProto.ELEMENT,
-        HtmlBytes.encodeInt0(20),
+        HtmlBytes.encodeInt0(18),
         HtmlByteProto.END,
-        HtmlBytes.encodeInt0(49),
+        HtmlBytes.encodeInt0(41),
         HtmlByteProto.INTERNAL
     );
   }

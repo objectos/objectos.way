@@ -119,14 +119,6 @@ public final class Html extends HtmlRecorder {
         return name().equals(name);
       }
 
-      /**
-       * Returns the value of the testable attribute if one was defined in this
-       * element or {@code null} if there was no testable attribute.
-       *
-       * @return the value of testable attribute
-       */
-      String testable();
-
     }
 
     /**
@@ -147,6 +139,14 @@ public final class Html extends HtmlRecorder {
      * A text node of a {@link Html.Template}.
      */
     sealed interface Text extends Node {
+
+      /**
+       * Returns the value of the testable attribute if one was defined in this
+       * element or {@code null} if there was no testable attribute.
+       *
+       * @return the value of testable attribute
+       */
+      String testable();
 
       String value();
 
@@ -951,8 +951,8 @@ public final class Html extends HtmlRecorder {
       return $html().text(text);
     }
 
-    protected final Instruction.OfAttribute testable(String name) {
-      return $html().testable(name);
+    protected final Html.Instruction.OfElement testable(String name, String value) {
+      return $html().testable(name, value);
     }
 
     @Override
@@ -4844,32 +4844,34 @@ final class HtmlByteProto {
   public static final byte INTERNAL3 = -3;
   public static final byte INTERNAL4 = -4;
   public static final byte INTERNAL5 = -5;
-  public static final byte LENGTH2 = -6;
-  public static final byte LENGTH3 = -7;
-  public static final byte MARKED3 = -8;
-  public static final byte MARKED4 = -9;
-  public static final byte MARKED5 = -10;
-  public static final byte NULL = -11;
-  public static final byte STANDARD_NAME = -12;
+  public static final byte INTERNAL6 = -6;
+  public static final byte LENGTH2 = -7;
+  public static final byte LENGTH3 = -8;
+  public static final byte MARKED3 = -9;
+  public static final byte MARKED4 = -10;
+  public static final byte MARKED5 = -11;
+  public static final byte MARKED6 = -12;
+  public static final byte NULL = -13;
+  public static final byte STANDARD_NAME = -14;
 
   // elements
 
-  public static final byte AMBIGUOUS1 = -13;
-  public static final byte DOCTYPE = -14;
-  public static final byte ELEMENT = -15;
-  public static final byte FLATTEN = -16;
-  public static final byte FRAGMENT = -17;
-  public static final byte RAW = -18;
-  public static final byte TEXT = -19;
+  public static final byte AMBIGUOUS1 = -15;
+  public static final byte DOCTYPE = -16;
+  public static final byte ELEMENT = -17;
+  public static final byte FLATTEN = -18;
+  public static final byte FRAGMENT = -19;
+  public static final byte RAW = -20;
+  public static final byte TEXT = -21;
+  public static final byte TESTABLE = -22;
 
   // attributes
 
-  public static final byte ATTRIBUTE0 = -20;
-  public static final byte ATTRIBUTE1 = -21;
+  public static final byte ATTRIBUTE0 = -23;
+  public static final byte ATTRIBUTE1 = -24;
   //public static final byte ATTRIBUTE_CLASS = -22;
   //public static final byte ATTRIBUTE_ID = -23;
-  public static final byte ATTRIBUTE_EXT1 = -22;
-  public static final byte TESTABLE = -23;
+  public static final byte ATTRIBUTE_EXT1 = -25;
 
   private HtmlByteProto() {}
 
@@ -5079,11 +5081,6 @@ final class HtmlDomElement implements Html.Dom.Element, Lang.IterableOnce<Html.D
   }
 
   @Override
-  public final String testable() {
-    return player.elementTestField();
-  }
-
-  @Override
   public final Html.Dom.Node next() {
     return player.elementNodesNext();
   }
@@ -5110,7 +5107,14 @@ final class HtmlDomRaw implements Html.Dom.Raw {
 
 final class HtmlDomText implements Html.Dom.Text {
 
+  String testable;
+
   String value;
+
+  @Override
+  public final String testable() {
+    return testable;
+  }
 
   @Override
   public final String value() {

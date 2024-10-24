@@ -1503,8 +1503,8 @@ public class HtmlTemplateTest {
       @Override
       protected final void render() throws IOException {
         div(
-            div(testable("x"), t("123")),
-            div(testable("y"), t("abc"))
+            div(testable("x", "123")),
+            div(testable("y", "abc"))
         );
       }
     };
