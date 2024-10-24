@@ -707,8 +707,12 @@ sealed class HtmlRecorderBase permits HtmlRecorderAttributes {
 
         case HtmlByteProto.MARKED5 -> index += 5;
 
+        case HtmlByteProto.MARKED6 -> index += 6;
+
         case HtmlByteProto.RAW,
              HtmlByteProto.TEXT -> index = encodeInternal4(index, proto);
+
+        case HtmlByteProto.TESTABLE -> index = encodeInternal6(index, proto);
 
         default -> {
           throw new UnsupportedOperationException(

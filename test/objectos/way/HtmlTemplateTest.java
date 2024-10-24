@@ -1580,6 +1580,43 @@ public class HtmlTemplateTest {
     );
   }
 
+  @Test(description = """
+  The testable text node + fragment
+  """)
+  public void testCase68() {
+    Html.Template template;
+    template = new Html.Template() {
+      @Override
+      protected final void render() throws IOException {
+        div(f(this::fragment));
+      }
+
+      private void fragment() {
+        div(testable("x", "abc"));
+        testable("y", "123");
+      }
+    };
+
+    assertEquals(
+        template.toString(),
+
+        """
+        <div>
+        <div>abc</div>
+        123</div>
+        """
+    );
+
+    assertEquals(
+        template.testableText(),
+
+        """
+        x: abc
+        y: 123
+        """
+    );
+  }
+
   private void test(Html.Template template, String expected) {
     String result;
     result = template.toString();
