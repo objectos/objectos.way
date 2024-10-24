@@ -143,7 +143,7 @@ final class CarbonTearsheet {
     return tmpl.h3(
         HEADER_TITLE,
 
-        tmpl.t(text)
+        tmpl.text(text)
     );
   }
 
@@ -151,7 +151,7 @@ final class CarbonTearsheet {
     return tmpl.p(
         HEADER_DESCRIPTION,
 
-        tmpl.t(text)
+        tmpl.text(text)
     );
   }
 
@@ -203,7 +203,7 @@ final class CarbonTearsheet {
 
         tmpl.type("button"),
 
-        tmpl.t(label)
+        tmpl.text(label)
     );
   }
 
@@ -215,7 +215,7 @@ final class CarbonTearsheet {
 
         tmpl.type("button"),
 
-        tmpl.t(label)
+        tmpl.text(label)
     );
   }
 
@@ -227,7 +227,7 @@ final class CarbonTearsheet {
 
         tmpl.type("button"),
 
-        tmpl.t(label)
+        tmpl.text(label)
     );
   }
 

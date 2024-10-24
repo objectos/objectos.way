@@ -48,7 +48,7 @@ final class ComponentsProgressIndicator extends CarbonPage {
         h2(
             Carbon.HEADING_03,
 
-            t("Vertical")
+            text("Vertical")
         ),
 
         carbon.progressIndicator(

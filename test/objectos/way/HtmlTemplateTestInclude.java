@@ -275,7 +275,7 @@ public class HtmlTemplateTestInclude {
           }
 
           private void heading1() {
-            t("abc");
+            text("abc");
           }
         },
 
@@ -321,7 +321,7 @@ public class HtmlTemplateTestInclude {
             div(
                 className("wrapper"),
 
-                t("foobar")
+                text("foobar")
             )
         );
       }
@@ -471,7 +471,7 @@ public class HtmlTemplateTestInclude {
             h1("Test");
 
             c1.render(
-                c2.render(t("A"))
+                c2.render(text("A"))
             );
           }
         },
@@ -521,9 +521,9 @@ public class HtmlTemplateTestInclude {
 
             header(
                 navigation.render(
-                    link.render(href("#"), t("Products")),
+                    link.render(href("#"), text("Products")),
 
-                    link.render(href("#"), t("Services"))
+                    link.render(href("#"), text("Services"))
                 )
             );
           }

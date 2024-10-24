@@ -340,9 +340,9 @@ public class HtmlTemplateTest {
           @Override
           protected final void render() {
             div(
-                t("a"),
+                text("a"),
                 p("b"),
-                t("c")
+                text("c")
             );
           }
         },
@@ -580,7 +580,7 @@ public class HtmlTemplateTest {
           @Override
           protected final void render() {
             pre(
-                code(t("<xml></xml>&copy;"))
+                code(text("<xml></xml>&copy;"))
             );
           }
         },
@@ -835,7 +835,7 @@ public class HtmlTemplateTest {
                 li(a(A, B, noop(), href("a"), raw("a"))),
 
                 li(
-                    h2(A, B, t("h2")),
+                    h2(A, B, text("h2")),
 
                     ul(
                         li(A, B, noop(), a(href("b"), raw("b"))),
@@ -1002,7 +1002,7 @@ public class HtmlTemplateTest {
           @Override
           protected final void render() {
             span("foo");
-            t("bar");
+            text("bar");
             span("zaz");
           }
         },
@@ -1233,7 +1233,7 @@ public class HtmlTemplateTest {
           }
 
           private void test() {
-            button(disabled(), t("Foo"));
+            button(disabled(), text("Foo"));
           }
         },
 

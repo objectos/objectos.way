@@ -97,7 +97,7 @@ public class ScriptActionTest {
         new Html.Template() {
           @Override
           protected final void render() {
-            a(dataOnClick(Script.location("/foo")), t("Foo"));
+            a(dataOnClick(Script.location("/foo")), text("Foo"));
           }
         },
 

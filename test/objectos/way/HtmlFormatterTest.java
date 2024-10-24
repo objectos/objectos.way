@@ -208,7 +208,7 @@ public class HtmlFormatterTest {
             doctype();
             html(
                 body(
-                    p(t("abc "), em("def"), t(" ghi"))
+                    p(text("abc "), em("def"), text(" ghi"))
                 )
             );
           }
@@ -328,7 +328,7 @@ public class HtmlFormatterTest {
           @Override
           protected final void render() {
             doctype();
-            a(href("index.html"), t("a"));
+            a(href("index.html"), text("a"));
           }
         },
 

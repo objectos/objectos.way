@@ -47,7 +47,7 @@ final class ComponentsGrid extends CarbonPage {
         h2(
             Carbon.HEADING_03,
 
-            t("Grid (Wide)")
+            text("Grid (Wide)")
         )
     );
 
@@ -57,25 +57,25 @@ final class ComponentsGrid extends CarbonPage {
         div(
             className("aspect-2x1 tile"),
 
-            t("Column 1")
+            text("Column 1")
         ),
 
         div(
             className("aspect-2x1 tile"),
 
-            t("Column 2")
+            text("Column 2")
         ),
 
         div(
             className("aspect-2x1 tile"),
 
-            t("Column 3")
+            text("Column 3")
         ),
 
         div(
             className("aspect-2x1 tile"),
 
-            t("Column 4")
+            text("Column 4")
         )
     );
 
@@ -85,7 +85,7 @@ final class ComponentsGrid extends CarbonPage {
         h2(
             Carbon.HEADING_03,
 
-            t("Grid (Narrow)")
+            text("Grid (Narrow)")
         )
     );
 
@@ -95,25 +95,25 @@ final class ComponentsGrid extends CarbonPage {
         div(
             className("aspect-2x1 tile"),
 
-            t("Column 1")
+            text("Column 1")
         ),
 
         div(
             className("aspect-2x1 tile"),
 
-            t("Column 2")
+            text("Column 2")
         ),
 
         div(
             className("aspect-2x1 tile"),
 
-            t("Column 3")
+            text("Column 3")
         ),
 
         div(
             className("aspect-2x1 tile"),
 
-            t("Column 4")
+            text("Column 4")
         )
     );
 
@@ -123,7 +123,7 @@ final class ComponentsGrid extends CarbonPage {
         h2(
             Carbon.HEADING_03,
 
-            t("Grid (Condensed)")
+            text("Grid (Condensed)")
         )
     );
 
@@ -133,25 +133,25 @@ final class ComponentsGrid extends CarbonPage {
         div(
             className("aspect-2x1 tile"),
 
-            t("Column 1")
+            text("Column 1")
         ),
 
         div(
             className("aspect-2x1 tile"),
 
-            t("Column 2")
+            text("Column 2")
         ),
 
         div(
             className("aspect-2x1 tile"),
 
-            t("Column 3")
+            text("Column 3")
         ),
 
         div(
             className("aspect-2x1 tile"),
 
-            t("Column 4")
+            text("Column 4")
         )
     );
   }

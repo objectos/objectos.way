@@ -57,7 +57,7 @@ public class ShellHeader extends Html.Component {
         li(section.name());
       } else {
         li(
-            a(href(section.href), t(section.name()))
+            a(href(section.href), text(section.name()))
         );
       }
     }

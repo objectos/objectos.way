@@ -98,7 +98,7 @@ final class ComponentsTearsheet extends CarbonPage {
         h2(
             Carbon.HEADING_03,
 
-            t("Title + description + influencer")
+            text("Title + description + influencer")
         ),
 
         carbon.button(
@@ -108,7 +108,7 @@ final class ComponentsTearsheet extends CarbonPage {
                 Carbon.showTearsheet(SHEET_01),
                 Carbon.showTearsheetModal(SHEET_01_MODAL)
             ),
-            t("Open Tearsheet")
+            text("Open Tearsheet")
         )
     );
 

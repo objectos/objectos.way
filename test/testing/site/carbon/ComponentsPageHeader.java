@@ -52,7 +52,7 @@ final class ComponentsPageHeader extends CarbonPage {
             h1(
                 className("page-header-title"),
 
-                t("Page title")
+                text("Page title")
             ),
 
             div(
@@ -62,7 +62,7 @@ final class ComponentsPageHeader extends CarbonPage {
                     className("button-md button-primary"),
                     type("button"),
 
-                    t("Primary action")
+                    text("Primary action")
                 )
             )
         )
@@ -74,19 +74,19 @@ final class ComponentsPageHeader extends CarbonPage {
         div(
             className("tile min-h-screen col-span-1"),
 
-            t("Column 1")
+            text("Column 1")
         ),
 
         div(
             className("tile min-h-screen col-span-1"),
 
-            t("Column 2")
+            text("Column 2")
         ),
 
         div(
             className("tile min-h-screen col-span-2"),
 
-            t("Column 3")
+            text("Column 3")
         )
     );
   }

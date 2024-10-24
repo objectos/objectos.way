@@ -98,7 +98,7 @@ final class ComponentsButton extends CarbonPage {
         h2(
             Carbon.HEADING_03,
 
-            t(title)
+            text(title)
         )
     );
 
@@ -108,19 +108,19 @@ final class ComponentsButton extends CarbonPage {
         carbon.gap(Carbon.SPACING_03),
         className("*:self-start"),
 
-        carbon.button(variant, Carbon.SM, type("button"), t(label)),
-        carbon.button(variant, Carbon.MD, type("button"), t(label)),
-        carbon.button(variant, Carbon.LG, type("button"), t(label)),
-        carbon.button(variant, Carbon.XL, type("button"), t(label)),
-        carbon.button(variant, Carbon.MAX, type("button"), t(label)),
+        carbon.button(variant, Carbon.SM, type("button"), text(label)),
+        carbon.button(variant, Carbon.MD, type("button"), text(label)),
+        carbon.button(variant, Carbon.LG, type("button"), text(label)),
+        carbon.button(variant, Carbon.XL, type("button"), text(label)),
+        carbon.button(variant, Carbon.MAX, type("button"), text(label)),
 
         div(className("col-span-full")),
 
-        carbon.button(variant, Carbon.SM, disabled(), type("button"), t(label)),
-        carbon.button(variant, Carbon.MD, disabled(), type("button"), t(label)),
-        carbon.button(variant, Carbon.LG, disabled(), type("button"), t(label)),
-        carbon.button(variant, Carbon.XL, disabled(), type("button"), t(label)),
-        carbon.button(variant, Carbon.MAX, disabled(), type("button"), t(label))
+        carbon.button(variant, Carbon.SM, disabled(), type("button"), text(label)),
+        carbon.button(variant, Carbon.MD, disabled(), type("button"), text(label)),
+        carbon.button(variant, Carbon.LG, disabled(), type("button"), text(label)),
+        carbon.button(variant, Carbon.XL, disabled(), type("button"), text(label)),
+        carbon.button(variant, Carbon.MAX, disabled(), type("button"), text(label))
     );
   }
 
@@ -132,7 +132,7 @@ final class ComponentsButton extends CarbonPage {
         h2(
             Carbon.HEADING_03,
 
-            t(title)
+            text(title)
         )
     );
 
@@ -142,19 +142,19 @@ final class ComponentsButton extends CarbonPage {
         carbon.gap(Carbon.SPACING_03),
         className("*:self-start"),
 
-        carbon.button(variant, Carbon.SM, type("button"), t(label), carbon.renderIcon(icon)),
-        carbon.button(variant, Carbon.MD, type("button"), t(label), carbon.renderIcon(icon)),
-        carbon.button(variant, Carbon.LG, type("button"), t(label), carbon.renderIcon(icon)),
-        carbon.button(variant, Carbon.XL, type("button"), t(label), carbon.renderIcon(icon)),
-        carbon.button(variant, Carbon.MAX, type("button"), t(label), carbon.renderIcon(icon)),
+        carbon.button(variant, Carbon.SM, type("button"), text(label), carbon.renderIcon(icon)),
+        carbon.button(variant, Carbon.MD, type("button"), text(label), carbon.renderIcon(icon)),
+        carbon.button(variant, Carbon.LG, type("button"), text(label), carbon.renderIcon(icon)),
+        carbon.button(variant, Carbon.XL, type("button"), text(label), carbon.renderIcon(icon)),
+        carbon.button(variant, Carbon.MAX, type("button"), text(label), carbon.renderIcon(icon)),
 
         div(className("col-span-full")),
 
-        carbon.button(variant, Carbon.SM, disabled(), type("button"), t(label), carbon.renderIcon(icon)),
-        carbon.button(variant, Carbon.MD, disabled(), type("button"), t(label), carbon.renderIcon(icon)),
-        carbon.button(variant, Carbon.LG, disabled(), type("button"), t(label), carbon.renderIcon(icon)),
-        carbon.button(variant, Carbon.XL, disabled(), type("button"), t(label), carbon.renderIcon(icon)),
-        carbon.button(variant, Carbon.MAX, disabled(), type("button"), t(label), carbon.renderIcon(icon))
+        carbon.button(variant, Carbon.SM, disabled(), type("button"), text(label), carbon.renderIcon(icon)),
+        carbon.button(variant, Carbon.MD, disabled(), type("button"), text(label), carbon.renderIcon(icon)),
+        carbon.button(variant, Carbon.LG, disabled(), type("button"), text(label), carbon.renderIcon(icon)),
+        carbon.button(variant, Carbon.XL, disabled(), type("button"), text(label), carbon.renderIcon(icon)),
+        carbon.button(variant, Carbon.MAX, disabled(), type("button"), text(label), carbon.renderIcon(icon))
     );
   }
 
@@ -166,7 +166,7 @@ final class ComponentsButton extends CarbonPage {
         h2(
             Carbon.HEADING_03,
 
-            t(title)
+            text(title)
         )
     );
 

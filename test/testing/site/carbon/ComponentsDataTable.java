@@ -48,7 +48,7 @@ final class ComponentsDataTable extends CarbonPage {
         h2(
             Carbon.HEADING_03,
 
-            t("Basic")
+            text("Basic")
         ),
 
         carbon.dataTable(
@@ -66,7 +66,7 @@ final class ComponentsDataTable extends CarbonPage {
         h2(
             Carbon.HEADING_03,
 
-            t("Basic (xs)")
+            text("Basic (xs)")
         ),
 
         carbon.dataTable(
@@ -85,7 +85,7 @@ final class ComponentsDataTable extends CarbonPage {
         h2(
             Carbon.HEADING_03,
 
-            t("Basic (sm)")
+            text("Basic (sm)")
         ),
 
         carbon.dataTable(
@@ -104,7 +104,7 @@ final class ComponentsDataTable extends CarbonPage {
         h2(
             Carbon.HEADING_03,
 
-            t("Basic (md)")
+            text("Basic (md)")
         ),
 
         carbon.dataTable(
@@ -123,7 +123,7 @@ final class ComponentsDataTable extends CarbonPage {
         h2(
             Carbon.HEADING_03,
 
-            t("Basic (xl)")
+            text("Basic (xl)")
         ),
 
         carbon.dataTable(
@@ -152,7 +152,7 @@ final class ComponentsDataTable extends CarbonPage {
             h2(
                 className("data-table-header-title"),
 
-                t("DataTable header")
+                text("DataTable header")
             )
         ),
 
@@ -173,13 +173,14 @@ final class ComponentsDataTable extends CarbonPage {
             h2(
                 className("data-table-header-title"),
 
-                t("DataTable header")
+                text("DataTable header")
             ),
 
             p(
                 className("data-table-header-description"),
 
-                t("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent aliquam mi lacus, vel posuere eros lacinia vel. Suspendisse potenti. Donec eu porta est. Praesent aliquam nisl a sapien ultricies egestas. Duis luctus erat vel mi porttitor, et semper ligula placerat. Integer imperdiet, dui ac mattis mattis, quam libero dapibus nulla, sit amet malesuada justo nisl lobortis nibh. Maecenas eleifend lectus nibh, nec viverra diam pretium eu. Nam ultricies velit ante, maximus sodales magna pulvinar ut. Vivamus in iaculis velit. Nam quis accumsan erat. Etiam tristique eget libero sed varius. Ut sodales mollis varius. Ut bibendum in ex non pellentesque. Duis congue, sem molestie commodo consequat, lectus enim semper nunc, vel luctus lacus justo nec elit. Nullam porta, elit a auctor euismod, tellus elit pulvinar augue, eget cursus eros sapien at orci. Nullam blandit erat nec blandit feugiat.")
+                text(
+                    "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent aliquam mi lacus, vel posuere eros lacinia vel. Suspendisse potenti. Donec eu porta est. Praesent aliquam nisl a sapien ultricies egestas. Duis luctus erat vel mi porttitor, et semper ligula placerat. Integer imperdiet, dui ac mattis mattis, quam libero dapibus nulla, sit amet malesuada justo nisl lobortis nibh. Maecenas eleifend lectus nibh, nec viverra diam pretium eu. Nam ultricies velit ante, maximus sodales magna pulvinar ut. Vivamus in iaculis velit. Nam quis accumsan erat. Etiam tristique eget libero sed varius. Ut sodales mollis varius. Ut bibendum in ex non pellentesque. Duis congue, sem molestie commodo consequat, lectus enim semper nunc, vel luctus lacus justo nec elit. Nullam porta, elit a auctor euismod, tellus elit pulvinar augue, eget cursus eros sapien at orci. Nullam blandit erat nec blandit feugiat.")
             )
         ),
 
@@ -195,11 +196,11 @@ final class ComponentsDataTable extends CarbonPage {
   private void tableContents() {
     thead(
         tr(
-            th(/*scope("col"), */ t("Name")),
-            th(/*scope("col"), */ t("Rule")),
-            th(/*scope("col"), */ t("Status")),
-            th(/*scope("col"), */ t("Other")),
-            th(/*scope("col"), */ t("Example"))
+            th(/*scope("col"), */ text("Name")),
+            th(/*scope("col"), */ text("Rule")),
+            th(/*scope("col"), */ text("Status")),
+            th(/*scope("col"), */ text("Other")),
+            th(/*scope("col"), */ text("Example"))
         )
     );
 
@@ -217,11 +218,11 @@ final class ComponentsDataTable extends CarbonPage {
 
   private void tableHead() {
     tr(
-        th(/*scope("col"), */ t("Name")),
-        th(/*scope("col"), */ t("Rule")),
-        th(/*scope("col"), */ t("Status")),
-        th(/*scope("col"), */ t("Other")),
-        th(/*scope("col"), */ t("Example"))
+        th(/*scope("col"), */ text("Name")),
+        th(/*scope("col"), */ text("Rule")),
+        th(/*scope("col"), */ text("Status")),
+        th(/*scope("col"), */ text("Other")),
+        th(/*scope("col"), */ text("Example"))
     );
   }
 

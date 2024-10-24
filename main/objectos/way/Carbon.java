@@ -671,7 +671,7 @@ public final class Carbon extends CarbonComponents {
     Check.notNull(text, "text == null");
     Check.notNull(href, "href == null");
 
-    return CarbonLink.render(tmpl, style, tmpl.href(href), tmpl.t(text));
+    return CarbonLink.render(tmpl, style, tmpl.href(href), tmpl.text(text));
   }
 
   public final Html.Instruction.OfElement link(LinkStyle style, Html.Instruction... contents) {

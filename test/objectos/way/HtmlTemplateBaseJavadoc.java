@@ -129,7 +129,7 @@ public class HtmlTemplateBaseJavadoc {
         div(
             className("alert"),
             error ? className("alert-error") : noop(),
-            t("This is an alert!")
+            text("This is an alert!")
         );
         // @end
       }
@@ -169,7 +169,7 @@ public class HtmlTemplateBaseJavadoc {
         // @start region="text"
         p(
             strong("This is in bold"),
-            t(" & this is not")
+            text(" & this is not")
         );
         // @end
       }

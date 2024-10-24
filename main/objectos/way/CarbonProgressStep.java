@@ -167,7 +167,7 @@ final class CarbonProgressStep implements ProgressStep {
 
                     horizontal ? LABEL_HORIZONTAL : LABEL_VERTICAL,
 
-                    tmpl.t(label)
+                    tmpl.text(label)
                 ),
 
                 secondaryLabel != null
@@ -176,7 +176,7 @@ final class CarbonProgressStep implements ProgressStep {
 
                         horizontal ? OPTIONAL_HORIZONTAL : OPTIONAL_VERTICAL,
 
-                        tmpl.t(secondaryLabel)
+                        tmpl.text(secondaryLabel)
                     )
                     : tmpl.noop()
             ),
@@ -185,11 +185,11 @@ final class CarbonProgressStep implements ProgressStep {
                 tmpl.className("sr-only"),
 
                 switch (variant) {
-                  case STEP_COMPLETE -> tmpl.t("Complete");
+                  case STEP_COMPLETE -> tmpl.text("Complete");
 
-                  case STEP_CURRENT -> tmpl.t("Current");
+                  case STEP_CURRENT -> tmpl.text("Current");
 
-                  case STEP_INCOMPLETE -> tmpl.t("Incomplete");
+                  case STEP_INCOMPLETE -> tmpl.text("Incomplete");
                 }
             ),
 

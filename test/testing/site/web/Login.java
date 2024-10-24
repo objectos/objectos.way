@@ -113,17 +113,17 @@ final class Login extends WebTemplate implements Http.Handler {
     input(name(STEP), type("hidden"), value("one"));
 
     div(className("mb-1 p-4 pb-0 text-2xl leading-none tracking-tighter"),
-        t("Log in")
+        text("Log in")
     );
 
     div(className("mb-12 px-4 text-gray-700 text-sm leading-none tracking-tighter"),
-        t("Don't have an account? "),
-        a(className("text-blue-700"), href("#"), t("Create a new one"))
+        text("Don't have an account? "),
+        a(className("text-blue-700"), href("#"), text("Create a new one"))
     );
 
     div(className("relative mb-6"),
         label(className("absolute top-4 left-4 text-xs text-gray-700"),
-            forAttr(LOGIN), t("Email address")),
+            forAttr(LOGIN), text("Email address")),
 
         input(className("w-full border-y border-t-gray-300 border-b-gray-400 px-4 pt-8 pb-3.5 text-sm"),
             id(LOGIN), name(LOGIN), type("text"), placeholder("user@example.com"), required()
@@ -133,7 +133,7 @@ final class Login extends WebTemplate implements Http.Handler {
     div(className("flex mb-10 pl-4"),
         input(id("remember"), name("remember"), type("checkbox")),
 
-        label(className("ml-3 text-sm text-gray-700"), forAttr("remember"), t("Remember me"))
+        label(className("ml-3 text-sm text-gray-700"), forAttr("remember"), text("Remember me"))
     );
 
     div(className("flex"),
@@ -160,17 +160,17 @@ final class Login extends WebTemplate implements Http.Handler {
     input(name(LOGIN), type("hidden"), value(login));
 
     div(className("mb-1 p-4 pb-0 text-2xl leading-none tracking-tighter"),
-        t("Log In")
+        text("Log In")
     );
 
     div(className("mb-12 px-4 text-gray-700 text-sm leading-none tracking-tighter"),
-        t("Logging in as "), t(login), raw("&nbsp;"),
-        a(className("text-blue-700"), href("#"), t("Not you?"))
+        text("Logging in as "), text(login), raw("&nbsp;"),
+        a(className("text-blue-700"), href("#"), text("Not you?"))
     );
 
     div(className("relative mb-6"),
         label(className("absolute top-4 left-4 text-xs text-gray-700"),
-            forAttr(PASSWORD), t("Password")),
+            forAttr(PASSWORD), text("Password")),
 
         input(className("w-full border-y border-t-gray-300 border-b-gray-400 pt-8 px-4 pb-3.5 text-sm tracking-widest"),
             id(PASSWORD), name(PASSWORD), type("password")

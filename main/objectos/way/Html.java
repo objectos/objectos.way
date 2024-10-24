@@ -947,7 +947,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing the text node
      */
-    protected final Html.Instruction.OfElement t(String text) {
+    protected final Html.Instruction.OfElement text(String text) {
       return $html().text(text);
     }
 

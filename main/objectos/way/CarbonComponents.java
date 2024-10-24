@@ -747,12 +747,12 @@ abstract class CarbonComponents {
         tmpl.span(
             HEADER_NAME_PREFIX,
 
-            tmpl.t(prefix)
+            tmpl.text(prefix)
         ),
 
         tmpl.nbsp(),
 
-        tmpl.t(text)
+        tmpl.text(text)
     );
   }
 
@@ -773,12 +773,12 @@ abstract class CarbonComponents {
         tmpl.span(
             HEADER_NAME_PREFIX,
 
-            tmpl.t(prefix)
+            tmpl.text(prefix)
         ),
 
         tmpl.nbsp(),
 
-        tmpl.t(text)
+        tmpl.text(text)
     );
   }
 
@@ -884,7 +884,7 @@ abstract class CarbonComponents {
     return tmpl.h1(
         PAGE_HEADER_TITLE, HEADING_04,
 
-        tmpl.t(title)
+        tmpl.text(title)
     );
   }
 

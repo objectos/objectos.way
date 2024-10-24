@@ -50,7 +50,7 @@ final class ComponentsTile extends CarbonPage {
         h2(
             Carbon.HEADING_03,
 
-            t("Clickable Tile")
+            text("Clickable Tile")
         )
     );
 
@@ -62,13 +62,13 @@ final class ComponentsTile extends CarbonPage {
         carbon.tile(
             Carbon.TILE_CLICKABLE, className("aspect-1x1"),
             href("#"),
-            t("Clickable Tile")
+            text("Clickable Tile")
         ),
 
         carbon.tile(
             Carbon.TILE_CLICKABLE, className("aspect-1x1"),
             href("#"),
-            t("Clickable Tile with icon"),
+            text("Clickable Tile with icon"),
             carbon.renderIcon(Carbon.Icon.ARROW_RIGHT)
         )
     );
