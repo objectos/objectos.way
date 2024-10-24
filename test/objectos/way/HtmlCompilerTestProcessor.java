@@ -77,26 +77,26 @@ public class HtmlCompilerTestProcessor {
     StringBuilder out;
     out = new StringBuilder();
 
-    HtmlDocument document;
+    HtmlDom document;
     document = compiler.compile();
 
-    Lang.IterableOnce<Html.Node> nodes;
+    Lang.IterableOnce<Html.Dom.Node> nodes;
     nodes = document.nodes();
 
-    Iterator<Html.Node> nodesIter;
+    Iterator<Html.Dom.Node> nodesIter;
     nodesIter = nodes.iterator();
 
     while (nodesIter.hasNext()) {
-      Html.Node node;
+      Html.Dom.Node node;
       node = nodesIter.next();
 
       switch (node) {
-        case HtmlDocumentType type -> throw new UnsupportedOperationException("Implement me");
+        case HtmlDomDocumentType type -> throw new UnsupportedOperationException("Implement me");
 
-        case HtmlElement element -> element(out, element);
+        case HtmlDomElement element -> element(out, element);
 
         default -> {
-          Class<? extends Html.Node> type;
+          Class<? extends Html.Dom.Node> type;
           type = node.getClass();
 
           throw new UnsupportedOperationException(
@@ -109,21 +109,21 @@ public class HtmlCompilerTestProcessor {
     return out.toString();
   }
 
-  private void element(StringBuilder out, HtmlElement element) {
+  private void element(StringBuilder out, HtmlDomElement element) {
     String elementName;
     elementName = element.name();
 
     out.append('<');
     out.append(elementName);
 
-    Lang.IterableOnce<Html.Attribute> attrs;
+    Lang.IterableOnce<Html.Dom.Attribute> attrs;
     attrs = element.attributes();
 
-    Iterator<Html.Attribute> attrsIter;
+    Iterator<Html.Dom.Attribute> attrsIter;
     attrsIter = attrs.iterator();
 
     while (attrsIter.hasNext()) {
-      Html.Attribute attr;
+      Html.Dom.Attribute attr;
       attr = attrsIter.next();
 
       attribute(out, attr);
@@ -136,21 +136,21 @@ public class HtmlCompilerTestProcessor {
       return;
     }
 
-    Lang.IterableOnce<Html.Node> nodes;
+    Lang.IterableOnce<Html.Dom.Node> nodes;
     nodes = element.nodes();
 
-    Iterator<Html.Node> nodesIter;
+    Iterator<Html.Dom.Node> nodesIter;
     nodesIter = nodes.iterator();
 
     while (nodesIter.hasNext()) {
-      Html.Node node;
+      Html.Dom.Node node;
       node = nodesIter.next();
 
       switch (node) {
-        case HtmlElement child -> element(out, child);
+        case HtmlDomElement child -> element(out, child);
 
         default -> {
-          Class<? extends Html.Node> type;
+          Class<? extends Html.Dom.Node> type;
           type = node.getClass();
 
           throw new UnsupportedOperationException(
@@ -167,7 +167,7 @@ public class HtmlCompilerTestProcessor {
     out.append('\n');
   }
 
-  private void attribute(StringBuilder out, Html.Attribute attribute) {
+  private void attribute(StringBuilder out, Html.Dom.Attribute attribute) {
     String name;
     name = attribute.name();
 

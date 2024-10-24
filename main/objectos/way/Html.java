@@ -76,6 +76,84 @@ public final class Html extends HtmlRecorder {
   }
 
   /**
+   * Top-level structure that allows for a one-pass, one-direction traversal of
+   * a {@link Html.Template} document.
+   */
+  public sealed interface Dom {
+
+    /**
+     * An attribute of a {@link Html.Template}.
+     */
+    sealed interface Attribute {
+
+      String name();
+
+      boolean booleanAttribute();
+
+      boolean singleQuoted();
+
+      String value();
+
+      default boolean hasName(String name) {
+        return name().equals(name);
+      }
+
+    }
+
+    /**
+     * The document type of a {@link Html.Template}.
+     */
+    sealed interface DocumentType extends Node {}
+
+    /**
+     * An element of a {@link Html.Template}.
+     */
+    sealed interface Element extends Node {
+
+      Lang.IterableOnce<Dom.Attribute> attributes();
+
+      boolean isVoid();
+
+      String name();
+
+      Lang.IterableOnce<Node> nodes();
+
+      default boolean hasName(String name) {
+        return name().equals(name);
+      }
+
+      String testField();
+
+    }
+
+    /**
+     * A node of a {@link Html.Template}.
+     */
+    sealed interface Node {}
+
+    /**
+     * A raw node of a {@link Html.Template}.
+     */
+    sealed interface Raw extends Node {
+
+      String value();
+
+    }
+
+    /**
+     * A text node of a {@link Html.Template}.
+     */
+    sealed interface Text extends Node {
+
+      String value();
+
+    }
+
+    Lang.IterableOnce<Node> nodes();
+
+  }
+
+  /**
    * The name of an HTML element.
    */
   public sealed interface ElementName extends HtmlElementNameGenerated permits HtmlElementName {
@@ -104,75 +182,9 @@ public final class Html extends HtmlRecorder {
 
   }
 
-  /*
-   * pseudom types
-   */
-
-  /**
-   * An attribute in a compiled {@link Html.Template}
-   */
-  public interface Attribute {
-
-    String name();
-
-    boolean booleanAttribute();
-
-    boolean singleQuoted();
-
-    String value();
-
-    default boolean hasName(String name) {
-      return name().equals(name);
-    }
-
-  }
-
-  /**
-   * A compiled {@link Html.Template}.
-   */
-  public interface Document {
-
-    Lang.IterableOnce<Node> nodes();
-
-  }
-
-  public sealed interface Node permits DocumentType, Element, RawText, Text {}
-
-  public non-sealed interface DocumentType extends Node {}
-
-  public non-sealed interface Element extends Node {
-
-    Lang.IterableOnce<Attribute> attributes();
-
-    boolean isVoid();
-
-    String name();
-
-    Lang.IterableOnce<Node> nodes();
-
-    default boolean hasName(String name) {
-      return name().equals(name);
-    }
-
-    String testField();
-
-  }
-
   public interface ElementComponent {
 
     Html.Instruction render();
-
-  }
-
-  public non-sealed interface RawText extends Node {
-
-    String value();
-
-  }
-
-  public non-sealed interface Text extends Node {
-
-    String value();
 
   }
 
@@ -210,7 +222,7 @@ public final class Html extends HtmlRecorder {
     /**
      * Invokes this set of instructions.
      */
-    void renderMobileNavHeaderItems(T1 arg1) throws Exception;
+    void invoke(T1 arg1) throws Exception;
 
   }
 
@@ -348,7 +360,7 @@ public final class Html extends HtmlRecorder {
 
         accept(compiler);
 
-        HtmlDocument document;
+        HtmlDom document;
         document = compiler.compile();
 
         StringBuilder out;
@@ -371,7 +383,7 @@ public final class Html extends HtmlRecorder {
 
       accept(html);
 
-      HtmlDocument document;
+      HtmlDom document;
       document = html.compile();
 
       HtmlFormatter.STANDARD.formatTo(document, out);
@@ -400,7 +412,7 @@ public final class Html extends HtmlRecorder {
       }
     }
 
-    final HtmlDocument compile(Html html) {
+    final HtmlDom compile(Html html) {
       accept(html);
 
       return html.compile();
@@ -4664,105 +4676,6 @@ enum HtmlAmbiguous {
 
 }
 
-final class HtmlAttribute implements Html.Attribute {
-
-  HtmlAttributeName name;
-
-  private final HtmlRecorder player;
-
-  Object value;
-
-  public HtmlAttribute(HtmlRecorder player) {
-    this.player = player;
-  }
-
-  @Override
-  public final String name() {
-    return name.name();
-  }
-
-  @Override
-  public final boolean booleanAttribute() {
-    return name.booleanAttribute();
-  }
-
-  @Override
-  public final boolean singleQuoted() {
-    return name.singleQuoted();
-  }
-
-  @Override
-  public final String value() {
-    player.attributeValues();
-
-    player.attributeValuesIterator();
-
-    if (!hasNext()) {
-      return "";
-    }
-
-    Object result;
-    result = next();
-
-    if (!hasNext()) {
-      return String.valueOf(result);
-    }
-
-    Class<?> type;
-    type = name.type();
-
-    if (type == Script.Action.class) {
-
-      ScriptActionJoiner joiner;
-      joiner = new ScriptActionJoiner();
-
-      joiner.add(result);
-
-      joiner.add(next());
-
-      while (hasNext()) {
-        joiner.add(next());
-      }
-
-      return joiner.join();
-
-    } else {
-
-      StringBuilder value;
-      value = new StringBuilder();
-
-      value.append(result);
-
-      value.append(' ');
-
-      value.append(next());
-
-      while (hasNext()) {
-        value.append(' ');
-
-        value.append(next());
-      }
-
-      return value.toString();
-
-    }
-  }
-
-  private boolean hasNext() {
-    return player.attributeValuesHasNext();
-  }
-
-  private Object next() {
-    Object result;
-    result = player.attributeValuesNext(value);
-
-    value = null;
-
-    return result;
-  }
-
-}
-
 final class HtmlAttributeName implements Html.AttributeName {
 
   /**
@@ -4924,23 +4837,23 @@ final class HtmlByteProto {
 
 }
 
-final class HtmlDocument implements Html.Document, Lang.IterableOnce<Html.Node>, Iterator<Html.Node> {
+final class HtmlDom implements Html.Dom, Lang.IterableOnce<Html.Dom.Node>, Iterator<Html.Dom.Node> {
 
   private final HtmlRecorder player;
 
-  public HtmlDocument(HtmlRecorder ctx) {
+  public HtmlDom(HtmlRecorder ctx) {
     this.player = ctx;
   }
 
   @Override
-  public final Lang.IterableOnce<Html.Node> nodes() {
+  public final Lang.IterableOnce<Html.Dom.Node> nodes() {
     player.documentIterable();
 
     return this;
   }
 
   @Override
-  public final Iterator<Html.Node> iterator() {
+  public final Iterator<Html.Dom.Node> iterator() {
     player.documentIterator();
 
     return this;
@@ -4952,19 +4865,118 @@ final class HtmlDocument implements Html.Document, Lang.IterableOnce<Html.Node>,
   }
 
   @Override
-  public final Html.Node next() {
+  public final Html.Dom.Node next() {
     return player.documentNext();
   }
 
 }
 
-enum HtmlDocumentType implements Html.DocumentType {
+final class HtmlDomAttribute implements Html.Dom.Attribute {
+
+  HtmlAttributeName name;
+
+  private final HtmlRecorder player;
+
+  Object value;
+
+  public HtmlDomAttribute(HtmlRecorder player) {
+    this.player = player;
+  }
+
+  @Override
+  public final String name() {
+    return name.name();
+  }
+
+  @Override
+  public final boolean booleanAttribute() {
+    return name.booleanAttribute();
+  }
+
+  @Override
+  public final boolean singleQuoted() {
+    return name.singleQuoted();
+  }
+
+  @Override
+  public final String value() {
+    player.attributeValues();
+
+    player.attributeValuesIterator();
+
+    if (!hasNext()) {
+      return "";
+    }
+
+    Object result;
+    result = next();
+
+    if (!hasNext()) {
+      return String.valueOf(result);
+    }
+
+    Class<?> type;
+    type = name.type();
+
+    if (type == Script.Action.class) {
+
+      ScriptActionJoiner joiner;
+      joiner = new ScriptActionJoiner();
+
+      joiner.add(result);
+
+      joiner.add(next());
+
+      while (hasNext()) {
+        joiner.add(next());
+      }
+
+      return joiner.join();
+
+    } else {
+
+      StringBuilder value;
+      value = new StringBuilder();
+
+      value.append(result);
+
+      value.append(' ');
+
+      value.append(next());
+
+      while (hasNext()) {
+        value.append(' ');
+
+        value.append(next());
+      }
+
+      return value.toString();
+
+    }
+  }
+
+  private boolean hasNext() {
+    return player.attributeValuesHasNext();
+  }
+
+  private Object next() {
+    Object result;
+    result = player.attributeValuesNext(value);
+
+    value = null;
+
+    return result;
+  }
+
+}
+
+enum HtmlDomDocumentType implements Html.Dom.DocumentType {
   INSTANCE;
 }
 
-final class HtmlElement implements Html.Element, Lang.IterableOnce<Html.Node>, Iterator<Html.Node> {
+final class HtmlDomElement implements Html.Dom.Element, Lang.IterableOnce<Html.Dom.Node>, Iterator<Html.Dom.Node> {
 
-  private class ThisAttributes implements Lang.IterableOnce<Html.Attribute>, Iterator<Html.Attribute> {
+  private class ThisAttributes implements Lang.IterableOnce<Html.Dom.Attribute>, Iterator<Html.Dom.Attribute> {
 
     @Override
     public final boolean hasNext() {
@@ -4972,14 +4984,14 @@ final class HtmlElement implements Html.Element, Lang.IterableOnce<Html.Node>, I
     }
 
     @Override
-    public final Iterator<Html.Attribute> iterator() {
+    public final Iterator<Html.Dom.Attribute> iterator() {
       player.elementAttributesIterator();
 
       return this;
     }
 
     @Override
-    public final Html.Attribute next() {
+    public final Html.Dom.Attribute next() {
       return player.elementAttributesNext();
     }
 
@@ -4991,12 +5003,12 @@ final class HtmlElement implements Html.Element, Lang.IterableOnce<Html.Node>, I
 
   HtmlElementName name;
 
-  HtmlElement(HtmlRecorder player) {
+  HtmlDomElement(HtmlRecorder player) {
     this.player = player;
   }
 
   @Override
-  public final Lang.IterableOnce<Html.Attribute> attributes() {
+  public final Lang.IterableOnce<Html.Dom.Attribute> attributes() {
     player.elementAttributes();
 
     if (attributes == null) {
@@ -5017,7 +5029,7 @@ final class HtmlElement implements Html.Element, Lang.IterableOnce<Html.Node>, I
   }
 
   @Override
-  public final Iterator<Html.Node> iterator() {
+  public final Iterator<Html.Dom.Node> iterator() {
     player.elementNodesIterator();
 
     return this;
@@ -5034,15 +5046,37 @@ final class HtmlElement implements Html.Element, Lang.IterableOnce<Html.Node>, I
   }
 
   @Override
-  public final Html.Node next() {
+  public final Html.Dom.Node next() {
     return player.elementNodesNext();
   }
 
   @Override
-  public final Lang.IterableOnce<Html.Node> nodes() {
+  public final Lang.IterableOnce<Html.Dom.Node> nodes() {
     player.elementNodes();
 
     return this;
+  }
+
+}
+
+final class HtmlDomRaw implements Html.Dom.Raw {
+
+  String value;
+
+  @Override
+  public final String value() {
+    return value;
+  }
+
+}
+
+final class HtmlDomText implements Html.Dom.Text {
+
+  String value;
+
+  @Override
+  public final String value() {
+    return value;
   }
 
 }
@@ -5177,7 +5211,7 @@ final class HtmlFormatter {
 
   private HtmlFormatter() {}
 
-  public final void formatTo(Html.Document document, Appendable appendable) throws IOException {
+  public final void formatTo(Html.Dom document, Appendable appendable) throws IOException {
     Check.notNull(document, "document == null");
     Check.notNull(appendable, "appendable == null");
 
@@ -5191,17 +5225,17 @@ final class HtmlFormatter {
     Html html;
     html = Html.create();
 
-    HtmlDocument document;
+    HtmlDom document;
     document = template.compile(html);
 
     format(document, appendable);
   }
 
-  private void format(Html.Document document, Appendable out) throws IOException {
+  private void format(Html.Dom document, Appendable out) throws IOException {
     byte state;
     state = START;
 
-    for (Html.Node node : document.nodes()) {
+    for (Html.Dom.Node node : document.nodes()) {
       state = node(out, state, node);
     }
 
@@ -5210,15 +5244,15 @@ final class HtmlFormatter {
     }
   }
 
-  private byte node(Appendable out, byte state, Html.Node node) throws IOException {
+  private byte node(Appendable out, byte state, Html.Dom.Node node) throws IOException {
     return switch (node) {
-      case HtmlDocumentType doctype -> doctype(out, state, doctype);
+      case HtmlDomDocumentType doctype -> doctype(out, state, doctype);
 
-      case HtmlElement element -> element(out, state, element);
+      case HtmlDomElement element -> element(out, state, element);
 
-      case HtmlText text -> text(out, state, text);
+      case HtmlDomText text -> text(out, state, text);
 
-      case HtmlRawText raw -> raw(out, state, raw);
+      case HtmlDomRaw raw -> raw(out, state, raw);
 
       default -> throw new UnsupportedOperationException(
           "Implement me :: type=" + node.getClass()
@@ -5226,13 +5260,13 @@ final class HtmlFormatter {
     };
   }
 
-  private byte doctype(Appendable out, byte state, HtmlDocumentType doctype) throws IOException {
+  private byte doctype(Appendable out, byte state, HtmlDomDocumentType doctype) throws IOException {
     out.append("<!DOCTYPE html>");
 
     return BLOCK_END;
   }
 
-  private byte element(Appendable out, byte state, HtmlElement element) throws IOException {
+  private byte element(Appendable out, byte state, HtmlDomElement element) throws IOException {
     // start tag
     String elementName;
     elementName = element.name();
@@ -5270,7 +5304,7 @@ final class HtmlFormatter {
     out.append('<');
     out.append(elementName);
 
-    for (Html.Attribute attribute : element.attributes()) {
+    for (Html.Dom.Attribute attribute : element.attributes()) {
       attribute(out, attribute);
     }
 
@@ -5280,7 +5314,7 @@ final class HtmlFormatter {
       int childCount;
       childCount = 0;
 
-      for (Html.Node node : element.nodes()) {
+      for (Html.Dom.Node node : element.nodes()) {
         childState = node(out, childState, node);
 
         childCount++;
@@ -5323,7 +5357,7 @@ final class HtmlFormatter {
     }
   }
 
-  private void attribute(Appendable out, Html.Attribute attribute) throws IOException {
+  private void attribute(Appendable out, Html.Dom.Attribute attribute) throws IOException {
     String name;
     name = attribute.name();
 
@@ -5394,7 +5428,7 @@ final class HtmlFormatter {
     }
   }
 
-  private byte text(Appendable out, byte state, HtmlText text) throws IOException {
+  private byte text(Appendable out, byte state, HtmlDomText text) throws IOException {
     String value;
     value = text.value();
 
@@ -5443,7 +5477,7 @@ final class HtmlFormatter {
     }
   }
 
-  private byte raw(Appendable out, byte state, HtmlRawText raw) throws IOException {
+  private byte raw(Appendable out, byte state, HtmlDomRaw raw) throws IOException {
     String value;
     value = raw.value();
 
@@ -5627,28 +5661,6 @@ final class HtmlFormatter {
 
 }
 
-final class HtmlRawText implements Html.RawText {
-
-  String value;
-
-  @Override
-  public final String value() {
-    return value;
-  }
-
-}
-
-final class HtmlText implements Html.Text {
-
-  String value;
-
-  @Override
-  public final String value() {
-    return value;
-  }
-
-}
-
 sealed class HtmlRecorder extends HtmlRecorderElements {
 
   static final byte _DOCUMENT_START = -1;
@@ -5687,12 +5699,12 @@ sealed class HtmlRecorder extends HtmlRecorderElements {
     StringBuilder sb;
     sb = new StringBuilder();
 
-    HtmlDocument document;
+    HtmlDom document;
     document = compile();
 
     for (var node : document.nodes()) {
       switch (node) {
-        case Html.Element element -> testableElement(sb, element);
+        case Html.Dom.Element element -> testableElement(sb, element);
 
         default -> {}
       }
@@ -5701,7 +5713,7 @@ sealed class HtmlRecorder extends HtmlRecorderElements {
     return sb.toString();
   }
 
-  private void testableElement(StringBuilder sb, Html.Element element) {
+  private void testableElement(StringBuilder sb, Html.Dom.Element element) {
     String testField;
     testField = element.testField();
 
@@ -5712,7 +5724,7 @@ sealed class HtmlRecorder extends HtmlRecorderElements {
 
       for (var node : element.nodes()) {
         switch (node) {
-          case Html.Text text -> sb.append(text.value());
+          case Html.Dom.Text text -> sb.append(text.value());
 
           default -> {}
         }
@@ -5722,7 +5734,7 @@ sealed class HtmlRecorder extends HtmlRecorderElements {
     } else {
       for (var node : element.nodes()) {
         switch (node) {
-          case Html.Element child -> testableElement(sb, child);
+          case Html.Dom.Element child -> testableElement(sb, child);
 
           default -> {}
         }
@@ -5736,7 +5748,7 @@ sealed class HtmlRecorder extends HtmlRecorderElements {
       StringBuilder sb;
       sb = new StringBuilder();
 
-      HtmlDocument document;
+      HtmlDom document;
       document = compile();
 
       HtmlFormatter.STANDARD.formatTo(document, sb);
@@ -5907,7 +5919,7 @@ sealed class HtmlRecorder extends HtmlRecorderElements {
     index = fragmentBegin();
 
     try {
-      fragment.renderMobileNavHeaderItems(arg1);
+      fragment.invoke(arg1);
     } catch (Exception e) {
       throw new Html.RenderingException(e);
     }
@@ -6047,7 +6059,7 @@ sealed class HtmlRecorder extends HtmlRecorderElements {
 
   //
 
-  final HtmlDocument compile() {
+  final HtmlDom compile() {
     // we will use the aux list to store contexts
     auxIndex = 0;
 
@@ -6067,17 +6079,17 @@ sealed class HtmlRecorder extends HtmlRecorderElements {
       objectArray = Util.growIfNecessary(objectArray, objectIndex + OFFSET_MAX);
     }
 
-    objectArray[objectIndex + OFFSET_ELEMENT] = new HtmlElement(this);
+    objectArray[objectIndex + OFFSET_ELEMENT] = new HtmlDomElement(this);
 
-    objectArray[objectIndex + OFFSET_ATTRIBUTE] = new HtmlAttribute(this);
+    objectArray[objectIndex + OFFSET_ATTRIBUTE] = new HtmlDomAttribute(this);
 
-    objectArray[objectIndex + OFFSET_TEXT] = new HtmlText();
+    objectArray[objectIndex + OFFSET_TEXT] = new HtmlDomText();
 
-    objectArray[objectIndex + OFFSET_RAW] = new HtmlRawText();
+    objectArray[objectIndex + OFFSET_RAW] = new HtmlDomRaw();
 
     documentCtx();
 
-    return new HtmlDocument(this);
+    return new HtmlDom(this);
   }
 
   final void documentIterable() {
@@ -6186,7 +6198,7 @@ sealed class HtmlRecorder extends HtmlRecorderElements {
     return nextState == _DOCUMENT_NODES_HAS_NEXT;
   }
 
-  final Html.Node documentNext() {
+  final Html.Dom.Node documentNext() {
     stateCAS(_DOCUMENT_NODES_HAS_NEXT, _DOCUMENT_NODES_NEXT);
 
     // restore main index from the context
@@ -6201,7 +6213,7 @@ sealed class HtmlRecorder extends HtmlRecorderElements {
       case HtmlByteProto.DOCTYPE -> {
         documentCtxMainIndexStore(index);
 
-        yield HtmlDocumentType.INSTANCE;
+        yield HtmlDomDocumentType.INSTANCE;
       }
 
       case HtmlByteProto.ELEMENT -> {
@@ -6280,7 +6292,7 @@ sealed class HtmlRecorder extends HtmlRecorderElements {
     aux[mainStart + 3] = HtmlBytes.encodeInt2(value);
   }
 
-  final HtmlElement element(int startIndex, int parentIndex) {
+  final HtmlDomElement element(int startIndex, int parentIndex) {
     // our iteration index
     int elementIndex;
     elementIndex = startIndex;
@@ -6309,7 +6321,7 @@ sealed class HtmlRecorder extends HtmlRecorderElements {
 
     elementCtx(startIndex, parentIndex);
 
-    HtmlElement element;
+    HtmlDomElement element;
     element = htmlElement();
 
     element.name = name;
@@ -6435,7 +6447,7 @@ sealed class HtmlRecorder extends HtmlRecorderElements {
     return nextState == _ELEMENT_ATTRS_HAS_NEXT;
   }
 
-  final HtmlAttribute elementAttributesNext() {
+  final HtmlDomAttribute elementAttributesNext() {
     stateCAS(_ELEMENT_ATTRS_HAS_NEXT, _ELEMENT_ATTRS_NEXT);
 
     // restore main index
@@ -6443,7 +6455,7 @@ sealed class HtmlRecorder extends HtmlRecorderElements {
     index = elementCtxAttrsIndexLoad();
 
     // our return value
-    final HtmlAttribute attribute;
+    final HtmlDomAttribute attribute;
     attribute = htmlAttribute();
 
     // values to set
@@ -6524,8 +6536,8 @@ sealed class HtmlRecorder extends HtmlRecorderElements {
     return attribute;
   }
 
-  private HtmlAttribute htmlAttribute() {
-    return (HtmlAttribute) objectArray[objectIndex + OFFSET_ATTRIBUTE];
+  private HtmlDomAttribute htmlAttribute() {
+    return (HtmlDomAttribute) objectArray[objectIndex + OFFSET_ATTRIBUTE];
   }
 
   final void attributeValues() {
@@ -6549,7 +6561,7 @@ sealed class HtmlRecorder extends HtmlRecorderElements {
       );
     }
 
-    HtmlAttribute attribute;
+    HtmlDomAttribute attribute;
     attribute = htmlAttribute();
 
     if (attribute.value != null) {
@@ -6599,7 +6611,7 @@ sealed class HtmlRecorder extends HtmlRecorderElements {
           ambiguous = HtmlAmbiguous.get(ordinal);
 
           // find out the parent
-          HtmlElement element;
+          HtmlDomElement element;
           element = htmlElement();
 
           HtmlElementName elementName;
@@ -6814,7 +6826,7 @@ sealed class HtmlRecorder extends HtmlRecorderElements {
         }
 
         // restore name
-        HtmlElement element;
+        HtmlDomElement element;
         element = htmlElement();
 
         element.name = elementCtxNameLoad();
@@ -6854,7 +6866,7 @@ sealed class HtmlRecorder extends HtmlRecorderElements {
           ambiguous = HtmlAmbiguous.get(ordinal);
 
           // find out parent element
-          HtmlElement element;
+          HtmlDomElement element;
           element = htmlElement();
 
           HtmlElementName parent;
@@ -6921,7 +6933,7 @@ sealed class HtmlRecorder extends HtmlRecorderElements {
     return nextState == _ELEMENT_NODES_HAS_NEXT;
   }
 
-  final Html.Node elementNodesNext() {
+  final Html.Dom.Node elementNodesNext() {
     stateCAS(_ELEMENT_NODES_HAS_NEXT, _ELEMENT_NODES_NEXT);
 
     // restore index from context
@@ -7011,8 +7023,8 @@ sealed class HtmlRecorder extends HtmlRecorderElements {
         elementCtxNodesIndexStore(index);
 
         // return value
-        HtmlRawText raw;
-        raw = (HtmlRawText) objectArray[objectIndex + OFFSET_RAW];
+        HtmlDomRaw raw;
+        raw = (HtmlDomRaw) objectArray[objectIndex + OFFSET_RAW];
 
         // text value
         raw.value = toObjectString(v0, v1);
@@ -7092,9 +7104,9 @@ sealed class HtmlRecorder extends HtmlRecorderElements {
     return testField;
   }
 
-  private HtmlText htmlText(byte v0, byte v1) {
-    HtmlText text;
-    text = (HtmlText) objectArray[objectIndex + OFFSET_TEXT];
+  private HtmlDomText htmlText(byte v0, byte v1) {
+    HtmlDomText text;
+    text = (HtmlDomText) objectArray[objectIndex + OFFSET_TEXT];
 
     // text value
     text.value = toObjectString(v0, v1);
@@ -7251,8 +7263,8 @@ sealed class HtmlRecorder extends HtmlRecorderElements {
     return parentIndex;
   }
 
-  private HtmlElement htmlElement() {
-    return (HtmlElement) objectArray[objectIndex + OFFSET_ELEMENT];
+  private HtmlDomElement htmlElement() {
+    return (HtmlDomElement) objectArray[objectIndex + OFFSET_ELEMENT];
   }
 
   private void stateCheck(byte expected) {
