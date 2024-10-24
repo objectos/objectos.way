@@ -21,11 +21,6 @@ import java.util.List;
 final class HtmlAttributeName implements Html.AttributeName {
 
   /**
-   * The {@code data-execute-default} attribute.
-   */
-  public static final Html.AttributeName DATA_EXECUTE_DEFAULT = create("data-execute-default", true);
-
-  /**
    * The {@code data-frame} attribute.
    */
   public static final Html.AttributeName DATA_FRAME = create("data-frame", false);

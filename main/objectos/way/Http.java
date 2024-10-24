@@ -136,10 +136,7 @@ public final class Http {
     }
 
     default void ok(Html.Template template) {
-      Html.Compiler html;
-      html = Html.Compiler.create();
-
-      template.accept(html);
+      Objects.requireNonNull(template, "template == null");
 
       status(Http.OK);
 
@@ -149,7 +146,7 @@ public final class Http {
 
       header(Http.TRANSFER_ENCODING, "chunked");
 
-      send(html, StandardCharsets.UTF_8);
+      send(template, StandardCharsets.UTF_8);
     }
 
     default void okText(String text, Charset charset) {

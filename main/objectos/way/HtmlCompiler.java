@@ -58,22 +58,7 @@ final class HtmlCompiler extends HtmlCompilerElements implements Html.Compiler {
    */
   public HtmlCompiler() {}
 
-  @Override
-  public final String toString() {
-    try {
-      StringBuilder sb;
-      sb = new StringBuilder();
-
-      writeTo(sb);
-
-      return sb.toString();
-    } catch (IOException e) {
-      throw new AssertionError("StringBuilder does not throw IOException", e);
-    }
-  }
-
-  @Override
-  public final String toTestString() {
+  public final String testableText() {
     StringBuilder sb;
     sb = new StringBuilder();
 
@@ -82,7 +67,7 @@ final class HtmlCompiler extends HtmlCompilerElements implements Html.Compiler {
 
     for (var node : document.nodes()) {
       switch (node) {
-        case Html.Element element -> toTestStringElement(sb, element);
+        case Html.Element element -> testableElement(sb, element);
 
         default -> {}
       }
@@ -91,7 +76,7 @@ final class HtmlCompiler extends HtmlCompilerElements implements Html.Compiler {
     return sb.toString();
   }
 
-  private void toTestStringElement(StringBuilder sb, Html.Element element) {
+  private void testableElement(StringBuilder sb, Html.Element element) {
     String testField;
     testField = element.testField();
 
@@ -112,7 +97,7 @@ final class HtmlCompiler extends HtmlCompilerElements implements Html.Compiler {
     } else {
       for (var node : element.nodes()) {
         switch (node) {
-          case Html.Element child -> toTestStringElement(sb, child);
+          case Html.Element child -> testableElement(sb, child);
 
           default -> {}
         }
@@ -121,11 +106,20 @@ final class HtmlCompiler extends HtmlCompilerElements implements Html.Compiler {
   }
 
   @Override
-  public final void writeTo(Appendable dest) throws IOException {
-    HtmlDocument document;
-    document = compile();
+  public final String toString() {
+    try {
+      StringBuilder sb;
+      sb = new StringBuilder();
 
-    HtmlFormatter.STANDARD.formatTo(document, dest);
+      HtmlDocument document;
+      document = compile();
+
+      HtmlFormatter.STANDARD.formatTo(document, sb);
+
+      return sb.toString();
+    } catch (IOException e) {
+      throw new AssertionError("StringBuilder does not throw IOException", e);
+    }
   }
 
   @Override
@@ -319,10 +313,10 @@ final class HtmlCompiler extends HtmlCompilerElements implements Html.Compiler {
   }
 
   @Override
-  public final AttributeInstruction testField(String name) {
+  public final AttributeInstruction testable(String name) {
     Check.notNull(name, "name == null");
 
-    testFieldImpl(name);
+    testableImpl(name);
 
     return Html.ATTRIBUTE;
   }
@@ -706,7 +700,7 @@ final class HtmlCompiler extends HtmlCompilerElements implements Html.Compiler {
         case HtmlByteProto.ELEMENT,
              HtmlByteProto.RAW,
              HtmlByteProto.TEXT,
-             HtmlByteProto.TEST_FIELD -> index = skipVarInt(index);
+             HtmlByteProto.TESTABLE -> index = skipVarInt(index);
 
         case HtmlByteProto.END -> {
           index = rollbackIndex;
@@ -1178,7 +1172,7 @@ final class HtmlCompiler extends HtmlCompilerElements implements Html.Compiler {
 
         case HtmlByteProto.ATTRIBUTE0,
              HtmlByteProto.ATTRIBUTE1,
-             HtmlByteProto.TEST_FIELD -> index = skipVarInt(index);
+             HtmlByteProto.TESTABLE -> index = skipVarInt(index);
 
         case HtmlByteProto.ATTRIBUTE_EXT1 -> index += 3;
 
@@ -1370,7 +1364,7 @@ final class HtmlCompiler extends HtmlCompilerElements implements Html.Compiler {
       proto = main[index++];
 
       switch (proto) {
-        case HtmlByteProto.TEST_FIELD -> {
+        case HtmlByteProto.TESTABLE -> {
           index = jmp2(index);
 
           byte v0;

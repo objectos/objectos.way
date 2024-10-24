@@ -801,11 +801,11 @@ public class HtmlCompilerTestRecorder {
 
     html.div(
         html.div(
-            html.testField("x"),
+            html.testable("x"),
             html.text("123")
         ),
         html.div(
-            html.testField("y"),
+            html.testable("y"),
             html.text("abc")
         )
     );
@@ -828,7 +828,7 @@ public class HtmlCompilerTestRecorder {
         HtmlBytes.encodeInt1(9),
         HtmlByteProto.STANDARD_NAME,
         (byte) HtmlElementName.DIV.index(),
-        HtmlByteProto.TEST_FIELD,
+        HtmlByteProto.TESTABLE,
         HtmlBytes.encodeInt0(14),
         HtmlByteProto.TEXT,
         HtmlBytes.encodeInt0(12),
@@ -851,7 +851,7 @@ public class HtmlCompilerTestRecorder {
         HtmlBytes.encodeInt1(9),
         HtmlByteProto.STANDARD_NAME,
         (byte) HtmlElementName.DIV.index(),
-        HtmlByteProto.TEST_FIELD,
+        HtmlByteProto.TESTABLE,
         HtmlBytes.encodeInt0(14),
         HtmlByteProto.TEXT,
         HtmlBytes.encodeInt0(12),
