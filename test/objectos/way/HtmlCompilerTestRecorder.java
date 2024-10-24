@@ -28,8 +28,8 @@ public class HtmlCompilerTestRecorder {
   <html></html>
   """)
   public void testCase00() {
-    HtmlCompiler html;
-    html = new HtmlCompiler();
+    HtmlRecorder html;
+    html = new HtmlRecorder();
 
     html.compilationBegin();
 
@@ -53,8 +53,8 @@ public class HtmlCompilerTestRecorder {
   <html lang="pt-BR"></html>
   """)
   public void testCase01() {
-    HtmlCompiler html;
-    html = new HtmlCompiler();
+    HtmlRecorder html;
+    html = new HtmlRecorder();
 
     html.compilationBegin();
 
@@ -88,8 +88,8 @@ public class HtmlCompilerTestRecorder {
   <html class="no-js" lang="pt-BR"></html>
   """)
   public void testCase02() {
-    HtmlCompiler html;
-    html = new HtmlCompiler();
+    HtmlRecorder html;
+    html = new HtmlRecorder();
 
     html.compilationBegin();
 
@@ -132,8 +132,8 @@ public class HtmlCompilerTestRecorder {
   <html><head></head></html>
   """)
   public void testCase03() {
-    HtmlCompiler html;
-    html = new HtmlCompiler();
+    HtmlRecorder html;
+    html = new HtmlRecorder();
 
     html.compilationBegin();
 
@@ -171,8 +171,8 @@ public class HtmlCompilerTestRecorder {
   <html></html>
   """)
   public void testCase09() {
-    HtmlCompiler html;
-    html = new HtmlCompiler();
+    HtmlRecorder html;
+    html = new HtmlRecorder();
 
     html.compilationBegin();
 
@@ -199,8 +199,8 @@ public class HtmlCompilerTestRecorder {
   fragment inclusion
   """)
   public void testCase10() {
-    HtmlCompiler html;
-    html = new HtmlCompiler();
+    HtmlRecorder html;
+    html = new HtmlRecorder();
 
     html.compilationBegin();
 
@@ -279,8 +279,8 @@ public class HtmlCompilerTestRecorder {
     HtmlId bar;
     bar = new HtmlId("bar");
 
-    HtmlCompiler html;
-    html = new HtmlCompiler();
+    HtmlRecorder html;
+    html = new HtmlRecorder();
 
     html.compilationBegin();
 
@@ -326,8 +326,8 @@ public class HtmlCompilerTestRecorder {
   Text child element
   """)
   public void testCase14() {
-    HtmlCompiler html;
-    html = new HtmlCompiler();
+    HtmlRecorder html;
+    html = new HtmlRecorder();
 
     html.compilationBegin();
 
@@ -384,8 +384,8 @@ public class HtmlCompilerTestRecorder {
   Ambiguous
   """)
   public void testCase16() {
-    HtmlCompiler html;
-    html = new HtmlCompiler();
+    HtmlRecorder html;
+    html = new HtmlRecorder();
 
     html.compilationBegin();
 
@@ -454,8 +454,8 @@ public class HtmlCompilerTestRecorder {
   include template
   """)
   public void testCase20() {
-    HtmlCompiler html;
-    html = new HtmlCompiler();
+    HtmlRecorder html;
+    html = new HtmlRecorder();
 
     html.compilationBegin();
 
@@ -505,8 +505,8 @@ public class HtmlCompilerTestRecorder {
   style/script => raw
   """)
   public void testCase25() {
-    HtmlCompiler html;
-    html = new HtmlCompiler();
+    HtmlRecorder html;
+    html = new HtmlRecorder();
 
     html.compilationBegin();
 
@@ -541,8 +541,8 @@ public class HtmlCompilerTestRecorder {
   - email input
   """)
   public void testCase31() {
-    HtmlCompiler html;
-    html = new HtmlCompiler();
+    HtmlRecorder html;
+    html = new HtmlRecorder();
 
     html.compilationBegin();
 
@@ -585,8 +585,8 @@ public class HtmlCompilerTestRecorder {
   - flatten instruction
   """)
   public void testCase46() {
-    HtmlCompiler html;
-    html = new HtmlCompiler();
+    HtmlRecorder html;
+    html = new HtmlRecorder();
 
     html.compilationBegin();
 
@@ -656,8 +656,8 @@ public class HtmlCompilerTestRecorder {
     ClassName col;
     col = new HtmlClassName("col");
 
-    HtmlCompiler html;
-    html = new HtmlCompiler();
+    HtmlRecorder html;
+    html = new HtmlRecorder();
 
     html.span("foo");
     html.text("bar");
@@ -794,8 +794,8 @@ public class HtmlCompilerTestRecorder {
   The test-field pseudo-attribute
   """)
   public void testCase65() {
-    HtmlCompiler html;
-    html = new HtmlCompiler();
+    HtmlRecorder html;
+    html = new HtmlRecorder();
 
     html.compilationBegin();
 
@@ -874,7 +874,7 @@ public class HtmlCompilerTestRecorder {
     );
   }
 
-  private void test(HtmlCompiler html, byte... expected) {
+  private void test(HtmlRecorder html, byte... expected) {
     byte[] result;
     result = Arrays.copyOf(html.main, html.mainIndex);
 

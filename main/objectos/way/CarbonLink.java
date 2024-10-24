@@ -20,7 +20,7 @@ import objectos.way.Carbon.LinkStyle;
 
 final class CarbonLink {
 
-  private static final Html.ClassName __LINK_BASE = Html.classText("""
+  private static final Html.ClassName __LINK_BASE = Html.ClassName.classText("""
       inline-flex
       text-link-primary outline-none
       transition-colors duration-100
@@ -29,32 +29,32 @@ final class CarbonLink {
       hover:text-link-primary-hover hover:underline
       """);
 
-  private static final Html.ClassName __LINK_STANDARD = Html.classText("""
+  private static final Html.ClassName __LINK_STANDARD = Html.ClassName.classText("""
       no-underline
       """);
 
-  private static final Html.ClassName __LINK_INLINE = Html.classText("""
+  private static final Html.ClassName __LINK_INLINE = Html.ClassName.classText("""
       underline
       """);
 
-  private static final Html.ClassName __LINK_VISITED = Html.classText("""
+  private static final Html.ClassName __LINK_VISITED = Html.ClassName.classText("""
       visited:text-link-visited
       visited:hover:text-link-primary-hover
       """);
 
-  private static final Html.ClassName LINK = Html.className(
+  private static final Html.ClassName LINK = Html.ClassName.className(
       __LINK_BASE, __LINK_STANDARD
   );
 
-  private static final Html.ClassName LINK_VISITED = Html.className(
+  private static final Html.ClassName LINK_VISITED = Html.ClassName.className(
       __LINK_BASE, __LINK_VISITED
   );
 
-  private static final Html.ClassName LINK_INLINE = Html.className(
+  private static final Html.ClassName LINK_INLINE = Html.ClassName.className(
       __LINK_BASE, __LINK_INLINE
   );
 
-  private static final Html.ClassName LINK_INLINE_VISITED = Html.className(
+  private static final Html.ClassName LINK_INLINE_VISITED = Html.ClassName.className(
       __LINK_BASE, __LINK_INLINE, __LINK_VISITED
   );
 

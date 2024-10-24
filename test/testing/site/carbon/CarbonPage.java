@@ -44,13 +44,13 @@ abstract class CarbonPage extends Carbon.Template {
     );
   }
 
-  private static final Html.Id menuButton = Html.id("menu-button");
+  private static final Html.Id menuButton = Html.Id.id("menu-button");
 
-  private static final Html.Id closeButton = Html.id("close-button");
+  private static final Html.Id closeButton = Html.Id.id("close-button");
 
-  private static final Html.Id sideNav = Html.id("side-nav");
+  private static final Html.Id sideNav = Html.Id.id("side-nav");
 
-  private static final Html.Id sideNavBody = Html.id("side-nav-body");
+  private static final Html.Id sideNavBody = Html.Id.id("side-nav-body");
 
   private static final Script.Action openMenu = Script.actions(
       Carbon.hideHeaderButton(menuButton),

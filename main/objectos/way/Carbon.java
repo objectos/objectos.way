@@ -423,22 +423,22 @@ public final class Carbon extends CarbonComponents {
   /**
    * The {@code white} Carbon theme.
    */
-  public static final Html.ClassName THEME_WHITE = Html.className("theme-white");
+  public static final Html.ClassName THEME_WHITE = Html.ClassName.className("theme-white");
 
   /**
    * The {@code g10} Carbon theme.
    */
-  public static final Html.ClassName THEME_G10 = Html.className("theme-g10");
+  public static final Html.ClassName THEME_G10 = Html.ClassName.className("theme-g10");
 
   /**
    * The {@code g90} Carbon theme.
    */
-  public static final Html.ClassName THEME_G90 = Html.className("theme-g90");
+  public static final Html.ClassName THEME_G90 = Html.ClassName.className("theme-g90");
 
   /**
    * The {@code g100} Carbon theme.
    */
-  public static final Html.ClassName THEME_G100 = Html.className("theme-g100");
+  public static final Html.ClassName THEME_G100 = Html.ClassName.className("theme-g100");
 
   /**
    * A Carbon tile variant.
@@ -562,11 +562,11 @@ public final class Carbon extends CarbonComponents {
   // Components
   //
 
-  static final Html.AttributeObject ARIA_HIDDEN_TRUE = Html.attribute(HtmlAttributeName.ARIA_HIDDEN, "true");
+  static final Html.AttributeObject ARIA_HIDDEN_TRUE = Html.AttributeObject.create(HtmlAttributeName.ARIA_HIDDEN, "true");
 
-  static final Html.AttributeObject ROLE_DIALOG = Html.attribute(HtmlAttributeName.ROLE, "dialog");
+  static final Html.AttributeObject ROLE_DIALOG = Html.AttributeObject.create(HtmlAttributeName.ROLE, "dialog");
 
-  static final Html.AttributeObject ROLE_PRESENTATION = Html.attribute(HtmlAttributeName.ROLE, "presentation");
+  static final Html.AttributeObject ROLE_PRESENTATION = Html.AttributeObject.create(HtmlAttributeName.ROLE, "presentation");
 
   public final Html.NoOpInstruction iconOnly() {
     flagIconOnly = true;

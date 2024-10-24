@@ -22,7 +22,7 @@ import org.testng.annotations.Test;
 
 public class ScriptActionTest {
 
-  private static final Html.Id _OVERLAY = Html.id("overlay");
+  private static final Html.Id _OVERLAY = Html.Id.id("overlay");
 
   @Test
   public void action() {
@@ -30,8 +30,8 @@ public class ScriptActionTest {
         new Html.Template() {
           @Override
           protected final void render() {
-            Action x = Script.replaceClass(Html.id("x"), "on", "off");
-            Action y = Script.replaceClass(Html.id("y"), "foo", "bar");
+            Action x = Script.replaceClass(Html.Id.id("x"), "on", "off");
+            Action y = Script.replaceClass(Html.Id.id("y"), "foo", "bar");
 
             div(
                 dataOnClick(Script.actions())
@@ -75,7 +75,7 @@ public class ScriptActionTest {
   public void delay() {
     test(
         new Html.Template() {
-          static final Html.Id FORM = Html.id("foo");
+          static final Html.Id FORM = Html.Id.id("foo");
 
           @Override
           protected final void render() {
@@ -145,7 +145,7 @@ public class ScriptActionTest {
   public void submit() {
     test(
         new Html.Template() {
-          static final Html.Id FORM = Html.id("foo");
+          static final Html.Id FORM = Html.Id.id("foo");
 
           @Override
           protected final void render() {
@@ -165,7 +165,7 @@ public class ScriptActionTest {
   public void toggleClass() {
     test(
         new Html.Template() {
-          static final Html.Id OVERLAY = Html.id("overlay");
+          static final Html.Id OVERLAY = Html.Id.id("overlay");
 
           @Override
           protected final void render() {

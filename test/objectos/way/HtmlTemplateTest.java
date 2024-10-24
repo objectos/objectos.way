@@ -281,8 +281,8 @@ public class HtmlTemplateTest {
   public void testCase13() {
     test(
         new Html.Template() {
-          final Id FOO = Html.id("foo");
-          final Id BAR = Html.id("bar");
+          final Id FOO = Html.Id.id("foo");
+          final Id BAR = Html.Id.id("bar");
 
           @Override
           protected final void render() {
@@ -487,9 +487,9 @@ public class HtmlTemplateTest {
   public void testCase21() {
     test(
         new Html.Template() {
-          private final ClassName first = Html.className("first");
+          private final ClassName first = Html.ClassName.className("first");
 
-          private final ClassName second = Html.className("second");
+          private final ClassName second = Html.ClassName.className("second");
 
           @Override
           protected final void render() {
@@ -826,8 +826,8 @@ public class HtmlTemplateTest {
   public void testCase35() {
     test(
         new Html.Template() {
-          private final ClassName A = Html.className("ca");
-          private final ClassName B = Html.className("cb");
+          private final ClassName A = Html.ClassName.className("ca");
+          private final ClassName B = Html.ClassName.className("cb");
 
           @Override
           protected final void render() {
@@ -1059,7 +1059,7 @@ public class HtmlTemplateTest {
   public void testCase49() {
     test(
         new Html.Template() {
-          final Id FOO = Html.id("foo");
+          final Id FOO = Html.Id.id("foo");
 
           @Override
           protected final void render() {
@@ -1147,7 +1147,7 @@ public class HtmlTemplateTest {
   public void testCase53() {
     test(
         new Html.Template() {
-          final Id NAV = Html.id("nav");
+          final Id NAV = Html.Id.id("nav");
           final IconsBootstrap icons = new IconsBootstrap(this);
 
           @Override
@@ -1178,7 +1178,7 @@ public class HtmlTemplateTest {
   public void testCase54() {
     test(
         new Html.Template() {
-          final Id FOO = Html.id("foo");
+          final Id FOO = Html.Id.id("foo");
 
           @Override
           protected final void render() {

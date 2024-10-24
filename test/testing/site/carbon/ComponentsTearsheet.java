@@ -26,9 +26,9 @@ final class ComponentsTearsheet extends CarbonPage {
 
   private static final String EXAMPLE = "example";
 
-  private static final Html.Id SHEET_01 = Html.id("tearsheet-01");
+  private static final Html.Id SHEET_01 = Html.Id.id("tearsheet-01");
 
-  private static final Html.Id SHEET_01_MODAL = Html.id("tearsheet-01-modal");
+  private static final Html.Id SHEET_01_MODAL = Html.Id.id("tearsheet-01-modal");
 
   @Override
   protected final void handle() {
