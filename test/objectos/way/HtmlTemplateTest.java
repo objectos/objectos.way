@@ -1494,6 +1494,47 @@ public class HtmlTemplateTest {
     );
   }
 
+  @Test(description = """
+  The test-field pseudo-attribute
+  """)
+  public void testCase65() {
+    Html.Compiler compiler;
+    compiler = Html.Compiler.create();
+
+    Html.Template template;
+    template = new Html.Template() {
+      @Override
+      protected final void render() throws IOException {
+        div(
+            div(testField("x"), t("123")),
+            div(testField("y"), t("abc"))
+        );
+      }
+    };
+
+    template.accept(compiler);
+
+    assertEquals(
+        compiler.toString(),
+
+        """
+        <div>
+        <div>123</div>
+        <div>abc</div>
+        </div>
+        """
+    );
+
+    assertEquals(
+        compiler.toTestString(),
+
+        """
+        x: 123
+        y: abc
+        """
+    );
+  }
+
   private void test(Html.Template template, String expected) {
     String result;
     result = template.toString();

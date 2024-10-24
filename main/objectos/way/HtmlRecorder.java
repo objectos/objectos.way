@@ -324,7 +324,8 @@ class HtmlRecorder {
               case HtmlByteProto.MARKED5 -> contents += 5;
 
               case HtmlByteProto.RAW,
-                   HtmlByteProto.TEXT -> {
+                   HtmlByteProto.TEXT,
+                   HtmlByteProto.TEST_FIELD -> {
                 contents = encodeInternal4(contents, proto);
 
                 continue loop;
@@ -369,6 +370,21 @@ class HtmlRecorder {
 
     mainAdd(
         HtmlByteProto.RAW,
+
+        // value
+        HtmlBytes.encodeInt0(object),
+        HtmlBytes.encodeInt1(object),
+
+        HtmlByteProto.INTERNAL4
+    );
+  }
+
+  final void testFieldImpl(String name) {
+    int object;
+    object = objectAdd(name);
+
+    mainAdd(
+        HtmlByteProto.TEST_FIELD,
 
         // value
         HtmlBytes.encodeInt0(object),

@@ -17,6 +17,7 @@ package objectos.way;
 
 import java.io.IOException;
 import java.util.function.Consumer;
+import objectos.way.Html.AttributeInstruction;
 
 final class HtmlCompiler extends HtmlCompilerElements implements Html.Compiler {
 
@@ -68,6 +69,54 @@ final class HtmlCompiler extends HtmlCompilerElements implements Html.Compiler {
       return sb.toString();
     } catch (IOException e) {
       throw new AssertionError("StringBuilder does not throw IOException", e);
+    }
+  }
+
+  @Override
+  public final String toTestString() {
+    StringBuilder sb;
+    sb = new StringBuilder();
+
+    HtmlDocument document;
+    document = compile();
+
+    for (var node : document.nodes()) {
+      switch (node) {
+        case Html.Element element -> toTestStringElement(sb, element);
+
+        default -> {}
+      }
+    }
+
+    return sb.toString();
+  }
+
+  private void toTestStringElement(StringBuilder sb, Html.Element element) {
+    String testField;
+    testField = element.testField();
+
+    if (testField != null) {
+      sb.append(testField);
+      sb.append(':');
+      sb.append(' ');
+
+      for (var node : element.nodes()) {
+        switch (node) {
+          case Html.Text text -> sb.append(text.value());
+
+          default -> {}
+        }
+      }
+
+      sb.append(System.lineSeparator());
+    } else {
+      for (var node : element.nodes()) {
+        switch (node) {
+          case Html.Element child -> toTestStringElement(sb, child);
+
+          default -> {}
+        }
+      }
     }
   }
 
@@ -270,6 +319,15 @@ final class HtmlCompiler extends HtmlCompilerElements implements Html.Compiler {
   }
 
   @Override
+  public final AttributeInstruction testField(String name) {
+    Check.notNull(name, "name == null");
+
+    testFieldImpl(name);
+
+    return Html.ATTRIBUTE;
+  }
+
+  @Override
   public final Html.ElementInstruction text(String text) {
     Check.notNull(text, "text == null");
 
@@ -348,7 +406,7 @@ final class HtmlCompiler extends HtmlCompilerElements implements Html.Compiler {
         index = documentCtxMainIndexLoad();
       }
 
-      case _ELEMENT_ATTRS_EXHAUSTED, _ELEMENT_NODES_EXHAUSTED -> {
+      case _ELEMENT_START, _ELEMENT_ATTRS_EXHAUSTED, _ELEMENT_NODES_EXHAUSTED -> {
         int parentIndex;
         parentIndex = elementCtxRemove();
 
@@ -647,7 +705,8 @@ final class HtmlCompiler extends HtmlCompilerElements implements Html.Compiler {
 
         case HtmlByteProto.ELEMENT,
              HtmlByteProto.RAW,
-             HtmlByteProto.TEXT -> index = skipVarInt(index);
+             HtmlByteProto.TEXT,
+             HtmlByteProto.TEST_FIELD -> index = skipVarInt(index);
 
         case HtmlByteProto.END -> {
           index = rollbackIndex;
@@ -1118,7 +1177,8 @@ final class HtmlCompiler extends HtmlCompilerElements implements Html.Compiler {
         }
 
         case HtmlByteProto.ATTRIBUTE0,
-             HtmlByteProto.ATTRIBUTE1 -> index = skipVarInt(index);
+             HtmlByteProto.ATTRIBUTE1,
+             HtmlByteProto.TEST_FIELD -> index = skipVarInt(index);
 
         case HtmlByteProto.ATTRIBUTE_EXT1 -> index += 3;
 
@@ -1283,6 +1343,58 @@ final class HtmlCompiler extends HtmlCompilerElements implements Html.Compiler {
           "Implement me :: proto=" + proto
       );
     };
+  }
+
+  final String elementTestField() {
+    // state check
+    switch (statePeek()) {
+      case _ELEMENT_START, _ELEMENT_ATTRS_EXHAUSTED -> {
+        // valid state
+      }
+
+      default -> throw new UnsupportedOperationException(
+          "Implement me :: state=" + statePeek()
+      );
+    }
+
+    // we assume there's no test field
+    String testField;
+    testField = null;
+
+    // restore index from context
+    int index;
+    index = elementCtxAttrsIndexLoad();
+
+    loop: while (index < mainIndex) {
+      byte proto;
+      proto = main[index++];
+
+      switch (proto) {
+        case HtmlByteProto.TEST_FIELD -> {
+          index = jmp2(index);
+
+          byte v0;
+          v0 = main[auxStart++];
+
+          byte v1;
+          v1 = main[auxStart++];
+
+          testField = toObjectString(v0, v1);
+
+          break loop;
+        }
+
+        case HtmlByteProto.ATTRIBUTE_EXT1 -> index += 2;
+
+        case HtmlByteProto.END -> {
+          break loop;
+        }
+
+        default -> index += 1;
+      }
+    }
+
+    return testField;
   }
 
   private HtmlText htmlText(byte v0, byte v1) {

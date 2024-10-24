@@ -146,6 +146,8 @@ public final class Html {
       return name().equals(name);
     }
 
+    String testField();
+
   }
 
   public interface ElementComponent {
@@ -310,10 +312,11 @@ public final class Html {
 
     ElementInstruction raw(String text);
 
+    AttributeInstruction testField(String name);
+
     /**
      * Generates a text node with the specified {@code text} value. The text
-     * value
-     * is escaped before being emitted to the output.
+     * value is escaped before being emitted to the output.
      *
      * <p>
      * The following Objectos HTML template:
@@ -334,6 +337,8 @@ public final class Html {
      * @return an instruction representing the text node
      */
     ElementInstruction text(String text);
+
+    String toTestString();
 
   }
 
@@ -989,6 +994,10 @@ public final class Html {
      */
     protected final ElementInstruction t(String text) {
       return $compiler().text(text);
+    }
+
+    protected final AttributeInstruction testField(String name) {
+      return $compiler().testField(name);
     }
 
     @Override
@@ -7554,5 +7563,45 @@ public final class Html {
   }
 
   // @formatter:on
+
+}
+
+final class HtmlByteProto {
+
+  // internal instructions
+
+  public static final byte END = -1;
+  public static final byte INTERNAL = -2;
+  public static final byte INTERNAL3 = -3;
+  public static final byte INTERNAL4 = -4;
+  public static final byte INTERNAL5 = -5;
+  public static final byte LENGTH2 = -6;
+  public static final byte LENGTH3 = -7;
+  public static final byte MARKED3 = -8;
+  public static final byte MARKED4 = -9;
+  public static final byte MARKED5 = -10;
+  public static final byte NULL = -11;
+  public static final byte STANDARD_NAME = -12;
+
+  // elements
+
+  public static final byte AMBIGUOUS1 = -13;
+  public static final byte DOCTYPE = -14;
+  public static final byte ELEMENT = -15;
+  public static final byte FLATTEN = -16;
+  public static final byte FRAGMENT = -17;
+  public static final byte RAW = -18;
+  public static final byte TEXT = -19;
+
+  // attributes
+
+  public static final byte ATTRIBUTE0 = -20;
+  public static final byte ATTRIBUTE1 = -21;
+  //public static final byte ATTRIBUTE_CLASS = -22;
+  //public static final byte ATTRIBUTE_ID = -23;
+  public static final byte ATTRIBUTE_EXT1 = -22;
+  public static final byte TEST_FIELD = -23;
+
+  private HtmlByteProto() {}
 
 }

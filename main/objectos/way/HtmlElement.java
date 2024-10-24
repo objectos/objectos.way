@@ -84,6 +84,11 @@ final class HtmlElement implements Html.Element, Lang.IterableOnce<Html.Node>, I
   }
 
   @Override
+  public final String testField() {
+    return player.elementTestField();
+  }
+
+  @Override
   public final Html.Node next() {
     return player.elementNodesNext();
   }
