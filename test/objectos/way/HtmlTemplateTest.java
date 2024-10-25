@@ -1229,7 +1229,7 @@ public class HtmlTemplateTest {
         new Html.Template() {
           @Override
           protected final void render() {
-            div(f(this::test));
+            div(include(this::test));
           }
 
           private void test() {
@@ -1275,10 +1275,10 @@ public class HtmlTemplateTest {
           @Override
           protected final void render() {
             div(
-                f(this::frag1, "a"),
-                f(this::frag2, "a", "b"),
-                f(this::frag3, "a", "b", "c"),
-                f(this::frag4, "a", "b", "c", "d")
+                include(this::frag1, "a"),
+                include(this::frag2, "a", "b"),
+                include(this::frag3, "a", "b", "c"),
+                include(this::frag4, "a", "b", "c", "d")
             );
           }
 
@@ -1350,11 +1350,11 @@ public class HtmlTemplateTest {
       @Override
       protected final void render() {
         switch (frag) {
-          case 0 -> div(f(this::fragment0));
-          case 1 -> div(f(this::fragment1, "A"));
-          case 2 -> div(f(this::fragment2, "A", "B"));
-          case 3 -> div(f(this::fragment3, "A", "B", "C"));
-          case 4 -> div(f(this::fragment4, "A", "B", "C", "D"));
+          case 0 -> div(include(this::fragment0));
+          case 1 -> div(include(this::fragment1, "A"));
+          case 2 -> div(include(this::fragment2, "A", "B"));
+          case 3 -> div(include(this::fragment3, "A", "B", "C"));
+          case 4 -> div(include(this::fragment4, "A", "B", "C", "D"));
         }
       }
 
@@ -1588,7 +1588,7 @@ public class HtmlTemplateTest {
     template = new Html.Template() {
       @Override
       protected final void render() throws IOException {
-        div(f(this::fragment));
+        div(include(this::fragment));
       }
 
       private void fragment() {

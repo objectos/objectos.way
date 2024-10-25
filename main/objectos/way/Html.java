@@ -717,66 +717,6 @@ public final class Html extends HtmlRecorder {
     }
 
     /**
-     * Includes a fragment into this template represented by the specified
-     * lambda.
-     *
-     * <p>
-     * The included fragment MUST only invoke methods this template instance. It
-     * is common (but not required) for a fragment to be a method reference to
-     * a private method of the template instance.
-     *
-     * <p>
-     * The following Objectos HTML template:
-     *
-     * {@snippet file = "objectos/html/BaseTemplateDslTest.java" region =
-     * "IncludeExample"}
-     *
-     * <p>
-     * Generates the following HTML:
-     *
-     * <pre>{@code
-     *     <!DOCTYPE html>
-     *     <html>
-     *     <head>
-     *     <title>Include fragment example</title>
-     *     </head>
-     *     <body>
-     *     <h1>Objectos HTML</h1>
-     *     <p>Using the include instruction</p>
-     *     </body>
-     *     </html>
-     * }</pre>
-     *
-     * <p>
-     * Note that the methods of included method references all return
-     * {@code void}.
-     *
-     * @param fragment
-     *        the fragment to include
-     *
-     * @return an instruction representing this fragment
-     */
-    protected final Html.Instruction.OfFragment f(Html.Fragment.Of0 fragment) {
-      return $html().include(fragment);
-    }
-
-    protected final <T1> Html.Instruction.OfFragment f(Html.Fragment.Of1<T1> fragment, T1 arg1) {
-      return $html().include(fragment, arg1);
-    }
-
-    protected final <T1, T2> Html.Instruction.OfFragment f(Html.Fragment.Of2<T1, T2> fragment, T1 arg1, T2 arg2) {
-      return $html().include(fragment, arg1, arg2);
-    }
-
-    protected final <T1, T2, T3> Html.Instruction.OfFragment f(Html.Fragment.Of3<T1, T2, T3> fragment, T1 arg1, T2 arg2, T3 arg3) {
-      return $html().include(fragment, arg1, arg2, arg3);
-    }
-
-    protected final <T1, T2, T3, T4> Html.Instruction.OfFragment f(Html.Fragment.Of4<T1, T2, T3, T4> fragment, T1 arg1, T2 arg2, T3 arg3, T4 arg4) {
-      return $html().include(fragment, arg1, arg2, arg3, arg4);
-    }
-
-    /**
      * Flattens the specified instructions so that each of the specified
      * instructions is individually added, in order, to a receiving element.
      *
@@ -867,6 +807,22 @@ public final class Html extends HtmlRecorder {
      */
     protected final Html.Instruction.OfFragment include(Html.Fragment.Of0 fragment) {
       return $html().include(fragment);
+    }
+
+    protected final <T1> Html.Instruction.OfFragment include(Html.Fragment.Of1<T1> fragment, T1 arg1) {
+      return $html().include(fragment, arg1);
+    }
+
+    protected final <T1, T2> Html.Instruction.OfFragment include(Html.Fragment.Of2<T1, T2> fragment, T1 arg1, T2 arg2) {
+      return $html().include(fragment, arg1, arg2);
+    }
+
+    protected final <T1, T2, T3> Html.Instruction.OfFragment include(Html.Fragment.Of3<T1, T2, T3> fragment, T1 arg1, T2 arg2, T3 arg3) {
+      return $html().include(fragment, arg1, arg2, arg3);
+    }
+
+    protected final <T1, T2, T3, T4> Html.Instruction.OfFragment include(Html.Fragment.Of4<T1, T2, T3, T4> fragment, T1 arg1, T2 arg2, T3 arg3, T4 arg4) {
+      return $html().include(fragment, arg1, arg2, arg3, arg4);
     }
 
     /**

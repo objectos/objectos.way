@@ -55,11 +55,11 @@ final class ComponentsDataTable extends CarbonPage {
             ariaLabel("sample table"),
 
             carbon.dataTableHead(
-                f(this::tableHead)
+                include(this::tableHead)
             ),
 
             carbon.dataTableBody(
-                f(this::tableBody)
+                include(this::tableBody)
             )
         ),
 
@@ -74,11 +74,11 @@ final class ComponentsDataTable extends CarbonPage {
             ariaLabel("sample table"),
 
             carbon.dataTableHead(
-                f(this::tableHead)
+                include(this::tableHead)
             ),
 
             carbon.dataTableBody(
-                f(this::tableBody)
+                include(this::tableBody)
             )
         ),
 
@@ -93,11 +93,11 @@ final class ComponentsDataTable extends CarbonPage {
             ariaLabel("sample table"),
 
             carbon.dataTableHead(
-                f(this::tableHead)
+                include(this::tableHead)
             ),
 
             carbon.dataTableBody(
-                f(this::tableBody)
+                include(this::tableBody)
             )
         ),
 
@@ -112,11 +112,11 @@ final class ComponentsDataTable extends CarbonPage {
             ariaLabel("sample table"),
 
             carbon.dataTableHead(
-                f(this::tableHead)
+                include(this::tableHead)
             ),
 
             carbon.dataTableBody(
-                f(this::tableBody)
+                include(this::tableBody)
             )
         ),
 
@@ -131,11 +131,11 @@ final class ComponentsDataTable extends CarbonPage {
             ariaLabel("sample table"),
 
             carbon.dataTableHead(
-                f(this::tableHead)
+                include(this::tableHead)
             ),
 
             carbon.dataTableBody(
-                f(this::tableBody)
+                include(this::tableBody)
             )
         )
     );
@@ -160,7 +160,7 @@ final class ComponentsDataTable extends CarbonPage {
             className("data-table"),
             ariaLabel("sample table"),
 
-            f(this::tableContents)
+            include(this::tableContents)
         )
     );
 
@@ -188,7 +188,7 @@ final class ComponentsDataTable extends CarbonPage {
             className("data-table"),
             ariaLabel("sample table"),
 
-            f(this::tableContents)
+            include(this::tableContents)
         )
     );
   }
