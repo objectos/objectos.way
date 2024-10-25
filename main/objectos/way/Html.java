@@ -895,19 +895,7 @@ public final class Html extends HtmlRecorder {
      * @return an instruction representing the rendered plugin.
      */
     protected final Html.Instruction.OfFragment renderPlugin(Consumer<Html> plugin) {
-      Check.notNull(plugin, "plugin == null");
-
-      Html html;
-      html = $html();
-
-      int index;
-      index = html.fragmentBegin();
-
-      plugin.accept(html);
-
-      html.fragmentEnd(index);
-
-      return Html.FRAGMENT;
+      return $html().renderPlugin(plugin);
     }
 
     /**
@@ -919,27 +907,15 @@ public final class Html extends HtmlRecorder {
      * @return an instruction representing the rendered template.
      */
     protected final Html.Instruction.OfFragment renderTemplate(Html.Template template) {
-      Check.notNull(template, "template == null");
-
-      try {
-        Html html;
-        html = $html();
-
-        int index;
-        index = html.fragmentBegin();
-
-        template.html = html;
-
-        template.tryToRender();
-
-        html.fragmentEnd(index);
-      } finally {
-        template.html = null;
-      }
-
-      return Html.FRAGMENT;
+      return $html().renderTemplate(template);
     }
 
+    /**
+     * The non-breaking space ({@code &nbsp;}) HTML character entity.
+     *
+     * @return an instruction representing the non-breaking space character
+     *         entity.
+     */
     protected final Html.Instruction.OfElement nbsp() {
       return raw("&nbsp;");
     }
@@ -1057,15 +1033,50 @@ public final class Html extends HtmlRecorder {
     return new Html();
   }
 
-  public final Html.Instruction.OfFragment render(Consumer<Html> fragment) {
-    Check.notNull(fragment, "fragment == null");
+  /**
+   * Renders the specified plugin as part of this HTML instance.
+   *
+   * @param plugin
+   *        the plugin to be rendered as part of this HTML instance
+   *
+   * @return an instruction representing the rendered plugin.
+   */
+  public final Html.Instruction.OfFragment renderPlugin(Consumer<Html> plugin) {
+    Check.notNull(plugin, "plugin == null");
 
     int index;
     index = fragmentBegin();
 
-    fragment.accept(this);
+    plugin.accept(this);
 
     fragmentEnd(index);
+
+    return Html.FRAGMENT;
+  }
+
+  /**
+   * Renders the specified template as part of this HTML instance.
+   *
+   * @param template
+   *        the template to be rendered as part of this HTML instance
+   *
+   * @return an instruction representing the rendered template.
+   */
+  public final Html.Instruction.OfFragment renderTemplate(Html.Template template) {
+    Check.notNull(template, "template == null");
+
+    try {
+      int index;
+      index = fragmentBegin();
+
+      template.html = this;
+
+      template.tryToRender();
+
+      fragmentEnd(index);
+    } finally {
+      template.html = null;
+    }
 
     return Html.FRAGMENT;
   }
