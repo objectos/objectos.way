@@ -21,7 +21,7 @@ import objectos.way.Html;
 @Css.Source
 final class Source1 extends Html.Template {
 
-  private static final Html.ClassName CONTAINER = Html.ClassName.classText("""
+  private static final Html.ClassName CONTAINER = Html.ClassName.of("""
   mx-auto w-full px-16px
   """);
 

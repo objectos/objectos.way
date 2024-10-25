@@ -17,16 +17,16 @@ package objectos.way;
 
 final class CarbonTearsheet {
 
-  private static final Html.ClassName INVISIBLE = Html.ClassName.className("invisible");
+  private static final Html.ClassName INVISIBLE = Html.ClassName.of("invisible");
 
-  private static final Html.ClassName SHELL = Html.ClassName.classText("""
+  private static final Html.ClassName SHELL = Html.ClassName.of("""
       fixed inset-0px z-tearsheet
       bg-overlay
       opacity-0
       transition-opacity duration-300
       """);
 
-  private static final Html.ClassName MODAL = Html.ClassName.classText("""
+  private static final Html.ClassName MODAL = Html.ClassName.of("""
       absolute flex flex-col inset-0px
       bg-layer
       outline outline-3 -outline-offset-3 outline-transparent
@@ -36,61 +36,61 @@ final class CarbonTearsheet {
       md:top-48px md:left-64px md:right-64px
       """);
 
-  private static final Html.ClassName HEADER = Html.ClassName.classText("""
+  private static final Html.ClassName HEADER = Html.ClassName.of("""
       flex-none
       border-b border-b-border-subtle
       py-spacing-06 px-spacing-07
       """);
 
-  private static final Html.ClassName __HEADER_TITLE = Html.ClassName.classText("""
+  private static final Html.ClassName __HEADER_TITLE = Html.ClassName.of("""
       text-text-primary
       """);
 
-  private static final Html.ClassName HEADER_TITLE = Html.ClassName.className(
+  private static final Html.ClassName HEADER_TITLE = Html.ClassName.of(
       __HEADER_TITLE, Carbon.HEADING_04
   );
 
-  private static final Html.ClassName __HEADER_DESCRIPTION = Html.ClassName.classText("""
+  private static final Html.ClassName __HEADER_DESCRIPTION = Html.ClassName.of("""
       mt-spacing-05
       overflow-hidden
 
       md:max-w-[60%]
       """);
 
-  private static final Html.ClassName HEADER_DESCRIPTION = Html.ClassName.className(
+  private static final Html.ClassName HEADER_DESCRIPTION = Html.ClassName.of(
       __HEADER_DESCRIPTION, Carbon.BODY_COMPACT_01
   );
 
-  private static final Html.ClassName BODY = Html.ClassName.classText("""
+  private static final Html.ClassName BODY = Html.ClassName.of("""
       flex grow
       """);
 
-  private static final Html.ClassName INFLUENCER = Html.ClassName.classText("""
+  private static final Html.ClassName INFLUENCER = Html.ClassName.of("""
       flex-[0_0_257px]
       border-r border-r-border-subtle
       overflow-y-auto
       """);
 
-  private static final Html.ClassName RIGHT = Html.ClassName.classText("""
+  private static final Html.ClassName RIGHT = Html.ClassName.of("""
       flex flex-col grow
       bg-background
       """);
 
-  private static final Html.ClassName MAIN = Html.ClassName.classText("""
+  private static final Html.ClassName MAIN = Html.ClassName.of("""
       grow
       """);
 
-  private static final Html.ClassName ACTIONS = Html.ClassName.classText("""
+  private static final Html.ClassName ACTIONS = Html.ClassName.of("""
       inline-flex min-w-full grow-0
       border-t border-t-border-subtle
       """);
 
-  private static final Html.ClassName CANCEL_ACTION = Html.ClassName.classText("""
+  private static final Html.ClassName CANCEL_ACTION = Html.ClassName.of("""
       w-full h-80px grow shrink basis-1/2 items-center
       pt-16px pr-[15px] pb-32px pl-32px
       """);
 
-  private static final Html.ClassName ACTION_25 = Html.ClassName.classText("""
+  private static final Html.ClassName ACTION_25 = Html.ClassName.of("""
       max-w-[14.5rem] h-80px grow-0 shrink basis-1/4 items-center
       pt-16px pr-[63px] pb-32px pl-[15px]
       """);

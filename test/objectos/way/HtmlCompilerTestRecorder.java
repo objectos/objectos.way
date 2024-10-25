@@ -17,7 +17,6 @@ package objectos.way;
 
 import java.util.Arrays;
 import objectos.way.Html.ClassName;
-import objectos.way.Html.HtmlClassName;
 import objectos.way.Html.HtmlId;
 import org.testng.annotations.Test;
 
@@ -478,11 +477,11 @@ public class HtmlCompilerTestRecorder {
     html.elementBegin(HtmlElementName.NAV);
     html.elementEnd();
     // template end
-
+    
     html.elementBegin(HtmlElementName.BODY);
     html.elementValue(BaseApi.FRAGMENT);
     html.elementEnd();
-
+    
     html.compilationEnd();
     */
 

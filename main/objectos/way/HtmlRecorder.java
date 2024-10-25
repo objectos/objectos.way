@@ -293,6 +293,8 @@ sealed class HtmlRecorder extends HtmlRecorderElements permits Html {
   }
 
   //
+  // Section: DOM related methods
+  //
 
   final HtmlDom compile() {
     // we will use the aux list to store contexts
@@ -1556,5 +1558,9 @@ sealed class HtmlRecorder extends HtmlRecorderElements permits Html {
 
     return index;
   }
+
+  //
+  // Section: elements methods
+  //
 
 }

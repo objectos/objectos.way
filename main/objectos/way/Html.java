@@ -73,6 +73,86 @@ public final class Html extends HtmlRecorder {
   }
 
   /**
+   * Represents an HTML {@code class} attribute and its value.
+   */
+  public sealed interface ClassName extends AttributeObject {
+
+    /**
+     * Creates a new {@code ClassName} instance whose value is the result of
+     * joining the value of each of the specified {@code ClassName} instances
+     * around the space character.
+     *
+     * @param values
+     *        the {@code ClassName} instances to be joined into a single value
+     *
+     * @return a newly constructed {@code ClassName} instance
+     */
+    static ClassName of(ClassName... values) {
+      StringBuilder sb;
+      sb = new StringBuilder();
+
+      for (int i = 0, len = values.length; i < len; i++) {
+        if (i != 0) {
+          sb.append(' ');
+        }
+
+        ClassName cn;
+        cn = values[i];
+
+        String value;
+        value = cn.value();
+
+        sb.append(value);
+      }
+
+      String value;
+      value = sb.toString();
+
+      return new HtmlClassName(value);
+    }
+
+    /**
+     * Creates a new {@code ClassName} instance with the specified value.
+     * If the specified value is composed of multiple lines then all of the
+     * lines will be joined together around the space character and this result
+     * will be used as the value of the {@code ClassName} instance.
+     *
+     * @param value
+     *        the value of this HTML {@code class} attribute
+     *
+     * @return a newly constructed {@code ClassName} instance
+     */
+    static ClassName of(String value) {
+      String[] lines;
+      lines = value.split("\n+");
+
+      String joined;
+      joined = String.join(" ", lines);
+
+      return new HtmlClassName(joined);
+    }
+
+    /**
+     * The {@code class} attribute name.
+     *
+     * @return the {@code class} attribute name
+     */
+    @Override
+    default AttributeName name() {
+      return HtmlAttributeName.CLASS;
+    }
+
+    /**
+     * The {@code class} value.
+     *
+     * @return the {@code class} value
+     */
+    @Override
+    String value();
+
+  }
+
+  /**
    * A DOM-like view of a {@link Html.Template} which allows for a one-pass,
    * one-direction traversal of the HTML document.
    */
@@ -1110,103 +1190,6 @@ public final class Html extends HtmlRecorder {
   }
 
   private record HtmlAttributeObject(AttributeName name, String value) implements AttributeObject {}
-
-  /**
-   * An instruction to render an HTML {@code class} attribute.
-   */
-  public sealed interface ClassName extends AttributeObject {
-
-    static ClassName className(ClassName... classNames) {
-      StringBuilder sb;
-      sb = new StringBuilder();
-
-      for (int i = 0, len = classNames.length; i < len; i++) {
-        if (i != 0) {
-          sb.append(' ');
-        }
-
-        ClassName cn;
-        cn = classNames[i];
-
-        String value;
-        value = cn.value();
-
-        sb.append(value);
-      }
-
-      String value;
-      value = sb.toString();
-
-      return new HtmlClassName(value);
-    }
-
-    static ClassName className(ClassName className, String text) {
-      StringBuilder sb;
-      sb = new StringBuilder();
-
-      sb.append(className.value());
-
-      String[] lines;
-      lines = text.split("\n+");
-
-      for (var line : lines) {
-        sb.append(' ');
-
-        sb.append(line);
-      }
-
-      String value;
-      value = sb.toString();
-
-      return new HtmlClassName(value);
-    }
-
-    static ClassName className(String value) {
-      return new HtmlClassName(
-          Check.notNull(value, "value == null")
-      );
-    }
-
-    /**
-     * Creates a new {@code ClassName} instance whose value is given by joining
-     * the lines of specified text block around the space character.
-     *
-     * @param text
-     *        the text block value
-     *
-     * @return a newly constructed {@code ClassName} instance
-     */
-    static ClassName classText(String text) {
-      String[] lines;
-      lines = text.split("\n+");
-
-      String joined;
-      joined = String.join(" ", lines);
-
-      return new HtmlClassName(joined);
-    }
-
-    /**
-     * The {@code class} attribute name.
-     *
-     * @return the {@code class} attribute name
-     */
-    @Override
-    default AttributeName name() {
-      return HtmlAttributeName.CLASS;
-    }
-
-    /**
-     * The {@code class} value.
-     *
-     * @return the {@code class} value
-     */
-    @Override
-    String value();
-
-  }
-
-  record HtmlClassName(String value) implements ClassName {}
 
   /**
    * An instruction to render an HTML {@code id} attribute.
@@ -4944,6 +4927,8 @@ final class HtmlByteProto {
   private HtmlByteProto() {}
 
 }
+
+record HtmlClassName(String value) implements Html.ClassName {}
 
 final class HtmlDom implements Html.Dom, Lang.IterableOnce<Html.Dom.Node>, Iterator<Html.Dom.Node> {
 

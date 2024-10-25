@@ -487,9 +487,9 @@ public class HtmlTemplateTest {
   public void testCase21() {
     test(
         new Html.Template() {
-          private final ClassName first = Html.ClassName.className("first");
+          private final ClassName first = Html.ClassName.of("first");
 
-          private final ClassName second = Html.ClassName.className("second");
+          private final ClassName second = Html.ClassName.of("second");
 
           @Override
           protected final void render() {
@@ -826,8 +826,8 @@ public class HtmlTemplateTest {
   public void testCase35() {
     test(
         new Html.Template() {
-          private final ClassName A = Html.ClassName.className("ca");
-          private final ClassName B = Html.ClassName.className("cb");
+          private final ClassName A = Html.ClassName.of("ca");
+          private final ClassName B = Html.ClassName.of("cb");
 
           @Override
           protected final void render() {

@@ -423,22 +423,22 @@ public final class Carbon extends CarbonComponents {
   /**
    * The {@code white} Carbon theme.
    */
-  public static final Html.ClassName THEME_WHITE = Html.ClassName.className("theme-white");
+  public static final Html.ClassName THEME_WHITE = Html.ClassName.of("theme-white");
 
   /**
    * The {@code g10} Carbon theme.
    */
-  public static final Html.ClassName THEME_G10 = Html.ClassName.className("theme-g10");
+  public static final Html.ClassName THEME_G10 = Html.ClassName.of("theme-g10");
 
   /**
    * The {@code g90} Carbon theme.
    */
-  public static final Html.ClassName THEME_G90 = Html.ClassName.className("theme-g90");
+  public static final Html.ClassName THEME_G90 = Html.ClassName.of("theme-g90");
 
   /**
    * The {@code g100} Carbon theme.
    */
-  public static final Html.ClassName THEME_G100 = Html.ClassName.className("theme-g100");
+  public static final Html.ClassName THEME_G100 = Html.ClassName.of("theme-g100");
 
   /**
    * A Carbon tile variant.

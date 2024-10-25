@@ -21,21 +21,21 @@ import objectos.way.Carbon.CarbonGridVariant;
 
 final class CarbonGrid {
 
-  private static final Html.ClassName __GRID = Html.ClassName.classText("""
+  private static final Html.ClassName __GRID = Html.ClassName.of("""
       mx-auto grid w-full max-w-screen-max
       md:px-16px
       max:px-24px
       """);
 
-  private static final Html.ClassName __GRID_WIDE = Html.ClassName.classText("""
+  private static final Html.ClassName __GRID_WIDE = Html.ClassName.of("""
       *:mx-16px
       """);
 
-  private static final Html.ClassName __GRID_NARROW = Html.ClassName.classText("""
+  private static final Html.ClassName __GRID_NARROW = Html.ClassName.of("""
       *:mr-16px
       """);
 
-  private static final Html.ClassName __GRID_CONDENSED = Html.ClassName.classText("""
+  private static final Html.ClassName __GRID_CONDENSED = Html.ClassName.of("""
       *:mx-0.5px
       """);
 
@@ -44,11 +44,11 @@ final class CarbonGrid {
   static {
     VARIANTS = new EnumMap<>(CarbonGridVariant.class);
 
-    VARIANTS.put(CarbonGridVariant.WIDE, Html.ClassName.className(__GRID, __GRID_WIDE));
+    VARIANTS.put(CarbonGridVariant.WIDE, Html.ClassName.of(__GRID, __GRID_WIDE));
 
-    VARIANTS.put(CarbonGridVariant.NARROW, Html.ClassName.className(__GRID, __GRID_NARROW));
+    VARIANTS.put(CarbonGridVariant.NARROW, Html.ClassName.of(__GRID, __GRID_NARROW));
 
-    VARIANTS.put(CarbonGridVariant.CONDENSED, Html.ClassName.className(__GRID, __GRID_CONDENSED));
+    VARIANTS.put(CarbonGridVariant.CONDENSED, Html.ClassName.of(__GRID, __GRID_CONDENSED));
   }
 
   public static Html.Instruction.OfElement render(

@@ -22,7 +22,7 @@ import objectos.way.Html.TemplateBase;
 
 final class CarbonTile {
 
-  private static final Html.ClassName TILE_CLICKABLE = Html.ClassName.classText("""
+  private static final Html.ClassName TILE_CLICKABLE = Html.ClassName.of("""
       relative block min-w-128px min-h-64px
       cursor-pointer
       bg-layer
@@ -39,7 +39,7 @@ final class CarbonTile {
       hover:bg-layer-hover
       """);
 
-  private static final Html.ClassName TILE_ICON = Html.ClassName.classText("""
+  private static final Html.ClassName TILE_ICON = Html.ClassName.of("""
       absolute right-16px bottom-16px
       fill-icon-interactive
       """);

@@ -47,7 +47,7 @@ abstract class CarbonComponents {
   /**
    * Typography: the {@code code-01} style class.
    */
-  public static final Html.ClassName CODE_01 = Html.ClassName.classText("""
+  public static final Html.ClassName CODE_01 = Html.ClassName.of("""
   font-mono
   text-12px leading-16px font-400 tracking-0.32px
   """);
@@ -55,7 +55,7 @@ abstract class CarbonComponents {
   /**
    * Typography: the {@code code-02} style class.
    */
-  public static final Html.ClassName CODE_02 = Html.ClassName.classText("""
+  public static final Html.ClassName CODE_02 = Html.ClassName.of("""
   font-mono
   text-14px leading-20px font-400 tracking-0.32px
   """);
@@ -63,112 +63,112 @@ abstract class CarbonComponents {
   /**
    * Typography: the {@code label-01} style class.
    */
-  public static final Html.ClassName LABEL_01 = Html.ClassName.classText("""
+  public static final Html.ClassName LABEL_01 = Html.ClassName.of("""
   text-12px leading-16px font-400 tracking-0.32px
   """);
 
   /**
    * Typography: the {@code label-02} style class.
    */
-  public static final Html.ClassName LABEL_02 = Html.ClassName.classText("""
+  public static final Html.ClassName LABEL_02 = Html.ClassName.of("""
   text-14px leading-18px font-400 tracking-0.16px
   """);
 
   /**
    * Typography: the {@code body-compact-01} style class.
    */
-  public static final Html.ClassName BODY_COMPACT_01 = Html.ClassName.classText("""
+  public static final Html.ClassName BODY_COMPACT_01 = Html.ClassName.of("""
   text-14px leading-18px font-400 tracking-0.16px
   """);
 
   /**
    * Typography: the {@code body-compact-02} style class.
    */
-  public static final Html.ClassName BODY_COMPACT_02 = Html.ClassName.classText("""
+  public static final Html.ClassName BODY_COMPACT_02 = Html.ClassName.of("""
   text-16px leading-22px font-400 tracking-0px
   """);
 
   /**
    * Typography: the {@code body-01} style class.
    */
-  public static final Html.ClassName BODY_01 = Html.ClassName.classText("""
+  public static final Html.ClassName BODY_01 = Html.ClassName.of("""
   text-14px leading-20px font-400 tracking-0.16px
   """);
 
   /**
    * Typography: the {@code body-02} style class.
    */
-  public static final Html.ClassName BODY_02 = Html.ClassName.classText("""
+  public static final Html.ClassName BODY_02 = Html.ClassName.of("""
   text-16px leading-24px font-400 tracking-0px
   """);
 
   /**
    * Typography: the {@code heading-compact-01} style class.
    */
-  public static final Html.ClassName HEADING_COMPACT_01 = Html.ClassName.classText("""
+  public static final Html.ClassName HEADING_COMPACT_01 = Html.ClassName.of("""
   text-14px leading-18px font-600 tracking-0.16px
   """);
 
   /**
    * Typography: the {@code heading-compact-02} style class.
    */
-  public static final Html.ClassName HEADING_COMPACT_02 = Html.ClassName.classText("""
+  public static final Html.ClassName HEADING_COMPACT_02 = Html.ClassName.of("""
   text-16px leading-22px font-600 tracking-0px
   """);
 
   /**
    * Typography: the {@code heading-01} style class.
    */
-  public static final Html.ClassName HEADING_01 = Html.ClassName.classText("""
+  public static final Html.ClassName HEADING_01 = Html.ClassName.of("""
   text-14px leading-20px font-600 tracking-0.16px
   """);
 
   /**
    * Typography: the {@code heading-02} style class.
    */
-  public static final Html.ClassName HEADING_02 = Html.ClassName.classText("""
+  public static final Html.ClassName HEADING_02 = Html.ClassName.of("""
   text-16px leading-24px font-600 tracking-0px
   """);
 
   /**
    * Typography: the {@code heading-03} style class.
    */
-  public static final Html.ClassName HEADING_03 = Html.ClassName.classText("""
+  public static final Html.ClassName HEADING_03 = Html.ClassName.of("""
   text-20px leading-28px font-400 tracking-0px
   """);
 
   /**
    * Typography: the {@code heading-04} style class.
    */
-  public static final Html.ClassName HEADING_04 = Html.ClassName.classText("""
+  public static final Html.ClassName HEADING_04 = Html.ClassName.of("""
   text-28px leading-36px font-400 tracking-0px
   """);
 
   /**
    * Typography: the {@code heading-05} style class.
    */
-  public static final Html.ClassName HEADING_05 = Html.ClassName.classText("""
+  public static final Html.ClassName HEADING_05 = Html.ClassName.of("""
   text-32px leading-40px font-400 tracking-0px
   """);
 
   /**
    * Typography: the {@code heading-06} style class.
    */
-  public static final Html.ClassName HEADING_06 = Html.ClassName.classText("""
+  public static final Html.ClassName HEADING_06 = Html.ClassName.of("""
   text-42px leading-50px font-300 tracking-0px
   """);
 
   /**
    * Typography: the {@code heading-07} style class.
    */
-  public static final Html.ClassName HEADING_07 = Html.ClassName.classText("""
+  public static final Html.ClassName HEADING_07 = Html.ClassName.of("""
   text-54px leading-64px font-300 tracking-0px
   """);
 
   /**
    * Typography: the {@code fluid-heading-03} style class.
    */
-  public static final Html.ClassName FLUID_HEADING_03 = Html.ClassName.classText("""
+  public static final Html.ClassName FLUID_HEADING_03 = Html.ClassName.of("""
   text-20px leading-28px font-400 tracking-0px
   max:text-24px
   """);
@@ -176,7 +176,7 @@ abstract class CarbonComponents {
   /**
    * Typography: the {@code fluid-heading-04} style class.
    */
-  public static final Html.ClassName FLUID_HEADING_04 = Html.ClassName.classText("""
+  public static final Html.ClassName FLUID_HEADING_04 = Html.ClassName.of("""
   text-28px leading-36px font-400 tracking-0px
   xl:text-32px xl:leading-40px
   """);
@@ -184,7 +184,7 @@ abstract class CarbonComponents {
   /**
    * Typography: the {@code fluid-heading-05} style class.
    */
-  public static final Html.ClassName FLUID_HEADING_05 = Html.ClassName.classText("""
+  public static final Html.ClassName FLUID_HEADING_05 = Html.ClassName.of("""
   text-32px leading-40px font-400 tracking-0px
   md:text-36px md:leading-44px md:font-300
   lg:text-42px lg:leading-50px
@@ -195,7 +195,7 @@ abstract class CarbonComponents {
   /**
    * Typography: the {@code fluid-heading-06} style class.
    */
-  public static final Html.ClassName FLUID_HEADING_06 = Html.ClassName.classText("""
+  public static final Html.ClassName FLUID_HEADING_06 = Html.ClassName.of("""
   text-32px leading-40px font-600 tracking-0px
   md:text-36px md:leading-44px md:font-600
   lg:text-42px lg:leading-50px
@@ -206,7 +206,7 @@ abstract class CarbonComponents {
   /**
    * Typography: the {@code fluid-paragraph-01} style class.
    */
-  public static final Html.ClassName FLUID_PARAGRAPH_01 = Html.ClassName.classText("""
+  public static final Html.ClassName FLUID_PARAGRAPH_01 = Html.ClassName.of("""
   text-24px leading-30px font-300 tracking-0px
   lg:text-28px lg:leading-36px
   max:text-32px max:leading-40px
@@ -215,7 +215,7 @@ abstract class CarbonComponents {
   /**
    * Typography: the {@code fluid-display-01} style class.
    */
-  public static final Html.ClassName FLUID_DISPLAY_01 = Html.ClassName.classText("""
+  public static final Html.ClassName FLUID_DISPLAY_01 = Html.ClassName.of("""
   text-42px leading-50px font-300 tracking-0px
   lg:text-54px lg:leading-64px
   xl:text-60px xl:leading-70px
@@ -225,7 +225,7 @@ abstract class CarbonComponents {
   /**
    * Typography: the {@code fluid-display-02} style class.
    */
-  public static final Html.ClassName FLUID_DISPLAY_02 = Html.ClassName.classText("""
+  public static final Html.ClassName FLUID_DISPLAY_02 = Html.ClassName.of("""
   text-42px leading-50px font-600 tracking-0px
   lg:text-54px lg:leading-64px
   xl:text-60px xl:leading-70px
@@ -235,7 +235,7 @@ abstract class CarbonComponents {
   /**
    * Typography: the {@code fluid-display-03} style class.
    */
-  public static final Html.ClassName FLUID_DISPLAY_03 = Html.ClassName.classText("""
+  public static final Html.ClassName FLUID_DISPLAY_03 = Html.ClassName.of("""
   text-42px leading-50px font-300 tracking-0px
   md:text-54px md:leading-64px
   lg:text-60px lg:leading-70px lg:-leading-0.64px
@@ -246,7 +246,7 @@ abstract class CarbonComponents {
   /**
    * Typography: the {@code fluid-display-04} style class.
    */
-  public static final Html.ClassName FLUID_DISPLAY_04 = Html.ClassName.classText("""
+  public static final Html.ClassName FLUID_DISPLAY_04 = Html.ClassName.of("""
   text-42px leading-50px font-300 tracking-0px
   md:text-68px md:leading-78px
   lg:text-92px lg:leading-102px lg:-leading-0.64px
@@ -297,41 +297,41 @@ abstract class CarbonComponents {
   // DataTable
   //
 
-  private static final Html.ClassName DATA_TABLE_CONTENT = Html.ClassName.classText("""
+  private static final Html.ClassName DATA_TABLE_CONTENT = Html.ClassName.of("""
       block overflow-x-auto
       outline outline-2 -outline-offset-2 outline-transparent
       focus:outline-focus
       """);
 
-  private static final Html.ClassName __DATA_TABLE_BASE = Html.ClassName.classText("""
+  private static final Html.ClassName __DATA_TABLE_BASE = Html.ClassName.of("""
       w-full border-collapse border-spacing-0
 
       tr:w-full tr:border-none
       """);
 
-  private static final Html.ClassName __DATA_TABLE_XS = Html.ClassName.classText("""
+  private static final Html.ClassName __DATA_TABLE_XS = Html.ClassName.of("""
       tr:h-24px
       th:py-2px
       td:py-2px
       """);
 
-  private static final Html.ClassName __DATA_TABLE_SM = Html.ClassName.classText("""
+  private static final Html.ClassName __DATA_TABLE_SM = Html.ClassName.of("""
       tr:h-32px
       th:py-[7px]
       td:py-[7px]
       """);
 
-  private static final Html.ClassName __DATA_TABLE_MD = Html.ClassName.classText("""
+  private static final Html.ClassName __DATA_TABLE_MD = Html.ClassName.of("""
       tr:h-40px
       th:pt-[6px] th:pb-[7px]
       td:pt-[6px] td:pb-[7px]
       """);
 
-  private static final Html.ClassName __DATA_TABLE_LG = Html.ClassName.classText("""
+  private static final Html.ClassName __DATA_TABLE_LG = Html.ClassName.of("""
       tr:h-48px
       """);
 
-  private static final Html.ClassName __DATA_TABLE_XL = Html.ClassName.classText("""
+  private static final Html.ClassName __DATA_TABLE_XL = Html.ClassName.of("""
       tr:h-64px
       th:py-spacing-05 th:align-top
       td:py-spacing-05 td:align-top
@@ -364,7 +364,7 @@ abstract class CarbonComponents {
     );
   }
 
-  private static final Html.ClassName DATA_TABLE_THEAD = Html.ClassName.classText("""
+  private static final Html.ClassName DATA_TABLE_THEAD = Html.ClassName.of("""
       bg-layer-accent
       text-14px leading-18px font-600 tracking-0.16px
 
@@ -381,7 +381,7 @@ abstract class CarbonComponents {
     );
   }
 
-  private static final Html.ClassName DATA_TABLE_TBODY = Html.ClassName.classText("""
+  private static final Html.ClassName DATA_TABLE_TBODY = Html.ClassName.of("""
       w-full bg-layer
       text-14px leading-18px font-400 tracking-0.16px
 
@@ -559,7 +559,7 @@ abstract class CarbonComponents {
   // Header
   //
 
-  private static final Html.ClassName HEADER = Html.ClassName.classText("""
+  private static final Html.ClassName HEADER = Html.ClassName.of("""
       fixed top-0px right-0px left-0px z-header
       flex items-center h-header
       border-b border-b-border-subtle
@@ -574,13 +574,13 @@ abstract class CarbonComponents {
     );
   }
 
-  public static final Html.ClassName HEADER_OFFSET = Html.ClassName.className("mt-header");
+  public static final Html.ClassName HEADER_OFFSET = Html.ClassName.of("mt-header");
 
   //
   // HeaderButton
   //
 
-  private static final Html.ClassName _HEADER_BUTTON = Html.ClassName.classText("""
+  private static final Html.ClassName _HEADER_BUTTON = Html.ClassName.of("""
       cursor-pointer appearance-none
       size-header items-center justify-center
       border border-transparent
@@ -600,8 +600,8 @@ abstract class CarbonComponents {
     return Script.replaceClass(id, "hidden", "flex");
   }
 
-  private static final Html.ClassName HEADER_CLOSE_BUTTON = Html.ClassName.className(
-      _HEADER_BUTTON, "hidden"
+  private static final Html.ClassName HEADER_CLOSE_BUTTON = Html.ClassName.of(
+      _HEADER_BUTTON, Html.ClassName.of("hidden")
   );
 
   public final Html.Instruction.OfElement headerCloseButton(Html.Instruction... contents) {
@@ -620,8 +620,8 @@ abstract class CarbonComponents {
     );
   }
 
-  private static final Html.ClassName HEADER_MENU_BUTTON = Html.ClassName.className(
-      _HEADER_BUTTON, "flex"
+  private static final Html.ClassName HEADER_MENU_BUTTON = Html.ClassName.of(
+      _HEADER_BUTTON, Html.ClassName.of("flex")
   );
 
   public final Html.Instruction.OfElement headerMenuButton(Html.Instruction... contents) {
@@ -644,7 +644,7 @@ abstract class CarbonComponents {
   // HeaderMenuItem
   //
 
-  private static final Html.ClassName __HEADER_NAV_LINK = Html.ClassName.classText("""
+  private static final Html.ClassName __HEADER_NAV_LINK = Html.ClassName.of("""
       relative flex h-full select-none items-center
       border-2 border-transparent
       bg-background
@@ -655,33 +655,33 @@ abstract class CarbonComponents {
       hover:bg-background-hover hover:text-text-primary
       """);
 
-  private static final Html.ClassName __HEADER_NAV_LINK_ACTIVE = Html.ClassName.classText("""
+  private static final Html.ClassName __HEADER_NAV_LINK_ACTIVE = Html.ClassName.of("""
       text-text-primary
       after:absolute after:-bottom-2px after:-left-2px after:-right-2px
       after:block after:border-b-3 after:border-b-border-interactive after:content-empty
       """);
 
-  private static final Html.ClassName __HEADER_NAV_LINK_INACTIVE = Html.ClassName.classText("""
+  private static final Html.ClassName __HEADER_NAV_LINK_INACTIVE = Html.ClassName.of("""
       text-text-secondary
       """);
 
-  private static final Html.ClassName __HEADER_NAV_LINK_PRODUCTIVE = Html.ClassName.classText("""
+  private static final Html.ClassName __HEADER_NAV_LINK_PRODUCTIVE = Html.ClassName.of("""
       text-14px leading-18px font-400 tracking-0px
       """);
 
-  static final Html.ClassName HEADER_NAV_LINK_ACTIVE = Html.ClassName.className(
+  static final Html.ClassName HEADER_NAV_LINK_ACTIVE = Html.ClassName.of(
       __HEADER_NAV_LINK, __HEADER_NAV_LINK_ACTIVE, __HEADER_NAV_LINK_PRODUCTIVE
   );
 
-  static final Html.ClassName HEADER_NAV_LINK_INACTIVE = Html.ClassName.className(
+  static final Html.ClassName HEADER_NAV_LINK_INACTIVE = Html.ClassName.of(
       __HEADER_NAV_LINK, __HEADER_NAV_LINK_INACTIVE, __HEADER_NAV_LINK_PRODUCTIVE
   );
 
-  static final Html.ClassName HEADER_NAV_LINK_ACTIVE_EXPRESSIVE = Html.ClassName.className(
+  static final Html.ClassName HEADER_NAV_LINK_ACTIVE_EXPRESSIVE = Html.ClassName.of(
       __HEADER_NAV_LINK, __HEADER_NAV_LINK_ACTIVE, BODY_COMPACT_02
   );
 
-  static final Html.ClassName HEADER_NAV_LINK_INACTIVE_EXPRESSIVE = Html.ClassName.className(
+  static final Html.ClassName HEADER_NAV_LINK_INACTIVE_EXPRESSIVE = Html.ClassName.of(
       __HEADER_NAV_LINK, __HEADER_NAV_LINK_INACTIVE, BODY_COMPACT_02
   );
 
@@ -711,7 +711,7 @@ abstract class CarbonComponents {
   // HeaderName
   //
 
-  private static final Html.ClassName HEADER_NAME = Html.ClassName.classText("""
+  private static final Html.ClassName HEADER_NAME = Html.ClassName.of("""
       flex h-full select-none items-center
       border-2 border-transparent
       px-16px
@@ -722,7 +722,7 @@ abstract class CarbonComponents {
       lg:pl-16px lg:pr-32px
       """);
 
-  private static final Html.ClassName HEADER_NAME_PREFIX = Html.ClassName.classText("""
+  private static final Html.ClassName HEADER_NAME_PREFIX = Html.ClassName.of("""
       font-400
       """);
 
@@ -786,7 +786,7 @@ abstract class CarbonComponents {
   // HeaderNavigation
   //
 
-  private static final Html.ClassName HEADER_NAVIGATION = Html.ClassName.classText("""
+  private static final Html.ClassName HEADER_NAVIGATION = Html.ClassName.of("""
       relative hidden h-full pl-16px
 
       lg:flex lg:items-center
@@ -811,7 +811,7 @@ abstract class CarbonComponents {
   // HeaderNavigationItems
   //
 
-  private static final Html.ClassName HEADER_NAVIGATION_ITEMS = Html.ClassName.classText("""
+  private static final Html.ClassName HEADER_NAVIGATION_ITEMS = Html.ClassName.of("""
       flex h-full
       text-text-secondary
       """);
@@ -856,12 +856,12 @@ abstract class CarbonComponents {
   // P
   //
 
-  private static final Html.ClassName PAGE_HEADER = Html.ClassName.classText("""
+  private static final Html.ClassName PAGE_HEADER = Html.ClassName.of("""
       sticky bg-layer
       shadow-[0_1px_0_var(--cds-layer-accent)]
       """);
 
-  public static final Html.ClassName PAGE_HEADER_TITLE_ONLY = Html.ClassName.classText("""
+  public static final Html.ClassName PAGE_HEADER_TITLE_ONLY = Html.ClassName.of("""
       py-32px
       """);
 
@@ -873,7 +873,7 @@ abstract class CarbonComponents {
     );
   }
 
-  private static final Html.ClassName PAGE_HEADER_TITLE = Html.ClassName.classText("""
+  private static final Html.ClassName PAGE_HEADER_TITLE = Html.ClassName.of("""
       col-span-full
       md:col-span-3
       """);
@@ -888,7 +888,7 @@ abstract class CarbonComponents {
     );
   }
 
-  private static final Html.ClassName __PAGE_HEADER_TITLE_ROW = Html.ClassName.classText("""
+  private static final Html.ClassName __PAGE_HEADER_TITLE_ROW = Html.ClassName.of("""
       grid-cols-5 gap-y-spacing-05
       """);
 
@@ -904,7 +904,7 @@ abstract class CarbonComponents {
   // S
   //
 
-  private static final Html.ClassName SIDE_NAV = Html.ClassName.classText("""
+  private static final Html.ClassName SIDE_NAV = Html.ClassName.of("""
       invisible fixed inset-0px z-overlay
       bg-overlay
       opacity-0
@@ -913,11 +913,11 @@ abstract class CarbonComponents {
       lg:hidden
       """);
 
-  public static final Html.ClassName SIDE_NAV_OFFSET = Html.ClassName.classText("""
+  public static final Html.ClassName SIDE_NAV_OFFSET = Html.ClassName.of("""
       lg:ml-side-nav
       """);
 
-  public static final Html.ClassName SIDE_NAV_PERSISTENT = Html.ClassName.classText("""
+  public static final Html.ClassName SIDE_NAV_PERSISTENT = Html.ClassName.of("""
       lg:visible lg:right-auto lg:w-side-nav lg:opacity-100
 
       lg:more:block
@@ -947,7 +947,7 @@ abstract class CarbonComponents {
     );
   }
 
-  private static final Html.ClassName SIDE_NAV_BODY = Html.ClassName.classText("""
+  private static final Html.ClassName SIDE_NAV_BODY = Html.ClassName.of("""
       absolute top-0px bottom-0px left-0px z-header
       w-0px pt-16px
       bg-background
@@ -955,7 +955,7 @@ abstract class CarbonComponents {
       transition-all duration-100
       """);
 
-  public static final Html.ClassName SIDE_NAV_BODY_PERSISTENT = Html.ClassName.className("""
+  public static final Html.ClassName SIDE_NAV_BODY_PERSISTENT = Html.ClassName.of("""
       lg:w-side-nav
       """);
 
@@ -979,11 +979,11 @@ abstract class CarbonComponents {
   // SideNavHeaderItem
   //
 
-  private static final Html.ClassName SIDE_NAV_HEADER_ITEM = Html.ClassName.classText("""
+  private static final Html.ClassName SIDE_NAV_HEADER_ITEM = Html.ClassName.of("""
   w-auto h-auto overflow-hidden
   """);
 
-  private static final Html.ClassName __SIDE_NAV_HEADER_LINK = Html.ClassName.classText("""
+  private static final Html.ClassName __SIDE_NAV_HEADER_LINK = Html.ClassName.of("""
   relative flex min-h-32px
   items-center justify-between whitespace-nowrap
   border-2 border-transparent
@@ -996,20 +996,20 @@ abstract class CarbonComponents {
   hover:bg-background-hover hover:text-text-primary
   """);
 
-  private static final Html.ClassName __SIDE_NAV_HEADER_LINK_ACTIVE = Html.ClassName.classText("""
+  private static final Html.ClassName __SIDE_NAV_HEADER_LINK_ACTIVE = Html.ClassName.of("""
   after:absolute after:-top-2px after:-bottom-2px after:-left-2px
   after:block after:border-l-3 after:border-l-border-interactive after:content-empty
   """);
 
-  private static final Html.ClassName __SIDE_NAV_HEADER_LINK_INACTIVE = Html.ClassName.classText("""
+  private static final Html.ClassName __SIDE_NAV_HEADER_LINK_INACTIVE = Html.ClassName.of("""
   text-text-secondary
   """);
 
-  private static final Html.ClassName SIDE_NAV_HEADER_LINK_ACTIVE = Html.ClassName.className(
+  private static final Html.ClassName SIDE_NAV_HEADER_LINK_ACTIVE = Html.ClassName.of(
       __SIDE_NAV_HEADER_LINK, Carbon.HEADING_COMPACT_01, __SIDE_NAV_HEADER_LINK_ACTIVE
   );
 
-  private static final Html.ClassName SIDE_NAV_HEADER_LINK_INACTIVE = Html.ClassName.className(
+  private static final Html.ClassName SIDE_NAV_HEADER_LINK_INACTIVE = Html.ClassName.of(
       __SIDE_NAV_HEADER_LINK, Carbon.HEADING_COMPACT_01, __SIDE_NAV_HEADER_LINK_INACTIVE
   );
 
@@ -1039,7 +1039,7 @@ abstract class CarbonComponents {
   // SideNavHeaderItems
   //
 
-  private static final Html.ClassName SIDE_NAV_HEADER_ITEMS = Html.ClassName.classText("""
+  private static final Html.ClassName SIDE_NAV_HEADER_ITEMS = Html.ClassName.of("""
       mb-32px
       lg:hidden
       """);
@@ -1082,7 +1082,7 @@ abstract class CarbonComponents {
   // SideNavLink
   //
 
-  private static final Html.ClassName __SIDE_NAV_LINK = Html.ClassName.classText("""
+  private static final Html.ClassName __SIDE_NAV_LINK = Html.ClassName.of("""
   relative flex min-h-32px
   items-center justify-between whitespace-nowrap
   px-16px
@@ -1093,22 +1093,22 @@ abstract class CarbonComponents {
   span:select-none span:text-14px span:leading-20px span:tracking-0.1px span:truncate
   """);
 
-  private static final Html.ClassName __SIDE_NAV_LINK_ACTIVE = Html.ClassName.classText("""
+  private static final Html.ClassName __SIDE_NAV_LINK_ACTIVE = Html.ClassName.of("""
   bg-selected text-link-primary font-600
   after:absolute after:top-0px after:bottom-0px after:left-0px
   after:block after:border-l-3 after:border-l-border-interactive after:content-empty
   span:text-text-primary
   """);
 
-  private static final Html.ClassName __SIDE_NAV_LINK_INACTIVE = Html.ClassName.classText("""
+  private static final Html.ClassName __SIDE_NAV_LINK_INACTIVE = Html.ClassName.of("""
   span:text-text-secondary
   """);
 
-  private static final Html.ClassName SIDE_NAV_LINK_ACTIVE = Html.ClassName.className(
+  private static final Html.ClassName SIDE_NAV_LINK_ACTIVE = Html.ClassName.of(
       __SIDE_NAV_LINK, Carbon.HEADING_COMPACT_01, __SIDE_NAV_LINK_ACTIVE
   );
 
-  private static final Html.ClassName SIDE_NAV_LINK_INACTIVE = Html.ClassName.className(
+  private static final Html.ClassName SIDE_NAV_LINK_INACTIVE = Html.ClassName.of(
       __SIDE_NAV_LINK, Carbon.HEADING_COMPACT_01, __SIDE_NAV_LINK_INACTIVE
   );
 

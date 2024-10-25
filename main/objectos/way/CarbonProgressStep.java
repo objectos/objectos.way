@@ -56,39 +56,39 @@ final class CarbonProgressStep implements ProgressStep {
 
   private static final Html.Instruction LI_HORIZONTAL = Html.NOOP;
 
-  private static final Html.ClassName LI_VERTICAL = Html.ClassName.classText("""
+  private static final Html.ClassName LI_VERTICAL = Html.ClassName.of("""
       relative inline-flex min-h-[3.625rem] overflow-visible
       """);
 
   private static final Html.Instruction BUTTON_HORIZONTAL = Html.NOOP;
 
-  private static final Html.ClassName BUTTON_VERTICAL = Html.ClassName.classText("""
+  private static final Html.ClassName BUTTON_VERTICAL = Html.ClassName.of("""
       flex min-h-[3.625rem] content-start text-start
       """);
 
   private static final Html.Instruction ICON_HORIZONTAL = Html.NOOP;
 
-  private static final Html.ClassName ICON_VERTICAL = Html.ClassName.classText("""
+  private static final Html.ClassName ICON_VERTICAL = Html.ClassName.of("""
       mt-1px mx-spacing-03 inline-block shrink-0
       """);
 
-  private static final Html.ClassName ICON_FILL_STANDARD = Html.ClassName.className(
+  private static final Html.ClassName ICON_FILL_STANDARD = Html.ClassName.of(
       "fill-interactive"
   );
 
-  private static final Html.ClassName ICON_FILL_WARNING = Html.ClassName.className(
+  private static final Html.ClassName ICON_FILL_WARNING = Html.ClassName.of(
       "fill-support-error"
   );
 
   private static final Html.Instruction TEXT_HORIZONTAL = Html.NOOP;
 
-  private static final Html.ClassName TEXT_VERTICAL = Html.ClassName.classText("""
+  private static final Html.ClassName TEXT_VERTICAL = Html.ClassName.of("""
       flex flex-col
       """);
 
   private static final Html.Instruction LABEL_HORIZONTAL = Html.NOOP;
 
-  private static final Html.ClassName LABEL_VERTICAL = Html.ClassName.classText("""
+  private static final Html.ClassName LABEL_VERTICAL = Html.ClassName.of("""
       inline-block max-w-160px
       overflow-hidden text-ellipsis
       align-top text-text-primary
@@ -98,13 +98,13 @@ final class CarbonProgressStep implements ProgressStep {
 
   private static final Html.Instruction OPTIONAL_HORIZONTAL = Html.NOOP;
 
-  private static final Html.ClassName OPTIONAL_VERTICAL = Html.ClassName.classText("""
+  private static final Html.ClassName OPTIONAL_VERTICAL = Html.ClassName.of("""
       static w-full text-text-secondary
       """);
 
   private static final Html.Instruction LINE_COMPLETE_HORIZONTAL = Html.NOOP;
 
-  private static final Html.ClassName LINE_COMPLETE_VERTICAL = Html.ClassName.classText("""
+  private static final Html.ClassName LINE_COMPLETE_VERTICAL = Html.ClassName.of("""
       top-0px left-0px absolute h-full w-1px
       border border-transparent
 
@@ -113,7 +113,7 @@ final class CarbonProgressStep implements ProgressStep {
 
   private static final Html.Instruction LINE_CURRENT_HORIZONTAL = Html.NOOP;
 
-  private static final Html.ClassName LINE_CURRENT_VERTICAL = Html.ClassName.classText("""
+  private static final Html.ClassName LINE_CURRENT_VERTICAL = Html.ClassName.of("""
       top-0px left-0px absolute h-full w-1px
       border border-transparent
 
@@ -122,7 +122,7 @@ final class CarbonProgressStep implements ProgressStep {
 
   private static final Html.Instruction LINE_INCOMPLETE_HORIZONTAL = Html.NOOP;
 
-  private static final Html.ClassName LINE_INCOMPLETE_VERTICAL = Html.ClassName.classText("""
+  private static final Html.ClassName LINE_INCOMPLETE_VERTICAL = Html.ClassName.of("""
       top-0px left-0px absolute h-full w-1px
       border border-transparent
 

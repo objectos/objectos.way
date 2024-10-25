@@ -19,11 +19,11 @@ final class CarbonProgressIndicator {
 
   /*<ul>*/
 
-  public static final Html.ClassName HORIZONTAL = Html.ClassName.classText("""
+  public static final Html.ClassName HORIZONTAL = Html.ClassName.of("""
       flex
       """);
 
-  public static final Html.ClassName VERTICAL = Html.ClassName.classText("""
+  public static final Html.ClassName VERTICAL = Html.ClassName.of("""
       flex flex-col
       """);
 
