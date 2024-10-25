@@ -1121,7 +1121,7 @@ public class HtmlTemplateTest {
           protected final void render() {
             html(
                 body(
-                    include(this::body0)
+                    renderFragment(this::body0)
                 )
             );
           }
@@ -1229,7 +1229,7 @@ public class HtmlTemplateTest {
         new Html.Template() {
           @Override
           protected final void render() {
-            div(include(this::test));
+            div(renderFragment(this::test));
           }
 
           private void test() {
@@ -1275,10 +1275,10 @@ public class HtmlTemplateTest {
           @Override
           protected final void render() {
             div(
-                include(this::frag1, "a"),
-                include(this::frag2, "a", "b"),
-                include(this::frag3, "a", "b", "c"),
-                include(this::frag4, "a", "b", "c", "d")
+                renderFragment(this::frag1, "a"),
+                renderFragment(this::frag2, "a", "b"),
+                renderFragment(this::frag3, "a", "b", "c"),
+                renderFragment(this::frag4, "a", "b", "c", "d")
             );
           }
 
@@ -1350,11 +1350,11 @@ public class HtmlTemplateTest {
       @Override
       protected final void render() {
         switch (frag) {
-          case 0 -> div(include(this::fragment0));
-          case 1 -> div(include(this::fragment1, "A"));
-          case 2 -> div(include(this::fragment2, "A", "B"));
-          case 3 -> div(include(this::fragment3, "A", "B", "C"));
-          case 4 -> div(include(this::fragment4, "A", "B", "C", "D"));
+          case 0 -> div(renderFragment(this::fragment0));
+          case 1 -> div(renderFragment(this::fragment1, "A"));
+          case 2 -> div(renderFragment(this::fragment2, "A", "B"));
+          case 3 -> div(renderFragment(this::fragment3, "A", "B", "C"));
+          case 4 -> div(renderFragment(this::fragment4, "A", "B", "C", "D"));
         }
       }
 
@@ -1588,7 +1588,7 @@ public class HtmlTemplateTest {
     template = new Html.Template() {
       @Override
       protected final void render() throws IOException {
-        div(include(this::fragment));
+        div(renderFragment(this::fragment));
       }
 
       private void fragment() {
@@ -1613,6 +1613,44 @@ public class HtmlTemplateTest {
         """
         x: abc
         y: 123
+        """
+    );
+  }
+
+  @Test(description = """
+  Html.Template::renderPlugin
+  """)
+  public void testCase69() {
+    test(
+        new Html.Template() {
+          @Override
+          protected final void render() throws IOException {
+            div(
+                renderPlugin(html -> html.span("as child"))
+            );
+
+            div(renderFragment(this::fragment0));
+
+            div(renderFragment(this::fragment1));
+          }
+
+          private void fragment0() {
+            renderPlugin(html -> html.span("fragment root"));
+          }
+
+          private void fragment1() {
+            div(
+                renderPlugin(html -> html.span("fragment child"))
+            );
+          }
+        },
+
+        """
+        <div><span>as child</span></div>
+        <div><span>fragment root</span></div>
+        <div>
+        <div><span>fragment child</span></div>
+        </div>
         """
     );
   }

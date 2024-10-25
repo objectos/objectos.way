@@ -37,8 +37,8 @@ abstract class UiTemplate extends Html.Template implements Http.Handler {
   protected final void render() {
     doctype();
     html(className("theme-white"),
-        head(include(this::headImpl)),
-        body(include(this::bodyImpl))
+        head(renderFragment(this::headImpl)),
+        body(renderFragment(this::bodyImpl))
     );
   }
 

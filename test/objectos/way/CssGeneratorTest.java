@@ -28,7 +28,7 @@ public class CssGeneratorTest {
     @Override
     protected final void render() {
       div(
-          include(this::classes)
+          renderFragment(this::classes)
       );
     }
 

@@ -25,8 +25,8 @@ abstract class WebTemplate extends Html.Template {
   protected void render() {
     doctype();
     html(
-        head(include(this::$head)),
-        body(include(this::bodyImpl))
+        head(renderFragment(this::$head)),
+        body(renderFragment(this::bodyImpl))
     );
   }
 

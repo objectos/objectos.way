@@ -208,9 +208,20 @@ public class HtmlCompilerTestRecorder {
       html.meta(html.charset("utf-8"));
     };
 
+    int startIndex;
+    startIndex = html.fragmentBegin();
+
+    try {
+      action.invoke();
+    } catch (Exception e) {
+      throw new Html.RenderingException(e);
+    }
+
+    html.fragmentEnd(startIndex);
+
     html.html(
         html.head(
-            html.include(action)
+            Html.FRAGMENT
         )
     );
 
@@ -467,11 +478,11 @@ public class HtmlCompilerTestRecorder {
     html.elementBegin(HtmlElementName.NAV);
     html.elementEnd();
     // template end
-    
+
     html.elementBegin(HtmlElementName.BODY);
     html.elementValue(BaseApi.FRAGMENT);
     html.elementEnd();
-    
+
     html.compilationEnd();
     */
 

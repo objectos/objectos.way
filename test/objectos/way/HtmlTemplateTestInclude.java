@@ -33,7 +33,7 @@ public class HtmlTemplateTestInclude {
           protected final void render() {
             html(
                 head(
-                    include(this::head0)
+                    renderFragment(this::head0)
                 )
             );
           }
@@ -65,14 +65,14 @@ public class HtmlTemplateTestInclude {
           protected final void render() {
             html(
                 body(
-                    include(this::body0)
+                    renderFragment(this::body0)
                 )
             );
           }
 
           private void body0() {
             header(
-                include(this::hero)
+                renderFragment(this::hero)
             );
           }
 
@@ -104,8 +104,8 @@ public class HtmlTemplateTestInclude {
           @Override
           protected final void render() {
             html(
-                include(this::head0),
-                include(this::body0)
+                renderFragment(this::head0),
+                renderFragment(this::body0)
             );
           }
 
@@ -164,8 +164,8 @@ public class HtmlTemplateTestInclude {
           @Override
           protected final void render() {
             body(
-                include(nav),
-                include(hero)
+                renderTemplate(nav),
+                renderTemplate(hero)
             );
           }
         },
@@ -192,15 +192,15 @@ public class HtmlTemplateTestInclude {
           @Override
           protected final void render() {
             div(
-                include(this::f0),
+                renderFragment(this::f0),
 
                 main(
                     article(
-                        include(this::f1)
+                        renderFragment(this::f1)
                     )
                 ),
 
-                include(this::f2)
+                renderFragment(this::f2)
             );
           }
 
@@ -242,7 +242,7 @@ public class HtmlTemplateTestInclude {
           @Override
           protected final void render() {
             head(
-                include(this::head0)
+                renderFragment(this::head0)
             );
           }
 
@@ -271,7 +271,7 @@ public class HtmlTemplateTestInclude {
         new Html.Template() {
           @Override
           protected final void render() {
-            h1(include(this::heading1));
+            h1(renderFragment(this::heading1));
           }
 
           private void heading1() {
@@ -295,7 +295,7 @@ public class HtmlTemplateTestInclude {
         new Html.Template() {
           @Override
           protected final void render() {
-            h1(include(this::heading1));
+            h1(renderFragment(this::heading1));
           }
 
           private void heading1() {
@@ -332,7 +332,7 @@ public class HtmlTemplateTestInclude {
           @Override
           protected final void render() {
             body(
-                include(component)
+                renderTemplate(component)
             );
           }
         },
@@ -363,13 +363,13 @@ public class HtmlTemplateTestInclude {
         new Html.Template() {
           @Override
           protected final void render() {
-            body(include(this::body));
+            body(renderFragment(this::body));
           }
 
           private void body() {
             h1("Test");
 
-            include(component);
+            renderTemplate(component);
           }
         },
 
@@ -402,7 +402,7 @@ public class HtmlTemplateTestInclude {
         new Html.Template() {
           @Override
           protected final void render() {
-            body(include(this::body));
+            body(renderFragment(this::body));
           }
 
           private void body() {
@@ -458,7 +458,7 @@ public class HtmlTemplateTestInclude {
         new Html.Template() {
           @Override
           protected final void render() {
-            body(include(this::body));
+            body(renderFragment(this::body));
           }
 
           private void body() {
@@ -558,7 +558,7 @@ public class HtmlTemplateTestInclude {
           @Override
           protected final void render() {
             html(
-                include(new Contents())
+                renderTemplate(new Contents())
             );
           }
         },
@@ -579,7 +579,7 @@ public class HtmlTemplateTestInclude {
           @Override
           protected final void render() {
             html(
-                include(this::contents)
+                renderFragment(this::contents)
             );
           }
 
@@ -619,7 +619,7 @@ public class HtmlTemplateTestInclude {
           @Override
           protected final void render() {
             html(
-                include(this::contents)
+                renderFragment(this::contents)
             );
           }
 
@@ -640,7 +640,7 @@ public class HtmlTemplateTestInclude {
         new Html.Template() {
           @Override
           protected final void render() {
-            input(include(this::attributes));
+            input(renderFragment(this::attributes));
           }
 
           private void attributes() {

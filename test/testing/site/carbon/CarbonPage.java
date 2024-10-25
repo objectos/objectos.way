@@ -34,12 +34,12 @@ abstract class CarbonPage extends Carbon.Template {
         Carbon.THEME_WHITE,
 
         head(
-            include(this::renderStandardHead),
-            include(this::renderHead)
+            renderFragment(this::renderStandardHead),
+            renderFragment(this::renderHead)
         ),
 
         body(
-            include(this::renderBody)
+            renderFragment(this::renderBody)
         )
     );
   }
@@ -123,7 +123,7 @@ abstract class CarbonPage extends Carbon.Template {
         Carbon.HEADER_OFFSET, Carbon.SIDE_NAV_OFFSET,
         className("flex flex-col gap-y-spacing-05"),
 
-        include(this::renderContent)
+        renderFragment(this::renderContent)
     );
   }
 

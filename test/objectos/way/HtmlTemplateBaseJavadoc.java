@@ -30,10 +30,10 @@ public class HtmlTemplateBaseJavadoc {
         doctype();
         html(
             head(
-                include(this::head0)
+                renderFragment(this::head0)
             ),
             body(
-                include(this::body0)
+                renderFragment(this::body0)
             )
         );
       }

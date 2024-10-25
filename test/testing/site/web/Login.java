@@ -94,7 +94,7 @@ final class Login extends WebTemplate implements Http.Handler {
 
     div(className("mx-4 flex h-screen flex-col items-center sm:mx-auto"),
         form(className("my-auto w-full bg-white sm:w-auto"), FORM, action("/login"), method("post"),
-            include(this::renderForm)
+            renderFragment(this::renderForm)
         )
     );
   }

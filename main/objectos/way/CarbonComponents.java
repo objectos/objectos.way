@@ -820,7 +820,7 @@ abstract class CarbonComponents {
     return tmpl.ul(
         HEADER_NAVIGATION_ITEMS,
 
-        tmpl.include(this::renderHeaderNavigationItems, elements)
+        tmpl.renderFragment(this::renderHeaderNavigationItems, elements)
     );
   }
 
@@ -1048,7 +1048,7 @@ abstract class CarbonComponents {
     return tmpl.ul(
         SIDE_NAV_HEADER_ITEMS,
 
-        tmpl.include(this::renderSideNavHeaderItems, elements)
+        tmpl.renderFragment(this::renderSideNavHeaderItems, elements)
     );
   }
 
@@ -1066,7 +1066,7 @@ abstract class CarbonComponents {
 
   public final Html.Instruction.OfElement sideNavItems(Iterable<? extends Carbon.MenuElement> elements) {
     return tmpl.ul(
-        tmpl.include(this::renderSideNavItems, elements)
+        tmpl.renderFragment(this::renderSideNavItems, elements)
     );
   }
 

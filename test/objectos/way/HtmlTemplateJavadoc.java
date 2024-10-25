@@ -66,7 +66,7 @@ public class HtmlTemplateJavadoc {
       @Override
       protected void render() {
         ul(
-            include(this::languages)
+            renderFragment(this::languages)
         );
       }
 
@@ -103,7 +103,7 @@ public class HtmlTemplateJavadoc {
       protected void render() {
         div(
             h1("Actions"),
-            include(this::actions)
+            renderFragment(this::actions)
         );
       }
 

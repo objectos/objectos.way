@@ -221,7 +221,7 @@ public final class Html extends HtmlRecorder {
    * The set of instructions MUST be of the same template instance where this
    * fragment will be included.
    *
-   * @see Html#include(Html.FragmentLambda)
+   * @see Html#renderTemplate(Html.FragmentLambda)
    */
   public sealed interface Fragment {
 
@@ -466,24 +466,12 @@ public final class Html extends HtmlRecorder {
      */
     @Override
     public final String toString() {
-      try {
-        Html html;
-        html = new Html();
+      Html html;
+      html = new Html();
 
-        accept(html);
+      accept(html);
 
-        HtmlDom dom;
-        dom = html.compile();
-
-        StringBuilder out;
-        out = new StringBuilder();
-
-        HtmlFormatter.STANDARD.formatTo(dom, out);
-
-        return out.toString();
-      } catch (IOException e) {
-        throw new AssertionError("StringBuilder does not throw IOException", e);
-      }
+      return html.toString();
     }
 
     @Override
@@ -567,13 +555,6 @@ public final class Html extends HtmlRecorder {
     protected static final Html.AttributeObject dataExecuteDefault = Html.AttributeObject.create(HtmlAttributeName.DATA_EXECUTE_DEFAULT, "");
 
     TemplateBase() {}
-
-    public final void plugin(Consumer<Html> plugin) {
-      Html html;
-      html = $html();
-
-      plugin.accept(html);
-    }
 
     /**
      * Generates the {@code class} attribute by joining the specified values
@@ -805,35 +786,139 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this fragment
      */
-    protected final Html.Instruction.OfFragment include(Html.Fragment.Of0 fragment) {
-      return $html().include(fragment);
+    protected final Html.Instruction.OfFragment renderFragment(Html.Fragment.Of0 fragment) {
+      Check.notNull(fragment, "fragment == null");
+
+      Html html;
+      html = $html();
+
+      int index;
+      index = html.fragmentBegin();
+
+      try {
+        fragment.invoke();
+      } catch (Exception e) {
+        throw new Html.RenderingException(e);
+      }
+
+      html.fragmentEnd(index);
+
+      return Html.FRAGMENT;
     }
 
-    protected final <T1> Html.Instruction.OfFragment include(Html.Fragment.Of1<T1> fragment, T1 arg1) {
-      return $html().include(fragment, arg1);
+    protected final <T1> Html.Instruction.OfFragment renderFragment(Html.Fragment.Of1<T1> fragment, T1 arg1) {
+      Check.notNull(fragment, "fragment == null");
+
+      Html html;
+      html = $html();
+
+      int index;
+      index = html.fragmentBegin();
+
+      try {
+        fragment.invoke(arg1);
+      } catch (Exception e) {
+        throw new Html.RenderingException(e);
+      }
+
+      html.fragmentEnd(index);
+
+      return Html.FRAGMENT;
     }
 
-    protected final <T1, T2> Html.Instruction.OfFragment include(Html.Fragment.Of2<T1, T2> fragment, T1 arg1, T2 arg2) {
-      return $html().include(fragment, arg1, arg2);
+    protected final <T1, T2> Html.Instruction.OfFragment renderFragment(Html.Fragment.Of2<T1, T2> fragment, T1 arg1, T2 arg2) {
+      Check.notNull(fragment, "fragment == null");
+
+      Html html;
+      html = $html();
+
+      int index;
+      index = html.fragmentBegin();
+
+      try {
+        fragment.invoke(arg1, arg2);
+      } catch (Exception e) {
+        throw new Html.RenderingException(e);
+      }
+
+      html.fragmentEnd(index);
+
+      return Html.FRAGMENT;
     }
 
-    protected final <T1, T2, T3> Html.Instruction.OfFragment include(Html.Fragment.Of3<T1, T2, T3> fragment, T1 arg1, T2 arg2, T3 arg3) {
-      return $html().include(fragment, arg1, arg2, arg3);
+    protected final <T1, T2, T3> Html.Instruction.OfFragment renderFragment(Html.Fragment.Of3<T1, T2, T3> fragment, T1 arg1, T2 arg2, T3 arg3) {
+      Check.notNull(fragment, "fragment == null");
+
+      Html html;
+      html = $html();
+
+      int index;
+      index = html.fragmentBegin();
+
+      try {
+        fragment.invoke(arg1, arg2, arg3);
+      } catch (Exception e) {
+        throw new Html.RenderingException(e);
+      }
+
+      html.fragmentEnd(index);
+
+      return Html.FRAGMENT;
     }
 
-    protected final <T1, T2, T3, T4> Html.Instruction.OfFragment include(Html.Fragment.Of4<T1, T2, T3, T4> fragment, T1 arg1, T2 arg2, T3 arg3, T4 arg4) {
-      return $html().include(fragment, arg1, arg2, arg3, arg4);
+    protected final <T1, T2, T3, T4> Html.Instruction.OfFragment renderFragment(Html.Fragment.Of4<T1, T2, T3, T4> fragment, T1 arg1, T2 arg2, T3 arg3, T4 arg4) {
+      Check.notNull(fragment, "fragment == null");
+
+      Html html;
+      html = $html();
+
+      int index;
+      index = html.fragmentBegin();
+
+      try {
+        fragment.invoke(arg1, arg2, arg3, arg4);
+      } catch (Exception e) {
+        throw new Html.RenderingException(e);
+      }
+
+      html.fragmentEnd(index);
+
+      return Html.FRAGMENT;
     }
 
     /**
-     * Includes the specified template into this template.
+     * Renders the specified plugin into this template.
+     *
+     * @param plugin
+     *        the plugin to be rendered as part of this template
+     *
+     * @return an instruction representing the rendered plugin.
+     */
+    protected final Html.Instruction.OfFragment renderPlugin(Consumer<Html> plugin) {
+      Check.notNull(plugin, "plugin == null");
+
+      Html html;
+      html = $html();
+
+      int index;
+      index = html.fragmentBegin();
+
+      plugin.accept(html);
+
+      html.fragmentEnd(index);
+
+      return Html.FRAGMENT;
+    }
+
+    /**
+     * Renders the specified template into this template.
      *
      * @param template
-     *        the template to be included
+     *        the template to be rendered as part of this template
      *
-     * @return an instruction representing the inclusion of the template.
+     * @return an instruction representing the rendered template.
      */
-    protected final Html.Instruction.OfFragment include(Html.Template template) {
+    protected final Html.Instruction.OfFragment renderTemplate(Html.Template template) {
       Check.notNull(template, "template == null");
 
       try {

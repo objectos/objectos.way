@@ -45,7 +45,7 @@ public class ShellHeader extends Html.Component {
     header(
         nav(
             ul(
-                include(this::items)
+                renderFragment(this::items)
             )
         )
     );
