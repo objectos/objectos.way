@@ -256,7 +256,8 @@ sealed class HtmlRecorder extends HtmlRecorderElements permits Html {
    *
    * @return an instruction representing this fragment
    */
-  public final Html.Instruction.OfFragment include(Html.FragmentLambda fragment) {
+  public final Html.Instruction.OfFragment include(
+      Html.Fragment.Of0 fragment) {
     Check.notNull(fragment, "fragment == null");
 
     int index;
@@ -273,7 +274,8 @@ sealed class HtmlRecorder extends HtmlRecorderElements permits Html {
     return Html.FRAGMENT;
   }
 
-  public final <T1> Html.Instruction.OfFragment include(Html.FragmentLambda1<T1> fragment, T1 arg1) {
+  public final <T1> Html.Instruction.OfFragment include(
+      Html.Fragment.Of1<T1> fragment, T1 arg1) {
     Check.notNull(fragment, "fragment == null");
 
     int index;
@@ -290,7 +292,8 @@ sealed class HtmlRecorder extends HtmlRecorderElements permits Html {
     return Html.FRAGMENT;
   }
 
-  public final <T1, T2> Html.Instruction.OfFragment include(Html.FragmentLambda2<T1, T2> fragment, T1 arg1, T2 arg2) {
+  public final <T1, T2> Html.Instruction.OfFragment include(
+      Html.Fragment.Of2<T1, T2> fragment, T1 arg1, T2 arg2) {
     Check.notNull(fragment, "fragment == null");
 
     int index;
@@ -308,7 +311,7 @@ sealed class HtmlRecorder extends HtmlRecorderElements permits Html {
   }
 
   public final <T1, T2, T3> Html.Instruction.OfFragment include(
-      Html.FragmentLambda3<T1, T2, T3> fragment, T1 arg1, T2 arg2, T3 arg3) {
+      Html.Fragment.Of3<T1, T2, T3> fragment, T1 arg1, T2 arg2, T3 arg3) {
     Check.notNull(fragment, "fragment == null");
 
     int index;
@@ -326,7 +329,7 @@ sealed class HtmlRecorder extends HtmlRecorderElements permits Html {
   }
 
   public final <T1, T2, T3, T4> Html.Instruction.OfFragment include(
-      Html.FragmentLambda4<T1, T2, T3, T4> fragment, T1 arg1, T2 arg2, T3 arg3, T4 arg4) {
+      Html.Fragment.Of4<T1, T2, T3, T4> fragment, T1 arg1, T2 arg2, T3 arg3, T4 arg4) {
     Check.notNull(fragment, "fragment == null");
 
     int index;

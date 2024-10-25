@@ -223,89 +223,105 @@ public final class Html extends HtmlRecorder {
    *
    * @see Html#include(Html.FragmentLambda)
    */
-  @FunctionalInterface
-  public interface FragmentLambda {
+  public sealed interface Fragment {
 
     /**
-     * Invokes this set of instructions.
+     * A fragment that takes no arguments.
      */
-    void invoke() throws Exception;
+    @FunctionalInterface
+    non-sealed interface Of0 extends Fragment {
 
-  }
+      /**
+       * Invokes this set of instructions.
+       *
+       * @throws Exception
+       *         if an error occurs during the execution of this fragment
+       */
+      void invoke() throws Exception;
 
-  /**
-   * A delayed set of template instructions.
-   *
-   * <p>
-   * The set of instructions MUST be of the same template instance where this
-   * fragment will be included.
-   *
-   * @see BaseTemplateDsl#include(FragmentAction)
-   */
-  @FunctionalInterface
-  public interface FragmentLambda1<T1> {
+    }
 
     /**
-     * Invokes this set of instructions.
+     * A fragment that takes one argument.
+     *
+     * @param <T1>
+     *        the type of the argument
      */
-    void invoke(T1 arg1) throws Exception;
+    @FunctionalInterface
+    non-sealed interface Of1<T1> extends Fragment {
 
-  }
+      /**
+       * Invokes this set of instructions.
+       *
+       * @throws Exception
+       *         if an error occurs during the execution of this fragment
+       */
+      void invoke(T1 arg1) throws Exception;
 
-  /**
-   * A delayed set of template instructions.
-   *
-   * <p>
-   * The set of instructions MUST be of the same template instance where this
-   * fragment will be included.
-   *
-   * @see BaseTemplateDsl#include(FragmentAction)
-   */
-  @FunctionalInterface
-  public interface FragmentLambda2<T1, T2> {
+    }
 
     /**
-     * Invokes this set of instructions.
+     * A fragment that takes two arguments.
+     *
+     * @param <T1>
+     *        the type of the first argument
+     * @param <T2>
+     *        the type of the second argument
      */
-    void invoke(T1 arg1, T2 arg2) throws Exception;
+    @FunctionalInterface
+    non-sealed interface Of2<T1, T2> extends Fragment {
 
-  }
+      /**
+       * Invokes this set of instructions.
+       *
+       * @throws Exception
+       *         if an error occurs during the execution of this fragment
+       */
+      void invoke(T1 arg1, T2 arg2) throws Exception;
 
-  /**
-   * A delayed set of template instructions.
-   *
-   * <p>
-   * The set of instructions MUST be of the same template instance where this
-   * fragment will be included.
-   *
-   * @see BaseTemplateDsl#include(FragmentAction)
-   */
-  @FunctionalInterface
-  public interface FragmentLambda3<T1, T2, T3> {
+    }
 
     /**
-     * Invokes this set of instructions.
+     * A fragment that takes three arguments.
+     *
+     * @param <T1>
+     *        the type of the first argument
+     * @param <T2>
+     *        the type of the second argument
+     * @param <T3>
+     *        the type of the third argument
      */
-    void invoke(T1 arg1, T2 arg2, T3 arg3) throws Exception;
+    @FunctionalInterface
+    non-sealed interface Of3<T1, T2, T3> extends Fragment {
 
-  }
+      /**
+       * Invokes this set of instructions.
+       */
+      void invoke(T1 arg1, T2 arg2, T3 arg3) throws Exception;
 
-  /**
-   * A delayed set of template instructions.
-   *
-   * <p>
-   * The set of instructions MUST be of the same template instance where this
-   * fragment will be included.
-   *
-   * @see BaseTemplateDsl#include(FragmentAction)
-   */
-  @FunctionalInterface
-  public interface FragmentLambda4<T1, T2, T3, T4> {
+    }
 
     /**
-     * Invokes this set of instructions.
+     * A fragment that takes four arguments.
+     *
+     * @param <T1>
+     *        the type of the first argument
+     * @param <T2>
+     *        the type of the second argument
+     * @param <T3>
+     *        the type of the third argument
+     * @param <T4>
+     *        the type of the fourth argument
      */
-    void invoke(T1 arg1, T2 arg2, T3 arg3, T4 arg4) throws Exception;
+    @FunctionalInterface
+    non-sealed interface Of4<T1, T2, T3, T4> extends Fragment {
+
+      /**
+       * Invokes this set of instructions.
+       */
+      void invoke(T1 arg1, T2 arg2, T3 arg3, T4 arg4) throws Exception;
+
+    }
 
   }
 
@@ -740,23 +756,23 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this fragment
      */
-    protected final Html.Instruction.OfFragment f(FragmentLambda fragment) {
+    protected final Html.Instruction.OfFragment f(Html.Fragment.Of0 fragment) {
       return $html().include(fragment);
     }
 
-    protected final <T1> Html.Instruction.OfFragment f(FragmentLambda1<T1> fragment, T1 arg1) {
+    protected final <T1> Html.Instruction.OfFragment f(Html.Fragment.Of1<T1> fragment, T1 arg1) {
       return $html().include(fragment, arg1);
     }
 
-    protected final <T1, T2> Html.Instruction.OfFragment f(FragmentLambda2<T1, T2> fragment, T1 arg1, T2 arg2) {
+    protected final <T1, T2> Html.Instruction.OfFragment f(Html.Fragment.Of2<T1, T2> fragment, T1 arg1, T2 arg2) {
       return $html().include(fragment, arg1, arg2);
     }
 
-    protected final <T1, T2, T3> Html.Instruction.OfFragment f(FragmentLambda3<T1, T2, T3> fragment, T1 arg1, T2 arg2, T3 arg3) {
+    protected final <T1, T2, T3> Html.Instruction.OfFragment f(Html.Fragment.Of3<T1, T2, T3> fragment, T1 arg1, T2 arg2, T3 arg3) {
       return $html().include(fragment, arg1, arg2, arg3);
     }
 
-    protected final <T1, T2, T3, T4> Html.Instruction.OfFragment f(FragmentLambda4<T1, T2, T3, T4> fragment, T1 arg1, T2 arg2, T3 arg3, T4 arg4) {
+    protected final <T1, T2, T3, T4> Html.Instruction.OfFragment f(Html.Fragment.Of4<T1, T2, T3, T4> fragment, T1 arg1, T2 arg2, T3 arg3, T4 arg4) {
       return $html().include(fragment, arg1, arg2, arg3, arg4);
     }
 
@@ -849,7 +865,7 @@ public final class Html extends HtmlRecorder {
      *
      * @return an instruction representing this fragment
      */
-    protected final Html.Instruction.OfFragment include(FragmentLambda fragment) {
+    protected final Html.Instruction.OfFragment include(Html.Fragment.Of0 fragment) {
       return $html().include(fragment);
     }
 
@@ -865,17 +881,17 @@ public final class Html extends HtmlRecorder {
       Check.notNull(template, "template == null");
 
       try {
-        Html api;
-        api = $html();
+        Html html;
+        html = $html();
 
         int index;
-        index = api.fragmentBegin();
+        index = html.fragmentBegin();
 
-        template.html = api;
+        template.html = html;
 
         template.tryToRender();
 
-        api.fragmentEnd(index);
+        html.fragmentEnd(index);
       } finally {
         template.html = null;
       }
