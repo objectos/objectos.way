@@ -234,41 +234,6 @@ interface HtmlAttributeNameGenerated {
   public static final Html.AttributeName FLOOD_OPACITY = HtmlAttributeName.create("flood-opacity", false);
 
   /**
-   * The {@code font-family} attribute.
-   */
-  public static final Html.AttributeName FONT_FAMILY = HtmlAttributeName.create("font-family", false);
-
-  /**
-   * The {@code font-size} attribute.
-   */
-  public static final Html.AttributeName FONT_SIZE = HtmlAttributeName.create("font-size", false);
-
-  /**
-   * The {@code font-size-adjust} attribute.
-   */
-  public static final Html.AttributeName FONT_SIZE_ADJUST = HtmlAttributeName.create("font-size-adjust", false);
-
-  /**
-   * The {@code font-stretch} attribute.
-   */
-  public static final Html.AttributeName FONT_STRETCH = HtmlAttributeName.create("font-stretch", false);
-
-  /**
-   * The {@code font-style} attribute.
-   */
-  public static final Html.AttributeName FONT_STYLE = HtmlAttributeName.create("font-style", false);
-
-  /**
-   * The {@code font-variant} attribute.
-   */
-  public static final Html.AttributeName FONT_VARIANT = HtmlAttributeName.create("font-variant", false);
-
-  /**
-   * The {@code font-weight} attribute.
-   */
-  public static final Html.AttributeName FONT_WEIGHT = HtmlAttributeName.create("font-weight", false);
-
-  /**
    * The {@code for} attribute.
    */
   public static final Html.AttributeName FOR = HtmlAttributeName.create("for", false);
