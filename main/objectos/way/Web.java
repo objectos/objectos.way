@@ -19,11 +19,18 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.security.SecureRandom;
 import java.time.Clock;
 import java.time.Duration;
+import java.time.Instant;
+import java.util.Collection;
+import java.util.HexFormat;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Random;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
+import java.util.function.Consumer;
 import objectos.notes.Note1;
 import objectos.notes.NoteSink;
 
@@ -194,9 +201,92 @@ public final class Web {
   public sealed interface Store permits WebStore {
 
     /**
-     * A store configuration option.
+     * Configures the creation of a {@code Store} instance.
      */
-    public sealed interface Option {}
+    public sealed interface Config {
+
+      /**
+       * Use the specified {@code clock} when setting session instances time
+       * related values.
+       *
+       * @param value
+       *        the clock instance to use
+       *
+       * @return this object
+       */
+      Config clock(Clock value);
+
+      /**
+       * Use the specified {@code name} when setting the client session cookie.
+       *
+       * @param name
+       *        the cookie name to use
+       *
+       * @return this object
+       */
+      Config cookieName(String name);
+
+      /**
+       * Sets the session cookie Path attribute to the specified value.
+       *
+       * @param path
+       *        the value of the Path attribute
+       *
+       * @return this object
+       */
+      Config cookiePath(String path);
+
+      /**
+       * Sets the session cookie Max-Age attribute to the specified value.
+       *
+       * @param duration
+       *        the value of the Max-Age attribute
+       *
+       * @return this object
+       */
+      Config cookieMaxAge(Duration duration);
+
+      /**
+       * Discards empty sessions, during a {@link Store#cleanUp()}
+       * operation, whose last access time is greater than the specified
+       * duration.
+       *
+       * @param duration
+       *        the duration value
+       *
+       * @return this object
+       */
+      Config emptyMaxAge(Duration duration);
+
+      /**
+       * Use the specified {@link Random} instance for generating session IDs.
+       *
+       * @param random
+       *        the {@link Random} instance to use
+       *
+       * @return this object
+       */
+      Config random(Random random);
+
+    }
+
+    /**
+     * Creates a new session store with the specified configuration.
+     *
+     * @param config
+     *        the session store configuration
+     *
+     * @return a newly created session store with the specified
+     *         configuration
+     */
+    static Store create(Consumer<Config> config) {
+      WebStoreConfig builder;
+      builder = new WebStoreConfig();
+
+      config.accept(builder);
+
+      return builder.build();
+    }
 
     void cleanUp();
 
@@ -209,13 +299,22 @@ public final class Web {
 
     void filter(Http.Exchange http);
 
+    /**
+     * Returns the session with the specified session ID; or returns
+     * {@code null} if the session does not exist.
+     *
+     * @param id
+     *        the session ID
+     *
+     * @return the session with the specified session ID or {@code null}
+     */
     Session get(String id);
 
     /**
      * Returns a Set-Cookie header value for the specified session ID.
      *
      * @param id
-     *        the id of the session
+     *        the session ID
      *
      * @return the value of a Set-Cookie header for the specified session ID
      */
@@ -232,12 +331,6 @@ public final class Web {
      * @return the previously stored session instance or {@code null}
      */
     Session store(Session session);
-
-  }
-
-  non-sealed static abstract class WebStoreOption implements Store.Option {
-
-    abstract void accept(WebStore.Builder builder);
 
   }
 
@@ -288,162 +381,6 @@ public final class Web {
     }
 
     return builder.build();
-  }
-
-  /**
-   * Creates a new session store with the specified configuration options.
-   */
-  public static Store createStore(Store.Option... options) {
-    WebStore.Builder builder;
-    builder = new WebStore.Builder();
-
-    for (int i = 0, len = options.length; i < len; i++) {
-      Store.Option o;
-      o = Check.notNull(options[i], "options[", i, "] == null");
-
-      WebStoreOption option;
-      option = (WebStoreOption) o;
-
-      option.accept(builder);
-    }
-
-    return builder.build();
-  }
-
-  /**
-   * Store option: use the specified {@code clock} when setting session
-   * instances time related values.
-   *
-   * @param value
-   *        the clock instance to use
-   *
-   * @return a new store configuration option
-   */
-  public static Store.Option clock(Clock value) {
-    Check.notNull(value, "value == null");
-
-    return new WebStoreOption() {
-      @Override
-      final void accept(WebStore.Builder builder) {
-        builder.clock = value;
-      }
-    };
-  }
-
-  /**
-   * Store option: use the specified {@code name} when setting the client
-   * session cookie.
-   *
-   * @param name
-   *        the cookie name to use
-   *
-   * @return a new store configuration option
-   */
-  public static Store.Option cookieName(String name) {
-    Check.notNull(name, "name == null");
-
-    return new WebStoreOption() {
-      @Override
-      final void accept(WebStore.Builder builder) {
-        builder.cookieName = name;
-      }
-    };
-  }
-
-  /**
-   * Store option: sets the session cookie Path attribute to the specified
-   * value.
-   *
-   * @param path
-   *        the value of the Path attribute
-   *
-   * @return a new store configuration option
-   */
-  public static Store.Option cookiePath(String path) {
-    Check.notNull(path, "path == null");
-
-    return new WebStoreOption() {
-      @Override
-      final void accept(WebStore.Builder builder) {
-        builder.cookiePath = path;
-      }
-    };
-  }
-
-  /**
-   * Store option: sets the session cookie Max-Age attribute to the
-   * specified value.
-   *
-   * @param duration
-   *        the value of the Max-Age attribute
-   *
-   * @return a new store configuration option
-   */
-  public static Store.Option cookieMaxAge(Duration duration) {
-    Objects.requireNonNull(duration, "duration == null");
-
-    if (duration.isZero()) {
-      throw new IllegalArgumentException("maxAge must not be zero");
-    }
-
-    if (duration.isNegative()) {
-      throw new IllegalArgumentException("maxAge must not be negative");
-    }
-
-    return new WebStoreOption() {
-      @Override
-      final void accept(WebStore.Builder builder) {
-        builder.cookieMaxAge = duration;
-      }
-    };
-  }
-
-  /**
-   * Store option: discards empty sessions, during a {@link Store#cleanUp()}
-   * operation, whose last access time is greater than the specified duration.
-   *
-   * @param duration
-   *        the duration value
-   *
-   * @return a new store configuration option
-   */
-  public static Store.Option emptyMaxAge(Duration duration) {
-    Objects.requireNonNull(duration, "duration == null");
-
-    if (duration.isZero()) {
-      throw new IllegalArgumentException("emptyMaxAge must not be zero");
-    }
-
-    if (duration.isNegative()) {
-      throw new IllegalArgumentException("emptyMaxAge must not be negative");
-    }
-
-    return new WebStoreOption() {
-      @Override
-      final void accept(WebStore.Builder builder) {
-        builder.emptyMaxAge = duration;
-      }
-    };
-  }
-
-  /**
-   * Store option: use the specified {@link Random} instance for generating
-   * session IDs.
-   *
-   * @param random
-   *        the {@link Random} instance to use
-   *
-   * @return a new store configuration option
-   */
-  public static Store.Option random(Random random) {
-    Check.notNull(random, "random == null");
-
-    return new WebStoreOption() {
-      @Override
-      final void accept(WebStore.Builder builder) {
-        builder.random = random;
-      }
-    };
   }
 
   /**
@@ -588,6 +525,267 @@ public final class Web {
         b.rootDirectory = directory;
       }
     };
+  }
+
+}
+
+/**
+ * The Objectos Way {@link SessionStore} implementation.
+ */
+final class WebStore implements Web.Store {
+
+  private static final int ID_LENGTH_IN_BYTES = 16;
+
+  private final Clock clock;
+
+  private final Duration cookieMaxAge;
+
+  private final String cookieName;
+
+  private final String cookiePath;
+
+  private final Duration emptyMaxAge;
+
+  private final HexFormat hexFormat = HexFormat.of();
+
+  private final Random random;
+
+  private final ConcurrentMap<String, WebSession> sessions = new ConcurrentHashMap<>();
+
+  WebStore(WebStoreConfig builder) {
+    clock = builder.clock;
+
+    cookieMaxAge = builder.cookieMaxAge;
+
+    cookieName = builder.cookieName;
+
+    cookiePath = builder.cookiePath;
+
+    emptyMaxAge = builder.emptyMaxAge;
+
+    random = builder.random;
+  }
+
+  @Override
+  public final void cleanUp() {
+    Instant now;
+    now = Instant.now(clock);
+
+    Instant min;
+    min = now.minus(emptyMaxAge);
+
+    Collection<WebSession> values;
+    values = sessions.values();
+
+    for (WebSession session : values) {
+      if (session.shouldCleanUp(min)) {
+        sessions.remove(session.id());
+      }
+    }
+  }
+
+  public final void clear() {
+    sessions.clear();
+  }
+
+  final WebSession put(String id, WebSession session) {
+    Check.notNull(id, "id == null");
+    Check.notNull(session, "session == null");
+
+    return sessions.put(id, session);
+  }
+
+  @Override
+  public final Web.Session createNext() {
+    WebSession session, maybeExisting;
+
+    do {
+      String id;
+      id = nextId();
+
+      session = new WebSession(id);
+
+      maybeExisting = sessions.putIfAbsent(id, session);
+    } while (maybeExisting != null);
+
+    return session;
+  }
+
+  @Override
+  public final void filter(Http.Exchange http) {
+    Http.Request.Headers headers;
+    headers = http.headers();
+
+    String cookieHeaderValue;
+    cookieHeaderValue = headers.first(Http.COOKIE);
+
+    if (cookieHeaderValue == null) {
+      return;
+    }
+
+    Http.Request.Cookies cookies;
+    cookies = Http.parseCookies(cookieHeaderValue);
+
+    String id;
+    id = cookies.get(cookieName);
+
+    if (id == null) {
+      return;
+    }
+
+    Web.Session session;
+    session = get(id);
+
+    if (session == null) {
+      return;
+    }
+
+    http.set(Web.Session.class, session);
+  }
+
+  @Override
+  public final Web.Session get(String id) {
+    WebSession session;
+    session = sessions.get(id);
+
+    if (session == null) {
+      return null;
+    }
+
+    if (!session.valid) {
+      return null;
+    }
+
+    session.touch(clock);
+
+    return session;
+  }
+
+  @Override
+  public final String setCookie(String id) {
+    Check.notNull(id, "id == null");
+
+    StringBuilder s;
+    s = new StringBuilder();
+
+    s.append(cookieName);
+
+    s.append('=');
+
+    s.append(id);
+
+    if (cookieMaxAge != null) {
+      s.append("; Max-Age=");
+
+      s.append(cookieMaxAge.getSeconds());
+    }
+
+    if (cookiePath != null) {
+      s.append("; Path=");
+
+      s.append(cookiePath);
+    }
+
+    return s.toString();
+  }
+
+  @Override
+  public final Web.Session store(Web.Session session) {
+    String id;
+    id = session.id();
+
+    return sessions.put(id, (WebSession) session);
+  }
+
+  private String nextId() {
+    byte[] bytes;
+    bytes = new byte[ID_LENGTH_IN_BYTES];
+
+    random.nextBytes(bytes);
+
+    return hexFormat.formatHex(bytes);
+  }
+
+}
+
+final class WebStoreConfig implements Web.Store.Config {
+
+  Clock clock = Clock.systemDefaultZone();
+
+  Duration cookieMaxAge;
+
+  String cookieName = "OBJECTOSWAY";
+
+  String cookiePath = "/";
+
+  Duration emptyMaxAge = Duration.ofMinutes(5);
+
+  Random random = new SecureRandom();
+
+  public final Web.Store build() {
+    return new WebStore(this);
+  }
+
+  @Override
+  public final Web.Store.Config clock(Clock value) {
+    clock = Objects.requireNonNull(value, "value == null");
+
+    return this;
+  }
+
+  @Override
+  public final Web.Store.Config cookieName(String name) {
+    cookieName = Objects.requireNonNull(name, "name == null");
+
+    return this;
+  }
+
+  @Override
+  public final Web.Store.Config cookiePath(String path) {
+    cookiePath = Objects.requireNonNull(path, "path == null");
+
+    return this;
+  }
+
+  @Override
+  public final Web.Store.Config cookieMaxAge(Duration duration) {
+    Objects.requireNonNull(duration, "duration == null");
+
+    if (duration.isZero()) {
+      throw new IllegalArgumentException("maxAge must not be zero");
+    }
+
+    if (duration.isNegative()) {
+      throw new IllegalArgumentException("maxAge must not be negative");
+    }
+
+    cookieMaxAge = duration;
+
+    return this;
+  }
+
+  @Override
+  public final Web.Store.Config emptyMaxAge(Duration duration) {
+    Objects.requireNonNull(duration, "duration == null");
+
+    if (duration.isZero()) {
+      throw new IllegalArgumentException("emptyMaxAge must not be zero");
+    }
+
+    if (duration.isNegative()) {
+      throw new IllegalArgumentException("emptyMaxAge must not be negative");
+    }
+
+    emptyMaxAge = duration;
+
+    return this;
+  }
+
+  @Override
+  public final Web.Store.Config random(Random random) {
+    this.random = Objects.requireNonNull(random, "random == null");
+
+    return this;
   }
 
 }

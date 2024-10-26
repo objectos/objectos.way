@@ -55,7 +55,7 @@ abstract class TestingSite extends App.Bootstrap {
 
     // SessionStore
     Web.Store sessionStore;
-    sessionStore = Web.createStore();
+    sessionStore = Web.Store.create(config -> {});
 
     // Web.Resources
 

@@ -32,7 +32,7 @@ public class WebStoreTest {
   """)
   public void testCase01() {
     Web.Store repo;
-    repo = Web.createStore();
+    repo = Web.Store.create(config -> {});
 
     Web.Session session;
     session = repo.createNext();
@@ -55,7 +55,7 @@ public class WebStoreTest {
   """)
   public void testCase02() {
     Web.Store repo;
-    repo = Web.createStore();
+    repo = Web.Store.create(config -> {});
 
     Web.Session session;
     session = repo.createNext();
@@ -80,7 +80,7 @@ public class WebStoreTest {
   """)
   public void testCase03() {
     Web.Store repo;
-    repo = Web.createStore();
+    repo = Web.Store.create(config -> {});
 
     Web.Session session;
     session = repo.createNext();
@@ -105,9 +105,9 @@ public class WebStoreTest {
     clock = new IncrementingClock(2024, 4, 29);
 
     Web.Store repo;
-    repo = Web.createStore(
-        Web.clock(clock)
-    );
+    repo = Web.Store.create(config -> {
+      config.clock(clock);
+    });
 
     String id;
     id = "foo";
@@ -138,9 +138,9 @@ public class WebStoreTest {
     clock = new IncrementingClock(2024, 4, 29);
 
     Web.Store repo;
-    repo = Web.createStore(
-        Web.clock(clock)
-    );
+    repo = Web.Store.create(config -> {
+      config.clock(clock);
+    });
 
     WebSession a = new WebSession("a");
     WebSession b = new WebSession("b");
@@ -171,11 +171,11 @@ public class WebStoreTest {
     clock = TestingClock.FIXED;
 
     Web.Store repo;
-    repo = Web.createStore(
-        Web.clock(clock),
+    repo = Web.Store.create(config -> {
+      config.clock(clock);
 
-        Web.emptyMaxAge(Duration.ofMinutes(1))
-    );
+      config.emptyMaxAge(Duration.ofMinutes(1));
+    });
 
     WebSession a = new WebSession("a");
     WebSession b = new WebSession("b");

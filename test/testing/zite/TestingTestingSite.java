@@ -74,9 +74,9 @@ public final class TestingTestingSite {
     random = new Random(1234L);
 
     Web.Store sessionStore;
-    sessionStore = Web.createStore(
-        Web.random(random)
-    );
+    sessionStore = Web.Store.create(config -> {
+      config.random(random);
+    });
 
     // WebResources
     Web.Resources webResources;

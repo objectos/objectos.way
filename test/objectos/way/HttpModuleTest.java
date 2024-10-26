@@ -45,11 +45,11 @@ public class HttpModuleTest extends Http.Module {
   public void beforeClass() {
     random = new SequentialRandom();
 
-    this.sessionStore = Web.createStore(
-        Web.cookieName("HTTPMODULETEST"),
+    this.sessionStore = Web.Store.create(config -> {
+      config.cookieName("HTTPMODULETEST");
 
-        Web.random(random)
-    );
+      config.random(random);
+    });
 
     TestingHttpServer.bindHttpModuleTest(this);
   }
