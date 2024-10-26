@@ -55,7 +55,7 @@ JAVADOCX += --release $(JAVA_RELEASE)
 JAVADOCX += --show-module-contents api
 JAVADOCX += --show-packages exported
 ifdef JAVADOC_SNIPPET_PATH
-JAVADOCX += --snippet-path $($(JAVADOC_SNIPPET_PATH))
+JAVADOCX += --snippet-path $(JAVADOC_SNIPPET_PATH)
 endif 
 JAVADOCX += -bottom 'Copyright &\#169; $(COPYRIGHT_YEARS) <a href="https://www.objectos.com.br/">Objectos Software LTDA</a>. All rights reserved.'
 JAVADOCX += -charset 'UTF-8'

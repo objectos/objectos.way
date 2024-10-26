@@ -17,7 +17,6 @@ package objectos.way;
 
 import java.util.Arrays;
 import objectos.way.Html.ClassName;
-import objectos.way.Html.HtmlId;
 import org.testng.annotations.Test;
 
 public class HtmlCompilerTestRecorder {
@@ -26,8 +25,8 @@ public class HtmlCompilerTestRecorder {
   <html></html>
   """)
   public void testCase00() {
-    HtmlRecorder html;
-    html = new HtmlRecorder();
+    HtmlMarkup html;
+    html = new HtmlMarkup();
 
     html.compilationBegin();
 
@@ -51,8 +50,8 @@ public class HtmlCompilerTestRecorder {
   <html lang="pt-BR"></html>
   """)
   public void testCase01() {
-    HtmlRecorder html;
-    html = new HtmlRecorder();
+    HtmlMarkup html;
+    html = new HtmlMarkup();
 
     html.compilationBegin();
 
@@ -86,8 +85,8 @@ public class HtmlCompilerTestRecorder {
   <html class="no-js" lang="pt-BR"></html>
   """)
   public void testCase02() {
-    HtmlRecorder html;
-    html = new HtmlRecorder();
+    HtmlMarkup html;
+    html = new HtmlMarkup();
 
     html.compilationBegin();
 
@@ -130,8 +129,8 @@ public class HtmlCompilerTestRecorder {
   <html><head></head></html>
   """)
   public void testCase03() {
-    HtmlRecorder html;
-    html = new HtmlRecorder();
+    HtmlMarkup html;
+    html = new HtmlMarkup();
 
     html.compilationBegin();
 
@@ -169,8 +168,8 @@ public class HtmlCompilerTestRecorder {
   <html></html>
   """)
   public void testCase09() {
-    HtmlRecorder html;
-    html = new HtmlRecorder();
+    HtmlMarkup html;
+    html = new HtmlMarkup();
 
     html.compilationBegin();
 
@@ -197,8 +196,8 @@ public class HtmlCompilerTestRecorder {
   fragment inclusion
   """)
   public void testCase10() {
-    HtmlRecorder html;
-    html = new HtmlRecorder();
+    HtmlMarkup html;
+    html = new HtmlMarkup();
 
     html.compilationBegin();
 
@@ -288,8 +287,8 @@ public class HtmlCompilerTestRecorder {
     HtmlId bar;
     bar = new HtmlId("bar");
 
-    HtmlRecorder html;
-    html = new HtmlRecorder();
+    HtmlMarkup html;
+    html = new HtmlMarkup();
 
     html.compilationBegin();
 
@@ -335,8 +334,8 @@ public class HtmlCompilerTestRecorder {
   Text child element
   """)
   public void testCase14() {
-    HtmlRecorder html;
-    html = new HtmlRecorder();
+    HtmlMarkup html;
+    html = new HtmlMarkup();
 
     html.compilationBegin();
 
@@ -393,8 +392,8 @@ public class HtmlCompilerTestRecorder {
   Ambiguous
   """)
   public void testCase16() {
-    HtmlRecorder html;
-    html = new HtmlRecorder();
+    HtmlMarkup html;
+    html = new HtmlMarkup();
 
     html.compilationBegin();
 
@@ -463,8 +462,8 @@ public class HtmlCompilerTestRecorder {
   include template
   """)
   public void testCase20() {
-    HtmlRecorder html;
-    html = new HtmlRecorder();
+    HtmlMarkup html;
+    html = new HtmlMarkup();
 
     html.compilationBegin();
 
@@ -477,11 +476,11 @@ public class HtmlCompilerTestRecorder {
     html.elementBegin(HtmlElementName.NAV);
     html.elementEnd();
     // template end
-    
+
     html.elementBegin(HtmlElementName.BODY);
     html.elementValue(BaseApi.FRAGMENT);
     html.elementEnd();
-    
+
     html.compilationEnd();
     */
 
@@ -514,8 +513,8 @@ public class HtmlCompilerTestRecorder {
   style/script => raw
   """)
   public void testCase25() {
-    HtmlRecorder html;
-    html = new HtmlRecorder();
+    HtmlMarkup html;
+    html = new HtmlMarkup();
 
     html.compilationBegin();
 
@@ -550,8 +549,8 @@ public class HtmlCompilerTestRecorder {
   - email input
   """)
   public void testCase31() {
-    HtmlRecorder html;
-    html = new HtmlRecorder();
+    HtmlMarkup html;
+    html = new HtmlMarkup();
 
     html.compilationBegin();
 
@@ -594,8 +593,8 @@ public class HtmlCompilerTestRecorder {
   - flatten instruction
   """)
   public void testCase46() {
-    HtmlRecorder html;
-    html = new HtmlRecorder();
+    HtmlMarkup html;
+    html = new HtmlMarkup();
 
     html.compilationBegin();
 
@@ -665,8 +664,8 @@ public class HtmlCompilerTestRecorder {
     ClassName col;
     col = new HtmlClassName("col");
 
-    HtmlRecorder html;
-    html = new HtmlRecorder();
+    HtmlMarkup html;
+    html = new HtmlMarkup();
 
     html.span("foo");
     html.text("bar");
@@ -803,8 +802,8 @@ public class HtmlCompilerTestRecorder {
   The test-field pseudo-attribute
   """)
   public void testCase65() {
-    HtmlRecorder html;
-    html = new HtmlRecorder();
+    HtmlMarkup html;
+    html = new HtmlMarkup();
 
     html.compilationBegin();
 
@@ -871,7 +870,7 @@ public class HtmlCompilerTestRecorder {
     );
   }
 
-  private void test(HtmlRecorder html, byte... expected) {
+  private void test(HtmlMarkup html, byte... expected) {
     byte[] result;
     result = Arrays.copyOf(html.main, html.mainIndex);
 

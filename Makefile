@@ -206,6 +206,8 @@ npm-install:
 # way@javadoc
 #
 
+JAVADOC_SNIPPET_PATH := $(TEST)
+
 include make/java-javadoc.mk
 
 #

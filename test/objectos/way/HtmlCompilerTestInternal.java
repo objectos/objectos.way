@@ -26,8 +26,8 @@ public class HtmlCompilerTestInternal {
   <html></html>
   """)
   public void testCase00() {
-    HtmlRecorder compiler;
-    compiler = new HtmlRecorder();
+    HtmlMarkup compiler;
+    compiler = new HtmlMarkup();
 
     compiler.compilationBegin();
 
@@ -42,7 +42,7 @@ public class HtmlCompilerTestInternal {
     testAux(
         compiler,
 
-        HtmlRecorder._DOCUMENT_START,
+        HtmlMarkup._DOCUMENT_START,
         HtmlBytes.encodeInt0(0), HtmlBytes.encodeInt1(0), HtmlBytes.encodeInt2(0)
     );
 
@@ -52,7 +52,7 @@ public class HtmlCompilerTestInternal {
     testAux(
         compiler,
 
-        HtmlRecorder._DOCUMENT_NODES_ITERABLE,
+        HtmlMarkup._DOCUMENT_NODES_ITERABLE,
         HtmlBytes.encodeInt0(0), HtmlBytes.encodeInt1(0), HtmlBytes.encodeInt2(0)
     );
 
@@ -62,7 +62,7 @@ public class HtmlCompilerTestInternal {
     testAux(
         compiler,
 
-        HtmlRecorder._DOCUMENT_NODES_ITERATOR,
+        HtmlMarkup._DOCUMENT_NODES_ITERATOR,
         HtmlBytes.encodeInt0(0), HtmlBytes.encodeInt1(0), HtmlBytes.encodeInt2(0)
     );
 
@@ -72,7 +72,7 @@ public class HtmlCompilerTestInternal {
     testAux(
         compiler,
 
-        HtmlRecorder._DOCUMENT_NODES_HAS_NEXT,
+        HtmlMarkup._DOCUMENT_NODES_HAS_NEXT,
         HtmlBytes.encodeInt0(0), HtmlBytes.encodeInt1(0), HtmlBytes.encodeInt2(0)
     );
 
@@ -85,10 +85,10 @@ public class HtmlCompilerTestInternal {
     testAux(
         compiler,
 
-        HtmlRecorder._DOCUMENT_NODES_NEXT,
+        HtmlMarkup._DOCUMENT_NODES_NEXT,
         HtmlBytes.encodeInt0(8), HtmlBytes.encodeInt1(8), HtmlBytes.encodeInt2(8),
 
-        HtmlRecorder._ELEMENT_START,
+        HtmlMarkup._ELEMENT_START,
         HtmlBytes.encodeInt0(3), HtmlBytes.encodeInt1(3), HtmlBytes.encodeInt2(3),
         HtmlBytes.encodeInt0(3), HtmlBytes.encodeInt1(3), HtmlBytes.encodeInt2(3),
         HtmlBytes.encodeInt0(3), HtmlBytes.encodeInt1(3), HtmlBytes.encodeInt2(3),
@@ -102,10 +102,10 @@ public class HtmlCompilerTestInternal {
     testAux(
         compiler,
 
-        HtmlRecorder._DOCUMENT_NODES_NEXT,
+        HtmlMarkup._DOCUMENT_NODES_NEXT,
         HtmlBytes.encodeInt0(8), HtmlBytes.encodeInt1(8), HtmlBytes.encodeInt2(8),
 
-        HtmlRecorder._ELEMENT_ATTRS_ITERABLE,
+        HtmlMarkup._ELEMENT_ATTRS_ITERABLE,
         HtmlBytes.encodeInt0(3), HtmlBytes.encodeInt1(3), HtmlBytes.encodeInt2(3),
         HtmlBytes.encodeInt0(3), HtmlBytes.encodeInt1(3), HtmlBytes.encodeInt2(3),
         HtmlBytes.encodeInt0(3), HtmlBytes.encodeInt1(3), HtmlBytes.encodeInt2(3),
@@ -119,10 +119,10 @@ public class HtmlCompilerTestInternal {
     testAux(
         compiler,
 
-        HtmlRecorder._DOCUMENT_NODES_NEXT,
+        HtmlMarkup._DOCUMENT_NODES_NEXT,
         HtmlBytes.encodeInt0(8), HtmlBytes.encodeInt1(8), HtmlBytes.encodeInt2(8),
 
-        HtmlRecorder._ELEMENT_ATTRS_ITERATOR,
+        HtmlMarkup._ELEMENT_ATTRS_ITERATOR,
         HtmlBytes.encodeInt0(3), HtmlBytes.encodeInt1(3), HtmlBytes.encodeInt2(3),
         HtmlBytes.encodeInt0(3), HtmlBytes.encodeInt1(3), HtmlBytes.encodeInt2(3),
         HtmlBytes.encodeInt0(3), HtmlBytes.encodeInt1(3), HtmlBytes.encodeInt2(3),
@@ -136,10 +136,10 @@ public class HtmlCompilerTestInternal {
     testAux(
         compiler,
 
-        HtmlRecorder._DOCUMENT_NODES_NEXT,
+        HtmlMarkup._DOCUMENT_NODES_NEXT,
         HtmlBytes.encodeInt0(8), HtmlBytes.encodeInt1(8), HtmlBytes.encodeInt2(8),
 
-        HtmlRecorder._ELEMENT_ATTRS_EXHAUSTED,
+        HtmlMarkup._ELEMENT_ATTRS_EXHAUSTED,
         HtmlBytes.encodeInt0(5), HtmlBytes.encodeInt1(5), HtmlBytes.encodeInt2(5),
         HtmlBytes.encodeInt0(3), HtmlBytes.encodeInt1(3), HtmlBytes.encodeInt2(3),
         HtmlBytes.encodeInt0(3), HtmlBytes.encodeInt1(3), HtmlBytes.encodeInt2(3),
@@ -153,10 +153,10 @@ public class HtmlCompilerTestInternal {
     testAux(
         compiler,
 
-        HtmlRecorder._DOCUMENT_NODES_NEXT,
+        HtmlMarkup._DOCUMENT_NODES_NEXT,
         HtmlBytes.encodeInt0(8), HtmlBytes.encodeInt1(8), HtmlBytes.encodeInt2(8),
 
-        HtmlRecorder._ELEMENT_NODES_ITERABLE,
+        HtmlMarkup._ELEMENT_NODES_ITERABLE,
         HtmlBytes.encodeInt0(5), HtmlBytes.encodeInt1(5), HtmlBytes.encodeInt2(5),
         HtmlBytes.encodeInt0(3), HtmlBytes.encodeInt1(3), HtmlBytes.encodeInt2(3),
         HtmlBytes.encodeInt0(3), HtmlBytes.encodeInt1(3), HtmlBytes.encodeInt2(3),
@@ -170,10 +170,10 @@ public class HtmlCompilerTestInternal {
     testAux(
         compiler,
 
-        HtmlRecorder._DOCUMENT_NODES_NEXT,
+        HtmlMarkup._DOCUMENT_NODES_NEXT,
         HtmlBytes.encodeInt0(8), HtmlBytes.encodeInt1(8), HtmlBytes.encodeInt2(8),
 
-        HtmlRecorder._ELEMENT_NODES_ITERATOR,
+        HtmlMarkup._ELEMENT_NODES_ITERATOR,
         HtmlBytes.encodeInt0(5), HtmlBytes.encodeInt1(5), HtmlBytes.encodeInt2(5),
         HtmlBytes.encodeInt0(3), HtmlBytes.encodeInt1(3), HtmlBytes.encodeInt2(3),
         HtmlBytes.encodeInt0(3), HtmlBytes.encodeInt1(3), HtmlBytes.encodeInt2(3),
@@ -187,10 +187,10 @@ public class HtmlCompilerTestInternal {
     testAux(
         compiler,
 
-        HtmlRecorder._DOCUMENT_NODES_NEXT,
+        HtmlMarkup._DOCUMENT_NODES_NEXT,
         HtmlBytes.encodeInt0(8), HtmlBytes.encodeInt1(8), HtmlBytes.encodeInt2(8),
 
-        HtmlRecorder._ELEMENT_NODES_EXHAUSTED,
+        HtmlMarkup._ELEMENT_NODES_EXHAUSTED,
         HtmlBytes.encodeInt0(5), HtmlBytes.encodeInt1(5), HtmlBytes.encodeInt2(5),
         HtmlBytes.encodeInt0(5), HtmlBytes.encodeInt1(5), HtmlBytes.encodeInt2(5),
         HtmlBytes.encodeInt0(3), HtmlBytes.encodeInt1(3), HtmlBytes.encodeInt2(3),
@@ -204,7 +204,7 @@ public class HtmlCompilerTestInternal {
     testAux(
         compiler,
 
-        HtmlRecorder._DOCUMENT_NODES_EXHAUSTED,
+        HtmlMarkup._DOCUMENT_NODES_EXHAUSTED,
         HtmlBytes.encodeInt0(8), HtmlBytes.encodeInt1(8), HtmlBytes.encodeInt2(8)
     );
   }
@@ -213,8 +213,8 @@ public class HtmlCompilerTestInternal {
   <html lang="pt-BR"></html>
   """)
   public void testCase01() {
-    HtmlRecorder compiler;
-    compiler = new HtmlRecorder();
+    HtmlMarkup compiler;
+    compiler = new HtmlMarkup();
 
     compiler.compilationBegin();
 
@@ -243,10 +243,10 @@ public class HtmlCompilerTestInternal {
     testAux(
         compiler,
 
-        HtmlRecorder._DOCUMENT_NODES_NEXT,
+        HtmlMarkup._DOCUMENT_NODES_NEXT,
         HtmlBytes.encodeInt0(15), HtmlBytes.encodeInt1(15), HtmlBytes.encodeInt2(15),
 
-        HtmlRecorder._ELEMENT_ATTRS_ITERATOR,
+        HtmlMarkup._ELEMENT_ATTRS_ITERATOR,
         HtmlBytes.encodeInt0(8), HtmlBytes.encodeInt1(8), HtmlBytes.encodeInt2(8),
         HtmlBytes.encodeInt0(8), HtmlBytes.encodeInt1(8), HtmlBytes.encodeInt2(8),
         HtmlBytes.encodeInt0(8), HtmlBytes.encodeInt1(8), HtmlBytes.encodeInt2(8),
@@ -260,10 +260,10 @@ public class HtmlCompilerTestInternal {
     testAux(
         compiler,
 
-        HtmlRecorder._DOCUMENT_NODES_NEXT,
+        HtmlMarkup._DOCUMENT_NODES_NEXT,
         HtmlBytes.encodeInt0(15), HtmlBytes.encodeInt1(15), HtmlBytes.encodeInt2(15),
 
-        HtmlRecorder._ELEMENT_ATTRS_HAS_NEXT,
+        HtmlMarkup._ELEMENT_ATTRS_HAS_NEXT,
         HtmlBytes.encodeInt0(10), HtmlBytes.encodeInt1(10), HtmlBytes.encodeInt2(10),
         HtmlBytes.encodeInt0(8), HtmlBytes.encodeInt1(8), HtmlBytes.encodeInt2(8),
         HtmlBytes.encodeInt0(8), HtmlBytes.encodeInt1(8), HtmlBytes.encodeInt2(8),
@@ -281,10 +281,10 @@ public class HtmlCompilerTestInternal {
     testAux(
         compiler,
 
-        HtmlRecorder._DOCUMENT_NODES_NEXT,
+        HtmlMarkup._DOCUMENT_NODES_NEXT,
         HtmlBytes.encodeInt0(15), HtmlBytes.encodeInt1(15), HtmlBytes.encodeInt2(15),
 
-        HtmlRecorder._ELEMENT_ATTRS_NEXT,
+        HtmlMarkup._ELEMENT_ATTRS_NEXT,
         HtmlBytes.encodeInt0(12), HtmlBytes.encodeInt1(12), HtmlBytes.encodeInt2(12),
         HtmlBytes.encodeInt0(8), HtmlBytes.encodeInt1(8), HtmlBytes.encodeInt2(8),
         HtmlBytes.encodeInt0(8), HtmlBytes.encodeInt1(8), HtmlBytes.encodeInt2(8),
@@ -298,10 +298,10 @@ public class HtmlCompilerTestInternal {
     testAux(
         compiler,
 
-        HtmlRecorder._DOCUMENT_NODES_NEXT,
+        HtmlMarkup._DOCUMENT_NODES_NEXT,
         HtmlBytes.encodeInt0(15), HtmlBytes.encodeInt1(15), HtmlBytes.encodeInt2(15),
 
-        HtmlRecorder._ATTRIBUTE_VALUES_ITERABLE,
+        HtmlMarkup._ATTRIBUTE_VALUES_ITERABLE,
         HtmlBytes.encodeInt0(12), HtmlBytes.encodeInt1(12), HtmlBytes.encodeInt2(12),
         HtmlBytes.encodeInt0(8), HtmlBytes.encodeInt1(8), HtmlBytes.encodeInt2(8),
         HtmlBytes.encodeInt0(8), HtmlBytes.encodeInt1(8), HtmlBytes.encodeInt2(8),
@@ -315,10 +315,10 @@ public class HtmlCompilerTestInternal {
     testAux(
         compiler,
 
-        HtmlRecorder._DOCUMENT_NODES_NEXT,
+        HtmlMarkup._DOCUMENT_NODES_NEXT,
         HtmlBytes.encodeInt0(15), HtmlBytes.encodeInt1(15), HtmlBytes.encodeInt2(15),
 
-        HtmlRecorder._ATTRIBUTE_VALUES_ITERATOR,
+        HtmlMarkup._ATTRIBUTE_VALUES_ITERATOR,
         HtmlBytes.encodeInt0(12), HtmlBytes.encodeInt1(12), HtmlBytes.encodeInt2(12),
         HtmlBytes.encodeInt0(8), HtmlBytes.encodeInt1(8), HtmlBytes.encodeInt2(8),
         HtmlBytes.encodeInt0(8), HtmlBytes.encodeInt1(8), HtmlBytes.encodeInt2(8),
@@ -332,10 +332,10 @@ public class HtmlCompilerTestInternal {
     testAux(
         compiler,
 
-        HtmlRecorder._DOCUMENT_NODES_NEXT,
+        HtmlMarkup._DOCUMENT_NODES_NEXT,
         HtmlBytes.encodeInt0(15), HtmlBytes.encodeInt1(15), HtmlBytes.encodeInt2(15),
 
-        HtmlRecorder._ATTRIBUTE_VALUES_HAS_NEXT,
+        HtmlMarkup._ATTRIBUTE_VALUES_HAS_NEXT,
         HtmlBytes.encodeInt0(12), HtmlBytes.encodeInt1(12), HtmlBytes.encodeInt2(12),
         HtmlBytes.encodeInt0(8), HtmlBytes.encodeInt1(8), HtmlBytes.encodeInt2(8),
         HtmlBytes.encodeInt0(8), HtmlBytes.encodeInt1(8), HtmlBytes.encodeInt2(8),
@@ -353,10 +353,10 @@ public class HtmlCompilerTestInternal {
     testAux(
         compiler,
 
-        HtmlRecorder._DOCUMENT_NODES_NEXT,
+        HtmlMarkup._DOCUMENT_NODES_NEXT,
         HtmlBytes.encodeInt0(15), HtmlBytes.encodeInt1(15), HtmlBytes.encodeInt2(15),
 
-        HtmlRecorder._ATTRIBUTE_VALUES_EXHAUSTED,
+        HtmlMarkup._ATTRIBUTE_VALUES_EXHAUSTED,
         HtmlBytes.encodeInt0(12), HtmlBytes.encodeInt1(12), HtmlBytes.encodeInt2(12),
         HtmlBytes.encodeInt0(8), HtmlBytes.encodeInt1(8), HtmlBytes.encodeInt2(8),
         HtmlBytes.encodeInt0(8), HtmlBytes.encodeInt1(8), HtmlBytes.encodeInt2(8),
@@ -370,10 +370,10 @@ public class HtmlCompilerTestInternal {
     testAux(
         compiler,
 
-        HtmlRecorder._DOCUMENT_NODES_NEXT,
+        HtmlMarkup._DOCUMENT_NODES_NEXT,
         HtmlBytes.encodeInt0(15), HtmlBytes.encodeInt1(15), HtmlBytes.encodeInt2(15),
 
-        HtmlRecorder._ELEMENT_ATTRS_EXHAUSTED,
+        HtmlMarkup._ELEMENT_ATTRS_EXHAUSTED,
         HtmlBytes.encodeInt0(12), HtmlBytes.encodeInt1(12), HtmlBytes.encodeInt2(12),
         HtmlBytes.encodeInt0(8), HtmlBytes.encodeInt1(8), HtmlBytes.encodeInt2(8),
         HtmlBytes.encodeInt0(8), HtmlBytes.encodeInt1(8), HtmlBytes.encodeInt2(8),
@@ -386,8 +386,8 @@ public class HtmlCompilerTestInternal {
   <html><head></head></html>
   """)
   public void testCase03() {
-    HtmlRecorder compiler;
-    compiler = new HtmlRecorder();
+    HtmlMarkup compiler;
+    compiler = new HtmlMarkup();
 
     compiler.compilationBegin();
 
@@ -415,10 +415,10 @@ public class HtmlCompilerTestInternal {
     testAux(
         compiler,
 
-        HtmlRecorder._DOCUMENT_NODES_NEXT,
+        HtmlMarkup._DOCUMENT_NODES_NEXT,
         HtmlBytes.encodeInt0(18), HtmlBytes.encodeInt1(18), HtmlBytes.encodeInt2(18),
 
-        HtmlRecorder._ELEMENT_START,
+        HtmlMarkup._ELEMENT_START,
         HtmlBytes.encodeInt0(11), HtmlBytes.encodeInt1(11), HtmlBytes.encodeInt2(11),
         HtmlBytes.encodeInt0(11), HtmlBytes.encodeInt1(11), HtmlBytes.encodeInt2(11),
         HtmlBytes.encodeInt0(11), HtmlBytes.encodeInt1(11), HtmlBytes.encodeInt2(11),
@@ -437,10 +437,10 @@ public class HtmlCompilerTestInternal {
     testAux(
         compiler,
 
-        HtmlRecorder._DOCUMENT_NODES_NEXT,
+        HtmlMarkup._DOCUMENT_NODES_NEXT,
         HtmlBytes.encodeInt0(18), HtmlBytes.encodeInt1(18), HtmlBytes.encodeInt2(18),
 
-        HtmlRecorder._ELEMENT_NODES_ITERABLE,
+        HtmlMarkup._ELEMENT_NODES_ITERABLE,
         HtmlBytes.encodeInt0(15), HtmlBytes.encodeInt1(15), HtmlBytes.encodeInt2(15),
         HtmlBytes.encodeInt0(11), HtmlBytes.encodeInt1(11), HtmlBytes.encodeInt2(11),
         HtmlBytes.encodeInt0(11), HtmlBytes.encodeInt1(11), HtmlBytes.encodeInt2(11),
@@ -454,10 +454,10 @@ public class HtmlCompilerTestInternal {
     testAux(
         compiler,
 
-        HtmlRecorder._DOCUMENT_NODES_NEXT,
+        HtmlMarkup._DOCUMENT_NODES_NEXT,
         HtmlBytes.encodeInt0(18), HtmlBytes.encodeInt1(18), HtmlBytes.encodeInt2(18),
 
-        HtmlRecorder._ELEMENT_NODES_ITERATOR,
+        HtmlMarkup._ELEMENT_NODES_ITERATOR,
         HtmlBytes.encodeInt0(15), HtmlBytes.encodeInt1(15), HtmlBytes.encodeInt2(15),
         HtmlBytes.encodeInt0(11), HtmlBytes.encodeInt1(11), HtmlBytes.encodeInt2(11),
         HtmlBytes.encodeInt0(11), HtmlBytes.encodeInt1(11), HtmlBytes.encodeInt2(11),
@@ -471,10 +471,10 @@ public class HtmlCompilerTestInternal {
     testAux(
         compiler,
 
-        HtmlRecorder._DOCUMENT_NODES_NEXT,
+        HtmlMarkup._DOCUMENT_NODES_NEXT,
         HtmlBytes.encodeInt0(18), HtmlBytes.encodeInt1(18), HtmlBytes.encodeInt2(18),
 
-        HtmlRecorder._ELEMENT_NODES_HAS_NEXT,
+        HtmlMarkup._ELEMENT_NODES_HAS_NEXT,
         HtmlBytes.encodeInt0(15), HtmlBytes.encodeInt1(15), HtmlBytes.encodeInt2(15),
         HtmlBytes.encodeInt0(13), HtmlBytes.encodeInt1(13), HtmlBytes.encodeInt2(13),
         HtmlBytes.encodeInt0(11), HtmlBytes.encodeInt1(11), HtmlBytes.encodeInt2(11),
@@ -491,17 +491,17 @@ public class HtmlCompilerTestInternal {
     testAux(
         compiler,
 
-        HtmlRecorder._DOCUMENT_NODES_NEXT,
+        HtmlMarkup._DOCUMENT_NODES_NEXT,
         HtmlBytes.encodeInt0(18), HtmlBytes.encodeInt1(18), HtmlBytes.encodeInt2(18),
 
-        HtmlRecorder._ELEMENT_NODES_NEXT,
+        HtmlMarkup._ELEMENT_NODES_NEXT,
         HtmlBytes.encodeInt0(15), HtmlBytes.encodeInt1(15), HtmlBytes.encodeInt2(15),
         HtmlBytes.encodeInt0(15), HtmlBytes.encodeInt1(15), HtmlBytes.encodeInt2(15),
         HtmlBytes.encodeInt0(11), HtmlBytes.encodeInt1(11), HtmlBytes.encodeInt2(11),
         HtmlBytes.encodeInt0(18), HtmlBytes.encodeInt1(18), HtmlBytes.encodeInt2(18),
         len(4),
 
-        HtmlRecorder._ELEMENT_START,
+        HtmlMarkup._ELEMENT_START,
         HtmlBytes.encodeInt0(3), HtmlBytes.encodeInt1(3), HtmlBytes.encodeInt2(3),
         HtmlBytes.encodeInt0(3), HtmlBytes.encodeInt1(3), HtmlBytes.encodeInt2(3),
         HtmlBytes.encodeInt0(3), HtmlBytes.encodeInt1(3), HtmlBytes.encodeInt2(3),
@@ -522,17 +522,17 @@ public class HtmlCompilerTestInternal {
     testAux(
         compiler,
 
-        HtmlRecorder._DOCUMENT_NODES_NEXT,
+        HtmlMarkup._DOCUMENT_NODES_NEXT,
         HtmlBytes.encodeInt0(18), HtmlBytes.encodeInt1(18), HtmlBytes.encodeInt2(18),
 
-        HtmlRecorder._ELEMENT_NODES_NEXT,
+        HtmlMarkup._ELEMENT_NODES_NEXT,
         HtmlBytes.encodeInt0(15), HtmlBytes.encodeInt1(15), HtmlBytes.encodeInt2(15),
         HtmlBytes.encodeInt0(15), HtmlBytes.encodeInt1(15), HtmlBytes.encodeInt2(15),
         HtmlBytes.encodeInt0(11), HtmlBytes.encodeInt1(11), HtmlBytes.encodeInt2(11),
         HtmlBytes.encodeInt0(18), HtmlBytes.encodeInt1(18), HtmlBytes.encodeInt2(18),
         len(4),
 
-        HtmlRecorder._ELEMENT_NODES_EXHAUSTED,
+        HtmlMarkup._ELEMENT_NODES_EXHAUSTED,
         HtmlBytes.encodeInt0(5), HtmlBytes.encodeInt1(5), HtmlBytes.encodeInt2(5),
         HtmlBytes.encodeInt0(5), HtmlBytes.encodeInt1(5), HtmlBytes.encodeInt2(5),
         HtmlBytes.encodeInt0(3), HtmlBytes.encodeInt1(3), HtmlBytes.encodeInt2(3),
@@ -546,10 +546,10 @@ public class HtmlCompilerTestInternal {
     testAux(
         compiler,
 
-        HtmlRecorder._DOCUMENT_NODES_NEXT,
+        HtmlMarkup._DOCUMENT_NODES_NEXT,
         HtmlBytes.encodeInt0(18), HtmlBytes.encodeInt1(18), HtmlBytes.encodeInt2(18),
 
-        HtmlRecorder._ELEMENT_NODES_EXHAUSTED,
+        HtmlMarkup._ELEMENT_NODES_EXHAUSTED,
         HtmlBytes.encodeInt0(15), HtmlBytes.encodeInt1(15), HtmlBytes.encodeInt2(15),
         HtmlBytes.encodeInt0(15), HtmlBytes.encodeInt1(15), HtmlBytes.encodeInt2(15),
         HtmlBytes.encodeInt0(11), HtmlBytes.encodeInt1(11), HtmlBytes.encodeInt2(11),
@@ -563,7 +563,7 @@ public class HtmlCompilerTestInternal {
     testAux(
         compiler,
 
-        HtmlRecorder._DOCUMENT_NODES_EXHAUSTED,
+        HtmlMarkup._DOCUMENT_NODES_EXHAUSTED,
         HtmlBytes.encodeInt0(18), HtmlBytes.encodeInt1(18), HtmlBytes.encodeInt2(18)
     );
   }
@@ -572,8 +572,8 @@ public class HtmlCompilerTestInternal {
   Ambiguous
   """)
   public void testCase16() {
-    HtmlRecorder compiler;
-    compiler = new HtmlRecorder();
+    HtmlMarkup compiler;
+    compiler = new HtmlMarkup();
 
     compiler.compilationBegin();
 
@@ -635,17 +635,17 @@ public class HtmlCompilerTestInternal {
     testAux(
         compiler,
 
-        HtmlRecorder._DOCUMENT_NODES_NEXT,
+        HtmlMarkup._DOCUMENT_NODES_NEXT,
         HtmlBytes.encodeInt0(42), HtmlBytes.encodeInt1(42), HtmlBytes.encodeInt2(42),
 
-        HtmlRecorder._ELEMENT_NODES_NEXT,
+        HtmlMarkup._ELEMENT_NODES_NEXT,
         HtmlBytes.encodeInt0(39), HtmlBytes.encodeInt1(39), HtmlBytes.encodeInt2(39),
         HtmlBytes.encodeInt0(37), HtmlBytes.encodeInt1(37), HtmlBytes.encodeInt2(37),
         HtmlBytes.encodeInt0(33), HtmlBytes.encodeInt1(33), HtmlBytes.encodeInt2(33),
         HtmlBytes.encodeInt0(42), HtmlBytes.encodeInt1(42), HtmlBytes.encodeInt2(42),
         len(4),
 
-        HtmlRecorder._ELEMENT_NODES_HAS_NEXT,
+        HtmlMarkup._ELEMENT_NODES_HAS_NEXT,
         HtmlBytes.encodeInt0(12), HtmlBytes.encodeInt1(12), HtmlBytes.encodeInt2(12),
         HtmlBytes.encodeInt0(10), HtmlBytes.encodeInt1(10), HtmlBytes.encodeInt2(10),
         HtmlBytes.encodeInt0(8), HtmlBytes.encodeInt1(8), HtmlBytes.encodeInt2(8),
@@ -665,8 +665,8 @@ public class HtmlCompilerTestInternal {
   - email input
   """)
   public void testCase31() {
-    HtmlRecorder compiler;
-    compiler = new HtmlRecorder();
+    HtmlMarkup compiler;
+    compiler = new HtmlMarkup();
 
     compiler.compilationBegin();
 
@@ -694,10 +694,10 @@ public class HtmlCompilerTestInternal {
     testAux(
         compiler,
 
-        HtmlRecorder._DOCUMENT_NODES_NEXT,
+        HtmlMarkup._DOCUMENT_NODES_NEXT,
         HtmlBytes.encodeInt0(20), HtmlBytes.encodeInt1(20), HtmlBytes.encodeInt2(20),
 
-        HtmlRecorder._ELEMENT_START,
+        HtmlMarkup._ELEMENT_START,
         HtmlBytes.encodeInt0(11), HtmlBytes.encodeInt1(11), HtmlBytes.encodeInt2(11),
         HtmlBytes.encodeInt0(11), HtmlBytes.encodeInt1(11), HtmlBytes.encodeInt2(11),
         HtmlBytes.encodeInt0(11), HtmlBytes.encodeInt1(11), HtmlBytes.encodeInt2(11),
@@ -718,10 +718,10 @@ public class HtmlCompilerTestInternal {
     testAux(
         compiler,
 
-        HtmlRecorder._DOCUMENT_NODES_NEXT,
+        HtmlMarkup._DOCUMENT_NODES_NEXT,
         HtmlBytes.encodeInt0(20), HtmlBytes.encodeInt1(20), HtmlBytes.encodeInt2(20),
 
-        HtmlRecorder._ELEMENT_ATTRS_NEXT,
+        HtmlMarkup._ELEMENT_ATTRS_NEXT,
         HtmlBytes.encodeInt0(15), HtmlBytes.encodeInt1(15), HtmlBytes.encodeInt2(15),
         HtmlBytes.encodeInt0(11), HtmlBytes.encodeInt1(11), HtmlBytes.encodeInt2(11),
         HtmlBytes.encodeInt0(11), HtmlBytes.encodeInt1(11), HtmlBytes.encodeInt2(11),
@@ -738,10 +738,10 @@ public class HtmlCompilerTestInternal {
     testAux(
         compiler,
 
-        HtmlRecorder._DOCUMENT_NODES_NEXT,
+        HtmlMarkup._DOCUMENT_NODES_NEXT,
         HtmlBytes.encodeInt0(20), HtmlBytes.encodeInt1(20), HtmlBytes.encodeInt2(20),
 
-        HtmlRecorder._ATTRIBUTE_VALUES_NEXT,
+        HtmlMarkup._ATTRIBUTE_VALUES_NEXT,
         HtmlBytes.encodeInt0(15), HtmlBytes.encodeInt1(15), HtmlBytes.encodeInt2(15),
         HtmlBytes.encodeInt0(11), HtmlBytes.encodeInt1(11), HtmlBytes.encodeInt2(11),
         HtmlBytes.encodeInt0(11), HtmlBytes.encodeInt1(11), HtmlBytes.encodeInt2(11),
@@ -756,10 +756,10 @@ public class HtmlCompilerTestInternal {
     testAux(
         compiler,
 
-        HtmlRecorder._DOCUMENT_NODES_NEXT,
+        HtmlMarkup._DOCUMENT_NODES_NEXT,
         HtmlBytes.encodeInt0(20), HtmlBytes.encodeInt1(20), HtmlBytes.encodeInt2(20),
 
-        HtmlRecorder._ATTRIBUTE_VALUES_EXHAUSTED,
+        HtmlMarkup._ATTRIBUTE_VALUES_EXHAUSTED,
         HtmlBytes.encodeInt0(15), HtmlBytes.encodeInt1(15), HtmlBytes.encodeInt2(15),
         HtmlBytes.encodeInt0(11), HtmlBytes.encodeInt1(11), HtmlBytes.encodeInt2(11),
         HtmlBytes.encodeInt0(11), HtmlBytes.encodeInt1(11), HtmlBytes.encodeInt2(11),
@@ -773,10 +773,10 @@ public class HtmlCompilerTestInternal {
     testAux(
         compiler,
 
-        HtmlRecorder._DOCUMENT_NODES_NEXT,
+        HtmlMarkup._DOCUMENT_NODES_NEXT,
         HtmlBytes.encodeInt0(20), HtmlBytes.encodeInt1(20), HtmlBytes.encodeInt2(20),
 
-        HtmlRecorder._ELEMENT_ATTRS_HAS_NEXT,
+        HtmlMarkup._ELEMENT_ATTRS_HAS_NEXT,
         HtmlBytes.encodeInt0(15), HtmlBytes.encodeInt1(15), HtmlBytes.encodeInt2(15),
         HtmlBytes.encodeInt0(11), HtmlBytes.encodeInt1(11), HtmlBytes.encodeInt2(11),
         HtmlBytes.encodeInt0(11), HtmlBytes.encodeInt1(11), HtmlBytes.encodeInt2(11),
@@ -792,10 +792,10 @@ public class HtmlCompilerTestInternal {
     testAux(
         compiler,
 
-        HtmlRecorder._DOCUMENT_NODES_NEXT,
+        HtmlMarkup._DOCUMENT_NODES_NEXT,
         HtmlBytes.encodeInt0(20), HtmlBytes.encodeInt1(20), HtmlBytes.encodeInt2(20),
 
-        HtmlRecorder._ELEMENT_ATTRS_NEXT,
+        HtmlMarkup._ELEMENT_ATTRS_NEXT,
         HtmlBytes.encodeInt0(17), HtmlBytes.encodeInt1(17), HtmlBytes.encodeInt2(17),
         HtmlBytes.encodeInt0(11), HtmlBytes.encodeInt1(11), HtmlBytes.encodeInt2(11),
         HtmlBytes.encodeInt0(11), HtmlBytes.encodeInt1(11), HtmlBytes.encodeInt2(11),
@@ -809,10 +809,10 @@ public class HtmlCompilerTestInternal {
     testAux(
         compiler,
 
-        HtmlRecorder._DOCUMENT_NODES_NEXT,
+        HtmlMarkup._DOCUMENT_NODES_NEXT,
         HtmlBytes.encodeInt0(20), HtmlBytes.encodeInt1(20), HtmlBytes.encodeInt2(20),
 
-        HtmlRecorder._ELEMENT_ATTRS_EXHAUSTED,
+        HtmlMarkup._ELEMENT_ATTRS_EXHAUSTED,
         HtmlBytes.encodeInt0(17), HtmlBytes.encodeInt1(17), HtmlBytes.encodeInt2(17),
         HtmlBytes.encodeInt0(11), HtmlBytes.encodeInt1(11), HtmlBytes.encodeInt2(11),
         HtmlBytes.encodeInt0(11), HtmlBytes.encodeInt1(11), HtmlBytes.encodeInt2(11),
@@ -825,7 +825,7 @@ public class HtmlCompilerTestInternal {
     return (byte) value;
   }
 
-  private void testAux(HtmlRecorder compiler, byte... expected) {
+  private void testAux(HtmlMarkup compiler, byte... expected) {
     byte[] result;
     result = Arrays.copyOf(compiler.aux, compiler.auxIndex);
 

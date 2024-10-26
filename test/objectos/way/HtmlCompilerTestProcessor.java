@@ -26,8 +26,8 @@ public class HtmlCompilerTestProcessor {
   <html></html>
   """)
   public void testCase00() {
-    HtmlRecorder compiler;
-    compiler = new HtmlRecorder();
+    HtmlMarkup compiler;
+    compiler = new HtmlMarkup();
 
     compiler.compilationBegin();
 
@@ -50,8 +50,8 @@ public class HtmlCompilerTestProcessor {
   <html lang="pt-BR"></html>
   """)
   public void testCase01() {
-    HtmlRecorder compiler;
-    compiler = new HtmlRecorder();
+    HtmlMarkup compiler;
+    compiler = new HtmlMarkup();
 
     compiler.compilationBegin();
 
@@ -73,7 +73,7 @@ public class HtmlCompilerTestProcessor {
     );
   }
 
-  private String test(HtmlRecorder compiler) {
+  private String test(HtmlMarkup compiler) {
     StringBuilder out;
     out = new StringBuilder();
 

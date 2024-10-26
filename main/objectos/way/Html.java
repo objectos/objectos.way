@@ -28,11 +28,7 @@ import java.util.stream.Stream;
 /**
  * The <strong>Objectos HTML</strong> main class.
  */
-public final class Html extends HtmlRecorder {
-
-  /*
-   * name types
-   */
+public final class Html {
 
   /**
    * The name of an HTML attribute.
@@ -153,70 +149,139 @@ public final class Html extends HtmlRecorder {
   }
 
   /**
-   * A DOM-like view of a {@link Html.Template} which allows for a one-pass,
+   * A DOM-like view of a {@code Html.Template} which allows for a one-pass,
    * one-direction traversal of the HTML document.
    */
   public sealed interface Dom {
 
     /**
-     * An attribute of a {@link Html.Template}.
+     * An attribute of a {@code Html.Template}.
      */
     sealed interface Attribute {
 
+      /**
+       * Returns the name of this attribute.
+       *
+       * @return the name of this attribute.
+       */
       String name();
 
+      /**
+       * Returns {@code true} if this is a boolean attribute or {@code false}
+       * otherwise.
+       *
+       * @return {@code true} if this is a boolean attribute or {@code false}
+       *         otherwise
+       */
       boolean booleanAttribute();
 
+      /**
+       * Returns {@code true} if the value of this attribute must be enclosed in
+       * single quotes and {@code false} otherwise.
+       *
+       * @return {@code true} if the value of this attribute must be enclosed in
+       *         single quotes and {@code false} otherwise
+       */
       boolean singleQuoted();
 
+      /**
+       * Returns the value of this attribute.
+       *
+       * @return the value of this attribute.
+       */
       String value();
 
-      default boolean hasName(String name) {
-        return name().equals(name);
+      /**
+       * Tests if the name of this attribute is equal to the specified value.
+       *
+       * @param value
+       *        the value to compare against the name of this attribute
+       *
+       * @return {@code true} if the name of this attribute is equal to the
+       *         specified value or {@code false} otherwise
+       */
+      default boolean hasName(String value) {
+        return name().equals(value);
       }
 
     }
 
     /**
-     * The document type of a {@link Html.Template}.
+     * The document type of a {@code Html.Template}.
      */
     sealed interface DocumentType extends Node {}
 
     /**
-     * An element of a {@link Html.Template}.
+     * An element of a {@code Html.Template}.
      */
     sealed interface Element extends Node {
 
+      /**
+       * Returns the attributes of this element.
+       *
+       * @return the attributes of this element.
+       */
       Lang.IterableOnce<Dom.Attribute> attributes();
 
+      /**
+       * Returns {@code true} if this is a void element or {@code false}
+       * otherwise.
+       *
+       * @return {@code true} if this is a void element or {@code false}
+       *         otherwise
+       */
       boolean isVoid();
 
+      /**
+       * Returns the name of this element.
+       *
+       * @return the name of this element
+       */
       String name();
 
+      /**
+       * Return the child nodes of this element.
+       *
+       * @return the child nodes of this element
+       */
       Lang.IterableOnce<Node> nodes();
 
-      default boolean hasName(String name) {
-        return name().equals(name);
+      /**
+       * Tests if the name of this element is equal to the specified value.
+       *
+       * @param value
+       *        the value to compare against the name of this element
+       *
+       * @return {@code true} if the name of this element is equal to the
+       *         specified value or {@code false} otherwise
+       */
+      default boolean hasName(String value) {
+        return name().equals(value);
       }
 
     }
 
     /**
-     * A node of a {@link Html.Template}.
+     * A node of a {@code Html.Template}.
      */
     sealed interface Node {}
 
     /**
-     * A raw node of a {@link Html.Template}.
+     * A raw HTML node of a {@code Html.Template}.
      */
     sealed interface Raw extends Node {
 
+      /**
+       * Return the value of this raw HTML node.
+       *
+       * @return the value of this raw HTML node.
+       */
       String value();
 
     }
 
     /**
-     * A text node of a {@link Html.Template}.
+     * A text node of a {@code Html.Template}.
      */
     sealed interface Text extends Node {
 
@@ -228,6 +293,11 @@ public final class Html extends HtmlRecorder {
        */
       String testable();
 
+      /**
+       * Return the value of this text node.
+       *
+       * @return the value of this text node.
+       */
       String value();
 
     }
@@ -241,8 +311,8 @@ public final class Html extends HtmlRecorder {
      * @return a newly created DOM object
      */
     static Dom create(Html.Template template) {
-      Html html;
-      html = new Html();
+      HtmlMarkup html;
+      html = new HtmlMarkup();
 
       template.accept(html);
 
@@ -285,12 +355,6 @@ public final class Html extends HtmlRecorder {
      *         tag and {@code false} otherwise
      */
     boolean endTag();
-
-  }
-
-  public interface ElementComponent {
-
-    Html.Instruction render();
 
   }
 
@@ -406,6 +470,45 @@ public final class Html extends HtmlRecorder {
   }
 
   /**
+   * Represents an HTML {@code id} attribute and its value.
+   */
+  public sealed interface Id extends AttributeObject {
+
+    /**
+     * Creates a new {@code Id} instance with the specified value.
+     *
+     * @param value
+     *        the value of this HTML {@code id} attribute.
+     *
+     * @return a newly constructed {@code Id} instance
+     */
+    static Id of(String value) {
+      Check.notNull(value, "value == null");
+
+      return new HtmlId(value);
+    }
+
+    /**
+     * The {@code id} attribute name.
+     *
+     * @return the {@code id} attribute name
+     */
+    @Override
+    default AttributeName name() {
+      return HtmlAttributeName.ID;
+    }
+
+    /**
+     * The {@code id} value.
+     *
+     * @return the {@code id} value
+     */
+    @Override
+    String value();
+
+  }
+
+  /**
    * Represents an instruction that generates part of the output of an HTML
    * template.
    */
@@ -507,9 +610,2906 @@ public final class Html extends HtmlRecorder {
     }
 
     @Override
-    final Html $html() {
+    final HtmlMarkup $html() {
       return parent.$html();
     }
+
+  }
+
+  /**
+   * Provides methods for defining the structure of an HTML document.
+   */
+  public sealed interface Markup extends MarkupAttributes, MarkupElements permits HtmlMarkup {
+
+    /**
+     * Creates a new {@code Markup} instance.
+     *
+     * @return a newly created {@code Markup} instance
+     */
+    static Markup create() {
+      return new HtmlMarkup();
+    }
+
+    /**
+     * Renders the specified plugin as part of this HTML instance.
+     *
+     * @param plugin
+     *        the plugin to be rendered as part of this HTML instance
+     *
+     * @return an instruction representing the rendered plugin.
+     */
+    Html.Instruction.OfFragment renderPlugin(Consumer<Html.Markup> plugin);
+
+    /**
+     * Renders the specified template as part of this HTML instance.
+     *
+     * @param template
+     *        the template to be rendered as part of this HTML instance
+     *
+     * @return an instruction representing the rendered template.
+     */
+    Html.Instruction.OfFragment renderTemplate(Html.Template template);
+
+  }
+
+  /**
+   * Provides methods for defining the attributes of an HTML document.
+   */
+  public sealed interface MarkupAttributes {
+
+    /**
+     * Renders the {@code accesskey} attribute with the specified value.
+     *
+     * @param value
+     *        the value of the attribute
+     *
+     * @return an instruction representing this attribute.
+     */
+    Html.Instruction.OfAttribute accesskey(String value);
+
+    /**
+     * Renders the {@code action} attribute with the specified value.
+     *
+     * @param value
+     *        the value of the attribute
+     *
+     * @return an instruction representing this attribute.
+     */
+    Html.Instruction.OfAttribute action(String value);
+
+    /**
+     * Renders the {@code align} attribute with the specified value.
+     *
+     * @param value
+     *        the value of the attribute
+     *
+     * @return an instruction representing this attribute.
+     */
+    Html.Instruction.OfAttribute align(String value);
+
+    /**
+     * Renders the {@code alignment-baseline} attribute with the specified
+     * value.
+     *
+     * @param value
+     *        the value of the attribute
+     *
+     * @return an instruction representing this attribute.
+     */
+    Html.Instruction.OfAttribute alignmentBaseline(String value);
+
+    /**
+     * Renders the {@code alt} attribute with the specified value.
+     *
+     * @param value
+     *        the value of the attribute
+     *
+     * @return an instruction representing this attribute.
+     */
+    Html.Instruction.OfAttribute alt(String value);
+
+    /**
+     * Renders the {@code aria-hidden} attribute with the specified value.
+     *
+     * @param value
+     *        the value of the attribute
+     *
+     * @return an instruction representing this attribute.
+     */
+    Html.Instruction.OfAttribute ariaHidden(String value);
+
+    /**
+     * Renders the {@code aria-label} attribute with the specified value.
+     *
+     * @param value
+     *        the value of the attribute
+     *
+     * @return an instruction representing this attribute.
+     */
+    Html.Instruction.OfAttribute ariaLabel(String value);
+
+    /**
+     * Renders the {@code async} boolean attribute.
+     *
+     * @return an instruction representing this attribute.
+     */
+    Html.Instruction.OfAttribute async();
+
+    /**
+     * Renders the {@code autocomplete} attribute with the specified value.
+     *
+     * @param value
+     *        the value of the attribute
+     *
+     * @return an instruction representing this attribute.
+     */
+    Html.Instruction.OfAttribute autocomplete(String value);
+
+    /**
+     * Renders the {@code autofocus} boolean attribute.
+     *
+     * @return an instruction representing this attribute.
+     */
+    Html.Instruction.OfAttribute autofocus();
+
+    /**
+     * Renders the {@code baseline-shift} attribute with the specified value.
+     *
+     * @param value
+     *        the value of the attribute
+     *
+     * @return an instruction representing this attribute.
+     */
+    Html.Instruction.OfAttribute baselineShift(String value);
+
+    /**
+     * Renders the {@code border} attribute with the specified value.
+     *
+     * @param value
+     *        the value of the attribute
+     *
+     * @return an instruction representing this attribute.
+     */
+    Html.Instruction.OfAttribute border(String value);
+
+    /**
+     * Renders the {@code cellpadding} attribute with the specified value.
+     *
+     * @param value
+     *        the value of the attribute
+     *
+     * @return an instruction representing this attribute.
+     */
+    Html.Instruction.OfAttribute cellpadding(String value);
+
+    /**
+     * Renders the {@code cellspacing} attribute with the specified value.
+     *
+     * @param value
+     *        the value of the attribute
+     *
+     * @return an instruction representing this attribute.
+     */
+    Html.Instruction.OfAttribute cellspacing(String value);
+
+    /**
+     * Renders the {@code charset} attribute with the specified value.
+     *
+     * @param value
+     *        the value of the attribute
+     *
+     * @return an instruction representing this attribute.
+     */
+    Html.Instruction.OfAttribute charset(String value);
+
+    /**
+     * Renders the {@code cite} attribute with the specified value.
+     *
+     * @param value
+     *        the value of the attribute
+     *
+     * @return an instruction representing this attribute.
+     */
+    Html.Instruction.OfAttribute cite(String value);
+
+    /**
+     * Renders the {@code class} attribute with the specified value.
+     *
+     * @param value
+     *        the value of the attribute
+     *
+     * @return an instruction representing this attribute.
+     */
+    Html.Instruction.OfAttribute className(String value);
+
+    /**
+     * Renders the {@code clip-rule} attribute with the specified value.
+     *
+     * @param value
+     *        the value of the attribute
+     *
+     * @return an instruction representing this attribute.
+     */
+    Html.Instruction.OfAttribute clipRule(String value);
+
+    /**
+     * Renders the {@code color} attribute with the specified value.
+     *
+     * @param value
+     *        the value of the attribute
+     *
+     * @return an instruction representing this attribute.
+     */
+    Html.Instruction.OfAttribute color(String value);
+
+    /**
+     * Renders the {@code color-interpolation} attribute with the specified
+     * value.
+     *
+     * @param value
+     *        the value of the attribute
+     *
+     * @return an instruction representing this attribute.
+     */
+    Html.Instruction.OfAttribute colorInterpolation(String value);
+
+    /**
+     * Renders the {@code color-interpolation-filters} attribute with the
+     * specified value.
+     *
+     * @param value
+     *        the value of the attribute
+     *
+     * @return an instruction representing this attribute.
+     */
+    Html.Instruction.OfAttribute colorInterpolationFilters(String value);
+
+    /**
+     * Renders the {@code cols} attribute with the specified value.
+     *
+     * @param value
+     *        the value of the attribute
+     *
+     * @return an instruction representing this attribute.
+     */
+    Html.Instruction.OfAttribute cols(String value);
+
+    /**
+     * Renders the {@code content} attribute with the specified value.
+     *
+     * @param value
+     *        the value of the attribute
+     *
+     * @return an instruction representing this attribute.
+     */
+    Html.Instruction.OfAttribute content(String value);
+
+    /**
+     * Renders the {@code contenteditable} attribute with the specified value.
+     *
+     * @param value
+     *        the value of the attribute
+     *
+     * @return an instruction representing this attribute.
+     */
+    Html.Instruction.OfAttribute contenteditable(String value);
+
+    /**
+     * Renders the {@code crossorigin} attribute with the specified value.
+     *
+     * @param value
+     *        the value of the attribute
+     *
+     * @return an instruction representing this attribute.
+     */
+    Html.Instruction.OfAttribute crossorigin(String value);
+
+    /**
+     * Renders the {@code cursor} attribute with the specified value.
+     *
+     * @param value
+     *        the value of the attribute
+     *
+     * @return an instruction representing this attribute.
+     */
+    Html.Instruction.OfAttribute cursor(String value);
+
+    /**
+     * Renders the {@code d} attribute with the specified value.
+     *
+     * @param value
+     *        the value of the attribute
+     *
+     * @return an instruction representing this attribute.
+     */
+    Html.Instruction.OfAttribute d(String value);
+
+    /**
+     * Renders the {@code defer} boolean attribute.
+     *
+     * @return an instruction representing this attribute.
+     */
+    Html.Instruction.OfAttribute defer();
+
+    /**
+     * Renders the {@code dir} attribute with the specified value.
+     *
+     * @param value
+     *        the value of the attribute
+     *
+     * @return an instruction representing this attribute.
+     */
+    Html.Instruction.OfAttribute dir(String value);
+
+    /**
+     * Renders the {@code direction} attribute with the specified value.
+     *
+     * @param value
+     *        the value of the attribute
+     *
+     * @return an instruction representing this attribute.
+     */
+    Html.Instruction.OfAttribute direction(String value);
+
+    /**
+     * Renders the {@code dirname} attribute with the specified value.
+     *
+     * @param value
+     *        the value of the attribute
+     *
+     * @return an instruction representing this attribute.
+     */
+    Html.Instruction.OfAttribute dirname(String value);
+
+    /**
+     * Renders the {@code disabled} boolean attribute.
+     *
+     * @return an instruction representing this attribute.
+     */
+    Html.Instruction.OfAttribute disabled();
+
+    /**
+     * Renders the {@code display} attribute with the specified value.
+     *
+     * @param value
+     *        the value of the attribute
+     *
+     * @return an instruction representing this attribute.
+     */
+    Html.Instruction.OfAttribute display(String value);
+
+    /**
+     * Renders the {@code dominant-baseline} attribute with the specified value.
+     *
+     * @param value
+     *        the value of the attribute
+     *
+     * @return an instruction representing this attribute.
+     */
+    Html.Instruction.OfAttribute dominantBaseline(String value);
+
+    /**
+     * Renders the {@code draggable} attribute with the specified value.
+     *
+     * @param value
+     *        the value of the attribute
+     *
+     * @return an instruction representing this attribute.
+     */
+    Html.Instruction.OfAttribute draggable(String value);
+
+    /**
+     * Renders the {@code enctype} attribute with the specified value.
+     *
+     * @param value
+     *        the value of the attribute
+     *
+     * @return an instruction representing this attribute.
+     */
+    Html.Instruction.OfAttribute enctype(String value);
+
+    /**
+     * Renders the {@code fill} attribute with the specified value.
+     *
+     * @param value
+     *        the value of the attribute
+     *
+     * @return an instruction representing this attribute.
+     */
+    Html.Instruction.OfAttribute fill(String value);
+
+    /**
+     * Renders the {@code fill-opacity} attribute with the specified value.
+     *
+     * @param value
+     *        the value of the attribute
+     *
+     * @return an instruction representing this attribute.
+     */
+    Html.Instruction.OfAttribute fillOpacity(String value);
+
+    /**
+     * Renders the {@code fill-rule} attribute with the specified value.
+     *
+     * @param value
+     *        the value of the attribute
+     *
+     * @return an instruction representing this attribute.
+     */
+    Html.Instruction.OfAttribute fillRule(String value);
+
+    /**
+     * Renders the {@code filter} attribute with the specified value.
+     *
+     * @param value
+     *        the value of the attribute
+     *
+     * @return an instruction representing this attribute.
+     */
+    Html.Instruction.OfAttribute filter(String value);
+
+    /**
+     * Renders the {@code flood-color} attribute with the specified value.
+     *
+     * @param value
+     *        the value of the attribute
+     *
+     * @return an instruction representing this attribute.
+     */
+    Html.Instruction.OfAttribute floodColor(String value);
+
+    /**
+     * Renders the {@code flood-opacity} attribute with the specified value.
+     *
+     * @param value
+     *        the value of the attribute
+     *
+     * @return an instruction representing this attribute.
+     */
+    Html.Instruction.OfAttribute floodOpacity(String value);
+
+    /**
+     * Renders the {@code font-family} attribute with the specified value.
+     *
+     * @param value
+     *        the value of the attribute
+     *
+     * @return an instruction representing this attribute.
+     */
+    Html.Instruction.OfAttribute fontFamily(String value);
+
+    /**
+     * Renders the {@code font-size} attribute with the specified value.
+     *
+     * @param value
+     *        the value of the attribute
+     *
+     * @return an instruction representing this attribute.
+     */
+    Html.Instruction.OfAttribute fontSize(String value);
+
+    /**
+     * Renders the {@code font-size-adjust} attribute with the specified value.
+     *
+     * @param value
+     *        the value of the attribute
+     *
+     * @return an instruction representing this attribute.
+     */
+    Html.Instruction.OfAttribute fontSizeAdjust(String value);
+
+    /**
+     * Renders the {@code font-stretch} attribute with the specified value.
+     *
+     * @param value
+     *        the value of the attribute
+     *
+     * @return an instruction representing this attribute.
+     */
+    Html.Instruction.OfAttribute fontStretch(String value);
+
+    /**
+     * Renders the {@code font-style} attribute with the specified value.
+     *
+     * @param value
+     *        the value of the attribute
+     *
+     * @return an instruction representing this attribute.
+     */
+    Html.Instruction.OfAttribute fontStyle(String value);
+
+    /**
+     * Renders the {@code font-variant} attribute with the specified value.
+     *
+     * @param value
+     *        the value of the attribute
+     *
+     * @return an instruction representing this attribute.
+     */
+    Html.Instruction.OfAttribute fontVariant(String value);
+
+    /**
+     * Renders the {@code font-weight} attribute with the specified value.
+     *
+     * @param value
+     *        the value of the attribute
+     *
+     * @return an instruction representing this attribute.
+     */
+    Html.Instruction.OfAttribute fontWeight(String value);
+
+    /**
+     * Renders the {@code for} attribute with the specified value.
+     *
+     * @param value
+     *        the value of the attribute
+     *
+     * @return an instruction representing this attribute.
+     */
+    Html.Instruction.OfAttribute forAttr(String value);
+
+    /**
+     * Renders the {@code for} attribute with the specified value.
+     *
+     * @param value
+     *        the value of the attribute
+     *
+     * @return an instruction representing this attribute.
+     */
+    Html.Instruction.OfAttribute forElement(String value);
+
+    /**
+     * Renders the {@code glyph-orientation-horizontal} attribute with the
+     * specified value.
+     *
+     * @param value
+     *        the value of the attribute
+     *
+     * @return an instruction representing this attribute.
+     */
+    Html.Instruction.OfAttribute glyphOrientationHorizontal(String value);
+
+    /**
+     * Renders the {@code glyph-orientation-vertical} attribute with the
+     * specified value.
+     *
+     * @param value
+     *        the value of the attribute
+     *
+     * @return an instruction representing this attribute.
+     */
+    Html.Instruction.OfAttribute glyphOrientationVertical(String value);
+
+    /**
+     * Renders the {@code height} attribute with the specified value.
+     *
+     * @param value
+     *        the value of the attribute
+     *
+     * @return an instruction representing this attribute.
+     */
+    Html.Instruction.OfAttribute height(String value);
+
+    /**
+     * Renders the {@code hidden} boolean attribute.
+     *
+     * @return an instruction representing this attribute.
+     */
+    Html.Instruction.OfAttribute hidden();
+
+    /**
+     * Renders the {@code href} attribute with the specified value.
+     *
+     * @param value
+     *        the value of the attribute
+     *
+     * @return an instruction representing this attribute.
+     */
+    Html.Instruction.OfAttribute href(String value);
+
+    /**
+     * Renders the {@code http-equiv} attribute with the specified value.
+     *
+     * @param value
+     *        the value of the attribute
+     *
+     * @return an instruction representing this attribute.
+     */
+    Html.Instruction.OfAttribute httpEquiv(String value);
+
+    /**
+     * Renders the {@code id} attribute with the specified value.
+     *
+     * @param value
+     *        the value of the attribute
+     *
+     * @return an instruction representing this attribute.
+     */
+    Html.Instruction.OfAttribute id(String value);
+
+    /**
+     * Renders the {@code image-rendering} attribute with the specified value.
+     *
+     * @param value
+     *        the value of the attribute
+     *
+     * @return an instruction representing this attribute.
+     */
+    Html.Instruction.OfAttribute imageRendering(String value);
+
+    /**
+     * Renders the {@code integrity} attribute with the specified value.
+     *
+     * @param value
+     *        the value of the attribute
+     *
+     * @return an instruction representing this attribute.
+     */
+    Html.Instruction.OfAttribute integrity(String value);
+
+    /**
+     * Renders the {@code lang} attribute with the specified value.
+     *
+     * @param value
+     *        the value of the attribute
+     *
+     * @return an instruction representing this attribute.
+     */
+    Html.Instruction.OfAttribute lang(String value);
+
+    /**
+     * Renders the {@code letter-spacing} attribute with the specified value.
+     *
+     * @param value
+     *        the value of the attribute
+     *
+     * @return an instruction representing this attribute.
+     */
+    Html.Instruction.OfAttribute letterSpacing(String value);
+
+    /**
+     * Renders the {@code lighting-color} attribute with the specified value.
+     *
+     * @param value
+     *        the value of the attribute
+     *
+     * @return an instruction representing this attribute.
+     */
+    Html.Instruction.OfAttribute lightingColor(String value);
+
+    /**
+     * Renders the {@code marker-end} attribute with the specified value.
+     *
+     * @param value
+     *        the value of the attribute
+     *
+     * @return an instruction representing this attribute.
+     */
+    Html.Instruction.OfAttribute markerEnd(String value);
+
+    /**
+     * Renders the {@code marker-mid} attribute with the specified value.
+     *
+     * @param value
+     *        the value of the attribute
+     *
+     * @return an instruction representing this attribute.
+     */
+    Html.Instruction.OfAttribute markerMid(String value);
+
+    /**
+     * Renders the {@code marker-start} attribute with the specified value.
+     *
+     * @param value
+     *        the value of the attribute
+     *
+     * @return an instruction representing this attribute.
+     */
+    Html.Instruction.OfAttribute markerStart(String value);
+
+    /**
+     * Renders the {@code mask} attribute with the specified value.
+     *
+     * @param value
+     *        the value of the attribute
+     *
+     * @return an instruction representing this attribute.
+     */
+    Html.Instruction.OfAttribute mask(String value);
+
+    /**
+     * Renders the {@code mask-type} attribute with the specified value.
+     *
+     * @param value
+     *        the value of the attribute
+     *
+     * @return an instruction representing this attribute.
+     */
+    Html.Instruction.OfAttribute maskType(String value);
+
+    /**
+     * Renders the {@code maxlength} attribute with the specified value.
+     *
+     * @param value
+     *        the value of the attribute
+     *
+     * @return an instruction representing this attribute.
+     */
+    Html.Instruction.OfAttribute maxlength(String value);
+
+    /**
+     * Renders the {@code media} attribute with the specified value.
+     *
+     * @param value
+     *        the value of the attribute
+     *
+     * @return an instruction representing this attribute.
+     */
+    Html.Instruction.OfAttribute media(String value);
+
+    /**
+     * Renders the {@code method} attribute with the specified value.
+     *
+     * @param value
+     *        the value of the attribute
+     *
+     * @return an instruction representing this attribute.
+     */
+    Html.Instruction.OfAttribute method(String value);
+
+    /**
+     * Renders the {@code minlength} attribute with the specified value.
+     *
+     * @param value
+     *        the value of the attribute
+     *
+     * @return an instruction representing this attribute.
+     */
+    Html.Instruction.OfAttribute minlength(String value);
+
+    /**
+     * Renders the {@code multiple} boolean attribute.
+     *
+     * @return an instruction representing this attribute.
+     */
+    Html.Instruction.OfAttribute multiple();
+
+    /**
+     * Renders the {@code name} attribute with the specified value.
+     *
+     * @param value
+     *        the value of the attribute
+     *
+     * @return an instruction representing this attribute.
+     */
+    Html.Instruction.OfAttribute name(String value);
+
+    /**
+     * Renders the {@code nomodule} boolean attribute.
+     *
+     * @return an instruction representing this attribute.
+     */
+    Html.Instruction.OfAttribute nomodule();
+
+    /**
+     * Renders the {@code onafterprint} attribute with the specified value.
+     *
+     * @param value
+     *        the value of the attribute
+     *
+     * @return an instruction representing this attribute.
+     */
+    Html.Instruction.OfAttribute onafterprint(String value);
+
+    /**
+     * Renders the {@code onbeforeprint} attribute with the specified value.
+     *
+     * @param value
+     *        the value of the attribute
+     *
+     * @return an instruction representing this attribute.
+     */
+    Html.Instruction.OfAttribute onbeforeprint(String value);
+
+    /**
+     * Renders the {@code onbeforeunload} attribute with the specified value.
+     *
+     * @param value
+     *        the value of the attribute
+     *
+     * @return an instruction representing this attribute.
+     */
+    Html.Instruction.OfAttribute onbeforeunload(String value);
+
+    /**
+     * Renders the {@code onclick} attribute with the specified value.
+     *
+     * @param value
+     *        the value of the attribute
+     *
+     * @return an instruction representing this attribute.
+     */
+    Html.Instruction.OfAttribute onclick(String value);
+
+    /**
+     * Renders the {@code onhashchange} attribute with the specified value.
+     *
+     * @param value
+     *        the value of the attribute
+     *
+     * @return an instruction representing this attribute.
+     */
+    Html.Instruction.OfAttribute onhashchange(String value);
+
+    /**
+     * Renders the {@code onlanguagechange} attribute with the specified value.
+     *
+     * @param value
+     *        the value of the attribute
+     *
+     * @return an instruction representing this attribute.
+     */
+    Html.Instruction.OfAttribute onlanguagechange(String value);
+
+    /**
+     * Renders the {@code onmessage} attribute with the specified value.
+     *
+     * @param value
+     *        the value of the attribute
+     *
+     * @return an instruction representing this attribute.
+     */
+    Html.Instruction.OfAttribute onmessage(String value);
+
+    /**
+     * Renders the {@code onoffline} attribute with the specified value.
+     *
+     * @param value
+     *        the value of the attribute
+     *
+     * @return an instruction representing this attribute.
+     */
+    Html.Instruction.OfAttribute onoffline(String value);
+
+    /**
+     * Renders the {@code ononline} attribute with the specified value.
+     *
+     * @param value
+     *        the value of the attribute
+     *
+     * @return an instruction representing this attribute.
+     */
+    Html.Instruction.OfAttribute ononline(String value);
+
+    /**
+     * Renders the {@code onpagehide} attribute with the specified value.
+     *
+     * @param value
+     *        the value of the attribute
+     *
+     * @return an instruction representing this attribute.
+     */
+    Html.Instruction.OfAttribute onpagehide(String value);
+
+    /**
+     * Renders the {@code onpageshow} attribute with the specified value.
+     *
+     * @param value
+     *        the value of the attribute
+     *
+     * @return an instruction representing this attribute.
+     */
+    Html.Instruction.OfAttribute onpageshow(String value);
+
+    /**
+     * Renders the {@code onpopstate} attribute with the specified value.
+     *
+     * @param value
+     *        the value of the attribute
+     *
+     * @return an instruction representing this attribute.
+     */
+    Html.Instruction.OfAttribute onpopstate(String value);
+
+    /**
+     * Renders the {@code onrejectionhandled} attribute with the specified
+     * value.
+     *
+     * @param value
+     *        the value of the attribute
+     *
+     * @return an instruction representing this attribute.
+     */
+    Html.Instruction.OfAttribute onrejectionhandled(String value);
+
+    /**
+     * Renders the {@code onstorage} attribute with the specified value.
+     *
+     * @param value
+     *        the value of the attribute
+     *
+     * @return an instruction representing this attribute.
+     */
+    Html.Instruction.OfAttribute onstorage(String value);
+
+    /**
+     * Renders the {@code onsubmit} attribute with the specified value.
+     *
+     * @param value
+     *        the value of the attribute
+     *
+     * @return an instruction representing this attribute.
+     */
+    Html.Instruction.OfAttribute onsubmit(String value);
+
+    /**
+     * Renders the {@code onunhandledrejection} attribute with the specified
+     * value.
+     *
+     * @param value
+     *        the value of the attribute
+     *
+     * @return an instruction representing this attribute.
+     */
+    Html.Instruction.OfAttribute onunhandledrejection(String value);
+
+    /**
+     * Renders the {@code onunload} attribute with the specified value.
+     *
+     * @param value
+     *        the value of the attribute
+     *
+     * @return an instruction representing this attribute.
+     */
+    Html.Instruction.OfAttribute onunload(String value);
+
+    /**
+     * Renders the {@code opacity} attribute with the specified value.
+     *
+     * @param value
+     *        the value of the attribute
+     *
+     * @return an instruction representing this attribute.
+     */
+    Html.Instruction.OfAttribute opacity(String value);
+
+    /**
+     * Renders the {@code open} boolean attribute.
+     *
+     * @return an instruction representing this attribute.
+     */
+    Html.Instruction.OfAttribute open();
+
+    /**
+     * Renders the {@code overflow} attribute with the specified value.
+     *
+     * @param value
+     *        the value of the attribute
+     *
+     * @return an instruction representing this attribute.
+     */
+    Html.Instruction.OfAttribute overflow(String value);
+
+    /**
+     * Renders the {@code paint-order} attribute with the specified value.
+     *
+     * @param value
+     *        the value of the attribute
+     *
+     * @return an instruction representing this attribute.
+     */
+    Html.Instruction.OfAttribute paintOrder(String value);
+
+    /**
+     * Renders the {@code placeholder} attribute with the specified value.
+     *
+     * @param value
+     *        the value of the attribute
+     *
+     * @return an instruction representing this attribute.
+     */
+    Html.Instruction.OfAttribute placeholder(String value);
+
+    /**
+     * Renders the {@code pointer-events} attribute with the specified value.
+     *
+     * @param value
+     *        the value of the attribute
+     *
+     * @return an instruction representing this attribute.
+     */
+    Html.Instruction.OfAttribute pointerEvents(String value);
+
+    /**
+     * Renders the {@code property} attribute with the specified value.
+     *
+     * @param value
+     *        the value of the attribute
+     *
+     * @return an instruction representing this attribute.
+     */
+    Html.Instruction.OfAttribute property(String value);
+
+    /**
+     * Renders the {@code readonly} boolean attribute.
+     *
+     * @return an instruction representing this attribute.
+     */
+    Html.Instruction.OfAttribute readonly();
+
+    /**
+     * Renders the {@code referrerpolicy} attribute with the specified value.
+     *
+     * @param value
+     *        the value of the attribute
+     *
+     * @return an instruction representing this attribute.
+     */
+    Html.Instruction.OfAttribute referrerpolicy(String value);
+
+    /**
+     * Renders the {@code rel} attribute with the specified value.
+     *
+     * @param value
+     *        the value of the attribute
+     *
+     * @return an instruction representing this attribute.
+     */
+    Html.Instruction.OfAttribute rel(String value);
+
+    /**
+     * Renders the {@code required} boolean attribute.
+     *
+     * @return an instruction representing this attribute.
+     */
+    Html.Instruction.OfAttribute required();
+
+    /**
+     * Renders the {@code rev} attribute with the specified value.
+     *
+     * @param value
+     *        the value of the attribute
+     *
+     * @return an instruction representing this attribute.
+     */
+    Html.Instruction.OfAttribute rev(String value);
+
+    /**
+     * Renders the {@code reversed} boolean attribute.
+     *
+     * @return an instruction representing this attribute.
+     */
+    Html.Instruction.OfAttribute reversed();
+
+    /**
+     * Renders the {@code role} attribute with the specified value.
+     *
+     * @param value
+     *        the value of the attribute
+     *
+     * @return an instruction representing this attribute.
+     */
+    Html.Instruction.OfAttribute role(String value);
+
+    /**
+     * Renders the {@code rows} attribute with the specified value.
+     *
+     * @param value
+     *        the value of the attribute
+     *
+     * @return an instruction representing this attribute.
+     */
+    Html.Instruction.OfAttribute rows(String value);
+
+    /**
+     * Renders the {@code selected} boolean attribute.
+     *
+     * @return an instruction representing this attribute.
+     */
+    Html.Instruction.OfAttribute selected();
+
+    /**
+     * Renders the {@code shape-rendering} attribute with the specified value.
+     *
+     * @param value
+     *        the value of the attribute
+     *
+     * @return an instruction representing this attribute.
+     */
+    Html.Instruction.OfAttribute shapeRendering(String value);
+
+    /**
+     * Renders the {@code size} attribute with the specified value.
+     *
+     * @param value
+     *        the value of the attribute
+     *
+     * @return an instruction representing this attribute.
+     */
+    Html.Instruction.OfAttribute size(String value);
+
+    /**
+     * Renders the {@code sizes} attribute with the specified value.
+     *
+     * @param value
+     *        the value of the attribute
+     *
+     * @return an instruction representing this attribute.
+     */
+    Html.Instruction.OfAttribute sizes(String value);
+
+    /**
+     * Renders the {@code spellcheck} attribute with the specified value.
+     *
+     * @param value
+     *        the value of the attribute
+     *
+     * @return an instruction representing this attribute.
+     */
+    Html.Instruction.OfAttribute spellcheck(String value);
+
+    /**
+     * Renders the {@code src} attribute with the specified value.
+     *
+     * @param value
+     *        the value of the attribute
+     *
+     * @return an instruction representing this attribute.
+     */
+    Html.Instruction.OfAttribute src(String value);
+
+    /**
+     * Renders the {@code srcset} attribute with the specified value.
+     *
+     * @param value
+     *        the value of the attribute
+     *
+     * @return an instruction representing this attribute.
+     */
+    Html.Instruction.OfAttribute srcset(String value);
+
+    /**
+     * Renders the {@code start} attribute with the specified value.
+     *
+     * @param value
+     *        the value of the attribute
+     *
+     * @return an instruction representing this attribute.
+     */
+    Html.Instruction.OfAttribute start(String value);
+
+    /**
+     * Renders the {@code stop-color} attribute with the specified value.
+     *
+     * @param value
+     *        the value of the attribute
+     *
+     * @return an instruction representing this attribute.
+     */
+    Html.Instruction.OfAttribute stopColor(String value);
+
+    /**
+     * Renders the {@code stop-opacity} attribute with the specified value.
+     *
+     * @param value
+     *        the value of the attribute
+     *
+     * @return an instruction representing this attribute.
+     */
+    Html.Instruction.OfAttribute stopOpacity(String value);
+
+    /**
+     * Renders the {@code stroke} attribute with the specified value.
+     *
+     * @param value
+     *        the value of the attribute
+     *
+     * @return an instruction representing this attribute.
+     */
+    Html.Instruction.OfAttribute stroke(String value);
+
+    /**
+     * Renders the {@code stroke-dasharray} attribute with the specified value.
+     *
+     * @param value
+     *        the value of the attribute
+     *
+     * @return an instruction representing this attribute.
+     */
+    Html.Instruction.OfAttribute strokeDasharray(String value);
+
+    /**
+     * Renders the {@code stroke-dashoffset} attribute with the specified value.
+     *
+     * @param value
+     *        the value of the attribute
+     *
+     * @return an instruction representing this attribute.
+     */
+    Html.Instruction.OfAttribute strokeDashoffset(String value);
+
+    /**
+     * Renders the {@code stroke-linecap} attribute with the specified value.
+     *
+     * @param value
+     *        the value of the attribute
+     *
+     * @return an instruction representing this attribute.
+     */
+    Html.Instruction.OfAttribute strokeLinecap(String value);
+
+    /**
+     * Renders the {@code stroke-linejoin} attribute with the specified value.
+     *
+     * @param value
+     *        the value of the attribute
+     *
+     * @return an instruction representing this attribute.
+     */
+    Html.Instruction.OfAttribute strokeLinejoin(String value);
+
+    /**
+     * Renders the {@code stroke-miterlimit} attribute with the specified value.
+     *
+     * @param value
+     *        the value of the attribute
+     *
+     * @return an instruction representing this attribute.
+     */
+    Html.Instruction.OfAttribute strokeMiterlimit(String value);
+
+    /**
+     * Renders the {@code stroke-opacity} attribute with the specified value.
+     *
+     * @param value
+     *        the value of the attribute
+     *
+     * @return an instruction representing this attribute.
+     */
+    Html.Instruction.OfAttribute strokeOpacity(String value);
+
+    /**
+     * Renders the {@code stroke-width} attribute with the specified value.
+     *
+     * @param value
+     *        the value of the attribute
+     *
+     * @return an instruction representing this attribute.
+     */
+    Html.Instruction.OfAttribute strokeWidth(String value);
+
+    /**
+     * Renders the {@code style} attribute with the specified value.
+     *
+     * @param value
+     *        the value of the attribute
+     *
+     * @return an instruction representing this attribute.
+     */
+    Html.Instruction.OfAttribute inlineStyle(String value);
+
+    /**
+     * Renders the {@code tabindex} attribute with the specified value.
+     *
+     * @param value
+     *        the value of the attribute
+     *
+     * @return an instruction representing this attribute.
+     */
+    Html.Instruction.OfAttribute tabindex(String value);
+
+    /**
+     * Renders the {@code target} attribute with the specified value.
+     *
+     * @param value
+     *        the value of the attribute
+     *
+     * @return an instruction representing this attribute.
+     */
+    Html.Instruction.OfAttribute target(String value);
+
+    /**
+     * Renders the {@code text-anchor} attribute with the specified value.
+     *
+     * @param value
+     *        the value of the attribute
+     *
+     * @return an instruction representing this attribute.
+     */
+    Html.Instruction.OfAttribute textAnchor(String value);
+
+    /**
+     * Renders the {@code text-decoration} attribute with the specified value.
+     *
+     * @param value
+     *        the value of the attribute
+     *
+     * @return an instruction representing this attribute.
+     */
+    Html.Instruction.OfAttribute textDecoration(String value);
+
+    /**
+     * Renders the {@code text-overflow} attribute with the specified value.
+     *
+     * @param value
+     *        the value of the attribute
+     *
+     * @return an instruction representing this attribute.
+     */
+    Html.Instruction.OfAttribute textOverflow(String value);
+
+    /**
+     * Renders the {@code text-rendering} attribute with the specified value.
+     *
+     * @param value
+     *        the value of the attribute
+     *
+     * @return an instruction representing this attribute.
+     */
+    Html.Instruction.OfAttribute textRendering(String value);
+
+    /**
+     * Renders the {@code transform} attribute with the specified value.
+     *
+     * @param value
+     *        the value of the attribute
+     *
+     * @return an instruction representing this attribute.
+     */
+    Html.Instruction.OfAttribute transform(String value);
+
+    /**
+     * Renders the {@code transform-origin} attribute with the specified value.
+     *
+     * @param value
+     *        the value of the attribute
+     *
+     * @return an instruction representing this attribute.
+     */
+    Html.Instruction.OfAttribute transformOrigin(String value);
+
+    /**
+     * Renders the {@code translate} attribute with the specified value.
+     *
+     * @param value
+     *        the value of the attribute
+     *
+     * @return an instruction representing this attribute.
+     */
+    Html.Instruction.OfAttribute translate(String value);
+
+    /**
+     * Renders the {@code type} attribute with the specified value.
+     *
+     * @param value
+     *        the value of the attribute
+     *
+     * @return an instruction representing this attribute.
+     */
+    Html.Instruction.OfAttribute type(String value);
+
+    /**
+     * Renders the {@code unicode-bidi} attribute with the specified value.
+     *
+     * @param value
+     *        the value of the attribute
+     *
+     * @return an instruction representing this attribute.
+     */
+    Html.Instruction.OfAttribute unicodeBidi(String value);
+
+    /**
+     * Renders the {@code value} attribute with the specified value.
+     *
+     * @param value
+     *        the value of the attribute
+     *
+     * @return an instruction representing this attribute.
+     */
+    Html.Instruction.OfAttribute value(String value);
+
+    /**
+     * Renders the {@code vector-effect} attribute with the specified value.
+     *
+     * @param value
+     *        the value of the attribute
+     *
+     * @return an instruction representing this attribute.
+     */
+    Html.Instruction.OfAttribute vectorEffect(String value);
+
+    /**
+     * Renders the {@code viewBox} attribute with the specified value.
+     *
+     * @param value
+     *        the value of the attribute
+     *
+     * @return an instruction representing this attribute.
+     */
+    Html.Instruction.OfAttribute viewBox(String value);
+
+    /**
+     * Renders the {@code visibility} attribute with the specified value.
+     *
+     * @param value
+     *        the value of the attribute
+     *
+     * @return an instruction representing this attribute.
+     */
+    Html.Instruction.OfAttribute visibility(String value);
+
+    /**
+     * Renders the {@code white-space} attribute with the specified value.
+     *
+     * @param value
+     *        the value of the attribute
+     *
+     * @return an instruction representing this attribute.
+     */
+    Html.Instruction.OfAttribute whiteSpace(String value);
+
+    /**
+     * Renders the {@code width} attribute with the specified value.
+     *
+     * @param value
+     *        the value of the attribute
+     *
+     * @return an instruction representing this attribute.
+     */
+    Html.Instruction.OfAttribute width(String value);
+
+    /**
+     * Renders the {@code word-spacing} attribute with the specified value.
+     *
+     * @param value
+     *        the value of the attribute
+     *
+     * @return an instruction representing this attribute.
+     */
+    Html.Instruction.OfAttribute wordSpacing(String value);
+
+    /**
+     * Renders the {@code wrap} attribute with the specified value.
+     *
+     * @param value
+     *        the value of the attribute
+     *
+     * @return an instruction representing this attribute.
+     */
+    Html.Instruction.OfAttribute wrap(String value);
+
+    /**
+     * Renders the {@code writing-mode} attribute with the specified value.
+     *
+     * @param value
+     *        the value of the attribute
+     *
+     * @return an instruction representing this attribute.
+     */
+    Html.Instruction.OfAttribute writingMode(String value);
+
+    /**
+     * Renders the {@code xmlns} attribute with the specified value.
+     *
+     * @param value
+     *        the value of the attribute
+     *
+     * @return an instruction representing this attribute.
+     */
+    Html.Instruction.OfAttribute xmlns(String value);
+
+  }
+
+  /**
+   * Provides methods for defining the elements of an HTML document.
+   */
+  public sealed interface MarkupElements {
+
+    /**
+     * Renders the {@code <!DOCTYPE html>} doctype.
+     */
+    void doctype();
+
+    /**
+     * Renders the {@code a} element with the specified content.
+     *
+     * @param contents
+     *        the attributes and children of this element
+     *
+     * @return an instruction representing this element.
+     */
+    Html.Instruction.OfElement a(Html.Instruction... contents);
+
+    /**
+     * Renders the {@code a} element with the specified text.
+     *
+     * @param text
+     *        the text value of this element
+     *
+     * @return an instruction representing this element.
+     */
+    Html.Instruction.OfElement a(String text);
+
+    /**
+     * Renders the {@code abbr} element with the specified content.
+     *
+     * @param contents
+     *        the attributes and children of this element
+     *
+     * @return an instruction representing this element.
+     */
+    Html.Instruction.OfElement abbr(Html.Instruction... contents);
+
+    /**
+     * Renders the {@code abbr} element with the specified text.
+     *
+     * @param text
+     *        the text value of this element
+     *
+     * @return an instruction representing this element.
+     */
+    Html.Instruction.OfElement abbr(String text);
+
+    /**
+     * Renders the {@code article} element with the specified content.
+     *
+     * @param contents
+     *        the attributes and children of this element
+     *
+     * @return an instruction representing this element.
+     */
+    Html.Instruction.OfElement article(Html.Instruction... contents);
+
+    /**
+     * Renders the {@code article} element with the specified text.
+     *
+     * @param text
+     *        the text value of this element
+     *
+     * @return an instruction representing this element.
+     */
+    Html.Instruction.OfElement article(String text);
+
+    /**
+     * Renders the {@code b} element with the specified content.
+     *
+     * @param contents
+     *        the attributes and children of this element
+     *
+     * @return an instruction representing this element.
+     */
+    Html.Instruction.OfElement b(Html.Instruction... contents);
+
+    /**
+     * Renders the {@code b} element with the specified text.
+     *
+     * @param text
+     *        the text value of this element
+     *
+     * @return an instruction representing this element.
+     */
+    Html.Instruction.OfElement b(String text);
+
+    /**
+     * Renders the {@code blockquote} element with the specified content.
+     *
+     * @param contents
+     *        the attributes and children of this element
+     *
+     * @return an instruction representing this element.
+     */
+    Html.Instruction.OfElement blockquote(Html.Instruction... contents);
+
+    /**
+     * Renders the {@code blockquote} element with the specified text.
+     *
+     * @param text
+     *        the text value of this element
+     *
+     * @return an instruction representing this element.
+     */
+    Html.Instruction.OfElement blockquote(String text);
+
+    /**
+     * Renders the {@code body} element with the specified content.
+     *
+     * @param contents
+     *        the attributes and children of this element
+     *
+     * @return an instruction representing this element.
+     */
+    Html.Instruction.OfElement body(Html.Instruction... contents);
+
+    /**
+     * Renders the {@code body} element with the specified text.
+     *
+     * @param text
+     *        the text value of this element
+     *
+     * @return an instruction representing this element.
+     */
+    Html.Instruction.OfElement body(String text);
+
+    /**
+     * Renders the {@code br} element with the specified content.
+     *
+     * @param contents
+     *        the attributes and children of this element
+     *
+     * @return an instruction representing this element.
+     */
+    Html.Instruction.OfElement br(Html.Instruction.OfVoid... contents);
+
+    /**
+     * Renders the {@code button} element with the specified content.
+     *
+     * @param contents
+     *        the attributes and children of this element
+     *
+     * @return an instruction representing this element.
+     */
+    Html.Instruction.OfElement button(Html.Instruction... contents);
+
+    /**
+     * Renders the {@code button} element with the specified text.
+     *
+     * @param text
+     *        the text value of this element
+     *
+     * @return an instruction representing this element.
+     */
+    Html.Instruction.OfElement button(String text);
+
+    /**
+     * Renders the {@code clipPath} element with the specified content.
+     *
+     * @param contents
+     *        the attributes and children of this element
+     *
+     * @return an instruction representing this element.
+     */
+    Html.Instruction.OfElement clipPath(Html.Instruction... contents);
+
+    /**
+     * Renders the {@code clipPath} attribute or element with the specified
+     * text.
+     *
+     * @param text
+     *        the text value of this attribute or element
+     *
+     * @return an instruction representing this attribute or element.
+     */
+    Html.Instruction.OfElement clipPath(String text);
+
+    /**
+     * Renders the {@code code} element with the specified content.
+     *
+     * @param contents
+     *        the attributes and children of this element
+     *
+     * @return an instruction representing this element.
+     */
+    Html.Instruction.OfElement code(Html.Instruction... contents);
+
+    /**
+     * Renders the {@code code} element with the specified text.
+     *
+     * @param text
+     *        the text value of this element
+     *
+     * @return an instruction representing this element.
+     */
+    Html.Instruction.OfElement code(String text);
+
+    /**
+     * Renders the {@code dd} element with the specified content.
+     *
+     * @param contents
+     *        the attributes and children of this element
+     *
+     * @return an instruction representing this element.
+     */
+    Html.Instruction.OfElement dd(Html.Instruction... contents);
+
+    /**
+     * Renders the {@code dd} element with the specified text.
+     *
+     * @param text
+     *        the text value of this element
+     *
+     * @return an instruction representing this element.
+     */
+    Html.Instruction.OfElement dd(String text);
+
+    /**
+     * Renders the {@code defs} element with the specified content.
+     *
+     * @param contents
+     *        the attributes and children of this element
+     *
+     * @return an instruction representing this element.
+     */
+    Html.Instruction.OfElement defs(Html.Instruction... contents);
+
+    /**
+     * Renders the {@code defs} element with the specified text.
+     *
+     * @param text
+     *        the text value of this element
+     *
+     * @return an instruction representing this element.
+     */
+    Html.Instruction.OfElement defs(String text);
+
+    /**
+     * Renders the {@code details} element with the specified content.
+     *
+     * @param contents
+     *        the attributes and children of this element
+     *
+     * @return an instruction representing this element.
+     */
+    Html.Instruction.OfElement details(Html.Instruction... contents);
+
+    /**
+     * Renders the {@code details} element with the specified text.
+     *
+     * @param text
+     *        the text value of this element
+     *
+     * @return an instruction representing this element.
+     */
+    Html.Instruction.OfElement details(String text);
+
+    /**
+     * Renders the {@code div} element with the specified content.
+     *
+     * @param contents
+     *        the attributes and children of this element
+     *
+     * @return an instruction representing this element.
+     */
+    Html.Instruction.OfElement div(Html.Instruction... contents);
+
+    /**
+     * Renders the {@code div} element with the specified text.
+     *
+     * @param text
+     *        the text value of this element
+     *
+     * @return an instruction representing this element.
+     */
+    Html.Instruction.OfElement div(String text);
+
+    /**
+     * Renders the {@code dl} element with the specified content.
+     *
+     * @param contents
+     *        the attributes and children of this element
+     *
+     * @return an instruction representing this element.
+     */
+    Html.Instruction.OfElement dl(Html.Instruction... contents);
+
+    /**
+     * Renders the {@code dl} element with the specified text.
+     *
+     * @param text
+     *        the text value of this element
+     *
+     * @return an instruction representing this element.
+     */
+    Html.Instruction.OfElement dl(String text);
+
+    /**
+     * Renders the {@code dt} element with the specified content.
+     *
+     * @param contents
+     *        the attributes and children of this element
+     *
+     * @return an instruction representing this element.
+     */
+    Html.Instruction.OfElement dt(Html.Instruction... contents);
+
+    /**
+     * Renders the {@code dt} element with the specified text.
+     *
+     * @param text
+     *        the text value of this element
+     *
+     * @return an instruction representing this element.
+     */
+    Html.Instruction.OfElement dt(String text);
+
+    /**
+     * Renders the {@code em} element with the specified content.
+     *
+     * @param contents
+     *        the attributes and children of this element
+     *
+     * @return an instruction representing this element.
+     */
+    Html.Instruction.OfElement em(Html.Instruction... contents);
+
+    /**
+     * Renders the {@code em} element with the specified text.
+     *
+     * @param text
+     *        the text value of this element
+     *
+     * @return an instruction representing this element.
+     */
+    Html.Instruction.OfElement em(String text);
+
+    /**
+     * Renders the {@code fieldset} element with the specified content.
+     *
+     * @param contents
+     *        the attributes and children of this element
+     *
+     * @return an instruction representing this element.
+     */
+    Html.Instruction.OfElement fieldset(Html.Instruction... contents);
+
+    /**
+     * Renders the {@code fieldset} element with the specified text.
+     *
+     * @param text
+     *        the text value of this element
+     *
+     * @return an instruction representing this element.
+     */
+    Html.Instruction.OfElement fieldset(String text);
+
+    /**
+     * Renders the {@code figure} element with the specified content.
+     *
+     * @param contents
+     *        the attributes and children of this element
+     *
+     * @return an instruction representing this element.
+     */
+    Html.Instruction.OfElement figure(Html.Instruction... contents);
+
+    /**
+     * Renders the {@code figure} element with the specified text.
+     *
+     * @param text
+     *        the text value of this element
+     *
+     * @return an instruction representing this element.
+     */
+    Html.Instruction.OfElement figure(String text);
+
+    /**
+     * Renders the {@code footer} element with the specified content.
+     *
+     * @param contents
+     *        the attributes and children of this element
+     *
+     * @return an instruction representing this element.
+     */
+    Html.Instruction.OfElement footer(Html.Instruction... contents);
+
+    /**
+     * Renders the {@code footer} element with the specified text.
+     *
+     * @param text
+     *        the text value of this element
+     *
+     * @return an instruction representing this element.
+     */
+    Html.Instruction.OfElement footer(String text);
+
+    /**
+     * Renders the {@code form} element with the specified content.
+     *
+     * @param contents
+     *        the attributes and children of this element
+     *
+     * @return an instruction representing this element.
+     */
+    Html.Instruction.OfElement form(Html.Instruction... contents);
+
+    /**
+     * Renders the {@code form} attribute or element with the specified text.
+     *
+     * @param text
+     *        the text value of this attribute or element
+     *
+     * @return an instruction representing this attribute or element.
+     */
+    Html.Instruction.OfElement form(String text);
+
+    /**
+     * Renders the {@code g} element with the specified content.
+     *
+     * @param contents
+     *        the attributes and children of this element
+     *
+     * @return an instruction representing this element.
+     */
+    Html.Instruction.OfElement g(Html.Instruction... contents);
+
+    /**
+     * Renders the {@code g} element with the specified text.
+     *
+     * @param text
+     *        the text value of this element
+     *
+     * @return an instruction representing this element.
+     */
+    Html.Instruction.OfElement g(String text);
+
+    /**
+     * Renders the {@code h1} element with the specified content.
+     *
+     * @param contents
+     *        the attributes and children of this element
+     *
+     * @return an instruction representing this element.
+     */
+    Html.Instruction.OfElement h1(Html.Instruction... contents);
+
+    /**
+     * Renders the {@code h1} element with the specified text.
+     *
+     * @param text
+     *        the text value of this element
+     *
+     * @return an instruction representing this element.
+     */
+    Html.Instruction.OfElement h1(String text);
+
+    /**
+     * Renders the {@code h2} element with the specified content.
+     *
+     * @param contents
+     *        the attributes and children of this element
+     *
+     * @return an instruction representing this element.
+     */
+    Html.Instruction.OfElement h2(Html.Instruction... contents);
+
+    /**
+     * Renders the {@code h2} element with the specified text.
+     *
+     * @param text
+     *        the text value of this element
+     *
+     * @return an instruction representing this element.
+     */
+    Html.Instruction.OfElement h2(String text);
+
+    /**
+     * Renders the {@code h3} element with the specified content.
+     *
+     * @param contents
+     *        the attributes and children of this element
+     *
+     * @return an instruction representing this element.
+     */
+    Html.Instruction.OfElement h3(Html.Instruction... contents);
+
+    /**
+     * Renders the {@code h3} element with the specified text.
+     *
+     * @param text
+     *        the text value of this element
+     *
+     * @return an instruction representing this element.
+     */
+    Html.Instruction.OfElement h3(String text);
+
+    /**
+     * Renders the {@code h4} element with the specified content.
+     *
+     * @param contents
+     *        the attributes and children of this element
+     *
+     * @return an instruction representing this element.
+     */
+    Html.Instruction.OfElement h4(Html.Instruction... contents);
+
+    /**
+     * Renders the {@code h4} element with the specified text.
+     *
+     * @param text
+     *        the text value of this element
+     *
+     * @return an instruction representing this element.
+     */
+    Html.Instruction.OfElement h4(String text);
+
+    /**
+     * Renders the {@code h5} element with the specified content.
+     *
+     * @param contents
+     *        the attributes and children of this element
+     *
+     * @return an instruction representing this element.
+     */
+    Html.Instruction.OfElement h5(Html.Instruction... contents);
+
+    /**
+     * Renders the {@code h5} element with the specified text.
+     *
+     * @param text
+     *        the text value of this element
+     *
+     * @return an instruction representing this element.
+     */
+    Html.Instruction.OfElement h5(String text);
+
+    /**
+     * Renders the {@code h6} element with the specified content.
+     *
+     * @param contents
+     *        the attributes and children of this element
+     *
+     * @return an instruction representing this element.
+     */
+    Html.Instruction.OfElement h6(Html.Instruction... contents);
+
+    /**
+     * Renders the {@code h6} element with the specified text.
+     *
+     * @param text
+     *        the text value of this element
+     *
+     * @return an instruction representing this element.
+     */
+    Html.Instruction.OfElement h6(String text);
+
+    /**
+     * Renders the {@code head} element with the specified content.
+     *
+     * @param contents
+     *        the attributes and children of this element
+     *
+     * @return an instruction representing this element.
+     */
+    Html.Instruction.OfElement head(Html.Instruction... contents);
+
+    /**
+     * Renders the {@code head} element with the specified text.
+     *
+     * @param text
+     *        the text value of this element
+     *
+     * @return an instruction representing this element.
+     */
+    Html.Instruction.OfElement head(String text);
+
+    /**
+     * Renders the {@code header} element with the specified content.
+     *
+     * @param contents
+     *        the attributes and children of this element
+     *
+     * @return an instruction representing this element.
+     */
+    Html.Instruction.OfElement header(Html.Instruction... contents);
+
+    /**
+     * Renders the {@code header} element with the specified text.
+     *
+     * @param text
+     *        the text value of this element
+     *
+     * @return an instruction representing this element.
+     */
+    Html.Instruction.OfElement header(String text);
+
+    /**
+     * Renders the {@code hgroup} element with the specified content.
+     *
+     * @param contents
+     *        the attributes and children of this element
+     *
+     * @return an instruction representing this element.
+     */
+    Html.Instruction.OfElement hgroup(Html.Instruction... contents);
+
+    /**
+     * Renders the {@code hgroup} element with the specified text.
+     *
+     * @param text
+     *        the text value of this element
+     *
+     * @return an instruction representing this element.
+     */
+    Html.Instruction.OfElement hgroup(String text);
+
+    /**
+     * Renders the {@code hr} element with the specified content.
+     *
+     * @param contents
+     *        the attributes and children of this element
+     *
+     * @return an instruction representing this element.
+     */
+    Html.Instruction.OfElement hr(Html.Instruction.OfVoid... contents);
+
+    /**
+     * Renders the {@code html} element with the specified content.
+     *
+     * @param contents
+     *        the attributes and children of this element
+     *
+     * @return an instruction representing this element.
+     */
+    Html.Instruction.OfElement html(Html.Instruction... contents);
+
+    /**
+     * Renders the {@code html} element with the specified text.
+     *
+     * @param text
+     *        the text value of this element
+     *
+     * @return an instruction representing this element.
+     */
+    Html.Instruction.OfElement html(String text);
+
+    /**
+     * Renders the {@code img} element with the specified content.
+     *
+     * @param contents
+     *        the attributes and children of this element
+     *
+     * @return an instruction representing this element.
+     */
+    Html.Instruction.OfElement img(Html.Instruction.OfVoid... contents);
+
+    /**
+     * Renders the {@code input} element with the specified content.
+     *
+     * @param contents
+     *        the attributes and children of this element
+     *
+     * @return an instruction representing this element.
+     */
+    Html.Instruction.OfElement input(Html.Instruction.OfVoid... contents);
+
+    /**
+     * Renders the {@code kbd} element with the specified content.
+     *
+     * @param contents
+     *        the attributes and children of this element
+     *
+     * @return an instruction representing this element.
+     */
+    Html.Instruction.OfElement kbd(Html.Instruction... contents);
+
+    /**
+     * Renders the {@code kbd} element with the specified text.
+     *
+     * @param text
+     *        the text value of this element
+     *
+     * @return an instruction representing this element.
+     */
+    Html.Instruction.OfElement kbd(String text);
+
+    /**
+     * Renders the {@code label} element with the specified content.
+     *
+     * @param contents
+     *        the attributes and children of this element
+     *
+     * @return an instruction representing this element.
+     */
+    Html.Instruction.OfElement label(Html.Instruction... contents);
+
+    /**
+     * Renders the {@code label} attribute or element with the specified text.
+     *
+     * @param text
+     *        the text value of this attribute or element
+     *
+     * @return an instruction representing this attribute or element.
+     */
+    Html.Instruction.OfElement label(String text);
+
+    /**
+     * Renders the {@code legend} element with the specified content.
+     *
+     * @param contents
+     *        the attributes and children of this element
+     *
+     * @return an instruction representing this element.
+     */
+    Html.Instruction.OfElement legend(Html.Instruction... contents);
+
+    /**
+     * Renders the {@code legend} element with the specified text.
+     *
+     * @param text
+     *        the text value of this element
+     *
+     * @return an instruction representing this element.
+     */
+    Html.Instruction.OfElement legend(String text);
+
+    /**
+     * Renders the {@code li} element with the specified content.
+     *
+     * @param contents
+     *        the attributes and children of this element
+     *
+     * @return an instruction representing this element.
+     */
+    Html.Instruction.OfElement li(Html.Instruction... contents);
+
+    /**
+     * Renders the {@code li} element with the specified text.
+     *
+     * @param text
+     *        the text value of this element
+     *
+     * @return an instruction representing this element.
+     */
+    Html.Instruction.OfElement li(String text);
+
+    /**
+     * Renders the {@code link} element with the specified content.
+     *
+     * @param contents
+     *        the attributes and children of this element
+     *
+     * @return an instruction representing this element.
+     */
+    Html.Instruction.OfElement link(Html.Instruction.OfVoid... contents);
+
+    /**
+     * Renders the {@code main} element with the specified content.
+     *
+     * @param contents
+     *        the attributes and children of this element
+     *
+     * @return an instruction representing this element.
+     */
+    Html.Instruction.OfElement main(Html.Instruction... contents);
+
+    /**
+     * Renders the {@code main} element with the specified text.
+     *
+     * @param text
+     *        the text value of this element
+     *
+     * @return an instruction representing this element.
+     */
+    Html.Instruction.OfElement main(String text);
+
+    /**
+     * Renders the {@code menu} element with the specified content.
+     *
+     * @param contents
+     *        the attributes and children of this element
+     *
+     * @return an instruction representing this element.
+     */
+    Html.Instruction.OfElement menu(Html.Instruction... contents);
+
+    /**
+     * Renders the {@code menu} element with the specified text.
+     *
+     * @param text
+     *        the text value of this element
+     *
+     * @return an instruction representing this element.
+     */
+    Html.Instruction.OfElement menu(String text);
+
+    /**
+     * Renders the {@code meta} element with the specified content.
+     *
+     * @param contents
+     *        the attributes and children of this element
+     *
+     * @return an instruction representing this element.
+     */
+    Html.Instruction.OfElement meta(Html.Instruction.OfVoid... contents);
+
+    /**
+     * Renders the {@code nav} element with the specified content.
+     *
+     * @param contents
+     *        the attributes and children of this element
+     *
+     * @return an instruction representing this element.
+     */
+    Html.Instruction.OfElement nav(Html.Instruction... contents);
+
+    /**
+     * Renders the {@code nav} element with the specified text.
+     *
+     * @param text
+     *        the text value of this element
+     *
+     * @return an instruction representing this element.
+     */
+    Html.Instruction.OfElement nav(String text);
+
+    /**
+     * Renders the {@code ol} element with the specified content.
+     *
+     * @param contents
+     *        the attributes and children of this element
+     *
+     * @return an instruction representing this element.
+     */
+    Html.Instruction.OfElement ol(Html.Instruction... contents);
+
+    /**
+     * Renders the {@code ol} element with the specified text.
+     *
+     * @param text
+     *        the text value of this element
+     *
+     * @return an instruction representing this element.
+     */
+    Html.Instruction.OfElement ol(String text);
+
+    /**
+     * Renders the {@code optgroup} element with the specified content.
+     *
+     * @param contents
+     *        the attributes and children of this element
+     *
+     * @return an instruction representing this element.
+     */
+    Html.Instruction.OfElement optgroup(Html.Instruction... contents);
+
+    /**
+     * Renders the {@code optgroup} element with the specified text.
+     *
+     * @param text
+     *        the text value of this element
+     *
+     * @return an instruction representing this element.
+     */
+    Html.Instruction.OfElement optgroup(String text);
+
+    /**
+     * Renders the {@code option} element with the specified content.
+     *
+     * @param contents
+     *        the attributes and children of this element
+     *
+     * @return an instruction representing this element.
+     */
+    Html.Instruction.OfElement option(Html.Instruction... contents);
+
+    /**
+     * Renders the {@code option} element with the specified text.
+     *
+     * @param text
+     *        the text value of this element
+     *
+     * @return an instruction representing this element.
+     */
+    Html.Instruction.OfElement option(String text);
+
+    /**
+     * Renders the {@code p} element with the specified content.
+     *
+     * @param contents
+     *        the attributes and children of this element
+     *
+     * @return an instruction representing this element.
+     */
+    Html.Instruction.OfElement p(Html.Instruction... contents);
+
+    /**
+     * Renders the {@code p} element with the specified text.
+     *
+     * @param text
+     *        the text value of this element
+     *
+     * @return an instruction representing this element.
+     */
+    Html.Instruction.OfElement p(String text);
+
+    /**
+     * Renders the {@code path} element with the specified content.
+     *
+     * @param contents
+     *        the attributes and children of this element
+     *
+     * @return an instruction representing this element.
+     */
+    Html.Instruction.OfElement path(Html.Instruction... contents);
+
+    /**
+     * Renders the {@code path} element with the specified text.
+     *
+     * @param text
+     *        the text value of this element
+     *
+     * @return an instruction representing this element.
+     */
+    Html.Instruction.OfElement path(String text);
+
+    /**
+     * Renders the {@code pre} element with the specified content.
+     *
+     * @param contents
+     *        the attributes and children of this element
+     *
+     * @return an instruction representing this element.
+     */
+    Html.Instruction.OfElement pre(Html.Instruction... contents);
+
+    /**
+     * Renders the {@code pre} element with the specified text.
+     *
+     * @param text
+     *        the text value of this element
+     *
+     * @return an instruction representing this element.
+     */
+    Html.Instruction.OfElement pre(String text);
+
+    /**
+     * Renders the {@code progress} element with the specified content.
+     *
+     * @param contents
+     *        the attributes and children of this element
+     *
+     * @return an instruction representing this element.
+     */
+    Html.Instruction.OfElement progress(Html.Instruction... contents);
+
+    /**
+     * Renders the {@code progress} element with the specified text.
+     *
+     * @param text
+     *        the text value of this element
+     *
+     * @return an instruction representing this element.
+     */
+    Html.Instruction.OfElement progress(String text);
+
+    /**
+     * Renders the {@code samp} element with the specified content.
+     *
+     * @param contents
+     *        the attributes and children of this element
+     *
+     * @return an instruction representing this element.
+     */
+    Html.Instruction.OfElement samp(Html.Instruction... contents);
+
+    /**
+     * Renders the {@code samp} element with the specified text.
+     *
+     * @param text
+     *        the text value of this element
+     *
+     * @return an instruction representing this element.
+     */
+    Html.Instruction.OfElement samp(String text);
+
+    /**
+     * Renders the {@code script} element with the specified content.
+     *
+     * @param contents
+     *        the attributes and children of this element
+     *
+     * @return an instruction representing this element.
+     */
+    Html.Instruction.OfElement script(Html.Instruction... contents);
+
+    /**
+     * Renders the {@code script} element with the specified text.
+     *
+     * @param text
+     *        the text value of this element
+     *
+     * @return an instruction representing this element.
+     */
+    Html.Instruction.OfElement script(String text);
+
+    /**
+     * Renders the {@code section} element with the specified content.
+     *
+     * @param contents
+     *        the attributes and children of this element
+     *
+     * @return an instruction representing this element.
+     */
+    Html.Instruction.OfElement section(Html.Instruction... contents);
+
+    /**
+     * Renders the {@code section} element with the specified text.
+     *
+     * @param text
+     *        the text value of this element
+     *
+     * @return an instruction representing this element.
+     */
+    Html.Instruction.OfElement section(String text);
+
+    /**
+     * Renders the {@code select} element with the specified content.
+     *
+     * @param contents
+     *        the attributes and children of this element
+     *
+     * @return an instruction representing this element.
+     */
+    Html.Instruction.OfElement select(Html.Instruction... contents);
+
+    /**
+     * Renders the {@code select} element with the specified text.
+     *
+     * @param text
+     *        the text value of this element
+     *
+     * @return an instruction representing this element.
+     */
+    Html.Instruction.OfElement select(String text);
+
+    /**
+     * Renders the {@code small} element with the specified content.
+     *
+     * @param contents
+     *        the attributes and children of this element
+     *
+     * @return an instruction representing this element.
+     */
+    Html.Instruction.OfElement small(Html.Instruction... contents);
+
+    /**
+     * Renders the {@code small} element with the specified text.
+     *
+     * @param text
+     *        the text value of this element
+     *
+     * @return an instruction representing this element.
+     */
+    Html.Instruction.OfElement small(String text);
+
+    /**
+     * Renders the {@code span} element with the specified content.
+     *
+     * @param contents
+     *        the attributes and children of this element
+     *
+     * @return an instruction representing this element.
+     */
+    Html.Instruction.OfElement span(Html.Instruction... contents);
+
+    /**
+     * Renders the {@code span} element with the specified text.
+     *
+     * @param text
+     *        the text value of this element
+     *
+     * @return an instruction representing this element.
+     */
+    Html.Instruction.OfElement span(String text);
+
+    /**
+     * Renders the {@code strong} element with the specified content.
+     *
+     * @param contents
+     *        the attributes and children of this element
+     *
+     * @return an instruction representing this element.
+     */
+    Html.Instruction.OfElement strong(Html.Instruction... contents);
+
+    /**
+     * Renders the {@code strong} element with the specified text.
+     *
+     * @param text
+     *        the text value of this element
+     *
+     * @return an instruction representing this element.
+     */
+    Html.Instruction.OfElement strong(String text);
+
+    /**
+     * Renders the {@code style} element with the specified content.
+     *
+     * @param contents
+     *        the attributes and children of this element
+     *
+     * @return an instruction representing this element.
+     */
+    Html.Instruction.OfElement style(Html.Instruction... contents);
+
+    /**
+     * Renders the {@code style} element with the specified text.
+     *
+     * @param text
+     *        the text value of this element
+     *
+     * @return an instruction representing this element.
+     */
+    Html.Instruction.OfElement style(String text);
+
+    /**
+     * Renders the {@code sub} element with the specified content.
+     *
+     * @param contents
+     *        the attributes and children of this element
+     *
+     * @return an instruction representing this element.
+     */
+    Html.Instruction.OfElement sub(Html.Instruction... contents);
+
+    /**
+     * Renders the {@code sub} element with the specified text.
+     *
+     * @param text
+     *        the text value of this element
+     *
+     * @return an instruction representing this element.
+     */
+    Html.Instruction.OfElement sub(String text);
+
+    /**
+     * Renders the {@code summary} element with the specified content.
+     *
+     * @param contents
+     *        the attributes and children of this element
+     *
+     * @return an instruction representing this element.
+     */
+    Html.Instruction.OfElement summary(Html.Instruction... contents);
+
+    /**
+     * Renders the {@code summary} element with the specified text.
+     *
+     * @param text
+     *        the text value of this element
+     *
+     * @return an instruction representing this element.
+     */
+    Html.Instruction.OfElement summary(String text);
+
+    /**
+     * Renders the {@code sup} element with the specified content.
+     *
+     * @param contents
+     *        the attributes and children of this element
+     *
+     * @return an instruction representing this element.
+     */
+    Html.Instruction.OfElement sup(Html.Instruction... contents);
+
+    /**
+     * Renders the {@code sup} element with the specified text.
+     *
+     * @param text
+     *        the text value of this element
+     *
+     * @return an instruction representing this element.
+     */
+    Html.Instruction.OfElement sup(String text);
+
+    /**
+     * Renders the {@code svg} element with the specified content.
+     *
+     * @param contents
+     *        the attributes and children of this element
+     *
+     * @return an instruction representing this element.
+     */
+    Html.Instruction.OfElement svg(Html.Instruction... contents);
+
+    /**
+     * Renders the {@code svg} element with the specified text.
+     *
+     * @param text
+     *        the text value of this element
+     *
+     * @return an instruction representing this element.
+     */
+    Html.Instruction.OfElement svg(String text);
+
+    /**
+     * Renders the {@code table} element with the specified content.
+     *
+     * @param contents
+     *        the attributes and children of this element
+     *
+     * @return an instruction representing this element.
+     */
+    Html.Instruction.OfElement table(Html.Instruction... contents);
+
+    /**
+     * Renders the {@code table} element with the specified text.
+     *
+     * @param text
+     *        the text value of this element
+     *
+     * @return an instruction representing this element.
+     */
+    Html.Instruction.OfElement table(String text);
+
+    /**
+     * Renders the {@code tbody} element with the specified content.
+     *
+     * @param contents
+     *        the attributes and children of this element
+     *
+     * @return an instruction representing this element.
+     */
+    Html.Instruction.OfElement tbody(Html.Instruction... contents);
+
+    /**
+     * Renders the {@code tbody} element with the specified text.
+     *
+     * @param text
+     *        the text value of this element
+     *
+     * @return an instruction representing this element.
+     */
+    Html.Instruction.OfElement tbody(String text);
+
+    /**
+     * Renders the {@code td} element with the specified content.
+     *
+     * @param contents
+     *        the attributes and children of this element
+     *
+     * @return an instruction representing this element.
+     */
+    Html.Instruction.OfElement td(Html.Instruction... contents);
+
+    /**
+     * Renders the {@code td} element with the specified text.
+     *
+     * @param text
+     *        the text value of this element
+     *
+     * @return an instruction representing this element.
+     */
+    Html.Instruction.OfElement td(String text);
+
+    /**
+     * Renders the {@code template} element with the specified content.
+     *
+     * @param contents
+     *        the attributes and children of this element
+     *
+     * @return an instruction representing this element.
+     */
+    Html.Instruction.OfElement template(Html.Instruction... contents);
+
+    /**
+     * Renders the {@code template} element with the specified text.
+     *
+     * @param text
+     *        the text value of this element
+     *
+     * @return an instruction representing this element.
+     */
+    Html.Instruction.OfElement template(String text);
+
+    /**
+     * Renders the {@code textarea} element with the specified content.
+     *
+     * @param contents
+     *        the attributes and children of this element
+     *
+     * @return an instruction representing this element.
+     */
+    Html.Instruction.OfElement textarea(Html.Instruction... contents);
+
+    /**
+     * Renders the {@code textarea} element with the specified text.
+     *
+     * @param text
+     *        the text value of this element
+     *
+     * @return an instruction representing this element.
+     */
+    Html.Instruction.OfElement textarea(String text);
+
+    /**
+     * Renders the {@code th} element with the specified content.
+     *
+     * @param contents
+     *        the attributes and children of this element
+     *
+     * @return an instruction representing this element.
+     */
+    Html.Instruction.OfElement th(Html.Instruction... contents);
+
+    /**
+     * Renders the {@code th} element with the specified text.
+     *
+     * @param text
+     *        the text value of this element
+     *
+     * @return an instruction representing this element.
+     */
+    Html.Instruction.OfElement th(String text);
+
+    /**
+     * Renders the {@code thead} element with the specified content.
+     *
+     * @param contents
+     *        the attributes and children of this element
+     *
+     * @return an instruction representing this element.
+     */
+    Html.Instruction.OfElement thead(Html.Instruction... contents);
+
+    /**
+     * Renders the {@code thead} element with the specified text.
+     *
+     * @param text
+     *        the text value of this element
+     *
+     * @return an instruction representing this element.
+     */
+    Html.Instruction.OfElement thead(String text);
+
+    /**
+     * Renders the {@code title} element with the specified content.
+     *
+     * @param contents
+     *        the attributes and children of this element
+     *
+     * @return an instruction representing this element.
+     */
+    Html.Instruction.OfElement title(Html.Instruction... contents);
+
+    /**
+     * Renders the {@code title} attribute or element with the specified text.
+     *
+     * @param text
+     *        the text value of this attribute or element
+     *
+     * @return an instruction representing this attribute or element.
+     */
+    Html.Instruction.OfElement title(String text);
+
+    /**
+     * Renders the {@code tr} element with the specified content.
+     *
+     * @param contents
+     *        the attributes and children of this element
+     *
+     * @return an instruction representing this element.
+     */
+    Html.Instruction.OfElement tr(Html.Instruction... contents);
+
+    /**
+     * Renders the {@code tr} element with the specified text.
+     *
+     * @param text
+     *        the text value of this element
+     *
+     * @return an instruction representing this element.
+     */
+    Html.Instruction.OfElement tr(String text);
+
+    /**
+     * Renders the {@code ul} element with the specified content.
+     *
+     * @param contents
+     *        the attributes and children of this element
+     *
+     * @return an instruction representing this element.
+     */
+    Html.Instruction.OfElement ul(Html.Instruction... contents);
+
+    /**
+     * Renders the {@code ul} element with the specified text.
+     *
+     * @param text
+     *        the text value of this element
+     *
+     * @return an instruction representing this element.
+     */
+    Html.Instruction.OfElement ul(String text);
 
   }
 
@@ -523,16 +3523,25 @@ public final class Html extends HtmlRecorder {
    */
   public non-sealed static abstract class Template extends TemplateBase implements Lang.CharWritable {
 
-    Html html;
+    HtmlMarkup html;
 
     /**
      * Sole constructor.
      */
     protected Template() {}
 
+    /**
+     * Returns a formatted text of all of the testable text nodes in this
+     * template.
+     *
+     * @return a formatted text of all of the testable text nodes in this
+     *         template
+     *
+     * @see Html.Template#testable(String, String)
+     */
     public final String testableText() {
-      Html html;
-      html = new Html();
+      HtmlMarkup html;
+      html = new HtmlMarkup();
 
       accept(html);
 
@@ -546,8 +3555,8 @@ public final class Html extends HtmlRecorder {
      */
     @Override
     public final String toString() {
-      Html html;
-      html = new Html();
+      HtmlMarkup html;
+      html = new HtmlMarkup();
 
       accept(html);
 
@@ -558,8 +3567,8 @@ public final class Html extends HtmlRecorder {
     public final void writeTo(Appendable out) throws IOException {
       Objects.requireNonNull(out, "out == null");
 
-      Html html;
-      html = new Html();
+      HtmlMarkup html;
+      html = new HtmlMarkup();
 
       accept(html);
 
@@ -580,25 +3589,7 @@ public final class Html extends HtmlRecorder {
      */
     protected abstract void render() throws Exception;
 
-    private void tryToRender() {
-      try {
-        preRender();
-
-        render();
-      } catch (Html.RenderingException e) {
-        throw e;
-      } catch (Exception e) {
-        throw new Html.RenderingException(e);
-      }
-    }
-
-    final HtmlDom compile(Html html) {
-      accept(html);
-
-      return html.compile();
-    }
-
-    final void accept(Html instance) {
+    final void accept(HtmlMarkup instance) {
       Check.state(html == null, "Concurrent evalution of a HtmlTemplate is not supported");
 
       try {
@@ -618,8 +3609,20 @@ public final class Html extends HtmlRecorder {
       $html().attribute(name, value);
     }
 
+    final void tryToRender() {
+      try {
+        preRender();
+
+        render();
+      } catch (Html.RenderingException e) {
+        throw e;
+      } catch (Exception e) {
+        throw new Html.RenderingException(e);
+      }
+    }
+
     @Override
-    final Html $html() {
+    final HtmlMarkup $html() {
       Check.state(html != null, "html not set");
 
       return html;
@@ -637,9 +3640,8 @@ public final class Html extends HtmlRecorder {
     TemplateBase() {}
 
     /**
-     * Generates the {@code class} attribute by joining the specified values
-     * with
-     * a space character.
+     * Renders the {@code class} attribute by joining the specified values
+     * with a space character.
      *
      * @param v0 the first value
      * @param v1 the second value
@@ -654,9 +3656,8 @@ public final class Html extends HtmlRecorder {
     }
 
     /**
-     * Generates the {@code class} attribute by joining the specified values
-     * with
-     * space characters.
+     * Renders the {@code class} attribute by joining the specified values
+     * with space characters.
      *
      * @param v0 the first value
      * @param v1 the second value
@@ -673,9 +3674,8 @@ public final class Html extends HtmlRecorder {
     }
 
     /**
-     * Generates the {@code class} attribute by joining the specified values
-     * with
-     * space characters.
+     * Renders the {@code class} attribute by joining the specified values
+     * with space characters.
      *
      * @param v0 the first value
      * @param v1 the second value
@@ -694,9 +3694,8 @@ public final class Html extends HtmlRecorder {
     }
 
     /**
-     * Generates the {@code class} attribute by joining the specified values
-     * with
-     * space characters.
+     * Renders the {@code class} attribute by joining the specified values
+     * with space characters.
      *
      * @param values the values to be joined
      *
@@ -707,24 +3706,6 @@ public final class Html extends HtmlRecorder {
 
       String value;
       value = Stream.of(values).collect(Collectors.joining(" "));
-
-      return $attributes().className(value);
-    }
-
-    /**
-     * Generates the {@code class} attribute by joining all of the lines in the
-     * specified text block.
-     *
-     * @param text the text block value
-     *
-     * @return an instruction representing this attribute.
-     */
-    protected final Instruction.OfAttribute classText(String text) {
-      String[] lines;
-      lines = text.split("\n+");
-
-      String value;
-      value = String.join(" ", lines);
 
       return $attributes().className(value);
     }
@@ -782,11 +3763,9 @@ public final class Html extends HtmlRecorder {
      * instructions is individually added, in order, to a receiving element.
      *
      * <p>
-     * This is useful, for example, when creating {@link HtmlComponent}
-     * instances.
      * The following Objectos HTML code:
      *
-     * {@snippet file = "objectos/html/BaseTemplateDslTest.java" region =
+     * {@snippet file = "objectos/way/HtmlTemplateBaseJavadoc.java" region =
      * "flatten"}
      *
      * <p>
@@ -822,24 +3801,59 @@ public final class Html extends HtmlRecorder {
       return $html().flatten(contents);
     }
 
-    protected final Html.Instruction.OfElement flattenNonNull(Instruction... contents) {
-      return $html().flattenNonNull(contents);
+    /**
+     * The non-breaking space {@code &nbsp;} HTML character entity.
+     *
+     * @return an instruction representing the non-breaking space character
+     *         entity.
+     */
+    protected final Html.Instruction.OfElement nbsp() {
+      return raw("&nbsp;");
     }
 
     /**
-     * Includes a fragment into this template represented by the specified
-     * lambda.
+     * The no-op instruction.
      *
      * <p>
-     * The included fragment MUST only invoke methods this template instance. It
-     * is common (but not required) for a fragment to be a method reference to
-     * a private method of the template instance.
+     * It can be used to conditionally add an attribute or element. For example,
+     * the following Objectos HTML template:
+     *
+     * {@snippet file = "objectos/way/HtmlTemplateBaseJavadoc.java" region =
+     * "noop"}
+     *
+     * <p>
+     * Generates the following when {@code error == false}:
+     *
+     * <pre>{@code
+     *     <div class="alert">This is an alert!</div>
+     * }</pre>
+     *
+     * <p>
+     * And generates the following when {@code error == true}:
+     *
+     * <pre>{@code
+     *     <div class="alert alert-error">This is an alert!</div>
+     * }</pre>
+     *
+     * @return the no-op instruction.
+     */
+    protected final Html.Instruction.NoOp noop() {
+      return Html.NOOP;
+    }
+
+    /**
+     * Renders the specified fragment as part of this template.
+     *
+     * <p>
+     * The included fragment MUST only invoke methods of this template instance.
+     * It is common (but not required) for a fragment to be a method reference
+     * to a private method of the template instance.
      *
      * <p>
      * The following Objectos HTML template:
      *
-     * {@snippet file = "objectos/html/BaseTemplateDslTest.java" region =
-     * "IncludeExample"}
+     * {@snippet file = "objectos/way/HtmlTemplateBaseJavadoc.java" region =
+     * "renderFragment0"}
      *
      * <p>
      * Generates the following HTML:
@@ -869,7 +3883,7 @@ public final class Html extends HtmlRecorder {
     protected final Html.Instruction.OfFragment renderFragment(Html.Fragment.Of0 fragment) {
       Check.notNull(fragment, "fragment == null");
 
-      Html html;
+      HtmlMarkup html;
       html = $html();
 
       int index;
@@ -886,10 +3900,47 @@ public final class Html extends HtmlRecorder {
       return Html.FRAGMENT;
     }
 
+    /**
+     * Renders the specified fragment as part of this template.
+     *
+     * <p>
+     * The included fragment MUST only invoke methods of this template instance.
+     * It is common (but not required) for a fragment to be a method reference
+     * to a private method of the template instance.
+     *
+     * <p>
+     * The following Objectos HTML template:
+     *
+     * {@snippet file = "objectos/way/HtmlTemplateBaseJavadoc.java" region =
+     * "renderFragment1"}
+     *
+     * <p>
+     * Generates the following HTML:
+     *
+     * <pre>{@code
+     *     <body>
+     *     <div>Foo</div>
+     *     <div>Bar</div>
+     *     </body>
+     * }</pre>
+     *
+     * <p>
+     * Note that the methods of included method references all return
+     * {@code void}.
+     *
+     * @param <T1> the type of the first argument
+     *
+     * @param fragment
+     *        the fragment to include
+     * @param arg1
+     *        the first argument
+     *
+     * @return an instruction representing this fragment
+     */
     protected final <T1> Html.Instruction.OfFragment renderFragment(Html.Fragment.Of1<T1> fragment, T1 arg1) {
       Check.notNull(fragment, "fragment == null");
 
-      Html html;
+      HtmlMarkup html;
       html = $html();
 
       int index;
@@ -906,10 +3957,50 @@ public final class Html extends HtmlRecorder {
       return Html.FRAGMENT;
     }
 
+    /**
+     * Renders the specified fragment as part of this template.
+     *
+     * <p>
+     * The included fragment MUST only invoke methods of this template instance.
+     * It is common (but not required) for a fragment to be a method reference
+     * to a private method of the template instance.
+     *
+     * <p>
+     * The following Objectos HTML template:
+     *
+     * {@snippet file = "objectos/way/HtmlTemplateBaseJavadoc.java" region =
+     * "renderFragment2"}
+     *
+     * <p>
+     * Generates the following HTML:
+     *
+     * <pre>{@code
+     *     <body>
+     *     <p>City<span>Tokyo</span></p>
+     *     <p>Country<span>Japan</span></p>
+     *     </body>
+     * }</pre>
+     *
+     * <p>
+     * Note that the methods of included method references all return
+     * {@code void}.
+     *
+     * @param <T1> the type of the first argument
+     * @param <T2> the type of the second argument
+     *
+     * @param fragment
+     *        the fragment to include
+     * @param arg1
+     *        the first argument
+     * @param arg2
+     *        the second argument
+     *
+     * @return an instruction representing this fragment
+     */
     protected final <T1, T2> Html.Instruction.OfFragment renderFragment(Html.Fragment.Of2<T1, T2> fragment, T1 arg1, T2 arg2) {
       Check.notNull(fragment, "fragment == null");
 
-      Html html;
+      HtmlMarkup html;
       html = $html();
 
       int index;
@@ -929,7 +4020,7 @@ public final class Html extends HtmlRecorder {
     protected final <T1, T2, T3> Html.Instruction.OfFragment renderFragment(Html.Fragment.Of3<T1, T2, T3> fragment, T1 arg1, T2 arg2, T3 arg3) {
       Check.notNull(fragment, "fragment == null");
 
-      Html html;
+      HtmlMarkup html;
       html = $html();
 
       int index;
@@ -949,7 +4040,7 @@ public final class Html extends HtmlRecorder {
     protected final <T1, T2, T3, T4> Html.Instruction.OfFragment renderFragment(Html.Fragment.Of4<T1, T2, T3, T4> fragment, T1 arg1, T2 arg2, T3 arg3, T4 arg4) {
       Check.notNull(fragment, "fragment == null");
 
-      Html html;
+      HtmlMarkup html;
       html = $html();
 
       int index;
@@ -967,19 +4058,19 @@ public final class Html extends HtmlRecorder {
     }
 
     /**
-     * Renders the specified plugin into this template.
+     * Renders the specified plugin as part of this template.
      *
      * @param plugin
      *        the plugin to be rendered as part of this template
      *
      * @return an instruction representing the rendered plugin.
      */
-    protected final Html.Instruction.OfFragment renderPlugin(Consumer<Html> plugin) {
+    protected final Html.Instruction.OfFragment renderPlugin(Consumer<Html.Markup> plugin) {
       return $html().renderPlugin(plugin);
     }
 
     /**
-     * Renders the specified template into this template.
+     * Renders the specified template as part of this template.
      *
      * @param template
      *        the template to be rendered as part of this template
@@ -990,62 +4081,18 @@ public final class Html extends HtmlRecorder {
       return $html().renderTemplate(template);
     }
 
-    /**
-     * The non-breaking space ({@code &nbsp;}) HTML character entity.
-     *
-     * @return an instruction representing the non-breaking space character
-     *         entity.
-     */
-    protected final Html.Instruction.OfElement nbsp() {
-      return raw("&nbsp;");
-    }
-
-    /**
-     * The no-op instruction.
-     *
-     * <p>
-     * It can be used to conditionally add an attribute or element. For example,
-     * the following Objectos HTML template:
-     *
-     * {@snippet file = "objectos/html/BaseTemplateDslTest.java" region =
-     * "noop"}
-     *
-     * <p>
-     * Generates the following when {@code error == false}:
-     *
-     * <pre>{@code
-     *     <div class="alert">This is an alert!</div>
-     * }</pre>
-     *
-     * <p>
-     * And generates the following when {@code error == true}:
-     *
-     * <pre>{@code
-     *     <div class="alert alert-error">This is an alert!</div>
-     * }</pre>
-     *
-     * @return the no-op instruction.
-     */
-    protected final Html.Instruction.NoOp noop() {
-      return Html.NOOP;
-    }
-
-    protected final Html.Instruction.NoOp noop(String ignored) {
-      return Html.NOOP;
-    }
-
     protected final Html.Instruction.OfElement raw(String text) {
       return $html().raw(text);
     }
 
     /**
-     * Generates a text node with the specified {@code text} value. The text
+     * Renders a text node with the specified {@code text} value. The text
      * value is escaped before being emitted to the output.
      *
      * <p>
      * The following Objectos HTML template:
      *
-     * {@snippet file = "objectos/html/BaseTemplateDslTest.java" region =
+     * {@snippet file = "objectos/way/HtmlTemplateBaseJavadoc.java" region =
      * "text"}
      *
      * <p>
@@ -1064,21 +4111,53 @@ public final class Html extends HtmlRecorder {
       return $html().text(text);
     }
 
+    /**
+     * Renders a named <em>testable</em> text node with the specified name and
+     * value. A <em>testable</em> text node produces the same HTML output of a
+     * regular text node. It participates in the
+     * {@link Html.Template#testableText()} output which a regular text node
+     * does not.
+     *
+     * <p>
+     * The following Objectos HTML template:
+     *
+     * {@snippet file = "objectos/way/HtmlTemplateBaseJavadoc.java" region =
+     * "testable0"}
+     *
+     * <p>
+     * Generates the following HTML:
+     *
+     * {@snippet file = "objectos/way/HtmlTemplateBaseJavadoc.java" region =
+     * "testable1"}
+     *
+     * <p>
+     * And produces the following testable text output:
+     *
+     * {@snippet file = "objectos/way/HtmlTemplateBaseJavadoc.java" region =
+     * "testable2"}
+     *
+     * @param name
+     *        the name of this testable text node
+     * @param value
+     *        the value of this testable text node
+     *
+     * @return an instruction representing the text node
+     */
     protected final Html.Instruction.OfElement testable(String name, String value) {
       return $html().testable(name, value);
     }
 
     @Override
-    final HtmlRecorderAttributes $attributes() {
+    final Html.MarkupAttributes $attributes() {
       return $html();
     }
 
     @Override
-    final HtmlRecorderElements $elements() {
+    final Html.MarkupElements $elements() {
       return $html();
     }
 
-    abstract Html $html();
+    abstract HtmlMarkup $html();
 
   }
 
@@ -1109,58 +4188,6 @@ public final class Html extends HtmlRecorder {
 
   private Html() {}
 
-  public static Html create() {
-    return new Html();
-  }
-
-  /**
-   * Renders the specified plugin as part of this HTML instance.
-   *
-   * @param plugin
-   *        the plugin to be rendered as part of this HTML instance
-   *
-   * @return an instruction representing the rendered plugin.
-   */
-  public final Html.Instruction.OfFragment renderPlugin(Consumer<Html> plugin) {
-    Check.notNull(plugin, "plugin == null");
-
-    int index;
-    index = fragmentBegin();
-
-    plugin.accept(this);
-
-    fragmentEnd(index);
-
-    return Html.FRAGMENT;
-  }
-
-  /**
-   * Renders the specified template as part of this HTML instance.
-   *
-   * @param template
-   *        the template to be rendered as part of this HTML instance
-   *
-   * @return an instruction representing the rendered template.
-   */
-  public final Html.Instruction.OfFragment renderTemplate(Html.Template template) {
-    Check.notNull(template, "template == null");
-
-    try {
-      int index;
-      index = fragmentBegin();
-
-      template.html = this;
-
-      template.tryToRender();
-
-      fragmentEnd(index);
-    } finally {
-      template.html = null;
-    }
-
-    return Html.FRAGMENT;
-  }
-
   /**
    * An instruction to render an HTML attribute and its value.
    */
@@ -1190,39 +4217,6 @@ public final class Html extends HtmlRecorder {
   }
 
   private record HtmlAttributeObject(AttributeName name, String value) implements AttributeObject {}
-
-  /**
-   * An instruction to render an HTML {@code id} attribute.
-   */
-  public sealed interface Id extends AttributeObject {
-
-    static Id id(String value) {
-      Check.notNull(value, "value == null");
-
-      return new HtmlId(value);
-    }
-
-    /**
-     * The {@code id} attribute name.
-     *
-     * @return the {@code id} attribute name
-     */
-    @Override
-    default AttributeName name() {
-      return HtmlAttributeName.ID;
-    }
-
-    /**
-     * The {@code id} value.
-     *
-     * @return the {@code id} value
-     */
-    @Override
-    String value();
-
-  }
-
-  record HtmlId(String value) implements Id {}
 
   /**
    * Provides the HTML attributes template methods.
@@ -2973,7 +5967,7 @@ public final class Html extends HtmlRecorder {
       return $attributes().xmlns(value);
     }
 
-    abstract HtmlRecorderAttributes $attributes();
+    abstract Html.MarkupAttributes $attributes();
 
   }
 
@@ -4675,7 +7669,7 @@ public final class Html extends HtmlRecorder {
       return $elements().ul(text);
     }
 
-    abstract HtmlRecorderElements $elements();
+    abstract Html.MarkupElements $elements();
 
   }
 
@@ -4932,9 +7926,9 @@ record HtmlClassName(String value) implements Html.ClassName {}
 
 final class HtmlDom implements Html.Dom, Lang.IterableOnce<Html.Dom.Node>, Iterator<Html.Dom.Node> {
 
-  private final HtmlRecorder player;
+  private final HtmlMarkup player;
 
-  public HtmlDom(HtmlRecorder ctx) {
+  public HtmlDom(HtmlMarkup ctx) {
     this.player = ctx;
   }
 
@@ -4968,11 +7962,11 @@ final class HtmlDomAttribute implements Html.Dom.Attribute {
 
   HtmlAttributeName name;
 
-  private final HtmlRecorder player;
+  private final HtmlMarkup player;
 
   Object value;
 
-  public HtmlDomAttribute(HtmlRecorder player) {
+  public HtmlDomAttribute(HtmlMarkup player) {
     this.player = player;
   }
 
@@ -5092,11 +8086,11 @@ final class HtmlDomElement implements Html.Dom.Element, Lang.IterableOnce<Html.D
 
   private ThisAttributes attributes;
 
-  private final HtmlRecorder player;
+  private final HtmlMarkup player;
 
   HtmlElementName name;
 
-  HtmlDomElement(HtmlRecorder player) {
+  HtmlDomElement(HtmlMarkup player) {
     this.player = player;
   }
 
@@ -5317,11 +8311,13 @@ final class HtmlFormatter {
     Check.notNull(template, "template == null");
     Check.notNull(appendable, "appendable == null");
 
-    Html html;
-    html = Html.create();
+    HtmlMarkup html;
+    html = new HtmlMarkup();
+
+    template.accept(html);
 
     HtmlDom document;
-    document = template.compile(html);
+    document = html.compile();
 
     format(document, appendable);
   }
@@ -5754,3 +8750,5 @@ final class HtmlFormatter {
   }
 
 }
+
+record HtmlId(String value) implements Html.Id {}

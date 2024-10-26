@@ -71,7 +71,7 @@ final class Login extends WebTemplate implements Http.Handler {
 
   }
 
-  private static final Html.Id FORM = Html.Id.id("login-form");
+  private static final Html.Id FORM = Html.Id.of("login-form");
 
   private static final String STEP = "step";
 
