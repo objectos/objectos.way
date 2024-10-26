@@ -399,7 +399,7 @@ public final class Web {
   }
 
   /**
-   * Store option: discards empty sessions, during a {@link #cleanUp()}
+   * Store option: discards empty sessions, during a {@link Store#cleanUp()}
    * operation, whose last access time is greater than the specified duration.
    *
    * @param duration

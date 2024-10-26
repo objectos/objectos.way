@@ -342,7 +342,8 @@ public final class Sql {
      * Invoking this method additionally:
      *
      * <ul>
-     * <li>clears any previously set arguments;
+     * <li>clears any previously set arguments;</li>
+     * </ul>
      *
      * @param value
      *        the raw SQL contents
@@ -354,7 +355,7 @@ public final class Sql {
     /**
      * Replaces the current SQL statement with the result of
      * applying the specified arguments to the SQL statement as if it were a
-     * <em>format string<em>.
+     * <em>format string</em>.
      *
      * @param args
      *        arguments referenced by the format specifiers in the format

@@ -1210,8 +1210,8 @@ public final class Http {
    * Parse the specified body as if it is the body of a
    * {@code application/x-www-form-urlencoded} HTTP message.
    *
-   * @param body
-   *        the body of the HTTP message to parse
+   * @param http
+   *        the HTTP exchange to parse
    *
    * @throws IOException
    *         if an I/O error occurs while reading the body

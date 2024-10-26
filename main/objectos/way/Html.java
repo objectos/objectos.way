@@ -364,8 +364,6 @@ public final class Html {
    * <p>
    * The set of instructions MUST be of the same template instance where this
    * fragment will be included.
-   *
-   * @see Html#renderTemplate(Html.FragmentLambda)
    */
   public sealed interface Fragment {
 
