@@ -615,7 +615,7 @@ public final class Html {
   }
 
   /**
-   * Provides methods for defining the structure of an HTML document.
+   * Allow for defining the structure of an HTML document using pure Java.
    */
   public sealed interface Markup extends MarkupAttributes, MarkupElements permits HtmlMarkup {
 
@@ -627,6 +627,36 @@ public final class Html {
     static Markup create() {
       return new HtmlMarkup();
     }
+
+    Html.Instruction.OfDataOn dataOn(Html.AttributeName name, Script.Action value);
+
+    /**
+     * Flattens the specified instructions so that each of the specified
+     * instructions is individually added, in order, to a receiving element.
+     *
+     * @param contents
+     *        the instructions to be flattened
+     *
+     * @return an instruction representing this flatten operation
+     */
+    Html.Instruction.OfElement flatten(Html.Instruction... contents);
+
+    /**
+     * The no-op instruction.
+     *
+     * @return the no-op instruction.
+     */
+    Html.Instruction.NoOp noop();
+
+    /**
+     * Renders the specified value as raw HTML.
+     *
+     * @param value
+     *        the raw HTML value
+     *
+     * @return a raw HTML instruction
+     */
+    Html.Instruction.OfElement raw(String value);
 
     /**
      * Renders the specified plugin as part of this HTML instance.
@@ -647,6 +677,33 @@ public final class Html {
      * @return an instruction representing the rendered template.
      */
     Html.Instruction.OfFragment renderTemplate(Html.Template template);
+
+    /**
+     * Renders a named <em>testable</em> text node with the specified name and
+     * value. A <em>testable</em> text node produces the same HTML output of a
+     * regular text node. It participates in the
+     * {@link Html.Template#testableText()} output which a regular text node
+     * does not.
+     *
+     * @param name
+     *        the name of the testable text node
+     * @param value
+     *        the value of the testable text node
+     *
+     * @return an instruction representing the text node
+     */
+    Html.Instruction.OfElement testable(String name, String value);
+
+    /**
+     * Renders a text node with the specified {@code text} value. The text
+     * value is escaped before being emitted to the output.
+     *
+     * @param text
+     *        the text value to be added
+     *
+     * @return an instruction representing the text node
+     */
+    Html.Instruction.OfElement text(String text);
 
   }
 
@@ -3840,6 +3897,18 @@ public final class Html {
     }
 
     /**
+     * Renders the specified value as raw HTML.
+     *
+     * @param value
+     *        the raw HTML value
+     *
+     * @return a raw HTML instruction
+     */
+    protected final Html.Instruction.OfElement raw(String value) {
+      return $html().raw(value);
+    }
+
+    /**
      * Renders the specified fragment as part of this template.
      *
      * <p>
@@ -4079,36 +4148,6 @@ public final class Html {
       return $html().renderTemplate(template);
     }
 
-    protected final Html.Instruction.OfElement raw(String text) {
-      return $html().raw(text);
-    }
-
-    /**
-     * Renders a text node with the specified {@code text} value. The text
-     * value is escaped before being emitted to the output.
-     *
-     * <p>
-     * The following Objectos HTML template:
-     *
-     * {@snippet file = "objectos/way/HtmlTemplateBaseJavadoc.java" region =
-     * "text"}
-     *
-     * <p>
-     * Generates the following HTML:
-     *
-     * <pre>{@code
-     *     <p><strong>This is in bold</strong> &amp; this is not</p>
-     * }</pre>
-     *
-     * @param text
-     *        the text value to be added
-     *
-     * @return an instruction representing the text node
-     */
-    protected final Html.Instruction.OfElement text(String text) {
-      return $html().text(text);
-    }
-
     /**
      * Renders a named <em>testable</em> text node with the specified name and
      * value. A <em>testable</em> text node produces the same HTML output of a
@@ -4135,14 +4174,40 @@ public final class Html {
      * "testable2"}
      *
      * @param name
-     *        the name of this testable text node
+     *        the name of the testable text node
      * @param value
-     *        the value of this testable text node
+     *        the value of the testable text node
      *
      * @return an instruction representing the text node
      */
     protected final Html.Instruction.OfElement testable(String name, String value) {
       return $html().testable(name, value);
+    }
+
+    /**
+     * Renders a text node with the specified {@code text} value. The text
+     * value is escaped before being emitted to the output.
+     *
+     * <p>
+     * The following Objectos HTML template:
+     *
+     * {@snippet file = "objectos/way/HtmlTemplateBaseJavadoc.java" region =
+     * "text"}
+     *
+     * <p>
+     * Generates the following HTML:
+     *
+     * <pre>{@code
+     *     <p><strong>This is in bold</strong> &amp; this is not</p>
+     * }</pre>
+     *
+     * @param text
+     *        the text value to be added
+     *
+     * @return an instruction representing the text node
+     */
+    protected final Html.Instruction.OfElement text(String text) {
+      return $html().text(text);
     }
 
     @Override

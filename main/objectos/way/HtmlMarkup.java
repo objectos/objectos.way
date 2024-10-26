@@ -179,6 +179,7 @@ final class HtmlMarkup implements Html.Markup {
     return attribute0(name, value);
   }
 
+  @Override
   public final Html.Instruction.OfDataOn dataOn(Html.AttributeName name, Script.Action value) {
     Check.notNull(name, "name == null");
 
@@ -232,6 +233,7 @@ final class HtmlMarkup implements Html.Markup {
    *
    * @return an instruction representing this flatten operation
    */
+  @Override
   public final Html.Instruction.OfElement flatten(Html.Instruction... contents) {
     Check.notNull(contents, "contents == null");
 
@@ -274,10 +276,12 @@ final class HtmlMarkup implements Html.Markup {
    *
    * @return the no-op instruction.
    */
+  @Override
   public final Html.Instruction.NoOp noop() {
     return Html.NOOP;
   }
 
+  @Override
   public final Html.Instruction.OfElement raw(String text) {
     Check.notNull(text, "text == null");
 
@@ -286,6 +290,7 @@ final class HtmlMarkup implements Html.Markup {
     return Html.ELEMENT;
   }
 
+  @Override
   public final Html.Instruction.OfElement testable(String name, String value) {
     Check.notNull(name, "name == null");
     Check.notNull(value, "value == null");
@@ -317,6 +322,7 @@ final class HtmlMarkup implements Html.Markup {
    *
    * @return an instruction representing the text node
    */
+  @Override
   public final Html.Instruction.OfElement text(String text) {
     Check.notNull(text, "text == null");
 
