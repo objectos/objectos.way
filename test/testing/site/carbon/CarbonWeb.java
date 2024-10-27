@@ -15,10 +15,11 @@
  */
 package testing.site.carbon;
 
+import objectos.way.Http;
 import objectos.way.Web;
 import testing.zite.TestingSiteInjector;
 
-public final class CarbonWeb extends Web.Module {
+public final class CarbonWeb extends Http.Module {
 
   private final TestingSiteInjector injector;
 
