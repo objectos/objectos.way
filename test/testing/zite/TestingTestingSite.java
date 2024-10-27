@@ -82,7 +82,7 @@ public final class TestingTestingSite {
     Web.Resources webResources;
 
     try {
-      webResources = Web.createResources();
+      webResources = Web.Resources.create(config -> {});
     } catch (IOException e) {
       throw new UncheckedIOException(e);
     }

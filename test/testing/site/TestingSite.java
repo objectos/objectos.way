@@ -62,15 +62,17 @@ abstract class TestingSite extends App.Bootstrap {
     Web.Resources webResources;
 
     try {
-      webResources = Web.createResources(
-          Web.contentTypes("""
+      webResources = Web.Resources.create(config -> {
+        config.contentTypes("""
           .css: text/css; charset=utf-8
           .js: text/javascript; charset=utf-8
-          """),
+          """);
 
-          Web.serveFile("/common/way.js", Script.getBytes()),
-          Web.serveFile("/ui/script.js", Script.getBytes())
-      );
+        final byte[] script = Script.getBytes();
+
+        config.serveFile("/common/way.js", script);
+        config.serveFile("/ui/script.js", script);
+      });
     } catch (IOException e) {
       throw App.serviceFailed("WebResources", e);
     }

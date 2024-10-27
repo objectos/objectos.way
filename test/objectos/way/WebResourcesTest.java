@@ -45,20 +45,20 @@ public class WebResourcesTest extends Http.Module {
   public void beforeClass() throws IOException {
     root = TestingDir.next();
 
-    resources = Web.createResources(
-        Web.rootDirectory(root),
+    resources = Web.Resources.create(config -> {
+      config.rootDirectory(root);
 
-        Web.noteSink(TestingNoteSink.INSTANCE),
+      config.noteSink(TestingNoteSink.INSTANCE);
 
-        Web.contentTypes("""
+      config.contentTypes("""
         .txt: text/plain; charset=utf-8
-        """),
+        """);
 
-        testCase01Option(),
-        testCase03Option(),
-        testCase04Option(),
-        testCase05Option()
-    );
+      testCase01Option(config);
+      testCase03Option(config);
+      testCase04Option(config);
+      testCase05Option(config);
+    });
 
     TestingShutdownHook.register(resources);
 
@@ -77,7 +77,7 @@ public class WebResourcesTest extends Http.Module {
     route("/tc08.txt", handler(resources), handler(this::testCase08));
   }
 
-  private Web.Resources.Option testCase01Option() throws IOException {
+  private void testCase01Option(Web.Resources.Config config) throws IOException {
     Path src;
     src = TestingDir.next();
 
@@ -86,7 +86,7 @@ public class WebResourcesTest extends Http.Module {
 
     write(src, a, "AAAA\n");
 
-    return Web.serveDirectory(src);
+    config.serveDirectory(src);
   }
 
   @Test(description = """
@@ -148,7 +148,7 @@ public class WebResourcesTest extends Http.Module {
     }
   }
 
-  private Web.Resources.Option testCase03Option() throws IOException {
+  private void testCase03Option(Web.Resources.Config config) throws IOException {
     Path src;
     src = TestingDir.next();
 
@@ -157,7 +157,7 @@ public class WebResourcesTest extends Http.Module {
 
     write(src, a, "AAAA\n");
 
-    return Web.serveDirectory(src);
+    config.serveDirectory(src);
   }
 
   @Test(description = """
@@ -185,8 +185,8 @@ public class WebResourcesTest extends Http.Module {
     }
   }
 
-  private Web.Resources.Option testCase04Option() throws IOException {
-    return Web.serveFile("/tc04.txt", "AAAA\n".getBytes(StandardCharsets.UTF_8));
+  private void testCase04Option(Web.Resources.Config config) throws IOException {
+    config.serveFile("/tc04.txt", "AAAA\n".getBytes(StandardCharsets.UTF_8));
   }
 
   @Test(description = """
@@ -231,7 +231,7 @@ public class WebResourcesTest extends Http.Module {
     }
   }
 
-  private Web.Resources.Option testCase05Option() throws IOException {
+  private void testCase05Option(Web.Resources.Config config) throws IOException {
     Path src;
     src = TestingDir.next();
 
@@ -240,7 +240,7 @@ public class WebResourcesTest extends Http.Module {
 
     write(src, a, "AAAA\n");
 
-    return Web.serveDirectory(src);
+    config.serveDirectory(src);
   }
 
   @Test(description = """

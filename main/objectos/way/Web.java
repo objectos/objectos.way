@@ -17,22 +17,11 @@ package objectos.way;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
-import java.nio.file.Files;
 import java.nio.file.Path;
-import java.security.SecureRandom;
 import java.time.Clock;
 import java.time.Duration;
-import java.time.Instant;
-import java.util.Collection;
-import java.util.HexFormat;
-import java.util.Map;
-import java.util.Objects;
 import java.util.Random;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
 import java.util.function.Consumer;
-import objectos.notes.Note1;
-import objectos.notes.NoteSink;
 
 /**
  * The <strong>Objectos Web</strong> main class.
@@ -90,18 +79,122 @@ public final class Web {
     /**
      * Configures the creation of an Web Resources instance.
      */
-    public sealed interface Option {}
+    public sealed interface Config permits WebResourcesConfig {
+
+      /**
+       * Map file extension names to content type (media type) values as defined
+       * by the specified properties string.
+       *
+       * <p>
+       * A typical usage is:
+       *
+       * <pre>
+       * config.contentTypes("""
+       *     .css: text/stylesheet; charset=utf-8
+       *     .js: text/javascript; charset=utf-8
+       *     .jpg: image/jpeg
+       *     .woff: font/woff2
+       *     """);</pre>
+       *
+       * <p>
+       * Which causes:
+       *
+       * <ul>
+       * <li>files ending in {@code .css} to be served with
+       * {@code Content-Type: text/stylesheet; charset=utf-8};</li>
+       * <li>files ending in {@code .js} to be served with
+       * {@code Content-Type: text/javascript; charset=utf-8};</li>
+       * <li>files ending in {@code .jpg} to be served with
+       * {@code Content-Type: image/jpeg};</li>
+       * <li>files ending in {@code .woff} to be served with
+       * {@code Content-Type: font/woff2};</li>
+       * </ul>
+       *
+       * @param propertiesString
+       *        a string with a file extension / content-type mapping in each
+       *        line
+       *
+       * @return this object
+       */
+      Config contentTypes(String propertiesString);
+
+      /**
+       * Set the note sink to the specified instance.
+       *
+       * @param noteSink
+       *        the note sink instance
+       *
+       * @return this object
+       */
+      Config noteSink(Note.Sink noteSink);
+
+      /**
+       * Serve the contents of the specified directory as if they were at the
+       * root of the web server.
+       *
+       * @param directory
+       *        the directory whose contents are to be served
+       *
+       * @return this object
+       */
+      Config serveDirectory(Path directory);
+
+      /**
+       * Serve at the specified path name a file with the specified
+       * contents. The behavior of this option is not specified if the
+       * contents of the array is changed while this option is configuring the
+       * creation of a resources instance.
+       *
+       * <p>
+       * A typical usage is:
+       *
+       * <pre>
+       * config.serveFile("/robots.txt", Files.readAllBytes(robotsPath));</pre>
+       *
+       * @param pathName
+       *        the path of the resource to be served. It must start with a '/'
+       *        character.
+       *
+       * @param contents
+       *        the contents of the resource to be served.
+       *
+       * @return this object
+       */
+      Config serveFile(String pathName, byte[] contents);
+
+      /**
+       * Set the root directory of the web resources to the specified path.
+       *
+       * @param value
+       *        the path of the directory
+       *
+       * @return this object
+       */
+      Config rootDirectory(Path value);
+
+    }
 
     /**
-     * A debug note indicating that a file has been created.
+     * Creates a new {@code Resources} instance with the specified
+     * configuration.
+     *
+     * @param config
+     *        the configuration
+     *
+     * @return a newly created {@code Resources} instance with the specified
+     *         configuration
+     *
+     * @throws IOException
+     *         if an I/O error occurs
      */
-    Note1<Path> CREATED = Note1.debug(Resources.class, "File created");
+    static Resources create(ThrowingConsumer<Config, IOException> config) throws IOException {
+      WebResourcesConfig builder;
+      builder = new WebResourcesConfig();
 
-    /**
-     * An error note indicating that a request has been denied because an
-     * attempted filesystem traversal has been detected.
-     */
-    Note1<String> TRAVERSAL = Note1.error(Resources.class, "Traversal detected");
+      config.accept(builder);
+
+      return builder.build();
+    }
 
     /**
      * Deletes the file at the specified path if it exists.
@@ -126,12 +219,6 @@ public final class Web {
      *         if an I/O error occurs
      */
     void writeString(String path, CharSequence contents, Charset charset) throws IOException;
-
-  }
-
-  private non-sealed interface WebResourcesOption extends Resources.Option {
-
-    void accept(WebResources.Builder builder);
 
   }
 
@@ -203,7 +290,7 @@ public final class Web {
     /**
      * Configures the creation of a {@code Store} instance.
      */
-    public sealed interface Config {
+    public sealed interface Config permits WebStoreConfig {
 
       /**
        * Use the specified {@code clock} when setting session instances time
@@ -334,6 +421,13 @@ public final class Web {
 
   }
 
+  @FunctionalInterface
+  public interface ThrowingConsumer<T, E extends Exception> {
+
+    void accept(T config) throws E;
+
+  }
+
   private Web() {}
 
   /**
@@ -353,439 +447,6 @@ public final class Web {
     Check.argument(totalCount >= 0, "totalCount must be equal or greater than zero");
 
     return WebPaginator.of(target, pageAttrName, pageSize, totalCount);
-  }
-
-  /**
-   * Creates a new resources instance configured with the specified options.
-   *
-   * @param options
-   *        configures the creation of the new resources instance
-   *
-   * @return a newly created resources instance
-   *
-   * @throws IOException
-   *         if an I/O error occurs
-   */
-  public static Resources createResources(Resources.Option... options) throws IOException {
-    WebResources.Builder builder;
-    builder = new WebResources.Builder();
-
-    for (int i = 0; i < options.length; i++) {
-      Resources.Option o;
-      o = Check.notNull(options[i], "options[", i, "] == null");
-
-      WebResourcesOption option;
-      option = (WebResourcesOption) o;
-
-      option.accept(builder);
-    }
-
-    return builder.build();
-  }
-
-  /**
-   * Resources option: map file extension names to content type (media type)
-   * values as defined by the specified properties string.
-   *
-   * <p>
-   * A typical usage is:
-   *
-   * <pre>
-   * Resources.Option o;
-   * o = Web.contentTypes("""
-   *     .css: text/stylesheet; charset=utf-8
-   *     .js: text/javascript; charset=utf-8
-   *     .jpg: image/jpeg
-   *     .woff: font/woff2
-   *     """);</pre>
-   *
-   * <p>
-   * Which causes:
-   *
-   * <ul>
-   * <li>files ending in {@code .css} to be served with
-   * {@code Content-Type: text/stylesheet; charset=utf-8};</li>
-   * <li>files ending in {@code .js} to be served with
-   * {@code Content-Type: text/javascript; charset=utf-8};</li>
-   * <li>files ending in {@code .jpg} to be served with
-   * {@code Content-Type: image/jpeg};</li>
-   * <li>files ending in {@code .woff} to be served with
-   * {@code Content-Type: font/woff2};</li>
-   * </ul>
-   *
-   * @param propertiesString
-   *        a string with a file extension / content-type mapping in each line
-   *
-   * @return a new configuration option
-   */
-  public static Resources.Option contentTypes(String propertiesString) {
-    Map<String, String> map;
-    map = Util.parsePropertiesMap(propertiesString);
-
-    return new WebResourcesOption() {
-      @Override
-      public final void accept(WebResources.Builder b) {
-        b.contentTypes = map;
-      }
-    };
-  }
-
-  /**
-   * Resources option: set the note sink to the specified instance.
-   *
-   * @param noteSink
-   *        the note sink instance
-   *
-   * @return a new configuration option
-   */
-  public static Resources.Option noteSink(NoteSink noteSink) {
-    Check.notNull(noteSink, "noteSink == null");
-
-    return new WebResourcesOption() {
-      @Override
-      public final void accept(WebResources.Builder b) {
-        b.noteSink = noteSink;
-      }
-    };
-  }
-
-  /**
-   * Resources option: serve the contents of the specified directory as if they
-   * were at the root of the web server.
-   *
-   * @param directory
-   *        the directory whose contents are to be served
-   *
-   * @return a new configuration option
-   */
-  public static Resources.Option serveDirectory(Path directory) {
-    Check.argument(Files.isDirectory(directory), "Path " + directory + " does not represent a directory");
-
-    return new WebResourcesOption() {
-      @Override
-      public final void accept(WebResources.Builder b) {
-        b.directories.add(directory);
-      }
-    };
-  }
-
-  /**
-   * Resources option: serve at the specified path name a file with the
-   * specified
-   * contents. The behavior of this option is not specified if the
-   * contents of the array is changed while this option is configuring the
-   * creation of a resources instance.
-   *
-   * <p>
-   * A typical usage is:
-   *
-   * <pre>
-   * Resources.Option o;
-   * o = Web.serveFile("/robots.txt", Files.readAllBytes(robotsPath));</pre>
-   *
-   * @param pathName
-   *        the path of the resource to be served. It must start with a '/'
-   *        character.
-   *
-   * @param contents
-   *        the contents of the resource to be served.
-   *
-   * @return a new configuration option
-   */
-  public static Resources.Option serveFile(String pathName, byte[] contents) {
-    Http.RequestTarget target;
-    target = Http.parseRequestTarget(pathName);
-
-    String query;
-    query = target.rawQuery();
-
-    if (query != null) {
-      throw new IllegalArgumentException("Found query component in path name: " + pathName);
-    }
-
-    String path;
-    path = target.path();
-
-    Check.notNull(contents, "contents == null");
-
-    return new WebResourcesOption() {
-      @Override
-      public final void accept(WebResources.Builder b) {
-        b.serveFile(path, contents);
-      }
-    };
-  }
-
-  static Resources.Option rootDirectory(Path directory) {
-    Check.argument(Files.isDirectory(directory), "Path " + directory + " does not represent a directory");
-
-    return new WebResourcesOption() {
-      @Override
-      public final void accept(WebResources.Builder b) {
-        b.rootDirectory = directory;
-      }
-    };
-  }
-
-}
-
-/**
- * The Objectos Way {@link SessionStore} implementation.
- */
-final class WebStore implements Web.Store {
-
-  private static final int ID_LENGTH_IN_BYTES = 16;
-
-  private final Clock clock;
-
-  private final Duration cookieMaxAge;
-
-  private final String cookieName;
-
-  private final String cookiePath;
-
-  private final Duration emptyMaxAge;
-
-  private final HexFormat hexFormat = HexFormat.of();
-
-  private final Random random;
-
-  private final ConcurrentMap<String, WebSession> sessions = new ConcurrentHashMap<>();
-
-  WebStore(WebStoreConfig builder) {
-    clock = builder.clock;
-
-    cookieMaxAge = builder.cookieMaxAge;
-
-    cookieName = builder.cookieName;
-
-    cookiePath = builder.cookiePath;
-
-    emptyMaxAge = builder.emptyMaxAge;
-
-    random = builder.random;
-  }
-
-  @Override
-  public final void cleanUp() {
-    Instant now;
-    now = Instant.now(clock);
-
-    Instant min;
-    min = now.minus(emptyMaxAge);
-
-    Collection<WebSession> values;
-    values = sessions.values();
-
-    for (WebSession session : values) {
-      if (session.shouldCleanUp(min)) {
-        sessions.remove(session.id());
-      }
-    }
-  }
-
-  public final void clear() {
-    sessions.clear();
-  }
-
-  final WebSession put(String id, WebSession session) {
-    Check.notNull(id, "id == null");
-    Check.notNull(session, "session == null");
-
-    return sessions.put(id, session);
-  }
-
-  @Override
-  public final Web.Session createNext() {
-    WebSession session, maybeExisting;
-
-    do {
-      String id;
-      id = nextId();
-
-      session = new WebSession(id);
-
-      maybeExisting = sessions.putIfAbsent(id, session);
-    } while (maybeExisting != null);
-
-    return session;
-  }
-
-  @Override
-  public final void filter(Http.Exchange http) {
-    Http.Request.Headers headers;
-    headers = http.headers();
-
-    String cookieHeaderValue;
-    cookieHeaderValue = headers.first(Http.COOKIE);
-
-    if (cookieHeaderValue == null) {
-      return;
-    }
-
-    Http.Request.Cookies cookies;
-    cookies = Http.parseCookies(cookieHeaderValue);
-
-    String id;
-    id = cookies.get(cookieName);
-
-    if (id == null) {
-      return;
-    }
-
-    Web.Session session;
-    session = get(id);
-
-    if (session == null) {
-      return;
-    }
-
-    http.set(Web.Session.class, session);
-  }
-
-  @Override
-  public final Web.Session get(String id) {
-    WebSession session;
-    session = sessions.get(id);
-
-    if (session == null) {
-      return null;
-    }
-
-    if (!session.valid) {
-      return null;
-    }
-
-    session.touch(clock);
-
-    return session;
-  }
-
-  @Override
-  public final String setCookie(String id) {
-    Check.notNull(id, "id == null");
-
-    StringBuilder s;
-    s = new StringBuilder();
-
-    s.append(cookieName);
-
-    s.append('=');
-
-    s.append(id);
-
-    if (cookieMaxAge != null) {
-      s.append("; Max-Age=");
-
-      s.append(cookieMaxAge.getSeconds());
-    }
-
-    if (cookiePath != null) {
-      s.append("; Path=");
-
-      s.append(cookiePath);
-    }
-
-    return s.toString();
-  }
-
-  @Override
-  public final Web.Session store(Web.Session session) {
-    String id;
-    id = session.id();
-
-    return sessions.put(id, (WebSession) session);
-  }
-
-  private String nextId() {
-    byte[] bytes;
-    bytes = new byte[ID_LENGTH_IN_BYTES];
-
-    random.nextBytes(bytes);
-
-    return hexFormat.formatHex(bytes);
-  }
-
-}
-
-final class WebStoreConfig implements Web.Store.Config {
-
-  Clock clock = Clock.systemDefaultZone();
-
-  Duration cookieMaxAge;
-
-  String cookieName = "OBJECTOSWAY";
-
-  String cookiePath = "/";
-
-  Duration emptyMaxAge = Duration.ofMinutes(5);
-
-  Random random = new SecureRandom();
-
-  public final Web.Store build() {
-    return new WebStore(this);
-  }
-
-  @Override
-  public final Web.Store.Config clock(Clock value) {
-    clock = Objects.requireNonNull(value, "value == null");
-
-    return this;
-  }
-
-  @Override
-  public final Web.Store.Config cookieName(String name) {
-    cookieName = Objects.requireNonNull(name, "name == null");
-
-    return this;
-  }
-
-  @Override
-  public final Web.Store.Config cookiePath(String path) {
-    cookiePath = Objects.requireNonNull(path, "path == null");
-
-    return this;
-  }
-
-  @Override
-  public final Web.Store.Config cookieMaxAge(Duration duration) {
-    Objects.requireNonNull(duration, "duration == null");
-
-    if (duration.isZero()) {
-      throw new IllegalArgumentException("maxAge must not be zero");
-    }
-
-    if (duration.isNegative()) {
-      throw new IllegalArgumentException("maxAge must not be negative");
-    }
-
-    cookieMaxAge = duration;
-
-    return this;
-  }
-
-  @Override
-  public final Web.Store.Config emptyMaxAge(Duration duration) {
-    Objects.requireNonNull(duration, "duration == null");
-
-    if (duration.isZero()) {
-      throw new IllegalArgumentException("emptyMaxAge must not be zero");
-    }
-
-    if (duration.isNegative()) {
-      throw new IllegalArgumentException("emptyMaxAge must not be negative");
-    }
-
-    emptyMaxAge = duration;
-
-    return this;
-  }
-
-  @Override
-  public final Web.Store.Config random(Random random) {
-    this.random = Objects.requireNonNull(random, "random == null");
-
-    return this;
   }
 
 }

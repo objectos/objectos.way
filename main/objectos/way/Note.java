@@ -167,6 +167,8 @@ public sealed interface Note {
 
   static class NoOpSink implements Sink {
 
+    protected NoOpSink() {}
+
     @Override
     public boolean isEnabled(Note note) {
       return false;

@@ -18,130 +18,21 @@ package objectos.way;
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.nio.charset.Charset;
-import java.nio.file.FileAlreadyExistsException;
-import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
 import java.nio.file.OpenOption;
 import java.nio.file.Path;
-import java.nio.file.SimpleFileVisitor;
-import java.nio.file.StandardCopyOption;
 import java.nio.file.StandardOpenOption;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.nio.file.attribute.FileTime;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
-import objectos.notes.NoOpNoteSink;
-import objectos.notes.NoteSink;
 import objectos.way.Http.Exchange;
 
 final class WebResources implements AutoCloseable, Web.Resources {
 
-  private record FileBytes(String pathName, byte[] contents) {}
-
-  static final class Builder {
-
-    Map<String, String> contentTypes = Map.of();
-
-    final String defaultContentType = "application/octet-stream";
-
-    final List<Path> directories = Util.createList();
-
-    final List<FileBytes> files = Util.createList();
-
-    NoteSink noteSink = NoOpNoteSink.of();
-
-    Path rootDirectory;
-
-    public Web.Resources build() throws IOException {
-      if (rootDirectory == null) {
-        rootDirectory = Files.createTempDirectory("way-web-resources-");
-      }
-
-      for (Path directory : directories) {
-        CopyRecursively copyRecursively;
-        copyRecursively = new CopyRecursively(directory);
-
-        Files.walkFileTree(directory, copyRecursively);
-      }
-
-      for (FileBytes f : files) {
-        String path;
-        path = f.pathName();
-
-        path = path.substring(1); // remove '/'
-
-        Path file;
-        file = rootDirectory.resolve(path);
-
-        file = file.normalize();
-
-        if (!file.startsWith(rootDirectory)) {
-          throw new IllegalArgumentException("Traversal detected: " + path);
-        }
-
-        Path parent;
-        parent = file.getParent();
-
-        Files.createDirectories(parent);
-
-        Files.write(file, f.contents, StandardOpenOption.CREATE_NEW);
-      }
-
-      return new WebResources(this);
-    }
-
-    public final void serveFile(String pathName, byte[] contents) {
-      files.add(new FileBytes(pathName, contents));
-    }
-
-    private class CopyRecursively extends SimpleFileVisitor<Path> {
-
-      private final Path source;
-
-      public CopyRecursively(Path source) {
-        this.source = source;
-      }
-
-      @Override
-      public final FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
-        Path path;
-        path = source.relativize(dir);
-
-        Path dest;
-        dest = rootDirectory.resolve(path);
-
-        try {
-          Files.copy(dir, dest);
-        } catch (FileAlreadyExistsException e) {
-          if (!Files.isDirectory(dest)) {
-            throw e;
-          }
-        }
-
-        return FileVisitResult.CONTINUE;
-      }
-
-      @Override
-      public final FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
-        Path path;
-        path = source.relativize(file);
-
-        Path dest;
-        dest = rootDirectory.resolve(path);
-
-        Files.copy(file, dest, StandardCopyOption.COPY_ATTRIBUTES);
-
-        noteSink.send(CREATED, dest);
-
-        return FileVisitResult.CONTINUE;
-      }
-
-    }
-
-  }
+  static final Note.Ref1<String> TRAVERSAL = Note.Ref1.create(Web.Resources.class, "Traversal detected", Note.ERROR);
 
   private static final OpenOption[] OPEN_CREATE = new OpenOption[] {StandardOpenOption.CREATE_NEW};
 
@@ -149,7 +40,7 @@ final class WebResources implements AutoCloseable, Web.Resources {
 
   private final String defaultContentType;
 
-  private final NoteSink noteSink;
+  private final Note.Sink noteSink;
 
   private final Path rootDirectory;
 
@@ -159,7 +50,7 @@ final class WebResources implements AutoCloseable, Web.Resources {
 
   private final Lock writeLock = rwl.writeLock();
 
-  private WebResources(Builder builder) {
+  WebResources(WebResourcesConfig builder) {
     this.contentTypes = builder.contentTypes;
 
     this.defaultContentType = builder.defaultContentType;
