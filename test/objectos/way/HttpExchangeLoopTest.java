@@ -89,7 +89,7 @@ public class HttpExchangeLoopTest {
       byte[] msg;
       msg = body01.getBytes(StandardCharsets.UTF_8);
 
-      http.status(Http.OK);
+      http.status(Http.Status.OK);
       http.header(Http.CONTENT_TYPE, "text/plain; charset=utf-8");
       http.header(Http.CONTENT_LENGTH, msg.length);
       http.header(Http.DATE, "Wed, 28 Jun 2023 12:08:43 GMT");
@@ -190,7 +190,7 @@ public class HttpExchangeLoopTest {
       byte[] msg;
       msg = body01.getBytes(StandardCharsets.UTF_8);
 
-      http.status(Http.OK);
+      http.status(Http.Status.OK);
       http.header(Http.CONTENT_TYPE, "text/html; charset=utf-8");
       http.header(Http.CONTENT_LENGTH, msg.length);
       http.header(Http.DATE, "Wed, 28 Jun 2023 12:08:43 GMT");
@@ -226,7 +226,7 @@ public class HttpExchangeLoopTest {
       // response phase
       msg = body02.getBytes(StandardCharsets.UTF_8);
 
-      http.status(Http.OK);
+      http.status(Http.Status.OK);
       http.header(Http.CONTENT_TYPE, "text/css; charset=utf-8");
       http.header(Http.CONTENT_LENGTH, msg.length);
       http.header(Http.DATE, "Wed, 28 Jun 2023 12:08:43 GMT");
@@ -291,7 +291,7 @@ public class HttpExchangeLoopTest {
       byte[] msg;
       msg = body01.getBytes(StandardCharsets.UTF_8);
 
-      http.status(Http.OK);
+      http.status(Http.Status.OK);
       http.header(Http.CONTENT_TYPE, "text/plain; charset=utf-8");
       http.header(Http.CONTENT_LENGTH, msg.length);
       http.header(Http.DATE, "Wed, 28 Jun 2023 12:08:43 GMT");
@@ -368,7 +368,7 @@ public class HttpExchangeLoopTest {
 
       Files.writeString(index, body01, StandardCharsets.UTF_8);
 
-      http.status(Http.OK);
+      http.status(Http.Status.OK);
       http.header(Http.CONTENT_TYPE, "text/html; charset=utf-8");
       http.header(Http.CONTENT_LENGTH, Files.size(index));
       http.header(Http.DATE, "Wed, 28 Jun 2023 12:08:43 GMT");
@@ -433,7 +433,7 @@ public class HttpExchangeLoopTest {
 
       // response phase
 
-      http.status(Http.NOT_MODIFIED);
+      http.status(Http.Status.NOT_MODIFIED);
       http.header(Http.DATE, "Wed, 28 Jun 2023 12:08:43 GMT");
       http.header(Http.ETAG, "some%hash");
       http.send();
@@ -479,7 +479,7 @@ public class HttpExchangeLoopTest {
 
       // response phase
 
-      http.status(Http.NOT_FOUND);
+      http.status(Http.Status.NOT_FOUND);
       http.header(Http.CONNECTION, "close");
       http.header(Http.DATE, "Wed, 28 Jun 2023 12:08:43 GMT");
       http.send();
@@ -529,7 +529,7 @@ public class HttpExchangeLoopTest {
 
       // response phase
 
-      http.status(Http.NOT_FOUND);
+      http.status(Http.Status.NOT_FOUND);
       http.header(Http.CONNECTION, "close");
       http.header(Http.DATE, "Wed, 28 Jun 2023 12:08:43 GMT");
       http.send();
@@ -588,7 +588,7 @@ public class HttpExchangeLoopTest {
 
       // response phase
 
-      http.status(Http.SEE_OTHER);
+      http.status(Http.Status.SEE_OTHER);
       http.header(Http.LOCATION, "/app");
       http.header(Http.CONTENT_TYPE, "text/plain; charset=utf-8");
       http.header(Http.CONTENT_LENGTH, "52");
@@ -640,7 +640,7 @@ public class HttpExchangeLoopTest {
 
       assertEquals(parse.isError(), false);
 
-      http.status(Http.OK);
+      http.status(Http.Status.OK);
       http.header(Http.CONTENT_TYPE, "text/plain; charset=utf-8");
       http.header(Http.CONTENT_LENGTH, 5);
       http.header(Http.DATE, "Wed, 28 Jun 2023 12:08:43 GMT");

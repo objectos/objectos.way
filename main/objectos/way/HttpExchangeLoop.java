@@ -323,14 +323,14 @@ final class HttpExchangeLoop extends HttpRequestBody implements Http.Exchange, C
 
   static {
     int size;
-    size = HttpResponseStatus.size();
+    size = HttpStatus.size();
 
     byte[][] map;
     map = new byte[size][];
 
     for (int index = 0; index < size; index++) {
-      HttpResponseStatus status;
-      status = HttpResponseStatus.get(index);
+      HttpStatus status;
+      status = HttpStatus.get(index);
 
       String response;
       response = Integer.toString(status.code()) + " " + status.reasonPhrase() + "\r\n";
@@ -342,7 +342,7 @@ final class HttpExchangeLoop extends HttpRequestBody implements Http.Exchange, C
   }
 
   @Override
-  public final void status(Http.Response.Status status) {
+  public final void status(Http.Status status) {
     checkResponse();
 
     Http.Version version;
@@ -350,8 +350,8 @@ final class HttpExchangeLoop extends HttpRequestBody implements Http.Exchange, C
 
     writeBytes(version.responseBytes);
 
-    HttpResponseStatus internal;
-    internal = (HttpResponseStatus) status;
+    HttpStatus internal;
+    internal = (HttpStatus) status;
 
     byte[] statusBytes;
     statusBytes = STATUS_LINES[internal.index];
@@ -479,7 +479,7 @@ final class HttpExchangeLoop extends HttpRequestBody implements Http.Exchange, C
 
   @Override
   public final void notFound() {
-    status(Http.NOT_FOUND);
+    status(Http.Status.NOT_FOUND);
 
     dateNow();
 
@@ -492,7 +492,7 @@ final class HttpExchangeLoop extends HttpRequestBody implements Http.Exchange, C
 
   @Override
   public final void methodNotAllowed() {
-    status(Http.METHOD_NOT_ALLOWED);
+    status(Http.Status.METHOD_NOT_ALLOWED);
 
     dateNow();
 
@@ -519,7 +519,7 @@ final class HttpExchangeLoop extends HttpRequestBody implements Http.Exchange, C
     byte[] bytes;
     bytes = msg.getBytes();
 
-    status(Http.INTERNAL_SERVER_ERROR);
+    status(Http.Status.INTERNAL_SERVER_ERROR);
 
     dateNow();
 

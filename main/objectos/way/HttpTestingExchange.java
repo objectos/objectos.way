@@ -46,7 +46,7 @@ final class HttpTestingExchange implements Http.TestingExchange {
 
   private Map<Http.HeaderName, Object> responseHeaders;
 
-  private Http.Response.Status responseStatus;
+  private Http.Status responseStatus;
 
   HttpTestingExchange(HttpTestingExchangeConfig config) {
     clock = config.clock;
@@ -63,7 +63,7 @@ final class HttpTestingExchange implements Http.TestingExchange {
   // testing methods
 
   @Override
-  public final Http.Response.Status responseStatus() {
+  public final Http.Status responseStatus() {
     return responseStatus;
   }
 
@@ -236,7 +236,7 @@ final class HttpTestingExchange implements Http.TestingExchange {
 
   @Override
   public final void notFound() {
-    status(Http.NOT_FOUND);
+    status(Http.Status.NOT_FOUND);
 
     dateNow();
 
@@ -247,7 +247,7 @@ final class HttpTestingExchange implements Http.TestingExchange {
 
   @Override
   public final void methodNotAllowed() {
-    status(Http.METHOD_NOT_ALLOWED);
+    status(Http.Status.METHOD_NOT_ALLOWED);
 
     dateNow();
 
@@ -272,7 +272,7 @@ final class HttpTestingExchange implements Http.TestingExchange {
     byte[] bytes;
     bytes = msg.getBytes();
 
-    status(Http.INTERNAL_SERVER_ERROR);
+    status(Http.Status.INTERNAL_SERVER_ERROR);
 
     dateNow();
 
@@ -291,7 +291,7 @@ final class HttpTestingExchange implements Http.TestingExchange {
   }
 
   @Override
-  public final void status(Http.Response.Status value) {
+  public final void status(Http.Status value) {
     responseStatus = Objects.requireNonNull(value, "value == null");
   }
 

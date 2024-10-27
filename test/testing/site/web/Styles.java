@@ -41,7 +41,7 @@ final class Styles implements Http.Handler {
     byte[] bytes;
     bytes = s.toByteArray();
 
-    http.status(Http.OK);
+    http.status(Http.Status.OK);
 
     http.dateNow();
 

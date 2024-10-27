@@ -87,7 +87,7 @@ public class HttpTestingExchangeTest {
 
     http.ok(new Template());
 
-    assertEquals(http.responseStatus(), Http.OK);
+    assertEquals(http.responseStatus(), Http.Status.OK);
 
     Lang.CharWritable body;
     body = (Lang.CharWritable) http.responseBody();

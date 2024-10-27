@@ -158,7 +158,7 @@ final class WebResources implements AutoCloseable, Web.Resources {
     ifNoneMatch = headers.first(Http.IF_NONE_MATCH);
 
     if (etag.equals(ifNoneMatch)) {
-      http.status(Http.NOT_MODIFIED);
+      http.status(Http.Status.NOT_MODIFIED);
 
       http.dateNow();
 
@@ -169,7 +169,7 @@ final class WebResources implements AutoCloseable, Web.Resources {
       return;
     }
 
-    http.status(Http.OK);
+    http.status(Http.Status.OK);
 
     String contentType;
     contentType = defaultContentType;

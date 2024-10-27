@@ -72,7 +72,7 @@ public class HttpServerTest extends Http.Module {
   }
 
   private void testCase01Get(Http.Exchange http) {
-    http.status(Http.OK);
+    http.status(Http.Status.OK);
     http.dateNow();
     http.header(Http.CONTENT_TYPE, "text/plain");
     http.header(Http.CONTENT_LENGTH, 5);
@@ -131,7 +131,7 @@ public class HttpServerTest extends Http.Module {
   }
 
   private void testCase02Get(Http.Exchange http) {
-    http.status(Http.OK);
+    http.status(Http.Status.OK);
     http.dateNow();
     http.header(Http.CONTENT_TYPE, "text/plain");
     http.header(Http.CONTENT_LENGTH, 5);

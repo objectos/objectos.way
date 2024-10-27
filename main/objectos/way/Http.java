@@ -95,7 +95,7 @@ public final class Http {
       handler.handle(this);
     }
 
-    void status(Response.Status status);
+    void status(Status status);
 
     void header(HeaderName name, long value);
 
@@ -119,7 +119,7 @@ public final class Http {
 
     // 200
     default void ok() {
-      status(Http.OK);
+      status(Http.Status.OK);
 
       dateNow();
 
@@ -129,7 +129,7 @@ public final class Http {
     default void ok(Html.Template template) {
       Objects.requireNonNull(template, "template == null");
 
-      status(Http.OK);
+      status(Http.Status.OK);
 
       dateNow();
 
@@ -144,7 +144,7 @@ public final class Http {
       byte[] bytes;
       bytes = text.getBytes(charset); // early implicit null-check
 
-      status(Http.OK);
+      status(Http.Status.OK);
 
       dateNow();
 
@@ -159,7 +159,7 @@ public final class Http {
     default void movedPermanently(String location) {
       Check.notNull(location, "location == null");
 
-      status(Http.MOVED_PERMANENTLY);
+      status(Http.Status.MOVED_PERMANENTLY);
 
       dateNow();
 
@@ -172,7 +172,7 @@ public final class Http {
     default void found(String location) {
       Check.notNull(location, "location == null");
 
-      status(Http.FOUND);
+      status(Http.Status.FOUND);
 
       dateNow();
 
@@ -202,7 +202,7 @@ public final class Http {
      */
     // 415
     default void unsupportedMediaType() {
-      status(Http.UNSUPPORTED_MEDIA_TYPE);
+      status(Http.Status.UNSUPPORTED_MEDIA_TYPE);
 
       dateNow();
 
@@ -226,7 +226,7 @@ public final class Http {
      */
     // 422
     default void unprocessableContent() {
-      status(Http.UNPROCESSABLE_CONTENT);
+      status(Http.Status.UNPROCESSABLE_CONTENT);
 
       dateNow();
 
@@ -595,38 +595,103 @@ public final class Http {
   }
 
   /**
-   * An HTTP response message.
+   * The status of an HTTP response message.
    */
-  public interface Response {
+  public sealed interface Status permits HttpStatus {
+
+    // Response constants
+
+    // 2.x.x
 
     /**
-     * The status of an HTTP response message.
+     * The {@code 200 OK} status.
      */
-    public sealed interface Status permits HttpResponseStatus {
+    Status OK = HttpStatus.OK;
 
-      /**
-       * The code of this status.
-       *
-       * @return the code of this status.
-       */
-      int code();
-
-      /**
-       * The reason-phrase of this status.
-       *
-       * @return the reason-phrase of this status.
-       */
-      String reasonPhrase();
-
-    }
+    // 3.x.x
 
     /**
-     * Sets the status of this response message.
+     * The {@code 301 MOVED PERMANENTLY} status.
+     */
+    Status MOVED_PERMANENTLY = HttpStatus.MOVED_PERMANENTLY;
+
+    /**
+     * The {@code 302 FOUND} status.
+     */
+    Status FOUND = HttpStatus.FOUND;
+
+    /**
+     * The {@code 303 SEE OTHER} status.
+     */
+    Status SEE_OTHER = HttpStatus.SEE_OTHER;
+
+    /**
+     * The {@code 304 NOT MODIFIED} status.
+     */
+    Status NOT_MODIFIED = HttpStatus.NOT_MODIFIED;
+
+    // 4.x.x
+
+    /**
+     * The {@code 400 BAD REQUEST} status.
+     */
+    Status BAD_REQUEST = HttpStatus.BAD_REQUEST;
+
+    /**
+     * The {@code 404 NOT FOUND} status.
+     */
+    Status NOT_FOUND = HttpStatus.NOT_FOUND;
+
+    /**
+     * The {@code 405 METHOD NOT ALLOWED} status.
+     */
+    Status METHOD_NOT_ALLOWED = HttpStatus.METHOD_NOT_ALLOWED;
+
+    /**
+     * The {@code 414 URI TOO LONG} status.
+     */
+    Status URI_TOO_LONG = HttpStatus.URI_TOO_LONG;
+
+    /**
+     * The {@code 415 UNSUPPORTED MEDIA TYPE} status.
+     */
+    Status UNSUPPORTED_MEDIA_TYPE = HttpStatus.UNSUPPORTED_MEDIA_TYPE;
+
+    /**
+     * The {@code 422 UNPROCESSABLE CONTENT} status.
+     */
+    Status UNPROCESSABLE_CONTENT = HttpStatus.UNPROCESSABLE_CONTENT;
+
+    // 5.x.x
+
+    /**
+     * The {@code 500 INTERNAL SERVER ERROR} status.
+     */
+    Status INTERNAL_SERVER_ERROR = HttpStatus.INTERNAL_SERVER_ERROR;
+
+    /**
+     * The {@code 501 NOT IMPLEMENTED} status.
+     */
+    Status NOT_IMPLEMENTED = HttpStatus.NOT_IMPLEMENTED;
+
+    /**
+     * The {@code 505 HTTP VERSION NOT SUPPORTED} status.
+     */
+    Status HTTP_VERSION_NOT_SUPPORTED = HttpStatus.HTTP_VERSION_NOT_SUPPORTED;
+
+    /**
+     * The code of this status.
      *
-     * @param status
-     *        the status to set
+     * @return the code of this status.
      */
-    void status(Status status);
+    int code();
+
+    /**
+     * The reason-phrase of this status.
+     *
+     * @return the reason-phrase of this status.
+     */
+    String reasonPhrase();
 
   }
 
@@ -727,7 +792,7 @@ public final class Http {
       return builder.build();
     }
 
-    Response.Status responseStatus();
+    Status responseStatus();
 
     Object responseBody();
 
@@ -954,86 +1019,6 @@ public final class Http {
       default -> throw new IllegalArgumentException("The value " + code + " is not mapped to a Http.Request.Method value");
     };
   }
-
-  // Response constants
-
-  // 2.x.x
-
-  /**
-   * The {@code 200 OK} status.
-   */
-  public static final Response.Status OK = HttpResponseStatus.create(200, "OK");
-
-  // 3.x.x
-
-  /**
-   * The {@code 301 MOVED PERMANENTLY} status.
-   */
-  public static final Response.Status MOVED_PERMANENTLY = HttpResponseStatus.create(301, "MOVED PERMANENTLY");
-
-  /**
-   * The {@code 302 FOUND} status.
-   */
-  public static final Response.Status FOUND = HttpResponseStatus.create(302, "FOUND");
-
-  /**
-   * The {@code 303 SEE OTHER} status.
-   */
-  public static final Response.Status SEE_OTHER = HttpResponseStatus.create(303, "SEE OTHER");
-
-  /**
-   * The {@code 304 NOT MODIFIED} status.
-   */
-  public static final Response.Status NOT_MODIFIED = HttpResponseStatus.create(304, "NOT MODIFIED");
-
-  // 4.x.x
-
-  /**
-   * The {@code 400 BAD REQUEST} status.
-   */
-  public static final Response.Status BAD_REQUEST = HttpResponseStatus.create(400, "BAD REQUEST");
-
-  /**
-   * The {@code 404 NOT FOUND} status.
-   */
-  public static final Response.Status NOT_FOUND = HttpResponseStatus.create(404, "NOT FOUND");
-
-  /**
-   * The {@code 405 METHOD NOT ALLOWED} status.
-   */
-  public static final Response.Status METHOD_NOT_ALLOWED = HttpResponseStatus.create(405, "METHOD NOT ALLOWED");
-
-  /**
-   * The {@code 414 URI TOO LONG} status.
-   */
-  public static final Response.Status URI_TOO_LONG = HttpResponseStatus.create(414, "URI TOO LONG");
-
-  /**
-   * The {@code 415 UNSUPPORTED MEDIA TYPE} status.
-   */
-  public static final Response.Status UNSUPPORTED_MEDIA_TYPE = HttpResponseStatus.create(415, "UNSUPPORTED MEDIA TYPE");
-
-  /**
-   * The {@code 422 UNPROCESSABLE CONTENT} status.
-   */
-  public static final Response.Status UNPROCESSABLE_CONTENT = HttpResponseStatus.create(422, "UNPROCESSABLE CONTENT");
-
-  // 5.x.x
-
-  /**
-   * The {@code 500 INTERNAL SERVER ERROR} status.
-   */
-  public static final Response.Status INTERNAL_SERVER_ERROR = HttpResponseStatus.create(500, "INTERNAL SERVER ERROR");
-
-  /**
-   * The {@code 501 NOT IMPLEMENTED} status.
-   */
-  public static final Response.Status NOT_IMPLEMENTED = HttpResponseStatus.create(501, "NOT IMPLEMENTED");
-
-  /**
-   * The {@code 505 HTTP VERSION NOT SUPPORTED} status.
-   */
-  public static final Response.Status HTTP_VERSION_NOT_SUPPORTED = HttpResponseStatus.createLast(505, "HTTP VERSION NOT SUPPORTED");
 
   private Http() {}
 

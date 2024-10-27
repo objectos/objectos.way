@@ -23,7 +23,7 @@ public class HttpResponseStatusTest {
 
   @Test
   public void reasonPhrase() {
-    assertEquals(Http.INTERNAL_SERVER_ERROR.reasonPhrase(), "INTERNAL SERVER ERROR");
+    assertEquals(Http.Status.INTERNAL_SERVER_ERROR.reasonPhrase(), "INTERNAL SERVER ERROR");
   }
 
 }

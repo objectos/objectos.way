@@ -95,7 +95,7 @@ abstract class HttpModule {
   private record MovedPermanentlyOption(String location) implements Http.Handler, ThisRouteOption {
     @Override
     public final void handle(Http.Exchange http) {
-      http.status(Http.MOVED_PERMANENTLY);
+      http.status(Http.Status.MOVED_PERMANENTLY);
 
       http.dateNow();
 
