@@ -19,12 +19,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import objectos.way.Http.HeaderName;
 
 final class HttpHeaderName implements Http.HeaderName {
 
   private static class Builder {
-
-    static Builder INSTANCE = new Builder();
 
     private final List<HttpHeaderName> standardNames = new ArrayList<>();
 
@@ -47,6 +46,97 @@ final class HttpHeaderName implements Http.HeaderName {
 
   record HeaderNameType(HttpHeaderName name, HttpHeaderType type) {}
 
+  private static Builder BUILDER = new Builder();
+
+  /**
+   * The {@code Accept-Encoding} header name.
+   */
+  public static final HeaderName ACCEPT_ENCODING = BUILDER.create("Accept-Encoding", HttpHeaderType.REQUEST);
+
+  /**
+   * The {@code Connection} header name.
+   */
+  public static final HeaderName CONNECTION = BUILDER.create("Connection", HttpHeaderType.BOTH);
+
+  /**
+   * The {@code Content-Length} header name.
+   */
+  public static final HeaderName CONTENT_LENGTH = BUILDER.create("Content-Length", HttpHeaderType.BOTH);
+
+  /**
+   * The {@code Content-Type} header name.
+   */
+  public static final HeaderName CONTENT_TYPE = BUILDER.create("Content-Type", HttpHeaderType.BOTH);
+
+  /**
+   * The {@code Cookie} header name.
+   */
+  public static final HeaderName COOKIE = BUILDER.create("Cookie", HttpHeaderType.REQUEST);
+
+  /**
+   * The {@code Date} header name.
+   */
+  public static final HeaderName DATE = BUILDER.create("Date", HttpHeaderType.BOTH);
+
+  /**
+   * The {@code ETag} header name.
+   */
+  public static final HeaderName ETAG = BUILDER.create("ETag", HttpHeaderType.RESPONSE);
+
+  /**
+   * The {@code From} header name.
+   */
+  public static final HeaderName FROM = BUILDER.create("From", HttpHeaderType.REQUEST);
+
+  /**
+   * The {@code Host} header name.
+   */
+  public static final HeaderName HOST = BUILDER.create("Host", HttpHeaderType.REQUEST);
+
+  /**
+   * The {@code If-None-Match} header name.
+   */
+  public static final HeaderName IF_NONE_MATCH = BUILDER.create("If-None-Match", HttpHeaderType.REQUEST);
+
+  /**
+   * The {@code Location} header name.
+   */
+  public static final HeaderName LOCATION = BUILDER.create("Location", HttpHeaderType.RESPONSE);
+
+  /**
+   * The {@code Set-Cookie} header name.
+   */
+  public static final HeaderName SET_COOKIE = BUILDER.create("Set-Cookie", HttpHeaderType.RESPONSE);
+
+  /**
+   * The {@code Transfer-Encoding} header name.
+   */
+  public static final HeaderName TRANSFER_ENCODING = BUILDER.create("Transfer-Encoding", HttpHeaderType.BOTH);
+
+  /**
+   * The {@code User-Agent} header name.
+   */
+  public static final HeaderName USER_AGENT = BUILDER.create("User-Agent", HttpHeaderType.REQUEST);
+
+  private static final HttpHeaderName[] STANDARD_NAMES;
+
+  private static final Map<String, HttpHeaderName> FIND_BY_NAME;
+
+  static {
+    STANDARD_NAMES = BUILDER.buildNames();
+
+    Map<String, HttpHeaderName> findByName;
+    findByName = Util.createMap();
+
+    for (HttpHeaderName value : STANDARD_NAMES) {
+      findByName.put(value.capitalized, value);
+    }
+
+    FIND_BY_NAME = Util.toUnmodifiableMap(findByName);
+
+    BUILDER = null;
+  }
+
   private final int index;
 
   private final String capitalized;
@@ -65,37 +155,6 @@ final class HttpHeaderName implements Http.HeaderName {
   public HttpHeaderName(String name) {
     this(-1, name);
   }
-
-  static Http.HeaderName create(String name, HttpHeaderType type) {
-    return Builder.INSTANCE.create(name, type);
-  }
-
-  static Http.HeaderName createLast(String name, HttpHeaderType type) {
-    Builder builder;
-    builder = Builder.INSTANCE;
-
-    Http.HeaderName result;
-    result = builder.create(name, type);
-
-    STANDARD_NAMES = builder.buildNames();
-
-    Map<String, HttpHeaderName> findByName;
-    findByName = Util.createMap();
-
-    for (HttpHeaderName value : STANDARD_NAMES) {
-      findByName.put(value.capitalized, value);
-    }
-
-    FIND_BY_NAME = Util.toUnmodifiableMap(findByName);
-
-    Builder.INSTANCE = null;
-
-    return result;
-  }
-
-  private static HttpHeaderName[] STANDARD_NAMES;
-
-  private static Map<String, HttpHeaderName> FIND_BY_NAME;
 
   public static HttpHeaderName findByName(String name) {
     return FIND_BY_NAME.get(name);

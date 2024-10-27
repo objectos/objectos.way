@@ -46,9 +46,9 @@ final class CarbonStyles implements Http.Handler {
 
     http.dateNow();
 
-    http.header(Http.CONTENT_TYPE, s.contentType());
+    http.header(Http.HeaderName.CONTENT_TYPE, s.contentType());
 
-    http.header(Http.CONTENT_LENGTH, bytes.length);
+    http.header(Http.HeaderName.CONTENT_LENGTH, bytes.length);
 
     http.send(bytes);
   }

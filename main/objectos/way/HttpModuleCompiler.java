@@ -145,7 +145,7 @@ final class HttpModuleCompiler extends HttpModuleMatcherParser implements Http.H
       headers = http.headers();
 
       String hostName;
-      hostName = headers.first(Http.HOST);
+      hostName = headers.first(Http.HeaderName.HOST);
 
       if (name.equals(hostName)) {
         handler.handle(http);

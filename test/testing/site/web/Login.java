@@ -270,7 +270,7 @@ final class Login extends WebTemplate implements Http.Handler {
       String setCookie;
       setCookie = sessionStore.setCookie(session.id());
 
-      http.header(Http.SET_COOKIE, setCookie);
+      http.header(Http.HeaderName.SET_COOKIE, setCookie);
 
       http.found("/");
     } else {

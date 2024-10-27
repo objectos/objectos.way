@@ -155,14 +155,14 @@ final class WebResources implements AutoCloseable, Web.Resources {
     headers = http.headers();
 
     String ifNoneMatch;
-    ifNoneMatch = headers.first(Http.IF_NONE_MATCH);
+    ifNoneMatch = headers.first(Http.HeaderName.IF_NONE_MATCH);
 
     if (etag.equals(ifNoneMatch)) {
       http.status(Http.Status.NOT_MODIFIED);
 
       http.dateNow();
 
-      http.header(Http.ETAG, etag);
+      http.header(Http.HeaderName.ETAG, etag);
 
       http.send();
 
@@ -187,13 +187,13 @@ final class WebResources implements AutoCloseable, Web.Resources {
       contentType = contentTypes.getOrDefault(extension, contentType);
     }
 
-    http.header(Http.CONTENT_TYPE, contentType);
+    http.header(Http.HeaderName.CONTENT_TYPE, contentType);
 
-    http.header(Http.CONTENT_LENGTH, attributes.size());
+    http.header(Http.HeaderName.CONTENT_LENGTH, attributes.size());
 
     http.dateNow();
 
-    http.header(Http.ETAG, etag);
+    http.header(Http.HeaderName.ETAG, etag);
 
     if (method == Http.GET) {
       http.send(file);

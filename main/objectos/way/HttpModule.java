@@ -99,7 +99,7 @@ abstract class HttpModule {
 
       http.dateNow();
 
-      http.header(Http.LOCATION, location);
+      http.header(Http.HeaderName.LOCATION, location);
 
       http.send();
     }

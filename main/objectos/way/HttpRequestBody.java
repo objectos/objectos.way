@@ -27,22 +27,22 @@ class HttpRequestBody extends HttpRequestHeaders implements Http.Request.Body {
     EMPTY,
 
     IN_BUFFER,
-    
+
     FILE;
   }
 
   private Kind kind = Kind.EMPTY;
-  
+
   private java.nio.file.Path requestBodyDirectory;
-  
+
   private java.nio.file.Path requestBodyFile;
 
   HttpRequestBody() {}
-  
+
   public void requestBodyDirectory(java.nio.file.Path directory) {
     requestBodyDirectory = directory;
   }
-  
+
   public void close() throws IOException {
     if (requestBodyFile != null) {
       Files.delete(requestBodyFile);
@@ -62,13 +62,13 @@ class HttpRequestBody extends HttpRequestHeaders implements Http.Request.Body {
 
   final void resetRequestBody() {
     kind = Kind.EMPTY;
-    
+
     requestBodyFile = null;
   }
 
   final void parseRequestBody() throws IOException {
     HttpHeader contentLength;
-    contentLength = headerUnchecked(Http.CONTENT_LENGTH);
+    contentLength = headerUnchecked(Http.HeaderName.CONTENT_LENGTH);
 
     if (contentLength != null) {
       long value;
@@ -95,10 +95,10 @@ class HttpRequestBody extends HttpRequestHeaders implements Http.Request.Body {
         } else {
           requestBodyFile = Files.createTempFile(requestBodyDirectory, "objectos-way-request-body-", ".tmp");
         }
-        
+
         long read;
         read = read(requestBodyFile, value);
-        
+
         if (read < 0) {
           parseStatus = ParseStatus.EOF;
         } else {
@@ -110,7 +110,7 @@ class HttpRequestBody extends HttpRequestHeaders implements Http.Request.Body {
     }
 
     HttpHeader transferEncoding;
-    transferEncoding = headerUnchecked(Http.TRANSFER_ENCODING);
+    transferEncoding = headerUnchecked(Http.HeaderName.TRANSFER_ENCODING);
 
     if (transferEncoding != null) {
       throw new UnsupportedOperationException("Implement me");

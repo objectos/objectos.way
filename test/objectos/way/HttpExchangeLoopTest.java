@@ -76,8 +76,8 @@ public class HttpExchangeLoopTest {
       headers = http.headers();
 
       assertEquals(headers.size(), 2);
-      assertEquals(headers.first(Http.HOST), "www.example.com");
-      assertEquals(headers.first(Http.CONNECTION), "close");
+      assertEquals(headers.first(Http.HeaderName.HOST), "www.example.com");
+      assertEquals(headers.first(Http.HeaderName.CONNECTION), "close");
 
       // body
       Http.Request.Body body;
@@ -90,9 +90,9 @@ public class HttpExchangeLoopTest {
       msg = body01.getBytes(StandardCharsets.UTF_8);
 
       http.status(Http.Status.OK);
-      http.header(Http.CONTENT_TYPE, "text/plain; charset=utf-8");
-      http.header(Http.CONTENT_LENGTH, msg.length);
-      http.header(Http.DATE, "Wed, 28 Jun 2023 12:08:43 GMT");
+      http.header(Http.HeaderName.CONTENT_TYPE, "text/plain; charset=utf-8");
+      http.header(Http.HeaderName.CONTENT_LENGTH, msg.length);
+      http.header(Http.HeaderName.DATE, "Wed, 28 Jun 2023 12:08:43 GMT");
       http.send(msg);
 
       http.commit();
@@ -178,7 +178,7 @@ public class HttpExchangeLoopTest {
       headers = http.headers();
 
       assertEquals(headers.size(), 1);
-      assertEquals(headers.first(Http.HOST), "www.example.com");
+      assertEquals(headers.first(Http.HeaderName.HOST), "www.example.com");
 
       // body
       Http.Request.Body body;
@@ -191,9 +191,9 @@ public class HttpExchangeLoopTest {
       msg = body01.getBytes(StandardCharsets.UTF_8);
 
       http.status(Http.Status.OK);
-      http.header(Http.CONTENT_TYPE, "text/html; charset=utf-8");
-      http.header(Http.CONTENT_LENGTH, msg.length);
-      http.header(Http.DATE, "Wed, 28 Jun 2023 12:08:43 GMT");
+      http.header(Http.HeaderName.CONTENT_TYPE, "text/html; charset=utf-8");
+      http.header(Http.HeaderName.CONTENT_LENGTH, msg.length);
+      http.header(Http.HeaderName.DATE, "Wed, 28 Jun 2023 12:08:43 GMT");
       http.send(msg);
 
       http.commit();
@@ -215,8 +215,8 @@ public class HttpExchangeLoopTest {
       headers = http.headers();
 
       assertEquals(headers.size(), 2);
-      assertEquals(headers.first(Http.HOST), "www.example.com");
-      assertEquals(headers.first(Http.CONNECTION), "close");
+      assertEquals(headers.first(Http.HeaderName.HOST), "www.example.com");
+      assertEquals(headers.first(Http.HeaderName.CONNECTION), "close");
 
       // body
       body = http.body();
@@ -227,9 +227,9 @@ public class HttpExchangeLoopTest {
       msg = body02.getBytes(StandardCharsets.UTF_8);
 
       http.status(Http.Status.OK);
-      http.header(Http.CONTENT_TYPE, "text/css; charset=utf-8");
-      http.header(Http.CONTENT_LENGTH, msg.length);
-      http.header(Http.DATE, "Wed, 28 Jun 2023 12:08:43 GMT");
+      http.header(Http.HeaderName.CONTENT_TYPE, "text/css; charset=utf-8");
+      http.header(Http.HeaderName.CONTENT_LENGTH, msg.length);
+      http.header(Http.HeaderName.DATE, "Wed, 28 Jun 2023 12:08:43 GMT");
       http.send(msg);
 
       socket.outputReset();
@@ -283,8 +283,8 @@ public class HttpExchangeLoopTest {
       headers = http.headers();
 
       assertEquals(headers.size(), 3);
-      assertEquals(headers.first(Http.HOST), "www.example.com");
-      assertEquals(headers.first(Http.CONNECTION), "close");
+      assertEquals(headers.first(Http.HeaderName.HOST), "www.example.com");
+      assertEquals(headers.first(Http.HeaderName.CONNECTION), "close");
       assertEquals(headers.first(Http.createHeaderName("Foo")), "bar");
 
       // response phase
@@ -292,9 +292,9 @@ public class HttpExchangeLoopTest {
       msg = body01.getBytes(StandardCharsets.UTF_8);
 
       http.status(Http.Status.OK);
-      http.header(Http.CONTENT_TYPE, "text/plain; charset=utf-8");
-      http.header(Http.CONTENT_LENGTH, msg.length);
-      http.header(Http.DATE, "Wed, 28 Jun 2023 12:08:43 GMT");
+      http.header(Http.HeaderName.CONTENT_TYPE, "text/plain; charset=utf-8");
+      http.header(Http.HeaderName.CONTENT_LENGTH, msg.length);
+      http.header(Http.HeaderName.DATE, "Wed, 28 Jun 2023 12:08:43 GMT");
       http.send(msg);
 
       http.commit();
@@ -356,8 +356,8 @@ public class HttpExchangeLoopTest {
       headers = http.headers();
 
       assertEquals(headers.size(), 3);
-      assertEquals(headers.first(Http.HOST), "www.example.com");
-      assertEquals(headers.first(Http.CONNECTION), "close");
+      assertEquals(headers.first(Http.HeaderName.HOST), "www.example.com");
+      assertEquals(headers.first(Http.HeaderName.CONNECTION), "close");
       assertEquals(headers.first(Http.createHeaderName("Foo")), "bar");
 
       // response phase
@@ -369,9 +369,9 @@ public class HttpExchangeLoopTest {
       Files.writeString(index, body01, StandardCharsets.UTF_8);
 
       http.status(Http.Status.OK);
-      http.header(Http.CONTENT_TYPE, "text/html; charset=utf-8");
-      http.header(Http.CONTENT_LENGTH, Files.size(index));
-      http.header(Http.DATE, "Wed, 28 Jun 2023 12:08:43 GMT");
+      http.header(Http.HeaderName.CONTENT_TYPE, "text/html; charset=utf-8");
+      http.header(Http.HeaderName.CONTENT_LENGTH, Files.size(index));
+      http.header(Http.HeaderName.DATE, "Wed, 28 Jun 2023 12:08:43 GMT");
       http.send(index);
 
       http.commit();
@@ -427,15 +427,15 @@ public class HttpExchangeLoopTest {
       headers = http.headers();
 
       assertEquals(headers.size(), 3);
-      assertEquals(headers.first(Http.HOST), "www.example.com");
-      assertEquals(headers.first(Http.IF_NONE_MATCH), "some%hash");
-      assertEquals(headers.first(Http.CONNECTION), "close");
+      assertEquals(headers.first(Http.HeaderName.HOST), "www.example.com");
+      assertEquals(headers.first(Http.HeaderName.IF_NONE_MATCH), "some%hash");
+      assertEquals(headers.first(Http.HeaderName.CONNECTION), "close");
 
       // response phase
 
       http.status(Http.Status.NOT_MODIFIED);
-      http.header(Http.DATE, "Wed, 28 Jun 2023 12:08:43 GMT");
-      http.header(Http.ETAG, "some%hash");
+      http.header(Http.HeaderName.DATE, "Wed, 28 Jun 2023 12:08:43 GMT");
+      http.header(Http.HeaderName.ETAG, "some%hash");
       http.send();
 
       http.commit();
@@ -480,8 +480,8 @@ public class HttpExchangeLoopTest {
       // response phase
 
       http.status(Http.Status.NOT_FOUND);
-      http.header(Http.CONNECTION, "close");
-      http.header(Http.DATE, "Wed, 28 Jun 2023 12:08:43 GMT");
+      http.header(Http.HeaderName.CONNECTION, "close");
+      http.header(Http.HeaderName.DATE, "Wed, 28 Jun 2023 12:08:43 GMT");
       http.send();
 
       http.commit();
@@ -530,8 +530,8 @@ public class HttpExchangeLoopTest {
       // response phase
 
       http.status(Http.Status.NOT_FOUND);
-      http.header(Http.CONNECTION, "close");
-      http.header(Http.DATE, "Wed, 28 Jun 2023 12:08:43 GMT");
+      http.header(Http.HeaderName.CONNECTION, "close");
+      http.header(Http.HeaderName.DATE, "Wed, 28 Jun 2023 12:08:43 GMT");
       http.send();
 
       http.commit();
@@ -589,10 +589,10 @@ public class HttpExchangeLoopTest {
       // response phase
 
       http.status(Http.Status.SEE_OTHER);
-      http.header(Http.LOCATION, "/app");
-      http.header(Http.CONTENT_TYPE, "text/plain; charset=utf-8");
-      http.header(Http.CONTENT_LENGTH, "52");
-      http.header(Http.DATE, "Wed, 28 Jun 2023 12:08:43 GMT");
+      http.header(Http.HeaderName.LOCATION, "/app");
+      http.header(Http.HeaderName.CONTENT_TYPE, "text/plain; charset=utf-8");
+      http.header(Http.HeaderName.CONTENT_LENGTH, "52");
+      http.header(Http.HeaderName.DATE, "Wed, 28 Jun 2023 12:08:43 GMT");
       http.send(body01.getBytes(StandardCharsets.UTF_8));
 
       http.commit();
@@ -641,10 +641,10 @@ public class HttpExchangeLoopTest {
       assertEquals(parse.isError(), false);
 
       http.status(Http.Status.OK);
-      http.header(Http.CONTENT_TYPE, "text/plain; charset=utf-8");
-      http.header(Http.CONTENT_LENGTH, 5);
-      http.header(Http.DATE, "Wed, 28 Jun 2023 12:08:43 GMT");
-      http.header(Http.ETAG, etag);
+      http.header(Http.HeaderName.CONTENT_TYPE, "text/plain; charset=utf-8");
+      http.header(Http.HeaderName.CONTENT_LENGTH, 5);
+      http.header(Http.HeaderName.DATE, "Wed, 28 Jun 2023 12:08:43 GMT");
+      http.header(Http.HeaderName.ETAG, etag);
       http.send("AAAA\n".getBytes(StandardCharsets.UTF_8));
 
       http.commit();
@@ -726,8 +726,8 @@ public class HttpExchangeLoopTest {
       assertEquals(parse.isError(), false);
 
       http.dateNow();
-      http.header(Http.CONTENT_TYPE, "text/plain");
-      http.header(Http.CONTENT_LENGTH, 64);
+      http.header(Http.HeaderName.CONTENT_TYPE, "text/plain");
+      http.header(Http.HeaderName.CONTENT_LENGTH, 64);
       http.send(writable, StandardCharsets.UTF_8);
 
       http.commit();
@@ -771,7 +771,7 @@ public class HttpExchangeLoopTest {
       assertEquals(parse.isError(), false);
 
       http.dateNow();
-      http.header(Http.CONTENT_TYPE, "text/plain");
+      http.header(Http.HeaderName.CONTENT_TYPE, "text/plain");
       http.send(writable, StandardCharsets.UTF_8);
 
       http.commit();
@@ -831,8 +831,8 @@ public class HttpExchangeLoopTest {
       assertEquals(parse.isError(), false);
 
       http.dateNow();
-      http.header(Http.CONTENT_TYPE, "text/plain");
-      http.header(Http.TRANSFER_ENCODING, "chunked");
+      http.header(Http.HeaderName.CONTENT_TYPE, "text/plain");
+      http.header(Http.HeaderName.TRANSFER_ENCODING, "chunked");
       http.send(writable, StandardCharsets.UTF_8);
 
       http.commit();
@@ -888,8 +888,8 @@ public class HttpExchangeLoopTest {
       assertEquals(parse.isError(), false);
 
       http.dateNow();
-      http.header(Http.CONTENT_TYPE, "text/plain");
-      http.header(Http.TRANSFER_ENCODING, "chunked");
+      http.header(Http.HeaderName.CONTENT_TYPE, "text/plain");
+      http.header(Http.HeaderName.TRANSFER_ENCODING, "chunked");
       http.send(writable, StandardCharsets.UTF_8);
 
       http.commit();
@@ -943,8 +943,8 @@ public class HttpExchangeLoopTest {
       assertEquals(parse.isError(), false);
 
       http.dateNow();
-      http.header(Http.CONTENT_TYPE, "text/plain");
-      http.header(Http.TRANSFER_ENCODING, "chunked");
+      http.header(Http.HeaderName.CONTENT_TYPE, "text/plain");
+      http.header(Http.HeaderName.TRANSFER_ENCODING, "chunked");
       http.send(writable, StandardCharsets.UTF_8);
 
       http.commit();
@@ -1008,8 +1008,8 @@ public class HttpExchangeLoopTest {
       assertEquals(parse.isError(), false);
 
       http.dateNow();
-      http.header(Http.CONTENT_TYPE, "text/plain");
-      http.header(Http.TRANSFER_ENCODING, "chunked");
+      http.header(Http.HeaderName.CONTENT_TYPE, "text/plain");
+      http.header(Http.HeaderName.TRANSFER_ENCODING, "chunked");
       http.send(writable, StandardCharsets.UTF_8);
 
       http.commit();
@@ -1096,9 +1096,9 @@ public class HttpExchangeLoopTest {
       headers = http.headers();
 
       assertEquals(headers.size(), 3);
-      assertEquals(headers.first(Http.HOST), "www.example.com");
-      assertEquals(headers.first(Http.FROM), "");
-      assertEquals(headers.first(Http.ACCEPT_ENCODING), "gzip, deflate, br");
+      assertEquals(headers.first(Http.HeaderName.HOST), "www.example.com");
+      assertEquals(headers.first(Http.HeaderName.FROM), "");
+      assertEquals(headers.first(Http.HeaderName.ACCEPT_ENCODING), "gzip, deflate, br");
 
       // body
       Http.Request.Body body;
@@ -1142,7 +1142,7 @@ public class HttpExchangeLoopTest {
       headers = http.headers();
 
       assertEquals(headers.size(), 1);
-      assertEquals(headers.first(Http.HOST), "www.example.com");
+      assertEquals(headers.first(Http.HeaderName.HOST), "www.example.com");
 
       // body
       Http.Request.Body body;
@@ -1186,7 +1186,7 @@ public class HttpExchangeLoopTest {
       headers = http.headers();
 
       assertEquals(headers.size(), 1);
-      assertEquals(headers.first(Http.HOST), "www.example.com");
+      assertEquals(headers.first(Http.HeaderName.HOST), "www.example.com");
 
       // body
       Http.Request.Body body;

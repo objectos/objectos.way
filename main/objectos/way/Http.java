@@ -133,9 +133,9 @@ public final class Http {
 
       dateNow();
 
-      header(Http.CONTENT_TYPE, "text/html; charset=utf-8");
+      header(Http.HeaderName.CONTENT_TYPE, "text/html; charset=utf-8");
 
-      header(Http.TRANSFER_ENCODING, "chunked");
+      header(Http.HeaderName.TRANSFER_ENCODING, "chunked");
 
       send(template, StandardCharsets.UTF_8);
     }
@@ -148,9 +148,9 @@ public final class Http {
 
       dateNow();
 
-      header(Http.CONTENT_TYPE, "text/plain; charset=" + charset.name().toLowerCase(Locale.US));
+      header(Http.HeaderName.CONTENT_TYPE, "text/plain; charset=" + charset.name().toLowerCase(Locale.US));
 
-      header(Http.CONTENT_LENGTH, bytes.length);
+      header(Http.HeaderName.CONTENT_LENGTH, bytes.length);
 
       send(bytes);
     }
@@ -163,7 +163,7 @@ public final class Http {
 
       dateNow();
 
-      header(Http.LOCATION, location);
+      header(Http.HeaderName.LOCATION, location);
 
       send();
     }
@@ -176,7 +176,7 @@ public final class Http {
 
       dateNow();
 
-      header(Http.LOCATION, location);
+      header(Http.HeaderName.LOCATION, location);
 
       send();
     }
@@ -206,7 +206,7 @@ public final class Http {
 
       dateNow();
 
-      header(Http.CONNECTION, "close");
+      header(Http.HeaderName.CONNECTION, "close");
 
       send();
     }
@@ -230,7 +230,7 @@ public final class Http {
 
       dateNow();
 
-      header(Http.CONNECTION, "close");
+      header(Http.HeaderName.CONNECTION, "close");
 
       send();
     }
@@ -327,6 +327,76 @@ public final class Http {
    * An HTTP header name.
    */
   public sealed interface HeaderName permits HttpHeaderName {
+
+    /**
+     * The {@code Accept-Encoding} header name.
+     */
+    HeaderName ACCEPT_ENCODING = HttpHeaderName.ACCEPT_ENCODING;
+
+    /**
+     * The {@code Connection} header name.
+     */
+    HeaderName CONNECTION = HttpHeaderName.CONNECTION;
+
+    /**
+     * The {@code Content-Length} header name.
+     */
+    HeaderName CONTENT_LENGTH = HttpHeaderName.CONTENT_LENGTH;
+
+    /**
+     * The {@code Content-Type} header name.
+     */
+    HeaderName CONTENT_TYPE = HttpHeaderName.CONTENT_TYPE;
+
+    /**
+     * The {@code Cookie} header name.
+     */
+    HeaderName COOKIE = HttpHeaderName.COOKIE;
+
+    /**
+     * The {@code Date} header name.
+     */
+    HeaderName DATE = HttpHeaderName.DATE;
+
+    /**
+     * The {@code ETag} header name.
+     */
+    HeaderName ETAG = HttpHeaderName.ETAG;
+
+    /**
+     * The {@code From} header name.
+     */
+    HeaderName FROM = HttpHeaderName.FROM;
+
+    /**
+     * The {@code Host} header name.
+     */
+    HeaderName HOST = HttpHeaderName.HOST;
+
+    /**
+     * The {@code If-None-Match} header name.
+     */
+    HeaderName IF_NONE_MATCH = HttpHeaderName.IF_NONE_MATCH;
+
+    /**
+     * The {@code Location} header name.
+     */
+    HeaderName LOCATION = HttpHeaderName.LOCATION;
+
+    /**
+     * The {@code Set-Cookie} header name.
+     */
+    HeaderName SET_COOKIE = HttpHeaderName.SET_COOKIE;
+
+    /**
+     * The {@code Transfer-Encoding} header name.
+     */
+    HeaderName TRANSFER_ENCODING = HttpHeaderName.TRANSFER_ENCODING;
+
+    /**
+     * The {@code User-Agent} header name.
+     */
+    HeaderName USER_AGENT = HttpHeaderName.USER_AGENT;
 
     /**
      * The index of this header name.
@@ -845,78 +915,6 @@ public final class Http {
     }
 
   }
-
-  // HeaderName constants
-
-  /**
-   * The {@code Accept-Encoding} header name.
-   */
-  public static final HeaderName ACCEPT_ENCODING = HttpHeaderName.create("Accept-Encoding", HttpHeaderType.REQUEST);
-
-  /**
-   * The {@code Connection} header name.
-   */
-  public static final HeaderName CONNECTION = HttpHeaderName.create("Connection", HttpHeaderType.BOTH);
-
-  /**
-   * The {@code Content-Length} header name.
-   */
-  public static final HeaderName CONTENT_LENGTH = HttpHeaderName.create("Content-Length", HttpHeaderType.BOTH);
-
-  /**
-   * The {@code Content-Type} header name.
-   */
-  public static final HeaderName CONTENT_TYPE = HttpHeaderName.create("Content-Type", HttpHeaderType.BOTH);
-
-  /**
-   * The {@code Cookie} header name.
-   */
-  public static final HeaderName COOKIE = HttpHeaderName.create("Cookie", HttpHeaderType.REQUEST);
-
-  /**
-   * The {@code Date} header name.
-   */
-  public static final HeaderName DATE = HttpHeaderName.create("Date", HttpHeaderType.BOTH);
-
-  /**
-   * The {@code ETag} header name.
-   */
-  public static final HeaderName ETAG = HttpHeaderName.create("ETag", HttpHeaderType.RESPONSE);
-
-  /**
-   * The {@code From} header name.
-   */
-  public static final HeaderName FROM = HttpHeaderName.create("From", HttpHeaderType.REQUEST);
-
-  /**
-   * The {@code Host} header name.
-   */
-  public static final HeaderName HOST = HttpHeaderName.create("Host", HttpHeaderType.REQUEST);
-
-  /**
-   * The {@code If-None-Match} header name.
-   */
-  public static final HeaderName IF_NONE_MATCH = HttpHeaderName.create("If-None-Match", HttpHeaderType.REQUEST);
-
-  /**
-   * The {@code Location} header name.
-   */
-  public static final HeaderName LOCATION = HttpHeaderName.create("Location", HttpHeaderType.RESPONSE);
-
-  /**
-   * The {@code Set-Cookie} header name.
-   */
-  public static final HeaderName SET_COOKIE = HttpHeaderName.create("Set-Cookie", HttpHeaderType.RESPONSE);
-
-  /**
-   * The {@code Transfer-Encoding} header name.
-   */
-  public static final HeaderName TRANSFER_ENCODING = HttpHeaderName.create("Transfer-Encoding", HttpHeaderType.BOTH);
-
-  /**
-   * The {@code User-Agent} header name.
-   */
-  public static final HeaderName USER_AGENT = HttpHeaderName.createLast("User-Agent", HttpHeaderType.REQUEST);
 
   // Request constants
 

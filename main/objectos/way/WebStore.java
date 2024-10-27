@@ -112,7 +112,7 @@ final class WebStore implements Web.Store {
     headers = http.headers();
 
     String cookieHeaderValue;
-    cookieHeaderValue = headers.first(Http.COOKIE);
+    cookieHeaderValue = headers.first(Http.HeaderName.COOKIE);
 
     if (cookieHeaderValue == null) {
       return;

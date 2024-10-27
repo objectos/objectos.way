@@ -220,7 +220,7 @@ final class HttpExchangeLoop extends HttpRequestBody implements Http.Exchange, C
     }
 
     HttpHeader connection;
-    connection = headerUnchecked(Http.CONNECTION);
+    connection = headerUnchecked(Http.HeaderName.CONNECTION);
 
     if (connection != null) {
       if (connection.contentEquals(KEEP_ALIVE_BYTES)) {
@@ -393,7 +393,7 @@ final class HttpExchangeLoop extends HttpRequestBody implements Http.Exchange, C
     String value;
     value = Http.formatDate(now);
 
-    header0(Http.DATE, value);
+    header0(Http.HeaderName.DATE, value);
   }
 
   private void header0(Http.HeaderName name, String value) { // write our the name
@@ -425,15 +425,15 @@ final class HttpExchangeLoop extends HttpRequestBody implements Http.Exchange, C
     writeBytes(Bytes.CRLF);
 
     // handle connection: close if necessary
-    if (name == Http.CONNECTION && value.equalsIgnoreCase("close")) {
+    if (name == Http.HeaderName.CONNECTION && value.equalsIgnoreCase("close")) {
       clearBit(KEEP_ALIVE);
     }
 
-    else if (name == Http.CONTENT_LENGTH) {
+    else if (name == Http.HeaderName.CONTENT_LENGTH) {
       setBit(CONTENT_LENGTH);
     }
 
-    else if (name == Http.TRANSFER_ENCODING && value.toLowerCase().contains("chunked")) {
+    else if (name == Http.HeaderName.TRANSFER_ENCODING && value.toLowerCase().contains("chunked")) {
       setBit(CHUNKED);
     }
   }
@@ -483,7 +483,7 @@ final class HttpExchangeLoop extends HttpRequestBody implements Http.Exchange, C
 
     dateNow();
 
-    header0(Http.CONNECTION, "close");
+    header0(Http.HeaderName.CONNECTION, "close");
 
     send();
   }
@@ -496,7 +496,7 @@ final class HttpExchangeLoop extends HttpRequestBody implements Http.Exchange, C
 
     dateNow();
 
-    header0(Http.CONNECTION, "close");
+    header0(Http.HeaderName.CONNECTION, "close");
 
     send();
   }
@@ -523,11 +523,11 @@ final class HttpExchangeLoop extends HttpRequestBody implements Http.Exchange, C
 
     dateNow();
 
-    header(Http.CONTENT_LENGTH, bytes.length);
+    header(Http.HeaderName.CONTENT_LENGTH, bytes.length);
 
-    header(Http.CONTENT_TYPE, "text/plain");
+    header(Http.HeaderName.CONTENT_TYPE, "text/plain");
 
-    header(Http.CONNECTION, "close");
+    header(Http.HeaderName.CONNECTION, "close");
 
     send(bytes);
   }

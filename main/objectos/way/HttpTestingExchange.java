@@ -209,7 +209,7 @@ final class HttpTestingExchange implements Http.TestingExchange {
     String value;
     value = Http.formatDate(now);
 
-    header(Http.DATE, value);
+    header(Http.HeaderName.DATE, value);
   }
 
   @Override
@@ -240,7 +240,7 @@ final class HttpTestingExchange implements Http.TestingExchange {
 
     dateNow();
 
-    header(Http.CONNECTION, "close");
+    header(Http.HeaderName.CONNECTION, "close");
 
     send();
   }
@@ -251,7 +251,7 @@ final class HttpTestingExchange implements Http.TestingExchange {
 
     dateNow();
 
-    header(Http.CONNECTION, "close");
+    header(Http.HeaderName.CONNECTION, "close");
 
     send();
   }
@@ -276,11 +276,11 @@ final class HttpTestingExchange implements Http.TestingExchange {
 
     dateNow();
 
-    header(Http.CONTENT_LENGTH, bytes.length);
+    header(Http.HeaderName.CONTENT_LENGTH, bytes.length);
 
-    header(Http.CONTENT_TYPE, "text/plain");
+    header(Http.HeaderName.CONTENT_TYPE, "text/plain");
 
-    header(Http.CONNECTION, "close");
+    header(Http.HeaderName.CONNECTION, "close");
 
     send(bytes);
   }

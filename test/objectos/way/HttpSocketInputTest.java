@@ -70,7 +70,7 @@ public class HttpSocketInputTest {
     assertEquals(input.bufferIndex, 16);
     assertEquals(input.consumeIfEmptyLine(), false);
     byte[] host;
-    host = HttpRequestHeaders.STD_HEADER_NAME_BYTES[Http.HOST.index()];
+    host = HttpRequestHeaders.STD_HEADER_NAME_BYTES[Http.HeaderName.HOST.index()];
     assertEquals(input.matches(host), true);
     assertEquals(hasNext(input), true);
     assertEquals(next(input), ':');

@@ -38,8 +38,8 @@ public class HttpRequestHeadersTest {
     headers.parseHeaders();
 
     assertEquals(headers.size(), 2);
-    assertEquals(headers.first(Http.HOST), "www.example.com");
-    assertEquals(headers.first(Http.CONNECTION), "close");
+    assertEquals(headers.first(Http.HeaderName.HOST), "www.example.com");
+    assertEquals(headers.first(Http.HeaderName.CONNECTION), "close");
   }
 
   @Test
@@ -55,8 +55,8 @@ public class HttpRequestHeadersTest {
     headers.parseHeaders();
 
     assertEquals(headers.size(), 3);
-    assertEquals(headers.first(Http.HOST), "www.example.com");
-    assertEquals(headers.first(Http.CONNECTION), "close");
+    assertEquals(headers.first(Http.HeaderName.HOST), "www.example.com");
+    assertEquals(headers.first(Http.HeaderName.CONNECTION), "close");
     assertEquals(headers.first(Http.createHeaderName("Foo")), "bar");
   }
 
@@ -76,9 +76,9 @@ public class HttpRequestHeadersTest {
     headers.parseHeaders();
 
     assertEquals(headers.size(), 3);
-    assertEquals(headers.first(Http.HOST), "www.example.com");
-    assertEquals(headers.first(Http.CONTENT_LENGTH), "24");
-    assertEquals(headers.first(Http.CONTENT_TYPE), "application/x-www-form-urlencoded");
+    assertEquals(headers.first(Http.HeaderName.HOST), "www.example.com");
+    assertEquals(headers.first(Http.HeaderName.CONTENT_LENGTH), "24");
+    assertEquals(headers.first(Http.HeaderName.CONTENT_TYPE), "application/x-www-form-urlencoded");
   }
 
   @Test(description = """
@@ -96,9 +96,9 @@ public class HttpRequestHeadersTest {
     headers.parseHeaders();
 
     assertEquals(headers.size(), 3);
-    assertEquals(headers.first(Http.HOST), "www.example.com");
-    assertEquals(headers.first(Http.FROM), "");
-    assertEquals(headers.first(Http.ACCEPT_ENCODING), "gzip, deflate, br");
+    assertEquals(headers.first(Http.HeaderName.HOST), "www.example.com");
+    assertEquals(headers.first(Http.HeaderName.FROM), "");
+    assertEquals(headers.first(Http.HeaderName.ACCEPT_ENCODING), "gzip, deflate, br");
   }
 
   @Test

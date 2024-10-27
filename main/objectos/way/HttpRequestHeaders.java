@@ -166,34 +166,34 @@ class HttpRequestHeaders extends HttpRequestLine implements Http.Request.Headers
 
     switch (first) {
       case 'A' -> parseHeaderName0(
-          Http.ACCEPT_ENCODING
+          Http.HeaderName.ACCEPT_ENCODING
       );
 
       case 'C' -> parseHeaderName0(
-          Http.CONNECTION,
-          Http.CONTENT_LENGTH,
-          Http.CONTENT_TYPE,
-          Http.COOKIE
+          Http.HeaderName.CONNECTION,
+          Http.HeaderName.CONTENT_LENGTH,
+          Http.HeaderName.CONTENT_TYPE,
+          Http.HeaderName.COOKIE
       );
 
       case 'D' -> parseHeaderName0(
-          Http.DATE
+          Http.HeaderName.DATE
       );
 
       case 'F' -> parseHeaderName0(
-          Http.FROM
+          Http.HeaderName.FROM
       );
 
       case 'H' -> parseHeaderName0(
-          Http.HOST
+          Http.HeaderName.HOST
       );
 
       case 'T' -> parseHeaderName0(
-          Http.TRANSFER_ENCODING
+          Http.HeaderName.TRANSFER_ENCODING
       );
 
       case 'U' -> parseHeaderName0(
-          Http.USER_AGENT
+          Http.HeaderName.USER_AGENT
       );
     }
   }
