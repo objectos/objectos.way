@@ -90,7 +90,7 @@ public final class Http {
    * interface return decoded values.
    */
   public sealed interface Exchange
-      extends Request, RequestLine, RequestTarget, RequestHeaders, RequestBody
+      extends RequestLine, RequestTarget, RequestHeaders, RequestBody
       permits HttpExchange, TestingExchange {
 
     /**
@@ -126,28 +126,74 @@ public final class Http {
 
     // response
 
-    default void accept(Handler handler) {
-      handler.handle(this);
-    }
-
+    /**
+     * Begins the HTTP response by writing out the specified response status.
+     *
+     * @param status
+     *        the HTTP response status
+     */
     void status(Status status);
 
+    /**
+     * Writes an HTTP response header field with the specified name and value.
+     *
+     * @param name
+     *        the header name
+     * @param value
+     *        the header value
+     */
     void header(HeaderName name, long value);
 
+    /**
+     * Writes an HTTP response header field with the specified name and value.
+     *
+     * @param name
+     *        the header name
+     * @param value
+     *        the header value
+     */
     void header(HeaderName name, String value);
 
-    // pre-made headers
-
+    /**
+     * Writes the {@link HeaderName#DATE} HTTP response header field with the
+     * current date and time.
+     */
     void dateNow();
 
     // response body
 
+    /**
+     * Writes the end of this HTTP response message with an empty message body.
+     */
     void send();
 
+    /**
+     * Writes the end of this HTTP response message with the specified message
+     * body.
+     *
+     * @param body
+     *        an array of bytes with the message body contents
+     */
     void send(byte[] body);
 
-    void send(Lang.CharWritable body, Charset charset);
+    /**
+     * Writes the end of this HTTP response message using the specified entity
+     * and charset to write out the message body.
+     *
+     * @param entity
+     *        the message body contents
+     * @param charset
+     *        the charset to use when encoding the message body contents
+     */
+    void send(Lang.CharWritable entity, Charset charset);
 
+    /**
+     * Writes the end of this HTTP response message with the contents of the
+     * specified file as message body.
+     *
+     * @param file
+     *        the message body contents
+     */
     void send(Path file);
 
     // pre-made responses
@@ -273,6 +319,13 @@ public final class Http {
     // 500
     void internalServerError(Throwable t);
 
+    /**
+     * Return {@code true} if an HTTP response message has been written to this
+     * exchange; {@code false} otherwise.
+     *
+     * @return {@code true} if an HTTP response message has been written to this
+     *         exchange; {@code false} otherwise
+     */
     boolean processed();
 
   }
@@ -526,13 +579,6 @@ public final class Http {
      * Sole constructor.
      */
     protected Module() {}
-
-  }
-
-  /**
-   * An HTTP request message.
-   */
-  public sealed interface Request {
 
   }
 

@@ -1081,4 +1081,40 @@ public class HttpExchangeTest {
     }
   }
 
+  @Test(description = """
+  Disallow access to request body if response phase has started
+  """)
+  public void testCase023() {
+    TestableSocket socket;
+    socket = TestableSocket.of("""
+    POST /login HTTP/1.1\r
+    Host: www.example.com\r
+    Content-Length: 24\r
+    Content-Type: application/x-www-form-urlencoded\r
+    \r
+    email=user%40example.com""");
+
+    try (HttpExchange http = new HttpExchange(socket, 128, 256, Clock.systemDefaultZone(), TestingNoteSink.INSTANCE)) {
+      // request phase
+      ParseStatus parse;
+      parse = http.parse();
+
+      assertEquals(parse.isError(), false);
+
+      // early response start...
+
+      http.status(Http.Status.SEE_OTHER);
+
+      try {
+        http.bodyInputStream();
+
+        Assert.fail();
+      } catch (IllegalStateException expected) {
+
+      }
+    } catch (IOException e) {
+      throw new AssertionError("Failed with IOException", e);
+    }
+  }
+
 }

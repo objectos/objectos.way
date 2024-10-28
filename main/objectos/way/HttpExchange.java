@@ -40,7 +40,6 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.function.Function;
-import objectos.way.Http.Method;
 import objectos.way.Lang.CharWritable;
 
 final class HttpExchange implements Http.Exchange, Closeable {
@@ -85,14 +84,6 @@ final class HttpExchange implements Http.Exchange, Closeable {
     }
   }
 
-  private enum Kind {
-    EMPTY,
-
-    IN_BUFFER,
-
-    FILE;
-  }
-
   private enum NoResponseBody {
 
     INSTANCE;
@@ -113,9 +104,17 @@ final class HttpExchange implements Http.Exchange, Closeable {
 
   }
 
+  private enum RequestBodyKind {
+    EMPTY,
+
+    IN_BUFFER,
+
+    FILE;
+  }
+
   private static final Notes NOTES = Notes.get();
 
-  private static final int _CONFIG = 0;
+  private static final int _START = 0;
   private static final int _PARSE = 1;
   private static final int _REQUEST = 2;
   private static final int _RESPONSE = 3;
@@ -130,10 +129,6 @@ final class HttpExchange implements Http.Exchange, Closeable {
   private static final int CONTENT_LENGTH = 1 << 5;
 
   private static final int CHUNKED = 1 << 6;
-
-  private static final byte[] CLOSE_BYTES = Http.utf8("close");
-
-  private static final byte[] KEEP_ALIVE_BYTES = Http.utf8("keep-alive");
 
   private Map<String, Object> attributes;
 
@@ -153,7 +148,7 @@ final class HttpExchange implements Http.Exchange, Closeable {
 
   // RequestBody
 
-  private Kind kind = Kind.EMPTY;
+  private RequestBodyKind requestBodyKind = RequestBodyKind.EMPTY;
 
   private Path requestBodyDirectory;
 
@@ -173,7 +168,7 @@ final class HttpExchange implements Http.Exchange, Closeable {
 
   private int matcherIndex;
 
-  private Method method;
+  private Http.Method method;
 
   private String path;
 
@@ -235,6 +230,8 @@ final class HttpExchange implements Http.Exchange, Closeable {
     lineLimit = 0;
 
     parseStatus = ParseStatus.NORMAL;
+
+    setState(_START);
   }
 
   /**
@@ -318,8 +315,12 @@ final class HttpExchange implements Http.Exchange, Closeable {
   // # BEGIN: HTTP/1.1 request parsing
   // ##################################################################
 
+  private static final byte[] CLOSE_BYTES = Http.utf8("close");
+
+  private static final byte[] KEEP_ALIVE_BYTES = Http.utf8("keep-alive");
+
   public final ParseStatus parse() throws IOException, IllegalStateException {
-    if (testState(_CONFIG)) {
+    if (testState(_START)) {
       // noop
     }
 
@@ -445,7 +446,7 @@ final class HttpExchange implements Http.Exchange, Closeable {
   }
 
   private void resetRequestBody() {
-    kind = Kind.EMPTY;
+    requestBodyKind = RequestBodyKind.EMPTY;
 
     requestBodyFile = null;
   }
@@ -543,7 +544,7 @@ final class HttpExchange implements Http.Exchange, Closeable {
     }
   }
 
-  private void parseMethod0(Method candidate, byte[] candidateBytes) throws IOException {
+  private void parseMethod0(Http.Method candidate, byte[] candidateBytes) throws IOException {
     if (matches(candidateBytes)) {
       method = candidate;
     }
@@ -988,6 +989,19 @@ final class HttpExchange implements Http.Exchange, Closeable {
     }
   }
 
+  final void hexDump() {
+    HexFormat format;
+    format = HexFormat.of();
+
+    String bufferDump;
+    bufferDump = format.formatHex(buffer, 0, bufferLimit);
+
+    String args;
+    args = "bufferIndex=" + bufferIndex + ";lineLimit=" + lineLimit;
+
+    noteSink.send(NOTES.hexdump, bufferDump, args);
+  }
+
   private int parseHeaderValueStart() {
     // consumes and discard a single leading OWS if present
     byte maybeOws;
@@ -1059,7 +1073,7 @@ final class HttpExchange implements Http.Exchange, Closeable {
           throw new EOFException();
         }
 
-        kind = Kind.IN_BUFFER;
+        requestBodyKind = RequestBodyKind.IN_BUFFER;
       }
 
       else {
@@ -1075,7 +1089,7 @@ final class HttpExchange implements Http.Exchange, Closeable {
         if (read < 0) {
           parseStatus = ParseStatus.EOF;
         } else {
-          kind = Kind.FILE;
+          requestBodyKind = RequestBodyKind.FILE;
         }
       }
 
@@ -1094,12 +1108,30 @@ final class HttpExchange implements Http.Exchange, Closeable {
   // # END: HTTP/1.1 request parsing || body
   // ##################################################################
 
+  private void checkRequest() {
+    Check.state(
+        !badRequest(),
+
+        """
+        This request method can only be invoked:
+        - after a successful parse() operation; and
+        - before any response related method invocation.
+        """
+    );
+  }
+
+  private boolean badRequest() {
+    Check.state(testState(_REQUEST), "Http.Request.Method can only be invoked after a parse() operation");
+
+    return parseStatus.isBadRequest();
+  }
+
   // ##################################################################
   // # BEGIN: Http.Exchange API || request line
   // ##################################################################
 
   @Override
-  public final Method method() {
+  public final Http.Method method() {
     return method;
   }
 
@@ -1252,6 +1284,114 @@ final class HttpExchange implements Http.Exchange, Closeable {
     return builder.toString();
   }
 
+  private void makeQueryParams(Map<String, Object> map, Function<String, String> decoder) {
+    int queryLength;
+    queryLength = rawValue.length() - queryStart;
+
+    if (queryLength < 2) {
+      // query is empty: either "" or "?"
+      return;
+    }
+
+    String source;
+    source = rawQuery();
+
+    StringBuilder sb;
+    sb = new StringBuilder();
+
+    String key;
+    key = null;
+
+    for (int i = 0, len = source.length(); i < len; i++) {
+      char c;
+      c = source.charAt(i);
+
+      switch (c) {
+        case '=' -> {
+          key = sb.toString();
+
+          sb.setLength(0);
+
+          putQueryParams(map, decoder, key, "");
+        }
+
+        case '&' -> {
+          String value;
+          value = sb.toString();
+
+          sb.setLength(0);
+
+          if (key == null) {
+            putQueryParams(map, decoder, value, "");
+
+            continue;
+          }
+
+          putQueryParams(map, decoder, key, value);
+
+          key = null;
+        }
+
+        default -> sb.append(c);
+      }
+    }
+
+    String value;
+    value = sb.toString();
+
+    if (key != null) {
+      putQueryParams(map, decoder, key, value);
+    } else {
+      putQueryParams(map, decoder, value, "");
+    }
+  }
+
+  @SuppressWarnings("unchecked")
+  private void putQueryParams(Map<String, Object> map, Function<String, String> decoder, String rawKey, String rawValue) {
+    String key;
+    key = decoder.apply(rawKey);
+
+    String value;
+    value = decoder.apply(rawValue);
+
+    Object oldValue;
+    oldValue = map.put(key, value);
+
+    if (oldValue == null) {
+      return;
+    }
+
+    if (oldValue.equals("")) {
+      return;
+    }
+
+    if (oldValue instanceof String s) {
+
+      if (value.equals("")) {
+        map.put(key, s);
+      } else {
+        List<String> list;
+        list = Util.createList();
+
+        list.add(s);
+
+        list.add(value);
+
+        map.put(key, list);
+      }
+
+    }
+
+    else {
+      List<String> list;
+      list = (List<String>) oldValue;
+
+      list.add(value);
+
+      map.put(key, list);
+    }
+  }
+
   // ##################################################################
   // # END: Http.Exchange API || request target
   // ##################################################################
@@ -1345,7 +1485,9 @@ final class HttpExchange implements Http.Exchange, Closeable {
 
   @Override
   public final InputStream bodyInputStream() throws IOException {
-    return switch (kind) {
+    checkRequest();
+
+    return switch (requestBodyKind) {
       case EMPTY -> InputStream.nullInputStream();
 
       case IN_BUFFER -> openStreamImpl();
@@ -1406,7 +1548,33 @@ final class HttpExchange implements Http.Exchange, Closeable {
   // # END: Http.Exchange API || request attributes
   // ##################################################################
 
-  // response
+  // ##################################################################
+  // # BEGIN: Http.Exchange API || response
+  // ##################################################################
+
+  private void checkResponse() {
+    if (testState(_REQUEST)) {
+      bufferIndex = 0;
+
+      responseBody = null;
+
+      setState(_RESPONSE);
+
+      return;
+    }
+
+    if (testState(_RESPONSE)) {
+      return;
+    }
+
+    throw new IllegalStateException(
+        """
+        Response methods can only be invoked:
+        - after a successful parse() operation; and
+        - before the commit() method invocation.
+        """
+    );
+  }
 
   static final byte[][] STATUS_LINES;
 
@@ -1621,30 +1789,6 @@ final class HttpExchange implements Http.Exchange, Closeable {
     send(bytes);
   }
 
-  private void checkResponse() {
-    if (testState(_REQUEST)) {
-      bufferIndex = 0;
-
-      responseBody = null;
-
-      setState(_RESPONSE);
-
-      return;
-    }
-
-    if (testState(_RESPONSE)) {
-      return;
-    }
-
-    throw new IllegalStateException(
-        """
-        Request methods can only be invoked:
-        - after a successful parse() operation; and
-        - before the commit() method invocation.
-        """
-    );
-  }
-
   private void writeBytes(byte[] bytes) {
     int length;
     length = bytes.length;
@@ -1670,6 +1814,23 @@ final class HttpExchange implements Http.Exchange, Closeable {
 
     bufferIndex += length;
   }
+
+  // ##################################################################
+  // # END: Http.Exchange API || response
+  // ##################################################################
+
+  public final boolean keepAlive() {
+    return testBit(KEEP_ALIVE);
+  }
+
+  @Override
+  public final boolean processed() {
+    return testState(_PROCESSED);
+  }
+
+  // ##################################################################
+  // # BEGIN: Http.Exchange API || commit
+  // ##################################################################
 
   private static final byte[] CHUNKED_TRAILER = "0\r\n\r\n".getBytes(StandardCharsets.UTF_8);
 
@@ -1704,8 +1865,8 @@ final class HttpExchange implements Http.Exchange, Closeable {
 
           bufferIndex = 0;
 
-          ThisAppendable out;
-          out = new ThisAppendable();
+          CharWritableAppendable out;
+          out = new CharWritableAppendable();
 
           writable.writeTo(out);
 
@@ -1727,43 +1888,8 @@ final class HttpExchange implements Http.Exchange, Closeable {
     setState(_COMMITED);
   }
 
-  public final boolean keepAlive() {
-    return testBit(KEEP_ALIVE);
-  }
-
-  @Override
-  public final boolean processed() {
-    return testState(_PROCESSED);
-  }
-
-  private void clearBit(int mask) {
-    bitset &= ~mask;
-  }
-
-  private void setBit(int mask) {
-    bitset |= mask;
-  }
-
-  private void setState(int value) {
-    int bits;
-    bits = bitset & BITS_MASK;
-
-    bitset = bits | value;
-  }
-
-  private boolean testBit(int mask) {
-    return (bitset & mask) != 0;
-  }
-
-  private boolean testState(int value) {
-    int result;
-    result = bitset & STATE_MASK;
-
-    return result == value;
-  }
-
-  private class ThisAppendable implements Appendable {
-    public ThisAppendable() {
+  private class CharWritableAppendable implements Appendable {
+    public CharWritableAppendable() {
       bufferIndex = 0;
     }
 
@@ -1876,13 +2002,13 @@ final class HttpExchange implements Http.Exchange, Closeable {
     }
   }
 
-  private String decode(String raw) {
-    return URLDecoder.decode(raw, StandardCharsets.UTF_8);
-  }
+  // ##################################################################
+  // # END: Http.Exchange API || commit
+  // ##################################################################
 
-  private String encode(String value) {
-    return URLEncoder.encode(value, StandardCharsets.UTF_8);
-  }
+  // ##################################################################
+  // # BEGIN: Http.Module support
+  // ##################################################################
 
   final void matcherReset() {
     matcherIndex = 0;
@@ -1962,131 +2088,42 @@ final class HttpExchange implements Http.Exchange, Closeable {
     pathParams.put(name, value);
   }
 
-  // query param stuff
+  // ##################################################################
+  // # END: Http.Module support
+  // ##################################################################
 
-  private void makeQueryParams(Map<String, Object> map, Function<String, String> decoder) {
-    int queryLength;
-    queryLength = rawValue.length() - queryStart;
-
-    if (queryLength < 2) {
-      // query is empty: either "" or "?"
-      return;
-    }
-
-    String source;
-    source = rawQuery();
-
-    StringBuilder sb;
-    sb = new StringBuilder();
-
-    String key;
-    key = null;
-
-    for (int i = 0, len = source.length(); i < len; i++) {
-      char c;
-      c = source.charAt(i);
-
-      switch (c) {
-        case '=' -> {
-          key = sb.toString();
-
-          sb.setLength(0);
-
-          putQueryParams(map, decoder, key, "");
-        }
-
-        case '&' -> {
-          String value;
-          value = sb.toString();
-
-          sb.setLength(0);
-
-          if (key == null) {
-            putQueryParams(map, decoder, value, "");
-
-            continue;
-          }
-
-          putQueryParams(map, decoder, key, value);
-
-          key = null;
-        }
-
-        default -> sb.append(c);
-      }
-    }
-
-    String value;
-    value = sb.toString();
-
-    if (key != null) {
-      putQueryParams(map, decoder, key, value);
-    } else {
-      putQueryParams(map, decoder, value, "");
-    }
+  private void clearBit(int mask) {
+    bitset &= ~mask;
   }
 
-  @SuppressWarnings("unchecked")
-  private void putQueryParams(Map<String, Object> map, Function<String, String> decoder, String rawKey, String rawValue) {
-    String key;
-    key = decoder.apply(rawKey);
-
-    String value;
-    value = decoder.apply(rawValue);
-
-    Object oldValue;
-    oldValue = map.put(key, value);
-
-    if (oldValue == null) {
-      return;
-    }
-
-    if (oldValue.equals("")) {
-      return;
-    }
-
-    if (oldValue instanceof String s) {
-
-      if (value.equals("")) {
-        map.put(key, s);
-      } else {
-        List<String> list;
-        list = Util.createList();
-
-        list.add(s);
-
-        list.add(value);
-
-        map.put(key, list);
-      }
-
-    }
-
-    else {
-      List<String> list;
-      list = (List<String>) oldValue;
-
-      list.add(value);
-
-      map.put(key, list);
-    }
+  private void setBit(int mask) {
+    bitset |= mask;
   }
 
-  //
-  // Section: SocketInput
-  //
+  private void setState(int value) {
+    int bits;
+    bits = bitset & BITS_MASK;
 
-  final void hexDump() {
-    HexFormat format;
-    format = HexFormat.of();
+    bitset = bits | value;
+  }
 
-    String bufferDump;
-    bufferDump = format.formatHex(buffer, 0, bufferLimit);
+  private boolean testBit(int mask) {
+    return (bitset & mask) != 0;
+  }
 
-    String args;
-    args = "bufferIndex=" + bufferIndex + ";lineLimit=" + lineLimit;
+  private boolean testState(int value) {
+    int result;
+    result = bitset & STATE_MASK;
 
-    noteSink.send(NOTES.hexdump, bufferDump, args);
+    return result == value;
+  }
+
+  private String decode(String raw) {
+    return URLDecoder.decode(raw, StandardCharsets.UTF_8);
+  }
+
+  private String encode(String value) {
+    return URLEncoder.encode(value, StandardCharsets.UTF_8);
   }
 
   final void parseLine() throws IOException {
