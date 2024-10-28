@@ -22,7 +22,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Set;
-import objectos.way.HttpExchangeLoop.ParseStatus;
+import objectos.way.HttpExchange.ParseStatus;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -99,11 +99,7 @@ public class HttpFormUrlEncodedTest {
     TestableSocket socket;
     socket = TestableSocket.of(request);
 
-    try (HttpExchangeLoop http = new HttpExchangeLoop(socket)) {
-      http.bufferSize(512, 1024);
-      http.clock(TestingClock.FIXED);
-      http.noteSink(TestingNoteSink.INSTANCE);
-
+    try (HttpExchange http = new HttpExchange(socket, 512, 1024, TestingClock.FIXED, TestingNoteSink.INSTANCE)) {
       ParseStatus status;
       status = http.parse();
 

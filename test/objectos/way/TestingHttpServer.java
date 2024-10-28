@@ -25,7 +25,8 @@ import java.net.InetAddress;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
-import objectos.notes.Note;
+import java.util.Objects;
+import java.util.concurrent.CountDownLatch;
 
 public final class TestingHttpServer {
 
@@ -155,24 +156,33 @@ public final class TestingHttpServer {
     private static Http.Server create0() throws IOException, InterruptedException {
       HANDLER = new ThisHandlerFactory();
 
+      CountDownLatch serverStarted;
+      serverStarted = new CountDownLatch(1);
+
+      CountDownLatch noteReceived;
+      noteReceived = new CountDownLatch(1);
+
+      ThisNoteSink noteSink;
+      noteSink = new ThisNoteSink(serverStarted, noteReceived);
+
       Http.Server wayServer;
-      wayServer = Http.createServer(
-          HANDLER,
+      wayServer = Http.Server.create(config -> {
+        config.handlerFactory(HANDLER);
 
-          Http.clock(TestingClock.FIXED),
+        config.clock(TestingClock.FIXED);
 
-          Http.noteSink(new ThisNoteSink(HANDLER)),
+        config.noteSink(noteSink);
 
-          Http.port(0)
-      );
+        config.port(0);
+      });
 
       TestingShutdownHook.register(wayServer);
 
       wayServer.start();
 
-      synchronized (HANDLER) {
-        HANDLER.wait();
-      }
+      serverStarted.countDown();
+
+      noteReceived.await();
 
       return wayServer;
     }
@@ -228,15 +238,26 @@ public final class TestingHttpServer {
 
   private static class ThisNoteSink extends TestingNoteSink {
 
-    private final Object lock;
+    private final Http.Server.Notes notes = Http.Server.Notes.create();
 
-    public ThisNoteSink(Object lock) { this.lock = lock; }
+    private final CountDownLatch serverStarted;
+    private final CountDownLatch noteReceived;
+
+    public ThisNoteSink(CountDownLatch serverStarted, CountDownLatch noteReceived) {
+      this.serverStarted = serverStarted;
+      this.noteReceived = noteReceived;
+    }
 
     @Override
     protected void visitNote(Note note) {
-      if (note == Http.Server.LISTENING) {
-        synchronized (lock) {
-          lock.notify();
+      if (Objects.equals(note, notes.started())) {
+        try {
+          serverStarted.await();
+
+          noteReceived.countDown();
+        } catch (InterruptedException e) {
+          // server interrupted...
+          Thread.currentThread().interrupt();
         }
       }
     }

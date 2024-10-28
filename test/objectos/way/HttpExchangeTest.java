@@ -22,12 +22,13 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.time.Clock;
 import java.util.Set;
-import objectos.way.HttpExchangeLoop.ParseStatus;
+import objectos.way.HttpExchange.ParseStatus;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-public class HttpExchangeLoopTest {
+public class HttpExchangeTest {
 
   @Test(description = """
   Minimum GET request with explicity close
@@ -54,10 +55,7 @@ public class HttpExchangeLoopTest {
     \r
     %s""".formatted(body01);
 
-    try (HttpExchangeLoop http = new HttpExchangeLoop(socket)) {
-      http.bufferSize(128, 128);
-      http.noteSink(TestingNoteSink.INSTANCE);
-
+    try (HttpExchange http = new HttpExchange(socket, 128, 128, Clock.systemDefaultZone(), TestingNoteSink.INSTANCE)) {
       // request phase
       ParseStatus parse;
       parse = http.parse();
@@ -157,10 +155,7 @@ public class HttpExchangeLoopTest {
     \r
     %s""".formatted(body02);
 
-    try (HttpExchangeLoop http = new HttpExchangeLoop(socket)) {
-      http.bufferSize(128, 128);
-      http.noteSink(TestingNoteSink.INSTANCE);
-
+    try (HttpExchange http = new HttpExchange(socket, 128, 128, Clock.systemDefaultZone(), TestingNoteSink.INSTANCE)) {
       // request 01
       ParseStatus parse;
       parse = http.parse();
@@ -268,10 +263,7 @@ public class HttpExchangeLoopTest {
     \r
     %s""".formatted(body01);
 
-    try (HttpExchangeLoop http = new HttpExchangeLoop(socket)) {
-      http.bufferSize(128, 128);
-      http.noteSink(TestingNoteSink.INSTANCE);
-
+    try (HttpExchange http = new HttpExchange(socket, 128, 128, Clock.systemDefaultZone(), TestingNoteSink.INSTANCE)) {
       // request phase
       ParseStatus parse;
       parse = http.parse();
@@ -335,10 +327,7 @@ public class HttpExchangeLoopTest {
     Path dir;
     dir = null;
 
-    try (HttpExchangeLoop http = new HttpExchangeLoop(socket)) {
-      http.bufferSize(128, 128);
-      http.noteSink(TestingNoteSink.INSTANCE);
-
+    try (HttpExchange http = new HttpExchange(socket, 128, 128, Clock.systemDefaultZone(), TestingNoteSink.INSTANCE)) {
       // request phase
       ParseStatus parse;
       parse = http.parse();
@@ -406,10 +395,7 @@ public class HttpExchangeLoopTest {
     \r
     """;
 
-    try (HttpExchangeLoop http = new HttpExchangeLoop(socket)) {
-      http.bufferSize(128, 128);
-      http.noteSink(TestingNoteSink.INSTANCE);
-
+    try (HttpExchange http = new HttpExchange(socket, 128, 128, Clock.systemDefaultZone(), TestingNoteSink.INSTANCE)) {
       // request phase
       ParseStatus parse;
       parse = http.parse();
@@ -467,10 +453,7 @@ public class HttpExchangeLoopTest {
     \r
     """;
 
-    try (HttpExchangeLoop http = new HttpExchangeLoop(socket)) {
-      http.bufferSize(128, 128);
-      http.noteSink(TestingNoteSink.INSTANCE);
-
+    try (HttpExchange http = new HttpExchange(socket, 128, 128, Clock.systemDefaultZone(), TestingNoteSink.INSTANCE)) {
       // request phase
       ParseStatus parse;
       parse = http.parse();
@@ -513,10 +496,7 @@ public class HttpExchangeLoopTest {
     \r
     """;
 
-    try (HttpExchangeLoop http = new HttpExchangeLoop(socket)) {
-      http.bufferSize(128, 128);
-      http.noteSink(TestingNoteSink.INSTANCE);
-
+    try (HttpExchange http = new HttpExchange(socket, 128, 128, Clock.systemDefaultZone(), TestingNoteSink.INSTANCE)) {
       // request phase
       ParseStatus parse;
       parse = http.parse();
@@ -571,10 +551,7 @@ public class HttpExchangeLoopTest {
     \r
     %s""".formatted(body01);
 
-    try (HttpExchangeLoop http = new HttpExchangeLoop(socket)) {
-      http.bufferSize(128, 256);
-      http.noteSink(TestingNoteSink.INSTANCE);
-
+    try (HttpExchange http = new HttpExchange(socket, 128, 256, Clock.systemDefaultZone(), TestingNoteSink.INSTANCE)) {
       // request phase
       ParseStatus parse;
       parse = http.parse();
@@ -630,11 +607,7 @@ public class HttpExchangeLoopTest {
     AAAA
     """.formatted(etag);
 
-    try (HttpExchangeLoop http = new HttpExchangeLoop(socket)) {
-      http.bufferSize(128, 256);
-      http.clock(TestingClock.FIXED);
-      http.noteSink(TestingNoteSink.INSTANCE);
-
+    try (HttpExchange http = new HttpExchange(socket, 128, 256, TestingClock.FIXED, TestingNoteSink.INSTANCE)) {
       ParseStatus parse;
       parse = http.parse();
 
@@ -677,11 +650,7 @@ public class HttpExchangeLoopTest {
     \r
     """;
 
-    try (HttpExchangeLoop http = new HttpExchangeLoop(socket)) {
-      http.bufferSize(128, 256);
-      http.clock(TestingClock.FIXED);
-      http.noteSink(TestingNoteSink.INSTANCE);
-
+    try (HttpExchange http = new HttpExchange(socket, 128, 256, TestingClock.FIXED, TestingNoteSink.INSTANCE)) {
       ParseStatus parse;
       parse = http.parse();
 
@@ -715,11 +684,7 @@ public class HttpExchangeLoopTest {
     TestingCharWritable writable;
     writable = TestingCharWritable.ofLength(64);
 
-    try (HttpExchangeLoop http = new HttpExchangeLoop(socket)) {
-      http.bufferSize(128, 256);
-      http.clock(TestingClock.FIXED);
-      http.noteSink(TestingNoteSink.INSTANCE);
-
+    try (HttpExchange http = new HttpExchange(socket, 128, 256, TestingClock.FIXED, TestingNoteSink.INSTANCE)) {
       ParseStatus parse;
       parse = http.parse();
 
@@ -760,11 +725,7 @@ public class HttpExchangeLoopTest {
     TestingCharWritable writable;
     writable = TestingCharWritable.ofLength(64);
 
-    try (HttpExchangeLoop http = new HttpExchangeLoop(socket)) {
-      http.bufferSize(128, 256);
-      http.clock(TestingClock.FIXED);
-      http.noteSink(TestingNoteSink.INSTANCE);
-
+    try (HttpExchange http = new HttpExchange(socket, 128, 256, TestingClock.FIXED, TestingNoteSink.INSTANCE)) {
       ParseStatus parse;
       parse = http.parse();
 
@@ -820,11 +781,7 @@ public class HttpExchangeLoopTest {
     \r
     """;
 
-    try (HttpExchangeLoop http = new HttpExchangeLoop(socket)) {
-      http.bufferSize(128, 128);
-      http.clock(TestingClock.FIXED);
-      http.noteSink(TestingNoteSink.INSTANCE);
-
+    try (HttpExchange http = new HttpExchange(socket, 128, 128, TestingClock.FIXED, TestingNoteSink.INSTANCE)) {
       ParseStatus parse;
       parse = http.parse();
 
@@ -877,11 +834,7 @@ public class HttpExchangeLoopTest {
     \r
     """;
 
-    try (HttpExchangeLoop http = new HttpExchangeLoop(socket)) {
-      http.bufferSize(128, 128);
-      http.clock(TestingClock.FIXED);
-      http.noteSink(TestingNoteSink.INSTANCE);
-
+    try (HttpExchange http = new HttpExchange(socket, 128, 128, TestingClock.FIXED, TestingNoteSink.INSTANCE)) {
       ParseStatus parse;
       parse = http.parse();
 
@@ -932,11 +885,7 @@ public class HttpExchangeLoopTest {
     \r
     """;
 
-    try (HttpExchangeLoop http = new HttpExchangeLoop(socket)) {
-      http.bufferSize(128, 256);
-      http.clock(TestingClock.FIXED);
-      http.noteSink(TestingNoteSink.INSTANCE);
-
+    try (HttpExchange http = new HttpExchange(socket, 128, 256, TestingClock.FIXED, TestingNoteSink.INSTANCE)) {
       ParseStatus parse;
       parse = http.parse();
 
@@ -997,11 +946,7 @@ public class HttpExchangeLoopTest {
     \r
     """;
 
-    try (HttpExchangeLoop http = new HttpExchangeLoop(socket)) {
-      http.bufferSize(128, 128);
-      http.clock(TestingClock.FIXED);
-      http.noteSink(TestingNoteSink.INSTANCE);
-
+    try (HttpExchange http = new HttpExchange(socket, 128, 128, TestingClock.FIXED, TestingNoteSink.INSTANCE)) {
       ParseStatus parse;
       parse = http.parse();
 
@@ -1043,11 +988,7 @@ public class HttpExchangeLoopTest {
     \r
     %s""".formatted(chunk256));
 
-    try (HttpExchangeLoop http = new HttpExchangeLoop(socket)) {
-      http.bufferSize(128, 128);
-      http.clock(TestingClock.FIXED);
-      http.noteSink(TestingNoteSink.INSTANCE);
-
+    try (HttpExchange http = new HttpExchange(socket, 128, 128, TestingClock.FIXED, TestingNoteSink.INSTANCE)) {
       ParseStatus parse;
       parse = http.parse();
 
@@ -1075,10 +1016,7 @@ public class HttpExchangeLoopTest {
     \r
     """);
 
-    try (HttpExchangeLoop http = new HttpExchangeLoop(socket)) {
-      http.clock(TestingClock.FIXED);
-      http.noteSink(TestingNoteSink.INSTANCE);
-
+    try (HttpExchange http = new HttpExchange(socket, 1024, 4096, TestingClock.FIXED, TestingNoteSink.INSTANCE)) {
       ParseStatus parse;
       parse = http.parse();
 
@@ -1121,10 +1059,7 @@ public class HttpExchangeLoopTest {
       \r
       """);
 
-    try (HttpExchangeLoop http = new HttpExchangeLoop(socket)) {
-      http.clock(TestingClock.FIXED);
-      http.noteSink(TestingNoteSink.INSTANCE);
-
+    try (HttpExchange http = new HttpExchange(socket, 1024, 4096, TestingClock.FIXED, TestingNoteSink.INSTANCE)) {
       ParseStatus parse;
       parse = http.parse();
 
@@ -1165,10 +1100,7 @@ public class HttpExchangeLoopTest {
       \r
       """);
 
-    try (HttpExchangeLoop http = new HttpExchangeLoop(socket)) {
-      http.clock(TestingClock.FIXED);
-      http.noteSink(TestingNoteSink.INSTANCE);
-
+    try (HttpExchange http = new HttpExchange(socket, 1024, 4096, TestingClock.FIXED, TestingNoteSink.INSTANCE)) {
       ParseStatus parse;
       parse = http.parse();
 

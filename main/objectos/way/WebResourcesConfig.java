@@ -121,7 +121,7 @@ final class WebResourcesConfig implements Web.Resources.Config {
   @Override
   public final Web.Resources.Config serveFile(String pathName, byte[] contents) {
     Http.RequestTarget target;
-    target = Http.parseRequestTarget(pathName);
+    target = HttpExchange.parseRequestTarget(pathName);
 
     String query;
     query = target.rawQuery();

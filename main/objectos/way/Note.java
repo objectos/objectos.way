@@ -167,6 +167,8 @@ public sealed interface Note {
 
   static class NoOpSink implements Sink {
 
+    static final NoOpSink INSTANCE = new NoOpSink();
+
     protected NoOpSink() {}
 
     @Override

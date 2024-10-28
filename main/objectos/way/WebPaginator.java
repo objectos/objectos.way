@@ -78,7 +78,7 @@ final record WebPaginator(Http.RequestTarget request, Sql.Page page, int firstIt
     String value;
     value = Integer.toString(page);
 
-    if (request instanceof HttpRequestLine line) {
+    if (request instanceof HttpExchange line) {
       return line.rawValue("page", value);
     } else {
       throw new UnsupportedOperationException("Implement me");

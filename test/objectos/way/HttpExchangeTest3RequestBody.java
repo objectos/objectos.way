@@ -20,7 +20,7 @@ import static org.testng.Assert.assertEquals;
 import java.io.IOException;
 import org.testng.annotations.Test;
 
-public class HttpRequestBodyTest {
+public class HttpExchangeTest3RequestBody {
 
   @Test(description = """
   GET / HTTP/1.1
@@ -28,7 +28,7 @@ public class HttpRequestBodyTest {
   Connection: close
   """)
   public void testCase001() throws IOException {
-    HttpRequestBody body;
+    HttpExchange body;
     body = regularInput("""
     Host: www.example.com\r
     Connection: close\r
@@ -47,7 +47,7 @@ public class HttpRequestBodyTest {
   - happy path
   """)
   public void testCase008() throws IOException {
-    HttpRequestBody body;
+    HttpExchange body;
     body = regularInput("""
     Host: www.example.com\r
     Content-Length: 24\r
@@ -74,7 +74,7 @@ public class HttpRequestBodyTest {
     .................................................
     123456""";
 
-    HttpRequestBody body;
+    HttpExchange body;
     body = regularInput("""
     Host: www.example.com\r
     Content-Length: 256\r
@@ -97,18 +97,11 @@ public class HttpRequestBodyTest {
     return ObjectosHttp.readString(body);
   }
 
-  private HttpRequestBody regularInput(Object... data) {
-    HttpRequestBody body;
-    body = new HttpRequestBody();
+  private HttpExchange regularInput(Object... data) throws IOException {
+    TestableSocket socket;
+    socket = TestableSocket.of(data);
 
-    body.bufferSize(64, 128);
-
-    TestingInputStream inputStream;
-    inputStream = TestingInputStream.of(data);
-
-    body.initSocketInput(inputStream);
-
-    return body;
+    return new HttpExchange(socket, 64, 128, null, TestingNoteSink.INSTANCE);
   }
 
 }

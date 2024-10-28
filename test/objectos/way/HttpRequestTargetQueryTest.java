@@ -151,7 +151,7 @@ public class HttpRequestTargetQueryTest {
   }
 
   private Http.RequestTarget queryOf(String q) {
-    return Http.parseRequestTarget("/test?" + q);
+    return HttpExchange.parseRequestTarget("/test?" + q);
   }
 
 }

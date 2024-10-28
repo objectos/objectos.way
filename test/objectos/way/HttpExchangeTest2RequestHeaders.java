@@ -20,7 +20,7 @@ import static org.testng.Assert.assertEquals;
 import java.io.IOException;
 import org.testng.annotations.Test;
 
-public class HttpRequestHeadersTest {
+public class HttpExchangeTest2RequestHeaders {
 
   @Test(description = """
   GET / HTTP/1.1
@@ -28,7 +28,7 @@ public class HttpRequestHeadersTest {
   Connection: close
   """)
   public void testCase001() throws IOException {
-    HttpRequestHeaders headers;
+    HttpExchange headers;
     headers = regularInput("""
     Host: www.example.com\r
     Connection: close\r
@@ -44,7 +44,7 @@ public class HttpRequestHeadersTest {
 
   @Test
   public void testCase003() throws IOException {
-    HttpRequestHeaders headers;
+    HttpExchange headers;
     headers = regularInput("""
     Host: www.example.com\r
     Connection: close\r
@@ -65,7 +65,7 @@ public class HttpRequestHeadersTest {
   - happy path
   """)
   public void testCase008() throws IOException {
-    HttpRequestHeaders headers;
+    HttpExchange headers;
     headers = regularInput("""
     Host: www.example.com\r
     Content-Length: 24\r
@@ -85,7 +85,7 @@ public class HttpRequestHeadersTest {
   Properly handle empty From: header
   """)
   public void testCase020() throws IOException {
-    HttpRequestHeaders headers;
+    HttpExchange headers;
     headers = regularInput("""
     Host: www.example.com\r
     From: \r
@@ -103,7 +103,7 @@ public class HttpRequestHeadersTest {
 
   @Test
   public void edge001() throws IOException {
-    HttpRequestHeaders headers;
+    HttpExchange headers;
     headers = regularInput("""
     no-leading-ows:foo\r
     empty-value:\r
@@ -121,18 +121,11 @@ public class HttpRequestHeadersTest {
     assertEquals(headers.first(Http.createHeaderName("trailing-ows2")), "foo");
   }
 
-  private HttpRequestHeaders regularInput(Object... data) {
-    HttpRequestHeaders headers;
-    headers = new HttpRequestHeaders();
+  private HttpExchange regularInput(Object... data) throws IOException {
+    TestableSocket socket;
+    socket = TestableSocket.of(data);
 
-    headers.bufferSize(64, 128);
-
-    TestingInputStream inputStream;
-    inputStream = TestingInputStream.of(data);
-
-    headers.initSocketInput(inputStream);
-
-    return headers;
+    return new HttpExchange(socket, 64, 128, null, TestingNoteSink.INSTANCE);
   }
 
 }

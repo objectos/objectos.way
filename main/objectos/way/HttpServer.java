@@ -19,38 +19,43 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;
+import java.net.Socket;
+import java.net.SocketException;
 import java.time.Clock;
-import objectos.notes.NoOpNoteSink;
-import objectos.notes.NoteSink;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadFactory;
+import objectos.way.HttpExchange.ParseStatus;
 
 /**
  * The Objectos Way {@link HttpServer} implementation.
  */
-final class HttpServer implements Http.Server {
+final class HttpServer implements Http.Server, Runnable {
 
-  static final class Builder {
+  record Notes(
+      Note.Ref1<ServerSocket> started,
+      Note.Ref0 stopped,
 
-    int bufferSizeInitial = 1024;
+      Note.Ref1<IOException> ioError,
+      Note.Ref1<Throwable> loopError,
+      Note.Ref1<Throwable> internalServerError
+  ) implements Http.Server.Notes {
 
-    int bufferSizeMax = 4096;
+    static Notes get() {
+      Class<?> s = Http.Server.class;
+      return new Notes(
+          Note.Ref1.create(s, "Started", Note.INFO),
+          Note.Ref0.create(s, "Stopped", Note.INFO),
 
-    Clock clock = Clock.systemUTC();
-
-    final Http.HandlerFactory factory;
-
-    NoteSink noteSink = NoOpNoteSink.of();
-
-    int port = 0;
-
-    public Builder(Http.HandlerFactory factory) {
-      this.factory = factory;
-    }
-
-    public final Http.Server build() {
-      return new HttpServer(this);
+          Note.Ref1.create(s, "I/O error", Note.ERROR),
+          Note.Ref1.create(s, "Loop error", Note.ERROR),
+          Note.Ref1.create(s, "Internal server error", Note.ERROR)
+      );
     }
 
   }
+
+  private final Notes notes = Notes.get();
 
   private final int bufferSizeInitial;
 
@@ -60,7 +65,7 @@ final class HttpServer implements Http.Server {
 
   private final Http.HandlerFactory factory;
 
-  private final NoteSink noteSink;
+  private final Note.Sink noteSink;
 
   private final int port;
 
@@ -68,12 +73,17 @@ final class HttpServer implements Http.Server {
 
   private Thread thread;
 
-  public HttpServer(Builder builder) {
+  public HttpServer(HttpServerConfig builder) {
     bufferSizeInitial = builder.bufferSizeInitial;
+
     bufferSizeMax = builder.bufferSizeMax;
+
     clock = builder.clock;
+
     factory = builder.factory;
+
     noteSink = builder.noteSink;
+
     port = builder.port;
   }
 
@@ -95,18 +105,7 @@ final class HttpServer implements Http.Server {
 
     serverSocket.bind(socketAddress);
 
-    HttpServerLoop loop;
-    loop = new HttpServerLoop(serverSocket, factory);
-
-    loop.bufferSizeInitial = bufferSizeInitial;
-
-    loop.bufferSizeMax = bufferSizeMax;
-
-    loop.clock = clock;
-
-    loop.noteSink = noteSink;
-
-    thread = Thread.ofPlatform().name("HTTP").start(loop);
+    thread = Thread.ofPlatform().name("HTTP").start(this);
   }
 
   @Override
@@ -150,6 +149,89 @@ final class HttpServer implements Http.Server {
         serverSocket = null;
       }
     }
+  }
+
+  @Override
+  public final void run() {
+    ThreadFactory factory;
+    factory = Thread.ofVirtual().name("http-", 1).factory();
+
+    try (ExecutorService executor = Executors.newThreadPerTaskExecutor(factory)) {
+      noteSink.send(notes.started, serverSocket);
+
+      while (!Thread.currentThread().isInterrupted()) {
+        Socket socket;
+        socket = serverSocket.accept();
+
+        Runnable task;
+        task = new ExchangeTask(socket);
+
+        executor.submit(task);
+      }
+
+      noteSink.send(notes.stopped);
+    } catch (SocketException e) {
+      if (serverSocket != null && !serverSocket.isClosed()) {
+        onIOException(e);
+      }
+    } catch (IOException e) {
+      onIOException(e);
+    }
+  }
+
+  private void onIOException(IOException e) {
+    noteSink.send(notes.ioError, e);
+  }
+
+  private class ExchangeTask implements Runnable {
+
+    private final Socket socket;
+
+    public ExchangeTask(Socket socket) {
+      this.socket = socket;
+    }
+
+    @Override
+    public final void run() {
+      try (HttpExchange http = new HttpExchange(socket, bufferSizeInitial, bufferSizeMax, clock, noteSink)) {
+        while (!Thread.currentThread().isInterrupted()) {
+          ParseStatus parse;
+          parse = http.parse();
+
+          if (parse == ParseStatus.EOF) {
+            break;
+          }
+
+          if (parse.isError()) {
+            throw new UnsupportedOperationException("Implement me");
+          }
+
+          try {
+            Http.Handler handler;
+            handler = factory.create();
+
+            handler.handle(http);
+          } catch (Http.AbstractHandlerException ex) {
+            ex.handle(http);
+          } catch (Throwable t) {
+            noteSink.send(notes.internalServerError, t);
+
+            http.internalServerError(t);
+          }
+
+          http.commit();
+
+          if (!http.keepAlive()) {
+            break;
+          }
+        }
+      } catch (IOException e) {
+        noteSink.send(notes.ioError, e);
+      } catch (Throwable t) {
+        noteSink.send(notes.loopError, t);
+      }
+    }
+
   }
 
 }

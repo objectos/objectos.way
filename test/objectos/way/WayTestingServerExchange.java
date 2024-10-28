@@ -25,10 +25,8 @@ import java.net.Socket;
 import java.nio.charset.StandardCharsets;
 import java.time.Clock;
 import java.util.function.Consumer;
-import objectos.notes.NoOpNoteSink;
-import objectos.notes.NoteSink;
 import objectos.way.Http.Exchange;
-import objectos.way.HttpExchangeLoop.ParseStatus;
+import objectos.way.HttpExchange.ParseStatus;
 
 public final class WayTestingServerExchange implements TestingServerExchange {
 
@@ -38,7 +36,7 @@ public final class WayTestingServerExchange implements TestingServerExchange {
 
   private Clock clock = Clock.systemUTC();
 
-  private NoteSink noteSink = NoOpNoteSink.of();
+  private Note.Sink noteSink = Note.NoOpSink.INSTANCE;
 
   public WayTestingServerExchange() {}
 
@@ -55,7 +53,7 @@ public final class WayTestingServerExchange implements TestingServerExchange {
     this.clock = Check.notNull(clock, "clock == null");
   }
 
-  public final void noteSink(NoteSink noteSink) {
+  public final void noteSink(Note.Sink noteSink) {
     this.noteSink = Check.notNull(noteSink, "noteSink == null");
   }
 
@@ -67,14 +65,8 @@ public final class WayTestingServerExchange implements TestingServerExchange {
     try (
         ByteArrayInputStream inputStream = new ByteArrayInputStream(bytes);
         TestingSocket socket = new TestingSocket(inputStream);
-        HttpExchangeLoop loop = new HttpExchangeLoop(socket)
+        HttpExchange loop = new HttpExchange(socket, bufferSizeInitial, bufferSizeMax, clock, noteSink)
     ) {
-      loop.bufferSize(bufferSizeInitial, bufferSizeMax);
-
-      loop.clock(clock);
-
-      loop.noteSink(noteSink);
-
       ParseStatus parse;
       parse = loop.parse();
 

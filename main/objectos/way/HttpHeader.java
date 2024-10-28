@@ -19,7 +19,7 @@ class HttpHeader {
 
   final Http.HeaderName name;
 
-  final HttpSocketInput input;
+  final HttpExchange input;
 
   final int start;
 
@@ -27,7 +27,7 @@ class HttpHeader {
 
   String value;
 
-  public HttpHeader(Http.HeaderName name, HttpSocketInput input, int start, int end) {
+  public HttpHeader(Http.HeaderName name, HttpExchange input, int start, int end) {
     this.name = name;
 
     this.input = input;

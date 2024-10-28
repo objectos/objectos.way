@@ -27,9 +27,9 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.Random;
 import java.util.function.Consumer;
-import objectos.notes.NoteSink;
 import objectos.way.App;
-import objectos.way.Http.Exchange;
+import objectos.way.Http;
+import objectos.way.Note;
 import objectos.way.WayTestingServerExchange;
 import objectos.way.Web;
 
@@ -37,7 +37,7 @@ public final class TestingTestingSite {
 
   public static final Clock CLOCK;
 
-  public static final NoteSink NOTE_SINK;
+  public static final Note.Sink NOTE_SINK;
 
   public static final TestingSiteInjector INJECTOR;
 
@@ -94,7 +94,7 @@ public final class TestingTestingSite {
 
   private TestingTestingSite() {}
 
-  public static String serverExchange(String request, Consumer<Exchange> handler) {
+  public static String serverExchange(String request, Consumer<Http.Exchange> handler) {
     WayTestingServerExchange serverExchange;
     serverExchange = new WayTestingServerExchange();
 

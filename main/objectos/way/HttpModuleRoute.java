@@ -31,8 +31,8 @@ final class HttpModuleRoute implements HttpModuleAction {
     boolean result;
     result = false;
 
-    HttpRequestLine t;
-    t = (HttpRequestLine) http;
+    HttpExchange t;
+    t = (HttpExchange) http;
 
     t.matcherReset();
 

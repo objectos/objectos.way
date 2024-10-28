@@ -99,17 +99,17 @@ abstract class TestingSite extends App.Bootstrap {
     // WebServer
     try {
       Http.Server httpServer;
-      httpServer = Http.createServer(
-          handlerFactory,
+      httpServer = Http.Server.create(config -> {
+        config.handlerFactory(handlerFactory);
 
-          Http.bufferSize(1024, 4096),
+        config.bufferSize(1024, 4096);
 
-          Http.clock(clock),
+        config.clock(clock);
 
-          Http.noteSink(noteSink),
+        config.noteSink(noteSink);
 
-          Http.port(portOption.get())
-      );
+        config.port(portOption.get());
+      });
 
       shutdownHook.register(httpServer);
 

@@ -55,11 +55,8 @@ public class HttpModuleConditionTest {
   }
 
   private void test(HttpModule.Condition condition, String target, boolean expected) {
-    Http.RequestTarget requestTarget;
-    requestTarget = Http.parseRequestTarget(target);
-
-    HttpRequestLine path;
-    path = (HttpRequestLine) requestTarget;
+    HttpExchange requestTarget;
+    requestTarget = HttpExchange.parseRequestTarget(target);
 
     HttpModuleMatcher matcher;
     matcher = new HttpModuleMatcher.Matcher2(
@@ -67,9 +64,9 @@ public class HttpModuleConditionTest {
         new HttpModuleMatcher.NamedVariable("x")
     );
 
-    assertEquals(matcher.test(path), true);
+    assertEquals(matcher.test(requestTarget), true);
 
-    assertEquals(condition.test(path), expected);
+    assertEquals(condition.test(requestTarget), expected);
   }
 
 }

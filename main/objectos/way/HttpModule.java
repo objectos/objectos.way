@@ -32,7 +32,7 @@ abstract class HttpModule {
       this.name = name;
     }
 
-    final boolean test(HttpRequestLine path) {
+    final boolean test(HttpExchange path) {
       String value;
       value = path.pathParam(name);
 

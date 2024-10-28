@@ -15,7 +15,6 @@
  */
 package objectos.way;
 
-import java.io.ByteArrayInputStream;
 import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
@@ -36,10 +35,6 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.function.Consumer;
-import objectos.notes.Note1;
-import objectos.notes.NoteSink;
-import objectos.way.HttpExchangeLoop.ParseStatus;
-import objectos.way.HttpServer.Builder;
 
 /**
  * The <strong>Objectos HTTP</strong> main class.
@@ -56,7 +51,7 @@ public final class Http {
    * Unless otherwise specified, request-target related methods of this
    * interface return decoded values.
    */
-  public sealed interface Exchange extends Request permits HttpExchangeLoop, TestingExchange {
+  public sealed interface Exchange extends Request permits HttpExchange, TestingExchange {
 
     /**
      * Stores an object in this request. The object will be associated to the
@@ -537,7 +532,7 @@ public final class Http {
    * Unless otherwise specified the values returned by the methods of this
    * interface are decoded.
    */
-  public sealed interface RequestTarget permits HttpRequestLine, Request {
+  public sealed interface RequestTarget permits Request {
 
     /**
      * The value of the path component.
@@ -628,17 +623,62 @@ public final class Http {
   /**
    * An HTTP server.
    */
-  public interface Server extends Closeable {
+  public sealed interface Server extends Closeable permits HttpServer {
 
     /**
      * Configures the creation of an HTTP server.
      */
-    public sealed interface Option permits HttpServerOption {}
+    public sealed interface Config permits HttpServerConfig {
+
+      Config bufferSize(int initial, int max);
+
+      Config clock(Clock clock);
+
+      Config handlerFactory(HandlerFactory factory);
+
+      Config noteSink(Note.Sink noteSink);
+
+      Config port(int port);
+
+    }
 
     /**
-     * Indicates that this server is ready to accept requests.
+     * References to the note instances emitted by an web server.
      */
-    Note1<ServerSocket> LISTENING = Note1.info(Http.Server.class, "Listening");
+    public sealed interface Notes permits HttpServer.Notes {
+
+      /**
+       * Creates a new {@code Notes} instance.
+       *
+       * @return a new {@code Notes} instance.
+       */
+      static Notes create() {
+        return HttpServer.Notes.get();
+      }
+
+      /**
+       * This server has started and is ready to accept requests.
+       */
+      Note.Ref1<ServerSocket> started();
+
+    }
+
+    /**
+     * Creates a new HTTP server instance with the specified configuration.
+     *
+     * @param config
+     *        configuration options of this new server instance
+     *
+     * @return a newly created HTTP server instance
+     */
+    static Server create(Consumer<Config> config) {
+      HttpServerConfig builder;
+      builder = new HttpServerConfig();
+
+      config.accept(builder);
+
+      return builder.build();
+    }
 
     /**
      * Starts this HTTP server.
@@ -1055,88 +1095,6 @@ public final class Http {
   }
 
   /**
-   * Creates a new HTTP server instance with the specified handler provider and
-   * the specified options.
-   *
-   * @param handlerFactory
-   *        the handler provider of this new server instance
-   * @param options
-   *        configuration options of this new server instance
-   *
-   * @return a newly created HTTP server instance
-   */
-  public static Server createServer(HandlerFactory handlerFactory, Server.Option... options) {
-    Check.notNull(handlerFactory, "handlerFactory == null");
-    Check.notNull(options, "options == null");
-
-    HttpServer.Builder builder;
-    builder = new HttpServer.Builder(handlerFactory);
-
-    for (int i = 0; i < options.length; i++) {
-      Server.Option option;
-      option = Check.notNull(options[i], "options[", i, "] == null");
-
-      // the cast is safe as Server.Option is sealed
-      HttpServerOption actual;
-      actual = (HttpServerOption) option;
-
-      actual.acceptHttpServerBuilder(builder);
-    }
-
-    return builder.build();
-  }
-
-  public static Server.Option bufferSize(int initial, int max) {
-    Check.argument(initial >= 128, "initial size must be >= 128");
-    Check.argument(max >= 128, "max size must be >= 128");
-    Check.argument(max >= initial, "max size must be >= initial size");
-
-    return new HttpServerOption() {
-      @Override
-      final void acceptHttpServerBuilder(Builder builder) {
-        builder.bufferSizeInitial = initial;
-
-        builder.bufferSizeMax = max;
-      }
-    };
-  }
-
-  public static Server.Option clock(Clock clock) {
-    Check.notNull(clock, "clock == null");
-
-    return new HttpServerOption() {
-      @Override
-      final void acceptHttpServerBuilder(Builder builder) {
-        builder.clock = clock;
-      }
-    };
-  }
-
-  public static Server.Option noteSink(NoteSink noteSink) {
-    Check.notNull(noteSink, "noteSink == null");
-
-    return new HttpServerOption() {
-      @Override
-      final void acceptHttpServerBuilder(Builder builder) {
-        builder.noteSink = noteSink;
-      }
-    };
-  }
-
-  public static Server.Option port(int port) {
-    if (port < 0 || port > 0xFFFF) {
-      throw new IllegalArgumentException("port out of range:" + port);
-    }
-
-    return new HttpServerOption() {
-      @Override
-      final void acceptHttpServerBuilder(Builder builder) {
-        builder.port = port;
-      }
-    };
-  }
-
-  /**
    * Formats a date so it can be used as the value of a {@code Date} HTTP
    * header.
    *
@@ -1191,53 +1149,6 @@ public final class Http {
    */
   public static FormUrlEncoded parseFormUrlEncoded(Http.Exchange http) throws IOException, UnsupportedMediaTypeException {
     return HttpFormUrlEncoded.parse(http);
-  }
-
-  /**
-   * Parses the specified string into a new request-target instance.
-   *
-   * @param target
-   *        the raw (undecoded) request-target value
-   *
-   * @return a new request target instance
-   *
-   * @throws IllegalArgumentException
-   *         if the string represents an invalid request-target value
-   */
-  static RequestTarget parseRequestTarget(String target) throws IllegalArgumentException {
-    Check.notNull(target, "target == null");
-
-    HttpRequestLine requestLine;
-    requestLine = new HttpRequestLine();
-
-    // append a line terminator
-    target = target + " \r\n";
-
-    byte[] bytes;
-    bytes = target.getBytes(StandardCharsets.UTF_8);
-
-    // in-memory stream... no closing needed...
-    InputStream inputStream;
-    inputStream = new ByteArrayInputStream(bytes);
-
-    requestLine.initSocketInput(inputStream);
-
-    try {
-      requestLine.parseLine();
-
-      requestLine.parseRequestTarget();
-    } catch (IOException e) {
-      throw new AssertionError("In-memory stream does not throw IOException", e);
-    }
-
-    ParseStatus parseStatus;
-    parseStatus = requestLine.parseStatus;
-
-    if (parseStatus.isError()) {
-      throw new IllegalArgumentException(parseStatus.name());
-    }
-
-    return requestLine;
   }
 
   // utils

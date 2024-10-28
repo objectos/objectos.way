@@ -146,25 +146,19 @@ public class HttpModuleMatcherTest {
   }
 
   private void test(HttpModuleMatcher matcher, String target, boolean expected) {
-    Http.RequestTarget requestTarget;
-    requestTarget = Http.parseRequestTarget(target);
+    HttpExchange requestTarget;
+    requestTarget = HttpExchange.parseRequestTarget(target);
 
-    HttpRequestLine path;
-    path = (HttpRequestLine) requestTarget;
-
-    assertEquals(matcher.test(path), expected);
+    assertEquals(matcher.test(requestTarget), expected);
   }
 
   private void test(HttpModuleMatcher matcher, String target, Map<String, String> expected) {
-    Http.RequestTarget requestTarget;
-    requestTarget = Http.parseRequestTarget(target);
+    HttpExchange requestTarget;
+    requestTarget = HttpExchange.parseRequestTarget(target);
 
-    HttpRequestLine path;
-    path = (HttpRequestLine) requestTarget;
+    assertTrue(matcher.test(requestTarget));
 
-    assertTrue(matcher.test(path));
-
-    assertEquals(path.pathParams, expected);
+    assertEquals(requestTarget.pathParams, expected);
   }
 
 }

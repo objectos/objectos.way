@@ -21,7 +21,7 @@ import java.io.IOException;
 import java.util.Set;
 import org.testng.annotations.Test;
 
-public class HttpRequestLineTest {
+public class HttpExchangeTest1RequestLine {
 
   @Test(description = """
   GET / HTTP/1.1
@@ -29,7 +29,7 @@ public class HttpRequestLineTest {
   Connection: close
   """)
   public void testCase001() throws IOException {
-    HttpRequestLine line;
+    HttpExchange line;
     line = regularInput("""
     GET / HTTP/1.1\r
     Host: www.example.com\r
@@ -65,7 +65,7 @@ public class HttpRequestLineTest {
   Host: www.example.com
   """)
   public void testCase007() throws IOException {
-    HttpRequestLine line;
+    HttpExchange line;
     line = regularInput("""
     GET /endpoint?foo=bar HTTP/1.1\r
     Host: www.example.com\r
@@ -101,7 +101,7 @@ public class HttpRequestLineTest {
   It should properly handle EOF on subsequent request line
   """)
   public void testCase020() throws IOException {
-    HttpRequestLine line;
+    HttpExchange line;
     line = regularInput("");
 
     line.parseRequestLine();
@@ -110,18 +110,11 @@ public class HttpRequestLineTest {
     assertEquals(line.parseStatus.isError(), true);
   }
 
-  private HttpRequestLine regularInput(Object... data) throws IOException {
-    HttpRequestLine requestLine;
-    requestLine = new HttpRequestLine();
+  private HttpExchange regularInput(Object... data) throws IOException {
+    TestableSocket socket;
+    socket = TestableSocket.of(data);
 
-    requestLine.bufferSize(64, 128);
-
-    TestingInputStream inputStream;
-    inputStream = TestingInputStream.of(data);
-
-    requestLine.initSocketInput(inputStream);
-
-    return requestLine;
+    return new HttpExchange(socket, 64, 128, null, TestingNoteSink.INSTANCE);
   }
 
 }

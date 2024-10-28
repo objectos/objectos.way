@@ -21,10 +21,10 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import objectos.way.HttpExchangeLoop.ParseStatus;
+import objectos.way.HttpExchange.ParseStatus;
 import org.testng.annotations.Test;
 
-public class HttpSocketInputTest {
+public class HttpExchangeTest0SocketInput {
 
   @Test(description = """
   Support for:
@@ -36,7 +36,7 @@ public class HttpSocketInputTest {
   public void testCase001() throws IOException {
     Http.init();
 
-    HttpSocketInput input;
+    HttpExchange input;
     input = regularInput("""
     GET / HTTP/1.1\r
     Host: www.example.com\r
@@ -56,7 +56,7 @@ public class HttpSocketInputTest {
     assertEquals(input.indexOf(Bytes.QUESTION_MARK, Bytes.SP), 5);
     input.bufferIndex = 5;
     assertEquals(next(input), Bytes.SP);
-    assertEquals(input.matches(HttpRequestLine.HTTP_VERSION_PREFIX), true);
+    assertEquals(input.matches(HttpExchange.HTTP_VERSION_PREFIX), true);
     assertEquals(hasNext(input, 3), true);
     assertEquals(next(input), '1');
     assertEquals(next(input), '.');
@@ -70,7 +70,7 @@ public class HttpSocketInputTest {
     assertEquals(input.bufferIndex, 16);
     assertEquals(input.consumeIfEmptyLine(), false);
     byte[] host;
-    host = HttpRequestHeaders.STD_HEADER_NAME_BYTES[Http.HeaderName.HOST.index()];
+    host = HttpExchange.STD_HEADER_NAME_BYTES[Http.HeaderName.HOST.index()];
     assertEquals(input.matches(host), true);
     assertEquals(hasNext(input), true);
     assertEquals(next(input), ':');
@@ -81,7 +81,7 @@ public class HttpSocketInputTest {
     String body;
     body = "email=user%40example.com";
 
-    HttpSocketInput input;
+    HttpExchange input;
     input = regularInput(body);
 
     long contentLength;
@@ -108,7 +108,7 @@ public class HttpSocketInputTest {
     .................................................
     123456""";
 
-    HttpSocketInput input;
+    HttpExchange input;
     input = regularInput(chunk256);
 
     long contentLength;
@@ -138,7 +138,7 @@ public class HttpSocketInputTest {
   It should properly handle EOF on subsequent request line
   """)
   public void testCase020() throws IOException {
-    HttpSocketInput input;
+    HttpExchange input;
     input = regularInput("""
     GET / HTTP/1.1\r
     """);
@@ -154,7 +154,7 @@ public class HttpSocketInputTest {
     assertEquals(input.indexOf(Bytes.QUESTION_MARK, Bytes.SP), 5);
     input.bufferIndex = 5;
     assertEquals(next(input), Bytes.SP);
-    assertEquals(input.matches(HttpRequestLine.HTTP_VERSION_PREFIX), true);
+    assertEquals(input.matches(HttpExchange.HTTP_VERSION_PREFIX), true);
     assertEquals(hasNext(input, 3), true);
     assertEquals(next(input), '1');
     assertEquals(next(input), '.');
@@ -174,15 +174,11 @@ public class HttpSocketInputTest {
 
     assertEquals(line.length(), 42);
 
-    HttpSocketInput input;
-    input = new HttpSocketInput();
+    TestableSocket socket;
+    socket = TestableSocket.of(line);
 
-    input.bufferSize(32, 128);
-
-    TestingInputStream inputStream;
-    inputStream = TestingInputStream.of(line);
-
-    input.initSocketInput(inputStream);
+    HttpExchange input;
+    input = new HttpExchange(socket, 32, 128, null, TestingNoteSink.INSTANCE);
 
     input.parseLine();
 
@@ -200,15 +196,13 @@ public class HttpSocketInputTest {
 
   @Test(description = "It should be possible to serialize contents for debugging purposes")
   public void hexDump() throws IOException {
-    HttpSocketInput input;
+    HttpExchange input;
     input = regularInput("""
     GET / HTTP/1.1\r
     Host: www.example.com\r
     Connection: close\r
     \r
     """);
-
-    input.noteSink(TestingNoteSink.INSTANCE);
 
     input.parseLine();
 
@@ -217,45 +211,38 @@ public class HttpSocketInputTest {
 
   @Test
   public void powerOfTwo() {
-    assertEquals(HttpSocketInput.powerOfTwo(127), 128);
-    assertEquals(HttpSocketInput.powerOfTwo(128), 128);
-    assertEquals(HttpSocketInput.powerOfTwo(129), 256);
-    assertEquals(HttpSocketInput.powerOfTwo(1023), 1024);
-    assertEquals(HttpSocketInput.powerOfTwo(1024), 1024);
-    assertEquals(HttpSocketInput.powerOfTwo(1025), 2048);
-    assertEquals(HttpSocketInput.powerOfTwo(16383), 16384);
-    assertEquals(HttpSocketInput.powerOfTwo(16384), 16384);
-    assertEquals(HttpSocketInput.powerOfTwo(16385), 16384);
+    assertEquals(HttpExchange.powerOfTwo(127), 128);
+    assertEquals(HttpExchange.powerOfTwo(128), 128);
+    assertEquals(HttpExchange.powerOfTwo(129), 256);
+    assertEquals(HttpExchange.powerOfTwo(1023), 1024);
+    assertEquals(HttpExchange.powerOfTwo(1024), 1024);
+    assertEquals(HttpExchange.powerOfTwo(1025), 2048);
+    assertEquals(HttpExchange.powerOfTwo(16383), 16384);
+    assertEquals(HttpExchange.powerOfTwo(16384), 16384);
+    assertEquals(HttpExchange.powerOfTwo(16385), 16384);
   }
 
-  private boolean hasNext(HttpSocketInput input) {
+  private boolean hasNext(HttpExchange input) {
     return input.bufferIndex < input.lineLimit;
   }
 
-  private boolean hasNext(HttpSocketInput input, int count) {
+  private boolean hasNext(HttpExchange input, int count) {
     return input.bufferIndex + count - 1 < input.lineLimit;
   }
 
-  private byte next(HttpSocketInput input) {
+  private byte next(HttpExchange input) {
     return input.buffer[input.bufferIndex++];
   }
 
-  private byte peek(HttpSocketInput input) {
+  private byte peek(HttpExchange input) {
     return input.buffer[input.bufferIndex];
   }
 
-  private HttpSocketInput regularInput(Object... data) {
-    HttpSocketInput input;
-    input = new HttpSocketInput();
+  private HttpExchange regularInput(Object... data) throws IOException {
+    TestableSocket socket;
+    socket = TestableSocket.of(data);
 
-    input.bufferSize(64, 128);
-
-    TestingInputStream inputStream;
-    inputStream = TestingInputStream.of(data);
-
-    input.initSocketInput(inputStream);
-
-    return input;
+    return new HttpExchange(socket, 64, 128, null, TestingNoteSink.INSTANCE);
   }
 
 }

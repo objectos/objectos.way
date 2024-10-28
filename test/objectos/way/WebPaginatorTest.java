@@ -23,7 +23,7 @@ public class WebPaginatorTest {
 
   @Test(description = "First page, single page")
   public void testCase01() {
-    Http.RequestTarget target = Http.parseRequestTarget("/foo");
+    Http.RequestTarget target = HttpExchange.parseRequestTarget("/foo");
     int pageSize = 15, totalCount = 8;
 
     WebPaginator paginator;
@@ -41,7 +41,7 @@ public class WebPaginatorTest {
 
   @Test(description = "First page, multiple pages")
   public void testCase02() {
-    Http.RequestTarget target = Http.parseRequestTarget("/foo");
+    Http.RequestTarget target = HttpExchange.parseRequestTarget("/foo");
     int pageSize = 15, totalCount = 16;
 
     WebPaginator paginator;
@@ -59,7 +59,7 @@ public class WebPaginatorTest {
 
   @Test(description = "First page, multiple pages, explicit query param")
   public void testCase03() {
-    Http.RequestTarget target = Http.parseRequestTarget("/foo?page=1");
+    Http.RequestTarget target = HttpExchange.parseRequestTarget("/foo?page=1");
     int pageSize = 15, totalCount = 16;
 
     WebPaginator paginator;
@@ -77,7 +77,7 @@ public class WebPaginatorTest {
 
   @Test(description = "Last page")
   public void testCase04() {
-    Http.RequestTarget target = Http.parseRequestTarget("/foo?page=2");
+    Http.RequestTarget target = HttpExchange.parseRequestTarget("/foo?page=2");
     int pageSize = 15, totalCount = 16;
 
     WebPaginator paginator;
@@ -95,7 +95,7 @@ public class WebPaginatorTest {
 
   @Test(description = "Middle page")
   public void testCase05() {
-    Http.RequestTarget target = Http.parseRequestTarget("/foo?page=3");
+    Http.RequestTarget target = HttpExchange.parseRequestTarget("/foo?page=3");
     int pageSize = 10, totalCount = 50;
 
     WebPaginator paginator;
@@ -113,7 +113,7 @@ public class WebPaginatorTest {
 
   @Test(description = "keep existing query parameters")
   public void testCase06() {
-    Http.RequestTarget target = Http.parseRequestTarget("/foo?q=abc&page=3");
+    Http.RequestTarget target = HttpExchange.parseRequestTarget("/foo?q=abc&page=3");
     int pageSize = 10, totalCount = 50;
 
     WebPaginator paginator;
@@ -131,7 +131,7 @@ public class WebPaginatorTest {
 
   @Test(description = "Last page, full size")
   public void testCase07() {
-    Http.RequestTarget target = Http.parseRequestTarget("/foo?page=2");
+    Http.RequestTarget target = HttpExchange.parseRequestTarget("/foo?page=2");
     int pageSize = 15, totalCount = 30;
 
     WebPaginator paginator;
@@ -149,7 +149,7 @@ public class WebPaginatorTest {
 
   @Test(description = "First page, full size")
   public void testCase08() {
-    Http.RequestTarget target = Http.parseRequestTarget("/foo?page=1");
+    Http.RequestTarget target = HttpExchange.parseRequestTarget("/foo?page=1");
     int pageSize = 15, totalCount = 15;
 
     WebPaginator paginator;

@@ -47,47 +47,69 @@ public class TestingNoteSink implements objectos.way.Note.Sink, objectos.notes.N
 
   @Override
   public void send(Int1 note, int value) {
+    visitNote(note);
+
     INSTANCE.send(note, value);
   }
 
   @Override
   public void send(Int2 note, int value1, int value2) {
+    visitNote(note);
+
     INSTANCE.send(note, value1, value2);
   }
 
   @Override
   public void send(Int3 note, int value1, int value2, int value3) {
+    visitNote(note);
+
     INSTANCE.send(note, value1, value2, value3);
   }
 
   @Override
   public void send(Long1 note, long value) {
+    visitNote(note);
+
     INSTANCE.send(note, value);
   }
 
   @Override
   public void send(Long2 note, long value1, long value2) {
+    visitNote(note);
+
     INSTANCE.send(note, value1, value2);
   }
 
   @Override
   public void send(Ref0 note) {
+    visitNote(note);
+
     INSTANCE.send(note);
   }
 
   @Override
   public <T1> void send(Ref1<T1> note, T1 value) {
+    visitNote(note);
+
     INSTANCE.send(note, value);
   }
 
   @Override
   public <T1, T2> void send(Ref2<T1, T2> note, T1 value1, T2 value2) {
+    visitNote(note);
+
     INSTANCE.send(note, value1, value2);
   }
 
   @Override
   public <T1, T2, T3> void send(Ref3<T1, T2, T3> note, T1 value1, T2 value2, T3 value3) {
+    visitNote(note);
+
     INSTANCE.send(note, value1, value2, value3);
+  }
+
+  protected void visitNote(objectos.way.Note note) {
+
   }
 
   // legacy methods
