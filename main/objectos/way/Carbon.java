@@ -476,14 +476,7 @@ public final class Carbon extends CarbonComponents {
         App.NoteSink noteSink;
         noteSink = App.NoteSink.OfConsole.create(
             config -> {
-              config.filter(note -> {
-                Note.Marker marker;
-                marker = note.marker();
-
-                return marker == Note.INFO
-                    || marker == Note.WARN
-                    || marker == Note.ERROR;
-              });
+              config.filter(note -> note.hasAny(Note.INFO, Note.WARN, Note.ERROR));
             }
         );
 

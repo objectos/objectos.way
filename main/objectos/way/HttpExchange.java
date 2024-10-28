@@ -371,28 +371,7 @@ final class HttpExchange implements Http.Exchange, Closeable {
       return parseStatus;
     }
 
-    // handle keep alive
-
-    clearBit(KEEP_ALIVE);
-
-    if (versionMajor == 1 && versionMinor == 1) {
-      setBit(KEEP_ALIVE);
-    }
-
-    HttpHeader connection;
-    connection = headerUnchecked(Http.HeaderName.CONNECTION);
-
-    if (connection != null) {
-      if (connection.contentEquals(KEEP_ALIVE_BYTES)) {
-        setBit(KEEP_ALIVE);
-      }
-
-      else if (connection.contentEquals(CLOSE_BYTES)) {
-        clearBit(KEEP_ALIVE);
-      }
-    }
-
-    setState(_REQUEST);
+    parseRequestEnd();
 
     return parseStatus;
   }
@@ -1106,6 +1085,39 @@ final class HttpExchange implements Http.Exchange, Closeable {
 
   // ##################################################################
   // # END: HTTP/1.1 request parsing || body
+  // ##################################################################
+
+  // ##################################################################
+  // # BEGIN: HTTP/1.1 request parsing || keep alive
+  // ##################################################################
+
+  final void parseRequestEnd() {
+    // handle keep alive
+
+    clearBit(KEEP_ALIVE);
+
+    if (versionMajor == 1 && versionMinor == 1) {
+      setBit(KEEP_ALIVE);
+    }
+
+    HttpHeader connection;
+    connection = headerUnchecked(Http.HeaderName.CONNECTION);
+
+    if (connection != null) {
+      if (connection.contentEquals(KEEP_ALIVE_BYTES)) {
+        setBit(KEEP_ALIVE);
+      }
+
+      else if (connection.contentEquals(CLOSE_BYTES)) {
+        clearBit(KEEP_ALIVE);
+      }
+    }
+
+    setState(_REQUEST);
+  }
+
+  // ##################################################################
+  // # END: HTTP/1.1 request parsing || keep alive
   // ##################################################################
 
   private void checkRequest() {

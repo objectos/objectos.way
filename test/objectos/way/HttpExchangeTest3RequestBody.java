@@ -35,9 +35,6 @@ public class HttpExchangeTest3RequestBody {
     \r
     """);
 
-    body.parseHeaders();
-    body.parseRequestBody();
-
     assertEquals(body.parseStatus.isError(), false);
     assertEquals(asString(body), "");
   }
@@ -54,9 +51,6 @@ public class HttpExchangeTest3RequestBody {
     Content-Type: application/x-www-form-urlencoded\r
     \r
     email=user%40example.com""");
-
-    body.parseHeaders();
-    body.parseRequestBody();
 
     assertEquals(body.parseStatus.isError(), false);
     assertEquals(asString(body), "email=user%40example.com");
@@ -83,9 +77,6 @@ public class HttpExchangeTest3RequestBody {
     %s""".formatted(chunk256));
 
     try {
-      body.parseHeaders();
-      body.parseRequestBody();
-
       assertEquals(body.parseStatus.isError(), false);
       assertEquals(asString(body), chunk256);
     } finally {
@@ -101,7 +92,16 @@ public class HttpExchangeTest3RequestBody {
     TestableSocket socket;
     socket = TestableSocket.of(data);
 
-    return new HttpExchange(socket, 64, 128, null, TestingNoteSink.INSTANCE);
+    HttpExchange http;
+    http = new HttpExchange(socket, 64, 128, null, TestingNoteSink.INSTANCE);
+
+    http.parseHeaders();
+
+    http.parseRequestBody();
+
+    http.parseRequestEnd();
+
+    return http;
   }
 
 }

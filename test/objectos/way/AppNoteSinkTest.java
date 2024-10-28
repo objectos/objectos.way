@@ -127,14 +127,7 @@ public class AppNoteSinkTest {
     noteSink = App.NoteSink.OfConsole.create(config -> {
       config.clock(new IncrementingClock(2023, 10, 31));
 
-      config.filter(note -> {
-        Note.Marker marker;
-        marker = note.marker();
-
-        return marker == Note.INFO
-            || marker == Note.WARN
-            || marker == Note.ERROR;
-      });
+      config.filter(note -> note.hasAny(Note.INFO, Note.WARN, Note.ERROR));
 
       config.target(stream);
     });
@@ -206,17 +199,17 @@ public class AppNoteSinkTest {
         2023-10-31 10:00:00.000 ERROR [main           ] objectos.way.AppNoteSinkTest             : throw1
         java.lang.Throwable
         \tat objectos.way/objectos.way.TestingStackTraces.throwable1(TestingStackTraces.java:27)
-        \tat objectos.way/objectos.way.AppNoteSinkTest.console03(AppNoteSinkTest.java:177)
+        \tat objectos.way/objectos.way.AppNoteSinkTest.console03(AppNoteSinkTest.java:170)
 
         2023-10-31 10:01:00.000 ERROR [main           ] objectos.way.AppNoteSinkTest             : throw2 java.lang.Throwable
         java.lang.Throwable
         \tat objectos.way/objectos.way.TestingStackTraces.throwable2(TestingStackTraces.java:31)
-        \tat objectos.way/objectos.way.AppNoteSinkTest.console03(AppNoteSinkTest.java:178)
+        \tat objectos.way/objectos.way.AppNoteSinkTest.console03(AppNoteSinkTest.java:171)
 
         2023-10-31 10:02:00.000 ERROR [main           ] objectos.way.AppNoteSinkTest             : throw3 java.lang.Throwable java.lang.Throwable
         java.lang.Throwable
         \tat objectos.way/objectos.way.TestingStackTraces.throwable3(TestingStackTraces.java:35)
-        \tat objectos.way/objectos.way.AppNoteSinkTest.console03(AppNoteSinkTest.java:179)
+        \tat objectos.way/objectos.way.AppNoteSinkTest.console03(AppNoteSinkTest.java:172)
         """
     );
   }
