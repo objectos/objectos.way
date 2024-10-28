@@ -47,8 +47,8 @@ public class HttpTest {
   It should parse a single name-value pair
   """)
   public void parseCookies01() {
-    Http.Request.Cookies c;
-    c = Http.parseCookies("foo=bar");
+    Http.Cookies c;
+    c = Http.Cookies.parse("foo=bar");
 
     assertEquals(c.get("foo"), "bar");
   }

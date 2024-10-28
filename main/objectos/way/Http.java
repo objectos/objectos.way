@@ -41,7 +41,45 @@ import java.util.function.Consumer;
  */
 public final class Http {
 
-  // types
+  /**
+   * The cookies of an HTTP request message.
+   */
+  public sealed interface Cookies permits HttpCookies, HttpCookiesEmpty {
+
+    /**
+     * Parses the specified string to a {@code Cookies} instance.
+     *
+     * @param s
+     *        the string to be parsed
+     *
+     * @return a {@code Cookies} instance representation of the cookies string
+     *         value
+     */
+    static Cookies parse(String s) {
+      Objects.requireNonNull(s, "s == null");
+
+      if (s.isBlank()) {
+        return HttpCookiesEmpty.INSTANCE;
+      }
+
+      HttpCookiesParser parser;
+      parser = new HttpCookiesParser(s);
+
+      return parser.parse();
+    }
+
+    /**
+     * Returns the value of the cookie with the specified name; {@code null}
+     * if a cookie with the specified name is not present.
+     *
+     * @param name
+     *        the cookie name
+     *
+     * @return the value or {@code null} if the cookie is not present
+     */
+    String get(String name);
+
+  }
 
   /**
    * An HTTP request received by the server and its subsequent response to the
@@ -495,24 +533,6 @@ public final class Http {
    * An HTTP request message.
    */
   public sealed interface Request {
-
-    /**
-     * The cookies of an HTTP request message.
-     */
-    public sealed interface Cookies permits HttpRequestCookies, HttpRequestCookiesEmpty {
-
-      /**
-       * Returns the value of the cookie with the specified name; {@code null}
-       * if a cookie with the specified name is not present.
-       *
-       * @param name
-       *        the cookie name
-       *
-       * @return the value or {@code null} if the cookie is not present
-       */
-      String get(String name);
-
-    }
 
   }
 
@@ -1044,19 +1064,6 @@ public final class Http {
     normalized = date.withZoneSameInstant(ZoneOffset.UTC);
 
     return IMF_FIXDATE.format(normalized);
-  }
-
-  public static Request.Cookies parseCookies(String s) {
-    Check.notNull(s, "s == null");
-
-    if (s.isBlank()) {
-      return HttpRequestCookiesEmpty.INSTANCE;
-    }
-
-    HttpRequestCookiesParser parser;
-    parser = new HttpRequestCookiesParser(s);
-
-    return parser.parse();
   }
 
   /**

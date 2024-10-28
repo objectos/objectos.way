@@ -115,8 +115,8 @@ final class WebStore implements Web.Store {
       return;
     }
 
-    Http.Request.Cookies cookies;
-    cookies = Http.parseCookies(cookieHeaderValue);
+    Http.Cookies cookies;
+    cookies = Http.Cookies.parse(cookieHeaderValue);
 
     String id;
     id = cookies.get(cookieName);

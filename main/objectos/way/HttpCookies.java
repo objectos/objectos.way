@@ -17,11 +17,11 @@ package objectos.way;
 
 import java.util.Map;
 
-final class HttpRequestCookies implements Http.Request.Cookies {
+final class HttpCookies implements Http.Cookies {
 
   private final Map<String, HttpRequestCookiesValue> cookies;
 
-  HttpRequestCookies(Map<String, HttpRequestCookiesValue> cookies) {
+  HttpCookies(Map<String, HttpRequestCookiesValue> cookies) {
     this.cookies = cookies;
   }
 

@@ -18,7 +18,7 @@ package objectos.way;
 import java.util.HashMap;
 import java.util.Map;
 
-final class HttpRequestCookiesParser {
+final class HttpCookiesParser {
 
   private final Map<String, HttpRequestCookiesValue> cookies = new HashMap<>();
 
@@ -32,11 +32,11 @@ final class HttpRequestCookiesParser {
 
   private State state;
 
-  public HttpRequestCookiesParser(String s) {
+  public HttpCookiesParser(String s) {
     this.source = s;
   }
 
-  public final Http.Request.Cookies parse() {
+  public final Http.Cookies parse() {
     state = State.START;
 
     while (state != State.STOP) {
@@ -44,9 +44,9 @@ final class HttpRequestCookiesParser {
     }
 
     if (cookies.isEmpty()) {
-      return HttpRequestCookiesEmpty.INSTANCE;
+      return HttpCookiesEmpty.INSTANCE;
     } else {
-      return new HttpRequestCookies(cookies);
+      return new HttpCookies(cookies);
     }
   }
 

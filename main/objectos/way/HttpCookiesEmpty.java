@@ -15,7 +15,7 @@
  */
 package objectos.way;
 
-enum HttpRequestCookiesEmpty implements Http.Request.Cookies {
+enum HttpCookiesEmpty implements Http.Cookies {
 
   INSTANCE;
 
