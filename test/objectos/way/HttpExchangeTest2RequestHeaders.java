@@ -38,8 +38,8 @@ public class HttpExchangeTest2RequestHeaders {
     headers.parseHeaders();
 
     assertEquals(headers.size(), 2);
-    assertEquals(headers.first(Http.HeaderName.HOST), "www.example.com");
-    assertEquals(headers.first(Http.HeaderName.CONNECTION), "close");
+    assertEquals(headers.header(Http.HeaderName.HOST), "www.example.com");
+    assertEquals(headers.header(Http.HeaderName.CONNECTION), "close");
   }
 
   @Test
@@ -55,9 +55,9 @@ public class HttpExchangeTest2RequestHeaders {
     headers.parseHeaders();
 
     assertEquals(headers.size(), 3);
-    assertEquals(headers.first(Http.HeaderName.HOST), "www.example.com");
-    assertEquals(headers.first(Http.HeaderName.CONNECTION), "close");
-    assertEquals(headers.first(Http.createHeaderName("Foo")), "bar");
+    assertEquals(headers.header(Http.HeaderName.HOST), "www.example.com");
+    assertEquals(headers.header(Http.HeaderName.CONNECTION), "close");
+    assertEquals(headers.header(Http.createHeaderName("Foo")), "bar");
   }
 
   @Test(description = """
@@ -76,9 +76,9 @@ public class HttpExchangeTest2RequestHeaders {
     headers.parseHeaders();
 
     assertEquals(headers.size(), 3);
-    assertEquals(headers.first(Http.HeaderName.HOST), "www.example.com");
-    assertEquals(headers.first(Http.HeaderName.CONTENT_LENGTH), "24");
-    assertEquals(headers.first(Http.HeaderName.CONTENT_TYPE), "application/x-www-form-urlencoded");
+    assertEquals(headers.header(Http.HeaderName.HOST), "www.example.com");
+    assertEquals(headers.header(Http.HeaderName.CONTENT_LENGTH), "24");
+    assertEquals(headers.header(Http.HeaderName.CONTENT_TYPE), "application/x-www-form-urlencoded");
   }
 
   @Test(description = """
@@ -96,9 +96,9 @@ public class HttpExchangeTest2RequestHeaders {
     headers.parseHeaders();
 
     assertEquals(headers.size(), 3);
-    assertEquals(headers.first(Http.HeaderName.HOST), "www.example.com");
-    assertEquals(headers.first(Http.HeaderName.FROM), "");
-    assertEquals(headers.first(Http.HeaderName.ACCEPT_ENCODING), "gzip, deflate, br");
+    assertEquals(headers.header(Http.HeaderName.HOST), "www.example.com");
+    assertEquals(headers.header(Http.HeaderName.FROM), "");
+    assertEquals(headers.header(Http.HeaderName.ACCEPT_ENCODING), "gzip, deflate, br");
   }
 
   @Test
@@ -115,10 +115,10 @@ public class HttpExchangeTest2RequestHeaders {
     headers.parseHeaders();
 
     assertEquals(headers.size(), 4);
-    assertEquals(headers.first(Http.createHeaderName("no-leading-ows")), "foo");
-    assertEquals(headers.first(Http.createHeaderName("empty-value")), "");
-    assertEquals(headers.first(Http.createHeaderName("trailing-ows1")), "foo");
-    assertEquals(headers.first(Http.createHeaderName("trailing-ows2")), "foo");
+    assertEquals(headers.header(Http.createHeaderName("no-leading-ows")), "foo");
+    assertEquals(headers.header(Http.createHeaderName("empty-value")), "");
+    assertEquals(headers.header(Http.createHeaderName("trailing-ows1")), "foo");
+    assertEquals(headers.header(Http.createHeaderName("trailing-ows2")), "foo");
   }
 
   private HttpExchange regularInput(Object... data) throws IOException {

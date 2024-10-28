@@ -70,12 +70,9 @@ public class HttpExchangeTest {
       assertEquals(http.queryParamNames(), Set.of());
 
       // headers
-      Http.Request.Headers headers;
-      headers = http.headers();
-
-      assertEquals(headers.size(), 2);
-      assertEquals(headers.first(Http.HeaderName.HOST), "www.example.com");
-      assertEquals(headers.first(Http.HeaderName.CONNECTION), "close");
+      assertEquals(http.size(), 2);
+      assertEquals(http.header(Http.HeaderName.HOST), "www.example.com");
+      assertEquals(http.header(Http.HeaderName.CONNECTION), "close");
 
       // body
       Http.Request.Body body;
@@ -169,11 +166,8 @@ public class HttpExchangeTest {
       assertEquals(http.queryParamNames(), Set.of());
 
       // headers
-      Http.Request.Headers headers;
-      headers = http.headers();
-
-      assertEquals(headers.size(), 1);
-      assertEquals(headers.first(Http.HeaderName.HOST), "www.example.com");
+      assertEquals(http.size(), 1);
+      assertEquals(http.header(Http.HeaderName.HOST), "www.example.com");
 
       // body
       Http.Request.Body body;
@@ -207,11 +201,9 @@ public class HttpExchangeTest {
       assertEquals(http.path(), "/login.css");
 
       // headers
-      headers = http.headers();
-
-      assertEquals(headers.size(), 2);
-      assertEquals(headers.first(Http.HeaderName.HOST), "www.example.com");
-      assertEquals(headers.first(Http.HeaderName.CONNECTION), "close");
+      assertEquals(http.size(), 2);
+      assertEquals(http.header(Http.HeaderName.HOST), "www.example.com");
+      assertEquals(http.header(Http.HeaderName.CONNECTION), "close");
 
       // body
       body = http.body();
@@ -271,13 +263,10 @@ public class HttpExchangeTest {
       assertEquals(parse.isError(), false);
 
       // headers
-      Http.Request.Headers headers;
-      headers = http.headers();
-
-      assertEquals(headers.size(), 3);
-      assertEquals(headers.first(Http.HeaderName.HOST), "www.example.com");
-      assertEquals(headers.first(Http.HeaderName.CONNECTION), "close");
-      assertEquals(headers.first(Http.createHeaderName("Foo")), "bar");
+      assertEquals(http.size(), 3);
+      assertEquals(http.header(Http.HeaderName.HOST), "www.example.com");
+      assertEquals(http.header(Http.HeaderName.CONNECTION), "close");
+      assertEquals(http.header(Http.createHeaderName("Foo")), "bar");
 
       // response phase
       byte[] msg;
@@ -341,13 +330,10 @@ public class HttpExchangeTest {
       assertEquals(http.queryParamNames(), Set.of());
 
       // headers
-      Http.Request.Headers headers;
-      headers = http.headers();
-
-      assertEquals(headers.size(), 3);
-      assertEquals(headers.first(Http.HeaderName.HOST), "www.example.com");
-      assertEquals(headers.first(Http.HeaderName.CONNECTION), "close");
-      assertEquals(headers.first(Http.createHeaderName("Foo")), "bar");
+      assertEquals(http.size(), 3);
+      assertEquals(http.header(Http.HeaderName.HOST), "www.example.com");
+      assertEquals(http.header(Http.HeaderName.CONNECTION), "close");
+      assertEquals(http.header(Http.createHeaderName("Foo")), "bar");
 
       // response phase
       dir = ObjectosHttp.createTempDir();
@@ -409,13 +395,10 @@ public class HttpExchangeTest {
       assertEquals(http.queryParamNames(), Set.of());
 
       // headers
-      Http.Request.Headers headers;
-      headers = http.headers();
-
-      assertEquals(headers.size(), 3);
-      assertEquals(headers.first(Http.HeaderName.HOST), "www.example.com");
-      assertEquals(headers.first(Http.HeaderName.IF_NONE_MATCH), "some%hash");
-      assertEquals(headers.first(Http.HeaderName.CONNECTION), "close");
+      assertEquals(http.size(), 3);
+      assertEquals(http.header(Http.HeaderName.HOST), "www.example.com");
+      assertEquals(http.header(Http.HeaderName.IF_NONE_MATCH), "some%hash");
+      assertEquals(http.header(Http.HeaderName.CONNECTION), "close");
 
       // response phase
 
@@ -1030,13 +1013,10 @@ public class HttpExchangeTest {
       assertEquals(http.queryParamNames(), Set.of());
 
       // headers
-      Http.Request.Headers headers;
-      headers = http.headers();
-
-      assertEquals(headers.size(), 3);
-      assertEquals(headers.first(Http.HeaderName.HOST), "www.example.com");
-      assertEquals(headers.first(Http.HeaderName.FROM), "");
-      assertEquals(headers.first(Http.HeaderName.ACCEPT_ENCODING), "gzip, deflate, br");
+      assertEquals(http.size(), 3);
+      assertEquals(http.header(Http.HeaderName.HOST), "www.example.com");
+      assertEquals(http.header(Http.HeaderName.FROM), "");
+      assertEquals(http.header(Http.HeaderName.ACCEPT_ENCODING), "gzip, deflate, br");
 
       // body
       Http.Request.Body body;
@@ -1073,11 +1053,8 @@ public class HttpExchangeTest {
       assertEquals(http.queryParamNames(), Set.of());
 
       // headers
-      Http.Request.Headers headers;
-      headers = http.headers();
-
-      assertEquals(headers.size(), 1);
-      assertEquals(headers.first(Http.HeaderName.HOST), "www.example.com");
+      assertEquals(http.size(), 1);
+      assertEquals(http.header(Http.HeaderName.HOST), "www.example.com");
 
       // body
       Http.Request.Body body;
@@ -1114,11 +1091,8 @@ public class HttpExchangeTest {
       assertEquals(http.queryParamNames(), Set.of());
 
       // headers
-      Http.Request.Headers headers;
-      headers = http.headers();
-
-      assertEquals(headers.size(), 1);
-      assertEquals(headers.first(Http.HeaderName.HOST), "www.example.com");
+      assertEquals(http.size(), 1);
+      assertEquals(http.header(Http.HeaderName.HOST), "www.example.com");
 
       // body
       Http.Request.Body body;

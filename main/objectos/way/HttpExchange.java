@@ -42,7 +42,7 @@ import java.util.Set;
 import java.util.function.Function;
 import objectos.way.Lang.CharWritable;
 
-final class HttpExchange implements Http.Exchange, Http.Request.Body, Http.Request.Headers, Closeable {
+final class HttpExchange implements Http.Exchange, Http.Request.Body, Closeable {
 
   public enum ParseStatus {
     // keep going
@@ -84,7 +84,15 @@ final class HttpExchange implements Http.Exchange, Http.Request.Body, Http.Reque
     }
   }
 
-  enum NoResponseBody {
+  private enum Kind {
+    EMPTY,
+
+    IN_BUFFER,
+
+    FILE;
+  }
+
+  private enum NoResponseBody {
 
     INSTANCE;
 
@@ -122,28 +130,19 @@ final class HttpExchange implements Http.Exchange, Http.Request.Body, Http.Reque
 
   private static final int CHUNKED = 1 << 6;
 
+  private static final byte[] CLOSE_BYTES = Http.utf8("close");
+
+  private static final byte[] KEEP_ALIVE_BYTES = Http.utf8("keep-alive");
+
   private Map<String, Object> attributes;
 
   private int bitset;
 
-  byte[] buffer;
-
-  int bufferIndex;
-
-  // also serve as initialBufferSize
-  int bufferLimit;
-
   private Charset charset;
 
-  private Clock clock;
+  private final Clock clock;
 
-  private InputStream inputStream;
-
-  int lineLimit;
-
-  int maxBufferSize;
-
-  Note.Sink noteSink = Note.NoOpSink.INSTANCE;
+  private final Note.Sink noteSink;
 
   ParseStatus parseStatus;
 
@@ -151,7 +150,63 @@ final class HttpExchange implements Http.Exchange, Http.Request.Body, Http.Reque
 
   private final Socket socket;
 
+  // RequestBody
+
+  private Kind kind = Kind.EMPTY;
+
+  private Path requestBodyDirectory;
+
+  private Path requestBodyFile;
+
+  // RequestHeaders
+
+  Http.HeaderName headerName;
+
+  HttpHeader[] standardHeaders;
+
+  int standardHeadersCount;
+
+  Map<Http.HeaderName, HttpHeader> unknownHeaders;
+
+  // RequestLine
+
+  private int matcherIndex;
+
+  byte method;
+
+  private String path;
+
+  private int pathLimit;
+
+  Map<String, String> pathParams;
+
+  private Map<String, Object> queryParams;
+
+  private boolean queryParamsReady;
+
+  private int queryStart;
+
+  private String rawValue;
+
+  byte versionMajor;
+
+  byte versionMinor;
+
+  // SocketInput
+
   private static final int HARD_MAX_BUFFER_SIZE = 1 << 14;
+
+  byte[] buffer;
+
+  int bufferIndex;
+
+  int bufferLimit;
+
+  private final InputStream inputStream;
+
+  int lineLimit;
+
+  private final int maxBufferSize;
 
   public HttpExchange(Socket socket, int bufferSizeInitial, int bufferSizeMax, Clock clock, Note.Sink noteSink) throws IOException {
     this(socket, socket.getInputStream(), bufferSizeInitial, bufferSizeMax, clock, noteSink);
@@ -226,30 +281,27 @@ final class HttpExchange implements Http.Exchange, Http.Request.Body, Http.Reque
     return requestLine;
   }
 
-  private void bufferSize(int initial, int max) {
-    checkConfig();
+  static final int powerOfTwo(int size) {
+    // maybe size is already power of 2
+    int x;
+    x = size - 1;
 
-    Check.argument(initial >= 128, "initial size must be >= 128");
-    Check.argument(max >= 128, "max size must be >= 128");
-    Check.argument(max >= initial, "max size must be >= initial size");
+    int leading;
+    leading = Integer.numberOfLeadingZeros(x);
 
-    socketInputBufferSize(initial, max);
-  }
+    int n;
+    n = -1 >>> leading;
 
-  private void clock(Clock clock) {
-    checkConfig();
+    if (n < 0) {
+      // should not happen as minimal buffer size is 128
+      throw new IllegalArgumentException("Buffer size is too small");
+    }
 
-    this.clock = Check.notNull(clock, "clock == null");
-  }
+    if (n >= HARD_MAX_BUFFER_SIZE) {
+      return HARD_MAX_BUFFER_SIZE;
+    }
 
-  private void noteSink(Note.Sink noteSink) {
-    checkConfig();
-
-    socketInputNoteSink(noteSink);
-  }
-
-  private void checkConfig() {
-    Check.state(testState(_CONFIG), "This configuration method cannot be called at this moment");
+    return n + 1;
   }
 
   @Override
@@ -261,9 +313,9 @@ final class HttpExchange implements Http.Exchange, Http.Request.Body, Http.Reque
     }
   }
 
-  private static final byte[] CLOSE_BYTES = Http.utf8("close");
-
-  private static final byte[] KEEP_ALIVE_BYTES = Http.utf8("keep-alive");
+  // ##################################################################
+  // # BEGIN: HTTP/1.1 request parsing
+  // ##################################################################
 
   public final ParseStatus parse() throws IOException, IllegalStateException {
     if (testState(_CONFIG)) {
@@ -343,11 +395,965 @@ final class HttpExchange implements Http.Exchange, Http.Request.Body, Http.Reque
     return parseStatus;
   }
 
+  private void resetSocketInput() {
+    bufferLimit = 0;
+
+    bufferIndex = 0;
+
+    lineLimit = 0;
+
+    parseStatus = ParseStatus.NORMAL;
+  }
+
+  private void resetRequestLine() {
+    method = 0;
+
+    pathLimit = 0;
+
+    if (pathParams != null) {
+      pathParams.clear();
+    }
+
+    path = null;
+
+    if (queryParams != null) {
+      queryParams.clear();
+    }
+
+    queryParamsReady = false;
+
+    queryStart = 0;
+
+    rawValue = null;
+
+    versionMajor = versionMinor = 0;
+  }
+
+  private void resetHeaders() {
+    headerName = null;
+
+    if (standardHeaders != null) {
+      Arrays.fill(standardHeaders, null);
+    }
+
+    standardHeadersCount = 0;
+
+    if (unknownHeaders != null) {
+      unknownHeaders.clear();
+    }
+  }
+
+  private void resetRequestBody() {
+    kind = Kind.EMPTY;
+
+    requestBodyFile = null;
+  }
+
   private void resetServerLoop() {
     if (attributes != null) {
       attributes.clear();
     }
   }
+
+  // ##################################################################
+  // # BEGIN: HTTP/1.1 request parsing || request line
+  // ##################################################################
+
+  final void parseRequestLine() throws IOException {
+    parseLine();
+
+    if (parseStatus == ParseStatus.UNEXPECTED_EOF) {
+      if (bufferLimit == 0) {
+        // buffer is empty, this is an expected EOF
+        parseStatus = ParseStatus.EOF;
+      }
+
+      return;
+    }
+
+    parseMethod();
+
+    if (method == 0) {
+      // parse method failed -> bad request
+      parseStatus = ParseStatus.INVALID_METHOD;
+
+      return;
+    }
+
+    parseRequestTarget();
+
+    parseVersion();
+
+    if (parseStatus.isError()) {
+      // bad request -> fail
+      return;
+    }
+
+    if (!consumeIfEndOfLine()) {
+      parseStatus = ParseStatus.INVALID_REQUEST_LINE_TERMINATOR;
+
+      return;
+    }
+  }
+
+  private static final byte[] _CONNECT = "CONNECT ".getBytes(StandardCharsets.UTF_8);
+
+  private static final byte[] _DELETE = "DELETE ".getBytes(StandardCharsets.UTF_8);
+
+  private static final byte[] _GET = "GET ".getBytes(StandardCharsets.UTF_8);
+
+  private static final byte[] _HEAD = "HEAD ".getBytes(StandardCharsets.UTF_8);
+
+  private static final byte[] _OPTIONS = "OPTIONS ".getBytes(StandardCharsets.UTF_8);
+
+  private static final byte[] _POST = "POST ".getBytes(StandardCharsets.UTF_8);
+
+  private static final byte[] _PUT = "PUT ".getBytes(StandardCharsets.UTF_8);
+
+  private static final byte[] _PATCH = "PATCH ".getBytes(StandardCharsets.UTF_8);
+
+  private static final byte[] _TRACE = "TRACE ".getBytes(StandardCharsets.UTF_8);
+
+  private void parseMethod() throws IOException {
+    if (bufferIndex >= lineLimit) {
+      // empty line... nothing to do
+      return;
+    }
+
+    byte first;
+    first = buffer[bufferIndex];
+
+    // based on the first char, we select out method candidate
+
+    switch (first) {
+      case 'C' -> parseMethod0(Http.CONNECT, _CONNECT);
+
+      case 'D' -> parseMethod0(Http.DELETE, _DELETE);
+
+      case 'G' -> parseMethod0(Http.GET, _GET);
+
+      case 'H' -> parseMethod0(Http.HEAD, _HEAD);
+
+      case 'O' -> parseMethod0(Http.OPTIONS, _OPTIONS);
+
+      case 'P' -> parseMethodP();
+
+      case 'T' -> parseMethod0(Http.TRACE, _TRACE);
+    }
+  }
+
+  private void parseMethod0(byte candidate, byte[] candidateBytes) throws IOException {
+    if (matches(candidateBytes)) {
+      method = candidate;
+    }
+  }
+
+  private void parseMethodP() throws IOException {
+    // method starts with a P. It might be:
+    // - POST
+    // - PUT
+    // - PATCH
+
+    // we'll try them in sequence
+
+    parseMethod0(Http.POST, _POST);
+
+    if (method != 0) {
+      return;
+    }
+
+    parseMethod0(Http.PUT, _PUT);
+
+    if (method != 0) {
+      return;
+    }
+
+    parseMethod0(Http.PATCH, _PATCH);
+
+    if (method != 0) {
+      return;
+    }
+  }
+
+  final void parseRequestTarget() throws IOException {
+    int startIndex;
+    startIndex = parsePathStart();
+
+    if (parseStatus.isError()) {
+      // bad request -> fail
+      return;
+    }
+
+    parsePathRest(startIndex);
+
+    if (parseStatus.isError()) {
+      // bad request -> fail
+      return;
+    }
+  }
+
+  private int parsePathStart() throws IOException {
+    // we will check if the request target starts with a '/' char
+
+    int targetStart;
+    targetStart = bufferIndex;
+
+    if (bufferIndex >= lineLimit) {
+      // reached EOL -> bad request
+      parseStatus = ParseStatus.INVALID_TARGET;
+
+      return 0;
+    }
+
+    byte b;
+    b = buffer[bufferIndex++];
+
+    if (b != Bytes.SOLIDUS) {
+      // first char IS NOT '/' => BAD_REQUEST
+      parseStatus = ParseStatus.INVALID_TARGET;
+
+      return 0;
+    }
+
+    // mark request path start
+
+    return targetStart;
+  }
+
+  private void parsePathRest(int startIndex) throws IOException {
+    // we will look for the first:
+    // - ? char
+    // - SP char
+    int index;
+    index = indexOf(Bytes.QUESTION_MARK, Bytes.SP);
+
+    if (index < 0) {
+      // trailing char was not found
+      parseStatus = ParseStatus.URI_TOO_LONG;
+
+      return;
+    }
+
+    // index where path ends
+    int pathEndIndex;
+    pathEndIndex = index;
+
+    // as of now target ends at the path
+    int targetEndIndex;
+    targetEndIndex = pathEndIndex;
+
+    // as of now query starts and ends at path i.e. len = 0
+    int queryStartIndex;
+    queryStartIndex = pathEndIndex;
+
+    // we'll continue at the '?' or SP char
+    bufferIndex = index;
+
+    byte b;
+    b = buffer[bufferIndex++];
+
+    if (b == Bytes.QUESTION_MARK) {
+      queryStartIndex = bufferIndex;
+
+      targetEndIndex = indexOf(Bytes.SP);
+
+      if (targetEndIndex < 0) {
+        // trailing char was not found
+        parseStatus = ParseStatus.URI_TOO_LONG;
+
+        return;
+      }
+
+      // we'll continue immediately after the SP
+      bufferIndex = targetEndIndex + 1;
+    }
+
+    rawValue = bufferToString(startIndex, targetEndIndex);
+
+    pathLimit = pathEndIndex - startIndex;
+
+    queryStart = queryStartIndex - startIndex;
+  }
+
+  static final byte[] HTTP_VERSION_PREFIX = {'H', 'T', 'T', 'P', '/'};
+
+  private void parseVersion() {
+    // 'H' 'T' 'T' 'P' '/' '1' '.' '1' = 8 bytes
+
+    if (!matches(HTTP_VERSION_PREFIX)) {
+      // buffer does not start with 'HTTP/'
+      parseStatus = ParseStatus.INVALID_PROTOCOL;
+
+      return;
+    }
+
+    // check if we  have '1' '.' '1' = 3 bytes
+
+    int requiredIndex;
+    requiredIndex = bufferIndex + 3 - 1;
+
+    if (requiredIndex >= lineLimit) {
+      parseStatus = ParseStatus.INVALID_PROTOCOL;
+
+      return;
+    }
+
+    byte maybeMajor;
+    maybeMajor = buffer[bufferIndex++];
+
+    if (!Http.isDigit(maybeMajor)) {
+      // major version is not a digit => bad request
+      parseStatus = ParseStatus.INVALID_PROTOCOL;
+
+      return;
+    }
+
+    byte maybeDot;
+    maybeDot = buffer[bufferIndex++];
+
+    if (maybeDot != '.') {
+      // major version not followed by a DOT => bad request
+      parseStatus = ParseStatus.INVALID_PROTOCOL;
+
+      return;
+    }
+
+    byte maybeMinor;
+    maybeMinor = buffer[bufferIndex++];
+
+    if (!Http.isDigit(maybeMinor)) {
+      // minor version is not a digit => bad request
+      parseStatus = ParseStatus.INVALID_PROTOCOL;
+
+      return;
+    }
+
+    versionMajor = (byte) (maybeMajor - 0x30);
+
+    versionMinor = (byte) (maybeMinor - 0x30);
+  }
+
+  // ##################################################################
+  // # END: HTTP/1.1 request parsing || request line
+  // ##################################################################
+
+  // ##################################################################
+  // # BEGIN: HTTP/1.1 request parsing || headers
+  // ##################################################################
+
+  final void parseHeaders() throws IOException {
+    parseLine();
+
+    while (parseStatus.isNormal() && !consumeIfEmptyLine()) {
+      parseStandardHeaderName();
+
+      if (parseStatus.isError()) {
+        break;
+      }
+
+      if (headerName == null) {
+        parseUnknownHeaderName();
+
+        if (parseStatus.isError()) {
+          break;
+        }
+      }
+
+      parseHeaderValue();
+
+      parseLine();
+    }
+
+    // clear last header name just in case
+    headerName = null;
+  }
+
+  private void parseStandardHeaderName() {
+    // we reset any previous found header name
+
+    headerName = null;
+
+    // we will use the first char as hash code
+    if (bufferIndex >= lineLimit) {
+      parseStatus = ParseStatus.INVALID_HEADER;
+
+      return;
+    }
+
+    final byte first;
+    first = buffer[bufferIndex];
+
+    // ad hoc hash map
+
+    switch (first) {
+      case 'A' -> parseHeaderName0(
+          Http.HeaderName.ACCEPT_ENCODING
+      );
+
+      case 'C' -> parseHeaderName0(
+          Http.HeaderName.CONNECTION,
+          Http.HeaderName.CONTENT_LENGTH,
+          Http.HeaderName.CONTENT_TYPE,
+          Http.HeaderName.COOKIE
+      );
+
+      case 'D' -> parseHeaderName0(
+          Http.HeaderName.DATE
+      );
+
+      case 'F' -> parseHeaderName0(
+          Http.HeaderName.FROM
+      );
+
+      case 'H' -> parseHeaderName0(
+          Http.HeaderName.HOST
+      );
+
+      case 'T' -> parseHeaderName0(
+          Http.HeaderName.TRANSFER_ENCODING
+      );
+
+      case 'U' -> parseHeaderName0(
+          Http.HeaderName.USER_AGENT
+      );
+    }
+  }
+
+  static final byte[][] STD_HEADER_NAME_BYTES;
+
+  static {
+    int size;
+    size = Http.headerNameSize();
+
+    byte[][] map;
+    map = new byte[size][];
+
+    for (int i = 0; i < size; i++) {
+      HttpHeaderName headerName;
+      headerName = HttpHeaderName.standardName(i);
+
+      String name;
+      name = headerName.capitalized();
+
+      map[i] = name.getBytes(StandardCharsets.UTF_8);
+    }
+
+    STD_HEADER_NAME_BYTES = map;
+  }
+
+  private void parseHeaderName0(Http.HeaderName candidate) {
+    int index;
+    index = candidate.index();
+
+    final byte[] candidateBytes;
+    candidateBytes = STD_HEADER_NAME_BYTES[index];
+
+    if (!matches(candidateBytes)) {
+      // does not match -> try next
+
+      return;
+    }
+
+    if (bufferIndex >= lineLimit) {
+      // matches but reached end of line -> bad request
+
+      parseStatus = ParseStatus.INVALID_HEADER;
+
+      return;
+    }
+
+    byte maybeColon;
+    maybeColon = buffer[bufferIndex++];
+
+    if (maybeColon != Bytes.COLON) {
+      // matches but is not followed by a colon character
+
+      parseStatus = ParseStatus.INVALID_HEADER;
+
+      return;
+    }
+
+    headerName = candidate;
+  }
+
+  private void parseHeaderName0(Http.HeaderName c0, Http.HeaderName c1, Http.HeaderName c2,
+      Http.HeaderName c3) {
+    parseHeaderName0(c0);
+
+    if (headerName != null) {
+      return;
+    }
+
+    parseHeaderName0(c1);
+
+    if (headerName != null) {
+      return;
+    }
+
+    parseHeaderName0(c2);
+
+    if (headerName != null) {
+      return;
+    }
+
+    parseHeaderName0(c3);
+  }
+
+  private void parseUnknownHeaderName() {
+    int startIndex;
+    startIndex = bufferIndex;
+
+    int colonIndex;
+    colonIndex = indexOf(Bytes.COLON);
+
+    if (colonIndex < 0) {
+      // no colon found
+      parseStatus = ParseStatus.INVALID_HEADER;
+
+      return;
+    }
+
+    if (startIndex == colonIndex) {
+      // empty header name
+      parseStatus = ParseStatus.INVALID_HEADER;
+
+      return;
+    }
+
+    String name;
+    name = bufferToString(startIndex, colonIndex);
+
+    headerName = Http.createHeaderName(name);
+
+    // resume immediately after the colon
+    bufferIndex = colonIndex + 1;
+  }
+
+  private void parseHeaderValue() {
+    int startIndex;
+    startIndex = parseHeaderValueStart();
+
+    int endIndex;
+    endIndex = parseHeaderValueEnd(startIndex);
+
+    if (startIndex > endIndex) {
+      // value has negative length... is it possible?
+      hexDump();
+
+      throw new UnsupportedOperationException("Implement me");
+    }
+
+    int index;
+    index = headerName.index();
+
+    if (index >= 0) {
+      if (standardHeaders == null) {
+        int size;
+        size = HttpHeaderName.standardNamesSize();
+
+        standardHeaders = new HttpHeader[size];
+      }
+
+      HttpHeader header;
+      header = standardHeaders[index];
+
+      if (header == null) {
+        header = new HttpHeader(headerName, this, startIndex, endIndex);
+
+        standardHeadersCount++;
+      } else {
+        header = header.add(startIndex, endIndex);
+      }
+
+      standardHeaders[index] = header;
+    } else {
+      if (unknownHeaders == null) {
+        unknownHeaders = new HashMap<>();
+      }
+
+      Http.HeaderName name;
+      name = headerName;
+
+      HttpHeader header;
+      header = unknownHeaders.get(name);
+
+      if (header == null) {
+        header = new HttpHeader(headerName, this, startIndex, endIndex);
+      } else {
+        header = header.add(startIndex, endIndex);
+      }
+
+      unknownHeaders.put(name, header);
+    }
+  }
+
+  private int parseHeaderValueStart() {
+    // consumes and discard a single leading OWS if present
+    byte maybeOws;
+    maybeOws = buffer[bufferIndex];
+
+    if (Bytes.isOptionalWhitespace(maybeOws)) {
+      // consume and discard leading OWS
+      bufferIndex++;
+    }
+
+    return bufferIndex;
+  }
+
+  private int parseHeaderValueEnd(int startIndex) {
+    int end;
+    end = lineLimit;
+
+    byte maybeCR;
+    maybeCR = buffer[end - 1];
+
+    if (maybeCR == Bytes.CR) {
+      // value ends at the CR of the line end CRLF
+      end = end - 1;
+    }
+
+    if (end != startIndex) {
+
+      byte maybeOWS;
+      maybeOWS = buffer[end - 1];
+
+      if (Bytes.isOptionalWhitespace(maybeOWS)) {
+        // value ends at the trailing OWS
+        end = end - 1;
+      }
+
+    }
+
+    // resume immediately after lineLimite
+    bufferIndex = lineLimit + 1;
+
+    return end;
+  }
+
+  // ##################################################################
+  // # END: HTTP/1.1 request parsing || headers
+  // ##################################################################
+
+  // ##################################################################
+  // # BEGIN: HTTP/1.1 request parsing || body
+  // ##################################################################
+
+  final void parseRequestBody() throws IOException {
+    HttpHeader contentLength;
+    contentLength = headerUnchecked(Http.HeaderName.CONTENT_LENGTH);
+
+    if (contentLength != null) {
+      long value;
+      value = contentLength.unsignedLongValue();
+
+      if (value < 0) {
+        parseStatus = ParseStatus.INVALID_HEADER;
+      }
+
+      else if (canBuffer(value)) {
+        int read;
+        read = read(value);
+
+        if (read < 0) {
+          throw new EOFException();
+        }
+
+        kind = Kind.IN_BUFFER;
+      }
+
+      else {
+        if (requestBodyDirectory == null) {
+          requestBodyFile = Files.createTempFile("objectos-way-request-body-", ".tmp");
+        } else {
+          requestBodyFile = Files.createTempFile(requestBodyDirectory, "objectos-way-request-body-", ".tmp");
+        }
+
+        long read;
+        read = read(requestBodyFile, value);
+
+        if (read < 0) {
+          parseStatus = ParseStatus.EOF;
+        } else {
+          kind = Kind.FILE;
+        }
+      }
+
+      return;
+    }
+
+    HttpHeader transferEncoding;
+    transferEncoding = headerUnchecked(Http.HeaderName.TRANSFER_ENCODING);
+
+    if (transferEncoding != null) {
+      throw new UnsupportedOperationException("Implement me");
+    }
+  }
+
+  // ##################################################################
+  // # END: HTTP/1.1 request parsing || body
+  // ##################################################################
+
+  // ##################################################################
+  // # BEGIN: Http.Exchange API || request target
+  // ##################################################################
+
+  @Override
+  public final String path() {
+    if (path == null) {
+      String raw;
+      raw = rawPath();
+
+      path = decode(raw);
+    }
+
+    return path;
+  }
+
+  @Override
+  public final String pathParam(String name) {
+    Check.notNull(name, "name == null");
+
+    String result;
+    result = null;
+
+    if (pathParams != null) {
+      result = pathParams.get(name);
+    }
+
+    return result;
+  }
+
+  @Override
+  public final String queryParam(String name) {
+    Check.notNull(name, "name == null");
+
+    Map<String, Object> params;
+    params = $queryParams();
+
+    Object maybe;
+    maybe = params.get(name);
+
+    return switch (maybe) {
+      case null -> null;
+
+      case String s -> s;
+
+      case List<?> l -> (String) l.get(0);
+
+      default -> throw new AssertionError(
+          "Type should not have been put into the map: " + maybe.getClass()
+      );
+    };
+  }
+
+  @Override
+  public final Set<String> queryParamNames() {
+    Map<String, Object> params;
+    params = $queryParams();
+
+    return params.keySet();
+  }
+
+  private Map<String, Object> $queryParams() {
+    if (!queryParamsReady) {
+      if (queryParams == null) {
+        queryParams = Util.createMap();
+      }
+
+      makeQueryParams(queryParams, this::decode);
+
+      queryParamsReady = true;
+    }
+
+    return queryParams;
+  }
+
+  @Override
+  public final String rawPath() {
+    return rawValue.substring(0, pathLimit);
+  }
+
+  @Override
+  public final String rawQuery() {
+    return queryStart == pathLimit ? null : rawValue.substring(queryStart);
+  }
+
+  private Map<String, Object> $rawQueryParams() {
+    Map<String, Object> map;
+    map = Util.createMap();
+
+    makeQueryParams(map, Function.identity());
+
+    return map;
+  }
+
+  public final String rawValue() {
+    return rawValue;
+  }
+
+  public final String rawValue(String queryParamName, String queryParamValue) {
+    Check.notNull(queryParamName, "queryParamName == null");
+    Check.notNull(queryParamValue, "queryParamValue == null");
+
+    StringBuilder builder;
+    builder = new StringBuilder(rawPath());
+
+    builder.append('?');
+
+    Map<String, Object> params;
+    params = $rawQueryParams();
+
+    String rawName;
+    rawName = encode(queryParamName);
+
+    String rawValue;
+    rawValue = encode(queryParamValue);
+
+    params.put(rawName, rawValue);
+
+    int count;
+    count = 0;
+
+    for (String key : params.keySet()) {
+      if (count++ > 0) {
+        builder.append('&');
+      }
+
+      builder.append(key);
+
+      builder.append('=');
+
+      Object value;
+      value = params.get(key);
+
+      if (value instanceof String s) {
+        builder.append(s);
+      }
+
+      else {
+        throw new UnsupportedOperationException("Implement me");
+      }
+    }
+
+    return builder.toString();
+  }
+
+  // ##################################################################
+  // # END: Http.Exchange API || request target
+  // ##################################################################
+
+  // ##################################################################
+  // # BEGIN: Http.Exchange API || request headers
+  // ##################################################################
+
+  @Override
+  public final String header(Http.HeaderName name) {
+    Check.notNull(name, "name == null");
+
+    int index;
+    index = name.index();
+
+    if (index >= 0) {
+
+      if (standardHeaders == null) {
+        return null;
+      }
+
+      HttpHeader maybe;
+      maybe = standardHeaders[index];
+
+      if (maybe != null) {
+        return maybe.get();
+      } else {
+        return null;
+      }
+
+    } else {
+
+      if (unknownHeaders == null) {
+        return null;
+      }
+
+      HttpHeader maybe;
+      maybe = unknownHeaders.get(name);
+
+      if (maybe != null) {
+        return maybe.get();
+      } else {
+        return null;
+      }
+
+    }
+  }
+
+  public final int size() {
+    int size = 0;
+
+    if (standardHeaders != null) {
+      size += standardHeadersCount;
+    }
+
+    if (unknownHeaders != null) {
+      size += unknownHeaders.size();
+    }
+
+    return size;
+  }
+
+  final HttpHeader headerUnchecked(Http.HeaderName name) {
+    if (standardHeaders == null) {
+      return null;
+    } else {
+      int index;
+      index = name.index();
+
+      return standardHeaders[index];
+    }
+  }
+
+  // ##################################################################
+  // # END: Http.Exchange API || request headers
+  // ##################################################################
+
+  // ##################################################################
+  // # BEGIN: Http.Exchange API || request body
+  // ##################################################################
+
+  public void requestBodyDirectory(java.nio.file.Path directory) {
+    requestBodyDirectory = directory;
+  }
+
+  private void requestBodyClose() throws IOException {
+    if (requestBodyFile != null) {
+      Files.delete(requestBodyFile);
+    }
+  }
+
+  @Override
+  public final InputStream openStream() throws IOException {
+    return switch (kind) {
+      case EMPTY -> InputStream.nullInputStream();
+
+      case IN_BUFFER -> openStreamImpl();
+
+      case FILE -> Files.newInputStream(requestBodyFile);
+    };
+  }
+
+  private InputStream openStreamImpl() {
+    int length;
+    length = bufferLimit - bufferIndex;
+
+    return new ByteArrayInputStream(buffer, bufferIndex, length);
+  }
+
+  // ##################################################################
+  // # END: Http.Exchange API || request body
+  // ##################################################################
+
+  // ##################################################################
+  // # BEGIN: Http.Exchange API || request attributes
+  // ##################################################################
 
   @Override
   public final <T> void set(Class<T> key, T value) {
@@ -382,6 +1388,10 @@ final class HttpExchange implements Http.Exchange, Http.Request.Body, Http.Reque
     return attributes;
   }
 
+  // ##################################################################
+  // # END: Http.Exchange API || request attributes
+  // ##################################################################
+
   private boolean badRequest() {
     Check.state(testState(_REQUEST), "Http.Request.Method can only be invoked after a parse() operation");
 
@@ -395,13 +1405,6 @@ final class HttpExchange implements Http.Exchange, Http.Request.Body, Http.Reque
     checkRequest();
 
     return method;
-  }
-
-  @Override
-  public final Http.Request.Headers headers() {
-    checkRequest();
-
-    return this;
   }
 
   @Override
@@ -893,966 +1896,13 @@ final class HttpExchange implements Http.Exchange, Http.Request.Body, Http.Reque
     }
   }
 
-  //
-  // Section: RequestBody
-  //
-
-  private enum Kind {
-    EMPTY,
-
-    IN_BUFFER,
-
-    FILE;
-  }
-
-  private Kind kind = Kind.EMPTY;
-
-  private java.nio.file.Path requestBodyDirectory;
-
-  private java.nio.file.Path requestBodyFile;
-
-  public void requestBodyDirectory(java.nio.file.Path directory) {
-    requestBodyDirectory = directory;
-  }
-
-  private void requestBodyClose() throws IOException {
-    if (requestBodyFile != null) {
-      Files.delete(requestBodyFile);
-    }
-  }
-
-  @Override
-  public final InputStream openStream() throws IOException {
-    return switch (kind) {
-      case EMPTY -> InputStream.nullInputStream();
-
-      case IN_BUFFER -> openStreamImpl();
-
-      case FILE -> Files.newInputStream(requestBodyFile);
-    };
-  }
-
-  final void resetRequestBody() {
-    kind = Kind.EMPTY;
-
-    requestBodyFile = null;
-  }
-
-  final void parseRequestBody() throws IOException {
-    HttpHeader contentLength;
-    contentLength = headerUnchecked(Http.HeaderName.CONTENT_LENGTH);
-
-    if (contentLength != null) {
-      long value;
-      value = contentLength.unsignedLongValue();
-
-      if (value < 0) {
-        parseStatus = ParseStatus.INVALID_HEADER;
-      }
-
-      else if (canBuffer(value)) {
-        int read;
-        read = read(value);
-
-        if (read < 0) {
-          throw new EOFException();
-        }
-
-        kind = Kind.IN_BUFFER;
-      }
-
-      else {
-        if (requestBodyDirectory == null) {
-          requestBodyFile = Files.createTempFile("objectos-way-request-body-", ".tmp");
-        } else {
-          requestBodyFile = Files.createTempFile(requestBodyDirectory, "objectos-way-request-body-", ".tmp");
-        }
-
-        long read;
-        read = read(requestBodyFile, value);
-
-        if (read < 0) {
-          parseStatus = ParseStatus.EOF;
-        } else {
-          kind = Kind.FILE;
-        }
-      }
-
-      return;
-    }
-
-    HttpHeader transferEncoding;
-    transferEncoding = headerUnchecked(Http.HeaderName.TRANSFER_ENCODING);
-
-    if (transferEncoding != null) {
-      throw new UnsupportedOperationException("Implement me");
-    }
-  }
-
-  //
-  // Section: RequestHeaders
-  //
-
-  Http.HeaderName headerName;
-
-  HttpHeader[] standardHeaders;
-
-  int standardHeadersCount;
-
-  Map<Http.HeaderName, HttpHeader> unknownHeaders;
-
-  // public API
-
-  @Override
-  public final String first(Http.HeaderName name) {
-    Check.notNull(name, "name == null");
-
-    int index;
-    index = name.index();
-
-    if (index >= 0) {
-
-      if (standardHeaders == null) {
-        return null;
-      }
-
-      HttpHeader maybe;
-      maybe = standardHeaders[index];
-
-      if (maybe != null) {
-        return maybe.get();
-      } else {
-        return null;
-      }
-
-    } else {
-
-      if (unknownHeaders == null) {
-        return null;
-      }
-
-      HttpHeader maybe;
-      maybe = unknownHeaders.get(name);
-
-      if (maybe != null) {
-        return maybe.get();
-      } else {
-        return null;
-      }
-
-    }
-  }
-
-  @Override
-  public final int size() {
-    int size = 0;
-
-    if (standardHeaders != null) {
-      size += standardHeadersCount;
-    }
-
-    if (unknownHeaders != null) {
-      size += unknownHeaders.size();
-    }
-
-    return size;
-  }
-
-  // unchecked API
-
-  final HttpHeader headerUnchecked(Http.HeaderName name) {
-    if (standardHeaders == null) {
-      return null;
-    } else {
-      int index;
-      index = name.index();
-
-      return standardHeaders[index];
-    }
-  }
-
-  // Internal
-
-  final void resetHeaders() {
-    headerName = null;
-
-    if (standardHeaders != null) {
-      Arrays.fill(standardHeaders, null);
-    }
-
-    standardHeadersCount = 0;
-
-    if (unknownHeaders != null) {
-      unknownHeaders.clear();
-    }
-  }
-
-  final void parseHeaders() throws IOException {
-    parseLine();
-
-    while (parseStatus.isNormal() && !consumeIfEmptyLine()) {
-      parseStandardHeaderName();
-
-      if (parseStatus.isError()) {
-        break;
-      }
-
-      if (headerName == null) {
-        parseUnknownHeaderName();
-
-        if (parseStatus.isError()) {
-          break;
-        }
-      }
-
-      parseHeaderValue();
-
-      parseLine();
-    }
-
-    // clear last header name just in case
-    headerName = null;
-  }
-
-  private void parseStandardHeaderName() {
-    // we reset any previous found header name
-
-    headerName = null;
-
-    // we will use the first char as hash code
-    if (bufferIndex >= lineLimit) {
-      parseStatus = ParseStatus.INVALID_HEADER;
-
-      return;
-    }
-
-    final byte first;
-    first = buffer[bufferIndex];
-
-    // ad hoc hash map
-
-    switch (first) {
-      case 'A' -> parseHeaderName0(
-          Http.HeaderName.ACCEPT_ENCODING
-      );
-
-      case 'C' -> parseHeaderName0(
-          Http.HeaderName.CONNECTION,
-          Http.HeaderName.CONTENT_LENGTH,
-          Http.HeaderName.CONTENT_TYPE,
-          Http.HeaderName.COOKIE
-      );
-
-      case 'D' -> parseHeaderName0(
-          Http.HeaderName.DATE
-      );
-
-      case 'F' -> parseHeaderName0(
-          Http.HeaderName.FROM
-      );
-
-      case 'H' -> parseHeaderName0(
-          Http.HeaderName.HOST
-      );
-
-      case 'T' -> parseHeaderName0(
-          Http.HeaderName.TRANSFER_ENCODING
-      );
-
-      case 'U' -> parseHeaderName0(
-          Http.HeaderName.USER_AGENT
-      );
-    }
-  }
-
-  static final byte[][] STD_HEADER_NAME_BYTES;
-
-  static {
-    int size;
-    size = Http.headerNameSize();
-
-    byte[][] map;
-    map = new byte[size][];
-
-    for (int i = 0; i < size; i++) {
-      HttpHeaderName headerName;
-      headerName = HttpHeaderName.standardName(i);
-
-      String name;
-      name = headerName.capitalized();
-
-      map[i] = name.getBytes(StandardCharsets.UTF_8);
-    }
-
-    STD_HEADER_NAME_BYTES = map;
-  }
-
-  private void parseHeaderName0(Http.HeaderName candidate) {
-    int index;
-    index = candidate.index();
-
-    final byte[] candidateBytes;
-    candidateBytes = STD_HEADER_NAME_BYTES[index];
-
-    if (!matches(candidateBytes)) {
-      // does not match -> try next
-
-      return;
-    }
-
-    if (bufferIndex >= lineLimit) {
-      // matches but reached end of line -> bad request
-
-      parseStatus = ParseStatus.INVALID_HEADER;
-
-      return;
-    }
-
-    byte maybeColon;
-    maybeColon = buffer[bufferIndex++];
-
-    if (maybeColon != Bytes.COLON) {
-      // matches but is not followed by a colon character
-
-      parseStatus = ParseStatus.INVALID_HEADER;
-
-      return;
-    }
-
-    headerName = candidate;
-  }
-
-  private void parseHeaderName0(Http.HeaderName c0, Http.HeaderName c1, Http.HeaderName c2,
-      Http.HeaderName c3) {
-    parseHeaderName0(c0);
-
-    if (headerName != null) {
-      return;
-    }
-
-    parseHeaderName0(c1);
-
-    if (headerName != null) {
-      return;
-    }
-
-    parseHeaderName0(c2);
-
-    if (headerName != null) {
-      return;
-    }
-
-    parseHeaderName0(c3);
-  }
-
-  private void parseUnknownHeaderName() {
-    int startIndex;
-    startIndex = bufferIndex;
-
-    int colonIndex;
-    colonIndex = indexOf(Bytes.COLON);
-
-    if (colonIndex < 0) {
-      // no colon found
-      parseStatus = ParseStatus.INVALID_HEADER;
-
-      return;
-    }
-
-    if (startIndex == colonIndex) {
-      // empty header name
-      parseStatus = ParseStatus.INVALID_HEADER;
-
-      return;
-    }
-
-    String name;
-    name = bufferToString(startIndex, colonIndex);
-
-    headerName = Http.createHeaderName(name);
-
-    // resume immediately after the colon
-    bufferIndex = colonIndex + 1;
-  }
-
-  private void parseHeaderValue() {
-    int startIndex;
-    startIndex = parseHeaderValueStart();
-
-    int endIndex;
-    endIndex = parseHeaderValueEnd(startIndex);
-
-    if (startIndex > endIndex) {
-      // value has negative length... is it possible?
-      hexDump();
-
-      throw new UnsupportedOperationException("Implement me");
-    }
-
-    int index;
-    index = headerName.index();
-
-    if (index >= 0) {
-      if (standardHeaders == null) {
-        int size;
-        size = HttpHeaderName.standardNamesSize();
-
-        standardHeaders = new HttpHeader[size];
-      }
-
-      HttpHeader header;
-      header = standardHeaders[index];
-
-      if (header == null) {
-        header = new HttpHeader(headerName, this, startIndex, endIndex);
-
-        standardHeadersCount++;
-      } else {
-        header = header.add(startIndex, endIndex);
-      }
-
-      standardHeaders[index] = header;
-    } else {
-      if (unknownHeaders == null) {
-        unknownHeaders = new HashMap<>();
-      }
-
-      Http.HeaderName name;
-      name = headerName;
-
-      HttpHeader header;
-      header = unknownHeaders.get(name);
-
-      if (header == null) {
-        header = new HttpHeader(headerName, this, startIndex, endIndex);
-      } else {
-        header = header.add(startIndex, endIndex);
-      }
-
-      unknownHeaders.put(name, header);
-    }
-  }
-
-  private int parseHeaderValueStart() {
-    // consumes and discard a single leading OWS if present
-    byte maybeOws;
-    maybeOws = buffer[bufferIndex];
-
-    if (Bytes.isOptionalWhitespace(maybeOws)) {
-      // consume and discard leading OWS
-      bufferIndex++;
-    }
-
-    return bufferIndex;
-  }
-
-  private int parseHeaderValueEnd(int startIndex) {
-    int end;
-    end = lineLimit;
-
-    byte maybeCR;
-    maybeCR = buffer[end - 1];
-
-    if (maybeCR == Bytes.CR) {
-      // value ends at the CR of the line end CRLF
-      end = end - 1;
-    }
-
-    if (end != startIndex) {
-
-      byte maybeOWS;
-      maybeOWS = buffer[end - 1];
-
-      if (Bytes.isOptionalWhitespace(maybeOWS)) {
-        // value ends at the trailing OWS
-        end = end - 1;
-      }
-
-    }
-
-    // resume immediately after lineLimite
-    bufferIndex = lineLimit + 1;
-
-    return end;
-  }
-
-  //
-  // Section: RequestLine
-  //
-
-  // force Http class init
-  static final byte HTTP_REQUEST_LINE = Http.GET;
-
-  byte method;
-
-  private String path;
-
-  private int pathLimit;
-
-  Map<String, String> pathParams;
-
-  private Map<String, Object> queryParams;
-
-  private boolean queryParamsReady;
-
-  private int queryStart;
-
-  private String rawValue;
-
-  byte versionMajor;
-
-  byte versionMinor;
-
-  @Override
-  public final String path() {
-    if (path == null) {
-      String raw;
-      raw = rawPath();
-
-      path = decode(raw);
-    }
-
-    return path;
-  }
-
   private String decode(String raw) {
     return URLDecoder.decode(raw, StandardCharsets.UTF_8);
-  }
-
-  @Override
-  public final String pathParam(String name) {
-    Check.notNull(name, "name == null");
-
-    String result;
-    result = null;
-
-    if (pathParams != null) {
-      result = pathParams.get(name);
-    }
-
-    return result;
-  }
-
-  @Override
-  public final String queryParam(String name) {
-    Check.notNull(name, "name == null");
-
-    Map<String, Object> params;
-    params = $queryParams();
-
-    Object maybe;
-    maybe = params.get(name);
-
-    return switch (maybe) {
-      case null -> null;
-
-      case String s -> s;
-
-      case List<?> l -> (String) l.get(0);
-
-      default -> throw new AssertionError(
-          "Type should not have been put into the map: " + maybe.getClass()
-      );
-    };
-  }
-
-  @Override
-  public final Set<String> queryParamNames() {
-    Map<String, Object> params;
-    params = $queryParams();
-
-    return params.keySet();
-  }
-
-  private Map<String, Object> $queryParams() {
-    if (!queryParamsReady) {
-      if (queryParams == null) {
-        queryParams = Util.createMap();
-      }
-
-      makeQueryParams(queryParams, this::decode);
-
-      queryParamsReady = true;
-    }
-
-    return queryParams;
-  }
-
-  @Override
-  public final String rawPath() {
-    return rawValue.substring(0, pathLimit);
-  }
-
-  @Override
-  public final String rawQuery() {
-    return queryStart == pathLimit ? null : rawValue.substring(queryStart);
-  }
-
-  private Map<String, Object> $rawQueryParams() {
-    Map<String, Object> map;
-    map = Util.createMap();
-
-    makeQueryParams(map, Function.identity());
-
-    return map;
-  }
-
-  public final String rawValue() {
-    return rawValue;
-  }
-
-  public final String rawValue(String queryParamName, String queryParamValue) {
-    Check.notNull(queryParamName, "queryParamName == null");
-    Check.notNull(queryParamValue, "queryParamValue == null");
-
-    StringBuilder builder;
-    builder = new StringBuilder(rawPath());
-
-    builder.append('?');
-
-    Map<String, Object> params;
-    params = $rawQueryParams();
-
-    String rawName;
-    rawName = encode(queryParamName);
-
-    String rawValue;
-    rawValue = encode(queryParamValue);
-
-    params.put(rawName, rawValue);
-
-    int count;
-    count = 0;
-
-    for (String key : params.keySet()) {
-      if (count++ > 0) {
-        builder.append('&');
-      }
-
-      builder.append(key);
-
-      builder.append('=');
-
-      Object value;
-      value = params.get(key);
-
-      if (value instanceof String s) {
-        builder.append(s);
-      }
-
-      else {
-        throw new UnsupportedOperationException("Implement me");
-      }
-    }
-
-    return builder.toString();
   }
 
   private String encode(String value) {
     return URLEncoder.encode(value, StandardCharsets.UTF_8);
   }
-
-  final void resetRequestLine() {
-    method = 0;
-
-    pathLimit = 0;
-
-    if (pathParams != null) {
-      pathParams.clear();
-    }
-
-    path = null;
-
-    if (queryParams != null) {
-      queryParams.clear();
-    }
-
-    queryParamsReady = false;
-
-    queryStart = 0;
-
-    rawValue = null;
-
-    versionMajor = versionMinor = 0;
-  }
-
-  final void parseRequestLine() throws IOException {
-    parseLine();
-
-    if (parseStatus == ParseStatus.UNEXPECTED_EOF) {
-      if (bufferLimit == 0) {
-        // buffer is empty, this is an expected EOF
-        parseStatus = ParseStatus.EOF;
-      }
-
-      return;
-    }
-
-    parseMethod();
-
-    if (method == 0) {
-      // parse method failed -> bad request
-      parseStatus = ParseStatus.INVALID_METHOD;
-
-      return;
-    }
-
-    parseRequestTarget();
-
-    parseVersion();
-
-    if (parseStatus.isError()) {
-      // bad request -> fail
-      return;
-    }
-
-    if (!consumeIfEndOfLine()) {
-      parseStatus = ParseStatus.INVALID_REQUEST_LINE_TERMINATOR;
-
-      return;
-    }
-  }
-
-  final void parseRequestTarget() throws IOException {
-    int startIndex;
-    startIndex = parsePathStart();
-
-    if (parseStatus.isError()) {
-      // bad request -> fail
-      return;
-    }
-
-    parsePathRest(startIndex);
-
-    if (parseStatus.isError()) {
-      // bad request -> fail
-      return;
-    }
-  }
-
-  private static final byte[] _CONNECT = "CONNECT ".getBytes(StandardCharsets.UTF_8);
-
-  private static final byte[] _DELETE = "DELETE ".getBytes(StandardCharsets.UTF_8);
-
-  private static final byte[] _GET = "GET ".getBytes(StandardCharsets.UTF_8);
-
-  private static final byte[] _HEAD = "HEAD ".getBytes(StandardCharsets.UTF_8);
-
-  private static final byte[] _OPTIONS = "OPTIONS ".getBytes(StandardCharsets.UTF_8);
-
-  private static final byte[] _POST = "POST ".getBytes(StandardCharsets.UTF_8);
-
-  private static final byte[] _PUT = "PUT ".getBytes(StandardCharsets.UTF_8);
-
-  private static final byte[] _PATCH = "PATCH ".getBytes(StandardCharsets.UTF_8);
-
-  private static final byte[] _TRACE = "TRACE ".getBytes(StandardCharsets.UTF_8);
-
-  private void parseMethod() throws IOException {
-    if (bufferIndex >= lineLimit) {
-      // empty line... nothing to do
-      return;
-    }
-
-    byte first;
-    first = buffer[bufferIndex];
-
-    // based on the first char, we select out method candidate
-
-    switch (first) {
-      case 'C' -> parseMethod0(Http.CONNECT, _CONNECT);
-
-      case 'D' -> parseMethod0(Http.DELETE, _DELETE);
-
-      case 'G' -> parseMethod0(Http.GET, _GET);
-
-      case 'H' -> parseMethod0(Http.HEAD, _HEAD);
-
-      case 'O' -> parseMethod0(Http.OPTIONS, _OPTIONS);
-
-      case 'P' -> parseMethodP();
-
-      case 'T' -> parseMethod0(Http.TRACE, _TRACE);
-    }
-  }
-
-  private void parseMethod0(byte candidate, byte[] candidateBytes) throws IOException {
-    if (matches(candidateBytes)) {
-      method = candidate;
-    }
-  }
-
-  private void parseMethodP() throws IOException {
-    // method starts with a P. It might be:
-    // - POST
-    // - PUT
-    // - PATCH
-
-    // we'll try them in sequence
-
-    parseMethod0(Http.POST, _POST);
-
-    if (method != 0) {
-      return;
-    }
-
-    parseMethod0(Http.PUT, _PUT);
-
-    if (method != 0) {
-      return;
-    }
-
-    parseMethod0(Http.PATCH, _PATCH);
-
-    if (method != 0) {
-      return;
-    }
-  }
-
-  private int parsePathStart() throws IOException {
-    // we will check if the request target starts with a '/' char
-
-    int targetStart;
-    targetStart = bufferIndex;
-
-    if (bufferIndex >= lineLimit) {
-      // reached EOL -> bad request
-      parseStatus = ParseStatus.INVALID_TARGET;
-
-      return 0;
-    }
-
-    byte b;
-    b = buffer[bufferIndex++];
-
-    if (b != Bytes.SOLIDUS) {
-      // first char IS NOT '/' => BAD_REQUEST
-      parseStatus = ParseStatus.INVALID_TARGET;
-
-      return 0;
-    }
-
-    // mark request path start
-
-    return targetStart;
-  }
-
-  private void parsePathRest(int startIndex) throws IOException {
-    // we will look for the first:
-    // - ? char
-    // - SP char
-    int index;
-    index = indexOf(Bytes.QUESTION_MARK, Bytes.SP);
-
-    if (index < 0) {
-      // trailing char was not found
-      parseStatus = ParseStatus.URI_TOO_LONG;
-
-      return;
-    }
-
-    // index where path ends
-    int pathEndIndex;
-    pathEndIndex = index;
-
-    // as of now target ends at the path
-    int targetEndIndex;
-    targetEndIndex = pathEndIndex;
-
-    // as of now query starts and ends at path i.e. len = 0
-    int queryStartIndex;
-    queryStartIndex = pathEndIndex;
-
-    // we'll continue at the '?' or SP char
-    bufferIndex = index;
-
-    byte b;
-    b = buffer[bufferIndex++];
-
-    if (b == Bytes.QUESTION_MARK) {
-      queryStartIndex = bufferIndex;
-
-      targetEndIndex = indexOf(Bytes.SP);
-
-      if (targetEndIndex < 0) {
-        // trailing char was not found
-        parseStatus = ParseStatus.URI_TOO_LONG;
-
-        return;
-      }
-
-      // we'll continue immediately after the SP
-      bufferIndex = targetEndIndex + 1;
-    }
-
-    rawValue = bufferToString(startIndex, targetEndIndex);
-
-    pathLimit = pathEndIndex - startIndex;
-
-    queryStart = queryStartIndex - startIndex;
-  }
-
-  static final byte[] HTTP_VERSION_PREFIX = {'H', 'T', 'T', 'P', '/'};
-
-  private void parseVersion() {
-    // 'H' 'T' 'T' 'P' '/' '1' '.' '1' = 8 bytes
-
-    if (!matches(HTTP_VERSION_PREFIX)) {
-      // buffer does not start with 'HTTP/'
-      parseStatus = ParseStatus.INVALID_PROTOCOL;
-
-      return;
-    }
-
-    // check if we  have '1' '.' '1' = 3 bytes
-
-    int requiredIndex;
-    requiredIndex = bufferIndex + 3 - 1;
-
-    if (requiredIndex >= lineLimit) {
-      parseStatus = ParseStatus.INVALID_PROTOCOL;
-
-      return;
-    }
-
-    byte maybeMajor;
-    maybeMajor = buffer[bufferIndex++];
-
-    if (!Http.isDigit(maybeMajor)) {
-      // major version is not a digit => bad request
-      parseStatus = ParseStatus.INVALID_PROTOCOL;
-
-      return;
-    }
-
-    byte maybeDot;
-    maybeDot = buffer[bufferIndex++];
-
-    if (maybeDot != '.') {
-      // major version not followed by a DOT => bad request
-      parseStatus = ParseStatus.INVALID_PROTOCOL;
-
-      return;
-    }
-
-    byte maybeMinor;
-    maybeMinor = buffer[bufferIndex++];
-
-    if (!Http.isDigit(maybeMinor)) {
-      // minor version is not a digit => bad request
-      parseStatus = ParseStatus.INVALID_PROTOCOL;
-
-      return;
-    }
-
-    versionMajor = (byte) (maybeMajor - 0x30);
-
-    versionMinor = (byte) (maybeMinor - 0x30);
-  }
-
-  // matcher methods
-
-  private int matcherIndex;
 
   final void matcherReset() {
     matcherIndex = 0;
@@ -2046,39 +2096,6 @@ final class HttpExchange implements Http.Exchange, Http.Request.Body, Http.Reque
   // Section: SocketInput
   //
 
-  static final int powerOfTwo(int size) {
-    // maybe size is already power of 2
-    int x;
-    x = size - 1;
-
-    int leading;
-    leading = Integer.numberOfLeadingZeros(x);
-
-    int n;
-    n = -1 >>> leading;
-
-    if (n < 0) {
-      // should not happen as minimal buffer size is 128
-      throw new IllegalArgumentException("Buffer size is too small");
-    }
-
-    if (n >= HARD_MAX_BUFFER_SIZE) {
-      return HARD_MAX_BUFFER_SIZE;
-    }
-
-    return n + 1;
-  }
-
-  private void socketInputBufferSize(int initial, int max) {
-    bufferLimit = powerOfTwo(initial);
-
-    this.maxBufferSize = powerOfTwo(max);
-  }
-
-  private void socketInputNoteSink(Note.Sink noteSink) {
-    this.noteSink = Check.notNull(noteSink, "noteSink == null");
-  }
-
   final void hexDump() {
     HexFormat format;
     format = HexFormat.of();
@@ -2090,26 +2107,6 @@ final class HttpExchange implements Http.Exchange, Http.Request.Body, Http.Reque
     args = "bufferIndex=" + bufferIndex + ";lineLimit=" + lineLimit;
 
     noteSink.send(NOTES.hexdump, bufferDump, args);
-  }
-
-  final void initSocketInput(InputStream inputStream) {
-    Check.state(buffer == null, "SocketInit already initialized");
-
-    buffer = new byte[bufferLimit];
-
-    this.inputStream = inputStream;
-
-    resetSocketInput();
-  }
-
-  final void resetSocketInput() {
-    bufferLimit = 0;
-
-    bufferIndex = 0;
-
-    lineLimit = 0;
-
-    parseStatus = ParseStatus.NORMAL;
   }
 
   final void parseLine() throws IOException {
@@ -2379,13 +2376,6 @@ final class HttpExchange implements Http.Exchange, Http.Request.Body, Http.Reque
     }
 
     return contentLength;
-  }
-
-  final InputStream openStreamImpl() {
-    int length;
-    length = bufferLimit - bufferIndex;
-
-    return new ByteArrayInputStream(buffer, bufferIndex, length);
   }
 
 }

@@ -27,6 +27,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+import objectos.way.Http.HeaderName;
 
 final class HttpTestingExchange implements Http.TestingExchange {
 
@@ -85,11 +86,6 @@ final class HttpTestingExchange implements Http.TestingExchange {
   }
 
   @Override
-  public final Http.Request.Headers headers() {
-    throw new UnsupportedOperationException();
-  }
-
-  @Override
   public final byte method() {
     return Http.checkMethod(method);
   }
@@ -136,6 +132,11 @@ final class HttpTestingExchange implements Http.TestingExchange {
   @Override
   public final String rawQuery() {
     throw new IllegalStateException("query was not set");
+  }
+
+  @Override
+  public final String header(HeaderName name) {
+    throw new UnsupportedOperationException();
   }
 
   @Override

@@ -151,11 +151,8 @@ final class WebResources implements AutoCloseable, Web.Resources {
     String etag;
     etag = etag(attributes);
 
-    Http.Request.Headers headers;
-    headers = http.headers();
-
     String ifNoneMatch;
-    ifNoneMatch = headers.first(Http.HeaderName.IF_NONE_MATCH);
+    ifNoneMatch = http.header(Http.HeaderName.IF_NONE_MATCH);
 
     if (etag.equals(ifNoneMatch)) {
       http.status(Http.Status.NOT_MODIFIED);

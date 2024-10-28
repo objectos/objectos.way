@@ -141,11 +141,8 @@ final class HttpModuleCompiler extends HttpModuleMatcherParser implements Http.H
   private record HttpModuleHost(String name, Http.Handler handler) implements HttpModuleAction {
     @Override
     public final boolean execute(Http.Exchange http) {
-      Http.Request.Headers headers;
-      headers = http.headers();
-
       String hostName;
-      hostName = headers.first(Http.HeaderName.HOST);
+      hostName = http.header(Http.HeaderName.HOST);
 
       if (name.equals(hostName)) {
         handler.handle(http);

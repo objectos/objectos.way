@@ -108,11 +108,8 @@ final class WebStore implements Web.Store {
 
   @Override
   public final void filter(Http.Exchange http) {
-    Http.Request.Headers headers;
-    headers = http.headers();
-
     String cookieHeaderValue;
-    cookieHeaderValue = headers.first(Http.HeaderName.COOKIE);
+    cookieHeaderValue = http.header(Http.HeaderName.COOKIE);
 
     if (cookieHeaderValue == null) {
       return;

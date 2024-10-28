@@ -51,7 +51,7 @@ public final class Http {
    * Unless otherwise specified, request-target related methods of this
    * interface return decoded values.
    */
-  public sealed interface Exchange extends Request permits HttpExchange, TestingExchange {
+  public sealed interface Exchange extends Request, RequestTarget, RequestHeaders permits HttpExchange, TestingExchange {
 
     /**
      * Stores an object in this request. The object will be associated to the
@@ -425,7 +425,7 @@ public final class Http {
   /**
    * An HTTP request message.
    */
-  public sealed interface Request extends RequestTarget {
+  public sealed interface Request {
 
     /**
      * The body of an HTTP request message.
@@ -463,32 +463,6 @@ public final class Http {
     }
 
     /**
-     * The header section of an HTTP request message.
-     */
-    public interface Headers {
-
-      /**
-       * Returns the value of the first field line having the specified name;
-       * returns {@code null} if the field line is not present.
-       *
-       * @param name
-       *        the name of the header field line
-       *
-       * @return the value of first field line or {@code null} if a field line
-       *         with the specified name is not present.
-       */
-      String first(Http.HeaderName name);
-
-      /**
-       * The number of field lines in this header section.
-       *
-       * @return the number of field lines in this header section.
-       */
-      int size();
-
-    }
-
-    /**
      * The method of an HTTP request message.
      */
     public sealed interface Method {
@@ -510,13 +484,6 @@ public final class Http {
     Body body();
 
     /**
-     * The header section of this request message.
-     *
-     * @return the header section of this request message
-     */
-    Headers headers();
-
-    /**
      * The code of the method of this request message.
      *
      * @return the code of the method of this request message
@@ -526,13 +493,33 @@ public final class Http {
   }
 
   /**
-   * The request-target of an HTTP request message.
+   * Provides methods for inspecting the headers of an HTTP request message.
+   */
+  public sealed interface RequestHeaders {
+
+    /**
+     * Returns the value of the first field line having the specified name;
+     * returns {@code null} if the field line is not present.
+     *
+     * @param name
+     *        the name of the header field line
+     *
+     * @return the value of first field line or {@code null} if a field line
+     *         with the specified name is not present.
+     */
+    String header(Http.HeaderName name);
+
+  }
+
+  /**
+   * Provides methods for inspecting the request-target of an HTTP request
+   * message.
    *
    * <p>
    * Unless otherwise specified the values returned by the methods of this
    * interface are decoded.
    */
-  public sealed interface RequestTarget permits Request {
+  public sealed interface RequestTarget {
 
     /**
      * The value of the path component.

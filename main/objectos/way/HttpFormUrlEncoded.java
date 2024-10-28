@@ -37,11 +37,8 @@ final class HttpFormUrlEncoded implements Http.FormUrlEncoded {
   }
 
   static HttpFormUrlEncoded parse(Http.Exchange http) throws Http.UnsupportedMediaTypeException, IOException {
-    Http.Request.Headers headers;
-    headers = http.headers();
-
     String contentType;
-    contentType = headers.first(Http.HeaderName.CONTENT_TYPE);
+    contentType = http.header(Http.HeaderName.CONTENT_TYPE);
 
     if (!contentType.equals("application/x-www-form-urlencoded")) {
       throw new Http.UnsupportedMediaTypeException(contentType);
