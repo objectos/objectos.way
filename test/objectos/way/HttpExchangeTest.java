@@ -75,10 +75,7 @@ public class HttpExchangeTest {
       assertEquals(http.header(Http.HeaderName.CONNECTION), "close");
 
       // body
-      Http.Request.Body body;
-      body = http.body();
-
-      assertEquals(ObjectosHttp.readAllBytes(body), Util.EMPTY_BYTE_ARRAY);
+      assertEquals(ObjectosHttp.readAllBytes(http), Util.EMPTY_BYTE_ARRAY);
 
       // response phase
       byte[] msg;
@@ -170,10 +167,7 @@ public class HttpExchangeTest {
       assertEquals(http.header(Http.HeaderName.HOST), "www.example.com");
 
       // body
-      Http.Request.Body body;
-      body = http.body();
-
-      assertEquals(ObjectosHttp.readAllBytes(body), Util.EMPTY_BYTE_ARRAY);
+      assertEquals(ObjectosHttp.readAllBytes(http), Util.EMPTY_BYTE_ARRAY);
 
       // response phase
       byte[] msg;
@@ -206,9 +200,7 @@ public class HttpExchangeTest {
       assertEquals(http.header(Http.HeaderName.CONNECTION), "close");
 
       // body
-      body = http.body();
-
-      assertEquals(ObjectosHttp.readAllBytes(body), Util.EMPTY_BYTE_ARRAY);
+      assertEquals(ObjectosHttp.readAllBytes(http), Util.EMPTY_BYTE_ARRAY);
 
       // response phase
       msg = body02.getBytes(StandardCharsets.UTF_8);
@@ -541,10 +533,7 @@ public class HttpExchangeTest {
 
       assertEquals(parse.isError(), false);
 
-      Http.Request.Body requestBody;
-      requestBody = http.body();
-
-      assertEquals(ObjectosHttp.readString(requestBody), "email=user%40example.com");
+      assertEquals(ObjectosHttp.readString(http), "email=user%40example.com");
 
       // response phase
 
@@ -977,10 +966,7 @@ public class HttpExchangeTest {
 
       assertEquals(parse.isError(), false);
 
-      Http.Request.Body requestBody;
-      requestBody = http.body();
-
-      assertEquals(ObjectosHttp.readString(requestBody), chunk256);
+      assertEquals(ObjectosHttp.readString(http), chunk256);
     } catch (IOException e) {
       throw new AssertionError("Failed with IOException", e);
     }
@@ -1019,10 +1005,7 @@ public class HttpExchangeTest {
       assertEquals(http.header(Http.HeaderName.ACCEPT_ENCODING), "gzip, deflate, br");
 
       // body
-      Http.Request.Body body;
-      body = http.body();
-
-      assertEquals(ObjectosHttp.readAllBytes(body), Util.EMPTY_BYTE_ARRAY);
+      assertEquals(ObjectosHttp.readAllBytes(http), Util.EMPTY_BYTE_ARRAY);
     } catch (IOException e) {
       throw new AssertionError("Failed with IOException", e);
     }
@@ -1057,10 +1040,7 @@ public class HttpExchangeTest {
       assertEquals(http.header(Http.HeaderName.HOST), "www.example.com");
 
       // body
-      Http.Request.Body body;
-      body = http.body();
-
-      assertEquals(ObjectosHttp.readAllBytes(body), Util.EMPTY_BYTE_ARRAY);
+      assertEquals(ObjectosHttp.readAllBytes(http), Util.EMPTY_BYTE_ARRAY);
     } catch (IOException e) {
       throw new AssertionError("Failed with IOException", e);
     }
@@ -1095,10 +1075,7 @@ public class HttpExchangeTest {
       assertEquals(http.header(Http.HeaderName.HOST), "www.example.com");
 
       // body
-      Http.Request.Body body;
-      body = http.body();
-
-      assertEquals(ObjectosHttp.readAllBytes(body), Util.EMPTY_BYTE_ARRAY);
+      assertEquals(ObjectosHttp.readAllBytes(http), Util.EMPTY_BYTE_ARRAY);
     } catch (IOException e) {
       throw new AssertionError("Failed with IOException", e);
     }

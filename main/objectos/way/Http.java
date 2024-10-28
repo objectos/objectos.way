@@ -51,7 +51,9 @@ public final class Http {
    * Unless otherwise specified, request-target related methods of this
    * interface return decoded values.
    */
-  public sealed interface Exchange extends Request, RequestLine, RequestTarget, RequestHeaders permits HttpExchange, TestingExchange {
+  public sealed interface Exchange
+      extends Request, RequestLine, RequestTarget, RequestHeaders, RequestBody
+      permits HttpExchange, TestingExchange {
 
     /**
      * Stores an object in this request. The object will be associated to the
@@ -495,23 +497,6 @@ public final class Http {
   public sealed interface Request {
 
     /**
-     * The body of an HTTP request message.
-     */
-    public interface Body {
-
-      /**
-       * An input stream that reads the bytes of this request body.
-       *
-       * @return an input stream that reads the bytes of this request body.
-       *
-       * @throws IOException
-       *         if an I/O error occurs
-       */
-      InputStream openStream() throws IOException;
-
-    }
-
-    /**
      * The cookies of an HTTP request message.
      */
     public sealed interface Cookies permits HttpRequestCookies, HttpRequestCookiesEmpty {
@@ -529,12 +514,22 @@ public final class Http {
 
     }
 
+  }
+
+  /**
+   * Provides methods for reading the body of an HTTP request message.
+   */
+  public interface RequestBody {
+
     /**
-     * The body of this request message.
+     * Returns an input stream that reads the bytes of this request body.
      *
-     * @return the body of this request message
+     * @return an input stream that reads the bytes of this request body.
+     *
+     * @throws IOException
+     *         if an I/O error occurs
      */
-    Body body();
+    InputStream bodyInputStream() throws IOException;
 
   }
 
@@ -1074,7 +1069,7 @@ public final class Http {
    * @throws IOException
    *         if an I/O error occurs while reading the body
    */
-  public static FormUrlEncoded parseFormUrlEncoded(Http.Request.Body body) throws IOException {
+  public static FormUrlEncoded parseFormUrlEncoded(Http.RequestBody body) throws IOException {
     return HttpFormUrlEncoded.parse(body);
   }
 

@@ -93,7 +93,7 @@ public class HttpExchangeTest3RequestBody {
     }
   }
 
-  private String asString(Http.Request.Body body) throws IOException {
+  private String asString(Http.RequestBody body) throws IOException {
     return ObjectosHttp.readString(body);
   }
 

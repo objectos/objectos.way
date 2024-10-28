@@ -30,7 +30,7 @@ public class HttpFormUrlEncodedTest {
 
   @Test
   public void testCase01() throws IOException {
-    Http.Request.Body body;
+    Http.RequestBody body;
     body = body("email=user%40example.com");
 
     Http.FormUrlEncoded form;
@@ -43,7 +43,7 @@ public class HttpFormUrlEncodedTest {
 
   @Test
   public void testCase02() throws IOException {
-    Http.Request.Body body;
+    Http.RequestBody body;
     body = body("login=foo&password=bar");
 
     Http.FormUrlEncoded form;
@@ -91,7 +91,7 @@ public class HttpFormUrlEncodedTest {
     }
   }
 
-  private Http.Request.Body body(String s) {
+  private Http.RequestBody body(String s) {
     return new ThisBody(s);
   }
 
@@ -112,7 +112,7 @@ public class HttpFormUrlEncodedTest {
     }
   }
 
-  private static class ThisBody implements Http.Request.Body {
+  private static class ThisBody implements Http.RequestBody {
 
     private final String value;
 
@@ -121,7 +121,7 @@ public class HttpFormUrlEncodedTest {
     }
 
     @Override
-    public final InputStream openStream() throws IOException {
+    public final InputStream bodyInputStream() throws IOException {
       byte[] bytes;
       bytes = value.getBytes(StandardCharsets.UTF_8);
 

@@ -30,8 +30,8 @@ final class HttpFormUrlEncoded implements Http.FormUrlEncoded {
     this.map = map;
   }
 
-  static HttpFormUrlEncoded parse(Http.Request.Body body) throws IOException {
-    try (InputStream in = body.openStream()) {
+  static HttpFormUrlEncoded parse(Http.RequestBody body) throws IOException {
+    try (InputStream in = body.bodyInputStream()) {
       return parse0(in);
     }
   }
@@ -44,8 +44,8 @@ final class HttpFormUrlEncoded implements Http.FormUrlEncoded {
       throw new Http.UnsupportedMediaTypeException(contentType);
     }
 
-    Http.Request.Body body;
-    body = http.body();
+    Http.RequestBody body;
+    body = http;
 
     return parse(body);
   }

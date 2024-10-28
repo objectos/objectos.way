@@ -15,6 +15,8 @@
  */
 package objectos.way;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.net.URLEncoder;
@@ -81,11 +83,6 @@ final class HttpTestingExchange implements Http.TestingExchange {
   // request methods
 
   @Override
-  public final Http.Request.Body body() {
-    throw new UnsupportedOperationException();
-  }
-
-  @Override
   public final Http.Method method() {
     Check.state(method != null, "method was not set");
 
@@ -138,6 +135,11 @@ final class HttpTestingExchange implements Http.TestingExchange {
 
   @Override
   public final String header(HeaderName name) {
+    throw new UnsupportedOperationException();
+  }
+
+  @Override
+  public final InputStream bodyInputStream() throws IOException {
     throw new UnsupportedOperationException();
   }
 

@@ -43,7 +43,7 @@ import java.util.function.Function;
 import objectos.way.Http.Method;
 import objectos.way.Lang.CharWritable;
 
-final class HttpExchange implements Http.Exchange, Http.Request.Body, Closeable {
+final class HttpExchange implements Http.Exchange, Closeable {
 
   public enum ParseStatus {
     // keep going
@@ -1344,7 +1344,7 @@ final class HttpExchange implements Http.Exchange, Http.Request.Body, Closeable 
   }
 
   @Override
-  public final InputStream openStream() throws IOException {
+  public final InputStream bodyInputStream() throws IOException {
     return switch (kind) {
       case EMPTY -> InputStream.nullInputStream();
 
@@ -1405,31 +1405,6 @@ final class HttpExchange implements Http.Exchange, Http.Request.Body, Closeable 
   // ##################################################################
   // # END: Http.Exchange API || request attributes
   // ##################################################################
-
-  private boolean badRequest() {
-    Check.state(testState(_REQUEST), "Http.Request.Method can only be invoked after a parse() operation");
-
-    return parseStatus.isBadRequest();
-  }
-
-  @Override
-  public final Http.Request.Body body() {
-    checkRequest();
-
-    return this;
-  }
-
-  private void checkRequest() {
-    Check.state(
-        !badRequest(),
-
-        """
-        Request methods can only be invoked:
-        - after a successful parse() operation; and
-        - before the toResponse() method invocation.
-        """
-    );
-  }
 
   // response
 

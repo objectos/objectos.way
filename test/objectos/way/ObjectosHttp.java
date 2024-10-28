@@ -31,14 +31,14 @@ public final class ObjectosHttp {
 
   /*
    HTTP 001: Minimal GET request
-
+  
    -- request
    GET / HTTP/1.1\r
    Host: www.example.com\r
    Connection: close\r
    \r
    ---
-
+  
    --- response
    HTTP/1.1 200 OK\r
    Content-Type: text/plain; charset=utf-8\r
@@ -83,15 +83,15 @@ public final class ObjectosHttp {
     }
   }
 
-  public static byte[] readAllBytes(Http.Request.Body body) throws IOException {
-    try (InputStream in = body.openStream(); ByteArrayOutputStream out = new ByteArrayOutputStream()) {
+  public static byte[] readAllBytes(Http.RequestBody body) throws IOException {
+    try (InputStream in = body.bodyInputStream(); ByteArrayOutputStream out = new ByteArrayOutputStream()) {
       in.transferTo(out);
 
       return out.toByteArray();
     }
   }
 
-  public static String readString(Http.Request.Body body) throws IOException {
+  public static String readString(Http.RequestBody body) throws IOException {
     byte[] bytes;
     bytes = readAllBytes(body);
 
