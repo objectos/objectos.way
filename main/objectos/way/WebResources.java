@@ -139,10 +139,10 @@ final class WebResources implements AutoCloseable, Web.Resources {
       return;
     }
 
-    byte method;
+    Http.Method method;
     method = http.method();
 
-    if (method != Http.GET && method != Http.HEAD) {
+    if (method != Http.Method.GET && method != Http.Method.HEAD) {
       http.methodNotAllowed();
 
       return;
@@ -192,7 +192,7 @@ final class WebResources implements AutoCloseable, Web.Resources {
 
     http.header(Http.HeaderName.ETAG, etag);
 
-    if (method == Http.GET) {
+    if (method == Http.Method.GET) {
       http.send(file);
     } else {
       http.send();

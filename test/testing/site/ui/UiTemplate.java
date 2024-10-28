@@ -23,7 +23,7 @@ abstract class UiTemplate extends Html.Template implements Http.Handler {
   @Override
   public void handle(Http.Exchange http) {
     switch (http.method()) {
-      case Http.GET, Http.HEAD -> get(http);
+      case GET, HEAD -> get(http);
 
       default -> http.methodNotAllowed();
     }

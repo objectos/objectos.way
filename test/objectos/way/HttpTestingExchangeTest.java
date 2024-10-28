@@ -18,7 +18,6 @@ package objectos.way;
 import static org.testng.Assert.assertEquals;
 
 import java.nio.charset.StandardCharsets;
-import org.testng.Assert;
 import org.testng.annotations.Test;
 
 public class HttpTestingExchangeTest {
@@ -27,7 +26,7 @@ public class HttpTestingExchangeTest {
   public void testCase01() {
     Http.TestingExchange http;
     http = Http.TestingExchange.create(config -> {
-      config.method(Http.GET);
+      config.method(Http.Method.GET);
 
       config.path("/foo");
 
@@ -38,7 +37,7 @@ public class HttpTestingExchangeTest {
       config.set(String.class, "Hello");
     });
 
-    assertEquals(http.method(), Http.GET);
+    assertEquals(http.method(), Http.Method.GET);
     assertEquals(http.path(), "/foo");
     assertEquals(http.pathParam("id"), "123");
     assertEquals(http.pathParam("path"), null);
@@ -47,38 +46,12 @@ public class HttpTestingExchangeTest {
     assertEquals(http.get(String.class), "Hello");
   }
 
-  @Test(description = """
-  Invalid:
-  - request method
-  """)
-  public void testCase02() {
-    try {
-      Http.TestingExchange.create(config -> {
-        config.method((byte) (Http.CONNECT - 1));
-      });
-
-      Assert.fail();
-    } catch (IllegalArgumentException expected) {
-
-    }
-
-    try {
-      Http.TestingExchange.create(config -> {
-        config.method((byte) (Http.TRACE + 1));
-      });
-
-      Assert.fail();
-    } catch (IllegalArgumentException expected) {
-
-    }
-  }
-
   @Test(description = "Lang.CharWritable response")
-  public void testCase03() {
+  public void testCase02() {
     class Template extends Html.Template {
       @Override
       protected void render() {
-        div("tc03");
+        div("tc02");
       }
     }
 
@@ -96,7 +69,7 @@ public class HttpTestingExchangeTest {
         body.toString(),
 
         """
-        <div>tc03</div>
+        <div>tc02</div>
         """
     );
 

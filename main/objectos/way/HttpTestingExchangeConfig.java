@@ -26,7 +26,7 @@ final class HttpTestingExchangeConfig implements Http.TestingExchange.Config {
 
   Map<Object, Object> objectStore;
 
-  byte method;
+  Http.Method method;
 
   String path;
 
@@ -44,8 +44,8 @@ final class HttpTestingExchangeConfig implements Http.TestingExchange.Config {
   }
 
   @Override
-  public final Http.TestingExchange.Config method(byte value) {
-    method = Http.checkMethod(value);
+  public final Http.TestingExchange.Config method(Http.Method value) {
+    method = Objects.requireNonNull(value, "value == null");
 
     return this;
   }

@@ -40,10 +40,10 @@ public class HttpExchangeTest1RequestLine {
     line.parseRequestLine();
 
     // method
-    byte method;
-    method = line.method;
+    Http.Method method;
+    method = line.method();
 
-    assertEquals(method, Http.GET);
+    assertEquals(method, Http.Method.GET);
 
     // path
     assertEquals(line.path(), "/");
@@ -75,10 +75,10 @@ public class HttpExchangeTest1RequestLine {
     line.parseRequestLine();
 
     // method
-    byte method;
-    method = line.method;
+    Http.Method method;
+    method = line.method();
 
-    assertEquals(method, Http.GET);
+    assertEquals(method, Http.Method.GET);
 
     // path
     assertEquals(line.path(), "/endpoint");
@@ -106,7 +106,7 @@ public class HttpExchangeTest1RequestLine {
 
     line.parseRequestLine();
 
-    assertEquals(line.method, 0);
+    assertEquals(line.method(), null);
     assertEquals(line.parseStatus.isError(), true);
   }
 

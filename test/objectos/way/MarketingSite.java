@@ -26,7 +26,7 @@ final class MarketingSite extends Http.Module {
 
   private void indexHtml(Http.Exchange http) {
     switch (http.method()) {
-      case Http.GET, Http.HEAD -> http.ok(new MarketingSiteHome());
+      case GET, HEAD -> http.ok(new MarketingSiteHome());
 
       default -> http.methodNotAllowed();
     }

@@ -29,7 +29,7 @@ final class Home extends WebTemplate implements Http.Handler {
   @Override
   public final void handle(Http.Exchange http) {
     switch (http.method()) {
-      case Http.GET, Http.HEAD -> get(http);
+      case GET, HEAD -> get(http);
 
       default -> http.methodNotAllowed();
     }

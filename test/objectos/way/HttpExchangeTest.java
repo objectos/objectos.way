@@ -63,7 +63,7 @@ public class HttpExchangeTest {
       assertEquals(parse.isError(), false);
 
       // request line
-      assertEquals(http.method(), Http.GET);
+      assertEquals(http.method(), Http.Method.GET);
       assertEquals(http.path(), "/");
       assertEquals(http.rawQuery(), null);
       assertEquals(http.queryParam("x"), null);
@@ -160,7 +160,7 @@ public class HttpExchangeTest {
       assertEquals(parse.isError(), false);
 
       // request line
-      assertEquals(http.method(), Http.GET);
+      assertEquals(http.method(), Http.Method.GET);
       assertEquals(http.path(), "/login");
       assertEquals(http.rawQuery(), null);
       assertEquals(http.queryParamNames(), Set.of());
@@ -197,7 +197,7 @@ public class HttpExchangeTest {
       assertEquals(parse.isError(), false);
 
       // request line
-      assertEquals(http.method(), Http.GET);
+      assertEquals(http.method(), Http.Method.GET);
       assertEquals(http.path(), "/login.css");
 
       // headers
@@ -324,7 +324,7 @@ public class HttpExchangeTest {
       assertEquals(parse.isError(), false);
 
       // request line
-      assertEquals(http.method(), Http.GET);
+      assertEquals(http.method(), Http.Method.GET);
       assertEquals(http.path(), "/index.html");
       assertEquals(http.rawQuery(), null);
       assertEquals(http.queryParamNames(), Set.of());
@@ -389,7 +389,7 @@ public class HttpExchangeTest {
       assertEquals(parse.isError(), false);
 
       // request line
-      assertEquals(http.method(), Http.GET);
+      assertEquals(http.method(), Http.Method.GET);
       assertEquals(http.path(), "/atom.xml");
       assertEquals(http.rawQuery(), null);
       assertEquals(http.queryParamNames(), Set.of());
@@ -1006,7 +1006,7 @@ public class HttpExchangeTest {
       assertEquals(parse.isError(), false);
 
       // request line
-      assertEquals(http.method(), Http.GET);
+      assertEquals(http.method(), Http.Method.GET);
       assertEquals(http.path(), "/");
       assertEquals(http.rawQuery(), null);
       assertEquals(http.queryParam(""), null);
@@ -1046,7 +1046,7 @@ public class HttpExchangeTest {
       assertEquals(parse.isError(), false);
 
       // request line
-      assertEquals(http.method(), Http.GET);
+      assertEquals(http.method(), Http.Method.GET);
       assertEquals(http.path(), "/wiki/東京");
       assertEquals(http.rawQuery(), null);
       assertEquals(http.queryParam("null"), null);
@@ -1084,7 +1084,7 @@ public class HttpExchangeTest {
       assertEquals(parse.isError(), false);
 
       // request line
-      assertEquals(http.method(), Http.GET);
+      assertEquals(http.method(), Http.Method.GET);
       assertEquals(http.path(), "/empty");
       assertEquals(http.rawQuery(), "");
       assertEquals(http.queryParam("null"), null);

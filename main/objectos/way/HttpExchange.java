@@ -40,6 +40,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.function.Function;
+import objectos.way.Http.Method;
 import objectos.way.Lang.CharWritable;
 
 final class HttpExchange implements Http.Exchange, Http.Request.Body, Closeable {
@@ -172,7 +173,7 @@ final class HttpExchange implements Http.Exchange, Http.Request.Body, Closeable 
 
   private int matcherIndex;
 
-  byte method;
+  private Method method;
 
   private String path;
 
@@ -406,7 +407,7 @@ final class HttpExchange implements Http.Exchange, Http.Request.Body, Closeable 
   }
 
   private void resetRequestLine() {
-    method = 0;
+    method = null;
 
     pathLimit = 0;
 
@@ -473,7 +474,7 @@ final class HttpExchange implements Http.Exchange, Http.Request.Body, Closeable 
 
     parseMethod();
 
-    if (method == 0) {
+    if (method == null) {
       // parse method failed -> bad request
       parseStatus = ParseStatus.INVALID_METHOD;
 
@@ -526,23 +527,23 @@ final class HttpExchange implements Http.Exchange, Http.Request.Body, Closeable 
     // based on the first char, we select out method candidate
 
     switch (first) {
-      case 'C' -> parseMethod0(Http.CONNECT, _CONNECT);
+      case 'C' -> parseMethod0(Http.Method.CONNECT, _CONNECT);
 
-      case 'D' -> parseMethod0(Http.DELETE, _DELETE);
+      case 'D' -> parseMethod0(Http.Method.DELETE, _DELETE);
 
-      case 'G' -> parseMethod0(Http.GET, _GET);
+      case 'G' -> parseMethod0(Http.Method.GET, _GET);
 
-      case 'H' -> parseMethod0(Http.HEAD, _HEAD);
+      case 'H' -> parseMethod0(Http.Method.HEAD, _HEAD);
 
-      case 'O' -> parseMethod0(Http.OPTIONS, _OPTIONS);
+      case 'O' -> parseMethod0(Http.Method.OPTIONS, _OPTIONS);
 
       case 'P' -> parseMethodP();
 
-      case 'T' -> parseMethod0(Http.TRACE, _TRACE);
+      case 'T' -> parseMethod0(Http.Method.TRACE, _TRACE);
     }
   }
 
-  private void parseMethod0(byte candidate, byte[] candidateBytes) throws IOException {
+  private void parseMethod0(Method candidate, byte[] candidateBytes) throws IOException {
     if (matches(candidateBytes)) {
       method = candidate;
     }
@@ -556,21 +557,21 @@ final class HttpExchange implements Http.Exchange, Http.Request.Body, Closeable 
 
     // we'll try them in sequence
 
-    parseMethod0(Http.POST, _POST);
+    parseMethod0(Http.Method.POST, _POST);
 
-    if (method != 0) {
+    if (method != null) {
       return;
     }
 
-    parseMethod0(Http.PUT, _PUT);
+    parseMethod0(Http.Method.PUT, _PUT);
 
-    if (method != 0) {
+    if (method != null) {
       return;
     }
 
-    parseMethod0(Http.PATCH, _PATCH);
+    parseMethod0(Http.Method.PATCH, _PATCH);
 
-    if (method != 0) {
+    if (method != null) {
       return;
     }
   }
@@ -1094,6 +1095,19 @@ final class HttpExchange implements Http.Exchange, Http.Request.Body, Closeable 
   // ##################################################################
 
   // ##################################################################
+  // # BEGIN: Http.Exchange API || request line
+  // ##################################################################
+
+  @Override
+  public final Method method() {
+    return method;
+  }
+
+  // ##################################################################
+  // # END: Http.Exchange API || request line
+  // ##################################################################
+
+  // ##################################################################
   // # BEGIN: Http.Exchange API || request target
   // ##################################################################
 
@@ -1398,15 +1412,6 @@ final class HttpExchange implements Http.Exchange, Http.Request.Body, Closeable 
     return parseStatus.isBadRequest();
   }
 
-  // request
-
-  @Override
-  public final byte method() {
-    checkRequest();
-
-    return method;
-  }
-
   @Override
   public final Http.Request.Body body() {
     checkRequest();
@@ -1703,7 +1708,7 @@ final class HttpExchange implements Http.Exchange, Http.Request.Body, Closeable 
 
     outputStream.write(buffer, 0, bufferIndex);
 
-    if (method != Http.HEAD) {
+    if (method != Http.Method.HEAD) {
       switch (responseBody) {
         case NoResponseBody no -> {}
 

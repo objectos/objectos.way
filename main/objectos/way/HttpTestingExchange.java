@@ -35,7 +35,7 @@ final class HttpTestingExchange implements Http.TestingExchange {
 
   private Map<Object, Object> objectStore;
 
-  private final byte method;
+  private final Http.Method method;
 
   private final String path;
 
@@ -86,8 +86,10 @@ final class HttpTestingExchange implements Http.TestingExchange {
   }
 
   @Override
-  public final byte method() {
-    return Http.checkMethod(method);
+  public final Http.Method method() {
+    Check.state(method != null, "method was not set");
+
+    return method;
   }
 
   @Override

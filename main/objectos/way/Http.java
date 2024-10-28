@@ -423,6 +423,60 @@ public final class Http {
   }
 
   /**
+   * The method of an HTTP request message.
+   */
+  public enum Method {
+
+    /**
+     * The CONNECT method.
+     */
+    CONNECT,
+
+    /**
+     * The DELETE method.
+     */
+    DELETE,
+
+    /**
+     * The GET method.
+     */
+    GET,
+
+    /**
+     * The HEAD method.
+     */
+    HEAD,
+
+    /**
+     * The OPTIONS method.
+     */
+    OPTIONS,
+
+    /**
+     * The PATCH method.
+     */
+    PATCH,
+
+    /**
+     * The POST method.
+     */
+    POST,
+
+    /**
+     * The PUT method.
+     */
+    PUT,
+
+    /**
+     * The TRACE method.
+     */
+    TRACE;
+
+    static final Method[] VALUES = values();
+
+  }
+
+  /**
    * A module configures the handlers a server instance will use to process its
    * requests.
    */
@@ -476,20 +530,6 @@ public final class Http {
     }
 
     /**
-     * The method of an HTTP request message.
-     */
-    public sealed interface Method {
-
-      /**
-       * The name of this method.
-       *
-       * @return the name of this method.
-       */
-      String name();
-
-    }
-
-    /**
      * The body of this request message.
      *
      * @return the body of this request message
@@ -536,7 +576,7 @@ public final class Http {
      *
      * @return the code of the method of this request message
      */
-    byte method();
+    Method method();
 
   }
 
@@ -845,11 +885,11 @@ public final class Http {
        * Sets the request method to the specified value.
        *
        * @param value
-       *        the byte value representing the HTTP method
+       *        the HTTP method
        *
        * @return this config instance
        */
-      Config method(byte value);
+      Config method(Http.Method value);
 
       /**
        * Sets the path component of the request-target to the specified value.
@@ -970,108 +1010,6 @@ public final class Http {
       responseBytes = Http.utf8(response);
     }
 
-  }
-
-  // Request constants
-
-  /**
-   * The CONNECT method code.
-   */
-  public static final byte CONNECT = 1;
-
-  /**
-   * The DELETE method code.
-   */
-  public static final byte DELETE = 2;
-
-  /**
-   * The GET method code.
-   */
-  public static final byte GET = 3;
-
-  /**
-   * The HEAD method code.
-   */
-  public static final byte HEAD = 4;
-
-  /**
-   * The OPTIONS method code.
-   */
-  public static final byte OPTIONS = 5;
-
-  /**
-   * The PATCH method code.
-   */
-  public static final byte PATCH = 6;
-
-  /**
-   * The POST method code.
-   */
-  public static final byte POST = 7;
-
-  /**
-   * The PUT method code.
-   */
-  public static final byte PUT = 8;
-
-  /**
-   * The TRACE method code.
-   */
-  public static final byte TRACE = 9;
-
-  static byte checkMethod(byte method) {
-    if (method < CONNECT) {
-      throw new IllegalArgumentException("The value " + method + " does not represent a valid HTTP method");
-    }
-
-    if (method > TRACE) {
-      throw new IllegalArgumentException("The value " + method + " does not represent a valid HTTP method");
-    }
-
-    return method;
-  }
-
-  enum HttpRequestMethod implements Http.Request.Method {
-
-    CONNECT,
-    DELETE,
-    GET,
-    HEAD,
-    OPTIONS,
-    PATCH,
-    POST,
-    PUT,
-    TRACE;
-
-    static final HttpRequestMethod[] VALUES = values();
-
-  }
-
-  /**
-   * Returns an HTTP request method object representing the specified method
-   * code.
-   *
-   * @param code
-   *        the method code
-   *
-   * @return an HTTP request method instance
-   *
-   * @throws IllegalArgumentException
-   *         if the specified code does not represent a valid HTTP method
-   */
-  public static Http.Request.Method method(byte code) {
-    return switch (code) {
-      case Http.CONNECT -> HttpRequestMethod.CONNECT;
-      case Http.DELETE -> HttpRequestMethod.DELETE;
-      case Http.GET -> HttpRequestMethod.GET;
-      case Http.HEAD -> HttpRequestMethod.HEAD;
-      case Http.OPTIONS -> HttpRequestMethod.OPTIONS;
-      case Http.PATCH -> HttpRequestMethod.PATCH;
-      case Http.POST -> HttpRequestMethod.POST;
-      case Http.PUT -> HttpRequestMethod.PUT;
-      case Http.TRACE -> HttpRequestMethod.TRACE;
-      default -> throw new IllegalArgumentException("The value " + code + " is not mapped to a Http.Request.Method value");
-    };
   }
 
   private Http() {}

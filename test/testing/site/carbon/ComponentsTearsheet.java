@@ -33,9 +33,9 @@ final class ComponentsTearsheet extends CarbonPage {
   @Override
   protected final void handle() {
     switch (http.method()) {
-      case Http.GET, Http.HEAD -> get();
+      case GET, HEAD -> get();
 
-      case Http.POST -> post();
+      case POST -> post();
 
       default -> http.methodNotAllowed();
     }

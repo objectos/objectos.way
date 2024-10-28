@@ -65,7 +65,7 @@ public class HttpServerTest extends Http.Module {
   @SuppressWarnings("unused")
   private void testCase01(Http.Exchange http) {
     switch (http.method()) {
-      case Http.GET -> testCase01Get(http);
+      case GET -> testCase01Get(http);
 
       default -> http.methodNotAllowed();
     }
@@ -124,7 +124,7 @@ public class HttpServerTest extends Http.Module {
   @SuppressWarnings("unused")
   private void testCase02(Http.Exchange http) {
     switch (http.method()) {
-      case Http.GET, Http.HEAD -> testCase02Get(http);
+      case GET, HEAD -> testCase02Get(http);
 
       default -> http.methodNotAllowed();
     }
@@ -181,9 +181,9 @@ public class HttpServerTest extends Http.Module {
   @SuppressWarnings("unused")
   private void testCase03(Http.Exchange http) {
     switch (http.method()) {
-      case Http.GET, Http.HEAD -> testCase03Get(http);
+      case GET, HEAD -> testCase03Get(http);
 
-      case Http.POST -> testCase03Post(http);
+      case POST -> testCase03Post(http);
 
       default -> http.methodNotAllowed();
     }
@@ -290,9 +290,9 @@ public class HttpServerTest extends Http.Module {
   @SuppressWarnings("unused")
   private void testCase04(Http.Exchange http) {
     switch (http.method()) {
-      case Http.GET -> testCase04Get(http);
+      case GET -> testCase04Get(http);
 
-      case Http.POST -> testCase04Post(http);
+      case POST -> testCase04Post(http);
 
       default -> http.methodNotAllowed();
     }
