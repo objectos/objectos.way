@@ -26,7 +26,7 @@ public class HttpTest {
   """)
   public void createHeaderName01() {
     Http.HeaderName res;
-    res = Http.createHeaderName("Foo");
+    res = Http.HeaderName.create("Foo");
 
     assertEquals(res.capitalized(), "Foo");
     assertEquals(res.index(), -1);
@@ -37,7 +37,7 @@ public class HttpTest {
   """)
   public void createHeaderName02() {
     Http.HeaderName res;
-    res = Http.createHeaderName("Connection");
+    res = Http.HeaderName.create("Connection");
 
     assertEquals(res.capitalized(), "Connection");
     assertEquals(res.index() >= 0, true);

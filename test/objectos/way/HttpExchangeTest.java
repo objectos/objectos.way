@@ -266,7 +266,7 @@ public class HttpExchangeTest {
       assertEquals(http.size(), 3);
       assertEquals(http.header(Http.HeaderName.HOST), "www.example.com");
       assertEquals(http.header(Http.HeaderName.CONNECTION), "close");
-      assertEquals(http.header(Http.createHeaderName("Foo")), "bar");
+      assertEquals(http.header(Http.HeaderName.create("Foo")), "bar");
 
       // response phase
       byte[] msg;
@@ -333,7 +333,7 @@ public class HttpExchangeTest {
       assertEquals(http.size(), 3);
       assertEquals(http.header(Http.HeaderName.HOST), "www.example.com");
       assertEquals(http.header(Http.HeaderName.CONNECTION), "close");
-      assertEquals(http.header(Http.createHeaderName("Foo")), "bar");
+      assertEquals(http.header(Http.HeaderName.create("Foo")), "bar");
 
       // response phase
       dir = ObjectosHttp.createTempDir();

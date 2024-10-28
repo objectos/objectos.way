@@ -51,7 +51,7 @@ public final class Http {
    * Unless otherwise specified, request-target related methods of this
    * interface return decoded values.
    */
-  public sealed interface Exchange extends Request, RequestTarget, RequestHeaders permits HttpExchange, TestingExchange {
+  public sealed interface Exchange extends Request, RequestLine, RequestTarget, RequestHeaders permits HttpExchange, TestingExchange {
 
     /**
      * Stores an object in this request. The object will be associated to the
@@ -393,6 +393,19 @@ public final class Http {
      */
     HeaderName USER_AGENT = HttpHeaderName.USER_AGENT;
 
+    static HeaderName create(String name) {
+      Objects.requireNonNull(name, "name == null");
+
+      HeaderName headerName;
+      headerName = HttpHeaderName.findByName(name);
+
+      if (headerName == null) {
+        headerName = new HttpHeaderName(name);
+      }
+
+      return headerName;
+    }
+
     /**
      * The index of this header name.
      *
@@ -483,17 +496,14 @@ public final class Http {
      */
     Body body();
 
-    /**
-     * The code of the method of this request message.
-     *
-     * @return the code of the method of this request message
-     */
-    byte method();
-
   }
 
   /**
    * Provides methods for inspecting the headers of an HTTP request message.
+   *
+   * <p>
+   * Unless otherwise specified the values returned by the methods of this
+   * interface are decoded.
    */
   public sealed interface RequestHeaders {
 
@@ -508,6 +518,25 @@ public final class Http {
      *         with the specified name is not present.
      */
     String header(Http.HeaderName name);
+
+  }
+
+  /**
+   * Provides methods for inspecting the request line of an HTTP request
+   * message.
+   *
+   * <p>
+   * Unless otherwise specified the values returned by the methods of this
+   * interface are decoded.
+   */
+  public sealed interface RequestLine extends RequestTarget {
+
+    /**
+     * The code of the method of this request message.
+     *
+     * @return the code of the method of this request message
+     */
+    byte method();
 
   }
 
@@ -1066,19 +1095,6 @@ public final class Http {
     Check.notNull(handler, "handler == null");
 
     return new SimpleHandlerFactory(handler);
-  }
-
-  public static HeaderName createHeaderName(String name) {
-    Check.notNull(name, "name == null");
-
-    HeaderName headerName;
-    headerName = HttpHeaderName.findByName(name);
-
-    if (headerName == null) {
-      headerName = new HttpHeaderName(name);
-    }
-
-    return headerName;
   }
 
   /**

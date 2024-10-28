@@ -923,7 +923,7 @@ final class HttpExchange implements Http.Exchange, Http.Request.Body, Closeable 
     String name;
     name = bufferToString(startIndex, colonIndex);
 
-    headerName = Http.createHeaderName(name);
+    headerName = Http.HeaderName.create(name);
 
     // resume immediately after the colon
     bufferIndex = colonIndex + 1;

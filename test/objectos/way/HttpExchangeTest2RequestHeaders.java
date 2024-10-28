@@ -57,7 +57,7 @@ public class HttpExchangeTest2RequestHeaders {
     assertEquals(headers.size(), 3);
     assertEquals(headers.header(Http.HeaderName.HOST), "www.example.com");
     assertEquals(headers.header(Http.HeaderName.CONNECTION), "close");
-    assertEquals(headers.header(Http.createHeaderName("Foo")), "bar");
+    assertEquals(headers.header(Http.HeaderName.create("Foo")), "bar");
   }
 
   @Test(description = """
@@ -115,10 +115,10 @@ public class HttpExchangeTest2RequestHeaders {
     headers.parseHeaders();
 
     assertEquals(headers.size(), 4);
-    assertEquals(headers.header(Http.createHeaderName("no-leading-ows")), "foo");
-    assertEquals(headers.header(Http.createHeaderName("empty-value")), "");
-    assertEquals(headers.header(Http.createHeaderName("trailing-ows1")), "foo");
-    assertEquals(headers.header(Http.createHeaderName("trailing-ows2")), "foo");
+    assertEquals(headers.header(Http.HeaderName.create("no-leading-ows")), "foo");
+    assertEquals(headers.header(Http.HeaderName.create("empty-value")), "");
+    assertEquals(headers.header(Http.HeaderName.create("trailing-ows1")), "foo");
+    assertEquals(headers.header(Http.HeaderName.create("trailing-ows2")), "foo");
   }
 
   private HttpExchange regularInput(Object... data) throws IOException {
