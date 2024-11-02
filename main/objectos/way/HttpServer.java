@@ -213,13 +213,20 @@ final class HttpServer implements Http.Server, Runnable {
             handler.handle(http);
           } catch (Http.AbstractHandlerException ex) {
             ex.handle(http);
+          } catch (HttpExchange.SendException ex) {
+            IOException cause;
+            cause = ex.getCause();
+
+            noteSink.send(notes.ioError, cause);
+
+            break; // could not send response. End this exchange
           } catch (Throwable t) {
             noteSink.send(notes.internalServerError, t);
 
-            http.internalServerError(t);
+            if (!http.processed()) {
+              http.internalServerError(t);
+            }
           }
-
-          http.commit();
 
           if (!http.keepAlive()) {
             break;

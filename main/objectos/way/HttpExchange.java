@@ -40,7 +40,6 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.function.Function;
-import objectos.way.Lang.CharWritable;
 
 final class HttpExchange implements Http.Exchange, Closeable {
 
@@ -84,10 +83,17 @@ final class HttpExchange implements Http.Exchange, Closeable {
     }
   }
 
-  private enum NoResponseBody {
+  static final class SendException extends RuntimeException {
+    private static final long serialVersionUID = 1L;
 
-    INSTANCE;
+    public SendException(IOException cause) {
+      super(cause);
+    }
 
+    @Override
+    public final IOException getCause() {
+      return (IOException) super.getCause();
+    }
   }
 
   private record Notes(
@@ -119,7 +125,6 @@ final class HttpExchange implements Http.Exchange, Closeable {
   private static final int _REQUEST = 2;
   private static final int _RESPONSE = 3;
   private static final int _PROCESSED = 4;
-  private static final int _COMMITED = 5;
 
   private static final int STATE_MASK = 0xF;
   private static final int BITS_MASK = ~STATE_MASK;
@@ -134,15 +139,11 @@ final class HttpExchange implements Http.Exchange, Closeable {
 
   private int bitset;
 
-  private Charset charset;
-
   private final Clock clock;
 
   private final Note.Sink noteSink;
 
   ParseStatus parseStatus;
-
-  private Object responseBody;
 
   private final Socket socket;
 
@@ -324,7 +325,7 @@ final class HttpExchange implements Http.Exchange, Closeable {
       // noop
     }
 
-    else if (testState(_COMMITED)) {
+    else if (testState(_PROCESSED)) {
       resetSocketInput();
 
       resetRequestLine();
@@ -1568,8 +1569,6 @@ final class HttpExchange implements Http.Exchange, Closeable {
     if (testState(_REQUEST)) {
       bufferIndex = 0;
 
-      responseBody = null;
-
       setState(_RESPONSE);
 
       return;
@@ -1711,37 +1710,243 @@ final class HttpExchange implements Http.Exchange, Closeable {
   public final void send() {
     checkResponse();
 
-    responseBody = NoResponseBody.INSTANCE;
-
-    setState(_PROCESSED);
+    try {
+      sendStart();
+    } catch (IOException e) {
+      throw new SendException(e);
+    } finally {
+      setState(_PROCESSED);
+    }
   }
 
   @Override
   public final void send(byte[] body) {
-    checkResponse();
+    if (method == Http.Method.HEAD) {
 
-    responseBody = Check.notNull(body, "body == null");
+      send();
 
-    setState(_PROCESSED);
+    } else {
+
+      checkResponse();
+
+      try {
+        OutputStream outputStream;
+        outputStream = sendStart();
+
+        outputStream.write(body, 0, body.length); // implicity body null-check
+      } catch (IOException e) {
+        throw new SendException(e);
+      } finally {
+        setState(_PROCESSED);
+      }
+
+    }
   }
+
+  private static final byte[] CHUNKED_TRAILER = "0\r\n\r\n".getBytes(StandardCharsets.UTF_8);
 
   @Override
   public final void send(Lang.CharWritable body, Charset charset) {
-    checkResponse();
+    Objects.requireNonNull(body, "body == null");
+    Objects.requireNonNull(charset, "charset == null");
 
-    responseBody = Check.notNull(body, "body == null");
-    this.charset = Check.notNull(charset, "charset == null");
+    if (testBit(CONTENT_LENGTH)) {
+      throw new IllegalStateException(
+          "Content-Length must not be set with a CharWritable body"
+      );
+    }
 
-    setState(_PROCESSED);
+    if (!testBit(CHUNKED)) {
+      throw new IllegalStateException(
+          "Transfer-Encoding: chunked must be set with a CharWritable body"
+      );
+    }
+
+    if (method == Http.Method.HEAD) {
+
+      send();
+
+    } else {
+
+      checkResponse();
+
+      try {
+        OutputStream outputStream;
+        outputStream = sendStart();
+
+        bufferIndex = 0;
+
+        CharWritableAppendable out;
+        out = new CharWritableAppendable(outputStream, charset);
+
+        body.writeTo(out);
+
+        out.flush();
+
+        outputStream.write(CHUNKED_TRAILER);
+      } catch (IOException e) {
+        throw new SendException(e);
+      } finally {
+        setState(_PROCESSED);
+      }
+
+    }
   }
 
   @Override
   public final void send(java.nio.file.Path file) {
-    checkResponse();
+    Objects.requireNonNull(file, "file == null");
 
-    responseBody = Check.notNull(file, "file == null");
+    if (method == Http.Method.HEAD) {
 
-    setState(_PROCESSED);
+      send();
+
+    } else {
+
+      checkResponse();
+
+      try {
+        OutputStream outputStream;
+        outputStream = sendStart();
+
+        try (InputStream in = Files.newInputStream(file)) {
+          in.transferTo(outputStream);
+        }
+      } catch (IOException e) {
+        throw new SendException(e);
+      } finally {
+        setState(_PROCESSED);
+      }
+
+    }
+  }
+
+  private OutputStream sendStart() throws IOException {
+    writeBytes(Bytes.CRLF);
+
+    OutputStream outputStream;
+    outputStream = socket.getOutputStream();
+
+    outputStream.write(buffer, 0, bufferIndex);
+
+    return outputStream;
+  }
+
+  private class CharWritableAppendable implements Appendable {
+    private final OutputStream outputStream;
+
+    private final Charset charset;
+
+    public CharWritableAppendable(OutputStream outputStream, Charset charset) {
+      this.outputStream = outputStream;
+
+      this.charset = charset;
+    }
+
+    @Override
+    public Appendable append(char c) throws IOException {
+      String s;
+      s = Character.toString(c);
+
+      return append(s);
+    }
+
+    @Override
+    public Appendable append(CharSequence csq) throws IOException {
+      String s;
+      s = csq.toString();
+
+      byte[] bytes;
+      bytes = s.getBytes(charset);
+
+      buffer(bytes);
+
+      return this;
+    }
+
+    @Override
+    public Appendable append(CharSequence csq, int start, int end) throws IOException {
+      CharSequence sub;
+      sub = csq.subSequence(start, end);
+
+      return append(sub);
+    }
+
+    private void buffer(byte[] bytes) throws IOException {
+      int bytesIndex;
+      bytesIndex = 0;
+
+      int remaining;
+      remaining = bytes.length - bytesIndex;
+
+      while (remaining > 0) {
+        int maxAvailable;
+        maxAvailable = maxBufferSize - bufferIndex;
+
+        if (maxAvailable == 0) {
+          flush();
+
+          maxAvailable = maxBufferSize - bufferIndex;
+        }
+
+        int bytesToCopy;
+        bytesToCopy = Math.min(remaining, maxAvailable);
+
+        int requiredIndex;
+        requiredIndex = bufferIndex + bytesToCopy - 1;
+
+        if (requiredIndex >= buffer.length) {
+          int minSize;
+          minSize = requiredIndex + 1;
+
+          int newSize;
+          newSize = powerOfTwo(minSize);
+
+          if (newSize > maxBufferSize) {
+            throw new UnsupportedOperationException("Implement me");
+          }
+
+          buffer = Arrays.copyOf(buffer, newSize);
+        }
+
+        System.arraycopy(bytes, bytesIndex, buffer, bufferIndex, bytesToCopy);
+
+        bufferIndex += bytesToCopy;
+
+        bytesIndex += bytesToCopy;
+
+        remaining -= bytesToCopy;
+      }
+    }
+
+    final void flush() throws IOException {
+      int chunkLength;
+      chunkLength = bufferIndex;
+
+      String lengthDigits;
+      lengthDigits = Integer.toHexString(chunkLength);
+
+      byte[] lengthBytes;
+      lengthBytes = (lengthDigits + "\r\n").getBytes(StandardCharsets.UTF_8);
+
+      outputStream.write(lengthBytes, 0, lengthBytes.length);
+
+      int bufferRemaining;
+      bufferRemaining = buffer.length - bufferIndex;
+
+      if (bufferRemaining >= 2) {
+        buffer[bufferIndex++] = Bytes.CR;
+        buffer[bufferIndex++] = Bytes.LF;
+
+        outputStream.write(buffer, 0, bufferIndex);
+      } else {
+        outputStream.write(buffer, 0, bufferIndex);
+
+        outputStream.write(Bytes.CRLF);
+      }
+
+      bufferIndex = 0;
+    }
   }
 
   // 404 NOT FOUND
@@ -1839,184 +2044,6 @@ final class HttpExchange implements Http.Exchange, Closeable {
   public final boolean processed() {
     return testState(_PROCESSED);
   }
-
-  // ##################################################################
-  // # BEGIN: Http.Exchange API || commit
-  // ##################################################################
-
-  private static final byte[] CHUNKED_TRAILER = "0\r\n\r\n".getBytes(StandardCharsets.UTF_8);
-
-  public final void commit() throws IOException, IllegalStateException {
-    Check.state(testState(_PROCESSED), "Cannot commit as we are not in the processed phase");
-
-    writeBytes(Bytes.CRLF);
-
-    OutputStream outputStream;
-    outputStream = socket.getOutputStream();
-
-    outputStream.write(buffer, 0, bufferIndex);
-
-    if (method != Http.Method.HEAD) {
-      switch (responseBody) {
-        case NoResponseBody no -> {}
-
-        case byte[] bytes -> outputStream.write(bytes, 0, bytes.length);
-
-        case CharWritable writable -> {
-          if (testBit(CONTENT_LENGTH)) {
-            throw new IllegalStateException(
-                "Content-Length must not be set with a CharWritable body"
-            );
-          }
-
-          if (!testBit(CHUNKED)) {
-            throw new IllegalStateException(
-                "Transfer-Encoding: chunked must be set with a CharWritable body"
-            );
-          }
-
-          bufferIndex = 0;
-
-          CharWritableAppendable out;
-          out = new CharWritableAppendable();
-
-          writable.writeTo(out);
-
-          out.flush();
-
-          outputStream.write(CHUNKED_TRAILER);
-        }
-
-        case java.nio.file.Path file -> {
-          try (InputStream in = Files.newInputStream(file)) {
-            in.transferTo(outputStream);
-          }
-        }
-
-        default -> throw new UnsupportedOperationException("Implement me");
-      }
-    }
-
-    setState(_COMMITED);
-  }
-
-  private class CharWritableAppendable implements Appendable {
-    public CharWritableAppendable() {
-      bufferIndex = 0;
-    }
-
-    @Override
-    public Appendable append(char c) throws IOException {
-      String s;
-      s = Character.toString(c);
-
-      return append(s);
-    }
-
-    @Override
-    public Appendable append(CharSequence csq) throws IOException {
-      String s;
-      s = csq.toString();
-
-      byte[] bytes;
-      bytes = s.getBytes(charset);
-
-      buffer(bytes);
-
-      return this;
-    }
-
-    @Override
-    public Appendable append(CharSequence csq, int start, int end) throws IOException {
-      CharSequence sub;
-      sub = csq.subSequence(start, end);
-
-      return append(sub);
-    }
-
-    private void buffer(byte[] bytes) throws IOException {
-      int bytesIndex;
-      bytesIndex = 0;
-
-      int remaining;
-      remaining = bytes.length - bytesIndex;
-
-      while (remaining > 0) {
-        int maxAvailable;
-        maxAvailable = maxBufferSize - bufferIndex;
-
-        if (maxAvailable == 0) {
-          flush();
-
-          maxAvailable = maxBufferSize - bufferIndex;
-        }
-
-        int bytesToCopy;
-        bytesToCopy = Math.min(remaining, maxAvailable);
-
-        int requiredIndex;
-        requiredIndex = bufferIndex + bytesToCopy - 1;
-
-        if (requiredIndex >= buffer.length) {
-          int minSize;
-          minSize = requiredIndex + 1;
-
-          int newSize;
-          newSize = powerOfTwo(minSize);
-
-          if (newSize > maxBufferSize) {
-            throw new UnsupportedOperationException("Implement me");
-          }
-
-          buffer = Arrays.copyOf(buffer, newSize);
-        }
-
-        System.arraycopy(bytes, bytesIndex, buffer, bufferIndex, bytesToCopy);
-
-        bufferIndex += bytesToCopy;
-
-        bytesIndex += bytesToCopy;
-
-        remaining -= bytesToCopy;
-      }
-    }
-
-    final void flush() throws IOException {
-      OutputStream outputStream;
-      outputStream = socket.getOutputStream();
-
-      int chunkLength;
-      chunkLength = bufferIndex;
-
-      String lengthDigits;
-      lengthDigits = Integer.toHexString(chunkLength);
-
-      byte[] lengthBytes;
-      lengthBytes = (lengthDigits + "\r\n").getBytes(StandardCharsets.UTF_8);
-
-      outputStream.write(lengthBytes, 0, lengthBytes.length);
-
-      int bufferRemaining;
-      bufferRemaining = buffer.length - bufferIndex;
-
-      if (bufferRemaining >= 2) {
-        buffer[bufferIndex++] = Bytes.CR;
-        buffer[bufferIndex++] = Bytes.LF;
-
-        outputStream.write(buffer, 0, bufferIndex);
-      } else {
-        outputStream.write(buffer, 0, bufferIndex);
-
-        outputStream.write(Bytes.CRLF);
-      }
-
-      bufferIndex = 0;
-    }
-  }
-
-  // ##################################################################
-  // # END: Http.Exchange API || commit
-  // ##################################################################
 
   // ##################################################################
   // # BEGIN: Http.Module support

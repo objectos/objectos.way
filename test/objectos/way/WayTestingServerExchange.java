@@ -80,8 +80,6 @@ public final class WayTestingServerExchange implements TestingServerExchange {
         loop.internalServerError(t);
       }
 
-      loop.commit();
-
       return socket.toString();
     } catch (IOException e) {
       throw new UncheckedIOException("Unexpected IOException: testing server exchange executed in-memory", e);

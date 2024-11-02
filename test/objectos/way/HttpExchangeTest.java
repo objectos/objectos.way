@@ -87,8 +87,6 @@ public class HttpExchangeTest {
       http.header(Http.HeaderName.DATE, "Wed, 28 Jun 2023 12:08:43 GMT");
       http.send(msg);
 
-      http.commit();
-
       assertEquals(socket.outputAsString(), resp01);
 
       assertEquals(http.keepAlive(), false);
@@ -179,8 +177,6 @@ public class HttpExchangeTest {
       http.header(Http.HeaderName.DATE, "Wed, 28 Jun 2023 12:08:43 GMT");
       http.send(msg);
 
-      http.commit();
-
       assertEquals(socket.outputAsString(), resp01);
 
       assertEquals(http.keepAlive(), true);
@@ -209,10 +205,10 @@ public class HttpExchangeTest {
       http.header(Http.HeaderName.CONTENT_TYPE, "text/css; charset=utf-8");
       http.header(Http.HeaderName.CONTENT_LENGTH, msg.length);
       http.header(Http.HeaderName.DATE, "Wed, 28 Jun 2023 12:08:43 GMT");
-      http.send(msg);
 
       socket.outputReset();
-      http.commit();
+
+      http.send(msg);
 
       assertEquals(socket.outputAsString(), resp02);
 
@@ -269,8 +265,6 @@ public class HttpExchangeTest {
       http.header(Http.HeaderName.CONTENT_LENGTH, msg.length);
       http.header(Http.HeaderName.DATE, "Wed, 28 Jun 2023 12:08:43 GMT");
       http.send(msg);
-
-      http.commit();
 
       assertEquals(socket.outputAsString(), resp01);
 
@@ -341,8 +335,6 @@ public class HttpExchangeTest {
       http.header(Http.HeaderName.DATE, "Wed, 28 Jun 2023 12:08:43 GMT");
       http.send(index);
 
-      http.commit();
-
       assertEquals(socket.outputAsString(), resp01);
 
       assertEquals(http.keepAlive(), false);
@@ -399,8 +391,6 @@ public class HttpExchangeTest {
       http.header(Http.HeaderName.ETAG, "some%hash");
       http.send();
 
-      http.commit();
-
       assertEquals(socket.outputAsString(), resp01);
 
       assertEquals(http.keepAlive(), false);
@@ -441,8 +431,6 @@ public class HttpExchangeTest {
       http.header(Http.HeaderName.CONNECTION, "close");
       http.header(Http.HeaderName.DATE, "Wed, 28 Jun 2023 12:08:43 GMT");
       http.send();
-
-      http.commit();
 
       assertEquals(socket.outputAsString(), resp01);
 
@@ -488,8 +476,6 @@ public class HttpExchangeTest {
       http.header(Http.HeaderName.CONNECTION, "close");
       http.header(Http.HeaderName.DATE, "Wed, 28 Jun 2023 12:08:43 GMT");
       http.send();
-
-      http.commit();
 
       assertEquals(socket.outputAsString(), resp01);
 
@@ -544,8 +530,6 @@ public class HttpExchangeTest {
       http.header(Http.HeaderName.DATE, "Wed, 28 Jun 2023 12:08:43 GMT");
       http.send(body01.getBytes(StandardCharsets.UTF_8));
 
-      http.commit();
-
       assertEquals(socket.outputAsString(), resp01);
 
       assertEquals(http.keepAlive(), true);
@@ -592,8 +576,6 @@ public class HttpExchangeTest {
       http.header(Http.HeaderName.ETAG, etag);
       http.send("AAAA\n".getBytes(StandardCharsets.UTF_8));
 
-      http.commit();
-
       assertEquals(socket.outputAsString(), resp01);
 
       assertEquals(http.keepAlive(), false);
@@ -630,8 +612,6 @@ public class HttpExchangeTest {
 
       http.unsupportedMediaType();
 
-      http.commit();
-
       assertEquals(socket.outputAsString(), resp01);
 
       assertEquals(http.keepAlive(), false);
@@ -666,8 +646,6 @@ public class HttpExchangeTest {
       http.header(Http.HeaderName.CONTENT_TYPE, "text/plain");
       http.header(Http.HeaderName.CONTENT_LENGTH, 64);
       http.send(writable, StandardCharsets.UTF_8);
-
-      http.commit();
 
       Assert.fail("http.commit should have thrown");
     } catch (IllegalStateException expected) {
@@ -706,8 +684,6 @@ public class HttpExchangeTest {
       http.dateNow();
       http.header(Http.HeaderName.CONTENT_TYPE, "text/plain");
       http.send(writable, StandardCharsets.UTF_8);
-
-      http.commit();
 
       Assert.fail("http.commit should have thrown");
     } catch (IllegalStateException expected) {
@@ -764,8 +740,6 @@ public class HttpExchangeTest {
       http.header(Http.HeaderName.TRANSFER_ENCODING, "chunked");
       http.send(writable, StandardCharsets.UTF_8);
 
-      http.commit();
-
       assertEquals(socket.outputAsString(), resp01);
 
       assertEquals(http.keepAlive(), true);
@@ -817,8 +791,6 @@ public class HttpExchangeTest {
       http.header(Http.HeaderName.TRANSFER_ENCODING, "chunked");
       http.send(writable, StandardCharsets.UTF_8);
 
-      http.commit();
-
       assertEquals(socket.outputAsString(), resp01);
 
       assertEquals(http.keepAlive(), true);
@@ -867,8 +839,6 @@ public class HttpExchangeTest {
       http.header(Http.HeaderName.CONTENT_TYPE, "text/plain");
       http.header(Http.HeaderName.TRANSFER_ENCODING, "chunked");
       http.send(writable, StandardCharsets.UTF_8);
-
-      http.commit();
 
       assertEquals(socket.outputAsString(), resp01);
 
@@ -928,8 +898,6 @@ public class HttpExchangeTest {
       http.header(Http.HeaderName.CONTENT_TYPE, "text/plain");
       http.header(Http.HeaderName.TRANSFER_ENCODING, "chunked");
       http.send(writable, StandardCharsets.UTF_8);
-
-      http.commit();
 
       assertEquals(socket.outputAsString(), resp01);
 

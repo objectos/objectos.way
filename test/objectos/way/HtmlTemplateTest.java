@@ -1498,36 +1498,44 @@ public class HtmlTemplateTest {
   The testable text node
   """)
   public void testCase65() {
-    Html.Template template;
-    template = new Html.Template() {
+
+    class TestableExample extends Html.Template {
       @Override
-      protected final void render() throws IOException {
-        div(
-            div(testable("x", "123")),
-            div(testable("y", "abc"))
+      protected void render() {
+        dl(
+            dt("ID"),
+            dd(testable("order.id", "123")),
+            dt("Qty"),
+            dd(testable("order.qty", "456"))
         );
       }
-    };
+    }
+
+    TestableExample example;
+    example = new TestableExample();
 
     assertEquals(
-        template.toString(),
+        example.toString(),
 
         """
-        <div>
-        <div>123</div>
-        <div>abc</div>
-        </div>
+        <dl>
+        <dt>ID</dt>
+        <dd>123</dd>
+        <dt>Qty</dt>
+        <dd>456</dd>
+        </dl>
         """
     );
 
     assertEquals(
-        template.testableText(),
+        example.testableText(),
 
         """
-        x: 123
-        y: abc
+        order.id: 123
+        order.qty: 456
         """
     );
+
   }
 
   @Test(description = """
