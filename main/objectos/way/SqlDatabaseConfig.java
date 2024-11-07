@@ -38,6 +38,10 @@ final class SqlDatabaseConfig implements Sql.Database.Config {
   }
 
   final SqlDatabase build() {
+    if (dataSource == null) {
+      throw new IllegalArgumentException("No data source specified. Please use the config.dataSource(DataSource) method to provide a data source.");
+    }
+
     try (Connection connection = dataSource.getConnection()) {
       DatabaseMetaData data;
       data = connection.getMetaData();

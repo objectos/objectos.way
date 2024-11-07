@@ -19,6 +19,5 @@
 module objectos.way {
   exports objectos.way;
 
-  requires transitive objectos.notes;
   requires transitive java.sql;
 }

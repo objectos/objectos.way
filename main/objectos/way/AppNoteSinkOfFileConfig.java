@@ -26,7 +26,6 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 import java.util.function.Predicate;
-import objectos.notes.Level;
 
 final class AppNoteSinkOfFileConfig implements App.NoteSink.OfFile.Config {
 
@@ -35,8 +34,6 @@ final class AppNoteSinkOfFileConfig implements App.NoteSink.OfFile.Config {
   private Clock clock = Clock.systemDefaultZone();
 
   private Predicate<Note> filter = note -> true;
-
-  private Level legacyLevel = Level.TRACE;
 
   private final Path file;
 
@@ -52,11 +49,6 @@ final class AppNoteSinkOfFileConfig implements App.NoteSink.OfFile.Config {
   @Override
   public final void filter(Predicate<Note> filter) {
     this.filter = Objects.requireNonNull(filter, "filter == null");
-  }
-
-  @Override
-  public final void legacyLevel(Level level) {
-    legacyLevel = Objects.requireNonNull(level, "level == null");
   }
 
   final AppNoteSinkOfFile build() throws IOException {
@@ -90,12 +82,7 @@ final class AppNoteSinkOfFileConfig implements App.NoteSink.OfFile.Config {
         StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING, StandardOpenOption.WRITE
     );
 
-    AppNoteSinkOfFile result;
-    result = new AppNoteSinkOfFile(clock, filter, buffer, channel);
-
-    result.level(legacyLevel);
-
-    return result;
+    return new AppNoteSinkOfFile(clock, filter, buffer, channel);
   }
 
 }

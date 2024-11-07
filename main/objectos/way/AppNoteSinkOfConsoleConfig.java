@@ -19,7 +19,6 @@ import java.io.PrintStream;
 import java.time.Clock;
 import java.util.Objects;
 import java.util.function.Predicate;
-import objectos.notes.Level;
 
 final class AppNoteSinkOfConsoleConfig implements App.NoteSink.OfConsole.Config {
 
@@ -28,8 +27,6 @@ final class AppNoteSinkOfConsoleConfig implements App.NoteSink.OfConsole.Config 
   private Predicate<Note> filter = note -> true;
 
   private PrintStream target = System.out;
-
-  private Level legacyLevel = Level.TRACE;
 
   @Override
   public final void clock(Clock clock) {
@@ -42,22 +39,12 @@ final class AppNoteSinkOfConsoleConfig implements App.NoteSink.OfConsole.Config 
   }
 
   @Override
-  public final void legacyLevel(Level level) {
-    legacyLevel = Objects.requireNonNull(level, "level == null");
-  }
-
-  @Override
   public final void target(PrintStream target) {
     this.target = Objects.requireNonNull(target, "target == null");
   }
 
   final AppNoteSinkOfConsole build() {
-    AppNoteSinkOfConsole result;
-    result = new AppNoteSinkOfConsole(clock, filter, target);
-
-    result.level(legacyLevel);
-
-    return result;
+    return new AppNoteSinkOfConsole(clock, filter, target);
   }
 
 }

@@ -25,14 +25,11 @@ import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.concurrent.TimeUnit;
-import objectos.notes.Note1;
-import objectos.notes.Note2;
-import objectos.notes.NoteSink;
 
 public class TestingInputStreamTest2 {
-  private static final Note1<String> MSG = Note1.info(TestingInputStreamTest2.class, "Message");
+  private static final Note.Ref1<String> MSG = Note.Ref1.create(TestingInputStreamTest2.class, "Message", Note.INFO);
 
-  private static final Note2<String, IOException> IO_ERROR = Note2.error(TestingInputStreamTest2.class, "I/O error");
+  private static final Note.Ref2<String, IOException> IO_ERROR = Note.Ref2.create(TestingInputStreamTest2.class, "I/O error", Note.ERROR);
 
   public static void main(String[] args) {
     App.NoteSink noteSink = TestingNoteSink.INSTANCE;
@@ -95,11 +92,11 @@ public class TestingInputStreamTest2 {
 
   private static class Server extends Thread {
 
-    private final NoteSink noteSink;
+    private final Note.Sink noteSink;
 
     private final ServerSocket serverSocket;
 
-    public Server(NoteSink noteSink, ServerSocket serverSocket) {
+    public Server(Note.Sink noteSink, ServerSocket serverSocket) {
       this.noteSink = noteSink;
 
       this.serverSocket = serverSocket;

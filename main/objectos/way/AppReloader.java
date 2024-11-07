@@ -30,35 +30,8 @@ import java.nio.file.WatchService;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.List;
 import java.util.Map;
-import objectos.notes.Note1;
-import objectos.notes.Note2;
 
 final class AppReloader implements App.Reloader {
-
-  static final Note1<Path> WATCH;
-
-  static final Note1<WatchKey> WATCH_KEY_IGNORED;
-
-  static final Note2<WatchEvent.Kind<?>, Object> FS_EVENT;
-
-  static final Note1<Class<?>> LOAD;
-
-  static final Note1<String> DO_NOT_RELOAD;
-
-  static {
-    Class<?> s;
-    s = App.Reloader.class;
-
-    WATCH = Note1.info(s, "Watch [directory]");
-
-    WATCH_KEY_IGNORED = Note1.debug(s, "Watch key ignored");
-
-    FS_EVENT = Note2.trace(s, "FS");
-
-    LOAD = Note1.trace(s, "Load");
-
-    DO_NOT_RELOAD = Note1.debug(s, "Do not reload");
-  }
 
   record Notes(
       Note.Ref1<Path> watching,

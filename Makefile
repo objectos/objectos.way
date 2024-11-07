@@ -26,7 +26,6 @@ MODULE := $(ARTIFACT_ID)
 
 ## Dependencies
 SELFGEN := br.com.objectos/objectos.selfgen/0.6
-NOTES := br.com.objectos/objectos.notes/0.1
 
 H2 := com.h2database/h2/2.2.224
 TESTNG := org.testng/testng/7.9.0
@@ -99,9 +98,6 @@ $(SELFGEN_MARKER): $(SELFGEN_MODULE_PATH)
 
 ## javac --release option
 JAVA_RELEASE := 21
-
-## compile deps
-COMPILE_DEPS := $(NOTES)
 
 ## resources
 RESOURCES := resources

@@ -28,7 +28,9 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.function.Predicate;
 import objectos.way.Note.Marker;
 
-sealed abstract class AppNoteSink extends LegacyNoteSink implements App.NoteSink permits AppNoteSinkOfConsole, AppNoteSinkOfFile {
+sealed abstract class AppNoteSink implements App.NoteSink permits AppNoteSinkOfConsole, AppNoteSinkOfFile {
+
+  private final Clock clock;
 
   private final DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS");
 
@@ -308,8 +310,7 @@ sealed abstract class AppNoteSink extends LegacyNoteSink implements App.NoteSink
     write(out);
   }
 
-  @Override
-  protected abstract void writeBytes(byte[] bytes);
+  abstract void writeBytes(byte[] bytes);
 
   private boolean test(Note note) {
     r.lock();
@@ -418,6 +419,26 @@ sealed abstract class AppNoteSink extends LegacyNoteSink implements App.NoteSink
     printWriter = new PrintWriter(writer);
 
     t.printStackTrace(printWriter);
+  }
+
+  private void pad(StringBuilder out, String value, int length) {
+    int valueLength;
+    valueLength = value.length();
+
+    if (valueLength > length) {
+      out.append(value, 0, length);
+
+      valueLength = length;
+    } else {
+      out.append(value);
+
+      int pad;
+      pad = length - valueLength;
+
+      for (int i = 0; i < pad; i++) {
+        out.append(' ');
+      }
+    }
   }
 
   private void write(StringBuilder out) {
