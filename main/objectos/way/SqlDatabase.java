@@ -16,48 +16,19 @@
 package objectos.way;
 
 import java.sql.Connection;
-import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
 import javax.sql.DataSource;
-import objectos.notes.NoOpNoteSink;
-import objectos.notes.NoteSink;
 
 final class SqlDatabase implements Sql.Database {
-
-  static class Builder {
-
-    final DataSource dataSource;
-
-    NoteSink noteSink = NoOpNoteSink.of();
-
-    public Builder(DataSource dataSource) {
-      this.dataSource = dataSource;
-    }
-
-    public final SqlDatabase build() throws SQLException {
-      try (Connection connection = dataSource.getConnection()) {
-        DatabaseMetaData data;
-        data = connection.getMetaData();
-
-        noteSink.send(Sql.METADATA, data, data.getDatabaseProductName(), data.getDatabaseProductVersion());
-
-        SqlDialect dialect;
-        dialect = SqlDialect.of(data);
-
-        return new SqlDatabase(dataSource, dialect, noteSink);
-      }
-    }
-
-  }
 
   private final DataSource dataSource;
 
   private final SqlDialect dialect;
 
   @SuppressWarnings("unused")
-  private final NoteSink noteSink;
+  private final Note.Sink noteSink;
 
-  private SqlDatabase(DataSource dataSource, SqlDialect dialect, NoteSink noteSink) {
+  SqlDatabase(DataSource dataSource, SqlDialect dialect, Note.Sink noteSink) {
     this.dataSource = dataSource;
     this.dialect = dialect;
     this.noteSink = noteSink;

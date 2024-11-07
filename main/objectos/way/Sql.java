@@ -19,7 +19,6 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.RecordComponent;
 import java.sql.Connection;
-import java.sql.DatabaseMetaData;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
@@ -30,26 +29,13 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 import java.util.OptionalInt;
+import java.util.function.Consumer;
 import javax.sql.DataSource;
-import objectos.notes.Note3;
-import objectos.notes.NoteSink;
-import objectos.way.SqlDatabase.Builder;
 
 /**
  * The <strong>Objectos SQL</strong> main class.
  */
 public final class Sql {
-
-  // notes
-
-  public static final Note3<DatabaseMetaData, String, String> METADATA;
-
-  static {
-    Class<?> s;
-    s = Sql.class;
-
-    METADATA = Note3.debug(s, "Database metadata");
-  }
 
   // trx isolation levels
 
@@ -70,9 +56,42 @@ public final class Sql {
   public sealed interface Database permits SqlDatabase {
 
     /**
-     * A {@code Sql.Database} configuration option.
+     * Configures the creation of a {@code Sql.Database} instance.
      */
-    public sealed interface Option permits SqlOption {}
+    public sealed interface Config permits SqlDatabaseConfig {
+
+      void dataSource(DataSource value);
+
+      /**
+       * Sets the note sink to the specified value.
+       *
+       * @param value
+       *        a note sink instance
+       */
+      void noteSink(Note.Sink value);
+
+    }
+
+    /**
+     * Creates a new {@code Sql.Database} instance with the specified
+     * configuration.
+     *
+     * @param config
+     *        configuration options of this new instance
+     *
+     * @return a newly created database instance
+     *
+     * @throws DatabaseException
+     *         if a database access error occurs
+     */
+    static Database create(Consumer<Config> config) throws DatabaseException {
+      SqlDatabaseConfig builder;
+      builder = new SqlDatabaseConfig();
+
+      config.accept(builder);
+
+      return builder.build();
+    }
 
     /**
      * Begins a transaction with the specified isolation level.
@@ -483,46 +502,6 @@ public final class Sql {
 
   private Sql() {}
 
-  /**
-   * Creates a new {@code Database} instance from the specified data source and
-   * configured with the specified options.
-   *
-   * @param dataSource
-   *        the data source
-   * @param options
-   *        the configuration options
-   *
-   * @return a new {@code Database} instance
-   *
-   * @throws DatabaseException
-   *         if a database access error occurs
-   */
-  public static Database createDatabase(DataSource dataSource, Database.Option... options) throws DatabaseException {
-    Check.notNull(dataSource, "dataSource == null");
-    Check.notNull(options, "options == null");
-
-    try {
-      SqlDatabase.Builder builder;
-      builder = new SqlDatabase.Builder(dataSource);
-
-      for (int idx = 0; idx < options.length; idx++) {
-        Database.Option o;
-        o = options[idx];
-
-        Check.notNull(o, "options[", idx, "] == null");
-
-        SqlOption option;
-        option = (SqlOption) o;
-
-        option.acceptSqlSourceBuilder(builder);
-      }
-
-      return builder.build();
-    } catch (SQLException e) {
-      throw new DatabaseException(e);
-    }
-  }
-
   public static GeneratedKeys.OfInt createGeneratedKeysOfInt() {
     return new SqlGeneratedKeysOfInt();
   }
@@ -542,17 +521,6 @@ public final class Sql {
   public static <R extends Record>
       Mapper<R> createRecordMapper(Class<R> recordType) {
     return RecordMapper.of(recordType);
-  }
-
-  public static Sql.Database.Option noteSink(NoteSink noteSink) {
-    Check.notNull(noteSink, "noteSink == null");
-
-    return new SqlOption() {
-      @Override
-      final void acceptSqlSourceBuilder(Builder builder) {
-        builder.noteSink = noteSink;
-      }
-    };
   }
 
   /**

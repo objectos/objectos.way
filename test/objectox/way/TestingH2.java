@@ -48,11 +48,14 @@ public final class TestingH2 {
   private TestingH2() {}
 
   private static Sql.Database source() throws SQLException {
-    return Sql.createDatabase(
-        create(),
+    final JdbcConnectionPool ds;
+    ds = create();
 
-        Sql.noteSink(TestingNoteSink.INSTANCE)
-    );
+    return Sql.Database.create(config -> {
+      config.dataSource(ds);
+
+      config.noteSink(TestingNoteSink.INSTANCE);
+    });
   }
 
   private static JdbcConnectionPool create() throws SQLException {

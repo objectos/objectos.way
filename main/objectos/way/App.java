@@ -221,7 +221,7 @@ public final class App {
   public sealed interface Reloader extends Closeable permits AppReloader {
 
     /**
-     * Configures the creation of an application Reloader.
+     * Configures the creation of an {@code App.Reloader}.
      */
     public sealed interface Config permits AppReloaderConfig {
 
