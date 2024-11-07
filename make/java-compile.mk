@@ -135,7 +135,6 @@ COMPILE_REQS += $(COMPILE_PATH)
 endif
 ifdef PROCESSING_RESOLUTION_FILES
 COMPILE_REQS += $(PROCESSING_PATH)
-COMPILE_REQS += | $(PROCESSING_OUTPUT)
 endif
 
 ## resources
@@ -156,6 +155,10 @@ $(RESOURCES_OUT): $(CLASS_OUTPUT)/%: $(RESOURCES)/%
 COMPILE_REQS += $(RESOURCES_OUT)
 endif
 
+ifdef PROCESSING_RESOLUTION_FILES
+COMPILE_REQS += | $(PROCESSING_OUTPUT)
+endif
+
 #
 # compilation targets
 #
@@ -170,11 +173,11 @@ compile@clean:
 .PHONY: re-compile
 re-compile: compile@clean compile
 
-$(COMPILE_PATH): $(COMPILE_RESOLUTION_FILES)
+$(COMPILE_PATH): $(COMPILE_RESOLUTION_FILES) | $(WORK)
 	$(call uniq-resolution-files,$(COMPILE_RESOLUTION_FILES)) > $@.tmp
 	cat $@.tmp | paste --delimiter='$(COMPILE_PATH_DELIMITER)' --serial > $@
 
-$(PROCESSING_PATH): $(PROCESSING_RESOLUTION_FILES)
+$(PROCESSING_PATH): $(PROCESSING_RESOLUTION_FILES) | $(WORK)
 	$(call uniq-resolution-files,$(PROCESSING_RESOLUTION_FILES)) > $@.tmp
 	cat $@.tmp | paste --delimiter='$(COMPILE_PATH_DELIMITER)' --serial > $@
 	

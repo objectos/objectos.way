@@ -99,7 +99,7 @@ test-compile@clean:
 .PHONY: re-test-compile
 re-test-compile: test-compile@clean test-compile
 
-$(TEST_COMPILE_CLASS_PATH): $(TEST_COMPILE_RESOLUTION_FILES)
+$(TEST_COMPILE_CLASS_PATH): $(TEST_COMPILE_RESOLUTION_FILES) | $(WORK)
 	echo $(CLASS_OUTPUT) > $@.tmp
 ifdef COMPILE_RESOLUTION_FILES
 	cat $(COMPILE_RESOLUTION_FILES) >> $@.tmp

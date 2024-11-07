@@ -122,7 +122,7 @@ test@clean:
 .PHONY: re-test
 re-test: test@clean test
 
-$(TEST_RUNTIME_PATH): $(TEST_RUNTIME_RESOLUTION_FILES)
+$(TEST_RUNTIME_PATH): $(TEST_RUNTIME_RESOLUTION_FILES) | $(WORK)
 	echo $(CLASS_OUTPUT) > $@.tmp
 ifdef COMPILE_RESOLUTION_FILES
 	cat $(COMPILE_RESOLUTION_FILES) | sort -u >> $@.tmp
