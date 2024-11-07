@@ -195,6 +195,8 @@ REMOTE_REPO_WGETX += --no-verbose
 # java dependency related rules
 #
 
+.NOTINTERMEDIATE: $(RESOLVER_DEPS_JARS)
+
 $(LOCAL_REPO_PATH)/%.jar:	
 	$(REMOTE_REPO_WGETX) $(@:$(LOCAL_REPO_PATH)/%.jar=$(REMOTE_REPO_URL)/%.jar)
 

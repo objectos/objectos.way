@@ -36,13 +36,9 @@ jobs:
         path: ~/.cache/objectos
         key: ${{ runner.os }}-objectos-${{ hashFiles('**/Makefile') }}
         restore-keys: ${{ runner.os }}-objectos-
-    - name: wget test
-      run: wget -O google.html https://www.google.com
 
     - name: Build it
-      env:
-        LOCAL_REPO_PATH: repo
-      run: make -d
+      run: make
 
     - name: Archive test results
       if: success() || failure()
