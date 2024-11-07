@@ -26,7 +26,6 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.lang.reflect.Constructor;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.WatchService;
 import java.time.Clock;
@@ -221,7 +220,69 @@ public final class App {
    */
   public sealed interface Reloader extends Closeable permits AppReloader {
 
-    public sealed interface Option {}
+    /**
+     * Configures the creation of an application Reloader.
+     */
+    public sealed interface Config permits AppReloaderConfig {
+
+      /**
+       * Sets the binary name of the application's HTTP handler class. This is
+       * the class that the reloader will try to reload.
+       *
+       * @param value
+       *        the binary name
+       */
+      void binaryName(String value);
+
+      /**
+       * Watch the specified directory for changes and reload its class files if
+       * necessary.
+       *
+       * @param value
+       *        the directory to watch
+       *
+       * @throws IllegalArgumentException
+       *         if the path does not represent a directory
+       */
+      void directory(Path value);
+
+      /**
+       * Sets the note sink to the specified value.
+       *
+       * @param value
+       *        a note sink instance
+       */
+      void noteSink(Note.Sink value);
+
+      /**
+       * Use the specified watch service.
+       *
+       * @param value
+       *        the watch service to use
+       */
+      void watchService(WatchService value);
+
+    }
+
+    /**
+     * Creates a new reloader with the specified configuration.
+     *
+     * @param config
+     *        configuration options of this new reloader instance
+     *
+     * @return a newly created reloader instance
+     *
+     * @throws IOException
+     *         if an I/O error occurs
+     */
+    static Reloader create(Consumer<Config> config) throws IOException {
+      AppReloaderConfig builder;
+      builder = new AppReloaderConfig();
+
+      config.accept(builder);
+
+      return builder.build();
+    }
 
     /**
      * Closes this class reloader.
@@ -329,16 +390,6 @@ public final class App {
 
   }
 
-  // non-public types
-
-  non-sealed static class CreateOption implements Reloader.Option {
-
-    void acceptReloader(AppReloader reloader) {
-      throw new UnsupportedOperationException();
-    }
-
-  }
-
   private static class ReloadingHandlerFactory1 implements Http.HandlerFactory {
 
     private final App.Reloader reloader;
@@ -382,52 +433,8 @@ public final class App {
     return new ReloadingHandlerFactory1(reloader, type1, value1);
   }
 
-  public static Reloader createReloader(String binaryName, WatchService watchService, Reloader.Option... options) throws IOException {
-    Check.notNull(binaryName, "binaryName == null");
-    Check.notNull(watchService, "watchService == null");
-
-    AppReloader builder;
-    builder = new AppReloader(binaryName, watchService);
-
-    for (int i = 0; i < options.length; i++) {
-      Reloader.Option o;
-      o = Check.notNull(options[i], "options[", i, "] == null");
-
-      CreateOption option;
-      option = (CreateOption) o;
-
-      option.acceptReloader(builder);
-    }
-
-    return builder.init();
-  }
-
-  public static Reloader.Option noteSink(objectos.notes.NoteSink value) {
-    Check.notNull(value, "value == null");
-
-    return new CreateOption() {
-      @Override
-      final void acceptReloader(AppReloader reloader) {
-        reloader.noteSink(value);
-      }
-    };
-  }
-
   public static ServiceFailedException serviceFailed(String name, Throwable cause) {
     return new ServiceFailedException(name, cause);
-  }
-
-  public static Reloader.Option watchDirectory(Path path) {
-    if (!Files.isDirectory(path)) {
-      throw new IllegalArgumentException("Path does not represent a directory: " + path);
-    }
-
-    return new CreateOption() {
-      @Override
-      final void acceptReloader(AppReloader reloader) {
-        reloader.addDirectory(path);
-      }
-    };
   }
 
 }

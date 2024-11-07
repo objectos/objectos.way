@@ -20,16 +20,15 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
-import objectos.notes.NoteSink;
 import objectos.way.Css.StyleSheet;
 
 final class CarbonStyles implements Http.Handler {
 
-  private final NoteSink noteSink;
+  private final Note.Sink noteSink;
 
   private final Path directory;
 
-  public CarbonStyles(NoteSink noteSink, Path directory) {
+  public CarbonStyles(Note.Sink noteSink, Path directory) {
     this.noteSink = noteSink;
     this.directory = directory;
   }

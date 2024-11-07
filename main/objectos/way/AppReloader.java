@@ -19,7 +19,6 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.ClosedWatchServiceException;
 import java.nio.file.FileVisitResult;
-import java.nio.file.FileVisitor;
 import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
@@ -31,11 +30,8 @@ import java.nio.file.WatchService;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.List;
 import java.util.Map;
-import objectos.notes.NoOpNoteSink;
 import objectos.notes.Note1;
 import objectos.notes.Note2;
-import objectos.notes.NoteSink;
-import objectos.way.App.Reloader;
 
 final class AppReloader implements App.Reloader {
 
@@ -64,51 +60,76 @@ final class AppReloader implements App.Reloader {
     DO_NOT_RELOAD = Note1.debug(s, "Do not reload");
   }
 
+  record Notes(
+      Note.Ref1<Path> watching,
+      Note.Ref1<WatchKey> watchKeyIgnored,
+      Note.Ref2<WatchEvent.Kind<?>, Object> watchEvent,
+      Note.Ref1<Class<?>> loaded,
+      Note.Ref1<String> skipped
+  ) {
+
+    static Notes get() {
+      Class<?> s;
+      s = App.Reloader.class;
+
+      return new Notes(
+          Note.Ref1.create(s, "Watch [directory]", Note.INFO),
+          Note.Ref1.create(s, "Watch key ignored", Note.DEBUG),
+          Note.Ref2.create(s, "FS", Note.TRACE),
+          Note.Ref1.create(s, "Load", Note.TRACE),
+          Note.Ref1.create(s, "Do not reload", Note.DEBUG)
+      );
+    }
+
+  }
+
   record Directory(Path path, String packageName) {
     public boolean contains(String name) {
       return name.startsWith(packageName);
     }
   }
 
-  private NoteSink noteSink = NoOpNoteSink.of();
+  private final Notes notes;
 
-  private Lang.ClassReader classReader;
+  private final Note.Sink noteSink;
 
-  private final List<Path> directories = Util.createList();
+  private final Lang.ClassReader classReader;
 
-  private final Map<WatchKey, Path> keys = Util.createMap();
+  private final List<Path> directories;
+
+  private final Map<WatchKey, Path> keys;
 
   private final String binaryName;
 
   private final WatchService service;
 
-  private final FileVisitor<Path> visitor = new SimpleFileVisitor<Path>() {
-    @Override
-    public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
-      WatchKey key;
-      key = dir.register(
-          service,
-          StandardWatchEventKinds.ENTRY_CREATE,
-          StandardWatchEventKinds.ENTRY_DELETE,
-          StandardWatchEventKinds.ENTRY_MODIFY
-      );
-
-      keys.put(key, dir);
-
-      return FileVisitResult.CONTINUE;
-    }
-  };
+  private final boolean serviceClose;
 
   private Class<?> clazz;
 
-  AppReloader(String binaryName, WatchService service) {
-    this.binaryName = binaryName;
+  AppReloader(AppReloaderConfig builder) {
+    notes = builder.notes;
 
-    this.service = service;
+    noteSink = builder.noteSink;
+
+    classReader = Lang.createClassReader(noteSink);
+
+    directories = builder.directories;
+
+    keys = builder.keys;
+
+    binaryName = builder.binaryName;
+
+    service = builder.service;
+
+    serviceClose = builder.serviceClose;
   }
 
   @Override
-  public final void close() {
+  public final void close() throws IOException {
+    if (serviceClose) {
+      service.close();
+    }
   }
 
   @Override
@@ -125,26 +146,6 @@ final class AppReloader implements App.Reloader {
   @Override
   public final String toString() {
     return "ClassReloader[" + binaryName + "]";
-  }
-
-  final void addDirectory(Path path) {
-    directories.add(path);
-  }
-
-  final Reloader init() throws IOException {
-    for (var directory : directories) {
-      noteSink.send(WATCH, directory);
-
-      Files.walkFileTree(directory, visitor);
-    }
-
-    classReader = Lang.createClassReader(noteSink);
-
-    return this;
-  }
-
-  final void noteSink(NoteSink value) {
-    noteSink = value;
   }
 
   private void reloadIfNecessary() throws ClassNotFoundException, IOException {
@@ -187,13 +188,13 @@ final class AppReloader implements App.Reloader {
       directory = keys.get(key);
 
       if (directory == null) {
-        noteSink.send(WATCH_KEY_IGNORED, key);
+        noteSink.send(notes.watchKeyIgnored, key);
 
         continue;
       }
 
       for (WatchEvent<?> event : key.pollEvents()) {
-        noteSink.send(FS_EVENT, event.kind(), event.context());
+        noteSink.send(notes.watchEvent, event.kind(), event.context());
 
         WatchEvent.Kind<?> kind;
         kind = event.kind();
@@ -296,7 +297,7 @@ final class AppReloader implements App.Reloader {
         }
 
         if (doNotReload(name, bytes)) {
-          noteSink.send(DO_NOT_RELOAD, name);
+          noteSink.send(notes.skipped, name);
 
           break;
         }
@@ -304,7 +305,7 @@ final class AppReloader implements App.Reloader {
         Class<?> clazz;
         clazz = defineClass(name, bytes, 0, bytes.length);
 
-        noteSink.send(LOAD, clazz);
+        noteSink.send(notes.loaded, clazz);
 
         return clazz;
       }

@@ -15,14 +15,14 @@
  */
 package testing.site.web;
 
-import objectos.notes.NoteSink;
 import objectos.way.Css;
 import objectos.way.Http;
+import objectos.way.Note;
 import testing.zite.TestingSiteInjector;
 
 final class Styles implements Http.Handler {
 
-  private final NoteSink noteSink;
+  private final Note.Sink noteSink;
 
   Styles(TestingSiteInjector injector) {
     noteSink = injector.noteSink();

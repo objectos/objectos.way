@@ -15,15 +15,15 @@
  */
 package testing.site.ui;
 
-import objectos.notes.NoteSink;
 import objectos.way.Css;
 import objectos.way.Css.StyleSheet;
 import objectos.way.Http;
+import objectos.way.Note;
 import testing.zite.TestingSiteInjector;
 
 final class UiStyles implements Http.Handler {
 
-  private final NoteSink noteSink;
+  private final Note.Sink noteSink;
 
   UiStyles(TestingSiteInjector injector) {
     noteSink = injector.noteSink();

@@ -18,8 +18,6 @@ package objectos.way;
 import java.lang.annotation.Annotation;
 import java.nio.charset.StandardCharsets;
 import java.util.function.Consumer;
-import objectos.notes.Note2;
-import objectos.notes.NoteSink;
 
 final class LangClassReader implements Lang.ClassReader {
 
@@ -31,13 +29,19 @@ final class LangClassReader implements Lang.ClassReader {
     }
   }
 
-  private static final Note2<String, Exception> INVALID_CLASS;
+  private record Notes(
+      Note.Ref2<String, Exception> invalidClass
+  ) {
 
-  static {
-    Class<?> s;
-    s = Lang.ClassReader.class;
+    static Notes get() {
+      Class<?> s;
+      s = Lang.ClassReader.class;
 
-    INVALID_CLASS = Note2.error(s, "Invalid class file");
+      return new Notes(
+          Note.Ref2.create(s, "Invalid class file", Note.ERROR)
+      );
+    }
+
   }
 
   private static final byte CONSTANT_Utf8 = 1;
@@ -61,7 +65,9 @@ final class LangClassReader implements Lang.ClassReader {
   private static final String RUNTIME_INVISIBLE_ANNOTATIONS = "RuntimeInvisibleAnnotations";
   private static final String RUNTIME_VISIBLE_ANNOTATIONS = "RuntimeVisibleAnnotations";
 
-  private final NoteSink noteSink;
+  private final Notes notes = Notes.get();
+
+  private final Note.Sink noteSink;
 
   private String binaryName;
 
@@ -71,7 +77,7 @@ final class LangClassReader implements Lang.ClassReader {
 
   private int[] constantPoolIndex;
 
-  LangClassReader(NoteSink noteSink) {
+  LangClassReader(Note.Sink noteSink) {
     this.noteSink = noteSink;
   }
 
@@ -96,9 +102,9 @@ final class LangClassReader implements Lang.ClassReader {
     try {
       result = isAnnotated0(nameToLookFor);
     } catch (ArrayIndexOutOfBoundsException e) {
-      noteSink.send(INVALID_CLASS, binaryName, e);
+      noteSink.send(notes.invalidClass, binaryName, e);
     } catch (InvalidClassException e) {
-      noteSink.send(INVALID_CLASS, binaryName, e);
+      noteSink.send(notes.invalidClass, binaryName, e);
     }
 
     return result;
@@ -247,9 +253,9 @@ final class LangClassReader implements Lang.ClassReader {
     try {
       processStringConstants0(processor);
     } catch (ArrayIndexOutOfBoundsException e) {
-      noteSink.send(INVALID_CLASS, binaryName, e);
+      noteSink.send(notes.invalidClass, binaryName, e);
     } catch (InvalidClassException e) {
-      noteSink.send(INVALID_CLASS, binaryName, e);
+      noteSink.send(notes.invalidClass, binaryName, e);
     }
   }
 

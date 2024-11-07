@@ -23,38 +23,37 @@ import java.nio.file.Path;
 import java.util.Iterator;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
-import objectos.notes.Note1;
-import objectos.notes.Note2;
-import objectos.notes.NoteSink;
 
 final class CssGeneratorScanner {
 
-  private static final Note1<String> CLASS_NOT_FOUND;
+  private record Notes(
+      Note.Ref1<String> classNotFound,
+      Note.Ref2<String, IOException> classIoError,
+      Note.Ref1<String> classLoaded,
+      Note.Ref2<Path, IOException> directoryIoError
+  ) {
 
-  private static final Note2<String, IOException> CLASS_IO_ERROR;
+    static Notes get() {
+      Class<?> s;
+      s = Css.Generator.class;
 
-  private static final Note1<String> CLASS_LOADED;
+      return new Notes(
+          Note.Ref1.create(s, "Class file not found", Note.ERROR),
+          Note.Ref2.create(s, "Class file I/O error", Note.ERROR),
+          Note.Ref1.create(s, "Class file loaded", Note.ERROR),
+          Note.Ref2.create(s, "Directory I/O error", Note.ERROR)
+      );
+    }
 
-  private static final Note2<Path, IOException> DIR_IO_ERROR;
-
-  static {
-    Class<?> s;
-    s = Css.Generator.class;
-
-    CLASS_NOT_FOUND = Note1.error(s, "Class file not found");
-
-    CLASS_IO_ERROR = Note2.error(s, "Class file I/O error");
-
-    CLASS_LOADED = Note1.debug(s, "Class file loaded");
-
-    DIR_IO_ERROR = Note2.error(s, "Directory I/O error");
   }
 
-  private final NoteSink noteSink;
+  private final Notes notes = Notes.get();
+
+  private final Note.Sink noteSink;
 
   private final Lang.ClassReader reader;
 
-  public CssGeneratorScanner(NoteSink noteSink) {
+  public CssGeneratorScanner(Note.Sink noteSink) {
     this.noteSink = noteSink;
 
     reader = Lang.createClassReader(noteSink);
@@ -78,7 +77,7 @@ final class CssGeneratorScanner {
     in = loader.getResourceAsStream(resourceName);
 
     if (in == null) {
-      noteSink.send(CLASS_NOT_FOUND, binaryName);
+      noteSink.send(notes.classNotFound, binaryName);
 
       return;
     }
@@ -90,9 +89,9 @@ final class CssGeneratorScanner {
 
       bytes = out.toByteArray();
 
-      noteSink.send(CLASS_LOADED, binaryName);
+      noteSink.send(notes.classLoaded, binaryName);
     } catch (IOException e) {
-      noteSink.send(CLASS_IO_ERROR, binaryName, e);
+      noteSink.send(notes.classIoError, binaryName, e);
 
       return;
     }
@@ -131,13 +130,13 @@ final class CssGeneratorScanner {
           continue;
         }
 
-        noteSink.send(CLASS_LOADED, fileName);
+        noteSink.send(notes.classLoaded, fileName);
 
         reader.processStringConstants(stringProcessor);
       }
 
     } catch (IOException e) {
-      noteSink.send(DIR_IO_ERROR, directory, e);
+      noteSink.send(notes.directoryIoError, directory, e);
     }
   }
 

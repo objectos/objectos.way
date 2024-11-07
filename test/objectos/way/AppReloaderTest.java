@@ -57,11 +57,12 @@ public class AppReloaderTest {
       fileSystem = FileSystems.getDefault();
 
       try (WatchService watchService = fileSystem.newWatchService();
-          App.Reloader reloader = App.createReloader(
-              "test.Subject", watchService,
-              App.noteSink(TestingNoteSink.INSTANCE),
-              App.watchDirectory(helper.classOutput())
-          )) {
+          App.Reloader reloader = App.Reloader.create(config -> {
+            config.binaryName("test.Subject");
+            config.watchService(watchService);
+            config.noteSink(TestingNoteSink.INSTANCE);
+            config.directory(helper.classOutput());
+          })) {
         String firstGet;
         firstGet = newInstanceAndGet(reloader);
 
@@ -141,11 +142,12 @@ public class AppReloaderTest {
       fileSystem = FileSystems.getDefault();
 
       try (WatchService watchService = fileSystem.newWatchService();
-          App.Reloader reloader = App.createReloader(
-              "test.Subject", watchService,
-              App.noteSink(TestingNoteSink.INSTANCE),
-              App.watchDirectory(helper.classOutput())
-          )) {
+          App.Reloader reloader = App.Reloader.create(config -> {
+            config.binaryName("test.Subject");
+            config.watchService(watchService);
+            config.noteSink(TestingNoteSink.INSTANCE);
+            config.directory(helper.classOutput());
+          })) {
 
         try {
           newInstanceAndGet(reloader);

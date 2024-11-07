@@ -539,7 +539,8 @@ public final class Sql {
   /**
    * Creates a {@link Sql.Mapper} for the specified record type.
    */
-  public static <R extends Record> Mapper<R> createRecordMapper(Class<R> recordType) {
+  public static <R extends Record>
+      Mapper<R> createRecordMapper(Class<R> recordType) {
     return RecordMapper.of(recordType);
   }
 

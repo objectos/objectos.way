@@ -26,7 +26,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.SequencedMap;
 import java.util.Set;
-import objectos.notes.NoteSink;
 
 /**
  * The <strong>Objectos CSS</strong> main class.
@@ -825,7 +824,7 @@ public final class Css {
     };
   }
 
-  public static Option noteSink(NoteSink noteSink) {
+  public static Option noteSink(Note.Sink noteSink) {
     Check.notNull(noteSink, "noteSink == null");
 
     return new GeneratorOption() {

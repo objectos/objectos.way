@@ -28,12 +28,10 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import objectos.notes.NoOpNoteSink;
-import objectos.notes.NoteSink;
 
 final class CssConfig {
 
-  private NoteSink noteSink = NoOpNoteSink.of();
+  private Note.Sink noteSink = Note.NoOpSink.INSTANCE;
 
   private List<Css.Breakpoint> breakpoints = List.of(
       new Css.Breakpoint(0, "sm", "640px"),
@@ -176,7 +174,7 @@ final class CssConfig {
     classes.addAll(set);
   }
 
-  public final void noteSink(NoteSink noteSink) {
+  public final void noteSink(Note.Sink noteSink) {
     this.noteSink = noteSink;
   }
 
@@ -230,7 +228,7 @@ final class CssConfig {
     return variants().get(variantName);
   }
 
-  final NoteSink noteSink() {
+  final Note.Sink noteSink() {
     return noteSink;
   }
 

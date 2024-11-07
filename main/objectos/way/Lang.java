@@ -19,7 +19,6 @@ import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.util.Iterator;
 import java.util.function.Consumer;
-import objectos.notes.NoteSink;
 
 /**
  * The <strong>Objectos Lang</strong> main class.
@@ -78,7 +77,7 @@ public final class Lang {
 
   private Lang() {}
 
-  static ClassReader createClassReader(NoteSink noteSink) {
+  static ClassReader createClassReader(Note.Sink noteSink) {
     return new LangClassReader(noteSink);
   }
 

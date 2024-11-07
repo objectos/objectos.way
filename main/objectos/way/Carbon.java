@@ -18,7 +18,6 @@ package objectos.way;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.function.Predicate;
-import objectos.notes.NoteSink;
 import objectos.way.Carbon.Size.ExtraSmall;
 import objectos.way.Carbon.Size.Max;
 import objectos.way.Html.ElementName;
@@ -498,7 +497,7 @@ public final class Carbon extends CarbonComponents {
     super(tmpl);
   }
 
-  public static void generate(NoteSink noteSink, Path directory, Path targetFile) throws IOException {
+  public static void generate(Note.Sink noteSink, Path directory, Path targetFile) throws IOException {
     Check.notNull(noteSink, "noteSink == null");
     Check.notNull(directory, "directory == null");
     Check.notNull(targetFile, "targetFile == null");
@@ -509,7 +508,7 @@ public final class Carbon extends CarbonComponents {
     styles.write(targetFile);
   }
 
-  public static Http.Handler generateOnGetHandler(NoteSink noteSink, Path directory) {
+  public static Http.Handler generateOnGetHandler(Note.Sink noteSink, Path directory) {
     Check.notNull(noteSink, "noteSink == null");
     Check.notNull(directory, "directory == null");
 

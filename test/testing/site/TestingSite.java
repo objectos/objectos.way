@@ -17,10 +17,10 @@ package testing.site;
 
 import java.io.IOException;
 import java.time.Clock;
-import objectos.notes.NoteSink;
 import objectos.way.App;
 import objectos.way.App.ShutdownHook;
 import objectos.way.Http;
+import objectos.way.Note;
 import objectos.way.Script;
 import objectos.way.Web;
 import testing.zite.TestingSiteInjector;
@@ -121,9 +121,9 @@ abstract class TestingSite extends App.Bootstrap {
 
   abstract App.NoteSink noteSink();
 
-  abstract Http.Handler carbonHandler(NoteSink noteSink);
+  abstract Http.Handler carbonHandler(Note.Sink noteSink);
 
-  abstract Http.HandlerFactory handlerFactory(NoteSink noteSink, ShutdownHook shutdownHook, TestingSiteInjector injector);
+  abstract Http.HandlerFactory handlerFactory(Note.Sink noteSink, ShutdownHook shutdownHook, TestingSiteInjector injector);
 
   Clock clock() {
     return Clock.systemUTC();
