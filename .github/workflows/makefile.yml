@@ -34,7 +34,7 @@ jobs:
       uses: actions/cache@v4
       with:
         path: ~/.cache/objectos
-        key: ${{ runner.os }}-objectos-${{ hashFiles('**/Makefile') }}
+        key: ${{ runner.os }}-objectos-${{ hashFiles('Makefile', 'make/*.mk') }}
         restore-keys: ${{ runner.os }}-objectos-
 
     - name: Build it
