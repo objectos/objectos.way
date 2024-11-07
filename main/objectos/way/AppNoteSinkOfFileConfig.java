@@ -35,15 +35,16 @@ final class AppNoteSinkOfFileConfig implements App.NoteSink.OfFile.Config {
 
   private Predicate<Note> filter = note -> true;
 
-  private final Path file;
-
-  public AppNoteSinkOfFileConfig(Path file) {
-    this.file = Objects.requireNonNull(file, "file == null");
-  }
+  private Path file;
 
   @Override
   public final void clock(Clock clock) {
     this.clock = Objects.requireNonNull(clock, "clock == null");
+  }
+
+  @Override
+  public final void file(Path value) {
+    file = Objects.requireNonNull(value, "value == null");
   }
 
   @Override
@@ -52,6 +53,10 @@ final class AppNoteSinkOfFileConfig implements App.NoteSink.OfFile.Config {
   }
 
   final AppNoteSinkOfFile build() throws IOException {
+    if (file == null) {
+      throw new IllegalArgumentException("No output file specified. Please set an output file with the config.file(String) method.");
+    }
+
     ByteBuffer buffer;
     buffer = ByteBuffer.allocateDirect(bufferSize);
 

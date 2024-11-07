@@ -148,11 +148,15 @@ public final class App {
 
     sealed interface OfFile extends NoteSink, Closeable permits AppNoteSinkOfFile {
 
-      sealed interface Config extends NoteSinkConfig permits AppNoteSinkOfFileConfig {}
+      sealed interface Config extends NoteSinkConfig permits AppNoteSinkOfFileConfig {
 
-      static OfFile create(Path file, Consumer<Config> config) throws IOException {
+        void file(Path value);
+
+      }
+
+      static OfFile create(Consumer<Config> config) throws IOException {
         AppNoteSinkOfFileConfig builder;
-        builder = new AppNoteSinkOfFileConfig(file);
+        builder = new AppNoteSinkOfFileConfig();
 
         config.accept(builder);
 

@@ -252,8 +252,10 @@ public class AppNoteSinkTest {
     logFile = parent.resolve("file.log");
 
     App.NoteSink.OfFile noteSink;
-    noteSink = App.NoteSink.OfFile.create(logFile, config -> {
+    noteSink = App.NoteSink.OfFile.create(config -> {
       config.clock(new IncrementingClock(2023, 10, 31));
+
+      config.file(logFile);
     });
 
     try (noteSink) {
@@ -297,8 +299,10 @@ public class AppNoteSinkTest {
     clock = new IncrementingClock(2023, 10, 31);
 
     App.NoteSink.OfFile noteSink;
-    noteSink = App.NoteSink.OfFile.create(logFile, config -> {
+    noteSink = App.NoteSink.OfFile.create(config -> {
       config.clock(clock);
+
+      config.file(logFile);
     });
 
     clock.reset();
