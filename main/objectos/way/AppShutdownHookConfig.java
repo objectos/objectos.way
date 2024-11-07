@@ -15,16 +15,19 @@
  */
 package objectos.way;
 
-public final class TestingShutdownHook {
+import java.util.Objects;
 
-  public static final App.ShutdownHook INSTANCE;
+final class AppShutdownHookConfig implements App.ShutdownHook.Config {
 
-  static {
-    INSTANCE = App.ShutdownHook.create(config -> config.noteSink(TestingNoteSink.INSTANCE));
+  Note.Sink noteSink = Note.NoOpSink.INSTANCE;
+
+  @Override
+  public final void noteSink(Note.Sink value) {
+    noteSink = Objects.requireNonNull(value, "value == null");
   }
 
-  public static void register(AutoCloseable closeable) {
-    INSTANCE.register(closeable);
+  final AppShutdownHook build() {
+    return new AppShutdownHook(noteSink);
   }
 
 }

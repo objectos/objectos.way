@@ -21,16 +21,25 @@ jobs:
         java-version: '23'
         distribution: 'temurin'
 
+    - name: Cache JDK
+      if: success() || failure()
+      uses: actions/cache@v4
+      with:
+        path: ${{ env.JAVA_HOME_23_X64 }}
+        key: ${{ runner.os }}-jdk-23
+        restore-keys: ${{ runner.os }}-jdk
+
     - name: Cache local repository
       if: success() || failure()
       uses: actions/cache@v4
       with:
         path: ~/.cache/objectos
         key: ${{ runner.os }}-objectos-${{ hashFiles('**/Makefile') }}
-        restore-keys: |
-          ${{ runner.os }}-objectos-
+        restore-keys: ${{ runner.os }}-objectos-
 
     - name: Build it
+      env:
+        LOCAL_REPO_PATH: repo
       run: make
 
     - name: Archive test results

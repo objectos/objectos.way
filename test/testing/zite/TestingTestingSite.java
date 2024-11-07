@@ -67,7 +67,7 @@ public final class TestingTestingSite {
 
     // ShutdownHook
     App.ShutdownHook shutdownHook;
-    shutdownHook = App.ShutdownHook.create(noteSink);
+    shutdownHook = App.ShutdownHook.create(config -> config.noteSink(noteSink));
 
     // SessionStore
     Random random;

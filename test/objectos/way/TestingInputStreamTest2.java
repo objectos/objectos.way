@@ -35,7 +35,7 @@ public class TestingInputStreamTest2 {
     App.NoteSink noteSink = TestingNoteSink.INSTANCE;
 
     App.ShutdownHook shutdownHook;
-    shutdownHook = App.ShutdownHook.create(noteSink);
+    shutdownHook = App.ShutdownHook.create(config -> config.noteSink(noteSink));
 
     InetAddress localHost;
 

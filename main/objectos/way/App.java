@@ -26,7 +26,6 @@ import java.lang.reflect.Constructor;
 import java.nio.file.Path;
 import java.nio.file.WatchService;
 import java.time.Clock;
-import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 import objectos.way.App.NoteSink.OfConsole;
@@ -320,6 +319,24 @@ public final class App {
    */
   public sealed interface ShutdownHook permits AppShutdownHook {
 
+    /**
+     * Configure the creation of a {@code ShutdownHook}.
+     */
+    public sealed interface Config permits AppShutdownHookConfig {
+
+      /**
+       * Sets the note sink to the specified value.
+       *
+       * @param value
+       *        a note sink instance
+       */
+      void noteSink(Note.Sink value);
+
+    }
+
+    /**
+     * The notes emitted by a {@code ShutdownHook}.
+     */
     public sealed interface Notes permits AppShutdownHook.Notes {
 
       static Notes create() {
@@ -338,10 +355,21 @@ public final class App {
 
     }
 
-    static ShutdownHook create(Note.Sink noteSink) {
-      Objects.requireNonNull(noteSink, "noteSink == null");
+    /**
+     * Creates a new shutdown hook with the specified configuration.
+     *
+     * @param config
+     *        configuration options of the new instance
+     *
+     * @return a newly created shutdown hook instance
+     */
+    static ShutdownHook create(Consumer<Config> config) {
+      AppShutdownHookConfig builder;
+      builder = new AppShutdownHookConfig();
 
-      return new AppShutdownHook(noteSink);
+      config.accept(builder);
+
+      return builder.build();
     }
 
     /**
