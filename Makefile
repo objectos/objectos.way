@@ -25,8 +25,6 @@ VERSION := 0.21-SNAPSHOT
 MODULE := $(ARTIFACT_ID)
 
 ## Dependencies
-SELFGEN := br.com.objectos/objectos.selfgen/0.6
-
 H2 := com.h2database/h2/2.2.224
 TESTNG := org.testng/testng/7.9.0
 
@@ -50,47 +48,6 @@ include make/java-core.mk
 #
 
 include make/common-clean.mk
-
-#
-# way@selfgen
-#
-
-## selfgen target directory
-MAIN := main
-
-## selfgen deps
-SELFGEN_DEPS := $(SELFGEN)
-
-## selfgen module path
-SELFGEN_MODULE_PATH := $(WORK)/selfgen-module-path
-
-## selfgen marker
-SELFGEN_MARKER := $(WORK)/selfgen-marker
-
-## selfgen java command
-SELFGEN_JAVAX := $(JAVA)
-SELFGEN_JAVAX += --module-path @$(SELFGEN_MODULE_PATH)
-SELFGEN_JAVAX += --enable-preview
-SELFGEN_JAVAX += --module objectos.selfgen/objectos.selfgen.Main
-SELFGEN_JAVAX += $(MAIN)
-
-.PHONY: selfgen
-selfgen: $(SELFGEN_MARKER)
-
-.PHONY: selfgen@clean
-selfgen@clean:
-	rm -f $(SELFGEN_MARKER)
-	
-.PHONY: re-selfgen
-re-selfgen: selfgen@clean selfgen 
-
-$(SELFGEN_MODULE_PATH): $(call to-resolution-files,$(SELFGEN_DEPS))
-	$(call uniq-resolution-files,$^) > $@.tmp
-	cat $@.tmp | paste --delimiter='$(MODULE_PATH_SEPARATOR)' --serial > $@
-
-$(SELFGEN_MARKER): $(SELFGEN_MODULE_PATH)
-	$(SELFGEN_JAVAX)
-	touch $@ 
 
 #
 # way@compile
