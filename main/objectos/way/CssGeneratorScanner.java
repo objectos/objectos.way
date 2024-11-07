@@ -40,7 +40,7 @@ final class CssGeneratorScanner {
       return new Notes(
           Note.Ref1.create(s, "Class file not found", Note.ERROR),
           Note.Ref2.create(s, "Class file I/O error", Note.ERROR),
-          Note.Ref1.create(s, "Class file loaded", Note.ERROR),
+          Note.Ref1.create(s, "Class file loaded", Note.DEBUG),
           Note.Ref2.create(s, "Directory I/O error", Note.ERROR)
       );
     }
