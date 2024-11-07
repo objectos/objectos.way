@@ -22,6 +22,7 @@ jobs:
         distribution: 'temurin'
 
     - name: Cache local repository
+      if: success() || failure()
       uses: actions/cache@v4
       with:
         path: ~/.cache/objectos
@@ -33,6 +34,7 @@ jobs:
       run: make
 
     - name: Archive test results
+      if: success() || failure()
       uses: actions/upload-artifact@v4
       with:
         name: test-results
