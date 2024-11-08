@@ -29,16 +29,16 @@ jobs:
       uses: actions/cache@v4
       with:
         path: ${{ env.JAVA_HOME_23_X64 }}
-        key: ${{ runner.os }}-jdk-23
-        restore-keys: ${{ runner.os }}-jdk
+        key: ${{ matrix.os }}-jdk-23
+        restore-keys: ${{ matrix.os }}-jdk
 
     - name: Cache local repository
       if: success() || failure()
       uses: actions/cache@v4
       with:
         path: ~/.cache/objectos
-        key: ${{ runner.os }}-objectos-${{ hashFiles('Makefile', 'make/*.mk') }}
-        restore-keys: ${{ runner.os }}-objectos-
+        key: ${{ matrix.os }}-objectos-${{ hashFiles('Makefile', 'make/*.mk') }}
+        restore-keys: ${{ matrix.os }}-objectos-
 
     - name: Build it
       run: make
@@ -47,5 +47,5 @@ jobs:
       if: success() || failure()
       uses: actions/upload-artifact@v4
       with:
-        name: ${{ runner.os }}-test-results
+        name: ${{ matrix.os }}-test-results
         path: work/test-output
