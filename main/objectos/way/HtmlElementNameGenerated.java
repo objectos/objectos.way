@@ -24,366 +24,366 @@ interface HtmlElementNameGenerated {
   /**
    * The {@code a} element.
    */
-  public static final Html.ElementName A = HtmlElementName.createNormal("a");
+  public static final Html.ElementName A = HtmlElementName.A;
 
   /**
    * The {@code abbr} element.
    */
-  public static final Html.ElementName ABBR = HtmlElementName.createNormal("abbr");
+  public static final Html.ElementName ABBR = HtmlElementName.ABBR;
 
   /**
    * The {@code article} element.
    */
-  public static final Html.ElementName ARTICLE = HtmlElementName.createNormal("article");
+  public static final Html.ElementName ARTICLE = HtmlElementName.ARTICLE;
 
   /**
    * The {@code b} element.
    */
-  public static final Html.ElementName B = HtmlElementName.createNormal("b");
+  public static final Html.ElementName B = HtmlElementName.B;
 
   /**
    * The {@code blockquote} element.
    */
-  public static final Html.ElementName BLOCKQUOTE = HtmlElementName.createNormal("blockquote");
+  public static final Html.ElementName BLOCKQUOTE = HtmlElementName.BLOCKQUOTE;
 
   /**
    * The {@code body} element.
    */
-  public static final Html.ElementName BODY = HtmlElementName.createNormal("body");
+  public static final Html.ElementName BODY = HtmlElementName.BODY;
 
   /**
    * The {@code br} element.
    */
-  public static final Html.ElementName BR = HtmlElementName.createVoid("br");
+  public static final Html.ElementName BR = HtmlElementName.BR;
 
   /**
    * The {@code button} element.
    */
-  public static final Html.ElementName BUTTON = HtmlElementName.createNormal("button");
+  public static final Html.ElementName BUTTON = HtmlElementName.BUTTON;
 
   /**
    * The {@code clipPath} element.
    */
-  public static final Html.ElementName CLIPPATH = HtmlElementName.createNormal("clipPath");
+  public static final Html.ElementName CLIPPATH = HtmlElementName.CLIPPATH;
 
   /**
    * The {@code code} element.
    */
-  public static final Html.ElementName CODE = HtmlElementName.createNormal("code");
+  public static final Html.ElementName CODE = HtmlElementName.CODE;
 
   /**
    * The {@code dd} element.
    */
-  public static final Html.ElementName DD = HtmlElementName.createNormal("dd");
+  public static final Html.ElementName DD = HtmlElementName.DD;
 
   /**
    * The {@code defs} element.
    */
-  public static final Html.ElementName DEFS = HtmlElementName.createNormal("defs");
+  public static final Html.ElementName DEFS = HtmlElementName.DEFS;
 
   /**
    * The {@code details} element.
    */
-  public static final Html.ElementName DETAILS = HtmlElementName.createNormal("details");
+  public static final Html.ElementName DETAILS = HtmlElementName.DETAILS;
 
   /**
    * The {@code div} element.
    */
-  public static final Html.ElementName DIV = HtmlElementName.createNormal("div");
+  public static final Html.ElementName DIV = HtmlElementName.DIV;
 
   /**
    * The {@code dl} element.
    */
-  public static final Html.ElementName DL = HtmlElementName.createNormal("dl");
+  public static final Html.ElementName DL = HtmlElementName.DL;
 
   /**
    * The {@code dt} element.
    */
-  public static final Html.ElementName DT = HtmlElementName.createNormal("dt");
+  public static final Html.ElementName DT = HtmlElementName.DT;
 
   /**
    * The {@code em} element.
    */
-  public static final Html.ElementName EM = HtmlElementName.createNormal("em");
+  public static final Html.ElementName EM = HtmlElementName.EM;
 
   /**
    * The {@code fieldset} element.
    */
-  public static final Html.ElementName FIELDSET = HtmlElementName.createNormal("fieldset");
+  public static final Html.ElementName FIELDSET = HtmlElementName.FIELDSET;
 
   /**
    * The {@code figure} element.
    */
-  public static final Html.ElementName FIGURE = HtmlElementName.createNormal("figure");
+  public static final Html.ElementName FIGURE = HtmlElementName.FIGURE;
 
   /**
    * The {@code footer} element.
    */
-  public static final Html.ElementName FOOTER = HtmlElementName.createNormal("footer");
+  public static final Html.ElementName FOOTER = HtmlElementName.FOOTER;
 
   /**
    * The {@code form} element.
    */
-  public static final Html.ElementName FORM = HtmlElementName.createNormal("form");
+  public static final Html.ElementName FORM = HtmlElementName.FORM;
 
   /**
    * The {@code g} element.
    */
-  public static final Html.ElementName G = HtmlElementName.createNormal("g");
+  public static final Html.ElementName G = HtmlElementName.G;
 
   /**
    * The {@code h1} element.
    */
-  public static final Html.ElementName H1 = HtmlElementName.createNormal("h1");
+  public static final Html.ElementName H1 = HtmlElementName.H1;
 
   /**
    * The {@code h2} element.
    */
-  public static final Html.ElementName H2 = HtmlElementName.createNormal("h2");
+  public static final Html.ElementName H2 = HtmlElementName.H2;
 
   /**
    * The {@code h3} element.
    */
-  public static final Html.ElementName H3 = HtmlElementName.createNormal("h3");
+  public static final Html.ElementName H3 = HtmlElementName.H3;
 
   /**
    * The {@code h4} element.
    */
-  public static final Html.ElementName H4 = HtmlElementName.createNormal("h4");
+  public static final Html.ElementName H4 = HtmlElementName.H4;
 
   /**
    * The {@code h5} element.
    */
-  public static final Html.ElementName H5 = HtmlElementName.createNormal("h5");
+  public static final Html.ElementName H5 = HtmlElementName.H5;
 
   /**
    * The {@code h6} element.
    */
-  public static final Html.ElementName H6 = HtmlElementName.createNormal("h6");
+  public static final Html.ElementName H6 = HtmlElementName.H6;
 
   /**
    * The {@code head} element.
    */
-  public static final Html.ElementName HEAD = HtmlElementName.createNormal("head");
+  public static final Html.ElementName HEAD = HtmlElementName.HEAD;
 
   /**
    * The {@code header} element.
    */
-  public static final Html.ElementName HEADER = HtmlElementName.createNormal("header");
+  public static final Html.ElementName HEADER = HtmlElementName.HEADER;
 
   /**
    * The {@code hgroup} element.
    */
-  public static final Html.ElementName HGROUP = HtmlElementName.createNormal("hgroup");
+  public static final Html.ElementName HGROUP = HtmlElementName.HGROUP;
 
   /**
    * The {@code hr} element.
    */
-  public static final Html.ElementName HR = HtmlElementName.createVoid("hr");
+  public static final Html.ElementName HR = HtmlElementName.HR;
 
   /**
    * The {@code html} element.
    */
-  public static final Html.ElementName HTML = HtmlElementName.createNormal("html");
+  public static final Html.ElementName HTML = HtmlElementName.HTML;
 
   /**
    * The {@code img} element.
    */
-  public static final Html.ElementName IMG = HtmlElementName.createVoid("img");
+  public static final Html.ElementName IMG = HtmlElementName.IMG;
 
   /**
    * The {@code input} element.
    */
-  public static final Html.ElementName INPUT = HtmlElementName.createVoid("input");
+  public static final Html.ElementName INPUT = HtmlElementName.INPUT;
 
   /**
    * The {@code kbd} element.
    */
-  public static final Html.ElementName KBD = HtmlElementName.createNormal("kbd");
+  public static final Html.ElementName KBD = HtmlElementName.KBD;
 
   /**
    * The {@code label} element.
    */
-  public static final Html.ElementName LABEL = HtmlElementName.createNormal("label");
+  public static final Html.ElementName LABEL = HtmlElementName.LABEL;
 
   /**
    * The {@code legend} element.
    */
-  public static final Html.ElementName LEGEND = HtmlElementName.createNormal("legend");
+  public static final Html.ElementName LEGEND = HtmlElementName.LEGEND;
 
   /**
    * The {@code li} element.
    */
-  public static final Html.ElementName LI = HtmlElementName.createNormal("li");
+  public static final Html.ElementName LI = HtmlElementName.LI;
 
   /**
    * The {@code link} element.
    */
-  public static final Html.ElementName LINK = HtmlElementName.createVoid("link");
+  public static final Html.ElementName LINK = HtmlElementName.LINK;
 
   /**
    * The {@code main} element.
    */
-  public static final Html.ElementName MAIN = HtmlElementName.createNormal("main");
+  public static final Html.ElementName MAIN = HtmlElementName.MAIN;
 
   /**
    * The {@code menu} element.
    */
-  public static final Html.ElementName MENU = HtmlElementName.createNormal("menu");
+  public static final Html.ElementName MENU = HtmlElementName.MENU;
 
   /**
    * The {@code meta} element.
    */
-  public static final Html.ElementName META = HtmlElementName.createVoid("meta");
+  public static final Html.ElementName META = HtmlElementName.META;
 
   /**
    * The {@code nav} element.
    */
-  public static final Html.ElementName NAV = HtmlElementName.createNormal("nav");
+  public static final Html.ElementName NAV = HtmlElementName.NAV;
 
   /**
    * The {@code ol} element.
    */
-  public static final Html.ElementName OL = HtmlElementName.createNormal("ol");
+  public static final Html.ElementName OL = HtmlElementName.OL;
 
   /**
    * The {@code optgroup} element.
    */
-  public static final Html.ElementName OPTGROUP = HtmlElementName.createNormal("optgroup");
+  public static final Html.ElementName OPTGROUP = HtmlElementName.OPTGROUP;
 
   /**
    * The {@code option} element.
    */
-  public static final Html.ElementName OPTION = HtmlElementName.createNormal("option");
+  public static final Html.ElementName OPTION = HtmlElementName.OPTION;
 
   /**
    * The {@code p} element.
    */
-  public static final Html.ElementName P = HtmlElementName.createNormal("p");
+  public static final Html.ElementName P = HtmlElementName.P;
 
   /**
    * The {@code path} element.
    */
-  public static final Html.ElementName PATH = HtmlElementName.createNormal("path");
+  public static final Html.ElementName PATH = HtmlElementName.PATH;
 
   /**
    * The {@code pre} element.
    */
-  public static final Html.ElementName PRE = HtmlElementName.createNormal("pre");
+  public static final Html.ElementName PRE = HtmlElementName.PRE;
 
   /**
    * The {@code progress} element.
    */
-  public static final Html.ElementName PROGRESS = HtmlElementName.createNormal("progress");
+  public static final Html.ElementName PROGRESS = HtmlElementName.PROGRESS;
 
   /**
    * The {@code samp} element.
    */
-  public static final Html.ElementName SAMP = HtmlElementName.createNormal("samp");
+  public static final Html.ElementName SAMP = HtmlElementName.SAMP;
 
   /**
    * The {@code script} element.
    */
-  public static final Html.ElementName SCRIPT = HtmlElementName.createNormal("script");
+  public static final Html.ElementName SCRIPT = HtmlElementName.SCRIPT;
 
   /**
    * The {@code section} element.
    */
-  public static final Html.ElementName SECTION = HtmlElementName.createNormal("section");
+  public static final Html.ElementName SECTION = HtmlElementName.SECTION;
 
   /**
    * The {@code select} element.
    */
-  public static final Html.ElementName SELECT = HtmlElementName.createNormal("select");
+  public static final Html.ElementName SELECT = HtmlElementName.SELECT;
 
   /**
    * The {@code small} element.
    */
-  public static final Html.ElementName SMALL = HtmlElementName.createNormal("small");
+  public static final Html.ElementName SMALL = HtmlElementName.SMALL;
 
   /**
    * The {@code span} element.
    */
-  public static final Html.ElementName SPAN = HtmlElementName.createNormal("span");
+  public static final Html.ElementName SPAN = HtmlElementName.SPAN;
 
   /**
    * The {@code strong} element.
    */
-  public static final Html.ElementName STRONG = HtmlElementName.createNormal("strong");
+  public static final Html.ElementName STRONG = HtmlElementName.STRONG;
 
   /**
    * The {@code style} element.
    */
-  public static final Html.ElementName STYLE = HtmlElementName.createNormal("style");
+  public static final Html.ElementName STYLE = HtmlElementName.STYLE;
 
   /**
    * The {@code sub} element.
    */
-  public static final Html.ElementName SUB = HtmlElementName.createNormal("sub");
+  public static final Html.ElementName SUB = HtmlElementName.SUB;
 
   /**
    * The {@code summary} element.
    */
-  public static final Html.ElementName SUMMARY = HtmlElementName.createNormal("summary");
+  public static final Html.ElementName SUMMARY = HtmlElementName.SUMMARY;
 
   /**
    * The {@code sup} element.
    */
-  public static final Html.ElementName SUP = HtmlElementName.createNormal("sup");
+  public static final Html.ElementName SUP = HtmlElementName.SUP;
 
   /**
    * The {@code svg} element.
    */
-  public static final Html.ElementName SVG = HtmlElementName.createNormal("svg");
+  public static final Html.ElementName SVG = HtmlElementName.SVG;
 
   /**
    * The {@code table} element.
    */
-  public static final Html.ElementName TABLE = HtmlElementName.createNormal("table");
+  public static final Html.ElementName TABLE = HtmlElementName.TABLE;
 
   /**
    * The {@code tbody} element.
    */
-  public static final Html.ElementName TBODY = HtmlElementName.createNormal("tbody");
+  public static final Html.ElementName TBODY = HtmlElementName.TBODY;
 
   /**
    * The {@code td} element.
    */
-  public static final Html.ElementName TD = HtmlElementName.createNormal("td");
+  public static final Html.ElementName TD = HtmlElementName.TD;
 
   /**
    * The {@code template} element.
    */
-  public static final Html.ElementName TEMPLATE = HtmlElementName.createNormal("template");
+  public static final Html.ElementName TEMPLATE = HtmlElementName.TEMPLATE;
 
   /**
    * The {@code textarea} element.
    */
-  public static final Html.ElementName TEXTAREA = HtmlElementName.createNormal("textarea");
+  public static final Html.ElementName TEXTAREA = HtmlElementName.TEXTAREA;
 
   /**
    * The {@code th} element.
    */
-  public static final Html.ElementName TH = HtmlElementName.createNormal("th");
+  public static final Html.ElementName TH = HtmlElementName.TH;
 
   /**
    * The {@code thead} element.
    */
-  public static final Html.ElementName THEAD = HtmlElementName.createNormal("thead");
+  public static final Html.ElementName THEAD = HtmlElementName.THEAD;
 
   /**
    * The {@code title} element.
    */
-  public static final Html.ElementName TITLE = HtmlElementName.createNormal("title");
+  public static final Html.ElementName TITLE = HtmlElementName.TITLE;
 
   /**
    * The {@code tr} element.
    */
-  public static final Html.ElementName TR = HtmlElementName.createNormal("tr");
+  public static final Html.ElementName TR = HtmlElementName.TR;
 
   /**
    * The {@code ul} element.
    */
-  public static final Html.ElementName UL = HtmlElementName.createNormal("ul");
+  public static final Html.ElementName UL = HtmlElementName.UL;
 
 }
