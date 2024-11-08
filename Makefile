@@ -21,7 +21,7 @@
 ## Coordinates
 GROUP_ID := br.com.objectos
 ARTIFACT_ID := objectos.way
-VERSION := 0.21-SNAPSHOT
+VERSION := 0.1.6-SNAPSHOT
 MODULE := $(ARTIFACT_ID)
 
 ## Dependencies

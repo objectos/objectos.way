@@ -460,6 +460,10 @@ public sealed interface Note {
      */
     protected NoOpSink() {}
 
+    public static NoOpSink create() {
+      return new NoOpSink();
+    }
+
     /**
      * Returns {@code false}.
      *
