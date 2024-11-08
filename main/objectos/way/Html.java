@@ -556,7 +556,13 @@ public final class Html {
     /**
      * The no-op instruction.
      */
-    sealed interface NoOp extends AsMethod, OfVoid {}
+    sealed interface NoOp extends AsMethod, OfVoid {
+
+      static NoOp get() {
+        return Html.NOOP;
+      }
+
+    }
 
   }
 
@@ -590,9 +596,11 @@ public final class Html {
    * A component instance may be used to render instructions issued from its
    * parent template.
    */
-  public non-sealed static abstract class Component extends TemplateBase {
+  public static abstract class Component {
 
-    private final TemplateBase parent;
+    private Component child;
+
+    protected Markup html;
 
     /**
      * Creates a new component bound to the specified {@code parent} template.
@@ -600,13 +608,20 @@ public final class Html {
      * @param parent
      *        the template instance for which this component will be bound to.
      */
-    public Component(TemplateBase parent) {
-      this.parent = Check.notNull(parent, "parent == null");
+    public Component(Html.Template parent) {
+      parent.register(this);
     }
 
-    @Override
-    final HtmlMarkup $html() {
-      return parent.$html();
+    final void nest(Component value) {
+      child = value;
+    }
+
+    final void set(HtmlMarkup html) {
+      this.html = html;
+
+      if (child != null) {
+        child.set(html);
+      }
     }
 
   }
@@ -625,7 +640,15 @@ public final class Html {
       return new HtmlMarkup();
     }
 
-    Html.Instruction.OfDataOn dataOn(Html.AttributeName name, Script.Action value);
+    Html.Instruction.OfDataOn dataOnClick(Script.Action action);
+
+    Html.Instruction.OfDataOn dataOnClick(Script.Action... actions);
+
+    Html.Instruction.OfDataOn dataOnInput(Script.Action action);
+
+    Html.Instruction.OfDataOn dataOnInput(Script.Action... actions);
+
+    Html.Instruction.OfElement element(Html.ElementName name, Html.Instruction... contents);
 
     /**
      * Flattens the specified instructions so that each of the specified
@@ -637,6 +660,16 @@ public final class Html {
      * @return an instruction representing this flatten operation
      */
     Html.Instruction.OfElement flatten(Html.Instruction... contents);
+
+    /**
+     * The non-breaking space {@code &nbsp;} HTML character entity.
+     *
+     * @return an instruction representing the non-breaking space character
+     *         entity.
+     */
+    default Html.Instruction.OfElement nbsp() {
+      return raw("&nbsp;");
+    }
 
     /**
      * The no-op instruction.
@@ -654,6 +687,132 @@ public final class Html {
      * @return a raw HTML instruction
      */
     Html.Instruction.OfElement raw(String value);
+
+    /**
+     * Renders the specified fragment as part of this template.
+     *
+     * <p>
+     * The included fragment MUST only invoke methods of this template instance.
+     * It is common (but not required) for a fragment to be a method reference
+     * to a private method of the template instance.
+     *
+     * <p>
+     * The following Objectos HTML template:
+     *
+     * {@snippet file = "objectos/way/HtmlTemplateBaseJavadoc.java" region =
+     * "renderFragment0"}
+     *
+     * <p>
+     * Generates the following HTML:
+     *
+     * <pre>{@code
+     *     <!DOCTYPE html>
+     *     <html>
+     *     <head>
+     *     <title>Include fragment example</title>
+     *     </head>
+     *     <body>
+     *     <h1>Objectos HTML</h1>
+     *     <p>Using the include instruction</p>
+     *     </body>
+     *     </html>
+     * }</pre>
+     *
+     * <p>
+     * Note that the methods of included method references all return
+     * {@code void}.
+     *
+     * @param fragment
+     *        the fragment to include
+     *
+     * @return an instruction representing this fragment
+     */
+    Html.Instruction.OfFragment renderFragment(Html.Fragment.Of0 fragment);
+
+    /**
+     * Renders the specified fragment as part of this template.
+     *
+     * <p>
+     * The included fragment MUST only invoke methods of this template instance.
+     * It is common (but not required) for a fragment to be a method reference
+     * to a private method of the template instance.
+     *
+     * <p>
+     * The following Objectos HTML template:
+     *
+     * {@snippet file = "objectos/way/HtmlTemplateBaseJavadoc.java" region =
+     * "renderFragment1"}
+     *
+     * <p>
+     * Generates the following HTML:
+     *
+     * <pre>{@code
+     *     <body>
+     *     <div>Foo</div>
+     *     <div>Bar</div>
+     *     </body>
+     * }</pre>
+     *
+     * <p>
+     * Note that the methods of included method references all return
+     * {@code void}.
+     *
+     * @param <T1> the type of the first argument
+     *
+     * @param fragment
+     *        the fragment to include
+     * @param arg1
+     *        the first argument
+     *
+     * @return an instruction representing this fragment
+     */
+    <T1> Html.Instruction.OfFragment renderFragment(Html.Fragment.Of1<T1> fragment, T1 arg1);
+
+    /**
+     * Renders the specified fragment as part of this template.
+     *
+     * <p>
+     * The included fragment MUST only invoke methods of this template instance.
+     * It is common (but not required) for a fragment to be a method reference
+     * to a private method of the template instance.
+     *
+     * <p>
+     * The following Objectos HTML template:
+     *
+     * {@snippet file = "objectos/way/HtmlTemplateBaseJavadoc.java" region =
+     * "renderFragment2"}
+     *
+     * <p>
+     * Generates the following HTML:
+     *
+     * <pre>{@code
+     *     <body>
+     *     <p>City<span>Tokyo</span></p>
+     *     <p>Country<span>Japan</span></p>
+     *     </body>
+     * }</pre>
+     *
+     * <p>
+     * Note that the methods of included method references all return
+     * {@code void}.
+     *
+     * @param <T1> the type of the first argument
+     * @param <T2> the type of the second argument
+     *
+     * @param fragment
+     *        the fragment to include
+     * @param arg1
+     *        the first argument
+     * @param arg2
+     *        the second argument
+     *
+     * @return an instruction representing this fragment
+     */
+    <T1, T2> Html.Instruction.OfFragment renderFragment(Html.Fragment.Of2<T1, T2> fragment, T1 arg1, T2 arg2);
+
+    <T1, T2, T3> Html.Instruction.OfFragment renderFragment(Html.Fragment.Of3<T1, T2, T3> fragment, T1 arg1, T2 arg2, T3 arg3);
+
+    <T1, T2, T3, T4> Html.Instruction.OfFragment renderFragment(Html.Fragment.Of4<T1, T2, T3, T4> fragment, T1 arg1, T2 arg2, T3 arg3, T4 arg4);
 
     /**
      * Renders the specified plugin as part of this HTML instance.
@@ -3505,6 +3664,8 @@ public final class Html {
    */
   public non-sealed static abstract class Template extends TemplateBase implements Lang.CharWritable {
 
+    private Component component;
+
     HtmlMarkup html;
 
     /**
@@ -3579,16 +3740,32 @@ public final class Html {
 
         html.compilationBegin();
 
+        if (component != null) {
+          component.set(html);
+        }
+
         tryToRender();
 
         html.compilationEnd();
       } finally {
         html = null;
+
+        if (component != null) {
+          component.set(null);
+        }
       }
     }
 
     final void attribute(Html.AttributeName name, String value) {
       $html().attribute(name, value);
+    }
+
+    final void register(Component value) {
+      if (component != null) {
+        component.nest(value);
+      } else {
+        component = value;
+      }
     }
 
     final void tryToRender() {
@@ -3600,7 +3777,7 @@ public final class Html {
         throw e;
       } catch (Exception e) {
         throw new Html.RenderingException(e);
-      }
+      } finally {}
     }
 
     @Override
@@ -3612,7 +3789,7 @@ public final class Html {
 
   }
 
-  public sealed static abstract class TemplateBase extends Html.TemplateElements permits Component, Template {
+  public sealed static abstract class TemplateBase extends Html.TemplateElements permits Template {
 
     /**
      * The {@code data-execute-default} boolean attribute.
@@ -3706,34 +3883,19 @@ public final class Html {
     }
 
     protected final Html.Instruction.OfDataOn dataOnClick(Script.Action action) {
-      return dataOn(HtmlAttributeName.DATA_ON_CLICK, action);
+      return $html().dataOnClick(action);
     }
 
     protected final Html.Instruction.OfDataOn dataOnClick(Script.Action... actions) {
-      return dataOn(HtmlAttributeName.DATA_ON_CLICK, actions);
+      return $html().dataOnClick(actions);
     }
 
     protected final Html.Instruction.OfDataOn dataOnInput(Script.Action action) {
-      return dataOn(HtmlAttributeName.DATA_ON_INPUT, action);
+      return $html().dataOnInput(action);
     }
 
     protected final Html.Instruction.OfDataOn dataOnInput(Script.Action... actions) {
-      return dataOn(HtmlAttributeName.DATA_ON_INPUT, actions);
-    }
-
-    private final Html.Instruction.OfDataOn dataOn(AttributeName name, Script.Action action) {
-      Check.notNull(action, "action == null");
-
-      return $html().dataOn(name, action);
-    }
-
-    private final Html.Instruction.OfDataOn dataOn(AttributeName name, Script.Action... actions) {
-      Check.notNull(actions, "actions == null");
-
-      Script.Action value;
-      value = Script.join(actions);
-
-      return $html().dataOn(name, value);
+      return $html().dataOnInput(actions);
     }
 
     protected final Html.Instruction.OfElement element(Html.ElementName name, Html.Instruction... contents) {
@@ -3790,7 +3952,7 @@ public final class Html {
      *         entity.
      */
     protected final Html.Instruction.OfElement nbsp() {
-      return raw("&nbsp;");
+      return $html().nbsp();
     }
 
     /**
@@ -3875,23 +4037,7 @@ public final class Html {
      * @return an instruction representing this fragment
      */
     protected final Html.Instruction.OfFragment renderFragment(Html.Fragment.Of0 fragment) {
-      Check.notNull(fragment, "fragment == null");
-
-      HtmlMarkup html;
-      html = $html();
-
-      int index;
-      index = html.fragmentBegin();
-
-      try {
-        fragment.invoke();
-      } catch (Exception e) {
-        throw new Html.RenderingException(e);
-      }
-
-      html.fragmentEnd(index);
-
-      return Html.FRAGMENT;
+      return $html().renderFragment(fragment);
     }
 
     /**
@@ -3932,23 +4078,7 @@ public final class Html {
      * @return an instruction representing this fragment
      */
     protected final <T1> Html.Instruction.OfFragment renderFragment(Html.Fragment.Of1<T1> fragment, T1 arg1) {
-      Check.notNull(fragment, "fragment == null");
-
-      HtmlMarkup html;
-      html = $html();
-
-      int index;
-      index = html.fragmentBegin();
-
-      try {
-        fragment.invoke(arg1);
-      } catch (Exception e) {
-        throw new Html.RenderingException(e);
-      }
-
-      html.fragmentEnd(index);
-
-      return Html.FRAGMENT;
+      return $html().renderFragment(fragment, arg1);
     }
 
     /**
@@ -3992,63 +4122,15 @@ public final class Html {
      * @return an instruction representing this fragment
      */
     protected final <T1, T2> Html.Instruction.OfFragment renderFragment(Html.Fragment.Of2<T1, T2> fragment, T1 arg1, T2 arg2) {
-      Check.notNull(fragment, "fragment == null");
-
-      HtmlMarkup html;
-      html = $html();
-
-      int index;
-      index = html.fragmentBegin();
-
-      try {
-        fragment.invoke(arg1, arg2);
-      } catch (Exception e) {
-        throw new Html.RenderingException(e);
-      }
-
-      html.fragmentEnd(index);
-
-      return Html.FRAGMENT;
+      return $html().renderFragment(fragment, arg1, arg2);
     }
 
     protected final <T1, T2, T3> Html.Instruction.OfFragment renderFragment(Html.Fragment.Of3<T1, T2, T3> fragment, T1 arg1, T2 arg2, T3 arg3) {
-      Check.notNull(fragment, "fragment == null");
-
-      HtmlMarkup html;
-      html = $html();
-
-      int index;
-      index = html.fragmentBegin();
-
-      try {
-        fragment.invoke(arg1, arg2, arg3);
-      } catch (Exception e) {
-        throw new Html.RenderingException(e);
-      }
-
-      html.fragmentEnd(index);
-
-      return Html.FRAGMENT;
+      return $html().renderFragment(fragment, arg1, arg2, arg3);
     }
 
     protected final <T1, T2, T3, T4> Html.Instruction.OfFragment renderFragment(Html.Fragment.Of4<T1, T2, T3, T4> fragment, T1 arg1, T2 arg2, T3 arg3, T4 arg4) {
-      Check.notNull(fragment, "fragment == null");
-
-      HtmlMarkup html;
-      html = $html();
-
-      int index;
-      index = html.fragmentBegin();
-
-      try {
-        fragment.invoke(arg1, arg2, arg3, arg4);
-      } catch (Exception e) {
-        throw new Html.RenderingException(e);
-      }
-
-      html.fragmentEnd(index);
-
-      return Html.FRAGMENT;
+      return $html().renderFragment(fragment, arg1, arg2, arg3, arg4);
     }
 
     /**

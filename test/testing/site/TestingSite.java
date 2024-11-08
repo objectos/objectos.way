@@ -79,13 +79,9 @@ abstract class TestingSite extends App.Bootstrap {
 
     shutdownHook.register(webResources);
 
-    // Carbon
-    Http.Handler carbonHandler;
-    carbonHandler = carbonHandler(noteSink);
-
     // Injector
     TestingSiteInjector injector;
-    injector = new TestingSiteInjector(noteSink, sessionStore, webResources, carbonHandler);
+    injector = new TestingSiteInjector(noteSink, sessionStore, webResources);
 
     // HandlerFactory
     Http.HandlerFactory handlerFactory;
@@ -120,8 +116,6 @@ abstract class TestingSite extends App.Bootstrap {
   }
 
   abstract App.NoteSink noteSink();
-
-  abstract Http.Handler carbonHandler(Note.Sink noteSink);
 
   abstract Http.HandlerFactory handlerFactory(Note.Sink noteSink, ShutdownHook shutdownHook, TestingSiteInjector injector);
 

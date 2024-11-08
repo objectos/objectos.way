@@ -53,14 +53,96 @@ final class HtmlMarkup implements Html.Markup {
 
   private static final int OFFSET_MAX = OFFSET_RAW;
 
-  /**
-   * Renders the specified plugin as part of this HTML instance.
-   *
-   * @param plugin
-   *        the plugin to be rendered as part of this HTML instance
-   *
-   * @return an instruction representing the rendered plugin.
-   */
+  @Override
+  public final Html.Instruction.OfFragment renderFragment(Html.Fragment.Of0 fragment) {
+    Check.notNull(fragment, "fragment == null");
+
+    int index;
+    index = fragmentBegin();
+
+    try {
+      fragment.invoke();
+    } catch (Exception e) {
+      throw new Html.RenderingException(e);
+    }
+
+    fragmentEnd(index);
+
+    return Html.FRAGMENT;
+  }
+
+  @Override
+  public final <T1> Html.Instruction.OfFragment renderFragment(Html.Fragment.Of1<T1> fragment, T1 arg1) {
+    Check.notNull(fragment, "fragment == null");
+
+    int index;
+    index = fragmentBegin();
+
+    try {
+      fragment.invoke(arg1);
+    } catch (Exception e) {
+      throw new Html.RenderingException(e);
+    }
+
+    fragmentEnd(index);
+
+    return Html.FRAGMENT;
+  }
+
+  @Override
+  public final <T1, T2> Html.Instruction.OfFragment renderFragment(Html.Fragment.Of2<T1, T2> fragment, T1 arg1, T2 arg2) {
+    Check.notNull(fragment, "fragment == null");
+
+    int index;
+    index = fragmentBegin();
+
+    try {
+      fragment.invoke(arg1, arg2);
+    } catch (Exception e) {
+      throw new Html.RenderingException(e);
+    }
+
+    fragmentEnd(index);
+
+    return Html.FRAGMENT;
+  }
+
+  @Override
+  public final <T1, T2, T3> Html.Instruction.OfFragment renderFragment(Html.Fragment.Of3<T1, T2, T3> fragment, T1 arg1, T2 arg2, T3 arg3) {
+    Check.notNull(fragment, "fragment == null");
+
+    int index;
+    index = fragmentBegin();
+
+    try {
+      fragment.invoke(arg1, arg2, arg3);
+    } catch (Exception e) {
+      throw new Html.RenderingException(e);
+    }
+
+    fragmentEnd(index);
+
+    return Html.FRAGMENT;
+  }
+
+  @Override
+  public final <T1, T2, T3, T4> Html.Instruction.OfFragment renderFragment(Html.Fragment.Of4<T1, T2, T3, T4> fragment, T1 arg1, T2 arg2, T3 arg3, T4 arg4) {
+    Check.notNull(fragment, "fragment == null");
+
+    int index;
+    index = fragmentBegin();
+
+    try {
+      fragment.invoke(arg1, arg2, arg3, arg4);
+    } catch (Exception e) {
+      throw new Html.RenderingException(e);
+    }
+
+    fragmentEnd(index);
+
+    return Html.FRAGMENT;
+  }
+
   @Override
   public final Html.Instruction.OfFragment renderPlugin(Consumer<Html.Markup> plugin) {
     Check.notNull(plugin, "plugin == null");
@@ -75,14 +157,6 @@ final class HtmlMarkup implements Html.Markup {
     return Html.FRAGMENT;
   }
 
-  /**
-   * Renders the specified template as part of this HTML instance.
-   *
-   * @param template
-   *        the template to be rendered as part of this HTML instance
-   *
-   * @return an instruction representing the rendered template.
-   */
   @Override
   public final Html.Instruction.OfFragment renderTemplate(Html.Template template) {
     Check.notNull(template, "template == null");
@@ -180,17 +254,44 @@ final class HtmlMarkup implements Html.Markup {
   }
 
   @Override
-  public final Html.Instruction.OfDataOn dataOn(Html.AttributeName name, Script.Action value) {
-    Check.notNull(name, "name == null");
+  public final Html.Instruction.OfDataOn dataOnClick(Script.Action action) {
+    Check.notNull(action, "action == null");
 
-    Script.Action a;
-    a = Check.notNull(value, "value == null");
+    return dataOn0(HtmlAttributeName.DATA_ON_CLICK, action);
+  }
 
-    if (a == Script.noop()) {
+  @Override
+  public final Html.Instruction.OfDataOn dataOnClick(Script.Action... actions) {
+    return dataOn1(HtmlAttributeName.DATA_ON_CLICK, actions);
+  }
+
+  @Override
+  public final Html.Instruction.OfDataOn dataOnInput(Script.Action action) {
+    Check.notNull(action, "action == null");
+
+    return dataOn0(HtmlAttributeName.DATA_ON_INPUT, action);
+  }
+
+  @Override
+  public final Html.Instruction.OfDataOn dataOnInput(Script.Action... actions) {
+    return dataOn1(HtmlAttributeName.DATA_ON_INPUT, actions);
+  }
+
+  private Html.Instruction.OfDataOn dataOn0(Html.AttributeName name, Script.Action value) {
+    if (value == Script.noop()) {
       return Html.NOOP;
     } else {
-      return attribute0(name, a);
+      return attribute0(name, value);
     }
+  }
+
+  private Html.Instruction.OfDataOn dataOn1(Html.AttributeName name, Script.Action... actions) {
+    Check.notNull(actions, "actions == null");
+
+    Script.Action value;
+    value = Script.join(actions);
+
+    return dataOn0(name, value);
   }
 
   /**
@@ -1704,6 +1805,7 @@ final class HtmlMarkup implements Html.Markup {
     return Html.ATTRIBUTE;
   }
 
+  @Override
   public final Html.Instruction.OfElement element(Html.ElementName name, Html.Instruction... contents) {
     Check.notNull(name, "name == null");
 

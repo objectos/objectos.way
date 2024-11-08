@@ -1146,10 +1146,10 @@ public class HtmlTemplateTest {
   """)
   public void testCase53() {
     class ThisComponent extends Html.Component {
-      ThisComponent(Html.TemplateBase parent) { super(parent); }
+      ThisComponent(Html.Template parent) { super(parent); }
 
       public Html.Instruction.OfElement threeDots(Html.Instruction instruction) {
-        return button(instruction);
+        return html.button(instruction);
       }
     }
 

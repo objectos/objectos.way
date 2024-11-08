@@ -33,7 +33,7 @@ public class ShellHeader extends Html.Component {
 
   private Section active = Section.HOME;
 
-  public ShellHeader(Html.TemplateBase parent) {
+  public ShellHeader(Html.Template parent) {
     super(parent);
   }
 
@@ -42,10 +42,10 @@ public class ShellHeader extends Html.Component {
   }
 
   public final void render() {
-    header(
-        nav(
-            ul(
-                renderFragment(this::items)
+    html.header(
+        html.nav(
+            html.ul(
+                html.renderFragment(this::items)
             )
         )
     );
@@ -54,10 +54,10 @@ public class ShellHeader extends Html.Component {
   private void items() {
     for (Section section : SECTIONS) {
       if (section == active) {
-        li(section.name());
+        html.li(section.name());
       } else {
-        li(
-            a(href(section.href), text(section.name()))
+        html.li(
+            html.a(html.href(section.href), html.text(section.name()))
         );
       }
     }

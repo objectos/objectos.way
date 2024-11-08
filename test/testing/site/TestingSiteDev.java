@@ -22,7 +22,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.WatchService;
 import objectos.way.App;
-import objectos.way.Carbon;
 import objectos.way.Http;
 import objectos.way.Note;
 import testing.zite.TestingSiteInjector;
@@ -49,11 +48,6 @@ public final class TestingSiteDev extends TestingSite {
   @Override
   final App.NoteSink noteSink() {
     return App.NoteSink.OfConsole.create(config -> {});
-  }
-
-  @Override
-  final Http.Handler carbonHandler(Note.Sink noteSink) {
-    return Carbon.generateOnGetHandler(noteSink, testClassOutputOption.get());
   }
 
   @Override

@@ -18,7 +18,6 @@ package testing.site.web;
 import objectos.way.Http;
 import objectos.way.Web;
 import testing.site.auth.User;
-import testing.site.carbon.CarbonWeb;
 import testing.site.ui.UiHttpModule;
 import testing.zite.TestingSiteInjector;
 
@@ -32,8 +31,6 @@ public class TestingHttpModule extends Http.Module {
 
   @Override
   protected final void configure() {
-    host("dev.carbon:8003", new CarbonWeb(injector));
-
     install(new UiHttpModule(injector));
 
     route("/login", handlerFactory(Login::new, injector));

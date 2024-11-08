@@ -32,10 +32,6 @@ public final class TestingHttpServer {
 
   private TestingHttpServer() {}
 
-  public static void bindCarbonStylesTest(CarbonStylesTest test) {
-    ServerHolder.bindCarbonStylesTest(test);
-  }
-
   public static void bindHttpModuleTest(HttpModuleTest test) {
     ServerHolder.bindHttpModuleTest(test);
   }
@@ -121,10 +117,6 @@ public final class TestingHttpServer {
 
     static ThisHandlerFactory HANDLER;
 
-    public static void bindCarbonStylesTest(CarbonStylesTest test) {
-      HANDLER.carbonStylesTest.delegate = test.compile();
-    }
-
     public static void bindHttpModuleTest(HttpModuleTest test) {
       HANDLER.httpModuleTest.delegate = test.compile();
     }
@@ -191,8 +183,6 @@ public final class TestingHttpServer {
 
   private static class ThisHandlerFactory extends Http.Module implements Http.HandlerFactory {
 
-    private final DelegatingHandler carbonStylesTest = new DelegatingHandler();
-
     private final DelegatingHandler httpModuleTest = new DelegatingHandler();
 
     private final DelegatingHandler httpServerTest = new DelegatingHandler();
@@ -210,8 +200,6 @@ public final class TestingHttpServer {
 
     @Override
     protected final void configure() {
-      host("carbon.styles.test", carbonStylesTest);
-
       host("http.module.test", httpModuleTest);
 
       host("http.server.test", httpServerTest);

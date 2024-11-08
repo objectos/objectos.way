@@ -89,7 +89,7 @@ public final class TestingTestingSite {
 
     shutdownHook.register(webResources);
 
-    INJECTOR = new TestingSiteInjector(noteSink, sessionStore, webResources, null);
+    INJECTOR = new TestingSiteInjector(noteSink, sessionStore, webResources);
   }
 
   private TestingTestingSite() {}

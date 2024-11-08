@@ -390,8 +390,8 @@ public class HtmlTemplateTestInclude {
       }
 
       public final void render(Html.Instruction.OfElement child) {
-        div(
-            className("component"),
+        html.div(
+            html.className("component"),
 
             child
         );
@@ -400,6 +400,8 @@ public class HtmlTemplateTestInclude {
 
     test(
         new Html.Template() {
+          private final Component component = new Component(this);
+
           @Override
           protected final void render() {
             body(renderFragment(this::body));
@@ -407,9 +409,6 @@ public class HtmlTemplateTestInclude {
 
           private void body() {
             h1("Test");
-
-            Component component;
-            component = new Component(this);
 
             component.render(p("Text"));
           }
@@ -434,8 +433,8 @@ public class HtmlTemplateTestInclude {
       }
 
       public final Html.Instruction.OfElement render(Html.Instruction.OfElement e) {
-        return div(
-            className("c1"),
+        return html.div(
+            html.className("c1"),
             e
         );
       }
@@ -447,8 +446,8 @@ public class HtmlTemplateTestInclude {
       }
 
       public final Html.Instruction.OfElement render(Html.Instruction.OfElement e) {
-        return div(
-            className("c2"),
+        return html.div(
+            html.className("c2"),
             e
         );
       }
@@ -456,18 +455,16 @@ public class HtmlTemplateTestInclude {
 
     test(
         new Html.Template() {
+          private final Component1 c1 = new Component1(this);
+
+          private final Component2 c2 = new Component2(this);
+
           @Override
           protected final void render() {
             body(renderFragment(this::body));
           }
 
           private void body() {
-            Component1 c1;
-            c1 = new Component1(this);
-
-            Component2 c2;
-            c2 = new Component2(this);
-
             h1("Test");
 
             c1.render(
@@ -495,8 +492,8 @@ public class HtmlTemplateTestInclude {
       }
 
       public final Html.Instruction.OfElement render(Html.Instruction... elements) {
-        return nav(
-            ul(elements)
+        return html.nav(
+            html.ul(elements)
         );
       }
     }
@@ -505,20 +502,20 @@ public class HtmlTemplateTestInclude {
       public Link(Html.Template parent) { super(parent); }
 
       public final Html.Instruction.OfElement render(Html.Instruction... elements) {
-        return li(
-            a(elements)
+        return html.li(
+            html.a(elements)
         );
       }
     }
 
     test(
         new Html.Template() {
+          private final Navigation navigation = new Navigation(this);
+
+          private final Link link = new Link(this);
+
           @Override
           protected final void render() {
-            Navigation navigation = new Navigation(this);
-
-            Link link = new Link(this);
-
             header(
                 navigation.render(
                     link.render(href("#"), text("Products")),
