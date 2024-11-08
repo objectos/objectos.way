@@ -1145,10 +1145,18 @@ public class HtmlTemplateTest {
   HtmlComponent + dataOnClick
   """)
   public void testCase53() {
+    class ThisComponent extends Html.Component {
+      ThisComponent(Html.TemplateBase parent) { super(parent); }
+
+      public Html.Instruction.OfElement threeDots(Html.Instruction instruction) {
+        return button(instruction);
+      }
+    }
+
     test(
         new Html.Template() {
           final Id NAV = Html.Id.of("nav");
-          final IconsBootstrap icons = new IconsBootstrap(this);
+          final ThisComponent icons = new ThisComponent(this);
 
           @Override
           protected final void render() {
@@ -1163,9 +1171,7 @@ public class HtmlTemplateTest {
         },
 
         """
-        <div><svg data-on-click='[{"cmd":"replace-class","args":["nav","hidden","block"]}]' xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
-        <path d="M3 9.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z"></path>
-        </svg></div>
+        <div><button data-on-click='[{"cmd":"replace-class","args":["nav","hidden","block"]}]'></button></div>
         """
     );
   }
