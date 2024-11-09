@@ -26,10 +26,8 @@ MODULE := $(ARTIFACT_ID)
 
 ## Dependencies
 H2 := com.h2database/h2/2.2.224
-TESTNG := org.testng/testng/7.9.0
-
 SLF4J_NOP := org.slf4j/slf4j-nop/1.7.36
-
+TESTNG := org.testng/testng/7.9.0
 
 # Delete the default suffixes
 .SUFFIXES:
@@ -170,17 +168,92 @@ include make/java-javadoc.mk
 include make/java-jar.mk
 
 #
-# way@pom
-#
-
-## pom.xml copyright years
-COPYRIGHT_YEARS := 2022-2024
-
-## pom.xml description
-DESCRIPTION := Objectos Way allows you to build web applications using only Java. 
-
-#
 # way@install
 #
 
 include make/java-install.mk
+
+#
+# way@source-jar
+#
+
+include make/java-source-jar.mk
+
+#
+# way@pom
+#
+
+## pom template
+define POM_TMPL =
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Copyright (C) 2022-2024 Objectos Software LTDA.
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+	<modelVersion>4.0.0</modelVersion>
+	
+	<groupId>$(GROUP_ID)</groupId>
+	<artifactId>$(ARTIFACT_ID)</artifactId>
+	<version>$(VERSION)</version>
+	<name>$(GROUP_ID):$(ARTIFACT_ID)</name>
+
+	<description>
+	Objectos Way allows you to build web applications using only Java.
+	</description>
+
+	<url>https://www.objectos.com.br/</url>
+
+	<inceptionYear>2022</inceptionYear>
+
+	<licenses>
+		<license>
+			<name>The Apache License, Version 2.0</name>
+			<url>https://www.apache.org/licenses/LICENSE-2.0</url>
+			<distribution>repo</distribution>
+		</license>
+	</licenses>
+
+	<scm>
+		<connection>scm:git:git://github.com/objectos/objectos.way.git</connection>
+		<developerConnection>scm:git:ssh://git@github.com/objectos/objectos.way.git</developerConnection>
+		<url>https://github.com/objectos/objectos.way</url>
+		<tag>HEAD</tag>
+	</scm>
+
+	<organization>
+		<name>Objectos Software LTDA</name>
+		<url>https://www.objectos.com.br/</url>
+	</organization>
+
+	<developers>
+		<developer>
+			<id>objectos</id>
+			<name>Objectos Software LTDA</name>
+			<email>opensource@objectos.com.br</email>
+			<organization>Objectos Software LTDA</organization>
+			<organizationUrl>https://www.objectos.com.br/</organizationUrl>
+		</developer>
+	</developers>
+	
+</project>
+endef
+
+## mk-pom function
+mk-pom = $(call POM_TMPL)
+
+include make/maven-pom.mk
