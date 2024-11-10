@@ -53,6 +53,10 @@ mk-pom-dep = $(call POM_DEPENDENCY,$(call word-solidus,$(1),1),$(call word-solid
 ## pom file
 POM_FILE := $(WORK)/$(ARTIFACT_ID)-$(VERSION).pom
 
+## deps
+pom_gavs = $(COMPILE_DEPS:$(RESOLUTION_DIR)/%=%)
+POM_DEPENDENCIES = $(foreach dep,$(pom_gavs),$(call mk-pom-dep,$(dep)))
+
 ## contents
 POM_CONTENTS = $(call mk-pom)
 

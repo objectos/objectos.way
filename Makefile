@@ -256,4 +256,13 @@ endef
 ## mk-pom function
 mk-pom = $(call POM_TMPL)
 
-include make/maven-pom.mk
+include make/java-pom.mk
+
+#
+# way@ossrh
+#
+
+## provides OSSRH secrets
+-include $(HOME)/.config/objectos/ossrh-config.mk
+
+include make/java-ossrh.mk
