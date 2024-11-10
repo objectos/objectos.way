@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.net.Socket;
 import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 import objectos.way.TestingRandom.SequentialRandom;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
@@ -155,83 +156,63 @@ public class HttpModuleTest extends Http.Module {
   }
 
   @Test
-  public void testCase01() throws IOException {
-    try (Socket socket = newSocket()) {
-      test(socket,
-          """
-          GET /testCase01/foo HTTP/1.1\r
-          Host: http.module.test\r
-          \r
-          """,
+  public void testCase01() throws IOException, InterruptedException {
+    HttpResponse<String> response;
+    response = Testing.httpClient(
+        "/testCase01/foo",
 
-          """
-          HTTP/1.1 200 OK\r
-          Date: Wed, 28 Jun 2023 12:08:43 GMT\r
-          Content-Type: text/html; charset=utf-8\r
-          Transfer-Encoding: chunked\r
-          \r
-          1a\r
-          <html>
-          <p>foo</p>
-          </html>
-          \r
-          0\r
-          \r
-          """
-      );
+        builder -> builder.headers(
+            "Host", "http.module.test"
+        )
+    );
 
-      test(socket,
-          """
-          GET /testCase01 HTTP/1.1\r
-          Host: http.module.test\r
-          Cookie: HTTPMODULETEST=TEST_COOKIE\r
-          \r
-          """,
+    assertEquals(response.statusCode(), 200);
+    assertEquals(response.headers().allValues("Content-Type"), List.of("text/html; charset=utf-8"));
+    assertEquals(response.headers().allValues("Date"), List.of("Wed, 28 Jun 2023 12:08:43 GMT"));
+    assertEquals(response.body(), """
+    <html>
+    <p>foo</p>
+    </html>
+    """);
 
-          """
-          HTTP/1.1 404 NOT FOUND\r
-          Date: Wed, 28 Jun 2023 12:08:43 GMT\r
-          Connection: close\r
-          \r
-          """
-      );
-    }
+    response = Testing.httpClient(
+        "/testCase01",
 
-    try (Socket socket = newSocket()) {
-      test(socket,
-          """
-          GET /testCase01/ HTTP/1.1\r
-          Host: http.module.test\r
-          Cookie: HTTPMODULETEST=TEST_COOKIE\r
-          \r
-          """,
+        builder -> builder.headers(
+            "Host", "http.module.test",
+            "Cookie", "HTTPMODULETEST=TEST_COOKIE"
+        )
+    );
 
-          """
-          HTTP/1.1 404 NOT FOUND\r
-          Date: Wed, 28 Jun 2023 12:08:43 GMT\r
-          Connection: close\r
-          \r
-          """
-      );
-    }
+    assertEquals(response.statusCode(), 404);
+    assertEquals(response.headers().allValues("Connection"), List.of("close"));
+    assertEquals(response.headers().allValues("Date"), List.of("Wed, 28 Jun 2023 12:08:43 GMT"));
 
-    try (Socket socket = newSocket()) {
-      test(socket,
-          """
-          GET /testCase01/foo/bar HTTP/1.1\r
-          Host: http.module.test\r
-          Cookie: HTTPMODULETEST=TEST_COOKIE\r
-          \r
-          """,
+    response = Testing.httpClient(
+        "/testCase01/",
 
-          """
-          HTTP/1.1 404 NOT FOUND\r
-          Date: Wed, 28 Jun 2023 12:08:43 GMT\r
-          Connection: close\r
-          \r
-          """
-      );
-    }
+        builder -> builder.headers(
+            "Host", "http.module.test",
+            "Cookie", "HTTPMODULETEST=TEST_COOKIE"
+        )
+    );
+
+    assertEquals(response.statusCode(), 404);
+    assertEquals(response.headers().allValues("Connection"), List.of("close"));
+    assertEquals(response.headers().allValues("Date"), List.of("Wed, 28 Jun 2023 12:08:43 GMT"));
+
+    response = Testing.httpClient(
+        "/testCase01/foo/bar",
+
+        builder -> builder.headers(
+            "Host", "http.module.test",
+            "Cookie", "HTTPMODULETEST=TEST_COOKIE"
+        )
+    );
+
+    assertEquals(response.statusCode(), 404);
+    assertEquals(response.headers().allValues("Connection"), List.of("close"));
+    assertEquals(response.headers().allValues("Date"), List.of("Wed, 28 Jun 2023 12:08:43 GMT"));
   }
 
   private void testCase02(Http.Exchange http) {
@@ -893,7 +874,7 @@ public class HttpModuleTest extends Http.Module {
     response = Testing.httpClient(
         "/testCase11",
 
-        Testing.headers(
+        builder -> builder.headers(
             "Host", "http.module.test",
             "Connection", "close",
             "Cookie", "HTTPMODULETEST=TEST_COOKIE"
@@ -910,7 +891,7 @@ public class HttpModuleTest extends Http.Module {
     response = Testing.httpClient(
         "/testCase12",
 
-        Testing.headers(
+        builder -> builder.headers(
             "Host", "http.module.test",
             "Connection", "close",
             "Cookie", "HTTPMODULETEST=TEST_COOKIE"

@@ -23,6 +23,7 @@ import java.net.http.HttpResponse;
 import java.net.http.HttpResponse.BodyHandlers;
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
+import java.util.function.Consumer;
 
 final class Testing {
 
@@ -45,13 +46,9 @@ final class Testing {
 
   }
 
-  static abstract class Option {
-    void acceptHttpRequestBuilder(HttpRequest.Builder builder) {}
-  }
-
   private Testing() {}
 
-  public static HttpResponse<String> httpClient(String path, Option... options) throws IOException, InterruptedException {
+  public static HttpResponse<String> httpClient(String path, Consumer<HttpRequest.Builder> config) throws IOException, InterruptedException {
     // force early init
     java.net.http.HttpClient client;
     client = HttpClient.INSTANCE;
@@ -69,23 +66,12 @@ final class Testing {
 
     builder.timeout(Duration.ofMinutes(1));
 
-    for (var option : options) {
-      option.acceptHttpRequestBuilder(builder);
-    }
+    config.accept(builder);
 
     HttpRequest request;
     request = builder.build();
 
     return client.send(request, BodyHandlers.ofString(StandardCharsets.UTF_8));
-  }
-
-  public static Option headers(String... headers) {
-    return new Option() {
-      @Override
-      final void acceptHttpRequestBuilder(HttpRequest.Builder builder) {
-        builder.headers(headers);
-      }
-    };
   }
 
 }

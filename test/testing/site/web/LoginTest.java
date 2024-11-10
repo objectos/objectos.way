@@ -47,9 +47,8 @@ public class LoginTest {
         HTTP/1.1 200 OK\r
         Date: Wed, 28 Jun 2023 12:08:43 GMT\r
         Content-Type: text/html; charset=utf-8\r
-        Transfer-Encoding: chunked\r
+        Content-Length: 1510\r
         \r
-        5e6\r
         <!DOCTYPE html>
         <html>
         <head>
@@ -71,9 +70,6 @@ public class LoginTest {
         </div>
         </body>
         </html>
-        \r
-        0\r
-        \r
         """
     );
   }
@@ -110,9 +106,8 @@ public class LoginTest {
         HTTP/1.1 200 OK\r
         Date: Wed, 28 Jun 2023 12:08:43 GMT\r
         Content-Type: text/html; charset=utf-8\r
-        Transfer-Encoding: chunked\r
+        Content-Length: 1411\r
         \r
-        583\r
         <!DOCTYPE html>
         <html>
         <head>
@@ -134,9 +129,6 @@ public class LoginTest {
         </div>
         </body>
         </html>
-        \r
-        0\r
-        \r
         """
     );
   }

@@ -15,11 +15,16 @@
  */
 package objectos.way;
 
+import static org.testng.Assert.assertEquals;
+
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.Socket;
+import java.net.http.HttpRequest.BodyPublishers;
+import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 import objectos.way.Http.Exchange;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -200,70 +205,54 @@ public class HttpServerTest extends Http.Module {
   @Test(description = """
   It should be possible to send pre-made 200 OK responses
   """)
-  public void testCase03() throws IOException {
-    try (Socket socket = newSocket()) {
-      test(socket,
-          """
-          HEAD /test/testCase03 HTTP/1.1\r
-          Host: http.server.test\r
-          \r
-          """,
+  public void testCase03() throws IOException, InterruptedException {
+    HttpResponse<String> response;
+    response = Testing.httpClient(
+        "/test/testCase03",
 
-          """
-          HTTP/1.1 200 OK\r
-          Date: Wed, 28 Jun 2023 12:08:43 GMT\r
-          Content-Type: text/html; charset=utf-8\r
-          Transfer-Encoding: chunked\r
-          \r
-          """
-      );
+        builder -> builder.HEAD().headers(
+            "Host", "http.server.test"
+        )
+    );
 
-      test(socket,
-          """
-          GET /test/testCase03 HTTP/1.1\r
-          Host: http.server.test\r
-          \r
-          """,
+    assertEquals(response.statusCode(), 200);
+    assertEquals(response.headers().allValues("Content-Type"), List.of("text/html; charset=utf-8"));
+    assertEquals(response.headers().allValues("Date"), List.of("Wed, 28 Jun 2023 12:08:43 GMT"));
+    assertEquals(response.body(), "");
 
-          """
-          HTTP/1.1 200 OK\r
-          Date: Wed, 28 Jun 2023 12:08:43 GMT\r
-          Content-Type: text/html; charset=utf-8\r
-          Transfer-Encoding: chunked\r
-          \r
-          1f\r
-          <html>
-          <p>TC03 GET</p>
-          </html>
-          \r
-          0\r
-          \r
-          """
-      );
+    response = Testing.httpClient(
+        "/test/testCase03",
 
-      test(socket,
-          """
-          POST /test/testCase03 HTTP/1.1\r
-          Host: http.server.test\r
-          \r
-          """,
+        builder -> builder.headers(
+            "Host", "http.server.test"
+        )
+    );
 
-          """
-          HTTP/1.1 200 OK\r
-          Date: Wed, 28 Jun 2023 12:08:43 GMT\r
-          Content-Type: text/html; charset=utf-8\r
-          Transfer-Encoding: chunked\r
-          \r
-          20\r
-          <html>
-          <p>TC03 POST</p>
-          </html>
-          \r
-          0\r
-          \r
-          """
-      );
-    }
+    assertEquals(response.statusCode(), 200);
+    assertEquals(response.headers().allValues("Content-Type"), List.of("text/html; charset=utf-8"));
+    assertEquals(response.headers().allValues("Date"), List.of("Wed, 28 Jun 2023 12:08:43 GMT"));
+    assertEquals(response.body(), """
+    <html>
+    <p>TC03 GET</p>
+    </html>
+    """);
+
+    response = Testing.httpClient(
+        "/test/testCase03",
+
+        builder -> builder.POST(BodyPublishers.noBody()).headers(
+            "Host", "http.server.test"
+        )
+    );
+
+    assertEquals(response.statusCode(), 200);
+    assertEquals(response.headers().allValues("Content-Type"), List.of("text/html; charset=utf-8"));
+    assertEquals(response.headers().allValues("Date"), List.of("Wed, 28 Jun 2023 12:08:43 GMT"));
+    assertEquals(response.body(), """
+    <html>
+    <p>TC03 POST</p>
+    </html>
+    """);
   }
 
   private static final class AttributeTester extends Html.Template {
@@ -311,50 +300,37 @@ public class HttpServerTest extends Http.Module {
   @Test(description = """
   Request attributes should be reset between requests
   """)
-  public void testCase04() throws IOException {
-    try (Socket socket = newSocket()) {
-      test(socket,
-          """
-          GET /test/testCase04 HTTP/1.1\r
-          Host: http.server.test\r
-          \r
-          """,
+  public void testCase04() throws IOException, InterruptedException {
+    HttpResponse<String> response;
+    response = Testing.httpClient(
+        "/test/testCase04",
 
-          """
-          HTTP/1.1 200 OK\r
-          Date: Wed, 28 Jun 2023 12:08:43 GMT\r
-          Content-Type: text/html; charset=utf-8\r
-          Transfer-Encoding: chunked\r
-          \r
-          10\r
-          <p>TC04 GET</p>
-          \r
-          0\r
-          \r
-          """
-      );
+        builder -> builder.headers(
+            "Host", "http.server.test"
+        )
+    );
 
-      test(socket,
-          """
-          POST /test/testCase04 HTTP/1.1\r
-          Host: http.server.test\r
-          \r
-          """,
+    assertEquals(response.statusCode(), 200);
+    assertEquals(response.headers().allValues("Content-Type"), List.of("text/html; charset=utf-8"));
+    assertEquals(response.headers().allValues("Date"), List.of("Wed, 28 Jun 2023 12:08:43 GMT"));
+    assertEquals(response.body(), """
+    <p>TC04 GET</p>
+    """);
 
-          """
-          HTTP/1.1 200 OK\r
-          Date: Wed, 28 Jun 2023 12:08:43 GMT\r
-          Content-Type: text/html; charset=utf-8\r
-          Transfer-Encoding: chunked\r
-          \r
-          c\r
-          <p>null</p>
-          \r
-          0\r
-          \r
-          """
-      );
-    }
+    response = Testing.httpClient(
+        "/test/testCase04",
+
+        builder -> builder.POST(BodyPublishers.noBody()).headers(
+            "Host", "http.server.test"
+        )
+    );
+
+    assertEquals(response.statusCode(), 200);
+    assertEquals(response.headers().allValues("Content-Type"), List.of("text/html; charset=utf-8"));
+    assertEquals(response.headers().allValues("Date"), List.of("Wed, 28 Jun 2023 12:08:43 GMT"));
+    assertEquals(response.body(), """
+    <p>null</p>
+    """);
   }
 
   @SuppressWarnings("unused")
@@ -373,23 +349,20 @@ public class HttpServerTest extends Http.Module {
   @Test(description = """
   An Http.AbstractHandlerException caught by the loop should call its handle method
   """)
-  public void testCase05() throws IOException {
-    try (Socket socket = newSocket()) {
-      test(socket,
-          """
-          GET /test/testCase05 HTTP/1.1\r
-          Host: http.server.test\r
-          \r
-          """,
+  public void testCase05() throws IOException, InterruptedException {
+    HttpResponse<String> response;
+    response = Testing.httpClient(
+        "/test/testCase05",
 
-          """
-          HTTP/1.1 404 NOT FOUND\r
-          Date: Wed, 28 Jun 2023 12:08:43 GMT\r
-          Connection: close\r
-          \r
-          """
-      );
-    }
+        builder -> builder.headers(
+            "Host", "http.server.test"
+        )
+    );
+
+    assertEquals(response.statusCode(), 404);
+    assertEquals(response.headers().allValues("Connection"), List.of("close"));
+    assertEquals(response.headers().allValues("Date"), List.of("Wed, 28 Jun 2023 12:08:43 GMT"));
+    assertEquals(response.body(), "");
   }
 
   private Socket newSocket() throws IOException {

@@ -21,7 +21,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
+import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 import org.testng.annotations.Test;
 
 public class MarketingSiteTest {
@@ -50,51 +52,46 @@ public class MarketingSiteTest {
   @Test(description = """
   GET /index.html should return 200 OK
   """)
-  public void testCase02() throws IOException {
-    try (Socket socket = newSocket()) {
-      req(socket, """
-          GET /index.html HTTP/1.1\r
-          Host: marketing\r
-          Connection: close\r
-          \r
-          """);
+  public void testCase02() throws IOException, InterruptedException {
+    HttpResponse<String> response;
+    response = Testing.httpClient(
+        "/index.html",
 
-      resp(socket, """
-          HTTP/1.1 200 OK\r
-          Date: Wed, 28 Jun 2023 12:08:43 GMT\r
-          Content-Type: text/html; charset=utf-8\r
-          Transfer-Encoding: chunked\r
-          \r
-          1e\r
-          <!DOCTYPE html>
-          <h1>home</h1>
-          \r
-          0\r
-          \r
-          """);
-    }
+        builder -> builder.headers(
+            "Host", "marketing",
+            "Connection", "close"
+        )
+    );
+
+    assertEquals(response.statusCode(), 200);
+    assertEquals(response.headers().allValues("Content-Length"), List.of("30"));
+    assertEquals(response.headers().allValues("Content-Type"), List.of("text/html; charset=utf-8"));
+    assertEquals(response.headers().allValues("Date"), List.of("Wed, 28 Jun 2023 12:08:43 GMT"));
+    assertEquals(response.body(), """
+    <!DOCTYPE html>
+    <h1>home</h1>
+    """);
   }
 
   @Test(description = """
   HEAD /index.html should return 200 OK
   """)
-  public void testCase03() throws IOException {
-    try (Socket socket = newSocket()) {
-      req(socket, """
-          HEAD /index.html HTTP/1.1\r
-          Host: marketing\r
-          Connection: close\r
-          \r
-          """);
+  public void testCase03() throws IOException, InterruptedException {
+    HttpResponse<String> response;
+    response = Testing.httpClient(
+        "/index.html",
 
-      resp(socket, """
-          HTTP/1.1 200 OK\r
-          Date: Wed, 28 Jun 2023 12:08:43 GMT\r
-          Content-Type: text/html; charset=utf-8\r
-          Transfer-Encoding: chunked\r
-          \r
-          """);
-    }
+        builder -> builder.HEAD().headers(
+            "Host", "marketing",
+            "Connection", "close"
+        )
+    );
+
+    assertEquals(response.statusCode(), 200);
+    assertEquals(response.headers().allValues("Content-Length"), List.of("30"));
+    assertEquals(response.headers().allValues("Content-Type"), List.of("text/html; charset=utf-8"));
+    assertEquals(response.headers().allValues("Date"), List.of("Wed, 28 Jun 2023 12:08:43 GMT"));
+    assertEquals(response.body(), "");
   }
 
   @Test(description = """

@@ -1745,7 +1745,6 @@ final class HttpExchange implements Http.Exchange, Closeable {
 
   private static final byte[] CHUNKED_TRAILER = "0\r\n\r\n".getBytes(StandardCharsets.UTF_8);
 
-  @Override
   public final void send(Lang.CharWritable body, Charset charset) {
     Objects.requireNonNull(body, "body == null");
     Objects.requireNonNull(charset, "charset == null");

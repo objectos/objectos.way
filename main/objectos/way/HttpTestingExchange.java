@@ -228,13 +228,6 @@ final class HttpTestingExchange implements Http.TestingExchange {
   }
 
   @Override
-  public final void send(Lang.CharWritable body, Charset charset) {
-    responseBody = Objects.requireNonNull(body, "body == null");
-
-    responseCharset = Objects.requireNonNull(charset, "charset == null");
-  }
-
-  @Override
   public final void send(Path file) {
     responseBody = Objects.requireNonNull(file, "file == null");
   }

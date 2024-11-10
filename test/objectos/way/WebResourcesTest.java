@@ -295,7 +295,7 @@ public class WebResourcesTest extends Http.Module {
     resp01 = Testing.httpClient(
         "/tc06.txt",
 
-        Testing.headers(
+        builder -> builder.headers(
             "Host", "web.resources.test"
         )
     );
@@ -312,7 +312,7 @@ public class WebResourcesTest extends Http.Module {
     resp02 = Testing.httpClient(
         "/tc06.txt",
 
-        Testing.headers(
+        builder -> builder.headers(
             "Host", "web.resources.test",
             "If-None-Match", maybeTag.get(),
             "Connection", "close"
@@ -350,7 +350,7 @@ public class WebResourcesTest extends Http.Module {
     resp = Testing.httpClient(
         "/tc07.txt",
 
-        Testing.headers(
+        builder -> builder.headers(
             "Host", "web.resources.test"
         )
     );
@@ -381,7 +381,7 @@ public class WebResourcesTest extends Http.Module {
     resp01 = Testing.httpClient(
         "/tc08.txt",
 
-        Testing.headers(
+        builder -> builder.headers(
             "Host", "web.resources.test"
         )
     );
@@ -398,7 +398,7 @@ public class WebResourcesTest extends Http.Module {
     resp02 = Testing.httpClient(
         "/tc08.txt",
 
-        Testing.headers(
+        builder -> builder.headers(
             "Host", "web.resources.test",
             "If-None-Match", maybeTag.get(),
             "Connection", "close"

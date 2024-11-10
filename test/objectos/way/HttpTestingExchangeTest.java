@@ -62,18 +62,16 @@ public class HttpTestingExchangeTest {
 
     assertEquals(http.responseStatus(), Http.Status.OK);
 
-    Lang.CharWritable body;
-    body = (Lang.CharWritable) http.responseBody();
+    byte[] body;
+    body = (byte[]) http.responseBody();
 
     assertEquals(
-        body.toString(),
+        new String(body, StandardCharsets.UTF_8),
 
         """
         <div>tc02</div>
         """
     );
-
-    assertEquals(http.responseCharset(), StandardCharsets.UTF_8);
   }
 
 }

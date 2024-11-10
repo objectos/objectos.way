@@ -177,17 +177,6 @@ public final class Http {
     void send(byte[] body);
 
     /**
-     * Writes the end of this HTTP response message using the specified entity
-     * and charset to write out the message body.
-     *
-     * @param entity
-     *        the message body contents
-     * @param charset
-     *        the charset to use when encoding the message body contents
-     */
-    void send(Lang.CharWritable entity, Charset charset);
-
-    /**
      * Writes the end of this HTTP response message with the contents of the
      * specified file as message body.
      *
@@ -208,7 +197,11 @@ public final class Http {
     }
 
     default void ok(Html.Template template) {
-      Objects.requireNonNull(template, "template == null");
+      String html; // early implicit null-check
+      html = template.toString();
+
+      byte[] bytes;
+      bytes = html.getBytes(StandardCharsets.UTF_8);
 
       status(Http.Status.OK);
 
@@ -216,9 +209,9 @@ public final class Http {
 
       header(Http.HeaderName.CONTENT_TYPE, "text/html; charset=utf-8");
 
-      header(Http.HeaderName.TRANSFER_ENCODING, "chunked");
+      header(Http.HeaderName.CONTENT_LENGTH, bytes.length);
 
-      send(template, StandardCharsets.UTF_8);
+      send(bytes);
     }
 
     default void okText(String text, Charset charset) {
