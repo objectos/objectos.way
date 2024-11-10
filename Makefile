@@ -21,7 +21,7 @@
 ## Coordinates
 GROUP_ID := br.com.objectos
 ARTIFACT_ID := objectos.way
-VERSION := 0.1.6-SNAPSHOT
+VERSION := 0.1.6
 MODULE := $(ARTIFACT_ID)
 
 ## Dependencies
@@ -263,6 +263,20 @@ include make/java-pom.mk
 #
 
 ## provides OSSRH secrets
+## - OSSRH_GPG_KEY
+## - OSSRH_GPG_PASSPHRASE
+## - OSSRH_USERNAME
+## - OSSRH_PASSWORD
 -include $(HOME)/.config/objectos/ossrh-config.mk
 
 include make/java-ossrh.mk
+
+#
+# way@gh-release
+#
+
+## provides GH secrets
+## - GH_TOKEN
+-include $(HOME)/.config/objectos/gh-config.mk
+
+include make/gh-release.mk

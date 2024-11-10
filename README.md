@@ -1,6 +1,6 @@
 # Objectos Way
 
-Objectos is a suite of open-source Java libraries.
+Objectos Way allows you to build web applications using only Java.
 
 ## License
 

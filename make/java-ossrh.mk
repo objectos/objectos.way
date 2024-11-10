@@ -36,23 +36,8 @@ ifndef POM_FILE
 $(error Required java-pom.mk was not included)
 endif
 
-## curl path
-ifndef CURL
-CURL := curl
-endif
-
-## gpg path
-ifndef GPG
-GPG := gpg
-endif
-
-## sed path
-ifndef SED
-SED := sed
-endif
-
 ## gpg command
-GPGX = $(GPG)
+GPGX = gpg
 GPGX += --armor
 GPGX += --batch
 GPGX += --default-key $(OSSRH_GPG_KEY)
@@ -87,7 +72,7 @@ OSSRH_JARX += $(foreach file,$(OSSRH_BUNDLE_CONTENTS), -C $(dir $(file)) $(notdi
 OSSRH_COOKIES = $(WORK)/ossrh-cookies.txt 
 
 ## ossrh login curl command
-OSSRH_LOGIN_CURLX := $(CURL)
+OSSRH_LOGIN_CURLX := curl
 OSSRH_LOGIN_CURLX += --cookie-jar $(OSSRH_COOKIES)
 OSSRH_LOGIN_CURLX += --output /dev/null
 OSSRH_LOGIN_CURLX += --request GET
@@ -99,7 +84,7 @@ OSSRH_LOGIN_CURLX += --user $(OSSRH_USERNAME):$(OSSRH_PASSWORD)
 OSSRH_UPLOAD_JSON := $(WORK)/ossrh-upload.json
 
 ## ossrh upload curl command
-OSSRH_UPLOAD_CURLX := $(CURL)
+OSSRH_UPLOAD_CURLX := curl
 OSSRH_UPLOAD_CURLX += --cookie $(OSSRH_COOKIES)
 OSSRH_UPLOAD_CURLX += --header 'Content-Type: multipart/form-data'
 OSSRH_UPLOAD_CURLX += --form file=@$(OSSRH_BUNDLE_FILE)
@@ -108,7 +93,7 @@ OSSRH_UPLOAD_CURLX += --request POST
 OSSRH_UPLOAD_CURLX += --url https://oss.sonatype.org/service/local/staging/bundle_upload
 
 ## ossrh repository id sed parsing
-OSSRH_SEDX := $(SED)
+OSSRH_SEDX := sed
 OSSRH_SEDX += --regexp-extended
 OSSRH_SEDX += --silent
 OSSRH_SEDX += 's/^.*repositories\/(.*)".*/\1/p'
@@ -118,7 +103,7 @@ OSSRH_SEDX += $(OSSRH_UPLOAD_JSON)
 OSSRH_REPOSITORY_ID = $(shell $(OSSRH_SEDX))
 
 ## ossrh release curl command
-OSSRH_RELEASE_CURLX = $(CURL)
+OSSRH_RELEASE_CURLX = curl
 OSSRH_RELEASE_CURLX += --cookie $(OSSRH_COOKIES)
 OSSRH_RELEASE_CURLX += --data '{"data":{"autoDropAfterRelease":true,"description":"","stagedRepositoryIds":["$(OSSRH_REPOSITORY_ID)"]}}'
 OSSRH_RELEASE_CURLX += --header 'Content-Type: application/json'
