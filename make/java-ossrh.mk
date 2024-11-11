@@ -36,6 +36,11 @@ ifndef POM_FILE
 $(error Required java-pom.mk was not included)
 endif
 
+# the OSSRH server to use
+ifndef OSSRH_SERVER
+OSSRH_SERVER := https://s01.oss.sonatype.org
+endif
+
 ## gpg command
 GPGX = gpg
 GPGX += --armor
@@ -77,7 +82,7 @@ OSSRH_LOGIN_CURLX += --cookie-jar $(OSSRH_COOKIES)
 OSSRH_LOGIN_CURLX += --output /dev/null
 OSSRH_LOGIN_CURLX += --request GET
 OSSRH_LOGIN_CURLX += --silent
-OSSRH_LOGIN_CURLX += --url https://oss.sonatype.org/service/local/authentication/login
+OSSRH_LOGIN_CURLX += --url $(OSSRH_SERVER)/service/local/authentication/login
 OSSRH_LOGIN_CURLX += --user $(OSSRH_USERNAME):$(OSSRH_PASSWORD)
 
 ## ossrh response json
@@ -90,7 +95,7 @@ OSSRH_UPLOAD_CURLX += --header 'Content-Type: multipart/form-data'
 OSSRH_UPLOAD_CURLX += --form file=@$(OSSRH_BUNDLE_FILE)
 OSSRH_UPLOAD_CURLX += --output $(OSSRH_UPLOAD_JSON)
 OSSRH_UPLOAD_CURLX += --request POST
-OSSRH_UPLOAD_CURLX += --url https://oss.sonatype.org/service/local/staging/bundle_upload
+OSSRH_UPLOAD_CURLX += --url $(OSSRH_SERVER)/service/local/staging/bundle_upload
 
 ## ossrh repository id sed parsing
 OSSRH_SEDX := sed
@@ -108,7 +113,7 @@ OSSRH_RELEASE_CURLX += --cookie $(OSSRH_COOKIES)
 OSSRH_RELEASE_CURLX += --data '{"data":{"autoDropAfterRelease":true,"description":"","stagedRepositoryIds":["$(OSSRH_REPOSITORY_ID)"]}}'
 OSSRH_RELEASE_CURLX += --header 'Content-Type: application/json'
 OSSRH_RELEASE_CURLX += --request POST
-OSSRH_RELEASE_CURLX += --url https://oss.sonatype.org/service/local/staging/bulk/promote
+OSSRH_RELEASE_CURLX += --url $(OSSRH_SERVER)/service/local/staging/bulk/promote
 
 ## ossrh marker
 OSSRH_MARKER := $(WORK)/ossrh-marker
