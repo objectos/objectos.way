@@ -29,6 +29,9 @@ H2 := com.h2database/h2/2.2.224
 SLF4J_NOP := org.slf4j/slf4j-nop/1.7.36
 TESTNG := org.testng/testng/7.9.0
 
+## use legacy OSSRH server
+OSSRH_SERVER := https://oss.sonatype.org
+
 # Delete the default suffixes
 .SUFFIXES:
 
@@ -259,24 +262,36 @@ mk-pom = $(call POM_TMPL)
 include make/java-pom.mk
 
 #
-# way@ossrh
+# OSSRH secrets
 #
 
-## provides OSSRH secrets
 ## - OSSRH_GPG_KEY
 ## - OSSRH_GPG_PASSPHRASE
 ## - OSSRH_USERNAME
 ## - OSSRH_PASSWORD
 -include $(HOME)/.config/objectos/ossrh-config.mk
 
+#
+# way@ossrh
+#
+
 include make/java-ossrh.mk
+
+#
+# way@ossrh-snapshots
+#
+
+include make/java-ossrh-snapshots.mk
+
+#
+# GH secrets
+#
+
+## - GH_TOKEN
+-include $(HOME)/.config/objectos/gh-config.mk
 
 #
 # way@gh-release
 #
-
-## provides GH secrets
-## - GH_TOKEN
--include $(HOME)/.config/objectos/gh-config.mk
 
 include make/gh-release.mk

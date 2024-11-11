@@ -49,3 +49,6 @@ jobs:
       with:
         name: ${{ matrix.os }}-test-results
         path: work/test-output
+
+    - name: Deploy snapshots to OSSRH
+      run: make ossrh-snapshots
