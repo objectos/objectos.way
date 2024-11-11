@@ -20,6 +20,7 @@ import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertTrue;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import objectos.way.Html.ClassName;
 import objectos.way.Html.Id;
 import org.testng.Assert;
@@ -1667,6 +1668,28 @@ public class HtmlTemplateTest {
         </div>
         """
     );
+  }
+
+  @Test(description = """
+  The Lang.MediaObject methods
+  """)
+  public void testCase70() {
+    var template = new Html.Template() {
+      @Override
+      protected final void render() {
+        doctype();
+        html();
+      }
+    };
+
+    assertEquals(template.contentType(), "text/html; charset=utf-8");
+
+    var mediaBytes = template.mediaBytes();
+
+    assertEquals(new String(mediaBytes, StandardCharsets.UTF_8), """
+    <!DOCTYPE html>
+    <html></html>
+    """);
   }
 
   private void test(Html.Template template, String expected) {

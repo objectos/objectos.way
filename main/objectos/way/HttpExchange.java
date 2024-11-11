@@ -1948,6 +1948,44 @@ final class HttpExchange implements Http.Exchange, Closeable {
     }
   }
 
+  // 200 OK
+
+  @Override
+  public final void ok() {
+    status(Http.Status.OK);
+
+    dateNow();
+
+    send();
+  }
+
+  @Override
+  public final void ok(Lang.MediaObject object) {
+    String contentType;
+    contentType = object.contentType();
+
+    if (contentType == null) {
+      throw new NullPointerException("Provided Lang.MediaObject provided a null content-type");
+    }
+
+    byte[] bytes;
+    bytes = object.mediaBytes();
+
+    if (bytes == null) {
+      throw new NullPointerException("Provided Lang.MediaObject provided a null byte array");
+    }
+
+    status(Http.Status.OK);
+
+    dateNow();
+
+    header(Http.HeaderName.CONTENT_TYPE, contentType);
+
+    header(Http.HeaderName.CONTENT_LENGTH, bytes.length);
+
+    send(bytes);
+  }
+
   // 404 NOT FOUND
 
   @Override

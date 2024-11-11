@@ -15,9 +15,8 @@
  */
 package objectos.way;
 
-import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.Iterator;
-import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -3662,7 +3661,7 @@ public final class Html {
    * instance of the class can then be used to generate the represented HTML
    * code.
    */
-  public non-sealed static abstract class Template extends TemplateBase implements Lang.CharWritable {
+  public non-sealed static abstract class Template extends TemplateBase implements Lang.MediaObject {
 
     private Component component;
 
@@ -3672,6 +3671,30 @@ public final class Html {
      * Sole constructor.
      */
     protected Template() {}
+
+    /**
+     * Returns {@code text/html; charset=utf-8}.
+     *
+     * @return always {@code text/html; charset=utf-8}
+     */
+    @Override
+    public final String contentType() {
+      return "text/html; charset=utf-8";
+    }
+
+    /**
+     * The bytes of the string representation of this template encoded with the
+     * {@code UTF-8} charset.
+     *
+     * @return the bytes of the string representation of this template
+     */
+    @Override
+    public final byte[] mediaBytes() {
+      String html;
+      html = toString();
+
+      return html.getBytes(StandardCharsets.UTF_8);
+    }
 
     /**
      * Returns a formatted text of all of the testable text nodes in this
@@ -3704,21 +3727,6 @@ public final class Html {
       accept(html);
 
       return html.toString();
-    }
-
-    @Override
-    public final void writeTo(Appendable out) throws IOException {
-      Objects.requireNonNull(out, "out == null");
-
-      HtmlMarkup html;
-      html = new HtmlMarkup();
-
-      accept(html);
-
-      HtmlDom document;
-      document = html.compile();
-
-      HtmlFormatter.STANDARD.formatTo(document, out);
     }
 
     /**

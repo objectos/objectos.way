@@ -17,7 +17,6 @@ package objectos.way;
 
 import static org.testng.Assert.assertEquals;
 
-import java.nio.charset.StandardCharsets;
 import org.testng.annotations.Test;
 
 public class HttpTestingExchangeTest {
@@ -46,7 +45,7 @@ public class HttpTestingExchangeTest {
     assertEquals(http.get(String.class), "Hello");
   }
 
-  @Test(description = "Lang.CharWritable response")
+  @Test(description = "Html.Template response")
   public void testCase02() {
     class Template extends Html.Template {
       @Override
@@ -62,11 +61,11 @@ public class HttpTestingExchangeTest {
 
     assertEquals(http.responseStatus(), Http.Status.OK);
 
-    byte[] body;
-    body = (byte[]) http.responseBody();
+    Html.Template body;
+    body = (Html.Template) http.responseBody();
 
     assertEquals(
-        new String(body, StandardCharsets.UTF_8),
+        body.toString(),
 
         """
         <div>tc02</div>

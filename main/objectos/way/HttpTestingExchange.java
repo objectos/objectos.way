@@ -30,6 +30,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import objectos.way.Http.HeaderName;
+import objectos.way.Lang.MediaObject;
 
 final class HttpTestingExchange implements Http.TestingExchange {
 
@@ -230,6 +231,34 @@ final class HttpTestingExchange implements Http.TestingExchange {
   @Override
   public final void send(Path file) {
     responseBody = Objects.requireNonNull(file, "file == null");
+  }
+
+  @Override
+  public final void ok() {
+    status(Http.Status.OK);
+
+    dateNow();
+
+    send();
+  }
+
+  @Override
+  public final void ok(MediaObject object) {
+    String contentType;
+    contentType = object.contentType();
+
+    byte[] bytes;
+    bytes = object.mediaBytes();
+
+    status(Http.Status.OK);
+
+    dateNow();
+
+    header(Http.HeaderName.CONTENT_TYPE, contentType);
+
+    header(Http.HeaderName.CONTENT_LENGTH, bytes.length);
+
+    responseBody = object;
   }
 
   @Override

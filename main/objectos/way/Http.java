@@ -187,32 +187,19 @@ public final class Http {
 
     // pre-made responses
 
-    // 200
-    default void ok() {
-      status(Http.Status.OK);
+    /**
+     * Sends an HTTP {@code 200 OK} response with no response body.
+     */
+    void ok();
 
-      dateNow();
-
-      send();
-    }
-
-    default void ok(Html.Template template) {
-      String html; // early implicit null-check
-      html = template.toString();
-
-      byte[] bytes;
-      bytes = html.getBytes(StandardCharsets.UTF_8);
-
-      status(Http.Status.OK);
-
-      dateNow();
-
-      header(Http.HeaderName.CONTENT_TYPE, "text/html; charset=utf-8");
-
-      header(Http.HeaderName.CONTENT_LENGTH, bytes.length);
-
-      send(bytes);
-    }
+    /**
+     * Sends an HTTP {@code 200 OK} response with the specified media object as
+     * the response body.
+     *
+     * @param object
+     *        the object providing the raw data to be sent over the wire
+     */
+    void ok(Lang.MediaObject object);
 
     default void okText(String text, Charset charset) {
       byte[] bytes;
