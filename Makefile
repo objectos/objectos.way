@@ -29,7 +29,8 @@ H2 := com.h2database/h2/2.2.224
 SLF4J_NOP := org.slf4j/slf4j-nop/1.7.36
 TESTNG := org.testng/testng/7.9.0
 
-## use legacy OSSRH server
+## Maven interop
+REMOTE_REPOS := https://repo.maven.apache.org/maven2
 OSSRH_SERVER := https://oss.sonatype.org
 
 # Delete the default suffixes

@@ -92,7 +92,7 @@ gav-to-resolution-file = $(RESOLUTION_DIR)/$(1)
 ## deps-to-local
 ##
 ## syntax:
-## LOCAL_REPO_PATH := /tmp/repo
+## LOCAL_REPO := /tmp/repo
 ## DEPS := com.example/foo/1.2.3
 ## DEPS += br.com.objectos/bar/3.4.5
 ## $(call deps-to-local,$(DEPS))
@@ -105,12 +105,12 @@ deps-to-local = $(foreach dep,$(1),$(call gav-to-local,$(dep)))
 ## syntax:
 ## $(call dependency,[GROUP_ID],[ARTIFACT_ID],[VERSION])
 mk-dependency = $(subst $(dot),$(solidus),$(1))/$(2)/$(3)/$(2)-$(3).$(4)
-dependency = $(LOCAL_REPO_PATH)/$(subst $(dot),$(solidus),$(1))/$(2)/$(3)/$(2)-$(3).jar
+dependency = $(LOCAL_REPO)/$(subst $(dot),$(solidus),$(1))/$(2)/$(3)/$(2)-$(3).jar
 
 ## dep-to-jar
 word-solidus = $(word $(2), $(subst $(solidus),$(space),$(1)))
 mk-resolved-jar = $(call mk-dependency,$(call word-solidus,$(1),1),$(call word-solidus,$(1),2),$(call word-solidus,$(1),3),jar)
-gav-to-local = $(LOCAL_REPO_PATH)/$(call mk-resolved-jar,$(1))
+gav-to-local = $(LOCAL_REPO)/$(call mk-resolved-jar,$(1))
 dep-to-jar = $(foreach dep,$(1),$(call gav-to-local,$(dep)))
 
 ## to-resolution-files
@@ -124,14 +124,9 @@ uniq-resolution-files = cat -n $(1) | sort -uk2 | sort -n | cut -f2-
 # Dependencies related options & functions
 #
 
-## remote repository URL
-ifndef REMOTE_REPO_URL
-REMOTE_REPO_URL := https://repo.maven.apache.org/maven2
-endif
-
-## local repository path
-ifndef LOCAL_REPO_PATH
-LOCAL_REPO_PATH := $(HOME)/.cache/objectos/repository
+## local repository
+ifndef LOCAL_REPO
+LOCAL_REPO := $(HOME)/.cache/objectos/repository
 endif
 
 ## resolution directory
@@ -139,9 +134,19 @@ ifndef RESOLUTION_DIR
 RESOLUTION_DIR := $(HOME)/.cache/objectos/resolution
 endif
 
+## remote repositories
+ifndef REMOTE_REPOS
+REMOTE_REPOS := https://repo.maven.apache.org/maven2
+endif
+
 ## Resolver.java path
 ifndef RESOLVER_JAVA
 RESOLVER_JAVA := Resolver.java
+endif
+
+## bootstrap repository
+ifndef BOOTSTRAP_REPO
+BOOTSTRAP_REPO := https://repo.maven.apache.org/maven2
 endif
 
 ## Where to find our Resolver.java source 
@@ -180,16 +185,17 @@ RESOLVER_DEPS_JARS := $(call dep-to-jar,$(RESOLVER_DEPS))
 RESOLVEX := $(JAVA)
 RESOLVEX += --class-path $(call class-path,$(RESOLVER_DEPS_JARS))
 RESOLVEX += $(RESOLVER_JAVA)
-RESOLVEX += --local-repo $(LOCAL_REPO_PATH)
+RESOLVEX += --local-repo $(LOCAL_REPO)
+RESOLVEX += $(foreach repo, $(REMOTE_REPOS), --remote-repo $(repo))
 RESOLVEX += --resolution-dir $(RESOLUTION_DIR)
 
-## remote repository curl
-REMOTE_REPO_WGETX := wget
-REMOTE_REPO_WGETX += --directory-prefix=$(LOCAL_REPO_PATH)
-REMOTE_REPO_WGETX += --force-directories
-REMOTE_REPO_WGETX += --no-host-directories
-REMOTE_REPO_WGETX += --cut-dirs=1
-REMOTE_REPO_WGETX += --no-verbose
+## boostrap repository curl
+BOOTSTRAP_REPO_WGETX := wget
+BOOTSTRAP_REPO_WGETX += --directory-prefix=$(LOCAL_REPO)
+BOOTSTRAP_REPO_WGETX += --force-directories
+BOOTSTRAP_REPO_WGETX += --no-host-directories
+BOOTSTRAP_REPO_WGETX += --cut-dirs=1
+BOOTSTRAP_REPO_WGETX += --no-verbose
 
 #
 # java dependency related rules
@@ -197,8 +203,8 @@ REMOTE_REPO_WGETX += --no-verbose
 
 .NOTINTERMEDIATE: $(RESOLVER_DEPS_JARS)
 
-$(LOCAL_REPO_PATH)/%.jar:	
-	$(REMOTE_REPO_WGETX) $(@:$(LOCAL_REPO_PATH)/%.jar=$(REMOTE_REPO_URL)/%.jar)
+$(LOCAL_REPO)/%.jar:	
+	$(BOOTSTRAP_REPO_WGETX) $(@:$(LOCAL_REPO)/%.jar=$(BOOTSTRAP_REPO)/%.jar)
 
 $(RESOLVER_JAVA):
 	wget --no-verbose $(RESOLVER_URL) 

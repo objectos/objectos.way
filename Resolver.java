@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Objectos Software LTDA.
+ * Copyright (C) 2023-2024 Objectos Software LTDA.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -50,6 +50,8 @@ public class Resolver {
 
   Path resolutionPath;
 
+  final List<RemoteRepository> remoteRepositories = new ArrayList<>();
+
   String requestedDependency;
 
   Artifact requestedArtifact;
@@ -92,6 +94,21 @@ public class Resolver {
             name = args[index++];
 
             localRepositoryPath = Path.of(name);
+          }
+        }
+
+        case "--remote-repo" -> {
+          if (index < length) {
+            String url;
+            url = args[index++];
+
+            RemoteRepository.Builder builder;
+            builder = new RemoteRepository.Builder(null, "default", url);
+
+            RemoteRepository repo;
+            repo = builder.build();
+
+            remoteRepositories.add(repo);
           }
         }
 
@@ -165,13 +182,7 @@ public class Resolver {
 
     collectRequest.setDependencies(dependencies);
 
-    RemoteRepository central;
-    central = new RemoteRepository.Builder("central", "default", "https://repo.maven.apache.org/maven2/").build();
-
-    List<RemoteRepository> repositories;
-    repositories = List.of(central);
-
-    collectRequest.setRepositories(repositories);
+    collectRequest.setRepositories(remoteRepositories);
 
     // DependencyRequest
 
