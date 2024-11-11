@@ -210,7 +210,7 @@ public final class Web {
      * @throws IOException
      *         if an I/O error occurs
      */
-    void writeCharWritable(String path, Lang.CharWritable contents, Charset charset) throws IOException;
+    void writeMediaObject(String path, Lang.MediaObject contents) throws IOException;
 
     /**
      * Creates a new file at the specified path with the specified text content.

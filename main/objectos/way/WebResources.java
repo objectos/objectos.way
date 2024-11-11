@@ -15,7 +15,6 @@
  */
 package objectos.way;
 
-import java.io.BufferedWriter;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
@@ -200,10 +199,11 @@ final class WebResources implements AutoCloseable, Web.Resources {
   }
 
   @Override
-  public final void writeCharWritable(String path, Lang.CharWritable contents, Charset charset) throws IOException {
+  public final void writeMediaObject(String path, Lang.MediaObject contents) throws IOException {
     Check.notNull(path, "path == null");
-    Check.notNull(contents, "contents == null");
-    Check.notNull(charset, "charset == null");
+
+    byte[] bytes;
+    bytes = contents.mediaBytes();
 
     Path file;
     file = resolve(path);
@@ -212,8 +212,8 @@ final class WebResources implements AutoCloseable, Web.Resources {
 
     writeLock.lock();
 
-    try (BufferedWriter writer = Files.newBufferedWriter(file, charset, OPEN_CREATE)) {
-      contents.writeTo(writer);
+    try {
+      Files.write(file, bytes, OPEN_CREATE);
     } finally {
       writeLock.unlock();
     }

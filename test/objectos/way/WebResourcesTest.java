@@ -33,6 +33,14 @@ import org.testng.annotations.Test;
 
 public class WebResourcesTest extends Http.Module {
 
+  private record TextPlain(String text) implements Lang.MediaObject {
+    @Override
+    public String contentType() { return "text/plain; charset=utf-8"; }
+
+    @Override
+    public byte[] mediaBytes() { return text.getBytes(StandardCharsets.UTF_8); }
+  }
+
   private Path root;
 
   private Web.Resources resources;
@@ -276,10 +284,10 @@ public class WebResourcesTest extends Http.Module {
       String path;
       path = http.path();
 
-      Lang.CharWritable contents;
-      contents = out -> out.append("test-case-06");
+      Lang.MediaObject contents;
+      contents = new TextPlain("test-case-06");
 
-      resources.writeCharWritable(path, contents, StandardCharsets.UTF_8);
+      resources.writeMediaObject(path, contents);
 
       resources.handle(http);
     } catch (IOException e) {
@@ -329,10 +337,10 @@ public class WebResourcesTest extends Http.Module {
       String path;
       path = http.path();
 
-      Lang.CharWritable contents;
-      contents = out -> out.append("test-case-07");
+      Lang.MediaObject contents;
+      contents = new TextPlain("test-case-07");
 
-      resources.writeCharWritable(path, contents, StandardCharsets.UTF_8);
+      resources.writeMediaObject(path, contents);
 
       assertTrue(resources.deleteIfExists(path));
 
