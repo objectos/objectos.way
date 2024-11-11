@@ -38,18 +38,7 @@ final class Styles implements Http.Handler {
         Css.noteSink(noteSink)
     );
 
-    byte[] bytes;
-    bytes = s.toByteArray();
-
-    http.status(Http.Status.OK);
-
-    http.dateNow();
-
-    http.header(Http.HeaderName.CONTENT_TYPE, s.contentType());
-
-    http.header(Http.HeaderName.CONTENT_LENGTH, bytes.length);
-
-    http.send(bytes);
+    http.ok(s);
   }
 
 }

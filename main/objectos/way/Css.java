@@ -54,15 +54,14 @@ public final class Css {
   /**
    * A CSS style sheet.
    */
-  public sealed interface StyleSheet {
+  public sealed interface StyleSheet extends Lang.MediaObject {
 
+    @Override
     default String contentType() {
       return "text/css; charset=utf-8";
     }
 
     String css();
-
-    byte[] toByteArray();
 
   }
 
@@ -620,7 +619,7 @@ public final class Css {
   private record ThisStyleSheet(String css) implements StyleSheet {
 
     @Override
-    public final byte[] toByteArray() {
+    public final byte[] mediaBytes() {
       return css.getBytes(StandardCharsets.UTF_8);
     }
 
