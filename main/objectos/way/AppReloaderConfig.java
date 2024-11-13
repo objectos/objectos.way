@@ -27,6 +27,7 @@ import java.nio.file.StandardWatchEventKinds;
 import java.nio.file.WatchKey;
 import java.nio.file.WatchService;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -37,7 +38,7 @@ final class AppReloaderConfig implements App.Reloader.Config {
 
   final List<Path> directories = Util.createList();
 
-  final Map<WatchKey, Path> keys = Util.createMap();
+  final Map<WatchKey, Path> keys = new HashMap<>();
 
   final AppReloader.Notes notes = AppReloader.Notes.get();
 

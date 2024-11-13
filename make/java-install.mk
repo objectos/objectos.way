@@ -27,7 +27,7 @@ $(error The required variable GROUP_ID was not defined)
 endif
 
 ## install location (jar)
-INSTALL := $(LOCAL_REPO_PATH)/$(call mk-dependency,$(GROUP_ID),$(ARTIFACT_ID),$(VERSION),jar)
+INSTALL := $(LOCAL_REPO)/$(call mk-dependency,$(GROUP_ID),$(ARTIFACT_ID),$(VERSION),jar)
 
 ## install location (resolution file)
 INSTALL_RESOLUTION_FILE := $(call mk-resolution-file,$(GROUP_ID)/$(ARTIFACT_ID)/$(VERSION))

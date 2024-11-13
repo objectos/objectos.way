@@ -160,6 +160,79 @@ public class AppReloaderTest {
     }
   }
 
+  @Test(description = """
+  Previously watched directory is deleted
+  """)
+  public void testCase03() throws Exception {
+    try (AppReloaderHelper helper = AppReloaderHelper.of()) {
+      // first subject version
+      Path subjectSrc;
+      subjectSrc = Path.of("test", "Subject.java");
+
+      helper.writeJavaFile(
+          subjectSrc,
+
+          """
+          package test;
+
+          public class Subject implements java.util.function.Supplier<String> {
+            public String get() {
+              return "A";
+            }
+          }
+          """
+      );
+
+      assertTrue(helper.compile());
+
+      FileSystem fileSystem;
+      fileSystem = FileSystems.getDefault();
+
+      try (WatchService watchService = fileSystem.newWatchService();
+          App.Reloader reloader = App.Reloader.create(config -> {
+            config.binaryName("test.Subject");
+            config.watchService(watchService);
+            config.noteSink(TestingNoteSink.INSTANCE);
+            config.directory(helper.classOutput());
+          })) {
+
+        String firstGet;
+        firstGet = newInstanceAndGet(reloader);
+
+        assertEquals(firstGet, "A");
+
+        Path packageDir;
+        packageDir = helper.classOutput().resolve("test");
+
+        TestingDir.deleteRecursively(packageDir);
+
+        // second subject version
+        helper.writeJavaFile(
+            subjectSrc,
+
+            """
+            package test;
+
+            public class Subject implements java.util.function.Supplier<String> {
+              public String get() {
+                return "B";
+              }
+            }
+            """
+        );
+
+        assertTrue(helper.compile());
+
+        TimeUnit.MILLISECONDS.sleep(5);
+
+        String secondGet;
+        secondGet = newInstanceAndGet(reloader);
+
+        assertEquals(secondGet, "B");
+      }
+    }
+  }
+
   @SuppressWarnings("unchecked")
   private String newInstanceAndGet(App.Reloader reloader) throws Exception {
     Class<?> type;
