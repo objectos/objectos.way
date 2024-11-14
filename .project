@@ -2,28 +2,6 @@
 <projectDescription>
 	<name>objectos.way</name>
 	<comment></comment>
-	<projects>
-		<project>objectos.code</project>
-		<project>objectos.html</project>
-		<project>objectos.html.icon</project>
-		<project>objectos.html.script</project>
-		<project>objectos.html.tmpl</project>
-		<project>objectos.http</project>
-		<project>objectos.http.server</project>
-		<project>objectos.lang.classloader</project>
-		<project>objectos.lang.object</project>
-		<project>objectos.lang.runtime</project>
-		<project>objectos.notes</project>
-		<project>objectos.notes.base</project>
-		<project>objectos.notes.console</project>
-		<project>objectos.notes.file</project>
-		<project>objectos.selfgen</project>
-		<project>objectos.util.array</project>
-		<project>objectos.util.collection</project>
-		<project>objectos.util.list</project>
-		<project>objectos.util.map</project>
-		<project>objectos.util.set</project>
-	</projects>
 	<buildSpec>
 		<buildCommand>
 			<name>org.eclipse.jdt.core.javabuilder</name>
