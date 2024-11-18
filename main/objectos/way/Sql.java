@@ -162,41 +162,6 @@ public final class Sql {
 
   }
 
-  public interface Page {
-
-    /**
-     * The page number. Page numbers are always greater than zero.
-     * In other words, the first page is page number 1.
-     * The second page is page number 2 and so on.
-     *
-     * @return the page number
-     */
-    int number();
-
-    /**
-     * The number of items to be displayed on each page.
-     *
-     * @return the number of items to be displayed on each page
-     */
-    int size();
-
-  }
-
-  /**
-   * A provider of {@link Sql.Page} instances.
-   */
-  @FunctionalInterface
-  public interface PageProvider {
-
-    /**
-     * The current page.
-     *
-     * @return the current page
-     */
-    Page page();
-
-  }
-
   /**
    * Responsible for processing the results of a query operation.
    */
@@ -323,34 +288,6 @@ public final class Sql {
      *         if a database access error occurs
      */
     void processQuery(QueryProcessor processor, String sql, Object... args) throws DatabaseException;
-
-    /**
-     * Use the specified processor to process the results of the execution of
-     * a row-retriving SQL statement that is obtained by applying the specified
-     * page to the specified SQL statement. The specified arguments
-     * are applied, in order, to the resulting prepared statement prior to
-     * sending the query to the database.
-     *
-     * @param processor
-     *        the processor to process the results
-     * @param page
-     *        limit the processing to this page
-     * @param sql
-     *        the row-retriving SQL statement to which the page will be applied
-     * @param args
-     *        the arguments of the SQL statement
-     *
-     * @throws DatabaseException
-     *         if a database access error occurs
-     */
-    void processQuery(QueryProcessor processor, Page page, String sql, Object... args) throws DatabaseException;
-
-    default void processQuery(QueryProcessor processor, PageProvider pageProvider, String sql, Object... args) throws DatabaseException {
-      Page page;
-      page = pageProvider.page(); // implicit null-check
-
-      processQuery(processor, page, sql, args);
-    }
 
     /**
      * Sets the SQL contents of this transaction to the specified value.
@@ -508,15 +445,6 @@ public final class Sql {
 
   public static GeneratedKeys.OfInt createGeneratedKeysOfInt() {
     return new SqlGeneratedKeysOfInt();
-  }
-
-  public static Page createPage(int number, int size) {
-    Check.argument(number > 0, "number must be positive");
-    Check.argument(size > 0, "size must be positive");
-
-    record SqlPage(int number, int size) implements Sql.Page {}
-
-    return new SqlPage(number, size);
   }
 
   /**

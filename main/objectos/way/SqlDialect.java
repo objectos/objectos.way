@@ -28,6 +28,7 @@ final class SqlDialect {
 
   }
 
+  @SuppressWarnings("unused")
   private final Dialect dialect;
 
   private SqlDialect(Dialect dialect) {
@@ -69,52 +70,6 @@ final class SqlDialect {
     }
     sqlBuilder.append(") x");
     sqlBuilder.append(System.lineSeparator());
-  }
-
-  public void paginate(StringBuilder sql, Sql.Page page) {
-    if (shouldAppendNewLine(sql)) {
-      sql.append(System.lineSeparator());
-    }
-
-    int pageNumber;
-    pageNumber = page.number();
-
-    switch (dialect) {
-      case H2:
-        if (pageNumber > 1) {
-          int offset;
-          offset = (pageNumber - 1) * page.size();
-
-          sql.append("offset ");
-          sql.append(offset);
-          sql.append(" rows");
-          sql.append(System.lineSeparator());
-        }
-
-        sql.append("fetch first ");
-        sql.append(page.size());
-        sql.append(" rows only");
-        sql.append(System.lineSeparator());
-        
-        break;
-
-      case MYSQL:
-      default:
-        sql.append("limit ");
-        sql.append(page.size());
-        sql.append(System.lineSeparator());
-
-        if (pageNumber > 1) {
-          int offset;
-          offset = (pageNumber - 1) * page.size();
-
-          sql.append("offset ");
-          sql.append(offset);
-          sql.append(System.lineSeparator());
-        }
-        
-        break;
-    }
   }
 
   private boolean shouldAppendNewLine(StringBuilder sqlBuilder) {

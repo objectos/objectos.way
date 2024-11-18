@@ -25,8 +25,6 @@ import java.util.OptionalInt;
 
 final class SqlTransaction implements Sql.Transaction {
 
-  private final SqlDialect dialect;
-
   private final Connection connection;
 
   private String sql;
@@ -35,9 +33,7 @@ final class SqlTransaction implements Sql.Transaction {
 
   private List<List<Object>> batches;
 
-  SqlTransaction(SqlDialect dialect, Connection connection) {
-    this.dialect = dialect;
-
+  SqlTransaction(Connection connection) {
     this.connection = connection;
   }
 
@@ -130,21 +126,6 @@ final class SqlTransaction implements Sql.Transaction {
 
     SqlTemplate template;
     template = SqlTemplate.parse(sql, args);
-
-    template.process(connection, processor);
-  }
-
-  @Override
-  public final void processQuery(Sql.QueryProcessor processor, Sql.Page page, String sql, Object... args) throws Sql.DatabaseException {
-    Check.notNull(processor, "processor == null");
-    Check.notNull(page, "page == null");
-    Check.notNull(sql, "sql == null");
-    Check.notNull(args, "args == null");
-
-    SqlTemplate template;
-    template = SqlTemplate.parse(sql, args);
-
-    template.paginate(dialect, page);
 
     template.process(connection, processor);
   }

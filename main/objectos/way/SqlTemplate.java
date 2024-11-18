@@ -170,8 +170,4 @@ final class SqlTemplate {
     }
   }
 
-  final void paginate(SqlDialect dialect, Sql.Page page) {
-    dialect.paginate(sqlBuilder, page);
-  }
-
 }

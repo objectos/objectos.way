@@ -33,7 +33,7 @@ public class SqlDialectH2Test {
 
     assertEquals(dialect.getClass(), SqlDialect.class);
   }
-  
+
   @Test
   public void count() {
     SqlDialect dialect;
@@ -48,39 +48,6 @@ public class SqlDialectH2Test {
     select count(*) from (
     select * from FOO
     ) x
-    """);
-  }
-  
-  @Test
-  public void paginate01() {
-    SqlDialect dialect;
-    dialect = TestingSqlDialect.H2;
-
-    StringBuilder sqlBuilder;
-    sqlBuilder = new StringBuilder("select * from FOO");
-
-    dialect.paginate(sqlBuilder, Sql.createPage(1, 15));
-
-    assertEquals(sqlBuilder.toString(), """
-    select * from FOO
-    fetch first 15 rows only
-    """);
-  }
-
-  @Test
-  public void paginate02() {
-    SqlDialect dialect;
-    dialect = TestingSqlDialect.H2;
-
-    StringBuilder sqlBuilder;
-    sqlBuilder = new StringBuilder("select * from FOO");
-
-    dialect.paginate(sqlBuilder, Sql.createPage(3, 15));
-
-    assertEquals(sqlBuilder.toString(), """
-    select * from FOO
-    offset 30 rows
-    fetch first 15 rows only
     """);
   }
 

@@ -189,10 +189,7 @@ public class SqlTest {
   }
 
   private SqlTransaction trx(Connection connection) {
-    SqlDialect dialect;
-    dialect = TestingDatabaseMetaData.H2.toSqlDialect();
-
-    return new SqlTransaction(dialect, connection);
+    return new SqlTransaction(connection);
   }
 
 }

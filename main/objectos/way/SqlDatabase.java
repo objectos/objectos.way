@@ -23,6 +23,7 @@ final class SqlDatabase implements Sql.Database {
 
   private final DataSource dataSource;
 
+  @SuppressWarnings("unused")
   private final SqlDialect dialect;
 
   @SuppressWarnings("unused")
@@ -55,7 +56,7 @@ final class SqlDatabase implements Sql.Database {
 
       connection.setAutoCommit(false);
 
-      return new SqlTransaction(dialect, connection);
+      return new SqlTransaction(connection);
     } catch (SQLException e) {
       try {
         connection.close();
