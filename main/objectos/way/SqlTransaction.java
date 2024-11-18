@@ -623,8 +623,6 @@ final class SqlTransaction implements Sql.Transaction {
     // so arguments is guaranteed to be non-null
     setArguments(stmt, arguments);
 
-    arguments.clear();
-
     return stmt;
   }
 

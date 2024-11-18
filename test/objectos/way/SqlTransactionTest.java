@@ -33,318 +33,14 @@ import org.testng.annotations.Test;
 
 public class SqlTransactionTest {
 
-  @Test(description = "trx.sql(sql).args(args).query(Record::new)")
-  public void testCase01() {
-    TestingConnection conn;
-    conn = new TestingConnection();
-
-    TestingPreparedStatement stmt;
-    stmt = new TestingPreparedStatement();
-
-    TestingResultSet query;
-    query = new TestingResultSet(
-        Map.of("1", 567, "2", "BAR", "3", LocalDate.of(2024, 12, 1))
-    );
-
-    stmt.queries(query);
-
-    conn.preparedStatements(stmt);
-
-    SqlTransaction trx;
-    trx = trx(conn);
-
-    try {
-      trx.sql("select A, B, C from FOO where X = ?");
-
-      trx.add(123);
-
-      List<Foo> result;
-      result = trx.query(Foo::new);
-
-      assertEquals(result.size(), 1);
-      assertEquals(result.get(0), new Foo(567, "BAR", LocalDate.of(2024, 12, 1)));
-    } finally {
-      trx.close();
+  private record Foo(Integer a, String b, LocalDate c) {
+    Foo(ResultSet rs, int idx) throws SQLException {
+      this(rs.getInt(idx++), rs.getString(idx++), rs.getObject(idx++, LocalDate.class));
     }
-
-    assertEquals(
-        conn.toString(),
-
-        """
-        prepareStatement(select A, B, C from FOO where X = ?, 2)
-        setAutoCommit(true)
-        close()
-        """
-    );
-
-    assertEquals(
-        stmt.toString(),
-
-        """
-        setInt(1, 123)
-        executeQuery()
-        close()
-        """
-    );
-
-    assertEquals(
-        query.toString(),
-
-        """
-        next()
-        getInt(1)
-        getString(2)
-        getObject(3, class java.time.LocalDate)
-        next()
-        close()
-        """
-    );
-  }
-
-  @Test(description = "trx.sql(sql).args(args).queryOne(Record::new)")
-  public void testCase02() {
-    TestingConnection conn;
-    conn = new TestingConnection();
-
-    TestingPreparedStatement stmt;
-    stmt = new TestingPreparedStatement();
-
-    TestingResultSet query;
-    query = new TestingResultSet(
-        Map.of("1", 567, "2", "BAR", "3", LocalDate.of(2024, 12, 1))
-    );
-
-    stmt.queries(query);
-
-    conn.preparedStatements(stmt);
-
-    SqlTransaction trx;
-    trx = trx(conn);
-
-    try {
-      trx.sql("select A, B, C from FOO where X = ?");
-
-      trx.add(123);
-
-      Foo result;
-      result = trx.querySingle(Foo::new);
-
-      assertEquals(result, new Foo(567, "BAR", LocalDate.of(2024, 12, 1)));
-    } finally {
-      trx.close();
-    }
-
-    assertEquals(
-        conn.toString(),
-
-        """
-        prepareStatement(select A, B, C from FOO where X = ?, 2)
-        setAutoCommit(true)
-        close()
-        """
-    );
-
-    assertEquals(
-        stmt.toString(),
-
-        """
-        setInt(1, 123)
-        executeQuery()
-        close()
-        """
-    );
-
-    assertEquals(
-        query.toString(),
-
-        """
-        next()
-        getInt(1)
-        getString(2)
-        getObject(3, class java.time.LocalDate)
-        next()
-        close()
-        """
-    );
-  }
-
-  @Test(description = "trx.sql(sql).query(Record::new)")
-  public void testCase03() {
-    TestingConnection conn;
-    conn = new TestingConnection();
-
-    TestingStatement stmt;
-    stmt = new TestingStatement();
-
-    TestingResultSet query;
-    query = new TestingResultSet(
-        Map.of("1", 567, "2", "BAR", "3", LocalDate.of(2024, 12, 1))
-    );
-
-    stmt.queries(query);
-
-    conn.statements(stmt);
-
-    SqlTransaction trx;
-    trx = trx(conn);
-
-    try {
-      trx.sql("select A, B, C from FOO");
-
-      List<Foo> result;
-      result = trx.query(Foo::new);
-
-      assertEquals(result.size(), 1);
-      assertEquals(result.get(0), new Foo(567, "BAR", LocalDate.of(2024, 12, 1)));
-    } finally {
-      trx.close();
-    }
-
-    assertEquals(
-        conn.toString(),
-
-        """
-        createStatement()
-        setAutoCommit(true)
-        close()
-        """
-    );
-
-    assertEquals(
-        stmt.toString(),
-
-        """
-        executeQuery(select A, B, C from FOO)
-        close()
-        """
-    );
-
-    assertEquals(
-        query.toString(),
-
-        """
-        next()
-        getInt(1)
-        getString(2)
-        getObject(3, class java.time.LocalDate)
-        next()
-        close()
-        """
-    );
-  }
-
-  @Test(description = "trx.sql(sql).queryOne(Record::new)")
-  public void testCase04() {
-    TestingConnection conn;
-    conn = new TestingConnection();
-
-    TestingStatement stmt;
-    stmt = new TestingStatement();
-
-    TestingResultSet query;
-    query = new TestingResultSet(
-        Map.of("1", 567, "2", "BAR", "3", LocalDate.of(2024, 12, 1))
-    );
-
-    stmt.queries(query);
-
-    conn.statements(stmt);
-
-    SqlTransaction trx;
-    trx = trx(conn);
-
-    try {
-      trx.sql("select A, B, C from FOO");
-
-      Foo result;
-      result = trx.querySingle(Foo::new);
-
-      assertEquals(result, new Foo(567, "BAR", LocalDate.of(2024, 12, 1)));
-    } finally {
-      trx.close();
-    }
-
-    assertEquals(
-        conn.toString(),
-
-        """
-        createStatement()
-        setAutoCommit(true)
-        close()
-        """
-    );
-
-    assertEquals(
-        stmt.toString(),
-
-        """
-        executeQuery(select A, B, C from FOO)
-        close()
-        """
-    );
-
-    assertEquals(
-        query.toString(),
-
-        """
-        next()
-        getInt(1)
-        getString(2)
-        getObject(3, class java.time.LocalDate)
-        next()
-        close()
-        """
-    );
-  }
-
-  @Test(description = "trx.sql(sql).update()")
-  public void testCase05() {
-    TestingConnection conn;
-    conn = new TestingConnection();
-
-    TestingStatement stmt;
-    stmt = new TestingStatement();
-
-    stmt.updates(1);
-
-    conn.statements(stmt);
-
-    SqlTransaction trx;
-    trx = trx(conn);
-
-    try {
-      trx.sql("create table TEMP (ID)");
-
-      int result;
-      result = trx.update();
-
-      assertEquals(result, 1);
-    } finally {
-      trx.close();
-    }
-
-    assertEquals(
-        conn.toString(),
-
-        """
-        createStatement()
-        setAutoCommit(true)
-        close()
-        """
-    );
-
-    assertEquals(
-        stmt.toString(),
-
-        """
-        executeUpdate(create table TEMP (ID))
-        close()
-        """
-    );
   }
 
   @Test(description = "trx.sql(sql).add(1).addBatch().add(2).addBatch().batchUpdate()")
-  public void testCase06() {
+  public void batchUpdate01() {
     TestingConnection conn;
     conn = new TestingConnection();
 
@@ -396,318 +92,6 @@ public class SqlTransactionTest {
         setInt(1, 2)
         addBatch()
         executeBatch()
-        close()
-        """
-    );
-  }
-
-  @Test(description = "trx.add(null, Types.DATE)")
-  public void testCase07() {
-    TestingConnection conn;
-    conn = new TestingConnection();
-
-    TestingPreparedStatement stmt;
-    stmt = new TestingPreparedStatement();
-
-    stmt.updates(1);
-
-    conn.preparedStatements(stmt);
-
-    SqlTransaction trx;
-    trx = trx(conn);
-
-    try {
-      trx.sql("insert into BAR (X, Y) values (?, ?)");
-
-      trx.add(1);
-
-      trx.add(null, Types.DATE);
-
-      int result;
-      result = trx.update();
-
-      assertEquals(result, 1);
-    } finally {
-      trx.close();
-    }
-
-    assertEquals(
-        conn.toString(),
-
-        """
-        prepareStatement(insert into BAR (X, Y) values (?, ?), 2)
-        setAutoCommit(true)
-        close()
-        """
-    );
-
-    assertEquals(
-        stmt.toString(),
-
-        """
-        setInt(1, 1)
-        setNull(2, 91)
-        executeUpdate()
-        close()
-        """
-    );
-  }
-
-  @Test(description = "trx.sql().format()")
-  public void testCase08() {
-    TestingConnection conn;
-    conn = new TestingConnection();
-
-    TestingStatement stmt;
-    stmt = new TestingStatement();
-
-    stmt.updates(1);
-
-    conn.statements(stmt);
-
-    SqlTransaction trx;
-    trx = trx(conn);
-
-    try {
-      trx.sql("insert into BAR (X, Y) values (%1$d, '%2$s')");
-
-      trx.format(123, LocalDate.of(2024, 9, 26));
-
-      int result;
-      result = trx.update();
-
-      assertEquals(result, 1);
-    } finally {
-      trx.close();
-    }
-
-    assertEquals(
-        conn.toString(),
-
-        """
-        createStatement()
-        setAutoCommit(true)
-        close()
-        """
-    );
-
-    assertEquals(
-        stmt.toString(),
-
-        """
-        executeUpdate(insert into BAR (X, Y) values (123, '2024-09-26'))
-        close()
-        """
-    );
-  }
-
-  @Test(description = "trx.sql().queryOptionalInt")
-  public void testCase09() {
-    TestingConnection conn;
-    conn = new TestingConnection();
-
-    TestingPreparedStatement stmt;
-    stmt = new TestingPreparedStatement();
-
-    TestingResultSet query;
-    query = new TestingResultSet(
-        Map.of("1", 23)
-    );
-
-    stmt.queries(query);
-
-    conn.preparedStatements(stmt);
-
-    SqlTransaction trx;
-    trx = trx(conn);
-
-    try {
-      trx.sql("select max(SEQ) from FOO where X = ?");
-
-      trx.add(123);
-
-      OptionalInt maybe;
-      maybe = trx.queryOptionalInt();
-
-      assertEquals(maybe.isPresent(), true);
-      assertEquals(maybe.getAsInt(), 23);
-    } finally {
-      trx.close();
-    }
-
-    assertEquals(
-        conn.toString(),
-
-        """
-        prepareStatement(select max(SEQ) from FOO where X = ?, 2)
-        setAutoCommit(true)
-        close()
-        """
-    );
-
-    assertEquals(
-        stmt.toString(),
-
-        """
-        setInt(1, 123)
-        executeQuery()
-        close()
-        """
-    );
-
-    assertEquals(
-        query.toString(),
-
-        """
-        next()
-        getInt(1)
-        next()
-        close()
-        """
-    );
-  }
-
-  @Test(description = "trx.sql(insert into FOO values (123, 456)).updateWithGeneratedKeys(keys)")
-  public void testCase10() {
-    TestingConnection conn;
-    conn = new TestingConnection();
-
-    TestingStatement stmt;
-    stmt = new TestingStatement();
-
-    TestingResultSet query;
-    query = new TestingResultSet(
-        Map.of("1", 23)
-    );
-
-    stmt.generatedKeys(query);
-
-    stmt.updates(1);
-
-    conn.statements(stmt);
-
-    SqlTransaction trx;
-    trx = trx(conn);
-
-    try {
-      trx.sql("insert into FOO (A, B) values (123, 'bar')");
-
-      Sql.GeneratedKeys.OfInt generatedKeys;
-      generatedKeys = Sql.createGeneratedKeysOfInt();
-
-      int update;
-      update = trx.updateWithGeneratedKeys(generatedKeys);
-
-      assertEquals(update, 1);
-
-      assertEquals(generatedKeys.size(), 1);
-      assertEquals(generatedKeys.getAsInt(0), 23);
-    } finally {
-      trx.close();
-    }
-
-    assertEquals(
-        conn.toString(),
-
-        """
-        createStatement()
-        setAutoCommit(true)
-        close()
-        """
-    );
-
-    assertEquals(
-        stmt.toString(),
-
-        """
-        executeUpdate(insert into FOO (A, B) values (123, 'bar'), 1)
-        getGeneratedKeys()
-        close()
-        """
-    );
-
-    assertEquals(
-        query.toString(),
-
-        """
-        next()
-        getInt(1)
-        next()
-        close()
-        """
-    );
-  }
-
-  @Test(description = "trx.sql(insert into FOO values (?)).add(some param).updateWithGeneratedKeys(keys)")
-  public void testCase11() {
-    TestingConnection conn;
-    conn = new TestingConnection();
-
-    TestingPreparedStatement stmt;
-    stmt = new TestingPreparedStatement();
-
-    TestingResultSet query;
-    query = new TestingResultSet(
-        Map.of("1", 23)
-    );
-
-    stmt.generatedKeys(query);
-
-    stmt.updates(1);
-
-    conn.preparedStatements(stmt);
-
-    SqlTransaction trx;
-    trx = trx(conn);
-
-    try {
-      trx.sql("insert into FOO (A, B) values (?, ?)");
-
-      trx.add(123).add("bar");
-
-      Sql.GeneratedKeys.OfInt generatedKeys;
-      generatedKeys = Sql.createGeneratedKeysOfInt();
-
-      int update;
-      update = trx.updateWithGeneratedKeys(generatedKeys);
-
-      assertEquals(update, 1);
-
-      assertEquals(generatedKeys.size(), 1);
-      assertEquals(generatedKeys.getAsInt(0), 23);
-    } finally {
-      trx.close();
-    }
-
-    assertEquals(
-        conn.toString(),
-
-        """
-        prepareStatement(insert into FOO (A, B) values (?, ?), 1)
-        setAutoCommit(true)
-        close()
-        """
-    );
-
-    assertEquals(
-        stmt.toString(),
-
-        """
-        setInt(1, 123)
-        setString(2, bar)
-        executeUpdate()
-        getGeneratedKeys()
-        close()
-        """
-    );
-
-    assertEquals(
-        query.toString(),
-
-        """
-        next()
-        getInt(1)
-        next()
         close()
         """
     );
@@ -847,15 +231,15 @@ public class SqlTransactionTest {
     );
   }
 
-  @Test
-  public void scriptUpdate01() {
+  @Test(description = "trx.sql().format()")
+  public void format01() {
     TestingConnection conn;
     conn = new TestingConnection();
 
     TestingStatement stmt;
     stmt = new TestingStatement();
 
-    stmt.batches(new int[] {1});
+    stmt.updates(1);
 
     conn.statements(stmt);
 
@@ -863,14 +247,14 @@ public class SqlTransactionTest {
     trx = trx(conn);
 
     try {
-      trx.sql("""
-      insert into FOO (A, B) values (1, 5)
-      """);
+      trx.sql("insert into BAR (X, Y) values (%1$d, '%2$s')");
 
-      int[] result;
-      result = trx.scriptUpdate();
+      trx.format(123, LocalDate.of(2024, 9, 26));
 
-      assertEquals(result, new int[] {1});
+      int result;
+      result = trx.update();
+
+      assertEquals(result, 1);
     } finally {
       trx.close();
     }
@@ -889,60 +273,7 @@ public class SqlTransactionTest {
         stmt.toString(),
 
         """
-        addBatch(insert into FOO (A, B) values (1, 5))
-        executeBatch()
-        close()
-        """
-    );
-  }
-
-  @Test
-  public void scriptUpdate02() {
-    TestingConnection conn;
-    conn = new TestingConnection();
-
-    TestingStatement stmt;
-    stmt = new TestingStatement();
-
-    stmt.batches(new int[] {1});
-
-    conn.statements(stmt);
-
-    SqlTransaction trx;
-    trx = trx(conn);
-
-    try {
-      trx.sql("""
-      insert into FOO (A, B) values (1, 5)
-
-      insert into BAR (X, Y) values ('A', 'B')
-      """);
-
-      int[] result;
-      result = trx.scriptUpdate();
-
-      assertEquals(result, new int[] {1});
-    } finally {
-      trx.close();
-    }
-
-    assertEquals(
-        conn.toString(),
-
-        """
-        createStatement()
-        setAutoCommit(true)
-        close()
-        """
-    );
-
-    assertEquals(
-        stmt.toString(),
-
-        """
-        addBatch(insert into FOO (A, B) values (1, 5))
-        addBatch(insert into BAR (X, Y) values ('A', 'B'))
-        executeBatch()
+        executeUpdate(insert into BAR (X, Y) values (123, '2024-09-26'))
         close()
         """
     );
@@ -1002,6 +333,557 @@ public class SqlTransactionTest {
         query.toString(),
 
         """
+        next()
+        close()
+        """
+    );
+  }
+
+  @Test(description = "trx.sql(sql).args(args).query(Record::new)")
+  public void query01() {
+    TestingConnection conn;
+    conn = new TestingConnection();
+
+    TestingPreparedStatement stmt;
+    stmt = new TestingPreparedStatement();
+
+    TestingResultSet query;
+    query = new TestingResultSet(
+        Map.of("1", 567, "2", "BAR", "3", LocalDate.of(2024, 12, 1))
+    );
+
+    stmt.queries(query);
+
+    conn.preparedStatements(stmt);
+
+    SqlTransaction trx;
+    trx = trx(conn);
+
+    try {
+      trx.sql("select A, B, C from FOO where X = ?");
+
+      trx.add(123);
+
+      List<Foo> result;
+      result = trx.query(Foo::new);
+
+      assertEquals(result.size(), 1);
+      assertEquals(result.get(0), new Foo(567, "BAR", LocalDate.of(2024, 12, 1)));
+    } finally {
+      trx.close();
+    }
+
+    assertEquals(
+        conn.toString(),
+
+        """
+        prepareStatement(select A, B, C from FOO where X = ?, 2)
+        setAutoCommit(true)
+        close()
+        """
+    );
+
+    assertEquals(
+        stmt.toString(),
+
+        """
+        setInt(1, 123)
+        executeQuery()
+        close()
+        """
+    );
+
+    assertEquals(
+        query.toString(),
+
+        """
+        next()
+        getInt(1)
+        getString(2)
+        getObject(3, class java.time.LocalDate)
+        next()
+        close()
+        """
+    );
+  }
+
+  @Test(description = "trx.sql(sql).query(Record::new)")
+  public void query02() {
+    TestingConnection conn;
+    conn = new TestingConnection();
+
+    TestingStatement stmt;
+    stmt = new TestingStatement();
+
+    TestingResultSet query;
+    query = new TestingResultSet(
+        Map.of("1", 567, "2", "BAR", "3", LocalDate.of(2024, 12, 1))
+    );
+
+    stmt.queries(query);
+
+    conn.statements(stmt);
+
+    SqlTransaction trx;
+    trx = trx(conn);
+
+    try {
+      trx.sql("select A, B, C from FOO");
+
+      List<Foo> result;
+      result = trx.query(Foo::new);
+
+      assertEquals(result.size(), 1);
+      assertEquals(result.get(0), new Foo(567, "BAR", LocalDate.of(2024, 12, 1)));
+    } finally {
+      trx.close();
+    }
+
+    assertEquals(
+        conn.toString(),
+
+        """
+        createStatement()
+        setAutoCommit(true)
+        close()
+        """
+    );
+
+    assertEquals(
+        stmt.toString(),
+
+        """
+        executeQuery(select A, B, C from FOO)
+        close()
+        """
+    );
+
+    assertEquals(
+        query.toString(),
+
+        """
+        next()
+        getInt(1)
+        getString(2)
+        getObject(3, class java.time.LocalDate)
+        next()
+        close()
+        """
+    );
+  }
+
+  @Test(description = "query after a count with same arguments")
+  public void query03() {
+    TestingConnection conn;
+    conn = new TestingConnection();
+
+    TestingPreparedStatement stmt0;
+    stmt0 = new TestingPreparedStatement();
+
+    TestingResultSet query0;
+    query0 = new TestingResultSet(
+        Map.of("1", 2)
+    );
+
+    stmt0.queries(query0);
+
+    TestingPreparedStatement stmt1;
+    stmt1 = new TestingPreparedStatement();
+
+    TestingResultSet query1;
+    query1 = new TestingResultSet(
+        Map.of("1", 1, "2", "FOO", "3", LocalDate.of(2020, 12, 1)),
+        Map.of("1", 2, "2", "BAR", "3", LocalDate.of(2024, 12, 1))
+    );
+
+    stmt1.queries(query1);
+
+    conn.preparedStatements(stmt0, stmt1);
+
+    SqlTransaction trx;
+    trx = trx(conn);
+
+    try {
+      trx.sql("select A from FOO where X = ? and Y = ?");
+
+      trx.add(456);
+
+      trx.add("XPTO");
+
+      int count;
+      count = trx.count();
+
+      assertEquals(count, 2);
+
+      List<Foo> rows;
+      rows = trx.query(Foo::new);
+
+      assertEquals(rows.size(), 2);
+      assertEquals(rows.get(0), new Foo(1, "FOO", LocalDate.of(2020, 12, 1)));
+      assertEquals(rows.get(1), new Foo(2, "BAR", LocalDate.of(2024, 12, 1)));
+    } finally {
+      trx.close();
+    }
+
+    assertEquals(
+        conn.toString(),
+
+        """
+        prepareStatement(select count(*) from ( select A from FOO where X = ? and Y = ? ) x, 2)
+        prepareStatement(select A from FOO where X = ? and Y = ?, 2)
+        setAutoCommit(true)
+        close()
+        """
+    );
+
+    assertEquals(
+        stmt0.toString(),
+
+        """
+        setInt(1, 456)
+        setString(2, XPTO)
+        executeQuery()
+        close()
+        """
+    );
+    assertEquals(
+        stmt1.toString(),
+
+        """
+        setInt(1, 456)
+        setString(2, XPTO)
+        executeQuery()
+        close()
+        """
+    );
+
+    assertEquals(
+        query0.toString(),
+
+        """
+        next()
+        getInt(1)
+        next()
+        close()
+        """
+    );
+    assertEquals(
+        query1.toString(),
+
+        """
+        next()
+        getInt(1)
+        getString(2)
+        getObject(3, class java.time.LocalDate)
+        next()
+        getInt(1)
+        getString(2)
+        getObject(3, class java.time.LocalDate)
+        next()
+        close()
+        """
+    );
+  }
+
+  @Test(description = "subsequent query must not use the arguments of previous query")
+  public void query04() {
+    TestingConnection conn;
+    conn = new TestingConnection();
+
+    TestingPreparedStatement stmt0;
+    stmt0 = new TestingPreparedStatement();
+
+    TestingResultSet query0;
+    query0 = new TestingResultSet(
+        Map.of("1", 1, "2", "FOO", "3", LocalDate.of(2020, 12, 1))
+    );
+
+    stmt0.queries(query0);
+
+    TestingPreparedStatement stmt1;
+    stmt1 = new TestingPreparedStatement();
+
+    TestingResultSet query1;
+    query1 = new TestingResultSet(
+        Map.of("1", 2, "2", "BAR", "3", LocalDate.of(2024, 12, 1))
+    );
+
+    stmt1.queries(query1);
+
+    conn.preparedStatements(stmt0, stmt1);
+
+    SqlTransaction trx;
+    trx = trx(conn);
+
+    try {
+      trx.sql("select A from FOO where X = ?");
+
+      trx.add(456);
+
+      List<Foo> rows;
+      rows = trx.query(Foo::new);
+
+      assertEquals(rows.size(), 1);
+      assertEquals(rows.get(0), new Foo(1, "FOO", LocalDate.of(2020, 12, 1)));
+
+      trx.sql("select B from FOO where Y = ?");
+
+      trx.add("XPTO");
+
+      rows = trx.query(Foo::new);
+
+      assertEquals(rows.get(0), new Foo(2, "BAR", LocalDate.of(2024, 12, 1)));
+    } finally {
+      trx.close();
+    }
+
+    assertEquals(
+        conn.toString(),
+
+        """
+        prepareStatement(select A from FOO where X = ?, 2)
+        prepareStatement(select B from FOO where Y = ?, 2)
+        setAutoCommit(true)
+        close()
+        """
+    );
+
+    assertEquals(
+        stmt0.toString(),
+
+        """
+        setInt(1, 456)
+        executeQuery()
+        close()
+        """
+    );
+    assertEquals(
+        stmt1.toString(),
+
+        """
+        setString(1, XPTO)
+        executeQuery()
+        close()
+        """
+    );
+
+    assertEquals(
+        query0.toString(),
+
+        """
+        next()
+        getInt(1)
+        getString(2)
+        getObject(3, class java.time.LocalDate)
+        next()
+        close()
+        """
+    );
+    assertEquals(
+        query1.toString(),
+
+        """
+        next()
+        getInt(1)
+        getString(2)
+        getObject(3, class java.time.LocalDate)
+        next()
+        close()
+        """
+    );
+  }
+
+  @Test(description = "trx.sql().queryOptionalInt")
+  public void queryOptionalInt01() {
+    TestingConnection conn;
+    conn = new TestingConnection();
+
+    TestingPreparedStatement stmt;
+    stmt = new TestingPreparedStatement();
+
+    TestingResultSet query;
+    query = new TestingResultSet(
+        Map.of("1", 23)
+    );
+
+    stmt.queries(query);
+
+    conn.preparedStatements(stmt);
+
+    SqlTransaction trx;
+    trx = trx(conn);
+
+    try {
+      trx.sql("select max(SEQ) from FOO where X = ?");
+
+      trx.add(123);
+
+      OptionalInt maybe;
+      maybe = trx.queryOptionalInt();
+
+      assertEquals(maybe.isPresent(), true);
+      assertEquals(maybe.getAsInt(), 23);
+    } finally {
+      trx.close();
+    }
+
+    assertEquals(
+        conn.toString(),
+
+        """
+        prepareStatement(select max(SEQ) from FOO where X = ?, 2)
+        setAutoCommit(true)
+        close()
+        """
+    );
+
+    assertEquals(
+        stmt.toString(),
+
+        """
+        setInt(1, 123)
+        executeQuery()
+        close()
+        """
+    );
+
+    assertEquals(
+        query.toString(),
+
+        """
+        next()
+        getInt(1)
+        next()
+        close()
+        """
+    );
+  }
+
+  @Test(description = "trx.sql(sql).args(args).queryOne(Record::new)")
+  public void querySingle01() {
+    TestingConnection conn;
+    conn = new TestingConnection();
+
+    TestingPreparedStatement stmt;
+    stmt = new TestingPreparedStatement();
+
+    TestingResultSet query;
+    query = new TestingResultSet(
+        Map.of("1", 567, "2", "BAR", "3", LocalDate.of(2024, 12, 1))
+    );
+
+    stmt.queries(query);
+
+    conn.preparedStatements(stmt);
+
+    SqlTransaction trx;
+    trx = trx(conn);
+
+    try {
+      trx.sql("select A, B, C from FOO where X = ?");
+
+      trx.add(123);
+
+      Foo result;
+      result = trx.querySingle(Foo::new);
+
+      assertEquals(result, new Foo(567, "BAR", LocalDate.of(2024, 12, 1)));
+    } finally {
+      trx.close();
+    }
+
+    assertEquals(
+        conn.toString(),
+
+        """
+        prepareStatement(select A, B, C from FOO where X = ?, 2)
+        setAutoCommit(true)
+        close()
+        """
+    );
+
+    assertEquals(
+        stmt.toString(),
+
+        """
+        setInt(1, 123)
+        executeQuery()
+        close()
+        """
+    );
+
+    assertEquals(
+        query.toString(),
+
+        """
+        next()
+        getInt(1)
+        getString(2)
+        getObject(3, class java.time.LocalDate)
+        next()
+        close()
+        """
+    );
+  }
+
+  @Test(description = "trx.sql(sql).queryOne(Record::new)")
+  public void querySingle02() {
+    TestingConnection conn;
+    conn = new TestingConnection();
+
+    TestingStatement stmt;
+    stmt = new TestingStatement();
+
+    TestingResultSet query;
+    query = new TestingResultSet(
+        Map.of("1", 567, "2", "BAR", "3", LocalDate.of(2024, 12, 1))
+    );
+
+    stmt.queries(query);
+
+    conn.statements(stmt);
+
+    SqlTransaction trx;
+    trx = trx(conn);
+
+    try {
+      trx.sql("select A, B, C from FOO");
+
+      Foo result;
+      result = trx.querySingle(Foo::new);
+
+      assertEquals(result, new Foo(567, "BAR", LocalDate.of(2024, 12, 1)));
+    } finally {
+      trx.close();
+    }
+
+    assertEquals(
+        conn.toString(),
+
+        """
+        createStatement()
+        setAutoCommit(true)
+        close()
+        """
+    );
+
+    assertEquals(
+        stmt.toString(),
+
+        """
+        executeQuery(select A, B, C from FOO)
+        close()
+        """
+    );
+
+    assertEquals(
+        query.toString(),
+
+        """
+        next()
+        getInt(1)
+        getString(2)
+        getObject(3, class java.time.LocalDate)
         next()
         close()
         """
@@ -1252,9 +1134,352 @@ public class SqlTransactionTest {
     );
   }
 
-  private SqlTransaction trx(Connection connection) {
-    return new SqlTransaction(connection);
+  @Test
+  public void scriptUpdate01() {
+    TestingConnection conn;
+    conn = new TestingConnection();
+
+    TestingStatement stmt;
+    stmt = new TestingStatement();
+
+    stmt.batches(new int[] {1});
+
+    conn.statements(stmt);
+
+    SqlTransaction trx;
+    trx = trx(conn);
+
+    try {
+      trx.sql("""
+      insert into FOO (A, B) values (1, 5)
+      """);
+
+      int[] result;
+      result = trx.scriptUpdate();
+
+      assertEquals(result, new int[] {1});
+    } finally {
+      trx.close();
+    }
+
+    assertEquals(
+        conn.toString(),
+
+        """
+        createStatement()
+        setAutoCommit(true)
+        close()
+        """
+    );
+
+    assertEquals(
+        stmt.toString(),
+
+        """
+        addBatch(insert into FOO (A, B) values (1, 5))
+        executeBatch()
+        close()
+        """
+    );
   }
+
+  @Test
+  public void scriptUpdate02() {
+    TestingConnection conn;
+    conn = new TestingConnection();
+
+    TestingStatement stmt;
+    stmt = new TestingStatement();
+
+    stmt.batches(new int[] {1});
+
+    conn.statements(stmt);
+
+    SqlTransaction trx;
+    trx = trx(conn);
+
+    try {
+      trx.sql("""
+      insert into FOO (A, B) values (1, 5)
+
+      insert into BAR (X, Y) values ('A', 'B')
+      """);
+
+      int[] result;
+      result = trx.scriptUpdate();
+
+      assertEquals(result, new int[] {1});
+    } finally {
+      trx.close();
+    }
+
+    assertEquals(
+        conn.toString(),
+
+        """
+        createStatement()
+        setAutoCommit(true)
+        close()
+        """
+    );
+
+    assertEquals(
+        stmt.toString(),
+
+        """
+        addBatch(insert into FOO (A, B) values (1, 5))
+        addBatch(insert into BAR (X, Y) values ('A', 'B'))
+        executeBatch()
+        close()
+        """
+    );
+  }
+
+  @Test(description = "trx.sql(sql).update()")
+  public void update01() {
+    TestingConnection conn;
+    conn = new TestingConnection();
+
+    TestingStatement stmt;
+    stmt = new TestingStatement();
+
+    stmt.updates(1);
+
+    conn.statements(stmt);
+
+    SqlTransaction trx;
+    trx = trx(conn);
+
+    try {
+      trx.sql("create table TEMP (ID)");
+
+      int result;
+      result = trx.update();
+
+      assertEquals(result, 1);
+    } finally {
+      trx.close();
+    }
+
+    assertEquals(
+        conn.toString(),
+
+        """
+        createStatement()
+        setAutoCommit(true)
+        close()
+        """
+    );
+
+    assertEquals(
+        stmt.toString(),
+
+        """
+        executeUpdate(create table TEMP (ID))
+        close()
+        """
+    );
+  }
+
+  @Test(description = "trx.add(null, Types.DATE)")
+  public void update02() {
+    TestingConnection conn;
+    conn = new TestingConnection();
+
+    TestingPreparedStatement stmt;
+    stmt = new TestingPreparedStatement();
+
+    stmt.updates(1);
+
+    conn.preparedStatements(stmt);
+
+    SqlTransaction trx;
+    trx = trx(conn);
+
+    try {
+      trx.sql("insert into BAR (X, Y) values (?, ?)");
+
+      trx.add(1);
+
+      trx.add(null, Types.DATE);
+
+      int result;
+      result = trx.update();
+
+      assertEquals(result, 1);
+    } finally {
+      trx.close();
+    }
+
+    assertEquals(
+        conn.toString(),
+
+        """
+        prepareStatement(insert into BAR (X, Y) values (?, ?), 2)
+        setAutoCommit(true)
+        close()
+        """
+    );
+
+    assertEquals(
+        stmt.toString(),
+
+        """
+        setInt(1, 1)
+        setNull(2, 91)
+        executeUpdate()
+        close()
+        """
+    );
+  }
+
+  @Test(description = "trx.sql(insert into FOO values (123, 456)).updateWithGeneratedKeys(keys)")
+  public void updateWithGeneratedKeys01() {
+    TestingConnection conn;
+    conn = new TestingConnection();
+
+    TestingStatement stmt;
+    stmt = new TestingStatement();
+
+    TestingResultSet query;
+    query = new TestingResultSet(
+        Map.of("1", 23)
+    );
+
+    stmt.generatedKeys(query);
+
+    stmt.updates(1);
+
+    conn.statements(stmt);
+
+    SqlTransaction trx;
+    trx = trx(conn);
+
+    try {
+      trx.sql("insert into FOO (A, B) values (123, 'bar')");
+
+      Sql.GeneratedKeys.OfInt generatedKeys;
+      generatedKeys = Sql.createGeneratedKeysOfInt();
+
+      int update;
+      update = trx.updateWithGeneratedKeys(generatedKeys);
+
+      assertEquals(update, 1);
+
+      assertEquals(generatedKeys.size(), 1);
+      assertEquals(generatedKeys.getAsInt(0), 23);
+    } finally {
+      trx.close();
+    }
+
+    assertEquals(
+        conn.toString(),
+
+        """
+        createStatement()
+        setAutoCommit(true)
+        close()
+        """
+    );
+
+    assertEquals(
+        stmt.toString(),
+
+        """
+        executeUpdate(insert into FOO (A, B) values (123, 'bar'), 1)
+        getGeneratedKeys()
+        close()
+        """
+    );
+
+    assertEquals(
+        query.toString(),
+
+        """
+        next()
+        getInt(1)
+        next()
+        close()
+        """
+    );
+  }
+
+  @Test(description = "trx.sql(insert into FOO values (?)).add(some param).updateWithGeneratedKeys(keys)")
+  public void updateWithGeneratedKeys02() {
+    TestingConnection conn;
+    conn = new TestingConnection();
+
+    TestingPreparedStatement stmt;
+    stmt = new TestingPreparedStatement();
+
+    TestingResultSet query;
+    query = new TestingResultSet(
+        Map.of("1", 23)
+    );
+
+    stmt.generatedKeys(query);
+
+    stmt.updates(1);
+
+    conn.preparedStatements(stmt);
+
+    SqlTransaction trx;
+    trx = trx(conn);
+
+    try {
+      trx.sql("insert into FOO (A, B) values (?, ?)");
+
+      trx.add(123).add("bar");
+
+      Sql.GeneratedKeys.OfInt generatedKeys;
+      generatedKeys = Sql.createGeneratedKeysOfInt();
+
+      int update;
+      update = trx.updateWithGeneratedKeys(generatedKeys);
+
+      assertEquals(update, 1);
+
+      assertEquals(generatedKeys.size(), 1);
+      assertEquals(generatedKeys.getAsInt(0), 23);
+    } finally {
+      trx.close();
+    }
+
+    assertEquals(
+        conn.toString(),
+
+        """
+        prepareStatement(insert into FOO (A, B) values (?, ?), 1)
+        setAutoCommit(true)
+        close()
+        """
+    );
+
+    assertEquals(
+        stmt.toString(),
+
+        """
+        setInt(1, 123)
+        setString(2, bar)
+        executeUpdate()
+        getGeneratedKeys()
+        close()
+        """
+    );
+
+    assertEquals(
+        query.toString(),
+
+        """
+        next()
+        getInt(1)
+        next()
+        close()
+        """
+    );
+  }
+
+  private void noop() {}
 
   private void row(ResultSet rs) throws SQLException {
     while (rs.next()) {
@@ -1262,12 +1487,8 @@ public class SqlTransactionTest {
     }
   }
 
-  private void noop() {}
-
-  private record Foo(Integer a, String b, LocalDate c) {
-    Foo(ResultSet rs, int idx) throws SQLException {
-      this(rs.getInt(idx++), rs.getString(idx++), rs.getObject(idx++, LocalDate.class));
-    }
+  private SqlTransaction trx(Connection connection) {
+    return new SqlTransaction(connection);
   }
 
 }
