@@ -306,8 +306,6 @@ public final class Sql {
      */
     void close() throws DatabaseException;
 
-    int count(String sql, Object... args) throws DatabaseException;
-
     /**
      * Use the specified processor to process the results of the execution of
      * the specified row-retriving SQL statement. The specified arguments
@@ -409,6 +407,12 @@ public final class Sql {
     Transaction addBatch();
 
     int[] batchUpdate();
+
+    /**
+     * Returns the number of rows of the current row-retrieving query SQL
+     * statement. This method works by decorating the current SQL statement.
+     */
+    int count() throws DatabaseException;
 
     /**
      * Executes the current SQL statement as a row-retrieving query.

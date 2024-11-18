@@ -123,17 +123,6 @@ final class SqlTransaction implements Sql.Transaction {
   }
 
   @Override
-  public final int count(String sql, Object... args) throws Sql.DatabaseException {
-    Check.notNull(sql, "sql == null");
-    Check.notNull(args, "args == null");
-
-    SqlTemplate template;
-    template = SqlTemplate.parse(sql, args);
-
-    return template.count(dialect, connection);
-  }
-
-  @Override
   public final void processQuery(Sql.QueryProcessor processor, String sql, Object... args) throws Sql.DatabaseException {
     Check.notNull(processor, "processor == null");
     Check.notNull(sql, "sql == null");
@@ -257,6 +246,88 @@ final class SqlTransaction implements Sql.Transaction {
   }
 
   @Override
+  public final int count() throws Sql.DatabaseException {
+    checkQuery();
+
+    boolean newLine;
+    newLine = shouldAppendNewLine(sql);
+
+    StringBuilder builder;
+    builder = new StringBuilder();
+
+    builder.append("select count(*) from (");
+
+    builder.append(System.lineSeparator());
+
+    builder.append(sql);
+
+    if (newLine) {
+      builder.append(System.lineSeparator());
+    }
+
+    builder.append(") x");
+
+    builder.append(System.lineSeparator());
+
+    String query;
+    query = builder.toString();
+
+    int result;
+
+    if (hasArguments()) {
+
+      try (PreparedStatement stmt = prepare(query); ResultSet rs = stmt.executeQuery()) {
+        result = count0(rs);
+      } catch (SQLException e) {
+        throw new Sql.DatabaseException(e);
+      }
+
+    } else {
+
+      try (Statement stmt = connection.createStatement(); ResultSet rs = stmt.executeQuery(query)) {
+        result = count0(rs);
+      } catch (SQLException e) {
+        throw new Sql.DatabaseException(e);
+      }
+
+    }
+
+    return result;
+  }
+
+  private int count0(ResultSet rs) throws SQLException {
+    if (!rs.next()) {
+      return 0;
+    }
+
+    int result;
+    result = rs.getInt(1);
+
+    if (rs.next()) {
+      throw new UnsupportedOperationException("Implement me");
+    }
+
+    return result;
+  }
+
+  private boolean shouldAppendNewLine(CharSequence query) {
+    int length;
+    length = query.length();
+
+    if (length == 0) {
+      return false;
+    }
+
+    int lastIndex;
+    lastIndex = length - 1;
+
+    char last;
+    last = query.charAt(lastIndex);
+
+    return !Character.isWhitespace(last);
+  }
+
+  @Override
   public final <T> List<T> query(Sql.Mapper<T> mapper) throws Sql.DatabaseException {
     checkQuery(mapper);
 
@@ -265,7 +336,7 @@ final class SqlTransaction implements Sql.Transaction {
 
     if (hasArguments()) {
 
-      try (PreparedStatement stmt = prepare(); ResultSet rs = stmt.executeQuery()) {
+      try (PreparedStatement stmt = prepare(sql); ResultSet rs = stmt.executeQuery()) {
         query0(mapper, list, rs);
       } catch (SQLException e) {
         throw new Sql.DatabaseException(e);
@@ -305,7 +376,7 @@ final class SqlTransaction implements Sql.Transaction {
 
     if (hasArguments()) {
 
-      try (PreparedStatement stmt = prepare(); ResultSet rs = stmt.executeQuery()) {
+      try (PreparedStatement stmt = prepare(sql); ResultSet rs = stmt.executeQuery()) {
         result = querySingle0(mapper, rs);
       } catch (SQLException e) {
         throw new Sql.DatabaseException(e);
@@ -348,7 +419,7 @@ final class SqlTransaction implements Sql.Transaction {
 
     if (hasArguments()) {
 
-      try (PreparedStatement stmt = prepare(); ResultSet rs = stmt.executeQuery()) {
+      try (PreparedStatement stmt = prepare(sql); ResultSet rs = stmt.executeQuery()) {
         result = queryNullable0(mapper, rs);
       } catch (SQLException e) {
         throw new Sql.DatabaseException(e);
@@ -391,7 +462,7 @@ final class SqlTransaction implements Sql.Transaction {
 
     if (hasArguments()) {
 
-      try (PreparedStatement stmt = prepare(); ResultSet rs = stmt.executeQuery()) {
+      try (PreparedStatement stmt = prepare(sql); ResultSet rs = stmt.executeQuery()) {
         result = queryOptionalInt0(rs);
       } catch (SQLException e) {
         throw new Sql.DatabaseException(e);
@@ -481,7 +552,7 @@ final class SqlTransaction implements Sql.Transaction {
 
     if (hasArguments()) {
 
-      try (PreparedStatement stmt = prepare()) {
+      try (PreparedStatement stmt = prepare(sql)) {
         result = stmt.executeUpdate();
       } catch (SQLException e) {
         throw new Sql.DatabaseException(e);
@@ -512,7 +583,7 @@ final class SqlTransaction implements Sql.Transaction {
 
     if (hasArguments()) {
 
-      try (PreparedStatement stmt = prepare(Statement.RETURN_GENERATED_KEYS)) {
+      try (PreparedStatement stmt = prepare(sql, Statement.RETURN_GENERATED_KEYS)) {
         result = stmt.executeUpdate();
 
         impl.accept(stmt);
@@ -559,11 +630,11 @@ final class SqlTransaction implements Sql.Transaction {
     return batches != null && !batches.isEmpty();
   }
 
-  private PreparedStatement prepare() throws SQLException {
-    return prepare(Statement.NO_GENERATED_KEYS);
+  private PreparedStatement prepare(String sql) throws SQLException {
+    return prepare(sql, Statement.NO_GENERATED_KEYS);
   }
 
-  private PreparedStatement prepare(int generatedKeys) throws SQLException {
+  private PreparedStatement prepare(String sql, int generatedKeys) throws SQLException {
     PreparedStatement stmt;
     stmt = connection.prepareStatement(sql, generatedKeys);
 

@@ -713,8 +713,73 @@ public class SqlTransactionTest {
     );
   }
 
-  @Test
+  @Test(description = "count without parameters")
   public void count01() {
+    TestingConnection conn;
+    conn = new TestingConnection();
+
+    TestingStatement stmt;
+    stmt = new TestingStatement();
+
+    TestingResultSet query;
+    query = new TestingResultSet(
+        Map.of("1", 23)
+    );
+
+    stmt.queries(query);
+
+    conn.statements(stmt);
+
+    SqlTransaction trx;
+    trx = trx(conn);
+
+    try {
+      trx.sql("""
+      select A, B
+      from FOO
+      """);
+
+      int count;
+      count = trx.count();
+
+      assertEquals(count, 23);
+    } finally {
+      trx.close();
+    }
+
+    assertEquals(
+        conn.toString(),
+
+        """
+        createStatement()
+        setAutoCommit(true)
+        close()
+        """
+    );
+
+    assertEquals(
+        stmt.toString(),
+
+        """
+        executeQuery(select count(*) from ( select A, B from FOO ) x)
+        close()
+        """
+    );
+
+    assertEquals(
+        query.toString(),
+
+        """
+        next()
+        getInt(1)
+        next()
+        close()
+        """
+    );
+  }
+
+  @Test(description = "count with parameters")
+  public void count02() {
     TestingConnection conn;
     conn = new TestingConnection();
 
@@ -734,12 +799,16 @@ public class SqlTransactionTest {
     trx = trx(conn);
 
     try {
-      int count;
-      count = trx.count("""
+      trx.sql("""
       select A, B
       from FOO
       where C = ?
-      """, 123);
+      """);
+
+      trx.add(123);
+
+      int count;
+      count = trx.count();
 
       assertEquals(count, 567);
     } finally {
@@ -750,7 +819,7 @@ public class SqlTransactionTest {
         conn.toString(),
 
         """
-        prepareStatement(select count(*) from ( select A, B from FOO where C = ? ) x)
+        prepareStatement(select count(*) from ( select A, B from FOO where C = ? ) x, 2)
         setAutoCommit(true)
         close()
         """
@@ -772,6 +841,7 @@ public class SqlTransactionTest {
         """
         next()
         getInt(1)
+        next()
         close()
         """
     );

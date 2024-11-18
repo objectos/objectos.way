@@ -155,10 +155,6 @@ $(RESOURCES_OUT): $(CLASS_OUTPUT)/%: $(RESOURCES)/%
 COMPILE_REQS += $(RESOURCES_OUT)
 endif
 
-ifdef PROCESSING_RESOLUTION_FILES
-COMPILE_REQS += | $(PROCESSING_OUTPUT)
-endif
-
 #
 # compilation targets
 #
@@ -177,7 +173,7 @@ $(COMPILE_PATH): $(COMPILE_RESOLUTION_FILES) | $(WORK)
 	$(call uniq-resolution-files,$(COMPILE_RESOLUTION_FILES)) > $@.tmp
 	cat $@.tmp | paste --delimiter='$(COMPILE_PATH_DELIMITER)' --serial > $@
 
-$(PROCESSING_PATH): $(PROCESSING_RESOLUTION_FILES) | $(WORK)
+$(PROCESSING_PATH): $(PROCESSING_RESOLUTION_FILES) | $(WORK) $(PROCESSING_OUTPUT)
 	$(call uniq-resolution-files,$(PROCESSING_RESOLUTION_FILES)) > $@.tmp
 	cat $@.tmp | paste --delimiter='$(COMPILE_PATH_DELIMITER)' --serial > $@
 	
@@ -187,7 +183,7 @@ $(PROCESSING_OUTPUT):
 $(CLASSES): $(CLASS_OUTPUT)/%.class: $(MAIN)/%.java
 	$(eval DIRTY += $$<)
 
-$(COMPILE_MARKER): $(COMPILE_REQS) | $(WORK)
+$(COMPILE_MARKER): $(COMPILE_REQS)
 	$(file > $(COMPILE_SOURCES).tmp,$(strip $(DIRTY)))
 	cat $(COMPILE_SOURCES).tmp | tr -d '\n' > $(COMPILE_SOURCES)
 	if [ -s $(COMPILE_SOURCES) ]; then \

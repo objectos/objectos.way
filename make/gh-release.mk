@@ -27,11 +27,17 @@ ifndef GH_API
 GH_API = https://api.github.com/repos/objectos/$(ARTIFACT_ID)
 endif
 
+## GitHub curl command
+GH_CURL = curl
+GH_CURL += --header "Accept: application/vnd.github+json"
+GH_CURL += --header "Authorization: Bearer $(GH_TOKEN)"
+GH_CURL += --header "X-GitHub-Api-Version: 2022-11-28"
+
 ## GitHub milestone title
 GH_MILESTONE_TITLE = v$(VERSION)
 
 ## GitHub milestones curl command
-GH_MILESTONE_CURLX = curl
+GH_MILESTONE_CURLX = $(GH_CURL)
 GH_MILESTONE_CURLX += '$(GH_API)/milestones'
 
 ## GitHub milestone number parsing
@@ -45,7 +51,7 @@ GH_MILESTONE_ID = $(shell $(GH_MILESTONE_CURLX) | $(GH_MILESTONE_JQX))
 GH_ISSUES_JSON = $(WORK)/gh-issues.json
 
 ## GitHub issues curl command
-GH_ISSUES_CURLX = curl
+GH_ISSUES_CURLX = $(GH_CURL)
 GH_ISSUES_CURLX += '$(GH_API)/issues?milestone=$(GH_MILESTONE_ID)&per_page=100&state=all'
 GH_ISSUES_CURLX += >
 GH_ISSUES_CURLX += $(GH_ISSUES_JSON)
@@ -76,11 +82,8 @@ GH_RELEASE_JQX += '. as $$body | {"tag_name":"$(GH_TAG)","name":"Release $(GH_TA
 GH_RELEASE_JQX += $(GH_RELEASE_BODY)
 
 ## 
-GH_RELEASE_CURLX = curl
+GH_RELEASE_CURLX = $(GH_CURL)
 GH_RELEASE_CURLX += --data-binary "@$(GH_RELEASE_JSON)"
-GH_RELEASE_CURLX += --header "Accept: application/vnd.github+json"
-GH_RELEASE_CURLX += --header "Authorization: Bearer $(GH_TOKEN)"
-GH_RELEASE_CURLX += --header "X-GitHub-Api-Version: 2022-11-28"
 GH_RELEASE_CURLX += --location
 GH_RELEASE_CURLX += --request POST
 GH_RELEASE_CURLX +=  $(GH_API)/releases
