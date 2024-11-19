@@ -15,41 +15,7 @@
  */
 package objectos.way;
 
-final record WebPaginator(Http.RequestTarget request, int firstItem, int lastItem, int totalCount, int previousPage, int nextPage) implements Web.Paginator {
-
-  public static WebPaginator of(Http.RequestTarget request, String pageAttrName, int pageSize, int totalCount) {
-    int pageNumber;
-    pageNumber = request.queryParamAsInt(pageAttrName, 1);
-
-    int previousPage;
-    previousPage = pageNumber - 1;
-
-    int nextPage;
-    nextPage = pageNumber > 0 ? pageNumber + 1 : 2;
-
-    int firstItem;
-    firstItem = 1;
-
-    int lastItem;
-    lastItem = pageSize;
-
-    if (pageNumber > 0) {
-      int zeroBasedNumber;
-      zeroBasedNumber = pageNumber - 1;
-
-      firstItem = zeroBasedNumber * pageSize + 1;
-
-      lastItem = firstItem + pageSize - 1;
-    }
-
-    if (lastItem >= totalCount) {
-      lastItem = totalCount;
-
-      nextPage = 0;
-    }
-
-    return new WebPaginator(request, firstItem, lastItem, totalCount, previousPage, nextPage);
-  }
+final record WebPaginator(Http.RequestTarget request, int firstRow, int lastRow, int rowCount, int previousPage, int nextPage) implements Web.Paginator {
 
   @Override
   public final boolean hasPrevious() {

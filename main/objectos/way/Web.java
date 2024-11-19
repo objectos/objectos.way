@@ -45,13 +45,93 @@ public final class Web {
   /**
    * Allows for pagination of data tables in an web application.
    */
-  public interface Paginator {
+  public sealed interface Paginator permits WebPaginator {
 
-    int firstItem();
+    /**
+     * Configures the creation of a {@code Paginator} instance.
+     */
+    sealed interface Config permits WebPaginatorConfig {
 
-    int lastItem();
+      /**
+       * Sets the page size to the specified value.
+       *
+       * @param value
+       *        the page size
+       *
+       * @throws IllegalArgumentException
+       *         if the value is equal to or lesser than {@code 0}
+       */
+      void pageSize(int value);
 
-    int totalCount();
+      /**
+       * Sets the query parameter name to be used in the pagination.
+       *
+       * @param value
+       *        the parameter name
+       *
+       * @throws IllegalArgumentException
+       *         if {@code value} is empty or blank
+       */
+      void parameterName(String value);
+
+      /**
+       * Sets the request target for pagination.
+       *
+       * @param value
+       *        the {@code Http.RequestTarget} instance
+       */
+      void requestTarget(Http.RequestTarget value);
+
+      /**
+       * Sets the total number of rows to be paginated.
+       *
+       * @param value
+       *        the total row count
+       *
+       * @throws IllegalArgumentException
+       *         if {@code value} is less than {@code 0}
+       */
+      void rowCount(int value);
+
+    }
+
+    /**
+     * Creates a new paginator instance with the specified configuration.
+     *
+     * @param config
+     *        the paginator configuration
+     *
+     * @return a new paginator instance
+     */
+    static Paginator create(Consumer<Config> config) {
+      WebPaginatorConfig builder;
+      builder = new WebPaginatorConfig();
+
+      config.accept(builder);
+
+      return builder.build();
+    }
+
+    /**
+     * Returns the index (1-based) of the first row in the current page.
+     *
+     * @return the index (1-based) of the first row in the current page.
+     */
+    int firstRow();
+
+    /**
+     * Returns the index (1-based) of the last row in the current page.
+     *
+     * @return the index (1-based) of the last row in the current page.
+     */
+    int lastRow();
+
+    /**
+     * Returns the total number of rows.
+     *
+     * @return the total number of rows.
+     */
+    int rowCount();
 
     boolean hasNext();
 
@@ -421,24 +501,5 @@ public final class Web {
   }
 
   private Web() {}
-
-  /**
-   * Creates a new paginator instance.
-   *
-   * @param target the request target
-   * @param pageAttrName the name of the page query parameter
-   * @param pageSize the maximum number of elements in each page
-   * @param totalCount the number of elements in all of the pages
-   *
-   * @return a new paginator instance
-   */
-  public static Paginator createPaginator(Http.RequestTarget target, String pageAttrName, int pageSize, int totalCount) {
-    Check.notNull(target, "target == null");
-    Check.notNull(pageAttrName, "pageAttrName == null");
-    Check.argument(pageSize > 0, "pageSize must be positive");
-    Check.argument(totalCount >= 0, "totalCount must be equal or greater than zero");
-
-    return WebPaginator.of(target, pageAttrName, pageSize, totalCount);
-  }
 
 }

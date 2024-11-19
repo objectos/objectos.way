@@ -23,14 +23,17 @@ public class WebPaginatorTest {
 
   @Test(description = "First page, single page")
   public void testCase01() {
-    Http.RequestTarget target = HttpExchange.parseRequestTarget("/foo");
-    int pageSize = 15, totalCount = 8;
+    Web.Paginator paginator;
+    paginator = Web.Paginator.create(config -> {
+      config.requestTarget(HttpExchange.parseRequestTarget("/foo"));
 
-    WebPaginator paginator;
-    paginator = WebPaginator.of(target, "page", pageSize, totalCount);
+      config.pageSize(15);
 
-    assertEquals(paginator.firstItem(), 1);
-    assertEquals(paginator.lastItem(), 8);
+      config.rowCount(8);
+    });
+
+    assertEquals(paginator.firstRow(), 1);
+    assertEquals(paginator.lastRow(), 8);
     assertEquals(paginator.hasPrevious(), false);
     assertEquals(paginator.hasNext(), false);
     assertEquals(paginator.previousHref(), "#");
@@ -39,14 +42,17 @@ public class WebPaginatorTest {
 
   @Test(description = "First page, multiple pages")
   public void testCase02() {
-    Http.RequestTarget target = HttpExchange.parseRequestTarget("/foo");
-    int pageSize = 15, totalCount = 16;
+    Web.Paginator paginator;
+    paginator = Web.Paginator.create(config -> {
+      config.requestTarget(HttpExchange.parseRequestTarget("/foo"));
 
-    WebPaginator paginator;
-    paginator = WebPaginator.of(target, "page", pageSize, totalCount);
+      config.pageSize(15);
 
-    assertEquals(paginator.firstItem(), 1);
-    assertEquals(paginator.lastItem(), 15);
+      config.rowCount(16);
+    });
+
+    assertEquals(paginator.firstRow(), 1);
+    assertEquals(paginator.lastRow(), 15);
     assertEquals(paginator.hasPrevious(), false);
     assertEquals(paginator.hasNext(), true);
     assertEquals(paginator.previousHref(), "#");
@@ -55,14 +61,17 @@ public class WebPaginatorTest {
 
   @Test(description = "First page, multiple pages, explicit query param")
   public void testCase03() {
-    Http.RequestTarget target = HttpExchange.parseRequestTarget("/foo?page=1");
-    int pageSize = 15, totalCount = 16;
+    Web.Paginator paginator;
+    paginator = Web.Paginator.create(config -> {
+      config.requestTarget(HttpExchange.parseRequestTarget("/foo?page=1"));
 
-    WebPaginator paginator;
-    paginator = WebPaginator.of(target, "page", pageSize, totalCount);
+      config.pageSize(15);
 
-    assertEquals(paginator.firstItem(), 1);
-    assertEquals(paginator.lastItem(), 15);
+      config.rowCount(16);
+    });
+
+    assertEquals(paginator.firstRow(), 1);
+    assertEquals(paginator.lastRow(), 15);
     assertEquals(paginator.hasPrevious(), false);
     assertEquals(paginator.hasNext(), true);
     assertEquals(paginator.previousHref(), "#");
@@ -71,14 +80,17 @@ public class WebPaginatorTest {
 
   @Test(description = "Last page")
   public void testCase04() {
-    Http.RequestTarget target = HttpExchange.parseRequestTarget("/foo?page=2");
-    int pageSize = 15, totalCount = 16;
+    Web.Paginator paginator;
+    paginator = Web.Paginator.create(config -> {
+      config.requestTarget(HttpExchange.parseRequestTarget("/foo?page=2"));
 
-    WebPaginator paginator;
-    paginator = WebPaginator.of(target, "page", pageSize, totalCount);
+      config.pageSize(15);
 
-    assertEquals(paginator.firstItem(), 16);
-    assertEquals(paginator.lastItem(), 16);
+      config.rowCount(16);
+    });
+
+    assertEquals(paginator.firstRow(), 16);
+    assertEquals(paginator.lastRow(), 16);
     assertEquals(paginator.hasPrevious(), true);
     assertEquals(paginator.hasNext(), false);
     assertEquals(paginator.previousHref(), "/foo?page=1");
@@ -87,14 +99,17 @@ public class WebPaginatorTest {
 
   @Test(description = "Middle page")
   public void testCase05() {
-    Http.RequestTarget target = HttpExchange.parseRequestTarget("/foo?page=3");
-    int pageSize = 10, totalCount = 50;
+    Web.Paginator paginator;
+    paginator = Web.Paginator.create(config -> {
+      config.requestTarget(HttpExchange.parseRequestTarget("/foo?page=3"));
 
-    WebPaginator paginator;
-    paginator = WebPaginator.of(target, "page", pageSize, totalCount);
+      config.pageSize(10);
 
-    assertEquals(paginator.firstItem(), 21);
-    assertEquals(paginator.lastItem(), 30);
+      config.rowCount(50);
+    });
+
+    assertEquals(paginator.firstRow(), 21);
+    assertEquals(paginator.lastRow(), 30);
     assertEquals(paginator.hasPrevious(), true);
     assertEquals(paginator.hasNext(), true);
     assertEquals(paginator.previousHref(), "/foo?page=2");
@@ -103,14 +118,17 @@ public class WebPaginatorTest {
 
   @Test(description = "keep existing query parameters")
   public void testCase06() {
-    Http.RequestTarget target = HttpExchange.parseRequestTarget("/foo?q=abc&page=3");
-    int pageSize = 10, totalCount = 50;
+    Web.Paginator paginator;
+    paginator = Web.Paginator.create(config -> {
+      config.requestTarget(HttpExchange.parseRequestTarget("/foo?q=abc&page=3"));
 
-    WebPaginator paginator;
-    paginator = WebPaginator.of(target, "page", pageSize, totalCount);
+      config.pageSize(10);
 
-    assertEquals(paginator.firstItem(), 21);
-    assertEquals(paginator.lastItem(), 30);
+      config.rowCount(50);
+    });
+
+    assertEquals(paginator.firstRow(), 21);
+    assertEquals(paginator.lastRow(), 30);
     assertEquals(paginator.hasPrevious(), true);
     assertEquals(paginator.hasNext(), true);
     assertEquals(paginator.previousHref(), "/foo?q=abc&page=2");
@@ -119,14 +137,17 @@ public class WebPaginatorTest {
 
   @Test(description = "Last page, full size")
   public void testCase07() {
-    Http.RequestTarget target = HttpExchange.parseRequestTarget("/foo?page=2");
-    int pageSize = 15, totalCount = 30;
+    Web.Paginator paginator;
+    paginator = Web.Paginator.create(config -> {
+      config.requestTarget(HttpExchange.parseRequestTarget("/foo?page=2"));
 
-    WebPaginator paginator;
-    paginator = WebPaginator.of(target, "page", pageSize, totalCount);
+      config.pageSize(15);
 
-    assertEquals(paginator.firstItem(), 16);
-    assertEquals(paginator.lastItem(), 30);
+      config.rowCount(30);
+    });
+
+    assertEquals(paginator.firstRow(), 16);
+    assertEquals(paginator.lastRow(), 30);
     assertEquals(paginator.hasPrevious(), true);
     assertEquals(paginator.hasNext(), false);
     assertEquals(paginator.previousHref(), "/foo?page=1");
@@ -135,14 +156,17 @@ public class WebPaginatorTest {
 
   @Test(description = "First page, full size")
   public void testCase08() {
-    Http.RequestTarget target = HttpExchange.parseRequestTarget("/foo?page=1");
-    int pageSize = 15, totalCount = 15;
+    Web.Paginator paginator;
+    paginator = Web.Paginator.create(config -> {
+      config.requestTarget(HttpExchange.parseRequestTarget("/foo?page=1"));
 
-    WebPaginator paginator;
-    paginator = WebPaginator.of(target, "page", pageSize, totalCount);
+      config.pageSize(15);
 
-    assertEquals(paginator.firstItem(), 1);
-    assertEquals(paginator.lastItem(), 15);
+      config.rowCount(15);
+    });
+
+    assertEquals(paginator.firstRow(), 1);
+    assertEquals(paginator.lastRow(), 15);
     assertEquals(paginator.hasPrevious(), false);
     assertEquals(paginator.hasNext(), false);
     assertEquals(paginator.previousHref(), "#");
