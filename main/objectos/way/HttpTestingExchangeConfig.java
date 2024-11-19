@@ -52,7 +52,21 @@ final class HttpTestingExchangeConfig implements Http.TestingExchange.Config {
 
   @Override
   public final Http.TestingExchange.Config path(String value) {
-    path = Objects.requireNonNull(value, "value == null");
+    int length;
+    length = value.length();
+
+    if (length == 0) {
+      throw new IllegalArgumentException("path must not be empty");
+    }
+
+    char first;
+    first = value.charAt(0);
+
+    if (first != '/') {
+      throw new IllegalArgumentException("path must start with a '/' character");
+    }
+
+    path = value;
 
     return this;
   }

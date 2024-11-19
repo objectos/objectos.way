@@ -73,4 +73,22 @@ public class HttpTestingExchangeTest {
     );
   }
 
+  @Test(description = "rawPath")
+  public void testCase03() {
+    assertEquals(rawPath("/"), "/");
+    assertEquals(rawPath("/files"), "/files");
+    assertEquals(rawPath("/files/"), "/files/");
+    assertEquals(rawPath("/files/são paulo.pdf"), "/files/s%C3%A3o+paulo.pdf");
+    assertEquals(rawPath("/files/são paulo.pdf/"), "/files/s%C3%A3o+paulo.pdf/");
+  }
+
+  private String rawPath(String string) {
+    Http.TestingExchange http;
+    http = Http.TestingExchange.create(config -> {
+      config.path(string);
+    });
+
+    return http.rawPath();
+  }
+
 }

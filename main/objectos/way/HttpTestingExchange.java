@@ -126,12 +126,78 @@ final class HttpTestingExchange implements Http.TestingExchange {
 
   @Override
   public final String rawPath() {
-    return URLEncoder.encode(path(), StandardCharsets.UTF_8);
+    StringBuilder builder;
+    builder = new StringBuilder();
+
+    String path;
+    path = path();
+
+    int slashFromIndex;
+    slashFromIndex = 0;
+
+    while (true) {
+      if (slashFromIndex == path.length()) {
+        break;
+      }
+
+      int slash;
+      slash = path.indexOf('/', slashFromIndex);
+
+      if (slash == slashFromIndex) {
+        builder.append('/');
+
+        slashFromIndex++;
+
+        continue;
+      }
+
+      if (slash < 0) {
+        int slugStart;
+        slugStart = slashFromIndex;
+
+        int slugEnd;
+        slugEnd = path.length();
+
+        String slug;
+        slug = path.substring(slugStart, slugEnd);
+
+        String encoded;
+        encoded = encode(slug);
+
+        builder.append(encoded);
+
+        break;
+      }
+
+      int slugStart;
+      slugStart = slashFromIndex;
+
+      int slugEnd;
+      slugEnd = slash;
+
+      String slug;
+      slug = path.substring(slugStart, slugEnd);
+
+      String encoded;
+      encoded = encode(slug);
+
+      builder.append(encoded);
+
+      builder.append('/');
+
+      slashFromIndex = slugEnd + 1;
+    }
+
+    return builder.toString();
   }
 
   @Override
   public final String rawQuery() {
     throw new IllegalStateException("query was not set");
+  }
+
+  private String encode(String s) {
+    return URLEncoder.encode(s, StandardCharsets.UTF_8);
   }
 
   @Override
