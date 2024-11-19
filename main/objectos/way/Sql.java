@@ -163,6 +163,53 @@ public final class Sql {
   }
 
   /**
+   * Represents a single page in a paginated result set.
+   */
+  public interface Page {
+
+    static Page of(int number, int size) {
+      Check.argument(number > 0, "number must be positive");
+      Check.argument(size > 0, "size must be positive");
+
+      record SqlPage(int number, int size) implements Sql.Page {}
+
+      return new SqlPage(number, size);
+    }
+
+    /**
+     * The page number. Page numbers are always greater than zero.
+     * In other words, the first page is page number 1.
+     * The second page is page number 2 and so on.
+     *
+     * @return the page number
+     */
+    int number();
+
+    /**
+     * The number of rows to be displayed on each page.
+     *
+     * @return the number of rows to be displayed on each page
+     */
+    int size();
+
+  }
+
+  /**
+   * A provider of {@link Sql.Page} instances.
+   */
+  @FunctionalInterface
+  public interface PageProvider {
+
+    /**
+     * The current page.
+     *
+     * @return the current page
+     */
+    Page page();
+
+  }
+
+  /**
    * Responsible for processing the results of a query operation.
    */
   @FunctionalInterface
@@ -350,6 +397,18 @@ public final class Sql {
      * statement. This method works by decorating the current SQL statement.
      */
     int count() throws DatabaseException;
+
+    /**
+     * Causes the current SQL statement to be paginated according to the
+     * specified {@code Page} object. In other words, when the query is
+     * executed, only the rows corresponding to the specified page will be
+     * retrieved.
+     *
+     * @param page
+     *        the {@code Page} object defining the page number and the number of
+     *        rows per page
+     */
+    Transaction paginate(Page page);
 
     /**
      * Executes the current SQL statement as a row-retrieving query.

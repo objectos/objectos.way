@@ -189,7 +189,7 @@ public class SqlTest {
   }
 
   private SqlTransaction trx(Connection connection) {
-    return new SqlTransaction(connection);
+    return new SqlTransaction(SqlDialect.TESTING, connection);
   }
 
 }

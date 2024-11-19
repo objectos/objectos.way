@@ -39,6 +39,12 @@ public class SqlTransactionTest {
     }
   }
 
+  private record String2(String a, String b) {
+    String2(ResultSet rs, int idx) throws SQLException {
+      this(rs.getString(idx++), rs.getString(idx++));
+    }
+  }
+
   @Test(description = "trx.sql(sql).add(1).addBatch().add(2).addBatch().batchUpdate()")
   public void batchUpdate01() {
     TestingConnection conn;
@@ -274,6 +280,233 @@ public class SqlTransactionTest {
 
         """
         executeUpdate(insert into BAR (X, Y) values (123, '2024-09-26'))
+        close()
+        """
+    );
+  }
+
+  @Test(description = """
+  paginate:
+  - prepared statement
+  - first page
+  """)
+  public void paginate01() {
+    TestingConnection conn;
+    conn = new TestingConnection();
+
+    TestingPreparedStatement stmt;
+    stmt = new TestingPreparedStatement();
+
+    TestingResultSet query;
+    query = new TestingResultSet(
+        Map.of("1", "Hello", "2", "World!")
+    );
+
+    stmt.queries(query);
+
+    conn.preparedStatements(stmt);
+
+    SqlTransaction trx;
+    trx = trx(conn);
+
+    try {
+      trx.sql("""
+      select A, B
+      from FOO
+      where C = ?
+      """);
+
+      trx.paginate(Sql.Page.of(1, 15));
+
+      trx.add(123);
+
+      List<String2> result;
+      result = trx.query(String2::new);
+
+      assertEquals(result.size(), 1);
+      assertEquals(result.get(0), new String2("Hello", "World!"));
+    } finally {
+      trx.close();
+    }
+
+    assertEquals(
+        conn.toString(),
+
+        """
+        prepareStatement(select A, B from FOO where C = ? limit 15, 2)
+        setAutoCommit(true)
+        close()
+        """
+    );
+
+    assertEquals(
+        stmt.toString(),
+
+        """
+        setInt(1, 123)
+        executeQuery()
+        close()
+        """
+    );
+
+    assertEquals(
+        query.toString(),
+
+        """
+        next()
+        getString(1)
+        getString(2)
+        next()
+        close()
+        """
+    );
+  }
+
+  @Test(description = """
+  paginate:
+  - prepared statement
+  - second page
+  """)
+  public void paginate02() {
+    TestingConnection conn;
+    conn = new TestingConnection();
+
+    TestingPreparedStatement stmt;
+    stmt = new TestingPreparedStatement();
+
+    TestingResultSet query;
+    query = new TestingResultSet(
+        Map.of("1", "Hello", "2", "World!")
+    );
+
+    stmt.queries(query);
+
+    conn.preparedStatements(stmt);
+
+    SqlTransaction trx;
+    trx = trx(conn);
+
+    try {
+      trx.sql("""
+      select A, B
+      from FOO
+      where C = ?
+      """);
+
+      trx.paginate(Sql.Page.of(2, 15));
+
+      trx.add(123);
+
+      List<String2> result;
+      result = trx.query(String2::new);
+
+      assertEquals(result.size(), 1);
+      assertEquals(result.get(0), new String2("Hello", "World!"));
+    } finally {
+      trx.close();
+    }
+
+    assertEquals(
+        conn.toString(),
+
+        """
+        prepareStatement(select A, B from FOO where C = ? limit 15 offset 15, 2)
+        setAutoCommit(true)
+        close()
+        """
+    );
+
+    assertEquals(
+        stmt.toString(),
+
+        """
+        setInt(1, 123)
+        executeQuery()
+        close()
+        """
+    );
+
+    assertEquals(
+        query.toString(),
+
+        """
+        next()
+        getString(1)
+        getString(2)
+        next()
+        close()
+        """
+    );
+  }
+
+  @Test(description = """
+  paginate:
+  - regular statement
+  - first page
+  """)
+  public void paginate03() {
+    TestingConnection conn;
+    conn = new TestingConnection();
+
+    TestingStatement stmt;
+    stmt = new TestingStatement();
+
+    TestingResultSet query;
+    query = new TestingResultSet(
+        Map.of("1", "Hello", "2", "World!")
+    );
+
+    stmt.queries(query);
+
+    conn.statements(stmt);
+
+    SqlTransaction trx;
+    trx = trx(conn);
+
+    try {
+      trx.sql("""
+      select A, B
+      from FOO
+      """);
+
+      trx.paginate(Sql.Page.of(1, 15));
+
+      List<String2> result;
+      result = trx.query(String2::new);
+
+      assertEquals(result.size(), 1);
+      assertEquals(result.get(0), new String2("Hello", "World!"));
+    } finally {
+      trx.close();
+    }
+
+    assertEquals(
+        conn.toString(),
+
+        """
+        createStatement()
+        setAutoCommit(true)
+        close()
+        """
+    );
+
+    assertEquals(
+        stmt.toString(),
+
+        """
+        executeQuery(select A, B from FOO limit 15)
+        close()
+        """
+    );
+
+    assertEquals(
+        query.toString(),
+
+        """
+        next()
+        getString(1)
+        getString(2)
+        next()
         close()
         """
     );
@@ -693,6 +926,32 @@ public class SqlTransactionTest {
     );
   }
 
+  @Test(description = """
+  queryNullable:
+  - disallow page
+  """)
+  public void queryNullable02() {
+    TestingConnection conn;
+    conn = new TestingConnection();
+
+    SqlTransaction trx;
+    trx = trx(conn);
+
+    try {
+      trx.sql("select ID from FOO");
+
+      trx.paginate(Sql.Page.of(1, 15));
+
+      trx.queryNullable(Foo::new);
+
+      Assert.fail();
+    } catch (IllegalStateException expected) {
+      assertEquals(expected.getMessage(), "Cannot paginate a query that is expected to return at most 1 row");
+    } finally {
+      trx.close();
+    }
+  }
+
   @Test(description = "trx.sql().queryOptionalInt")
   public void queryOptionalInt01() {
     TestingConnection conn;
@@ -757,6 +1016,32 @@ public class SqlTransactionTest {
         close()
         """
     );
+  }
+
+  @Test(description = """
+  queryOptionalInt:
+  - disallow page
+  """)
+  public void queryOptionalInt02() {
+    TestingConnection conn;
+    conn = new TestingConnection();
+
+    SqlTransaction trx;
+    trx = trx(conn);
+
+    try {
+      trx.sql("select ID from FOO");
+
+      trx.paginate(Sql.Page.of(1, 15));
+
+      trx.queryOptionalInt();
+
+      Assert.fail();
+    } catch (IllegalStateException expected) {
+      assertEquals(expected.getMessage(), "Cannot paginate a query that is expected to return at most 1 row");
+    } finally {
+      trx.close();
+    }
   }
 
   @Test(description = "trx.sql(sql).args(args).queryOne(Record::new)")
@@ -888,6 +1173,32 @@ public class SqlTransactionTest {
         close()
         """
     );
+  }
+
+  @Test(description = """
+  querySingle:
+  - disallow page
+  """)
+  public void querySingle03() {
+    TestingConnection conn;
+    conn = new TestingConnection();
+
+    SqlTransaction trx;
+    trx = trx(conn);
+
+    try {
+      trx.sql("select A, B, C from FOO");
+
+      trx.paginate(Sql.Page.of(1, 15));
+
+      trx.querySingle(Foo::new);
+
+      Assert.fail();
+    } catch (IllegalStateException expected) {
+      assertEquals(expected.getMessage(), "Cannot paginate a query that is expected to return at most 1 row");
+    } finally {
+      trx.close();
+    }
   }
 
   @Test
@@ -1488,7 +1799,10 @@ public class SqlTransactionTest {
   }
 
   private SqlTransaction trx(Connection connection) {
-    return new SqlTransaction(connection);
+    SqlDialect dialect;
+    dialect = SqlDialect.TESTING;
+
+    return new SqlTransaction(dialect, connection);
   }
 
 }

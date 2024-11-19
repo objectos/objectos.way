@@ -51,4 +51,43 @@ public class SqlDialectMysqlTest {
     """);
   }
 
+  @Test
+  public void paginate01() {
+    SqlDialect dialect;
+    dialect = TestingSqlDialect.MYSQL_5_7;
+
+    assertEquals(
+        dialect.paginate(
+            "select * from FOO",
+
+            Sql.Page.of(1, 15)
+        ),
+
+        """
+        select * from FOO
+        limit 15
+        """
+    );
+  }
+
+  @Test
+  public void paginate02() {
+    SqlDialect dialect;
+    dialect = TestingSqlDialect.MYSQL_5_7;
+
+    assertEquals(
+        dialect.paginate(
+            "select * from FOO",
+
+            Sql.Page.of(3, 15)
+        ),
+
+        """
+        select * from FOO
+        limit 15
+        offset 30
+        """
+    );
+  }
+
 }

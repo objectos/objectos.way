@@ -21,9 +21,12 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.List;
+import java.util.Objects;
 import java.util.OptionalInt;
 
 final class SqlTransaction implements Sql.Transaction {
+
+  private final SqlDialect dialect;
 
   private final Connection connection;
 
@@ -33,7 +36,11 @@ final class SqlTransaction implements Sql.Transaction {
 
   private List<List<Object>> batches;
 
-  SqlTransaction(Connection connection) {
+  private Sql.Page page;
+
+  SqlTransaction(SqlDialect dialect, Connection connection) {
+    this.dialect = dialect;
+
     this.connection = connection;
   }
 
@@ -141,6 +148,8 @@ final class SqlTransaction implements Sql.Transaction {
     if (batches != null) {
       batches.clear();
     }
+
+    page = null;
 
     return this;
   }
@@ -309,11 +318,21 @@ final class SqlTransaction implements Sql.Transaction {
   }
 
   @Override
+  public final Sql.Transaction paginate(Sql.Page page) {
+    this.page = Objects.requireNonNull(page);
+
+    return this;
+  }
+
+  @Override
   public final <T> List<T> query(Sql.Mapper<T> mapper) throws Sql.DatabaseException {
     checkQuery(mapper);
 
     List<T> list;
     list = Util.createList();
+
+    String sql;
+    sql = paginateIfNecessary();
 
     if (hasArguments()) {
 
@@ -336,6 +355,14 @@ final class SqlTransaction implements Sql.Transaction {
     return Util.toUnmodifiableList(list);
   }
 
+  private String paginateIfNecessary() {
+    if (page != null) {
+      return dialect.paginate(sql, page);
+    } else {
+      return sql;
+    }
+  }
+
   private <T> void query0(Sql.Mapper<T> mapper, List<T> list, ResultSet rs) throws SQLException {
     while (rs.next()) {
       T instance;
@@ -352,6 +379,7 @@ final class SqlTransaction implements Sql.Transaction {
   @Override
   public final <T> T querySingle(Sql.Mapper<T> mapper) throws Sql.DatabaseException {
     checkQuery(mapper);
+    checkNoPage();
 
     T result;
 
@@ -395,6 +423,7 @@ final class SqlTransaction implements Sql.Transaction {
   @Override
   public final <T> T queryNullable(Sql.Mapper<T> mapper) throws Sql.DatabaseException {
     checkQuery(mapper);
+    checkNoPage();
 
     T result;
 
@@ -438,6 +467,7 @@ final class SqlTransaction implements Sql.Transaction {
   @Override
   public final OptionalInt queryOptionalInt() throws Sql.DatabaseException {
     checkQuery();
+    checkNoPage();
 
     OptionalInt result;
 
@@ -601,6 +631,10 @@ final class SqlTransaction implements Sql.Transaction {
     Check.state(sql != null, "No SQL statement was defined");
 
     Check.state(!hasBatches(), "Cannot execute query: one or more batches were defined");
+  }
+
+  private void checkNoPage() {
+    Check.state(page == null, "Cannot paginate a query that is expected to return at most 1 row");
   }
 
   private boolean hasArguments() {

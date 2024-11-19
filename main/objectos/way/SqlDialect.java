@@ -18,39 +18,27 @@ package objectos.way;
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
 
-final class SqlDialect {
+enum SqlDialect {
 
-  private enum Dialect {
+  H2,
 
-    H2,
+  MYSQL,
 
-    MYSQL;
-
-  }
-
-  @SuppressWarnings("unused")
-  private final Dialect dialect;
-
-  private SqlDialect(Dialect dialect) {
-    this.dialect = dialect;
-  }
+  TESTING;
 
   static SqlDialect of(DatabaseMetaData data) throws SQLException {
     String productName;
     productName = data.getDatabaseProductName();
 
-    Dialect dialect;
-    dialect = switch (productName) {
-      case "H2" -> Dialect.H2;
+    return switch (productName) {
+      case "H2" -> H2;
 
-      case "MySQL" -> Dialect.MYSQL;
+      case "MySQL" -> MYSQL;
 
       default -> throw new UnsupportedOperationException(
           "Unsupported dialect with databaseProductName=" + productName
       );
     };
-
-    return new SqlDialect(dialect);
   }
 
   public void count(StringBuilder sqlBuilder) {
@@ -72,7 +60,66 @@ final class SqlDialect {
     sqlBuilder.append(System.lineSeparator());
   }
 
-  private boolean shouldAppendNewLine(StringBuilder sqlBuilder) {
+  public final String paginate(String sql, Sql.Page page) {
+    StringBuilder builder;
+    builder = new StringBuilder(sql);
+
+    if (shouldAppendNewLine(builder)) {
+      builder.append(System.lineSeparator());
+    }
+
+    int offset;
+    offset = 0;
+
+    int pageNumber;
+    pageNumber = page.number();
+
+    if (pageNumber > 1) {
+      offset = (pageNumber - 1) * page.size();
+    }
+
+    switch (this) {
+      case H2 -> {
+        if (offset > 0) {
+          builder.append("offset ");
+
+          builder.append(offset);
+
+          builder.append(" rows");
+
+          builder.append(System.lineSeparator());
+        }
+
+        builder.append("fetch first ");
+
+        builder.append(page.size());
+
+        builder.append(" rows only");
+
+        builder.append(System.lineSeparator());
+      }
+
+      case MYSQL, TESTING -> {
+        builder.append("limit ");
+
+        builder.append(page.size());
+
+        builder.append(System.lineSeparator());
+
+        if (offset > 0) {
+          builder.append("offset ");
+
+          builder.append(offset);
+
+          builder.append(System.lineSeparator());
+        }
+      }
+    }
+
+    return builder.toString();
+  }
+
+  private boolean shouldAppendNewLine(CharSequence sqlBuilder) {
     int length;
     length = sqlBuilder.length();
 
