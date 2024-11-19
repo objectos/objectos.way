@@ -45,7 +45,7 @@ public final class Web {
   /**
    * Allows for pagination of data tables in an web application.
    */
-  public sealed interface Paginator permits WebPaginator {
+  public sealed interface Paginator extends Sql.PageProvider permits WebPaginator {
 
     /**
      * Configures the creation of a {@code Paginator} instance.
@@ -111,6 +111,14 @@ public final class Web {
 
       return builder.build();
     }
+
+    /**
+     * Returns the current page.
+     *
+     * @return the current page
+     */
+    @Override
+    Sql.Page page();
 
     /**
      * Returns the index (1-based) of the first row in the current page.

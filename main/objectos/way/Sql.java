@@ -411,6 +411,23 @@ public final class Sql {
     Transaction paginate(Page page);
 
     /**
+     * Causes the current SQL statement to be paginated according to the
+     * {@code Page} object provided by the specified provider.
+     * In other words, when the query is executed, only the rows corresponding
+     * to the specified page will be retrieved.
+     *
+     * @param page
+     *        the {@code Page} object defining the page number and the number of
+     *        rows per page
+     */
+    default Transaction paginate(PageProvider provider) {
+      Page page;
+      page = provider.page();
+
+      return paginate(page);
+    }
+
+    /**
      * Executes the current SQL statement as a row-retrieving query.
      */
     <T> List<T> query(Mapper<T> mapper) throws DatabaseException;

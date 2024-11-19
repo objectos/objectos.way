@@ -94,7 +94,10 @@ final class WebPaginatorConfig implements Web.Paginator.Config {
       nextPage = 0;
     }
 
-    return new WebPaginator(requestTarget, firstRow, lastRow, rowCount, previousPage, nextPage);
+    Sql.Page page;
+    page = Sql.Page.of(pageNumber, pageSize);
+
+    return new WebPaginator(requestTarget, page, firstRow, lastRow, rowCount, previousPage, nextPage);
   }
 
 }

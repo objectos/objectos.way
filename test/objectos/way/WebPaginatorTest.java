@@ -32,6 +32,8 @@ public class WebPaginatorTest {
       config.rowCount(8);
     });
 
+    assertEquals(paginator.page().number(), 1);
+    assertEquals(paginator.page().size(), 15);
     assertEquals(paginator.firstRow(), 1);
     assertEquals(paginator.lastRow(), 8);
     assertEquals(paginator.hasPrevious(), false);
@@ -51,6 +53,8 @@ public class WebPaginatorTest {
       config.rowCount(16);
     });
 
+    assertEquals(paginator.page().number(), 1);
+    assertEquals(paginator.page().size(), 15);
     assertEquals(paginator.firstRow(), 1);
     assertEquals(paginator.lastRow(), 15);
     assertEquals(paginator.hasPrevious(), false);
@@ -70,6 +74,8 @@ public class WebPaginatorTest {
       config.rowCount(16);
     });
 
+    assertEquals(paginator.page().number(), 1);
+    assertEquals(paginator.page().size(), 15);
     assertEquals(paginator.firstRow(), 1);
     assertEquals(paginator.lastRow(), 15);
     assertEquals(paginator.hasPrevious(), false);
@@ -89,6 +95,8 @@ public class WebPaginatorTest {
       config.rowCount(16);
     });
 
+    assertEquals(paginator.page().number(), 2);
+    assertEquals(paginator.page().size(), 15);
     assertEquals(paginator.firstRow(), 16);
     assertEquals(paginator.lastRow(), 16);
     assertEquals(paginator.hasPrevious(), true);
@@ -108,6 +116,8 @@ public class WebPaginatorTest {
       config.rowCount(50);
     });
 
+    assertEquals(paginator.page().number(), 3);
+    assertEquals(paginator.page().size(), 10);
     assertEquals(paginator.firstRow(), 21);
     assertEquals(paginator.lastRow(), 30);
     assertEquals(paginator.hasPrevious(), true);
@@ -127,6 +137,8 @@ public class WebPaginatorTest {
       config.rowCount(50);
     });
 
+    assertEquals(paginator.page().number(), 3);
+    assertEquals(paginator.page().size(), 10);
     assertEquals(paginator.firstRow(), 21);
     assertEquals(paginator.lastRow(), 30);
     assertEquals(paginator.hasPrevious(), true);
@@ -146,6 +158,8 @@ public class WebPaginatorTest {
       config.rowCount(30);
     });
 
+    assertEquals(paginator.page().number(), 2);
+    assertEquals(paginator.page().size(), 15);
     assertEquals(paginator.firstRow(), 16);
     assertEquals(paginator.lastRow(), 30);
     assertEquals(paginator.hasPrevious(), true);
@@ -165,6 +179,8 @@ public class WebPaginatorTest {
       config.rowCount(15);
     });
 
+    assertEquals(paginator.page().number(), 1);
+    assertEquals(paginator.page().size(), 15);
     assertEquals(paginator.firstRow(), 1);
     assertEquals(paginator.lastRow(), 15);
     assertEquals(paginator.hasPrevious(), false);
