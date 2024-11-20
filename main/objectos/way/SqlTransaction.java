@@ -23,6 +23,7 @@ import java.sql.Statement;
 import java.util.List;
 import java.util.Objects;
 import java.util.OptionalInt;
+import java.util.regex.Pattern;
 
 final class SqlTransaction implements Sql.Transaction {
 
@@ -37,6 +38,8 @@ final class SqlTransaction implements Sql.Transaction {
   private List<List<Object>> batches;
 
   private Sql.Page page;
+
+  private boolean template;
 
   SqlTransaction(SqlDialect dialect, Connection connection) {
     this.dialect = dialect;
@@ -151,6 +154,8 @@ final class SqlTransaction implements Sql.Transaction {
 
     page = null;
 
+    template = false;
+
     return this;
   }
 
@@ -169,26 +174,37 @@ final class SqlTransaction implements Sql.Transaction {
 
     checkSql();
 
-    if (arguments == null) {
-      arguments = Util.createList();
-    }
+    return addValue(value);
+  }
 
-    arguments.add(value);
+  @Override
+  public final Sql.Transaction addIf(Object value, boolean condition) {
+    checkSql();
 
-    return this;
+    Object maybe;
+    maybe = SqlMaybe.get(value, condition);
+
+    template = true;
+
+    return addValue(maybe);
   }
 
   @Override
   public final Sql.Transaction add(Object value, int sqlType) {
     checkSql();
 
-    Object nullable = Sql.nullable(value, sqlType);
+    Object nullable;
+    nullable = Sql.nullable(value, sqlType);
 
+    return addValue(nullable);
+  }
+
+  private Sql.Transaction addValue(Object value) {
     if (arguments == null) {
       arguments = Util.createList();
     }
 
-    arguments.add(nullable);
+    arguments.add(value);
 
     return this;
   }
@@ -649,15 +665,114 @@ final class SqlTransaction implements Sql.Transaction {
     return prepare(sql, Statement.NO_GENERATED_KEYS);
   }
 
-  private PreparedStatement prepare(String sql, int generatedKeys) throws SQLException {
-    PreparedStatement stmt;
-    stmt = connection.prepareStatement(sql, generatedKeys);
+  private static final Pattern TWO_DASHES = Pattern.compile("^--.*$", Pattern.MULTILINE);
 
-    // we assume this method was called after hasArguments() returned true
-    // so arguments is guaranteed to be non-null
-    setArguments(stmt, arguments);
+  private PreparedStatement prepare(String sql, int generatedKeys) throws SQLException {
+    if (!template) {
+      PreparedStatement stmt;
+      stmt = connection.prepareStatement(sql, generatedKeys);
+
+      // we assume this method was called after hasArguments() returned true
+      // so arguments is guaranteed to be non-null
+      setArguments(stmt, arguments);
+
+      return stmt;
+    }
+
+    StringBuilder sqlBuilder;
+    sqlBuilder = new StringBuilder(sql.length());
+
+    List<Object> values;
+    values = Util.createList();
+
+    int argsIndex;
+    argsIndex = 0;
+
+    String[] fragments;
+    fragments = TWO_DASHES.split(sql);
+
+    String fragment;
+    fragment = fragments[0];
+
+    sqlBuilder.append(fragment);
+
+    int placeholders;
+    placeholders = placeholders(fragment);
+
+    while (values.size() < placeholders) {
+      Object arg;
+      arg = arguments.get(argsIndex++);
+
+      values.add(arg);
+    }
+
+    for (int i = 1; i < fragments.length; i++) {
+      fragment = fragments[i];
+
+      placeholders = placeholders(fragment);
+
+      switch (placeholders) {
+        case 0 -> sqlBuilder.append(fragment.trim());
+
+        case 1 -> {
+          if (argsIndex < arguments.size()) {
+            Object arg;
+            arg = arguments.get(argsIndex++);
+
+            if (arg instanceof SqlMaybe maybe) {
+
+              if (maybe.absent()) {
+                continue;
+              }
+
+              arg = maybe.value();
+            }
+
+            sqlBuilder.append(fragment);
+
+            values.add(arg);
+          } else {
+            throw new UnsupportedOperationException("Implement me");
+          }
+        }
+
+        default -> throw new IllegalArgumentException(
+            "Fragment must not contain more than one placeholder: " + fragment.trim()
+        );
+      }
+    }
+
+    String sqlToPrepare;
+    sqlToPrepare = sqlBuilder.toString();
+
+    PreparedStatement stmt;
+    stmt = connection.prepareStatement(sqlToPrepare, generatedKeys);
+
+    setArguments(stmt, values);
 
     return stmt;
+  }
+
+  private static int placeholders(String fragment) {
+    int count;
+    count = 0;
+
+    int question;
+    question = 0;
+
+    while (true) {
+      question = fragment.indexOf('?', question);
+
+      if (question < 0) {
+        break;
+      }
+
+      count++;
+
+      question++;
+    }
+
+    return count;
   }
 
   private void setArguments(PreparedStatement stmt, List<Object> arguments) throws SQLException {

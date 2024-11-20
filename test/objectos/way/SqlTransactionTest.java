@@ -27,8 +27,10 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 import java.util.OptionalInt;
+import java.util.function.Consumer;
 import objectos.way.Sql.RollbackWrapperException;
 import org.testng.Assert;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 public class SqlTransactionTest {
@@ -42,6 +44,360 @@ public class SqlTransactionTest {
   private record String2(String a, String b) {
     String2(ResultSet rs, int idx) throws SQLException {
       this(rs.getString(idx++), rs.getString(idx++));
+    }
+  }
+
+  private TestingConnection connection;
+
+  private TestingPreparedStatement preparedStatement;
+
+  private TestingResultSet resultSet;
+
+  @BeforeMethod
+  public void reset() {
+    connection = null;
+
+    preparedStatement = null;
+
+    resultSet = null;
+  }
+
+  @Test(description = """
+  addIf
+  - query
+  - value present
+  """)
+  public void addIf01() {
+    addIfTransaction(trx -> {
+      trx.sql("""
+      select A, B, C from FOO
+      --
+      where X = ?
+      """);
+
+      trx.addIf("SOME", true);
+    });
+
+    assertEquals(
+        connection.toString(),
+
+        """
+        prepareStatement(select A, B, C from FOO where X = ?, 2)
+        setAutoCommit(true)
+        close()
+        """
+    );
+
+    assertEquals(
+        preparedStatement.toString(),
+
+        """
+        setString(1, SOME)
+        executeQuery()
+        close()
+        """
+    );
+
+    assertEquals(
+        resultSet.toString(),
+
+        """
+        next()
+        close()
+        """
+    );
+  }
+
+  @Test(description = """
+  addIf
+  - query
+  - value absent
+  """)
+  public void addIf02() {
+    addIfTransaction(trx -> {
+      trx.sql("""
+      select A, B, C from FOO
+      --
+      where X = ?
+      """);
+
+      trx.addIf("SOME", false);
+    });
+
+    assertEquals(
+        connection.toString(),
+
+        """
+        prepareStatement(select A, B, C from FOO, 2)
+        setAutoCommit(true)
+        close()
+        """
+    );
+
+    assertEquals(
+        preparedStatement.toString(),
+
+        """
+        executeQuery()
+        close()
+        """
+    );
+
+    assertEquals(
+        resultSet.toString(),
+
+        """
+        next()
+        close()
+        """
+    );
+  }
+
+  @Test(description = """
+  addIf
+  - query
+  - prelude with placeholders
+  - value absent
+  """)
+  public void addIf03() {
+    addIfTransaction(trx -> {
+      trx.sql("""
+      select A, B, C from FOO
+      where X = ?
+      --
+      and Y = ?
+      """);
+
+      trx.add("XPTO");
+
+      trx.addIf("SOME", false);
+    });
+
+    assertEquals(
+        connection.toString(),
+
+        """
+        prepareStatement(select A, B, C from FOO where X = ?, 2)
+        setAutoCommit(true)
+        close()
+        """
+    );
+
+    assertEquals(
+        preparedStatement.toString(),
+
+        """
+        setString(1, XPTO)
+        executeQuery()
+        close()
+        """
+    );
+
+    assertEquals(
+        resultSet.toString(),
+
+        """
+        next()
+        close()
+        """
+    );
+  }
+
+  @Test(description = """
+  addIf
+  - query
+  - fragment 1 absent
+  - fragment 2 present
+  """)
+  public void addIf04() {
+    addIfTransaction(trx -> {
+      trx.sql("""
+      select A, B, C from FOO
+      where 1 = 1
+      --
+      and X = ?
+      --
+      and Y = ?
+      """);
+
+      trx.addIf("1", false);
+
+      trx.addIf("2", true);
+    });
+
+    assertEquals(
+        connection.toString(),
+
+        """
+        prepareStatement(select A, B, C from FOO where 1 = 1 and Y = ?, 2)
+        setAutoCommit(true)
+        close()
+        """
+    );
+
+    assertEquals(
+        preparedStatement.toString(),
+
+        """
+        setString(1, 2)
+        executeQuery()
+        close()
+        """
+    );
+
+    assertEquals(
+        resultSet.toString(),
+
+        """
+        next()
+        close()
+        """
+    );
+  }
+
+  @Test(description = """
+  addIf
+  - query
+  - fragment 1 present
+  - fragment 2 absent
+  """)
+  public void addIf05() {
+    addIfTransaction(trx -> {
+      trx.sql("""
+      select A, B, C from FOO
+      where 1 = 1
+      --
+      and X = ?
+      --
+      and Y = ?
+      """);
+
+      trx.add("1");
+
+      trx.addIf("2", false);
+    });
+
+    assertEquals(
+        connection.toString(),
+
+        """
+        prepareStatement(select A, B, C from FOO where 1 = 1 and X = ?, 2)
+        setAutoCommit(true)
+        close()
+        """
+    );
+
+    assertEquals(
+        preparedStatement.toString(),
+
+        """
+        setString(1, 1)
+        executeQuery()
+        close()
+        """
+    );
+
+    assertEquals(
+        resultSet.toString(),
+
+        """
+        next()
+        close()
+        """
+    );
+  }
+
+  @Test(
+      description = "addIf\n- reject fragment with more than one placeholder",
+      expectedExceptions = IllegalArgumentException.class,
+      expectedExceptionsMessageRegExp = "Fragment must not contain more than one placeholder: and X = \\? and Y = \\?")
+  public void addIf06() {
+    addIfTransaction(trx -> {
+      trx.sql("""
+      select A, B, C from FOO
+      where 1 = 1
+      --
+      and X = ? and Y = ?
+      """);
+
+      trx.add("1");
+
+      trx.addIf("2", false);
+    });
+  }
+
+  @Test(description = """
+  addIf
+  - query
+  - fragment 1 present
+  - fragment 2 no placeholders
+  """)
+  public void addIf07() {
+    addIfTransaction(trx -> {
+      trx.sql("""
+      select A, B, C from FOO
+      --
+      where X = ?
+      --
+      order by C
+      """);
+
+      trx.addIf("2", true);
+    });
+
+    assertEquals(
+        connection.toString(),
+
+        """
+        prepareStatement(select A, B, C from FOO where X = ? order by C, 2)
+        setAutoCommit(true)
+        close()
+        """
+    );
+
+    assertEquals(
+        preparedStatement.toString(),
+
+        """
+        setString(1, 2)
+        executeQuery()
+        close()
+        """
+    );
+
+    assertEquals(
+        resultSet.toString(),
+
+        """
+        next()
+        close()
+        """
+    );
+  }
+
+  private void addIfTransaction(Consumer<SqlTransaction> config) {
+    connection = new TestingConnection();
+
+    preparedStatement = new TestingPreparedStatement();
+
+    resultSet = new TestingResultSet();
+
+    preparedStatement.queries(resultSet);
+
+    connection.preparedStatements(preparedStatement);
+
+    SqlTransaction trx;
+    trx = trx(connection);
+
+    try {
+      config.accept(trx);
+
+      List<Foo> result;
+      result = trx.query(Foo::new);
+
+      assertEquals(result.size(), 0);
+    } finally {
+      trx.close();
     }
   }
 

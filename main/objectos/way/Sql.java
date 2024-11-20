@@ -376,6 +376,8 @@ public final class Sql {
      */
     Transaction add(Object value);
 
+    Transaction addIf(Object value, boolean condition);
+
     /**
      * Adds the specified value to the SQL statement argument list.
      *
