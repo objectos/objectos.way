@@ -18,6 +18,7 @@ package objectos.way;
 import java.time.Clock;
 import java.util.Map;
 import java.util.Objects;
+import java.util.function.Function;
 import objectos.way.Http.TestingExchange.Config;
 
 final class HttpTestingExchangeConfig implements Http.TestingExchange.Config {
@@ -30,7 +31,7 @@ final class HttpTestingExchangeConfig implements Http.TestingExchange.Config {
 
   String path;
 
-  Map<String, String> queryParams;
+  Map<String, Object> queryParams;
 
   public final Http.TestingExchange build() {
     return new HttpTestingExchange(this);
@@ -91,10 +92,10 @@ final class HttpTestingExchangeConfig implements Http.TestingExchange.Config {
     Objects.requireNonNull(value, "value == null");
 
     if (queryParams == null) {
-      queryParams = Util.createMap();
+      queryParams = Util.createSequencedMap();
     }
 
-    queryParams.put(name, value);
+    Http.queryParamsAdd(queryParams, Function.identity(), name, value);
 
     return this;
   }

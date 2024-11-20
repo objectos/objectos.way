@@ -30,11 +30,13 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeFormatterBuilder;
 import java.time.temporal.ChronoField;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.function.Consumer;
+import java.util.function.Function;
 
 /**
  * The <strong>Objectos HTTP</strong> main class.
@@ -715,6 +717,39 @@ public final class Http {
      */
     String rawQuery();
 
+    /**
+     * Returns the raw (encoded) value of the query component with the specified
+     * parameter added or replaced if it exists.
+     *
+     * <p>
+     * If a parameter with the same name already exists in the query, its value
+     * is replaced with the specified value. If no such parameter exists, a new
+     * parameter is added.
+     *
+     * <h3>Usage Example</h3>
+     * <pre>{@code
+     * // original query is "search=java&sort=asc";
+     * Http.RequestTarget target = ...
+     *
+     * // returns "search=java&sort=desc"
+     * target.rawQueryWith("sort", "desc");
+     *
+     * // returns "search=java&sort=asc&page=2"
+     * target.rawQueryWith("page", "2");
+     * }</pre>
+     *
+     * @param name
+     *        the name of the parameter to be added or replaced
+     * @param value
+     *        the value of the parameter to be added or set
+     *
+     * @return the raw query string with the updated parameter
+     *
+     * @throws IllegalArgumentException
+     *         if {@code name} is blank
+     */
+    String rawQueryWith(String name, String value);
+
   }
 
   /**
@@ -1223,6 +1258,126 @@ public final class Http {
           "Illegal hex char= " + (char) value
       );
     };
+  }
+
+  @SuppressWarnings("unchecked")
+  static void queryParamsAdd(Map<String, Object> map, Function<String, String> decoder, String rawKey, String rawValue) {
+    String key;
+    key = decoder.apply(rawKey);
+
+    String value;
+    value = decoder.apply(rawValue);
+
+    Object oldValue;
+    oldValue = map.put(key, value);
+
+    if (oldValue == null) {
+      return;
+    }
+
+    if (oldValue.equals("")) {
+      return;
+    }
+
+    if (oldValue instanceof String s) {
+
+      if (value.equals("")) {
+        map.put(key, s);
+      } else {
+        List<String> list;
+        list = Util.createList();
+
+        list.add(s);
+
+        list.add(value);
+
+        map.put(key, list);
+      }
+
+    }
+
+    else {
+      List<String> list;
+      list = (List<String>) oldValue;
+
+      list.add(value);
+
+      map.put(key, list);
+    }
+  }
+
+  static String queryParamsGet(Map<String, Object> params, String name) {
+    Object maybe;
+    maybe = params.get(name);
+
+    return switch (maybe) {
+      case null -> null;
+
+      case String s -> s;
+
+      case List<?> l -> (String) l.get(0);
+
+      default -> throw new AssertionError(
+          "Type should not have been put into the map: " + maybe.getClass()
+      );
+    };
+  }
+
+  @SuppressWarnings("unchecked")
+  static String queryParamsToString(Map<String, Object> params, Function<String, String> processor) {
+    StringBuilder builder;
+    builder = new StringBuilder();
+
+    int count;
+    count = 0;
+
+    for (String key : params.keySet()) {
+      if (count++ > 0) {
+        builder.append('&');
+      }
+
+      queryParamsToStringAppend(builder, processor, key);
+
+      builder.append('=');
+
+      Object existing;
+      existing = params.get(key);
+
+      if (existing instanceof String s) {
+        queryParamsToStringAppend(builder, processor, s);
+      }
+
+      else {
+        List<String> list;
+        list = (List<String>) existing;
+
+        String value;
+        value = list.get(0);
+
+        queryParamsToStringAppend(builder, processor, value);
+
+        for (int i = 1; i < list.size(); i++) {
+          builder.append('&');
+
+          queryParamsToStringAppend(builder, processor, key);
+
+          builder.append('=');
+
+          value = list.get(i);
+
+          queryParamsToStringAppend(builder, processor, value);
+        }
+      }
+    }
+
+    return builder.toString();
+  }
+
+  private static void queryParamsToStringAppend(StringBuilder builder, Function<String, String> processor, String value) {
+    String processed;
+    processed = processor.apply(value);
+
+    builder.append(processed);
   }
 
   static byte[] utf8(String value) {

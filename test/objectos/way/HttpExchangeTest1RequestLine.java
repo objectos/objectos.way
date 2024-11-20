@@ -19,9 +19,148 @@ import static org.testng.Assert.assertEquals;
 
 import java.io.IOException;
 import java.util.Set;
+import org.testng.Assert;
 import org.testng.annotations.Test;
 
 public class HttpExchangeTest1RequestLine {
+
+  @Test(description = "rawQueryWith: add a new parameter to an empty query")
+  public void rawQueryWith01() throws IOException {
+    Http.RequestTarget target;
+    target = rawQuery("/test");
+
+    assertEquals(target.rawQuery(), null);
+    assertEquals(target.rawQueryWith("page", "123"), "page=123");
+  }
+
+  @Test(description = "rawQueryWith: add a new parameter to an non-empty query")
+  public void rawQueryWith02() {
+    Http.RequestTarget target;
+    target = rawQuery("/test?q=a");
+
+    assertEquals(target.rawQuery(), "q=a");
+    assertEquals(target.rawQueryWith("page", "123"), "q=a&page=123");
+  }
+
+  @Test(description = "rawQueryWith: replace existing parameter value")
+  public void rawQueryWith03() {
+    Http.RequestTarget target;
+    target = rawQuery("/test?q=a&page=foo");
+
+    assertEquals(target.rawQuery(), "q=a&page=foo");
+    assertEquals(target.rawQueryWith("page", "123"), "q=a&page=123");
+  }
+
+  @Test(description = "rawQueryWith: name needs encoding")
+  public void rawQueryWith04() {
+    Http.RequestTarget target;
+    target = rawQuery("/test");
+
+    assertEquals(target.rawQuery(), null);
+    assertEquals(target.rawQueryWith("@", "123"), "%40=123");
+  }
+
+  @Test(description = "rawQueryWith: value needs encoding")
+  public void rawQueryWith05() {
+    Http.RequestTarget target;
+    target = rawQuery("/test");
+
+    assertEquals(target.rawQuery(), null);
+    assertEquals(target.rawQueryWith("page", "@"), "page=%40");
+  }
+
+  @Test(description = "rawQueryWith: name and value needs encoding")
+  public void rawQueryWith06() {
+    Http.RequestTarget target;
+    target = rawQuery("/test");
+
+    assertEquals(target.rawQuery(), null);
+    assertEquals(target.rawQueryWith("@", "~"), "%40=%7E");
+  }
+
+  @Test(description = "rawQueryWith: reject null name")
+  public void rawQueryWith07() {
+    Http.RequestTarget target;
+    target = rawQuery("/test");
+
+    try {
+      target.rawQueryWith(null, "foo");
+
+      Assert.fail();
+    } catch (NullPointerException expected) {
+
+    }
+  }
+
+  @Test(description = "rawQueryWith: reject null value")
+  public void rawQueryWith08() {
+    Http.RequestTarget target;
+    target = rawQuery("/test");
+
+    try {
+      target.rawQueryWith("foo", null);
+
+      Assert.fail();
+    } catch (NullPointerException expected) {
+
+    }
+  }
+
+  @Test(description = "rawQueryWith: reject empty name")
+  public void rawQueryWith09() {
+    Http.RequestTarget target;
+    target = rawQuery("/test");
+
+    try {
+      target.rawQueryWith("", "foo");
+
+      Assert.fail();
+    } catch (IllegalArgumentException expected) {
+      assertEquals(expected.getMessage(), "name must not be blank");
+    }
+  }
+
+  @Test(description = "rawQueryWith: reject blank name")
+  public void rawQueryWith10() {
+    Http.RequestTarget target;
+    target = rawQuery("/test");
+
+    try {
+      target.rawQueryWith("   ", "foo");
+
+      Assert.fail();
+    } catch (IllegalArgumentException expected) {
+      assertEquals(expected.getMessage(), "name must not be blank");
+    }
+  }
+
+  @Test(description = "rawQueryWith: accept empty value")
+  public void rawQueryWith11() {
+    Http.RequestTarget target;
+    target = rawQuery("/test");
+
+    assertEquals(target.rawQuery(), null);
+    assertEquals(target.rawQueryWith("page", ""), "page=");
+  }
+
+  private Http.RequestTarget rawQuery(String path) {
+    try {
+      String request = """
+      GET %s HTTP/1.1\r
+      Host: www.example.com\r
+      \r
+      """.formatted(path);
+
+      HttpExchange line;
+      line = regularInput(request);
+
+      line.parseRequestLine();
+
+      return line;
+    } catch (IOException e) {
+      throw new AssertionError(e);
+    }
+  }
 
   @Test(description = """
   GET / HTTP/1.1

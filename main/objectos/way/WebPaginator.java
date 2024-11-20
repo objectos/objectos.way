@@ -41,11 +41,10 @@ final record WebPaginator(Http.RequestTarget request, Sql.Page page, int firstRo
     String value;
     value = Integer.toString(page);
 
-    if (request instanceof HttpExchange line) {
-      return line.rawValue("page", value);
-    } else {
-      throw new UnsupportedOperationException("Implement me");
-    }
+    String query;
+    query = request.rawQueryWith("page", value);
+
+    return request.rawPath() + "?" + query;
   }
 
 }

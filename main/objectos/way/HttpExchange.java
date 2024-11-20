@@ -35,7 +35,6 @@ import java.time.ZonedDateTime;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HexFormat;
-import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
@@ -1189,20 +1188,7 @@ final class HttpExchange implements Http.Exchange, Closeable {
     Map<String, Object> params;
     params = $queryParams();
 
-    Object maybe;
-    maybe = params.get(name);
-
-    return switch (maybe) {
-      case null -> null;
-
-      case String s -> s;
-
-      case List<?> l -> (String) l.get(0);
-
-      default -> throw new AssertionError(
-          "Type should not have been put into the map: " + maybe.getClass()
-      );
-    };
+    return Http.queryParamsGet(params, name);
   }
 
   @Override
@@ -1237,64 +1223,40 @@ final class HttpExchange implements Http.Exchange, Closeable {
     return queryStart == pathLimit ? null : rawValue.substring(queryStart);
   }
 
-  private Map<String, Object> $rawQueryParams() {
-    Map<String, Object> map;
-    map = Util.createMap();
+  @SuppressWarnings("unchecked")
+  @Override
+  public final String rawQueryWith(String name, String value) {
+    if (name.isBlank()) {
+      throw new IllegalArgumentException("name must not be blank");
+    }
 
-    makeQueryParams(map, Function.identity());
+    Objects.requireNonNull(value, "value == null");
 
-    return map;
+    String encodedKey;
+    encodedKey = encode(name);
+
+    String encodedValue;
+    encodedValue = encode(value);
+
+    int queryLength;
+    queryLength = rawValue.length() - queryStart;
+
+    if (queryLength < 2) {
+      return encodedKey + "=" + encodedValue;
+    }
+
+    Map<String, Object> params;
+    params = Util.createSequencedMap();
+
+    makeQueryParams(params, Function.identity());
+
+    params.put(encodedKey, encodedValue);
+
+    return Http.queryParamsToString(params, Function.identity());
   }
 
   public final String rawValue() {
     return rawValue;
-  }
-
-  public final String rawValue(String queryParamName, String queryParamValue) {
-    Check.notNull(queryParamName, "queryParamName == null");
-    Check.notNull(queryParamValue, "queryParamValue == null");
-
-    StringBuilder builder;
-    builder = new StringBuilder(rawPath());
-
-    builder.append('?');
-
-    Map<String, Object> params;
-    params = $rawQueryParams();
-
-    String rawName;
-    rawName = encode(queryParamName);
-
-    String rawValue;
-    rawValue = encode(queryParamValue);
-
-    params.put(rawName, rawValue);
-
-    int count;
-    count = 0;
-
-    for (String key : params.keySet()) {
-      if (count++ > 0) {
-        builder.append('&');
-      }
-
-      builder.append(key);
-
-      builder.append('=');
-
-      Object value;
-      value = params.get(key);
-
-      if (value instanceof String s) {
-        builder.append(s);
-      }
-
-      else {
-        throw new UnsupportedOperationException("Implement me");
-      }
-    }
-
-    return builder.toString();
   }
 
   private void makeQueryParams(Map<String, Object> map, Function<String, String> decoder) {
@@ -1325,7 +1287,7 @@ final class HttpExchange implements Http.Exchange, Closeable {
 
           sb.setLength(0);
 
-          putQueryParams(map, decoder, key, "");
+          Http.queryParamsAdd(map, decoder, key, "");
         }
 
         case '&' -> {
@@ -1335,12 +1297,12 @@ final class HttpExchange implements Http.Exchange, Closeable {
           sb.setLength(0);
 
           if (key == null) {
-            putQueryParams(map, decoder, value, "");
+            Http.queryParamsAdd(map, decoder, value, "");
 
             continue;
           }
 
-          putQueryParams(map, decoder, key, value);
+          Http.queryParamsAdd(map, decoder, key, value);
 
           key = null;
         }
@@ -1353,55 +1315,9 @@ final class HttpExchange implements Http.Exchange, Closeable {
     value = sb.toString();
 
     if (key != null) {
-      putQueryParams(map, decoder, key, value);
+      Http.queryParamsAdd(map, decoder, key, value);
     } else {
-      putQueryParams(map, decoder, value, "");
-    }
-  }
-
-  @SuppressWarnings("unchecked")
-  private void putQueryParams(Map<String, Object> map, Function<String, String> decoder, String rawKey, String rawValue) {
-    String key;
-    key = decoder.apply(rawKey);
-
-    String value;
-    value = decoder.apply(rawValue);
-
-    Object oldValue;
-    oldValue = map.put(key, value);
-
-    if (oldValue == null) {
-      return;
-    }
-
-    if (oldValue.equals("")) {
-      return;
-    }
-
-    if (oldValue instanceof String s) {
-
-      if (value.equals("")) {
-        map.put(key, s);
-      } else {
-        List<String> list;
-        list = Util.createList();
-
-        list.add(s);
-
-        list.add(value);
-
-        map.put(key, list);
-      }
-
-    }
-
-    else {
-      List<String> list;
-      list = (List<String>) oldValue;
-
-      list.add(value);
-
-      map.put(key, list);
+      Http.queryParamsAdd(map, decoder, value, "");
     }
   }
 

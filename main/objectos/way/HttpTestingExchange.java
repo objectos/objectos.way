@@ -28,6 +28,7 @@ import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.SequencedMap;
 import java.util.Set;
 import objectos.way.Http.HeaderName;
 import objectos.way.Lang.MediaObject;
@@ -42,7 +43,7 @@ final class HttpTestingExchange implements Http.TestingExchange {
 
   private final String path;
 
-  private final Map<String, String> queryParams;
+  private final Map<String, Object> queryParams;
 
   private Object responseBody;
 
@@ -111,7 +112,7 @@ final class HttpTestingExchange implements Http.TestingExchange {
     if (queryParams == null) {
       return null;
     } else {
-      return queryParams.get(name);
+      return Http.queryParamsGet(queryParams, name);
     }
   }
 
@@ -193,7 +194,37 @@ final class HttpTestingExchange implements Http.TestingExchange {
 
   @Override
   public final String rawQuery() {
-    throw new IllegalStateException("query was not set");
+    if (queryParams == null) {
+      return null;
+    } else {
+      return Http.queryParamsToString(queryParams, this::encode);
+    }
+  }
+
+  @Override
+  public final String rawQueryWith(String name, String value) {
+    if (name.isBlank()) {
+      throw new IllegalArgumentException("name must not be blank");
+    }
+
+    Objects.requireNonNull(value, "value == null");
+
+    Map<String, Object> params;
+
+    if (queryParams == null) {
+      params = Map.of(name, value);
+    } else {
+      SequencedMap<String, Object> copy;
+      copy = Util.createSequencedMap();
+
+      copy.putAll(queryParams);
+
+      copy.put(name, value);
+
+      params = copy;
+    }
+
+    return Http.queryParamsToString(params, this::encode);
   }
 
   private String encode(String s) {

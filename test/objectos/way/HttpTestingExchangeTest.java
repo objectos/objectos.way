@@ -74,7 +74,7 @@ public class HttpTestingExchangeTest {
   }
 
   @Test(description = "rawPath")
-  public void testCase03() {
+  public void rawPath() {
     assertEquals(rawPath("/"), "/");
     assertEquals(rawPath("/files"), "/files");
     assertEquals(rawPath("/files/"), "/files/");
@@ -84,11 +84,87 @@ public class HttpTestingExchangeTest {
 
   private String rawPath(String string) {
     Http.TestingExchange http;
-    http = Http.TestingExchange.create(config -> {
-      config.path(string);
-    });
+    http = Http.TestingExchange.create(config -> config.path(string));
 
     return http.rawPath();
+  }
+
+  @Test(description = "rawQuery")
+  public void rawQuery() {
+    assertEquals(rawQuery0(), null);
+    assertEquals(rawQuery0("q", "a"), "q=a");
+    assertEquals(rawQuery0("q", "a", "foo", "bar"), "q=a&foo=bar");
+    assertEquals(rawQuery0("@", "a", "foo", "~"), "%40=a&foo=%7E");
+  }
+
+  private String rawQuery0(String... values) {
+    Http.TestingExchange http;
+    http = Http.TestingExchange.create(config -> {
+      for (int i = 0; i < values.length;) {
+        String name;
+        name = values[i++];
+
+        String value;
+        value = values[i++];
+
+        config.queryParam(name, value);
+      }
+    });
+
+    return http.rawQuery();
+  }
+
+  @Test(description = "rawQueryWith: happy paths")
+  public void rawQueryWith01() {
+    assertEquals(rawQueryWith("page", "123"), "page=123");
+    assertEquals(rawQueryWith("page", "123", "q", "a"), "q=a&page=123");
+    assertEquals(rawQueryWith("page", "123", "q", "a", "page", "foo"), "q=a&page=123");
+    assertEquals(rawQueryWith("@", "123"), "%40=123");
+    assertEquals(rawQueryWith("page", "@"), "page=%40");
+    assertEquals(rawQueryWith("@", "~"), "%40=%7E");
+  }
+
+  @Test(description = "rawQueryWith: reject null name",
+      expectedExceptions = NullPointerException.class)
+  public void rawQueryWith02() {
+    rawQueryWith(null, "123");
+  }
+
+  @Test(description = "rawQueryWith: reject empty name",
+      expectedExceptions = IllegalArgumentException.class,
+      expectedExceptionsMessageRegExp = "name must not be blank")
+  public void rawQueryWith03() {
+    rawQueryWith("", "123");
+  }
+
+  @Test(description = "rawQueryWith: reject blank name",
+      expectedExceptions = IllegalArgumentException.class,
+      expectedExceptionsMessageRegExp = "name must not be blank")
+  public void rawQueryWith04() {
+    rawQueryWith("   ", "123");
+  }
+
+  @Test(description = "rawQueryWith: reject null value",
+      expectedExceptions = NullPointerException.class)
+  public void rawQueryWith05() {
+    rawQueryWith("page", null);
+  }
+
+  private String rawQueryWith(String newName, String newValue, String... values) {
+    Http.TestingExchange http;
+    http = Http.TestingExchange.create(config -> {
+      for (int i = 0; i < values.length;) {
+        String name;
+        name = values[i++];
+
+        String value;
+        value = values[i++];
+
+        config.queryParam(name, value);
+      }
+    });
+
+    return http.rawQueryWith(newName, newValue);
   }
 
 }
