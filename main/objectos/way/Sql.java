@@ -319,24 +319,6 @@ public final class Sql {
     void close() throws DatabaseException;
 
     /**
-     * Use the specified processor to process the results of the execution of
-     * the specified row-retriving SQL statement. The specified arguments
-     * are applied, in order, to the resulting prepared statement prior to
-     * sending the query to the database.
-     *
-     * @param processor
-     *        the processor to process the results
-     * @param sql
-     *        the row-retriving SQL statement to be executed
-     * @param args
-     *        the arguments of the SQL statement
-     *
-     * @throws DatabaseException
-     *         if a database access error occurs
-     */
-    void processQuery(QueryProcessor processor, String sql, Object... args) throws DatabaseException;
-
-    /**
      * Sets the SQL contents of this transaction to the specified value.
      *
      * <p>

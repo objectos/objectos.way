@@ -308,9 +308,9 @@ public class SqlTransactionTest {
   }
 
   @Test(
-      description = "addIf\n- reject fragment with more than one placeholder",
+      description = "addIf\n- reject use in a fragment with more than one placeholder",
       expectedExceptions = IllegalArgumentException.class,
-      expectedExceptionsMessageRegExp = "Fragment must not contain more than one placeholder: and X = \\? and Y = \\?")
+      expectedExceptionsMessageRegExp = "Conditional value must not be used in a fragment with more than one placeholder: .*")
   public void addIf06() {
     addIfTransaction(trx -> {
       trx.sql("""
@@ -321,7 +321,6 @@ public class SqlTransactionTest {
       """);
 
       trx.add("1");
-
       trx.addIf("2", false);
     });
   }
@@ -373,6 +372,104 @@ public class SqlTransactionTest {
         close()
         """
     );
+  }
+
+  @Test(description = """
+  addIf
+  - query
+  - fragment 1 absent
+  - fragment 2 present (with > 1 placeholders)
+  """)
+  public void addIf08() {
+    addIfTransaction(trx -> {
+      trx.sql("""
+      select A, B, C from FOO
+      where 1 = 1
+      --
+      and X = ?
+      --
+      and Y = ?
+      and Z = ?
+      """);
+
+      trx.addIf("X", false);
+      trx.add("Y");
+      trx.add("Z");
+    });
+
+    assertEquals(
+        connection.toString(),
+
+        """
+        prepareStatement(select A, B, C from FOO where 1 = 1 and Y = ? and Z = ?, 2)
+        setAutoCommit(true)
+        close()
+        """
+    );
+
+    assertEquals(
+        preparedStatement.toString(),
+
+        """
+        setString(1, Y)
+        setString(2, Z)
+        executeQuery()
+        close()
+        """
+    );
+
+    assertEquals(
+        resultSet.toString(),
+
+        """
+        next()
+        close()
+        """
+    );
+  }
+
+  @Test(description = """
+  addIf
+  - query
+  - fail if fragment has less than required args
+  """, expectedExceptions = IllegalArgumentException.class)
+  public void addIf09() {
+    addIfTransaction(trx -> {
+      trx.sql("""
+      select A, B, C from FOO
+      where 1 = 1
+      --
+      and X = ?
+      --
+      and Y = ?
+      and Z = ?
+      """);
+
+      trx.addIf("X", false);
+      trx.add("Y");
+      // missing Z
+    });
+  }
+
+  @Test(description = """
+  addIf
+  - query
+  - fail if fragment has less than required args
+  """, expectedExceptions = IllegalArgumentException.class)
+  public void addIf10() {
+    addIfTransaction(trx -> {
+      trx.sql("""
+      select A, B, C from FOO
+      where 1 = 1
+      --
+      and X = ?
+      --
+      and Y = ?
+      """);
+
+      trx.addIf("X", true);
+      // missing Y
+    });
   }
 
   private void addIfTransaction(Consumer<SqlTransaction> config) {
@@ -862,66 +959,6 @@ public class SqlTransactionTest {
         next()
         getString(1)
         getString(2)
-        next()
-        close()
-        """
-    );
-  }
-
-  @Test(description = """
-  No optional fragments
-  """)
-  public void processAll01() {
-    TestingConnection conn;
-    conn = new TestingConnection();
-
-    TestingPreparedStatement stmt;
-    stmt = new TestingPreparedStatement();
-
-    TestingResultSet query;
-    query = new TestingResultSet();
-
-    stmt.queries(query);
-
-    conn.preparedStatements(stmt);
-
-    SqlTransaction trx;
-    trx = trx(conn);
-
-    try {
-      trx.processQuery(this::row, """
-      select A, B
-      from FOO
-      where ID = ?
-      """, 123);
-    } finally {
-      trx.close();
-    }
-
-    assertEquals(
-        conn.toString(),
-
-        """
-        prepareStatement(select A, B from FOO where ID = ?)
-        setAutoCommit(true)
-        close()
-        """
-    );
-
-    assertEquals(
-        stmt.toString(),
-
-        """
-        setInt(1, 123)
-        executeQuery()
-        close()
-        """
-    );
-
-    assertEquals(
-        query.toString(),
-
-        """
         next()
         close()
         """
@@ -2144,14 +2181,6 @@ public class SqlTransactionTest {
         close()
         """
     );
-  }
-
-  private void noop() {}
-
-  private void row(ResultSet rs) throws SQLException {
-    while (rs.next()) {
-      noop();
-    }
   }
 
   private SqlTransaction trx(Connection connection) {

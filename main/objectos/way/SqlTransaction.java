@@ -129,18 +129,6 @@ final class SqlTransaction implements Sql.Transaction {
   }
 
   @Override
-  public final void processQuery(Sql.QueryProcessor processor, String sql, Object... args) throws Sql.DatabaseException {
-    Check.notNull(processor, "processor == null");
-    Check.notNull(sql, "sql == null");
-    Check.notNull(args, "args == null");
-
-    SqlTemplate template;
-    template = SqlTemplate.parse(sql, args);
-
-    template.process(connection, processor);
-  }
-
-  @Override
   public final Sql.Transaction sql(String value) {
     sql = Check.notNull(value, "value == null");
 
@@ -712,33 +700,55 @@ final class SqlTransaction implements Sql.Transaction {
       placeholders = placeholders(fragment);
 
       switch (placeholders) {
-        case 0 -> sqlBuilder.append(fragment.trim());
+        case 0 -> sqlBuilder.append(fragment);
 
         case 1 -> {
-          if (argsIndex < arguments.size()) {
+          if (argsIndex >= arguments.size()) {
+            throw new IllegalArgumentException(
+                "Missing value for fragment: " + fragment
+            );
+          }
+
+          Object arg;
+          arg = arguments.get(argsIndex++);
+
+          if (arg instanceof SqlMaybe maybe) {
+            if (maybe.absent()) {
+              continue;
+            }
+
+            arg = maybe.value();
+          }
+
+          sqlBuilder.append(fragment);
+
+          values.add(arg);
+        }
+
+        default -> {
+          sqlBuilder.append(fragment);
+
+          for (int j = 0; j < placeholders; j++) {
+
+            if (argsIndex >= arguments.size()) {
+              throw new IllegalArgumentException(
+                  "Missing value for placeholder " + (j + 1) + " of fragment: " + fragment
+              );
+            }
+
             Object arg;
             arg = arguments.get(argsIndex++);
 
-            if (arg instanceof SqlMaybe maybe) {
-
-              if (maybe.absent()) {
-                continue;
-              }
-
-              arg = maybe.value();
+            if (arg instanceof SqlMaybe) {
+              throw new IllegalArgumentException(
+                  "Conditional value must not be used in a fragment with more than one placeholder: " + fragment
+              );
             }
 
-            sqlBuilder.append(fragment);
-
             values.add(arg);
-          } else {
-            throw new UnsupportedOperationException("Implement me");
+
           }
         }
-
-        default -> throw new IllegalArgumentException(
-            "Fragment must not contain more than one placeholder: " + fragment.trim()
-        );
       }
     }
 
