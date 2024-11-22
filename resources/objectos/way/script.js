@@ -36,12 +36,20 @@
 
 				break;
 			}
+
+			// there was no data-on-click action...
+			// but we explicitly stop at these elements
+
+			if (element instanceof HTMLAnchorElement ||
+				element instanceof HTMLButtonElement) {
+				break;
+			}
 		}
 	}
 
 	function onInput(event) {
 		const target = event.target;
-		
+
 		executeEvent(target, "onInput");
 	}
 
