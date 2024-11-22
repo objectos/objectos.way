@@ -468,6 +468,11 @@ public final class Http {
      */
     HeaderName USER_AGENT = HttpHeaderName.USER_AGENT;
 
+    /**
+     * The {@code Way-Requst} header name.
+     */
+    HeaderName WAY_REQUEST = HttpHeaderName.WAY_REQUEST;
+
     static HeaderName create(String name) {
       Objects.requireNonNull(name, "name == null");
 

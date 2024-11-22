@@ -797,6 +797,10 @@ final class HttpExchange implements Http.Exchange, Closeable {
       case 'U' -> parseHeaderName0(
           Http.HeaderName.USER_AGENT
       );
+
+      case 'W' -> parseHeaderName0(
+          Http.HeaderName.WAY_REQUEST
+      );
     }
   }
 

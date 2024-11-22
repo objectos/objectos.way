@@ -118,6 +118,8 @@ final class HttpHeaderName implements Http.HeaderName {
    */
   public static final HeaderName USER_AGENT = BUILDER.create("User-Agent", HttpHeaderType.REQUEST);
 
+  public static final HeaderName WAY_REQUEST = BUILDER.create("Way-Request", HttpHeaderType.REQUEST);
+
   private static final HttpHeaderName[] STANDARD_NAMES;
 
   private static final Map<String, HttpHeaderName> FIND_BY_NAME;

@@ -1085,4 +1085,35 @@ public class HttpExchangeTest {
     }
   }
 
+  @Test(description = """
+  Support the Way-Request request header
+  """)
+  public void testCase024() {
+    TestableSocket socket;
+    socket = TestableSocket.of("""
+    POST /login HTTP/1.1\r
+    Host: www.example.com\r
+    Content-Length: 24\r
+    Content-Type: application/x-www-form-urlencoded\r
+    Way-Request: true\r
+    \r
+    email=user%40example.com""");
+
+    try (HttpExchange http = new HttpExchange(socket, 128, 256, Clock.systemDefaultZone(), TestingNoteSink.INSTANCE)) {
+      ParseStatus parse;
+      parse = http.parse();
+
+      assertEquals(parse.isError(), false);
+
+      // headers
+      assertEquals(http.size(), 4);
+      assertEquals(http.header(Http.HeaderName.HOST), "www.example.com");
+      assertEquals(http.header(Http.HeaderName.CONTENT_LENGTH), "24");
+      assertEquals(http.header(Http.HeaderName.CONTENT_TYPE), "application/x-www-form-urlencoded");
+      assertEquals(http.header(Http.HeaderName.WAY_REQUEST), "true");
+    } catch (IOException e) {
+      throw new AssertionError("Failed with IOException", e);
+    }
+  }
+
 }
