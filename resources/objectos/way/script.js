@@ -22,43 +22,27 @@
 	}
 
 	function clickListener(event) {
-		if (executeEvent(event, "onClick")) {
-			event.preventDefault();
+		let target = event.target;
 
-			return;
-		}
+		while (target instanceof Node) {
+			const element = target;
 
-		const target = event.target;
+			target = target.parentNode;
 
-		let maybeAnchor = target;
+			const result = executeEvent(element, "onClick");
 
-		while (maybeAnchor instanceof Node) {
-			if (maybeAnchor instanceof HTMLAnchorElement) {
+			if (result) {
+				event.preventDefault();
 
-				const anchor = maybeAnchor;
-
-				if (anchor.origin !== window.location.origin) {
-					return;
-				}
-
-				const dataset = anchor.dataset;
-
-				if (dataset.executeDefault === undefined) {
-					event.preventDefault();
-
-					executeLocation(anchor.href);
-				}
-
-				return;
-
-			} else {
-				maybeAnchor = maybeAnchor.parentNode;
+				break;
 			}
 		}
 	}
 
 	function onInput(event) {
-		executeEvent(event, "onInput");
+		const target = event.target;
+		
+		executeEvent(target, "onInput");
 	}
 
 	function submitListener(event) {
@@ -167,38 +151,22 @@
 		return xhr;
 	}
 
-	function executeEvent(event, name) {
-		let result = false;
+	function executeEvent(element, name) {
+		const dataset = element.dataset;
 
-		let target = event.target;
-
-		while (target instanceof Node) {
-			const element = target;
-
-			target = target.parentNode;
-
-			const dataset = element.dataset;
-
-			if (!dataset) {
-				continue;
-			}
-
-			const data = dataset[name];
-
-			if (!data) {
-				continue;
-			}
-
-			const way = JSON.parse(data);
-
-			result = executeActions(way, element);
-
-			if (result) {
-				break;
-			}
+		if (!dataset) {
+			return false;
 		}
 
-		return result;
+		const data = dataset[name];
+
+		if (!data) {
+			return false;
+		}
+
+		const way = JSON.parse(data);
+
+		return executeActions(way, element);
 	}
 
 	function executeActions(actions, element) {

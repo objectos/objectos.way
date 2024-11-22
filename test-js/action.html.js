@@ -246,7 +246,7 @@ suite("Action::html test", function() {
 		<div data-frame='main:first'>
     	<h1>Do not change</h1>
     	<div data-frame='name-only'>
-    	<a id='a' href='/test'>Click me</a>
+    	<a id='a' href='/test' data-on-click='[{"cmd":"navigate"}]'>Click me</a>
     	</div>
     	</div>`);
 		const page2 = makeElement(`
@@ -278,7 +278,7 @@ suite("Action::html test", function() {
 	test("name-only data-frame: do not update if names are different", function() {
 		make(`
 		<div data-frame='main:first'><h1>Do not change</h1><div data-frame='name-only-1'>
-    	<a id='a' href='/test'>Click me</a>
+    	<a id='a' href='/test' data-on-click='[{"cmd":"navigate"}]'>Click me</a>
     	</div><div data-frame='name-only-2'>will remove...</div></div>`);
 		const page2 = makeElement("<div data-frame='main:first'><h1>It is different but shouldn't change</h1><div data-frame='name-only-1'>Success</div><div data-frame='name-only-x'>Different name</div></div>");
 		const expect = makeElement("<div data-frame='main:first'><h1>Do not change</h1><div data-frame='name-only-1'>Success</div></div>");
@@ -337,7 +337,10 @@ suite("Action::html test", function() {
 	});
 
 	test("head/title update", function() {
-		make("<div data-frame='x:x'><a id='a' href='/foo'>Foo</a></div>");
+		make(`
+		<div data-frame='x:x'>
+		<a id='a' href='/foo' data-on-click='[{"cmd":"navigate"}]'>Foo</a>
+		</div>`);
 		const page2 = makeElement("<html><head><title>Updated page title</title></head></html>");
 
 		assert.notEqual(document.title, "Updated page title");
@@ -354,7 +357,10 @@ suite("Action::html test", function() {
 	});
 
 	test("anchor click", function() {
-		make("<div data-frame='x:foo'><a id='a' href='/foo'>Foo</a></div>");
+		make(`
+		<div data-frame='x:foo'>
+		<a id='a' href='/foo' data-on-click='[{"cmd":"navigate"}]'>Foo</a>
+		</div>`);
 		const page2 = makeElement("<html><div data-frame='x:bar'>Bar</div></html>");
 
 		this.server.respondWith("GET", "/foo", [200, { "Content-Type": "text/html" }, page2.outerHTML]);
@@ -369,7 +375,10 @@ suite("Action::html test", function() {
 	});
 
 	test("anchor click child", function() {
-		make("<div data-frame='x:foo'><a href='/foo'><span id='a'>Foo</span></a></div>");
+		make(`
+		<div data-frame='x:foo'>
+		<a href='/foo' data-on-click='[{"cmd":"navigate"}]'><span id='a'>Foo</span></a>
+		</div>`);
 		const page2 = makeElement("<html><div data-frame='x:bar'>Bar</div></html>");
 
 		this.server.respondWith("GET", "/foo", [200, { "Content-Type": "text/html" }, page2.outerHTML]);
