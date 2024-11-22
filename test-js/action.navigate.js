@@ -2,13 +2,14 @@ suite("Action::navigate test", function() {
 
 	setup(function() {
 		clearWorkArea();
-		this.server = makeServer();
+
 		this.errorStub = sinon.stub(console, 'error');
+		this.server = makeServer();
 	});
 
 	teardown(function() {
-		this.errorStub.restore();
 		this.server.restore();
+		this.errorStub.restore();
 	});
 
 	test("it should perform a soft navigation", function() {
@@ -22,7 +23,10 @@ suite("Action::navigate test", function() {
 		<div id='after' data-frame='x:after'>After</div>
 		</html>`);
 
-		this.server.respondWith("GET", "/after", [200, { "Content-Type": "text/html" }, after.outerHTML]);
+		this.server.respondWith(
+			"GET", "/after",
+			[200, { "Content-Type": "text/html" }, after.outerHTML]
+		);
 
 		const link = byId("link");
 
@@ -31,6 +35,11 @@ suite("Action::navigate test", function() {
 		this.server.respond();
 
 		assert.equal(workArea().innerHTML, after.outerHTML);
+
+		const requests = this.server.requests;
+
+		assert.equal(requests.length, 1);
+		assert.propertyVal(requests[0].requestHeaders, "Way-Request", "true");
 	});
 
 	test("it should fail if element is not an anchor", function() {
@@ -52,7 +61,7 @@ suite("Action::navigate test", function() {
 		<div id='before' data-frame='x:before'>
 		<a id='link' data-on-click='[{"cmd":"navigate"}]'>Before</button>
 		</div>`);
-		
+
 		const link = byId("link");
 
 		link.click();

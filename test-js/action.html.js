@@ -33,6 +33,11 @@ suite("Action::html test", function() {
 		this.server.respond();
 
 		assert.equal(workArea().innerHTML, frame2.outerHTML);
+		
+		const requests = this.server.requests;
+
+		assert.equal(requests.length, 1);
+		assert.propertyVal(requests[0].requestHeaders, "Way-Request", "true");
 	});
 
 	test("single data-frame: same name same value", function() {

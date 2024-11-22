@@ -113,6 +113,8 @@
 		const xhr = new XMLHttpRequest();
 
 		xhr.open(method, url, true);
+		
+		xhr.setRequestHeader("Way-Request", "true");
 
 		xhr.onload = (_) => {
 			if (xhr.status === 200) {
