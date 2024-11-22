@@ -173,9 +173,11 @@
 		let target = event.target;
 
 		while (target instanceof Node) {
-			const dataset = target.dataset;
+			const element = target;
 
 			target = target.parentNode;
+
+			const dataset = element.dataset;
 
 			if (!dataset) {
 				continue;
@@ -189,7 +191,7 @@
 
 			const way = JSON.parse(data);
 
-			result = executeActions(way, target);
+			result = executeActions(way, element);
 
 			if (result) {
 				break;
@@ -207,7 +209,7 @@
 		if (actions.length === 0) {
 			return false;
 		}
-		
+
 		let count = 0;
 
 		for (const action of actions) {
@@ -217,7 +219,7 @@
 			if (!cmd) {
 				continue;
 			}
-			
+
 			count++;
 
 			switch (cmd) {
@@ -245,6 +247,12 @@
 					break;
 				}
 
+				case "navigate": {
+					executeNavigate(element);
+
+					break;
+				}
+
 				case "remove-class": {
 					executeRemoveClass(action);
 
@@ -262,10 +270,10 @@
 
 					break;
 				}
-				
+
 				case "stop-propagation": {
 					// noop
-					
+
 					break;
 				}
 
@@ -280,10 +288,10 @@
 
 					break;
 				}
-				
+
 				default: {
 					count--;
-					
+
 					break;
 				}
 			}
@@ -425,6 +433,26 @@
 		const xhr = createXhr("GET", location);
 
 		xhr.send();
+	}
+
+	function executeNavigate(element) {
+		if (!(element instanceof HTMLAnchorElement)) {
+			const name = element.constructor ? element.constructor.name : "Unknown";
+
+			console.error("executeNavigate: expected HTMLAnchorElement but got %s", name);
+
+			return;
+		}
+
+		const href = element.href;
+
+		if (!href) {
+			console.error("executeNavigate: anchor has no href attribute");
+
+			return;
+		}
+
+		executeLocation(href);
 	}
 
 	function executeRemoveClass(action) {

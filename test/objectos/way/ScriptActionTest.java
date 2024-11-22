@@ -108,6 +108,22 @@ public class ScriptActionTest {
   }
 
   @Test
+  public void navigate() {
+    test(
+        new Html.Template() {
+          @Override
+          protected final void render() {
+            a(dataOnClick(Script.navigate()), text("Foo"));
+          }
+        },
+
+        """
+        <a data-on-click='[{"cmd":"navigate"}]'>Foo</a>
+        """
+    );
+  }
+
+  @Test
   public void removeClass() {
     test(
         new Html.Template() {

@@ -161,6 +161,16 @@ public final class Script {
   }
 
   /**
+   * Performs a soft navigation to the URL specified by the {@code href}
+   * attribute of this {@code <a>} HTML element.
+   *
+   * @return an action that performs a soft navigation.
+   */
+  public static Action navigate() {
+    return Fixed.NAVIGATE;
+  }
+
+  /**
    * The no-op action.
    *
    * @return the no-op action
@@ -266,23 +276,13 @@ public final class Script {
   }
 
   /**
-   * Returns a new action that causes the event handling to stop at the current
-   * HTML element.
+   * Causes the event handling to stop at the current HTML element.
    *
-   * @return a new action that causes the event handling to stop at the current
+   * @return an action that causes the event handling to stop at the current
    *         HTML element.
    */
   public static Action stopPropagation() {
-    return new ScriptAction() {
-      @Override
-      final void writeTo(StringBuilder json) {
-        objectStart(json);
-
-        property(json, CMD, "stop-propagation");
-
-        objectEnd(json);
-      }
-    };
+    return Fixed.STOP_PROPAGATION;
   }
 
   public static Action toggleClass(Html.Id id, String className) {
@@ -463,6 +463,27 @@ public final class Script {
     @Override
     final void writeTo(StringBuilder json) {
       actions(json, actions);
+    }
+
+  }
+
+  private static final class Fixed extends ScriptAction {
+
+    static final Script.Action NAVIGATE = new Fixed("""
+    {"cmd":"navigate"}""");
+
+    static final Script.Action STOP_PROPAGATION = new Fixed("""
+    {"cmd":"stop-propagation"}""");
+
+    private final String value;
+
+    private Fixed(String value) {
+      this.value = value;
+    }
+
+    @Override
+    final void writeTo(StringBuilder json) {
+      json.append(value);
     }
 
   }
