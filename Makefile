@@ -90,7 +90,6 @@ TEST_ADD_MODULES += java.net.http
 
 ## test --add-exports
 TEST_ADD_EXPORTS := objectos.way/objectos.util=org.testng
-TEST_ADD_EXPORTS += objectos.way/objectox.lang=org.testng
 TEST_ADD_EXPORTS += objectos.way/testing.site.web=org.testng
 
 ## test --add-reads

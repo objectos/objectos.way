@@ -599,7 +599,7 @@ public final class Html {
 
     private Component child;
 
-    protected Markup html;
+    protected Markup m;
 
     /**
      * Creates a new component bound to the specified {@code parent} template.
@@ -616,7 +616,7 @@ public final class Html {
     }
 
     final void set(HtmlMarkup html) {
-      this.html = html;
+      this.m = html;
 
       if (child != null) {
         child.set(html);

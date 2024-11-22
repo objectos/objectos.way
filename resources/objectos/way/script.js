@@ -21,7 +21,7 @@
 		disableHistory: false
 	}
 
-	function onClick(event) {
+	function clickListener(event) {
 		if (executeEvent(event, "onClick")) {
 			event.preventDefault();
 
@@ -168,33 +168,47 @@
 	}
 
 	function executeEvent(event, name) {
+		let result = false;
+
 		let target = event.target;
 
 		while (target instanceof Node) {
 			const dataset = target.dataset;
 
-			if (dataset) {
-				const data = dataset[name];
+			target = target.parentNode;
 
-				if (data) {
-					const way = JSON.parse(data);
-
-					executeActions(way, target);
-
-					return true;
-				}
+			if (!dataset) {
+				continue;
 			}
 
-			target = target.parentNode;
+			const data = dataset[name];
+
+			if (!data) {
+				continue;
+			}
+
+			const way = JSON.parse(data);
+
+			result = executeActions(way, target);
+
+			if (result) {
+				break;
+			}
 		}
 
-		return false;
+		return result;
 	}
 
 	function executeActions(actions, element) {
 		if (!Array.isArray(actions)) {
-			return;
+			return false;
 		}
+
+		if (actions.length === 0) {
+			return false;
+		}
+		
+		let count = 0;
 
 		for (const action of actions) {
 
@@ -203,6 +217,8 @@
 			if (!cmd) {
 				continue;
 			}
+			
+			count++;
 
 			switch (cmd) {
 				case "add-class": {
@@ -246,6 +262,12 @@
 
 					break;
 				}
+				
+				case "stop-propagation": {
+					// noop
+					
+					break;
+				}
 
 				case "submit": {
 					executeSubmit(action);
@@ -258,9 +280,17 @@
 
 					break;
 				}
+				
+				default: {
+					count--;
+					
+					break;
+				}
 			}
 
 		}
+
+		return count > 0;
 	}
 
 	function executeAddClass(action) {
@@ -532,7 +562,7 @@
 	function domLoaded() {
 		const body = document.body;
 
-		body.addEventListener("click", onClick);
+		body.addEventListener("click", clickListener);
 		body.addEventListener("input", onInput);
 		body.addEventListener("submit", submitListener);
 	}

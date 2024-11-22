@@ -390,8 +390,8 @@ public class HtmlTemplateTestInclude {
       }
 
       public final void render(Html.Instruction.OfElement child) {
-        html.div(
-            html.className("component"),
+        m.div(
+            m.className("component"),
 
             child
         );
@@ -433,8 +433,8 @@ public class HtmlTemplateTestInclude {
       }
 
       public final Html.Instruction.OfElement render(Html.Instruction.OfElement e) {
-        return html.div(
-            html.className("c1"),
+        return m.div(
+            m.className("c1"),
             e
         );
       }
@@ -446,8 +446,8 @@ public class HtmlTemplateTestInclude {
       }
 
       public final Html.Instruction.OfElement render(Html.Instruction.OfElement e) {
-        return html.div(
-            html.className("c2"),
+        return m.div(
+            m.className("c2"),
             e
         );
       }
@@ -492,8 +492,8 @@ public class HtmlTemplateTestInclude {
       }
 
       public final Html.Instruction.OfElement render(Html.Instruction... elements) {
-        return html.nav(
-            html.ul(elements)
+        return m.nav(
+            m.ul(elements)
         );
       }
     }
@@ -502,8 +502,8 @@ public class HtmlTemplateTestInclude {
       public Link(Html.Template parent) { super(parent); }
 
       public final Html.Instruction.OfElement render(Html.Instruction... elements) {
-        return html.li(
-            html.a(elements)
+        return m.li(
+            m.a(elements)
         );
       }
     }

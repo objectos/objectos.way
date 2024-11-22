@@ -1150,7 +1150,7 @@ public class HtmlTemplateTest {
       ThisComponent(Html.Template parent) { super(parent); }
 
       public Html.Instruction.OfElement threeDots(Html.Instruction instruction) {
-        return html.button(instruction);
+        return m.button(instruction);
       }
     }
 

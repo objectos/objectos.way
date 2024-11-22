@@ -42,10 +42,10 @@ public class ShellHeader extends Html.Component {
   }
 
   public final void render() {
-    html.header(
-        html.nav(
-            html.ul(
-                html.renderFragment(this::items)
+    m.header(
+        m.nav(
+            m.ul(
+                m.renderFragment(this::items)
             )
         )
     );
@@ -54,10 +54,10 @@ public class ShellHeader extends Html.Component {
   private void items() {
     for (Section section : SECTIONS) {
       if (section == active) {
-        html.li(section.name());
+        m.li(section.name());
       } else {
-        html.li(
-            html.a(html.href(section.href), html.text(section.name()))
+        m.li(
+            m.a(m.href(section.href), m.text(section.name()))
         );
       }
     }

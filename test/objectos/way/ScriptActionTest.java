@@ -142,6 +142,22 @@ public class ScriptActionTest {
   }
 
   @Test
+  public void stopPropagation() {
+    test(
+        new Html.Template() {
+          @Override
+          protected final void render() {
+            div(dataOnClick(Script.stopPropagation()));
+          }
+        },
+
+        """
+        <div data-on-click='[{"cmd":"stop-propagation"}]'></div>
+        """
+    );
+  }
+
+  @Test
   public void submit() {
     test(
         new Html.Template() {

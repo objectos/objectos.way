@@ -265,6 +265,26 @@ public final class Script {
     };
   }
 
+  /**
+   * Returns a new action that causes the event handling to stop at the current
+   * HTML element.
+   *
+   * @return a new action that causes the event handling to stop at the current
+   *         HTML element.
+   */
+  public static Action stopPropagation() {
+    return new ScriptAction() {
+      @Override
+      final void writeTo(StringBuilder json) {
+        objectStart(json);
+
+        property(json, CMD, "stop-propagation");
+
+        objectEnd(json);
+      }
+    };
+  }
+
   public static Action toggleClass(Html.Id id, String className) {
     Check.notNull(id, "id == null");
     Check.notNull(className, "className == null");
