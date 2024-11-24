@@ -153,19 +153,18 @@ endif
 #
 
 .PHONY: npm-install
-npm-install: node_modules/package-lock.json
+npm-install: node_modules/marker
 
-node_modules/package-lock.json: package-lock.json
-
-package-lock.json:
+node_modules/marker: package.json
 	npm install
+	touch $@
 	
 #
 # way@test-js
 #
 
 .PHONY: test-js
-test-js: node_modules/package-lock.json
+test-js: node_modules/marker
 	node_modules/mocha-chrome/cli.js test-js/test.html
 
 #
