@@ -400,9 +400,9 @@ public final class Sql {
      * In other words, when the query is executed, only the rows corresponding
      * to the specified page will be retrieved.
      *
-     * @param page
-     *        the {@code Page} object defining the page number and the number of
-     *        rows per page
+     * @param provider
+     *        provider of the {@code Page} object defining the page number and
+     *        the number of rows per page
      */
     default Transaction paginate(PageProvider provider) {
       Page page;

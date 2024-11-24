@@ -731,7 +731,9 @@ public final class Http {
      * is replaced with the specified value. If no such parameter exists, a new
      * parameter is added.
      *
-     * <h3>Usage Example</h3>
+     * <p>
+     * Usage example:
+     *
      * <pre>{@code
      * // original query is "search=java&sort=asc";
      * Http.RequestTarget target = ...
