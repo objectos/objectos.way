@@ -3,6 +3,7 @@
   "devDependencies": {
     "chai": "4.4.1",
     "mocha": "10.3.0",
+    "mocha-chrome": "github:Telroshan/mocha-chrome",
     "sinon": "17.0.1"
   }
 }

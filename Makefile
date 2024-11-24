@@ -41,7 +41,7 @@ OSSRH_SERVER := https://oss.sonatype.org
 #
 
 .PHONY: all
-all: test
+all: test test-js
 
 include make/java-core.mk
 
@@ -153,8 +153,20 @@ endif
 #
 
 .PHONY: npm-install
-npm-install:
+npm-install: node_modules/package-lock.json
+
+node_modules/package-lock.json: package-lock.json
+
+package-lock.json:
 	npm install
+	
+#
+# way@test-js
+#
+
+.PHONY: test-js
+test-js: node_modules/package-lock.json
+	node_modules/mocha-chrome/cli.js test-js/test.html
 
 #
 # way@javadoc
