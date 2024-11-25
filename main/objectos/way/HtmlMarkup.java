@@ -62,6 +62,8 @@ final class HtmlMarkup implements Html.Markup {
 
     try {
       fragment.invoke();
+    } catch (Error | RuntimeException e) {
+      throw e;
     } catch (Exception e) {
       throw new Html.RenderingException(e);
     }
@@ -80,6 +82,8 @@ final class HtmlMarkup implements Html.Markup {
 
     try {
       fragment.invoke(arg1);
+    } catch (Error | RuntimeException e) {
+      throw e;
     } catch (Exception e) {
       throw new Html.RenderingException(e);
     }
@@ -98,6 +102,8 @@ final class HtmlMarkup implements Html.Markup {
 
     try {
       fragment.invoke(arg1, arg2);
+    } catch (Error | RuntimeException e) {
+      throw e;
     } catch (Exception e) {
       throw new Html.RenderingException(e);
     }
@@ -116,6 +122,8 @@ final class HtmlMarkup implements Html.Markup {
 
     try {
       fragment.invoke(arg1, arg2, arg3);
+    } catch (Error | RuntimeException e) {
+      throw e;
     } catch (Exception e) {
       throw new Html.RenderingException(e);
     }
@@ -134,6 +142,8 @@ final class HtmlMarkup implements Html.Markup {
 
     try {
       fragment.invoke(arg1, arg2, arg3, arg4);
+    } catch (Error | RuntimeException e) {
+      throw e;
     } catch (Exception e) {
       throw new Html.RenderingException(e);
     }

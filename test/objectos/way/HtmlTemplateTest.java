@@ -21,8 +21,6 @@ import static org.testng.Assert.assertTrue;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import objectos.way.Html.ClassName;
-import objectos.way.Html.Id;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -282,8 +280,8 @@ public class HtmlTemplateTest {
   public void testCase13() {
     test(
         new Html.Template() {
-          final Id FOO = Html.Id.of("foo");
-          final Id BAR = Html.Id.of("bar");
+          final Html.Id FOO = Html.Id.of("foo");
+          final Html.Id BAR = Html.Id.of("bar");
 
           @Override
           protected final void render() {
@@ -488,9 +486,9 @@ public class HtmlTemplateTest {
   public void testCase21() {
     test(
         new Html.Template() {
-          private final ClassName first = Html.ClassName.of("first");
+          private final Html.ClassName first = Html.ClassName.of("first");
 
-          private final ClassName second = Html.ClassName.of("second");
+          private final Html.ClassName second = Html.ClassName.of("second");
 
           @Override
           protected final void render() {
@@ -827,8 +825,8 @@ public class HtmlTemplateTest {
   public void testCase35() {
     test(
         new Html.Template() {
-          private final ClassName A = Html.ClassName.of("ca");
-          private final ClassName B = Html.ClassName.of("cb");
+          private final Html.ClassName A = Html.ClassName.of("ca");
+          private final Html.ClassName B = Html.ClassName.of("cb");
 
           @Override
           protected final void render() {
@@ -1060,7 +1058,7 @@ public class HtmlTemplateTest {
   public void testCase49() {
     test(
         new Html.Template() {
-          final Id FOO = Html.Id.of("foo");
+          final Html.Id FOO = Html.Id.of("foo");
 
           @Override
           protected final void render() {
@@ -1156,7 +1154,7 @@ public class HtmlTemplateTest {
 
     test(
         new Html.Template() {
-          final Id NAV = Html.Id.of("nav");
+          final Html.Id NAV = Html.Id.of("nav");
           final ThisComponent icons = new ThisComponent(this);
 
           @Override
@@ -1185,7 +1183,7 @@ public class HtmlTemplateTest {
   public void testCase54() {
     test(
         new Html.Template() {
-          final Id FOO = Html.Id.of("foo");
+          final Html.Id FOO = Html.Id.of("foo");
 
           @Override
           protected final void render() {
@@ -1690,6 +1688,42 @@ public class HtmlTemplateTest {
     <!DOCTYPE html>
     <html></html>
     """);
+  }
+
+  @Test(description = """
+  RenderingException should not be wrapped into another RenderingException
+  """)
+  public void testCase71() {
+    class Subject extends Html.Template {
+      @Override
+      protected final void render() {
+        div(renderFragment(this::fragment0));
+      }
+
+      private void fragment0() {
+        div(renderFragment(this::fragment1));
+      }
+
+      private void fragment1() throws IOException {
+        throw new IOException("Nested");
+      }
+    }
+
+    Subject subject;
+    subject = new Subject();
+
+    try {
+      subject.toString();
+
+      Assert.fail("It should have thrown");
+    } catch (Html.RenderingException expected) {
+      Exception cause;
+      cause = expected.getCause();
+
+      assertTrue(cause instanceof IOException);
+
+      assertEquals(cause.getMessage(), "Nested");
+    }
   }
 
   private void test(Html.Template template, String expected) {

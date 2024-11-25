@@ -3781,7 +3781,7 @@ public final class Html {
         preRender();
 
         render();
-      } catch (Html.RenderingException e) {
+      } catch (Error | RuntimeException e) {
         throw e;
       } catch (Exception e) {
         throw new Html.RenderingException(e);
