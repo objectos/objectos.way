@@ -28,6 +28,20 @@ import org.testng.annotations.Test;
 
 public class HttpFormUrlEncodedTest {
 
+  @Test(description = "it should decode the values")
+  public void decode01() throws IOException {
+    Http.RequestBody body;
+    body = body("address=RUA+DEM%C3%93STENES&city=S%C3%A3o+Paulo");
+
+    Http.FormUrlEncoded form;
+    form = Http.parseFormUrlEncoded(body);
+
+    assertEquals(form.size(), 2);
+    assertEquals(form.names(), Set.of("address", "city"));
+    assertEquals(form.get("address"), "RUA DEMÓSTENES");
+    assertEquals(form.get("city"), "São Paulo");
+  }
+
   @Test
   public void testCase01() throws IOException {
     Http.RequestBody body;

@@ -15,6 +15,7 @@
  */
 package objectos.way;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Map;
@@ -54,8 +55,8 @@ final class HttpFormUrlEncoded implements Http.FormUrlEncoded {
     Map<String, String> map;
     map = Util.createMap();
 
-    StringBuilder sb;
-    sb = new StringBuilder();
+    ByteArrayOutputStream bytes;
+    bytes = new ByteArrayOutputStream();
 
     String key;
     key = null;
@@ -65,9 +66,9 @@ final class HttpFormUrlEncoded implements Http.FormUrlEncoded {
     while ((c = in.read()) != -1) {
       switch (c) {
         case '=' -> {
-          key = sb.toString();
+          key = bytes.toString();
 
-          sb.setLength(0);
+          bytes.reset();
 
           String oldValue;
           oldValue = map.put(key, EMPTY);
@@ -77,15 +78,17 @@ final class HttpFormUrlEncoded implements Http.FormUrlEncoded {
           }
         }
 
+        case '+' -> bytes.write(' ');
+
         case '&' -> {
           if (key == null) {
             throw new UnsupportedOperationException("Implement me");
           }
 
           String value;
-          value = sb.toString();
+          value = bytes.toString();
 
-          sb.setLength(0);
+          bytes.reset();
 
           String oldValue;
           oldValue = map.put(key, value);
@@ -123,15 +126,15 @@ final class HttpFormUrlEncoded implements Http.FormUrlEncoded {
           int value;
           value = high << 4 | low;
 
-          sb.append((char) value);
+          bytes.write(value);
         }
 
-        default -> sb.append((char) c);
+        default -> bytes.write(c);
       }
     }
 
     String value;
-    value = sb.toString();
+    value = bytes.toString();
 
     if (key != null) {
       map.put(key, value);
