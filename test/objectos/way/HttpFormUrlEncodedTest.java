@@ -21,6 +21,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 import java.util.Set;
 import objectos.way.HttpExchange.ParseStatus;
 import org.testng.Assert;
@@ -101,7 +102,10 @@ public class HttpFormUrlEncodedTest {
       String message;
       message = expected.getMessage();
 
-      assertEquals(message, "multipart/form-data");
+      assertEquals(message, "Supports application/x-www-form-urlencoded but got multipart/form-data");
+
+      assertEquals(expected.unsupportedMediaType(), "multipart/form-data");
+      assertEquals(expected.supportedMediaTypes(), List.of("application/x-www-form-urlencoded"));
     }
   }
 

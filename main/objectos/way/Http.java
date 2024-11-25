@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016-2023 Objectos Software LTDA.
+ * Copyright (C) 2016-2024 Objectos Software LTDA.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,6 +18,7 @@ package objectos.way;
 import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UncheckedIOException;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.nio.charset.Charset;
@@ -37,6 +38,7 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /**
  * The <strong>Objectos HTTP</strong> main class.
@@ -1060,20 +1062,58 @@ public final class Http {
   /**
    * Thrown to indicate that a content type is not supported.
    */
-  public static class UnsupportedMediaTypeException extends Exception {
+  public static final class UnsupportedMediaTypeException extends RuntimeException {
 
     private static final long serialVersionUID = -6412173093510319276L;
 
+    private final String unsupportedMediaType;
+
+    private final List<String> supportedMediaTypes;
+
     /**
-     * Creates a new {@code UnsupportedMediaTypeException} with the specified
-     * content type name.
+     * Creates a new {@code UnsupportedMediaTypeException}.
      *
-     * @param contentType
-     *        the name of the content type such as {@code application/pdf} or
-     *        {@code image/gif}.
+     * @param unsupportedMediaType
+     *        the name of the media type such as {@code application/pdf} or
+     *        {@code image/gif} that caused this exception to be thrown
+     *
+     * @param supportedMediaTypes
+     *        the names of the supported media types such as
+     *        {@code application/json}
      */
-    public UnsupportedMediaTypeException(String contentType) {
-      super(contentType);
+    public UnsupportedMediaTypeException(String unsupportedMediaType, String... supportedMediaTypes) {
+      super((String) null);
+
+      this.unsupportedMediaType = Objects.requireNonNull(unsupportedMediaType, "actual == null");
+
+      if (supportedMediaTypes.length == 0) {
+        throw new IllegalArgumentException("At least one media type is required");
+      }
+
+      this.supportedMediaTypes = List.of(supportedMediaTypes);
+    }
+
+    @Override
+    public final String getMessage() {
+      return "Supports " + supportedMediaTypes.stream().collect(Collectors.joining(", ")) + " but got " + unsupportedMediaType;
+    }
+
+    /**
+     * Returns the name of the unsupported media type.
+     *
+     * @return the name of the unsupported media type.
+     */
+    public final String unsupportedMediaType() {
+      return unsupportedMediaType;
+    }
+
+    /**
+     * Returns the names of the supported media types.
+     *
+     * @return the names of the supported media types.
+     */
+    public final List<String> supportedMediaTypes() {
+      return supportedMediaTypes;
     }
 
   }
@@ -1141,10 +1181,10 @@ public final class Http {
    * @param body
    *        the body of the HTTP message to parse
    *
-   * @throws IOException
+   * @throws UncheckedIOException
    *         if an I/O error occurs while reading the body
    */
-  public static FormUrlEncoded parseFormUrlEncoded(Http.RequestBody body) throws IOException {
+  public static FormUrlEncoded parseFormUrlEncoded(Http.RequestBody body) throws UncheckedIOException {
     return HttpFormUrlEncoded.parse(body);
   }
 
@@ -1155,10 +1195,10 @@ public final class Http {
    * @param http
    *        the HTTP exchange to parse
    *
-   * @throws IOException
+   * @throws UncheckedIOException
    *         if an I/O error occurs while reading the body
    */
-  public static FormUrlEncoded parseFormUrlEncoded(Http.Exchange http) throws IOException, UnsupportedMediaTypeException {
+  public static FormUrlEncoded parseFormUrlEncoded(Http.Exchange http) throws UncheckedIOException, UnsupportedMediaTypeException {
     return HttpFormUrlEncoded.parse(http);
   }
 

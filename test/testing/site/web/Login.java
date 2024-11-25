@@ -15,7 +15,6 @@
  */
 package testing.site.web;
 
-import java.io.IOException;
 import objectos.way.Html;
 import objectos.way.Http;
 import objectos.way.Web;
@@ -218,24 +217,18 @@ final class Login extends WebTemplate implements Http.Handler {
   }
 
   private void post0(Http.Exchange http) {
-    try {
-      Http.FormUrlEncoded form;
-      form = Http.parseFormUrlEncoded(http);
+    Http.FormUrlEncoded form;
+    form = Http.parseFormUrlEncoded(http);
 
-      String step;
-      step = form.getOrDefault(STEP, "");
+    String step;
+    step = form.getOrDefault(STEP, "");
 
-      switch (step) {
-        case "one" -> postStep1(http, form);
+    switch (step) {
+      case "one" -> postStep1(http, form);
 
-        case "two" -> postStep2(http, form);
+      case "two" -> postStep2(http, form);
 
-        default -> http.unprocessableContent();
-      }
-    } catch (IOException e) {
-      http.internalServerError(e);
-    } catch (Http.UnsupportedMediaTypeException e) {
-      http.unsupportedMediaType();
+      default -> http.unprocessableContent();
     }
   }
 

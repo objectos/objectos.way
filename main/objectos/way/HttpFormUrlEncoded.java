@@ -18,6 +18,7 @@ package objectos.way;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UncheckedIOException;
 import java.util.Map;
 import java.util.Set;
 
@@ -31,18 +32,20 @@ final class HttpFormUrlEncoded implements Http.FormUrlEncoded {
     this.map = map;
   }
 
-  static HttpFormUrlEncoded parse(Http.RequestBody body) throws IOException {
+  static HttpFormUrlEncoded parse(Http.RequestBody body) throws UncheckedIOException {
     try (InputStream in = body.bodyInputStream()) {
       return parse0(in);
+    } catch (IOException e) {
+      throw new UncheckedIOException(e);
     }
   }
 
-  static HttpFormUrlEncoded parse(Http.Exchange http) throws Http.UnsupportedMediaTypeException, IOException {
+  static HttpFormUrlEncoded parse(Http.Exchange http) throws Http.UnsupportedMediaTypeException, UncheckedIOException {
     String contentType;
     contentType = http.header(Http.HeaderName.CONTENT_TYPE);
 
     if (!contentType.equals("application/x-www-form-urlencoded")) {
-      throw new Http.UnsupportedMediaTypeException(contentType);
+      throw new Http.UnsupportedMediaTypeException(contentType, "application/x-www-form-urlencoded");
     }
 
     Http.RequestBody body;
