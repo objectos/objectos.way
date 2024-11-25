@@ -13,16 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectox.way;
+package objectos.way;
 
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
-import objectos.way.Sql;
-import objectos.way.TestingNoteSink;
 import org.h2.jdbcx.JdbcConnectionPool;
 
-public final class TestingH2 {
+final class TestingH2 {
 
   public static final Sql.Database SOURCE;
 

@@ -18,7 +18,6 @@ package objectos.way;
 import java.io.IOException;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
-import objectox.way.TestingH2;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 

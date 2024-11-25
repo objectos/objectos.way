@@ -16,11 +16,14 @@
 package objectos.way;
 
 import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.nio.charset.Charset;
 import java.nio.file.Path;
 import java.time.Clock;
 import java.time.Duration;
+import java.util.List;
 import java.util.Random;
+import java.util.Set;
 import java.util.function.Consumer;
 
 /**
@@ -28,7 +31,91 @@ import java.util.function.Consumer;
  */
 public final class Web {
 
-  // types
+  /**
+   * The parsed and decoded body of a {@code application/x-www-form-urlencoded}
+   * HTTP message.
+   */
+  public sealed interface FormData permits WebFormData {
+
+    /**
+     * Parse the body of the specified HTTP request as if it is the body of a
+     * {@code application/x-www-form-urlencoded} HTTP message.
+     *
+     * @param http
+     *        the HTTP exchange to parse
+     *
+     * @throws UncheckedIOException
+     *         if an I/O error occurs while reading the body
+     */
+    static FormData parse(Http.Exchange http) throws UncheckedIOException, Http.UnsupportedMediaTypeException {
+      return WebFormData.parse(http);
+    }
+
+    /**
+     * Parse the specified request body as if it is the body of a
+     * {@code application/x-www-form-urlencoded} HTTP message.
+     *
+     * @param body
+     *        the request body to parse
+     *
+     * @throws UncheckedIOException
+     *         if an I/O error occurs while reading the body
+     */
+    static FormData parseRequestBody(Http.RequestBody body) throws UncheckedIOException {
+      return WebFormData.parse(body);
+    }
+
+    /**
+     * Returns the names of all of the fields contained in this form data
+     *
+     * @return the names of all of the fields contained in this form data
+     */
+    Set<String> names();
+
+    /**
+     * Returns the first decoded value associated to the specified field name or
+     * {@code null} if the field is not present.
+     *
+     * @param name
+     *        the field name
+     *
+     * @return the first decoded value or {@code null}
+     */
+    String get(String name);
+
+    /**
+     * Returns a list containing all of the decoded values associated to the
+     * specified field name. This method returns an empty list if the field name
+     * is not present. In other words, this method never returns {@code null}.
+     *
+     * @param name
+     *        the field name
+     *
+     * @return the first decoded value or {@code null}
+     */
+    List<String> getAll(String name);
+
+    /**
+     * Returns the first decoded value associated to the specified key or
+     * the specified {@code defaultValue} if the key is not present.
+     *
+     * @param key
+     *        the key to search for
+     * @param defaultValue
+     *        the value to return if the key is not present
+     *
+     * @return the first decoded value or the {@code defaultValue}
+     */
+    String getOrDefault(String key, String defaultValue);
+
+    /**
+     * Returns the number of distinct keys
+     *
+     * @return the number of distinct keys
+     */
+    int size();
+
+  }
 
   /**
    * An abstract HTTP module suited for web applications.

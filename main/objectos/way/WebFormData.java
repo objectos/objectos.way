@@ -19,20 +19,20 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UncheckedIOException;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Function;
 
-final class HttpFormUrlEncoded implements Http.FormUrlEncoded {
+final class WebFormData implements Web.FormData {
 
-  private static final String EMPTY = "";
+  private final Map<String, Object> map;
 
-  private final Map<String, String> map;
-
-  private HttpFormUrlEncoded(Map<String, String> map) {
+  private WebFormData(Map<String, Object> map) {
     this.map = map;
   }
 
-  static HttpFormUrlEncoded parse(Http.RequestBody body) throws UncheckedIOException {
+  static WebFormData parse(Http.RequestBody body) throws UncheckedIOException {
     try (InputStream in = body.bodyInputStream()) {
       return parse0(in);
     } catch (IOException e) {
@@ -40,7 +40,7 @@ final class HttpFormUrlEncoded implements Http.FormUrlEncoded {
     }
   }
 
-  static HttpFormUrlEncoded parse(Http.Exchange http) throws Http.UnsupportedMediaTypeException, UncheckedIOException {
+  static WebFormData parse(Http.Exchange http) throws Http.UnsupportedMediaTypeException, UncheckedIOException {
     String contentType;
     contentType = http.header(Http.HeaderName.CONTENT_TYPE);
 
@@ -54,9 +54,9 @@ final class HttpFormUrlEncoded implements Http.FormUrlEncoded {
     return parse(body);
   }
 
-  private static HttpFormUrlEncoded parse0(InputStream in) throws IOException {
-    Map<String, String> map;
-    map = Util.createMap();
+  private static WebFormData parse0(InputStream in) throws IOException {
+    Map<String, Object> map;
+    map = Util.createSequencedMap();
 
     ByteArrayOutputStream bytes;
     bytes = new ByteArrayOutputStream();
@@ -69,16 +69,13 @@ final class HttpFormUrlEncoded implements Http.FormUrlEncoded {
     while ((c = in.read()) != -1) {
       switch (c) {
         case '=' -> {
+          if (key != null) {
+            Http.queryParamsAdd(map, Function.identity(), key, "");
+          }
+
           key = bytes.toString();
 
           bytes.reset();
-
-          String oldValue;
-          oldValue = map.put(key, EMPTY);
-
-          if (oldValue != null) {
-            throw new UnsupportedOperationException("Implement me");
-          }
         }
 
         case '+' -> bytes.write(' ');
@@ -93,12 +90,7 @@ final class HttpFormUrlEncoded implements Http.FormUrlEncoded {
 
           bytes.reset();
 
-          String oldValue;
-          oldValue = map.put(key, value);
-
-          if (oldValue != EMPTY) {
-            throw new UnsupportedOperationException("Implement me");
-          }
+          Http.queryParamsAdd(map, Function.identity(), key, value);
 
           key = null;
         }
@@ -140,10 +132,10 @@ final class HttpFormUrlEncoded implements Http.FormUrlEncoded {
     value = bytes.toString();
 
     if (key != null) {
-      map.put(key, value);
+      Http.queryParamsAdd(map, Function.identity(), key, value);
     }
 
-    return new HttpFormUrlEncoded(
+    return new WebFormData(
         Util.toUnmodifiableMap(map)
     );
   }
@@ -155,12 +147,20 @@ final class HttpFormUrlEncoded implements Http.FormUrlEncoded {
 
   @Override
   public final String get(String key) {
-    return map.get(key);
+    return Http.queryParamsGet(map, key);
+  }
+
+  @Override
+  public final List<String> getAll(String name) {
+    return Http.queryParamsGetAll(map, name);
   }
 
   @Override
   public final String getOrDefault(String key, String defaultValue) {
-    return map.getOrDefault(key, defaultValue);
+    String maybe;
+    maybe = get(key);
+
+    return maybe != null ? maybe : defaultValue;
   }
 
   @Override

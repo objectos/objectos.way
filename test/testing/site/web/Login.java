@@ -217,8 +217,8 @@ final class Login extends WebTemplate implements Http.Handler {
   }
 
   private void post0(Http.Exchange http) {
-    Http.FormUrlEncoded form;
-    form = Http.parseFormUrlEncoded(http);
+    Web.FormData form;
+    form = Web.FormData.parse(http);
 
     String step;
     step = form.getOrDefault(STEP, "");
@@ -232,7 +232,7 @@ final class Login extends WebTemplate implements Http.Handler {
     }
   }
 
-  private void postStep1(Http.Exchange http, Http.FormUrlEncoded form) {
+  private void postStep1(Http.Exchange http, Web.FormData form) {
     login = form.getOrDefault(LOGIN, "");
 
     if (login.isBlank()) {
@@ -244,7 +244,7 @@ final class Login extends WebTemplate implements Http.Handler {
     http.ok(this);
   }
 
-  private void postStep2(Http.Exchange http, Http.FormUrlEncoded form) {
+  private void postStep2(Http.Exchange http, Web.FormData form) {
     String login;
     login = form.getOrDefault(LOGIN, "");
 

@@ -1287,11 +1287,13 @@ final class HttpExchange implements Http.Exchange, Closeable {
 
       switch (c) {
         case '=' -> {
+          if (key != null) {
+            Http.queryParamsAdd(map, decoder, key, "");
+          }
+
           key = sb.toString();
 
           sb.setLength(0);
-
-          Http.queryParamsAdd(map, decoder, key, "");
         }
 
         case '&' -> {
@@ -1301,7 +1303,7 @@ final class HttpExchange implements Http.Exchange, Closeable {
           sb.setLength(0);
 
           if (key == null) {
-            Http.queryParamsAdd(map, decoder, value, "");
+            key = value;
 
             continue;
           }

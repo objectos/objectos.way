@@ -18,7 +18,6 @@ package objectos.way;
 import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.UncheckedIOException;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.nio.charset.Charset;
@@ -311,50 +310,6 @@ public final class Http {
      *         exchange; {@code false} otherwise
      */
     boolean processed();
-
-  }
-
-  /**
-   * The parsed and decoded body of a {@code application/x-www-form-urlencoded}
-   * HTTP message.
-   */
-  public interface FormUrlEncoded {
-
-    /**
-     * Returns the keys.
-     */
-    Set<String> names();
-
-    /**
-     * Returns the first decoded value associated to the specified key or
-     * {@code null} if the key is not present.
-     *
-     * @param key
-     *        the key to search for
-     *
-     * @return the first decoded value or {@code null}
-     */
-    String get(String key);
-
-    /**
-     * Returns the first decoded value associated to the specified key or
-     * the specified {@code defaultValue} if the key is not present.
-     *
-     * @param key
-     *        the key to search for
-     * @param defaultValue
-     *        the value to return if the key is not present
-     *
-     * @return the first decoded value or the {@code defaultValue}
-     */
-    String getOrDefault(String key, String defaultValue);
-
-    /**
-     * Returns the number of distinct keys
-     *
-     * @return the number of distinct keys
-     */
-    int size();
 
   }
 
@@ -1174,34 +1129,6 @@ public final class Http {
     return IMF_FIXDATE.format(normalized);
   }
 
-  /**
-   * Parse the specified body as if it is the body of a
-   * {@code application/x-www-form-urlencoded} HTTP message.
-   *
-   * @param body
-   *        the body of the HTTP message to parse
-   *
-   * @throws UncheckedIOException
-   *         if an I/O error occurs while reading the body
-   */
-  public static FormUrlEncoded parseFormUrlEncoded(Http.RequestBody body) throws UncheckedIOException {
-    return HttpFormUrlEncoded.parse(body);
-  }
-
-  /**
-   * Parse the specified body as if it is the body of a
-   * {@code application/x-www-form-urlencoded} HTTP message.
-   *
-   * @param http
-   *        the HTTP exchange to parse
-   *
-   * @throws UncheckedIOException
-   *         if an I/O error occurs while reading the body
-   */
-  public static FormUrlEncoded parseFormUrlEncoded(Http.Exchange http) throws UncheckedIOException, UnsupportedMediaTypeException {
-    return HttpFormUrlEncoded.parse(http);
-  }
-
   // utils
 
   private static final DateTimeFormatter IMF_FIXDATE;
@@ -1322,24 +1249,16 @@ public final class Http {
       return;
     }
 
-    if (oldValue.equals("")) {
-      return;
-    }
-
     if (oldValue instanceof String s) {
 
-      if (value.equals("")) {
-        map.put(key, s);
-      } else {
-        List<String> list;
-        list = Util.createList();
+      List<String> list;
+      list = Util.createList();
 
-        list.add(s);
+      list.add(s);
 
-        list.add(value);
+      list.add(value);
 
-        map.put(key, list);
-      }
+      map.put(key, list);
 
     }
 
@@ -1363,6 +1282,24 @@ public final class Http {
       case String s -> s;
 
       case List<?> l -> (String) l.get(0);
+
+      default -> throw new AssertionError(
+          "Type should not have been put into the map: " + maybe.getClass()
+      );
+    };
+  }
+
+  @SuppressWarnings("unchecked")
+  static List<String> queryParamsGetAll(Map<String, Object> params, String name) {
+    Object maybe;
+    maybe = params.get(name);
+
+    return switch (maybe) {
+      case null -> List.of();
+
+      case String s -> List.of(s);
+
+      case List<?> l -> (List<String>) l;
 
       default -> throw new AssertionError(
           "Type should not have been put into the map: " + maybe.getClass()
