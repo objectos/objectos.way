@@ -16,10 +16,10 @@
 package objectos.way;
 
 import java.time.Clock;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.function.Function;
-import objectos.way.Http.TestingExchange.Config;
 
 final class HttpTestingExchangeConfig implements Http.TestingExchange.Config {
 
@@ -33,26 +33,64 @@ final class HttpTestingExchangeConfig implements Http.TestingExchange.Config {
 
   Map<String, Object> queryParams;
 
+  Map<Http.HeaderName, Object> headers;
+
   public final Http.TestingExchange build() {
     return new HttpTestingExchange(this);
   }
 
   @Override
-  public final Config clock(Clock value) {
+  public final void clock(Clock value) {
     clock = Objects.requireNonNull(value, "value == null");
-
-    return this;
   }
 
   @Override
-  public final Http.TestingExchange.Config method(Http.Method value) {
+  public final void method(Http.Method value) {
     method = Objects.requireNonNull(value, "value == null");
+  }
 
-    return this;
+  @SuppressWarnings("unchecked")
+  @Override
+  public final void header(Http.HeaderName name, String value) {
+    Objects.requireNonNull(name, "name == null");
+    Objects.requireNonNull(value, "value == null");
+
+    if (headers == null) {
+      headers = Util.createSequencedMap();
+    }
+
+    Object previous;
+    previous = headers.put(name, value);
+
+    switch (previous) {
+      case null -> {}
+
+      case String s -> {
+        List<String> list = Util.createList();
+
+        list.add(s);
+
+        list.add(value);
+
+        headers.put(name, list);
+      }
+
+      case List<?> l -> {
+        List<String> list = (List<String>) l;
+
+        list.add(value);
+
+        headers.put(name, list);
+      }
+
+      default -> throw new AssertionError(
+          "Type should not have been put into the map: " + previous.getClass()
+      );
+    }
   }
 
   @Override
-  public final Http.TestingExchange.Config path(String value) {
+  public final void path(String value) {
     int length;
     length = value.length();
 
@@ -68,12 +106,10 @@ final class HttpTestingExchangeConfig implements Http.TestingExchange.Config {
     }
 
     path = value;
-
-    return this;
   }
 
   @Override
-  public final Http.TestingExchange.Config pathParam(String name, String value) {
+  public final void pathParam(String name, String value) {
     Objects.requireNonNull(name, "name == null");
     Objects.requireNonNull(value, "value == null");
 
@@ -82,12 +118,10 @@ final class HttpTestingExchangeConfig implements Http.TestingExchange.Config {
     }
 
     objectStore.put(name, value);
-
-    return this;
   }
 
   @Override
-  public final Http.TestingExchange.Config queryParam(String name, String value) {
+  public final void queryParam(String name, String value) {
     Objects.requireNonNull(name, "name == null");
     Objects.requireNonNull(value, "value == null");
 
@@ -96,12 +130,10 @@ final class HttpTestingExchangeConfig implements Http.TestingExchange.Config {
     }
 
     Http.queryParamsAdd(queryParams, Function.identity(), name, value);
-
-    return this;
   }
 
   @Override
-  public final <T> Http.TestingExchange.Config set(Class<T> key, T value) {
+  public final <T> void set(Class<T> key, T value) {
     Objects.requireNonNull(key, "key == null");
     Objects.requireNonNull(value, "value == null");
 
@@ -110,8 +142,6 @@ final class HttpTestingExchangeConfig implements Http.TestingExchange.Config {
     }
 
     objectStore.put(key, value);
-
-    return this;
   }
 
 }

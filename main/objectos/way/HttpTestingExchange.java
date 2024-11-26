@@ -30,7 +30,6 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.SequencedMap;
 import java.util.Set;
-import objectos.way.Http.HeaderName;
 import objectos.way.Lang.MediaObject;
 
 final class HttpTestingExchange implements Http.TestingExchange {
@@ -44,6 +43,8 @@ final class HttpTestingExchange implements Http.TestingExchange {
   private final String path;
 
   private final Map<String, Object> queryParams;
+
+  private final Map<Http.HeaderName, Object> headers;
 
   private Object responseBody;
 
@@ -63,6 +64,8 @@ final class HttpTestingExchange implements Http.TestingExchange {
     path = config.path;
 
     queryParams = config.queryParams;
+
+    headers = config.headers;
   }
 
   // testing methods
@@ -83,6 +86,35 @@ final class HttpTestingExchange implements Http.TestingExchange {
   }
 
   // request methods
+
+  @SuppressWarnings("unchecked")
+  @Override
+  public final String header(Http.HeaderName name) {
+    Check.notNull(name, "name == null");
+
+    if (headers == null) {
+      return null;
+    }
+
+    Object value;
+    value = headers.get(name);
+
+    return switch (value) {
+      case null -> null;
+
+      case String s -> s;
+
+      case List<?> l -> {
+        List<String> list = (List<String>) l;
+
+        yield list.get(0);
+      }
+
+      default -> throw new AssertionError(
+          "Type should not have been put into the map: " + value.getClass()
+      );
+    };
+  }
 
   @Override
   public final Http.Method method() {
@@ -229,11 +261,6 @@ final class HttpTestingExchange implements Http.TestingExchange {
 
   private String encode(String s) {
     return URLEncoder.encode(s, StandardCharsets.UTF_8);
-  }
-
-  @Override
-  public final String header(HeaderName name) {
-    throw new UnsupportedOperationException();
   }
 
   @Override

@@ -916,30 +916,34 @@ public final class Http {
        *
        * @param value
        *        the clock instance to use
-       *
-       * @return this config instance
        */
-      Config clock(Clock value);
+      void clock(Clock value);
+
+      /**
+       * Adds the specified request header to the HTTP exchange.
+       *
+       * @param name
+       *        the header field name
+       * @param value
+       *        the header field value
+       */
+      void header(HeaderName name, String value);
 
       /**
        * Sets the request method to the specified value.
        *
        * @param value
        *        the HTTP method
-       *
-       * @return this config instance
        */
-      Config method(Http.Method value);
+      void method(Http.Method value);
 
       /**
        * Sets the path component of the request-target to the specified value.
        *
        * @param value
        *        the decoded path value
-       *
-       * @return this config instance
        */
-      Config path(String value);
+      void path(String value);
 
       /**
        * Sets the request-path parameter with the specified name to the
@@ -949,10 +953,8 @@ public final class Http {
        *        the name of the path parameter
        * @param value
        *        the decoded value of the path parameter
-       *
-       * @return this config instance
        */
-      Config pathParam(String name, String value);
+      void pathParam(String name, String value);
 
       /**
        * Sets the request-target query parameter with the specified name to the
@@ -962,10 +964,8 @@ public final class Http {
        *        the name of the query parameter
        * @param value
        *        the decoded value of the query parameter
-       *
-       * @return this config instance
        */
-      Config queryParam(String name, String value);
+      void queryParam(String name, String value);
 
       /**
        * Stores the provided key-value pair in the testing exchange.
@@ -974,10 +974,10 @@ public final class Http {
        *        the key to be stored
        * @param value
        *        the value to be stored
-       *
-       * @return this config instance
+       * @param <T>
+       *        the type of the value
        */
-      <T> Config set(Class<T> key, T value);
+      <T> void set(Class<T> key, T value);
 
     }
 

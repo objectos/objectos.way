@@ -17,9 +17,43 @@ package objectos.way;
 
 import static org.testng.Assert.assertEquals;
 
+import org.testng.Assert;
 import org.testng.annotations.Test;
 
 public class HttpTestingExchangeTest {
+
+  @Test
+  public void header01() {
+    Http.TestingExchange http;
+    http = Http.TestingExchange.create(config -> {
+      config.header(Http.HeaderName.CONTENT_TYPE, "application/x-www-form-urlencoded");
+
+      config.header(Http.HeaderName.USER_AGENT, "first");
+      config.header(Http.HeaderName.USER_AGENT, "second");
+    });
+
+    assertEquals(http.header(Http.HeaderName.CONTENT_TYPE), "application/x-www-form-urlencoded");
+    assertEquals(http.header(Http.HeaderName.CONTENT_LENGTH), null);
+    assertEquals(http.header(Http.HeaderName.USER_AGENT), "first");
+  }
+
+  @Test(description = "config.header should reject null names", expectedExceptions = NullPointerException.class)
+  public void header02() {
+    Http.TestingExchange.create(config -> {
+      config.header(null, "application/x-www-form-urlencoded");
+    });
+
+    Assert.fail("it should have thrown");
+  }
+
+  @Test(description = "config.header should reject null values", expectedExceptions = NullPointerException.class)
+  public void header03() {
+    Http.TestingExchange.create(config -> {
+      config.header(Http.HeaderName.CONTENT_TYPE, null);
+    });
+
+    Assert.fail("it should have thrown");
+  }
 
   @Test
   public void testCase01() {
@@ -74,7 +108,7 @@ public class HttpTestingExchangeTest {
   }
 
   @Test(description = "rawPath")
-  public void rawPath() {
+  public void rawPath01() {
     assertEquals(rawPath("/"), "/");
     assertEquals(rawPath("/files"), "/files");
     assertEquals(rawPath("/files/"), "/files/");
@@ -90,7 +124,7 @@ public class HttpTestingExchangeTest {
   }
 
   @Test(description = "rawQuery")
-  public void rawQuery() {
+  public void rawQuery01() {
     assertEquals(rawQuery0(), null);
     assertEquals(rawQuery0("q", "a"), "q=a");
     assertEquals(rawQuery0("q", "a", "foo", "bar"), "q=a&foo=bar");
