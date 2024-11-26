@@ -239,6 +239,22 @@ final class HtmlMarkup implements Html.Markup {
     }
   }
 
+  public final String toJsonString() {
+    try {
+      StringBuilder sb;
+      sb = new StringBuilder();
+
+      HtmlDom document;
+      document = compile();
+
+      HtmlFormatter.JSON.formatTo(document, sb);
+
+      return sb.toString();
+    } catch (IOException e) {
+      throw new AssertionError("StringBuilder does not throw IOException", e);
+    }
+  }
+
   @Override
   public final String toString() {
     try {

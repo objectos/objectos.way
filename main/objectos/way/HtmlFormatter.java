@@ -18,7 +18,9 @@ package objectos.way;
 import java.io.IOException;
 import java.util.Set;
 
-final class HtmlFormatter {
+class HtmlFormatter {
+
+  static final HtmlFormatter JSON = new HtmlFormatterJson();
 
   static final HtmlFormatter STANDARD = new HtmlFormatter();
 
@@ -59,7 +61,7 @@ final class HtmlFormatter {
   private static final byte PHRASE = 4;
   private static final byte SCRIPT = 5;
 
-  private HtmlFormatter() {}
+  HtmlFormatter() {}
 
   public final void formatTo(Html.Dom document, Appendable appendable) throws IOException {
     Check.notNull(document, "document == null");
@@ -83,7 +85,7 @@ final class HtmlFormatter {
     format(document, appendable);
   }
 
-  private void format(Html.Dom document, Appendable out) throws IOException {
+  void format(Html.Dom document, Appendable out) throws IOException {
     byte state;
     state = START;
 
