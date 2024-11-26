@@ -44,6 +44,10 @@ final class WebFormData implements Web.FormData {
     String contentType;
     contentType = http.header(Http.HeaderName.CONTENT_TYPE);
 
+    if (contentType == null) {
+      throw new Http.UnsupportedMediaTypeException(contentType, "application/x-www-form-urlencoded");
+    }
+
     if (!contentType.equals("application/x-www-form-urlencoded")) {
       throw new Http.UnsupportedMediaTypeException(contentType, "application/x-www-form-urlencoded");
     }

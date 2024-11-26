@@ -1039,7 +1039,7 @@ public final class Http {
     public UnsupportedMediaTypeException(String unsupportedMediaType, String... supportedMediaTypes) {
       super((String) null);
 
-      this.unsupportedMediaType = Objects.requireNonNull(unsupportedMediaType, "actual == null");
+      this.unsupportedMediaType = unsupportedMediaType;
 
       if (supportedMediaTypes.length == 0) {
         throw new IllegalArgumentException("At least one media type is required");
@@ -1050,7 +1050,11 @@ public final class Http {
 
     @Override
     public final String getMessage() {
-      return "Supports " + supportedMediaTypes.stream().collect(Collectors.joining(", ")) + " but got " + unsupportedMediaType;
+      if (unsupportedMediaType != null) {
+        return "Supports " + supportedMediaTypes.stream().collect(Collectors.joining(", ")) + " but got " + unsupportedMediaType;
+      } else {
+        return "Supports " + supportedMediaTypes.stream().collect(Collectors.joining(", ")) + " but Content-Type was not specified";
+      }
     }
 
     /**

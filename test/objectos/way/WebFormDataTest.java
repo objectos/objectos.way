@@ -69,6 +69,28 @@ public class WebFormDataTest {
   }
 
   @Test
+  public void parse03() throws IOException {
+    try {
+      parse("""
+      POST /login HTTP/1.1\r
+      Host: www.example.com\r
+      Content-Length: 24\r
+      \r
+      email=user%40example.com""");
+
+      Assert.fail("Should have thrown");
+    } catch (Http.UnsupportedMediaTypeException expected) {
+      String message;
+      message = expected.getMessage();
+
+      assertEquals(message, "Supports application/x-www-form-urlencoded but Content-Type was not specified");
+
+      assertEquals(expected.unsupportedMediaType(), null);
+      assertEquals(expected.supportedMediaTypes(), List.of("application/x-www-form-urlencoded"));
+    }
+  }
+
+  @Test
   public void parseRequestBody01() {
     Http.RequestBody body;
     body = body("email=user%40example.com");
