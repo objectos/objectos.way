@@ -920,6 +920,17 @@ public final class Http {
       void clock(Clock value);
 
       /**
+       * Adds the specified field name and value to the request body as if it
+       * were sent by a HTML form. The name and value must be decoded.
+       *
+       * @param name
+       *        the field name (decoded)
+       * @param value
+       *        the field value (decoded)
+       */
+      void formParam(String name, String value);
+
+      /**
        * Adds the specified request header to the HTTP exchange.
        *
        * @param name

@@ -17,10 +17,31 @@ package objectos.way;
 
 import static org.testng.Assert.assertEquals;
 
+import java.util.List;
+import objectos.way.Web.FormData;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
 public class HttpTestingExchangeTest {
+
+  @Test
+  public void formParam01() {
+    Http.TestingExchange http;
+    http = Http.TestingExchange.create(config -> {
+      config.formParam("p1", "abc");
+
+      config.formParam("p2", "val1");
+      config.formParam("p2", "val2");
+    });
+
+    FormData data;
+    data = Web.FormData.parse(http);
+
+    assertEquals(data.get("p1"), "abc");
+    assertEquals(data.getAll("p1"), List.of("abc"));
+    assertEquals(data.get("p2"), "val1");
+    assertEquals(data.getAll("p2"), List.of("val1", "val2"));
+  }
 
   @Test
   public void header01() {

@@ -15,6 +15,7 @@
  */
 package objectos.way;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
@@ -46,6 +47,8 @@ final class HttpTestingExchange implements Http.TestingExchange {
 
   private final Map<Http.HeaderName, Object> headers;
 
+  private final byte[] body;
+
   private Object responseBody;
 
   private Charset responseCharset;
@@ -66,6 +69,8 @@ final class HttpTestingExchange implements Http.TestingExchange {
     queryParams = config.queryParams;
 
     headers = config.headers;
+
+    body = config.body;
   }
 
   // testing methods
@@ -259,13 +264,15 @@ final class HttpTestingExchange implements Http.TestingExchange {
     return Http.queryParamsToString(params, this::encode);
   }
 
-  private String encode(String s) {
-    return URLEncoder.encode(s, StandardCharsets.UTF_8);
-  }
-
   @Override
   public final InputStream bodyInputStream() throws IOException {
-    throw new UnsupportedOperationException();
+    Check.state(body != null, "body was not set");
+
+    return new ByteArrayInputStream(body);
+  }
+
+  private String encode(String s) {
+    return URLEncoder.encode(s, StandardCharsets.UTF_8);
   }
 
   @Override

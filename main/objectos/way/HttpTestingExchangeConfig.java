@@ -15,6 +15,8 @@
  */
 package objectos.way;
 
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.time.Clock;
 import java.util.List;
 import java.util.Map;
@@ -35,8 +37,35 @@ final class HttpTestingExchangeConfig implements Http.TestingExchange.Config {
 
   Map<Http.HeaderName, Object> headers;
 
+  Map<String, Object> formParams;
+
+  byte[] body;
+
   public final Http.TestingExchange build() {
+    if (formParams == null) {
+      body = Util.EMPTY_BYTE_ARRAY;
+    } else {
+
+      if (headers == null) {
+        headers = Util.createSequencedMap();
+      }
+
+      if (!headers.containsKey(Http.HeaderName.CONTENT_TYPE)) {
+        headers.put(Http.HeaderName.CONTENT_TYPE, "application/x-www-form-urlencoded");
+      }
+
+      String body;
+      body = Http.queryParamsToString(formParams, this::encode);
+
+      this.body = body.getBytes(StandardCharsets.UTF_8);
+
+    }
+
     return new HttpTestingExchange(this);
+  }
+
+  private String encode(String s) {
+    return URLEncoder.encode(s, StandardCharsets.UTF_8);
   }
 
   @Override
@@ -130,6 +159,18 @@ final class HttpTestingExchangeConfig implements Http.TestingExchange.Config {
     }
 
     Http.queryParamsAdd(queryParams, Function.identity(), name, value);
+  }
+
+  @Override
+  public final void formParam(String name, String value) {
+    Objects.requireNonNull(name, "name == null");
+    Objects.requireNonNull(value, "value == null");
+
+    if (formParams == null) {
+      formParams = Util.createSequencedMap();
+    }
+
+    Http.queryParamsAdd(formParams, Function.identity(), name, value);
   }
 
   @Override
