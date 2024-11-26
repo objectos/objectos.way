@@ -17,6 +17,7 @@ package objectos.way;
 
 import static org.testng.Assert.assertEquals;
 
+import java.nio.charset.StandardCharsets;
 import objectos.way.Script.Action;
 import org.testng.annotations.Test;
 
@@ -72,6 +73,11 @@ public class ScriptActionTest {
   }
 
   @Test
+  public void contentType() {
+    assertEquals(Script.addClass(_OVERLAY, "hidden").contentType(), "application/json");
+  }
+
+  @Test
   public void delay() {
     test(
         new Html.Template() {
@@ -105,6 +111,21 @@ public class ScriptActionTest {
         <a data-on-click='[{"cmd":"location","value":"/foo"}]'>Foo</a>
         """
     );
+  }
+
+  @Test
+  public void mediaBytes() {
+    Script.Action action;
+    action = Script.addClass(_OVERLAY, "hidden");
+
+    byte[] mediaBytes;
+    mediaBytes = action.mediaBytes();
+
+    String s;
+    s = new String(mediaBytes, StandardCharsets.UTF_8);
+
+    assertEquals(s, """
+    [{"cmd":"add-class","args":["overlay","hidden"]}]""");
   }
 
   @Test

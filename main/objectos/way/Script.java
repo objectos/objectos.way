@@ -20,6 +20,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 
 /**
  * The <strong>Objectos Script</strong> main class. Part of Objectos HTML.
@@ -30,7 +31,31 @@ public final class Script {
    * Represents an action to be executed by the browser in the context of an web
    * application.
    */
-  public sealed interface Action permits ScriptAction {
+  public sealed interface Action extends Lang.MediaObject permits ScriptAction {
+
+    /**
+     * Return {@code application/json} always.
+     *
+     * @return always {@code application/json}
+     */
+    @Override
+    default String contentType() {
+      return "application/json";
+    }
+
+    /**
+     * Returns the JSON data representing this action as a byte array.
+     *
+     * @return the JSON data representing this action as a byte array
+     */
+    @Override
+    default byte[] mediaBytes() {
+      String s;
+      s = toString();
+
+      return s.getBytes(StandardCharsets.UTF_8);
+    }
+
   }
 
   private Script() {}
