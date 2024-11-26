@@ -113,7 +113,7 @@
 		const xhr = new XMLHttpRequest();
 
 		xhr.open(method, url, true);
-		
+
 		xhr.setRequestHeader("Way-Request", "true");
 
 		xhr.onload = (_) => {
@@ -312,23 +312,31 @@
 			return;
 		}
 
-		const dataset = el.dataset;
+		if (el) {
 
-		let timer = dataset.timer;
+			const dataset = el.dataset;
 
-		if (!timer) {
-			timer = 0;
+			let timer = dataset.timer;
+
+			if (!timer) {
+				timer = 0;
+			}
+
+			const delay = function() {
+				clearTimeout(timer);
+
+				timer = setTimeout(() => executeActions(actions, el), ms);
+
+				dataset.timer = timer;
+			}
+
+			delay();
+
+			return;
+
 		}
 
-		const delay = function() {
-			clearTimeout(timer);
-
-			timer = setTimeout(() => executeActions(actions, el), ms);
-
-			dataset.timer = timer;
-		}
-
-		delay();
+		setTimeout(() => executeActions(actions), ms);
 	}
 
 	function executeHtml(value) {

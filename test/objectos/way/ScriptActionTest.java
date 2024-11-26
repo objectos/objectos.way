@@ -98,6 +98,25 @@ public class ScriptActionTest {
   }
 
   @Test
+  public void html() {
+    Html.Template template = new Html.Template() {
+      @Override
+      protected final void render() {
+        doctype();
+        html(
+            body("Hello world!")
+        );
+      }
+    };
+
+    Script.Action action;
+    action = Script.html(template);
+
+    assertEquals(action.toString(), """
+    [{"cmd":"html","value":"<!DOCTYPE html><html><body>Hello world!</body></html>"}]""");
+  }
+
+  @Test
   public void location() {
     test(
         new Html.Template() {

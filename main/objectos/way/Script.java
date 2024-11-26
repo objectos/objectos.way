@@ -166,6 +166,26 @@ public final class Script {
     };
   }
 
+  public static Action html(Html.Template template) {
+    final String value;
+    value = template.toJsonString();
+
+    return new ScriptAction() {
+      @Override
+      final void writeTo(StringBuilder json) {
+        objectStart(json);
+
+        property(json, CMD, "html");
+
+        comma(json);
+
+        property(json, "value", value);
+
+        objectEnd(json);
+      }
+    };
+  }
+
   public static Action location(String url) {
     Check.notNull(url, "url == null");
 
