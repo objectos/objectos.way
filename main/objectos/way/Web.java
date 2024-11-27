@@ -31,6 +31,18 @@ import java.util.function.Consumer;
  */
 public final class Web {
 
+  public sealed interface Form {
+
+    public sealed interface Invalid extends Form {}
+
+    public sealed interface Valid extends Form {}
+
+  }
+
+  enum Dummy implements Form.Invalid, Form.Valid {
+    INSTANCE;
+  }
+
   /**
    * The parsed and decoded body of a {@code application/x-www-form-urlencoded}
    * HTTP message.
@@ -235,6 +247,52 @@ public final class Web {
     String nextHref();
 
     String previousHref();
+
+  }
+
+  public interface Relation {
+
+    public interface Config {
+
+      void name(String value);
+
+      void stringAttribute(Consumer<StringAttribute.Config> config);
+
+    }
+
+    public sealed interface Attribute {
+
+      public sealed interface Config {
+
+        void name(String value);
+
+        void required();
+
+      }
+
+      String name();
+
+      boolean required();
+
+    }
+
+    public non-sealed interface StringAttribute extends Attribute {
+
+      public non-sealed interface Config extends Attribute.Config {
+
+        void maxLength(int value);
+
+        void pattern(String value, String message);
+
+      }
+
+    }
+
+    static Relation create(Consumer<Config> config) {
+      throw new UnsupportedOperationException("Implement me");
+    }
+
+    Web.Form parseForm(Http.Exchange http);
 
   }
 
