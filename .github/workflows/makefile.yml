@@ -9,10 +9,7 @@ on:
 jobs:
   build:
 
-    strategy:
-      matrix:
-        os: [ubuntu-20.04, ubuntu-22.04, ubuntu-24.04] 
-    runs-on: ${{ matrix.os }}
+    runs-on: ubuntu-20.04
     timeout-minutes: 10
 
     steps:
@@ -29,16 +26,16 @@ jobs:
       uses: actions/cache@v4
       with:
         path: ${{ env.JAVA_HOME_23_X64 }}
-        key: ${{ matrix.os }}-jdk-23
-        restore-keys: ${{ matrix.os }}-jdk
+        key: ${{ runner.os }}-jdk-23
+        restore-keys: ${{ runner.os }}-jdk
 
     - name: Cache local repository
       if: success() || failure()
       uses: actions/cache@v4
       with:
         path: ~/.cache/objectos
-        key: ${{ matrix.os }}-objectos-${{ hashFiles('Makefile', 'make/*.mk') }}
-        restore-keys: ${{ matrix.os }}-objectos-
+        key: ${{ runner.os }}-objectos-${{ hashFiles('Makefile', 'make/*.mk') }}
+        restore-keys: ${{ runner.os }}-objectos-
 
     - name: Build it
       run: make
@@ -47,5 +44,5 @@ jobs:
       if: success() || failure()
       uses: actions/upload-artifact@v4
       with:
-        name: ${{ matrix.os }}-test-results
+        name: ${{ runner.os }}-test-results
         path: work/test-output
