@@ -37,6 +37,12 @@ public final class Web {
 
     public sealed interface Valid extends Form {}
 
+    public interface Renderer {
+
+      void render(Html.Markup m, Relation relation);
+
+    }
+
   }
 
   enum Dummy implements Form.Invalid, Form.Valid {
@@ -250,9 +256,9 @@ public final class Web {
 
   }
 
-  public interface Relation {
+  public sealed interface Relation permits WebRelation {
 
-    public interface Config {
+    public sealed interface Config permits WebRelationConfig {
 
       void name(String value);
 
@@ -266,19 +272,23 @@ public final class Web {
 
         void name(String value);
 
+        void description(String value);
+
         void required();
 
       }
 
       String name();
 
+      String description();
+
       boolean required();
 
     }
 
-    public non-sealed interface StringAttribute extends Attribute {
+    public sealed interface StringAttribute extends Attribute permits WebRelationStringAttribute {
 
-      public non-sealed interface Config extends Attribute.Config {
+      public sealed interface Config extends Attribute.Config permits WebRelationStringAttributeConfig {
 
         void maxLength(int value);
 
@@ -289,8 +299,17 @@ public final class Web {
     }
 
     static Relation create(Consumer<Config> config) {
-      throw new UnsupportedOperationException("Implement me");
+      WebRelationConfig builder;
+      builder = new WebRelationConfig();
+
+      config.accept(builder);
+
+      return builder.build();
     }
+
+    String name();
+
+    List<Attribute> attributes();
 
     Web.Form parseForm(Http.Exchange http);
 
