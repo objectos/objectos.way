@@ -15,18 +15,25 @@
  */
 package objectos.way;
 
-import java.util.List;
+final class WebFormTextInput extends WebFormField implements Web.Form.TextInput {
 
-final class WebRelation implements Web.Relation {
+  private final String id;
 
   private final String name;
 
-  private final List<? extends WebRelationAttribute> attributes;
+  private final String label;
 
-  WebRelation(WebRelationConfig config) {
-    name = config.name;
+  WebFormTextInput(WebRelationStringAttribute attribute) {
+    id = attribute.htmlId();
 
-    attributes = config.attributes();
+    name = attribute.htmlName();
+
+    label = attribute.htmlLabel();
+  }
+
+  @Override
+  public final String id() {
+    return id;
   }
 
   @Override
@@ -34,25 +41,14 @@ final class WebRelation implements Web.Relation {
     return name;
   }
 
-  @SuppressWarnings("unchecked")
   @Override
-  public final List<Web.Relation.Attribute> attributes() {
-    return (List<Web.Relation.Attribute>) attributes;
+  public final String label() {
+    return label;
   }
 
-  final List<? extends WebFormField> toFields() {
-    UtilList<WebFormField> fields;
-    fields = new UtilList<>();
-
-    for (WebRelationAttribute attr : attributes) {
-      fields.add(
-          switch (attr) {
-            case WebRelationStringAttribute str -> new WebFormTextInput(str);
-          }
-      );
-    }
-
-    return fields.toUnmodifiableList();
+  @Override
+  public final String type() {
+    return "text";
   }
 
 }

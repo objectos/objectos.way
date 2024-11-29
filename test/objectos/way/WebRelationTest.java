@@ -16,8 +16,9 @@
 package objectos.way;
 
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertTrue;
 
-import org.testng.Assert;
+import objectos.way.Web.Form;
 import org.testng.annotations.Test;
 
 public class WebRelationTest {
@@ -27,47 +28,52 @@ public class WebRelationTest {
 
     config.stringAttribute(attr -> {
       attr.name("first_name");
+      attr.description("First name");
       attr.required();
       attr.maxLength(30);
     });
 
     config.stringAttribute(attr -> {
       attr.name("last_name");
+      attr.description("Last name");
       attr.required();
       attr.maxLength(30);
     });
 
     config.stringAttribute(attr -> {
       attr.name("address");
+      attr.description("Address");
       attr.required();
       attr.maxLength(255);
     });
 
     config.stringAttribute(attr -> {
       attr.name("city");
+      attr.description("City");
       attr.required();
       attr.maxLength(80);
     });
 
     config.stringAttribute(attr -> {
       attr.name("telephone");
+      attr.description("Telephone");
       attr.required();
       attr.pattern("\\d{10}", "Telephone must be a 10-digit number");
     });
   });
 
-  private class OwnersForm extends Html.Template {
+  private class OwnersFormView extends Html.Template {
 
-    private final Web.Relation relation;
+    private final Web.Form form;
 
-    public OwnersForm(Web.Relation relation) {
-      this.relation = relation;
+    public OwnersFormView(Form form) {
+      this.form = form;
     }
 
     @Override
     protected final void render() {
       form(
-          action("FIXME"),
+          action(form.action()),
           method("post"),
 
           input(type("hidden"), name("_csfr"), value("FIXME")),
@@ -79,39 +85,59 @@ public class WebRelationTest {
     }
 
     private void fields() {
-      for (Web.Relation.Attribute attribute : relation.attributes()) {
-        switch (attribute) {
-          case Web.Relation.StringAttribute str -> stringAttribute(str);
-        }
+      for (Web.Form.Field field : form.fields()) {
+        renderField(field);
       }
     }
 
-    private void stringAttribute(Web.Relation.StringAttribute attr) {
-      div(
-          label(forAttr(attr.name()), text(attr.description())),
+    private Html.Instruction.OfElement renderField(Web.Form.Field field) {
+      return switch (field) {
 
-          input(id(attr.name()), name(attr.name()), type("text"))
-      );
+        case Web.Form.TextInput input -> div(
+            label(
+                forAttr(input.id()),
+
+                text(input.label())
+            ),
+
+            input(
+                id(input.id()),
+
+                name(input.name()),
+
+                type(input.type())
+            )
+        );
+
+      };
     }
 
   }
 
   @Test(description = "owners: rendering")
   public void owners01() {
-    OwnersForm form;
-    form = new OwnersForm(owners);
+    Web.Form form = Web.Form.create(config -> {
+      config.spec(owners);
+      config.action("/owners");
+      //config.custom("header", "foo");
+    });
+
+    assertTrue(form.isValid());
+
+    OwnersFormView view;
+    view = new OwnersFormView(form);
 
     assertEquals(
-        form.toString(),
+        view.toString(),
 
         """
-        <form action="FIXME" method="post"><input type="hidden" name="_csfr" value="FIXME">
+        <form action="/owners" method="post"><input type="hidden" name="_csfr" value="FIXME">
         <fieldset>
-        <div><label for="first_name"></label><input id="first_name" name="first_name" type="text"></div>
-        <div><label for="last_name"></label><input id="last_name" name="last_name" type="text"></div>
-        <div><label for="address"></label><input id="address" name="address" type="text"></div>
-        <div><label for="city"></label><input id="city" name="city" type="text"></div>
-        <div><label for="telephone"></label><input id="telephone" name="telephone" type="text"></div>
+        <div><label for="first_name">First name</label><input id="first_name" name="first_name" type="text"></div>
+        <div><label for="last_name">Last name</label><input id="last_name" name="last_name" type="text"></div>
+        <div><label for="address">Address</label><input id="address" name="address" type="text"></div>
+        <div><label for="city">City</label><input id="city" name="city" type="text"></div>
+        <div><label for="telephone">Telephone</label><input id="telephone" name="telephone" type="text"></div>
         </fieldset>
         </form>
         """
@@ -130,13 +156,13 @@ public class WebRelationTest {
     });
 
     Web.Form form;
-    form = owners.parseForm(http);
+    form = parseForm(http);
 
-    switch (form) {
-      case Web.Form.Valid valid -> {}
+    assertTrue(form.isValid());
+  }
 
-      case Web.Form.Invalid invalid -> Assert.fail("Expected Web.Form.Valid");
-    }
+  private Web.Form parseForm(Http.Exchange http) {
+    throw new UnsupportedOperationException("Implement me");
   }
 
 }

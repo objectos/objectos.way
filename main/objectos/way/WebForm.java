@@ -15,32 +15,34 @@
  */
 package objectos.way;
 
-sealed abstract class WebRelationAttribute permits WebRelationStringAttribute {
+import java.util.List;
 
-  final String name;
+final class WebForm implements Web.Form {
 
-  final String description;
+  private final String action;
 
-  final boolean required;
+  private final List<? extends WebFormField> fields;
 
-  public WebRelationAttribute(WebRelationAttributeConfig config) {
-    name = config.name;
+  WebForm(WebFormConfig config) {
+    action = config.action;
 
-    description = config.description;
-
-    required = config.required;
+    fields = config.fields();
   }
 
-  public final String name() {
-    return name;
+  @Override
+  public final boolean isValid() {
+    return true;
   }
 
-  public final String description() {
-    return description;
+  @Override
+  public final String action() {
+    return action;
   }
 
-  public final boolean required() {
-    return required;
+  @SuppressWarnings("unchecked")
+  @Override
+  public final List<Web.Form.Field> fields() {
+    return (List<Web.Form.Field>) fields;
   }
 
 }

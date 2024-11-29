@@ -47,12 +47,8 @@ final class WebRelationConfig implements Web.Relation.Config {
     return new WebRelation(this);
   }
 
-  @SuppressWarnings("unchecked")
-  final List<Web.Relation.Attribute> attributes() {
-    UtilUnmodifiableList<?> list;
-    list = attributes.toUnmodifiableList();
-
-    return (List<Web.Relation.Attribute>) list;
+  final List<WebRelationAttribute> attributes() {
+    return attributes.toUnmodifiableList();
   }
 
 }

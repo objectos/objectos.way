@@ -35,4 +35,16 @@ final class WebRelationStringAttribute extends WebRelationAttribute implements W
     patternMessage = config.patternMessage;
   }
 
+  final String htmlId() {
+    return name;
+  }
+
+  final String htmlName() {
+    return name;
+  }
+
+  final String htmlLabel() {
+    return description;
+  }
+
 }

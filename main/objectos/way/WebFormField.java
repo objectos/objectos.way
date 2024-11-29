@@ -15,32 +15,6 @@
  */
 package objectos.way;
 
-sealed abstract class WebRelationAttribute permits WebRelationStringAttribute {
-
-  final String name;
-
-  final String description;
-
-  final boolean required;
-
-  public WebRelationAttribute(WebRelationAttributeConfig config) {
-    name = config.name;
-
-    description = config.description;
-
-    required = config.required;
-  }
-
-  public final String name() {
-    return name;
-  }
-
-  public final String description() {
-    return description;
-  }
-
-  public final boolean required() {
-    return required;
-  }
+abstract class WebFormField {
 
 }

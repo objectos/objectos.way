@@ -31,22 +31,47 @@ import java.util.function.Consumer;
  */
 public final class Web {
 
-  public sealed interface Form {
+  public sealed interface Form permits WebForm {
 
-    public sealed interface Invalid extends Form {}
+    public sealed interface Config permits WebFormConfig {
 
-    public sealed interface Valid extends Form {}
+      void spec(Relation value);
 
-    public interface Renderer {
-
-      void render(Html.Markup m, Relation relation);
+      void action(String value);
 
     }
 
-  }
+    public sealed interface Field {
 
-  enum Dummy implements Form.Invalid, Form.Valid {
-    INSTANCE;
+      String id();
+
+      String name();
+
+      String label();
+
+    }
+
+    public sealed interface TextInput extends Field permits WebFormTextInput {
+
+      String type();
+
+    }
+
+    static Form create(Consumer<Config> config) {
+      WebFormConfig builder;
+      builder = new WebFormConfig();
+
+      config.accept(builder);
+
+      return builder.build();
+    }
+
+    boolean isValid();
+
+    String action();
+
+    List<Field> fields();
+
   }
 
   /**
@@ -310,8 +335,6 @@ public final class Web {
     String name();
 
     List<Attribute> attributes();
-
-    Web.Form parseForm(Http.Exchange http);
 
   }
 
