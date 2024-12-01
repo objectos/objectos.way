@@ -42,7 +42,10 @@ final class WebForm implements Web.Form {
   @SuppressWarnings("unchecked")
   @Override
   public final List<Web.Form.Field> fields() {
-    return (List<Web.Form.Field>) fields;
+    List<?> list;
+    list = fields;
+
+    return (List<Web.Form.Field>) list;
   }
 
 }

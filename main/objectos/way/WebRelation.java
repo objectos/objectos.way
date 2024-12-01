@@ -37,7 +37,10 @@ final class WebRelation implements Web.Relation {
   @SuppressWarnings("unchecked")
   @Override
   public final List<Web.Relation.Attribute> attributes() {
-    return (List<Web.Relation.Attribute>) attributes;
+    List<?> list;
+    list = attributes;
+
+    return (List<Web.Relation.Attribute>) list;
   }
 
   final List<? extends WebFormField> toFields() {
