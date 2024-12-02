@@ -16,13 +16,15 @@
 package objectos.way;
 
 import java.util.List;
-import java.util.Objects;
+import java.util.function.Consumer;
 
-final class WebFormConfig implements Web.Form.Config {
+final class WebFormConfig implements Web.FormSpec.Config {
 
   String action = "/";
 
-  Web.Relation spec;
+  boolean useNameForId;
+
+  UtilList<WebFormField> fields = new UtilList<>();
 
   @Override
   public final void action(String value) {
@@ -37,21 +39,29 @@ final class WebFormConfig implements Web.Form.Config {
   }
 
   @Override
-  public final void spec(Web.Relation value) {
-    spec = Objects.requireNonNull(value, "value == null");
+  public final void useNameForId() {
+    useNameForId = true;
+  }
+
+  @Override
+  public final void textInput(Consumer<Web.Form.TextInput.Config> config) {
+    WebFormTextInputConfig builder;
+    builder = new WebFormTextInputConfig(this);
+
+    config.accept(builder);
+
+    WebFormTextInput textInput;
+    textInput = builder.build();
+
+    fields.add(textInput);
   }
 
   final WebForm build() {
-    Check.state(spec != null, "spec was not set");
-
     return new WebForm(this);
   }
 
   final List<? extends WebFormField> fields() {
-    WebRelation impl;
-    impl = (WebRelation) spec;
-
-    return impl.toFields();
+    return fields.toUnmodifiableList();
   }
 
 }

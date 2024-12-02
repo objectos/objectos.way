@@ -18,7 +18,7 @@ package objectos.way;
 import java.util.Objects;
 import java.util.regex.Pattern;
 
-final class WebRelationStringAttributeConfig extends WebRelationAttributeConfig implements Web.Relation.StringAttribute.Config {
+final class WebFormTextInputConfig extends WebFormFieldConfig implements Web.Form.TextInput.Config {
 
   int maxLength;
 
@@ -26,22 +26,24 @@ final class WebRelationStringAttributeConfig extends WebRelationAttributeConfig 
 
   String patternMessage;
 
-  @Override
+  public WebFormTextInputConfig(WebFormConfig config) {
+    super(config);
+  }
+
   public final void maxLength(int value) {
     Check.argument(value > 0, "Maximum length must be greater than zero");
 
     maxLength = value;
   }
 
-  @Override
   public final void pattern(String value, String message) {
     pattern = Pattern.compile(value);
 
     patternMessage = Objects.requireNonNull(message, "message == null");
   }
 
-  final WebRelationStringAttribute build() {
-    return new WebRelationStringAttribute(this);
+  final WebFormTextInput build() {
+    return new WebFormTextInput(this);
   }
 
 }

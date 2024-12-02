@@ -17,4 +17,30 @@ package objectos.way;
 
 abstract class WebFormField {
 
+  private final String label;
+
+  private final String id;
+
+  private final String name;
+
+  public WebFormField(WebFormFieldConfig config) {
+    label = config.label;
+
+    id = config.id();
+
+    name = config.name;
+  }
+
+  public final String label() {
+    return label;
+  }
+
+  public final String id() {
+    return id;
+  }
+
+  public final String name() {
+    return name;
+  }
+
 }

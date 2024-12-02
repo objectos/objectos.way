@@ -17,7 +17,7 @@ package objectos.way;
 
 import java.util.List;
 
-final class WebForm implements Web.Form {
+final class WebForm implements Web.Form, Web.FormSpec {
 
   private final String action;
 

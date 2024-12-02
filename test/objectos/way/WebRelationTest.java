@@ -23,42 +23,43 @@ import org.testng.annotations.Test;
 
 public class WebRelationTest {
 
-  private final Web.Relation owners = Web.Relation.create(config -> {
-    config.name("owners");
+  private final Web.FormSpec owners = Web.FormSpec.create(config -> {
+    config.action("/owners");
+    config.useNameForId();
 
-    config.stringAttribute(attr -> {
-      attr.name("first_name");
-      attr.description("First name");
-      attr.required();
-      attr.maxLength(30);
+    config.textInput(input -> {
+      input.label("First name");
+      input.name("first_name");
+      // input.required();
+      // input.maxLength(30);
     });
 
-    config.stringAttribute(attr -> {
-      attr.name("last_name");
-      attr.description("Last name");
-      attr.required();
-      attr.maxLength(30);
+    config.textInput(input -> {
+      input.label("Last name");
+      input.name("last_name");
+      // input.required();
+      // input.maxLength(30);
     });
 
-    config.stringAttribute(attr -> {
-      attr.name("address");
-      attr.description("Address");
-      attr.required();
-      attr.maxLength(255);
+    config.textInput(input -> {
+      input.label("Address");
+      input.name("address");
+      // input.required();
+      // input.maxLength(255);
     });
 
-    config.stringAttribute(attr -> {
-      attr.name("city");
-      attr.description("City");
-      attr.required();
-      attr.maxLength(80);
+    config.textInput(input -> {
+      input.label("City");
+      input.name("city");
+      // input.required();
+      // input.maxLength(80);
     });
 
-    config.stringAttribute(attr -> {
-      attr.name("telephone");
-      attr.description("Telephone");
-      attr.required();
-      attr.pattern("\\d{10}", "Telephone must be a 10-digit number");
+    config.textInput(input -> {
+      input.label("Telephone");
+      input.name("telephone");
+      // input.required();
+      // input.pattern("\\d{10}", "Telephone must be a 10-digit number");
     });
   });
 
@@ -116,11 +117,7 @@ public class WebRelationTest {
 
   @Test(description = "owners: rendering")
   public void owners01() {
-    Web.Form form = Web.Form.create(config -> {
-      config.spec(owners);
-      config.action("/owners");
-      //config.custom("header", "foo");
-    });
+    Web.Form form = Web.Form.of(owners);
 
     assertTrue(form.isValid());
 

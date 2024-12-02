@@ -33,37 +33,38 @@ public final class Web {
 
   public sealed interface Form permits WebForm {
 
-    public sealed interface Config permits WebFormConfig {
+    sealed interface Field {
 
-      void spec(Relation value);
+      sealed interface Config {
 
-      void action(String value);
+        void label(String value);
 
-    }
+        void id(String value);
 
-    public sealed interface Field {
+        void name(String value);
+
+      }
+
+      String label();
 
       String id();
 
       String name();
 
-      String label();
-
     }
 
-    public sealed interface TextInput extends Field permits WebFormTextInput {
+    sealed interface TextInput extends Field permits WebFormTextInput {
+
+      sealed interface Config extends Field.Config permits WebFormTextInputConfig {
+
+      }
 
       String type();
 
     }
 
-    static Form create(Consumer<Config> config) {
-      WebFormConfig builder;
-      builder = new WebFormConfig();
-
-      config.accept(builder);
-
-      return builder.build();
+    static Form of(FormSpec spec) {
+      return (Form) spec;
     }
 
     boolean isValid();
@@ -71,6 +72,29 @@ public final class Web {
     String action();
 
     List<Field> fields();
+
+  }
+
+  public sealed interface FormSpec permits WebForm {
+
+    sealed interface Config permits WebFormConfig {
+
+      void action(String value);
+
+      void useNameForId();
+
+      void textInput(Consumer<Web.Form.TextInput.Config> config);
+
+    }
+
+    static FormSpec create(Consumer<Config> config) {
+      WebFormConfig builder;
+      builder = new WebFormConfig();
+
+      config.accept(builder);
+
+      return builder.build();
+    }
 
   }
 
@@ -278,63 +302,6 @@ public final class Web {
     String nextHref();
 
     String previousHref();
-
-  }
-
-  public sealed interface Relation permits WebRelation {
-
-    public sealed interface Config permits WebRelationConfig {
-
-      void name(String value);
-
-      void stringAttribute(Consumer<StringAttribute.Config> config);
-
-    }
-
-    public sealed interface Attribute {
-
-      public sealed interface Config {
-
-        void name(String value);
-
-        void description(String value);
-
-        void required();
-
-      }
-
-      String name();
-
-      String description();
-
-      boolean required();
-
-    }
-
-    public sealed interface StringAttribute extends Attribute permits WebRelationStringAttribute {
-
-      public sealed interface Config extends Attribute.Config permits WebRelationStringAttributeConfig {
-
-        void maxLength(int value);
-
-        void pattern(String value, String message);
-
-      }
-
-    }
-
-    static Relation create(Consumer<Config> config) {
-      WebRelationConfig builder;
-      builder = new WebRelationConfig();
-
-      config.accept(builder);
-
-      return builder.build();
-    }
-
-    String name();
-
-    List<Attribute> attributes();
 
   }
 

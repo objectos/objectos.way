@@ -17,33 +17,8 @@ package objectos.way;
 
 final class WebFormTextInput extends WebFormField implements Web.Form.TextInput {
 
-  private final String id;
-
-  private final String name;
-
-  private final String label;
-
-  WebFormTextInput(WebRelationStringAttribute attribute) {
-    id = attribute.htmlId();
-
-    name = attribute.htmlName();
-
-    label = attribute.htmlLabel();
-  }
-
-  @Override
-  public final String id() {
-    return id;
-  }
-
-  @Override
-  public final String name() {
-    return name;
-  }
-
-  @Override
-  public final String label() {
-    return label;
+  WebFormTextInput(WebFormTextInputConfig config) {
+    super(config);
   }
 
   @Override
