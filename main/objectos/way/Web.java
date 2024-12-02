@@ -61,6 +61,8 @@ public final class Web {
 
       String type();
 
+      String value();
+
     }
 
     static Form of(FormSpec spec) {
@@ -95,6 +97,8 @@ public final class Web {
 
       return builder.build();
     }
+
+    Form parse(Http.Exchange http);
 
   }
 

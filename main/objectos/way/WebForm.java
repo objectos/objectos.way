@@ -21,12 +21,18 @@ final class WebForm implements Web.Form, Web.FormSpec {
 
   private final String action;
 
-  private final List<? extends WebFormField> fields;
+  private final List<WebFormField> fields;
 
   WebForm(WebFormConfig config) {
     action = config.action;
 
     fields = config.fields();
+  }
+
+  private WebForm(String action, List<WebFormField> fields) {
+    this.action = action;
+
+    this.fields = fields;
   }
 
   @Override
@@ -46,6 +52,31 @@ final class WebForm implements Web.Form, Web.FormSpec {
     list = fields;
 
     return (List<Web.Form.Field>) list;
+  }
+
+  @Override
+  public final Web.Form parse(Http.Exchange http) {
+    Web.FormData data;
+    data = Web.FormData.parse(http);
+
+    int size;
+    size = fields.size();
+
+    WebFormField[] parsedFields;
+    parsedFields = new WebFormField[size];
+
+    for (int idx = 0; idx < size; idx++) {
+      WebFormField field;
+      field = fields.get(idx);
+
+      parsedFields[idx] = field.parse(data);
+    }
+
+    return new WebForm(
+        action,
+
+        new UtilUnmodifiableList<>(parsedFields)
+    );
   }
 
 }

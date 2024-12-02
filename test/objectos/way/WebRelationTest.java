@@ -106,7 +106,9 @@ public class WebRelationTest {
 
                 name(input.name()),
 
-                type(input.type())
+                type(input.type()),
+
+                value(input.value())
             )
         );
 
@@ -117,7 +119,8 @@ public class WebRelationTest {
 
   @Test(description = "owners: rendering")
   public void owners01() {
-    Web.Form form = Web.Form.of(owners);
+    Web.Form form;
+    form = Web.Form.of(owners);
 
     assertTrue(form.isValid());
 
@@ -130,18 +133,18 @@ public class WebRelationTest {
         """
         <form action="/owners" method="post"><input type="hidden" name="_csfr" value="FIXME">
         <fieldset>
-        <div><label for="first_name">First name</label><input id="first_name" name="first_name" type="text"></div>
-        <div><label for="last_name">Last name</label><input id="last_name" name="last_name" type="text"></div>
-        <div><label for="address">Address</label><input id="address" name="address" type="text"></div>
-        <div><label for="city">City</label><input id="city" name="city" type="text"></div>
-        <div><label for="telephone">Telephone</label><input id="telephone" name="telephone" type="text"></div>
+        <div><label for="first_name">First name</label><input id="first_name" name="first_name" type="text" value=""></div>
+        <div><label for="last_name">Last name</label><input id="last_name" name="last_name" type="text" value=""></div>
+        <div><label for="address">Address</label><input id="address" name="address" type="text" value=""></div>
+        <div><label for="city">City</label><input id="city" name="city" type="text" value=""></div>
+        <div><label for="telephone">Telephone</label><input id="telephone" name="telephone" type="text" value=""></div>
         </fieldset>
         </form>
         """
     );
   }
 
-  @Test(enabled = false, description = "owners: happy path")
+  @Test(description = "owners: happy path")
   public void owners02() {
     Http.TestingExchange http;
     http = Http.TestingExchange.create(config -> {
@@ -153,13 +156,26 @@ public class WebRelationTest {
     });
 
     Web.Form form;
-    form = parseForm(http);
+    form = owners.parse(http);
 
-    assertTrue(form.isValid());
-  }
+    OwnersFormView view;
+    view = new OwnersFormView(form);
 
-  private Web.Form parseForm(Http.Exchange http) {
-    throw new UnsupportedOperationException("Implement me");
+    assertEquals(
+        view.toString(),
+
+        """
+        <form action="/owners" method="post"><input type="hidden" name="_csfr" value="FIXME">
+        <fieldset>
+        <div><label for="first_name">First name</label><input id="first_name" name="first_name" type="text" value="First"></div>
+        <div><label for="last_name">Last name</label><input id="last_name" name="last_name" type="text" value="Last"></div>
+        <div><label for="address">Address</label><input id="address" name="address" type="text" value="Some Address"></div>
+        <div><label for="city">City</label><input id="city" name="city" type="text" value="My City"></div>
+        <div><label for="telephone">Telephone</label><input id="telephone" name="telephone" type="text" value="1122334455"></div>
+        </fieldset>
+        </form>
+        """
+    );
   }
 
 }

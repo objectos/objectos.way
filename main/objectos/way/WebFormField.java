@@ -15,6 +15,8 @@
  */
 package objectos.way;
 
+import objectos.way.Web.FormData;
+
 abstract class WebFormField {
 
   private final String label;
@@ -23,12 +25,20 @@ abstract class WebFormField {
 
   private final String name;
 
-  public WebFormField(WebFormFieldConfig config) {
+  WebFormField(WebFormFieldConfig config) {
     label = config.label;
 
     id = config.id();
 
     name = config.name;
+  }
+
+  WebFormField(WebFormField source) {
+    label = source.label;
+
+    id = source.id;
+
+    name = source.name;
   }
 
   public final String label() {
@@ -42,5 +52,7 @@ abstract class WebFormField {
   public final String name() {
     return name;
   }
+
+  abstract WebFormField parse(FormData data);
 
 }

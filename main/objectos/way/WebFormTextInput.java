@@ -15,15 +15,43 @@
  */
 package objectos.way;
 
+import objectos.way.Web.FormData;
+
 final class WebFormTextInput extends WebFormField implements Web.Form.TextInput {
+
+  private final String value;
 
   WebFormTextInput(WebFormTextInputConfig config) {
     super(config);
+
+    value = "";
+  }
+
+  private WebFormTextInput(WebFormTextInput source, String value) {
+    super(source);
+
+    this.value = value;
   }
 
   @Override
   public final String type() {
     return "text";
+  }
+
+  @Override
+  public final String value() {
+    return value;
+  }
+
+  @Override
+  final WebFormField parse(FormData data) {
+    String name;
+    name = name();
+
+    String value;
+    value = data.getOrDefault(name, "");
+
+    return new WebFormTextInput(this, value);
   }
 
 }

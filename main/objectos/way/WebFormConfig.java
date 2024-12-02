@@ -60,7 +60,7 @@ final class WebFormConfig implements Web.FormSpec.Config {
     return new WebForm(this);
   }
 
-  final List<? extends WebFormField> fields() {
+  final List<WebFormField> fields() {
     return fields.toUnmodifiableList();
   }
 
