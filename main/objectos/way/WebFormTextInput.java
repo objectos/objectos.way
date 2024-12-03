@@ -20,16 +20,28 @@ import objectos.way.Web.FormData;
 
 final class WebFormTextInput extends WebFormField implements Web.Form.TextInput {
 
+  private final int maxLength;
+
+  private final MaxLengthFormatter maxLengthFormatter;
+
   private final String value;
 
   WebFormTextInput(WebFormTextInputConfig config) {
     super(config);
+
+    maxLength = config.maxLength;
+
+    maxLengthFormatter = config.maxLengthFormatter;
 
     value = "";
   }
 
   private WebFormTextInput(WebFormTextInput source, List<WebFormError> errors, String value) {
     super(source, errors);
+
+    maxLength = source.maxLength;
+
+    maxLengthFormatter = source.maxLengthFormatter;
 
     this.value = value;
   }
@@ -59,6 +71,22 @@ final class WebFormTextInput extends WebFormField implements Web.Form.TextInput 
       }
 
       value = "";
+
+    }
+
+    else {
+
+      int actualLength;
+      actualLength = value.length();
+
+      if (actualLength > maxLength) {
+
+        String msg;
+        msg = maxLengthFormatter.format(maxLength, actualLength);
+
+        errors = WebFormError.addWithMessage(errors, msg);
+
+      }
 
     }
 

@@ -49,7 +49,7 @@ public final class Web {
 
         void name(String value);
 
-        void requiredWithMessage(String message);
+        void required();
 
       }
 
@@ -70,6 +70,15 @@ public final class Web {
     sealed interface TextInput extends Field permits WebFormTextInput {
 
       sealed interface Config extends Field.Config permits WebFormTextInputConfig {
+
+        void maxLength(int value);
+
+      }
+
+      @FunctionalInterface
+      interface MaxLengthFormatter {
+
+        String format(int maxLength, int actualLength);
 
       }
 

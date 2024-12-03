@@ -20,7 +20,9 @@ import java.util.regex.Pattern;
 
 final class WebFormTextInputConfig extends WebFormFieldConfig implements Web.Form.TextInput.Config {
 
-  int maxLength;
+  int maxLength = Integer.MAX_VALUE;
+
+  Web.Form.TextInput.MaxLengthFormatter maxLengthFormatter;
 
   Pattern pattern;
 
@@ -28,10 +30,15 @@ final class WebFormTextInputConfig extends WebFormFieldConfig implements Web.For
 
   WebFormTextInputConfig() {}
 
+  @Override
   public final void maxLength(int value) {
     Check.argument(value > 0, "Maximum length must be greater than zero");
 
     maxLength = value;
+
+    if (maxLengthFormatter == null) {
+      maxLengthFormatter = (max, actual) -> "Maximum of " + max + " characters allowed; you entered " + actual;
+    }
   }
 
   public final void pattern(String value, String message) {

@@ -21,127 +21,132 @@ import org.testng.annotations.Test;
 
 public class WebFormSpecTest {
 
-  private final Web.FormSpec owners = Web.FormSpec.create(config -> {
-    config.action("/owners");
+  @Test(description = "textInput: first render")
+  public void textInput01() {
+    Web.FormSpec spec;
+    spec = Web.FormSpec.create(config -> {
+      config.action("/test");
 
-    config.textInput(input -> {
-      input.label("First name");
-      input.id("first_name");
-      input.name("first_name");
-      input.requiredWithMessage("Please enter a first name");
-      // input.maxLength(30);
+      config.textInput(input -> {
+        input.label("First name");
+        input.id("some_id");
+        input.name("first_name");
+      });
     });
 
-    config.textInput(input -> {
-      input.label("Last name");
-      input.id("last_name");
-      input.name("last_name");
-      input.requiredWithMessage("Please enter a last name");
-      // input.maxLength(30);
-    });
-
-    config.textInput(input -> {
-      input.label("Address");
-      input.id("address");
-      input.name("address");
-      input.requiredWithMessage("Please enter an address");
-      // input.maxLength(255);
-    });
-
-    config.textInput(input -> {
-      input.label("City");
-      input.id("city");
-      input.name("city");
-      input.requiredWithMessage("Please enter a city");
-      // input.maxLength(80);
-    });
-
-    config.textInput(input -> {
-      input.label("Telephone");
-      input.id("telephone");
-      input.name("telephone");
-      input.requiredWithMessage("Please enter a telephone");
-      // input.pattern("\\d{10}", "Telephone must be a 10-digit number");
-    });
-  });
-
-  @Test(description = "owners: rendering")
-  public void owners01() {
     Web.Form form;
-    form = Web.Form.of(owners);
+    form = Web.Form.of(spec);
 
     testWebForm(form, """
     # Form
 
-    /owners    | true
+    /test      | true
 
     # Fields
 
-    TextInput  | First name |                 | first_name | first_name | text
-    TextInput  | Last name  |                 | last_name  | last_name  | text
-    TextInput  | Address    |                 | address    | address    | text
-    TextInput  | City       |                 | city       | city       | text
-    TextInput  | Telephone  |                 | telephone  | telephone  | text
+    TextInput  | First name |                 | some_id    | first_name | text
     """);
   }
 
-  @Test(description = "owners: happy path")
-  public void owners02() {
+  @Test(description = "textInput: successful parse")
+  public void textInput02() {
+    Web.FormSpec spec;
+    spec = Web.FormSpec.create(config -> {
+      config.action("/test");
+
+      config.textInput(input -> {
+        input.label("First name");
+        input.id("some_id");
+        input.name("first_name");
+        input.required();
+        input.maxLength(30);
+      });
+    });
+
     Http.TestingExchange http;
     http = Http.TestingExchange.create(config -> {
       config.formParam("first_name", "First");
+    });
+
+    Web.Form form;
+    form = spec.parse(http);
+
+    testWebForm(form, """
+    # Form
+
+    /test      | true
+
+    # Fields
+
+    TextInput  | First name | First           | some_id    | first_name | text
+    """);
+  }
+
+  @Test(description = "textInput: fail required")
+  public void textInput03() {
+    Web.FormSpec spec;
+    spec = Web.FormSpec.create(config -> {
+      config.action("/test");
+
+      config.textInput(input -> {
+        input.label("First name");
+        input.id("some_id");
+        input.name("first_name");
+        input.required();
+      });
+    });
+
+    Http.TestingExchange http;
+    http = Http.TestingExchange.create(config -> {
       config.formParam("last_name", "Last");
-      config.formParam("address", "Some Address");
-      config.formParam("city", "My City");
-      config.formParam("telephone", "1122334455");
     });
 
     Web.Form form;
-    form = owners.parse(http);
+    form = spec.parse(http);
 
     testWebForm(form, """
     # Form
 
-    /owners    | true
+    /test      | false
 
     # Fields
 
-    TextInput  | First name | First           | first_name | first_name | text
-    TextInput  | Last name  | Last            | last_name  | last_name  | text
-    TextInput  | Address    | Some Address    | address    | address    | text
-    TextInput  | City       | My City         | city       | city       | text
-    TextInput  | Telephone  | 1122334455      | telephone  | telephone  | text
+    TextInput  | First name |                 | some_id    | first_name | text
+    Error      | Please enter a value
     """);
   }
 
-  @Test(description = "owners: required fail")
-  public void owners03() {
+  @Test(description = "textInput: fail maxLength")
+  public void textInput04() {
+    Web.FormSpec spec;
+    spec = Web.FormSpec.create(config -> {
+      config.action("/test");
+
+      config.textInput(input -> {
+        input.label("First name");
+        input.id("some_id");
+        input.name("first_name");
+        input.maxLength(3);
+      });
+    });
+
     Http.TestingExchange http;
     http = Http.TestingExchange.create(config -> {
       config.formParam("first_name", "First");
-      config.formParam("last_name", ""); // empty
-      config.formParam("address", "Some Address");
-      // city missing
-      config.formParam("telephone", "1122334455");
     });
 
     Web.Form form;
-    form = owners.parse(http);
+    form = spec.parse(http);
 
     testWebForm(form, """
     # Form
 
-    /owners    | false
+    /test      | false
 
     # Fields
 
-    TextInput  | First name | First           | first_name | first_name | text
-    TextInput  | Last name  |                 | last_name  | last_name  | text
-    Error      | Please enter a last name
-    TextInput  | Address    | Some Address    | address    | address    | text
-    TextInput  | City       |                 | city       | city       | text
-    Error      | Please enter a city
-    TextInput  | Telephone  | 1122334455      | telephone  | telephone  | text
+    TextInput  | First name | First           | some_id    | first_name | text
+    Error      | Maximum of 3 characters allowed; you entered 5
     """);
   }
 
@@ -176,7 +181,7 @@ public class WebFormSpecTest {
       for (Web.Form.Error error : field.errors()) {
         w.row(
             "Error", 10,
-            error.message(), 40
+            error.message(), 50
         );
       }
 

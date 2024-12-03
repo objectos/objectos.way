@@ -15,7 +15,6 @@
  */
 package objectos.way;
 
-import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
 
 abstract class WebFormFieldConfig {
@@ -51,8 +50,10 @@ abstract class WebFormFieldConfig {
     name = value;
   }
 
-  public final void requiredWithMessage(String message) {
-    requiredMessage = Objects.requireNonNull(message, "message == null");
+  public final void required() {
+    if (requiredMessage == null) {
+      requiredMessage = "Please enter a value";
+    }
   }
 
   final String id() {
