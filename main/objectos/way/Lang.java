@@ -98,6 +98,75 @@ public final class Lang {
 
   }
 
+  /**
+   * Represents a contract for components that can be tested.
+   */
+  public interface Testable {
+
+    /**
+     * Provides an interface for generating tabular representations of data.
+     * Implementations are responsible for formatting rows and columns with
+     * proper alignment and spacing.
+     */
+    public sealed interface Writer permits LangTestableWriter {
+
+      /**
+       * Creates a new instance of {@code Writer} with a default column
+       * separator.
+       *
+       * @return a new instance of {@code Writer}.
+       */
+      static Writer create() {
+        return new LangTestableWriter("|");
+      }
+
+      void heading(String value);
+
+      /**
+       * Clears the current content of the writer, resetting it to an empty
+       * state.
+       */
+      void clear();
+
+      /**
+       * Adds a single cell value to the current row.
+       * The cell content will be right-padded with spaces to match the
+       * specified length.
+       *
+       * @param value the string value of the cell; may be {@code null}.
+       * @param length the fixed width of the cell.
+       *
+       * @throws IllegalArgumentException if {@code length} is negative or if
+       *         {@code value.length()} exceeds {@code length}.
+       */
+      void cell(String value, int length);
+
+      /**
+       * Moves the writer to the next row. Any subsequent column operations will
+       * append to a new line.
+       */
+      void nextRow();
+
+      /**
+       * Adds multiple columns to a single row. Columns are specified as
+       * alternating
+       * value and length pairs.
+       *
+       * @param values an array where even indices represent column values
+       *        (strings)
+       *        and odd indices represent their respective lengths (integers).
+       *
+       * @throws IllegalArgumentException if the values array is not structured
+       *         as
+       *         alternating string and integer pairs or contains unsupported
+       *         types.
+       */
+      void row(Object... values);
+
+    }
+
+  }
+
   // non-public types
 
   sealed interface ClassReader permits LangClassReader {
