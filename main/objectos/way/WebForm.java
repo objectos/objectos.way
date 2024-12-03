@@ -19,17 +19,23 @@ import java.util.List;
 
 final class WebForm implements Web.Form, Web.FormSpec {
 
+  private final boolean valid;
+
   private final String action;
 
   private final List<WebFormField> fields;
 
   WebForm(WebFormConfig config) {
+    valid = true;
+
     action = config.action;
 
     fields = config.fields();
   }
 
-  private WebForm(String action, List<WebFormField> fields) {
+  private WebForm(boolean valid, String action, List<WebFormField> fields) {
+    this.valid = valid;
+
     this.action = action;
 
     this.fields = fields;
@@ -37,7 +43,7 @@ final class WebForm implements Web.Form, Web.FormSpec {
 
   @Override
   public final boolean isValid() {
-    return true;
+    return valid;
   }
 
   @Override
@@ -45,17 +51,16 @@ final class WebForm implements Web.Form, Web.FormSpec {
     return action;
   }
 
-  @SuppressWarnings("unchecked")
   @Override
-  public final List<Web.Form.Field> fields() {
-    List<?> list;
-    list = fields;
-
-    return (List<Web.Form.Field>) list;
+  public final List<? extends Web.Form.Field> fields() {
+    return fields;
   }
 
   @Override
   public final Web.Form parse(Http.Exchange http) {
+    boolean valid;
+    valid = true;
+
     Web.FormData data;
     data = Web.FormData.parse(http);
 
@@ -69,10 +74,17 @@ final class WebForm implements Web.Form, Web.FormSpec {
       WebFormField field;
       field = fields.get(idx);
 
-      parsedFields[idx] = field.parse(data);
+      WebFormField parsed;
+      parsed = field.parse(data);
+
+      valid = valid && parsed.isValid();
+
+      parsedFields[idx] = parsed;
     }
 
     return new WebForm(
+        valid,
+
         action,
 
         new UtilUnmodifiableList<>(parsedFields)

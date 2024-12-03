@@ -22,8 +22,6 @@ final class WebFormConfig implements Web.FormSpec.Config {
 
   String action = "/";
 
-  boolean useNameForId;
-
   UtilList<WebFormField> fields = new UtilList<>();
 
   @Override
@@ -39,14 +37,9 @@ final class WebFormConfig implements Web.FormSpec.Config {
   }
 
   @Override
-  public final void useNameForId() {
-    useNameForId = true;
-  }
-
-  @Override
   public final void textInput(Consumer<Web.Form.TextInput.Config> config) {
     WebFormTextInputConfig builder;
-    builder = new WebFormTextInputConfig(this);
+    builder = new WebFormTextInputConfig();
 
     config.accept(builder);
 

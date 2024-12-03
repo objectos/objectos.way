@@ -15,6 +15,7 @@
  */
 package objectos.way;
 
+import java.util.List;
 import objectos.way.Web.FormData;
 
 final class WebFormTextInput extends WebFormField implements Web.Form.TextInput {
@@ -27,8 +28,8 @@ final class WebFormTextInput extends WebFormField implements Web.Form.TextInput 
     value = "";
   }
 
-  private WebFormTextInput(WebFormTextInput source, String value) {
-    super(source);
+  private WebFormTextInput(WebFormTextInput source, List<WebFormError> errors, String value) {
+    super(source, errors);
 
     this.value = value;
   }
@@ -45,13 +46,23 @@ final class WebFormTextInput extends WebFormField implements Web.Form.TextInput 
 
   @Override
   final WebFormField parse(FormData data) {
-    String name;
-    name = name();
+    List<WebFormError> errors;
+    errors = null;
 
     String value;
-    value = data.getOrDefault(name, "");
+    value = data.get(name);
 
-    return new WebFormTextInput(this, value);
+    if (value == null || value.isBlank()) {
+
+      if (requiredMessage != null) {
+        errors = WebFormError.addWithMessage(errors, requiredMessage);
+      }
+
+      value = "";
+
+    }
+
+    return new WebFormTextInput(this, errors, value);
   }
 
 }

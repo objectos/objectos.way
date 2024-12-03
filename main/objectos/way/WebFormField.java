@@ -15,15 +15,20 @@
  */
 package objectos.way;
 
+import java.util.List;
 import objectos.way.Web.FormData;
 
-abstract class WebFormField {
+sealed abstract class WebFormField implements Web.Form.Field permits WebFormTextInput {
 
-  private final String label;
+  final String label;
 
-  private final String id;
+  final String id;
 
-  private final String name;
+  final String name;
+
+  final String requiredMessage;
+
+  private final List<WebFormError> errors;
 
   WebFormField(WebFormFieldConfig config) {
     label = config.label;
@@ -31,26 +36,52 @@ abstract class WebFormField {
     id = config.id();
 
     name = config.name;
+
+    requiredMessage = config.requiredMessage;
+
+    errors = List.of();
   }
 
-  WebFormField(WebFormField source) {
+  WebFormField(WebFormField source, List<WebFormError> errors) {
     label = source.label;
 
     id = source.id;
 
     name = source.name;
+
+    requiredMessage = source.requiredMessage;
+
+    this.errors = errors != null ? errors : List.of();
   }
 
+  @Override
+  public final boolean isValid() {
+    return errors.isEmpty();
+  }
+
+  @Override
   public final String label() {
     return label;
   }
 
+  @Override
   public final String id() {
     return id;
   }
 
+  @Override
   public final String name() {
     return name;
+  }
+
+  @Override
+  public final boolean required() {
+    return requiredMessage != null;
+  }
+
+  @Override
+  public final List<? extends Web.Form.Error> errors() {
+    return errors;
   }
 
   abstract WebFormField parse(FormData data);

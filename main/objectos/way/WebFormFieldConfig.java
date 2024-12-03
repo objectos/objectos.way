@@ -15,13 +15,12 @@
  */
 package objectos.way;
 
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
 
 abstract class WebFormFieldConfig {
 
   private static final AtomicInteger ID = new AtomicInteger(1);
-
-  private final WebFormConfig config;
 
   String label = "";
 
@@ -29,10 +28,9 @@ abstract class WebFormFieldConfig {
 
   String name = "unnamed";
 
-  boolean required;
+  String requiredMessage;
 
-  WebFormFieldConfig(WebFormConfig config) {
-    this.config = config;
+  WebFormFieldConfig() {
   }
 
   public final void label(String value) {
@@ -53,17 +51,13 @@ abstract class WebFormFieldConfig {
     name = value;
   }
 
-  public final void required() {
-    required = true;
+  public final void requiredWithMessage(String message) {
+    requiredMessage = Objects.requireNonNull(message, "message == null");
   }
 
   final String id() {
     if (id != null) {
       return id;
-    }
-
-    if (config.useNameForId) {
-      return name;
     }
 
     return "way-form-field-" + ID.getAndIncrement();

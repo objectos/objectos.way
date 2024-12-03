@@ -26,9 +26,7 @@ final class WebFormTextInputConfig extends WebFormFieldConfig implements Web.For
 
   String patternMessage;
 
-  public WebFormTextInputConfig(WebFormConfig config) {
-    super(config);
-  }
+  WebFormTextInputConfig() {}
 
   public final void maxLength(int value) {
     Check.argument(value > 0, "Maximum length must be greater than zero");

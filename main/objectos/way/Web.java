@@ -33,7 +33,13 @@ public final class Web {
 
   public sealed interface Form permits WebForm {
 
-    sealed interface Field {
+    sealed interface Error permits WebFormError {
+
+      String message();
+
+    }
+
+    sealed interface Field permits WebFormField, TextInput {
 
       sealed interface Config {
 
@@ -43,13 +49,21 @@ public final class Web {
 
         void name(String value);
 
+        void requiredWithMessage(String message);
+
       }
+
+      boolean isValid();
 
       String label();
 
       String id();
 
       String name();
+
+      boolean required();
+
+      List<? extends Error> errors();
 
     }
 
@@ -73,7 +87,7 @@ public final class Web {
 
     String action();
 
-    List<Field> fields();
+    List<? extends Field> fields();
 
   }
 
@@ -82,8 +96,6 @@ public final class Web {
     sealed interface Config permits WebFormConfig {
 
       void action(String value);
-
-      void useNameForId();
 
       void textInput(Consumer<Web.Form.TextInput.Config> config);
 
