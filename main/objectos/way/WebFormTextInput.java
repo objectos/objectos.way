@@ -57,6 +57,11 @@ final class WebFormTextInput extends WebFormField implements Web.Form.TextInput 
   }
 
   @Override
+  public final void setValue(Sql.Transaction trx) {
+    trx.add(value);
+  }
+
+  @Override
   final WebFormField parse(FormData data) {
     List<WebFormError> errors;
     errors = null;

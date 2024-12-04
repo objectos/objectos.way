@@ -80,6 +80,12 @@ public class WebFormSpecTest {
 
     TextInput  | First name | First           | some_id    | first_name | text
     """);
+
+    testSql(form, """
+    setString(1, First)
+    executeUpdate()
+    close()
+    """);
   }
 
   @Test(description = "textInput: fail required")
@@ -188,6 +194,31 @@ public class WebFormSpecTest {
     }
 
     assertEquals(w.toString(), expected);
+  }
+
+  private void testSql(Web.Form form, String expected) {
+    TestingConnection conn;
+    conn = new TestingConnection();
+
+    TestingPreparedStatement stmt;
+    stmt = new TestingPreparedStatement();
+
+    stmt.updates(1);
+
+    conn.preparedStatements(stmt);
+
+    SqlTransaction trx;
+    trx = new SqlTransaction(SqlDialect.TESTING, conn);
+
+    trx.sql("insert into dummy values (?)");
+
+    for (Web.Form.Field field : form.fields()) {
+      field.setValue(trx);
+    }
+
+    trx.update();
+
+    assertEquals(stmt.toString(), expected);
   }
 
 }

@@ -65,6 +65,8 @@ public final class Web {
 
       List<? extends Error> errors();
 
+      void setValue(Sql.Transaction trx);
+
     }
 
     sealed interface TextInput extends Field permits WebFormTextInput {
