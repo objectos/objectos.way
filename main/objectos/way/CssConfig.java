@@ -352,20 +352,16 @@ final class CssConfig {
     var inset = values(
         Css.Key.INSET,
 
-        () -> Css.merge(
-            """
-            auto: auto
-            1/2: 50%
-            1/3: 33.333333%
-            2/3: 66.666667%
-            1/4: 25%
-            2/4: 50%
-            3/4: 75%
-            full: 100%
-            """,
-
-            spacing
-        )
+        """
+        auto: auto
+        1/2: 50%
+        1/3: 33.333333%
+        2/3: 66.666667%
+        1/4: 25%
+        2/4: 50%
+        3/4: 75%
+        full: 100%
+        """
     );
 
     // A
@@ -570,9 +566,9 @@ final class CssConfig {
 
     // I
 
-    funcUtility(Css.Key.INSET, inset, NEGATIVE, "inset", "inset");
-    funcUtility(Css.Key.INSET_X, inset, NEGATIVE, "inset-x", propertyType.left(), propertyType.right());
-    funcUtility(Css.Key.INSET_Y, inset, NEGATIVE, "inset-y", propertyType.top(), propertyType.bottom());
+    funcUtility(Css.Key.INSET, inset, NEGATIVE, L_OR_P, "inset", "inset");
+    funcUtility(Css.Key.INSET_X, inset, NEGATIVE, L_OR_P, "inset-x", propertyType.left(), propertyType.right());
+    funcUtility(Css.Key.INSET_Y, inset, NEGATIVE, L_OR_P, "inset-y", propertyType.top(), propertyType.bottom());
 
     // J
 
@@ -862,150 +858,7 @@ final class CssConfig {
 
     // T
 
-    staticUtility(
-        Css.Key.TABLE_LAYOUT,
-
-        """
-        table-auto  | table-layout: auto
-        table-fixed | table-layout: fixed
-        """
-    );
-
-    staticUtility(
-        Css.Key.TEXT_ALIGN,
-
-        """
-        text-left    | text-align: left
-        text-center  | text-align: center
-        text-right   | text-align: right
-        text-justify | text-align: justify
-        text-start   | text-align: start
-        text-end     | text-align: end
-        """
-    );
-
-    colorUtility(
-        Css.Key.TEXT_COLOR,
-
-        values(
-            Css.Key.TEXT_COLOR,
-
-            colors
-        ),
-
-        "text", "color"
-    );
-
-    staticUtility(
-        Css.Key.TEXT_DECORATION,
-
-        """
-        underline    | text-decoration-line: underline
-        overline     | text-decoration-line: overline
-        line-through | text-decoration-line: line-through
-        no-underline | text-decoration-line: none
-        """
-    );
-
-    staticUtility(
-        Css.Key.TEXT_OVERFLOW,
-
-        """
-        truncate      | overflow: hidden
-                      | text-overflow: ellipsis
-                      | white-space: nowrap
-        text-ellipsis | text-overflow: ellipsis
-        text-clip     | text-overflow: clip
-        """
-    );
-
-    staticUtility(
-        Css.Key.TEXT_WRAP,
-
-        """
-        text-wrap    | text-wrap: wrap
-        text-nowrap  | text-wrap: nowrap
-        text-balance | text-wrap: balance
-        text-pretty  | text-wrap: pretty
-        """
-    );
-
-    funcUtility(Css.Key.TOP, inset, NEGATIVE, "top", propertyType.top());
-
-    staticUtility(
-        Css.Key.TRANSFORM,
-
-        """
-        transform-none | transform: none
-        """
-    );
-
-    funcUtility(
-        Css.Key.TRANSITION_DURATION,
-
-        values(
-            Css.Key.TRANSITION_DURATION,
-
-            """
-            0: 0s
-            75: 75ms
-            100: 100ms
-            150: 150ms
-            200: 200ms
-            300: 300ms
-            500: 500ms
-            700: 700ms
-            1000: 1000ms
-            """
-        ),
-
-        "duration", "transition-duration"
-    );
-
-    customUtility(
-        Css.Key.TRANSITION_PROPERTY,
-
-        "transition",
-
-        new CssResolver.OfTransitionProperty(
-            values(
-                Css.Key.TRANSITION_PROPERTY,
-
-                """
-                none: none
-
-                all: all/cubic-bezier(0.4, 0, 0.2, 1)/150ms
-
-                : color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter/cubic-bezier(0.4, 0, 0.2, 1)/150ms
-
-                colors: color, background-color, border-color, text-decoration-color, fill, stroke/cubic-bezier(0.4, 0, 0.2, 1)/150ms
-
-                opacity: opacity/cubic-bezier(0.4, 0, 0.2, 1)/150ms
-
-                shadow: box-shadow/cubic-bezier(0.4, 0, 0.2, 1)/150ms
-
-                transform: transform/cubic-bezier(0.4, 0, 0.2, 1)/150ms
-                """
-            )
-        )
-    );
-
-    var translate = values(Css.Key.TRANSLATE, () -> Css.merge(
-        """
-        1/2: 50%
-        1/3: 33.333333%
-        2/3: 66.666667%
-        1/4: 25%
-        2/4: 50%
-        3/4: 75%
-        full: 100%
-        """,
-
-        spacing
-    ));
-
-    funcUtility(Css.Key.TRANSLATE_X, translate, ofFuncNeg("translateX"), "translate-x", "transform");
-    funcUtility(Css.Key.TRANSLATE_Y, translate, ofFuncNeg("translateY"), "translate-y", "transform");
+    specT(colors, spacing, inset);
 
     // U
 
@@ -1450,7 +1303,7 @@ final class CssConfig {
     funcUtility(Css.Key.BORDER_WIDTH_X, borderWidth, "border-x", propertyType.borderWidthLeft(), propertyType.borderWidthRight());
     funcUtility(Css.Key.BORDER_WIDTH_Y, borderWidth, "border-y", propertyType.borderWidthTop(), propertyType.borderWidthBottom());
 
-    funcUtility(Css.Key.BOTTOM, inset, NEGATIVE, "bottom", propertyType.bottom());
+    funcUtility(Css.Key.BOTTOM, inset, NEGATIVE, L_OR_P, "bottom", propertyType.bottom());
 
     customUtility(
         Css.Key.BOX_SHADOW,
@@ -1894,7 +1747,7 @@ final class CssConfig {
   }
 
   private void specL(Map<String, String> inset) {
-    funcUtility(Css.Key.LEFT, inset, NEGATIVE, "left", propertyType.left());
+    funcUtility(Css.Key.LEFT, inset, NEGATIVE, L_OR_P, "left", propertyType.left());
 
     funcUtility(
         Css.Key.LETTER_SPACING,
@@ -2103,7 +1956,7 @@ final class CssConfig {
   }
 
   private void specR(Map<String, String> colors, Map<String, String> inset) {
-    funcUtility(Css.Key.RIGHT, inset, NEGATIVE, "right", propertyType.right());
+    funcUtility(Css.Key.RIGHT, inset, NEGATIVE, L_OR_P, "right", propertyType.right());
 
     colorUtility(Css.Key.RING_COLOR, values(Css.Key.RING_COLOR, colors), "ring", "--tw-ring-color");
 
@@ -2163,6 +2016,153 @@ final class CssConfig {
             )
         )
     );
+  }
+
+  private void specT(Map<String, String> colors, Map<String, String> spacing, Map<String, String> inset) {
+    staticUtility(
+        Css.Key.TABLE_LAYOUT,
+
+        """
+        table-auto  | table-layout: auto
+        table-fixed | table-layout: fixed
+        """
+    );
+
+    staticUtility(
+        Css.Key.TEXT_ALIGN,
+
+        """
+        text-left    | text-align: left
+        text-center  | text-align: center
+        text-right   | text-align: right
+        text-justify | text-align: justify
+        text-start   | text-align: start
+        text-end     | text-align: end
+        """
+    );
+
+    colorUtility(
+        Css.Key.TEXT_COLOR,
+
+        values(
+            Css.Key.TEXT_COLOR,
+
+            colors
+        ),
+
+        "text", "color"
+    );
+
+    staticUtility(
+        Css.Key.TEXT_DECORATION,
+
+        """
+        underline    | text-decoration-line: underline
+        overline     | text-decoration-line: overline
+        line-through | text-decoration-line: line-through
+        no-underline | text-decoration-line: none
+        """
+    );
+
+    staticUtility(
+        Css.Key.TEXT_OVERFLOW,
+
+        """
+        truncate      | overflow: hidden
+                      | text-overflow: ellipsis
+                      | white-space: nowrap
+        text-ellipsis | text-overflow: ellipsis
+        text-clip     | text-overflow: clip
+        """
+    );
+
+    staticUtility(
+        Css.Key.TEXT_WRAP,
+
+        """
+        text-wrap    | text-wrap: wrap
+        text-nowrap  | text-wrap: nowrap
+        text-balance | text-wrap: balance
+        text-pretty  | text-wrap: pretty
+        """
+    );
+
+    funcUtility(Css.Key.TOP, inset, NEGATIVE, L_OR_P, "top", propertyType.top());
+
+    staticUtility(
+        Css.Key.TRANSFORM,
+
+        """
+        transform-none | transform: none
+        """
+    );
+
+    funcUtility(
+        Css.Key.TRANSITION_DURATION,
+
+        values(
+            Css.Key.TRANSITION_DURATION,
+
+            """
+            0: 0s
+            75: 75ms
+            100: 100ms
+            150: 150ms
+            200: 200ms
+            300: 300ms
+            500: 500ms
+            700: 700ms
+            1000: 1000ms
+            """
+        ),
+
+        "duration", "transition-duration"
+    );
+
+    customUtility(
+        Css.Key.TRANSITION_PROPERTY,
+
+        "transition",
+
+        new CssResolver.OfTransitionProperty(
+            values(
+                Css.Key.TRANSITION_PROPERTY,
+
+                """
+                none: none
+
+                all: all/cubic-bezier(0.4, 0, 0.2, 1)/150ms
+
+                : color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter/cubic-bezier(0.4, 0, 0.2, 1)/150ms
+
+                colors: color, background-color, border-color, text-decoration-color, fill, stroke/cubic-bezier(0.4, 0, 0.2, 1)/150ms
+
+                opacity: opacity/cubic-bezier(0.4, 0, 0.2, 1)/150ms
+
+                shadow: box-shadow/cubic-bezier(0.4, 0, 0.2, 1)/150ms
+
+                transform: transform/cubic-bezier(0.4, 0, 0.2, 1)/150ms
+                """
+            )
+        )
+    );
+
+    var translate = values(Css.Key.TRANSLATE, () -> Css.merge(
+        """
+        1/2: 50%
+        1/3: 33.333333%
+        2/3: 66.666667%
+        1/4: 25%
+        2/4: 50%
+        3/4: 75%
+        full: 100%
+        """,
+
+        spacing
+    ));
+
+    funcUtility(Css.Key.TRANSLATE_X, translate, ofFuncNeg("translateX"), "translate-x", "transform");
+    funcUtility(Css.Key.TRANSLATE_Y, translate, ofFuncNeg("translateY"), "translate-y", "transform");
   }
 
   private void specZ() {
