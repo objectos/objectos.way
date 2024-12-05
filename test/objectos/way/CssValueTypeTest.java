@@ -156,4 +156,9 @@ public class CssValueTypeTest {
     assertEquals(CssValueType.parse("12.345px"), CssValueType.TOKEN_LENGTH);
   }
 
+  @Test(description = "token zero: success")
+  public void parseTokenZero01() {
+    assertEquals(CssValueType.parse("0"), CssValueType.TOKEN_ZERO);
+  }
+
 }

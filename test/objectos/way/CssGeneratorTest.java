@@ -1068,7 +1068,7 @@ public class CssGeneratorTest {
         // @formatter:off
         className("basis-px basis-0 basis-0.5 basis-1 basis-1.5 basis-2 basis-2.5 basis-3 basis-3.5 basis-4 basis-5 basis-6 basis-7 basis-8 basis-9 basis-10 basis-11 basis-12 basis-14 basis-16 basis-20 basis-24 basis-28 basis-32 basis-36 basis-40 basis-44 basis-48 basis-52 basis-56 basis-60 basis-64 basis-72 basis-80 basis-96");
         className("basis-auto basis-1/2 basis-1/3 basis-2/3 basis-1/4 basis-2/4 basis-3/4 basis-1/5 basis-2/5 basis-3/5 basis-4/5 basis-1/6 basis-2/6 basis-3/6 basis-4/6 basis-5/6 basis-1/12 basis-2/12 basis-3/12 basis-4/12 basis-5/12 basis-6/12 basis-7/12 basis-8/12 basis-9/12 basis-10/12 basis-11/12 basis-full");
-        className("basis-[14.2857143%]");
+        className("basis-[14.2857143%] basis-67px basis-4%");
         // @formatter:on
       }
     }
@@ -1141,6 +1141,8 @@ public class CssGeneratorTest {
         .basis-11\\/12 { flex-basis: 91.666667% }
         .basis-full { flex-basis: 100% }
         .basis-\\[14\\.2857143\\%\\] { flex-basis: 14.2857143% }
+        .basis-67px { flex-basis: 67px }
+        .basis-4\\% { flex-basis: 4% }
         """
     );
   }
@@ -1581,7 +1583,7 @@ public class CssGeneratorTest {
   }
 
   @Test
-  public void height() {
+  public void height01() {
     class Subject extends AbstractSubject {
       @Override
       final void classes() {
@@ -1712,6 +1714,25 @@ public class CssGeneratorTest {
         .h-min { height: min-content }
         .h-max { height: max-content }
         .h-fit { height: fit-content }
+        """
+    );
+  }
+
+  @Test
+  public void height02() {
+    class Subject extends AbstractSubject {
+      @Override
+      final void classes() {
+        className("h-120px h-24.3%");
+      }
+    }
+
+    test(
+        Subject.class,
+
+        """
+        .h-120px { height: 120px }
+        .h-24\\.3\\% { height: 24.3% }
         """
     );
   }
@@ -2456,6 +2477,7 @@ public class CssGeneratorTest {
       final void classes() {
         // @formatter:off
         className("max-h-px max-h-0 max-h-0.5 max-h-1 max-h-1.5 max-h-2 max-h-2.5 max-h-3 max-h-3.5 max-h-4 max-h-5 max-h-6 max-h-7 max-h-8 max-h-9 max-h-10 max-h-11 max-h-12 max-h-14 max-h-16 max-h-20 max-h-24 max-h-28 max-h-32 max-h-36 max-h-40 max-h-44 max-h-48 max-h-52 max-h-56 max-h-60 max-h-64 max-h-72 max-h-80 max-h-96 max-h-none max-h-full max-h-screen max-h-svh max-h-lvh max-h-dvh max-h-min max-h-max max-h-fit");
+        className("max-h-1000px max-h-47.5%");
         // @formatter:on
       }
     }
@@ -2508,6 +2530,8 @@ public class CssGeneratorTest {
         .max-h-min { max-height: min-content }
         .max-h-max { max-height: max-content }
         .max-h-fit { max-height: fit-content }
+        .max-h-1000px { max-height: 1000px }
+        .max-h-47\\.5\\% { max-height: 47.5% }
         """
     );
   }
@@ -2519,6 +2543,7 @@ public class CssGeneratorTest {
       final void classes() {
         // @formatter:off
         className("max-w-px max-w-0 max-w-0.5 max-w-1 max-w-1.5 max-w-2 max-w-2.5 max-w-3 max-w-3.5 max-w-4 max-w-5 max-w-6 max-w-7 max-w-8 max-w-9 max-w-10 max-w-11 max-w-12 max-w-14 max-w-16 max-w-20 max-w-24 max-w-28 max-w-32 max-w-36 max-w-40 max-w-44 max-w-48 max-w-52 max-w-56 max-w-60 max-w-64 max-w-72 max-w-80 max-w-96 max-w-none max-w-xs max-w-sm max-w-md max-w-lg max-w-xl max-w-2xl max-w-3xl max-w-4xl max-w-5xl max-w-6xl max-w-7xl max-w-full max-w-min max-w-max max-w-fit max-w-prose max-w-screen-sm max-w-screen-md max-w-screen-lg max-w-screen-xl max-w-screen-2xl");
+        className("max-w-1000px max-w-47.5%");
         // @formatter:on
       }
     }
@@ -2584,6 +2609,8 @@ public class CssGeneratorTest {
         .max-w-screen-lg { max-width: 1024px }
         .max-w-screen-xl { max-width: 1280px }
         .max-w-screen-2xl { max-width: 1536px }
+        .max-w-1000px { max-width: 1000px }
+        .max-w-47\\.5\\% { max-width: 47.5% }
         """
     );
   }
@@ -2595,6 +2622,7 @@ public class CssGeneratorTest {
       final void classes() {
         // @formatter:off
         className("min-h-px min-h-0 min-h-0.5 min-h-1 min-h-1.5 min-h-2 min-h-2.5 min-h-3 min-h-3.5 min-h-4 min-h-5 min-h-6 min-h-7 min-h-8 min-h-9 min-h-10 min-h-11 min-h-12 min-h-14 min-h-16 min-h-20 min-h-24 min-h-28 min-h-32 min-h-36 min-h-40 min-h-44 min-h-48 min-h-52 min-h-56 min-h-60 min-h-64 min-h-72 min-h-80 min-h-96 min-h-full min-h-screen min-h-svh min-h-lvh min-h-dvh min-h-min min-h-max min-h-fit");
+        className("min-h-381px min-h-14%");
         // @formatter:on
       }
     }
@@ -2646,6 +2674,8 @@ public class CssGeneratorTest {
         .min-h-min { min-height: min-content }
         .min-h-max { min-height: max-content }
         .min-h-fit { min-height: fit-content }
+        .min-h-381px { min-height: 381px }
+        .min-h-14\\% { min-height: 14% }
         """
     );
   }
@@ -2657,6 +2687,7 @@ public class CssGeneratorTest {
       final void classes() {
         // @formatter:off
         className("min-w-px min-w-0 min-w-0.5 min-w-1 min-w-1.5 min-w-2 min-w-2.5 min-w-3 min-w-3.5 min-w-4 min-w-5 min-w-6 min-w-7 min-w-8 min-w-9 min-w-10 min-w-11 min-w-12 min-w-14 min-w-16 min-w-20 min-w-24 min-w-28 min-w-32 min-w-36 min-w-40 min-w-44 min-w-48 min-w-52 min-w-56 min-w-60 min-w-64 min-w-72 min-w-80 min-w-96 min-w-full min-w-min min-w-max min-w-fit");
+        className("min-w-381px min-w-14%");
         // @formatter:on
       }
     }
@@ -2704,6 +2735,8 @@ public class CssGeneratorTest {
         .min-w-min { min-width: min-content }
         .min-w-max { min-width: max-content }
         .min-w-fit { min-width: fit-content }
+        .min-w-381px { min-width: 381px }
+        .min-w-14\\% { min-width: 14% }
         """
     );
   }
@@ -2886,6 +2919,7 @@ public class CssGeneratorTest {
         className("pr-px pr-0 pr-0.5 pr-1 pr-1.5 pr-2 pr-2.5 pr-3 pr-3.5 pr-4 pr-5 pr-6 pr-7 pr-8 pr-9 pr-10 pr-11 pr-12 pr-14 pr-16 pr-20 pr-24 pr-28 pr-32 pr-36 pr-40 pr-44 pr-48 pr-52 pr-56 pr-60 pr-64 pr-72 pr-80 pr-96");
         className("pb-px pb-0 pb-0.5 pb-1 pb-1.5 pb-2 pb-2.5 pb-3 pb-3.5 pb-4 pb-5 pb-6 pb-7 pb-8 pb-9 pb-10 pb-11 pb-12 pb-14 pb-16 pb-20 pb-24 pb-28 pb-32 pb-36 pb-40 pb-44 pb-48 pb-52 pb-56 pb-60 pb-64 pb-72 pb-80 pb-96");
         className("pl-px pl-0 pl-0.5 pl-1 pl-1.5 pl-2 pl-2.5 pl-3 pl-3.5 pl-4 pl-5 pl-6 pl-7 pl-8 pl-9 pl-10 pl-11 pl-12 pl-14 pl-16 pl-20 pl-24 pl-28 pl-32 pl-36 pl-40 pl-44 pl-48 pl-52 pl-56 pl-60 pl-64 pl-72 pl-80 pl-96");
+        className("px-27px py-10%");
         // @formatter:on
       }
     }
@@ -2964,6 +2998,7 @@ public class CssGeneratorTest {
         .px-72 { padding-left: 18rem; padding-right: 18rem }
         .px-80 { padding-left: 20rem; padding-right: 20rem }
         .px-96 { padding-left: 24rem; padding-right: 24rem }
+        .px-27px { padding-left: 27px; padding-right: 27px }
         .py-px { padding-top: 1px; padding-bottom: 1px }
         .py-0 { padding-top: 0px; padding-bottom: 0px }
         .py-0\\.5 { padding-top: 0.125rem; padding-bottom: 0.125rem }
@@ -2999,6 +3034,7 @@ public class CssGeneratorTest {
         .py-72 { padding-top: 18rem; padding-bottom: 18rem }
         .py-80 { padding-top: 20rem; padding-bottom: 20rem }
         .py-96 { padding-top: 24rem; padding-bottom: 24rem }
+        .py-10\\% { padding-top: 10%; padding-bottom: 10% }
         .pt-px { padding-top: 1px }
         .pt-0 { padding-top: 0px }
         .pt-0\\.5 { padding-top: 0.125rem }
@@ -3211,7 +3247,7 @@ public class CssGeneratorTest {
     class Subject extends AbstractSubject {
       @Override
       final void classes() {
-        className("ring-offset-0 ring-offset-1 ring-offset-2 ring-offset-4 ring-offset-8 ring-offset-[10px]");
+        className("ring-offset-0 ring-offset-1 ring-offset-2 ring-offset-4 ring-offset-8 ring-offset-[10px] ring-offset-20px");
       }
     }
 
@@ -3225,6 +3261,7 @@ public class CssGeneratorTest {
         .ring-offset-4 { --tw-ring-offset-width: 4px }
         .ring-offset-8 { --tw-ring-offset-width: 8px }
         .ring-offset-\\[10px\\] { --tw-ring-offset-width: 10px }
+        .ring-offset-20px { --tw-ring-offset-width: 20px }
         """
     );
   }
@@ -3835,7 +3872,7 @@ public class CssGeneratorTest {
   }
 
   @Test
-  public void width() {
+  public void width01() {
     class Subject extends AbstractSubject {
       @Override
       final void classes() {
@@ -3920,6 +3957,25 @@ public class CssGeneratorTest {
         .w-72 { width: 18rem }
         .w-80 { width: 20rem }
         .w-96 { width: 24rem }
+        """
+    );
+  }
+
+  @Test
+  public void width02() {
+    class Subject extends AbstractSubject {
+      @Override
+      final void classes() {
+        className("w-12% w-23rem");
+      }
+    }
+
+    test(
+        Subject.class,
+
+        """
+        .w-12\\% { width: 12% }
+        .w-23rem { width: 23rem }
         """
     );
   }
@@ -5111,6 +5167,7 @@ public class CssGeneratorTest {
         .mx-auto { margin-left: auto; margin-right: auto }
         .w-full { width: 100% }
         .bg-white { background-color: #ffffff }
+        .px-16px { padding-left: 16px; padding-right: 16px }
         """
     );
   }

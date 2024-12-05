@@ -307,10 +307,16 @@ final class CssConfig {
   );
 
   private static final Set<CssValueType> LENGTH = EnumSet.of(
+      CssValueType.TOKEN_LENGTH,
+
       CssValueType.BOXED_LENGTH
   );
 
   private static final Set<CssValueType> L_OR_P = EnumSet.of(
+      CssValueType.TOKEN_ZERO,
+      CssValueType.TOKEN_LENGTH,
+      CssValueType.TOKEN_PERCENTAGE,
+
       CssValueType.BOXED_ZERO,
       CssValueType.BOXED_LENGTH,
       CssValueType.BOXED_PERCENTAGE
