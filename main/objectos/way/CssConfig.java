@@ -323,6 +323,10 @@ final class CssConfig {
   );
 
   private static final Set<CssValueType> L_OR_P_NEG = EnumSet.of(
+      CssValueType.TOKEN_ZERO,
+      CssValueType.TOKEN_LENGTH,
+      CssValueType.TOKEN_PERCENTAGE,
+
       CssValueType.BOXED_ZERO,
       CssValueType.BOXED_LENGTH,
       CssValueType.BOXED_LENGTH_NEGATIVE,
@@ -589,157 +593,7 @@ final class CssConfig {
 
     // M
 
-    var margin = values(
-        Css.Key.MARGIN,
-
-        () -> Css.merge(
-            """
-            auto: auto
-            """,
-
-            spacing
-        )
-    );
-
-    funcUtility(Css.Key.MARGIN, margin, NEGATIVE, L_OR_P_NEG, "m", "margin");
-    funcUtility(Css.Key.MARGIN_TOP, margin, NEGATIVE, L_OR_P_NEG, "mt", propertyType.marginTop());
-    funcUtility(Css.Key.MARGIN_RIGHT, margin, NEGATIVE, L_OR_P_NEG, "mr", propertyType.marginRight());
-    funcUtility(Css.Key.MARGIN_BOTTOM, margin, NEGATIVE, L_OR_P_NEG, "mb", propertyType.marginBottom());
-    funcUtility(Css.Key.MARGIN_LEFT, margin, NEGATIVE, L_OR_P_NEG, "ml", propertyType.marginLeft());
-    funcUtility(Css.Key.MARGIN_X, margin, NEGATIVE, L_OR_P_NEG, "mx", propertyType.marginLeft(), propertyType.marginRight());
-    funcUtility(Css.Key.MARGIN_Y, margin, NEGATIVE, L_OR_P_NEG, "my", propertyType.marginTop(), propertyType.marginBottom());
-
-    funcUtility(
-        Css.Key.MAX_HEIGHT,
-
-        values(
-            Css.Key.MAX_HEIGHT,
-
-            () -> Css.merge(
-                """
-                none: none
-                full: 100%
-                screen: 100vh
-                svh: 100svh
-                lvh: 100lvh
-                dvh: 100dvh
-                min: min-content
-                max: max-content
-                fit: fit-content
-                """,
-
-                spacing
-            )
-        ),
-
-        L_OR_P,
-
-        "max-h",
-
-        propertyType.maxHeight()
-    );
-
-    funcUtility(
-        Css.Key.MAX_WIDTH,
-
-        values(
-            Css.Key.MAX_WIDTH,
-
-            () -> {
-              Map<String, String> maxWidth;
-              maxWidth = Util.createMap();
-
-              maxWidth.putAll(spacing);
-
-              maxWidth.put("none", "none");
-              maxWidth.put("xs", "20rem");
-              maxWidth.put("sm", "24rem");
-              maxWidth.put("md", "28rem");
-              maxWidth.put("lg", "32rem");
-              maxWidth.put("xl", "36rem");
-              maxWidth.put("2xl", "42rem");
-              maxWidth.put("3xl", "48rem");
-              maxWidth.put("4xl", "56rem");
-              maxWidth.put("5xl", "64rem");
-              maxWidth.put("6xl", "72rem");
-              maxWidth.put("7xl", "80rem");
-              maxWidth.put("full", "100%");
-              maxWidth.put("min", "min-content");
-              maxWidth.put("max", "max-content");
-              maxWidth.put("fit", "fit-content");
-              maxWidth.put("prose", "65ch");
-
-              for (var breakpoint : breakpoints) {
-                String screen;
-                screen = "screen-" + breakpoint.name();
-
-                maxWidth.put(screen, breakpoint.value());
-              }
-
-              return maxWidth;
-            }
-        ),
-
-        L_OR_P,
-
-        "max-w",
-
-        propertyType.maxWidth()
-    );
-
-    funcUtility(
-        Css.Key.MIN_HEIGHT,
-
-        values(
-            Css.Key.MIN_HEIGHT,
-
-            () -> Css.merge(
-                """
-                full: 100%
-                screen: 100vh
-                svh: 100svh
-                lvh: 100lvh
-                dvh: 100dvh
-                min: min-content
-                max: max-content
-                fit: fit-content
-                """,
-
-                spacing
-            )
-        ),
-
-        L_OR_P,
-
-        "min-h",
-
-        propertyType.minHeight()
-    );
-
-    funcUtility(
-        Css.Key.MIN_WIDTH,
-
-        values(
-            Css.Key.MIN_WIDTH,
-
-            () -> Css.merge(
-                """
-                full: 100%
-                min: min-content
-                max: max-content
-                fit: fit-content
-                """,
-
-                spacing
-            )
-        ),
-
-        L_OR_P,
-
-        "min-w",
-
-        propertyType.minWidth()
-    );
+    specM(spacing);
 
     // O
 
@@ -2108,6 +1962,157 @@ final class CssConfig {
         STRING,
 
         "list", "list-style-type"
+    );
+  }
+
+  private void specM(Map<String, String> spacing) {
+    var margin = values(
+        Css.Key.MARGIN,
+
+        """
+        auto: auto
+        0: 0px
+        """
+    );
+
+    funcUtility(Css.Key.MARGIN, margin, NEGATIVE, L_OR_P_NEG, "m", "margin");
+    funcUtility(Css.Key.MARGIN_TOP, margin, NEGATIVE, L_OR_P_NEG, "mt", propertyType.marginTop());
+    funcUtility(Css.Key.MARGIN_RIGHT, margin, NEGATIVE, L_OR_P_NEG, "mr", propertyType.marginRight());
+    funcUtility(Css.Key.MARGIN_BOTTOM, margin, NEGATIVE, L_OR_P_NEG, "mb", propertyType.marginBottom());
+    funcUtility(Css.Key.MARGIN_LEFT, margin, NEGATIVE, L_OR_P_NEG, "ml", propertyType.marginLeft());
+    funcUtility(Css.Key.MARGIN_X, margin, NEGATIVE, L_OR_P_NEG, "mx", propertyType.marginLeft(), propertyType.marginRight());
+    funcUtility(Css.Key.MARGIN_Y, margin, NEGATIVE, L_OR_P_NEG, "my", propertyType.marginTop(), propertyType.marginBottom());
+
+    funcUtility(
+        Css.Key.MAX_HEIGHT,
+
+        values(
+            Css.Key.MAX_HEIGHT,
+
+            () -> Css.merge(
+                """
+                none: none
+                full: 100%
+                screen: 100vh
+                svh: 100svh
+                lvh: 100lvh
+                dvh: 100dvh
+                min: min-content
+                max: max-content
+                fit: fit-content
+                """,
+
+                spacing
+            )
+        ),
+
+        L_OR_P,
+
+        "max-h",
+
+        propertyType.maxHeight()
+    );
+
+    funcUtility(
+        Css.Key.MAX_WIDTH,
+
+        values(
+            Css.Key.MAX_WIDTH,
+
+            () -> {
+              Map<String, String> maxWidth;
+              maxWidth = Util.createMap();
+
+              maxWidth.putAll(spacing);
+
+              maxWidth.put("none", "none");
+              maxWidth.put("xs", "20rem");
+              maxWidth.put("sm", "24rem");
+              maxWidth.put("md", "28rem");
+              maxWidth.put("lg", "32rem");
+              maxWidth.put("xl", "36rem");
+              maxWidth.put("2xl", "42rem");
+              maxWidth.put("3xl", "48rem");
+              maxWidth.put("4xl", "56rem");
+              maxWidth.put("5xl", "64rem");
+              maxWidth.put("6xl", "72rem");
+              maxWidth.put("7xl", "80rem");
+              maxWidth.put("full", "100%");
+              maxWidth.put("min", "min-content");
+              maxWidth.put("max", "max-content");
+              maxWidth.put("fit", "fit-content");
+              maxWidth.put("prose", "65ch");
+
+              for (var breakpoint : breakpoints) {
+                String screen;
+                screen = "screen-" + breakpoint.name();
+
+                maxWidth.put(screen, breakpoint.value());
+              }
+
+              return maxWidth;
+            }
+        ),
+
+        L_OR_P,
+
+        "max-w",
+
+        propertyType.maxWidth()
+    );
+
+    funcUtility(
+        Css.Key.MIN_HEIGHT,
+
+        values(
+            Css.Key.MIN_HEIGHT,
+
+            () -> Css.merge(
+                """
+                full: 100%
+                screen: 100vh
+                svh: 100svh
+                lvh: 100lvh
+                dvh: 100dvh
+                min: min-content
+                max: max-content
+                fit: fit-content
+                """,
+
+                spacing
+            )
+        ),
+
+        L_OR_P,
+
+        "min-h",
+
+        propertyType.minHeight()
+    );
+
+    funcUtility(
+        Css.Key.MIN_WIDTH,
+
+        values(
+            Css.Key.MIN_WIDTH,
+
+            () -> Css.merge(
+                """
+                full: 100%
+                min: min-content
+                max: max-content
+                fit: fit-content
+                """,
+
+                spacing
+            )
+        ),
+
+        L_OR_P,
+
+        "min-w",
+
+        propertyType.minWidth()
     );
   }
 
