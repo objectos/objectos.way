@@ -32,7 +32,7 @@ public class CssResolverTest {
     resolver = new CssResolver.OfTransitionProperty(props);
 
     Css.Rule rule;
-    rule = resolver.resolve("transition-none", Css.EMPTY_MODIFIER, false, Css.ValueType.STANDARD, "none");
+    rule = resolver.resolve("transition-none", Css.EMPTY_MODIFIER, false, CssValueType.TOKEN, "none");
 
     assertEquals(
         rule.toString(),
@@ -52,7 +52,7 @@ public class CssResolverTest {
     resolver = new CssResolver.OfTransitionProperty(props);
 
     Css.Rule rule;
-    rule = resolver.resolve("transition-all", Css.EMPTY_MODIFIER, false, Css.ValueType.STANDARD, "all");
+    rule = resolver.resolve("transition-all", Css.EMPTY_MODIFIER, false, CssValueType.TOKEN, "all");
 
     assertEquals(
         rule.toString(),
@@ -72,7 +72,7 @@ public class CssResolverTest {
     resolver = new CssResolver.OfTransitionProperty(props);
 
     Css.Rule rule;
-    rule = resolver.resolve("transition-all", Css.EMPTY_MODIFIER, false, Css.ValueType.STANDARD, "all");
+    rule = resolver.resolve("transition-all", Css.EMPTY_MODIFIER, false, CssValueType.TOKEN, "all");
 
     assertEquals(
         rule.toString(),

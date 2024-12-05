@@ -302,30 +302,30 @@ final class CssConfig {
   // SPEC
   //
 
-  private static final Set<Css.ValueType> INTEGER = EnumSet.of(
-      Css.ValueType.INTEGER
+  private static final Set<CssValueType> INTEGER = EnumSet.of(
+      CssValueType.BOXED_INTEGER
   );
 
-  private static final Set<Css.ValueType> LENGTH = EnumSet.of(
-      Css.ValueType.LENGTH
+  private static final Set<CssValueType> LENGTH = EnumSet.of(
+      CssValueType.BOXED_LENGTH
   );
 
-  private static final Set<Css.ValueType> L_OR_P = EnumSet.of(
-      Css.ValueType.ZERO,
-      Css.ValueType.LENGTH,
-      Css.ValueType.PERCENTAGE
+  private static final Set<CssValueType> L_OR_P = EnumSet.of(
+      CssValueType.BOXED_ZERO,
+      CssValueType.BOXED_LENGTH,
+      CssValueType.BOXED_PERCENTAGE
   );
 
-  private static final Set<Css.ValueType> L_OR_P_NEG = EnumSet.of(
-      Css.ValueType.ZERO,
-      Css.ValueType.LENGTH,
-      Css.ValueType.LENGTH_NEGATIVE,
-      Css.ValueType.PERCENTAGE,
-      Css.ValueType.PERCENTAGE_NEGATIVE
+  private static final Set<CssValueType> L_OR_P_NEG = EnumSet.of(
+      CssValueType.BOXED_ZERO,
+      CssValueType.BOXED_LENGTH,
+      CssValueType.BOXED_LENGTH_NEGATIVE,
+      CssValueType.BOXED_PERCENTAGE,
+      CssValueType.BOXED_PERCENTAGE_NEGATIVE
   );
 
-  private static final Set<Css.ValueType> STRING = EnumSet.of(
-      Css.ValueType.STRING
+  private static final Set<CssValueType> STRING = EnumSet.of(
+      CssValueType.BOXED
   );
 
   final void spec() {
@@ -1459,15 +1459,12 @@ final class CssConfig {
 
   record BoxShadow(Map<String, String> props) implements CssResolver {
     @Override
-    public final Css.Rule resolve(String className, Css.Modifier modifier, boolean negative, Css.ValueType type, String value) {
+    public final Css.Rule resolve(String className, Css.Modifier modifier, boolean negative, CssValueType type, String value) {
       String resolved;
+      resolved = props.get(value);
 
-      if (type == Css.ValueType.STANDARD) {
-        resolved = props.get(value);
-      } else if (type == Css.ValueType.STRING) {
+      if (type == CssValueType.BOXED) {
         resolved = type.get(value);
-      } else {
-        return null;
       }
 
       if (resolved == null) {
@@ -1495,14 +1492,9 @@ final class CssConfig {
 
   record BoxShadowColor(Map<String, String> props) implements CssResolver {
     @Override
-    public final Css.Rule resolve(String className, Css.Modifier modifier, boolean negative, Css.ValueType type, String value) {
+    public final Css.Rule resolve(String className, Css.Modifier modifier, boolean negative, CssValueType type, String value) {
       String resolved;
-
-      if (type == Css.ValueType.STANDARD) {
-        resolved = props.get(value);
-      } else {
-        return null;
-      }
+      resolved = props.get(value);
 
       if (resolved == null) {
         return null;
@@ -1650,15 +1642,12 @@ final class CssConfig {
 
   record RingWidth(Map<String, String> props) implements CssResolver {
     @Override
-    public final Css.Rule resolve(String className, Css.Modifier modifier, boolean negative, Css.ValueType type, String value) {
+    public final Css.Rule resolve(String className, Css.Modifier modifier, boolean negative, CssValueType type, String value) {
       String resolved;
+      resolved = props.get(value);
 
-      if (type == Css.ValueType.STANDARD) {
-        resolved = props.get(value);
-      } else if (type == Css.ValueType.LENGTH) {
+      if (resolved == null && type == CssValueType.BOXED_LENGTH) {
         resolved = type.get(value);
-      } else {
-        return null;
       }
 
       if (resolved == null) {
@@ -2088,10 +2077,10 @@ final class CssConfig {
         values(Css.Key.LINE_HEIGHT, Css.DEFAULT_LINE_HEIGHT),
 
         EnumSet.of(
-            Css.ValueType.INTEGER,
-            Css.ValueType.DECIMAL,
-            Css.ValueType.LENGTH,
-            Css.ValueType.PERCENTAGE
+            CssValueType.BOXED_INTEGER,
+            CssValueType.BOXED_DECIMAL,
+            CssValueType.BOXED_LENGTH,
+            CssValueType.BOXED_PERCENTAGE
         ),
 
         "leading", "line-height"
@@ -2222,7 +2211,7 @@ final class CssConfig {
 
   private void funcUtility(
       Css.Key key,
-      Map<String, String> values, Set<Css.ValueType> types,
+      Map<String, String> values, Set<CssValueType> types,
       String prefix) {
     funcUtility(key, values, IDENTITY, types, prefix, prefix, null);
   }
@@ -2243,14 +2232,14 @@ final class CssConfig {
 
   private void funcUtility(
       Css.Key key,
-      Map<String, String> values, Set<Css.ValueType> types,
+      Map<String, String> values, Set<CssValueType> types,
       String prefix, String propertyName) {
     funcUtility(key, values, IDENTITY, types, prefix, propertyName, null);
   }
 
   private void funcUtility(
       Css.Key key,
-      Map<String, String> values, Set<Css.ValueType> types,
+      Map<String, String> values, Set<CssValueType> types,
       String prefix, String propertyName1, String propertyName2) {
     funcUtility(key, values, IDENTITY, types, prefix, propertyName1, propertyName2);
   }
@@ -2283,14 +2272,14 @@ final class CssConfig {
 
   private void funcUtility(
       Css.Key key,
-      Map<String, String> values, Css.ValueFormatter formatter, Set<Css.ValueType> types,
+      Map<String, String> values, Css.ValueFormatter formatter, Set<CssValueType> types,
       String prefix, String propertyName) {
     funcUtility(key, values, formatter, types, prefix, propertyName, null);
   }
 
   private void funcUtility(
       Css.Key key,
-      Map<String, String> values, Css.ValueFormatter formatter, Set<Css.ValueType> types,
+      Map<String, String> values, Css.ValueFormatter formatter, Set<CssValueType> types,
       String prefix, String propertyName1, String propertyName2) {
 
     CssResolver resolver;

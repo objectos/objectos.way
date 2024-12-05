@@ -25,7 +25,6 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.function.Consumer;
 import objectos.way.Css.MediaQuery;
-import objectos.way.Css.ValueType;
 
 final class CssGenerator extends CssGeneratorAdapter implements Css.Generator, Css.Repository {
 
@@ -329,8 +328,8 @@ final class CssGenerator extends CssGeneratorAdapter implements Css.Generator, C
       return Css.Rule.NOOP;
     }
 
-    ValueType type;
-    type = Css.typeOf(suffix);
+    CssValueType type;
+    type = CssValueType.parse(suffix);
 
     for (Css.Key candidate : candidates) {
       CssResolver resolver;

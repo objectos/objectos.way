@@ -43,7 +43,7 @@ interface CssResolver {
     }
 
     @Override
-    public final Css.Rule resolve(String className, Css.Modifier modifier, boolean negative, Css.ValueType type, String value) {
+    public final Css.Rule resolve(String className, Css.Modifier modifier, boolean negative, CssValueType type, String value) {
       String colorKey;
       colorKey = value;
 
@@ -87,7 +87,7 @@ interface CssResolver {
     }
 
     @Override
-    public final Css.Rule resolve(String className, Css.Modifier modifier, boolean negative, Css.ValueType type, String value) {
+    public final Css.Rule resolve(String className, Css.Modifier modifier, boolean negative, CssValueType type, String value) {
       int slash;
       slash = value.indexOf('/');
 
@@ -229,7 +229,7 @@ interface CssResolver {
     }
 
     @Override
-    public final Css.Rule resolve(String className, Css.Modifier modifier, boolean negative, Css.ValueType type, String value) {
+    public final Css.Rule resolve(String className, Css.Modifier modifier, boolean negative, CssValueType type, String value) {
       String resolved;
       resolved = properties.get(value);
 
@@ -294,7 +294,7 @@ interface CssResolver {
 
     private final Css.ValueFormatter valueFormatter;
 
-    private final Set<Css.ValueType> valueTypes;
+    private final Set<CssValueType> valueTypes;
 
     private final String propertyName1;
 
@@ -308,7 +308,7 @@ interface CssResolver {
       this(key, properties, valueFormatter, Set.of(), propertyName1, propertyName2);
     }
 
-    public OfProperties(Css.Key key, Map<String, String> properties, Css.ValueFormatter valueFormatter, Set<Css.ValueType> valueTypes, String propertyName1, String propertyName2) {
+    public OfProperties(Css.Key key, Map<String, String> properties, Css.ValueFormatter valueFormatter, Set<CssValueType> valueTypes, String propertyName1, String propertyName2) {
       this.key = key;
       this.properties = properties;
       this.valueFormatter = valueFormatter;
@@ -318,15 +318,12 @@ interface CssResolver {
     }
 
     @Override
-    public final Css.Rule resolve(String className, Css.Modifier modifier, boolean negative, Css.ValueType type, String value) {
+    public final Css.Rule resolve(String className, Css.Modifier modifier, boolean negative, CssValueType type, String value) {
       String resolved;
+      resolved = properties.get(value);
 
-      if (type == Css.ValueType.STANDARD) {
-        resolved = properties.get(value);
-      } else if (valueTypes.contains(type)) {
+      if (resolved == null && valueTypes.contains(type)) {
         resolved = type.get(value);
-      } else {
-        resolved = null;
       }
 
       if (resolved == null) {
@@ -349,6 +346,6 @@ interface CssResolver {
 
   }
 
-  Css.Rule resolve(String className, Css.Modifier modifier, boolean negative, Css.ValueType type, String value);
+  Css.Rule resolve(String className, Css.Modifier modifier, boolean negative, CssValueType type, String value);
 
 }

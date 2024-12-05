@@ -122,22 +122,6 @@ public class CssTest {
   }
 
   @Test
-  public void typeOf() {
-    assertEquals(Css.typeOf(""), Css.ValueType.STANDARD);
-    assertEquals(Css.typeOf("[]"), Css.ValueType.STRING);
-    assertEquals(Css.typeOf("block"), Css.ValueType.STANDARD);
-    assertEquals(Css.typeOf("[block]"), Css.ValueType.STRING);
-    assertEquals(Css.typeOf("1px"), Css.ValueType.STANDARD);
-    assertEquals(Css.typeOf("[1px]"), Css.ValueType.LENGTH);
-    assertEquals(Css.typeOf("0"), Css.ValueType.STANDARD);
-    assertEquals(Css.typeOf("[0]"), Css.ValueType.ZERO);
-    assertEquals(Css.typeOf("[1]"), Css.ValueType.INTEGER);
-    assertEquals(Css.typeOf("[10]"), Css.ValueType.INTEGER);
-    assertEquals(Css.typeOf("[-1px]"), Css.ValueType.LENGTH_NEGATIVE);
-    assertEquals(Css.typeOf("[1.23%]"), Css.ValueType.PERCENTAGE);
-  }
-
-  @Test
   public void writeClassName() {
     assertEquals(writeClassName("foo"), ".foo");
     assertEquals(writeClassName("after:block"), ".after\\:block");
@@ -152,7 +136,8 @@ public class CssTest {
   }
 
   private String writeClassName(String className) {
-    StringBuilder out = new StringBuilder();
+    StringBuilder out;
+    out = new StringBuilder();
 
     Css.writeClassName(out, className);
 
