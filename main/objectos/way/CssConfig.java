@@ -303,6 +303,10 @@ final class CssConfig {
   //
 
   private static final Set<CssValueType> INTEGER = EnumSet.of(
+      CssValueType.TOKEN_ZERO,
+      CssValueType.TOKEN_INTEGER,
+
+      CssValueType.BOXED_ZERO,
       CssValueType.BOXED_INTEGER
   );
 
@@ -1116,25 +1120,7 @@ final class CssConfig {
 
     // Z
 
-    funcUtility(
-        Css.Key.Z_INDEX,
-
-        values(
-            Css.Key.Z_INDEX,
-
-            """
-            0: 0
-            10: 10
-            20: 20
-            30: 30
-            40: 40
-            50: 50
-            auto: auto
-            """
-        ),
-
-        "z", "z-index"
-    );
+    specZ();
   }
 
   private void specA() {
@@ -2176,6 +2162,26 @@ final class CssConfig {
                 """
             )
         )
+    );
+  }
+
+  private void specZ() {
+    funcUtility(
+        Css.Key.Z_INDEX,
+
+        values(
+            Css.Key.Z_INDEX,
+
+            """
+            auto: auto
+            """
+        ),
+
+        NEGATIVE,
+
+        INTEGER,
+
+        "z", "z-index"
     );
   }
 

@@ -3751,7 +3751,7 @@ public class CssGeneratorTest {
     class Subject extends AbstractSubject {
       @Override
       final void classes() {
-        className("z-0 z-10 z-20 z-30 z-40 z-50 z-auto");
+        className("z-auto z-0 z-289 -z-1");
       }
     }
 
@@ -3759,13 +3759,10 @@ public class CssGeneratorTest {
         Subject.class,
 
         """
-        .z-0 { z-index: 0 }
-        .z-10 { z-index: 10 }
-        .z-20 { z-index: 20 }
-        .z-30 { z-index: 30 }
-        .z-40 { z-index: 40 }
-        .z-50 { z-index: 50 }
         .z-auto { z-index: auto }
+        .z-0 { z-index: 0 }
+        .z-289 { z-index: 289 }
+        .-z-1 { z-index: -1 }
         """
     );
   }
@@ -4250,6 +4247,31 @@ public class CssGeneratorTest {
   }
 
   @Test
+  public void extendZIndex() {
+    class Subject extends AbstractSubject {
+      @Override
+      final void classes() {
+        className("z-a z-foo z-20");
+      }
+    }
+
+    test(
+        Css.overrideZIndex("""
+        a: 100
+        foo: 9000
+        """),
+
+        Subject.class,
+
+        """
+        .z-a { z-index: 100 }
+        .z-foo { z-index: 9000 }
+        .z-20 { z-index: 20 }
+        """
+    );
+  }
+
+  @Test
   public void overrideBackgroundColor() {
     class Subject extends AbstractSubject {
       @Override
@@ -4568,30 +4590,6 @@ public class CssGeneratorTest {
         .w-2px { width: 0.125rem }
         .p-4px { padding: 0.25rem }
         .focus\\:py-16px:focus { padding-top: 1rem; padding-bottom: 1rem }
-        """
-    );
-  }
-
-  @Test
-  public void overrideZIndex() {
-    class Subject extends AbstractSubject {
-      @Override
-      final void classes() {
-        className("z-a z-foo z-20");
-      }
-    }
-
-    test(
-        Css.overrideZIndex("""
-        a: 100
-        foo: 9000
-        """),
-
-        Subject.class,
-
-        """
-        .z-a { z-index: 100 }
-        .z-foo { z-index: 9000 }
         """
     );
   }
