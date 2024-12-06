@@ -182,8 +182,6 @@ public final class Css {
 
   }
 
-  record InvalidVariant(String formatString, String reason) implements Variant {}
-
   enum Key {
 
     _COLORS,
@@ -1138,7 +1136,7 @@ public final class Css {
     amper = formatString.indexOf('&');
 
     if (amper < 0) {
-      return new InvalidVariant(formatString, "Format string must contain exactly one '&' character");
+      throw new IllegalArgumentException("Format string must contain exactly one '&' character: " + formatString);
     }
 
     String before;
@@ -1151,7 +1149,7 @@ public final class Css {
     anotherAmper = after.indexOf('&');
 
     if (anotherAmper > 0) {
-      return new InvalidVariant(formatString, "Format string must contain exactly one '&' character");
+      throw new IllegalArgumentException("Format string must contain exactly one '&' character: " + formatString);
     }
 
     return new ClassNameFormat(before, after);

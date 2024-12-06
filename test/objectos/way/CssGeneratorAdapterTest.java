@@ -205,7 +205,7 @@ public class CssGeneratorAdapterTest {
       }
     };
 
-    adapter.processRawString(raw);
+    adapter.processStringConstant(raw);
 
     assertEquals(result, List.of(expected));
   }

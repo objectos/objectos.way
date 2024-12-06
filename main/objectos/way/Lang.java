@@ -18,7 +18,6 @@ package objectos.way;
 import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.util.Iterator;
-import java.util.function.Consumer;
 
 /**
  * The <strong>Objectos Lang</strong> main class.
@@ -171,11 +170,18 @@ public final class Lang {
 
   sealed interface ClassReader permits LangClassReader {
 
+    @FunctionalInterface
+    interface StringConstantProcessor {
+
+      void processStringConstant(String value);
+
+    }
+
     void init(String binaryName, byte[] contents);
 
     boolean isAnnotationPresent(Class<? extends Annotation> annotationType);
 
-    void processStringConstants(Consumer<String> processor);
+    void processStringConstants(StringConstantProcessor processor);
 
   }
 

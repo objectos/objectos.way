@@ -20,6 +20,11 @@ import static org.testng.Assert.assertTrue;
 
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.EnumSet;
+import java.util.List;
+import java.util.Set;
+import objectos.way.Note.Ref3;
 import org.testng.annotations.Test;
 
 public class CssGeneratorTest {
@@ -4005,6 +4010,65 @@ public class CssGeneratorTest {
         .z-20 { z-index: 20 }
         """
     );
+  }
+
+  @Test
+  public void noteSink() {
+    class NoteSinkTest extends AbstractSubject {
+      @Override
+      final void classes() {
+        className("not-an-utility");
+        className("text-invalid-value");
+      }
+    }
+
+    record SomeNote(String key, String fileName, String className, Set<Css.Key> candidates) {}
+
+    List<SomeNote> notes;
+    notes = new ArrayList<>();
+
+    Note.Sink noteSink = new Note.NoOpSink() {
+      @Override
+      public <T1, T2> void send(Note.Ref2<T1, T2> note, T1 value1, T2 value2) {
+        notes.add(
+            new SomeNote(note.key(), (String) value1, (String) value2, null)
+        );
+      }
+
+      @SuppressWarnings("unchecked")
+      @Override
+      public <T1, T2, T3> void send(Ref3<T1, T2, T3> note, T1 value1, T2 value2, T3 value3) {
+        notes.add(
+            new SomeNote(note.key(), (String) value1, (String) value2, (Set<Css.Key>) value3)
+        );
+      }
+    };
+
+    Css.generateCss(
+        Css.classes(NoteSinkTest.class),
+
+        Css.noteSink(noteSink),
+
+        Css.skipReset()
+    );
+
+    assertEquals(notes.size(), 2);
+
+    SomeNote note0;
+    note0 = notes.get(0);
+
+    assertEquals(note0.key, "Candidates not found");
+    assertEquals(note0.fileName.contains("NoteSinkTest"), true);
+    assertEquals(note0.className, "not-an-utility");
+    assertEquals(note0.candidates, null);
+
+    SomeNote note1;
+    note1 = notes.get(1);
+
+    assertEquals(note1.key, "Match not found");
+    assertEquals(note1.fileName.contains("NoteSinkTest"), true);
+    assertEquals(note1.className, "text-invalid-value");
+    assertEquals(note1.candidates, EnumSet.of(Css.Key.TEXT_COLOR, Css.Key.FONT_SIZE));
   }
 
   @Test

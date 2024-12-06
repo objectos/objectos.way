@@ -17,7 +17,6 @@ package objectos.way;
 
 import java.lang.annotation.Annotation;
 import java.nio.charset.StandardCharsets;
-import java.util.function.Consumer;
 
 final class LangClassReader implements Lang.ClassReader {
 
@@ -247,7 +246,7 @@ final class LangClassReader implements Lang.ClassReader {
   }
 
   @Override
-  public final void processStringConstants(Consumer<String> processor) {
+  public final void processStringConstants(StringConstantProcessor processor) {
     Check.notNull(processor, "processor == null");
 
     try {
@@ -259,7 +258,7 @@ final class LangClassReader implements Lang.ClassReader {
     }
   }
 
-  private void processStringConstants0(Consumer<String> processor) throws InvalidClassException {
+  private void processStringConstants0(StringConstantProcessor processor) throws InvalidClassException {
     reset();
 
     readConstantPool();
@@ -293,7 +292,7 @@ final class LangClassReader implements Lang.ClassReader {
       String utf8;
       utf8 = readUtf8(stringIndex);
 
-      processor.accept(utf8);
+      processor.processStringConstant(utf8);
     }
   }
 

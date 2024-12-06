@@ -23,10 +23,26 @@ import java.util.Map;
 import java.util.SequencedMap;
 import java.util.Set;
 import java.util.TreeMap;
-import java.util.function.Consumer;
 import objectos.way.Css.MediaQuery;
 
 final class CssGenerator extends CssGeneratorAdapter implements Css.Generator, Css.Repository {
+
+  record Notes(
+      Note.Ref2<String, String> candidatesNotFound,
+      Note.Ref3<String, String, Set<Css.Key>> noMatch
+  ) {
+
+    static Notes get() {
+      Class<?> s;
+      s = Css.Generator.class;
+
+      return new Notes(
+          Note.Ref2.create(s, "Candidates not found", Note.DEBUG),
+          Note.Ref3.create(s, "Match not found", Note.WARN)
+      );
+    }
+
+  }
 
   private static abstract class ThisContext extends Css.Context {
 
@@ -138,6 +154,10 @@ final class CssGenerator extends CssGeneratorAdapter implements Css.Generator, C
 
   private final CssConfig config;
 
+  private final Note.Sink noteSink;
+
+  private final Notes notes = Notes.get();
+
   private final Deque<Css.Repository> repositories = new ArrayDeque<>(4);
 
   private final SequencedMap<String, Css.Rule> rules = Util.createSequencedMap();
@@ -147,6 +167,8 @@ final class CssGenerator extends CssGeneratorAdapter implements Css.Generator, C
 
     this.config = config;
 
+    noteSink = config.noteSink();
+
     init();
   }
 
@@ -155,6 +177,8 @@ final class CssGenerator extends CssGeneratorAdapter implements Css.Generator, C
     this.adapter = adapter;
 
     this.config = config;
+
+    noteSink = config.noteSink();
 
     init();
   }
@@ -168,15 +192,12 @@ final class CssGenerator extends CssGeneratorAdapter implements Css.Generator, C
     CssGeneratorScanner scanner;
     scanner = new CssGeneratorScanner(config.noteSink());
 
-    Consumer<String> processor;
-    processor = adapter::processRawString;
-
     for (var clazz : config.classes()) {
-      scanner.scan(clazz, processor);
+      scanner.scan(clazz, adapter);
     }
 
     for (var directory : config.directories()) {
-      scanner.scanDirectory(directory, processor);
+      scanner.scanDirectory(directory, adapter);
     }
 
     // 02. process
@@ -243,7 +264,7 @@ final class CssGenerator extends CssGeneratorAdapter implements Css.Generator, C
     repositories.push(component);
 
     // 3) process
-    processRawString(definition);
+    processStringConstant(definition);
 
     // 4) pop component
 
@@ -325,6 +346,8 @@ final class CssGenerator extends CssGeneratorAdapter implements Css.Generator, C
     }
 
     if (candidates == null) {
+      noteSink.send(notes.candidatesNotFound, sourceName, className);
+
       return Css.Rule.NOOP;
     }
 
@@ -342,6 +365,8 @@ final class CssGenerator extends CssGeneratorAdapter implements Css.Generator, C
         return rule;
       }
     }
+
+    noteSink.send(notes.noMatch, sourceName, className, candidates);
 
     return Css.Rule.NOOP;
   }

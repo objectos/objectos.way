@@ -21,7 +21,6 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Iterator;
-import java.util.function.Consumer;
 import java.util.stream.Stream;
 
 final class CssGeneratorScanner {
@@ -59,7 +58,7 @@ final class CssGeneratorScanner {
     reader = Lang.createClassReader(noteSink);
   }
 
-  public final void scan(Class<?> clazz, Consumer<String> stringProcessor) {
+  public final void scan(Class<?> clazz, CssGeneratorAdapter adapter) {
     String binaryName;
     binaryName = clazz.getName();
 
@@ -98,10 +97,12 @@ final class CssGeneratorScanner {
 
     reader.init(binaryName, bytes);
 
-    reader.processStringConstants(stringProcessor);
+    adapter.sourceName(binaryName);
+
+    reader.processStringConstants(adapter);
   }
 
-  public final void scanDirectory(Path directory, Consumer<String> stringProcessor) {
+  public final void scanDirectory(Path directory, CssGeneratorAdapter adapter) {
     try (Stream<Path> stream = Files.walk(directory, Integer.MAX_VALUE).filter(Files::isRegularFile)) {
 
       Iterator<Path> iterator;
@@ -132,7 +133,9 @@ final class CssGeneratorScanner {
 
         noteSink.send(notes.classLoaded, fileName);
 
-        reader.processStringConstants(stringProcessor);
+        adapter.sourceName(fileName);
+
+        reader.processStringConstants(adapter);
       }
 
     } catch (IOException e) {

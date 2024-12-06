@@ -132,10 +132,6 @@ final class CssConfig {
       Css.Variant variant;
       variant = Css.parseVariant(formatString);
 
-      if (variant instanceof Css.InvalidVariant invalid) {
-        throw new IllegalArgumentException("Invalid formatString: " + invalid.reason());
-      }
-
       putVariant(variantName, variant);
     }
   }

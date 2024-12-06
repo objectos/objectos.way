@@ -17,15 +17,16 @@ package objectos.way;
 
 import java.util.List;
 
-class CssGeneratorAdapter {
+class CssGeneratorAdapter implements Lang.ClassReader.StringConstantProcessor {
 
   private final List<Css.ClassNameFormat> classNameFormats = Util.createList();
 
   private final List<Css.MediaQuery> mediaQueries = Util.createList();
 
-  private boolean invalid;
+  String sourceName;
 
-  void processRawString(String s) {
+  @Override
+  public void processStringConstant(String s) {
     String[] parts;
     parts = s.split("\\s+");
 
@@ -76,8 +77,6 @@ class CssGeneratorAdapter {
 
     mediaQueries.clear();
 
-    invalid = false;
-
     int beginIndex;
     beginIndex = 0;
 
@@ -99,12 +98,6 @@ class CssGeneratorAdapter {
         case Css.ClassNameFormat format -> classNameFormats.add(format);
 
         case Css.MediaQuery query -> mediaQueries.add(query);
-
-        case Css.InvalidVariant unused -> invalid = true;
-      }
-
-      if (invalid) {
-        return Css.Rule.NOOP;
       }
 
       beginIndex = colon + 1;
@@ -134,19 +127,23 @@ class CssGeneratorAdapter {
   }
 
   Css.Rule createUtility(String className, Css.Modifier modifier, String value) {
-    throw new UnsupportedOperationException("Implement me");
+    throw new UnsupportedOperationException();
   }
 
   String getComponent(String className) {
-    throw new UnsupportedOperationException("Implement me");
+    throw new UnsupportedOperationException();
   }
 
   Css.Rule getRule(String token) {
-    throw new UnsupportedOperationException("Implement me");
+    throw new UnsupportedOperationException();
   }
 
   Css.Variant getVariant(String name) {
-    throw new UnsupportedOperationException("Implement me");
+    throw new UnsupportedOperationException();
+  }
+
+  final void sourceName(String binaryName) {
+    sourceName = binaryName;
   }
 
   void store(String token, Css.Rule value) {

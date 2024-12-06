@@ -106,10 +106,16 @@ public class CssGeneratorScannerTest {
     List<String> result;
     result = new ArrayList<>();
 
+    CssGeneratorAdapter adapter;
+    adapter = new CssGeneratorAdapter() {
+      @Override
+      public void processStringConstant(String s) { result.add(s); }
+    };
+
     CssGeneratorScanner scanner;
     scanner = new CssGeneratorScanner(TestingNoteSink.INSTANCE);
 
-    scanner.scan(type, result::add);
+    scanner.scan(type, adapter);
 
     assertEquals(result, List.of(expected));
   }
