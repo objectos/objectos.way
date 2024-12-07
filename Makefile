@@ -312,3 +312,38 @@ include make/gh-release.mk
 #
 
 include make/java-eclipse.mk
+
+#
+# www sub-project
+#
+
+## www directory
+WWW := www
+
+## www make directory
+WWW_MK_DIR := $(WWW)/make
+
+## www required makefiles
+WWW_MK := $(WWW_MK_DIR)/common-clean.mk
+WWW_MK += $(WWW_MK_DIR)/java-compile.mk
+WWW_MK += $(WWW_MK_DIR)/java-core.mk
+WWW_MK += $(WWW_MK_DIR)/java-eclipse.mk
+
+## exported variables to WWW sub-project
+export GROUP_ID
+export VERSION
+export JAVA_RELEASE
+
+.PHONY: www
+www: $(WWW_MK)
+	$(MAKE) -C $(WWW)
+
+.PHONY: www-%
+www-%: $(WWW_MK)
+	$(MAKE) -C $(WWW) $*
+
+$(WWW_MK_DIR)/%: make/% | $(WWW_MK_DIR)
+	cp $< $@
+
+$(WWW_MK_DIR):
+	mkdir --parents $@

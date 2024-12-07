@@ -99,7 +99,7 @@ test-compile@clean:
 .PHONY: re-test-compile
 re-test-compile: test-compile@clean test-compile
 
-$(TEST_COMPILE_CLASS_PATH): $(TEST_COMPILE_RESOLUTION_FILES) | $(WORK)
+$(TEST_COMPILE_CLASS_PATH): $(TEST_COMPILE_RESOLUTION_FILES)
 	echo $(CLASS_OUTPUT) > $@.tmp
 ifdef COMPILE_RESOLUTION_FILES
 	cat $(COMPILE_RESOLUTION_FILES) >> $@.tmp
@@ -112,7 +112,7 @@ endif
 $(TEST_CLASSES): $(TEST_CLASS_OUTPUT)/%.class: $(TEST)/%.java
 	$(eval TEST_DIRTY += $$<)
 
-$(TEST_COMPILE_MARKER): $(TEST_COMPILE_REQS) 
+$(TEST_COMPILE_MARKER): $(TEST_COMPILE_REQS) | $(WORK)
 	$(file > $(TEST_COMPILE_SOURCES).tmp,$(strip $(TEST_DIRTY)))
 	cat $(TEST_COMPILE_SOURCES).tmp | tr -d '\n' > $(TEST_COMPILE_SOURCES)
 	if [ -s $(TEST_COMPILE_SOURCES) ]; then \
