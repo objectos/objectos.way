@@ -111,10 +111,15 @@ ECLIPSE_CLASSPATH_REQS += $(TEST_COMPILE_RESOLUTION_FILES)
 ECLIPSE_PROJECT := .project
 .PHONY: $(ECLIPSE_PROJECT)
 
+## Eclipse project name
+ifndef ECLIPSE_PROJECT_NAME
+ECLIPSE_PROJECT_NAME := $(ARTIFACT_ID)
+endif
+
 define ECLIPSE_PROJECT_CONTENTS :=
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-	<name>$(ARTIFACT_ID)</name>
+	<name>$(ECLIPSE_PROJECT_NAME)</name>
 	<comment></comment>
 	<buildSpec>
 		<buildCommand>

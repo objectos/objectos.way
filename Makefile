@@ -327,11 +327,15 @@ WWW_MK_DIR := $(WWW)/make
 WWW_MK := $(WWW_MK_DIR)/common-clean.mk
 WWW_MK += $(WWW_MK_DIR)/java-compile.mk
 WWW_MK += $(WWW_MK_DIR)/java-core.mk
+WWW_MK += $(WWW_MK_DIR)/java-dev.mk
 WWW_MK += $(WWW_MK_DIR)/java-eclipse.mk
+WWW_MK += $(WWW_MK_DIR)/java-test.mk
+WWW_MK += $(WWW_MK_DIR)/java-test-compile.mk
 
 ## exported variables to WWW sub-project
 export GROUP_ID
 export VERSION
+export TESTNG
 export JAVA_RELEASE
 
 .PHONY: www
