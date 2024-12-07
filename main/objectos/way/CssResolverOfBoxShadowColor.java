@@ -15,8 +15,25 @@
  */
 package objectos.way;
 
-interface CssResolver {
+import java.util.Map;
 
-  Css.Rule resolve(String className, Css.Modifier modifier, boolean negative, CssValueType type, String value);
+record CssResolverOfBoxShadowColor(Map<String, String> props) implements CssResolver {
+  @Override
+  public final Css.Rule resolve(String className, Css.Modifier modifier, boolean negative, CssValueType type, String value) {
+    String resolved;
+    resolved = props.get(value);
 
+    if (resolved == null) {
+      return null;
+    }
+
+    CssProperties.Builder builder;
+    builder = new CssProperties.Builder();
+
+    builder.add("--tw-shadow-colored", resolved);
+
+    builder.add("--tw-shadow", "var(--tw-shadow-colored)");
+
+    return new CssUtility(Css.Key.BOX_SHADOW_COLOR, className, modifier, builder);
+  }
 }

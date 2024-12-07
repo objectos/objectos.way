@@ -1069,60 +1069,6 @@ final class CssConfig {
     return matcher.replaceAll(replacement);
   }
 
-  record BoxShadow(Map<String, String> props) implements CssResolver {
-    @Override
-    public final Css.Rule resolve(String className, Css.Modifier modifier, boolean negative, CssValueType type, String value) {
-      String resolved;
-      resolved = props.get(value);
-
-      if (type == CssValueType.BOXED) {
-        resolved = type.get(value);
-      }
-
-      if (resolved == null) {
-        return null;
-      }
-
-      CssProperties.Builder builder;
-      builder = new CssProperties.Builder();
-
-      builder.add("--tw-shadow", resolved);
-
-      String colored;
-      colored = replaceColor(resolved, "var(--tw-shadow-color)");
-
-      builder.add("--tw-shadow-colored", colored);
-
-      builder.add(
-          "box-shadow",
-          "var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow, 0 0 #0000)"
-      );
-
-      return new CssUtility(Css.Key.BOX_SHADOW, className, modifier, builder);
-    }
-  }
-
-  record BoxShadowColor(Map<String, String> props) implements CssResolver {
-    @Override
-    public final Css.Rule resolve(String className, Css.Modifier modifier, boolean negative, CssValueType type, String value) {
-      String resolved;
-      resolved = props.get(value);
-
-      if (resolved == null) {
-        return null;
-      }
-
-      CssProperties.Builder builder;
-      builder = new CssProperties.Builder();
-
-      builder.add("--tw-shadow-colored", resolved);
-
-      builder.add("--tw-shadow", "var(--tw-shadow-colored)");
-
-      return new CssUtility(Css.Key.BOX_SHADOW_COLOR, className, modifier, builder);
-    }
-  }
-
   private void specB(Map<String, String> colors, Map<String, String> spacing, Map<String, String> inset) {
     colorUtility(
         Css.Key.BACKGROUND_COLOR,
@@ -1223,7 +1169,7 @@ final class CssConfig {
 
         "shadow",
 
-        new BoxShadow(
+        new CssResolverOfBoxShadow(
             values(
                 Css.Key.BOX_SHADOW,
 
@@ -1246,46 +1192,10 @@ final class CssConfig {
 
         "shadow",
 
-        new BoxShadowColor(
+        new CssResolverOfBoxShadowColor(
             values(Css.Key.BOX_SHADOW_COLOR, colors)
         )
     );
-  }
-
-  record RingWidth(Map<String, String> props) implements CssResolver {
-    @Override
-    public final Css.Rule resolve(String className, Css.Modifier modifier, boolean negative, CssValueType type, String value) {
-      String resolved;
-      resolved = props.get(value);
-
-      if (resolved == null && type == CssValueType.BOXED_LENGTH) {
-        resolved = type.get(value);
-      }
-
-      if (resolved == null) {
-        return null;
-      }
-
-      CssProperties.Builder builder;
-      builder = new CssProperties.Builder();
-
-      builder.add(
-          "--tw-ring-offset-shadow",
-          "var(--tw-ring-inset, ) 0 0 0 var(--tw-ring-offset-width, 0px) var(--tw-ring-offset-color, #fff)"
-      );
-
-      builder.add(
-          "--tw-ring-shadow",
-          "var(--tw-ring-inset, ) 0 0 0 calc(" + resolved + " + var(--tw-ring-offset-width, 0px)) var(--tw-ring-color, rgb(59 130 246 / 0.5))"
-      );
-
-      builder.add(
-          "box-shadow",
-          "var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow, 0 0 #0000)"
-      );
-
-      return new CssUtility(Css.Key.RING_WIDTH, className, modifier, builder);
-    }
   }
 
   private void specF() {
@@ -1453,7 +1363,7 @@ final class CssConfig {
 
         "text",
 
-        new CssResolver.OfFontSize(
+        new CssResolverOfFontSize(
             values(
                 Css.Key.FONT_SIZE,
 
@@ -1914,7 +1824,7 @@ final class CssConfig {
 
         "ring",
 
-        new RingWidth(
+        new CssResolverOfRingWidth(
             values(
                 Css.Key.RING_WIDTH,
 
@@ -2122,7 +2032,7 @@ final class CssConfig {
 
         "transition",
 
-        new CssResolver.OfTransitionProperty(
+        new CssResolverOfTransitionProperty(
             values(
                 Css.Key.TRANSITION_PROPERTY,
 
@@ -2192,7 +2102,7 @@ final class CssConfig {
       Map<String, String> values,
       String prefix, String propertyName1, String propertyName2) {
     CssResolver resolver;
-    resolver = new CssResolver.OfColorAlpha(key, values, propertyName1, propertyName2);
+    resolver = new CssResolverOfColorAlpha(key, values, propertyName1, propertyName2);
 
     customUtility(key, prefix, resolver);
   }
@@ -2279,7 +2189,7 @@ final class CssConfig {
       String prefix, String propertyName1, String propertyName2) {
 
     CssResolver resolver;
-    resolver = new CssResolver.OfProperties(key, values, formatter, propertyName1, propertyName2);
+    resolver = new CssResolverOfProperties(key, values, formatter, propertyName1, propertyName2);
 
     customUtility(key, prefix, resolver);
 
@@ -2298,7 +2208,7 @@ final class CssConfig {
       String prefix, String propertyName1, String propertyName2) {
 
     CssResolver resolver;
-    resolver = new CssResolver.OfProperties(key, values, formatter, types, propertyName1, propertyName2);
+    resolver = new CssResolverOfProperties(key, values, formatter, types, propertyName1, propertyName2);
 
     customUtility(key, prefix, resolver);
 

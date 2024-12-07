@@ -18,7 +18,6 @@ package objectos.way;
 import static org.testng.Assert.assertEquals;
 
 import java.util.Map;
-import objectos.way.CssResolver.OfTransitionProperty;
 import org.testng.annotations.Test;
 
 public class CssResolverTest {
@@ -28,8 +27,8 @@ public class CssResolverTest {
     Map<String, String> props;
     props = Map.of("none", "none");
 
-    OfTransitionProperty resolver;
-    resolver = new CssResolver.OfTransitionProperty(props);
+    CssResolverOfTransitionProperty resolver;
+    resolver = new CssResolverOfTransitionProperty(props);
 
     Css.Rule rule;
     rule = resolver.resolve("transition-none", Css.EMPTY_MODIFIER, false, CssValueType.TOKEN, "none");
@@ -48,8 +47,8 @@ public class CssResolverTest {
     Map<String, String> props;
     props = Map.of("all", "all/cubic-bezier(0.4, 0, 0.2, 1)");
 
-    OfTransitionProperty resolver;
-    resolver = new CssResolver.OfTransitionProperty(props);
+    CssResolverOfTransitionProperty resolver;
+    resolver = new CssResolverOfTransitionProperty(props);
 
     Css.Rule rule;
     rule = resolver.resolve("transition-all", Css.EMPTY_MODIFIER, false, CssValueType.TOKEN, "all");
@@ -68,8 +67,8 @@ public class CssResolverTest {
     Map<String, String> props;
     props = Map.of("all", "all/cubic-bezier(0.4, 0, 0.2, 1)/150ms");
 
-    OfTransitionProperty resolver;
-    resolver = new CssResolver.OfTransitionProperty(props);
+    CssResolverOfTransitionProperty resolver;
+    resolver = new CssResolverOfTransitionProperty(props);
 
     Css.Rule rule;
     rule = resolver.resolve("transition-all", Css.EMPTY_MODIFIER, false, CssValueType.TOKEN, "all");

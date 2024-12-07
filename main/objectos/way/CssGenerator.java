@@ -29,7 +29,7 @@ final class CssGenerator extends CssGeneratorAdapter implements Css.Generator, C
 
   record Notes(
       Note.Ref2<String, String> candidatesNotFound,
-      Note.Ref3<String, String, Set<Css.Key>> noMatch
+      Note.Ref3<String, String, Set<Css.Key>> matchNotFound
   ) {
 
     static Notes get() {
@@ -366,7 +366,7 @@ final class CssGenerator extends CssGeneratorAdapter implements Css.Generator, C
       }
     }
 
-    noteSink.send(notes.noMatch, sourceName, className, candidates);
+    noteSink.send(notes.matchNotFound, sourceName, className, candidates);
 
     return Css.Rule.NOOP;
   }
