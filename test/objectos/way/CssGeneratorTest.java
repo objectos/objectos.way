@@ -4057,7 +4057,7 @@ public class CssGeneratorTest {
     SomeNote note0;
     note0 = notes.get(0);
 
-    assertEquals(note0.key, "Candidates not found");
+    assertEquals(note0.key, "Css.Key not found");
     assertEquals(note0.fileName.contains("NoteSinkTest"), true);
     assertEquals(note0.className, "not-an-utility");
     assertEquals(note0.candidates, null);

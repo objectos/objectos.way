@@ -28,7 +28,7 @@ final class CssResolverOfTransitionProperty implements CssResolver {
   }
 
   @Override
-  public final Css.Rule resolve(String className, Css.Modifier modifier, boolean negative, CssValueType type, String value) {
+  public final CssUtility resolve(String className, Css.Modifier modifier, boolean negative, CssValueType type, String value) {
     String resolved;
     resolved = properties.get(value);
 
@@ -39,7 +39,7 @@ final class CssResolverOfTransitionProperty implements CssResolver {
     return resolveSlashes(Css.Key.TRANSITION_PROPERTY, className, modifier, PROPERTY_NAMES, resolved);
   }
 
-  private Css.Rule resolveSlashes(
+  private CssUtility resolveSlashes(
       Css.Key key,
       String className, Css.Modifier modifier,
       String[] propertyNames, String value) {

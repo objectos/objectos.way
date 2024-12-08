@@ -28,7 +28,7 @@ import objectos.way.Css.MediaQuery;
 final class CssGenerator extends CssGeneratorAdapter implements Css.Generator, Css.Repository {
 
   record Notes(
-      Note.Ref2<String, String> candidatesNotFound,
+      Note.Ref2<String, String> keyNotFound,
       Note.Ref3<String, String, Set<Css.Key>> matchNotFound
   ) {
 
@@ -37,7 +37,7 @@ final class CssGenerator extends CssGeneratorAdapter implements Css.Generator, C
       s = Css.Generator.class;
 
       return new Notes(
-          Note.Ref2.create(s, "Candidates not found", Note.DEBUG),
+          Note.Ref2.create(s, "Css.Key not found", Note.DEBUG),
           Note.Ref3.create(s, "Match not found", Note.WARN)
       );
     }
@@ -346,7 +346,7 @@ final class CssGenerator extends CssGeneratorAdapter implements Css.Generator, C
     }
 
     if (candidates == null) {
-      noteSink.send(notes.candidatesNotFound, sourceName, className);
+      noteSink.send(notes.keyNotFound, sourceName, className);
 
       return Css.Rule.NOOP;
     }

@@ -29,7 +29,7 @@ final class CssResolverOfFontSize implements CssResolver {
   }
 
   @Override
-  public final Css.Rule resolve(String className, Css.Modifier modifier, boolean negative, CssValueType type, String value) {
+  public final CssUtility resolve(String className, Css.Modifier modifier, boolean negative, CssValueType type, String value) {
     int slash;
     slash = value.indexOf('/');
 
@@ -87,7 +87,7 @@ final class CssResolverOfFontSize implements CssResolver {
     return result;
   }
 
-  private Css.Rule size(String className, Css.Modifier modifier, String value) {
+  private CssUtility size(String className, Css.Modifier modifier, String value) {
     String size;
     size = fontSize.get(value);
 
@@ -98,7 +98,7 @@ final class CssResolverOfFontSize implements CssResolver {
     }
   }
 
-  private Css.Rule rule(String className, Css.Modifier modifier, String value) {
+  private CssUtility rule(String className, Css.Modifier modifier, String value) {
     CssProperties.Builder properties;
     properties = new CssProperties.Builder();
 
