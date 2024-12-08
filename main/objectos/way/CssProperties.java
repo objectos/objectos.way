@@ -24,7 +24,7 @@ final class CssProperties implements Iterable<Map.Entry<String, String>> {
 
   static final class Builder {
 
-    private final List<Map.Entry<String, String>> values = Util.createList();
+    private final UtilList<Map.Entry<String, String>> values = new UtilList<>();
 
     public final void add(String key, String value) {
       Entry<String, String> entry;
@@ -39,7 +39,7 @@ final class CssProperties implements Iterable<Map.Entry<String, String>> {
       }
 
       return new CssProperties(
-          Util.toUnmodifiableList(values)
+          values.toUnmodifiableList()
       );
     }
 

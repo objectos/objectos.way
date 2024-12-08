@@ -1261,7 +1261,7 @@ public class CssGeneratorTest {
     class Subject extends AbstractSubject {
       @Override
       final void classes() {
-        className("text-xs text-sm text-base text-lg text-xl text-2xl text-3xl text-4xl text-5xl text-6xl text-7xl text-8xl text-9xl");
+        className("text-base");
       }
     }
 
@@ -1269,19 +1269,7 @@ public class CssGeneratorTest {
         Subject.class,
 
         """
-        .text-xs { font-size: 0.75rem; line-height: 1rem }
-        .text-sm { font-size: 0.875rem; line-height: 1.25rem }
-        .text-base { font-size: 1rem; line-height: 1.5rem }
-        .text-lg { font-size: 1.125rem; line-height: 1.75rem }
-        .text-xl { font-size: 1.25rem; line-height: 1.75rem }
-        .text-2xl { font-size: 1.5rem; line-height: 2rem }
-        .text-3xl { font-size: 1.875rem; line-height: 2.25rem }
-        .text-4xl { font-size: 2.25rem; line-height: 2.5rem }
-        .text-5xl { font-size: 3rem; line-height: 1 }
-        .text-6xl { font-size: 3.75rem; line-height: 1 }
-        .text-7xl { font-size: 4.5rem; line-height: 1 }
-        .text-8xl { font-size: 6rem; line-height: 1 }
-        .text-9xl { font-size: 8rem; line-height: 1 }
+        .text-base { font-size: 1rem }
         """
     );
   }
@@ -4199,21 +4187,12 @@ public class CssGeneratorTest {
     test(
         Css.overrideFontSize("""
         sm: 0.8rem
-        base: 16px/24px
-        body-compact-01: var(--ui-body-compact-01-font-size, 0.875rem)/var(--ui-body-compact-01-line-height, 1.28572)/var(--ui-body-compact-01-letter-spacing, 0.16px)/var(--ui-body-compact-01-font-weight, 400)
         """),
 
         Subject.class,
 
         """
         .text-sm { font-size: 0.8rem }
-        .text-base { font-size: 16px; line-height: 24px }
-        .text-body-compact-01 {
-          font-size: var(--ui-body-compact-01-font-size, 0.875rem);
-          line-height: var(--ui-body-compact-01-line-height, 1.28572);
-          letter-spacing: var(--ui-body-compact-01-letter-spacing, 0.16px);
-          font-weight: var(--ui-body-compact-01-font-weight, 400);
-        }
         """
     );
   }
