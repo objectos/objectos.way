@@ -16,6 +16,7 @@
 package objectos.way;
 
 import java.util.Map;
+import objectos.way.Css.Modifier;
 
 final class CssResolverOfTransitionProperty implements CssResolver {
 
@@ -28,14 +29,17 @@ final class CssResolverOfTransitionProperty implements CssResolver {
   }
 
   @Override
-  public final CssUtility resolve(String className, Css.Modifier modifier, boolean negative, CssValueType type, String value) {
-    String resolved;
-    resolved = properties.get(value);
+  public final String resolve(String value) {
+    return properties.get(value);
+  }
 
-    if (resolved == null) {
-      return null;
-    }
+  @Override
+  public final String resolveWithType(CssValueType type, String value) {
+    return null;
+  }
 
+  @Override
+  public final CssUtility create(String className, Modifier modifier, boolean negative, String resolved) {
     return resolveSlashes(Css.Key.TRANSITION_PROPERTY, className, modifier, PROPERTY_NAMES, resolved);
   }
 

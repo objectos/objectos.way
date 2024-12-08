@@ -17,6 +17,10 @@ package objectos.way;
 
 interface CssResolver {
 
-  CssUtility resolve(String className, Css.Modifier modifier, boolean negative, CssValueType type, String value);
+  String resolve(String value);
+
+  String resolveWithType(CssValueType type, String value);
+
+  CssUtility create(String className, Css.Modifier modifier, boolean negative, String resolved);
 
 }

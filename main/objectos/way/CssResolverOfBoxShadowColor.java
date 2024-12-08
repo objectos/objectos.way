@@ -16,17 +16,22 @@
 package objectos.way;
 
 import java.util.Map;
+import objectos.way.Css.Modifier;
 
 record CssResolverOfBoxShadowColor(Map<String, String> props) implements CssResolver {
+
   @Override
-  public final CssUtility resolve(String className, Css.Modifier modifier, boolean negative, CssValueType type, String value) {
-    String resolved;
-    resolved = props.get(value);
+  public final String resolve(String value) {
+    return props.get(value);
+  }
 
-    if (resolved == null) {
-      return null;
-    }
+  @Override
+  public final String resolveWithType(CssValueType type, String value) {
+    return null;
+  }
 
+  @Override
+  public final CssUtility create(String className, Modifier modifier, boolean negative, String resolved) {
     CssProperties.Builder builder;
     builder = new CssProperties.Builder();
 
@@ -36,4 +41,5 @@ record CssResolverOfBoxShadowColor(Map<String, String> props) implements CssReso
 
     return new CssUtility(Css.Key.BOX_SHADOW_COLOR, className, modifier, builder);
   }
+
 }

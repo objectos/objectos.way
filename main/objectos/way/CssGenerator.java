@@ -38,7 +38,7 @@ final class CssGenerator extends CssGeneratorAdapter implements Css.Generator, C
 
       return new Notes(
           Note.Ref2.create(s, "Css.Key not found", Note.DEBUG),
-          Note.Ref3.create(s, "Match not found", Note.WARN)
+          Note.Ref3.create(s, "Match not found", Note.INFO)
       );
     }
 
@@ -351,6 +351,18 @@ final class CssGenerator extends CssGeneratorAdapter implements Css.Generator, C
       return Css.Rule.NOOP;
     }
 
+    for (Css.Key candidate : candidates) {
+      CssResolver resolver;
+      resolver = config.getResolver(candidate);
+
+      String resolved;
+      resolved = resolver.resolve(suffix);
+
+      if (resolved != null) {
+        return resolver.create(className, modifier, negative, resolved);
+      }
+    }
+
     CssValueType type;
     type = CssValueType.parse(suffix);
 
@@ -358,11 +370,11 @@ final class CssGenerator extends CssGeneratorAdapter implements Css.Generator, C
       CssResolver resolver;
       resolver = config.getResolver(candidate);
 
-      Css.Rule rule;
-      rule = resolver.resolve(className, modifier, negative, type, suffix);
+      String resolved;
+      resolved = resolver.resolveWithType(type, suffix);
 
-      if (rule != null) {
-        return rule;
+      if (resolved != null) {
+        return resolver.create(className, modifier, negative, resolved);
       }
     }
 

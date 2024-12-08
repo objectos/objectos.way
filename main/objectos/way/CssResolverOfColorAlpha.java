@@ -16,6 +16,7 @@
 package objectos.way;
 
 import java.util.Map;
+import objectos.way.Css.Modifier;
 
 final class CssResolverOfColorAlpha implements CssResolver {
 
@@ -27,10 +28,6 @@ final class CssResolverOfColorAlpha implements CssResolver {
 
   private final String propertyName2;
 
-  public CssResolverOfColorAlpha(Css.Key key, Map<String, String> colors, String propertyName1) {
-    this(key, colors, propertyName1, null);
-  }
-
   public CssResolverOfColorAlpha(Css.Key key, Map<String, String> colors, String propertyName1, String propertyName2) {
     this.key = key;
     this.colors = colors;
@@ -39,31 +36,24 @@ final class CssResolverOfColorAlpha implements CssResolver {
   }
 
   @Override
-  public final CssUtility resolve(String className, Css.Modifier modifier, boolean negative, CssValueType type, String value) {
-    String colorKey;
-    colorKey = value;
+  public final String resolve(String value) {
+    return colors.get(value);
+  }
 
-    int slash;
-    slash = value.indexOf('/');
+  @Override
+  public final String resolveWithType(CssValueType type, String value) {
+    return null;
+  }
 
-    if (slash > 0) {
-      throw new UnsupportedOperationException("Implement me :: " + value);
-    }
-
-    String color;
-    color = colors.get(colorKey);
-
-    if (color == null) {
-      return null;
-    }
-
+  @Override
+  public final CssUtility create(String className, Modifier modifier, boolean negative, String resolved) {
     CssProperties.Builder properties;
     properties = new CssProperties.Builder();
 
-    properties.add(propertyName1, color);
+    properties.add(propertyName1, resolved);
 
     if (propertyName2 != null) {
-      properties.add(propertyName2, color);
+      properties.add(propertyName2, resolved);
     }
 
     return new CssUtility(key, className, modifier, properties);

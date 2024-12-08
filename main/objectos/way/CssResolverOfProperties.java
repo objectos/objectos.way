@@ -17,6 +17,7 @@ package objectos.way;
 
 import java.util.Map;
 import java.util.Set;
+import objectos.way.Css.Modifier;
 
 final class CssResolverOfProperties implements CssResolver {
 
@@ -46,27 +47,27 @@ final class CssResolverOfProperties implements CssResolver {
   }
 
   @Override
-  public final CssUtility resolve(String className, Css.Modifier modifier, boolean negative, CssValueType type, String value) {
-    String resolved;
-    resolved = properties.get(value);
+  public final String resolve(String value) {
+    return properties.get(value);
+  }
 
-    if (resolved == null && valueTypes.contains(type)) {
-      resolved = type.get(value);
-    }
+  @Override
+  public final String resolveWithType(CssValueType type, String value) {
+    return valueTypes.contains(type) ? type.get(value) : null;
+  }
 
-    if (resolved == null) {
-      return null;
-    }
-
-    resolved = valueFormatter.format(resolved, negative);
+  @Override
+  public final CssUtility create(String className, Modifier modifier, boolean negative, String resolved) {
+    String formatted;
+    formatted = valueFormatter.format(resolved, negative);
 
     CssProperties.Builder properties;
     properties = new CssProperties.Builder();
 
-    properties.add(propertyName1, resolved);
+    properties.add(propertyName1, formatted);
 
     if (propertyName2 != null) {
-      properties.add(propertyName2, resolved);
+      properties.add(propertyName2, formatted);
     }
 
     return new CssUtility(key, className, modifier, properties);
