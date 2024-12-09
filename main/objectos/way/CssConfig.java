@@ -303,6 +303,10 @@ final class CssConfig {
       CssValueType.INTEGER
   );
 
+  private static final Set<CssValueType> KEYWORD = EnumSet.of(
+      CssValueType.KEYWORD
+  );
+
   private static final Set<CssValueType> LENGTH = EnumSet.of(
       CssValueType.LENGTH_PX,
       CssValueType.DIMENSION
@@ -1541,19 +1545,9 @@ final class CssConfig {
     funcUtility(
         Css.Key.LIST_STYLE_TYPE,
 
-        values(
-            Css.Key.LIST_STYLE_TYPE,
+        "list-style-type",
 
-            """
-            none: none
-            disc: disc
-            decimal: decimal
-            """
-        ),
-
-        STRING,
-
-        "list", "list-style-type"
+        KEYWORD
     );
   }
 
@@ -2087,6 +2081,23 @@ final class CssConfig {
   }
 
   // new funcUtility
+
+  private void funcUtility(
+      Css.Key key,
+      String propertyName,
+      Set<CssValueType> supportedTypes) {
+
+    prefix(key, propertyName);
+
+    Map<String, String> values;
+    values = Map.of();
+
+    CssResolver resolver;
+    resolver = new CssResolverOfProperties(key, values, IDENTITY, supportedTypes, propertyName, null);
+
+    resolver(key, resolver);
+
+  }
 
   private void funcUtility(
       Css.Key key,

@@ -1795,7 +1795,7 @@ public class CssGeneratorTest {
     class Subject extends AbstractSubject {
       @Override
       final void classes() {
-        className("list-none list-disc list-decimal list-upper-roman");
+        className("list-style-type-none list-style-type-square list-style-type-upper-roman");
       }
     }
 
@@ -1803,10 +1803,9 @@ public class CssGeneratorTest {
         Subject.class,
 
         """
-        .list-none { list-style-type: none }
-        .list-disc { list-style-type: disc }
-        .list-decimal { list-style-type: decimal }
-        .list-upper-roman { list-style-type: upper-roman }
+        .list-style-type-none { list-style-type: none }
+        .list-style-type-square { list-style-type: square }
+        .list-style-type-upper-roman { list-style-type: upper-roman }
         """
     );
   }

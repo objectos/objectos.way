@@ -21,7 +21,7 @@ import org.testng.annotations.Test;
 
 public class CssValueTypeTest {
 
-  @Test(description = "strings")
+  @Test(description = "decode: string")
   public void decode01() {
     CssValueType type;
     type = CssValueType.STRING;
@@ -32,12 +32,12 @@ public class CssValueTypeTest {
     assertEquals(type.get("foo_bar"), "foo bar");
   }
 
-  @Test(description = "length px")
+  @Test(description = "decode: length=0px")
   public void decodeLengthPx01() {
     assertEquals(CssValueType.LENGTH_PX.get("0px"), "0px");
   }
 
-  @Test(description = "length px")
+  @Test(description = "decode: length < 16px")
   public void decodeLengthPx02() {
     CssValueType type;
     type = CssValueType.LENGTH_PX;
@@ -49,7 +49,7 @@ public class CssValueTypeTest {
     assertEquals(type.get("10px"), "0.625rem");
   }
 
-  @Test(description = "length px")
+  @Test(description = "decode: length >= 16px")
   public void decodeLengthPx03() {
     CssValueType type;
     type = CssValueType.LENGTH_PX;
@@ -59,28 +59,33 @@ public class CssValueTypeTest {
     assertEquals(type.get("48px"), "3rem");
   }
 
-  @Test(description = "string: empty")
-  public void parseString01() {
-    assertEquals(CssValueType.parse(""), CssValueType.STRING);
+  @Test(description = "parse: empty")
+  public void parseEmpty01() {
+    assertEquals(CssValueType.parse(""), CssValueType.EMPTY);
   }
 
-  @Test(description = "string: len=1")
-  public void parseString02() {
-    assertEquals(CssValueType.parse("x"), CssValueType.STRING);
+  @Test(description = "parse: keyword len=1")
+  public void parseKeyword01() {
+    assertEquals(CssValueType.parse("x"), CssValueType.KEYWORD);
   }
 
-  @Test(description = "string: len>1")
-  public void parseString03() {
-    assertEquals(CssValueType.parse("block"), CssValueType.STRING);
+  @Test(description = "parse: keyword len>1")
+  public void parseKeyword02() {
+    assertEquals(CssValueType.parse("block"), CssValueType.KEYWORD);
+  }
+
+  @Test(description = "parse: keyword with dash")
+  public void parseKeyword03() {
+    assertEquals(CssValueType.parse("flex-start"), CssValueType.KEYWORD);
   }
 
   @Test(description = "string: box-shadow")
-  public void parseString04() {
+  public void parseString01() {
     assertEquals(CssValueType.parse("0_35px_60px_-15px_rgb(0_0_0_/_0.3)"), CssValueType.STRING);
   }
 
   @Test(description = "string: flex")
-  public void parseString05() {
+  public void parseString02() {
     assertEquals(CssValueType.parse("2_2_0%"), CssValueType.STRING);
   }
 

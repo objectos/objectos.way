@@ -17,6 +17,10 @@ package objectos.way;
 
 enum CssValueType {
 
+  EMPTY,
+
+  KEYWORD,
+
   STRING,
 
   ZERO,
@@ -34,6 +38,8 @@ enum CssValueType {
   private enum Parser {
 
     START,
+
+    MAYBE_KEYWORD,
 
     TOKEN,
 
@@ -69,8 +75,26 @@ enum CssValueType {
             parser = Parser.MAYBE_ZERO;
           }
 
+          else if (isLetter(c)) {
+            parser = Parser.MAYBE_KEYWORD;
+          }
+
           else if (isDigit(c)) {
             parser = Parser.INTEGER;
+          }
+
+          else {
+            parser = Parser.TOKEN;
+          }
+        }
+
+        case MAYBE_KEYWORD -> {
+          if (isLetter(c)) {
+            parser = Parser.MAYBE_KEYWORD;
+          }
+
+          else if (c == '-') {
+            parser = Parser.MAYBE_KEYWORD;
           }
 
           else {
@@ -193,7 +217,9 @@ enum CssValueType {
     }
 
     return switch (parser) {
-      case START -> CssValueType.STRING;
+      case START -> CssValueType.EMPTY;
+
+      case MAYBE_KEYWORD -> CssValueType.KEYWORD;
 
       case TOKEN -> CssValueType.STRING;
 
@@ -226,6 +252,20 @@ enum CssValueType {
 
   public final String get(String value) {
     return switch (this) {
+      case EMPTY,
+
+           KEYWORD,
+
+           ZERO,
+
+           DIMENSION,
+
+           PERCENTAGE,
+
+           INTEGER,
+
+           DECIMAL -> value;
+
       case STRING -> value.replace('_', ' ');
 
       case LENGTH_PX -> {
@@ -378,16 +418,6 @@ enum CssValueType {
 
         yield out.toString();
       }
-
-      case ZERO,
-
-           DIMENSION,
-
-           PERCENTAGE,
-
-           INTEGER,
-
-           DECIMAL -> value;
     };
   }
 
