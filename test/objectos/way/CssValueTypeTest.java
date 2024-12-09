@@ -189,4 +189,29 @@ public class CssValueTypeTest {
     assertEquals(CssValueType.parse("0"), CssValueType.ZERO);
   }
 
+  @Test(description = "parse ratio :: integer/integer")
+  public void parseRatio01() {
+    assertEquals(CssValueType.parse("1/1"), CssValueType.RATIO);
+  }
+
+  @Test(description = "parse ratio :: integer/integer")
+  public void parseRatio02() {
+    assertEquals(CssValueType.parse("16/9"), CssValueType.RATIO);
+  }
+
+  @Test(description = "parse ratio :: decimal/integer")
+  public void parseRatio03() {
+    assertEquals(CssValueType.parse("2.40/1"), CssValueType.RATIO);
+  }
+
+  @Test(description = "parse ratio :: integer/decimal")
+  public void parseRatio04() {
+    assertEquals(CssValueType.parse("2/1.5"), CssValueType.RATIO);
+  }
+
+  @Test(description = "parse ratio :: not ratio")
+  public void parseRatio05() {
+    assertEquals(CssValueType.parse("2/1."), CssValueType.STRING);
+  }
+
 }

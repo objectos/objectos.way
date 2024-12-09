@@ -834,10 +834,6 @@ public final class Css {
     return override(Key.FILL, text);
   }
 
-  public static Option overrideFontSize(String text) {
-    return override(Key.FONT_SIZE, text);
-  }
-
   public static Option overrideFontWeight(String text) {
     return override(Key.FONT_WEIGHT, text);
   }

@@ -33,13 +33,15 @@ enum CssValueType {
 
   INTEGER,
 
-  DECIMAL;
+  DECIMAL,
+
+  RATIO;
 
   private enum Parser {
 
     START,
 
-    MAYBE_KEYWORD,
+    KEYWORD,
 
     TOKEN,
 
@@ -57,7 +59,13 @@ enum CssValueType {
 
     DIMENSION,
 
-    PERCENTAGE;
+    PERCENTAGE,
+
+    RATIO,
+
+    MAYBE_RATIO_DECIMAL,
+
+    RATIO_DECIMAL;
 
   }
 
@@ -76,7 +84,7 @@ enum CssValueType {
           }
 
           else if (isLetter(c)) {
-            parser = Parser.MAYBE_KEYWORD;
+            parser = Parser.KEYWORD;
           }
 
           else if (isDigit(c)) {
@@ -88,13 +96,13 @@ enum CssValueType {
           }
         }
 
-        case MAYBE_KEYWORD -> {
+        case KEYWORD -> {
           if (isLetter(c)) {
-            parser = Parser.MAYBE_KEYWORD;
+            parser = Parser.KEYWORD;
           }
 
           else if (c == '-') {
-            parser = Parser.MAYBE_KEYWORD;
+            parser = Parser.KEYWORD;
           }
 
           else {
@@ -129,6 +137,10 @@ enum CssValueType {
             parser = Parser.MAYBE_DECIMAL;
           }
 
+          else if (c == '/') {
+            parser = Parser.RATIO;
+          }
+
           else if (c == '%') {
             parser = Parser.PERCENTAGE;
           }
@@ -161,7 +173,11 @@ enum CssValueType {
         }
 
         case DECIMAL -> {
-          if (c == '%') {
+          if (c == '/') {
+            parser = Parser.RATIO;
+          }
+
+          else if (c == '%') {
             parser = Parser.PERCENTAGE;
           }
 
@@ -210,6 +226,30 @@ enum CssValueType {
           parser = Parser.TOKEN;
         }
 
+        case RATIO -> {
+          if (isDigit(c)) {
+            parser = Parser.RATIO;
+          }
+
+          else if (c == '.') {
+            parser = Parser.MAYBE_RATIO_DECIMAL;
+          }
+
+          else {
+            parser = Parser.TOKEN;
+          }
+        }
+
+        case MAYBE_RATIO_DECIMAL, RATIO_DECIMAL -> {
+          if (isDigit(c)) {
+            parser = Parser.RATIO_DECIMAL;
+          }
+
+          else {
+            parser = Parser.TOKEN;
+          }
+        }
+
         case TOKEN -> {
           break outer;
         }
@@ -219,7 +259,7 @@ enum CssValueType {
     return switch (parser) {
       case START -> CssValueType.EMPTY;
 
-      case MAYBE_KEYWORD -> CssValueType.KEYWORD;
+      case KEYWORD -> CssValueType.KEYWORD;
 
       case TOKEN -> CssValueType.STRING;
 
@@ -238,6 +278,12 @@ enum CssValueType {
       case DIMENSION -> CssValueType.DIMENSION;
 
       case PERCENTAGE -> CssValueType.PERCENTAGE;
+
+      case RATIO -> CssValueType.RATIO;
+
+      case MAYBE_RATIO_DECIMAL -> CssValueType.STRING;
+
+      case RATIO_DECIMAL -> CssValueType.RATIO;
     };
   }
 
@@ -264,7 +310,9 @@ enum CssValueType {
 
            INTEGER,
 
-           DECIMAL -> value;
+           DECIMAL,
+
+           RATIO -> value;
 
       case STRING -> value.replace('_', ' ');
 

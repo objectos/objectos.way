@@ -16,12 +16,10 @@
 package objectos.way;
 
 import java.nio.file.Path;
-import java.text.NumberFormat;
 import java.util.EnumMap;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Function;
@@ -300,7 +298,8 @@ final class CssConfig {
 
   private static final Set<CssValueType> INTEGER = EnumSet.of(
       CssValueType.ZERO,
-      CssValueType.INTEGER
+      CssValueType.INTEGER,
+      CssValueType.KEYWORD
   );
 
   private static final Set<CssValueType> KEYWORD = EnumSet.of(
@@ -309,13 +308,15 @@ final class CssConfig {
 
   private static final Set<CssValueType> LENGTH = EnumSet.of(
       CssValueType.LENGTH_PX,
-      CssValueType.DIMENSION
+      CssValueType.DIMENSION,
+      CssValueType.KEYWORD
   );
 
   private static final Set<CssValueType> L_OR_P = EnumSet.of(
       CssValueType.LENGTH_PX,
       CssValueType.DIMENSION,
-      CssValueType.PERCENTAGE
+      CssValueType.PERCENTAGE,
+      CssValueType.KEYWORD
   );
 
   private static final Set<CssValueType> STRING = EnumSet.of(
@@ -827,147 +828,50 @@ final class CssConfig {
         """
     );
 
-    staticUtility(
+    funcUtility(
         Css.Key.ALIGN_CONTENT,
 
-        """
-        content-normal   | align-content: normal
-        content-center   | align-content: center
-        content-start    | align-content: flex-start
-        content-end      | align-content: flex-end
-        content-between  | align-content: space-between
-        content-around   | align-content: space-around
-        content-evenly   | align-content: space-evenly
-        content-baseline | align-content: baseline
-        content-stretch  | align-content: stretch
-        """
+        "align-content",
+
+        KEYWORD
     );
 
-    staticUtility(
+    funcUtility(
         Css.Key.ALIGN_ITEMS,
 
-        """
-        items-start    | align-items: flex-start
-        items-end      | align-items: flex-end
-        items-center   | align-items: center
-        items-baseline | align-items: baseline
-        items-stretch  | align-items: stretch
-        """
+        "align-items",
+
+        KEYWORD
     );
 
-    staticUtility(
+    funcUtility(
         Css.Key.ALIGN_SELF,
 
-        """
-        self-auto     | align-self: auto
-        self-start    | align-self: flex-start
-        self-end      | align-self: flex-end
-        self-center   | align-self: center
-        self-baseline | align-self: baseline
-        self-stretch  | align-self: stretch
-        """
+        "align-self",
+
+        KEYWORD
     );
 
-    staticUtility(
+    funcUtility(
         Css.Key.APPEARANCE,
 
-        """
-        appearance-none | appearance: none
-        appearance-auto | appearance: auto
-        """
+        "appearance",
+
+        KEYWORD
     );
 
-    var aspectRatio = values(
+    funcUtility(
         Css.Key.ASPECT_RATIO,
 
-        """
-        16x9: 16/9
-        9x16: 9/16
-        2x1: 2/1
-        1x2: 1/2
-        4x3: 4/3
-        3x4: 3/4
-        3x2: 3/2
-        2x3: 2/3
-        1x1: 1/1
-        """
+        "aspect-ratio",
+
+        EnumSet.of(
+            CssValueType.INTEGER,
+            CssValueType.DECIMAL,
+            CssValueType.RATIO,
+            CssValueType.KEYWORD
+        )
     );
-
-    addComponent("aspect-auto", "before:hidden after:hidden");
-
-    NumberFormat doubleFormatter;
-    doubleFormatter = NumberFormat.getNumberInstance(Locale.US);
-
-    doubleFormatter.setMaximumFractionDigits(5);
-
-    for (String suffix : aspectRatio.keySet()) {
-      String raw;
-      raw = aspectRatio.get(suffix);
-
-      int slash;
-      slash = raw.indexOf('/');
-
-      if (slash <= 0) {
-        continue;
-      }
-
-      int height;
-
-      try {
-        String s;
-        s = raw.substring(slash + 1);
-
-        height = Integer.parseInt(s);
-      } catch (NumberFormatException e) {
-        continue;
-      }
-
-      if (height <= 0) {
-        continue;
-      }
-
-      int width;
-
-      try {
-        String s;
-        s = raw.substring(0, slash);
-
-        width = Integer.parseInt(s);
-      } catch (NumberFormatException e) {
-        continue;
-      }
-
-      if (width <= 0) {
-        continue;
-      }
-
-      double padding;
-      padding = ((double) height / (double) width) * 100d;
-
-      StringBuilder def;
-      def = new StringBuilder();
-
-      def.append("before:float-left before:-ml-1px before:w-1px before:h-0px");
-      def.append(' ');
-      def.append("before:pt-");
-
-      if (padding == Math.rint(padding)) {
-        def.append((int) padding);
-      } else {
-        def.append(doubleFormatter.format(padding));
-      }
-
-      def.append("% ");
-      def.append("before:content-''");
-      def.append(' ');
-      def.append("after:table after:clear-both after:content-''");
-
-      addComponent(
-          "aspect-" + suffix,
-
-          def.toString()
-      );
-    }
   }
 
   private static final Pattern REPLACE_COLOR = Pattern.compile(

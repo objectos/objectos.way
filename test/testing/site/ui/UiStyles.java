@@ -90,12 +90,6 @@ final class UiStyles implements Http.Handler {
         empty: ""
         """),
 
-        Css.overrideFontSize("""
-        body-compact-01: var(--cds-body-compact-01-font-size, 0.875rem)/var(--cds-body-compact-01-line-height, 1.28572)/var(--cds-body-compact-01-letter-spacing, 0.16px)/var(--cds-body-compact-01-font-weight, 400)
-
-        heading-compact-01: var(--cds-heading-compact-01-font-size, 0.875rem)/var(--cds-heading-compact-01-line-height, 1.28572)/var(--cds-heading-compact-01-letter-spacing, 0.16px)/var(--cds-heading-compact-01-font-weight, 600)
-        """),
-
         Css.overrideSpacing("""
         0px: 0px
         1px: 0.0625rem

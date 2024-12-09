@@ -45,7 +45,7 @@ public class CssGeneratorTest {
     class Subject extends AbstractSubject {
       @Override
       final void classes() {
-        className("content-normal content-center content-start content-end content-between content-around content-evenly content-baseline content-stretch");
+        className("align-content-normal align-content-flex-start");
       }
     }
 
@@ -53,15 +53,8 @@ public class CssGeneratorTest {
         Subject.class,
 
         """
-        .content-normal { align-content: normal }
-        .content-center { align-content: center }
-        .content-start { align-content: flex-start }
-        .content-end { align-content: flex-end }
-        .content-between { align-content: space-between }
-        .content-around { align-content: space-around }
-        .content-evenly { align-content: space-evenly }
-        .content-baseline { align-content: baseline }
-        .content-stretch { align-content: stretch }
+        .align-content-normal { align-content: normal }
+        .align-content-flex-start { align-content: flex-start }
         """
     );
   }
@@ -71,11 +64,7 @@ public class CssGeneratorTest {
     class Subject extends AbstractSubject {
       @Override
       final void classes() {
-        className("items-start");
-        className("items-end");
-        className("items-center");
-        className("items-baseline");
-        className("items-stretch");
+        className("align-items-flex-start align-items-center");
       }
     }
 
@@ -83,11 +72,8 @@ public class CssGeneratorTest {
         Subject.class,
 
         """
-        .items-start { align-items: flex-start }
-        .items-end { align-items: flex-end }
-        .items-center { align-items: center }
-        .items-baseline { align-items: baseline }
-        .items-stretch { align-items: stretch }
+        .align-items-flex-start { align-items: flex-start }
+        .align-items-center { align-items: center }
         """
     );
   }
@@ -97,7 +83,7 @@ public class CssGeneratorTest {
     class Subject extends AbstractSubject {
       @Override
       final void classes() {
-        className("self-auto self-start self-end self-center self-stretch self-baseline");
+        className("align-self-auto align-self-flex-start");
       }
     }
 
@@ -105,12 +91,8 @@ public class CssGeneratorTest {
         Subject.class,
 
         """
-        .self-auto { align-self: auto }
-        .self-start { align-self: flex-start }
-        .self-end { align-self: flex-end }
-        .self-center { align-self: center }
-        .self-stretch { align-self: stretch }
-        .self-baseline { align-self: baseline }
+        .align-self-auto { align-self: auto }
+        .align-self-flex-start { align-self: flex-start }
         """
     );
   }
@@ -139,7 +121,7 @@ public class CssGeneratorTest {
     class Subject extends AbstractSubject {
       @Override
       final void classes() {
-        className("aspect-auto aspect-16x9 aspect-9x16 aspect-2x1 aspect-1x2 aspect-4x3 aspect-3x4 aspect-3x2 aspect-2x3 aspect-1x1");
+        className("aspect-ratio-auto aspect-ratio-2 aspect-ratio-16/9");
       }
     }
 
@@ -147,138 +129,9 @@ public class CssGeneratorTest {
         Subject.class,
 
         """
-        .aspect-16x9::before {
-          float: left;
-          margin-left: -0.0625rem;
-          height: 0px;
-          width: 0.0625rem;
-          padding-top: 56.25%;
-          content: '';
-        }
-        .aspect-16x9::after {
-          clear: both;
-          display: table;
-          content: '';
-        }
-
-        .aspect-1x1::before {
-          float: left;
-          margin-left: -0.0625rem;
-          height: 0px;
-          width: 0.0625rem;
-          padding-top: 100%;
-          content: '';
-        }
-        .aspect-1x1::after {
-          clear: both;
-          display: table;
-          content: '';
-        }
-
-        .aspect-1x2::before {
-          float: left;
-          margin-left: -0.0625rem;
-          height: 0px;
-          width: 0.0625rem;
-          padding-top: 200%;
-          content: '';
-        }
-        .aspect-1x2::after {
-          clear: both;
-          display: table;
-          content: '';
-        }
-
-        .aspect-2x1::before {
-          float: left;
-          margin-left: -0.0625rem;
-          height: 0px;
-          width: 0.0625rem;
-          padding-top: 50%;
-          content: '';
-        }
-        .aspect-2x1::after {
-          clear: both;
-          display: table;
-          content: '';
-        }
-
-        .aspect-2x3::before {
-          float: left;
-          margin-left: -0.0625rem;
-          height: 0px;
-          width: 0.0625rem;
-          padding-top: 150%;
-          content: '';
-        }
-        .aspect-2x3::after {
-          clear: both;
-          display: table;
-          content: '';
-        }
-
-        .aspect-3x2::before {
-          float: left;
-          margin-left: -0.0625rem;
-          height: 0px;
-          width: 0.0625rem;
-          padding-top: 66.66667%;
-          content: '';
-        }
-        .aspect-3x2::after {
-          clear: both;
-          display: table;
-          content: '';
-        }
-
-        .aspect-3x4::before {
-          float: left;
-          margin-left: -0.0625rem;
-          height: 0px;
-          width: 0.0625rem;
-          padding-top: 133.33333%;
-          content: '';
-        }
-        .aspect-3x4::after {
-          clear: both;
-          display: table;
-          content: '';
-        }
-
-        .aspect-4x3::before {
-          float: left;
-          margin-left: -0.0625rem;
-          height: 0px;
-          width: 0.0625rem;
-          padding-top: 75%;
-          content: '';
-        }
-        .aspect-4x3::after {
-          clear: both;
-          display: table;
-          content: '';
-        }
-
-        .aspect-9x16::before {
-          float: left;
-          margin-left: -0.0625rem;
-          height: 0px;
-          width: 0.0625rem;
-          padding-top: 177.77778%;
-          content: '';
-        }
-        .aspect-9x16::after {
-          clear: both;
-          display: table;
-          content: '';
-        }
-
-        .aspect-auto::before {
-          display: none;
-        }
-        .aspect-auto::after {
-          display: none;
-        }
+        .aspect-ratio-auto { aspect-ratio: auto }
+        .aspect-ratio-2 { aspect-ratio: 2 }
+        .aspect-ratio-16\\/9 { aspect-ratio: 16/9 }
         """
     );
   }
@@ -3134,7 +2987,7 @@ public class CssGeneratorTest {
     test(
         Css.components("""
         # carbon-grid
-        mx-auto grid w-full max-w-screen-max grid-cols-4
+        mx-auto grid w-full max-w-screen-2xl grid-cols-4
         px-0
         md:grid-cols-8 md:px-16px
         lg:grid-cols-12
@@ -3150,6 +3003,7 @@ public class CssGeneratorTest {
           margin-right: auto;
           display: grid;
           width: 100%;
+          max-width: 1536px;
           grid-template-columns: repeat(4, minmax(0, 1fr));
           padding-left: 0px;
           padding-right: 0px;
@@ -3468,7 +3322,7 @@ public class CssGeneratorTest {
       @Override
       final void classes() {
         className("not-an-utility");
-        className("text-invalid-value");
+        className("font-size-1");
       }
     }
 
@@ -3517,8 +3371,8 @@ public class CssGeneratorTest {
 
     assertEquals(note1.key, "Match not found");
     assertEquals(note1.fileName.contains("NoteSinkTest"), true);
-    assertEquals(note1.className, "text-invalid-value");
-    assertEquals(note1.candidates, EnumSet.of(Css.Key.TEXT_COLOR, Css.Key.FONT_SIZE));
+    assertEquals(note1.className, "font-size-1");
+    assertEquals(note1.candidates, EnumSet.of(Css.Key.FONT_SIZE));
   }
 
   @Test
@@ -3633,28 +3487,6 @@ public class CssGeneratorTest {
         """
         .content-foo { content: url(foo.png) }
         .before\\:content-empty::before { content: "" }
-        """
-    );
-  }
-
-  @Test
-  public void overrideFontSize() {
-    class Subject extends AbstractSubject {
-      @Override
-      final void classes() {
-        className("text-sm text-base text-body-compact-01");
-      }
-    }
-
-    test(
-        Css.overrideFontSize("""
-        sm: 0.8rem
-        """),
-
-        Subject.class,
-
-        """
-        .text-sm { font-size: 0.8rem }
         """
     );
   }
