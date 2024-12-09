@@ -27,7 +27,7 @@ record CssResolverOfBoxShadow(Map<String, String> props) implements CssResolver 
 
   @Override
   public final String resolveWithType(CssValueType type, String value) {
-    return type == CssValueType.BOXED ? type.get(value) : null;
+    return type == CssValueType.STRING ? type.get(value) : null;
   }
 
   @Override

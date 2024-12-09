@@ -299,43 +299,23 @@ final class CssConfig {
   //
 
   private static final Set<CssValueType> INTEGER = EnumSet.of(
-      CssValueType.TOKEN_ZERO,
-      CssValueType.TOKEN_INTEGER,
-
-      CssValueType.BOXED_ZERO,
-      CssValueType.BOXED_INTEGER
+      CssValueType.ZERO,
+      CssValueType.INTEGER
   );
 
   private static final Set<CssValueType> LENGTH = EnumSet.of(
-      CssValueType.TOKEN_LENGTH,
-
-      CssValueType.BOXED_LENGTH
+      CssValueType.ZERO,
+      CssValueType.DIMENSION
   );
 
   private static final Set<CssValueType> L_OR_P = EnumSet.of(
-      CssValueType.TOKEN_ZERO,
-      CssValueType.TOKEN_LENGTH,
-      CssValueType.TOKEN_PERCENTAGE,
-
-      CssValueType.BOXED_ZERO,
-      CssValueType.BOXED_LENGTH,
-      CssValueType.BOXED_PERCENTAGE
-  );
-
-  private static final Set<CssValueType> L_OR_P_NEG = EnumSet.of(
-      CssValueType.TOKEN_ZERO,
-      CssValueType.TOKEN_LENGTH,
-      CssValueType.TOKEN_PERCENTAGE,
-
-      CssValueType.BOXED_ZERO,
-      CssValueType.BOXED_LENGTH,
-      CssValueType.BOXED_LENGTH_NEGATIVE,
-      CssValueType.BOXED_PERCENTAGE,
-      CssValueType.BOXED_PERCENTAGE_NEGATIVE
+      CssValueType.ZERO,
+      CssValueType.DIMENSION,
+      CssValueType.PERCENTAGE
   );
 
   private static final Set<CssValueType> STRING = EnumSet.of(
-      CssValueType.BOXED
+      CssValueType.STRING
   );
 
   final void spec() {
@@ -1035,9 +1015,9 @@ final class CssConfig {
       StringBuilder def;
       def = new StringBuilder();
 
-      def.append("before:float-left before:ml-[-1px] before:w-[1px] before:h-[0]");
+      def.append("before:float-left before:-ml-1px before:w-1px before:h-0");
       def.append(' ');
-      def.append("before:pt-[");
+      def.append("before:pt-");
 
       if (padding == Math.rint(padding)) {
         def.append((int) padding);
@@ -1045,10 +1025,10 @@ final class CssConfig {
         def.append(doubleFormatter.format(padding));
       }
 
-      def.append("%] ");
-      def.append("before:content-['']");
+      def.append("% ");
+      def.append("before:content-''");
       def.append(' ');
-      def.append("after:table after:clear-both after:content-['']");
+      def.append("after:table after:clear-both after:content-''");
 
       addComponent(
           "aspect-" + suffix,
@@ -1583,10 +1563,10 @@ final class CssConfig {
         values(Css.Key.LINE_HEIGHT, Css.DEFAULT_LINE_HEIGHT),
 
         EnumSet.of(
-            CssValueType.BOXED_INTEGER,
-            CssValueType.BOXED_DECIMAL,
-            CssValueType.BOXED_LENGTH,
-            CssValueType.BOXED_PERCENTAGE
+            CssValueType.INTEGER,
+            CssValueType.DECIMAL,
+            CssValueType.DIMENSION,
+            CssValueType.PERCENTAGE
         ),
 
         "leading", "line-height"
@@ -1621,13 +1601,13 @@ final class CssConfig {
         """
     );
 
-    funcUtility(Css.Key.MARGIN, margin, NEGATIVE, L_OR_P_NEG, "m", "margin");
-    funcUtility(Css.Key.MARGIN_TOP, margin, NEGATIVE, L_OR_P_NEG, "mt", propertyType.marginTop());
-    funcUtility(Css.Key.MARGIN_RIGHT, margin, NEGATIVE, L_OR_P_NEG, "mr", propertyType.marginRight());
-    funcUtility(Css.Key.MARGIN_BOTTOM, margin, NEGATIVE, L_OR_P_NEG, "mb", propertyType.marginBottom());
-    funcUtility(Css.Key.MARGIN_LEFT, margin, NEGATIVE, L_OR_P_NEG, "ml", propertyType.marginLeft());
-    funcUtility(Css.Key.MARGIN_X, margin, NEGATIVE, L_OR_P_NEG, "mx", propertyType.marginLeft(), propertyType.marginRight());
-    funcUtility(Css.Key.MARGIN_Y, margin, NEGATIVE, L_OR_P_NEG, "my", propertyType.marginTop(), propertyType.marginBottom());
+    funcUtility(Css.Key.MARGIN, margin, NEGATIVE, L_OR_P, "m", "margin");
+    funcUtility(Css.Key.MARGIN_TOP, margin, NEGATIVE, L_OR_P, "mt", propertyType.marginTop());
+    funcUtility(Css.Key.MARGIN_RIGHT, margin, NEGATIVE, L_OR_P, "mr", propertyType.marginRight());
+    funcUtility(Css.Key.MARGIN_BOTTOM, margin, NEGATIVE, L_OR_P, "mb", propertyType.marginBottom());
+    funcUtility(Css.Key.MARGIN_LEFT, margin, NEGATIVE, L_OR_P, "ml", propertyType.marginLeft());
+    funcUtility(Css.Key.MARGIN_X, margin, NEGATIVE, L_OR_P, "mx", propertyType.marginLeft(), propertyType.marginRight());
+    funcUtility(Css.Key.MARGIN_Y, margin, NEGATIVE, L_OR_P, "my", propertyType.marginTop(), propertyType.marginBottom());
 
     funcUtility(
         Css.Key.MAX_HEIGHT,

@@ -27,7 +27,7 @@ record CssResolverOfRingWidth(Map<String, String> props) implements CssResolver 
 
   @Override
   public final String resolveWithType(CssValueType type, String value) {
-    return type == CssValueType.BOXED_LENGTH ? type.get(value) : null;
+    return type == CssValueType.DIMENSION ? type.get(value) : null;
   }
 
   @Override

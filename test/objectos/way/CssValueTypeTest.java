@@ -21,144 +21,84 @@ import org.testng.annotations.Test;
 
 public class CssValueTypeTest {
 
-  @Test(description = "boxed: empty")
-  public void parseBoxed01() {
-    assertEquals(CssValueType.parse("[]"), CssValueType.BOXED);
+  @Test(description = "string: empty")
+  public void parseString01() {
+    assertEquals(CssValueType.parse(""), CssValueType.STRING);
   }
 
-  @Test(description = "boxed: len=1")
-  public void parseBoxed02() {
-    assertEquals(CssValueType.parse("[b]"), CssValueType.BOXED);
+  @Test(description = "string: len=1")
+  public void parseString02() {
+    assertEquals(CssValueType.parse("x"), CssValueType.STRING);
   }
 
-  @Test(description = "boxed: len>1")
-  public void parseBoxed03() {
-    assertEquals(CssValueType.parse("[foo]"), CssValueType.BOXED);
+  @Test(description = "string: len>1")
+  public void parseString03() {
+    assertEquals(CssValueType.parse("block"), CssValueType.STRING);
   }
 
-  @Test(description = "boxed: box-shadow")
-  public void parseBoxed04() {
-    assertEquals(CssValueType.parse("[0_35px_60px_-15px_rgb(0_0_0_/_0.3)]"), CssValueType.BOXED);
+  @Test(description = "string: box-shadow")
+  public void parseString04() {
+    assertEquals(CssValueType.parse("0_35px_60px_-15px_rgb(0_0_0_/_0.3)"), CssValueType.STRING);
   }
 
-  @Test(description = "boxed: flex")
-  public void parseBoxed05() {
-    assertEquals(CssValueType.parse("[2_2_0%]"), CssValueType.BOXED);
+  @Test(description = "string: flex")
+  public void parseString05() {
+    assertEquals(CssValueType.parse("2_2_0%"), CssValueType.STRING);
   }
 
-  @Test(description = "boxed: not boxed")
-  public void parseBoxed06() {
-    assertEquals(CssValueType.parse("["), CssValueType.TOKEN);
+  @Test(description = "dimension: zero")
+  public void parseDimension01() {
+    assertEquals(CssValueType.parse("0rem"), CssValueType.DIMENSION);
   }
 
-  @Test(description = "boxed integer: len=1")
-  public void parseBoxedInteger01() {
-    assertEquals(CssValueType.parse("[1]"), CssValueType.BOXED_INTEGER);
+  @Test(description = "dimension: integer len=1")
+  public void parseDimension02() {
+    assertEquals(CssValueType.parse("3rem"), CssValueType.DIMENSION);
   }
 
-  @Test(description = "boxed integer: len>1")
-  public void parseBoxedInteger02() {
-    assertEquals(CssValueType.parse("[345]"), CssValueType.BOXED_INTEGER);
+  @Test(description = "dimension: integer len>1")
+  public void parseDimension03() {
+    assertEquals(CssValueType.parse("127vh"), CssValueType.DIMENSION);
   }
 
-  @Test(description = "boxed integer negative: len=1")
-  public void parseBoxedIntegerNegative01() {
-    assertEquals(CssValueType.parse("[-3]"), CssValueType.BOXED_INTEGER_NEGATIVE);
+  @Test(description = "dimension: decimal fractional=1")
+  public void parseDimension04() {
+    assertEquals(CssValueType.parse("0.5rem"), CssValueType.DIMENSION);
   }
 
-  @Test(description = "boxed integer negative: len>1")
-  public void parseBoxedIntegerNegative02() {
-    assertEquals(CssValueType.parse("[-987]"), CssValueType.BOXED_INTEGER_NEGATIVE);
+  @Test(description = "dimension: decimal fractional>1")
+  public void parseDimension05() {
+    assertEquals(CssValueType.parse("12.345s"), CssValueType.DIMENSION);
   }
 
-  @Test(description = "boxed length: integer len=1")
-  public void parseBoxedLength01() {
-    assertEquals(CssValueType.parse("[1px]"), CssValueType.BOXED_LENGTH);
+  @Test(description = "percentage: integer len=1")
+  public void parsePercentage01() {
+    assertEquals(CssValueType.parse("4%"), CssValueType.PERCENTAGE);
   }
 
-  @Test(description = "boxed length: integer len>1")
-  public void parseBoxedLength02() {
-    assertEquals(CssValueType.parse("[123px]"), CssValueType.BOXED_LENGTH);
+  @Test(description = "percentage: integer len>1")
+  public void parsePercentage02() {
+    assertEquals(CssValueType.parse("789%"), CssValueType.PERCENTAGE);
   }
 
-  @Test(description = "boxed length: decimal")
-  public void parseBoxedLength03() {
-    assertEquals(CssValueType.parse("[5.6px]"), CssValueType.BOXED_LENGTH);
+  @Test(description = "percentage: decimal")
+  public void parsePercentage03() {
+    assertEquals(CssValueType.parse("1.23%"), CssValueType.PERCENTAGE);
   }
 
-  @Test(description = "boxed length negative: integer len=1")
-  public void parseBoxedLengthNegative01() {
-    assertEquals(CssValueType.parse("[-3px]"), CssValueType.BOXED_LENGTH_NEGATIVE);
+  @Test(description = "integer: len=1")
+  public void parseInteger01() {
+    assertEquals(CssValueType.parse("1"), CssValueType.INTEGER);
   }
 
-  @Test(description = "boxed length negative: integer len>1")
-  public void parseBoxedLengthNegative02() {
-    assertEquals(CssValueType.parse("[-345px]"), CssValueType.BOXED_LENGTH_NEGATIVE);
+  @Test(description = "integer: len>1")
+  public void parseInteger02() {
+    assertEquals(CssValueType.parse("345"), CssValueType.INTEGER);
   }
 
-  @Test(description = "boxed percentage: integer len=1")
-  public void parseBoxedPercentage01() {
-    assertEquals(CssValueType.parse("[4%]"), CssValueType.BOXED_PERCENTAGE);
-  }
-
-  @Test(description = "boxed percentage: integer len>1")
-  public void parseBoxedPercentage02() {
-    assertEquals(CssValueType.parse("[789%]"), CssValueType.BOXED_PERCENTAGE);
-  }
-
-  @Test(description = "boxed percentage: decimal")
-  public void parseBoxedPercentage03() {
-    assertEquals(CssValueType.parse("[1.23%]"), CssValueType.BOXED_PERCENTAGE);
-  }
-
-  @Test(description = "boxed zero: success")
-  public void parseBoxedZero01() {
-    assertEquals(CssValueType.parse("[0]"), CssValueType.BOXED_ZERO);
-  }
-
-  @Test(description = "token: empty")
-  public void parseToken01() {
-    assertEquals(CssValueType.parse(""), CssValueType.TOKEN);
-  }
-
-  @Test(description = "token: len=1")
-  public void parseToken02() {
-    assertEquals(CssValueType.parse("x"), CssValueType.TOKEN);
-  }
-
-  @Test(description = "token: len>1")
-  public void parseToken03() {
-    assertEquals(CssValueType.parse("block"), CssValueType.TOKEN);
-  }
-
-  @Test(description = "token length: zero")
-  public void parseTokenLength01() {
-    assertEquals(CssValueType.parse("0px"), CssValueType.TOKEN_LENGTH);
-  }
-
-  @Test(description = "token length: integer len=1")
-  public void parseTokenLength02() {
-    assertEquals(CssValueType.parse("3rem"), CssValueType.TOKEN_LENGTH);
-  }
-
-  @Test(description = "token length: integer len>1")
-  public void parseTokenLength03() {
-    assertEquals(CssValueType.parse("127vh"), CssValueType.TOKEN_LENGTH);
-  }
-
-  @Test(description = "token length: decimal fractional=1")
-  public void parseTokenLength04() {
-    assertEquals(CssValueType.parse("0.5px"), CssValueType.TOKEN_LENGTH);
-  }
-
-  @Test(description = "token length: decimal fractional>1")
-  public void parseTokenLength05() {
-    assertEquals(CssValueType.parse("12.345px"), CssValueType.TOKEN_LENGTH);
-  }
-
-  @Test(description = "token zero: success")
-  public void parseTokenZero01() {
-    assertEquals(CssValueType.parse("0"), CssValueType.TOKEN_ZERO);
+  @Test(description = "zero: success")
+  public void parseZero01() {
+    assertEquals(CssValueType.parse("0"), CssValueType.ZERO);
   }
 
 }

@@ -150,7 +150,7 @@ public class CssGeneratorTest {
         .aspect-16x9::before {
           float: left;
           margin-left: -1px;
-          height: 0;
+          height: 0px;
           width: 1px;
           padding-top: 56.25%;
           content: '';
@@ -164,7 +164,7 @@ public class CssGeneratorTest {
         .aspect-1x1::before {
           float: left;
           margin-left: -1px;
-          height: 0;
+          height: 0px;
           width: 1px;
           padding-top: 100%;
           content: '';
@@ -178,7 +178,7 @@ public class CssGeneratorTest {
         .aspect-1x2::before {
           float: left;
           margin-left: -1px;
-          height: 0;
+          height: 0px;
           width: 1px;
           padding-top: 200%;
           content: '';
@@ -192,7 +192,7 @@ public class CssGeneratorTest {
         .aspect-2x1::before {
           float: left;
           margin-left: -1px;
-          height: 0;
+          height: 0px;
           width: 1px;
           padding-top: 50%;
           content: '';
@@ -206,7 +206,7 @@ public class CssGeneratorTest {
         .aspect-2x3::before {
           float: left;
           margin-left: -1px;
-          height: 0;
+          height: 0px;
           width: 1px;
           padding-top: 150%;
           content: '';
@@ -220,7 +220,7 @@ public class CssGeneratorTest {
         .aspect-3x2::before {
           float: left;
           margin-left: -1px;
-          height: 0;
+          height: 0px;
           width: 1px;
           padding-top: 66.66667%;
           content: '';
@@ -234,7 +234,7 @@ public class CssGeneratorTest {
         .aspect-3x4::before {
           float: left;
           margin-left: -1px;
-          height: 0;
+          height: 0px;
           width: 1px;
           padding-top: 133.33333%;
           content: '';
@@ -248,7 +248,7 @@ public class CssGeneratorTest {
         .aspect-4x3::before {
           float: left;
           margin-left: -1px;
-          height: 0;
+          height: 0px;
           width: 1px;
           padding-top: 75%;
           content: '';
@@ -262,7 +262,7 @@ public class CssGeneratorTest {
         .aspect-9x16::before {
           float: left;
           margin-left: -1px;
-          height: 0;
+          height: 0px;
           width: 1px;
           padding-top: 177.77778%;
           content: '';
@@ -329,9 +329,7 @@ public class CssGeneratorTest {
     class Subject extends AbstractSubject {
       @Override
       final void classes() {
-        // @formatter:off
         className("border-inherit border-current border-transparent border-black border-white");
-        // @formatter:on
       }
     }
 
@@ -353,10 +351,8 @@ public class CssGeneratorTest {
     class Subject extends AbstractSubject {
       @Override
       final void classes() {
-        // @formatter:off
         className("border-x-inherit border-x-current border-x-transparent border-x-black border-x-white");
         className("border-y-inherit border-y-current border-y-transparent border-y-black border-y-white");
-        // @formatter:on
       }
     }
 
@@ -383,12 +379,10 @@ public class CssGeneratorTest {
     class Subject extends AbstractSubject {
       @Override
       final void classes() {
-        // @formatter:off
         className("border-t-inherit border-t-current border-t-transparent border-t-black border-t-white");
         className("border-r-inherit border-r-current border-r-transparent border-r-black border-r-white");
         className("border-b-inherit border-b-current border-b-transparent border-b-black border-b-white");
         className("border-l-inherit border-l-current border-l-transparent border-l-black border-l-white");
-        // @formatter:on
       }
     }
 
@@ -741,7 +735,7 @@ public class CssGeneratorTest {
       @Override
       final void classes() {
         className("shadow-sm shadow shadow-md shadow-lg shadow-xl shadow-2xl shadow-inner shadow-none");
-        className("shadow-[0_35px_60px_-15px_rgb(0_0_0_/_0.3)]");
+        className("shadow-0_35px_60px_-15px_rgb(0_0_0_/_0.3)");
       }
     }
 
@@ -789,7 +783,7 @@ public class CssGeneratorTest {
           --tw-shadow-colored: none;
           box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow, 0 0 #0000);
         }
-        .shadow-\\[0_35px_60px_-15px_rgb\\(0_0_0_\\/_0\\.3\\)\\] {
+        .shadow-0_35px_60px_-15px_rgb\\(0_0_0_\\/_0\\.3\\) {
           --tw-shadow: 0 35px 60px -15px rgb(0 0 0 / 0.3);
           --tw-shadow-colored: 0 35px 60px -15px var(--tw-shadow-color);
           box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow, 0 0 #0000);
@@ -1048,7 +1042,7 @@ public class CssGeneratorTest {
       @Override
       final void classes() {
         className("flex-1 flex-auto flex-initial flex-none");
-        className("flex-[2_2_0%]");
+        className("flex-2_2_0%");
       }
     }
 
@@ -1060,7 +1054,7 @@ public class CssGeneratorTest {
         .flex-auto { flex: 1 1 auto }
         .flex-initial { flex: 0 1 auto }
         .flex-none { flex: none }
-        .flex-\\[2_2_0\\%\\] { flex: 2 2 0% }
+        .flex-2_2_0\\% { flex: 2 2 0% }
         """
     );
   }
@@ -1073,7 +1067,7 @@ public class CssGeneratorTest {
         // @formatter:off
         className("basis-px basis-0 basis-0.5 basis-1 basis-1.5 basis-2 basis-2.5 basis-3 basis-3.5 basis-4 basis-5 basis-6 basis-7 basis-8 basis-9 basis-10 basis-11 basis-12 basis-14 basis-16 basis-20 basis-24 basis-28 basis-32 basis-36 basis-40 basis-44 basis-48 basis-52 basis-56 basis-60 basis-64 basis-72 basis-80 basis-96");
         className("basis-auto basis-1/2 basis-1/3 basis-2/3 basis-1/4 basis-2/4 basis-3/4 basis-1/5 basis-2/5 basis-3/5 basis-4/5 basis-1/6 basis-2/6 basis-3/6 basis-4/6 basis-5/6 basis-1/12 basis-2/12 basis-3/12 basis-4/12 basis-5/12 basis-6/12 basis-7/12 basis-8/12 basis-9/12 basis-10/12 basis-11/12 basis-full");
-        className("basis-[14.2857143%] basis-67px basis-4%");
+        className("basis-14.2857143% basis-67px basis-4%");
         // @formatter:on
       }
     }
@@ -1145,7 +1139,7 @@ public class CssGeneratorTest {
         .basis-10\\/12 { flex-basis: 83.333333% }
         .basis-11\\/12 { flex-basis: 91.666667% }
         .basis-full { flex-basis: 100% }
-        .basis-\\[14\\.2857143\\%\\] { flex-basis: 14.2857143% }
+        .basis-14\\.2857143\\% { flex-basis: 14.2857143% }
         .basis-67px { flex-basis: 67px }
         .basis-4\\% { flex-basis: 4% }
         """
@@ -1181,7 +1175,7 @@ public class CssGeneratorTest {
     class Subject extends AbstractSubject {
       @Override
       final void classes() {
-        className("grow grow-0 grow-[2]");
+        className("grow grow-0 grow-2");
       }
     }
 
@@ -1191,7 +1185,7 @@ public class CssGeneratorTest {
         """
         .grow { flex-grow: 1 }
         .grow-0 { flex-grow: 0 }
-        .grow-\\[2\\] { flex-grow: 2 }
+        .grow-2 { flex-grow: 2 }
         """
     );
   }
@@ -1201,7 +1195,7 @@ public class CssGeneratorTest {
     class Subject extends AbstractSubject {
       @Override
       final void classes() {
-        className("shrink shrink-0 shrink-[2]");
+        className("shrink shrink-0 shrink-2");
       }
     }
 
@@ -1211,7 +1205,7 @@ public class CssGeneratorTest {
         """
         .shrink { flex-shrink: 1 }
         .shrink-0 { flex-shrink: 0 }
-        .shrink-\\[2\\] { flex-shrink: 2 }
+        .shrink-2 { flex-shrink: 2 }
         """
     );
   }
@@ -1514,7 +1508,7 @@ public class CssGeneratorTest {
       final void classes() {
         className("grid-cols-none grid-cols-subgrid");
         className("grid-cols-1 grid-cols-2 grid-cols-3 grid-cols-4 grid-cols-5 grid-cols-6 grid-cols-7 grid-cols-8 grid-cols-9 grid-cols-10 grid-cols-11 grid-cols-12");
-        className("grid-cols-[200px_minmax(900px,_1fr)_100px]");
+        className("grid-cols-200px_minmax(900px,_1fr)_100px");
       }
     }
 
@@ -1536,7 +1530,7 @@ public class CssGeneratorTest {
         .grid-cols-10 { grid-template-columns: repeat(10, minmax(0, 1fr)) }
         .grid-cols-11 { grid-template-columns: repeat(11, minmax(0, 1fr)) }
         .grid-cols-12 { grid-template-columns: repeat(12, minmax(0, 1fr)) }
-        .grid-cols-\\[200px_minmax\\(900px\\2c _1fr\\)_100px\\] { grid-template-columns: 200px minmax(900px, 1fr) 100px }
+        .grid-cols-200px_minmax\\(900px\\2c _1fr\\)_100px { grid-template-columns: 200px minmax(900px, 1fr) 100px }
         """
     );
   }
@@ -1548,7 +1542,7 @@ public class CssGeneratorTest {
       final void classes() {
         className("grid-rows-none grid-rows-subgrid");
         className("grid-rows-1 grid-rows-2 grid-rows-3 grid-rows-4 grid-rows-5 grid-rows-6 grid-rows-7 grid-rows-8 grid-rows-9 grid-rows-10 grid-rows-11 grid-rows-12");
-        className("grid-rows-[200px_minmax(900px,_1fr)_100px]");
+        className("grid-rows-200px_minmax(900px,_1fr)_100px");
       }
     }
 
@@ -1570,7 +1564,7 @@ public class CssGeneratorTest {
         .grid-rows-10 { grid-template-rows: repeat(10, minmax(0, 1fr)) }
         .grid-rows-11 { grid-template-rows: repeat(11, minmax(0, 1fr)) }
         .grid-rows-12 { grid-template-rows: repeat(12, minmax(0, 1fr)) }
-        .grid-rows-\\[200px_minmax\\(900px\\2c _1fr\\)_100px\\] { grid-template-rows: 200px minmax(900px, 1fr) 100px }
+        .grid-rows-200px_minmax\\(900px\\2c _1fr\\)_100px { grid-template-rows: 200px minmax(900px, 1fr) 100px }
         """
     );
   }
@@ -1895,7 +1889,7 @@ public class CssGeneratorTest {
       @Override
       final void classes() {
         className("leading-3 leading-4 leading-5 leading-6 leading-7 leading-8 leading-9 leading-10 leading-none leading-tight leading-snug leading-normal leading-relaxed leading-loose");
-        className("leading-[1.45] leading-[3]");
+        className("leading-1.45");
       }
     }
 
@@ -1917,8 +1911,7 @@ public class CssGeneratorTest {
         .leading-normal { line-height: 1.5 }
         .leading-relaxed { line-height: 1.625 }
         .leading-loose { line-height: 2 }
-        .leading-\\[1\\.45\\] { line-height: 1.45 }
-        .leading-\\[3\\] { line-height: 3 }
+        .leading-1\\.45 { line-height: 1.45 }
         """
     );
   }
@@ -1928,7 +1921,7 @@ public class CssGeneratorTest {
     class Subject extends AbstractSubject {
       @Override
       final void classes() {
-        className("list-none list-disc list-decimal list-[upper-roman]");
+        className("list-none list-disc list-decimal list-upper-roman");
       }
     }
 
@@ -1939,7 +1932,7 @@ public class CssGeneratorTest {
         .list-none { list-style-type: none }
         .list-disc { list-style-type: disc }
         .list-decimal { list-style-type: decimal }
-        .list-\\[upper-roman\\] { list-style-type: upper-roman }
+        .list-upper-roman { list-style-type: upper-roman }
         """
     );
   }
@@ -2772,7 +2765,7 @@ public class CssGeneratorTest {
     class Subject extends AbstractSubject {
       @Override
       final void classes() {
-        className("ring-offset-0 ring-offset-1 ring-offset-2 ring-offset-4 ring-offset-8 ring-offset-[10px] ring-offset-20px");
+        className("ring-offset-0 ring-offset-1 ring-offset-2 ring-offset-4 ring-offset-8 ring-offset-20px");
       }
     }
 
@@ -2785,7 +2778,6 @@ public class CssGeneratorTest {
         .ring-offset-2 { --tw-ring-offset-width: 2px }
         .ring-offset-4 { --tw-ring-offset-width: 4px }
         .ring-offset-8 { --tw-ring-offset-width: 8px }
-        .ring-offset-\\[10px\\] { --tw-ring-offset-width: 10px }
         .ring-offset-20px { --tw-ring-offset-width: 20px }
         """
     );
@@ -2818,7 +2810,7 @@ public class CssGeneratorTest {
     class Subject extends AbstractSubject {
       @Override
       final void classes() {
-        className("ring-0 ring-1 ring-2 ring ring-4 ring-8 ring-inset ring-[10px]");
+        className("ring-0 ring-1 ring-2 ring ring-4 ring-8 ring-inset ring-10px");
       }
     }
 
@@ -2856,7 +2848,7 @@ public class CssGeneratorTest {
           --tw-ring-shadow: var(--tw-ring-inset, ) 0 0 0 calc(8px + var(--tw-ring-offset-width, 0px)) var(--tw-ring-color, rgb(59 130 246 / 0.5));
           box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow, 0 0 #0000);
         }
-        .ring-\\[10px\\] {
+        .ring-10px {
           --tw-ring-offset-shadow: var(--tw-ring-inset, ) 0 0 0 var(--tw-ring-offset-width, 0px) var(--tw-ring-offset-color, #fff);
           --tw-ring-shadow: var(--tw-ring-inset, ) 0 0 0 calc(10px + var(--tw-ring-offset-width, 0px)) var(--tw-ring-color, rgb(59 130 246 / 0.5));
           box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow, 0 0 #0000);
@@ -4581,7 +4573,7 @@ public class CssGeneratorTest {
       final void classes() {
         className("focus:not-sr-only active:bg-white hover:bg-black *:rounded-full");
         className("visited:text-white visited:hover:text-black");
-        className("before:block after:text-black");
+        className("before:block before:-ml-1px after:text-black");
         className("ltr:ml-1px rtl:mr-1px");
         className("disabled:bg-black");
       }
@@ -4602,6 +4594,7 @@ public class CssGeneratorTest {
           white-space: normal;
         }
         .rtl\\:mr-1px:where([dir="rtl"], [dir="rtl"] *) { margin-right: 1px }
+        .before\\:-ml-1px::before { margin-left: -1px }
         .ltr\\:ml-1px:where([dir="ltr"], [dir="ltr"] *) { margin-left: 1px }
         .before\\:block::before { display: block }
         .\\*\\:rounded-full > * { border-radius: 9999px }
