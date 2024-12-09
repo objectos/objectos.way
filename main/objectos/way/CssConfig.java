@@ -1263,15 +1263,15 @@ final class CssConfig {
     funcUtility(
         Css.Key.FONT_SIZE,
 
-        values(
-            Css.Key.FONT_SIZE,
+        prefixes("text", "font-size"),
 
-            """
-            base: 1rem
-            """
-        ),
+        "font-size",
 
-        "text", "font-size"
+        L_OR_P,
+
+        """
+        base: 1rem
+        """
     );
 
     staticUtility(
@@ -2058,6 +2058,10 @@ final class CssConfig {
   private void customUtility(Css.Key key, String prefix, CssResolver resolver) {
     prefix(key, prefix);
 
+    resolver(key, resolver);
+  }
+
+  private void resolver(Css.Key key, CssResolver resolver) {
     CssResolver maybeExisting;
     maybeExisting = resolvers.put(key, resolver);
 
@@ -2074,6 +2078,41 @@ final class CssConfig {
 
     set.add(key);
   }
+
+  private void prefixes(Css.Key key, String[] prefixes) {
+    for (String prefix : prefixes) {
+      prefix(key, prefix);
+    }
+  }
+
+  // new funcUtility
+
+  private void funcUtility(
+      Css.Key key,
+      String[] prefixes,
+      String propertyName,
+      Set<CssValueType> supportedTypes,
+      String defaultValues
+  ) {
+
+    prefixes(key, prefixes);
+
+    Map<String, String> values;
+    values = values(key, defaultValues);
+
+    CssResolver resolver;
+    resolver = new CssResolverOfProperties(key, values, IDENTITY, supportedTypes, propertyName, null);
+
+    resolver(key, resolver);
+
+  }
+
+  private String[] prefixes(String... values) {
+    // yeah... just don't mutate the array...
+    return values;
+  }
+
+  // current funcUtility
 
   private void funcUtility(
       Css.Key key,

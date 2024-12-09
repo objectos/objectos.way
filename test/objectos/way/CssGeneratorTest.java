@@ -1222,7 +1222,8 @@ public class CssGeneratorTest {
     class Subject extends AbstractSubject {
       @Override
       final void classes() {
-        className("text-base");
+        className("text-base text-32px");
+        className("font-size-16px font-size-2rem");
       }
     }
 
@@ -1231,6 +1232,9 @@ public class CssGeneratorTest {
 
         """
         .text-base { font-size: 1rem }
+        .text-32px { font-size: 2rem }
+        .font-size-16px { font-size: 1rem }
+        .font-size-2rem { font-size: 2rem }
         """
     );
   }
