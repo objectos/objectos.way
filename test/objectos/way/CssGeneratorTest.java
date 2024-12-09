@@ -149,9 +149,9 @@ public class CssGeneratorTest {
         """
         .aspect-16x9::before {
           float: left;
-          margin-left: -1px;
+          margin-left: -0.0625rem;
           height: 0px;
-          width: 1px;
+          width: 0.0625rem;
           padding-top: 56.25%;
           content: '';
         }
@@ -163,9 +163,9 @@ public class CssGeneratorTest {
 
         .aspect-1x1::before {
           float: left;
-          margin-left: -1px;
+          margin-left: -0.0625rem;
           height: 0px;
-          width: 1px;
+          width: 0.0625rem;
           padding-top: 100%;
           content: '';
         }
@@ -177,9 +177,9 @@ public class CssGeneratorTest {
 
         .aspect-1x2::before {
           float: left;
-          margin-left: -1px;
+          margin-left: -0.0625rem;
           height: 0px;
-          width: 1px;
+          width: 0.0625rem;
           padding-top: 200%;
           content: '';
         }
@@ -191,9 +191,9 @@ public class CssGeneratorTest {
 
         .aspect-2x1::before {
           float: left;
-          margin-left: -1px;
+          margin-left: -0.0625rem;
           height: 0px;
-          width: 1px;
+          width: 0.0625rem;
           padding-top: 50%;
           content: '';
         }
@@ -205,9 +205,9 @@ public class CssGeneratorTest {
 
         .aspect-2x3::before {
           float: left;
-          margin-left: -1px;
+          margin-left: -0.0625rem;
           height: 0px;
-          width: 1px;
+          width: 0.0625rem;
           padding-top: 150%;
           content: '';
         }
@@ -219,9 +219,9 @@ public class CssGeneratorTest {
 
         .aspect-3x2::before {
           float: left;
-          margin-left: -1px;
+          margin-left: -0.0625rem;
           height: 0px;
-          width: 1px;
+          width: 0.0625rem;
           padding-top: 66.66667%;
           content: '';
         }
@@ -233,9 +233,9 @@ public class CssGeneratorTest {
 
         .aspect-3x4::before {
           float: left;
-          margin-left: -1px;
+          margin-left: -0.0625rem;
           height: 0px;
-          width: 1px;
+          width: 0.0625rem;
           padding-top: 133.33333%;
           content: '';
         }
@@ -247,9 +247,9 @@ public class CssGeneratorTest {
 
         .aspect-4x3::before {
           float: left;
-          margin-left: -1px;
+          margin-left: -0.0625rem;
           height: 0px;
-          width: 1px;
+          width: 0.0625rem;
           padding-top: 75%;
           content: '';
         }
@@ -261,9 +261,9 @@ public class CssGeneratorTest {
 
         .aspect-9x16::before {
           float: left;
-          margin-left: -1px;
+          margin-left: -0.0625rem;
           height: 0px;
-          width: 1px;
+          width: 0.0625rem;
           padding-top: 177.77778%;
           content: '';
         }
@@ -1064,11 +1064,13 @@ public class CssGeneratorTest {
     class Subject extends AbstractSubject {
       @Override
       final void classes() {
-        // @formatter:off
-        className("basis-px basis-0 basis-0.5 basis-1 basis-1.5 basis-2 basis-2.5 basis-3 basis-3.5 basis-4 basis-5 basis-6 basis-7 basis-8 basis-9 basis-10 basis-11 basis-12 basis-14 basis-16 basis-20 basis-24 basis-28 basis-32 basis-36 basis-40 basis-44 basis-48 basis-52 basis-56 basis-60 basis-64 basis-72 basis-80 basis-96");
-        className("basis-auto basis-1/2 basis-1/3 basis-2/3 basis-1/4 basis-2/4 basis-3/4 basis-1/5 basis-2/5 basis-3/5 basis-4/5 basis-1/6 basis-2/6 basis-3/6 basis-4/6 basis-5/6 basis-1/12 basis-2/12 basis-3/12 basis-4/12 basis-5/12 basis-6/12 basis-7/12 basis-8/12 basis-9/12 basis-10/12 basis-11/12 basis-full");
+        className("basis-auto");
+        className("basis-1/2 basis-1/3 basis-2/3 basis-1/4 basis-2/4 basis-3/4");
+        className("basis-1/5 basis-2/5 basis-3/5 basis-4/5");
+        className("basis-1/6 basis-2/6 basis-3/6 basis-4/6 basis-5/6");
+        className("basis-1/12 basis-2/12 basis-3/12 basis-4/12 basis-5/12 basis-6/12");
+        className("basis-7/12 basis-8/12 basis-9/12 basis-10/12 basis-11/12 basis-full");
         className("basis-14.2857143% basis-67px basis-4%");
-        // @formatter:on
       }
     }
 
@@ -1076,41 +1078,6 @@ public class CssGeneratorTest {
         Subject.class,
 
         """
-        .basis-px { flex-basis: 1px }
-        .basis-0 { flex-basis: 0px }
-        .basis-0\\.5 { flex-basis: 0.125rem }
-        .basis-1 { flex-basis: 0.25rem }
-        .basis-1\\.5 { flex-basis: 0.375rem }
-        .basis-2 { flex-basis: 0.5rem }
-        .basis-2\\.5 { flex-basis: 0.625rem }
-        .basis-3 { flex-basis: 0.75rem }
-        .basis-3\\.5 { flex-basis: 0.875rem }
-        .basis-4 { flex-basis: 1rem }
-        .basis-5 { flex-basis: 1.25rem }
-        .basis-6 { flex-basis: 1.5rem }
-        .basis-7 { flex-basis: 1.75rem }
-        .basis-8 { flex-basis: 2rem }
-        .basis-9 { flex-basis: 2.25rem }
-        .basis-10 { flex-basis: 2.5rem }
-        .basis-11 { flex-basis: 2.75rem }
-        .basis-12 { flex-basis: 3rem }
-        .basis-14 { flex-basis: 3.5rem }
-        .basis-16 { flex-basis: 4rem }
-        .basis-20 { flex-basis: 5rem }
-        .basis-24 { flex-basis: 6rem }
-        .basis-28 { flex-basis: 7rem }
-        .basis-32 { flex-basis: 8rem }
-        .basis-36 { flex-basis: 9rem }
-        .basis-40 { flex-basis: 10rem }
-        .basis-44 { flex-basis: 11rem }
-        .basis-48 { flex-basis: 12rem }
-        .basis-52 { flex-basis: 13rem }
-        .basis-56 { flex-basis: 14rem }
-        .basis-60 { flex-basis: 15rem }
-        .basis-64 { flex-basis: 16rem }
-        .basis-72 { flex-basis: 18rem }
-        .basis-80 { flex-basis: 20rem }
-        .basis-96 { flex-basis: 24rem }
         .basis-auto { flex-basis: auto }
         .basis-1\\/2 { flex-basis: 50% }
         .basis-1\\/3 { flex-basis: 33.333333% }
@@ -1140,7 +1107,7 @@ public class CssGeneratorTest {
         .basis-11\\/12 { flex-basis: 91.666667% }
         .basis-full { flex-basis: 100% }
         .basis-14\\.2857143\\% { flex-basis: 14.2857143% }
-        .basis-67px { flex-basis: 67px }
+        .basis-67px { flex-basis: 4.1875rem }
         .basis-4\\% { flex-basis: 4% }
         """
     );
@@ -1570,48 +1537,11 @@ public class CssGeneratorTest {
   }
 
   @Test
-  public void height01() {
+  public void height() {
     class Subject extends AbstractSubject {
       @Override
       final void classes() {
         className("h-auto");
-
-        className("h-px");
-        className("h-0");
-        className("h-0.5");
-        className("h-1");
-        className("h-1.5");
-        className("h-2");
-        className("h-2.5");
-        className("h-3");
-        className("h-3.5");
-        className("h-4");
-        className("h-5");
-        className("h-6");
-        className("h-7");
-        className("h-8");
-        className("h-9");
-        className("h-10");
-        className("h-11");
-        className("h-12");
-        className("h-14");
-        className("h-16");
-        className("h-20");
-        className("h-24");
-        className("h-28");
-        className("h-32");
-        className("h-36");
-        className("h-40");
-        className("h-44");
-        className("h-48");
-        className("h-52");
-        className("h-56");
-        className("h-60");
-        className("h-64");
-        className("h-72");
-        className("h-80");
-        className("h-96");
-
         className("h-1/2");
         className("h-1/3");
         className("h-2/3");
@@ -1635,6 +1565,7 @@ public class CssGeneratorTest {
         className("h-min");
         className("h-max");
         className("h-fit");
+        className("h-120px h-24.3%");
       }
     }
 
@@ -1643,41 +1574,6 @@ public class CssGeneratorTest {
 
         """
         .h-auto { height: auto }
-        .h-px { height: 1px }
-        .h-0 { height: 0px }
-        .h-0\\.5 { height: 0.125rem }
-        .h-1 { height: 0.25rem }
-        .h-1\\.5 { height: 0.375rem }
-        .h-2 { height: 0.5rem }
-        .h-2\\.5 { height: 0.625rem }
-        .h-3 { height: 0.75rem }
-        .h-3\\.5 { height: 0.875rem }
-        .h-4 { height: 1rem }
-        .h-5 { height: 1.25rem }
-        .h-6 { height: 1.5rem }
-        .h-7 { height: 1.75rem }
-        .h-8 { height: 2rem }
-        .h-9 { height: 2.25rem }
-        .h-10 { height: 2.5rem }
-        .h-11 { height: 2.75rem }
-        .h-12 { height: 3rem }
-        .h-14 { height: 3.5rem }
-        .h-16 { height: 4rem }
-        .h-20 { height: 5rem }
-        .h-24 { height: 6rem }
-        .h-28 { height: 7rem }
-        .h-32 { height: 8rem }
-        .h-36 { height: 9rem }
-        .h-40 { height: 10rem }
-        .h-44 { height: 11rem }
-        .h-48 { height: 12rem }
-        .h-52 { height: 13rem }
-        .h-56 { height: 14rem }
-        .h-60 { height: 15rem }
-        .h-64 { height: 16rem }
-        .h-72 { height: 18rem }
-        .h-80 { height: 20rem }
-        .h-96 { height: 24rem }
         .h-1\\/2 { height: 50% }
         .h-1\\/3 { height: 33.333333% }
         .h-2\\/3 { height: 66.666667% }
@@ -1701,24 +1597,7 @@ public class CssGeneratorTest {
         .h-min { height: min-content }
         .h-max { height: max-content }
         .h-fit { height: fit-content }
-        """
-    );
-  }
-
-  @Test
-  public void height02() {
-    class Subject extends AbstractSubject {
-      @Override
-      final void classes() {
-        className("h-120px h-24.3%");
-      }
-    }
-
-    test(
-        Subject.class,
-
-        """
-        .h-120px { height: 120px }
+        .h-120px { height: 7.5rem }
         .h-24\\.3\\% { height: 24.3% }
         """
     );
@@ -1758,7 +1637,7 @@ public class CssGeneratorTest {
         .inset-2\\/4 { inset: 50% }
         .inset-3\\/4 { inset: 75% }
         .inset-full { inset: 100% }
-        .inset-2px { inset: 2px }
+        .inset-2px { inset: 0.125rem }
         .inset-3\\% { inset: 3% }
         .inset-x-auto { left: auto; right: auto }
         .inset-x-1\\/2 { left: 50%; right: 50% }
@@ -1768,7 +1647,7 @@ public class CssGeneratorTest {
         .inset-x-2\\/4 { left: 50%; right: 50% }
         .inset-x-3\\/4 { left: 75%; right: 75% }
         .inset-x-full { left: 100%; right: 100% }
-        .inset-x-4px { left: 4px; right: 4px }
+        .inset-x-4px { left: 0.25rem; right: 0.25rem }
         .inset-x-2\\% { left: 2%; right: 2% }
         .inset-y-auto { top: auto; bottom: auto }
         .inset-y-1\\/2 { top: 50%; bottom: 50% }
@@ -1778,7 +1657,7 @@ public class CssGeneratorTest {
         .inset-y-2\\/4 { top: 50%; bottom: 50% }
         .inset-y-3\\/4 { top: 75%; bottom: 75% }
         .inset-y-full { top: 100%; bottom: 100% }
-        .inset-y-8px { top: 8px; bottom: 8px }
+        .inset-y-8px { top: 0.5rem; bottom: 0.5rem }
         .inset-y-4\\% { top: 4%; bottom: 4% }
         .top-auto { top: auto }
         .top-1\\/2 { top: 50% }
@@ -1788,9 +1667,9 @@ public class CssGeneratorTest {
         .top-2\\/4 { top: 50% }
         .top-3\\/4 { top: 75% }
         .top-full { top: 100% }
-        .top-20px { top: 20px }
+        .top-20px { top: 1.25rem }
         .top-40\\% { top: 40% }
-        .-top-1px { top: -1px }
+        .-top-1px { top: -0.0625rem }
         .right-auto { right: auto }
         .right-1\\/2 { right: 50% }
         .right-1\\/3 { right: 33.333333% }
@@ -1801,7 +1680,7 @@ public class CssGeneratorTest {
         .right-full { right: 100% }
         .right-1rem { right: 1rem }
         .right-20\\.5\\% { right: 20.5% }
-        .-right-2px { right: -2px }
+        .-right-2px { right: -0.125rem }
         .bottom-auto { bottom: auto }
         .bottom-1\\/2 { bottom: 50% }
         .bottom-1\\/3 { bottom: 33.333333% }
@@ -1810,9 +1689,9 @@ public class CssGeneratorTest {
         .bottom-2\\/4 { bottom: 50% }
         .bottom-3\\/4 { bottom: 75% }
         .bottom-full { bottom: 100% }
-        .bottom-11px { bottom: 11px }
+        .bottom-11px { bottom: 0.6875rem }
         .bottom-45\\% { bottom: 45% }
-        .-bottom-3px { bottom: -3px }
+        .-bottom-3px { bottom: -0.1875rem }
         .left-auto { left: auto }
         .left-1\\/2 { left: 50% }
         .left-1\\/3 { left: 33.333333% }
@@ -1821,9 +1700,9 @@ public class CssGeneratorTest {
         .left-2\\/4 { left: 50% }
         .left-3\\/4 { left: 75% }
         .left-full { left: 100% }
-        .left-34px { left: 34px }
+        .left-34px { left: 2.125rem }
         .left-78\\% { left: 78% }
-        .-left-4px { left: -4px }
+        .-left-4px { left: -0.25rem }
         """
     );
   }
@@ -1958,24 +1837,24 @@ public class CssGeneratorTest {
         """
         .m-auto { margin: auto }
         .m-0 { margin: 0px }
-        .m-1px { margin: 1px }
-        .-m-2px { margin: -2px }
+        .m-1px { margin: 0.0625rem }
+        .-m-2px { margin: -0.125rem }
         .mx-auto { margin-left: auto; margin-right: auto }
         .mx-0 { margin-left: 0px; margin-right: 0px }
-        .mx-2px { margin-left: 2px; margin-right: 2px }
+        .mx-2px { margin-left: 0.125rem; margin-right: 0.125rem }
         .-mx-2\\% { margin-left: -2%; margin-right: -2% }
         .my-auto { margin-top: auto; margin-bottom: auto }
         .my-0 { margin-top: 0px; margin-bottom: 0px }
-        .my-3px { margin-top: 3px; margin-bottom: 3px }
+        .my-3px { margin-top: 0.1875rem; margin-bottom: 0.1875rem }
         .-my-3rem { margin-top: -3rem; margin-bottom: -3rem }
         .mt-auto { margin-top: auto }
         .mt-0 { margin-top: 0px }
-        .mt-4px { margin-top: 4px }
+        .mt-4px { margin-top: 0.25rem }
         .-mt-0\\.4\\% { margin-top: -0.4% }
         .mr-auto { margin-right: auto }
         .mr-0 { margin-right: 0px }
-        .mr-15px { margin-right: 15px }
-        .-mr-10px { margin-right: -10px }
+        .mr-15px { margin-right: 0.9375rem }
+        .-mr-10px { margin-right: -0.625rem }
         .mb-auto { margin-bottom: auto }
         .mb-0 { margin-bottom: 0px }
         .mb-2rem { margin-bottom: 2rem }
@@ -1993,10 +1872,8 @@ public class CssGeneratorTest {
     class Subject extends AbstractSubject {
       @Override
       final void classes() {
-        // @formatter:off
-        className("max-h-px max-h-0 max-h-0.5 max-h-1 max-h-1.5 max-h-2 max-h-2.5 max-h-3 max-h-3.5 max-h-4 max-h-5 max-h-6 max-h-7 max-h-8 max-h-9 max-h-10 max-h-11 max-h-12 max-h-14 max-h-16 max-h-20 max-h-24 max-h-28 max-h-32 max-h-36 max-h-40 max-h-44 max-h-48 max-h-52 max-h-56 max-h-60 max-h-64 max-h-72 max-h-80 max-h-96 max-h-none max-h-full max-h-screen max-h-svh max-h-lvh max-h-dvh max-h-min max-h-max max-h-fit");
+        className("max-h-none max-h-full max-h-screen max-h-svh max-h-lvh max-h-dvh max-h-min max-h-max max-h-fit");
         className("max-h-1000px max-h-47.5%");
-        // @formatter:on
       }
     }
 
@@ -2004,41 +1881,6 @@ public class CssGeneratorTest {
         Subject.class,
 
         """
-        .max-h-px { max-height: 1px }
-        .max-h-0 { max-height: 0px }
-        .max-h-0\\.5 { max-height: 0.125rem }
-        .max-h-1 { max-height: 0.25rem }
-        .max-h-1\\.5 { max-height: 0.375rem }
-        .max-h-2 { max-height: 0.5rem }
-        .max-h-2\\.5 { max-height: 0.625rem }
-        .max-h-3 { max-height: 0.75rem }
-        .max-h-3\\.5 { max-height: 0.875rem }
-        .max-h-4 { max-height: 1rem }
-        .max-h-5 { max-height: 1.25rem }
-        .max-h-6 { max-height: 1.5rem }
-        .max-h-7 { max-height: 1.75rem }
-        .max-h-8 { max-height: 2rem }
-        .max-h-9 { max-height: 2.25rem }
-        .max-h-10 { max-height: 2.5rem }
-        .max-h-11 { max-height: 2.75rem }
-        .max-h-12 { max-height: 3rem }
-        .max-h-14 { max-height: 3.5rem }
-        .max-h-16 { max-height: 4rem }
-        .max-h-20 { max-height: 5rem }
-        .max-h-24 { max-height: 6rem }
-        .max-h-28 { max-height: 7rem }
-        .max-h-32 { max-height: 8rem }
-        .max-h-36 { max-height: 9rem }
-        .max-h-40 { max-height: 10rem }
-        .max-h-44 { max-height: 11rem }
-        .max-h-48 { max-height: 12rem }
-        .max-h-52 { max-height: 13rem }
-        .max-h-56 { max-height: 14rem }
-        .max-h-60 { max-height: 15rem }
-        .max-h-64 { max-height: 16rem }
-        .max-h-72 { max-height: 18rem }
-        .max-h-80 { max-height: 20rem }
-        .max-h-96 { max-height: 24rem }
         .max-h-none { max-height: none }
         .max-h-full { max-height: 100% }
         .max-h-screen { max-height: 100vh }
@@ -2048,7 +1890,7 @@ public class CssGeneratorTest {
         .max-h-min { max-height: min-content }
         .max-h-max { max-height: max-content }
         .max-h-fit { max-height: fit-content }
-        .max-h-1000px { max-height: 1000px }
+        .max-h-1000px { max-height: 62.5rem }
         .max-h-47\\.5\\% { max-height: 47.5% }
         """
     );
@@ -2059,10 +1901,12 @@ public class CssGeneratorTest {
     class Subject extends AbstractSubject {
       @Override
       final void classes() {
-        // @formatter:off
-        className("max-w-px max-w-0 max-w-0.5 max-w-1 max-w-1.5 max-w-2 max-w-2.5 max-w-3 max-w-3.5 max-w-4 max-w-5 max-w-6 max-w-7 max-w-8 max-w-9 max-w-10 max-w-11 max-w-12 max-w-14 max-w-16 max-w-20 max-w-24 max-w-28 max-w-32 max-w-36 max-w-40 max-w-44 max-w-48 max-w-52 max-w-56 max-w-60 max-w-64 max-w-72 max-w-80 max-w-96 max-w-none max-w-xs max-w-sm max-w-md max-w-lg max-w-xl max-w-2xl max-w-3xl max-w-4xl max-w-5xl max-w-6xl max-w-7xl max-w-full max-w-min max-w-max max-w-fit max-w-prose max-w-screen-sm max-w-screen-md max-w-screen-lg max-w-screen-xl max-w-screen-2xl");
+        className("max-w-none");
+        className("max-w-xs max-w-sm max-w-md max-w-lg max-w-xl");
+        className("max-w-2xl max-w-3xl max-w-4xl max-w-5xl max-w-6xl max-w-7xl");
+        className("max-w-full max-w-min max-w-max max-w-fit max-w-prose");
+        className("max-w-screen-sm max-w-screen-md max-w-screen-lg max-w-screen-xl max-w-screen-2xl");
         className("max-w-1000px max-w-47.5%");
-        // @formatter:on
       }
     }
 
@@ -2070,41 +1914,6 @@ public class CssGeneratorTest {
         Subject.class,
 
         """
-        .max-w-px { max-width: 1px }
-        .max-w-0 { max-width: 0px }
-        .max-w-0\\.5 { max-width: 0.125rem }
-        .max-w-1 { max-width: 0.25rem }
-        .max-w-1\\.5 { max-width: 0.375rem }
-        .max-w-2 { max-width: 0.5rem }
-        .max-w-2\\.5 { max-width: 0.625rem }
-        .max-w-3 { max-width: 0.75rem }
-        .max-w-3\\.5 { max-width: 0.875rem }
-        .max-w-4 { max-width: 1rem }
-        .max-w-5 { max-width: 1.25rem }
-        .max-w-6 { max-width: 1.5rem }
-        .max-w-7 { max-width: 1.75rem }
-        .max-w-8 { max-width: 2rem }
-        .max-w-9 { max-width: 2.25rem }
-        .max-w-10 { max-width: 2.5rem }
-        .max-w-11 { max-width: 2.75rem }
-        .max-w-12 { max-width: 3rem }
-        .max-w-14 { max-width: 3.5rem }
-        .max-w-16 { max-width: 4rem }
-        .max-w-20 { max-width: 5rem }
-        .max-w-24 { max-width: 6rem }
-        .max-w-28 { max-width: 7rem }
-        .max-w-32 { max-width: 8rem }
-        .max-w-36 { max-width: 9rem }
-        .max-w-40 { max-width: 10rem }
-        .max-w-44 { max-width: 11rem }
-        .max-w-48 { max-width: 12rem }
-        .max-w-52 { max-width: 13rem }
-        .max-w-56 { max-width: 14rem }
-        .max-w-60 { max-width: 15rem }
-        .max-w-64 { max-width: 16rem }
-        .max-w-72 { max-width: 18rem }
-        .max-w-80 { max-width: 20rem }
-        .max-w-96 { max-width: 24rem }
         .max-w-none { max-width: none }
         .max-w-xs { max-width: 20rem }
         .max-w-sm { max-width: 24rem }
@@ -2127,7 +1936,7 @@ public class CssGeneratorTest {
         .max-w-screen-lg { max-width: 1024px }
         .max-w-screen-xl { max-width: 1280px }
         .max-w-screen-2xl { max-width: 1536px }
-        .max-w-1000px { max-width: 1000px }
+        .max-w-1000px { max-width: 62.5rem }
         .max-w-47\\.5\\% { max-width: 47.5% }
         """
     );
@@ -2138,10 +1947,8 @@ public class CssGeneratorTest {
     class Subject extends AbstractSubject {
       @Override
       final void classes() {
-        // @formatter:off
-        className("min-h-px min-h-0 min-h-0.5 min-h-1 min-h-1.5 min-h-2 min-h-2.5 min-h-3 min-h-3.5 min-h-4 min-h-5 min-h-6 min-h-7 min-h-8 min-h-9 min-h-10 min-h-11 min-h-12 min-h-14 min-h-16 min-h-20 min-h-24 min-h-28 min-h-32 min-h-36 min-h-40 min-h-44 min-h-48 min-h-52 min-h-56 min-h-60 min-h-64 min-h-72 min-h-80 min-h-96 min-h-full min-h-screen min-h-svh min-h-lvh min-h-dvh min-h-min min-h-max min-h-fit");
+        className("min-h-full min-h-screen min-h-svh min-h-lvh min-h-dvh min-h-min min-h-max min-h-fit");
         className("min-h-381px min-h-14%");
-        // @formatter:on
       }
     }
 
@@ -2149,41 +1956,6 @@ public class CssGeneratorTest {
         Subject.class,
 
         """
-        .min-h-px { min-height: 1px }
-        .min-h-0 { min-height: 0px }
-        .min-h-0\\.5 { min-height: 0.125rem }
-        .min-h-1 { min-height: 0.25rem }
-        .min-h-1\\.5 { min-height: 0.375rem }
-        .min-h-2 { min-height: 0.5rem }
-        .min-h-2\\.5 { min-height: 0.625rem }
-        .min-h-3 { min-height: 0.75rem }
-        .min-h-3\\.5 { min-height: 0.875rem }
-        .min-h-4 { min-height: 1rem }
-        .min-h-5 { min-height: 1.25rem }
-        .min-h-6 { min-height: 1.5rem }
-        .min-h-7 { min-height: 1.75rem }
-        .min-h-8 { min-height: 2rem }
-        .min-h-9 { min-height: 2.25rem }
-        .min-h-10 { min-height: 2.5rem }
-        .min-h-11 { min-height: 2.75rem }
-        .min-h-12 { min-height: 3rem }
-        .min-h-14 { min-height: 3.5rem }
-        .min-h-16 { min-height: 4rem }
-        .min-h-20 { min-height: 5rem }
-        .min-h-24 { min-height: 6rem }
-        .min-h-28 { min-height: 7rem }
-        .min-h-32 { min-height: 8rem }
-        .min-h-36 { min-height: 9rem }
-        .min-h-40 { min-height: 10rem }
-        .min-h-44 { min-height: 11rem }
-        .min-h-48 { min-height: 12rem }
-        .min-h-52 { min-height: 13rem }
-        .min-h-56 { min-height: 14rem }
-        .min-h-60 { min-height: 15rem }
-        .min-h-64 { min-height: 16rem }
-        .min-h-72 { min-height: 18rem }
-        .min-h-80 { min-height: 20rem }
-        .min-h-96 { min-height: 24rem }
         .min-h-full { min-height: 100% }
         .min-h-screen { min-height: 100vh }
         .min-h-svh { min-height: 100svh }
@@ -2192,7 +1964,7 @@ public class CssGeneratorTest {
         .min-h-min { min-height: min-content }
         .min-h-max { min-height: max-content }
         .min-h-fit { min-height: fit-content }
-        .min-h-381px { min-height: 381px }
+        .min-h-381px { min-height: 23.8125rem }
         .min-h-14\\% { min-height: 14% }
         """
     );
@@ -2203,10 +1975,8 @@ public class CssGeneratorTest {
     class Subject extends AbstractSubject {
       @Override
       final void classes() {
-        // @formatter:off
-        className("min-w-px min-w-0 min-w-0.5 min-w-1 min-w-1.5 min-w-2 min-w-2.5 min-w-3 min-w-3.5 min-w-4 min-w-5 min-w-6 min-w-7 min-w-8 min-w-9 min-w-10 min-w-11 min-w-12 min-w-14 min-w-16 min-w-20 min-w-24 min-w-28 min-w-32 min-w-36 min-w-40 min-w-44 min-w-48 min-w-52 min-w-56 min-w-60 min-w-64 min-w-72 min-w-80 min-w-96 min-w-full min-w-min min-w-max min-w-fit");
+        className("min-w-full min-w-min min-w-max min-w-fit");
         className("min-w-381px min-w-14%");
-        // @formatter:on
       }
     }
 
@@ -2214,46 +1984,11 @@ public class CssGeneratorTest {
         Subject.class,
 
         """
-        .min-w-px { min-width: 1px }
-        .min-w-0 { min-width: 0px }
-        .min-w-0\\.5 { min-width: 0.125rem }
-        .min-w-1 { min-width: 0.25rem }
-        .min-w-1\\.5 { min-width: 0.375rem }
-        .min-w-2 { min-width: 0.5rem }
-        .min-w-2\\.5 { min-width: 0.625rem }
-        .min-w-3 { min-width: 0.75rem }
-        .min-w-3\\.5 { min-width: 0.875rem }
-        .min-w-4 { min-width: 1rem }
-        .min-w-5 { min-width: 1.25rem }
-        .min-w-6 { min-width: 1.5rem }
-        .min-w-7 { min-width: 1.75rem }
-        .min-w-8 { min-width: 2rem }
-        .min-w-9 { min-width: 2.25rem }
-        .min-w-10 { min-width: 2.5rem }
-        .min-w-11 { min-width: 2.75rem }
-        .min-w-12 { min-width: 3rem }
-        .min-w-14 { min-width: 3.5rem }
-        .min-w-16 { min-width: 4rem }
-        .min-w-20 { min-width: 5rem }
-        .min-w-24 { min-width: 6rem }
-        .min-w-28 { min-width: 7rem }
-        .min-w-32 { min-width: 8rem }
-        .min-w-36 { min-width: 9rem }
-        .min-w-40 { min-width: 10rem }
-        .min-w-44 { min-width: 11rem }
-        .min-w-48 { min-width: 12rem }
-        .min-w-52 { min-width: 13rem }
-        .min-w-56 { min-width: 14rem }
-        .min-w-60 { min-width: 15rem }
-        .min-w-64 { min-width: 16rem }
-        .min-w-72 { min-width: 18rem }
-        .min-w-80 { min-width: 20rem }
-        .min-w-96 { min-width: 24rem }
         .min-w-full { min-width: 100% }
         .min-w-min { min-width: min-content }
         .min-w-max { min-width: max-content }
         .min-w-fit { min-width: fit-content }
-        .min-w-381px { min-width: 381px }
+        .min-w-381px { min-width: 23.8125rem }
         .min-w-14\\% { min-width: 14% }
         """
     );
@@ -2429,16 +2164,13 @@ public class CssGeneratorTest {
     class Subject extends AbstractSubject {
       @Override
       final void classes() {
-        // @formatter:off
-        className("p-px p-0 p-0.5 p-1 p-1.5 p-2 p-2.5 p-3 p-3.5 p-4 p-5 p-6 p-7 p-8 p-9 p-10 p-11 p-12 p-14 p-16 p-20 p-24 p-28 p-32 p-36 p-40 p-44 p-48 p-52 p-56 p-60 p-64 p-72 p-80 p-96");
-        className("px-px px-0 px-0.5 px-1 px-1.5 px-2 px-2.5 px-3 px-3.5 px-4 px-5 px-6 px-7 px-8 px-9 px-10 px-11 px-12 px-14 px-16 px-20 px-24 px-28 px-32 px-36 px-40 px-44 px-48 px-52 px-56 px-60 px-64 px-72 px-80 px-96");
-        className("py-px py-0 py-0.5 py-1 py-1.5 py-2 py-2.5 py-3 py-3.5 py-4 py-5 py-6 py-7 py-8 py-9 py-10 py-11 py-12 py-14 py-16 py-20 py-24 py-28 py-32 py-36 py-40 py-44 py-48 py-52 py-56 py-60 py-64 py-72 py-80 py-96");
-        className("pt-px pt-0 pt-0.5 pt-1 pt-1.5 pt-2 pt-2.5 pt-3 pt-3.5 pt-4 pt-5 pt-6 pt-7 pt-8 pt-9 pt-10 pt-11 pt-12 pt-14 pt-16 pt-20 pt-24 pt-28 pt-32 pt-36 pt-40 pt-44 pt-48 pt-52 pt-56 pt-60 pt-64 pt-72 pt-80 pt-96");
-        className("pr-px pr-0 pr-0.5 pr-1 pr-1.5 pr-2 pr-2.5 pr-3 pr-3.5 pr-4 pr-5 pr-6 pr-7 pr-8 pr-9 pr-10 pr-11 pr-12 pr-14 pr-16 pr-20 pr-24 pr-28 pr-32 pr-36 pr-40 pr-44 pr-48 pr-52 pr-56 pr-60 pr-64 pr-72 pr-80 pr-96");
-        className("pb-px pb-0 pb-0.5 pb-1 pb-1.5 pb-2 pb-2.5 pb-3 pb-3.5 pb-4 pb-5 pb-6 pb-7 pb-8 pb-9 pb-10 pb-11 pb-12 pb-14 pb-16 pb-20 pb-24 pb-28 pb-32 pb-36 pb-40 pb-44 pb-48 pb-52 pb-56 pb-60 pb-64 pb-72 pb-80 pb-96");
-        className("pl-px pl-0 pl-0.5 pl-1 pl-1.5 pl-2 pl-2.5 pl-3 pl-3.5 pl-4 pl-5 pl-6 pl-7 pl-8 pl-9 pl-10 pl-11 pl-12 pl-14 pl-16 pl-20 pl-24 pl-28 pl-32 pl-36 pl-40 pl-44 pl-48 pl-52 pl-56 pl-60 pl-64 pl-72 pl-80 pl-96");
-        className("px-27px py-10%");
-        // @formatter:on
+        className("p-16px p-20%");
+        className("px-32px px-31rem");
+        className("py-18px py-7%");
+        className("pt-24px pt-1%");
+        className("pr-18px pr-4%");
+        className("pb-48px pb-3%");
+        className("pl-30px pl-12%");
       }
     }
 
@@ -2446,253 +2178,20 @@ public class CssGeneratorTest {
         Subject.class,
 
         """
-        .p-px { padding: 1px }
-        .p-0 { padding: 0px }
-        .p-0\\.5 { padding: 0.125rem }
-        .p-1 { padding: 0.25rem }
-        .p-1\\.5 { padding: 0.375rem }
-        .p-2 { padding: 0.5rem }
-        .p-2\\.5 { padding: 0.625rem }
-        .p-3 { padding: 0.75rem }
-        .p-3\\.5 { padding: 0.875rem }
-        .p-4 { padding: 1rem }
-        .p-5 { padding: 1.25rem }
-        .p-6 { padding: 1.5rem }
-        .p-7 { padding: 1.75rem }
-        .p-8 { padding: 2rem }
-        .p-9 { padding: 2.25rem }
-        .p-10 { padding: 2.5rem }
-        .p-11 { padding: 2.75rem }
-        .p-12 { padding: 3rem }
-        .p-14 { padding: 3.5rem }
-        .p-16 { padding: 4rem }
-        .p-20 { padding: 5rem }
-        .p-24 { padding: 6rem }
-        .p-28 { padding: 7rem }
-        .p-32 { padding: 8rem }
-        .p-36 { padding: 9rem }
-        .p-40 { padding: 10rem }
-        .p-44 { padding: 11rem }
-        .p-48 { padding: 12rem }
-        .p-52 { padding: 13rem }
-        .p-56 { padding: 14rem }
-        .p-60 { padding: 15rem }
-        .p-64 { padding: 16rem }
-        .p-72 { padding: 18rem }
-        .p-80 { padding: 20rem }
-        .p-96 { padding: 24rem }
-        .px-px { padding-left: 1px; padding-right: 1px }
-        .px-0 { padding-left: 0px; padding-right: 0px }
-        .px-0\\.5 { padding-left: 0.125rem; padding-right: 0.125rem }
-        .px-1 { padding-left: 0.25rem; padding-right: 0.25rem }
-        .px-1\\.5 { padding-left: 0.375rem; padding-right: 0.375rem }
-        .px-2 { padding-left: 0.5rem; padding-right: 0.5rem }
-        .px-2\\.5 { padding-left: 0.625rem; padding-right: 0.625rem }
-        .px-3 { padding-left: 0.75rem; padding-right: 0.75rem }
-        .px-3\\.5 { padding-left: 0.875rem; padding-right: 0.875rem }
-        .px-4 { padding-left: 1rem; padding-right: 1rem }
-        .px-5 { padding-left: 1.25rem; padding-right: 1.25rem }
-        .px-6 { padding-left: 1.5rem; padding-right: 1.5rem }
-        .px-7 { padding-left: 1.75rem; padding-right: 1.75rem }
-        .px-8 { padding-left: 2rem; padding-right: 2rem }
-        .px-9 { padding-left: 2.25rem; padding-right: 2.25rem }
-        .px-10 { padding-left: 2.5rem; padding-right: 2.5rem }
-        .px-11 { padding-left: 2.75rem; padding-right: 2.75rem }
-        .px-12 { padding-left: 3rem; padding-right: 3rem }
-        .px-14 { padding-left: 3.5rem; padding-right: 3.5rem }
-        .px-16 { padding-left: 4rem; padding-right: 4rem }
-        .px-20 { padding-left: 5rem; padding-right: 5rem }
-        .px-24 { padding-left: 6rem; padding-right: 6rem }
-        .px-28 { padding-left: 7rem; padding-right: 7rem }
-        .px-32 { padding-left: 8rem; padding-right: 8rem }
-        .px-36 { padding-left: 9rem; padding-right: 9rem }
-        .px-40 { padding-left: 10rem; padding-right: 10rem }
-        .px-44 { padding-left: 11rem; padding-right: 11rem }
-        .px-48 { padding-left: 12rem; padding-right: 12rem }
-        .px-52 { padding-left: 13rem; padding-right: 13rem }
-        .px-56 { padding-left: 14rem; padding-right: 14rem }
-        .px-60 { padding-left: 15rem; padding-right: 15rem }
-        .px-64 { padding-left: 16rem; padding-right: 16rem }
-        .px-72 { padding-left: 18rem; padding-right: 18rem }
-        .px-80 { padding-left: 20rem; padding-right: 20rem }
-        .px-96 { padding-left: 24rem; padding-right: 24rem }
-        .px-27px { padding-left: 27px; padding-right: 27px }
-        .py-px { padding-top: 1px; padding-bottom: 1px }
-        .py-0 { padding-top: 0px; padding-bottom: 0px }
-        .py-0\\.5 { padding-top: 0.125rem; padding-bottom: 0.125rem }
-        .py-1 { padding-top: 0.25rem; padding-bottom: 0.25rem }
-        .py-1\\.5 { padding-top: 0.375rem; padding-bottom: 0.375rem }
-        .py-2 { padding-top: 0.5rem; padding-bottom: 0.5rem }
-        .py-2\\.5 { padding-top: 0.625rem; padding-bottom: 0.625rem }
-        .py-3 { padding-top: 0.75rem; padding-bottom: 0.75rem }
-        .py-3\\.5 { padding-top: 0.875rem; padding-bottom: 0.875rem }
-        .py-4 { padding-top: 1rem; padding-bottom: 1rem }
-        .py-5 { padding-top: 1.25rem; padding-bottom: 1.25rem }
-        .py-6 { padding-top: 1.5rem; padding-bottom: 1.5rem }
-        .py-7 { padding-top: 1.75rem; padding-bottom: 1.75rem }
-        .py-8 { padding-top: 2rem; padding-bottom: 2rem }
-        .py-9 { padding-top: 2.25rem; padding-bottom: 2.25rem }
-        .py-10 { padding-top: 2.5rem; padding-bottom: 2.5rem }
-        .py-11 { padding-top: 2.75rem; padding-bottom: 2.75rem }
-        .py-12 { padding-top: 3rem; padding-bottom: 3rem }
-        .py-14 { padding-top: 3.5rem; padding-bottom: 3.5rem }
-        .py-16 { padding-top: 4rem; padding-bottom: 4rem }
-        .py-20 { padding-top: 5rem; padding-bottom: 5rem }
-        .py-24 { padding-top: 6rem; padding-bottom: 6rem }
-        .py-28 { padding-top: 7rem; padding-bottom: 7rem }
-        .py-32 { padding-top: 8rem; padding-bottom: 8rem }
-        .py-36 { padding-top: 9rem; padding-bottom: 9rem }
-        .py-40 { padding-top: 10rem; padding-bottom: 10rem }
-        .py-44 { padding-top: 11rem; padding-bottom: 11rem }
-        .py-48 { padding-top: 12rem; padding-bottom: 12rem }
-        .py-52 { padding-top: 13rem; padding-bottom: 13rem }
-        .py-56 { padding-top: 14rem; padding-bottom: 14rem }
-        .py-60 { padding-top: 15rem; padding-bottom: 15rem }
-        .py-64 { padding-top: 16rem; padding-bottom: 16rem }
-        .py-72 { padding-top: 18rem; padding-bottom: 18rem }
-        .py-80 { padding-top: 20rem; padding-bottom: 20rem }
-        .py-96 { padding-top: 24rem; padding-bottom: 24rem }
-        .py-10\\% { padding-top: 10%; padding-bottom: 10% }
-        .pt-px { padding-top: 1px }
-        .pt-0 { padding-top: 0px }
-        .pt-0\\.5 { padding-top: 0.125rem }
-        .pt-1 { padding-top: 0.25rem }
-        .pt-1\\.5 { padding-top: 0.375rem }
-        .pt-2 { padding-top: 0.5rem }
-        .pt-2\\.5 { padding-top: 0.625rem }
-        .pt-3 { padding-top: 0.75rem }
-        .pt-3\\.5 { padding-top: 0.875rem }
-        .pt-4 { padding-top: 1rem }
-        .pt-5 { padding-top: 1.25rem }
-        .pt-6 { padding-top: 1.5rem }
-        .pt-7 { padding-top: 1.75rem }
-        .pt-8 { padding-top: 2rem }
-        .pt-9 { padding-top: 2.25rem }
-        .pt-10 { padding-top: 2.5rem }
-        .pt-11 { padding-top: 2.75rem }
-        .pt-12 { padding-top: 3rem }
-        .pt-14 { padding-top: 3.5rem }
-        .pt-16 { padding-top: 4rem }
-        .pt-20 { padding-top: 5rem }
-        .pt-24 { padding-top: 6rem }
-        .pt-28 { padding-top: 7rem }
-        .pt-32 { padding-top: 8rem }
-        .pt-36 { padding-top: 9rem }
-        .pt-40 { padding-top: 10rem }
-        .pt-44 { padding-top: 11rem }
-        .pt-48 { padding-top: 12rem }
-        .pt-52 { padding-top: 13rem }
-        .pt-56 { padding-top: 14rem }
-        .pt-60 { padding-top: 15rem }
-        .pt-64 { padding-top: 16rem }
-        .pt-72 { padding-top: 18rem }
-        .pt-80 { padding-top: 20rem }
-        .pt-96 { padding-top: 24rem }
-        .pr-px { padding-right: 1px }
-        .pr-0 { padding-right: 0px }
-        .pr-0\\.5 { padding-right: 0.125rem }
-        .pr-1 { padding-right: 0.25rem }
-        .pr-1\\.5 { padding-right: 0.375rem }
-        .pr-2 { padding-right: 0.5rem }
-        .pr-2\\.5 { padding-right: 0.625rem }
-        .pr-3 { padding-right: 0.75rem }
-        .pr-3\\.5 { padding-right: 0.875rem }
-        .pr-4 { padding-right: 1rem }
-        .pr-5 { padding-right: 1.25rem }
-        .pr-6 { padding-right: 1.5rem }
-        .pr-7 { padding-right: 1.75rem }
-        .pr-8 { padding-right: 2rem }
-        .pr-9 { padding-right: 2.25rem }
-        .pr-10 { padding-right: 2.5rem }
-        .pr-11 { padding-right: 2.75rem }
-        .pr-12 { padding-right: 3rem }
-        .pr-14 { padding-right: 3.5rem }
-        .pr-16 { padding-right: 4rem }
-        .pr-20 { padding-right: 5rem }
-        .pr-24 { padding-right: 6rem }
-        .pr-28 { padding-right: 7rem }
-        .pr-32 { padding-right: 8rem }
-        .pr-36 { padding-right: 9rem }
-        .pr-40 { padding-right: 10rem }
-        .pr-44 { padding-right: 11rem }
-        .pr-48 { padding-right: 12rem }
-        .pr-52 { padding-right: 13rem }
-        .pr-56 { padding-right: 14rem }
-        .pr-60 { padding-right: 15rem }
-        .pr-64 { padding-right: 16rem }
-        .pr-72 { padding-right: 18rem }
-        .pr-80 { padding-right: 20rem }
-        .pr-96 { padding-right: 24rem }
-        .pb-px { padding-bottom: 1px }
-        .pb-0 { padding-bottom: 0px }
-        .pb-0\\.5 { padding-bottom: 0.125rem }
-        .pb-1 { padding-bottom: 0.25rem }
-        .pb-1\\.5 { padding-bottom: 0.375rem }
-        .pb-2 { padding-bottom: 0.5rem }
-        .pb-2\\.5 { padding-bottom: 0.625rem }
-        .pb-3 { padding-bottom: 0.75rem }
-        .pb-3\\.5 { padding-bottom: 0.875rem }
-        .pb-4 { padding-bottom: 1rem }
-        .pb-5 { padding-bottom: 1.25rem }
-        .pb-6 { padding-bottom: 1.5rem }
-        .pb-7 { padding-bottom: 1.75rem }
-        .pb-8 { padding-bottom: 2rem }
-        .pb-9 { padding-bottom: 2.25rem }
-        .pb-10 { padding-bottom: 2.5rem }
-        .pb-11 { padding-bottom: 2.75rem }
-        .pb-12 { padding-bottom: 3rem }
-        .pb-14 { padding-bottom: 3.5rem }
-        .pb-16 { padding-bottom: 4rem }
-        .pb-20 { padding-bottom: 5rem }
-        .pb-24 { padding-bottom: 6rem }
-        .pb-28 { padding-bottom: 7rem }
-        .pb-32 { padding-bottom: 8rem }
-        .pb-36 { padding-bottom: 9rem }
-        .pb-40 { padding-bottom: 10rem }
-        .pb-44 { padding-bottom: 11rem }
-        .pb-48 { padding-bottom: 12rem }
-        .pb-52 { padding-bottom: 13rem }
-        .pb-56 { padding-bottom: 14rem }
-        .pb-60 { padding-bottom: 15rem }
-        .pb-64 { padding-bottom: 16rem }
-        .pb-72 { padding-bottom: 18rem }
-        .pb-80 { padding-bottom: 20rem }
-        .pb-96 { padding-bottom: 24rem }
-        .pl-px { padding-left: 1px }
-        .pl-0 { padding-left: 0px }
-        .pl-0\\.5 { padding-left: 0.125rem }
-        .pl-1 { padding-left: 0.25rem }
-        .pl-1\\.5 { padding-left: 0.375rem }
-        .pl-2 { padding-left: 0.5rem }
-        .pl-2\\.5 { padding-left: 0.625rem }
-        .pl-3 { padding-left: 0.75rem }
-        .pl-3\\.5 { padding-left: 0.875rem }
-        .pl-4 { padding-left: 1rem }
-        .pl-5 { padding-left: 1.25rem }
-        .pl-6 { padding-left: 1.5rem }
-        .pl-7 { padding-left: 1.75rem }
-        .pl-8 { padding-left: 2rem }
-        .pl-9 { padding-left: 2.25rem }
-        .pl-10 { padding-left: 2.5rem }
-        .pl-11 { padding-left: 2.75rem }
-        .pl-12 { padding-left: 3rem }
-        .pl-14 { padding-left: 3.5rem }
-        .pl-16 { padding-left: 4rem }
-        .pl-20 { padding-left: 5rem }
-        .pl-24 { padding-left: 6rem }
-        .pl-28 { padding-left: 7rem }
-        .pl-32 { padding-left: 8rem }
-        .pl-36 { padding-left: 9rem }
-        .pl-40 { padding-left: 10rem }
-        .pl-44 { padding-left: 11rem }
-        .pl-48 { padding-left: 12rem }
-        .pl-52 { padding-left: 13rem }
-        .pl-56 { padding-left: 14rem }
-        .pl-60 { padding-left: 15rem }
-        .pl-64 { padding-left: 16rem }
-        .pl-72 { padding-left: 18rem }
-        .pl-80 { padding-left: 20rem }
-        .pl-96 { padding-left: 24rem }
+        .p-16px { padding: 1rem }
+        .p-20\\% { padding: 20% }
+        .px-32px { padding-left: 2rem; padding-right: 2rem }
+        .px-31rem { padding-left: 31rem; padding-right: 31rem }
+        .py-18px { padding-top: 1.125rem; padding-bottom: 1.125rem }
+        .py-7\\% { padding-top: 7%; padding-bottom: 7% }
+        .pt-24px { padding-top: 1.5rem }
+        .pt-1\\% { padding-top: 1% }
+        .pr-18px { padding-right: 1.125rem }
+        .pr-4\\% { padding-right: 4% }
+        .pb-48px { padding-bottom: 3rem }
+        .pb-3\\% { padding-bottom: 3% }
+        .pl-30px { padding-left: 1.875rem }
+        .pl-12\\% { padding-left: 12% }
         """
     );
   }
@@ -2778,7 +2277,7 @@ public class CssGeneratorTest {
         .ring-offset-2 { --tw-ring-offset-width: 2px }
         .ring-offset-4 { --tw-ring-offset-width: 4px }
         .ring-offset-8 { --tw-ring-offset-width: 8px }
-        .ring-offset-20px { --tw-ring-offset-width: 20px }
+        .ring-offset-20px { --tw-ring-offset-width: 1.25rem }
         """
     );
   }
@@ -2810,7 +2309,7 @@ public class CssGeneratorTest {
     class Subject extends AbstractSubject {
       @Override
       final void classes() {
-        className("ring-0 ring-1 ring-2 ring ring-4 ring-8 ring-inset ring-10px");
+        className("ring-0 ring-1 ring-2 ring ring-4 ring-8 ring-inset ring-16px");
       }
     }
 
@@ -2848,9 +2347,9 @@ public class CssGeneratorTest {
           --tw-ring-shadow: var(--tw-ring-inset, ) 0 0 0 calc(8px + var(--tw-ring-offset-width, 0px)) var(--tw-ring-color, rgb(59 130 246 / 0.5));
           box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow, 0 0 #0000);
         }
-        .ring-10px {
+        .ring-16px {
           --tw-ring-offset-shadow: var(--tw-ring-inset, ) 0 0 0 var(--tw-ring-offset-width, 0px) var(--tw-ring-offset-color, #fff);
-          --tw-ring-shadow: var(--tw-ring-inset, ) 0 0 0 calc(10px + var(--tw-ring-offset-width, 0px)) var(--tw-ring-color, rgb(59 130 246 / 0.5));
+          --tw-ring-shadow: var(--tw-ring-inset, ) 0 0 0 calc(1rem + var(--tw-ring-offset-width, 0px)) var(--tw-ring-color, rgb(59 130 246 / 0.5));
           box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow, 0 0 #0000);
         }
         .ring-inset { --tw-ring-inset: inset }
@@ -2945,7 +2444,7 @@ public class CssGeneratorTest {
         .size-min { height: min-content; width: min-content }
         .size-max { height: max-content; width: max-content }
         .size-fit { height: fit-content; width: fit-content }
-        .size-24px { height: 24px; width: 24px }
+        .size-24px { height: 1.5rem; width: 1.5rem }
         .size-50\\% { height: 50%; width: 50% }
         """
     );
@@ -3506,24 +3005,24 @@ public class CssGeneratorTest {
         .m-0 { margin: 0px }
 
         @media (min-width: 640px) {
-          .sm\\:m-1px { margin: 1px }
+          .sm\\:m-1px { margin: 0.0625rem }
           .sm\\:block { display: block }
         }
 
         @media (min-width: 768px) {
-          .md\\:m-2px { margin: 2px }
+          .md\\:m-2px { margin: 0.125rem }
         }
 
         @media (min-width: 1024px) {
-          .lg\\:m-3px { margin: 3px }
+          .lg\\:m-3px { margin: 0.1875rem }
         }
 
         @media (min-width: 1280px) {
-          .xl\\:m-4px { margin: 4px }
+          .xl\\:m-4px { margin: 0.25rem }
         }
 
         @media (min-width: 1536px) {
-          .\\32xl\\:m-5px { margin: 5px }
+          .\\32xl\\:m-5px { margin: 0.3125rem }
         }
         """
     );
@@ -3643,9 +3142,9 @@ public class CssGeneratorTest {
         # carbon-grid
         mx-auto grid w-full max-w-screen-max grid-cols-4
         px-0
-        md:grid-cols-8 md:px-4
+        md:grid-cols-8 md:px-16px
         lg:grid-cols-12
-        2xl:px-6
+        2xl:px-24px
         *:mx-4px
         """),
 
@@ -3662,8 +3161,8 @@ public class CssGeneratorTest {
           padding-right: 0px;
         }
         .carbon-grid > * {
-          margin-left: 4px;
-          margin-right: 4px;
+          margin-left: 0.25rem;
+          margin-right: 0.25rem;
         }
         @media (min-width: 768px) {
           .carbon-grid {
@@ -3940,29 +3439,6 @@ public class CssGeneratorTest {
         """
         .border-border-subtle { border-color: var(--ui-border-subtle) }
         .border-black { border-color: #000000 }
-        """
-    );
-  }
-
-  @Test
-  public void extendSpacing() {
-    class Subject extends AbstractSubject {
-      @Override
-      final void classes() {
-        className("w-1 h-spacing-01");
-      }
-    }
-
-    test(
-        Css.extendSpacing("""
-        spacing-01: var(--ui-spacing-01)
-        """),
-
-        Subject.class,
-
-        """
-        .h-spacing-01 { height: var(--ui-spacing-01) }
-        .w-1 { width: 0.25rem }
         """
     );
   }
@@ -4389,9 +3865,9 @@ public class CssGeneratorTest {
         className("border-x border-y");
         className("border-t border-r border-b border-l");
         // height
-        className("h-4");
-        className("min-h-8");
-        className("max-h-12");
+        className("h-16px");
+        className("min-h-32px");
+        className("max-h-48px");
         // float
         className("float-right float-left");
         // clear
@@ -4405,17 +3881,17 @@ public class CssGeneratorTest {
         className("mb-auto");
         className("ml-auto");
         // padding
-        className("p-px");
-        className("px-px");
-        className("py-px");
-        className("pt-px");
-        className("pr-px");
-        className("pb-px");
-        className("pl-px");
+        className("p-1px");
+        className("px-1px");
+        className("py-1px");
+        className("pt-1px");
+        className("pr-1px");
+        className("pb-1px");
+        className("pl-1px");
         // width
-        className("w-4");
-        className("min-w-8");
-        className("max-w-12");
+        className("w-16px");
+        className("min-w-32px");
+        className("max-w-48px");
         // inset
         className("inset-1px");
         className("inset-x-1px");
@@ -4435,13 +3911,13 @@ public class CssGeneratorTest {
         Subject.class,
 
         """
-        .inset-1px { inset: 1px }
-        .inset-x-1px { inset-inline-start: 1px; inset-inline-end: 1px }
-        .inset-y-1px { inset-block-start: 1px; inset-block-end: 1px }
-        .top-1px { inset-block-start: 1px }
-        .right-1px { inset-inline-end: 1px }
-        .bottom-1px { inset-block-end: 1px }
-        .left-1px { inset-inline-start: 1px }
+        .inset-1px { inset: 0.0625rem }
+        .inset-x-1px { inset-inline-start: 0.0625rem; inset-inline-end: 0.0625rem }
+        .inset-y-1px { inset-block-start: 0.0625rem; inset-block-end: 0.0625rem }
+        .top-1px { inset-block-start: 0.0625rem }
+        .right-1px { inset-inline-end: 0.0625rem }
+        .bottom-1px { inset-block-end: 0.0625rem }
+        .left-1px { inset-inline-start: 0.0625rem }
         .float-right { float: inline-end }
         .float-left { float: inline-start }
         .clear-right { clear: inline-end }
@@ -4453,13 +3929,13 @@ public class CssGeneratorTest {
         .mr-auto { margin-inline-end: auto }
         .mb-auto { margin-block-end: auto }
         .ml-auto { margin-inline-start: auto }
-        .size-2px { block-size: 2px; inline-size: 2px }
-        .h-4 { block-size: 1rem }
-        .max-h-12 { max-block-size: 3rem }
-        .min-h-8 { min-block-size: 2rem }
-        .w-4 { inline-size: 1rem }
-        .max-w-12 { max-inline-size: 3rem }
-        .min-w-8 { min-inline-size: 2rem }
+        .size-2px { block-size: 0.125rem; inline-size: 0.125rem }
+        .h-16px { block-size: 1rem }
+        .max-h-48px { max-block-size: 3rem }
+        .min-h-32px { min-block-size: 2rem }
+        .w-16px { inline-size: 1rem }
+        .max-w-48px { max-inline-size: 3rem }
+        .min-w-32px { min-inline-size: 2rem }
         .rounded-none { border-radius: 0px }
         .rounded-t-none { border-start-start-radius: 0px; border-start-end-radius: 0px }
         .rounded-r-none { border-start-end-radius: 0px; border-end-end-radius: 0px }
@@ -4483,13 +3959,13 @@ public class CssGeneratorTest {
         .border-r-white { border-inline-end-color: #ffffff }
         .border-b-white { border-block-end-color: #ffffff }
         .border-l-white { border-inline-start-color: #ffffff }
-        .p-px { padding: 1px }
-        .px-px { padding-inline-start: 1px; padding-inline-end: 1px }
-        .py-px { padding-block-start: 1px; padding-block-end: 1px }
-        .pt-px { padding-block-start: 1px }
-        .pr-px { padding-inline-end: 1px }
-        .pb-px { padding-block-end: 1px }
-        .pl-px { padding-inline-start: 1px }
+        .p-1px { padding: 0.0625rem }
+        .px-1px { padding-inline-start: 0.0625rem; padding-inline-end: 0.0625rem }
+        .py-1px { padding-block-start: 0.0625rem; padding-block-end: 0.0625rem }
+        .pt-1px { padding-block-start: 0.0625rem }
+        .pr-1px { padding-inline-end: 0.0625rem }
+        .pb-1px { padding-block-end: 0.0625rem }
+        .pl-1px { padding-inline-start: 0.0625rem }
         """
     );
   }
@@ -4593,9 +4069,9 @@ public class CssGeneratorTest {
           clip: auto;
           white-space: normal;
         }
-        .rtl\\:mr-1px:where([dir="rtl"], [dir="rtl"] *) { margin-right: 1px }
-        .before\\:-ml-1px::before { margin-left: -1px }
-        .ltr\\:ml-1px:where([dir="ltr"], [dir="ltr"] *) { margin-left: 1px }
+        .rtl\\:mr-1px:where([dir="rtl"], [dir="rtl"] *) { margin-right: 0.0625rem }
+        .before\\:-ml-1px::before { margin-left: -0.0625rem }
+        .ltr\\:ml-1px:where([dir="ltr"], [dir="ltr"] *) { margin-left: 0.0625rem }
         .before\\:block::before { display: block }
         .\\*\\:rounded-full > * { border-radius: 9999px }
         .hover\\:bg-black:hover { background-color: #000000 }
@@ -4644,7 +4120,7 @@ public class CssGeneratorTest {
         Subject.class,
 
         """
-        .-ml-2px { margin-left: -2px }
+        .-ml-2px { margin-left: -0.125rem }
 
         @media (min-width: 768px) {
           .md\\:hidden { display: none }
@@ -4703,7 +4179,7 @@ public class CssGeneratorTest {
         .mx-auto { margin-left: auto; margin-right: auto }
         .w-full { width: 100% }
         .bg-white { background-color: #ffffff }
-        .px-16px { padding-left: 16px; padding-right: 16px }
+        .px-16px { padding-left: 1rem; padding-right: 1rem }
         """
     );
   }

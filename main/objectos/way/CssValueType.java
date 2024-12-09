@@ -21,6 +21,8 @@ enum CssValueType {
 
   ZERO,
 
+  LENGTH_PX,
+
   DIMENSION,
 
   PERCENTAGE,
@@ -42,6 +44,10 @@ enum CssValueType {
     MAYBE_DECIMAL,
 
     DECIMAL,
+
+    MAYBE_LENGTH_PX,
+
+    LENGTH_PX,
 
     DIMENSION,
 
@@ -81,6 +87,10 @@ enum CssValueType {
             parser = Parser.PERCENTAGE;
           }
 
+          else if (c == 'p') {
+            parser = Parser.MAYBE_LENGTH_PX;
+          }
+
           else if (isLetter(c)) {
             parser = Parser.DIMENSION;
           }
@@ -97,6 +107,10 @@ enum CssValueType {
 
           else if (c == '%') {
             parser = Parser.PERCENTAGE;
+          }
+
+          else if (c == 'p') {
+            parser = Parser.MAYBE_LENGTH_PX;
           }
 
           else if (isLetter(c)) {
@@ -127,6 +141,10 @@ enum CssValueType {
             parser = Parser.PERCENTAGE;
           }
 
+          else if (c == 'p') {
+            parser = Parser.MAYBE_LENGTH_PX;
+          }
+
           else if (isLetter(c)) {
             parser = Parser.DIMENSION;
           }
@@ -138,6 +156,20 @@ enum CssValueType {
           else {
             parser = Parser.DECIMAL;
           }
+        }
+
+        case MAYBE_LENGTH_PX -> {
+          if (c == 'x') {
+            parser = Parser.LENGTH_PX;
+          }
+
+          else {
+            parser = Parser.DIMENSION;
+          }
+        }
+
+        case LENGTH_PX -> {
+          parser = Parser.DIMENSION;
         }
 
         case DIMENSION -> {
@@ -173,6 +205,10 @@ enum CssValueType {
 
       case DECIMAL -> CssValueType.DECIMAL;
 
+      case MAYBE_LENGTH_PX -> CssValueType.DIMENSION;
+
+      case LENGTH_PX -> CssValueType.LENGTH_PX;
+
       case DIMENSION -> CssValueType.DIMENSION;
 
       case PERCENTAGE -> CssValueType.PERCENTAGE;
@@ -188,9 +224,160 @@ enum CssValueType {
         || 'a' <= c && c <= 'z';
   }
 
-  final String get(String value) {
+  public final String get(String value) {
     return switch (this) {
       case STRING -> value.replace('_', ' ');
+
+      case LENGTH_PX -> {
+        // we assume parse was invoked prior to invoking this method...
+
+        // accumulate all of the digits here
+        long digits;
+        digits = 0L;
+
+        // let's keep track of now many digits before the '.' we have found
+        int integerCount = 0;
+
+        // we need to know if we are before or after the '.'
+        boolean dot;
+        dot = false;
+
+        // let's keep track of how many digits after the '.' we have found
+        int decimalCount;
+        decimalCount = 0;
+
+        // we process all digits and stop before the trailing 'px'
+        int maxLen;
+        maxLen = value.length() - 2;
+
+        for (int idx = 0; idx < maxLen; idx++) {
+          char charValue;
+          charValue = value.charAt(idx);
+
+          if (!dot && charValue == '.') {
+            dot = true;
+
+            continue;
+          }
+
+          if (dot) {
+            decimalCount++;
+          } else {
+            integerCount++;
+          }
+
+          long longValue;
+          longValue = charValue - '0';
+
+          digits *= 10;
+
+          digits += longValue;
+        }
+
+        // don't convert 0px
+        if (digits == 0) {
+          yield value;
+        }
+
+        int scale;
+        scale = Math.max(decimalCount, 5);
+
+        double dividend;
+        dividend = digits;
+
+        if (scale > decimalCount) {
+          dividend *= Math.pow(10D, scale - decimalCount);
+        }
+
+        // round up if necessary...
+        dividend += 5;
+
+        double multiplier;
+        multiplier = Math.pow(10D, scale);
+
+        double divisor;
+        divisor = 16L * multiplier;
+
+        double result;
+        result = dividend / divisor;
+
+        long unscaled;
+        unscaled = (long) (result * multiplier);
+
+        StringBuilder out;
+        out = new StringBuilder();
+
+        // print the decimal digits
+
+        boolean append;
+        append = false;
+
+        for (int idx = 0; idx < scale; idx++) {
+          int thisDigit;
+          thisDigit = (int) (unscaled % 10L);
+
+          unscaled /= 10L;
+
+          if (thisDigit != 0) {
+            append = true;
+          }
+
+          if (!append) {
+            continue;
+          }
+
+          out.append(thisDigit);
+        }
+
+        if (append) {
+          out.append('.');
+        }
+
+        // print the integer digits
+
+        int nonZeroCount;
+        nonZeroCount = 0;
+
+        int zeroCount;
+        zeroCount = 0;
+
+        for (int idx = 0, max = integerCount; idx < max; idx++) {
+          int thisDigit;
+          thisDigit = (int) (unscaled % 10L);
+
+          if (thisDigit != 0) {
+            nonZeroCount++;
+
+            zeroCount = 0;
+          } else {
+            zeroCount++;
+          }
+
+          unscaled /= 10L;
+
+          out.append(thisDigit);
+        }
+
+        if (zeroCount > 1 && nonZeroCount == 0) {
+          int length;
+          length = out.length();
+
+          out.setLength(length - zeroCount + 1);
+        }
+
+        else if (zeroCount > 0 && nonZeroCount > 0) {
+          int length;
+          length = out.length();
+
+          out.setLength(length - zeroCount);
+        }
+
+        out.reverse();
+
+        out.append("rem");
+
+        yield out.toString();
+      }
 
       case ZERO,
 
@@ -201,6 +388,14 @@ enum CssValueType {
            INTEGER,
 
            DECIMAL -> value;
+    };
+  }
+
+  public final boolean isLength() {
+    return switch (this) {
+      case LENGTH_PX, DIMENSION -> true;
+
+      default -> false;
     };
   }
 

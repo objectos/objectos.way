@@ -304,12 +304,12 @@ final class CssConfig {
   );
 
   private static final Set<CssValueType> LENGTH = EnumSet.of(
-      CssValueType.ZERO,
+      CssValueType.LENGTH_PX,
       CssValueType.DIMENSION
   );
 
   private static final Set<CssValueType> L_OR_P = EnumSet.of(
-      CssValueType.ZERO,
+      CssValueType.LENGTH_PX,
       CssValueType.DIMENSION,
       CssValueType.PERCENTAGE
   );
@@ -495,50 +495,7 @@ final class CssConfig {
 
     // H
 
-    funcUtility(
-        Css.Key.HEIGHT,
-
-        values(
-            Css.Key.HEIGHT,
-
-            () -> Css.merge(
-                """
-                auto: auto
-                1/2: 50%
-                1/3: 33.333333%
-                2/3: 66.666667%
-                1/4: 25%
-                2/4: 50%
-                3/4: 75%
-                1/5: 20%
-                2/5: 40%
-                3/5: 60%
-                4/5: 80%
-                1/6: 16.666667%
-                2/6: 33.333333%
-                3/6: 50%
-                4/6: 66.666667%
-                5/6: 83.333333%
-                full: 100%
-                screen: 100vh
-                svh: 100svh
-                lvh: 100lvh
-                dvh: 100dvh
-                min: min-content
-                max: max-content
-                fit: fit-content
-                """,
-
-                spacing
-            )
-        ),
-
-        L_OR_P,
-
-        "h",
-
-        propertyType.height()
-    );
+    specH();
 
     // I
 
@@ -569,7 +526,7 @@ final class CssConfig {
 
     // M
 
-    specM(spacing);
+    specM();
 
     // O
 
@@ -710,36 +667,7 @@ final class CssConfig {
 
     // P
 
-    var padding = values(Css.Key.PADDING, spacing);
-
-    funcUtility(Css.Key.PADDING, padding, L_OR_P, "p", "padding");
-    funcUtility(Css.Key.PADDING_TOP, padding, L_OR_P, "pt", propertyType.paddingTop());
-    funcUtility(Css.Key.PADDING_RIGHT, padding, L_OR_P, "pr", propertyType.paddingRight());
-    funcUtility(Css.Key.PADDING_BOTTOM, padding, L_OR_P, "pb", propertyType.paddingBottom());
-    funcUtility(Css.Key.PADDING_LEFT, padding, L_OR_P, "pl", propertyType.paddingLeft());
-    funcUtility(Css.Key.PADDING_X, padding, L_OR_P, "px", propertyType.paddingLeft(), propertyType.paddingRight());
-    funcUtility(Css.Key.PADDING_Y, padding, L_OR_P, "py", propertyType.paddingTop(), propertyType.paddingBottom());
-
-    staticUtility(
-        Css.Key.POINTER_EVENTS,
-
-        """
-        pointer-events-auto | pointer-events: auto
-        pointer-events-none | pointer-events: none
-        """
-    );
-
-    staticUtility(
-        Css.Key.POSITION,
-
-        """
-        static   | position: static
-        fixed    | position: fixed
-        absolute | position: absolute
-        relative | position: relative
-        sticky   | position: sticky
-        """
-    );
+    specP();
 
     // R
 
@@ -1015,7 +943,7 @@ final class CssConfig {
       StringBuilder def;
       def = new StringBuilder();
 
-      def.append("before:float-left before:-ml-1px before:w-1px before:h-0");
+      def.append("before:float-left before:-ml-1px before:w-1px before:h-0px");
       def.append(' ');
       def.append("before:pt-");
 
@@ -1181,8 +1109,6 @@ final class CssConfig {
   private void specF() {
     var colors = values(Css.Key._COLORS, Css.DEFAULT_COLORS);
 
-    var spacing = values(Css.Key._SPACING, Css.DEFAULT_SPACING);
-
     funcUtility(
         Css.Key.FILL,
 
@@ -1226,40 +1152,36 @@ final class CssConfig {
         values(
             Css.Key.FLEX_BASIS,
 
-            () -> Css.merge(
-                """
-                auto: auto
-                1/2: 50%
-                1/3: 33.333333%
-                2/3: 66.666667%
-                1/4: 25%
-                2/4: 50%
-                3/4: 75%
-                1/5: 20%
-                2/5: 40%
-                3/5: 60%
-                4/5: 80%
-                1/6: 16.666667%
-                2/6: 33.333333%
-                3/6: 50%
-                4/6: 66.666667%
-                5/6: 83.333333%
-                1/12: 8.333333%
-                2/12: 16.666667%
-                3/12: 25%
-                4/12: 33.333333%
-                5/12: 41.666667%
-                6/12: 50%
-                7/12: 58.333333%
-                8/12: 66.666667%
-                9/12: 75%
-                10/12: 83.333333%
-                11/12: 91.666667%
-                full: 100%
-                """,
-
-                spacing
-            )
+            """
+            auto: auto
+            1/2: 50%
+            1/3: 33.333333%
+            2/3: 66.666667%
+            1/4: 25%
+            2/4: 50%
+            3/4: 75%
+            1/5: 20%
+            2/5: 40%
+            3/5: 60%
+            4/5: 80%
+            1/6: 16.666667%
+            2/6: 33.333333%
+            3/6: 50%
+            4/6: 66.666667%
+            5/6: 83.333333%
+            1/12: 8.333333%
+            2/12: 16.666667%
+            3/12: 25%
+            4/12: 33.333333%
+            5/12: 41.666667%
+            6/12: 50%
+            7/12: 58.333333%
+            8/12: 66.666667%
+            9/12: 75%
+            10/12: 83.333333%
+            11/12: 91.666667%
+            full: 100%
+            """
         ),
 
         L_OR_P,
@@ -1533,6 +1455,49 @@ final class CssConfig {
     );
   }
 
+  private void specH() {
+    funcUtility(
+        Css.Key.HEIGHT,
+
+        values(
+            Css.Key.HEIGHT,
+
+            """
+            auto: auto
+            1/2: 50%
+            1/3: 33.333333%
+            2/3: 66.666667%
+            1/4: 25%
+            2/4: 50%
+            3/4: 75%
+            1/5: 20%
+            2/5: 40%
+            3/5: 60%
+            4/5: 80%
+            1/6: 16.666667%
+            2/6: 33.333333%
+            3/6: 50%
+            4/6: 66.666667%
+            5/6: 83.333333%
+            full: 100%
+            screen: 100vh
+            svh: 100svh
+            lvh: 100lvh
+            dvh: 100dvh
+            min: min-content
+            max: max-content
+            fit: fit-content
+            """
+        ),
+
+        L_OR_P,
+
+        "h",
+
+        propertyType.height()
+    );
+  }
+
   private void specL(Map<String, String> inset) {
     funcUtility(Css.Key.LEFT, inset, NEGATIVE, L_OR_P, "left", propertyType.left());
 
@@ -1591,7 +1556,7 @@ final class CssConfig {
     );
   }
 
-  private void specM(Map<String, String> spacing) {
+  private void specM() {
     var margin = values(
         Css.Key.MARGIN,
 
@@ -1615,21 +1580,17 @@ final class CssConfig {
         values(
             Css.Key.MAX_HEIGHT,
 
-            () -> Css.merge(
-                """
-                none: none
-                full: 100%
-                screen: 100vh
-                svh: 100svh
-                lvh: 100lvh
-                dvh: 100dvh
-                min: min-content
-                max: max-content
-                fit: fit-content
-                """,
-
-                spacing
-            )
+            """
+            none: none
+            full: 100%
+            screen: 100vh
+            svh: 100svh
+            lvh: 100lvh
+            dvh: 100dvh
+            min: min-content
+            max: max-content
+            fit: fit-content
+            """
         ),
 
         L_OR_P,
@@ -1648,8 +1609,6 @@ final class CssConfig {
             () -> {
               Map<String, String> maxWidth;
               maxWidth = Util.createMap();
-
-              maxWidth.putAll(spacing);
 
               maxWidth.put("none", "none");
               maxWidth.put("xs", "20rem");
@@ -1693,20 +1652,16 @@ final class CssConfig {
         values(
             Css.Key.MIN_HEIGHT,
 
-            () -> Css.merge(
-                """
-                full: 100%
-                screen: 100vh
-                svh: 100svh
-                lvh: 100lvh
-                dvh: 100dvh
-                min: min-content
-                max: max-content
-                fit: fit-content
-                """,
-
-                spacing
-            )
+            """
+            full: 100%
+            screen: 100vh
+            svh: 100svh
+            lvh: 100lvh
+            dvh: 100dvh
+            min: min-content
+            max: max-content
+            fit: fit-content
+            """
         ),
 
         L_OR_P,
@@ -1722,16 +1677,12 @@ final class CssConfig {
         values(
             Css.Key.MIN_WIDTH,
 
-            () -> Css.merge(
-                """
-                full: 100%
-                min: min-content
-                max: max-content
-                fit: fit-content
-                """,
-
-                spacing
-            )
+            """
+            full: 100%
+            min: min-content
+            max: max-content
+            fit: fit-content
+            """
         ),
 
         L_OR_P,
@@ -1739,6 +1690,39 @@ final class CssConfig {
         "min-w",
 
         propertyType.minWidth()
+    );
+  }
+
+  private void specP() {
+    var padding = values(Css.Key.PADDING, Map.of("0", "0px"));
+
+    funcUtility(Css.Key.PADDING, padding, L_OR_P, "p", "padding");
+    funcUtility(Css.Key.PADDING_TOP, padding, L_OR_P, "pt", propertyType.paddingTop());
+    funcUtility(Css.Key.PADDING_RIGHT, padding, L_OR_P, "pr", propertyType.paddingRight());
+    funcUtility(Css.Key.PADDING_BOTTOM, padding, L_OR_P, "pb", propertyType.paddingBottom());
+    funcUtility(Css.Key.PADDING_LEFT, padding, L_OR_P, "pl", propertyType.paddingLeft());
+    funcUtility(Css.Key.PADDING_X, padding, L_OR_P, "px", propertyType.paddingLeft(), propertyType.paddingRight());
+    funcUtility(Css.Key.PADDING_Y, padding, L_OR_P, "py", propertyType.paddingTop(), propertyType.paddingBottom());
+
+    staticUtility(
+        Css.Key.POINTER_EVENTS,
+
+        """
+        pointer-events-auto | pointer-events: auto
+        pointer-events-none | pointer-events: none
+        """
+    );
+
+    staticUtility(
+        Css.Key.POSITION,
+
+        """
+        static   | position: static
+        fixed    | position: fixed
+        absolute | position: absolute
+        relative | position: relative
+        sticky   | position: sticky
+        """
     );
   }
 
