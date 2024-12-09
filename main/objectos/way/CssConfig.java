@@ -1508,13 +1508,13 @@ final class CssConfig {
             Css.Key.LETTER_SPACING,
 
             """
-          tighter: -0.05em
-          tight: -0.025em
-          normal: 0em
-          wide: 0.025em
-          wider: 0.05em
-          widest: 0.1em
-          """
+            tighter: -0.05em
+            tight: -0.025em
+            normal: 0em
+            wide: 0.025em
+            wider: 0.05em
+            widest: 0.1em
+            """
         ),
 
         NEGATIVE,
@@ -1525,16 +1525,17 @@ final class CssConfig {
     funcUtility(
         Css.Key.LINE_HEIGHT,
 
-        values(Css.Key.LINE_HEIGHT, Css.DEFAULT_LINE_HEIGHT),
+        prefixes("leading", "line-height"),
+
+        "line-height",
 
         EnumSet.of(
             CssValueType.INTEGER,
             CssValueType.DECIMAL,
+            CssValueType.LENGTH_PX,
             CssValueType.DIMENSION,
             CssValueType.PERCENTAGE
-        ),
-
-        "leading", "line-height"
+        )
     );
 
     funcUtility(
@@ -2086,6 +2087,25 @@ final class CssConfig {
   }
 
   // new funcUtility
+
+  private void funcUtility(
+      Css.Key key,
+      String[] prefixes,
+      String propertyName,
+      Set<CssValueType> supportedTypes
+  ) {
+
+    prefixes(key, prefixes);
+
+    Map<String, String> values;
+    values = Map.of();
+
+    CssResolver resolver;
+    resolver = new CssResolverOfProperties(key, values, IDENTITY, supportedTypes, propertyName, null);
+
+    resolver(key, resolver);
+
+  }
 
   private void funcUtility(
       Css.Key key,
