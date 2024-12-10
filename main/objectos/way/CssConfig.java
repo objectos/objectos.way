@@ -16,10 +16,13 @@
 package objectos.way;
 
 import java.nio.file.Path;
+import java.util.Collection;
+import java.util.Comparator;
 import java.util.EnumMap;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Function;
@@ -69,11 +72,6 @@ final class CssConfig {
 
   public CssConfig() {
     classes = Util.createSet();
-  }
-
-  // testing helper
-  CssConfig(Class<?> type) {
-    classes = Set.of(type);
   }
 
   public final void addComponent(String name, String definition) {
@@ -143,7 +141,8 @@ final class CssConfig {
   }
 
   public final void breakpoints(CssProperties properties) {
-    int index = 0;
+    int index;
+    index = 0;
 
     List<Css.Breakpoint> builder;
     builder = Util.createList();
@@ -170,6 +169,264 @@ final class CssConfig {
 
   public final void noteSink(Note.Sink noteSink) {
     this.noteSink = noteSink;
+  }
+
+  private final Map<Css.Namespace, List<CssThemeEntry>> themeNamespaces = new EnumMap<>(Css.Namespace.class);
+
+  private enum ThemeParser {
+
+    NORMAL,
+
+    // variables
+
+    HYPHEN1,
+    VARNS1,
+    VARNSN,
+    VARID1,
+    VARIDN,
+    VAROWS,
+    VARVALUE,
+    VARTRIM;
+
+  }
+
+  public final void theme(String text) {
+    ThemeParser parser;
+    parser = ThemeParser.NORMAL;
+
+    int entryIndex = 0;
+
+    int line = 1;
+
+    int col = 0;
+
+    int start = 0;
+
+    int aux = 0;
+
+    Css.Namespace namespace = null;
+
+    String variableName = null;
+
+    String variableId = null;
+
+    StringBuilder sb = new StringBuilder();
+
+    for (int idx = 0, len = text.length(); idx < len; idx++) {
+      char c;
+      c = text.charAt(idx);
+
+      col++;
+
+      switch (parser) {
+        case NORMAL -> {
+          if (c == '-') {
+            parser = ThemeParser.HYPHEN1;
+
+            start = idx;
+          }
+
+          else if (Character.isWhitespace(c)) {
+            parser = ThemeParser.NORMAL;
+          }
+
+          else {
+            parseError(line, col, "Expected start of CSS variable declaration");
+          }
+        }
+
+        case HYPHEN1 -> {
+          if (c == '-') {
+            parser = ThemeParser.VARNS1;
+          }
+
+          else {
+            parseError(line, col, "Expected start of CSS variable declaration");
+          }
+        }
+
+        case VARNS1 -> {
+          if (LangChars.isAsciiLetter(c)) {
+            parser = ThemeParser.VARNSN;
+
+            aux = idx;
+          }
+
+          else {
+            parseError(line, col, "CSS variable name must start with a letter");
+          }
+        }
+
+        case VARNSN -> {
+          if (c == '-') {
+            parser = ThemeParser.VARID1;
+
+            String sub;
+            sub = text.substring(aux, idx);
+
+            String maybeName;
+            maybeName = sub.toUpperCase(Locale.US);
+
+            try {
+              namespace = Css.Namespace.valueOf(maybeName);
+            } catch (IllegalArgumentException iae) {
+              parseError(line, col, "Invalid namespace name=" + sub);
+            }
+          }
+
+          else if (LangChars.isAsciiLetterOrDigit(c)) {
+            parser = ThemeParser.VARNSN;
+          }
+
+          else {
+            parseError(line, col, "CSS variable name with invalid character=" + c);
+          }
+        }
+
+        case VARID1 -> {
+          if (LangChars.isAsciiLetterOrDigit(c)) {
+            parser = ThemeParser.VARIDN;
+
+            aux = idx;
+          }
+
+          else {
+            parseError(line, col, "CSS variable name with invalid character=" + c);
+          }
+        }
+
+        case VARIDN -> {
+          if (c == ':') {
+            parser = ThemeParser.VAROWS;
+
+            variableName = text.substring(start, idx);
+
+            variableId = text.substring(aux, idx);
+          }
+
+          else if (c == '-') {
+            parser = ThemeParser.VARIDN;
+          }
+
+          else if (LangChars.isAsciiLetterOrDigit(c)) {
+            parser = ThemeParser.VARIDN;
+          }
+
+          else {
+            parseError(line, col, "CSS variable name with invalid character=" + c);
+          }
+        }
+
+        case VAROWS -> {
+          if (LangChars.isAsciiWhitespace(c)) {
+            parser = ThemeParser.VAROWS;
+
+            if (c == '\n') {
+              line++;
+
+              col = 0;
+            }
+          }
+
+          else if (c == ';') {
+            parseError(line, col, "Empty variable definition");
+          }
+
+          else {
+            parser = ThemeParser.VARVALUE;
+
+            sb.setLength(0);
+
+            sb.append(c);
+          }
+        }
+
+        case VARVALUE -> {
+          if (c == ';') {
+            parser = ThemeParser.NORMAL;
+
+            String value;
+            value = sb.toString();
+
+            CssThemeEntryOfVariable entry;
+            entry = new CssThemeEntryOfVariable(entryIndex++, variableName, value, variableId);
+
+            putThemeEntry(namespace, entry);
+          }
+
+          else if (LangChars.isAsciiWhitespace(c)) {
+            parser = ThemeParser.VARTRIM;
+
+            if (c == '\n') {
+              line++;
+
+              col = 0;
+            }
+          }
+
+          else {
+            parser = ThemeParser.VARVALUE;
+
+            sb.append(c);
+          }
+        }
+
+        case VARTRIM -> {
+          if (c == ';') {
+            parser = ThemeParser.VARVALUE;
+
+            idx--;
+          }
+
+          else if (LangChars.isAsciiWhitespace(c)) {
+            parser = ThemeParser.VARTRIM;
+
+            if (c == '\n') {
+              line++;
+
+              col = 0;
+            }
+          }
+
+          else {
+            parser = ThemeParser.VARVALUE;
+
+            sb.append(' ');
+            sb.append(c);
+          }
+        }
+      }
+    }
+  }
+
+  private void putThemeEntry(Css.Namespace namespace, CssThemeEntryOfVariable entry) {
+    List<CssThemeEntry> list;
+    list = themeNamespaces.computeIfAbsent(namespace, ns -> Util.createList());
+
+    list.add(entry);
+  }
+
+  private void parseError(int line, int col, String message) {
+    String formatted;
+    formatted = String.format("At %d:%d -> %s", line, col, message);
+
+    throw new IllegalArgumentException(formatted);
+  }
+
+  final List<CssThemeEntry> themeEntries() {
+    UtilList<CssThemeEntry> entries;
+    entries = new UtilList<>();
+
+    Collection<List<CssThemeEntry>> values;
+    values = themeNamespaces.values();
+
+    for (List<CssThemeEntry> value : values) {
+      entries.addAll(value);
+    }
+
+    entries.sort(Comparator.naturalOrder());
+
+    return entries.toUnmodifiableList();
   }
 
   public final CssResolver getResolver(Css.Key key) {

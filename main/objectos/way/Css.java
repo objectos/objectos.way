@@ -408,6 +408,12 @@ public final class Css {
   // N
   //
 
+  enum Namespace {
+
+    COLOR;
+
+  }
+
   private static final class NoOpRule implements Rule {
 
     static final NoOpRule INSTANCE = new NoOpRule();
