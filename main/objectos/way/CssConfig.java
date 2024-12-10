@@ -16,13 +16,10 @@
 package objectos.way;
 
 import java.nio.file.Path;
-import java.util.Collection;
-import java.util.Comparator;
 import java.util.EnumMap;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Function;
@@ -171,264 +168,6 @@ final class CssConfig {
     this.noteSink = noteSink;
   }
 
-  private final Map<Css.Namespace, List<CssThemeEntry>> themeNamespaces = new EnumMap<>(Css.Namespace.class);
-
-  private enum ThemeParser {
-
-    NORMAL,
-
-    // variables
-
-    HYPHEN1,
-    VARNS1,
-    VARNSN,
-    VARID1,
-    VARIDN,
-    VAROWS,
-    VARVALUE,
-    VARTRIM;
-
-  }
-
-  public final void theme(String text) {
-    ThemeParser parser;
-    parser = ThemeParser.NORMAL;
-
-    int entryIndex = 0;
-
-    int line = 1;
-
-    int col = 0;
-
-    int start = 0;
-
-    int aux = 0;
-
-    Css.Namespace namespace = null;
-
-    String variableName = null;
-
-    String variableId = null;
-
-    StringBuilder sb = new StringBuilder();
-
-    for (int idx = 0, len = text.length(); idx < len; idx++) {
-      char c;
-      c = text.charAt(idx);
-
-      col++;
-
-      switch (parser) {
-        case NORMAL -> {
-          if (c == '-') {
-            parser = ThemeParser.HYPHEN1;
-
-            start = idx;
-          }
-
-          else if (Character.isWhitespace(c)) {
-            parser = ThemeParser.NORMAL;
-          }
-
-          else {
-            parseError(line, col, "Expected start of CSS variable declaration");
-          }
-        }
-
-        case HYPHEN1 -> {
-          if (c == '-') {
-            parser = ThemeParser.VARNS1;
-          }
-
-          else {
-            parseError(line, col, "Expected start of CSS variable declaration");
-          }
-        }
-
-        case VARNS1 -> {
-          if (LangChars.isAsciiLetter(c)) {
-            parser = ThemeParser.VARNSN;
-
-            aux = idx;
-          }
-
-          else {
-            parseError(line, col, "CSS variable name must start with a letter");
-          }
-        }
-
-        case VARNSN -> {
-          if (c == '-') {
-            parser = ThemeParser.VARID1;
-
-            String sub;
-            sub = text.substring(aux, idx);
-
-            String maybeName;
-            maybeName = sub.toUpperCase(Locale.US);
-
-            try {
-              namespace = Css.Namespace.valueOf(maybeName);
-            } catch (IllegalArgumentException iae) {
-              parseError(line, col, "Invalid namespace name=" + sub);
-            }
-          }
-
-          else if (LangChars.isAsciiLetterOrDigit(c)) {
-            parser = ThemeParser.VARNSN;
-          }
-
-          else {
-            parseError(line, col, "CSS variable name with invalid character=" + c);
-          }
-        }
-
-        case VARID1 -> {
-          if (LangChars.isAsciiLetterOrDigit(c)) {
-            parser = ThemeParser.VARIDN;
-
-            aux = idx;
-          }
-
-          else {
-            parseError(line, col, "CSS variable name with invalid character=" + c);
-          }
-        }
-
-        case VARIDN -> {
-          if (c == ':') {
-            parser = ThemeParser.VAROWS;
-
-            variableName = text.substring(start, idx);
-
-            variableId = text.substring(aux, idx);
-          }
-
-          else if (c == '-') {
-            parser = ThemeParser.VARIDN;
-          }
-
-          else if (LangChars.isAsciiLetterOrDigit(c)) {
-            parser = ThemeParser.VARIDN;
-          }
-
-          else {
-            parseError(line, col, "CSS variable name with invalid character=" + c);
-          }
-        }
-
-        case VAROWS -> {
-          if (LangChars.isAsciiWhitespace(c)) {
-            parser = ThemeParser.VAROWS;
-
-            if (c == '\n') {
-              line++;
-
-              col = 0;
-            }
-          }
-
-          else if (c == ';') {
-            parseError(line, col, "Empty variable definition");
-          }
-
-          else {
-            parser = ThemeParser.VARVALUE;
-
-            sb.setLength(0);
-
-            sb.append(c);
-          }
-        }
-
-        case VARVALUE -> {
-          if (c == ';') {
-            parser = ThemeParser.NORMAL;
-
-            String value;
-            value = sb.toString();
-
-            CssThemeEntryOfVariable entry;
-            entry = new CssThemeEntryOfVariable(entryIndex++, variableName, value, variableId);
-
-            putThemeEntry(namespace, entry);
-          }
-
-          else if (LangChars.isAsciiWhitespace(c)) {
-            parser = ThemeParser.VARTRIM;
-
-            if (c == '\n') {
-              line++;
-
-              col = 0;
-            }
-          }
-
-          else {
-            parser = ThemeParser.VARVALUE;
-
-            sb.append(c);
-          }
-        }
-
-        case VARTRIM -> {
-          if (c == ';') {
-            parser = ThemeParser.VARVALUE;
-
-            idx--;
-          }
-
-          else if (LangChars.isAsciiWhitespace(c)) {
-            parser = ThemeParser.VARTRIM;
-
-            if (c == '\n') {
-              line++;
-
-              col = 0;
-            }
-          }
-
-          else {
-            parser = ThemeParser.VARVALUE;
-
-            sb.append(' ');
-            sb.append(c);
-          }
-        }
-      }
-    }
-  }
-
-  private void putThemeEntry(Css.Namespace namespace, CssThemeEntryOfVariable entry) {
-    List<CssThemeEntry> list;
-    list = themeNamespaces.computeIfAbsent(namespace, ns -> Util.createList());
-
-    list.add(entry);
-  }
-
-  private void parseError(int line, int col, String message) {
-    String formatted;
-    formatted = String.format("At %d:%d -> %s", line, col, message);
-
-    throw new IllegalArgumentException(formatted);
-  }
-
-  final List<CssThemeEntry> themeEntries() {
-    UtilList<CssThemeEntry> entries;
-    entries = new UtilList<>();
-
-    Collection<List<CssThemeEntry>> values;
-    values = themeNamespaces.values();
-
-    for (List<CssThemeEntry> value : values) {
-      entries.addAll(value);
-    }
-
-    entries.sort(Comparator.naturalOrder());
-
-    return entries.toUnmodifiableList();
-  }
-
   public final CssResolver getResolver(Css.Key key) {
     return resolvers.get(key);
   }
@@ -529,24 +268,35 @@ final class CssConfig {
   // ValueFormatter implementations
   //
 
-  private static final Css.ValueFormatter IDENTITY = new Css.ValueFormatter() {
+  private static final CssValueFormatter IDENTITY = new CssValueFormatter() {
     @Override
     public final String format(String value, boolean negative) { return value; }
   };
 
-  private static final Css.ValueFormatter NEGATIVE = new Css.ValueFormatter() {
+  private static final CssValueFormatter NEGATIVE = new CssValueFormatter() {
     @Override
     public final String format(String value, boolean negative) { return negative ? "-" + value : value; }
   };
 
-  private Css.ValueFormatter ofFunc(Function<String, String> function) {
+  private CssValueFormatter ofFunc(Function<String, String> function) {
     return (value, negative) -> function.apply(value);
   }
 
-  private Css.ValueFormatter ofFuncNeg(String functionName) {
+  private CssValueFormatter ofFuncNeg(String functionName) {
     return (value, negative) -> negative
         ? functionName + "(-" + value + ")"
         : functionName + "(" + value + ")";
+  }
+
+  private static final Pattern REPLACE_COLOR = Pattern.compile(
+      "(rgb\\([0-9]{1,3} [0-9]{1,3} [0-9]{1,3}(:?\\s*\\/\\s*[0-9\\.]+)?\\)|#[a-fA-F0-9]{3,6}|var\\(.+\\))"
+  );
+
+  static String replaceColor(String raw, String replacement) {
+    Matcher matcher;
+    matcher = REPLACE_COLOR.matcher(raw);
+
+    return matcher.replaceAll(replacement);
   }
 
   //
@@ -580,6 +330,10 @@ final class CssConfig {
       CssValueType.STRING
   );
 
+  private Map<String, String> colors() {
+    return values(Css.Key._COLORS, Css.DEFAULT_COLORS);
+  }
+
   final void spec() {
     // be mindful of method size
 
@@ -608,7 +362,7 @@ final class CssConfig {
 
     // B
 
-    specB(colors, spacing, inset);
+    specB(spacing, inset);
 
     // C
 
@@ -1131,18 +885,9 @@ final class CssConfig {
     );
   }
 
-  private static final Pattern REPLACE_COLOR = Pattern.compile(
-      "(rgb\\([0-9]{1,3} [0-9]{1,3} [0-9]{1,3}(:?\\s*\\/\\s*[0-9\\.]+)?\\)|#[a-fA-F0-9]{3,6}|var\\(.+\\))"
-  );
+  private void specB(Map<String, String> spacing, Map<String, String> inset) {
+    var colors = colors();
 
-  static String replaceColor(String raw, String replacement) {
-    Matcher matcher;
-    matcher = REPLACE_COLOR.matcher(raw);
-
-    return matcher.replaceAll(replacement);
-  }
-
-  private void specB(Map<String, String> colors, Map<String, String> spacing, Map<String, String> inset) {
     colorUtility(
         Css.Key.BACKGROUND_COLOR,
 
@@ -2350,21 +2095,21 @@ final class CssConfig {
 
   private void funcUtility(
       Css.Key key,
-      Map<String, String> values, Css.ValueFormatter formatter,
+      Map<String, String> values, CssValueFormatter formatter,
       String prefix) {
     funcUtility(key, values, formatter, prefix, prefix, null);
   }
 
   private void funcUtility(
       Css.Key key,
-      Map<String, String> values, Css.ValueFormatter formatter,
+      Map<String, String> values, CssValueFormatter formatter,
       String prefix, String propertyName) {
     funcUtility(key, values, formatter, prefix, propertyName, null);
   }
 
   private void funcUtility(
       Css.Key key,
-      Map<String, String> values, Css.ValueFormatter formatter,
+      Map<String, String> values, CssValueFormatter formatter,
       String prefix, String propertyName1, String propertyName2) {
 
     CssResolver resolver;
@@ -2376,14 +2121,14 @@ final class CssConfig {
 
   private void funcUtility(
       Css.Key key,
-      Map<String, String> values, Css.ValueFormatter formatter, Set<CssValueType> types,
+      Map<String, String> values, CssValueFormatter formatter, Set<CssValueType> types,
       String prefix, String propertyName) {
     funcUtility(key, values, formatter, types, prefix, propertyName, null);
   }
 
   private void funcUtility(
       Css.Key key,
-      Map<String, String> values, Css.ValueFormatter formatter, Set<CssValueType> types,
+      Map<String, String> values, CssValueFormatter formatter, Set<CssValueType> types,
       String prefix, String propertyName1, String propertyName2) {
 
     CssResolver resolver;

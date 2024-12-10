@@ -17,7 +17,7 @@ package objectos.way;
 
 import java.util.List;
 
-class CssGeneratorAdapter implements Lang.ClassReader.StringConstantProcessor {
+class CssGeneratorAdapter implements CssGeneratorScanner.Adapter {
 
   private final List<Css.ClassNameFormat> classNameFormats = Util.createList();
 
@@ -35,6 +35,11 @@ class CssGeneratorAdapter implements Lang.ClassReader.StringConstantProcessor {
         processToken(part);
       }
     }
+  }
+
+  @Override
+  public final void sourceName(String binaryName) {
+    sourceName = binaryName;
   }
 
   void processToken(String token) {
@@ -140,10 +145,6 @@ class CssGeneratorAdapter implements Lang.ClassReader.StringConstantProcessor {
 
   Css.Variant getVariant(String name) {
     throw new UnsupportedOperationException();
-  }
-
-  final void sourceName(String binaryName) {
-    sourceName = binaryName;
   }
 
   void store(String token, Css.Rule value) {

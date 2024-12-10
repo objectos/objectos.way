@@ -25,6 +25,12 @@ import java.util.stream.Stream;
 
 final class CssGeneratorScanner {
 
+  interface Adapter extends Lang.ClassReader.StringConstantProcessor {
+
+    void sourceName(String value);
+
+  }
+
   private record Notes(
       Note.Ref1<String> classNotFound,
       Note.Ref2<String, IOException> classIoError,
@@ -58,7 +64,7 @@ final class CssGeneratorScanner {
     reader = Lang.createClassReader(noteSink);
   }
 
-  public final void scan(Class<?> clazz, CssGeneratorAdapter adapter) {
+  public final void scan(Class<?> clazz, Adapter adapter) {
     String binaryName;
     binaryName = clazz.getName();
 
@@ -102,7 +108,7 @@ final class CssGeneratorScanner {
     reader.processStringConstants(adapter);
   }
 
-  public final void scanDirectory(Path directory, CssGeneratorAdapter adapter) {
+  public final void scanDirectory(Path directory, Adapter adapter) {
     try (Stream<Path> stream = Files.walk(directory, Integer.MAX_VALUE).filter(Files::isRegularFile)) {
 
       Iterator<Path> iterator;

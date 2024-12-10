@@ -25,7 +25,7 @@ final class CssResolverOfProperties implements CssResolver {
 
   private final Map<String, String> properties;
 
-  private final Css.ValueFormatter valueFormatter;
+  private final CssValueFormatter valueFormatter;
 
   private final Set<CssValueType> valueTypes;
 
@@ -33,11 +33,11 @@ final class CssResolverOfProperties implements CssResolver {
 
   private final String propertyName2;
 
-  public CssResolverOfProperties(Css.Key key, Map<String, String> properties, Css.ValueFormatter valueFormatter, String propertyName1, String propertyName2) {
+  public CssResolverOfProperties(Css.Key key, Map<String, String> properties, CssValueFormatter valueFormatter, String propertyName1, String propertyName2) {
     this(key, properties, valueFormatter, Set.of(), propertyName1, propertyName2);
   }
 
-  public CssResolverOfProperties(Css.Key key, Map<String, String> properties, Css.ValueFormatter valueFormatter, Set<CssValueType> valueTypes, String propertyName1, String propertyName2) {
+  public CssResolverOfProperties(Css.Key key, Map<String, String> properties, CssValueFormatter valueFormatter, Set<CssValueType> valueTypes, String propertyName1, String propertyName2) {
     this.key = key;
     this.properties = properties;
     this.valueFormatter = valueFormatter;

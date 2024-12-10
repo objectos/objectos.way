@@ -17,13 +17,8 @@ package objectos.way;
 
 import java.util.ArrayDeque;
 import java.util.Deque;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
 import java.util.SequencedMap;
 import java.util.Set;
-import java.util.TreeMap;
-import objectos.way.Css.MediaQuery;
 
 final class CssGenerator extends CssGeneratorAdapter implements Css.Generator, Css.Repository {
 
@@ -40,112 +35,6 @@ final class CssGenerator extends CssGeneratorAdapter implements Css.Generator, C
           Note.Ref2.create(s, "Css.Key not found", Note.DEBUG),
           Note.Ref3.create(s, "Match not found", Note.INFO)
       );
-    }
-
-  }
-
-  private static abstract class ThisContext extends Css.Context {
-
-    Map<Css.MediaQuery, MediaQueryContext> mediaQueries;
-
-    @Override
-    public final void addComponent(CssComponent component) {
-      add(component);
-    }
-
-    @Override
-    public final Css.Context contextOf(Css.Modifier modifier) {
-      List<Css.MediaQuery> modifierQueries;
-      modifierQueries = modifier.mediaQueries();
-
-      if (modifierQueries.isEmpty()) {
-        return this;
-      }
-
-      if (mediaQueries == null) {
-        mediaQueries = new TreeMap<>();
-      }
-
-      Iterator<Css.MediaQuery> iterator;
-      iterator = modifierQueries.iterator();
-
-      Css.MediaQuery first;
-      first = iterator.next(); // safe as list is not empty
-
-      MediaQueryContext result;
-      result = mediaQueries.computeIfAbsent(first, MediaQueryContext::new);
-
-      while (iterator.hasNext()) {
-        result = result.nest(iterator.next());
-      }
-
-      return result;
-    }
-
-    final void writeContents(StringBuilder out, Css.Indentation indentation) {
-      int lastKind = 0;
-
-      for (Css.Rule rule : rules) {
-        int kind;
-        kind = rule.kind();
-
-        if (lastKind == 1 && kind == 2) {
-          out.append(System.lineSeparator());
-        }
-
-        lastKind = kind;
-
-        rule.writeTo(out, indentation);
-      }
-
-      if (mediaQueries != null) {
-        for (Css.Context child : mediaQueries.values()) {
-          if (!out.isEmpty()) {
-            out.append(System.lineSeparator());
-          }
-
-          child.writeTo(out, indentation);
-        }
-      }
-    }
-
-  }
-
-  private static final class TopLevelContext extends ThisContext {
-
-    @Override
-    final void write(StringBuilder out, Css.Indentation indentation) {
-      writeContents(out, indentation);
-    }
-
-  }
-
-  private static final class MediaQueryContext extends ThisContext {
-
-    private final Css.MediaQuery query;
-
-    MediaQueryContext(Css.MediaQuery query) {
-      this.query = query;
-    }
-
-    public final MediaQueryContext nest(MediaQuery next) {
-      return mediaQueries.computeIfAbsent(next, MediaQueryContext::new);
-    }
-
-    @Override
-    final void write(StringBuilder out, Css.Indentation indentation) {
-      query.writeMediaQueryStart(out, indentation);
-
-      Css.Indentation blockIndentation;
-      blockIndentation = indentation.increase();
-
-      writeContents(out, blockIndentation);
-
-      indentation.writeTo(out);
-
-      out.append('}');
-
-      out.append(System.lineSeparator());
     }
 
   }
@@ -203,7 +92,7 @@ final class CssGenerator extends CssGeneratorAdapter implements Css.Generator, C
     // 02. process
 
     Css.Context topLevel;
-    topLevel = new TopLevelContext();
+    topLevel = new CssGeneratorContextOf();
 
     for (Css.Rule rule : rules.values()) {
       rule.accept(topLevel);
