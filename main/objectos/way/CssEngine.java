@@ -122,8 +122,11 @@ final class CssEngine implements Css.StyleSheet.Config, CssGeneratorScanner.Adap
     // let's apply the spec
     spec();
 
-    // let's scan all of the classes
+    // we scan all of the classes
     scan();
+
+    // and we process all of the distinct tokens
+    process();
   }
 
   // ##################################################################
@@ -547,16 +550,14 @@ final class CssEngine implements Css.StyleSheet.Config, CssGeneratorScanner.Adap
   // ##################################################################
 
   // ##################################################################
-  // # BEGIN: Scanning
+  // # BEGIN: Scan
   // ##################################################################
 
-  private final List<Css.ClassNameFormat> classNameFormats = Util.createList();
-
-  private final List<Css.MediaQuery> mediaQueries = Util.createList();
-
-  private final SequencedMap<String, Css.Rule> rules = Util.createSequencedMap();
+  private final StringBuilder sb = new StringBuilder();
 
   private String sourceName;
+
+  private final UtilMap<String, Set<String>> tokens = new UtilSequencedMap<>();
 
   private void scan() {
     CssGeneratorScanner scanner;
@@ -582,25 +583,92 @@ final class CssEngine implements Css.StyleSheet.Config, CssGeneratorScanner.Adap
 
   @Override
   public final void processStringConstant(String value) {
-    String[] parts;
-    parts = value.split("\\s+");
+    enum Splitter {
+      NORMAL,
 
-    for (String part : parts) {
-      if (!part.isBlank()) {
-        processToken(part);
+      WORD;
+    }
+
+    Splitter parser;
+    parser = Splitter.NORMAL;
+
+    for (int idx = 0, len = value.length(); idx < len; idx++) {
+      char c;
+      c = value.charAt(idx);
+
+      switch (parser) {
+        case NORMAL -> {
+          if (Character.isWhitespace(c)) {
+            parser = Splitter.NORMAL;
+          }
+
+          else {
+            parser = Splitter.WORD;
+
+            sb.setLength(0);
+
+            sb.append(c);
+          }
+        }
+
+        case WORD -> {
+          if (Character.isWhitespace(c)) {
+            parser = Splitter.NORMAL;
+
+            consumeToken();
+          }
+
+          else {
+            parser = Splitter.WORD;
+
+            sb.append(c);
+          }
+        }
       }
+    }
+
+    if (parser == Splitter.WORD) {
+      consumeToken();
     }
   }
 
-  private void processToken(String token) {
-    if (rules.containsKey(token)) {
-      return;
+  private void consumeToken() {
+    String token;
+    token = sb.toString();
+
+    Set<String> sources;
+    sources = tokens.get(token);
+
+    if (sources == null) {
+      sources = Util.createSet();
+
+      tokens.put(token, sources);
     }
 
-    Css.Rule newRule;
-    newRule = createUtility(token);
+    sources.add(sourceName);
+  }
 
-    rules.put(token, newRule);
+  // ##################################################################
+  // # END: Scan
+  // ##################################################################
+
+  // ##################################################################
+  // # BEGIN: Process
+  // ##################################################################
+
+  private final List<Css.ClassNameFormat> classNameFormats = Util.createList();
+
+  private final List<Css.MediaQuery> mediaQueries = Util.createList();
+
+  private final SequencedMap<String, Css.Rule> rules = Util.createSequencedMap();
+
+  private void process() {
+    for (String token : tokens.keySet()) {
+      Css.Rule newRule;
+      newRule = createUtility(token);
+
+      rules.put(token, newRule);
+    }
   }
 
   private Css.Rule createUtility(String className) {
@@ -839,7 +907,7 @@ final class CssEngine implements Css.StyleSheet.Config, CssGeneratorScanner.Adap
   }
 
   // ##################################################################
-  // # END: Scanning
+  // # END: Process
   // ##################################################################
 
   // ##################################################################
@@ -862,6 +930,18 @@ final class CssEngine implements Css.StyleSheet.Config, CssGeneratorScanner.Adap
     entries.sort(Comparator.naturalOrder());
 
     return entries.toUnmodifiableList();
+  }
+
+  final Set<String> testProcess() {
+    Set<String> keys;
+    keys = tokens.keySet();
+
+    Set<String> copy;
+    copy = Set.copyOf(keys);
+
+    tokens.clear();
+
+    return copy;
   }
 
   final String testUtilities() {
