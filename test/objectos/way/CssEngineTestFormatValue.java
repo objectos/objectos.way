@@ -30,15 +30,21 @@ public class CssEngineTestFormatValue {
   }
 
   @Test(description = "arity: arity=2")
-  public void arity01() {
+  public void arity02() {
     assertEquals(engine.formatValue(false, "2px_dashed"), "0.125rem dashed");
     assertEquals(engine.formatValue(false, "1rem_solid"), "1rem solid");
+    assertEquals(engine.formatValue(false, "10px_5%"), "0.625rem 5%");
   }
 
   @Test(description = "arity: arity=3")
-  public void arity02() {
+  public void arity03() {
     assertEquals(engine.formatValue(false, "4px_solid_red-50"), "0.25rem solid var(--color-red-50)");
     assertEquals(engine.formatValue(false, "thick_double_#32a1ce"), "thick double #32a1ce");
+  }
+
+  @Test(description = "arity: arity=4")
+  public void arity04() {
+    assertEquals(engine.formatValue(false, "1px_0_3px_4px"), "0.0625rem 0 0.1875rem 0.25rem");
   }
 
   @Test(description = "color: valid color replace with var expr")
@@ -93,6 +99,21 @@ public class CssEngineTestFormatValue {
     assertEquals(engine.formatValue(true, "revert-layer"), "revert-layer");
   }
 
+  @Test(description = "percentage: integer len=1")
+  public void percentage01() {
+    assertEquals(engine.formatValue(false, "4%"), "4%");
+  }
+
+  @Test(description = "percentage: integer len>1")
+  public void percentage02() {
+    assertEquals(engine.formatValue(false, "789%"), "789%");
+  }
+
+  @Test(description = "percentage: decimal")
+  public void percentage03() {
+    assertEquals(engine.formatValue(false, "1.23%"), "1.23%");
+  }
+
   @Test(description = "pixel: zero")
   public void pixel01() {
     assertEquals(engine.formatValue(false, "0px"), "0px");
@@ -114,9 +135,14 @@ public class CssEngineTestFormatValue {
     assertEquals(engine.formatValue(false, "48px"), "3rem");
   }
 
-  @Test(description = "raio: integer/integer")
+  @Test(description = "ratio: integer/integer")
   public void ratio01() {
     assertEquals(engine.formatValue(false, "16/9"), "16/9");
+  }
+
+  @Test(description = "slash")
+  public void slash01() {
+    assertEquals(engine.formatValue(false, "10px/20px"), "0.625rem/1.25rem");
   }
 
 }

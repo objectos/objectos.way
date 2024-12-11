@@ -224,6 +224,60 @@ public class CssEngineTestUtilities {
     );
   }
 
+  @Test
+  public void borderRadius() {
+    class Subject extends AbstractSubject {
+      @Override
+      final void classes() {
+        className("border-radius-10px");
+        className("border-radius-10px_5%");
+        className("border-radius-2px_4px_2px");
+        className("border-radius-1px_0_3px_4px");
+        className("border-radius-10px/20px");
+        className("border-radius-10px_5%_/_20px_30px");
+      }
+    }
+
+    test(
+        Subject.class,
+
+        """
+        @layer utilities {
+          .border-radius-10px { border-radius: 0.625rem }
+          .border-radius-10px_5\\% { border-radius: 0.625rem 5% }
+          .border-radius-2px_4px_2px { border-radius: 0.125rem 0.25rem 0.125rem }
+          .border-radius-1px_0_3px_4px { border-radius: 0.0625rem 0 0.1875rem 0.25rem }
+          .border-radius-10px\\/20px { border-radius: 0.625rem/1.25rem }
+          .border-radius-10px_5\\%_\\/_20px_30px { border-radius: 0.625rem 5% / 1.25rem 1.875rem }
+        }
+        """
+    );
+  }
+
+  @Test
+  public void borderSpacing() {
+    class Subject extends AbstractSubject {
+      @Override
+      final void classes() {
+        className("border-spacing-1px");
+        className("border-spacing-1cm_2em");
+        className("border-spacing-unset");
+      }
+    }
+
+    test(
+        Subject.class,
+
+        """
+        @layer utilities {
+          .border-spacing-1px { border-spacing: 0.0625rem }
+          .border-spacing-1cm_2em { border-spacing: 1cm 2em }
+          .border-spacing-unset { border-spacing: unset }
+        }
+        """
+    );
+  }
+
   private void test(Class<?> type, String expected) {
     CssEngine config;
     config = new CssEngine();

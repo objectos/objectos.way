@@ -507,6 +507,10 @@ final class CssEngine implements Css.StyleSheet.Config, CssGeneratorScanner.Adap
     funcUtility(Css.Key.BORDER_LEFT, "border-left");
 
     funcUtility(Css.Key.BORDER_COLLAPSE, "border-collapse");
+
+    funcUtility(Css.Key.BORDER_RADIUS, "border-radius");
+
+    funcUtility(Css.Key.BORDER_SPACING, "border-spacing");
   }
 
   private void funcUtility(Css.Key key, String propertyName) {
@@ -864,6 +868,8 @@ final class CssEngine implements Css.StyleSheet.Config, CssGeneratorScanner.Adap
 
     DIMENSION,
 
+    PERCENTAGE,
+
     HASH,
 
     HEX_COLOR,
@@ -893,18 +899,26 @@ final class CssEngine implements Css.StyleSheet.Config, CssGeneratorScanner.Adap
 
     sb.setLength(0);
 
-    outer: for (int idx = 0, len = value.length(); idx < len; idx++) {
+    for (int idx = 0, len = value.length(); idx < len; idx++) {
       char c;
       c = value.charAt(idx);
 
       switch (parser) {
         case NORMAL -> {
-          if (Ascii.isLetter(c)) {
+          if (c == '_') {
+            parser = FormatValue.NORMAL;
+          }
+
+          else if (Ascii.isLetter(c)) {
             parser = FormatValue.KEYWORD;
+
+            wordStart = idx;
           }
 
           else if (Ascii.isDigit(c)) {
             parser = FormatValue.INTEGER;
+
+            wordStart = idx;
 
             digits = Ascii.digitToInt(c);
 
@@ -913,10 +927,14 @@ final class CssEngine implements Css.StyleSheet.Config, CssGeneratorScanner.Adap
 
           else if (c == '#') {
             parser = FormatValue.HASH;
+
+            wordStart = idx;
           }
 
           else {
             parser = FormatValue.UNKNOWN;
+
+            wordStart = idx;
           }
         }
 
@@ -943,7 +961,16 @@ final class CssEngine implements Css.StyleSheet.Config, CssGeneratorScanner.Adap
         }
 
         case INTEGER -> {
-          if (Ascii.isDigit(c)) {
+          if (c == '_') {
+            parser = FormatValue.SPACE;
+
+            String word;
+            word = value.substring(wordStart, idx);
+
+            sb.append(word);
+          }
+
+          else if (Ascii.isDigit(c)) {
             parser = FormatValue.INTEGER;
 
             digits *= 10;
@@ -959,6 +986,10 @@ final class CssEngine implements Css.StyleSheet.Config, CssGeneratorScanner.Adap
 
           else if (Ascii.isLetter(c)) {
             parser = FormatValue.DIMENSION;
+          }
+
+          else if (c == '%') {
+            parser = FormatValue.PERCENTAGE;
           }
 
           else if (c == '.') {
@@ -1011,6 +1042,10 @@ final class CssEngine implements Css.StyleSheet.Config, CssGeneratorScanner.Adap
             parser = FormatValue.DIMENSION;
           }
 
+          else if (c == '%') {
+            parser = FormatValue.PERCENTAGE;
+          }
+
           else if (c == '/') {
             parser = FormatValue.RATIO;
           }
@@ -1050,6 +1085,17 @@ final class CssEngine implements Css.StyleSheet.Config, CssGeneratorScanner.Adap
             sb.append(px);
           }
 
+          else if (c == '/') {
+            parser = FormatValue.NORMAL;
+
+            String px;
+            px = formatResultPixel(digits, beforeDot, afterDot);
+
+            sb.append(px);
+
+            sb.append('/');
+          }
+
           else {
             parser = FormatValue.UNKNOWN;
           }
@@ -1065,8 +1111,45 @@ final class CssEngine implements Css.StyleSheet.Config, CssGeneratorScanner.Adap
             sb.append(word);
           }
 
+          else if (c == '/') {
+            parser = FormatValue.NORMAL;
+
+            String word;
+            word = value.substring(wordStart, idx);
+
+            sb.append(word);
+
+            sb.append('/');
+          }
+
           else if (Ascii.isLetter(c)) {
             parser = FormatValue.DIMENSION;
+          }
+
+          else {
+            parser = FormatValue.UNKNOWN;
+          }
+        }
+
+        case PERCENTAGE -> {
+          if (c == '_') {
+            parser = FormatValue.SPACE;
+
+            String word;
+            word = value.substring(wordStart, idx);
+
+            sb.append(word);
+          }
+
+          else if (c == '/') {
+            parser = FormatValue.NORMAL;
+
+            String word;
+            word = value.substring(wordStart, idx);
+
+            sb.append(word);
+
+            sb.append('/');
           }
 
           else {
@@ -1105,16 +1188,11 @@ final class CssEngine implements Css.StyleSheet.Config, CssGeneratorScanner.Adap
 
         case SPACE -> {
           if (c == '_') {
-            parser = FormatValue.UNKNOWN;
-
-            sb.append('_');
-            sb.append('_');
+            parser = FormatValue.SPACE;
           }
 
           else {
             parser = FormatValue.NORMAL;
-
-            wordStart = idx;
 
             idx--;
 
@@ -1123,7 +1201,14 @@ final class CssEngine implements Css.StyleSheet.Config, CssGeneratorScanner.Adap
         }
 
         case UNKNOWN -> {
-          break outer;
+          if (c == '_') {
+            parser = FormatValue.SPACE;
+
+            String word;
+            word = value.substring(wordStart, idx);
+
+            sb.append(word);
+          }
         }
       }
     }
@@ -1160,13 +1245,15 @@ final class CssEngine implements Css.StyleSheet.Config, CssGeneratorScanner.Adap
 
       case DIMENSION -> formatResultDefault(value, wordStart);
 
+      case PERCENTAGE -> formatResultDefault(value, wordStart);
+
       case HASH -> formatResultDefault(value, wordStart);
 
       case HEX_COLOR -> formatResultDefault(value, wordStart);
 
-      case SPACE -> value;
+      case SPACE -> formatResultDefault(value, wordStart);
 
-      case UNKNOWN -> value;
+      case UNKNOWN -> formatResultDefault(value, wordStart);
     };
   }
 
