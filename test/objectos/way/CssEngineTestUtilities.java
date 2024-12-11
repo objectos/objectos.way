@@ -165,6 +165,26 @@ public class CssEngineTestUtilities {
   }
 
   @Test
+  public void border() {
+    class Subject extends AbstractSubject {
+      @Override
+      final void classes() {
+        className("border-1px");
+      }
+    }
+
+    test(
+        Subject.class,
+
+        """
+        @layer utilities {
+          .border-1px { border: 0.0625rem }
+        }
+        """
+    );
+  }
+
+  @Test
   public void borderCollapse() {
     class Subject extends AbstractSubject {
       @Override

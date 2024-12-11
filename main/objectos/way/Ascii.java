@@ -15,25 +15,29 @@
  */
 package objectos.way;
 
-final class LangChars {
+final class Ascii {
 
-  private LangChars() {}
+  private Ascii() {}
 
-  public static boolean isAsciiDigit(char c) {
+  public static boolean isDigit(char c) {
     return '0' <= c && c <= '9';
   }
 
-  public static boolean isAsciiLetter(char c) {
+  public static boolean isLetter(char c) {
     return 'A' <= c && c <= 'Z'
         || 'a' <= c && c <= 'z';
   }
 
-  public static boolean isAsciiLetterOrDigit(char c) {
-    return isAsciiLetter(c) || isAsciiDigit(c);
+  public static boolean isLetterOrDigit(char c) {
+    return isLetter(c) || isDigit(c);
   }
 
-  public static boolean isAsciiWhitespace(char c) {
+  public static boolean isWhitespace(char c) {
     return c == '\t' || c == '\r' || c == '\n' || c == ' ';
+  }
+
+  public static int digitToInt(char c) {
+    return c - '0';
   }
 
 }

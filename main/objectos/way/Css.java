@@ -302,6 +302,8 @@ public final class Css {
     WHITESPACE,
     TEXT_WRAP,
 
+    BORDER,
+
     BORDER_RADIUS,
     BORDER_RADIUS_T,
     BORDER_RADIUS_R,

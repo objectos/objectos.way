@@ -15,8 +15,8 @@
  */
 package objectos.way;
 
-import static objectos.way.LangChars.isAsciiDigit;
-import static objectos.way.LangChars.isAsciiLetter;
+import static objectos.way.Ascii.isDigit;
+import static objectos.way.Ascii.isLetter;
 
 enum CssValueType {
 
@@ -86,11 +86,11 @@ enum CssValueType {
             parser = Parser.MAYBE_ZERO;
           }
 
-          else if (isAsciiLetter(c)) {
+          else if (isLetter(c)) {
             parser = Parser.KEYWORD;
           }
 
-          else if (isAsciiDigit(c)) {
+          else if (isDigit(c)) {
             parser = Parser.INTEGER;
           }
 
@@ -100,7 +100,7 @@ enum CssValueType {
         }
 
         case KEYWORD -> {
-          if (isAsciiLetter(c)) {
+          if (isLetter(c)) {
             parser = Parser.KEYWORD;
           }
 
@@ -126,7 +126,7 @@ enum CssValueType {
             parser = Parser.MAYBE_LENGTH_PX;
           }
 
-          else if (isAsciiLetter(c)) {
+          else if (isLetter(c)) {
             parser = Parser.DIMENSION;
           }
 
@@ -152,11 +152,11 @@ enum CssValueType {
             parser = Parser.MAYBE_LENGTH_PX;
           }
 
-          else if (isAsciiLetter(c)) {
+          else if (isLetter(c)) {
             parser = Parser.DIMENSION;
           }
 
-          else if (!isAsciiDigit(c)) {
+          else if (!isDigit(c)) {
             parser = Parser.TOKEN;
           }
 
@@ -166,7 +166,7 @@ enum CssValueType {
         }
 
         case MAYBE_DECIMAL -> {
-          if (isAsciiDigit(c)) {
+          if (isDigit(c)) {
             parser = Parser.DECIMAL;
           }
 
@@ -188,11 +188,11 @@ enum CssValueType {
             parser = Parser.MAYBE_LENGTH_PX;
           }
 
-          else if (isAsciiLetter(c)) {
+          else if (isLetter(c)) {
             parser = Parser.DIMENSION;
           }
 
-          else if (!isAsciiDigit(c)) {
+          else if (!isDigit(c)) {
             parser = Parser.TOKEN;
           }
 
@@ -216,7 +216,7 @@ enum CssValueType {
         }
 
         case DIMENSION -> {
-          if (!isAsciiLetter(c)) {
+          if (!isLetter(c)) {
             parser = Parser.TOKEN;
           }
 
@@ -230,7 +230,7 @@ enum CssValueType {
         }
 
         case RATIO -> {
-          if (isAsciiDigit(c)) {
+          if (isDigit(c)) {
             parser = Parser.RATIO;
           }
 
@@ -244,7 +244,7 @@ enum CssValueType {
         }
 
         case MAYBE_RATIO_DECIMAL, RATIO_DECIMAL -> {
-          if (isAsciiDigit(c)) {
+          if (isDigit(c)) {
             parser = Parser.RATIO_DECIMAL;
           }
 

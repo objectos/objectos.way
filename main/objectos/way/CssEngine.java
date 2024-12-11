@@ -59,6 +59,7 @@ final class CssEngine implements Css.StyleSheet.Config, CssGeneratorScanner.Adap
 
   private Note.Sink noteSink = Note.NoOpSink.INSTANCE;
 
+  @SuppressWarnings("unused")
   private final Notes notes = Notes.get();
 
   private String theme;
@@ -212,7 +213,7 @@ final class CssEngine implements Css.StyleSheet.Config, CssGeneratorScanner.Adap
         }
 
         case VARNS1 -> {
-          if (LangChars.isAsciiLetter(c)) {
+          if (Ascii.isLetter(c)) {
             parser = Parser.VARNSN;
 
             aux = idx;
@@ -240,7 +241,7 @@ final class CssEngine implements Css.StyleSheet.Config, CssGeneratorScanner.Adap
             }
           }
 
-          else if (LangChars.isAsciiLetterOrDigit(c)) {
+          else if (Ascii.isLetterOrDigit(c)) {
             parser = Parser.VARNSN;
           }
 
@@ -250,7 +251,7 @@ final class CssEngine implements Css.StyleSheet.Config, CssGeneratorScanner.Adap
         }
 
         case VARID1 -> {
-          if (LangChars.isAsciiLetterOrDigit(c)) {
+          if (Ascii.isLetterOrDigit(c)) {
             parser = Parser.VARIDN;
 
             aux = idx;
@@ -274,7 +275,7 @@ final class CssEngine implements Css.StyleSheet.Config, CssGeneratorScanner.Adap
             parser = Parser.VARIDN;
           }
 
-          else if (LangChars.isAsciiLetterOrDigit(c)) {
+          else if (Ascii.isLetterOrDigit(c)) {
             parser = Parser.VARIDN;
           }
 
@@ -284,7 +285,7 @@ final class CssEngine implements Css.StyleSheet.Config, CssGeneratorScanner.Adap
         }
 
         case VAROWS -> {
-          if (LangChars.isAsciiWhitespace(c)) {
+          if (Ascii.isWhitespace(c)) {
             parser = Parser.VAROWS;
 
             if (c == '\n') {
@@ -320,7 +321,7 @@ final class CssEngine implements Css.StyleSheet.Config, CssGeneratorScanner.Adap
             putThemeEntry(namespace, entry);
           }
 
-          else if (LangChars.isAsciiWhitespace(c)) {
+          else if (Ascii.isWhitespace(c)) {
             parser = Parser.VARTRIM;
 
             if (c == '\n') {
@@ -344,7 +345,7 @@ final class CssEngine implements Css.StyleSheet.Config, CssGeneratorScanner.Adap
             idx--;
           }
 
-          else if (LangChars.isAsciiWhitespace(c)) {
+          else if (Ascii.isWhitespace(c)) {
             parser = Parser.VARTRIM;
 
             if (c == '\n') {
@@ -498,6 +499,8 @@ final class CssEngine implements Css.StyleSheet.Config, CssGeneratorScanner.Adap
 
   private void specB() {
     funcUtility(Css.Key.BACKGROUND_COLOR, "background-color");
+
+    funcUtility(Css.Key.BORDER, "border");
 
     funcUtility(Css.Key.BORDER_COLLAPSE, "border-collapse");
   }
@@ -664,14 +667,34 @@ final class CssEngine implements Css.StyleSheet.Config, CssGeneratorScanner.Adap
 
   private void process() {
     for (String token : tokens.keySet()) {
-      Css.Rule newRule;
-      newRule = createUtility(token);
+      String className;
+      className = token;
 
-      rules.put(token, newRule);
+      String suffix;
+      suffix = processVariants(className);
+
+      if (suffix == null) {
+        continue;
+      }
+
+      Css.Rule maybeStatic;
+      maybeStatic = processStatic(className, suffix);
+
+      if (maybeStatic != null) {
+        rules.put(className, maybeStatic);
+
+        continue;
+      }
+
+      Css.Rule rule;
+      rule = processFunc(className, suffix);
+
+      rules.put(token, rule);
     }
   }
 
-  private Css.Rule createUtility(String className) {
+  @Lang.VisibleForTesting
+  final String processVariants(String className) {
     classNameFormats.clear();
 
     mediaQueries.clear();
@@ -690,7 +713,7 @@ final class CssEngine implements Css.StyleSheet.Config, CssGeneratorScanner.Adap
       variant = variants.get(variantName);
 
       if (variant == null) {
-        return Css.Rule.NOOP;
+        return null;
       }
 
       switch (variant) {
@@ -704,17 +727,6 @@ final class CssEngine implements Css.StyleSheet.Config, CssGeneratorScanner.Adap
       colon = className.indexOf(':', beginIndex);
     }
 
-    Css.Modifier modifier;
-
-    if (mediaQueries.isEmpty() && classNameFormats.isEmpty()) {
-      modifier = Css.EMPTY_MODIFIER;
-    } else {
-      modifier = new Css.Modifier(
-          Util.toUnmodifiableList(mediaQueries),
-          Util.toUnmodifiableList(classNameFormats)
-      );
-    }
-
     String value;
     value = className;
 
@@ -722,20 +734,35 @@ final class CssEngine implements Css.StyleSheet.Config, CssGeneratorScanner.Adap
       value = className.substring(beginIndex);
     }
 
-    return createUtility(className, modifier, value);
+    return value;
   }
 
-  private Css.Rule createUtility(String className, Css.Modifier modifier, String value) {
-    // 1) static values search
+  private Css.Modifier createModifier() {
+    if (mediaQueries.isEmpty() && classNameFormats.isEmpty()) {
+      return Css.EMPTY_MODIFIER;
+    } else {
+      return new Css.Modifier(
+          Util.toUnmodifiableList(mediaQueries),
+          Util.toUnmodifiableList(classNameFormats)
+      );
+    }
+  }
+
+  private Css.Rule processStatic(String className, String value) {
     Css.StaticUtility staticFactory;
     staticFactory = staticUtilities.get(value);
 
-    if (staticFactory != null) {
-      return staticFactory.create(className, modifier);
+    if (staticFactory == null) {
+      return null;
     }
 
-    // 2) by prefix search
+    Css.Modifier modifier;
+    modifier = createModifier();
 
+    return staticFactory.create(className, modifier);
+  }
+
+  private Css.Rule processFunc(String className, String value) {
     char firstChar;
     firstChar = value.charAt(0);
 
@@ -787,23 +814,28 @@ final class CssEngine implements Css.StyleSheet.Config, CssGeneratorScanner.Adap
     }
 
     if (spec == null) {
-      noteSink.send(notes.keyNotFound, sourceName, className);
+      // TODO note key not found
 
       return Css.Rule.NOOP;
     }
 
-    return createUtility(spec, className, modifier, negative, suffix);
-  }
-
-  private Css.Rule createUtility(UtilitySpec spec, String className, Css.Modifier modifier, boolean negative, String value) {
     if (negative && !spec.allowsNegative()) {
-      noteSink.send(notes.negativeNotSupported, spec.key(), className);
+      // TODO note negative not supported
 
       return Css.Rule.NOOP;
     }
 
     String formatted;
-    formatted = formatValue(negative, value);
+    formatted = formatValue(negative, suffix);
+
+    if (formatted == null) {
+      // TODO note invalid value
+
+      return Css.Rule.NOOP;
+    }
+
+    Css.Modifier modifier;
+    modifier = createModifier();
 
     return spec.createRule(className, modifier, formatted);
   }
@@ -816,7 +848,15 @@ final class CssEngine implements Css.StyleSheet.Config, CssGeneratorScanner.Adap
 
     INTEGER,
 
+    INTEGER_DOT,
+
+    DECIMAL,
+
     RATIO,
+
+    NUMBER_P,
+
+    PIXEL,
 
     UNKNOWN;
 
@@ -824,6 +864,15 @@ final class CssEngine implements Css.StyleSheet.Config, CssGeneratorScanner.Adap
 
   @Lang.VisibleForTesting
   final String formatValue(boolean negative, String value) {
+    // accumulate all of the digits here
+    long digits = 0L;
+
+    // let's keep track of now many digits before the '.' we have found
+    int beforeDot = 0;
+
+    // let's keep track of how many digits after the '.' we have found
+    int afterDot = 0;
+
     FormatValue parser;
     parser = FormatValue.NORMAL;
 
@@ -833,12 +882,16 @@ final class CssEngine implements Css.StyleSheet.Config, CssGeneratorScanner.Adap
 
       switch (parser) {
         case NORMAL -> {
-          if (LangChars.isAsciiLetter(c)) {
+          if (Ascii.isLetter(c)) {
             parser = FormatValue.KEYWORD;
           }
 
-          else if (LangChars.isAsciiDigit(c)) {
+          else if (Ascii.isDigit(c)) {
             parser = FormatValue.INTEGER;
+
+            digits = Ascii.digitToInt(c);
+
+            beforeDot = 1;
           }
 
           else {
@@ -847,32 +900,108 @@ final class CssEngine implements Css.StyleSheet.Config, CssGeneratorScanner.Adap
         }
 
         case KEYWORD -> {
-          if (LangChars.isAsciiLetterOrDigit(c) || c == '-') {
+          if (Ascii.isLetterOrDigit(c) || c == '-') {
             parser = FormatValue.KEYWORD;
           }
 
           else {
-            throw new UnsupportedOperationException("Implement me");
+            parser = FormatValue.UNKNOWN;
           }
         }
 
         case INTEGER -> {
-          if (LangChars.isAsciiDigit(c)) {
+          if (Ascii.isDigit(c)) {
             parser = FormatValue.INTEGER;
+
+            digits *= 10;
+
+            digits += Ascii.digitToInt(c);
+
+            beforeDot++;
+          }
+
+          else if (c == '.') {
+            parser = FormatValue.DECIMAL;
+
+            afterDot = 0;
           }
 
           else if (c == '/') {
             parser = FormatValue.RATIO;
           }
 
+          else if (c == 'p') {
+            parser = FormatValue.NUMBER_P;
+          }
+
+          else {
+            parser = FormatValue.UNKNOWN;
+          }
+        }
+
+        case INTEGER_DOT -> {
+          if (Ascii.isDigit(c)) {
+            parser = FormatValue.DECIMAL;
+
+            digits *= 10;
+
+            digits += Ascii.digitToInt(c);
+
+            afterDot++;
+          }
+
+          else {
+            parser = FormatValue.UNKNOWN;
+          }
+        }
+
+        case DECIMAL -> {
+          if (Ascii.isDigit(c)) {
+            parser = FormatValue.DECIMAL;
+
+            digits *= 10;
+
+            digits += Ascii.digitToInt(c);
+
+            afterDot++;
+          }
+
+          else if (c == '/') {
+            parser = FormatValue.RATIO;
+          }
+
+          else if (c == 'p') {
+            parser = FormatValue.NUMBER_P;
+          }
+
+          else {
+            parser = FormatValue.UNKNOWN;
+          }
+        }
+
+        case RATIO -> {
+          if (Ascii.isDigit(c)) {
+            parser = FormatValue.RATIO;
+          }
+
           else {
             throw new UnsupportedOperationException("Implement me");
           }
         }
 
-        case RATIO -> {
-          if (LangChars.isAsciiDigit(c)) {
-            parser = FormatValue.RATIO;
+        case NUMBER_P -> {
+          if (c == 'x') {
+            parser = FormatValue.PIXEL;
+          }
+
+          else {
+            throw new UnsupportedOperationException("Implement me");
+          }
+        }
+
+        case PIXEL -> {
+          if (c == '_') {
+            throw new UnsupportedOperationException("Implement me");
           }
 
           else {
@@ -893,10 +1022,124 @@ final class CssEngine implements Css.StyleSheet.Config, CssGeneratorScanner.Adap
 
       case INTEGER -> value;
 
+      case INTEGER_DOT -> value;
+
+      case DECIMAL -> value;
+
       case RATIO -> value;
+
+      case NUMBER_P -> value;
+
+      case PIXEL -> formatValuePixel(digits, beforeDot, afterDot);
 
       case UNKNOWN -> value;
     };
+  }
+
+  private String formatValuePixel(long digits, int beforeDot, int afterDot) {
+    // don't convert 0px
+    if (digits == 0) {
+      return "0px";
+    }
+
+    int scale;
+    scale = Math.max(afterDot, 5);
+
+    double dividend;
+    dividend = digits;
+
+    if (scale > afterDot) {
+      dividend *= Math.pow(10D, scale - afterDot);
+    }
+
+    // round up if necessary...
+    dividend += 5;
+
+    double multiplier;
+    multiplier = Math.pow(10D, scale);
+
+    double divisor;
+    divisor = 16L * multiplier;
+
+    double result;
+    result = dividend / divisor;
+
+    long unscaled;
+    unscaled = (long) (result * multiplier);
+
+    StringBuilder out;
+    out = new StringBuilder();
+
+    // print the decimal digits
+
+    boolean append;
+    append = false;
+
+    for (int idx = 0; idx < scale; idx++) {
+      int thisDigit;
+      thisDigit = (int) (unscaled % 10L);
+
+      unscaled /= 10L;
+
+      if (thisDigit != 0) {
+        append = true;
+      }
+
+      if (!append) {
+        continue;
+      }
+
+      out.append(thisDigit);
+    }
+
+    if (append) {
+      out.append('.');
+    }
+
+    // print the integer digits
+
+    int nonZeroCount;
+    nonZeroCount = 0;
+
+    int zeroCount;
+    zeroCount = 0;
+
+    for (int idx = 0, max = beforeDot; idx < max; idx++) {
+      int thisDigit;
+      thisDigit = (int) (unscaled % 10L);
+
+      if (thisDigit != 0) {
+        nonZeroCount++;
+
+        zeroCount = 0;
+      } else {
+        zeroCount++;
+      }
+
+      unscaled /= 10L;
+
+      out.append(thisDigit);
+    }
+
+    if (zeroCount > 1 && nonZeroCount == 0) {
+      int length;
+      length = out.length();
+
+      out.setLength(length - zeroCount + 1);
+    }
+
+    else if (zeroCount > 0 && nonZeroCount > 0) {
+      int length;
+      length = out.length();
+
+      out.setLength(length - zeroCount);
+    }
+
+    out.reverse();
+
+    out.append("rem");
+
+    return out.toString();
   }
 
   private String formatValueKeyword(String keyword) {

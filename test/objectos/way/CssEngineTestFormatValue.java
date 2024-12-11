@@ -56,7 +56,26 @@ public class CssEngineTestFormatValue {
     assertEquals(engine.formatValue(true, "revert-layer"), "revert-layer");
   }
 
-  @Test
+  @Test(description = "pixel: zero")
+  public void pixel01() {
+    assertEquals(engine.formatValue(false, "0px"), "0px");
+  }
+
+  @Test(description = "pixel: value < 16px")
+  public void pixel02() {
+    assertEquals(engine.formatValue(false, "0.16px"), "0.01rem");
+    assertEquals(engine.formatValue(false, "1px"), "0.0625rem");
+    assertEquals(engine.formatValue(false, "2px"), "0.125rem");
+    assertEquals(engine.formatValue(false, "8px"), "0.5rem");
+    assertEquals(engine.formatValue(false, "10px"), "0.625rem");
+  }
+
+  @Test(description = "pixel: single digit")
+  public void pixel03() {
+    assertEquals(engine.formatValue(false, "1px"), "0.0625rem");
+  }
+
+  @Test(description = "raio: integer/integer")
   public void ratio01() {
     assertEquals(engine.formatValue(false, "16/9"), "16/9");
   }
