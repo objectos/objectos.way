@@ -19,7 +19,6 @@ import java.nio.file.Path;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.EnumMap;
-import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -27,12 +26,14 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.SequencedMap;
 import java.util.Set;
+import objectos.way.Css.Modifier;
 
-final class CssStyleSheetConfig implements Css.StyleSheet.Config, CssGeneratorScanner.Adapter {
+final class CssEngine implements Css.StyleSheet.Config, CssGeneratorScanner.Adapter {
 
   record Notes(
       Note.Ref2<String, String> keyNotFound,
-      Note.Ref3<String, String, Set<Css.Key>> matchNotFound
+      Note.Ref3<String, String, Set<Css.Key>> matchNotFound,
+      Note.Ref2<Css.Key, String> negativeNotSupported
   ) {
 
     static Notes get() {
@@ -41,7 +42,8 @@ final class CssStyleSheetConfig implements Css.StyleSheet.Config, CssGeneratorSc
 
       return new Notes(
           Note.Ref2.create(s, "Css.Key not found", Note.DEBUG),
-          Note.Ref3.create(s, "Match not found", Note.INFO)
+          Note.Ref3.create(s, "Match not found", Note.INFO),
+          Note.Ref2.create(s, "Does not allow negative values", Note.WARN)
       );
     }
 
@@ -114,7 +116,8 @@ final class CssStyleSheetConfig implements Css.StyleSheet.Config, CssGeneratorSc
       parse(theme);
     }
 
-    // TODO validate theme
+    // validate theme
+    validate();
 
     // let's apply the spec
     spec();
@@ -131,7 +134,7 @@ final class CssStyleSheetConfig implements Css.StyleSheet.Config, CssGeneratorSc
   // # BEGIN: Theme parsing
   // ##################################################################
 
-  private final Map<Css.Namespace, List<CssThemeEntry>> namespaces = new EnumMap<>(Css.Namespace.class);
+  private final Map<Css.Namespace, List<CssThemeEntry>> themeEntries = new EnumMap<>(Css.Namespace.class);
 
   private enum Parser {
 
@@ -361,7 +364,7 @@ final class CssStyleSheetConfig implements Css.StyleSheet.Config, CssGeneratorSc
 
   private void putThemeEntry(Css.Namespace namespace, CssThemeEntry entry) {
     List<CssThemeEntry> list;
-    list = namespaces.computeIfAbsent(namespace, ns -> Util.createList());
+    list = themeEntries.computeIfAbsent(namespace, ns -> Util.createList());
 
     list.add(entry);
   }
@@ -378,28 +381,79 @@ final class CssStyleSheetConfig implements Css.StyleSheet.Config, CssGeneratorSc
   // ##################################################################
 
   // ##################################################################
+  // # BEGIN: Theme validation
+  // ##################################################################
+
+  private final Map<Css.Namespace, Map<String, String>> namespaces = new EnumMap<>(Css.Namespace.class);
+
+  private void validate() {
+    for (Css.Namespace namespace : Css.Namespace.values()) {
+      List<CssThemeEntry> namespaceEntries;
+      namespaceEntries = themeEntries.get(namespace);
+
+      Map<String, String> mappings;
+
+      if (namespaceEntries == null) {
+
+        mappings = Map.of();
+
+      } else {
+
+        mappings = Util.createMap();
+
+        for (CssThemeEntry entry : namespaceEntries) {
+          entry.acceptMappings(mappings);
+        }
+
+      }
+
+      namespaces.put(namespace, mappings);
+    }
+  }
+
+  // ##################################################################
+  // # END: Theme validation
+  // ##################################################################
+
+  // ##################################################################
   // # BEGIN: Spec
   // ##################################################################
 
-  private static final Set<CssValueType> KEYWORD = EnumSet.of(
-      CssValueType.KEYWORD
-  );
+  private sealed interface UtilitySpec {
 
-  private static final CssValueFormatter IDENTITY = new CssValueFormatter() {
+    Css.Key key();
+
+    boolean allowsNegative();
+
+    Css.Rule createRule(String className, Modifier modifier, String formatted);
+
+  }
+
+  private record UtilitySpec1(Css.Key key, String propertyName) implements UtilitySpec {
     @Override
-    public final String format(String value, boolean negative) { return value; }
-  };
+    public final boolean allowsNegative() {
+      return false;
+    }
 
-  private final Map<String, Set<Css.Key>> prefixes = new HashMap<>();
+    @Override
+    public final Css.Rule createRule(String className, Modifier modifier, String formatted) {
+      CssProperties.Builder properties;
+      properties = new CssProperties.Builder();
 
-  private final Map<Css.Key, CssResolver> resolvers = new EnumMap<>(Css.Key.class);
+      properties.add(propertyName, formatted);
+
+      return new CssUtility(key, className, modifier, properties);
+    }
+  }
 
   private final Map<String, Css.StaticUtility> staticUtilities = new HashMap<>();
 
-  private void spec() {
-    // A
+  private final Map<String, UtilitySpec> utilitySpecs = Util.createMap();
 
+  private void spec() {
     specA();
+
+    specB();
   }
 
   private void specA() {
@@ -428,83 +482,36 @@ final class CssStyleSheetConfig implements Css.StyleSheet.Config, CssGeneratorSc
         """
     );
 
-    funcUtility(
-        Css.Key.ALIGN_CONTENT,
+    funcUtility(Css.Key.ALIGN_CONTENT, "align-content");
 
-        "align-content",
+    funcUtility(Css.Key.ALIGN_ITEMS, "align-items");
 
-        KEYWORD
-    );
+    funcUtility(Css.Key.ALIGN_SELF, "align-self");
 
-    funcUtility(
-        Css.Key.ALIGN_ITEMS,
+    funcUtility(Css.Key.APPEARANCE, "appearance");
 
-        "align-items",
-
-        KEYWORD
-    );
-
-    funcUtility(
-        Css.Key.ALIGN_SELF,
-
-        "align-self",
-
-        KEYWORD
-    );
-
-    funcUtility(
-        Css.Key.APPEARANCE,
-
-        "appearance",
-
-        KEYWORD
-    );
-
-    funcUtility(
-        Css.Key.ASPECT_RATIO,
-
-        "aspect-ratio",
-
-        EnumSet.of(
-            CssValueType.INTEGER,
-            CssValueType.DECIMAL,
-            CssValueType.RATIO,
-            CssValueType.KEYWORD
-        )
-    );
+    funcUtility(Css.Key.ASPECT_RATIO, "aspect-ratio");
   }
 
-  private void funcUtility(
-      Css.Key key,
-      String propertyName,
-      Set<CssValueType> supportedTypes) {
+  private void specB() {
+    funcUtility(Css.Key.BACKGROUND_COLOR, "background-color");
 
-    prefix(key, propertyName);
-
-    Map<String, String> values;
-    values = Map.of();
-
-    CssResolver resolver;
-    resolver = new CssResolverOfProperties(key, values, IDENTITY, supportedTypes, propertyName, null);
-
-    resolver(key, resolver);
-
+    funcUtility(Css.Key.BORDER_COLLAPSE, "border-collapse");
   }
 
-  private void prefix(Css.Key key, String prefix) {
-    Set<Css.Key> set;
-    set = prefixes.computeIfAbsent(prefix, s -> EnumSet.noneOf(Css.Key.class));
+  private void funcUtility(Css.Key key, String propertyName) {
+    UtilitySpec1 spec = new UtilitySpec1(key, propertyName);
 
-    set.add(key);
+    putUtilitySpec(propertyName, spec);
   }
 
-  private void resolver(Css.Key key, CssResolver resolver) {
-    CssResolver maybeExisting;
-    maybeExisting = resolvers.put(key, resolver);
+  private void putUtilitySpec(String prefix, UtilitySpec spec) {
+    UtilitySpec maybeExisting;
+    maybeExisting = utilitySpecs.put(prefix, spec);
 
     if (maybeExisting != null) {
       throw new IllegalArgumentException(
-          "Key " + key + " already mapped to " + maybeExisting
+          "Prefix " + prefix + " already mapped to " + maybeExisting
       );
     }
   }
@@ -586,42 +593,14 @@ final class CssStyleSheetConfig implements Css.StyleSheet.Config, CssGeneratorSc
   }
 
   private void processToken(String token) {
-    Css.Rule existing;
-    existing = rules.get(token);
-
-    if (existing == null) {
-      Css.Rule newRule;
-      newRule = createRule(token);
-
-      store(token, newRule);
+    if (rules.containsKey(token)) {
+      return;
     }
 
-    else {
-      consumeExisting(token, existing);
-    }
-  }
+    Css.Rule newRule;
+    newRule = createUtility(token);
 
-  private Css.Rule createRule(String className) {
-    String component;
-    component = getComponent(className);
-
-    if (component != null) {
-      return createComponent(className, component);
-    } else {
-      return createUtility(className);
-    }
-  }
-
-  void consumeExisting(String className, Css.Rule existing) {
-    throw new UnsupportedOperationException("Implement me");
-  }
-
-  private String getComponent(String className) {
-    return null;
-  }
-
-  private Css.Rule createComponent(String className, String definition) {
-    throw new UnsupportedOperationException("Implement me");
+    rules.put(token, newRule);
   }
 
   private Css.Rule createUtility(String className) {
@@ -702,88 +681,161 @@ final class CssStyleSheetConfig implements Css.StyleSheet.Config, CssGeneratorSc
       value = value.substring(1);
     }
 
-    // maybe it is the prefix with an empty value
-    // e.g. border-x
+    // search for the CSS Key
 
-    Set<Css.Key> candidates;
-    candidates = prefixes.get(value);
+    UtilitySpec spec;
+    spec = null;
 
     String suffix;
     suffix = "";
 
-    if (candidates == null) {
+    int fromIndex;
+    fromIndex = value.length();
 
-      int fromIndex;
-      fromIndex = value.length();
+    while (spec == null && fromIndex > 0) {
+      int lastDash;
+      lastDash = value.lastIndexOf('-', fromIndex);
 
-      while (candidates == null && fromIndex > 0) {
-        int lastDash;
-        lastDash = value.lastIndexOf('-', fromIndex);
-
-        if (lastDash == 0) {
-          // value starts with a dash and has no other dash
-          // => invalid value
-          break;
-        }
-
-        fromIndex = lastDash - 1;
-
-        String prefix;
-        prefix = value;
-
-        suffix = "";
-
-        if (lastDash > 0) {
-          prefix = value.substring(0, lastDash);
-
-          suffix = value.substring(lastDash + 1);
-        }
-
-        candidates = prefixes.get(prefix);
+      if (lastDash == 0) {
+        // value starts with a dash and has no other dash
+        // => invalid value
+        break;
       }
 
+      fromIndex = lastDash - 1;
+
+      String prefix;
+      prefix = value;
+
+      suffix = "";
+
+      if (lastDash > 0) {
+        prefix = value.substring(0, lastDash);
+
+        suffix = value.substring(lastDash + 1);
+      }
+
+      spec = utilitySpecs.get(prefix);
     }
 
-    if (candidates == null) {
+    if (spec == null) {
       noteSink.send(notes.keyNotFound, sourceName, className);
 
       return Css.Rule.NOOP;
     }
 
-    for (Css.Key candidate : candidates) {
-      CssResolver resolver;
-      resolver = resolvers.get(candidate);
-
-      String resolved;
-      resolved = resolver.resolve(suffix);
-
-      if (resolved != null) {
-        return resolver.create(className, modifier, negative, resolved);
-      }
-    }
-
-    CssValueType type;
-    type = CssValueType.parse(suffix);
-
-    for (Css.Key candidate : candidates) {
-      CssResolver resolver;
-      resolver = resolvers.get(candidate);
-
-      String resolved;
-      resolved = resolver.resolveWithType(type, suffix);
-
-      if (resolved != null) {
-        return resolver.create(className, modifier, negative, resolved);
-      }
-    }
-
-    noteSink.send(notes.matchNotFound, sourceName, className, candidates);
-
-    return Css.Rule.NOOP;
+    return createUtility(spec, className, modifier, negative, suffix);
   }
 
-  void store(String token, Css.Rule value) {
-    rules.put(token, value);
+  private Css.Rule createUtility(UtilitySpec spec, String className, Css.Modifier modifier, boolean negative, String value) {
+    if (negative && !spec.allowsNegative()) {
+      noteSink.send(notes.negativeNotSupported, spec.key(), className);
+
+      return Css.Rule.NOOP;
+    }
+
+    String formatted;
+    formatted = formatValue(negative, value);
+
+    return spec.createRule(className, modifier, formatted);
+  }
+
+  private enum FormatValue {
+
+    NORMAL,
+
+    KEYWORD,
+
+    INTEGER,
+
+    RATIO,
+
+    UNKNOWN;
+
+  }
+
+  @Lang.VisibleForTesting
+  final String formatValue(boolean negative, String value) {
+    FormatValue parser;
+    parser = FormatValue.NORMAL;
+
+    outer: for (int idx = 0, len = value.length(); idx < len; idx++) {
+      char c;
+      c = value.charAt(idx);
+
+      switch (parser) {
+        case NORMAL -> {
+          if (LangChars.isAsciiLetter(c)) {
+            parser = FormatValue.KEYWORD;
+          }
+
+          else if (LangChars.isAsciiDigit(c)) {
+            parser = FormatValue.INTEGER;
+          }
+
+          else {
+            parser = FormatValue.UNKNOWN;
+          }
+        }
+
+        case KEYWORD -> {
+          if (LangChars.isAsciiLetterOrDigit(c) || c == '-') {
+            parser = FormatValue.KEYWORD;
+          }
+
+          else {
+            throw new UnsupportedOperationException("Implement me");
+          }
+        }
+
+        case INTEGER -> {
+          if (LangChars.isAsciiDigit(c)) {
+            parser = FormatValue.INTEGER;
+          }
+
+          else if (c == '/') {
+            parser = FormatValue.RATIO;
+          }
+
+          else {
+            throw new UnsupportedOperationException("Implement me");
+          }
+        }
+
+        case RATIO -> {
+          if (LangChars.isAsciiDigit(c)) {
+            parser = FormatValue.RATIO;
+          }
+
+          else {
+            throw new UnsupportedOperationException("Implement me");
+          }
+        }
+
+        case UNKNOWN -> {
+          break outer;
+        }
+      }
+    }
+
+    return switch (parser) {
+      case NORMAL -> null; // empty value is invalid
+
+      case KEYWORD -> formatValueKeyword(value);
+
+      case INTEGER -> value;
+
+      case RATIO -> value;
+
+      case UNKNOWN -> value;
+    };
+  }
+
+  private String formatValueKeyword(String keyword) {
+    Map<String, String> colors;
+    colors = namespaces.get(Css.Namespace.COLOR);
+
+    return colors.getOrDefault(keyword, keyword);
   }
 
   // ##################################################################
@@ -791,7 +843,7 @@ final class CssStyleSheetConfig implements Css.StyleSheet.Config, CssGeneratorSc
   // ##################################################################
 
   // ##################################################################
-  // # BEGIN: Test-only output
+  // # BEGIN: Test-only section
   // ##################################################################
 
   final List<CssThemeEntry> testParseTheme() {
@@ -801,7 +853,7 @@ final class CssStyleSheetConfig implements Css.StyleSheet.Config, CssGeneratorSc
     entries = new UtilList<>();
 
     Collection<List<CssThemeEntry>> values;
-    values = namespaces.values();
+    values = themeEntries.values();
 
     for (List<CssThemeEntry> value : values) {
       entries.addAll(value);
@@ -826,13 +878,21 @@ final class CssStyleSheetConfig implements Css.StyleSheet.Config, CssGeneratorSc
     Css.Indentation indentation;
     indentation = Css.Indentation.ROOT;
 
+    out.append("@layer utilities {");
+    out.append(System.lineSeparator());
+
+    indentation = indentation.increase();
+
     topLevel.writeTo(out, indentation);
+
+    out.append("}");
+    out.append(System.lineSeparator());
 
     return out.toString();
   }
 
   // ##################################################################
-  // # END: Test-only output
+  // # END: Test-only section
   // ##################################################################
 
 }

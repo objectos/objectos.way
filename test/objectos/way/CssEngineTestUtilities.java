@@ -19,7 +19,7 @@ import static org.testng.Assert.assertEquals;
 
 import org.testng.annotations.Test;
 
-public class CssGeneratorTestUtilities {
+public class CssEngineTestUtilities {
 
   private static abstract class AbstractSubject extends Html.Template {
     @Override
@@ -45,8 +45,10 @@ public class CssGeneratorTestUtilities {
         Subject.class,
 
         """
-        .align-content-normal { align-content: normal }
-        .align-content-flex-start { align-content: flex-start }
+        @layer utilities {
+          .align-content-normal { align-content: normal }
+          .align-content-flex-start { align-content: flex-start }
+        }
         """
     );
   }
@@ -64,8 +66,10 @@ public class CssGeneratorTestUtilities {
         Subject.class,
 
         """
-        .align-items-flex-start { align-items: flex-start }
-        .align-items-center { align-items: center }
+        @layer utilities {
+          .align-items-flex-start { align-items: flex-start }
+          .align-items-center { align-items: center }
+        }
         """
     );
   }
@@ -83,8 +87,10 @@ public class CssGeneratorTestUtilities {
         Subject.class,
 
         """
-        .align-self-auto { align-self: auto }
-        .align-self-flex-start { align-self: flex-start }
+        @layer utilities {
+          .align-self-auto { align-self: auto }
+          .align-self-flex-start { align-self: flex-start }
+        }
         """
     );
   }
@@ -102,8 +108,10 @@ public class CssGeneratorTestUtilities {
         Subject.class,
 
         """
-        .appearance-auto { appearance: auto }
-        .appearance-none { appearance: none }
+        @layer utilities {
+          .appearance-auto { appearance: auto }
+          .appearance-none { appearance: none }
+        }
         """
     );
   }
@@ -121,16 +129,66 @@ public class CssGeneratorTestUtilities {
         Subject.class,
 
         """
-        .aspect-ratio-auto { aspect-ratio: auto }
-        .aspect-ratio-2 { aspect-ratio: 2 }
-        .aspect-ratio-16\\/9 { aspect-ratio: 16/9 }
+        @layer utilities {
+          .aspect-ratio-auto { aspect-ratio: auto }
+          .aspect-ratio-2 { aspect-ratio: 2 }
+          .aspect-ratio-16\\/9 { aspect-ratio: 16/9 }
+        }
+        """
+    );
+  }
+
+  @Test
+  public void backgroundColor() {
+    class Subject extends AbstractSubject {
+      @Override
+      final void classes() {
+        className("background-color-currentColor");
+        className("background-color-transparent");
+        className("background-color-red-50");
+        className("background-color-white");
+      }
+    }
+
+    test(
+        Subject.class,
+
+        """
+        @layer utilities {
+          .background-color-currentColor { background-color: currentColor }
+          .background-color-transparent { background-color: transparent }
+          .background-color-red-50 { background-color: var(--color-red-50) }
+          .background-color-white { background-color: var(--color-white) }
+        }
+        """
+    );
+  }
+
+  @Test
+  public void borderCollapse() {
+    class Subject extends AbstractSubject {
+      @Override
+      final void classes() {
+        className("border-collapse-collapse border-collapse-separate border-collapse-inherit");
+      }
+    }
+
+    test(
+        Subject.class,
+
+        """
+        @layer utilities {
+          .border-collapse-collapse { border-collapse: collapse }
+          .border-collapse-separate { border-collapse: separate }
+          .border-collapse-inherit { border-collapse: inherit }
+        }
         """
     );
   }
 
   private void test(Class<?> type, String expected) {
-    CssStyleSheetConfig config;
-    config = new CssStyleSheetConfig();
+    CssEngine config;
+    config = new CssEngine();
 
     config.scanClass(type);
 

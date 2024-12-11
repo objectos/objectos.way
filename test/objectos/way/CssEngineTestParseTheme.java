@@ -20,12 +20,12 @@ import static org.testng.Assert.assertEquals;
 import java.util.List;
 import org.testng.annotations.Test;
 
-public class CssStyleSheetConfigTest {
+public class CssEngineTestParseTheme {
 
   @Test(description = "theme :: colors (just one)")
   public void theme01() {
-    CssStyleSheetConfig config;
-    config = new CssStyleSheetConfig();
+    CssEngine config;
+    config = new CssEngine();
 
     config.theme("""
     --color-stone-950: oklch(0.147 0.004 49.25);
@@ -46,8 +46,8 @@ public class CssStyleSheetConfigTest {
 
   @Test(description = "theme :: colors (two lines)")
   public void theme02() {
-    CssStyleSheetConfig config;
-    config = new CssStyleSheetConfig();
+    CssEngine config;
+    config = new CssEngine();
 
     config.theme("""
     --color-stone-950: oklch(0.147 0.004 49.25);
@@ -76,8 +76,8 @@ public class CssStyleSheetConfigTest {
 
   @Test(description = "theme :: colors (multiple w/ blank lines)")
   public void theme03() {
-    CssStyleSheetConfig config;
-    config = new CssStyleSheetConfig();
+    CssEngine config;
+    config = new CssEngine();
 
     config.theme("""
     --color-orange-900: oklch(0.408 0.123 38.172);
@@ -115,8 +115,8 @@ public class CssStyleSheetConfigTest {
 
   @Test(description = "theme :: colors (it should trim the value)")
   public void theme04() {
-    CssStyleSheetConfig config;
-    config = new CssStyleSheetConfig();
+    CssEngine config;
+    config = new CssEngine();
 
     config.theme("""
     --color-orange-900:

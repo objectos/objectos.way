@@ -15,12 +15,16 @@
  */
 package objectos.way;
 
+import java.util.Map;
+
 sealed interface CssThemeEntry extends Comparable<CssThemeEntry> permits CssThemeEntryOfVariable {
 
   @Override
   default int compareTo(CssThemeEntry o) {
     return Integer.compare(index(), o.index());
   }
+
+  void acceptMappings(Map<String, String> mappings);
 
   int index();
 

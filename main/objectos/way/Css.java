@@ -59,7 +59,7 @@ public final class Css {
     /**
      * Configures the generation of a CSS style sheet.
      */
-    sealed interface Config permits CssStyleSheetConfig {
+    sealed interface Config permits CssEngine {
 
       void noteSink(Note.Sink value);
 

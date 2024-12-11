@@ -15,7 +15,19 @@
  */
 package objectos.way;
 
+import java.util.Map;
+
 record CssThemeEntryOfVariable(int index, String name, String value, String id) implements CssThemeEntry {
+
+  @Override
+  public final void acceptMappings(Map<String, String> mappings) {
+    String maybeExisting;
+    maybeExisting = mappings.put(id, "var(" + name + ")");
+
+    if (maybeExisting != null) {
+      throw new IllegalArgumentException("Duplicate mapping for " + name + ": " + value);
+    }
+  }
 
   @Override
   public final Object key() {
