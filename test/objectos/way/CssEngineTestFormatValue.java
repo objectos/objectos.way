@@ -29,6 +29,16 @@ public class CssEngineTestFormatValue {
     engine.execute();
   }
 
+  @Test(description = "arity: arity=2")
+  public void arity01() {
+    assertEquals(engine.formatValue(false, "2px_dashed"), "0.125rem dashed");
+  }
+
+  @Test(description = "arity: arity=3")
+  public void arity02() {
+    assertEquals(engine.formatValue(false, "4px_solid_red-50"), "0.25rem solid var(--color-red-50)");
+  }
+
   @Test(description = "color: valid color replace with var expr")
   public void color01() {
     assertEquals(engine.formatValue(false, "red-50"), "var(--color-red-50)");
@@ -70,9 +80,11 @@ public class CssEngineTestFormatValue {
     assertEquals(engine.formatValue(false, "10px"), "0.625rem");
   }
 
-  @Test(description = "pixel: single digit")
+  @Test(description = "pixel: value >= 16px")
   public void pixel03() {
-    assertEquals(engine.formatValue(false, "1px"), "0.0625rem");
+    assertEquals(engine.formatValue(false, "16px"), "1rem");
+    assertEquals(engine.formatValue(false, "44px"), "2.75rem");
+    assertEquals(engine.formatValue(false, "48px"), "3rem");
   }
 
   @Test(description = "raio: integer/integer")

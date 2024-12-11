@@ -858,12 +858,17 @@ final class CssEngine implements Css.StyleSheet.Config, CssGeneratorScanner.Adap
 
     PIXEL,
 
+    SPACE,
+
     UNKNOWN;
 
   }
 
   @Lang.VisibleForTesting
   final String formatValue(boolean negative, String value) {
+    // index of the first char of the word
+    int wordStart = 0;
+
     // accumulate all of the digits here
     long digits = 0L;
 
@@ -875,6 +880,8 @@ final class CssEngine implements Css.StyleSheet.Config, CssGeneratorScanner.Adap
 
     FormatValue parser;
     parser = FormatValue.NORMAL;
+
+    sb.setLength(0);
 
     outer: for (int idx = 0, len = value.length(); idx < len; idx++) {
       char c;
@@ -900,7 +907,19 @@ final class CssEngine implements Css.StyleSheet.Config, CssGeneratorScanner.Adap
         }
 
         case KEYWORD -> {
-          if (Ascii.isLetterOrDigit(c) || c == '-') {
+          if (c == '_') {
+            parser = FormatValue.SPACE;
+
+            String keyword;
+            keyword = value.substring(wordStart, idx);
+
+            String formatted;
+            formatted = formatResultKeyword(keyword);
+
+            sb.append(formatted);
+          }
+
+          else if (Ascii.isLetterOrDigit(c) || c == '-') {
             parser = FormatValue.KEYWORD;
           }
 
@@ -1001,11 +1020,35 @@ final class CssEngine implements Css.StyleSheet.Config, CssGeneratorScanner.Adap
 
         case PIXEL -> {
           if (c == '_') {
-            throw new UnsupportedOperationException("Implement me");
+            parser = FormatValue.SPACE;
+
+            String px;
+            px = formatResultPixel(digits, beforeDot, afterDot);
+
+            sb.append(px);
           }
 
           else {
-            throw new UnsupportedOperationException("Implement me");
+            parser = FormatValue.UNKNOWN;
+          }
+        }
+
+        case SPACE -> {
+          if (c == '_') {
+            parser = FormatValue.UNKNOWN;
+
+            sb.append('_');
+            sb.append('_');
+          }
+
+          else {
+            parser = FormatValue.NORMAL;
+
+            wordStart = idx;
+
+            idx--;
+
+            sb.append(' ');
           }
         }
 
@@ -1018,7 +1061,15 @@ final class CssEngine implements Css.StyleSheet.Config, CssGeneratorScanner.Adap
     return switch (parser) {
       case NORMAL -> null; // empty value is invalid
 
-      case KEYWORD -> formatValueKeyword(value);
+      case KEYWORD -> {
+        String keyword;
+        keyword = trailer(value, wordStart);
+
+        String formatted;
+        formatted = formatResultKeyword(keyword);
+
+        yield formatResult(formatted);
+      }
 
       case INTEGER -> value;
 
@@ -1030,13 +1081,41 @@ final class CssEngine implements Css.StyleSheet.Config, CssGeneratorScanner.Adap
 
       case NUMBER_P -> value;
 
-      case PIXEL -> formatValuePixel(digits, beforeDot, afterDot);
+      case PIXEL -> {
+        String px;
+        px = formatResultPixel(digits, beforeDot, afterDot);
+
+        yield formatResult(px);
+      }
+
+      case SPACE -> value;
 
       case UNKNOWN -> value;
     };
   }
 
-  private String formatValuePixel(long digits, int beforeDot, int afterDot) {
+  private String trailer(String value, int wordStart) {
+    return wordStart == 0 ? value : value.substring(wordStart);
+  }
+
+  private String formatResult(String trailer) {
+    if (sb.isEmpty()) {
+      return trailer;
+    } else {
+      sb.append(trailer);
+
+      return sb.toString();
+    }
+  }
+
+  private String formatResultKeyword(String keyword) {
+    Map<String, String> colors;
+    colors = namespaces.get(Css.Namespace.COLOR);
+
+    return colors.getOrDefault(keyword, keyword);
+  }
+
+  private String formatResultPixel(long digits, int beforeDot, int afterDot) {
     // don't convert 0px
     if (digits == 0) {
       return "0px";
@@ -1140,13 +1219,6 @@ final class CssEngine implements Css.StyleSheet.Config, CssGeneratorScanner.Adap
     out.append("rem");
 
     return out.toString();
-  }
-
-  private String formatValueKeyword(String keyword) {
-    Map<String, String> colors;
-    colors = namespaces.get(Css.Namespace.COLOR);
-
-    return colors.getOrDefault(keyword, keyword);
   }
 
   // ##################################################################

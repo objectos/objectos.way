@@ -170,6 +170,8 @@ public class CssEngineTestUtilities {
       @Override
       final void classes() {
         className("border-1px");
+        className("border-2px_dashed");
+        className("border-4px_solid_red-50");
       }
     }
 
@@ -179,6 +181,8 @@ public class CssEngineTestUtilities {
         """
         @layer utilities {
           .border-1px { border: 0.0625rem }
+          .border-2px_dashed { border: 0.125rem dashed }
+          .border-4px_solid_red-50 { border: 0.25rem solid var(--color-red-50) }
         }
         """
     );
