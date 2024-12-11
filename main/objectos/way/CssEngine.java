@@ -501,6 +501,10 @@ final class CssEngine implements Css.StyleSheet.Config, CssGeneratorScanner.Adap
     funcUtility(Css.Key.BACKGROUND_COLOR, "background-color");
 
     funcUtility(Css.Key.BORDER, "border");
+    funcUtility(Css.Key.BORDER_TOP, "border-top");
+    funcUtility(Css.Key.BORDER_RIGHT, "border-right");
+    funcUtility(Css.Key.BORDER_BOTTOM, "border-bottom");
+    funcUtility(Css.Key.BORDER_LEFT, "border-left");
 
     funcUtility(Css.Key.BORDER_COLLAPSE, "border-collapse");
   }
@@ -858,6 +862,12 @@ final class CssEngine implements Css.StyleSheet.Config, CssGeneratorScanner.Adap
 
     PIXEL,
 
+    DIMENSION,
+
+    HASH,
+
+    HEX_COLOR,
+
     SPACE,
 
     UNKNOWN;
@@ -901,6 +911,10 @@ final class CssEngine implements Css.StyleSheet.Config, CssGeneratorScanner.Adap
             beforeDot = 1;
           }
 
+          else if (c == '#') {
+            parser = FormatValue.HASH;
+          }
+
           else {
             parser = FormatValue.UNKNOWN;
           }
@@ -910,11 +924,11 @@ final class CssEngine implements Css.StyleSheet.Config, CssGeneratorScanner.Adap
           if (c == '_') {
             parser = FormatValue.SPACE;
 
-            String keyword;
-            keyword = value.substring(wordStart, idx);
+            String word;
+            word = value.substring(wordStart, idx);
 
             String formatted;
-            formatted = formatResultKeyword(keyword);
+            formatted = formatResultKeyword(word);
 
             sb.append(formatted);
           }
@@ -939,6 +953,14 @@ final class CssEngine implements Css.StyleSheet.Config, CssGeneratorScanner.Adap
             beforeDot++;
           }
 
+          else if (c == 'p') {
+            parser = FormatValue.NUMBER_P;
+          }
+
+          else if (Ascii.isLetter(c)) {
+            parser = FormatValue.DIMENSION;
+          }
+
           else if (c == '.') {
             parser = FormatValue.DECIMAL;
 
@@ -947,10 +969,6 @@ final class CssEngine implements Css.StyleSheet.Config, CssGeneratorScanner.Adap
 
           else if (c == '/') {
             parser = FormatValue.RATIO;
-          }
-
-          else if (c == 'p') {
-            parser = FormatValue.NUMBER_P;
           }
 
           else {
@@ -985,12 +1003,16 @@ final class CssEngine implements Css.StyleSheet.Config, CssGeneratorScanner.Adap
             afterDot++;
           }
 
-          else if (c == '/') {
-            parser = FormatValue.RATIO;
-          }
-
           else if (c == 'p') {
             parser = FormatValue.NUMBER_P;
+          }
+
+          else if (Ascii.isLetter(c)) {
+            parser = FormatValue.DIMENSION;
+          }
+
+          else if (c == '/') {
+            parser = FormatValue.RATIO;
           }
 
           else {
@@ -1026,6 +1048,54 @@ final class CssEngine implements Css.StyleSheet.Config, CssGeneratorScanner.Adap
             px = formatResultPixel(digits, beforeDot, afterDot);
 
             sb.append(px);
+          }
+
+          else {
+            parser = FormatValue.UNKNOWN;
+          }
+        }
+
+        case DIMENSION -> {
+          if (c == '_') {
+            parser = FormatValue.SPACE;
+
+            String word;
+            word = value.substring(wordStart, idx);
+
+            sb.append(word);
+          }
+
+          else if (Ascii.isLetter(c)) {
+            parser = FormatValue.DIMENSION;
+          }
+
+          else {
+            parser = FormatValue.UNKNOWN;
+          }
+        }
+
+        case HASH -> {
+          if (Ascii.isHexDigit(c)) {
+            parser = FormatValue.HEX_COLOR;
+          }
+
+          else {
+            parser = FormatValue.UNKNOWN;
+          }
+        }
+
+        case HEX_COLOR -> {
+          if (c == '_') {
+            parser = FormatValue.SPACE;
+
+            String word;
+            word = value.substring(wordStart, idx);
+
+            sb.append(word);
+          }
+
+          else if (Ascii.isHexDigit(c)) {
+            parser = FormatValue.HEX_COLOR;
           }
 
           else {
@@ -1071,13 +1141,13 @@ final class CssEngine implements Css.StyleSheet.Config, CssGeneratorScanner.Adap
         yield formatResult(formatted);
       }
 
-      case INTEGER -> value;
+      case INTEGER -> formatResultDefault(value, wordStart);
 
       case INTEGER_DOT -> value;
 
-      case DECIMAL -> value;
+      case DECIMAL -> formatResultDefault(value, wordStart);
 
-      case RATIO -> value;
+      case RATIO -> formatResultDefault(value, wordStart);
 
       case NUMBER_P -> value;
 
@@ -1087,6 +1157,12 @@ final class CssEngine implements Css.StyleSheet.Config, CssGeneratorScanner.Adap
 
         yield formatResult(px);
       }
+
+      case DIMENSION -> formatResultDefault(value, wordStart);
+
+      case HASH -> formatResultDefault(value, wordStart);
+
+      case HEX_COLOR -> formatResultDefault(value, wordStart);
 
       case SPACE -> value;
 
@@ -1106,6 +1182,13 @@ final class CssEngine implements Css.StyleSheet.Config, CssGeneratorScanner.Adap
 
       return sb.toString();
     }
+  }
+
+  private String formatResultDefault(String value, int wordStart) {
+    String trailer;
+    trailer = trailer(value, wordStart);
+
+    return formatResult(trailer);
   }
 
   private String formatResultKeyword(String keyword) {

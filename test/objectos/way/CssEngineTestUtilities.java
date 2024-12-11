@@ -172,6 +172,13 @@ public class CssEngineTestUtilities {
         className("border-1px");
         className("border-2px_dashed");
         className("border-4px_solid_red-50");
+        className("border-top-solid");
+        className("border-top-dashed_red-500");
+        className("border-top-1rem_solid");
+        className("border-top-thick_double_#32a1ce");
+        className("border-right-2px");
+        className("border-bottom-2px_dotted");
+        className("border-left-medium_dashed_green");
       }
     }
 
@@ -183,6 +190,13 @@ public class CssEngineTestUtilities {
           .border-1px { border: 0.0625rem }
           .border-2px_dashed { border: 0.125rem dashed }
           .border-4px_solid_red-50 { border: 0.25rem solid var(--color-red-50) }
+          .border-top-solid { border-top: solid }
+          .border-top-dashed_red-500 { border-top: dashed var(--color-red-500) }
+          .border-top-1rem_solid { border-top: 1rem solid }
+          .border-top-thick_double_#32a1ce { border-top: thick double #32a1ce }
+          .border-right-2px { border-right: 0.125rem }
+          .border-bottom-2px_dotted { border-bottom: 0.125rem dotted }
+          .border-left-medium_dashed_green { border-left: medium dashed green }
         }
         """
     );

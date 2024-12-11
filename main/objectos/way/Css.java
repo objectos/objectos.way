@@ -303,6 +303,10 @@ public final class Css {
     TEXT_WRAP,
 
     BORDER,
+    BORDER_TOP,
+    BORDER_RIGHT,
+    BORDER_BOTTOM,
+    BORDER_LEFT,
 
     BORDER_RADIUS,
     BORDER_RADIUS_T,

@@ -23,6 +23,12 @@ final class Ascii {
     return '0' <= c && c <= '9';
   }
 
+  public static boolean isHexDigit(char c) {
+    return isDigit(c)
+        || 'A' <= c && c <= 'F'
+        || 'a' <= c && c <= 'f';
+  }
+
   public static boolean isLetter(char c) {
     return 'A' <= c && c <= 'Z'
         || 'a' <= c && c <= 'z';

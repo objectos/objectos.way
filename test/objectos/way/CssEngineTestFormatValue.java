@@ -32,16 +32,43 @@ public class CssEngineTestFormatValue {
   @Test(description = "arity: arity=2")
   public void arity01() {
     assertEquals(engine.formatValue(false, "2px_dashed"), "0.125rem dashed");
+    assertEquals(engine.formatValue(false, "1rem_solid"), "1rem solid");
   }
 
   @Test(description = "arity: arity=3")
   public void arity02() {
     assertEquals(engine.formatValue(false, "4px_solid_red-50"), "0.25rem solid var(--color-red-50)");
+    assertEquals(engine.formatValue(false, "thick_double_#32a1ce"), "thick double #32a1ce");
   }
 
   @Test(description = "color: valid color replace with var expr")
   public void color01() {
     assertEquals(engine.formatValue(false, "red-50"), "var(--color-red-50)");
+  }
+
+  @Test(description = "dimension: zero")
+  public void dimension01() {
+    assertEquals(engine.formatValue(false, "0rem"), "0rem");
+  }
+
+  @Test(description = "dimension: integer len=1")
+  public void dimension02() {
+    assertEquals(engine.formatValue(false, "3rem"), "3rem");
+  }
+
+  @Test(description = "dimension: integer len>1")
+  public void dimension03() {
+    assertEquals(engine.formatValue(false, "127vh"), "127vh");
+  }
+
+  @Test(description = "dimension: decimal fractional=1")
+  public void dimension04() {
+    assertEquals(engine.formatValue(false, "0.5rem"), "0.5rem");
+  }
+
+  @Test(description = "dimension: decimal fractional>1")
+  public void dimension05() {
+    assertEquals(engine.formatValue(false, "12.345s"), "12.345s");
   }
 
   @Test(description = "keyword: len=1")
