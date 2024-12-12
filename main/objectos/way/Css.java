@@ -219,6 +219,8 @@ public final class Css {
     BORDER_COLLAPSE(true),
     BORDER_SPACING(true),
     BORDER_RADIUS(true),
+    BOTTOM(true),
+    BOX_SHADOW(true),
 
     CLEAR(true),
     COLUMN_GAP(true),
@@ -246,7 +248,20 @@ public final class Css {
     GRID_TEMPLATE_COLUMNS(true),
     GRID_TEMPLATE_ROWS(true),
 
+    HEIGHT(true),
+
+    INSET(true),
+
+    JUSTIFY_CONTENT(true),
+    JUSTIFY_ITEMS(true),
+    JUSTIFY_SELF(true),
+
+    LEFT(true),
+
+    RIGHT(true),
     ROW_GAP(true),
+
+    TOP(true),
 
     _COLORS,
 
@@ -264,13 +279,8 @@ public final class Css {
 
     POSITION,
 
-    INSET,
     INSET_X,
     INSET_Y,
-    TOP,
-    RIGHT,
-    BOTTOM,
-    LEFT,
 
     Z_INDEX,
 
@@ -283,7 +293,6 @@ public final class Css {
     MARGIN_LEFT,
 
     SIZE,
-    HEIGHT,
     MAX_HEIGHT,
     MIN_HEIGHT,
     WIDTH,
@@ -304,7 +313,6 @@ public final class Css {
 
     LIST_STYLE_TYPE,
 
-    JUSTIFY_CONTENT,
     GAP_X,
     GAP_Y,
 
@@ -366,7 +374,6 @@ public final class Css {
 
     OPACITY,
 
-    BOX_SHADOW(true),
     BOX_SHADOW_COLOR,
 
     OUTLINE_STYLE,

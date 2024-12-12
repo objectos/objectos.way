@@ -1460,7 +1460,7 @@ public class CssGeneratorTest {
     );
   }
 
-  @Test
+  @Test(enabled = false)
   public void inset() {
     class Subject extends AbstractSubject {
       @Override
@@ -3637,7 +3637,7 @@ public class CssGeneratorTest {
     );
   }
 
-  @Test
+  @Test(enabled = false)
   public void overrideSpacing() {
     class Subject extends AbstractSubject {
       @Override

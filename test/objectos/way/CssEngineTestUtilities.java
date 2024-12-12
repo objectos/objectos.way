@@ -279,6 +279,28 @@ public class CssEngineTestUtilities {
   }
 
   @Test
+  public void bottom() {
+    class Subject extends AbstractSubject {
+      @Override
+      final void classes() {
+        className("bottom:auto");
+        className("bottom:0px");
+      }
+    }
+
+    test(
+        Subject.class,
+
+        """
+        @layer utilities {
+          .bottom\\:auto { bottom: auto }
+          .bottom\\:0px { bottom: 0px }
+        }
+        """
+    );
+  }
+
+  @Test
   public void boxShadow() {
     class Subject extends AbstractSubject {
       @Override
@@ -825,6 +847,165 @@ public class CssEngineTestUtilities {
   }
 
   @Test
+  public void height() {
+    class Subject extends AbstractSubject {
+      @Override
+      final void classes() {
+        className("height:auto");
+        className("height:50%");
+        className("height:calc(100%/3)");
+        className("height:32rx");
+      }
+    }
+
+    test(
+        Subject.class,
+
+        """
+        @layer utilities {
+          .height\\:auto { height: auto }
+          .height\\:50\\% { height: 50% }
+          .height\\:calc\\(100\\%\\/3\\) { height: calc(100%/3) }
+          .height\\:32rx { height: calc(32px / var(--rx) * 1rem) }
+        }
+        """
+    );
+  }
+
+  @Test
+  public void inset() {
+    class Subject extends AbstractSubject {
+      @Override
+      final void classes() {
+        className("inset:10px");
+        className("inset:4px_8px");
+        className("inset:5px_15px_10px");
+        className("inset:2.4em_3em_3em_3em");
+      }
+    }
+
+    test(
+        Subject.class,
+
+        """
+        @layer utilities {
+          .inset\\:10px { inset: 10px }
+          .inset\\:4px_8px { inset: 4px 8px }
+          .inset\\:5px_15px_10px { inset: 5px 15px 10px }
+          .inset\\:2\\.4em_3em_3em_3em { inset: 2.4em 3em 3em 3em }
+        }
+        """
+    );
+  }
+
+  @Test
+  public void justifyContent() {
+    class Subject extends AbstractSubject {
+      @Override
+      final void classes() {
+        className("justify-content:normal justify-content:flex-start");
+      }
+    }
+
+    test(
+        Subject.class,
+
+        """
+        @layer utilities {
+          .justify-content\\:normal { justify-content: normal }
+          .justify-content\\:flex-start { justify-content: flex-start }
+        }
+        """
+    );
+  }
+
+  @Test
+  public void justifyItems() {
+    class Subject extends AbstractSubject {
+      @Override
+      final void classes() {
+        className("justify-items:space-between justify-items:stretch");
+      }
+    }
+
+    test(
+        Subject.class,
+
+        """
+        @layer utilities {
+          .justify-items\\:space-between { justify-items: space-between }
+          .justify-items\\:stretch { justify-items: stretch }
+        }
+        """
+    );
+  }
+
+  @Test
+  public void justifySelf() {
+    class Subject extends AbstractSubject {
+      @Override
+      final void classes() {
+        className("justify-self:normal justify-self:right");
+      }
+    }
+
+    test(
+        Subject.class,
+
+        """
+        @layer utilities {
+          .justify-self\\:normal { justify-self: normal }
+          .justify-self\\:right { justify-self: right }
+        }
+        """
+    );
+  }
+
+  @Test
+  public void left() {
+    class Subject extends AbstractSubject {
+      @Override
+      final void classes() {
+        className("left:auto");
+        className("left:10px");
+      }
+    }
+
+    test(
+        Subject.class,
+
+        """
+        @layer utilities {
+          .left\\:auto { left: auto }
+          .left\\:10px { left: 10px }
+        }
+        """
+    );
+  }
+
+  @Test
+  public void right() {
+    class Subject extends AbstractSubject {
+      @Override
+      final void classes() {
+        className("right:auto");
+        className("right:10px");
+      }
+    }
+
+    test(
+        Subject.class,
+
+        """
+        @layer utilities {
+          .right\\:auto { right: auto }
+          .right\\:10px { right: 10px }
+        }
+        """
+    );
+  }
+
+  @Test
   public void rowGap() {
     class Subject extends AbstractSubject {
       @Override
@@ -841,6 +1022,30 @@ public class CssEngineTestUtilities {
         @layer utilities {
           .row-gap\\:0 { row-gap: 0 }
           .row-gap\\:1rem { row-gap: 1rem }
+        }
+        """
+    );
+  }
+
+  @Test
+  public void top() {
+    class Subject extends AbstractSubject {
+      @Override
+      final void classes() {
+        className("top:auto");
+        className("top:0px");
+        className("top:-2px");
+      }
+    }
+
+    test(
+        Subject.class,
+
+        """
+        @layer utilities {
+          .top\\:auto { top: auto }
+          .top\\:0px { top: 0px }
+          .top\\:-2px { top: -2px }
         }
         """
     );
