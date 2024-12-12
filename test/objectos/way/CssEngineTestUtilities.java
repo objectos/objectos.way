@@ -187,15 +187,15 @@ public class CssEngineTestUtilities {
 
         """
         @layer utilities {
-          .border-1px { border: 0.0625rem }
-          .border-2px_dashed { border: 0.125rem dashed }
-          .border-4px_solid_red-50 { border: 0.25rem solid var(--color-red-50) }
+          .border-1px { border: 1px }
+          .border-2px_dashed { border: 2px dashed }
+          .border-4px_solid_red-50 { border: 4px solid var(--color-red-50) }
           .border-top-solid { border-top: solid }
           .border-top-dashed_red-500 { border-top: dashed var(--color-red-500) }
           .border-top-1rem_solid { border-top: 1rem solid }
           .border-top-thick_double_#32a1ce { border-top: thick double #32a1ce }
-          .border-right-2px { border-right: 0.125rem }
-          .border-bottom-2px_dotted { border-bottom: 0.125rem dotted }
+          .border-right-2px { border-right: 2px }
+          .border-bottom-2px_dotted { border-bottom: 2px dotted }
           .border-left-medium_dashed_green { border-left: medium dashed green }
         }
         """
@@ -243,12 +243,12 @@ public class CssEngineTestUtilities {
 
         """
         @layer utilities {
-          .border-radius-10px { border-radius: 0.625rem }
-          .border-radius-10px_5\\% { border-radius: 0.625rem 5% }
-          .border-radius-2px_4px_2px { border-radius: 0.125rem 0.25rem 0.125rem }
-          .border-radius-1px_0_3px_4px { border-radius: 0.0625rem 0 0.1875rem 0.25rem }
-          .border-radius-10px\\/20px { border-radius: 0.625rem/1.25rem }
-          .border-radius-10px_5\\%_\\/_20px_30px { border-radius: 0.625rem 5% / 1.25rem 1.875rem }
+          .border-radius-10px { border-radius: 10px }
+          .border-radius-10px_5\\% { border-radius: 10px 5% }
+          .border-radius-2px_4px_2px { border-radius: 2px 4px 2px }
+          .border-radius-1px_0_3px_4px { border-radius: 1px 0 3px 4px }
+          .border-radius-10px\\/20px { border-radius: 10px/20px }
+          .border-radius-10px_5\\%_\\/_20px_30px { border-radius: 10px 5% / 20px 30px }
         }
         """
     );
@@ -270,7 +270,7 @@ public class CssEngineTestUtilities {
 
         """
         @layer utilities {
-          .border-spacing-1px { border-spacing: 0.0625rem }
+          .border-spacing-1px { border-spacing: 1px }
           .border-spacing-1cm_2em { border-spacing: 1cm 2em }
           .border-spacing-unset { border-spacing: unset }
         }

@@ -31,20 +31,20 @@ public class CssEngineTestFormatValue {
 
   @Test(description = "arity: arity=2")
   public void arity02() {
-    assertEquals(engine.formatValue(false, "2px_dashed"), "0.125rem dashed");
+    assertEquals(engine.formatValue(false, "2px_dashed"), "2px dashed");
     assertEquals(engine.formatValue(false, "1rem_solid"), "1rem solid");
-    assertEquals(engine.formatValue(false, "10px_5%"), "0.625rem 5%");
+    assertEquals(engine.formatValue(false, "10px_5%"), "10px 5%");
   }
 
   @Test(description = "arity: arity=3")
   public void arity03() {
-    assertEquals(engine.formatValue(false, "4px_solid_red-50"), "0.25rem solid var(--color-red-50)");
+    assertEquals(engine.formatValue(false, "4px_solid_red-50"), "4px solid var(--color-red-50)");
     assertEquals(engine.formatValue(false, "thick_double_#32a1ce"), "thick double #32a1ce");
   }
 
   @Test(description = "arity: arity=4")
   public void arity04() {
-    assertEquals(engine.formatValue(false, "1px_0_3px_4px"), "0.0625rem 0 0.1875rem 0.25rem");
+    assertEquals(engine.formatValue(false, "1px_0_3px_4px"), "1px 0 3px 4px");
   }
 
   @Test(description = "color: valid color replace with var expr")
@@ -114,35 +114,42 @@ public class CssEngineTestFormatValue {
     assertEquals(engine.formatValue(false, "1.23%"), "1.23%");
   }
 
-  @Test(description = "pixel: zero")
-  public void pixel01() {
-    assertEquals(engine.formatValue(false, "0px"), "0px");
-  }
-
-  @Test(description = "pixel: value < 16px")
-  public void pixel02() {
-    assertEquals(engine.formatValue(false, "0.16px"), "0.01rem");
-    assertEquals(engine.formatValue(false, "1px"), "0.0625rem");
-    assertEquals(engine.formatValue(false, "2px"), "0.125rem");
-    assertEquals(engine.formatValue(false, "8px"), "0.5rem");
-    assertEquals(engine.formatValue(false, "10px"), "0.625rem");
-  }
-
-  @Test(description = "pixel: value >= 16px")
-  public void pixel03() {
-    assertEquals(engine.formatValue(false, "16px"), "1rem");
-    assertEquals(engine.formatValue(false, "44px"), "2.75rem");
-    assertEquals(engine.formatValue(false, "48px"), "3rem");
-  }
-
   @Test(description = "ratio: integer/integer")
   public void ratio01() {
     assertEquals(engine.formatValue(false, "16/9"), "16/9");
   }
 
+  @Test(description = "rx: zero")
+  public void rx01() {
+    assertEquals(engine.formatValue(false, "0rx"), "calc(0px / var(--rx) * 1rem)");
+  }
+
+  @Test(description = "rx: integer")
+  public void rx02() {
+    assertEquals(engine.formatValue(false, "32rx"), "calc(32px / var(--rx) * 1rem)");
+  }
+
+  @Test(description = "rx: decimal")
+  public void rx03() {
+    assertEquals(engine.formatValue(false, "144.5rx"), "calc(144.5px / var(--rx) * 1rem)");
+  }
+
+  @Test(description = "rx: looks like rx but it is not")
+  public void rx04() {
+    assertEquals(engine.formatValue(false, "100ry"), "100ry");
+    assertEquals(engine.formatValue(false, "100rxx"), "100rxx");
+    assertEquals(engine.formatValue(false, "100rpx"), "100rpx");
+  }
+
+  @Test(description = "rx: arity 2")
+  public void rx05() {
+    assertEquals(engine.formatValue(false, "10rx_solid"), "calc(10px / var(--rx) * 1rem) solid");
+    assertEquals(engine.formatValue(false, "10px_20rx"), "10px calc(20px / var(--rx) * 1rem)");
+  }
+
   @Test(description = "slash")
   public void slash01() {
-    assertEquals(engine.formatValue(false, "10px/20px"), "0.625rem/1.25rem");
+    assertEquals(engine.formatValue(false, "10px/20px"), "10px/20px");
   }
 
 }

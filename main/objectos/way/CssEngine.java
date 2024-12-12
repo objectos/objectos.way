@@ -860,19 +860,9 @@ final class CssEngine implements Css.StyleSheet.Config, CssGeneratorScanner.Adap
 
     DECIMAL,
 
-    RATIO,
+    NUMBER_R,
 
-    NUMBER_P,
-
-    PIXEL,
-
-    DIMENSION,
-
-    PERCENTAGE,
-
-    HASH,
-
-    HEX_COLOR,
+    RX,
 
     SPACE,
 
@@ -883,16 +873,8 @@ final class CssEngine implements Css.StyleSheet.Config, CssGeneratorScanner.Adap
   @Lang.VisibleForTesting
   final String formatValue(boolean negative, String value) {
     // index of the first char of the word
-    int wordStart = 0;
-
-    // accumulate all of the digits here
-    long digits = 0L;
-
-    // let's keep track of now many digits before the '.' we have found
-    int beforeDot = 0;
-
-    // let's keep track of how many digits after the '.' we have found
-    int afterDot = 0;
+    int wordStart;
+    wordStart = 0;
 
     FormatValue parser;
     parser = FormatValue.NORMAL;
@@ -917,16 +899,6 @@ final class CssEngine implements Css.StyleSheet.Config, CssGeneratorScanner.Adap
 
           else if (Ascii.isDigit(c)) {
             parser = FormatValue.INTEGER;
-
-            wordStart = idx;
-
-            digits = Ascii.digitToInt(c);
-
-            beforeDot = 1;
-          }
-
-          else if (c == '#') {
-            parser = FormatValue.HASH;
 
             wordStart = idx;
           }
@@ -970,36 +942,16 @@ final class CssEngine implements Css.StyleSheet.Config, CssGeneratorScanner.Adap
             sb.append(word);
           }
 
+          else if (c == 'r') {
+            parser = FormatValue.NUMBER_R;
+          }
+
           else if (Ascii.isDigit(c)) {
             parser = FormatValue.INTEGER;
-
-            digits *= 10;
-
-            digits += Ascii.digitToInt(c);
-
-            beforeDot++;
-          }
-
-          else if (c == 'p') {
-            parser = FormatValue.NUMBER_P;
-          }
-
-          else if (Ascii.isLetter(c)) {
-            parser = FormatValue.DIMENSION;
-          }
-
-          else if (c == '%') {
-            parser = FormatValue.PERCENTAGE;
           }
 
           else if (c == '.') {
             parser = FormatValue.DECIMAL;
-
-            afterDot = 0;
-          }
-
-          else if (c == '/') {
-            parser = FormatValue.RATIO;
           }
 
           else {
@@ -1010,12 +962,6 @@ final class CssEngine implements Css.StyleSheet.Config, CssGeneratorScanner.Adap
         case INTEGER_DOT -> {
           if (Ascii.isDigit(c)) {
             parser = FormatValue.DECIMAL;
-
-            digits *= 10;
-
-            digits += Ascii.digitToInt(c);
-
-            afterDot++;
           }
 
           else {
@@ -1026,28 +972,10 @@ final class CssEngine implements Css.StyleSheet.Config, CssGeneratorScanner.Adap
         case DECIMAL -> {
           if (Ascii.isDigit(c)) {
             parser = FormatValue.DECIMAL;
-
-            digits *= 10;
-
-            digits += Ascii.digitToInt(c);
-
-            afterDot++;
           }
 
-          else if (c == 'p') {
-            parser = FormatValue.NUMBER_P;
-          }
-
-          else if (Ascii.isLetter(c)) {
-            parser = FormatValue.DIMENSION;
-          }
-
-          else if (c == '%') {
-            parser = FormatValue.PERCENTAGE;
-          }
-
-          else if (c == '/') {
-            parser = FormatValue.RATIO;
+          else if (c == 'r') {
+            parser = FormatValue.NUMBER_R;
           }
 
           else {
@@ -1055,45 +983,9 @@ final class CssEngine implements Css.StyleSheet.Config, CssGeneratorScanner.Adap
           }
         }
 
-        case RATIO -> {
-          if (Ascii.isDigit(c)) {
-            parser = FormatValue.RATIO;
-          }
-
-          else {
-            throw new UnsupportedOperationException("Implement me");
-          }
-        }
-
-        case NUMBER_P -> {
+        case NUMBER_R -> {
           if (c == 'x') {
-            parser = FormatValue.PIXEL;
-          }
-
-          else {
-            throw new UnsupportedOperationException("Implement me");
-          }
-        }
-
-        case PIXEL -> {
-          if (c == '_') {
-            parser = FormatValue.SPACE;
-
-            String px;
-            px = formatResultPixel(digits, beforeDot, afterDot);
-
-            sb.append(px);
-          }
-
-          else if (c == '/') {
-            parser = FormatValue.NORMAL;
-
-            String px;
-            px = formatResultPixel(digits, beforeDot, afterDot);
-
-            sb.append(px);
-
-            sb.append('/');
+            parser = FormatValue.RX;
           }
 
           else {
@@ -1101,84 +993,11 @@ final class CssEngine implements Css.StyleSheet.Config, CssGeneratorScanner.Adap
           }
         }
 
-        case DIMENSION -> {
+        case RX -> {
           if (c == '_') {
             parser = FormatValue.SPACE;
 
-            String word;
-            word = value.substring(wordStart, idx);
-
-            sb.append(word);
-          }
-
-          else if (c == '/') {
-            parser = FormatValue.NORMAL;
-
-            String word;
-            word = value.substring(wordStart, idx);
-
-            sb.append(word);
-
-            sb.append('/');
-          }
-
-          else if (Ascii.isLetter(c)) {
-            parser = FormatValue.DIMENSION;
-          }
-
-          else {
-            parser = FormatValue.UNKNOWN;
-          }
-        }
-
-        case PERCENTAGE -> {
-          if (c == '_') {
-            parser = FormatValue.SPACE;
-
-            String word;
-            word = value.substring(wordStart, idx);
-
-            sb.append(word);
-          }
-
-          else if (c == '/') {
-            parser = FormatValue.NORMAL;
-
-            String word;
-            word = value.substring(wordStart, idx);
-
-            sb.append(word);
-
-            sb.append('/');
-          }
-
-          else {
-            parser = FormatValue.UNKNOWN;
-          }
-        }
-
-        case HASH -> {
-          if (Ascii.isHexDigit(c)) {
-            parser = FormatValue.HEX_COLOR;
-          }
-
-          else {
-            parser = FormatValue.UNKNOWN;
-          }
-        }
-
-        case HEX_COLOR -> {
-          if (c == '_') {
-            parser = FormatValue.SPACE;
-
-            String word;
-            word = value.substring(wordStart, idx);
-
-            sb.append(word);
-          }
-
-          else if (Ascii.isHexDigit(c)) {
-            parser = FormatValue.HEX_COLOR;
+            formatResultRx(value, wordStart, idx);
           }
 
           else {
@@ -1232,24 +1051,13 @@ final class CssEngine implements Css.StyleSheet.Config, CssGeneratorScanner.Adap
 
       case DECIMAL -> formatResultDefault(value, wordStart);
 
-      case RATIO -> formatResultDefault(value, wordStart);
+      case NUMBER_R -> formatResultDefault(value, wordStart);
 
-      case NUMBER_P -> value;
+      case RX -> {
+        formatResultRx(value, wordStart, value.length());
 
-      case PIXEL -> {
-        String px;
-        px = formatResultPixel(digits, beforeDot, afterDot);
-
-        yield formatResult(px);
+        yield sb.toString();
       }
-
-      case DIMENSION -> formatResultDefault(value, wordStart);
-
-      case PERCENTAGE -> formatResultDefault(value, wordStart);
-
-      case HASH -> formatResultDefault(value, wordStart);
-
-      case HEX_COLOR -> formatResultDefault(value, wordStart);
 
       case SPACE -> formatResultDefault(value, wordStart);
 
@@ -1285,110 +1093,17 @@ final class CssEngine implements Css.StyleSheet.Config, CssGeneratorScanner.Adap
     return colors.getOrDefault(keyword, keyword);
   }
 
-  private String formatResultPixel(long digits, int beforeDot, int afterDot) {
-    // don't convert 0px
-    if (digits == 0) {
-      return "0px";
-    }
+  private void formatResultRx(String value, int wordStart, int wordEnd) {
+    int endIndex = wordEnd - 2; // remove the rx unit
 
-    int scale;
-    scale = Math.max(afterDot, 5);
+    String rx;
+    rx = value.substring(wordStart, endIndex);
 
-    double dividend;
-    dividend = digits;
+    sb.append("calc(");
 
-    if (scale > afterDot) {
-      dividend *= Math.pow(10D, scale - afterDot);
-    }
+    sb.append(rx);
 
-    // round up if necessary...
-    dividend += 5;
-
-    double multiplier;
-    multiplier = Math.pow(10D, scale);
-
-    double divisor;
-    divisor = 16L * multiplier;
-
-    double result;
-    result = dividend / divisor;
-
-    long unscaled;
-    unscaled = (long) (result * multiplier);
-
-    StringBuilder out;
-    out = new StringBuilder();
-
-    // print the decimal digits
-
-    boolean append;
-    append = false;
-
-    for (int idx = 0; idx < scale; idx++) {
-      int thisDigit;
-      thisDigit = (int) (unscaled % 10L);
-
-      unscaled /= 10L;
-
-      if (thisDigit != 0) {
-        append = true;
-      }
-
-      if (!append) {
-        continue;
-      }
-
-      out.append(thisDigit);
-    }
-
-    if (append) {
-      out.append('.');
-    }
-
-    // print the integer digits
-
-    int nonZeroCount;
-    nonZeroCount = 0;
-
-    int zeroCount;
-    zeroCount = 0;
-
-    for (int idx = 0, max = beforeDot; idx < max; idx++) {
-      int thisDigit;
-      thisDigit = (int) (unscaled % 10L);
-
-      if (thisDigit != 0) {
-        nonZeroCount++;
-
-        zeroCount = 0;
-      } else {
-        zeroCount++;
-      }
-
-      unscaled /= 10L;
-
-      out.append(thisDigit);
-    }
-
-    if (zeroCount > 1 && nonZeroCount == 0) {
-      int length;
-      length = out.length();
-
-      out.setLength(length - zeroCount + 1);
-    }
-
-    else if (zeroCount > 0 && nonZeroCount > 0) {
-      int length;
-      length = out.length();
-
-      out.setLength(length - zeroCount);
-    }
-
-    out.reverse();
-
-    out.append("rem");
-
-    return out.toString();
+    sb.append("px / var(--rx) * 1rem)");
   }
 
   // ##################################################################
