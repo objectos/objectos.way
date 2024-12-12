@@ -204,6 +204,50 @@ public final class Css {
 
   enum Key {
 
+    ALIGN_CONTENT(true),
+    ALIGN_ITEMS(true),
+    ALIGN_SELF(true),
+    APPEARANCE(true),
+    ASPECT_RATIO(true),
+
+    BACKGROUND_COLOR(true),
+    BORDER(true),
+    /**/BORDER_TOP(true),
+    /**/BORDER_RIGHT(true),
+    /**/BORDER_BOTTOM(true),
+    /**/BORDER_LEFT(true),
+    BORDER_COLLAPSE(true),
+    BORDER_SPACING(true),
+    BORDER_RADIUS(true),
+
+    CLEAR(true),
+    COLUMN_GAP(true),
+    CURSOR(true),
+
+    DISPLAY(true),
+
+    FLEX(true),
+    FLEX_BASIS(true),
+    FLEX_DIRECTION(true),
+    FLEX_GROW(true),
+    FLEX_SHRINK(true),
+    FLEX_WRAP(true),
+    FLOAT(true),
+    FILL(true),
+    FONT_SIZE(true),
+    FONT_STYLE(true),
+    FONT_WEIGHT(true),
+
+    GAP(true),
+    GRID_COLUMN(true),
+    GRID_COLUMN_END(true),
+    GRID_COLUMN_START(true),
+    GRID_TEMPLATE(true),
+    GRID_TEMPLATE_COLUMNS(true),
+    GRID_TEMPLATE_ROWS(true),
+
+    ROW_GAP(true),
+
     _COLORS,
 
     _SPACING,
@@ -230,13 +274,6 @@ public final class Css {
 
     Z_INDEX,
 
-    GRID_COLUMN,
-    GRID_COLUMN_START,
-    GRID_COLUMN_END,
-
-    FLOAT(true),
-    CLEAR(true),
-
     MARGIN,
     MARGIN_X,
     MARGIN_Y,
@@ -245,9 +282,6 @@ public final class Css {
     MARGIN_BOTTOM,
     MARGIN_LEFT,
 
-    DISPLAY(true),
-
-    ASPECT_RATIO(true),
     SIZE,
     HEIGHT,
     MAX_HEIGHT,
@@ -256,15 +290,8 @@ public final class Css {
     MAX_WIDTH,
     MIN_WIDTH,
 
-    FLEX(true),
-    FLEX_GROW(true),
-    FLEX_SHRINK(true),
-    FLEX_BASIS(true),
-
     TABLE_LAYOUT,
 
-    BORDER_COLLAPSE(true),
-    BORDER_SPACING(true),
     BORDER_SPACING_X,
     BORDER_SPACING_Y,
 
@@ -273,27 +300,13 @@ public final class Css {
     TRANSLATE_Y,
     TRANSFORM,
 
-    CURSOR(true),
-
     USER_SELECT,
 
     LIST_STYLE_TYPE,
 
-    APPEARANCE(true),
-
-    GRID_TEMPLATE_COLUMNS,
-    GRID_TEMPLATE_ROWS,
-
-    FLEX_DIRECTION(true),
-    FLEX_WRAP(true),
-    ALIGN_CONTENT(true),
-    ALIGN_ITEMS(true),
     JUSTIFY_CONTENT,
-    GAP,
     GAP_X,
     GAP_Y,
-
-    ALIGN_SELF(true),
 
     OVERFLOW,
     OVERFLOW_X,
@@ -303,13 +316,6 @@ public final class Css {
     WHITESPACE,
     TEXT_WRAP,
 
-    BORDER(true),
-    BORDER_TOP(true),
-    BORDER_RIGHT(true),
-    BORDER_BOTTOM(true),
-    BORDER_LEFT(true),
-
-    BORDER_RADIUS(true),
     BORDER_RADIUS_T,
     BORDER_RADIUS_R,
     BORDER_RADIUS_B,
@@ -337,9 +343,6 @@ public final class Css {
     BORDER_COLOR_BOTTOM,
     BORDER_COLOR_LEFT,
 
-    BACKGROUND_COLOR(true),
-
-    FILL(true),
     STROKE,
     STROKE_WIDTH,
 
@@ -353,10 +356,6 @@ public final class Css {
 
     TEXT_ALIGN,
     VERTICAL_ALIGN,
-
-    FONT_SIZE(true),
-    FONT_WEIGHT(true),
-    FONT_STYLE(true),
 
     LINE_HEIGHT,
 

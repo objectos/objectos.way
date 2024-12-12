@@ -322,6 +322,28 @@ public class CssEngineTestUtilities {
   }
 
   @Test
+  public void columnGap() {
+    class Subject extends AbstractSubject {
+      @Override
+      final void classes() {
+        className("column-gap:0");
+        className("column-gap:1rem");
+      }
+    }
+
+    test(
+        Subject.class,
+
+        """
+        @layer utilities {
+          .column-gap\\:0 { column-gap: 0 }
+          .column-gap\\:1rem { column-gap: 1rem }
+        }
+        """
+    );
+  }
+
+  @Test
   public void content() {
     class Subject extends AbstractSubject {
       @Override
@@ -625,6 +647,200 @@ public class CssEngineTestUtilities {
         @layer utilities {
           .font-weight\\:400 { font-weight: 400 }
           .font-weight\\:normal { font-weight: normal }
+        }
+        """
+    );
+  }
+
+  @Test
+  public void gap() {
+    class Subject extends AbstractSubject {
+      @Override
+      final void classes() {
+        className("gap:0");
+        className("gap:1rem");
+      }
+    }
+
+    test(
+        Subject.class,
+
+        """
+        @layer utilities {
+          .gap\\:0 { gap: 0 }
+          .gap\\:1rem { gap: 1rem }
+        }
+        """
+    );
+  }
+
+  @Test
+  public void gridColumn() {
+    class Subject extends AbstractSubject {
+      @Override
+      final void classes() {
+        className("grid-column:auto");
+        className("grid-column:span_1/span_1");
+        className("grid-column:1/-1");
+      }
+    }
+
+    test(
+        Subject.class,
+
+        """
+        @layer utilities {
+          .grid-column\\:auto { grid-column: auto }
+          .grid-column\\:span_1\\/span_1 { grid-column: span 1/span 1 }
+          .grid-column\\:1\\/-1 { grid-column: 1/-1 }
+        }
+        """
+    );
+  }
+
+  @Test
+  public void gridColumnEnd() {
+    class Subject extends AbstractSubject {
+      @Override
+      final void classes() {
+        className("grid-column-end:auto");
+        className("grid-column-end:4");
+        className("grid-column-end:-1");
+        className("grid-column-end:span_3");
+      }
+    }
+
+    test(
+        Subject.class,
+
+        """
+        @layer utilities {
+          .grid-column-end\\:auto { grid-column-end: auto }
+          .grid-column-end\\:4 { grid-column-end: 4 }
+          .grid-column-end\\:-1 { grid-column-end: -1 }
+          .grid-column-end\\:span_3 { grid-column-end: span 3 }
+        }
+        """
+    );
+  }
+
+  @Test
+  public void gridColumnStart() {
+    class Subject extends AbstractSubject {
+      @Override
+      final void classes() {
+        className("grid-column-start:auto");
+        className("grid-column-start:4");
+        className("grid-column-start:-1");
+        className("grid-column-start:span_4");
+      }
+    }
+
+    test(
+        Subject.class,
+
+        """
+        @layer utilities {
+          .grid-column-start\\:auto { grid-column-start: auto }
+          .grid-column-start\\:4 { grid-column-start: 4 }
+          .grid-column-start\\:-1 { grid-column-start: -1 }
+          .grid-column-start\\:span_4 { grid-column-start: span 4 }
+        }
+        """
+    );
+  }
+
+  @Test
+  public void gridTemplate() {
+    class Subject extends AbstractSubject {
+      @Override
+      final void classes() {
+        className("grid-template:none");
+        className("grid-template:'a_a_a'_'b_b_b'");
+        className("grid-template:100px_1fr_/_50px_1fr");
+      }
+    }
+
+    test(
+        Subject.class,
+
+        """
+        @layer utilities {
+          .grid-template\\:none { grid-template: none }
+          .grid-template\\:'a_a_a'_'b_b_b' { grid-template: 'a a a' 'b b b' }
+          .grid-template\\:100px_1fr_\\/_50px_1fr { grid-template: 100px 1fr / 50px 1fr }
+        }
+        """
+    );
+  }
+
+  @Test
+  public void gridTemplateColumns() {
+    class Subject extends AbstractSubject {
+      @Override
+      final void classes() {
+        className("grid-template-columns:none");
+        className("grid-template-columns:100px_1fr");
+        className("grid-template-columns:minmax(100px,1fr)");
+      }
+    }
+
+    test(
+        Subject.class,
+
+        """
+        @layer utilities {
+          .grid-template-columns\\:none { grid-template-columns: none }
+          .grid-template-columns\\:100px_1fr { grid-template-columns: 100px 1fr }
+          .grid-template-columns\\:minmax\\(100px\\2c 1fr\\) { grid-template-columns: minmax(100px,1fr) }
+        }
+        """
+    );
+  }
+
+  @Test
+  public void gridTemplateRows() {
+    class Subject extends AbstractSubject {
+      @Override
+      final void classes() {
+        className("grid-template-rows:none");
+        className("grid-template-rows:100px_1fr");
+        className("grid-template-rows:minmax(100px,1fr)");
+        className("grid-template-rows:repeat(3,200px)");
+      }
+    }
+
+    test(
+        Subject.class,
+
+        """
+        @layer utilities {
+          .grid-template-rows\\:none { grid-template-rows: none }
+          .grid-template-rows\\:100px_1fr { grid-template-rows: 100px 1fr }
+          .grid-template-rows\\:minmax\\(100px\\2c 1fr\\) { grid-template-rows: minmax(100px,1fr) }
+          .grid-template-rows\\:repeat\\(3\\2c 200px\\) { grid-template-rows: repeat(3,200px) }
+        }
+        """
+    );
+  }
+
+  @Test
+  public void rowGap() {
+    class Subject extends AbstractSubject {
+      @Override
+      final void classes() {
+        className("row-gap:0");
+        className("row-gap:1rem");
+      }
+    }
+
+    test(
+        Subject.class,
+
+        """
+        @layer utilities {
+          .row-gap\\:0 { row-gap: 0 }
+          .row-gap\\:1rem { row-gap: 1rem }
         }
         """
     );
