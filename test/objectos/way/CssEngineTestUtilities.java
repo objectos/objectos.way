@@ -984,6 +984,334 @@ public class CssEngineTestUtilities {
   }
 
   @Test
+  public void letterSpacing() {
+    class Subject extends AbstractSubject {
+      @Override
+      final void classes() {
+        className("letter-spacing:-0.05em");
+        className("letter-spacing:0em");
+        className("letter-spacing:0.1em");
+      }
+    }
+
+    test(
+        Subject.class,
+
+        """
+        @layer utilities {
+          .letter-spacing\\:-0\\.05em { letter-spacing: -0.05em }
+          .letter-spacing\\:0em { letter-spacing: 0em }
+          .letter-spacing\\:0\\.1em { letter-spacing: 0.1em }
+        }
+        """
+    );
+  }
+
+  @Test
+  public void lineHeight() {
+    class Subject extends AbstractSubject {
+      @Override
+      final void classes() {
+        className("line-height:1");
+        className("line-height:150%");
+        className("line-height:32px");
+      }
+    }
+
+    test(
+        Subject.class,
+
+        """
+        @layer utilities {
+          .line-height\\:1 { line-height: 1 }
+          .line-height\\:150\\% { line-height: 150% }
+          .line-height\\:32px { line-height: 32px }
+        }
+        """
+    );
+  }
+
+  @Test
+  public void listStyleType() {
+    class Subject extends AbstractSubject {
+      @Override
+      final void classes() {
+        className("list-style-type:none list-style-type:square list-style-type:upper-roman");
+      }
+    }
+
+    test(
+        Subject.class,
+
+        """
+        @layer utilities {
+          .list-style-type\\:none { list-style-type: none }
+          .list-style-type\\:square { list-style-type: square }
+          .list-style-type\\:upper-roman { list-style-type: upper-roman }
+        }
+        """
+    );
+  }
+
+  @Test
+  public void margin() {
+    class Subject extends AbstractSubject {
+      @Override
+      final void classes() {
+        className("margin:auto");
+        className("margin:0");
+        className("margin:1em");
+        className("margin:5%_0");
+        className("margin:10px_50px_20px");
+        className("margin:10px_50px_20px_auto");
+      }
+    }
+
+    test(
+        Subject.class,
+
+        """
+        @layer utilities {
+          .margin\\:auto { margin: auto }
+          .margin\\:0 { margin: 0 }
+          .margin\\:1em { margin: 1em }
+          .margin\\:5\\%_0 { margin: 5% 0 }
+          .margin\\:10px_50px_20px { margin: 10px 50px 20px }
+          .margin\\:10px_50px_20px_auto { margin: 10px 50px 20px auto }
+        }
+        """
+    );
+  }
+
+  @Test
+  public void marginBlock() {
+    class Subject extends AbstractSubject {
+      @Override
+      final void classes() {
+        className("margin-block:auto");
+        className("margin-block:0.25rem");
+        className("margin-block:1em_2em");
+      }
+    }
+
+    test(
+        Subject.class,
+
+        """
+        @layer utilities {
+          .margin-block\\:auto { margin-block: auto }
+          .margin-block\\:0\\.25rem { margin-block: 0.25rem }
+          .margin-block\\:1em_2em { margin-block: 1em 2em }
+        }
+        """
+    );
+  }
+
+  @Test
+  public void marginBottom() {
+    class Subject extends AbstractSubject {
+      @Override
+      final void classes() {
+        className("margin-bottom:auto");
+        className("margin-bottom:0.25rem");
+      }
+    }
+
+    test(
+        Subject.class,
+
+        """
+        @layer utilities {
+          .margin-bottom\\:auto { margin-bottom: auto }
+          .margin-bottom\\:0\\.25rem { margin-bottom: 0.25rem }
+        }
+        """
+    );
+  }
+
+  @Test
+  public void marginInline() {
+    class Subject extends AbstractSubject {
+      @Override
+      final void classes() {
+        className("margin-inline:auto");
+        className("margin-inline:0.25rem");
+        className("margin-inline:1em_2em");
+      }
+    }
+
+    test(
+        Subject.class,
+
+        """
+        @layer utilities {
+          .margin-inline\\:auto { margin-inline: auto }
+          .margin-inline\\:0\\.25rem { margin-inline: 0.25rem }
+          .margin-inline\\:1em_2em { margin-inline: 1em 2em }
+        }
+        """
+    );
+  }
+
+  @Test
+  public void marginLeft() {
+    class Subject extends AbstractSubject {
+      @Override
+      final void classes() {
+        className("margin-left:auto");
+        className("margin-left:0.25rem");
+      }
+    }
+
+    test(
+        Subject.class,
+
+        """
+        @layer utilities {
+          .margin-left\\:auto { margin-left: auto }
+          .margin-left\\:0\\.25rem { margin-left: 0.25rem }
+        }
+        """
+    );
+  }
+
+  @Test
+  public void marginRight() {
+    class Subject extends AbstractSubject {
+      @Override
+      final void classes() {
+        className("margin-right:auto");
+        className("margin-right:0.25rem");
+      }
+    }
+
+    test(
+        Subject.class,
+
+        """
+        @layer utilities {
+          .margin-right\\:auto { margin-right: auto }
+          .margin-right\\:0\\.25rem { margin-right: 0.25rem }
+        }
+        """
+    );
+  }
+
+  @Test
+  public void marginTop() {
+    class Subject extends AbstractSubject {
+      @Override
+      final void classes() {
+        className("margin-top:auto");
+        className("margin-top:0.25rem");
+      }
+    }
+
+    test(
+        Subject.class,
+
+        """
+        @layer utilities {
+          .margin-top\\:auto { margin-top: auto }
+          .margin-top\\:0\\.25rem { margin-top: 0.25rem }
+        }
+        """
+    );
+  }
+
+  @Test
+  public void maxHeight() {
+    class Subject extends AbstractSubject {
+      @Override
+      final void classes() {
+        className("max-height:none");
+        className("max-height:max-content");
+        className("max-height:100%");
+      }
+    }
+
+    test(
+        Subject.class,
+
+        """
+        @layer utilities {
+          .max-height\\:none { max-height: none }
+          .max-height\\:max-content { max-height: max-content }
+          .max-height\\:100\\% { max-height: 100% }
+        }
+        """
+    );
+  }
+
+  @Test
+  public void maxWidth() {
+    class Subject extends AbstractSubject {
+      @Override
+      final void classes() {
+        className("max-width:none");
+        className("max-width:1000px");
+        className("max-width:var(--breakpoint-xl)");
+      }
+    }
+
+    test(
+        Subject.class,
+
+        """
+        @layer utilities {
+          .max-width\\:none { max-width: none }
+          .max-width\\:1000px { max-width: 1000px }
+          .max-width\\:var\\(--breakpoint-xl\\) { max-width: var(--breakpoint-xl) }
+        }
+        """
+    );
+  }
+
+  @Test
+  public void minHeight() {
+    class Subject extends AbstractSubject {
+      @Override
+      final void classes() {
+        className("min-height:100%");
+        className("min-height:100vh");
+      }
+    }
+
+    test(
+        Subject.class,
+
+        """
+        @layer utilities {
+          .min-height\\:100\\% { min-height: 100% }
+          .min-height\\:100vh { min-height: 100vh }
+        }
+        """
+    );
+  }
+
+  @Test
+  public void minWidth() {
+    class Subject extends AbstractSubject {
+      @Override
+      final void classes() {
+        className("min-width:100%");
+        className("min-width:max-content");
+      }
+    }
+
+    test(
+        Subject.class,
+
+        """
+        @layer utilities {
+          .min-width\\:100\\% { min-width: 100% }
+          .min-width\\:max-content { min-width: max-content }
+        }
+        """
+    );
+  }
+
+  @Test
   public void right() {
     class Subject extends AbstractSubject {
       @Override

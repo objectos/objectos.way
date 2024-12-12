@@ -257,6 +257,21 @@ public final class Css {
     JUSTIFY_SELF(true),
 
     LEFT(true),
+    LETTER_SPACING(true),
+    LINE_HEIGHT(true),
+    LIST_STYLE_TYPE(true),
+
+    MARGIN(true),
+    /**/MARGIN_TOP(true),
+    /**/MARGIN_RIGHT(true),
+    /**/MARGIN_BOTTOM(true),
+    /**/MARGIN_LEFT(true),
+    /**/MARGIN_BLOCK(true),
+    /**/MARGIN_INLINE(true),
+    MAX_HEIGHT(true),
+    MAX_WIDTH(true),
+    MIN_HEIGHT(true),
+    MIN_WIDTH(true),
 
     RIGHT(true),
     ROW_GAP(true),
@@ -284,20 +299,11 @@ public final class Css {
 
     Z_INDEX,
 
-    MARGIN,
     MARGIN_X,
     MARGIN_Y,
-    MARGIN_TOP,
-    MARGIN_RIGHT,
-    MARGIN_BOTTOM,
-    MARGIN_LEFT,
 
     SIZE,
-    MAX_HEIGHT,
-    MIN_HEIGHT,
     WIDTH,
-    MAX_WIDTH,
-    MIN_WIDTH,
 
     TABLE_LAYOUT,
 
@@ -310,8 +316,6 @@ public final class Css {
     TRANSFORM,
 
     USER_SELECT,
-
-    LIST_STYLE_TYPE,
 
     GAP_X,
     GAP_Y,
@@ -364,10 +368,6 @@ public final class Css {
 
     TEXT_ALIGN,
     VERTICAL_ALIGN,
-
-    LINE_HEIGHT,
-
-    LETTER_SPACING,
 
     TEXT_COLOR,
     TEXT_DECORATION,

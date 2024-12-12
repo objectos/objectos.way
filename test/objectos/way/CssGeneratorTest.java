@@ -1663,7 +1663,7 @@ public class CssGeneratorTest {
     );
   }
 
-  @Test
+  @Test(enabled = false)
   public void margin() {
     class Subject extends AbstractSubject {
       @Override
