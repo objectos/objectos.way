@@ -455,74 +455,11 @@ final class CssEngine implements Css.StyleSheet.Config, CssGeneratorScanner.Adap
   private final Map<String, UtilitySpec> utilitySpecs = Util.createMap();
 
   private void spec() {
-    specA();
-
-    specB();
-
-    specC();
-  }
-
-  private void specA() {
-    staticUtility(
-        Css.Key.ACCESSIBILITY,
-
-        """
-        sr-only     | position: absolute
-                    | width: 1px
-                    | height: 1px
-                    | padding: 0
-                    | margin: -1px
-                    | overflow: hidden
-                    | clip: rect(0, 0, 0, 0)
-                    | white-space: nowrap
-                    | border-width: 0
-
-        not-sr-only | position: static
-                    | width: auto
-                    | height: auto
-                    | padding: 0
-                    | margin: 0
-                    | overflow: visible
-                    | clip: auto
-                    | white-space: normal
-        """
-    );
-
-    funcUtility(Css.Key.ALIGN_CONTENT);
-
-    funcUtility(Css.Key.ALIGN_ITEMS);
-
-    funcUtility(Css.Key.ALIGN_SELF);
-
-    funcUtility(Css.Key.APPEARANCE);
-
-    funcUtility(Css.Key.ASPECT_RATIO);
-  }
-
-  private void specB() {
-    funcUtility(Css.Key.BACKGROUND_COLOR);
-
-    funcUtility(Css.Key.BORDER);
-    funcUtility(Css.Key.BORDER_TOP);
-    funcUtility(Css.Key.BORDER_RIGHT);
-    funcUtility(Css.Key.BORDER_BOTTOM);
-    funcUtility(Css.Key.BORDER_LEFT);
-
-    funcUtility(Css.Key.BORDER_COLLAPSE);
-
-    funcUtility(Css.Key.BORDER_RADIUS);
-
-    funcUtility(Css.Key.BORDER_SPACING);
-
-    funcUtility(Css.Key.BOX_SHADOW);
-  }
-
-  private void specC() {
-    funcUtility(Css.Key.CLEAR);
-
-    funcUtility(Css.Key.CONTENT);
-
-    funcUtility(Css.Key.CURSOR);
+    for (Css.Key key : Css.Key.values()) {
+      if (key.engineCompatible) {
+        funcUtility(key);
+      }
+    }
   }
 
   private void funcUtility(Css.Key key) {
@@ -612,7 +549,9 @@ final class CssEngine implements Css.StyleSheet.Config, CssGeneratorScanner.Adap
     enum Splitter {
       NORMAL,
 
-      WORD;
+      WORD,
+
+      TOKEN;
     }
 
     Splitter parser;
@@ -640,8 +579,12 @@ final class CssEngine implements Css.StyleSheet.Config, CssGeneratorScanner.Adap
         case WORD -> {
           if (Character.isWhitespace(c)) {
             parser = Splitter.NORMAL;
+          }
 
-            consumeToken();
+          else if (c == ':') {
+            parser = Splitter.TOKEN;
+
+            sb.append(c);
           }
 
           else {
@@ -650,10 +593,24 @@ final class CssEngine implements Css.StyleSheet.Config, CssGeneratorScanner.Adap
             sb.append(c);
           }
         }
+
+        case TOKEN -> {
+          if (Character.isWhitespace(c)) {
+            parser = Splitter.NORMAL;
+
+            consumeToken();
+          }
+
+          else {
+            parser = Splitter.TOKEN;
+
+            sb.append(c);
+          }
+        }
       }
     }
 
-    if (parser == Splitter.WORD) {
+    if (parser == Splitter.TOKEN) {
       consumeToken();
     }
   }
@@ -682,6 +639,8 @@ final class CssEngine implements Css.StyleSheet.Config, CssGeneratorScanner.Adap
   // # BEGIN: Process
   // ##################################################################
 
+  private final List<String> classNameSlugs = Util.createList();
+
   private final List<Css.ClassNameFormat> classNameFormats = Util.createList();
 
   private final List<Css.MediaQuery> mediaQueries = Util.createList();
@@ -689,75 +648,95 @@ final class CssEngine implements Css.StyleSheet.Config, CssGeneratorScanner.Adap
   private final SequencedMap<String, Css.Rule> rules = Util.createSequencedMap();
 
   private void process() {
-    for (String token : tokens.keySet()) {
+    outer: for (String token : tokens.keySet()) {
       String className;
       className = token;
 
-      String suffix;
-      suffix = processVariants(className);
+      // split className on the ':' character
+      classNameSlugs.clear();
 
-      if (suffix == null) {
-        continue;
+      int beginIndex;
+      beginIndex = 0;
+
+      int colon;
+      colon = className.indexOf(':');
+
+      while (colon > 0) {
+        String slug;
+        slug = className.substring(beginIndex, colon);
+
+        if (slug.isEmpty()) {
+          // TODO log invalid className
+
+          continue outer;
+        }
+
+        classNameSlugs.add(slug);
+
+        beginIndex = colon + 1;
+
+        colon = className.indexOf(':', beginIndex);
       }
 
-      Css.Rule maybeStatic;
-      maybeStatic = processStatic(className, suffix);
+      // last slug = propValue
+      String propValue;
+      propValue = className.substring(beginIndex);
 
-      if (maybeStatic != null) {
-        rules.put(className, maybeStatic);
+      // process variants
+      classNameFormats.clear();
 
-        continue;
+      mediaQueries.clear();
+
+      int parts;
+      parts = classNameSlugs.size();
+
+      if (parts > 1) {
+
+        for (int idx = 0, max = parts - 1; idx < max; idx++) {
+          String variantName;
+          variantName = classNameSlugs.get(idx);
+
+          Css.Variant variant;
+          variant = variants.get(variantName);
+
+          if (variant == null) {
+            // TODO log unknown variant name
+
+            continue outer;
+          }
+
+          switch (variant) {
+            case Css.ClassNameFormat format -> classNameFormats.add(format);
+
+            case Css.MediaQuery query -> mediaQueries.add(query);
+          }
+        }
+
       }
+
+      String propName;
+      propName = classNameSlugs.get(parts - 1);
+
+      UtilitySpec spec;
+      spec = utilitySpecs.get(propName);
+
+      if (spec == null) {
+        // TODO log unknown property name
+
+        continue outer;
+      }
+
+      String formatted;
+      formatted = formatValue(false, propValue);
+
+      Css.Modifier modifier;
+      modifier = createModifier();
 
       Css.Rule rule;
-      rule = processFunc(className, suffix);
+      rule = spec.createRule(className, modifier, formatted);
 
       rules.put(token, rule);
     }
-  }
-
-  @Lang.VisibleForTesting
-  final String processVariants(String className) {
-    classNameFormats.clear();
-
-    mediaQueries.clear();
-
-    int beginIndex;
-    beginIndex = 0;
-
-    int colon;
-    colon = className.indexOf(':', beginIndex);
-
-    while (colon > 0) {
-      String variantName;
-      variantName = className.substring(beginIndex, colon);
-
-      Css.Variant variant;
-      variant = variants.get(variantName);
-
-      if (variant == null) {
-        return null;
-      }
-
-      switch (variant) {
-        case Css.ClassNameFormat format -> classNameFormats.add(format);
-
-        case Css.MediaQuery query -> mediaQueries.add(query);
-      }
-
-      beginIndex = colon + 1;
-
-      colon = className.indexOf(':', beginIndex);
-    }
-
-    String value;
-    value = className;
-
-    if (beginIndex > 0) {
-      value = className.substring(beginIndex);
-    }
-
-    return value;
   }
 
   private Css.Modifier createModifier() {
@@ -769,98 +748,6 @@ final class CssEngine implements Css.StyleSheet.Config, CssGeneratorScanner.Adap
           Util.toUnmodifiableList(classNameFormats)
       );
     }
-  }
-
-  private Css.Rule processStatic(String className, String value) {
-    Css.StaticUtility staticFactory;
-    staticFactory = staticUtilities.get(value);
-
-    if (staticFactory == null) {
-      return null;
-    }
-
-    Css.Modifier modifier;
-    modifier = createModifier();
-
-    return staticFactory.create(className, modifier);
-  }
-
-  private Css.Rule processFunc(String className, String value) {
-    char firstChar;
-    firstChar = value.charAt(0);
-
-    // are we dealing with a negative value
-    boolean negative;
-    negative = false;
-
-    if (firstChar == '-') {
-      negative = true;
-
-      value = value.substring(1);
-    }
-
-    // search for the CSS Key
-
-    UtilitySpec spec;
-    spec = null;
-
-    String suffix;
-    suffix = "";
-
-    int fromIndex;
-    fromIndex = value.length();
-
-    while (spec == null && fromIndex > 0) {
-      int lastDash;
-      lastDash = value.lastIndexOf('-', fromIndex);
-
-      if (lastDash == 0) {
-        // value starts with a dash and has no other dash
-        // => invalid value
-        break;
-      }
-
-      fromIndex = lastDash - 1;
-
-      String prefix;
-      prefix = value;
-
-      suffix = "";
-
-      if (lastDash > 0) {
-        prefix = value.substring(0, lastDash);
-
-        suffix = value.substring(lastDash + 1);
-      }
-
-      spec = utilitySpecs.get(prefix);
-    }
-
-    if (spec == null) {
-      // TODO note key not found
-
-      return Css.Rule.NOOP;
-    }
-
-    if (negative && !spec.allowsNegative()) {
-      // TODO note negative not supported
-
-      return Css.Rule.NOOP;
-    }
-
-    String formatted;
-    formatted = formatValue(negative, suffix);
-
-    if (formatted == null) {
-      // TODO note invalid value
-
-      return Css.Rule.NOOP;
-    }
-
-    Css.Modifier modifier;
-    modifier = createModifier();
-
-    return spec.createRule(className, modifier, formatted);
   }
 
   private enum FormatValue {
