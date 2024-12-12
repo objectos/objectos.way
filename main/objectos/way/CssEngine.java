@@ -19,14 +19,12 @@ import java.nio.file.Path;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.EnumMap;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 import java.util.SequencedMap;
 import java.util.Set;
-import objectos.way.Css.Modifier;
 
 final class CssEngine implements Css.StyleSheet.Config, CssGeneratorScanner.Adapter {
 
@@ -423,86 +421,23 @@ final class CssEngine implements Css.StyleSheet.Config, CssGeneratorScanner.Adap
   // # BEGIN: Spec
   // ##################################################################
 
-  private sealed interface UtilitySpec {
-
-    Css.Key key();
-
-    boolean allowsNegative();
-
-    Css.Rule createRule(String className, Modifier modifier, String formatted);
-
-  }
-
-  private record UtilitySpec1(Css.Key key, String propertyName) implements UtilitySpec {
-    @Override
-    public final boolean allowsNegative() {
-      return false;
-    }
-
-    @Override
-    public final Css.Rule createRule(String className, Modifier modifier, String formatted) {
-      CssProperties.Builder properties;
-      properties = new CssProperties.Builder();
-
-      properties.add(propertyName, formatted);
-
-      return new CssUtility(key, className, modifier, properties);
-    }
-  }
-
-  private final Map<String, Css.StaticUtility> staticUtilities = new HashMap<>();
-
-  private final Map<String, UtilitySpec> utilitySpecs = Util.createMap();
+  private final Map<String, Css.Key> prefixes = Util.createMap();
 
   private void spec() {
     for (Css.Key key : Css.Key.values()) {
-      if (key.engineCompatible) {
-        funcUtility(key);
+      if (!key.engineCompatible) {
+        continue;
       }
-    }
-  }
 
-  private void funcUtility(Css.Key key) {
-    String propertyName;
-    propertyName = key.propertyName;
+      String propertyName;
+      propertyName = key.propertyName;
 
-    UtilitySpec1 spec = new UtilitySpec1(key, propertyName);
-
-    putUtilitySpec(propertyName, spec);
-  }
-
-  private void putUtilitySpec(String prefix, UtilitySpec spec) {
-    UtilitySpec maybeExisting;
-    maybeExisting = utilitySpecs.put(prefix, spec);
-
-    if (maybeExisting != null) {
-      throw new IllegalArgumentException(
-          "Prefix " + prefix + " already mapped to " + maybeExisting
-      );
-    }
-  }
-
-  // visible for testing
-  final void staticUtility(Css.Key key, String text) {
-    Map<String, CssProperties> table;
-    table = Css.parseTable(text);
-
-    for (Map.Entry<String, CssProperties> entry : table.entrySet()) {
-      String className;
-      className = entry.getKey();
-
-      CssProperties properties;
-      properties = entry.getValue();
-
-      Css.StaticUtility utility;
-      utility = new Css.StaticUtility(key, properties);
-
-      Css.StaticUtility maybeExisting;
-      maybeExisting = staticUtilities.put(className, utility);
+      Css.Key maybeExisting;
+      maybeExisting = prefixes.put(propertyName, key);
 
       if (maybeExisting != null) {
         throw new IllegalArgumentException(
-            "Class name " + className + " already mapped to " + maybeExisting
+            "Prefix " + propertyName + " already mapped to " + maybeExisting
         );
       }
     }
@@ -717,23 +652,28 @@ final class CssEngine implements Css.StyleSheet.Config, CssGeneratorScanner.Adap
       String propName;
       propName = classNameSlugs.get(parts - 1);
 
-      UtilitySpec spec;
-      spec = utilitySpecs.get(propName);
+      Css.Key key;
+      key = prefixes.get(propName);
 
-      if (spec == null) {
+      if (key == null) {
         // TODO log unknown property name
 
         continue outer;
       }
 
       String formatted;
-      formatted = formatValue(false, propValue);
+      formatted = formatValue(propValue);
 
       Css.Modifier modifier;
       modifier = createModifier();
 
+      CssProperties.Builder properties;
+      properties = new CssProperties.Builder();
+
+      properties.add(propName, formatted);
+
       Css.Rule rule;
-      rule = spec.createRule(className, modifier, formatted);
+      rule = new CssUtility(key, className, modifier, properties);
 
       rules.put(token, rule);
     }
@@ -773,7 +713,7 @@ final class CssEngine implements Css.StyleSheet.Config, CssGeneratorScanner.Adap
   }
 
   @Lang.VisibleForTesting
-  final String formatValue(boolean negative, String value) {
+  final String formatValue(String value) {
     // index of the first char of the word
     int wordStart;
     wordStart = 0;

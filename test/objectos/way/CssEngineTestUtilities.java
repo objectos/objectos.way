@@ -1712,6 +1712,28 @@ public class CssEngineTestUtilities {
   }
 
   @Test
+  public void rotate() {
+    class Subject extends AbstractSubject {
+      @Override
+      final void classes() {
+        className("rotate:none");
+        className("rotate:-45deg");
+      }
+    }
+
+    test(
+        Subject.class,
+
+        """
+        @layer utilities {
+          .rotate\\:none { rotate: none }
+          .rotate\\:-45deg { rotate: -45deg }
+        }
+        """
+    );
+  }
+
+  @Test
   public void rowGap() {
     class Subject extends AbstractSubject {
       @Override
@@ -1728,6 +1750,374 @@ public class CssEngineTestUtilities {
         @layer utilities {
           .row-gap\\:0 { row-gap: 0 }
           .row-gap\\:1rem { row-gap: 1rem }
+        }
+        """
+    );
+  }
+
+  @Test
+  public void scrollBehavior() {
+    class Subject extends AbstractSubject {
+      @Override
+      final void classes() {
+        className("scroll-behavior:auto");
+        className("scroll-behavior:smooth");
+      }
+    }
+
+    test(
+        Subject.class,
+
+        """
+        @layer utilities {
+          .scroll-behavior\\:auto { scroll-behavior: auto }
+          .scroll-behavior\\:smooth { scroll-behavior: smooth }
+        }
+        """
+    );
+  }
+
+  @Test
+  public void stroke() {
+    class Subject extends AbstractSubject {
+      @Override
+      final void classes() {
+        className("stroke:none");
+        className("stroke:teal-400");
+        className("stroke:rgb(153_51_102_/_1);");
+      }
+    }
+
+    test(
+        Subject.class,
+
+        """
+        @layer utilities {
+          .stroke\\:none { stroke: none }
+          .stroke\\:teal-400 { stroke: var(--color-teal-400) }
+          .stroke\\:rgb\\(153_51_102_\\/_1\\); { stroke: rgb(153 51 102 / 1); }
+        }
+        """
+    );
+  }
+
+  @Test
+  public void strokeOpacity() {
+    class Subject extends AbstractSubject {
+      @Override
+      final void classes() {
+        className("stroke-opacity:1");
+        className("stroke-opacity:0.3");
+        className("stroke-opacity:50%");
+      }
+    }
+
+    test(
+        Subject.class,
+
+        """
+        @layer utilities {
+          .stroke-opacity\\:1 { stroke-opacity: 1 }
+          .stroke-opacity\\:0\\.3 { stroke-opacity: 0.3 }
+          .stroke-opacity\\:50\\% { stroke-opacity: 50% }
+        }
+        """
+    );
+  }
+
+  @Test
+  public void strokeWidth() {
+    class Subject extends AbstractSubject {
+      @Override
+      final void classes() {
+        className("stroke-width:0");
+        className("stroke-width:1");
+        className("stroke-width:14px");
+      }
+    }
+
+    test(
+        Subject.class,
+
+        """
+        @layer utilities {
+          .stroke-width\\:0 { stroke-width: 0 }
+          .stroke-width\\:1 { stroke-width: 1 }
+          .stroke-width\\:14px { stroke-width: 14px }
+        }
+        """
+    );
+  }
+
+  @Test
+  public void tabSize() {
+    class Subject extends AbstractSubject {
+      @Override
+      final void classes() {
+        className("tab-size:10px");
+        className("tab-size:4");
+      }
+    }
+
+    test(
+        Subject.class,
+
+        """
+        @layer utilities {
+          .tab-size\\:10px { tab-size: 10px }
+          .tab-size\\:4 { tab-size: 4 }
+        }
+        """
+    );
+  }
+
+  @Test
+  public void tableLayout() {
+    class Subject extends AbstractSubject {
+      @Override
+      final void classes() {
+        className("table-layout:auto");
+        className("table-layout:fixed");
+      }
+    }
+
+    test(
+        Subject.class,
+
+        """
+        @layer utilities {
+          .table-layout\\:auto { table-layout: auto }
+          .table-layout\\:fixed { table-layout: fixed }
+        }
+        """
+    );
+  }
+
+  @Test
+  public void textAlign() {
+    class Subject extends AbstractSubject {
+      @Override
+      final void classes() {
+        className("text-align:start");
+        className("text-align:center");
+      }
+    }
+
+    test(
+        Subject.class,
+
+        """
+        @layer utilities {
+          .text-align\\:start { text-align: start }
+          .text-align\\:center { text-align: center }
+        }
+        """
+    );
+  }
+
+  @Test
+  public void textDecoration() {
+    class Subject extends AbstractSubject {
+      @Override
+      final void classes() {
+        className("text-decoration:underline");
+        className("text-decoration:underline_overline");
+        className("text-decoration:line-through_double_green");
+      }
+    }
+
+    test(
+        Subject.class,
+
+        """
+        @layer utilities {
+          .text-decoration\\:underline { text-decoration: underline }
+          .text-decoration\\:underline_overline { text-decoration: underline overline }
+          .text-decoration\\:line-through_double_green { text-decoration: line-through double green }
+        }
+        """
+    );
+  }
+
+  @Test
+  public void textDecorationColor() {
+    class Subject extends AbstractSubject {
+      @Override
+      final void classes() {
+        className("text-decoration-color:red");
+        className("text-decoration-color:slate-100");
+        className("text-decoration-color:#21ff21;");
+      }
+    }
+
+    test(
+        Subject.class,
+
+        """
+        @layer utilities {
+          .text-decoration-color\\:red { text-decoration-color: red }
+          .text-decoration-color\\:slate-100 { text-decoration-color: var(--color-slate-100) }
+          .text-decoration-color\\:#21ff21; { text-decoration-color: #21ff21; }
+        }
+        """
+    );
+  }
+
+  @Test
+  public void textDecorationLine() {
+    class Subject extends AbstractSubject {
+      @Override
+      final void classes() {
+        className("text-decoration-line:none");
+        className("text-decoration-line:underline");
+        className("text-decoration-line:overline");
+      }
+    }
+
+    test(
+        Subject.class,
+
+        """
+        @layer utilities {
+          .text-decoration-line\\:none { text-decoration-line: none }
+          .text-decoration-line\\:underline { text-decoration-line: underline }
+          .text-decoration-line\\:overline { text-decoration-line: overline }
+        }
+        """
+    );
+  }
+
+  @Test
+  public void textDecorationStyle() {
+    class Subject extends AbstractSubject {
+      @Override
+      final void classes() {
+        className("text-decoration-style:solid");
+        className("text-decoration-style:double");
+        className("text-decoration-style:wavy");
+      }
+    }
+
+    test(
+        Subject.class,
+
+        """
+        @layer utilities {
+          .text-decoration-style\\:solid { text-decoration-style: solid }
+          .text-decoration-style\\:double { text-decoration-style: double }
+          .text-decoration-style\\:wavy { text-decoration-style: wavy }
+        }
+        """
+    );
+  }
+
+  @Test
+  public void textDecorationThickness() {
+    class Subject extends AbstractSubject {
+      @Override
+      final void classes() {
+        className("text-decoration-thickness:from-font");
+        className("text-decoration-thickness:0.1rem");
+        className("text-decoration-thickness:3px");
+      }
+    }
+
+    test(
+        Subject.class,
+
+        """
+        @layer utilities {
+          .text-decoration-thickness\\:from-font { text-decoration-thickness: from-font }
+          .text-decoration-thickness\\:0\\.1rem { text-decoration-thickness: 0.1rem }
+          .text-decoration-thickness\\:3px { text-decoration-thickness: 3px }
+        }
+        """
+    );
+  }
+
+  @Test
+  public void textOverflow() {
+    class Subject extends AbstractSubject {
+      @Override
+      final void classes() {
+        className("text-overflow:clip");
+        className("text-overflow:ellipsis");
+      }
+    }
+
+    test(
+        Subject.class,
+
+        """
+        @layer utilities {
+          .text-overflow\\:clip { text-overflow: clip }
+          .text-overflow\\:ellipsis { text-overflow: ellipsis }
+        }
+        """
+    );
+  }
+
+  @Test
+  public void textShadow() {
+    class Subject extends AbstractSubject {
+      @Override
+      final void classes() {
+        className("text-shadow:1px_1px_2px_blue-200");
+        className("text-shadow:5px_10px");
+      }
+    }
+
+    test(
+        Subject.class,
+
+        """
+        @layer utilities {
+          .text-shadow\\:1px_1px_2px_blue-200 { text-shadow: 1px 1px 2px var(--color-blue-200) }
+          .text-shadow\\:5px_10px { text-shadow: 5px 10px }
+        }
+        """
+    );
+  }
+
+  @Test
+  public void textTransform() {
+    class Subject extends AbstractSubject {
+      @Override
+      final void classes() {
+        className("text-transform:capitalize");
+        className("text-transform:uppercase");
+      }
+    }
+
+    test(
+        Subject.class,
+
+        """
+        @layer utilities {
+          .text-transform\\:capitalize { text-transform: capitalize }
+          .text-transform\\:uppercase { text-transform: uppercase }
+        }
+        """
+    );
+  }
+
+  @Test
+  public void textWrap() {
+    class Subject extends AbstractSubject {
+      @Override
+      final void classes() {
+        className("text-wrap:wrap");
+        className("text-wrap:nowrap");
+      }
+    }
+
+    test(
+        Subject.class,
+
+        """
+        @layer utilities {
+          .text-wrap\\:wrap { text-wrap: wrap }
+          .text-wrap\\:nowrap { text-wrap: nowrap }
         }
         """
     );
@@ -1752,6 +2142,190 @@ public class CssEngineTestUtilities {
           .top\\:auto { top: auto }
           .top\\:0px { top: 0px }
           .top\\:-2px { top: -2px }
+        }
+        """
+    );
+  }
+
+  @Test
+  public void transform() {
+    class Subject extends AbstractSubject {
+      @Override
+      final void classes() {
+        className("transform:rotate(0.5turn)");
+        className("transform:translate(120px,50%)");
+        className("transform:scale(2,_0.5)");
+      }
+    }
+
+    test(
+        Subject.class,
+
+        """
+        @layer utilities {
+          .transform\\:rotate\\(0\\.5turn\\) { transform: rotate(0.5turn) }
+          .transform\\:translate\\(120px\\2c 50\\%\\) { transform: translate(120px,50%) }
+          .transform\\:scale\\(2\\2c _0\\.5\\) { transform: scale(2, 0.5) }
+        }
+        """
+    );
+  }
+
+  @Test
+  public void transformOrigin() {
+    class Subject extends AbstractSubject {
+      @Override
+      final void classes() {
+        className("transform-origin:center");
+        className("transform-origin:top_left");
+        className("transform-origin:left_5px_-3px");
+      }
+    }
+
+    test(
+        Subject.class,
+
+        """
+        @layer utilities {
+          .transform-origin\\:center { transform-origin: center }
+          .transform-origin\\:top_left { transform-origin: top left }
+          .transform-origin\\:left_5px_-3px { transform-origin: left 5px -3px }
+        }
+        """
+    );
+  }
+
+  @Test
+  public void transition() {
+    class Subject extends AbstractSubject {
+      @Override
+      final void classes() {
+        className("transition:margin-right_2s");
+        className("transition:all_1s_ease-out");
+      }
+    }
+
+    test(
+        Subject.class,
+
+        """
+        @layer utilities {
+          .transition\\:margin-right_2s { transition: margin-right 2s }
+          .transition\\:all_1s_ease-out { transition: all 1s ease-out }
+        }
+        """
+    );
+  }
+
+  @Test
+  public void transitionDelay() {
+    class Subject extends AbstractSubject {
+      @Override
+      final void classes() {
+        className("transition-delay:250ms");
+        className("transition-delay:1s,_250ms");
+      }
+    }
+
+    test(
+        Subject.class,
+
+        """
+        @layer utilities {
+          .transition-delay\\:250ms { transition-delay: 250ms }
+          .transition-delay\\:1s\\2c _250ms { transition-delay: 1s, 250ms }
+        }
+        """
+    );
+  }
+
+  @Test
+  public void transitionDuration() {
+    class Subject extends AbstractSubject {
+      @Override
+      final void classes() {
+        className("transition-duration:123ms");
+        className("transition-duration:1s,3s");
+      }
+    }
+
+    test(
+        Subject.class,
+
+        """
+        @layer utilities {
+          .transition-duration\\:123ms { transition-duration: 123ms }
+          .transition-duration\\:1s\\2c 3s { transition-duration: 1s,3s }
+        }
+        """
+    );
+  }
+
+  @Test
+  public void transitionProperty() {
+    class Subject extends AbstractSubject {
+      @Override
+      final void classes() {
+        className("transition-property:all");
+        className("transition-property:none");
+        className("transition-property:height,color");
+      }
+    }
+
+    test(
+        Subject.class,
+
+        """
+        @layer utilities {
+          .transition-property\\:all { transition-property: all }
+          .transition-property\\:none { transition-property: none }
+          .transition-property\\:height\\2c color { transition-property: height,color }
+        }
+        """
+    );
+  }
+
+  @Test
+  public void transitionTimingFunction() {
+    class Subject extends AbstractSubject {
+      @Override
+      final void classes() {
+        className("transition-timing-function:linear");
+        className("transition-timing-function:ease-in");
+      }
+    }
+
+    test(
+        Subject.class,
+
+        """
+        @layer utilities {
+          .transition-timing-function\\:linear { transition-timing-function: linear }
+          .transition-timing-function\\:ease-in { transition-timing-function: ease-in }
+        }
+        """
+    );
+  }
+
+  @Test
+  public void translate() {
+    class Subject extends AbstractSubject {
+      @Override
+      final void classes() {
+        className("translate:none");
+        className("translate:40px");
+        className("translate:50%_-40%");
+      }
+    }
+
+    test(
+        Subject.class,
+
+        """
+        @layer utilities {
+          .translate\\:none { translate: none }
+          .translate\\:40px { translate: 40px }
+          .translate\\:50\\%_-40\\% { translate: 50% -40% }
         }
         """
     );

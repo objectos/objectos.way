@@ -33,22 +33,22 @@ public class CssUtilityTest {
 
     List<Css.Rule> rules = new ArrayList<>();
 
-    Css.Rule a1 = rule(Css.Key.ACCESSIBILITY, "a-1", empty);
+    Css.Rule a1 = rule(Css.Key.APPEARANCE, "a-1", empty);
     rules.add(a1);
 
-    Css.Rule a2 = rule(Css.Key.ACCESSIBILITY, "a-2", empty);
+    Css.Rule a2 = rule(Css.Key.APPEARANCE, "a-2", empty);
     rules.add(a2);
 
-    Css.Rule a1Active = rule(Css.Key.ACCESSIBILITY, "a-2:active", active);
+    Css.Rule a1Active = rule(Css.Key.APPEARANCE, "a-2:active", active);
     rules.add(a1Active);
 
-    Css.Rule a1Hover = rule(Css.Key.ACCESSIBILITY, "a-1:hover", hover);
+    Css.Rule a1Hover = rule(Css.Key.APPEARANCE, "a-1:hover", hover);
     rules.add(a1Hover);
 
-    Css.Rule b1 = rule(Css.Key.CONTENT, "b-1", empty);
+    Css.Rule b1 = rule(Css.Key.DISPLAY, "b-1", empty);
     rules.add(b1);
 
-    Css.Rule b2 = rule(Css.Key.CONTENT, "b-2", empty);
+    Css.Rule b2 = rule(Css.Key.DISPLAY, "b-2", empty);
     rules.add(b2);
 
     Collections.sort(rules);

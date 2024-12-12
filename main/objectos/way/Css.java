@@ -224,6 +224,7 @@ public final class Css {
 
     CLEAR(true),
     COLUMN_GAP(true),
+    CONTENT(true),
     CURSOR(true),
 
     DISPLAY(true),
@@ -292,9 +293,36 @@ public final class Css {
     POSITION(true),
 
     RIGHT(true),
+    ROTATE(true),
     ROW_GAP(true),
 
+    SCROLL_BEHAVIOR(true),
+    STROKE(true),
+    STROKE_OPACITY(true),
+    STROKE_WIDTH(true),
+
+    TAB_SIZE(true),
+    TABLE_LAYOUT(true),
+    TEXT_ALIGN(true),
+    TEXT_COLOR(true),
+    TEXT_DECORATION(true),
+    /**/TEXT_DECORATION_COLOR(true),
+    /**/TEXT_DECORATION_LINE(true),
+    /**/TEXT_DECORATION_STYLE(true),
+    /**/TEXT_DECORATION_THICKNESS(true),
+    TEXT_OVERFLOW(true),
+    TEXT_SHADOW(true),
+    TEXT_TRANSFORM(true),
+    TEXT_WRAP(true),
     TOP(true),
+    TRANSFORM(true),
+    TRANSFORM_ORIGIN(true),
+    TRANSITION(true),
+    TRANSITION_DELAY(true),
+    TRANSITION_DURATION(true),
+    TRANSITION_PROPERTY(true),
+    TRANSITION_TIMING_FUNCTION(true),
+    TRANSLATE(true),
 
     _COLORS,
 
@@ -320,24 +348,18 @@ public final class Css {
     SIZE,
     WIDTH,
 
-    TABLE_LAYOUT,
-
     BORDER_SPACING_X,
     BORDER_SPACING_Y,
 
-    TRANSLATE,
     TRANSLATE_X,
     TRANSLATE_Y,
-    TRANSFORM,
 
     USER_SELECT,
 
     GAP_X,
     GAP_Y,
 
-    TEXT_OVERFLOW,
     WHITESPACE,
-    TEXT_WRAP,
 
     BORDER_RADIUS_T,
     BORDER_RADIUS_R,
@@ -366,17 +388,10 @@ public final class Css {
     BORDER_COLOR_BOTTOM,
     BORDER_COLOR_LEFT,
 
-    STROKE,
-    STROKE_WIDTH,
-
     PADDING_X,
     PADDING_Y,
 
-    TEXT_ALIGN,
     VERTICAL_ALIGN,
-
-    TEXT_COLOR,
-    TEXT_DECORATION,
 
     BOX_SHADOW_COLOR,
 
@@ -384,12 +399,7 @@ public final class Css {
     RING_COLOR,
     RING_OFFSET_WIDTH,
     RING_OFFSET_COLOR,
-    RING_INSET,
-
-    TRANSITION_PROPERTY,
-    TRANSITION_DURATION,
-
-    CONTENT(true);
+    RING_INSET;
 
     final boolean engineCompatible;
 
