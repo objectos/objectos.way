@@ -278,6 +278,26 @@ public class CssEngineTestUtilities {
     );
   }
 
+  @Test
+  public void boxShadow() {
+    class Subject extends AbstractSubject {
+      @Override
+      final void classes() {
+        className("box-shadow-inset_0_2px_4px_0_rgb(0_0_0_/_0.05)");
+      }
+    }
+
+    test(
+        Subject.class,
+
+        """
+        @layer utilities {
+          .box-shadow-inset_0_2px_4px_0_rgb\\(0_0_0_\\/_0\\.05\\) { box-shadow: inset 0 2px 4px 0 rgb(0 0 0 / 0.05) }
+        }
+        """
+    );
+  }
+
   private void test(Class<?> type, String expected) {
     CssEngine config;
     config = new CssEngine();

@@ -511,6 +511,8 @@ final class CssEngine implements Css.StyleSheet.Config, CssGeneratorScanner.Adap
     funcUtility(Css.Key.BORDER_RADIUS, "border-radius");
 
     funcUtility(Css.Key.BORDER_SPACING, "border-spacing");
+
+    funcUtility(Css.Key.BOX_SHADOW, "box-shadow");
   }
 
   private void funcUtility(Css.Key key, String propertyName) {
