@@ -458,6 +458,8 @@ final class CssEngine implements Css.StyleSheet.Config, CssGeneratorScanner.Adap
     specA();
 
     specB();
+
+    specC();
   }
 
   private void specA() {
@@ -486,36 +488,47 @@ final class CssEngine implements Css.StyleSheet.Config, CssGeneratorScanner.Adap
         """
     );
 
-    funcUtility(Css.Key.ALIGN_CONTENT, "align-content");
+    funcUtility(Css.Key.ALIGN_CONTENT);
 
-    funcUtility(Css.Key.ALIGN_ITEMS, "align-items");
+    funcUtility(Css.Key.ALIGN_ITEMS);
 
-    funcUtility(Css.Key.ALIGN_SELF, "align-self");
+    funcUtility(Css.Key.ALIGN_SELF);
 
-    funcUtility(Css.Key.APPEARANCE, "appearance");
+    funcUtility(Css.Key.APPEARANCE);
 
-    funcUtility(Css.Key.ASPECT_RATIO, "aspect-ratio");
+    funcUtility(Css.Key.ASPECT_RATIO);
   }
 
   private void specB() {
-    funcUtility(Css.Key.BACKGROUND_COLOR, "background-color");
+    funcUtility(Css.Key.BACKGROUND_COLOR);
 
-    funcUtility(Css.Key.BORDER, "border");
-    funcUtility(Css.Key.BORDER_TOP, "border-top");
-    funcUtility(Css.Key.BORDER_RIGHT, "border-right");
-    funcUtility(Css.Key.BORDER_BOTTOM, "border-bottom");
-    funcUtility(Css.Key.BORDER_LEFT, "border-left");
+    funcUtility(Css.Key.BORDER);
+    funcUtility(Css.Key.BORDER_TOP);
+    funcUtility(Css.Key.BORDER_RIGHT);
+    funcUtility(Css.Key.BORDER_BOTTOM);
+    funcUtility(Css.Key.BORDER_LEFT);
 
-    funcUtility(Css.Key.BORDER_COLLAPSE, "border-collapse");
+    funcUtility(Css.Key.BORDER_COLLAPSE);
 
-    funcUtility(Css.Key.BORDER_RADIUS, "border-radius");
+    funcUtility(Css.Key.BORDER_RADIUS);
 
-    funcUtility(Css.Key.BORDER_SPACING, "border-spacing");
+    funcUtility(Css.Key.BORDER_SPACING);
 
-    funcUtility(Css.Key.BOX_SHADOW, "box-shadow");
+    funcUtility(Css.Key.BOX_SHADOW);
   }
 
-  private void funcUtility(Css.Key key, String propertyName) {
+  private void specC() {
+    funcUtility(Css.Key.CLEAR);
+
+    funcUtility(Css.Key.CONTENT);
+
+    funcUtility(Css.Key.CURSOR);
+  }
+
+  private void funcUtility(Css.Key key) {
+    String propertyName;
+    propertyName = key.propertyName;
+
     UtilitySpec1 spec = new UtilitySpec1(key, propertyName);
 
     putUtilitySpec(propertyName, spec);

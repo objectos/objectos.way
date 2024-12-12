@@ -298,6 +298,73 @@ public class CssEngineTestUtilities {
     );
   }
 
+  @Test
+  public void clear() {
+    class Subject extends AbstractSubject {
+      @Override
+      final void classes() {
+        className("clear-left clear-right clear-both clear-none");
+      }
+    }
+
+    test(
+        Subject.class,
+
+        """
+        @layer utilities {
+          .clear-left { clear: left }
+          .clear-right { clear: right }
+          .clear-both { clear: both }
+          .clear-none { clear: none }
+        }
+        """
+    );
+  }
+
+  @Test
+  public void content() {
+    class Subject extends AbstractSubject {
+      @Override
+      final void classes() {
+        className("content-none");
+        className("content-''");
+      }
+    }
+
+    test(
+        Subject.class,
+
+        """
+        @layer utilities {
+          .content-none { content: none }
+          .content-'' { content: '' }
+        }
+        """
+    );
+  }
+
+  @Test
+  public void cursor() {
+    class Subject extends AbstractSubject {
+      @Override
+      final void classes() {
+        className("cursor-auto cursor-pointer cursor-zoom-out");
+      }
+    }
+
+    test(
+        Subject.class,
+
+        """
+        @layer utilities {
+          .cursor-auto { cursor: auto }
+          .cursor-pointer { cursor: pointer }
+          .cursor-zoom-out { cursor: zoom-out }
+        }
+        """
+    );
+  }
+
   private void test(Class<?> type, String expected) {
     CssEngine config;
     config = new CssEngine();

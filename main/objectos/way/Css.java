@@ -22,6 +22,7 @@ import java.lang.annotation.Target;
 import java.nio.file.Path;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.SequencedMap;
 import java.util.Set;
@@ -384,6 +385,8 @@ public final class Css {
     TRANSITION_DURATION,
 
     CONTENT;
+
+    final String propertyName = name().replace('_', '-').toLowerCase(Locale.US);
 
   }
 
