@@ -2006,7 +2006,7 @@ public class CssGeneratorTest {
     );
   }
 
-  @Test
+  @Test(enabled = false)
   public void padding() {
     class Subject extends AbstractSubject {
       @Override

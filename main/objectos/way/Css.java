@@ -273,6 +273,24 @@ public final class Css {
     MIN_HEIGHT(true),
     MIN_WIDTH(true),
 
+    OPACITY(true),
+    OUTLINE(true),
+    OUTLINE_COLOR(true),
+    OUTLINE_OFFSET(true),
+    OUTLINE_STYLE(true),
+    OUTLINE_WIDTH(true),
+    OVERFLOW(true),
+    OVERFLOW_X(true),
+    OVERFLOW_Y(true),
+
+    PADDING(true),
+    /**/PADDING_TOP(true),
+    /**/PADDING_RIGHT(true),
+    /**/PADDING_BOTTOM(true),
+    /**/PADDING_LEFT(true),
+    POINTER_EVENTS(true),
+    POSITION(true),
+
     RIGHT(true),
     ROW_GAP(true),
 
@@ -289,10 +307,7 @@ public final class Css {
 
     ACCESSIBILITY,
 
-    POINTER_EVENTS,
     VISIBILITY,
-
-    POSITION,
 
     INSET_X,
     INSET_Y,
@@ -319,10 +334,6 @@ public final class Css {
 
     GAP_X,
     GAP_Y,
-
-    OVERFLOW,
-    OVERFLOW_X,
-    OVERFLOW_Y,
 
     TEXT_OVERFLOW,
     WHITESPACE,
@@ -358,13 +369,8 @@ public final class Css {
     STROKE,
     STROKE_WIDTH,
 
-    PADDING,
     PADDING_X,
     PADDING_Y,
-    PADDING_TOP,
-    PADDING_RIGHT,
-    PADDING_BOTTOM,
-    PADDING_LEFT,
 
     TEXT_ALIGN,
     VERTICAL_ALIGN,
@@ -372,14 +378,7 @@ public final class Css {
     TEXT_COLOR,
     TEXT_DECORATION,
 
-    OPACITY,
-
     BOX_SHADOW_COLOR,
-
-    OUTLINE_STYLE,
-    OUTLINE_WIDTH,
-    OUTLINE_OFFSET,
-    OUTLINE_COLOR,
 
     RING_WIDTH,
     RING_COLOR,

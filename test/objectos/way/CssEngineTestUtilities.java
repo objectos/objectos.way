@@ -1312,6 +1312,384 @@ public class CssEngineTestUtilities {
   }
 
   @Test
+  public void opacity() {
+    class Subject extends AbstractSubject {
+      @Override
+      final void classes() {
+        className("opacity:0");
+        className("opacity:0.33");
+        className("opacity:90%");
+      }
+    }
+
+    test(
+        Subject.class,
+
+        """
+        @layer utilities {
+          .opacity\\:0 { opacity: 0 }
+          .opacity\\:0\\.33 { opacity: 0.33 }
+          .opacity\\:90\\% { opacity: 90% }
+        }
+        """
+    );
+  }
+
+  @Test
+  public void outline() {
+    class Subject extends AbstractSubject {
+      @Override
+      final void classes() {
+        className("outline:solid");
+        className("outline:dashed_#f66");
+        className("outline:thick_inset");
+        className("outline:3px_solid_green");
+      }
+    }
+
+    test(
+        Subject.class,
+
+        """
+        @layer utilities {
+          .outline\\:solid { outline: solid }
+          .outline\\:dashed_#f66 { outline: dashed #f66 }
+          .outline\\:thick_inset { outline: thick inset }
+          .outline\\:3px_solid_green { outline: 3px solid green }
+        }
+        """
+    );
+  }
+
+  @Test
+  public void outlineColor() {
+    class Subject extends AbstractSubject {
+      @Override
+      final void classes() {
+        className("outline-color:inherit");
+        className("outline-color:orange-700");
+        className("outline-color:rgb(30_222_121)");
+      }
+    }
+
+    test(
+        Subject.class,
+
+        """
+        @layer utilities {
+          .outline-color\\:inherit { outline-color: inherit }
+          .outline-color\\:orange-700 { outline-color: var(--color-orange-700) }
+          .outline-color\\:rgb\\(30_222_121\\) { outline-color: rgb(30 222 121) }
+        }
+        """
+    );
+  }
+
+  @Test
+  public void outlineOffset() {
+    class Subject extends AbstractSubject {
+      @Override
+      final void classes() {
+        className("outline-offset:0");
+        className("outline-offset:3px");
+        className("outline-offset:0.2em");
+      }
+    }
+
+    test(
+        Subject.class,
+
+        """
+        @layer utilities {
+          .outline-offset\\:0 { outline-offset: 0 }
+          .outline-offset\\:3px { outline-offset: 3px }
+          .outline-offset\\:0\\.2em { outline-offset: 0.2em }
+        }
+        """
+    );
+  }
+
+  @Test
+  public void outlineStyle() {
+    class Subject extends AbstractSubject {
+      @Override
+      final void classes() {
+        className("outline-style:none");
+        className("outline-style:dashed");
+      }
+    }
+
+    test(
+        Subject.class,
+
+        """
+        @layer utilities {
+          .outline-style\\:none { outline-style: none }
+          .outline-style\\:dashed { outline-style: dashed }
+        }
+        """
+    );
+  }
+
+  @Test
+  public void outlineWidth() {
+    class Subject extends AbstractSubject {
+      @Override
+      final void classes() {
+        className("outline-width:thin");
+        className("outline-width:1px");
+        className("outline-width:0.1em");
+      }
+    }
+
+    test(
+        Subject.class,
+
+        """
+        @layer utilities {
+          .outline-width\\:thin { outline-width: thin }
+          .outline-width\\:1px { outline-width: 1px }
+          .outline-width\\:0\\.1em { outline-width: 0.1em }
+        }
+        """
+    );
+  }
+
+  @Test
+  public void overflow() {
+    class Subject extends AbstractSubject {
+      @Override
+      final void classes() {
+        className("overflow:auto");
+        className("overflow:hidden");
+        className("overflow:scroll");
+        className("overflow:hidden_visible");
+      }
+    }
+
+    test(
+        Subject.class,
+
+        """
+        @layer utilities {
+          .overflow\\:auto { overflow: auto }
+          .overflow\\:hidden { overflow: hidden }
+          .overflow\\:scroll { overflow: scroll }
+          .overflow\\:hidden_visible { overflow: hidden visible }
+        }
+        """
+    );
+  }
+
+  @Test
+  public void overflowX() {
+    class Subject extends AbstractSubject {
+      @Override
+      final void classes() {
+        className("overflow-x:auto");
+        className("overflow-x:hidden");
+        className("overflow-x:scroll");
+      }
+    }
+
+    test(
+        Subject.class,
+
+        """
+        @layer utilities {
+          .overflow-x\\:auto { overflow-x: auto }
+          .overflow-x\\:hidden { overflow-x: hidden }
+          .overflow-x\\:scroll { overflow-x: scroll }
+        }
+        """
+    );
+  }
+
+  @Test
+  public void overflowY() {
+    class Subject extends AbstractSubject {
+      @Override
+      final void classes() {
+        className("overflow-y:auto");
+        className("overflow-y:hidden");
+        className("overflow-y:scroll");
+      }
+    }
+
+    test(
+        Subject.class,
+
+        """
+        @layer utilities {
+          .overflow-y\\:auto { overflow-y: auto }
+          .overflow-y\\:hidden { overflow-y: hidden }
+          .overflow-y\\:scroll { overflow-y: scroll }
+        }
+        """
+    );
+  }
+
+  @Test
+  public void padding() {
+    class Subject extends AbstractSubject {
+      @Override
+      final void classes() {
+        className("padding:1rem");
+        className("padding:5%_10%");
+        className("padding:1em_2em_2em");
+        className("padding:5px_1em_0_2em");
+      }
+    }
+
+    test(
+        Subject.class,
+
+        """
+        @layer utilities {
+          .padding\\:1rem { padding: 1rem }
+          .padding\\:5\\%_10\\% { padding: 5% 10% }
+          .padding\\:1em_2em_2em { padding: 1em 2em 2em }
+          .padding\\:5px_1em_0_2em { padding: 5px 1em 0 2em }
+        }
+        """
+    );
+  }
+
+  @Test
+  public void paddingBottom() {
+    class Subject extends AbstractSubject {
+      @Override
+      final void classes() {
+        className("padding-bottom:0");
+        className("padding-bottom:20px");
+      }
+    }
+
+    test(
+        Subject.class,
+
+        """
+        @layer utilities {
+          .padding-bottom\\:0 { padding-bottom: 0 }
+          .padding-bottom\\:20px { padding-bottom: 20px }
+        }
+        """
+    );
+  }
+
+  @Test
+  public void paddingLeft() {
+    class Subject extends AbstractSubject {
+      @Override
+      final void classes() {
+        className("padding-left:0");
+        className("padding-left:20px");
+      }
+    }
+
+    test(
+        Subject.class,
+
+        """
+        @layer utilities {
+          .padding-left\\:0 { padding-left: 0 }
+          .padding-left\\:20px { padding-left: 20px }
+        }
+        """
+    );
+  }
+
+  @Test
+  public void paddingRight() {
+    class Subject extends AbstractSubject {
+      @Override
+      final void classes() {
+        className("padding-right:0");
+        className("padding-right:20px");
+      }
+    }
+
+    test(
+        Subject.class,
+
+        """
+        @layer utilities {
+          .padding-right\\:0 { padding-right: 0 }
+          .padding-right\\:20px { padding-right: 20px }
+        }
+        """
+    );
+  }
+
+  @Test
+  public void paddingTop() {
+    class Subject extends AbstractSubject {
+      @Override
+      final void classes() {
+        className("padding-top:0");
+        className("padding-top:20px");
+      }
+    }
+
+    test(
+        Subject.class,
+
+        """
+        @layer utilities {
+          .padding-top\\:0 { padding-top: 0 }
+          .padding-top\\:20px { padding-top: 20px }
+        }
+        """
+    );
+  }
+
+  @Test
+  public void pointerEvents() {
+    class Subject extends AbstractSubject {
+      @Override
+      final void classes() {
+        className("pointer-events:none");
+        className("pointer-events:auto");
+      }
+    }
+
+    test(
+        Subject.class,
+
+        """
+        @layer utilities {
+          .pointer-events\\:none { pointer-events: none }
+          .pointer-events\\:auto { pointer-events: auto }
+        }
+        """
+    );
+  }
+
+  @Test
+  public void position() {
+    class Subject extends AbstractSubject {
+      @Override
+      final void classes() {
+        className("position:relative");
+        className("position:absolute");
+        className("position:sticky");
+      }
+    }
+
+    test(
+        Subject.class,
+
+        """
+        @layer utilities {
+          .position\\:relative { position: relative }
+          .position\\:absolute { position: absolute }
+          .position\\:sticky { position: sticky }
+        }
+        """
+    );
+  }
+
+  @Test
   public void right() {
     class Subject extends AbstractSubject {
       @Override
