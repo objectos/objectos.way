@@ -62,8 +62,6 @@ final class CssEngine implements Css.StyleSheet.Config, CssGeneratorScanner.Adap
 
   private String theme;
 
-  private final Map<String, Css.Variant> variants = Util.createMap();
-
   @Override
   public final void noteSink(Note.Sink value) {
     noteSink = Objects.requireNonNull(value, "value == null");
@@ -136,228 +134,282 @@ final class CssEngine implements Css.StyleSheet.Config, CssGeneratorScanner.Adap
   // # BEGIN: Theme parsing
   // ##################################################################
 
+  private final StringBuilder sb = new StringBuilder();
+
   private final Map<Css.Namespace, List<CssThemeEntry>> themeEntries = new EnumMap<>(Css.Namespace.class);
 
-  private enum Parser {
+  private final Map<String, Css.Variant> variants = Util.createMap();
 
-    NORMAL,
+  private class ParseCtx {
 
-    // variables
+    final String text;
 
-    HYPHEN1,
-    VARNS1,
-    VARNSN,
-    VARID1,
-    VARIDN,
-    VAROWS,
-    VARVALUE,
-    VARTRIM;
+    final int length;
+
+    int idx = -1;
+
+    int entryIndex;
+
+    int startIndex;
+
+    int auxIndex;
+
+    Css.Namespace namespace;
+
+    private String name;
+
+    private String id;
+
+    ParseCtx(String text) {
+      this.text = text;
+
+      length = text.length();
+    }
+
+    final boolean hasNext() {
+      idx++;
+
+      return idx < length;
+    }
+
+    final char next() {
+      return text.charAt(idx);
+    }
+
+    final void markStart() {
+      startIndex = idx;
+    }
+
+    final void varNamespaceStart() {
+      auxIndex = idx;
+    }
+
+    final void varNamespaceEnd() {
+      String sub;
+      sub = text.substring(auxIndex, idx);
+
+      String maybeName;
+      maybeName = sub.toUpperCase(Locale.US);
+
+      try {
+        namespace = Css.Namespace.valueOf(maybeName);
+      } catch (IllegalArgumentException iae) {
+        error("Invalid namespace name=" + sub);
+      }
+    }
+
+    final void varIdStart() {
+      auxIndex = idx;
+    }
+
+    final void varIdEnd() {
+      name = text.substring(startIndex, idx);
+
+      id = text.substring(auxIndex, idx);
+    }
+
+    final void varValueStart(char c) {
+      sb.setLength(0);
+
+      sb.append(c);
+    }
+
+    final void varValueAppend(char c) {
+      sb.append(c);
+    }
+
+    final void varValueSpace(char c) {
+      sb.append(' ');
+
+      sb.append(c);
+    }
+
+    final void varValueEnd() {
+      String value;
+      value = sb.toString();
+
+      CssThemeEntryOfVariable entry;
+      entry = new CssThemeEntryOfVariable(entryIndex++, name, value, id);
+
+      putThemeEntry(namespace, entry);
+    }
+
+    final void error(String message) {
+      throw new IllegalArgumentException(message);
+    }
 
   }
 
   private void parse(String text) {
-    Parser parser;
-    parser = Parser.NORMAL;
+    ParseCtx ctx;
+    ctx = new ParseCtx(text);
 
-    int entryIndex = 0;
-
-    int line = 1;
-
-    int col = 0;
-
-    int start = 0;
-
-    int aux = 0;
-
-    Css.Namespace namespace = null;
-
-    String variableName = null;
-
-    String variableId = null;
-
-    StringBuilder sb = new StringBuilder();
-
-    for (int idx = 0, len = text.length(); idx < len; idx++) {
+    while (ctx.hasNext()) {
       char c;
-      c = text.charAt(idx);
+      c = ctx.next();
 
-      col++;
+      if (c == '@') {
+        parseAtRule(ctx);
+      }
+
+      else if (c == '-') {
+        parseVariable(ctx);
+      }
+
+      else if (!Character.isWhitespace(c)) {
+        ctx.error("Expected start of @-rule or --variable declaration");
+      }
+    }
+  }
+
+  private int parseAtRule(ParseCtx ctx) {
+    throw new UnsupportedOperationException("Implement me");
+  }
+
+  private void parseVariable(ParseCtx ctx) {
+    enum Parser {
+
+      HYPHEN1,
+      NAMESPACE_1,
+      NAMESPACE_N,
+      ID_1,
+      ID_N,
+      OPTIONAL_WS,
+      VALUE,
+      VALUE_TRIM;
+
+    }
+
+    // mark declaration start
+    ctx.markStart();
+
+    Parser parser;
+    parser = Parser.HYPHEN1;
+
+    loop: while (ctx.hasNext()) {
+      char c;
+      c = ctx.next();
 
       switch (parser) {
-        case NORMAL -> {
-          if (c == '-') {
-            parser = Parser.HYPHEN1;
-
-            start = idx;
-          }
-
-          else if (Character.isWhitespace(c)) {
-            parser = Parser.NORMAL;
-          }
-
-          else {
-            parseError(line, col, "Expected start of CSS variable declaration");
-          }
-        }
-
         case HYPHEN1 -> {
           if (c == '-') {
-            parser = Parser.VARNS1;
+            parser = Parser.NAMESPACE_1;
           }
 
           else {
-            parseError(line, col, "Expected start of CSS variable declaration");
+            ctx.error("Expected start of CSS variable declaration");
           }
         }
 
-        case VARNS1 -> {
+        case NAMESPACE_1 -> {
           if (Ascii.isLetter(c)) {
-            parser = Parser.VARNSN;
+            parser = Parser.NAMESPACE_N;
 
-            aux = idx;
+            ctx.varNamespaceStart();
           }
 
           else {
-            parseError(line, col, "CSS variable name must start with a letter");
+            ctx.error("CSS variable name must start with a letter");
           }
         }
 
-        case VARNSN -> {
+        case NAMESPACE_N -> {
           if (c == '-') {
-            parser = Parser.VARID1;
+            parser = Parser.ID_1;
 
-            String sub;
-            sub = text.substring(aux, idx);
-
-            String maybeName;
-            maybeName = sub.toUpperCase(Locale.US);
-
-            try {
-              namespace = Css.Namespace.valueOf(maybeName);
-            } catch (IllegalArgumentException iae) {
-              parseError(line, col, "Invalid namespace name=" + sub);
-            }
+            ctx.varNamespaceEnd();
           }
 
           else if (Ascii.isLetterOrDigit(c)) {
-            parser = Parser.VARNSN;
+            parser = Parser.NAMESPACE_N;
           }
 
           else {
-            parseError(line, col, "CSS variable name with invalid character=" + c);
+            ctx.error("CSS variable name with invalid character=" + c);
           }
         }
 
-        case VARID1 -> {
+        case ID_1 -> {
           if (Ascii.isLetterOrDigit(c)) {
-            parser = Parser.VARIDN;
+            parser = Parser.ID_N;
 
-            aux = idx;
+            ctx.varIdStart();
           }
 
           else {
-            parseError(line, col, "CSS variable name with invalid character=" + c);
+            ctx.error("CSS variable name with invalid character=" + c);
           }
         }
 
-        case VARIDN -> {
+        case ID_N -> {
           if (c == ':') {
-            parser = Parser.VAROWS;
+            parser = Parser.OPTIONAL_WS;
 
-            variableName = text.substring(start, idx);
-
-            variableId = text.substring(aux, idx);
+            ctx.varIdEnd();
           }
 
           else if (c == '-') {
-            parser = Parser.VARIDN;
+            parser = Parser.ID_N;
           }
 
           else if (Ascii.isLetterOrDigit(c)) {
-            parser = Parser.VARIDN;
+            parser = Parser.ID_N;
           }
 
           else {
-            parseError(line, col, "CSS variable name with invalid character=" + c);
+            ctx.error("CSS variable name with invalid character=" + c);
           }
         }
 
-        case VAROWS -> {
+        case OPTIONAL_WS -> {
           if (Ascii.isWhitespace(c)) {
-            parser = Parser.VAROWS;
-
-            if (c == '\n') {
-              line++;
-
-              col = 0;
-            }
+            parser = Parser.OPTIONAL_WS;
           }
 
           else if (c == ';') {
-            parseError(line, col, "Empty variable definition");
+            ctx.error("Empty variable definition");
           }
 
           else {
-            parser = Parser.VARVALUE;
+            parser = Parser.VALUE;
 
-            sb.setLength(0);
-
-            sb.append(c);
+            ctx.varValueStart(c);
           }
         }
 
-        case VARVALUE -> {
+        case VALUE -> {
           if (c == ';') {
-            parser = Parser.NORMAL;
+            ctx.varValueEnd();
 
-            String value;
-            value = sb.toString();
-
-            CssThemeEntryOfVariable entry;
-            entry = new CssThemeEntryOfVariable(entryIndex++, variableName, value, variableId);
-
-            putThemeEntry(namespace, entry);
+            break loop;
           }
 
           else if (Ascii.isWhitespace(c)) {
-            parser = Parser.VARTRIM;
-
-            if (c == '\n') {
-              line++;
-
-              col = 0;
-            }
+            parser = Parser.VALUE_TRIM;
           }
 
           else {
-            parser = Parser.VARVALUE;
+            parser = Parser.VALUE;
 
-            sb.append(c);
+            ctx.varValueAppend(c);
           }
         }
 
-        case VARTRIM -> {
+        case VALUE_TRIM -> {
           if (c == ';') {
-            parser = Parser.VARVALUE;
+            ctx.varValueEnd();
 
-            idx--;
+            break loop;
           }
 
           else if (Ascii.isWhitespace(c)) {
-            parser = Parser.VARTRIM;
-
-            if (c == '\n') {
-              line++;
-
-              col = 0;
-            }
+            parser = Parser.VALUE_TRIM;
           }
 
           else {
-            parser = Parser.VARVALUE;
+            parser = Parser.VALUE;
 
-            sb.append(' ');
-            sb.append(c);
+            ctx.varValueSpace(c);
           }
         }
       }
@@ -369,13 +421,6 @@ final class CssEngine implements Css.StyleSheet.Config, CssGeneratorScanner.Adap
     list = themeEntries.computeIfAbsent(namespace, ns -> Util.createList());
 
     list.add(entry);
-  }
-
-  private void parseError(int line, int col, String message) {
-    String formatted;
-    formatted = String.format("At %d:%d -> %s", line, col, message);
-
-    throw new IllegalArgumentException(formatted);
   }
 
   // ##################################################################
@@ -450,8 +495,6 @@ final class CssEngine implements Css.StyleSheet.Config, CssGeneratorScanner.Adap
   // ##################################################################
   // # BEGIN: Scan
   // ##################################################################
-
-  private final StringBuilder sb = new StringBuilder();
 
   private String sourceName;
 
@@ -956,7 +999,19 @@ final class CssEngine implements Css.StyleSheet.Config, CssGeneratorScanner.Adap
   // # BEGIN: Test-only section
   // ##################################################################
 
-  final List<CssThemeEntry> testParseTheme() {
+  final Set<String> testProcess() {
+    Set<String> keys;
+    keys = tokens.keySet();
+
+    Set<String> copy;
+    copy = Set.copyOf(keys);
+
+    tokens.clear();
+
+    return copy;
+  }
+
+  final List<CssThemeEntry> testThemeEntries() {
     parse(theme);
 
     UtilList<CssThemeEntry> entries;
@@ -974,16 +1029,11 @@ final class CssEngine implements Css.StyleSheet.Config, CssGeneratorScanner.Adap
     return entries.toUnmodifiableList();
   }
 
-  final Set<String> testProcess() {
-    Set<String> keys;
-    keys = tokens.keySet();
+  final List<Css.Variant> testThemeVariants() {
+    Collection<Css.Variant> values;
+    values = variants.values();
 
-    Set<String> copy;
-    copy = Set.copyOf(keys);
-
-    tokens.clear();
-
-    return copy;
+    return List.copyOf(values);
   }
 
   final String testUtilities() {

@@ -20,10 +20,10 @@ import static org.testng.Assert.assertEquals;
 import java.util.List;
 import org.testng.annotations.Test;
 
-public class CssEngineTestParseTheme {
+public class CssEngineTestParse {
 
-  @Test(description = "theme :: colors (just one)")
-  public void theme01() {
+  @Test(description = "colors :: just one")
+  public void colors01() {
     CssEngine config;
     config = new CssEngine();
 
@@ -32,7 +32,7 @@ public class CssEngineTestParseTheme {
     """);
 
     List<CssThemeEntry> entries;
-    entries = config.testParseTheme();
+    entries = config.testThemeEntries();
 
     assertEquals(entries.size(), 1);
 
@@ -44,8 +44,8 @@ public class CssEngineTestParseTheme {
     assertEquals(entry0.id(), "stone-950");
   }
 
-  @Test(description = "theme :: colors (two lines)")
-  public void theme02() {
+  @Test(description = "colors :: two lines")
+  public void colors02() {
     CssEngine config;
     config = new CssEngine();
 
@@ -55,7 +55,7 @@ public class CssEngineTestParseTheme {
     """);
 
     List<CssThemeEntry> entries;
-    entries = config.testParseTheme();
+    entries = config.testThemeEntries();
 
     assertEquals(entries.size(), 2);
 
@@ -74,8 +74,8 @@ public class CssEngineTestParseTheme {
     assertEquals(entry1.id(), "red-50");
   }
 
-  @Test(description = "theme :: colors (multiple w/ blank lines)")
-  public void theme03() {
+  @Test(description = "colors :: multiple w/ blank lines")
+  public void colors03() {
     CssEngine config;
     config = new CssEngine();
 
@@ -87,7 +87,7 @@ public class CssEngineTestParseTheme {
     """);
 
     List<CssThemeEntry> entries;
-    entries = config.testParseTheme();
+    entries = config.testThemeEntries();
 
     assertEquals(entries.size(), 3);
 
@@ -113,8 +113,8 @@ public class CssEngineTestParseTheme {
     assertEquals(entry2.id(), "amber-50");
   }
 
-  @Test(description = "theme :: colors (it should trim the value)")
-  public void theme04() {
+  @Test(description = "colors :: it should trim the value")
+  public void colors04() {
     CssEngine config;
     config = new CssEngine();
 
@@ -124,7 +124,7 @@ public class CssEngineTestParseTheme {
     """);
 
     List<CssThemeEntry> entries;
-    entries = config.testParseTheme();
+    entries = config.testThemeEntries();
 
     assertEquals(entries.size(), 1);
 
@@ -134,6 +134,26 @@ public class CssEngineTestParseTheme {
     assertEquals(entry0.index(), 0);
     assertEquals(entry0.toString(), "--color-orange-900: oklch(0.408 0.123 38.172);");
     assertEquals(entry0.id(), "orange-900");
+  }
+
+  @Test(enabled = false, description = "variants :: placeholder no body")
+  public void variant01() {
+    CssEngine config;
+    config = new CssEngine();
+
+    config.theme("""
+    @variant hover (&:hover);
+    """);
+
+    List<CssThemeEntry> entries;
+    entries = config.testThemeEntries();
+
+    assertEquals(entries.size(), 0);
+
+    List<Css.Variant> variants;
+    variants = config.testThemeVariants();
+
+    assertEquals(variants.size(), 1);
   }
 
 }

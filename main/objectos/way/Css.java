@@ -1593,6 +1593,25 @@ public final class Css {
   // current version:
   // https://github.com/tailwindlabs/tailwindcss/blob/aa15964b28ab9858ac0055082741c2f95f20a920/packages/tailwindcss/theme.css
   //
+  /*
+
+    @variant dark (@media (prefers-color-scheme: dark));
+
+    @variant focus (&:focus);
+    @variant hover (&:hover);
+    @variant active (&:active);
+    @variant visited (&:visited);
+
+    @variant ltr (&:where([dir="ltr"], [dir="ltr"] *));
+    @variant rtl (&:where([dir="rtl"], [dir="rtl"] *));
+
+    @variant after (&::after);
+    @variant before (&::before);
+
+    @variant * (:is(& > *));
+    @variant ** (:is(& *));
+
+   */
   static String defaultTheme() {
     return """
     --color-red-50: oklch(0.971 0.013 17.38);
