@@ -324,29 +324,34 @@ public final class Css {
     TRANSITION_TIMING_FUNCTION(true),
     TRANSLATE(true),
 
+    USER_SELECT(true),
+
+    VERTICAL_ALIGN(true),
+    VISIBILITY(true),
+
+    WHITE_SPACE(true),
+    WIDTH(true),
+    WORD_SPACING(true),
+
+    Z_INDEX(true),
+
+    // legacy and to be removed
+
     _COLORS,
 
     _SPACING,
-
-    // utilities
-    // order is important!
 
     CUSTOM,
 
     ACCESSIBILITY,
 
-    VISIBILITY,
-
     INSET_X,
     INSET_Y,
-
-    Z_INDEX,
 
     MARGIN_X,
     MARGIN_Y,
 
     SIZE,
-    WIDTH,
 
     BORDER_SPACING_X,
     BORDER_SPACING_Y,
@@ -354,12 +359,8 @@ public final class Css {
     TRANSLATE_X,
     TRANSLATE_Y,
 
-    USER_SELECT,
-
     GAP_X,
     GAP_Y,
-
-    WHITESPACE,
 
     BORDER_RADIUS_T,
     BORDER_RADIUS_R,
@@ -390,8 +391,6 @@ public final class Css {
 
     PADDING_X,
     PADDING_Y,
-
-    VERTICAL_ALIGN,
 
     BOX_SHADOW_COLOR,
 

@@ -740,7 +740,7 @@ final class CssConfig {
     // W
 
     staticUtility(
-        Css.Key.WHITESPACE,
+        Css.Key.WHITE_SPACE,
 
         """
         whitespace-normal       | white-space: normal

@@ -2331,6 +2331,176 @@ public class CssEngineTestUtilities {
     );
   }
 
+  @Test
+  public void userSelect() {
+    class Subject extends AbstractSubject {
+      @Override
+      final void classes() {
+        className("user-select:none");
+        className("user-select:text");
+        className("user-select:all");
+      }
+    }
+
+    test(
+        Subject.class,
+
+        """
+        @layer utilities {
+          .user-select\\:none { user-select: none }
+          .user-select\\:text { user-select: text }
+          .user-select\\:all { user-select: all }
+        }
+        """
+    );
+  }
+
+  @Test
+  public void verticalAlign() {
+    class Subject extends AbstractSubject {
+      @Override
+      final void classes() {
+        className("vertical-align:baseline");
+        className("vertical-align:top");
+        className("vertical-align:super");
+      }
+    }
+
+    test(
+        Subject.class,
+
+        """
+        @layer utilities {
+          .vertical-align\\:baseline { vertical-align: baseline }
+          .vertical-align\\:top { vertical-align: top }
+          .vertical-align\\:super { vertical-align: super }
+        }
+        """
+    );
+  }
+
+  @Test
+  public void visibility() {
+    class Subject extends AbstractSubject {
+      @Override
+      final void classes() {
+        className("visibility:visible");
+        className("visibility:hidden");
+      }
+    }
+
+    test(
+        Subject.class,
+
+        """
+        @layer utilities {
+          .visibility\\:visible { visibility: visible }
+          .visibility\\:hidden { visibility: hidden }
+        }
+        """
+    );
+  }
+
+  @Test
+  public void whiteSpace() {
+    class Subject extends AbstractSubject {
+      @Override
+      final void classes() {
+        className("white-space:normal");
+        className("white-space:nowrap");
+        className("white-space:pre");
+        className("white-space:pre-line");
+      }
+    }
+
+    test(
+        Subject.class,
+
+        """
+        @layer utilities {
+          .white-space\\:normal { white-space: normal }
+          .white-space\\:nowrap { white-space: nowrap }
+          .white-space\\:pre { white-space: pre }
+          .white-space\\:pre-line { white-space: pre-line }
+        }
+        """
+    );
+  }
+
+  @Test
+  public void width() {
+    class Subject extends AbstractSubject {
+      @Override
+      final void classes() {
+        className("width:auto");
+        className("width:50%");
+        className("width:fit-content");
+      }
+    }
+
+    test(
+        Subject.class,
+
+        """
+        @layer utilities {
+          .width\\:auto { width: auto }
+          .width\\:50\\% { width: 50% }
+          .width\\:fit-content { width: fit-content }
+        }
+        """
+    );
+  }
+
+  @Test
+  public void wordSpacing() {
+    class Subject extends AbstractSubject {
+      @Override
+      final void classes() {
+        className("word-spacing:normal");
+        className("word-spacing:3px");
+        className("word-spacing:0.3em");
+      }
+    }
+
+    test(
+        Subject.class,
+
+        """
+        @layer utilities {
+          .word-spacing\\:normal { word-spacing: normal }
+          .word-spacing\\:3px { word-spacing: 3px }
+          .word-spacing\\:0\\.3em { word-spacing: 0.3em }
+        }
+        """
+    );
+  }
+
+  @Test
+  public void zIndex() {
+    class Subject extends AbstractSubject {
+      @Override
+      final void classes() {
+        className("z-index:auto");
+        className("z-index:0");
+        className("z-index:289");
+        className("z-index:-1");
+      }
+    }
+
+    test(
+        Subject.class,
+
+        """
+        @layer utilities {
+          .z-index\\:auto { z-index: auto }
+          .z-index\\:0 { z-index: 0 }
+          .z-index\\:289 { z-index: 289 }
+          .z-index\\:-1 { z-index: -1 }
+        }
+        """
+    );
+  }
+
   private void test(Class<?> type, String expected) {
     CssEngine config;
     config = new CssEngine();
