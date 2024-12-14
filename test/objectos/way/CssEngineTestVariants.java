@@ -121,6 +121,26 @@ public class CssEngineTestVariants {
     );
   }
 
+  @Test
+  public void star() {
+    class Subject extends AbstractSubject {
+      @Override
+      final void classes() {
+        className("*:color:blue-500");
+      }
+    }
+
+    test(
+        Subject.class,
+
+        """
+        @layer utilities {
+          .\\*\\:color\\:blue-500 > * { color: var(--color-blue-500) }
+        }
+        """
+    );
+  }
+
   private void test(Class<?> type, String expected) {
     CssEngine config;
     config = new CssEngine();

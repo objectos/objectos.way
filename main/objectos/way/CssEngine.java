@@ -550,7 +550,7 @@ final class CssEngine implements Css.StyleSheet.Config, CssGeneratorScanner.Adap
             parser = Parser.START;
           }
 
-          else if (Ascii.isLetter(c)) {
+          else if (Ascii.isLetter(c) || c == '*') {
             parser = Parser.NAME;
 
             start = ctx.idx;
@@ -562,7 +562,7 @@ final class CssEngine implements Css.StyleSheet.Config, CssGeneratorScanner.Adap
         }
 
         case NAME -> {
-          if (Ascii.isLetterOrDigit(c) || c == '-') {
+          if (Ascii.isLetterOrDigit(c) || c == '-' || c == '*') {
             parser = Parser.NAME;
           }
 

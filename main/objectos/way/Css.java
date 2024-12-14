@@ -1620,12 +1620,6 @@ public final class Css {
   // current version:
   // https://github.com/tailwindlabs/tailwindcss/blob/aa15964b28ab9858ac0055082741c2f95f20a920/packages/tailwindcss/theme.css
   //
-  /*
-  
-    @variant * (:is(& > *));
-    @variant ** (:is(& *));
-  
-   */
   static String defaultTheme() {
     return """
     @variant dark (@media (prefers-color-scheme: dark));
@@ -1637,6 +1631,9 @@ public final class Css {
 
     @variant after (&::after);
     @variant before (&::before);
+
+    @variant * (& > *);
+    @variant ** (& *);
 
     @theme {
       --color-red-50: oklch(0.971 0.013 17.38);
