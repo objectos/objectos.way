@@ -28,7 +28,9 @@ public class CssEngineTestParse {
     config = new CssEngine();
 
     config.theme("""
-    --color-stone-950: oklch(0.147 0.004 49.25);
+    @theme {
+       --color-stone-950: oklch(0.147 0.004 49.25);
+    }
     """);
 
     List<CssThemeEntry> entries;
@@ -50,8 +52,10 @@ public class CssEngineTestParse {
     config = new CssEngine();
 
     config.theme("""
-    --color-stone-950: oklch(0.147 0.004 49.25);
-    --color-red-50: oklch(0.971 0.013 17.38);
+    @theme {
+      --color-stone-950: oklch(0.147 0.004 49.25);
+      --color-red-50: oklch(0.971 0.013 17.38);
+    }
     """);
 
     List<CssThemeEntry> entries;
@@ -80,10 +84,12 @@ public class CssEngineTestParse {
     config = new CssEngine();
 
     config.theme("""
-    --color-orange-900: oklch(0.408 0.123 38.172);
-    --color-orange-950: oklch(0.266 0.079 36.259);
+    @theme {
+      --color-orange-900: oklch(0.408 0.123 38.172);
+      --color-orange-950: oklch(0.266 0.079 36.259);
 
-    --color-amber-50: oklch(0.987 0.022 95.277);
+      --color-amber-50: oklch(0.987 0.022 95.277);
+    }
     """);
 
     List<CssThemeEntry> entries;
@@ -119,8 +125,10 @@ public class CssEngineTestParse {
     config = new CssEngine();
 
     config.theme("""
+    @theme {
     --color-orange-900:
        oklch(0.408 0.123        38.172)     ;
+    }
     """);
 
     List<CssThemeEntry> entries;
@@ -142,7 +150,7 @@ public class CssEngineTestParse {
     config = new CssEngine();
 
     config.theme("""
-    @variant hover (&:hover);
+    @variant focus (&:focus);
     """);
 
     List<CssThemeEntry> entries;
