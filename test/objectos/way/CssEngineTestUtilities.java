@@ -344,6 +344,28 @@ public class CssEngineTestUtilities {
   }
 
   @Test
+  public void color() {
+    class Subject extends AbstractSubject {
+      @Override
+      final void classes() {
+        className("color:rebeccapurple");
+        className("color:purple-500");
+      }
+    }
+
+    test(
+        Subject.class,
+
+        """
+        @layer utilities {
+          .color\\:rebeccapurple { color: rebeccapurple }
+          .color\\:purple-500 { color: var(--color-purple-500) }
+        }
+        """
+    );
+  }
+
+  @Test
   public void columnGap() {
     class Subject extends AbstractSubject {
       @Override

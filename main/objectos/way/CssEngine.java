@@ -19,12 +19,14 @@ import java.nio.file.Path;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.EnumMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 import java.util.SequencedMap;
 import java.util.Set;
+import objectos.way.Css.ClassNameFormat;
 import objectos.way.Css.Namespace;
 
 final class CssEngine implements Css.StyleSheet.Config, CssGeneratorScanner.Adapter {
@@ -139,7 +141,7 @@ final class CssEngine implements Css.StyleSheet.Config, CssGeneratorScanner.Adap
 
   private final Map<Css.Namespace, List<CssThemeEntry>> themeEntries = new EnumMap<>(Css.Namespace.class);
 
-  private final Map<String, Css.Variant> variants = Util.createMap();
+  private final Map<String, Css.Variant> variants = new LinkedHashMap<>();
 
   private class ParseCtx {
 
@@ -161,12 +163,6 @@ final class CssEngine implements Css.StyleSheet.Config, CssGeneratorScanner.Adap
       return idx < length;
     }
 
-    final boolean hasNext(int max) {
-      idx++;
-
-      return idx < max;
-    }
-
     final char next() {
       return text.charAt(idx);
     }
@@ -177,19 +173,6 @@ final class CssEngine implements Css.StyleSheet.Config, CssGeneratorScanner.Adap
 
     final void error(String message) {
       throw new IllegalArgumentException(message);
-    }
-
-    final int jmp(int value) {
-      int returnTo;
-      returnTo = idx;
-
-      idx = value - 1;
-
-      return returnTo;
-    }
-
-    final void returnTo(int value) {
-      idx = value;
     }
 
   }
@@ -535,17 +518,23 @@ final class CssEngine implements Css.StyleSheet.Config, CssGeneratorScanner.Adap
       NAME,
       BLOCK_OR_PARENS,
       PARENS_START,
-      PARENS_DEF,
-      PARENS_END;
+      // placeholder: content only after the &
+      AFTER_1,
+      AFTER_1_WS,
+      AFTER_N,
+      AFTER_N_WS,
+      AFTER_END;
 
     }
 
     Parser parser;
     parser = Parser.START;
 
-    int start = 0, parens = 0;
+    int start;
+    start = 0;
 
-    String name = null;
+    String name;
+    name = null;
 
     loop: while (ctx.hasNext()) {
       char c;
@@ -591,8 +580,6 @@ final class CssEngine implements Css.StyleSheet.Config, CssGeneratorScanner.Adap
 
           else if (c == '(') {
             parser = Parser.PARENS_START;
-
-            parens = 1;
           }
 
           else {
@@ -609,49 +596,124 @@ final class CssEngine implements Css.StyleSheet.Config, CssGeneratorScanner.Adap
             ctx.error("Empty variant definition");
           }
 
-          else {
-            parser = Parser.PARENS_DEF;
+          else if (c == '&') {
+            parser = Parser.AFTER_1;
+          }
 
-            start = ctx.idx;
+          else {
+            ctx.error("Invalid variant definition");
           }
         }
 
-        case PARENS_DEF -> {
-          if (c == '(') {
-            parens++;
+        case AFTER_1 -> {
+          if (Ascii.isWhitespace(c)) {
+            parser = Parser.AFTER_1_WS;
+          }
+
+          else if (c == ')' || c == ';') {
+            ctx.error("Empty placeholder definition");
+          }
+
+          else if (c == '&') {
+            ctx.error("Multiple placeholders found");
+          }
+
+          else {
+            parser = Parser.AFTER_N;
+
+            sb.setLength(0);
+
+            sb.append(c);
+          }
+        }
+
+        case AFTER_1_WS -> {
+          if (Ascii.isWhitespace(c)) {
+            parser = Parser.AFTER_1_WS;
+          }
+
+          else if (c == ')' || c == ';') {
+            ctx.error("Empty placeholder definition");
+          }
+
+          else if (c == '&') {
+            ctx.error("Multiple placeholders found");
+          }
+
+          else {
+            parser = Parser.AFTER_N;
+
+            sb.setLength(0);
+
+            sb.append(' ');
+
+            sb.append(c);
+          }
+        }
+
+        case AFTER_N -> {
+          if (Ascii.isWhitespace(c)) {
+            parser = Parser.AFTER_N_WS;
           }
 
           else if (c == ')') {
-            parens--;
-
-            if (parens == 0) {
-              parser = Parser.PARENS_END;
-            } else {
-              parser = Parser.PARENS_DEF;
-            }
+            parser = Parser.AFTER_END;
           }
 
           else if (c == ';') {
-            ctx.error("Invalid variant definition: unclosed parenthesis found");
+            ctx.error("Missing closing ')'");
+          }
+
+          else if (c == '&') {
+            ctx.error("Multiple placeholders found");
           }
 
           else {
-            parser = Parser.PARENS_DEF;
+            parser = Parser.AFTER_N;
+
+            sb.append(c);
           }
         }
 
-        case PARENS_END -> {
+        case AFTER_N_WS -> {
           if (Ascii.isWhitespace(c)) {
-            parser = Parser.PARENS_END;
+            parser = Parser.AFTER_N_WS;
+          }
+
+          else if (c == ')') {
+            parser = Parser.AFTER_END;
           }
 
           else if (c == ';') {
-            int returnTo;
-            returnTo = ctx.jmp(start);
+            ctx.error("Missing closing ')'");
+          }
 
-            parseVariantParens(ctx, returnTo, name);
+          else if (c == '&') {
+            ctx.error("Multiple placeholders found");
+          }
 
-            ctx.returnTo(returnTo);
+          else {
+            parser = Parser.AFTER_N;
+
+            sb.append(' ');
+
+            sb.append(c);
+          }
+        }
+
+        case AFTER_END -> {
+          if (Ascii.isWhitespace(c)) {
+            parser = Parser.AFTER_END;
+          }
+
+          else if (c == ';') {
+            String after;
+            after = sb.toString();
+
+            ClassNameFormat result;
+            result = new Css.ClassNameFormat("", after);
+
+            putVariant(name, result);
 
             break loop;
           }
@@ -664,41 +726,11 @@ final class CssEngine implements Css.StyleSheet.Config, CssGeneratorScanner.Adap
     }
   }
 
-  private void parseVariantParens(ParseCtx ctx, int returnTo, String name) {
-    enum Parser {
-      START,
+  private void putVariant(String name, Css.Variant value) {
+    Css.Variant maybeExisting = variants.put(name, value);
 
-      PLACEHOLDER;
-    }
-
-    Parser parser;
-    parser = Parser.START;
-
-    while (ctx.hasNext(returnTo)) {
-      char c;
-      c = ctx.next();
-
-      switch (parser) {
-        case START -> {
-          if (c == '&') {
-            parser = Parser.PLACEHOLDER;
-          }
-
-          else if (c == '@') {
-            throw new UnsupportedOperationException("Implement me :: @media like");
-          }
-
-          else {
-            throw new UnsupportedOperationException("Implement me");
-          }
-        }
-
-        case PLACEHOLDER -> {
-          if (c == '&') {
-            ctx.error("Variant must not have more than one placeholder");
-          }
-        }
-      }
+    if (maybeExisting != null) {
+      // TODO log variant replaced
     }
   }
 
@@ -1282,6 +1314,10 @@ final class CssEngine implements Css.StyleSheet.Config, CssGeneratorScanner.Adap
   // ##################################################################
   // # BEGIN: Test-only section
   // ##################################################################
+
+  final void testParse(String css) {
+    parse(css);
+  }
 
   final Set<String> testProcess() {
     Set<String> keys;

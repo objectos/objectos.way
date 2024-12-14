@@ -18,6 +18,7 @@ package objectos.way;
 import static org.testng.Assert.assertEquals;
 
 import java.util.List;
+import org.testng.Assert;
 import org.testng.annotations.Test;
 
 public class CssEngineTestParse {
@@ -144,14 +145,11 @@ public class CssEngineTestParse {
     assertEquals(entry0.id(), "orange-900");
   }
 
-  @Test(enabled = false, description = "variants :: placeholder no body")
-  public void variant01() {
+  private void variant(String css, Css.Variant... expected) {
     CssEngine config;
     config = new CssEngine();
 
-    config.theme("""
-    @variant focus (&:focus);
-    """);
+    config.theme(css);
 
     List<CssThemeEntry> entries;
     entries = config.testThemeEntries();
@@ -161,7 +159,104 @@ public class CssEngineTestParse {
     List<Css.Variant> variants;
     variants = config.testThemeVariants();
 
-    assertEquals(variants.size(), 1);
+    assertEquals(variants.size(), expected.length);
+
+    for (int idx = 0, len = variants.size(); idx < len; idx++) {
+      assertEquals(variants.get(idx), expected[idx]);
+    }
+  }
+
+  @Test(description = "variants :: placeholder no body")
+  public void variant01() {
+    variant("@variant focus (&:focus);", new Css.ClassNameFormat("", ":focus"));
+  }
+
+  @Test(description = "variants :: multiple variants")
+  public void variant02() {
+    variant(
+        """
+        @variant focus (&:focus);
+        @variant active (&:active);
+        """,
+
+        new Css.ClassNameFormat("", ":focus"),
+        new Css.ClassNameFormat("", ":active")
+    );
+  }
+
+  @Test(description = "variants :: ignore whitespace")
+  public void variant03() {
+    variant("@variant after ( &::after   );", new Css.ClassNameFormat("", "::after"));
+  }
+
+  @Test(description = "variants :: trim intra ws")
+  public void variant04() {
+    variant("@variant after ( &  >  table   );", new Css.ClassNameFormat("", " > table"));
+  }
+
+  private void invalidVariant(String css, String expectedMessage) {
+    CssEngine config;
+    config = new CssEngine();
+
+    config.theme(css);
+
+    try {
+      config.testParse(css);
+
+      Assert.fail("IllegalArgumentException was not thrown");
+    } catch (IllegalArgumentException expected) {
+      assertEquals(expected.getMessage(), expectedMessage);
+    }
+  }
+
+  @Test
+  public void invalidVariant01() {
+    invalidVariant("@variant ;", "Variant name must start with a letter");
+  }
+
+  @Test
+  public void invalidVariant02() {
+    invalidVariant("@variant foo;", "Variant name contains invalid character");
+  }
+
+  @Test
+  public void invalidVariant03() {
+    invalidVariant("@variant foo (;", "Empty variant definition");
+  }
+
+  @Test
+  public void invalidVariant04() {
+    invalidVariant("@variant foo ();", "Empty variant definition");
+  }
+
+  @Test
+  public void invalidVariant05() {
+    invalidVariant("@variant foo (&);", "Empty placeholder definition");
+  }
+
+  @Test
+  public void invalidVariant06() {
+    invalidVariant("@variant foo (& );", "Empty placeholder definition");
+  }
+
+  @Test
+  public void invalidVariant07() {
+    invalidVariant("@variant foo ( &);", "Empty placeholder definition");
+  }
+
+  @Test
+  public void invalidVariant08() {
+    invalidVariant("@variant foo ( &:foo)a;", "Invalid variant definition: expected the ';' character");
+  }
+
+  @Test
+  public void invalidVariant09() {
+    invalidVariant("@variant foo (&&);", "Multiple placeholders found");
+  }
+
+  @Test
+  public void invalidVariant10() {
+    invalidVariant("@variant foo (&::after::&);", "Multiple placeholders found");
   }
 
 }
