@@ -194,6 +194,12 @@ public class CssEngineTestParse {
     variant("@variant after ( &  >  table   );", new Css.ClassNameFormat("", " > table"));
   }
 
+  @Test(description = "variants :: media query")
+  public void variant05() {
+    variant("@variant dark (@media (prefers-color-scheme: dark));",
+        new Css.AtRuleVariant("@media (prefers-color-scheme: dark)"));
+  }
+
   private void invalidVariant(String css, String expectedMessage) {
     CssEngine config;
     config = new CssEngine();

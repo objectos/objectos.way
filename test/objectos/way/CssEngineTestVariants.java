@@ -73,6 +73,35 @@ public class CssEngineTestVariants {
   }
 
   @Test
+  public void dark() {
+    class Subject extends AbstractSubject {
+      @Override
+      final void classes() {
+        className("background-color:white");
+        className("color:black");
+        className("dark:background-color:black");
+        className("dark:color:gray-50");
+      }
+    }
+
+    test(
+        Subject.class,
+
+        """
+        @layer utilities {
+          .background-color\\:white { background-color: var(--color-white) }
+          .color\\:black { color: var(--color-black) }
+
+          @media (prefers-color-scheme: dark) {
+            .dark\\:background-color\\:black { background-color: var(--color-black) }
+            .dark\\:color\\:gray-50 { color: var(--color-gray-50) }
+          }
+        }
+        """
+    );
+  }
+
+  @Test
   public void focus() {
     class Subject extends AbstractSubject {
       @Override

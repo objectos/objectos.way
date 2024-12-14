@@ -26,7 +26,6 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.SequencedMap;
 import java.util.Set;
-import objectos.way.Css.ClassNameFormat;
 import objectos.way.Css.Namespace;
 
 final class CssEngine implements Css.StyleSheet.Config, CssGeneratorScanner.Adapter {
@@ -518,23 +517,28 @@ final class CssEngine implements Css.StyleSheet.Config, CssGeneratorScanner.Adap
       NAME,
       BLOCK_OR_PARENS,
       PARENS_START,
+
       // placeholder: content only after the &
       AFTER_1,
       AFTER_1_WS,
       AFTER_N,
       AFTER_N_WS,
-      AFTER_END;
+      AFTER_END,
+
+      // @-rule variant
+      AT,
+      AT_END;
 
     }
 
     Parser parser;
     parser = Parser.START;
 
-    int start;
-    start = 0;
+    int start, parens;
+    start = parens = 0;
 
-    String name;
-    name = null;
+    String name, def;
+    name = def = null;
 
     loop: while (ctx.hasNext()) {
       char c;
@@ -580,6 +584,8 @@ final class CssEngine implements Css.StyleSheet.Config, CssGeneratorScanner.Adap
 
           else if (c == '(') {
             parser = Parser.PARENS_START;
+
+            parens = 1;
           }
 
           else {
@@ -598,6 +604,12 @@ final class CssEngine implements Css.StyleSheet.Config, CssGeneratorScanner.Adap
 
           else if (c == '&') {
             parser = Parser.AFTER_1;
+          }
+
+          else if (c == '@') {
+            parser = Parser.AT;
+
+            start = ctx.idx;
           }
 
           else {
@@ -710,8 +722,55 @@ final class CssEngine implements Css.StyleSheet.Config, CssGeneratorScanner.Adap
             String after;
             after = sb.toString();
 
-            ClassNameFormat result;
+            Css.ClassNameFormat result;
             result = new Css.ClassNameFormat("", after);
+
+            putVariant(name, result);
+
+            break loop;
+          }
+
+          else {
+            ctx.error("Invalid variant definition: expected the ';' character");
+          }
+        }
+
+        case AT -> {
+          if (c == '(') {
+            parser = Parser.AT;
+
+            parens++;
+          }
+
+          else if (c == ')') {
+            parens--;
+
+            if (parens == 0) {
+              parser = Parser.AT_END;
+
+              def = ctx.substring(start);
+            } else {
+              parser = Parser.AT;
+            }
+          }
+
+          else if (c == ';') {
+            ctx.error("Missing closing ')'");
+          }
+
+          else {
+            parser = Parser.AT;
+          }
+        }
+
+        case AT_END -> {
+          if (Ascii.isWhitespace(c)) {
+            parser = Parser.AT_END;
+          }
+
+          else if (c == ';') {
+            Css.AtRuleVariant result;
+            result = new Css.AtRuleVariant(def);
 
             putVariant(name, result);
 

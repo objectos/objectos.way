@@ -90,6 +90,32 @@ public final class Css {
   //
 
   //
+  // A
+  //
+
+  record AtRuleVariant(String rule) implements MediaQuery {
+
+    @Override
+    public final int compareTo(MediaQuery o) {
+      if (o instanceof AtRuleVariant that) {
+        return rule.compareTo(that.rule);
+      } else {
+        return 1;
+      }
+    }
+
+    @Override
+    public final void writeMediaQueryStart(StringBuilder out, Indentation indentation) {
+      indentation.writeTo(out);
+
+      out.append(rule);
+      out.append(" {");
+      out.append(System.lineSeparator());
+    }
+
+  }
+
+  //
   // B
   //
 
@@ -1596,22 +1622,14 @@ public final class Css {
   //
   /*
   
-    @variant dark (@media (prefers-color-scheme: dark));
-  
-    @variant focus (&:focus);
-    @variant hover (&:hover);
-    @variant active (&:active);
-    @variant visited (&:visited);
-  
-    @variant after (&::after);
-    @variant before (&::before);
-  
     @variant * (:is(& > *));
     @variant ** (:is(& *));
   
    */
   static String defaultTheme() {
     return """
+    @variant dark (@media (prefers-color-scheme: dark));
+
     @variant focus (&:focus);
     @variant hover (&:hover);
     @variant active (&:active);
