@@ -19,6 +19,7 @@ import java.nio.file.Path;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.EnumMap;
+import java.util.EnumSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
@@ -53,6 +54,10 @@ final class CssEngine implements Css.StyleSheet.Config, CssGeneratorScanner.Adap
   // # BEGIN: Configuration
   // ##################################################################
 
+  private final StringBuilder css = new StringBuilder();
+
+  private String base = Css.defaultBase();
+
   private Set<Class<?>> classesToScan;
 
   private Set<Path> directoriesToScan;
@@ -62,9 +67,15 @@ final class CssEngine implements Css.StyleSheet.Config, CssGeneratorScanner.Adap
   @SuppressWarnings("unused")
   private final Notes notes = Notes.get();
 
+  private final Set<Css.Layer> skipLayer = EnumSet.noneOf(Css.Layer.class);
+
   private String theme;
 
   private final Map<String, Css.Variant> variants = new LinkedHashMap<>();
+
+  public final void base(String value) {
+    base = Objects.requireNonNull(value, "value == null");
+  }
 
   @Override
   public final void noteSink(Note.Sink value) {
@@ -91,6 +102,10 @@ final class CssEngine implements Css.StyleSheet.Config, CssGeneratorScanner.Adap
     }
 
     directoriesToScan.add(value);
+  }
+
+  public final void skipLayer(Css.Layer layer) {
+    skipLayer.add(layer);
   }
 
   @Override
@@ -989,6 +1004,268 @@ final class CssEngine implements Css.StyleSheet.Config, CssGeneratorScanner.Adap
   // ##################################################################
 
   // ##################################################################
+  // # BEGIN: CSS Generation
+  // ##################################################################
+
+  public final String generate() {
+    if (!skipLayer.contains(Css.Layer.THEME)) {
+      generateTheme();
+    }
+
+    if (!skipLayer.contains(Css.Layer.BASE)) {
+      generateBase(base);
+    }
+
+    if (!skipLayer.contains(Css.Layer.UTILITIES)) {
+      generateUtilities();
+    }
+
+    return css.toString();
+  }
+
+  private void generateTheme() {
+    writeln("@layer theme {");
+
+    indent(1);
+
+    writeln(":root {");
+
+    UtilList<CssThemeEntry> entries;
+    entries = new UtilList<>();
+
+    Collection<List<CssThemeEntry>> values;
+    values = themeEntries.values();
+
+    for (List<CssThemeEntry> value : values) {
+      entries.addAll(value);
+    }
+
+    entries.sort(Comparator.naturalOrder());
+
+    for (CssThemeEntry entry : entries) {
+      indent(2);
+
+      write(entry.name());
+      write(": ");
+      write(entry.value());
+      writeln(';');
+    }
+
+    indent(1);
+
+    writeln('}');
+
+    writeln('}');
+  }
+
+  // ##################################################################
+  // # BEGIN: Base layer
+  // ##################################################################
+
+  private void generateBase(String text) {
+    enum Parser {
+      NORMAL,
+
+      SLASH,
+
+      COMMENT,
+      COMMENT_STAR,
+
+      TEXT,
+
+      UNKNOWN;
+    }
+
+    Parser parser;
+    parser = Parser.NORMAL;
+
+    writeln("@layer base {");
+
+    boolean indent;
+    indent = true;
+
+    int level;
+    level = 1;
+
+    for (int idx = 0, len = text.length(); idx < len; idx++) {
+      char c = text.charAt(idx);
+
+      switch (parser) {
+        case NORMAL -> {
+          if (Ascii.isWhitespace(c)) {
+            parser = Parser.NORMAL;
+          }
+
+          else if (c == '/') {
+            parser = Parser.SLASH;
+          }
+
+          else if (c == '{') {
+            parser = Parser.NORMAL;
+
+            indent = true;
+
+            level++;
+
+            writeln(c);
+          }
+
+          else if (c == '}') {
+            parser = Parser.NORMAL;
+
+            indent = true;
+
+            level--;
+
+            indent(level);
+
+            writeln(c);
+          }
+
+          else {
+            parser = Parser.TEXT;
+
+            if (indent) {
+              indent(level);
+
+              indent = false;
+            }
+
+            write(c);
+          }
+        }
+
+        case SLASH -> {
+          if (c == '*') {
+            parser = Parser.COMMENT;
+          }
+
+          else {
+            parser = Parser.UNKNOWN;
+
+            write('/', c);
+          }
+        }
+
+        case COMMENT -> {
+          if (c == '*') {
+            parser = Parser.COMMENT_STAR;
+          }
+        }
+
+        case COMMENT_STAR -> {
+          if (c == '*') {
+            parser = Parser.COMMENT_STAR;
+          }
+
+          else if (c == '/') {
+            parser = Parser.NORMAL;
+          }
+
+          else {
+            parser = Parser.COMMENT;
+          }
+        }
+
+        case TEXT -> {
+          if (Ascii.isWhitespace(c)) {
+            parser = Parser.NORMAL;
+
+            write(' ');
+          }
+
+          else if (c == '{') {
+            throw new UnsupportedOperationException("Implement me");
+          }
+
+          else if (c == ';') {
+            parser = Parser.NORMAL;
+
+            indent = true;
+
+            writeln(c);
+          }
+
+          else {
+            parser = Parser.TEXT;
+
+            write(c);
+          }
+        }
+
+        case UNKNOWN -> css.append(c);
+      }
+    }
+
+    css.append("}\n");
+  }
+
+  // ##################################################################
+  // # END: Base layer
+  // ##################################################################
+
+  private void generateUtilities() {
+    CssGeneratorContextOf topLevel;
+    topLevel = new CssGeneratorContextOf();
+
+    for (Css.Rule rule : rules.values()) {
+      rule.accept(topLevel);
+    }
+
+    Css.Indentation indentation;
+    indentation = Css.Indentation.ROOT;
+
+    writeln("@layer utilities {");
+
+    indentation = indentation.increase();
+
+    topLevel.writeTo(css, indentation);
+
+    writeln('}');
+  }
+
+  // ##################################################################
+  // # BEGIN: output writing section
+  // ##################################################################
+
+  private void indent(int level) {
+    for (int i = 0, count = level * 2; i < count; i++) {
+      css.append(' ');
+    }
+  }
+
+  private void write(char c) {
+    css.append(c);
+  }
+
+  private void write(char c1, char c2) {
+    css.append(c1);
+    css.append(c2);
+  }
+
+  private void write(String s) {
+    css.append(s);
+  }
+
+  private void writeln(char c) {
+    css.append(c);
+    css.append('\n');
+  }
+
+  private void writeln(String s) {
+    css.append(s);
+    css.append('\n');
+  }
+
+  // ##################################################################
+  // # END: output writing section
+  // ##################################################################
+
+  // ##################################################################
+  // # END: CSS Generation
+  // ##################################################################
+
+  // ##################################################################
   // # BEGIN: Test-only section
   // ##################################################################
 
@@ -1027,33 +1304,6 @@ final class CssEngine implements Css.StyleSheet.Config, CssGeneratorScanner.Adap
     values = variants.values();
 
     return List.copyOf(values);
-  }
-
-  final String testUtilities() {
-    CssGeneratorContextOf topLevel;
-    topLevel = new CssGeneratorContextOf();
-
-    for (Css.Rule rule : rules.values()) {
-      rule.accept(topLevel);
-    }
-
-    StringBuilder out;
-    out = new StringBuilder();
-
-    Css.Indentation indentation;
-    indentation = Css.Indentation.ROOT;
-
-    out.append("@layer utilities {");
-    out.append(System.lineSeparator());
-
-    indentation = indentation.increase();
-
-    topLevel.writeTo(out, indentation);
-
-    out.append("}");
-    out.append(System.lineSeparator());
-
-    return out.toString();
   }
 
   // ##################################################################

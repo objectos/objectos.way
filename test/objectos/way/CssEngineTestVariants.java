@@ -172,18 +172,21 @@ public class CssEngineTestVariants {
   }
 
   private void test(Class<?> type, String expected) {
-    CssEngine config;
-    config = new CssEngine();
+    CssEngine engine;
+    engine = new CssEngine();
 
-    config.scanClass(type);
+    engine.scanClass(type);
 
-    config.execute();
+    engine.skipLayer(Css.Layer.THEME);
+    engine.skipLayer(Css.Layer.BASE);
+    engine.skipLayer(Css.Layer.COMPONENTS);
 
-    assertEquals(
-        config.testUtilities(),
+    engine.execute();
 
-        expected
-    );
+    String result;
+    result = engine.generate();
+
+    assertEquals(result, expected);
   }
 
 }
