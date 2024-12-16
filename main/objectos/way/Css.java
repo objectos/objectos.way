@@ -73,7 +73,17 @@ public final class Css {
     }
 
     static StyleSheet generate(Consumer<Config> config) {
-      throw new UnsupportedOperationException("Implement me");
+      CssEngine engine;
+      engine = new CssEngine();
+
+      config.accept(engine);
+
+      engine.execute();
+
+      String css;
+      css = engine.generate();
+
+      return new CssStyleSheet(css);
     }
 
     @Override

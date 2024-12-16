@@ -21,20 +21,9 @@ import org.testng.annotations.Test;
 
 public class CssEngineTestVariants {
 
-  private static abstract class AbstractSubject extends Html.Template {
-    @Override
-    protected final void render() {
-      div(
-          renderFragment(this::classes)
-      );
-    }
-
-    abstract void classes();
-  }
-
   @Test
   public void active() {
-    class Subject extends AbstractSubject {
+    class Subject extends CssSubject {
       @Override
       final void classes() {
         className("active:color:pink-300");
@@ -54,7 +43,7 @@ public class CssEngineTestVariants {
 
   @Test
   public void after() {
-    class Subject extends AbstractSubject {
+    class Subject extends CssSubject {
       @Override
       final void classes() {
         className("after:content:''");
@@ -74,7 +63,7 @@ public class CssEngineTestVariants {
 
   @Test
   public void breakpoint() {
-    class Subject extends AbstractSubject {
+    class Subject extends CssSubject {
       @Override
       final void classes() {
         className("width:100%");
@@ -104,7 +93,7 @@ public class CssEngineTestVariants {
 
   @Test
   public void dark() {
-    class Subject extends AbstractSubject {
+    class Subject extends CssSubject {
       @Override
       final void classes() {
         className("background-color:white");
@@ -133,7 +122,7 @@ public class CssEngineTestVariants {
 
   @Test
   public void focus() {
-    class Subject extends AbstractSubject {
+    class Subject extends CssSubject {
       @Override
       final void classes() {
         className("focus:outline:solid_blue-500");
@@ -153,7 +142,7 @@ public class CssEngineTestVariants {
 
   @Test
   public void star() {
-    class Subject extends AbstractSubject {
+    class Subject extends CssSubject {
       @Override
       final void classes() {
         className("*:color:blue-500");

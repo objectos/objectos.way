@@ -21,20 +21,9 @@ import org.testng.annotations.Test;
 
 public class CssEngineTestUtilities {
 
-  private static abstract class AbstractSubject extends Html.Template {
-    @Override
-    protected final void render() {
-      div(
-          renderFragment(this::classes)
-      );
-    }
-
-    abstract void classes();
-  }
-
   @Test
   public void alignContent() {
-    class Subject extends AbstractSubject {
+    class Subject extends CssSubject {
       @Override
       final void classes() {
         className("align-content:normal align-content:flex-start");
@@ -55,7 +44,7 @@ public class CssEngineTestUtilities {
 
   @Test
   public void alignItems() {
-    class Subject extends AbstractSubject {
+    class Subject extends CssSubject {
       @Override
       final void classes() {
         className("align-items:flex-start align-items:center");
@@ -76,7 +65,7 @@ public class CssEngineTestUtilities {
 
   @Test
   public void alignSelf() {
-    class Subject extends AbstractSubject {
+    class Subject extends CssSubject {
       @Override
       final void classes() {
         className("align-self:auto align-self:flex-start");
@@ -97,7 +86,7 @@ public class CssEngineTestUtilities {
 
   @Test
   public void appearance() {
-    class Subject extends AbstractSubject {
+    class Subject extends CssSubject {
       @Override
       final void classes() {
         className("appearance:auto appearance:none");
@@ -118,7 +107,7 @@ public class CssEngineTestUtilities {
 
   @Test
   public void aspectRatio() {
-    class Subject extends AbstractSubject {
+    class Subject extends CssSubject {
       @Override
       final void classes() {
         className("aspect-ratio:auto aspect-ratio:2 aspect-ratio:16/9");
@@ -140,7 +129,7 @@ public class CssEngineTestUtilities {
 
   @Test
   public void backgroundColor() {
-    class Subject extends AbstractSubject {
+    class Subject extends CssSubject {
       @Override
       final void classes() {
         className("background-color:currentColor");
@@ -166,7 +155,7 @@ public class CssEngineTestUtilities {
 
   @Test
   public void border() {
-    class Subject extends AbstractSubject {
+    class Subject extends CssSubject {
       @Override
       final void classes() {
         className("border:1px");
@@ -204,7 +193,7 @@ public class CssEngineTestUtilities {
 
   @Test
   public void borderCollapse() {
-    class Subject extends AbstractSubject {
+    class Subject extends CssSubject {
       @Override
       final void classes() {
         className("border-collapse:collapse border-collapse:separate border-collapse:inherit");
@@ -226,7 +215,7 @@ public class CssEngineTestUtilities {
 
   @Test
   public void borderRadius() {
-    class Subject extends AbstractSubject {
+    class Subject extends CssSubject {
       @Override
       final void classes() {
         className("border-radius:10px");
@@ -256,7 +245,7 @@ public class CssEngineTestUtilities {
 
   @Test
   public void borderSpacing() {
-    class Subject extends AbstractSubject {
+    class Subject extends CssSubject {
       @Override
       final void classes() {
         className("border-spacing:1px");
@@ -280,7 +269,7 @@ public class CssEngineTestUtilities {
 
   @Test
   public void bottom() {
-    class Subject extends AbstractSubject {
+    class Subject extends CssSubject {
       @Override
       final void classes() {
         className("bottom:auto");
@@ -302,7 +291,7 @@ public class CssEngineTestUtilities {
 
   @Test
   public void boxShadow() {
-    class Subject extends AbstractSubject {
+    class Subject extends CssSubject {
       @Override
       final void classes() {
         className("box-shadow:inset_0_2px_4px_0_rgb(0_0_0_/_0.05)");
@@ -322,7 +311,7 @@ public class CssEngineTestUtilities {
 
   @Test
   public void clear() {
-    class Subject extends AbstractSubject {
+    class Subject extends CssSubject {
       @Override
       final void classes() {
         className("clear:left clear:right clear:both clear:none");
@@ -345,7 +334,7 @@ public class CssEngineTestUtilities {
 
   @Test
   public void color() {
-    class Subject extends AbstractSubject {
+    class Subject extends CssSubject {
       @Override
       final void classes() {
         className("color:rebeccapurple");
@@ -367,7 +356,7 @@ public class CssEngineTestUtilities {
 
   @Test
   public void columnGap() {
-    class Subject extends AbstractSubject {
+    class Subject extends CssSubject {
       @Override
       final void classes() {
         className("column-gap:0");
@@ -389,7 +378,7 @@ public class CssEngineTestUtilities {
 
   @Test
   public void content() {
-    class Subject extends AbstractSubject {
+    class Subject extends CssSubject {
       @Override
       final void classes() {
         className("content:none");
@@ -411,7 +400,7 @@ public class CssEngineTestUtilities {
 
   @Test
   public void cursor() {
-    class Subject extends AbstractSubject {
+    class Subject extends CssSubject {
       @Override
       final void classes() {
         className("cursor:auto cursor:pointer cursor:zoom-out");
@@ -433,7 +422,7 @@ public class CssEngineTestUtilities {
 
   @Test
   public void display() {
-    class Subject extends AbstractSubject {
+    class Subject extends CssSubject {
       @Override
       final void classes() {
         className("display:block display:flex display:none");
@@ -455,7 +444,7 @@ public class CssEngineTestUtilities {
 
   @Test
   public void fill() {
-    class Subject extends AbstractSubject {
+    class Subject extends CssSubject {
       @Override
       final void classes() {
         className("fill:none");
@@ -477,7 +466,7 @@ public class CssEngineTestUtilities {
 
   @Test
   public void flex() {
-    class Subject extends AbstractSubject {
+    class Subject extends CssSubject {
       @Override
       final void classes() {
         className("flex:none");
@@ -499,7 +488,7 @@ public class CssEngineTestUtilities {
 
   @Test
   public void flexBasis() {
-    class Subject extends AbstractSubject {
+    class Subject extends CssSubject {
       @Override
       final void classes() {
         className("flex-basis:auto");
@@ -521,7 +510,7 @@ public class CssEngineTestUtilities {
 
   @Test
   public void flexDirection() {
-    class Subject extends AbstractSubject {
+    class Subject extends CssSubject {
       @Override
       final void classes() {
         className("flex-direction:row");
@@ -547,7 +536,7 @@ public class CssEngineTestUtilities {
 
   @Test
   public void flexGrow() {
-    class Subject extends AbstractSubject {
+    class Subject extends CssSubject {
       @Override
       final void classes() {
         className("flex-grow:1 flex-grow:0 flex-grow:2");
@@ -569,7 +558,7 @@ public class CssEngineTestUtilities {
 
   @Test
   public void flexShrink() {
-    class Subject extends AbstractSubject {
+    class Subject extends CssSubject {
       @Override
       final void classes() {
         className("flex-shrink:1 flex-shrink:0 flex-shrink:2");
@@ -591,7 +580,7 @@ public class CssEngineTestUtilities {
 
   @Test
   public void flexWrap() {
-    class Subject extends AbstractSubject {
+    class Subject extends CssSubject {
       @Override
       final void classes() {
         className("flex-wrap:wrap flex-wrap:wrap-reverse flex-wrap:nowrap");
@@ -613,7 +602,7 @@ public class CssEngineTestUtilities {
 
   @Test
   public void floatTest() {
-    class Subject extends AbstractSubject {
+    class Subject extends CssSubject {
       @Override
       final void classes() {
         className("float:right float:left float:none");
@@ -635,7 +624,7 @@ public class CssEngineTestUtilities {
 
   @Test
   public void fontSize() {
-    class Subject extends AbstractSubject {
+    class Subject extends CssSubject {
       @Override
       final void classes() {
         className("font-size:16px font-size:2rem");
@@ -656,7 +645,7 @@ public class CssEngineTestUtilities {
 
   @Test
   public void fontStyle() {
-    class Subject extends AbstractSubject {
+    class Subject extends CssSubject {
       @Override
       final void classes() {
         className("font-style:italic font-style:normal");
@@ -677,7 +666,7 @@ public class CssEngineTestUtilities {
 
   @Test
   public void fontWeight() {
-    class Subject extends AbstractSubject {
+    class Subject extends CssSubject {
       @Override
       final void classes() {
         className("font-weight:400 font-weight:normal");
@@ -698,7 +687,7 @@ public class CssEngineTestUtilities {
 
   @Test
   public void gap() {
-    class Subject extends AbstractSubject {
+    class Subject extends CssSubject {
       @Override
       final void classes() {
         className("gap:0");
@@ -720,7 +709,7 @@ public class CssEngineTestUtilities {
 
   @Test
   public void gridColumn() {
-    class Subject extends AbstractSubject {
+    class Subject extends CssSubject {
       @Override
       final void classes() {
         className("grid-column:auto");
@@ -744,7 +733,7 @@ public class CssEngineTestUtilities {
 
   @Test
   public void gridColumnEnd() {
-    class Subject extends AbstractSubject {
+    class Subject extends CssSubject {
       @Override
       final void classes() {
         className("grid-column-end:auto");
@@ -770,7 +759,7 @@ public class CssEngineTestUtilities {
 
   @Test
   public void gridColumnStart() {
-    class Subject extends AbstractSubject {
+    class Subject extends CssSubject {
       @Override
       final void classes() {
         className("grid-column-start:auto");
@@ -796,7 +785,7 @@ public class CssEngineTestUtilities {
 
   @Test
   public void gridTemplate() {
-    class Subject extends AbstractSubject {
+    class Subject extends CssSubject {
       @Override
       final void classes() {
         className("grid-template:none");
@@ -820,7 +809,7 @@ public class CssEngineTestUtilities {
 
   @Test
   public void gridTemplateColumns() {
-    class Subject extends AbstractSubject {
+    class Subject extends CssSubject {
       @Override
       final void classes() {
         className("grid-template-columns:none");
@@ -844,7 +833,7 @@ public class CssEngineTestUtilities {
 
   @Test
   public void gridTemplateRows() {
-    class Subject extends AbstractSubject {
+    class Subject extends CssSubject {
       @Override
       final void classes() {
         className("grid-template-rows:none");
@@ -870,7 +859,7 @@ public class CssEngineTestUtilities {
 
   @Test
   public void height() {
-    class Subject extends AbstractSubject {
+    class Subject extends CssSubject {
       @Override
       final void classes() {
         className("height:auto");
@@ -896,7 +885,7 @@ public class CssEngineTestUtilities {
 
   @Test
   public void inset() {
-    class Subject extends AbstractSubject {
+    class Subject extends CssSubject {
       @Override
       final void classes() {
         className("inset:10px");
@@ -922,7 +911,7 @@ public class CssEngineTestUtilities {
 
   @Test
   public void justifyContent() {
-    class Subject extends AbstractSubject {
+    class Subject extends CssSubject {
       @Override
       final void classes() {
         className("justify-content:normal justify-content:flex-start");
@@ -943,7 +932,7 @@ public class CssEngineTestUtilities {
 
   @Test
   public void justifyItems() {
-    class Subject extends AbstractSubject {
+    class Subject extends CssSubject {
       @Override
       final void classes() {
         className("justify-items:space-between justify-items:stretch");
@@ -964,7 +953,7 @@ public class CssEngineTestUtilities {
 
   @Test
   public void justifySelf() {
-    class Subject extends AbstractSubject {
+    class Subject extends CssSubject {
       @Override
       final void classes() {
         className("justify-self:normal justify-self:right");
@@ -985,7 +974,7 @@ public class CssEngineTestUtilities {
 
   @Test
   public void left() {
-    class Subject extends AbstractSubject {
+    class Subject extends CssSubject {
       @Override
       final void classes() {
         className("left:auto");
@@ -1007,7 +996,7 @@ public class CssEngineTestUtilities {
 
   @Test
   public void letterSpacing() {
-    class Subject extends AbstractSubject {
+    class Subject extends CssSubject {
       @Override
       final void classes() {
         className("letter-spacing:-0.05em");
@@ -1031,7 +1020,7 @@ public class CssEngineTestUtilities {
 
   @Test
   public void lineHeight() {
-    class Subject extends AbstractSubject {
+    class Subject extends CssSubject {
       @Override
       final void classes() {
         className("line-height:1");
@@ -1055,7 +1044,7 @@ public class CssEngineTestUtilities {
 
   @Test
   public void listStyleType() {
-    class Subject extends AbstractSubject {
+    class Subject extends CssSubject {
       @Override
       final void classes() {
         className("list-style-type:none list-style-type:square list-style-type:upper-roman");
@@ -1077,7 +1066,7 @@ public class CssEngineTestUtilities {
 
   @Test
   public void margin() {
-    class Subject extends AbstractSubject {
+    class Subject extends CssSubject {
       @Override
       final void classes() {
         className("margin:auto");
@@ -1107,7 +1096,7 @@ public class CssEngineTestUtilities {
 
   @Test
   public void marginBlock() {
-    class Subject extends AbstractSubject {
+    class Subject extends CssSubject {
       @Override
       final void classes() {
         className("margin-block:auto");
@@ -1131,7 +1120,7 @@ public class CssEngineTestUtilities {
 
   @Test
   public void marginBottom() {
-    class Subject extends AbstractSubject {
+    class Subject extends CssSubject {
       @Override
       final void classes() {
         className("margin-bottom:auto");
@@ -1153,7 +1142,7 @@ public class CssEngineTestUtilities {
 
   @Test
   public void marginInline() {
-    class Subject extends AbstractSubject {
+    class Subject extends CssSubject {
       @Override
       final void classes() {
         className("margin-inline:auto");
@@ -1177,7 +1166,7 @@ public class CssEngineTestUtilities {
 
   @Test
   public void marginLeft() {
-    class Subject extends AbstractSubject {
+    class Subject extends CssSubject {
       @Override
       final void classes() {
         className("margin-left:auto");
@@ -1199,7 +1188,7 @@ public class CssEngineTestUtilities {
 
   @Test
   public void marginRight() {
-    class Subject extends AbstractSubject {
+    class Subject extends CssSubject {
       @Override
       final void classes() {
         className("margin-right:auto");
@@ -1221,7 +1210,7 @@ public class CssEngineTestUtilities {
 
   @Test
   public void marginTop() {
-    class Subject extends AbstractSubject {
+    class Subject extends CssSubject {
       @Override
       final void classes() {
         className("margin-top:auto");
@@ -1243,7 +1232,7 @@ public class CssEngineTestUtilities {
 
   @Test
   public void maxHeight() {
-    class Subject extends AbstractSubject {
+    class Subject extends CssSubject {
       @Override
       final void classes() {
         className("max-height:none");
@@ -1267,7 +1256,7 @@ public class CssEngineTestUtilities {
 
   @Test
   public void maxWidth() {
-    class Subject extends AbstractSubject {
+    class Subject extends CssSubject {
       @Override
       final void classes() {
         className("max-width:none");
@@ -1293,7 +1282,7 @@ public class CssEngineTestUtilities {
 
   @Test
   public void minHeight() {
-    class Subject extends AbstractSubject {
+    class Subject extends CssSubject {
       @Override
       final void classes() {
         className("min-height:100%");
@@ -1315,7 +1304,7 @@ public class CssEngineTestUtilities {
 
   @Test
   public void minWidth() {
-    class Subject extends AbstractSubject {
+    class Subject extends CssSubject {
       @Override
       final void classes() {
         className("min-width:100%");
@@ -1337,7 +1326,7 @@ public class CssEngineTestUtilities {
 
   @Test
   public void opacity() {
-    class Subject extends AbstractSubject {
+    class Subject extends CssSubject {
       @Override
       final void classes() {
         className("opacity:0");
@@ -1361,7 +1350,7 @@ public class CssEngineTestUtilities {
 
   @Test
   public void outline() {
-    class Subject extends AbstractSubject {
+    class Subject extends CssSubject {
       @Override
       final void classes() {
         className("outline:solid");
@@ -1387,7 +1376,7 @@ public class CssEngineTestUtilities {
 
   @Test
   public void outlineColor() {
-    class Subject extends AbstractSubject {
+    class Subject extends CssSubject {
       @Override
       final void classes() {
         className("outline-color:inherit");
@@ -1411,7 +1400,7 @@ public class CssEngineTestUtilities {
 
   @Test
   public void outlineOffset() {
-    class Subject extends AbstractSubject {
+    class Subject extends CssSubject {
       @Override
       final void classes() {
         className("outline-offset:0");
@@ -1435,7 +1424,7 @@ public class CssEngineTestUtilities {
 
   @Test
   public void outlineStyle() {
-    class Subject extends AbstractSubject {
+    class Subject extends CssSubject {
       @Override
       final void classes() {
         className("outline-style:none");
@@ -1457,7 +1446,7 @@ public class CssEngineTestUtilities {
 
   @Test
   public void outlineWidth() {
-    class Subject extends AbstractSubject {
+    class Subject extends CssSubject {
       @Override
       final void classes() {
         className("outline-width:thin");
@@ -1481,7 +1470,7 @@ public class CssEngineTestUtilities {
 
   @Test
   public void overflow() {
-    class Subject extends AbstractSubject {
+    class Subject extends CssSubject {
       @Override
       final void classes() {
         className("overflow:auto");
@@ -1507,7 +1496,7 @@ public class CssEngineTestUtilities {
 
   @Test
   public void overflowX() {
-    class Subject extends AbstractSubject {
+    class Subject extends CssSubject {
       @Override
       final void classes() {
         className("overflow-x:auto");
@@ -1531,7 +1520,7 @@ public class CssEngineTestUtilities {
 
   @Test
   public void overflowY() {
-    class Subject extends AbstractSubject {
+    class Subject extends CssSubject {
       @Override
       final void classes() {
         className("overflow-y:auto");
@@ -1555,7 +1544,7 @@ public class CssEngineTestUtilities {
 
   @Test
   public void padding() {
-    class Subject extends AbstractSubject {
+    class Subject extends CssSubject {
       @Override
       final void classes() {
         className("padding:1rem");
@@ -1581,7 +1570,7 @@ public class CssEngineTestUtilities {
 
   @Test
   public void paddingBottom() {
-    class Subject extends AbstractSubject {
+    class Subject extends CssSubject {
       @Override
       final void classes() {
         className("padding-bottom:0");
@@ -1603,7 +1592,7 @@ public class CssEngineTestUtilities {
 
   @Test
   public void paddingLeft() {
-    class Subject extends AbstractSubject {
+    class Subject extends CssSubject {
       @Override
       final void classes() {
         className("padding-left:0");
@@ -1625,7 +1614,7 @@ public class CssEngineTestUtilities {
 
   @Test
   public void paddingRight() {
-    class Subject extends AbstractSubject {
+    class Subject extends CssSubject {
       @Override
       final void classes() {
         className("padding-right:0");
@@ -1647,7 +1636,7 @@ public class CssEngineTestUtilities {
 
   @Test
   public void paddingTop() {
-    class Subject extends AbstractSubject {
+    class Subject extends CssSubject {
       @Override
       final void classes() {
         className("padding-top:0");
@@ -1669,7 +1658,7 @@ public class CssEngineTestUtilities {
 
   @Test
   public void pointerEvents() {
-    class Subject extends AbstractSubject {
+    class Subject extends CssSubject {
       @Override
       final void classes() {
         className("pointer-events:none");
@@ -1691,7 +1680,7 @@ public class CssEngineTestUtilities {
 
   @Test
   public void position() {
-    class Subject extends AbstractSubject {
+    class Subject extends CssSubject {
       @Override
       final void classes() {
         className("position:relative");
@@ -1715,7 +1704,7 @@ public class CssEngineTestUtilities {
 
   @Test
   public void right() {
-    class Subject extends AbstractSubject {
+    class Subject extends CssSubject {
       @Override
       final void classes() {
         className("right:auto");
@@ -1737,7 +1726,7 @@ public class CssEngineTestUtilities {
 
   @Test
   public void rotate() {
-    class Subject extends AbstractSubject {
+    class Subject extends CssSubject {
       @Override
       final void classes() {
         className("rotate:none");
@@ -1759,7 +1748,7 @@ public class CssEngineTestUtilities {
 
   @Test
   public void rowGap() {
-    class Subject extends AbstractSubject {
+    class Subject extends CssSubject {
       @Override
       final void classes() {
         className("row-gap:0");
@@ -1781,7 +1770,7 @@ public class CssEngineTestUtilities {
 
   @Test
   public void scrollBehavior() {
-    class Subject extends AbstractSubject {
+    class Subject extends CssSubject {
       @Override
       final void classes() {
         className("scroll-behavior:auto");
@@ -1803,7 +1792,7 @@ public class CssEngineTestUtilities {
 
   @Test
   public void stroke() {
-    class Subject extends AbstractSubject {
+    class Subject extends CssSubject {
       @Override
       final void classes() {
         className("stroke:none");
@@ -1827,7 +1816,7 @@ public class CssEngineTestUtilities {
 
   @Test
   public void strokeOpacity() {
-    class Subject extends AbstractSubject {
+    class Subject extends CssSubject {
       @Override
       final void classes() {
         className("stroke-opacity:1");
@@ -1851,7 +1840,7 @@ public class CssEngineTestUtilities {
 
   @Test
   public void strokeWidth() {
-    class Subject extends AbstractSubject {
+    class Subject extends CssSubject {
       @Override
       final void classes() {
         className("stroke-width:0");
@@ -1875,7 +1864,7 @@ public class CssEngineTestUtilities {
 
   @Test
   public void tabSize() {
-    class Subject extends AbstractSubject {
+    class Subject extends CssSubject {
       @Override
       final void classes() {
         className("tab-size:10px");
@@ -1897,7 +1886,7 @@ public class CssEngineTestUtilities {
 
   @Test
   public void tableLayout() {
-    class Subject extends AbstractSubject {
+    class Subject extends CssSubject {
       @Override
       final void classes() {
         className("table-layout:auto");
@@ -1919,7 +1908,7 @@ public class CssEngineTestUtilities {
 
   @Test
   public void textAlign() {
-    class Subject extends AbstractSubject {
+    class Subject extends CssSubject {
       @Override
       final void classes() {
         className("text-align:start");
@@ -1941,7 +1930,7 @@ public class CssEngineTestUtilities {
 
   @Test
   public void textDecoration() {
-    class Subject extends AbstractSubject {
+    class Subject extends CssSubject {
       @Override
       final void classes() {
         className("text-decoration:underline");
@@ -1965,7 +1954,7 @@ public class CssEngineTestUtilities {
 
   @Test
   public void textDecorationColor() {
-    class Subject extends AbstractSubject {
+    class Subject extends CssSubject {
       @Override
       final void classes() {
         className("text-decoration-color:red");
@@ -1989,7 +1978,7 @@ public class CssEngineTestUtilities {
 
   @Test
   public void textDecorationLine() {
-    class Subject extends AbstractSubject {
+    class Subject extends CssSubject {
       @Override
       final void classes() {
         className("text-decoration-line:none");
@@ -2013,7 +2002,7 @@ public class CssEngineTestUtilities {
 
   @Test
   public void textDecorationStyle() {
-    class Subject extends AbstractSubject {
+    class Subject extends CssSubject {
       @Override
       final void classes() {
         className("text-decoration-style:solid");
@@ -2037,7 +2026,7 @@ public class CssEngineTestUtilities {
 
   @Test
   public void textDecorationThickness() {
-    class Subject extends AbstractSubject {
+    class Subject extends CssSubject {
       @Override
       final void classes() {
         className("text-decoration-thickness:from-font");
@@ -2061,7 +2050,7 @@ public class CssEngineTestUtilities {
 
   @Test
   public void textOverflow() {
-    class Subject extends AbstractSubject {
+    class Subject extends CssSubject {
       @Override
       final void classes() {
         className("text-overflow:clip");
@@ -2083,7 +2072,7 @@ public class CssEngineTestUtilities {
 
   @Test
   public void textShadow() {
-    class Subject extends AbstractSubject {
+    class Subject extends CssSubject {
       @Override
       final void classes() {
         className("text-shadow:1px_1px_2px_blue-200");
@@ -2105,7 +2094,7 @@ public class CssEngineTestUtilities {
 
   @Test
   public void textTransform() {
-    class Subject extends AbstractSubject {
+    class Subject extends CssSubject {
       @Override
       final void classes() {
         className("text-transform:capitalize");
@@ -2127,7 +2116,7 @@ public class CssEngineTestUtilities {
 
   @Test
   public void textWrap() {
-    class Subject extends AbstractSubject {
+    class Subject extends CssSubject {
       @Override
       final void classes() {
         className("text-wrap:wrap");
@@ -2149,7 +2138,7 @@ public class CssEngineTestUtilities {
 
   @Test
   public void top() {
-    class Subject extends AbstractSubject {
+    class Subject extends CssSubject {
       @Override
       final void classes() {
         className("top:auto");
@@ -2173,7 +2162,7 @@ public class CssEngineTestUtilities {
 
   @Test
   public void transform() {
-    class Subject extends AbstractSubject {
+    class Subject extends CssSubject {
       @Override
       final void classes() {
         className("transform:rotate(0.5turn)");
@@ -2197,7 +2186,7 @@ public class CssEngineTestUtilities {
 
   @Test
   public void transformOrigin() {
-    class Subject extends AbstractSubject {
+    class Subject extends CssSubject {
       @Override
       final void classes() {
         className("transform-origin:center");
@@ -2221,7 +2210,7 @@ public class CssEngineTestUtilities {
 
   @Test
   public void transition() {
-    class Subject extends AbstractSubject {
+    class Subject extends CssSubject {
       @Override
       final void classes() {
         className("transition:margin-right_2s");
@@ -2243,7 +2232,7 @@ public class CssEngineTestUtilities {
 
   @Test
   public void transitionDelay() {
-    class Subject extends AbstractSubject {
+    class Subject extends CssSubject {
       @Override
       final void classes() {
         className("transition-delay:250ms");
@@ -2265,7 +2254,7 @@ public class CssEngineTestUtilities {
 
   @Test
   public void transitionDuration() {
-    class Subject extends AbstractSubject {
+    class Subject extends CssSubject {
       @Override
       final void classes() {
         className("transition-duration:123ms");
@@ -2287,7 +2276,7 @@ public class CssEngineTestUtilities {
 
   @Test
   public void transitionProperty() {
-    class Subject extends AbstractSubject {
+    class Subject extends CssSubject {
       @Override
       final void classes() {
         className("transition-property:all");
@@ -2311,7 +2300,7 @@ public class CssEngineTestUtilities {
 
   @Test
   public void transitionTimingFunction() {
-    class Subject extends AbstractSubject {
+    class Subject extends CssSubject {
       @Override
       final void classes() {
         className("transition-timing-function:linear");
@@ -2333,7 +2322,7 @@ public class CssEngineTestUtilities {
 
   @Test
   public void translate() {
-    class Subject extends AbstractSubject {
+    class Subject extends CssSubject {
       @Override
       final void classes() {
         className("translate:none");
@@ -2357,7 +2346,7 @@ public class CssEngineTestUtilities {
 
   @Test
   public void userSelect() {
-    class Subject extends AbstractSubject {
+    class Subject extends CssSubject {
       @Override
       final void classes() {
         className("user-select:none");
@@ -2381,7 +2370,7 @@ public class CssEngineTestUtilities {
 
   @Test
   public void verticalAlign() {
-    class Subject extends AbstractSubject {
+    class Subject extends CssSubject {
       @Override
       final void classes() {
         className("vertical-align:baseline");
@@ -2405,7 +2394,7 @@ public class CssEngineTestUtilities {
 
   @Test
   public void visibility() {
-    class Subject extends AbstractSubject {
+    class Subject extends CssSubject {
       @Override
       final void classes() {
         className("visibility:visible");
@@ -2427,7 +2416,7 @@ public class CssEngineTestUtilities {
 
   @Test
   public void whiteSpace() {
-    class Subject extends AbstractSubject {
+    class Subject extends CssSubject {
       @Override
       final void classes() {
         className("white-space:normal");
@@ -2453,7 +2442,7 @@ public class CssEngineTestUtilities {
 
   @Test
   public void width() {
-    class Subject extends AbstractSubject {
+    class Subject extends CssSubject {
       @Override
       final void classes() {
         className("width:auto");
@@ -2477,7 +2466,7 @@ public class CssEngineTestUtilities {
 
   @Test
   public void wordSpacing() {
-    class Subject extends AbstractSubject {
+    class Subject extends CssSubject {
       @Override
       final void classes() {
         className("word-spacing:normal");
@@ -2501,7 +2490,7 @@ public class CssEngineTestUtilities {
 
   @Test
   public void zIndex() {
-    class Subject extends AbstractSubject {
+    class Subject extends CssSubject {
       @Override
       final void classes() {
         className("z-index:auto");
