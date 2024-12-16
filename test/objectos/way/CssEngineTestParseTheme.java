@@ -23,6 +23,23 @@ import org.testng.annotations.Test;
 
 public class CssEngineTestParseTheme {
 
+  @Test(description = "breakpoint :: just one")
+  public void breakpoint01() {
+    List<CssThemeEntry> entries;
+    entries = test("""
+    --breakpoint-sm: 40rem;
+    """);
+
+    assertEquals(entries.size(), 1);
+
+    CssThemeEntry entry0;
+    entry0 = entries.get(0);
+
+    assertEquals(entry0.index(), 0);
+    assertEquals(entry0.toString(), "--breakpoint-sm: 40rem;");
+    assertEquals(entry0.id(), "sm");
+  }
+
   @Test(description = "colors :: just one")
   public void colors01() {
     List<CssThemeEntry> entries;
@@ -32,8 +49,8 @@ public class CssEngineTestParseTheme {
 
     assertEquals(entries.size(), 1);
 
-    CssThemeEntryOfVariable entry0;
-    entry0 = (CssThemeEntryOfVariable) entries.get(0);
+    CssThemeEntry entry0;
+    entry0 = entries.get(0);
 
     assertEquals(entry0.index(), 0);
     assertEquals(entry0.toString(), "--color-stone-950: oklch(0.147 0.004 49.25);");
@@ -50,15 +67,15 @@ public class CssEngineTestParseTheme {
 
     assertEquals(entries.size(), 2);
 
-    CssThemeEntryOfVariable entry0;
-    entry0 = (CssThemeEntryOfVariable) entries.get(0);
+    CssThemeEntry entry0;
+    entry0 = entries.get(0);
 
     assertEquals(entry0.index(), 0);
     assertEquals(entry0.toString(), "--color-stone-950: oklch(0.147 0.004 49.25);");
     assertEquals(entry0.id(), "stone-950");
 
-    CssThemeEntryOfVariable entry1;
-    entry1 = (CssThemeEntryOfVariable) entries.get(1);
+    CssThemeEntry entry1;
+    entry1 = entries.get(1);
 
     assertEquals(entry1.index(), 1);
     assertEquals(entry1.toString(), "--color-red-50: oklch(0.971 0.013 17.38);");
@@ -77,22 +94,22 @@ public class CssEngineTestParseTheme {
 
     assertEquals(entries.size(), 3);
 
-    CssThemeEntryOfVariable entry0;
-    entry0 = (CssThemeEntryOfVariable) entries.get(0);
+    CssThemeEntry entry0;
+    entry0 = entries.get(0);
 
     assertEquals(entry0.index(), 0);
     assertEquals(entry0.toString(), "--color-orange-900: oklch(0.408 0.123 38.172);");
     assertEquals(entry0.id(), "orange-900");
 
-    CssThemeEntryOfVariable entry1;
-    entry1 = (CssThemeEntryOfVariable) entries.get(1);
+    CssThemeEntry entry1;
+    entry1 = entries.get(1);
 
     assertEquals(entry1.index(), 1);
     assertEquals(entry1.toString(), "--color-orange-950: oklch(0.266 0.079 36.259);");
     assertEquals(entry1.id(), "orange-950");
 
-    CssThemeEntryOfVariable entry2;
-    entry2 = (CssThemeEntryOfVariable) entries.get(2);
+    CssThemeEntry entry2;
+    entry2 = entries.get(2);
 
     assertEquals(entry2.index(), 2);
     assertEquals(entry2.toString(), "--color-amber-50: oklch(0.987 0.022 95.277);");
@@ -109,8 +126,8 @@ public class CssEngineTestParseTheme {
 
     assertEquals(entries.size(), 1);
 
-    CssThemeEntryOfVariable entry0;
-    entry0 = (CssThemeEntryOfVariable) entries.get(0);
+    CssThemeEntry entry0;
+    entry0 = entries.get(0);
 
     assertEquals(entry0.index(), 0);
     assertEquals(entry0.toString(), "--color-orange-900: oklch(0.408 0.123 38.172);");

@@ -73,6 +73,36 @@ public class CssEngineTestVariants {
   }
 
   @Test
+  public void breakpoint() {
+    class Subject extends AbstractSubject {
+      @Override
+      final void classes() {
+        className("width:100%");
+        className("sm:max-width:screen-sm");
+        className("md:max-width:screen-md");
+      }
+    }
+
+    test(
+        Subject.class,
+
+        """
+        @layer utilities {
+          .width\\:100\\% { width: 100% }
+
+          @media (min-width: 40rem) {
+            .sm\\:max-width\\:screen-sm { max-width: var(--breakpoint-sm) }
+          }
+
+          @media (min-width: 48rem) {
+            .md\\:max-width\\:screen-md { max-width: var(--breakpoint-md) }
+          }
+        }
+        """
+    );
+  }
+
+  @Test
   public void dark() {
     class Subject extends AbstractSubject {
       @Override

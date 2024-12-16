@@ -1273,6 +1273,7 @@ public class CssEngineTestUtilities {
         className("max-width:none");
         className("max-width:1000px");
         className("max-width:var(--breakpoint-xl)");
+        className("max-width:screen-xl");
       }
     }
 
@@ -1284,6 +1285,7 @@ public class CssEngineTestUtilities {
           .max-width\\:none { max-width: none }
           .max-width\\:1000px { max-width: 1000px }
           .max-width\\:var\\(--breakpoint-xl\\) { max-width: var(--breakpoint-xl) }
+          .max-width\\:screen-xl { max-width: var(--breakpoint-xl) }
         }
         """
     );

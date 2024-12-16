@@ -17,19 +17,51 @@ package objectos.way;
 
 import java.util.Map;
 
-sealed interface CssThemeEntry extends Comparable<CssThemeEntry> permits CssThemeEntryOfVariable {
+record CssThemeEntry(int index, String name, String value, String id) implements Comparable<CssThemeEntry> {
 
   @Override
-  default int compareTo(CssThemeEntry o) {
+  public final int compareTo(CssThemeEntry o) {
     return Integer.compare(index(), o.index());
   }
 
-  void acceptMappings(Map<String, String> mappings);
+  public final void acceptMappings(Css.Namespace namespace, Map<String, String> mappings) {
+    String mappingKey;
+    mappingKey = switch (namespace) {
+      case BREAKPOINT -> "screen-" + id;
 
-  int index();
+      default -> id;
+    };
 
-  Object key();
+    String mappingValue;
+    mappingValue = "var(" + name + ")";
 
-  void writeTo(StringBuilder out);
+    String maybeExisting;
+    maybeExisting = mappings.put(mappingKey, mappingValue);
+
+    if (maybeExisting != null) {
+      throw new IllegalArgumentException("Duplicate mapping for " + name + ": " + value);
+    }
+  }
+
+  public final Object key() {
+    return name;
+  }
+
+  @Override
+  public final String toString() {
+    StringBuilder out;
+    out = new StringBuilder();
+
+    writeTo(out);
+
+    return out.toString();
+  }
+
+  public final void writeTo(StringBuilder out) {
+    out.append(name);
+    out.append(": ");
+    out.append(value);
+    out.append(';');
+  }
 
 }

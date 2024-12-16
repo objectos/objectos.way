@@ -407,8 +407,8 @@ final class CssEngine implements Css.StyleSheet.Config, CssGeneratorScanner.Adap
     List<CssThemeEntry> list;
     list = themeEntries.computeIfAbsent(namespace, ns -> Util.createList());
 
-    CssThemeEntryOfVariable entry;
-    entry = new CssThemeEntryOfVariable(entryIndex++, name, value, id);
+    CssThemeEntry entry;
+    entry = new CssThemeEntry(entryIndex++, name, value, id);
 
     list.add(entry);
   }
@@ -425,30 +425,31 @@ final class CssEngine implements Css.StyleSheet.Config, CssGeneratorScanner.Adap
   // # BEGIN: Theme validation
   // ##################################################################
 
-  private final Map<Css.Namespace, Map<String, String>> namespaces = new EnumMap<>(Css.Namespace.class);
+  private final Map<String, String> keywords = Util.createMap();
 
   private void validate() {
     for (Css.Namespace namespace : Css.Namespace.values()) {
       List<CssThemeEntry> namespaceEntries;
-      namespaceEntries = themeEntries.get(namespace);
+      namespaceEntries = themeEntries.getOrDefault(namespace, List.of());
 
-      Map<String, String> mappings;
-
-      if (namespaceEntries == null) {
-
-        mappings = Map.of();
-
-      } else {
-
-        mappings = Util.createMap();
-
-        for (CssThemeEntry entry : namespaceEntries) {
-          entry.acceptMappings(mappings);
-        }
-
+      for (CssThemeEntry entry : namespaceEntries) {
+        entry.acceptMappings(namespace, keywords);
       }
+    }
 
-      namespaces.put(namespace, mappings);
+    // generate breakpoint variants
+
+    List<CssThemeEntry> breakpoints;
+    breakpoints = themeEntries.getOrDefault(Css.Namespace.BREAKPOINT, List.of());
+
+    for (CssThemeEntry entry : breakpoints) {
+      String id;
+      id = entry.id();
+
+      Css.Variant variant;
+      variant = new Css.AtRuleVariant("@media (min-width: " + entry.value() + ")");
+
+      variant(id, variant);
     }
   }
 
@@ -967,10 +968,7 @@ final class CssEngine implements Css.StyleSheet.Config, CssGeneratorScanner.Adap
   }
 
   private String formatResultKeyword(String keyword) {
-    Map<String, String> colors;
-    colors = namespaces.get(Css.Namespace.COLOR);
-
-    return colors.getOrDefault(keyword, keyword);
+    return keywords.getOrDefault(keyword, keyword);
   }
 
   private void formatResultRx(String value, int wordStart, int wordEnd) {

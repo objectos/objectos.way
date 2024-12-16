@@ -489,6 +489,8 @@ public final class Css {
 
   enum Namespace {
 
+    BREAKPOINT,
+
     COLOR;
 
   }
@@ -1888,6 +1890,12 @@ public final class Css {
 
     --color-black: #000;
     --color-white: #fff;
+
+    --breakpoint-sm: 40rem;
+    --breakpoint-md: 48rem;
+    --breakpoint-lg: 64rem;
+    --breakpoint-xl: 80rem;
+    --breakpoint-2xl: 96rem;
     """;
   }
 
