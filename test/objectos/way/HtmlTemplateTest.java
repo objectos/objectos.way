@@ -1730,6 +1730,30 @@ public class HtmlTemplateTest {
     }
   }
 
+  @Test(description = """
+  dataFrame
+  """)
+  public void testCase72() {
+    test(
+        new Html.Template() {
+          @Override
+          protected final void render() {
+            div(
+                dataFrame("foo")
+            );
+            div(
+                dataFrame("foo", "bar")
+            );
+          }
+        },
+
+        """
+        <div data-frame="foo"></div>
+        <div data-frame="foo:bar"></div>
+        """
+    );
+  }
+
   private void test(Html.Template template, String expected) {
     String result;
     result = template.toString();

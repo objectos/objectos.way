@@ -259,6 +259,21 @@ final class HtmlMarkup implements Html.Markup {
   }
 
   @Override
+  public final Html.Instruction.OfAttribute dataFrame(String name) {
+    Check.notNull(name, "name == null");
+
+    return attribute(HtmlAttributeName.DATA_FRAME, name);
+  }
+
+  @Override
+  public final Html.Instruction.OfAttribute dataFrame(String name, String value) {
+    Check.notNull(name, "name == null");
+    Check.notNull(value, "value == null");
+
+    return attribute(HtmlAttributeName.DATA_FRAME, name + ":" + value);
+  }
+
+  @Override
   public final Html.Instruction.OfDataOn dataOnClick(Script.Action action) {
     Check.notNull(action, "action == null");
 

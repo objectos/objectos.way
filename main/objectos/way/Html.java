@@ -641,6 +641,10 @@ public final class Html {
       return new HtmlMarkup();
     }
 
+    Html.Instruction.OfAttribute dataFrame(String name);
+
+    Html.Instruction.OfAttribute dataFrame(String name, String value);
+
     Html.Instruction.OfDataOn dataOnClick(Script.Action action);
 
     Html.Instruction.OfDataOn dataOnClick(Script.Action... actions);
@@ -3852,16 +3856,11 @@ public final class Html {
     }
 
     protected final Instruction.OfAttribute dataFrame(String name) {
-      Check.notNull(name, "name == null");
-
-      return $html().attribute(HtmlAttributeName.DATA_FRAME, name);
+      return $html().dataFrame(name);
     }
 
     protected final Instruction.OfAttribute dataFrame(String name, String value) {
-      Check.notNull(name, "name == null");
-      Check.notNull(value, "value == null");
-
-      return $html().attribute(HtmlAttributeName.DATA_FRAME, name + ":" + value);
+      return $html().dataFrame(name, value);
     }
 
     protected final Html.Instruction.OfDataOn dataOnClick(Script.Action action) {
