@@ -45,8 +45,6 @@ public class TestingHttpModule extends Http.Module {
     filter(sessionStore::filter);
 
     filter(this::requireLogin);
-
-    route("/", handlerFactory(Home::new, injector));
   }
 
   private void requireLogin(Http.Exchange http) {

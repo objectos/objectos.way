@@ -77,7 +77,7 @@ class HtmlFormatter {
     HtmlMarkup html;
     html = new HtmlMarkup();
 
-    template.accept(html);
+    template.renderHtml(html);
 
     HtmlDom document;
     document = html.compile();

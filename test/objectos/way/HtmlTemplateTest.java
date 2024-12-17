@@ -1144,27 +1144,31 @@ public class HtmlTemplateTest {
   HtmlComponent + dataOnClick
   """)
   public void testCase53() {
-    class ThisComponent extends Html.Component {
-      ThisComponent(Html.Template parent) { super(parent); }
+    class ThisComponent implements Html.Component {
+      private final Html.Id id;
 
-      public Html.Instruction.OfElement threeDots(Html.Instruction instruction) {
-        return m.button(instruction);
+      public ThisComponent(Html.Id id) {
+        this.id = id;
+      }
+
+      @Override
+      public void renderHtml(Html.Markup m) {
+        m.button(
+            m.dataOnClick(
+                Script.replaceClass(id, "hidden", "block")
+            )
+        );
       }
     }
 
     test(
         new Html.Template() {
           final Html.Id NAV = Html.Id.of("nav");
-          final ThisComponent icons = new ThisComponent(this);
 
           @Override
           protected final void render() {
             div(
-                icons.threeDots(
-                    dataOnClick(
-                        Script.replaceClass(NAV, "hidden", "block")
-                    )
-                )
+                renderComponent(new ThisComponent(NAV))
             );
           }
         },
@@ -1631,7 +1635,7 @@ public class HtmlTemplateTest {
   }
 
   @Test(description = """
-  Html.Template::renderPlugin
+  Html.Template::renderComponent
   """)
   public void testCase69() {
     test(
@@ -1639,7 +1643,7 @@ public class HtmlTemplateTest {
           @Override
           protected final void render() throws IOException {
             div(
-                renderPlugin(html -> html.span("as child"))
+                renderComponent(html -> html.span("as child"))
             );
 
             div(renderFragment(this::fragment0));
@@ -1648,12 +1652,12 @@ public class HtmlTemplateTest {
           }
 
           private void fragment0() {
-            renderPlugin(html -> html.span("fragment root"));
+            renderComponent(html -> html.span("fragment root"));
           }
 
           private void fragment1() {
             div(
-                renderPlugin(html -> html.span("fragment child"))
+                renderComponent(html -> html.span("fragment child"))
             );
           }
         },

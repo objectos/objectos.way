@@ -17,7 +17,6 @@ package objectos.way;
 
 import java.io.IOException;
 import java.util.Objects;
-import java.util.function.Consumer;
 
 final class HtmlMarkup implements Html.Markup {
 
@@ -154,35 +153,15 @@ final class HtmlMarkup implements Html.Markup {
   }
 
   @Override
-  public final Html.Instruction.OfFragment renderPlugin(Consumer<Html.Markup> plugin) {
-    Check.notNull(plugin, "plugin == null");
+  public final Html.Instruction.OfFragment renderComponent(Html.Component component) {
+    Check.notNull(component, "component == null");
 
     int index;
     index = fragmentBegin();
 
-    plugin.accept(this);
+    component.renderHtml(this);
 
     fragmentEnd(index);
-
-    return Html.FRAGMENT;
-  }
-
-  @Override
-  public final Html.Instruction.OfFragment renderTemplate(Html.Template template) {
-    Check.notNull(template, "template == null");
-
-    try {
-      int index;
-      index = fragmentBegin();
-
-      template.html = this;
-
-      template.tryToRender();
-
-      fragmentEnd(index);
-    } finally {
-      template.html = null;
-    }
 
     return Html.FRAGMENT;
   }

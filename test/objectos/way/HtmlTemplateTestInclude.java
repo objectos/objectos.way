@@ -44,12 +44,12 @@ public class HtmlTemplateTestInclude {
         },
 
         """
-      <html>
-      <head>
-      <meta charset="utf-8">
-      </head>
-      </html>
-      """
+        <html>
+        <head>
+        <meta charset="utf-8">
+        </head>
+        </html>
+        """
     );
   }
 
@@ -82,14 +82,14 @@ public class HtmlTemplateTestInclude {
         },
 
         """
-      <html>
-      <body>
-      <header>
-      <nav></nav>
-      </header>
-      </body>
-      </html>
-      """
+        <html>
+        <body>
+        <header>
+        <nav></nav>
+        </header>
+        </body>
+        </html>
+        """
     );
   }
 
@@ -164,8 +164,8 @@ public class HtmlTemplateTestInclude {
           @Override
           protected final void render() {
             body(
-                renderTemplate(nav),
-                renderTemplate(hero)
+                renderComponent(nav),
+                renderComponent(hero)
             );
           }
         },
@@ -332,7 +332,7 @@ public class HtmlTemplateTestInclude {
           @Override
           protected final void render() {
             body(
-                renderTemplate(component)
+                renderComponent(component)
             );
           }
         },
@@ -369,7 +369,7 @@ public class HtmlTemplateTestInclude {
           private void body() {
             h1("Test");
 
-            renderTemplate(component);
+            renderComponent(component);
           }
         },
 
@@ -384,24 +384,25 @@ public class HtmlTemplateTestInclude {
 
   @Test
   public void testCase11() {
-    class Component extends Html.Component {
-      public Component(Html.Template parent) {
-        super(parent);
+    class Component implements Html.Component {
+      final String text;
+
+      public Component(String text) {
+        this.text = text;
       }
 
-      public final void render(Html.Instruction.OfElement child) {
+      @Override
+      public final void renderHtml(Html.Markup m) {
         m.div(
             m.className("component"),
 
-            child
+            m.p(text)
         );
       }
     }
 
     test(
         new Html.Template() {
-          private final Component component = new Component(this);
-
           @Override
           protected final void render() {
             body(renderFragment(this::body));
@@ -410,7 +411,7 @@ public class HtmlTemplateTestInclude {
           private void body() {
             h1("Test");
 
-            component.render(p("Text"));
+            renderComponent(new Component("Text"));
           }
         },
 
@@ -421,120 +422,6 @@ public class HtmlTemplateTestInclude {
       <p>Text</p>
       </div>
       </body>
-      """
-    );
-  }
-
-  @Test
-  public void testCase12() {
-    class Component1 extends Html.Component {
-      public Component1(Html.Template parent) {
-        super(parent);
-      }
-
-      public final Html.Instruction.OfElement render(Html.Instruction.OfElement e) {
-        return m.div(
-            m.className("c1"),
-            e
-        );
-      }
-    }
-
-    class Component2 extends Html.Component {
-      public Component2(Html.Template parent) {
-        super(parent);
-      }
-
-      public final Html.Instruction.OfElement render(Html.Instruction.OfElement e) {
-        return m.div(
-            m.className("c2"),
-            e
-        );
-      }
-    }
-
-    test(
-        new Html.Template() {
-          private final Component1 c1 = new Component1(this);
-
-          private final Component2 c2 = new Component2(this);
-
-          @Override
-          protected final void render() {
-            body(renderFragment(this::body));
-          }
-
-          private void body() {
-            h1("Test");
-
-            c1.render(
-                c2.render(text("A"))
-            );
-          }
-        },
-
-        """
-      <body>
-      <h1>Test</h1>
-      <div class="c1">
-      <div class="c2">A</div>
-      </div>
-      </body>
-      """
-    );
-  }
-
-  @Test
-  public void testCase13() {
-    class Navigation extends Html.Component {
-      public Navigation(Html.Template parent) {
-        super(parent);
-      }
-
-      public final Html.Instruction.OfElement render(Html.Instruction... elements) {
-        return m.nav(
-            m.ul(elements)
-        );
-      }
-    }
-
-    class Link extends Html.Component {
-      public Link(Html.Template parent) { super(parent); }
-
-      public final Html.Instruction.OfElement render(Html.Instruction... elements) {
-        return m.li(
-            m.a(elements)
-        );
-      }
-    }
-
-    test(
-        new Html.Template() {
-          private final Navigation navigation = new Navigation(this);
-
-          private final Link link = new Link(this);
-
-          @Override
-          protected final void render() {
-            header(
-                navigation.render(
-                    link.render(href("#"), text("Products")),
-
-                    link.render(href("#"), text("Services"))
-                )
-            );
-          }
-        },
-
-        """
-      <header>
-      <nav>
-      <ul>
-      <li><a href="#">Products</a></li>
-      <li><a href="#">Services</a></li>
-      </ul>
-      </nav>
-      </header>
       """
     );
   }
@@ -555,7 +442,7 @@ public class HtmlTemplateTestInclude {
           @Override
           protected final void render() {
             html(
-                renderTemplate(new Contents())
+                renderComponent(new Contents())
             );
           }
         },

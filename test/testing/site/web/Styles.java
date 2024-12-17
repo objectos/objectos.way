@@ -32,7 +32,7 @@ final class Styles implements Http.Handler {
   public final void handle(Http.Exchange http) {
     Css.StyleSheet s = Css.generateStyleSheet(
         Css.classes(
-            Login.class, ShellHeader.class
+            Login.class
         ),
 
         Css.noteSink(noteSink)
