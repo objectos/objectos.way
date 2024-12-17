@@ -27,6 +27,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.SequencedMap;
 import java.util.Set;
+import java.util.function.Function;
 import objectos.way.Css.Namespace;
 
 final class CssEngine implements Css.StyleSheet.Config, CssGeneratorScanner.Adapter {
@@ -307,6 +308,16 @@ final class CssEngine implements Css.StyleSheet.Config, CssGeneratorScanner.Adap
             }
           }
 
+          else if (c == ':') {
+            parser = Parser.OPTIONAL_WS;
+
+            namespace = Css.Namespace.CUSTOM;
+
+            name = text.substring(startIndex, idx);
+
+            id = null;
+          }
+
           else if (Ascii.isLetterOrDigit(c)) {
             parser = Parser.NAMESPACE_N;
           }
@@ -444,11 +455,36 @@ final class CssEngine implements Css.StyleSheet.Config, CssGeneratorScanner.Adap
 
   private void validate() {
     for (Css.Namespace namespace : Css.Namespace.values()) {
+      if (namespace == Css.Namespace.CUSTOM) {
+        continue;
+      }
+
+      Function<String, String> keywordFunction;
+      keywordFunction = Function.identity();
+
+      if (namespace == Css.Namespace.BREAKPOINT) {
+        keywordFunction = id -> "screen-" + id;
+      }
+
       List<CssThemeEntry> namespaceEntries;
       namespaceEntries = themeEntries.getOrDefault(namespace, List.of());
 
       for (CssThemeEntry entry : namespaceEntries) {
-        entry.acceptMappings(namespace, keywords);
+        String id;
+        id = entry.id();
+
+        String keyword;
+        keyword = keywordFunction.apply(id);
+
+        String mappingValue;
+        mappingValue = "var(" + entry.name() + ")";
+
+        String maybeExisting;
+        maybeExisting = keywords.put(keyword, mappingValue);
+
+        if (maybeExisting != null) {
+          throw new IllegalArgumentException("Duplicate mapping for " + entry.name() + ": " + entry.value());
+        }
       }
     }
 

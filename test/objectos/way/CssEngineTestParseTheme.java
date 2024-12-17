@@ -134,6 +134,23 @@ public class CssEngineTestParseTheme {
     assertEquals(entry0.id(), "orange-900");
   }
 
+  @Test(description = "custom :: allow for values without a namespace")
+  public void custom01() {
+    List<CssThemeEntry> entries;
+    entries = test("""
+    --rx: 16px;
+    """);
+
+    assertEquals(entries.size(), 1);
+
+    CssThemeEntry entry0;
+    entry0 = entries.get(0);
+
+    assertEquals(entry0.index(), 0);
+    assertEquals(entry0.toString(), "--rx: 16px;");
+    assertEquals(entry0.id(), null);
+  }
+
   @Test(description = "Incomplete variable declaration at the end")
   public void errors01() {
     try {
@@ -414,6 +431,7 @@ public class CssEngineTestParseTheme {
             --breakpoint-lg: 64rem;
             --breakpoint-xl: 80rem;
             --breakpoint-2xl: 96rem;
+            --rx: 16px;
           }
         }
         """

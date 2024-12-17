@@ -512,7 +512,9 @@ public final class Css {
 
     BREAKPOINT,
 
-    COLOR;
+    COLOR,
+
+    CUSTOM;
 
   }
 
@@ -2309,6 +2311,8 @@ public final class Css {
     --breakpoint-lg: 64rem;
     --breakpoint-xl: 80rem;
     --breakpoint-2xl: 96rem;
+
+    --rx: 16px;
     """;
   }
 
