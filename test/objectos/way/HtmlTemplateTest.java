@@ -19,9 +19,7 @@ import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertTrue;
 
-import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import org.testng.Assert;
 import org.testng.annotations.Test;
 
 public class HtmlTemplateTest {
@@ -1348,106 +1346,13 @@ public class HtmlTemplateTest {
   }
 
   @Test(description = """
-  Throwing fragment invocation
-  """)
-  public void testCase60() {
-    class Subject extends Html.Template {
-      private final int frag;
-
-      public Subject(int frag) { this.frag = frag; }
-
-      @Override
-      protected final void render() {
-        switch (frag) {
-          case 0 -> div(renderFragment(this::fragment0));
-          case 1 -> div(renderFragment(this::fragment1, "A"));
-          case 2 -> div(renderFragment(this::fragment2, "A", "B"));
-          case 3 -> div(renderFragment(this::fragment3, "A", "B", "C"));
-          case 4 -> div(renderFragment(this::fragment4, "A", "B", "C", "D"));
-        }
-      }
-
-      private void fragment0() throws IOException {
-        throw new IOException("Fragment0");
-      }
-
-      private void fragment1(String a) throws IOException {
-        throw new IOException(a);
-      }
-
-      private void fragment2(String a, String b) throws IOException {
-        throw new IOException(a + b);
-      }
-
-      private void fragment3(String a, String b, String c) throws IOException {
-        throw new IOException(a + b + c);
-      }
-
-      private void fragment4(String a, String b, String c, String d) throws IOException {
-        throw new IOException(a + b + c + d);
-      }
-    }
-
-    testCase60(new Subject(0), "Fragment0");
-    testCase60(new Subject(1), "A");
-    testCase60(new Subject(2), "AB");
-    testCase60(new Subject(3), "ABC");
-    testCase60(new Subject(4), "ABCD");
-  }
-
-  private void testCase60(Html.Template template, String expectedMessage) {
-    try {
-      template.toString();
-
-      Assert.fail("Should have thrown RenderingException");
-    } catch (Html.RenderingException expected) {
-      Exception cause;
-      cause = expected.getCause();
-
-      assertTrue(cause instanceof IOException);
-
-      assertEquals(cause.getMessage(), expectedMessage);
-    }
-  }
-
-  @Test(description = """
-  Throwing render invocation
-  """)
-  public void testCase61() {
-    final String msg = "thrown by render()";
-
-    class Subject extends Html.Template {
-      @Override
-      protected final void render() throws IOException {
-        throw new IOException(msg);
-      }
-    }
-
-    Subject template;
-    template = new Subject();
-
-    try {
-      template.toString();
-
-      Assert.fail("Should have thrown RenderingException");
-    } catch (Html.RenderingException expected) {
-      Exception cause;
-      cause = expected.getCause();
-
-      assertTrue(cause instanceof IOException);
-
-      assertEquals(cause.getMessage(), msg);
-    }
-  }
-
-  @Test(description = """
   Adding a Script::noop action should behave as a noop() operation
   """)
   public void testCase62() {
     test(
         new Html.Template() {
           @Override
-          protected final void render() throws IOException {
+          protected final void render() {
             div(
                 dataOnClick(Script.noop())
             );
@@ -1467,7 +1372,7 @@ public class HtmlTemplateTest {
     test(
         new Html.Template() {
           @Override
-          protected final void render() throws IOException {
+          protected final void render() {
             svg(
                 title("svg title")
             );
@@ -1489,7 +1394,7 @@ public class HtmlTemplateTest {
     test(
         new Html.Template() {
           @Override
-          protected final void render() throws IOException {
+          protected final void render() {
             element(
                 Html.ElementName.BLOCKQUOTE,
                 className("foo")
@@ -1554,7 +1459,7 @@ public class HtmlTemplateTest {
     Html.Template template;
     template = new Html.Template() {
       @Override
-      protected final void render() throws IOException {
+      protected final void render() {
         div(className("x"), testable("x", "123"));
       }
     };
@@ -1575,7 +1480,7 @@ public class HtmlTemplateTest {
     Html.Template template;
     template = new Html.Template() {
       @Override
-      protected final void render() throws IOException {
+      protected final void render() {
         div(testable("empty", ""));
       }
     };
@@ -1604,7 +1509,7 @@ public class HtmlTemplateTest {
     Html.Template template;
     template = new Html.Template() {
       @Override
-      protected final void render() throws IOException {
+      protected final void render() {
         div(renderFragment(this::fragment));
       }
 
@@ -1641,7 +1546,7 @@ public class HtmlTemplateTest {
     test(
         new Html.Template() {
           @Override
-          protected final void render() throws IOException {
+          protected final void render() {
             div(
                 renderComponent(html -> html.span("as child"))
             );
@@ -1692,42 +1597,6 @@ public class HtmlTemplateTest {
     <!DOCTYPE html>
     <html></html>
     """);
-  }
-
-  @Test(description = """
-  RenderingException should not be wrapped into another RenderingException
-  """)
-  public void testCase71() {
-    class Subject extends Html.Template {
-      @Override
-      protected final void render() {
-        div(renderFragment(this::fragment0));
-      }
-
-      private void fragment0() {
-        div(renderFragment(this::fragment1));
-      }
-
-      private void fragment1() throws IOException {
-        throw new IOException("Nested");
-      }
-    }
-
-    Subject subject;
-    subject = new Subject();
-
-    try {
-      subject.toString();
-
-      Assert.fail("It should have thrown");
-    } catch (Html.RenderingException expected) {
-      Exception cause;
-      cause = expected.getCause();
-
-      assertTrue(cause instanceof IOException);
-
-      assertEquals(cause.getMessage(), "Nested");
-    }
   }
 
   @Test(description = """

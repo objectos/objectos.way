@@ -59,13 +59,7 @@ final class HtmlMarkup implements Html.Markup {
     int index;
     index = fragmentBegin();
 
-    try {
-      fragment.invoke();
-    } catch (Error | RuntimeException e) {
-      throw e;
-    } catch (Exception e) {
-      throw new Html.RenderingException(e);
-    }
+    fragment.invoke();
 
     fragmentEnd(index);
 
@@ -79,13 +73,7 @@ final class HtmlMarkup implements Html.Markup {
     int index;
     index = fragmentBegin();
 
-    try {
-      fragment.invoke(arg1);
-    } catch (Error | RuntimeException e) {
-      throw e;
-    } catch (Exception e) {
-      throw new Html.RenderingException(e);
-    }
+    fragment.invoke(arg1);
 
     fragmentEnd(index);
 
@@ -99,13 +87,7 @@ final class HtmlMarkup implements Html.Markup {
     int index;
     index = fragmentBegin();
 
-    try {
-      fragment.invoke(arg1, arg2);
-    } catch (Error | RuntimeException e) {
-      throw e;
-    } catch (Exception e) {
-      throw new Html.RenderingException(e);
-    }
+    fragment.invoke(arg1, arg2);
 
     fragmentEnd(index);
 
@@ -119,13 +101,7 @@ final class HtmlMarkup implements Html.Markup {
     int index;
     index = fragmentBegin();
 
-    try {
-      fragment.invoke(arg1, arg2, arg3);
-    } catch (Error | RuntimeException e) {
-      throw e;
-    } catch (Exception e) {
-      throw new Html.RenderingException(e);
-    }
+    fragment.invoke(arg1, arg2, arg3);
 
     fragmentEnd(index);
 
@@ -139,13 +115,7 @@ final class HtmlMarkup implements Html.Markup {
     int index;
     index = fragmentBegin();
 
-    try {
-      fragment.invoke(arg1, arg2, arg3, arg4);
-    } catch (Error | RuntimeException e) {
-      throw e;
-    } catch (Exception e) {
-      throw new Html.RenderingException(e);
-    }
+    fragment.invoke(arg1, arg2, arg3, arg4);
 
     fragmentEnd(index);
 

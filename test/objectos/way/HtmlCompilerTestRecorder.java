@@ -209,11 +209,7 @@ public class HtmlCompilerTestRecorder {
     int startIndex;
     startIndex = html.fragmentBegin();
 
-    try {
-      action.invoke();
-    } catch (Exception e) {
-      throw new Html.RenderingException(e);
-    }
+    action.invoke();
 
     html.fragmentEnd(startIndex);
 
@@ -476,11 +472,11 @@ public class HtmlCompilerTestRecorder {
     html.elementBegin(HtmlElementName.NAV);
     html.elementEnd();
     // template end
-
+    
     html.elementBegin(HtmlElementName.BODY);
     html.elementValue(BaseApi.FRAGMENT);
     html.elementEnd();
-
+    
     html.compilationEnd();
     */
 
