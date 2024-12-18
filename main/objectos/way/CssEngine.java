@@ -1032,7 +1032,7 @@ final class CssEngine implements Css.StyleSheet.Config, CssGeneratorScanner.Adap
 
     sb.append(rx);
 
-    sb.append("px / var(--rx) * 1rem)");
+    sb.append(" / var(--rx) * 1rem)");
   }
 
   // ##################################################################

@@ -121,17 +121,17 @@ public class CssEngineTestFormatValue {
 
   @Test(description = "rx: zero")
   public void rx01() {
-    assertEquals(engine.formatValue("0rx"), "calc(0px / var(--rx) * 1rem)");
+    assertEquals(engine.formatValue("0rx"), "calc(0 / var(--rx) * 1rem)");
   }
 
   @Test(description = "rx: integer")
   public void rx02() {
-    assertEquals(engine.formatValue("32rx"), "calc(32px / var(--rx) * 1rem)");
+    assertEquals(engine.formatValue("32rx"), "calc(32 / var(--rx) * 1rem)");
   }
 
   @Test(description = "rx: decimal")
   public void rx03() {
-    assertEquals(engine.formatValue("144.5rx"), "calc(144.5px / var(--rx) * 1rem)");
+    assertEquals(engine.formatValue("144.5rx"), "calc(144.5 / var(--rx) * 1rem)");
   }
 
   @Test(description = "rx: looks like rx but it is not")
@@ -143,8 +143,8 @@ public class CssEngineTestFormatValue {
 
   @Test(description = "rx: arity 2")
   public void rx05() {
-    assertEquals(engine.formatValue("10rx_solid"), "calc(10px / var(--rx) * 1rem) solid");
-    assertEquals(engine.formatValue("10px_20rx"), "10px calc(20px / var(--rx) * 1rem)");
+    assertEquals(engine.formatValue("10rx_solid"), "calc(10 / var(--rx) * 1rem) solid");
+    assertEquals(engine.formatValue("10px_20rx"), "10px calc(20 / var(--rx) * 1rem)");
   }
 
   @Test(description = "slash")

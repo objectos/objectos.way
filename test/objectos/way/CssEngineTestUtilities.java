@@ -877,7 +877,7 @@ public class CssEngineTestUtilities {
           .height\\:auto { height: auto }
           .height\\:50\\% { height: 50% }
           .height\\:calc\\(100\\%\\/3\\) { height: calc(100%/3) }
-          .height\\:32rx { height: calc(32px / var(--rx) * 1rem) }
+          .height\\:32rx { height: calc(32 / var(--rx) * 1rem) }
         }
         """
     );

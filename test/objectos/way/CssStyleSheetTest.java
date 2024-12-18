@@ -293,7 +293,7 @@ public class CssStyleSheetTest {
             --breakpoint-lg: 64rem;
             --breakpoint-xl: 80rem;
             --breakpoint-2xl: 96rem;
-            --rx: 16px;
+            --rx: 16;
           }
         }
         @layer base {
