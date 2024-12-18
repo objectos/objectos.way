@@ -17,6 +17,7 @@ package objectos.way;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Iterator;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -66,7 +67,7 @@ public final class Html {
   /**
    * Represents an HTML {@code class} attribute and its value.
    */
-  public sealed interface ClassName extends AttributeObject {
+  public sealed interface ClassName extends AttributeObject permits HtmlClassName {
 
     /**
      * Creates a new {@code ClassName} instance whose value is the result of
@@ -104,9 +105,6 @@ public final class Html {
 
     /**
      * Creates a new {@code ClassName} instance with the specified value.
-     * If the specified value is composed of multiple lines then all of the
-     * lines will be joined together around the space character and this result
-     * will be used as the value of the {@code ClassName} instance.
      *
      * @param value
      *        the value of this HTML {@code class} attribute
@@ -114,13 +112,48 @@ public final class Html {
      * @return a newly constructed {@code ClassName} instance
      */
     static ClassName of(String value) {
-      String[] lines;
-      lines = value.split("\n+");
+      Objects.requireNonNull(value, "value == null");
 
-      String joined;
-      joined = String.join(" ", lines);
+      return new HtmlClassName(value);
+    }
 
-      return new HtmlClassName(joined);
+    /**
+     * Creates a new {@code ClassName} instance by processing the specified
+     * value.
+     *
+     * <p>
+     * This method is designed to work with Java text blocks. It first removes
+     * any leading and trailing whitespace. Additionally, any sequence of
+     * consecutive whitespace characters is replaced by a single space
+     * character.
+     *
+     * <p>
+     * For example, creating an instance like the following:
+     *
+     * <pre>{@code
+     * Html.ClassName.ofText("""
+     *     first \tsecond
+     *       third\r
+     *
+     *     fourth
+     *     """);
+     * }</pre>
+     *
+     * <p>
+     * Produces the same result as creating an instance with the
+     * {@code "first second third fourth"} string literal.
+     *
+     * @param value
+     *        the text block containing class names, possibly spread across
+     *        multiple lines
+     *
+     * @return a newly constructed {@code ClassName} instance
+     */
+    static Html.ClassName ofText(String value) {
+      String result;
+      result = Html.ofText(value);
+
+      return new HtmlClassName(result);
     }
 
     /**
@@ -4189,6 +4222,58 @@ public final class Html {
 
   private Html() {}
 
+  static String ofText(String value) {
+    return ofText(value, new StringBuilder());
+  }
+
+  static String ofText(String value, StringBuilder sb) {
+    enum Parser {
+      START,
+
+      TEXT,
+
+      WS;
+    }
+
+    Parser parser;
+    parser = Parser.START;
+
+    sb.setLength(0);
+
+    for (int idx = 0, len = value.length(); idx < len; idx++) {
+      char c;
+      c = value.charAt(idx);
+
+      switch (parser) {
+        case START -> {
+          switch (c) {
+            case ' ', '\t', '\n', '\r', '\f' -> parser = Parser.START;
+
+            default -> { parser = Parser.TEXT; sb.append(c); }
+          }
+        }
+
+        case TEXT -> {
+          switch (c) {
+            case ' ', '\t', '\n', '\r', '\f' -> parser = Parser.WS;
+
+            default -> { parser = Parser.TEXT; sb.append(c); }
+          }
+        }
+
+        case WS -> {
+          switch (c) {
+            case ' ', '\t', '\n', '\r', '\f' -> parser = Parser.WS;
+
+            default -> { parser = Parser.TEXT; sb.append(' '); sb.append(c); }
+          }
+        }
+      }
+    }
+
+    return sb.toString();
+  }
+
   /**
    * An instruction to render an HTML attribute and its value.
    */
@@ -7590,8 +7675,6 @@ public final class Html {
   }
 
 }
-
-record HtmlClassName(String value) implements Html.ClassName {}
 
 final class HtmlDom implements Html.Dom, Lang.IterableOnce<Html.Dom.Node>, Iterator<Html.Dom.Node> {
 
