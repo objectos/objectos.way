@@ -18,8 +18,6 @@ package objectos.way;
 import java.nio.charset.StandardCharsets;
 import java.util.Iterator;
 import java.util.Objects;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * The <strong>Objectos HTML</strong> main class.
@@ -1051,6 +1049,39 @@ public final class Html {
      * @return an instruction representing this attribute.
      */
     Html.Instruction.OfAttribute className(String value);
+
+    /**
+     * Renders the {@code class} attribute by processing the specified value.
+     *
+     * <p>
+     * This method is designed to work with Java text blocks. It first removes
+     * any leading and trailing whitespace. Additionally, any sequence of
+     * consecutive whitespace characters is replaced by a single space
+     * character.
+     *
+     * <p>
+     * For example, the following invocation:
+     *
+     * <pre>{@code
+     * classNameText("""
+     *     first \tsecond
+     *       third\r
+     *
+     *     fourth
+     *     """);
+     * }</pre>
+     *
+     * <p>
+     * Produces the same result as invoking
+     * {@code className("first second third fourth")}.
+     *
+     * @param value
+     *        the text block containing class names, possibly spread across
+     *        multiple lines
+     *
+     * @return an instruction representing this attribute.
+     */
+    Html.Instruction.OfAttribute classNameText(String value);
 
     /**
      * Renders the {@code clip-rule} attribute with the specified value.
@@ -3802,77 +3833,6 @@ public final class Html {
 
     TemplateBase() {}
 
-    /**
-     * Renders the {@code class} attribute by joining the specified values
-     * with a space character.
-     *
-     * @param v0 the first value
-     * @param v1 the second value
-     *
-     * @return an instruction representing this attribute.
-     */
-    protected final Instruction.OfAttribute className(String v0, String v1) {
-      Check.notNull(v0, "v0 == null");
-      Check.notNull(v1, "v1 == null");
-
-      return $attributes().className(v0 + " " + v1);
-    }
-
-    /**
-     * Renders the {@code class} attribute by joining the specified values
-     * with space characters.
-     *
-     * @param v0 the first value
-     * @param v1 the second value
-     * @param v2 the third value
-     *
-     * @return an instruction representing this attribute.
-     */
-    protected final Instruction.OfAttribute className(String v0, String v1, String v2) {
-      Check.notNull(v0, "v0 == null");
-      Check.notNull(v1, "v1 == null");
-      Check.notNull(v2, "v2 == null");
-
-      return $attributes().className(v0 + " " + v1 + " " + v2);
-    }
-
-    /**
-     * Renders the {@code class} attribute by joining the specified values
-     * with space characters.
-     *
-     * @param v0 the first value
-     * @param v1 the second value
-     * @param v2 the third value
-     * @param v3 the fourth value
-     *
-     * @return an instruction representing this attribute.
-     */
-    protected final Instruction.OfAttribute className(String v0, String v1, String v2, String v3) {
-      Check.notNull(v0, "v0 == null");
-      Check.notNull(v1, "v1 == null");
-      Check.notNull(v2, "v2 == null");
-      Check.notNull(v3, "v3 == null");
-
-      return $attributes().className(v0 + " " + v1 + " " + v2 + " " + v3);
-    }
-
-    /**
-     * Renders the {@code class} attribute by joining the specified values
-     * with space characters.
-     *
-     * @param values the values to be joined
-     *
-     * @return an instruction representing this attribute.
-     */
-    protected final Instruction.OfAttribute className(String... values) {
-      Check.notNull(values, "values == null");
-
-      String value;
-      value = Stream.of(values).collect(Collectors.joining(" "));
-
-      return $attributes().className(value);
-    }
-
     protected final Instruction.OfAttribute dataFrame(String name) {
       return $html().dataFrame(name);
     }
@@ -4508,6 +4468,41 @@ public final class Html {
      */
     protected final Instruction.OfAttribute className(String value) {
       return $attributes().className(value);
+    }
+
+    /**
+     * Generates the {@code class} attribute by processing the specified value.
+     *
+     * <p>
+     * This method is designed to work with Java text blocks. It first removes
+     * any leading and trailing whitespace. Additionally, any sequence of
+     * consecutive whitespace characters is replaced by a single space
+     * character.
+     *
+     * <p>
+     * For example, the following invocation:
+     *
+     * <pre>{@code
+     * classNameText("""
+     *     first \tsecond
+     *       third\r
+     *
+     *     fourth
+     *     """);
+     * }</pre>
+     *
+     * <p>
+     * Produces the same result as invoking
+     * {@code className("first second third fourth")}.
+     *
+     * @param value
+     *        the text block containing class names, possibly spread across
+     *        multiple lines
+     *
+     * @return an instruction representing this attribute.
+     */
+    protected final Instruction.OfAttribute classNameText(String value) {
+      return $attributes().classNameText(value);
     }
 
     /**

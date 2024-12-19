@@ -4669,6 +4669,14 @@ final class HtmlMarkup implements Html.Markup {
     return attribute0(HtmlAttributeName.CLASS, value);
   }
 
+  @Override
+  public final Html.Instruction.OfAttribute classNameText(String value) {
+    String formatted;
+    formatted = Html.ofText(value);
+
+    return attribute0(HtmlAttributeName.CLASS, formatted);
+  }
+
   /**
    * Renders the {@code clip-rule} attribute with the specified value.
    *

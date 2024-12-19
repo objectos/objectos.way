@@ -1259,16 +1259,18 @@ public class HtmlTemplateTest {
           @Override
           protected final void render() {
             div(
-                className("a", "b"),
-                className("c", "d", "e"),
-                className("f", "g", "h", "i"),
-                className("j", "k", "l", "m", "n")
+                classNameText("""
+                first \tsecond
+                  third\r
+
+                fourth
+                """)
             );
           }
         },
 
         """
-        <div class="a b c d e f g h i j k l m n"></div>
+        <div class="first second third fourth"></div>
         """
     );
   }
