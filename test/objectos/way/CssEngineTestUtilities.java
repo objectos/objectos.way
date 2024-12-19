@@ -161,13 +161,6 @@ public class CssEngineTestUtilities {
         className("border:1px");
         className("border:2px_dashed");
         className("border:4px_solid_red-50");
-        className("border-top:solid");
-        className("border-top:dashed_red-500");
-        className("border-top:1rem_solid");
-        className("border-top:thick_double_#32a1ce");
-        className("border-right:2px");
-        className("border-bottom:2px_dotted");
-        className("border-left:medium_dashed_green");
       }
     }
 
@@ -179,13 +172,32 @@ public class CssEngineTestUtilities {
           .border\\:1px { border: 1px }
           .border\\:2px_dashed { border: 2px dashed }
           .border\\:4px_solid_red-50 { border: 4px solid var(--color-red-50) }
-          .border-top\\:solid { border-top: solid }
-          .border-top\\:dashed_red-500 { border-top: dashed var(--color-red-500) }
-          .border-top\\:1rem_solid { border-top: 1rem solid }
-          .border-top\\:thick_double_#32a1ce { border-top: thick double #32a1ce }
-          .border-right\\:2px { border-right: 2px }
+        }
+        """
+    );
+  }
+
+  @Test
+  public void borderBottom() {
+    class Subject extends CssSubject {
+      @Override
+      final void classes() {
+        className("border-bottom:2px_dotted");
+        className("border-bottom-color:blue-500");
+        className("border-bottom-style:dotted");
+        className("border-bottom-width:2rem");
+      }
+    }
+
+    test(
+        Subject.class,
+
+        """
+        @layer utilities {
           .border-bottom\\:2px_dotted { border-bottom: 2px dotted }
-          .border-left\\:medium_dashed_green { border-left: medium dashed green }
+          .border-bottom-color\\:blue-500 { border-bottom-color: var(--color-blue-500) }
+          .border-bottom-style\\:dotted { border-bottom-style: dotted }
+          .border-bottom-width\\:2rem { border-bottom-width: 2rem }
         }
         """
     );
@@ -208,6 +220,58 @@ public class CssEngineTestUtilities {
           .border-collapse\\:collapse { border-collapse: collapse }
           .border-collapse\\:separate { border-collapse: separate }
           .border-collapse\\:inherit { border-collapse: inherit }
+        }
+        """
+    );
+  }
+
+  @Test
+  public void borderColor() {
+    class Subject extends CssSubject {
+      @Override
+      final void classes() {
+        className("border-color:red");
+        className("border-color:red_#f015ca");
+        className("border-color:red_rgb(240_30_50_/_70%)_green");
+        className("border-color:red_yellow_green_blue");
+      }
+    }
+
+    test(
+        Subject.class,
+
+        """
+        @layer utilities {
+          .border-color\\:red { border-color: red }
+          .border-color\\:red_#f015ca { border-color: red #f015ca }
+          .border-color\\:red_rgb\\(240_30_50_\\/_70\\%\\)_green { border-color: red rgb(240 30 50 / 70%) green }
+          .border-color\\:red_yellow_green_blue { border-color: red yellow green blue }
+        }
+        """
+    );
+  }
+
+  @Test
+  public void borderLeft() {
+    class Subject extends CssSubject {
+      @Override
+      final void classes() {
+        className("border-left:2px_dotted");
+        className("border-left-color:blue-500");
+        className("border-left-style:dotted");
+        className("border-left-width:2rem");
+      }
+    }
+
+    test(
+        Subject.class,
+
+        """
+        @layer utilities {
+          .border-left\\:2px_dotted { border-left: 2px dotted }
+          .border-left-color\\:blue-500 { border-left-color: var(--color-blue-500) }
+          .border-left-style\\:dotted { border-left-style: dotted }
+          .border-left-width\\:2rem { border-left-width: 2rem }
         }
         """
     );
@@ -244,6 +308,32 @@ public class CssEngineTestUtilities {
   }
 
   @Test
+  public void borderRight() {
+    class Subject extends CssSubject {
+      @Override
+      final void classes() {
+        className("border-right:2px_dotted");
+        className("border-right-color:blue-500");
+        className("border-right-style:dotted");
+        className("border-right-width:2rem");
+      }
+    }
+
+    test(
+        Subject.class,
+
+        """
+        @layer utilities {
+          .border-right\\:2px_dotted { border-right: 2px dotted }
+          .border-right-color\\:blue-500 { border-right-color: var(--color-blue-500) }
+          .border-right-style\\:dotted { border-right-style: dotted }
+          .border-right-width\\:2rem { border-right-width: 2rem }
+        }
+        """
+    );
+  }
+
+  @Test
   public void borderSpacing() {
     class Subject extends CssSubject {
       @Override
@@ -262,6 +352,84 @@ public class CssEngineTestUtilities {
           .border-spacing\\:1px { border-spacing: 1px }
           .border-spacing\\:1cm_2em { border-spacing: 1cm 2em }
           .border-spacing\\:unset { border-spacing: unset }
+        }
+        """
+    );
+  }
+
+  @Test
+  public void borderStyle() {
+    class Subject extends CssSubject {
+      @Override
+      final void classes() {
+        className("border-style:none");
+        className("border-style:dotted_solid");
+        className("border-style:hidden_double_dashed");
+        className("border-style:none_solid_dotted_dashed");
+      }
+    }
+
+    test(
+        Subject.class,
+
+        """
+        @layer utilities {
+          .border-style\\:none { border-style: none }
+          .border-style\\:dotted_solid { border-style: dotted solid }
+          .border-style\\:hidden_double_dashed { border-style: hidden double dashed }
+          .border-style\\:none_solid_dotted_dashed { border-style: none solid dotted dashed }
+        }
+        """
+    );
+  }
+
+  @Test
+  public void borderTop() {
+    class Subject extends CssSubject {
+      @Override
+      final void classes() {
+        className("border-top:2px_dotted");
+        className("border-top-color:blue-500");
+        className("border-top-style:dotted");
+        className("border-top-width:2rem");
+      }
+    }
+
+    test(
+        Subject.class,
+
+        """
+        @layer utilities {
+          .border-top\\:2px_dotted { border-top: 2px dotted }
+          .border-top-color\\:blue-500 { border-top-color: var(--color-blue-500) }
+          .border-top-style\\:dotted { border-top-style: dotted }
+          .border-top-width\\:2rem { border-top-width: 2rem }
+        }
+        """
+    );
+  }
+
+  @Test
+  public void borderWidth() {
+    class Subject extends CssSubject {
+      @Override
+      final void classes() {
+        className("border-width:4px");
+        className("border-width:2px_1.5em");
+        className("border-width:1px_2em_1.5cm");
+        className("border-width:1px_2em_0_4rem");
+      }
+    }
+
+    test(
+        Subject.class,
+
+        """
+        @layer utilities {
+          .border-width\\:4px { border-width: 4px }
+          .border-width\\:2px_1\\.5em { border-width: 2px 1.5em }
+          .border-width\\:1px_2em_1\\.5cm { border-width: 1px 2em 1.5cm }
+          .border-width\\:1px_2em_0_4rem { border-width: 1px 2em 0 4rem }
         }
         """
     );
