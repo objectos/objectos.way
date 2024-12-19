@@ -27,6 +27,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.SequencedMap;
 import java.util.Set;
+import java.util.function.Consumer;
 import java.util.function.Function;
 import objectos.way.Css.Namespace;
 
@@ -451,12 +452,21 @@ final class CssEngine implements Css.StyleSheet.Config, CssGeneratorScanner.Adap
   // # BEGIN: Theme validation
   // ##################################################################
 
+  private final Set<String> colorKeywords = Util.createSet();
+
   private final Map<String, String> keywords = Util.createMap();
 
   private void validate() {
     for (Css.Namespace namespace : Css.Namespace.values()) {
       if (namespace == Css.Namespace.CUSTOM) {
         continue;
+      }
+
+      Consumer<String> keywordConsumer;
+      keywordConsumer = k -> {};
+
+      if (namespace == Css.Namespace.COLOR) {
+        keywordConsumer = colorKeywords::add;
       }
 
       Function<String, String> keywordFunction;
@@ -475,6 +485,8 @@ final class CssEngine implements Css.StyleSheet.Config, CssGeneratorScanner.Adap
 
         String keyword;
         keyword = keywordFunction.apply(id);
+
+        keywordConsumer.accept(keyword);
 
         String mappingValue;
         mappingValue = "var(" + entry.name() + ")";
@@ -779,36 +791,46 @@ final class CssEngine implements Css.StyleSheet.Config, CssGeneratorScanner.Adap
     }
   }
 
-  private enum FormatValue {
-
-    NORMAL,
-
-    KEYWORD,
-
-    INTEGER,
-
-    INTEGER_DOT,
-
-    DECIMAL,
-
-    NUMBER_R,
-
-    RX,
-
-    SPACE,
-
-    UNKNOWN;
-
-  }
-
   @Lang.VisibleForTesting
   final String formatValue(String value) {
+    enum FormatValue {
+
+      NORMAL,
+
+      KEYWORD,
+
+      COLOR_SLASH,
+
+      COLOR_OPACITY,
+
+      INTEGER,
+
+      INTEGER_DOT,
+
+      DECIMAL,
+
+      NUMBER_R,
+
+      RX,
+
+      SPACE,
+
+      UNKNOWN;
+
+    }
+
     // index of the first char of the word
     int wordStart;
     wordStart = 0;
 
     FormatValue parser;
     parser = FormatValue.NORMAL;
+
+    String colorName;
+    colorName = null;
+
+    int opacity;
+    opacity = 0;
 
     sb.setLength(0);
 
@@ -856,6 +878,68 @@ final class CssEngine implements Css.StyleSheet.Config, CssGeneratorScanner.Adap
 
           else if (Ascii.isLetterOrDigit(c) || c == '-') {
             parser = FormatValue.KEYWORD;
+          }
+
+          else if (c == '/') {
+            String word;
+            word = value.substring(wordStart, idx);
+
+            if (colorKeywords.contains(word)) {
+              parser = FormatValue.COLOR_SLASH;
+
+              colorName = word;
+
+              opacity = 0;
+            } else {
+              parser = FormatValue.KEYWORD;
+            }
+          }
+
+          else {
+            parser = FormatValue.UNKNOWN;
+          }
+        }
+
+        case COLOR_SLASH -> {
+          if (c == '_') {
+            parser = FormatValue.UNKNOWN;
+
+            String word;
+            word = value.substring(wordStart, idx);
+
+            sb.append(word);
+          }
+
+          else if (Ascii.isDigit(c)) {
+            parser = FormatValue.COLOR_OPACITY;
+
+            int digit;
+            digit = Ascii.digitToInt(c);
+
+            opacity += digit;
+          }
+
+          else {
+            parser = FormatValue.UNKNOWN;
+          }
+        }
+
+        case COLOR_OPACITY -> {
+          if (c == '_') {
+            parser = FormatValue.SPACE;
+
+            formatResultColorOpacity(colorName, opacity);
+          }
+
+          else if (Ascii.isDigit(c)) {
+            parser = FormatValue.COLOR_OPACITY;
+
+            opacity *= 10;
+
+            int digit;
+            digit = Ascii.digitToInt(c);
+
+            opacity += digit;
           }
 
           else {
@@ -976,6 +1060,14 @@ final class CssEngine implements Css.StyleSheet.Config, CssGeneratorScanner.Adap
         yield formatResult(formatted);
       }
 
+      case COLOR_SLASH -> formatResultDefault(value, wordStart);
+
+      case COLOR_OPACITY -> {
+        formatResultColorOpacity(colorName, opacity);
+
+        yield sb.toString();
+      }
+
       case INTEGER -> formatResultDefault(value, wordStart);
 
       case INTEGER_DOT -> value;
@@ -1018,12 +1110,28 @@ final class CssEngine implements Css.StyleSheet.Config, CssGeneratorScanner.Adap
     return formatResult(trailer);
   }
 
+  private void formatResultColorOpacity(String colorName, int opacity) {
+    sb.append("color-mix(in oklab, ");
+
+    String colorValue;
+    colorValue = keywords.get(colorName);
+
+    sb.append(colorValue);
+
+    sb.append(' ');
+
+    sb.append(opacity);
+
+    sb.append("%, transparent)");
+  }
+
   private String formatResultKeyword(String keyword) {
     return keywords.getOrDefault(keyword, keyword);
   }
 
   private void formatResultRx(String value, int wordStart, int wordEnd) {
-    int endIndex = wordEnd - 2; // remove the rx unit
+    int endIndex;
+    endIndex = wordEnd - 2; // remove the rx unit
 
     String rx;
     rx = value.substring(wordStart, endIndex);

@@ -52,6 +52,17 @@ public class CssEngineTestFormatValue {
     assertEquals(engine.formatValue("red-50"), "var(--color-red-50)");
   }
 
+  @Test(description = "color: valid color with opacity")
+  public void color02() {
+    assertEquals(engine.formatValue("red-50/20"), "color-mix(in oklab, var(--color-red-50) 20%, transparent)");
+  }
+
+  @Test(description = "color: valid color with opacity + arity")
+  public void color03() {
+    assertEquals(engine.formatValue("red-50/48_dashed"), "color-mix(in oklab, var(--color-red-50) 48%, transparent) dashed");
+    assertEquals(engine.formatValue("4px_solid_red-50/20"), "4px solid color-mix(in oklab, var(--color-red-50) 20%, transparent)");
+  }
+
   @Test(description = "dimension: zero")
   public void dimension01() {
     assertEquals(engine.formatValue("0rem"), "0rem");
@@ -97,6 +108,11 @@ public class CssEngineTestFormatValue {
     assertEquals(engine.formatValue("z"), "z");
     assertEquals(engine.formatValue("inherit"), "inherit");
     assertEquals(engine.formatValue("revert-layer"), "revert-layer");
+  }
+
+  @Test(description = "keyword: looks like color but no match")
+  public void keyword05() {
+    assertEquals(engine.formatValue("foo-400/20"), "foo-400/20");
   }
 
   @Test(description = "percentage: integer len=1")
