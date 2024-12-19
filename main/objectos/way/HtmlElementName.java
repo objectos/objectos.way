@@ -17,6 +17,7 @@ package objectos.way;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 final class HtmlElementName implements Html.ElementName {
 
@@ -154,6 +155,10 @@ final class HtmlElementName implements Html.ElementName {
     return VALUES[index];
   }
 
+  static boolean hasName(String name) {
+    return Names.contains(name);
+  }
+
   @Override
   public final int index() {
     return index;
@@ -171,6 +176,27 @@ final class HtmlElementName implements Html.ElementName {
 
   static int size() {
     return VALUES.length;
+  }
+
+  private static final class Names {
+
+    private static final Set<String> NAMES = create();
+
+    public static boolean contains(String name) {
+      return NAMES.contains(name);
+    }
+
+    private static Set<String> create() {
+      Set<String> names;
+      names = Util.createSet();
+
+      for (HtmlElementName value : VALUES) {
+        names.add(value.name);
+      }
+
+      return names;
+    }
+
   }
 
 }

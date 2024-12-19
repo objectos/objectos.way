@@ -29,6 +29,7 @@ import java.util.SequencedMap;
 import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import objectos.way.Css.ClassNameFormat;
 import objectos.way.Css.Namespace;
 
 final class CssEngine implements Css.StyleSheet.Config, CssGeneratorScanner.Adapter {
@@ -733,7 +734,7 @@ final class CssEngine implements Css.StyleSheet.Config, CssGeneratorScanner.Adap
           variantName = classNameSlugs.get(idx);
 
           Css.Variant variant;
-          variant = variants.get(variantName);
+          variant = variantByName(variantName);
 
           if (variant == null) {
             // TODO log unknown variant name
@@ -778,6 +779,26 @@ final class CssEngine implements Css.StyleSheet.Config, CssGeneratorScanner.Adap
 
       rules.put(token, rule);
     }
+  }
+
+  private Css.Variant variantByName(String name) {
+    Css.Variant variant;
+    variant = variants.get(name);
+
+    if (variant != null) {
+      return variant;
+    }
+
+    if (!HtmlElementName.hasName(name)) {
+      return null;
+    }
+
+    ClassNameFormat descendant;
+    descendant = new Css.ClassNameFormat("", " " + name);
+
+    variants.put(name, descendant);
+
+    return descendant;
   }
 
   private Css.Modifier createModifier() {

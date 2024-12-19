@@ -121,6 +121,26 @@ public class CssEngineTestVariants {
   }
 
   @Test
+  public void element() {
+    class Subject extends CssSubject {
+      @Override
+      final void classes() {
+        className("tr:background-color:neutral-100");
+      }
+    }
+
+    test(
+        Subject.class,
+
+        """
+        @layer utilities {
+          .tr\\:background-color\\:neutral-100 tr { background-color: var(--color-neutral-100) }
+        }
+        """
+    );
+  }
+
+  @Test
   public void focus() {
     class Subject extends CssSubject {
       @Override
