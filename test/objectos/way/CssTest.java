@@ -133,6 +133,10 @@ public class CssTest {
         writeClassName("md:max-w-[60%]"),
         ".md\\:max-w-\\[60\\%\\]"
     );
+    assertEquals(
+        writeClassName("grid-template:'a_c'_'b_b'"),
+        ".grid-template\\:\\'a_c\\'_\\'b_b\\'"
+    );
   }
 
   private String writeClassName(String className) {

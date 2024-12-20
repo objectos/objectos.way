@@ -55,7 +55,7 @@ public class CssEngineTestVariants {
 
         """
         @layer utilities {
-          .after\\:content\\:''::after { content: '' }
+          .after\\:content\\:\\'\\'::after { content: '' }
         }
         """
     );

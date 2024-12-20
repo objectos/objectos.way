@@ -294,6 +294,8 @@ public final class Css {
     FONT_WEIGHT(true),
 
     GAP(true),
+    GRID(true),
+    GRID_AREA(true),
     GRID_COLUMN(true),
     GRID_COLUMN_END(true),
     GRID_COLUMN_START(true),
@@ -1299,7 +1301,7 @@ public final class Css {
           escaped = false;
         }
 
-        case ' ', '.', '/', ':', '@', '(', ')', '[', ']', '*', '%' -> {
+        case ' ', '.', '/', ':', '@', '(', ')', '[', ']', '*', '%', '\'' -> {
           out.append("\\");
 
           out.append(c);

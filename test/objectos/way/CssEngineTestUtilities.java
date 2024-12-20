@@ -560,7 +560,7 @@ public class CssEngineTestUtilities {
         """
         @layer utilities {
           .content\\:none { content: none }
-          .content\\:'' { content: '' }
+          .content\\:\\'\\' { content: '' }
         }
         """
     );
@@ -876,6 +876,48 @@ public class CssEngineTestUtilities {
   }
 
   @Test
+  public void grid() {
+    class Subject extends CssSubject {
+      @Override
+      final void classes() {
+        className("grid:none");
+        className("grid:'a'_100px_'b'_1fr");
+      }
+    }
+
+    test(
+        Subject.class,
+
+        """
+        @layer utilities {
+          .grid\\:none { grid: none }
+          .grid\\:\\'a\\'_100px_\\'b\\'_1fr { grid: 'a' 100px 'b' 1fr }
+        }
+        """
+    );
+  }
+
+  @Test
+  public void gridArea() {
+    class Subject extends CssSubject {
+      @Override
+      final void classes() {
+        className("grid-area:a");
+      }
+    }
+
+    test(
+        Subject.class,
+
+        """
+        @layer utilities {
+          .grid-area\\:a { grid-area: a }
+        }
+        """
+    );
+  }
+
+  @Test
   public void gridColumn() {
     class Subject extends CssSubject {
       @Override
@@ -968,7 +1010,7 @@ public class CssEngineTestUtilities {
         """
         @layer utilities {
           .grid-template\\:none { grid-template: none }
-          .grid-template\\:'a_a_a'_'b_b_b' { grid-template: 'a a a' 'b b b' }
+          .grid-template\\:\\'a_a_a\\'_\\'b_b_b\\' { grid-template: 'a a a' 'b b b' }
           .grid-template\\:100px_1fr_\\/_50px_1fr { grid-template: 100px 1fr / 50px 1fr }
         }
         """
