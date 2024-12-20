@@ -163,6 +163,7 @@ final class CssEngine implements Css.StyleSheet.Config, CssGeneratorScanner.Adap
     variant("dark", new Css.AtRuleVariant("@media (prefers-color-scheme: dark)"));
 
     variant("focus", new Css.ClassNameFormat("", ":focus"));
+    variant("focus-visible", new Css.ClassNameFormat("", ":focus-visible"));
     variant("hover", new Css.ClassNameFormat("", ":hover"));
     variant("active", new Css.ClassNameFormat("", ":active"));
     variant("visited", new Css.ClassNameFormat("", ":visited"));

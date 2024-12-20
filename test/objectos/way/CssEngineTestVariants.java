@@ -161,6 +161,26 @@ public class CssEngineTestVariants {
   }
 
   @Test
+  public void focusVisible() {
+    class Subject extends CssSubject {
+      @Override
+      final void classes() {
+        className("focus-visible:outline:solid_blue-500");
+      }
+    }
+
+    test(
+        Subject.class,
+
+        """
+        @layer utilities {
+          .focus-visible\\:outline\\:solid_blue-500:focus-visible { outline: solid var(--color-blue-500) }
+        }
+        """
+    );
+  }
+
+  @Test
   public void star() {
     class Subject extends CssSubject {
       @Override
