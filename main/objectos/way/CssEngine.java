@@ -16,10 +16,12 @@
 package objectos.way;
 
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.EnumMap;
 import java.util.EnumSet;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
@@ -30,7 +32,6 @@ import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import objectos.way.Css.ClassNameFormat;
-import objectos.way.Css.Namespace;
 
 final class CssEngine implements Css.StyleSheet.Config, CssGeneratorScanner.Adapter {
 
@@ -194,21 +195,73 @@ final class CssEngine implements Css.StyleSheet.Config, CssGeneratorScanner.Adap
   // # BEGIN: Parse
   // ##################################################################
 
+  @Lang.VisibleForTesting
+  enum Namespace {
+
+    BREAKPOINT,
+
+    COLOR,
+
+    FONT,
+
+    CUSTOM;
+
+  }
+
+  @Lang.VisibleForTesting
+  record ThemeEntry(int index, String name, String value, String id) implements Comparable<ThemeEntry> {
+
+    @Override
+    public final int compareTo(ThemeEntry o) {
+      return Integer.compare(index, o.index);
+    }
+
+    public final Object key() {
+      return name;
+    }
+
+    @Override
+    public final String toString() {
+      StringBuilder out;
+      out = new StringBuilder();
+
+      writeTo(out);
+
+      return out.toString();
+    }
+
+    public final void writeTo(StringBuilder out) {
+      out.append(name);
+      out.append(": ");
+      out.append(value);
+      out.append(';');
+    }
+
+    private boolean shouldClear() {
+      return "*".equals(id) && "initial".equals(value);
+    }
+
+    private ThemeEntry withValue(ThemeEntry newValue) {
+      return new ThemeEntry(index, name, newValue.value, id);
+    }
+
+  }
+
   private final StringBuilder sb = new StringBuilder();
 
-  private final Map<Css.Namespace, List<CssThemeEntry>> themeEntries = new EnumMap<>(Css.Namespace.class);
+  private final Map<Namespace, Map<String, ThemeEntry>> themeEntries = new EnumMap<>(Namespace.class);
 
   // ##################################################################
   // # BEGIN: Parse :: @theme {}
   // ##################################################################
 
-  private final Map<String, Css.Namespace> namespacePrefixes = namespacePrefixes();
+  private final Map<String, Namespace> namespacePrefixes = namespacePrefixes();
 
-  private Map<String, Css.Namespace> namespacePrefixes() {
+  private Map<String, Namespace> namespacePrefixes() {
     Map<String, Namespace> map;
     map = Util.createMap();
 
-    for (Css.Namespace namespace : Css.Namespace.values()) {
+    for (Namespace namespace : Namespace.values()) {
       String name;
       name = namespace.name();
 
@@ -249,7 +302,7 @@ final class CssEngine implements Css.StyleSheet.Config, CssGeneratorScanner.Adap
     int auxIndex;
     auxIndex = 0;
 
-    Css.Namespace namespace;
+    Namespace namespace;
     namespace = null;
 
     String name = null, id = null;
@@ -304,17 +357,13 @@ final class CssEngine implements Css.StyleSheet.Config, CssGeneratorScanner.Adap
             String maybeName;
             maybeName = text.substring(auxIndex, idx);
 
-            namespace = namespacePrefixes.get(maybeName);
-
-            if (namespace == null) {
-              parseError(text, idx, "Invalid namespace name=" + maybeName);
-            }
+            namespace = namespacePrefixes.getOrDefault(maybeName, Namespace.CUSTOM);
           }
 
           else if (c == ':') {
             parser = Parser.OPTIONAL_WS;
 
-            namespace = Css.Namespace.CUSTOM;
+            namespace = Namespace.CUSTOM;
 
             name = text.substring(startIndex, idx);
 
@@ -331,7 +380,7 @@ final class CssEngine implements Css.StyleSheet.Config, CssGeneratorScanner.Adap
         }
 
         case ID_1 -> {
-          if (Ascii.isLetterOrDigit(c)) {
+          if (Ascii.isLetterOrDigit(c) || c == '*') {
             parser = Parser.ID_N;
 
             auxIndex = idx;
@@ -429,17 +478,23 @@ final class CssEngine implements Css.StyleSheet.Config, CssGeneratorScanner.Adap
 
   private int entryIndex;
 
-  private void parseThemeAddVar(Css.Namespace namespace, String name, String id) {
+  private void parseThemeAddVar(Namespace namespace, String name, String id) {
     String value;
     value = sb.toString();
 
-    List<CssThemeEntry> list;
-    list = themeEntries.computeIfAbsent(namespace, ns -> Util.createList());
+    Map<String, ThemeEntry> entries;
+    entries = themeEntries.computeIfAbsent(namespace, ns -> new HashMap<>());
 
-    CssThemeEntry entry;
-    entry = new CssThemeEntry(entryIndex++, name, value, id);
+    ThemeEntry entry;
+    entry = new ThemeEntry(entryIndex++, name, value, id);
 
-    list.add(entry);
+    if (entry.shouldClear()) {
+      entries.clear();
+
+      return;
+    }
+
+    entries.merge(entry.name, entry, (oldValue, newValue) -> oldValue.withValue(newValue));
   }
 
   // ##################################################################
@@ -459,29 +514,32 @@ final class CssEngine implements Css.StyleSheet.Config, CssGeneratorScanner.Adap
   private final Map<String, String> keywords = Util.createMap();
 
   private void validate() {
-    for (Css.Namespace namespace : Css.Namespace.values()) {
-      if (namespace == Css.Namespace.CUSTOM) {
+    for (Map.Entry<Namespace, Map<String, ThemeEntry>> namespaceEntry : themeEntries.entrySet()) {
+      Namespace namespace;
+      namespace = namespaceEntry.getKey();
+
+      if (namespace == Namespace.CUSTOM) {
         continue;
       }
 
       Consumer<String> keywordConsumer;
       keywordConsumer = k -> {};
 
-      if (namespace == Css.Namespace.COLOR) {
+      if (namespace == Namespace.COLOR) {
         keywordConsumer = colorKeywords::add;
       }
 
       Function<String, String> keywordFunction;
       keywordFunction = Function.identity();
 
-      if (namespace == Css.Namespace.BREAKPOINT) {
+      if (namespace == Namespace.BREAKPOINT) {
         keywordFunction = id -> "screen-" + id;
       }
 
-      List<CssThemeEntry> namespaceEntries;
-      namespaceEntries = themeEntries.getOrDefault(namespace, List.of());
+      Map<String, ThemeEntry> namespaceEntries;
+      namespaceEntries = namespaceEntry.getValue();
 
-      for (CssThemeEntry entry : namespaceEntries) {
+      for (ThemeEntry entry : namespaceEntries.values()) {
         String id;
         id = entry.id();
 
@@ -504,10 +562,15 @@ final class CssEngine implements Css.StyleSheet.Config, CssGeneratorScanner.Adap
 
     // generate breakpoint variants
 
-    List<CssThemeEntry> breakpoints;
-    breakpoints = themeEntries.getOrDefault(Css.Namespace.BREAKPOINT, List.of());
+    Map<String, ThemeEntry> breakpoints;
+    breakpoints = themeEntries.getOrDefault(Namespace.BREAKPOINT, Map.of());
 
-    for (CssThemeEntry entry : breakpoints) {
+    List<ThemeEntry> sorted;
+    sorted = new ArrayList<>(breakpoints.values());
+
+    sorted.sort(Comparator.naturalOrder());
+
+    for (ThemeEntry entry : sorted) {
       String id;
       id = entry.id();
 
@@ -1196,19 +1259,22 @@ final class CssEngine implements Css.StyleSheet.Config, CssGeneratorScanner.Adap
 
     writeln(":root {");
 
-    UtilList<CssThemeEntry> entries;
+    UtilList<ThemeEntry> entries;
     entries = new UtilList<>();
 
-    Collection<List<CssThemeEntry>> values;
+    Collection<Map<String, ThemeEntry>> values;
     values = themeEntries.values();
 
-    for (List<CssThemeEntry> value : values) {
-      entries.addAll(value);
+    for (Map<String, ThemeEntry> value : values) {
+      Collection<ThemeEntry> thisEntries;
+      thisEntries = value.values();
+
+      entries.addAll(thisEntries);
     }
 
     entries.sort(Comparator.naturalOrder());
 
-    for (CssThemeEntry entry : entries) {
+    for (ThemeEntry entry : entries) {
       indent(2);
 
       write(entry.name());
@@ -1447,17 +1513,20 @@ final class CssEngine implements Css.StyleSheet.Config, CssGeneratorScanner.Adap
     return copy;
   }
 
-  final List<CssThemeEntry> testThemeEntries() {
+  final List<ThemeEntry> testThemeEntries() {
     parseTheme(theme);
 
-    UtilList<CssThemeEntry> entries;
+    UtilList<ThemeEntry> entries;
     entries = new UtilList<>();
 
-    Collection<List<CssThemeEntry>> values;
+    Collection<Map<String, ThemeEntry>> values;
     values = themeEntries.values();
 
-    for (List<CssThemeEntry> value : values) {
-      entries.addAll(value);
+    for (Map<String, ThemeEntry> value : values) {
+      Collection<ThemeEntry> thisEntries;
+      thisEntries = value.values();
+
+      entries.addAll(thisEntries);
     }
 
     entries.sort(Comparator.naturalOrder());

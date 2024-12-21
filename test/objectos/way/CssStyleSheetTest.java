@@ -21,8 +21,8 @@ import org.testng.annotations.Test;
 
 public class CssStyleSheetTest {
 
-  @Test
-  public void fullGeneration() {
+  @Test(description = "generate: full generation")
+  public void generate01() {
     class Subject extends CssSubject {
       @Override
       final void classes() {
@@ -44,6 +44,9 @@ public class CssStyleSheetTest {
         """
         @layer theme {
           :root {
+            --font-sans: ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+            --font-serif: ui-serif, Georgia, Cambria, 'Times New Roman', Times, serif;
+            --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
             --color-red-50: oklch(0.971 0.013 17.38);
             --color-red-100: oklch(0.936 0.032 17.717);
             --color-red-200: oklch(0.885 0.062 18.334);
@@ -293,6 +296,12 @@ public class CssStyleSheetTest {
             --breakpoint-lg: 64rem;
             --breakpoint-xl: 80rem;
             --breakpoint-2xl: 96rem;
+            --default-font-family: var(--font-sans);
+            --default-font-feature-settings: var(--font-sans--font-feature-settings);
+            --default-font-variation-settings: var(--font-sans--font-variation-settings);
+            --default-mono-font-family: var(--font-mono);
+            --default-mono-font-feature-settings: var(--font-mono--font-feature-settings);
+            --default-mono-font-variation-settings: var(--font-mono--font-variation-settings);
             --rx: 16;
           }
         }

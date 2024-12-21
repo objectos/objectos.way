@@ -25,14 +25,14 @@ public class CssEngineTestParseTheme {
 
   @Test(description = "breakpoint :: just one")
   public void breakpoint01() {
-    List<CssThemeEntry> entries;
+    List<CssEngine.ThemeEntry> entries;
     entries = test("""
     --breakpoint-sm: 40rem;
     """);
 
     assertEquals(entries.size(), 1);
 
-    CssThemeEntry entry0;
+    CssEngine.ThemeEntry entry0;
     entry0 = entries.get(0);
 
     assertEquals(entry0.index(), 0);
@@ -42,14 +42,14 @@ public class CssEngineTestParseTheme {
 
   @Test(description = "colors :: just one")
   public void colors01() {
-    List<CssThemeEntry> entries;
+    List<CssEngine.ThemeEntry> entries;
     entries = test("""
     --color-stone-950: oklch(0.147 0.004 49.25);
     """);
 
     assertEquals(entries.size(), 1);
 
-    CssThemeEntry entry0;
+    CssEngine.ThemeEntry entry0;
     entry0 = entries.get(0);
 
     assertEquals(entry0.index(), 0);
@@ -59,7 +59,7 @@ public class CssEngineTestParseTheme {
 
   @Test(description = "colors :: two lines")
   public void colors02() {
-    List<CssThemeEntry> entries;
+    List<CssEngine.ThemeEntry> entries;
     entries = test("""
     --color-stone-950: oklch(0.147 0.004 49.25);
     --color-red-50: oklch(0.971 0.013 17.38);
@@ -67,14 +67,14 @@ public class CssEngineTestParseTheme {
 
     assertEquals(entries.size(), 2);
 
-    CssThemeEntry entry0;
+    CssEngine.ThemeEntry entry0;
     entry0 = entries.get(0);
 
     assertEquals(entry0.index(), 0);
     assertEquals(entry0.toString(), "--color-stone-950: oklch(0.147 0.004 49.25);");
     assertEquals(entry0.id(), "stone-950");
 
-    CssThemeEntry entry1;
+    CssEngine.ThemeEntry entry1;
     entry1 = entries.get(1);
 
     assertEquals(entry1.index(), 1);
@@ -84,7 +84,7 @@ public class CssEngineTestParseTheme {
 
   @Test(description = "colors :: multiple w/ blank lines")
   public void colors03() {
-    List<CssThemeEntry> entries;
+    List<CssEngine.ThemeEntry> entries;
     entries = test("""
     --color-orange-900: oklch(0.408 0.123 38.172);
     --color-orange-950: oklch(0.266 0.079 36.259);
@@ -94,21 +94,21 @@ public class CssEngineTestParseTheme {
 
     assertEquals(entries.size(), 3);
 
-    CssThemeEntry entry0;
+    CssEngine.ThemeEntry entry0;
     entry0 = entries.get(0);
 
     assertEquals(entry0.index(), 0);
     assertEquals(entry0.toString(), "--color-orange-900: oklch(0.408 0.123 38.172);");
     assertEquals(entry0.id(), "orange-900");
 
-    CssThemeEntry entry1;
+    CssEngine.ThemeEntry entry1;
     entry1 = entries.get(1);
 
     assertEquals(entry1.index(), 1);
     assertEquals(entry1.toString(), "--color-orange-950: oklch(0.266 0.079 36.259);");
     assertEquals(entry1.id(), "orange-950");
 
-    CssThemeEntry entry2;
+    CssEngine.ThemeEntry entry2;
     entry2 = entries.get(2);
 
     assertEquals(entry2.index(), 2);
@@ -118,7 +118,7 @@ public class CssEngineTestParseTheme {
 
   @Test(description = "colors :: it should trim the value")
   public void colors04() {
-    List<CssThemeEntry> entries;
+    List<CssEngine.ThemeEntry> entries;
     entries = test("""
     --color-orange-900:
        oklch(0.408 0.123        38.172)     ;
@@ -126,7 +126,7 @@ public class CssEngineTestParseTheme {
 
     assertEquals(entries.size(), 1);
 
-    CssThemeEntry entry0;
+    CssEngine.ThemeEntry entry0;
     entry0 = entries.get(0);
 
     assertEquals(entry0.index(), 0);
@@ -134,21 +134,48 @@ public class CssEngineTestParseTheme {
     assertEquals(entry0.id(), "orange-900");
   }
 
+  @Test(description = "colors :: clear")
+  public void colors05() {
+    List<CssEngine.ThemeEntry> entries;
+    entries = test("""
+    --color-*: initial;
+    """);
+
+    assertEquals(entries.size(), 0);
+  }
+
   @Test(description = "custom :: allow for values without a namespace")
   public void custom01() {
-    List<CssThemeEntry> entries;
+    List<CssEngine.ThemeEntry> entries;
     entries = test("""
     --rx: 16px;
     """);
 
     assertEquals(entries.size(), 1);
 
-    CssThemeEntry entry0;
+    CssEngine.ThemeEntry entry0;
     entry0 = entries.get(0);
 
     assertEquals(entry0.index(), 0);
     assertEquals(entry0.toString(), "--rx: 16px;");
     assertEquals(entry0.id(), null);
+  }
+
+  @Test(description = "font :: just one")
+  public void font01() {
+    List<CssEngine.ThemeEntry> entries;
+    entries = test("""
+    --font-display: Foo, "Foo bar";
+    """);
+
+    assertEquals(entries.size(), 1);
+
+    CssEngine.ThemeEntry entry0;
+    entry0 = entries.get(0);
+
+    assertEquals(entry0.index(), 0);
+    assertEquals(entry0.toString(), "--font-display: Foo, \"Foo bar\";");
+    assertEquals(entry0.id(), "display");
   }
 
   @Test(description = "Incomplete variable declaration at the end")
@@ -165,8 +192,8 @@ public class CssEngineTestParseTheme {
     }
   }
 
-  @Test
-  public void fullGeneration() {
+  @Test(description = "Full generation indeed")
+  public void fullGeneration01() {
     CssEngine engine;
     engine = new CssEngine();
 
@@ -182,6 +209,9 @@ public class CssEngineTestParseTheme {
         """
         @layer theme {
           :root {
+            --font-sans: ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+            --font-serif: ui-serif, Georgia, Cambria, 'Times New Roman', Times, serif;
+            --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
             --color-red-50: oklch(0.971 0.013 17.38);
             --color-red-100: oklch(0.936 0.032 17.717);
             --color-red-200: oklch(0.885 0.062 18.334);
@@ -431,6 +461,12 @@ public class CssEngineTestParseTheme {
             --breakpoint-lg: 64rem;
             --breakpoint-xl: 80rem;
             --breakpoint-2xl: 96rem;
+            --default-font-family: var(--font-sans);
+            --default-font-feature-settings: var(--font-sans--font-feature-settings);
+            --default-font-variation-settings: var(--font-sans--font-variation-settings);
+            --default-mono-font-family: var(--font-mono);
+            --default-mono-font-feature-settings: var(--font-mono--font-feature-settings);
+            --default-mono-font-variation-settings: var(--font-mono--font-variation-settings);
             --rx: 16;
           }
         }
@@ -438,7 +474,90 @@ public class CssEngineTestParseTheme {
     );
   }
 
-  private List<CssThemeEntry> test(String theme) {
+  @Test(description = "Full generation + clear")
+  public void fullGeneration02() {
+    CssEngine engine;
+    engine = new CssEngine();
+
+    engine.theme("""
+    --color-*: initial;
+    --color-foo: rebecapurple;
+    """);
+
+    engine.skipLayer(Css.Layer.BASE);
+    engine.skipLayer(Css.Layer.COMPONENTS);
+    engine.skipLayer(Css.Layer.UTILITIES);
+
+    engine.execute();
+
+    assertEquals(
+        engine.generate(),
+
+        """
+        @layer theme {
+          :root {
+            --font-sans: ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+            --font-serif: ui-serif, Georgia, Cambria, 'Times New Roman', Times, serif;
+            --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
+            --breakpoint-sm: 40rem;
+            --breakpoint-md: 48rem;
+            --breakpoint-lg: 64rem;
+            --breakpoint-xl: 80rem;
+            --breakpoint-2xl: 96rem;
+            --default-font-family: var(--font-sans);
+            --default-font-feature-settings: var(--font-sans--font-feature-settings);
+            --default-font-variation-settings: var(--font-sans--font-variation-settings);
+            --default-mono-font-family: var(--font-mono);
+            --default-mono-font-feature-settings: var(--font-mono--font-feature-settings);
+            --default-mono-font-variation-settings: var(--font-mono--font-variation-settings);
+            --rx: 16;
+            --color-foo: rebecapurple;
+          }
+        }
+        """
+    );
+  }
+
+  @Test(description = "Full generation + override")
+  public void fullGeneration03() {
+    CssEngine engine;
+    engine = new CssEngine();
+
+    engine.theme("""
+    --color-*: initial;
+    --breakpoint-*: initial;
+    --font-sans: 'DM Sans';
+    """);
+
+    engine.skipLayer(Css.Layer.BASE);
+    engine.skipLayer(Css.Layer.COMPONENTS);
+    engine.skipLayer(Css.Layer.UTILITIES);
+
+    engine.execute();
+
+    assertEquals(
+        engine.generate(),
+
+        """
+        @layer theme {
+          :root {
+            --font-sans: 'DM Sans';
+            --font-serif: ui-serif, Georgia, Cambria, 'Times New Roman', Times, serif;
+            --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
+            --default-font-family: var(--font-sans);
+            --default-font-feature-settings: var(--font-sans--font-feature-settings);
+            --default-font-variation-settings: var(--font-sans--font-variation-settings);
+            --default-mono-font-family: var(--font-mono);
+            --default-mono-font-feature-settings: var(--font-mono--font-feature-settings);
+            --default-mono-font-variation-settings: var(--font-mono--font-variation-settings);
+            --rx: 16;
+          }
+        }
+        """
+    );
+  }
+
+  private List<CssEngine.ThemeEntry> test(String theme) {
     CssEngine engine;
     engine = new CssEngine();
 

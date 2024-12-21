@@ -190,7 +190,7 @@ public final class Lang {
   }
 
   @Retention(RetentionPolicy.SOURCE)
-  @Target({ElementType.METHOD})
+  @Target({ElementType.TYPE, ElementType.METHOD})
   @interface VisibleForTesting {}
 
   private Lang() {}
