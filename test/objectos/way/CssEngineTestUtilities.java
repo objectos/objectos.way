@@ -791,6 +791,26 @@ public class CssEngineTestUtilities {
   }
 
   @Test
+  public void fontFamily() {
+    class Subject extends CssSubject {
+      @Override
+      final void classes() {
+        className("font-family:mono");
+      }
+    }
+
+    test(
+        Subject.class,
+
+        """
+        @layer utilities {
+          .font-family\\:mono { font-family: var(--font-mono) }
+        }
+        """
+    );
+  }
+
+  @Test
   public void fontSize() {
     class Subject extends CssSubject {
       @Override

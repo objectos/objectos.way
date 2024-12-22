@@ -44,9 +44,12 @@ public class CssStyleSheetTest {
         """
         @layer theme {
           :root {
-            --font-sans: ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
-            --font-serif: ui-serif, Georgia, Cambria, 'Times New Roman', Times, serif;
-            --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
+            --default-font-sans: ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+            --default-font-serif: ui-serif, Georgia, Cambria, 'Times New Roman', Times, serif;
+            --default-font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
+            --font-sans: var(--default-font-sans);
+            --font-serif: var(--default-font-serif);
+            --font-mono: var(--default-font-mono);
             --color-red-50: oklch(0.971 0.013 17.38);
             --color-red-100: oklch(0.936 0.032 17.717);
             --color-red-200: oklch(0.885 0.062 18.334);

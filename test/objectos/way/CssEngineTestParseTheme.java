@@ -209,9 +209,12 @@ public class CssEngineTestParseTheme {
         """
         @layer theme {
           :root {
-            --font-sans: ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
-            --font-serif: ui-serif, Georgia, Cambria, 'Times New Roman', Times, serif;
-            --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
+            --default-font-sans: ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+            --default-font-serif: ui-serif, Georgia, Cambria, 'Times New Roman', Times, serif;
+            --default-font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
+            --font-sans: var(--default-font-sans);
+            --font-serif: var(--default-font-serif);
+            --font-mono: var(--default-font-mono);
             --color-red-50: oklch(0.971 0.013 17.38);
             --color-red-100: oklch(0.936 0.032 17.717);
             --color-red-200: oklch(0.885 0.062 18.334);
@@ -496,9 +499,12 @@ public class CssEngineTestParseTheme {
         """
         @layer theme {
           :root {
-            --font-sans: ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
-            --font-serif: ui-serif, Georgia, Cambria, 'Times New Roman', Times, serif;
-            --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
+            --default-font-sans: ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+            --default-font-serif: ui-serif, Georgia, Cambria, 'Times New Roman', Times, serif;
+            --default-font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
+            --font-sans: var(--default-font-sans);
+            --font-serif: var(--default-font-serif);
+            --font-mono: var(--default-font-mono);
             --breakpoint-sm: 40rem;
             --breakpoint-md: 48rem;
             --breakpoint-lg: 64rem;
@@ -526,7 +532,7 @@ public class CssEngineTestParseTheme {
     engine.theme("""
     --color-*: initial;
     --breakpoint-*: initial;
-    --font-sans: 'DM Sans';
+    --font-sans: 'DM Sans', var(--default-font-sans);
     """);
 
     engine.skipLayer(Css.Layer.BASE);
@@ -541,9 +547,12 @@ public class CssEngineTestParseTheme {
         """
         @layer theme {
           :root {
-            --font-sans: 'DM Sans';
-            --font-serif: ui-serif, Georgia, Cambria, 'Times New Roman', Times, serif;
-            --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
+            --default-font-sans: ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+            --default-font-serif: ui-serif, Georgia, Cambria, 'Times New Roman', Times, serif;
+            --default-font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
+            --font-sans: 'DM Sans', var(--default-font-sans);
+            --font-serif: var(--default-font-serif);
+            --font-mono: var(--default-font-mono);
             --default-font-family: var(--font-sans);
             --default-font-feature-settings: var(--font-sans--font-feature-settings);
             --default-font-variation-settings: var(--font-sans--font-variation-settings);
