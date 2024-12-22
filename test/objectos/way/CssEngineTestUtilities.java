@@ -1305,6 +1305,7 @@ public class CssEngineTestUtilities {
         className("margin:5%_0");
         className("margin:10px_50px_20px");
         className("margin:10px_50px_20px_auto");
+        className("margin:16rx_-16rx");
       }
     }
 
@@ -1319,6 +1320,7 @@ public class CssEngineTestUtilities {
           .margin\\:5\\%_0 { margin: 5% 0 }
           .margin\\:10px_50px_20px { margin: 10px 50px 20px }
           .margin\\:10px_50px_20px_auto { margin: 10px 50px 20px auto }
+          .margin\\:16rx_-16rx { margin: calc(16 / var(--rx) * 1rem) calc(-16 / var(--rx) * 1rem) }
         }
         """
     );

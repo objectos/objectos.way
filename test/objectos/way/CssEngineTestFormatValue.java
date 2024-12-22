@@ -163,6 +163,11 @@ public class CssEngineTestFormatValue {
     assertEquals(engine.formatValue("10px_20rx"), "10px calc(20 / var(--rx) * 1rem)");
   }
 
+  @Test(description = "rx: negative value")
+  public void rx06() {
+    assertEquals(engine.formatValue("-10rx"), "calc(-10 / var(--rx) * 1rem)");
+  }
+
   @Test(description = "slash")
   public void slash01() {
     assertEquals(engine.formatValue("10px/20px"), "10px/20px");

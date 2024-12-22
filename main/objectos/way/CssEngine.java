@@ -892,6 +892,8 @@ final class CssEngine implements Css.StyleSheet.Config, CssGeneratorScanner.Adap
 
       INTEGER_DOT,
 
+      MINUS,
+
       DECIMAL,
 
       NUMBER_R,
@@ -937,6 +939,12 @@ final class CssEngine implements Css.StyleSheet.Config, CssGeneratorScanner.Adap
 
           else if (Ascii.isDigit(c)) {
             parser = FormatValue.INTEGER;
+
+            wordStart = idx;
+          }
+
+          else if (c == '-') {
+            parser = FormatValue.MINUS;
 
             wordStart = idx;
           }
@@ -1069,6 +1077,16 @@ final class CssEngine implements Css.StyleSheet.Config, CssGeneratorScanner.Adap
           }
         }
 
+        case MINUS -> {
+          if (Ascii.isDigit(c)) {
+            parser = FormatValue.INTEGER;
+          }
+
+          else {
+            parser = FormatValue.UNKNOWN;
+          }
+        }
+
         case DECIMAL -> {
           if (Ascii.isDigit(c)) {
             parser = FormatValue.DECIMAL;
@@ -1156,6 +1174,8 @@ final class CssEngine implements Css.StyleSheet.Config, CssGeneratorScanner.Adap
       case INTEGER -> formatResultDefault(value, wordStart);
 
       case INTEGER_DOT -> value;
+
+      case MINUS -> formatResultDefault(value, wordStart);
 
       case DECIMAL -> formatResultDefault(value, wordStart);
 
