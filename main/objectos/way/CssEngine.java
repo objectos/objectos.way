@@ -762,7 +762,7 @@ final class CssEngine implements Css.StyleSheet.Config, CssGeneratorScanner.Adap
       int colon;
       colon = className.indexOf(':');
 
-      while (colon > 0) {
+      while (colon >= 0) {
         String slug;
         slug = className.substring(beginIndex, colon);
 

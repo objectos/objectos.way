@@ -169,11 +169,11 @@ compile@clean:
 .PHONY: re-compile
 re-compile: compile@clean compile
 
-$(COMPILE_PATH): $(COMPILE_RESOLUTION_FILES)
+$(COMPILE_PATH): $(COMPILE_RESOLUTION_FILES) | $(WORK)
 	$(call uniq-resolution-files,$(COMPILE_RESOLUTION_FILES)) > $@.tmp
 	cat $@.tmp | paste --delimiter='$(COMPILE_PATH_DELIMITER)' --serial > $@
 
-$(PROCESSING_PATH): $(PROCESSING_RESOLUTION_FILES) | $(PROCESSING_OUTPUT)
+$(PROCESSING_PATH): $(PROCESSING_RESOLUTION_FILES) | $(WORK) $(PROCESSING_OUTPUT)
 	$(call uniq-resolution-files,$(PROCESSING_RESOLUTION_FILES)) > $@.tmp
 	cat $@.tmp | paste --delimiter='$(COMPILE_PATH_DELIMITER)' --serial > $@
 	

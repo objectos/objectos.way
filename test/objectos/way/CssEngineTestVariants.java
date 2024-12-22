@@ -200,6 +200,26 @@ public class CssEngineTestVariants {
     );
   }
 
+  @Test(description = "edge cases")
+  public void testCase01() {
+    class Subject extends CssSubject {
+      @Override
+      final void classes() {
+        text("::");
+        text("foo:");
+      }
+    }
+
+    test(
+        Subject.class,
+
+        """
+        @layer utilities {
+        }
+        """
+    );
+  }
+
   private void test(Class<?> type, String expected) {
     CssEngine engine;
     engine = new CssEngine();
