@@ -624,10 +624,32 @@ public class CssEngineTestUtilities {
         Subject.class,
 
         """
-      @layer utilities {
-        .fill\\:none { fill: none }
-        .fill\\:teal-400 { fill: var(--color-teal-400) }
+        @layer utilities {
+          .fill\\:none { fill: none }
+          .fill\\:teal-400 { fill: var(--color-teal-400) }
+        }
+        """
+    );
+  }
+
+  @Test
+  public void filter() {
+    class Subject extends CssSubject {
+      @Override
+      final void classes() {
+        className("filter:blur(5px)");
+        className("filter:grayscale(100%)");
       }
+    }
+
+    test(
+        Subject.class,
+
+        """
+        @layer utilities {
+          .filter\\:blur\\(5px\\) { filter: blur(5px) }
+          .filter\\:grayscale\\(100\\%\\) { filter: grayscale(100%) }
+        }
         """
     );
   }

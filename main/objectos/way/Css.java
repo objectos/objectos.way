@@ -289,6 +289,7 @@ public final class Css {
     FLEX_WRAP(true),
     FLOAT(true),
     FILL(true),
+    FILTER(true),
     FONT_FAMILY(true),
     FONT_SIZE(true),
     FONT_STYLE(true),
