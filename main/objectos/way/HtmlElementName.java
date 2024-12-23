@@ -57,6 +57,7 @@ final class HtmlElementName implements Html.ElementName {
   public static final Html.ElementName A = BUILDER.createNormal("a");
   public static final Html.ElementName ABBR = BUILDER.createNormal("abbr");
   public static final Html.ElementName ARTICLE = BUILDER.createNormal("article");
+  public static final Html.ElementName ASIDE = BUILDER.createNormal("aside");
   public static final Html.ElementName B = BUILDER.createNormal("b");
   public static final Html.ElementName BLOCKQUOTE = BUILDER.createNormal("blockquote");
   public static final Html.ElementName BODY = BUILDER.createNormal("body");

@@ -2601,90 +2601,49 @@ final class HtmlMarkup implements Html.Markup {
   // Section: elements methods
   //
 
-  /**
-   * Generates the {@code <!DOCTYPE html>} doctype.
-   */
   @Override
   public final void doctype() {
     mainAdd(HtmlByteProto.DOCTYPE);
   }
 
-  /**
-   * Renders the {@code a} element with the specified content.
-   *
-   * @param contents
-   *        the attributes and children of this element
-   *
-   * @return an instruction representing this element.
-   */
   @Override
   public final Html.Instruction.OfElement a(Html.Instruction... contents) {
     return element(HtmlElementName.A, contents);
   }
 
-  /**
-   * Renders the {@code a} element with the specified text.
-   *
-   * @param text
-   *        the text value of this element
-   *
-   * @return an instruction representing this element.
-   */
   @Override
   public final Html.Instruction.OfElement a(String text) {
     return element(HtmlElementName.A, text);
   }
 
-  /**
-   * Renders the {@code abbr} element with the specified content.
-   *
-   * @param contents
-   *        the attributes and children of this element
-   *
-   * @return an instruction representing this element.
-   */
   @Override
   public final Html.Instruction.OfElement abbr(Html.Instruction... contents) {
     return element(HtmlElementName.ABBR, contents);
   }
 
-  /**
-   * Renders the {@code abbr} element with the specified text.
-   *
-   * @param text
-   *        the text value of this element
-   *
-   * @return an instruction representing this element.
-   */
   @Override
   public final Html.Instruction.OfElement abbr(String text) {
     return element(HtmlElementName.ABBR, text);
   }
 
-  /**
-   * Renders the {@code article} element with the specified content.
-   *
-   * @param contents
-   *        the attributes and children of this element
-   *
-   * @return an instruction representing this element.
-   */
   @Override
   public final Html.Instruction.OfElement article(Html.Instruction... contents) {
     return element(HtmlElementName.ARTICLE, contents);
   }
 
-  /**
-   * Renders the {@code article} element with the specified text.
-   *
-   * @param text
-   *        the text value of this element
-   *
-   * @return an instruction representing this element.
-   */
   @Override
   public final Html.Instruction.OfElement article(String text) {
     return element(HtmlElementName.ARTICLE, text);
+  }
+
+  @Override
+  public final Html.Instruction.OfElement aside(Html.Instruction... contents) {
+    return element(HtmlElementName.ASIDE, contents);
+  }
+
+  @Override
+  public final Html.Instruction.OfElement aside(String text) {
+    return element(HtmlElementName.ASIDE, text);
   }
 
   /**

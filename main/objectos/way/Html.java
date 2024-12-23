@@ -2362,6 +2362,26 @@ public final class Html {
     Html.Instruction.OfElement article(String text);
 
     /**
+     * Renders the {@code aside} element with the specified content.
+     *
+     * @param contents
+     *        the attributes and children of this element
+     *
+     * @return an instruction representing this element.
+     */
+    Html.Instruction.OfElement aside(Html.Instruction... contents);
+
+    /**
+     * Renders the {@code aside} element with the specified text.
+     *
+     * @param text
+     *        the text value of this element
+     *
+     * @return an instruction representing this element.
+     */
+    Html.Instruction.OfElement aside(String text);
+
+    /**
      * Renders the {@code b} element with the specified content.
      *
      * @param contents
@@ -6054,6 +6074,30 @@ public final class Html {
      */
     protected final Html.Instruction.OfElement article(String text) {
       return $elements().article(text);
+    }
+
+    /**
+     * Generates the {@code aside} element with the specified content.
+     *
+     * @param contents
+     *        the attributes and children of this element
+     *
+     * @return an instruction representing this element.
+     */
+    protected final Html.Instruction.OfElement aside(Instruction... contents) {
+      return $elements().aside(contents);
+    }
+
+    /**
+     * Generates the {@code aside} element with the specified text.
+     *
+     * @param text
+     *        the text value of this element
+     *
+     * @return an instruction representing this element.
+     */
+    protected final Html.Instruction.OfElement aside(String text) {
+      return $elements().aside(text);
     }
 
     /**
