@@ -141,6 +141,46 @@ public class CssEngineTestVariants {
   }
 
   @Test
+  public void firstLetter() {
+    class Subject extends CssSubject {
+      @Override
+      final void classes() {
+        className("first-letter:font-weight:bold");
+      }
+    }
+
+    test(
+        Subject.class,
+
+        """
+        @layer utilities {
+          .first-letter\\:font-weight\\:bold::first-letter { font-weight: bold }
+        }
+        """
+    );
+  }
+
+  @Test
+  public void firstLine() {
+    class Subject extends CssSubject {
+      @Override
+      final void classes() {
+        className("first-line:text-decoration:underline");
+      }
+    }
+
+    test(
+        Subject.class,
+
+        """
+        @layer utilities {
+          .first-line\\:text-decoration\\:underline::first-line { text-decoration: underline }
+        }
+        """
+    );
+  }
+
+  @Test
   public void focus() {
     class Subject extends CssSubject {
       @Override

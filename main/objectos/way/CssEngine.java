@@ -171,6 +171,8 @@ final class CssEngine implements Css.StyleSheet.Config, CssGeneratorScanner.Adap
 
     variant("after", new Css.ClassNameFormat("", "::after"));
     variant("before", new Css.ClassNameFormat("", "::before"));
+    variant("first-letter", new Css.ClassNameFormat("", "::first-letter"));
+    variant("first-line", new Css.ClassNameFormat("", "::first-line"));
 
     variant("*", new Css.ClassNameFormat("", " > *"));
     variant("**", new Css.ClassNameFormat("", " *"));
