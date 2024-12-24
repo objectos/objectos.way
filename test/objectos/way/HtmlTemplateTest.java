@@ -1259,7 +1259,7 @@ public class HtmlTemplateTest {
           @Override
           protected final void render() {
             div(
-                classNameText("""
+                css("""
                 first \tsecond
                   third\r
 

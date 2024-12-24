@@ -52,6 +52,8 @@ final class HtmlMarkup implements Html.Markup {
 
   private static final int OFFSET_MAX = OFFSET_RAW;
 
+  private final StringBuilder sb = new StringBuilder();
+
   @Override
   public final Html.Instruction.OfFragment renderFragment(Html.Fragment.Of0 fragment) {
     Check.notNull(fragment, "fragment == null");
@@ -190,11 +192,10 @@ final class HtmlMarkup implements Html.Markup {
 
   public final String toJsonString() {
     try {
-      StringBuilder sb;
-      sb = new StringBuilder();
-
       HtmlDom document;
       document = compile();
+
+      sb.setLength(0);
 
       HtmlFormatter.JSON.formatTo(document, sb);
 
@@ -207,11 +208,10 @@ final class HtmlMarkup implements Html.Markup {
   @Override
   public final String toString() {
     try {
-      StringBuilder sb;
-      sb = new StringBuilder();
-
       HtmlDom document;
       document = compile();
+
+      sb.setLength(0);
 
       HtmlFormatter.STANDARD.formatTo(document, sb);
 
@@ -226,6 +226,14 @@ final class HtmlMarkup implements Html.Markup {
     Check.notNull(value, "value == null");
 
     return attribute0(name, value);
+  }
+
+  @Override
+  public final Html.Instruction.OfAttribute css(String value) {
+    String formatted;
+    formatted = Html.ofText(value, sb);
+
+    return attribute0(HtmlAttributeName.CLASS, formatted);
   }
 
   @Override
@@ -4626,14 +4634,6 @@ final class HtmlMarkup implements Html.Markup {
   public final Html.Instruction.OfAttribute className(String value) {
     Objects.requireNonNull(value, "value == null");
     return attribute0(HtmlAttributeName.CLASS, value);
-  }
-
-  @Override
-  public final Html.Instruction.OfAttribute classNameText(String value) {
-    String formatted;
-    formatted = Html.ofText(value);
-
-    return attribute0(HtmlAttributeName.CLASS, formatted);
   }
 
   /**

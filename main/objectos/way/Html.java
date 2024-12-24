@@ -663,6 +663,39 @@ public final class Html {
       return new HtmlMarkup();
     }
 
+    /**
+     * Renders the {@code class} attribute by processing the specified value.
+     *
+     * <p>
+     * This method is designed to work with Java text blocks. It first removes
+     * any leading and trailing whitespace. Additionally, any sequence of
+     * consecutive whitespace characters is replaced by a single space
+     * character.
+     *
+     * <p>
+     * For example, the following invocation:
+     *
+     * <pre>{@code
+     * css("""
+     *     display:inline-flex
+     *     justify-content:center
+     *
+     *     background-color:blue-500
+     *     """);
+     * }</pre>
+     *
+     * <p>
+     * Produces the same result as invoking
+     * {@code className("display:inline-flex justify-content:center background-color:blue-500")}.
+     *
+     * @param value
+     *        the text block containing class names, possibly spread across
+     *        multiple lines
+     *
+     * @return an instruction representing this attribute.
+     */
+    Html.Instruction.OfAttribute css(String value);
+
     Html.Instruction.OfAttribute dataFrame(String name);
 
     Html.Instruction.OfAttribute dataFrame(String name, String value);
@@ -1049,39 +1082,6 @@ public final class Html {
      * @return an instruction representing this attribute.
      */
     Html.Instruction.OfAttribute className(String value);
-
-    /**
-     * Renders the {@code class} attribute by processing the specified value.
-     *
-     * <p>
-     * This method is designed to work with Java text blocks. It first removes
-     * any leading and trailing whitespace. Additionally, any sequence of
-     * consecutive whitespace characters is replaced by a single space
-     * character.
-     *
-     * <p>
-     * For example, the following invocation:
-     *
-     * <pre>{@code
-     * classNameText("""
-     *     first \tsecond
-     *       third\r
-     *
-     *     fourth
-     *     """);
-     * }</pre>
-     *
-     * <p>
-     * Produces the same result as invoking
-     * {@code className("first second third fourth")}.
-     *
-     * @param value
-     *        the text block containing class names, possibly spread across
-     *        multiple lines
-     *
-     * @return an instruction representing this attribute.
-     */
-    Html.Instruction.OfAttribute classNameText(String value);
 
     /**
      * Renders the {@code clip-rule} attribute with the specified value.
@@ -3853,6 +3853,41 @@ public final class Html {
 
     TemplateBase() {}
 
+    /**
+     * Renders the {@code class} attribute by processing the specified value.
+     *
+     * <p>
+     * This method is designed to work with Java text blocks. It first removes
+     * any leading and trailing whitespace. Additionally, any sequence of
+     * consecutive whitespace characters is replaced by a single space
+     * character.
+     *
+     * <p>
+     * For example, the following invocation:
+     *
+     * <pre>{@code
+     * css("""
+     *     display:inline-flex
+     *     justify-content:center
+     *
+     *     background-color:blue-500
+     *     """);
+     * }</pre>
+     *
+     * <p>
+     * Produces the same result as invoking
+     * {@code className("display:inline-flex justify-content:center background-color:blue-500")}.
+     *
+     * @param value
+     *        the text block containing class names, possibly spread across
+     *        multiple lines
+     *
+     * @return an instruction representing this attribute.
+     */
+    protected final Instruction.OfAttribute css(String value) {
+      return $html().css(value);
+    }
+
     protected final Instruction.OfAttribute dataFrame(String name) {
       return $html().dataFrame(name);
     }
@@ -4488,41 +4523,6 @@ public final class Html {
      */
     protected final Instruction.OfAttribute className(String value) {
       return $attributes().className(value);
-    }
-
-    /**
-     * Generates the {@code class} attribute by processing the specified value.
-     *
-     * <p>
-     * This method is designed to work with Java text blocks. It first removes
-     * any leading and trailing whitespace. Additionally, any sequence of
-     * consecutive whitespace characters is replaced by a single space
-     * character.
-     *
-     * <p>
-     * For example, the following invocation:
-     *
-     * <pre>{@code
-     * classNameText("""
-     *     first \tsecond
-     *       third\r
-     *
-     *     fourth
-     *     """);
-     * }</pre>
-     *
-     * <p>
-     * Produces the same result as invoking
-     * {@code className("first second third fourth")}.
-     *
-     * @param value
-     *        the text block containing class names, possibly spread across
-     *        multiple lines
-     *
-     * @return an instruction representing this attribute.
-     */
-    protected final Instruction.OfAttribute classNameText(String value) {
-      return $attributes().classNameText(value);
     }
 
     /**
