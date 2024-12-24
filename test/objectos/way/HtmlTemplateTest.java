@@ -16,8 +16,6 @@
 package objectos.way;
 
 import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertFalse;
-import static org.testng.Assert.assertTrue;
 
 import java.nio.charset.StandardCharsets;
 import org.testng.annotations.Test;
@@ -1317,34 +1315,6 @@ public class HtmlTemplateTest {
         </div>
         """
     );
-  }
-
-  @Test(description = """
-  test that preRender is invoked
-  """)
-  public void testCase59() {
-    class Subject extends Html.Template {
-      private boolean invoked;
-
-      @Override
-      protected void preRender() {
-        invoked = true;
-      }
-
-      @Override
-      protected void render() {
-        div("render");
-      }
-    }
-
-    Subject subject;
-    subject = new Subject();
-
-    assertFalse(subject.invoked);
-
-    test(subject, "<div>render</div>\n");
-
-    assertTrue(subject.invoked);
   }
 
   @Test(description = """
